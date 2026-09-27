@@ -1,0 +1,40 @@
+C8     4.7u                   U2     HTSSOP-28-1EP_4.4x9.7mm_P0 pin 23  gate 3 fan_now True  (0.65) fan_cu True  (0.65) fan_ruled True  cap_cy [3.4, 1.96]  dmin_fan  4.89  dmin_cy  2.69  now  26.03  gate_pad 25.24 over True
+C123   U2     pin 16  not on this board
+C128   U2     pin 14  not on this board
+C11    10u 50V X7R 1210       U2     HTSSOP-28-1EP_4.4x9.7mm_P0 pin 2   gate 6 fan_now True  (0.65) fan_cu True  (0.65) fan_ruled True  cap_cy [4.6, 3.2]  dmin_fan  5.33  dmin_cy  3.12  now  18.81  gate_pad 18.47 over True
+C12    10u 50V X7R 1210       U2     HTSSOP-28-1EP_4.4x9.7mm_P0 pin 3   gate 6 fan_now True  (0.65) fan_cu True  (0.65) fan_ruled True  cap_cy [4.6, 3.2]  dmin_fan  5.49  dmin_cy  3.29  now  18.14  gate_pad 18.19 over True
+C29    10u 25V 1210           U4     SOIC-8-1EP_3.9x4.9mm_P1.27 pin 2   gate 6 fan_now True  (0.942) fan_cu False (1.27) fan_ruled False cap_cy [4.6, 3.2]  dmin_fan  5.72  dmin_cy  3.52  now  13.22  gate_pad 13.37 over True
+C30    10u 25V 1210           U4     SOIC-8-1EP_3.9x4.9mm_P1.27 pin 2   gate 6 fan_now True  (0.942) fan_cu False (1.27) fan_ruled False cap_cy [4.6, 3.2]  dmin_fan  5.72  dmin_cy  3.52  now  14.21  gate_pad 13.74 over True
+C35    10u 25V 1210           U5     SOIC-8-1EP_3.9x4.9mm_P1.27 pin 2   gate 6 fan_now True  (0.942) fan_cu False (1.27) fan_ruled False cap_cy [4.6, 3.2]  dmin_fan  5.72  dmin_cy  3.52  now  13.22  gate_pad 13.37 over True
+C36    10u 25V 1210           U5     SOIC-8-1EP_3.9x4.9mm_P1.27 pin 2   gate 6 fan_now True  (0.942) fan_cu False (1.27) fan_ruled False cap_cy [4.6, 3.2]  dmin_fan  5.72  dmin_cy  3.52  now  14.21  gate_pad 13.74 over True
+C41    10u 25V 1210           U6     SOIC-8-1EP_3.9x4.9mm_P1.27 pin 2   gate 6 fan_now True  (0.942) fan_cu False (1.27) fan_ruled False cap_cy [4.6, 3.2]  dmin_fan  5.72  dmin_cy  3.52  now  13.22  gate_pad 13.37 over True
+C42    10u 25V 1210           U6     SOIC-8-1EP_3.9x4.9mm_P1.27 pin 2   gate 6 fan_now True  (0.942) fan_cu False (1.27) fan_ruled False cap_cy [4.6, 3.2]  dmin_fan  5.72  dmin_cy  3.52  now  14.21  gate_pad 13.74 over True
+C47    10u 25V 1210           U7     SOIC-8-1EP_3.9x4.9mm_P1.27 pin 2   gate 6 fan_now True  (0.942) fan_cu False (1.27) fan_ruled False cap_cy [4.6, 3.2]  dmin_fan  5.72  dmin_cy  3.52  now  13.22  gate_pad 13.37 over True
+C48    10u 25V 1210           U7     SOIC-8-1EP_3.9x4.9mm_P1.27 pin 2   gate 6 fan_now True  (0.942) fan_cu False (1.27) fan_ruled False cap_cy [4.6, 3.2]  dmin_fan  5.72  dmin_cy  3.52  now  14.21  gate_pad 13.74 over True
+C60    4.7u                   U13    HTSSOP-28-1EP_4.4x9.7mm_P0 pin 23  gate 3 fan_now True  (0.65) fan_cu True  (0.65) fan_ruled True  cap_cy [3.4, 1.96]  dmin_fan  4.89  dmin_cy  2.69  now  25.29  gate_pad 26.14 over True
+C124   U13    pin 16  not on this board
+C129   U13    pin 14  not on this board
+C63    10u 50V X7R 1210       U13    HTSSOP-28-1EP_4.4x9.7mm_P0 pin 2   gate 6 fan_now True  (0.65) fan_cu True  (0.65) fan_ruled True  cap_cy [4.6, 3.2]  dmin_fan  5.33  dmin_cy  3.12  now  18.93  gate_pad 20.3 over True
+C64    10u 50V X7R 1210       U13    HTSSOP-28-1EP_4.4x9.7mm_P0 pin 3   gate 6 fan_now True  (0.65) fan_cu True  (0.65) fan_ruled True  cap_cy [4.6, 3.2]  dmin_fan  5.49  dmin_cy  3.29  now  17.27  gate_pad 18.71 over True
+C71    4.7u                   U15    HTSSOP-28-1EP_4.4x9.7mm_P0 pin 23  gate 3 fan_now True  (0.65) fan_cu True  (0.65) fan_ruled True  cap_cy [3.4, 1.96]  dmin_fan  4.89  dmin_cy  2.69  now  26.38  gate_pad 25.47 over True
+C125   U15    pin 16  not on this board
+C130   U15    pin 14  not on this board
+C74    10u 50V X7R 1210       U15    HTSSOP-28-1EP_4.4x9.7mm_P0 pin 2   gate 6 fan_now True  (0.65) fan_cu True  (0.65) fan_ruled True  cap_cy [4.6, 3.2]  dmin_fan  5.33  dmin_cy  3.12  now  25.85  gate_pad 24.38 over True
+C108   10u 50V X7R 1210       U15    HTSSOP-28-1EP_4.4x9.7mm_P0 pin 3   gate 6 fan_now True  (0.65) fan_cu True  (0.65) fan_ruled True  cap_cy [4.6, 3.2]  dmin_fan  5.49  dmin_cy  3.29  now  31.66  gate_pad 30.18 over True
+C78    4.7u                   U16    HTSSOP-28-1EP_4.4x9.7mm_P0 pin 23  gate 3 fan_now True  (0.65) fan_cu True  (0.65) fan_ruled True  cap_cy [3.4, 1.96]  dmin_fan  4.89  dmin_cy  2.69  now  19.53  gate_pad 19.97 over True
+C126   U16    pin 16  not on this board
+C131   U16    pin 14  not on this board
+C81    10u 50V X7R 1210       U16    HTSSOP-28-1EP_4.4x9.7mm_P0 pin 2   gate 6 fan_now True  (0.65) fan_cu True  (0.65) fan_ruled True  cap_cy [4.6, 3.2]  dmin_fan  5.33  dmin_cy  3.12  now  18.63  gate_pad 18.87 over True
+C82    10u 50V X7R 1210       U16    HTSSOP-28-1EP_4.4x9.7mm_P0 pin 3   gate 6 fan_now True  (0.65) fan_cu True  (0.65) fan_ruled True  cap_cy [4.6, 3.2]  dmin_fan  5.49  dmin_cy  3.29  now  18.22  gate_pad 17.98 over True
+C89    4.7u                   U19    HTSSOP-28-1EP_4.4x9.7mm_P0 pin 23  gate 3 fan_now True  (0.65) fan_cu True  (0.65) fan_ruled True  cap_cy [3.4, 1.96]  dmin_fan  4.89  dmin_cy  2.69  now  27.38  gate_pad 26.59 over True
+C127   U19    pin 16  not on this board
+C132   U19    pin 14  not on this board
+C92    10u 50V X7R 1210       U19    HTSSOP-28-1EP_4.4x9.7mm_P0 pin 2   gate 6 fan_now True  (0.65) fan_cu True  (0.65) fan_ruled True  cap_cy [4.6, 3.2]  dmin_fan  5.33  dmin_cy  3.12  now  18.50  gate_pad 18.58 over True
+C116   10u 50V X7R 1210       U19    HTSSOP-28-1EP_4.4x9.7mm_P0 pin 3   gate 6 fan_now True  (0.65) fan_cu True  (0.65) fan_ruled True  cap_cy [4.6, 3.2]  dmin_fan  5.49  dmin_cy  3.29  now  18.72  gate_pad 18.33 over True
+C4     1u                     U1     TSOT-23-8                  pin 1   gate 3 fan_now True  (0.65) fan_cu True  (0.65) fan_ruled True  cap_cy [2.96, 1.46]  dmin_fan  3.65  dmin_cy  1.46  now 109.37  gate_pad 108.59 over True
+C19    1u                     U3     QFN-32-1EP_4x4mm_P0.4mm_EP pin 7   gate 3 fan_now True  (0.4) fan_cu True  (0.4) fan_ruled True  cap_cy [2.96, 1.46]  dmin_fan  4.33  dmin_cy  2.13  now  19.57  gate_pad 18.84 over True
+C54    10u 25V 1210           U12    SOT-583-8                  pin 3   gate 6 fan_now True  (0.5) fan_cu True  (0.5) fan_ruled True  cap_cy [4.6, 3.2]  dmin_fan  4.85  dmin_cy  2.65  now  44.51  gate_pad 43.22 over True
+C94    220n                   U18    QFN-24-1EP_4x4mm_P0.5mm_EP pin 5   gate 3 fan_now True  (0.5) fan_cu True  (0.5) fan_ruled True  cap_cy [2.96, 1.46]  dmin_fan  4.33  dmin_cy  2.13  now  16.49  gate_pad 15.9 over True
+C104   100n                   U26    TSSOP-14_4.4x5mm_P0.65mm   pin 14  gate 3 fan_now True  (0.65) fan_cu True  (0.65) fan_ruled True  cap_cy [2.96, 1.46]  dmin_fan  3.73  dmin_cy  1.53  now 139.61  gate_pad 138.84 over True
+C106   100n                   U27    TSSOP-24_4.4x7.8mm_P0.65mm pin 24  gate 3 fan_now True  (0.65) fan_cu True  (0.65) fan_ruled True  cap_cy [2.96, 1.46]  dmin_fan  3.50  dmin_cy  1.30  now 114.62  gate_pad 113.85 over True
+C107   100n                   U28    TSSOP-24_4.4x7.8mm_P0.65mm pin 24  gate 3 fan_now True  (0.65) fan_cu True  (0.65) fan_ruled True  cap_cy [2.96, 1.46]  dmin_fan  3.50  dmin_cy  1.30  now 130.71  gate_pad 129.94 over True

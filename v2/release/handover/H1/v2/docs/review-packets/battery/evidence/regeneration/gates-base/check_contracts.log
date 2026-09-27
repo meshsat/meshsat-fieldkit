@@ -1,0 +1,65 @@
+UNKNOWN GENERATOR for pcb-a-power: pcb-a-power.net carries a sidecar written under the three-file identity (gen_sch_a.py, kisch.py, intent.py) before 2026-09-26; it says nothing about schlayout.py, idc_pads.py, the footprint lands or boards/a.json's gen_env, so it cannot be current. Regenerate, or re-write it with sch_prov.py after a regeneration parity run
+MISSING netlist for A (pcb-a-power), run its chain first
+UNKNOWN GENERATOR for pcb-b-compute: pcb-b-compute.net carries a sidecar written under the three-file identity (gen_sch_b.py, kisch.py, intent.py) before 2026-09-26; it says nothing about schlayout.py, idc_pads.py, the footprint lands or boards/b.json's gen_env, so it cannot be current. Regenerate, or re-write it with sch_prov.py after a regeneration parity run
+MISSING netlist for B (pcb-b-compute), run its chain first
+MISSING J_PANEL map on B: its netlist names no pin of the connector, so the ribbon contract is not judged
+UNJUDGED  J_PANEL 2x13 map identical on B and C   (B absent from this tree)
+PASS  transmit inhibit present on C (SW_EMCON)
+UNJUDGED  transmit inhibit present on B (J_PANEL)   (B absent from this tree)
+UNJUDGED  transmit inhibit present on A (J_AB1)   (A absent from this tree)
+PASS  transmit inhibit present on D (J_HARN1)
+PASS  D: TX_INHIBIT_n reaches the KEY gate U12 (D8: KEY = PTT_ANY AND TX_INHIBIT_n)
+PASS  D: nothing but the harness, its pull-down, a test point and the KEY gate touches TX_INHIBIT_n
+UNJUDGED  rail +5V_S1 leaves A on J_5V_S1 and enters B on J_5V_S1   (B, A absent from this tree)
+UNJUDGED  rail +5V_S2 leaves A on J_5V_S2 and enters B on J_5V_S2   (B, A absent from this tree)
+UNJUDGED  rail +5V_S3 leaves A on J_5V_S3 and enters B on J_5V_S3   (B, A absent from this tree)
+UNJUDGED  rail +5V_DEV leaves A on J_5V_DEV and enters B on J_5V_DEV   (B, A absent from this tree)
+UNJUDGED  dock 2x6 contact map identical on A (J_DOCK) and E (J_BLK)   (A absent from this tree)
+UNJUDGED  A J_DOCK pin 8 is SHORE_INHIBIT   (A absent from this tree)
+PASS  E6: SHORE_INHIBIT reaches the sensor controller U10 (directly or through its series resistor)
+UNJUDGED  A22: four CELL+ pins and four return pins (GND, the In1 plane, 32.56) on the dock block   (A absent from this tree)
+UNJUDGED  A: the pre-charge pin lands on a cell node net   (A absent from this tree)
+PASS  E: the 12 AWG lands P_CP and P_CN exist
+PASS  E6: the pack return lands on GND (the 14.4 V node's return is the ground plane, 32.56)
+UNJUDGED  ribbon net PI_SHDN_REQ exists on A and B   (B, A absent from this tree)
+UNJUDGED  ribbon net PI_KILL exists on A and B   (B, A absent from this tree)
+UNJUDGED  J_AB1 2x13 map identical on A and B   (B, A absent from this tree)
+UNJUDGED  J_AB2 2x5 map identical on A and B   (B, A absent from this tree)
+UNJUDGED  J_AB2 carries the wall pair on its END row (pins 1 and 2)   (B, A absent from this tree)
+UNJUDGED  J_MEZZ1 (A) and J_HARN1 (D) 2x8 maps identical   (A absent from this tree)
+UNJUDGED  D8 USB pair USB_D8_P: B16 J_AB1 -> A22 J_AB1/J_MEZZ1 -> D8 J_HARN1   (B, A absent from this tree)
+UNJUDGED  D8 USB pair USB_D8_N: B16 J_AB1 -> A22 J_AB1/J_MEZZ1 -> D8 J_HARN1   (B, A absent from this tree)
+UNJUDGED  wall-port pair USB_WALL_P: B16 slot hub -> J_AB2 -> A22 J_USBW   (B, A absent from this tree)
+UNJUDGED  wall-port pair USB_WALL_N: B16 slot hub -> J_AB2 -> A22 J_USBW   (B, A absent from this tree)
+UNJUDGED  +3V3 on A J_MEZZ1   (A absent from this tree)
+PASS  +3V3 on D J_HARN1
+UNJUDGED  panel controller USB pair USB_PNL_P on B16 and C7 J_PANEL   (B absent from this tree)
+UNJUDGED  panel controller USB pair USB_PNL_N on B16 and C7 J_PANEL   (B absent from this tree)
+PASS  C7: SW_EMCON drives TX_INHIBIT_n, EMCON_HW leaves on J_PANEL
+PASS  D8: TX_INHIBIT_n from J_HARN1 into the KEY gate
+UNJUDGED  A: no device drives TX_INHIBIT_n, the panel toggle is its only source   (A absent from this tree)
+UNJUDGED  B: no device drives TX_INHIBIT_n, the panel toggle is its only source   (B absent from this tree)
+UNJUDGED  A22: EMCON_HW reaches only the AND gates' inputs 1A and 2A, never an output   (A absent from this tree)
+UNJUDGED  A: TX_INHIBIT_n is pulled DOWN on this board, so a missing panel inhibits   (A absent from this tree)
+UNJUDGED  B: TX_INHIBIT_n is pulled DOWN on this board, so a missing panel inhibits   (B absent from this tree)
+PASS  D: TX_INHIBIT_n is pulled DOWN on this board, so a missing panel inhibits
+PASS  C7: U9 buffers TX_INHIBIT_n into EMCON_HW rather than inverting it
+PASS  P: the pack leads are the pack's own two nets, W_P on the positive and W_N on the return
+PASS  E: the XT60 carries the pack on pin 2 and the return on pin 1, which is what P's leads land on
+PASS  the pack pair is not crossed between board P's leads and board E's XT60
+PASS  P: the pack's blade fuse is on the netlist and carries a net
+PASS  E: R48 (22R (pulse input series)) is in series with a real pin on both sides
+UNJUDGED  rail +3V3: the shares sum to 3.0% within the 3.0% the rail declares   (A absent from this tree)
+UNJUDGED  rail +54V_POE: the shares sum to 2.0% within the 2.0% the rail declares   (B, A absent from this tree)
+UNJUDGED  rail +5V_D8: the shares sum to 6.0% within the 6.0% the rail declares   (A absent from this tree)
+UNJUDGED  rail +5V_DEV: the shares sum to 2.0% within the 2.0% the rail declares   (B, A absent from this tree)
+UNJUDGED  rail +5V_S1: the shares sum to 2.0% within the 2.0% the rail declares   (B, A absent from this tree)
+UNJUDGED  rail +5V_S2: the shares sum to 2.0% within the 2.0% the rail declares   (B, A absent from this tree)
+UNJUDGED  rail +5V_S3: the shares sum to 2.0% within the 2.0% the rail declares   (B, A absent from this tree)
+UNJUDGED  rail CELL+: the shares sum to 1.0% within the 2.0% the rail declares   (A absent from this tree)
+UNJUDGED  rail VIN_RAW: the shares sum to 2.0% within the 2.0% the rail declares   (A absent from this tree)
+
+2 board netlist(s) absent from this tree: A, B. Every contract that names one of them was judged against nothing, so this is INCONCLUSIVE and not a verdict on the design; generate those boards and run it again.
+
+verdict: check_contracts        INCONCLUSIVE of 55 {"boards_without_intent": 0, "fail": 0, "missing_boards": 2, "pass": 17, "rails_unsplit": 0, "unjudged": 38} | A, B absent from this tree, so nothing that names them was judged
+check_contracts exit 3

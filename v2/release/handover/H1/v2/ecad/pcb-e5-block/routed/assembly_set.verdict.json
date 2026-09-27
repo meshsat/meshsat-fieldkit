@@ -1,0 +1,41 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "boards": 1,
+  "fail": 0,
+  "table_present": true,
+  "unchecked_footprints": 0,
+  "unverified_rows": 0
+ },
+ "denominator": 1,
+ "evidence": [],
+ "inputs": {
+  "board": "e5",
+  "rotations": "../release/revA/order/jlc-rotations.csv"
+ },
+ "missing_input": null,
+ "note": "every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own preview. A footprint with no row goes to the assembler with KiCad's rotation unchanged, which is an assumption rather than a verification, and the list is the checklist for the session that has the preview",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "DFA-001": "143ef1ed2ab833e9"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "DFA-001"
+ ],
+ "tool": "assembly_set",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "994b3d2315bb9859"
+ },
+ "ts": "2026-09-21T12:53:10Z",
+ "verdict": "PASS",
+ "version": "unknown",
+ "writer": {
+  "file": "assembly_set.py",
+  "sha16": "03299094353eb15f"
+ }
+}

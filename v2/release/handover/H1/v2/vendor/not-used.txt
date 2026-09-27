@@ -1,0 +1,6 @@
+# Part numbers that appear in the design documents but are NOT used, one per line with the reason.
+# kb_inventory.py reads this: without it, a part number named only to record that it was rejected
+# reads as a part with a missing datasheet, and chasing it wastes the time this store exists to save.
+# A line without a reason declares nothing (the erc-allow.txt idiom).
+
+ASM118x   # the ASMedia PCIe switch question, closed on 7 September 2026 with 0 stock at JLC; the design uses the Diodes PI7C9X2G404SL, whose datasheet is in diodes/

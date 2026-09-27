@@ -1,0 +1,168 @@
+Geometry of T-A7670X-Board-3D, probed from tcall/T-A7670X-Board-3D.stp
+
+Written by tools/kb/geom_probe.py, not hand edited, so that a CAD model's measurable
+facts can be searched and reviewed as text instead of living only in whoever opened the
+model that day. Units: mm. EVERY NUMBER IS A MEASUREMENT OF THIS FILE, NOT A
+SPECIFICATION: a vendor model may carry a connector, an antenna or a mounting boss the
+catalogue dimension leaves out, and it may be exported in any orientation. Where the
+manufacturer publishes a drawing, the drawing wins and this is how to find the number
+to check against it.
+
+source file: tcall/T-A7670X-Board-3D.stp
+sha256 (first 16): 12983d4e3fc562c9
+size: 694684 bytes
+points read: 2665
+
+T-A7670X-Board-3D ENVELOPE (single part, so the bounding box of its points is the part).
+Axes are THE FILE'S OWN: a vendor model is often exported Y up, and this reader does
+not turn it, so read the three extents as sizes and not as width, depth and height.
+  axis 1 0.000 to 310.751   extent 310.751
+  axis 2 0.000 to 323.758   extent 323.758
+  axis 3 -16.200 to 6.000   extent 22.200
+
+T-A7670X-Board-3D HOLES AND ROUND FEATURES of 0.5 mm and over, coaxial duplicates collapsed.
+In an assembly a pattern is still true WITHIN the component that carries it, which is
+how a module's mounting holes come out right.
+  T-A7670X-Board-3D: diameter 1.000 : 8 holes   pattern 0.395 x 9.199
+      at X 266.339  Y 166.662
+      at X 266.444  Y 169.896
+      at X 266.444  Y 172.682
+      at X 266.444  Y 175.862
+      at X 266.628  Y 166.662
+      at X 266.733  Y 169.896
+      at X 266.733  Y 172.682
+      at X 266.733  Y 175.862
+  T-A7670X-Board-3D: diameter 1.270 : 4 holes   pattern 0.105 x 9.199
+      at X 266.483  Y 166.662
+      at X 266.589  Y 169.896
+      at X 266.589  Y 172.682
+      at X 266.589  Y 175.862
+  T-A7670X-Board-3D: diameter 1.381 : 1 hole
+      at X 296.647  Y 183.363
+  T-A7670X-Board-3D: diameter 1.387 : 2 holes   pattern 30.480 x 35.560
+      at X 266.167  Y 178.283
+      at X 296.647  Y 213.843
+  T-A7670X-Board-3D: diameter 1.400 : 12 holes   pattern 6.300 x 68.765
+      at X 278.368  Y 136.013
+      at X 278.368  Y 136.986
+      at X 278.368  Y 139.650
+      at X 278.368  Y 201.142
+      at X 278.368  Y 203.806
+      at X 278.368  Y 204.778
+      at X 284.668  Y 136.013
+      at X 284.668  Y 136.986
+      at X 284.668  Y 139.650
+      at X 284.668  Y 201.142
+      at X 284.668  Y 203.806
+      at X 284.668  Y 204.778
+  T-A7670X-Board-3D: diameter 1.423 : 10 holes   pattern 30.480 x 35.560
+      at X 266.167  Y 185.903
+      at X 266.167  Y 193.523
+      at X 266.167  Y 211.303
+      at X 296.647  Y 180.823
+      at X 296.647  Y 185.903
+      at X 296.647  Y 198.603
+      at X 296.647  Y 203.683
+      at X 296.647  Y 208.763
+      at X 296.647  Y 211.303
+      at X 296.647  Y 216.383
+  T-A7670X-Board-3D: diameter 1.424 : 6 holes   pattern 30.480 x 15.240
+      at X 266.167  Y 201.143
+      at X 266.167  Y 203.683
+      at X 296.647  Y 190.983
+      at X 296.647  Y 196.063
+      at X 296.647  Y 201.143
+      at X 296.647  Y 206.223
+  T-A7670X-Board-3D: diameter 1.427 : 4 holes   pattern 30.480 x 15.240
+      at X 266.167  Y 183.363
+      at X 266.167  Y 190.983
+      at X 266.167  Y 198.603
+      at X 296.647  Y 193.523
+  T-A7670X-Board-3D: diameter 1.431 : 2 holes   pattern 0.000 x 10.160
+      at X 296.647  Y 178.283
+      at X 296.647  Y 188.443
+  T-A7670X-Board-3D: diameter 1.466 : 1 hole
+      at X 266.167  Y 216.383
+  T-A7670X-Board-3D: diameter 1.474 : 2 holes   pattern 0.000 x 7.620
+      at X 266.167  Y 206.223
+      at X 266.167  Y 213.843
+  T-A7670X-Board-3D: diameter 1.482 : 1 hole
+      at X 266.167  Y 188.443
+  T-A7670X-Board-3D: diameter 1.488 : 1 hole
+      at X 266.167  Y 180.823
+  T-A7670X-Board-3D: diameter 1.496 : 1 hole
+      at X 266.167  Y 208.763
+  T-A7670X-Board-3D: diameter 1.526 : 1 hole
+      at X 266.167  Y 196.063
+  T-A7670X-Board-3D: diameter 1.600 : 5 holes   pattern 20.823 x 95.554
+      at X 273.157  Y 114.352
+      at X 280.403  Y 117.502
+      at X 281.407  Y 114.352
+      at X 293.980  Y 203.505
+      at X 293.980  Y 209.906
+  T-A7670X-Board-3D: diameter 1.700 : 4 holes   pattern 27.737 x 105.588
+      at X 267.462  Y 115.388
+      at X 267.487  Y 220.975
+      at X 295.199  Y 115.438
+      at X 295.199  Y 220.975
+  T-A7670X-Board-3D: diameter 1.900 : 6 holes   pattern 26.035 x 59.200
+      at X 273.157  Y 114.352
+      at X 281.407  Y 114.352
+      at X 290.392  Y 167.202
+      at X 290.392  Y 173.552
+      at X 299.192  Y 167.202
+      at X 299.192  Y 173.552
+  T-A7670X-Board-3D: diameter 2.000 : 12 holes   pattern 6.300 x 68.765
+      at X 278.368  Y 136.013
+      at X 278.368  Y 136.986
+      at X 278.368  Y 139.650
+      at X 278.368  Y 201.142
+      at X 278.368  Y 203.806
+      at X 278.368  Y 204.778
+      at X 284.668  Y 136.013
+      at X 284.668  Y 136.986
+      at X 284.668  Y 139.650
+      at X 284.668  Y 201.142
+      at X 284.668  Y 203.806
+      at X 284.668  Y 204.778
+  T-A7670X-Board-3D: diameter 2.109 : 4 holes   pattern 0.105 x 9.199
+      at X 266.483  Y 166.662
+      at X 266.589  Y 169.896
+      at X 266.589  Y 172.682
+      at X 266.589  Y 175.862
+  T-A7670X-Board-3D: diameter 2.600 : 4 holes   pattern 8.800 x 6.350
+      at X 290.392  Y 167.202
+      at X 290.392  Y 173.552
+      at X 299.192  Y 167.202
+      at X 299.192  Y 173.552
+  T-A7670X-Board-3D: diameter 4.000 : 20 holes   pattern 29.071 x 106.541
+      at X 266.871  Y 115.102
+      at X 266.871  Y 221.642
+      at X 280.346  Y 209.361
+      at X 280.346  Y 212.935
+      at X 280.371  Y 127.806
+      at X 280.371  Y 132.131
+      at X 280.409  Y 212.935
+      at X 280.409  Y 212.998
+      at X 280.435  Y 127.743
+      at X 280.435  Y 127.806
+      at X 282.632  Y 212.935
+      at X 282.632  Y 212.998
+  T-A7670X-Board-3D: diameter 17.000 : 8 holes   pattern 0.000 x 69.000
+      at X 281.518  Y 135.896
+      at X 281.518  Y 136.896
+      at X 281.518  Y 144.496
+      at X 281.518  Y 156.796
+      at X 281.518  Y 183.996
+      at X 281.518  Y 196.296
+      at X 281.518  Y 203.896
+      at X 281.518  Y 204.896
+  T-A7670X-Board-3D: diameter 21.378 : 4 holes   pattern 0.000 x 51.800
+      at X 281.518  Y 144.496
+      at X 281.518  Y 156.796
+      at X 281.518  Y 183.996
+      at X 281.518  Y 196.296
+
+(3 smaller circle sizes were read and are not listed: below 0.5 mm they are edge
+fillets and pad corners, not holes.)
+

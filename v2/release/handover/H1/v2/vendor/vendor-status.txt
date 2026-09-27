@@ -1,0 +1,257 @@
+# What each vendor folder is FOR, one line each: <path>  <status>  # reason
+# Statuses: current (this design uses it), v1 (the built V1 kits only, not the V2 board set),
+#           retired (superseded by a ruling; kept for the record), tooling (not a document).
+#
+# WHY THIS FILE EXISTS. A document store answers with whatever it holds, and this folder holds the
+# whole history: the u-blox receiver that the Quectel ruling replaced, the Touch Display 2 that the
+# Xenarc replaced, the DMR858M that was dropped from both kits. A retrieval that returns a retired
+# part's page with the same standing as a current one does not merely waste a minute; it is the
+# exact shape of the defect this repository has already paid for twice, a confident claim about a
+# part nobody re-read (a TPS2065CDBV on a SOT-23-6 land for four board phases).
+#
+# So: kb_search.py LABELS every hit with the status of its folder and pushes a retired one down the
+# ranking, and kb_verify.py FAILS when a vendor folder has no line here. A new folder cannot enter
+# the store as "current" by default, and a retirement is a line with a ruling behind it rather than
+# something a session is expected to remember.
+#
+# A file line overrides its folder line. Written 10 September 2026 (MESHSAT-862), each reason
+# traceable to a ruling in the design record or to the generator that instantiates the part.
+
+# --- the V2 board set as it stands ---
+adi          current   # LT8705A, the bespoke solar tracker on the dock strip (ruling F, 4 September 2026)
+ams          current   # AS7331 UV sensor of the outside pod; approved in the device set of 6 September, not yet in a generator
+battery      current   # the 4S pack of the 7 September ruling, its protection board and the RS PRO heater mat
+bosch        current   # the environment sensing approved 6 September 2026
+cluster      current   # the three-CM5 cluster of appendix 32.52
+cm5          current   # Compute Module 5, the compute of every slot
+connectors   current   # the USB 3 A receptacle and the nano-SIM socket on B
+d38999       current   # the MIL-DTL-38999 wall receptacles on the connector plate
+diodes       current   # protection and ideal-diode parts on A and the dock
+ebyte        current   # E22-900M30S class LoRa and the two E72 CC2652P (Zigbee and Thread), ruled 6 September 2026
+fans         current   # the fan catalogue pages the power and thermal budget reads for the ruled internal fans (added 26 September 2026, MESHSAT-1357, stream r8docs)
+infineon     current   # OPTIGA TPM SLB 9673, the TPM 2.0 fallback owner ruling D-03.1 names for ZEROIZE; not fitted (added 26 September 2026, stream r8docs)
+keystone     current   # 3568 blade-fuse holders on A
+limesdr      current   # LimeSDR Mini 2.4 on USB 3, ruled 6 September 2026
+lora         current   # the LoRa radio documents behind the E22 ruling
+m2           current   # the M.2 E-key and M-key sockets on B
+mentor       current   # 1282.5004 light guides, the only path from the LEDs through the sealed face
+microchip    current   # ATECC608B (secure element) and KSZ9897 (the five-port switch) are in gen_sch_b.py
+mitsubishi   current   # RA30H1317M1, the 30 W PA stage on D
+nxp          current   # EdgeLock SE050, the second ZEROIZE fallback behind the SLB 9673 (ZEROIZE.md); not fitted (added 26 September 2026, stream r8docs)
+openthread   current   # the CC13x2/CC26x2 notes behind the Matter/Thread RCP
+pdi          current   # E2370KS0C1 wide-temperature e-paper, ruled 6 September 2026
+peli         current   # the Peli 1450 and 1450PF; the case is fixed by the ruling of 7 September ("no change of case ever again")
+power        current   # the converters and chargers of the A power tree
+precidip     current   # 813 series signal contacts on the dock block
+pulse        current   # H5007NL magnetics on B's gigabit links
+qrp-labs     current   # the QMX-class HF module approved 6 September 2026
+quectel      current   # LG290P (GNSS, ruled 6 September) and the RM520N-GL 5G module
+rf           current   # SMP-MAX blind-mate, SMA bulkheads, the RF path documents
+rockblock    current   # RockBLOCK 9704 Iridium
+rp2040       current   # the two RP2040 controllers, panel and sensors
+sciosense    current   # AS3935 lightning sensor of the approved suite
+seals        current   # the gasket, O-ring and IP-rating documents behind the sealed face
+sensirion    current   # inside climate sensing
+silabs       current   # CP2102N, the console bridge on B, D and P
+st           current   # STM32H743VIT6, the three I/O supervisors of the high-availability layer
+standards    current   # ECSS-Q-ST-70-12C Annex D, the published current-rating models rule PI-001 cites;
+                       # a TRANSCRIPTION of the clauses used, not a copy of the standard (16 September 2026)
+storage      current   # the 2242 NVMe drive sheets the power and thermal budget reads for the drive in each slot (added 26 September 2026, stream r8docs)
+switches     current   # APEM, NKK and C&K panel parts named in the ruling of 4 September 2026
+ti           current   # the largest current-part folder: converters, muxes, codecs, protection
+
+
+vishay       current   # passives and protection on the power tree
+wifi         current   # AW7915-AED, ruled 5 September 2026
+xenarc       current   # 709GNK IP67 monitor, ruled 6 September 2026, replacing the Touch Display 2
+zigbee       current   # the CC2652P documents behind the E72 modules
+coilcraft     current   # XAL40xx and XAL60xx moulded inductors, the buck inductors of A, B and E
+winbond      current   # W25Q16JV QSPI flash beside the RP2040 controllers on C and E
+
+# --- retired by a ruling, kept for the record ---
+aioc         retired   # the V1 audio-interface chain went with the PicoAPRS V4 ruling of 8 September 2026: no AIOC, no sound card, no PTT wiring
+audio        retired   # WM8960 and CM108B were the D7-era codec path; the current D and P boards carry a PCM2912A, and the Direwolf guide went with the same PicoAPRS ruling
+dmr858       retired   # the DMR858M was dropped from V2 on 6 September and from V1 on 8 September 2026; both modules went back unopened
+gnss         retired   # the u-blox NEO-M9N, MAX-M10S and SAM-M10Q were replaced by the Quectel LG290P on 6 September 2026 (MESHSAT-823)
+lte          retired   # the EG25-G mini PCIe path and its socket were replaced by an M.2 B-key 5G module on 6 September 2026; the SIMCom and T-Call sheets were evaluation reading
+nicerf       current   # NOT retired despite the folder's history: its one file is the SA868 datasheet, and the SA868 is the ruled V2 radio (six generators reference it). The NiceRF part that was retired is the DMR858M, which lives in dmr858/
+td2          retired   # the Touch Display 2 was replaced by the Xenarc 709GNK on 6 September 2026
+weact        retired   # the WeAct 3.7 e-paper module was replaced by the PDi E2370KS0C1 on 6 September 2026; its drawing is still the mechanical reference for the window because the two share the glass
+traco        retired   # the TEN 40-2412WIN is on no current BOM: E6 carries none of it, and the only mention left in a generator is a KiCad footprint name. The README had this right and my first status line did not
+usb2517      retired   # the USB2517I is on no current BOM either: the only mention left in gen_sch_a.py is a historical note in its title block
+wio          retired   # the Wio-SX1262 SPI LoRa module was replaced by the E22-900M30S class on 6 September 2026
+
+# --- the built V1 kits, which are a different machine ---
+rpi5         v1        # the Raspberry Pi 5 of tesseract and parallax; the V2 kit is Compute Module 5 on our own carrier
+tbeam        v1        # T-Beam mechanical models from the V1 kits
+tcall        v1        # T-Call A7670 models from the V1 kits
+x1202        v1        # the Geekworm X1202 was removed from V2 on 4 September 2026 (appendix 32.17) and is still the V1 kits' charger (MESHSAT-793)
+
+# --- not documents ---
+probes       tooling   # python probes that measure STEP models and drawings, not vendor documentation
+wch          retired   # CH334/CH335 USB hub, read while choosing the hub for B; no generator instantiates it (A carries a USB2517I, B the voted TMUXHS4212 and TS3USB221A path)
+
+# --- this folder's own files ---
+README.md            tooling   # the vendor README: what these files are, the licence position and the takedown-on-request line
+vendor-status.txt    tooling   # this file
+vendor-noindex.txt   tooling   # the declared-invisible list beside it
+
+# --- file lines: documents that sit in a current folder but describe something retired ---
+cm5/doc-touch-display-2.adoc   retired   # the Touch Display 2 was replaced by the Xenarc 709GNK on 6 September 2026; this file is a 38-byte include stub with no content of its own
+cm5/doc-td2-about.adoc         retired   # the Touch Display 2 text, same ruling
+cm5/rpi5-product-brief.pdf     v1        # the Raspberry Pi 5 brief, a byte-identical copy of rpi5/raspberry-pi-5-product-brief.pdf
+# Corrected 26 September 2026 (MESHSAT-1357, stream r8docs, from the battery review stream's merge note 3): these four lines
+# read 'retired' because the 1S12P module of 4 September went with the pack ruling of 7 September. Owner ruling D-06 (26 September
+# 2026) builds the 4S3P pack from the same Samsung INR18650-35E cell, and the battery review packet and pcb_pack_protection.yaml
+# rest on these sheets, so a search must not push them down. The module study is retired; the cell sheets are not.
+battery/samsung-35e-akkuzentrum.pdf   current   # the Samsung INR18650-35E cell of the ruled 4S3P pack (D-06); a reseller's copy of Samsung's Version 1.0 specification
+battery/samsung-35e-conrad.pdf        current   # the same cell (D-06); a reseller's copy
+battery/samsung-35e-orbtronic.pdf     current   # the same cell (D-06); a reseller's copy of Samsung's Ver. 1.1 specification, the one the battery review packet cites
+battery/samsung-35e-relectro.pdf      current   # the same cell (D-06); this reseller sheet is 13 pages of images with 1097 characters of text in all of them (vendor-noindex.txt)
+DOWNLOADS-2026-09-10.md   current   # what was fetched on 10 September 2026, from where, and the one document still owed
+everlight    current   # EL817 optocoupler, the shore-inhibit isolation on the dock strip
+nexperia     current   # 74LVC08A quad AND gate on A and the BC847BS dual NPN
+omron        current   # G6K-2F-Y signal relay, the T/R changeover on PCB-D
+hirose       current   # FH12 series (the display FFC on B) and FH34 series (the e-paper ZIF on C)
+adhesives    current   # the bonded joints of the build: 3M Scotch-Weld DP8005 under the QMX tray nut plates
+family-matches.txt   tooling   # the declared reasons a family sheet covers a specific order code
+open-picks.txt       tooling   # the items of the kit with no part chosen yet, and what each pick needs
+not-used.txt         tooling   # part numbers named in a document only to record that they were rejected
+PARTS.md             tooling   # the generated inventory of everything V2 uses, checked against this store on every run
+sources.txt          tooling   # where each vendor document came from, folder level for the backfill and file level for each fetch
+duplicates-allowed.txt   tooling   # the declared reasons a file is kept in two places
+bulgin       current   # the sealed wall parts: PX0833 RJ45 coupler and the 4000 series C-type USB receptacle
+polyphaser   current   # GTH-SFF-AL SMA surge protector at the antenna bulkheads
+fabricator  current  # the chosen fabricator's own PCB capability page, fetched 16 September 2026: the authority behind every via, annular ring, track width and stackup limit this project enforces (rules VIA-001, VIA-002, RTE-001, STK-001, IMP-001)
+
+# --- file lines added 26 September 2026 (MESHSAT-1357, review stream BAT): the two TI E2E answers the battery packet cites ---
+ti/ti-e2e-1316778-bq25731-chargecurrent-por.html   current   # BQ25731, board A's charger U3: TI's answer that ChargeCurrent's power-on value is 256 mA (SOURCES.yaml, battery_review_documents)
+battery/ti-e2e-1421182-bq77207-application.html   current   # BQ7720700, board P's second level U2: TI's statement of its usual role (fuse drive) and that no active-low variant was released (SOURCES.yaml, battery_review_documents)
+
+# --- file lines added 26 September 2026 (MESHSAT-1357, integration I6): each new document and what it is FOR ---
+SOURCES.yaml   tooling   # the identity and source record of the critical parts, written in this repository (MESHSAT-1357); not a vendor document and not a certification
+fabricator/jlcpcb-stackups-2026-09-25.md   current   # the fabricator's four-layer 2 oz outer (JLC04162H-7628) and eight-layer (JLC08161H-2116) stackups read 25 September 2026: the record behind stackup_write.STACKS rows added under owner decisions 28 (board P) and 43 (board B, experimental run)
+m2/te-2199119-customer-drawing-revF.pdf   current   # TE C-2199119 rev F: the drawing of J_M2C2's fitted part 1-2199119-5, which it gives as key M where the RM520N-GL needs key B (SOURCES.yaml, cellular-socket); its sheet 2 table also lists the family's key-B parts
+nexperia/nexperia-pesd5v0s1ba.pdf   current   # PESD5V0S1BA, the six headset ESD clamps D9 to D14 on board D (gen_sch_d.py)
+power/littelfuse-smcj-series-tvs.pdf   current   # Littelfuse SMCJ series: the maker's sheet for the fitted surge clamps C224052 (SMCJ40A), C224047 (SMCJ28A) and C374030 (SMCJ18A) on boards A and E
+st/st-an4938-rev7.pdf   current   # AN4938, hardware development of the STM32H74x/H75x: the three I/O supervisors on board B, both the named H753 and the bought H743
+ti/ti-slla552-tmuxhs4212-schematic-checklist.pdf   current   # TMUXHS4212 schematic checklist; its RSVD1/RSVD2 row is superseded by the datasheet's later revision (SOURCES.yaml, usb3-host-mux)
+ti/ti-tps2065c-slvsau6i.pdf   current   # TPS2065C (SLVSAU6), the camera-rail switch U28 on board B; the C-suffix sheet the fitted TPS2065CDBVR needs
+
+# --- added 26 September 2026 (MESHSAT-1357, stream PKT): the new folder and each new document, and what it is FOR ---
+techpublic   current   # TECH PUBLIC 74LVC1G08GV, the AND gates of board D's keying and EMCON chain in the round 6 candidate (SOURCES.yaml, board-d-ptt-emcon-logic)
+battery/ti-bq77207.pdf   current   # BQ7720700, board P's second-level protector U2 (decision 40, D-15)
+battery/eaton-scf9550-elx1135.pdf   current   # SCF9550-30-05, board P's chemical fuse F2 (decision 40, D-15)
+battery/murata-prf-series.pdf   current   # PRF15BB103RB6RC, board P's PTC element RT1
+battery/ti-sluuaq3a-bq4050-trm.pdf   current   # the BQ4050 technical reference manual (board P's gauge: protections, FUSE, ship mode)
+battery/ti-sluubf9-bq4050evm.pdf   current   # the BQ4050 evaluation module guide (the maker's reference circuit for board P)
+battery/ti-sluuav7c-bq40z50evm.pdf   current   # the bq40z50 evaluation module guide, section 4.5: the PTC element requirement
+connectors/jst-ph-catalogue.pdf   current   # JST PH, board P's thermistor socket J_TS
+connectors/jst-xh-catalogue.pdf   current   # JST XH, the pack SMBus lead (E and P J_SMB), the cell taps and board E's lid lead J_TAMP
+diodes/diodes-74lvc1g17.pdf   current   # 74LVC1G17W5-7, board C's EMCON and ZEROIZE buffers U9 and U12, and the controller's one-way EMCON copy U13 (round 8)
+diodes/diodes-74lvc1g34.pdf   current   # 74LVC1G34W5-7, board D's read-back buffers in the round 6 candidate (and board C's U9 before round 4)
+diodes/diodes-bat46w.pdf   current   # BAT46W-7-F, board A's bootstrap diodes in the round 6 candidate
+diodes/diodes-smbj-ds19002.pdf   current   # SMBJ58A-13-F, board B's PoE clamp D2
+nexperia/nexperia-pesd12vl1ba.pdf   current   # PESD12VL1BA, board D's microphone clamps D10 and D13
+power/aos-ao3400a-n-mosfet.pdf   current   # AO3400A, board P's fuse heater FET Q3
+power/jscj-2n7002-c8545.pdf   current   # the JSCJ 2N7002 behind C8545, the logic N-FET on B, D and P
+power/littelfuse-smbj-series-tvs.pdf   current   # Littelfuse SMBJ series: SMBJ6.0A (D D1) and SMBJ18A (A D4)
+power/mdd-smbj-series-tvs.pdf   current   # MDD SMBJ series: SMBJ5.0A (A, B, D clamps) and SMBJ20A (P D1)
+power/panjit-ss2020fl-series.pdf   current   # PANJIT SS2040FL, board C's e-paper boost rectifiers D19 to D21
+techpublic/techpublic-74lvc1g08gv-c19829591.pdf   current   # the AND gates of board D's keying chain in the round 6 candidate
+ti/ti-sn74aup1g08.pdf   current   # SN74AUP1G08, board A's PA and HF rails' EMCON gates U35 to U38 in the round 8 candidate (EMCON.md section 4a)
+ti/ti-sn74lvc1g00.pdf   current   # SN74LVC1G00, board A's outlet interlock U30 in the round 6 candidate (D-11)
+ti/ti-sn74lvc1g04.pdf   current   # SN74LVC1G04, board D's PTT inverter U11 in the round 6 candidate
+ti/ti-sn74lvc1g06.pdf   current   # SN74LVC1G06, board D's open-drain PTT driver U13 in the round 6 candidate
+ti/ti-sn74lvc1g08.pdf   current   # SN74LVC1G08, the Ioff reference of board B's round 6 candidate (no part fitted from it)
+ti/ti-sn74lvc1g57.pdf   current   # SN74LVC1G57DBVR, board C's EMCON lamp gate U14 (round 8, SD-EMC-6)
+ti/ti-tlv758p.pdf   current   # TLV75801P, board D's hub rail U17 and PA gate bias U15
+ti/ti-tpd2e2u06-q1.pdf   current   # TPD2E2U06-Q1, board A's USB-C CC ESD array in the round 6 candidate (D-17)
+ti/ti-tusb2046b-slls413l-addendum-2025.pdf   current   # TUSB2046IBVFR, board D's hub U4 (the current orderable addendum)
+vishay/vishay-si2300ds.pdf   current   # Si2300DS-T1-GE3, board C's e-paper boost FET Q6 and EMCON lamp sink Q7 (round 8)
+vishay/vishay-wsl-power-metal-strip.pdf   current   # WSL25126L000FEA, board A's stage shunts in the round 6 candidate
+battery/ti-sffs317a-bq77207-fusa.pdf   current   # TI's pin FMA for the BQ77207 family, board P's U2: what an open, shorted or bridged TS pin does (SOURCES.yaml, pack-secondary-protector)
+battery/littelfuse-itv9550-30a.pdf   retired   # NOT FITTED: the chemical fuse alternative the battery review stream evaluated and did not take (-10 C operating floor), kept for the record of that choice (SOURCES.yaml, pack-chemical-fuse-alternative)
+ti/ti-sn74lvc86a.pdf   current   # SN74LVC86APWR, the part board B's U80 order code C350562 resolves to (the break-before-make XOR; SOURCES.yaml, bbm-xor)
+nexperia/nexperia-74lvc86a.pdf   current   # 74LVC86APW, the type number board B's U80 value names; a component mismatch with the ordered TI part (SOURCES.yaml, bbm-xor)
+
+# --- added 26 September 2026 (MESHSAT-1357, parts stream) ---
+diodes/diodes-bzt52c-ds18004.pdf   current   # BZT52C12-7-F, board A's D22, the front end's restart-guard clamp (SOURCES.yaml, zener-bzt52c12); the sheet kisch.py's _HELD_DIRECTION cites
+
+# --- added 26 September 2026 (MESHSAT-1357, stream r8docs): the maker documents the committed pages cite that
+# v2/docs/records/README.md listed as not yet in v2/vendor (review of 26 September 2026 22:35, section 3). A current status
+# here means the design's decision record reads the document; it does not mean the part is fitted, and it validates nothing.
+microchip/microchip-atecc608b-summary-DS40002239B.pdf   current   # ATECC608B summary sheet, revision B (October 2021), the maker's current revision for board B's secure element U8 (the tree's microchip-atecc608b-datasheet.pdf is revision A)
+microchip/microchip-atecc508a-complete-20005927A.pdf   current   # ATECC508A complete data sheet, the public predecessor whose configuration tables ZEROIZE.md reads for the fitted ATECC608B (whose full sheet is under NDA)
+microchip/microchip-atecc608a-40001977A.pdf   current   # ATECC608A summary sheet, read by ZEROIZE.md to establish that the full ATECC608A sheet was never published
+microchip/microchip-atecc608b-tngtls-DS40002250.pdf   current   # ATECC608B-TNGTLS, a pre-provisioned sibling of the fitted blank part; ZEROIZE.md E3 reads GenKey mode 0x04 here
+microchip/microchip-atecc608b-tflxtls-DS40002249.pdf   current   # ATECC608B-TFLXTLS, a pre-provisioned sibling of the fitted blank part; ZEROIZE.md E3
+microchip/microchip-dm320118-users-guide-DS50002921A.pdf   current   # the CryptoAuth Trust Platform DM320118, the development device of ZEROIZE.md's bounded experiment Z-EXP-A
+infineon/infineon-slb9673-fw26-datasheet-rev1.4.pdf   current   # SLB 9673 TPM 2.0, the ZEROIZE fallback (D-03.1, ZEROIZE.md); not fitted
+nxp/nxp-se050-datasheet.pdf   current   # SE050, the second ZEROIZE fallback (ZEROIZE.md); not fitted
+nxp/nxp-an12413-se050-apdu.pdf   current   # SE050 APDU specification: how its delete is specified (ZEROIZE.md)
+standards/tcg-tpm2-library-r1p59-2019-11-08.md   current   # a TRANSCRIPTION of the TCG TPM 2.0 library clauses ZEROIZE.md cites for the fallback's TPM2_Clear (the PDFs are fetched, not redistributed, as for every standard here)
+standards/intel-an574.pdf   current   # Altera/Intel AN 574, the PDN methodology decision 42 cites (DECOUPLING.md): a maker's application note, not a standard, filed as a copy at the path DECOUPLING.md names
+quectel/quectel-rm5x0n-at-commands-manual-v1.0-digikey.pdf   current   # the released AT manual of the RM5x0N series, which includes the fitted RM520N-GL (EMCON.md 4.5)
+quectel/quectel-rm520n-at-commands-manual-v1.0.0-prelim-20220812-waveshare.pdf   current   # the preliminary RM520N AT manual (EMCON.md 4.5)
+quectel/quectel-ec2x-eg2x-eg9x-em05-qcfg-at-commands-manual-v1.1-sixfab.pdf   current   # Quectel's LTE QCFG manual, read ONLY as precedent for how Quectel firmware treats W_DISABLE# (EMCON.md 4.5); not a statement about the RM520N-GL
+quectel/quectel-rg50xq-rm5xxq-at-commands-manual-v1.1.1-quectelforums.pdf   current   # the RM5xxQ predecessor's AT manual, precedent only (EMCON.md 4.5)
+qrp-labs/qrplabs-qmx-schematics-rev5.pdf   current   # QRP Labs QMX PCB Rev 5 schematic: the HF module's DC input and USB VBUS (EMCON.md 4.3); image-only
+qrp-labs/qrplabs-qmx-schematics-rev3.pdf   current   # QMX PCB Rev 3/4 schematic (EMCON.md 4.3); image-only
+qrp-labs/qrplabs-qmx-schematics-rev2.pdf   current   # QMX PCB Rev 2 schematic (EMCON.md 4.3); image-only
+qrp-labs/qrplabs-qmx-schematics-rev1-a.pdf   current   # QMX PCB Rev 1 schematic (EMCON.md 4.3); image-only
+qrp-labs/qrplabs-qmx-rev1-searchable-schematic-1b.pdf   current   # G4GIR's searchable redraw of Rev 1, a cross-check only, not a QRP Labs drawing (EMCON.md 1.2)
+wifi/asiarf-AW7915-AED_V1.pdf   current   # AsiaRF AW7915-AED datasheet v1.0 of 2023: the card's supply and current figures the power budget reads (POWER-THERMAL.md)
+wifi/asiarf-aw7915-aed-product-page-20260926.html   current   # the AW7915-AED product page as served on 26 September 2026 (a snapshot; POWER-THERMAL.md)
+limesdr/myriadrf-limesdr-mini-2-0-page-20260925.html   current   # MyriadRF's LimeSDR Mini 2.0 page as served on 25 September 2026 (EMCON.md 4.17, POWER-THERMAL.md)
+limesdr/myriadrf-limesdr-mini-2-0-user-setup-20260926.html   current   # the LimeSDR Mini 2.0 user setup page as served on 26 September 2026 (POWER-THERMAL.md)
+xenarc/xenarc-709gnk-product-page-20260926.html   current   # the 709GNK product page as served on 26 September 2026: power figures (POWER-THERMAL.md)
+storage/advantech-sqflash-720-d-m2-2242-v1.9.pdf   current   # Advantech SQFlash 720-D M.2 2242 NVMe datasheet (POWER-THERMAL.md); a candidate drive, not a pick
+storage/cervoz-m2-2242-nvme-titan.pdf   current   # Cervoz M.2 2242 NVMe datasheet (POWER-THERMAL.md); a candidate drive, not a pick
+fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf   current   # pages 18 and 40 of Sunon's DC fan catalogue 240-A (POWER-THERMAL.md); the ruled IP68 fan is still open (D-18)
+switches/littelfuse-59140-reed-sensor-2022-03-25.pdf   current   # Littelfuse 59140 reed sensor, board E's J_TAMP lid and tamper lead (R4E-06); filed from the round 4 author's copy, source unrecorded (sources.txt)
+battery/ti-bq2947.pdf   retired   # NOT FITTED: the OV-only second-level protector TI names beside the BQ4050, weighed for D-15 and decision 40 and not taken (gen_sch_p.py), kept for the record of that choice
+battery/dexerials-sfk-series-datasheet.pdf   retired   # NOT FITTED: the Dexerials SFK-1830A chemical fuse of the first round 4 pass, replaced by the Eaton SCF9550 (no published temperature range or land; FUSE-INTERPRETATION.md)
+battery/littelfuse-itv4030-c1869305.pdf   retired   # NOT FITTED: Littelfuse ITV4030 (15 A, -10 C), refused in round 4 (FUSE-INTERPRETATION.md); LCSC's copy
+battery/prosemi-dhc45-c2937382.pdf   retired   # NOT FITTED: Prosemi DHC45, a two-terminal part refused in round 4 (FUSE-INTERPRETATION.md); LCSC's copy
+battery/onsemi-mm3z-c82071.pdf   retired   # NOT FITTED: onsemi MM3Z, TI's reference SMBus zener, not taken for board P's SMBus clamps (gen_sch_p.py); LCSC's copy
+
+# --- added 26 September 2026 (MESHSAT-1357, round 8, stream d) ---
+ti/ti-ads1115-sbas444e.pdf   current   # ADS1115IDGSR, board D's U22, the PA flange temperature ADC at 0x48 (SOURCES.yaml, board-d-flange-adc)
+kento/kento-kt-0603y-citayl-0603.pdf   current   # KT-0603Y (C2287), board D's LED2 and LED5, yellow (SOURCES.yaml, round8_board_d_parts)
+yageo/yageo-cc-general-purpose-np0-16v-250v.pdf   current   # CC0402JRNPO9BN102 (C113780), board D's 1 nF NP0 bypasses (SOURCES.yaml, round8_board_d_parts, R8D-P1)
+samsung/samsung-cl05a225ko5nqn-spec.html   current   # CL05A225KO5NQNC (C170151), board D's C31 and C32, G12 (SOURCES.yaml, round8_board_d_parts)
+# --- added 27 September 2026 (MESHSAT-1357, round 8 integration): the documents the RF-002 walk (tools/tx_inhibit.py)
+# cites that main did not hold. A current status means the walk's tables read the document; no board fits the five logic
+# families yet, and the walk refuses to cross a part whose sheet is not held, so each is here before a board fits it.
+ti/ti-sn74lvc00a.pdf   current   # SN74LVC00A, the tx_inhibit LOGIC row (quad NAND) and its 7.3.3 negative-only clamps (R4T-D65, R4T-D71); no board fits it
+ti/ti-sn74lvc07a.pdf   current   # SN74LVC07A, the tx_inhibit LOGIC row (hex open-drain buffer; page 1 open drain, R4T-D71); no board fits it
+ti/ti-sn74lvc1g07.pdf   current   # SN74LVC1G07, the tx_inhibit LOGIC row (open-drain buffer; page 1 open drain, R4T-D71); no board fits it
+ti/ti-sn74lvc1g34.pdf   current   # SN74LVC1G34, the tx_inhibit LOGIC row (buffer; II and Ioff, 5.5); board C's U9 was this family before round 4
+ti/ti-sn74lvc2g07.pdf   current   # SN74LVC2G07, the tx_inhibit LOGIC row (dual open-drain buffer; page 1 open drain, R4T-D71); no board fits it
+cm5/doc-rtc.adoc   current   # the RTC's 3 mA constant-current, constant-voltage battery charger and how firmware switches it on (tx_inhibit FW_PIN_TABLES, Compute Module 5, R4T-D51)
+cm5/rpi-firmware-overlays-README.txt   current   # the rtc_bbat_vchg parameter that switches the RTC battery charger on, '2712 only' (tx_inhibit, R4T-D51)
+cm5/linux-bcm2712-rpi.dtsi   current   # the rpi_rtc node with trickle-charge-microvolt and the rtc_bbat_vchg parameter (tx_inhibit, R4T-D51)
+cm5/linux-bcm2712-rpi-cm5.dtsi   current   # the Compute Module 5's own device tree, which includes bcm2712-rpi.dtsi (tx_inhibit, R4T-D51)
+
+# Closer hc6 (pre-PCB layer 6, MESHSAT-1357), 27 September 2026.
+crystals     current   # board B's 25 MHz crystals Y1 to Y4: the fitted part and the replacement candidates of v2/docs/parts/STM32H743-COMPATIBILITY.md section 7
+st/st-stm32h743xi-datasheet-rev11.pdf   current   # DS12110 Rev 11, the current revision for board B's supervisors (supersedes the held Rev 10 as the reading of record)
+st/st-rm0433-rev8.pdf   current   # RM0433 Rev 8, the STM32H743 reference manual (option bytes, FDCAN, I2C, GPIO reset state, security features)
+st/st-es0392-rev15.pdf   current   # ES0392 Rev 15, the STM32H743 errata (silicon revision constraint of the supervisors)
+connectors/jst-vh-catalogue.pdf   current   # JST VH, the 10 A board-to-board power leads (A, B, D, E)
+connectors/wurth-wr-bhd-box-header-61202621621.pdf   current   # the 2x13 IDC box header picked for J_AB1 and J_PANEL (HC6-SC-7)
+connectors/wurth-wr-bhd-box-header-61201621621.pdf   current   # the 2x8 IDC box header picked for J_MEZZ1, J_HARN1 and J_RB9704 (HC6-SC-7)
+connectors/wurth-wr-bhd-box-header-61201021621.pdf   current   # the 2x5 IDC box header picked for J_AB2 (HC6-SC-7)
+connectors/wurth-wr-bhd-idc-socket-61202623021.pdf   current   # the 26-way IDC socket of the ribbons (HC6-SC-7)
+connectors/wurth-wr-bhd-idc-socket-61201623021.pdf   current   # the 16-way IDC socket of the ribbons (HC6-SC-7)
+connectors/wurth-wr-bhd-idc-socket-61201023021.pdf   current   # the 10-way IDC socket of the ribbons (HC6-SC-7)
+connectors/wurth-wr-cab-ribbon-63912615521cab.pdf   current   # the 26-conductor flat cable (HC6-SC-7)
+connectors/wurth-wr-cab-ribbon-63911615521cab.pdf   current   # the 16-conductor flat cable (HC6-SC-7)
+connectors/wurth-wr-cab-ribbon-63911015521cab.pdf   current   # the 10-conductor flat cable (HC6-SC-7)
+connectors/wurth-wr-com-usb3-a-692122030100.pdf   current   # the USB 3.0 A receptacle of board B's J_LIME
+connectors/millmax-0858-product-page-20260927.html   current   # the 9 A spring pins J_CP and J_CN of board A (HC6-SC-8)
+connectors/millmax-rugged-power-spring-pins-page28.pdf   current   # the 085X power spring pin family page (ratings and order code scheme)
+rockblock/groundcontrol-rockblock-9704-product-page-20260927.html   current   # the RockBLOCK 9704 operating range (-40 to +70 C)
+rockblock/groundcontrol-docs-rockblock-9704-specification-20260927.html   current   # the RockBLOCK 9704 specification page
+pulse/pulse-hx6096nl-datasheet-rev-a.pdf   current   # HX6096NL, the -40 to +85 C PoE-rated replacement recommended for board B's T1 (HC6-SC-6, ethernet-magnetics update_53a98a71)

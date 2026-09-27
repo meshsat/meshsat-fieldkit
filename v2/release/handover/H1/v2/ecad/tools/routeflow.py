@@ -1,0 +1,1261 @@
+#!/usr/bin/env python3
+"""routeflow: the supervisor around the board chains and Freerouting (v2/docs/routeflow-methodology.md, 5 Sep 2026).
+
+It runs the EXISTING stage scripts of a board with fixed argument vectors (pre-route chain, route_parallel.sh, finish_*.sh), judges each
+stage by its own artefacts (a `saved` line, a session file, a parseable DRC JSON, the clean flag), records every transition in an append-only
+journal with a fixed status vocabulary, applies a small deterministic remedy table to the failure signatures of 5 Sep 2026 within a round
+budget, and stops with a named state when the table ends. No model is in the loop; a stop is the session's cue to fix a generator.
+
+Usage:
+  routeflow.py preflight [--repo DIR]                 host checks (imports, binaries, jar, memory, load, services, git, lock)
+  routeflow.py validate <profile.json> [--repo DIR]    the profile against the tree: nothing written, no host touched
+  routeflow.py run <profile.json> [--rounds N] [--no-services] [--dry-run] [--requires A,B]
+  routeflow.py status <project dir> [--markdown]      the journal
+  routeflow.py selftest                               kill the predicates with empty inputs; every one must block
+  routeflow.py experiment <exp.json> [--budget-hours H] [--no-services] [--parallel N]   one route per configuration (rules file knobs, jar) on one pre-route board, measured into bench/results.jsonl; N configurations at once
+
+Profile (JSON): tools/routeflow/<letter>.json, one per board. Placeholders in argv: <PROJECT> (the project dir), <ECAD> (its parent), <NAME> (the board stem); <PHASE> and <phase> anywhere in the profile, resolved from --phase, ROUTEFLOW_PHASE or boards/<letter>.json (resolve_phase).
+"""
+import platform, sys, os, re, json, time, glob, hashlib, subprocess, shutil, collections, tempfile, datetime, fcntl
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import verdict   # one hash implementation, and the same one the gates write into their verdicts
+import hardset   # the one DRC policy, for grading a profile's prediction
+import ledger    # the journal is a chained ledger, not an append-only file
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import hardset   # 10 September 2026: the supervisor used to carry its own six-type tuple while the finish refused on hardset's
+                 # fifteen, so a board with only (say) track_width violations was journalled ROUTED_CLEAN here, refused there,
+                 # and the remedy table had no case for the disagreement. One definition, imported (both red teams, C1/P0).
+HARD = hardset.HARD_POST
+LOCK = os.path.expanduser(os.environ.get("ROUTEFLOW_LOCK") or "~/.routeflow.lock")   # ROUTEFLOW_LOCK: another lock name, so several experiments run side by side on a big host (6 Sep 2026)
+
+def _kicad_version():
+    """pcbnew's build string, or the CLI's, or "unknown"; never an exception, this is bookkeeping."""
+    try:
+        import pcbnew; return pcbnew.GetBuildVersion()
+    except Exception: pass
+    try:
+        import subprocess as _sp; return _sp.run(["kicad-cli", "version"], capture_output=True, text=True, timeout=30).stdout.strip() or "unknown"
+    except Exception: return "unknown"
+
+
+def now(): return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+# THE CHILD THIS SUPERVISOR IS WAITING ON, AND WHY IT IS REMEMBERED (17 September 2026). Every run is launched
+# under `timeout <cap>`; when that cap fires, this process is killed where it stands, inside a blocking wait on
+# a router that is NOT killed with it. Board A's second round was found tonight with its driver three quarters
+# of an hour dead and its router still going, reparented to init, 3 h 04 into a route whose session nobody
+# would ever import: a thread of a rented box held by a job with no supervisor. Killing the direct child is
+# enough, because that child is `timeout`, which takes its own down with it.
+_CHILD = [None]
+
+
+def _stop_child_and_exit(signum, _frame):
+    p = _CHILD[0]
+    if p is not None and p.poll() is None:
+        try:
+            p.terminate()
+            try: p.wait(timeout=20)
+            except Exception: p.kill()
+        except Exception: pass
+    sys.stderr.write("routeflow: signal %d, the running stage was stopped with it\n" % signum)
+    raise SystemExit(143 if signum == 15 else 130)
+
+
+def sh(argv, cwd, log, env=None):
+    """Run a fixed argv vector, capture everything to `log`, return the exit code. Never a shell string."""
+    e = dict(os.environ); e.update(env or {})
+    with open(log, "ab") as f:
+        f.write(("\n=== %s  %s  (cwd %s)\n" % (now(), " ".join(argv), cwd)).encode())
+        f.flush()
+        p = subprocess.Popen(argv, cwd=cwd, stdout=f, stderr=subprocess.STDOUT, env=e)
+        _CHILD[0] = p
+        try: p.wait()
+        finally: _CHILD[0] = None
+    return p.returncode
+
+# ---------------------------------------------------------------- predicates (each reads an artefact; absence blocks)
+def import_refused(w):
+    """Why the launcher in attempt directory `w` refused its import, or None. The records are fr_dialog_watch.sh's:
+    import-probe.json (the board the jar holds against the DSN), import-probe.log.watch.json and fr.log.watch.json
+    (the watcher's decisions, a dialog or window it would not answer among them) and fr.log.final-survive.json."""
+    for f, key, bad in (("import-probe.json", "decision", ("LOST", "UNREADABLE")), ("import-probe.log.watch.json", "decision", ("REFUSED",)),
+                        ("fr.log.watch.json", "decision", ("REFUSED",)), ("fr.log.final-survive.json", "decision", ("LOST",))):
+        try: r = json.load(open(os.path.join(w, f)))
+        except (OSError, ValueError): continue
+        if r.get(key) in bad:
+            why = r.get("findings") or r.get("reasons") or [e.get("reason") for e in r.get("events", []) if e.get("reason")]
+            return "%s %s: %s" % (f, r.get(key), json.dumps(why)[:300])
+    return None
+
+
+def read(fn):
+    try: return open(fn, errors="replace").read()
+    except OSError: return None
+
+def judge_pre(log_text, must_contain, min_all_pass, gen_logs):
+    """The pre-route chain: its markers present, enough ALL PASS lines, no FAIL/BLOCK/Traceback, every generator saved."""
+    if log_text is None: return "GATE_BLOCKED", "pre-route log missing"
+    fails = [ln for ln in log_text.splitlines() if re.match(r"^FAIL\b|^\s*RESULT: \d+ FAIL|Traceback|PREROUTE-DONE BLOCK|BLOCK:", ln)]
+    if fails: return "GATE_BLOCKED", "%d blocking lines: %s" % (len(fails), " | ".join(f[:100] for f in fails[:4]))
+    missing = [m for m in must_contain if m not in log_text]
+    if missing: return "GATE_BLOCKED", "markers missing: %s" % missing
+    n = log_text.count("RESULT: ALL PASS")
+    if n < min_all_pass: return "GATE_BLOCKED", "RESULT: ALL PASS %d of %d gates" % (n, min_all_pass)
+    for g in gen_logs:
+        t = read(g["file"])
+        if t is None or g.get("must", "saved") not in t: return "GATE_BLOCKED", "generator %s has no '%s' line" % (g["file"], g.get("must", "saved"))
+    return "GATED", "ALL PASS %d of %d gates, %d generator logs saved" % (n, min_all_pass, len(gen_logs))
+
+def parse_scores(par_dir):
+    """attempt -> (hard, unrouted, vias) from route_one's score files; a missing file scores out."""
+    out = {}
+    for d in sorted(glob.glob(os.path.join(par_dir, "*/"))):
+        k = os.path.basename(d.rstrip("/")); t = read(os.path.join(d, "score.txt"))
+        try: h, u, v = [int(x) for x in t.split()[:3]]
+        except Exception: h, u, v = 9999, 9999, 999999
+        out[k] = (h, u, v)
+    return out
+
+def autoroute_minutes(fr_log):
+    t = read(fr_log) or ""
+    m = re.search(r"Auto-routing was completed in (\d+) minute\(s\) ([\d.]+) seconds", t)
+    return round(int(m.group(1)) + float(m.group(2)) / 60, 1) if m else None
+
+def load_drc(fn):
+    """A DRC JSON must parse and carry a violations list; anything else is a tool failure, never a pass."""
+    t = read(fn)
+    if t is None: raise RuntimeError("DRC report missing: %s" % fn)
+    d = json.loads(t)
+    if "violations" not in d or not isinstance(d["violations"], list): raise RuntimeError("DRC report has no violations list: %s" % fn)
+    return d
+
+def signature(drc):
+    """Classify a routed board's hard violations: KNOT (one layer, two nets, fragments), EDGE (edge clearance dominates), HARD, OPEN, CLEAN."""
+    hard = [v for v in drc["violations"] if v["type"] in HARD and not hardset.exempt(v)]; unr = len(drc.get("unconnected_items", []))   # hardset's own exemptions: a footprint against itself
+    counts = collections.Counter(v["type"] for v in hard)
+    if not hard and unr == 0: return "CLEAN", counts, unr
+    if not hard: return "OPEN", counts, unr
+    if counts.get("copper_edge_clearance", 0) * 2 >= len(hard): return "EDGE", counts, unr
+    layers, nets, lengths = set(), set(), []
+    for v in hard:
+        for it in v.get("items", []):
+            d = it.get("description", "")
+            layers.update(re.findall(r"on (\w+\.Cu)", d)); nets.update(re.findall(r"\[([^\]]+)\]", d))
+            m = re.search(r"length ([\d.]+) mm", d)
+            if m: lengths.append(float(m.group(1)))
+    if len(layers) == 1 and len(nets) == 2 and lengths and max(lengths) < 0.5: return "KNOT", counts, unr
+    return "HARD", counts, unr
+
+def judge_verdicts(project, require=(), since=None):
+    """What the gates themselves decided, read from their verdict JSONs rather than from their prose.
+
+    The seam stage 0 left open (11 September 2026): every gate writes `out/<tool>.verdict.json` now, and the
+    supervisor still judged stages by log markers, flag files and the DRC JSON. A gate could write FAIL and this
+    would not notice unless its prose happened to match a grep. The log checks stay: they catch a crash, a missing
+    marker and a generator that never saved, none of which a verdict can report because the tool never got that far.
+    """
+    out = os.path.join(project, "out")
+    # Only the verdicts this stage wrote. Verdict files persist in out/ across stages and rounds, and boards P
+    # and E were each blocked three times by a check_contracts verdict their OWN earlier finish had written.
+    worst, found, missing = verdict.collect(out, require, since=since)
+    bad = sorted("%s %s%s" % (t, r.get("verdict"), (" (%s)" % r["note"]) if r.get("note") else "")
+                 for t, r in found.items() if r.get("verdict") != verdict.PASS)
+    if missing: bad += ["%s did not run" % t for t in missing]
+    if worst == 0:
+        return "GATED", "%d gate verdict(s), all PASS" % len(found)
+    return "GATE_BLOCKED", "%d of %d gate verdict(s) not PASS: %s" % (len(bad), len(found) + len(missing), "; ".join(bad[:6]))
+
+
+def judge_expect(drc_path, exp, measured=None):
+    """The profile's own prediction, which until now was written in every profile and read by nothing.
+
+    `expect: {hard, unrouted}` is a prediction in the sense the prediction gate means: written before the run,
+    graded mechanically after it. Twelve profiles carry one.
+
+    IT IS GRADED AGAINST THE BOARD THE ROUTER PRODUCED (17 September 2026). `out/<name>-drc.json` is the file
+    the LAST stage to run a DRC wrote, and at the end of the route stage that is the PRE-ROUTE report: board
+    A40 routed 0 hard and 25 unrouted of 254 nets and its prediction was graded "unrouted 499 against 0", 499
+    being KiCad's own cap on the unconnected list of the placed board. Every graded prediction since this was
+    wired on 11 September read the placement. `measured` is the route stage's own (hard, unrouted) for the
+    winning attempt, taken from that attempt's own report, and it is used whenever the caller has it."""
+    if not exp or ("hard" not in exp and "unrouted" not in exp): return None, "no prediction in the profile"
+    if measured is not None:
+        c = {"hard": measured[0], "unrouted": measured[1]}
+        parts, met = [], True
+        for k in ("hard", "unrouted"):
+            if k not in exp: continue
+            parts.append("%s %d against %s" % (k, c[k], exp[k]))
+            if c[k] > exp[k]: met = False
+        return met, ", ".join(parts) + " (the routed board of this round)"
+    try: d = load_drc(drc_path)
+    except Exception as e: return None, "no DRC to grade the prediction against (%s)" % e
+    c = hardset.counts(d, "post")
+    parts, met = [], True
+    for k, got in (("hard", c["hard"]), ("unrouted", c["unrouted"])):
+        if k not in exp: continue
+        parts.append("%s %d against %s" % (k, got, exp[k]))
+        if got > exp[k]: met = False
+    return met, ", ".join(parts)
+
+
+def judge_finish(finish_log, clean_flag, stub_log, deliverable):
+    t = read(finish_log) or ""
+    if "Traceback" in t or "CRASHED" in t or (stub_log and "Traceback" in (read(stub_log) or "")): return "TOOL_CRASH", "a finish stage crashed (see %s)" % finish_log
+    flag = read(clean_flag)
+    if flag is None: return "FINISH_REFUSED", "no clean flag written (%s)" % clean_flag
+    if flag.strip() != "clean": return "FINISH_REFUSED", "flag says %r" % flag.strip()
+    if deliverable and not glob.glob(os.path.join(deliverable, "*-gerbers.zip")): return "FINISH_REFUSED", "deliverable has no gerber zip: %s" % deliverable
+    if "contracts: ALL PASS" not in t: return "FINISH_REFUSED", "the finish did not print 'contracts: ALL PASS' (check_contracts.py is part of every finish since 8 Sep 2026)"
+    # 10 September 2026: this used to refuse only when REFUSED was also printed, so a finish that never ran the read-back at all
+    # passed the gate. Absence of evidence is not evidence: the line must be there (both red teams, P1).
+    if deliverable and "verify_deliverable: ALL PASS" not in t: return "FINISH_REFUSED", "the deliverable was not read back (verify_deliverable.py did not print ALL PASS)"
+    m = re.search(r"routed-board gate: hard (\d+) unrouted (\d+)", t)
+    return "CLEAN", ("routed-board gate: hard %s unrouted %s" % (m.group(1), m.group(2))) if m else "clean flag set"
+
+# The finish's own stop reasons that no amount of routing can answer, by the words the finish prints. Each is
+# a property of the schematic, the netlist or another board, and the boards they refuse are finished copper.
+NOT_A_ROUTE = (
+    ("PORTS", "rule TRN-001: a conductor leaves the case and meets a chip with nothing between. That is a "
+              "schematic property and owner decision 31; the copper is not what refused this board"),
+    ("BOARD DOES NOT MATCH ITS NETLIST", "the board and the schematic it was placed from are different "
+                                         "designs: regenerate, do not re-route"),
+    ("CONTRACTS FAILED", "a cross-board contract: the disagreement is between two schematics"),
+    ("CONTRACTS NOT JUDGED", "a board this set depends on has not been generated in this tree"),
+)
+
+
+def finish_gate_clean(flog):
+    """True when the finish's own routed-board gate read hard 0 unrouted 0 on the board it judged: the closers
+    (stub router, direct_close) can close what the router left, and then the router's own count is history."""
+    m = re.search(r"routed-board gate: hard (\d+) unrouted (\d+)", read(flog) or "")
+    return bool(m) and m.group(1) == "0" and m.group(2) == "0"
+
+
+def finish_blocker(flog):
+    """The signature for a finish that refused a board the router left clean.
+
+    OPEN unless the finish's own stop line names a reason no route can change, in which case the run stops and
+    says which. Reading the log rather than the flag is the point: the flag says 'open' for every refusal."""
+    try: t = open(flog, errors="replace").read()
+    except OSError: return "OPEN"
+    for key, _why in NOT_A_ROUTE:
+        if key in t: return "NOT_A_ROUTE:" + key
+    return "OPEN"
+
+
+# ---------------------------------------------------------------- remedies (profile changes, bounded)
+def remedy(sig, prof, applied):
+    if str(sig).startswith("NOT_A_ROUTE:"):
+        key = sig.split(":", 1)[1]
+        why = dict(NOT_A_ROUTE).get(key, "a refusal a route cannot change")
+        return None, ("the finish refused this board for something routing cannot change (%s): %s. The copper "
+                      "this run produced is the best it will produce; the answer is upstream" % (key, why))
+    r = dict(prof["route"])
+    if sig == "INFRA_FAIL": return None, "the router supervisor failed; fix the host or the invocation, do not change the route"
+    if sig == "NO_SESSION":
+        # NO REMEDY. Doubling a timeout was the answer to a jar that wrote its session only when the whole
+        # job ended, and our patched jar writes one after every pass, so a run that produces no session at
+        # all now means the router did not start, died, or was killed: an infrastructure question, and
+        # doubling the clock buys another hour of the same nothing (red team round three H2; the record's
+        # own reading of 12 September, "with the per-pass jar, no session is INFRA_FAIL").
+        return None, ("no session from a jar that writes one every pass: the router did not run. Read "
+                      "out/par/*/fr.log and fr_jar.sh; this is infrastructure, not a route to retune")
+    if sig == "KNOT":
+        if int(r.get("threads", 6)) != 1: r["threads"] = 1; return r, "single-thread optimiser (multi-thread knot)"
+        return None, "knot with one thread: needs the session"
+    if sig == "OPEN":
+        if "via_costs" not in applied and not r.get("via_costs"): r["via_costs"] = 100; return r, "via_costs 100 through a rules file (a different solution; the router is deterministic, so more passes alone repeat the result)"
+        if "passes" not in applied: r["attempts"] = [int(p * 1.3) for p in r["attempts"]]; return r, "passes +30 percent"
+        return None, "opens survive a different via cost and more passes: needs the generators (escapes, joins) or the stub router"
+    if sig == "EDGE": return None, "edge clearance dominates: an edge keep-out band belongs in the outline generator"
+    return None, "hard violations of mixed kind: needs the session (route_audit.py)"
+
+# ---------------------------------------------------------------- the run
+# The board files a stage can produce or consume, by the board's name. A stage's row carries the hash of every one
+# that exists at the moment the row is written, so "in" and "out" are the same field read on consecutive rows.
+BOARD_FILES = ("%s.kicad_pcb", "out/%s-placed.kicad_pcb", "out/%s-preroute.kicad_pcb",
+               "out/%s-par-routed.kicad_pcb", "out/%s-routed.kicad_pcb")
+
+
+def board_hashes(project, name):
+    """MESHSAT-862, stage 0c, 11 September 2026: a run recorded its configuration and never the bytes it acted on.
+
+    provenance.json is written before the chain generates the board it names, so its board hash was the PREVIOUS
+    run's board or nothing at all, and a journal row said which knobs were set and never which board they were set
+    on. Two runs of one profile that produce different boards were indistinguishable in the record, which is also
+    what made the determinism question (stage 0b) unanswerable from the journal."""
+    out = {}
+    for pat in BOARD_FILES:
+        fn = os.path.join(project, pat % name)
+        h = verdict.sha256_file(fn) if os.path.exists(fn) else None
+        if h: out[os.path.basename(fn)] = h
+    return out
+
+
+def journal(project, rec):
+    os.makedirs(os.path.join(project, "out", "routeflow"), exist_ok=True)
+    rec = dict(ts=now(), **rec)
+    if rec.get("board") and "boards" not in rec:
+        try: rec["boards"] = board_hashes(project, rec["board"])
+        except Exception as e: rec["boards"] = {"error": str(e)}
+    # Chained (11 September 2026): each row carries the hash of the one before, so a row edited, removed or
+    # reordered after the fact fails `ledger.py verify`. Append-only was never the same as tamper-evident.
+    path = os.path.join(project, "out", "routeflow", "journal.jsonl")
+    try: rec = ledger.append(path, rec)
+    except Exception as e:
+        rec["ledger_error"] = str(e)
+        with open(path, "a") as f: f.write(json.dumps(rec) + "\n")
+    print("[routeflow %s] %s %s  %s" % (rec["ts"][11:], rec.get("stage", ""), rec.get("status", ""), rec.get("note", "")), flush=True)
+
+def fingerprint(repo, prof, project):
+    """The deterministic identity of a run's INPUTS: the profile, the tools tree including uncommitted work, and the board it starts
+    from. It indexes results; it does not name the run directory (10 September 2026, both red teams: a deterministic directory name
+    let a second run append to the first one's logs and read its markers)."""
+    h = hashlib.sha256(json.dumps(prof, sort_keys=True).encode())
+    for argv in (["git", "rev-parse", "HEAD:v2/ecad/tools"], ["git", "diff", "HEAD", "--", "v2/ecad/tools"]):
+        try: h.update(subprocess.run(argv, cwd=repo, capture_output=True, text=True).stdout.encode())   # the working tree counts: a run on an edited tool is a different input
+        except Exception: pass
+    pre = os.path.join(project, "out", "%s-preroute.kicad_pcb" % prof["board"])
+    if os.path.exists(pre): h.update(open(pre, "rb").read())
+    return h.hexdigest()[:12]
+
+def new_run_dir(project, fp):
+    """A fresh directory per invocation, never reused: <utc>-<fingerprint>[-n]."""
+    base = os.path.join(project, "out", "routeflow"); os.makedirs(base, exist_ok=True)
+    stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())   # utcnow() is deprecated and printed two warnings at the head of every run log
+    for n in range(1, 100):
+        d = os.path.join(base, "%s-%s" % (stamp, fp[:8]) if n == 1 else "%s-%s-%d" % (stamp, fp[:8], n))
+        try: os.makedirs(d); return d
+        except FileExistsError: continue
+    raise RuntimeError("cannot make a run directory in %s" % base)
+
+def provenance(repo, prof, project, fp):
+    """What produced this run, recorded beside it: nothing here is inferred later from a filename."""
+    def out(argv, cwd=repo):
+        try: return subprocess.run(argv, cwd=cwd, capture_output=True, text=True, timeout=30).stdout.strip()
+        except Exception: return ""
+    pre = os.path.join(project, "out", "%s-preroute.kicad_pcb" % prof["board"])
+    jar = jar_in_use(prof.get("route") or {})
+    def sha(fn):
+        try: return hashlib.sha256(open(fn, "rb").read()).hexdigest()[:16]
+        except Exception: return None
+    try:
+        import pcbnew as _pcb; kicad = _pcb.GetBuildVersion()
+    except Exception: kicad = out(["kicad-cli", "version"])
+    return {"fingerprint": fp, "utc": verdict.now(), "host": os.uname().nodename,
+            "git_head": out(["git", "rev-parse", "HEAD"]), "git_tools_tree": out(["git", "rev-parse", "HEAD:v2/ecad/tools"]),
+            "git_dirty": bool(out(["git", "status", "--porcelain", "v2/ecad/tools"])), "git_dirty_sha": hashlib.sha256(out(["git", "diff", "HEAD", "--", "v2/ecad/tools"]).encode()).hexdigest()[:16],
+            # NOT the board this run produces: provenance is written before the chain generates it, so this is
+            # whatever was on disk from the previous run, or nothing. The board a stage acted on is in that
+            # stage's journal row, under "boards" (stage 0c, 11 September 2026).
+            "board_sha_before_run": sha(pre), "board_file": pre, "kicad": kicad, "python": sys.version.split()[0],
+            "freerouting_jar": os.path.basename(jar), "freerouting_sha": sha(jar), "java": out(["java", "-version"]) or out(["bash", "-c", "java -version 2>&1 | head -1"])}
+
+_LOCK_FH = []   # kept open for the life of the process: closing the handle releases the flock
+
+def jar_in_use(route=None):
+    """The jar `route_one.sh` will actually take: a pinned one wins, else our patched build when the host has
+    it, else the stock jar (which route_one refuses unless FR_REQUIRE_MESH=0 says so deliberately).
+
+    Every place that RECORDED a jar had its own default string, `~/bin/freerouting-1.9.0.jar`, so with nothing
+    pinned the journal line and the provenance file both named the stock jar while the patched one ran. A record
+    that says something other than what happened is the defect this whole channel exists to remove
+    (11 September 2026)."""
+    pinned = (route or {}).get("jar")
+    if pinned: return os.path.expanduser(pinned)
+    mesh = os.path.expanduser("~/bin/freerouting-1.9.0-mesh.jar")
+    return mesh if os.path.exists(mesh) else os.path.expanduser("~/bin/freerouting-1.9.0.jar")
+
+
+def take_lock(board):
+    """An exclusive flock on the lock file, not a check followed by a write: two routeflows could pass the existence test at the
+    same time and both proceed (10 September 2026, both red teams). The JSON body stays, for the message."""
+    fh = open(LOCK, "a+")
+    try: fcntl.flock(fh.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        fh.seek(0)
+        try: o = json.loads(fh.read() or "{}")
+        except Exception: o = {}
+        fh.close(); return False, "router held by %s (pid %s since %s)" % (o.get("board"), o.get("pid"), o.get("since"))
+    fh.seek(0); fh.truncate(); fh.write(json.dumps({"board": board, "pid": os.getpid(), "since": now()})); fh.flush()
+    _LOCK_FH.append(fh); return True, "lock taken"
+
+def services(script, action, log):
+    if script and os.path.exists(os.path.expanduser(script)): sh([os.path.expanduser(script), action], os.path.expanduser("~"), log)
+
+def expand(argv, project, ecad, name): return [a.replace("<PROJECT>", project).replace("<ECAD>", ecad).replace("<NAME>", name) for a in argv]
+
+def validate(profile_fn, repo=None, phase=None):
+    """Everything about a profile that can be judged without a host, a board or a filesystem write.
+
+    11 September 2026 (MESHSAT-862). `--dry-run` was not one: it still created the run directory, wrote
+    provenance, ran preflight and took the lock, so a box profile could not be checked from the runner at all
+    and the first thing that read it was an eight-hour wave. Five profiles were carrying a phase one behind the
+    deliverable their own finish cuts when this was written; that is the class of defect this catches in a
+    second. Prints one line per property and returns a verdict code."""
+    prof = resolve_phase(json.load(open(profile_fn)), phase); b = os.path.basename(profile_fn)
+    repo = repo or os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+    ecad = os.path.join(repo, "v2", "ecad"); tools = os.path.join(ecad, "tools")
+    fails, lines = [], []
+    def ok(cond, text):
+        lines.append(("PASS  " if cond else "FAIL  ") + text)
+        if not cond: fails.append(text)
+
+    for k in ("board", "project", "phase", "route", "finish"):
+        ok(k in prof, "profile declares %s" % k)
+    if fails:
+        for l in lines: print("validate: " + l)
+        return verdict.write("routeflow_validate", verdict.FAIL, denominator=len(lines), evidence=fails,
+                             counts={"fail": len(fails)}, inputs={"profile": b})
+
+    # 13 September 2026: a profile that pins `repo` routes THAT tree's board whatever directory the command was
+    # given in, which is right for a production run and is how an isolated arm came to measure the production
+    # board with the production tools (see `one_tree`). Reported here so a copied profile that was not repointed
+    # is caught by reading it rather than by an hour of routing.
+    # Judged only where the pinned repo EXISTS: every profile pins the BOX's path, and on the runner that path
+    # is simply absent, which says nothing about the profile. A property that cannot be evaluated is not a FAIL.
+    pinned = prof.get("repo")
+    if pinned and os.path.isdir(pinned):
+        _proj = os.path.abspath(os.path.join(pinned, prof["project"]))
+        ok(os.path.realpath(os.path.join(os.path.dirname(_proj), "tools")) == os.path.realpath(tools),
+           "the pinned repo is the tree this routeflow belongs to (%s)" % pinned)
+
+    proj = os.path.basename(str(prof["project"]).rstrip("/")); phase = prof["phase"]
+    fin = prof["finish"]; argv = fin.get("argv") or []
+    ok(bool(argv), "the finish declares an argv")
+    if argv:
+        script = os.path.join(ecad, argv[0].lstrip("./"))
+        ok(os.path.exists(script), "the finish script exists: %s" % argv[0])
+        ok(fin.get("cwd") == "<ECAD>", "the finish runs from <ECAD>, which is the only place its relative argv[0] resolves")
+        if os.path.basename(argv[0]) == "finish.sh" and len(argv) >= 6:
+            _, _, aproj, letter, aphase, alog = argv[:6]
+            ok(aproj == proj, "the finish runs in the profile's own project directory (%s against %s)" % (aproj, proj))
+            ok(aphase == phase, "the finish cuts the profile's phase (%s against %s)" % (aphase, phase))
+            ok(os.path.exists(os.path.join(tools, "boards", "%s.json" % letter)), "a board file exists for letter %s" % letter)
+            want = "meshsat-pcb-%s-revA-%s" % (letter, aphase)
+            ok(os.path.basename(prof.get("deliverable", "")) == want,
+               "the deliverable is the one the finish writes (%s against %s)" % (os.path.basename(prof.get("deliverable", "")) or "-", want))
+            ok(fin.get("clean_flag") == "out/%s-clean.txt" % aphase.lower(),
+               "the clean flag is the phase's own (%s)" % fin.get("clean_flag"))
+            ok(alog == (prof["route"].get("log") or alog), "the finish waits on the log the route writes (%s against %s)" % (alog, prof["route"].get("log")))
+    pre = prof.get("pre") or {}
+    # Two shapes exist for the same stage: `argv` (one command) and `steps` (a list of them). Both are checked,
+    # because the profile that carried the stale generator log used `steps`, and the first version of this rule
+    # looked only at `argv`, so it never ran on the one profile it was written for.
+    cmds = ([pre["argv"]] if pre.get("argv") else []) + [c for c in (pre.get("steps") or []) if isinstance(c, list)]
+    ok(bool(cmds), "the pre-route stage declares a command")
+    for cmd in cmds:
+        ps = cmd[1] if len(cmd) > 1 else ""
+        cand = os.path.join(ecad, ps[3:]) if ps.startswith("../") else os.path.join(ecad, ps.lstrip("./"))
+        ok(os.path.exists(cand), "the pre-route script exists: %s" % ps)
+    if cmds: ok(bool(pre.get("must_contain")), "the pre-route stage names what its log must contain")
+    # A declared generator log the chain never writes blocks every run of that board: c7 and c8 named
+    # out/gen_pcb_c3.log, which no chain has written since full.sh replaced the clones, and C died on it twice
+    # in one wave while its own chain printed PREROUTE-DONE OK.
+    # The board's OWN letter, not any token: the first version of this rule used [a-z0-9]+ and so accepted
+    # out/gen_pcb_c3.log, the very file it was written to catch.
+    _L = (fin.get("argv") or [None] * 4)[3] or ""
+    WRITES = {"out/gen_sch.log", "out/gen_fp.log", "out/gen3.log", "out/gen_pcb_%s.log" % _L}
+    for g in pre.get("gen_logs") or []:
+        f = g.get("file") if isinstance(g, dict) else g
+        ok(f in WRITES, "the declared generator log is one the chain writes: %s (it writes %s)"
+           % (f, ", ".join(sorted(WRITES))))
+    ok(bool(prof.get("expect")), "the profile carries an expectation to be graded against")
+    jar = str(prof["route"].get("jar", ""))
+    ok(not jar or jar.endswith(".jar"), "the route names a jar file (%s)" % (jar or "the host default"))
+    # Pinning the stock 1.9.0 jar sets FR_JAR, which bypasses route_one's choice and, with it, the refusal that
+    # exists because the stock jar writes no session until the whole job ends. Every profile did this, so the
+    # refusal added on 11 September could never fire (found the same evening, with E routing on stock).
+    ok(not jar.endswith("freerouting-1.9.0.jar"),
+       "the route does not pin the stock 1.9.0 jar, which would bypass route_one's per-pass-session refusal")
+
+    for l in lines: print("validate: " + l)
+    print("validate: %s (%d of %d properties, %s)" % ("ALL PASS" if not fails else "%d FAIL" % len(fails),
+                                                      len(lines) - len(fails), len(lines), b))
+    return verdict.write("routeflow_validate", verdict.PASS if not fails else verdict.FAIL,
+                         counts={"fail": len(fails), "pass": len(lines) - len(fails)},
+                         denominator=len(lines), evidence=fails, inputs={"profile": b},
+                         note="the profile against the tree, with nothing written and no host touched")
+
+
+def one_tree(project, what):
+    """The TOOLS that run and the BOARD they run on must come from one tree, or the run measures neither.
+
+    13 September 2026, found by making the mistake. Every profile pins `repo`, and line one of `run` reads that
+    key in preference to where the command was invoked from, which is correct for a production run and silently
+    wrong for a measurement: an arm copied the tree to /root/d05_ecad, patched ONE number in its generator and
+    called `python3 tools/routeflow.py run tools/routeflow/d9.json` there. The profile's pinned repo sent every
+    stage to the box clone's phase directory, so the chain regenerated and routed the PRODUCTION board with the
+    PRODUCTION tools, overwrote a committed phase board on the way, and would have reported a number the arm's
+    own patch never touched. That is the shape the record keeps meeting: a result identical to the baseline is
+    indistinguishable from an honest answer.
+
+    The test is structural and carries no assumption about the layout: every stage calls the tools beside the
+    project (`./tools/finish.sh` from the ECAD directory, `../tools/full_*.sh` from the project), so the
+    routeflow.py that is executing must BE one of those tools. An isolated copy is a first-class way to measure
+    (`routeflow/cloud/iso_chain.sh` is built on one) and it stays available: copy the profile too and point its
+    `repo` at the copy.
+    """
+    ecad = os.path.dirname(project)
+    mine = os.path.realpath(os.path.dirname(os.path.abspath(__file__)))
+    theirs = os.path.realpath(os.path.join(ecad, "tools"))
+    if mine == theirs: return
+    sys.stderr.write(
+        "routeflow: REFUSED. The tools running and the board to be %s come from different trees, so this run\n"
+        "  would measure neither. Copy the profile into the tree you are measuring and point its `repo` there.\n"
+        "    tools executing: %s\n"
+        "    tools the stages would call: %s\n" % (what, mine, theirs))
+    sys.exit(2)
+
+
+def resolve_phase(prof, phase=None):
+    """ONE PROFILE PER LETTER (15 September 2026, red team round four H1): the 34 per-phase profiles differed from one
+    another in the phase string and a note, and the supervisor versioned by filename. A letter profile carries <PHASE>
+    (and <phase>, lower case) where the phase used to be typed, and the phase comes from `--phase`, ROUTEFLOW_PHASE, or
+    the board's own declaration in boards/<letter>.json, which is what full.sh exports to the silk. A profile with no
+    placeholder is returned as it is."""
+    text = json.dumps(prof)
+    if "<PHASE>" not in text and "<phase>" not in text: return prof
+    ph = phase or os.environ.get("ROUTEFLOW_PHASE")
+    if not ph:
+        letter = str(prof.get("board", "")).split("-")[1][0] if str(prof.get("board", "")).startswith("pcb-") else ""
+        bf = os.path.join(os.path.dirname(os.path.abspath(__file__)), "boards", "%s.json" % letter)
+        if not os.path.exists(bf): raise SystemExit("routeflow: the profile carries <PHASE> and no phase was given (--phase, ROUTEFLOW_PHASE) and no boards/%s.json declares one" % letter)
+        ph = json.load(open(bf)).get("phase")
+        if not ph: raise SystemExit("routeflow: boards/%s.json declares no phase" % letter)
+    if not re.match(r"^[A-Z]+[0-9]+[A-Z0-9]*$", ph): raise SystemExit("routeflow: %r is not a phase (A35, C18, P5)" % ph)
+    # A PHASE GIVEN ON THE COMMAND LINE MUST BE THE ONE THE BOARD FILE DECLARES (17 September 2026). The phase
+    # is a fact about the board: the generators stamp it on the silk, the finish names the folder after it and
+    # the set gate refuses a folder that is not the declared one. When it can also arrive as an argument the
+    # two drift, and they did: board C was cut and committed as C24, a deliverable that passes 38 of its 38
+    # properties, while boards/c.json still said C18, so the set gate read the CURRENT board as stale against
+    # a declaration six phases behind it. The argument may LEAD the declaration, which is what an arm does
+    # before it knows whether its board will be adopted, so the refusal names the one line that fixes it
+    # rather than forbidding the run outright; ROUTEFLOW_PHASE_UNDECLARED=1 is the arm's way of saying so.
+    _letter = str(prof.get("board", "")).split("-")[1][0] if str(prof.get("board", "")).startswith("pcb-") else ""
+    _bf = os.path.join(os.path.dirname(os.path.abspath(__file__)), "boards", "%s.json" % _letter)
+    if phase and os.path.exists(_bf) and not os.environ.get("ROUTEFLOW_PHASE_UNDECLARED"):
+        try: _decl = json.load(open(_bf)).get("phase")
+        except ValueError: _decl = None
+        if _decl and _decl != ph:
+            raise SystemExit("routeflow: --phase %s and boards/%s.json declares %s. The phase is a fact about "
+                             "the board, not an argument: set \"phase\": \"%s\" in boards/%s.json, or pass "
+                             "ROUTEFLOW_PHASE_UNDECLARED=1 if this run is an arm whose board may never be "
+                             "adopted." % (ph, _letter, _decl, ph, _letter))
+    return json.loads(text.replace("<PHASE>", ph).replace("<phase>", ph.lower()))
+
+
+def run(profile_fn, rounds, use_services, dry, phase=None, requires=None):
+    prof = resolve_phase(json.load(open(profile_fn)), phase); repo = prof.get("repo") or os.getcwd()
+    project = os.path.abspath(os.path.join(repo, prof["project"])); ecad = os.path.dirname(project); name = prof["board"]
+    one_tree(project, "routed")
+    os.makedirs(os.path.join(project, "out", "routeflow"), exist_ok=True)
+    fp = fingerprint(repo, prof, project); rdir = new_run_dir(project, fp); rid = os.path.basename(rdir)
+    json.dump(provenance(repo, prof, project, fp), open(os.path.join(rdir, "provenance.json"), "w"), indent=1)
+    json.dump({"profile": prof, "profile_file": os.path.abspath(profile_fn), "rounds": rounds, "services": bool(use_services), "dry": bool(dry),
+               "env": {k: v for k, v in sorted(os.environ.items()) if k.startswith(("PAIR_", "FR_", "ROUTEFLOW_", "PLACE_", "STUB_", "ESCAPE_", "BYPASS_"))}},
+              open(os.path.join(rdir, "resolved-config.json"), "w"), indent=1)
+    # 10 September 2026 (report 1, P2): preflight existed and was optional exactly where an expensive run begins. It runs here now;
+    # ROUTEFLOW_SKIP_PREFLIGHT=1 is for a host that is deliberately not the build host, and it is journalled when it is used.
+    if os.environ.get("ROUTEFLOW_SKIP_PREFLIGHT") != "1":
+        prc = preflight(repo, list(prof.get("requires") or []) + list(requires or []))
+        journal(project, dict(run=rid, board=name, phase=prof["phase"], stage="preflight", status="PREFLIGHT_OK" if prc == 0 else "PREFLIGHT_FAIL", note="required checks %s" % ("pass" if prc == 0 else "FAIL, see the lines above")))
+        if prc != 0: return 2
+    else:
+        journal(project, dict(run=rid, board=name, phase=prof["phase"], stage="preflight", status="PREFLIGHT_SKIPPED", note="ROUTEFLOW_SKIP_PREFLIGHT=1"))
+    ok, msg = take_lock(name)
+    journal(project, dict(run=rid, fingerprint=fp, board=name, phase=prof["phase"], stage="lock", status="LOCKED" if ok else "PREFLIGHT_FAIL", note=msg))
+    if not ok: return 2
+    applied = set(); status = None
+    best_board = (None, None, 0)   # (score, path, round): the best routed board of this run, kept across remedies
+    try:
+        for rnd in range(1, rounds + 2):
+            route = prof["route"]
+            journal(project, dict(run=rid, round=rnd, board=name, stage="pre", status="GENERATING", note="expect %s" % json.dumps(prof.get("expect", {}))))
+            pre = prof["pre"]; plog = os.path.join(rdir, "round%d-pre.log" % rnd)
+            # The horizon for this stage's verdicts, and it has to be taken BEFORE the chain runs or it excludes
+            # every verdict the chain writes. Set after, as it was for one commit, it would have hidden all of
+            # them and read as "no verdicts at all" (11 September 2026; see verdict.collect).
+            # A round starts with a clean verdict channel. The horizon alone is not enough: the stamp has
+            # one-second resolution, so a verdict written in the same second as the stage began is not "before"
+            # it, and P's round-two pre stage was blocked by a verify_deliverable its round-one finish had
+            # written 0 seconds earlier. Clearing is also the honest thing: a gate that does not re-run this
+            # round should read as absent, which verdict.collect already treats as INCONCLUSIVE when required.
+            if not dry:
+                for _v in glob.glob(os.path.join(project, "out", "*.verdict.json")):
+                    try: os.remove(_v)
+                    except OSError: pass
+            pre_started = verdict.now()   # UTC in the verdict channel's own format, never routeflow's local now()
+            rc = 0
+            if not dry:
+                for argv in (pre.get("steps") or [pre["argv"]]):   # fixed argument vectors, one process each, no shell string
+                    # the phase reaches the chain (and the silk) from the resolved profile: with one profile per letter there is
+                    # no per-phase wrapper exporting PHASE any more (15 September 2026)
+                    rc = sh(expand(argv, project, ecad, name), project if pre.get("cwd", "<PROJECT>") == "<PROJECT>" else ecad, plog, env={"PHASE": prof["phase"]})
+                    if rc != 0: break
+            gen_logs = [dict(g, file=os.path.join(project, g["file"])) for g in pre.get("gen_logs", [])]
+            st, note = judge_pre(read(plog), pre.get("must_contain", []), pre.get("min_all_pass", 1), gen_logs) if not dry else ("GATED", "dry run")
+            if rc != 0 and st == "GATED": st, note = "TOOL_CRASH", "pre-route chain exit %d" % rc
+            journal(project, dict(run=rid, round=rnd, board=name, stage="pre", status=st, note=note))
+            if st == "GATED" and not dry:
+                vst, vnote = judge_verdicts(project, prof.get("expect", {}).get("verdicts", ()), since=pre_started)
+                journal(project, dict(run=rid, round=rnd, board=name, stage="pre", status=vst, note=vnote))
+                if vst != "GATED": st, note = vst, vnote
+            if st != "GATED": status = st; break
+            # THE SLOW-HOST STRETCH APPLIES TO `run` TOO (20 September 2026). `ROUTEFLOW_TIMEOUT_SCALE` was
+            # read in `experiment` alone and its own line calls it "every route timeout", so a production run
+            # given it accepted the variable and routed at the profile's own cap: board D's D29 was launched
+            # at 4x to answer whether D28's fifteen opens were the clock, and its log printed `timeout 3600`,
+            # the same cap, which makes the arm a repeat of D28 with no variable in it. Caught by reading the
+            # route line instead of the exit status, and the arm was stopped by pid before it wasted a core.
+            # The profile's own cap is untouched: a board's cap is its declaration and this stretches it for
+            # a host, which is why the line SAYS so when it is not 1.
+            _tscale = float(os.environ.get("ROUTEFLOW_TIMEOUT_SCALE") or 1)
+            _tout = int(route.get("timeout", 4500) * _tscale)
+            if abs(_tscale - 1.0) > 1e-9:
+                print("routeflow: ROUTEFLOW_TIMEOUT_SCALE=%g stretches this route's %ss cap to %ss"
+                      % (_tscale, route.get("timeout", 4500), _tout))
+            env = {"FR_THREADS": str(route.get("threads", 2)), "FR_TIMEOUT": str(_tout)}
+            if route.get("power_layers"): env["FR_POWER_LAYERS"] = " ".join(route["power_layers"])
+            if route.get("plane_nets"): env["FR_PLANE_NETS"] = ",".join(route["plane_nets"])   # zones of these nets on the power layers stay in the DSN as planes (6 Sep 2026: GND by vias into In1, not as wires)
+            if route.get("rail_planes"): env["FR_RAIL_PLANES"] = "1"   # the rails' locked bands and islands as DSN planes on their own layers (15 Sep 2026, a measurement on A)
+            if route.get("jar"): env["FR_JAR"] = os.path.expanduser(route["jar"])
+            # the optimiser is where a route disappears: C8's auto-route finished in 14 min 21 s and the two default optimiser passes
+            # then ran past a 90 minute limit with no session written, three times (8 Sep 2026 19:35). A profile may cap it.
+            if route.get("optimiser_passes") is not None: env["FR_OIT"] = str(route["optimiser_passes"])
+            if route.get("layer_rules"): env["FR_LAYER_RULES"] = ";".join("%s:%s" % (c, ",".join(ls)) for c, ls in route["layer_rules"].items())   # rule 2 of 32.67: a class only on layers with a plane next to them   # the router build (Stage 4: freerouting-2.4.1.jar beside 1.9.0)
+            if any(k in route for k in ("via_costs", "plane_via_costs", "ripup", "preferred", "inactive")) and not dry:   # the rules-file knobs the probe found the router honours
+                tools = os.path.dirname(os.path.abspath(__file__)); pre = os.path.join(project, "out", name + "-preroute.kicad_pcb"); dsn0 = os.path.join(rdir, "round%d-rules.dsn" % rnd); rules = os.path.join(rdir, "round%d.rules" % rnd)
+                sh(["python3", "-c", "import pcbnew,sys; b=pcbnew.LoadBoard(sys.argv[1]); [b.Remove(z) for z in list(b.Zones()) if not z.GetIsRuleArea()]; pcbnew.SaveBoard(sys.argv[1]+'.np.kicad_pcb', b); print(pcbnew.ExportSpecctraDSN(pcbnew.LoadBoard(sys.argv[1]+'.np.kicad_pcb'), sys.argv[2]))", pre, dsn0], project, os.path.join(rdir, "round%d-rules.log" % rnd))
+                argv = ["python3", os.path.join(tools, "fr_rules.py"), dsn0, rules, "--via-costs", str(route.get("via_costs", 50)), "--plane-via-costs", str(route.get("plane_via_costs", 5)), "--ripup", str(route.get("ripup", 100))]
+                if route.get("preferred"): argv += ["--preferred", route["preferred"]]
+                if route.get("inactive"): argv += ["--inactive", route["inactive"]]
+                if sh(argv, project, os.path.join(rdir, "round%d-rules.log" % rnd)) == 0 and os.path.exists(rules): env["FR_RULES"] = rules; env["FR_RULES_INJECT"] = "1"   # into the DSN, never -dr (6 Sep 2026 11:30)
+            journal(project, dict(run=rid, round=rnd, board=name, stage="route", status="ROUTING", note="attempts %s threads %s timeout %s power %s planes %s rules %s jar %s" % (route["attempts"], env["FR_THREADS"], env["FR_TIMEOUT"], route.get("power_layers"), route.get("plane_nets") or "none", {k: route[k] for k in ("via_costs", "plane_via_costs", "ripup", "preferred", "inactive") if k in route} or "none", os.path.basename(jar_in_use(route)))))
+            if use_services: services(prof.get("services_script"), "stop", os.path.join(rdir, "services.log"))
+            rlog = os.path.join(project, prof["route"].get("log", "out/parallel-routeflow.log"))
+            if not dry:
+                shutil.rmtree(os.path.join(project, "out", "par"), ignore_errors=True)
+                rc = sh(["./tools/route_parallel.sh", os.path.basename(project), name, " ".join(str(p) for p in route["attempts"])], ecad, rlog, env)   # the project directory, not the board name (a copy directory such as pcb-a-power-a23, 8 Sep 2026)
+            scores = parse_scores(os.path.join(project, "out", "par")) if not dry else {}
+            best = min(scores.items(), key=lambda kv: kv[1]) if scores else (None, (9999, 9999, 999999))
+            mins = {k: autoroute_minutes(os.path.join(project, "out", "par", k, "fr.log")) for k in scores}
+            if best[1][0] >= 9999 and rc != 0:
+                # 10 September 2026 (both red teams, P0): route_parallel.sh's exit code was captured and then ignored, so a crashed
+                # supervisor became NO_SESSION and the remedy doubled the timeout for what was never a routing problem.
+                sig = "INFRA_FAIL"; note = "the router supervisor exited %d and wrote no session; this is not a routing outcome (see %s)" % (rc, rlog)
+            elif best[1][0] >= 9999:
+                # With our patched jar a session is written after EVERY pass, so "no session at all" stops being a
+                # routing outcome and becomes something that went wrong: the job never started, the DSN was refused,
+                # the host ran out of memory. Calling it NO_SESSION sends the remedy table off to double a timeout
+                # that was never the problem, which is the two nights A23 lost. Round-two H5, 11 September 2026.
+                _mesh = os.path.exists(os.path.expanduser("~/bin/freerouting-1.9.0-mesh.jar")) and not route.get("jar")
+                if _mesh:
+                    sig = "INFRA_FAIL"; note = ("the per-pass jar wrote NO session in %d attempts, so this is not a routing "
+                                               "outcome: the job did not run. autoroute minutes %s" % (len(scores), mins))
+                else:
+                    sig = "NO_SESSION"; note = "no session in %d attempts on a jar that writes one only at the end; autoroute minutes %s" % (len(scores), mins)
+            else:
+                try: drc = load_drc(os.path.join(project, "out", "par", best[0], "drc.json")); sig, counts, unr = signature(drc)
+                except RuntimeError as e: sig, counts, unr = "TOOL_CRASH", {}, None; note = str(e)
+                if sig != "TOOL_CRASH":
+                    nets = len(re.findall(r"^\s*\(net ", read(os.path.join(project, "out", "par", best[0], "%s.dsn" % name)) or "", re.M))
+                    note = "winner attempt %s: hard %d of %d types %s, unrouted %d of %d nets, vias %d, autoroute minutes %s" % (best[0], best[1][0], len(HARD), dict(counts), unr, nets, best[1][2], mins)
+            st = {"NO_SESSION": "NO_SESSION", "KNOT": "ROUTED_HARD", "HARD": "ROUTED_HARD", "EDGE": "ROUTED_HARD", "OPEN": "ROUTED_OPEN", "CLEAN": "ROUTED_CLEAN", "TOOL_CRASH": "TOOL_CRASH", "INFRA_FAIL": "INFRA_FAIL"}[sig]
+            journal(project, dict(run=rid, round=rnd, board=name, stage="route", status=st, signature=sig, note=note))
+            # Keep the best routed board of the run. A remedy can make a board WORSE and every round re-routes
+            # from scratch, so the supervisor was discarding a good board to keep a bad one: board E went 0 hard
+            # and 1 open in round one, then 0 hard and 23 opens after the via_costs remedy, and the 1-open board
+            # was gone. Every other stage in this pipeline already keeps a result only if it improves
+            # (cont_route, stub_accept, quality_pass); the supervisor did not (11 September 2026).
+            _sc = None
+            if sig not in ("NO_SESSION", "TOOL_CRASH", "INFRA_FAIL"):
+                _sc = (best[1][0], unr if unr is not None else 10 ** 6)
+                if best_board[0] is None or _sc < best_board[0]:
+                    _bp = os.path.join(rdir, "best-round%d.kicad_pcb" % rnd)
+                    try:
+                        shutil.copy(os.path.join(project, name + ".kicad_pcb"), _bp)
+                        for _e in (".kicad_pro", ".kicad_prl"):
+                            _s = os.path.join(project, name + _e)
+                            if os.path.exists(_s): shutil.copy(_s, os.path.splitext(_bp)[0] + _e)
+                        best_board = (_sc, _bp, rnd)
+                    except OSError as _e: journal(project, dict(run=rid, round=rnd, board=name, stage="route", status=st, note="could not keep the best board: %s" % _e))
+                elif _sc > best_board[0]:
+                    journal(project, dict(run=rid, round=rnd, board=name, stage="route", status=st,
+                                          note="this round is worse than round %d (hard %d unrouted %s against %d and %s); the better board is kept"
+                                               % (best_board[2], _sc[0], _sc[1], best_board[0][0], best_board[0][1])))
+            # The profile's own prediction, graded. `expect: {hard, unrouted}` is written in all twelve profiles and
+            # was read by nothing until 11 September 2026; a prediction nobody grades is a comment.
+            met, enote = judge_expect(os.path.join(project, "out", name + "-drc.json"), prof.get("expect", {}),
+                                      measured=_sc)
+            if met is not None:
+                journal(project, dict(run=rid, round=rnd, board=name, stage="expect",
+                                      status="MET" if met else "MISSED", note="the profile predicted: " + enote))
+            _worse = (sig not in ("NO_SESSION", "TOOL_CRASH", "INFRA_FAIL") and best_board[0] is not None
+                      and best_board[2] != rnd)
+            if _worse and sig in ("CLEAN", "OPEN", "HARD", "KNOT", "EDGE"):
+                # 14 September 2026: A WORSE ROUND'S BOARD IS NOT FINISHED. A30's round two came back 13 unrouted
+                # against round one's 8, the journal said "the better board is kept", and the finish then spent
+                # an hour of stub router and closure ladder on the 13-open board that was about to be discarded,
+                # while round one's FINISHED board, which had reached 3, had already been regenerated over. The
+                # finish runs on the board that is kept, once, when the run ends.
+                journal(project, dict(run=rid, round=rnd, board=name, stage="finish", status="FINISH_SKIPPED",
+                                      note="round %d's board is worse than round %d's and is not finished" % (rnd, best_board[2])))
+                fst = "REFUSED"; sig = "OPEN" if sig == "CLEAN" else sig
+            elif sig in ("CLEAN", "OPEN", "HARD", "KNOT", "EDGE"):
+                # the finish gets its chance on every routed board: cleanup, stub router, pairs, the routed-board gate
+                fin = prof["finish"]; flog = os.path.join(rdir, "round%d-finish.log" % rnd)
+                journal(project, dict(run=rid, round=rnd, board=name, stage="finish", status="FINISHING", note=" ".join(fin["argv"])))
+                for stale in (os.path.join(project, fin["clean_flag"]), os.path.join(project, "out", "contracts.log")):   # 8 Sep 2026 (MESHSAT-862): a stale clean flag finished a board (register class 6)
+                    try: os.remove(stale)
+                    except OSError: pass
+                if not dry: sh(expand(fin["argv"], project, ecad, name), project if fin.get("cwd", "<PROJECT>") == "<PROJECT>" else ecad, flog)
+                fst, fnote = judge_finish(flog, os.path.join(project, fin["clean_flag"]), os.path.join(project, fin.get("stub_log", "out/%s-stub.log" % name)), os.path.join(repo, prof.get("deliverable", "")) if prof.get("deliverable") else None)
+                journal(project, dict(run=rid, round=rnd, board=name, stage="finish", status=fst, note=fnote))
+                # THE FINISHED BOARD IS KEPT, NOT ONLY THE ROUTED ONE (17 September 2026). `best-round<N>` is
+                # the board the ROUTER produced; the finish then spends an hour of stub router, direct closure,
+                # pruning and widening on it and usually ends with FEWER open connections. That board lives in
+                # the project directory, and the next round's pre stage regenerates straight over it. Board A's
+                # two arms tonight both lost theirs that way: A40 came out of its router at 25 open and its
+                # finish reached 20, A41 at 23, and after the remedy rounds started only the 25 and the 23
+                # survive. One file copy per round keeps the better artefact, whatever the round is judged.
+                try:
+                    _fb = os.path.join(rdir, "finished-round%d.kicad_pcb" % rnd)
+                    if not dry and os.path.isfile(os.path.join(project, name + ".kicad_pcb")):
+                        shutil.copy2(os.path.join(project, name + ".kicad_pcb"), _fb)
+                        journal(project, dict(run=rid, round=rnd, board=name, stage="finish", status="KEPT",
+                                              note="the finished board of this round is kept at %s" % os.path.relpath(_fb, project)))
+                except OSError as _e:
+                    journal(project, dict(run=rid, round=rnd, board=name, stage="finish", status="KEEP_FAILED",
+                                          note="the finished board could not be kept: %s" % str(_e)[:90]))
+                if fst == "CLEAN":
+                    exp = prof.get("expect", {}); met = all(m is None or m <= exp.get("autoroute_minutes_max", 1e9) for m in mins.values())
+                    journal(project, dict(run=rid, round=rnd, board=name, stage="expect", status="MET" if met else "MISSED", note="autoroute minutes %s against max %s" % (mins, exp.get("autoroute_minutes_max"))))
+                    quality(project, repo, prof, rid, rnd, name, mins)
+                    status = "CLEAN"; break
+                if fst == "TOOL_CRASH": status = fst; break
+                # A REFUSAL A ROUTE CANNOT CHANGE IS NOT AN OPEN (16 September 2026). This line used to turn
+                # EVERY finish refusal on a clean route into the OPEN signature, whose remedies are a
+                # different via cost and thirty percent more router passes. Board C23 routed 0 hard and 0
+                # unrouted of 133 nets and its finish was refused by rule TRN-001, four conductors on the
+                # face jack and the main switch reaching a chip with nothing between: a property of the
+                # SCHEMATIC, on a board whose copper is finished, and the supervisor answered it by starting
+                # another route. It would have done that until the round budget ran out, and every round is
+                # about half an hour of a rented box. The reasons a route cannot touch are named here and
+                # stop the run instead, with the rule that refused it in the line.
+                if sig == "CLEAN": sig = finish_blocker(flog)
+                # AND THE SAME WHEN THE CLOSERS, NOT THE ROUTER, LEFT THE BOARD CLEAN (18 September 2026, E17).
+                # The router landed E17 at one open, direct_close closed it, the finish's own routed-board gate
+                # read hard 0 unrouted 0, and the finish was refused by rule TRN-001 (decision 31); but `sig`
+                # still carried the ROUTER's OPEN, this line never asked the finish, and the supervisor started a
+                # via-cost round on a board whose copper was finished, regenerating the placement over the
+                # evidence the finish had just written. The board the finish judged is what decides here.
+                elif finish_gate_clean(flog): sig = finish_blocker(flog)
+            def _restore_best_and_finish(status):
+                """The run ends on whatever the last remedy produced, which may be the worst board of the run.
+                Put the best one back, so what is left on disk is the best this run reached, and finish it.
+                14 September 2026: this ran on STOPPED_BUDGET alone. STOPPED_NEEDS_GENERATOR, which is how A30
+                ended (opens after the via-cost remedy and more passes), left round two's worse board in the
+                phase directory with round one's better one sitting in best-round1.kicad_pcb, unfinished."""
+                if best_board[1] and best_board[2] != rnd and os.path.exists(best_board[1]):
+                    try:
+                        shutil.copy(best_board[1], os.path.join(project, name + ".kicad_pcb"))
+                        # with its project files: they carry the net-class assignments every gate reads, and a
+                        # remedy can change the route block between rounds, so a board from round N under a
+                        # project file from round N+1 is the B19 trap of 9 September again (reviewer, 12 Sep)
+                        for _e in (".kicad_pro", ".kicad_prl"):
+                            _b = os.path.splitext(best_board[1])[0] + _e
+                            if os.path.exists(_b): shutil.copy(_b, os.path.join(project, name + _e))
+                        journal(project, dict(run=rid, round=rnd, board=name, stage="remedy", status="RESTORED_BEST",
+                                              note="round %d's board (hard %d, unrouted %s) restored over round %d's"
+                                                   % (best_board[2], best_board[0][0], best_board[0][1], rnd)))
+                        # A restored board is not a finished board. The finish is what closes the last opens,
+                        # runs every gate and cuts the deliverable, and it last ran on the round being discarded,
+                        # so run it once on the board that is actually being kept (11 September 2026).
+                        if not dry:
+                            fin = prof["finish"]; flog = os.path.join(rdir, "round%d-finish-best.log" % rnd)
+                            for stale in (os.path.join(project, fin["clean_flag"]), os.path.join(project, "out", "contracts.log")):
+                                try: os.remove(stale)
+                                except OSError: pass
+                            journal(project, dict(run=rid, round=rnd, board=name, stage="finish", status="FINISHING", note="on the restored best board of round %d" % best_board[2]))
+                            sh(expand(fin["argv"], project, ecad, name), project if fin.get("cwd", "<PROJECT>") == "<PROJECT>" else ecad, flog)
+                            fst, fnote = judge_finish(flog, os.path.join(project, fin["clean_flag"]), os.path.join(project, fin.get("stub_log", "out/%s-stub.log" % name)), os.path.join(repo, prof.get("deliverable", "")) if prof.get("deliverable") else None)
+                            journal(project, dict(run=rid, round=rnd, board=name, stage="finish", status=fst, note=fnote + " (restored best board)"))
+                            if fst == "CLEAN": status = "CLEAN"
+                    except OSError as _e: journal(project, dict(run=rid, round=rnd, board=name, stage="remedy", status=status, note="could not restore the best board: %s" % _e))
+                return status
+            if rnd > rounds:
+                status = "STOPPED_BUDGET"
+                journal(project, dict(run=rid, round=rnd, board=name, stage="remedy", status=status, note="%d automatic rounds spent on %s" % (rounds, sig)))
+                status = _restore_best_and_finish(status)
+                break
+            new_route, why = remedy(sig, prof, applied)
+            if new_route is None:
+                status = "STOPPED_NEEDS_GENERATOR"; journal(project, dict(run=rid, round=rnd, board=name, stage="remedy", status=status, note=why))
+                status = _restore_best_and_finish(status)
+                break
+            for k in ("power_layers", "timeout", "threads", "attempts", "via_costs"):
+                if new_route.get(k) != route.get(k): applied.add("passes" if k == "attempts" else k)
+            prof["route"] = new_route; journal(project, dict(run=rid, round=rnd, board=name, stage="remedy", status="REMEDY", note="%s -> %s" % (sig, why)))
+    finally:
+        if use_services: services(prof.get("services_script"), "start", os.path.join(rdir, "services.log"))
+        try: os.remove(LOCK)
+        except OSError: pass
+    journal(project, dict(run=rid, board=name, stage="end", status=status or "UNKNOWN", note="see out/routeflow/%s/" % rid))
+    return 0 if status == "CLEAN" else 1
+
+# ---------------------------------------------------------------- quality (Stage 1 of the programme): metrics of the finished board against the baseline
+def quality(project, repo, prof, rid, rnd, name, mins):
+    tools = os.path.dirname(os.path.abspath(__file__)); board = os.path.join(project, name + ".kicad_pcb"); drc = os.path.join(project, "out", name + "-drc.json")
+    mfile = os.path.join(project, "out", "routeflow", rid, "round%d-metrics.json" % rnd); base = os.path.join(tools, "routeflow", "bench", "baseline.json")
+    argv = ["python3", os.path.join(tools, "route_metrics.py"), board, drc if os.path.exists(drc) else "-", "--json", mfile, "--tag", prof["phase"]]
+    for k, m in mins.items():
+        if m: argv += ["--autoroute", str(m)]; break
+    rc = sh(argv, project, os.path.join(project, "out", "routeflow", rid, "round%d-quality.log" % rnd))
+    if rc != 0 or not os.path.exists(mfile): journal(project, dict(run=rid, round=rnd, board=name, stage="quality", status="UNMEASURABLE", note="route_metrics exit %d" % rc)); return
+    if not os.path.exists(base): journal(project, dict(run=rid, round=rnd, board=name, stage="quality", status="MEASURED", note="no baseline yet: " + (read(mfile) or "")[:200])); return
+    out = os.path.join(project, "out", "routeflow", rid, "round%d-compare.json" % rnd)
+    sys.path.insert(0, tools); import bench_compare as _bc
+    key = prof.get("baseline_key") or _bc.board_key(prof["board"])   # 10 Sep 2026: keyed by board; a phase key never matched (C3)
+    rc = sh(["python3", os.path.join(tools, "bench_compare.py"), base, mfile, "--board", key, "--json", out], project, os.path.join(project, "out", "routeflow", rid, "round%d-quality.log" % rnd))
+    try: c = json.load(open(out)); st = {"MET": "QUALITY_MET", "REGRESSION": "QUALITY_REGRESSED", "INELIGIBLE": "QUALITY_INELIGIBLE"}.get(c["verdict"], "UNMEASURABLE"); note = c["note"]
+    except Exception as e: st, note = "UNMEASURABLE", "compare failed: %s" % e
+    journal(project, dict(run=rid, round=rnd, board=name, stage="quality", status=st, note=note))
+
+# ---------------------------------------------------------------- experiment (Stage 2): one route per configuration on one pre-route board, measured, journaled, resumable
+def experiment(exp_fn, budget_hours, use_services, parallel=1):
+    """One route per configuration on one pre-route board, measured into bench/results.jsonl. `parallel` above 1 runs that many
+    configurations at once, one worker thread each (the vast.ai box of 6 Sep 2026: 384 threads, 773 GB); every configuration owns its
+    out/par/exp-<name> directory, so the only shared things are the DSN they all read and the results file, appended under a file lock.
+    ROUTEFLOW_TIMEOUT_SCALE (float) stretches every route timeout for a slower core without changing a configuration's key; ROUTEFLOW_LOCK
+    names the lock file, so several experiments run side by side on one host."""
+    import threading, fcntl, concurrent.futures
+    FINISH_VERSION = 2   # 2 (6 Sep 2026 02:00): the finish runs the stub router as production does and records the raw counts; rows of an older finish are re-finished from their session, never re-routed
+    RULES_MODE = "inject"   # part of every configuration key since 6 Sep 2026 11:30: the settings go into the DSN; the -dr rows of the night before (which lost the design's clearances) have other keys and are never reused
+    exp = json.load(open(exp_fn)); repo = exp.get("repo") or os.getcwd(); tools = os.path.dirname(os.path.abspath(__file__))
+    project = os.path.abspath(os.path.join(repo, exp["project"])); ecad = os.path.dirname(project); name = exp["board"]
+    one_tree(project, "measured")
+    _tools = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, _tools); import bench_compare as _bc
+    key = exp.get("board_key") or _bc.board_key(name)
+    # 10 September 2026 (both red teams, C3): 66 of 81 measured router hours were thrown away by a dictionary lookup that ran
+    # AFTER the route. The lookup runs first now: an experiment whose board has no baseline does not start.
+    _base_fn = os.path.join(_tools, "routeflow", "bench", "baseline.json")
+    _keys = sorted(json.load(open(_base_fn))) if os.path.exists(_base_fn) else []
+    if key not in _keys:
+        print("routeflow: experiment %s refused: no baseline for board key %r (have %s). Record one with `baseline`, or set board_key." % (os.path.basename(exp_fn), key, ", ".join(_keys)))
+        return 2
+    os.makedirs(os.path.join(project, "out"), exist_ok=True); results = os.path.join(tools, "routeflow", "bench", "results.jsonl"); os.makedirs(os.path.dirname(results), exist_ok=True)
+    scale = float(os.environ.get("ROUTEFLOW_TIMEOUT_SCALE") or 1); jlock = threading.Lock()
+    def jn(rec):
+        with jlock: journal(project, rec)
+    t_start = time.time(); ok, msg = take_lock(name + ":experiment")
+    jn(dict(run="exp", board=name, phase=key, stage="lock", status="LOCKED" if ok else "PREFLIGHT_FAIL", note=msg))
+    if not ok: return 2
+    # the project lock (6 Sep 2026 03:50): two experiments on one project directory share out/<name>-preroute.kicad_pcb and out/par/exp-<config>; the
+    # B14 strip overwrote the B15 pre-route board while both ran and every B row of that night had to be discarded. A busy project directory refuses.
+    plock = os.path.join(project, "out", "routeflow", "experiment.lock"); os.makedirs(os.path.dirname(plock), exist_ok=True)
+    # A CLAIM, not a check-then-write (15 September 2026, red team report 1 P1): the lock file is created with O_EXCL,
+    # so two experiments cannot both read "nobody here" and both write the lock. A stale lock (its pid gone) is
+    # removed and claimed again once.
+    def _claim():
+        try:
+            fd = os.open(plock, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
+        except FileExistsError:
+            return False
+        with os.fdopen(fd, "w") as f: json.dump({"exp": os.path.basename(exp_fn), "pid": os.getpid(), "since": now()}, f)
+        return True
+    if not _claim():
+        try: o = json.load(open(plock))
+        except (OSError, ValueError): o = {}
+        if os.path.exists("/proc/%d" % o.get("pid", -1)) and o.get("pid") != os.getpid():
+            jn(dict(run="exp", board=name, phase=key, stage="lock", status="PREFLIGHT_FAIL", note="project directory busy: experiment %s (pid %d since %s); give this experiment its own project directory" % (o.get("exp"), o.get("pid"), o.get("since"))))
+            try: os.remove(LOCK)
+            except OSError: pass
+            return 2
+        try: os.remove(plock)
+        except OSError: pass
+        if not _claim():
+            jn(dict(run="exp", board=name, phase=key, stage="lock", status="PREFLIGHT_FAIL", note="project directory claimed by another experiment between two of our attempts"))
+            try: os.remove(LOCK)
+            except OSError: pass
+            return 2
+    try:
+        # the pre-route board: "strip:<released board>" strips the router copper (locked copper stays); a path is used as is; nothing means out/<name>-preroute.kicad_pcb
+        pre = os.path.join(project, "out", name + "-preroute.kicad_pcb"); src = exp.get("preroute")
+        elog = os.path.join(project, "out", "experiment.log")
+        if src and src.startswith("strip:"): sh(["python3", os.path.join(tools, "strip_route.py"), os.path.join(repo, src[6:]), pre], project, elog); shutil.copy(os.path.join(os.path.dirname(os.path.join(repo, src[6:])), name + ".kicad_pro"), os.path.join(project, name + ".kicad_pro"))
+        elif src and os.path.abspath(os.path.join(repo, src)) != os.path.abspath(pre): shutil.copy(os.path.join(repo, src), pre)
+        if not os.path.exists(pre): jn(dict(run="exp", board=name, stage="pre", status="GATE_BLOCKED", note="no pre-route board at " + pre)); return 1
+        pre_hash = hashlib.sha256(open(pre, "rb").read()).hexdigest()[:12]
+        done = set(); stale = {}
+        if os.path.exists(results):
+            for l in open(results):
+                try: r = json.loads(l)
+                except Exception: continue
+                if r.get("verdict") == "NO_SESSION" and (r.get("wall_s") or 0) < 60: continue   # a router that died within a minute is a tool failure (no display, no Java), not a measurement: run it again
+                if r.get("verdict") != "NO_SESSION" and r.get("finish_version", 1) < FINISH_VERSION: stale[r.get("key")] = r; continue   # routed under an older finish: re-finish from its session
+                done.add(r.get("key"))
+        def ident(cfg):
+            """(jar path, jar sha, configuration key): the key is the pre-route board, the jar, the configuration and the route block; never the host, the timeout scale or the time"""
+            jar_path = jar_in_use({"jar": cfg.get("jar") or exp.get("jar")})   # the jar route_one will take, never a default string
+            if not jar_path.startswith("/"): jar_path = os.path.expanduser("~/bin/" + jar_path)
+            jar_sha = hashlib.sha256(open(jar_path, "rb").read()).hexdigest()[:16] if os.path.exists(jar_path) else "nojar"
+            return jar_path, jar_sha, hashlib.sha256((pre_hash + jar_sha + json.dumps(cfg, sort_keys=True) + json.dumps(exp.get("route", {}), sort_keys=True) + RULES_MODE).encode()).hexdigest()[:16]
+        pending = []; refin = []
+        for cfg in exp["configs"]:
+            jar_path, jar_sha, ckey = ident(cfg)
+            if jar_sha == "nojar": jn(dict(run="exp", board=name, stage="experiment", status="GATE_BLOCKED", note="%s: no jar at %s" % (cfg["name"], jar_path))); continue
+            if ckey in done: jn(dict(run="exp", board=name, stage="experiment", status="MEASURED", note="%s already in results (skip)" % cfg["name"])); continue
+            if ckey in stale and os.path.exists(os.path.join(project, "out", "par", "exp-" + cfg["name"], name + ".ses")): refin.append((cfg, stale[ckey])); continue
+            pending.append(cfg)
+        jn(dict(run="exp", board=name, phase=key, stage="experiment", status="EXPERIMENT", note="preroute %s, %d of %d configs to route, %d to re-finish from their sessions, %d at once, timeout scale %.1f, budget %.1f h, expect: %s" % (pre_hash, len(pending), len(exp["configs"]), len(refin), max(1, parallel), scale, budget_hours, exp.get("expect", "")[:160])))
+        if use_services: services(exp.get("services_script"), "stop", elog)
+        # one DSN for the rules file's layer list
+        dsn0 = os.path.join(project, "out", name + "-experiment.dsn")
+        sh(["python3", "-c", "import pcbnew,sys; b=pcbnew.LoadBoard(sys.argv[1]); [b.Remove(z) for z in list(b.Zones()) if not z.GetIsRuleArea()]; pcbnew.SaveBoard(sys.argv[1]+'.np.kicad_pcb', b); print(pcbnew.ExportSpecctraDSN(pcbnew.LoadBoard(sys.argv[1]+'.np.kicad_pcb'), sys.argv[2]))", pre, dsn0], project, elog)
+        if not os.path.exists(dsn0) or os.path.getsize(dsn0) == 0: jn(dict(run="exp", board=name, stage="experiment", status="GATE_BLOCKED", note="no DSN from the pre-route board (see out/experiment.log)")); return 1
+        def one(cfg, slot):
+            if time.time() - t_start > budget_hours * 3600: jn(dict(run="exp", board=name, stage="experiment", status="STOPPED_BUDGET", note="budget spent before %s" % cfg["name"])); return None
+            if slot: time.sleep(min(slot * 3, 240))   # stagger the starts: xvfb-run -a races on display numbers when many start in the same second
+            jar_path, jar_sha, ckey = ident(cfg)
+            k = "exp-" + cfg["name"]; w = os.path.join(project, "out", "par", k); shutil.rmtree(w, ignore_errors=True); os.makedirs(w); plog = os.path.join(w, "prep.log")
+            rules = os.path.join(w, "config.rules"); argv = ["python3", os.path.join(tools, "fr_rules.py"), dsn0, rules, "--via-costs", str(cfg.get("via_costs", 50)), "--plane-via-costs", str(cfg.get("plane_via_costs", 5)), "--ripup", str(cfg.get("ripup", 100))]
+            if cfg.get("preferred"): argv += ["--preferred", cfg["preferred"]]
+            if cfg.get("inactive"): argv += ["--inactive", cfg["inactive"]]
+            if cfg.get("only"): argv += ["--only", cfg["only"]]
+            if cfg.get("plain"): rules = ""   # plain (6 Sep 2026 14:15): no settings block at all, the production configuration; a settings block, even with default values, costs the design's clearances on B15
+            else: sh(argv, project, plog)
+            route = dict(exp.get("route", {})); route.update({kk: cfg[kk] for kk in ("passes", "threads", "timeout", "power_layers") if kk in cfg})
+            if cfg.get("planes"): route["plane_nets"] = list(cfg["planes"])
+            timeout = int(route.get("timeout", 1800) * scale)
+            env = {"FR_THREADS": str(route.get("threads", 1)), "FR_TIMEOUT": str(timeout), "FR_RULES": rules, "FR_RULES_INJECT": "1" if rules else "0", "FR_JAR": jar_path, "FR_FANOUT": "true" if cfg.get("fanout") else "false"}
+            if route.get("power_layers"): env["FR_POWER_LAYERS"] = " ".join(route["power_layers"])
+            if route.get("plane_nets"): env["FR_PLANE_NETS"] = ",".join(route["plane_nets"])
+            if route.get("rail_planes"): env["FR_RAIL_PLANES"] = "1"
+            ses = os.path.join(w, name + ".ses"); t0 = time.time(); starts = 0; flog = os.path.join(w, "finish.log"); board = os.path.join(w, name + ".kicad_pcb")
+            for attempt in (1, 2):
+                starts += 1; sh(["../tools/route_one.sh", ".", name, k, str(route.get("passes", 60))], project, os.path.join(w, "route_one.log"), env)
+                fr = read(os.path.join(w, "fr.log")) or ""
+                if not os.path.exists(ses) and ("Xvfb failed to start" in fr or "Can't open display" in fr or "No protocol specified" in fr or "HeadlessException" in fr):
+                    jn(dict(run="exp", board=name, stage="experiment", status="TOOL_CRASH", note="%s: no display for the router (attempt %d), retrying once" % (cfg["name"], attempt))); time.sleep(5); continue
+                break
+            wall = int(time.time() - t0)
+            row = {"key": ckey, "board_key": key, "board": name, "config": cfg["name"], "cfg": cfg, "route": route, "rules_mode": RULES_MODE, "timeout_s": timeout, "starts": starts, "host": os.uname().nodename, "preroute_hash": pre_hash, "jar": os.path.basename(jar_path), "jar_sha": jar_sha, "wall_s": wall, "ts": now(), "finish_version": FINISH_VERSION,
+                   # 10 September 2026 (report 2 M3): the tool versions belong in the row. A benchmark comparing two boxes or two
+                   # months compares KiCad builds and Python versions too, and the record could not say which build a row was measured on.
+                   "kicad": _kicad_version(), "python": platform.python_version(), "cpus": os.cpu_count()}
+            refused = import_refused(w)
+            if refused:
+                # round 8 (review finding F, 26 September 2026): route_one.sh confirms the import before it routes and
+                # its watcher reads every dialog before answering; a refusal is a finding about the DSN or the jar, not a
+                # routing result and not a tool that died, so it is neither NO_SESSION nor run again unchanged
+                row.update(verdict="IMPORT_REFUSED", Q=None, metrics=None, note=refused)
+                jn(dict(run="exp", board=name, stage="experiment", status="IMPORT_REFUSED", note="%s: %s" % (cfg["name"], refused[:200])))
+            elif not os.path.exists(ses) or os.path.getsize(ses) == 0:
+                row.update(verdict="NO_SESSION", Q=None, metrics=None); jn(dict(run="exp", board=name, stage="experiment", status="NO_SESSION", note="%s: no session in %d s" % (cfg["name"], wall)))
+            else: finish(row, cfg, w, board, ses, flog)
+            return row
+        def finish(row, cfg, w, board, ses, flog):
+            """the production finish on the routed copy, every count recorded: the raw route (route_one's score), the dangling clean-up, the stub router
+            (closes what the router left open, as finish_*.sh do), the DRC-gated quality pass, the final DRC, the metrics and the grade"""
+            raw = (read(os.path.join(w, "score.txt")) or "").split()
+            if len(raw) >= 3: row["raw"] = {"hard": int(raw[0]), "unrouted": int(raw[1]), "vias": int(raw[2])}
+            shutil.copy(os.path.join(project, name + ".kicad_pro"), os.path.join(w, name + ".kicad_pro"))
+            sh(["python3", os.path.join(tools, "cleanup_dangling.py"), board], project, flog)
+            sh(["kicad-cli", "pcb", "drc", "--severity-all", "--format", "json", "-o", os.path.join(w, "pre-stub-drc.json"), board], project, flog)
+            sh(["python3", os.path.join(tools, "stub_router.py"), board, os.path.join(w, "pre-stub-drc.json")], project, os.path.join(w, "stub.log"), {"STUB_LAYERS": exp.get("stub_layers", "F.Cu,B.Cu"), "STUB_GRID": str(exp.get("stub_grid", "0.05"))})
+            st = re.search(r"stub_router: closed (\d+) of (\d+)", read(os.path.join(w, "stub.log")) or "")
+            row["stub_closed"], row["stub_open"] = (int(st.group(1)), int(st.group(2))) if st else (None, None)
+            sh(["bash", os.path.join(tools, "quality_pass.sh"), w, name], project, flog)
+            sh(["kicad-cli", "pcb", "drc", "--severity-all", "--format", "json", "-o", os.path.join(w, "final-drc.json"), board], project, flog)
+            mfile = os.path.join(w, "metrics.json"); fr = read(os.path.join(w, "fr.log")) or ""
+            m_auto = re.search(r"Auto-routing was completed in (\d+) minute\(s\) ([\d.]+) seconds", fr); m_opt = re.search(r"optimization was completed in (\d+) minute\(s\) ([\d.]+) seconds", fr)
+            argv = ["python3", os.path.join(tools, "route_metrics.py"), board, os.path.join(w, "final-drc.json"), "--json", mfile, "--tag", key, "--wall", str(row["wall_s"])]
+            if m_auto: argv += ["--autoroute", "%.2f" % (int(m_auto.group(1)) + float(m_auto.group(2)) / 60)]
+            if m_opt: argv += ["--optimizer", "%.2f" % (int(m_opt.group(1)) + float(m_opt.group(2)) / 60)]
+            sh(argv, project, flog)
+            try:
+                m = json.load(open(mfile)); base_all = json.load(open(os.path.join(tools, "routeflow", "bench", "baseline.json"))); bench_compare = __import__("bench_compare")
+                v, note, q = bench_compare.compare(base_all[key], m) if key in base_all else ("UNMEASURABLE", "no baseline for " + key, None)
+                row.update(verdict=v, Q=q, metrics=m, note=note); jn(dict(run="exp", board=name, stage="experiment", status="MEASURED", note="%s: %s (raw %s, stub closed %s of %s) %s" % (cfg["name"], v, row.get("raw"), row.get("stub_closed"), row.get("stub_open"), note[:160])))
+            except Exception as e:
+                row.update(verdict="UNMEASURABLE", Q=None, metrics=None, note=str(e)[:200]); jn(dict(run="exp", board=name, stage="experiment", status="UNMEASURABLE", note="%s: %s" % (cfg["name"], str(e)[:160])))
+        def refinish(cfg, old):
+            """a row routed under an older finish: the routed board again from the pre-route board and the kept session (the import is deterministic, as route_one.sh does it), then the finish; the route is not repeated"""
+            jar_path, jar_sha, ckey = ident(cfg); k = "exp-" + cfg["name"]; w = os.path.join(project, "out", "par", k); ses = os.path.join(w, name + ".ses"); board = os.path.join(w, name + ".kicad_pcb"); flog = os.path.join(w, "finish.log")
+            if not os.path.exists(ses) or os.path.getsize(ses) == 0: return None
+            shutil.copy(pre, board); shutil.copy(os.path.join(project, name + ".kicad_pro"), os.path.join(w, name + ".kicad_pro"))
+            sh(["python3", "-c", "import sys, os, pcbnew; b = pcbnew.LoadBoard(sys.argv[1]); ok = pcbnew.ImportSpecctraSES(b, sys.argv[2]); sys.path.insert(0, os.path.dirname(os.path.abspath(sys.argv[3]))); import ses_via_drill; ses_via_drill.restore_board(b, sys.argv[2]); pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(sys.argv[1], b); print('SES import:', ok)", board, ses, os.path.join(TOOLS, 'ses_via_drill.py')], project, flog)
+            sh(["python3", os.path.join(tools, "net_tie.py"), board], project, flog)
+            row = dict(old); row.update(ts=now(), finish_version=FINISH_VERSION, refinished=True, host=os.uname().nodename)
+            finish(row, cfg, w, board, ses, flog); return row
+            return row
+        def write_row(row):
+            if row is None: return
+            with open(results, "a") as f:
+                fcntl.flock(f, fcntl.LOCK_EX); f.write(json.dumps(row) + "\n"); f.flush(); fcntl.flock(f, fcntl.LOCK_UN)
+        if parallel <= 1:
+            for cfg, old in refin: write_row(refinish(cfg, old))
+            for cfg in pending: write_row(one(cfg, 0))
+        else:
+            with concurrent.futures.ThreadPoolExecutor(max_workers=parallel) as ex:
+                futs = {ex.submit(one, cfg, i): cfg for i, cfg in enumerate(pending)}
+                futs.update({ex.submit(refinish, cfg, old): cfg for cfg, old in refin})
+                for fut in concurrent.futures.as_completed(futs):
+                    try: write_row(fut.result())
+                    except Exception as e: jn(dict(run="exp", board=name, stage="experiment", status="TOOL_CRASH", note="%s: %s" % (futs[fut]["name"], str(e)[:160])))
+    finally:
+        if use_services: services(exp.get("services_script"), "start", os.path.join(project, "out", "experiment.log"))
+        for lk in (LOCK, plock):
+            try: os.remove(lk)
+            except OSError: pass
+    jn(dict(run="exp", board=name, stage="end", status="COMPLETE", note="results in %s" % results)); return 0
+
+# ---------------------------------------------------------------- status, preflight, selftest
+def status(project, markdown):
+    fn = os.path.join(project, "out", "routeflow", "journal.jsonl"); t = read(fn)
+    if t is None: print("no journal at", fn); return 1
+    rows = [json.loads(ln) for ln in t.splitlines() if ln.strip()]
+    if markdown:
+        print("| time | run | round | stage | status | note |\n|---|---|---|---|---|---|")
+        for r in rows: print("| %s | %s | %s | %s | %s | %s |" % (r["ts"], r.get("run", "")[:8], r.get("round", ""), r.get("stage", ""), r.get("status", ""), str(r.get("note", "")).replace("|", "/")[:160]))
+    else:
+        for r in rows: print(r["ts"], r.get("run", "")[:8], r.get("round", ""), r.get("stage", ""), r.get("status", ""), str(r.get("note", ""))[:160])
+    print("%d journal lines" % len(rows)); return 0
+
+def preflight(repo, requires=()):
+    """`requires` is what an ARM depends on, declared by the run and proved in the tree that will run it.
+
+    D16 (18 September 2026) was staged at 18:39 UTC to measure a pre-lay and the fix that makes a pre-lay work
+    landed at 19:10; its tree therefore carried the old `stub_router`, its pre-lay closed 0 of 3 and the arm
+    measured nothing, which is 75 minutes of a rented box and, worse, a number that reads like a result. A tree
+    carries the tools it was staged with; an arm that exists to test a change can say so, and then it is the
+    launcher's business rather than the operator's memory. Each entry is a literal that must appear somewhere
+    in the tools this run will execute: a flag name, a function, a stage. It is a blocking check, because a run
+    that cannot measure its own variable is worse than a run that does not start."""
+    checks = []
+    for _req in (requires or ()):
+        _hit = False
+        for _root, _dirs, _files in os.walk(os.path.join(repo, "v2", "ecad", "tools")):
+            _dirs[:] = [d for d in _dirs if d not in ("out", "__pycache__", "tests")]
+            for _f in _files:
+                if not _f.endswith((".py", ".sh")): continue
+                try:
+                    if _req in read(os.path.join(_root, _f)): _hit = True; break
+                except Exception: pass
+            if _hit: break
+        checks.append(("requires %s in the tools that will run" % _req, _hit,
+                       "" if _hit else "this arm declares it and the staged tools do not carry it: it would measure nothing"))
+    for mod in ("pcbnew", "numpy", "PIL"):
+        try: __import__(mod); checks.append((mod + " importable", True, ""))
+        except Exception as e: checks.append((mod + " importable", False, str(e)[:60]))
+    for b in ("kicad-cli", "java", "xvfb-run"): checks.append((b + " on PATH", shutil.which(b) is not None, ""))
+    jar = os.path.expanduser("~/bin/freerouting-1.9.0.jar"); checks.append(("freerouting jar", os.path.exists(jar), jar))
+    try:
+        mem = {l.split(":")[0]: int(l.split()[1]) // 1024 for l in open("/proc/meminfo") if l.startswith(("MemTotal", "MemAvailable"))}
+        checks.append(("memory available >= 8 GB", mem["MemAvailable"] >= 8192, "%d of %d MB free" % (mem["MemAvailable"], mem["MemTotal"])))
+    except Exception as e: checks.append(("memory", False, str(e)[:60]))
+    # A ROUTE THAT CANNOT WRITE ITS RESULT IS FIVE HOURS SPENT FOR NOTHING (20 September 2026). The hub filled
+    # to 100 percent with 184 K free while four boards routed: A54's router finished at hard 0 and 20 unrouted,
+    # its finish ran every closer, and routeflow then ended TOOL_CRASH on `[Errno 28] No space left on device`
+    # at the moment it tried to KEEP its own board. Nothing warned, because the free space was spent by dead
+    # arm trees elsewhere on the disk and not by this run. Measured, a route's whole `out/` is 93 MB on board A
+    # and 22 on board E, so the bar is not about this run's appetite; it is headroom for the keep, the frozen
+    # tree a lander makes and whatever else shares the box. 2 GB is twenty times the largest measured run.
+    try:
+        _st = os.statvfs(repo if os.path.isdir(repo) else ".")
+        _free_mb = (_st.f_bavail * _st.f_frsize) // (1024 * 1024)
+        checks.append(("disk free >= 2 GB where the run writes", _free_mb >= 2048,
+                       "%d MB free" % _free_mb if _free_mb >= 2048 else
+                       "%d MB free: a finish that cannot keep its board ends TOOL_CRASH and the route is lost" % _free_mb))
+    except Exception as e: checks.append(("disk free", False, str(e)[:60]))
+    try: load = os.getloadavg()[0]; checks.append(("load average under 8", load < 8, "%.1f" % load))
+    except Exception: pass
+    svc = os.path.expanduser("~/meshsat-services.sh"); checks.append(("service group script", os.path.exists(svc), svc + (" (stop it before a route)" if os.path.exists(svc) else " absent: not the build host")))
+    try:
+        subprocess.run(["git", "fetch", "-q", "origin"], cwd=repo, capture_output=True, timeout=60)
+        anc = subprocess.run(["git", "merge-base", "--is-ancestor", "origin/main", "HEAD"], cwd=repo).returncode == 0
+        dirty = subprocess.run(["git", "status", "--porcelain", "v2/ecad/tools"], cwd=repo, capture_output=True, text=True).stdout.strip()
+        checks.append(("tools tree at or past origin/main", anc, "" if anc else "HEAD behind origin/main")); checks.append(("tools tree clean", not dirty, dirty[:80]))
+    except Exception as e: checks.append(("git state", False, str(e)[:60]))
+    held = False
+    if os.path.exists(LOCK):
+        try:
+            with open(LOCK, "a+") as _fh:
+                try: fcntl.flock(_fh.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB); fcntl.flock(_fh.fileno(), fcntl.LOCK_UN)
+                except OSError: held = True
+        except Exception: held = False
+    # 11 September 2026: this is one lock for the whole host by default, which is the VM's memory rule (three
+    # Freerouting attempts at 2 to 4 GB each filled its 31 GB on 5 September). On a 256-thread box four boards
+    # are meant to route side by side, and the first wave lost three of them here with a message that did not
+    # say how. ROUTEFLOW_LOCK is the answer and the message names it now.
+    checks.append(("no other route running", not held,
+                   ((read(LOCK) or "") + ("  [lock %s; set ROUTEFLOW_LOCK to a per-board path to route boards side by side on a host with the memory for it]" % LOCK if held else ""))))
+    # The pin on which files may write a gerber, a BOM, a CPL or an order set. Cheap, and preflight runs where an
+    # expensive run begins, which is the right place to notice that the actuation surface grew (11 September 2026).
+    try:
+        import execution_paths as _ep
+        _found = _ep.producers()
+        _unpinned = sorted(f for f in _found if f not in _ep.PIN and f not in _ep.READERS)
+        _gone = sorted(f for f in _ep.PIN if f not in _found)
+        checks.append(("fab-artefact producers match the pin", not _unpinned and not _gone,
+                       ("unpinned %s" % _unpinned if _unpinned else "") + (" stale pin %s" % _gone if _gone else "")))
+    except Exception as e: checks.append(("fab-artefact pin readable", False, str(e)[:60]))
+    ok = sum(1 for c in checks if c[1])
+    for name_, good, note in checks: print("%s  %s  %s" % ("PASS" if good else "FAIL", name_, note))
+    print("preflight: %d of %d checks pass" % (ok, len(checks)))
+    required = [c for c in checks if not c[1] and c[0].split()[0] in ("pcbnew", "numpy", "kicad-cli", "java", "xvfb-run", "freerouting", "no", "requires")]
+    return 0 if not required else 2
+
+def selftest():
+    """Every predicate is fed an empty or missing input and must answer with a blocking state, never a pass."""
+    t = tempfile.mkdtemp(prefix="routeflow-selftest-"); res = []
+    def chk(name_, cond): res.append((name_, cond)); print("%s  %s" % ("PASS" if cond else "FAIL", name_))
+    chk("missing pre log blocks", judge_pre(None, [], 1, [])[0] == "GATE_BLOCKED")
+    chk("empty pre log blocks", judge_pre("", ["PREROUTE-DONE OK"], 1, [])[0] == "GATE_BLOCKED")
+    chk("two ALL PASS with a FAIL between still blocks", judge_pre("RESULT: ALL PASS\nFAIL U outline\nRESULT: ALL PASS\nPREROUTE-DONE OK\n", ["PREROUTE-DONE OK"], 2, [])[0] == "GATE_BLOCKED")
+    chk("generator log without saved blocks", judge_pre("RESULT: ALL PASS\nPREROUTE-DONE OK\n", ["PREROUTE-DONE OK"], 1, [dict(file=os.path.join(t, "nolog"))])[0] == "GATE_BLOCKED")
+    open(os.path.join(t, "gen.log"), "w").write("footprint X not found\n"); chk("generator log with a silent SystemExit message blocks", judge_pre("RESULT: ALL PASS\nPREROUTE-DONE OK\n", ["PREROUTE-DONE OK"], 1, [dict(file=os.path.join(t, "gen.log"))])[0] == "GATE_BLOCKED")
+    open(os.path.join(t, "gen.log"), "w").write("saved board.kicad_pcb outline U\n"); chk("a healthy pre log passes", judge_pre("RESULT: ALL PASS\nRESULT: ALL PASS\nPREROUTE-DONE OK\n", ["PREROUTE-DONE OK"], 2, [dict(file=os.path.join(t, "gen.log"))])[0] == "GATED")
+    os.makedirs(os.path.join(t, "par", "1")); chk("attempt without a score file scores out", parse_scores(os.path.join(t, "par"))["1"][0] == 9999)
+    open(os.path.join(t, "par", "1", "score.txt"), "w").write("9999 9999 999999\n"); chk("9999 score is not a winner", min(parse_scores(os.path.join(t, "par")).values())[0] >= 9999)
+    open(os.path.join(t, "empty.json"), "w").write("{}")
+    try: load_drc(os.path.join(t, "empty.json")); chk("empty DRC JSON raises", False)
+    except RuntimeError: chk("empty DRC JSON raises", True)
+    try: load_drc(os.path.join(t, "absent.json")); chk("missing DRC JSON raises", False)
+    except RuntimeError: chk("missing DRC JSON raises", True)
+    knot = {"violations": [{"type": "clearance", "items": [{"description": "Track [+3V3] on In3.Cu, length 0.02 mm"}, {"description": "Track [/WIFI_DIS] on In3.Cu, length 0.03 mm"}]}] * 5, "unconnected_items": [1] * 5}
+    chk("knot signature detected", signature(knot)[0] == "KNOT")
+    edge = {"violations": [{"type": "copper_edge_clearance", "items": [{"description": "Segment on Edge.Cuts"}, {"description": "Track [/X] on F.Cu, length 4 mm"}]}] * 6 + [{"type": "clearance", "items": [{"description": "Track [/A] on B.Cu, length 4 mm"}, {"description": "Pad 1 [/B] of JP2 on B.Cu"}]}], "unconnected_items": []}
+    chk("edge signature detected", signature(edge)[0] == "EDGE")
+    chk("clean signature", signature({"violations": [{"type": "silk_overlap", "items": []}], "unconnected_items": []})[0] == "CLEAN")
+    chk("opens signature", signature({"violations": [], "unconnected_items": [1, 2]})[0] == "OPEN")
+    prof = {"route": {"attempts": [50], "threads": 2, "timeout": 4500}, "plane_layers": ["In1.Cu", "In4.Cu"]}
+    # 14 September 2026: this predicate asked for the remedy of 11 September (power layers, timeout x 2) after the
+    # remedy itself was removed on the 12th (red team round three H2: a per-pass jar with no session is
+    # infrastructure), so the supervisor's own selftest had read "53 of 54" for two days and nobody read the line.
+    r, why = remedy("NO_SESSION", prof, set()); chk("no session -> no remedy, named as infrastructure", r is None and "infrastructure" in why)
+    r, why = remedy("KNOT", prof, set()); chk("knot -> one thread", r and r["threads"] == 1)
+    r, why = remedy("KNOT", {"route": {"attempts": [50], "threads": 1}}, set()); chk("knot with one thread stops", r is None)
+    r, why = remedy("EDGE", prof, set()); chk("edge stops for the generator", r is None)
+    r, why = remedy("OPEN", prof, set()); chk("opens -> via costs 100 first", r and r.get("via_costs") == 100)
+    r, why = remedy("OPEN", {"route": {"attempts": [50], "via_costs": 100}}, {"via_costs"}); chk("opens after via costs -> more passes once", r and r["attempts"] == [65])
+    r, why = remedy("OPEN", {"route": {"attempts": [65], "via_costs": 100}}, {"via_costs", "passes"}); chk("opens three times stops", r is None)
+    open(os.path.join(t, "e17.log"), "w").write("routed-board gate: hard 0 unrouted 0 (15 types checked)\nE17 PORTS a conductor leaves the case and meets a chip with nothing between (rule TRN-001)\nFINISH-E17-DONE\n")
+    chk("a finish whose own gate read 0/0 is clean whatever the router counted", finish_gate_clean(os.path.join(t, "e17.log")))
+    chk("and a TRN-001 refusal on it is not a route to remedy", finish_blocker(os.path.join(t, "e17.log")) == "NOT_A_ROUTE:PORTS")
+    open(os.path.join(t, "e16.log"), "w").write("routed-board gate: hard 0 unrouted 3 (15 types checked)\n")
+    chk("a finish whose gate read opens is not clean", not finish_gate_clean(os.path.join(t, "e16.log")))
+    chk("missing clean flag refuses", judge_finish(os.path.join(t, "nofinish.log"), os.path.join(t, "noflag"), None, None)[0] == "FINISH_REFUSED")
+    open(os.path.join(t, "flag"), "w").write("open\n"); chk("open flag refuses", judge_finish(os.path.join(t, "nofinish.log"), os.path.join(t, "flag"), None, None)[0] == "FINISH_REFUSED")
+    open(os.path.join(t, "flag"), "w").write("clean\n"); open(os.path.join(t, "fin.log"), "w").write("routed-board gate: hard 0 unrouted 0\n"); os.makedirs(os.path.join(t, "deliv"))
+    chk("clean flag without a gerber zip refuses", judge_finish(os.path.join(t, "fin.log"), os.path.join(t, "flag"), None, os.path.join(t, "deliv"))[0] == "FINISH_REFUSED")
+    open(os.path.join(t, "deliv", "x-gerbers.zip"), "w").write("z"); chk("clean flag with a deliverable but no contracts line refuses", judge_finish(os.path.join(t, "fin.log"), os.path.join(t, "flag"), None, os.path.join(t, "deliv"))[0] == "FINISH_REFUSED")
+    # 10 September 2026: this row used to assert that a deliverable plus the contracts line PASSES, which is the hole report 1
+    # names at this line: it codified "absence of evidence is evidence". The read-back line is required now.
+    open(os.path.join(t, "fin.log"), "w").write("routed-board gate: hard 0 unrouted 0\ncontracts: ALL PASS\n"); chk("clean flag, deliverable and contracts but no read-back still refuses", judge_finish(os.path.join(t, "fin.log"), os.path.join(t, "flag"), None, os.path.join(t, "deliv"))[0] == "FINISH_REFUSED")
+    open(os.path.join(t, "fin.log"), "a").write("verify_deliverable: ALL PASS\n"); chk("with the read-back it passes", judge_finish(os.path.join(t, "fin.log"), os.path.join(t, "flag"), None, os.path.join(t, "deliv"))[0] == "CLEAN")
+    open(os.path.join(t, "fin.log"), "w").write("routed-board gate: hard 0 unrouted 0\ncontracts: FAIL (out/contracts.log)\n"); chk("a contracts FAIL line refuses", judge_finish(os.path.join(t, "fin.log"), os.path.join(t, "flag"), None, os.path.join(t, "deliv"))[0] == "FINISH_REFUSED")
+    open(os.path.join(t, "fin.log"), "w").write("routed-board gate: hard 0 unrouted 0\ncontracts: ALL PASS\nfinish_board: deliverable REFUSED, folder removed\n"); chk("a refused deliverable read-back refuses", judge_finish(os.path.join(t, "fin.log"), os.path.join(t, "flag"), None, os.path.join(t, "deliv"))[0] == "FINISH_REFUSED")
+    open(os.path.join(t, "fin.log"), "w").write("routed-board gate: hard 0 unrouted 0\ncontracts: ALL PASS\n")
+    try:   # 8 Sep 2026 (MESHSAT-862): the re-armed gates, each fed a broken input
+        import hardset, erc_gate, verify_deliverable
+        bad = {"violations": [{"type": "solder_mask_bridge", "items": [{"description": "Pad 1 [X] of U1 on F.Cu"}, {"description": "Track [Y] on F.Cu"}]}, {"type": "courtyards_overlap", "items": [{"description": "Footprint U9"}, {"description": "Footprint U9"}]}, {"type": "zones_intersect", "items": []}, {"type": "connection_width", "items": []}], "unconnected_items": []}   # drift-ok: a fixture fed to hardset.counts, not a policy
+        c = hardset.counts(bad); chk("hardset: a pad-to-track mask bridge and a zone intersection are hard, the own-courtyard overlap exempt, connection_width reported", c["hard"] == 2 and c["exempt"] == {"courtyards_overlap": 1} and c["report"] == {"connection_width": 1})
+        chk("hardset: fifteen types, pre and post the same", len(hardset.HARD_POST) == 15 and hardset.HARD_PRE == hardset.HARD_POST)
+        try: hardset.load(os.path.join(t, "absent.json")); chk("hardset: a missing DRC JSON raises", False)
+        except RuntimeError: chk("hardset: a missing DRC JSON raises", True)
+        erc = {"sheets": [{"violations": [{"type": "pin_not_connected", "severity": "error", "description": "Pin 3 of U1", "items": []}, {"type": "power_pin_not_driven", "severity": "error", "description": "Input Power pin on +3V3_AB", "items": []}, {"type": "label_dangling", "severity": "warning", "description": "x", "items": []}]}]}
+        blk, allowed, by = erc_gate.gate(erc, []); chk("erc_gate: two errors block with no allow-list, the warning does not", len(blk) == 2 and allowed == 0)
+        blk, allowed, by = erc_gate.gate(erc, [("power_pin_not_driven", "+3V3_AB", "the gated rail comes over the harness")]); chk("erc_gate: an allow-listed error with a reason passes, the other still blocks", len(blk) == 1 and allowed == 1)
+        chk("erc_gate: an allow line without a reason is ignored", erc_gate.allow_rules(os.path.join(t, "noallow.txt")) == [])
+        open(os.path.join(t, "erc-allow.txt"), "w").write("pin_not_connected\npower_pin_not_driven|+3V3   # gated rail\n"); chk("erc_gate: only the reasoned line is a rule", erc_gate.allow_rules(os.path.join(t, "erc-allow.txt")) == [("power_pin_not_driven", "+3V3", "gated rail")])
+        d = os.path.join(t, "deliv2"); os.makedirs(d); fails, lines = verify_deliverable.check_dir(d, "x", 4); chk("verify_deliverable: an empty folder fails every item", len(fails) >= len(verify_deliverable.ITEMS))
+    except ImportError as e: chk("hardset, erc_gate and verify_deliverable importable (%s)" % e, False)
+    open(os.path.join(t, "stub.log"), "w").write("Traceback (most recent call last):\n"); chk("stub router traceback is a tool crash", judge_finish(os.path.join(t, "fin.log"), os.path.join(t, "flag"), os.path.join(t, "stub.log"), os.path.join(t, "deliv"))[0] == "TOOL_CRASH")
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    try:
+        import bench_compare
+        base = {"vias_router": 100, "length_mm": 1000.0, "tracks": 500, "hard": 0, "unrouted": 0}
+        same = dict(base, hard_types_checked=len(hardset.HARD_POST), connections=300, pairs_over_1mm=0)
+        v, note, q = bench_compare.compare(base, same); chk("board compared with itself is MET with Q 1.0", v == "MET" and abs(q - 1.0) < 1e-9)
+        v, note, q = bench_compare.compare(base, dict(same, unrouted=1)); chk("a deleted track (one open) is INELIGIBLE, not ranked", v == "INELIGIBLE" and q is None)
+        v, note, q = bench_compare.compare(base, dict(same, vias_router=110)); chk("router vias +10 percent is a REGRESSION", v == "REGRESSION")
+        v, note, q = bench_compare.compare(base, dict(same, pairs_over_1mm=2)); chk("a pair over 1 mm is a REGRESSION", v == "REGRESSION")
+        v, note, q = bench_compare.compare(base, dict(same, vias_router=80, length_mm=950.0, tracks=450)); chk("fewer vias, shorter, fewer segments is MET with Q under 1", v == "MET" and q < 1.0)
+        v, note, q = bench_compare.compare(base, {"hard": None, "unrouted": None}); chk("metrics without DRC numbers are UNMEASURABLE", v == "UNMEASURABLE")
+    except ImportError as e: chk("bench_compare importable", False)
+    # 10 September 2026, the three predicates the red teams' P0 findings owe (C1, C3, the deliverable hole)
+    tools_dir = os.path.dirname(os.path.abspath(__file__))
+    strays = []
+    # Every text file, not only Python: the six-type tuple had survived in 27 shell scripts while this predicate passed
+    # (10 September 2026, both round-two red teams C1).
+    for fn in sorted(glob.glob(os.path.join(tools_dir, "*.py")) + glob.glob(os.path.join(tools_dir, "*.sh"))):
+        if os.path.basename(fn) in ("hardset.py",): continue
+        for i, line in enumerate(open(fn, errors="replace"), 1):
+            _q = sum(1 for _t in hardset.DRIFT_MARKERS if ('"%s"' % _t) in line or ("'%s'" % _t) in line)   # the names come from
+            # the policy itself (or this predicate would be the second definition); quoted, so prose does not trip it
+            if _q >= 2 and "hardset" not in line and not line.lstrip().startswith("#") and not re.search(r"drift-ok:\s*\S", line):
+                strays.append("%s:%d" % (os.path.basename(fn), i))
+    chk("one hard set: no second definition of the DRC policy in the tools (%s)" % (", ".join(strays[:4]) or "none"), not strays)
+    d2 = os.path.join(t, "deliv3"); os.makedirs(d2); open(os.path.join(d2, "x-gerbers.zip"), "w").write("z")
+    fl = os.path.join(t, "clean.txt"); open(fl, "w").write("clean\n")
+    fg = os.path.join(t, "finish-nogate.log"); open(fg, "w").write("contracts: ALL PASS\nrouted-board gate: hard 0 unrouted 0\n")
+    chk("a finish that never read the deliverable back is refused", judge_finish(fg, fl, None, d2)[0] == "FINISH_REFUSED")
+    open(fg, "a").write("verify_deliverable: ALL PASS\n")
+    chk("a finish that did read it back passes", judge_finish(fg, fl, None, d2)[0] == "CLEAN")
+    chk("a supervisor failure is not a routing remedy", remedy("INFRA_FAIL", {"route": {}}, set())[0] is None)
+    try:
+        import bench_compare as _bc2
+        base_all = json.load(open(os.path.join(tools_dir, "routeflow", "bench", "baseline.json")))
+        chk("the baseline is keyed by board, not phase (%s)" % ", ".join(sorted(base_all)), all(len(k) <= 2 for k in base_all) and _bc2.board_key("pcb-b-compute-b19/pcb-b-compute.kicad_pcb") == "B")
+    except Exception as e: chk("baseline readable and keyed by board (%s)" % e, False)
+    # Stage 0c (11 September 2026): a journal row must name the bytes it is about, and must say nothing when
+    # there are no bytes. A row that carried a board name and no hash was the shape that made two runs of one
+    # profile indistinguishable in the record.
+    jp = os.path.join(t, "proj"); os.makedirs(os.path.join(jp, "out"))
+    journal(jp, dict(board="brd", stage="pre", status="GENERATING"))
+    row = json.loads(open(os.path.join(jp, "out", "routeflow", "journal.jsonl")).read().splitlines()[-1])
+    chk("a row about a board that does not exist yet claims no hash", row.get("boards") == {})
+    open(os.path.join(jp, "brd.kicad_pcb"), "wb").write(b"(kicad_pcb)")
+    journal(jp, dict(board="brd", stage="route", status="ROUTING"))
+    row2 = json.loads(open(os.path.join(jp, "out", "routeflow", "journal.jsonl")).read().splitlines()[-1])
+    chk("a row names the board file it acted on", list(row2.get("boards", {})) == ["brd.kicad_pcb"] and len(row2["boards"]["brd.kicad_pcb"]) == 16)
+    open(os.path.join(jp, "brd.kicad_pcb"), "wb").write(b"(kicad_pcb changed)")
+    journal(jp, dict(board="brd", stage="finish", status="CLEAN"))
+    row3 = json.loads(open(os.path.join(jp, "out", "routeflow", "journal.jsonl")).read().splitlines()[-1])
+    chk("a changed board changes the hash on the next row", row3["boards"]["brd.kicad_pcb"] != row2["boards"]["brd.kicad_pcb"])
+    # The journal is a chained ledger: a row edited after the fact must fail the walk (11 September 2026).
+    jl = os.path.join(jp, "out", "routeflow", "journal.jsonl")
+    ok_, n_, probs_ = ledger.verify(jl)
+    chk("the journal chain verifies (%d rows)" % n_, ok_ and n_ == 3)
+    _rows = [json.loads(l) for l in open(jl) if l.strip()]
+    _rows[1]["status"] = "CLEAN"
+    open(jl, "w").write("\n".join(json.dumps(r, sort_keys=True) for r in _rows) + "\n")
+    ok2_, _n, probs2_ = ledger.verify(jl)
+    chk("a journal row edited after the fact is caught", (not ok2_) and any("content changed" in x for x in probs2_))
+    shutil.rmtree(t, ignore_errors=True); ok = sum(1 for _, c in res if c)
+    print("selftest: %d of %d predicates block on empty input as required" % (ok, len(res))); return 0 if ok == len(res) else 1
+
+def _install_signal_handlers():
+    """Installed only where this process IS the supervisor: a handler set at import time would surprise a
+    caller that imports routeflow for its predicates, which the tests and `arms.py` both do."""
+    import signal
+    for _s in (signal.SIGTERM, signal.SIGINT):
+        try: signal.signal(_s, _stop_child_and_exit)
+        except (ValueError, OSError): pass
+
+
+if __name__ == "__main__":
+    a = sys.argv[1:]
+    if not a: print(__doc__); sys.exit(2)
+    _install_signal_handlers()
+    if a[0] == "preflight": sys.exit(preflight(verdict.opt(a, "--repo", os.getcwd())))
+    if a[0] == "selftest": sys.exit(selftest())
+    if a[0] == "status": sys.exit(status(a[1], "--markdown" in a))
+    _ph = verdict.opt(a, "--phase", None)
+    if a[0] == "validate": sys.exit(validate(a[1], verdict.opt(a, "--repo", None), _ph))
+    _rq = [x for x in (verdict.opt(a, "--requires", "")).split(",") if x]
+    if a[0] == "run": sys.exit(run(a[1], int(a[a.index("--rounds") + 1]) if "--rounds" in a else 2, "--no-services" not in a, "--dry-run" in a, _ph, _rq))
+    if a[0] == "experiment": sys.exit(experiment(a[1], float(a[a.index("--budget-hours") + 1]) if "--budget-hours" in a else 6.0, "--no-services" not in a, int(a[a.index("--parallel") + 1]) if "--parallel" in a else 1))
+    print(__doc__); sys.exit(2)

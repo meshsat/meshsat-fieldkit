@@ -1,0 +1,40 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "claims": 2,
+  "unqualified": 0
+ },
+ "denominator": 2,
+ "evidence": [],
+ "inputs": {
+  "documents": {
+   "path": "v2/docs/feasibility/EMCON.md",
+   "sha256_16": "268c5e3d0cd5cff7"
+  }
+ },
+ "missing_input": null,
+ "note": "a rating claimed without its test is a promise to whoever carries the kit",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "ENV-002": "2e75bce9fed3352a"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "ENV-002"
+ ],
+ "tool": "claims_check",
+ "tools": {
+  "git_head": "1f614233998c",
+  "tools_tree_sha": "3f5a673e727ddd39"
+ },
+ "ts": "2026-09-26T16:28:46Z",
+ "verdict": "PASS",
+ "version": "1f614233998c",
+ "writer": {
+  "file": "claims_check.py",
+  "sha16": "c0fd3da56b998154"
+ }
+}

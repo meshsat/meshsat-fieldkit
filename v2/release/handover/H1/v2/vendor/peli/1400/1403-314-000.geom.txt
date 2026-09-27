@@ -1,0 +1,32 @@
+Geometry of 1403-314-000, probed from peli/1400/1403-314-000.DXF
+
+Written by tools/kb/geom_probe.py, not hand edited, so that a CAD model's measurable
+facts can be searched and reviewed as text instead of living only in whoever opened the
+model that day. Units: drawing units (a DXF declares no unit here). EVERY NUMBER IS A MEASUREMENT OF THIS FILE, NOT A
+SPECIFICATION: a vendor model may carry a connector, an antenna or a mounting boss the
+catalogue dimension leaves out, and it may be exported in any orientation. Where the
+manufacturer publishes a drawing, the drawing wins and this is how to find the number
+to check against it.
+
+source file: peli/1400/1403-314-000.DXF
+sha256 (first 16): 751b2f18c27df3fd
+size: 546094 bytes
+points read: 3399
+
+1403-314-000 EXTENTS OF THE DRAWING SHEET. This is a 2D drawing, not a solid: the box below
+is the sheet, several views sit on it at different places, and only the circle
+centres further down are positions within a view.
+Axes are THE FILE'S OWN: a vendor model is often exported Y up, and this reader does
+not turn it, so read the three extents as sizes and not as width, depth and height.
+  This file also carries construction geometry far outside the body. The raw box is
+  11 x 37 x 0, which is not the part. With the 1 outlying points removed
+  (0.0 percent of the file), the body is:
+  axis 1 0.000 to 11.000   extent 11.000
+  axis 2 0.000 to 8.500   extent 8.500
+  axis 3 0.000 to 0.000   extent 0.000
+
+1403-314-000 HOLES: no circle of 0.5 mm or more is in this file
+
+(4 smaller circle sizes were read and are not listed: below 0.5 mm they are edge
+fillets and pad corners, not holes.)
+

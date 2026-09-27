@@ -1,0 +1,624 @@
+"""The decision rules of the computed board status (MESHSAT-862, 16 September 2026).
+
+Executed against synthetic verdicts, never against source text: each case builds a world (a registry, a
+coverage map, a manifest and a set of verdict records) and asserts the result the computation must reach.
+The property under test throughout is ABSENCE IS NEVER A PASS: a missing verdict, a verdict older than the
+evidence epoch, a verdict taken under another rule set, a rule with no implementation and a rule whose
+authority is unverified all come out INCONCLUSIVE, and an inconclusive blocker keeps the set out of
+READY_FOR_PROTOTYPE.
+"""
+import os, sys, json, copy, tempfile
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from harness import Skip
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import rules_status as S
+import rules_lib as R
+
+EPOCH = "2026-09-16T00:35:00+02:00"
+FP = "fingerprint0000"
+
+
+def _manifest(frozen=False):
+    return {"manifest_version": "test", "boards": {"x": {"project": "pcb-x", "required": True}},
+            "promotion": {"frozen": frozen}, "evidence": {"epoch": EPOCH}}
+
+
+def _rule(rid="R-1", effect="BLOCKER", phase="ROUTED_BOARD"):
+    return {"id": rid, "domain": "ROUTING", "short_name": "n", "requirement": "r", "classification": "PROJECT_DECISION",
+            "applicability": "UNIVERSAL_FOR_THIS_PROJECT", "risk_class": ["FABRICATION"], "release_effect": effect,
+            "source_status": "NOT_REQUIRED_FOR_PROJECT_DECISION", "sources": [], "acceptance_criteria": "a",
+            "rationale": "b", "failure_mode": "c", "verification_method": ["SCRIPT"], "verification_phase": phase,
+            "automation_feasibility": "AUTOMATABLE", "boards_affected": ["ALL"], "interfaces_affected": ["NONE"],
+            "implementation_location": "x.py", "evidence_scope": ["board_sha256"], "owner": "SESSION",
+            "waiver_policy": {"allowed": False}, "maturity": "ENFORCED"}
+
+
+def _verdict(result="PASS", ts="2026-09-16T01:00:00Z", fp=FP):
+    rec = {"tool": "gate_x", "ts": ts, "verdict": result, "denominator": 10, "counts": {"fail": 0}}
+    if fp: rec["policy"] = {"rule_set_fingerprint": fp}
+    return {"gate_x": rec}
+
+
+def _cov(maturity="ENFORCED", verdict_name="gate_x", waiver=None):
+    c = {"R-1": {"implementation": "x.py", "verification": {"tool": "x.py", "verdict": verdict_name},
+                 "maturity": maturity}}
+    if waiver: c["R-1"]["waiver"] = waiver
+    return c
+
+
+def _result(cov, vs, m=None, rule=None, phase=None):
+    return S.result_for(rule or _rule(), "x", cov, vs, m or _manifest(), FP, phase)["result"]
+
+
+def t_a_current_pass_is_a_pass():
+    assert _result(_cov(), _verdict("PASS")) == S.PASS
+
+
+def t_a_fail_is_a_fail():
+    assert _result(_cov(), _verdict("FAIL")) == S.FAIL
+
+
+def t_a_missing_verdict_is_inconclusive_and_never_a_pass():
+    assert _result(_cov(), {}) == S.INCONCLUSIVE
+
+
+def t_a_verdict_older_than_the_evidence_epoch_is_inconclusive():
+    """The whole point of the epoch: a board that passed under an unversioned rule set has history, not evidence."""
+    assert _result(_cov(), _verdict("PASS", ts="2026-09-15T20:00:00Z")) == S.INCONCLUSIVE
+
+
+def t_a_verdict_under_another_rule_set_is_inconclusive():
+    assert _result(_cov(), _verdict("PASS", fp="somethingelse")) == S.INCONCLUSIVE
+
+
+def t_a_verdict_that_does_not_name_its_rule_set_is_inconclusive():
+    assert _result(_cov(), _verdict("PASS", fp=None)) == S.INCONCLUSIVE
+
+
+def t_a_rule_with_no_implementation_is_inconclusive():
+    for maturity in ("OPEN", "DOCUMENTED_ONLY", "GENERATED_ONLY", "SOURCE_UNVERIFIED", "OWNER_DECISION_REQUIRED"):
+        assert _result(_cov(maturity), _verdict("PASS")) == S.INCONCLUSIVE, maturity
+
+
+def t_a_waiver_is_waived_and_is_not_a_pass():
+    w = {"active": True, "authority": "OWNER", "expiry": "2026-10-01", "reason": "measured", "evidence": "e"}
+    assert _result(_cov(waiver=w), {}) == S.WAIVED
+    rows = [dict(result=S.WAIVED, release_effect="BLOCKER", verification_phase="ROUTED_BOARD")]
+    c = S.counts(rows)
+    assert c["PASS"] == 0 and c["WAIVED"] == 1, c
+
+
+def t_the_four_percentages_share_one_denominator_and_sum_to_a_hundred():
+    rows = ([dict(result=S.PASS, release_effect="BLOCKER", verification_phase="ROUTED_BOARD")] * 3
+            + [dict(result=S.FAIL, release_effect="BLOCKER", verification_phase="ROUTED_BOARD")]
+            + [dict(result=S.INCONCLUSIVE, release_effect="MUST_JUSTIFY", verification_phase="ROUTED_BOARD")] * 4
+            + [dict(result=S.WAIVED, release_effect="BLOCKER", verification_phase="ROUTED_BOARD")] * 2
+            + [dict(result=S.NOT_APPLICABLE, release_effect="BLOCKER", verification_phase="PROTOTYPE")])
+    c = S.counts(rows)
+    assert c["denominator"] == 10, c
+    total = c["pass_percent"] + c["fail_percent"] + c["inconclusive_percent"] + c["waived_percent"]
+    assert abs(total - 100.0) < 0.5, total
+
+
+def t_the_gate_state_is_the_worst_blocker_and_a_waiver_shows():
+    m = _manifest()
+    ok = [dict(result=S.PASS, release_effect="BLOCKER", verification_phase="ROUTED_BOARD")]
+    assert S.gate_state(ok, m) == "READY_FOR_PROTOTYPE"
+    assert S.gate_state(ok + [dict(result=S.INCONCLUSIVE, release_effect="BLOCKER", verification_phase="ROUTED_BOARD")], m) == "INCONCLUSIVE"
+    assert S.gate_state(ok + [dict(result=S.FAIL, release_effect="BLOCKER", verification_phase="ROUTED_BOARD")], m) == "NOT_READY"
+    assert S.gate_state(ok + [dict(result=S.WAIVED, release_effect="BLOCKER", verification_phase="ROUTED_BOARD")], m).endswith("WITH_WAIVERS")
+
+
+def t_a_failure_beats_an_inconclusive():
+    m = _manifest()
+    rows = [dict(result=S.INCONCLUSIVE, release_effect="BLOCKER", verification_phase="ROUTED_BOARD"),
+            dict(result=S.FAIL, release_effect="BLOCKER", verification_phase="ROUTED_BOARD")]
+    assert S.gate_state(rows, m) == "NOT_READY"
+
+
+def t_a_frozen_promotion_cannot_report_ready():
+    """The freeze is the owner's instruction of 16 September: pre-audit evidence is not promoted. It must not be
+    possible for a green board to read READY while the freeze is on."""
+    ok = [dict(result=S.PASS, release_effect="BLOCKER", verification_phase="ROUTED_BOARD")]
+    assert S.gate_state(ok, _manifest(frozen=True)) == "INCONCLUSIVE"
+
+
+def t_a_later_phase_rule_is_not_applicable_to_an_earlier_phase_report():
+    r = _rule(phase="PROTOTYPE")
+    assert _result(_cov(), _verdict("PASS"), rule=r, phase="ROUTED_BOARD") == S.NOT_APPLICABLE
+
+
+def t_the_committed_registry_and_coverage_compute_for_every_board():
+    """The real registry, the real coverage map, the real manifest: every board computes, and nothing throws."""
+    m = S.manifest(); reg = R.load(); cov = S.coverage()
+    for letter in m["boards"]:
+        st = S.board_status(letter, reg, R.facts(), cov, m, R.fingerprint(reg))
+        assert st["rows"], letter
+        for row in st["rows"]:
+            assert row["result"] in R.RESULTS, row
+
+
+def t_a_manual_verification_whose_record_is_a_generated_page_is_judged_by_rebuilding_it():
+    """SGN-002 and every rule like it. The evidence for a manually verified rule is a RECORD, and the record
+    here is a page generated from the registry. It counts as evidence only while it still matches the registry:
+    a hand edit, a rule added after the page was last written, or a deleted row all read INCONCLUSIVE, because
+    a list of prototype unknowns that has quietly shrunk looks exactly like a list that is complete.
+    """
+    doc = os.path.join(S.ECAD, "..", "docs", "PCB-PROTOTYPE-UNKNOWNS.md")   # the tool's own resolution, not a second copy of it
+    S._DOC_CACHE.clear()
+    ok, why = S._document_current("docs/PCB-PROTOTYPE-UNKNOWNS.md")
+    assert ok, "the generated record does not match the registry: %s" % why
+
+    original = open(doc).read()
+    try:
+        open(doc, "w").write(original.replace("| rule | what is unknown", "| rule | what is KNOWN", 1))
+        S._DOC_CACHE.clear()
+        ok2, why2 = S._document_current("docs/PCB-PROTOTYPE-UNKNOWNS.md")
+        assert not ok2, "a hand-edited record still counted as evidence"
+        cov = _cov("VERIFIED_MANUALLY"); cov["R-1"]["verification"] = {"tool": "rules_render.py", "document": "docs/PCB-PROTOTYPE-UNKNOWNS.md"}
+        assert _result(cov, {}) == S.INCONCLUSIVE, "a stale record passed the rule it is the evidence for"
+    finally:
+        open(doc, "w").write(original)
+        S._DOC_CACHE.clear()
+
+
+def t_a_manual_verification_with_no_record_is_never_a_pass():
+    cov = _cov("VERIFIED_MANUALLY"); cov["R-1"]["verification"] = {"tool": "a person reads it"}
+    assert _result(cov, _verdict("PASS")) == S.INCONCLUSIVE, \
+        "a rule claiming manual verification with no record to point at read as verified"
+
+
+def t_the_completeness_verdict_asks_a_different_question_from_readiness():
+    """SGN-001. rules_status says whether the boards pass; rules_complete says whether every rule that applies
+    to a board reached one of the five results AT ALL. The second is the property the registry exists for and
+    the one that would otherwise be invisible, because a rule missing from the table looks exactly like a rule
+    that does not apply. Executed: run the computation into a temporary directory and read both verdicts back.
+    """
+    import subprocess, glob
+    d = tempfile.mkdtemp(prefix="rules-complete-")
+    ecad = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    p = subprocess.run([sys.executable, os.path.join(ecad, "tools", "rules_status.py"), "--out-dir", d],
+                       cwd=ecad, capture_output=True, text=True, timeout=600)
+    assert p.returncode in (0, 1, 3), p.stdout[-400:] + p.stderr[-400:]
+    # FROM THE DIRECTORY THE RUN WAS TOLD TO WRITE TO (18 September 2026). It used to read the TREE's copy,
+    # because `--out-dir` redirected the pages and the audit and not this verdict, so the suite wrote into the
+    # tree it was judging; on a checkout without the untracked evidence that replaced the readiness reading
+    # with a worse one and `tests/run.py`'s evidence guard caught it on the box.
+    rec = json.load(open(os.path.join(d, "rules_complete.verdict.json")))
+    assert rec["verdict"] == "PASS", "a rule that applies to a board reached no result: %s" % rec.get("evidence")
+    assert rec["denominator"] > 0 and rec["counts"]["unresolved"] == 0, rec
+    # and it is NOT the readiness verdict: the set is not ready today, and completeness still passes
+    rs = json.load(open(os.path.join(d, "rules_status.verdict.json")))
+    assert rs["verdict"] != rec["verdict"], \
+        "the completeness verdict is tracking the readiness verdict, so it is asking the same question"
+
+
+def t_every_board_in_the_manifest_can_be_named_by_the_sweep():
+    """A board the sweep cannot name is a board the readiness cannot re-judge (MESHSAT-862, 16 September 2026).
+
+    Board E5 has no `boards/e5.json`, because it is a bare contact interposer generated from board A's own board
+    file: no schematic, no netlist, no routed copper, so it never needed a chain. The sweep resolved a board's
+    name through that file alone and stopped at "no board .kicad_pcb", so all twenty of E5's applicable
+    rule-board pairs stayed INCONCLUSIVE for a reason that was about the script. The name now falls back to the
+    registry's own applicability data, which has carried `project: pcb-e5-block` since Phase A."""
+    import os, sys, json
+    here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, here)
+    import rules_lib
+    facts = rules_lib.board_facts()
+    m = json.load(open(os.path.join(here, "readiness_manifest.json"), encoding="utf-8"))
+    for letter in m["boards"]:
+        tbl = os.path.join(here, "boards", "%s.json" % letter)
+        if os.path.exists(tbl):
+            assert json.load(open(tbl, encoding="utf-8")).get("name"), "%s's board table carries no name" % letter
+            continue
+        assert (facts.get(letter) or {}).get("project"), \
+            "board %s has neither a board table nor a project in the facts, so no sweep can name it" % letter
+    src = open(os.path.join(here, "gate_sweep.sh"), encoding="utf-8").read()
+    assert "board_facts()" in src, "the sweep no longer falls back to the registry's facts for a board with no table"
+
+
+def t_a_verdict_taken_on_another_board_is_not_this_board_s_evidence():
+    """A verdict says which board it was taken on and nothing compared it with the board being judged.
+
+    Found by measurement on 16 September 2026: the SET-LEVEL out/, which every board's status reads, held a
+    `fab_limits` verdict carrying board A's sha and a `port_protect` verdict naming board E. Only their
+    timestamps kept each board's own sweep winning. Identity does not depend on who wrote a file where.
+
+    The check costs nothing on the tree it was added to: every one of the 145 committed verdicts that names a
+    board names the board it sits beside. It exists so that the day one does not, it says so.
+    """
+    ident = {"x", "abc123def456aaaa"}
+    vs = _verdict("PASS"); vs["gate_x"]["inputs"] = {"board": {"path": "b.kicad_pcb", "sha256_16": "abc123def456aaaa"}}
+    assert S.result_for(_rule(), "x", _cov(), vs, _manifest(), FP, None, ident)["result"] == S.PASS
+
+    other = _verdict("PASS"); other["gate_x"]["inputs"] = {"board": {"path": "b.kicad_pcb", "sha256_16": "0000deadbeef0000"}}
+    r = S.result_for(_rule(), "x", _cov(), other, _manifest(), FP, None, ident)
+    assert r["result"] == S.INCONCLUSIVE, r
+    assert "not a board this project directory holds" in r["why"], r["why"]
+
+    byletter = _verdict("PASS"); byletter["gate_x"]["inputs"] = {"board": "y"}
+    assert S.result_for(_rule(), "x", _cov(), byletter, _manifest(), FP, None, ident)["result"] == S.INCONCLUSIVE
+
+    # a verdict that names no board at all is judged on its other properties, as the netlist gates are
+    assert S.result_for(_rule(), "x", _cov(), _verdict("PASS"), _manifest(), FP, None, ident)["result"] == S.PASS
+
+
+def t_a_dependency_cycle_is_refused_and_not_absorbed():
+    """DEFECTIVE fixture: a register with a cycle must RAISE. ACCEPTABLE fixture: an acyclic one returns.
+
+    `critical_path`'s walk carries a seen-set, which keeps it from recursing for ever and also makes a cycle
+    invisible: the path is computed by silently truncating one of the two edges, and nothing says which was
+    dropped or that the number is short. The register held two such cycles on 16 September 2026, RET-001
+    against SI-001 and BAT-002 against PWR-003, while the critical path they produced was being reported to
+    the owner every ten minutes. Breaking both moved it from 26 h to 22 h at P50.
+
+    A number computed through a cycle is not a duration, so it is refused rather than returned.
+    """
+    import rules_eta as E
+
+    acyclic = [{"rule": "A", "depends_on": [], "p50": 2.0, "p80": 4.0},
+               {"rule": "B", "depends_on": ["A"], "p50": 3.0, "p80": 6.0}]
+    assert E.cycles(acyclic) == [], "an acyclic register was reported as cyclic"
+    assert E.critical_path(acyclic, "p50") == 5.0, "the chain A then B is not two plus three"
+
+    cyclic = [{"rule": "A", "depends_on": ["B"], "p50": 2.0, "p80": 4.0},
+              {"rule": "B", "depends_on": ["A"], "p50": 3.0, "p80": 6.0}]
+    found = E.cycles(cyclic)
+    assert found, "a two-rule cycle was not detected"
+    assert set(found[0]) >= {"A", "B"}, found
+    try:
+        E.critical_path(cyclic, "p50")
+    except ValueError as e:
+        assert "cycle" in str(e), e
+    else:
+        raise AssertionError("a critical path was returned through a cycle, which is not a duration")
+
+    # and the committed register must itself be acyclic, or the reported ETA is short by an unknown amount
+    assert E.cycles(E.open_items()) == [], "the committed gap register has a dependency cycle"
+
+
+def _route_gate(unrouted, ts="2026-09-16T01:00:00Z"):
+    return {S.ROUTE_GATE: {"tool": S.ROUTE_GATE, "ts": ts, "verdict": "FAIL" if unrouted else "PASS",
+                           "denominator": 15, "counts": {"hard": 0, "unrouted": unrouted},
+                           "policy": {"rule_set_fingerprint": FP}}}
+
+
+def t_a_routed_board_rule_on_a_board_that_is_not_routed_is_inconclusive_and_not_a_failure():
+    """Board B, 17 September 2026. The board committed in its phase directory while the route runs is the
+    PLACED one: 499 connections open and all six zones carrying zero filled area, because the fill happens in
+    the finish. Judged against it the return-path rule read 214 nets of 566 without a reference (the same tool
+    on the same board with the zones filled in memory reads ONE net over, by 0.6 mm), the return-via rule read
+    204 signal vias without a ground via, and the via-current rule read 19 rails over their barrels. None of
+    that is a property of the design; it is what a board looks like before it is finished.
+
+    Prematurity is not failure, and it is not a pass either: the rule is INCONCLUSIVE, which still blocks."""
+    vs = dict(_verdict("FAIL")); vs.update(_route_gate(499))
+    assert _result(_cov(), vs) == S.INCONCLUSIVE, "a routed-board rule failed on a board that is not routed"
+
+
+def t_the_same_rule_on_a_routed_board_still_fails():
+    """The guard must not become an exemption: with nothing unrouted the failure stands."""
+    vs = dict(_verdict("FAIL")); vs.update(_route_gate(0))
+    assert _result(_cov(), vs) == S.FAIL, "the guard swallowed a real failure on a routed board"
+
+
+def t_the_rule_that_measures_the_route_itself_keeps_its_result():
+    """RTE-001 and RTE-002 read the routed-board gate as their own verdict, and 'nothing unrouted' is exactly
+    what they are there to say: if they went INCONCLUSIVE on an unrouted board, no board could ever fail them.
+    """
+    cov = {"R-1": {"implementation": "hardset.py",
+                   "verification": {"tool": "hardset.py", "verdict": S.ROUTE_GATE}, "maturity": "ENFORCED"}}
+    assert _result(cov, _route_gate(499)) == S.FAIL
+
+
+def t_a_rule_verified_before_the_route_is_untouched_by_an_unrouted_board():
+    vs = dict(_verdict("FAIL")); vs.update(_route_gate(499))
+    assert _result(_cov(), vs, rule=_rule(phase="PLACED_BOARD")) == S.FAIL
+    assert _result(_cov(), vs, rule=_rule(phase="SCHEMATIC")) == S.FAIL
+
+
+def t_a_run_about_one_board_does_not_write_the_set_s_completeness_verdict():
+    """SGN-001 IS A SET-LEVEL QUESTION AND A SCOPED RUN CANNOT ANSWER IT (17 September 2026).
+
+    `rules_status.py --board p` judges one board's forty-two pairs, and it used to write the SET-LEVEL
+    `rules_complete` verdict from them, denominator and all, on top of the reading taken over all 301. SGN-001
+    is a BLOCKER on every one of the seven boards and every board's generated page reads that one file, so a
+    single scoped run made six boards claim a completeness check that had looked at one board: the pages read
+    `rules_complete PASS of 42`. This is the `missing_input` doctrine one level up, and the honest answer is
+    to take no reading at all rather than a narrower one.
+
+    Executed: record the set-level verdict, run a scoped computation, and require the file to be untouched.
+    """
+    import subprocess, shutil
+    ecad = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    setlevel = os.path.join(ecad, "out", "rules_complete.verdict.json")
+    if not os.path.exists(setlevel):
+        return "no set-level completeness verdict on this tree to protect"
+    before = open(setlevel, "rb").read()
+    keep = tempfile.mkdtemp(prefix="rules-scoped-")
+    shutil.copy(setlevel, os.path.join(keep, "rules_complete.verdict.json"))
+    letter = sorted(S.manifest()["boards"])[0]
+    try:
+        p = subprocess.run([sys.executable, os.path.join(ecad, "tools", "rules_status.py"),
+                            "--board", letter, "--out-dir", keep],
+                           cwd=ecad, capture_output=True, text=True, timeout=900)
+        assert p.returncode in (0, 1, 3), p.stdout[-400:] + p.stderr[-400:]
+        after = open(setlevel, "rb").read()
+        if after != before:
+            # put the full reading back before failing: a test must not leave the tree worse than it found it
+            shutil.copy(os.path.join(keep, "rules_complete.verdict.json"), setlevel)
+            rec = json.loads(after.decode("utf-8"))
+            raise AssertionError("a run about board %s rewrote the SET's completeness verdict "
+                                 "(denominator %s, counts %s): a reading taken with less input never replaces "
+                                 "one taken with more" % (letter, rec.get("denominator"), rec.get("counts")))
+        assert "NOT written" in p.stdout, \
+            "the scoped run left the verdict alone and did not say so, which reads as though it had checked the set"
+    finally:
+        shutil.rmtree(keep, ignore_errors=True)
+
+
+def t_a_verdict_under_an_older_rule_set_does_not_stand_in_front_of_a_current_one():
+    """HISTORY NEVER STANDS IN FRONT OF A CURRENT READING (17 September 2026).
+
+    `_supersedes` protects a reading that HAD its input from being replaced by one that declares its input
+    absent, which is this project's own rule. On 17 September it protected a STALE one: board A's parts were
+    last certified under rule set 8087c341, before that morning's applicability correction, and from the folder
+    of a board this tree does not hold; the fresh reading says so with `missing_input` and was refused for
+    saying it, so six rule-board pairs read "taken under rule set 8087c341" where the true reason is "there is
+    no deliverable folder at the declared phase".
+
+    A verdict taken under a superseded rule set is not evidence at all, since `_fresh` refuses it wherever it
+    is read, so it cannot be the thing that keeps a current reading out. Fingerprint first, then input.
+    """
+    import copy
+    old = {"tool": "t", "ts": "2026-09-17T00:00:00Z", "verdict": "PASS", "denominator": 9,
+           "policy": {"rule_set_fingerprint": "an_older_one"}}
+    new = {"tool": "t", "ts": "2026-09-17T12:00:00Z", "verdict": "INCONCLUSIVE", "denominator": 0,
+           "missing_input": "no deliverable folder at the declared phase",
+           "policy": {"rule_set_fingerprint": S._fingerprint_now()}}
+    assert S._supersedes(new, old), \
+        "a verdict taken under a superseded rule set kept a current reading out, which is how a board comes to " \
+        "report the wrong reason for being inconclusive"
+    # and the input rule still binds among readings of the SAME rule set
+    same_old = copy.deepcopy(old); same_old["policy"]["rule_set_fingerprint"] = S._fingerprint_now()
+    assert not S._supersedes(new, same_old), \
+        "a reading that declares its input absent replaced one that had it, under the same rule set"
+
+
+def _rec(fp_set, rule_fps=None, ts="2026-09-17T12:00:00Z"):
+    r = {"tool": "t", "ts": ts, "verdict": "PASS", "policy": {"rule_set_fingerprint": fp_set}}
+    if rule_fps: r["policy"]["rule_fingerprints"] = rule_fps
+    return r
+
+
+def t_a_reading_is_stale_when_its_own_rule_changed_and_not_when_another_did():
+    """17 September 2026. Correcting ten rules' board lists marked THREE HUNDRED readings stale, and all but
+    fifteen were about rules whose demands had not changed: the sweep re-took them in six minutes and the
+    set-level ones by hand in twenty, which is a tax paid every time the registry is corrected. A verdict names
+    the rules it decides and carries a digest of each, so the question is asked rule by rule."""
+    m = {"evidence": {"epoch": "2026-09-01T00:00:00Z"}}
+    rid = R.load()["rules"][0]["id"]
+    mine = R.rule_fingerprints()[rid]
+    rule = {"id": rid}
+    # the whole registry moved, this rule did not: the reading stands
+    ok, why = S._fresh(_rec("an-older-set-fingerprint", {rid: mine}), m, "a-new-set-fingerprint", None, rule)
+    assert ok, "a reading whose own rule is unchanged was called stale: %s" % why
+    # this rule's own demands moved: the reading is history
+    ok, why = S._fresh(_rec("an-older-set-fingerprint", {rid: "0000000000000000"}), m, "a-new-set-fingerprint", None, rule)
+    assert not ok and rid in why, "a reading taken under a different version of its own rule was accepted: %s" % why
+
+
+def t_a_verdict_with_no_per_rule_digest_is_judged_as_it_always_was():
+    """Every verdict written before this change carries only the set fingerprint, and the fallback is the whole
+    of the old behaviour: a change anywhere in the registry makes it stale, which is what it was written under."""
+    m = {"evidence": {"epoch": "2026-09-01T00:00:00Z"}}
+    rule = {"id": R.load()["rules"][0]["id"]}
+    ok, why = S._fresh(_rec("the-set-it-was-taken-under"), m, "the-set-it-was-taken-under", None, rule)
+    assert ok, why
+    ok, why = S._fresh(_rec("the-set-it-was-taken-under"), m, "a-different-set", None, rule)
+    assert not ok and "rule set" in why, why
+
+
+def t_the_writer_stamps_the_digest_of_every_rule_a_verdict_decides():
+    import verdict as V
+    d = tempfile.mkdtemp(prefix="verdict-rulefp-")
+    rid = R.load()["rules"][0]["id"]
+    V.write("t_stamp", V.PASS, counts={"x": 1}, denominator=1, rules=[rid], out_dir=d, quiet=True)
+    rec = json.load(open(os.path.join(d, "t_stamp.verdict.json"), encoding="utf-8"))
+    fps = (rec.get("policy") or {}).get("rule_fingerprints") or {}
+    assert fps.get(rid) == R.rule_fingerprints()[rid], \
+        "the verdict does not carry the digest of the rule it decides: %s" % fps
+
+
+def t_a_gate_that_says_the_rule_cannot_arise_here_is_answered_and_not_unanswered():
+    """17 September 2026. `clock_check` writes "this board carries no crystal, so CLK-001 has nothing on it to
+    judge" with `applicable` false, and the comment above that line says it was written so a reader could tell
+    "not applicable" from "could not judge". This reader never looked at the field, so board A's CLK-001 counted
+    as an unanswered question about a crystal the board does not have. The registry's condition says a rule
+    COULD apply to a board; the tool that looked says whether the thing it is about is there."""
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "rules_status.py"),
+               encoding="utf-8").read()
+    i = src.index("ok, why = _fresh(rec, m, fingerprint, identities, rule)")
+    seg = src[i:i + 1400]
+    assert 'rec.get("applicable") is False' in seg, "the verdict's own applicability is still unread"
+    assert "NOT_APPLICABLE" in seg, "a gate's not-applicable answer does not reach the result"
+    j = seg.index('rec.get("applicable") is False')
+    assert seg.index("if not ok:") < j, "the freshness test must come first: a stale verdict says nothing at all"
+
+
+def t_a_gate_that_types_no_rules_still_stamps_the_digests_of_the_rules_the_map_gives_it():
+    """17 September 2026, the evening's second registry change: most gates pass no `rules=` and take theirs from
+    the coverage map, and the policy was built from the argument alone, so hardset, final_gate, jlc_certify and
+    the rest carried no per-rule digest and went stale with the whole set on every registry edit (49 pairs
+    after SCH-005 was added, none of them about SCH-005)."""
+    import verdict as V
+    d = tempfile.mkdtemp(prefix="verdict-rulefp-derived-")
+    tool = "hardset-placed"
+    rids = V._rules_for_tool(tool)
+    assert rids, "the coverage map no longer names %s, pick another verdict name for this rule" % tool
+    V.write(tool, V.PASS, counts={"x": 1}, denominator=1, out_dir=d, quiet=True)
+    rec = json.load(open(os.path.join(d, tool + ".verdict.json"), encoding="utf-8"))
+    fps = (rec.get("policy") or {}).get("rule_fingerprints") or {}
+    for rid in rids:
+        assert fps.get(rid) == R.rule_fingerprints()[rid], \
+            "a verdict that took %s from the coverage map carries no digest for it: %s" % (rid, fps)
+
+
+def t_a_run_told_where_to_write_leaves_the_tree_exactly_as_it_found_it():
+    """THE DEFECTIVE FIXTURE is the tool as it stood: `--out-dir` redirected the board pages and the audit and
+    wrote `rules_complete` into the tree anyway. THE ACCEPTABLE FIXTURE is a run whose every output lands in
+    the directory it was given, with the tree's own files untouched to the nanosecond.
+
+    Why it matters more than tidiness: the suite's own completeness test makes that run on every execution, so
+    the set's readiness verdict was being rewritten by the test set. On the runner the numbers match what was
+    there and nothing shows; run on a box in an exact checkout, where the untracked per-board evidence is
+    absent, it replaced 211 PASS with 188."""
+    import subprocess, tempfile, os, sys
+    ecad = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    watched = [os.path.join(ecad, "out", "rules_complete.verdict.json"),
+               os.path.join(ecad, "out", "rule-audit", "rules_status.verdict.json"),
+               os.path.join(ecad, "out", "rule-audit", "summary.json")]
+    watched = [w for w in watched if os.path.exists(w)]
+    if not watched: raise Skip("this tree holds no set-level readiness evidence to protect")
+    before = {w: os.stat(w).st_mtime_ns for w in watched}
+    d = tempfile.mkdtemp(prefix="rules-outdir-")
+    p = subprocess.run([sys.executable, os.path.join(ecad, "tools", "rules_status.py"), "--out-dir", d],
+                       cwd=ecad, capture_output=True, text=True, timeout=900)
+    assert p.returncode in (0, 1, 3), (p.stdout[-300:] + p.stderr[-300:])
+    moved = [os.path.basename(w) for w in watched if os.stat(w).st_mtime_ns != before[w]]
+    assert not moved, "a run told to write elsewhere still wrote into the tree: %s" % moved
+    for name in ("rules_complete.verdict.json", "rules_status.verdict.json", "summary.json"):
+        assert os.path.exists(os.path.join(d, name)), "%s did not reach the directory the run was given" % name
+
+
+def t_an_inconclusive_reading_carries_the_reason_the_gate_gave_for_it():
+    """AN INCONCLUSIVE READING EXPLAINS ITSELF AND THE READER MUST NOT THROW THE EXPLANATION AWAY (19
+    September 2026). Thirteen rule-board pairs on the readiness pages read "assembly_set INCONCLUSIVE",
+    which is a tool's name and its verdict and not one word about the cause, while the sentence that
+    explains it sat in the verdict file. Where the gate declared a missing input that wins, because it
+    names what the reading did not have; otherwise the note is carried."""
+    m = _manifest()
+    vs = _verdict("INCONCLUSIVE")
+    vs["gate_x"]["note"] = "no single-ended controlled line was found to judge, and this board does not declare that it has none"
+    r = S.result_for(_rule(), "x", _cov(), vs, m, FP)
+    assert r["result"] == "INCONCLUSIVE", r
+    assert "single-ended controlled line" in r["why"], r["why"]
+
+    vs2 = _verdict("INCONCLUSIVE")
+    vs2["gate_x"]["note"] = "a note about something else"
+    vs2["gate_x"]["missing_input"] = "no deliverable folder at the declared phase"
+    r2 = S.result_for(_rule(), "x", _cov(), vs2, m, FP)
+    assert "no deliverable folder at the declared phase" in r2["why"], r2["why"]
+
+    bare = S.result_for(_rule(), "x", _cov(), _verdict("INCONCLUSIVE"), m, FP)
+    assert bare["why"].strip() == "gate_x INCONCLUSIVE", bare["why"]
+
+
+def t_a_no_input_reading_that_wins_on_fingerprint_alone_is_announced():
+    """A PAGE MUST NOT CHANGE UNDER THE READER WITH NOTHING ON IT TO SHOW WHY (19 September 2026). A gate run
+    by hand on a host without pcbnew wrote a reading with its missing input declared and the CURRENT rule-set
+    fingerprint; board A's measured ANA-001, taken under a superseded set, lost to it by `_supersedes`'s
+    stated order (fingerprint first, then input) and the readiness page went from FAIL 15 of 24 to
+    INCONCLUSIVE in silence. The order is deliberate and is NOT changed by this rule; what it requires is
+    that the swap be recorded, so a run says which rows are a fresher reading that lacked its input standing
+    in front of a measured one. It decides nothing: the same verdicts, the same percentages."""
+    S._DISPLACED[:] = []
+    S._FP_NOW[0] = "CURRENT"
+    old = {"name": "t", "ts": "2026-09-18T00:00:00", "policy": {"rule_set_fingerprint": "OLD"}}
+    new = {"name": "t", "ts": "2026-09-19T00:00:00", "policy": {"rule_set_fingerprint": "CURRENT"},
+           "missing_input": "the copper: pcbnew is not importable here"}
+    try:
+        assert S._supersedes(new, old) is True, "a current-fingerprint reading no longer wins, which is a change of judgement"
+        assert S._DISPLACED, "the swap was not recorded, so the page can change in silence"
+        name, missing, oldfp = S._DISPLACED[0]
+        assert name == "t" and "pcbnew" in missing and oldfp == "OLD"
+
+        # and it is NOT recorded when the fresher reading had its input: that is an ordinary supersede
+        S._DISPLACED[:] = []
+        new2 = dict(new); new2.pop("missing_input")
+        assert S._supersedes(new2, old) is True
+        assert not S._DISPLACED, "an ordinary supersede is reported as a displacement"
+
+        # nor when the OLD one also lacked its input: nothing measured is being displaced
+        S._DISPLACED[:] = []
+        old2 = dict(old); old2["missing_input"] = "no folder"
+        assert S._supersedes(new, old2) is True
+        assert not S._DISPLACED, "a swap between two readings that both lacked their input is reported"
+    finally:
+        S._DISPLACED[:] = []
+        S._FP_NOW[0] = None
+
+
+def t_the_selection_asks_rule_by_rule_where_the_verdict_allows_it():
+    """A MEASUREMENT WHOSE OWN RULES NEVER MOVED IS NOT HISTORY (19 September 2026).
+
+    Freshness has been asked rule by rule since 17 September (`_fresh` prefers a verdict's per-rule digest
+    over the set fingerprint), and the step BEFORE it, which picks one reading per tool out of every project
+    directory, went on asking the SET fingerprint. The set fingerprint moves whenever anything anywhere in the
+    registry does, so a reading that measured a board, under rules that have not changed since, was treated as
+    history at the moment two verdicts were compared, and a newer reading that declares it had no input at all
+    took its place. That is tonight's incident's mechanism and it is live on five of the seven boards, whose
+    `sensitive_nodes` readings carry the CURRENT digest of ANA-001 under a superseded set fingerprint.
+
+    The rule: where BOTH readings name rules the registry still has, the comparison is decided by those rules'
+    digests. A verdict naming no rule the registry knows falls back to the set fingerprint exactly as before,
+    which is every verdict written before 17 September."""
+    S._DISPLACED[:] = []
+    S._FP_NOW[0] = "CURRENT"
+    S._RULE_FPS[0] = {"ANA-001": "DIGEST-NOW"}
+    try:
+        # the measured reading: superseded SET fingerprint, CURRENT digest of the one rule it decides
+        measured = {"name": "t", "ts": "2026-09-18T00:00:00",
+                    "policy": {"rule_set_fingerprint": "OLD", "rule_fingerprints": {"ANA-001": "DIGEST-NOW"}}}
+        noinput = {"name": "t", "ts": "2026-09-19T00:00:00",
+                   "policy": {"rule_set_fingerprint": "CURRENT", "rule_fingerprints": {"ANA-001": "DIGEST-NOW"}},
+                   "missing_input": "the copper: pcbnew is not importable here"}
+        assert S._supersedes(noinput, measured) is False, (
+            "a reading that declares it had no input displaced a measurement whose own rule never moved")
+        assert not S._DISPLACED, "nothing was displaced, so nothing is announced"
+
+        # and the reverse direction is still an ordinary supersede: the measurement wins on input
+        assert S._supersedes(measured, noinput) is True
+
+        # a measurement whose OWN rule did move really is history, and the swap is still announced
+        S._DISPLACED[:] = []
+        stale = dict(measured)
+        stale["policy"] = {"rule_set_fingerprint": "OLD", "rule_fingerprints": {"ANA-001": "DIGEST-THEN"}}
+        assert S._supersedes(noinput, stale) is True, "a reading taken under a different version of its own rule stood"
+        assert S._DISPLACED, "a no-input reading displaced a measured one and said nothing"
+
+        # a verdict naming a rule the registry no longer has falls back to the set fingerprint
+        S._DISPLACED[:] = []
+        gone = {"name": "t", "ts": "2026-09-18T00:00:00",
+                "policy": {"rule_set_fingerprint": "OLD", "rule_fingerprints": {"XXX-999": "DIGEST-NOW"}}}
+        assert S._supersedes(noinput, gone) is True, (
+            "a digest of a rule the registry does not carry was read as evidence about today's rules")
+    finally:
+        S._DISPLACED[:] = []
+        S._FP_NOW[0] = None
+        S._RULE_FPS[0] = None
+
+
+def t_a_hand_written_record_is_current_evidence_only_while_its_content_is_the_one_that_was_verified():
+    """ACCEPTABLE and DEFECTIVE in one rule (21 September 2026, decision 34's follow-through).
+
+    `_document_current` rebuilds a GENERATED page from the registry and compares, which is the right test for a
+    page this tool writes and no test at all for a record a person writes: OPERATING-ENVELOPE.md came back as
+    'not a document this tool can rebuild, so it cannot be checked' and ENV-001 stayed INCONCLUSIVE on all
+    seven boards the hour its envelope was adopted. A hand-written record is evidence while it is THE ONE that
+    was verified, so the coverage entry pins its sha256 and a later edit takes the verification away. Both
+    halves are asserted here: the pinned content passes, and one byte changed does not."""
+    import hashlib, os, sys
+    sys.path.insert(0, TOOLS) if "TOOLS" in globals() else None
+    import rules_status as S
+    docs = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(S.__file__))), "..", "docs")
+    p = os.path.join(docs, "OPERATING-ENVELOPE.md")
+    sha = hashlib.sha256(open(p, "rb").read()).hexdigest()
+    S._DOC_CACHE.clear()
+    ok, why = S._document_current("OPERATING-ENVELOPE.md", sha)
+    assert ok, "the pinned record is not accepted as current: %s" % why
+    S._DOC_CACHE.clear()
+    ok2, why2 = S._document_current("OPERATING-ENVELOPE.md", "0" * 64)
+    assert not ok2 and "changed" in why2.lower(), "a record that changed since it was verified still passed: %s" % why2
+    S._DOC_CACHE.clear()

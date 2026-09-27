@@ -1,0 +1,10 @@
+6b97f4004f1b5ced21845cb6699d6963ca5e5fb82277b007836313ecbc4ca9de  ./v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json
+af8a9186f981210c48104eaf5742fb4cd4f80d12aa0f13bc5d887e75c922a380  ./v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net
+4c1d9b2665324943f35830cb6161e0694c8178c98abcfba25e406d4472e2cd55  ./v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net.prov.json
+f29dcc911327c520e34dac60c7edbc7f269a7e1b5a7e82d5a486ed3e7b7a269a  ./v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_sch
+93362c20c54e9edc727b4b369d6f9a9817547a9ba55a609506ba98fb90db65a3  ./v2/ecad/tools/build_sch.sh
+28904a37f2f1810399e553f522d73fcc7848afc4d6ce3cce21556bffd70ccd4d  ./v2/ecad/tools/check_pcb_b.py
+6e3d880901fd30306c0fa8bda35a86da6450d7e4bb15217f9cc3225da8d5faef  ./v2/ecad/tools/gen_sch_b.py
+f4fe37141904cb617341e7a72de4078107149b9b6a2351a0af096fe07e060f74  ./v2/ecad/tools/sch_pages.py
+568bcf115c0edd8e79111c1981266d31a9bb3e0a16e00579b02d569241ab97a4  ./v2/ecad/tools/tests/test_schematic_pages.py
+694c5cfbb8f8bd3e5a609abcb2d6a9d2ef2279e11a422af4ebe795eaea528af4  ./v2/release/revA/order/ROTATION-CHECKLIST.md

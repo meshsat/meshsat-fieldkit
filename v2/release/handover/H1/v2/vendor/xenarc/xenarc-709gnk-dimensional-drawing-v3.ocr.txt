@@ -1,0 +1,75 @@
+OCR of xenarc/xenarc-709gnk-dimensional-drawing-v3.pdf, a drawing with no text layer
+
+Read by tools/kb/kb_ocr.py at 300 dpi with tesseract, because this document carries no
+font objects: its lettering is drawn as vector paths and no text extractor can reach it.
+
+THIS IS AN INDEX, NOT A SOURCE OF NUMBERS. OCR misreads exactly the characters that matter
+on a drawing: a decimal point, a tolerance, an H7, a 6 against an 8. Use this to find WHICH
+drawing to open. Then open it:  pdftoppm -r 300 -png -f <page> -l <page> v2/vendor/xenarc/xenarc-709gnk-dimensional-drawing-v3.pdf
+Every dimension quoted anywhere in this project must come from the drawing, never from here.
+
+LEGIBILITY: 45 word-like tokens in 583 characters.
+
+--- xenarc-709gnk-dimensional-drawing-v3, page 1, as read by OCR ---
+“109 SERIES
+SPECIFICATIONS
+Physical Resolution: 1024 x 600
+Supported Resolution: 640 x 480 - 1920 x 1080
+Q
+S
+-
+=
+Brightness: 1000 cd/m?
+Contrast Ratio: 700:1
+Viewing Angle: 150° Horizontal, 145° Vertical
+205.15
+Response Time (Tr/Tf): 10/15ms (Typ.)
+173.15
+28.66
+Operating Voltage: DC 10V ~ 35V
+16
+153.6
+16
+10.66
+Power Consumption: <1O0W
+Operating Temp: -4°F ~ 158°F
+ra’
+Storage Temp: -22°F ~ 176°F
+/
+Ty HN
+Weight: 2.64lbs
+36 Month Warranty
+All measurements are in [mm ]
+XKCRLAREC
+T E C H N OL O G
+!
+Ie
+Oo0o0O dg
+ee (ee)
+i
+cy
+16.16
+19
+WATERPROOF
+SUNLIGHT READABLE
+|}
+PERCE
+T MONWT
+50
+SQ
+47
+——
+30
+4
+50
+——— |
+CERTIFICATIONS
+CRORES
+43.12
+i
+if}!
+‘i
+57.85
+TEL: 949.380.8898 FAX: 949.380.0888
+EMAIL: SALES@XENARC.COM
+

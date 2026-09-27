@@ -1,0 +1,75 @@
+# Board C (panel backer): every changed reference between 82dd1e4d and 1f614233, read by hand.
+# Written for review_packet.py --attribution (MESHSAT-1357, 26 September 2026), in answer to the checker's finding that
+# the mechanical fallbacks credited changes with a neighbour's IDs. Each row gives the IDs that are the change's own
+# cause, the lines of gen_sch_c.py at 1f614233 that carry them, and the reason in words. The build refuses this file
+# unless every ID is written on its cited lines and every cited range names the part or one of its nets, is the part's
+# own comment or section header, or the row states the tie. Where the round-4 board C record (a session draft of that
+# round, not in the repository) says more than the generator, `record` quotes it; `record` is never counted as an ID.
+# Unbuilt prototype design; this reading releases nothing.
+board: c
+rev: 1f614233998c3087a53abfa977be134465ce9f47
+prev: 82dd1e4dc44efabeee1164a995cda4e866610f3d
+read_by: "the session (review stream PKT), 26 September 2026, from gen_sch_c.py at both revisions and the round-4 board C record"
+rows:
+  C20:
+    ids: [D-03.2, D-03.3, W3-F12]
+    cite: [[168, 174]]
+    why: "R10's filter capacitor moves with the ZEROIZE toggle from the exported ZEROIZE_HW to the local net ZEROIZE_SW, so a fault on the exported chain cannot read as a closed toggle (the toggle is the only trigger and the wipe is level-sensitive), and board A's pull-up no longer back-feeds this board"
+  R10:
+    ids: [D-03.2, D-03.3, W3-F12]
+    cite: [[168, 174]]
+    why: "the toggle's pull-up moves to the local net ZEROIZE_SW, for the same reason as C20"
+  C39:
+    ids: [D-03.2, D-03.3, W3-F12]
+    cite: [[168, 173], [354, 354]]
+    tie: "C39 is U12's supply capacitor: its statement (179) follows U12's (178) under the block at 168 to 177, and line 354 declares it as U12 pin 5's bypass"
+    why: "the 100 nF supply capacitor of the new ZEROIZE buffer U12"
+  C31:
+    ids: []
+    cite: [[261, 263]]
+    why: "the pump capacitor goes from 1 uF to 4.7 uF 25 V because PDi's EPD driving-circuit note Rev.02 draws 4.7 uF there (page 3) and lists it in its BOM (page 10, item 2)"
+    record: "round-4 board C record, section 1 item 2: found while proving item 1 (S-09 / A03 / F-IN-01) against the same PDi figure; the record gives it no finding ID of its own"
+  D19:
+    ids: [S-09, A03, F-IN-01]
+    cite: [[252, 252]]
+    why: "the VGH rectifier was reversed; its anode is now on the switch node and its cathode on VGH, as PDi draws it, with PANJIT's SS2040FL code pinned"
+  D20:
+    ids: [S-09, A03, F-IN-01]
+    cite: [[252, 257]]
+    tie: "the block heads THE THREE RECTIFIERS; line 255 names the pump clamp (D20, value 'SS2040FL: pump clamp') and 257 says all three were the other way round"
+    why: "the pump clamp was reversed; anode now on the pump node and cathode on GND"
+  D21:
+    ids: [S-09, A03, F-IN-01]
+    cite: [[252, 257]]
+    tie: "the block heads THE THREE RECTIFIERS; line 256 names the VGL diode (D21, value 'SS2040FL: pump -> VGL') and 257 says all three were the other way round"
+    why: "the VGL diode was reversed; cathode now on the pump node and anode on VGL"
+  Q6:
+    ids: []
+    cite: [[245, 249]]
+    why: "the boost FET changes from the 20 V Si2302CDS to the 30 V Si2300DS that PDi names, to meet PDi's drain criterion (Rev.02 page 4 note 1: VDDS 30 V)"
+    record: "round-4 board C record, section 1 item 3: found while proving item 1; no finding ID of its own"
+  SW_ZERO:
+    ids: [W5-ZEROIZE-4, D-03.1, D-03.3, D-03.2, W3-F12]
+    cite: [[212, 212], [168, 175]]
+    why: "the value text now states what the hardware does, not a disk-key wipe line that exists in no netlist (W5-ZEROIZE-4, D-03.1 to D-03.3), and pin 1 moves to the local net ZEROIZE_SW (D-03.2, D-03.3, W3-F12)"
+  TP41: {ids: [TST-001], cite: [[306, 306]], why: "test access owed before placement: ZEROIZE_SW (W5 test-access list, section 3), appended after TP40 so nothing is renumbered"}
+  TP42: {ids: [TST-001], cite: [[306, 306]], why: "test access owed before placement: SDA"}
+  TP43: {ids: [TST-001], cite: [[306, 306]], why: "test access owed before placement: SCL"}
+  TP44: {ids: [TST-001], cite: [[306, 306]], why: "test access owed before placement: SOS_SW"}
+  TP45: {ids: [TST-001], cite: [[306, 306]], why: "test access owed before placement: TEST_SW"}
+  TP46: {ids: [TST-001], cite: [[306, 306]], why: "test access owed before placement: TR_APRS"}
+  TP47: {ids: [TST-001], cite: [[306, 306]], why: "test access owed before placement: C_DVDD, the RP2040 core"}
+  TP48: {ids: [TST-001], cite: [[306, 306]], why: "test access owed before placement: BOOT_J, the BOOTSEL node through R5's 1k"}
+  U3:
+    ids: [D-03.3, decision 30, D-03.2, W3-F12]
+    cite: [[111, 111], [123, 123], [168, 175]]
+    why: "the panel controller's GPIO22 (pin 34) reads the local ZEROIZE_SW at boot, before any slot powers (D-03.3, decision 30), instead of the exported ZEROIZE_HW (D-03.2, W3-F12)"
+  U9:
+    ids: []
+    cite: [[157, 165]]
+    why: "the EMCON buffer becomes a Schmitt-input 74LVC1G17, because TX_INHIBIT_n rises with a 77 us time constant against the 74LVC1G34's 10 ns/V input-transition limit"
+    record: "round-4 board C record, section 1 item 6: found while doing item 5 (D-03.2 and D-03.3 conformance, W3-F12); no finding ID of its own"
+  U12:
+    ids: [D-03.2, D-03.3, W3-F12]
+    cite: [[168, 176]]
+    why: "a new Schmitt buffer copies the local ZEROIZE_SW onto the exported ZEROIZE_HW; its IOFF stops board A's pull-up back-feeding this board"

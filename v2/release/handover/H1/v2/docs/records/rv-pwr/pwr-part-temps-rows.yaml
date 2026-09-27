@@ -1,0 +1,60 @@
+# PROPOSED rows for v2/ecad/tools/pcb_part_temps.yaml (stream PWR, 26 September 2026, POWER-THERMAL.md section 9.4;
+# citations at main 01469100, where pcb_part_temps.yaml is unchanged since 1f614233).
+# This stream is not the writer of that file: the integrator adds them, checks the `match` strings against the
+# committed schematics (the two bought modules are not schematic parts; their sockets carry them in a comment), and
+# runs tests/test_envelope_data.py and part_temps.py. The fetched sources are in drafts/datasheets/ until they are
+# filed under v2/vendor/.
+parts:
+  - {name: "AsiaRF AW7915-AED WiFi link card (two, bought)", where: inside, match: "AW7915",
+     min_c: 0, max_c: 70,
+     source: {title: "AsiaRF AW7915-AED datasheet v1.0 (2023-08-17)", clause: "Specifications, Temperature",
+              quote: "Operating: 0°C ~ +70°C",
+              url_or_path: "https://asiarf.com/wp-content/uploads/2023/09/AW7915-AED_V1.pdf", accessed: "2026-09-26"},
+     note: "the maker's product page, fetched the same day, states Operating -10 to +70 C and storage -20 to +90 C; the
+       two AsiaRF documents disagree, so the narrower (0 C) is carried until AsiaRF answers (drafts/pwr-maker-questions.md).
+       Either way the card is outside the envelope's -20 C, and its own 4 to 9 W rise at the hot end is TBD"}
+
+  - {name: "LimeSDR Mini v2.4 (bought)", where: inside, match: "LimeSDR",
+     min_c: 0, max_c: 70,
+     source: {title: "LimeSDR Mini v2 documentation v2.4, Introduction (last updated 8 Jun 2026)", clause: "Environmental",
+              quote: "Operating Temperature 0 °C to +70 °C Commercial-grade; Storage Temperature 0 °C to +70 °C",
+              url_or_path: "https://myriadrf.org/projects/limesdr-mini-2-0", accessed: "2026-09-26"},
+     note: "outside the envelope's -20 C in use AND its -20 C storage (the maker's storage range is 0 to +70 C), and below
+       the +71 C storage qualification margin (D-02a). The maker also notes that extra cooling may be needed"}
+
+  - {name: "the 4S pack cells, Samsung INR18650-35E (charge)", where: pack, match: "INR18650-35E",
+     min_c: 0, max_c: 45,
+     source: {title: "Samsung SDI INR18650-35E specification Ver. 1.1", clause: "3.12 Operating Temperature (Cell Surface Temperature)",
+              quote: "Charge : 0 to 45°C",
+              url_or_path: "v2/vendor/battery/samsung-35e-orbtronic.pdf", accessed: "2026-09-26"},
+     carve_out: "below -10 C the pack is warmed by its heater mat before charge (OPERATING-ENVELOPE.md section 4)",
+     note: "replaces the `owed` row: OPERATING-ENVELOPE.md line 55 already cites this sheet. Discharge is -10 to +60 C
+       at the cell surface (same clause); a second row or a two-range schema is the integrator's choice"}
+
+  # Third cycle (26 September 2026): the chemical fuse, in series in the pack path on main since faf8c981.
+  - {name: "Eaton SCF9550-30-05 chemical fuse F2", where: pack, match: "SCF9550-30-05",
+     min_c: -20, max_c: 60,
+     source: {title: "Eaton Technical Data ELX1135 (SCF9550, effective January 2022)", clause: "Operating temperature",
+              quote: "Operating temperature: -20 °C to +60 °C",
+              url_or_path: "fnd/r4p drafts/datasheets/eaton-scf9550-elx1135.pdf (sha256 3ecc2424acfa1753); quoted in gen_sch_p.py lines 255 and 256",
+              accessed: "2026-09-26"},
+     note: "no current derating against temperature is published; at the 18 A key-down current it dissipates 0.32 to
+       0.81 W of its own (fuse DCR 1.0 to 2.5 mohm), on top of the block's temperature, and a key-down may start at a
+       +55 C cell (POWER-THERMAL.md section 7.2). Its margin is unknown until the protection test reads its body
+       (drafts/pwr-chain-redeclaration.yaml)"}
+
+  # Fifth cycle (26 September 2026): the VHF PA, whose flange bolts to the face plate (appendix 32.56, line 2940).
+  - {name: "Mitsubishi RA30H1317M1 VHF PA module", where: in_the_plate, match: "RA30H1317M1",
+     min_c: -30, max_c: 100,
+     source: {title: "Mitsubishi RA30H1317M1 datasheet (Publication Date Oct. 2011)", clause: "MAXIMUM RATINGS, Tcase(OP) Operation Case Temperature Range",
+              quote: "-30 to +100 °C",
+              url_or_path: "v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf", accessed: "2026-09-26"},
+     note: "a CASE temperature, not an ambient. The same sheet, Thermal Design of the Heat Sink: 'For long-term
+       reliability, it is best to keep the module case temperature (Tcase) below 90°C.' During a key-down the flange
+       sits on the plate's local patch, which appendix 32.56 puts at +15 K for 20 s at 45 W; POWER-THERMAL.md section
+       7.2 bounds it by a flange reading (K2 +75 C, C4 +85 C) whose sensor is PWR-F15. The module is not a schematic
+       part (board D carries its leads: J_PAIN, J_PAOUT, J_VGG), so the match string needs the integrator's check"}
+
+# Also for the integrator: the row "the pack's protection board" (pcb_part_temps.yaml line 88, match "PCB-LIS1A15",
+# -40 to +85 C from the Batteryspace sheet) describes the retired 1S module of appendix 32.31 (line 2456), not board P. Board P's
+# own parts (BQ4050, BQ7720700, CSD17570Q5B, F2) are what the row should carry; the battery stream owns that list.

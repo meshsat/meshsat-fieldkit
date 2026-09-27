@@ -1,0 +1,6 @@
+lands: 15 footprint(s) judged, 0 pin(s) on a pad the land does not carry, 0 land(s) unreadable
+schlayout verify: 149 pins in 120 nets, every component one name
+layout: 1 A3 pages on a 1 x 1 sheet -> paper "User" 419.10 297.18
+wrote /root/r2/A03-clamp-orientation/out/regen/pcb-p-pack.kicad_sch parts: 65 lib symbols: 15
+nets: 35 single-pin nets (should be empty or intentional): []
+intent: /root/r2/A03-clamp-orientation/out/regen/out/pcb-p-pack-intent.json (3 bypass, 4 rails, 1 nodes, 5 pair classes)

@@ -1,0 +1,462 @@
+#!/usr/bin/env python3
+"""One finish, its stage order, and the profile that dispatches it.
+
+MESHSAT-862, 11 September 2026. There were fifteen finish_*.sh, 728 lines, clones of one another with a board
+name changed, and the drift between the clones was not cosmetic:
+
+  * FIVE ran the stub router BEFORE the clean-up. The order established with B13 on 5 September is clean up
+    first, then the stub router, then a zone refill, then the check, and it has two written reasons, both paid
+    for: the stub router's closing via counts as a plane clearance violation when the zone fill is stale, so a
+    legal closure is reverted; and `cleanup_dangling.py` running afterwards can remove the very via the closure
+    used. The five with the wrong order are the boards whose deliverables shipped.
+  * TWELVE OF TWELVE never ran `netlist_board.py`, so a board could pass every gate carrying a phantom net or a
+    footprint the netlist does not have. Found by a reviewer, not by a gate, which is why this file exists.
+  * Nine never ran `pruned_gate.py`, four never ran `pour_stitch.py`, three never matched pairs.
+
+The twelve are retired into `finish.sh`, which carries the order once and is driven by `boards/<letter>.json`.
+These tests hold the collapse in place: the order, every gate present, and each routeflow profile agreeing with
+itself about which phase it cuts (five did not, and one of those would have had the supervisor verify a folder
+the finish never wrote).
+"""
+import os, re, sys, json, glob, tempfile
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from harness import Skip, need
+
+TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+GUARD = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "guarded.sh"), errors="replace").read()
+FINISH = os.path.join(TOOLS, "finish.sh")
+
+STAGES = ("unknot", "cleanup_dangling", "zone_pad_via", "pour_stitch", "stub_router")
+
+# Every gate that decides whether a board is finished. A gate absent from the finish is a bar nothing tests.
+# Every gate that decides whether a board is finished. `stitch_prune.py` is NOT one: it is a cleanup that cuts
+# copper, it is declared per board and off everywhere, and listing a cleanup among the gates is the drift this
+# file exists to catch.
+GATES = ("hardset.py", "check_pcb_", "dc_drop.py", "impedance_check.py", "netlist_board.py", "check_contracts.py",
+         "pruned_gate.py", "pair_match.sh", "quality_pass.sh", "silk_fix_all.py", "stackup_write.py")
+
+
+def _order(path):
+    """The stages of a script, in the order they first appear, comments excluded."""
+    seen, out = set(), []
+    for line in open(path, errors="replace"):
+        t = line.strip()
+        if t.startswith("#"): continue
+        for s in STAGES:
+            if re.search(r"\b%s\.py" % s, t) and s not in seen: seen.add(s); out.append(s)
+    return out
+
+
+def t_the_one_finish_cleans_up_before_it_stubs():
+    o = _order(FINISH)
+    assert "stub_router" in o, o
+    for before in ("unknot", "cleanup_dangling", "zone_pad_via", "pour_stitch"):
+        assert before in o, (before, o)
+        assert o.index(before) < o.index("stub_router"), \
+            "%s must run before the stub router: %s" % (before, o)
+
+
+def t_the_finish_runs_every_gate():
+    """The reviewer's finding as a rule: netlist_board.py was in finish.sh and in no clone, so the boards that
+    shipped were never checked against their own netlists."""
+    t = "".join(l for l in open(FINISH, errors="replace") if not l.strip().startswith("#"))
+    missing = [g for g in GATES if g not in t]
+    assert not missing, "finish.sh does not run %s" % missing
+
+
+def t_a_gate_that_fails_stops_the_finish():
+    """A gate whose exit code nothing reads is decoration. Every gate here must be followed by a test of its
+    status; `stop` is the one way out."""
+    t = open(FINISH, errors="replace").read()
+    for g, var in (("dc_drop.py", "DC"), ("impedance_check.py", "IM"), ("netlist_board.py", "NB"), ("check_pcb_", "GATE")):
+        assert re.search(r'\[ "\$%s" -eq 0 \] \|\| stop ' % var, t), "%s runs but its status %s is never tested" % (g, var)
+
+
+def t_no_board_finish_clone_is_left():
+    """The clones are retired, and a new one must not appear: the drift they carried is what these tests are for.
+    finish_board.sh (the exporter), finish_a18.sh (a one-off re-export of a routed board) and finish_b_after.sh
+    (a wrapper on stub_and_finish.sh) are different jobs and are named explicitly."""
+    KEEP = {"finish_board.sh", "finish_a18.sh", "finish_b_after.sh", "finish.sh"}
+    found = {os.path.basename(p) for p in glob.glob(os.path.join(TOOLS, "finish*.sh"))} - KEEP
+    assert not found, "a per-board finish clone is back: %s (the finish is tools/finish.sh, driven by boards/<letter>.json)" % sorted(found)
+
+
+def t_every_board_has_a_finish_block_with_every_key():
+    need = {"stub_layers", "pour_nets", "pair_match", "pair_audit_nets", "post_fix", "pruned_gate", "gate_grep"}
+    for p in sorted(glob.glob(os.path.join(TOOLS, "boards", "*.json"))):
+        d = json.load(open(p))
+        # A TABLE THAT DECLARES NO CHAIN IS NOT A CHAIN DEFECT (17 September 2026). Board E5 is generated from
+        # board A's board file by build_e5.sh: no schematic, no netlist, no route and no finish. It has a table
+        # so that the rules which ask a BOARD a question have somewhere to read its answer.
+        if d.get("chain") is False: continue
+        assert "finish" in d, "%s has no finish block" % os.path.basename(p)
+        missing = need - set(d["finish"])
+        assert not missing, "%s finish block lacks %s" % (os.path.basename(p), sorted(missing))
+
+
+def t_a_board_that_matches_pairs_names_the_pairs_it_audits():
+    """The audit images are what a stopped chain is read from; a board that gates on pairs and names none would
+    stop with nothing to look at."""
+    for p in sorted(glob.glob(os.path.join(TOOLS, "boards", "*.json"))):
+        _d = json.load(open(p))
+        if _d.get("chain") is False: continue
+        f = _d["finish"]
+        if f["pair_match"]:
+            assert f["pair_audit_nets"], "%s gates on pairs and names no audit net" % os.path.basename(p)
+
+
+def t_a_declared_post_fix_exists():
+    for p in sorted(glob.glob(os.path.join(TOOLS, "boards", "*.json"))):
+        _d = json.load(open(p))
+        if _d.get("chain") is False: continue
+        pf = _d["finish"]["post_fix"]
+        if pf and pf != "-":
+            assert os.path.exists(os.path.join(TOOLS, pf)), "%s names a post fix that is not in the tree: %s" % (os.path.basename(p), pf)
+
+
+def t_every_profile_dispatches_the_one_finish():
+    for p in sorted(glob.glob(os.path.join(TOOLS, "routeflow", "*.json"))):
+        fin = (json.load(open(p)).get("finish") or {})
+        if not fin.get("argv"): continue
+        assert os.path.basename(fin["argv"][0]) == "finish.sh", \
+            "%s dispatches %s; the finish is tools/finish.sh" % (os.path.basename(p), fin["argv"][0])
+
+
+def t_a_profile_agrees_with_itself_about_the_phase_it_cuts():
+    """`finish.sh` derives the deliverable folder from the phase argument, and routeflow verifies the folder
+    named in `deliverable`. Five profiles named a phase one behind the folder their finish actually wrote, so
+    the supervisor would have looked for a folder that was never going to exist."""
+    sys.path.insert(0, TOOLS); import routeflow as _rf
+    for p in sorted(glob.glob(os.path.join(TOOLS, "routeflow", "*.json"))):
+        d = _rf.resolve_phase(json.load(open(p))); fin = d.get("finish") or {}
+        if not fin.get("argv") or os.path.basename(fin["argv"][0]) != "finish.sh": continue
+        _, _, proj, letter, phase, _log = fin["argv"]
+        b = os.path.basename(p)
+        assert d.get("phase") == phase, "%s: phase %r, finish argv cuts %r" % (b, d.get("phase"), phase)
+        assert os.path.basename(d.get("deliverable", "")) == "meshsat-pcb-%s-revA-%s" % (letter, phase), \
+            "%s: deliverable %r against a finish that cuts meshsat-pcb-%s-revA-%s" % (b, d.get("deliverable"), letter, phase)
+        assert fin.get("clean_flag") == "out/%s-clean.txt" % phase.lower(), \
+            "%s: clean flag %r against phase %s" % (b, fin.get("clean_flag"), phase)
+        assert os.path.basename(d.get("project", "").rstrip("/")) == proj, \
+            "%s: project %r, the finish runs in %r" % (b, d.get("project"), proj)
+        assert os.path.exists(os.path.join(TOOLS, "boards", "%s.json" % letter)), "%s: no board file for %s" % (b, letter)
+        # argv[0] is a path relative to the ecad directory, so the working directory is not free. c7 named
+        # <PROJECT> and would have died on its first line looking for ./tools there.
+        assert fin.get("cwd") == "<ECAD>", "%s: finish cwd %r, but ./tools/finish.sh only resolves from <ECAD>" % (b, fin.get("cwd"))
+
+
+def t_routeflow_validate_agrees_with_these_rules():
+    """The same judgement at runtime, so a profile is checkable before an eight-hour wave rests on it.
+    `--dry-run` was not that: it still created the run directory, wrote provenance, ran preflight and took the
+    lock, so a box profile could not be checked from the runner at all. Ten of the twelve profiles as they
+    stood before the collapse fail `routeflow.py validate`."""
+    import subprocess
+    # `validate` judges a profile against the TREE, including the project directory its chain runs in, and
+    # those are generated. On a code-only checkout this was a FAIL for a missing input, which is the shape
+    # the suite exists to forbid (red team round three M1): it skips with the reason instead.
+    ecad = os.path.dirname(TOOLS)
+    if not glob.glob(os.path.join(ecad, "pcb-*-*")):
+        raise Skip("no phase project directories in this checkout; routeflow validate judges profiles against them")
+    # AND A TREE THAT IS NOT THE PINNED REPO CANNOT ANSWER THIS (20 September 2026, found by running the suite
+    # where KiCad is). Every profile pins `repo` at the box clone, and `one_tree` exists to refuse a run whose
+    # tools and board come from different trees, which is the 13 September defect. On the runner that path does
+    # not exist, so `validate` skips the property and reads 20 of 20; in the staged suite tree beside a real box
+    # clone it exists and is a DIFFERENT tree, so every profile fails that one property and the rule reports a
+    # correct guard as a broken profile. The question is about the HOST, not about the profile.
+    import json as _json
+    for _p in sorted(glob.glob(os.path.join(TOOLS, "routeflow", "*.json"))):
+        try: _repo = (_json.load(open(_p, encoding="utf-8")) or {}).get("repo") or ""
+        except ValueError: continue
+        if _repo and os.path.isdir(_repo) and os.path.realpath(_repo) != os.path.realpath(os.path.dirname(ecad) + "/.."):
+            if os.path.realpath(_repo) != os.path.realpath(os.path.join(ecad, "..", "..")):
+                raise Skip("the profiles pin %s, which exists here and is not this tree, so validate's "
+                           "one-tree property is about the host rather than the profile" % _repo)
+    for p in sorted(glob.glob(os.path.join(TOOLS, "routeflow", "*.json"))):
+        # Its verdict goes to a directory of its own (25 September 2026, MESHSAT-1357): `validate` writes
+        # routeflow_validate.verdict.json, and written into v2/ecad/out/ it replaced this tree's own reading with
+        # whatever the host answered (20 of 20 here, 21 of 21 on a box that holds one more pinned directory).
+        with tempfile.TemporaryDirectory() as _vd:
+            r = subprocess.run([sys.executable, os.path.join(TOOLS, "routeflow.py"), "validate", p],
+                               capture_output=True, text=True, env=dict(os.environ, VERDICT_DIR=_vd))
+        assert r.returncode == 0, "%s: %s" % (os.path.basename(p), (r.stdout + r.stderr).strip().splitlines()[-1] if (r.stdout + r.stderr).strip() else r.returncode)
+
+
+def t_the_stitch_pruner_is_off_unless_a_board_asks_for_it_with_its_number():
+    """It cuts copper out of a board bound for manufacture, and on 12 September it was measured finding sixteen
+    abandoned vias on board E of which none was dead. That is fixed; what was not fixed then is that it had never
+    removed a via that needed removing, so its risk was proved and its value was not, and no board declared it.
+
+    A24 is the board that presented the case: the route laid two nets across In2 within 0.5 mm of a locked VBAT
+    stitch via, the fill retreated, and the via ended 0.91 mm from the nearest copper of its own net with a 0.2 mm
+    escape stub on its other end. The board gate refused the board for that one item of 799 checks. So the rule is
+    not "no board may" any more; it is that a board turning it on carries the measurement that justified it, taken
+    on a copy before it went into the path: how many vias it removed, of how many, and what that did to the opens."""
+    t = open(FINISH, errors="replace").read()
+    assert 'if [ -n "$(cfg x stitch_prune)" ]' in t, "the pruner runs on every board rather than on request"
+    for p in sorted(glob.glob(os.path.join(TOOLS, "boards", "*.json"))):
+        _d = json.load(open(p))
+        if _d.get("chain") is False: continue
+        f = _d["finish"]
+        if not f.get("stitch_prune"): continue
+        why = f.get("_stitch_prune_why", "")
+        assert len(why) > 200 and re.search(r"\d+ locked via", why) and "unrouted" in why, \
+            "%s turns the pruner on without the board's own number for it" % os.path.basename(p)
+
+def t_the_stitch_pruner_is_reverted_when_it_opens_anything():
+    """It removes copper, so it is judged the way every copper pass is since 15 September 2026: under the one guard,
+    against the board BEFORE it (never against zero), restored if hard or unrouted ROSE."""
+    t = open(FINISH, errors="replace").read()
+    assert "prune_stitch() { guarded stitch_prune python3 $T/stitch_prune.py" in t, "the pruner does not run under the guard"
+    assert '"$AH" -gt "$BH"' in GUARD and '"$AU" -gt "$BU"' in GUARD, "the guard does not compare both counts against the handed-in board"
+
+
+def t_a_continuation_route_gets_the_same_plane_treatment_as_the_route():
+    """12 September 2026. `cont_route.sh` exports its OWN DSN from the routed board, so it needs the plane and
+    power-layer treatment the route itself was given (`FR_PLANE_NETS`, `FR_POWER_LAYERS`) or Freerouting sees no
+    plane and re-routes every plane pin as a wire. On C that is GND on In1, the majority of the board's
+    connections; on E it is five nets over two layers.
+
+    Nothing gave it that treatment. finish.sh passed none, and routeflow dispatches the finish with no environment
+    at all (`sh(expand(fin["argv"] ...))` takes the route's env only for the route), so every continuation on every
+    board since the stage was written ran against a planeless DSN. It is declared per board now, beside the
+    threshold that gates the stage, and held equal to the profiles that declare it for the route."""
+    treat = {}
+    for f in sorted(glob.glob(os.path.join(TOOLS, "routeflow", "*.json"))):
+        try: d = json.load(open(f))
+        except Exception: continue
+        r = d.get("route") or {}
+        if "power_layers" not in r and "plane_nets" not in r: continue
+        b = d.get("board") or ""
+        if not b.startswith("pcb-"): continue
+        treat.setdefault(b.split("-")[1][0], {})[os.path.basename(f)] = (
+            tuple(r.get("power_layers") or []), tuple(r.get("plane_nets") or []))
+    for L, per in sorted(treat.items()):
+        cfg = json.load(open(os.path.join(TOOLS, "boards", "%s.json" % L)))
+        # The profile of the DECLARED phase decides; an older profile may differ only when the current one says why
+        # (15 September 2026: P5 makes B.Cu a power layer where P1 to P4 declared none, owner ruling 20:15 CEST).
+        curf = "%s.json" % L
+        assert curf in per, "%s: the letter profile is not among those that declare a plane treatment: %s" % (L, sorted(per))
+        cur = per[curf]; others = {f: v for f, v in per.items() if v != cur}
+        if others:
+            why = json.load(open(os.path.join(TOOLS, "routeflow", curf))).get("_plane_treatment_why", "")
+            assert why, "the %s profiles disagree about the plane treatment and %s does not say why (_plane_treatment_why): %s" % (L, curf, others)
+        cont = (cfg.get("finish") or {}).get("cont_route")
+        if not cont: continue
+        got = (tuple(cont.get("power_layers") or []), tuple(cont.get("plane_nets") or []))
+        assert got == cur, \
+            "board %s's continuation would route against a different DSN than its route: %s against %s" % (L, got, list(per.values())[0])
+    src = open(FINISH, errors="replace").read()
+    i = src.index("$T/cont_route.sh")   # the invocation, not the comment that explains the stage
+    line = src[max(0, src.rindex("\n", 0, i - 200)):i]
+    assert "FR_PLANE_NETS" in line and "FR_POWER_LAYERS" in line, \
+        "finish.sh runs the continuation without handing it the board's plane treatment"
+
+
+def t_a_pass_that_lays_copper_after_the_router_is_declared_with_its_number():
+    """The rule stitch_prune's admission taught, applied to the family rather than to one tool: any pass that adds
+    or removes copper on a ROUTED board runs only where a board asks for it, and a board asking for it carries the
+    measurement that justified it. `direct_close` joined that family on 12 September 2026 (A24: /CELL+ closed as a
+    straight 9.59 mm locked track after the stub router refused it, hard 0 and the opens 3 to 2)."""
+    t = open(FINISH, errors="replace").read()
+    for key in ("stitch_prune", "direct_close"):
+        assert 'cfg x %s' % key in t, "%s is not declared per board in the finish" % key
+    for p in sorted(glob.glob(os.path.join(TOOLS, "boards", "*.json"))):
+        _d = json.load(open(p))
+        if _d.get("chain") is False: continue
+        f = _d["finish"]
+        for key in ("stitch_prune", "direct_close"):
+            if not f.get(key): continue
+            why = f.get("_%s_why" % key, "")
+            assert len(why) > 200 and re.search(r"\d", why), \
+                "%s turns %s on without the board's own number for it" % (os.path.basename(p), key)
+
+
+def t_every_board_declares_the_phase_its_profile_cuts():
+    """The phase reaches the silk, and `verify_deliverable` refuses a deliverable whose silk names another one, so a
+    wrong phase is a board routed for hours and refused at its last step. It lived as a DEFAULT inside each generator
+    (12 September 2026), then in 34 per-phase profiles that differed in the phase string and a note (red team round
+    four H1, 15 September). It lives in ONE place now: boards/<letter>.json, which full.sh exports to the silk and
+    routeflow.resolve_phase substitutes into the letter profile's <PHASE> placeholders."""
+    src = open(os.path.join(TOOLS, "full.sh"), errors="replace").read()
+    assert 'export PHASE="${PHASE:-$(cfg phase)}"' in src, "full.sh does not take the phase from the board file"
+    profiles = sorted(os.path.basename(f) for f in glob.glob(os.path.join(TOOLS, "routeflow", "*.json")))
+    for bf in sorted(glob.glob(os.path.join(TOOLS, "boards", "*.json"))):
+        L = os.path.basename(bf)[:-5]; d = json.load(open(bf))
+        if d.get("chain") is False: continue
+        assert re.match(r"^[A-Z]+[0-9]+$", str(d.get("phase", ""))), "%s declares no phase" % os.path.basename(bf)
+        assert "%s.json" % L in profiles, "no letter profile routeflow/%s.json" % L
+        t = open(os.path.join(TOOLS, "routeflow", "%s.json" % L)).read()
+        assert "<PHASE>" in t and "<phase>" in t, "routeflow/%s.json types a phase instead of carrying <PHASE>" % L
+        assert not [f for f in profiles if re.match(r"^%s\d+\.json$" % L, f)], "per-phase profiles for %s still exist: %s" % (L, [f for f in profiles if re.match(r"^%s\d+" % L, f)])
+
+
+def t_the_finish_stamps_the_phase_it_was_given_onto_the_silk():
+    """`verify_deliverable` refuses a deliverable whose silk names another phase, and it is checked after the
+    route, which is the most expensive moment to find out: A24's routed board carried A18 and C's generator
+    default would have stamped C9 on a C10 deliverable. The generator writes the phase it was given, the legend
+    pass now CORRECTS it from the phase the finish itself was called with, and the two together mean a board
+    cannot reach the deliverable step carrying a phase nobody asked for (12 September 2026)."""
+    src = open(FINISH, errors="replace").read()
+    assert 'silk_fix_all.py $N.kicad_pcb $L "$PHASE"' in src, "the finish does not pass its phase to the legend pass"
+    sfa = open(os.path.join(TOOLS, "silk_fix_all.py"), errors="replace").read()
+    assert "PHASE = sys.argv[3]" in sfa, "the legend pass takes no phase"
+    i = sfa.index("PHASE = sys.argv[3]")
+    assert "REV" in sfa[i:i + 800], "the phase correction does not look at the title line"
+
+
+def t_a_meander_is_locked_copper():
+    """A meander is a deliberate length, not router copper. `straighten.py` shortcuts unlocked segments, and it
+    runs BEFORE the pair gate in the finish, so on a board finished twice it removes the previous run's meander:
+    A24 matched USB_WALL at 0.00 mm in its first finish by adding 7.54 mm to the P leg, and its second finish
+    straightened 5.37 mm of that away, failed to place it again in three rounds and refused the board with every
+    other gate passing (12 September 2026). Locked copper is exempt from the straightener and from the router's
+    rip-up, which is what a matched length needs from both."""
+    src = open(os.path.join(TOOLS, "meander.py"), errors="replace").read()
+    i = src.index("PCB_TRACK(b)")
+    assert "SetLocked(True)" in src[i:i + 700], "the meander's copper is not locked"
+    st = open(os.path.join(TOOLS, "straighten.py"), errors="replace").read()
+    assert "a.locked or c.locked" in st, "the straightener does not exempt locked copper"
+    assert "PAIR_NETS" in st and st.count("a.net in PAIR_NETS") >= 2, \
+        "the straightener still merges and shortcuts the nets of a differential pair class"
+
+
+def t_a_routed_board_that_passed_its_gate_is_kept():
+    """Four routed boards went with a destroyed rented box on 11 September (red team round three M5).
+
+    The lesson was written the same day and no step did it, so it depended on somebody remembering within
+    the hour. The finish puts the board, its project file, its DRC report and its verdicts beside the
+    deliverable, which is tracked.
+    """
+    src = open(os.path.join(TOOLS, "finish.sh"), errors="replace").read()
+    i = src.find("finish_board.sh")
+    if i < 0:
+        raise AssertionError("finish.sh no longer cuts a deliverable")
+    tail = src[i:]
+    if "kept:" not in tail or "routed" not in tail:
+        raise AssertionError("the finish does not keep the routed board anywhere tracked")
+    done = tail.rindex("FINISH-$PHASE-DONE")      # the LAST one: the earlier ones are refusal paths
+    if tail.index("kept:") > done:
+        raise AssertionError("the board is kept after the finish says DONE")
+
+
+def t_a_finish_declaration_lives_where_the_finish_looks_for_it():
+    """`finish.sh` reads its per-board settings with `cfg`, which looks inside the `finish` block of
+    `tools/boards/<letter>.json`. A key written at the TOP level of that file is not an error and not a
+    warning: it is silently absent, and the stage it was meant to switch on simply does not run.
+
+    12 September 2026: board P declared `stitch_prune` at the top level with a paragraph of measurement
+    beside it, and three routes in a row were refused by the gate item the pruner exists to remove,
+    while the finish log carried no stitch_prune line at all to say it had never run.
+    """
+    import os as _os, re as _re, json as _json, glob as _glob
+    here = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
+    sh = open(_os.path.join(here, "finish.sh"), encoding="utf-8").read()
+    keys = set(_re.findall(r'cfg\s+\S+\s+([a-z_]+)', sh)) | set(_re.findall(r'\$\(cfg\s+\S+\s+([a-z_]+)\)', sh))
+    assert keys, "no cfg lookups found in finish.sh: this rule has lost its subject"
+    bad = []
+    for path in sorted(_glob.glob(_os.path.join(here, "boards", "*.json"))):
+        d = _json.load(open(path, encoding="utf-8"))
+        for k in sorted(keys & set(d)):
+            bad.append("%s declares %r at the top level; finish.sh reads it from the finish block"
+                       % (_os.path.basename(path), k))
+    # AND A PREFIXED KEY LIVES INSIDE THE BLOCK ITS PREFIX NAMES (16 September 2026). `cfg` strips a
+    # `cont_route_` or `direct_close_` prefix and looks inside that sub-block, so `direct_close_budget_s`
+    # written at the FINISH level is read as `budget_s` of a block that does not have it: board A's closer
+    # spent 1,809 seconds of an 1,800 second default while its declaration said 5,400, and nothing said a word.
+    # Same silence as the top-level case above, one level down.
+    for path in sorted(_glob.glob(_os.path.join(here, "boards", "*.json"))):
+        d = _json.load(open(path, encoding="utf-8")).get("finish") or {}
+        for pre in ("cont_route", "direct_close"):
+            for k in sorted(d):
+                if k.startswith(pre + "_") and not k.startswith("_"):
+                    bad.append("%s declares %r beside the %s block; cfg reads it from INSIDE that block"
+                               % (_os.path.basename(path), k, pre))
+    assert not bad, "\n  ".join(bad)
+
+
+def t_routeflow_hands_the_phase_to_the_chain():
+    """With one profile per letter there is no per-phase wrapper exporting PHASE, so the supervisor gives the resolved
+    phase to the pre-route chain itself; without it the silk names the board file's phase and the deliverable of any other
+    phase is refused at its last step (15 September 2026)."""
+    src = open(os.path.join(TOOLS, "routeflow.py"), errors="replace").read()
+    assert 'env={"PHASE": prof["phase"]}' in src, "routeflow runs the chain without handing it the phase"
+
+
+def t_the_placed_board_stop_runs_the_placements_own_judge():
+    """A FLAG THAT MAKES A MEASUREMENT CHEAP MUST NOT SKIP THE THING THE MEASUREMENT IS FOR (20 September
+    2026). `PREROUTE_STOP_AFTER_PLACE=1` exists so a placement can be judged without paying for a route, and
+    it was stopping two hundred lines ABOVE `place_audit.py`, the one gate whose whole subject is a
+    placement. Every arm that used it printed PREROUTE-DONE PLACED and never asked.
+
+    A83 is the measured case and it cost an hour: it stopped there looking like a pass with its escape stage
+    quietly reporting 447 escapes and sixteen pads skipped, and the same predictor, run BY HAND on the same
+    board file half an hour later, reads `FAIL U18: 8 of 25 fine-pitch pads without an escape (pads
+    5,8,11,14,15,17,19,20): the fan could not be placed`. That is exactly what the arm was launched to find
+    out.
+
+    The property is mechanical: between the line that tests the flag and the `exit 0` that reports a placed
+    board there must be a call to `place_audit.py`. It fails on the file as it stood.
+    """
+    src = open(os.path.join(TOOLS, "full.sh"), errors="replace").read()
+    i = src.find('"${PREROUTE_STOP_AFTER_PLACE:-0}" = 1')
+    assert i >= 0, "full.sh no longer tests PREROUTE_STOP_AFTER_PLACE"
+    j = src.find("PREROUTE-DONE PLACED (out/", i)
+    assert j > i, "full.sh no longer reports a placed board at that stop"
+    assert "place_audit.py" in src[i:j], (
+        "the placed-board stop reports PREROUTE-DONE PLACED without running place_audit.py, so an arm that "
+        "stops at the placement never asks the gate whose subject IS the placement")
+
+
+def t_the_placed_board_stop_blocks_when_the_predictor_refuses():
+    """And running it is not enough: an arm that prints the predictor's FAIL and then exits 0 has told the
+    caller the placement passed. The stop exits non-zero on a refusal unless the board declares the
+    predictor a report, which is the same escape hatch the full chain honours for board B."""
+    src = open(os.path.join(TOOLS, "full.sh"), errors="replace").read()
+    i = src.find('"${PREROUTE_STOP_AFTER_PLACE:-0}" = 1')
+    j = src.find("PREROUTE-DONE PLACED (out/", i)
+    seg = src[i:j]
+    assert "PREROUTE-DONE PLACED BLOCK" in seg and "exit 1" in seg, (
+        "the placed-board stop does not stop on a refused placement")
+    assert "place_audit_gate_off" in seg, (
+        "the placed-board stop does not honour a board that declares the predictor a report")
+
+
+def t_the_chain_reports_where_a_decoupling_capacitor_could_go():
+    """DEC-001's verdict counts capacitors within 3 mm and never says WHERE one could sit, and the tool that
+    answers that (20 September 2026) was in no chain, no sweep and no finish: it ran only when somebody typed
+    its name, which is how a tool that found board A's twenty-four seats, board E's fourteen and board C's
+    ten stays unused. It runs on the finished placement beside `rail_crossings`, which asks the same kind of
+    question about barrels, and like it it must NEVER block: a report that can stop a chain is a gate whose
+    criteria nobody agreed."""
+    src = open(os.path.join(TOOLS, "full.sh"), errors="replace").read()
+    # THE LINE, NOT THE WORD: the first mention of either tool is in the comment that explains it, and a
+    # rule that reads a comment is not reading the chain (this test found its own comment first).
+    def _cmd(name):
+        for n, line in enumerate(src.splitlines(), 1):
+            s2 = line.strip()
+            if s2.startswith("#") or name not in s2: continue
+            return n, s2
+        return None, None
+    n_seat, seat = _cmd("bypass_seats.py")
+    assert seat, "the chain does not report where a decoupling capacitor could go"
+    assert "|| true" in seat, "the seat report can stop the chain: %s" % seat[:120]
+    n_rail, rail = _cmd("rail_crossings.py")
+    assert rail and n_rail < n_seat, "the seat report does not run with the other finished-placement reports"
+
+
+def t_the_via_parallel_stage_shows_its_own_decision_and_not_only_its_first_lines():
+    """A stage's DECISION is its last line, and a bare `head` throws it away (21 September 2026).
+
+    On E37's finish the log carried nine sites being given parallel barrels, one of them 8.00 A through a
+    single 0.4 mm hole, and NOT the sentence saying the whole round was put back; the revert was invisible
+    for a day and cost board E eleven barrels. The stage may elide the middle, and it may not elide the end.
+    Proved to fail on the tree it was written against, where the line is `grep ... | head -10`."""
+    src = open(os.path.join(TOOLS, "finish.sh"), encoding="utf-8").read()
+    i = src.find("guarded via_parallel")
+    assert i > 0, "the finish no longer runs via_parallel"
+    blk = src[i:src.find("\nfi", i)]
+    assert "guard-via_parallel.log" in blk, "the stage no longer reads its own guard log"
+    assert not re.search(r"guard-via_parallel\.log[^\n]*\|\s*head\s+-\d+\s*$", blk, re.M), \
+        "the stage pipes its log through head alone, so its last line, which is its decision, never appears"
+    assert "not shown" in blk or "tail" in blk, \
+        "the stage shows no tail, so a reader cannot see what the round decided"

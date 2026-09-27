@@ -1,0 +1,138 @@
+(footprint "Eaton_SCF9550_9.5x5.0mm"
+	(version 20241229)
+	(generator "meshsat")
+	(generator_version "1.0")
+	(layer "F.Cu")
+	(descr "Eaton Bussmann SCF9550 self-control fuse (SCF9550-30-05 and its family), body 9.5 x 5.0 x 2.0 mm. LAND REVIEW: Eaton's own recommended pad layout, Technical Data ELX1135 (January 2022) page 3, pad for pad; pins from page 1 (1 and 2 the fuse ends on the long edges, 3 the heater on the short edge). Pads 1 and 2: 7.40 x 1.40 at y -+2.05 (inner edges 1.35 from centre); pad 3: 3.00 tall at x -5.95, 0.75 straight then a 1.40 taper to a 0.70 tip at x -3.80. Read back from pcbnew on the KiCad box, 26 Sep 2026")
+	(tags "SCF self-control fuse chemical fuse Eaton Bussmann SCF9550")
+	(property "Reference" "REF**"
+		(at 0 -3.4 0)
+		(layer "F.SilkS")
+		(uuid "76dd4d88-3643-59f8-b160-e99f90aa2a91")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "Eaton_SCF9550_9.5x5.0mm"
+		(at 0 3.4 0)
+		(layer "F.Fab")
+		(uuid "88f8f2bb-a397-53b9-907c-dcfcd0dba127")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "cdca3c8f-ff36-5c2c-8da3-44e3a161f901")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" "Eaton Bussmann SCF9550 self-control fuse (SCF9550-30-05 and its family), body 9.5 x 5.0 x 2.0 mm. LAND REVIEW: Eaton's own recommended pad layout, Technical Data ELX1135 (January 2022) page 3, pad for pad; pins from page 1 (1 and 2 the fuse ends on the long edges, 3 the heater on the short edge). Pads 1 and 2: 7.40 x 1.40 at y -+2.05 (inner edges 1.35 from centre); pad 3: 3.00 tall at x -5.95, 0.75 straight then a 1.40 taper to a 0.70 tip at x -3.80. Read back from pcbnew on the KiCad box, 26 Sep 2026"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "81d660e3-c9b0-52d1-8fa0-a06e1672f272")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(fp_rect
+		(start -4.75 -2.5)
+		(end 4.75 2.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.Fab")
+		(uuid "0c67a3eb-ce83-5e91-8b82-36396b35eca3")
+	)
+	(fp_line
+		(start -3.75 -2.5)
+		(end -3.75 2.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "f46e47ab-893b-5df9-84f1-10cec379cf3b")
+	)
+	(pad "1" smd rect
+		(at 0 -2.05)
+		(size 7.4 1.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "72675943-fac4-51b9-a2f7-1855aea5d4d9")
+	)
+	(pad "2" smd rect
+		(at 0 2.05)
+		(size 7.4 1.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "388770f3-4fe9-5fa4-8b66-c17b9024eb31")
+	)
+	(pad "3" smd custom
+		(at -4.875 0)
+		(size 0.5 0.5)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(options
+			(clearance outline)
+			(anchor rect)
+		)
+		(primitives
+			(gr_poly
+				(pts
+					(xy -1.075 -1.5) (xy -0.325 -1.5) (xy 1.075 -0.35) (xy 1.075 0.35) (xy -0.325 1.5) (xy -1.075 1.5)
+				)
+				(width 0)
+				(fill yes)
+			)
+		)
+		(uuid "71302af5-f122-5f19-9e3e-e1290a2be1d5")
+	)
+	(fp_rect
+		(start -6.2 -3)
+		(end 5.15 3)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.CrtYd")
+		(uuid "ae0bd549-e169-520f-88e9-13acc42f9740")
+	)
+	(fp_line
+		(start -5.45 -2.96)
+		(end 4.9 -2.96)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "c156af33-e160-5436-9500-88dd184c0073")
+	)
+	(fp_line
+		(start -3.6 2.96)
+		(end 4.9 2.96)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "1154864b-14b9-508a-ad04-ed49da845ca8")
+	)
+)

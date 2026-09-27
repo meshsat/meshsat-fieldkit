@@ -1,0 +1,119 @@
+U12 | Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1: TXEN GPIO4, RXEN GPIO5, DIO1 GPIO24, BUSY GPIO23, NRST GPIO26; EU power cap in meshtasti
+   pin 1 (GND) -> GND
+   pin 2 (GND) -> GND
+   pin 3 (GND) -> GND
+   pin 4 (GND) -> GND
+   pin 5 (GND) -> GND
+   pin 6 (RXEN) -> LORA_RXEN
+   pin 7 (TXEN) -> LORA_TXEN
+   pin 8 (DIO2) -> unconnected-(U12-DIO2-Pad8)
+   pin 9 (VCC) -> +5V_LORA
+   pin 10 (VCC) -> +5V_LORA
+   pin 11 (GND) -> GND
+   pin 12 (GND) -> GND
+   pin 13 (DIO1) -> SPI3_IO24
+   pin 14 (BUSY) -> SPI3_IO23
+   pin 15 (NRST) -> SPI3_IO26
+   pin 16 (MISO) -> SPI3_MISO
+   pin 17 (MOSI) -> SPI3_MOSI
+   pin 18 (SCK) -> SPI3_SCLK
+   pin 19 (NSS) -> SPI3_CE1
+   pin 20 (GND) -> GND
+   pin 21 (ANT) -> LORA_ANT
+   pin 22 (GND) -> GND
+U13 | Ebyte E72-2G4M20S1E CC2652P (Zigbee coordinator): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge
+   pin 1 (GND) -> GND
+   pin 2 (ZBA_LED_R) -> ZBA_LED_R
+   pin 3 (ZBA_LED_G) -> ZBA_LED_G
+   pin 4 (NC) -> unconnected-(U13-NC-Pad4)
+   pin 5 (NC) -> unconnected-(U13-NC-Pad5)
+   pin 6 (NC) -> unconnected-(U13-NC-Pad6)
+   pin 7 (ZBA_RXD) -> ZBA_RXD
+   pin 8 (ZBA_TXD) -> ZBA_TXD
+   pin 9 (NC) -> unconnected-(U13-NC-Pad9)
+   pin 10 (ZBA_BSL) -> ZBA_BSL
+   pin 11 (GND) -> GND
+   pin 12 (GND) -> GND
+   pin 13 (ZBA_TMSC) -> ZBA_TMSC
+   pin 14 (ZBA_TCKC) -> ZBA_TCKC
+   pin 15 (NC) -> unconnected-(U13-NC-Pad15)
+   pin 16 (NC) -> unconnected-(U13-NC-Pad16)
+   pin 17 (NC) -> unconnected-(U13-NC-Pad17)
+   pin 18 (NC) -> unconnected-(U13-NC-Pad18)
+   pin 19 (GND) -> GND
+   pin 20 (+3V3_ZB) -> +3V3_ZB
+   pin 21 (NC) -> unconnected-(U13-NC-Pad21)
+   pin 22 (NC) -> unconnected-(U13-NC-Pad22)
+   pin 23 (GND) -> GND
+   pin 24 (ZBA_RST_n) -> ZBA_RST_n
+   pin 25 (NC) -> unconnected-(U13-NC-Pad25)
+   pin 26 (NC) -> unconnected-(U13-NC-Pad26)
+   pin 27 (NC) -> unconnected-(U13-NC-Pad27)
+   pin 28 (NC) -> unconnected-(U13-NC-Pad28)
+   pin 29 (NC) -> unconnected-(U13-NC-Pad29)
+   pin 30 (NC) -> unconnected-(U13-NC-Pad30)
+   pin 31 (NC) -> unconnected-(U13-NC-Pad31)
+   pin 32 (NC) -> unconnected-(U13-NC-Pad32)
+   pin 33 (NC) -> unconnected-(U13-NC-Pad33)
+   pin 34 (GND) -> GND
+U14 | Ebyte E72-2G4M20S1E CC2652P (OpenThread RCP for Matter): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge
+   pin 1 (GND) -> GND
+   pin 2 (ZBB_LED_R) -> ZBB_LED_R
+   pin 3 (ZBB_LED_G) -> ZBB_LED_G
+   pin 4 (NC) -> unconnected-(U14-NC-Pad4)
+   pin 5 (NC) -> unconnected-(U14-NC-Pad5)
+   pin 6 (NC) -> unconnected-(U14-NC-Pad6)
+   pin 7 (ZBB_RXD) -> ZBB_RXD
+   pin 8 (ZBB_TXD) -> ZBB_TXD
+   pin 9 (NC) -> unconnected-(U14-NC-Pad9)
+   pin 10 (ZBB_BSL) -> ZBB_BSL
+   pin 11 (GND) -> GND
+   pin 12 (GND) -> GND
+   pin 13 (ZBB_TMSC) -> ZBB_TMSC
+   pin 14 (ZBB_TCKC) -> ZBB_TCKC
+   pin 15 (NC) -> unconnected-(U14-NC-Pad15)
+   pin 16 (NC) -> unconnected-(U14-NC-Pad16)
+   pin 17 (NC) -> unconnected-(U14-NC-Pad17)
+   pin 18 (NC) -> unconnected-(U14-NC-Pad18)
+   pin 19 (GND) -> GND
+   pin 20 (+3V3_ZB) -> +3V3_ZB
+   pin 21 (NC) -> unconnected-(U14-NC-Pad21)
+   pin 22 (NC) -> unconnected-(U14-NC-Pad22)
+   pin 23 (GND) -> GND
+   pin 24 (ZBB_RST_n) -> ZBB_RST_n
+   pin 25 (NC) -> unconnected-(U14-NC-Pad25)
+   pin 26 (NC) -> unconnected-(U14-NC-Pad26)
+   pin 27 (NC) -> unconnected-(U14-NC-Pad27)
+   pin 28 (NC) -> unconnected-(U14-NC-Pad28)
+   pin 29 (NC) -> unconnected-(U14-NC-Pad29)
+   pin 30 (NC) -> unconnected-(U14-NC-Pad30)
+   pin 31 (NC) -> unconnected-(U14-NC-Pad31)
+   pin 32 (NC) -> unconnected-(U14-NC-Pad32)
+   pin 33 (NC) -> unconnected-(U14-NC-Pad33)
+   pin 34 (GND) -> GND
+U12 LORA_ANT -> J_LORA1.1(In) U.FL socket: pigtail to A22's LoRa jack 
+U12 LORA_RXEN -> U32A.34(GPIO5) Amphenol 10164227-1004A1RLF receptacle A
+U12 LORA_TXEN -> U32A.54(GPIO4) Amphenol 10164227-1004A1RLF receptacle A
+U12 SPI3_CE1 -> J_SPI3.7(Pin_7) SPI0 breakout of S3 (2x5): 3V3 GND MISO ; R25.1() 10k; U32A.37(GPIO7) Amphenol 10164227-1004A1RLF receptacle A
+U12 SPI3_IO23 -> J_SPI3.8(Pin_8) SPI0 breakout of S3 (2x5): 3V3 GND MISO ; U32A.47(GPIO23) Amphenol 10164227-1004A1RLF receptacle A
+U12 SPI3_IO24 -> J_SPI3.9(Pin_9) SPI0 breakout of S3 (2x5): 3V3 GND MISO ; U32A.45(GPIO24) Amphenol 10164227-1004A1RLF receptacle A
+U12 SPI3_IO26 -> J_SPI3.10(Pin_10) SPI0 breakout of S3 (2x5): 3V3 GND MISO ; U32A.24(GPIO26) Amphenol 10164227-1004A1RLF receptacle A
+U12 SPI3_MISO -> J_SPI3.3(Pin_3) SPI0 breakout of S3 (2x5): 3V3 GND MISO ; U32A.40(GPIO9) Amphenol 10164227-1004A1RLF receptacle A
+U12 SPI3_MOSI -> J_SPI3.4(Pin_4) SPI0 breakout of S3 (2x5): 3V3 GND MISO ; U32A.44(GPIO10) Amphenol 10164227-1004A1RLF receptacle A
+U12 SPI3_SCLK -> J_SPI3.5(Pin_5) SPI0 breakout of S3 (2x5): 3V3 GND MISO ; U32A.38(GPIO11) Amphenol 10164227-1004A1RLF receptacle A
+U13 ZBA_BSL -> R30.1() 10k; U16.28(DTR) CP2102N-A02-GQFN28 USB-UART bridge (ZBA)
+U13 ZBA_LED_G -> R34.1() 1k
+U13 ZBA_LED_R -> R32.1() 1k
+U13 ZBA_RST_n -> J_ZBDBG1.5(Pin_5) CC2652P cJTAG ZBA (bench): 3V3 GND TMSC ; R28.1() 10k; U16.24(RTS) CP2102N-A02-GQFN28 USB-UART bridge (ZBA)
+U13 ZBA_RXD -> U16.26(TXD) CP2102N-A02-GQFN28 USB-UART bridge (ZBA)
+U13 ZBA_TCKC -> J_ZBDBG1.4(Pin_4) CC2652P cJTAG ZBA (bench): 3V3 GND TMSC 
+U13 ZBA_TMSC -> J_ZBDBG1.3(Pin_3) CC2652P cJTAG ZBA (bench): 3V3 GND TMSC 
+U13 ZBA_TXD -> U16.25(RXD) CP2102N-A02-GQFN28 USB-UART bridge (ZBA)
+U14 ZBB_BSL -> R31.1() 10k; U17.28(DTR) CP2102N-A02-GQFN28 USB-UART bridge (ZBB)
+U14 ZBB_LED_G -> R35.1() 1k
+U14 ZBB_LED_R -> R33.1() 1k
+U14 ZBB_RST_n -> J_ZBDBG2.5(Pin_5) CC2652P cJTAG ZBB (bench): 3V3 GND TMSC ; R29.1() 10k; U17.24(RTS) CP2102N-A02-GQFN28 USB-UART bridge (ZBB)
+U14 ZBB_RXD -> U17.26(TXD) CP2102N-A02-GQFN28 USB-UART bridge (ZBB)
+U14 ZBB_TCKC -> J_ZBDBG2.4(Pin_4) CC2652P cJTAG ZBB (bench): 3V3 GND TMSC 
+U14 ZBB_TMSC -> J_ZBDBG2.3(Pin_3) CC2652P cJTAG ZBB (bench): 3V3 GND TMSC 
+U14 ZBB_TXD -> U17.25(RXD) CP2102N-A02-GQFN28 USB-UART bridge (ZBB)

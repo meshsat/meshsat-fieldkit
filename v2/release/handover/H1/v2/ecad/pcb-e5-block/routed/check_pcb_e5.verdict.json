@@ -1,0 +1,41 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "fail": 0,
+  "footprints": 17,
+  "pass": 27
+ },
+ "denominator": 27,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-e5-block.kicad_pcb",
+   "sha256_16": "686b29a734c55b9a"
+  }
+ },
+ "missing_input": null,
+ "note": "",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "MEC-001": "b6c4a6962ac81e88"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "MEC-001"
+ ],
+ "tool": "check_pcb_e5",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "994b3d2315bb9859"
+ },
+ "ts": "2026-09-21T12:52:57Z",
+ "verdict": "PASS",
+ "version": "unknown",
+ "writer": {
+  "file": "check_pcb_e5.py",
+  "sha16": "b6a78f8871e67d66"
+ }
+}

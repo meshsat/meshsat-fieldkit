@@ -1,0 +1,79 @@
+bat: start 2026-09-26T13:32:48Z
+kicad-cli: 9.0.9
+kicad	9.0.9~ubuntu24.04.1
+kicad-footprints	9.0.9~ubuntu24.04.1
+kicad-symbols	9.0.9~ubuntu24.04.1
+poppler-utils	24.02.0-1ubuntu9.9
+Python 3.12.3
+mutool: mutool version 1.23.10
+bat: committed phase label P4
+bat: ===== base 13:32:51
+compile ok
+swallowed-calls ok
+schlayout verify: 211 pins in 176 nets, every component one name
+layout: 2 A3 pages on a 2 x 1 sheet -> paper "User" 838.20 297.18
+wrote pcb-p-pack.kicad_sch parts: 92 lib symbols: 20
+nets: 50 single-pin nets (should be empty or intentional): []
+intent: /root/rv/bat/run/base/v2/ecad/pcb-p-pack-p2/out/pcb-p-pack-intent.json (4 bypass, 5 rails, 2 nodes, 5 pair classes)
+gen_sch exit 0
+sch_prov: pcb-p-pack.net written by generator 0a73ba784f3d409d (boards/p.json#gen_env, gen_footprints_b16.py, gen_footprints_e.py, gen_footprints_idc.py, gen_footprints_panel.py, gen_sch_p.py, idc_pads.py, intent.py, kisch.py, schlayout.py, and 59 land(s) in meshsat.pretty)
+sheet pdf: out/pcb-p-pack-schematic-sheet.pdf
+sch_pages: 2 x 1 cells, 2 pages kept of 2 tiles
+pdf: out/pcb-p-pack-schematic.pdf
+bom: out/pcb-p-pack-bom.csv
+build_sch exit 0
+erc_gate: warning  unconnected_wire_endpoint                17
+erc_gate: no blocking error (120 violations, 0 error(s) allow-listed with a reason, warnings 120)
+verdict: erc_gate               PASS         of 120 {"allowed": 0, "blocking": 0, "violations": 120}
+erc_gate exit 0
+TRN-001 port_protect exit 0
+SCH-005 pin_map_lands exit 0
+CMP-001 derate exit 0
+power_path exit 0
+BAT-001 pack_protection exit 0
+check_contracts exit 3
+energy_chain exit 1
+lcsc_fill exit 1
+lcsc_fill: 10 lines filled (0 of them from the certified table), 9 still blank of 34 (4 allow-listed, 5 not: C1, C12, F1, R10, R17,R19)
+bat: ===== new 13:33:03
+compile ok
+swallowed-calls ok
+schlayout verify: 216 pins in 179 nets, every component one name
+layout: 2 A3 pages on a 2 x 1 sheet -> paper "User" 838.20 297.18
+wrote pcb-p-pack.kicad_sch parts: 95 lib symbols: 21
+nets: 51 single-pin nets (should be empty or intentional): []
+intent: /root/rv/bat/run/new/v2/ecad/pcb-p-pack-p2/out/pcb-p-pack-intent.json (4 bypass, 5 rails, 2 nodes, 5 pair classes)
+gen_sch exit 0
+sch_prov: pcb-p-pack.net written by generator 4ce12f9caae757d0 (boards/p.json#gen_env, gen_footprints_b16.py, gen_footprints_e.py, gen_footprints_idc.py, gen_footprints_panel.py, gen_sch_p.py, idc_pads.py, intent.py, kisch.py, schlayout.py, and 59 land(s) in meshsat.pretty)
+sheet pdf: out/pcb-p-pack-schematic-sheet.pdf
+sch_pages: 2 x 1 cells, 2 pages kept of 2 tiles
+pdf: out/pcb-p-pack-schematic.pdf
+bom: out/pcb-p-pack-bom.csv
+build_sch exit 0
+erc_gate: warning  unconnected_wire_endpoint                17
+erc_gate: no blocking error (123 violations, 0 error(s) allow-listed with a reason, warnings 123)
+verdict: erc_gate               PASS         of 123 {"allowed": 0, "blocking": 0, "violations": 123}
+erc_gate exit 0
+TRN-001 port_protect exit 0
+SCH-005 pin_map_lands exit 0
+CMP-001 derate exit 0
+power_path exit 0
+BAT-001 pack_protection exit 0
+check_contracts exit 3
+energy_chain exit 1
+lcsc_fill exit 1
+lcsc_fill: 10 lines filled (0 of them from the certified table), 9 still blank of 37 (4 allow-listed, 5 not: C1, C12, F1, R10, R17,R19)
+bat: ===== parity of main's committed P files against main's generator
+schematic exit 0
+netlist exit 0
+bom exit 0
+erc exit 0
+intent exit 0
+bat: ===== the change: base regenerated against new
+netlist (expected DIFFERENT) exit 1
+bom (expected DIFFERENT) exit 1
+erc exit 1
+netdiff exit 0
+netdiff vs committed exit 0
+bom diff lines 13
+bat: done 2026-09-26T13:33:16Z

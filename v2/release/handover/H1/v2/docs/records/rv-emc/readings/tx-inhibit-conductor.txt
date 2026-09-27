@@ -1,0 +1,188 @@
+# Read-only dumps behind EMCON.md section 2 and 4.2 (TX_INHIBIT_n conductor and ribbon neighbours), 26 Sep 2026
+## main-pcb-c-display
+TX_INHIBIT_n (6 nodes):
+   C24.1  | 10n
+   J_PANEL.11 (Pin_11) | panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inhibit, HDMI selects, USB, heartbe
+   R14.1  | 10k
+   SW_EMCON.1 (Pin_1) | EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_HW low, the same sense; APEM 5636
+   TP10.1 (1) | TX_INHIBIT_n
+   U9.2 (TX_INHIBIT_n) | 74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; l
+EMCON_HW (4 nodes):
+   J_PANEL.8 (Pin_8) | panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inhibit, HDMI selects, USB, heartbe
+   TP11.1 (1) | EMCON_HW
+   U3.32 (GPIO21) | RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)
+   U9.4 (EMCON_HW) | 74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; l
+TR_APRS (6 nodes):
+   J_PANEL.7 (Pin_7) | panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inhibit, HDMI selects, USB, heartbe
+   R37.1  | 1k
+   TP46.1 (1) | TR_APRS
+   U3.35 (GPIO23) | RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)
+   U8.1 (I/O1) | USBLC6-2SC6
+   U8.6 (I/O1) | USBLC6-2SC6
+## A-r6cand-pcb-a-power
+TX_INHIBIT_n (3 nodes):
+   J_AB1.16 (Pin_16) | A-B interconnect (IDC 2x13, top side) to B16's underside header
+   J_MEZZ1.8 (Pin_8) | D8 mezzanine harness (IDC 2x8): its USB pair, the PTT mirror, the inhibit, the PA rail state, I2C
+   R145.1  | 100k
+EMCON_HW (5 nodes):
+   J_AB1.15 (Pin_15) | A-B interconnect (IDC 2x13, top side) to B16's underside header
+   R102.1  | 100k
+   TP15.1 (1) | EMCON_HW
+   U26.1 (EMCON_HW) | SN74LVC08APWR quad AND: EMCON gates for the PA and HF rails, the outlet interlock for PoE and USB-C
+   U26.4 (EMCON_HW) | SN74LVC08APWR quad AND: EMCON gates for the PA and HF rails, the outlet interlock for PoE and USB-C
+TR_APRS (4 nodes):
+   J_AB1.14 (Pin_14) | A-B interconnect (IDC 2x13, top side) to B16's underside header
+   J_MEZZ1.7 (Pin_7) | D8 mezzanine harness (IDC 2x8): its USB pair, the PTT mirror, the inhibit, the PA rail state, I2C
+   R116.1  | 100k
+   U30.1 (TR_APRS) | SN74LVC1G00DBVR NAND: OUTLET_OK = NOT (TR_APRS AND PA_EN), the outlet interlock
+## B-r6cand-pcb-b-compute
+TX_INHIBIT_n (3 nodes):
+   J_AB1.16 (Pin_16) | A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+   J_PANEL.11 (Pin_11) | panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMCON/ZEROIZE/TX_INHIBIT, HDMI sele
+   R59.1  | 100k
+EMCON_HW (12 nodes):
+   J_AB1.15 (Pin_15) | A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+   J_PANEL.8 (Pin_8) | panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMCON/ZEROIZE/TX_INHIBIT, HDMI sele
+   Q11.1 (G) | 2N7002: EMCON_ON = NOT EMCON_HW (S-01)
+   R58.1  | 10k
+   TP7.1 (1) | EMCON_HW
+   U19.1 (EMCON_HW) | SN74LVC08APWR quad AND: LimeSDR (hub port power AND EMCON AND software), RockBLOCK (EMCON AND software), LoRa (EMCON AND
+   U19.12 (EMCON_HW) | SN74LVC08APWR quad AND: LimeSDR (hub port power AND EMCON AND software), RockBLOCK (EMCON AND software), LoRa (EMCON AND
+   U19.9 (EMCON_HW) | SN74LVC08APWR quad AND: LimeSDR (hub port power AND EMCON AND software), RockBLOCK (EMCON AND software), LoRa (EMCON AND
+   U20.1 (EMCON_HW) | SN74LVC08APWR quad AND: E72 radios (EMCON AND software); spare gates grounded
+   U41.33 (PC5) | STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset
+   U51.33 (PC5) | STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset
+   U61.33 (PC5) | STM32H743VIT6 I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset
+TR_APRS (2 nodes):
+   J_AB1.14 (Pin_14) | A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+   J_PANEL.7 (Pin_7) | panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMCON/ZEROIZE/TX_INHIBIT, HDMI sele
+## D-r6cand-pcb-d-aprs
+TX_INHIBIT_n (4 nodes):
+   J_HARN1.8 (Pin_8) | A22 mezzanine harness J_MEZZ1 (IDC 2x8): USB pair, PTT mirror, inhibit, PA rail state, I2C, 3.3 V
+   R2.1  | 100k
+   TP15.1 (1) | TX_INHIBIT_n
+   U12.2 (TX_INHIBIT_n) | 74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)
+EMCON_HW: NOT IN NETLIST
+TR_APRS (2 nodes):
+   J_HARN1.7 (Pin_7) | A22 mezzanine harness J_MEZZ1 (IDC 2x8): USB pair, PTT mirror, inhibit, PA rail state, I2C, 3.3 V
+   R48.2  | 220
+J_PANEL | panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inhibit, HDMI selects, USB, heartbeats, slot enables, p
+   pin 1 (Pin_1) -> +5V
+   pin 2 (Pin_2) -> +5V
+   pin 3 (Pin_3) -> GND
+   pin 4 (Pin_4) -> SDA
+   pin 5 (Pin_5) -> SCL
+   pin 6 (Pin_6) -> EXP_INT
+   pin 7 (Pin_7) -> TR_APRS
+   pin 8 (Pin_8) -> EMCON_HW
+   pin 9 (Pin_9) -> GND
+   pin 10 (Pin_10) -> ZEROIZE_HW
+   pin 11 (Pin_11) -> TX_INHIBIT_n
+   pin 12 (Pin_12) -> HDMI_SEL1
+   pin 13 (Pin_13) -> HDMI_SEL2
+   pin 14 (Pin_14) -> GND
+   pin 15 (Pin_15) -> USB_PNL_P
+   pin 16 (Pin_16) -> USB_PNL_N
+   pin 17 (Pin_17) -> GND
+   pin 18 (Pin_18) -> HB1
+   pin 19 (Pin_19) -> HB2
+   pin 20 (Pin_20) -> HB3
+   pin 21 (Pin_21) -> SLOT_EN1
+   pin 22 (Pin_22) -> SLOT_EN2
+   pin 23 (Pin_23) -> SLOT_EN3
+   pin 24 (Pin_24) -> PI_SHDN_REQ
+   pin 25 (Pin_25) -> PI_KILL
+   pin 26 (Pin_26) -> SHORE_INHIBIT
+SW_EMCON | EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_HW low, the same sense; APEM 5636ADKB-2V, hinged safe
+   pin 1 (Pin_1) -> TX_INHIBIT_n
+   pin 2 (Pin_2) -> GND
+   pin 3 (Pin_3) -> unconnected-(SW_EMCON-Pin_3-Pad3)
+U9 | 74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitt
+   pin 1 (NC) -> unconnected-(U9-NC-Pad1)
+   pin 2 (TX_INHIBIT_n) -> TX_INHIBIT_n
+   pin 3 (GND) -> GND
+   pin 4 (EMCON_HW) -> EMCON_HW
+   pin 5 (+3V3) -> +3V3
+Q3 | 2N7002
+   pin 1 (G) -> Q3_G
+   pin 2 (S) -> GND
+   pin 3 (D) -> TX_K
+J_AB1 | A-B interconnect (IDC 2x13, top side) to B16's underside header
+   pin 1 (Pin_1) -> USB_D8_P
+   pin 2 (Pin_2) -> USB_D8_N
+   pin 3 (Pin_3) -> GND
+   pin 4 (Pin_4) -> GND
+   pin 5 (Pin_5) -> GND
+   pin 6 (Pin_6) -> GND
+   pin 7 (Pin_7) -> GND
+   pin 8 (Pin_8) -> GND
+   pin 9 (Pin_9) -> PI_SHDN_REQ
+   pin 10 (Pin_10) -> PI_KILL
+   pin 11 (Pin_11) -> SDA
+   pin 12 (Pin_12) -> SCL
+   pin 13 (Pin_13) -> EXP_INT
+   pin 14 (Pin_14) -> TR_APRS
+   pin 15 (Pin_15) -> EMCON_HW
+   pin 16 (Pin_16) -> TX_INHIBIT_n
+   pin 17 (Pin_17) -> SLOT_EN1
+   pin 18 (Pin_18) -> SLOT_EN2
+   pin 19 (Pin_19) -> SLOT_EN3
+   pin 20 (Pin_20) -> ZEROIZE_HW
+   pin 21 (Pin_21) -> SHORE_INHIBIT
+   pin 22 (Pin_22) -> GND
+   pin 23 (Pin_23) -> GND
+   pin 24 (Pin_24) -> GND
+   pin 25 (Pin_25) -> USB_E6_P
+   pin 26 (Pin_26) -> USB_E6_N
+J_MEZZ1 | D8 mezzanine harness (IDC 2x8): its USB pair, the PTT mirror, the inhibit, the PA rail state, I2C
+   pin 1 (Pin_1) -> USB_D8_P
+   pin 2 (Pin_2) -> USB_D8_N
+   pin 3 (Pin_3) -> GND
+   pin 4 (Pin_4) -> GND
+   pin 5 (Pin_5) -> GND
+   pin 6 (Pin_6) -> GND
+   pin 7 (Pin_7) -> TR_APRS
+   pin 8 (Pin_8) -> TX_INHIBIT_n
+   pin 9 (Pin_9) -> PA_EN
+   pin 10 (Pin_10) -> SDA
+   pin 11 (Pin_11) -> SCL
+   pin 12 (Pin_12) -> EXP_INT
+   pin 13 (Pin_13) -> +3V3
+   pin 14 (Pin_14) -> GND
+   pin 15 (Pin_15) -> ZEROIZE_HW
+   pin 16 (Pin_16) -> AB_SPARE
+R102 | 100k
+   pin 1 () -> EMCON_HW
+   pin 2 () -> GND
+U26 | SN74LVC08APWR quad AND: EMCON gates for the PA and HF rails, the outlet interlock for PoE and USB-C
+   pin 1 (EMCON_HW) -> EMCON_HW
+   pin 2 (PA_SW_EN) -> PA_SW_EN
+   pin 3 (PA_EN) -> PA_EN
+   pin 4 (EMCON_HW) -> EMCON_HW
+   pin 5 (HF_SW_EN) -> HF_SW_EN
+   pin 6 (HF_EN) -> HF_EN
+   pin 7 (GND) -> GND
+   pin 8 (POE_EN) -> POE_EN
+   pin 9 (POE_SW_EN) -> POE_SW_EN
+   pin 10 (OUTLET_OK) -> OUTLET_OK
+   pin 11 (PD_EN) -> PD_EN
+   pin 12 (PD_SW_EN) -> PD_SW_EN
+   pin 13 (OUTLET_OK) -> OUTLET_OK
+   pin 14 (+3V3) -> +3V3
+J_HARN1 | A22 mezzanine harness J_MEZZ1 (IDC 2x8): USB pair, PTT mirror, inhibit, PA rail state, I2C, 3.3 V
+   pin 1 (Pin_1) -> USB_D8_P
+   pin 2 (Pin_2) -> USB_D8_N
+   pin 3 (Pin_3) -> GND
+   pin 4 (Pin_4) -> GND
+   pin 5 (Pin_5) -> GND
+   pin 6 (Pin_6) -> GND
+   pin 7 (Pin_7) -> TR_APRS
+   pin 8 (Pin_8) -> TX_INHIBIT_n
+   pin 9 (Pin_9) -> PA_EN
+   pin 10 (Pin_10) -> SDA
+   pin 11 (Pin_11) -> SCL
+   pin 12 (Pin_12) -> EXP_INT
+   pin 13 (Pin_13) -> +3V3
+   pin 14 (Pin_14) -> GND
+   pin 15 (Pin_15) -> ZEROIZE_HW
+   pin 16 (Pin_16) -> AB_SPARE

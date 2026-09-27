@@ -1,0 +1,9 @@
+# Files that are byte-identical to another file here, one sha256 per line with the reason it is kept
+# twice. kb_verify.py FAILS on an undeclared duplicate.
+#
+# This gate exists because on 10 September 2026 I fetched two documents this tree already held, filed
+# them under new names, and nothing noticed. A store that accepts the same bytes twice cannot tell you
+# what it holds, and the second copy is exactly where a stale revision hides.
+#
+# The rule for the pairs below: a model or sheet that legitimately serves two folders keeps one copy
+# and is declared; anything else is deleted.

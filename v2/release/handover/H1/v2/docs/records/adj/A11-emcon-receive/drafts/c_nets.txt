@@ -1,0 +1,12 @@
+TX_INHIBIT_n (6 nodes):
+   C24.1  | 10n
+   J_PANEL.11 (Pin_11) | panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inhibit, HDMI selects, USB, heartbe
+   R14.1  | 10k
+   SW_EMCON.1 (Pin_1) | EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_HW low, the same sense; APEM 5636
+   TP10.1 (1) | TX_INHIBIT_n
+   U9.2 (TX_INHIBIT_n) | 74LVC1G34 non-inverting buffer (2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3
+EMCON_HW (4 nodes):
+   J_PANEL.8 (Pin_8) | panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inhibit, HDMI selects, USB, heartbe
+   TP11.1 (1) | EMCON_HW
+   U3.32 (GPIO21) | RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)
+   U9.4 (EMCON_HW) | 74LVC1G34 non-inverting buffer (2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3

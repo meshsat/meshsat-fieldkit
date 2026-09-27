@@ -1,0 +1,252 @@
+# Requirements
+
+K3s is very lightweight, but has some minimum requirements as outlined below.
+
+Whether you're configuring K3s to run in a container or as a native Linux service, each node running K3s should meet the following minimum requirements. These requirements are baseline for K3s and its packaged components, and do not include resources consumed by the workload itself.
+
+## Prerequisites
+
+Two nodes cannot have the same hostname.
+
+If multiple nodes will have the same hostname, or if hostnames may be reused by an automated provisioning system, use the `--with-node-id` option to append a random suffix for each node, or devise a unique name to pass with `--node-name` or `$K3S_NODE_NAME` for each node you add to the cluster.
+
+## Architecture
+
+K3s is available for the following architectures:
+
+-   x86_64
+-   armhf
+-   arm64/aarch64
+
+## Operating Systems
+
+K3s is expected to work on most modern Linux systems.
+
+Some OSs have additional setup requirements:
+
+-   SUSE Linux Enterprise / openSUSE
+-   Red Hat Enterprise Linux / CentOS / Fedora
+-   Ubuntu / Debian
+-   Raspberry Pi
+
+#### Firewalld
+
+It is recommended to turn off firewalld:
+
+``` prism-code
+systemctl disable firewalld --now
+```
+
+If you wish to keep firewalld enabled, by default, the following rules are required:
+
+``` prism-code
+firewall-cmd --permanent --add-port=6443/tcp #apiserver
+firewall-cmd --permanent --zone=trusted --add-source=10.42.0.0/16 #pods
+firewall-cmd --permanent --zone=trusted --add-source=10.43.0.0/16 #services
+firewall-cmd --reload
+```
+
+Additional ports may need to be opened depending on your setup. See [Inbound Rules](#inbound-rules-for-k3s-nodes) for more information. If you change the default CIDR for pods or services, you will need to update the firewall rules accordingly.
+
+#### RHEL 10
+
+On RHEL 10, an additional package is required:
+
+``` prism-code
+sudo dnf install -y kernel-modules-extra
+```
+
+#### Firewalld
+
+It is recommended to turn off firewalld:
+
+``` prism-code
+systemctl disable firewalld --now
+```
+
+If you wish to keep firewalld enabled, by default, the following rules are required:
+
+``` prism-code
+firewall-cmd --permanent --add-port=6443/tcp #apiserver
+firewall-cmd --permanent --zone=trusted --add-source=10.42.0.0/16 #pods
+firewall-cmd --permanent --zone=trusted --add-source=10.43.0.0/16 #services
+firewall-cmd --reload
+```
+
+Additional ports may need to be opened depending on your setup. See [Inbound Rules](#inbound-rules-for-k3s-nodes) for more information. If you change the default CIDR for pods or services, you will need to update the firewall rules accordingly.
+
+<span class="admonitionIcon_Rf37"></span>Older RHEL/CentOS Releases
+
+OS versions prior to RHEL 8.4 carry NetworkManager with a known bug that interferes with K3s networking. If using an older release, it is required to disable nm-cloud-setup and reboot the node:
+
+``` prism-code
+systemctl disable nm-cloud-setup.service nm-cloud-setup.timer
+reboot
+```
+
+Older Debian release may suffer from a known iptables bug. See [Known Issues](/known-issues#iptables).
+
+#### UFW
+
+It is recommended to turn off ufw (uncomplicated firewall):
+
+``` prism-code
+ufw disable
+```
+
+If you wish to keep ufw enabled, by default, the following rules are required:
+
+``` prism-code
+ufw allow 6443/tcp #apiserver
+ufw allow from 10.42.0.0/16 to any #pods
+ufw allow from 10.43.0.0/16 to any #services
+```
+
+Additional ports may need to be opened depending on your setup. See [Inbound Rules](#inbound-rules-for-k3s-nodes) for more information. If you change the default CIDR for pods or services, you will need to update the firewall rules accordingly.
+
+Raspberry Pi OS is Debian based, and may suffer from a known iptables bug. See [Known Issues](/known-issues#iptables).
+
+#### Cgroups
+
+Standard Raspberry Pi OS installations do not start with `cgroups` enabled. **K3S** needs `cgroups` to start the systemd service. `cgroups`can be enabled by appending `cgroup_memory=1 cgroup_enable=memory` to `/boot/firmware/cmdline.txt`.  
+**Note:** On Debian 11 and older Pi OS releases the cmdline.txt is located at `/boot/cmdline.txt`.
+
+Example cmdline.txt:
+
+``` prism-code
+console=serial0,115200 console=tty1 root=PARTUUID=58b06195-02 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait cgroup_memory=1 cgroup_enable=memory
+```
+
+#### Ubuntu Vxlan Module
+
+With Ubuntu 21.10 to Ubuntu 23.10, vxlan support on Raspberry Pi was moved into a separate kernel module. This step in not required for Ubuntu 24.04 and later.
+
+``` prism-code
+sudo apt install linux-modules-extra-raspi
+```
+
+For more information on which OSs were tested with Rancher managed K3s clusters, refer to the <a href="https://rancher.com/support-maintenance-terms/" rel="noopener noreferrer" target="_blank">Rancher support and maintenance terms.</a>
+
+## Hardware
+
+Hardware requirements scale based on the size of your deployments. The minimum requirements are:
+
+| Node   | CPU     | RAM    |
+|--------|---------|--------|
+| Server | 2 cores | 2 GB   |
+| Agent  | 1 core  | 512 MB |
+
+[Resource Profiling](/reference/resource-profiling) captures the results of tests and analysis to determine minimum resource requirements for the K3s agent, the K3s server with a workload, and the K3s server with one agent.
+
+### Disks
+
+K3s performance depends on the performance of the database. To ensure optimal speed, we recommend using an SSD when possible.
+
+If deploying K3s on a Raspberry Pi or other ARM devices, it is recommended that you use an external SSD. etcd is write intensive; SD cards and eMMC cannot handle the IO load.
+
+### Server Sizing Guide
+
+When limited on CPU and RAM on the server (control-plane + etcd) node, there are limitations on the amount of agent nodes that can be joined under standard workload conditions.
+
+| Server CPU | Server RAM | Number of Agents |
+|------------|------------|------------------|
+| 2          | 4 GB       | 0-350            |
+| 4          | 8 GB       | 351-900          |
+| 8          | 16 GB      | 901-1800         |
+| 16+        | 32 GB      | 1800+            |
+
+<span class="admonitionIcon_Rf37"></span>High Availability Sizing
+
+When using a high-availability setup of 3 server nodes, the number of agents can scale roughly \~50% more than the above table.  
+Ex: 3 server with 4 vCPU/8 GB can scale to \~1200 agents.
+
+It is recommended to join agent nodes in batches of 50 or less to allow the CPU to free up space, as there is a spike on node join. Remember to modify the default `cluster-cidr` if desiring more than 255 nodes!
+
+[Resource Profiling](/reference/resource-profiling#server-sizing-requirements-for-k3s) contains more information how these recommendations were found.
+
+## Networking
+
+The K3s server needs port 6443 to be accessible by all nodes.
+
+The nodes need to be able to reach other nodes over UDP port 8472 when using the Flannel VXLAN backend, or over UDP port 51820 (and 51821 if IPv6 is used) when using the Flannel WireGuard backend. The node should not listen on any other port. K3s uses reverse tunneling such that the nodes make outbound connections to the server and all kubelet traffic runs through that tunnel. However, if you do not use Flannel and provide your own custom CNI, then the ports needed by Flannel are not needed by K3s.
+
+If you wish to utilize the metrics server, all nodes must be accessible to each other on port 10250.
+
+If you plan on achieving high availability with embedded etcd, server nodes must be accessible to each other on ports 2379 and 2380.
+
+Additional changes to the firewall may be required depending on the OS used.
+
+<span class="admonitionIcon_Rf37"></span>Important
+
+The VXLAN port on nodes should not be exposed to the world as it opens up your cluster network to be accessed by anyone. Run your nodes behind a firewall/security group that disables access to port 8472.
+
+<span class="admonitionIcon_Rf37"></span>danger
+
+Flannel relies on the <a href="https://www.cni.dev/plugins/current/main/bridge/" rel="noopener noreferrer" target="_blank">Bridge CNI plugin</a> to create a L2 network that switches traffic. Rogue pods with `NET_RAW` capabilities can abuse that L2 network to launch attacks such as ARP spoofing. Therefore, as documented in the <a href="https://kubernetes.io/docs/concepts/security/pod-security-standards/" rel="noopener noreferrer" target="_blank">Kubernetes docs</a>, please set a restricted profile that disables `NET_RAW` on non-trustable pods.
+
+### Inbound Rules for K3s Nodes
+
+| Protocol | Port      | Source    | Destination | Description                                              |
+|----------|-----------|-----------|-------------|----------------------------------------------------------|
+| TCP      | 2379-2380 | Servers   | Servers     | Required only for HA with embedded etcd                  |
+| TCP      | 6443      | Agents    | Servers     | K3s supervisor and Kubernetes API Server                 |
+| UDP      | 8472      | All nodes | All nodes   | Required only for Flannel VXLAN                          |
+| TCP      | 10250     | All nodes | All nodes   | Kubelet metrics and API                                  |
+| UDP      | 51820     | All nodes | All nodes   | Required only for Flannel Wireguard with IPv4            |
+| UDP      | 51821     | All nodes | All nodes   | Required only for Flannel Wireguard with IPv6            |
+| TCP      | 5001      | All nodes | All nodes   | Required only for embedded distributed registry (Spegel) |
+| TCP      | 6443      | All nodes | All nodes   | Required only for embedded distributed registry (Spegel) |
+
+### Outbound Rules for K3s Nodes
+
+Typically, all outbound traffic is allowed.
+
+### Local Ports
+
+Kubernetes and the Container Runtime listen on the loopback interface for monitoring and communication between components. Avoid deploying other workloads that use these ports, or using these as the Node Port for pods or services.
+
+| Protocol | Port  | Description                                                |
+|----------|-------|------------------------------------------------------------|
+| TCP      | 2381  | etcd metrics                                               |
+| TCP      | 2382  | etcd legacy HTTP API                                       |
+| TCP      | 6444  | kube-apiserver local access                                |
+| TCP      | 10010 | containerd and cri-dockerd CRI service exec/logs streaming |
+| TCP      | 10248 | kubelet health                                             |
+| TCP      | 10249 | kube-proxy metrics                                         |
+| TCP      | 10250 | kubelet metrics and API                                    |
+| TCP      | 10256 | kube-proxy health                                          |
+| TCP      | 10257 | kube-controller-manager metrics                            |
+| TCP      | 10258 | cloud-controller-manager metrics                           |
+| TCP      | 10259 | kube-scheduler metrics                                     |
+
+## Large Clusters
+
+Hardware requirements are based on the size of your K3s cluster. For production and large clusters, we recommend using a high-availability setup with an external database. The following options are recommended for the external database in production:
+
+-   MySQL
+-   PostgreSQL
+-   etcd
+
+For control-plane node CPU and memory sizing relative to the number of agents, see the [Server Sizing Guide](#server-sizing-guide) above.
+
+### Disks
+
+The cluster performance depends on database performance. To ensure optimal speed, we recommend always using SSD disks to back your K3s cluster. On cloud providers, you will also want to use the minimum size that allows the maximum IOPS.
+
+### Network
+
+You should consider increasing the subnet size for the cluster CIDR so that you don't run out of IPs for the pods. You can do that by passing the `--cluster-cidr` option to K3s server upon starting.
+
+### Database
+
+K3s supports different databases including MySQL, PostgreSQL, MariaDB, and etcd. See [Cluster Datastore](/datastore) for more info.
+
+The following is a sizing guide for the database resources you need to run large clusters:
+
+| Deployment Size |   Nodes   | vCPUs |  RAM  |
+|:---------------:|:---------:|:-----:|:-----:|
+|      Small      | Up to 10  |   1   | 2 GB  |
+|     Medium      | Up to 100 |   2   | 8 GB  |
+|      Large      | Up to 250 |   4   | 16 GB |
+|     X-Large     | Up to 500 |   8   | 32 GB |
+|    XX-Large     |   500+    |  16   | 64 GB |

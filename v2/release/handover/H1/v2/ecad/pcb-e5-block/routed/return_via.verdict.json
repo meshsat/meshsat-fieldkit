@@ -1,0 +1,54 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "examined_same_reference": 0,
+  "examined_to_power": 0,
+  "exempt": 0,
+  "judged": 6,
+  "lacking": 6,
+  "same_plane": 0,
+  "slow": 0,
+  "standing": 6,
+  "unclassified": 0
+ },
+ "denominator": 6,
+ "evidence": [
+  "GND_P7 at (67.65, 176.50)",
+  "SHORE_INHIBIT_P8 at (70.19, 176.50)",
+  "USB_E6_P_P9 at (72.73, 176.50)",
+  "USB_E6_N_P10 at (75.27, 176.50)",
+  "GND_P11 at (77.81, 176.50)",
+  "DOCK_SPARE_P12 at (80.35, 176.50)"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-e5-block.kicad_pcb",
+   "sha256_16": "686b29a734c55b9a"
+  }
+ },
+ "missing_input": null,
+ "note": "the screen measures every signal via outside a fine-pitch fan against the declared 1.5 mm and then EXAMINES each one it flags against RET-003, which is what this rule's own requirement asks for: a via whose reference never changes and a via whose reference changes to another NET are not this screen's to fail, and what stands is a move between two ground planes with no ground via beside it",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "RET-004": "b6b1e4f327ce2d08"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "RET-004"
+ ],
+ "tool": "return_via",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "994b3d2315bb9859"
+ },
+ "ts": "2026-09-21T12:53:02Z",
+ "verdict": "FAIL",
+ "version": "unknown",
+ "writer": {
+  "file": "return_via.py",
+  "sha16": "d32e465cef7c5146"
+ }
+}

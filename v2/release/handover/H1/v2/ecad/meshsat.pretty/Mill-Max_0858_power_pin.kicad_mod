@@ -1,0 +1,107 @@
+(footprint "Mill-Max_0858_power_pin"
+	(version 20241229)
+	(generator "meshsat")
+	(generator_version "1.0")
+	(layer "F.Cu")
+	(descr "Mill-Max 0858-0-15-20-82-14-11-0 power spring pin, 9 A, through-hole, flange dia 3.18 mm, 9.60 mm above the board at free height, mid stroke 1.14 mm, max stroke 2.29 mm; place on a 4.0 mm grid (Mill-Max series 858)")
+	(tags "Mill-Max 0858 spring pin pogo power 9A")
+	(attr through_hole)
+	(property "Reference" "REF**"
+		(at 0 -2.7 0)
+		(layer "F.SilkS")
+		(uuid "563cde2e-ff6d-4722-8294-400f96eb76c0")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "Mill-Max_0858_power_pin"
+		(at 0 2.7 0)
+		(layer "F.Fab")
+		(uuid "f40a85b6-6677-4677-89af-158f941c407d")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "abee3437-a2b7-4a36-ac73-981efecfcd8c")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" "Mill-Max 0858-0-15-20-82-14-11-0 power spring pin, 9 A, through-hole, flange dia 3.18 mm, 9.60 mm above the board at free height, mid stroke 1.14 mm, max stroke 2.29 mm; place on a 4.0 mm grid (Mill-Max series 858)"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "73bd59b4-0a53-4b8b-9df4-050accfa8d4f")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(fp_circle
+		(center 0 0)
+		(end 1.5875 0)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.Fab")
+		(uuid "eb82356a-62ff-4ccb-a4af-1ea3872d7994")
+	)
+	(fp_circle
+		(center 0 0)
+		(end 0.508 0)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.Fab")
+		(uuid "ada01e27-fad4-4cdf-9ef1-08dbe305f531")
+	)
+	(fp_circle
+		(center 0 0)
+		(end 1.75 0)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.SilkS")
+		(uuid "744dd289-2472-4bb2-8187-4f551a1f2f06")
+	)
+	(fp_circle
+		(center 0 0)
+		(end 1.85 0)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.CrtYd")
+		(uuid "feb20e1d-3244-406c-b3f5-ec913a9c11c0")
+	)
+	(pad "1" thru_hole circle
+		(at 0 0)
+		(size 2 2)
+		(drill 1.3)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "5fda16aa-30d5-452c-9805-790fd8788432")
+	)
+)

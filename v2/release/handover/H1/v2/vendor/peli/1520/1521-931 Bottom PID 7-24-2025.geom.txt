@@ -1,0 +1,41 @@
+Geometry of 1521-931 Bottom PID 7-24-2025, probed from peli/1520/1521-931 Bottom PID 7-24-2025.STEP
+
+Written by tools/kb/geom_probe.py, not hand edited, so that a CAD model's measurable
+facts can be searched and reviewed as text instead of living only in whoever opened the
+model that day. Units: unknown. EVERY NUMBER IS A MEASUREMENT OF THIS FILE, NOT A
+SPECIFICATION: a vendor model may carry a connector, an antenna or a mounting boss the
+catalogue dimension leaves out, and it may be exported in any orientation. Where the
+manufacturer publishes a drawing, the drawing wins and this is how to find the number
+to check against it.
+
+source file: peli/1520/1521-931 Bottom PID 7-24-2025.STEP
+sha256 (first 16): c928181f3dbb369d
+size: 169337 bytes
+points read: 437
+
+1521-931 Bottom PID 7-24-2025 ENVELOPE (single part, so the bounding box of its points is the part).
+Axes are THE FILE'S OWN: a vendor model is often exported Y up, and this reader does
+not turn it, so read the three extents as sizes and not as width, depth and height.
+  This file also carries construction geometry far outside the body. The raw box is
+  20 x 19685 x 15, which is not the part. With the 22 outlying points removed
+  (5.0 percent of the file), the body is:
+  axis 1 -10.000 to 10.000   extent 20.000
+  axis 2 -31.839 to 0.062   extent 31.901
+  axis 3 -7.436 to 7.436   extent 14.872
+
+1521-931 Bottom PID 7-24-2025 HOLES AND ROUND FEATURES of 0.5 mm and over, coaxial duplicates collapsed.
+In an assembly a pattern is still true WITHIN the component that carries it, which is
+how a module's mounting holes come out right.
+  1521-931 Bottom PID 7-24-2025: diameter 1.360 : 2 holes   pattern 16.293 x 0.000
+      at X -8.147  Y -4.236
+      at X 8.147  Y -4.236
+  1521-931 Bottom PID 7-24-2025: diameter 1.387 : 2 holes   pattern 16.591 x 0.000
+      at X -8.295  Y -0.312
+      at X 8.295  Y -0.312
+  1521-931 Bottom PID 7-24-2025: diameter 1.409 : 2 holes   pattern 16.591 x 0.000
+      at X -8.295  Y 0.000
+      at X 8.295  Y 0.000
+
+(2 smaller circle sizes were read and are not listed: below 0.5 mm they are edge
+fillets and pad corners, not holes.)
+

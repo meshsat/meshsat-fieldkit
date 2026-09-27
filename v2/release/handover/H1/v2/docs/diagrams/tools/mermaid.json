@@ -1,0 +1,23 @@
+{
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "DejaVu Sans, Liberation Sans, Arial, sans-serif",
+    "fontSize": "14px",
+    "primaryColor": "#ffffff",
+    "primaryBorderColor": "#37474f",
+    "lineColor": "#455a64",
+    "clusterBkg": "#fafafa",
+    "clusterBorder": "#90a4ae"
+  },
+  "flowchart": {
+    "htmlLabels": false,
+    "nodeSpacing": 28,
+    "rankSpacing": 60,
+    "padding": 10,
+    "wrappingWidth": 320
+  },
+  "maxTextSize": 200000,
+  "htmlLabels": false,
+  "layout": "elk",
+  "themeCSS": ".edgeLabel rect.background { opacity: 1 !important; fill: #ffffff !important; }"
+}

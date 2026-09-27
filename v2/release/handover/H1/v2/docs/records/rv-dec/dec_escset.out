@@ -1,0 +1,330 @@
+== pcb-a-power-a23   ESCAPE_SKIP none
+   TODAY 25   T1 18   ESC 19   RULED = T1 | ESC 19
+   escaped by escape.py but outside T1 (1):
+     U29      SOT-23-6                                 F  smd  6 (numbered copper  6)  pitch 0.950   not fanned today
+         pad 1   /USB_WALL_P        nearest via of its net none
+         pad 2   GND                nearest via of its net 0.00 mm
+         pad 3   /USB_WALL_N        nearest via of its net none
+         pad 4   /USB_WALL_N        nearest via of its net none
+         pad 5   /+5V_DEV           nearest via of its net 0.00 mm
+         pad 6   /USB_WALL_P        nearest via of its net none
+   T1 alone would drop from TODAY (7):
+     U21      SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942   not escaped, fan removed
+     U22      SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942   not escaped, fan removed
+     U23      SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942   not escaped, fan removed
+     U4       SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942   not escaped, fan removed
+     U5       SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942   not escaped, fan removed
+     U6       SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942   not escaped, fan removed
+     U7       SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942   not escaped, fan removed
+   RULED removes from TODAY (7):
+     U21      SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942
+     U22      SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942
+     U23      SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942
+     U4       SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942
+     U5       SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942
+     U6       SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942
+     U7       SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942
+   RULED adds to TODAY (1):
+     U29      SOT-23-6                                 F  smd  6 (numbered copper  6)  pitch 0.950
+   fanned TODAY but not escaped (kept by T1's 1.0 mm term, as the 9 September D10 lesson asks) (0): 
+
+== pcb-b-compute-b19   ESCAPE_SKIP ['J_HDMI', 'U3', 'U4']
+   TODAY 72   T1 61   ESC 72   RULED = T1 | ESC 75
+   escaped by escape.py but outside T1 (14):
+     U10      WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm       F  smd  9 (numbered copper  7)  pitch 0.400   fanned TODAY
+         pad 1   /SCL               nearest via of its net 0.50 mm
+         pad 2   GND                nearest via of its net 8.17 mm
+         pad 3   /EXP_INT           nearest via of its net 1.28 mm
+         pad 4   /+3V3_DEV          nearest via of its net 0.50 mm
+         pad 5   /+3V3_DEV          nearest via of its net 1.15 mm
+         pad 6   /SDA               nearest via of its net 1.28 mm
+     U107     SOT-23-6                                 F  smd  6 (numbered copper  6)  pitch 0.950   not fanned today
+         pad 1   /USB_OTG_P1        nearest via of its net 1.46 mm
+         pad 2   GND                nearest via of its net 2.20 mm
+         pad 3   /USB_OTG_N1        nearest via of its net 3.74 mm
+         pad 4   /USB_OTG_N1        nearest via of its net 1.46 mm
+         pad 5   /VBUS_FLASH1       nearest via of its net 2.20 mm
+         pad 6   /USB_OTG_P1        nearest via of its net 3.74 mm
+     U207     SOT-23-6                                 F  smd  6 (numbered copper  6)  pitch 0.950   not fanned today
+         pad 1   /USB_OTG_P2        nearest via of its net 3.74 mm
+         pad 2   GND                nearest via of its net 2.20 mm
+         pad 3   /USB_OTG_N2        nearest via of its net 1.46 mm
+         pad 4   /USB_OTG_N2        nearest via of its net 3.74 mm
+         pad 5   /VBUS_FLASH2       nearest via of its net 2.20 mm
+         pad 6   /USB_OTG_P2        nearest via of its net 1.46 mm
+     U21      WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm       F  smd  9 (numbered copper  7)  pitch 0.400   fanned TODAY
+         pad 1   /+5V_LORA          nearest via of its net 0.50 mm
+         pad 3   /E22_CT            nearest via of its net 1.28 mm
+         pad 4   GND                nearest via of its net 0.50 mm
+         pad 5   /E22_EN            nearest via of its net 4.95 mm
+         pad 6   /+5V_DEV           nearest via of its net 1.28 mm
+         pad 7   GND                nearest via of its net 1.10 mm
+     U22      WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm       F  smd  9 (numbered copper  7)  pitch 0.400   fanned TODAY
+         pad 1   /+3V3_ZB           nearest via of its net 0.50 mm
+         pad 3   /E72_CT            nearest via of its net 1.28 mm
+         pad 4   GND                nearest via of its net 0.50 mm
+         pad 5   /E72_EN            nearest via of its net 28.93 mm
+         pad 6   /+3V3_DEV          nearest via of its net 1.28 mm
+         pad 7   GND                nearest via of its net 1.10 mm
+     U25      TSOT-23-6                                F  smd  6 (numbered copper  6)  pitch 0.950   not fanned today
+         pad 1   /+3V3_DEV          nearest via of its net 1.46 mm
+         pad 2   /+5V_DEV           nearest via of its net 1.74 mm
+         pad 3   /+5V_DEV           nearest via of its net 1.46 mm
+         pad 4   GND                nearest via of its net 1.46 mm
+         pad 5   /DEV_SW            nearest via of its net 2.20 mm
+         pad 6   /DEV_BST           nearest via of its net 1.46 mm
+     U29      SOT-23-6                                 F  smd  6 (numbered copper  6)  pitch 0.950   not fanned today
+         pad 1   /USB_WALL_P        nearest via of its net none
+         pad 2   GND                nearest via of its net 4.20 mm
+         pad 3   /USB_WALL_N        nearest via of its net 141.60 mm
+         pad 4   /USB_WALL_N        nearest via of its net 139.91 mm
+         pad 5   /+3V3_DEV          nearest via of its net 15.62 mm
+         pad 6   /USB_WALL_P        nearest via of its net none
+     U307     SOT-23-6                                 F  smd  6 (numbered copper  6)  pitch 0.950   not fanned today
+         pad 1   /USB_OTG_P3        nearest via of its net 1.46 mm
+         pad 2   GND                nearest via of its net 2.20 mm
+         pad 3   /USB_OTG_N3        nearest via of its net 1.46 mm
+         pad 4   /USB_OTG_N3        nearest via of its net 1.46 mm
+         pad 5   /VBUS_FLASH3       nearest via of its net 2.20 mm
+         pad 6   /USB_OTG_P3        nearest via of its net 3.74 mm
+     U33      SOT-23-6                                 F  smd  6 (numbered copper  6)  pitch 0.950   not fanned today
+         pad 1   /LIME_DP           nearest via of its net 1.46 mm
+         pad 2   GND                nearest via of its net 2.20 mm
+         pad 3   /LIME_DM           nearest via of its net 3.74 mm
+         pad 4   /LIME_DM           nearest via of its net 1.46 mm
+         pad 5   /+5V_LIME          nearest via of its net 2.20 mm
+         pad 6   /LIME_DP           nearest via of its net 3.74 mm
+     U34      SOT-23-6                                 F  smd  6 (numbered copper  6)  pitch 0.950   not fanned today
+         pad 1   /CAM_DP            nearest via of its net 3.74 mm
+         pad 2   GND                nearest via of its net 2.20 mm
+         pad 3   /CAM_DM            nearest via of its net 3.74 mm
+         pad 4   /CAM_DM            nearest via of its net 1.46 mm
+         pad 5   /+5V_CAM           nearest via of its net 2.20 mm
+         pad 6   /CAM_DP            nearest via of its net 1.46 mm
+     U35      SOT-23-6                                 F  smd  6 (numbered copper  6)  pitch 0.950   not fanned today
+         pad 1   /QMX_DP            nearest via of its net 1.46 mm
+         pad 2   GND                nearest via of its net 2.56 mm
+         pad 3   /QMX_DM            nearest via of its net none
+         pad 4   /QMX_DM            nearest via of its net none
+         pad 5   /VBUS_QMX          nearest via of its net none
+         pad 6   /QMX_DP            nearest via of its net 1.46 mm
+     U37      SOT-23-6                                 F  smd  6 (numbered copper  6)  pitch 0.950   not fanned today
+         pad 1   /USB_PNL_P         nearest via of its net none
+         pad 2   GND                nearest via of its net 4.45 mm
+         pad 3   /USB_PNL_N         nearest via of its net none
+         pad 4   /USB_PNL_N         nearest via of its net none
+         pad 5   /+3V3_DEV          nearest via of its net 15.12 mm
+         pad 6   /USB_PNL_P         nearest via of its net none
+     U82      Skyworks_SKY13351_MLPD-6_1x1mm           B  smd  7 (numbered copper  7)  pitch 0.354   not fanned today
+         pad 1   /SWA_O1            nearest via of its net 0.46 mm
+         pad 2   GND                nearest via of its net 1.06 mm
+         pad 2   GND                nearest via of its net 0.96 mm
+         pad 3   /SWA_O2            nearest via of its net 1.27 mm
+         pad 4   /WIFI_SEC          nearest via of its net 0.46 mm
+         pad 5   /SWA_IN            nearest via of its net none
+         pad 6   /WIFI_PRI          nearest via of its net 0.46 mm
+     U83      Skyworks_SKY13351_MLPD-6_1x1mm           B  smd  7 (numbered copper  7)  pitch 0.354   not fanned today
+         pad 1   /SWB_O1            nearest via of its net 0.46 mm
+         pad 2   GND                nearest via of its net 1.06 mm
+         pad 2   GND                nearest via of its net 0.96 mm
+         pad 3   /SWB_O2            nearest via of its net 1.27 mm
+         pad 4   /WIFI_SEC          nearest via of its net 0.46 mm
+         pad 5   /SWB_IN            nearest via of its net none
+         pad 6   /WIFI_PRI          nearest via of its net 0.46 mm
+   T1 alone would drop from TODAY (11):
+     U10      WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm       F  smd  9 (numbered copper  7)  pitch 0.400   ESCAPED, so RULED keeps its fan
+     U103     SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942   not escaped, fan removed
+     U104     SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942   not escaped, fan removed
+     U203     SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942   not escaped, fan removed
+     U204     SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942   not escaped, fan removed
+     U21      WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm       F  smd  9 (numbered copper  7)  pitch 0.400   ESCAPED, so RULED keeps its fan
+     U22      WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm       F  smd  9 (numbered copper  7)  pitch 0.400   ESCAPED, so RULED keeps its fan
+     U23      SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942   not escaped, fan removed
+     U24      SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942   not escaped, fan removed
+     U303     SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942   not escaped, fan removed
+     U304     SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942   not escaped, fan removed
+   RULED removes from TODAY (8):
+     U103     SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942
+     U104     SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942
+     U203     SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942
+     U204     SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942
+     U23      SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942
+     U24      SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942
+     U303     SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942
+     U304     SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm  F  smd 13 (numbered copper  9)  pitch 0.942
+   RULED adds to TODAY (11):
+     U107     SOT-23-6                                 F  smd  6 (numbered copper  6)  pitch 0.950
+     U207     SOT-23-6                                 F  smd  6 (numbered copper  6)  pitch 0.950
+     U25      TSOT-23-6                                F  smd  6 (numbered copper  6)  pitch 0.950
+     U29      SOT-23-6                                 F  smd  6 (numbered copper  6)  pitch 0.950
+     U307     SOT-23-6                                 F  smd  6 (numbered copper  6)  pitch 0.950
+     U33      SOT-23-6                                 F  smd  6 (numbered copper  6)  pitch 0.950
+     U34      SOT-23-6                                 F  smd  6 (numbered copper  6)  pitch 0.950
+     U35      SOT-23-6                                 F  smd  6 (numbered copper  6)  pitch 0.950
+     U37      SOT-23-6                                 F  smd  6 (numbered copper  6)  pitch 0.950
+     U82      Skyworks_SKY13351_MLPD-6_1x1mm           B  smd  7 (numbered copper  7)  pitch 0.354
+     U83      Skyworks_SKY13351_MLPD-6_1x1mm           B  smd  7 (numbered copper  7)  pitch 0.354
+   fanned TODAY but not escaped (kept by T1's 1.0 mm term, as the 9 September D10 lesson asks) (3): J_HDMI U3 U4
+
+== pcb-c-display-c8   ESCAPE_SKIP none
+   TODAY 5   T1 5   ESC 10   RULED = T1 | ESC 10
+   escaped by escape.py but outside T1 (5):
+     U10      SOT-23-6                                 B  smd  6 (numbered copper  6)  pitch 0.950   not fanned today
+         pad 1   /MAINSW_A2         nearest via of its net 3.74 mm
+         pad 2   GND                nearest via of its net 2.20 mm
+         pad 3   /MAINSW_B2         nearest via of its net 3.74 mm
+         pad 4   /MAINSW_B2         nearest via of its net 1.46 mm
+         pad 5   /+3V3              nearest via of its net 2.20 mm
+         pad 6   /MAINSW_A2         nearest via of its net 1.46 mm
+     U11      SOT-23-6                                 B  smd  6 (numbered copper  6)  pitch 0.950   not fanned today
+         pad 1   /PIJ2_A2           nearest via of its net 3.74 mm
+         pad 2   GND                nearest via of its net 2.20 mm
+         pad 3   /PIJ2_B2           nearest via of its net 1.46 mm
+         pad 4   /PIJ2_B2           nearest via of its net 3.59 mm
+         pad 5   /+3V3              nearest via of its net 2.20 mm
+         pad 6   /PIJ2_A2           nearest via of its net 1.46 mm
+     U6       SOT-23-6                                 B  smd  6 (numbered copper  6)  pitch 0.950   not fanned today
+         pad 1   /USB_PNL_P         nearest via of its net 3.32 mm
+         pad 2   GND                nearest via of its net 0.00 mm
+         pad 3   /USB_PNL_N         nearest via of its net 4.32 mm
+         pad 4   /USB_PNL_N         nearest via of its net 2.05 mm
+         pad 5   /+3V3              nearest via of its net 0.00 mm
+         pad 6   /USB_PNL_P         nearest via of its net 1.06 mm
+     U7       SOT-23-6                                 B  smd  6 (numbered copper  6)  pitch 0.950   not fanned today
+         pad 1   /SDA               nearest via of its net 1.46 mm
+         pad 2   GND                nearest via of its net 2.20 mm
+         pad 3   /SCL               nearest via of its net 1.46 mm
+         pad 4   /SCL               nearest via of its net 1.46 mm
+         pad 5   /+3V3              nearest via of its net 2.20 mm
+         pad 6   /SDA               nearest via of its net 1.46 mm
+     U8       SOT-23-6                                 B  smd  6 (numbered copper  6)  pitch 0.950   not fanned today
+         pad 1   /TR_APRS           nearest via of its net 3.74 mm
+         pad 2   GND                nearest via of its net 2.20 mm
+         pad 3   /EXP_INT           nearest via of its net 3.74 mm
+         pad 4   /EXP_INT           nearest via of its net 1.46 mm
+         pad 5   /+3V3              nearest via of its net 2.20 mm
+         pad 6   /TR_APRS           nearest via of its net 1.46 mm
+   T1 alone would drop from TODAY (0):
+   RULED removes from TODAY (0):
+   RULED adds to TODAY (5):
+     U10      SOT-23-6                                 B  smd  6 (numbered copper  6)  pitch 0.950
+     U11      SOT-23-6                                 B  smd  6 (numbered copper  6)  pitch 0.950
+     U6       SOT-23-6                                 B  smd  6 (numbered copper  6)  pitch 0.950
+     U7       SOT-23-6                                 B  smd  6 (numbered copper  6)  pitch 0.950
+     U8       SOT-23-6                                 B  smd  6 (numbered copper  6)  pitch 0.950
+   fanned TODAY but not escaped (kept by T1's 1.0 mm term, as the 9 September D10 lesson asks) (0): 
+
+== pcb-d-aprs-d9   ESCAPE_SKIP none
+   TODAY 7   T1 6   ESC 6   RULED = T1 | ESC 8
+   escaped by escape.py but outside T1 (2):
+     U15      WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm       F  smd  9 (numbered copper  7)  pitch 0.400   fanned TODAY
+         pad 1   /VGG_SW            nearest via of its net none
+         pad 3   /VGG_CT            nearest via of its net 1.50 mm
+         pad 4   GND                nearest via of its net 1.59 mm
+         pad 5   /PA_KEY            nearest via of its net 13.62 mm
+         pad 6   /+5V_D8            nearest via of its net 1.58 mm
+         pad 7   GND                nearest via of its net 2.11 mm
+     U5       SOT-23-6                                 F  smd  6 (numbered copper  6)  pitch 0.950   not fanned today
+         pad 1   /USB_D8_P          nearest via of its net none
+         pad 2   GND                nearest via of its net 0.00 mm
+         pad 3   /USB_D8_N          nearest via of its net none
+         pad 4   /USB_D8_N          nearest via of its net none
+         pad 5   /+5V_D8            nearest via of its net 0.00 mm
+         pad 6   /USB_D8_P          nearest via of its net none
+   T1 alone would drop from TODAY (1):
+     U15      WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm       F  smd  9 (numbered copper  7)  pitch 0.400   ESCAPED, so RULED keeps its fan
+   RULED removes from TODAY (0):
+   RULED adds to TODAY (1):
+     U5       SOT-23-6                                 F  smd  6 (numbered copper  6)  pitch 0.950
+   fanned TODAY but not escaped (kept by T1's 1.0 mm term, as the 9 September D10 lesson asks) (2): U4 U6
+
+== pcb-e1-dock-e7   ESCAPE_SKIP none
+   TODAY 12   T1 6   ESC 14   RULED = T1 | ESC 15
+   escaped by escape.py but outside T1 (9):
+     Q1       TDSON-8-1                                F  smd 14 (numbered copper  5)  pitch 0.400   fanned TODAY
+         pad 1   /DC_F              nearest via of its net 1.46 mm
+         pad 2   /DC_F              nearest via of its net 0.73 mm
+         pad 3   /DC_F              nearest via of its net 1.46 mm
+         pad 4   /Q1_G              nearest via of its net 0.73 mm
+         pad 5   /DC_P              nearest via of its net 0.99 mm
+     Q2       TDSON-8-1                                F  smd 14 (numbered copper  5)  pitch 0.400   fanned TODAY
+         pad 1   /TRK_OUT           nearest via of its net 1.46 mm
+         pad 2   /TRK_OUT           nearest via of its net 0.73 mm
+         pad 3   /TRK_OUT           nearest via of its net 1.46 mm
+         pad 4   /Q2_G              nearest via of its net 16.17 mm
+         pad 5   /VIN_RAW           nearest via of its net 0.00 mm
+     Q3       TDSON-8-1                                F  smd 14 (numbered copper  5)  pitch 0.400   fanned TODAY
+         pad 1   /TRK_SW1           nearest via of its net 1.46 mm
+         pad 2   /TRK_SW1           nearest via of its net 0.73 mm
+         pad 3   /TRK_SW1           nearest via of its net 1.46 mm
+         pad 4   /TRK_TG1           nearest via of its net 12.79 mm
+         pad 5   /PV_P              nearest via of its net 0.00 mm
+     Q4       TDSON-8-1                                F  smd 14 (numbered copper  5)  pitch 0.400   fanned TODAY
+         pad 1   GND                nearest via of its net 1.46 mm
+         pad 2   GND                nearest via of its net 0.73 mm
+         pad 3   GND                nearest via of its net 1.46 mm
+         pad 4   /TRK_BG1           nearest via of its net 0.73 mm
+         pad 5   /TRK_SW1           nearest via of its net 0.99 mm
+     Q5       TDSON-8-1                                F  smd 14 (numbered copper  5)  pitch 0.400   fanned TODAY
+         pad 1   GND                nearest via of its net 1.46 mm
+         pad 2   GND                nearest via of its net 0.72 mm
+         pad 3   GND                nearest via of its net 1.46 mm
+         pad 4   /TRK_BG2           nearest via of its net 0.72 mm
+         pad 5   /TRK_SW2           nearest via of its net 0.99 mm
+     Q6       TDSON-8-1                                F  smd 14 (numbered copper  5)  pitch 0.400   fanned TODAY
+         pad 1   /TRK_SW2           nearest via of its net 1.51 mm
+         pad 2   /TRK_SW2           nearest via of its net 1.97 mm
+         pad 3   /TRK_SW2           nearest via of its net 2.95 mm
+         pad 4   /TRK_TG2           nearest via of its net 0.72 mm
+         pad 5   /TRK_OUT           nearest via of its net 0.00 mm
+     U12      TSOT-23-6                                F  smd  6 (numbered copper  6)  pitch 0.950   not fanned today
+         pad 1   /+5V_E6            nearest via of its net 1.46 mm
+         pad 2   /CELL_F            nearest via of its net 1.74 mm
+         pad 3   /CELL_F            nearest via of its net 1.46 mm
+         pad 4   GND                nearest via of its net 1.46 mm
+         pad 5   /E6_SW             nearest via of its net 2.20 mm
+         pad 6   /E6_BST            nearest via of its net none
+     U3       SOT-23-6                                 F  smd  6 (numbered copper  6)  pitch 0.950   not fanned today
+         pad 1   /U3_VCAP           nearest via of its net 1.46 mm
+         pad 2   /GND_V             nearest via of its net 2.20 mm
+         pad 3   /DC_F              nearest via of its net 1.46 mm
+         pad 4   /DC_P              nearest via of its net 9.09 mm
+         pad 5   /Q1_G              nearest via of its net 2.20 mm
+         pad 6   /DC_F              nearest via of its net 1.46 mm
+     U4       SOT-23-6                                 F  smd  6 (numbered copper  6)  pitch 0.950   not fanned today
+         pad 1   /U4_VCAP           nearest via of its net 1.46 mm
+         pad 2   GND                nearest via of its net 2.20 mm
+         pad 3   /TRK_OUT           nearest via of its net 1.46 mm
+         pad 4   /VIN_RAW           nearest via of its net 1.46 mm
+         pad 5   /Q2_G              nearest via of its net 2.20 mm
+         pad 6   /TRK_OUT           nearest via of its net 1.46 mm
+   T1 alone would drop from TODAY (6):
+     Q1       TDSON-8-1                                F  smd 14 (numbered copper  5)  pitch 0.400   ESCAPED, so RULED keeps its fan
+     Q2       TDSON-8-1                                F  smd 14 (numbered copper  5)  pitch 0.400   ESCAPED, so RULED keeps its fan
+     Q3       TDSON-8-1                                F  smd 14 (numbered copper  5)  pitch 0.400   ESCAPED, so RULED keeps its fan
+     Q4       TDSON-8-1                                F  smd 14 (numbered copper  5)  pitch 0.400   ESCAPED, so RULED keeps its fan
+     Q5       TDSON-8-1                                F  smd 14 (numbered copper  5)  pitch 0.400   ESCAPED, so RULED keeps its fan
+     Q6       TDSON-8-1                                F  smd 14 (numbered copper  5)  pitch 0.400   ESCAPED, so RULED keeps its fan
+   RULED removes from TODAY (0):
+   RULED adds to TODAY (3):
+     U12      TSOT-23-6                                F  smd  6 (numbered copper  6)  pitch 0.950
+     U3       SOT-23-6                                 F  smd  6 (numbered copper  6)  pitch 0.950
+     U4       SOT-23-6                                 F  smd  6 (numbered copper  6)  pitch 0.950
+   fanned TODAY but not escaped (kept by T1's 1.0 mm term, as the 9 September D10 lesson asks) (1): U14
+
+== pcb-p-pack-p2   ESCAPE_SKIP none
+   TODAY 1   T1 1   ESC 2   RULED = T1 | ESC 2
+   escaped by escape.py but outside T1 (1):
+     D2       SOT-23-6                                 F  smd  6 (numbered copper  6)  pitch 0.950   not fanned today
+         pad 1   /SMBC              nearest via of its net 3.74 mm
+         pad 2   GND                nearest via of its net 2.20 mm
+         pad 3   /SMBD              nearest via of its net 1.46 mm
+         pad 4   /SMBD              nearest via of its net 1.46 mm
+         pad 5   /VCC_F             nearest via of its net 4.62 mm
+         pad 6   /SMBC              nearest via of its net 1.46 mm
+   T1 alone would drop from TODAY (0):
+   RULED removes from TODAY (0):
+   RULED adds to TODAY (1):
+     D2       SOT-23-6                                 F  smd  6 (numbered copper  6)  pitch 0.950
+   fanned TODAY but not escaped (kept by T1's 1.0 mm term, as the 9 September D10 lesson asks) (0): 
+

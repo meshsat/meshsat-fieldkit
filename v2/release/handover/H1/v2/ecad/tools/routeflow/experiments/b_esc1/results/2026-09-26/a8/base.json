@@ -1,0 +1,616 @@
+{
+ "label": "EXPERIMENTAL (Q-B-ESC-1)",
+ "board": "/root/besc1/v2/ecad/out/routeflow/b-esc1/a8/pcb-b-compute.kicad_pcb",
+ "board_sha256": "c858ef17f05d59f57e1777ea1edf775a69fa2e54fa61524b0985d943841bbd45",
+ "part_json": "/root/besc1/v2/ecad/out/routeflow/b-esc1/a8/part.json",
+ "part_json_sha256": "0d54fe1b87d1496825f867a8375c5ee869551652288f629ce9647d4e7b7e0a92",
+ "group": "S3",
+ "imported": null,
+ "copper_layers": 8,
+ "nets_in_group": 146,
+ "nets_with_pads": 146,
+ "zone_nets": [],
+ "open": 290,
+ "open_nets": [
+  "/+1V0_S3",
+  "/+1V1_S3",
+  "/+3V3_CM3",
+  "/+3V3_S3A",
+  "/+3V3_S3B",
+  "/BANK3_UPRX_N",
+  "/BANK3_UPRX_P",
+  "/BANK3_UPTX_N",
+  "/BANK3_UPTX_P",
+  "/BOE3_n",
+  "/CANT2_A",
+  "/CARD3_CLKREQ_n",
+  "/CARD3_CLK_N",
+  "/CARD3_CLK_P",
+  "/CARD3_RX_N",
+  "/CARD3_RX_P",
+  "/CARD3_TX_N",
+  "/CARD3_TX_P",
+  "/CC1_F3",
+  "/CC2_F3",
+  "/EN33_S3",
+  "/ETH3_P0_N",
+  "/ETH3_P0_P",
+  "/ETH3_P1_N",
+  "/ETH3_P1_P",
+  "/ETH3_P2_N",
+  "/FAN_PWM3",
+  "/FAN_TACHO3",
+  "/GNSS_PPS_CM3",
+  "/HB_CM3",
+  "/HOST3_0D_N",
+  "/HOST3_0D_P",
+  "/HOST3_0TX_N",
+  "/HOST3_0TX_P",
+  "/HUB3_PWRPOL",
+  "/HUB3_R1",
+  "/HUB3_RST_n",
+  "/HUB3_SMBUS_n",
+  "/HUB3_VBUS",
+  "/HUB3_XI",
+  "/HUB3_XO",
+  "/IOCC_SWCLK",
+  "/IOCC_SWDIO",
+  "/IOCC_VCAP",
+  "/IOCC_XI",
+  "/IOCC_XO",
+  "/LED_5V_A3",
+  "/LED_ACT_A3",
+  "/LED_NV_A3",
+  "/LED_PST0_A3",
+  "/LED_PST1_A3",
+  "/LED_PWR_A3",
+  "/LED_WIFI2_A",
+  "/LED_nACT3",
+  "/LED_nPWR3",
+  "/MUX3_A1N",
+  "/MUX3_A1P",
+  "/NVME3_CLKREQ_n",
+  "/NVME3_CLK_N",
+  "/NVME3_CLK_P",
+  "/NVME3_DEVSLP",
+  "/NVME3_RX_N",
+  "/NVME3_RX_P",
+  "/NVME3_nLED",
+  "/PCIE3_CLKREQ_n",
+  "/PCIE3_CLK_N",
+  "/PCIE3_RCLK0_N",
+  "/PCIE3_RCLK0_P",
+  "/PCIE3_RST1_n",
+  "/PCIE3_RST2_n",
+  "/PCIE3_RXSW_N",
+  "/PCIE3_RXSW_P",
+  "/PCIE3_RX_N",
+  "/PCIE3_RX_P",
+  "/PCIE3_TX_N",
+  "/PCIE3_TX_P",
+  "/PCIE3_nRST",
+  "/PCIE3_nWAKE",
+  "/PCIE_PWR_EN3",
+  "/PI_KILL_CM3",
+  "/PI_SHDN_REQ_CM3",
+  "/Q3B",
+  "/Q3C",
+  "/S3A_BOOT",
+  "/S3A_COMP",
+  "/S3A_COMPC",
+  "/S3A_FB",
+  "/S3A_RT",
+  "/S3A_SW",
+  "/S3B_BOOT",
+  "/S3B_COMP",
+  "/S3B_COMPC",
+  "/S3B_FB",
+  "/S3B_RT",
+  "/S3B_SW",
+  "/S3C_BST",
+  "/S3C_FB",
+  "/S3C_SS",
+  "/S3C_SW",
+  "/S3D_BST",
+  "/S3D_FB",
+  "/S3D_SS",
+  "/S3D_SW",
+  "/S3_EEPD",
+  "/S3_IREF",
+  "/S3_JTAGL",
+  "/S3_PRSNT3",
+  "/S3_PST0",
+  "/S3_PST1",
+  "/S3_PWRSAV",
+  "/S3_REXT",
+  "/S3_SLOTCLK",
+  "/S3_SLOTIMP",
+  "/S3_SMBCLK",
+  "/S3_SMBDAT",
+  "/S3_TEST1",
+  "/S3_TESTL",
+  "/SCL_CM3",
+  "/SDA_CM3",
+  "/SPI3_CE0",
+  "/SPI3_IO23",
+  "/SPI3_IO24",
+  "/SPI3_IO26",
+  "/SPI3_MISO",
+  "/SPI3_MOSI",
+  "/SPI3_SCLK",
+  "/UART0_RX3",
+  "/UART0_TX3",
+  "/USB_OTG_N3",
+  "/USB_OTG_P3",
+  "/VBUS_FLASH3",
+  "/WIFI2_W_DIS2_n",
+  "/WIFI2_W_DIS_n",
+  "/WIFI2_nLED",
+  "/nRPIBOOT3"
+ ],
+ "per_net_open": {
+  "/+1V0_S3": 26,
+  "/+1V1_S3": 17,
+  "/+3V3_CM3": 15,
+  "/+3V3_S3A": 14,
+  "/+3V3_S3B": 40,
+  "/BANK3_UPRX_N": 1,
+  "/BANK3_UPRX_P": 1,
+  "/BANK3_UPTX_N": 1,
+  "/BANK3_UPTX_P": 1,
+  "/BOE3_n": 3,
+  "/CANT2_A": 2,
+  "/CARD3_CLKREQ_n": 1,
+  "/CARD3_CLK_N": 1,
+  "/CARD3_CLK_P": 1,
+  "/CARD3_RX_N": 1,
+  "/CARD3_RX_P": 1,
+  "/CARD3_TX_N": 1,
+  "/CARD3_TX_P": 1,
+  "/CC1_F3": 1,
+  "/CC2_F3": 1,
+  "/EN33_S3": 3,
+  "/ETH3_P0_N": 1,
+  "/ETH3_P0_P": 1,
+  "/ETH3_P1_N": 1,
+  "/ETH3_P1_P": 1,
+  "/ETH3_P2_N": 1,
+  "/FAN_PWM3": 2,
+  "/FAN_TACHO3": 1,
+  "/GNSS_PPS_CM3": 2,
+  "/HB_CM3": 2,
+  "/HOST3_0D_N": 1,
+  "/HOST3_0D_P": 1,
+  "/HOST3_0TX_N": 1,
+  "/HOST3_0TX_P": 1,
+  "/HUB3_PWRPOL": 1,
+  "/HUB3_R1": 1,
+  "/HUB3_RST_n": 3,
+  "/HUB3_SMBUS_n": 1,
+  "/HUB3_VBUS": 2,
+  "/HUB3_XI": 3,
+  "/HUB3_XO": 3,
+  "/IOCC_SWCLK": 1,
+  "/IOCC_SWDIO": 1,
+  "/IOCC_VCAP": 3,
+  "/IOCC_XI": 2,
+  "/IOCC_XO": 2,
+  "/LED_5V_A3": 1,
+  "/LED_ACT_A3": 1,
+  "/LED_NV_A3": 1,
+  "/LED_PST0_A3": 1,
+  "/LED_PST1_A3": 1,
+  "/LED_PWR_A3": 1,
+  "/LED_WIFI2_A": 1,
+  "/LED_nACT3": 1,
+  "/LED_nPWR3": 1,
+  "/MUX3_A1N": 1,
+  "/MUX3_A1P": 1,
+  "/NVME3_CLKREQ_n": 1,
+  "/NVME3_CLK_N": 1,
+  "/NVME3_CLK_P": 1,
+  "/NVME3_DEVSLP": 1,
+  "/NVME3_RX_N": 1,
+  "/NVME3_RX_P": 1,
+  "/NVME3_nLED": 1,
+  "/PCIE3_CLKREQ_n": 1,
+  "/PCIE3_CLK_N": 1,
+  "/PCIE3_RCLK0_N": 1,
+  "/PCIE3_RCLK0_P": 1,
+  "/PCIE3_RST1_n": 1,
+  "/PCIE3_RST2_n": 1,
+  "/PCIE3_RXSW_N": 1,
+  "/PCIE3_RXSW_P": 1,
+  "/PCIE3_RX_N": 1,
+  "/PCIE3_RX_P": 1,
+  "/PCIE3_TX_N": 1,
+  "/PCIE3_TX_P": 1,
+  "/PCIE3_nRST": 1,
+  "/PCIE3_nWAKE": 3,
+  "/PCIE_PWR_EN3": 2,
+  "/PI_KILL_CM3": 2,
+  "/PI_SHDN_REQ_CM3": 2,
+  "/Q3B": 1,
+  "/Q3C": 1,
+  "/S3A_BOOT": 1,
+  "/S3A_COMP": 1,
+  "/S3A_COMPC": 1,
+  "/S3A_FB": 2,
+  "/S3A_RT": 1,
+  "/S3A_SW": 2,
+  "/S3B_BOOT": 1,
+  "/S3B_COMP": 1,
+  "/S3B_COMPC": 1,
+  "/S3B_FB": 2,
+  "/S3B_RT": 1,
+  "/S3B_SW": 2,
+  "/S3C_BST": 1,
+  "/S3C_FB": 2,
+  "/S3C_SS": 1,
+  "/S3C_SW": 2,
+  "/S3D_BST": 1,
+  "/S3D_FB": 2,
+  "/S3D_SS": 1,
+  "/S3D_SW": 2,
+  "/S3_EEPD": 1,
+  "/S3_IREF": 1,
+  "/S3_JTAGL": 2,
+  "/S3_PRSNT3": 1,
+  "/S3_PST0": 1,
+  "/S3_PST1": 1,
+  "/S3_PWRSAV": 1,
+  "/S3_REXT": 1,
+  "/S3_SLOTCLK": 1,
+  "/S3_SLOTIMP": 1,
+  "/S3_SMBCLK": 1,
+  "/S3_SMBDAT": 1,
+  "/S3_TEST1": 1,
+  "/S3_TESTL": 4,
+  "/SCL_CM3": 1,
+  "/SDA_CM3": 1,
+  "/SPI3_CE0": 1,
+  "/SPI3_IO23": 2,
+  "/SPI3_IO24": 2,
+  "/SPI3_IO26": 2,
+  "/SPI3_MISO": 2,
+  "/SPI3_MOSI": 2,
+  "/SPI3_SCLK": 2,
+  "/UART0_RX3": 1,
+  "/UART0_TX3": 1,
+  "/USB_OTG_N3": 3,
+  "/USB_OTG_P3": 3,
+  "/VBUS_FLASH3": 2,
+  "/WIFI2_W_DIS2_n": 1,
+  "/WIFI2_W_DIS_n": 2,
+  "/WIFI2_nLED": 1,
+  "/nRPIBOOT3": 1
+ },
+ "walk_split_nets": 135,
+ "residue": {
+  "U301": [
+   {
+    "pad": "U301.3",
+    "net": "/+1V0_S3",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.23",
+    "net": "/+1V0_S3",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.29",
+    "net": "/+1V0_S3",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.31",
+    "net": "/+1V0_S3",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.40",
+    "net": "/+1V0_S3",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.55",
+    "net": "/+1V0_S3",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.62",
+    "net": "/+1V0_S3",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.65",
+    "net": "/+1V0_S3",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.91",
+    "net": "/+1V0_S3",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.99",
+    "net": "/+1V0_S3",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.105",
+    "net": "/+1V0_S3",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.108",
+    "net": "/+1V0_S3",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.119",
+    "net": "/+1V0_S3",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.125",
+    "net": "/+1V0_S3",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.1",
+    "net": "/+3V3_S3B",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.8",
+    "net": "/+3V3_S3B",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.15",
+    "net": "/+3V3_S3B",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.49",
+    "net": "/+3V3_S3B",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.64",
+    "net": "/+3V3_S3B",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.79",
+    "net": "/+3V3_S3B",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.82",
+    "net": "/+3V3_S3B",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.84",
+    "net": "/+3V3_S3B",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.96",
+    "net": "/+3V3_S3B",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.113",
+    "net": "/+3V3_S3B",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.80",
+    "net": "/NVME3_CLK_N",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.81",
+    "net": "/NVME3_CLK_P",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.101",
+    "net": "/NVME3_RX_N",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.100",
+    "net": "/NVME3_RX_P",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.111",
+    "net": "/PCIE3_RCLK0_N",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.110",
+    "net": "/PCIE3_RCLK0_P",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.5",
+    "net": "/PCIE3_RST1_n",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.124",
+    "net": "/PCIE3_RXSW_P",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.89",
+    "net": "/S3_JTAGL",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.22",
+    "net": "/S3_TESTL",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.25",
+    "net": "/S3_TESTL",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.51",
+    "net": "/S3_TESTL",
+    "zone_net": false
+   }
+  ],
+  "U302": [
+   {
+    "pad": "U302.5",
+    "net": "/+1V1_S3",
+    "zone_net": false
+   },
+   {
+    "pad": "U302.8",
+    "net": "/+1V1_S3",
+    "zone_net": false
+   },
+   {
+    "pad": "U302.13",
+    "net": "/+1V1_S3",
+    "zone_net": false
+   },
+   {
+    "pad": "U302.21",
+    "net": "/+1V1_S3",
+    "zone_net": false
+   },
+   {
+    "pad": "U302.28",
+    "net": "/+1V1_S3",
+    "zone_net": false
+   },
+   {
+    "pad": "U302.31",
+    "net": "/+1V1_S3",
+    "zone_net": false
+   },
+   {
+    "pad": "U302.51",
+    "net": "/+1V1_S3",
+    "zone_net": false
+   },
+   {
+    "pad": "U302.57",
+    "net": "/+1V1_S3",
+    "zone_net": false
+   }
+  ],
+  "U309": [
+   {
+    "pad": "U309.4",
+    "net": "/BANK3_UPTX_N",
+    "zone_net": false
+   },
+   {
+    "pad": "U309.3",
+    "net": "/BANK3_UPTX_P",
+    "zone_net": false
+   },
+   {
+    "pad": "U309.2",
+    "net": "/BOE3_n",
+    "zone_net": false
+   },
+   {
+    "pad": "U309.18",
+    "net": "/HOST3_0TX_N",
+    "zone_net": false
+   },
+   {
+    "pad": "U309.19",
+    "net": "/HOST3_0TX_P",
+    "zone_net": false
+   }
+  ],
+  "U32B": [
+   {
+    "pad": "U32B.136",
+    "net": "/HOST3_0D_N",
+    "zone_net": false
+   },
+   {
+    "pad": "U32B.134",
+    "net": "/HOST3_0D_P",
+    "zone_net": false
+   },
+   {
+    "pad": "U32B.112",
+    "net": "/PCIE3_CLK_N",
+    "zone_net": false
+   },
+   {
+    "pad": "U32B.116",
+    "net": "/PCIE3_RX_P",
+    "zone_net": false
+   },
+   {
+    "pad": "U32B.124",
+    "net": "/PCIE3_TX_N",
+    "zone_net": false
+   },
+   {
+    "pad": "U32B.122",
+    "net": "/PCIE3_TX_P",
+    "zone_net": false
+   },
+   {
+    "pad": "U32B.109",
+    "net": "/PCIE3_nRST",
+    "zone_net": false
+   },
+   {
+    "pad": "U32B.104",
+    "net": "/PCIE3_nWAKE",
+    "zone_net": false
+   },
+   {
+    "pad": "U32B.106",
+    "net": "/PCIE_PWR_EN3",
+    "zone_net": false
+   },
+   {
+    "pad": "U32B.103",
+    "net": "/USB_OTG_N3",
+    "zone_net": false
+   },
+   {
+    "pad": "U32B.105",
+    "net": "/USB_OTG_P3",
+    "zone_net": false
+   }
+  ]
+ },
+ "copper_by_layer": {
+  "B.Cu": {
+   "tracks_mm": 590.1,
+   "segments": 119
+  },
+  "F.Cu": {
+   "tracks_mm": 844.7,
+   "segments": 344
+  },
+  "In2.Cu": {
+   "tracks_mm": 6.2,
+   "segments": 5
+  }
+ },
+ "vias": 184,
+ "board_ratsnest_total": 2889,
+ "seconds": 19.9
+}

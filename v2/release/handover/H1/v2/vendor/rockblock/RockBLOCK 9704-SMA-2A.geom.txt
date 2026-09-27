@@ -1,0 +1,973 @@
+Geometry of RockBLOCK 9704-SMA-2A, probed from rockblock/RockBLOCK 9704-SMA-2A.step
+
+Written by tools/kb/geom_probe.py, not hand edited, so that a CAD model's measurable
+facts can be searched and reviewed as text instead of living only in whoever opened the
+model that day. Units: mm. EVERY NUMBER IS A MEASUREMENT OF THIS FILE, NOT A
+SPECIFICATION: a vendor model may carry a connector, an antenna or a mounting boss the
+catalogue dimension leaves out, and it may be exported in any orientation. Where the
+manufacturer publishes a drawing, the drawing wins and this is how to find the number
+to check against it.
+
+source file: rockblock/RockBLOCK 9704-SMA-2A.step
+sha256 (first 16): 44ec669bd683b7ee
+size: 52669518 bytes
+points read: 117781
+
+RockBLOCK 9704-SMA-2A ENVELOPE: NOT MEASURED. This file is an assembly (119 component occurrences),
+  and each component's coordinates are its own; placing them needs a CAD kernel, which this
+  reader deliberately is not. Open the model, or probe a single-part file instead.
+  For the record, the raw spread of all points, which is NOT the part size:
+  X -91.0 to 116.4, Y -115.1 to 44.2, Z -55.2 to 55.2
+
+RockBLOCK 9704-SMA-2A HOLES AND ROUND FEATURES of 0.5 mm and over, coaxial duplicates collapsed.
+In an assembly a pattern is still true WITHIN the component that carries it, which is
+how a module's mounting holes come out right.
+  RockBLOCK 9704-SMA-2A: diameter 0.500 : 127 centres (too many to be a hole pattern, not listed)
+  RockBLOCK 9704-SMA-2A: diameter 0.509 : 3 holes   pattern 31.450 x 9.431
+      at X 80.860  Y -113.593
+      at X 104.110  Y -104.162
+      at X 112.310  Y -112.343
+  RockBLOCK 9704-SMA-2A: diameter 0.545 : 2 holes   pattern 0.000 x 12.880
+      at X 70.963  Y -108.388
+      at X 70.963  Y -95.509
+  RockBLOCK 9704-SMA-2A: diameter 0.550 : 8 holes   pattern 5.130 x 8.640
+      at X 66.535  Y -87.920
+      at X 66.535  Y -79.280
+      at X 67.335  Y -87.920
+      at X 67.335  Y -79.280
+      at X 70.565  Y -87.920
+      at X 70.565  Y -79.280
+      at X 71.665  Y -87.920
+      at X 71.665  Y -79.280
+  RockBLOCK 9704-SMA-2A: diameter 0.552 : 56 holes   pattern 47.181 x 43.034
+      at X 67.288  Y -80.554
+      at X 68.978  Y -76.350
+      at X 69.423  Y -88.600
+      at X 69.499  Y -88.638
+      at X 73.273  Y -78.238
+      at X 74.500  Y -79.873
+      at X 74.681  Y -88.678
+      at X 74.719  Y -88.754
+      at X 75.262  Y -79.873
+      at X 75.262  Y -77.873
+      at X 75.262  Y -78.873
+      at X 75.938  Y -87.173
+  RockBLOCK 9704-SMA-2A: diameter 0.559 : 30 holes   pattern 41.431 x 36.800
+      at X 73.273  Y -77.473
+      at X 73.746  Y -90.173
+      at X 76.027  Y -79.873
+      at X 76.027  Y -77.873
+      at X 76.027  Y -78.873
+      at X 80.923  Y -112.123
+      at X 82.973  Y -83.373
+      at X 83.496  Y -110.573
+      at X 83.673  Y -80.273
+      at X 84.773  Y -80.273
+      at X 86.546  Y -110.573
+      at X 89.673  Y -82.273
+  RockBLOCK 9704-SMA-2A: diameter 0.561 : 1 hole
+      at X 98.806  Y -73.814
+  RockBLOCK 9704-SMA-2A: diameter 0.562 : 1 hole
+      at X 67.358  Y -74.772
+  RockBLOCK 9704-SMA-2A: diameter 0.564 : 8 holes   pattern 5.306 x 5.103
+      at X 67.412  Y -71.256
+      at X 67.412  Y -74.715
+      at X 67.412  Y -71.096
+      at X 67.412  Y -69.668
+      at X 67.468  Y -74.771
+      at X 72.606  Y -70.707
+      at X 72.662  Y -70.763
+      at X 72.718  Y -70.707
+  RockBLOCK 9704-SMA-2A: diameter 0.574 : 9 holes   pattern 49.727 x 36.216
+      at X 65.685  Y -78.919
+      at X 65.735  Y -86.569
+      at X 68.935  Y -77.169
+      at X 69.381  Y -84.785
+      at X 105.162  Y -111.235
+      at X 110.831  Y -81.535
+      at X 112.043  Y -88.735
+      at X 113.081  Y -104.235
+      at X 115.412  Y -113.385
+  RockBLOCK 9704-SMA-2A: diameter 0.579 : 2 holes   pattern 0.001 x 0.182
+      at X 101.547  Y -81.061
+      at X 101.548  Y -80.879
+  RockBLOCK 9704-SMA-2A: diameter 0.581 : 6 holes   pattern 9.658 x 5.067
+      at X 84.506  Y -72.668
+      at X 88.370  Y -77.163
+      at X 89.673  Y -76.554
+      at X 90.300  Y -76.287
+      at X 93.537  Y -72.363
+      at X 94.164  Y -72.097
+  RockBLOCK 9704-SMA-2A: diameter 0.582 : 4 holes   pattern 0.150 x 17.825
+      at X 86.789  Y -108.517
+      at X 86.789  Y -91.217
+      at X 86.939  Y -107.992
+      at X 86.939  Y -90.692
+  RockBLOCK 9704-SMA-2A: diameter 0.589 : 3 holes   pattern 46.237 x 24.195
+      at X 65.476  Y -87.294
+      at X 83.511  Y -88.513
+      at X 111.713  Y -111.489
+  RockBLOCK 9704-SMA-2A: diameter 0.595 : 1 hole
+      at X 101.527  Y -84.918
+  RockBLOCK 9704-SMA-2A: diameter 0.600 : 33 holes   pattern 100.550 x 114.800
+      at X -20.450  Y 0.300
+      at X -20.050  Y 2.200
+      at X -19.450  Y 0.300
+      at X -19.450  Y 2.200
+      at X -18.900  Y 0.300
+      at X -3.345  Y -1.775
+      at X -3.345  Y -0.875
+      at X -1.000  Y -1.028
+      at X -1.000  Y 0.972
+      at X 1.000  Y -1.028
+      at X 1.000  Y 0.972
+      at X 3.345  Y -1.775
+  RockBLOCK 9704-SMA-2A: diameter 0.603 : 15 holes   pattern 46.113 x 43.050
+      at X 65.259  Y -86.065
+      at X 103.309  Y -96.227
+      at X 103.759  Y -79.327
+      at X 104.159  Y -101.777
+      at X 104.473  Y -92.409
+      at X 105.023  Y -69.259
+      at X 106.323  Y -90.359
+      at X 106.659  Y -106.706
+      at X 107.123  Y -92.259
+      at X 108.127  Y -79.359
+      at X 108.473  Y -112.309
+      at X 109.235  Y -112.309
+  RockBLOCK 9704-SMA-2A: diameter 0.607 : 3 holes   pattern 2.520 x 2.184
+      at X 99.085  Y -70.255
+      at X 99.085  Y -72.383
+      at X 101.605  Y -70.200
+  RockBLOCK 9704-SMA-2A: diameter 0.610 : 1 hole
+      at X 103.572  Y -70.251
+  RockBLOCK 9704-SMA-2A: diameter 0.612 : 2 holes   pattern 40.500 x 42.000
+      at X 68.013  Y -113.117
+      at X 108.513  Y -71.117
+  RockBLOCK 9704-SMA-2A: diameter 0.613 : 1 hole
+      at X 68.686  Y -77.183
+  RockBLOCK 9704-SMA-2A: diameter 0.619 : 1 hole
+      at X 100.976  Y -80.820
+  RockBLOCK 9704-SMA-2A: diameter 0.621 : 5 holes   pattern 26.579 x 7.271
+      at X 69.477  Y -72.375
+      at X 72.559  Y -72.876
+      at X 73.146  Y -72.871
+      at X 95.469  Y -79.645
+      at X 96.056  Y -79.640
+  RockBLOCK 9704-SMA-2A: diameter 0.622 : 1 hole
+      at X 101.570  Y -84.931
+  RockBLOCK 9704-SMA-2A: diameter 0.637 : 2 holes   pattern 10.279 x 32.179
+      at X 101.034  Y -78.940
+      at X 111.312  Y -111.119
+  RockBLOCK 9704-SMA-2A: diameter 0.642 : 18 holes   pattern 45.354 x 31.135
+      at X 68.359  Y -89.935
+      at X 80.965  Y -113.631
+      at X 81.285  Y -113.653
+      at X 85.778  Y -110.935
+      at X 90.013  Y -83.780
+      at X 92.413  Y -83.219
+      at X 104.215  Y -104.200
+      at X 104.535  Y -104.222
+      at X 105.509  Y -92.985
+      at X 106.347  Y -89.835
+      at X 108.063  Y -94.930
+      at X 109.863  Y -82.519
+  RockBLOCK 9704-SMA-2A: diameter 0.647 : 1 hole
+      at X 98.517  Y -69.158
+  RockBLOCK 9704-SMA-2A: diameter 0.650 : 3 holes   pattern 28.268 x 12.637
+      at X 70.615  Y -86.490
+      at X 70.615  Y -80.710
+      at X 98.883  Y -73.853
+  RockBLOCK 9704-SMA-2A: diameter 0.652 : 1 hole
+      at X 101.442  Y -78.837
+  RockBLOCK 9704-SMA-2A: diameter 0.658 : 1 hole
+      at X 101.588  Y -74.930
+  RockBLOCK 9704-SMA-2A: diameter 0.660 : 4 holes   pattern 7.890 x 2.605
+      at X -2.890  Y 2.605
+      at X 0.000  Y 0.000
+      at X 2.890  Y 2.605
+      at X 5.000  Y 0.000
+  RockBLOCK 9704-SMA-2A: diameter 0.662 : 8 holes   pattern 102.240 x 109.553
+      at X -1.210  Y 2.955
+      at X -1.210  Y 3.655
+      at X 1.210  Y 2.955
+      at X 1.210  Y 3.655
+      at X 73.059  Y -105.898
+      at X 73.059  Y -93.018
+      at X 73.075  Y -103.338
+      at X 101.030  Y -75.091
+  RockBLOCK 9704-SMA-2A: diameter 0.664 : 2 holes   pattern 2.133 x 2.576
+      at X 70.925  Y -100.437
+      at X 73.058  Y -103.012
+  RockBLOCK 9704-SMA-2A: diameter 0.670 : 1 hole
+      at X 67.516  Y -69.700
+  RockBLOCK 9704-SMA-2A: diameter 0.678 : 1 hole
+      at X 101.054  Y -77.530
+  RockBLOCK 9704-SMA-2A: diameter 0.681 : 1 hole
+      at X 101.423  Y -77.518
+  RockBLOCK 9704-SMA-2A: diameter 0.687 : 3 holes   pattern 2.520 x 2.184
+      at X 98.904  Y -72.496
+      at X 98.904  Y -70.369
+      at X 101.424  Y -70.313
+  RockBLOCK 9704-SMA-2A: diameter 0.691 : 2 holes   pattern 0.116 x 1.993
+      at X 100.942  Y -80.850
+      at X 101.058  Y -78.857
+  RockBLOCK 9704-SMA-2A: diameter 0.698 : 2 holes   pattern 2.520 x 1.482
+      at X 99.050  Y -71.304
+      at X 101.570  Y -72.785
+  RockBLOCK 9704-SMA-2A: diameter 0.699 : 2 holes   pattern 2.520 x 1.482
+      at X 98.391  Y -71.427
+      at X 100.911  Y -72.909
+  RockBLOCK 9704-SMA-2A: diameter 0.716 : 1 hole
+      at X 101.414  Y -78.905
+  RockBLOCK 9704-SMA-2A: diameter 0.724 : 13 holes   pattern 108.764 x 77.680
+      at X -2.330  Y 1.125
+      at X -2.330  Y 1.625
+      at X -1.770  Y 1.125
+      at X -1.770  Y 1.625
+      at X -1.210  Y 1.125
+      at X -1.210  Y 1.625
+      at X 1.210  Y 1.125
+      at X 1.210  Y 1.625
+      at X 1.770  Y 1.125
+      at X 1.770  Y 1.625
+      at X 2.330  Y 1.125
+      at X 2.330  Y 1.625
+  RockBLOCK 9704-SMA-2A: diameter 0.726 : 1 hole
+      at X 100.929  Y -84.027
+  RockBLOCK 9704-SMA-2A: diameter 0.727 : 6 holes   pattern 33.081 x 11.800
+      at X 70.868  Y -91.058
+      at X 74.537  Y -79.258
+      at X 86.307  Y -80.264
+      at X 96.858  Y -82.963
+      at X 101.196  Y -82.914
+      at X 103.949  Y -89.958
+  RockBLOCK 9704-SMA-2A: diameter 0.728 : 1 hole
+      at X 101.198  Y -83.875
+  RockBLOCK 9704-SMA-2A: diameter 0.730 : 33 holes   pattern 48.129 x 37.078
+      at X 67.258  Y -113.117
+      at X 68.972  Y -76.387
+      at X 69.356  Y -84.866
+      at X 69.505  Y -89.401
+      at X 70.870  Y -90.972
+      at X 73.617  Y -78.918
+      at X 74.539  Y -79.172
+      at X 77.517  Y -79.456
+      at X 79.444  Y -80.217
+      at X 81.944  Y -81.667
+      at X 84.017  Y -81.718
+      at X 86.309  Y -80.178
+  RockBLOCK 9704-SMA-2A: diameter 0.732 : 74 centres (too many to be a hole pattern, not listed)
+  RockBLOCK 9704-SMA-2A: diameter 0.736 : 1 hole
+      at X 98.678  Y -73.812
+  RockBLOCK 9704-SMA-2A: diameter 0.747 : 1 hole
+      at X 95.690  Y -70.151
+  RockBLOCK 9704-SMA-2A: diameter 0.750 : 11 holes   pattern 41.326 x 118.186
+      at X 31.788  Y 6.407
+      at X 31.788  Y 7.407
+      at X 70.869  Y -100.438
+      at X 70.981  Y -108.471
+      at X 70.981  Y -105.895
+      at X 70.981  Y -95.591
+      at X 70.981  Y -93.015
+      at X 73.077  Y -110.779
+      at X 73.077  Y -97.900
+      at X 73.115  Y -105.895
+      at X 73.115  Y -93.015
+  RockBLOCK 9704-SMA-2A: diameter 0.758 : 1 hole
+      at X 101.536  Y -75.037
+  RockBLOCK 9704-SMA-2A: diameter 0.766 : 5 holes   pattern 7.728 x 4.686
+      at X 82.545  Y -73.405
+      at X 83.905  Y -72.719
+      at X 87.769  Y -77.214
+      at X 90.272  Y -77.405
+      at X 90.272  Y -73.405
+  RockBLOCK 9704-SMA-2A: diameter 0.768 : 2 holes   pattern 7.628 x 2.748
+      at X 98.830  Y -73.815
+      at X 106.458  Y -71.067
+  RockBLOCK 9704-SMA-2A: diameter 0.776 : 2 holes   pattern 2.520 x 1.482
+      at X 99.013  Y -71.388
+      at X 101.533  Y -72.870
+  RockBLOCK 9704-SMA-2A: diameter 0.777 : 2 holes   pattern 2.520 x 1.482
+      at X 98.428  Y -71.343
+      at X 100.948  Y -72.824
+  RockBLOCK 9704-SMA-2A: diameter 0.780 : 1 hole
+      at X 101.566  Y -80.980
+  RockBLOCK 9704-SMA-2A: diameter 0.782 : 1 hole
+      at X 103.930  Y -70.443
+  RockBLOCK 9704-SMA-2A: diameter 0.785 : 1 hole
+      at X 98.449  Y -69.225
+  RockBLOCK 9704-SMA-2A: diameter 0.786 : 1 hole
+      at X 105.186  Y -81.183
+  RockBLOCK 9704-SMA-2A: diameter 0.790 : 1 hole
+      at X 103.899  Y -70.303
+  RockBLOCK 9704-SMA-2A: diameter 0.797 : 2 holes   pattern 2.590 x 10.021
+      at X 98.576  Y -73.972
+      at X 101.166  Y -83.993
+  RockBLOCK 9704-SMA-2A: diameter 0.799 : 1 hole
+      at X 100.950  Y -80.906
+  RockBLOCK 9704-SMA-2A: diameter 0.800 : 9 holes   pattern 39.500 x 1.800
+      at X -39.500  Y 0.500
+      at X -39.500  Y 1.900
+      at X -23.300  Y 1.900
+      at X -21.150  Y 2.100
+      at X -21.150  Y 2.300
+      at X -17.550  Y 2.100
+      at X -17.550  Y 2.300
+      at X 0.000  Y 0.500
+      at X 0.000  Y 1.900
+  RockBLOCK 9704-SMA-2A: diameter 0.802 : 1 hole
+      at X 105.186  Y -81.171
+  RockBLOCK 9704-SMA-2A: diameter 0.805 : 1 hole
+      at X 100.967  Y -83.912
+  RockBLOCK 9704-SMA-2A: diameter 0.808 : 1 hole
+      at X 105.180  Y -81.172
+  RockBLOCK 9704-SMA-2A: diameter 0.810 : 1 hole
+      at X 98.945  Y -73.707
+  RockBLOCK 9704-SMA-2A: diameter 0.813 : 1 hole
+      at X 65.653  Y -76.845
+  RockBLOCK 9704-SMA-2A: diameter 0.818 : 1 hole
+      at X 106.428  Y -69.949
+  RockBLOCK 9704-SMA-2A: diameter 0.819 : 24 holes   pattern 49.731 x 36.214
+      at X 65.682  Y -78.918
+      at X 65.732  Y -86.568
+      at X 67.234  Y -113.032
+      at X 68.932  Y -77.168
+      at X 69.382  Y -84.782
+      at X 73.532  Y -78.942
+      at X 77.432  Y -79.480
+      at X 79.420  Y -80.132
+      at X 81.920  Y -81.582
+      at X 83.932  Y -81.742
+      at X 91.958  Y -90.782
+      at X 92.239  Y -110.932
+  RockBLOCK 9704-SMA-2A: diameter 0.823 : 8 holes   pattern 8.940 x 0.277
+      at X -4.470  Y 2.966
+      at X -4.470  Y 3.244
+      at X -4.170  Y 2.966
+      at X -4.170  Y 3.244
+      at X 4.170  Y 2.966
+      at X 4.170  Y 3.244
+      at X 4.470  Y 2.966
+      at X 4.470  Y 3.244
+  RockBLOCK 9704-SMA-2A: diameter 0.840 : 1 hole
+      at X 95.548  Y -78.194
+  RockBLOCK 9704-SMA-2A: diameter 0.865 : 1 hole
+      at X 98.600  Y -73.738
+  RockBLOCK 9704-SMA-2A: diameter 0.870 : 1 hole
+      at X 31.788  Y -2.893
+  RockBLOCK 9704-SMA-2A: diameter 0.873 : 1 hole
+      at X 101.491  Y -74.809
+  RockBLOCK 9704-SMA-2A: diameter 0.874 : 2 holes   pattern 3.864 x 4.495
+      at X 84.505  Y -72.664
+      at X 88.369  Y -77.159
+  RockBLOCK 9704-SMA-2A: diameter 0.883 : 2 holes   pattern 3.864 x 4.190
+      at X 90.300  Y -76.286
+      at X 94.164  Y -72.096
+  RockBLOCK 9704-SMA-2A: diameter 0.884 : 2 holes   pattern 3.864 x 4.190
+      at X 89.673  Y -76.555
+      at X 93.537  Y -72.364
+  RockBLOCK 9704-SMA-2A: diameter 0.885 : 1 hole
+      at X 98.923  Y -73.929
+  RockBLOCK 9704-SMA-2A: diameter 0.904 : 1 hole
+      at X 101.023  Y -78.992
+  RockBLOCK 9704-SMA-2A: diameter 0.916 : 3 holes   pattern 2.520 x 2.184
+      at X 99.027  Y -70.603
+      at X 99.027  Y -72.731
+      at X 101.547  Y -70.548
+  RockBLOCK 9704-SMA-2A: diameter 0.925 : 2 holes   pattern 0.077 x 7.816
+      at X 101.026  Y -75.062
+      at X 101.103  Y -82.878
+  RockBLOCK 9704-SMA-2A: diameter 0.940 : 1 hole
+      at X 31.788  Y 7.407
+  RockBLOCK 9704-SMA-2A: diameter 0.942 : 1 hole
+      at X 105.796  Y -73.280
+  RockBLOCK 9704-SMA-2A: diameter 0.943 : 1 hole
+      at X 105.801  Y -69.909
+  RockBLOCK 9704-SMA-2A: diameter 0.950 : 17 holes   pattern 37.077 x 118.197
+      at X 31.788  Y 7.407
+      at X 66.325  Y -110.790
+      at X 66.325  Y -108.250
+      at X 66.325  Y -105.710
+      at X 66.325  Y -103.170
+      at X 66.325  Y -100.630
+      at X 66.325  Y -98.090
+      at X 66.325  Y -95.550
+      at X 66.325  Y -93.010
+      at X 68.865  Y -110.790
+      at X 68.865  Y -108.250
+      at X 68.865  Y -105.710
+  RockBLOCK 9704-SMA-2A: diameter 0.972 : 1 hole
+      at X 103.504  Y -70.083
+  RockBLOCK 9704-SMA-2A: diameter 0.974 : 1 hole
+      at X 105.845  Y -74.426
+  RockBLOCK 9704-SMA-2A: diameter 0.976 : 1 hole
+      at X 103.510  Y -76.179
+  RockBLOCK 9704-SMA-2A: diameter 0.979 : 45 holes   pattern 48.452 x 39.148
+      at X 65.613  Y -79.363
+      at X 67.137  Y -89.763
+      at X 68.863  Y -77.613
+      at X 68.937  Y -84.713
+      at X 69.613  Y -89.863
+      at X 71.930  Y -90.863
+      at X 75.780  Y -88.563
+      at X 77.365  Y -79.037
+      at X 79.863  Y -80.065
+      at X 82.363  Y -81.515
+      at X 87.533  Y -80.070
+      at X 90.915  Y -86.037
+  RockBLOCK 9704-SMA-2A: diameter 0.992 : 3 holes   pattern 36.150 x 23.131
+      at X 69.643  Y -88.827
+      at X 104.193  Y -78.477
+      at X 105.793  Y -101.607
+  RockBLOCK 9704-SMA-2A: diameter 0.995 : 4 holes   pattern 10.568 x 32.994
+      at X 104.091  Y -76.692
+      at X 109.686  Y -82.310
+      at X 113.536  Y -99.991
+      at X 114.659  Y -109.686
+  RockBLOCK 9704-SMA-2A: diameter 1.000 : 56 holes   pattern 51.000 x 47.800
+      at X 64.900  Y -114.600
+      at X 64.900  Y -67.800
+      at X 66.325  Y -110.790
+      at X 66.325  Y -108.250
+      at X 66.325  Y -105.710
+      at X 66.325  Y -103.170
+      at X 66.325  Y -100.630
+      at X 66.325  Y -98.090
+      at X 66.325  Y -95.550
+      at X 66.325  Y -93.010
+      at X 66.535  Y -87.920
+      at X 66.535  Y -79.280
+  RockBLOCK 9704-SMA-2A: diameter 1.002 : 3 holes   pattern 1.738 x 12.880
+      at X 71.123  Y -100.624
+      at X 72.860  Y -105.709
+      at X 72.860  Y -92.829
+  RockBLOCK 9704-SMA-2A: diameter 1.003 : 1 hole
+      at X 101.059  Y -82.898
+  RockBLOCK 9704-SMA-2A: diameter 1.004 : 4 holes   pattern 26.000 x 47.300
+      at X 64.900  Y -114.600
+      at X 64.900  Y -67.800
+      at X 89.900  Y -67.300
+      at X 90.900  Y -67.300
+  RockBLOCK 9704-SMA-2A: diameter 1.005 : 2 holes   pattern 1.000 x 0.000
+      at X 89.900  Y -115.100
+      at X 90.900  Y -115.100
+  RockBLOCK 9704-SMA-2A: diameter 1.010 : 5 holes   pattern 23.006 x 11.808
+      at X 89.840  Y -83.996
+      at X 101.688  Y -90.866
+      at X 107.890  Y -95.146
+      at X 110.997  Y -85.396
+      at X 112.846  Y -83.338
+  RockBLOCK 9704-SMA-2A: diameter 1.012 : 1 hole
+      at X 76.345  Y -71.033
+  RockBLOCK 9704-SMA-2A: diameter 1.019 : 1 hole
+      at X 104.020  Y -75.593
+  RockBLOCK 9704-SMA-2A: diameter 1.027 : 1 hole
+      at X 101.400  Y -77.538
+  RockBLOCK 9704-SMA-2A: diameter 1.028 : 1 hole
+      at X 98.575  Y -73.994
+  RockBLOCK 9704-SMA-2A: diameter 1.036 : 1 hole
+      at X 104.019  Y -76.147
+  RockBLOCK 9704-SMA-2A: diameter 1.040 : 2 holes   pattern 69.281 x 84.954
+      at X 31.788  Y 7.407
+      at X 101.070  Y -77.547
+  RockBLOCK 9704-SMA-2A: diameter 1.046 : 1 hole
+      at X 103.703  Y -70.334
+  RockBLOCK 9704-SMA-2A: diameter 1.051 : 1 hole
+      at X 98.945  Y -73.689
+  RockBLOCK 9704-SMA-2A: diameter 1.056 : 1 hole
+      at X 98.942  Y -73.973
+  RockBLOCK 9704-SMA-2A: diameter 1.059 : 1 hole
+      at X 101.093  Y -78.842
+  RockBLOCK 9704-SMA-2A: diameter 1.061 : 5 holes   pattern 7.728 x 4.686
+      at X 82.545  Y -73.402
+      at X 83.905  Y -72.716
+      at X 87.769  Y -77.211
+      at X 90.272  Y -77.402
+      at X 90.272  Y -73.402
+  RockBLOCK 9704-SMA-2A: diameter 1.073 : 1 hole
+      at X 101.381  Y -78.926
+  RockBLOCK 9704-SMA-2A: diameter 1.099 : 1 hole
+      at X 98.603  Y -73.715
+  RockBLOCK 9704-SMA-2A: diameter 1.100 : 9 holes   pattern 8.940 x 1.196
+      at X -4.470  Y -1.225
+      at X -4.470  Y -0.925
+      at X -4.170  Y -1.225
+      at X -4.170  Y -0.925
+      at X 0.006  Y -0.028
+      at X 4.170  Y -1.225
+      at X 4.170  Y -0.925
+      at X 4.470  Y -1.225
+      at X 4.470  Y -0.925
+  RockBLOCK 9704-SMA-2A: diameter 1.106 : 1 hole
+      at X 101.129  Y -80.938
+  RockBLOCK 9704-SMA-2A: diameter 1.111 : 1 hole
+      at X 105.878  Y -74.977
+  RockBLOCK 9704-SMA-2A: diameter 1.134 : 3 holes   pattern 2.520 x 2.183
+      at X 99.044  Y -72.642
+      at X 99.044  Y -70.515
+      at X 101.564  Y -70.459
+  RockBLOCK 9704-SMA-2A: diameter 1.140 : 1 hole
+      at X 101.661  Y -75.022
+  RockBLOCK 9704-SMA-2A: diameter 1.157 : 1 hole
+      at X 98.761  Y -69.333
+  RockBLOCK 9704-SMA-2A: diameter 1.173 : 3 holes   pattern 2.520 x 2.184
+      at X 98.817  Y -70.330
+      at X 98.817  Y -72.458
+      at X 101.337  Y -70.274
+  RockBLOCK 9704-SMA-2A: diameter 1.195 : 6 holes   pattern 36.700 x 25.500
+      at X 77.360  Y -79.026
+      at X 90.910  Y -86.026
+      at X 107.860  Y -104.526
+      at X 107.910  Y -93.676
+      at X 111.017  Y -83.926
+      at X 114.060  Y -102.226
+  RockBLOCK 9704-SMA-2A: diameter 1.200 : 6 holes   pattern 45.200 x 0.400
+      at X -25.750  Y 2.100
+      at X -25.750  Y 2.300
+      at X -19.450  Y 2.300
+      at X -19.450  Y 2.500
+      at X 19.450  Y 2.300
+      at X 19.450  Y 2.500
+  RockBLOCK 9704-SMA-2A: diameter 1.204 : 37 holes   pattern 47.950 x 39.153
+      at X 65.615  Y -79.370
+      at X 67.130  Y -89.765
+      at X 68.865  Y -77.620
+      at X 68.930  Y -84.715
+      at X 69.615  Y -89.870
+      at X 71.923  Y -90.865
+      at X 75.773  Y -88.565
+      at X 79.870  Y -80.062
+      at X 82.370  Y -81.512
+      at X 87.541  Y -80.068
+      at X 93.120  Y -89.712
+      at X 93.273  Y -110.865
+  RockBLOCK 9704-SMA-2A: diameter 1.215 : 1 hole
+      at X 101.482  Y -74.816
+  RockBLOCK 9704-SMA-2A: diameter 1.222 : 5 holes   pattern 0.310 x 4.708
+      at X 76.190  Y -71.020
+      at X 76.393  Y -75.728
+      at X 76.393  Y -75.513
+      at X 76.501  Y -75.620
+      at X 76.501  Y -71.020
+  RockBLOCK 9704-SMA-2A: diameter 1.223 : 2 holes   pattern 0.000 x 17.300
+      at X 90.167  Y -108.256
+      at X 90.167  Y -90.956
+  RockBLOCK 9704-SMA-2A: diameter 1.236 : 1 hole
+      at X 31.788  Y 7.407
+  RockBLOCK 9704-SMA-2A: diameter 1.247 : 1 hole
+      at X 31.788  Y 7.407
+  RockBLOCK 9704-SMA-2A: diameter 1.250 : 3 holes   pattern 0.000 x 2.000
+      at X 31.788  Y 5.407
+      at X 31.788  Y 6.407
+      at X 31.788  Y 7.407
+  RockBLOCK 9704-SMA-2A: diameter 1.262 : 4 holes   pattern 2.420 x 0.700
+      at X -1.210  Y 2.955
+      at X -1.210  Y 3.655
+      at X 1.210  Y 2.955
+      at X 1.210  Y 3.655
+  RockBLOCK 9704-SMA-2A: diameter 1.267 : 1 hole
+      at X 101.284  Y -77.512
+  RockBLOCK 9704-SMA-2A: diameter 1.270 : 4 holes   pattern 0.000 x 8.850
+      at X 31.788  Y -2.693
+      at X 31.788  Y 5.407
+      at X 31.788  Y 1.507
+      at X 31.788  Y 6.157
+  RockBLOCK 9704-SMA-2A: diameter 1.275 : 20 holes   pattern 3.090 x 10.304
+      at X 71.209  Y -110.894
+      at X 71.209  Y -108.318
+      at X 71.209  Y -105.742
+      at X 71.209  Y -103.166
+      at X 71.209  Y -100.591
+      at X 72.165  Y -110.894
+      at X 72.165  Y -108.318
+      at X 72.165  Y -105.742
+      at X 72.165  Y -103.166
+      at X 72.165  Y -100.591
+      at X 72.580  Y -100.591
+      at X 73.342  Y -110.894
+  RockBLOCK 9704-SMA-2A: diameter 1.288 : 16 holes   pattern 15.200 x 34.400
+      at X 88.700  Y -112.200
+      at X 88.700  Y -111.600
+      at X 90.100  Y -112.200
+      at X 90.100  Y -111.600
+      at X 95.600  Y -112.200
+      at X 95.600  Y -111.600
+      at X 97.000  Y -112.200
+      at X 97.000  Y -111.600
+      at X 97.200  Y -79.200
+      at X 97.200  Y -77.800
+      at X 97.800  Y -79.200
+      at X 97.800  Y -77.800
+  RockBLOCK 9704-SMA-2A: diameter 1.290 : 1 hole
+      at X 67.639  Y -71.435
+  RockBLOCK 9704-SMA-2A: diameter 1.300 : 1 hole
+      at X 31.788  Y 7.407
+  RockBLOCK 9704-SMA-2A: diameter 1.305 : 12 holes   pattern 31.468 x 19.894
+      at X 80.641  Y -81.514
+      at X 81.597  Y -81.514
+      at X 84.964  Y -82.259
+      at X 84.964  Y -81.303
+      at X 90.914  Y -87.759
+      at X 90.914  Y -86.803
+      at X 104.564  Y -100.241
+      at X 104.564  Y -101.197
+      at X 109.464  Y -88.959
+      at X 109.464  Y -88.003
+      at X 111.153  Y -81.464
+      at X 112.109  Y -81.464
+  RockBLOCK 9704-SMA-2A: diameter 1.312 : 1 hole
+      at X 103.666  Y -77.836
+  RockBLOCK 9704-SMA-2A: diameter 1.350 : 1 hole
+      at X 31.788  Y 7.407
+  RockBLOCK 9704-SMA-2A: diameter 1.365 : 1 hole
+      at X 101.061  Y -83.552
+  RockBLOCK 9704-SMA-2A: diameter 1.390 : 1 hole
+      at X 101.066  Y -84.362
+  RockBLOCK 9704-SMA-2A: diameter 1.400 : 5 holes   pattern 120.707 x 79.730
+      at X -19.450  Y 0.300
+      at X -19.450  Y 2.200
+      at X 19.450  Y 0.300
+      at X 19.450  Y 2.200
+      at X 101.257  Y -77.530
+  RockBLOCK 9704-SMA-2A: diameter 1.411 : 1 hole
+      at X 101.263  Y -75.113
+  RockBLOCK 9704-SMA-2A: diameter 1.450 : 1 hole
+      at X 112.000  Y -75.750
+  RockBLOCK 9704-SMA-2A: diameter 1.460 : 1 hole
+      at X 105.188  Y -81.244
+  RockBLOCK 9704-SMA-2A: diameter 1.500 : 5 holes   pattern 47.500 x 43.900
+      at X 66.400  Y -113.200
+      at X 67.800  Y -70.700
+      at X 108.400  Y -69.300
+      at X 112.000  Y -75.750
+      at X 113.900  Y -112.600
+  RockBLOCK 9704-SMA-2A: diameter 1.520 : 16 holes   pattern 15.200 x 34.400
+      at X 88.700  Y -112.200
+      at X 88.700  Y -111.600
+      at X 90.100  Y -112.200
+      at X 90.100  Y -111.600
+      at X 95.600  Y -112.200
+      at X 95.600  Y -111.600
+      at X 97.000  Y -112.200
+      at X 97.000  Y -111.600
+      at X 97.200  Y -79.200
+      at X 97.200  Y -77.800
+      at X 97.800  Y -77.800
+      at X 97.800  Y -79.200
+  RockBLOCK 9704-SMA-2A: diameter 1.547 : 8 holes   pattern 31.470 x 18.938
+      at X 80.640  Y -81.514
+      at X 81.598  Y -81.514
+      at X 84.964  Y -81.302
+      at X 90.914  Y -86.802
+      at X 104.564  Y -100.240
+      at X 109.464  Y -88.002
+      at X 111.152  Y -81.464
+      at X 112.110  Y -81.464
+  RockBLOCK 9704-SMA-2A: diameter 1.548 : 1 hole
+      at X 98.811  Y -69.325
+  RockBLOCK 9704-SMA-2A: diameter 1.554 : 1 hole
+      at X 105.228  Y -81.274
+  RockBLOCK 9704-SMA-2A: diameter 1.575 : 1 hole
+      at X 105.155  Y -81.189
+  RockBLOCK 9704-SMA-2A: diameter 1.576 : 4 holes   pattern 28.154 x 23.427
+      at X 83.309  Y -88.264
+      at X 84.452  Y -88.264
+      at X 111.464  Y -111.690
+      at X 111.464  Y -110.548
+  RockBLOCK 9704-SMA-2A: diameter 1.579 : 20 holes   pattern 3.093 x 10.304
+      at X 71.207  Y -110.894
+      at X 71.207  Y -108.318
+      at X 71.207  Y -105.742
+      at X 71.207  Y -103.166
+      at X 71.207  Y -100.591
+      at X 72.167  Y -110.894
+      at X 72.167  Y -108.318
+      at X 72.167  Y -105.742
+      at X 72.167  Y -103.166
+      at X 72.167  Y -100.591
+      at X 72.578  Y -100.591
+      at X 73.340  Y -110.894
+  RockBLOCK 9704-SMA-2A: diameter 1.582 : 4 holes   pattern 22.910 x 7.965
+      at X 72.853  Y -73.472
+      at X 72.853  Y -72.276
+      at X 95.763  Y -80.241
+      at X 95.763  Y -79.045
+  RockBLOCK 9704-SMA-2A: diameter 1.600 : 2 holes   pattern 16.000 x 26.500
+      at X 11.000  Y 2.500
+      at X 27.000  Y 29.000
+  RockBLOCK 9704-SMA-2A: diameter 1.650 : 4 holes   pattern 5.080 x 5.080
+      at X 109.460  Y -78.290
+      at X 109.460  Y -73.210
+      at X 114.540  Y -78.290
+      at X 114.540  Y -73.210
+  RockBLOCK 9704-SMA-2A: diameter 1.671 : 1 hole
+      at X 103.657  Y -70.361
+  RockBLOCK 9704-SMA-2A: diameter 1.700 : 20 holes   pattern 114.534 x 110.762
+      at X 0.006  Y -0.028
+      at X 66.325  Y -108.250
+      at X 66.325  Y -105.710
+      at X 66.325  Y -103.170
+      at X 66.325  Y -100.630
+      at X 66.325  Y -98.090
+      at X 66.325  Y -95.550
+      at X 66.325  Y -93.010
+      at X 68.865  Y -110.790
+      at X 68.865  Y -108.250
+      at X 68.865  Y -105.710
+      at X 68.865  Y -103.170
+  RockBLOCK 9704-SMA-2A: diameter 1.780 : 1 hole
+      at X 65.848  Y -76.381
+  RockBLOCK 9704-SMA-2A: diameter 1.781 : 1 hole
+      at X 106.224  Y -113.950
+  RockBLOCK 9704-SMA-2A: diameter 1.800 : 4 holes   pattern 38.900 x 1.900
+      at X -19.450  Y 0.300
+      at X -19.450  Y 2.200
+      at X 19.450  Y 0.300
+      at X 19.450  Y 2.200
+  RockBLOCK 9704-SMA-2A: diameter 1.818 : 1 hole
+      at X 111.464  Y -111.692
+  RockBLOCK 9704-SMA-2A: diameter 1.860 : 1 hole
+      at X 0.011  Y -0.028
+  RockBLOCK 9704-SMA-2A: diameter 1.960 : 16 holes   pattern 6.380 x 7.100
+      at X -3.190  Y -3.375
+      at X -3.190  Y -1.875
+      at X -3.190  Y 0.225
+      at X -3.190  Y 3.655
+      at X -3.170  Y 1.125
+      at X -3.170  Y 2.175
+      at X -3.170  Y 3.025
+      at X -3.170  Y 3.725
+      at X 3.170  Y 1.125
+      at X 3.170  Y 2.175
+      at X 3.170  Y 3.025
+      at X 3.170  Y 3.725
+  RockBLOCK 9704-SMA-2A: diameter 1.983 : 2 holes   pattern 22.910 x 6.769
+      at X 72.853  Y -73.472
+      at X 95.763  Y -80.241
+  RockBLOCK 9704-SMA-2A: diameter 1.986 : 2 holes   pattern 22.910 x 6.769
+      at X 72.853  Y -72.273
+      at X 95.763  Y -79.043
+  RockBLOCK 9704-SMA-2A: diameter 2.000 : 5 holes   pattern 38.900 x 0.228
+      at X -19.450  Y 0.000
+      at X -19.450  Y 0.200
+      at X 0.013  Y -0.028
+      at X 19.450  Y 0.000
+      at X 19.450  Y 0.200
+  RockBLOCK 9704-SMA-2A: diameter 2.100 : 2 holes   pattern 0.000 x 2.150
+      at X 31.788  Y 4.007
+      at X 31.788  Y 6.157
+  RockBLOCK 9704-SMA-2A: diameter 2.160 : 2 holes   pattern 6.380 x 0.000
+      at X -3.190  Y -3.675
+      at X 3.190  Y -3.675
+  RockBLOCK 9704-SMA-2A: diameter 2.161 : 1 hole
+      at X 105.230  Y -81.455
+  RockBLOCK 9704-SMA-2A: diameter 2.172 : 1 hole
+      at X 105.213  Y -81.477
+  RockBLOCK 9704-SMA-2A: diameter 2.182 : 2 holes   pattern 0.213 x 1.042
+      at X 104.992  Y -82.472
+      at X 105.205  Y -81.430
+  RockBLOCK 9704-SMA-2A: diameter 2.191 : 1 hole
+      at X 101.244  Y -79.574
+  RockBLOCK 9704-SMA-2A: diameter 2.200 : 4 holes   pattern 38.900 x 0.200
+      at X -19.450  Y 0.000
+      at X -19.450  Y 0.200
+      at X 19.450  Y 0.000
+      at X 19.450  Y 0.200
+  RockBLOCK 9704-SMA-2A: diameter 2.213 : 1 hole
+      at X 105.189  Y -81.439
+  RockBLOCK 9704-SMA-2A: diameter 2.243 : 1 hole
+      at X 105.181  Y -81.449
+  RockBLOCK 9704-SMA-2A: diameter 2.249 : 1 hole
+      at X 101.238  Y -78.168
+  RockBLOCK 9704-SMA-2A: diameter 2.258 : 1 hole
+      at X 105.198  Y -81.450
+  RockBLOCK 9704-SMA-2A: diameter 2.295 : 5 holes   pattern 7.728 x 7.695
+      at X 86.123  Y -72.229
+      at X 88.055  Y -69.334
+      at X 89.987  Y -77.029
+      at X 91.919  Y -72.229
+      at X 93.851  Y -77.029
+  RockBLOCK 9704-SMA-2A: diameter 2.296 : 6 holes   pattern 11.592 x 5.067
+      at X 82.259  Y -77.602
+      at X 82.259  Y -72.612
+      at X 86.123  Y -72.536
+      at X 88.055  Y -76.574
+      at X 91.919  Y -72.536
+      at X 93.851  Y -77.336
+  RockBLOCK 9704-SMA-2A: diameter 2.318 : 1 hole
+      at X 105.223  Y -81.431
+  RockBLOCK 9704-SMA-2A: diameter 2.357 : 1 hole
+      at X 105.229  Y -81.501
+  RockBLOCK 9704-SMA-2A: diameter 2.500 : 4 holes   pattern 5.080 x 5.080
+      at X 109.460  Y -78.290
+      at X 109.460  Y -73.210
+      at X 114.540  Y -78.290
+      at X 114.540  Y -73.210
+  RockBLOCK 9704-SMA-2A: diameter 2.560 : 12 holes   pattern 6.380 x 7.330
+      at X -3.190  Y -3.675
+      at X -3.190  Y -1.875
+      at X -3.190  Y 0.225
+      at X -3.190  Y 2.145
+      at X -3.190  Y 2.975
+      at X -3.190  Y 3.655
+      at X 3.190  Y -3.675
+      at X 3.190  Y -1.875
+      at X 3.190  Y 0.225
+      at X 3.190  Y 2.145
+      at X 3.190  Y 2.975
+      at X 3.190  Y 3.655
+  RockBLOCK 9704-SMA-2A: diameter 2.589 : 5 holes   pattern 7.728 x 7.695
+      at X 86.122  Y -72.232
+      at X 88.054  Y -69.337
+      at X 89.986  Y -77.032
+      at X 91.918  Y -72.232
+      at X 93.850  Y -77.032
+  RockBLOCK 9704-SMA-2A: diameter 2.603 : 6 holes   pattern 11.592 x 5.067
+      at X 82.259  Y -77.606
+      at X 82.259  Y -72.616
+      at X 86.123  Y -72.540
+      at X 88.055  Y -76.578
+      at X 91.919  Y -72.540
+      at X 93.851  Y -77.340
+  RockBLOCK 9704-SMA-2A: diameter 2.687 : 1 hole
+      at X 105.233  Y -81.410
+  RockBLOCK 9704-SMA-2A: diameter 2.864 : 1 hole
+      at X 105.163  Y -81.518
+  RockBLOCK 9704-SMA-2A: diameter 2.882 : 1 hole
+      at X 105.190  Y -81.531
+  RockBLOCK 9704-SMA-2A: diameter 2.890 : 1 hole
+      at X 105.176  Y -81.512
+  RockBLOCK 9704-SMA-2A: diameter 2.896 : 1 hole
+      at X 105.179  Y -81.513
+  RockBLOCK 9704-SMA-2A: diameter 2.899 : 1 hole
+      at X 105.197  Y -81.518
+  RockBLOCK 9704-SMA-2A: diameter 3.000 : 8 holes   pattern 106.900 x 138.700
+      at X 1.500  Y 1.500
+      at X 1.500  Y 25.500
+      at X 31.788  Y 4.007
+      at X 31.788  Y 10.007
+      at X 36.500  Y 1.500
+      at X 36.500  Y 25.500
+      at X 66.400  Y -113.200
+      at X 108.400  Y -69.300
+  RockBLOCK 9704-SMA-2A: diameter 3.141 : 1 hole
+      at X 105.255  Y -81.415
+  RockBLOCK 9704-SMA-2A: diameter 3.200 : 1 hole
+      at X 31.788  Y 7.407
+  RockBLOCK 9704-SMA-2A: diameter 3.250 : 1 hole
+      at X 31.788  Y 6.407
+  RockBLOCK 9704-SMA-2A: diameter 3.529 : 2 holes   pattern 0.490 x 0.164
+      at X 104.785  Y -81.910
+      at X 105.274  Y -81.745
+  RockBLOCK 9704-SMA-2A: diameter 3.620 : 2 holes   pattern 0.000 x 3.216
+      at X 84.191  Y -76.276
+      at X 84.191  Y -73.060
+  RockBLOCK 9704-SMA-2A: diameter 3.638 : 1 hole
+      at X 105.215  Y -81.747
+  RockBLOCK 9704-SMA-2A: diameter 3.658 : 1 hole
+      at X 105.169  Y -81.738
+  RockBLOCK 9704-SMA-2A: diameter 3.659 : 1 hole
+      at X 105.190  Y -81.719
+  RockBLOCK 9704-SMA-2A: diameter 3.747 : 1 hole
+      at X 105.209  Y -81.759
+  RockBLOCK 9704-SMA-2A: diameter 3.779 : 1 hole
+      at X 105.150  Y -81.758
+  RockBLOCK 9704-SMA-2A: diameter 3.849 : 1 hole
+      at X 104.026  Y -76.628
+  RockBLOCK 9704-SMA-2A: diameter 3.931 : 1 hole
+      at X 84.190  Y -76.281
+  RockBLOCK 9704-SMA-2A: diameter 3.946 : 1 hole
+      at X 84.192  Y -73.046
+  RockBLOCK 9704-SMA-2A: diameter 4.200 : 1 hole
+      at X 31.788  Y 7.407
+  RockBLOCK 9704-SMA-2A: diameter 4.287 : 1 hole
+      at X 105.182  Y -81.835
+  RockBLOCK 9704-SMA-2A: diameter 4.333 : 1 hole
+      at X 105.200  Y -81.783
+  RockBLOCK 9704-SMA-2A: diameter 4.345 : 1 hole
+      at X 105.202  Y -81.801
+  RockBLOCK 9704-SMA-2A: diameter 4.364 : 1 hole
+      at X 105.186  Y -81.798
+  RockBLOCK 9704-SMA-2A: diameter 4.368 : 1 hole
+      at X 105.187  Y -81.799
+  RockBLOCK 9704-SMA-2A: diameter 4.392 : 1 hole
+      at X 105.178  Y -81.794
+  RockBLOCK 9704-SMA-2A: diameter 4.400 : 1 hole
+      at X 105.201  Y -81.781
+  RockBLOCK 9704-SMA-2A: diameter 4.432 : 1 hole
+      at X 105.191  Y -81.832
+  RockBLOCK 9704-SMA-2A: diameter 4.528 : 1 hole
+      at X 105.266  Y -82.322
+  RockBLOCK 9704-SMA-2A: diameter 4.542 : 1 hole
+      at X 104.887  Y -82.071
+  RockBLOCK 9704-SMA-2A: diameter 4.650 : 1 hole
+      at X 31.788  Y 7.407
+  RockBLOCK 9704-SMA-2A: diameter 4.793 : 1 hole
+      at X 105.307  Y -81.576
+  RockBLOCK 9704-SMA-2A: diameter 4.799 : 1 hole
+      at X 105.120  Y -82.184
+  RockBLOCK 9704-SMA-2A: diameter 4.880 : 1 hole
+      at X 105.136  Y -81.896
+  RockBLOCK 9704-SMA-2A: diameter 4.900 : 3 holes   pattern 0.000 x 2.600
+      at X 31.788  Y 1.407
+      at X 31.788  Y 1.507
+      at X 31.788  Y 4.007
+  RockBLOCK 9704-SMA-2A: diameter 5.000 : 1 hole
+      at X 31.788  Y 7.407
+  RockBLOCK 9704-SMA-2A: diameter 5.057 : 1 hole
+      at X 104.860  Y -81.133
+  RockBLOCK 9704-SMA-2A: diameter 5.138 : 1 hole
+      at X 105.197  Y -82.020
+  RockBLOCK 9704-SMA-2A: diameter 5.161 : 1 hole
+      at X 105.188  Y -82.014
+  RockBLOCK 9704-SMA-2A: diameter 5.184 : 1 hole
+      at X 105.174  Y -82.021
+  RockBLOCK 9704-SMA-2A: diameter 5.250 : 1 hole
+      at X 31.788  Y 7.407
+  RockBLOCK 9704-SMA-2A: diameter 5.292 : 1 hole
+      at X 105.238  Y -81.961
+  RockBLOCK 9704-SMA-2A: diameter 5.293 : 1 hole
+      at X 105.260  Y -82.042
+  RockBLOCK 9704-SMA-2A: diameter 5.350 : 1 hole
+      at X 31.788  Y 7.407
+  RockBLOCK 9704-SMA-2A: diameter 5.450 : 1 hole
+      at X 31.788  Y 7.407
+  RockBLOCK 9704-SMA-2A: diameter 5.502 : 1 hole
+      at X 105.252  Y -82.231
+  RockBLOCK 9704-SMA-2A: diameter 5.534 : 1 hole
+      at X 31.788  Y 10.907
+  RockBLOCK 9704-SMA-2A: diameter 5.836 : 1 hole
+      at X 105.190  Y -82.071
+  RockBLOCK 9704-SMA-2A: diameter 5.878 : 1 hole
+      at X 105.207  Y -82.105
+  RockBLOCK 9704-SMA-2A: diameter 5.933 : 1 hole
+      at X 105.222  Y -82.128
+  RockBLOCK 9704-SMA-2A: diameter 6.000 : 2 holes   pattern 0.000 x 1.200
+      at X 31.788  Y 2.707
+      at X 31.788  Y 3.907
+  RockBLOCK 9704-SMA-2A: diameter 6.011 : 1 hole
+      at X 105.235  Y -81.996
+  RockBLOCK 9704-SMA-2A: diameter 6.105 : 1 hole
+      at X 106.399  Y -81.801
+  RockBLOCK 9704-SMA-2A: diameter 6.145 : 1 hole
+      at X 105.070  Y -82.194
+  RockBLOCK 9704-SMA-2A: diameter 6.250 : 1 hole
+      at X 31.788  Y 7.407
+  RockBLOCK 9704-SMA-2A: diameter 6.405 : 1 hole
+      at X 105.482  Y -82.110
+  RockBLOCK 9704-SMA-2A: diameter 7.200 : 1 hole
+      at X 104.498  Y -82.083
+  RockBLOCK 9704-SMA-2A: diameter 7.636 : 1 hole
+      at X 97.500  Y -80.846
+  RockBLOCK 9704-SMA-2A: diameter 10.000 : 2 holes   pattern 0.000 x 8.750
+      at X 31.788  Y 3.032
+      at X 31.788  Y 11.782
+  RockBLOCK 9704-SMA-2A: diameter 10.490 : 1 hole
+      at X 2.500  Y 0.000
+  RockBLOCK 9704-SMA-2A: diameter 10.541 : 1 hole
+      at X 2.510  Y 0.000
+
+(84 smaller circle sizes were read and are not listed: below 0.5 mm they are edge
+fillets and pad corners, not holes.)
+

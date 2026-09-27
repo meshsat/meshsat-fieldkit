@@ -1,0 +1,1231 @@
+# PHASE B: where each rule of pcb_rules.yaml is generated, where it is verified, and what its evidence is
+# worth (MESHSAT-862, 16 September 2026). Written AFTER the registry, by reading the tools; the registry was
+# written first so that the catalogue is not a description of the gates that happen to exist.
+#
+# maturity meanings (rules_lib.MATURITY), applied strictly:
+#   ENFORCED           an executable decision gate exists, writes a machine-readable verdict, and has
+#                      behavioural fixtures (a failing input that must fail, a passing input that must pass)
+#   GENERATED_ONLY     generation intends to comply; no independent verification of the property
+#   VERIFIED_MANUALLY  a controlled review, calculation, simulation or lab protocol exists with its artefact
+#   DOCUMENTED_ONLY    prose exists, no current evidence
+#   OPEN               no adequate implementation or verification
+#   SOURCE_UNVERIFIED  the governing authority or threshold is not established
+#   OWNER_DECISION_REQUIRED  more than one valid choice and the reserved decision is unresolved
+#
+# gap_category is one of the nine the audit separates:
+#   ABSENT GENERATED_ONLY PROSE_ONLY NO_BEHAVIOURAL_TEST NO_PROTOCOL DUPLICATED_OR_STALE HEURISTIC_AS_LAW
+#   SOURCE_OR_APPLICABILITY_UNRESOLVED CROSS_BOARD_INCONSISTENT   (or NONE when the rule is covered)
+
+schema_version: "1.0.0"
+generated: "2026-09-16"
+# THE FINGERPRINT OF THE REGISTRY THIS MAP WAS WRITTEN AGAINST. It is documentation: nothing reads it, the
+# tools compute the fingerprint from pcb_rules.yaml itself. It had been "88f207606ad2945a" since the file
+# was written while the registry computed ff8151db3576437b, which is a number in a file a person reads
+# describing something else, the class this project keeps finding. A rule holds the two together now
+# (test_rule_gate_mapping), and it only has to be touched when a rule's DEMANDS change, which is rare and
+# deliberate: writing down a source or a rationale does not move it. Moved on 26 September 2026 (MESHSAT-1357) from
+# ff8151db3576437b, when INT-002 was split into its pre-layout assessment and INT-003's bench test.
+rule_set_fingerprint: "635ff031f210f48c"
+
+coverage:
+
+ ENV-001: {implementation: NONE_YET,
+   verification: {tool: none, document: OPERATING-ENVELOPE.md, data: "pcb_envelope.yaml", fixtures: "tests/test_envelope_data.py"},
+   _data_why: "21 September 2026: the record stays the authority and this rule is still verified by reading it,
+     but FOUR rules resolve against the envelope (CMP-001, THM-001, ISO-001, REL-001) and until the decision was
+     ruled each of them would have had to read prose or pick its own number. `tools/pcb_envelope.yaml` carries
+     the adopted numbers in a form a rule can use, and its four fixtures keep it from drifting: every number in
+     it must appear in the document, the document is pinned by the SAME sha256 this entry pins, and what the
+     record leaves open (the altitude, the vibration and shock severities, the service life) may not be invented
+     there. A second copy of a decision is only as good as its pin, and this one breaks in the same commit as
+     the record it quotes.",
+   maturity: VERIFIED_MANUALLY, gap_category: NONE,
+   _maturity_ruled: "decision 34, ruled by the session on 21 September 2026: v2/docs/OPERATING-ENVELOPE.md section 4 is ADOPTED as the design envelope and section 6's first row as the transient level, IEC 61000-4-2 level 4 at 8 kV contact and 15 kV air. This rule asks for exactly that document, so it is VERIFIED_MANUALLY against a document that is current and dated rather than OWNER_DECISION_REQUIRED against a draft. The altitude, the vibration and shock severities and the service life stayed open in the document's own words that day. Since 25 and 26 September 2026 the document also carries the OWNER's envelope rulings (its section 8: D-02a to D-02e, D-04 and D-16), so the altitude, the severities (by name, TEST-PLAN.md E1 and E2), the cold start (out of scope) and direct sun (operate shaded) are ruled; what it still leaves open is the service life (TBD for prototype 1) and the pollution degree and duty cycle, and those belong to the rules that genuinely need them. ENV-001 asks that the envelope is written, dated and resolved against, which it is; the document was re-read and re-pinned on 26 September 2026 after those rulings, and again the same day after two record corrections that change no number (the pack row after the owner reversed D-08, and the transport sentence of section 8 after the review of 26 September 2026; appendix 32.367), and a third time the same day after the S-07 correction, which describes sections 2 (the pack's protection-board row), 3 (decision 40's hardware and the SMBus lead) and 4 (the EMCON paragraph and the USB-C row) as generated at 45bde541 and changes no number the envelope adopts. Reverse by reopening decision 34, which returns the document to a draft and this rule to OWNER_DECISION_REQUIRED.",
+   verified_on: "2026-09-26", verified_by: SESSION, verified_document: "v2/docs/OPERATING-ENVELOPE.md",
+   verified_sha: "89de81a11c52f34afab349adc74d948e824583a15544218cd7b91b83c19f76ca",
+   _verified_sha_why: "the record is hand-written, so it cannot be rebuilt and compared the way a generated page is; it is pinned by content instead and ANY later edit takes this verification away until someone re-reads the document and re-pins it. That is the point: an envelope that quietly changed after the rules resolved against it is the failure this pin exists to catch.",
+   note: "16 September 2026: a DRAFT envelope exists for the first time (v2/docs/OPERATING-ENVELOPE.md), written from the parts own datasheets rather than from an assumption, and it is owner decision 34. Writing it found that the two narrowest parts in the kit are the battery-bay VOC sensor at -20 to +55 C and the e-paper at -15 to +60 C, not the compute modules or the radios, and that with the estimated 16 K inside-air rise of the no-vent ruling the outside ambient ceiling is about +39 C with three modules loaded and charging is limited from an ambient near +25 C by the cells own +45 C charge limit. The envelope is not ruled, so this stays INCONCLUSIVE; what has changed is that the four rules that resolve against it now have a document to cite and a number to argue with",
+   remediation: {action: "DONE 21 September 2026: decision 34 adopted section 4 and section 6's first row. 26 September 2026: the owner ruled the altitude (0 to 3000 m in use, 0 to 4500 m in transport), the vibration and shock severities (by name) and the rest of the envelope questions (the document's section 8), and the document was re-pinned. What it still leaves open is named in it and belongs to the rules that need it: the service life (TBD for prototype 1, REL-001), and the pollution degree and duty cycle (ISO-001 does not need an altitude or a pollution degree today, because ECSS-Q-ST-70-12C Table 13-3 is stated for an as-manufactured rigid board without an altitude derating or a pollution degree)", owner: SESSION, execution: SEQUENTIAL, depends_on: [], p50_h: 0, p80_h: 0}}
+
+ ENV-002: {implementation: "claims_check.py plus claims-allow.txt, one declared exemption per line with its reason",
+   verification: {tool: claims_check.py, verdict: claims_check, fixtures: tests/test_gate_fixtures.py},
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026: a screen over the eight public documents, in final_gate.py because the release package is a set of
+     documents as much as a set of folders and they reach the public mirror within minutes. It finds the sentences that assert a
+     rating or a capability and asks each for a qualifier, an evidence reference, a negation, or a declared reason. The
+     distinction it holds: a rating attached to a part the project BUYS is the maker's own claim and quoting it is a fact about
+     the bill of materials, while the same rating attached to THIS KIT is a promise about hardware that has never been built.
+     Nine vendor ratings are declared with their reason; 19 claim sentences, 0 unqualified"}
+
+ SCH-001: {implementation: "gen_sch_*.py", verification: {tool: erc_gate.py, verdict: erc_gate, fixtures: "tests/test_erc_gate.py, tests/test_artefact_recording.py"},
+   maturity: ENFORCED, gap_category: NONE, note: "an allow line without a reason waves nothing through, proved by fixture. 26 September 2026, the tools stream's recording round: erc_gate.py records the ERC report, the schematic and erc-allow.txt by sha, and records the netlist out/<name>.net (sha and content) only when the report's sidecar names the schematic the netlist's own provenance (sch_prov.py) names. `erc_gate.py <dir> <name> --run` takes the ERC with kicad-cli on the schematic the directory holds and writes that sidecar; a report without one, or taken on another schematic, is recorded and stays unbound. The reports in the main checkout's out/ date from 11 September and predate the schematics committed on 26 September. Re-taken with --run on the six committed schematics (box 52646493, KiCad 9.0.9): PASS on all six, A 0 blocking of 1474 violations, B 0 of 2431 with 5 allow-listed, C 0 of 322, D 0 of 415, E 0 of 361, P 0 of 125, each tied to its committed netlist. full.sh and gate_sweep.sh are to call it with --run (drafts/ts-rec/erc_gate-run-in-drivers.patch)."}
+
+ SCH-002: {implementation: "gen_pcb_*3.py", verification: {tool: "netlist_board.py, netlist_parts.py", verdict: "netlist_board, netlist_parts", fixtures: "tests/test_netlist_board.py, tests/test_netlist_parts.py"},
+   _verdict_why: "26 September 2026 (MESHSAT-1357; finding W7-R2-02 in the known design findings of v2/docs/ARCHITECTURE.md): netlist_board compares references, pad nets and
+     net names and never what a reference IS, so the value and land differences the regeneration parity run measured
+     on A32 (C11, C12, D2), B21 (U10, and the SWD land of U42, U52 and U62) and D12 (C26, C27, R11, Y1, Y2) passed it.
+     netlist_parts compares value and footprint name per shared reference; netlist_board runs it at the end of every
+     run, so each run site leaves both verdicts, and the rule reads the worst of the two. A board with only the
+     netlist_board half reads INCONCLUSIVE until it is re-taken.",
+   maturity: ENFORCED, gap_category: NONE, note: "five comparisons with denominators (references, pad nets, net names, values, footprint names); runs on the placed and on the routed board"}
+
+ SCH-003: {implementation: "gen_sch_*.py, gen_pcb_e5.py", verification: {tool: "check_contracts.py, block_contract.py", verdict: "check_contracts_<letter>", fixtures: "tests/test_gate_fixtures.py, tests/test_block_contract.py, tests/test_smbus_lead_contract.py"},
+   _verdict_why: "The whole of what check_contracts measures: every declared contract on the netlists of the
+     boards in the manifest, plus block_contract for the one interface with no netlist at either end. It was
+     shared with RF-002 until 18 September 2026, when the transmit inhibit contracts were given their own verdict
+     (`inhibit_chain_<letter>`), because a failure anywhere in this set was failing that rule as well.",
+   maturity: ENFORCED, gap_category: NONE,
+   note: "INCONCLUSIVE when a sibling netlist is absent, which is correct; the contracts themselves are a hand-written list and their completeness is not itself checked. 17 September 2026: board E5 is judged now. It has no schematic and no netlist, so its contract is between two BOARDS: gen_pcb_e5.py reads board A's board file and puts a target under each spring pin carrying that pin's net, and block_contract.py re-derives that match by position and compares it, 33 checks on the current A. It is the one blind-mate interface in the kit, where a target on the wrong net is invisible until the pack current is on it, and until today nothing checked it at all. 26 September 2026 (S-05 of MESHSAT-1357, adjudication A07; tool in 93138ac1): the pack SMBus lead is a contract. J_SMB on P and on E must be the same connector family, pitch and pin count (read from the footprints), pin n must carry the same role at both ends (clock, data, return; E may leave P's PRES open or ground it, TI SLUSC67B 8.2.2.2.3), P's return pin must be the net of its own negative lead W_N, the load side of the shunt, and every clamp on P's SMBus clock and data lines must return to W_N too (TI SLUSC67B Figures 21, 29, 30). Before faf8c981 it would have failed four ways (a 1x6 2.54 mm header on E against P's JST-XH 1x4, clock and data crossed, P's return and its SMBus clamps on the cell-side ground); the generators carry A07's fix since then, and the round 7b box regeneration with this tool read check_contracts PASS 96 of 96 across the set, the five new rows the lead's. A contract judged on every input and not decided (check(None, ...)) makes the board and set verdicts INCONCLUSIVE when nothing failed. RF-002's transmitter walk (tx_inhibit.py, held for its own commit) is NOT one of this rule's contracts: its results go to the `inhibit` group alone, so they decide inhibit_chain_<letter> and move neither check_contracts_<letter> nor the set verdict."}
+
+ SCH-004: {implementation: "gen_sch_b.py, gen_sch_c.py, gen_sch_d.py",
+   verification: {tool: safe_lines.py, verdict: "safe_lines_<letter>", fixtures: "tests/test_safe_lines.py, tests/test_artefact_recording.py",
+     document: "docs/OWNER-DECISIONS-OPEN.md"},
+   maturity: ENFORCED, gap_category: NONE,
+   note: "the transmit-inhibit chain is checked and passes. ZEROIZE is not: the panel toggle drives a line that reaches
+     the connector and a test point on boards A and B and NOTHING ELSE, the ATECC608B carries only power and I2C, and
+     the feature as built asks the compute modules to wipe themselves in software. 16 September 2026: written up as
+     owner decision 30 with three costed options. The fact that shapes them is that the ATECC608B has NO ERASE PIN, so
+     no option is a pure hardware wipe; the fact that makes option 1 cheap is that the three supervisors are already on
+     the same I2C bus as the secure element and depend on no compute module being alive.
+     17 September 2026: THE RULE HAS A TOOL OF ITS OWN AT LAST, and the fifteen hand-written EMCON lines in
+     check_contracts are no longer the whole of it. Each board declares its safety lines in boards/<letter>.json
+     with the hazard, the safe state and the role it plays (listens, source, carries), and safe_lines.py judges on
+     the netlist the three things the acceptance criteria ask for: the pull direction on the board that READS the
+     line, what drives it, and what happens with the far board absent. All six boards pass today, each holding its
+     own line: A on EMCON_HW, PI_KILL and KILL, B on EMCON_HW, D on TX_INHIBIT_n, E on SHORE_INHIBIT, with C the
+     source of five and P declaring with its reason that it has none. A declaration is not taken on trust: a board
+     that calls a line a pass-through while a part of it reads that line is refused, which is the fixture that
+     would have caught the EMCON defect of 9 September. What the tool cannot settle is ZEROIZE, which is decision
+     30: the line is held de-asserted everywhere it goes and the question is which device performs the wipe. 26 September 2026, the tools stream's recording round: safe_lines.py records the netlist (sha and content) and the intent by sha, and on a board with no netlist (E5, --board) its declared phase's board file, the design its declared zero is about. Readings unchanged: A PASS of 6 lines, B 5, C 6, D 2, E 1, P a declared zero, E5 a declared zero.",
+   remediation: {action: "owner decision 30: the supervisors execute the wipe, power removal only, or accept the software path and rename the feature everywhere",
+     owner: OWNER, execution: OWNER, depends_on: [], p50_h: 8, p80_h: 24}}
+
+ SCH-005: {implementation: "kisch.py (check_land, land_pads), schlayout.py (_lands), gen_sch_e.py, gen_sch_b.py",
+   verification: {tool: "kisch.py, pin_map_lands.py", verdict: "pin_map_lands_<letter>", fixtures: "tests/test_pin_map_lands.py",
+     document: "docs/MESHSAT-709-geometry-appendix.md"},
+   maturity: ENFORCED, gap_category: NONE,
+   note: "the check runs inside the schematic engine, as part() writes each part, and stops the generator, which stops the
+     chain; pin_map_lands.py judges a COMMITTED netlist the same way, so a board cut before the rule reads as what it is. Run over
+     the six generators on 17 September 2026 it found two things and nothing else: board E's Q7, a PowerPAK SO-8 whose
+     gate and drain nets sat on two SOURCE pins with the drain tab floating, and board B's fan connectors, whose JST-SH
+     land carries two mechanical retention tabs the map never named (declared NC with the reason). Board E's committed
+     board still carries the defect: it is a schematic change and board E is held on decision 31, so the correction
+     reaches copper with the phase that answers it."}
+ CMP-001: {implementation: "gen_sch_*.py value strings, each board's intent rails and its declared nodes",
+   verification: {tool: derate.py, verdict: derate, fixtures: "tests/test_gate_fixtures.py, tests/test_derate_prefix.py",
+     report: "part_temps.py (tests/test_part_temps.py), advisory"},
+   _report_why: "21 September 2026: this rule is written about ABSOLUTE MAXIMUM RATINGS and `derate.py` reads
+     VOLTAGE alone, so a part operated outside its published TEMPERATURE range is a thing no rule in this
+     project has ever looked at. The envelope was adopted the same day (decision 34) and `pcb_envelope.yaml`
+     carries it as data, so the comparison became possible for the first time; the first pass named board B's
+     T1, a 0 to +70 C magnetics module on a kit whose ambient floor is -20 C, reported board C's e-paper as
+     the carve-out the envelope declares, and counted 1,955 part instances with NO published range in this
+     tree. It is ADVISORY and does not decide this rule: thirty judged instances of nearly two thousand is a
+     beginning, and a rule that failed a board on that denominator would claim more than it knows, which is
+     `via_current`'s lesson of 18 September and STK-001's PASS of zero pairs before it.",
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026, SECOND PASS: THE NETS WHERE THE HIGHEST VOLTAGES LIVE ARE NOT RAILS, and until today
+     none of them was declared. A switching node, a bootstrap, a charge pump and a transmitter's output are not
+     supplies with a current and loads, so `rail()` could not describe them and `derate` reported them as
+     UNDECLARED: 29 such nets on board A, 15 on B, 14 on E, and board C judged NO PART AT ALL. `intent.node()`
+     declares a net's peak with the basis for the number, `rides_on` records that a bootstrap sees its driver's
+     bias and not the height of the node it rides on, `v_work` records the working maximum where it differs from
+     the nominal (VBAT is declared 14.4 and a 4S pack terminates at 16.8; VIN_RAW is declared 12 and the vehicle
+     line it comes from is specified 9 to 36), and `vendor_reference` records the one case where the voltage lives
+     inside a part this project does not open and the PART MAKER STATES THE PART instead. The seven boards now
+     declare 0 undeclared nets and 379 part-on-net comparisons where there were 174.
+     IT FOUND SIX REAL DEFECTS ON THREE BOARDS, all of one class and all invisible before: a transient suppressor
+     whose stand-off is BELOW its line's own working maximum conducts in normal service rather than only on a
+     transient. Three SMCJ33A sat on lines specified to 36 V (board A's VIN_RAW clamp, board E's input and bus
+     clamps) and three SMBJ5.0A on 5.1 V slot rails. All six are replaced at the source with the next standard
+     stand-off, and the SMCJ40A's higher clamping voltage is paid for where it lands: board A's front-end input
+     capacitors and board E's bus capacitor move from 50 V to the 100 V part the set already buys. A seventh item
+     was found the same way and is not a stand-off: board E's panel clamp did not begin to conduct until 36.7 V,
+     above the 35 V rating of the bulk capacitors it guards, and is now an SMCJ28A that conducts at 31.1.
+     STILL OPEN and said out loud rather than implied: DC-bias capacitance derating is not implemented and is a
+     different failure; a part whose value states no rating is counted and reported, never assumed good; and the
+     comparison is against the declared STEADY voltage, so transients and ringing are outside it",
+   remediation: {action: "the DC-bias curves for the decoupling on the fastest rails, and a rating from the ordered part for the values that state none",
+     owner: SESSION, execution: PARALLEL_AGENT, depends_on: [], p50_h: 6, p80_h: 18}}
+
+ CMP-002: {implementation: "lcsc_fill.py", verification: {tool: "jlc_certify.py, lcsc_fill.py", verdict: "jlc_certify_<letter>, lcsc_fill", fixtures: "tests/test_order_codes.py, tests/test_gate_fixtures.py, tests/test_certify_identity.py, tests/test_certify_mismatch.py"},
+   _shared_verdict_why: "SHARED WITH SUP-001 (18 September 2026). One query per BOM row answers both, which is why
+     one verdict is honest here: the supplier's record gives the model and the package for the code, and the row is
+     then CERTIFIED with its stock and date or it is not. This rule is the PACKAGE half, the code's package against
+     the footprint the board places. THE ASYMMETRY: a row with no code at all fails SUP-001 and gives CMP-002
+     nothing to check, so a CMP-002 reading is read against the row list before it is believed; lcsc_fill's own
+     verdict is the code-to-land half (a fill rule must name a land this project draws).",
+   _identity_why: "26 September 2026 (MESHSAT-1357; finding W6-F3 in the known design findings of v2/docs/ARCHITECTURE.md):
+     CERTIFIED had not been evidence of part identity or land. same_part took six shared leading characters, or one
+     number contained in the other, as the same part; the package was compared by family with no body size or pitch;
+     and a row carrying a code was taken to be identified by it. So BQ4050RSMR (a 4 x 4 mm RSM package) was
+     certified on a 5 x 5 mm land, TUSB2046BVFR (commercial) as TUSB2046BI, STM32H743VIT6 as STM32H753VITx, a
+     5 mOhm shunt as a 3 mOhm one, TE 1-2199119-5 (key M) on a key B land, XSD's C4661 on the Keystone 3568
+     fuse-holder land (boards A, E and P), C10081 on board E's other two, and C2089, an 8550SS in TO-92-3, as
+     sixteen of board C's 3 mm LEDs. Now, code or no code: the answer carries every character of the part the row
+     names; a land drawn from one maker's drawing names its part and the answer is that part; the body and pitch
+     both sides state agree; an M.2 land's key is the key the maker's drawing gives the part; and a row that names
+     no part, on a land that names none, answered on a package only one side names, is NOT_IDENTIFIED.
+     STILL NOT CAUGHT, beyond this rule's acceptance criteria but inside its failure mode: a code on a class land
+     whose package the answer shares (an 0603 resistor on LED_0603_1608Metric) passes on its code, because no
+     catalogue line this tool reads states a class, and a value is compared only where it is a frequency.",
+   evidence_not_before: {"jlc_certify_<letter>": "2026-09-27T01:27:45+02:00", "lcsc_fill": "2026-09-27T01:27:45+02:00"},
+   _evidence_not_before_r8_why: "ROUND 8, 26 September 2026 (MESHSAT-1357; review finding D1, stream cert): both tools changed
+     what their verdicts mean again. jlc_certify reads the declared condition 1 mismatches of tools/jlc-mismatch.yaml and
+     refuses them whatever the catalogue answers (a reading taken before certified fourteen rows the owner's condition 1
+     refuses); it no longer reads a document number, a finding id, a ppm figure, a package name or a far-end part as a
+     row's part (eleven rows it refused, ten of them wrongly; a far-end part only where the words name the land's part
+     and mark the other one as away from it, a placement word whose object is the land itself (its part or series, or the
+     words land, footprint or pads) marking nothing, else the value and the land conflict and the row is refused); and its frequency guard reads the catalogue's own
+     description. lcsc_fill refuses the declared codes whatever the certified table says, and its MAP fills the SMBus lead
+     and the cell thermistor lead with the plain JST parts. Every earlier per-board jlc_certify reading and every
+     earlier lcsc_fill reading is re-taken, not read. The instant written is the start of the run of the round 8 tool as
+     integrated (2026-09-26T23:27:45Z, v2/vendor/SOURCES.yaml jlc_retake_r8cert: the integration narrowed the placement
+     words after the second independent check and re-ran the tool over the same staging and cache, writing the second
+     pass's table byte for byte; the first pass's run at 21:24:07Z and the second pass's at 22:20:49Z read the far-end rows
+     by rules later narrowed). A later merge may move it to the merge instant, never earlier.",
+   _evidence_not_before_why: "the instant jlc_certify's CERTIFIED changed meaning (above). Every per-board verdict in
+     the tree is older and would otherwise stand: measured on 26 September, boards C, E5 and P read PASS on this rule
+     and on SUP-001 and now read INCONCLUSIVE until jlc_certify is re-taken; A, B, D and E were INCONCLUSIVE already
+     (no deliverable folder at the declared phase). The re-take queries JLCPCB's catalogue and belongs to the
+     order-set rebuild of decision 41 (owner, 25 September 2026); board E5's declared zero has no row to query.",
+   maturity: ENFORCED, gap_category: NONE, note: "the part the row or its land names, the package family, body, pitch and M.2 key are caught against the supplier's record and the maker's drawing, with a date; a verdict older than evidence_not_before is re-taken"}
+
+ SUP-001: {implementation: "lcsc_fill.py, jlc-handfit.txt",
+   verification: {tool: "jlc_certify.py, lcsc_fill.py", verdict: "jlc_certify_<letter>, lcsc_fill", fixtures: "tests/test_order_codes.py, tests/test_gate_fixtures.py, tests/test_certify_identity.py, tests/test_certify_mismatch.py"},
+   _shared_verdict_why: "SHARED WITH CMP-002 (18 September 2026). The same per-row query answers both: this rule is
+     the BUYABILITY half, every row CERTIFIED against the live catalogue with its stock at a recorded date, or
+     HAND_FIT with a written purchase route, or BENCH_FITTED and excluded from the assembly. A row whose package
+     disagrees fails both, a row with no code fails this one alone, and a board with no deliverable folder at its
+     declared phase makes both INCONCLUSIVE rather than either of them a pass.",
+   evidence_not_before: {"jlc_certify_<letter>": "2026-09-27T01:27:45+02:00", "lcsc_fill": "2026-09-27T01:27:45+02:00"},
+   _evidence_not_before_r8_why: "the round 8 instant and reason of CMP-002 (above).",
+   _evidence_not_before_why: "the same instant and the same reason as CMP-002: a row CERTIFIED before it was not
+     shown to be the part the row or its land names, so it was not shown that the part to be placed is buyable.",
+   maturity: ENFORCED, gap_category: NONE, note: "stock is read at a date; the date is the evidence's freshness"}
+
+ PWR-001: {implementation: "gen_sch_*.py via intent.rail()", verification: {tool: intent_checks.py, verdict: intent_rails, fixtures: "tests/test_rail_loads.py, tests/test_rails_netlist.py, tests/test_rails_census.py"},
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026: the declared set is compared with the power nets the board actually carries. A net whose
+     name begins with + is a rail by this project's own generator convention, so intent_checks counts the power-symbol
+     nets against the declared ones and names what is missing. It found thirty-eight undeclared rails across five
+     boards, thirty of them on board B, and every one of those was invisible three ways at once: judged as a SIGNAL by
+     the return-path rule, skipped entirely by dc_drop, and unreachable by derate. All thirty-eight are declared with
+     their loads and their real power-path sources.
+     26 September 2026 (ts-net, MESHSAT-1357): JUDGED ON THE NETLIST, AND FAIL CLOSED. `intent_checks.py --netlist
+     <net>` (and the board run, whenever the netlist sits beside the board) writes intent_rails from the committed
+     netlist of the declared phase and the intent file beside it, both recorded by sha (the netlist by content16 too),
+     with every held datasheet a pin role was read from recorded by sha as document_N. A power net is a power-symbol
+     net, a net carrying a pin typed power_in or power_out, a net of a counted power class (PWR, RAIL, BANK, SW,
+     NODE), a net carrying a supply-named pin (the VDD, VCC, VSS and VEE families, VIN, VBAT, VBUS, VSYS, VCAP, VREG,
+     BAT, a voltage) that a bypass entry, a capacitor to ground or a second supply pin corroborates, a net carrying a
+     pin its held datasheet makes a supply (intent_checks.PIN_ROLES), or a net a declared rail's current reaches
+     through a two-terminal part or a transistor's channel; the threshold is 0 A. Every power net must be a declared
+     rail (or a node that supplies one part at most), and every declared rail a net of the netlist whose source and
+     loads are on it. THE FIRST TWO PASSES ADMITTED A NET ONLY THROUGH A NAME THEY COULD READ AND RECOGNISE, and on
+     these netlists a pin's name is the maker's (board D's TPA6132A2 HPVSS), the net's own (board A's TPS25740 pin 1
+     reads \"PD_VTX\") or a number (board E's LT8705A \"Pin_4\"): the second independent check found AMP_HPVSS and
+     TRK_LDO33 in no count and no undecided list, so a board stream declaring exactly what the readings named would
+     have read PASS, and the third pass found PD_VTX, PD_VAUX, the charge pump's AMP_CPP and AMP_CPN, and board B's
+     SIM2_VCC and antenna feed in the same state. THE THIRD PASS FAILS CLOSED: every other net that carries the mark
+     of a supply (a capacitor to ground; a capacitor to a power net or across two pins of one part; a fuse, inductor,
+     ferrite, diode, jumper, two-pin switch or link resistor of at most 10 ohms to a power net, passed on link by link
+     from an undecided net; a transistor channel shared with a power net) is settled only by what is read (a crystal;
+     a pin whose held datasheet role supplies nothing; a gate; a channel sinking to ground; a declared clamp; a switch
+     to ground; resistors and capacitors alone) and is otherwise UNDECIDED, which holds the reading at INCONCLUSIVE
+     when nothing fails. Every reading records the census of every net (counted, declared node, undecided, settled
+     with its reason, unmarked, ground, unconnected). THE FOURTH PASS (27 September 2026) answers the third
+     independent check, which found board A's VMON, the eFuse U21's output (TPS2596 pin 5, typed \"Power Output\"), in
+     no count and no undecided list: it runs straight to the monitor's two-pin lead J_MON and carries neither a
+     capacitor nor a two-terminal link on this board, and the TPS2596 row carried only its dVdt pin. The general cause
+     is that marks M1 to M4 assume a supply leaves decoupling or a two-terminal link on its net, and a supply a part
+     of three or more pins delivers straight off the board leaves neither. Closed three ways: every held row now
+     carries every pin its table types power or ground or describes as a supply (the suite holds each row line by line
+     against its document), with a GROUND role that makes a ground pin off a ground net a power net; the six power
+     parts no row held (AP2112K, TLV755P, TLV758P, TPS2065C, TPS23861, LM74700-Q1) gained rows from their filed
+     documents, and the suite holds every power part of the six boards to a row; and two new marks, M5 (a lead: a
+     connector whose every other pin is ground, fed by a part on the board) and M6 (a net of class SENSE), with M4
+     extended to the switched low side of a load (board P's SCP_HTR). On a lead or a sense net a connector carries
+     what the board's own pins carry, so a read signal pin settles it; on a net with any other mark a connector is
+     read by nothing (a fixture holds it both ways since the integration). THE FIFTH PASS (integration, 27 September
+     2026) answers the fourth independent check, which found board C's EPD_RESE unmarked: the e-paper boost switch Q6
+     carries the inductor's current from EPD_SW into EPD_RESE and the 0.47R shunt R43 every on-phase, and M4 never saw
+     it because the set of power nets it reads held the counted nets and the declared rails only, while EPD_SW (marked
+     through L1) is declared as a node. A declared node that carries a mark itself is now a power net for its
+     neighbours; a node with no mark of its own is not, so board B's eSIM lines behind their 0R links stay unmarked (a
+     fixture holds both ways). On the six committed netlists of fc144600 it moves exactly one net, EPD_RESE, from
+     unmarked to undecided (session decision TSN-D30, under the owner's standing rule of 26 September 2026). Readings
+     of 27 September on this integration's committed netlists (boards A, D and E as round 8 regenerated them, B, C and
+     P as at fc144600), all FAIL: A 9 of 39 (undeclared B33_BST, HT_BST, PD_DVDD, PD_VAUX, PD_VTX, S1_BOOT, S3_BOOT,
+     VMON; undecided PD_CC1, PD_CC2, PRECHG; 58 settled, MAIN_PB among them by the LTC2954's push-button input), B 29
+     of 70 (28 undeclared: the fourteen buck bootstraps, DEV_BST's and KSZC_BST's among them, GNSS_3V3, GNSS_VDD_RF,
+     IOCA/IOCB/IOCC_VCAP, RB_3V3, SIM1_VCC, SIMC2_VCC, VBAT, VBUS_FLASH1 to 3, ZBA_3V3, ZBB_3V3; 26 undecided:
+     GNSS_ANT, GNSS_BIAS, SIM2_VCC, IOCA/IOCB/IOCC_RST_n, Q1C to Q3C, the thirteen HV-class PoE nets, and the leads
+     LORA_ANT and nRPIBOOT1 to 3), C 5 of 7 (C_DVDD, EPD_VCC, LED_RAIL, LED_RAIL_SW; 9 undecided: EPD_RESE,
+     LIGHT_DAY_n, LIGHT_NIGHT_n, TEST_SW, TX_INHIBIT_n, ZEROIZE_SW and the TX lamp's TX_K, TX_A and TX_LAMPTEST), D 10
+     of 16 (AMP_CPN, AMP_CPP, AMP_HPVSS, PCM_VCCA, PCM_VCCL, PCM_VCCP, PCM_VCCR, PCM_VDD, SAU_3V3; 10 undecided:
+     FLANGE_AIN0, FLANGE_REF, HS1/HS2_MIC, HS1/HS2_BIAS_R, PTT_HS1/HS2_n, RLY_K and the antenna lead RF_ANT), E 6 of
+     20 (E6_BST, E6_DVDD, SGP_VDD, TRK_LDO33, TRK_LSENSE; undecided FAN1_SW, FAN2_SW, WATER_SENSE), P 6 of 11 (BAT_F,
+     PBI, SEC_VDD, SW, VCC_F; undecided FUSE_G, FUSE_GQ, the cell taps CELL1 to CELL3 and the fuse heater's return
+     SCP_HTR). Board C's and board P's readings are taken on their fc144600 netlists and await the re-take on the
+     netlists their round 8 commits regenerate. Each net is closed in the board's schematic generator by declaring it
+     as a rail with its source and loads, or as a node where it is a part's own supply, a bootstrap, a charge pump's
+     node, a lead, a sense tap or a switch's current shunt, and a re-take; an undecided net is settled by a
+     declaration or by a PIN_ROLES row for the part, which needs the held document. The board's own rail lines (every
+     power-symbol net ON THE BOARD declared, every rail a net OF THE BOARD) are SCH-002's question and go to
+     intent_other, which the finish still blocks on. Board A's `tools/boards/a.json` still describes VMON as \"a
+     voltage monitor divider tap into an ADC\" (LOW_SPEED_OR_DC); it is the eFuse U21's output feeding the Xenarc
+     monitor's supply lead (ILM 1.2 A), and PWR-001 refuses it until the intent declares it as a rail with U21 as its
+     source and J_MON as its load (board A's writer). WHAT THE FAIL-CLOSED READING DOES NOT SEE, by its own premises
+     (intent_checks.py, pass (6)): a supply to a part that the design forgot to decouple and that no name, type,
+     class, held role or rail current points at; a supply that runs from one connector pin to another with nothing
+     between them; a supply through a resistor above 10 ohms to a part with no decoupling of its own on the net (a
+     lamp's current-limited feed is such a path, and the rail's own load list states it); a supply that a part with NO
+     held row delivers straight to a connector that also carries a line that is not ground (M5 marks a lead only when
+     every other pin of the connector is on ground; a held row reads the output wherever it goes); the switched low
+     side of a load that is itself a connector (left out so that an open-drain line into a module socket is not
+     marked; a fan's switched return is marked where its flyback diode joins it to a power net, as on board E); a
+     current path through a part of three or more pins that is neither a transistor nor a held part (a relay's
+     contacts, a multi-pole switch). INSTANCES OF THESE STATED LIMITS ON THE COMMITTED NETLISTS, named by the fourth
+     independent check and read again on this integration's netlists: board A's RF_GNSS (the connector-to-connector
+     limit: J_RF4, the SMA, to J_BM4, the SMP-MAX blind-mate, carrying the active GNSS antenna's DC supply that board
+     B's LG290P VDD_RF feeds through R23, L3 and J_GNSS1, gen_sch_b.py; board B's own reading holds GNSS_ANT
+     undecided, board A's reads RF_GNSS unmarked); board A's PD_DSCG (the resistor-above-10-ohm limit: PD_VBUS through
+     R139, 43R 1W 2512, into the TPS25740's DSCG open-drain pin, about 0.35 A at 15 V, unmarked); and board A's
+     FE_BLEED, the analogous bleed path, which reads unmarked too once its node declaration is taken away. A PIN_ROLES
+     row is trusted as written once the suite has held it against its document: every word it quotes is found in the
+     document's text, each pin's number stands in its own words, and every table line that types a pin power or ground
+     or describes a supply is claimed by a pin the row carries or exempted with a stated reason; a reviewer reads each
+     role. A node declaration is taken as its author's statement: a current path declared as a node (the second
+     check's example, board B's PoE port path POE_P and POE_DRAIN) is reported and not refused, and only a node that
+     carries the supply pins of two parts is refused (TSN-D3; not changed). HOW IT IS SHOWN THAT NO SUPPLY OUTSIDE THE
+     STATED LIMITS ESCAPES ON THE SIX COMMITTED NETLISTS (tests/test_rails_census.py): three INDEPENDENT sweeps read
+     sources the tool does not read. (a) Each held document's own pin table, line by line: every row carries every
+     power and ground pin of its table (the TPS2596 row with its Power Output taken out is caught, a fixture). (b) The
+     generators' PWR_FLAG statements in the committed schematics: every flagged net is counted, declared or undecided;
+     run on the reading of 26 September it names A's VMON and P's CELL1 to CELL3, the third check's finding, and on
+     the fourth pass's none. (c) The value fields and the intent's rail sources: every part a value calls a power
+     part, and every integrated circuit a rail names as its source, has a row. None of the three could see EPD_RESE
+     (it holds no held pin and no power part, and no PWR_FLAG), which is why the fourth check found it by reading the
+     drawing; the stated-limit instances above are named, not swept, so 'no supply escapes' is claimed only outside
+     the stated limits. The older sweeps (every net with a capacitor to ground or a two-terminal supply link, every
+     supply-named pin) are REGRESSION GUARDS: they re-read the tool's own marks and a name grammar, and they could not
+     find VMON, which is why the third check held them to be no evidence. Replays: declaring exactly what the second
+     pass named on D and E, or what the third pass named on A and P, does not pass and names AMP_HPVSS, TRK_LDO33,
+     VMON and CELL1; declaring every net the reading names closes all six, and taking away any one named supply's or
+     tap's declaration (PD_VTX, PD_VAUX, VMON, AMP_HPVSS, AMP_CPP, AMP_CPN, TRK_LDO33, CELL1 to CELL3) reopens exactly
+     that net. The session decisions TSN-D1 to TSN-D29 are filed as v2/docs/records/ts-net/ts-net-decisions.md."}
+
+ PWR-002: {implementation: "the switch and always_on declarations in each gen_sch_*.py rail", verification: {tool: power_sequence.py, verdict: power_sequence, fixtures: "tests/test_power_sequence.py, tests/test_artefact_recording.py"}, maturity: ENFORCED, gap_category: NONE,
+   note: "sequencing exists in the design (LTC2954, enables, eFuses) and is written nowhere as a requirement with a check 16 September 2026: IT IS DERIVED AND CHECKED, not written. power_sequence.py reads each rail's declaration in the intent (the part whose enable pin switches it, or `always_on` with the reason there is no such part) and checks it against the netlist: the declared switch exists, it has that enable pin, and the parts driving that net are named with the rails they are powered from. What it DECIDES is the deadlock a schematic cannot show, a rail whose enable is driven only by a device powered from that same rail, which cannot start. What it does not decide is the ORDER between rails, because which order is correct is a property of the modules' own datasheets and belongs with INT-001. Boards A (13 rails), C (2), D (4), E (4) and P (3) pass; board B declares 36 rails and none of them yet, so it reads INCONCLUSIVE with the list. Deriving the switch instead of declaring it was tried and withdrawn the same hour: a walk across two-pin passives from the rail's own net reached 28 candidate parts on board A, and a search that answers 'one of twenty-eight' is not an answer. 26 September 2026, the tools stream's recording round: power_sequence.py records the netlist it judged by sha and by content and the intent file by sha (it recorded the netlist's bare file name, which verdict.write could not hash), and it reads the last net of a KiCad 9 netlist (R4T-F1, the look-ahead r4t fixed in port_protect and check_contracts). On the six committed netlists every reading is unchanged: A PASS of 30 rails, B 41, C 2, D 5, E 14, P 5; the net the old parser lost on each board was one unconnected pin (A U34 pad 8, B U311 pad 11, C U12 pad 1, D U20 pad 1, E U16 pad 2, P U1 pad 30) that no rail or enable touches.",
+   remediation: {action: "DONE 17 September 2026: every rail declares the part whose enable switches it or says always_on with its reason, and power_sequence.py checks that against the netlist and finds the deadlock a schematic cannot show. Six boards pass, board B's thirty-six rails included. What is NOT settled here is the ORDER between rails, which is a property of each module's own datasheet and belongs to INT-001 THE CATEGORY WAS STALE AND IS CORRECTED (17 September 2026): ABSENT means no implementation exists, and one does, with fixtures and a verdict, passing on six boards. The clause that remains, the ORDER between rails, is explicitly another rule's (INT-001) and is counted there, so counting it here as well would count it twice.", owner: SESSION, execution: PARALLEL_AGENT, depends_on: [], p50_h: 0, p80_h: 0}}
+
+ PWR-003: {implementation: "pcb_energy_chain.yaml, the chain as data", verification: {tool: "energy_chain.py, pcb_fuse_derating.yaml", verdict: "energy_chain_<letter>", fixtures: "tests/test_energy_chain.py, tests/test_artefact_recording.py"}, maturity: ENFORCED, gap_category: NONE,
+   note: "two 25 A blades, three 10 A blades, eFuses and an ideal diode, and no coordination study: no fuse curve is on file 16 September 2026: the coordination study exists as data and as a gate, energy_chain.py over pcb_energy_chain.yaml, 69 checks passing. For every protective element it carries the rated and peak current of the path, the element's rating and its I2t figure with the datasheet it comes from, the fault current available at that point with its derivation, and the element downstream it protects; the melting time at the worst fault is printed from the I2t (4.3 ms for the 25 A blades at 480 A, 2.9 ms for the 10 A at 200 A). The interrupting rating is 1000 A at 32 VDC against a pack that cannot exceed 16.8 V. 17 SEPTEMBER 2026: THE SELECTION CRITERIA HAVE AN AUTHORITY. ECSS-Q-ST-30-11C Rev.2, 'Derating - EEE components', 23 June 2021, clause 6.17, published free by the ECSS and transcribed in v2/vendor/standards/ecss-q-st-30-11c-rev2-2021-06-23.md. Two of its clauses are about the CIRCUIT and are enforced whatever the fuse is made of: 6.17.3b, the largest rating compatible with the source, and 6.17.3c, the source must deliver three times the rating for short fusing times, which the chain's own fault currents answer (9.6 times at the pack blades). Table 6-17's 65 percent is stated for CERMET fuses and this kit's are automotive blades, so it is a SCREEN whose origin is named, and 6.17.1a's own requirement that another technology be JUSTIFIED is what the gate asks for: a stage over 65 percent must carry a written derating_basis or it fails. It found one, board E's shore inlet at 8.0 A of a 10.0 A fuse, 80 percent, on 10 A of copper. A verdict per board sits beside the set's, because a coordination failure belongs to the stage that has it and BAT-002's end-to-end question is the set's. WHAT IS DECIDED AND WHAT IS PRINTED (the CLK-001 shape): the gate decides four things that are definitional rather than empirical, that the element is at or below the rating of what it protects, at or above the path's own declared peak, able to interrupt the fault current declared at its position, and followed by the stage it protects; plus that every rating's source file is in this tree and every protective element is in its board's netlist. What it PRINTS rather than decides is the melting time from the I2t figure, because a clearing curve is a curve and this reads one point of it. The rule's own authority for the SELECTION CRITERIA is still not in the tree, which is why the registry keeps source_status SOURCE_UNVERIFIED. 26 September 2026, the tools stream's recording round: energy_chain.py reads each board's DECLARED phase netlist (phase_artefacts.netlist, the one rules_status.candidate judges against) where it read the newest `<stem>*/out/<stem>.net` by mtime, and energy_chain_<letter> records every netlist its stages' protective elements were looked up in (sha and content), the chain and pcb_fuse_derating.yaml by sha, and for the DOCK_BLOCK stage board E5's declared board file, the design the stage describes (the chain's claims about E5 are declarations; nothing reads the board file for a number). In this tree the declared and the newest netlists are the same files and every reading is unchanged: A PASS of 4 stages, B FAIL 1 of 3 (B_PANEL_5V, the known finding), E PASS of 3, E5 PASS of 1, P PASS of 3.",
+   remediation: {action: "DONE 17 September 2026: ECSS-Q-ST-30-11C Rev.2 clause 6.17 is the authority and the gate enforces it. What remains is a DESIGN item rather than a document: board E's shore inlet carries 8.0 A of a 10.0 A fuse on 10 A of copper, which is 80 percent of the fuse rating, and it needs wider input copper and a larger fuse or a lower declared continuous current", owner: SESSION, execution: PARALLEL_AGENT, depends_on: [ENV-001, BAT-002], p50_h: 2, p80_h: 6}}
+
+ DEC-001: {implementation: "bypass_slots.py, bypass_place.py", verification: {tool: intent_checks.py, verdict: intent_decoupling, fixtures: tests/test_board_gates.py, report: bypass_seats.py},
+   maturity: ENFORCED, gap_category: HEURISTIC_AS_LAW,
+   _report_why: "DEC-001 verdict says how many capacitors are within 3 mm and never WHERE one could go (20 September 2026). bypass_seats.py answers that per board, against the case frame, the region rectangles grown by their declared overflow, the escape fans, the laid tracks at the board own clearance, the part-forbidding rule areas, other courtyards with their margin and the real outline, and it holds a capacitor the generator has already seated. It is what found board A twenty-four seats, board E fourteen and board C ten, all of which cost nothing. It is a REPORT and decides no rule; decision 42 is the question it cannot answer.",
+   note: "the 3 mm distance is a project number applied to every device; the loop inductance it stands for is never computed, and a board declares exceptions in an allow file 16 September 2026, evening: THIS RULE'S ONLY FAILURE WAS NOT ITS OWN. Board B read FAIL on three items and all three were RETURN-PATH lines: the bucket that splits intent_checks into one verdict per rule matched its keys against the whole message, and a return-path line quotes the net's declared basis, so board B's three STM32 core-regulator nets, declared as an internal-supply DECOUPLING node, were filed under decoupling. The quotation is stripped before the keys are matched and a line two buckets claim is named rather than counted twice. It is the composite-verdict defect of this morning one level down, and it means no board in this set currently has a decoupling item outside its declared exceptions.",
+   remediation: {action: "derive the distance per device class from the current's spectral content; keep the 3 mm as a screen", owner: SESSION, execution: PARALLEL_AGENT, depends_on: [SI-001], p50_h: 6, p80_h: 16}}
+
+ PI-001: {implementation: "power_copper.py, gen_pcb_*3.py bands", verification: {tool: "dc_drop.py, track_current.py, power_path.py (report, in full.sh: every conductor on a power path is declared)", verdict: dc_density, fixtures: "tests/test_conductor_current.py, tests/test_track_current.py, tests/test_power_path.py"},
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026, THE LIMIT HAS A DOCUMENT. It had been a formula in a code comment, `I = k dT^0.44
+     A^0.725` with k 0.024 and 0.048, judging every rail on seven boards with nothing behind it anyone could look
+     up. ECSS-Q-ST-70-12C (14 July 2014, Annex D) publishes closed-form curve fits of the IPC-2221A, IPC-2152 and
+     CNES models with their constants, their validity ranges and a worked example; it is free, it is in the tree as
+     a transcription of the clauses cited (v2/vendor/standards/), and `track_current.py` implements it and proves
+     itself against the standard's own example (1 A at 5 K on 0.925 by 0.025 mm, reproduced to 1.0002 A). The
+     project's internal-conductor bar turns out to BE the published one, to within 0.20 percent over 96 geometries.
+     Two things the document does not settle are written into the rule rather than left implied: the external
+     factor of two is fitted nowhere in the annex, and the two models CROSS at 0.268 mm2 at 10 K, above which our
+     bar is the optimistic one (every 2 oz pour wider than 3.8 mm). dc_drop prints the other two numbers beside any
+     conductor past that line and gates on neither: moving the bar changes MET on boards already cut, which is a
+     decision with a number attached rather than a patch. Earlier: it reads its OWN verdict (dc_density), because
+     one verdict served both power rules and a density miss failed the board through the drop rule",
+   remediation: {action: "put the crossover to the owner as a decision: keep the IPC-2221A bar, take the most conservative of the three published models, or move to IPC-2152", owner: OWNER, execution: OWNER, depends_on: [], p50_h: 1, p80_h: 3}}
+
+ PI-002: {implementation: "power_copper.py", verification: {tool: "dc_drop.py, power_path.py (report, in full.sh)", verdict: dc_drop, fixtures: "tests/test_conductor_current.py, tests/test_power_path.py"},
+   maturity: ENFORCED, gap_category: NONE,
+   note: "the solver's residual is checked before the number is read. Since 16 September the dc_drop verdict carries the
+     VOLTAGE DROP alone, against each rail's own budget, and the current capacity is a separate verdict under PI-001"}
+
+ PI-003: {implementation: "prefanout.py, gen_pcb_*3.py stitch vias, gen_pcb_d3.py locked parallel barrels, rail_barrels.py (pre-route), via_parallel.py (post-route)", verification: {tool: via_current.py, verdict: via_current, fixtures: tests/test_via_current.py, report: "barrel_sites.py, rail_crossings.py"},
+   _fixer_why: "This rule has TWO fixers and they are not interchangeable (19 September 2026).
+     `rail_barrels.py` runs on the PLACED board, takes its sites from `rail_crossings.rows` and its count
+     from `power_copper`, and lays the barrels a declared rail's own crossing needs while the room beside
+     that pad is still empty; `via_parallel.py` runs on the ROUTED board, where every candidate has to be
+     checked against copper that is already there and each barrel's link back to its net drawn and proved.
+     The pre-route tool REFUSES a routed board and names the other one, because a locked via laid into
+     traffic is the defect the post-route tool's rings and link tests exist to avoid. It also DECLINES a
+     site whose current needs more than eight barrels and reports it as a placement item: board P's CELL4
+     crosses at one 0.50 mm barrel carrying 18.00 A, which is eighteen barrels, and eighteen barrels in a
+     row beside a pad is a busbar and a different pad. Its verdict is advisory on a dry run and a reading
+     on --apply; `via_current` on the solved mesh is still what DECIDES this rule.",
+   _report_why: "barrel_sites.py (18 September 2026) is the map this rule's failure hands to whoever draws the
+     copper: every barrel over its rating rather than each rail's worst, the pads of its own net within reach
+     (the anchors a locked run can join) and every other net's pad within reach (what the corridor has to
+     miss). It decides nothing. It was written after board D's answer was drawn by hand from those same four
+     readings, and its first run found that board D has TWO over-rated barrels on +5V_SA and not one.
+     THE SECOND REPORT IS rail_crossings.py (18 September 2026) and it is taken at a different time with
+     different input: on the FINISHED PLACEMENT, before anything is routed, from the intent's own declared
+     currents rather than from a solved mesh. At a rail's declared SOURCE pad the whole current changes layer
+     and at a LOAD's pad that load's share does, split across the pads the part takes it on, so the barrels
+     each needs are barrels_for arithmetic a generator can still answer for free. Board B reads 199 crossings
+     carrying what they need and SIX that do not, and those six AGREE with the solved map (+5V_LIME at 3.00 A,
+     +5V_RB at 2.00 A are in both), which is the argument for asking before the route. It decides nothing and
+     lays nothing, and it can never displace the solved reading: it sees only the crossings the generator has
+     already placed, where via_current sees every barrel the route made. Rules: tests/test_rail_crossings.py,
+     on a fake board of nine methods so the split rule runs where KiCad is not.",
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026, SECOND PASS: THE ATTRIBUTION IS A MEASUREMENT AND THE CURVE HAS A DOCUMENT, and
+     both halves of the remediation this entry asked for are done. `dc_drop` already solved for the current in
+     every barrel on its way to the density verdict and threw it away; it writes them beside the board now, and
+     `via_current` judges each barrel on what the mesh puts through it instead of attributing a rail's whole
+     current to its weakest cluster of its own vias. The difference is the whole rule: board A went from
+     ELEVEN rails refused on the attributed reading to FIVE barrels that really do carry more than their wall
+     is rated for, the worst a VBUS20 barrel at (68.5, 82.0) carrying 3.40 A against 0.90. Board C PASSES it
+     for the first time. The curve is IPC-2221A's internal-conductor model, published with its constants in
+     ECSS-Q-ST-70-12C Annex D and transcribed in v2/vendor/standards/; the plating is the fabricator's own
+     18 um. The verdict is ADVISORY exactly when a judged rail still has no solved barrel current AND
+     nothing measured is over its rating (18 September 2026: board E read INCONCLUSIVE with two barrels
+     over their own wall on rails the mesh had solved, because a fourth rail had none: an absence
+     elsewhere on the board was un-failing an established measurement, and the attributed branch can
+     only ADD failures to the measured ones, never remove one), and says how
+     many, which today is board B, whose committed board is not routed at all, so no load is reachable from any
+     source and the mesh finds nothing. Earlier: each declared rail's vias are grouped into SITES, a cluster of
+     that net's barrels within 6 mm, which is what a layer transition looks like on these boards, and the rail's
+     peak current is compared against the weakest site, because a transition is a series element. The barrel is
+     geometry (an annulus of the plating thickness) and the plating thickness is the FABRICATOR'S published
+     18 um, but the curve is IPC-2221's and that document is not in this tree, so the maturity is
+     GENERATED_ONLY and the number is a calculation this project made rather than a limit a document gave it.
+     It lands where the trade's own rule of thumb lands, one ampere through a 0.3 mm via at 20 K, which is the
+     check that the expression has no unit error in it; the record's own '2.5 A per 0.4 mm hole' comment of
+     5 September is nearly three times the computed figure and cites nothing. Its first run on real boards found
+     something on all seven and most of it is one false shape: a rail's weakest SITE is often a lone stitch via
+     at the end of a pour carrying almost none of the current, while the current travels in a band with a via
+     field under it (board E's CELL_F reads 18 A through one via). The arithmetic is right and the attribution
+     is not, so the verdict is ADVISORY and the rule reads as unverified rather than failed until the per-via
+     current comes from dc_drop's solved mesh",
+   remediation: {action: "close the five barrels board A's mesh puts over their rating, which are the same gaps in the rail's own copper that the density rule reports; board B needs a routed board before it can be judged at all AND WHO LAID THE BARREL IS NOW KNOWN (17 September 2026). Board A fails this rule on five rails and the remedy depends on whether the router or the generator put the via there: every one of the five is LOCKED, which is the placement generator power-copper pass, and the sites are small. VBAT at (85.0, 62.4) is ONE barrel carrying 1.79 A against 0.65 allowed; +13V8_PA at (157.0, 122.6) two barrels at 2.40 A against 0.90; VBUS20 at (68.5, 82.0) two at 3.40; VIN_RAW at (51.6, 151.4) two at 2.52; +5V_DEV at (144.8, 37.4) three at 1.68. The fix belongs in the generator, as more barrels at those five transitions, about three, three, four, three and two times the present count. It is NOT made tonight: board A is being routed in two arms from one placed board and changing the placement would make them incomparable. The next A generation carries it, judged by via_current on its own placed board.", owner: SESSION, execution: PARALLEL_BOX, depends_on: [], p50_h: 6, p80_h: 16}}
+
+ GND-001: {implementation: "the grounds declaration in boards/<letter>.json plus the pours in gen_pcb_*3.py", verification: {tool: ground_system.py, verdict: ground_system, fixtures: tests/test_ground_system.py},
+   maturity: ENFORCED, gap_category: NONE,
+   note: "phantom-net pours are refused and pour coverage is measured; no check asks whether a partition is deliberate or where a crossing happens 16 September 2026: IT IS READ FROM THE NETLIST AND COMPARED WITH THE BOARD'S OWN DECLARATION. ground_system.py finds every ground net, the parts that touch more than one of them (the crossing points) and every net whose parts sit on both sides (the signals that cross), and requires each to be declared in boards/<letter>.json. Six boards declare one ground; board E declares two, and what the gate found there is the reason this rule exists: GND_V, the vehicle-side return, meets GND at exactly one part, the second winding of the SRF1260 common-mode choke, and DCIN_PGD and SHORE_INHIBIT cross the partition. The declaration says in words that this is a FILTER and not an isolation barrier, which is the reading that would otherwise be made by anyone designing to it.",
+   remediation: {action: "DONE 17 September 2026: every board states its ground system in boards/<letter>.json and ground_system.py judges it against the netlist, six of six passing. Board E's two-ground partition is declared with its single crossing, the SRF1260 choke, and the two slow signals that cross it", owner: SESSION, execution: PARALLEL_AGENT, depends_on: [], p50_h: 0, p80_h: 0}}
+
+ GND-002: {implementation: "gen_sch_c.py standoff bond, gen_sch_b.py magnetics termination",
+   verification: {tool: "a written strategy and a bench measurement", document: "docs/GROUNDING-AND-SHIELDS.md"},
+   maturity: DOCUMENTED_ONLY, gap_category: PROSE_ONLY,
+   _maturity_ruled: "21 September 2026: DECISION 29 IS RULED (the session's) and this rule stops waiting on it.
+     The strategy's four board changes were held because they touch the Ethernet link's territory; the ruling
+     settles that territory, so they are SESSION WORK NOW and the maturity says what is true, DOCUMENTED_ONLY:
+     the strategy is written and dated, nothing is built to it yet, and a bond is confirmed by a four-wire
+     measurement and an emissions sweep that need hardware. What the ruling also settles is the strategy's own
+     subject: the ONE isolated boundary in this kit is the external Ethernet port through T1, and everything
+     else that leaves the case leaves on a conductor referenced to the kit's own ground. MEASURED ON THE SEVEN
+     COMMITTED BOARDS THE SAME DAY, so the write-up rests on the boards and not on a memory of them: no board
+     declares a chassis, shield or earth net; the only bond between signal ground and metal is board C's eight
+     BackerScrew_M3_GND rings into the face plate's PEM standoffs, which ASSEMBLY.md masks from the conformal
+     coat for that reason; every mounting hole on A, B, D, E, E5 and P carries no net, so the four M3 rods bond
+     nothing and there is no second path; and board B's line-side termination is 75 ohm per centre tap into a
+     1 nF 2 kV capacitor to SIGNAL ground (R9, R10, C33), while the other two centre taps carry the PoE phantom
+     power, which is why only two of the four are terminated.",
+   _maturity_why: "16 September 2026, second reading: DOCUMENTED_ONLY said the gap was a missing tool and it is
+     not. The strategy names four changes that make it true (a CHASSIS net and a bonding pad on board A, the
+     1 nF 2 kV common-node capacitor and the RJ45 shell moved to it on board B) and its own last paragraph says
+     they wait on owner DECISION 29, the transformerless Ethernet link, rather than being made piecemeal. A tool
+     written today would report those four as not done, which the document already says in words. The rule is
+     waiting on a ruling, and recording it as waiting on a tool put a day of session work in the critical path
+     that no session can start.",
+   note: "16 September 2026: the strategy is WRITTEN, which it was not before, and writing it found the gap. The kit has
+     no single conductive enclosure: the Peli 1450 is plastic and every piece of metal in it is an island held by
+     plastic, so the only thing joining them is whatever this design says joins them. Board B's magnetics termination
+     matches the switch vendor's clause exactly except in one respect: the 1 nF 2 kV common-node capacitor and the RJ45
+     shell both land on SIGNAL ground, where the clause says chassis, and THERE IS NO CHASSIS NET ANYWHERE IN THIS KIT.
+     The four board changes that would make the strategy true are listed in the document; they are schematic changes on
+     three boards and they touch owner decision 29's territory, so they wait on that ruling rather than being made
+     piecemeal. It stays DOCUMENTED_ONLY because a bond is confirmed by a four-wire measurement and an emissions sweep,
+     neither of which exists until there is hardware",
+   remediation: {action: "decision 29 is answered (21 September 2026), so the four changes the strategy names are session work now: a CHASSIS net and a bonding pad near the dock on board A, a pad for the connector-plate strap on the same board, and the 1 nF 2 kV common-node capacitor and the RJ45 shell moved from signal ground to that node on board B. Each is a schematic change that owes its regeneration and its contract gate in the same commit. Then the bond resistances and the pre-compliance sweep at the prototype",
+     owner: SESSION, execution: SEQUENTIAL, depends_on: [], p50_h: 4, p80_h: 12}}
+
+ STK-001: {implementation: "stackup_write.py, written LAST in full.sh so it survives the chain",
+   verification: {tool: "stackup_gate.py", verdict: "stackup_gate", fixtures: "tests/test_stackup_gate.py, tests/test_stackup_reader.py"},
+   _verdict_why: "ITS OWN INSTRUMENT AT LAST (18 September 2026). This entry named impedance_check and fab_limits, and
+     neither asks what this rule asks. Where a rule names several verdicts the worst decides, so boards C, D and E read
+     STK-001 PASS from 'impedance_check PASS of 0', a pair measurement that judged ZERO pairs on boards that declare no
+     controlled pair: absence wearing a PASS, on a BLOCKER, on three boards. Board B read FAIL because seventeen pairs
+     missed their impedance target (PAIR-001's criteria) and board P read FAIL because five design classes are under the
+     fabricator's capability (RTE-001's). No board's stackup had ever been compared with anything. stackup_gate.py reads
+     the block out of the board file in both of KiCad's forms and compares the copper layer count, every copper
+     thickness, every dielectric thickness, material and dielectric constant against the named record in
+     stackup_write.STACKS, then checks the order note names the same stack; a board with no stackup, no declared stack,
+     or a stack this project holds no record of is INCONCLUSIVE and says which. It found both two-layer boards on its
+     first run: P and E5 carry epsilon_r 4.6 on their core where the capability document says 4.5, from before the
+     16 September correction, and it is owed to their next generation.",
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026, and it took three separate findings to get here. The stackup is DECLARED: it is written
+     into the board and the pre-route chain refuses a board whose stackup did not survive, which it had to, because
+     boards A and B reached the router carrying none at all while their logs said one was written (the block goes in as
+     text and every pcbnew save after it drops it). It is FEASIBLE: fab_limits.py compares the board's own minimums
+     against the fabricator's capability for the copper weight the stackup itself carries. And the capability document
+     is in the tree at last, fetched and transcribed on 16 September, which is what makes either statement more than an
+     assertion. What is still owed and is NOT claimed here is the fabricator's CONFIRMATION of the two specific stacks
+     for these boards, which is a question for the order"}
+
+ STK-002: {implementation: NONE_YET, verification: {tool: layer_judge.py, verdict: layer_judge},
+   maturity: OWNER_DECISION_REQUIRED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   note: "layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for
+     four against six layers exists for any board, which decision 2 left open and decisions 27 and 28 now need.
+     19 September 2026, from the open-pairs register: this rule read AN OWNER DECISION IS OPEN on all seven boards
+     while NO numbered decision claimed it, so a reader who followed the readiness page could not find out which
+     one. Decisions 27 and 28 name STK-002 on C and P now, which is what the sentence above already said in
+     prose. The other five boards stay deliberately unclaimed: their layer question IS decision 2, the P0 of 11
+     September, ruled on 12 September as write up all seven and TEST BOARD A ONLY, and the index only carries
+     decisions from 23 up. So five pairs point at a ruled decision whose per-board half was never asked again,
+     and the page says so under DECISION_UNCLAIMED rather than hiding them among the pairs that have a number.
+     20 SEPTEMBER 2026, THAT LAST CLAUSE HAS STOPPED BEING TRUE AND THE SENTENCE IS CORRECTED. The per-board
+     half WAS asked again and it is answered for all seven boards in v2/docs/LAYER-DECISIONS-2026-09-11.md,
+     each with the measurement that forced it: board A six layers, the four-layer arm ROUTED on 12 September
+     with the autoroute COMPLETED at 0 hard and 345 unrouted against the six-layer board's 0 (not a pass
+     ceiling and not a timeout, which is what settles it); board B six, three CM5 at 0.4 mm receptacle pitch
+     measuring 93 opens at 8 passes with In1 keep-outs; board C four, In2 carrying 55 percent of all routing
+     on a board whose middle is a display window; board D four, In1 as a solid ground plane under the exciter,
+     the PA stage and the filter, which is an RF requirement and the return path for all three and is the
+     sentence the record had never written; board E four, refused at two by the ROUTING half alone after the
+     power argument was measured and WITHDRAWN (deleting all four In2 pours costs CELL_F 13 mV and VIN_RAW
+     28 mV, so area is not current); boards P and E5 two, with no signal that leaves its own face.
+     SO THE MEASUREMENT HALF OF THIS RULE IS COMPLETE ON ALL SEVEN BOARDS and the only outstanding input is
+     the second half of its own acceptance criteria, the fabricator's like-for-like price at four layers and
+     at six, one per board at its real outline and quantity five. The runner cannot take it: JLCPCB publishes
+     no open PCB pricing endpoint and the standing rule is that the runner never logs in, so it is the laptop
+     ordering session's. THE CATEGORY IS DELIBERATELY NOT MOVED HERE. Reclassifying these five from
+     DECISION_UNCLAIMED to VENDOR_WAIT means changing this rule's maturity out of OWNER_DECISION_REQUIRED,
+     which is a claim that decision 2 is closed, and five BLOCKER pairs would change class for a reason that
+     is not the boards. Decision 2 was RULED on 12 September and its ruling has been EXECUTED; recording a
+     ruled decision as closed is the owner's, so the page keeps saying DECISION_UNCLAIMED and this note says
+     exactly what is left.",
+   remediation: {action: "quotes from the ordering session for both counts on C and P, then the rulings. 19 September
+     2026: EVERY BOARD OF THE SEVEN NOW HAS ITS LAYER MEASUREMENT and the only missing input on any row is the PRICE.
+     A 345 unrouted at four layers against 0 at six (12 September, the autoroute COMPLETED in 51 minutes, so it is a
+     result and not a ceiling, and the P0 page's own summary paragraph had gone on saying A was supported by nothing
+     for a week after the arm that refuted it); B 93 opens at 8 passes with In1 keep-outs; C 14 to 35 opens at two
+     layers, decision 27 for four against six; D four layers on the RF ground-plane reason; E the routing half and
+     In1; P 43, 45 and 47 opens at two layers against 0 and 0 at four at the fabricator's own floor, decision 28;
+     E5 two layers with nothing inner to weigh. The runner never logs into JLCPCB, so the price comes from the
+     ordering session and from nowhere else. 19 SEPTEMBER 2026, THE TASK IS WRITTEN WHERE THAT SESSION WILL
+     READ IT: v2/docs/ORDER-SESSION-PROMPT.md carries a section asking for the PCB-only price at quantity 5
+     for each of the seven boards at its own size, thickness, copper weight, finish and mask, TWICE, once at
+     the count it is built at and once at the count below it (and for P and E5 the other direction, because
+     decision 28 asks what four layers cost), with a count the form does not offer written down as an answer
+     too. It is a quote and not an order: nothing is uploaded, no cart line is touched, nothing is paid. The
+     figures land in a LAYER PRICES section of ORDER-LOG.md, and seven BLOCKER pairs of 333 turn on them,
+     which is more than any single engineering item on the set", owner: OWNER, execution: OWNER,
+     depends_on: [], p50_h: 2, p80_h: 72}}
+
+ RET-001: {implementation: "signal_class.py plus each board's signal_classes table, judged by intent_checks.py",
+   _shared_verdict_why: "SHARED WITH RET-002 (18 September 2026). One pass over the routed board produces both: the
+     net is classified by spectral content, and each class is asked its own question. This rule is the CRITERION,
+     whether the class's adequacy question is the right one and is met; RET-002 is the per-net SCREEN the same pass
+     prints. THE LAST SENTENCE OF THIS NOTE STOPPED BEING TRUE ON 21 SEPTEMBER 2026 AND IS REPLACED: it said
+     the sharing was harmless because this rule's maturity was SOURCE_UNVERIFIED and its verdict was never
+     read. Decision 39 makes it ENFORCED, so ONE number now decides two rule-board pairs on every board, and
+     RET-002's own note named the consequence in advance: a net can pass the screen under a
+     criterion that is itself wrong. What that costs is bounded and visible: where the shared verdict passes,
+     the readiness page carries two PASS rows for one measurement (three boards today), and where it declines
+     it declines twice. The separation is intent_checks.py writing a verdict per rule, and it is this rule's
+     item rather than a reason to leave the criterion unruled.",
+   verification: {tool: intent_checks.py, verdict: intent_return_path, fixtures: tests/test_signal_class.py},
+   maturity: ENFORCED, gap_category: GENERATED_ONLY,
+   _maturity_ruled: "decision 39, ruled by the session on 21 September 2026: this project's own per-class criterion is a DECLARED CALIBRATION and the numbers stand exactly as they are. The rule is enforced against them and its result is whatever the tool measures; what the page still says, through gap_category GENERATED_ONLY, is that the number is OURS and no document states one. Reverse by setting the maturity back to SOURCE_UNVERIFIED and reopening decision 39.",
+   note: "16 September 2026: the principle is implemented and the heuristic is no longer standing in for it. Every net
+     gets a spectral-content class from EVIDENCE (the board's own impedance-targeted net class, or a declaration in
+     boards/<letter>.json carrying a written basis naming the part or interface that decides it), and each class is asked
+     the question it deserves: a fast net for an ADJACENT reference within a tolerance, a slow one for whether a return
+     path EXISTS at all. Four properties keep a relaxation from becoming an exemption mechanism, each with a rule:
+     a declaration without a reason is refused, an unclassified net is judged at the STRICTEST bar and named, a
+     declaration cannot downgrade a net the board itself calls impedance-targeted, and the relaxed class asks a
+     different QUESTION rather than a looser number. It is GENERATED_ONLY and not ENFORCED for one reason and it is
+     the honest one: THE PER-CLASS TOLERANCES ARE THIS PROJECT'S OWN NUMBERS, not a standard's. The 10 mm or 5 percent
+     of the fast classes is the 15 September ruling's figure calibrated on board A's anti-pad rows; the 30 mm or 15
+     percent of CLOCKED_DIGITAL is a judgement. Until a source backs them, they are a written screen and say so 16 September 2026, an authority for the PRINCIPLE and not for the numbers: TI SCAA082A section 1.6 (v2/vendor/ti/ti-scaa082a-high-speed-layout-guidelines.pdf) states that at high frequency the return current flows along the lowest impedance path, directly beside the signal, and that a slot in the reference forces a loop whose area is what radiates. That is what this rule rests on and this tree held no source for it until today. It states NO per-class tolerance, so the millimetres here are still this project's own and the maturity does not move.",
+   remediation: {action: "decision 39 closed the source half on 21 September 2026: the per-class criterion is ruled as a declared calibration with the numbers exactly as they stand. What is left is the DECLARATION, the remaining boards' signal_classes tables written the way board E's is, AND the separation of this rule's count from RET-002's, which the shared verdict has made live",
+     owner: SESSION, execution: SEQUENTIAL, depends_on: [], _depends_why: "it depended on SI-001 for a critical-length criterion derived from the drivers' own edge rates; decision 39 rules the criterion as it stands, so it no longer waits on an edge rate the drivers do not publish", p50_h: 8, p80_h: 24}}
+
+ RET-002: {implementation: "gen_pcb_*3.py pours", verification: {tool: intent_checks.py, verdict: intent_return_path, fixtures: tests/test_board_gates.py, report: return_gaps.py},
+   _shared_verdict_why: "SHARED WITH RET-001 (18 September 2026). The same pass; this rule is the per-net screen
+     (total length, uncovered length, the runs that make it up and what sits on the neighbouring layers), judged
+     against the class RET-001's criterion assigns. When RET-001 gains an authority and starts being read, the two
+     will need separate counts, because a net can pass the screen under a criterion that is itself wrong.",
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026: it no longer stands in for RET-001. The same measurement runs, and what it is compared
+     against now depends on the net's declared spectral class, so the screen is a screen again. It still counts a net's
+     own via anti-pads as uncovered, which is what RET-003 is about and is why boards D and E read what they read 16 September 2026: TI SCAA082A section 2.5 states the fixer as practice, 'use ground vias around the signal via to make sure that the return current can flow as close as possible to the signal'. It gives no distance, which is the number this rule still wants. 17 SEPTEMBER 2026: IT NO LONGER COUNTS A NET'S OWN VIA ANTI-PADS. The fill retreats around every barrel, so a net that changes layer punches a hole in the plane it is judged against, and the reference is continuous either side of it: what the signal needs there is a return transition, which is RET-003's and RET-004's question. The anti-pad share is measured, reported and handed to them, and an anti-pad is a hole IN a fill, so a point near a via on a board with no pour is still a net with no reference. Measured across the set, after the test was tightened to ask whether the fill RESUMES on both sides of the point (an anti-pad is a hole in a reference, and a point just outside a fill's edge with a via inside it is not one): board E goes from one net over its limit to NONE with 266.8 mm of its uncovered millimetres in its own anti-pads, D stays at zero with 440.5 mm of them, C goes 18 to 16 and P 6 to 5. The real failures do not move, which is the point.",
+   remediation: {action: "DONE 17 September 2026. What remains is RET-003's own number, which is that rule's gap and not this one's",
+     owner: SESSION, execution: PARALLEL_BOX, depends_on: [RET-003], p50_h: 0, p80_h: 0}}
+
+ RET-003: {implementation: "gen_pcb_a3.py In2 pours", verification: {tool: ref_change.py, verdict: return_stitch, fixtures: tests/test_ref_change.py},
+   maturity: ENFORCED, gap_category: GENERATED_ONLY,
+   _maturity_ruled: "decision 39, ruled by the session on 21 September 2026: this project's own per-class criterion is a DECLARED CALIBRATION and the numbers stand exactly as they are. The rule is enforced against them and its result is whatever the tool measures; what the page still says, through gap_category GENERATED_ONLY, is that the number is OURS and no document states one. Reverse by setting the maturity back to SOURCE_UNVERIFIED and reopening decision 39.",
+   note: "16 September 2026: the reference conductor is determined now, per via, by sampling the fill in a RING
+     around the transition (the fill retreats from the via's own barrel, so the centre reads 'no pour' and the
+     first version of this measurement came back with every via undetermined on every board). Measured: board A
+     86 vias keep their reference, 131 move between two ground planes, 35 move between GND and VBAT because A's
+     In2 carries both side by side; C 62 and 166 and none; D 145 and none; E 202 and none. The first two cases
+     are RET-004's and are gated there. The third is this rule's and is gated here: a return crossing between
+     two DIFFERENT reference nets crosses at a capacitor or it goes the long way round. The distance is declared
+     per board (board A: 3 mm, the same number this project already uses for a decoupling capacitor from its
+     pin) and it is OURS, so the maturity is GENERATED_ONLY until a document states it 16 September 2026: TI SCAA082A section 2.5 asks for ground vias AROUND the signal via and gives no figure for how far away one may sit, so the search radius here remains unsourced.",
+   remediation: {action: "decision 39 rules the distance as this project's own declared calibration (21 September 2026). What is left is board A's own reading: the vias that change to a power reference with no capacitor within it, each answered by a capacitor at the transition in gen_pcb_a3.py or declared with its reason", owner: SESSION, execution: SEQUENTIAL, depends_on: [], p50_h: 3, p80_h: 12}}
+
+ RET-004: {implementation: "gnd_grid.py, return_via.py fixer",
+   verification: {tool: return_via.py, verdict: return_via, fixtures: "tests/test_board_gates.py, tests/test_signal_class.py", examination: ref_change.py},
+   _examination_why: "18 September 2026: this rule is a SCREEN for RET-003 in its own requirement, which
+     says in as many words that a via beyond the screening distance is EXAMINED against that rule rather
+     than failed outright, and its failure-mode line says that used as a law it demands vias where the
+     reference never changed. That is what it was doing: five boards failed on the screen's own count with
+     nobody looking at one flagged transition. `ref_change.py` already classifies every signal via (the
+     reference kept, moved between two GROUND planes, or moved to another NET) and now writes that per via
+     beside the board, the way dc_drop writes the barrel currents it had solved and thrown away. The screen
+     reads it: a via whose reference never changes and a via that changes to another net are not this
+     screen's to fail (the second is return_stitch's, where only a capacitor between the two planes can
+     help), a via the examination could not classify stands because an unexamined via is not an examined
+     one, and with no reading beside the board at all the screen declares its missing input, which is
+     INCONCLUSIVE and never a pass. The sweep runs the examination BEFORE the screen and a rule holds that
+     order.",
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026: it reads the SAME spectral-content class rule 1 reads, so a net cannot be slow for one rule
+     and fast for the other. A return via exists so the return current can follow its signal through a reference change;
+     where the signal has no edge worth speaking of there is no loop worth closing, and demanding one anyway refuses
+     boards for nothing. Board D was one item from a clean gate on fifteen vias, and every one of them is a push-to-talk
+     line or an expander output that changes state when a person presses a switch. The skip is a COUNTED category in the
+     verdict, not a silent one, and a net nobody classified is judged as though it were fast"}
+
+ IMP-001: {implementation: "gen_pcb_*3.py net classes", verification: {tool: impedance_check.py, verdict: impedance_check, second_opinion: impedance_2d.py},
+   _solver_why: "WHERE THE NUMBERS COME FROM, 18 September 2026. This rule's gap was never only the standard: it
+     was that most of the millimetres judged came from a measured BIAS applied to a closed form rather than from a
+     solve, and the run said how many but not WHICH cross-section. It names them now, longest first, with the
+     command that solves each. Six were solved that day: the two outer geometries boards A and B actually route
+     (the solver reads 0.978 of the closed form, the same bias the first four measured), two inner striplines of
+     the 3313 stack, and the two inner cross-sections board B's router makes where only one side has a plane.
+     Board A is 338 mm of 338 solved and board B 5,970 of 6,684, the rest being legs metres apart that are not
+     pairs. What is still missing, and is why this rule's maturity does not move: the closed form's own standard
+     is not in this tree, and no fabricator has confirmed a stack and no coupon has been measured.",
+   _shared_verdict_why: "SHARED WITH PAIR-001 (18 September 2026). One pass over the routed board writes one
+     verdict with both readings in it: per CLASS, the target, the tolerance, the geometry as built and the
+     impedance that geometry makes on the board's own stackup, which is this rule; and per PAIR, the coupled
+     fraction and the intra-pair difference, which is PAIR-001. The sharing is harmless today because this rule's
+     maturity is SOURCE_UNVERIFIED and its verdict is never read: the closed forms come from a standard this tree
+     does not hold and the field solver has one solved point. When it is read, a pair that misses its target will
+     fail both, and the class question and the pair question will need their own counts.",
+   maturity: SOURCE_UNVERIFIED,
+   _maturity_why: "16 September 2026: the fabricator's impedance page was fetched and transcribed and carries the two stackups and NO impedance-against-width table and no tolerance, so the confirmation this rule asks for is not on any page: it is a question to the fabricator at order time, or a coupon. That is the ordering session's or the owner's, not a session's, and the remediation says so now.", gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   note: "closed forms from a standard not in the tree; no fabricator confirmation and no coupon. 19 SEPTEMBER 2026, THE NOTE WAS A DAY OUT OF DATE AND THE REGISTER WAS PRINTING IT AS WHAT THIS RULE WAITS ON: it said the 2D solver has ONE solved point, which was true when it was written and stopped being true on 18 September, when six cross-sections were solved in one pass (the two outer geometries boards A and B actually route, two inner striplines of the 3313 stack, and the two one-sided inner cross-sections board Bs router makes) and the solver read 0.978 of the closed form on the outer pair, the same bias the first four had measured. Board A is 338 mm of 338 solved and board B 5,970 of 6,684. What is genuinely open is the other two clauses and neither is a solve: the closed forms come from a standard this tree does not hold, and the fabricators own impedance page carries the two stackups with NO impedance-against-width table and no tolerance, so the confirmation this rule asks for is a question at order time or a coupon, which is the ordering sessions or the owners and is written into ORDER-SESSION-PROMPT.md on 19 September beside the layer prices",
+   remediation: {action: "solve every geometry, pin the standard, and get the fabricator's written confirmation with a coupon where the tolerance needs it", owner: OWNER, execution: VENDOR_OR_STANDARD_WAIT, depends_on: [STK-001], p50_h: 8, p80_h: 24}}
+
+ IMP-002: {implementation: "gen_pcb_*3.py class table (board B's project classes are built from CLASSES since 16 September)",
+   verification: {tool: class_floor.py, verdict: class_floor, fixtures: "tests/test_board_gates.py, tests/test_return_rules.py"},
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026: board B's project file shipped USB and DIFF100 at 0.10 mm against its own 0.127 mm minimum, a second hand-written copy that had drifted from the generator's table. The project classes come from the table now and full.sh blocks the placed board on class_floor.py"}
+
+ PAIR-001: {implementation: "pair_preroute.py, meander.py", verification: {tool: pair_match.sh, verdict: impedance_check, fixtures: tests/test_pair_leg_match.py},
+   _shared_verdict_why: "SHARED WITH IMP-001 (18 September 2026). The same verdict; this rule is the PAIR half,
+     the coupled length as a fraction of the judged length (board B declares 0.80 by owner ruling 24), the
+     intra-pair difference against the interface's skew budget, and the via count. Board B reads FAIL here on
+     seventeen pairs missing their target, which is this rule's own criteria and not IMP-001's, and until
+     18 September that same count was also failing STK-001, a rule about the stackup being present in the board.",
+   maturity: ENFORCED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   note: "coupling and the 1 mm length gate are enforced; the 1 mm is a project number. 17 September 2026: the interface's own budget IS cited beside it now. interfaces.budget_for reads the sheet per net through each board's assignment, and both board gates that print a pair's mismatch print what that pair's own host asks for and the clause it was read from. Which of the two DECIDES is owner decision 36, which now carries the USB 2.0 specification's own 100 ps of allowed cable skew as the scale: this project's 1.00 mm is about 5.5 ps",
+   remediation: {action: "The CITATION is done (17 September 2026); the JUDGING is owner decision 36, which now has the numbers on both sides", owner: SESSION, execution: PARALLEL_AGENT, depends_on: [INT-001], p50_h: 1, p80_h: 3}}
+
+ SI-001: {implementation: "signal_class.py declarations", verification: {tool: edge_length.py, verdict: edge_length, fixtures: tests/test_edge_length.py},
+   maturity: ENFORCED, gap_category: GENERATED_ONLY,
+   _maturity_ruled: "decision 39, ruled by the session on 21 September 2026: this project's own per-class criterion is a DECLARED CALIBRATION and the numbers stand exactly as they are. The rule is enforced against them and its result is whatever the tool measures; what the page still says, through gap_category GENERATED_ONLY, is that the number is OURS and no document states one. Reverse by setting the maturity back to SOURCE_UNVERIFIED and reopening decision 39.",
+   note: "16 September 2026: half of this note was already wrong and the other half is now addressed. Every net
+     IS classified, by spectral content, 413 declarations across the seven boards; what was missing was the
+     arithmetic that turns a class into a LENGTH. edge_length.py computes the propagation delay of each layer
+     from the board's own stackup (an outer layer is a microstrip and sees about (er+1)/2, an inner one sees er:
+     5.5 and 6.9 ps/mm on FR-4), takes the rise time from the DECLARATION beside each class entry, because a
+     rise time is a property of the driver and board A's fast nets are gate drives while board B's are a memory
+     bus, and compares every signal net's routed length with t_r / (k * t_pd). The criterion k is declared per
+     board with its reason and no source in this tree states one, so the rule stays GENERATED_ONLY however
+     carefully it is chosen. A net whose class carries no declared edge is COUNTED AND NAMED, never estimated,
+     and the verdict is INCONCLUSIVE while any remain: that is the gap made per-net instead of per-project 16 September 2026: TI SCAA082A Table 2 gives measured propagation delays on FR-4 at er 4.6, microstrip 171.9 mm/ns and stripline 139.8 mm/ns (5.82 and 7.15 ps/mm), which is within 6 percent of the 5.5 and 6.9 ps/mm edge_length.py computes from the board's own stackup: the arithmetic has a second opinion. The criterion k still has none. 16 September 2026, evening: BOTH HALVES OF THE INPUT ARE NOW PARTLY SOURCED AND THE REST IS MEASURED WORK, NOT SESSION WORK. The criterion is declared 6 on every board and calibrated against a document for the first time: ECSS-E-HB-20-07A section 6.1.2.3 (transcribed in v2/vendor/standards/) works a real case where a 35 mm clock track with a 200 ps edge failed a radiated emission test, and that track is ONE rise distance long, k = 1, so k = 6 is a sixth of a known failure. Fifteen entries over five boards now carry a rise time from a SPECIFICATION rather than from nobody: USB 2.0 gives 500 ps for high speed (7.1.2.2, THSR/THSF minimum) and 4 ns for full speed (Table 7-9, TFR/TFF minimum), both 10 to 90 percent, both minimums, which is the worst case a board is designed for. What the other classes need was CHECKED before it was called a gap: the RP2040 datasheet documents a slew-rate control bit and no number, the 74LVC family datasheets from TI and from Nexperia specify only the input transition rate they tolerate, and TI SCAA082A gives propagation delay and no edge. A rise time those parts do not publish cannot be declared by this session at all: it is an oscilloscope at bring-up or a vendor's answer, and putting it in the session queue put work in the critical path that no session could start. AND THE RULE NOW ASKS THE RIGHT QUESTION OF A LONG NET: being a transmission line is physics, not a defect, so a net past its critical length is asked whether it is impedance-controlled, series-terminated (a screen that says so: the board file knows neither which end drives nor what the far end is) or declared with a reason, and only what is left is the finding. The first version would have failed every net on every board at a sub-nanosecond edge and reported physics. 17 SEPTEMBER 2026, A SECOND ANCHOR FOR k, from the same handbook and independent of the first: 6.1.2.3's example track is one rise distance long (k = 1) and failed a radiated emission test, and the same clause describes that track as 'approximately lambda/6' at F2 = 1/(pi tr). Those two statements are the same length, because lambda/6 at F2 is exactly pi/6 of v*tr, so the handbook's own radiator sits at k = 6/pi, which is 1.9. This project's k = 6 is 3.1 times stricter than the length that failed, by the handbook's own arithmetic rather than by a second opinion about it. The criterion is still ours and still without a standard that states one; what it now has is a published failure it is a stated distance away from.
+     26 September 2026 (ts-net, MESHSAT-1357): THE TABLE AT THE SCHEMATIC PHASE. `edge_length.py --netlist <net>`
+     writes the edge_length verdict from the committed netlist, the board table's signal-class declarations, the held
+     documents and the declared stack, and the table beside it (edge_length.table.json): per class entry the edge rate
+     and the document that states it (edge_length.EDGE_SOURCES: a quote that must be found in the held file and a
+     number that must equal the declared one; a contradiction FAILS, anything no held document states is UNDECIDED and
+     the reading INCONCLUSIVE with the ICs on the nets named), the critical length on the slowest layer of the
+     declared stack and of every stack a layer decision rules for the board (C six layers by 27, P four at 2 oz by 28,
+     B's eight-layer measurement by 43), and whether the netlist carries an impedance target, a series termination or
+     a declaration where a net may be electrically long (critical length under the outline's width plus height). A net
+     with none of them is LAYOUT_BOUND: its critical length is what the layout gate holds it to. The routed comparison
+     is the board run's and writes edge_length_routed, which no rule names yet. Since the third pass (TSN-D18) such a
+     LAYOUT_BOUND net holds the reading at INCONCLUSIVE, named with its critical length, until the schematic answers
+     it (a target, a termination or an edge_allow declaration): edge_length_routed decides no rule, so a PASS standing
+     over it would never be checked. A board with no outline_mm is read as having every decided net possibly long.
+     Readings of 27 September on this integration's committed netlists (A, D and E as round 8 regenerated them), all
+     INCONCLUSIVE, as before: A 6 decided of 283 signal nets (118 undecided), B 30 of 835 (492), C 4 of 128 (29), D 20
+     of 135 (27, and 2 LAYOUT_BOUND), E 4 of 82 (36), P 0 of 44 (22). The decided nets are the USB 2.0 lines (0.5 ns
+     high speed, 4 ns full speed, both from the held USB 2.0 transcription). Every one is answered in the netlist
+     except board D's HUB_DM4 and HUB_DP4, which carry no impedance target (board D's USB class has none) and no
+     series resistor, so a layout must hold them under their critical length or the schematic gives them one. No
+     reading moved class: all six were INCONCLUSIVE already.",
+   remediation: {action: "decision 39 rules the criterion k as a declared calibration (21 September 2026), so the whole of what is left is an edge rate for the classes whose drivers publish none (checked: RP2040, 74LVC from two vendors, SCAA082A: the datasheets carry a slew-rate control bit, an input transition rate and a propagation delay, and no edge). That is an oscilloscope at bring-up, which is why the owner is LAB and the execution HARDWARE rather than a standards wait: the vendors' documents were the wait and they have been read. A direct question to a vendor is the only shortcut and nobody has asked one", owner: LAB, execution: HARDWARE, depends_on: [], _depends_why: "NOT RET-001 (16 September 2026). RET-001 depended on SI-001 and SI-001 on RET-001, a cycle the ETA model absorbed in silence because its walk carries a seen-set and returns zero on a revisit, so the critical path was computed by truncating one of the two edges and nothing said which. The real direction is one way: RET-001's per-class tolerance is to come from a critical-length criterion, which needs the drivers' edge rates, which is SI-001. SI-001 itself needs datasheets and nothing from RET-001.", p50_h: 8, p80_h: 24}}
+
+ CLK-001: {implementation: "gen_sch_*.py crystal networks",
+   verification: {tool: clock_check.py, verdict: clock_check, fixtures: tests/test_clock_check.py},
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026. Every crystal on every board is judged from the netlist: both signal pins loaded to ground,
+     the two load capacitors the SAME value because an unbalanced pair pulls the oscillator off frequency, one series
+     damping resistor allowed and no second driving part on the node. Eleven crystals across four boards pass; board A
+     carries none. What is NOT judged is the load capacitor's VALUE against each part's own C_L, which lives in a
+     datasheet this tool does not read, so the value found is printed for a person to compare. The check shipped with a
+     false positive worth recording: it called every series damping resistor a defect, on four boards at once, and board
+     D's hub crystal carries the justification in its own value string (Rd 1.5k per SLLS413 figure 6). A guard whose
+     condition is a hypothesis about the data, for the sixth time in this project's record 16 September 2026, evening:
+     THE VALUE IS JUDGED NOW, and it found two defects the moment it could see. Each board declares its crystals'
+     C_L with the source it came from (`crystals` in boards/<letter>.json), the tool computes what the fitted
+     capacitors present (C1 in series with C2 plus the declared stray) and compares within 20 percent, which is the
+     error that moves a 10 pF part about 30 ppm at the usual motional numbers, and it reports the implied pull in ppm
+     beside every crystal. The arithmetic reproduces the RP2040 hardware design guide's own worked example for the
+     exact part on boards C and E, 15 pF capacitors and 3 pF of stray making 10.5 pF against a 10 pF target. FOUND:
+     board B's three 24 MHz hub crystals carried an 18 pF load part with 18 pF capacitors beside them, which present
+     12 pF, a third light and about 54 ppm fast (the code is now C164058, a 12 pF part of the same family, no land
+     change); and board D's two 6 MHz crystals were certified against a 25 MHz part on a land no 6 MHz crystal exists
+     in, which is decision 37 and why board D declares no C_L and reads INCONCLUSIVE here rather than passing",
+   remediation: {action: "decision 37 (board D's two clocks: the land cannot hold the part it draws), then the straps half of this rule",
+     owner: OWNER, execution: OWNER, depends_on: [], p50_h: 2, p80_h: 6}}
+
+ ANA-001: {implementation: "pcb_sensitive.yaml, the nodes and their filters; sense_fence.py, the keep-out the router obeys", verification: {tool: sensitive_nodes.py, verdict: sensitive_nodes, fixtures: tests/test_sensitive_nodes.py, report: "kelvin_check.py, switch_list.py, sense_reach.py"},
+   _fixer_why: "sense_fence.py (21 September 2026) is this rules only instrument that reaches the router.
+     A DSN class-pair clearance is ignored by Freerouting 1.9.0 (measured on E17), a KiCad custom rule
+     catches after the route and steers nothing, and a class clearance is refused by the pins of the very
+     class it would protect (board A POE_CS 0.250 mm at U16 pin 16, board E WATER_SENSE 0.200 mm at U10
+     pad 38), so the escape dies at the source. A rule area that forbids tracks leaves KiCads DSN export
+     as a wire_keepout and route_one.sh drops those only on power layers. It runs AFTER the pre-lay,
+     because the copper it fences does not exist until then and a generator-drawn fence is an obstacle to
+     the pre-lay itself, and its shape is an ANNULUS: a rule area that sits on the track it protects is
+     items_not_allowed, which is in the hard set. Boards A and E declare it; both were measured on their
+     own pre-route boards first (A 85 areas over 115 mm2, E 12 over 52 mm2, each hard 0 and unrouted
+     unchanged). It lays no copper and decides no verdict: sensitive_nodes still measures the board.",
+   _report_why: "kelvin_check.py (18 September 2026) measures the OTHER way a current sense stops being a
+     measurement, and it is a REPORT because no rule in this registry asks it yet. ANA-001 asks how far a
+     sense line runs from switching copper; this asks how much of the sensed signal is the copper's own
+     drop, which is the failure when a tap lands on a POUR that carries the same current instead of on the
+     shunt's own pad. Board A's charger is the case: R16 is a 10 mOhm input shunt whose whole signal at
+     6.0 A is 60 mV, and the high side taps VBUS20 through R147. The number was unaskable until dc_drop
+     began writing the solved drop at every pad the same day, so the error is now a subtraction between
+     two pads of one net. It writes an ADVISORY verdict and decides nothing; what it is worth is that the
+     rule, when it is written, is written against a number.
+
+     sense_reach.py (21 September 2026) asks whether this rule's own INSTRUMENT can reach the violation.
+     sense_fence is grown around the copper the PRE-LAY LOCKED and can move only copper the ROUTER laid, and
+     sensitive_nodes names one clearance per node without saying who laid either side, so a fence arm can be
+     launched against a violation it was never able to answer. Measured the morning it was written: on board
+     E's E37 board 23 pairs of segments sit inside 0.50 mm on a shared layer with the switching side locked
+     in NONE and the sense side in every one, so E38 was a real arm; on board A's A98 board 88 pairs, the
+     switching side locked in 6 and the sense side in 35, and every one of the tightest rows is a net the
+     pre-lay never touched (PD_ISNS_P 0.132 mm from PD_SW1, FE_ISNS_P 0.155, CH_SRN_F 0.155) while the nets
+     that DO carry locked copper read 0.213 and wider, which is a prediction about board A's fence arm and
+     the reason A101 adds those nets to the pre-lay instead. It also counts the aggressors this board's own
+     switch_nets does NOT carry, because a gate drive is excluded from that list by pin function and board
+     E's tightest approach of all is TRK_CSN at 0.204 mm from TRK_TG2. It is ADVISORY and decides nothing:
+     whether a gate drive belongs in this rule's denominator is a judgement that belongs with decision 34.
+
+     switch_list.py (19 September 2026) asks whether the DENOMINATOR is complete. This rule measures a
+     sensitive node's clearance from the nearest SWITCHING copper and which copper is switching is a
+     declaration, so a switching net nobody declared is copper the reading never looks at and the PASS that
+     comes back is taken against an incomplete list, which is a pass on a short denominator wearing
+     different clothes. sensitive_nodes already refuses the mirror image, a SENSITIVE net that carries a
+     transistor or inductor pad; nothing asked the other half. The predicate is stated so it can be argued
+     with: a net carrying a transistor's drain or source pad together with an inductor's, or two
+     transistors', excluding gates by pin function and excluding the board's own poured nets, because a
+     plane is a rail by construction. It is a REPORT and writes an ADVISORY verdict, because whether a
+     given power node is switching for this rule is a judgement (a synchronous converter's midpoint
+     certainly is; a hot-swap pass element that switches once arguably is not) and a tool that turned its
+     heuristic into a verdict would be asserting that judgement. It reads the netlist and the board file's
+     text and never pcbnew, so it runs where KiCad is not, which is where this half of the rule belongs.
+     ITS FIRST RUN, on all six boards. Board A's list is CONFIRMED COMPLETE (23 declared, 17 switching
+     shaped, 0 missing) and so is BOARD E'S (6 declared, 2 shaped, 0 missing), which matters because board
+     E's ANA-001 arm is in flight: if E23 still fails the rule, the violation is against copper this board
+     DOES call switching and has locked before the router, which is a geometry question and not a
+     declaration one. Board D's declared ZERO is confirmed against its own netlist, the first time a
+     declared zero in this project has been checked against the design rather than believed. Board P keeps
+     its declared zero with ONE weak candidate named, SW, the protection pair's common drain (Q1, Q2, no
+     inductor). Boards B and C declare no switch_nets at all: B's four candidates are all weak, three
+     small-signal FETs each on an open-drain logic net, and BOARD C HAS TWO STRONG ONES, EPD_SW and
+     EPD_VCC, the e-paper boost's switching node and its output, each carrying Q5 or Q6 with L1. Board C is
+     NOT a gap, and the distinction is worth keeping straight: this rule's applicability is a board FACT
+     (an audio interface, an energy source, or the pack node) and board C has none of the three, so it is
+     out of scope by the registry's own condition and not by anything it declares or omits. Its two
+     candidates are recorded for the day a sensitive node is added to that board.",
+   maturity: ENFORCED, gap_category: GENERATED_ONLY,
+   note: "the shunt's Kelvin connection and the microphone filtering are designed; no check identifies sensitive nodes or measures their separation from switching copper 16 September 2026: THE LIST EXISTS AND WRITING IT FOUND A DEFECT. pcb_sensitive.yaml declares 34 nodes over boards A, D, E and P with each one's filter, its Kelvin partner where the measurement is a difference, and the clearance asked of the layout; sensitive_nodes.py checks the declaration against the netlist everywhere and, where pcbnew is present, measures the real distance from each node's copper to the nearest switching copper on the routed board and reports it beside the asked-for number. The defect: board A's BQ25731 had BOTH of its sense pairs wired straight from the shunt to the pin, and the part's own table asks for an RC filter on each (10 Ohm with 10 nF differential on the input pair for a 47 to 200 ns time constant, section 10.2.2.2; a 10 Ohm contact resistor and 0.1 uF across the charge sense resistor, pin 19), warning that without it the ringing 'overwhelms converter sensed inductor current information' and can push the average-current loop into oscillation. Six parts were added at the source. The clearances themselves are this project's own numbers and no source in this tree sets them, which is why the measured distance travels in the verdict beside them. 17 SEPTEMBER 2026, WHERE THE APPROACH HAPPENS DECIDES WHAT IT IS: a sense line and the switching node it measures are adjacent by construction at the part that makes both, two pins of one package, and this gate reported the smallest gap and failed board A on six nodes of which four were that geometry. The run inside the limit is split at the shared part's own COURTYARD, which is published geometry rather than a number of ours: copper inside it is the package and is reported as a note, copper outside it is a routing decision and fails. Board A keeps POE_CS at 10.79 mm and B33_FB at 8.47 mm, and board E keeps both of its own, one of which runs 20.49 mm with no shared part at all.",
+   remediation: {action: "The declarations and the check are DONE (17 September 2026): every board that has a sensitive node declares it with the clearance it asks for, and sensitive_nodes.py measures it. What remains is COPPER and rides with those boards' next route: board A has ten clearances under their own asked-for distance, four of which are the charger filter nets its committed board does not yet carry, and board E has two", owner: SESSION, execution: PARALLEL_AGENT, depends_on: [], p50_h: 2, p80_h: 6}}
+
+ RF-001: {implementation: "gen_pcb_d3.py, gen_pcb_b3.py keep-outs", verification: {tool: "rf_line.py, check_pcb_d.py", verdict: rf_line, fixtures: tests/test_rf_line.py},
+   maturity: ENFORCED, gap_category: GENERATED_ONLY,
+   note: "the D gate checks the RF chain's net continuity and the module keep-outs; no line impedance is computed, no filter is verified, and the LPF values are flagged for a simulation that has not run. This entry NAMES NO VERDICT on purpose (16 September 2026): it named check_pcb_d, board D's own gate, while the rule applies to B as well, so the day it was promoted board B would have read a PASS off a gate that looks at no RF line. Nothing verifies this rule on either board, and the coverage map says so rather than pointing at the nearest gate 16 September 2026, evening: THE FIRST HALF IS MEASURED NOW AND IT FOUND ELEVEN LINES. Every board declares an RF class with a 50 ohm single-ended target (intent.Z_DEFAULT) and impedance_check judges PAIRS: the string z_se does not appear in it, so the target was declared on every board and read by nothing. rf_line.py computes each such net from the width it was ROUTED at on each layer against the board own stackup, by the closed form alone because this project two-dimensional solver calibration was measured on differential geometries. Board A: all eleven blind-mate RF paths sit on In2.Cu at 0.350 mm, which is 25.5 ohm on that stack against the 50 their class asks for. The width is right for the OUTER layer the class was drawn for and the router put the lines inside, which is the shape of defect this rule exists to catch. What is still not judged is the ground clearance of a coplanar line, the via fence, the launch and the filter, so the rule stays GENERATED_ONLY in its gap category while its verdict is now real",
+   remediation: {action: "board A's eleven RF paths take an outer layer at the class width (the A40 placement), then the LPF simulation and the coplanar clearance and via fence", owner: SESSION, execution: PARALLEL_BOX, depends_on: [IMP-001], p50_h: 6, p80_h: 18}}
+
+ RF-002: {implementation: "gen_sch_c.py, gen_sch_d.py, gen_sch_a.py, gen_sch_b.py (the EMCON gates), tx_inhibit.py (the transmitter table: CONOPS section 4b)",
+   verification: {tool: check_contracts.py, verdict: "inhibit_chain_<letter>", fixtures: "tests/test_gate_fixtures.py, tests/test_artefact_recording.py, tests/test_tx_inhibit.py, tests/test_tx_inhibit_split_guard.py"},
+   _verdict_why: "ITS OWN VERDICT SINCE 18 SEPTEMBER 2026. This rule and SCH-003 both read check_contracts' single
+     verdict, so a failure of ANY contract failed the transmit inhibit chain too; the contracts that answer THIS rule are
+     tagged `inhibit` and write `inhibit_chain_<letter>`: the line is present on the board, it reaches the gate it keys, the
+     panel toggle is its only driver, its sense is a buffer, and every consumer pulls it down so a missing panel inhibits.
+     26 SEPTEMBER 2026 (S-02 of MESHSAT-1357): THE RULE'S OWN QUESTION IS ASKED. Those contracts ask about the LINE; the rule
+     is about the TRANSMITTERS, and board B read PASS of 3 while its three Compute Modules' radios were disabled only
+     through a software I/O expander and its two AW7915-AED cards through a pin their maker does not document.
+     tx_inhibit.py holds CONOPS section 4b's list, finds each transmitter on the netlists and walks from the asserted line
+     through parts whose held pin maps give how they pass it (the 74LVC AND, OR, NAND, inverter, buffer and open-drain
+     families, an N-channel level shifter or switch to ground, a series resistor) to the transmitter's supply-switch
+     enable, its keying pin, or a disable pin whose effect its maker states (the Compute Module 5's WL_nDisable and
+     BT_nDisable 'may only be driven low': the last element before them is open-drain or an N-channel switch to ground).
+     Every net of a path is a conductor with one driver, followed across the four mated ribbons and through resistors,
+     beads, level-shifter channels and diodes; a pin firmware can drive FAILS the path and any other unproved pin leaves it
+     UNDECIDED, which check_contracts counts as INCONCLUSIVE. Each asserted line is solved in every state where its source
+     does not drive it (every subset of its ribbons unplugged, its source's board or any one rail down) against every pin's
+     datasheet current, every other part at the worse of powered and unpowered, resistors and rails at their adverse
+     tolerance, and must stay under its readers' VIL; every element on a path is taken down with its own supply and the pin
+     it drove must still be held; an open-drain element EMCON releases is judged on what holds its net. A gated rail has no
+     second feed (rounds 6 fourth to eleventh pass): a resistor from another supply, a transistor channel, a diode toward the
+     rail, a second switch output, a logic gate's push-pull output (R4T-D59) and a pin of a part firmware sets FAIL on the
+     rail's conductor (the rail, the nets its current-sense shunts and 0 Ohm links join, either way) and are UNDECIDED behind
+     a resistor; a part firmware sets may run from the rail only by a pin its maker's table gives as a supply input
+     (FW_PIN_TABLES: RP2040, STM32H742, H743 and H753, PCA9555, CP2102N, Compute Module 5), a supply output FAILS, a tied
+     pin (a VBAT, a VREF+, a CP2102N's VDD) is a load only with its partner on the rail, and a supply input is not a load
+     while any other supply pin of its part sits on a live net off the rail (R4T-D62) unless that net is fed only by the
+     part's own outputs made from the rail or a held sentence of its maker's lets the two fall in that order (the STM32H7's
+     'When VDD is above 1 V, all power supplies are independent', 3.5.1; the RP2040's 'power supplies may be powered up or
+     down in any order', 2.9.6; the Compute Module 5's VBAT that keeps the RTC 'even when the board is off', 2.12.2), which
+     since the eleventh pass never excuses the part's own output held up from outside and is quoted in the PASS it gives
+     (R4T-D67). The rows state the joins their makers state (an STM32H7's VDD beside its VBAT, VDDA, VDD33USB, VDD50USB and
+     VDDLDO, its VDDA beside VREF+, a CP2102N's VREGIN beside its VDD and VIO, a Compute Module 5's 5V beside a GPIO_VREF
+     that is not on the module's own CM5_3.3V or CM5_1.8V; a PCA9555's P-ports, an RP2040's ADC inputs, a CP2102N's VBUS),
+     and since the eleventh pass every I/O of a supply's domain held up elsewhere is UNDECIDED with its maker's limit
+     (RP2040 Table 622, STM32H7 Tables 21 and 22, CP2102N Table 3.10, CM5 4.2.1), but the pins the maker states pass no
+     current then (the RP2040's fault-tolerant pins, Table 614) and the PCA9555's INT and address pins (SCPS131J 6.1; its
+     SCL is read since the twelfth pass, 6.3 note (1)) (R4T-D68); an SN74LVC08A's, 32A's or 00A's VCC (the 08A's positive output clamps, SCAS283W 7.3.3, and each one's output
+     rated at most VCC + 0.5 V with no Ioff, 5.1) and a TPS22810's, TPS2596's or AP64500's input (the TPS22810's body diode,
+     SLVSDH0C 10.4; the others' outputs rated at most their input plus 0.3 V) are UNDECIDED with an output held up (R4T-D65); and a module's own-output net, and every net behind a pull
+     from it, is read in the second-feed check's words, another firmware part's supply input there with all its joins
+     (R4T-D63, R4T-D64). SINCE THE TWELFTH PASS (27 September 2026, R4T-D70 to R4T-D73; the review of the eleventh pass, its
+     three blocking items closed as classes by the session's decision under the owner's standing rule of 26 Sep 2026,
+     following the second checkpoint review's findings D and G) the default is inverted: a pin on a gated rail, behind a
+     resistor from it or on a net that falls with it is a load only where a row of its maker's held document clears it (a
+     logic input by II, an open-drain output by its maker's words, a logic VCC by Ioff or with nothing holding its outputs
+     up, a switch enable its maker states only leaks, a switch input with nothing holding up a pin no row clears, the
+     USBLC6-2's VBUS with nothing holding its I/O up, a firmware part's supply input by its table), and the PASS quotes that
+     row; every other pin is UNDECIDED, named (a part in no class, a switch's pin other than its outputs, its input and a
+     leaking enable, a logic part's pin its map does not place, an accessory's connector, a transistor the walk cannot read,
+     a resistor designator with other than two pins); a logic part's or a switch's ground with its supply up FAILS as a
+     firmware part's ground does; every pin of every part that carries the same module (board B's U30B beside U30A) is the
+     module's own; and the maker's words a load rests on reach the PASS from the module's own-output path too. A part is
+     read as a firmware part by its own symbol or part number, and one that only mentions a
+     family ('Raspberry Pi CM5 8GB/64GB wireless', 'RPi_CM5_8GB') is UNDECIDED wherever an active pin of it is met (R4T-D56,
+     R4T-D66). Any part that names a radio and is not listed, declared an accessory or declared receive-only fails; a
+     declaration resting on an inference is owed and UNDECIDED. The walk's results are recorded in the `inhibit` group alone:
+     they decide this rule and not SCH-003's check_contracts_<letter> or the set verdict INT-001 reads, so RF-002 must APPLY
+     on every board the walk writes for, which is the pcb_rules.yaml change beside this row. Since the tools stream's
+     recording round (b4ee78ec, 26 September 2026) inhibit_chain_<letter> records the netlist (sha and content) and the
+     intent of every board named by a result that names the board, the walk's results included, and rules_status holds a
+     reading that recorded another board's netlist current only while that netlist is still the other board's (cause
+     OTHER_DESIGN).",
+   maturity: ENFORCED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   _gap_why: "The walk is an executable gate with a machine-readable verdict and fixtures both ways (maturity ENFORCED), and
+     its note names what it does not read. Until the tenth pass the row said gap NONE beside that list. Under the stop rule
+     of the review of 26 September 2026 22:35 (findings D and G: verification-tool work must not dominate the schedule)
+     the eleventh pass was to be the last, and its review found three classes still read PASS in silence (a part in no
+     class, a switch's or a logic part's pin other than its outputs, the second part of a split module). The twelfth pass
+     closes them as classes by inverting the default (R4T-D70): no pin on a gated rail is a load without a maker's row, quoted
+     in the PASS, and every other pin reads UNDECIDED, named. What remains in the note is a clearance that rests on what a
+     part is and not on a maker's row (a capacitor, a MOSFET's gate), a size or a state the walk does not judge (a leakage,
+     Ioff, II), or a false UNDECIDED, seen. The first two are open for want of a source, which is this category, not NONE.
+     Session decision R4T-D69, taken under the owner's standing rule of 26 Sep 2026 and kept by R4T-D70; reverse it by
+     closing every limit of the note, when NONE is true again.",
+   _gap_if_applied_alone: "This row's note lists the walk's limits truly only together with the pcb_rules.yaml change
+     beside it AND with tx_inhibit.py as the integration of 27 September 2026 leaves it (sha256
+     1d01e6d2999f0f7d3c4f6436b9e2b50c276108fcf054571a3133711e32909031: the twelfth pass's file with board A's SN74AUP1G08 row,
+     the walk from each asserted line alone, the enable-row fallback and the named limits (8) to (12)). The twelfth pass's own
+     file (sha256 44ca218cf23833217ba228efe52ffa8e220cdf7473a7466509d499cbdb018658) under-states nothing the note names but
+     reads board A's round 8 gates U35 to U38 as parts it cannot walk, and raises KeyError on a switch with no enable row.
+     With any earlier file the list UNDER-STATES them, and
+     the gap must stay at least SOURCE_OR_APPLICABILITY_UNRESOLVED with the earlier file's own silent passes added to the
+     note: the eleventh pass's (sha256 ca9d7cb59ad250bc9643483ee48d0a4f2c28c5e1d904f10e596f11c1a0da4265: a pin of a part in
+     no class on a gated rail, board B's USBLC6 U33 on +5V_LIME among them, a switch's pin other than its outputs and input
+     (an AP64500's or an LM5176's enable, whose makers state a current sourced out of the pin, an LM5176's VCC, a ground),
+     a logic part's ground, a pin of U30B held up beside U30A's 5V on a gated rail, a PCA9555's SCL held up, a declared
+     accessory header, a three-pin resistor designator and a transistor pin named G, each read PASS with an empty detail,
+     and a PASS resting on RP2040 2.9.6 on a module's own output that did not quote it; R4T-F44 to R4T-F48), the tenth
+     pass's (sha256 397331f51f5ad243abcd097da9922d05f09719be5d6fb8655fa963c1a711d941:
+     another firmware part's supply input on a module's own CM5_3.3V taken as a load on its row alone, a pull from that net to
+     a regulator's or a buffer's output, an SN74LVC08A, 32A or 00A or a TPS22810, TPS2596 or AP64500 running from the rail
+     or that net with an output held up, a supply name with an underscore, a module named 'RPi_CM5_8GB', an STM32H7's VCAP or an RP2040's VREG_VOUT held up
+     from outside, and every I/O of a firmware part held up elsewhere, each read PASS with an empty detail; R4T-F37 to
+     R4T-F42), the ninth pass's (sha256 df382343aca1304d80da5791f097b7911a1f1314fe9e015c369922d443e3b248: all of the tenth
+     pass's plus an STM32H7's VDD beside a live VDDLDO and a Compute Module 5's 5V beside an external GPIO_VREF; R4T-F33 to
+     R4T-F36), and every file before it (the tenth pass's row names them: dd584cc9, 7fa144a0, 4836c42c, bd3e93d5, b3d645da,
+     5aece264, e88aa46b, round 6's first pass and every file older than round 6). If this row is applied without the rule
+     change, the walk's results on A, C, E and P decide no rule, and test_tx_inhibit's guard SKIPS and says so.",
+   note: "WHAT THE WALK DOES NOT READ (tx_inhibit.py's header holds the same list; since the twelfth pass no pin on a gated
+     rail is a load without a word, and each item is a clearance that rests on something other than a maker's row, named so
+     that none is silent, a size or a state the walk does not judge, or a false UNDECIDED, seen): (1) clearances by what a
+     part is, not by a maker's row: a capacitor, a test point or a power flag, a MOSFET's gate (an N- or P-channel MOSFET by
+     its symbol or part number), a resistor, a discharge FET or a diode to ground or to nothing, a diode whose anode is on the
+     net, and the parts that carry the switch's output to the rail; a capacitor fitted reversed, its leakage and a diode's
+     reverse leakage are not judged; the transmitter's own anchor part is not read on its own rail, so its own I/O lines (an
+     E22's or an E72's UART held up by its host while its rail is off) are not read there. (2) The rows clear by a stated
+     leakage or rating whose size is not judged: a logic input by II, a logic VCC by Ioff, a switch's enable by IEN or
+     IENLKG; II is stated with VCC in its range, and an input of a part with no Ioff row whose VCC is down is read on it too;
+     a switch's input is cleared only with nothing holding up a pin of it no row clears (the LM5176's input only with every
+     other pin of it held by nothing); the I/O of an STM32H7 with VDDA or VDD33USB on the rail and VDD up are read with VDD,
+     its analogue and USB pins not told apart; a logic part's or a switch's ground is found by its pin's name, and a ground
+     pin named otherwise is UNDECIDED. (3) The own-output net and the nets behind its pulls are read in the second-feed
+     check's words, which count as a source what the reading cannot show unable to feed them; false UNDECIDEDs follow: an
+     N-channel level shifter whose gate is on that net, a fan connector's PWM pin and a converter with no row behind a pull,
+     so board B's Q102 to Q105, J_FAN1 and U105 behind R154 to R157, R151 and R111 would make its modules' 5V UNDECIDED if a
+     slot rail were ever gated (none is); behind R111 also sits U104's enable, the AP64500's stated current source, a source
+     now and not a false one; the reading stops after four steps and counts what lies beyond as a source; and a sentence
+     that lets two supplies fall in any order (the STM32H7's 3.5.1 with VDD up, the RP2040's 2.9.6, the module's 2.12.2 for
+     its RTC cell) is still read as saying nothing flows between them then, a statement about sequence taken as one about
+     current, which each PASS that rests on one quotes, on the own-output path too since the twelfth pass. (4) The RP2040's
+     ADC_AVDD transient when it outlives DVDD (RP2040 Datasheet 2.9.6). (5) A part that mentions a firmware family for
+     another reason, sits in a library whose nickname names one, or carries 'CM5' with three digits inside a longer word
+     ('SCM5100') is UNDECIDED on a rail where it may be a plain load; a firmware family the walk does not know (an RP2350, a
+     value that names none) is a part in no class, UNDECIDED on a gated rail, and not named as firmware. (6) The rows of the
+     RP2040, STM32H7, PCA9555 and CP2102N go by the symbol's pin names, the RP2040's fault-tolerant pins by name, and a
+     Compute Module receptacle's declared pin range is not checked against its numbering; the parts that carry one module
+     are joined in one form only (a family its maker numbers, the Compute Module 5 alone; a reference ending in one letter A
+     to H right after a digit; a sibling whose own value or symbol names the same family: board B's U30A plus U30B, U31 and
+     U32 likewise), and every other drawing of a split symbol is read part by part, see (8); a supply pin whose name carries none of the supply words ('PWR') is outside the class; a supply pin on any live
+     net off the rail is read whether or not anything holds that net up. (7) A charger's current and a feed's size (an Ioff,
+     an II, an enable's leakage, an off-state leakage, a clamp current) are not judged; a tied pin is judged by where its
+     partner is drawn, not by whether that net is live while the rail is off; a firmware pin behind a resistor is UNDECIDED
+     whatever its row; the second-feed check follows resistors, not FET channels or diodes, past the first part; a gate on a
+     land its map is not for is UNDECIDED by any pin; the census takes a '+' rail as always up; the second-feed check reads
+     the walk's own ACCESSORIES, not a caller's list (every accessory on a gated rail reads UNDECIDED either way). NAMED AT
+     INTEGRATION (27 September 2026, the final independent check of the twelfth pass, its blocking item and four minors named
+     rather than closed by the session's decision under the owner's standing rule of 26 September 2026; no board on the six
+     committed netlists is read through any of them): (8) a split symbol in any form but (6)'s reads PASS, mostly with no
+     word: the Compute Module 5 as U30 plus U30B or U30-A plus U30-B, U30A plus a U30B on a generic connector symbol that
+     names no family, and an STM32H7, an RP2040, a PCA9555 or a 74LVC32A with its power unit drawn as its own reference each
+     read the part carrying the supply alone, so a pin held up on the other part is not read (the 74LVC32A case even quotes
+     'no output of it is held up', which is false); the only split references on the six committed netlists are board B's
+     U30A/B, U31A/B and U32A/B, all of the joined form, and tests/test_tx_inhibit_split_guard.py fails on the real design if
+     any board carries another reference that looks like a unit of a split symbol. (9) A part's kind is read from its
+     designator prefix in the second-feed check: a two-pin part whose reference begins D, LED, L, FB or F is cleared as a
+     clamp to ground when its far pin is on ground or dead, and a reference beginning #, TP or C and a digit is skipped,
+     whatever the part is, so a fan (FAN1), a supercapacitor module (DC1), a cell (LB1) or a supervisor designated TPS1 on
+     a gated rail reads PASS with no word; no part on the six netlists is misread this way. (10) A firmware part's supply
+     input cleared by its FW_PIN_TABLES row alone (a PCA9555's VDD alone on the rail; a CP2102N with VDD, VREGIN and VBUS on
+     it; an STM32H753's VDD alone) passes without quoting that row: a traceability gap, not a silent load. (11) A net that
+     is itself a supply is not counted as a source by the second-feed check, only the parts drawn on it and a resistor from
+     a supply: a switch pin on a '+12V' net holding nothing else reads as held up by nothing; on the committed netlists the
+     supply's regulator or connector is always on the net. (12) A switch with no enable row reads its enable held up beside
+     its input UNDECIDED, named, as _class_pin reads it (it raised KeyError before the integration); all five SWITCHES rows
+     carry one. Also since the integration, from board A's round 8 draft applied by hand: the SN74AUP1G08's pin map (TI
+     SCES502Q Table 4-1; II 0.5 uA, Ioff 0.6 uA, VIL 0.9 V at 3 V to 3.6 V) and the walk from each asserted line alone, whose
+     best answer an option takes, because a gate both lines force (board A's U35 and U37: TX_INHIBIT_n AND EMCON_HW) kept only
+     the path of the line the queue took first. WHAT THE
+     BOARDS MUST SHOW for the walk to pass them, as it reads main a6f87e9d: buffers for the STM32 and RP2040 pins on
+     EMCON_HW, one-way open-drain buffers instead of the level shifters Q106, Q206 and Q306, gates that state Ioff on
+     EMCON_HW, open-drain drive for the six Compute Module disable pins, a one-way readback of KEY on D, the QMX's USB power
+     gated or stated, every firmware part's value beginning with its part number, every pin on a gated rail cleared by a row
+     of its maker's (board B's USBLC6 U33 on +5V_LIME, whose I/O the hub U102 and J_LIME hold, the other E72 module and the
+     bench headers J_ZBDBG1 and J_ZBDBG2 on the shared +3V3_ZB, and board A's INA226 U14 across R55 each read UNDECIDED
+     today, behind the FAILs and UNDECIDEDs that decide those options first), and, where a firmware part runs from a gated
+     rail, every other supply pin of it on that rail or on its own outputs, with nothing on that net, or behind a pull from
+     it, that the reading cannot show unable to feed it (board B's +3V3_CM1 to +3V3_CM3 carry level shifters, fan
+     connectors, converter enables and an AP64500 enable behind their pulls, so its modules would not pass there if a slot
+     rail were gated), every I/O of that supply's domain, on both parts that carry a module, held up by nothing, and no
+     logic part or switch (but one with Ioff and a power-off rating) running from a gated rail with an output held up.
+     READING ON THIS INTEGRATION's six committed netlists (27 September 2026: A 3a786cf3, D 0dad82b4 and E f3c1ad61 as round 8 regenerated them, B 669d02d0, C 2834f0d8 and P 4342c4cb as at fc144600), with this file: check_contracts PASS of 96; inhibit_chain A FAIL (1 fail, 6 pass, 2 undecided: the EMCON_HW line, which the STM32 and RP2040 pins on it fail; the 30 W VHF PA's and the QMX HF's supply gates UNDECIDED, walked from TX_INHIBIT_n alone through the SN74AUP1G08s U35 to U38, on board A's INA226 U14 and the LM5176s' boost-leg FETs Q14 and Q24, whose drive no held table states off with the enable), B FAIL (15 fail, 4 pass, 1 undecided: the EMCON_HW line and all fourteen transmitters, the LimeSDR, the RockBLOCK 9704, the E22, both E72s, the RM520N-GL, both AW7915 cards and the six on-module Compute Module radios; the classification undecided, since J_QMX's declaration as a data lead rests on a QRP Labs statement not yet held), C FAIL (1 fail, 5 pass: the EMCON_HW line), D INCONCLUSIVE (7 pass, 1 undecided: the SA868 exciter's keying), E PASS, P PASS. Board A's two supply gates move from FAIL (they inherited the EMCON_HW line's FAIL, the path of the line the queue took first) to UNDECIDED on round 8's netlist; nothing else moved against a6f87e9d's readings, and the verdicts per board are the same. Board C's and board P's round 8 netlists, committed after this, are read at the consolidated re-take. The
+     instrument's declared tables (TRANSMITTERS, MATES, PIN_READERS, READER_TAPS, ACCESSORIES, RECEIVE_ONLY, OWED,
+     FW_PIN_TABLES, LOGIC, SWITCHES and PROTECTION_ROWS with their stated paths and rows) each carry their basis and are held
+     to it by tests/test_tx_inhibit.py",
+   remediation: {action: "each UNDECIDED the inverted default names closes where a held maker document gives the part a row (a statement for board B's E72 modules on +3V3_ZB, board A's INA226 across R55, a bench header's far end) or where the boards keep the part off every gated rail and every module's own output (board B's USBLC6 U33 on +5V_LIME with its I/O held by the hub); each limit of the note closes where a held maker document decides it; no limit and no named UNDECIDED decides a board's reading on main a6f87e9d's six netlists today; limits (8) to (11) close where the walk reads every split form by the part's own family (or a board draws none, which test_tx_inhibit_split_guard.py holds), reads a part's kind from its symbol rather than its designator, quotes a FW_PIN_TABLES row in the PASS it gives, and counts a supply net itself as a source", owner: SESSION, execution: PARALLEL_AGENT, depends_on: [], p50_h: 4, p80_h: 12}}
+
+ INT-001: {implementation: "gen_sch_*.py, with the PCIe clauses of the module datasheet held by check_contracts.py",
+   verification: {tool: "interfaces.py, check_contracts.py", verdict: "interfaces_<letter>, check_contracts", fixtures: "tests/test_interfaces.py, tests/test_gate_fixtures.py, tests/test_artefact_recording.py"},
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026: the FIRST interface source in this tree was read, the Compute Module 5 datasheet, and it decided
+     three things. PCIe on this host is 90 ohm differential with intra-pair match within 0.1 mm, so the class board B already
+     assigns is correct and the PCIe wants 85 note of 9 September is withdrawn for this design. Every PCIe receive line needs
+     a 220 nF series capacitor before it enters the IC, and board B had none on three slots: six capacitors added at the
+     source and a contract now holds the shape (the module's receive net carries exactly one capacitor and never a second
+     device). Ethernet is 100 ohm differential, intra-pair within 0.15 mm. This closes ONE interface of several: USB,
+     M.2 and HDMI have no sheet, which is why the maturity is GENERATED_ONLY and not ENFORCED.
+     16 SEPTEMBER 2026, SECOND PASS: THE SAME DATASHEET STATES ALL OF THEM, and the sentence above was wrong to
+     stop at PCIe. The Compute Module 5's own document gives Ethernet 100 ohm with 0.15 mm intra-pair, PCIe
+     90 ohm with 0.1, USB 2.0 and 3.0 90 ohm with 0.1, HDMI 100 ohm with 0.15 and 25 mm between pairs, and MIPI
+     100 ohm with 0.15; the RM520N-GL hardware design gives the M.2 socket's own side, 85 ohm plus or minus
+     10 percent on PCIe with a 200 mm limit and 90 ohm on USB with 225 mm. `pcb_interfaces.yaml` holds all of
+     it as data with the clause and the quote each was read from, and `interfaces.py` judges every board's
+     classes against it. EVERY IMPEDANCE TARGET ON EVERY BOARD IS CORRECT, including the two ends that state
+     different numbers, because 90 ohm is inside the module's 85 plus or minus 10 percent. What disagrees is
+     one thing, on every high-speed interface of boards A and B: THIS PROJECT JUDGED INTRA-PAIR MISMATCH AT
+     1.0 mm AND THE PARTS ASK FOR 0.1 TO 0.7, six to ten times tighter. The 1 mm is the owner ruling of
+     5 September and tightening it was a decision, so the rule reported the gap with its numbers and the
+     decision was filed. DECISION 36 IS RULED (the session's, 21 September 2026): a pair is judged at the
+     TIGHTER of the two, the owner's 1.00 mm being the floor and never the ceiling, `interfaces.bar_for` is
+     the one place that decides it and both board gates print the number it returned. So this rule now asks
+     `bar_for` what a net of each interface would be judged at, through the board's OWN assignment patterns,
+     and the eight disagreements are closed. WHAT THIS RULE STILL DOES NOT ASK, named rather than implied: the
+     routed LENGTH against `max_length_mm` (board B's M.2 PCIe states 200 mm and its USB 225), which nothing
+     in this tree reads today; the per-pair mismatch itself is read off the board by `check_pcb_a.py` and
+     `check_pcb_b.py` and refused by `pair_match.sh`. Boards C, D and E carry USB only at full speed and declare no target, which their parts'
+     datasheets say in as many words: a declared zero with a reason, not a silence. 26 September 2026, the tools stream's recording round: interfaces_<letter> records the netlist beside the declared phase's intent (phase_artefacts.intent, where it took the first `<stem>*/out/<stem>-intent.json` in sorted order, the same file in this tree), the intent and the sheet by sha, and on E5 its declared board file; check_contracts records each board's netlist it read. Readings unchanged: interfaces 12 assignments, 0 disagreements (E5 a declared zero); check_contracts PASS of 96. On E5 the set verdict check_contracts judges nothing of E5 and records nothing of it, so INT-001 cannot bind there by any recording. The recommended change of the verdict to interfaces_<letter> with check_contracts_<letter> (per board, so E5 is decided by block_contract.py's check_contracts_e5) is deferred by the session under the owner's standing rule of 26 September 2026: it needs check_contracts.py to declare its verdict names (RULE_VERDICTS) so the set verdict keeps a rule, and a _shared_verdict_why beside SCH-003, and changing check_contracts.py at this merge would stale the re-take it carries. Until then E5's INT-001 is routed to the registry writer.",
+   false_positive_analysis_note: "an interface nothing in this tree describes is not invented a requirement, and
+     a board that declares NO impedance target is not failed for it where its parts say the interface has none",
+   remediation: {action: "per-interface sheets for USB, M.2 and HDMI from their own specifications, the way PCIe was done today",
+     owner: SESSION, execution: PARALLEL_AGENT, depends_on: [], p50_h: 10, p80_h: 34}}
+
+ INT-002: {implementation: "gen_sch_b.py, eight 100 nF series capacitors per module link, no magnetics",
+   verification: {tool: "the pre-layout assessment, a desk review by the session", document: "docs/reviews/INT-002-PRE-LAYOUT-ASSESSMENT.md"},
+   maturity: VERIFIED_MANUALLY, gap_category: NONE,
+   verified_sha: "cad907b73c7ed8ea3c3f7b3dfb05ddcffd68fa4dedeb7333ebf70be502372ed4",
+   _verified_sha_why: "the assessment is hand-written, so it is pinned by content: any later edit takes this verification away until the page is re-read and re-pinned.",
+   verified_nets: {b: {nets: [SWP1_A_P, SWP1_A_N, SWP1_B_P, SWP1_B_N, SWP1_C_P, SWP1_C_N, SWP1_D_P, SWP1_D_N, SWP2_A_P, SWP2_A_N, SWP2_B_P, SWP2_B_N, SWP2_C_P, SWP2_C_N, SWP2_D_P, SWP2_D_N, SWP3_A_P, SWP3_A_N, SWP3_B_P, SWP3_B_N, SWP3_C_P, SWP3_C_N, SWP3_D_P, SWP3_D_N, ETH1_P0_P, ETH1_P0_N, ETH1_P1_P, ETH1_P1_N, ETH1_P2_P, ETH1_P2_N, ETH1_P3_P, ETH1_P3_N, ETH2_P0_P, ETH2_P0_N, ETH2_P1_P, ETH2_P1_N, ETH2_P2_P, ETH2_P2_N, ETH2_P3_P, ETH2_P3_N, ETH3_P0_P, ETH3_P0_N, ETH3_P1_P, ETH3_P1_N, ETH3_P2_P, ETH3_P2_N, ETH3_P3_P, ETH3_P3_N],
+     digest: "262e8b039e833d02"}},
+   _verified_nets_why: "the assessment read these 48 nets on netlist 669d02d07aeaae4b (rules_status.net_digest: every node, and every part on them with its value and land). It stays current while they are unchanged on board B's current netlist, whatever else on the board changes, and it stops counting the moment one of them moves (26 September 2026, rules_status.verified_nets_current).",
+   note: "SPLIT on 26 September 2026 (the review of the 22:35 progress report, finding A; the session under the owner's standing rule of that day): this rule is the pre-layout assessment at the SCHEMATIC phase and INT-003 the bench link test at the PROTOTYPE phase, so the test on the first built board B no longer holds that board's layout entry and is not weakened either. The assessment (v2/docs/reviews/INT-002-PRE-LAYOUT-ASSESSMENT.md) reads the switch vendor's permission (Microchip DS00004151A section 6.6, matched item by item by the 24 conductors of board B's netlist), the module vendor's statements (the CM5 datasheet describes a MagJack only and neither permits nor forbids the coupling), the module maker's reference design (its PHY-side centre taps on 100 nF to ground and no supply, consistent with a voltage-mode driver, INFERRED), and states the unresolved gap (the BCM54210PE's termination and bias, unpublished), allocated to INT-003 with decision 29's fallback and its trigger. It is a DESK_REVIEW and never a physical test. DECISION 29 IS RULED (the session's, 21 September 2026): the three links stay capacitively coupled as built and no magnetics are fitted; what decided it and the 16 September reading are in decision 29 and in this entry's history.",
+   history: "DECISION 29 IS RULED (the session's, 21 September 2026): the three links stay capacitively coupled as built and no magnetics are fitted. What decided it, beyond the 16 September reading below: the compute module's own datasheet says of all eight Ethernet pins 'connect to transformer or MagJack' (Table 4), which is the cable application those pins were designed for and not a prohibition of a PHY-to-PHY link inside one board, where nothing leaves the enclosure and there is nothing for a transformer to isolate; the fallback's own part is a 0 to +70 C device against an envelope adopted at -20 to +40, so fitting three more would triple a part already outside its range; and waiting is not available, because Broadcom does not publish the PHY's datasheet to anyone here. THE RULING DOES NOT PRODUCE THE MISSING DOCUMENT and this maturity says so: nothing measured this link, the answer rests on one vendor's clause plus a ruling that accepts a named risk, and the reading that would close it is a bench test (each module link up at 1000M). The 16 September recommendation in the last line below, to fit the magnetics, is SUPERSEDED by that ruling and is left in place so the change of mind is visible. BOTH ends read on 16 September 2026, and they do not close the question. The switch vendor PERMITS this exact topology and board B matches its clause word for word (Microchip DS00004151A section 6.6: transformer-less where the PHY-to-PHY connection is within one PCB, a single DC blocking 0.1 uF in series on each of the eight signals, no additional components between the switch and the capacitor). The module's datasheet describes ONE topology, a 1:1 RJ45 MagJack, and never discusses capacitive coupling; and the switch vendor's own clause names the gap in a sentence, the other device may require termination or other circuitry. The module's PHY is a Broadcom BCM54210PE and Broadcom does not publish its datasheet, so this cannot be closed from any document this project can obtain. Owner decision 29, with three costed options; the recommendation is to fit the magnetics board B already carries on its wall port (the note of this entry until the split of 26 September 2026, kept so the change of mind reads true; its remediation, now INT-003's, read: the bench test the ruling rests on: each of the three module links brought up at 1000M with auto-negotiation enabled, on the first board B that exists; a link that does not come up is the fallback's trigger and the fallback is three magnetics of an extended-temperature family)"}
+
+ INT-003: {implementation: NONE_YET,
+   verification: {tool: "the bench link test on the first built board B"},
+   maturity: OPEN, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   note: "the PROTOTYPE half of INT-002 (split 26 September 2026). Nothing is built, so nothing verifies it and it reads INCONCLUSIVE until the bench. The module PHY's datasheet is not published (Broadcom BCM54210PE), so the termination and bias question the switch vendor's clause 6.6 raises is closed by this test (the acceptance and method below); a written vendor answer would only inform it. It is never closed by the assessment of INT-002.",
+   remediation: {action: "the bench test the ruling rests on: each of the three module links brought up at 1000M full duplex with auto-negotiation enabled, on the first board B that exists, carrying line-rate traffic each way for at least 60 s with zero frame, CRC and symbol errors, at room temperature and at TEST-PLAN's cold and hot points; a link that does not come up or counts an error is the fallback's trigger (three magnetics of an extended-temperature family)",
+     owner: LAB, execution: HARDWARE, depends_on: [], p50_h: 3, p80_h: 10}}
+
+ TRN-001: {implementation: "gen_sch_*.py protection parts (one-way clamps through kisch.tvs(), 26 September 2026) and each board's external_ports declaration",
+   verification: {tool: port_protect.py, verdict: port_protect_<letter>, fixtures: "tests/test_port_protect.py, tests/test_kisch_tvs.py, tests/test_artefact_recording.py"},
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026: every conductor that leaves the enclosure is followed from its connector through fuses,
+     beads, chokes and resistors until it meets a clamp. Board B passes: its wall Ethernet is behind the H5007NL
+     magnetics, which is galvanic isolation and the strongest protection there is. The other four boards carry NINE
+     conductors that reach a chip with nothing between, and they are owner decision 31: the USB-C outlet's two
+     configuration channels (its VBUS pin is clamped and they are not), four conductors on board C's panel FACE which a
+     person touches, two headset microphone lines, the sensor pod's supply through its sealed M8 receptacle, and board
+     E's shore inlet whose SMCJ33A sits BEHIND the pass FET so that FET sees the transient the clamp exists to stop.
+     The check took four rounds of false-positive removal to get there, each recorded in its own docstring: a part
+     family matched with a word boundary that a part number does not have, galvanic isolation not recognised as
+     protection, protection treated as a single net rather than a chain, and a search that walked out through a power
+     rail and found a clamp on the other side of the board. 26 SEPTEMBER 2026 (S-09 of MESHSAT-1357, adjudication
+     A03; tool in 93138ac1): A CLAMP THAT TOUCHES THE CONDUCTOR IS NOT ENOUGH, IT HAS TO POINT THE RIGHT WAY. All
+     sixteen one-way clamps of the set had been drawn with KiCad's bidirectional Device:D_TVS (pins A1/A2, no cathode)
+     and seven had the band on the return (D's D1, E's D1 to D4 and D10, P's D1): forward diodes across their own
+     rails. port_protect.py now judges every clamp on every board, declared port or not: a one-way part on an A1/A2
+     symbol FAILS, a two-way part on a K/A symbol FAILS, and a one-way clamp FAILS when its cathode (the K pin, or pad 1
+     on an A1/A2 drawing) is on the return. The direction is read from the part number (the families whose makers'
+     sheets are held) or from the generator's declaration, which kisch.tvs() writes into the intent with its datasheet
+     basis, never from the drawing; a part whose direction is read from neither is UNJUDGED and makes the verdict
+     INCONCLUSIVE. kisch.tvs() draws a one-way part with Device:D_Zener (K on pin 1) and refuses a swapped call. C, D,
+     E and P took their corrections in faf8c981. Reading on the round 7b box regeneration: A FAIL (D1 to D4 on the
+     two-way symbol, 0 reversed; D22 BZT52C12 read OK), B FAIL (D1, D2, D101, D201, D301 and D520 on the two-way
+     symbol, 0 reversed), C PASS (0 clamps), D PASS (7), E PASS (5), P PASS (3). A's and B's switch to kisch.tvs() is
+     owed by their board streams; it changes their pin names and intents only. 26 September 2026, the tools stream's recording round: port_protect.py records the netlist (sha and content) and the intent by sha, and on E5 (--board) its declared phase's board file. Readings unchanged by the change: A FAIL (4 clamps drawn with a symbol that does not match the part's direction), B FAIL (6), C PASS of 4, D PASS of 21, E PASS of 13, P PASS of 3, E5 a declared zero. The FAIL on A and B is the S-09 polarity pass of 93138ac1 read on the committed netlists; the readings of A and B on disk (PASS) predate it."}
+
+ ISO-001: {implementation: "gen_pcb_a3.py HV class, gen_pcb_b3.py HV class", verification: {tool: spacing.py, verdict: spacing, fixtures: tests/test_spacing.py},
+   maturity: ENFORCED,
+   _maturity_ruled: "21 September 2026, decision 34 ruled by the SESSION: ISO-001 is judged against
+     ECSS-Q-ST-70-12C Table 13-3, per voltage band, per layer, on the column each board's declared
+     conformal coating selects (ASSEMBLY.md section 5, IPC-CC-830 acrylic on A22, B16, D8, E6 and E5).
+     That table is stated for an as-manufactured rigid PCB with NO altitude derating and NO pollution
+     degree, so the two numbers this rule was said to be waiting for are not needed to judge it. The
+     reading that follows, on both committed boards read-only with their sha identical before and after:
+     every 20 V row passes at 0.1287 mm against the coated 120 um, and the 36 V input rails on A and E
+     are about 31 um short of the 160 um floor, where the bare column said a factor of four.",
+   _maturity_why: "16 September 2026: a published table is in the tree now (ECSS-Q-ST-70-12C Table 13-3) and the two boards with high-voltage nets are measured against it: board B passes with 80 percent to spare and board A's 20 V bus is short by a factor of 2.3. What is missing is not a table, it is WHICH table governs a sealed terrestrial kit, which is decision 34: the ECSS numbers are a space standard covering any elevation and a terrestrial functional-insulation reading asks for a fraction of them.", gap_category: NONE,
+   note: "16 September 2026: it is MEASURED now, per board, which it never was. A net class is an instruction to
+     the router and not a fact about the board, and the two differ wherever a pad, a zone edge or a hand-laid
+     piece of copper is involved. spacing.py takes every conductor of a declared high-voltage rail (20 V and
+     above: board A's VBUS20 and +54V_POE, board B's +54V_POE) and measures the real distance to the nearest
+     conductor of any other net on the same layer, pads and fills included, and names the ten tightest. What it
+     cannot do is say whether the number is ENOUGH: creepage and clearance come from a standard's table for a
+     working voltage, a pollution degree and a material group, and IEC 60664-1 is not in this tree. A board
+     declares hv_spacing_mm when it has an authority and is judged against it; where nothing is declared the
+     measurement is reported and the rule stays unjudged, which is what 'no source' has to mean",
+   remediation: {action: "the two boards whose 36 V input rails are about 31 um short of the coated row take a wider clearance on that class and are re-routed; the row and the measurement are both already here", owner: SESSION, execution: SEQUENTIAL, p50_h: 3, p80_h: 12}}
+
+ THM-001: {implementation: "gen_pcb_*3.py copper and thermal vias", verification: {tool: thermal.py, verdict: thermal, fixtures: tests/test_thermal.py},
+   maturity: DOCUMENTED_ONLY,
+   _maturity_ruled: "decision 34 is ruled (21 September 2026) and this rule no longer waits on an owner: the envelope states +40 C ambient in use and an inside air limit of about +55 C, which is the number its junction-temperature half was missing. It is DOCUMENTED_ONLY rather than ENFORCED because thermal.py builds the dissipation table and says in its own words that it does NOT compute a junction temperature, and no board declares a part-level dissipator yet (declared_dissipators reads 0 on all six). The verdict stays INCONCLUSIVE, and it now says so for the right reason: the work is a declaration per dissipating part with its thermal resistance and path, which is this session's and not the owner's.",
+   _maturity_why: "16 September 2026, second reading: the session half is done. Every rail on all five boards declares whether it converts and what that conversion costs, each figure read off the part's own datasheet at the conditions that datasheet states, and the five boards carry a dissipation table: about 28 W across the set at the typical load. What is left is not a source and not a tool, it is the maximum ambient a junction temperature has to be computed against, which is ENV-001 and owner decision 34. Recording it as SOURCE_UNVERIFIED put it in the queue of things a session can close.", gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   note: "16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own
+     intent (rails, currents, the source part) and from what each board declares: a converter's loss is
+     P_out * (1/efficiency - 1) with the efficiency declared PER RAIL and its basis in the note, and a part
+     that dissipates for another reason (the power amplifier, a shunt, a linear regulator) is declared in
+     boards/<letter>.json with its watts and its sentence. The thermal path is measured off the board, the
+     part's own pad area and the vias inside its courtyard, because on a sealed case with no airflow that is
+     what carries the heat out. What is MISSING is the second half: a junction temperature needs the envelope's
+     maximum ambient, which is ENV-001 and is an owner decision nobody has written, so the rule stays short of
+     its acceptance criteria and says which half is absent rather than inventing it. A rail with no declared
+     efficiency is listed as unknown and makes the verdict INCONCLUSIVE, so the table is a floor until every
+     converter carries its number",
+   remediation: {action: "decision 34 is ruled (21 September 2026), so the ambient this rule was missing is stated: +40 C in use and about +55 C of inside air with three modules loaded. What is left is THIS SESSION'S and it is a declaration per dissipating part: the thermal resistance its own datasheet publishes, the path the board gives it, and the junction temperature thermal.py can then compute at that ambient. Six boards read declared_dissipators 0 today, so the table exists and the judgement does not", owner: SESSION, execution: PARALLEL_AGENT, depends_on: [], p50_h: 10, p80_h: 30}}
+
+ PLC-001: {implementation: "gen_pcb_*3.py, regionfit.py", verification: {tool: "hardset.py, place_audit.py, carry_placed.py", verdict: "hardset-placed, place_audit", fixtures: "tests/test_region_fit.py, tests/test_board_gates.py, tests/test_carry_placed.py"},
+   maturity: ENFORCED, gap_category: NONE, note: "the cheap gate runs before the expensive stage and blocks above a declared allowance. The measurement can only be taken on the PLACED board, in a route tree that is later thrown away, so it is carried into the board's routed snapshot: 17 September 2026 the carry is PROVED rather than copied (carry_placed.py compares every footprint position, orientation and side between the placed snapshot and the board being cut, and a part that moved refuses it), and hardset names the board it read, so a carried verdict can be compared with the board it is evidence for instead of trusted for sitting in the right directory. The first run of that tool found the thing it was built to find: board D's placed snapshot and its committed board differ by R20 and R21, 1.600 mm each, which is the pre-router's pair station swap and runs BEFORE the router. So there are two boards before the route and the placement that shipped is the one the PRE-ROUTE DRC measured, over the same fifteen hard types and after every part move: that verdict is the evidence when the placed snapshot no longer matches, carried under the name hardset-placed with its stage and both shas recorded in the verdict itself (a second verdict NAME here would make the fallback mandatory for every board and read a stale copy of it as this board's evidence, which is how board P came to read PRE_AUDIT from 11 September for ten minutes this morning), and place_audit is not carried with it because it was taken before the move. A pure exchange of seats between two parts of the same land is not a move at all: board D's R20 and R21 are in each other's seats, which is the swap, and the set of occupied seats is identical, so the placement measured is the placement that shipped"}
+
+ PLC-002: {implementation: "closers declared in pcb_closers.yaml; the pour-island half predicted by place_audit.py", verification: {tool: closer_audit.py, verdict: closer_audit, fixtures: tests/test_closer_audit.py}, maturity: ENFORCED, gap_category: NONE,
+   note: "the principle is written in the record and in the plan; the finish still carries ten copper-editing passes and the predictor covers two of the classes 16 September 2026: EVERY REPAIR IN THE FINISH IS DECLARED AND THE COVERAGE IS JUDGED PER BOARD. pcb_closers.yaml names all fourteen copper-changing stages with the defect class each repairs and why prevention was not possible, and closer_audit.py takes the list of stages from finish.sh itself, so a stage added and not declared is a failure rather than a silence. Three classes are repaired on every board and prevented by one thing, a ground-via grid laid BEFORE the route: a pour island with no via of its own net, a pad its plane cannot reach, and a stitch via the fill has retreated from. Boards D and E declare the grid and are covered; A, B, C and P do not and are not, which is a design item with a measured cost (board P measured the grid at 21 open connections against 0 without, which is why it declares none) and board C is measuring it on two arms right now. Board E5 has no chain, so no closer runs on it at all.",
+   remediation: {action: "ALL THREE CLAUSES ARE ANSWERED (17 September 2026). The declarations were done; the two measurements are done, boards A and C having measured the ground-via grid against their own controls (board A: 4,000 locked ground vias take RET-004 from 46 lacking of 58 judged to 33 of 52 and cost the route nothing, 23 open against 25; board C: the grid costs 21 open connections against zero and makes the island count worse), and both refuse it with those numbers in their board files, which is the rule's second half answered rather than ignored; and place_audit PREDICTS the pour-island class now, as far as a placed board can. It reads the fill the board already carries, names every filled island of 1 mm2 or more that reaches no via and no plated pad of its own net with its area, its net and its layer, and says in as many words that the islands a ROUTER cuts out of a pour cannot be predicted from a placed board and are the other half of the class. It costs 1.9 s on board C and nothing measurable on board B, it never refuses a board (a WARN, because the repair stage exists and works), and it never takes a chain down: the geometry calls are guarded and a reading it cannot take is reported as a reading it cannot take. WHAT REMAINS IS ONE BOARD, not a tool: board B has never measured the grid on its own copper, which is a route of its own and waits for B21", owner: SESSION, execution: PARALLEL_AGENT, depends_on: [], p50_h: 1, p80_h: 3}}
+
+ RTE-001: {implementation: "gen_pcb_*.py design rules",
+   verification: {tool: "drc.sh, fab_limits.py", verdict: "fab_limits", fixtures: "tests/test_fab_limits.py, tests/test_rule_gate_mapping.py"},
+   maturity: ENFORCED, gap_category: NONE,
+   _verdict_why: "fab_limits ALONE, and the correction is worth the sentence (18 September 2026). This entry also named
+     hardset-routed-board-gate, whose own note says what it measures: the routed board's hard and unrouted counts, both
+     zero, which is RTE-002's acceptance criteria word for word and not this rule's. Where a rule names several verdicts
+     the worst decides, so board B read RTE-001 FAIL while its own fab_limits verdict read PASS on 24 checks with the
+     note 'every rule this board is designed to is inside the fabricator's capability for its own copper weight': what
+     had failed was the route, hard 0 and 416 unrouted, on a board mid-campaign. A board recorded as designed to rules
+     the fabricator cannot make, because its router had not finished. The second half of this rule's criteria, that the
+     DRC runs with the board's own rules, is carried by drc.sh's own contract, which refuses a board whose project file
+     is not beside it under its own stem (12 September 2026) and is held by a rule of its own. Board P is the control:
+     its RTE-001 failure is fab_limits' five classes under capability and it is untouched by this.",
+   note: "16 September 2026. The DRC enforces the board's own rules and nothing had ever asked whether THOSE RULES are
+     inside what the process makes at the board's own copper weight. fab_limits.py asks, against the fabricator's
+     capability document now in the tree, with the copper weight read from the board's own stackup rather than from a
+     literal. It found board P immediately: two layers at 2 oz by owner ruling 7, designed to 0.127 mm track width and
+     clearance where the 2 oz two-layer rows read 0.16, and its Default, SENSE and GNDC classes at 0.127 as well. Five
+     items, on a board every gate in this project had passed, because each of them judges the COPPER against the
+     board's rules and none of them judged the RULES. Fixed at the source in gen_pcb_p.py and gen_pcb_p3.py.
+     Boards A and B come back INCONCLUSIVE because their committed board files carry no stackup at all, which is
+     STK-001's problem and is visible here for the first time"}
+
+ RTE-002: {implementation: "routeflow.py, finish.sh", verification: {tool: hardset.py, verdict: "hardset-routed-board-gate, pruned_gate", fixtures: "tests/test_hardset.py, tests/test_gate_fixtures.py"},
+   _tool_why: "two tools, and the second is why: escape_prune removes an escape stub that sits in a hard violation and leaves the pad to the router with only a count printed. On a 0.4 mm receptacle row that pad can end with no via site on any layer, and the routed board looks complete because the router simply never reached it (board A19s SDA pin, 8 September 2026)",
+   maturity: ENFORCED, gap_category: NONE, note: "fifteen types, two exemptions, denominators, and a report that cannot be read as a pass"}
+
+ VIA-001: {implementation: "escape.py, prefanout.py, gen_pcb_*.py minimums",
+   verification: {tool: "via_audit.py", verdict: "via_audit", fixtures: tests/test_board_gates.py},
+   _verdict_why: "via_audit alone, and the correction matters (16 September 2026). This entry named check_pcb_c beside
+     it, which is BOARD C'S OWN gate: five boards that carry a current via_audit PASS read INCONCLUSIVE for ever
+     because the evidence demanded of them was a verdict only one board can write. Naming check_pcb_<letter> instead
+     would have been worse than leaving it: only C's gate asserts anything about a via (a literal 0.2 mm drill, which
+     is C's plugged-via number and not the board's own minimum), so the other five gates would have been counted as
+     via evidence while checking no via at all. via_audit judges every via on every board against that board's own
+     declared minimums, which is the rule",
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026: every via on the board is judged against the BOARD'S OWN minimum diameter and drill, which
+     the board carries and the DRC already believes, and the vias that sit inside a pad are counted and named. A via in
+     a pad is NOT a defect here: it is a deliberate technique on exposed pads and fine-pitch escapes, and it carries a
+     fabrication cost (filled and capped) that the order paperwork has to name, so reporting it is how that note gets
+     written. The ANNULAR RING is a separate verdict under VIA-002 because it is judged against a FABRICATOR
+     capability and not against the board"}
+
+ VIA-002: {implementation: "escape.py, prefanout.py, gen_pcb_*.py minimums; boards/<letter>.json annular_min_mm and via_ring_min_mm",
+   verification: {tool: via_audit.py, verdict: via_annular, fixtures: tests/test_board_gates.py},
+   maturity: ENFORCED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   note: "the floor arrived on 16 September with the fabricator's own capability page, and reading it carefully split
+     this rule in two: the ANNULAR RING row governs a plated COMPONENT hole, and a VIA is governed by the via rows,
+     which leave 0.05 mm of copper per side at that document's own minimum of 0.25 mm on 0.15 mm. Applied the other way
+     round it refused board D12, a board at 0 hard and 0 unrouted, for one 0.45/0.20 via at 0.125 mm of ring. A, B, C, D
+     and E declare both floors with the clause cited; E5 and P are 2 oz, the annular rows are stated for 1 oz only, and
+     they stay INCONCLUSIVE rather than being judged against a number for another process",
+   remediation: {action: "ask the fabricator for the annular ring rows AT 2 oz, which its published page does not state, so boards E5 and P can be judged rather than left inconclusive",
+     owner: VENDOR, execution: VENDOR_OR_STANDARD_WAIT, depends_on: [], p50_h: 2, p80_h: 48}}
+
+ PLN-001: {implementation: "pour_stitch.py, zone_pad_via.py, stitch_prune.py", verification: {tool: check_zone_nets.py, verdict: check_zone_nets, fixtures: tests/test_gate_fixtures.py},
+   maturity: ENFORCED, gap_category: NONE, note: "isolated copper is a hard type and pour islands are stitched or removed under a guard"}
+
+ EMC-001: {implementation: "pcb_emc.yaml, the sheet as data", verification: {tool: emc_sheet.py, verdict: emc_sheet, fixtures: tests/test_emc_sheet.py}, maturity: ENFORCED, gap_category: NO_PROTOCOL,
+   note: "no EMC analysis of any kind exists; eleven radios and a sealed metal box 16 September 2026: THE SHEET IS DATA AND IT IS COMPARED WITH THE BOARDS. pcb_emc.yaml carries, per board, every switching source with its frequency and the datasheet or timing resistor that sets it, the sensitive victims by reference, the coupling paths with the measure taken at each and the evidence for it, and a pre-compliance plan. emc_sheet.py checks it against each board's own netlist, and the check that makes it a gate is completeness: every switching part in the netlist must be declared as a source, because a sheet listing thirteen of a board's fourteen converters reads as complete. 27 sources, 10 paths and a plan on all seven boards; C, D, P and E5 carry no converter at all and each says why. What is NOT decided here is any emission: no edge rate is invented where a datasheet publishes none, and the measurement half of this rule is the laboratory stage.",
+   remediation: {action: "The SHEET and the PLAN are DONE (16 September 2026, verified again on the 17th): pcb_emc.yaml carries every switching source with the document that sets its frequency, the victims, the coupling paths with the measure taken at each, and a pre-compliance plan, on all seven boards, and emc_sheet.py checks it against each board's netlist for completeness. What remains is not a document: it is the MEASUREMENT, which is a laboratory stage on a built prototype, and the emission levels it is measured against are the operating envelope, owner decision 34", owner: SESSION, execution: PARALLEL_AGENT, depends_on: [ENV-001, SI-001], p50_h: 0, p80_h: 0}}
+
+ MEC-001: {implementation: "panel1450.py, gen_pcb_*.py", verification: {tool: "check_pcb_*.py", verdict: "check_pcb_<letter>", fixtures: tests/test_board_gates.py},
+   maturity: ENFORCED, gap_category: NONE, note: "every mechanical number is asserted against the single module that owns it"}
+
+ DFM-001: {implementation: "build_pcb.sh, export_jlc.sh", verification: {tool: verify_deliverable.py, verdict: verify_deliverable_<letter>, fixtures: tests/test_gate_fixtures.py},
+   maturity: ENFORCED, gap_category: NONE, note: "the gerber zip is counted against the board's copper layer count"}
+
+ DFA-001: {implementation: "export_jlc.sh, jlc-rotations.csv", verification: {tool: assembly_set.py, verdict: assembly_set, fixtures: tests/test_assembly_set.py},
+   maturity: ENFORCED, gap_category: NO_PROTOCOL,
+   _per_board_why: "ONE VERDICT PER BOARD SINCE 20 September 2026, the FIFTH rule to need it (DOC-001 on the 16th, CMP-002, SUP-001 and DFM-001 on the 17th, DOC-002 on the 18th). One assembly_set verdict counting 42 unchecked footprints over seven boards was the deciding reading for all seven, and it hid board E5, whose one polarised footprint HAS a verified rotation row and whose DFA-001 is therefore a PASS. The tool takes a --board letter and needs no KiCad, reading each board's own netlist and the rotation table, so the seven readings are taken where the table is and written into each board's own directory. The two counts reconcile and neither is wrong: 42 DISTINCT polarised footprint types for the checklist the ordering session works from, 66 board-instances for the register, because a type placed by three boards is one row and three pairs.",
+   note: "the CPL's form is checked; the rotation of each polarised footprint has never been verified against its own drawing or the assembler's preview, and the rotation table is inherited 16 September 2026: THE ROTATION HALF IS MEASURED AND IT IS NOT GOOD. assembly_set.py lists every polarised or pin-1-sensitive footprint the boards place and compares it with the rotation table the ordering session keeps, which now carries the DATE each row was compared with JLCPCB's own preview. Eleven rows carry 3 September 2026 and two carry UNVERIFIED, and 41 distinct polarised footprints match NO row at all, including three LQFP families, every JST connector and the crystals: those go to the assembler with KiCad's rotation unchanged, which may well be right and has never been compared with a preview by anyone. That is an assumption rather than a verification, so the verdict is INCONCLUSIVE with the 41 named, and the list is the checklist for the session that has the preview. The tool also compares the TWO copies of the table, the CSV and the literal in make_handoff.py that actually reaches a CPL: that line is on the never-auto floor, so a disagreement is reported for a person to resolve rather than edited here. 26 September 2026 (MESHSAT-1357 round 6, R4T-D35; tool in 93138ac1): the polarised-footprint test matched its families only at the START of the footprint name, so every land named after its maker dropped out: board P's gauge left the list when it moved to Texas_RSM0032A_VQFN-32 in round 4, and board E's SGP41 on Sensirion_DFN-6 and board P's three-terminal Eaton_SCF9550 were never on it. A family now counts anywhere in the name at a word boundary, and any part with three or more pins is polarised whatever its name. The checklist grows from 47 to 82 footprints on the committed netlists; ROTATION-CHECKLIST.md is re-rendered with assembly_set.py --checklist.",
+   remediation: {action: "the assembler's own preview of each polarised footprint, which is the artefact the acceptance criteria names and the ONE thing this session cannot produce: the runner never logs into JLCPCB (a standing rule of this repo) and their preview is behind that login. It belongs to the ordering session on the laptop, which has the browser and the account, and the table it fills in is v2/release/revA/order/jlc-rotations.csv with a date per row. What the session HAS done is the other half of the acceptance criteria, the rotation against each part's own drawing, and what it cannot do is the half that says 'and against the assembler's convention'. THE WORK LIST IS A DOCUMENT NOW (17 September 2026): `assembly_set.py --checklist` writes v2/docs/PCB-ROTATION-CHECKLIST.md from the same reading the verdict is taken from, forty-one footprints with the boards that place each one, a designator to look it up by and two empty columns for the offset and the date; an offset of zero is a real answer recorded the same way, and what the rule refuses is the blank",
+     owner: OWNER, execution: OWNER, depends_on: [], p50_h: 4, p80_h: 12,
+     _owner_why: "16 September 2026: this was recorded as SESSION work and it is not. An artefact that only exists behind a login this session is forbidden to use cannot be produced by this session, and carrying it in the session pool made the critical path claim a day of work that was never going to happen here."}}
+
+ TST-001: {implementation: "rules_render.py bringup_doc, from each board's own intent file",
+   verification: {tool: rules_render.py, document: "docs/PCB-BRING-UP.md", fixtures: tests/test_rules_status.py},
+   maturity: VERIFIED_MANUALLY, gap_category: NONE,
+   note: "16 September 2026. A bring-up sheet per board, GENERATED from what the board itself declares, so it cannot
+     describe a rail the board does not have and cannot miss one it does. An INPUT is applied from a bench supply
+     current-limited to the rail's own typical current; a DERIVED rail is never applied, its step is a measurement, and
+     a reading outside plus or minus 5 percent stops the sequence. The order is by DEPENDENCY and not by voltage: the
+     first draft sorted by voltage ascending and would have had a supply put 3.3 V onto board A's logic rail before the
+     14.4 V pack node feeding the converter that makes it. Where a rail's declared source is an inductor or a ferrite
+     the tool says it CANNOT TELL a filter choke on an incoming feed from a converter's output, and lists those
+     separately to be decided before powering, rather than choosing. It is a procedure and a person does it, which is
+     why this is VERIFIED_MANUALLY and the record is the page"}
+
+ REL-001: {implementation: NONE_YET, verification: {tool: reliability.py, verdict: reliability, fixtures: tests/test_reliability.py}, maturity: ENFORCED, gap_category: ABSENT,
+   note: "nothing considers vibration, mating cycles or moisture for any interface 16 September 2026: THE LIST EXISTS AND IS CHECKED AGAINST THE BOARDS. pcb_reliability.yaml declares 25 classes over the seven boards covering all 111 parts whose value names a connector, a socket, a holder or a jack, each with its cycle figure or the reason none is published, the load it takes and the measure that makes it good enough. reliability.py refuses a wear part that falls in no class, a class that names no load or measure, a class with no cycle figure and no reason, and a declared count that the netlist does not match. The lowest figure in the kit is the U.FL socket at 30 mating cycles and the highest-cycled connector is the pack's XT60 at 1000, which is the one a user touches most. What it does NOT do is test anything: this rule is verified at the PROTOTYPE, no board has been built, and the dock block's contact targets carry the open item the mate-cycle test exists for.",
+   remediation: {action: "The SHEET is DONE (17 September 2026): every board carries its wear-out and environment classes with the parts each covers and reliability.py checks the coverage, seven boards passing. The TEST PLAN for the prototype is the laboratory stage and belongs with it", owner: OWNER, execution: OWNER, depends_on: [ENV-001], p50_h: 0, p80_h: 0}}
+
+ BAT-001: {implementation: "gen_sch_p.py BQ4050 and protection FETs, pcb_pack_protection.yaml",
+   verification: {tool: pack_protection.py, verdict: pack_protection, fixtures: "tests/test_pack_protection.py, tests/test_artefact_recording.py"},
+   maturity: ENFORCED, gap_category: NONE,
+   note: "the protection is designed and its thresholds are configured in software; no check compares a threshold against the cell's own limits, and the cell is not chosen 18 September 2026: THE THRESHOLDS EXIST NOW AND THEY ARE JUDGED. A data-flash configuration that exists nowhere is not a design, it is an intention, so `pcb_pack_protection.yaml` writes the intended BQ4050 configuration down function by function: nine functions, each naming the device that implements it, its threshold and delay, the cell limit it is derived from and the test that will demonstrate it on the prototype, which is this rule's acceptance criteria word for word. `pack_protection.py` makes 45 checks over it: every protection the requirement names is present, every threshold is inside its limit IN ITS OWN DIRECTION at the pack's WORST parallel count (3P, not 4P: 20 A against 24, 30 A against 39, 5 A against 6), every quoted limit is re-read from the cell maker's own specification so a number typed from memory cannot survive, and every device named is in board P's netlist by reference. The limits come from the INR18650-35E specification's own Pack Design Guideline for electrical design, which is the manufacturer telling a pack designer what to set: 4.20 V charging, 4.10 V re-charge, NCA/NCM terminate discharging 2.50 V and over-discharge protection 2.30 V, BMS shutdown 2.00 V, pre-charge between 1.00 and 3.00 V at 0.1C to 0.5C, and do not charge below 1.00 V. IT FAILS ON THE OTHER HALF OF THE REQUIREMENT: `in hardware, independent of any software`. All nine functions are the BQ4050's, whose thresholds live in data flash and whose protection subsystem is firmware; there is no second protector IC, no chemical fuse (gen_sch_p.py: the 25 A mini blade is the fuse) and the PTC input is tied off, so the only element on the board that needs no firmware is a 25 A blade fuse, which does not protect a cell from over-voltage, over-discharge or heat. The remedy is a part and a board change and is owner DECISION 40. 26 September 2026, the tools stream's recording round: pack_protection.py reads board P's declared phase netlist (phase_artefacts.netlist) where it named pcb-p-pack-p2 in its own source, and records it by sha and content with the protection table and the cell specification by sha (it recorded the netlist relative to the repository root, which verdict.write hashed only when run from there). Reading unchanged: FAIL, 1 of 45 checks (no protection independent of software).",
+   remediation: {action: "DONE 18 September 2026 for the derivation half: the cell's specification is in the tree, the threshold table is derived from it and gated, and every function carries its prototype test. What remains is the owner's: decision 40, whether the pack carries a protector independent of the gauge's firmware (the ABLIC S-8261 and TI bq2970 sheets are already in v2/vendor/battery/) or the BQ4050's chemical-fuse output with a fuse that has one; and then the prototype measurement itself, which needs a built pack", owner: OWNER, execution: OWNER, depends_on: [], p50_h: 6, p80_h: 20}}
+
+ BAT-002: {implementation: "pcb_energy_chain.yaml, the chain as data", verification: {tool: energy_chain.py, verdict: energy_chain, fixtures: "tests/test_energy_chain.py, tests/test_artefact_recording.py"}, maturity: ENFORCED, gap_category: NONE,
+   note: "the chain crosses four boards with two 25 A blades and 12 AWG wiring, and no document draws it end to end 16 September 2026: THE CHAIN IS DRAWN AND GATED. pcb_energy_chain.yaml carries it end to end, nine stages from the 4S cell block to the eFused branches and a second entry for the shore and vehicle input, each with its conductor and connector rating, its protective element, the prospective fault current with the derivation, and the stage it protects. energy_chain.py judges 69 checks over it: every number's source is a file this tree holds, every protective element is in its board's own netlist by reference, and the four coordination tests (the element is at or below what it protects, at or above the path's peak, able to interrupt what is available, and followed by the stage it protects). It passes. Its first run refused a stage that carried the pack node's 18 A peak while naming a 2 A eFuse as its protection, which was a modelling error and is now two stages. WHAT REMAINS is the rule's own authority: the ratings come from the parts' datasheets (Littelfuse ATOF, Samsung INR18650-35E, Amass XT60, TI BQ4050 and CSD17570Q5B) but the SELECTION CRITERIA are engineering practice, and the standards the fuse cites for them (SAE J1284, ISO 8820-3) are not in this tree. littelfuse.com refuses this host with 403. WHAT IS DECIDED AND WHAT IS PRINTED (the CLK-001 shape): the gate decides four things that are definitional rather than empirical, that the element is at or below the rating of what it protects, at or above the path's own declared peak, able to interrupt the fault current declared at its position, and followed by the stage it protects; plus that every rating's source file is in this tree and every protective element is in its board's netlist. What it PRINTS rather than decides is the melting time from the I2t figure, because a clearing curve is a curve and this reads one point of it. The rule's own authority for the SELECTION CRITERIA is still not in the tree, which is why the registry keeps source_status SOURCE_UNVERIFIED. 26 September 2026, the tools stream's recording round: the set verdict energy_chain records the netlists of boards A, B, E and P its elements were looked up in and board E5's declared board file (the DOCK_BLOCK stage), so it binds on A, E, E5 and P; unchanged reading, PASS of 98 checks.",
+   remediation: {action: "DONE 17 September 2026: ECSS-Q-ST-30-11C Rev.2 clause 6.17 is the authority and the gate enforces it. What remains is a DESIGN item rather than a document: board E's shore inlet carries 8.0 A of a 10.0 A fuse on 10 A of copper, which is 80 percent of the fuse rating, and it needs wider input copper and a larger fuse or a lower declared continuous current", owner: SESSION, execution: PARALLEL_AGENT, depends_on: [], _depends_why: "NOT PWR-003 (16 September 2026), the second cycle the register held: BAT-002 depended on PWR-003 and PWR-003 on BAT-002. The direction is one way. This rule DRAWS the pack-to-load chain with its ratings and the prospective fault current at each stage, which is the input a coordination study reads; PWR-003 is that study and rightly waits for this and for the fuse curves.", p50_h: 0, p80_h: 0}}
+
+ DOC-001: {implementation: "full.sh PHASE, silk_fix_all.py", verification: {tool: final_gate.py, verdict: "final_gate_<letter>", fixtures: tests/test_final_gate.py},
+   maturity: ENFORCED, gap_category: NONE, note: "added 16 September: a folder that is not the declared phase fails the set, with a truth-table fixture"}
+
+ DOC-002: {implementation: "ledger.py, provenance.json, make_handoff.py's PROVENANCE block, export_jlc.sh's header",
+   verification: {tool: "doc_provenance.py, ledger_verify.py", verdict: "doc_provenance_<letter>, ledger_verify", fixtures: "tests/test_doc_provenance.py, tests/test_ledger.py"},
+   _per_board_why: "ONE VERDICT PER BOARD SINCE 18 September 2026, the fourth rule to need it (DOC-001 was
+     split on the 16th, CMP-002, SUP-001 and DFM-001 on the 17th). One set-level reading was deciding DOC-002
+     on all seven boards, so board C read FAIL because a note describing C7 names no artefact while board C
+     declares C24 and has no order note at all: different states, and only one of them is the board's fault. A
+     board whose order folder is not at its declared phase now reads INCONCLUSIVE carrying the phase it wanted
+     and the phase the set holds, which is what the certification does. It flattered nothing: six boards moved
+     from a failure they did not own to an absent input, and board E5, whose folder IS at its declared phase,
+     is left as the one real FAIL, its note naming no artefact.",
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026: THE DOCUMENT THAT ASSERTS THE NUMBERS IS THE ORDER NOTE, and it named no board.
+     The rule asks that each asserted number carry its artefact hash or be marked an estimate, and its phase is
+     RELEASE_PACKAGE, so the documents in scope are the ones in a deliverable and order folder: ORDER-NOTES.txt
+     states a board's size, layer count, thickness, copper weight and stackup, and said only 'generated from
+     the board file'. A note beside a folder cut three phases ago reads exactly like one beside the current
+     board, which is not hypothetical here: three of the seven folders described boards this project was not
+     building on 12 September. `make_handoff.py` writes a PROVENANCE block naming the board's sha256 and the
+     gerber zip's, `export_jlc.sh` puts the board's sha in its own header, and `doc_provenance.py` checks that
+     every order note names a sha256 and that it IS the artefact in its own folder. All seven notes in the tree
+     today name none, which is a FAIL and the truth; they clear on the next handoff, which waits on the boards
+     being cut. What this does NOT do is read prose for numbers: a claim in a sentence is a manual-review
+     question and the rule's own verification method says MANUAL_REVIEW as well as SCRIPT. 16 September 2026, evening: the second tool of this rule had never been RUN. ledger_verify.py was written on 11 September to re-walk every routeflow journal in the tree, re-hash every row and check each witness, and no chain called it, so the chained record this rule rests on was a claim nobody tested. It is in the sweep now and reads 224 rows over four ledgers with no problem. That is the same 'written and never run' the closer audit began refusing tonight for copper-changing tools, in the verification half of this registry rather than in the boards. 18 September 2026 00:20: taken on the runner, where the seven order folders are, the rule reads FAIL of 7 (INCONCLUSIVE in a sweep tree that holds no folder): every committed ORDER-NOTES.txt predates make_handoff.py's provenance line of 12 September, and make_handoff refuses to rebuild the set while the folders describe boards the tree is not building. So DOC-002 closes with the order set's rebuild, behind the boards' phases and decisions 31 and 37, and reads as the failure it is until then.",
+   remediation: {action: "rebuild the order set once the boards are cut; the writers are in place and the check passes the moment they run", owner: SESSION, execution: SEQUENTIAL, depends_on: [DOC-001], p50_h: 2, p80_h: 6}}
+
+ OUT-001: {implementation: "make_handoff.py", verification: {tool: final_gate.py, verdict: "final_gate", fixtures: tests/test_final_gate.py},
+   maturity: ENFORCED, gap_category: DUPLICATED_OR_STALE,
+   _set_level_why: "ONE READING FOR THE WHOLE SET, DELIBERATELY (20 September 2026). The order set is ONE artefact, a single folder of gerbers, BOM and CPL that an order is placed from, and final_gate judges whether THAT is releasable. A board cannot have its own answer about it, which is why this rule alone is counted on seven boards from one verdict while DOC-001, DOC-002, CMP-002, SUP-001, DFM-001 and DFA-001 were each split to a reading per board once it turned out a board was being failed for another board's state. The per-board half of the same question is DOC-001, which asks whether THIS board has a folder at the phase it declares.",
+   note: "the gate refuses a stale or quote-only set correctly; the set on disk is built from folders three to five phases behind and has not been rebuilt",
+   remediation: {action: "rebuild the order set from the current folders once the boards are cut", owner: SESSION, execution: SEQUENTIAL, depends_on: [DOC-001], p50_h: 2, p80_h: 6}}
+
+ SGN-001: {implementation: "rules_status.py, over pcb_rules.yaml and pcb_rules_coverage.yaml",
+   verification: {tool: rules_status.py, verdict: rules_complete, fixtures: tests/test_rules_status.py},
+   maturity: ENFORCED, gap_category: NONE,
+   note: "16 September 2026. The verdict read here is rules_complete and NOT rules_status, because the two answer different
+     questions: rules_status says whether the boards pass, rules_complete says whether every rule that applies to a board
+     reached one of the five results at all. The second is the property this registry exists for, and it is the one that
+     would otherwise be invisible, since a rule missing from the table looks exactly like a rule that does not apply. It is
+     FAIL when any pair produces a result outside the five, when the registry fails its own validator, or when an applied
+     rule has no coverage entry; 294 of 294 pairs resolve today"}
+
+ SGN-002: {implementation: "rules_render.py prototype_doc", verification: {tool: rules_render.py, document: docs/PCB-PROTOTYPE-UNKNOWNS.md, fixtures: tests/test_rule_gate_mapping.py},
+   maturity: VERIFIED_MANUALLY, gap_category: NONE,
+   note: "16 September 2026: v2/docs/PCB-PROTOTYPE-UNKNOWNS.md is generated from the registry's verification phase and methods, so the list cannot quietly shrink; rules_render --check refuses a hand-edited copy and the suite runs it"}

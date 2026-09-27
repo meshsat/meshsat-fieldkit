@@ -1,0 +1,333 @@
+# Where each vendor document came from, one line per folder or file: `path  # source`.
+#
+# Authority is not a property of a PDF. Two of ours are Wayback Machine copies because st.com
+# refuses this host, and two are distributors' mirrors of the manufacturer's own file. A reader
+# has to be able to see which is which, and until 11 September 2026 only the 29 documents
+# fetched the day before had their source recorded anywhere.
+#
+# Folder lines are the backfill, taken from this folder's own README table, which is the
+# granularity that record keeps. File lines override them and are written when a file is fetched.
+
+1400           # Peli Products customer drawings, STEP, DXF and Parasolid of the 1520EU and 1400EU cases and their PF panel frames (downloaded by the owner from peli.com); `proj.py`, `sect.py` are our probes
+1520           # Peli Products customer drawings, STEP, DXF and Parasolid of the 1520EU and 1400EU cases and their PF panel frames (downloaded by the owner from peli.com); `proj.py`, `sect.py` are our probes
+adhesives      # multimedia.3m.com, the Scotch-Weld DP8005 technical data sheet, fetched 11 September 2026
+adi            # DS3231M datasheet (the holdover RTC pick, TCXO, +-5 ppm)
+aioc           # AIOC (All-In-One-Cable) KiCad sources and schematic, its own `LICENSE.md` applies
+ams            # ams OSRAM AS7331 UVA, UVB and UVC sensor datasheet (OLGA16, I2C)
+audio          # Raspberry Pi I2S white paper, Cirrus WM8960 data sheet, the Waveshare WM8960 HAT wiki as text, the Direwolf user guide, C-Media CM108B data sheet; see `audio/README.md`
+battery        # the 1S12P battery module study of 4 Sep 2026: Samsung 35E cell sheets, Batteryspace protection board, Nisshinbo and ABLIC protection ICs, TI BQ2970 and the CSD17570/CSD18510 FETs, Littelfuse blade fuses and holders, Semitec and Mu
+bosch          # BME280 datasheet (inside and outside climate sensors of the sensor board)
+cluster        # Microchip KSZ9897 and KSZ9893 switch data sheets and hardware checklist, TI TMUX1308, TS3USB221, TS3USB3031 and TCA9548A sheets, NXP PCA9615, DeskPi Super4C and k3s pages as text, Compute Blade data sheet; see `cluster/README.md`
+cm5            # Raspberry Pi Compute Module 5 datasheet (release 3), product briefs, CM5IO datasheet and KiCad design files (RP-008099-DD), antenna kit brief, documentation sources, Amphenol 10164227 BergStak product sheet; see `cm5/README.md`
+coilcraft      # coilcraft.com, xal4000.pdf and xal60xx.pdf, fetched 10 September 2026
+connectors     # Hong Cheng HC-USB3.0-L257-P USB 3.0 A receptacle drawing, SHOU HAN nano SIM holder drawing
+d38999         # Glenair D38999/20 and /26 sheets, panel cut-outs, pin selection, environmental overview, the 233-370 USB feed-through; Amphenol Series III catalogue for the insert chart and contact ratings
+diodes         # Diodes PI7C9X2G304SL (3-port, 4-lane PCIe 2.0 packet switch, 128-pin LQFP 14 x 14, -40 to 85 C; the one-to-two switch of each CM5 slot) and PI7C9X2G404SL (4-port variant, the alternative with a third downstream port) datasheets re
+dmr858         # NiceRF DMR858M and DMR858S datasheets and mechanical drawing, the vendor pages as saved; NXP SC16IS740/750/760 datasheet (the D7 I2C-to-UART bridge on the module's control UART)
+ebyte          # Ebyte E22-M series user manual (E22-900M30S 1 W LoRa module: pins, currents, dimensions)
+fans           # sunon.com, the DC brushless fan and blower catalogue 240-A (two pages extracted), fetched 26 September 2026
+everlight      # everlighteurope.com datasheet service, fetched 11 September 2026
+gnss           # u-blox NEO-M9N-00B data sheet and integration manual, MAX-M10S and SAM-M10Q data sheets; see `gnss/README.md`
+hirose         # hirose.com's own document service, the FH12 and FH34 series catalogues, fetched 11 September 2026
+infineon       # infineon.com's own document service, the OPTIGA TPM SLB 9673 data sheet, fetched 26 September 2026
+keystone       # Keystone catalogue page with the 3568 and 3549-2 mini blade holders; Littelfuse 297 blade dimensions
+labs           # QRP Labs QMX operating and CAT manuals (the HF module in its bay on B16; the assembly manual stays online)
+limesdr        # LimeSDR Mini 2.4 drawings and STEP
+lora           # Seeed Wio-SX1262 data sheet, Ebyte E22-900M22S and E22-900M30S manuals, the meshtasticd config.d templates and the Meshtastic Linux hardware pages as text; see `lora/README.md`
+lte            # SIMCom A7672X/A7670X hardware design, A76XX UART application note and A7670G spec, Quectel EG25-G Mini PCIe hardware design and specification, LilyGO T-Call A7670 schematic; see `lte/README.md`
+m2             # M.2 socket documents: TE 2199230-4 (E-key) drawing; TE 1-2199119-5, which TE's customer drawing C-2199119 rev F (sheet 2, read 25 September 2026) gives as KEY M, not B; te-2199119-m2-b-key.pdf is TE's M.2 Quick Reference Guide 1-1773702-1 (01/2014), not a drawing; Amphenol MDT420M02001 (M-key) drawing and an Amphenol M.2 family brochure filed for MDT420B01001 (B-key) that does not print that part number (see SOURCES.yaml, cellular-socket)
+mentor         # Mentor catalogue sheet ll14-14, IP68-proofed front-panel light guides (families 1282, 1292, 1293): the 1282.5004 (2.5 mm shaft in a 2.6 H7 hole, 3.2 mm spherical head, 7.5 mm long) carries the sixteen panel LEDs of the backer boar
+microchip      # USB5744 four-port USB 3.2 Gen 1 hub datasheet (the alternative hub; Microchip's site refused every other download)
+mitsubishi     # Mitsubishi RA30H1317M1 datasheet (30 W VHF amplifier module of D8)
+nexperia       # assets.nexperia.com/documents/data-sheet/, fetched 10 and 11 September 2026
+nicerf         # NiceRF SA868 2 W embedded walkie-talkie module datasheet V1.3 (VHF 134 to 174 MHz or UHF 400 to 480 MHz variants; 3.3 to 5.5 V, RX 60 mA, TX 1 A at 2 W; UART 9600 8N1 AT+DMO command set; pins: Audio ON, AF_OUT, PTT low = transmit,
+nxp            # the Internet Archive's byte copies of nxp.com/docs (nxp.com answers this host 404 on the direct links), captured 2026, fetched 26 September 2026
+omron          # omronfs.omron.com, fetched 11 September 2026
+openthread     # README of the OpenThread ot-cc13x2-cc26x2 platform repository (the RCP build for the CC2652P)
+pdi            # Pervasive Displays E2370KS0C1 flyer and the EPD driving circuit note rev.02 (24-pin FPC, boost circuit)
+peli           # Peli Products customer drawings, STEP, DXF and Parasolid of the 1520EU and 1400EU cases and their PF panel frames (downloaded by the owner from peli.com); `proj.py`, `sect.py` are our probes
+peli/1450/1450_pf.pdf   # Peli 1450PF panel frame instruction sheet 1453-314-000 rev A, fetched from peli.com 26 September 2026 (MESHSAT-1357 case margins); sha256 4681c0525a3cf605
+peli/panel-frame-inst.pdf   # Peli's generic panel frame mounting instructions, fetched from peli.com 26 September 2026; sha256 797a2ed6f9809d0b
+peli/step_faces.py, dxf_read.py, case_margins.py, frame_seat.py   # our readers of the 1451-931 STEP and DXF (MESHSAT-1357); their readings are the .faces.txt and .out files in peli/1450/, reproduced byte for byte
+power          # TI BQ25798 and BQ25792 charger, BQ34Z100-G1 gauge (and the MAX17048 fallback), TPS61288 boost, TPS2596 eFuse, LTC2954 push-button controller, ADI LT8705A buck-boost controller, Coilcraft XAL1010 and XAL1510 inductors, RALEC shunt,
+precidip       # Preci-Dip spring-loaded connector catalogue, pages 31 (general specifications) and 34 (813 series, 2.54 mm double row, solder tail, heights 6 to 7.5 mm)
+probes         # our own STEP probe scripts (build123d), kept with the models they read
+pulse          # H5007NL 1000BASE-T magnetics module datasheet
+quectel        # forums.quectel.com for the RM520N-GL hardware design (Quectel's own domain) and TI's E2E forum for Quectel's own RM520N series v1.1; the LG290P documents predate the fetch log
+rf             # Radiall SMP-MAX R222M00720 receptacle and R222M80500 right-angle plug data sheets (the blind-mate pair, 32.21); Amphenol Connex 132170 SMA bulkhead female-female adapter drawing (rev D, the E2 D-hole: 6.50 with the flat at 6.00 ac
+rockblock      # Ground Control RockBLOCK 9704 STEP, SMA drawing and schematic, the 9704 data sheet (RB9704-001-JUN26), the Maxtena M1621HCT-P-SMA helical antenna sheet (Ground Control's approved external antenna for the 9704 SMA, ACC-HELANT-9704)
+rp2040         # RP2040 datasheet and the hardware design guide from raspberrypi.com
+rpi5           # Raspberry Pi 5 mechanical drawing and product brief (datasheets.raspberrypi.com)
+sciosense      # AS3935 Franklin lightning sensor factsheet and hardware design guide (the full datasheet is not on the maker's public page; the sensor is a bench-fitted module on the sensor board because JLCPCB has no stock)
+seals          # 3M VHB and 467MP tape sheets, polycarbonate sheet data, Silex silicone sheet, NKK IP sheet and the APEM 5000 catalogue, Floyd Bell sounder and gasket, Rogers PORON and BISCO, DOWSIL 3145, Loctite SI 5145, RTV162, MG 422B, the Cent
+sensirion      # SGP41 datasheet (VOC and NOx sensing in the battery bay)
+silabs         # CP2102N USB-to-UART bridge datasheet (QFN20/24/28, 3 Mbaud, no crystal)
+st             # the Wayback Machine's stored copies of st.com/resource/en/datasheet/, because st.com refuses this host (section 7 of the handover)
+standards      # our transcriptions of the clauses this project cites from free standards and specifications (ECSS, USB-IF, TCG); each file's header names the URL, the fetch date and the sha256 of the file read. Added 26 September 2026: until then the four ECSS and USB files had no line here
+storage        # advantech.com and cervoz.com, the makers' own download services, fetched 26 September 2026
+switches       # C&K ATP19 and ATP16 anti-vandal pushbutton data sheets (ordering codes, panel holes 19.2 and 16.2); NKK M series miniature toggle data sheet (circuits, levers, bushings) and the NKK accessories and hardware catalogue (boots, nuts,
+tbeam          # LilyGO T-Beam 1W shell and PCB models, drawing
+tcall          # LilyGO T-Call A7670 dimension drawing `T-Call-A7670-ESP32.dxf` and `T-Call-A767X-ESP32.png` (from `Xinyuan-LilyGO/LilyGo-Modem-Series`, `dimensions/esp32`): the source of the 74.78 x 29.01 outline and the four Ø3 holes on 69.46 x 
+td2            # Raspberry Pi Touch Display 2 (7 inch) STEP model and the product-brief editions from raspberrypi.com
+ti             # ti.com/lit/ds/symlink/<part>.pdf, fetched 10 and 11 September 2026
+traco          # TRACO TEN 40WIN datasheet
+usb2517        # Microchip USB2517/USB2517i data sheet (LCSC-hosted copy)
+vishay         # VEML7700 datasheet (ambient light behind the plate window)
+wch            # CH334 and CH335 USB 2.0 four-port hub datasheet V2.7 (Chinese)
+weact          # WeAct Studio e-paper module, 3.7 inch files only, see `weact/README.md`
+wifi           # AsiaRF AW7915-AED, AW7915-AE1, AW7915-NP1 and AW7916-AED data sheets, the Linux mt76x2u device table as text; see `wifi/README.md`
+winbond        # winbond.com resource files, fetched 10 September 2026
+wio            # Seeed Wio-SX1262 STEP
+x1202          # Geekworm X1202 V1.1 PCB DXF and the wiki page as archived by the Wayback Machine on 9 May 2026 (the live wiki refuses non-browser clients), plus an overview photo
+xenarc         # Xenarc 709GNK dimensional drawing V3 and product manual V2 (the IP67 7 in monitor on the face plate)
+zigbee         # Ebyte E72-2G4M20S1E and E180-ZG120B manuals, the Sonoff Dongle-E NCP readme and the Zigbee2MQTT adapter-settings page as text; see `zigbee/README.md`
+
+# File lines, where a single document's source differs from its folder's.
+connectors/amphenol-rjhse5380-rj45-jack.pdf   # Mouser's mirror of Amphenol's io_modjack_rjhse sheet; cs.amphenol.com refuses this host and Amphenol's own CDN answered 403
+vishay/vishay-smbj-series-tvs.pdf   # vishay.com/docs/88392/smbj.pdf, fetched 10 September 2026
+vishay/vishay-smcj-series-tvs.pdf   # vishay.com/docs/88394/smcj.pdf, fetched 10 September 2026
+vishay/vishay-ss12-ss16-schottky.pdf   # vishay.com/docs/88746/ss12.pdf, fetched 11 September 2026
+rf/skyworks-sky13351-378lf-spdt.pdf   # skyworksinc.com, SKY13351_378LF_201132I.pdf, fetched 10 September 2026
+connectors/gct-sim8060-nano-sim-socket.pdf   # gct.co/files/drawings/sim8060.pdf, fetched 10 September 2026
+diodes/diodes-ap2112-ldo.pdf   # diodes.com/assets/Datasheets/AP2112.pdf, fetched 10 September 2026
+diodes/diodes-ap63200-series-buck.pdf   # diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf, fetched 10 September 2026
+power/aos-ao3401a-p-mosfet.pdf   # aosmd.com/res/data_sheets/AO3401A.pdf, fetched 10 September 2026
+power/infineon-irf7404-p-mosfet.pdf   # infineon.com/dgdl/irf7404pbf.pdf, fetched 10 September 2026
+power/bourns-srf1260-common-mode-choke.pdf   # bourns.com/docs/product-datasheets/srf1260.pdf, fetched 10 September 2026
+switches/apem-5000-series-toggles.pdf   # Farnell's copy of APEM's 5000 series toggle catalogue; apem.com serves its datasheets behind a product-page form
+# Added 26 September 2026 (MESHSAT-1357, review stream BAT, the battery review packet): two TI E2E threads, saved from the
+# runner with curl the same day as HTML snapshots. The sha256 identifies this copy only; the quoted words are the evidence.
+ti/ti-e2e-1316778-bq25731-chargecurrent-por.html   # https://e2e.ti.com/support/power-management-group/power-management/f/power-management-forum/1316778/bq25731-bq25731-chargecurrent-start-up-behavior, fetched 26 September 2026
+battery/ti-e2e-1421182-bq77207-application.html   # https://e2e.ti.com/support/power-management-group/power-management/f/power-management-forum/1421182/bq77207-help-understanding-application-configuration, fetched 26 September 2026
+
+# Our own files at the root of this folder: written in this repository, not fetched from a vendor.
+README.md            # written in this repository: what each folder is, the licence position and the takedown line
+PARTS.md             # generated in this repository by tools/kb/kb_inventory.py
+vendor-status.txt    # written in this repository
+vendor-noindex.txt   # written in this repository
+family-matches.txt   # written in this repository
+open-picks.txt       # written in this repository
+not-used.txt         # written in this repository
+sources.txt          # this file
+DOWNLOADS-2026-09-10.md   # written in this repository: the fetch log of 10 and 11 September 2026
+qrp-labs             # qrp-labs.com, the QMX assembly and operating manuals, downloaded by the owner
+duplicates-allowed.txt   # written in this repository
+adhesives            # multimedia.3m.com, the Scotch-Weld DP8005 technical data sheet, fetched 11 September 2026
+
+# Per-file URLs for everything fetched on 10 and 11 September 2026. kb_recheck.py re-fetches
+# from these and compares the bytes and the revision, so currency can be stated as a date
+# rather than assumed. A folder line without a URL is a backfill and can only be checked by hand.
+adhesives/3m-scotch-weld-dp8005.pdf                          # https://multimedia.3m.com/mws/media/2365892O/3m-scotch-weld-structural-plastic-adhesive-dp8005-black.pdf
+coilcraft/coilcraft-xal40xx-series.pdf                       # https://www.coilcraft.com/getmedia/6adcb47d-8b55-416c-976e-1e22e0d2848c/xal4000.pdf
+coilcraft/coilcraft-xal60xx-series.pdf                       # https://www.coilcraft.com/getmedia/ea51f14b-7f32-4dc6-8dfe-d4b70549040f/xal60xx.pdf
+connectors/amphenol-rjhse5380-rj45-jack.pdf                  # https://www.mouser.com/datasheet/2/18/1/io_modjack_rjhse-2509079.pdf
+connectors/gct-sim8060-nano-sim-socket.pdf                   # https://gct.co/files/drawings/sim8060.pdf
+diodes/diodes-ap2112-ldo.pdf                                 # https://www.diodes.com/assets/Datasheets/AP2112.pdf
+diodes/diodes-ap63200-series-buck.pdf                        # https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf
+everlight/everlight-el817-optocoupler.pdf                    # https://www.everlighteurope.com/custom/files/datasheets/DPC-0000046.pdf
+hirose/hirose-fh12-series-ffc-connectors.pdf                 # https://www.hirose.com/product/document?clcode=&productname=&series=FH12&documenttype=Catalog&lang=en&documentid=D31648_en
+nexperia/nexperia-74lvc08a-quad-and.pdf                      # https://assets.nexperia.com/documents/data-sheet/74LVC08A.pdf
+nexperia/nexperia-bc847bs-dual-npn.pdf                       # https://assets.nexperia.com/documents/data-sheet/BC847BS.pdf
+omron/omron-g6k-signal-relay.pdf                             # https://omronfs.omron.com/en_US/ecb/products/pdf/en-g6k.pdf
+power/aos-ao3401a-p-mosfet.pdf                               # https://aosmd.com/res/data_sheets/AO3401A.pdf
+power/bourns-srf1260-common-mode-choke.pdf                   # https://www.bourns.com/docs/product-datasheets/srf1260.pdf
+power/infineon-irf7404-p-mosfet.pdf                          # https://www.infineon.com/dgdl/irf7404pbf.pdf
+power/ti-csd19532q5b-n-fet.pdf                               # https://www.ti.com/lit/ds/symlink/csd19532q5b.pdf
+power/ti-tlv755p-ldo.pdf                                     # https://www.ti.com/lit/ds/symlink/tlv755p.pdf
+power/ti-tps2595-efuse.pdf                                   # https://www.ti.com/lit/ds/symlink/tps2595.pdf
+power/ti-tps563201-buck.pdf                                  # https://www.ti.com/lit/ds/symlink/tps563201.pdf
+power/ti-tps61089-boost.pdf                                  # https://www.ti.com/lit/ds/symlink/tps61089.pdf
+quectel/quectel-rm520n-gl-hardware-design-v1.0.pdf           # https://forums.quectel.com/uploads/short-url/1zkjPRnxF5BZ2woox386baCZx4g.pdf
+quectel/quectel-rm520n-series-hardware-design-v1.1.pdf       # https://e2e.ti.com/cfs-file/__key/communityserver-discussions-components-files/138/rm520_5F00_modem_5F00_datasheet.pdf
+rf/skyworks-sky13351-378lf-spdt.pdf                          # https://www.skyworksinc.com/-/media/SkyWorks/Documents/Products/401-500/SKY13351_378LF_201132I.pdf
+seals/apem-5000-series-catalogue.pdf                         # https://www.farnell.com/datasheets/94098.pdf
+st/st-stm32h743xi-datasheet.pdf                              # https://web.archive.org/web/2024id_/https://www.st.com/resource/en/datasheet/stm32h743vi.pdf
+st/st-stm32h753xi-datasheet.pdf                              # https://web.archive.org/web/2024id_/https://www.st.com/resource/en/datasheet/stm32h753vi.pdf
+st/st-usblc6-2-esd-protection.pdf                            # https://web.archive.org/web/2024id_/https://www.st.com/resource/en/datasheet/usblc6-2.pdf
+ti/ti-ina219.pdf                                             # https://www.ti.com/lit/ds/symlink/ina219.pdf
+ti/ti-pca9555.pdf                                            # https://www.ti.com/lit/ds/symlink/pca9555.pdf
+ti/ti-tca9517a-i2c-buffer.pdf                                # https://www.ti.com/lit/ds/symlink/tca9517a.pdf
+ti/ti-tcan334-can-fd-transceiver.pdf                         # https://www.ti.com/lit/ds/symlink/tcan334.pdf
+ti/ti-tlv9062-op-amp.pdf                                     # https://www.ti.com/lit/ds/symlink/tlv9062.pdf
+ti/ti-tmp117-temperature.pdf                                 # https://www.ti.com/lit/ds/symlink/tmp117.pdf
+ti/ti-tmuxhs4212.pdf                                         # https://www.ti.com/lit/ds/symlink/tmuxhs4212.pdf
+ti/ti-tps2065-tps2066-tps2067.pdf                            # https://www.ti.com/lit/ds/symlink/tps2065.pdf
+ti/ti-tps22810-load-switch.pdf                               # https://www.ti.com/lit/ds/symlink/tps22810.pdf
+ti/ti-ts3usb221a.pdf                                         # https://www.ti.com/lit/ds/symlink/ts3usb221a.pdf
+vishay/vishay-smbj-series-tvs.pdf                            # https://www.vishay.com/docs/88392/smbj.pdf
+vishay/vishay-smcj-series-tvs.pdf                            # https://www.vishay.com/docs/88394/smcj.pdf
+vishay/vishay-ss12-ss16-schottky.pdf                         # https://www.vishay.com/docs/88746/ss12.pdf
+winbond/winbond-w25q16jv-serial-flash.pdf                    # https://www.winbond.com/resource-files/w25q16jv%20spi%20revh%2004082019%20plus.pdf
+bulgin       # bulgin.com's own datasheet service, fetched 11 September 2026
+polyphaser   # polyphaser.com datasheet downloads, fetched 11 September 2026
+bulgin/bulgin-px0833-sealed-rj45-coupler.pdf   # https://www.bulgin.com/pdf/pdf.php?sku=PX0833
+bulgin/bulgin-4000-series-sealed-usb-c.pdf   # https://www.bulgin.com/products/pub/media/bulgin/data/4000_series_c_type.pdf
+bulgin/bulgin-pxp4043-micro-usb-rear-panel.pdf   # https://www.bulgin.com/pdf/pdf.php?sku=PXP4043, fetched 26 September 2026 (MESHSAT-1357 case margins): the 4000 series rear-panel body, a sibling's sheet (micro-B), used for the connector plate's envelope; sha256 245d895c678995b2
+bulgin/bulgin-pxp4043c-usb-c-rear-panel.pdf   # https://www.bulgin.com/pdf/pdf.php?sku=PXP4043/C, fetched 26 September 2026: the recommended part's own sheet (rear panel mount, no panel dimension); sha256 cce556227a71f895
+polyphaser/polyphaser-gth-sff-al-sma-surge-protector.pdf   # https://www.polyphaser.com/Images/Downloadables/Datasheets/GTH-SFF-AL_datasheets_US.pdf
+switches/apem-switch-guards-series.pdf   # https://www.apem.com/storage/datasheets/files/safety_guards_serie_switchguards/media/safety guards-serie-switchguards.pdf
+
+# Added 26 September 2026 (MESHSAT-1357, integration I6 of workstream W6's vendor files of 25 and 26 September).
+# One line per new file: the URL it was fetched from first, then what the copy is. Revision, sha256 and whether the
+# document describes the fitted order code are in SOURCES.yaml beside this file.
+fabricator   # jlcpcb.com's own pages (capability page, impedance page, order form, impedance calculator), read anonymously and TRANSCRIBED in this repository; each transcription names its URLs, the date and time read and the sha256 of its captures
+fabricator/jlcpcb-stackups-2026-09-25.md   # written in this repository: a transcription of https://jlcpcb.com/impedance (4 layers, 2 oz outer selector), https://cart.jlcpcb.com/quote (8 layers, Specify Stackup) and JLC's impedance calculator template endpoint, read 25 September 2026 21:24 to 21:38 UTC
+m2/te-2199119-customer-drawing-revF.pdf   # https://web.archive.org/web/20240629111304id_/https://www.te.com/commerce/DocumentDelivery/DDEController?Action=showdoc&DocId=Customer+Drawing%7F2199119%7FB1%7Fpdf%7FEnglish%7FENG_CD_2199119_B1.pdf%7F1-2199119-5 (the Wayback Machine's copy of TE customer drawing C-2199119 rev F; te.com answered this host with HTTP 403), fetched 25 September 2026
+nexperia/nexperia-pesd5v0s1ba.pdf   # https://assets.nexperia.com/documents/data-sheet/PESD5V0S1BA.pdf, fetched 25 September 2026; byte-identical to LCSC's datasheet for C19224
+power/littelfuse-smcj-series-tvs.pdf   # https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C224052 (LCSC's copy of Littelfuse's SMCJ series sheet, the document attached to the fitted code; LCSC serves the same bytes for C224047 and C374030), fetched 25 September 2026
+st/st-an4938-rev7.pdf   # https://web.archive.org/web/20250726045640id_/https://www.st.com/resource/en/application_note/an4938-getting-started-with-stm32h74xig-and-stm32h75xig-mcu-hardware-development-stmicroelectronics.pdf (the Wayback Machine's copy, because st.com refuses this host; the filed PDF is the decompressed body of the gzip-encoded archived response), fetched 25 September 2026
+ti/ti-slla552-tmuxhs4212-schematic-checklist.pdf   # https://www.ti.com/lit/an/slla552/slla552.pdf, fetched 25 September 2026
+ti/ti-tps2065c-slvsau6i.pdf   # https://www.ti.com/lit/ds/symlink/tps2065c.pdf, fetched 25 September 2026
+SOURCES.yaml   # written in this repository: the identity and source record of the critical parts (MESHSAT-1357, 25 and 26 September 2026)
+
+# Added 26 September 2026 (MESHSAT-1357, stream PKT of the review of 26 September 2026). One line per new file: the URL
+# it was fetched from on 26 September 2026 (12:22 to 12:33 UTC unless the line gives another time; each byte-identical to
+# the round 4 to 6 author's copy), then whose copy it is. One file was NOT re-fetched: the Eaton ELX1135, because
+# eaton.com answered neither this host nor the build box; its line names the Wayback capture the round 4 author used. Revision, sha256 and whether it describes the fitted order code are in SOURCES.yaml.
+techpublic   # the maker's sheets for TECH PUBLIC parts, as LCSC serves them (the maker's site was not tried)
+battery/ti-bq77207.pdf   # https://www.ti.com/lit/ds/symlink/bq77207.pdf
+battery/eaton-scf9550-elx1135.pdf   # https://www.eaton.com/content/dam/eaton/products/electronic-components/resources/data-sheet/eaton-scf9550-self-control-fuse-data-sheet-elx1135-en.pdf through the Wayback Machine's capture (the round 4 board P author's fetch; eaton.com refused the runner and the build box on 26 September 2026)
+battery/murata-prf-series.pdf   # https://www.murata.com/~/media/webrenewal/products/thermistor/ptc/prf/datasheet_prfseries.ashx?la=en-us
+battery/ti-sluuaq3a-bq4050-trm.pdf   # https://www.ti.com/lit/ug/sluuaq3a/sluuaq3a.pdf
+battery/ti-sluubf9-bq4050evm.pdf   # https://www.ti.com/lit/ug/sluubf9/sluubf9.pdf
+battery/ti-sluuav7c-bq40z50evm.pdf   # https://www.ti.com/lit/ug/sluuav7c/sluuav7c.pdf
+connectors/jst-ph-catalogue.pdf   # https://www.jst-mfg.com/product/pdf/eng/ePH.pdf
+connectors/jst-xh-catalogue.pdf   # https://www.jst-mfg.com/product/pdf/eng/eXH.pdf
+diodes/diodes-74lvc1g17.pdf   # https://www.diodes.com/assets/Datasheets/74LVC1G17.pdf
+diodes/diodes-74lvc1g34.pdf   # https://www.diodes.com/assets/Datasheets/74LVC1G34.pdf
+diodes/diodes-bat46w.pdf   # https://www.diodes.com/assets/Datasheets/BAT46W.pdf
+diodes/diodes-smbj-ds19002.pdf   # https://www.diodes.com/assets/Datasheets/ds19002.pdf
+nexperia/nexperia-pesd12vl1ba.pdf   # https://assets.nexperia.com/documents/data-sheet/PESD12VL1BA.pdf
+power/aos-ao3400a-n-mosfet.pdf   # https://www.aosmd.com/res/datasheets/AO3400A.pdf
+power/jscj-2n7002-c8545.pdf   # https://datasheet.lcsc.com/datasheet/pdf/a141b8bd86b14475955ac8c4d3eea0a8.pdf?productCode=C8545 (LCSC's copy of the JSCJ sheet attached to the fitted code)
+power/littelfuse-smbj-series-tvs.pdf   # https://datasheet.lcsc.com/datasheet/pdf/4ab84a227fae39f9eac85241b8264ead.pdf?productCode=C83270 (LCSC's copy of Littelfuse's SMBJ sheet; the same bytes for C151256; littelfuse.com answered HTTP 403)
+power/mdd-smbj-series-tvs.pdf   # https://datasheet.lcsc.com/datasheet/pdf/2fdb55289569ebfc0bc21eab3853afe6.pdf?productCode=C113974 (LCSC's copy of the MDD sheet; the same bytes for C364296)
+power/panjit-ss2020fl-series.pdf   # https://www.panjit.com.tw/upload/datasheet/SS2020FL_SERIES.pdf
+techpublic/techpublic-74lvc1g08gv-c19829591.pdf   # https://datasheet.lcsc.com/datasheet/pdf/e335bb6567581dcd835345d1662386ee.pdf?productCode=C19829591 (LCSC's copy)
+ti/ti-sn74aup1g08.pdf   # https://www.ti.com/lit/ds/symlink/sn74aup1g08.pdf
+ti/ti-sn74lvc1g00.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc1g00.pdf
+ti/ti-sn74lvc1g04.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc1g04.pdf
+ti/ti-sn74lvc1g06.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc1g06.pdf
+ti/ti-sn74lvc1g08.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc1g08.pdf
+ti/ti-sn74lvc1g57.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc1g57.pdf, fetched 26 September 2026 21:10 UTC by board C's round 8 stream (SCES414P)
+ti/ti-tlv758p.pdf   # https://www.ti.com/lit/ds/symlink/tlv758p.pdf
+ti/ti-tpd2e2u06-q1.pdf   # https://www.ti.com/lit/ds/symlink/tpd2e2u06-q1.pdf
+ti/ti-tusb2046b-slls413l-addendum-2025.pdf   # https://www.ti.com/lit/ds/symlink/tusb2046b.pdf (the same revision L as ti/ti-tusb2046b.pdf, with the orderable addendum of 31-Oct-2025)
+vishay/vishay-si2300ds.pdf   # https://www.vishay.com/docs/65701/si2300ds.pdf
+vishay/vishay-wsl-power-metal-strip.pdf   # https://www.vishay.com/docs/30100/wsl.pdf
+battery/ti-sffs317a-bq77207-fusa.pdf   # https://www.ti.com/lit/fs/sffs317a/sffs317a.pdf, fetched 26 September 2026 13:52 UTC (byte-identical to the battery review stream's copy)
+battery/littelfuse-itv9550-30a.pdf   # https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/194/ITV9550_30A_Series_DS.pdf (Digi-Key's copy of the Littelfuse sheet; littelfuse.com refused this host), fetched 26 September 2026 13:52 UTC
+ti/ti-sn74lvc86a.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc86a.pdf, fetched 26 September 2026 12:31 UTC by the fabric review stream (SCAS288R)
+nexperia/nexperia-74lvc86a.pdf   # https://assets.nexperia.com/documents/data-sheet/74LVC86A.pdf, fetched 26 September 2026 12:31 UTC by the fabric review stream (Rev. 8)
+
+# --- added 26 September 2026 (MESHSAT-1357, parts stream, at 45bde541): D22's zener sheet, and file lines for the documents
+# the new SOURCES.yaml entries read (each re-fetched that evening and byte-identical unless the line says otherwise)
+diodes/diodes-bzt52c-ds18004.pdf   # https://www.diodes.com/assets/Datasheets/ds18004.pdf, fetched 26 September 2026 18:48 UTC; the filed file is the round 6 board A author's copy, byte-identical to that fetch (DS18004 Rev. 38-2)
+diodes/diodes-ap64500.pdf   # https://www.diodes.com/assets/Datasheets/AP64500.pdf (filed 7 September 2026; byte-identical on 26 September 2026)
+ti/lm5176-datasheet.pdf   # https://www.ti.com/lit/ds/symlink/lm5176.pdf (filed 7 September 2026; byte-identical on 26 September 2026)
+ti/ti-tps62933.pdf   # https://www.ti.com/lit/ds/symlink/tps62933.pdf (filed 7 September 2026; byte-identical on 26 September 2026)
+ti/ti-lm74700-q1.pdf   # https://www.ti.com/lit/ds/symlink/lm74700-q1.pdf (filed 7 September 2026; byte-identical on 26 September 2026)
+ti/ti-lm5069.pdf   # https://www.ti.com/lit/ds/symlink/lm5069.pdf (filed 7 September 2026; byte-identical on 26 September 2026)
+peli/1450/1451-931-customer-drawing-2025-01-15.pdf   # Peli's CAD, supplied by the owner on 5 September 2026 (appendix 32.41); source URL not recorded and not re-fetched on 26 September 2026 (the Peli sheets that were re-fetched that day came from media.pelican.com and business.pelican.com)
+peli/1450/1451-931-customer-drawing.dxf   # the same drawing as DXF, supplied by the owner on 5 September 2026; source URL not recorded
+peli/1450/1451-931-bottom.STEP   # Peli's base body STEP, supplied by the owner on 5 September 2026; source URL not recorded
+peli/1450/1451-931-top.STEP   # Peli's lid body STEP, supplied by the owner on 5 September 2026; source URL not recorded
+peli/1450/1450-panel-frame.STEP   # Peli's 1450 panel frame STEP (2015), supplied by the owner on 5 September 2026; source URL not recorded
+
+# --- added 26 September 2026 (MESHSAT-1357, stream r8docs): the maker documents the committed pages cited from the review
+# streams' drafts/ folders (v2/docs/records/README.md, "Cited but not filed: maker documents"). Each was fetched again that
+# evening from the URL its stream recorded (the maker's first, then the stream's own fallback), and compared by sha256
+# with the stream's copy; every copied file here is byte for byte that copy (the one transcription says so on its line). "identical" below means the fetch of that time
+# returned the same bytes; where no fetch did, the line says so and whose copy is filed. A source line records where a
+# file came from; it does not validate the part the file describes.
+microchip/microchip-atecc508a-complete-20005927A.pdf   # http://ww1.microchip.com/downloads/en/DeviceDoc/20005927A.pdf answered HTTP 403 at 2026-09-26T21:15:46Z; the Internet Archive's capture https://web.archive.org/web/20190618060547id_/http://ww1.microchip.com/downloads/en/DeviceDoc/20005927A.pdf was identical at 21:15:47Z
+microchip/microchip-atecc608a-40001977A.pdf   # http://ww1.microchip.com/downloads/en/DeviceDoc/40001977A.pdf, identical at 2026-09-26T21:15:49Z (the stream had taken it from the Internet Archive, capture 20260301151407)
+microchip/microchip-atecc608b-tngtls-DS40002250.pdf   # https://ww1.microchip.com/downloads/aemDocuments/documents/SCBU/ProductDocuments/DataSheets/ATECC608B-TNGTLS-CryptoAuthentication-Data-Sheet-DS40002250.pdf, identical at 2026-09-26T21:15:50Z
+microchip/microchip-atecc608b-tflxtls-DS40002249.pdf   # https://ww1.microchip.com/downloads/aemDocuments/documents/SCBU/ProductDocuments/DataSheets/ATECC608B-TFLXTLS-CryptoAuthentication-Data-DS40002249.pdf, identical at 2026-09-26T21:15:50Z
+microchip/microchip-dm320118-users-guide-DS50002921A.pdf   # http://ww1.microchip.com/downloads/en/DeviceDoc/CryptoAuth-Trust-Platform-Users-Guide-DS50002921A.pdf, identical at 2026-09-26T21:15:52Z
+microchip/microchip-atecc608b-summary-DS40002239B.pdf   # https://ww1.microchip.com/downloads/aemDocuments/documents/SCBU/ProductDocuments/DataSheets/ATECC608B-CryptoAuthentication-Device-Summary-Data-Sheet-DS40002239B.pdf, fetched 2026-09-26T21:17:24Z (revision B, October 2021)
+infineon/infineon-slb9673-fw26-datasheet-rev1.4.pdf   # https://www.infineon.com/dgdl/Infineon-SLB9673-TPM20-I2C_FW26xx_DS_Rev1-4-2024-11-13-DataSheet-v01_00-EN.pdf?fileId=8ac78c8c93dda25b01944055dd2c5d11, identical at 2026-09-26T21:15:52Z
+nxp/nxp-se050-datasheet.pdf   # https://www.nxp.com/docs/en/data-sheet/SE050-DATASHEET.pdf answered HTTP 404 at 2026-09-26T21:15:52Z; the Internet Archive's capture https://web.archive.org/web/20260313115240id_/https://www.nxp.com/docs/en/data-sheet/SE050-DATASHEET.pdf?pspll=1 was identical
+nxp/nxp-an12413-se050-apdu.pdf   # https://www.nxp.com/docs/en/application-note/AN12413.pdf answered HTTP 404 at 2026-09-26T21:15:54Z; the Internet Archive's capture https://web.archive.org/web/20260916110513id_/https://www.nxp.com/docs/en/application-note/AN12413.pdf was identical
+standards/tcg-tpm2-library-r1p59-2019-11-08.md   # our transcription of the clauses ZEROIZE.md cites, from TCG's Part 1 and Part 3 of Revision 01.59: trustedcomputinggroup.org answered HTTP 403 at 2026-09-26T21:15:57Z and 21:15:59Z; the Internet Archive's captures 20260904023834 and 20260428182655 of the two URLs returned the ZEROIZE stream's bytes (sha256 18e393ef... and d2e5e718..., in the file's header)
+standards/intel-an574.pdf   # https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/an/an574.pdf answered HTTP 403 at 2026-09-26T21:16:02Z; the Internet Archive's capture https://web.archive.org/web/20211201012633id_/<that URL> was identical (the path DECOUPLING.md already names)
+quectel/quectel-rm5x0n-at-commands-manual-v1.0-digikey.pdf   # https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/6382/Quectel_RG520NRG525FRG5x0FRM5x0NRM521F_Series_AT_Commands_Manual_V1.0.pdf (Digi-Key's copy of Quectel's manual), identical at 2026-09-26T21:16:05Z
+quectel/quectel-rm520n-at-commands-manual-v1.0.0-prelim-20220812-waveshare.pdf   # https://files.waveshare.com/upload/8/8a/Quectel_RG520N&RG52xF&RG530F&RM520N&RM530N_Series_AT_Commands_Manual_V1.0.0_Preliminary_20220812.pdf (Waveshare's copy of Quectel's manual), identical at 2026-09-26T21:16:05Z
+quectel/quectel-ec2x-eg2x-eg9x-em05-qcfg-at-commands-manual-v1.1-sixfab.pdf   # https://sixfab.com/wp-content/uploads/2023/11/Quectel_EC2xEG2xEG9xEM05_Series_QCFG_AT_Commands_Manual_V1.1.pdf (Sixfab's copy of Quectel's manual), identical at 2026-09-26T21:16:07Z
+quectel/quectel-rg50xq-rm5xxq-at-commands-manual-v1.1.1-quectelforums.pdf   # https://forums.quectel.com/uploads/short-url/avUSxfJeKqWJzAie8wEZCshlXjm.pdf (Quectel's forum host), identical at 2026-09-26T21:16:07Z
+qrp-labs/qrplabs-qmx-schematics-rev5.pdf   # https://qrp-labs.com/images/qmx/manuals/schematics_rev5.pdf, identical at 2026-09-26T21:16:10Z
+qrp-labs/qrplabs-qmx-schematics-rev3.pdf   # https://qrp-labs.com/images/qmx/manuals/schematics_rev3.pdf, identical at 2026-09-26T21:16:11Z
+qrp-labs/qrplabs-qmx-schematics-rev2.pdf   # https://qrp-labs.com/images/qmx/manuals/schematics_rev2.pdf, identical at 2026-09-26T21:16:13Z
+qrp-labs/qrplabs-qmx-schematics-rev1-a.pdf   # https://qrp-labs.com/images/qmx/manuals/schematics_rev1_a.pdf, identical at 2026-09-26T21:16:14Z
+qrp-labs/qrplabs-qmx-rev1-searchable-schematic-1b.pdf   # https://qrp-labs.com/images/qmx/manuals/QMX_Rev1_Searchable_Schematic_1b.pdf (compiled by G4GIR, hosted by QRP Labs), identical at 2026-09-26T21:16:15Z
+qrp-labs/qmx-crops/rev1a-p2-J201.png   # our own render of page 2 (J201 region) of qrplabs-qmx-schematics-rev1-a.pdf, pdftoppm at 300 dpi, made by the EMCON stream on 26 September 2026 (EMCON.md 4.3); derived, sha256 in v2/docs/records/rv-emc/datasheets/SHA256SUMS
+qrp-labs/qmx-crops/rev3-left-rev2-right-p2-J201.png   # our own render of page 2 (J201 region), side by side, of qrplabs-qmx-schematics-rev3.pdf and qrplabs-qmx-schematics-rev2.pdf, pdftoppm at 300 dpi, made by the EMCON stream on 26 September 2026 (EMCON.md 4.3); derived, sha256 in v2/docs/records/rv-emc/datasheets/SHA256SUMS
+qrp-labs/qmx-crops/rev5-p1-power-supplies.png   # our own render of page 1 of qrplabs-qmx-schematics-rev5.pdf (power supplies), pdftoppm at 300 dpi and downscaled, made by the EMCON stream on 26 September 2026 (EMCON.md 4.3); derived, sha256 in v2/docs/records/rv-emc/datasheets/SHA256SUMS
+qrp-labs/qmx-crops/rev5-p2-J201.png   # our own render of page 2 (J201 region) of qrplabs-qmx-schematics-rev5.pdf, pdftoppm at 300 dpi, made by the EMCON stream on 26 September 2026 (EMCON.md 4.3); derived, sha256 in v2/docs/records/rv-emc/datasheets/SHA256SUMS
+wifi/linux-mt7915-f14572c2/mcu.c   # Linux (GPL-2.0), https://raw.githubusercontent.com/torvalds/linux/f14572c203d57492e1d4e5d7851a3b143e083b82/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c, identical at 2026-09-26T21:16:16Z
+wifi/linux-mt7915-f14572c2/mt7915.h   # Linux (GPL-2.0), https://raw.githubusercontent.com/torvalds/linux/f14572c203d57492e1d4e5d7851a3b143e083b82/drivers/net/wireless/mediatek/mt76/mt7915/mt7915.h, identical at 2026-09-26T21:16:16Z
+wifi/linux-mt7915-f14572c2/head.json   # https://api.github.com/repos/torvalds/linux/commits/master as answered on 25 September 2026 (adjudication A11's record that master was f14572c2 when the two files beside it were read); filed from the EMCON stream's copy, not re-fetchable
+wifi/asiarf-AW7915-AED_V1.pdf   # https://asiarf.com/wp-content/uploads/2023/09/AW7915-AED_V1.pdf, identical at 2026-09-26T21:16:17Z
+wifi/asiarf-aw7915-aed-product-page-20260926.html   # https://asiarf.com/product/wifi-6-11ax-m-2-ae-key-module-aw7915-aed/ as the power stream saved it on 26 September 2026 (sha256 b153fe71...); the page served at 21:16:18Z differs in bytes (a dynamic page), so the stream's copy is filed and its quoted words are the evidence
+limesdr/myriadrf-limesdr-mini-2-0-page-20260925.html   # https://myriadrf.org/projects/limesdr-mini-2-0 (adjudication A11's copy of 25 September 2026), identical at 2026-09-26T21:16:17Z; the power stream's limesdr-mini-v2-introduction.html is the same bytes and is not filed twice
+limesdr/myriadrf-limesdr-mini-2-0-user-setup-20260926.html   # https://myriadrf.org/projects/limesdr-mini-2-0/user/setup.html, identical at 2026-09-26T21:16:17Z (the power stream's limesdr-mini-v2-user-setup.html)
+xenarc/xenarc-709gnk-product-page-20260926.html   # https://www.xenarc.com/709GNK.html, identical at 2026-09-26T21:16:20Z
+storage/advantech-sqflash-720-d-m2-2242-v1.9.pdf   # https://advdownload.advantech.com/productfile/Downloadfile2/1-2MDTFS2/Advantech%20SQFlash_PCIe%20NVMe%20M.2%202242_M%20Key_720-D-DS_v1.9_20240709.pdf, identical at 2026-09-26T21:16:21Z
+storage/cervoz-m2-2242-nvme-titan.pdf   # https://www.cervoz.com/products/download/8r0k7y0bWdEw/Cervoz_Industrial_Embedded_Module_M.pdf, identical at 2026-09-26T21:16:21Z
+fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf   # pages 18 and 40 of https://www.sunon.com/en/MANAGE/Docs/PRODUCT/286/360/Sunon%20DC%20Brushless%20Fan%20&%20Blower_(240-A).pdf, extracted by the power stream with pdfseparate and pdfunite; the full catalogue fetched at 2026-09-26T21:16:23Z has the sha256 the stream recorded for its original (bd47c704...), so the extract's source is confirmed; the extract itself is derived and not re-made
+switches/littelfuse-59140-reed-sensor-2022-03-25.pdf   # NOT RE-FETCHED: the round 4 board E author's copy (revised 03/25/22), whose source URL was never recorded; littelfuse.com answered this host HTTP 403 again at 2026-09-26T21:16:33Z and the Internet Archive holds no capture of the sheet. Filed so the reading can be reproduced; its source stays owed (SOURCES.yaml owed list)
+battery/ti-bq2947.pdf   # https://www.ti.com/lit/ds/symlink/bq2947.pdf, identical at 2026-09-26T21:16:33Z (the round 4 board P author's copy, SLUSB15K)
+battery/dexerials-sfk-series-datasheet.pdf   # https://6197088.fs1.hubspotusercontent-na1.net/hubfs/6197088/TDS/SCP/SFK%20series_Datasheet.pdf (linked from dexerials.jp's SFK page), identical at 2026-09-26T21:16:33Z
+battery/littelfuse-itv4030-c1869305.pdf   # https://datasheet.lcsc.com/datasheet/pdf/1305195b724f0906085249dd41c3e69b.pdf?productCode=C1869305 (LCSC's copy of the Littelfuse sheet), identical at 2026-09-26T21:16:34Z
+battery/prosemi-dhc45-c2937382.pdf   # https://datasheet.lcsc.com/datasheet/pdf/44513f68c55bda342d8773122bf0e7c7.pdf?productCode=C2937382 (LCSC's copy of the Prosemi sheet), identical at 2026-09-26T21:16:34Z
+battery/onsemi-mm3z-c82071.pdf   # https://datasheet.lcsc.com/datasheet/pdf/d230120ac088f212a72f52868a6ffd7b.pdf?productCode=C82071 (LCSC's copy of onsemi's MM3Z2V4T1/D), identical at 2026-09-26T21:16:34Z
+diodes/diodes-pi7c9x2g404sl.pdf   # https://www.diodes.com/assets/Datasheets/PI7C9X2G404SL.pdf, identical at 2026-09-26T21:16:44Z (DS40068 Rev 5-2; the folder line above had been its only record)
+diodes/diodes-pi7c9x2g304sl.pdf   # https://www.diodes.com/assets/Datasheets/PI7C9X2G304SL.pdf, identical at 2026-09-26T21:16:47Z
+
+# --- added 26 September 2026 (MESHSAT-1357, round 8, stream d) ---
+ti/ti-ads1115-sbas444e.pdf   # https://www.ti.com/lit/ds/symlink/ads1115.pdf (round 8, stream d: board D's U22, PWR-F15)
+kento/kento-kt-0603y-citayl-0603.pdf   # https://datasheet.lcsc.com/datasheet/pdf/ba7b73648918210433b88ee1f2fd7ebf.pdf?productCode=C2287 (LCSC's copy of KENTO's sheet; round 8, stream d)
+yageo/yageo-cc-general-purpose-np0-16v-250v.pdf   # https://datasheet.lcsc.com/datasheet/pdf/4eca2bb4b507f1633db47e922d632b95.pdf?productCode=C113780 (LCSC's copy of YAGEO's V.21; round 8, stream d)
+samsung/samsung-cl05a225ko5nqn-spec.html   # https://weblib.samsungsem.com/mlcc/mlcc-ec-data-sheet.do?partNumber=CL05A225KO5NQN (Samsung's own page, stamped 2026/09/27 06:20 KST; round 8, stream d)
+# --- added 27 September 2026 (MESHSAT-1357, round 8 integration, the RF-002 walk tools/tx_inhibit.py): documents its tables
+# cite that main did not hold, filed byte for byte from the r4t author's copies (fnd/r4t drafts/datasheets/), each at the
+# sha256 its SHA256SUMS and v2/vendor/SOURCES.yaml (rf002_walk_documents, cm5-receptacle) record
+ti/ti-sn74lvc00a.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc00a.pdf (fetched by r4t on 2026-09-26)
+ti/ti-sn74lvc07a.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc07a.pdf (fetched by r4t on 2026-09-26)
+ti/ti-sn74lvc1g07.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc1g07.pdf (fetched by r4t on 2026-09-26)
+ti/ti-sn74lvc1g34.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc1g34.pdf (fetched by r4t on 2026-09-26)
+ti/ti-sn74lvc2g07.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc2g07.pdf (fetched by r4t on 2026-09-26)
+cm5/doc-rtc.adoc   # https://raw.githubusercontent.com/raspberrypi/documentation/master/documentation/asciidoc/computers/raspberry-pi/rtc.adoc (last commit to the file 8136a09a, 2026-08-11; curl from the runner, 2026-09-26)
+cm5/rpi-firmware-overlays-README.txt   # https://raw.githubusercontent.com/raspberrypi/firmware/master/boot/overlays/README (last commit to the file f72c4f42, 2026-09-11; curl from the runner, 2026-09-26)
+cm5/linux-bcm2712-rpi.dtsi   # https://raw.githubusercontent.com/raspberrypi/linux/rpi-6.18.y/arch/arm64/boot/dts/broadcom/bcm2712-rpi.dtsi (last commit to the file 00365ac0, 2026-09-03; curl from the runner, 2026-09-26)
+cm5/linux-bcm2712-rpi-cm5.dtsi   # https://raw.githubusercontent.com/raspberrypi/linux/rpi-6.18.y/arch/arm64/boot/dts/broadcom/bcm2712-rpi-cm5.dtsi (last commit to the file 6855d494, 2026-04-20; curl from the runner, 2026-09-26)
+
+# Closer hc6 (pre-PCB layer 6, MESHSAT-1357), fetched 27 September 2026 (UTC); v2/docs/parts/PROCUREMENT.md section 7 gives each sha256.
+crystals       # 25 MHz crystal specifications: the fitted Yajingxin TAXM25M4RFBCCT2T and two replacement candidates (YXC, Seiko Epson), each LCSC's copy of the maker's sheet
+st/st-stm32h743xi-datasheet-rev11.pdf   # https://web.archive.org/web/20260827112637id_/https://www.st.com/resource/en/datasheet/stm32h743vi.pdf (DS12110 Rev 11), fetched 2026-09-26T23:51Z, served gzip-encoded and filed decompressed; capture 20260318060051 byte-identical; st.com refused this host
+st/st-rm0433-rev8.pdf   # https://web.archive.org/web/20251014013150id_/https://www.st.com/resource/en/reference_manual/rm0433-stm32h742-stm32h743753-and-stm32h750-value-line-advanced-armbased-32bit-mcus-stmicroelectronics.pdf (RM0433 Rev 8), fetched 2026-09-26T23:50Z
+st/st-es0392-rev15.pdf   # https://web.archive.org/web/20260526205148id_/https://www.st.com/resource/en/errata_sheet/es0392-stm32h742xig-stm32h743xig-and-stm32h753xi-device-errata-stmicroelectronics.pdf (ES0392 Rev 15), fetched 2026-09-26T23:52Z, served gzip-encoded and filed decompressed
+connectors/jst-vh-catalogue.pdf   # https://www.jst-mfg.com/product/pdf/eng/eVH.pdf, fetched 2026-09-27T00:21:04Z
+connectors/wurth-wr-bhd-box-header-61202621621.pdf   # https://www.we-online.com/components/products/datasheet/61202621621.pdf, fetched 2026-09-27T00:20Z
+connectors/wurth-wr-bhd-box-header-61201621621.pdf   # https://www.we-online.com/components/products/datasheet/61201621621.pdf, fetched 2026-09-27T00:20Z
+connectors/wurth-wr-bhd-box-header-61201021621.pdf   # https://www.we-online.com/components/products/datasheet/61201021621.pdf, fetched 2026-09-27T00:20Z
+connectors/wurth-wr-bhd-idc-socket-61202623021.pdf   # https://www.we-online.com/components/products/datasheet/61202623021.pdf, fetched 2026-09-27T00:20Z
+connectors/wurth-wr-bhd-idc-socket-61201623021.pdf   # https://www.we-online.com/components/products/datasheet/61201623021.pdf, fetched 2026-09-27T00:20Z
+connectors/wurth-wr-bhd-idc-socket-61201023021.pdf   # https://www.we-online.com/components/products/datasheet/61201023021.pdf, fetched 2026-09-27T00:20Z
+connectors/wurth-wr-cab-ribbon-63912615521cab.pdf   # https://www.we-online.com/components/products/datasheet/63912615521CAB.pdf, fetched 2026-09-27T00:21Z
+connectors/wurth-wr-cab-ribbon-63911615521cab.pdf   # https://www.we-online.com/components/products/datasheet/63911615521CAB.pdf, fetched 2026-09-27T00:21Z
+connectors/wurth-wr-cab-ribbon-63911015521cab.pdf   # https://www.we-online.com/components/products/datasheet/63911015521CAB.pdf, fetched 2026-09-27T00:21Z
+connectors/wurth-wr-com-usb3-a-692122030100.pdf   # https://www.we-online.com/components/products/datasheet/692122030100.pdf, fetched 2026-09-27T00:30Z
+connectors/millmax-0858-product-page-20260927.html   # https://www.mill-max.com/products/discrete-spring-loaded-pins/spring-loaded-pin-with-standard-tail/0858, saved 2026-09-27T00:12:15Z
+connectors/millmax-rugged-power-spring-pins-page28.pdf   # https://www.mill-max.com/sites/default/files/external/assets/2017-12/Rugged%20Spring%20Pins.pdf, fetched 2026-09-27T00:13Z
+rockblock/groundcontrol-rockblock-9704-product-page-20260927.html   # https://www.groundcontrol.com/product/rockblock-9704/, saved 2026-09-27T00:08:20Z
+rockblock/groundcontrol-docs-rockblock-9704-specification-20260927.html   # https://docs.groundcontrol.com/iot/rockblock-9704/specification, saved 2026-09-27T00:08:20Z
+rockblock/rb9704-datasheet-RB9704-001-JUN26.pdf   # https://www.groundcontrol.com/wp-content/uploads/2026/07/RockBLOCK-9704-Data-Sheet.pdf, byte-identical at 2026-09-27T00:26Z (its URL was not recorded before)
+ti/tps23861-datasheet.pdf   # https://www.ti.com/lit/ds/symlink/tps23861.pdf, byte-identical at 2026-09-27T00:42:45Z (SLUSBX9I)
+crystals/yajingxin-taxm25m4rfbcct2t-spec-2026-08-26.pdf   # https://datasheet.lcsc.com/datasheet/pdf/3086cc872f6c9505eebaf3751fb73fcd.pdf?productCode=C164047 (LCSC's copy of the maker's specification), fetched 2026-09-27T00:04:33Z
+crystals/yxc-ysx321sl-x322525mob4si.pdf   # https://datasheet.lcsc.com/datasheet/pdf/a84bd8d530dd46e4b0f6d0ee59d8a89c.pdf?productCode=C9006 (LCSC's copy of the YXC sheet), fetched 2026-09-27T00:05:27Z
+crystals/epson-tsx-3225-x1e0000210139.pdf   # https://datasheet.lcsc.com/datasheet/pdf/0d18bdcfc6729dd0d95eefcfc4755fee.pdf?productCode=C91750 (LCSC's copy of the Seiko Epson sheet), fetched 2026-09-27T00:05:27Z
+pulse/pulse-hx6096nl-datasheet-rev-a.pdf   # https://productfinder.pulseeng.com/doc_type/WEB301/doc_num/HX6096NL/doc_part/HX6096NL.pdf (linked from Pulse's product finder page for HX6096NL), fetched 2026-09-27T04:05:06Z
+wifi/asiarf-AW7915-AED-datasheet.pdf   # https://asiarf.com/wp-content/uploads/2026/05/260505_Datasheet_AW7915-AED-1P.pdf (linked from the held product page), byte-identical at 2026-09-27T03:56:57Z
+cm5/cm5-datasheet.pdf   # https://datasheets.raspberrypi.com/cm5/cm5-datasheet.pdf, byte-identical at 2026-09-27T03:56:58Z
+rf/radiall-smp-max-series-R222M-D1C004XEe.pdf   # https://www.radiall.com/media/files/SMP-MAX%20D1C004XEe.pdf, byte-identical at 2026-09-27T03:57:30Z

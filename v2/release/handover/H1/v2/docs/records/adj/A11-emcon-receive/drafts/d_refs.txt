@@ -1,0 +1,61 @@
+U2 | NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A)
+   pin 1 (AUDIO_ON_n) -> SA_AUDIO_ON_n
+   pin 2 (NC) -> unconnected-(U2-NC-Pad2)
+   pin 3 (AF_OUT) -> AF_OUT
+   pin 4 (NC) -> unconnected-(U2-NC-Pad4)
+   pin 5 (PTT_n) -> SA_PTT_n
+   pin 6 (PD) -> SA_PD
+   pin 7 (H/L) -> SA_HL
+   pin 8 (VBAT) -> +5V_SA
+   pin 9 (GND) -> GND
+   pin 10 (GND) -> GND
+   pin 11 (NC) -> unconnected-(U2-NC-Pad11)
+   pin 12 (ANT) -> RF_SA
+   pin 13 (NC) -> unconnected-(U2-NC-Pad13)
+   pin 14 (NC) -> unconnected-(U2-NC-Pad14)
+   pin 15 (NC) -> unconnected-(U2-NC-Pad15)
+   pin 16 (RXD) -> SA_RXD
+   pin 17 (TXD) -> SA_TXD
+   pin 18 (MIC_IN) -> MIC_IN
+U12 | 74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)
+   pin 1 (PTT_ANY) -> PTT_ANY
+   pin 2 (TX_INHIBIT_n) -> TX_INHIBIT_n
+   pin 3 (GND) -> GND
+   pin 4 (KEY) -> KEY
+   pin 5 (+3V3_D8) -> +3V3_D8
+U13 | 74LVC1G04 inverter: KEY -> SA868 PTT (low = transmit)
+   pin 1 (NC) -> unconnected-(U13-NC-Pad1)
+   pin 2 (KEY) -> KEY
+   pin 3 (GND) -> GND
+   pin 4 (SA_PTT_n) -> SA_PTT_n
+   pin 5 (+3V3_D8) -> +3V3_D8
+U14 | 74LVC1G08 AND: PA_KEY = KEY AND PA_EN (A22's PA rail state)
+   pin 1 (KEY) -> KEY
+   pin 2 (PA_EN) -> PA_EN
+   pin 3 (GND) -> GND
+   pin 4 (PA_KEY) -> PA_KEY
+   pin 5 (+3V3_D8) -> +3V3_D8
+K1 | Omron G6K-2F-Y 5 VDC DPDT signal relay, T/R
+   pin 1 () -> +5V_D8
+   pin 2 () -> RF_RX
+   pin 3 () -> RF_SA
+   pin 4 () -> RF_PAD_IN
+   pin 5 () -> RF_LPF_OUT
+   pin 6 () -> RF_ANT
+   pin 7 () -> RF_RX
+   pin 8 () -> RLY_K
+U15 | TPS22810DRV
+   pin 1 (VOUT) -> VGG_SW
+   pin 2 (QOD) -> unconnected-(U15-QOD-Pad2)
+   pin 3 (CT) -> VGG_CT
+   pin 4 (GND) -> GND
+   pin 5 (EN/UVLO) -> PA_KEY
+   pin 6 (VIN) -> +5V_D8
+   pin 7 (GND) -> GND
+Q1 | 2N7002 PA_EN -> H/L low (never tie H/L high)
+   pin 1 (G) -> PA_EN
+   pin 2 (S) -> GND
+   pin 3 (D) -> SA_HL
+FB1 | 600R 2A ferrite (the exciter's 1 A transmit pulses)
+   pin 1 () -> +5V_D8
+   pin 2 () -> +5V_SA

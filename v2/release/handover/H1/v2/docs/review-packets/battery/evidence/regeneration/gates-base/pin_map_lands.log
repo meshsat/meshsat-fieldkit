@@ -1,0 +1,3 @@
+pin_map_lands: board P: 81 part(s) judged against their land, 0 failure(s), 0 pin(s) on a merged pad, 0 land(s) unreadable
+verdict: pin_map_lands_p        PASS         of 81 {"failures": 0, "judged": 81, "merged_pad_pins": 0, "unreadable": 0} | every part's map names every pad of its land
+SCH-005 pin_map_lands exit 0

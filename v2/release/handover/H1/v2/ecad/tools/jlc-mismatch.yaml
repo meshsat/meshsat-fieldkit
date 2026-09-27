@@ -1,0 +1,117 @@
+# Declared component mismatches under the owner's condition 1 of 25 September 2026: "a part substitution is a component
+# mismatch until compatibility is proven". Read by jlc_certify.py and lcsc_fill.py on every run (MESHSAT-1357, round 8,
+# 26 September 2026; review of the 22:35 progress report, finding D1).
+#
+# WHY THIS FILE EXISTS. Fourteen rows of v2/release/revA/order/JLC-CERTIFIED.tsv were marked WRONG_MODEL by hand at
+# 2aaa7b7f (thirteen by the parts stream, v2/vendor/SOURCES.yaml jlc_retake_45bde541.table_marks, and board B's U80 by
+# the integrator, SOURCES.yaml bbm-xor), and a fifteenth row (board P's J_TS2) carries the same condition 1 reason
+# beside a parser refusal. jlc_certify.py reads every one of them CERTIFIED, because each ordered model carries every
+# character of the part the row names, and a full run writes the whole table: the next run would have put CERTIFIED
+# back on all of them and lcsc_fill.py would have filled and accepted their codes again. Written here, the mismatch is
+# an input the tools read, so a re-run and a regeneration keep it.
+#
+# WHAT AN ENTRY DOES. A row whose LCSC code is `code` (the code its BOM carries, or the code a search picked), and whose
+# BOM comment matches `comment_re` when the entry has one (Python re.search), and whose land contains `fp_contains`
+# when it has one, reads WRONG_MODEL in jlc_certify with the reason below, whatever the catalogue answered; lcsc_fill
+# refuses the code on that row whatever the certified table says. `id`, `code`, `reason` and `record` are required: an
+# entry missing one stops jlc_certify before it writes the table (a mismatch is never dropped silently).
+#
+# HOW A MISMATCH IS LIFTED. Two ways, and only two:
+#   1. the row stops ordering the part: its code moves to the recommended part in the GENERATOR (or, for a blank line,
+#      in lcsc_fill.py's MAP), or, for the two entries scoped by comment_re, its value text comes to name the ordered
+#      part; the entry then matches nothing and jlc_certify names it as matching no row;
+#   2. a `compatibility:` decision below names the entry (`clears:`) and cites its evidence: every item a file in this
+#      repository (`path`), its sha256 as it sits here, and the words in it that establish compatibility (`finding`),
+#      with `ruled_by`, `ruled_on` and `why`. A decision missing any of these, citing a file that is not in the tree, or
+#      citing a sha256 the file does not have, is REFUSED: printed, recorded in the verdict, and it lifts nothing.
+# Removing an entry by hand is neither; tests/test_certify_mismatch.py holds the entries against the table's marks.
+
+schema_version: 1
+
+mismatches:
+  - id: MM-01
+    code: C594232
+    named: "B4B-XH-A (the value and the land JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical)"
+    ordered: "B4B-XH-A-G, JST per LCSC, gold contacts (JLCPCB model string, 2026-09-26)"
+    reason: "the held JST XH catalogue (v2/vendor/connectors/jst-xh-catalogue.pdf) lists B4B-XH-A and B4B-XH-AM only; a -G suffix and gold contacts are not in it, and the mating XH contacts are tin"
+    recommended: "C144395, JST B4B-XH-A(LF)(SN) (lcsc_fill.py's MAP fills blank SMBus lead lines with it since round 8; E J_SMB's generator line is the board E author's)"
+    rows: "E J_SMB (gen_sch_e.py); P J_SMB of the P3 and P4 folders and of the 45bde541 netlist as lcsc_fill filled it before round 8"
+    record: "v2/vendor/SOURCES.yaml jlc_retake_45bde541.condition_1_mismatches and table_marks; entry pack-and-lid-leads-jst-xh update_45bde541"
+    declared_by: "parts stream (marked), session tools stream round 8 (declared here)"
+    declared_on: "2026-09-26"
+
+  - id: MM-02
+    code: C265283
+    named: "JST-XH 1x2 on the B2B-XH-A land (JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical)"
+    ordered: "B2B-XH-A-GU, JST per LCSC, gold contacts (JLCPCB model string, 2026-09-26)"
+    reason: "the held JST XH catalogue lists B2B-XH-A and no -GU variant; the mating XH contacts are tin"
+    recommended: "C158012, JST B2B-XH-A(LF)(SN), the code board E's J_TAMP carries (gen_sch_a.py's J_MAINSW and J_HEAT lines are the board A author's)"
+    rows: "A J_HEAT and J_MAINSW (the 45bde541 netlist), and the A22 and A24 folders' heater line"
+    record: "v2/vendor/SOURCES.yaml jlc_retake_45bde541.condition_1_mismatches and table_marks"
+    declared_by: "parts stream (marked), session tools stream round 8 (declared here)"
+    declared_on: "2026-09-26"
+
+  - id: MM-03
+    code: C5251182
+    named: "JST-PH 1x2 on the B2B-PH-K land (JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical)"
+    ordered: "B2B-PH-K-S-GW, JST per LCSC, tin, PA66 (JLCPCB model string, 2026-09-26)"
+    reason: "the held JST PH catalogue (v2/vendor/connectors/jst-ph-catalogue.pdf) lists B2B-PH-K-S; what -GW denotes is not in it"
+    recommended: "C131337, JST B2B-PH-K-S(LF)(SN) (lcsc_fill.py's MAP fills blank cell-thermistor PH2 lines with it since round 8; P J_TS2 and D J_VGG carry the code from gen_sch_p.py and gen_sch_d.py, the board P and D authors' lines)"
+    rows: "P J_TS2 (the 45bde541 netlist), P J_TS of the P3 and P4 folders, D J_VGG (the 45bde541 netlist)"
+    record: "v2/vendor/SOURCES.yaml jlc_retake_45bde541.condition_1_mismatches, table_marks and annotated; entry jst-ph-headers update_45bde541"
+    declared_by: "parts stream (marked), session tools stream round 8 (declared here)"
+    declared_on: "2026-09-26"
+
+  - id: MM-04
+    code: C580654
+    named: "LTC2954ITS8-1"
+    ordered: "LTC2954ITS8-1#TRMPBF, Analog Devices (JLCPCB model string, 2026-09-26)"
+    reason: "the held 2954fb (v2/vendor/power/ltc2954.pdf) lists LTC2954ITS8-1#PBF and #TRPBF only; #TRM as a 500-piece reel is Linear Technology's convention, INFERRED and not in the held document, and analog.com gave this host no answer on 2026-09-26 (again at about 21:05 UTC in round 8: no HTTP answer within 20 s)"
+    recommended: "keep the code and read the suffix in the maker's current order guide when analog.com answers; that document, filed in v2/vendor, is the evidence a compatibility decision below would cite"
+    rows: "A U1 (the 45bde541 netlist)"
+    record: "v2/vendor/SOURCES.yaml jlc_retake_45bde541.condition_1_mismatches and table_marks; entry power-button-controller update_45bde541"
+    declared_by: "parts stream (marked), session tools stream round 8 (declared here)"
+    declared_on: "2026-09-26"
+
+  - id: MM-05
+    code: C2287
+    comment_re: "(?i)\\bamber\\b"
+    named: "amber (a colour in the value text, no part number)"
+    ordered: "KT-0603Y, Hubei KENTO, yellow, 596 nm peak, 584 to 594 nm per LCSC"
+    reason: "the value names a colour the maker does not: the generators' LED_CODE maps amber and yellow to one code (gen_sch_b.py and gen_sch_d.py). Scoped to rows whose value says amber, because the same code is right on a row that says yellow"
+    recommended: "the value text names yellow and the code stays (board-level indicators, not PANEL.md lamps); if amber is a panel semantic, C165983 (BL-HJC36G-AV-TRB, amber 605 nm, lcsc_fill's amber) replaces it"
+    rows: "B 'amber NVMe activity' (LED14, LED24, LED34) and 'amber 5G network' (LED25); D 'amber record' (LED2) and 'amber PA keyed' (LED5)"
+    record: "v2/vendor/SOURCES.yaml jlc_retake_45bde541.condition_1_mismatches and table_marks"
+    declared_by: "parts stream (marked), session tools stream round 8 (declared here)"
+    declared_on: "2026-09-26"
+
+  - id: MM-06
+    code: C350562
+    comment_re: "(?<![A-Za-z])74LVC86APW"
+    named: "74LVC86APW, Nexperia's type number"
+    ordered: "SN74LVC86APWR, Texas Instruments (JLCPCB model string, 2026-09-26)"
+    reason: "the two sheets give the same function and 14-pin assignment but different input transition limits (TI 9 ns/V, Nexperia 10 ns/V at 2.7 to 3.6 V), and the Nexperia sheet states Schmitt-trigger action at all inputs where the TI sheet, as read, does not; which one is fitted matters for this circuit's slow delayed input. Scoped to rows whose value names the Nexperia type (no SN prefix), because a value naming SN74LVC86APWR names the ordered part"
+    recommended: "the value text names SN74LVC86APWR (gen_sch_b.py, the board B author's line); the fabric page's FAB-03 change removes the slow edge either way"
+    rows: "B U80 (the 45bde541 netlist)"
+    record: "v2/vendor/SOURCES.yaml bbm-xor (documents v2/vendor/ti/ti-sn74lvc86a.pdf and v2/vendor/nexperia/nexperia-74lvc86a.pdf)"
+    declared_by: "integrator (marked), session tools stream round 8 (declared here)"
+    declared_on: "2026-09-26"
+
+# No compatibility decision is supported today (round 8, 26 September 2026). What each entry would need:
+#   MM-01, MM-02, MM-03  JST's own document listing the -G, -GU or -GW variant and stating that it mates with the tin
+#                        XH or PH housing contacts; none is held. The recommended codes are the plain parts the land names.
+#   MM-04                Analog Devices' current order guide listing LTC2954ITS8-1#TRMPBF; analog.com does not answer
+#                        this host.
+#   MM-05, MM-06         none: the recommended remedy is the value text naming the ordered part, which lifts the entry
+#                        by its comment_re, not a compatibility argument.
+# The shape of a decision, for when one is:
+#   - clears: MM-04
+#     ruled_by: "SESSION under the owner's standing rule of 26 September 2026"
+#     ruled_on: "YYYY-MM-DD"
+#     authority: SESSION
+#     why: "the maker's order guide lists the ordered suffix as a packing option of the part the schematic names"
+#     evidence:
+#       - path: "v2/vendor/power/<the filed order guide>.pdf"
+#         sha256: "<the file's sha256 as it sits in this tree>"
+#         finding: "<the words in it that list LTC2954ITS8-1#TRMPBF>"
+compatibility: []

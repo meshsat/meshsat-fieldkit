@@ -1,0 +1,296 @@
+== battery-side power per state (W): low / plan / high; at the loads (plan)
+PS-IDLE      load   33.5 | battery   30.9 /   39.7 /   81.7 | S  16.8 R  11.3 D   6.3 T   5.3
+PS-IDLE-SPEC load   36.5 | battery   33.1 /   42.8 /   82.8 | S  16.8 R  11.3 D   6.3 T   8.4
+PS-TYP       load   54.5 | battery   46.9 /   63.0 /  120.6 | S  22.1 R  21.0 D   8.2 T  11.7
+PS-BUSY      load   79.6 | battery   54.6 /   92.0 /  134.4 | S  19.3 R  26.3 D  34.6 T  11.8
+PS-RED       load   18.5 | battery   12.7 /   22.2 /   45.9 | S  10.8 R   5.4 D   6.1 T   0.0
+PS-RED-b     load   29.6 | battery   26.9 /   35.7 /   71.5 | S  16.8 R  11.3 D   6.3 T   1.3
+PS-EMCON     load   46.1 | battery   37.3 /   53.1 /  103.3 | S  20.9 R  11.0 D   7.9 T  13.2
+PS-ALLTX     load  183.7 | battery  168.9 /  203.8 /  272.0 | S  60.9 R  98.0 D  40.8 T   4.1
+== variants (battery W lo/plan/hi): {"IDLESPEC_link_off": {"lo": 28.42, "plan": 36.88, "hi": 62.35}, "IDLE_link_off": {"lo": 26.29, "plan": 33.8, "hi": 61.26}, "TYP_standby_card_off": {"lo": 46.94, "plan": 61.7, "hi": 109.17}, "ALLTX_standby_card_off": {"lo": 168.93, "plan": 202.48, "hi": 259.99}, "ALLTX_non_tx_at_typical": {"lo": 162.73, "plan": 181.35, "hi": 247.48}}
+== converter efficiency by state (plan scenario, VIN 14.4 V where the parent is the pack)
+IDLE [('S1', 1.708, 0.926, 0.921, 0.935, 0.69), ('S2', 0.894, 0.904, 0.901, 0.914, 0.48), ('S3', 1.073, 0.912, 0.921, 0.911, 0.53), ('DEV', 2.18, 0.93, 0.902, 0.924, 0.83), ('A3V3', 0.152, 0.88, 0.88, 0.88, 0.07), ('E5V', 0.212, 0.916, 0.919, 0.921, 0.1), ('E3V3', 0.152, 0.66, 0.66, 0.66, 0.26), ('D3V3', 1.146, 0.913, 0.91, 0.916, 0.36), ('KSZ2V5', 0.33, 0.758, 0.758, 0.758, 0.26), ('KSZ1V2', 1.21, 0.85, 0.85, 0.85, 0.26), ('HUB1V1', 0.259, 0.85, 0.85, 0.85, 0.05), ('IOC', 0.393, 0.647, 0.647, 0.647, 0.71), ('S1A', 1.212, 0.904, 0.913, 0.904, 0.42), ('S1B', 0.38, 0.859, 0.867, 0.859, 0.21), ('S1C', 0.27, 0.85, 0.85, 0.85, 0.05), ('S2A', 0.067, 0.819, 0.819, 0.819, 0.05), ('S2B', 0.38, 0.859, 0.867, 0.859, 0.21), ('S2C', 0.27, 0.85, 0.85, 0.85, 0.05), ('S3A', 0.303, 0.846, 0.911, 1.0, 0.18), ('S3B', 0.38, 0.859, 0.867, 0.859, 0.21), ('S3C', 0.27, 0.85, 0.85, 0.85, 0.05)]
+TYP [('S1', 2.683, 0.929, 0.912, 0.939, 1.05), ('S2', 1.733, 0.927, 0.918, 0.929, 0.7), ('S3', 1.626, 0.925, 0.91, 0.928, 0.68), ('DEV', 3.436, 0.923, 0.901, 0.94, 1.47), ('A3V3', 0.152, 0.88, 0.88, 0.88, 0.07), ('HF', 0.08, 0.848, 0.836, 0.86, 0.17), ('E5V', 0.212, 0.916, 0.919, 0.921, 0.1), ('E3V3', 0.152, 0.66, 0.66, 0.66, 0.26), ('D3V3', 1.155, 0.912, 0.91, 0.916, 0.37), ('KSZ2V5', 0.33, 0.758, 0.758, 0.758, 0.26), ('KSZ1V2', 1.21, 0.85, 0.85, 0.85, 0.26), ('HUB1V1', 0.568, 0.85, 0.85, 0.85, 0.11), ('IOC', 0.393, 0.647, 0.647, 0.647, 0.71), ('S1A', 1.818, 0.913, 0.913, 0.904, 0.57), ('S1B', 0.471, 0.872, 0.904, 0.859, 0.23), ('S1C', 0.27, 0.85, 0.85, 0.85, 0.05), ('S2A', 0.455, 0.869, 0.911, 0.819, 0.23), ('S2B', 0.471, 0.872, 0.904, 0.859, 0.23), ('S2C', 0.27, 0.85, 0.85, 0.85, 0.05), ('S3A', 0.303, 0.846, 0.911, 1.0, 0.18), ('S3B', 0.471, 0.872, 0.904, 0.859, 0.23), ('S3C', 0.27, 0.85, 0.85, 0.85, 0.05)]
+BUSY [('S1', 4.097, 0.916, 0.904, 0.937, 1.92), ('S2', 3.581, 0.921, 0.911, 0.94, 1.57), ('S3', 2.61, 0.929, 0.904, 0.935, 1.02), ('DEV', 4.27, 0.914, 0.901, 0.939, 2.04), ('A3V3', 0.152, 0.88, 0.88, 0.88, 0.07), ('HF', 0.08, 0.848, 0.836, 0.86, 0.17), ('E5V', 0.212, 0.916, 0.919, 0.921, 0.1), ('E3V3', 0.152, 0.66, 0.66, 0.66, 0.26), ('D3V3', 1.155, 0.912, 0.91, 0.916, 0.37), ('KSZ2V5', 0.33, 0.758, 0.758, 0.758, 0.26), ('KSZ1V2', 1.21, 0.85, 0.85, 0.85, 0.26), ('HUB1V1', 0.568, 0.85, 0.85, 0.85, 0.11), ('IOC', 0.393, 0.647, 0.647, 0.647, 0.71), ('S1A', 2.424, 0.913, 0.911, 0.904, 0.77), ('S1B', 0.895, 0.895, 0.904, 0.895, 0.35), ('S1C', 0.27, 0.85, 0.85, 0.85, 0.05), ('S2A', 1.694, 0.911, 0.911, 0.869, 0.54), ('S2B', 0.895, 0.895, 0.904, 0.895, 0.35), ('S2C', 0.27, 0.85, 0.85, 0.85, 0.05), ('S3A', 0.303, 0.846, 0.911, 1.0, 0.18), ('S3B', 0.895, 0.895, 0.904, 0.895, 0.35), ('S3C', 0.27, 0.85, 0.85, 0.85, 0.05)]
+RED [('S3', 1.331, 0.919, 0.912, 0.911, 0.6), ('DEV', 2.116, 0.931, 0.901, 0.923, 0.81), ('A3V3', 0.152, 0.88, 0.88, 0.88, 0.07), ('E5V', 0.212, 0.916, 0.919, 0.921, 0.1), ('E3V3', 0.152, 0.66, 0.66, 0.66, 0.26), ('D3V3', 1.072, 0.916, 0.91, 0.916, 0.32), ('KSZ2V5', 0.33, 0.758, 0.758, 0.758, 0.26), ('KSZ1V2', 1.21, 0.85, 0.85, 0.85, 0.26), ('HUB1V1', 0.201, 0.85, 0.85, 0.85, 0.04), ('IOC', 0.393, 0.647, 0.647, 0.647, 0.71), ('S3B', 0.38, 0.859, 0.867, 0.859, 0.21), ('S3C', 0.27, 0.85, 0.85, 0.85, 0.05)]
+ALLTX [('S1', 4.648, 0.911, 0.904, 0.928, 2.32), ('S2', 3.893, 0.918, 0.911, 0.936, 1.78), ('S3', 2.922, 0.928, 0.904, 0.935, 1.15), ('DEV', 5.889, 0.908, 0.901, 0.92, 3.04), ('A3V3', 0.303, 0.88, 0.88, 0.88, 0.14), ('PA', 5.435, 0.983, 0.98, 0.986, 1.31), ('HF', 1.0, 0.961, 0.955, 0.96, 0.49), ('E5V', 0.212, 0.916, 0.919, 0.921, 0.1), ('E3V3', 0.152, 0.66, 0.66, 0.66, 0.26), ('D3V3', 1.352, 0.904, 0.902, 0.925, 0.47), ('KSZ2V5', 0.33, 0.758, 0.758, 0.758, 0.26), ('KSZ1V2', 1.21, 0.85, 0.85, 0.85, 0.26), ('HUB1V1', 0.568, 0.85, 0.85, 0.85, 0.11), ('IOC', 0.393, 0.647, 0.647, 0.647, 0.71), ('S1A', 2.758, 0.911, 0.911, 0.911, 0.89), ('S1B', 1.209, 0.904, 0.904, 0.895, 0.42), ('S1C', 0.676, 0.85, 0.85, 0.85, 0.12), ('S2A', 1.694, 0.911, 0.911, 0.911, 0.54), ('S2B', 1.209, 0.904, 0.904, 0.895, 0.42), ('S2C', 0.676, 0.85, 0.85, 0.85, 0.12), ('S3A', 0.303, 0.846, 0.911, 1.0, 0.18), ('S3B', 1.209, 0.904, 0.904, 0.895, 0.42), ('S3C', 0.676, 0.85, 0.85, 0.85, 0.12)]
+== runtime, 4S3P, +20 C (factor 1.00): hours new / aged 80 % / aged 60 %; cold bracket new
+PS-IDLE      {'lo': (4.4, 3.52, 2.64), 'plan': (3.41, 2.73, 2.04), 'hi': (1.62, 1.29, 0.97)}
+PS-IDLE-SPEC {'lo': (4.11, 3.29, 2.47), 'plan': (3.16, 2.52, 1.89), 'hi': (1.59, 1.28, 0.96)}
+PS-TYP       {'lo': (2.87, 2.3, 1.72), 'plan': (2.12, 1.7, 1.27), 'hi': (1.07, 0.86, 0.64)}
+PS-BUSY      {'lo': (2.46, 1.96, 1.47), 'plan': (1.43, 1.14, 0.86), 'hi': (0.95, 0.76, 0.57)}
+PS-RED       {'lo': (10.82, 8.65, 6.49), 'plan': (6.15, 4.92, 3.69), 'hi': (2.94, 2.35, 1.76)}
+PS-RED-b     {'lo': (5.06, 4.05, 3.04), 'plan': (3.8, 3.04, 2.28), 'hi': (1.86, 1.49, 1.12)}
+PS-EMCON     {'lo': (3.63, 2.91, 2.18), 'plan': (2.53, 2.03, 1.52), 'hi': (1.26, 1.01, 0.76)}
+PS-ALLTX     {'lo': (0.74, 0.6, 0.45), 'plan': (0.61, 0.49, 0.36), 'hi': (0.44, 0.35, 0.26)}
+IDLESPEC derating chain (plan, new): [('12 cells x 3.35 Ah x 3.60 V (spec minimum, 0.2C, 2.65 V, 23 C)', 144.7), ('x rate factor 0.997 at 0.99 A per cell (7.8)', 144.2), ('x average voltage (3.60 - 0.99 x 0.050) / 3.60 (sag, INFERRED)', 142.2), ('x temperature factor 1.00', 142.2), ('x ageing 1.00', 142.2), ('x (1 - 5 percent shutdown reserve, INFERRED)', 135.1)]
+IDLESPEC derating chain (plan, aged 80): [('12 cells x 3.35 Ah x 3.60 V (spec minimum, 0.2C, 2.65 V, 23 C)', 144.7), ('x rate factor 0.997 at 0.99 A per cell (7.8)', 144.2), ('x average voltage (3.60 - 0.99 x 0.050) / 3.60 (sag, INFERRED)', 142.2), ('x temperature factor 1.00', 142.2), ('x ageing 0.80', 113.8), ('x (1 - 5 percent shutdown reserve, INFERRED)', 108.1)]
+TYP derating chain (plan, new): [('12 cells x 3.35 Ah x 3.60 V (spec minimum, 0.2C, 2.65 V, 23 C)', 144.7), ('x rate factor 0.991 at 1.46 A per cell (7.8)', 143.5), ('x average voltage (3.60 - 1.46 x 0.050) / 3.60 (sag, INFERRED)', 140.6), ('x temperature factor 1.00', 140.6), ('x ageing 1.00', 140.6), ('x (1 - 5 percent shutdown reserve, INFERRED)', 133.5)]
+TYP derating chain (plan, aged 80): [('12 cells x 3.35 Ah x 3.60 V (spec minimum, 0.2C, 2.65 V, 23 C)', 144.7), ('x rate factor 0.991 at 1.46 A per cell (7.8)', 143.5), ('x average voltage (3.60 - 1.46 x 0.050) / 3.60 (sag, INFERRED)', 140.6), ('x temperature factor 1.00', 140.6), ('x ageing 0.80', 112.5), ('x (1 - 5 percent shutdown reserve, INFERRED)', 106.8)]
+variant IDLESPEC_link_off: plan 36.9 W -> 3.68 h new, 2.94 h aged
+variant IDLE_link_off: plan 33.8 W -> 4.02 h new, 3.22 h aged
+variant TYP_standby_card_off: plan 61.7 W -> 2.17 h new, 1.73 h aged
+variant ALLTX_standby_card_off: plan 202.5 W -> 0.61 h new, 0.49 h aged
+variant ALLTX_non_tx_at_typical: plan 181.3 W -> 0.69 h new, 0.55 h aged
+== D-11: stack voltage under load that keeps all-transmit at 18 A, and the rest voltage that gives it
+ALLTX plan {"battery_W": 203.82, "vbat_W": 199.31, "V_vbat_at_18A": 11.07, "V_stack_at_18A": 11.48, "by_R_cell": {"lo": {"R_cell": 0.035, "V_rest_pack": 12.32, "V_rest_cell": 3.079, "feasible_at_full_charge": true, "V_rest_pack_prev_method": 12.49}, "plan": {"R_cell": 0.05, "V_rest_pack": 12.68, "V_rest_cell": 3.169, "feasible_at_full_charge": true, "V_rest_pack_prev_method": 12.85}, "hi": {"R_cell": 0.06, "V_rest_pack": 12.92, "V_rest_cell": 3.229, "feasible_at_full_charge": true, "V_rest_pack_prev_method": 13.09}}, "I_at_V_stack": {"16.8": 12.1, "14.4": 14.2, "12.0": 17.2, "10.6": 19.6, "10.0": 20.9}, "R_cell_max_that_15V5_covers": 0.1676, "V_stack_at_I": {"10.0": 20.16, "18.0": 11.48, "20.0": 10.42, "25.0": 8.54}, "margin_V_at_R_hi": 2.58}
+ALLTX high {"battery_W": 272.03, "vbat_W": 264.0, "V_vbat_at_18A": 14.67, "V_stack_at_18A": 15.07, "by_R_cell": {"lo": {"R_cell": 0.035, "V_rest_pack": 15.91, "V_rest_cell": 3.978, "feasible_at_full_charge": true, "V_rest_pack_prev_method": 16.26}, "plan": {"R_cell": 0.05, "V_rest_pack": 16.27, "V_rest_cell": 4.068, "feasible_at_full_charge": true, "V_rest_pack_prev_method": 16.62}, "hi": {"R_cell": 0.06, "V_rest_pack": 16.51, "V_rest_cell": 4.128, "feasible_at_full_charge": true, "V_rest_pack_prev_method": 16.86}}, "I_at_V_stack": {"16.8": 16.1, "14.4": 18.9, "12.0": 23.0, "10.6": 26.4, "10.0": 28.2}, "R_cell_max_that_15V5_covers": 0.0179, "V_stack_at_I": {"10.0": 26.62, "18.0": 15.07, "20.0": 13.65, "25.0": 11.12}, "margin_V_at_R_hi": -1.01}
+ALLTX, non-transmit loads typical, standby card off (plan) {"battery_W": 181.35, "vbat_W": 177.78, "V_vbat_at_18A": 9.88, "V_stack_at_18A": 10.28, "by_R_cell": {"lo": {"R_cell": 0.035, "V_rest_pack": 11.12, "V_rest_cell": 2.78, "feasible_at_full_charge": true, "V_rest_pack_prev_method": 11.25}, "plan": {"R_cell": 0.05, "V_rest_pack": 11.48, "V_rest_cell": 2.87, "feasible_at_full_charge": true, "V_rest_pack_prev_method": 11.61}, "hi": {"R_cell": 0.06, "V_rest_pack": 11.72, "V_rest_cell": 2.93, "feasible_at_full_charge": true, "V_rest_pack_prev_method": 11.85}}, "I_at_V_stack": {"16.8": 10.7, "14.4": 12.6, "12.0": 15.3, "10.6": 17.4, "10.0": 18.6}, "R_cell_max_that_15V5_covers": 0.2174, "V_stack_at_I": {"10.0": 18.0, "18.0": 10.28, "20.0": 9.34, "25.0": 7.67}, "margin_V_at_R_hi": 3.78}
+ALLTX, non-transmit loads typical, standby card off (high) {"battery_W": 247.48, "vbat_W": 240.83, "V_vbat_at_18A": 13.38, "V_stack_at_18A": 13.78, "by_R_cell": {"lo": {"R_cell": 0.035, "V_rest_pack": 14.62, "V_rest_cell": 3.656, "feasible_at_full_charge": true, "V_rest_pack_prev_method": 14.91}, "plan": {"R_cell": 0.05, "V_rest_pack": 14.98, "V_rest_cell": 3.746, "feasible_at_full_charge": true, "V_rest_pack_prev_method": 15.27}, "hi": {"R_cell": 0.06, "V_rest_pack": 15.22, "V_rest_cell": 3.806, "feasible_at_full_charge": true, "V_rest_pack_prev_method": 15.51}}, "I_at_V_stack": {"16.8": 14.6, "14.4": 17.2, "12.0": 20.9, "10.6": 23.9, "10.0": 25.6}, "R_cell_max_that_15V5_covers": 0.0715, "V_stack_at_I": {"10.0": 24.31, "18.0": 13.78, "20.0": 12.49, "25.0": 10.2}, "margin_V_at_R_hi": 0.28}
+D-11 basis with the heater on: {"1f614233, unregulated mat": {"heater_W": 10.12, "V_vbat_at_18A": 13.94, "V_stack_at_18A": 14.35, "V_rest_pack": {"lo": 15.19, "plan": 15.55, "hi": 15.79}, "R_cell_max_that_15V5_covers": 0.048}, "main since 458b2873, regulated 12 V": {"heater_W": 8.52, "V_vbat_at_18A": 13.85, "V_stack_at_18A": 14.26, "V_rest_pack": {"lo": 15.1, "plan": 15.46, "hi": 15.7}, "R_cell_max_that_15V5_covers": 0.0518}}
+PA alone over PS-TYP, PA at 75 W (plan) {"battery_W": 143.91, "vbat_W": 141.67, "V_stack_at_18A": 8.28, "V_rest_pack": {"lo": 9.12, "plan": 9.48, "hi": 9.72}, "R_cell_max_that_PA_floor_covers": 0.1719, "V_stack_at_I": {"10.0": 14.39, "18.0": 8.28, "20.0": 7.53}, "I_at_V_stack": {"16.8": 8.5, "14.4": 10.0, "12.0": 12.1, "10.0": 14.6}}
+PA alone over PS-TYP, PA at 113 W, the rest at plan {"battery_W": 183.96, "vbat_W": 180.29, "V_stack_at_18A": 10.42, "V_rest_pack": {"lo": 11.26, "plan": 11.62, "hi": 11.86}, "R_cell_max_that_PA_floor_covers": 0.0824, "V_stack_at_I": {"10.0": 18.25, "18.0": 10.42, "20.0": 9.46}, "I_at_V_stack": {"16.8": 10.9, "14.4": 12.8, "12.0": 15.5, "10.0": 18.8}}
+PA alone over PS-TYP, every load at its maximum {"battery_W": 243.46, "vbat_W": 237.03, "V_stack_at_18A": 13.57, "V_rest_pack": {"lo": 14.41, "plan": 14.77, "hi": 15.01}, "R_cell_max_that_PA_floor_covers": -0.0489, "V_stack_at_I": {"10.0": 23.93, "18.0": 13.57, "20.0": 12.3}, "I_at_V_stack": {"16.8": 14.4, "14.4": 16.9, "12.0": 20.5, "10.0": 25.1}}
+PA alone over PS-IDLE-SPEC, PA at 113 W, the rest at plan {"battery_W": 162.28, "vbat_W": 159.42, "V_stack_at_18A": 9.26, "V_rest_pack": {"lo": 10.1, "plan": 10.46, "hi": 10.7}, "R_cell_max_that_PA_floor_covers": 0.1308, "V_stack_at_I": {"10.0": 16.17, "18.0": 9.26, "20.0": 8.42}, "I_at_V_stack": {"16.8": 9.6, "14.4": 11.3, "12.0": 13.6, "10.0": 16.6}}
+main's pack path with R17 (S-04): {"R_DIST_ohm": 0.0225, "R_DIST_main_ohm": 0.0275, "R17_ohm": 0.005, "R17_W_at_A": {"10.0": 0.5, "18.0": 1.62, "20.0": 2.0}, "rest_voltage_shift_V_at_18A": 0.09, "all-transmit basis: non-transmit typical, standby card off, high": {"vbat_W": 240.83, "floor_V": 15.5, "V_stack_at_18A": 13.87, "V_rest_pack": {"lo": 14.71, "plan": 15.07, "hi": 15.31}, "margin_V_at_R_hi": 0.19, "R_cell_max_that_floor_covers": 0.0677}, "the same with main's regulated heater on": {"vbat_W": 249.35, "floor_V": 15.5, "V_stack_at_18A": 14.35, "V_rest_pack": {"lo": 15.19, "plan": 15.55, "hi": 15.79}, "margin_V_at_R_hi": -0.29, "R_cell_max_that_floor_covers": 0.048}, "PA alone over PS-TYP, PA at 113 W, the rest at plan": {"vbat_W": 180.29, "floor_V": 12.4, "V_stack_at_18A": 10.51, "V_rest_pack": {"lo": 11.35, "plan": 11.71, "hi": 11.95}, "margin_V_at_R_hi": 0.45, "R_cell_max_that_floor_covers": 0.0787}}
+key-down heating: {"lo": {"pack_I2R_W_at_18A": 15.1, "K_per_min_adiabatic": [1.37, 1.89]}, "plan": {"pack_I2R_W_at_18A": 21.6, "K_per_min_adiabatic": [1.96, 2.7]}, "hi": {"pack_I2R_W_at_18A": 25.9, "K_per_min_adiabatic": [2.36, 3.24]}} {"heat_W": 45.0, "plate_J_per_K": 403.0, "K_per_min": 6.7, "case_limit_C": 100.0}
+the record's key-down (32.53 line 2860) against the cells: {"peak_W": 200.0, "mass_J_per_K": [8000.0, 10000.0], "stated_rise_K": 10.0, "K_per_min_lumped": [1.2, 1.5], "s_to_plus_10K_lumped": [400, 500], "cells_J_per_K": [480, 660], "cells_share_of_record_mass_pct": [4.8, 8.2], "s_to_use_5K_cells_at_18A": [93, 219]}
+the record's plate patch (32.56 line 2940) against the PA's case: {"patch_J_per_K": 60.0, "record": "32.56 line 2940: 20 s at 45 W, +15 K at the local patch", "T_keyon_C": 50.0, "T_case_reliability_C": 90.0, "T_case_rated_C": 100.0, "T_flange_gate_C": 75.0, "T_flange_cut_C": 85.0, "by_heat": {"45 W: 30 W out at the sheet's 40 % minimum (32.52 item 6, 32.56)": {"heat_W": 45.0, "K_per_s_patch_linear": 0.75, "patch_C_after_s": {"20": 65.0, "30": 72.5, "60": 95.0}, "s_from_keyon_to": {"cut_85C": 46.7, "reliability_90C": 53.3, "rated_100C": 66.7}, "s_from_gate_to_cut": 13.3, "whole_plate_K_per_60s": {"W4_403_J_per_K": 6.7, "record_660_J_per_K": 4.1}}, "68 W: F-PR-02's 113 W in, 45 W out at 40 %": {"heat_W": 68.0, "K_per_s_patch_linear": 1.133, "patch_C_after_s": {"20": 72.7, "30": 84.0, "60": 118.0}, "s_from_keyon_to": {"cut_85C": 30.9, "reliability_90C": 35.3, "rated_100C": 44.1}, "s_from_gate_to_cut": 8.8, "whole_plate_K_per_60s": {"W4_403_J_per_K": 10.1, "record_660_J_per_K": 6.2}}, "83 W: 113 W in at 30 W out, outside the sheet's 40 % condition": {"heat_W": 83.0, "K_per_s_patch_linear": 1.383, "patch_C_after_s": {"20": 77.7, "30": 91.5, "60": 133.0}, "s_from_keyon_to": {"cut_85C": 25.3, "reliability_90C": 28.9, "rated_100C": 36.1}, "s_from_gate_to_cut": 7.2, "whole_plate_K_per_60s": {"W4_403_J_per_K": 12.4, "record_660_J_per_K": 7.5}}}}
+== thermal: inside-air rise (K) per state = (battery W + pack I2R) / conductance
+PS-IDLE open_fans {"enclosure": "open_fans", "G_bound": [1.22, 2.85], "heat_plan_W": 40.2, "heat_high_W": 84.2, "pack_I2R_plan_W": 0.51, "rise_plan_K": [14.1, 33.0], "rise_worst_K": 69.1, "rise_3253_G_plan_K": [12.2, 13.4]}
+PS-IDLE-SPEC open_fans {"enclosure": "open_fans", "G_bound": [1.22, 2.85], "heat_plan_W": 43.4, "heat_high_W": 85.4, "pack_I2R_plan_W": 0.59, "rise_plan_K": [15.2, 35.6], "rise_worst_K": 70.0, "rise_3253_G_plan_K": [13.2, 14.5]}
+PS-TYP open_fans {"enclosure": "open_fans", "G_bound": [1.22, 2.85], "heat_plan_W": 64.2, "heat_high_W": 126.2, "pack_I2R_plan_W": 1.27, "rise_plan_K": [22.5, 52.7], "rise_worst_K": 103.4, "rise_3253_G_plan_K": [19.5, 21.4]}
+PS-BUSY open_fans {"enclosure": "open_fans", "G_bound": [1.22, 2.85], "heat_plan_W": 94.7, "heat_high_W": 141.4, "pack_I2R_plan_W": 2.72, "rise_plan_K": [33.2, 77.6], "rise_worst_K": 115.9, "rise_3253_G_plan_K": [28.7, 31.6]}
+PS-RED closed_fans {"enclosure": "closed_fans", "G_bound": [1.06, 2.49], "heat_plan_W": 22.4, "heat_high_W": 46.7, "pack_I2R_plan_W": 0.16, "rise_plan_K": [9.0, 21.1], "rise_worst_K": 44.0, "rise_3253_G_plan_K": [11.2, 14.9]}
+PS-RED-b closed_fans {"enclosure": "closed_fans", "G_bound": [1.06, 2.49], "heat_plan_W": 36.1, "heat_high_W": 73.5, "pack_I2R_plan_W": 0.41, "rise_plan_K": [14.5, 34.1], "rise_worst_K": 69.3, "rise_3253_G_plan_K": [18.1, 24.1]}
+PS-EMCON open_fans {"enclosure": "open_fans", "G_bound": [1.22, 2.85], "heat_plan_W": 54.0, "heat_high_W": 107.4, "pack_I2R_plan_W": 0.91, "rise_plan_K": [18.9, 44.2], "rise_worst_K": 88.0, "rise_3253_G_plan_K": [16.4, 18.0]}
+PS-ALLTX open_fans {"enclosure": "open_fans", "G_bound": [1.22, 2.85], "heat_plan_W": 217.2, "heat_high_W": 300.6, "pack_I2R_plan_W": 13.36, "rise_plan_K": [76.2, 178.0], "rise_worst_K": 246.4, "rise_3253_G_plan_K": [65.8, 72.4]}
+PS-TYP, lid open, fans off {"enclosure": "open_still", "G_bound": [0.77, 1.57], "G_3253": [2.1, 2.1], "heat_plan_W": 64.2, "heat_high_W": 126.2, "rise_plan_K": [40.9, 83.4], "rise_worst_K": 163.9, "rise_3253_G_plan_K": [30.6, 30.6], "fans_own_battery_W": [3.11, 4.9], "overstatement_K_3253": [1.5, 2.3], "overstatement_K_W4": [2.0, 4.0], "air_cells_20C_3253_fans_counted": [50.6, 54.9], "air_cells_20C_3253_fans_drawing_nothing": [49.0, 52.9]}
+charge overlay: {"I_charge_A": 3.0, "P_into_pack_W": 46.5, "charge_path_heat_W": [2.4, 3.4], "pack_I2R_W": [0.42, 0.72]}
+ambient ceilings (worst, best on the W4 bound; 32.53 G): PS-IDLE-SPEC, lid open, fans
+      ('SGP41 (battery-bay VOC), absolute operating max', 55.0, 19.4, 39.8, (40.5, 41.8), '')
+      ('cells, charge (cell surface)', 45.0, -0.1, 26.8, (26.6, 28.1), '')
+      ('cells, discharge (cell surface)', 60.0, 20.4, 43.4, (43.5, 44.9), '')
+      ('AW7915-AED WiFi card (inside air only; own rise TBD)', 70.0, 34.4, 54.8, (55.5, 56.8), '')
+      ('LimeSDR Mini v2.4 (inside air only; own rise TBD)', 70.0, 34.4, 54.8, (55.5, 56.8), '')
+      ('SA868 VHF module (inside air only)', 70.0, 34.4, 54.8, (55.5, 56.8), '')
+      ('Xenarc 709GNK (inside air only)', 70.0, 34.4, 54.8, (55.5, 56.8), '')
+      ('RM520N-GL 3GPP range (inside air only; own rise TBD)', 75.0, 39.4, 59.8, (60.5, 61.8), '')
+      ('commercial NVMe 0 to 70 C (inside air only)', 70.0, 34.4, 54.8, (55.5, 56.8), '')
+ambient ceilings (worst, best on the W4 bound; 32.53 G): PS-TYP, lid open, fans
+      ('SGP41 (battery-bay VOC), absolute operating max', 55.0, 2.4, 32.5, (33.6, 35.5), '')
+      ('cells, charge (cell surface)', 45.0, -17.8, 19.4, (19.5, 21.6), '')
+      ('cells, discharge (cell surface)', 60.0, -1.3, 34.6, (34.3, 36.2), '')
+      ('AW7915-AED WiFi card (inside air only; own rise TBD)', 70.0, 17.4, 47.5, (48.6, 50.5), '')
+      ('LimeSDR Mini v2.4 (inside air only; own rise TBD)', 70.0, 17.4, 47.5, (48.6, 50.5), '')
+      ('SA868 VHF module (inside air only)', 70.0, 17.4, 47.5, (48.6, 50.5), '')
+      ('Xenarc 709GNK (inside air only)', 70.0, 17.4, 47.5, (48.6, 50.5), '')
+      ('RM520N-GL 3GPP range (inside air only; own rise TBD)', 75.0, 22.4, 52.5, (53.6, 55.5), '')
+      ('commercial NVMe 0 to 70 C (inside air only)', 70.0, 17.4, 47.5, (48.6, 50.5), '')
+ambient ceilings (worst, best on the W4 bound; 32.53 G): PS-TYP, lid open, fans off
+      ('SGP41 (battery-bay VOC), absolute operating max', 55.0, -28.4, 14.1, (24.4, 24.4), '')
+      ('cells, charge (cell surface)', 45.0, -52.1, -0.5, (9.4, 9.4), '')
+      ('cells, discharge (cell surface)', 60.0, -32.0, 16.2, (25.1, 25.1), '')
+      ('AW7915-AED WiFi card (inside air only; own rise TBD)', 70.0, -13.4, 29.1, (39.4, 39.4), '')
+      ('LimeSDR Mini v2.4 (inside air only; own rise TBD)', 70.0, -13.4, 29.1, (39.4, 39.4), '')
+      ('SA868 VHF module (inside air only)', 70.0, -13.4, 29.1, (39.4, 39.4), '')
+      ('Xenarc 709GNK (inside air only)', 70.0, -13.4, 29.1, (39.4, 39.4), '')
+      ('RM520N-GL 3GPP range (inside air only; own rise TBD)', 75.0, -8.4, 34.1, (44.4, 44.4), '')
+      ('commercial NVMe 0 to 70 C (inside air only)', 70.0, -13.4, 29.1, (39.4, 39.4), '')
+ambient ceilings (worst, best on the W4 bound; 32.53 G): PS-TYP plus both outlets, lid open, fans
+      ('SGP41 (battery-bay VOC), absolute operating max', 55.0, -10.6, 26.9, (28.3, 30.7), '')
+      ('cells, charge (cell surface)', 45.0, None, None, None, "not charging: the outlets take the input's headroom")
+      ('cells, discharge (cell surface)', 60.0, -54.6, 15.6, (8.8, 11.3), '')
+      ('AW7915-AED WiFi card (inside air only; own rise TBD)', 70.0, 4.4, 41.9, (43.3, 45.7), '')
+      ('LimeSDR Mini v2.4 (inside air only; own rise TBD)', 70.0, 4.4, 41.9, (43.3, 45.7), '')
+      ('SA868 VHF module (inside air only)', 70.0, 4.4, 41.9, (43.3, 45.7), '')
+      ('Xenarc 709GNK (inside air only)', 70.0, 4.4, 41.9, (43.3, 45.7), '')
+      ('RM520N-GL 3GPP range (inside air only; own rise TBD)', 75.0, 9.4, 46.9, (48.3, 50.7), '')
+      ('commercial NVMe 0 to 70 C (inside air only)', 70.0, 4.4, 41.9, (43.3, 45.7), '')
+ambient ceilings (worst, best on the W4 bound; 32.53 G): PS-BUSY, lid open, fans
+      ('SGP41 (battery-bay VOC), absolute operating max', 55.0, -22.6, 21.8, (23.4, 26.3), '')
+      ('cells, charge (cell surface)', 45.0, -43.4, 8.6, (9.2, 12.3), '')
+      ('cells, discharge (cell surface)', 60.0, -36.0, 20.6, (19.2, 22.1), '')
+      ('AW7915-AED WiFi card (inside air only; own rise TBD)', 70.0, -7.6, 36.8, (38.4, 41.3), '')
+      ('LimeSDR Mini v2.4 (inside air only; own rise TBD)', 70.0, -7.6, 36.8, (38.4, 41.3), '')
+      ('SA868 VHF module (inside air only)', 70.0, -7.6, 36.8, (38.4, 41.3), '')
+      ('Xenarc 709GNK (inside air only)', 70.0, -7.6, 36.8, (38.4, 41.3), '')
+      ('RM520N-GL 3GPP range (inside air only; own rise TBD)', 75.0, -2.6, 41.8, (43.4, 46.3), '')
+      ('commercial NVMe 0 to 70 C (inside air only)', 70.0, -7.6, 36.8, (38.4, 41.3), '')
+ambient ceilings (worst, best on the W4 bound; 32.53 G): PS-EMCON, lid open, fans
+      ('SGP41 (battery-bay VOC), absolute operating max', 55.0, 10.8, 36.1, (37.0, 38.6), '')
+      ('cells, charge (cell surface)', 45.0, -9.1, 23.0, (23.0, 24.8), '')
+      ('cells, discharge (cell surface)', 60.0, 9.7, 39.0, (39.0, 40.6), '')
+      ('AW7915-AED WiFi card (inside air only; own rise TBD)', 70.0, 25.8, 51.1, (52.0, 53.6), '')
+      ('LimeSDR Mini v2.4 (inside air only; own rise TBD)', 70.0, 25.8, 51.1, (52.0, 53.6), '')
+      ('SA868 VHF module (inside air only)', 70.0, 25.8, 51.1, (52.0, 53.6), '')
+      ('Xenarc 709GNK (inside air only)', 70.0, 25.8, 51.1, (52.0, 53.6), '')
+      ('RM520N-GL 3GPP range (inside air only; own rise TBD)', 75.0, 30.8, 56.1, (57.0, 58.6), '')
+      ('commercial NVMe 0 to 70 C (inside air only)', 70.0, 25.8, 51.1, (52.0, 53.6), '')
+ambient ceilings (worst, best on the W4 bound; 32.53 G): PS-RED, lid closed, fans
+      ('SGP41 (battery-bay VOC), absolute operating max', 55.0, 33.9, 46.0, (40.1, 43.8), '')
+      ('cells, charge (cell surface)', 45.0, 14.6, 33.1, (24.9, 29.4), '')
+      ('cells, discharge (cell surface)', 60.0, 37.8, 50.7, (44.6, 48.3), '')
+      ('AW7915-AED WiFi card (inside air only; own rise TBD)', 70.0, 48.9, 61.0, (55.1, 58.8), '')
+      ('LimeSDR Mini v2.4 (inside air only; own rise TBD)', 70.0, 48.9, 61.0, (55.1, 58.8), '')
+      ('SA868 VHF module (inside air only)', 70.0, 48.9, 61.0, (55.1, 58.8), '')
+      ('Xenarc 709GNK (inside air only)', 70.0, 48.9, 61.0, (55.1, 58.8), '')
+      ('RM520N-GL 3GPP range (inside air only; own rise TBD)', 75.0, 53.9, 66.0, (60.1, 63.8), '')
+      ('commercial NVMe 0 to 70 C (inside air only)', 70.0, 48.9, 61.0, (55.1, 58.8), '')
+ambient ceilings (worst, best on the W4 bound; 32.53 G): PS-RED, lid open, fans
+      ('SGP41 (battery-bay VOC), absolute operating max', 55.0, 36.7, 47.2, (47.5, 48.2), '')
+      ('cells, charge (cell surface)', 45.0, 18.1, 34.4, (33.9, 34.8), '')
+      ('cells, discharge (cell surface)', 60.0, 40.6, 51.8, (52.0, 52.7), '')
+      ('AW7915-AED WiFi card (inside air only; own rise TBD)', 70.0, 51.7, 62.2, (62.5, 63.2), '')
+      ('LimeSDR Mini v2.4 (inside air only; own rise TBD)', 70.0, 51.7, 62.2, (62.5, 63.2), '')
+      ('SA868 VHF module (inside air only)', 70.0, 51.7, 62.2, (62.5, 63.2), '')
+      ('Xenarc 709GNK (inside air only)', 70.0, 51.7, 62.2, (62.5, 63.2), '')
+      ('RM520N-GL 3GPP range (inside air only; own rise TBD)', 75.0, 56.7, 67.2, (67.5, 68.2), '')
+      ('commercial NVMe 0 to 70 C (inside air only)', 70.0, 51.7, 62.2, (62.5, 63.2), '')
+ambient ceilings (worst, best on the W4 bound; 32.53 G): PS-RED-b, lid closed, fans
+      ('SGP41 (battery-bay VOC), absolute operating max', 55.0, 20.9, 40.5, (30.9, 36.9), '')
+      ('cells, charge (cell surface)', 45.0, 1.0, 27.4, (15.3, 22.2), '')
+      ('cells, discharge (cell surface)', 60.0, 23.2, 44.6, (34.5, 40.6), '')
+      ('AW7915-AED WiFi card (inside air only; own rise TBD)', 70.0, 35.9, 55.5, (45.9, 51.9), '')
+      ('LimeSDR Mini v2.4 (inside air only; own rise TBD)', 70.0, 35.9, 55.5, (45.9, 51.9), '')
+      ('SA868 VHF module (inside air only)', 70.0, 35.9, 55.5, (45.9, 51.9), '')
+      ('Xenarc 709GNK (inside air only)', 70.0, 35.9, 55.5, (45.9, 51.9), '')
+      ('RM520N-GL 3GPP range (inside air only; own rise TBD)', 75.0, 40.9, 60.5, (50.9, 56.9), '')
+      ('commercial NVMe 0 to 70 C (inside air only)', 70.0, 35.9, 55.5, (45.9, 51.9), '')
+== allowed modes: pack current (A) at stack 16.8 / 14.4 / 12.0 / 10.0 V, plan and high; heat; cells at +20 C
+PS-IDLE {"battery_W_plan": 39.7, "battery_W_high": 81.7, "outside_W": 0.0, "enclosure": "open_fans", "limit_C": 60.0, "I_plan": {"16.8": 2.4, "14.4": 2.8, "12.0": 3.3, "10.0": 4.0}, "I_high": {"16.8": 4.8, "14.4": 5.7, "12.0": 6.8, "10.0": 8.2}, "V_below_which_over_cont_plan": 4.18, "V_below_which_over_peak_plan": 2.6, "V_below_which_over_cont_high": 8.32, "V_below_which_over_peak_high": 4.9, "heat_inside_plan_W": 40.2, "pack_I2R_W": 0.51, "cells_20C_W4": [35.3, 56.4], "cells_20C_3253": [33.9, 35.1], "ceiling_W4": [23.6, 44.7], "ceiling_3253": [44.9, 46.1]}
+PS-IDLE-SPEC {"battery_W_plan": 42.8, "battery_W_high": 82.8, "outside_W": 0.0, "enclosure": "open_fans", "limit_C": 60.0, "I_plan": {"16.8": 2.5, "14.4": 3.0, "12.0": 3.6, "10.0": 4.3}, "I_high": {"16.8": 4.9, "14.4": 5.7, "12.0": 6.9, "10.0": 8.4}, "V_below_which_over_cont_plan": 4.49, "V_below_which_over_peak_plan": 2.77, "V_below_which_over_cont_high": 8.43, "V_below_which_over_peak_high": 4.96, "heat_inside_plan_W": 43.4, "pack_I2R_W": 0.59, "cells_20C_W4": [36.6, 59.6], "cells_20C_3253": [35.1, 36.5], "ceiling_W4": [20.4, 43.4], "ceiling_3253": [43.5, 44.9]}
+PS-EMCON {"battery_W_plan": 53.1, "battery_W_high": 103.3, "outside_W": 0.0, "enclosure": "open_fans", "limit_C": 60.0, "I_plan": {"16.8": 3.2, "14.4": 3.7, "12.0": 4.4, "10.0": 5.3}, "I_high": {"16.8": 6.1, "14.4": 7.2, "12.0": 8.6, "10.0": 10.5}, "V_below_which_over_cont_plan": 5.5, "V_below_which_over_peak_plan": 3.34, "V_below_which_over_cont_high": 10.44, "V_below_which_over_peak_high": 6.08, "heat_inside_plan_W": 54.0, "pack_I2R_W": 0.9, "cells_20C_W4": [41.0, 70.3], "cells_20C_3253": [39.4, 41.0], "ceiling_W4": [9.7, 39.0], "ceiling_3253": [39.0, 40.6]}
+PS-RED, lid closed {"battery_W_plan": 22.2, "battery_W_high": 45.9, "outside_W": 0.0, "enclosure": "closed_fans", "limit_C": 60.0, "I_plan": {"16.8": 1.3, "14.4": 1.5, "12.0": 1.9, "10.0": 2.2}, "I_high": {"16.8": 2.7, "14.4": 3.2, "12.0": 3.8, "10.0": 4.6}, "V_below_which_over_cont_plan": 2.44, "V_below_which_over_peak_plan": 1.64, "V_below_which_over_cont_high": 4.79, "V_below_which_over_peak_high": 2.94, "heat_inside_plan_W": 22.4, "pack_I2R_W": 0.16, "cells_20C_W4": [29.3, 42.2], "cells_20C_3253": [31.7, 35.4], "ceiling_W4": [37.8, 50.7], "ceiling_3253": [44.6, 48.3]}
+PS-RED-b, lid closed {"battery_W_plan": 35.7, "battery_W_high": 71.5, "outside_W": 0.0, "enclosure": "closed_fans", "limit_C": 60.0, "I_plan": {"16.8": 2.1, "14.4": 2.5, "12.0": 3.0, "10.0": 3.6}, "I_high": {"16.8": 4.2, "14.4": 5.0, "12.0": 6.0, "10.0": 7.2}, "V_below_which_over_cont_plan": 3.78, "V_below_which_over_peak_plan": 2.38, "V_below_which_over_cont_high": 7.32, "V_below_which_over_peak_high": 4.35, "heat_inside_plan_W": 36.1, "pack_I2R_W": 0.41, "cells_20C_W4": [35.4, 56.8], "cells_20C_3253": [39.4, 45.5], "ceiling_W4": [23.2, 44.6], "ceiling_3253": [34.5, 40.6]}
+PS-TYP {"battery_W_plan": 63.0, "battery_W_high": 120.6, "outside_W": 0.0, "enclosure": "open_fans", "limit_C": 60.0, "I_plan": {"16.8": 3.7, "14.4": 4.4, "12.0": 5.3, "10.0": 6.3}, "I_high": {"16.8": 7.2, "14.4": 8.4, "12.0": 10.1, "10.0": 12.2}, "V_below_which_over_cont_plan": 6.48, "V_below_which_over_peak_plan": 3.88, "V_below_which_over_cont_high": 12.12, "V_below_which_over_peak_high": 7.02, "heat_inside_plan_W": 64.2, "pack_I2R_W": 1.27, "cells_20C_W4": [45.4, 81.3], "cells_20C_3253": [43.8, 45.7], "ceiling_W4": [-1.3, 34.6], "ceiling_3253": [34.3, 36.2]}
+PS-TYP plus PoE {"battery_W_plan": 100.4, "battery_W_high": 158.5, "outside_W": 32.4, "enclosure": "open_fans", "limit_C": 60.0, "I_plan": {"16.8": 6.0, "14.4": 7.0, "12.0": 8.4, "10.0": 10.2}, "I_high": {"16.8": 9.4, "14.4": 11.0, "12.0": 13.3, "10.0": 16.2}, "V_below_which_over_cont_plan": 10.16, "V_below_which_over_peak_plan": 5.92, "V_below_which_over_cont_high": 15.81, "V_below_which_over_peak_high": 9.06, "heat_inside_plan_W": 71.3, "pack_I2R_W": 3.24, "cells_20C_W4": [52.3, 100.3], "cells_20C_3253": [52.6, 54.7], "ceiling_W4": [-20.3, 27.7], "ceiling_3253": [25.3, 27.4]}
+PS-TYP plus USB-C {"battery_W_plan": 112.3, "battery_W_high": 170.5, "outside_W": 45.0, "enclosure": "open_fans", "limit_C": 60.0, "I_plan": {"16.8": 6.7, "14.4": 7.8, "12.0": 9.4, "10.0": 11.4}, "I_high": {"16.8": 10.1, "14.4": 11.8, "12.0": 14.3, "10.0": 17.4}, "V_below_which_over_cont_plan": 11.32, "V_below_which_over_peak_plan": 6.57, "V_below_which_over_cont_high": 16.96, "V_below_which_over_peak_high": 9.7, "heat_inside_plan_W": 71.3, "pack_I2R_W": 4.05, "cells_20C_W4": [54.2, 105.8], "cells_20C_3253": [55.3, 57.5], "ceiling_W4": [-25.8, 25.8], "ceiling_3253": [22.5, 24.7]}
+PS-TYP plus both outlets {"battery_W_plan": 150.2, "battery_W_high": 208.9, "outside_W": 77.4, "enclosure": "open_fans", "limit_C": 60.0, "I_plan": {"16.8": 8.9, "14.4": 10.4, "12.0": 12.6, "10.0": 15.3}, "I_high": {"16.8": 12.4, "14.4": 14.5, "12.0": 17.6, "10.0": 21.5}, "V_below_which_over_cont_plan": 15.0, "V_below_which_over_peak_plan": 8.61, "V_below_which_over_cont_high": 20.65, "V_below_which_over_peak_high": 11.75, "heat_inside_plan_W": 80.0, "pack_I2R_W": 7.25, "cells_20C_W4": [64.4, 134.6], "cells_20C_3253": [68.7, 71.2], "ceiling_W4": [-54.6, 15.6], "ceiling_3253": [8.8, 11.3]}
+PS-BUSY {"battery_W_plan": 92.0, "battery_W_high": 134.4, "outside_W": 0.0, "enclosure": "open_fans", "limit_C": 60.0, "I_plan": {"16.8": 5.5, "14.4": 6.4, "12.0": 7.7, "10.0": 9.3}, "I_high": {"16.8": 8.0, "14.4": 9.3, "12.0": 11.3, "10.0": 13.7}, "V_below_which_over_cont_plan": 9.33, "V_below_which_over_peak_plan": 5.47, "V_below_which_over_cont_high": 13.47, "V_below_which_over_peak_high": 7.76, "heat_inside_plan_W": 94.7, "pack_I2R_W": 2.72, "cells_20C_W4": [59.4, 116.0], "cells_20C_3253": [57.9, 60.8], "ceiling_W4": [-36.0, 20.6], "ceiling_3253": [19.2, 22.1]}
+PS-BUSY plus both outlets {"battery_W_plan": 179.8, "battery_W_high": 223.0, "outside_W": 77.4, "enclosure": "open_fans", "limit_C": 60.0, "I_plan": {"16.8": 10.6, "14.4": 12.5, "12.0": 15.1, "10.0": 18.4}, "I_high": {"16.8": 13.2, "14.4": 15.5, "12.0": 18.8, "10.0": 22.9}, "V_below_which_over_cont_plan": 17.85, "V_below_which_over_peak_plan": 10.2, "V_below_which_over_cont_high": 21.99, "V_below_which_over_peak_high": 12.5, "heat_inside_plan_W": 112.8, "pack_I2R_W": 10.39, "cells_20C_W4": [83.0, 182.7], "cells_20C_3253": [89.3, 92.7], "ceiling_W4": [-102.7, -3.0], "ceiling_3253": [-12.7, -9.3]}
+PS-TYP while charging on shore at 3 A {"battery_W_plan": 63.0, "battery_W_high": 120.6, "outside_W": 0.0, "enclosure": "open_fans", "limit_C": 45.0, "heat_inside_plan_W": 70.4, "pack_I2R_W": 0.6, "cells_20C_W4": [45.6, 82.8], "cells_20C_3253": [43.4, 45.5], "ceiling_W4": [-17.8, 19.4], "ceiling_3253": [19.5, 21.6]}
+PA keyed alone over PS-IDLE-SPEC, PA at 75 W {"battery_W_plan": 122.4, "battery_W_high": 203.7, "outside_W": 0.0, "enclosure": "open_fans", "limit_C": 60.0, "I_plan": {"16.8": 7.3, "14.4": 8.5, "12.0": 10.3, "10.0": 12.4}, "I_high": {"16.8": 12.1, "14.4": 14.1, "12.0": 17.2, "10.0": 20.9}, "V_below_which_over_cont_plan": 12.3, "V_below_which_over_peak_plan": 7.12, "V_below_which_over_cont_high": 20.15, "V_below_which_over_peak_high": 11.47, "heat_inside_plan_W": 127.2, "pack_I2R_W": 4.82, "cells_20C_W4": [75.5, 156.8], "cells_20C_3253": [74.8, 78.7], "ceiling_W4": [-76.8, 4.5], "ceiling_3253": [1.3, 5.2], "key_down_I_max_A": 12.4, "key_down_rise_K_per_60s": [0.65, 1.54]}
+PA keyed alone over PS-IDLE-SPEC, PA at 113 W {"battery_W_plan": 162.3, "battery_W_high": 203.7, "outside_W": 0.0, "enclosure": "open_fans", "limit_C": 60.0, "I_plan": {"16.8": 9.6, "14.4": 11.3, "12.0": 13.6, "10.0": 16.6}, "I_high": {"16.8": 12.1, "14.4": 14.1, "12.0": 17.2, "10.0": 20.9}, "V_below_which_over_cont_plan": 16.17, "V_below_which_over_peak_plan": 9.26, "V_below_which_over_cont_high": 20.15, "V_below_which_over_peak_high": 11.47, "heat_inside_plan_W": 170.7, "pack_I2R_W": 8.47, "cells_20C_W4": [99.0, 217.1], "cells_20C_3253": [100.3, 105.5], "ceiling_W4": [-137.1, -19.0], "ceiling_3253": [-25.5, -20.3], "key_down_I_max_A": 16.6, "key_down_rise_K_per_60s": [1.17, 2.76]}
+PA keyed alone over PS-TYP, PA at 75 W {"battery_W_plan": 143.9, "battery_W_high": 243.5, "outside_W": 0.0, "enclosure": "open_fans", "limit_C": 60.0, "I_plan": {"16.8": 8.5, "14.4": 10.0, "12.0": 12.1, "10.0": 14.6}, "I_high": {"16.8": 14.4, "14.4": 16.9, "12.0": 20.5, "10.0": 25.1}, "V_below_which_over_cont_plan": 14.39, "V_below_which_over_peak_plan": 8.28, "V_below_which_over_cont_high": 23.93, "V_below_which_over_peak_high": 13.57, "heat_inside_plan_W": 150.6, "pack_I2R_W": 6.66, "cells_20C_W4": [87.8, 188.4], "cells_20C_3253": [88.1, 92.7], "ceiling_W4": [-108.4, -7.8], "ceiling_3253": [-12.7, -8.1], "key_down_I_max_A": 14.6, "key_down_rise_K_per_60s": [0.9, 2.13]}
+PA keyed alone over PS-TYP, PA at 113 W {"battery_W_plan": 184.0, "battery_W_high": 243.5, "outside_W": 0.0, "enclosure": "open_fans", "limit_C": 60.0, "I_plan": {"16.8": 10.9, "14.4": 12.8, "12.0": 15.5, "10.0": 18.8}, "I_high": {"16.8": 14.4, "14.4": 16.9, "12.0": 20.5, "10.0": 25.1}, "V_below_which_over_cont_plan": 18.25, "V_below_which_over_peak_plan": 10.42, "V_below_which_over_cont_high": 23.93, "V_below_which_over_peak_high": 13.57, "heat_inside_plan_W": 194.8, "pack_I2R_W": 10.88, "cells_20C_W4": [112.9, 253.2], "cells_20C_3253": [115.8, 121.7], "ceiling_W4": [-173.2, -32.9], "ceiling_3253": [-41.7, -35.8], "key_down_I_max_A": 18.0, "key_down_rise_K_per_60s": [1.37, 3.24]}
+PS-TYP plus the heater (cold overlay) {"battery_W_plan": 73.9, "battery_W_high": 135.7, "outside_W": 0.0, "enclosure": "open_fans", "limit_C": 60.0, "I_plan": {"16.8": 4.4, "14.4": 5.1, "12.0": 6.2, "10.0": 7.5}, "I_high": {"16.8": 8.0, "14.4": 9.4, "12.0": 11.4, "10.0": 13.8}, "V_below_which_over_cont_plan": 7.56, "V_below_which_over_peak_plan": 4.48, "V_below_which_over_cont_high": 13.59, "V_below_which_over_peak_high": 7.83, "heat_inside_plan_W": 75.7, "pack_I2R_W": 1.76, "cells_20C_W4": [50.5, 93.9], "cells_20C_3253": [48.9, 51.2], "ceiling_W4": [-13.9, 29.5], "ceiling_3253": [28.8, 31.1], "air_at_minus20C_W4": [42.0, 6.6], "air_at_minus20C_3253": [5.2, 2.9]}
+PS-RED plus the heater (cold overlay), lid closed {"battery_W_plan": 33.1, "battery_W_high": 60.7, "outside_W": 0.0, "enclosure": "closed_fans", "limit_C": 60.0, "I_plan": {"16.8": 2.0, "14.4": 2.3, "12.0": 2.8, "10.0": 3.3}, "I_high": {"16.8": 3.6, "14.4": 4.2, "12.0": 5.1, "10.0": 6.1}, "V_below_which_over_cont_plan": 3.52, "V_below_which_over_peak_plan": 2.24, "V_below_which_over_cont_high": 6.26, "V_below_which_over_peak_high": 3.76, "heat_inside_plan_W": 33.4, "pack_I2R_W": 0.35, "cells_20C_W4": [34.2, 53.9], "cells_20C_3253": [37.9, 43.5], "ceiling_W4": [26.1, 45.8], "ceiling_3253": [36.5, 42.1], "air_at_minus20C_W4": [11.5, -6.6], "air_at_minus20C_3253": [2.3, -3.3]}
+main's R17, the largest shift in section 7.1's discharge rows and the power states: {"battery_W": 1.92, "I_at_10V_A": 0.47, "air_K_W4_lowest_G": 1.58, "air_K_3253_lowest_G": 0.64, "V_below_which_shift_V": {"10 A": 0.05, "18 A": 0.09}}
+cells in PS-TYP at +20 C ambient, lid open, fans (C, best, worst, pack I2R W): (45.4, 81.3, 1.27)
+reconcile: {"IDLE": {"battery_W": 39.73, "load_W": 33.55}, "IDLESPEC": {"battery_W": 42.82, "load_W": 36.45}}
+== shares PS-IDLE-SPEC
+   Xenarc 709GNK                                load   6.00  battery   6.03  T
+   WiFi link card 1 (live)                      load   4.00  battery   4.80  R
+   CM5 slot 2                                   load   2.00  battery   2.22  S
+   CM5 slot 3                                   load   2.00  battery   2.20  S
+   CM5 slot 1                                   load   2.00  battery   2.17  S
+   three STM32H743 supervisors and their parts  load   1.30  battery   2.16  R
+   KSZ9897R AVDDL+DVDDL 1.2 V                   load   1.45  battery   1.84  S
+   panel board C                                load   1.50  battery   1.62  D
+   other +3V3_DEV logic                         load   1.30  battery   1.54  D
+   two mixer fans                               load   1.44  battery   1.45  R
+   WiFi link card 2 (standby)                   load   1.00  battery   1.30  T
+   KSZ9897R AVDDH 2.5 V                         load   0.82  battery   1.29  S
+   NVMe slot 2                                  load   0.90  battery   1.16  S
+   NVMe slot 3                                  load   0.90  battery   1.15  S
+   NVMe slot 1                                  load   0.90  battery   1.14  S
+   VHF PA 30 W                                  load   0.90  battery   1.07  T
+   three TUSB8041 hubs VDD33                    load   0.75  battery   0.89  R
+   board E controller and sensors               load   0.50  battery   0.83  D
+   board D (SA868 and logic)                    load   0.60  battery   0.65  D
+   board A logic                                load   0.50  battery   0.57  D
+   cooler fan slot 2                            load   0.51  battery   0.57  R
+   cooler fan slot 3                            load   0.51  battery   0.56  R
+   cooler fan slot 1                            load   0.51  battery   0.55  R
+   PCIe switch 3.3 V slot 2                     load   0.35  battery   0.46  S
+   PCIe switch 3.3 V slot 3                     load   0.35  battery   0.46  S
+   PCIe switch 3.3 V slot 1                     load   0.35  battery   0.45  S
+   four CP2102N bridges                         load   0.40  battery   0.43  D
+   LG290P GNSS                                  load   0.33  battery   0.39  S
+   three TUSB8041 hubs VDD 1.1 V                load   0.28  battery   0.36  R
+   PCIe switch 1.0 V slot 2                     load   0.27  battery   0.35  S
+   PCIe switch 1.0 V slot 3                     load   0.27  battery   0.35  S
+   PCIe switch 1.0 V slot 1                     load   0.27  battery   0.34  S
+   Geiger module                                load   0.30  battery   0.33  D
+   QMX USB and HDMI 5 V                         load   0.30  battery   0.32  D
+   KSZ9897R VDDIO 3.3 V                         load   0.26  battery   0.31  S
+   5G RM520N-GL                                 load   0.22  battery   0.30  S
+   LoRa E22-900M30S                             load   0.07  battery   0.08  S
+   RockBLOCK 9704                               load   0.06  battery   0.07  S
+   E72 x2 (Zigbee, Thread)                      load   0.05  battery   0.06  S
+== shares PS-TYP
+   WiFi link card 1 (live)                      load   6.00  battery   7.12  R
+   Xenarc 709GNK                                load   6.00  battery   6.04  T
+   CM5 slot 3                                   load   4.50  battery   4.90  S
+   CM5 slot 2                                   load   4.50  battery   4.89  S
+   CM5 slot 1                                   load   4.50  battery   4.88  S
+   LimeSDR Mini 2.4                             load   3.00  battery   3.27  T
+   panel board C                                load   3.00  battery   3.27  D
+   three STM32H743 supervisors and their parts  load   1.30  battery   2.19  R
+   5G RM520N-GL                                 load   1.50  battery   1.88  R
+   KSZ9897R AVDDL+DVDDL 1.2 V                   load   1.45  battery   1.86  S
+   other +3V3_DEV logic                         load   1.30  battery   1.55  D
+   NVMe slot 3                                  load   1.20  battery   1.50  R
+   NVMe slot 2                                  load   1.20  battery   1.50  R
+   NVMe slot 1                                  load   1.20  battery   1.49  R
+   two mixer fans                               load   1.44  battery   1.45  R
+   KSZ9897R AVDDH 2.5 V                         load   0.82  battery   1.30  S
+   WiFi link card 2 (standby)                   load   1.00  battery   1.29  T
+   QMX HF                                       load   0.96  battery   1.14  S
+   camera (part TBD)                            load   1.00  battery   1.09  T
+   three TUSB8041 hubs VDD33                    load   0.78  battery   0.94  R
+   board D (SA868 and logic)                    load   0.80  battery   0.87  D
+   board E controller and sensors               load   0.50  battery   0.83  D
+   three TUSB8041 hubs VDD 1.1 V                load   0.62  battery   0.80  R
+   board A logic                                load   0.50  battery   0.57  D
+   cooler fan slot 3                            load   0.51  battery   0.56  R
+   cooler fan slot 2                            load   0.51  battery   0.55  R
+   cooler fan slot 1                            load   0.51  battery   0.55  R
+   PCIe switch 3.3 V slot 3                     load   0.35  battery   0.44  S
+   PCIe switch 3.3 V slot 2                     load   0.35  battery   0.44  S
+   PCIe switch 3.3 V slot 1                     load   0.35  battery   0.44  S
+   four CP2102N bridges                         load   0.40  battery   0.44  D
+   LG290P GNSS                                  load   0.33  battery   0.39  S
+   PCIe switch 1.0 V slot 3                     load   0.27  battery   0.35  S
+   PCIe switch 1.0 V slot 2                     load   0.27  battery   0.34  S
+   PCIe switch 1.0 V slot 1                     load   0.27  battery   0.34  S
+   Geiger module                                load   0.30  battery   0.33  D
+   LoRa E22-900M30S                             load   0.30  battery   0.33  R
+   QMX USB and HDMI 5 V                         load   0.30  battery   0.33  D
+   KSZ9897R VDDIO 3.3 V                         load   0.26  battery   0.32  S
+   RockBLOCK 9704                               load   0.10  battery   0.11  R
+   E72 x2 (Zigbee, Thread)                      load   0.05  battery   0.06  S
+== shares PS-ALLTX
+   VHF PA 30 W                                  load  75.00  battery  78.03  R
+   QMX HF                                       load  12.00  battery  12.77  R
+   WiFi link card 1 (live)                      load   9.10  battery  11.21  S
+   Xenarc 709GNK                                load  10.00  battery  10.23  S
+   CM5 slot 1                                   load   8.00  battery   8.98  D
+   CM5 slot 2                                   load   8.00  battery   8.91  D
+   CM5 slot 3                                   load   8.00  battery   8.81  D
+   5G RM520N-GL                                 load   5.59  battery   6.83  S
+   panel board C                                load   5.00  battery   5.63  D
+   LimeSDR Mini 2.4                             load   4.50  battery   5.07  S
+   NVMe slot 1                                  load   3.60  battery   4.47  S
+   NVMe slot 2                                  load   3.60  battery   4.44  S
+   NVMe slot 3                                  load   3.60  battery   4.39  S
+   board D (SA868 and logic)                    load   3.30  battery   3.72  D
+   LoRa E22-900M30S                             load   3.25  battery   3.66  S
+   camera (part TBD)                            load   2.50  battery   2.82  T
+   three STM32H743 supervisors and their parts  load   1.30  battery   2.26  R
+   KSZ9897R AVDDL+DVDDL 1.2 V                   load   1.45  battery   1.92  S
+   other +3V3_DEV logic                         load   1.30  battery   1.62  D
+   RockBLOCK 9704                               load   1.40  battery   1.58  S
+   two mixer fans                               load   1.44  battery   1.47  R
+   KSZ9897R AVDDH 2.5 V                         load   0.82  battery   1.36  S
+   WiFi link card 2 (standby)                   load   1.00  battery   1.30  T
+   board A logic                                load   1.00  battery   1.16  D
+   three TUSB8041 hubs VDD33                    load   0.78  battery   0.98  R
+   PCIe switch 1.0 V slot 1                     load   0.68  battery   0.89  S
+   PCIe switch 1.0 V slot 2                     load   0.68  battery   0.89  S
+   PCIe switch 1.0 V slot 3                     load   0.68  battery   0.88  S
+   E72 x2 (Zigbee, Thread)                      load   0.70  battery   0.87  S
+   board E controller and sensors               load   0.50  battery   0.85  D
+   three TUSB8041 hubs VDD 1.1 V                load   0.62  battery   0.83  R
+   cooler fan slot 1                            load   0.51  battery   0.57  R
+   cooler fan slot 2                            load   0.51  battery   0.57  R
+   cooler fan slot 3                            load   0.51  battery   0.56  R
+   PCIe switch 3.3 V slot 1                     load   0.39  battery   0.48  S
+   PCIe switch 3.3 V slot 2                     load   0.39  battery   0.48  S
+   PCIe switch 3.3 V slot 3                     load   0.39  battery   0.47  S
+   four CP2102N bridges                         load   0.40  battery   0.45  D
+   LG290P GNSS                                  load   0.33  battery   0.41  S
+   QMX USB and HDMI 5 V                         load   0.30  battery   0.34  D
+   Geiger module                                load   0.30  battery   0.34  D
+   KSZ9897R VDDIO 3.3 V                         load   0.26  battery   0.33  S

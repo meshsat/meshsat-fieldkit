@@ -1,0 +1,410 @@
+#!/usr/bin/env python3
+"""The loop: evidence, propose, validate, run, grade, review, record (MESHSAT-862, 12 September 2026).
+
+This is the whole agentic system in one file's worth of control flow, and the order is the contract:
+
+    evidence (counted artefacts)
+      -> tier 2 proposes ONE arm with a written prediction        [a model, contained by schema.py]
+      -> the validator accepts or refuses it                      [mechanical, fail closed]
+      -> the deterministic runner executes it                     [arms.py, no model anywhere near it]
+      -> the mechanical judge grades it against the prediction    [arms.grade, never the model]
+      -> tier 2 drafts the record entry from the numbers          [a model]
+      -> tier 2b reviews the entry and the numbers with fresh eyes[a different context]
+      -> the ledger chains all of it
+
+THE JUDGE IS NEVER THE PROPOSER and the reviewer cannot move the grade. Those two sentences are the
+reason this is worth building at all: the width a model adds only pays against an objective that is
+trustworthy, and the objective here is a pair count printed by a tool that has no idea a model exists.
+
+EXECUTION IS NOT DONE HERE WHEN KICAD IS NOT HERE. The runner host has no pcbnew, so `--exec` takes a
+command template that runs `arms.py` where the boards are. The command is given on the command line
+and never stored in the tree, because the machine it names is not this repo's business and this repo
+is public within minutes.
+"""
+import os, sys, json, hashlib, time, shlex, argparse, subprocess
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+TOOLS = os.path.dirname(HERE)
+sys.path.insert(0, HERE); sys.path.insert(0, TOOLS)
+import client, schema, evidence, propose, review as reviewmod     # noqa: E402
+import expstore                                                   # noqa: E402
+import verdict, ledger, arms as armsmod                           # noqa: E402
+
+DRAFT_SYSTEM = """You write one entry for a hardware project's design record, from measurements only.
+
+The record's rules, which are not stylistic:
+  * Every number carries what it was measured on. A pair count without the board and the placement it
+    came from answers nothing.
+  * A missed prediction is reported as plainly as a met one, and what it falsifies is said out loud.
+  * Never claim a cause the measurement does not carry. "X did not pay" is supported; "X does not
+    work" usually is not.
+  * No em dashes anywhere. Prototype framing: nothing has been built or field deployed.
+  * Four to twelve sentences. No headings, no bullet list, no markdown.
+
+You are given the arm, its written prediction, the measured result and the mechanical grade. Answer
+with one JSON object: {"entry": "<the prose>", "headline": "<one sentence, at most 120 characters>"}"""
+
+
+def _max_arms(template, path):
+    """The template's declared width. AN ABSENT VALUE IS AN ERROR, NOT A QUIET ONE (16 September 2026).
+
+    This was `template.get("_max_arms", 1)`, so a template that declared nothing was narrowed to a single
+    arm and said nothing about it: `b.json` and `d.json` both declared nothing, which is two of the three
+    templates in the tree. A default that silently halves the width of the work is the same shape as the
+    knob whose arrival nothing proved (12 September), and it is refused here instead."""
+    v = template.get("_max_arms")
+    if v is None:
+        raise SystemExit("loop: %s declares no _max_arms. A template says how many arms a cycle proposes, "
+                         "each with its own prediction; a missing value used to mean one silently, which is "
+                         "how a 96-thread box ran one arm at a time. Add _max_arms with a reason." % path)
+    v = int(v)
+    if v < 1: raise SystemExit("loop: %s declares _max_arms %d, which is not a width" % (path, v))
+    return v
+
+
+def run_spec(spec_path, exec_cmd, result_path, timeout=None, parallel=None):
+    """Execute the spec. Either here (when pcbnew is importable) or through the caller's command.
+
+    WIDTH IS AN ARGUMENT, NOT A LITERAL (16 September 2026). This called the runner with `--parallel 1`
+    while `arms.py` has taken a width since it was written and defaults to 8, so every local arm set ran
+    one arm at a time on a box with 96 threads and 29 workers' worth of memory. The width comes from the
+    template's `_max_arms` by way of the caller, and `{parallel}` in an --exec command carries it to a
+    remote runner, because a remote arm set was serial for exactly the same reason."""
+    if exec_cmd:
+        # AN ARGV, NOT A SHELL STRING. `routeflow.sh()` refuses the construction this used, and this is
+        # the loop's one actuation point: the operator authors the template, the model never does, and a
+        # substituted string is still the wrong shape for the place where a run begins (red team,
+        # 12 September 2026). Substitution happens per argument, after the split.
+        argv = [a.replace("{spec}", spec_path).replace("{result}", result_path).replace("{parallel}", str(parallel or 1))
+                for a in shlex.split(exec_cmd)]
+        print("loop: executing %s" % " ".join(argv[:3] + (["..."] if len(argv) > 3 else [])))
+        r = subprocess.run(argv, timeout=timeout)
+        return r.returncode
+    try:
+        import pcbnew                                             # noqa: F401
+    except Exception as e:
+        raise client.Infra("no pcbnew here and no --exec given, so nothing can run the arm (%s). "
+                           "This is INFRA_FAIL and never a fallback: a loop that quietly skips the run "
+                           "would report a proposal as a measurement" % type(e).__name__)
+    return armsmod.main([spec_path, "--parallel", str(parallel or 1), "--out-dir", os.path.dirname(result_path)])
+
+
+def incomplete(rows, names, rc):
+    """COMPLETENESS IS AUTHORITATIVE (15 September 2026, red team report 1 P0). The loop used to go on whenever at
+    least one row matched: one arm of eight writing its row before the runner died was drafted, reviewed and returned
+    as a cycle. The runner's exit status decides first; then exactly one row per requested arm, no duplicates. Returns
+    None for a complete cycle, else {why, counts, evidence}."""
+    import collections as _c0
+    names = set(names)
+    got = _c0.Counter(r.get("name") or r.get("arm") for r in rows)   # the runner's rows carry the name as "arm"
+    dup = sorted(n for n, c in got.items() if c > 1); absent = sorted(names - set(got))
+    # the runner's exit code is its VERDICT code (0 PASS, 1 FAIL with graded rows, 3 INCONCLUSIVE): a FAIL over a
+    # complete row set is the rows' business (an all-ILLEGAL set, a MISSED prediction); anything else is the runner
+    # not running to a verdict (the first live cycle read arms' FAIL over one ILLEGAL row as an incomplete cycle)
+    infra = rc not in (0, 1, 3)
+    if not infra and not absent and not dup: return None
+    why = ("the runner exited %s" % rc) if infra else ("no row for %s" % absent if absent else "duplicate rows for %s" % dup)
+    return {"why": why,
+            "counts": {"rows": len(rows), "requested": len(names), "absent": len(absent), "duplicate": len(dup), "runner_rc": rc, "infra_fail": 1 if infra else 0},
+            "evidence": ["absent: %s" % n for n in absent] + ["duplicate: %s" % n for n in dup]}
+
+
+def cycle_result(rows, rev, no_review):
+    """THE VERDICT IS THE ARMS' VERDICT: PASS when every prediction was MET, FAIL when one was MISSED, INCONCLUSIVE when
+    anything was not measured (INFRA_FAIL, UNMEASURED, UNMEASURABLE, ILLEGAL: the runner refuses an all-ILLEGAL set and
+    this loop must not soften that) or the entry was not reviewed. The review's verdict travels as a COUNT and no longer
+    grades the cycle (15 September 2026, red team report 1 P0 and round four M4)."""
+    import collections as _c
+    g = _c.Counter(r.get("verdict") for r in rows)
+    bad = g["INFRA_FAIL"] + g["UNMEASURED"] + g["UNMEASURABLE"] + g["ILLEGAL"]
+    refused = bool(rev) and rev["verdict"] != "APPROVE"
+    if bad or (rev is None and not no_review): res = verdict.INCONCLUSIVE
+    else: res = verdict.FAIL if g["MISSED"] else verdict.PASS
+    return res, g, bad, refused
+
+
+def read_rows(path, names, after_seq=-1, cycle_id=None):
+    """The rows the runner appended FOR THIS CYCLE: the name matches and the row is newer than the head
+    the cycle started from. Tier 2b found the gap: selected by name alone, an older row carrying the same
+    model-chosen name is read as this cycle's measurement, and the name is chosen by the model."""
+    out = []
+    if not os.path.exists(path):
+        return out
+    for line in open(path, errors="replace"):
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            rec = json.loads(line)
+        except ValueError:
+            continue
+        seq = rec.get("seq", -1)
+        rec = rec.get("rec", rec)
+        if rec.get("arm") in names and seq > after_seq and (cycle_id is None or rec.get("cycle_id") == cycle_id):   # a row belongs to THIS cycle by its id, not by a name the model chose and a horizon (15 Sep 2026)
+            out.append(rec)
+    return out
+
+
+def numbers_text(rows, baseline=None):
+    """The measurement, and the baseline it may be compared with, or the plain statement that there is none.
+
+    Tier 2b found this gap on the second cycle it reviewed: the block handed to the draft carried the
+    arm's pair count and no baseline, so every sentence comparing the two was drawing on a number that
+    was not in front of it. A record entry whose comparison comes from memory is exactly how this
+    project got "the staircase costs five pairs" (two runs under different box loads) and "C10 has five
+    short opens" (a loose end measured against the wrong pad).
+    """
+    L = []
+    if baseline:
+        L.append("THE BASELINE THIS RUN IS COMPARED WITH: %s" % baseline)
+    else:
+        L.append("NO BASELINE WAS SUPPLIED TO THIS CYCLE. Do not compare this number with any other number: "
+                 "you have not been shown one, and a comparison drawn from memory is not a measurement.")
+    for r in rows:
+        p = r.get("predict") or {}
+        L.append("arm %s: %s of %s pairs laid in %s s of wall time on %s (KiCad %s), placed board md5 %s"
+                 % (r.get("arm"), r.get("pairs"), r.get("of"), r.get("wall_s"), r.get("host"), r.get("kicad"),
+                    r.get("placed_md5")))
+        L.append("  knobs asked for: %s" % json.dumps(r.get("env", {})))
+        L.append("  knobs the tool itself reported receiving: %s"
+                 % json.dumps({k: v for k, v in (r.get("knobs_seen") or {}).items() if k in (r.get("env") or {})}
+                              or (r.get("knobs_seen") or {})))
+        L.append("  it predicted %s %s, basis: %s" % (p.get("op"), p.get("value"), p.get("basis")))
+        L.append("  THE MECHANICAL JUDGE SAID: %s  (%s)" % (r.get("verdict"), r.get("note")))
+    return "\n".join(L)
+
+
+def draft_entry(nums, context="", cfg=None, repair=1):
+    """The record entry, refused for its shape the way everything else here is refused."""
+    c = client.Client(role="propose", cfg=cfg)
+    user = (context + "\n\n" if context else "") + nums
+    for _ in range(repair + 1):
+        text, meta = c.ask(DRAFT_SYSTEM, user, max_tokens=1200)
+        try:
+            d = client.extract_json(text)
+            missing = [k for k in ("entry", "headline") if not str(d.get(k) or "").strip()]
+            if not missing and "—" not in d["entry"] and "--" not in d["headline"]:
+                return d, meta
+            why = ("the draft carries no %s" % ", ".join(missing)) if missing else "the draft used an em dash, which this record never does"
+        except Exception as e:
+            why = "%s: %s" % (type(e).__name__, e)
+        user = (context + "\n\n" if context else "") + nums + "\n\n=== YOUR PREVIOUS DRAFT WAS REFUSED ===\n" + why
+    raise ValueError(why)
+
+
+def main(argv):
+    ap = argparse.ArgumentParser(description="the agentic loop, tier 2 and 2b around a deterministic runner")
+    ap.add_argument("--letter", default="b")
+    ap.add_argument("--template", required=True)
+    ap.add_argument("--profile", default=None)
+    ap.add_argument("--ledger", action="append", default=[])
+    ap.add_argument("--ask", default="Propose the single arm most likely to lay more pairs than the board's current best.")
+    ap.add_argument("--note", action="append", default=[])
+    ap.add_argument("--out-dir", default="out/agent")
+    ap.add_argument("--exec", dest="exec_cmd", default=None,
+                    help="command that runs arms.py where the boards are; {spec} and {result} are substituted")
+    ap.add_argument("--result", default=None, help="the arms.jsonl the runner appends to")
+    ap.add_argument("--exec-timeout", type=int, default=None)
+    ap.add_argument("--no-exec", action="store_true", help="propose and stop, which is tier 2 on its own")
+    ap.add_argument("--no-review", action="store_true")
+    ap.add_argument("--baseline", default=None,
+                    help="the number this run is compared with, with the board and placement it came from")
+    ap.add_argument("--revisions", type=int, default=1,
+                    help="how many times a refused draft is rewritten against the findings and reviewed again")
+    ap.add_argument("--allow-repeat", action="store_true")
+    ap.add_argument("--parallel", type=int, default=None,
+                    help="arms to run at once; defaults to the template's _max_arms. Refused above the host's "
+                         "measured admission, which is min(threads/1.3, 0.80*free GiB/3.0) for this workload")
+    a = ap.parse_args(argv)
+
+    os.makedirs(a.out_dir, exist_ok=True)
+    stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
+    template = json.load(open(a.template))
+    template.setdefault("_stamp", stamp)
+    # the template decides the run shape, so the evidence pack is built FOR it: a placement template shows the
+    # placement knobs, a pair template the pair knobs (15 September 2026, red team report 1 P1: this called pack()
+    # without the template, so every proposal saw the pair stage whatever the template said)
+    p = evidence.pack(a.letter, profile=a.profile, ledgers=a.ledger, extra=a.note, spec_template=template)
+    pack_text = evidence.render(p)
+    open(os.path.join(a.out_dir, "pack-%s.txt" % stamp), "w").write(pack_text)
+    print("loop: evidence pack %d characters, %d arms already graded" % (len(pack_text), p["graded_count"]))
+
+    # WIDTH. One arm per cycle made a loop whose stated argument is width serial by construction; the
+    # runner has taken --parallel since it was written (red team, 12 September 2026). The template says
+    # how many, each with its own prediction, and they are dispatched together.
+    spec, arms, attempts = propose.ask(pack_text, a.ask, repair=2,
+                                       graded=() if a.allow_repeat else p["_signatures"], template=template,
+                                       max_arms=_max_arms(template, a.template),
+                                       best=p.get("best_pairs"), worst=p.get("worst_pairs"))
+    for at in attempts:
+        print("loop: propose attempt %d %s" % (at["attempt"], "ACCEPTED" if at["accepted"] else "REFUSED"))
+        for e in at["errors"]:
+            print("      %s" % e)
+    open(os.path.join(a.out_dir, "attempts-%s.json" % stamp), "w").write(json.dumps(attempts, indent=1, default=str))
+    ledger.append(os.path.join(a.out_dir, "agent.jsonl"),
+                  {"kind": "proposal", "stamp": stamp, "letter": a.letter, "accepted": bool(spec),
+                   "attempts": len(attempts), "calls": [at["meta"] for at in attempts],
+                   "arms": [{"name": x["name"], "env": x.get("env"), "predict": x["predict"]} for x in arms]})
+    if not spec:
+        print("loop: refused every attempt, nothing ran")
+        return verdict.write("agent_loop", verdict.FAIL, counts={"accepted": 0, "attempts": len(attempts)},
+                             denominator=len(attempts), evidence=attempts[-1]["errors"],
+                             note="the validator refused every proposal", out_dir=a.out_dir)
+
+    # THE CYCLE IS A FIRST-CLASS OBJECT (15 September 2026, red team report 1 rec. 1 and 2): minted here, before the
+    # run, with its cohort's context hash and the exact arm set; every row, artefact and review names it, and the store's
+    # constraints make a partial or duplicate cycle unrepresentable.
+    store = expstore.Store(os.path.join(a.out_dir, "store.db"))
+    context_hash = hashlib.sha256(json.dumps(p.get("cohort", {}), sort_keys=True).encode()).hexdigest()[:16]
+    cycle_id = store.new_cycle(p.get("board_declarations", {}).get("name", "pcb-%s" % a.letter), p.get("run_stage", "pair"), context_hash, len(spec["arms"]), note=stamp)
+    for x in spec["arms"]: store.add_arm(cycle_id, x["name"], x.get("env"), x["predict"])
+    spec["cycle_id"] = cycle_id
+    print("loop: cycle %s, context %s, %d arm(s)" % (cycle_id, context_hash, len(spec["arms"])))
+    spec_path = os.path.join(a.out_dir, "proposal-%s.json" % stamp)
+    json.dump(spec, open(spec_path, "w"), indent=1)
+    for x in spec["arms"]:
+        print("loop: arm %s env %s predict %s %s" % (x["name"], json.dumps(x["env"]), x["predict"]["op"], x["predict"]["value"]))
+    if a.no_exec:
+        print("loop: --no-exec, stopping at the proposal (tier 2 never actuates anyway)")
+        return verdict.write("agent_loop", verdict.INCONCLUSIVE, counts={"arms": len(spec["arms"]), "ran": 0},
+                             denominator=len(spec["arms"]), evidence=[spec_path],
+                             note="proposed and not run", out_dir=a.out_dir)
+
+    result = a.result or os.path.join(a.out_dir, "arms.jsonl")
+    head_before = ledger.head(result)[0]          # every row after this one belongs to this cycle
+    rc = run_spec(spec_path, a.exec_cmd, result, timeout=a.exec_timeout,
+                  parallel=(a.parallel if a.parallel is not None else _max_arms(template, a.template)))
+    names = {x["name"] for x in spec["arms"]}
+    rows = read_rows(result, names, after_seq=head_before, cycle_id=cycle_id)
+    for r in rows:
+        try:
+            store.finish_arm(cycle_id, r["arm"], r.get("verdict", "INFRA_FAIL"), note=str(r.get("note", ""))[:400],
+                             metrics={"pairs": (r.get("pairs"), r.get("of")), "hard": r.get("hard"), "unrouted": r.get("unrouted"), "seconds": r.get("seconds")},
+                             tools=r.get("tools"), placed_md5=r.get("placed_md5"))
+        except (ValueError, KeyError) as e:
+            print("loop: the store refused a row for %s: %s" % (r.get("arm"), e))
+    ok_c, why_c = store.complete(cycle_id)
+    inc = incomplete(rows, names, rc)
+    if inc is None and not ok_c: inc = {"why": "the store reads the cycle as incomplete: " + why_c, "counts": {"rows": len(rows), "requested": len(names), "absent": 0, "duplicate": 0, "runner_rc": rc, "infra_fail": 0}, "evidence": [why_c]}
+    if inc: store.finish_cycle(cycle_id, "INCOMPLETE", inc["why"])
+    if inc:
+        print("loop: the cycle is INCOMPLETE (%s): %d row(s) for %d requested arm(s); nothing is drafted from a partial cycle" % (inc["why"], len(rows), len(names)))
+        return verdict.write("agent_loop", verdict.INCONCLUSIVE, counts=inc["counts"], denominator=len(names),
+                             evidence=["exit %s" % rc, result] + inc["evidence"], note="an incomplete cycle is not evidence: " + inc["why"], out_dir=a.out_dir)
+
+    # THE RUNNER IS THE JUDGE AND THERE IS ONLY ONE. This used to re-grade every row here, and on the
+    # first cycle where the two could differ they did: the runner graded an arm ILLEGAL against the
+    # baseline hard count it had measured, and this loop re-graded the same row UNMEASURED because it
+    # had no baseline to hand. Two graders with two answers is worse than either. The runner's verdict
+    # stands; a row that arrives without one is graded here and says so (12 September 2026).
+    for r in rows:
+        if not r.get("verdict"):
+            v, note = armsmod.grade(r, r.get("hard_baseline"))
+            r["verdict"], r["note"] = v, note
+            r["graded_by"] = "the loop, because the row carried no verdict"
+        else:
+            r.setdefault("graded_by", "the runner that measured it")
+    nums = numbers_text(rows, a.baseline)
+    print("loop: measured\n" + nums)
+    open(os.path.join(a.out_dir, "numbers-%s.txt" % stamp), "w").write(nums)
+
+    draft, dmeta = draft_entry(nums, context="Board %s, the pair pre-router." % a.letter.upper())
+    open(os.path.join(a.out_dir, "draft-%s-0.md" % stamp), "w").write(draft["entry"])
+    print("loop: draft headline: %s" % draft.get("headline"))
+
+    rev = None
+    if not a.no_review:
+        context = ["The arm was proposed by an automated tier 2 from counted evidence and executed by a "
+                   "deterministic runner. You are judging whether the numbers support the draft entry."]
+        for cycle in range(a.revisions + 1):
+            # THE REVIEWER GETS THE ARTEFACTS, not a numbers block. It can only catch "the knob did not
+            # reach the tool" if it can see knobs_seen against env, and only weigh legality if it can see
+            # the hard count with its denominator (red team, 12 September 2026).
+            # ONLY THIS CYCLE'S VERDICTS (15 September 2026, found by tier 2b on cycle four: the previous cycle's
+            # agent_loop.verdict.json sat in the out directory and the reviewer was handed a gate file grading another
+            # arm). A verdict written before this cycle's stamp is not evidence about this cycle, and agent_loop's own
+            # verdict is written after the review by construction, so it is never material.
+            cycle_iso = "%s-%s-%sT%s:%s:%sZ" % (stamp[:4], stamp[4:6], stamp[6:8], stamp[9:11], stamp[11:13], stamp[13:15])  # verdict.now() form
+            vs = {}
+            for f in sorted(os.listdir(a.out_dir)) if os.path.isdir(a.out_dir) else []:
+                if f.endswith(".verdict.json") and not f.startswith("agent_loop"):
+                    try:
+                        rec = json.load(open(os.path.join(a.out_dir, f)))
+                        if str(rec.get("ts", "")) >= cycle_iso: vs[f] = rec
+                    except ValueError: pass
+            vs["arm_rows"] = [{k: r.get(k) for k in ("arm", "env", "knobs_seen", "pairs", "of", "hard",
+                                                     "verdict", "note", "tools", "placed_md5", "board_sha")}
+                              for r in rows]
+            material = reviewmod.build_material(diff="", verdicts=vs, numbers=nums, draft=draft["entry"], extra=context)
+            rev, rattempts = reviewmod.review(material)
+            open(os.path.join(a.out_dir, "review-%s-%d.json" % (stamp, cycle)), "w").write(
+                json.dumps(rattempts, indent=1, default=str))
+            if not rev:
+                print("loop: the review was refused for its shape"); break
+            print("loop: review %s, %d finding(s)" % (rev["verdict"], len(rev["findings"])))
+            for f in rev["findings"]:
+                print("      %-8s %-30s %s" % (f["severity"], f["where"][:30], f["what"]))
+            if rev["verdict"] == "APPROVE" or cycle == a.revisions:
+                break
+            # REVISE and REJECT both mean the entry does not go in as it stands. The draft is rewritten
+            # against the findings and reviewed again, by a fresh context that has not seen this exchange.
+            print("loop: redrafting against %d finding(s)" % len(rev["findings"]))
+            fixes = "\n".join("- %s (%s): %s. Why it matters: %s" % (f["severity"], f["where"], f["what"], f["why"])
+                               for f in rev["findings"])
+            draft, _ = draft_entry(nums, context=("Board %s, the pair pre-router.\n\nA reviewer refused your "
+                                                  "previous entry for these reasons. Write it again so that every "
+                                                  "sentence is supported by the measurement above, and DROP any "
+                                                  "claim the run cannot carry rather than hedging it:\n%s\n\n"
+                                                  "Your previous entry was:\n%s"
+                                                  % (a.letter.upper(), fixes, draft["entry"])))
+            open(os.path.join(a.out_dir, "draft-%s-%d.md" % (stamp, cycle + 1)), "w").write(draft["entry"])
+            print("loop: redraft headline: %s" % draft.get("headline"))
+
+    ledger.append(os.path.join(a.out_dir, "agent.jsonl"),
+                  {"kind": "cycle", "stamp": stamp, "letter": a.letter,
+                   "arms": [{"arm": r.get("arm"), "pairs": r.get("pairs"), "of": r.get("of"),
+                             "verdict": r.get("verdict"), "env": r.get("env")} for r in rows],
+                   "draft_sha": client.sha(draft["entry"]), "review": (rev or {}).get("verdict"),
+                   "final_draft": draft["entry"],
+                   "findings": len((rev or {}).get("findings") or [])})
+
+    # FOUR QUESTIONS, FOUR FIELDS. One verdict used to answer "did the experiment measure anything",
+    # "was the prediction met" and "was the write-up approved" at once, and `missed` was the remainder,
+    # so an UNMEASURED or ILLEGAL arm counted as a missed prediction (red team, 12 September 2026).
+    res, g, bad, refused = cycle_result(rows, rev, a.no_review)
+    if rev is not None: store.add_review(cycle_id, (rev.get("meta") or {}).get("model", "") if isinstance(rev.get("meta"), dict) else "", rev.get("verdict", ""), rev.get("findings") or [])
+    store.finish_cycle(cycle_id, res)
+    met = g["MET"]
+    # Tier 2b gates the WRITE-UP, and a verdict file that reads PASS over a refused entry is a claim the
+    # code does not make good on (its own finding on the change that introduced it, 12 September 2026).
+    # The measurement stands either way: the arm's grade is above and the reviewer never touched it.
+    if refused:
+        print("loop: tier 2b did not approve the entry (%s), so the cycle is FAIL: the number stands, the "
+              "write-up does not go into the record as it is" % rev["verdict"])
+    if rev is None and not a.no_review:
+        print("loop: no usable review, so the cycle is INCONCLUSIVE rather than PASS")
+    # THE VERDICT IS THE ARMS' VERDICT: PASS when every prediction was MET, FAIL when one was MISSED, INCONCLUSIVE
+    # when anything was not measured or the entry was not reviewed. The review's verdict travels as a COUNT
+    # (`entry_review`); it no longer grades the cycle (15 September 2026, red team round four M4 and report 1 P0).
+    # A refused write-up still does not go into the record as it is: that is the drafter's rule, not this verdict's.
+    return verdict.write("agent_loop", res,
+                         counts={"arms": len(rows), "met": g["MET"], "missed": g["MISSED"],
+                                 "entry_review": (rev or {}).get("verdict", "none"), "entry_refused": 1 if refused else 0,
+                                 "illegal": g["ILLEGAL"], "unmeasured": g["UNMEASURED"],
+                                 "unmeasurable": g["UNMEASURABLE"], "infra_fail": g["INFRA_FAIL"],
+                                 "best_pairs": max((r.get("pairs") or 0) for r in rows),
+                                 "review_findings": len((rev or {}).get("findings") or []),
+                                 "process_status": "PASS" if not bad else "INCONCLUSIVE",
+                                 "measurement_status": ("MEASURED" if met + g["MISSED"] else "NOT MEASURED"),
+                                 "review_status": (rev or {}).get("verdict", "none")},
+                         denominator=len(rows),
+                         evidence=[nums, (rev or {}).get("summary", "no review")],
+                         note="one cycle: proposed, run, graded mechanically, reviewed by a separate context",
+                         out_dir=a.out_dir)
+
+
+if __name__ == "__main__":
+    try:
+        sys.exit(main(sys.argv[1:]))
+    except client.Infra as e:
+        print("loop: INFRA_FAIL %s" % e); sys.exit(3)

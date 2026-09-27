@@ -1,0 +1,188 @@
+#!/usr/bin/env python3
+"""Does the board match the netlist it was placed from? (MESHSAT-862, round-two M4, 11 September 2026.)
+
+Nothing in this pipeline compares the two. `check_contracts.py` reads netlists and never the board;
+`verify_deliverable.py` reads the deliverable's files and never their contents against each other; the golden
+schematic test compares a schematic with itself from a previous run. So a board placed from a STALE netlist
+passes every gate: the chain's own history has the shape twice, once when a generator died and the next stage
+rebuilt from the previous schematic (5 September, the 0x43 patch), and once when `build_sch.sh`'s exit code was
+an echo nobody read (appendix 32.64). `full.sh` now deletes the netlist before regenerating it and blocks if it
+is absent, which stops the file being stale; it does not check that the BOARD is the netlist's board.
+
+Three comparisons, each with its denominator:
+
+  1. every reference in the netlist is a footprint on the board, and every footprint that is a real component
+     is in the netlist (a bench-fit land, a mounting hole and a test point are declared exceptions by prefix);
+  2. every pad of a shared reference carries the net the netlist gives that pin;
+  3. the net NAMES agree, once the root-sheet slash is stripped, because a board net that exists on no schematic
+     pin is the phantom-net defect `check_zone_nets.py` catches from the other side.
+
+WHAT IT DOES NOT COMPARE, and what does (26 September 2026, MESHSAT-1357). None of the three asks what a reference
+IS: a value or a land that changed between the placement and the schematic passes all three. The regeneration
+parity run of 25 September found such differences on boards A32, B21 and D12 that this gate could not see.
+`netlist_parts.py` compares value and footprint per reference; this gate runs it at the end of every run and it
+writes its own verdict (`netlist_parts`), so every place SCH-002 is measured (full.sh, finish.sh, gate_sweep.sh)
+leaves both halves, and rule SCH-002 reads the worst of the two. The companion never changes this gate's verdict
+or exit code.
+
+Usage: netlist_board.py <board.kicad_pcb> [<netlist.net>]   exit 0 match, 1 mismatch, 3 nothing to compare
+"""
+import os, re, sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import verdict
+
+# Prefixes that exist on the board and never in the netlist as placeable parts: the same set the deliverable
+# gate uses, and it is a declaration rather than a guess.
+BENCH = ("H", "S_", "TP", "W_", "JP", "PAD", "P_", "#")
+
+
+def read_aliases(path=None):
+    """{(footprint, pin): pad} from tools/pad-aliases.txt, each line carrying its reason.
+
+    A package that ties several symbol pins to one physical pad (KiCad's TDSON-8-1 brings a FET's drain pins
+    5 to 8 out on one slug numbered 5) leaves netlist nodes with nowhere to land. They are declared here rather
+    than skipped: the aliased pad is still checked for the net, so a pin map that names a pad the footprint does
+    not have keeps failing, which is how the TPS2065CDBV trap would be caught."""
+    path = path or os.path.join(os.path.dirname(os.path.abspath(__file__)), "pad-aliases.txt")
+    out = {}
+    if not os.path.exists(path): return out
+    for ln in open(path, errors="replace"):
+        ln = ln.split("#")[0].strip()
+        if not ln: continue
+        f = ln.split()
+        if len(f) == 3: out[(f[0], f[1])] = f[2]
+    return out
+
+
+def read_netlist(path):
+    """{ref: {pin: net}} from a KiCad netlist."""
+    txt = open(path, encoding="utf-8", errors="replace").read()
+    out = {}
+    # THE LAST NET IS READ TOO (R4T-F1, 26 September 2026, MESHSAT-1357). KiCad 9.0.9 closes the nets section on the
+    # last net's own line (`...)))))`), so the old look-ahead, a newline and the section's closing bracket, never
+    # matched after it and the last net of every committed netlist was dropped (at main 45bde541: A 340 of 341 nets read,
+    # B 1928 of 1929, C 145 of 146, D 179 of 180, E 123 of 124, P 54 of 55; each dropped net was an unconnected pin's
+    # placeholder there, which is luck and not a property). The next net or the end of the file ends a net now, as in
+    # port_protect.netlist() and check_contracts.load().
+    for m in re.finditer(r'\(net \(code "?\d+"?\) \(name "([^"]*)"\)(.*?)(?=\(net \(code|\Z)', txt, re.S):
+        net = m.group(1).lstrip("/")
+        for n in re.finditer(r'\(node \(ref "([^"]+)"\) \(pin "([^"]+)"\)', m.group(2)):
+            out.setdefault(n.group(1), {})[n.group(2)] = net
+    return out
+
+
+def _parts(board_path, net_path):
+    """The companion half of SCH-002, under its own crash guard: a failure there writes ITS inconclusive verdict
+    and never reaches this gate's verdict or exit code."""
+    try:
+        import netlist_parts
+        return verdict.guard("netlist_parts", netlist_parts.main, [board_path, net_path])
+    except BaseException as e:
+        print("netlist_board: the value and footprint companion did not run (%s: %s)" % (type(e).__name__, str(e)[:120]))
+        return None
+
+
+_NAMES = {code: name for name, code in verdict.CODE.items()}
+
+
+def main(a):
+    if not a: print(__doc__); return verdict.USAGE
+    board_path = a[0]
+    stem = os.path.splitext(os.path.basename(board_path))[0]
+    net_path = a[1] if len(a) > 1 else os.path.join(os.path.dirname(os.path.abspath(board_path)), "out", stem + ".net")
+    rc = None
+    try:
+        rc = _main(board_path, net_path)
+        return rc
+    finally:
+        pc = _parts(board_path, net_path)   # after this gate's own verdict, and even if this gate raised
+        # THE LAST LINE OF THE LOG IS THIS GATE'S (26 September 2026). full.sh and finish.sh show the tail of this
+        # log when they judge the exit code, which is this gate's alone, and with the companion running last that
+        # tail had become the companion's lines. One closing line names both readings, this gate's first.
+        print("netlist_board: %s (this gate, exit %s); netlist_parts: %s (values and lands); rule SCH-002 reads both"
+              % (_NAMES.get(rc, "no verdict, it raised"), rc, _NAMES.get(pc, "did not run")))
+
+
+def _main(board_path, net_path):
+    if not os.path.exists(net_path):
+        print("netlist_board: no netlist at %s, so the board was compared with nothing" % net_path)
+        return verdict.write("netlist_board", verdict.INCONCLUSIVE, denominator=0, inputs={"board": board_path},
+                             note="no netlist at %s" % net_path)
+    nl = read_netlist(net_path)
+    if not nl:
+        print("netlist_board: %s parsed to no nodes at all" % net_path)
+        return verdict.write("netlist_board", verdict.INCONCLUSIVE, denominator=0, inputs={"netlist": net_path},
+                             note="the netlist parsed to no nodes")
+    import pcbnew
+    b = pcbnew.LoadBoard(board_path)
+    fps = {f.GetReference(): f for f in b.GetFootprints()}
+    fails, checked = [], 0
+
+    for ref in sorted(nl):
+        checked += 1
+        if ref not in fps: fails.append("%s is in the netlist and not on the board" % ref)
+    board_only_dead = []
+    for ref in sorted(fps):
+        if ref.startswith(BENCH): continue
+        checked += 1
+        if ref in nl: continue
+        # A footprint the netlist does not have is a part with no schematic behind it. If none of its pads carries
+        # a net it is inert copper (a land, a bracket, a leftover of a placement list) and it is reported, not
+        # blocked on; if any pad DOES carry a net, the board is wired to something the schematic does not know
+        # about, which is the defect this gate exists for.
+        live = sorted({p.GetNetname().lstrip("/") for p in fps[ref].Pads()
+                       if p.GetNetname() and not p.GetNetname().lstrip("/").startswith("unconnected-")})
+        if live: fails.append("%s is on the board and not in the netlist, and its pads carry %s" % (ref, ", ".join(live[:4])))
+        else: board_only_dead.append(ref)
+
+    aliases = read_aliases()
+    aliased = 0
+    for ref in sorted(set(nl) & set(fps)):
+        fpname = fps[ref].GetFPIDAsString().split(":")[-1]
+        pads = {}
+        for p in fps[ref].Pads():
+            n = p.GetNetname().lstrip("/")
+            if n and not n.startswith("unconnected-"): pads.setdefault(p.GetNumber(), n)
+        for pin, net in sorted(nl[ref].items()):
+            checked += 1
+            got = pads.get(pin)
+            if got is None and (fpname, pin) in aliases:
+                # a declared alias: this pin lands on another pad of the same footprint, and THAT pad still has
+                # to carry the net, so the check is moved rather than dropped
+                got = pads.get(aliases[(fpname, pin)]); aliased += 1
+            # KiCad gives every unconnected pin a synthetic net, `unconnected-(REF-PINNAME-PadN)`, and writes it
+            # into the netlist as though it were a net. It is not one: the same pad on the board carries no net
+            # at all, and the two agreeing is what a correct board looks like. Comparing the placeholder against
+            # "no net" called 1,000 of B19's 6,716 comparisons a failure and blocked a board whose every other
+            # gate passed, the first time this gate ran in a chain (11 September 2026).
+            if net.startswith("unconnected-"):
+                if got is not None:
+                    fails.append("%s.%s carries %s on the board and is unconnected in the netlist" % (ref, pin, got))
+                continue
+            if got is None: fails.append("%s.%s is on net %s in the netlist and has no net on the board" % (ref, pin, net))
+            elif got != net: fails.append("%s.%s is %s on the board and %s in the netlist" % (ref, pin, got, net))
+
+    for f in fails[:30]: print("netlist_board: FAIL " + f)
+    if board_only_dead:
+        print("netlist_board: %d footprint(s) on the board that the netlist does not have and that carry no net "
+              "at all: %s. Inert copper, reported and not blocked on; each is a placement list that has outlived "
+              "its schematic part." % (len(board_only_dead), ", ".join(board_only_dead[:12])))
+    if aliased: print("netlist_board: %d pin(s) checked through a declared pad alias (tools/pad-aliases.txt)" % aliased)
+    print("netlist_board: %d of %d comparisons agree (%d references in the netlist, %d footprints on the board)"
+          % (checked - len(fails), checked, len(nl), len(fps)))
+    return verdict.write("netlist_board", verdict.PASS if not fails else verdict.FAIL,
+                         counts={"fail": len(fails), "agree": checked - len(fails),
+                                 "netlist_refs": len(nl), "board_footprints": len(fps),
+                                 "board_only_inert": len(board_only_dead), "aliased_pins": aliased},
+                         denominator=checked, evidence=fails,
+                         inputs={"board": board_path, "netlist": net_path},
+                         note="the board against the schematic it was placed from")
+
+
+if __name__ == "__main__":
+    # EVERY GATE LEAVES A READING WHEN IT RAISES (18 September 2026). The thirteen one-line entries of this
+    # morning were the gates a crash had already cost a verdict; these are the rest of the deciding gates in
+    # the coverage map, guarded the same way, so a rule whose tool raised reads INCONCLUSIVE naming the
+    # exception rather than 'no verdict', which the registry reads as nobody having looked.
+    sys.exit(verdict.guard("netlist_board", main, sys.argv[1:]))

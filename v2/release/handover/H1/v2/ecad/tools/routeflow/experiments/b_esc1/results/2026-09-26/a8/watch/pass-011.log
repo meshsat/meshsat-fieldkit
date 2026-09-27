@@ -1,0 +1,2 @@
+ses_via_drill: 2437 via(s) on the board, 247 named by the session, 209 drill(s) restored from the session's padstack names
+count_open: group S3 open 16 over 146 nets (14 split by the walk), residue {'U301': 3, 'U302': 1}, vias 403, 4.0 s

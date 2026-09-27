@@ -1,0 +1,729 @@
+#!/usr/bin/env python3
+"""The one verdict writer (MESHSAT-862, 10 September 2026; round-two red teams, and the estate's own pattern).
+
+Every gate in this pipeline decided something and said so on stdout, and every driver read that decision with `grep`. Fifteen
+gates, zero machine-readable verdicts, flag files rewritten ten times per finish, and a board gate run twice because nothing
+could be asked twice cheaply. That is the channel the two red teams call untrustworthy, and it is the one an agent would have
+to read.
+
+Four sibling projects on this estate arrived at the same shape before us, each pairing the rule with the thing that enforces
+it (finops-agora's constitution calls that the omoikane pattern: "an invariant survives only when a script or a CHECK guards
+it"). What they agree on, and what this module is:
+
+  * ONE writer per verdict. finops-agora: "only verdict.py/scalper_eod.py write verdicts"; logos: "the SOLE writer of
+    verdicts"; Territory Grounder: "the acting agent has NO write path to its own outcome verdict". Here: a tool writes its
+    own verdict and no other tool's, and the thing that proposes a change never writes the verdict on it.
+  * THREE values, not two. PASS, FAIL and INCONCLUSIVE, because a bar that was skipped is not a bar that held. TG's eval gate
+    states the invariant this module copies: `ok` is true for PASS and for nothing else, and there is never a truthy spelling
+    of INCONCLUSIVE.
+  * THE DENOMINATOR TRAVELS WITH THE VERDICT, always, including at zero. "0 of 3,383 is evidence; 0 alone is what a broken
+    query, an unwired store and a healthy system all produce identically."
+  * THE EXIT CODE IS THE VERDICT. 0 PASS, 1 FAIL, 3 INCONCLUSIVE, 2 for a usage or tooling error. No caller greps.
+
+Usage from a gate:
+
+    import verdict
+    ...
+    return verdict.write("check_pcb_b", verdict.PASS if not fails else verdict.FAIL,
+                         counts={"fail": len(fails), "checked": n}, denominator=n,
+                         evidence=fails[:20], inputs={"board": board_path})
+
+`write()` returns the exit code, so `sys.exit(verdict.write(...))` is the whole contract.
+
+Usage from a driver, in place of a grep:
+
+    verdict.py read out/check_pcb_b.verdict.json     -> prints one line, exits with that verdict's code
+"""
+import sys, os, json, time, hashlib, subprocess
+
+PASS, FAIL, INCONCLUSIVE = "PASS", "FAIL", "INCONCLUSIVE"
+CODE = {PASS: 0, FAIL: 1, INCONCLUSIVE: 3}
+USAGE = 2
+
+
+def sha256_file(path, n=16):
+    """A short content hash of an input, so a verdict names the thing it judged rather than a filename that moved on."""
+    try:
+        h = hashlib.sha256()
+        with open(path, "rb") as f:
+            for chunk in iter(lambda: f.read(1 << 20), b""): h.update(chunk)
+        return h.hexdigest()[:n]
+    except Exception:
+        return None
+
+
+def _version():
+    """The tools tree's git sha, so a verdict says which code produced it. Unknown is written as unknown, never omitted."""
+    try:
+        d = os.path.dirname(os.path.abspath(__file__))
+        r = subprocess.run(["git", "-C", d, "rev-parse", "--short=12", "HEAD"], capture_output=True, text=True, timeout=15)
+        sha = r.stdout.strip() if r.returncode == 0 else ""
+        dirty = subprocess.run(["git", "-C", d, "status", "--porcelain", "--", d], capture_output=True, text=True, timeout=15).stdout.strip()
+        return (sha or "unknown") + ("+dirty" if dirty else "")
+    except Exception:
+        return "unknown"
+
+
+_TOOLS_CACHE = {}
+
+
+def _tools():
+    """The git head and the content hash of the tools tree, once per process (subprocess git, no import of arms.py)."""
+    if _TOOLS_CACHE: return dict(_TOOLS_CACHE)
+    here = os.path.dirname(os.path.abspath(__file__)); out = {"git_head": "", "tools_tree_sha": ""}
+    try:
+        out["git_head"] = subprocess.run(["git", "-C", here, "rev-parse", "HEAD"], capture_output=True, text=True, timeout=10).stdout.strip()[:12]
+        h = hashlib.sha256()
+        for root, dirs, files in os.walk(here):
+            dirs[:] = sorted(d for d in dirs if d not in ("__pycache__", "out", "tests"))
+            for f in sorted(files):
+                if f.endswith((".py", ".sh", ".json")): h.update(open(os.path.join(root, f), "rb").read())
+        out["tools_tree_sha"] = h.hexdigest()[:16]
+    except Exception: pass
+    _TOOLS_CACHE.update(out); return dict(out)
+
+
+_RULESET = [None]
+
+
+def _rule_set_fingerprint():
+    """The identity of the rule registry this verdict was taken under (MESHSAT-862, 16 September 2026). Evidence
+    that does not name its rule set cannot be shown to be current, and rules_status.py treats it as stale."""
+    if _RULESET[0] is None:
+        # BaseException, not Exception, and the difference is a live defect found on 16 September: rules_lib
+        # raises SystemExit when PyYAML is absent, SystemExit does not descend from Exception, and so a gate on
+        # a host without PyYAML EXITED at the moment it wrote its verdict. It printed its result, wrote no
+        # verdict file and returned 1, which reads as a failing board. Stamping the rule set is evidence about
+        # the verdict; it can never be allowed to decide whether the verdict exists.
+        try:
+            import rules_lib as _r; _RULESET[0] = _r.fingerprint()
+        except BaseException as e: _RULESET[0] = ""; _RULESET_WHY[0] = "%s: %s" % (type(e).__name__, str(e)[:90])
+    return _RULESET[0]
+
+
+_RULESET_WHY = [""]
+_BY_TOOL = [None]
+
+
+def _rules_for_tool(tool):
+    """Which rule ids this verdict decides, read from the coverage map rather than typed into twenty gates.
+    The coverage map names, per rule, the verdict that carries its evidence; this is that mapping inverted,
+    so the registry stays the single source and a gate cannot drift from it."""
+    if _BY_TOOL[0] is None:
+        m = {}
+        try:
+            import rules_lib as _r
+            cov = (_r._yaml().safe_load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                                          "pcb_rules_coverage.yaml"))) or {}).get("coverage", {})
+            for rid, c in cov.items():
+                # A RULE MAY NAME SEVERAL VERDICTS, comma separated: a placement is judged by the DRC on the
+                # placed board AND by the escape-fan predictor, a part by its code AND by asking the fabricator.
+                # Splitting here is what makes each of those tools able to say which rule it decides.
+                for name in str(((c or {}).get("verification") or {}).get("verdict") or "").split(","):
+                    name = name.strip()
+                    if name: m.setdefault(name, []).append(rid)
+        except BaseException: m = {}          # as above: a coverage map this host cannot read is not a failure of the gate
+        _BY_TOOL[0] = m
+    m = _BY_TOOL[0]; out = set(m.get(tool, []))
+    for name, ids in m.items():                      # check_pcb_<letter> and friends: the union, never the first match
+        if "<letter>" in name and tool.startswith(name.split("<letter>")[0]): out |= set(ids)
+    return sorted(out)
+
+
+_RULEFPS = [None]
+
+
+def _rule_fingerprints(rules):
+    """The digest of each rule this verdict decides, so staleness can be judged rule by rule rather than by the
+    whole registry (17 September 2026). Same guard as the set fingerprint: BaseException, because a host
+    without PyYAML must still write its verdict."""
+    if not rules: return {}
+    if _RULEFPS[0] is None:
+        try:
+            import rules_lib as _r; _RULEFPS[0] = _r.rule_fingerprints()
+        except BaseException: _RULEFPS[0] = {}
+    return {r: _RULEFPS[0][r] for r in rules if r in (_RULEFPS[0] or {})}
+
+
+def _policy(rules=()):
+    d = {}
+    fps = _rule_fingerprints(rules)
+    if fps: d["rule_fingerprints"] = fps
+    try:
+        import hardset as _h; d["hard_types"] = len(_h.HARD_POST)
+    except Exception: pass
+    fp = _rule_set_fingerprint()
+    if fp: d["rule_set_fingerprint"] = fp
+    elif _RULESET_WHY[0]:
+        # Say WHY it is missing. Unstamped evidence is treated as stale by rules_status, and a reader has to be
+        # able to tell "written before the registry existed" from "written on a host that could not read it".
+        d["rule_set_fingerprint_absent"] = _RULESET_WHY[0]
+    return d
+
+
+def _with_board(inputs):
+    """Record the board this gate was given, when it did not say so itself.
+
+    A VERDICT THAT DOES NOT NAME ITS BOARD CAN ONLY BE ATTRIBUTED BY THE DIRECTORY IT SITS IN (17 September
+    2026), and that is how a reading about one board came to answer for another: `rules_status` compares
+    `inputs.board` with the boards the project directory holds and simply cannot check a verdict that names
+    none. Twenty gates take the board as their first argument and pass it to nobody; this records what the
+    process was actually given, with its sha256 and the fact that it was read off the command line, so a
+    verdict is attributable without every gate having to learn a new argument. A gate that names its board
+    itself is left exactly as it wrote it."""
+    if "board" in inputs: return inputs      # the gate said which board, or said explicitly that it judges none
+    try:
+        import hashlib
+        for a in sys.argv[1:]:
+            if not isinstance(a, str) or not a.endswith(".kicad_pcb"): continue
+            if not os.path.isfile(a): continue
+            with open(a, "rb") as f:
+                h = hashlib.sha256()
+                for b in iter(lambda: f.read(1 << 20), b""): h.update(b)
+            inputs["board"] = {"path": os.path.basename(a), "sha256_16": h.hexdigest()[:16], "from": "argv"}
+            break
+        # A GATE GIVEN A BOARD'S NETLIST WAS GIVEN THAT BOARD (17 September 2026). Three gates judge the
+        # netlist and never the board file (derate, clock_check, power_sequence: twenty-three verdicts on this
+        # disk), so argv carries no .kicad_pcb and they named no board at all. One of them is sitting in the
+        # SET-LEVEL out/ that every board reads, taken on board A's netlist and saying "this board carries no
+        # crystal": today it decides nothing because each board has a newer reading of its own, and the only
+        # thing standing between it and answering for board D is a timestamp. The netlist's stem is the
+        # board's name, which is exactly what `boardtable.letter_for` resolves, so the letter is recorded and
+        # `rules_status` can refuse it for another board the way it refuses a board file's sha.
+        if "board" not in inputs:
+            for a in sys.argv[1:]:
+                if not isinstance(a, str) or not a.endswith(".net") or not os.path.isfile(a): continue
+                import boardtable as _bt
+                _l = _bt.letter_for(a)
+                if _l:
+                    inputs["board"] = _l
+                    break
+        # AND A GATE THAT TAKES THE BOARD AS A LETTER (17 September 2026). `--board` is overloaded here: hardset
+        # takes a board FILE and `closer_audit` takes a letter, and the letter form left `inputs.board` empty,
+        # so a run of it in the set-level directory would have answered PLC-002 for all seven boards with one
+        # board's reading. That rule is per board: it fails on A and C and passes on D, E and P.
+        # AND A GATE GIVEN THE BOARD'S STEM (17 September 2026). `verify_deliverable` takes a deliverable
+        # FOLDER and the board's name, `pcb-c-display`, which is exactly what `boardtable.letter_for` resolves;
+        # it decides DFM-001, which is per board, and it named none. Three gates were anonymous on this disk
+        # after the sweep and this is the last of them: hardset takes --board <file>, emc_sheet takes
+        # --board <letter>, and this one takes the stem.
+        if "board" not in inputs:
+            import boardtable as _bt2
+            for a in sys.argv[1:]:
+                if not isinstance(a, str) or "/" in a or a.startswith("-"): continue
+                _l = _bt2.letter_for(a + ".kicad_pcb")
+                if _l:
+                    inputs["board"] = _l
+                    break
+        if "board" not in inputs and "--board" in sys.argv:
+            _i = sys.argv.index("--board")
+            if _i + 1 < len(sys.argv):
+                _v = str(sys.argv[_i + 1]).strip().lower()
+                if _v and not os.sep in _v and not _v.endswith((".kicad_pcb", ".net")):
+                    import boardtable as _bt
+                    if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(_bt.__file__)),
+                                                   "boards", "%s.json" % _v)) or _v in ("e5",):
+                        inputs["board"] = _v
+    except BaseException:
+        pass                                   # a verdict is never lost because its identity could not be read
+    return inputs
+
+
+def opt(argv, flag, default=None):
+    """The value after `flag`, or `default`. A FLAG GIVEN NO VALUE IS ANSWERED, NEVER RAISED.
+
+    18 September 2026: `assembly_set.py --checklist` with nothing after it raised IndexError from
+    `argv[argv.index("--checklist") + 1]`, the crash guard turned that into an INCONCLUSIVE verdict naming the
+    exception, and rule DFA-001 then read as though the seven boards had been judged and found wanting when
+    what had happened was an argument error. A gate that cannot tell a missing argument from a finding is the
+    shape this project keeps meeting, and the tools carry about a hundred of these reads.
+
+    It also refuses to take the NEXT FLAG as a value, which is the other half of the same mistake:
+    `--checklist --json` would otherwise write a file called `--json`."""
+    if flag not in argv: return default
+    i = argv.index(flag)
+    if len(argv) <= i + 1: return default
+    v = argv[i + 1]
+    return default if isinstance(v, str) and v.startswith("--") else v
+
+
+def _writer():
+    """THE FILE THAT WROTE THIS VERDICT, AND ITS CONTENT HASH (20 September 2026).
+
+    `tools` above carries the hash of the WHOLE tools tree, which moves whenever any tool changes, so it
+    cannot tell "the tool that decides this reading has changed" from "something else has". That is 17
+    September's rule-set-fingerprint defect one level along, and it cost nineteen hours: `check_pcb_b` was
+    corrected on 19 September to REPORT a half-routed pair rather than fail it, board B's MEC-001 went on
+    reading FAIL on 21 of them, and nothing on the page could say the reading predated the fix. A reader can
+    ask now, and it ANNOUNCES rather than deciding, because a tool change is not evidence about a board."""
+    import sys as _sys
+    cand = None
+    a0 = (_sys.argv[0] if _sys.argv else "") or ""
+    if a0.endswith(".py") and os.path.exists(a0): cand = os.path.abspath(a0)
+    if cand is None:
+        m = _sys.modules.get("__main__")
+        f = getattr(m, "__file__", None)
+        if f and str(f).endswith(".py") and os.path.exists(f): cand = os.path.abspath(f)
+    if cand is None: return {"file": "", "sha16": ""}
+    try:
+        h = hashlib.sha256(open(cand, "rb").read()).hexdigest()[:16]
+    except Exception:
+        h = ""
+    return {"file": os.path.basename(cand), "sha16": h}
+
+
+# ------------------------------------------------------------------------------------------------------------------
+# THE CODE BUNDLE (26 September 2026, MESHSAT-1357; the review of the 22:35 progress report, finding D2: "Hashing only
+# the verdict-writing script, with a commit-date fallback for older results, does not establish that the calculation or
+# matching logic is unchanged. Fingerprint the relevant checking code, including local helpers ... A conservative
+# code-bundle hash is sufficient initially").
+#
+# `writer` above hashes the ENTRY script alone, and most of what a gate decides lives in the modules it imports:
+# port_protect's clamp chain walks `kisch`'s part classes, stackup_gate compares against `stackup_write.STACKS`, and every
+# gate records through this file and `rules_lib`. A change to any of those moved no hash a reading carried. The bundle
+# is the entry script plus EVERY LOCAL MODULE IT IMPORTS, transitively, found by PARSING each file (ast), never by
+# grepping it:
+#
+#   * every `import x` and `from x import y` at ANY depth of the file (inside a function, a try, a conditional), because
+#     a lazy import runs as surely as a top-level one; `from x import y` also takes `x/y.py` where that is a module;
+#   * `importlib.import_module("x")` and `__import__("x")` with a literal name;
+#   * a string literal that names a file of the tools tree by itself (`"energy_chain.py"`, or a path ending in one) and
+#     is not a dictionary key: that is how a script is run by path in a subprocess; a table keyed by file names is data
+#     about other tools and is left out;
+#   * a name resolves to `<root>/<a>/<b>.py` or `<root>/<a>/<b>/__init__.py`, or to the same beside the importing file;
+#     anything else (the standard library, pcbnew, yaml) is not this project's code and is not in the bundle.
+#
+# It is CONSERVATIVE by construction: a module imported for one helper brings its whole file. ONE DECLARED EXCEPTION,
+# THE RECORDING CHANNEL (taken by the session on 26 September 2026 under the owner's standing rule of that day): this
+# file is in every bundle, and the modules IT imports lazily (rules_lib, hardset, boardtable) are not followed from it,
+# because what they compute is what a verdict records ABOUT ITSELF (the rule-set and per-rule digests, the rules it
+# decides, the board it names, the hard-type count), and rules_status re-checks each of those against the current tree
+# when it reads the verdict (`_fresh` against today's rule digests, `_board_identities` against today's board files). A
+# gate that imports one of them for its own judgement has it in its bundle through its own import, as twelve of the
+# fifty-four writers on this disk did with rules_lib on 26 September 2026. Following them from here would stale every
+# reading on this disk on every edit of the requirements validator in rules_lib, which decides nothing a gate measures. What the bundle does not see,
+# and says so where it is read: a module named by a computed string, a shell script, and data a module opens at run
+# time (that is configuration, bound by rules_status.CONFIG_INPUTS). The rule a reading decides is bound by its own
+# digest (`policy.rule_fingerprints`), and configuration by CONFIG_INPUTS at the time the reading is judged; together
+# with this hash they are the three parts of the bundle a reading is judged against.
+# ------------------------------------------------------------------------------------------------------------------
+BUNDLE_METHOD = "ast-local-imports-v1"
+# Files whose own imports are not followed: the recording channel (see the block comment above). Relative to the root.
+RECORDING_CHANNEL = ("verdict.py",)
+_PARSE_CACHE = {}
+_SHA_CACHE = {}
+
+
+def _stat_key(path):
+    try:
+        s = os.stat(path)
+        return (path, s.st_mtime_ns, s.st_size)
+    except OSError:
+        return None
+
+
+def _sha16_cached(path):
+    k = _stat_key(path)
+    if k is None: return None
+    if k not in _SHA_CACHE:
+        try: _SHA_CACHE[k] = hashlib.sha256(open(path, "rb").read()).hexdigest()[:16]
+        except OSError: return None
+    return _SHA_CACHE[k]
+
+
+def _module_file(name, bases):
+    """The file a dotted module name resolves to under one of `bases`, or None."""
+    parts = [p for p in str(name or "").split(".") if p]
+    if not parts: return None
+    for b in bases:
+        p = os.path.join(b, *parts)
+        for c in (p + ".py", os.path.join(p, "__init__.py")):
+            if os.path.isfile(c): return os.path.abspath(c)
+    return None
+
+
+def _references(path, root):
+    """(files, unresolved): the local files one source file reaches, and the dynamic imports it could not name."""
+    k = (_stat_key(path), os.path.abspath(root))
+    if k[0] is not None and k in _PARSE_CACHE: return _PARSE_CACHE[k]
+    import ast
+    out, unresolved = set(), []
+    try:
+        tree = ast.parse(open(path, "rb").read(), filename=path)
+    except (OSError, SyntaxError, ValueError) as e:
+        res = (set(), ["%s could not be parsed (%s)" % (os.path.basename(path), type(e).__name__)])
+        _PARSE_CACHE[k] = res
+        return res
+    here = os.path.dirname(os.path.abspath(path))
+    bases = [os.path.abspath(root)] + ([here] if here != os.path.abspath(root) else [])
+    dict_keys = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Dict):
+            for kk in node.keys:
+                if isinstance(kk, ast.Constant): dict_keys.add(id(kk))
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for a in node.names:
+                parts = a.name.split(".")
+                for i in range(1, len(parts) + 1):          # `import a.b` executes a and a.b
+                    f = _module_file(".".join(parts[:i]), bases)
+                    if f: out.add(f)
+        elif isinstance(node, ast.ImportFrom):
+            if node.level:
+                up = here
+                for _ in range(node.level - 1): up = os.path.dirname(up)
+                bb = [up]
+            else:
+                bb = bases
+            mod = node.module or ""
+            if mod:
+                f = _module_file(mod, bb)
+                if f: out.add(f)
+            for a in node.names:
+                f = _module_file((mod + "." if mod else "") + a.name, bb)
+                if f: out.add(f)
+        elif isinstance(node, ast.Call):
+            fn = node.func
+            fname = fn.attr if isinstance(fn, ast.Attribute) else (fn.id if isinstance(fn, ast.Name) else "")
+            if fname in ("import_module", "__import__"):
+                a0 = node.args[0] if node.args else None
+                if isinstance(a0, ast.Constant) and isinstance(a0.value, str):
+                    f = _module_file(a0.value, bases)
+                    if f: out.add(f)
+                else:
+                    unresolved.append("%s:%d %s with a computed name" % (os.path.basename(path), node.lineno, fname))
+        elif isinstance(node, ast.Constant) and isinstance(node.value, str) and id(node) not in dict_keys:
+            v = node.value.strip()
+            if v.endswith(".py") and "\n" not in v and len(v) < 200 and " " not in v:
+                for b in bases:
+                    c = os.path.normpath(os.path.join(b, v)) if not os.path.isabs(v) else v
+                    cand = [c, os.path.join(b, os.path.basename(v))]
+                    hit = next((x for x in cand if os.path.isfile(x)), None)
+                    if hit:
+                        out.add(os.path.abspath(hit)); break
+    out.discard(os.path.abspath(path))
+    res = (out, unresolved)
+    if k[0] is not None: _PARSE_CACHE[k] = res
+    return res
+
+
+def bundle_sha(files):
+    """The bundle's own identity: sha256/16 over its sorted `path:sha16` lines."""
+    body = "\n".join("%s:%s" % (p, files[p]) for p in sorted(files))
+    return hashlib.sha256(body.encode()).hexdigest()[:16]
+
+
+def code_bundle(entry, root=None):
+    """{method, entry, files: {path: sha16}, sha16, unresolved} for a script and every local module it reaches.
+
+    `root` is the tools directory (this file's own by default); paths are relative to it where the file is inside it,
+    and absolute otherwise (a probe script in a temporary directory). An entry that cannot be read gives an empty
+    bundle with sha16 "" rather than raising: a verdict is never lost because its provenance could not be read."""
+    root = os.path.abspath(root or os.path.dirname(os.path.abspath(__file__)))
+    entry = os.path.abspath(entry)
+
+    def rel(p):
+        r = os.path.relpath(p, root)
+        return p if r.startswith("..") else r
+    if not os.path.isfile(entry):
+        return {"method": BUNDLE_METHOD, "entry": rel(entry), "files": {}, "sha16": "", "unresolved": ["entry not found"]}
+    seen, todo, unresolved = set(), [entry], []
+    channel = {os.path.join(root, x) for x in RECORDING_CHANNEL}
+    while todo:
+        p = todo.pop()
+        if p in seen: continue
+        seen.add(p)
+        if p in channel and p != entry: continue           # the recording channel: the file, not what it imports
+        refs, un = _references(p, root)
+        unresolved += un
+        todo += sorted(refs - seen)
+    files = {}
+    for p in seen:
+        s = _sha16_cached(p)
+        if s: files[rel(p)] = s
+    return {"method": BUNDLE_METHOD, "entry": rel(entry), "files": files, "sha16": bundle_sha(files),
+            "unresolved": sorted(set(unresolved))}
+
+
+def _entry_path():
+    """The script this process was started as, when it is a Python file (the same choice `_writer` makes)."""
+    a0 = (sys.argv[0] if sys.argv else "") or ""
+    if a0.endswith(".py") and os.path.exists(a0): return os.path.abspath(a0)
+    m = sys.modules.get("__main__")
+    f = getattr(m, "__file__", None)
+    if f and str(f).endswith(".py") and os.path.exists(f): return os.path.abspath(f)
+    return None
+
+
+def _code_bundle_now():
+    """The bundle of the running entry script, or {} when the process was not started from a Python file."""
+    try:
+        e = _entry_path()
+        return code_bundle(e) if e else {}
+    except BaseException as ex:                     # provenance never decides whether a verdict exists
+        return {"method": BUNDLE_METHOD, "files": {}, "sha16": "", "unresolved": ["%s: %s" % (type(ex).__name__, str(ex)[:80])]}
+
+
+def _runtime():
+    """The interpreter and, where the process loaded it, KiCad's own version. RECORDED, not compared: the runner has no
+    pcbnew, so no reader here can say which KiCad version is current, and a comparison it cannot make is not made."""
+    out = {"python": "%d.%d.%d" % sys.version_info[:3]}
+    pc = sys.modules.get("pcbnew")
+    if pc is not None:
+        for fn in ("GetBuildVersion", "Version", "GetMajorMinorVersion"):
+            try:
+                out["kicad"] = str(getattr(pc, fn)()); break
+            except Exception:
+                continue
+    return out
+
+
+def write(tool, result, counts=None, denominator=None, evidence=None, inputs=None, note="", out_dir=None,
+          quiet=False, advisory=None, rules=None, applicable=True, missing_input=None):
+    """Write out/<tool>.verdict.json and return the exit code that equals the verdict.
+
+    `advisory` (or VERDICT_ADVISORY=1 in the environment) marks a verdict that is a MEASUREMENT for the record and
+    not a bar: it is written, listed and hashed like any other, and `collect` leaves it out of the stage's worst.
+    15 September 2026 (MESHSAT-862): B19's pre stage printed PREROUTE-DONE OK and routeflow read GATE_BLOCKED,
+    because the pre-route DRC on the pair copper BEFORE the prune (hard 15, the number the prune acts on) and the
+    placement predictor the board declares as a report had each written a FAIL the collector took as the stage's.
+
+    `applicable=False` says the rule this tool decides does not apply to THIS board: the board carries none of
+    the thing the rule is about. It stays INCONCLUSIVE, because absence is never a pass and a gate that could
+    not judge must never read as one, and it carries `applicable: false` so a collector can tell "this board has
+    no crystal" apart from "the crystal check did not run". Board P's route was blocked on 16 September 2026 by
+    exactly that confusion: the pre-route gate refused the board because its crystal check and its exposed-port
+    check both said, correctly, that there was nothing of theirs on the board. The registry remains the
+    authority on applicability; this field is the tool reporting the board fact it observed, and
+    `rules_status.py` compares the two.
+
+    `missing_input` says the thing this tool judges was NOT THERE to be judged: no rotation table in this tree,
+    no order folder, no netlist. It is a sentence, and it makes two things true at once. The verdict is
+    INCONCLUSIVE, because a tool that could not read its input has not judged; and the record carries the
+    declaration, so a reader can tell "there was nothing to check" apart from "everything checked was fine".
+
+    WHY IT IS A FIELD AND NOT A NOTE (17 September 2026). A READING TAKEN WITH LESS INPUT NEVER REPLACES ONE
+    TAKEN WITH MORE is this project's own rule and it has been re-learnt five times: the cross-board contracts
+    at both ends, the rotation table, the energy chain, the placement carry, and today `doc_provenance`, whose
+    reading taken in a sweep tree that holds NO release folder at all (0 documents of 0 folders) is newer than
+    the runner's reading of the seven real ones and stands in front of it on four boards. Each of those was
+    fixed where it was found, which is four fixes and one that was missed. Written down here, a consumer can
+    hold the rule once for every tool: `rules_status` prefers the reading that HAD its input, whatever the
+    timestamps say, and a tool declares the absence rather than each reader guessing it from a zero.
+
+    `result` must be PASS, FAIL or INCONCLUSIVE; anything else is a usage error, because a verdict this module does not
+    recognise must not resolve to a pass by falling through."""
+    if result not in CODE:
+        print("verdict: %s reported %r, which is not a verdict" % (tool, result)); return USAGE
+    # A tool whose input was absent has not judged, whatever it was about to say.
+    if missing_input and result != INCONCLUSIVE:
+        print("verdict: %s declares its input absent (%s) and reported %s; a judgement needs the thing it "
+              "judges, so this is INCONCLUSIVE" % (tool, str(missing_input)[:70], result))
+        result = INCONCLUSIVE
+    # `out` beside the board is the house default; a driver that runs a gate from elsewhere sets VERDICT_DIR
+    # rather than teaching every gate an argument it would otherwise never take.
+    out_dir = out_dir or os.environ.get("VERDICT_DIR") or "out"
+    if advisory is None: advisory = os.environ.get("VERDICT_ADVISORY", "0") not in ("0", "")
+    rec = {
+        "tool": tool,
+        "version": _version(),
+        "ts": now(),
+        "tools": _tools(),         # the code that judged: git head and the tools tree's content hash (a StageResult field, 15 Sep 2026)
+        "writer": _writer(),       # the FILE that judged and its own content hash, so staleness can be asked of the deciding tool (20 Sep 2026)
+        # AND EVERY LOCAL MODULE IT RAN (26 Sep 2026, the review's finding D2): the entry script plus its imports,
+        # transitively, each by sha256/16, and their combined hash. See `code_bundle`.
+        "code_bundle": _code_bundle_now(),
+        "runtime": _runtime(),     # the interpreter and KiCad's version where it was loaded; recorded, never compared
+        # THE DIGESTS ARE STAMPED FOR THE RULES THE VERDICT DECIDES, NOT ONLY FOR THE ONES THE GATE TYPED (17
+        # September 2026, the evening's second registry change). `rules` below falls back to the coverage map when a
+        # gate passes none, and most gates pass none; the policy was built from the argument alone, so hardset,
+        # final_gate, jlc_certify and every other gate that relies on the map carried no per-rule digest and went
+        # stale with the whole set on every registry edit: 49 pairs after SCH-005 was added, for readings that
+        # nothing about SCH-005 touched.
+        "policy": _policy(sorted(set(rules or _rules_for_tool(tool)))),
+        "verdict": result,
+        "advisory": bool(advisory),
+        "applicable": bool(applicable),
+        "counts": dict(counts or {}),
+        "denominator": denominator,
+        "inputs": _with_board(dict(inputs or {})),
+        # A BARE STRING IS ONE PIECE OF EVIDENCE, NOT ITS CHARACTERS (19 September 2026). `list("a.kicad_pcb")`
+        # is twelve one-character rows, and that is exactly what `rail_barrels` wrote on board E: a verdict whose
+        # whole job is to name the sites it DECLINED recorded the board's filename spelled out letter by letter,
+        # truncated at fifty. The reader could not have found the declined sites from it. A mechanical sweep says
+        # rail_barrels is the only tool that passed a scalar, and it is fixed at its five call sites too; this is
+        # the floor under the next one, because the failure is silent and looks like a populated evidence list.
+        "evidence": ([str(evidence)] if isinstance(evidence, (str, bytes)) else list(evidence or []))[:50],
+        "note": note,
+        # The sentence saying the input was not there, or None. A reader prefers a verdict that had
+        # its input over one that says it did not, whatever the two timestamps are.
+        "missing_input": (str(missing_input) if missing_input else None),
+        # THE RULE IDS THIS VERDICT DECIDES (MESHSAT-862, 16 September 2026). A gate with no rule id decides
+        # something the registry does not know about, which is how this project came to enforce rules it had
+        # never written down; tests/test_rule_gate_mapping.py holds the list.
+        "rules": sorted(set(rules or _rules_for_tool(tool))),
+    }
+    # An input given as a path is recorded by its hash as well as its name: the verdict then names the bytes it judged.
+    for k, v in list(rec["inputs"].items()):
+        if isinstance(v, str) and os.path.exists(v):
+            rec["inputs"][k] = {"path": v, "sha256_16": sha256_file(v)}
+    try:
+        os.makedirs(out_dir, exist_ok=True)
+        tmp = os.path.join(out_dir, "%s.verdict.json.part" % tool)
+        with open(tmp, "w") as f: json.dump(rec, f, indent=1, sort_keys=True)
+        os.replace(tmp, os.path.join(out_dir, "%s.verdict.json" % tool))   # atomic: a reader never sees a half-written verdict
+    except Exception as e:
+        print("verdict: %s could not write its verdict (%s)" % (tool, e)); return USAGE
+    if not quiet:
+        d = "" if denominator is None else " of %s" % denominator
+        c = (" " + json.dumps(rec["counts"], sort_keys=True)) if rec["counts"] else ""
+        print("verdict: %-22s %-12s%s%s%s%s" % (tool, result, d, c, (" (advisory: a measurement, not a bar)" if advisory else ("" if applicable else " (this rule does not apply to this board)")), (" | " + note) if note else ""))
+    return CODE[result]
+
+
+def read(path):
+    """Read a verdict back. A missing or unparseable verdict is INCONCLUSIVE, never a pass."""
+    try:
+        rec = json.load(open(path))
+    except Exception as e:
+        return {"tool": os.path.basename(path), "verdict": INCONCLUSIVE, "note": "unreadable verdict (%s)" % e}, CODE[INCONCLUSIVE]
+    v = rec.get("verdict")
+    if v not in CODE:
+        rec["note"] = "verdict field is %r, which is not a verdict" % v
+        return rec, CODE[INCONCLUSIVE]
+    return rec, CODE[v]
+
+
+def now():
+    """The one timestamp format in this channel: UTC, `2026-09-11T13:38:13Z`.
+
+    It is a function rather than an inline strftime because a caller needs to build a comparable horizon for
+    `collect(since=...)`, and the first version of that horizon passed routeflow's own `now()`, which is LOCAL
+    time with a space separator. The string compare then put every record on the wrong side of it and the
+    horizon excluded nothing at all (11 September 2026)."""
+    return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+
+
+def collect(out_dir="out", require=(), since=None):
+    """Every verdict in a directory, and the worst of them (MESHSAT-862, 11 September 2026).
+
+    There was no collector. `kb_confidence.py` aggregates five gates from a hardcoded list and nothing does it for the
+    other nineteen, so no caller could ask "did every gate that ran on this board pass" without knowing the answer's
+    shape in advance. Two rules make the answer mean something:
+
+      * a REQUIRED verdict that is absent is INCONCLUSIVE, not missing-and-ignored. A gate that did not run is the
+        case this pipeline keeps mistaking for a gate that passed.
+      * the worst verdict wins, and INCONCLUSIVE is worse than PASS. There is no truthy spelling of INCONCLUSIVE.
+
+    `since` is a horizon: a UTC timestamp in the form verdict.now() writes, and any verdict older than it is
+    ignored. Verdict files live in the board's out/ directory across stages and rounds, so without a horizon a
+    stage is judged partly by files an EARLIER stage wrote. On 11 September 2026 board E's second pre-route was
+    blocked by a check_contracts verdict its first round's FINISH had written, which is a judgement about a
+    different moment and a different question. A verdict with no timestamp is kept, because dropping it would
+    turn an unreadable record into a silent pass.
+
+    Returns (worst_code, {tool: record}, [missing tools]).
+    """
+    found = {}
+    try: names = sorted(os.listdir(out_dir))
+    except Exception: names = []
+    for fn in names:
+        if not fn.endswith(".verdict.json"): continue
+        rec, _code = read(os.path.join(out_dir, fn))
+        if since and rec.get("ts") and rec["ts"] < since: continue
+        found[rec.get("tool") or fn[:-len(".verdict.json")]] = rec
+    missing = [t for t in require if t not in found]
+    # No verdicts at all is not "everything passed": it is a directory nothing wrote to, which is what an
+    # unrun chain, a wrong out_dir and a healthy board all produce identically. Found by a reviewer reading
+    # this against the rule it was written to enforce, 11 September 2026.
+    if not found: return CODE[INCONCLUSIVE], found, missing
+    worst = 0
+    for rec in found.values():
+        if rec.get("advisory"): continue   # a measurement for the record; it never decides the stage
+        if rec.get("applicable") is False: continue   # the board carries none of what this rule is about
+        worst = max(worst, CODE.get(rec.get("verdict"), CODE[INCONCLUSIVE]))
+    if missing: worst = max(worst, CODE[INCONCLUSIVE])
+    if not any((not r.get("advisory")) and r.get("applicable") is not False for r in found.values()):
+        worst = max(worst, CODE[INCONCLUSIVE])   # only advisories and inapplicable rules is nothing judged
+    return worst, found, missing
+
+
+def main(a):
+    if len(a) >= 2 and a[0] == "collect":
+        req = tuple(x for x in (a[a.index("--require") + 1].split(",") if "--require" in a else []) if x)
+        worst, found, missing = collect(a[1], req)
+        for t, rec in sorted(found.items()):
+            d = "" if rec.get("denominator") is None else " of %s" % rec["denominator"]
+            print("verdict: %-24s %-12s%s%s" % (t, rec.get("verdict"), d, (" | " + rec["note"]) if rec.get("note") else ""))
+        for t in missing: print("verdict: %-24s %-12s did not run, and a gate that did not run is not a gate that passed" % (t, INCONCLUSIVE))
+        print("verdict: %d verdict(s) in %s, %d required and absent; worst %s"
+              % (len(found), a[1], len(missing), {v: k for k, v in CODE.items()}.get(worst, "PASS")))
+        return worst
+    if len(a) == 2 and a[0] == "read":
+        rec, code = read(a[1])
+        d = "" if rec.get("denominator") is None else " of %s" % rec["denominator"]
+        print("verdict: %-22s %-12s%s%s" % (rec.get("tool", "?"), rec.get("verdict"), d, (" | " + rec["note"]) if rec.get("note") else ""))
+        return code
+    print(__doc__); return USAGE
+
+
+if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
+
+def guard(tool, fn, argv, rules=None):
+    """Run a gate's main and, if it raises, write INCONCLUSIVE naming the exception instead of leaving nothing.
+
+    18 September 2026: impedance_check raised a ValueError on B21 (a ten-field row among eleven-field ones) three
+    lines before its writer, so board B had no impedance verdict for two sweeps and PAIR-001 and STK-001 read
+    "no verdict", which the registry reads as nobody having looked. A crash is a reading too: the tool did not
+    decide, and here is why. The board named is argv[0] where the gate takes one, so prune_stale_evidence and
+    rules_status can still tell which board it was about. Exit 3, the INCONCLUSIVE code."""
+    try:
+        return fn(argv)
+    except SystemExit as e:
+        raise
+    except BaseException as e:
+        import traceback
+        tb = traceback.format_exc().strip().split("\n")[-1][:200]
+        try:
+            board = argv[0] if argv and str(argv[0]).endswith(".kicad_pcb") else None
+            # AND IT GOES WHERE THE CALLER SAID TO WRITE (20 September 2026). This wrote with no `out_dir`,
+            # so a gate that was told to put its reading somewhere else put its CRASH in the tree's own
+            # evidence instead: re-taking board E5's CMP-001 with `--out-dir routed` landed an INCONCLUSIVE
+            # beside the board because the tool raised. A run told where to write leaves the tree alone,
+            # which was settled for the gates themselves on 19 September and never reached their guard.
+            _od = opt(argv, "--out-dir", None)
+            write(tool, INCONCLUSIVE, denominator=0, inputs={"board": board} if board else {}, rules=rules,
+                  note="the gate raised before it decided: %s (%s)" % (type(e).__name__, tb),
+                  missing_input="a decision: the gate crashed with %s" % type(e).__name__,
+                  **({"out_dir": _od} if _od else {}))
+        except BaseException:
+            pass
+        print("%s: CRASHED before deciding: %s" % (tool, tb))
+        return 3
+
+
+def crash_hook(tool, argv, rules=None):
+    """The same guard for a gate that runs at MODULE level and has no main to wrap (the six check_pcb_* gates,
+    check_contracts, check_zone_nets, lcsc_fill): install a sys.excepthook that writes INCONCLUSIVE naming the
+    exception and exits 3. Installed at the top of the file, before pcbnew loads the board, so a crash anywhere
+    in the module body is a reading. SystemExit never reaches an excepthook, so a gate's own verdict exit is
+    untouched; KeyboardInterrupt is left to the default hook."""
+    import sys as _s
+    prev = _s.excepthook
+
+    def hook(et, ev, tb):
+        if issubclass(et, KeyboardInterrupt):
+            return prev(et, ev, tb)
+        import traceback
+        last = "".join(traceback.format_exception_only(et, ev)).strip().split("\n")[-1][:200]
+        try:
+            board = argv[0] if argv and str(argv[0]).endswith(".kicad_pcb") else None
+            write(tool, INCONCLUSIVE, denominator=0, inputs={"board": board} if board else {}, rules=rules,
+                  note="the gate raised before it decided: %s (%s)" % (et.__name__, last),
+                  missing_input="a decision: the gate crashed with %s" % et.__name__)
+        except BaseException:
+            pass
+        print("%s: CRASHED before deciding: %s" % (tool, last))
+        _s.stdout.flush()
+        _s.exit(3)
+    _s.excepthook = hook

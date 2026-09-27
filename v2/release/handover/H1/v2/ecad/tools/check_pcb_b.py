@@ -1,0 +1,449 @@
+#!/usr/bin/env python3
+"""Numeric verification of PCB-B phase B16 (MESHSAT-830, appendix 32.58): outline, rods, the three Compute Module 5 sites and their receptacle pairs,
+the M.2 sockets and their standoffs, the QMX, LimeSDR and RockBLOCK sites, J_AB1 under the board, the fabric nets reaching their receptacles, six layers;
+on a placed board the net-class patterns; on a routed board the pair report."""
+import sys, re, pcbnew, itertools
+import os as _bo, sys as _bs; _bs.path.insert(0, _bo.path.dirname(_bo.path.abspath(__file__)))
+import verdict as _vh; _vh.crash_hook("check_pcb_b", sys.argv[1:])   # a crash in this module body writes INCONCLUSIVE, never nothing (18 Sep 2026)
+import boardtable as _bt   # the copper layer count is a DECLARATION in boards/<letter>.json, never a
+                           # literal here: six gates carried one, so a layer decision meant editing a
+                           # gate, and two experiments came back with their only failure being the gate
+                           # describing the previous decision (board A, 12 September; board C, today)
+from pcbnew import FromMM
+OX, OY = 150.0, 110.0
+def case(v): return (round(v.x / 1e6 - OX, 3), round(OY - v.y / 1e6, 3))
+b = pcbnew.LoadBoard(sys.argv[1]); fails = []; checked = []; _intent_reported = []; _route_reported = []
+def check(c, m):
+    print(("PASS " if c else "FAIL ") + m)
+    checked.append(m)
+    if not c: fails.append(m)
+# A PAIR WITH ONE LEG ROUTED IS THE ROUTE'S PROPERTY AND NOT THE MECHANICAL RULE'S (19 September 2026, the
+# same defect the intent items were split out for on 16 September and its own comment's rule: THE SAME DEFECT
+# MUST NOT BE COUNTED TWICE UNDER TWO AUTHORITIES). This gate is the verdict rule MEC-001 is read from, which
+# asks whether the board fits what it is fitted to: outline, mounting holes, keep-outs, connector positions,
+# part heights. Board B's gate failed it on 21 items and every one of the 21 was `pair X has one leg routed
+# and one not`, which is B21 being 416 connections short and is already reported by PAIR-001's own
+# impedance_check as UNROUTED 36 and by RTE-002's routed-board gate as a non-zero unrouted count. It is
+# REPORTED here, counted in the denominator, and kept out of this gate's failures. Nothing is lost by it: one
+# leg routed and one not implies at least one unmade connection, and the routed-board gate refuses any board
+# with a non-zero unrouted count, so no board can reach a deliverable through this door.
+def route_item(c, m):
+    print(("PASS " if c else "FAIL ") + m)
+    checked.append(m); _route_reported.append(m)
+segs = [(case(d.GetStart()), case(d.GetEnd())) for d in b.GetDrawings() if d.GetLayer() == pcbnew.Edge_Cuts and d.GetShape() == pcbnew.SHAPE_T_SEGMENT]
+pts = [p for s in segs for p in s]
+x0, x1 = min(p[0] for p in pts), max(p[0] for p in pts); y0, y1 = min(p[1] for p in pts), max(p[1] for p in pts)
+check(abs(x1 - x0 - 330) < 0.005 and abs(y1 - y0 - 200) < 0.005 and abs(x0 + 165) < 0.005 and abs(y1 - 100) < 0.005, "outline 330 x 200 centred (X %.2f..%.2f Y %.2f..%.2f)" % (x0, x1, y0, y1))
+fps = {}
+for fp in b.GetFootprints():
+    pads = list(fp.Pads()); d = pads[0].GetDrillSize() if pads else None
+    fps[fp.GetReference()] = (case(fp.GetPosition()), (round(d.x / 1e6, 2), round(d.y / 1e6, 2)) if d else None)
+holes = {r: v for r, v in fps.items() if r.startswith("H")}
+def near(p, q, tol=0.01): return abs(p[0] - q[0]) < tol and abs(p[1] - q[1]) < tol
+def find(pos, drill): return any(near(v[0], pos) and abs(v[1][0] - drill) < 0.01 for v in holes.values())
+for (x, y) in [(-110.5, -73), (110.5, -73), (-110.5, 73), (110.5, 73)]: check(find((x, y), 3.2), "rod hole 3.2 at (%.1f, %.1f)" % (x, y))
+CM5_C = {1: (-72.5, 60.0), 2: (-2.5, 60.0), 3: (67.5, 60.0)}
+for s, (cx, cy) in CM5_C.items():
+    for (x, y) in [(cx + dx, cy + dy) for dx in (-16.5, 16.5) for dy in (-24.0, 24.0)]:
+        check(find((x, y), 2.7), "CM5 S%d M2.5 hole 2.7 at (%.1f, %.1f) (module 40 x 55 at (%.1f, %.1f), holes 33 x 48)" % (s, x, y, cx, cy))
+RB_C = (139.0, -71.0)
+for p in [(RB_C[0] + dx, RB_C[1] + dy) for dx in (-16, 16) for dy in (-16, 16)]: check(find(p, 4.3), "9704 bracket hole 4.3 at %s" % (p,))
+placed = len(list(b.GetFootprints())) > 200
+fpo = {f.GetReference(): f for f in b.GetFootprints()}
+def bbox(f):
+    bb = f.GetBoundingBox(False, False); return (bb.GetLeft() / 1e6 - OX, OY - bb.GetBottom() / 1e6, bb.GetRight() / 1e6 - OX, OY - bb.GetTop() / 1e6)
+if placed:
+    for s, (cx, cy) in CM5_C.items():
+        for ref, rx in (("U3%dA" % (s - 1), cx - 17.0), ("U3%dB" % (s - 1), cx + 17.0)):
+            f = fpo.get(ref); check(f is not None, "%s (CM5 receptacle, slot S%d) present" % (ref, s))
+            if f is None: continue
+            smd = [case(p.GetPosition()) for p in f.Pads() if p.GetAttribute() == pcbnew.PAD_ATTRIB_SMD]
+            check(len(smd) == 100, "%s has 100 pads (got %d)" % (ref, len(smd)))
+            xs = sorted(set(round(p[0], 2) for p in smd)); ys = sorted(set(round(p[1], 2) for p in smd))
+            check(len(xs) == 2 and abs(xs[1] - xs[0] - 3.08) < 0.02 and abs((xs[0] + xs[1]) / 2 - rx) < 0.05, "%s rows 3.08 mm apart centred x %.1f (got %s)" % (ref, rx, xs))
+            check(len(ys) == 50 and abs(ys[-1] - ys[0] - 19.6) < 0.02 and abs((ys[0] + ys[-1]) / 2 - (cy - 2.5)) < 0.05, "%s 50 positions at 0.4 mm over 19.6 mm centred y %.1f (got %d over %.2f)" % (ref, cy - 2.5, len(ys), ys[-1] - ys[0]))
+            check(all(cx - 20 < p[0] < cx + 20 and cy - 27.5 < p[1] < cy + 27.5 for p in smd), "%s pads inside the module outline" % ref)
+    # M.2 sockets: body centre (the placement centres the courtyard box) and the standoff hole (card length minus 1.75 from the socket datum; cards extend south, S2's NVMe east)
+    M2 = {"J_M2N1": (-85, 5.35, (-85, -17.1), 67), "J_M2C1": (-57, 11.35, (-57, -5.1), 67), "J_M2C2": (-20, 0.35, (-20, -27.1), 67), "J_M2N2": (-9.35, -85, (13.1, -85), 67), "J_M2N3": (48, 5.35, (48, -17.1), 67), "J_M2C3": (79, 11.35, (79, -5.1), 67)}
+    for ref, (ex, ey, (sx, sy), ncont) in M2.items():
+        f = fpo.get(ref); check(f is not None, "%s present" % ref)
+        if f is None: continue
+        r = bbox(f); cxb, cyb = (r[0] + r[2]) / 2, (r[1] + r[3]) / 2
+        check(abs(cxb - ex) < 0.6 and abs(cyb - ey) < 0.6, "%s socket box centred at (%.1f, %.1f) (got %.2f, %.2f)" % (ref, ex, ey, cxb, cyb))
+        check(sum(1 for pd in f.Pads() if pd.GetNumber().isdigit()) == ncont, "%s carries %d contacts" % (ref, ncont))
+        st = [case(pd.GetPosition()) for pd in f.Pads() if pd.GetNumber() == "M1"]
+        check(len(st) == 1 and abs(st[0][0] - sx) < 1.0 and abs(st[0][1] - sy) < 1.0, "%s standoff hole near (%.2f, %.2f) (got %s)" % (ref, sx, sy, st))
+    for ref in ("J_ETH", "J_HDMI", "J_PANEL", "J_LIME", "J_RB9704", "T1", "U1", "U3", "U4", "U5", "U11", "U12", "U13", "U14", "J_SIM1", "J_SIM2", "J_5V_DEV", "J_54V", "BT1") + tuple("U%d0%d" % (s, k) for s in (1, 2, 3) for k in (1, 2, 3, 4, 5, 6)):
+        check(ref in fpo, "%s present" % ref)
+    j = fpo.get("J_AB1")
+    if j is not None:
+        check(j.IsFlipped(), "J_AB1 on the underside"); r = bbox(j); check(abs((r[0] + r[2]) / 2 - 113) < 0.6 and abs((r[1] + r[3]) / 2 + 46) < 0.6, "J_AB1 centred at (113, -46) over A22's header (got %.1f, %.1f)" % ((r[0] + r[2]) / 2, (r[1] + r[3]) / 2))
+    # the fabric nets: every PCIe, USB 3 and HDMI net of a slot reaches its module receptacle and the part it feeds (the B14 lesson: a net that lives only on one part makes no ratsnest)
+    bynet = {}; bypad = {}   # bypad (MESHSAT-1357 round 4): the same map at pad level, so a lane's DIRECTION can be judged
+    byval = {}   # reference -> value text (MESHSAT-1357 round 4, R4T-F9): a pull-down is judged by its size as well as its place
+    for f in b.GetFootprints():
+        byval[f.GetReference()] = f.GetValue()
+        for pd in f.Pads():
+            nm = pd.GetNetname().lstrip("/")
+            if nm: bynet.setdefault(nm, set()).add(f.GetReference()); bypad.setdefault(nm, set()).add((f.GetReference(), pd.GetNumber()))
+    for s in (1, 2, 3):
+        rb = "U3%dB" % (s - 1); sw = "U%d01" % s; hub = "U%d02" % s
+        # THE RECEIVE LINES RUN THROUGH A COUPLING CAPACITOR SINCE 16 SEPTEMBER 2026, so the switch is no longer
+        # ON those two nets and this check has to follow the path rather than assert a membership that the
+        # CM5 datasheet forbids. Section 2.3.1 asks for 220 nF in series in every PCIe RECEIVE line close to the
+        # driving source, which is the switch; section 2.3 says the module carries its own on the transmit side.
+        # The path is therefore U<slot>01 -> PCIE<slot>_RXSW_x -> C<slot>5x -> PCIE<slot>_RX_x -> U3<slot-1>B,
+        # and a check that still demanded the switch on the receive net refused board B's pre-route at 04:27
+        # with four failures that were the gate describing the design before the capacitors.
+        for nm in ("PCIE%d_TX_P" % s, "PCIE%d_TX_N" % s, "PCIE%d_CLK_P" % s, "PCIE%d_CLK_N" % s, "PCIE%d_nRST" % s):
+            check(rb in bynet.get(nm, set()) and sw in bynet.get(nm, set()), "%s reaches %s and the PCIe switch %s (got %s)" % (nm, rb, sw, sorted(bynet.get(nm, set()))))
+        for half in ("P", "N"):
+            rx = "PCIE%d_RX_%s" % (s, half); sw_side = "PCIE%d_RXSW_%s" % (s, half)
+            on_rx = bynet.get(rx, set()); on_sw = bynet.get(sw_side, set())
+            cap = sorted(on_rx & on_sw)
+            check(rb in on_rx and sw in on_sw and len(cap) == 1,
+                  "%s reaches %s through exactly one series coupling capacitor from the switch %s (module side %s, "
+                  "switch side %s, in series %s)" % (rx, rb, sw, sorted(on_rx), sorted(on_sw), cap))
+        # 9 September 2026 (ARCH-PCB-B-IOHA): the module no longer faces its hub directly. Port 0 goes to its OWN bank's
+        # pair of muxes and port 1 to the bank that adopts this slot, and the bank's upstream runs from the muxes to the
+        # hub, so the three checks below follow that path rather than the direct one they used to.
+        _own = ("U%d09" % s, "U%d10" % s)
+        _adopt = {1: 3, 2: 1, 3: 2}[s]          # bank b adopts slot RING[b], so slot s is adopted by this bank
+        for nm in ("HOST%d_0TX_P" % s, "HOST%d_0TX_N" % s, "HOST%d_0RX_P" % s, "HOST%d_0RX_N" % s, "HOST%d_0D_P" % s, "HOST%d_0D_N" % s):
+            _p = bynet.get(nm, set())
+            check(rb in _p and (set(_own) & _p), "%s reaches %s and its own bank's host select (got %s)" % (nm, rb, sorted(_p)))
+        for nm in ("HOST%d_1TX_P" % s, "HOST%d_1TX_N" % s, "HOST%d_1RX_P" % s, "HOST%d_1RX_N" % s, "HOST%d_1D_P" % s, "HOST%d_1D_N" % s):
+            _p = bynet.get(nm, set())
+            check(rb in _p and ({"U%d09" % _adopt, "U%d10" % _adopt} & _p),
+                  "%s reaches %s and the host select of the bank that adopts slot %d (got %s)" % (nm, rb, s, sorted(_p)))
+        for nm in ("BANK%d_UPTX_P" % s, "BANK%d_UPTX_N" % s, "BANK%d_UPD_P" % s, "BANK%d_UPD_N" % s):
+            _p = bynet.get(nm, set())
+            check(hub in _p and (set(_own) & _p), "%s reaches the hub %s and its host select (got %s)" % (nm, hub, sorted(_p)))
+        for nm in ("BANK%d_UPRX_P" % s, "BANK%d_UPRX_N" % s):
+            _p = bynet.get(nm, set())
+            check(hub in _p and any(r.startswith("C") for r in _p), "%s reaches the hub %s and its coupling capacitor (got %s)" % (nm, hub, sorted(_p)))
+        for nm in ("HDMI%d_D0_P" % s, "HDMI%d_D1_P" % s, "HDMI%d_D2_P" % s, "HDMI%d_CK_P" % s, "HDMI%d_HPD" % s, "HDMI%d_SDA" % s):
+            check(rb in bynet.get(nm, set()) and ({"U3", "U4"} & bynet.get(nm, set())), "%s reaches %s and a display switch (got %s)" % (nm, rb, sorted(bynet.get(nm, set()))))
+        for k in range(4): check(len(bynet.get("ETH%d_P%d_P" % (s, k), set())) == 2, "ETH%d_P%d_P reaches the receptacle and its coupling capacitor" % (s, k))
+        # THE DOWNSTREAM LINKS ARE JUDGED BY DIRECTION, NOT BY MEMBERSHIP (MESHSAT-1357 round 4, 26 September 2026,
+        # W3-F01 and W3-F03). The check this replaces asked only that each NVME*/CARD* net reach the switch and a
+        # socket, which a link wired transmitter to transmitter passes: B21 did, on all six links. Pins from DS40068
+        # Rev 5-2 section 3.1 (PETP1/PETN1 100/101 and PETP2/PETN2 106/107 type O, PERP1/PERN1 97/98 and PERP2/PERN2
+        # 102/103 type I, REFCLKO_P/N[1] 81/80, [2] 78/77, [0] 85/83, REFCLKP/N 110/111) and the M.2 sockets in the
+        # host's naming (keys M and B: PETp0/PETn0 49/47, PERp0/PERn0 43/41, REFCLKp/n 55/53; key E: 35/37, 41/43,
+        # 47/49). A switch transmitter reaches the socket's PET pin through exactly one series capacitor (*_RX_SW_x to
+        # *_RX_x, named from the device's side), the socket's PER pin returns straight to the switch receiver
+        # (*_TX_x), and every used REFCLKO pin meets its 33.2 Ohm series resistor (*_SRC_x) with the 49.9 Ohm to
+        # ground on the line after it (Table 8-1 note 1), REFCLKO0 then AC coupled into REFCLKP/N.
+        def _between(n1, n2, prefix):
+            return sorted(r for r in bynet.get(n1, set()) & bynet.get(n2, set()) if r.startswith(prefix))
+        for dev, sock, pet, per, rco in (("NVME", "J_M2N%d" % s, 100, 97, 81), ("CARD", "J_M2C%d" % s, 106, 102, 78)):
+            key_e = dev == "CARD" and s != 2
+            s_pet, s_per, s_clk = ((35, 37), (41, 43), (47, 49)) if key_e else ((49, 47), (43, 41), (55, 53))
+            for i, h in enumerate(("P", "N")):
+                swtx, devrx, devtx = "%s%d_RX_SW_%s" % (dev, s, h), "%s%d_RX_%s" % (dev, s, h), "%s%d_TX_%s" % (dev, s, h)
+                cap = _between(swtx, devrx, "C")
+                check((sw, str(pet + i)) in bypad.get(swtx, set()) and (sock, str(s_pet[i])) in bypad.get(devrx, set()) and len(cap) == 1,
+                      "%s: the switch transmitter %s.%d reaches %s.%d (PET%s0) through exactly one series capacitor (switch side %s, socket side %s, in series %s)"
+                      % (devrx, sw, pet + i, sock, s_pet[i], h.lower(), sorted(bypad.get(swtx, set())), sorted(bypad.get(devrx, set())), cap))
+                check((sw, str(per + i)) in bypad.get(devtx, set()) and (sock, str(s_per[i])) in bypad.get(devtx, set()),
+                      "%s: %s.%d (PER%s0) returns to the switch receiver %s.%d (got %s)" % (devtx, sock, s_per[i], h.lower(), sw, per + i, sorted(bypad.get(devtx, set()))))
+                src, line = "%s%d_CLK_SRC_%s" % (dev, s, h), "%s%d_CLK_%s" % (dev, s, h)
+                rs, rp = _between(src, line, "R"), _between(line, "GND", "R")
+                check((sw, str(rco - i)) in bypad.get(src, set()) and len(rs) == 1 and len(rp) == 1 and (sock, str(s_clk[i])) in bypad.get(line, set()),
+                      "%s: REFCLKO %s.%d reaches %s.%d through one series resistor with one resistor to ground on the line (series %s, to ground %s, line %s)"
+                      % (line, sw, rco - i, sock, s_clk[i], rs, rp, sorted(bypad.get(line, set()))))
+        for i, h in enumerate(("P", "N")):
+            src, line, rin = "PCIE%d_RCLK0_SRC_%s" % (s, h), "PCIE%d_RCLK0_%s" % (s, h), "PCIE%d_RCLKIN_%s" % (s, h)
+            rs, rp, cap = _between(src, line, "R"), _between(line, "GND", "R"), _between(line, rin, "C")
+            check((sw, str(85 - 2 * i)) in bypad.get(src, set()) and len(rs) == 1 and len(rp) == 1 and len(cap) == 1 and (sw, str(110 + i)) in bypad.get(rin, set()),
+                  "%s: REFCLKO0 %s.%d is terminated (series %s, to ground %s) and AC coupled through %s into REFCLK%s %s.%d"
+                  % (line, sw, 85 - 2 * i, rs, rp, cap, h, sw, 110 + i))
+    for nm in ("HDMIO_D0_P", "HDMIO_CK_P", "HDMIO_SCL"): check("J_HDMI" in bynet.get(nm, set()) and "U4" in bynet.get(nm, set()), "%s reaches J_HDMI and U4" % nm)
+    for nm in ("MDI_A_P", "MDI_B_P", "MDI_C_P", "MDI_D_P"): check("J_ETH" in bynet.get(nm, set()) and "T1" in bynet.get(nm, set()), "%s reaches J_ETH and the magnetics" % nm)
+    # W3-F02 (MESHSAT-1357 round 4, 26 September 2026): J_LIME's names are the HOST's (USB 3.0 type A: 5/6 SSRX, 8/9
+    # SSTX). The hub's DN1 receiver USB_SSRXP/M_DN1 (TUSB8041 pins 6/7, type I, SLLSEE4E) takes LIME_SSRX from J_LIME 6/5,
+    # and its transmitter USB_SSTXP/M_DN1 (pins 3/4, type O) reaches J_LIME 9/8 on LIME_SSTX through one series capacitor.
+    # The check this replaces asked LIME_SSTX_P to reach the hub itself, which only the crossed wiring of B21 did.
+    check("J_LIME" in bynet.get("LIME_DP", set()) and "U102" in bynet.get("LIME_DP", set()), "LIME_DP reaches J_LIME and the S1 hub")
+    for i, h in enumerate(("P", "N")):
+        _lcap = sorted(r for r in bynet.get("HUB1_D1TX_%s" % h, set()) & bynet.get("LIME_SSTX_%s" % h, set()) if r.startswith("C"))
+        check(("U102", str(3 + i)) in bypad.get("HUB1_D1TX_%s" % h, set()) and ("J_LIME", str(9 - i)) in bypad.get("LIME_SSTX_%s" % h, set()) and len(_lcap) == 1,
+              "LIME_SSTX_%s: the hub transmitter U102.%d reaches J_LIME.%d through exactly one series capacitor (%s)" % (h, 3 + i, 9 - i, _lcap))
+        check(("J_LIME", str(6 - i)) in bypad.get("LIME_SSRX_%s" % h, set()) and ("U102", str(6 + i)) in bypad.get("LIME_SSRX_%s" % h, set()),
+              "LIME_SSRX_%s: J_LIME.%d returns to the hub receiver U102.%d (got %s)" % (h, 6 - i, 6 + i, sorted(bypad.get("LIME_SSRX_%s" % h, set()))))
+    # THE HARDWARE EMCON LINE IS ONLY READ ON THIS BOARD: NO PULL-UP, NO TRANSISTOR CHANNEL AND NO SLOT RAIL MAY REACH IT
+    # (MESHSAT-1357 round 4, fix-up pass 3, 26 September 2026, the round-5 re-review's blocking item). With the panel ribbon out, or board C's buffer
+    # U9 unpowered, EMCON_HW is held only by its pull-downs. B21's W_DISABLE1# stages Q106/Q206/Q306 had their gate on
+    # the card rail, their source on W_DISABLE1# with 10 k up to that rail and their drain on EMCON_HW. The body diode
+    # (anode at the source) sourced current per live card rail into the line (up to 0.35 mA into a line at 0 V, about
+    # 50 uA against the 50 k that held it) and lifted it to about 2.3 to 2.5 V,
+    # a HIGH at every EMCON gate on B and A: "EMCON released" with no panel. No gate read it, because every check asked
+    # only that a net exist or reach a part. Four properties, on pads, so the path cannot come back under another name:
+    #   1. every resistor on EMCON_HW goes to GND or to a signal, never to a rail (it is pulled down, never up);
+    #   2. a transistor meets EMCON_HW with its pad 1 only (the SOT-23 gate), never with a channel pad (2 or 3);
+    #   3. no other pad of such a transistor sits on a slot rail, directly or through one resistor (the review's rule;
+    #      a slot rail is any +3V3_S*, +3V3_M2C*, +3V3_CM*, +1V8_CM*, +5V_S*, +1V0_S* or +1V1_S* net);
+    #   4. the path that replaced the stages: Q11 inverts EMCON_HW into EMCON_ON (R513 to +3V3_DEV), and each card's
+    #      W_DISABLE1# is an open drain Q{s}06 (gate EMCON_ON, source GND, drain on the socket's pin) with one resistor
+    #      to its own card rail. Socket pins: key E W_DISABLE1# 56, key B W_DISABLE1# 8 (the M.2 pinouts in gen_sch_b.py).
+    _pads = {}
+    for _n, _ps in bypad.items():
+        for _r, _p in _ps: _pads.setdefault(_r, {})[_p] = _n
+    _SLOT_RAILS = ("+3V3_S", "+3V3_M2C", "+3V3_CM", "+1V8_CM", "+5V_S", "+1V0_S", "+1V1_S")
+    def _one_r(n):   # the nets one resistor away from net n
+        return sorted({_pads[r][p] for r in bynet.get(n, set()) if r.startswith("R") for p in _pads.get(r, {}) if _pads[r][p] != n})
+    def _gsd(ref):   # a SOT-23 transistor's pads in a fixed order, so the line reads the same from a board and a netlist
+        return "G %s S %s D %s" % tuple(_pads.get(ref, {}).get(k) for k in ("1", "2", "3")) if ref in _pads else "absent"
+    _far = _one_r("EMCON_HW")
+    check("GND" in _far and not [n for n in _far if n.startswith("+")],
+          "EMCON_HW: every resistor on it goes to GND or a signal, none to a rail (one resistor away: %s)" % _far)
+    for _q in sorted(r for r in bynet.get("EMCON_HW", set()) if r.startswith("Q")):
+        _on = sorted(p for p, n in _pads.get(_q, {}).items() if n == "EMCON_HW")
+        check(_on == ["1"], "EMCON_HW: %s meets it with its gate pad 1 only, never with a channel pad (pads on the line %s)" % (_q, _on))
+        _other = sorted({n for p, n in _pads.get(_q, {}).items() if n != "EMCON_HW" and n != "GND"})
+        _reach = sorted(set(_other) | {m for n in _other for m in _one_r(n)})
+        _bad = [n for n in _reach if n.startswith(_SLOT_RAILS)]
+        check(not _bad, "EMCON_HW: no other pad of %s reaches a slot rail directly or through one resistor (reaches %s)" % (_q, _bad or _reach))
+    check(_pads.get("Q11") == {"1": "EMCON_HW", "2": "GND", "3": "EMCON_ON"} and _one_r("EMCON_ON") == ["+3V3_DEV"],
+          "EMCON_ON: Q11 inverts EMCON_HW into it (gate EMCON_HW, source GND, drain EMCON_ON) with its pull-up to +3V3_DEV (Q11 %s, one resistor away %s)"
+          % (_gsd("Q11"), _one_r("EMCON_ON")))
+    for _sl, (_wd, _sk, _pin) in ((1, ("WIFI_W_DIS_n", "J_M2C1", "56")), (2, ("5G_W_DIS_n", "J_M2C2", "8")), (3, ("WIFI2_W_DIS_n", "J_M2C3", "56"))):
+        _q = "Q%d06" % _sl
+        check(_pads.get(_q) == {"1": "EMCON_ON", "2": "GND", "3": _wd} and (_sk, _pin) in bypad.get(_wd, set()) and _one_r(_wd) == ["+3V3_S%dA" % _sl],
+              "%s: W_DISABLE1# %s.%s is an open drain %s from EMCON_ON (gate EMCON_ON, source GND) with one pull-up to +3V3_S%dA (%s %s, one resistor away %s)"
+              % (_wd, _sk, _pin, _q, _sl, _q, _gsd(_q), _one_r(_wd)))
+    # AN EMCON GATE'S ENABLE OUTPUT HOLDS ITS SWITCH OFF WITHOUT ITS DRIVER (MESHSAT-1357 round 4, R4T-F9, 26 September
+    # 2026). U19 and U20 (SN74LVC08A, on +3V3_DEV) drive the EN pins of U23/U24 (TPS259631, input +5V_DEV), U21
+    # (TPS22810, input +5V_DEV) and U22 (TPS22810, input +3V3_DEV). A gate without its supply, or with its pin 14 open,
+    # drives nothing, and both makers forbid a floating EN (SLVSET8A pin table, SLVSDH0C 9.3.3). Each net must carry the
+    # gate's output pad, the switch's EN pad and exactly one resistor, to GND, sized between two bounds read from the
+    # sheets: at most V / I, where V is the lower full-shutdown threshold (TPS22810 VSHUTF 0.5 V minimum; TPS259631 VSD
+    # 0.53 V minimum) and I is 10 uA of output leakage (SCAS283W gives the LVC08A no Ioff, so the family's guaranteed
+    # figure, SN74LVC1G08 SCES217AA Ioff 10 uA, stands in) plus 0.1 uA of EN leakage (both sheets): 49.5 kOhm. At least
+    # the load the gate can drive high: SCAS283W 5.7 VOH 2.4 V minimum at 12 mA (VCC 3 V), 200 Ohm. A test point may
+    # share the net; any other pad or resistor fails it.
+    import re as _re
+    def _ohms(v):
+        m = _re.match(r"\s*(\d+(?:\.\d+)?)\s*([kKM]?)", v or "")
+        return float(m.group(1)) * {"": 1.0, "k": 1e3, "K": 1e3, "M": 1e6}[m.group(2)] if m else None
+    _R_MAX = 0.50 / (10e-6 + 0.1e-6); _R_MIN = 2.4 / 12e-3
+    for _en, _drv, _load in (("LIME_EN", ("U19", "6"), ("U23", "3")), ("RB_EN", ("U19", "8"), ("U24", "3")),
+                             ("E22_EN", ("U19", "11"), ("U21", "5")), ("E72_EN", ("U20", "3"), ("U22", "5"))):
+        _rs = sorted(r for r in bynet.get(_en, set()) if r.startswith("R"))
+        _down = [r for r in _rs if sorted(_pads.get(r, {}).values()) == sorted([_en, "GND"])]
+        _ohm = [_ohms(byval.get(r)) for r in _down]
+        _other = sorted(p for p in bypad.get(_en, set()) if p not in (_drv, _load) and p[0] not in _rs and not p[0].startswith("TP"))
+        check(_drv in bypad.get(_en, set()) and _load in bypad.get(_en, set()) and len(_rs) == 1 and len(_down) == 1
+              and _ohm[0] is not None and _R_MIN <= _ohm[0] <= _R_MAX and not _other,
+              "%s: %s.%s holds %s.%s OFF with its driver unpowered: one pull-down to GND of %.0f Ohm to %.1f kOhm "
+              "(pull-downs %s valued %s, resistors on the net %s, other pads %s)"
+              % (_en, _drv[0], _drv[1], _load[0], _load[1], _R_MIN, _R_MAX / 1e3, _down, [byval.get(r) for r in _down], _rs, _other))
+    import fnmatch as _fn, json as _json, os as _os
+    pro = _os.path.splitext(sys.argv[1])[0] + ".kicad_pro"
+    if _os.path.exists(pro):
+        pats = [(e["pattern"], e["netclass"]) for e in _json.load(open(pro)).get("net_settings", {}).get("netclass_patterns", [])]
+        names = {b.GetNetInfo().GetNetItem(i).GetNetname() for i in range(1, b.GetNetInfo().GetNetCount())}
+        dead = [p for p, c in pats if not any(_fn.fnmatchcase(n, p) for n in names)]
+        check(not [p for p in dead if not p.startswith("/") and ("/" + p) in dead], "every label net-class pattern matches a net in one of its two forms (unmatched: %s)" % [p for p in dead if not p.startswith("/") and ("/" + p) in dead])
+    tl = {}
+    for t in b.GetTracks():
+        if t.GetClass() == "PCB_TRACK": tl[t.GetNetname().lstrip("/")] = tl.get(t.GetNetname().lstrip("/"), 0.0) + t.GetLength() / 1e6
+    if tl:   # 8 Sep 2026 (MESHSAT-862): the +5V pours on In4 and the GND plane get the A21 copper checks; every netlist pair is reported, a one-leg pair is a FAIL
+        import sys as _sys, os as _os2; _sys.path.insert(0, _os2.path.dirname(_os2.path.abspath(__file__))); import copper_checks as _cc; print(_cc.run(b, check))
+    # DECISION 47, ruled 21 September 2026 (the session's, on the evidence in the tree; tools/pair_gate.py
+    # carries the reasoning and the way back). The 1.00 mm rule is about a pair whose CLASS declares an impedance
+    # target. Board A's ten LM5176 current-sense taps were given _P/_N names when the ISNS filter went in on
+    # 18 September, so this gate began holding a KELVIN TAP to a differential pair's rule: PA_ISNS reads a
+    # 58.38 mm mismatch by construction, because a Kelvin tap's legs run to opposite ends of its shunt, and every
+    # board A finish since has ended PAIRS NOT MATCHED. A pair with no target is MEASURED and REPORTED as INFO.
+    # pair_gate fails closed: where the class table or the intent cannot be read, the pair is judged as before.
+    import pair_gate as _pg
+    _pg_class_of, _pg_targets = _pg.from_board(sys.argv[1])
+    names_all = {b.GetNetInfo().GetNetItem(k).GetNetname().lstrip("/") for k in range(1, b.GetNetInfo().GetNetCount())}
+    pairs = sorted(set(n[:-2] for n in names_all if n.endswith(("_P", "_N")) and (n[:-2] + "_P") in names_all and (n[:-2] + "_N") in names_all))
+    for pair in pairs:
+        lp, ln = tl.get(pair + "_P", 0.0), tl.get(pair + "_N", 0.0)
+        if (lp > 0) != (ln > 0): route_item(False, "pair %s has one leg routed and one not (P %.2f mm, N %.2f mm)" % (pair, lp, ln)); continue
+        # DECISION 36, ruled 21 September 2026 (the session's; `bar_for` in tools/interfaces.py carries the
+        # reasoning and the way back). A pair is judged at the TIGHTER of this project's 1.00 mm, which the owner
+        # ruled on 5 September, and the number the part at the end of its link asks for. The owner's number is the
+        # FLOOR and never the ceiling, so this can only refuse a pair the old bar passed. `bar_for` is the one
+        # place that decides it; this gate prints the number it returned and rule PAIR-001's citation of the
+        # interface's own budget stands beside it. FAIL CLOSED: where the sheet cannot be read the bar is 1.00 mm,
+        # which is what this gate refused at before the ruling.
+        try:
+            import os as _osi, sys as _sysi
+            _sysi.path.insert(0, _osi.path.dirname(_osi.path.abspath(__file__)))
+            import interfaces as _ifc
+            _bmm, _iname, _isrc = _ifc.budget_for("b", pair + "_P")
+            _bar, _barwhy = _ifc.bar_for("b", pair + "_P")
+        except Exception:
+            _bmm = _iname = _isrc = None
+            _bar, _barwhy = 1.0, "the interface sheet could not be read, so the bar is this project's own"
+        _over = abs(lp - ln) > _bar + 1e-9
+        _cite = (("; %s asks for %.2f mm (%s)" % (_iname, _bmm, (_isrc or "").strip()[:60])) if _bmm is not None
+                 else (("; judged at %.2f mm: %s" % (_bar, _barwhy)) if _over else ""))
+        _ok, _why47 = _pg.judged(pair, _pg_class_of, _pg_targets)
+        _tag = ("WARN " if _ok else "INFO ") if _over else "PASS "
+        _tail = "" if not _over else ((" (over %.2f mm: add a meander on the short leg)" % _bar) if _ok
+                                          else " (over %.2f mm and %s)" % (_bar, _why47))
+        if lp or ln: print("%s pair length P %.2f mm, N %.2f mm, mismatch %.2f mm%s%s" % (_tag + pair, lp, ln, abs(lp - ln), _tail, _cite))
+# hole-to-hole webs >= 2 mm between every pair of holes (drill edges), the socket standoffs and the module holes included
+hl = [(v[0], v[1][0], r) for r, v in holes.items()]
+for fp in b.GetFootprints():
+    if fp.GetReference() in holes or fp.GetReference().startswith("S_"): continue
+    for p in fp.Pads():
+        if p.GetAttribute() in (pcbnew.PAD_ATTRIB_NPTH, pcbnew.PAD_ATTRIB_PTH) and min(p.GetDrillSize().x, p.GetDrillSize().y) >= FromMM(2.0): hl.append((case(p.GetPosition()), p.GetDrillSize().x / 1e6, fp.GetReference()))
+hl2 = [(a, c) for a, c in itertools.combinations(hl, 2) if a[2] != c[2]]   # a footprint's own holes (the USB 3 receptacle's peg beside its shield hole) are the library's business
+pair = min(hl2, key=lambda t: ((t[0][0][0] - t[1][0][0]) ** 2 + (t[0][0][1] - t[1][0][1]) ** 2) ** 0.5 - (t[0][1] + t[1][1]) / 2)
+minweb = ((pair[0][0][0] - pair[1][0][0]) ** 2 + (pair[0][0][1] - pair[1][0][1]) ** 2) ** 0.5 - (pair[0][1] + pair[1][1]) / 2
+check(minweb >= 2.0, "minimum web between any two holes %.2f mm (>= 2.0): %s at %s and %s at %s" % (minweb, pair[0][2], pair[0][0], pair[1][2], pair[1][0]))
+# device rectangles: inside the outline (3 mm margin; edge connectors and the bracket may reach the edge), pairwise non-overlapping, clear of nut keep-outs
+R = {"CM5_1": (-92.5, 32.5, -52.5, 87.5), "COOLER_1": (-93, 32, -52, 88), "CM5_2": (-22.5, 32.5, 17.5, 87.5), "COOLER_2": (-23, 32, 18, 88), "CM5_3": (47.5, 32.5, 87.5, 87.5), "COOLER_3": (47, 32, 88, 88),
+     "QMX": (-162, -66, -99, 29), "LIME": (130, -24, 161, 45), "RB9704": (113, -99, 165, -43), "JLIME": (137, -43, 154, -24), "JAB": (110.5, -67, 115.5, -25), "JRB": (95.5, -67, 105.5, -45.1),
+     "ETH": (-162, 30, -122, 59), "T1": (-161.5, 59, -142.5, 77), "JETH": (-162, 81, -142, 100), "POE": (-140.5, 59, -122, 86), "WNE": (-121, 29, -102, 68), "JPANEL": (-137, 86.5, -95, 97.5),
+     "GAP12": (-50, 33, -32, 97), "GAP23": (19, 33, 44, 97), "JFAN1": (-101.5, 41, -93.5, 49), "JFAN2": (-31.5, 41, -23.5, 49), "JFAN3": (88.5, 40, 96.5, 48),
+     "WMIDS": (-152, -97, -116, -69), "JHDMI": (96, -100, 113, -86), "NEX": (96, 78, 123, 97.5), "SEX": (96, -85, 112, -78), "RADE": (125.5, 45.5, 162, 67), "E22": (96.8, 27.75, 125.3, 67.25), "E72A": (123, 67.5, 144, 100.5), "E72B": (144, 67.5, 165, 100.5), "RBX": (96, -25, 126, 27), "RBX2": (96, -44, 110, -26),
+     "S1_M2N": (-96.5, -20, -73.5, 30.5), "S1_M2C": (-68.5, -8, -45.5, 30.5), "S2_M2C": (-35.5, -30, -4.5, 30.5), "S2_M2N": (-35, -97, 16.5, -73.5), "S2_SIM": (-3, -7, 12, 30.5), "S2_SUP": (12, -30, 32, 28), "S2_SUP2": (-3, -30, 12, -8),
+     "S3_M2N": (36.5, -20, 59.5, 30.5), "S3_M2C": (67.5, -20, 90.5, 30.5), "NORTH1": (-94, 88.5, -52, 97.5), "NORTH2": (-23, 88.5, 18, 97.5), "NORTH3": (47, 88.5, 88, 97.5),
+     "S1_SW": (-98, -49, -38, -21), "S1_RAIL": (-98, -70, -38, -49), "S1_SUP": (-86, -97, -38, -70), "S2_SW": (-36, -54, 32, -30), "S2_RAIL": (-36, -73.4, 32, -54),
+     "S3_SW": (34, -49, 94, -21), "S3_RAIL": (34, -70, 94, -49), "S3_SUP": (46, -97, 94, -70),
+     "JFLASH1": (-98, -100, -87, -90), "JFLASH2": (18.5, -100, 29.5, -90), "JFLASH3": (34, -100, 45, -90), "J5V1": (-97.5, -89.5, -87.5, -79.5), "J5V2": (22, -89, 32, -79), "J5V3": (34.5, -89.5, 44.5, -79.5)}
+EDGE = {"JETH", "JHDMI", "RB9704", "E72A", "E72B", "JFLASH1", "JFLASH2", "JFLASH3", "J5V1", "J5V3", "JPANEL", "NORTH1", "NORTH2", "NORTH3", "NEX"}
+for k, r in R.items():
+    if k in EDGE: continue
+    check(r[0] >= -162 and r[2] <= 162 and r[1] >= -97 and r[3] <= 97, "%s inside outline with 3 mm margin" % k)
+def overlap(a, c): return not (a[2] <= c[0] or c[2] <= a[0] or a[3] <= c[1] or c[3] <= a[1])
+SKIP = ({"CM5_1", "COOLER_1"}, {"CM5_2", "COOLER_2"}, {"CM5_3", "COOLER_3"}, {"RB9704", "JAB"}, {"COOLER_1", "NORTH1"}, {"COOLER_2", "NORTH2"}, {"COOLER_3", "NORTH3"})
+for (ka, a), (kb, bb) in itertools.combinations(R.items(), 2):
+    if {ka, kb} in SKIP: continue
+    check(not overlap(a, bb), "%s and %s do not overlap" % (ka, kb))
+def rect_circle_clear(r, c, rad):
+    cx = max(r[0], min(c[0], r[2])); cy = max(r[1], min(c[1], r[3])); return ((cx - c[0]) ** 2 + (cy - c[1]) ** 2) ** 0.5 >= rad
+for k, r in R.items():
+    if k == "RB9704": continue   # the bracket plate rides on 8 mm standoffs over rod nut R2 (silk note on the board)
+    check(all(rect_circle_clear(r, rod, 4.5) for rod in [(-110.5, -73), (110.5, -73), (-110.5, 73), (110.5, 73)]), "%s clear of the 9 mm nut keep-outs" % k)
+# THE COPPER LAYER COUNT IS A DECLARATION, NEVER A LITERAL (16 September 2026). A literal here meant a
+# layer decision was a gate edit, and twice a measurement came back whose ONLY failure was the gate
+# describing the previous decision: board A four layers on 12 September (510 of 511) and board C six
+# layers on 16 September. Under the P0 ruling every board's count is open, so it lives in the board
+# table with its reason and is read here; a board that declares none keeps the count written below.
+_LAYERS = _bt.value("b", "copper_layers", 6)
+check(b.GetCopperLayerCount() == _LAYERS, "%d copper layers as board B declares them (JLC06161H-3313 at six)" % _LAYERS)
+check(b.GetDesignSettings().GetBoardThickness() == pcbnew.FromMM(1.6), "1.6 mm thick")
+# 8 Sep 2026 (MESHSAT-862 Stage C): the intent gates (return path under the pair-class nets, decoupling loops, the rails of the intent file)
+if any(t.GetClass() == "PCB_TRACK" and not t.IsLocked() for t in b.GetTracks()):
+    import os as _os3, sys as _sys3; _sys3.path.insert(0, _os3.path.dirname(_os3.path.abspath(__file__))); import intent_checks as _ic
+    # THE INTENT ITEMS ARE REPORTED HERE AND DECIDED BY THEIR OWN VERDICTS (16 September 2026). They are five
+    # rules with five authorities (the return path, the return via, the decoupling loop, the rails, the rest)
+    # and `intent_checks` already writes a verdict for each. Counting them in THIS gate's failure list as well
+    # made one composite verdict fail every rule it is mapped to: board D routed 0 hard and 0 unrouted with a
+    # single item open, one signal via short of a ground via, and that EMC item failed the MECHANICAL rule
+    # MEC-001 on six boards through this gate. The same defect must not be counted twice under two authorities.
+    _intent_fails = []
+    def _intent_check(c, m):
+        print(("PASS " if c else "FAIL ") + m)
+        _intent_reported.append(m)
+        if not c: _intent_fails.append(m)
+    print(_ic.run(b, _intent_check, sys.argv[1]))
+# ----------------------------------------------------------------- the I/O high-availability invariants (ARCH-PCB-B-IOHA)
+# These are the properties the architecture rests on, so they are checked rather than described. A pad map by net name
+# is enough: every one of them is a question about which parts share a net.
+PADS = {}
+for _fp in b.GetFootprints():
+    for _pd in _fp.Pads():
+        _n = _pd.GetNetname().lstrip("/")
+        if _n: PADS.setdefault(_n, set()).add(_fp.GetReference())
+RING = {1: 2, 2: 3, 3: 1}   # bank s is owned by slot s and fails over to slot RING[s]
+for _s, _f in RING.items():
+    _mods = lambda n: {r for r in PADS.get(n, set()) if re.match(r"^U3[012][AB]$", r)}   # the receptacles only: the mux (U309 and friends) is on both nets by construction, and its reference starts with U3 as well
+    home = _mods("HOST%d_0TX_P" % _s); over = _mods("HOST%d_1TX_P" % _f)
+    check(len(home & over) == 0 and home and over,
+          "bank %d has one home host and one failover host, and they are different modules (home %s, failover %s)"
+          % (_s, sorted(home), sorted(over)))
+    for _sig in ("BSEL%d" % _s, "BOE%d_n" % _s):
+        parts = PADS.get(_sig, set())
+        check(sum(1 for r in parts if r.startswith("U")) >= 2,
+              "%s reaches both switches of its bank (%s)" % (_sig, sorted(parts)))
+    # the safe state: each control carries a pull to the home host, so a dark control plane changes nothing
+    check(any(r.startswith("R") for r in PADS.get("BSEL%d" % _s, set())),
+          "bank %d select is pulled to its safe state" % _s)
+# a bank must outlive the module it fails away from, so nothing in its path may hang on that slot's rail. This is the
+# defect the first rail read-back found: the hub and both host-selection switches sat on +3V3_S{s}B, whose buck is
+# enabled by the module's own 3.3 V, which would have made the whole ring decoration.
+for _s in (1, 2, 3):
+    for _ref, _what in (("U%d02" % _s, "hub"), ("U%d09" % _s, "SuperSpeed host select"), ("U%d10" % _s, "USB2 host select")):
+        _bad = sorted({_n for _n, _rs in PADS.items() if _ref in _rs and (_n.startswith("+3V3_S%d" % _s) or _n.startswith("+5V_S%d" % _s))})
+        check(not _bad, "the %s of bank %d is off the slot rail (%s)" % (_what, _s, _bad))
+    check("U%d06" % _s in PADS.get("+5V_DEV", set()), "the hub core buck of bank %d is fed from the device rail" % _s)
+    check("U%d02" % _s in PADS.get("+3V3_DEV", set()), "the hub of bank %d takes its 3.3 V from the device rail" % _s)
+# every voted bit is driven by all three controllers and by nothing else
+for _bit in ("SEL1", "SEL2", "SEL3", "HUBRST1", "HUBRST2", "HUBRST3", "WSEC"):
+    drivers = [t for t in ("A", "B", "C") if PADS.get("%s_%s" % (_bit, t))]
+    check(len(drivers) == 3, "%s is driven by all three controllers (%s)" % (_bit, drivers))
+    for _t in drivers:
+        parts = PADS["%s_%s" % (_bit, _t)]
+        check(any(r.startswith("R") for r in parts),
+              "%s_%s is pulled down, so an absent controller reads as a definite no (%s)" % (_bit, _t, sorted(parts)))
+# the hub reset must be gated, never driven straight from a voter: a voter output is push-pull and its inputs sit low
+# when the plane is dark, which would hold every hub in reset. The FET plus the existing RC is the safe arrangement.
+for _s in (1, 2, 3):
+    rst = PADS.get("HUB%d_RST_n" % _s, set())
+    check(any(r.startswith("Q") for r in rst) and not any(r.startswith("U7") or r.startswith("U8") for r in rst),
+          "hub %d reset is gated by a FET and not driven by a voter directly (%s)" % (_s, sorted(rst)))
+# each controller is its own failure domain: its own regulator output and its own reset net
+for _t in ("A", "B", "C"):
+    check(PADS.get("+3V3_IOC%s" % _t), "controller %s has its own regulator branch" % _t)
+    check(PADS.get("IOC%s_RST_n" % _t), "controller %s has its own reset" % _t)
+# the two heartbeat fabrics are independent: no part may sit on both, other than a controller's own two transceivers
+for _f in ("A", "B"):
+    check(PADS.get("CANH_%s" % _f) and PADS.get("CANL_%s" % _f), "heartbeat fabric %s exists" % _f)
+check(not (PADS.get("CANH_A", set()) & PADS.get("CANH_B", set())),
+      "the two heartbeat fabrics share no transceiver (%s)" % sorted(PADS.get("CANH_A", set()) & PADS.get("CANH_B", set())))
+# the kit-to-kit mesh radio is the one bearer with no second path, so it is duplicated on two slots and the two cards
+# share the case's existing antennas through a passive changeover that rests on the primary card when nothing drives it
+for _ref, _dis, _slot in (("J_M2C1", "WIFI_W_DIS_n", 1), ("J_M2C3", "WIFI2_W_DIS_n", 3)):
+    check(_ref in PADS.get(_dis, set()), "WiFi card on slot %d is fitted and EMCON reaches its W_DISABLE (%s)" % (_slot, sorted(PADS.get(_dis, set()))))
+    check("U%d01" % _slot in PADS.get("CARD%d_TX_P" % _slot, set()),
+          "the slot %d WiFi card hangs on its own PCIe switch, so one switch cannot take both radios" % _slot)
+# the plane can read back what the voters did: without it a voter stuck at one value is invisible to the controllers
+for _b in ("BSEL1", "BSEL2", "BSEL3", "WIFI_SEC"):
+    _ctl = {r for r in PADS.get(_b, set()) if r in ("U41", "U51", "U61")}
+    check(len(_ctl) == 3, "%s is read back by all three controllers (%s)" % (_b, sorted(_ctl)))
+_sw = {r for r in PADS.get("WIFI_SEC", set()) if r.startswith("U8")}
+check(len(_sw) == 2, "both antenna changeover switches follow the voted select (%s)" % sorted(_sw))
+check(any(r.startswith("R") for r in PADS.get("WIFI_PRI", set())) and any(r.startswith("Q") for r in PADS.get("WIFI_PRI", set())),
+      "the changeover's complement is a pull-up and a FET, so a dark control plane rests on the primary card (%s)" % sorted(PADS.get("WIFI_PRI", set())))
+for _ch in ("A", "B"):
+    for _n, _what in (("W1%s_CARD" % _ch, "the slot 1 card"), ("W3%s_CARD" % _ch, "the slot 3 card"), ("W%s_ANT" % _ch, "the case jack")):
+        _p = PADS.get(_n, set())
+        check(any(r.startswith("J_W") for r in _p) and any(r.startswith("C") for r in _p),
+              "chain %s reaches %s through a U.FL and a DC block (%s)" % (_ch, _what, sorted(_p)))
+
+# no peripheral bank may hold two long-range bearers, or one bank failure removes more than it should
+BEARERS = {"RB_DP": "Iridium", "QMX_DP": "HF", "USB_D8_P": "APRS"}   # the 5G module's USB is management: its data path is slot 2's PCIe lane (ARCH-PCB-B-IOHA open ruling 4)
+BANK_OF = {}
+for _s in (1, 2, 3):
+    for _n in BEARERS:
+        if "U%d02" % _s in PADS.get(_n, set()): BANK_OF.setdefault(_s, []).append(BEARERS[_n])
+for _s, _b in BANK_OF.items():
+    check(len(_b) <= 1, "bank %d holds at most one long-range bearer (%s)" % (_s, _b))
+
+print("\nRESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails))
+# The verdict is a file and the exit code, and the denominator travels with it: a bare "0 FAIL" is what a
+# gate that ran, a gate that loaded an empty board and a gate whose checks were all skipped all print.
+# MESHSAT-862, 11 Sep 2026.
+import os as _osv, sys as _sysv
+_sysv.path.insert(0, _osv.path.dirname(_osv.path.abspath(__file__)))
+import verdict as _v
+_nfp = len(list(b.GetFootprints()))
+_sysv.exit(_v.write("check_pcb_b",
+                    _v.INCONCLUSIVE if not _nfp else (_v.PASS if not fails else _v.FAIL),
+                    counts={"fail": len(fails), "pass": len(checked) - len(fails), "footprints": _nfp,
+                            "intent_items_reported": len(_intent_reported),
+                            "route_items_reported": len(_route_reported)},
+                    denominator=len(checked),
+                    evidence=fails,
+                    inputs={"board": sys.argv[1]},
+                    note="" if _nfp else "the board loaded with no footprints, so nothing here is a judgement of a board"))

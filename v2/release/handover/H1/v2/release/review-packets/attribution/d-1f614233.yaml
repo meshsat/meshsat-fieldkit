@@ -1,0 +1,68 @@
+# Board D (VHF APRS mezzanine): every changed reference between 82dd1e4d and 1f614233, read by hand.
+# Same rules as c-1f614233.yaml: each ID is checked by review_packet.py against the cited lines of gen_sch_d.py at
+# 1f614233, and each cited range must be tied to the part. `record` quotes the round-4 board D record (a session draft,
+# not in the repository) where it says more than the generator; it is never counted as an ID.
+# Unbuilt prototype design; this reading releases nothing.
+board: d
+rev: 1f614233998c3087a53abfa977be134465ce9f47
+prev: 82dd1e4dc44efabeee1164a995cda4e866610f3d
+read_by: "the session (review stream PKT), 26 September 2026, from gen_sch_d.py at both revisions and the round-4 board D record"
+rows:
+  C15: {ids: [W6-F5], cite: [[326, 326]], why: "the hub's 100 nF decoupling moves with the hub to its own rail +3V4_HUB"}
+  C16: {ids: [W6-F5], cite: [[326, 326]], why: "the hub's 100 nF decoupling moves with the hub to its own rail +3V4_HUB"}
+  C17: {ids: [W6-F5], cite: [[326, 326]], why: "the hub's 10 uF decoupling moves with the hub to its own rail +3V4_HUB"}
+  C61:
+    ids: [F-PR-02]
+    cite: [[601, 601]]
+    why: "C61 was the TPS22810's 4.7 nF slew capacitor on a net that no longer exists; it becomes the VGG LDO's 1 uF input capacitor"
+  C62:
+    ids: [F-PR-02]
+    cite: [[483, 517]]
+    why: "C62 becomes the VGG LDO's 2.2 uF 16 V output capacitor, the one capacitance on VGG"
+  C64: {ids: [W6-F5], cite: [[288, 290]], why: "the input capacitor of the hub's own LDO U17"}
+  C65: {ids: [W6-F5], cite: [[288, 290]], why: "the output capacitor of the hub's own LDO U17"}
+  D1:
+    ids: [S-09, A03, F-IN-01]
+    cite: [[216, 216]]
+    why: "the +5V_D8 rail clamp was reversed (GND on its cathode pad); now cathode on the rail, as SMBJ6.0A because the rail's 5.23 V working maximum is above a 5.0 V stand-off"
+    record: "round-4 board D record, R4D-1: the part choice (SMBJ6.0A, board B's precedent) was taken by the session under the owner's standing rule of 26 September 2026"
+  D10:
+    ids: [W7-F3, W6-F14]
+    cite: [[416, 425]]
+    why: "the headset 1 microphone clamp moves from PESD5V0S1BA (5 V stand-off) to PESD12VL1BA, above the electret bias of up to 5.23 V"
+  D13:
+    ids: [W7-F3, W6-F14]
+    cite: [[416, 425]]
+    why: "the headset 2 microphone clamp moves from PESD5V0S1BA to PESD12VL1BA, for the same reason as D10"
+  R8: {ids: [W6-F5], cite: [[283, 283]], why: "the upstream attach pull-up follows the hub's own supply"}
+  R9:
+    ids: [W6-F5]
+    cite: [[271, 271], [287, 287]]
+    tie: "R9 is a hub input pull-up; the inline comment at 287 says every hub input is tied to the hub's own VCC, and the block opened at 271 (W6-F5) moves the hub off +3V3_D8"
+    why: "the hub's over-current input pull-up moves with the hub to +3V4_HUB (SLLS413L 7.3: VI 0 to VCC)"
+  R10:
+    ids: [W6-F5]
+    cite: [[271, 271], [287, 287]]
+    tie: "R10 is the hub's reset pull-up on the same statement line 287; the block opened at 271 (W6-F5) moves the hub off +3V3_D8"
+    why: "the hub's reset pull-up moves with the hub to +3V4_HUB"
+  R33: {ids: [A01], cite: [[351, 351]], why: "the MMUTE divider becomes 470R / 4.7k so the codec's mute is a defined low at power-up, while the expander's ports are inputs"}
+  R34: {ids: [A01], cite: [[351, 351]], why: "the lower resistor of the MMUTE divider becomes 4.7k, with R33"}
+  R80: {ids: [W6-F5], cite: [[288, 292]], why: "U17's upper feedback resistor, 0.1 percent 25 ppm/C thin film, for +3V4_HUB at 3.44 V"}
+  R81: {ids: [W6-F5], cite: [[288, 292]], why: "U17's lower feedback resistor, 0.1 percent 25 ppm/C thin film"}
+  R82: {ids: [F-PR-02], cite: [[483, 493]], why: "the VGG LDO's upper feedback resistor, VGG 4.48 V nominal"}
+  R83: {ids: [F-PR-02], cite: [[483, 493]], why: "the VGG LDO's lower feedback resistor"}
+  TP25:
+    ids: []
+    cite: [[550, 552]]
+    why: "a test pad on the hub's own supply +3V4_HUB, for the bench measurement owed to TEST-PLAN.md; appended so TP1 to TP24 keep their numbers"
+    record: "round-4 board D record, R4D-2 (W6-F5): 'TP25 is its test point'; the generator's comment at 550 to 552 carries no ID"
+  U4:
+    ids: [W6-F5]
+    cite: [[58, 58], [271, 281]]
+    tie: "the block at 271 to 281 is the comment above the hub section's first statements (U5 at 282, R8 at 283, then U4 at 284): it names the hub by its part name, TUSB2046BI and TUSB2046IBVFR, the value U4 carries"
+    why: "the hub is the industrial TUSB2046IBVFR (the name TUSB2046BI in LQFP-32 does not exist and the code bought was commercial) on its own 3.44 V rail, because the I grade needs 3.3 V minimum"
+  U15:
+    ids: [F-PR-02]
+    cite: [[483, 483]]
+    why: "the PA gate bias comes from a TLV75801P LDO at 4.48 V enabled by PA_KEY, not the 5 V rail through a TPS22810 load switch, inside the RA30H1317M1's VGG under 5 V condition"
+  U17: {ids: [W6-F5], cite: [[288, 288]], why: "a TLV75801P LDO makes the hub's own rail +3V4_HUB (3.44 V)"}

@@ -1,0 +1,14 @@
+C113974 SMBJ5.0A https://datasheet.lcsc.com/datasheet/pdf/2fdb55289569ebfc0bc21eab3853afe6.pdf?productCode=C113974
+C135085 SMBJ58A-13-F https://datasheet.lcsc.com/datasheet/pdf/a98dcba2e58a9f9a1a005c1c0c468785.pdf?productCode=C135085
+C151256 SMBJ18A https://datasheet.lcsc.com/datasheet/pdf/4ab84a227fae39f9eac85241b8264ead.pdf?productCode=C151256
+C19224 PESD5V0S1BA_115 https://datasheet.lcsc.com/datasheet/pdf/dd1aa251f61f8aba7aba621165608b08.pdf?productCode=C19224
+C224047 SMCJ28A https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C224047
+C224052 SMCJ40A https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C224052
+C268712 SS2040FL https://datasheet.lcsc.com/datasheet/pdf/fbe7b074b28942710b4075bd637e687d.pdf?productCode=C268712
+C364296 SMBJ20A https://datasheet.lcsc.com/datasheet/pdf/2fdb55289569ebfc0bc21eab3853afe6.pdf?productCode=C364296
+C374030 SMCJ18A https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C374030
+C42371548 SMCJ33A https://datasheet.lcsc.com/datasheet/pdf/63434cf44d11833c6d7a145dda2ad39c.pdf?productCode=C42371548
+C42371550 SMCJ15A https://datasheet.lcsc.com/datasheet/pdf/63434cf44d11833c6d7a145dda2ad39c.pdf?productCode=C42371550
+C7502705 BAT54W https://datasheet.lcsc.com/datasheet/pdf/ff1378297995998b12f7103bcafc2a22.pdf?productCode=C7502705
+C7519 USBLC6-2SC6 https://datasheet.lcsc.com/datasheet/pdf/0d3a2ab954b34651a0695e7ccf534db0.pdf?productCode=C7519
+C83270 SMBJ6.0A https://datasheet.lcsc.com/datasheet/pdf/4ab84a227fae39f9eac85241b8264ead.pdf?productCode=C83270

@@ -1,0 +1,309 @@
+OCR of quectel/sparkfun-lg290p-breakout-schematic.pdf, a drawing with no text layer
+
+Read by tools/kb/kb_ocr.py at 300 dpi with tesseract, because this document carries no
+font objects: its lettering is drawn as vector paths and no text extractor can reach it.
+
+THIS IS AN INDEX, NOT A SOURCE OF NUMBERS. OCR misreads exactly the characters that matter
+on a drawing: a decimal point, a tolerance, an H7, a 6 against an 8. Use this to find WHICH
+drawing to open. Then open it:  pdftoppm -r 300 -png -f <page> -l <page> v2/vendor/quectel/sparkfun-lg290p-breakout-schematic.pdf
+Every dimension quoted anywhere in this project must come from the drawing, never from here.
+
+LEGIBILITY: 225 word-like tokens in 1823 characters.
+
+--- sparkfun-lg290p-breakout-schematic, page 1, as read by OCR ---
+5V
+O..uF
+USB to Serial
+V 3.3
+i
+20%
+Shvio
+Sa
+RXDO
+[20
+GNSS Receiver
+LG290P Quadband
+USB_C_Receptacle
+2}
+cTsofe
+veusy
+an” Toa 5A i
+GND
+RST
+RIO Ex
+Devoe
+3.3V
+us
+5V
+DTRO
+AG
+DSRO
+be
+Power
+Pay LG290P
+1x01 22
+D+
+AT
+Sup+
+5v
+24y_8cKP
+RXDL
+24
+At up
+Txo1
+Reset has
+|
+rxp1 PS
+internal pull—up.
+<) RESET
+1xo2}&
+werk
+RISE
+RO
+2
+rxp22
+cca
+AS
+5v
+3.3V
+Txo3 6
+85
+Ka TRA
+ust
+100k RT9080-3.3
+45 RFIN
+Rxo3 5
+alt
+Ria
+1
+RL
+R2
+HN
+Depa p-&
+Ci
+C2 C5
+cB
+SCL
+SH vec_RF
+I?C pins have internal
+5.1k
+5.1k
+DTRI
+O.4uF
+vout| Tr
+10uF
+O.tuF
+aa
+33pF
+06
+SDA
+2.2k pull-ups.
+fsa | asl
+DSRI
+4
+25V
+6.3V
+25V
+50V
+PESD0603-240
+20%
+20%
+20%
+5%
+RTK_STATE <RIKSTAT 596 pc
+U4
+P
+3
+GND
+GND
+GND
+‘ U: ok
+i
+CH342F
+i
+wb 071042-0480
+GND
+GND
+GND
+GND
+GND
+GND
+G
+gre
+GND
+GND
+=
+Edge
+event} S<
+3.3V
+5V
+GND
+C13
+C7
+4.0uF
+4.0uF
+16V
+16V
+10%
+10%
+GND
+GND
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+RF Connector
+i?C Connectors
+C6
+Battery Backup
+100pF
+3.3V
+50V
+3.3V
+3.3
+3.3V
+JS
+10%
+SMA_Edge
+SCL
+scl
+SL
+SDA
+J4
+SOA
+7
+SDA
+39
+No external |?C pull-ups because
+0.54 Wy
+40v
+PMEG4OOSEJ
+ut
+3v3
+Qwiic RA
+3v3
+Qwiic_RA
+3v3
+l2c
+'90P has internal resistors
+0.42
+Y ©:
+68nH
+SND
+ESND
+EGNO
+ZX PESD0402
+R7
+200mA
+GND
+xo
+exo
+oxo
+1k
+R6
+GNo
+10
++ BT
+co
+c3
+ch
+1.0uF
+V4
+‘8mm_ML414H
+16V
+O.tuF
+100pF
+IC interface not yet supported
+ZN PESD0603-240
+25V
+50V
+10%
+20%
+10%
+Support coming in future firmware release
+GND
+GND
+oxo
+GND
+GND
+Coplanar Waveguide Calculatio
+Copper Thickness (1oz): 1.4mil/0.035mm
+Board thickness: 1.6mm
+a
+a
+Dielectric thickness (layer 1 to 2): 0.2mm
+~~ I
+Polygon Isolation: 8mil/0.2032mm
+RF Trace Width: 13.74mil/0.349mm.
+https://chemandy.com/calculators/coplanar—waveguide—with—ground—calculator.htm
+LEDs
+External
+PTH Connectors
+Locking JST
+3.3V
+3.3
+3.3V
+3.3V 5V
+BT-VCC
+aw
+SCL
+TXD3
+J8
+J10
+J2
+RXD3,
+PPS
+JST_Locking_4
+R4
+R5
+RB
+SDA
+J6
+Conn_01x06
+Conn_01x06
+RB
+47k
+2.2k
+ik
+open source
+RXD2
+BlueSMiRF
+TxD2
+Conn_01x09
++k GND
+araware
+ot
+V
+04
+V
+D2
+GNo
+Red
+y Yellow [YQ White
+00 @®
+00 @®@
+GND
+GND
+Xo
+Xo
+Generally speaking the ports are used as follows
+wove SParkfun
+Sheet:
+UART1 — Configure in and NMEA output over U
+UART2 — RTCM correction input and NMEA output over Bluetooth
+File
+SparkFun_GNSS_LG290P.kicad_sch
+UART3 — NMEA output to embedded system
+Title: LG290P Triband GNSS Receiver Breakout
+Date: 2024-08-21
+Size: USLedger |
+[_Rev: v0
+KiCad E.D.A. 8
+| Id: 1/2
+

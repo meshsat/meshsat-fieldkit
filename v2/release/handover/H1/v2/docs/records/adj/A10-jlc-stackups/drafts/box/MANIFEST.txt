@@ -1,0 +1,40 @@
+A10-jlc-stackups evidence, fetched by the runner on 2026-09-25 between 21:24 and 21:38 UTC (23:24 to 23:38 CEST).
+Nothing here was logged in; every request was an anonymous public GET or POST to jlcpcb.com / cart.jlcpcb.com.
+
+Pages (verbatim HTML as served, plus a tag-stripped text copy made by api/html2txt.py):
+  raw_impedance_2026-09-25.html / text_impedance_2026-09-25.txt
+      https://jlcpcb.com/impedance, server-rendered default state (1.6 mm, outer 1 oz, inner 0.5 oz). Text identical
+      to W3's 22:40 CEST capture (scratchpad/w3txt/jlc-imp.html).
+  nuxt_impedance_2026-09-25.js / .json
+      the page's window.__NUXT__ state, evaluated with node: only fourLayerForm and sixLayerForm exist (no 8-layer form).
+  raw_capabilities_pcb-capabilities_2026-09-25.html / text_capabilities_2026-09-25.txt
+      https://jlcpcb.com/capabilities/pcb-capabilities. Text identical to W3's capture except two nav words.
+  wayback_capabilities_20260913020451.html / .txt
+      https://web.archive.org/web/20260913020451id_/https://jlcpcb.com/capabilities/pcb-capabilities (Wayback digest
+      JFI57TLLXTXSZLT4EIQJ5M6XLL4Q242M): already carries "Multilayer ... 2 oz: 0.254 mm or above" for the PTH annular ring.
+  text_pcba_capabilities_2026-09-25.txt
+      https://jlcpcb.com/capabilities/pcb-assembly-capabilities, text only; the one em dash in the page was replaced by
+      "--" and the raw HTML deleted (as-fetched sha256 409ff8286f787934e8b5ffd090740bb65a9f8bde4359bf9efb300e4761388166).
+  raw_quote_2026-09-25.html, raw_impcalc_2026-09-25.html
+      https://cart.jlcpcb.com/quote and https://jlcpcb.com/pcb-impedance-calculator shells (client-rendered).
+  js_excerpts_2026-09-25.txt
+      excerpts of the JS bundles that prove which endpoint each page calls, with each bundle's URL and sha256.
+
+The fabricator's own stackup data (the endpoint the impedance page and the order form both call):
+  api/impedance_template_sweep_2026-09-25.json
+      POST https://jlcpcb.com/api/overseas-core-platform/shoppingCart/getImpedanceTemplateSettings for layers 4, 6, 8, 10
+      x thickness 0.8/1.0/1.2/1.6/2.0 x outer 1/2 oz x inner 0.5/1/2 oz (120 requests, raw responses kept).
+  api/render_4L_1.6mm_2oz_2026-09-25.txt, api/render_4L_1.6mm_1oz_2026-09-25.txt, api/render_8L_1.6mm_2026-09-25.txt
+      the same responses rendered layer by layer (api/render.py).
+  api/quoteform_4L_1.6_2oz_inner{0.5,1,2}_2026-09-25.json
+      the same endpoint on cart.jlcpcb.com with the order form's exact request body.
+  api/calculator_template_sweep_2026-09-25.json + api/calc_render_*.txt
+      POST https://jlcpcb.com/api/jlcTools/impedance/selectPageImpedanceDefaultTemplate (the impedance calculator's
+      template list): per-layer thickness AND per-layer dielectric constant, plus JLC's finished-thickness label per code.
+
+Rendered in headless Chromium (Playwright, runner), clicking as a visitor would:
+  ui/impedance_4L_outer2oz_*       jlcpcb.com/impedance, 4-layer section, Outer Copper Weight "2oz" clicked: the page
+                                    POSTs the endpoint with cuprumThickness 2 and lists JLC04162H-7628/-3313A/-3313/-2116.
+  ui/quote_8L_*                    cart.jlcpcb.com/quote, Layers "8", Specify Stackup "Yes": the Layer Stackup dialog
+                                    lists 13 eight-layer codes (JLC08161H-2116 ... JLC08161H-1080B) with the layer table.
+  ui/render_*.py                   the scripts that produced them.

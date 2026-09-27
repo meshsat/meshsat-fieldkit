@@ -1,0 +1,257 @@
+{
+ "0603WAF1802T5E": {
+  "asked": "2026-09-26T13:25:48Z",
+  "list": [
+   {
+    "componentBrandEn": "UNI-ROYAL(Uniroyal Elec)",
+    "componentCode": "C25810",
+    "componentLibraryType": "base",
+    "componentModelEn": "0603WAF1802T5E",
+    "componentSpecificationEn": "0603",
+    "describe": "-55\u2103~+155\u2103 100mW 18k\u03a9 75V Thick Film Resistor \u00b11% \u00b1100ppm/\u2103 0603 Chip Resistor - Surface Mount ROHS",
+    "initialPrice": 0.004,
+    "stockCount": 869648
+   },
+   {
+    "componentBrandEn": "JLCPCB Assembly",
+    "componentCode": "C9900259767",
+    "componentLibraryType": "expand",
+    "componentModelEn": "0603WAF1802T5E",
+    "componentSpecificationEn": "0603",
+    "describe": "0603 SMT ROHS",
+    "initialPrice": 0.0203,
+    "stockCount": 0
+   }
+  ]
+ },
+ "0603WAF2000T5E": {
+  "asked": "2026-09-26T12:35:39Z",
+  "list": [
+   {
+    "componentBrandEn": "UNI-ROYAL(Uniroyal Elec)",
+    "componentCode": "C8218",
+    "componentLibraryType": "base",
+    "componentModelEn": "0603WAF2000T5E",
+    "componentSpecificationEn": "0603",
+    "describe": "-55\u2103~+155\u2103 100mW 200\u03a9 75V Thick Film Resistor \u00b11% \u00b1100ppm/\u2103 0603 Chip Resistor - Surface Mount ROHS",
+    "initialPrice": 0.0037,
+    "stockCount": 2756205
+   },
+   {
+    "componentBrandEn": "JLCPCB Assembly",
+    "componentCode": "C9900102352",
+    "componentLibraryType": "expand",
+    "componentModelEn": "0603WAF2000T5E",
+    "componentSpecificationEn": "0603",
+    "describe": "0603 New Arrivals ROHS",
+    "initialPrice": 0.0203,
+    "stockCount": 0
+   }
+  ]
+ },
+ "0603WAF2202T5E": {
+  "asked": "2026-09-26T12:35:39Z",
+  "list": [
+   {
+    "componentBrandEn": "UNI-ROYAL(Uniroyal Elec)",
+    "componentCode": "C31850",
+    "componentLibraryType": "base",
+    "componentModelEn": "0603WAF2202T5E",
+    "componentSpecificationEn": "0603",
+    "describe": "-55\u2103~+155\u2103 100mW 22k\u03a9 75V Thick Film Resistor \u00b11% \u00b1100ppm/\u2103 0603 Chip Resistor - Surface Mount ROHS",
+    "initialPrice": 0.0041,
+    "stockCount": 3779418
+   },
+   {
+    "componentBrandEn": "JLCPCB Assembly",
+    "componentCode": "C9900149411",
+    "componentLibraryType": "expand",
+    "componentModelEn": "0603WAF2202T5E",
+    "componentSpecificationEn": "0603",
+    "describe": "0603 New Arrivals ROHS",
+    "initialPrice": 0.0203,
+    "stockCount": 0
+   }
+  ]
+ },
+ "0603WAF2700T5E": {
+  "asked": "2026-09-26T13:25:48Z",
+  "list": [
+   {
+    "componentBrandEn": "UNI-ROYAL(Uniroyal Elec)",
+    "componentCode": "C22966",
+    "componentLibraryType": "base",
+    "componentModelEn": "0603WAF2700T5E",
+    "componentSpecificationEn": "0603",
+    "describe": "-55\u2103~+155\u2103 100mW 270\u03a9 75V Thick Film Resistor \u00b11% \u00b1100ppm/\u2103 0603 Chip Resistor - Surface Mount ROHS",
+    "initialPrice": 0.0024,
+    "stockCount": 801146
+   },
+   {
+    "componentBrandEn": "JLCPCB Assembly",
+    "componentCode": "C9900170143",
+    "componentLibraryType": "expand",
+    "componentModelEn": "0603WAF2700T5E",
+    "componentSpecificationEn": "0603",
+    "describe": "0603 SMT ROHS",
+    "initialPrice": 0.0203,
+    "stockCount": 0
+   }
+  ]
+ },
+ "C31850": {
+  "asked": "2026-09-26T12:35:40Z",
+  "list": [
+   {
+    "componentBrandEn": "UNI-ROYAL(Uniroyal Elec)",
+    "componentCode": "C31850",
+    "componentLibraryType": "base",
+    "componentModelEn": "0603WAF2202T5E",
+    "componentSpecificationEn": "0603",
+    "describe": "-55\u2103~+155\u2103 100mW 22k\u03a9 75V Thick Film Resistor \u00b11% \u00b1100ppm/\u2103 0603 Chip Resistor - Surface Mount ROHS",
+    "initialPrice": 0.0041,
+    "stockCount": 3779418
+   }
+  ]
+ },
+ "C5251182": {
+  "asked": "2026-09-26T12:35:40Z",
+  "list": [
+   {
+    "componentBrandEn": "JST",
+    "componentCode": "C5251182",
+    "componentLibraryType": "expand",
+    "componentModelEn": "B2B-PH-K-S-GW",
+    "componentSpecificationEn": "Plugin,P=2mm",
+    "describe": "-25\u2103~+85\u2103 1 100V 1x2P 2 2A 2P 2mm 4.5mm 5.9mm 6mm Brass K Pin PA66 PH Through Hole Tin UL94V-0 White \u63d2\u4ef6,P=2mm Wire To Board Connector ROHS",
+    "initialPrice": 0.1418,
+    "stockCount": 37049
+   }
+  ]
+ },
+ "C8218": {
+  "asked": "2026-09-26T12:35:40Z",
+  "list": [
+   {
+    "componentBrandEn": "UNI-ROYAL(Uniroyal Elec)",
+    "componentCode": "C8218",
+    "componentLibraryType": "base",
+    "componentModelEn": "0603WAF2000T5E",
+    "componentSpecificationEn": "0603",
+    "describe": "-55\u2103~+155\u2103 100mW 200\u03a9 75V Thick Film Resistor \u00b11% \u00b1100ppm/\u2103 0603 Chip Resistor - Surface Mount ROHS",
+    "initialPrice": 0.0037,
+    "stockCount": 2756205
+   },
+   {
+    "componentBrandEn": "Winchester Interconnect",
+    "componentCode": "C5904820",
+    "componentLibraryType": "expand",
+    "componentModelEn": "SBC8218",
+    "componentSpecificationEn": "-",
+    "describe": "1 1GHz 75\u03a9 BNC Connector - Coaxial Connectors (RF) ROHS",
+    "initialPrice": 4.9742,
+    "stockCount": 0
+   },
+   {
+    "componentBrandEn": "Texas Instruments",
+    "componentCode": "C1555282",
+    "componentLibraryType": "expand",
+    "componentModelEn": "DAC8218SRGZR",
+    "componentSpecificationEn": "VQFN-48-EP(7x7)",
+    "describe": "-40\u2103~+105\u2103 14 15us 1LSB 35uA 4.5V~18V 50MHz 8 External SPI VQFN-48-EP(7x7) Digital to Analog Converters (DAC) ROHS",
+    "initialPrice": 34.4567,
+    "stockCount": 3
+   },
+   {
+    "componentBrandEn": "Texas Instruments",
+    "componentCode": "C1554766",
+    "componentLibraryType": "expand",
+    "componentModelEn": "DAC8218SPAG",
+    "componentSpecificationEn": "TQFP-64(10x10)",
+    "describe": "-40\u2103~+105\u2103 14 15us 1LSB 4.5V~18V 8 SPI TQFP-64(10x10) Digital to Analog Converters (DAC) ROHS",
+    "initialPrice": 19.3752,
+    "stockCount": 0
+   },
+   {
+    "componentBrandEn": "Texas Instruments",
+    "componentCode": "C2859581",
+    "componentLibraryType": "expand",
+    "componentModelEn": "DAC8218SRGZT",
+    "componentSpecificationEn": "VQFN-48-EP(7x7)",
+    "describe": "-40\u2103~+105\u2103 14 15us 1LSB 4.5V~18V 8 SPI Voltage Buffer VQFN-48-EP(7x7) Digital to Analog Converters (DAC) ROHS",
+    "initialPrice": 66.63,
+    "stockCount": 0
+   },
+   {
+    "componentBrandEn": "SRD(Shenzhen Sincerity Tech)",
+    "componentCode": "C466152",
+    "componentLibraryType": "expand",
+    "componentModelEn": "C82182JCD2RLC",
+    "componentSpecificationEn": "Plugin,P=15mm",
+    "describe": "-40\u2103~+105\u2103 1.6kV 1.8nF \u00b15% \u63d2\u4ef6,P=15mm Polypropylene Film Capacitors (CBB) ROHS",
+    "initialPrice": 0.0892,
+    "stockCount": 0
+   },
+   {
+    "componentBrandEn": "SRD(Shenzhen Sincerity Tech)",
+    "componentCode": "C466153",
+    "componentLibraryType": "expand",
+    "componentModelEn": "C82182JDD2RLC",
+    "componentSpecificationEn": "Plugin,P=15mm",
+    "describe": "-40\u2103~+105\u2103 1.8nF 2kV \u00b15% \u63d2\u4ef6,P=15mm Polypropylene Film Capacitors (CBB) ROHS",
+    "initialPrice": 0.1082,
+    "stockCount": 0
+   },
+   {
+    "componentBrandEn": "SRD(Shenzhen Sincerity Tech)",
+    "componentCode": "C466156",
+    "componentLibraryType": "expand",
+    "componentModelEn": "C82183JCD4RLC",
+    "componentSpecificationEn": "Plugin,P=15mm",
+    "describe": "-40\u2103~+105\u2103 1.6kV 18nF \u00b15% \u63d2\u4ef6,P=15mm Polypropylene Film Capacitors (CBB) ROHS",
+    "initialPrice": 0.0665,
+    "stockCount": 0
+   },
+   {
+    "componentBrandEn": "SRD(Shenzhen Sincerity Tech)",
+    "componentCode": "C466159",
+    "componentLibraryType": "expand",
+    "componentModelEn": "C82183JEE6RLC",
+    "componentSpecificationEn": "Plugin,P=22.5mm",
+    "describe": "-40\u2103~+105\u2103 18nF 3kV \u00b15% \u63d2\u4ef6,P=22.5mm Polypropylene Film Capacitors (CBB) ROHS",
+    "initialPrice": 0.1577,
+    "stockCount": 0
+   },
+   {
+    "componentBrandEn": "SRD(Shenzhen Sincerity Tech)",
+    "componentCode": "C466155",
+    "componentLibraryType": "expand",
+    "componentModelEn": "C82183J3AD3R8LC",
+    "componentSpecificationEn": "Plugin,P=15mm",
+    "describe": "-40\u2103~+105\u2103 18nF 1kV \u00b15% \u63d2\u4ef6,P=15mm Polypropylene Film Capacitors (CBB) ROHS",
+    "initialPrice": 0.1124,
+    "stockCount": 3
+   },
+   {
+    "componentBrandEn": "SRD(Shenzhen Sincerity Tech)",
+    "componentCode": "C466157",
+    "componentLibraryType": "expand",
+    "componentModelEn": "C82183J3CE1R8LC",
+    "componentSpecificationEn": "Plugin,P=22.5mm",
+    "describe": "-40\u2103~+105\u2103 1.6kV 18nF \u00b15% \u63d2\u4ef6,P=22.5mm Polypropylene Film Capacitors (CBB) ROHS",
+    "initialPrice": 0.1389,
+    "stockCount": 51
+   },
+   {
+    "componentBrandEn": "SRD(Shenzhen Sincerity Tech)",
+    "componentCode": "C466158",
+    "componentLibraryType": "expand",
+    "componentModelEn": "C82183J3DE2R8LC",
+    "componentSpecificationEn": "Plugin,P=22.5mm",
+    "describe": "-40\u2103~+105\u2103 18nF 2kV \u00b15% \u63d2\u4ef6,P=22.5mm Polypropylene Film Capacitors (CBB) ROHS",
+    "initialPrice": 0.1538,
+    "stockCount": 39
+   }
+  ]
+ }
+}

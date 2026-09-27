@@ -1,0 +1,26 @@
+Geometry of X1202-pcb-V1.1, probed from x1202/X1202-pcb-V1.1.dxf
+
+Written by tools/kb/geom_probe.py, not hand edited, so that a CAD model's measurable
+facts can be searched and reviewed as text instead of living only in whoever opened the
+model that day. Units: drawing units (a DXF declares no unit here). EVERY NUMBER IS A MEASUREMENT OF THIS FILE, NOT A
+SPECIFICATION: a vendor model may carry a connector, an antenna or a mounting boss the
+catalogue dimension leaves out, and it may be exported in any orientation. Where the
+manufacturer publishes a drawing, the drawing wins and this is how to find the number
+to check against it.
+
+source file: x1202/X1202-pcb-V1.1.dxf
+sha256 (first 16): cb6ce4f8c0c6f832
+size: 964202 bytes
+points read: 6747
+
+X1202-pcb-V1.1 EXTENTS OF THE DRAWING SHEET. This is a 2D drawing, not a solid: the box below
+is the sheet, several views sit on it at different places, and only the circle
+centres further down are positions within a view.
+Axes are THE FILE'S OWN: a vendor model is often exported Y up, and this reader does
+not turn it, so read the three extents as sizes and not as width, depth and height.
+  axis 1 -0.050 to 97.537   extent 97.587
+  axis 2 -9.218 to 86.000   extent 95.218
+  axis 3 0.000 to 0.000   extent 0.000
+
+X1202-pcb-V1.1 HOLES: no circle of 0.5 mm or more is in this file
+

@@ -1,0 +1,69 @@
+K1 | Omron G6K-2F-Y 5 VDC DPDT signal relay, T/R
+   pin 1 () -> +5V_D8
+   pin 2 () -> RF_RX
+   pin 3 () -> RF_SA
+   pin 4 () -> RF_PAD_IN
+   pin 5 () -> RF_LPF_OUT
+   pin 6 () -> RF_ANT
+   pin 7 () -> RF_RX
+   pin 8 () -> RLY_K
+Q2 | 2N7002 relay coil
+   pin 1 (G) -> RLY_DRV
+   pin 2 (S) -> GND
+   pin 3 (D) -> RLY_K
+U15 | TLV75801PDRVR adjustable LDO, PA gate bias VGG 4.48 V while PA_KEY is high (1 OUT 2 FB 3 GND 4 EN 5 DNC 6 IN 7 pad)
+   pin 1 (VGG_SW) -> VGG_SW
+   pin 2 (VGG_FB) -> VGG_FB
+   pin 3 (GND) -> GND
+   pin 4 (PA_KEY) -> PA_KEY
+   pin 5 (NC) -> unconnected-(U15-NC-Pad5)
+   pin 6 (+5V_D8) -> +5V_D8
+   pin 7 (GND) -> GND
+U2 | NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A)
+   pin 1 (AUDIO_ON_n) -> SA_AUDIO_ON_n
+   pin 2 (NC) -> unconnected-(U2-NC-Pad2)
+   pin 3 (AF_OUT) -> AF_OUT
+   pin 4 (NC) -> unconnected-(U2-NC-Pad4)
+   pin 5 (PTT_n) -> SA_PTT_n
+   pin 6 (PD) -> SA_PD
+   pin 7 (H/L) -> SA_HL
+   pin 8 (VBAT) -> +5V_SA
+   pin 9 (GND) -> GND
+   pin 10 (GND) -> GND
+   pin 11 (NC) -> unconnected-(U2-NC-Pad11)
+   pin 12 (ANT) -> RF_SA
+   pin 13 (NC) -> unconnected-(U2-NC-Pad13)
+   pin 14 (NC) -> unconnected-(U2-NC-Pad14)
+   pin 15 (NC) -> unconnected-(U2-NC-Pad15)
+   pin 16 (RXD) -> SA_RXD
+   pin 17 (TXD) -> SA_TXD
+   pin 18 (MIC_IN) -> MIC_IN
+U12 | 74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)
+   pin 1 (PTT_ANY) -> PTT_ANY
+   pin 2 (TX_INHIBIT_n) -> TX_INHIBIT_n
+   pin 3 (GND) -> GND
+   pin 4 (KEY) -> KEY
+   pin 5 (+3V3_D8) -> +3V3_D8
+U13 | 74LVC1G06 open-drain inverter (2 A 4 Y): KEY -> SA868 PTT (low = transmit; released = receive, held by R88 and R89)
+   pin 1 (NC) -> unconnected-(U13-NC-Pad1)
+   pin 2 (KEY) -> KEY
+   pin 3 (GND) -> GND
+   pin 4 (SA_PTT_n) -> SA_PTT_n
+   pin 5 (+3V3_D8) -> +3V3_D8
+J_HARN1 | A22 mezzanine harness J_MEZZ1 (IDC 2x8): USB pair, PTT mirror, inhibit, PA rail state, I2C, 3.3 V
+   pin 1 (Pin_1) -> USB_D8_P
+   pin 2 (Pin_2) -> USB_D8_N
+   pin 3 (Pin_3) -> GND
+   pin 4 (Pin_4) -> GND
+   pin 5 (Pin_5) -> GND
+   pin 6 (Pin_6) -> GND
+   pin 7 (Pin_7) -> TR_APRS
+   pin 8 (Pin_8) -> TX_INHIBIT_n
+   pin 9 (Pin_9) -> PA_EN
+   pin 10 (Pin_10) -> SDA
+   pin 11 (Pin_11) -> SCL
+   pin 12 (Pin_12) -> EXP_INT
+   pin 13 (Pin_13) -> +3V3
+   pin 14 (Pin_14) -> GND
+   pin 15 (Pin_15) -> ZEROIZE_HW
+   pin 16 (Pin_16) -> AB_SPARE

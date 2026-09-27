@@ -1,0 +1,39 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "missing": 2
+ },
+ "denominator": 0,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-e5-block.kicad_pcb",
+   "sha256_16": "686b29a734c55b9a"
+  }
+ },
+ "missing_input": null,
+ "note": "this board declares no rise_ns anywhere, no critical_k, and an edge nobody wrote down decides nothing",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "SI-001": "e67c393563c5d8ce"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "SI-001"
+ ],
+ "tool": "edge_length",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "994b3d2315bb9859"
+ },
+ "ts": "2026-09-21T12:53:06Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown",
+ "writer": {
+  "file": "edge_length.py",
+  "sha16": "b07b7902c8edd4cf"
+ }
+}

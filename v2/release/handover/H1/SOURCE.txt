@@ -1,0 +1,54 @@
+MeshSat field kit V2 engineering handover snapshot H1
+
+commit: 8a19fe295f4f77b67366854d1006e1feff228fef
+commit_date: 2026-09-27T07:05:53+02:00
+commit_tree: c56d56bf60f5463debd86f1336099c09e5ef0972
+commit_subject: docs(handover): the four pages and REGENERATE brought to H1: layer status and remaining items per layer, round 8's questions EQ-15 to EQ-21, the candidates left in worktrees and the known gaps [MESHSAT-1357]
+spec: v2/docs/handover/pack.yaml blob 947e95dd92ae216712456b76df0a72cd0634bdd1
+builder at the commit: v2/ecad/tools/handover_pack.py sha256 a36e66007d86f0008a22ea58584b45d4756b938f2bbe9c89b0f3c7bff1c6d156
+builder that ran: sha256 a36e66007d86f0008a22ea58584b45d4756b938f2bbe9c89b0f3c7bff1c6d156 (the same file)
+tools_tree_sha: bdbd71b347b0e032 (verdict.py's definition: .py, .sh and .json under v2/ecad/tools, __pycache__, out and tests skipped, over the commit's blobs)
+
+files of the commit: 5130; included 1635, excluded 3023 (EXCLUDED.tsv), referenced and not bundled 472 (REFERENCED-SOURCES.tsv); the snapshot adds 5 handover page(s) at its root and four generated files
+SOURCES.yaml documents: 191 cited paths, 17 of them bundled because a rule includes them, 0 cited but absent from the commit
+
+boards (letter, stem, declared phase directory read from readiness_manifest.json and the routeflow profile):
+  a pcb-a-power -> v2/ecad/pcb-a-power-a23
+  b pcb-b-compute -> v2/ecad/pcb-b-compute-b19
+  c pcb-c-display -> v2/ecad/pcb-c-display-c8
+  d pcb-d-aprs -> v2/ecad/pcb-d-aprs-d9
+  e pcb-e1-dock -> v2/ecad/pcb-e1-dock-e7
+  e5 pcb-e5-block -> v2/ecad/pcb-e5-block (no schematic chain: the board file is the design)
+  p pcb-p-pack -> v2/ecad/pcb-p-pack-p2
+
+handover pages:
+  START-HERE.md: copied from v2/docs/handover/START-HERE.md blob a9b5a9469da2abeebda75daa7f41bb3e934232b5
+  LAYER-STATUS.md: copied from v2/docs/handover/LAYER-STATUS.md blob 7f9e98266d07b6e7b7858bbe5411335a61f3a503
+  CONTINUATION-BRIEF.md: copied from v2/docs/handover/CONTINUATION-BRIEF.md blob c62e2594ffe85315b2d8a2785dbfb2e5e647b153
+  ENGINEERING-QUESTIONS.md: copied from v2/docs/handover/ENGINEERING-QUESTIONS.md blob 8813c6c60e89d0f60f4497baeebe64af7380c4e9
+  REGENERATE.md: copied from v2/docs/handover/REGENERATE.md blob 653c0456b092c184fd8d0113a5b21495c96b3035
+
+tool versions on the host that built this snapshot:
+  python: 3.11.2
+  kicad-cli: not installed on this host
+third-party modules imported by the schematic generators (gen_sch_*.py and their local imports): none: the standard library only. They read KiCad's symbol library (kisch.py: /usr/share/kicad/symbols, or $KICAD_SYMBOLS) and footprint libraries, so the KiCad release is part of their input
+third-party modules imported anywhere under v2/ecad/tools (module: version on this host; importers):
+  PIL: pillow 12.2.0; impedance_2d.py, pair_audit.py, route_audit.py, sch_pages.py, test_schematic_pages.py
+  build123d: not installed on this host; peli_probe.py
+  matplotlib: matplotlib 3.10.9; config.py, dc_drop.py, face_section.py, geometry.py, occupancy.py, place_audit.py and 2 more
+  numba (imported only inside a function or a condition): not installed on this host; pairsearch.py
+  numpy: numpy 2.4.4; config.py, dc_drop.py, geometry.py, occupancy.py, pair_negotiate.py, pair_order_from_plan.py and 7 more
+  pcbnew: not installed on this host; apply_netlist_values.py, arms.py, barrel_sites.py, besc1_copper.py, besc1_passes.py, besc1_residue.py and 146 more
+  pymysql (imported only inside a function or a condition): PyMySQL 1.0.2; kbdb.py
+  pypdf (imported only inside a function or a condition): pypdf 6.13.2; pack_protection.py
+  reportlab: reportlab 5.0.1; case_wall_cutouts.py
+  scipy (imported only inside a function or a condition): scipy 1.17.1; dc_drop.py, pair_preroute.py, test_conductor_current.py
+  yaml (imported only inside a function or a condition): PyYAML 6.0.3; closer_audit.py, decisions_render.py, emc_sheet.py, energy_chain.py, gen_pcb_a3.py, gen_pcb_d3.py and 33 more
+
+versions recorded by the committed exports (v2/release/handover/_generated/<board>/provenance.json):
+  pcb-a-power-a23: kicad-cli 9.0.9, python 3.12.3, host Linux-6.8.0-134-generic-x86_64-with-glibc2.39, schematic sha256 e96c92ab344d4305
+  pcb-b-compute-b19: kicad-cli 9.0.9, python 3.12.3, host Linux-6.8.0-134-generic-x86_64-with-glibc2.39, schematic sha256 d6a25e63622e20da
+  pcb-c-display-c8: kicad-cli 9.0.9, python 3.12.3, host Linux-6.8.0-134-generic-x86_64-with-glibc2.39, schematic sha256 f566ea89fb3e3af4
+  pcb-d-aprs-d9: kicad-cli 9.0.9, python 3.12.3, host Linux-6.8.0-134-generic-x86_64-with-glibc2.39, schematic sha256 4adfe0c87e44db5e
+  pcb-e1-dock-e7: kicad-cli 9.0.9, python 3.12.3, host Linux-6.8.0-134-generic-x86_64-with-glibc2.39, schematic sha256 e6137ea442932e4d
+  pcb-p-pack-p2: kicad-cli 9.0.9, python 3.12.3, host Linux-6.8.0-134-generic-x86_64-with-glibc2.39, schematic sha256 47e0bc19e8e18cf0

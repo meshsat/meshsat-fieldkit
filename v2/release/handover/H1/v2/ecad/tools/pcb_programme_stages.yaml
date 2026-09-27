@@ -1,0 +1,80 @@
+# The stages of this programme that are NOT rule work, declared as data (MESHSAT-862, 16 September 2026).
+#
+# WHY THIS FILE EXISTS. `rules_eta.py` computes engineering effort from the gap register, and engineering
+# effort is not a date. Between a finished design package and a released product sit a fabricator's queue, a
+# courier, a soldering iron for the parts the assembler will not fit, and a bench. None of those is a rule and
+# none of them is compressible by this session, so presenting engineering days as elapsed days is the error
+# this file exists to stop. It has been made twice in this project's record already.
+#
+# EVERY NUMBER HERE CARRIES ITS SOURCE KIND, and only one kind is evidence:
+#   MEASURED_BY_THIS_PROJECT    taken from this tree's own journals or logs
+#   VENDOR_PUBLISHED            a number the vendor publishes, not yet confirmed by an order of ours
+#   DECLARED_ESTIMATE           this session's estimate, with its reasoning; the weakest kind
+# Nothing here has been through an order, so nothing here is MEASURED_BY_THIS_PROJECT. That is the honest
+# state and it is why the programme date carries a wider band than the design date.
+#
+# The stages are ELAPSED days, seven days to the week, because a fabricator's queue and a courier do not
+# observe this project's working hours.
+
+stages:
+
+ DESIGN_PACKAGE_READY_FOR_PROTOTYPE:
+   after: []
+   source: COMPUTED
+   basis: "computed by rules_eta.py from the gap register: every open rule whose execution class is not
+     HARDWARE, at the declared parallel width per class, with OWNER and VENDOR waits carried separately"
+   note: "this is the only stage this project controls end to end, and the only one whose inputs are counted"
+
+ OWNER_AND_VENDOR_WAITS:
+   after: []
+   source: DECLARED_ESTIMATE
+   p50_days: 3
+   p80_days: 21
+   basis: "eight owner decisions and five vendor or standard items are open. The P50 is the owner answering a
+     batch in one sitting, which he has done twice (12 and 13 September, eight rulings and four). The P80 is a
+     standard that has to be bought and read, or a fabricator's answer about a copper weight its published
+     page does not state, which is a correspondence round trip"
+   note: "runs CONCURRENTLY with design work and is not added to it; it binds only the items that depend on it"
+
+ FABRICATION_AND_ASSEMBLY:
+   after: [DESIGN_PACKAGE_READY_FOR_PROTOTYPE]
+   source: VENDOR_PUBLISHED
+   p50_days: 12
+   p80_days: 30
+   basis: "JLCPCB's published build times for the classes this set uses (four and six layer, one and two
+     ounce) plus assembly after parts, plus a courier to the Netherlands. The P80 carries what this project
+     has already seen coming: seven boards is seven queues, both free engineering confirmations are on and
+     each is a round trip, 23 rows per board are HAND_FIT and are bought separately, and one of them needs a
+     reflow step of our own (owner ruling 12, board E's U5)"
+   note: "NOT MEASURED BY THIS PROJECT: nothing has been ordered and the cart is unpaid. Treat as a vendor
+     figure until an order of ours has a date on it"
+
+ BENCH_BRING_UP:
+   after: [FABRICATION_AND_ASSEMBLY]
+   source: DECLARED_ESTIMATE
+   p50_days: 14
+   p80_days: 45
+   basis: "the test plan in v2/docs/TEST-PLAN.md walked on real hardware: power tree first, then each rail
+     under load, then the buses, then the radios one at a time. The P80 is what a first prototype usually
+     costs: a rework on at least one board, and the parts for it"
+   note: "needs hardware in hand; no part of it can be pulled earlier by any amount of compute"
+
+ LAB_VALIDATION:
+   after: [BENCH_BRING_UP]
+   source: DECLARED_ESTIMATE
+   p50_days: 21
+   p80_days: 90
+   basis: "EMC pre-compliance and the environmental items of the approved MIL-STD-810/461 plan need a chamber
+     and a booking. The P80 is a failed pre-compliance run and its fix, which is the usual outcome of a first
+     visit"
+   note: "rule EMC-001 is the design-side half of this and is in the gap register; the chamber half is here"
+
+ PRODUCTION_RELEASE_READY:
+   after: [LAB_VALIDATION]
+   source: DECLARED_ESTIMATE
+   p50_days: 30
+   p80_days: 120
+   basis: "one design revision after bring-up and validation, which is the normal path for a first article:
+     the corrections, a second fabrication and assembly round, and the re-test of what changed"
+   note: "this is a PROGRAMME date and not an engineering estimate. It is dominated by fabrication rounds and
+     a chamber booking, both of which are other people's calendars"

@@ -1,0 +1,51 @@
+103AT-2 at 70 C: 2228 ohm (table 2228); at 0 C 27280 (table 27280)
+slope beta: 0.0297 /C at 70 C, 0.0432 /C at 0.5 C
+
+BARE NTC on TS (TI Figure 8-1): OT trip at 70.5 C nominal
+  UT resistance  26700 ohm is reached at 0.5 C
+  UT resistance  42200 ohm is reached at -9.9 C
+  UT resistance  68900 ohm is reached at -20.3 C
+  UT resistance 111100 ohm is reached at -30.0 C
+  open NTC: infinite resistance, above every UT resistance (reads as UT if UT is enabled)
+
+THE LOWEST UT RESISTANCE THE CHIP MAY APPLY (26.7 kohm, the 103AT at 0.5 C, moved by TUT_ACC +5 C):
+  reading A (the +-5 C includes a +-2 % external resistance): 21946 ohm
+  reading B (the +-5 C is the chip's alone):                     21516 ohm
+  the first cycle's figure, 26.7 kohm less RUT_ACC's 2 % (WITHDRAWN: RUT_ACC is the external resistance): 26166 ohm
+
+CROSS-CHECK ON TI'S OWN UT THRESHOLDS (42.2 kohm at -10 C, 26.7 kohm at 0 C), no 103AT data used:
+  chord slope 0.0458 /C (the slope at about -5 C); B fit 3290 K
+  chord, reading B  lowest UT resistance 21238 ohm; the taken network's ceiling (18298 ohm) is 13.8 % below it
+  B fit, reading B  lowest UT resistance 21502 ohm; the taken network's ceiling (18298 ohm) is 14.9 % below it
+
+OPTIONS (reading B throughout):
+  Rs / Rp        trip C   slope   window C        ceiling      below UT  frac 25/open
+  200 / 22000    69.84    0.826   63.0 to 76.9    22364        -3.9 %    0.258/0.524 withdrawn
+  240 / 20000    70.04    0.804   62.9 to 77.4    20331        +5.5 %    0.253/0.500 
+  270 / 18000    69.97    0.783   62.7 to 77.5    18298        +15.0 %   0.246/0.474 TAKEN
+  330 / 15000    69.80    0.744   62.2 to 77.7    15248        +29.1 %   0.234/0.429 
+
+NETWORK Rp || (Rs + NTC), Rs = 270 ohm, Rp = 18000 ohm:
+  OT trip at 69.97 C nominal; d ln(network) / d ln(NTC) at the trip 0.783 (1.000 for a bare NTC)
+  network tolerance at the trip (NTC R25 and B +-1 %, Rs and Rp +-1 % and 100 ppm/C to 70 C): -2.26 % to +2.30 %
+  OT window, reading A: 63.6 to 76.6 C
+  OT window, reading B: 62.7 to 77.5 C
+  highest resistance TS can see: NTC open, Rp +1 % and -40 C: 18298 ohm (network at -50 C with the NTC in: 17068 ohm)
+  lowest UT resistance, reading A: 21946 ohm; the ceiling is 16.6 % below it
+  lowest UT resistance, reading B: 21516 ohm; the ceiling is 15.0 % below it
+  an open NTC reads as a bare 103AT at 9.9 C
+  Rs shorted: trip 66.1 C; Rp open: trip 75.0 C; NTC shorted: 266 ohm (reads over-temperature)
+  TS fraction of the internal reference (RTC 20 kohm): J_TS2 plugged at 25 C 0.246, unplugged 0.474
+
+FOR THE RECORD, the withdrawn network:
+NETWORK Rp || (Rs + NTC), Rs = 200 ohm, Rp = 22000 ohm:
+  OT trip at 69.84 C nominal; d ln(network) / d ln(NTC) at the trip 0.826 (1.000 for a bare NTC)
+  network tolerance at the trip (NTC R25 and B +-1 %, Rs and Rp +-1 % and 100 ppm/C to 70 C): -2.30 % to +2.34 %
+  OT window, reading A: 63.8 to 76.1 C
+  OT window, reading B: 63.0 to 76.9 C
+  highest resistance TS can see: NTC open, Rp +1 % and -40 C: 22364 ohm (network at -50 C with the NTC in: 20624 ohm)
+  lowest UT resistance, reading A: 21946 ohm; the ceiling is -1.9 % below it
+  lowest UT resistance, reading B: 21516 ohm; the ceiling is -3.9 % below it
+  an open NTC reads as a bare 103AT at 5.1 C
+  Rs shorted: trip 67.0 C; Rp open: trip 73.7 C; NTC shorted: 198 ohm (reads over-temperature)
+  TS fraction of the internal reference (RTC 20 kohm): J_TS2 plugged at 25 C 0.258, unplugged 0.524

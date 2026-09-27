@@ -1,0 +1,1218 @@
+{
+ "name": "pcb-b-compute",
+ "letter": "b",
+ "title": "PCB-B COMPUTE",
+ "footprint_generator": [
+  "gen_footprints_b16.py",
+  "gen_footprints_idc.py"
+ ],
+ "extra_compile": [],
+ "gate_before_placement": false,
+ "bypass_place_after": "stackup",
+ "escape_env": {
+  "ESCAPE_SKIP": "U3,U4,J_HDMI"
+ },
+ "pair_classes": "USB,DIFF100",
+ "pair_layers": "F.Cu,B.Cu",
+ "pair_hop_layers": "In2.Cu,In3.Cu",
+ "pair_tail": 40,
+ "fanout_nets": "GND,+5V_S1,+5V_S2,+5V_S3,+5V_DEV",
+ "escape_prune_before_audit": true,
+ "pair_passes": [
+  {
+   "classes": "DIFF100",
+   "layers": "F.Cu,In2.Cu,In3.Cu,B.Cu",
+   "hop_layers": "In2.Cu,In3.Cu",
+   "inner": "DIFF100:0.13/0.127",
+   "note": "100 ohm: on In2/In3 the field solver reads 102 ohm at a 0.127 gap, inside tolerance, and the envelope is 0.387 against the 0.46 it uses outside, so this class gains both layers and room"
+  },
+  {
+   "classes": "USB",
+   "layers": "F.Cu,B.Cu",
+   "hop_layers": "In2.Cu",
+   "inner": "",
+   "note": "90 ohm: stays on the outer layers, where its class geometry already hits the target; 0.127/0.127 on In2/In3 would read 102 ohm against a 90 ohm target"
+  }
+ ],
+ "finish": {
+  "stub_layers": "F.Cu,In2.Cu,In3.Cu,B.Cu",
+  "pour_nets": "GND",
+  "pair_match": true,
+  "pair_audit_nets": [
+   "PCIE1_TX",
+   "PCIE2_TX",
+   "PCIE3_TX",
+   "USB31_TX",
+   "HDMI1_D0"
+  ],
+  "post_fix": "post_fix_b13.py",
+  "pruned_gate": true,
+  "gate_grep": "FAIL|RESULT|WARN|pieces|stitch|^verdict:",
+  "cont_route": {
+   "max_opens": 6,
+   "passes": 80,
+   "timeout_s": 900,
+   "power_layers": [
+    "In1.Cu",
+    "In4.Cu"
+   ],
+   "plane_nets": [
+    "GND"
+   ]
+  },
+  "_cont_route_why": "11 September 2026: one continuation pass of the router before the stub router when a handful of connections are open (A21's lever of 5 September). cont_route.sh keeps the board only if it improves, so it cannot make one worse; it was declared for A alone because only the A clones carried it, and E and P both ended a route at exactly one open.",
+  "_cont_route_planes_why": "12 September 2026: the continuation exports its own DSN, and it did so with every plane REMOVED, because finish.sh passed it no plane treatment and routeflow never put one in the finish's environment either. That makes the continuation re-route every plane pin as a wire: on C that is GND on In1, the majority of the board's connections. It is the same treatment the route itself is given in routeflow/<phase>.json, and a test holds the two in agreement.",
+  "stub_timeout_s": 3600,
+  "return_via": true,
+  "_return_via_why": "15 September 2026, owner ruling 20:15 CEST (appendix 32.198): a ground via within 1.5 mm of every signal via, fine-pitch escape fans exempt; the finish places them after the last copper-changing stage and the board gate (intent_checks item 4) refuses a board with a signal via left without one.",
+  "via_parallel": true,
+  "_via_parallel_why": "18 September 2026 (rule PI-003): after every copper-editing stage and before the ground vias, via_parallel lays parallel barrels beside any via dc_drop's solved mesh puts over IPC-2221's rating for its wall (the fabricator's 18 um plating), joined on every layer the net touches there, DRC-guarded, then re-solves and re-judges. On the committed board: B21 fails twenty-one barrels, three unmeasured",
+  "widen": [
+   {
+    "net": "/+5V_LIME",
+    "to": 1.0,
+    "steps": [
+     "1.0",
+     "0.8",
+     "0.6",
+     "0.5"
+    ],
+    "layers": [
+     "F.Cu",
+     "B.Cu",
+     "In2.Cu",
+     "In3.Cu"
+    ],
+    "why": "18 September 2026 (PI-001): on B21 nine rails miss the density bar on a router conductor, +5V_LIME at 8.9 times its limit, +3V3_S3B 5.2, +5V_RB 4.8, +3V3_S3A 4.5, +5V_S1 2.0, +5V_S2 1.4, +5V_S3 1.4, +1V0_S1 1.3, +54V_POE 1.2; the rails' own copper is the In4 pours and the slot bands, so these are the router's runs between them and a wider run in place changes no topology. Declared for B22's finish; each is a trial the DRC decides"
+   },
+   {
+    "net": "/+3V3_S3B",
+    "to": 1.0,
+    "steps": [
+     "1.0",
+     "0.8",
+     "0.6",
+     "0.5"
+    ],
+    "layers": [
+     "F.Cu",
+     "B.Cu",
+     "In2.Cu",
+     "In3.Cu"
+    ],
+    "why": "18 September 2026 (PI-001): on B21 nine rails miss the density bar on a router conductor, +5V_LIME at 8.9 times its limit, +3V3_S3B 5.2, +5V_RB 4.8, +3V3_S3A 4.5, +5V_S1 2.0, +5V_S2 1.4, +5V_S3 1.4, +1V0_S1 1.3, +54V_POE 1.2; the rails' own copper is the In4 pours and the slot bands, so these are the router's runs between them and a wider run in place changes no topology. Declared for B22's finish; each is a trial the DRC decides"
+   },
+   {
+    "net": "/+5V_RB",
+    "to": 1.0,
+    "steps": [
+     "1.0",
+     "0.8",
+     "0.6",
+     "0.5"
+    ],
+    "layers": [
+     "F.Cu",
+     "B.Cu",
+     "In2.Cu",
+     "In3.Cu"
+    ],
+    "why": "18 September 2026 (PI-001): on B21 nine rails miss the density bar on a router conductor, +5V_LIME at 8.9 times its limit, +3V3_S3B 5.2, +5V_RB 4.8, +3V3_S3A 4.5, +5V_S1 2.0, +5V_S2 1.4, +5V_S3 1.4, +1V0_S1 1.3, +54V_POE 1.2; the rails' own copper is the In4 pours and the slot bands, so these are the router's runs between them and a wider run in place changes no topology. Declared for B22's finish; each is a trial the DRC decides"
+   },
+   {
+    "net": "/+3V3_S3A",
+    "to": 1.0,
+    "steps": [
+     "1.0",
+     "0.8",
+     "0.6",
+     "0.5"
+    ],
+    "layers": [
+     "F.Cu",
+     "B.Cu",
+     "In2.Cu",
+     "In3.Cu"
+    ],
+    "why": "18 September 2026 (PI-001): on B21 nine rails miss the density bar on a router conductor, +5V_LIME at 8.9 times its limit, +3V3_S3B 5.2, +5V_RB 4.8, +3V3_S3A 4.5, +5V_S1 2.0, +5V_S2 1.4, +5V_S3 1.4, +1V0_S1 1.3, +54V_POE 1.2; the rails' own copper is the In4 pours and the slot bands, so these are the router's runs between them and a wider run in place changes no topology. Declared for B22's finish; each is a trial the DRC decides"
+   },
+   {
+    "net": "/+5V_S1",
+    "to": 1.0,
+    "steps": [
+     "1.0",
+     "0.8",
+     "0.6",
+     "0.5"
+    ],
+    "layers": [
+     "F.Cu",
+     "B.Cu",
+     "In2.Cu",
+     "In3.Cu"
+    ],
+    "why": "18 September 2026 (PI-001): on B21 nine rails miss the density bar on a router conductor, +5V_LIME at 8.9 times its limit, +3V3_S3B 5.2, +5V_RB 4.8, +3V3_S3A 4.5, +5V_S1 2.0, +5V_S2 1.4, +5V_S3 1.4, +1V0_S1 1.3, +54V_POE 1.2; the rails' own copper is the In4 pours and the slot bands, so these are the router's runs between them and a wider run in place changes no topology. Declared for B22's finish; each is a trial the DRC decides"
+   },
+   {
+    "net": "/+5V_S2",
+    "to": 1.0,
+    "steps": [
+     "1.0",
+     "0.8",
+     "0.6",
+     "0.5"
+    ],
+    "layers": [
+     "F.Cu",
+     "B.Cu",
+     "In2.Cu",
+     "In3.Cu"
+    ],
+    "why": "18 September 2026 (PI-001): on B21 nine rails miss the density bar on a router conductor, +5V_LIME at 8.9 times its limit, +3V3_S3B 5.2, +5V_RB 4.8, +3V3_S3A 4.5, +5V_S1 2.0, +5V_S2 1.4, +5V_S3 1.4, +1V0_S1 1.3, +54V_POE 1.2; the rails' own copper is the In4 pours and the slot bands, so these are the router's runs between them and a wider run in place changes no topology. Declared for B22's finish; each is a trial the DRC decides"
+   },
+   {
+    "net": "/+5V_S3",
+    "to": 1.0,
+    "steps": [
+     "1.0",
+     "0.8",
+     "0.6",
+     "0.5"
+    ],
+    "layers": [
+     "F.Cu",
+     "B.Cu",
+     "In2.Cu",
+     "In3.Cu"
+    ],
+    "why": "18 September 2026 (PI-001): on B21 nine rails miss the density bar on a router conductor, +5V_LIME at 8.9 times its limit, +3V3_S3B 5.2, +5V_RB 4.8, +3V3_S3A 4.5, +5V_S1 2.0, +5V_S2 1.4, +5V_S3 1.4, +1V0_S1 1.3, +54V_POE 1.2; the rails' own copper is the In4 pours and the slot bands, so these are the router's runs between them and a wider run in place changes no topology. Declared for B22's finish; each is a trial the DRC decides"
+   },
+   {
+    "net": "/+1V0_S1",
+    "to": 1.0,
+    "steps": [
+     "1.0",
+     "0.8",
+     "0.6",
+     "0.5"
+    ],
+    "layers": [
+     "F.Cu",
+     "B.Cu",
+     "In2.Cu",
+     "In3.Cu"
+    ],
+    "why": "18 September 2026 (PI-001): on B21 nine rails miss the density bar on a router conductor, +5V_LIME at 8.9 times its limit, +3V3_S3B 5.2, +5V_RB 4.8, +3V3_S3A 4.5, +5V_S1 2.0, +5V_S2 1.4, +5V_S3 1.4, +1V0_S1 1.3, +54V_POE 1.2; the rails' own copper is the In4 pours and the slot bands, so these are the router's runs between them and a wider run in place changes no topology. Declared for B22's finish; each is a trial the DRC decides"
+   },
+   {
+    "net": "/+54V_POE",
+    "to": 1.0,
+    "steps": [
+     "1.0",
+     "0.8",
+     "0.6",
+     "0.5"
+    ],
+    "layers": [
+     "F.Cu",
+     "B.Cu",
+     "In2.Cu",
+     "In3.Cu"
+    ],
+    "why": "18 September 2026 (PI-001): on B21 nine rails miss the density bar on a router conductor, +5V_LIME at 8.9 times its limit, +3V3_S3B 5.2, +5V_RB 4.8, +3V3_S3A 4.5, +5V_S1 2.0, +5V_S2 1.4, +5V_S3 1.4, +1V0_S1 1.3, +54V_POE 1.2; the rails' own copper is the In4 pours and the slot bands, so these are the router's runs between them and a wider run in place changes no topology. Declared for B22's finish; each is a trial the DRC decides"
+   }
+  ]
+ },
+ "pair_env": {
+  "PAIR_CORRIDOR_SLACK": 0.08,
+  "PAIR_CORRIDOR_SLACK_SLIM": 0.03,
+  "PAIR_VIA_MODE": "min",
+  "PAIR_COVER_LEGS": 1,
+  "PAIR_CLASS_CLEAR": 1
+ },
+ "_pair_env_why": "13 September 2026, THE CURVE WAS RE-MEASURED ON THE TOOLS THAT LAY THE PAIRS TODAY, which is what the note it replaces asked for in capitals. What moved since the 12 September sweep: the pair's end emissions are asked about the partner BEFORE they are laid and move their approach into the pad when the last hop is the violation (PAIR_END_FIT, appendix 32.173), and that alone took this board from 38 to 54 of 113 at the old 0.06. Re-swept with it on, one placed board, one variable, eight arms: 0.04 lays 64 (32 DIFF100 + 32 USB), 0.05 lays 64 (35 + 29), 0.06 lays 54 (35 + 19), 0.07 lays 64 (34 + 30), 0.08 lays 65 (37 + 28), 0.09 lays 60 (34 + 26), 0.10 lays 62 (34 + 28), 0.12 lays 58 (32 + 26). The peak has MOVED to 0.08 and the old declared 0.06 is now the WORST point of the sweep: its DIFF100 pass lays 35, as good as any, and leaves the USB pass 19 where every neighbour leaves it 26 to 32, which is the greedy pass showing its shape. The value here is 0.08 with that table as its reason, and the caution stands unchanged: re-measure the whole curve when the tools or the placement move.",
+ "_pair_via_mode_why": "12 September 2026, measured on B19's placed board (md5 f8b5828a9d4e), DIFF100 only, four arms. The class via of DIFF100 is 0.70 mm, so the pair's own two vias need 0.70 + 0.127 = 0.827 mm centre to centre, and the HDMI and Ethernet fans this board leaves from are on an 0.8 mm pitch: 36 of the 74 failed attempts in one 48-pair pass were the pair refused for its own two vias, every one reading 0.707 to 0.800 of 0.822. At the board's own via minimum (0.40/0.20, which escape.py has laid at fine pitch here since 5 September) the demand falls to 0.522. Arms: alphabet-and-span order 8 -> 14 of 48, contention `scarce` order 11 -> 15 of 48. Worth +6 and +4, which is less than the twenty predicted and more than any other single knob measured on this board since the slack. Declared for B and not as the tool's default, because it is measured on B: A lays 3 of 3 with the class via at a 2.54 mm ribbon, where the arithmetic does not bind.",
+ "phase": "B21",
+ "_phase_why": "B21, adopted 17 September 2026 with the board, its schematic and its netlist together. The route ran from 16 September 04:51 UTC with no supervisor (its routeflow exited moments after launching the router) and was imported and finished by $SP/b21_after.sh, which is the missing half of that run rather than a new one. Before this the tree held a B21 netlist beside a B19 schematic and board, which is why every cross-board contract naming board B was unjudged.",
+ "place_env": {
+  "PLACE_COUPLE_GAP": 2.4,
+  "PLACE_FINE_MARGIN": 2.0
+ },
+ "_place_env_why": "12 September 2026 (appendix 32.146, 32.147). 30 of 46 leg refusals on B19's DIFF100 pass sat within 2 mm of one of the pair's OWN pads and 22 of those at the pairs' own series coupling capacitors, which the packer stacks as couples at its global 1.2 mm gap. Two placements regenerated on the same tools, one at 1.2 and one at 2.4, each with its own chain and gate: the DIFF100 pass lays 14 of 48 at 1.2 and 22 of 48 at 2.4, and the leg-fit refusals go from 102 lines to 8 with the 76 that were refused out in the corridor becoming none. The escape quality is unchanged (1,493 escapes and 279 skipped pads against 1,488 and 284), so the pairs are not bought at the fine-pitch parts' expense. A placement change moves every part in its region, so this is recorded as one placement against another rather than as a knob with a value. ** 15 September 2026 23:10 CEST, the B placement loop measured five values and the declaration goes back to 2.4: the loop's own pass ran without PAIR_COVER_LEGS and PAIR_CLASS_CLEAR (fixed at 22:39), and on the production pass the 2.6 placement lays 31 of 48 DIFF100 pairs where B19's own chain laid 35 at 2.4; the same 2.6 placed board laid 38 in the loop's arm and 33 in three reproductions (the placement is deterministic, four regenerations identical; the escape stage is not, one GND via differed, and a greedy pass without rip-up turns one cell into five pairs, appendix 32.117). So no value of this knob is distinguishable from the pass's own scatter by a single arm; 2.8 and 3.2 are ILLEGAL (mask bridges at the antenna jacks), PLACE_GAP 1.8 and PLACE_PTH_OBSTACLE 1 are ILLEGAL on the placed board, PLACE_FINE_MARGIN 2.6 and PLACE_NO_UNDER_FINE 1 are refused by the region gate. couple_gap.py reads the achieved gap back: 2.4 reads 1.80 mm between the parts' boxes.",
+ "_pair_cover_legs_why": "13 September 2026, measured on B19 at the declared baseline (end fit on, slack 0.08), one variable: PAIR_COVER_LEGS=0 lays 65 of 113 (37 DIFF100 + 28 USB), =1 lays 71 (38 + 33). The corridor is grown by w + s/2 + slack and the legs by w + s/2 + 0.02, so the corridor is 0.02 mm short of covering its own legs and the whole margin at the standard slack is one grid cell (appendix 32.126, 11 September). It was worth +1 on the tools of that day and OFF on the reading that it costs 0.12 mm of envelope; with the end fit laying the last hop properly it is worth SIX, which is the record's own law about removing the last bar rather than a bar. The slack was re-swept with it on: 0.06 lays 63, 0.08 lays 71, 0.10 lays 57, 0.12 lays 63, so 0.08 remains the peak and PAIR_LEG_RETRY=2 on top of it costs nine (62).",
+ "_pair_passes_order_why": "14 September 2026, measured on today's tools at the declared baseline (end fit, cover legs, slack 0.08): DIFF100 first lays 71 of 113 (38 + 33), USB first lays 55 (28 DIFF100 + 27 USB). The record's number for the reverse order was 56 against 60 on the tools of 10 September, so the direction has held through three generations of the tool while the size of the gap has grown. DIFF100 goes first because it is the pass that takes the extra layers, and what it lays is what the second pass has to route around.",
+ "_pair_class_clear_why": "14 September 2026, MEASURED AND DECLARED FOR B. The pre-router's occupancy map grew every obstacle by the module literal CLR = 0.16 mm, whatever class it belongs to and whatever class the pair belongs to, on every board. B19's DIFF100 and USB classes ask for 0.127, and the escape fans the legs have to reach their own vias through are laid at 0.127 with 0.127 tracks, so a 0.254 mm lane loses a quarter of its width to margin that KiCad's own rule does not ask for: the clearance between two items is the LARGER of their two classes'. Two arms, one variable, the same placed board, at this board's declared baseline: the map as it was lays 62 of 113 (35 DIFF100 + 27 USB) and the class-aware map lays 64 (37 + 27). Plus two, and it is the correct model rather than a lever, which is why it is declared here rather than argued about. AND A CORRECTION TO CARRY: the control arm says 62, where the record's baseline for this board was 71 measured yesterday evening. The generators moved between the two, so 71 is not reproducible on today's tree and every comparison from here is against 62. The caution of 32.109 word for word: the baseline also moved because the board did.",
+ "pair_coupled_fraction": 0.8,
+ "_pair_coupled_fraction_why": "15 September 2026 02:40 CEST, OWNER RULING, his words: 'while B is blocked on your decision == unblock B from my decision'. Decision 24 became the session's and the session took its option 2, the one the decision itself recommended: the board passes the pair hold when the coupled length across its judged pairs is at least this fraction of the total, every pair still named with its own verdict, the 1 mm length gate untouched for the pairs that exist. The number: B lays 62 to 71 of 113 pairs on the tools of the day (32.174, 32.185), ruling 18's floor plan is refused by the board by 86.2 mm, and USB 2.0's own budget for uncoupled length is a sixteenth of the edge, so 80 percent of the pair copper coupled and the rest laid by the router as two traces is the measured board rather than a hoped-for one. What this changes is the bar; the read-back of every pair is unchanged and stays in the record.",
+ "_gate_before_placement_why": "15 September 2026: check_pcb_b carries the I/O high-availability topology checks of 9 September (each bank's home and failover host, the selects reaching both switches), and on the MECHANICAL board, 27 footprints and no placement, every one of them reads an empty list: 52 FAIL lines and 'RESULT: 52 FAIL' before the placement runs and the same gate passes 2142 of 2142 after it. routeflow's pre-route judge blocks on any FAIL line in the log, so B19 has been unrunnable under routeflow since those checks were written, and nobody saw it because every B measurement since ran as an arm whose driver reads only the pair count. C, D, E and P run no gate before placement; B joins them, and the gate that means something runs where it always has, on the placed board.",
+ "place_audit_gate_off": true,
+ "_place_audit_gate_off_why": "15 September 2026, B19's first route for a deliverable under the delegated decision 24. The placement predictor names 9 collisions among 75 fine-pitch parts (U19, U20, U7, U102, U209: pads whose escape fan could not be placed), the same stations 32.146 measured as the pair wall, and B18 routed with the gate off on 9 September for the same reason. The route decides what the predictor predicts: the routed-board gate, hard 0 of fifteen types and 0 unrouted, is unchanged.",
+ "_signal_classes_why": "Rule RET-001, 16 September 2026. The return-path rule asks what a net's spectral content deserves, so every signal net needs a class and a reason. A net matched by no entry here is UNKNOWN and is judged at the STRICTEST bar, so an omission costs a failure rather than buying a pass. Patterns are shell globs over the net name without its leading slash, first match wins. Board B carries every fast interface in the kit, so most of this table is strict and the slow entries are the exceptions, which is the opposite of the other six boards.",
+ "signal_classes": [
+  {
+   "pattern": "PCIE*_RX_*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "PCIe Gen 2 at 5 GT/s into the compute module, routed as a 90 ohm pair on the module vendor's own guidance"
+  },
+  {
+   "pattern": "PCIE*_TX_*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the other direction of the same PCIe lane"
+  },
+  {
+   "pattern": "PCIE*_RXSW_*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the switch side of the module's receive pair, before its AC coupling capacitor"
+  },
+  {
+   "pattern": "PCIE*_CLK_*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the 100 MHz PCIe reference clock, a continuous differential source"
+  },
+  {
+   "pattern": "PCIE*_RCLK*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a PCIe reference clock output of the switch, same rate"
+  },
+  {
+   "pattern": "NVME*_RX_*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "PCIe Gen 2 to the NVMe socket"
+  },
+  {
+   "pattern": "NVME*_TX_*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the other direction of the same lane"
+  },
+  {
+   "pattern": "NVME*_CLK_*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the 100 MHz reference clock to the NVMe socket"
+  },
+  {
+   "pattern": "CARD*_RX_*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "PCIe Gen 2 to the card socket"
+  },
+  {
+   "pattern": "CARD*_TX_*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the other direction of the same lane"
+  },
+  {
+   "pattern": "CARD*_CLK_*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the 100 MHz reference clock to the card socket"
+  },
+  {
+   "pattern": "HOST*_*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a USB 3 SuperSpeed or USB 2 host lane between a module and its bank mux, 5 Gbit/s and 480 Mbit/s"
+  },
+  {
+   "pattern": "HUB*_D*TX_*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a hub's downstream SuperSpeed transmit pair"
+  },
+  {
+   "pattern": "BANK*_UP*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a bank's upstream USB 3 and USB 2 pairs into the host-select mux"
+  },
+  {
+   "pattern": "MUX*_A*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a SuperSpeed mux's switched pair"
+  },
+  {
+   "pattern": "SWP*_*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a gigabit Ethernet pair between the switch and a module's PHY, 125 MBd per pair with a wide spectrum"
+  },
+  {
+   "pattern": "ETH*_P*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a module's own gigabit Ethernet pair"
+  },
+  {
+   "pattern": "MDI_*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the media-dependent interface to the wall RJ45 through its magnetics, gigabit"
+  },
+  {
+   "pattern": "HDMI*_CK_*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "an HDMI clock pair, up to 340 MHz at 4K"
+  },
+  {
+   "pattern": "HDMI*_D*_*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "an HDMI data lane, up to 3.4 Gbit/s"
+  },
+  {
+   "pattern": "USB_*_N",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a USB 2.0 data line at 480 Mbit/s",
+   "rise_ns": 0.5,
+   "rise_basis": "USB 2.0 high speed: the specification's own minimum transition time, THSR/THSF 500 ps 10 to 90 percent (7.1.2.2). A conforming driver is never faster"
+  },
+  {
+   "pattern": "USB_*_P",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the other half of the same USB 2.0 pair",
+   "rise_ns": 0.5,
+   "rise_basis": "USB 2.0 high speed: the specification's own minimum transition time, THSR/THSF 500 ps 10 to 90 percent (7.1.2.2). A conforming driver is never faster"
+  },
+  {
+   "pattern": "USB_OTG_*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a USB 2.0 on-the-go pair",
+   "rise_ns": 0.5,
+   "rise_basis": "USB 2.0 high speed: the specification's own minimum transition time, THSR/THSF 500 ps 10 to 90 percent (7.1.2.2). A conforming driver is never faster"
+  },
+  {
+   "pattern": "*_DM",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a USB 2.0 D minus line to a device (radio, camera, modem)",
+   "rise_ns": 0.5,
+   "rise_basis": "USB 2.0 high speed: the specification's own minimum transition time, THSR/THSF 500 ps 10 to 90 percent (7.1.2.2). A conforming driver is never faster"
+  },
+  {
+   "pattern": "*_DP",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a USB 2.0 D plus line, the other half of the same pair",
+   "rise_ns": 0.5,
+   "rise_basis": "USB 2.0 high speed: the specification's own minimum transition time, THSR/THSF 500 ps 10 to 90 percent (7.1.2.2). A conforming driver is never faster"
+  },
+  {
+   "pattern": "LIME_SS*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the software-defined radio's USB 3 SuperSpeed pairs, 5 Gbit/s"
+  },
+  {
+   "pattern": "*_ANT",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "an antenna feed, radio frequency by definition"
+  },
+  {
+   "pattern": "*_RF_IN",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a receiver's radio-frequency input"
+  },
+  {
+   "pattern": "W?A_CARD",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a radio-frequency path between a card and its antenna switch"
+  },
+  {
+   "pattern": "W?B_CARD",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the same, second branch"
+  },
+  {
+   "pattern": "*_XI",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a crystal drive node, a continuous periodic source"
+  },
+  {
+   "pattern": "*_XO",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the other half of the same crystal loop"
+  },
+  {
+   "pattern": "*_SW",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a converter switch node: the fastest edges on the board and its primary radiated source"
+  },
+  {
+   "pattern": "*_BST",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a bootstrap node riding on a switch node"
+  },
+  {
+   "pattern": "*_BOOT",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a bootstrap node riding on a switch node"
+  },
+  {
+   "pattern": "POE_GATE",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the Power over Ethernet FET gate drive"
+  },
+  {
+   "pattern": "DEV_SW",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the shared logic buck's switch node"
+  },
+  {
+   "pattern": "SPI*_*",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "an SPI bus to a radio module, a few megahertz"
+  },
+  {
+   "pattern": "UART*_*",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a UART to a radio module, 115200 baud or less"
+  },
+  {
+   "pattern": "*_RXD",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a UART receive line to a module"
+  },
+  {
+   "pattern": "*_TXD",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a UART transmit line to a module"
+  },
+  {
+   "pattern": "*_RXD?",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a second UART receive line of the same module"
+  },
+  {
+   "pattern": "*_TXD?",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a second UART transmit line of the same module"
+  },
+  {
+   "pattern": "CAN?_*",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a CAN-FD fabric between the three controllers, up to 5 Mbit/s on a terminated bus"
+  },
+  {
+   "pattern": "CANT*",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a CAN bus termination node"
+  },
+  {
+   "pattern": "IOC?_CAN*",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a controller's CAN transmit or receive pin"
+  },
+  {
+   "pattern": "SCL*",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "I2C at 100 or 400 kHz, open drain"
+  },
+  {
+   "pattern": "SDA*",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the data half of the same I2C bus"
+  },
+  {
+   "pattern": "HDMI*_SCL",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "an HDMI display data channel clock, I2C rates"
+  },
+  {
+   "pattern": "HDMI*_SDA",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the data half of the same channel"
+  },
+  {
+   "pattern": "*_SMBCLK",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "an SMBus clock at 100 kHz"
+  },
+  {
+   "pattern": "*_SMBDAT",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the data half of the same SMBus"
+  },
+  {
+   "pattern": "*_SWCLK",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a debug clock, a few megahertz and used only with a probe attached"
+  },
+  {
+   "pattern": "*_SWDIO",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the data half of the same debug port"
+  },
+  {
+   "pattern": "*_TCKC",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a radio module's programming clock, used at the bench"
+  },
+  {
+   "pattern": "*_TMSC",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the data half of the same programming port"
+  },
+  {
+   "pattern": "SIM*_CLK",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a SIM card clock, a few megahertz"
+  },
+  {
+   "pattern": "SIM*_IO",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a SIM card data line at the same rate"
+  },
+  {
+   "pattern": "GNSS_PPS*",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the GNSS pulse per second: one edge a second, and the EDGE is the whole point of it"
+  },
+  {
+   "pattern": "HB*",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a heartbeat between a controller and a module, a slow square wave that must keep its edge"
+  },
+  {
+   "pattern": "FAN_PWM*",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a fan PWM at 25 kHz into a gate"
+  },
+  {
+   "pattern": "FAN_TACHO*",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a fan tachometer, two pulses a revolution through a pull-up"
+  },
+  {
+   "pattern": "EXP_INT",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "an expander interrupt, an edge into a GPIO"
+  },
+  {
+   "pattern": "*_RST_n",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a reset line: a logic edge whose timing is a specified property of the device"
+  },
+  {
+   "pattern": "*_RST",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a reset line, as above"
+  },
+  {
+   "pattern": "HUBRST*",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a voted hub reset line, a logic edge through the 2-of-3 gates"
+  },
+  {
+   "pattern": "SEL*",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a voted host-select line: it is break-before-make, so its edge order matters"
+  },
+  {
+   "pattern": "WSEC_*",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the voted secondary-radio select, as above"
+  },
+  {
+   "pattern": "SW?_IN",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a voter input"
+  },
+  {
+   "pattern": "SW?_O?",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a voter output"
+  },
+  {
+   "pattern": "BSEL*",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a bank-select line into the mux logic"
+  },
+  {
+   "pattern": "BOE*_n",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a mux output enable, a logic edge in the break-before-make sequence"
+  },
+  {
+   "pattern": "BOB",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the break-before-make timing node of the same logic"
+  },
+  {
+   "pattern": "*_EN",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an enable, a static level with an RC on it"
+  },
+  {
+   "pattern": "*_EN?",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an enable of a numbered channel, a static level"
+  },
+  {
+   "pattern": "EN?_S?",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a per-slot rail enable, a static level"
+  },
+  {
+   "pattern": "*_FLT",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a fault flag, an open-drain static level"
+  },
+  {
+   "pattern": "*_FB",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a converter's feedback divider tap, a DC level inside the control loop"
+  },
+  {
+   "pattern": "*_COMP",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an error amplifier's compensation node"
+  },
+  {
+   "pattern": "*_COMPC",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the second element of the same compensation network"
+  },
+  {
+   "pattern": "*_SS",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a soft-start capacitor node, a ramp of milliseconds"
+  },
+  {
+   "pattern": "*_RT",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a frequency-setting resistor node, a DC bias"
+  },
+  {
+   "pattern": "*_VCAP",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an internal-supply decoupling node, a local rail"
+  },
+  {
+   "pattern": "*_IREF",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a reference-current resistor node, a DC bias"
+  },
+  {
+   "pattern": "*_REXT",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an external-resistor bias node, DC"
+  },
+  {
+   "pattern": "*_ISET",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a current-set resistor node, DC"
+  },
+  {
+   "pattern": "*_ILM",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an eFuse current-limit resistor node, DC"
+  },
+  {
+   "pattern": "*_DVDT",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an eFuse slew-rate capacitor node, deliberately slow"
+  },
+  {
+   "pattern": "*_OVLO",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an overvoltage-lockout divider tap, DC"
+  },
+  {
+   "pattern": "*_STRAP*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a configuration strap, read once at reset"
+  },
+  {
+   "pattern": "*_TEST*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a test pin strapped to a static level"
+  },
+  {
+   "pattern": "*_JTAGL",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an unused JTAG pin strapped low"
+  },
+  {
+   "pattern": "*_PRSNT*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a presence-detect pin, a static level"
+  },
+  {
+   "pattern": "*_SLOTCLK",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a slot-clock configuration strap, static"
+  },
+  {
+   "pattern": "*_SLOTIMP",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a slot-implemented configuration strap, static"
+  },
+  {
+   "pattern": "*_PWRSAV",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a power-saving configuration strap, static"
+  },
+  {
+   "pattern": "*_EEPD",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an EEPROM-present strap, static"
+  },
+  {
+   "pattern": "*_PST?",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a port-status output driving an indicator"
+  },
+  {
+   "pattern": "*_CLKREQ_n",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a PCIe clock request, an open-drain static level in this design"
+  },
+  {
+   "pattern": "*_nWAKE",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a PCIe wake line, an open-drain static level"
+  },
+  {
+   "pattern": "*_nRST",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a PCIe reset, a static level held through boot"
+  },
+  {
+   "pattern": "*_RST?_n",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a downstream PCIe reset, a static level"
+  },
+  {
+   "pattern": "*_DEVSLP",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an NVMe device-sleep pin, a static level"
+  },
+  {
+   "pattern": "*_HPD",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an HDMI hot-plug detect, a static level"
+  },
+  {
+   "pattern": "*_HPD_IN",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the input side of the same hot-plug detect"
+  },
+  {
+   "pattern": "*_CEC",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the HDMI consumer-electronics control line, a single wire at about 400 bit/s"
+  },
+  {
+   "pattern": "*_VBUS",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a USB bus supply node, a DC rail"
+  },
+  {
+   "pattern": "VBUS_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a USB bus supply node, a DC rail"
+  },
+  {
+   "pattern": "*_PWRPOL",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a hub's power-polarity strap, static"
+  },
+  {
+   "pattern": "*_SMBUS_n",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a hub's SMBus-mode strap, static"
+  },
+  {
+   "pattern": "*_R?",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a hub's reference-resistor node, DC"
+  },
+  {
+   "pattern": "*_LED_?",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an indicator LED anode or cathode"
+  },
+  {
+   "pattern": "LED_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an indicator LED drive, a static level or a slow blink"
+  },
+  {
+   "pattern": "*_nLED",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an active-low indicator LED drive"
+  },
+  {
+   "pattern": "*_nLED?",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an active-low indicator LED drive"
+  },
+  {
+   "pattern": "KSZ_LED*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a switch port's link indicator"
+  },
+  {
+   "pattern": "*_BOOT?",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a controller's boot-select strap, read once at reset"
+  },
+  {
+   "pattern": "*_BSL",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a radio module's bootstrap-loader strap, read once at reset"
+  },
+  {
+   "pattern": "nRPIBOOT*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a module's boot-mode strap, read once at reset"
+  },
+  {
+   "pattern": "*_W_DIS*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a wireless-disable pin, a static level"
+  },
+  {
+   "pattern": "WL_nDIS*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a module's wireless-disable pin, a static level"
+  },
+  {
+   "pattern": "BT_nDIS*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a module's Bluetooth-disable pin, a static level"
+  },
+  {
+   "pattern": "*_OFF",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a module power-off request, a static level"
+  },
+  {
+   "pattern": "*_PWROFF_n",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a module power-off line, a static level"
+  },
+  {
+   "pattern": "*_RESET",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a module reset held for milliseconds by an RC"
+  },
+  {
+   "pattern": "*_CTRL",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a module control line, a static level"
+  },
+  {
+   "pattern": "*_STATUS",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a module status output, a static level"
+  },
+  {
+   "pattern": "*_IEN",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a module interface-enable strap, static"
+  },
+  {
+   "pattern": "*_XMTG",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a satellite modem's transmit-gate flag, a static level"
+  },
+  {
+   "pattern": "*_ON",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a radio module's power-on control, a static level"
+  },
+  {
+   "pattern": "*_RXEN",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a radio module's receive enable, a static level held for a whole packet"
+  },
+  {
+   "pattern": "*_TXEN",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a radio module's transmit enable, the same"
+  },
+  {
+   "pattern": "*_BIAS",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an antenna bias feed, DC through a choke"
+  },
+  {
+   "pattern": "*_VDD_RF",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a module's radio supply pin with its decoupling"
+  },
+  {
+   "pattern": "GNSS_?V?",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a GNSS module supply node"
+  },
+  {
+   "pattern": "ZB?_?V?",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a radio module supply node"
+  },
+  {
+   "pattern": "RB_?V?",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a satellite modem supply node"
+  },
+  {
+   "pattern": "SIM*_VCC",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a SIM card supply"
+  },
+  {
+   "pattern": "SIM*_RST",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a SIM card reset, a static level"
+  },
+  {
+   "pattern": "PANEL_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a panel supply or identification node"
+  },
+  {
+   "pattern": "POE_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a Power over Ethernet sense, drain or reset node, DC or a static level"
+  },
+  {
+   "pattern": "MCT*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a magnetics centre tap, a DC reference node"
+  },
+  {
+   "pattern": "TCT*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a magnetics centre tap on the chip side, a DC reference node"
+  },
+  {
+   "pattern": "CC?_F?",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a USB configuration-channel node after its filter"
+  },
+  {
+   "pattern": "E*_CT",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a radio module's antenna-switch control line, a static level held for a whole packet"
+  },
+  {
+   "pattern": "Q?B",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a transistor node in a level shifter, a static level"
+  },
+  {
+   "pattern": "Q?C",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a transistor node in a level shifter, a static level"
+  },
+  {
+   "pattern": "SLOT_EN*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a slot enable, a static level"
+  },
+  {
+   "pattern": "EXP_SPARE*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an unused expander pin, driven by nothing"
+  },
+  {
+   "pattern": "TX_INHIBIT_n",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the hardware transmit inhibit from the panel toggle, a static level with a pull-down"
+  },
+  {
+   "pattern": "EMCON_HW",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the emission-control line, a static level"
+  },
+  {
+   "pattern": "ZEROIZE_HW",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the zeroize line, a static level"
+  },
+  {
+   "pattern": "SHORE_INHIBIT",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the shore inhibit, a static level through an optocoupler"
+  },
+  {
+   "pattern": "TR_APRS",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the transmit indication from the APRS board, a static level"
+  },
+  {
+   "pattern": "PI_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a shutdown-request or kill line to a module, a static level"
+  },
+  {
+   "pattern": "WIFI_PRI",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the primary radio select, a static level"
+  },
+  {
+   "pattern": "WIFI_SEC",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the secondary radio select, a static level"
+  },
+  {
+   "pattern": "ZB_ON",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the Zigbee radios' power control, a static level"
+  },
+  {
+   "pattern": "EN33_S*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a per-slot 3.3 V rail enable, a static level"
+  },
+  {
+   "pattern": "HDMI_SEL*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the display switch's select lines, static levels changed by a person or by the panel"
+  },
+  {
+   "pattern": "LIME_EN_A",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the software-defined radio's enable indicator anode, a static level"
+  }
+ ],
+ "annular_min_mm": 0.2,
+ "_annular_min_mm_why": "Rule VIA-002. JLCPCB rigid PCB manufacturing capabilities, annular ring rows, read 16 September 2026 (v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md): six layers at 1 oz outer: multilayer 1 oz, recommended 0.20 mm or above. The RECOMMENDED figure is taken and not the absolute minimum, because the absolute minimum is where yield starts to suffer and this board is made five at a time with no second chance before the owner has it in his hands.",
+ "via_ring_min_mm": 0.05,
+ "_via_ring_min_mm_why": "Rule VIA-002, the VIA rows rather than the annular ring row. JLCPCB rigid PCB manufacturing capabilities, read 16 September 2026 (v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md): minimum via diameter 0.25 mm on a minimum via hole of 0.15 mm for 2 or more layers, which leaves 0.05 mm of copper per side. The PTH annular ring row (0.20 mm) is stated for a plated COMPONENT hole and cannot bind a via, because no via at this document's own minimum could satisfy it; board D12 was refused on 16 September for a 0.45/0.20 via at 0.125 mm of ring, which is what that confusion costs.",
+ "copper_layers": 6,
+ "_copper_layers_why": "Six layers, and this is the one board of the set whose layer count stands on its own measurement: three compute modules at 0.4 mm receptacle pitch need two inner signal layers, and a board-wide In1 keep-out left 93 opens at eight passes.",
+ "external_ports": [
+  {
+   "ref": "J_ETH",
+   "why": "the internal RJ45 whose patch lead reaches the sealed wall RJ45: a cable-borne port"
+  },
+  {
+   "ref": "J_54V",
+   "why": "the Power over Ethernet feed, which leaves the case on that same wall jack"
+  }
+ ],
+ "_external_ports_why": "Rule TRN-001, 16 September 2026. A port that leaves the ENCLOSURE is a wire a person will plug something into, in the rain, having walked across a floor. Every one of them reaches a semiconductor, and the only thing between is a suppressor, a choke, a series resistor into a clamp, or nothing. Most connectors on these boards are internal (board-to-board ribbons, module sockets, fan leads inside a sealed case) and treating every J as external would refuse every board for wires that never leave it. The board knows which is which and nothing else does, so each one is named with where it goes.",
+ "grounds": {
+  "GND": {
+   "what": "the board's single ground: every return on this board is this net"
+  }
+ },
+ "_grounds_why": "16 September 2026, rule GND-001: either the board has one ground and says so, or every partition is drawn deliberately with its crossing points named and the signals that cross listed. ground_system.py reads the netlist and compares it with this.",
+ "critical_k": 6,
+ "critical_k_why": "l = t_r / (6 t_pd). ECSS-E-HB-20-07A section 6.1.2.3 works a real case where a 35 mm clock track with a 200 ps edge failed a radiated emission test: that track is ONE rise distance long (t_r / t_pd = 34.5 mm on its microstrip), which is k = 1, and the handbook calls it a textbook radiator. k = 2 is half a known failure and k = 6 is a sixth of it. The number is this project's choice; the handbook is what it was calibrated against, and no standard in this tree states a value for k",
+ "crystals": {
+  "Y1": {
+   "c_load_pf": 12.0,
+   "stray_pf": 3.0,
+   "source": "TAXM25M4RFBCCT2T (C164047), 25 MHz +-10 ppm, load capacitance 12 pF, from JLCPCB's own catalogue entry for the ordered code; the 18 pF capacitors give 9 pF in series and the 3 pF stray makes 12",
+   "_stray_why": "3 pF, the allowance the RP2040 hardware design guide uses for the pins and tracks of a 3225 crystal beside its IC, which is the geometry every crystal on these boards has"
+  },
+  "Y2": {
+   "c_load_pf": 12.0,
+   "stray_pf": 3.0,
+   "source": "TAXM25M4RFBCCT2T (C164047), 25 MHz +-10 ppm, load capacitance 12 pF, from JLCPCB's own catalogue entry for the ordered code; the 18 pF capacitors give 9 pF in series and the 3 pF stray makes 12",
+   "_stray_why": "3 pF, the allowance the RP2040 hardware design guide uses for the pins and tracks of a 3225 crystal beside its IC, which is the geometry every crystal on these boards has"
+  },
+  "Y3": {
+   "c_load_pf": 12.0,
+   "stray_pf": 3.0,
+   "source": "TAXM25M4RFBCCT2T (C164047), 25 MHz +-10 ppm, load capacitance 12 pF, from JLCPCB's own catalogue entry for the ordered code; the 18 pF capacitors give 9 pF in series and the 3 pF stray makes 12",
+   "_stray_why": "3 pF, the allowance the RP2040 hardware design guide uses for the pins and tracks of a 3225 crystal beside its IC, which is the geometry every crystal on these boards has"
+  },
+  "Y4": {
+   "c_load_pf": 12.0,
+   "stray_pf": 3.0,
+   "source": "TAXM25M4RFBCCT2T (C164047), 25 MHz +-10 ppm, load capacitance 12 pF, from JLCPCB's own catalogue entry for the ordered code; the 18 pF capacitors give 9 pF in series and the 3 pF stray makes 12",
+   "_stray_why": "3 pF, the allowance the RP2040 hardware design guide uses for the pins and tracks of a 3225 crystal beside its IC, which is the geometry every crystal on these boards has"
+  },
+  "Y101": {
+   "c_load_pf": 12.0,
+   "stray_pf": 3.0,
+   "source": "TAXM24M4RFBCCT2T (C164058), 24 MHz +-10 ppm, load capacitance 12 pF, from JLCPCB's own catalogue entry. The code it replaces, C70571, is an 18 pF part, which the same 18 pF capacitors loaded a third light",
+   "_stray_why": "3 pF, the allowance the RP2040 hardware design guide uses for the pins and tracks of a 3225 crystal beside its IC, which is the geometry every crystal on these boards has"
+  },
+  "Y201": {
+   "c_load_pf": 12.0,
+   "stray_pf": 3.0,
+   "source": "TAXM24M4RFBCCT2T (C164058), 24 MHz +-10 ppm, load capacitance 12 pF, from JLCPCB's own catalogue entry. The code it replaces, C70571, is an 18 pF part, which the same 18 pF capacitors loaded a third light",
+   "_stray_why": "3 pF, the allowance the RP2040 hardware design guide uses for the pins and tracks of a 3225 crystal beside its IC, which is the geometry every crystal on these boards has"
+  },
+  "Y301": {
+   "c_load_pf": 12.0,
+   "stray_pf": 3.0,
+   "source": "TAXM24M4RFBCCT2T (C164058), 24 MHz +-10 ppm, load capacitance 12 pF, from JLCPCB's own catalogue entry. The code it replaces, C70571, is an 18 pF part, which the same 18 pF capacitors loaded a third light",
+   "_stray_why": "3 pF, the allowance the RP2040 hardware design guide uses for the pins and tracks of a 3225 crystal beside its IC, which is the geometry every crystal on these boards has"
+  }
+ },
+ "_escape_gap_why": "MEASURED 17 September 2026, and a hypothesis refused. B21's placement predicts ten escape-fan collisions (U101 38 of 99 pads without an escape, U301 34, U202 17, U302 14, U7 12 of 24, U19 5 of 14), and the escape pass's own debug lines name a via of the PAD'S OWN NET as the last thing it rejected at several of them, which reads like a false refusal: same-net copper needs no clearance and the escape would only have to reach a via that is already there. It is not. Counted over the whole placed board: 560 fine-pitch pads have no escape and only 12 of them have a via of their own net within 0.5 mm, 17 within 1.0 and 35 within 2.0. The 'last reject' line is the last of many candidate positions and not a statement about the pad's neighbourhood, which is the 8 September lesson about a debug print that does not share the predicate it explains. So place_audit is not describing its own limit here and the prediction stands: this board's fine-pitch fans do not fit where they are, which is a PLACEMENT item for B22 and not a tool item. AND THE ROOM IT WOULD TAKE IS MEASURED (17 September 2026, 16:20 CEST). The knob that gives a fine-pitch part more room is PLACE_FINE_MARGIN, whose own note carries 10 September's reading (194 pads with no escape at 1.6 mm against 69 at 2.6, and 50 pairs of 113 against 43). Re-run on today's tools in its own tree, the 2.6 mm arm does not reach the pair pass at all: the region-fit gate REFUSES the placement with nine regions over their rectangles, S1_SWIC by 13.9 mm, S2_SWIC by 5.7, S3_SWIC by 3.7, ETH by 2.9, GAP12 by 2.6, IOCA and RADE by 1.8 and the two rail pockets by 1.0. At the declared 1.6 nothing overflows. So the answer to 'give the fans room' is not a knob: it is owner ruling 13's resize, one region at a time with its overflow before and after, and those nine numbers are the work list. The baseline to beat is 11 predicted collisions of 75 fine-pitch parts and 31 of 68 pairs laid, both taken on 17 September.",
+ "_floor_plan_room_why": "WHERE THE ROOM IS, MEASURED (17 September 2026, region_room.py on the regenerated placement). The three pockets that need it have none: S1_SWIC has 0.0 mm in all four directions (a fixed hole west, S1_SWE east, S1_RAIL south, the M.2 socket J_M2 north), S2_SWIC 0.0 in all four, boxed by regions on every side, and S3_SWIC 1.0 mm west and nothing else. The room on this board is elsewhere: ETH has 49.0 mm to its south before it meets BATT, IOCA 22.0 mm north, RADE 11.5 mm south, S1_RAIL 6.0 mm west, IOCA 5.0 mm west to the outline, ETH 3.0 mm west, GAP12 3.0 mm north. So the escape-fan problem on this board CANNOT be solved by growing the switch pockets: they are boxed in, and the answer is a redistribution, parts moving out of the three per-slot pockets into the regions that have room, which is the 'floor plan built around the pair corridors' the record has named since 10 September. The numbers above are where that campaign starts. THE WHOLE TABLE, for the campaign to start from: in the slot column band the only front-side slack is S1_SWE and S3_SWE with 12.5 mm to the north (S2_SWE has none north and 3.0 south), and S2_SUP has 5.0 mm north; the BACK-side rail pockets are roomy (S1_RAILB 19.0 west into IOCA, S2_RAILB 16.0 east, S3_RAILB 16.0 west) and so are POEB 63.0 south, ETH 49.0 south, WIFISW 38.5 north and 14.0 south, IOCA 22.0 north. Every SWIC pocket is bounded north by the M.2 socket and east by its own SWE, so the only way to widen one is to move the SWIC/SWE boundary east and let SWE take its 12.5 mm northward, which is a two-region move on one slot and is what owner ruling 13's procedure asks to be reported before and after.",
+ "_floor_plan_targets_why": "WHERE THE TWO PROBLEMS MEET, counted on B21 (17 September 2026). The pair pass laid 31 of 68 and its failures die at: U32B and U31B twelve times each, U301 twelve, U4 and U3 ten, U1 ten, U30B six, U209 six, U302 four, U109 four, U102 four, then J_M2N3, J_M2C3 and J_HDMI. The escape fans that cannot be placed are at U101 (36 of 99 pads), U301 (37), U201 (30), U102 (21), U202 (19), U302 (16), U209 (16), U7 (12 of 24), U19 (5) and U20 (3). FOUR PARTS ARE IN BOTH LISTS: U301, U302, U209 and U102, the slot-3 PCIe switch, its hub and the slot-2 pair of the same, and the pair failures otherwise concentrate at the CM5 receptacles' high-speed halves (U30B, U31B, U32B) and at the switch U1 and the display switches U3 and U4. So the corridor from a module receptacle to its own switch and hub is the thing the floor plan has to serve, and it is the same copper the fans need: that is why the two knobs do not compose and why the answer is a layout rather than a margin.",
+ "_floor_plan_resize_why": "OWNER RULING 13'S SECOND PASS: THE NINE REGIONS THE 2.6 MM FINE MARGIN OVERFLOWS, EACH WITH ITS OVERFLOW BEFORE AND AFTER (17 September 2026, one tree and one instrument, the two generators and the region table, nothing routed and nothing committed to the board). ETH 2.92 -> 0 with 4 mm south (49.0 mm of room before BATT). IOCA 1.78 -> 0 with 3 mm north (22.0). RADE 1.81 -> 0 with 3 mm south (11.5). GAP12 2.61 -> 0.11 with 2.5 mm north and -> 0 with 2 mm west as well. S1_RAIL 1.01 -> 0 by taking 2 mm of height from S1_SUP, and its own 2 mm of width west bought NOTHING (1.01 either way); S3_RAIL 1.01 -> 0 the same way, its 0.75 mm of width east buying nothing. S1_SWIC 12.74 -> 3.69 with 6 mm of width from S1_SWE, which takes its measured 12 mm north, -> 0.69 with 3 mm of height and -> 0 with 4. S3_SWIC 3.69 -> 0 with 3 mm of width and 4 of height, the width alone buying nothing. S2_SWIC 5.69 -> 0 with 8 mm of width, S2_SWE taking 6 mm south to pay for it. The three SWIC pockets are boxed north by the M.2 socket, so their height comes through a chain, SWIC from RAIL and RAIL from SUP, and at 2.6 that chain needs the 3 mm band between S1_SUP and S3_SUP and the board outline, which would put parts at the edge and is refused. At 2.0 the whole board fits with none of that. A TRAP WORTH THE RECORD: a region grown all the way to what stops it packs WORSE, because the obstacle is then inside the rectangle and the shelf packer must step around it: S2_SUP2 grown its measured 1 mm north went from 0.55 mm over to 3.57, and grown 2 mm east to 6.57. Leave a margin or do not grow. AND THE TRADE THE RESIZE WAS FOR, measured with the whole pre-route chain to the placed board, the predictor on each: today's rectangles at the declared 1.6 predict ELEVEN escape-fan collisions of 75 fine-pitch parts with 1465 escapes and 288 pads skipped; the resized rectangles at 1.6 predict THIRTEEN (1451 and 302), so the resize alone COSTS two; the resized rectangles at 2.0 buy the escapes it was all for, 1491 and 264, and produce a placement with TWENTY-NINE hard violations, every one a front part over U52 or U62, the five SWD pins of the two underside controllers, which this schematic calls SWD PADS and draws as a through-hole 1x5 header. A through-hole pad occupies both sides, so a debug header on the underside is a keep-out on the front that nothing declares: it is decision 11's finding again, one board later. WITH THAT ONE FOOTPRINT ON A SURFACE-MOUNT LAND (PinHeader_1x05_P2.54mm_Vertical_SMD_Pin1Left, one line of gen_sch_b.py, nothing else changed) the 2.0 arm reads 1496 escapes, 259 pads skipped and TEN predicted collisions, which beats today's eleven, and its hard set falls from 29 to FIVE, all five being pads of one part, U24, inside a rule area at (284.75, 110.0). That is one part's seat and it is what B22's generation starts from. PLACE_PTH_OBSTACLE, refused twice before because the packer had nowhere to step, is FREE on the resized floor plan at 1.6 (0 hard, no overflow, the same 1451 and 302 as without it) and costs GAP12 3.49 mm at 2.0, which GAP12 has not got. None of this is applied to the generator while B21 is routing: the rectangles, the margin and the SWD land are one change and they belong to B22, with these numbers as its baseline to beat. THE CAMPAIGN HAS ITS ANSWER AND IT IS A FLOOR PLAN, NOT A KNOB (17 September 2026, 19:40 CEST). The five hard violations that were left after the surface-mount SWD land were one part in one place: U24, the RockBLOCK eFuse, inside J_WOA's OWN footprint keep-out, which forbids pads and which the packer could not see because a footprint's rule areas are FP_ZONEs and its obstacle list read board.Zones(). With the packer stepping around a placed part's own keep-out the whole set reads: today's rectangles at the declared 1.6 give 0 hard, no overflow, 1469 escapes, 284 pads without one and ELEVEN predicted collisions, which is the baseline unchanged; the resized rectangles at 2.0 with the surface-mount land give 0 hard, no overflow, 1496 escapes, 259 pads without one and TEN. So B22's floor plan is the nine rectangles, the 2.0 margin and the one footprint, together, and it beats B21 on both measures with a legal board. AND THE PAIR PASS, WHICH IS WHAT THE WHOLE CAMPAIGN IS DOWNSTREAM OF, WAS ASKED TOO, AND IT IS THE ONE MEASURE THAT DOES NOT SETTLE (17 September 2026, 21:25 CEST). The candidate went through the whole pre-route chain rather than the placement alone, and the first arm read 34 of 68 pairs against B21's 31 -- on a rectangle set that turned out to OVERLAP: S2_SWE grown six millimetres south crosses S2_RAIL's top edge, which the region-fit gate does not test and tests/test_region_overlap.py refuses. Two legal ways to give S2_SWE its room were measured: three millimetres south alone reads 30 of 68, and three south with three north taken from S2_SUP (which has five to the board's own edge) reads 32. Every one of the three arms reads TEN predicted collisions, 1,496 escapes, 259 pads without one and a placed board at 0 hard. So the escapes and the fans are what this floor plan buys, solidly; the pair count over the three arms is 30, 32 and 34 around B21's 31, which is inside the pass's own scatter (the same board has laid 38 once and 33 thrice, appendix 32.117), and it is not evidence either way. The set to apply is the legal one that reads 32: S2_SWE (18, -60, 32, -27) with S2_SUP moved to (12, -27, 32, 33).",
+ "safety_lines": [
+  {
+   "net": "EMCON_HW",
+   "hazard": "the WiFi cards and the module radios are released",
+   "safe_state": "low",
+   "role": "listens",
+   "why": "the three W_DISABLE stages hang on it and R58 holds it down, so with the panel ribbon out every card reads disable"
+  },
+  {
+   "net": "TX_INHIBIT_n",
+   "hazard": "the transmit inhibit is lost on its way to board D",
+   "safe_state": "low",
+   "role": "carries",
+   "why": "it arrives from the panel ribbon and leaves on the A to B ribbon, and no part of this board reads it: R59 holds it down here anyway, which is the 9 September red team's rule that every board on its path holds its own. Board D is where it is read"
+  },
+  {
+   "net": "PI_KILL",
+   "hazard": "the modules are powered down",
+   "safe_state": "low",
+   "role": "source",
+   "why": "each module can pull it through its own level stage, so this board drives it and board A reads it"
+  },
+  {
+   "net": "ZEROIZE_HW",
+   "hazard": "the secure element is wiped",
+   "safe_state": "high",
+   "role": "carries",
+   "why": "it arrives from the panel ribbon and ends at a test point: nothing on this board acts on it, and the wipe is the panel controller's over the I2C bus (owner decision 30)"
+  },
+  {
+   "net": "SHORE_INHIBIT",
+   "hazard": "shore power is admitted when the panel would refuse it",
+   "safe_state": "low",
+   "role": "carries",
+   "why": "carried from the panel ribbon to the A to B ribbon; board E reads it"
+  }
+ ],
+ "_safety_lines_why": "Board B acts on two of the five: the hardware EMCON line, which disables every card it carries, and the inhibit it passes to board D. Both carry their own pull-down (R58 and R59), which is what makes a missing panel ribbon safe rather than undefined. ZEROIZE_HW reaches a test point and nothing else, which is owner decision 30's subject.",
+ "_panel_5v_fuse_why": "THE PANEL 5 V FUSE SITS ABOVE ITS OWN TRACK (17 September 2026, rule PWR-003, found when board B's three polyfuses entered the energy chain). F1 is a Bourns MF-MSMF200, 2.0 A hold and 3.5 A trip, and PANEL_5V is a PWR-class net with no zone of its own on this board, so it is a 0.4 mm track on 1 oz outer copper: IPC-2221 through this project's own dc_drop.ipc_limit gives it 1.23 A at 10 K and 1.67 at 20 K, against a load of 0.6 A typical and 1.0 A peak declared by board C. The copper is the weaker element and a fault at the panel end would run at the fuse's trip current through it. B21 is mid-route, so nothing changes in this phase; B22 carries the answer with the floor plan and the surface-mount SWD land, and there are two: widen PANEL_5V to 0.8 mm, which is 2.03 A at 10 K and clears the hold, or fit an MF-MSMF110, which holds 1.1 A and trips at 2.2 and leaves ten percent over board C's declared peak. The widening is the one to prefer: it costs a pattern in the class table and no part number, and it leaves the margin on the side of the copper.",
+ "_b21_route_why": "B21 routed on the hub from 16 September 04:51 UTC to its 40 hour cap on 17 September 20:51 UTC: the last session written is pass 11 of 20 at 16:44 UTC and the imported board reads 0 hard and 416 unrouted; the router spent its final four hours on pass 12 without writing. Passes cost about 2.5 h at the start and 4 h by the end (pass 9 at 08:31, 10 at 12:37, 11 at 16:44). This is the measurement B22's floor plan (the sixteen rectangles, the 2.0 mm margin and the surface-mount SWD land of 32.216) has to beat, and it says the B19/B21 placement does not route in forty hours: the closers cannot answer 416 opens, so board B's route is a placement problem and a partition problem (32.91) before it is a pass-count problem (appendix 32.220).",
+ "_b22_set_why": "THE B22 SET IS APPLIED (17 September 2026, 22:41 CEST, recorded 23:58): the sixteen rectangles of 32.216 in gen_pcb_b3.py, the underside SWD headers on the surface-mount land PH1x5S in gen_sch_b.py, and PLACE_FINE_MARGIN 2.0 here. They entered the repo with commits c161b3d8 and b02e2fef because the apply script's --dry-run was not a check; the state is the one 32.216 measured (0 hard, no overflow, 1,496 escapes, 259 pads without one, 10 predicted collisions, 32 of 68 pairs) and B22's pre-route on the hub re-measures it on today's tools before the partition route.",
+ "_b22_pre_why": "B22's pre-route on the hub (/root/biso22, 17 September 2026 21:57 to 22:23 UTC, today's tools, the sixteen rectangles, the surface-mount SWD land and PLACE_FINE_MARGIN 2.0 of _b22_set_why): placed board hard 0 of the fifteen types, no region overflow, 1,511 escapes added and 259 pads skipped, 16 thermal vias refused for what is on the other side (U102 and U302 get none of their four, U203 and U204 none of their one), pair pass 35 of 48 DIFF100 and 36 of 68 in all against B21's 31, place_audit 9 predicted collisions of 75 fine-pitch parts against B21's 10, PREROUTE-DONE OK. Its route is the partition (b22_part_box.sh: GLOBAL, then the region groups sequentially, then the reconcile), launched 22:24 UTC, never plain passes: B21's 20 plain passes at 40 hours ended at 416 open.",
+ "_b22_class_table_why": "18 September 2026 10:50 CEST: gen_pcb_b3.py's project-file loop named four classes by hand (USB, DIFF100, PWR, HV) while its CLASSES table had grown PANEL (the polyfuse rail at 0.8 mm, PWR-003) and RF (the four antenna paths at 0.14 mm, RF-001), so B22's project file, its DSN and its gates carry those nets at the Default geometry (0.25 mm): B22 does not answer PWR-003 or RF-001 in copper. The loop iterates the whole table now; B23 is the first phase that carries PANEL and RF.",
+ "_b22_partition_why": "B22's partition, read at 11:05 CEST 18 September 2026. Stage 1 GLOBAL routed in 12 minutes (00:08 UTC) and the five region groups ran SEQUENTIALLY from 00:24 to 10:25, each cut by its own two-hour cap (exit 124 on all five: DEVW, S1, S2, S3, DEVE). **S3's session never reached the merged board**: `ses_import_lock` raised on it, the SWIG staleness this morning's A46 run found and fixed at 09:00 (the board came back from `b.Tracks()` as a bare object after the removals), so the driver carried on with a board that has no S3 copper, DEVE was routed against that board, and the merge read hard 2 with the DRC's unconnected list at its 499 cap. Re-merged at 11:01 with the repaired importer, nothing re-routed, every session off disk in the order it was cut: S3's 1,432 tracks land, the board is 16,422 tracks against 14,990, and the TRUE open count from the connectivity (never the DRC's capped list) is **597 unconnected items against the pre-route board's 2,889**. B21's forty hours of plain passes left 416. So the partition as cut does NOT beat B21 and B22 is not adopted on this evidence; the reconcile runs on the re-merged board and its closers are what could still move it. What the run measures is the CAP and not the method: every region job stopped at two hours with passes still improving, which is the same shape as A42's truncated arm, so a partition arm that is to be compared with a 40 h plain route needs region caps that add up to the same order of hours. The reconcile on the re-merged board was stopped at 11:34: three rip passes left it at hard 44 with the unconnected list at its cap and the board-wide stub router was into its second hour, which is the 10 September reading word for word (28 of 499 closed in 34 minutes, killed). A reconcile is for boundary conflicts between groups that each finished; it is not an instrument for a board whose groups were cut at their caps. B23 carries the hours instead.",
+ "_b23_route_why": "B23 (18 September 2026 11:34 UTC, /root/biso23, $SP/b23_box.sh): board B's next arm, the partition given the hours a plain route was given. Two variables against B22 and nothing else. (1) The project file carries the generator's whole class table now, so the panel 5 V rail routes at the PANEL class's 0.8 mm (PWR-003's polyfuse over a 0.4 mm track) and the four antenna paths at the RF class's 0.14 mm (RF-001), where B22 routed both at the Default 0.25 because the project loop named four classes by hand. (2) Each region group is given FOUR hours and GLOBAL two, about twenty in all, against B22's two per group: every one of B22's five exited 124 with passes still improving, so what that run measured was its cap. The pre-route re-runs from this tree's own placement (the B22 floor plan is in the repo), then GLOBAL, then the five groups sequentially, then the reconcile. Judged against B21's 416 open and B22's re-merged 597.",
+ "_b23_classes_reached_why": "THE TWO CLASS ANSWERS REACHED B23'S ROUTE, checked rather than assumed (18 September 2026 16:50 UTC, the 10:55 lesson: read the .kicad_pro classes and the DSN before believing a class change reached a router). B23's project file, the one its DSN is exported from, carries **PANEL at 0.800 mm** (rule PWR-003: the panel 5 V's 2.0 A hold, 3.5 A trip polyfuse was over a 0.4 mm class track rated 1.23 A at 10 K) and **RF at 0.140 mm with 0.180 clearance** (rule RF-001: board B's four antenna paths were in the USB class at 0.25 mm), beside Default 0.250, DIFF100 0.127, PWR 0.400 and USB 0.127; and the stage-2 DSN carries the PANEL classes by name. So both answers are in the copper this partition is laying, and neither waits on another generation.",
+ "_pair_inner_layer_why": "BOARD B'S 100 OHM PAIRS ON In2 CANNOT MAKE THEIR TARGET AT THE CLASS WIDTH, and the number is a field solver's (18 September 2026, atlc 4.6.1 at 200 px/mm). B21 routes **1,677 mm of pair copper at w 0.130 with the legs 0.152 mm apart on an inner layer whose only reference plane is 0.55 mm away** (In1 across the 3313 stack's core), and that cross-section solves to **140.5 ohm differential against the 100 the class asks**. It is not a calibration artefact: the closed form says 148.8 and the solver 140.5, a 5 percent difference, and both are 40 percent over the target. **What would make 100 ohm there, measured on the same solver at the same gap: w 0.30 gives 111.6 ohm, w 0.40 gives 101.5, w 0.50 gives 93.7** - so the width this stack needs 0.55 mm from its plane is about 0.40 mm, three times the 0.127 the DIFF100 class carries. The three ways out and what is known about each: keep the 100 ohm pairs on the layers adjacent to a plane, which is the per-class layer split measured on 10 September at 60 of 113 pairs against 71 for four layers with the wrong geometry; widen the class, which a KiCad class applies to every layer, so the outer runs would go to 0.40 as well and read about 60 ohm; or change the stackup so the signal layers sit near a plane. Nothing here is a routing setting: the per-class layer rule that would have held the router to the outer layers was withdrawn on measurement on 8 September because it cost board C three routes that never finished a pass. **This is the substance of PAIR-001 and IMP-001 on board B**, and it is now a measured trade rather than a principle. AND THE LEVER IS THE PRE-ROUTER, which is what makes this actionable: only the pairs the pre-router LAYS are on the layers and the geometry chosen for impedance (it lays on F.Cu and B.Cu, 0.0994 mm from In1 and In4, where 0.127/0.152 solves to 92 ohm against the 90 asked); every pair the router makes instead goes where the router likes, which on this board is In2 at 0.55 mm from its plane. B21's coupled length splits almost exactly that way: 2,107 mm at the outer cross-section and 1,677 at the inner one. So board B's impedance correctness is bounded by the pre-router's coverage, which is 31 of 68 pairs on B21 and 34 on B23's pre-route, and the way to raise it is the pair pre-router and the floor plan rather than the impedance gate. The set's whole impedance exposure is this board: A passes 3 of 3 with every millimetre solved, and C, D and E each declare their USB class with no target and a written reason (D's hub, codec and bridges are all FULL speed by their own datasheets; E's is the RP2040's USB 1.1 port).",
+ "_pi003_b21_barrels_why": "PI-003 ON BOARD B IS 34 BARRELS AND ONE SHAPE REPEATED (18 September 2026, re-taken read-only on B21, sha 2e64b5bf2d9cd3bc before and after, `dc_drop` and `via_current` run as one set so the solved currents belong to the board being judged; the reading used to be INCONCLUSIVE because fourteen of the thirty-three declared rails have no solved current and the advisory flag was applied to the whole verdict instead of to the attribution). `barrel_sites.py` names every one: **9 of the 19 measured rails are over their own barrels, 34 barrels in all**, and the worst are not spread about. `+5V_LIME` crosses at FOUR barrels each carrying the whole 3.00 A, the worst a 0.30 mm barrel at U33's own pad 5 rated 0.738 A (ratio 4.07); `+5V_S1`, `+5V_S2` and `+5V_S3` each cross at ONE 0.25 mm barrel carrying 2.20 A against 0.652 A (ratio 3.38), and all three sit AT 0.00 mm inside the pad of that slot's bulk capacitor (C119, C219, C319), which is the fanout's via-in-pad: **one generator pattern repeated three times**, the same shape as the host-select fabric of 9 September. `+5V_RB` is two barrels at 2.00 A against 0.900, `+3V3_S3A` and `+3V3_S3B` seventeen between them at 1.2 to 1.75 A. Every one of the named sites is the GENERATOR's own locked via, so the map's answer is not a hand-drawn cluster but points added to the call that placed it: 4 more barrels of 0.30 mm at +5V_LIME's U33 crossing, 3 more of 0.25 mm at each slot rail, each at the tool's own 0.5495 mm hole-to-hole floor. TWO ways to get there and both are B24's, not B23's (whose design is frozen and routing): the fanout laying the barrels a DECLARED rail's own current needs where that rail crosses, which is `barrels_for` arithmetic the generator can ask (it already refuses a short stitch), or `via_parallel.py` at the finish, which has never run on board B because B21's finish was refused at the routed-board gate. CAVEAT with the number: B21 is 416 connections short, so the mesh solved what THIS copper carries and fourteen rails carry nothing at all; an attributed rail can only ADD failures to these, never remove one.",
+ "_ret002_b_why": "RET-002 ON BOARD B IS ONE NET (18 September 2026, re-taken on B21 read-only after the screen learnt to tell a hole in a reference from an absent one). It read ELEVEN, all marginal, and every one of them was the via field: `return_gaps.py` measured board B run by run and of 675.2 mm of uncovered signal run over 937 runs, 884 runs and 601.3 mm are ANOTHER conductor's via anti-pad, median 0.7 mm and longest 3.0, against 60.0 mm where the reference is genuinely absent. What is left is `HOST3_1RX_N` at 11.0 mm of 192.5 against a 10.0 mm limit, with 8.2 mm more being this net's own via anti-pads, which RET-003 judges. That is 1.10 times a limit the rule itself records as a project calibration rather than an authority (owner decision 39 is the criterion), on a USB run of 192 mm, and it is the whole of board B's return-path screen.",
+ "_b_rail_crossings_why": "BOARD B'S PI-003 WORK LIST AT GENERATION TIME IS SIX PADS (18 September 2026, `rail_crossings.py` on B21, read-only). The tool asks the cheap half of PI-003 before a route: at the pad of a rail's declared SOURCE the whole rail current changes layer and at a LOAD's pad that load's share does, split across the pads the part takes it on. Board B reads **199 crossings of 36 declared rails carrying the barrels their current needs and SIX that do not**: `+5V_LIME` at J_LIME pad 1 (3.00 A on one 0.40 mm barrel, needs 4), `+5V_RB` at U24 pad 5 (2.00 A, needs 3), `+3V3_S2B` at L202 pad 2 (1.80 A, needs 3), `+5V_DEV` at U23 pad 4 (1.20 A on a 0.25 mm barrel, needs 2), `+5V_LORA` at U21 pad 1 (0.70 A, needs 2) and one more. **They agree with the SOLVED reading**: `barrel_sites` on the same board names +5V_LIME at 3.00 A and +5V_RB at 2.00 A among its 34 over-rated barrels, so the pre-route arithmetic and the post-route mesh find the same shape, which is the argument for asking before the route rather than after it. The answer is B24's: points added to the calls that place those vias (`power_copper.cluster` counts them from the current and keeps the hole-to-hole floor). The split matters: with the whole load current at every pad the same tool reads 102 short of 103, which is the attribution error this project made once already in the hand-over report of 16 September.",
+ "_b_via_parallel_why": "AND THE POST-ROUTE FIXER CANNOT REACH BOARD B'S WORST BARRELS, measured 18 September 2026 with `via_parallel.py --dry --reach 4.0` on B21 in a scratch tree (nothing adopted). It lays what it can (one parallel via at `+5V_RB` (267.4, 109.8), joined on F.Cu and In3), but round after round it reports **`no free site within 4.0 mm for a 0.40 mm via`** at exactly the three that matter, the slot rails' 2.20 A crossings at (80.7, 172.7), (212.7, 172.7) and (218.6, 172.7), because each sits INSIDE that slot's bulk capacitor pad in a dense corner; and a round of nine new vias came off again with their links for sitting in a hard violation (clearance 2, items_not_allowed 8, solder_mask_bridge 16 on the laid board). So PI-003 on board B is not a finish-stage question: **the answer is the generator's**, points added to the calls that place those vias, which is what `rail_crossings.py` names before a route (six crossings) and what `barrel_sites --suggest` writes as `_pc.cluster(...)` lines from the solved board. B24.",
+ "_b23_rail_crossings_why": "B23's PLACEMENT ANSWERED THREE OF THE SIX CROSSINGS B21 WAS SHORT, and the five it still reads are all answerable beside the pad (19 September 2026, `rail_barrels.py` dry run in /root/biso23, read-only, board sha ba83e359). Of **231 crossings over B's declared rails, 226 carry the barrels their current needs and FIVE do not**, where B21 read 199 and six. Gone from the list: `+5V_LIME` at J_LIME pad 1, `+5V_RB` at U24 pad 5 and `+3V3_S2B` at L202 pad 2, which B23's floor plan and fanout answered without anybody asking them to. Still short: `+5V_DEV` at U23 pad 4 (1 barrel of 0.25 mm for 1.20 A, needs 2), `+5V_LORA` at U21 pad 1 (1 of 0.20 mm for 0.70 A, needs 2) and **three GROUND returns**, U25 pad 4 at 0.90 A and U103 and U303 pad 9 at 1.10 A, each through one 0.30 mm barrel. The ground three are not a false reading and they are not the plane's problem: the barrel IS the path from that pad to the plane, and a part's share is split across the ground pads it takes it on before the count is asked. NOT ONE is declined, so all five are B24's for free: `rail_barrels.py --apply` after the fanout and before the route. The caveat that travels with the number: B23 is routing as this is written, so nothing was laid, and the reading is of the placement the route is being made from, which is the right board to read and the wrong board to change.",
+ "rail_barrels": {
+  "max_barrels": 8
+ },
+ "_rail_barrels_why": "PI-003's cheap half is laid in the chain from this board's next phase (19 September 2026). B24's, from B23's measured list: five short crossings, all five answerable beside the pad, three of them ground returns through one 0.30 mm barrel at U25, U103 and U303. The stage runs after the fanout, the ground grid and the escape prune so its site test sees every via those laid, and before the pre-lay because power copper is not something a signal run should be moved for. It refills the board before the DRC judges it, keeps per site, and reverts everything if the hard count rises. READ WHAT IT DECLINES: a site over eight barrels is a busbar and belongs to the placement.",
+ "_pwr003_answered_at_b23_why": "PWR-003 IS ANSWERED IN B23'S PROJECT FILE AND WILL READ PASS ON ADOPTION (19 September 2026, checked in the routing tree rather than assumed). Board B's panel 5 V carries a 2.0 A hold, 3.5 A trip polyfuse and B21 runs it on a 0.4 mm class track rated 1.23 A at 10 K, which is the failure the record has carried since 17 September. **B23's `pcb-b-compute.kicad_pro` declares a PANEL class at 0.8 mm** (clearance 0.127, via 0.8/0.4) with `PANEL_5V` assigned to it in BOTH spellings, `PANEL_5V` and `/PANEL_5V`, which is the 5 September lesson about KiCad matching patterns against the slash-prefixed name of a root-sheet label. The project file is what the DSN export and every gate read, and since 18 September one CLASSES table feeds both the board and the file, so there is no second hand-written copy to drift. **Nothing more is owed here**: when B23 is adopted, re-take PWR-003 and expect it to move from FAIL to PASS without any further work. If it does not, the thing to look at is whether the ROUTE honoured the class, which is read off the routed board's own track widths and not off the file.",
+ "_pour_island_measured_why": "THE POUR-ISLAND CLASS DOES NOT OCCUR ON B21, MEASURED ON THE BOARD BOARD B DECLARES (19 September 2026, `pour_stitch.py` on a copy of the committed B21, sha 2e64b5bf2d9cd3bc, 416 open): **0 islands stitched, 0 left**. Board B carries 35 zones of which SIX have any filled area at all (GND on In1, `+5V_DEV` twice, `+5V_S1`, `+5V_S2`, `+5V_S3` on In4) and **every one of the six is a single outline**: nothing is fragmented, so there is no island with no via of its own net to repair. That matters because PLC-002 reports `pour_stitch` UNCOVERED on board B, and the closer's own declaration says of this class that 'it runs on every board and finds islands every time'. On board B, today, it does not. **THE CAVEAT IS THE WHOLE OF IT**: B21 is 416 connections SHORT, and an island is what a ROUTER cuts out of a pour, so a board that never laid a quarter of its copper is exactly the board least likely to have cut its own pours. This measurement is true of B21 and is not evidence about B24. **Re-take it on the first board B that routes closed**; if it is still zero, board B's pour-island class is a declared zero with its reason and no grid is owed, and if islands appear then board B needs what the other five boards each measured for themselves: the grid, with the number it costs. Board P's is 21 open connections against 0 without, which is why P declares none.",
+ "_sch002_answered_at_b23_why": "BOARD B'S ONE SCH-002 FAILURE IS THE TMP117 PIN AND B23 ALREADY CARRIES THE FIX (19 September 2026, verified on both boards rather than inferred). `netlist_board` on B21 reads **6,752 agreements and ONE failure**: `U10.7 is on net GND in the netlist and has no net on the board`. That is the 17 September finding of rule SCH-005 exactly: `emit_part` dropped a map key the SYMBOL lacks without saying so, board B's U10 TMP117 wrote `\"7\": \"GND\"`, and the pad floated. The netlist was regenerated at B21 with the repaired engine on 18 September and the BOARD was not, because B21's copper was routed for forty hours before the fix existed, so the netlist is one generation ahead of the board it describes and SCH-002 is doing precisely its job. **Read on both boards today**: B21's U10 pin 7 carries NO net; B23's carries GND. So **B23's adoption closes SCH-002 on board B** with nothing else to do, and if it does not, the thing to look at is whether the adoption moved the board, the schematic and the netlist together, which is the 17 September rule that a B21 board beside a B19 schematic fails `netlist_board` instead.",
+ "_b23_s3_why": "B23'S PARTITION STOPPED AT S3 AND DEVE NEVER RAN, AND IT IS A CAP AND NOT A STALL (19 September 2026, 04:22 UTC). The sequence ran GLOBAL (3,698 tracks locked), DEVW (1,827), S1 (1,139), S2 (1,301) and then **S3 wrote no session in four hours** and `part_stage2.sh` stopped the chain there, which is the guard added on 18 September doing exactly its job: B22's loop carried on without its S3 group and DEVE routed against a board that did not have it. So the merged board is 14,305 tracks with **two of six groups missing** and its DRC reads the 499 cap. **IT IS NOT THE MODAL-DIALOG STALL, and that was checked rather than assumed.** S3's `fr.log` ends at 00:22:00 with four `The normalization of net ... failed` warnings, which is the shape that cost board B three hours on 15 September, and `route_part.sh` has carried the shared watchdog (`fr_watch`) since 16 September. **The watchdog printed nothing for any group, and its matcher was tested against a live router on the same box and found it**: `pgrep -x java` plus the DSN in the process's own cmdline matched E21's JVM on the first try. A watchdog that can find the process and never fires is watching a process whose CPU time moves, so S3's JVM was COMPUTING for four hours and did not finish one pass. **THE CAUSE IS THE SEQUENCE ITSELF.** Each group routes against everything locked before it, so the fifth group meets 14,305 tracks where the second met 10,038, and board B's passes were already 2.5 rising to 4 hours on B21. **This is the SECOND B partition to lose a region to a cap** (B22's every region job exited 124 at its two-hour cap), which makes it a property of the method and not an accident: **a sequential partition's cap has to grow along the sequence**, or the groups that run last are given less time than they need by construction.",
+ "_b23_pass_rate_why": "BOARD B'S PARTITION PASS RATE, MEASURED FOR THE FIRST TIME, AND EVERY REGION WAS CUT (19 September 2026, read off each group's own `fr.log` in `out/part/<group>/`). The sequential run is not S3 failing while the others succeeded; it is the whole sequence running out of time, and only the last group ran out before its first pass:\n  GLOBAL   4 sessions in 1 h 44 (about 26 min a pass), cut\n  DEVW    20 sessions in 2 h 28 (about 7.4 min a pass), COMPLETE\n  S1       5 sessions in 4 h 00 (about 48 min a pass), cut at its cap\n  S2       6 sessions in 4 h 00 (about 40 min a pass), cut at its cap\n  S3       0 sessions in 4 h 00 (the first pass takes more than four hours), cut with nothing written\n**Twenty passes were asked of each group and only the smallest region delivered them.** A pass costs more the later a group runs, because each group routes against everything locked before it: 10,038 tracks by DEVW's turn and 14,305 by S3's. At 40 to 50 minutes a pass and twenty passes a group, the partition as configured needs on the order of a hundred hours, which is not a cap that can be raised into. **SO THE LEVER FOR BOARD B IS NOT MORE TIME.** B21's plain route spent forty hours and stopped at 416 open; B22's partition lost a region at two-hour caps; B23's has now lost two at four-hour caps with its surviving regions served 5 and 6 passes of 20. Three different shapes of the same answer. What the numbers point at is the shape the record has named since 10 September: **board B is a placement and partition problem before it is a pass-count problem**, and the partition itself is the thing to change, into more and smaller groups whose passes are cheap, rather than six groups whose passes grow until the last one cannot finish even one.",
+ "_b24_redistribution_room": "THE REDISTRIBUTION'S ROOM, RE-TAKEN ON B23'S OWN PLACEMENT (19 September 2026, `region_room.py`, read-only). **Every region overflows by 0.0 mm**, so the sixteen-rectangle resize of 17 September did what it was for and the floor plan is legal. What it did not do is give the crowded pockets room, and the map is the same shape as the 17 September reading with current numbers:\n  BOXED IN: `S1_SWIC` 0.0 mm west, east, south AND north (a fixed part hole west, S1_SWE east, S1_RAIL south, the M.2 socket north); `S2_SWIC` 0.0 in all four; `S3_SWIC` 1.0 west and 0.0 in the other three. These three are the per-slot switch and hub pockets, and they are the corridor from each module receptacle to its switch, which is the same copper the escape fans need.\n  WHERE THE ROOM IS: **`WIFISW` 38.5 mm north** and 14.0 south and 6.0 east; **`IOCA` 19.0 mm north** and 5.0 west to the outline; **`S1_RAILB` 19.0 mm west**; **`S2_RAILB` 16.0 mm east** and `S3_RAILB` 16.0 west; `IOCB` 12.0 north; `S1_RAIL` 6.0 west; `S1_SUP` and `S3_SUP` 3.0 south to the board outline.\n**So B24's floor-plan work is a MOVE and not a resize**, and these are the six pockets with somewhere to move to. The parts to move are the ones in both of the 17 September lists, the escape fans that cannot be placed and the pair failures that die at the same parts: **U301, U302, U209 and U102**, with the rest of the pair failures at the CM5 receptacles' own high-speed halves. Nothing here can be measured further without moving something: the room is known, the crowding is known, and the next number comes from a placement that has actually redistributed.",
+ "_b_margin_arm_result": "THE FINE-PITCH MARGIN ARM, AND IT NAMES THE FOUR RECTANGLES AND THE MILLIMETRES (19 September 2026, one variable, two placement regenerations ten minutes apart, no route). The question was askable for the first time because owner ruling 13's resize has landed and `region_room` on B23 reads every region overflowing by **0.0 mm**, where on 17 September `PLACE_FINE_MARGIN=2.6` overflowed NINE regions by up to 8.4 mm.\n  **2.0 (declared)**: placed clean, hard 0, **10 predicted escape-fan collisions** of 75 fine-pitch parts.\n  **2.6**: **FOUR regions overflow** and the chain is BLOCKED by the region-fit gate: `S1_SWIC` by 1.7 mm, **`S2_SWIC` by 3.2**, `S2_SUP2` by 0.5, `S3_SWIC` by 1.7. Six parts went unplaced and the collisions did not fall (11 of 75 on 951 parts).\n**The resize bought most of the way and the last three millimetres are not there.** Nine regions at 8.4 mm became four at 3.2, which is the resize working; it did not become zero. **AND THE TWO MEASUREMENTS AGREE ON WHICH RECTANGLES**: three of the four that overflow are exactly the three per-slot switch and hub pockets that `region_room` reports with **0.0 mm of room in every direction** (`S1_SWIC` and `S2_SWIC` boxed on all four sides, `S3_SWIC` 1.0 mm west and 0.0 elsewhere). The margin experiment and the room map are independent readings of one fact: **those three pockets are board B's binding constraint, and the fans cannot be given their room while the parts stay in them.** **So B24's floor-plan work has its numbers at last**: four rectangles need between 0.5 and 3.2 mm, and the room is 16 to 38 mm away in four named neighbours (`WIFISW` 38.5 mm north, `IOCA` 19.0 north, `S1_RAILB` 19.0 west, `S2_RAILB` 16.0 east). It is a MOVE of parts between pockets, not a resize of rectangles, and that is the one lever board B has left that has never been tried.",
+ "_b24_floor_plan_proposal": "B24'S FLOOR PLAN, PER RECTANGLE, WITH A NAMED SOURCE OF ROOM FOR EACH (19 September 2026). This is a PROPOSAL derived from two measurements, not a measured result: the margin arm says which four rectangles are short and by how much, and `region_room` says where the room is. Read the contents first, because they decide what is possible:\n  **`S*_SWIC` holds four FINE-PITCH ICs and two capacitors** (`U*01` the PCIe switch, `U*02` the USB hub, `U*09` the SuperSpeed mux, `U*10` the USB2 mux, plus `C*51`/`C*52`). **None of them can move**: they are the slot's own switch fabric and belong beside its CM5 receptacle. So 'move parts out of SWIC' is not available, and the room has to come from a NEIGHBOUR.\n  **`S1_SWIC` and `S3_SWIC` (1.7 mm each) are boxed NORTH by the M.2 socket**, a FIXED part, west by a fixed hole, east by their own SWE and south by their RAIL. North and west are impossible. So their 1.7 mm comes from the SOUTH, moving the `S*_RAIL` boundary down, and the rail pockets have somewhere to go: `S1_RAIL` has 6.0 mm west and `S1_RAILB` 19.0, `S3_RAILB` 16.0 west.\n  **`S2_SWIC` (3.2 mm, the worst) is boxed NORTH by `S2_SUP2`**, which is a REGION and not a fixed part, and the generator's own comment beside it says so: 'nothing to the north (S2_SUP2 covers its eastern half)'. `S2_SUP2` holds `U205`, `U206`, `L203`, `L204` and two capacitor runs, the slot's rail regulators and inductors, and **those can move**: `S2_RAILB` has 16.0 mm east and is where the rest of slot 2's rail parts already live. Moving them frees S2_SUP2's rectangle and lets S2_SWIC grow north, which also answers `S2_SUP2`'s own 0.5 mm.\n**So the change is: S2_SUP2's four parts east into S2_RAILB, S2_SWIC north into the space they leave, and the two outer slots' SWIC south into their rail pockets, which shift west.** Then re-run the margin arm: if 2.6 places clean, the fans have their room and the predicted collisions are the number to read. **NOTHING HERE IS APPLIED**: it is one measured proposal, the region rectangles are on the never-auto floor under owner ruling 13 (which released board B's rectangles and board B's only), and the parts named are an electrical judgement about what may sit where, which is the part of this that wants a second pair of eyes before a generator changes.",
+ "_b_margin_chain_measured": "OWNER RULING 13's RESIZE, CARRIED ALL THE WAY DOWN, ONE REGION AT A TIME WITH ITS OVERFLOW BEFORE AND AFTER (19 September 2026, five placement regenerations, every one at PLACE_FINE_MARGIN=2.6, no route, nothing adopted). The margin arm had left four rectangles short; the question was whether the resize the owner released for board B can reach them.\n  **start**  4 regions over: S1_SWIC 1.7, S2_SWIC 3.2, S2_SUP2 0.5, S3_SWIC 1.7\n  **1** SWIC takes 1.7 mm of HEIGHT from its own RAIL (south edge -54 to -55.7): **both outer SWIC pockets clean**, their RAIL pockets take only 0.7 of the 1.7, so RAIL had a millimetre of slack.\n  **2** RAIL widens WEST by 0.8 mm into the 6.0 `region_room` reports there: **EXACTLY NOTHING**, the overflow stays 0.7. **A row packer that has lost a row does not get it back from width.** That is the lesson of the whole chain and it is worth more than the millimetres.\n  **3** RAIL takes its height back from the SOUTH instead (floor -74 to -75.7, S*_SUP's ceiling follows): **RAIL clean**, S1_SUP and S3_SUP now 1.5 over.\n  **4** SUP drops to the board outline (floor -97 to -98.5, using the 3.0 mm `region_room` reports): **both outer slots CLEAN, all the way down.** Two regions left, both slot 2.\n  **5** slot 2: S2_SUP2's four parts (U205, U206, L203, L204 and two capacitor runs) put BACK into S2_RAIL, where the generator explicitly took them from; SUP2 emptied; S2_SWIC grown north by 3.2 into it. **S2_SWIC and S2_SUP2 clean, and S2_RAIL overflows by 6.8 mm.**\n**SO: four regions at 3.2 mm worst became ONE at 6.8, and the whole of board B's fine-pitch margin now rests on a single rectangle.** Slot 2's rail pocket is 13.4 mm tall where the outer slots' are 20, which is why the generator split those four parts out of it in the first place, and it has 2.0 mm west and nothing north, south or east (`region_room`: south 0.0 to a fixed M.2 socket, east 0.0 to S3_RAIL). **2.0 against 6.8 is not enough, so the resize as a lever ends here** and slot 2's four parts need a home that is not the front-side rail band. The candidates are `S2_RAILB` (16.0 mm east, but the UNDERSIDE, so a slot's rail regulator and its inductors change side) and `S2_SUP` north. **That is an electrical judgement and not a rectangle, so it stops here**: nothing is applied, the generator is untouched, and the five steps above are the evidence whoever makes that call should read first.",
+ "_b_margin_refused_why": "AND THEN THE MARGIN ITSELF WAS MEASURED AND REFUSED (19 September 2026, step six of the chain). With every rectangle accommodated and the one remaining overflow declared in a THROWAWAY tree so the placement could proceed, `PLACE_FINE_MARGIN=2.6` predicts **TWELVE escape-fan collisions of 75 fine-pitch parts against 2.0's TEN**. More room around each fine-pitch part makes the prediction WORSE, not better, because the parts spread and their fans reach further into one another. **So the fine-pitch margin is not board B's lever, and that is worth the five regenerations it cost to learn**: the whole resize chain was undertaken to make this number readable, and the number says the thing the chain was clearing the way for does not work. Nobody now needs to move a slot's rail regulator and its inductors to the UNDERSIDE for it, which is what step five's dead end was asking. **WHAT THIS LEAVES.** Board B's predicted collisions have not moved off about ten under any lever this project has tried: the sixteen-rectangle resize (B22/B23, 10 to 11), the fine-pitch margin (10 to 12), three route methods and forty hours of router. The ten sit at the CM5 receptacles' own fine-pitch fabric, the three PCIe switches and three hubs whose pads are a third un-escaped, and they are the same parts the pair failures die at. **The levers not yet tried are the ARCHITECTURE ones**: fewer parts in that fabric, or more layers (STK-002 and the 11 September P0, which found four layers was never argued or costed and board B is six). That is where board B's next real measurement is, and it is an owner decision rather than a floor plan.",
+ "_board_b_state_why": "19 September 2026 09:55 CEST, BOARD B'S FOURTEEN FAILURES READ ONE BY ONE, and not one of them is a defect in the current design waiting to be diagnosed. FIVE ARE THE ROUTE, which is B21 at 416 unrouted: RTE-002 says so directly (hard 0, unrouted 416); MEC-001's twenty-one failures of 3,102 checks are every one of them the same sentence, 'pair X has one leg routed and one not', with the unrouted leg reading 0.00 mm (BANK2_UPTX, HDMIO_CK at 188.86 mm on its other leg, HOST3_1TX at 227.83, SWP2_A at 230.28); PAIR-001 reads 36 UNROUTED of its judged pairs; RET-004 judges twelve vias on a board whose copper is two thirds absent; RET-002 names ONE net of 658. TWO ARE THE BOARD BEING A PHASE BEHIND ITS OWN GENERATOR: SCH-002 is a single disagreement of 6,752 comparisons, `U10.7 is on net GND in the netlist and has no net on the board`, which is the TMP117's ground pad and the 17 September SCH-005 finding exactly, fixed in the generator and still on a board placed before the fix; PWR-003 is the panel 5 V polyfuse over a 0.4 mm track, and the generator has carried its own PANEL class at 0.8 mm since 17 September. THREE ARE A GENERATOR ANSWER OWED AT B24, measured with every site named: PI-003's 34 over-rated barrels, of which every one is the generator's own locked via and the three slot rails are one pattern repeated three times; PI-001's nine density misses of 36; PI-002's five drop misses. TWO ARE THE PLACEMENT, measured and refused this morning: PLC-001's thirteen predicted collisions of 75 fine-pitch parts, which has not moved off about ten under the sixteen-rectangle resize, the fine-pitch margin, three route methods or forty hours of router, and PLC-002's one uncovered class, board B being the only board whose pour-island class still names no prevention. ONE IS AN OWNER DECISION BY NAME (INT-001, decision 36) and ONE IS THE SET'S PAPERWORK (OUT-001). SO BOARD B'S WHOLE FAILURE SET IS ITS ROUTE, ITS NEXT GENERATION AND TWO RULINGS, and the route and the placement are the same architectural question: fewer parts in the CM5 fabric, or more layers, which is STK-002 and the 11 September P0. Counts are generated in v2/docs/PCB-OPEN-PAIRS.md; this paragraph is what that page cannot know.",
+ "_b_power_failures_read": "20 Sep 2026 02:41 CEST, appendix 32.242. Board B fails both power rules and neither is claimed by a decision. DROP: +5V_LIME 12.35 percent of 5.0 V, +3V3_S3B 10.28 of 3.3, +3V3_S3A 10.09, +1V0_S1 6.89 of 1.0 V, +5V_RB 3.03. DENSITY: +5V_LIME 8.92x, +3V3_S3B 5.21, +5V_RB 4.77, +3V3_S3A 4.46, +5V_S1 1.99, +5V_S2 1.44, +5V_S3 1.43, +1V0_S1 1.26, +54V_POE 1.23. THE CAVEAT IS THE WHOLE OF IT: B21 IS 416 CONNECTIONS SHORT, cut at its 40 h cap at pass 11 of 20, and dc_drop solves the copper that EXISTS, so adding the missing connections can only add parallel conductors and every drop is an UPPER BOUND. Not a dismissal: +5V_LIME needs a factor of SIX to reach 2 percent and the slot-3 rails five, and a rail does not usually find five times its copper in connections a router failed to make. +1V0_S1 IS THE ONE TO LOOK AT FIRST whatever the route does: 69 mV on a 1.0 V CM5 core rail is outside any core-rail tolerance a datasheet states, and it fails on the DROP with its density nearly clean at 1.26x, which is the signature of a long thin path rather than a missing band. Board B's power problem is NOT board A's: A's is copper never laid (density over, drops inside budget) and answered by a generator and a stackup; B's is five DROPS on a board that has not finished routing, so it needs a board that routes first, which is where its floor plan decision already sits.",
+ "_b_feeders_declared_and_the_device_rail_is_short_at_peak": "20 Sep 2026 05:33 CEST, appendix 32.262. Board B's ten remaining converters declare what feeds them, each read from THIS BOARD'S OWN NETLIST pin by pin and named in the generator beside the declaration: U27 pins 1 and 3 /+3V3_DEV, U22 pin 6 /+3V3_DEV, U21 pin 6, U23 pin 4, U24 pin 4, U28 pin 5 and F2 pin 1 all /+5V_DEV, U40/U50/U60 pins 1 and 3 /+5V_DEV. The four LINEAR regulators already carried the right efficiency and that is not a coincidence: an LDO's efficiency IS Vout/Vin (0.76 = 2.5/3.3, 0.66 = 3.3/5.0), so the same number that is physically true also makes feed_sums give the input current an LDO really draws, which is its OUTPUT current. Declaring one as a switching converter with a guessed efficiency would have understated its feeder, which is why the record left these alone until each could be read. THE COMPUTE MODULES' OWN OUTPUT RAILS (+1V8_CM1..3, +3V3_CM1..3) ARE DELIBERATELY NOT DECLARED: they are produced by the module, whose own draw is already a load on its slot rail (U30A 1.60 A on +5V_S1), so a fed_from there would count the same amps twice. WHAT IT FINDS, arithmetic on the declaration (feed_sums is a pure function of the intent, so this is exact and the next regeneration confirms it): +5V_DEV declares 3.80 A typical and its THIRTEEN children draw 3.56, a margin of six percent; its PEAK declares 6.00 and the children draw 9.72, 62 percent over. +3V3_DEV 1.20 against 0.25 and 2.00 against 0.55; the three slot rails 2.50 against 1.21 each, unchanged. The peak column has the standing defence that peaks do not coincide and the typical column has none, so this is a finding and not a failure: two children carry it, +5V_LIME at 3.00 (the SDR bay's eFuse) and +5V_RB at 2.00 (the satellite modem's transmit burst), and whether those two can burst together is a question about the fabric rather than about the copper.",
+ "_board_bs_mechanical_rule_was_failing_on_a_stale_reading": "20 Sep 2026 08:04 CEST, appendix 32.283. MEC-001 read FAIL on board B with 21 failures and every one of them was 'pair X has one leg routed and one not'. That is 19 September's finding, a ROUTE property counted twice under a second authority, which the same file's own comment forbids; the tool was corrected that day to REPORT such a pair rather than fail it, and THE READING WAS NEVER RE-TAKEN. Re-taken now where KiCad is, read-only, board sha 2e64b5bf2d9cd3bc identical before and after: `check_pcb_b` PASS of 3102, fail 0, route_items_reported 21, intent_items_reported 728. So MEC-001 goes FAIL to PASS and board B's measured failures go 14 to 13, and READINESS GOES 62.5 TO 62.8 PERCENT OF 333 FOR A REASON THAT IS NOT THE BOARD. The 21 pairs are still 21 pairs and are still counted, under RTE-002 and PAIR-001 where a route belongs. THE LESSON IS SCHEDULING AND IT IS THE SAME ONE AS 20 SEPTEMBER 00:10: a tool change stales every reading it decides, and a reading nobody re-takes is how a day passes with a board looking worse than it is. This one sat for nineteen hours. Found by reading the open-pairs register's thirty measured failures one by one and asking of each whether the reading was taken under the tool that decides it now.",
+ "_board_bs_routed_board_rules_are_inconclusive_and_not_failures": "20 Sep 2026 08:32 CEST, appendix 32.286, from sweep 28. SIXTEEN of board B's rule-board pairs moved from FAIL to INCONCLUSIVE and the sentence is the tool's own: 'the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connections), so a rule verified on a routed board has nothing current to be judged against'. The sixteen are PI-002, PI-003, GND-001, STK-001, RET-002, RET-004, PAIR-001, RF-001, PLC-002, RTE-001, VIA-001, PLN-001, EMC-001, SCH-003 and DOC-001. THEY WERE NEVER FAILURES OF BOARD B'S DESIGN: they are failures of a board that has not been routed, and reading them as design failures overstated board B's backlog for as long as they stood. Board B's MEASURED FAILURES GO 13 TO 6, and its open pairs go 30 to 39 because a pair that cannot be judged is still open. THE NUMBER THAT MATTERS FOR BOARD B IS UNCHANGED BY ALL OF THIS: its route is 416 connections short and every one of those sixteen answers itself on the first board B that closes, which is the floor plan, which is the owner decision the record has named since 10 September. What the re-take buys is that board B's page no longer reads as thirteen separate engineering items when it is one.",
+ "_the_fanout_in_pad_fix_measured_on_this_board": "THE FANOUT FIX ON BOARD B, AND THIS IS WHERE IT WAS COSTING (20 September 2026). One variable, both tools on board B's own placed snapshot: the old centre-circle test lays **603 vias (68 in the pad), skips 114 pads and leaves hard 25** {solder_mask_bridge 18, shorting_items 2, clearance 2, hole_clearance 3}; the polygon test lays **621 (86), skips 93 and leaves hard 16** {solder_mask_bridge 16}. **Eighteen more plane pads connected, twenty-one rescued, and every shorting, clearance and hole-clearance item gone.** A circle of a pad's long half-dimension does not contain its corners, so a via approaching a land on its diagonal was accepted onto another net's copper, and board B has the most crowded lands in the set. CAVEAT, because the snapshot is not the chain: board B's full chain reads pre-route hard 0 either way, so the later stages were already removing some of those nine; what is measured here is what the fanout itself lays.",
+ "_the_decoupling_pass_ran_before_any_footprint_existed": "20 September 2026: board B declared bypass_place_after = mechanical, which runs the decoupling pass before the placement generator, on a board with no footprints; see boards/a.json _the_decoupling_pass_ran_before_any_footprint_existed for the measurement that found it. Board B's own reading is owed on its next placed board. ITS OWN READING IS TAKEN (20 September 2026, appendix 32.308, a placement-only chain on B21's tree, no route): 30 declared, FOUR within 3.0 mm, median 13.3 mm and worst 251.9. The three worst are C38, C37 and C36 at 251.9, 247.7 and 177.0 mm from U5 pin 1, and after them the slot rails' own capacitors at 32.3, 32.3, 26.7, 26.7 and 24.2 mm (C112, C312, C113, C313, C213 against U103, U203 and U303 pin 2). bypass_slots reserved NOT ONE of the thirty: every spot inside 3 mm of a pin on this board touches an escaped part's fan, which is 32.306's conflict on a board with 75 fine-pitch parts. Board B's placed board otherwise reads hard 0, 1,508 escapes and 262 pads without one, which is its known floor-plan problem and an owner decision.",
+ "_decision_43_the_layer_option_has_no_fabricator_record_to_stand_on": "21 September 2026, 01:26 CEST. Decision 43 recommends measuring the LAYER option for board B before anything else. Read tonight from the fabricator's own impedance page (https://jlcpcb.com/impedance, fetched by the runner): it publishes impedance-controlled stackups for FOUR layers (18 JLC04161H variants) and SIX (16 JLC06161H variants) and none for eight. An eight-layer board B would therefore carry no controlled-impedance stackup record, so STK-001 and IMP-001 could not be judged on it (a rating whose basis file is not here is a claim), and the fabricator's capability page lists eight layers only as a size row (656 x 586 mm for 6+ layers) and a backdrill row. So the layer measurement decision 43 asks for is not a regeneration this session can run tonight: it needs the fabricator's eight-layer stackup asked for on the order, or a different fabricator's published one, which is a wait on the vendor and is recorded here rather than guessed. The measurement that CAN be run without a record is the ROUTING half alone (does B close at eight layers), which would answer decision 43's routability question and leave the impedance half owed; it is not launched tonight because a board that routes and cannot be judged on its pairs is the 10 September hold in another costume.",
+ "conformal_coated": true,
+ "_conformal_coated_why": "ASSEMBLY.md section 5: IPC-CC-830 acrylic (MG Chemicals 422B or equal), two thin coats, after the bench fit. It selects the column of ECSS-Q-ST-70-12C Table 13-3 that ISO-001 is judged against (decision 34, ruled 21 September 2026), and the masks matter: the same section masks every connector face and its keying, the spring-pin and pack targets, the SMP-MAX, SMA and U.FL bodies, the module and M.2 receptacles, the RockBLOCK bracket, the LimeSDR receptacle, the SA868 module and relay, the water electrodes and sensor headers, and the bench test points. A high-voltage pair measured AT one of those is on the bare column, which is why the verdict names its tightest pairs with their positions rather than only a count. Board B is named in that section as B16.",
+ "_t1_magnetics_is_a_commercial_temperature_part_why": "21 September 2026, found while reading the Ethernet documents for decision 29 and worth more than that decision: T1, the Pulse H5007NL magnetics module on the RJ45 port, is rated 0 to +70 C by its own datasheet (v2/vendor/pulse/pulse-h5007nl.pdf, Electrical Specifications, 'Operating Temperature 0C to 70C'), and this kit's adopted envelope (decision 34, OPERATING-ENVELOPE.md section 4) is -20 to +40 C ambient in use. So the part is outside its own operating range over the coldest 20 K of the envelope, on a board that is not built. The same sheet names the remedy in its own note 1: 'HX: Extended temperature version -40C to +85C', and its Mechanicals page groups 'H5004, HX5004, H5007*' on one outline, so HX5004NL is the extended-temperature part in this part's own mechanical group; the asterisk on H5007 is unexplained in the text this tree can read, so PIN COMPATIBILITY IS NOT CLAIMED and is the first thing to check before a swap. THE WIDER FINDING, which is not board B's: no rule in this project compares a part's OPERATING TEMPERATURE RANGE with the envelope. CMP-001 is about absolute maximum ratings and derate.py reads voltage alone; the envelope was adopted only on 21 September, so this is the first day the comparison could be made at all. If decision 29 ever rules magnetics onto the three module links, it triples this part before it is settled."
+}

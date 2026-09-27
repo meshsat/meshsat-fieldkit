@@ -1,0 +1,62 @@
+R162 | 10k
+   pin 1 () -> WL_nDIS1_OFF
+   pin 2 () -> +3V3_DEV
+R163 | 10k
+   pin 1 () -> BT_nDIS1_OFF
+   pin 2 () -> +3V3_DEV
+R173 | 100k
+   pin 1 () -> WL_nDIS1_KILL
+   pin 2 () -> GND
+R164 | 10k
+   pin 1 () -> PCIE_PWR_EN1
+   pin 2 () -> S1A_EN
+R106 | 100k
+   pin 1 () -> PCIE_PWR_EN1
+   pin 2 () -> GND
+R50 | 4.7k
+   pin 1 () -> LIME_SW_EN
+   pin 2 () -> GND
+R51 | 4.7k
+   pin 1 () -> RB_SW_EN
+   pin 2 () -> GND
+R52 | 4.7k
+   pin 1 () -> LORA_ON
+   pin 2 () -> GND
+R53 | 4.7k
+   pin 1 () -> ZB_ON
+   pin 2 () -> GND
+R61 | 4.7k
+   pin 1 () -> 5G_OFF
+   pin 2 () -> GND
+U6 | PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)
+   pin 1 (~{INT}) -> EXP_INT
+   pin 2 (A1) -> GND
+   pin 3 (A2) -> GND
+   pin 4 (IO0_0) -> KSZ_RST
+   pin 5 (IO0_1) -> LIME_SW_EN
+   pin 6 (IO0_2) -> RB_SW_EN
+   pin 7 (IO0_3) -> LORA_ON
+   pin 8 (IO0_4) -> ZB_ON
+   pin 9 (IO0_5) -> CAM_EN
+   pin 10 (IO0_6) -> 5G_OFF
+   pin 11 (IO0_7) -> 5G_RESET
+   pin 12 (VSS) -> GND
+   pin 13 (IO1_0) -> WL_nDIS1_OFF
+   pin 14 (IO1_1) -> WL_nDIS2_OFF
+   pin 15 (IO1_2) -> WL_nDIS3_OFF
+   pin 16 (IO1_3) -> BT_nDIS1_OFF
+   pin 17 (IO1_4) -> BT_nDIS2_OFF
+   pin 18 (IO1_5) -> BT_nDIS3_OFF
+   pin 19 (IO1_6) -> RB_IEN
+   pin 20 (IO1_7) -> RB_CTRL
+   pin 21 (A0) -> GND
+   pin 22 (SCL) -> SCL
+   pin 23 (SDA) -> SDA
+   pin 24 (VDD) -> +3V3_DEV
+U25 | AP63203WU-7 3.3 V 2 A buck: the shared logic (+3V3_DEV)
+   pin 1 (+3V3_DEV) -> +3V3_DEV
+   pin 2 (+5V_DEV) -> +5V_DEV
+   pin 3 (+5V_DEV) -> +5V_DEV
+   pin 4 (GND) -> GND
+   pin 5 (DEV_SW) -> DEV_SW
+   pin 6 (DEV_BST) -> DEV_BST

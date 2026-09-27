@@ -1,0 +1,26 @@
+Geometry of T-Call-A7670-ESP32, probed from tcall/T-Call-A7670-ESP32.dxf
+
+Written by tools/kb/geom_probe.py, not hand edited, so that a CAD model's measurable
+facts can be searched and reviewed as text instead of living only in whoever opened the
+model that day. Units: drawing units (a DXF declares no unit here). EVERY NUMBER IS A MEASUREMENT OF THIS FILE, NOT A
+SPECIFICATION: a vendor model may carry a connector, an antenna or a mounting boss the
+catalogue dimension leaves out, and it may be exported in any orientation. Where the
+manufacturer publishes a drawing, the drawing wins and this is how to find the number
+to check against it.
+
+source file: tcall/T-Call-A7670-ESP32.dxf
+sha256 (first 16): 3420c6a4f1e9678a
+size: 763250 bytes
+points read: 492
+
+T-Call-A7670-ESP32 EXTENTS OF THE DRAWING SHEET. This is a 2D drawing, not a solid: the box below
+is the sheet, several views sit on it at different places, and only the circle
+centres further down are positions within a view.
+Axes are THE FILE'S OWN: a vendor model is often exported Y up, and this reader does
+not turn it, so read the three extents as sizes and not as width, depth and height.
+  axis 1 -17.671 to 98.030   extent 115.701
+  axis 2 -1.458 to 62.009   extent 63.467
+  axis 3 0.000 to 0.000   extent 0.000
+
+T-Call-A7670-ESP32 HOLES: no circle of 0.5 mm or more is in this file
+

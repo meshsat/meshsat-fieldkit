@@ -1,0 +1,27 @@
+# Comment substrings whose BOM line may carry no LCSC code, one per line with the reason after a #.
+# lcsc_fill.py refuses any other blank (it resolves this file three dirnames up from out/jlc/<name>-bom.csv).
+# A line here means JLCPCB never places that part: it is a lead, a solder land, a bench header, or a part
+# bought elsewhere with a route in tools/jlc-handfit.txt. It is NOT a place to park a part nobody has chosen.
+
+(JST-VH          # solar and vehicle input leads
+(XH or pin header)              # the pack SMBus lead of E17 as committed, a 2.54 mm 1x6 with no code. Since MESHSAT-1357 round 4 J_SMB is a JST-XH 1x4 that carries its code (C594232 in round 4, C144395 since round 8), so this line covers no row of the new schematic: remove it when board E is re-cut
+BOOTSEL:         # the BOOTSEL solder jumper, copper on our own board ("BOOTSEL:" with its colon: the bare word also covered the 1k BOOTSEL resistor, a real part JLCPCB places, 26 Sep 2026)
+solder lands     # the twelve signal wires to the block board, soldered at build
+solder pad       # 12 AWG pack wires, soldered at build
+bare copper      # the two water electrodes: copper on our own board, nothing is placed on them
+on XT60-M        # the pack cable assembly, bought with the pack
+module:          # sensor modules on headers: DCF77, Geiger, lightning, the outside pod
+# 11 September 2026: the line above has never matched anything. The generator writes "Geiger counter module
+# (RadiationD-v1.1 class)", with a bracket after "module" and not a colon, so the substring missed all four and
+# board E's deliverable was refused for five uncoded rows. These five are 2.54 mm pin headers that a lead is
+# pushed onto at build, which is the "bench header" case this file is for; the sensor boards themselves are
+# bought as modules. Matching what the generator actually writes, not what it was thought to write.
+Geiger counter module           # 1x03 pin header: the RadiationD board hangs off a lead
+AS3935 lightning sensor module  # 1x05 pin header: the CJMCU-3935 board hangs off a lead
+outside sensor pod              # 1x04 pin header: the pod's M8 sealed lead is made up at build
+mixer fan                       # 1x03 pin header per fan: the IP68 fan's own flying lead is pushed on
+lead from the D38999            # wall receptacle leads, made up at build
+Bourns SRF1260-4R7Y             # JLCPCB stock 0, route in tools/jlc-handfit.txt. E17 as committed; no row of the round-4 schematic carries it: remove it when board E is re-cut
+Bourns SRF1260-1R5Y             # JLCPCB stock 0 (C7320434, 26 Sep 2026), route in tools/jlc-handfit.txt: board E's L2 since MESHSAT-1357 round 4 (F-IN-02)
+XAL              # Coilcraft: not in JLCPCB's catalogue, route in tools/jlc-handfit.txt
+mini blade (Keystone 3568 holder)   # F1, F2 (10 A) and F3 (25 A): the Keystone 3568 blade clip is through-hole and JLCPCB does not place it (route in tools/jlc-handfit.txt, '3568'), and the MINI blade fuse is fitted at build. Added 26 Sep 2026 (MESHSAT-1357 round 8, the parts stream's draft 03, as board A's '25 A mini blade (Keystone 3568' line)

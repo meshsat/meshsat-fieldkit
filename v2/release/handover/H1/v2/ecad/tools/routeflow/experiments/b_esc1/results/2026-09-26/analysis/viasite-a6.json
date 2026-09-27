@@ -1,0 +1,3891 @@
+{
+ "label": "EXPERIMENTAL (Q-B-ESC-1) via-site search, KiCad's exact shapes (second version)",
+ "arm": "a6",
+ "method": "Second version, 27 September 2026: every copper item is KiCad's own shape for it (pcbnew GetEffectiveShape per copper\nlayer: a pad's roundrect, rectangle, oval or custom outline, a track's segment with its width, a via's circle) and\nevery clearance is KiCad's own SHAPE Collide test. The first version modelled each pad as its bounding rectangle,\nwhich over-states the copper at a rounded corner; three readings turned on that (U301.102 and U301.106 on A8's final\nboard and U301.86 on A6's input board, each with a site at 2 to 8 micrometres over the clearance).\n\nFor every pad that ends a missing S3 connection on the arm's final board (from besc1_residue.py) and lies in the S3\nregion, on two boards, the arm's INPUT board (placement and the escape pass's copper, before any routing) and its\nFINAL board (after the router): the nearest via site within 3 mm of the pad centre, on a 0.05 mm grid centred on the\npad (the centre itself excluded), that\n  (1) holds a through via of copper diameter D at 0.127 mm or more from every copper item of another net on every\n      copper layer, and\n  (2) is reached from the pad centre by a straight 0.127 mm track on the pad's own layer at 0.127 mm or more from every\n      copper item of another net on that layer (the pad itself and its own net's copper are not obstacles),\nfor D = 0.40 (the escape pass's via on 0.4 mm rows), 0.70 (the router's via for the signal classes of S3 in this DSN)\nand 0.80 (its via for PWR_S3). For the nearest site of each D it gives the site, the nearest foreign item to the via\nand its distance to 1 micrometre, and how many sites the grid holds for that D (counted up to 25; nearest first, so\nthe nearest site always clears by less than one grid step, and it is the count that says whether a site is a\nsingle point at the edge of the clearance or one of many). What the search leaves out, both ways: zone fills are not obstacles (they yield) and\ndrilled holes are not checked against holes or against copper by hole clearance, so a site found is not proof a via\nfits; only straight stubs and grid points are tried, so a site not found is not proof that none exists.",
+ "targets": {
+  "C346.1": "/+1V0_S3",
+  "L303.2": "/+1V0_S3",
+  "C374.1": "/+1V1_S3",
+  "L301.2": "/+3V3_S3A",
+  "R302.1": "/+3V3_S3A",
+  "R337.2": "/+3V3_S3A",
+  "J_M2C3.2": "/+3V3_S3A",
+  "J_M2N3.74": "/+3V3_S3B",
+  "J_M2N3.2": "/+3V3_S3B",
+  "U302.59": "/BANK3_UPTX_N",
+  "U309.4": "/BANK3_UPTX_N",
+  "U301.107": "/CARD3_RX_N",
+  "J_M2C3.43": "/CARD3_RX_N",
+  "U301.106": "/CARD3_RX_P",
+  "J_M2C3.41": "/CARD3_RX_P",
+  "U301.102": "/CARD3_TX_P",
+  "J_M2C3.35": "/CARD3_TX_P",
+  "U310.2": "/HOST3_0D_N",
+  "U32B.136": "/HOST3_0D_N",
+  "U302.64": "/HUB3_R1",
+  "R342.1": "/HUB3_R1",
+  "U302.50": "/HUB3_RST_n",
+  "C363.1": "/HUB3_RST_n",
+  "U302.39": "/HUB3_SMBUS_n",
+  "R345.1": "/HUB3_SMBUS_n",
+  "R347.1": "/HUB3_XI",
+  "C364.1": "/HUB3_XI",
+  "U302.61": "/HUB3_XO",
+  "R347.2": "/HUB3_XO",
+  "Y301.3": "/HUB3_XO",
+  "C365.1": "/HUB3_XO",
+  "Y4.3": "/IOCC_XO",
+  "J_M2N3.41": "/NVME3_RX_N",
+  "U301.101": "/NVME3_RX_N",
+  "U301.83": "/PCIE3_RCLK0_N",
+  "U301.111": "/PCIE3_RCLK0_N",
+  "C351.1": "/PCIE3_RXSW_P",
+  "U301.124": "/PCIE3_RXSW_P",
+  "U301.128": "/PCIE3_TX_P",
+  "U32B.122": "/PCIE3_TX_P",
+  "U303.3": "/PCIE_PWR_EN3",
+  "R306.1": "/PCIE_PWR_EN3",
+  "U301.86": "/S3_IREF",
+  "R317.1": "/S3_IREF"
+ },
+ "input": {
+  "C346.1": {
+   "layer": "B.Cu",
+   "at": [
+    224.59,
+    177.405
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     224.54,
+     177.405
+    ],
+    "nearest_foreign_to_via": {
+     "item": "C311.1",
+     "net": "/S3A_BOOT",
+     "layer": "F.Cu",
+     "mm": 0.416
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 6211
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     224.54,
+     177.405
+    ],
+    "nearest_foreign_to_via": {
+     "item": "C311.1",
+     "net": "/S3A_BOOT",
+     "layer": "F.Cu",
+     "mm": 0.266
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 5092
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     224.54,
+     177.405
+    ],
+    "nearest_foreign_to_via": {
+     "item": "C311.1",
+     "net": "/S3A_BOOT",
+     "layer": "F.Cu",
+     "mm": 0.216
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 4785
+   }
+  },
+  "C351.1": {
+   "layer": "F.Cu",
+   "at": [
+    204.945,
+    153.135
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.45,
+    "site_at": [
+     204.945,
+     152.685
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track F.Cu",
+     "net": "/BANK3_UPD_N",
+     "layer": "F.Cu",
+     "mm": 0.833
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 6029
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.6,
+    "site_at": [
+     204.945,
+     152.535
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track F.Cu",
+     "net": "/BANK3_UPD_N",
+     "layer": "F.Cu",
+     "mm": 0.647
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 4841
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.65,
+    "site_at": [
+     204.945,
+     152.485
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track F.Cu",
+     "net": "/BANK3_UPD_N",
+     "layer": "F.Cu",
+     "mm": 0.586
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 4482
+   }
+  },
+  "C363.1": {
+   "layer": "B.Cu",
+   "at": [
+    194.63,
+    132.355
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.2,
+    "site_at": [
+     194.63,
+     132.155
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.111",
+     "net": "/PCIE3_RCLK0_N",
+     "layer": "F.Cu",
+     "mm": 0.132
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2388
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.35,
+    "site_at": [
+     194.63,
+     132.005
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.111",
+     "net": "/PCIE3_RCLK0_N",
+     "layer": "F.Cu",
+     "mm": 0.129
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1267
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.4,
+    "site_at": [
+     194.63,
+     131.955
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.111",
+     "net": "/PCIE3_RCLK0_N",
+     "layer": "F.Cu",
+     "mm": 0.128
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 972
+   }
+  },
+  "C364.1": {
+   "layer": "B.Cu",
+   "at": [
+    237.505,
+    138.005
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.2,
+    "site_at": [
+     237.705,
+     138.005
+    ],
+    "nearest_foreign_to_via": {
+     "item": "LED35.2",
+     "net": "/LED_WIFI2_A",
+     "layer": "F.Cu",
+     "mm": 0.131
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 5971
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.667,
+    "site_at": [
+     237.655,
+     138.655
+    ],
+    "nearest_foreign_to_via": {
+     "item": "LED35.1",
+     "net": "/WIFI2_nLED",
+     "layer": "F.Cu",
+     "mm": 0.143
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 4487
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.728,
+    "site_at": [
+     237.705,
+     138.705
+    ],
+    "nearest_foreign_to_via": {
+     "item": "LED35.2",
+     "net": "/LED_WIFI2_A",
+     "layer": "F.Cu",
+     "mm": 0.134
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 4069
+   }
+  },
+  "C365.1": {
+   "layer": "B.Cu",
+   "at": [
+    240.575,
+    138.005
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     240.525,
+     138.005
+    ],
+    "nearest_foreign_to_via": {
+     "item": "C365.2",
+     "net": "GND",
+     "layer": "B.Cu",
+     "mm": 0.53
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 7405
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     240.525,
+     138.005
+    ],
+    "nearest_foreign_to_via": {
+     "item": "C365.2",
+     "net": "GND",
+     "layer": "B.Cu",
+     "mm": 0.381
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 6232
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     240.525,
+     138.005
+    ],
+    "nearest_foreign_to_via": {
+     "item": "C365.2",
+     "net": "GND",
+     "layer": "B.Cu",
+     "mm": 0.33
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 5876
+   }
+  },
+  "C374.1": {
+   "layer": "B.Cu",
+   "at": [
+    185.375,
+    132.605
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.391,
+    "site_at": [
+     185.075,
+     132.355
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track F.Cu",
+     "net": "/HOST3_1D_P",
+     "layer": "F.Cu",
+     "mm": 0.138
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 3330
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.532,
+    "site_at": [
+     184.975,
+     132.255
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track F.Cu",
+     "net": "/HOST3_1D_P",
+     "layer": "F.Cu",
+     "mm": 0.129
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2335
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.604,
+    "site_at": [
+     185.125,
+     132.055
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track F.Cu",
+     "net": "/HOST3_1D_P",
+     "layer": "F.Cu",
+     "mm": 0.13
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2015
+   }
+  },
+  "J_M2C3.2": {
+   "layer": "F.Cu",
+   "at": [
+    220.0,
+    89.78
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     219.95,
+     89.78
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 9005
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     219.95,
+     89.78
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 8563
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     219.95,
+     89.78
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 8410
+   }
+  },
+  "J_M2C3.35": {
+   "layer": "F.Cu",
+   "at": [
+    228.25,
+    82.23
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     228.25,
+     82.18
+    ],
+    "nearest_foreign_to_via": {
+     "item": "J_M2C3.33",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.15
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 6441
+   },
+   "via_0.70": {
+    "nearest_site_mm": 1.1,
+    "site_at": [
+     228.25,
+     83.33
+    ],
+    "nearest_foreign_to_via": {
+     "item": "J_M2C3.33",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.128
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 5635
+   },
+   "via_0.80": {
+    "nearest_site_mm": 1.2,
+    "site_at": [
+     228.25,
+     83.43
+    ],
+    "nearest_foreign_to_via": {
+     "item": "J_M2C3.33",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.151
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 5373
+   }
+  },
+  "J_M2C3.41": {
+   "layer": "F.Cu",
+   "at": [
+    229.75,
+    82.23
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     229.75,
+     82.18
+    ],
+    "nearest_foreign_to_via": {
+     "item": "J_M2C3.39",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.15
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 4544
+   },
+   "via_0.70": {
+    "nearest_site_mm": 1.1,
+    "site_at": [
+     229.75,
+     83.33
+    ],
+    "nearest_foreign_to_via": {
+     "item": "J_M2C3.39",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.128
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 3627
+   },
+   "via_0.80": {
+    "nearest_site_mm": 1.2,
+    "site_at": [
+     229.75,
+     83.43
+    ],
+    "nearest_foreign_to_via": {
+     "item": "J_M2C3.39",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.151
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 3373
+   }
+  },
+  "J_M2C3.43": {
+   "layer": "F.Cu",
+   "at": [
+    230.25,
+    82.23
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     230.25,
+     82.18
+    ],
+    "nearest_foreign_to_via": {
+     "item": "J_M2C3.41",
+     "net": "/CARD3_RX_P",
+     "layer": "F.Cu",
+     "mm": 0.15
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 4243
+   },
+   "via_0.70": {
+    "nearest_site_mm": 1.1,
+    "site_at": [
+     230.25,
+     83.33
+    ],
+    "nearest_foreign_to_via": {
+     "item": "J_M2C3.41",
+     "net": "/CARD3_RX_P",
+     "layer": "F.Cu",
+     "mm": 0.128
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 3549
+   },
+   "via_0.80": {
+    "nearest_site_mm": 1.2,
+    "site_at": [
+     230.25,
+     83.43
+    ],
+    "nearest_foreign_to_via": {
+     "item": "J_M2C3.41",
+     "net": "/CARD3_RX_P",
+     "layer": "F.Cu",
+     "mm": 0.151
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 3345
+   }
+  },
+  "J_M2N3.2": {
+   "layer": "F.Cu",
+   "at": [
+    189.0,
+    89.53
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     188.95,
+     89.53
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 9234
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     188.95,
+     89.53
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 8683
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     188.95,
+     89.53
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 8491
+   }
+  },
+  "J_M2N3.41": {
+   "layer": "F.Cu",
+   "at": [
+    198.75,
+    81.98
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     198.75,
+     81.93
+    ],
+    "nearest_foreign_to_via": {
+     "item": "J_M2N3.39",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.15
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 3942
+   },
+   "via_0.70": {
+    "nearest_site_mm": 1.1,
+    "site_at": [
+     198.75,
+     83.08
+    ],
+    "nearest_foreign_to_via": {
+     "item": "J_M2N3.39",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.128
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 3021
+   },
+   "via_0.80": {
+    "nearest_site_mm": 1.2,
+    "site_at": [
+     198.75,
+     83.18
+    ],
+    "nearest_foreign_to_via": {
+     "item": "J_M2N3.39",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.151
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2771
+   }
+  },
+  "J_M2N3.74": {
+   "layer": "F.Cu",
+   "at": [
+    207.0,
+    89.53
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     206.95,
+     89.53
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 8052
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     206.95,
+     89.53
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 7398
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     206.95,
+     89.53
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 7171
+   }
+  },
+  "L301.2": {
+   "layer": "F.Cu",
+   "at": [
+    202.355,
+    166.255
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     202.305,
+     166.255
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 7083
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     202.305,
+     166.255
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 5489
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     202.305,
+     166.255
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 4968
+   }
+  },
+  "L303.2": {
+   "layer": "F.Cu",
+   "at": [
+    234.31,
+    165.025
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     234.26,
+     165.025
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 5441
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     234.26,
+     165.025
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 3960
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     234.26,
+     165.025
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 3506
+   }
+  },
+  "R302.1": {
+   "layer": "B.Cu",
+   "at": [
+    208.58,
+    163.355
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     208.53,
+     163.355
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 6542
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     208.53,
+     163.355
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 5755
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     208.53,
+     163.355
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 5499
+   }
+  },
+  "R306.1": {
+   "layer": "B.Cu",
+   "at": [
+    225.42,
+    163.355
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     225.37,
+     163.355
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U304.9",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.405
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 4166
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     225.37,
+     163.355
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U304.9",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.256
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 3567
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     225.37,
+     163.355
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U304.9",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.205
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 3387
+   }
+  },
+  "R317.1": {
+   "layer": "B.Cu",
+   "at": [
+    228.75,
+    169.275
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     228.7,
+     169.275
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 5730
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     228.7,
+     169.275
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 4448
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     228.7,
+     169.275
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 4057
+   }
+  },
+  "R337.2": {
+   "layer": "B.Cu",
+   "at": [
+    224.82,
+    135.565
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     224.77,
+     135.565
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track B.Cu",
+     "net": "/SWP3_C_P",
+     "layer": "B.Cu",
+     "mm": 1.072
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 4973
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     224.77,
+     135.565
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track B.Cu",
+     "net": "/SWP3_C_P",
+     "layer": "B.Cu",
+     "mm": 0.923
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 3731
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     224.77,
+     135.565
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track B.Cu",
+     "net": "/SWP3_C_P",
+     "layer": "B.Cu",
+     "mm": 0.873
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 3402
+   }
+  },
+  "R342.1": {
+   "layer": "B.Cu",
+   "at": [
+    189.49,
+    135.565
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     189.44,
+     135.565
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track B.Cu",
+     "net": "/PCIE3_CLK_P",
+     "layer": "B.Cu",
+     "mm": 0.688
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 3289
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     189.44,
+     135.565
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track B.Cu",
+     "net": "/PCIE3_CLK_P",
+     "layer": "B.Cu",
+     "mm": 0.538
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1899
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     189.44,
+     135.565
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track B.Cu",
+     "net": "/PCIE3_CLK_P",
+     "layer": "B.Cu",
+     "mm": 0.488
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1575
+   }
+  },
+  "R345.1": {
+   "layer": "B.Cu",
+   "at": [
+    202.12,
+    135.565
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.5,
+    "site_at": [
+     202.62,
+     135.565
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.94",
+     "net": "/S3_JTAGL",
+     "layer": "F.Cu",
+     "mm": 0.146
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2171
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.65,
+    "site_at": [
+     202.77,
+     135.565
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.94",
+     "net": "/S3_JTAGL",
+     "layer": "F.Cu",
+     "mm": 0.146
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 750
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.7,
+    "site_at": [
+     202.82,
+     135.565
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.94",
+     "net": "/S3_JTAGL",
+     "layer": "F.Cu",
+     "mm": 0.146
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 459
+   }
+  },
+  "R347.1": {
+   "layer": "B.Cu",
+   "at": [
+    210.54,
+    135.565
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.8,
+    "site_at": [
+     209.74,
+     135.565
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U302.65",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.16
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 3198
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.95,
+    "site_at": [
+     209.59,
+     135.565
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U302.65",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.16
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2178
+   },
+   "via_0.80": {
+    "nearest_site_mm": 1.0,
+    "site_at": [
+     209.54,
+     135.565
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U302.65",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.16
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1860
+   }
+  },
+  "R347.2": {
+   "layer": "B.Cu",
+   "at": [
+    212.19,
+    135.565
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.95,
+    "site_at": [
+     212.19,
+     134.615
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U302.65",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.16
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2566
+   },
+   "via_0.70": {
+    "nearest_site_mm": 1.1,
+    "site_at": [
+     212.19,
+     134.465
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U302.65",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.16
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1779
+   },
+   "via_0.80": {
+    "nearest_site_mm": 1.15,
+    "site_at": [
+     212.19,
+     134.415
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U302.65",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.16
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1522
+   }
+  },
+  "U301.101": {
+   "layer": "F.Cu",
+   "at": [
+    198.475,
+    133.213
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.9,
+    "site_at": [
+     198.475,
+     134.113
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.100",
+     "net": "/NVME3_RX_P",
+     "layer": "F.Cu",
+     "mm": 0.144
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2351
+   },
+   "via_0.70": {
+    "nearest_site_mm": 1.1,
+    "site_at": [
+     198.475,
+     134.312
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.100",
+     "net": "/NVME3_RX_P",
+     "layer": "F.Cu",
+     "mm": 0.131
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1136
+   },
+   "via_0.80": {
+    "nearest_site_mm": 1.2,
+    "site_at": [
+     198.475,
+     134.412
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.100",
+     "net": "/NVME3_RX_P",
+     "layer": "F.Cu",
+     "mm": 0.162
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 850
+   }
+  },
+  "U301.102": {
+   "layer": "F.Cu",
+   "at": [
+    198.075,
+    133.213
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.9,
+    "site_at": [
+     198.075,
+     134.113
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.101",
+     "net": "/NVME3_RX_N",
+     "layer": "F.Cu",
+     "mm": 0.144
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2259
+   },
+   "via_0.70": {
+    "nearest_site_mm": 1.1,
+    "site_at": [
+     198.075,
+     134.312
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.101",
+     "net": "/NVME3_RX_N",
+     "layer": "F.Cu",
+     "mm": 0.131
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1082
+   },
+   "via_0.80": {
+    "nearest_site_mm": 1.2,
+    "site_at": [
+     198.075,
+     134.412
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.101",
+     "net": "/NVME3_RX_N",
+     "layer": "F.Cu",
+     "mm": 0.162
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 790
+   }
+  },
+  "U301.106": {
+   "layer": "F.Cu",
+   "at": [
+    196.475,
+    133.213
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.9,
+    "site_at": [
+     196.475,
+     134.113
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.105",
+     "net": "/+1V0_S3",
+     "layer": "F.Cu",
+     "mm": 0.144
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2409
+   },
+   "via_0.70": {
+    "nearest_site_mm": 1.1,
+    "site_at": [
+     196.475,
+     134.312
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.105",
+     "net": "/+1V0_S3",
+     "layer": "F.Cu",
+     "mm": 0.131
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1266
+   },
+   "via_0.80": {
+    "nearest_site_mm": 1.2,
+    "site_at": [
+     196.475,
+     134.412
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.105",
+     "net": "/+1V0_S3",
+     "layer": "F.Cu",
+     "mm": 0.162
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 948
+   }
+  },
+  "U301.107": {
+   "layer": "F.Cu",
+   "at": [
+    196.075,
+    133.213
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.9,
+    "site_at": [
+     196.075,
+     134.113
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.106",
+     "net": "/CARD3_RX_P",
+     "layer": "F.Cu",
+     "mm": 0.144
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2411
+   },
+   "via_0.70": {
+    "nearest_site_mm": 1.1,
+    "site_at": [
+     196.075,
+     134.312
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.106",
+     "net": "/CARD3_RX_P",
+     "layer": "F.Cu",
+     "mm": 0.131
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1256
+   },
+   "via_0.80": {
+    "nearest_site_mm": 1.2,
+    "site_at": [
+     196.075,
+     134.412
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.106",
+     "net": "/CARD3_RX_P",
+     "layer": "F.Cu",
+     "mm": 0.162
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 945
+   }
+  },
+  "U301.111": {
+   "layer": "F.Cu",
+   "at": [
+    194.475,
+    133.213
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.9,
+    "site_at": [
+     194.475,
+     134.113
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.110",
+     "net": "/PCIE3_RCLK0_P",
+     "layer": "F.Cu",
+     "mm": 0.144
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2155
+   },
+   "via_0.70": {
+    "nearest_site_mm": 1.1,
+    "site_at": [
+     194.475,
+     134.312
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.110",
+     "net": "/PCIE3_RCLK0_P",
+     "layer": "F.Cu",
+     "mm": 0.131
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1090
+   },
+   "via_0.80": {
+    "nearest_site_mm": 1.2,
+    "site_at": [
+     194.475,
+     134.412
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.110",
+     "net": "/PCIE3_RCLK0_P",
+     "layer": "F.Cu",
+     "mm": 0.162
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 824
+   }
+  },
+  "U301.124": {
+   "layer": "F.Cu",
+   "at": [
+    189.275,
+    133.213
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.9,
+    "site_at": [
+     189.275,
+     134.113
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.123",
+     "net": "/PCIE3_RXSW_N",
+     "layer": "F.Cu",
+     "mm": 0.144
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2111
+   },
+   "via_0.70": {
+    "nearest_site_mm": 1.1,
+    "site_at": [
+     189.275,
+     134.312
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.123",
+     "net": "/PCIE3_RXSW_N",
+     "layer": "F.Cu",
+     "mm": 0.131
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 979
+   },
+   "via_0.80": {
+    "nearest_site_mm": 1.2,
+    "site_at": [
+     189.275,
+     134.412
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.123",
+     "net": "/PCIE3_RXSW_N",
+     "layer": "F.Cu",
+     "mm": 0.162
+    },
+    "sites_found_up_to_25": 24,
+    "via_ok_points": 721
+   }
+  },
+  "U301.128": {
+   "layer": "F.Cu",
+   "at": [
+    187.675,
+    133.213
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.461,
+    "site_at": [
+     187.575,
+     133.662
+    ],
+    "nearest_foreign_to_via": {
+     "item": "C374.2",
+     "net": "GND",
+     "layer": "B.Cu",
+     "mm": 0.135
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1479
+   },
+   "via_0.70": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 492
+   },
+   "via_0.80": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 306
+   }
+  },
+  "U301.83": {
+   "layer": "F.Cu",
+   "at": [
+    201.537,
+    139.875
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.9,
+    "site_at": [
+     202.438,
+     139.875
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track F.Cu",
+     "net": "/+3V3_S3B",
+     "layer": "F.Cu",
+     "mm": 0.137
+    },
+    "sites_found_up_to_25": 17,
+    "via_ok_points": 1851
+   },
+   "via_0.70": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 1033
+   },
+   "via_0.80": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 909
+   }
+  },
+  "U301.86": {
+   "layer": "F.Cu",
+   "at": [
+    201.537,
+    138.675
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.9,
+    "site_at": [
+     200.637,
+     138.675
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.85",
+     "net": "/PCIE3_RCLK0_P",
+     "layer": "F.Cu",
+     "mm": 0.144
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1550
+   },
+   "via_0.70": {
+    "nearest_site_mm": 1.1,
+    "site_at": [
+     200.438,
+     138.675
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.85",
+     "net": "/PCIE3_RCLK0_P",
+     "layer": "F.Cu",
+     "mm": 0.131
+    },
+    "sites_found_up_to_25": 5,
+    "via_ok_points": 373
+   },
+   "via_0.80": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 224
+   }
+  },
+  "U302.39": {
+   "layer": "F.Cu",
+   "at": [
+    216.863,
+    138.075
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.3,
+    "site_at": [
+     217.162,
+     138.075
+    ],
+    "nearest_foreign_to_via": {
+     "item": "R356.2",
+     "net": "/+3V3_CM3",
+     "layer": "B.Cu",
+     "mm": 0.163
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 3898
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.7,
+    "site_at": [
+     217.562,
+     138.075
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U302.38",
+     "net": "",
+     "layer": "F.Cu",
+     "mm": 0.148
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2361
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.75,
+    "site_at": [
+     217.613,
+     138.075
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U302.38",
+     "net": "",
+     "layer": "F.Cu",
+     "mm": 0.128
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1926
+   }
+  },
+  "U302.50": {
+   "layer": "F.Cu",
+   "at": [
+    215.7,
+    132.912
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.25,
+    "site_at": [
+     215.7,
+     133.162
+    ],
+    "nearest_foreign_to_via": {
+     "item": "C370.1",
+     "net": "/+3V3_DEV",
+     "layer": "B.Cu",
+     "mm": 0.133
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2686
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.7,
+    "site_at": [
+     215.7,
+     133.613
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U302.49",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.148
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1390
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.75,
+    "site_at": [
+     215.7,
+     133.662
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U302.49",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.128
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1105
+   }
+  },
+  "U302.59": {
+   "layer": "F.Cu",
+   "at": [
+    211.2,
+    132.912
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.25,
+    "site_at": [
+     211.2,
+     133.162
+    ],
+    "nearest_foreign_to_via": {
+     "item": "C369.1",
+     "net": "/+1V1_S3",
+     "layer": "B.Cu",
+     "mm": 0.135
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2990
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.7,
+    "site_at": [
+     211.2,
+     133.613
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U302.58",
+     "net": "/BANK3_UPTX_P",
+     "layer": "F.Cu",
+     "mm": 0.148
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1908
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.75,
+    "site_at": [
+     211.2,
+     133.662
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U302.58",
+     "net": "/BANK3_UPTX_P",
+     "layer": "F.Cu",
+     "mm": 0.128
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1610
+   }
+  },
+  "U302.61": {
+   "layer": "F.Cu",
+   "at": [
+    210.2,
+    132.912
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     210.15,
+     132.912
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U302.62",
+     "net": "/HUB3_XI",
+     "layer": "F.Cu",
+     "mm": 0.15
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2836
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.7,
+    "site_at": [
+     210.2,
+     133.613
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U302.60",
+     "net": "",
+     "layer": "F.Cu",
+     "mm": 0.148
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1727
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.75,
+    "site_at": [
+     210.2,
+     133.662
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U302.60",
+     "net": "",
+     "layer": "F.Cu",
+     "mm": 0.128
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1435
+   }
+  },
+  "U302.64": {
+   "layer": "F.Cu",
+   "at": [
+    208.7,
+    132.912
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.25,
+    "site_at": [
+     208.7,
+     133.162
+    ],
+    "nearest_foreign_to_via": {
+     "item": "C368.2",
+     "net": "GND",
+     "layer": "B.Cu",
+     "mm": 0.133
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2906
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.934,
+    "site_at": [
+     208.95,
+     133.812
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U302.63",
+     "net": "/+3V3_DEV",
+     "layer": "F.Cu",
+     "mm": 0.15
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1862
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.996,
+    "site_at": [
+     209.0,
+     133.863
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U302.63",
+     "net": "/+3V3_DEV",
+     "layer": "F.Cu",
+     "mm": 0.133
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1603
+   }
+  },
+  "U303.3": {
+   "layer": "F.Cu",
+   "at": [
+    214.65,
+    166.095
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     214.6,
+     166.095
+    ],
+    "nearest_foreign_to_via": {
+     "item": "R313.2",
+     "net": "/S3C_FB",
+     "layer": "B.Cu",
+     "mm": 0.463
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 3723
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     214.6,
+     166.095
+    ],
+    "nearest_foreign_to_via": {
+     "item": "R313.2",
+     "net": "/S3C_FB",
+     "layer": "B.Cu",
+     "mm": 0.312
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2293
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     214.6,
+     166.095
+    ],
+    "nearest_foreign_to_via": {
+     "item": "R313.2",
+     "net": "/S3C_FB",
+     "layer": "B.Cu",
+     "mm": 0.263
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1884
+   }
+  },
+  "U309.4": {
+   "layer": "F.Cu",
+   "at": [
+    185.86,
+    156.01
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     185.81,
+     156.01
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U309.3",
+     "net": "/BANK3_UPTX_P",
+     "layer": "F.Cu",
+     "mm": 0.181
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2270
+   },
+   "via_0.70": {
+    "nearest_site_mm": 1.54,
+    "site_at": [
+     184.36,
+     155.66
+    ],
+    "nearest_foreign_to_via": {
+     "item": "via 0.45",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.133
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1465
+   },
+   "via_0.80": {
+    "nearest_site_mm": 1.746,
+    "site_at": [
+     184.16,
+     155.61
+    ],
+    "nearest_foreign_to_via": {
+     "item": "via 0.45",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.132
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1270
+   }
+  },
+  "U310.2": {
+   "layer": "F.Cu",
+   "at": [
+    193.74,
+    155.23
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     193.69,
+     155.23
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U310.1",
+     "net": "/HOST3_0D_P",
+     "layer": "F.Cu",
+     "mm": 0.176
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 3075
+   },
+   "via_0.70": {
+    "nearest_site_mm": 1.001,
+    "site_at": [
+     192.74,
+     155.18
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track F.Cu",
+     "net": "/HOST3_0D_P",
+     "layer": "F.Cu",
+     "mm": 0.136
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1736
+   },
+   "via_0.80": {
+    "nearest_site_mm": 1.251,
+    "site_at": [
+     192.49,
+     155.18
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track F.Cu",
+     "net": "/HOST1_1D_P",
+     "layer": "F.Cu",
+     "mm": 0.134
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1414
+   }
+  },
+  "U32B.122": {
+   "layer": "F.Cu",
+   "at": [
+    236.04,
+    46.7
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.5,
+    "site_at": [
+     236.54,
+     46.7
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U32B.120",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.136
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 3805
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.982,
+    "site_at": [
+     235.09,
+     46.45
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U32B.120",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.253
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2873
+   },
+   "via_0.80": {
+    "nearest_site_mm": 1.079,
+    "site_at": [
+     234.99,
+     46.45
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2600
+   }
+  },
+  "U32B.136": {
+   "layer": "F.Cu",
+   "at": [
+    236.04,
+    49.5
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.5,
+    "site_at": [
+     235.54,
+     49.5
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U32B.134",
+     "net": "/HOST3_0D_P",
+     "layer": "F.Cu",
+     "mm": 0.136
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 3290
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.75,
+    "site_at": [
+     235.29,
+     49.5
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U32B.134",
+     "net": "/HOST3_0D_P",
+     "layer": "F.Cu",
+     "mm": 0.15
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2168
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.8,
+    "site_at": [
+     235.24,
+     49.5
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U32B.134",
+     "net": "/HOST3_0D_P",
+     "layer": "F.Cu",
+     "mm": 0.142
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1892
+   }
+  },
+  "Y301.3": {
+   "layer": "F.Cu",
+   "at": [
+    201.665,
+    153.275
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.3,
+    "site_at": [
+     201.665,
+     153.575
+    ],
+    "nearest_foreign_to_via": {
+     "item": "Y301.2",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.601
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 3371
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.45,
+    "site_at": [
+     201.665,
+     153.725
+    ],
+    "nearest_foreign_to_via": {
+     "item": "Y301.2",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.301
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2265
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.5,
+    "site_at": [
+     201.665,
+     153.775
+    ],
+    "nearest_foreign_to_via": {
+     "item": "Y301.2",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.2
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1971
+   }
+  },
+  "Y4.3": {
+   "layer": "B.Cu",
+   "at": [
+    190.82,
+    47.135
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     190.77,
+     47.135
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 7144
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     190.77,
+     47.135
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 6552
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     190.77,
+     47.135
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 6367
+   }
+  }
+ },
+ "final": {
+  "C346.1": {
+   "layer": "B.Cu",
+   "at": [
+    224.59,
+    177.405
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.776,
+    "site_at": [
+     224.39,
+     178.155
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track In2.Cu",
+     "net": "/SDA_CM3",
+     "layer": "In2.Cu",
+     "mm": 0.157
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 396
+   },
+   "via_0.70": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 10
+   },
+   "via_0.80": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 3
+   }
+  },
+  "C351.1": {
+   "layer": "F.Cu",
+   "at": [
+    204.945,
+    153.135
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.696,
+    "site_at": [
+     205.195,
+     153.785
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track In2.Cu",
+     "net": "/S3_TEST1",
+     "layer": "In2.Cu",
+     "mm": 0.143
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 887
+   },
+   "via_0.70": {
+    "nearest_site_mm": 1.551,
+    "site_at": [
+     204.895,
+     151.585
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track In2.Cu",
+     "net": "/S3_JTAGL",
+     "layer": "In2.Cu",
+     "mm": 0.129
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 232
+   },
+   "via_0.80": {
+    "nearest_site_mm": 2.61,
+    "site_at": [
+     205.845,
+     150.685
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track In2.Cu",
+     "net": "/NVME3_CLKREQ_n",
+     "layer": "In2.Cu",
+     "mm": 0.151
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 151
+   }
+  },
+  "C363.1": {
+   "layer": "B.Cu",
+   "at": [
+    194.63,
+    132.355
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 1.638,
+    "site_at": [
+     196.03,
+     131.505
+    ],
+    "nearest_foreign_to_via": {
+     "item": "C363.2",
+     "net": "GND",
+     "layer": "B.Cu",
+     "mm": 0.176
+    },
+    "sites_found_up_to_25": 21,
+    "via_ok_points": 260
+   },
+   "via_0.70": {
+    "nearest_site_mm": 2.915,
+    "site_at": [
+     195.73,
+     129.655
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track In2.Cu",
+     "net": "/CARD3_TX_N",
+     "layer": "In2.Cu",
+     "mm": 0.151
+    },
+    "sites_found_up_to_25": 5,
+    "via_ok_points": 20
+   },
+   "via_0.80": {
+    "nearest_site_mm": 2.962,
+    "site_at": [
+     195.73,
+     129.605
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track In2.Cu",
+     "net": "/CARD3_TX_N",
+     "layer": "In2.Cu",
+     "mm": 0.137
+    },
+    "sites_found_up_to_25": 2,
+    "via_ok_points": 3
+   }
+  },
+  "C364.1": {
+   "layer": "B.Cu",
+   "at": [
+    237.505,
+    138.005
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 1.487,
+    "site_at": [
+     238.005,
+     136.605
+    ],
+    "nearest_foreign_to_via": {
+     "item": "via 0.45",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.137
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 442
+   },
+   "via_0.70": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 180
+   },
+   "via_0.80": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 135
+   }
+  },
+  "C365.1": {
+   "layer": "B.Cu",
+   "at": [
+    240.575,
+    138.005
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     240.525,
+     138.005
+    ],
+    "nearest_foreign_to_via": {
+     "item": "C365.2",
+     "net": "GND",
+     "layer": "B.Cu",
+     "mm": 0.53
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1430
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     240.525,
+     138.005
+    ],
+    "nearest_foreign_to_via": {
+     "item": "C365.2",
+     "net": "GND",
+     "layer": "B.Cu",
+     "mm": 0.381
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 799
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     240.525,
+     138.005
+    ],
+    "nearest_foreign_to_via": {
+     "item": "C365.2",
+     "net": "GND",
+     "layer": "B.Cu",
+     "mm": 0.33
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 618
+   }
+  },
+  "C374.1": {
+   "layer": "B.Cu",
+   "at": [
+    185.375,
+    132.605
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.424,
+    "site_at": [
+     185.075,
+     132.305
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track In2.Cu",
+     "net": "/HUB3_RST_n",
+     "layer": "In2.Cu",
+     "mm": 0.148
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1383
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.566,
+    "site_at": [
+     184.975,
+     132.205
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track In2.Cu",
+     "net": "/HUB3_RST_n",
+     "layer": "In2.Cu",
+     "mm": 0.141
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 566
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.652,
+    "site_at": [
+     185.025,
+     132.055
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track B.Cu",
+     "net": "/PCIE3_CLK_P",
+     "layer": "B.Cu",
+     "mm": 0.15
+    },
+    "sites_found_up_to_25": 20,
+    "via_ok_points": 355
+   }
+  },
+  "J_M2C3.2": {
+   "layer": "F.Cu",
+   "at": [
+    220.0,
+    89.78
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.32,
+    "site_at": [
+     219.75,
+     89.58
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track In3.Cu",
+     "net": "/PCIE3_nWAKE",
+     "layer": "In3.Cu",
+     "mm": 0.143
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 5570
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.461,
+    "site_at": [
+     219.65,
+     89.48
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track In3.Cu",
+     "net": "/PCIE3_nWAKE",
+     "layer": "In3.Cu",
+     "mm": 0.134
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 4496
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.532,
+    "site_at": [
+     219.6,
+     89.43
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track In3.Cu",
+     "net": "/PCIE3_nWAKE",
+     "layer": "In3.Cu",
+     "mm": 0.154
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 4124
+   }
+  },
+  "J_M2C3.35": {
+   "layer": "F.Cu",
+   "at": [
+    228.25,
+    82.23
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     228.25,
+     82.18
+    ],
+    "nearest_foreign_to_via": {
+     "item": "J_M2C3.33",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.15
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2753
+   },
+   "via_0.70": {
+    "nearest_site_mm": 1.55,
+    "site_at": [
+     228.25,
+     80.68
+    ],
+    "nearest_foreign_to_via": {
+     "item": "via 0.40",
+     "net": "/CARD3_TX_N",
+     "layer": "F.Cu",
+     "mm": 0.141
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1322
+   },
+   "via_0.80": {
+    "nearest_site_mm": 1.65,
+    "site_at": [
+     228.25,
+     80.58
+    ],
+    "nearest_foreign_to_via": {
+     "item": "via 0.40",
+     "net": "/CARD3_TX_N",
+     "layer": "F.Cu",
+     "mm": 0.162
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1057
+   }
+  },
+  "J_M2C3.41": {
+   "layer": "F.Cu",
+   "at": [
+    229.75,
+    82.23
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     229.75,
+     82.18
+    ],
+    "nearest_foreign_to_via": {
+     "item": "J_M2C3.39",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.15
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2127
+   },
+   "via_0.70": {
+    "nearest_site_mm": 2.3,
+    "site_at": [
+     229.75,
+     79.93
+    ],
+    "nearest_foreign_to_via": {
+     "item": "via 0.40",
+     "net": "/CARD3_RX_N",
+     "layer": "F.Cu",
+     "mm": 0.157
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 863
+   },
+   "via_0.80": {
+    "nearest_site_mm": 2.35,
+    "site_at": [
+     229.75,
+     79.88
+    ],
+    "nearest_foreign_to_via": {
+     "item": "via 0.40",
+     "net": "/CARD3_RX_N",
+     "layer": "F.Cu",
+     "mm": 0.144
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 646
+   }
+  },
+  "J_M2C3.43": {
+   "layer": "F.Cu",
+   "at": [
+    230.25,
+    82.23
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     230.25,
+     82.18
+    ],
+    "nearest_foreign_to_via": {
+     "item": "J_M2C3.41",
+     "net": "/CARD3_RX_P",
+     "layer": "F.Cu",
+     "mm": 0.15
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1747
+   },
+   "via_0.70": {
+    "nearest_site_mm": 1.55,
+    "site_at": [
+     230.25,
+     80.68
+    ],
+    "nearest_foreign_to_via": {
+     "item": "via 0.40",
+     "net": "/CARD3_RX_P",
+     "layer": "F.Cu",
+     "mm": 0.141
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 935
+   },
+   "via_0.80": {
+    "nearest_site_mm": 1.65,
+    "site_at": [
+     230.25,
+     80.58
+    ],
+    "nearest_foreign_to_via": {
+     "item": "via 0.40",
+     "net": "/CARD3_RX_P",
+     "layer": "F.Cu",
+     "mm": 0.162
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 752
+   }
+  },
+  "J_M2N3.2": {
+   "layer": "F.Cu",
+   "at": [
+    189.0,
+    89.53
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     188.95,
+     89.53
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 8822
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     188.95,
+     89.53
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 8315
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     188.95,
+     89.53
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 8169
+   }
+  },
+  "J_M2N3.41": {
+   "layer": "F.Cu",
+   "at": [
+    198.75,
+    81.98
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.35,
+    "site_at": [
+     198.75,
+     82.33
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track In2.Cu",
+     "net": "/HOST3_0D_P",
+     "layer": "In2.Cu",
+     "mm": 0.147
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2641
+   },
+   "via_0.70": {
+    "nearest_site_mm": 1.1,
+    "site_at": [
+     198.75,
+     83.08
+    ],
+    "nearest_foreign_to_via": {
+     "item": "J_M2N3.39",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.128
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1891
+   },
+   "via_0.80": {
+    "nearest_site_mm": 1.2,
+    "site_at": [
+     198.75,
+     83.18
+    ],
+    "nearest_foreign_to_via": {
+     "item": "J_M2N3.39",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.151
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1677
+   }
+  },
+  "J_M2N3.74": {
+   "layer": "F.Cu",
+   "at": [
+    207.0,
+    89.53
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     206.95,
+     89.53
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 4495
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     206.95,
+     89.53
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 3591
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     206.95,
+     89.53
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 3316
+   }
+  },
+  "L301.2": {
+   "layer": "F.Cu",
+   "at": [
+    202.355,
+    166.255
+   ],
+   "via_0.40": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 35
+   },
+   "via_0.70": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 0
+   },
+   "via_0.80": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 0
+   }
+  },
+  "L303.2": {
+   "layer": "F.Cu",
+   "at": [
+    234.31,
+    165.025
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     234.26,
+     165.025
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track In2.Cu",
+     "net": "/CC2_F3",
+     "layer": "In2.Cu",
+     "mm": 0.181
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1109
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     234.36,
+     165.025
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track In2.Cu",
+     "net": "/CC2_F3",
+     "layer": "In2.Cu",
+     "mm": 0.131
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 404
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.1,
+    "site_at": [
+     234.41,
+     165.025
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track In2.Cu",
+     "net": "/CC2_F3",
+     "layer": "In2.Cu",
+     "mm": 0.131
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 268
+   }
+  },
+  "R302.1": {
+   "layer": "B.Cu",
+   "at": [
+    208.58,
+    163.355
+   ],
+   "via_0.40": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 16
+   },
+   "via_0.70": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 0
+   },
+   "via_0.80": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 0
+   }
+  },
+  "R306.1": {
+   "layer": "B.Cu",
+   "at": [
+    225.42,
+    163.355
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.55,
+    "site_at": [
+     224.87,
+     163.355
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track In3.Cu",
+     "net": "/S3B_COMP",
+     "layer": "In3.Cu",
+     "mm": 0.128
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 251
+   },
+   "via_0.70": {
+    "nearest_site_mm": 2.864,
+    "site_at": [
+     224.82,
+     160.555
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track In2.Cu",
+     "net": "/UART0_RX3",
+     "layer": "In2.Cu",
+     "mm": 0.13
+    },
+    "sites_found_up_to_25": 11,
+    "via_ok_points": 11
+   },
+   "via_0.80": {
+    "nearest_site_mm": 2.961,
+    "site_at": [
+     224.82,
+     160.455
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track In2.Cu",
+     "net": "/S3_SMBDAT",
+     "layer": "In2.Cu",
+     "mm": 0.145
+    },
+    "sites_found_up_to_25": 1,
+    "via_ok_points": 1
+   }
+  },
+  "R317.1": {
+   "layer": "B.Cu",
+   "at": [
+    228.75,
+    169.275
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.35,
+    "site_at": [
+     228.4,
+     169.275
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track In2.Cu",
+     "net": "/CC1_F3",
+     "layer": "In2.Cu",
+     "mm": 0.142
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 215
+   },
+   "via_0.70": {
+    "nearest_site_mm": 1.21,
+    "site_at": [
+     229.5,
+     170.225
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track In3.Cu",
+     "net": "/S3_REXT",
+     "layer": "In3.Cu",
+     "mm": 0.15
+    },
+    "sites_found_up_to_25": 1,
+    "via_ok_points": 2
+   },
+   "via_0.80": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 0
+   }
+  },
+  "R337.2": {
+   "layer": "B.Cu",
+   "at": [
+    224.82,
+    135.565
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.65,
+    "site_at": [
+     224.82,
+     136.215
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track In3.Cu",
+     "net": "/PI_KILL_CM3",
+     "layer": "In3.Cu",
+     "mm": 0.167
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 2221
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.8,
+    "site_at": [
+     224.82,
+     136.365
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track B.Cu",
+     "net": "/SWP3_C_P",
+     "layer": "B.Cu",
+     "mm": 0.156
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1266
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.901,
+    "site_at": [
+     225.12,
+     136.415
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track B.Cu",
+     "net": "/SWP3_C_P",
+     "layer": "B.Cu",
+     "mm": 0.128
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1059
+   }
+  },
+  "R342.1": {
+   "layer": "B.Cu",
+   "at": [
+    189.49,
+    135.565
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.255,
+    "site_at": [
+     189.24,
+     135.615
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track F.Cu",
+     "net": "/PCIE3_RXSW_N",
+     "layer": "F.Cu",
+     "mm": 0.155
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 139
+   },
+   "via_0.70": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 11
+   },
+   "via_0.80": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 0
+   }
+  },
+  "R345.1": {
+   "layer": "B.Cu",
+   "at": [
+    202.12,
+    135.565
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 2.912,
+    "site_at": [
+     200.47,
+     137.965
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U301.88",
+     "net": "",
+     "layer": "F.Cu",
+     "mm": 0.132
+    },
+    "sites_found_up_to_25": 7,
+    "via_ok_points": 170
+   },
+   "via_0.70": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 3
+   },
+   "via_0.80": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 0
+   }
+  },
+  "R347.1": {
+   "layer": "B.Cu",
+   "at": [
+    210.54,
+    135.565
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.8,
+    "site_at": [
+     209.74,
+     135.565
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U302.65",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.16
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 842
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.951,
+    "site_at": [
+     209.59,
+     135.615
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U302.65",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.16
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 399
+   },
+   "via_0.80": {
+    "nearest_site_mm": 1.005,
+    "site_at": [
+     209.54,
+     135.665
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U302.65",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.16
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 291
+   }
+  },
+  "R347.2": {
+   "layer": "B.Cu",
+   "at": [
+    212.19,
+    135.565
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.95,
+    "site_at": [
+     212.19,
+     134.615
+    ],
+    "nearest_foreign_to_via": {
+     "item": "via 0.70",
+     "net": "/BANK3_UPTX_P",
+     "layer": "F.Cu",
+     "mm": 0.141
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 323
+   },
+   "via_0.70": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 57
+   },
+   "via_0.80": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 29
+   }
+  },
+  "U301.101": {
+   "layer": "F.Cu",
+   "at": [
+    198.475,
+    133.213
+   ],
+   "via_0.40": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 243
+   },
+   "via_0.70": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 7
+   },
+   "via_0.80": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 0
+   }
+  },
+  "U301.102": {
+   "layer": "F.Cu",
+   "at": [
+    198.075,
+    133.213
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 1.4,
+    "site_at": [
+     198.075,
+     131.812
+    ],
+    "nearest_foreign_to_via": {
+     "item": "via 0.40",
+     "net": "/CARD3_TX_N",
+     "layer": "F.Cu",
+     "mm": 0.141
+    },
+    "sites_found_up_to_25": 11,
+    "via_ok_points": 268
+   },
+   "via_0.70": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 9
+   },
+   "via_0.80": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 0
+   }
+  },
+  "U301.106": {
+   "layer": "F.Cu",
+   "at": [
+    196.475,
+    133.213
+   ],
+   "via_0.40": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 195
+   },
+   "via_0.70": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 12
+   },
+   "via_0.80": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 0
+   }
+  },
+  "U301.107": {
+   "layer": "F.Cu",
+   "at": [
+    196.075,
+    133.213
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 1.7,
+    "site_at": [
+     196.075,
+     131.512
+    ],
+    "nearest_foreign_to_via": {
+     "item": "C363.2",
+     "net": "GND",
+     "layer": "B.Cu",
+     "mm": 0.168
+    },
+    "sites_found_up_to_25": 15,
+    "via_ok_points": 246
+   },
+   "via_0.70": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 17
+   },
+   "via_0.80": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 0
+   }
+  },
+  "U301.111": {
+   "layer": "F.Cu",
+   "at": [
+    194.475,
+    133.213
+   ],
+   "via_0.40": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 213
+   },
+   "via_0.70": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 17
+   },
+   "via_0.80": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 0
+   }
+  },
+  "U301.124": {
+   "layer": "F.Cu",
+   "at": [
+    189.275,
+    133.213
+   ],
+   "via_0.40": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 153
+   },
+   "via_0.70": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 3
+   },
+   "via_0.80": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 0
+   }
+  },
+  "U301.128": {
+   "layer": "F.Cu",
+   "at": [
+    187.675,
+    133.213
+   ],
+   "via_0.40": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 236
+   },
+   "via_0.70": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 21
+   },
+   "via_0.80": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 4
+   }
+  },
+  "U301.83": {
+   "layer": "F.Cu",
+   "at": [
+    201.537,
+    139.875
+   ],
+   "via_0.40": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 61
+   },
+   "via_0.70": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 0
+   },
+   "via_0.80": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 0
+   }
+  },
+  "U301.86": {
+   "layer": "F.Cu",
+   "at": [
+    201.537,
+    138.675
+   ],
+   "via_0.40": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 38
+   },
+   "via_0.70": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 0
+   },
+   "via_0.80": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 0
+   }
+  },
+  "U302.39": {
+   "layer": "F.Cu",
+   "at": [
+    216.863,
+    138.075
+   ],
+   "via_0.40": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 285
+   },
+   "via_0.70": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 20
+   },
+   "via_0.80": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 0
+   }
+  },
+  "U302.50": {
+   "layer": "F.Cu",
+   "at": [
+    215.7,
+    132.912
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.255,
+    "site_at": [
+     215.75,
+     133.162
+    ],
+    "nearest_foreign_to_via": {
+     "item": "C370.1",
+     "net": "/+3V3_DEV",
+     "layer": "B.Cu",
+     "mm": 0.133
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 932
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.922,
+    "site_at": [
+     215.9,
+     133.812
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track F.Cu",
+     "net": "/+1V1_S3",
+     "layer": "F.Cu",
+     "mm": 0.156
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 266
+   },
+   "via_0.80": {
+    "nearest_site_mm": 1.315,
+    "site_at": [
+     215.9,
+     134.213
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U302.47",
+     "net": "",
+     "layer": "F.Cu",
+     "mm": 0.132
+    },
+    "sites_found_up_to_25": 14,
+    "via_ok_points": 166
+   }
+  },
+  "U302.59": {
+   "layer": "F.Cu",
+   "at": [
+    211.2,
+    132.912
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.453,
+    "site_at": [
+     211.25,
+     133.363
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U302.58",
+     "net": "/BANK3_UPTX_P",
+     "layer": "F.Cu",
+     "mm": 0.155
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 882
+   },
+   "via_0.70": {
+    "nearest_site_mm": 1.423,
+    "site_at": [
+     210.75,
+     131.562
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track F.Cu",
+     "net": "/HUB3_XO",
+     "layer": "F.Cu",
+     "mm": 0.137
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 344
+   },
+   "via_0.80": {
+    "nearest_site_mm": 1.492,
+    "site_at": [
+     210.85,
+     131.463
+    ],
+    "nearest_foreign_to_via": {
+     "item": "C369.1",
+     "net": "/+1V1_S3",
+     "layer": "B.Cu",
+     "mm": 0.13
+    },
+    "sites_found_up_to_25": 23,
+    "via_ok_points": 271
+   }
+  },
+  "U302.61": {
+   "layer": "F.Cu",
+   "at": [
+    210.2,
+    132.912
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.25,
+    "site_at": [
+     210.2,
+     132.662
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track B.Cu",
+     "net": "/+1V1_S3",
+     "layer": "B.Cu",
+     "mm": 0.147
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 871
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.752,
+    "site_at": [
+     210.25,
+     132.162
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track F.Cu",
+     "net": "/HUB3_XI",
+     "layer": "F.Cu",
+     "mm": 0.137
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 303
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.856,
+    "site_at": [
+     210.3,
+     132.062
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U302.60",
+     "net": "",
+     "layer": "F.Cu",
+     "mm": 0.131
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 207
+   }
+  },
+  "U302.64": {
+   "layer": "F.Cu",
+   "at": [
+    208.7,
+    132.912
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 1.401,
+    "site_at": [
+     208.75,
+     131.512
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track F.Cu",
+     "net": "/BANK3_UPD_N",
+     "layer": "F.Cu",
+     "mm": 0.131
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1507
+   },
+   "via_0.70": {
+    "nearest_site_mm": 2.789,
+    "site_at": [
+     209.4,
+     135.613
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track B.Cu",
+     "net": "/+1V1_S3",
+     "layer": "B.Cu",
+     "mm": 0.14
+    },
+    "sites_found_up_to_25": 22,
+    "via_ok_points": 833
+   },
+   "via_0.80": {
+    "nearest_site_mm": 2.85,
+    "site_at": [
+     209.45,
+     135.662
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track B.Cu",
+     "net": "/+1V1_S3",
+     "layer": "B.Cu",
+     "mm": 0.14
+    },
+    "sites_found_up_to_25": 10,
+    "via_ok_points": 712
+   }
+  },
+  "U303.3": {
+   "layer": "F.Cu",
+   "at": [
+    214.65,
+    166.095
+   ],
+   "via_0.40": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 98
+   },
+   "via_0.70": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 20
+   },
+   "via_0.80": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 6
+   }
+  },
+  "U309.4": {
+   "layer": "F.Cu",
+   "at": [
+    185.86,
+    156.01
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     185.81,
+     156.01
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U309.3",
+     "net": "/BANK3_UPTX_P",
+     "layer": "F.Cu",
+     "mm": 0.181
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 973
+   },
+   "via_0.70": {
+    "nearest_site_mm": 1.54,
+    "site_at": [
+     184.36,
+     155.66
+    ],
+    "nearest_foreign_to_via": {
+     "item": "via 0.45",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.133
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 254
+   },
+   "via_0.80": {
+    "nearest_site_mm": 1.746,
+    "site_at": [
+     184.16,
+     155.61
+    ],
+    "nearest_foreign_to_via": {
+     "item": "via 0.45",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.132
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 122
+   }
+  },
+  "U310.2": {
+   "layer": "F.Cu",
+   "at": [
+    193.74,
+    155.23
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.502,
+    "site_at": [
+     193.24,
+     155.28
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track In3.Cu",
+     "net": "/S3_SMBDAT",
+     "layer": "In3.Cu",
+     "mm": 0.134
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 1077
+   },
+   "via_0.70": {
+    "nearest_site_mm": 1.001,
+    "site_at": [
+     192.74,
+     155.18
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track F.Cu",
+     "net": "/HOST3_0D_P",
+     "layer": "F.Cu",
+     "mm": 0.136
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 283
+   },
+   "via_0.80": {
+    "nearest_site_mm": 1.251,
+    "site_at": [
+     192.49,
+     155.18
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track F.Cu",
+     "net": "/HOST1_1D_P",
+     "layer": "F.Cu",
+     "mm": 0.134
+    },
+    "sites_found_up_to_25": 13,
+    "via_ok_points": 166
+   }
+  },
+  "U32B.122": {
+   "layer": "F.Cu",
+   "at": [
+    236.04,
+    46.7
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.5,
+    "site_at": [
+     236.54,
+     46.7
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U32B.120",
+     "net": "GND",
+     "layer": "F.Cu",
+     "mm": 0.136
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 890
+   },
+   "via_0.70": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 388
+   },
+   "via_0.80": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 335
+   }
+  },
+  "U32B.136": {
+   "layer": "F.Cu",
+   "at": [
+    236.04,
+    49.5
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.5,
+    "site_at": [
+     235.54,
+     49.5
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U32B.134",
+     "net": "/HOST3_0D_P",
+     "layer": "F.Cu",
+     "mm": 0.136
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 516
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.75,
+    "site_at": [
+     235.29,
+     49.5
+    ],
+    "nearest_foreign_to_via": {
+     "item": "U32B.134",
+     "net": "/HOST3_0D_P",
+     "layer": "F.Cu",
+     "mm": 0.15
+    },
+    "sites_found_up_to_25": 13,
+    "via_ok_points": 35
+   },
+   "via_0.80": {
+    "nearest_site_mm": 1.3,
+    "site_at": [
+     237.34,
+     49.5
+    ],
+    "nearest_foreign_to_via": {
+     "item": "via 0.40",
+     "net": "/HOST3_0D_P",
+     "layer": "F.Cu",
+     "mm": 0.164
+    },
+    "sites_found_up_to_25": 4,
+    "via_ok_points": 12
+   }
+  },
+  "Y301.3": {
+   "layer": "F.Cu",
+   "at": [
+    201.665,
+    153.275
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.304,
+    "site_at": [
+     201.715,
+     153.575
+    ],
+    "nearest_foreign_to_via": {
+     "item": "track In2.Cu",
+     "net": "/Q3C",
+     "layer": "In2.Cu",
+     "mm": 0.14
+    },
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 268
+   },
+   "via_0.70": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 0
+   },
+   "via_0.80": {
+    "nearest_site_mm": null,
+    "sites_found_up_to_25": 0,
+    "via_ok_points": 0
+   }
+  },
+  "Y4.3": {
+   "layer": "B.Cu",
+   "at": [
+    190.82,
+    47.135
+   ],
+   "via_0.40": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     190.77,
+     47.135
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 6147
+   },
+   "via_0.70": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     190.77,
+     47.135
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 5461
+   },
+   "via_0.80": {
+    "nearest_site_mm": 0.05,
+    "site_at": [
+     190.77,
+     47.135
+    ],
+    "nearest_foreign_to_via": null,
+    "sites_found_up_to_25": 25,
+    "via_ok_points": 5241
+   }
+  }
+ }
+}

@@ -1,0 +1,44 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "classes_declared": 0,
+  "met": 0,
+  "missed": 0,
+  "pairs_on_board": 0
+ },
+ "denominator": 0,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-e5-block.kicad_pcb",
+   "sha256_16": "686b29a734c55b9a"
+  }
+ },
+ "missing_input": null,
+ "note": "the board declares its pair classes and gives none a target, or its own facts declare that it controls no impedance at all, which is its recorded design",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "IMP-001": "b55e6a861a00f8ad",
+   "PAIR-001": "e742b4d58ac642e2"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "IMP-001",
+  "PAIR-001"
+ ],
+ "tool": "impedance_check",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "994b3d2315bb9859"
+ },
+ "ts": "2026-09-21T12:53:00Z",
+ "verdict": "PASS",
+ "version": "unknown",
+ "writer": {
+  "file": "impedance_check.py",
+  "sha16": "e2495a04e16fc600"
+ }
+}

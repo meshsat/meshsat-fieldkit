@@ -1,0 +1,223 @@
+# Read-only dumps behind EMCON.md 4.5 and SD-EMC-1 (26 Sep 2026, B-r6cand-pcb-b-compute.net sha256 af8a9186f981210c)
+J_M2C2 | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the module's ANT0, ANT2 and,
+   pin 1 (CONFIG_3) -> unconnected-(J_M2C2-CONFIG_3-Pad1)
+   pin 2 (3.3V) -> +3V3_M2C2
+   pin 3 (GND) -> GND
+   pin 4 (3.3V) -> +3V3_M2C2
+   pin 5 (GND) -> GND
+   pin 6 (~{FULL_CARD_POWER_OFF}) -> 5G_PWROFF_n
+   pin 7 (USB_D+) -> USB_5G_P
+   pin 8 (~{W_DISABLE1}) -> 5G_W_DIS_n
+   pin 9 (USB_D-) -> USB_5G_N
+   pin 10 (GPIO_9/DAS/~{DSS}/~{LED1}) -> 5G_nLED
+   pin 11 (GND) -> GND
+   pin 20 (GPIO_5) -> unconnected-(J_M2C2-GPIO_5-Pad20)
+   pin 21 (CONFIG_0) -> unconnected-(J_M2C2-CONFIG_0-Pad21)
+   pin 22 (GPIO_6) -> unconnected-(J_M2C2-GPIO_6-Pad22)
+   pin 23 (GPIO_11) -> unconnected-(J_M2C2-GPIO_11-Pad23)
+   pin 24 (GPIO_7) -> unconnected-(J_M2C2-GPIO_7-Pad24)
+   pin 25 (DPR) -> unconnected-(J_M2C2-DPR-Pad25)
+   pin 26 (GPIO_10) -> unconnected-(J_M2C2-GPIO_10-Pad26)
+   pin 27 (GND) -> GND
+   pin 28 (GPIO_8) -> unconnected-(J_M2C2-GPIO_8-Pad28)
+   pin 29 (PERn1/USB3.0-Rx-/SSIC-RxN) -> unconnected-(J_M2C2-PERn1{slash}USB3.0-Rx-{slash}SSIC-RxN-Pad29)
+   pin 30 (UIM-RESET) -> SIM1_RST
+   pin 31 (PERp1/USB3.0-Rx+/SSIC-RxP) -> unconnected-(J_M2C2-PERp1{slash}USB3.0-Rx+{slash}SSIC-RxP-Pad31)
+   pin 32 (UIM-CLK) -> SIM1_CLK
+   pin 33 (GND) -> GND
+   pin 34 (UIM-DATA) -> SIM1_IO
+   pin 35 (PETn1/USB3.0-Tx-/SSIC-TxN) -> unconnected-(J_M2C2-PETn1{slash}USB3.0-Tx-{slash}SSIC-TxN-Pad35)
+   pin 36 (UIM-PWR) -> SIM1_VCC
+   pin 37 (PETp1/USB3.0-Tx+/SSIC-TxP) -> unconnected-(J_M2C2-PETp1{slash}USB3.0-Tx+{slash}SSIC-TxP-Pad37)
+   pin 38 (DEVSLP) -> unconnected-(J_M2C2-DEVSLP-Pad38)
+   pin 39 (GND) -> GND
+   pin 40 (GPIO_0) -> unconnected-(J_M2C2-GPIO_0-Pad40)
+   pin 41 (PERn0/SATA-B+) -> CARD2_TX_N
+   pin 42 (GPIO_1) -> SIM2_IO
+   pin 43 (PERp0/SATA-B-) -> CARD2_TX_P
+   pin 44 (GPIO_2) -> SIM2_CLK
+   pin 45 (GND) -> GND
+   pin 46 (GPIO_3) -> SIM2_RST
+   pin 47 (PETn0/SATA-A-) -> CARD2_RX_N
+   pin 48 (GPIO_4) -> SIM2_VCC
+   pin 49 (PETp0/SATA-A+) -> CARD2_RX_P
+   pin 50 (~{PERST}) -> PCIE2_RST2_n
+   pin 51 (GND) -> GND
+   pin 52 (~{CLKREQ}) -> CARD2_CLKREQ_n
+   pin 53 (REFCLKn) -> CARD2_CLK_N
+   pin 54 (~{PEWAKE}) -> PCIE2_nWAKE
+   pin 55 (REFCLKp) -> CARD2_CLK_P
+   pin 56 (NC) -> unconnected-(J_M2C2-NC-Pad56)
+   pin 57 (GND) -> GND
+   pin 58 (NC) -> unconnected-(J_M2C2-NC-Pad58)
+   pin 59 (ANTCTL0) -> unconnected-(J_M2C2-ANTCTL0-Pad59)
+   pin 60 (COEX3) -> unconnected-(J_M2C2-COEX3-Pad60)
+   pin 61 (ANTCTL1) -> unconnected-(J_M2C2-ANTCTL1-Pad61)
+   pin 62 (COEX2) -> unconnected-(J_M2C2-COEX2-Pad62)
+   pin 63 (ANTCTL2) -> unconnected-(J_M2C2-ANTCTL2-Pad63)
+   pin 64 (COEX1) -> unconnected-(J_M2C2-COEX1-Pad64)
+   pin 65 (ANTCTL3) -> unconnected-(J_M2C2-ANTCTL3-Pad65)
+   pin 66 (SIM_DETECT) -> unconnected-(J_M2C2-SIM_DETECT-Pad66)
+   pin 67 (~{RESET}) -> 5G_RST_n
+   pin 68 (SUSCLK) -> unconnected-(J_M2C2-SUSCLK-Pad68)
+   pin 69 (CONFIG_1) -> unconnected-(J_M2C2-CONFIG_1-Pad69)
+   pin 70 (3.3V) -> +3V3_M2C2
+   pin 71 (GND) -> GND
+   pin 72 (3.3V) -> +3V3_M2C2
+   pin 73 (GND) -> GND
+   pin 74 (3.3V) -> +3V3_M2C2
+   pin 75 (CONFIG_2) -> unconnected-(J_M2C2-CONFIG_2-Pad75)
+U203 | AP64500SP-13 5 A buck, 3.3 V rail +3V3_S2A
+   pin 1 (S2A_BOOT) -> S2A_BOOT
+   pin 2 (+5V_S2) -> +5V_S2
+   pin 3 (PCIE_PWR_EN2) -> PCIE_PWR_EN2
+   pin 4 (S2A_RT) -> S2A_RT
+   pin 5 (S2A_FB) -> S2A_FB
+   pin 6 (S2A_COMP) -> S2A_COMP
+   pin 7 (GND) -> GND
+   pin 8 (S2A_SW) -> S2A_SW
+   pin 9 (GND) -> GND
+Q206 | 2N7002: EMCON_ON pulls W_DISABLE1# low (open drain)
+   pin 1 (G) -> EMCON_ON
+   pin 2 (S) -> GND
+   pin 3 (D) -> 5G_W_DIS_n
+Q207 | 2N7002 expander -> FULL_CARD_POWER_OFF#
+   pin 1 (G) -> 5G_OFF
+   pin 2 (S) -> GND
+   pin 3 (D) -> 5G_PWROFF_n
+Q208 | 2N7002 expander -> RESET# (open drain, no pull-up: HD Figure 12)
+   pin 1 (G) -> 5G_RESET
+   pin 2 (S) -> GND
+   pin 3 (D) -> 5G_RST_n
+U211 | SN74LVC32APWR quad OR, slot S2: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare
+   pin 1 (WL_nDIS2_OFF) -> WL_nDIS2_OFF
+   pin 2 (EMCON_ON) -> EMCON_ON
+   pin 3 (WL_nDIS2_KILL) -> WL_nDIS2_KILL
+   pin 4 (BT_nDIS2_OFF) -> BT_nDIS2_OFF
+   pin 5 (EMCON_ON) -> EMCON_ON
+   pin 6 (BT_nDIS2_KILL) -> BT_nDIS2_KILL
+   pin 7 (GND) -> GND
+   pin 8 (NC) -> unconnected-(U211-NC-Pad8)
+   pin 9 (GND) -> GND
+   pin 10 (GND) -> GND
+   pin 11 (NC) -> unconnected-(U211-NC-Pad11)
+   pin 12 (GND) -> GND
+   pin 13 (GND) -> GND
+   pin 14 (+3V3_DEV) -> +3V3_DEV
+R206 | 100k
+   pin 1 () -> PCIE_PWR_EN2
+   pin 2 () -> GND
+R232 | 10k
+   pin 1 () -> PCIE2_nWAKE
+   pin 2 () -> +3V3_S2B
+R234 | 10k
+   pin 1 () -> CARD2_CLKREQ_n
+   pin 2 () -> +3V3_S2A
+R237 | 10k
+   pin 1 () -> 5G_W_DIS_n
+   pin 2 () -> +3V3_S2A
+R238 | 10k
+   pin 1 () -> 5G_PWROFF_n
+   pin 2 () -> +3V3_S2A
+R239 | 1k
+   pin 1 () -> +3V3_S2A
+   pin 2 () -> LED_5G_A
++3V3_S2A (12 nodes):
+   C214.1  | 22u 10V X7R 1210
+   C215.1  | 22u 10V X7R 1210
+   C216.1  | 22u 10V X7R 1210
+   L201.2 (2) | 3.3uH XAL6030-332ME
+   R202.1  | 33.2k 1%
+   R234.2  | 10k
+   R237.2  | 10k
+   R238.2  | 10k
+   R239.1  | 1k
+   R265.1  | 5mOhm 1% 2512 (Kelvin shunt: card socket current, W5 TESTACCESS-B)
+   TP202.1 (1) | +3V3_S2A
+   TP24.1 (1) | +3V3_S2A
++3V3_M2C2 (21 nodes):
+   C257.1  | 22u 6.3V
+   C258.1  | 100n
+   C520.1  | 220u 6.3V KEMET T520B227M006ATE025 polymer tantalum 25 mOhm (RM520N HD 3.3.1 bulk)
+   C521.1  | 220u 6.3V KEMET T520B227M006ATE025 polymer tantalum 25 mOhm (RM520N HD 3.3.1 bulk)
+   C522.1  | 6.8n 50V X7R
+   C523.1  | 220p 50V C0G
+   C524.1  | 68p 50V C0G
+   C525.1  | 100n
+   C526.1  | 220p 50V C0G
+   C527.1  | 68p 50V C0G
+   C528.1  | 15p 50V C0G
+   C529.1  | 9.1p 50V C0G
+   C530.1  | 4.7p 50V C0G
+   D520.1 (A1) | SMBJ5.0A
+   J_M2C2.2 (3.3V) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   J_M2C2.4 (3.3V) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   J_M2C2.70 (3.3V) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   J_M2C2.72 (3.3V) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   J_M2C2.74 (3.3V) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   R265.2  | 5mOhm 1% 2512 (Kelvin shunt: card socket current, W5 TESTACCESS-B)
+   TP203.1 (1) | +3V3_M2C2
+PCIE_PWR_EN2 (3 nodes):
+   R206.1  | 100k
+   U203.3 (PCIE_PWR_EN2) | AP64500SP-13 5 A buck, 3.3 V rail +3V3_S2A
+   U31B.106 (PCIE_PWR_EN) | Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side)
+5G_W_DIS_n (3 nodes):
+   J_M2C2.8 (~{W_DISABLE1}) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   Q206.3 (D) | 2N7002: EMCON_ON pulls W_DISABLE1# low (open drain)
+   R237.1  | 10k
+5G_PWROFF_n (3 nodes):
+   J_M2C2.6 (~{FULL_CARD_POWER_OFF}) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   Q207.3 (D) | 2N7002 expander -> FULL_CARD_POWER_OFF#
+   R238.1  | 10k
+5G_RST_n (2 nodes):
+   J_M2C2.67 (~{RESET}) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   Q208.3 (D) | 2N7002 expander -> RESET# (open drain, no pull-up: HD Figure 12)
+5G_OFF (3 nodes):
+   Q207.1 (G) | 2N7002 expander -> FULL_CARD_POWER_OFF#
+   R61.1  | 4.7k
+   U6.10 (IO0_6) | PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)
+EMCON_ON (13 nodes):
+   Q106.1 (G) | 2N7002: EMCON_ON pulls W_DISABLE1# low (open drain)
+   Q11.3 (D) | 2N7002: EMCON_ON = NOT EMCON_HW (S-01)
+   Q111.1 (G) | 2N7002: EMCON removes the WiFi card's supply (S-01)
+   Q206.1 (G) | 2N7002: EMCON_ON pulls W_DISABLE1# low (open drain)
+   Q306.1 (G) | 2N7002: EMCON_ON pulls W_DISABLE1# low (open drain)
+   Q311.1 (G) | 2N7002: EMCON removes the WiFi card's supply (S-01)
+   R513.1  | 10k
+   U111.2 (EMCON_ON) | SN74LVC32APWR quad OR, slot S1: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare
+   U111.5 (EMCON_ON) | SN74LVC32APWR quad OR, slot S1: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare
+   U211.2 (EMCON_ON) | SN74LVC32APWR quad OR, slot S2: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare
+   U211.5 (EMCON_ON) | SN74LVC32APWR quad OR, slot S2: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare
+   U311.2 (EMCON_ON) | SN74LVC32APWR quad OR, slot S3: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare
+   U311.5 (EMCON_ON) | SN74LVC32APWR quad OR, slot S3: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare
+PCIE2_RST2_n (2 nodes):
+   J_M2C2.50 (~{PERST}) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   U201.6 (DWNRST_L2) | Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket
+PCIE2_nWAKE (4 nodes):
+   J_M2C2.54 (~{PEWAKE}) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   J_M2N2.54 (~{PEWAKE}) | M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S2 (k3s replicated storage)
+   R232.1  | 10k
+   U31B.104 (PCIE_nWAKE) | Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side)
+CARD2_CLKREQ_n (2 nodes):
+   J_M2C2.52 (~{CLKREQ}) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   R234.1  | 10k
+USB_5G_P (2 nodes):
+   J_M2C2.7 (USB_D+) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   U302.24 (USB_DP_DN4) | TI TUSB8041IRGCR four-port USB 3.0 hub, slot S3 (upstream the CM5 USB3-0 port)
+USB_5G_N (2 nodes):
+   J_M2C2.9 (USB_D-) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   U302.25 (USB_DM_DN4) | TI TUSB8041IRGCR four-port USB 3.0 hub, slot S3 (upstream the CM5 USB3-0 port)
+CARD2_TX_P (2 nodes):
+   J_M2C2.43 (PERp0/SATA-B-) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   U201.102 (PERP2) | Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket
+CARD2_TX_N (2 nodes):
+   J_M2C2.41 (PERn0/SATA-B+) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   U201.103 (PERN2) | Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket
+CARD2_CLK_P (3 nodes):
+   J_M2C2.55 (REFCLKp) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   R283.2  | 33.2R 1% (HCSL series Rs, DS40068 Table 8-1, W3-F03)
+   R285.1  | 49.9R 1% (HCSL shunt Rp, DS40068 Table 8-1, W3-F03)
+CARD2_CLK_N (3 nodes):
+   J_M2C2.53 (REFCLKn) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   R284.2  | 33.2R 1% (HCSL series Rs, DS40068 Table 8-1, W3-F03)
+   R286.1  | 49.9R 1% (HCSL shunt Rp, DS40068 Table 8-1, W3-F03)

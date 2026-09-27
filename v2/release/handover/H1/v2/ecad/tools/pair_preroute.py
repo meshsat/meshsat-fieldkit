@@ -1,0 +1,1879 @@
+#!/usr/bin/env python3
+"""Differential-pair pre-router (MESHSAT-862 rule 1 of appendix 32.67, 8 Sep 2026): Freerouting has no pair routing, so every released pair was
+two lone traces millimetres apart (32.66). This lays both legs of a pair as LOCKED copper before Freerouting runs, at the class width w and
+gap s, on the class's allowed layers (rule 2), so the router only sees two finished nets.
+
+Method (the stub router's grid, 0.1 mm): the pair's centreline is routed by A* from the midpoint between the two P and N starts to the
+midpoint between the two ends, on a map where every other-net copper item is grown by (clearance + w + s/2), the pair's half envelope; a
+through via costs VIA_COST and is only allowed where two via sites (0.9 mm apart along the local normal) are free. The path is simplified to
+straight runs; each run is offset by +-(w + s)/2 on its layer, consecutive runs meet at their offset intersection (a mitre); at a layer change
+each leg gets its own via 0.9 mm from the centreline with a jog; at the ends short stubs join the offset ends to the pads (or to the escape
+vias when the pads carry locked escapes). Everything added is locked. A pair whose centreline finds no path is reported and left to the
+router (the gate then calls it UNCOUPLED). The caller runs DRC.
+
+Rip-up and retry (10 Sep 2026): a pair that fails takes the laid pairs out of its corridor and is laid again before them, because a pair that
+fails in the pass often lays alone on the same board (measured on B19), so the failure is the greedy order, not the placement. PAIR_RIPUP=0
+turns it off and restores the plain greedy pass; PAIR_RIP_MARGIN, PAIR_RIP_MAX and PAIR_RIP_TOTAL bound how much is ripped.
+
+Usage: pair_preroute.py <board.kicad_pcb> [--pairs STEM,STEM] [--layers F.Cu,In2.Cu] [--classes USB,DIFF100] [--test] [--grid 0.1]
+  prints one line per pair and `pair_preroute: N of M pairs laid, R rip-up event(s)`, exit 1 when a pair failed."""
+import sys, os, re, math, json, heapq, time, collections
+import verdict          # the guarded flag reader (19 September 2026)
+import netclass
+
+# ---------------------------------------------------------------- the compiled search needs an interpreter that has numba
+# The corridor search is 13.5x faster compiled (2.26 million expansions a second against 167 thousand; `pairsearch.py bench`),
+# and numba is not installable into the KiCad python of a rented box. A venv made with `--system-site-packages` has both, so
+# rather than edit every chain the tool re-execs itself under that interpreter, says so, and checks first that the interpreter
+# really imports pcbnew and numba. PAIR_VENV=0 stays here; PAIR_VENV=<python> names another one.
+def _reexec_for_numba():
+    import importlib.util, subprocess
+    if os.environ.get("PAIR_VENV") == "0" or os.environ.get("_PAIR_REEXEC"): return
+    if importlib.util.find_spec("numba") is not None: return
+    cand = os.environ.get("PAIR_VENV") or "/root/venv-numba/bin/python"
+    if not os.path.exists(cand): return
+    try:
+        if subprocess.run([cand, "-c", "import numba, pcbnew, numpy"], capture_output=True, timeout=120).returncode != 0: return
+    except Exception: return
+    os.environ["_PAIR_REEXEC"] = "1"
+    print("pair_preroute: re-exec under %s, which has numba, for the compiled corridor search (PAIR_VENV=0 to stay here)" % cand, flush=True)
+    try: os.execv(cand, [cand] + sys.argv)
+    except Exception as e: print("pair_preroute: the re-exec failed (%s); the heapq search it is" % e, flush=True)
+if __name__ == "__main__": _reexec_for_numba()   # only as a script: importing this module must never restart the caller's process
+# The module-level machinery lives in pair_router/ since 15 September 2026 (config, occupancy, search, geometry); every name
+# is re-exported here so main() and every importer read what they always read.
+from pair_router.config import *      # noqa: F401,F403
+from pair_router.occupancy import *   # noqa: F401,F403
+from pair_router.search import *      # noqa: F401,F403
+from pair_router.geometry import *    # noqa: F401,F403
+
+def _echo_knobs():
+    """Print the knobs this PROCESS received, once, before any pair is laid (12 September 2026).
+
+    Tier 2b of the control plane asked for this on the first cycle it reviewed, and the finding was
+    right: the run reported a pair count under an arm's knob and NOTHING in the result showed that the
+    knob had reached the tool. That is this project's most expensive shape, a tool reporting success
+    about something it had not done, and it had already cost six defects on A24 alone.
+
+    What this line proves and what it does not: it is os.environ as seen INSIDE the process that lays
+    the copper, after the numba re-exec, which is the same mapping every knob above is read from at
+    import. So it proves the value reached the tool. It does not prove any particular code path used
+    it; that is what a measured difference in the result is for.
+    """
+    seen = {k: v for k, v in sorted(os.environ.items()) if k.startswith(("PAIR_", "PLACE_")) and not k.startswith("_")}
+    print("pair_preroute: knobs this process received: %s | search kernel %s | stub kernel %s"
+          % (json.dumps(seen), _SEARCH_KERNEL, "compiled" if (_FAST_STUBS and pairsearch.HAVE_NUMBA) else "python"),
+          flush=True)
+
+
+def main(a):
+    if not a: print(__doc__); return 2
+    _echo_knobs()
+    board = a[0]; test = "--test" in a; g = float(verdict.opt(a, "--grid", 0.1))
+    # The pair classes live in the PROJECT file, not the board. A board without one, or with one that carries no
+    # netclass assignments, has no pairs by construction, and this tool then printed "0 of 0 pairs laid" and exited 0.
+    # A pre-router that finds no pairs and reports success is the exact shape this pipeline spent two days removing,
+    # and it is easy to hit: `out/<name>-placed.kicad_pcb` has no project file beside it, and a project directory
+    # copied for a route carries a stale one (the B19 trap of 9 September, appendix 32.91). It refuses now.
+    # 11 September 2026 (MESHSAT-862).
+    pro = os.path.splitext(board)[0] + ".kicad_pro"
+    if not os.path.exists(pro):
+        sys.stderr.write("pair_preroute: no project file at %s. The pair classes are in it, so this board has no pairs to lay,\n"
+                         "  which is not the same as having laid them all. Run on the board in its project directory, or copy\n"
+                         "  the .kicad_pro beside it.\n" % pro)
+        # exit 2, not 1: a caller that sees 1 reads "a pair did not lay" and may retry the same board for ever.
+        # This is a tooling error and nothing about it will change on a retry (reviewer, 11 September 2026).
+        raise SystemExit(2)
+    d = json.load(open(pro))
+    assign = d.get("net_settings", {}).get("netclass_assignments") or {}
+    classes = {c["name"]: c for c in (d.get("net_settings", {}).get("classes") or [])}
+    if not assign:
+        sys.stderr.write("pair_preroute: %s carries no netclass_assignments, so every net reads as Default and no pair\n"
+                         "  would be found. The placement generator writes them into the project file OF THE DIRECTORY IT RUNS IN;\n"
+                         "  a copied project directory needs that file copied too.\n" % pro)
+        raise SystemExit(2)
+    b = pcbnew.LoadBoard(board); gr = Grid(b, g); _grids = {g: gr}
+    # Every position this pass changes, named at the end. The tool exchanges two passives when a station's fans cross,
+    # and on D the routed board came back with R12 and R13 exchanged while the pass log named three swaps, none of them
+    # those two: a part had moved and nothing said so. A move that decides whether the OTHER side of the station can be
+    # routed (the hub pin to its series resistor, D's last open) must be in the report (11 September 2026).
+    _POS0 = {f_.GetReference(): (f_.GetPosition().x, f_.GetPosition().y) for f_ in b.GetFootprints()}
+    def cls_of(n):
+        return netclass.class_of(assign, n, "Default")   # KiCad 9 stores the assignment as a list of class names
+    if CLASS_CLEAR:   # one lookup per net of the board, once, so the obstacle map can ask per item
+        for _n in {t.GetNetname() for t in b.GetTracks()} | {p.GetNetname() for f_ in b.GetFootprints() for p in f_.Pads()}:
+            _cl = classes.get(cls_of(_n), {})
+            if "clearance" in _cl: _NET_CLR[_n[1:] if _n.startswith("/") else _n] = float(_cl["clearance"])
+    want_classes = (set(str(verdict.opt(a, "--classes", "")).split(",")) - {""}) if "--classes" in a else {"USB", "DIFF100", "PCIE", "HDMI"}
+    layers = [_ALL[x] for x in (str(verdict.opt(a, "--layers", "")).split(",") if "--layers" in a else os.environ.get("PAIR_LAYERS", "F.Cu,B.Cu").split(",")) if x in _ALL]
+    # the hop layers carry only the dives and the stubs' hops, never a corridor run: on the 7628 four-layer stack a 0.30/0.20 pair on In2 reads 137 ohm
+    # against In1 across the 1.065 mm core (D9's USB_D8 took 42 mm of In2 in its corridor, 8 Sep 2026 14:44); the class geometry holds on the corridor layers only
+    hops = [_ALL[x] for x in (str(verdict.opt(a, "--hop-layers", "")).split(",") if "--hop-layers" in a else os.environ.get("PAIR_HOP_LAYERS", "").split(",")) if x in _ALL and _ALL[x] not in layers]
+    maplayers = layers + hops
+    def hop_of(L): return next((L2 for L2 in hops + layers if L2 != L), None)   # a hop layer first, else another corridor layer
+    names = {str(n): n for n in b.GetNetInfo().NetsByName().keys()}
+    stems = sorted({n[:-2] for n in names if n.endswith("_P") and n[:-2] + "_N" in names})
+    suffixed = sorted({n[:-3] for n in names if n.endswith("_PR") and n[:-3] + "_NR" in names})   # USB1_PR / USB1_NR (the codec side of D9's port 1): P and N with a suffix
+    pair_names = {st: (st + "_P", st + "_N") for st in stems}; pair_names.update({st + "_R": (st + "_PR", st + "_NR") for st in suffixed}); stems = stems + [st + "_R" for st in suffixed]
+    if "--pairs" in a: stems = [s for s in stems if s.lstrip("/") in set(str(verdict.opt(a, "--pairs", "")).split(","))]
+    stems = [s for s in stems if cls_of(pair_names.get(s, (s + "_P", s + "_N"))[0]) in want_classes]
+    # The long pairs go first (9 September 2026). This tool lays greedily and never rips up, so whichever pair is laid first takes the room
+    # and the rest fit around it; alphabetical order decided that, which is no order at all. The span of a pair's own pads is a cheap proxy
+    # for how hard it will be: a 90 mm PCIe run across B18 has one route and a 4 mm hub link has hundreds, so the long one is laid while the
+    # board is still empty. Measured on B18 in the same build: PAIR_ORDER=name restores the old order for comparison.
+    def _span(st):
+        pn_, nn_ = pair_names.get(st, (st + "_P", st + "_N"))
+        want = {pn_.lstrip("/"), nn_.lstrip("/")}
+        pts = [q.GetPosition() for f in b.GetFootprints() for q in f.Pads() if q.GetNetname().lstrip("/") in want]
+        if len(pts) < 2: return 0.0
+        return max(math.hypot(u.x - v.x, u.y - v.y) for u in pts for v in pts) / 1e6
+    # 10 September 2026: an explicit order, one stem per line, for the multi-pass driver `pair_passes.py`. The isolation test
+    # of 32.95 proved the order decides: a pair that fails in the pass lays when it is alone on the board. Ripping the room
+    # back from its neighbours does not work (32.98), so the other way round it is: the pairs that failed go FIRST next time.
+    _ordf = os.environ.get("PAIR_ORDER_FILE")
+    if _ordf and os.path.exists(_ordf):
+        _want = [l.strip().lstrip("/") for l in open(_ordf) if l.strip()]
+        _rank = {n: i for i, n in enumerate(_want)}
+        stems = sorted(stems, key=lambda st: (_rank.get(st.lstrip("/"), 10 ** 6), -_span(st), st))
+        print("pair_preroute: order from %s: %d named first, then the longest of the rest" % (os.path.basename(_ordf), len(_want)))
+    elif os.environ.get("PAIR_ORDER", "span") == "span":
+        stems = sorted(stems, key=lambda st: (-_span(st), st))
+        if stems: print("pair_preroute: %d pairs, longest first (%s spans %.0f mm, %s spans %.0f mm)" % (len(stems), stems[0], _span(stems[0]), stems[-1], _span(stems[-1])))
+    laid = 0; swapped = set()
+    # 9 September 2026 (B19): the outcome lines used to be held until the pass ended, so a run of 113 pairs showed nothing
+    # for hours and could not be steered or timed. They are printed as they happen now, and the same list is still summarised
+    # at the end, so a driver watching the log can count LAID and FAIL while the pass is running.
+    class _Report(list):
+        def append(self, line):
+            list.append(self, line); print("pair_preroute: " + line, flush=True)
+    report = _Report()
+    # 10 September 2026, rip-up and retry (MESHSAT-862), OFF by default on its own measurement (see PAIR_RIPUP below). /HOST2_1RX, /HDMIO_D1 and /HDMIO_CK
+    # all FAIL in the full pass with "the legs clear no smoothing of the centreline" and all three LAY when they are the only pair
+    # routed on the same board. What stops them is copper this tool laid for an earlier pair, not the placement and not the corner
+    # geometry: it lays greedily and never rips up, so whichever pair went first took the room. When a section fails now, the laid
+    # pairs whose copper lies in that section's corridor are taken off the board, the failed pair is queued to be laid again first
+    # and they are queued behind it. PAIR_RIPUP=0 restores the greedy pass, which is how the two arms are compared.
+    # MEASURED 10 September 2026 and OFF by default: rip-up as written LOSES pairs. On B19's placed board the greedy pass lays
+    # 38 of 113; with rip-up the tool laid 224 times, spent 47 rip-up events and ended at 29, because a ripped pair is not
+    # guaranteed to fit again once its room has been taken by the pair that ripped it, and nothing checks that the episode paid.
+    # The episode has to become a trial that is accepted only when it leaves more pairs laid than it found; until it is, the flag
+    # stays off (PAIR_RIPUP=1 to reproduce the measurement).
+    OWN_CLEAR = os.environ.get("PAIR_OWN_CLEAR", "1") != "0"   # the emissions that used to lay copper unasked ask the partner
+    # 14 September 2026, MEASURED AND OFF: judging the layer change's four segments against each other before
+    # the spot is taken is correct copper and it costs pairs, at either bar. On B19 at the declared baseline,
+    # one variable, same placed board: no test 71 of 113 (38 DIFF100 + 33 USB), the class clearance 58
+    # (36 + 22), the fold detector 57 (33 + 24). This is the day's law restated (32.95): on a greedy pass with
+    # no rip-up, a bar that refuses a spot moves the failure rather than the pair, and a spot refused early
+    # sends the corridor somewhere that costs more later. The post-lay gate still judges the copper and rolls
+    # the pair back if it violates, which is what happened before this test existed. The guard stays here,
+    # measurable, for the board where the rollback is the expensive half.
+    FOLD_TEST = os.environ.get("PAIR_FOLD_TEST", "1") != "0"   # the two offset legs judged against each other in the candidate ladder
+    UNMERGE = os.environ.get("PAIR_UNMERGE", "1") != "0"       # a merge of two runs that folds the legs is dropped
+    # The entry region (the first and last 1.2 mm of a leg at an entry station) used to skip the occupancy map
+    # entirely, which is what let A lay a leg at 0.00 mm from another pair. It asks the pads-only map now and then
+    # the geometry. PAIR_ENTRY_STRICT=0 restores the skip, which is the ONLY way to measure what the guard costs:
+    # B19 reads 22 of 48 on its DIFF100 pass with the skip and 8 with the check (12 September 2026), and the
+    # question that decides which is right is whether the fourteen extra pairs pass a DRC, not whether they exist.
+    ENTRY_STRICT = os.environ.get("PAIR_ENTRY_STRICT", "1") != "0"
+    # 12 September 2026: REPORT by default, not block. The test asks a RASTER grown by the clearance plus half a leg,
+    # and the emitters deliberately relax that near a station (a direct leg runs pad to pad past its neighbours' pads),
+    # so a cell it calls blocked is not yet a DRC violation: D10 ships 0 hard and this refused one of its five pairs.
+    # The pre-route DRC remains the authority on clearance; what this adds is the NAME of the counterparty and of the
+    # emission, at the moment the pair is laid. PAIR_CROSS_NET=block makes it a verdict, =off silences it.
+    # 12 September 2026, B19's DIFF100 arms: the LARGEST single failure class is a pair refused for its OWN two
+    # vias, 36 of the 74 failed attempts in one 48-pair pass, and the numbers are always the same shape:
+    # "0.800 mm of 0.822". The class via of DIFF100 is 0.70 mm (gen_pcb_b3.py CLASSES), so two of them need
+    # 0.70 + 0.127 = 0.827 mm centre to centre, and the HDMI and Ethernet fans this board has to leave are on an
+    # 0.8 mm pitch. A 0.70 mm via pair cannot leave an 0.8 mm fan on any layer, which is decision 6's finding in
+    # the via domain rather than the pad domain. The escape fan on this same board has laid 0.40/0.20 vias at
+    # fine pitch since 5 September (escape.py, the CM5IO scheme) because of the same arithmetic; the pre-router
+    # never took that step and lays the class via everywhere.
+    #
+    # A class via size is a DEFAULT for new copper, not a bar the DRC holds a via to: the bar is the board's own
+    # m_ViasMinSize, which is 0.40 on B, and the escape vias prove the DRC accepts it. So this is a router choice
+    # and not a net class change. It is a knob at `class` (today's behaviour) until an arm says what it is worth.
+    # 12 September 2026, measured on B19's DIFF100 arms after the via size was fixed: every own-legs refusal that
+    # remains is track against track at 0.203 to 0.225 mm against a demand of 0.252, and the emissions named in all
+    # of them are the three END geometries (`the end stub into the pad`, `the end hop to a via beside the pad`, `the
+    # dive of a crossing end`).
+    #
+    # The first explanation was that the per-leg map could not see the partner's own end, and it was WRONG: with the
+    # stamping instrumented, the map already blocks the partner at a larger margin than the gate's bar (7 partner
+    # pieces stamped, 0 cells newly blocked). What violates is the copper laid WITHOUT asking the map: the last hop
+    # from the path's final cell into the pad, the straight piece taken when the two ends sit in one cell, and the
+    # same final hop in the fallback that aims at the net's own escape. PAIR_END_STRICT=1 judges those against the
+    # partner at the gate's own bar and takes them off when they fail, so the caller tries its next candidate
+    # instead of the pair being rolled back whole after it is laid. Off until an arm grades it.
+    # 13 September 2026: PAIR_END_FIT, and it is the answer END_STRICT was reaching for. 84 of B19's 152 failed
+    # attempts are the pair's own two legs at the END emissions, and the gap they miss by is 1 to 15 micrometres
+    # against a bar of 0.249 to 0.252: an inner pair whose gap IS its class clearance has no margin, so the last
+    # hop into the pad, laid without asking anything, decides the pair. END_STRICT asked afterwards and threw the
+    # copper away, which cannot lay a pair; this asks BEFORE the copper exists and, when the hop is the violation,
+    # comes at the pad from the side the partner is not on. Counted per pass and printed, so it is never a claim.
+    END_FIT = os.environ.get("PAIR_END_FIT", "1") != "0"
+    # PAIR_LEG_MATCH, 14 September 2026: the two legs of a laid pair are measured and the short one is given
+    # the difference back in bumps on its own copper. A's USB_D8 comes off this pass 1.77 mm apart in every
+    # route, because the mismatch is this pass's corner geometry and not the router's, and the owner's gate is
+    # 1 mm. The tolerance is the gate's own margin: a pair inside it is left alone.
+    # OFF by default on its own measurement (14 September 2026). On A it fits nothing, because A's pair
+    # corridors have no free copper beside them, and it says so with the test that refused each bump. On
+    # B it fits plenty: 26 pairs got bumps and the pass fell from **71 of 113 to 61**, because copper
+    # added to match one pair is copper the next pair has to route around. A length matcher that costs
+    # ten pairs to fix none is not a default; a board that wants it declares it.
+    LEG_MATCH = os.environ.get("PAIR_LEG_MATCH", "0") != "0"
+    LEG_MATCH_TOL = float(os.environ.get("PAIR_LEG_MATCH_TOL", "0.5"))
+    _end_fit = [0]
+    # 12 September 2026: the wall. "the legs clear no smoothing of the centreline" is 28 of the 68 failures left on
+    # B19's DIFF100 pass and it did not move in ANY of the five configurations measured today. It means a corridor was
+    # found and then neither the smoothed nor the staircase form of the two OFFSET legs fits the maps, so the pair is
+    # dropped while its corridor is still there. Nothing in the tool tells the search about that: the next pair is
+    # laid on the same map and the next attempt at this pair would find the same path again.
+    # PAIR_LEG_RETRY=N blocks the corridor cell the legs failed at and searches again, up to N times. It is the
+    # PathFinder idea at the smallest scale that can work here, one section against its own legs, and it costs a
+    # search per retry on a kernel that does 2.26 M expansions a second.
+    LEG_RETRY = max(0, int(os.environ.get("PAIR_LEG_RETRY", "0")))
+    VIA_CANDS = max(1, int(os.environ.get("PAIR_VIA_CANDS", "12")))   # via sites tried at a station before the section fails
+    VIA_MODE = os.environ.get("PAIR_VIA_MODE", "class").lower()
+    if VIA_MODE not in ("class", "min"): raise SystemExit("pair_preroute: PAIR_VIA_MODE is `class` or `min`, not %r" % VIA_MODE)
+    CROSS_NET = os.environ.get("PAIR_CROSS_NET", "report").lower()
+    if CROSS_NET in ("1", "true", "yes"): CROSS_NET = "block"
+    if CROSS_NET in ("0", "false", "no"): CROSS_NET = "off"
+    if CROSS_NET not in ("report", "block", "off"): raise SystemExit("PAIR_CROSS_NET is report, block or off")       # a merge of two runs that folds the legs is dropped
+    FAN_BACK = float(os.environ.get("PAIR_FAN_BACK", "1.0"))   # how far the P leg is pulled back before the N fan of a dive is laid (mm; 0 restores the old behaviour)       # re-test a blocked leg point against the polygons before refusing the pair
+    # A station swap exchanges two identical passives so the pair's own fans stop crossing. It is judged on the side the
+    # pair is laid from and NOT on the other side of the same two parts, and on D that is what left the board one open:
+    # round one swapped R12 and R13, which put the hub's DM1 pin across from the resistor of DP1, and /HUB_DM1 came back
+    # with not one track laid on it. Round three of the same run did not swap them and routed that net. PAIR_SWAP=0 turns
+    # every swap off, which is how the cost of the swap is measured rather than argued (11 September 2026).
+    SWAP_OK = os.environ.get("PAIR_SWAP", "1") != "0"
+    on_board = {}     # stem -> (pieces, stripped escapes) of a pair that is laid and can be ripped
+    cur_seg = [0.0, 0.0, 0.0, 0.0]   # the section the corridor search is working on, for the rip-up window
+
+    def _seg_d(px, py, x1, y1, x2, y2):
+        dx, dy = x2 - x1, y2 - y1; L2 = dx * dx + dy * dy
+        t = 0.0 if L2 <= 1e-9 else max(0.0, min(1.0, ((px - x1) * dx + (py - y1) * dy) / L2))
+        return math.hypot(px - (x1 + t * dx), py - (y1 + t * dy))
+
+    def _nearest_edge(x, y, L, net, limit=3.0, skip=()):
+        """Distance in mm from a point to the nearest obstacle EDGE on one layer, ignoring `net`, or None past `limit`.
+
+        Edges, not centres: the maps rasterise a pad by its polygon, so a centre distance is the wrong number to compare
+        with them and reads as a pad "at 1.85 mm" blocking a cell it cannot reach (11 September 2026). Bounded by `limit`
+        so the scan is a local one; the caller decides what distance is enough."""
+        best = None
+        pt = pcbnew.VECTOR2I(FromMM(x), FromMM(y))
+        for f in b.GetFootprints():
+            bb = f.GetBoundingBox(False, False)
+            if mm(bb.GetLeft()) - limit > x or mm(bb.GetRight()) + limit < x or mm(bb.GetTop()) - limit > y or mm(bb.GetBottom()) + limit < y: continue
+            for q in f.Pads():
+                if q.GetNetname() == net or q.GetNetname() in skip or not q.IsOnLayer(L): continue
+                if abs(mm(q.GetPosition().x) - x) > limit + 5 or abs(mm(q.GetPosition().y) - y) > limit + 5: continue
+                # A pad whose polygon cannot be taken is an obstacle of UNKNOWN extent, so it answers 0.0 and the caller
+                # refuses. The centre distance was the obvious fallback and it is larger than the edge distance, which
+                # would accept copper the map had blocked: a silent fallback in the unsafe direction, the class of defect
+                # the record has caught twice (the inflate fallback, the map expression).
+                try: d_ = mm(int(q.GetEffectivePolygon(L).Distance(pt)))
+                except Exception: d_ = 0.0
+                if best is None or d_ < best: best = d_
+        for t in b.GetTracks():
+            if t.GetNetname() == net or t.GetNetname() in skip: continue
+            if t.GetClass() == "PCB_VIA":
+                d_ = math.hypot(mm(t.GetPosition().x) - x, mm(t.GetPosition().y) - y) - mm(t.GetDrillValue()) / 2 - 0.05
+            else:
+                if t.GetLayer() != L: continue
+                d_ = _seg_d(x, y, mm(t.GetStart().x), mm(t.GetStart().y), mm(t.GetEnd().x), mm(t.GetEnd().y)) - mm(t.GetWidth()) / 2
+            if d_ < limit and (best is None or d_ < best): best = d_
+        for z in list(b.Zones()) + [z for fp in b.GetFootprints() for z in fp.Zones()]:
+            if not (z.GetIsRuleArea() and z.IsOnLayer(L) and z.GetDoNotAllowTracks()): continue
+            d_ = mm(int(z.Outline().Distance(pt)))
+            if d_ < limit and (best is None or d_ < best): best = d_
+        return best
+
+    def _what_is_at(x, y, L, net, skip=()):
+        """The copper nearest to a point on one layer, named (10 September 2026). A debug line that says a leg hits `an
+        obstacle` and does not say WHICH cost an evening once already (8 Sep, the escape-depth theory); the rule of the
+        record is that a gate which strips or refuses copper names what it hit."""
+        best = None
+        for f in b.GetFootprints():
+            for q in f.Pads():
+                if q.GetNetname() == net or q.GetNetname() in skip or not q.IsOnLayer(L): continue
+                d_ = math.hypot(mm(q.GetPosition().x) - x, mm(q.GetPosition().y) - y)
+                if best is None or d_ < best[0]: best = (d_, "pad %s.%s (%s)" % (f.GetReference(), q.GetNumber(), q.GetNetname() or "no net"))
+        for t in b.GetTracks():
+            if t.GetNetname() == net or t.GetNetname() in skip: continue
+            if t.GetClass() == "PCB_VIA":
+                d_ = math.hypot(mm(t.GetPosition().x) - x, mm(t.GetPosition().y) - y); what = "via (%s)%s" % (t.GetNetname() or "no net", " locked" if t.IsLocked() else "")
+            else:
+                if t.GetLayer() != L: continue
+                d_ = _seg_d(x, y, mm(t.GetStart().x), mm(t.GetStart().y), mm(t.GetEnd().x), mm(t.GetEnd().y)); what = "track (%s)%s" % (t.GetNetname() or "no net", " locked" if t.IsLocked() else "")
+            if best is None or d_ < best[0]: best = (d_, what)
+        # 11 September 2026: zones and rule areas were not scanned at all, so a leg stopped by a pour or a keep-out was
+        # reported as the nearest PAD, which reads as a pad problem and is not one. It named "pad U2.1 at 1.85 mm" for a
+        # cell no pad could reach, and 1.85 mm against a forbidden radius of about 1.35 is the tell that the answer was
+        # the wrong object. The rule of the record is that a tool which refuses copper names what it hit.
+        # 11 September 2026: RULE AREAS were not scanned at all, so a leg stopped by a keep-out was reported as the nearest
+        # PAD, which reads as a pad problem and is not one. It named "pad U2.1 at 1.85 mm" for a cell no pad could reach, and
+        # 1.85 mm against a forbidden radius near 1.35 is the tell that the answer was the wrong object. Footprint-local rule
+        # areas are NOT in b.Zones() (the same trap build_maps closed on 9 September), so both lists are walked. A copper pour
+        # is deliberately not named: build_maps stamps rule areas only, because a fill yields to a track and is no obstacle.
+        pt = pcbnew.VECTOR2I(pcbnew.FromMM(x), pcbnew.FromMM(y))
+        for z in list(b.Zones()) + [z for fp in b.GetFootprints() for z in fp.Zones()]:
+            if not (z.GetIsRuleArea() and z.IsOnLayer(L) and z.GetDoNotAllowTracks()): continue
+            d_ = mm(int(z.Outline().Distance(pt)))
+            what = "rule area %s of %s" % (z.GetZoneName() or "(unnamed)", z.GetParentFootprint().GetReference() if z.GetParentFootprint() else "the board")
+            if best is None or d_ < best[0]: best = (d_, what)
+        return "nothing within reach" if best is None else "%s at %.2f mm" % (best[1], best[0])
+
+    def pinned(f):
+        """A footprint whose pads already hold a track end (a section laid for another stem of the same nets, an escape) must not be moved: the second swap of
+        R26/R27 on D9 (8 Sep 2026 12:20) left four locked pieces on pads of the wrong net."""
+        return any(p.HitTest(t.GetStart()) or p.HitTest(t.GetEnd()) for t in b.GetTracks() if t.GetClass() == "PCB_TRACK" for p in f.Pads())
+
+    def _seg_cross(a1, a2, b1, b2):
+        def ccw(p, q, r): return (r[1] - p[1]) * (q[0] - p[0]) > (q[1] - p[1]) * (r[0] - p[0])
+        return ccw(a1, b1, b2) != ccw(a2, b1, b2) and ccw(a1, a2, b1) != ccw(a1, a2, b2)
+
+    def dist_p(p, q): return math.hypot(p.GetPosition().x - q.GetPosition().x, p.GetPosition().y - q.GetPosition().y) / 1e6
+    pre_vias = []   # the locked vias present before a pair is laid (its own end vias must not become anchors of its next section)
+    _pitch = {}
+    def pitch_of(f):
+        """The smallest centre distance between two SMD pads of the part (mm); 1e9 without two."""
+        k = f.GetReference()
+        if k not in _pitch:
+            ps = [q.GetPosition() for q in f.Pads() if q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD]; best = 1e9
+            for i in range(len(ps)):
+                for j in range(i + 1, len(ps)):
+                    dd = math.hypot(ps[i].x - ps[j].x, ps[i].y - ps[j].y) / 1e6
+                    if 0 < dd < best: best = dd
+            _pitch[k] = best
+        return _pitch[k]
+    ROW_PITCH = 0.45   # a 0.4 mm receptacle row keeps escape.py's CM5IO scheme: the legs end at the escape via, never in the pad (B17, 8 Sep 2026 13:35)
+    def row_scheme(f):
+        """escape.py's own ROWS04 condition, kept in step with it: a 0.4 mm row, or a 0.5 mm row of 40 pads or more (a card socket),
+        keeps its escapes and the escape via is where a pair leg ends. Out of step, the pre-router aims at pads that sit behind a wall
+        of escape vias and reports "the legs clear no smoothing of the centreline": 57 of B17's 99 pairs (8 Sep 2026 19:55)."""
+        pt = pitch_of(f); n = sum(1 for q in f.Pads() if q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD)
+        return pt <= ROW_PITCH or (pt <= 0.5 and n >= 40)
+    # 10 September 2026 (B19): PAIR_ENTRY_VIA=1 ends a leg at an IC's escape via instead of stripping the escape and entering
+    # the pad. Measured because /HDMI1_D0 fails alone on the board with "no stub path at U3": the pad sits behind the picket of
+    # the OTHER nets' escape vias, and stripping had just removed the one target this leg could still have reached. It applies
+    # to a fanned part of eight SMD pads or more, which is escape.py's own fan condition; a passive couple keeps its pads.
+    ENTRY_VIA = os.environ.get("PAIR_ENTRY_VIA", "0") == "1"
+    via_entry_stems = set()   # pairs that failed once with the legs entering the pads and are laid again ending at the escape vias
+    SLACK = float(os.environ.get("PAIR_CORRIDOR_SLACK", "0.12"))
+    SLACK_SLIM = float(os.environ.get("PAIR_CORRIDOR_SLACK_SLIM", "0.05"))
+    slim_stems = set()   # pairs that found no corridor at the measured slack and are searched again at the slim one
+
+    def via_entry(f):
+        return (ENTRY_VIA or stem in via_entry_stems) and sum(1 for q in f.Pads() if q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD) >= 8
+
+    def anchor(p):
+        """The pad: (x, y, layer or None for a via, object). A pad of a 0.4 mm row is anchored at its escape via (a locked via of its net within 3 mm, present before the pair was laid)."""
+        pth = p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH)
+        L = None if pth else next((L for L in _ALL.values() if p.IsOnLayer(L)), None)   # the pad's own copper layer (a through-hole pad is on every layer)
+        if not pth and (row_scheme(p.GetParentFootprint()) or via_entry(p.GetParentFootprint())):
+            vs = [v for v in pre_vias if v.GetNetname() == p.GetNetname() and math.hypot(v.GetPosition().x - p.GetPosition().x, v.GetPosition().y - p.GetPosition().y) < 3e6]
+            if vs:
+                v = min(vs, key=lambda v: math.hypot(v.GetPosition().x - p.GetPosition().x, v.GetPosition().y - p.GetPosition().y))
+                return (mm(v.GetPosition().x), mm(v.GetPosition().y), None, v)
+        return (mm(p.GetPosition().x), mm(p.GetPosition().y), L, p)
+
+    # ===================================================================== negotiated congestion (10 September 2026, MESHSAT-862)
+    # The measured plateau of 32.98 is a greedy-order plateau: whichever pair is laid first takes the room, and taking it back
+    # by ripping the neighbours never pays (106 episodes, none kept). The way a router actually solves this is PathFinder's
+    # negotiation: every pair routes as if it owned the board, cells used by more than one pair get a HISTORY cost, and the
+    # iteration repeats until no cell is shared. `pair_negotiate.py` drives it; this tool does one half-iteration at a time.
+    #   PAIR_PLAN_MODE=plan  search only, lay nothing, write the corridors and the cells two pairs both wanted
+    #   PAIR_HIST_IN=<npz>   the history rasters of the iterations before this one
+    #   PAIR_PRESENT=<w>     the weight of the cells THIS iteration has already given away
+    #   PAIR_PLAN_OUT=<json> where the corridors go; PAIR_PLAN_IN=<json> lays a negotiated plan instead of searching
+    PLAN_MODE = os.environ.get("PAIR_PLAN_MODE", "") == "plan"
+    _li = {L: i for i, L in enumerate(layers)}
+    NEG_COST = None; NEG_OCC = None
+    _hist_in = os.environ.get("PAIR_HIST_IN")
+    if PLAN_MODE or _hist_in:
+        NEG_COST = {i: np.zeros((gr.NY, gr.NX), dtype=np.float32) for i in range(len(layers))}
+        NEG_OCC = {i: np.zeros((gr.NY, gr.NX), dtype=np.int16) for i in range(len(layers))}
+        if _hist_in and os.path.exists(_hist_in):
+            _h = np.load(_hist_in)
+            for _k, _ii, _jj, _vv in zip(_h["L"], _h["i"], _h["j"], _h["v"]):
+                if int(_k) in NEG_COST: NEG_COST[int(_k)][int(_ii), int(_jj)] += float(_vv)
+            print("pair_preroute: history from %s: %d cell(s) carry a cost" % (os.path.basename(_hist_in), len(_h["v"])))
+    plan_out = {}   # stem -> [[[layer index, i, j], ...], ...] one list per section
+    plan_in = {}
+    _pin = os.environ.get("PAIR_PLAN_IN")
+    if _pin and os.path.exists(_pin):
+        plan_in = json.load(open(_pin))
+        print("pair_preroute: laying the negotiated plan of %s (%d pairs)" % (os.path.basename(_pin), len(plan_in)))
+
+    def neg_stamp(cells, half_mm):
+        """Give this corridor's envelope to the pair that just took it: occupancy up by one, and the present cost with it."""
+        if NEG_OCC is None: return
+        for Lidx in {c[0] for c in cells}:
+            run = [c for c in cells if c[0] == Lidx]
+            if not run: continue
+            tmp = np.zeros((gr.NY, gr.NX), dtype=bool)
+            for a_, b_ in zip(run[:-1], run[1:]):
+                x1, y1 = gr.xy(a_[2], a_[1]); x2, y2 = gr.xy(b_[2], b_[1])
+                if abs(a_[1] - b_[1]) + abs(a_[2] - b_[2]) > 4: continue   # a layer change is not a run
+                gr.seg(tmp, x1, y1, x2, y2, half_mm)
+            NEG_OCC[Lidx][tmp] += 1
+
+    for stem in stems:   # a swapped pair is appended and laid again
+        PAIR_DEADLINE[0] = time.time() + PAIR_BUDGET if PAIR_BUDGET > 0 else 0.0
+        PAIR_SPENT[0] = 0
+        # 9 September 2026 (B19): the long pairs die on the expansion cap, not on geometry. SWP3_D spans 261 mm and its
+        # corridor search stopped after 5,365,661 expansions of a 0.1 mm grid, which is 3320 x 2020 cells per layer. A
+        # coarser grid for the long ones is four times fewer cells for the same millimetres of clearance, since every
+        # obstacle margin here is in mm. Off by default until it is measured: PAIR_GRID_LONG=0.2 PAIR_LONG_MM=120.
+        # 10 September 2026 (report 1, P1): the negotiation rasters are allocated once from the grid in use, so a pass that
+        # changes the cell size mid-run would index them in another coordinate system. The two are not composable and the tool
+        # says so rather than reading the wrong cells.
+        # One Grid per cell size, kept: the polygon raster cache is instance-local since the fix above, so building a fresh Grid
+        # for every long pair threw the whole board's pad rasters away twice per pair (10 September 2026).
+        want = g
+        if gr.G != want: gr = _grids.setdefault(want, Grid(b, want))
+        pre_vias[:] = [v for v in b.GetTracks() if v.GetClass() == "PCB_VIA" and v.IsLocked()]   # the locked vias before this pair lays anything (the escape vias of a 0.4 mm row are anchors)
+        pn, nn = pair_names.get(stem, (stem + "_P", stem + "_N")); cl = classes.get(cls_of(pn), {}); w = float(cl.get("diff_pair_width", cl.get("track_width", 0.2))); s = float(cl.get("diff_pair_gap", 0.15))
+        vd, vdr = float(cl.get("via_diameter", 0.6)), float(cl.get("via_drill", 0.3)); clr_c = float(cl.get("clearance", CLR))
+        if VIA_MODE == "min":   # the board's own via minimum, the size the escape fan already uses at fine pitch
+            try: _bv, _bd = b.GetDesignSettings().m_ViasMinSize / 1e6, b.GetDesignSettings().m_MinThroughDrill / 1e6
+            except Exception: _bv = _bd = 0.0
+            if _bv and _bv < vd: vd, vdr = _bv, (_bd if _bd else vdr)
+        try: min_clr = b.GetDesignSettings().m_MinClearance / 1e6
+        except Exception: min_clr = 0.0
+        clr_c = max(clr_c, min_clr); s = max(s, clr_c + GAP_CUSHION)   # the legs' gap never below the clearance the DRC will apply (the board minimum wins over a smaller class value)
+        _CLR_NOW[0] = max(clr_c, min_clr) if CLASS_CLEAR else CLR   # what the obstacle map grows this pair's obstacles by
+        # 10 September 2026, measured: the corridor's margin over its legs was 0.25 mm (a 0.15 mm mask margin plus one grid
+        # cell) and that slack decides how many pairs can be laid. A leg needs w/2 + 0.02 from other copper on its own map
+        # and sits (w + s)/2 off the centreline, so the centreline needs w + s/2 + 0.02; anything beyond that is clearance
+        # the corridor demands and the legs do not, on a board whose gaps are measured in tenths. On B19's placed board:
+        # 0.25 lays 38 of 113, 0.18 and 0.15 are in the sweep, 0.12 lays 49, 0.05 lays 42 (too little slack lets the
+        # corridor into places the legs then fail out of, and legs_clear rejects the whole pair). D10 lays 4 of 5 at every
+        # value, so the figure is not board-specific in the small. PAIR_CORRIDOR_SLACK restores any of them.
+        # 10 September 2026, the slim retry. A 2.54 mm through-hole header leaves 0.94 mm between two 1.6 mm pads, and the
+        # corridor at the measured slack asks for 2 x (w + s/2 + 0.12 + 0.16) = 1.02 mm, so a pair whose station is inside a
+        # ribbon header has NO corridor out of the pin field: /USB_PNL at J_PANEL and /USB_E6 at J_AB1 both fail exactly
+        # there, by eighty micrometres. At 0.05 mm of slack the same gap is 0.88 mm and the corridor fits. A board-wide 0.05
+        # is worse (42 of 113 against 49), so it is a per-pair second chance like the escape-via entry: the measured slack
+        # first, and the slim one for a pair that found no corridor at all. `legs_clear` still judges the legs either way.
+        # A pair on an inner layer is a STRIPLINE and the class width that hits its target on the outside does not hit it inside.
+        # Measured with the 2D field solver on the JLC 3313 six-layer stack (appendix 32.101, 32.102): 0.127 mm reads 102 ohm
+        # against a 90 ohm target on In2 or In3 and 118 against 100, while 0.210 mm reads 90.2 and 101.7. So the width follows
+        # the layer: PAIR_INNER_WIDTH names the inner one (0 keeps the class width everywhere, which is what every board did
+        # while the corridors were confined to F.Cu and B.Cu). The corridor's own envelope takes the WIDER of the two, because
+        # one map serves every layer and it must never under-block.
+        _ic = INNER_BY_CLASS.get(cls_of(pn))
+        w_in, s_in = (_ic if _ic else (W_INNER or w, S_INNER or s))
+        s_in = max(s_in, clr_c + GAP_CUSHION)   # the inner gap takes the same cushion over the clearance as the outer one (15 Sep 2026, 13 of B19's 64)
+        def wid(L): return w_in if L in _INNER_CU else w
+        def gap(L): return s_in if L in _INNER_CU else s
+        def dof(L): return (wid(L) + gap(L)) / 2
+        # 11 September 2026 (MESHSAT-862), measured on D's /USB_D8: the corridor did not cover its own legs, and the
+        # difference was smaller than a grid cell. A leg sits dof = (w + s)/2 off the centreline and its own map grows
+        # obstacles by w/2 + 0.02, so it reaches w + s/2 + 0.02 out; the corridor grew them by w + s/2 + slack, which is
+        # 0.02 mm SHORT of that before the slack is counted. The author's own note above says the centreline needs
+        # "w + s/2 + 0.02" and the code never added the 0.02. At the standard slack the whole margin is then 0.10 mm,
+        # one cell of the 0.1 mm grid, and at the slim retry 0.03 mm, a third of a cell: a centreline the raster calls
+        # free can have a leg the raster calls blocked, and the pass reports "the legs clear no smoothing of the
+        # centreline", which reads as a smoothing problem and is a rounding one. Measured at the failure: pad U2.1's
+        # polygon is 0.618 mm from the centreline where the corridor demanded 0.610, and 0.367 mm from the leg where
+        # the leg demanded 0.330. Both fit in exact arithmetic, by 8 and 37 micrometres, and the cell centres do not.
+        # PAIR_COVER_LEGS=1 makes the corridor cover the legs plus one grid cell, so that a free centreline implies free
+        # legs and a pair that cannot pass an obstacle is refused by the SEARCH, which can go round, rather than by the
+        # legs, which cannot. It is OFF, and that is the B19 arm of 11 September 2026 rather than an opinion. Same placed
+        # board (md5 27dd5bd0), same slack 0.08/0.03, one pass, 113 pairs, counted by each pair's LAST failure:
+        #
+        #                                          off        on
+        #   pairs laid                          47 of 113   45 of 113
+        #   the legs clear no smoothing            25          10
+        #   no stub path at a station or via       15          23
+        #   no path on the map (expansion cap)      9          19
+        #   no via site / no room for a via pair   12           3
+        #
+        # The rounding class is real and covering the legs removes 60 percent of it. It does not become laid pairs: the
+        # stricter envelope costs the search its paths instead, and "no path on the map" doubles. Two fewer pairs, so
+        # the knob stays off. What that says about the next arm is the useful part: widening the corridor is the wrong
+        # way to remove the rounding, because this board is already at the edge of what its congestion allows (the slack
+        # sweep of 32.117 was measuring that edge). The right way is to make the LEG CHECK exact where it matters: when
+        # a leg point fails on the raster, re-test that point against the polygons before rejecting the pair. That
+        # removes the rounding without touching the corridor. D lays 5 of 5 either way once the corridor leaves its
+        # station on the right side.
+        _cover = (0.02 + gr.G) if os.environ.get("PAIR_COVER_LEGS", "0") != "0" else 0.0   # OFF: the B19 arm above
+        # The corridor envelope takes the wider of the two geometries: one map serves every layer and it must never under-block.
+        half = max(w + s / 2, w_in + s_in / 2) + _cover + (SLACK_SLIM if stem in slim_stems else SLACK); d = (w + s) / 2
+        def is_pull(p):
+            """A two-pad passive whose other pad sits on GND or a supply: a pull resistor hanging off the pair, never a station (D9: the 15k pulldowns R14, R15)."""
+            f = p.GetParentFootprint(); ps = list(f.Pads())
+            if len(ps) != 2 or not f.GetReference()[:1] in "RCL": return False
+            o = next((q for q in ps if q.GetNumber() != p.GetNumber()), None); on = (o.GetNetname() if o else "").lstrip("/")
+            return on == "GND" or on.startswith("+") or on.startswith("V") or "VDD" in on or "VBUS" in on or "3V3" in on
+        pads = {net: [p for f in b.GetFootprints() for p in f.Pads() if p.GetNetname() == net and not is_pull(p)] for net in (pn, nn)}
+        # a real leg is a chain of pads (connector, series resistor, ESD diode, hub pin): match each P pad to the nearest N pad within 5 mm (a station),
+        # order the stations along the leg by nearest neighbour from the outermost one; unmatched pads (a lone test point) stay the router's stubs
+        import itertools
+        P_, N_ = pads[pn], pads[nn]; best = None
+        small, large, flip = (P_, N_, False) if len(P_) <= len(N_) else (N_, P_, True)
+        # This is an assignment problem and it was solved by enumerating every ordered selection, which is len(large)!/(len(large)
+        # - len(small))! and rises off a cliff: 8 pads against 8 is 40,320 and 12 against 12 is 479 million (report 1 item 9).
+        # Today's pairs are two to four pads, so the exhaustive search is kept where it is affordable and gives exactly the
+        # matching the boards have been laid with; beyond that scipy's Hungarian solver answers the same question in polynomial
+        # time. The threshold is on the actual count, not on a pad number, so it cannot be wrong about which side is cheap.
+        _npermute = 1
+        for _k in range(len(small)): _npermute *= (len(large) - _k)
+        if _npermute > 50000:
+            try:
+                from scipy.optimize import linear_sum_assignment
+                M = np.array([[dist_p(a_, b_) for b_ in large] for a_ in small], dtype=float)
+                rows, cols = linear_sum_assignment(M)
+                best = (float(M[rows, cols].sum()), tuple(int(c) for c in cols))
+                report.append("MATCH %s: %d against %d pads matched by assignment (%d orderings would have been enumerated)" % (stem, len(small), len(large), _npermute))
+            except ImportError: pass
+        if best is None:
+            for perm in itertools.permutations(range(len(large)), len(small)):
+                cost = sum(dist_p(small[k], large[perm[k]]) for k in range(len(small)))
+                if best is None or cost < best[0]: best = (cost, perm)
+        stations = []
+        if best:
+            for k, idx in enumerate(best[1]):
+                p, q = (small[k], large[idx]) if not flip else (large[idx], small[k])
+                if dist_p(p, q) <= 5.0: stations.append((p, q))
+        if len(stations) < 2: report.append("SKIP  %s: fewer than two matched stations (P %d, N %d pads)" % (stem, len(pads[pn]), len(pads[nn]))); continue
+        for p_, q_ in stations:   # a station's two pads should sit side by side within about 2 mm; the packer's resistor rows put them 4 mm apart with another pad between (D8, 8 Sep)
+            dd = dist_p(p_, q_)
+            if dd > 2.5: report.append("STATION %s: %s and %s are %.1f mm apart (place the pair's parts side by side, pads across the pair axis)" % (stem, p_.GetParentFootprint().GetReference(), q_.GetParentFootprint().GetReference(), dd))
+        def mid(st): return ((st[0].GetPosition().x + st[1].GetPosition().x) / 2e6, (st[0].GetPosition().y + st[1].GetPosition().y) / 2e6)
+        far = max(stations, key=lambda st: sum(math.hypot(mid(st)[0] - mid(o)[0], mid(st)[1] - mid(o)[1]) for o in stations))
+        order = [far]; rest = [st for st in stations if st is not far]
+        while rest:
+            nxt = min(rest, key=lambda st: math.hypot(mid(st)[0] - mid(order[-1])[0], mid(st)[1] - mid(order[-1])[1])); order.append(nxt); rest.remove(nxt)
+        sections = [(a_, b_) for a_, b_ in zip(order[:-1], order[1:]) if a_[0].GetParentFootprint().GetReference() != b_[0].GetParentFootprint().GetReference()]   # a part's pass-through pins (the ESD's 1 and 6) are joined by join_adjacent_pins, not by a corridor
+        for t in [t for t in b.GetTracks() if t.GetNetname() in (pn, nn) and not t.IsLocked()]: board_remove(b, t)   # a previous route of the pair goes; the locked escapes stay
+        pieces = []   # everything this pair lays (removed on rollback)
+        staircase = False   # set when a section fell back to the corridor as the search found it
+        stripped = []   # the escape via and stubs of a fine-pitch station pad, removed so the legs enter the pad itself (restored on rollback)
+        END_CANDS = int(os.environ.get("PAIR_END_CANDS", "12"))   # candidate corridor ends tested for reach before the nearest one is taken anyway
+        END_OFFSET = os.environ.get("PAIR_END_OFFSET", "1") != "0"   # test the corridor end where the stubs will really start (round-two C2)
+        # A SECOND knob for a second change. `_legs_leave` and `_end_reaches_offset` are two different predicates and
+        # riding both on one switch would make every arm two variables, which is how the staircase comparison of
+        # 9 September produced a number that could not be attributed (appendix 32.90 addendum). 11 September 2026.
+        END_LEGS = os.environ.get("PAIR_END_LEGS", "1") != "0"
+
+        def _reach_one(sx_, sy_, tx_, ty_, nm, cache):
+            """Can a stub run from (sx_, sy_) to (tx_, ty_) on net nm's own map, on any allowed layer?"""
+            if math.hypot(tx_ - sx_, ty_ - sy_) < 0.35: return True   # the end sits on the pad already
+            for L_ in layers:
+                if L_ not in trk1[nm]: continue
+                if (nm, L_) not in cache: cache[(nm, L_)] = ~trk1[nm][L_]   # stub_path walks the PASSABLE map and writes in it, so each try gets its own copy
+                w2 = (gr.cell(min(sx_, tx_) - 8, min(sy_, ty_) - 8), gr.cell(max(sx_, tx_) + 8, max(sy_, ty_) + 8))
+                w2 = ((max(0, w2[0][0]), max(0, w2[0][1])), (min(gr.NX - 1, w2[1][0]), min(gr.NY - 1, w2[1][1])))
+                if stub_path(gr, cache[(nm, L_)].copy(), (sx_, sy_), (tx_, ty_), w2): return True
+            return False
+
+        def _end_reaches(cx_, cy_, px, py, qx, qy, cache=None):
+            """Can a stub run from this corridor end to BOTH pads of the station, on the legs' own maps? (10 September 2026)"""
+            cache = {} if cache is None else cache
+            return (_reach_one(cx_, cy_, px, py, pn, cache) and _reach_one(cx_, cy_, qx, qy, nn, cache))
+
+        def _legs_leave(cx_, cy_, px, py, qx, qy, tx_, ty_, off):
+            """Do the two OFFSET legs clear their own maps on the straight run from their pads to this corridor end?
+
+            11 September 2026. The end-chooser tested that a STUB could reach each pad and never tested the LEGS, which
+            is the predicate that later judges the pair, so it could choose an end no leg can reach and the pair then
+            failed with "the legs clear no smoothing of the centreline". Measured on D's /USB_D8 at J_HARN1, a
+            through-hole header whose pair sits in one column with ground pins on both sides: the P leg is blocked by
+            its own partner's pad at 1.13 mm and the N leg by a GND pad at 0.87 mm, both just past the 1.2 mm station
+            exemption, on every smoothing including the raw staircase. An end-chooser that does not share the predicate
+            that judges is the same mistake as a debug print that does not share the predicate it explains.
+            """
+            dx_, dy_ = tx_ - cx_, ty_ - cy_; ln_ = math.hypot(dx_, dy_)
+            if ln_ < 1e-9: return True
+            ox_, oy_ = -dy_ / ln_ * off, dx_ / ln_ * off
+            for (sp, sq) in (((cx_ + ox_, cy_ + oy_), (cx_ - ox_, cy_ - oy_)), ((cx_ - ox_, cy_ - oy_), (cx_ + ox_, cy_ + oy_))):
+                ok_ = True
+                for (ex_, ey_), (tx2, ty2), nm in ((sp, (px, py), pn), (sq, (qx, qy), nn)):
+                    pm_ = trk1.get(nm, {}).get(pcbnew.F_Cu)
+                    if pm_ is None: continue
+                    L_ = math.hypot(ex_ - tx2, ey_ - ty2)
+                    if L_ < 0.2: continue
+                    for k in range(int(L_ / gr.G) + 1):
+                        u = k * gr.G / L_
+                        # the first 1.2 mm is inside the station's own pad pair and is not an obstacle: the SAME
+                        # exemption legs_clear uses, which is the whole point of sharing the predicate
+                        if u * L_ < 1.2: continue
+                        jj, ii = gr.cell(tx2 + u * (ex_ - tx2), ty2 + u * (ey_ - ty2))
+                        if 0 <= ii < gr.NY and 0 <= jj < gr.NX and pm_[ii, jj]: ok_ = False; break
+                    if not ok_: break
+                if ok_: return True
+            return False
+
+        def _end_reaches_offset(cx_, cy_, px, py, qx, qy, tx_, ty_, off, cache=None):
+            """The same question asked where the stub will really start: at the OFFSET leg ends, not on the centreline.
+
+            11 September 2026 (round-two C2, the 23 "no stub path" failures of the 60-of-113 arm). `free_end` tested
+            reachability from the corridor's centreline end, and then the pass ran its stubs from the two offset leg
+            ends, each displaced perpendicular to the corridor by half the pair pitch. At a fine-pitch part the picket
+            of the other nets' escape vias has gaps at the via pitch, and half a pair gap sideways is the difference
+            between a start inside a gap and a start inside a via's clearance. The test now asks about the points the
+            stubs will use. Both sign assignments are tried, because which leg takes which side is decided later."""
+            cache = {} if cache is None else cache
+            dx_, dy_ = tx_ - cx_, ty_ - cy_; ln_ = math.hypot(dx_, dy_)
+            if ln_ < 1e-9 or off <= 0: return _end_reaches(cx_, cy_, px, py, qx, qy, cache)
+            ox_, oy_ = -dy_ / ln_ * off, dx_ / ln_ * off
+            a_ = (cx_ + ox_, cy_ + oy_); b_ = (cx_ - ox_, cy_ - oy_)
+            for (sp, sq) in ((a_, b_), (b_, a_)):
+                if _reach_one(sp[0], sp[1], px, py, pn, cache) and _reach_one(sq[0], sq[1], qx, qy, nn, cache): return True
+            return False
+
+        def fine_part(f):
+            """Pitch 0.7 mm or under: the legs enter the pads straight (the entry run)."""
+            ps = [q.GetPosition() for q in f.Pads() if q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD]; best = 1e18
+            for i in range(len(ps)):
+                for j in range(i + 1, len(ps)):
+                    dd = math.hypot(ps[i].x - ps[j].x, ps[i].y - ps[j].y)
+                    if 0 < dd < best: best = dd
+            return best <= 0.7e6
+        STRIP_MM = float(os.environ.get("PAIR_STRIP_MM", "6.0"))   # how far out of the pad an escape chain is followed
+
+        def _escape_chain(p, net):
+            """The locked escape pieces of `net` that hang off this pad, followed from the pad outward (10 September 2026).
+
+            It used to be whatever piece STARTED within 3 mm of the pad, which is not the same thing: on B19 the other leg's
+            escape survived past that radius and stood in the way of this leg 1.8 mm out of the station (SWP3_A, and the same
+            shape in 30 of the 75 failures). The chain is followed piece by piece and bounded by PAIR_STRIP_MM from the pad,
+            so nothing far from the station is touched, and rollback puts every piece back."""
+            pool = [t for t in b.GetTracks() if t.IsLocked() and t.GetNetname() == net]
+            px_, py_ = p.GetPosition().x, p.GetPosition().y; ends = []; take = []
+            def _pts(t): return [t.GetPosition()] if t.GetClass() == "PCB_VIA" else [t.GetStart(), t.GetEnd()]
+            grew = True
+            while grew:
+                grew = False
+                for t in list(pool):
+                    qs = _pts(t)
+                    if not any(math.hypot(q.x - px_, q.y - py_) < STRIP_MM * 1e6 for q in qs): continue
+                    if not (any(p.HitTest(q) for q in qs) or any(math.hypot(q.x - e.x, q.y - e.y) < 0.05e6 for q in qs for e in ends)): continue
+                    take.append(t); pool.remove(t); ends.extend(qs); grew = True
+            return take
+
+        def fanned_part(f): return (fine_part(f) or bool(re.search(r"SOT-23-[68]", f.GetFPIDAsString()))) and not row_scheme(f)   # escape.py's rule: these parts carry escape stubs and vias; a 0.4 mm row keeps them (the via is the station)
+        for net in (pn, nn):
+            for p in pads[net]:
+                if p.GetAttribute() != pcbnew.PAD_ATTRIB_SMD or via_entry(p.GetParentFootprint()) or not fanned_part(p.GetParentFootprint()): continue   # PAIR_ENTRY_VIA keeps an IC's escape and ends the legs at its vias
+                for t in _escape_chain(p, net): board_remove(b, t); stripped.append(t)
+        inpad = 0; inpad_refused = []
+        for p_, n_ in stations:   # a pin between the station's two pads (the SOT-23-6 ESD's ground pin 2): its escape stub would sit under the legs; a via in its pad instead
+            f_ = p_.GetParentFootprint()
+            if f_.GetReference() != n_.GetParentFootprint().GetReference() or not fanned_part(f_): continue
+            for q in f_.Pads():
+                if q.GetNetname() in (pn, nn) or q.GetAttribute() != pcbnew.PAD_ATTRIB_SMD: continue
+                d1, d2 = dist_p(q, p_), dist_p(q, n_)
+                if abs(d1 + d2 - dist_p(p_, n_)) > 0.3: continue   # not between them
+                _blk = _via_site_blocked(b, q.GetPosition(), min(vd, 0.5), max(CLR, clr_c), q.GetNetname(), f_)
+                if _blk: inpad_refused.append("%s.%s against %s" % (f_.GetReference(), q.GetNumber(), _blk)); continue
+                near = [t for t in b.GetTracks() if t.IsLocked() and t.GetNetname() == q.GetNetname() and math.hypot(t.GetPosition().x - q.GetPosition().x, t.GetPosition().y - q.GetPosition().y) < 2.5e6]
+                for t in near: board_remove(b, t); stripped.append(t)
+                v = pcbnew.PCB_VIA(b); v.SetPosition(q.GetPosition()); v.SetWidth(FromMM(min(vd, 0.5))); v.SetDrill(FromMM(min(vdr, 0.25))); v.SetViaType(pcbnew.VIATYPE_THROUGH); v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v.SetNet(q.GetNet()); v.SetLocked(True); b.Add(v); pieces.append(v); inpad += 1
+        if stripped or inpad or inpad_refused: print("pair_preroute: %s: %d escape pieces of fine-pitch station pads removed, the legs enter those pads directly; %d via(s) in the pad of a pin between them" % (stem, len(stripped), inpad) + ("; %d via site(s) refused, the escape stays: %s" % (len(inpad_refused), ", ".join(inpad_refused)) if inpad_refused else ""))
+        pre_vias[:] = [t for t in b.GetTracks() if t.GetClass() == "PCB_VIA" and t.IsLocked()]
+        trk, via = build_maps(gr, b, maplayers, set(), half, vd / 2)   # every net's copper, the pair's own pads included: the corridor stops outside the stations, the stubs enter
+        via1n = {pn: build_maps(gr, b, maplayers, {pn}, half, vd / 2, split=0.05)[1], nn: build_maps(gr, b, maplayers, {nn}, half, vd / 2, split=0.05)[1]}   # sites for a single end via per leg (plain margins; the other leg's pads block)
+        via1 = via1n[pn]   # shared updates below go to both
+        pad_layers = sorted({L for net in (pn, nn) for p in pads[net] for L in _ALL.values() if p.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and p.IsOnLayer(L)} | set(maplayers), key=list(_ALL.values()).index)
+        trk1 = {pn: build_maps(gr, b, pad_layers, {pn}, max(w, w_in) / 2 + 0.02, vd / 2)[0], nn: build_maps(gr, b, pad_layers, {nn}, max(w, w_in) / 2 + 0.02, vd / 2)[0]}   # the stub maps cover the pads' own layers too   # per leg: the other leg's copper is an obstacle (the P stub through the N pad of J_USB3, 8 Sep); 0.15 mm extra for the mask dam at through-hole pads
+        # The same map with BOTH of the pair's nets exempt, for the station region only. A leg fans out to its own
+        # pad there and necessarily passes its partner's pad on the way; `trk1` calls the partner an obstacle,
+        # which is right along the pair and wrong at its ends, and the fixed 1.2 mm entry exemption covers that
+        # only for a fine-pitch row. 21 of B19's 52 remaining failures at the peak slack are "the legs clear no
+        # smoothing of the centreline" (32.131). PAIR_STATION_OWN=1 tests the legs inside the station radius
+        # against this map instead, which excuses the pair's OWN copper and no one else's (12 September 2026).
+        trk2 = None   # the station-own map was never measured and is deleted (15 September 2026)
+        # the map a fan is judged by where it enters its own pads: this pair's PADS are not obstacles, every track is
+        trkP = build_maps(gr, b, pad_layers, {pn, nn}, max(w, w_in) / 2 + 0.02, vd / 2, pads_only=True)[0]
+        def rebuild_maps():   # after a swap of two passives inside a section the maps still hold the pads at their old places (D9: a stub over the swapped pad, 8 Sep 2026 13:08)
+            nonlocal trk, via, via1n, trk1, trk2, trkP
+            trk, via = build_maps(gr, b, maplayers, set(), half, vd / 2)
+            via1n = {pn: build_maps(gr, b, maplayers, {pn}, half, vd / 2, split=0.05)[1], nn: build_maps(gr, b, maplayers, {nn}, half, vd / 2, split=0.05)[1]}
+            trk1 = {pn: build_maps(gr, b, pad_layers, {pn}, max(w, w_in) / 2 + 0.02, vd / 2)[0], nn: build_maps(gr, b, pad_layers, {nn}, max(w, w_in) / 2 + 0.02, vd / 2)[0]}
+            trkP = build_maps(gr, b, pad_layers, {pn, nn}, max(w, w_in) / 2 + 0.02, vd / 2, pads_only=True)[0]
+        net_p, net_n = b.GetNetInfo().GetNetItem(pn), b.GetNetInfo().GetNetItem(nn); added = 0; cells = 0; nruns = 0; failed = None; twist = None; laid_sections = 0
+        _sec_retry_at = [-1]; _trk_private = [False]   # PAIR_LEG_RETRY: which section is being retried, and whether this pair owns its corridor map
+        def rollback():
+            for t in pieces: board_remove(b, t)
+            pieces.clear()
+            for t in stripped: b.Add(t)   # the escapes come back with the pair's failure
+            stripped.clear()
+        def other_of(net): return nn if net.GetNetname() == pn else pn
+        def trim_leg(net, x, y, r):
+            """Remove this leg's own laid tracks within r of (x, y) and answer the end it is left with, or None.
+
+            12 September 2026 (appendix 32.135). When the two fans of a station cross, the P leg dives under the N
+            fan, so every millimetre of P that reached the station is copper the fan has to get past and P does not
+            need. On A's J_AB1, a 2.54 mm through-hole row with a 0.13/0.14 pair, that is exactly what the fan came
+            to lie on: 0.044 mm from a leg whose own next move was to leave the layer."""
+            keep, keep_site, cut = [], {}, 0
+            for _i, t in enumerate(pieces):
+                near = False
+                if t.GetClass() == "PCB_TRACK" and t.GetNetname() == net.GetNetname():
+                    # BOTH ends inside the radius, never one: a leg's last piece can be the whole corridor run, and
+                    # removing it for having one end at the station took 45.84 mm of A's /USB_D8_P away in one step
+                    # (12 September 2026). A piece that straddles the radius stays, so the trim is at most one piece long.
+                    near = all(math.hypot(px_ - x, py_ - y) < r
+                               for px_, py_ in ((mm(t.GetStart().x), mm(t.GetStart().y)), (mm(t.GetEnd().x), mm(t.GetEnd().y))))
+                if near: board_remove(b, t); cut += 1
+                else: keep_site[len(keep)] = piece_site.get(_i, "?"); keep.append(t)
+            if not cut: return None
+            pieces[:] = keep; piece_site.clear(); piece_site.update(keep_site)
+            best = None
+            for t in pieces:
+                if t.GetClass() != "PCB_TRACK" or t.GetNetname() != net.GetNetname(): continue
+                for px_, py_ in ((mm(t.GetStart().x), mm(t.GetStart().y)), (mm(t.GetEnd().x), mm(t.GetEnd().y))):
+                    d_ = math.hypot(px_ - x, py_ - y)
+                    if best is None or d_ < best[0]: best = (d_, px_, py_)
+            rebuild_maps()   # the removed copper is still an obstacle in the cached maps until they are rebuilt
+            return None if best is None else (best[1], best[2])
+        # 12 September 2026: every piece records WHICH emission laid it. A's /USB_D8 was refused for its own two
+        # legs and the four sites that can lay copper without asking are indistinguishable in a board file, so a
+        # day went into reading the code for something one word per piece answers.
+        _site = ["?"]; piece_site = {}
+        def at_site(name):
+            _site[0] = name
+        def seg(x1, y1, x2, y2, L, net):
+            nonlocal added
+            if math.hypot(x2 - x1, y2 - y1) < 0.01: return
+            wL = wid(L)
+            t = pcbnew.PCB_TRACK(b); t.SetStart(VECTOR2I(FromMM(x1), FromMM(y1))); t.SetEnd(VECTOR2I(FromMM(x2), FromMM(y2))); t.SetWidth(FromMM(wL)); t.SetLayer(L); t.SetNet(net); t.SetLocked(True); b.Add(t); added += 1; pieces.append(t); piece_site[len(pieces) - 1] = _site[0]
+            o = other_of(net)
+            if L in trk1[o]: gr.seg(trk1[o][L], x1, y1, x2, y2, wL + clr_c + 0.01)   # the other leg keeps clear of this piece by the class clearance (the map's 0.16 floor blocked the other leg's own start 0.35 mm away)
+            for vm in via1n.values(): gr.seg(vm, x1, y1, x2, y2, wL / 2 + clr_c + vd / 2 + 0.01)
+            gr.seg(via, x1, y1, x2, y2, wL / 2 + CLR + vd / 2 + VIA_SPLIT)
+        def via_at(x, y, net):
+            nonlocal added
+            v = pcbnew.PCB_VIA(b); v.SetPosition(VECTOR2I(FromMM(x), FromMM(y))); v.SetWidth(FromMM(vd)); v.SetDrill(FromMM(vdr)); v.SetViaType(pcbnew.VIATYPE_THROUGH); v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v.SetNet(net); v.SetLocked(True); b.Add(v); added += 1; pieces.append(v); piece_site[len(pieces) - 1] = _site[0]
+            o = other_of(net)
+            for L in trk1[o]: gr.disc(trk1[o][L], x, y, vd / 2 + clr_c + w / 2 + 0.01)
+            for vm in via1n.values(): gr.disc(vm, x, y, vdr + 0.30 + 0.02)
+            gr.disc(via, x, y, vdr + 0.30 + VIA_SPLIT)
+        def own_clear(x1, y1, x2, y2, L, net):
+            """Is this piece clear of the copper THIS PAIR has already laid on its other leg? (12 September 2026, appendix 32.134.)
+
+            The leg maps answer that everywhere except where a caller exempts them, and two callers do: `fan_leg` exempts the
+            last 1.2 mm of a fan because the partner's PAD blocks there, and `stub` lays a straight piece without asking when
+            the two ends are inside one cell. Both exemptions are about PADS and both silently excused the partner's TRACKS as
+            well. A's three ribbon pairs came out of the J_AB1 station fan with /USB_D8_N shorting its own /USB_D8_P on 0.1 mm
+            segments: the tool had emitted a dive, so the crossing was seen, and the fan copper went down unasked beside it."""
+            if not OWN_CLEAR: return True
+            o = other_of(net); half = wid(L) / 2
+            # The bar is the fold bar of `legs_clear`, not the class clearance: a leg and its partner MUST converge at
+            # their own station, where their pads are half a millimetre apart, so asking for the full clearance here
+            # refuses the pair's own geometry. What this catches is copper laid ON the partner (A measured 0.044 mm
+            # against a pair pitch of 0.27), and the class number is judged once, on the copper, after the pair is laid.
+            fold = min(clr_c + wid(L), 2.0 * abs(dof(L))) * 0.5
+            for t in pieces:
+                if t.GetNetname() != o: continue
+                if t.GetClass() == "PCB_TRACK":
+                    if t.GetLayer() != L: continue
+                    if _seg_dist(x1, y1, x2, y2, mm(t.GetStart().x), mm(t.GetStart().y), mm(t.GetEnd().x), mm(t.GetEnd().y)) < fold: return False
+                elif t.GetClass() == "PCB_VIA":
+                    if _pt_seg(mm(t.GetPosition().x), mm(t.GetPosition().y), x1, y1, x2, y2) < fold + _via_dia(t) / 2: return False
+            return True
+        # the stub, via-site and hop helpers of this pair (pair-level state only; they were inside the section loop and a pair whose last section took the direct legs left them undefined for the stub pass, 8 Sep 2026 12:47)
+        def own_gate(n0, net):
+            """Do the pieces this call has just laid clear the PARTNER's copper at the bar the post-lay gate uses?
+
+            12 September 2026, and the first answer was wrong, which is the useful part. The guess was that the end
+            stubs searched a map that could not see the partner's copper; instrumented (`PAIR_DEBUG_END`), the map
+            already blocks the partner at a LARGER margin than the gate's bar: 7 partner pieces stamped, **0 cells
+            newly blocked**. So the violating copper is not copper the search chose. It is the copper laid without
+            asking the map at all: the last hop from the path's final cell INTO the pad, the straight piece taken
+            when the two ends sit in one cell, and the same final hop in the fallback that aims at the net's own
+            escape. Those three are why the post-lay gate reads 0.203 mm of 0.252 and refuses the whole pair.
+
+            The bar here is the gate's, not `own_clear`'s fold bar: this is the last millimetre at a station, where
+            the two legs are turning into their own pads, and it is exactly where the class number has to hold."""
+            return True   # the strict end test measured 0 of 48 on B19 and was deleted (appendix 32.146, 15 September 2026); PAIR_END_FIT answers what it reached for
+        def partner_clear(cand, SL, net):
+            """Would these segments, which are NOT on the board yet, clear the partner at the post-lay gate's bar?
+
+            13 September 2026 (MESHSAT-862). 84 of B19's 152 failed pair attempts are the pair's own two legs, and
+            every one of them misses by between 1 and 15 micrometres: 0.251 mm of 0.252, 0.249 of 0.249, 0.244 of
+            0.249. An inner pair's gap IS the class clearance here (0.127 both), so the geometry has no margin at
+            all and any rounding at the ends refuses the whole pair. The copper that violates is the last hop into
+            the pad, which is laid without asking anything (32.134 named it and `PAIR_END_STRICT` measured it).
+            Asking AFTER laying it is what made END_STRICT worth nothing: `_ok()` removed the pieces from the board
+            and left them in `pieces`, and their stamps on the partner's map behind, so every later emission of that
+            pair was judged against copper that no longer existed and searched a map that still forbade it. The
+            question is asked here instead, before anything is added, which needs no undo at all."""
+            o = other_of(net); bar = max(0.0, clr_c - 0.005); need = bar + wid(SL)
+            for x1, y1, x2, y2 in cand:
+                for u in pieces:
+                    if u.GetNetname() != o: continue
+                    if u.GetClass() == "PCB_TRACK":
+                        if u.GetLayer() != SL: continue
+                        if _seg_dist(x1, y1, x2, y2, mm(u.GetStart().x), mm(u.GetStart().y), mm(u.GetEnd().x), mm(u.GetEnd().y)) < need: return False
+                    elif u.GetClass() == "PCB_VIA":
+                        if _pt_seg(mm(u.GetPosition().x), mm(u.GetPosition().y), x1, y1, x2, y2) < bar + wid(SL) / 2 + _via_dia(u) / 2: return False
+            return True
+
+        def _equalise(short_net, long_net, want):
+            """Add `want` mm to the short leg as small bumps on its own straight pieces, away from the partner.
+
+            One bump of amplitude A on a straight piece adds 2A and needs 2p of run along it, p being the
+            leg's own width plus its clearance. The pieces are taken longest first, the offset side is the one
+            the partner is NOT on, and every replacement is judged by `partner_clear` and by this leg's own
+            obstacle map before any copper is laid: a bump that would touch anything is simply not made.
+            Returns the millimetres actually added."""
+            got = 0.0; _why = collections.Counter()
+            o_name = long_net.GetNetname()
+            mine = [t for t in pieces if t.GetClass() == "PCB_TRACK" and t.GetNetname() == short_net.GetNetname()]
+            mine.sort(key=lambda t: -t.GetLength())
+            for t in mine:
+                if got >= want - 0.02: break
+                L_ = t.GetLayer(); wl = wid(L_); p_ = wl + clr_c + 0.05
+                x1, y1 = mm(t.GetStart().x), mm(t.GetStart().y); x2, y2 = mm(t.GetEnd().x), mm(t.GetEnd().y)
+                ln = math.hypot(x2 - x1, y2 - y1)
+                if ln < 4 * p_ + 1.0: _why["the piece is shorter than two bumps"] += 1; continue
+                ux, uy = (x2 - x1) / ln, (y2 - y1) / ln
+                # The side away from the partner, decided LOCALLY. Summing every partner piece on the layer
+                # gives the direction of its CENTROID, which on a long winding pair is the wrong side over
+                # half the run: five bumps were refused for coming within the class clearance of the partner
+                # they were supposed to be moving away from (14 September 2026). The nearest partner piece to
+                # THIS segment is what decides.
+                mxp, myp = (x1 + x2) / 2, (y1 + y2) / 2
+                near, ndist = None, 1e9
+                for u in pieces:
+                    if u.GetNetname() != o_name or u.GetClass() != "PCB_TRACK" or u.GetLayer() != L_: continue
+                    ox, oy = (mm(u.GetStart().x) + mm(u.GetEnd().x)) / 2, (mm(u.GetStart().y) + mm(u.GetEnd().y)) / 2
+                    d_ = math.hypot(ox - mxp, oy - myp)
+                    if d_ < ndist: ndist, near = d_, (ox, oy)
+                vx, vy = -uy, ux
+                if near is not None and vx * (near[0] - mxp) + vy * (near[1] - myp) > 0: vx, vy = -vx, -vy
+                for A in (0.6, 0.4, 0.25, 0.15, 0.10):
+                    n_fit = int((ln - 1.0) / (2 * p_))
+                    if n_fit < 1: continue
+                    n_use = min(n_fit, max(1, int(math.ceil((want - got) / (2 * A)))))
+                    A = min(A, (want - got) / (2 * n_use))   # never add more than the difference: /ETH2_P2 was 2.71 mm apart and got 3.60 back (14 September 2026)
+                    a0 = (ln - n_use * 2 * p_) / 2.0
+                    pts = [(x1, y1), (x1 + ux * a0, y1 + uy * a0)]
+                    cx, cy = pts[-1]
+                    for _ in range(n_use):
+                        pts.append((cx + vx * A, cy + vy * A)); cx, cy = cx + ux * p_, cy + uy * p_
+                        pts.append((cx + vx * A, cy + vy * A)); pts.append((cx, cy)); cx, cy = cx + ux * p_, cy + uy * p_
+                        pts.append((cx, cy))
+                    pts.append((x2, y2))
+                    cand = [(pts[k][0], pts[k][1], pts[k + 1][0], pts[k + 1][1]) for k in range(len(pts) - 1)]
+                    cand = [c for c in cand if math.hypot(c[2] - c[0], c[3] - c[1]) > 1e-4]
+                    if not partner_clear(cand, L_, short_net): _why["the bump comes within the class clearance of the partner"] += 1; continue
+                    pm_ = trk1[short_net.GetNetname()].get(L_)
+                    if pm_ is not None:
+                        bad = False
+                        for (ax_, ay_, bx_, by_) in cand:
+                            n_ = int(math.hypot(bx_ - ax_, by_ - ay_) / gr.G) + 2
+                            for k in range(n_ + 1):
+                                qx, qy = ax_ + (bx_ - ax_) * k / n_, ay_ + (by_ - ay_) * k / n_
+                                jj, ii = gr.cell(qx, qy)
+                                if 0 <= ii < gr.NY and 0 <= jj < gr.NX and pm_[ii, jj]: bad = True; break
+                            if bad: break
+                        if bad: _why["the bump lies on copper this leg's own map forbids"] += 1; continue
+                    board_remove(b, t)
+                    try: pieces.remove(t)
+                    except ValueError: pass
+                    for (ax_, ay_, bx_, by_) in cand: seg(ax_, ay_, bx_, by_, L_, short_net)
+                    got += 2 * A * n_use
+                    break
+            # A refusal that does not name what it hit is the defect `escape_prune` was corrected for on
+            # 9 September: say which test refused the bumps and how often.
+            if got < 0.02 and _why:
+                report.append("      %s: no bump fitted (%s)" % (short_net.GetNetname(),
+                              ", ".join("%s x%d" % (k, v) for k, v in _why.most_common(3))))
+            return got
+
+        def stub(ax_, ay_, bx_, by_, SL, net):
+            """One stub on layer SL from (ax_, ay_) to the pad at (bx_, by_) on that leg's own map; a straight piece when no path exists."""
+            _n0 = len(pieces)
+            def _ok():   # PAIR_END_STRICT: the pieces just laid against the partner, at the gate's bar
+                if own_gate(_n0, net): return True
+                for t in pieces[_n0:]: board_remove(b, t)
+                del pieces[_n0:]                      # and out of the pair's own list: removed copper is not the pair's geometry
+                return False
+            def _path_segs(sp_, gx_, gy_):
+                c = [(sp_[k][0], sp_[k][1], sp_[k + 1][0], sp_[k + 1][1]) for k in range(len(sp_) - 1)]
+                c.append((sp_[-1][0], sp_[-1][1], gx_, gy_))   # the last hop into the goal: the piece nothing used to ask about
+                return c
+            def _lay(cand):
+                for x1, y1, x2, y2 in cand: seg(x1, y1, x2, y2, SL, net)
+                return True
+            def _approach(pm_):
+                """Points a third of a millimetre or so off the pad, ordered by how far they sit from the partner's
+                copper: an entry that comes at the pad from the far side turns away from the partner instead of into
+                it. Only cells the leg's own map calls free are offered."""
+                o = other_of(net)
+                parts = [(mm(t.GetStart().x), mm(t.GetStart().y), mm(t.GetEnd().x), mm(t.GetEnd().y))
+                         for t in pieces if t.GetNetname() == o and t.GetClass() == "PCB_TRACK" and t.GetLayer() == SL]
+                out = []
+                for r10 in (3, 5, 8):
+                    r = r10 / 10.0
+                    for a10 in range(0, 360, 20):
+                        a = math.radians(a10); gx_, gy_ = bx_ + r * math.cos(a), by_ + r * math.sin(a)
+                        jj_, ii_ = gr.cell(gx_, gy_)
+                        if not (0 <= ii_ < gr.NY and 0 <= jj_ < gr.NX) or not pm_[ii_, jj_]: continue
+                        d_ = min((_seg_dist(gx_, gy_, bx_, by_, *_p) for _p in parts), default=9.9)
+                        out.append((-d_, r, gx_, gy_))
+                out.sort()
+                return [(o_[2], o_[3]) for o_ in out[:8]]
+            pm = ~trk1[net.GetNetname()][SL] if SL in trk1[net.GetNetname()] else None
+            win2 = (gr.cell(min(ax_, bx_) - 8, min(ay_, by_) - 8), gr.cell(max(ax_, bx_) + 8, max(ay_, by_) + 8)); win2 = ((max(0, win2[0][0]), max(0, win2[0][1])), (min(gr.NX - 1, win2[1][0]), min(gr.NY - 1, win2[1][1])))
+            if gr.cell(ax_, ay_) == gr.cell(bx_, by_) or math.hypot(bx_ - ax_, by_ - ay_) < 1.5 * gr.G:   # the offset end already sits on the pad
+                if not own_clear(ax_, ay_, bx_, by_, SL, net): return False   # ... but not over the partner's own copper
+                if END_FIT and not partner_clear([(ax_, ay_, bx_, by_)], SL, net): return False
+                seg(ax_, ay_, bx_, by_, SL, net); return _ok()
+            sp = stub_path(gr, pm.copy(), (ax_, ay_), (bx_, by_), win2) if pm is not None else None
+            if sp and len(sp) >= 2:
+                cand = _path_segs(sp, bx_, by_)
+                if not END_FIT or partner_clear(cand, SL, net):
+                    _lay(cand)
+                    if _ok(): return True
+                else:
+                    # The path is fine and its LAST HOP is the violation, by a few micrometres. Come at the pad
+                    # from a point off to the side the partner is not on, and hop in from there.
+                    for _gx, _gy in _approach(pm):
+                        sp2_ = stub_path(gr, pm.copy(), (ax_, ay_), (_gx, _gy), win2)
+                        if not (sp2_ and len(sp2_) >= 2): continue
+                        cand2 = _path_segs(sp2_, _gx, _gy) + [(_gx, _gy, bx_, by_)]
+                        if not partner_clear(cand2, SL, net): continue
+                        _end_fit[0] += 1
+                        _lay(cand2)
+                        if _ok(): return True
+            # A stub has to reach its own NET, not one point of it. Aiming only at the escape via made the last half millimetre the hardest
+            # cell on the board, because the via sits inside its own part's fan: 34 of B18's 66 pair failures were "no stub path at via"
+            # (9 September 2026). The escape track that leads to the via is the same copper and is reachable a millimetre earlier, so when
+            # the via cannot be reached the nearest points of the net's own locked escape are tried in turn.
+            if pm is not None:
+                alts = []
+                for t_ in b.GetTracks():
+                    if t_.GetClass() != "PCB_TRACK" or not t_.IsLocked() or t_.GetNetname() != net.GetNetname() or t_.GetLayer() != SL: continue
+                    ax2, ay2, bx2, by2 = mm(t_.GetStart().x), mm(t_.GetStart().y), mm(t_.GetEnd().x), mm(t_.GetEnd().y)
+                    for px_, py_ in ((ax2, ay2), (bx2, by2), ((ax2 + bx2) / 2, (ay2 + by2) / 2)):
+                        d_ = math.hypot(px_ - bx_, py_ - by_)
+                        if 0.05 < d_ <= 4.0: alts.append((d_, px_, py_))
+                for _d, px_, py_ in sorted(alts)[:8]:
+                    sp2 = stub_path(gr, pm.copy(), (ax_, ay_), (px_, py_), win2)
+                    if sp2 and len(sp2) >= 2:
+                        cand3 = _path_segs(sp2, px_, py_)
+                        if END_FIT and not partner_clear(cand3, SL, net): continue
+                        _lay(cand3)
+                        if _ok(): return True
+            if os.environ.get("PAIR_DEBUG") and pm is not None:   # the stub map around the goal, one character per cell (S start, G goal, # forbidden)
+                js, is_ = gr.cell(ax_, ay_); jg, ig = gr.cell(bx_, by_); r = 20
+                print("pair_preroute: stub map 4 mm around the START (%.2f, %.2f):" % (ax_, ay_))
+                for i in range(is_ - r, is_ + r + 1, 2):
+                    rowtxt = ""
+                    for j in range(js - r, js + r + 1):
+                        if not (0 <= i < gr.NY and 0 <= j < gr.NX): rowtxt += " "; continue
+                        rowtxt += "S" if (i, j) == (is_, js) else ("G" if (abs(i - ig) <= 1 and abs(j - jg) <= 1) else ("." if pm[i, j] else "#"))
+                    print("   " + rowtxt)
+                print("pair_preroute: stub %s on %s from (%.2f, %.2f) [%s] to (%.2f, %.2f) [%s], 4 mm around the goal:" % (net.GetNetname(), b.GetLayerName(SL), ax_, ay_, "free" if pm[is_, js] else "BLOCKED", bx_, by_, "free" if pm[ig, jg] else "BLOCKED"))
+                for i in range(ig - r, ig + r + 1, 2):
+                    rowtxt = ""
+                    for j in range(jg - r, jg + r + 1):
+                        if not (0 <= i < gr.NY and 0 <= j < gr.NX): rowtxt += " "; continue
+                        rowtxt += "S" if (abs(i - is_) <= 1 and abs(j - js) <= 1) else ("G" if (i, j) == (ig, jg) else ("." if pm[i, j] else "#"))
+                    print("   " + rowtxt)
+            return False   # no blind straight piece (it shorted J_HARN1's pin 4 on D9)
+        def fan_leg(ex_, ey_, px_, py_, L_, net_):
+            """The last piece of a leg, from its corridor end into its own pad. It used to be laid straight and untested, which is how a
+            pair's own fan came to sit on other nets' escapes: 24 of B17's 34 pruned escapes had a pre-routed pair leg as the counterparty
+            (8 Sep 2026 23:15, 32.77). Straight when the straight line is clear on this leg's own map, with the last 1.2 mm exempt because
+            it lies inside the pad pair (the exemption legs_clear already uses); otherwise routed by stub(), and False when neither works."""
+            pm = trk1[net_.GetNetname()].get(L_)
+            if pm is None: seg(ex_, ey_, px_, py_, L_, net_); return True
+            ln_ = math.hypot(px_ - ex_, py_ - ey_)
+            clear = True
+            n_ = int(ln_ / gr.G) + 2
+            for k_ in range(n_ + 1):
+                u_ = k_ / n_
+                qx_, qy_ = ex_ + u_ * (px_ - ex_), ey_ + u_ * (py_ - ey_)
+                jj_, ii_ = gr.cell(qx_, qy_)
+                if 0 <= ii_ < gr.NY and 0 <= jj_ < gr.NX and pm[ii_, jj_]:
+                    if ln_ * (1.0 - u_) < 1.2 and L_ in trkP and not trkP[L_][ii_, jj_]: continue   # inside the pair's own pad field, and nothing else is there
+                    clear = False; break
+            if clear and own_clear(ex_, ey_, px_, py_, L_, net_): seg(ex_, ey_, px_, py_, L_, net_); return True
+            return stub(ex_, ey_, px_, py_, L_, net_)
+        def via_site(ex_, ey_, px_, py_, L, aL, net, away):
+            """A free single-via site near the offset end (ex_, ey_): the nearest cell of via1 that is also clear on both layers' leg maps, preferring the
+            side away from the other leg (unit vector `away`) and the direction of the pad; None when nothing within 3 mm."""
+            cands = []
+            for r10 in range(4, 31):
+                r = r10 / 10.0
+                for a10 in range(0, 360, 15):
+                    a = math.radians(a10); cx_, cy_ = ex_ + r * math.cos(a), ey_ + r * math.sin(a); jj, ii = gr.cell(cx_, cy_)
+                    if not (0 <= ii < gr.NY and 0 <= jj < gr.NX) or via1n[net.GetNetname()][ii, jj]: continue
+                    cx_, cy_ = gr.xy(jj, ii)   # the site is the cell the maps cleared, not the polar sample up to 0.07 mm off it (a dive via 0.10 mm from the other leg, 8 Sep 2026 13:27)
+                    if L in trk1[net.GetNetname()] and trk1[net.GetNetname()][L][ii, jj]: continue
+                    if aL in trk1[net.GetNetname()] and trk1[net.GetNetname()][aL][ii, jj]: continue
+                    score = r - 0.5 * ((cx_ - ex_) * away[0] + (cy_ - ey_) * away[1]) / r + 0.3 * math.hypot(cx_ - px_, cy_ - py_) / 10.0
+                    cands.append((score, cx_, cy_))
+            # 12 September 2026: the cap was twelve, and it was never measured. "no via site with a hop path" is 24 of
+            # the 68 failures left on B19's DIFF100 pass once the via size and the end geometry are right, all of them
+            # at the HDMI switches U3 and U4, and every one means all twelve candidates were refused by the stub search.
+            cands.sort(); return [(c[1], c[2]) for c in cands[:VIA_CANDS]]
+        def via_hop(ex_, ey_, px_, py_, L, aL, net, away):
+            """A via site with a hop path from the offset end on L: (vx, vy) or None; the hop is laid."""
+            for vx_, vy_ in via_site(ex_, ey_, px_, py_, L, aL, net, away):
+                if stub(ex_, ey_, vx_, vy_, L, net): return (vx_, vy_)
+            return None
+        def dive_p(x, y, ex, ey, L, aL, obj, net, away):
+            """The P leg from its corridor end (ex, ey) on L to its pad (x, y) under the N leg: a via beside the corridor end, a hop on the other layer,
+            a via beside the pad (none for a through-hole pad, which the hop layer reaches itself), the stub in. Returns the failure text or None."""
+            if aL is not None and aL != L:   # the pad is on another layer: the P leg runs on the corridor layer to a via beside its pad, under the N stub
+                site = None
+                for cand in via_site(x, y, x, y, L, aL, net, away):
+                    if stub(ex, ey, cand[0], cand[1], L, net): site = cand; break
+                if site is None: return "no via site beside the pad with a hop path"
+                via_at(site[0], site[1], net); gr.disc(via, site[0], site[1], VIA_SPLIT)
+                return None if stub(site[0], site[1], x, y, aL, net) else "no stub path"
+            hop = hop_of(L)   # the pad is on the corridor layer: dive through a hop layer (else the other corridor layer)
+            if hop is None: return "no layer to dive through"
+            aL_ = L if aL is None else aL
+            site1 = via_hop(ex, ey, x, y, L, hop, net, away)
+            if site1 is None: return "no via site for the dive"
+            via_at(site1[0], site1[1], net); gr.disc(via, site1[0], site1[1], VIA_SPLIT)
+            pth_ = hasattr(obj, "GetAttribute") and obj.GetAttribute() == pcbnew.PAD_ATTRIB_PTH
+            if pth_ and stub(site1[0], site1[1], x, y, hop, net): return None   # a through-hole pad takes the leg on the hop layer
+            for cand in via_site(x, y, x, y, hop, aL_, net, away):   # each site: the hop to it, the via, the stub into the pad; the next site when the stub finds no path (13:16)
+                n0 = len(pieces)
+                if not stub(site1[0], site1[1], cand[0], cand[1], hop, net): continue
+                via_at(cand[0], cand[1], net); gr.disc(via, cand[0], cand[1], VIA_SPLIT)
+                if stub(cand[0], cand[1], x, y, aL_, net): return None
+                for t in pieces[n0:]: board_remove(b, t)
+                del pieces[n0:]
+            return "no via site beside the pad with a dive path and a stub into it"
+        # A while loop, not a for, so a section can be searched again on a map that carries what the last attempt
+        # learnt (PAIR_LEG_RETRY, 12 September 2026). `_sec_k` only advances when the section is laid or given up.
+        _sec_k = -1; _sec_tries = 0
+        while True:
+            _sec_k += 1; _sec_tries = _sec_tries if _sec_k == _sec_retry_at[0] else 0
+            if _sec_k >= len(sections): break
+            ((pa, na), (pb, nb)) = sections[_sec_k]
+            A = [anchor(pa), anchor(na)]; B = [anchor(pb), anchor(nb)]
+            sx, sy = (A[0][0] + A[1][0]) / 2, (A[0][1] + A[1][1]) / 2; gx, gy = (B[0][0] + B[1][0]) / 2, (B[0][1] + B[1][1]) / 2
+            sL = gL = None   # the corridor picks its layer; the end stubs via to the pads' own layer (8 Sep: a start forced onto B.Cu inside the resistor cluster found no exit)
+            # a station between two through-hole pads or two hub pins has no room for the corridor at its midpoint: slide the end outward along the normal of the
+            # P-N line (both ways, up to 4 mm) to the first cell the corridor map allows on any of the layers; the stubs cover the rest
+            def _free_cands(x, y, px, py, qx, qy, tx, ty):
+                """The cells the corridor allows near a station, nearest first: the midpoint itself, then outward towards the other
+                station (through the escape cloud of a hub or a connector), then along the normal of the P-N line, up to 12 mm."""
+                def open_cell(jj, ii, r=3):   # free with a clear 7 x 7 block around it on that layer: a one-cell pocket between a header's pins is no corridor start (D9, J_HARN1)
+                    return 0 <= ii - r and ii + r < gr.NY and 0 <= jj - r and jj + r < gr.NX and any(not trk[L][ii - r:ii + r + 1, jj - r:jj + r + 1].any() for L in layers)
+                # 9 Sep 2026 (A24 USB_E6, appendix 32.83): the FIRST cell with a 0.6 mm block around it is often a pocket
+                # inside a connector's escape cloud, and the corridor A* then dies in it after ninety expansions. A wider
+                # block is far more likely to sit in open copper, so the search runs twice: 1.2 mm first, 0.6 mm after.
+                dx_, dy_ = qx - px, qy - py; ln_ = math.hypot(dx_, dy_) or 1.0; nx_, ny_ = -dy_ / ln_, dx_ / ln_
+                tdx, tdy = tx - x, ty - y; tl = math.hypot(tdx, tdy) or 1.0; tdx, tdy = tdx / tl, tdy / tl
+                for _rr in (6, 3):
+                  jj, ii = gr.cell(x, y)
+                  if open_cell(jj, ii, _rr): yield x, y
+                  for step in range(1, 121):   # up to 12 mm: a 0.4 mm hub's escape cloud is 4 to 8 mm deep
+                    for ux, uy in ((nx_, ny_), (-nx_, -ny_), (tdx, tdy)):   # the P-N normal first: the legs then arrive side by side with the pads (8 Sep: an approach along the P-N line makes the far stub pass the near pad)
+                        cx_, cy_ = x + ux * 0.1 * step, y + uy * 0.1 * step; jj, ii = gr.cell(cx_, cy_)
+                        if open_cell(jj, ii, _rr): yield cx_, cy_
+                  # three rays are a thin search; the sweep tries sixteen directions, the ones pointing at the other station first
+                  order = sorted(range(16), key=lambda k: -(math.cos(k * math.pi / 8) * tdx + math.sin(k * math.pi / 8) * tdy))
+                  for step in range(1, 121):
+                    for k in order:
+                        ux, uy = math.cos(k * math.pi / 8), math.sin(k * math.pi / 8)
+                        cx_, cy_ = x + ux * 0.1 * step, y + uy * 0.1 * step; jj, ii = gr.cell(cx_, cy_)
+                        if open_cell(jj, ii, _rr): yield cx_, cy_
+
+            def free_end(x, y, px, py, qx, qy, tx, ty):
+                """The corridor end at a station: the nearest allowed cell FROM WHICH BOTH LEGS CAN STILL REACH THEIR PADS.
+
+                10 September 2026 (B19): the old version took the first open cell it found, in a sweep of sixteen directions up to
+                12 mm. At a fine-pitch part that cell is regularly on the far side of the picket of the OTHER nets' escape vias, and
+                the corridor then arrives somewhere the stub cannot leave: /HDMI1_D0 fails alone on the board with "no stub path for
+                HDMI1_D0_N at U3" and its stub map shows a wall between the corridor end and the pad. Each candidate is now tested
+                with the same stub search that will have to run later, and the first that works for both legs is taken; when none of
+                the first PAIR_END_CANDS does, the nearest open cell is used as before, so nothing is lost."""
+                best = None; centre_ok = None; cache = {}
+                off_ = max((dof(L_) for L_ in layers), default=0.0) if END_OFFSET else 0.0
+                for k_, (cx_, cy_) in enumerate(_free_cands(x, y, px, py, qx, qy, tx, ty)):
+                    if best is None: best = (cx_, cy_)
+                    # first choice: an end whose OFFSET leg starts both reach their pads, which is what the pass will do
+                    if off_ > 0 and _end_reaches_offset(cx_, cy_, px, py, qx, qy, tx, ty, off_, cache) \
+                       and (not END_LEGS or _legs_leave(cx_, cy_, px, py, qx, qy, tx, ty, off_)): return cx_, cy_
+                    # second choice: the centreline test, which is what this did before; kept so the change can only
+                    # improve on the old answer and never replace a working end with a worse one
+                    if centre_ok is None and _end_reaches(cx_, cy_, px, py, qx, qy, cache): centre_ok = (cx_, cy_)
+                    if off_ <= 0 and centre_ok is not None: return centre_ok
+                    if k_ + 1 >= END_CANDS: break
+                return centre_ok or best or (x, y)
+
+            def fine_end(st, out_=2.5):
+                """The corridor end of an entry station: on the outward normal of the pad pair (away from the parts' centre), the first open block at out_ mm or beyond."""
+                p_, n_ = st; mx_, my_ = mid(st); fa_, fb_ = p_.GetParentFootprint(), n_.GetParentFootprint(); fx_, fy_ = [(a_ + b_) / 2 for a_, b_ in zip(fp_centre(fa_), fp_centre(fb_))]
+                dx_, dy_ = n_.GetPosition().x / 1e6 - p_.GetPosition().x / 1e6, n_.GetPosition().y / 1e6 - p_.GetPosition().y / 1e6; ln_ = math.hypot(dx_, dy_) or 1.0
+                nx_, ny_ = -dy_ / ln_, dx_ / ln_
+                if (mx_ - fx_) * nx_ + (my_ - fy_) * ny_ < 0: nx_, ny_ = -nx_, -ny_   # outward
+                padL = [L for L in layers if all(q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and q.IsOnLayer(L) for q in st)]   # an SMD station's end sits where its own layer is free
+                Ls_ = padL or list(layers)   # (8 Sep 2026 12:53: an end free on In2 only, inside the top-layer keep-away between two stations 2.4 mm apart, left the corridor no start)
+                for step in range(int(out_ * 10), 121):
+                    cx_, cy_ = mx_ + nx_ * 0.1 * step, my_ + ny_ * 0.1 * step; jj, ii = gr.cell(cx_, cy_)
+                    if 0 <= ii - 3 and ii + 3 < gr.NY and 0 <= jj - 3 and jj + 3 < gr.NX and any(not trk[L][ii - 3:ii + 4, jj - 3:jj + 4].any() for L in Ls_): return cx_, cy_
+                # 10 September 2026 (D10 USB_D8): the outward normal of the P-N line is the WRONG way out of a through-hole header
+                # whose pair sits across the two rows: the normal then runs ALONG the pin row and hits pin after pin, and the tool
+                # returned a blocked point that A* refused with "the start cell is passable on no allowed layer". A pair on the old
+                # diagonal pins escaped between four pins by luck of the geometry. None here means "no way out along the normal",
+                # and the caller falls back to the sixteen-direction sweep of free_end.
+                return None
+            gx0, gy0 = gx, gy
+            def entry_station0(st):
+                if any(q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and (row_scheme(q.GetParentFootprint()) or via_entry(q.GetParentFootprint())) for q in st): return False   # a 0.4 mm row, or an IC under PAIR_ENTRY_VIA: the escape vias are the ends
+                if not all((q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and q.IsOnLayer(pcbnew.F_Cu)) or q.GetAttribute() == pcbnew.PAD_ATTRIB_PTH for q in st) or dist_p(st[0], st[1]) > 2.6: return False
+                fa_, fb_ = st[0].GetParentFootprint(), st[1].GetParentFootprint()
+                return fa_.GetReference() == fb_.GetReference() or (fa_.GetFPIDAsString() == fb_.GetFPIDAsString() and fa_.GetReference()[:1] in "RCL")
+            fineA0, fineB0 = entry_station0((pa, na)), entry_station0((pb, nb))
+            if fineA0 and fineB0 and math.hypot(mid((pb, nb))[0] - mid((pa, na))[0], mid((pb, nb))[1] - mid((pa, na))[1]) < 7.0:
+                # two entry stations a few millimetres apart (the ESD beside its series resistors): straight legs pad to pad on F.Cu, no corridor
+                # each leg: from its pad at the wider station to a waypoint 1.2 mm before the finer station's pad pair at +-(w+s)/2 of its axis, then straight into the pin
+                # (a neighbouring pin's escape via sits 0.45 mm off the axis: a leg converging late would touch it)
+                stA, stB = (pa, na), (pb, nb); wide_first = dist_p(*stA) >= dist_p(*stB)
+                stF, stW = (stB, stA) if wide_first else (stA, stB)   # the finer station gets the waypoint
+                mxF, myF = mid(stF); fa_, fb_ = stF[0].GetParentFootprint(), stF[1].GetParentFootprint(); fx_, fy_ = [(a_ + b_) / 2 for a_, b_ in zip(fp_centre(fa_), fp_centre(fb_))]
+                dxF, dyF = stF[1].GetPosition().x / 1e6 - stF[0].GetPosition().x / 1e6, stF[1].GetPosition().y / 1e6 - stF[0].GetPosition().y / 1e6; lF = math.hypot(dxF, dyF) or 1.0; ax_, ay_ = dxF / lF, dyF / lF
+                nxF, nyF = -ay_, ax_
+                if (mxF - fx_) * nxF + (myF - fy_) * nyF < 0: nxF, nyF = -nxF, -nyF
+                wx, wy = mxF + nxF * 1.2, myF + nyF * 1.2; fineF = dist_p(*stF) <= 0.7
+                legs_ = []
+                for k_, net in ((0, net_p), (1, net_n)):
+                    pW, pF = stW[k_], stF[k_]; lat = (-d if k_ == 0 else d)   # P on the near side of the axis direction P->N
+                    E_ = (mm(pF.GetPosition().x), mm(pF.GetPosition().y)); W_ = (wx + ax_ * lat, wy + ay_ * lat) if fineF else E_   # two wide stations: pad to pad
+                    legs_.append((net, (mm(pW.GetPosition().x), mm(pW.GetPosition().y)), W_, E_))
+                ok_ = True
+                for net, S_, W_, E_ in legs_:
+                    (x1_, y1_), (x2_, y2_) = S_, W_; ln_ = math.hypot(x2_ - x1_, y2_ - y1_); pm_ = trk1[net.GetNetname()].get(pcbnew.F_Cu)
+                    for k in range(int(ln_ / gr.G) + 1):
+                        u = k * gr.G / ln_ if ln_ else 0
+                        if u * ln_ < 0.9 or (not fineF and (1 - u) * ln_ < 0.9): continue   # inside a station's own pad space
+                        jj, ii = gr.cell(x1_ + u * (x2_ - x1_), y1_ + u * (y2_ - y1_))
+                        if pm_ is not None and 0 <= ii < gr.NY and 0 <= jj < gr.NX and pm_[ii, jj]:
+                            if ok_ and os.environ.get("PAIR_DEBUG"): print("pair_preroute: direct leg of %s blocked on F.Cu at (%.2f, %.2f), %.1f mm along the %.1f mm leg" % (net.GetNetname(), x1_ + u * (x2_ - x1_), y1_ + u * (y2_ - y1_), u * ln_, ln_))
+                            ok_ = False
+                def isx_(a_, b_, c_, d_):
+                    def ccw(p1_, p2_, p3_): return (p3_[1] - p1_[1]) * (p2_[0] - p1_[0]) > (p2_[1] - p1_[1]) * (p3_[0] - p1_[0])
+                    return ccw(a_, c_, d_) != ccw(b_, c_, d_) and ccw(a_, b_, c_) != ccw(a_, b_, d_)
+                if ok_ and isx_(legs_[0][1], legs_[0][2], legs_[1][1], legs_[1][2]):   # the two fans cross: exchange the wide station's passives when they are a pair
+                    fa2, fb2 = stW[0].GetParentFootprint(), stW[1].GetParentFootprint()
+                    if SWAP_OK and fa2.GetReference() != fb2.GetReference() and fa2.GetFPIDAsString() == fb2.GetFPIDAsString() and not fa2.IsLocked() and not fb2.IsLocked() and not pinned(fa2) and not pinned(fb2):
+                        p1_, p2_ = fa2.GetPosition(), fb2.GetPosition(); fa2.SetPosition(p2_); fb2.SetPosition(p1_); MAP_EPOCH[0] += 1; report.append("SWAP  %s: %s and %s exchanged positions so the legs reach their pins without crossing" % (stem, fa2.GetReference(), fb2.GetReference())); rebuild_maps()
+                        legs_ = [(net, (mm(stW[k_].GetPosition().x), mm(stW[k_].GetPosition().y)), W_, E_) for (net, S_, W_, E_), k_ in zip(legs_, (0, 1))]
+                    else: ok_ = False
+                if ok_:   # and the two legs against each other, which isx_ above answers only for a crossing (12 September 2026)
+                    _need3 = min(clr_c + wid(pcbnew.F_Cu), 2.0 * abs(dof(pcbnew.F_Cu))) * 0.5   # a fold detector, as in legs_clear above
+                    _segA = [(legs_[0][1], legs_[0][2]), (legs_[0][2], legs_[0][3])]
+                    _segB = [(legs_[1][1], legs_[1][2]), (legs_[1][2], legs_[1][3])]
+                    for _u in _segA:
+                        for _v in _segB:
+                            if _seg_dist(_u[0][0], _u[0][1], _u[1][0], _u[1][1], _v[0][0], _v[0][1], _v[1][0], _v[1][1]) < _need3: ok_ = False
+                if ok_:
+                    at_site("direct legs")
+                    for net, S_, W_, E_ in legs_: seg(S_[0], S_[1], W_[0], W_[1], pcbnew.F_Cu, net); seg(W_[0], W_[1], E_[0], E_[1], pcbnew.F_Cu, net)
+                    laid_sections += 1; continue
+                # not clear: the corridor takes over, with shorter entries so the two ends do not overlap
+            d_mid = math.hypot(mid((pb, nb))[0] - mid((pa, na))[0], mid((pb, nb))[1] - mid((pa, na))[1])
+            def entry_out_(st):
+                pitch = dist_p(st[0], st[1]); tgt = 0.0 if pitch <= 0.7 else (1.0 if pitch <= 1.0 else 1.6)
+                return max(tgt + 0.8, min(2.5 + tgt, d_mid / 2 - 0.3))
+            _fa = fine_end((pa, na), entry_out_((pa, na))) if fineA0 else None
+            # An entry station's end comes from fine_end, which walks the OUTWARD NORMAL of the P-N line. When the pair
+            # sits in one column of a through-hole header, that normal points ALONG the pin row, so the end is open for
+            # the centreline and the offset legs leave straight through the neighbouring pins: measured on D's /USB_D8
+            # at J_HARN1, the P leg blocked by its own partner's pad at 1.13 mm and the N leg by a GND pad at 0.87 mm.
+            # An end whose legs cannot leave is not an end, so it is dropped and the sixteen-direction sweep is used.
+            # 11 September 2026, and the same class as the 10 September finding about a pair across two rows.
+            _offl = max((dof(L_) for L_ in layers), default=0.0) if END_LEGS else 0.0
+            if _fa and _offl > 0 and not _legs_leave(_fa[0], _fa[1], A[0][0], A[0][1], A[1][0], A[1][1], gx0, gy0, _offl):
+                report.append("ENDLEG %s: the entry end of %s is open for the centreline and its legs cannot leave it; taking the sweep instead"
+                              % (stem, pa.GetParentFootprint().GetReference())); _fa = None
+            sx, sy = _fa if _fa else free_end(sx, sy, A[0][0], A[0][1], A[1][0], A[1][1], gx0, gy0)
+            _fb = fine_end((pb, nb), entry_out_((pb, nb))) if fineB0 else None
+            if _fb and _offl > 0 and not _legs_leave(_fb[0], _fb[1], B[0][0], B[0][1], B[1][0], B[1][1], sx, sy, _offl):
+                report.append("ENDLEG %s: the entry end of %s is open for the centreline and its legs cannot leave it; taking the sweep instead"
+                              % (stem, pb.GetParentFootprint().GetReference())); _fb = None
+            gx, gy = _fb if _fb else free_end(gx, gy, B[0][0], B[0][1], B[1][0], B[1][1], sx, sy)
+            # 10 September 2026: the corridor search box is the two ends plus this margin. 25 mm was a guess; with the
+            # corridor slack measured, "no path on the map" is the biggest remaining family (24 of B19's 64 misses) and
+            # a pair that has to detour further than the box allows reads exactly like a pair with no path. PAIR_WINDOW.
+            sj, si = gr.cell(sx, sy); gj, gi = gr.cell(gx, gy); win = float(os.environ.get("PAIR_WINDOW", "25"))
+            window = (gr.cell(min(sx, gx) - win, min(sy, gy) - win), gr.cell(max(sx, gx) + win, max(sy, gy) + win))
+            window = ((max(0, window[0][0]), max(0, window[0][1])), (min(gr.NX - 1, window[1][0]), min(gr.NY - 1, window[1][1])))
+            cur_seg[:] = [sx, sy, gx, gy]   # the section the rip-up window is measured from
+            behind = []
+            if fineA0: mx_, my_ = mid((pa, na)); ln_ = math.hypot(sx - mx_, sy - my_) or 1.0; behind.append((sx, sy, (sx - mx_) / ln_, (sy - my_) / ln_))
+            if fineB0: mx_, my_ = mid((pb, nb)); ln_ = math.hypot(gx - mx_, gy - my_) or 1.0; behind.append((gx, gy, (gx - mx_) / ln_, (gy - my_) / ln_))
+            _planned = plan_in.get(stem.lstrip("/"), None)
+            if _planned is not None and _sec_k < len(_planned) and _planned[_sec_k]:
+                path = [tuple(c) for c in _planned[_sec_k]]   # the negotiated corridor, already agreed with every other pair
+                # The plan owns its ends. `free_end` reads the board, and by the time this section is laid the board carries
+                # the pairs laid before it, so it can choose a different cell than the planning pass did and the corridor
+                # would then start away from its own first cell. The planned path's own ends win (10 September 2026).
+                sx, sy = gr.xy(path[0][2], path[0][1]); gx, gy = gr.xy(path[-1][2], path[-1][1])
+                sj, si = gr.cell(sx, sy); gj, gi = gr.cell(gx, gy); cur_seg[:] = [sx, sy, gx, gy]
+            else:
+                path = astar(gr, layers, trk, via, (sL, sj, si), (gL, gj, gi), window, behind, cost=NEG_COST)
+            if PLAN_MODE:
+                plan_out.setdefault(stem.lstrip("/"), []).append([list(c) for c in (path or [])])
+                if path:
+                    neg_stamp(path, half + CLR)
+                    print("pair_preroute: PLAN  %s section %d of %d: %d cells" % (stem, _sec_k + 1, len(sections), len(path)), flush=True)
+                elif stem not in slim_stems and SLACK_SLIM < SLACK:
+                    slim_stems.add(stem); stems.append(stem); plan_out.pop(stem.lstrip("/"), None)
+                    report.append("SLIM  %s: no corridor at %.2f mm of slack; planned again at %.2f" % (stem, SLACK, SLACK_SLIM))
+                    break
+                else:
+                    report.append("FAIL  %s: section %s -> %s (%s)" % (stem, pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), PATH_WHY[0] or "no corridor"))
+                continue
+            def dump(tag, cx, cy, R=3.0, layer_idx=0):   # PAIR_DEBUG=1: the corridor map around a point, one character per 2 cells (S start, G goal, # forbidden)
+                if not os.environ.get("PAIR_DEBUG"): return
+                jc, ic = gr.cell(cx, cy); r = int(R / gr.G); M = trk[layers[layer_idx]]; print("pair_preroute: map %s on %s around (%.1f, %.1f), %d mm square" % (tag, b.GetLayerName(layers[layer_idx]), cx, cy, 2 * R))
+                for i in range(ic - r, ic + r + 1, 2):
+                    row = ""
+                    for j in range(jc - r, jc + r + 1, 2):
+                        if not (0 <= i < gr.NY and 0 <= j < gr.NX): row += " "; continue
+                        row += "S" if (i, j) == (si, sj) else ("G" if (i, j) == (gi, gj) else ("#" if M[i, j] else "."))
+                    print("   " + row)
+            if path is None:
+                failed = "%s -> %s (%s)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), PATH_WHY[0] or "no corridor")
+                for li in range(len(layers)): dump("start of %s" % failed, sx, sy, 3.0, li); dump("goal of %s" % failed, gx, gy, 3.0, li)
+                break
+            def entry_station(st):
+                if not all((q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and q.IsOnLayer(pcbnew.F_Cu)) or q.GetAttribute() == pcbnew.PAD_ATTRIB_PTH for q in st): return False
+                if dist_p(st[0], st[1]) > 2.6: return False
+                fa_, fb_ = st[0].GetParentFootprint(), st[1].GetParentFootprint()
+                return fa_.GetReference() == fb_.GetReference() or (fa_.GetFPIDAsString() == fb_.GetFPIDAsString() and fa_.GetReference()[:1] in "RCL")
+            def entry_target(st):
+                """Where the entry run ends: the pad pair's midpoint for a fine pitch, 1.0 mm short of it (on the outward normal) when the legs must fan out."""
+                mx_, my_ = mid(st); pitch = dist_p(st[0], st[1])
+                if pitch <= 0.7: return mx_, my_
+                out_ = 1.0 if pitch <= 1.0 else (1.6 if pitch <= 2.0 else 2.2)
+                p_, n_ = st; fa_, fb_ = p_.GetParentFootprint(), n_.GetParentFootprint(); fx_, fy_ = [(a_ + b_) / 2 for a_, b_ in zip(fp_centre(fa_), fp_centre(fb_))]
+                dx_, dy_ = n_.GetPosition().x / 1e6 - p_.GetPosition().x / 1e6, n_.GetPosition().y / 1e6 - p_.GetPosition().y / 1e6; ln_ = math.hypot(dx_, dy_) or 1.0; nx_, ny_ = -dy_ / ln_, dx_ / ln_
+                if (mx_ - fx_) * nx_ + (my_ - fy_) * ny_ < 0: nx_, ny_ = -nx_, -ny_
+                return mx_ + nx_ * out_, my_ + ny_ * out_
+            def fine_station(st):
+                # The tail run (a straight line on F.Cu from the corridor's end into the pad pair) is only for a station whose pads the
+                # corridor is meant to reach directly. A 0.4 mm row is not one: `entry_station0` already refuses it for the corridor's own
+                # end because "the escape vias are the ends", and drawing a straight tail into the pad pair anyway crosses the whole fan.
+                # That asymmetry between the two predicates is what "the legs clear no smoothing of the centreline" was on B17's socket and
+                # switch sections: both legs cleared the corridor and hit at the first cell of the tail run (8 Sep 2026 22:30, 32.75).
+                if any(q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and (row_scheme(q.GetParentFootprint()) or via_entry(q.GetParentFootprint())) for q in st): return False
+                return entry_station(st)
+            def entry_cells(frm, to):
+                """Straight cells (i, j) from cell frm to cell to (Bresenham), both included."""
+                (j0, i0), (j1, i1) = frm, to; n = max(abs(i1 - i0), abs(j1 - j0), 1)
+                return [(int(round(i0 + (i1 - i0) * k / n)), int(round(j0 + (j1 - j0) * k / n))) for k in range(n + 1)]
+            FL = layers.index(pcbnew.F_Cu) if pcbnew.F_Cu in layers else None
+            fineA, fineB = fine_station((pa, na)), fine_station((pb, nb))
+            runs = simplify(path); head_run = tail_run = None
+            if FL is not None and fineB:   # the far station: from the corridor's end straight into the pad pair on F.Cu, a run of its own (never smoothed into the corridor)
+                mB = gr.cell(*entry_target((pb, nb))); tail_run = [(FL, i, j) for i, j in entry_cells((path[-1][2], path[-1][1]), mB)]
+                runs = runs + [tail_run]
+            if FL is not None and fineA:
+                mA = gr.cell(*entry_target((pa, na))); head_run = [(FL, i, j) for i, j in entry_cells(mA, (path[0][2], path[0][1]))]
+                runs = [head_run] + runs
+            cells += len(path); nruns += len(runs); laid_sections += 1
+            first = runs[0]; (x0, y0) = gr.xy(first[0][2], first[0][1]); (x1, y1) = gr.xy(first[-1][2], first[-1][1]) if len(first) > 1 else (gx, gy)
+            cross = (x1 - x0) * (A[0][1] - y0) - (y1 - y0) * (A[0][0] - x0); p_side = 1 if cross > 0 else -1   # which leg is left of the centreline: the P anchor's side
+            _stA = mid((pa, na)); _stB = mid((pb, nb))
+            _rA = dist_p(pa, na) / 2 + 0.6; _rB = dist_p(pb, nb) / 2 + 0.6   # the fan's own reach, not a fixed 1.2 mm
+            prev_end = None; lp = ln = None
+            # a twist: the P pad lies on one side of the line from station A to station B at A and on the other at B (a property of the placement, not of the path)
+            dxab, dyab = gx - sx, gy - sy
+            side_a = dxab * (A[0][1] - sy) - dyab * (A[0][0] - sx); side_b = dxab * (B[0][1] - gy) - dyab * (B[0][0] - gx)
+            crossing = False
+            # 12 September 2026: keep the honest geometry. Forcing the twist at an entry station exists so the swap
+            # machinery below gets its chance (a station of two passives is untwisted by exchanging them), but when
+            # neither station is swappable the forced value fell through to `crossing = True` and the pair dived at a
+            # pad field it had no reason to dive at. A's /USB_D8 runs between two IDC headers that both carry P on the
+            # SAME side, side_a and side_b are both +60.5, and the tool declared a twist, laid the N fan across the P
+            # leg and was refused by its own clearance gate. The forcing stays for the swap; the fallback is the truth.
+            real_a, real_b = side_a, side_b
+            if fineA0 or fineB0: side_a, side_b = 1.0, -1.0   # an entry station's twist is settled when its fan is laid (a swap of the two passives there)
+            if side_a * side_b < 0 and min(abs(side_a), abs(side_b)) > 1e-6:
+                def swappable_(x_, y_):
+                    fa_, fb_ = x_.GetParentFootprint(), y_.GetParentFootprint()
+                    return fa_.GetReference() != fb_.GetReference() and fa_.GetFPIDAsString() == fb_.GetFPIDAsString() and abs(fa_.GetOrientationDegrees() - fb_.GetOrientationDegrees()) < 0.01 and not fa_.IsLocked() and not fb_.IsLocked() and not pinned(fa_) and not pinned(fb_) and stem not in swapped
+                if swappable_(pb, nb): twist = ("%s -> %s" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference()), pb, nb); break
+                if swappable_(pa, na): twist = ("%s -> %s" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference()), pa, na); break
+                crossing = real_a * real_b < 0 and min(abs(real_a), abs(real_b)) > 1e-6   # nothing to swap: the pads' own geometry says whether the legs must cross at all
+                # 12 September 2026: say so. A twist between two FIXED parts is a placement finding, not a routing one:
+                # the pair's two pads present themselves on opposite sides at the two ends, so the legs must cross
+                # somewhere, and the tool's only answer is a dive at a pad field. Rotating one connector by 180 degrees
+                # removes it without touching the schematic, which nothing could propose while this was silent.
+                if crossing:
+                    report.append("TWIST %s: %s and %s present the pair's pads on opposite sides; the legs must cross once and one of them dives at the pad field"
+                                  % (stem, pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference()))
+            _leg_hit = [None]   # (x, y, layer, centreline points of that run): where the legs were refused, for PAIR_LEG_RETRY
+            def legs_clear(sm):   # each offset leg of every run against its own single-track map (the other leg and every other net are obstacles)
+                for r_i, run in enumerate(runs):
+                    L = layers[run[0][0]]; pts = [gr.xy(j, i) for i, j in sm[r_i]]
+                    if len(pts) == 1: pts = pts * 2
+                    first_run, last_run = r_i == 0, r_i == len(runs) - 1
+                    _polys = {}
+                    for poly, net in ((offset_polyline(pts, dof(L) * p_side), pn), (offset_polyline(pts, -dof(L) * p_side), nn)):
+                        _polys[net] = poly
+                        total = sum(math.hypot(poly[k + 1][0] - poly[k][0], poly[k + 1][1] - poly[k][1]) for k in range(len(poly) - 1)); walked = 0.0
+                        for k in range(len(poly) - 1):
+                            (x1, y1), (x2, y2) = poly[k], poly[k + 1]; ln_ = math.hypot(x2 - x1, y2 - y1); n = int(ln_ / gr.G) * 2 + 2
+                            for q in range(n + 1):
+                                u = q / n; along = walked + u * ln_
+                                px_, py_ = x1 + u * (x2 - x1), y1 + u * (y2 - y1)
+                                jj, ii = gr.cell(px_, py_)
+                                # The entry ends INSIDE the pair's own pad pair, which is why the map is skipped there. It was
+                                # skipped for everything, and A's /USB_D8 laid its corridor leg at 0.00 mm from /USB_WALL's,
+                                # laid by the same pass ten minutes earlier, inside exactly this 1.2 mm (12 September 2026,
+                                # appendix 32.135). The exemption asks the pads-only map now: the pair's own pads are not an
+                                # obstacle here, and nothing else is excused. Both map modes lay the same copper without it.
+                                if (first_run and fineA and along < 1.2) or (last_run and fineB and total - along < 1.2):
+                                    if not ENTRY_STRICT: continue   # the old skip, kept as the measurement's control arm
+                                    if L not in trkP or not (0 <= ii < gr.NY and 0 <= jj < gr.NX) or not trkP[L][ii, jj]: continue
+                                    # The raster is grown by the clearance plus half a leg and rounded to a 0.1 mm cell, and this
+                                    # is the one place a leg MUST come close to other copper: it is entering a pad field. Asking
+                                    # the map alone cost B19's DIFF100 pass fourteen pairs (22 of 48 to 8), so a blocked cell here
+                                    # is put to the geometry before the pair is refused, which is what PAIR_LEG_EXACT does for the
+                                    # rest of the leg. The pair's own two nets are excused: they are judged exactly, twice, below.
+                                    _needE = CLR + wid(L) / 2 + 0.02
+                                    _dE = _nearest_edge(px_, py_, L, net, limit=_needE + 0.5, skip=(pn, nn))
+                                    if _dE is None or _dE >= _needE: continue
+                                    _leg_hit[0] = (px_, py_, L, pts); return False
+                                _m = trk1[net]
+                                if trk2 is not None and (math.hypot(px_ - _stA[0], py_ - _stA[1]) < _rA or math.hypot(px_ - _stB[0], py_ - _stB[1]) < _rB):
+                                    _m = trk2   # the pair's own copper is not an obstacle at its own station
+                                if 0 <= ii < gr.NY and 0 <= jj < gr.NX and _m[L][ii, jj]:
+                                    # The map is a raster and the leg's margin over it is smaller than a cell (the note at
+                                    # `_cover` above has the arithmetic), so a blocked CELL is not yet a blocked LEG. Before
+                                    # refusing the whole pair for one point, ask the geometry: the map grows an obstacle by
+                                    # CLR + w/2 + 0.02, so the same question exactly is whether the nearest edge is that far.
+                                    # Measured on D: 0.367 mm against a 0.330 demand, refused by 37 micrometres of rounding.
+                                    # PAIR_LEG_EXACT=1 turns it on; it costs a local scan only where a pair would be refused.
+                                    _leg_hit[0] = (px_, py_, L, pts); return False   # the exact re-test was measured worth no pairs and deleted (32.128)
+                            walked += ln_
+                    # THE TWO LEGS AGAINST EACH OTHER, which no occupancy map can answer: both are laid by this pair, so
+                    # neither is on the board when the maps are built and each leg's map excuses its partner's copper by
+                    # construction. A's /USB_D8 came out of this loop with its two legs 0.038 mm apart centre to centre in
+                    # eleven places against a 0.249 mm demand (12 September 2026), which the post-lay gate then rolled the
+                    # whole pair back for. The cause is the offset of a hairpin: `offset_polyline` removes the loop the inner
+                    # leg makes, and what is left lies on the other leg. Judged here instead, the pair simply takes the next
+                    # smoothing, which is what the candidate ladder below exists for.
+                    # The demand here is a FOLD detector, not a clearance test, and the difference cost thirteen of
+                    # B19's DIFF100 pairs when it was written as the latter (22 of 48 to 9 of 48, 12 September 2026).
+                    # A correctly coupled pair runs at exactly 2*dof apart, and on the inner-layer DIFF100 geometry that
+                    # is 0.257 against a class demand of 0.257: every wobble of a rasterised candidate then reads as a
+                    # violation and the whole ladder of smoothings is refused. A FOLD is not marginal, it is the inner
+                    # leg lying on the outer one at a twentieth of the pitch (A measured 0.038 and 0.060 mm), so this
+                    # asks for half the pair's own pitch and the class number is judged once, on the copper, below.
+                    if not FOLD_TEST: continue
+                    _need2 = min(clr_c + wid(L), 2.0 * abs(dof(L))) * 0.5
+                    _pA, _pB = _polys[pn], _polys[nn]
+                    for _k in range(len(_pA) - 1):
+                        _x1, _y1 = _pA[_k]; _x2, _y2 = _pA[_k + 1]
+                        _lo_x, _hi_x = min(_x1, _x2) - _need2, max(_x1, _x2) + _need2
+                        _lo_y, _hi_y = min(_y1, _y2) - _need2, max(_y1, _y2) + _need2
+                        for _m in range(len(_pB) - 1):
+                            _x3, _y3 = _pB[_m]; _x4, _y4 = _pB[_m + 1]
+                            if max(_x3, _x4) < _lo_x or min(_x3, _x4) > _hi_x or max(_y3, _y4) < _lo_y or min(_y3, _y4) > _hi_y: continue
+                            if _seg_dist(_x1, _y1, _x2, _y2, _x3, _y3, _x4, _y4) < _need2:
+                                _leg_hit[0] = ((_x1 + _x2) / 2, (_y1 + _y2) / 2, L, pts); return False
+                return True
+            def dp(pts_cells, tol):
+                """Douglas-Peucker on cells: the fewest vertices within tol cells of the raw run."""
+                if len(pts_cells) <= 2: return list(pts_cells)
+                (i0, j0), (i1, j1) = pts_cells[0], pts_cells[-1]; dx_, dy_ = i1 - i0, j1 - j0; ln_ = math.hypot(dx_, dy_) or 1.0
+                far = max(range(1, len(pts_cells) - 1), key=lambda k: abs((pts_cells[k][0] - i0) * dy_ - (pts_cells[k][1] - j0) * dx_) / ln_)
+                dmax = abs((pts_cells[far][0] - i0) * dy_ - (pts_cells[far][1] - j0) * dx_) / ln_
+                if dmax <= tol: return [pts_cells[0], pts_cells[-1]]
+                return dp(pts_cells[:far + 1], tol)[:-1] + dp(pts_cells[far:], tol)
+            def los_ok(cells, passable):
+                for a_, b_ in zip(cells[:-1], cells[1:]):
+                    n = max(abs(b_[0] - a_[0]), abs(b_[1] - a_[1])) * 4 + 1
+                    for k in range(n + 1):
+                        u = k / n; i = int(round(a_[0] + u * (b_[0] - a_[0]))); j = int(round(a_[1] + u * (b_[1] - a_[1])))
+                        if not passable[i, j]: return False
+                return True
+            smoothed = None; staircase = False
+            cand = [smooth(gr, [(c[1], c[2]) for c in run], ~trk[layers[run[0][0]]], None) for run in runs]
+            if legs_clear(cand): smoothed = cand
+            else:
+                for tol in (1.5, 2.5, 4.0):   # gentler polylines (few long segments at free angles)
+                    cand = [dp([(c[1], c[2]) for c in run], tol) for run in runs]
+                    if all(los_ok(c, ~trk[layers[run[0][0]]]) for c, run in zip(cand, runs)) and legs_clear(cand): smoothed = cand; break
+            if smoothed is None and os.environ.get("PAIR_STAIRCASE", "1") != "0":
+                # 9 September 2026 (B19): the last resort is the corridor as the search found it, tidied only enough to drop
+                # single-cell jitter. Until tonight the tool refused a staircase on quality grounds and left the pair to the
+                # router instead, and `pair_report.py` measured what that costs: THIRTEEN of the first twenty four failures
+                # were this one line. A staircase pair is coupled, holds its class geometry and can be straightened later by
+                # `straighten.py`; a pair left to the router is uncoupled and fails the impedance gate. The owner's ruling of
+                # 9 September is that the pairs are laid in the pre-router, so the coupled staircase wins on the requirement.
+                for tol in (0.6, 0.0):
+                    cand = [dp([(c[1], c[2]) for c in run], tol) if tol else [(c[1], c[2]) for c in run] for run in runs]
+                    if all(los_ok(c, ~trk[layers[run[0][0]]]) for c, run in zip(cand, runs)) and legs_clear(cand):
+                        smoothed = cand; staircase = True; break
+            if smoothed is None and LEG_RETRY and _leg_hit[0] and _sec_tries < LEG_RETRY:
+                # The corridor is there and the legs do not fit it. Block the corridor cell the legs were refused at
+                # and search this section again: the only thing the tool knows that the search does not.
+                _hx, _hy, _hL, _hpts = _leg_hit[0]
+                _cl = min(_hpts, key=lambda q: math.hypot(q[0] - _hx, q[1] - _hy)) if _hpts else (_hx, _hy)
+                if not _trk_private[0]:
+                    trk = {k: v.copy() for k, v in trk.items()}; _trk_private[0] = True   # never stamp the shared cache
+                gr.disc(trk[_hL], _cl[0], _cl[1], max(abs(dof(_hL)), gr.G) + gr.G)
+                _sec_tries += 1; _sec_retry_at[0] = _sec_k
+                report.append("LEGS  %s: section %d's legs were refused at (%.2f, %.2f) on %s; the corridor cell at (%.2f, %.2f) is blocked and the section searched again (%d of %d)"
+                              % (stem, _sec_k + 1, _hx, _hy, b.GetLayerName(_hL), _cl[0], _cl[1], _sec_tries, LEG_RETRY))
+                _sec_k -= 1; _leg_hit[0] = None
+                continue
+            if smoothed is None:
+                # 12 September 2026: say WHERE. This line was the largest failure class on B19 and read the same for a
+                # leg refused in open board as for one refused a millimetre from its own pad, which are different
+                # findings: 30 of 46 refusals measured that day were within 2 mm of one of the pair's own pads, at
+                # J_HDMI, T1 and the pairs' own coupling capacitors, and that is a placement answer rather than a
+                # search one (32.146). The instrument was a knob nobody will remember to set; it is the line now.
+                _where = ""
+                if _leg_hit[0]:
+                    _hx, _hy, _hL, _ = _leg_hit[0]
+                    _own = [(math.hypot(mm(q.GetPosition().x) - _hx, mm(q.GetPosition().y) - _hy), q) for q in (pa, na, pb, nb)]
+                    _d0, _q0 = min(_own, key=lambda t: t[0])
+                    # no parentheses in this text: `pair_report.py` reads the reason as everything inside the
+                    # section line's own brackets, and a nested pair would cut the reason in half at the first one
+                    _where = " refused at %.2f, %.2f on %s, %.2f mm from %s.%s%s" % (
+                        _hx, _hy, b.GetLayerName(_hL), _d0, _q0.GetParentFootprint().GetReference(), _q0.GetNumber(),
+                        ", at the station" if _d0 <= 2.0 else ", out in the corridor")
+                failed = "%s -> %s (the legs clear no smoothing of the centreline%s)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), _where)
+                if os.environ.get("PAIR_DEBUG"):
+                    # where the legs hit: the first forbidden cell of each leg on the raw path, under the SAME exemption legs_clear uses
+                    # (the first and last 1.2 mm at a fine-pitch station are inside the pad pair and are not obstacles). Without the
+                    # exemption this print named a cell 0.23 mm from the pad that legs_clear had already skipped, and an evening went
+                    # into a theory about pair escapes at the socket that the tool was never blocked by (8 Sep 2026 22:15).
+                    for r_i, run in enumerate(runs):
+                        L = layers[run[0][0]]; pts = [gr.xy(c[2], c[1]) for c in run]
+                        first_run, last_run = r_i == 0, r_i == len(runs) - 1
+                        for poly, net in ((offset_polyline(pts, dof(L) * p_side), pn), (offset_polyline(pts, -dof(L) * p_side), nn)):
+                            seg = [math.hypot(poly[k + 1][0] - poly[k][0], poly[k + 1][1] - poly[k][1]) for k in range(len(poly) - 1)]
+                            total = sum(seg); walked = 0.0; hit = None
+                            for k in range(len(poly) - 1):
+                                if not ((first_run and fineA and walked < 1.2) or (last_run and fineB and total - walked < 1.2)):
+                                    jj, ii = gr.cell(*poly[k])
+                                    if 0 <= ii < gr.NY and 0 <= jj < gr.NX and trk1[net][L][ii, jj]: hit = (poly[k], walked); break
+                                walked += seg[k]
+                            if hit:
+                                # Is the CENTRELINE free where the leg is not? The corridor map is grown by `half` (the pair's
+                                # half width plus the slack) and the leg maps by half a leg plus 0.02, so a leg 0.25 mm off the
+                                # centreline reaches 0.42 mm out against the 0.52 mm the corridor guarantees, and the legs can
+                                # only fail where the two maps disagree or where the offset itself has left the corridor.
+                                _cl = min(pts, key=lambda q: math.hypot(q[0] - hit[0][0], q[1] - hit[0][1]))
+                                _jj, _ii = gr.cell(*_cl)
+                                _cb = trk[L][_ii, _jj] if 0 <= _ii < gr.NY and 0 <= _jj < gr.NX else True
+                                print("pair_preroute: leg %s hits an obstacle at (%.2f, %.2f) on %s, %.2f mm along run %d of %d: %s | the centreline %.2f mm away at (%.2f, %.2f) is %s in the corridor map (half %.2f, leg offset %.2f)"
+                                      % (net, hit[0][0], hit[0][1], b.GetLayerName(L), hit[1], r_i + 1, len(runs), _what_is_at(hit[0][0], hit[0][1], L, net),
+                                         math.hypot(_cl[0] - hit[0][0], _cl[1] - hit[0][1]), _cl[0], _cl[1], "BLOCKED" if _cb else "free", half, dof(L)))
+                            else: print("pair_preroute: leg %s clears run %d of %d on %s (the blocker is another run or the smoothing)" % (net, r_i + 1, len(runs), b.GetLayerName(L)))
+                break
+            merged = []   # [(layer index, points)] with consecutive same-layer runs joined into one polyline
+            for r_i, run in enumerate(runs):
+                pts_ = [gr.xy(j, i) for i, j in smoothed[r_i]]
+                if merged and merged[-1][0] == run[0][0]: merged[-1][1].extend(pts_[1:] if pts_ and merged[-1][1] and pts_[0] == merged[-1][1][-1] else pts_)
+                else: merged.append((run[0][0], list(pts_)))
+            # 12 September 2026: what `legs_clear` judged is NOT what is laid. It tested each run's own offset polylines;
+            # the emission below offsets the MERGED polyline, and joining two runs end to end can make a corner neither
+            # of them had. A's /USB_D8 came out of here with its two legs 0.060 mm apart in ten places on copper that
+            # had passed every test. The merged geometry is tested for the same fold, and a merge that folds is dropped
+            # (the runs are then laid one by one, which is what the tool did before the merge was introduced).
+            def _folds(mg):
+                for li_, pts_ in mg:
+                    L_ = layers[li_]
+                    if len(pts_) < 2: continue
+                    _a2 = offset_polyline(pts_, dof(L_) * p_side); _b3 = offset_polyline(pts_, -dof(L_) * p_side)
+                    _nd = min(clr_c + wid(L_), 2.0 * abs(dof(L_))) * 0.5
+                    for _k in range(len(_a2) - 1):
+                        _x1, _y1 = _a2[_k]; _x2, _y2 = _a2[_k + 1]
+                        for _m in range(len(_b3) - 1):
+                            _x3, _y3 = _b3[_m]; _x4, _y4 = _b3[_m + 1]
+                            if max(_x3, _x4) < min(_x1, _x2) - _nd or min(_x3, _x4) > max(_x1, _x2) + _nd: continue
+                            if max(_y3, _y4) < min(_y1, _y2) - _nd or min(_y3, _y4) > max(_y1, _y2) + _nd: continue
+                            if _seg_dist(_x1, _y1, _x2, _y2, _x3, _y3, _x4, _y4) < _nd: return True
+                return False
+            if UNMERGE and len(merged) < len(runs) and _folds(merged):
+                merged = [(run[0][0], [gr.xy(j, i) for i, j in smoothed[r_i]]) for r_i, run in enumerate(runs)]
+                report.append("UNMERGE %s: joining the runs into one polyline folded the legs onto each other; laid run by run" % stem)
+            runs = [[(li, 0, 0)] for li, _ in merged]; smoothed = [None] * len(merged)   # the loop below reads the layer from runs and the points from merged
+            for r_i, run in enumerate(runs):
+                L = layers[run[0][0]]; pts = list(merged[r_i][1])
+                if len(pts) == 1: pts = pts * 2
+                lp = offset_polyline(pts, dof(L) * p_side); ln = offset_polyline(pts, -dof(L) * p_side)
+                at_site("corridor leg run %d" % (r_i + 1))
+                for poly, net in ((lp, net_p), (ln, net_n)):
+                    for k in range(len(poly) - 1): seg(poly[k][0], poly[k][1], poly[k + 1][0], poly[k + 1][1], L, net)
+                if r_i > 0 and layers[runs[r_i - 1][0][0]] == L:   # the same layer (an entry run meets the corridor): the legs join with a short piece
+                    at_site("run join")
+                    for poly_start, prev_poly_end, net in ((lp[0], prev_end[0], net_p), (ln[0], prev_end[1], net_n)): seg(prev_poly_end[0], prev_poly_end[1], poly_start[0], poly_start[1], L, net)
+                elif r_i > 0:   # the layer change: two vias VIA_SPLIT either side of the centreline, on the previous run's last direction, walked back until both sites are free
+                    ppts = list(merged[r_i - 1][1])
+                    if len(ppts) == 1: ppts = ppts * 2
+                    (ax, ay), (qx, qy) = ppts[-1], ppts[-2]; dx, dy = ax - qx, ay - qy; ll = math.hypot(dx, dy)
+                    if ll < 1e-6: (bx, by) = pts[1]; dx, dy = bx - pts[0][0], by - pts[0][1]; ll = math.hypot(dx, dy) or 1.0
+                    ux, uy = dx / ll, dy / ll; nx, ny = -uy, ux
+                    Lprev = layers[runs[r_i - 1][0][0]]
+                    (fx_, fy_) = pts[1]; fdx, fdy = fx_ - pts[0][0], fy_ - pts[0][1]; fl_ = math.hypot(fdx, fdy) or 1.0; fux, fuy = fdx / fl_, fdy / fl_   # the next run's first direction
+                    def pair_free(cx_, cy_, nx_, ny_, split_):
+                        for sign in (p_side, -p_side):
+                            jj, ii = gr.cell(cx_ + nx_ * split_ * sign, cy_ + ny_ * split_ * sign)
+                            if not (0 <= ii < gr.NY and 0 <= jj < gr.NX) or via1n[net_p.GetNetname() if sign == p_side else net_n.GetNetname()][ii, jj]: return False
+                        if abs(2 * split_) < vd + clr_c + 0.02: return False
+                        # 14 September 2026: AND THE COPPER EITHER SIDE OF THOSE VIAS, against each other. The
+                        # two sites are separated by a via plus the clearance, and the four SEGMENTS that reach
+                        # them are not: with the end emissions asked before they are laid (PAIR_END_FIT), every
+                        # own-legs refusal left on B19 names this emission, 14 of them `layer change` against
+                        # `layer change`. The legs' pieces are built here and judged against each other at the
+                        # post-lay gate's own bar, before either exists, so a spot that cannot work is simply
+                        # not taken and the search walks on to the next one.
+                        return True   # the layer-change fit was measured to cost 14 pairs and deleted (32.185, 14 and 15 September 2026)
+                    spot = None
+                    for split_ in (VIA_SPLIT, 0.7, 0.55):   # the vias either side of the centreline; closer when the corridor is tight (their spacing stays a via plus the clearance)
+                        if not (r_i == 1 and fineA):   # back along the previous run (never into an entry run: that is the pad row), up to 8 mm
+                            for k_ in range(0, 81):
+                                if pair_free(ax - ux * 0.1 * k_, ay - uy * 0.1 * k_, nx, ny, split_): spot = (ax - ux * 0.1 * k_, ay - uy * 0.1 * k_, nx, ny, split_); break
+                        if spot is None:   # forward along the next run
+                            for k_ in range(0, 81):
+                                if pair_free(ax + fux * 0.1 * k_, ay + fuy * 0.1 * k_, -fuy, fux, split_): spot = (ax + fux * 0.1 * k_, ay + fuy * 0.1 * k_, -fuy, fux, split_); break
+                        if spot is not None: break
+                    if spot is None: failed = "%s -> %s (no room for the layer-change via pair)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference()); break
+                    cx_, cy_, nx, ny, split_ = spot
+                    for sign, net, poly_start, prev_poly_end in ((p_side, net_p, lp[0], prev_end[0]), (-p_side, net_n, ln[0], prev_end[1])):
+                        vx, vy = cx_ + nx * split_ * sign, cy_ + ny * split_ * sign
+                        at_site("layer change")
+                        seg(prev_poly_end[0], prev_poly_end[1], vx, vy, Lprev, net); via_at(vx, vy, net); seg(vx, vy, poly_start[0], poly_start[1], L, net)
+                prev_end = (lp[-1], ln[-1])
+            if failed: break
+            firstL = layers[runs[0][0][0]]; lastL = layers[runs[-1][0][0]]
+            first_pts = list(merged[0][1]); last_pts = list(merged[-1][1])
+            if len(first_pts) == 1: first_pts = first_pts * 2
+            if len(last_pts) == 1: last_pts = last_pts * 2
+            lp0, ln0 = offset_polyline(first_pts, dof(firstL) * p_side)[0], offset_polyline(first_pts, -dof(firstL) * p_side)[0]
+            lp1, ln1 = offset_polyline(last_pts, dof(lastL) * p_side)[-1], offset_polyline(last_pts, -dof(lastL) * p_side)[-1]
+            def end_crossing(P, Nn, lp_, ln_):
+                """The stubs of an end cross when the P pad lies on the other side of the leg-pair axis than the P leg's offset end."""
+                ux, uy = ln_[0] - lp_[0], ln_[1] - lp_[1]   # across the legs, P to N
+                mx, my = (lp_[0] + ln_[0]) / 2, (lp_[1] + ln_[1]) / 2; px_, py_ = (P[0] + Nn[0]) / 2, (P[1] + Nn[1]) / 2
+                ax_, ay_ = px_ - mx, py_ - my   # along: from the legs' ends to the station
+                side_leg = ax_ * uy - ay_ * ux
+                side_pad = ax_ * (Nn[1] - P[1]) - ay_ * (Nn[0] - P[0])
+                return side_leg * side_pad < 0
+            cross_near = end_crossing(A[0], A[1], lp0, ln0); cross_far = end_crossing(B[0], B[1], lp1, ln1)
+            if crossing and not (cross_near or cross_far): pass
+            ends = ((A[0], lp0, firstL, net_p, True, 1), (A[1], ln0, firstL, net_n, True, -1), (B[0], lp1, lastL, net_p, False, 1), (B[1], ln1, lastL, net_n, False, -1))
+            for (x, y, aL, obj), (ex, ey), L, net, near, sgn in ends:
+                if (near and fineA) or (not near and fineB):
+                    st_ = (pa, na) if near else (pb, nb)
+                    if dist_p(*st_) > 0.7 and net is net_p:   # the fan into a side-by-side pair, both legs at once (the N leg's turn is skipped below)
+                        lpx, lpy = (ex, ey); lnx, lny = (ln0 if near else ln1)
+                        def xing():
+                            """The two fans against each other and against every top-layer piece of the other leg laid so far (an L-shaped corridor twists the order)."""
+                            P_ = (mm(st_[0].GetPosition().x), mm(st_[0].GetPosition().y)); N_ = (mm(st_[1].GetPosition().x), mm(st_[1].GetPosition().y))
+                            def ccw(a_, b_, c_): return (c_[1] - a_[1]) * (b_[0] - a_[0]) > (b_[1] - a_[1]) * (c_[0] - a_[0])
+                            def isx(a_, b_, c_, d_): return ccw(a_, c_, d_) != ccw(b_, c_, d_) and ccw(a_, b_, c_) != ccw(a_, b_, d_)
+                            if isx((lpx, lpy), P_, (lnx, lny), N_): return True
+                            for t in pieces:
+                                if t.GetClass() != "PCB_TRACK" or t.GetLayer() != pcbnew.F_Cu: continue
+                                a_ = (mm(t.GetStart().x), mm(t.GetStart().y)); b_ = (mm(t.GetEnd().x), mm(t.GetEnd().y))
+                                if t.GetNetname() == nn and isx((lpx, lpy), P_, a_, b_): return True
+                                if t.GetNetname() == pn and isx((lnx, lny), N_, a_, b_): return True
+                            return False
+                        if xing():
+                            fa_, fb_ = st_[0].GetParentFootprint(), st_[1].GetParentFootprint()
+                            if SWAP_OK and fa_.GetReference() != fb_.GetReference() and fa_.GetFPIDAsString() == fb_.GetFPIDAsString() and not fa_.IsLocked() and not fb_.IsLocked() and not pinned(fa_) and not pinned(fb_):
+                                pa_, pb_ = fa_.GetPosition(), fb_.GetPosition(); fa_.SetPosition(pb_); fb_.SetPosition(pa_); MAP_EPOCH[0] += 1; report.append("SWAP  %s: %s and %s exchanged positions so the legs fan into their pads without crossing" % (stem, fa_.GetReference(), fb_.GetReference())); rebuild_maps()
+                            if xing():   # still crossing (one part's two pins, a pinned station): the N fan is laid straight and the P leg dives under it (8 Sep 2026 12:26)
+                                # the N fan first runs 0.5 mm on along the corridor, then turns: its diagonal passed 1 um under the class clearance at P's turn into the dive (13:08)
+                                ax2, ay2 = (lnx - lpx), (lny - lpy); al2 = math.hypot(ax2, ay2) or 1.0; ux2, uy2 = -ay2 / al2, ax2 / al2
+                                smx, smy = (mm(st_[0].GetPosition().x) + mm(st_[1].GetPosition().x)) / 2, (mm(st_[0].GetPosition().y) + mm(st_[1].GetPosition().y)) / 2
+                                if (smx - lnx) * ux2 + (smy - lny) * uy2 < 0: ux2, uy2 = -ux2, -uy2
+                                lnx2, lny2 = lnx + 0.5 * ux2, lny + 0.5 * uy2
+                                _nx_, _ny_ = mm(st_[1].GetPosition().x), mm(st_[1].GetPosition().y)
+                                # 12 September 2026 (appendix 32.135): these two segments went down straight and untested, and they
+                                # are the defect A's /USB_D8 shipped into the pre-route DRC. `xing()` above asks whether the fan
+                                # CROSSES the partner's copper; two segments 0.06 mm apart never cross, so the N fan came to lie
+                                # flat along the P leg's staircase and ten shorting items followed. The fan asks now, and takes the
+                                # searched stub when the straight one would sit on its own partner.
+                                at_site("the N fan of a dive")
+                                _back = trim_leg(net_p, lpx, lpy, FAN_BACK) if FAN_BACK > 0 else None
+                                if _back:
+                                    report.append("TRIM  %s: the P leg ends %.2f mm short of %s so the N fan has room; it dives from there"
+                                                  % (stem, math.hypot(_back[0] - lpx, _back[1] - lpy), st_[0].GetParentFootprint().GetReference()))
+                                    lpx, lpy = _back
+                                if not (fan_leg(lnx, lny, lnx2, lny2, pcbnew.F_Cu, net_n) and fan_leg(lnx2, lny2, _nx_, _ny_, pcbnew.F_Cu, net_n)):
+                                    failed = "%s -> %s (the N fan into %s has no path clear of the copper already laid)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), st_[0].GetParentFootprint().GetReference()); break
+                                nnx_, nny_ = (lnx - lpx, lny - lpy); nl2_ = math.hypot(nnx_, nny_) or 1.0
+                                at_site("the P dive under it")
+                                err_ = dive_p(mm(st_[0].GetPosition().x), mm(st_[0].GetPosition().y), lpx, lpy, pcbnew.F_Cu, None, st_[0], net_p, (-nnx_ / nl2_, -nny_ / nl2_))
+                                if err_: failed = "%s -> %s (the fan into %s crosses, %s)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), st_[0].GetParentFootprint().GetReference(), err_); break
+                                report.append("DIVE  %s: the P leg crosses under the N fan into %s on %s" % (stem, st_[0].GetParentFootprint().GetReference(), b.GetLayerName(hop_of(pcbnew.F_Cu) or pcbnew.F_Cu)))
+                                continue
+                        at_site("fan into the pads")
+                        okp = fan_leg(lpx, lpy, mm(st_[0].GetPosition().x), mm(st_[0].GetPosition().y), pcbnew.F_Cu, net_p)
+                        okn = fan_leg(lnx, lny, mm(st_[1].GetPosition().x), mm(st_[1].GetPosition().y), pcbnew.F_Cu, net_n)
+                        if not (okp and okn): failed = "%s -> %s (the fan into %s is blocked and has no path)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), st_[0].GetParentFootprint().GetReference()); break
+                    continue   # a fine pitch: the legs entered the pads straight; the N leg of a fan was laid with the P leg
+                crossing = cross_near if near else cross_far
+                nnx, nny = (ln0[0] - lp0[0], ln0[1] - lp0[1]) if near else (ln1[0] - lp1[0], ln1[1] - lp1[1]); nl_ = math.hypot(nnx, nny) or 1.0
+                away = (-sgn * nnx / nl_, -sgn * nny / nl_)   # from the other leg's end towards this one, continued
+                _pf = obj.GetParentFootprint() if hasattr(obj, "GetParentFootprint") else None; ref_ = _pf.GetReference() if _pf else "via"   # a via's parent is None
+                def fail_(what): return "%s -> %s (%s for %s at %s)" % (pa.GetParentFootprint().GetReference(), pb.GetParentFootprint().GetReference(), what, net.GetNetname(), ref_)
+                if crossing and net is net_p:
+                    at_site("the dive of a crossing end")
+                    err_ = dive_p(x, y, ex, ey, L, aL, obj, net, away)
+                    if err_: failed = fail_(err_); break
+                    continue
+                if aL is None or aL == L:   # the pad (or an escape via) is on the corridor layer
+                    at_site("the end stub into the pad")
+                    if not stub(ex, ey, x, y, L, net): failed = fail_("no stub path"); break
+                    continue
+                at_site("the end hop to a via beside the pad")
+                site = via_hop(ex, ey, x, y, L, aL, net, away)   # the pad is on another layer: a via near the offset end with a hop path, the stub on the pad's layer
+                if site is None: failed = fail_("no via site with a hop path"); break
+                via_at(site[0], site[1], net); gr.disc(via, site[0], site[1], VIA_SPLIT)
+                if not stub(site[0], site[1], x, y, aL, net): failed = fail_("no stub path"); break
+            if failed: break
+        if PLAN_MODE:   # a planning half-iteration searches and gives nothing back to the board
+            rollback()
+            continue
+        if twist:
+            rollback()
+            # the P leg changes side between two stations: when the far station is two identical passives (the series resistors of the two legs), swapping
+            # their positions is a legal pre-route placement move that untwists the pair (the packer placed them in arbitrary order); done once, then the pair is laid again
+            twist, pa2, na2 = twist
+            fa, fb = pa2.GetParentFootprint(), na2.GetParentFootprint()
+            if SWAP_OK and fa.GetReference() != fb.GetReference() and fa.GetFPIDAsString() == fb.GetFPIDAsString() and abs(fa.GetOrientationDegrees() - fb.GetOrientationDegrees()) < 0.01 and not fa.IsLocked() and not fb.IsLocked() and stem not in swapped and not pinned(fa) and not pinned(fb):
+                pa_, pb_ = fa.GetPosition(), fb.GetPosition(); fa.SetPosition(pb_); fb.SetPosition(pa_); MAP_EPOCH[0] += 1; swapped.add(stem)   # a swap moves pads, so every cached occupancy map is stale
+                for t in [t for t in b.GetTracks() if t.GetNetname() in (pn, nn) and t not in stripped]: board_remove(b, t)   # its locked pieces so far go with the retry
+                for t in stripped: b.Add(t)
+                stripped.clear()
+                report.append("SWAP  %s: %s and %s exchanged positions to untwist the pair; laid again" % (stem, fa.GetReference(), fb.GetReference())); stems.append(stem); continue
+            why = ("one part's two pins" if fa.GetReference() == fb.GetReference() else ("different footprints %s / %s" % (fa.GetFPIDAsString().split(":")[-1], fb.GetFPIDAsString().split(":")[-1]) if fa.GetFPIDAsString() != fb.GetFPIDAsString() else ("orientations %s / %s" % (fa.GetOrientationDegrees(), fb.GetOrientationDegrees()) if abs(fa.GetOrientationDegrees() - fb.GetOrientationDegrees()) >= 0.01 else ("locked" if fa.IsLocked() or fb.IsLocked() else "already swapped once"))))
+            report.append("TWIST %s: the P leg changes side between the stations %s (no swap: %s); a crossing would be needed, left to the router" % (stem, twist, why)); continue
+        if failed:
+            rollback()
+            # 10 September 2026, measured both ways: ending the legs at an IC's escape vias instead of stripping the escape and
+            # entering the pads lays 27 more of B19's 113 pairs and COSTS D10 two of its five, so it is not a mode to switch on.
+            # It is a fallback: the pads are tried first, and a pair that fails is laid again ending at the vias.
+            if not ENTRY_VIA and stem not in via_entry_stems:
+                via_entry_stems.add(stem); stems.append(stem)
+                report.append("ENTRY %s: section %s failed with the legs entering the pads; laid again ending at the escape vias" % (stem, failed))
+                continue
+            if stem not in slim_stems and SLACK_SLIM < SLACK:
+                slim_stems.add(stem); stems.append(stem)
+                report.append("SLIM  %s: section %s; searched again with the corridor at %.2f mm of slack instead of %.2f" % (stem, failed, SLACK_SLIM, SLACK))
+                continue
+            report.append("FAIL  %s: section %s on %s at w %.2f s %.2f (%d of %d sections laid before it)" % (stem, failed, ",".join(b.GetLayerName(L) for L in layers), w, s, laid_sections, len(sections)))
+            continue
+        # every other pad of the two nets (a pull resistor, a test point, a part's second pin) gets a stub to the nearest laid piece of its net, so the router
+        # has nothing left on a pair net (8 Sep 2026: Freerouting wandered 15 to 23 pieces over three layers to reach D9's pull-downs and the read-back called the pairs uncoupled)
+        left = 0; stubs_ = 0; dives_ = 0; rebuild_maps()
+        for net_obj, net in ((net_p, pn), (net_n, nn)):
+            laid_pts = [(mm(t.GetStart().x), mm(t.GetStart().y), t.GetLayer()) for t in pieces if t.GetClass() == "PCB_TRACK" and t.GetNetname() == net] + [(mm(t.GetEnd().x), mm(t.GetEnd().y), t.GetLayer()) for t in pieces if t.GetClass() == "PCB_TRACK" and t.GetNetname() == net]
+            if not laid_pts: continue
+            station_pads = {(q.GetParentFootprint().GetReference(), q.GetNumber()) for st in stations for q in st}
+            for f in b.GetFootprints():
+                for q in f.Pads():
+                    if q.GetNetname() != net or (f.GetReference(), q.GetNumber()) in station_pads: continue
+                    qx, qy = mm(q.GetPosition().x), mm(q.GetPosition().y)
+                    if any(math.hypot(qx - x_, qy - y_) < 0.3 for x_, y_, _ in laid_pts): continue   # already on the copper
+                    near = sorted(laid_pts, key=lambda t: math.hypot(qx - t[0], qy - t[1]))[:6]
+                    if math.hypot(qx - near[0][0], qy - near[0][1]) > 12.0: left += 1; continue   # too far: the router's
+                    qL = None if q.GetAttribute() != pcbnew.PAD_ATTRIB_SMD else next((L for L in _ALL.values() if q.IsOnLayer(L)), None)
+                    done = False
+                    for x_, y_, L_ in near:
+                        SL = qL if (qL is not None and qL == L_) else L_
+                        if qL is not None and qL != L_:   # the pad on another layer: a via beside it, the stub on the pad's layer
+                            site = via_hop(x_, y_, qx, qy, L_, qL, net_obj, (0.0, 0.0)) if L_ in trk1[net] else None
+                            if site is None: continue
+                            via_at(site[0], site[1], net_obj); gr.disc(via, site[0], site[1], VIA_SPLIT)
+                            if stub(site[0], site[1], qx, qy, qL, net_obj): done = True; break
+                            continue
+                        if SL in trk1[net] and stub(x_, y_, qx, qy, SL, net_obj): done = True; break
+                    if not done:   # the pad across the other leg (a pull-down whose side flipped with a swap): the stub dives under it on the other corridor layer (8 Sep 2026 12:59)
+                        for x_, y_, L_ in near[:3]:
+                            if L_ not in layers: continue
+                            n0 = len(pieces)
+                            if dive_p(qx, qy, x_, y_, L_, (None if (qL is None or qL == L_) else qL), q, net_obj, (0.0, 0.0)) is None: done = True; dives_ += 1; break
+                            for t in pieces[n0:]: board_remove(b, t)
+                            del pieces[n0:]
+                    if done: stubs_ += 1
+                    else: left += 1
+        if stubs_ or left: report.append("STUBS %s: %d other pad(s) of the pair nets stubbed to the laid copper (%d by a dive), %d left to the router" % (stem, stubs_, dives_, left))
+        # 9 Sep 2026 (D10 USB3, appendix 32.83): THE TWO LEGS OF A PAIR MAY NEVER CROSS EACH OTHER. Around a hairpin the
+        # offset legs can swap sides and swap back, which D10's USB3 did twice on F.Cu and shipped two tracks_crossing
+        # violations between USB3_P and USB3_N into the pre-route gate. A pair the pre-router cannot lay is one unrouted
+        # net the router will take; a pair it lays crossed is a short. The pair is rolled back and reported instead.
+        _segs = {}; _seg_site = {}
+        for _i_, _t in enumerate(pieces):
+            if _t.GetClass() != "PCB_TRACK": continue
+            _k_ = (mm(_t.GetStart().x), mm(_t.GetStart().y), mm(_t.GetEnd().x), mm(_t.GetEnd().y))
+            _segs.setdefault((_t.GetNetname(), _t.GetLayer()), []).append(_k_)
+            _seg_site[(_t.GetNetname(), _t.GetLayer()) + _k_] = piece_site.get(_i_, "?")
+        def _site_of(net, L, seg4): return _seg_site.get((net, L) + tuple(seg4), "?")
+        def _hit(a, c, d, e, f, g_, h, i_):
+            def _o(px, py, qx, qy, rx, ry): return (qx - px) * (ry - py) - (qy - py) * (rx - px)
+            o1, o2, o3, o4 = _o(a, c, d, e, f, g_), _o(a, c, d, e, h, i_), _o(f, g_, h, i_, a, c), _o(f, g_, h, i_, d, e)
+            return (o1 > 1e-9) != (o2 > 1e-9) and (o3 > 1e-9) != (o4 > 1e-9) and abs(o1) + abs(o2) + abs(o3) + abs(o4) > 1e-9
+        # 12 September 2026: crossing is not the only way two legs of one pair can be illegal. A's ribbon pairs
+        # came out of the station fan with `shorting_items` and `clearance` between /USB_D8_N and its OWN partner
+        # on 0.1 mm segments, which no strict crossing test sees: two segments can run alongside 0.05 mm apart
+        # and never cross. KiCad applies the CLASS clearance between P and N, so the pair's own two legs are
+        # judged by the same number as any other pair of nets, and the pre-router judges them here rather than
+        # shipping 13 hard violations into the pre-route gate for the chain to refuse.
+        _vias = {pn: [], nn: []}
+        for _t in pieces:
+            if _t.GetClass() == "PCB_VIA" and _t.GetNetname() in _vias: _vias[_t.GetNetname()].append((mm(_t.GetPosition().x), mm(_t.GetPosition().y), _via_dia(_t) / 2))
+        _cross = 0; _near = 0; _near_worst = 9.9; _near_at = []
+        _tol = 0.005   # the DRC's own rounding: a gap equal to the clearance is legal
+        for _L in {k[1] for k in _segs}:
+            _needL = max(0.0, clr_c - _tol) + wid(_L)   # centre to centre for two tracks of THIS layer's width
+            for _a in _segs.get((pn, _L), []):
+                for _b2 in _segs.get((nn, _L), []):
+                    if _hit(*_a, *_b2): _cross += 1
+                    else:
+                        _g = _seg_gap(*_a, *_b2)
+                        if _g < _needL:
+                            _near += 1; _near_worst = min(_near_worst, _g)
+                            if len(_near_at) < 4: _near_at.append("%.3f mm of %.3f on %s: %s [%s] (%.3f, %.3f)-(%.3f, %.3f) against %s [%s] (%.3f, %.3f)-(%.3f, %.3f)" % ((_g, _needL, b.GetLayerName(_L), pn, _site_of(pn, _L, _a)) + tuple(_a) + (nn, _site_of(nn, _L, _b2)) + tuple(_b2)))
+            for _nm, _on in ((pn, nn), (nn, pn)):   # a via of one leg against the other leg's track on this layer (a through via is on every layer)
+                for _vx, _vy, _vr in _vias[_nm]:
+                    _needV = max(0.0, clr_c - _tol) + _vr + wid(_L) / 2
+                    for _a in _segs.get((_on, _L), []):
+                        _g = _pt_seg(_vx, _vy, *_a)
+                        if _g < _needV:
+                            _near += 1; _near_worst = min(_near_worst, _g)
+                            if len(_near_at) < 4: _near_at.append("%.3f mm of %.3f on %s: the %s via at (%.3f, %.3f) against %s (%.3f, %.3f)-(%.3f, %.3f)" % ((_g, _needV, b.GetLayerName(_L), _nm, _vx, _vy, _on) + tuple(_a)))
+        for _vx, _vy, _vr in _vias[pn]:
+            for _wx, _wy, _wr in _vias[nn]:
+                _needVV = max(0.0, clr_c - _tol) + _vr + _wr
+                _g = math.hypot(_vx - _wx, _vy - _wy)
+                if _g < _needVV:
+                    _near += 1; _near_worst = min(_near_worst, _g)
+                    if len(_near_at) < 4: _near_at.append("%.3f mm of %.3f: the %s via at (%.3f, %.3f) against the %s via at (%.3f, %.3f)" % (_g, _needVV, pn, _vx, _vy, nn, _wx, _wy))
+        # 12 September 2026: and the pair against EVERY OTHER NET, which is the same question one map further out.
+        # A's /USB_D8 laid its fan across /USB_WALL, laid minutes earlier by this same pass, and the pre-route DRC
+        # read twelve items on copper every one of whose emissions had asked a map. The map is right (the cell IS
+        # blocked); what was missing was anyone asking it about the copper as emitted. `trkP` exempts this pair's own
+        # PADS and nothing else, so a fan may enter its own pad field and may not lie on another net's track.
+        _foul = []
+        if CROSS_NET != "off":
+            # The map for this question exempts the pair's OWN two nets, pads and tracks alike: its two legs run at
+            # the pair pitch by design and are judged by the fold test and the gate below, not here. Everything else
+            # on the board, including a pair this same pass laid ten minutes ago, is an obstacle.
+            trkX = build_maps(gr, b, pad_layers, {pn, nn}, max(w, w_in) / 2 + 0.02, vd / 2)[0]
+            for _i_, _t in enumerate(pieces):
+                if _t.GetClass() != "PCB_TRACK": continue
+                _L = _t.GetLayer()
+                if _L not in trkX: continue
+                _x1, _y1, _x2, _y2 = mm(_t.GetStart().x), mm(_t.GetStart().y), mm(_t.GetEnd().x), mm(_t.GetEnd().y)
+                _ln = math.hypot(_x2 - _x1, _y2 - _y1); _n = int(_ln / gr.G) + 2
+                for _k in range(_n + 1):
+                    _u = _k / _n; _qx, _qy = _x1 + _u * (_x2 - _x1), _y1 + _u * (_y2 - _y1)
+                    _jj, _ii = gr.cell(_qx, _qy)
+                    if 0 <= _ii < gr.NY and 0 <= _jj < gr.NX and trkX[_L][_ii, _jj]:
+                        _foul.append((_t.GetNetname(), b.GetLayerName(_L), _qx, _qy, piece_site.get(_i_, "?"), _what_is_at(_qx, _qy, _L, _t.GetNetname(), skip=(pn, nn))))
+                        break
+                if len(_foul) >= 4: break
+        if _foul:
+            if CROSS_NET == "block":
+                rollback()
+                report.append("FAIL  %s: its copper lies on another net; rolled back, the router takes the pair" % stem)
+            else:
+                report.append("NEAR  %s: its copper sits inside another net's keep-away on the map (the DRC decides; PAIR_CROSS_NET=block refuses it)" % stem)
+            for _nm, _Ln, _qx, _qy, _st, _wh in _foul:
+                report.append("      %s on %s at (%.3f, %.3f) [%s]: %s" % (_nm, _Ln, _qx, _qy, _st, _wh))
+            if CROSS_NET == "block": continue
+        if _near and not _cross:
+            rollback()
+            for _w in _near_at: report.append("      %s" % _w)   # name the copper: which piece of which leg, on which layer (12 September 2026)
+            report.append("FAIL  %s: its own two legs come within %.3f mm of each other in %d place(s) against the class clearance %.3f; rolled back, the router takes the pair"
+                          % (stem, _near_worst, _near, clr_c))
+            continue
+        if _cross:
+            rollback()
+            # 10 September 2026: a crossing used to end the pair here, while a section failure got the escape-via fallback.
+            # The crossings are 12 of the 64 misses that remain once the corridor slack is right, and the fallback changes
+            # where the legs end, which is where most of them cross. The pair takes the same second chance.
+            if not ENTRY_VIA and stem not in via_entry_stems:
+                via_entry_stems.add(stem); stems.append(stem)
+                report.append("ENTRY %s: the two legs crossed %d time(s) with the legs entering the pads; laid again ending at the escape vias" % (stem, _cross))
+                continue
+            report.append("FAIL  %s: the two legs cross each other %d time(s) on the laid path; rolled back, the router takes the pair" % (stem, _cross))
+            continue
+        # ---- THE TWO LEGS ARE MEASURED AND THE SHORT ONE IS LENGTHENED (14 September 2026, MESHSAT-862).
+        # A's USB_D8 comes off this pass at P 140.32 mm and N 138.54: a 1.77 mm mismatch, identical in every
+        # route because it is THIS pass's geometry and not the router's. The owner's length gate is 1 mm, and
+        # `meander.py` could place nothing, because a pair laid end to end here leaves no unlocked copper and
+        # no free band beside it. The difference is where it always is on an offset pair: at every corner the
+        # outer leg is longer than the inner by about the pitch times the turn, and over a winding corridor
+        # those add up.
+        #
+        # The fix is the one a pair router owes: give the short leg the difference back, in small bumps on its
+        # own straight pieces, on the side AWAY from the partner, and only where the leg's own map says the
+        # copper is free. Every bump is judged by `partner_clear` before it exists, which is the same test the
+        # end emissions pass, so this cannot lay copper on the partner. If a bump does not fit, the leg keeps
+        # the length it has and the gate says so: this pass is a length matcher, not a length promise.
+        if LEG_MATCH:
+            # `pn` and `nn` are the net NAMES here (the gate above keys its segment map on them); the net
+            # objects are `net_p` and `net_n`. Getting that wrong is an AttributeError on the first pair, which
+            # is how it was found.
+            # THE WHOLE NET, not just what this pass laid: measured on A, the pre-router's own legs come out
+            # matched and the 1.77 mm the board gate reports is in the ESCAPE stubs, which `escape.py` laid
+            # before this pass ever ran and which are locked like everything else. A length gate judges the
+            # net; so does this.
+            _lens = {pn: 0.0, nn: 0.0}
+            for _t in b.GetTracks():
+                if _t.GetClass() == "PCB_TRACK" and _t.GetNetname() in _lens: _lens[_t.GetNetname()] += mm(_t.GetLength())
+            _d = _lens[pn] - _lens[nn]
+            if abs(_d) > LEG_MATCH_TOL:
+                _short, _long = (net_n, net_p) if _d > 0 else (net_p, net_n)
+                _added = _equalise(_short, _long, abs(_d))
+                report.append("MATCH %s: legs %.2f and %.2f mm, %.2f mm apart; %.2f mm added to %s%s"
+                              % (stem, _lens[pn], _lens[nn], abs(_d), _added, _short.GetNetname(),
+                                 "" if _added >= abs(_d) - LEG_MATCH_TOL else " (the rest has no room)"))
+        laid += 1; on_board[stem] = (list(pieces), list(stripped))
+        report.append("LAID  %s: class %s w %.2f s %.2f, %d sections over %d stations, %d cells, %d runs, %d pieces added%s" % (stem, cls_of(pn), w, s, len(sections), len(stations), cells, nruns, added, " (staircase corridor)" if staircase else ""))
+    if PLAN_MODE:
+        _po = os.environ.get("PAIR_PLAN_OUT")
+        if _po: json.dump(plan_out, open(_po, "w"))
+        _done = sum(1 for v in plan_out.values() if v and all(x for x in v))
+        _cL, _ci, _cj, _cv = [], [], [], []
+        for _k, _occ in (NEG_OCC or {}).items():
+            _ii, _jj = np.nonzero(_occ > 1)
+            _cL.extend([_k] * len(_ii)); _ci.extend(_ii.tolist()); _cj.extend(_jj.tolist()); _cv.extend((_occ[_ii, _jj] - 1).tolist())
+        _co = os.environ.get("PAIR_CONFLICT_OUT")
+        if _co: np.savez_compressed(_co, L=np.array(_cL, dtype=np.int16), i=np.array(_ci, dtype=np.int32), j=np.array(_cj, dtype=np.int32), v=np.array(_cv, dtype=np.int16))
+        print("pair_preroute: PLAN %d of %d pairs have a corridor for every section, %d contested cell(s)" % (_done, len(set(stems)), len(_cv)))
+        return 0 if _done == len(set(stems)) else 1
+    out = board if not test else board.replace(".kicad_pcb", "-pairs.kicad_pcb")
+    pcbnew.SaveBoard(out, b)
+    print("pair_preroute: --- summary ---")
+    for l in report: print("pair_preroute: " + l)
+    n_pairs = len(set(stems))   # a swapped pair is appended for its retry and counts once
+    _moved = [(r_, _POS0[r_], (f_.GetPosition().x, f_.GetPosition().y)) for f_ in b.GetFootprints()
+              for r_ in [f_.GetReference()] if r_ in _POS0 and _POS0[r_] != (f_.GetPosition().x, f_.GetPosition().y)]
+    for r_, a_, c_ in sorted(_moved):
+        print("pair_preroute: MOVED %s from (%.2f, %.2f) to (%.2f, %.2f)" % (r_, mm(a_[0]), mm(a_[1]), mm(c_[0]), mm(c_[1])))
+    if _moved: print("pair_preroute: %d footprint(s) moved by this pass" % len(_moved))
+    print("pair_preroute: %d of %d pairs laid -> %s" % (laid, n_pairs, out))
+    if END_FIT: print("pair_preroute: the end fit moved the approach into the pad %d time(s) (PAIR_END_FIT=0 to measure it off)" % _end_fit[0])
+    print("pair_preroute: search kernel %s%s" % (_SEARCH_KERNEL, (", rasteriser fell back to the per-cell predicate %d time(s)" % _RASTER_FALLBACK[0]) if _RASTER_FALLBACK[0] else ""))
+    # `_T["maps"]` already counted this and a second counter beside it would be one more pair of numbers to drift apart,
+    # which this project has paid for twice. The map mode and the call count join the line that exists (11 Sep 2026).
+    _known = _T["maps"] + _T["astar"] + _T["stubs"] + _T["legs"] + _T["stamp"]
+    print("pair_preroute: seconds %.0f total, %.0f in the occupancy maps (%d call(s), mode %s%s), %.0f in the corridor search, "
+          "%.0f in the stub search, %.0f in the leg offsets, %.0f stamping laid copper, %.0f elsewhere; %d expansions"
+          % (time.time() - T0, _T["maps"], MAP_CALLS[0], MAP_MODE, ", CHECKED against the reference" if MAP_CHECK else "",
+             _T["astar"], _T["stubs"], _T["legs"], _T["stamp"], max(0.0, time.time() - T0 - _known), PAIR_TOTAL[0]))
+    print("pair_preroute: calls %s" % ", ".join("%s %d" % (k, _N[k]) for k in ("maps", "astar", "stubs", "legs", "stamp")))
+    return 0 if laid == n_pairs else 1
+
+if __name__ == "__main__": sys.exit(main(sys.argv[1:]))

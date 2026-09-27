@@ -1,0 +1,39 @@
+RB_3V3 (4 nodes):
+   C59.1  | 4.7u
+   C60.1  | 100n
+   R40.2  | 1k
+   U18.6 (VDD) | CP2102N-A02-GQFN28 USB-UART bridge (RB)
+RB_CTRL (2 nodes):
+   J_RB9704.6 (Pin_6) | RockBLOCK 9704 16-pin (IDC 2x8) on the Ground Control bracket
+   U6.20 (IO1_7) | PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)
+RB_IEN (2 nodes):
+   J_RB9704.3 (Pin_3) | RockBLOCK 9704 16-pin (IDC 2x8) on the Ground Control bracket
+   U6.19 (IO1_6) | PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)
+RB_RST (2 nodes):
+   R40.1  | 1k
+   U18.9 (RSTb) | CP2102N-A02-GQFN28 USB-UART bridge (RB)
+RB_STATUS (3 nodes):
+   J_RB9704.7 (Pin_7) | RockBLOCK 9704 16-pin (IDC 2x8) on the Ground Control bracket
+   R41.1  | 10k
+   U7.7 (IO0_3) | PCA9555PW 0x25: inputs (faults, RockBLOCK status) and spares
+RB_XMTG (3 nodes):
+   J_RB9704.8 (Pin_8) | RockBLOCK 9704 16-pin (IDC 2x8) on the Ground Control bracket
+   R42.1  | 10k
+   U7.8 (IO0_4) | PCA9555PW 0x25: inputs (faults, RockBLOCK status) and spares
+RB_TXD (2 nodes):
+   J_RB9704.13 (Pin_13) | RockBLOCK 9704 16-pin (IDC 2x8) on the Ground Control bracket
+   U18.25 (RXD) | CP2102N-A02-GQFN28 USB-UART bridge (RB)
+RB_RXD (2 nodes):
+   J_RB9704.14 (Pin_14) | RockBLOCK 9704 16-pin (IDC 2x8) on the Ground Control bracket
+   U18.26 (TXD) | CP2102N-A02-GQFN28 USB-UART bridge (RB)
+RB_DM (2 nodes):
+   U102.25 (USB_DM_DN4) | TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port)
+   U18.5 (D-) | CP2102N-A02-GQFN28 USB-UART bridge (RB)
+RB_DP (2 nodes):
+   U102.24 (USB_DP_DN4) | TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port)
+   U18.4 (D+) | CP2102N-A02-GQFN28 USB-UART bridge (RB)
+LIME_DP (4 nodes):
+   J_LIME.3 (D+) | USB 3.0 type A receptacle (Wuerth 692122030100 land): the LimeSDR Mini 2.4 in its bay
+   U102.1 (USB_DP_DN1) | TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port)
+   U33.1 (I/O1) | USBLC6-2SC6
+   U33.6 (I/O1) | USBLC6-2SC6

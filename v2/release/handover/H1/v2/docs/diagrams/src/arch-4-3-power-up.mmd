@@ -1,0 +1,12 @@
+---
+title: "ARCHITECTURE.md, 4.3 Power-up and power control, as generated (adjudication A01, corrected at `458b2873`) (lines 343 to 351 of the document with sha256/16 4ad3ba63938e8d85): design diagram of an unbuilt prototype"
+---
+flowchart TB
+  S0["S0 pack connected: LTC2954 holds RAIL_EN low, sensor RP2040 on E runs, KILL low (its pull-up is on the rail it enables)"]
+  S1["S1 MAIN pressed: RAIL_EN at 2.8 to 4.7 V, A's +3V3 comes up"]
+  S2["S2 expanders U27, U28 leave reset as inputs; DEV_EN pulled up by R42, every other enable held off by 4.7 k"]
+  S3["S3 +5V_DEV starts by design, then B's +3V3_DEV, PANEL_5V, the panel RP2040"]
+  S4["S4 panel firmware reads ZEROIZE_SW and its wipe-pending record, completes any pending wipe (D-03), writes the expanders (output registers before configuration), holds PI_KILL low, raises SLOT_EN1..3"]
+  S5["S5 compute slots, cards and radios per their enables"]
+  S0 --> S1 --> S2 --> S3 --> S4 --> S5
+  S3 -->|"no panel firmware: blank, crashed or BOOTSEL"| STOP["kit stops at S3: no module runs, by D-03's boot order"]

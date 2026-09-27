@@ -1,0 +1,138 @@
+# The pair pre-router's knobs, and which of them has a number behind it
+
+12 September 2026 (MESHSAT-862). `tools/pair_preroute.py` is 2497 lines and reads **53 environment knobs**, and since 12 September 2026 every one of them is in the typed registry `tools/agent/knobs.json` with its category, type, unit and stage. **Category is the authority for what tier 2 may propose**; this document is the measurement behind each value.
+This is the map: what each one does, what it defaults to, and **what it measured**, because a knob with no
+measurement is a decision someone made once and nobody has checked since. Every number here is on one board
+with one placement, named beside it; the record's standing caution applies to all of them, that a value which
+wins one draw is a measurement and not a law.
+
+The measurements are on B19's placed board (113 pairs) unless a row says otherwise. `boards/<letter>.json` is
+where a board's own values live (`pair_env`), never the tool's defaults.
+
+**EVERY NUMBER BELOW WAS TAKEN ON A TOOL THAT COULD LAY COPPER ON ANOTHER NET (appendix 32.135), and the whole
+table is owed a re-measurement.** Six emissions laid copper without asking, the worst of them being the entry
+region of `legs_clear`, which skipped the occupancy map for the first and last 1.2 mm of every leg at an entry
+station. Closing that hole alone takes B19's DIFF100 pass from 22 of 48 to about 10, so the 57 of 113 this table
+rests on is an upper bound on a pass that was not legal throughout. `PAIR_ENTRY_STRICT=0` reproduces the old
+behaviour exactly, which is how the two are compared; the arm that decides whether those pairs were legal is a
+DRC of both boards, not a pair count.
+
+## Measured
+
+| knob | default | what it does | what it measured |
+|---|---|---|---|
+| `PAIR_CORRIDOR_SLACK` | `0.12` | how much wider than the pair the corridor must be | **the one real lever.** Ten arms, 12 Sep: 0.03 lays 41, 0.04 44, 0.05 53, **0.06 57**, 0.07 52, 0.08 47, 0.10 48, 0.12 46, 0.14 49, 0.16 47. One peak, then a noisy plateau from 0.10 out. `boards/b.json` carries 0.06 |
+| `PAIR_CORRIDOR_SLACK_SLIM` | `0.05` | the retry for a pair that found no corridor | a per-pair second chance; a board-wide 0.05 was worse than the retry (42 against 49 on the old tools) |
+| `PAIR_FAST_STUBS` | on where numba is | the stub search on `pairsearch`'s compiled kernel | **the same board, faster:** B19 47 of 113 either way, the pass 1586 s to 976 s, the stub search 675 s to 46 s, **0 of 7,706 items differ**. D: 5 of 5 either way, 9 s to 3 s |
+| `PAIR_FAST_SEARCH` | `1` | the corridor search on the same kernel | 13.5x compiled (2.26 M expansions a second against 167 k); `pairsearch.py selftest` refuses any difference |
+| `PAIR_LAYERS` | `F.Cu,B.Cu` | the layers a pair may use | four layers lay 71 of 113 against 56, and every impedance-correct variant lands at or below 56; the per-class split is the answer (32.102) |
+| `PAIR_INNER` | none | per-class inner geometry | 0.13/0.127 on In2/In3 reads 102 ohm on a 100 ohm class, inside tolerance; it is what makes the four-layer split legal |
+| `PAIR_COVER_LEGS` | `0` | the corridor covers its own legs plus a grid cell | 45 of 113 against 47: the rounding class falls 25 to 10 and the failures move to the search. Off |
+| `PAIR_LEG_EXACT` | `0` | re-test a blocked leg point against the polygons | 47 either way. The rounding is real and worth no pairs here. Off |
+| `PAIR_SWAP` | `1` | exchange a station's two passives when the fans cross | D lays 2 of 5 without it and 5 of 5 with it |
+| `PAIR_SWAP_BOTH_SIDES` | `0` | refuse a swap that crosses the parts' OTHER pads | D 3 of 5 against 5 of 5, and it prints why: the two sides of a series-resistor pair are mirror images, so uncrossing one crosses the other at every one of these stations. Off, kept for the sentence |
+| `PAIR_MITRE_LIMIT` | `1.2` | above this multiple the outer join is arced | a right angle puts the mitre at 1.414 of the offset, 41 percent further out than the straights; the arc is strictly closer |
+| `PAIR_EXPANSIONS` | `12000000` | the pair's whole search budget, counted in work | replaced a wall clock that decided results (32.90). 3 M laid 21 where a 300 s clock laid 38, so 12 M |
+| `PAIR_RIPUP` | `0` | rip-up as a trial kept only when it pays | 29 of 113 as first written, and as an accept-if-better trial 106 episodes with **not one kept**. Off |
+| `PAIR_ORDER` | `span` | longest pair first | it lays greedily and never rips up, so whichever pair goes first takes the room; alphabetical was an accident |
+| `PAIR_ENTRY_VIA` | `0` | end a pair at the escape vias rather than the pads | +27 on B when it was first measured, **zero** on B19 later, and it costs D two of five. A per-pair fallback, not a mode |
+| `PAIR_MAP_MODE` | `counts` | the occupancy maps counted once for the whole board | proved identical to the per-pair rebuild on all 75 of D's calls; the map share of a pass fell from 76 percent to 44 |
+| `PAIR_STAIRCASE` | `1` | accept the corridor as the search found it | thirteen of the first twenty four failures were the refusal to; a staircase pair is coupled and can be straightened later |
+
+## Measured at zero, which is worth as much
+
+Seven arms at the peak slack on B19, 12 September (32.132), baseline **57 of 113**:
+
+| knob | value | pairs |
+|---|---|---:|
+| `PAIR_LEG_EXACT` | 1 | 57 |
+| `PAIR_EXPANSIONS` | 48 M against 12 M | 57 |
+| `PAIR_STUB_EXPANSIONS` | 4 M against 400 k | 57 |
+| `PAIR_STATION_OWN` | 1 | 57 |
+| `PAIR_END_CANDS` | 48 against 12 | **53** |
+| the per-class two-pass split | at 0.06 | **54** |
+
+**Every knob that changes how hard the search works measures zero, and two measure worse.** The two that have
+ever moved the number, `PAIR_CORRIDOR_SLACK` and `PAIR_LAYERS`, change the geometry the search is given. That
+is the shape of the whole table: this tool's remaining levers are not in it.
+
+## Declared and never measured
+
+`PAIR_BUDGET` (the outer clock, 600 s a pair), `PAIR_END_CANDS` (12), `PAIR_END_LEGS`, `PAIR_END_OFFSET`,
+`PAIR_GRID_LONG` and `PAIR_LONG_MM` (a coarser grid for long pairs, off), `PAIR_HOP_LAYERS`,
+`PAIR_INNER_WIDTH` and `PAIR_INNER_GAP` (the pre-class form), `PAIR_ORDER_FILE`, `PAIR_PRESENT`,
+`PAIR_RIP_MARGIN` / `PAIR_RIP_MAX` / `PAIR_RIP_TOTAL` (the rip-up shape, which never paid),
+`PAIR_STATION_OWN` (new, its arm is running), `PAIR_STRIP_MM` (6.0), `PAIR_STUB_EXPANSIONS` (new, 400,000
+inherited from a constant), `PAIR_WINDOW` (25 mm; 40 mm measured worse, 45 of 113), and the plumbing:
+`PAIR_VENV`, `PAIR_DEBUG`, `PAIR_MAP_CHECK`, `PAIR_PLAN_MODE` / `PAIR_PLAN_IN` / `PAIR_PLAN_OUT` /
+`PAIR_HIST_IN` / `PAIR_CONFLICT_OUT` (the negotiated router, measured and rejected at 22 to 25 of 113).
+
+**That is seventeen knobs with a number and twenty six without**, in a tool whose output is the gate on four
+boards. The ones worth measuring next are the ones that touch the two biggest failure classes of 32.131:
+`PAIR_END_CANDS` and `PAIR_STUB_EXPANSIONS` at the station stubs, `PAIR_STATION_OWN` at the legs.
+
+## 12 September 2026: the four knobs of the own-legs work (MESHSAT-862, appendix 32.135)
+
+A pair that shorts its own partner was laid, kept and shipped into the pre-route DRC, and the repairs are four
+guards. Each has a knob because each can cost pairs and the only way to know is to measure it on B19.
+
+| knob | default | what it does |
+|---|---|---|
+| `PAIR_OWN_CLEAR` | 1 | the three emissions that used to lay copper unasked ask whether it lies on the partner |
+| `PAIR_FOLD_TEST` | 1 | the two offset legs of a run judged against each other in the candidate ladder |
+| `PAIR_UNMERGE` | 1 | a merge of two runs whose legs then fold is dropped and the runs laid one by one |
+| `PAIR_FAN_BACK` | 1.0 mm | how far a diving leg is pulled back from the station before the other leg's fan is laid |
+| `PAIR_CROSS_NET` | report | a laid pair sampled against a map that exempts its own two nets: `report` names the counterparty and the emission, `block` refuses the pair, `off` says nothing |
+| `PAIR_VIA_MODE` | class | the via the pair's own hops are laid with: `class` is the net class's via, `min` is the board's own via minimum, which is what the escape fan uses at fine pitch |
+| `PAIR_LAYER_CHANGE_FIT` | 0 | the layer change's four segments and two vias judged against each other before the spot is taken. Correct copper, and it costs pairs: on B19 at the declared baseline, one variable, no test lays 71 of 113, the class clearance 58, the fold detector 57. The post-lay gate still rolls a violating pair back, which is what happened before this test existed |
+| `PAIR_CLASS_CLEAR` | 0 | every obstacle in the occupancy map is grown by the larger of the two nets' CLASS clearances instead of the 0.16 mm literal, which is KiCad's own rule. Off until an arm grades it: it changes the map the corridor and both leg searches read, so with it off every number in the record stands unchanged |
+| `PAIR_GAP_CUSHION` | 0.025 | both legs are laid this far above the clearance the DRC will apply, on the outer AND the inner layers. Measured 15 Sep 2026 on B19: the outer gap carried 0.013 since 12 Sep and the inner gap nothing, so 13 of the pre-route DRC's 64 hard items were a pair's own two legs at 0.122 to 0.126 mm against 0.127, at the arcs, where the offset of a chord is not the offset of the arc. On the 3313 stack 0.025 moves an inner 100 ohm pair about 5 percent, inside the judge's 10 |
+| `PAIR_END_FIT` | 1 | the end emissions are asked about the partner BEFORE the copper exists, and when the last hop into the pad is the violation the approach moves to the side the partner is not on (13 Sep 2026: 84 of B19's 152 failed attempts are the pair's own two legs, missing by 1 to 15 micrometres at those hops) |
+| `PAIR_END_STRICT` | 0 | the three end emissions judged against the partner at the post-lay gate's bar, and taken off when they fail (measured: 18 fewer refusals, the same 14 pairs) |
+| `PAIR_VIA_CANDS` | 12 | how many via sites a station tries before the section fails; the cap was never measured and 24 of B19's 68 remaining failures are "no via site with a hop path" |
+| `PAIR_LEG_RETRY` | 0 | when the offset legs fit no smoothing of a corridor, block the corridor cell they were refused at and search the section again, up to N times |
+
+**`PAIR_CROSS_NET` reports rather than blocks, and that default is a measurement.** The test asks a RASTER grown
+by the clearance plus half a leg, and the emitters deliberately relax that near a station (a direct leg runs pad
+to pad past its neighbours' pads), so a cell it calls blocked is not yet a DRC violation: as a verdict it refused
+one of D10's five pairs and one of A's three, on boards whose DRC reads 0 hard. The pre-route DRC remains the
+authority on clearance; what this adds is the NAME of the counterparty and of the emission at the moment the pair
+is laid, which is what turned twelve silent DRC items on A into one line naming `/USB_WALL`.
+
+**`PAIR_VIA_MODE` exists because a 0.70 mm via pair cannot leave an 0.8 mm fan.** B19's DIFF100 class carries a
+0.70 mm via, so the pair's own two vias need 0.70 + 0.127 = 0.827 mm centre to centre, and the HDMI and Ethernet
+fans this board leaves from are on an 0.8 mm pitch. In the contention arms of 12 September that single arithmetic
+is **36 of the 74 failed attempts of a 48-pair pass**, every one reading "0.800 mm of 0.822" or nearer. It is
+decision 6's finding in the via domain: the part's pitch decides, and no amount of searching moves it. A class via
+size is a DEFAULT for new copper and not a bar the DRC holds a via to (the bar is the board's `m_ViasMinSize`,
+0.40 on B, which is what `escape.py` has laid at fine pitch since 5 September), so this is a router choice rather
+than a net class change, and it is a knob at today's behaviour until an arm says what it is worth.
+
+**A sixth knob is not a knob:** `legs_clear`'s entry region (the first and last 1.2 mm of a leg at an entry
+station) asks the pads-only map and then, where that map refuses, asks the GEOMETRY through `_nearest_edge`
+before the pair is lost. Asking the raster alone there cost B19's DIFF100 pass fourteen pairs.
+
+**The bar inside all of them is half the pair's own pitch, not the class clearance**, and that distinction is
+worth thirteen pairs: written as a second clearance test, the fold test took B19's DIFF100 pass from 22 of 48
+to 9. A correctly coupled pair runs AT the class number on the inner-layer geometry (0.13 on 0.127), so a
+clearance test inside the candidate ladder refuses the tool's own design. The class number is judged exactly
+once, on the copper that was actually laid.
+
+
+
+## Removed 15 September 2026 (red team round four C3: a knob that lost is deleted with its section cited)
+
+| knob | measured | section |
+|---|---|---|
+| `PAIR_RIPUP`, `PAIR_RIP_MARGIN`, `PAIR_RIP_MAX`, `PAIR_RIP_TOTAL` | 29 of 113 against 38 without; as a trial, 106 episodes with none kept | 32.95, 32.98 |
+| `PAIR_END_STRICT` | 0 of 48: it removes 18 late rollbacks and lays nothing; `PAIR_END_FIT` answers what it reached for | 32.146 |
+| `PAIR_LEG_EXACT` | 47 of 113 either way: the rounding is real and worth no pairs | 32.128 |
+| `PAIR_LAYER_CHANGE_FIT` | costs 14 pairs | 32.185 |
+| `PAIR_SWAP_BOTH_SIDES` | refusing a swap for the other side costs D two of five pairs | 32.133 |
+| `PAIR_GRID_LONG`, `PAIR_LONG_MM`, `PAIR_PRESENT` | never measured; they belong to the negotiated router, which was measured and rejected | 32.103 |
+| `PAIR_STATION_OWN` | never measured | 32.131 |
+
+The knobs that stay unset by any board are the ones that WON and whose off position is how an arm measures them
+(`PAIR_OWN_CLEAR`, `PAIR_FOLD_TEST`, `PAIR_UNMERGE`, `PAIR_ENTRY_STRICT`, `PAIR_SWAP`, `PAIR_GAP_CUSHION`, `PAIR_CROSS_NET`,
+`PAIR_FAN_BACK`, `PAIR_VIA_CANDS`, `PAIR_LEG_MATCH`, `PAIR_LEG_MATCH_TOL`, `PAIR_MITRE_LIMIT`, `PAIR_STUB_EXPANSIONS`): the
+suite holds that a guard the record measured stays measurable.

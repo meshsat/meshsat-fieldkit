@@ -1,0 +1,211 @@
+{
+ "_why": [
+  "Round two, 11 September 2026 evening. Round one measured sixteen arms on B19's 113 pairs and its own",
+  "predictions were mostly wrong: the escape-via entry, predicted at 65 or better, came back at 54 against a",
+  "base of 54; the leg test, predicted at 60, came back at 55; turning the staircase OFF, predicted at 45 or",
+  "worse, came back at 55, one ABOVE base.",
+  "The one thing that moved was the corridor slack, and it moved in BOTH directions from the default 0.12:",
+  "0.08 gave 60 and 0.15 gave 59. A default that is beaten on both sides is not a local optimum, it is an",
+  "unlucky point, so this sweep walks the parameter properly instead of guessing a third value.",
+  "Predictions are what I actually expect after round one, not what is safe."
+ ],
+ "board": "pcb-b-compute",
+ "letter": "b",
+ "source_project": "pcb-b-compute-b19",
+ "placed": "out/pcb-b-compute-placed.kicad_pcb",
+ "timeout_s": 10800,
+ "passes": [
+  {
+   "classes": "DIFF100",
+   "env": {
+    "PAIR_BUDGET": 0,
+    "PAIR_LAYERS": "F.Cu,In2.Cu,In3.Cu,B.Cu",
+    "PAIR_HOP_LAYERS": "In2.Cu,In3.Cu",
+    "PAIR_INNER": "DIFF100:0.13/0.127"
+   }
+  },
+  {
+   "classes": "USB",
+   "env": {
+    "PAIR_BUDGET": 0,
+    "PAIR_LAYERS": "F.Cu,B.Cu",
+    "PAIR_HOP_LAYERS": "In2.Cu"
+   }
+  }
+ ],
+ "arms": [
+  {
+   "name": "slack004",
+   "env": {
+    "PAIR_CORRIDOR_SLACK": 0.04
+   },
+   "predict": {
+    "metric": "pairs",
+    "op": ">=",
+    "value": 54,
+    "basis": "the sweep round one asked for: 0.08 gave 60 and 0.15 gave 59 against 0.12's 54, so the curve is not single-peaked at the default and every point between 0.04 and 0.20 is worth one pass"
+   }
+  },
+  {
+   "name": "slack005",
+   "env": {
+    "PAIR_CORRIDOR_SLACK": 0.05
+   },
+   "predict": {
+    "metric": "pairs",
+    "op": ">=",
+    "value": 54,
+    "basis": "the sweep round one asked for: 0.08 gave 60 and 0.15 gave 59 against 0.12's 54, so the curve is not single-peaked at the default and every point between 0.04 and 0.20 is worth one pass"
+   }
+  },
+  {
+   "name": "slack006",
+   "env": {
+    "PAIR_CORRIDOR_SLACK": 0.06
+   },
+   "predict": {
+    "metric": "pairs",
+    "op": ">=",
+    "value": 54,
+    "basis": "the sweep round one asked for: 0.08 gave 60 and 0.15 gave 59 against 0.12's 54, so the curve is not single-peaked at the default and every point between 0.04 and 0.20 is worth one pass"
+   }
+  },
+  {
+   "name": "slack007",
+   "env": {
+    "PAIR_CORRIDOR_SLACK": 0.07
+   },
+   "predict": {
+    "metric": "pairs",
+    "op": ">=",
+    "value": 54,
+    "basis": "the sweep round one asked for: 0.08 gave 60 and 0.15 gave 59 against 0.12's 54, so the curve is not single-peaked at the default and every point between 0.04 and 0.20 is worth one pass"
+   }
+  },
+  {
+   "name": "slack009",
+   "env": {
+    "PAIR_CORRIDOR_SLACK": 0.09
+   },
+   "predict": {
+    "metric": "pairs",
+    "op": ">=",
+    "value": 54,
+    "basis": "the sweep round one asked for: 0.08 gave 60 and 0.15 gave 59 against 0.12's 54, so the curve is not single-peaked at the default and every point between 0.04 and 0.20 is worth one pass"
+   }
+  },
+  {
+   "name": "slack010",
+   "env": {
+    "PAIR_CORRIDOR_SLACK": 0.1
+   },
+   "predict": {
+    "metric": "pairs",
+    "op": ">=",
+    "value": 54,
+    "basis": "the sweep round one asked for: 0.08 gave 60 and 0.15 gave 59 against 0.12's 54, so the curve is not single-peaked at the default and every point between 0.04 and 0.20 is worth one pass"
+   }
+  },
+  {
+   "name": "slack014",
+   "env": {
+    "PAIR_CORRIDOR_SLACK": 0.14
+   },
+   "predict": {
+    "metric": "pairs",
+    "op": ">=",
+    "value": 54,
+    "basis": "the sweep round one asked for: 0.08 gave 60 and 0.15 gave 59 against 0.12's 54, so the curve is not single-peaked at the default and every point between 0.04 and 0.20 is worth one pass"
+   }
+  },
+  {
+   "name": "slack016",
+   "env": {
+    "PAIR_CORRIDOR_SLACK": 0.16
+   },
+   "predict": {
+    "metric": "pairs",
+    "op": ">=",
+    "value": 54,
+    "basis": "the sweep round one asked for: 0.08 gave 60 and 0.15 gave 59 against 0.12's 54, so the curve is not single-peaked at the default and every point between 0.04 and 0.20 is worth one pass"
+   }
+  },
+  {
+   "name": "slack018",
+   "env": {
+    "PAIR_CORRIDOR_SLACK": 0.18
+   },
+   "predict": {
+    "metric": "pairs",
+    "op": ">=",
+    "value": 54,
+    "basis": "the sweep round one asked for: 0.08 gave 60 and 0.15 gave 59 against 0.12's 54, so the curve is not single-peaked at the default and every point between 0.04 and 0.20 is worth one pass"
+   }
+  },
+  {
+   "name": "slack020",
+   "env": {
+    "PAIR_CORRIDOR_SLACK": 0.2
+   },
+   "predict": {
+    "metric": "pairs",
+    "op": ">=",
+    "value": 54,
+    "basis": "the sweep round one asked for: 0.08 gave 60 and 0.15 gave 59 against 0.12's 54, so the curve is not single-peaked at the default and every point between 0.04 and 0.20 is worth one pass"
+   }
+  },
+  {
+   "name": "slack008_slim003",
+   "env": {
+    "PAIR_CORRIDOR_SLACK": 0.08,
+    "PAIR_CORRIDOR_SLACK_SLIM": 0.03
+   },
+   "predict": {
+    "metric": "pairs",
+    "op": ">=",
+    "value": 61,
+    "basis": "the best single knob of round one (60) with the slim retry that was worth +2 on its own (56 against 54); they act at different moments, so I expect them to add rather than overlap"
+   }
+  },
+  {
+   "name": "slack008_endlegs",
+   "env": {
+    "PAIR_CORRIDOR_SLACK": 0.08,
+    "PAIR_END_OFFSET": 1,
+    "PAIR_END_LEGS": 1
+   },
+   "predict": {
+    "metric": "pairs",
+    "op": ">=",
+    "value": 60,
+    "basis": "the leg test was worth +1 alone; with the better slack I expect it to be worth no more, and this arm is here to say so rather than to win"
+   }
+  },
+  {
+   "name": "slack008_nostaircase",
+   "env": {
+    "PAIR_CORRIDOR_SLACK": 0.08,
+    "PAIR_STAIRCASE": 0
+   },
+   "predict": {
+    "metric": "pairs",
+    "op": "<=",
+    "value": 60,
+    "basis": "turning the staircase off was worth +1 at the default slack, which I read as noise rather than a finding; at the better slack I expect it to be neutral or worse, and if it is better again the staircase needs a measurement of its own"
+   }
+  },
+  {
+   "name": "slack008_cands30",
+   "env": {
+    "PAIR_CORRIDOR_SLACK": 0.08,
+    "PAIR_END_CANDS": 30
+   },
+   "predict": {
+    "metric": "pairs",
+    "op": "<=",
+    "value": 60,
+    "basis": "more corridor-end candidates cost three pairs at the default slack (20 against 23 on the DIFF100 pass); I expect the same here, which would settle that the candidate count is not a lever"
+   }
+  }
+ ]
+}

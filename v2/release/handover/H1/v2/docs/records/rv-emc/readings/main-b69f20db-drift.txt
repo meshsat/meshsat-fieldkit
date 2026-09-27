@@ -1,0 +1,22 @@
+# Drift check of main b69f20db against the files EMCON.md cites (read-only; 2026-09-26 18:14 CEST)
+## git diff --stat 458b2873 b69f20db on cited paths
+ v2/docs/CONOPS.md | 69 ++++++++++++++++++++++++++++++++++++-------------------
+ 1 file changed, 45 insertions(+), 24 deletions(-)
+## git diff --stat 1f614233 b69f20db on the same paths, excluding the generators and netlists of A, B, D (458b2873)
+(empty above = unchanged)
+## generator sha256 (first 16) at b69f20db
+gen_sch_a.py a0452054ec04cf5d
+gen_sch_b.py 6e3d880901fd3030
+gen_sch_c.py 5f1ce2dd66ed7d2d
+gen_sch_d.py 39c5713b947d253f
+## CONOPS section 4b: 1f614233 lines 274-306 against b69f20db lines 288-320
+identical
+## CONOPS b69f20db lines 294, 307, 319 and the SC-02 lines
+| Radio | What the line drives | What EMCON removes | Receive under EMCON |
+**Owner ruling D-05 (26 September 2026): EMCON means radios dark, as generated and completed.** Every radio wi
+for the 5G module and a converter enable for the WiFi card under EMCON, and neither is in the generated
+8:and D-08a stands (section 7), the session settled SC-02 at about 11:35 CEST (section 2a), and the pack's
+108:appendix 32.366 record. **Settled by the session under the owner's standing rule of 26 September 2026 (SC-
+115:modules", `V2-SPEC.md` line 29) names no exception; that contradicted section 15a and appendix 32.366, and
+191:exceptions to NEED-03 for prototype 1 (SC-02); a slot whose heartbeat stays flat for 60 s is power-cycled 
+442:| Which peripherals NEED-03 protects (SC-02, settled about 11:35 CEST) | every USB peripheral `ARCH-PCB-B-

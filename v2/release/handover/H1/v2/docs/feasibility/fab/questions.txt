@@ -1,0 +1,22 @@
+Questions drafted by the FAB stream of MESHSAT-1357, 26 September 2026. NOT SENT. The session never writes to a
+supplier; the owner's outreach or ordering session sends these if the owner's standing rule routes them there.
+
+Q-FAB-RPI-1 (Raspberry Pi, Compute Module 5)
+  Our carrier (a prototype, nothing built) keeps USB hubs, USB 2.0 host-select switches and an HDMI switch powered
+  while a CM5 on it may be unpowered. In that state, and at every carrier power-up before the CM5's 5 V rises, it can
+  apply: (1) a USB 2.0 device attach pull-up (about 1.5 kOhm to 3.3 V) to USB3-0-DP or USB3-1-DP (pins 134, 163);
+  (2) about 5 V through 2.2 kOhm to HDMI0_SDA and HDMI0_SCL (pins 199, 200); (3) about 3 V through 15 kOhm to
+  HDMI0_HOTPLUG (pin 153). The datasheet says no pin should be powered before the 5 V rail is active and that a CM5
+  with external voltage on a pin might not power up again. Is there a current or voltage that these pins tolerate
+  while the CM5 is unpowered, and for how long? Separately: what is the electrical standard of PCIe_CLK_P/N (pins
+  110/112) (HCSL or other, swing, source termination on the module), and does the CM5 enable spread spectrum on it?
+  What is the common-mode voltage of the USB 3.0 receive pins (128/130, 157/159)?
+
+Q-FAB-ASIARF-1 (AsiaRF, AW7915-AED)
+  Please send the M.2 key A/E pin assignment of the AW7915-AED, in particular which pins carry the module's PCIe
+  transmit pair, its receive pair, REFCLK, PERST#, CLKREQ#, PEWAKE#, W_DISABLE1# and W_DISABLE2#.
+
+Q-FAB-TI-1 (Texas Instruments, TUSB8041)
+  With USB_VBUS held above its detection threshold (the 90.9 kOhm / 10 kOhm divider on a permanent 5 V) and no host
+  on the upstream port, does the TUSB8041 keep its upstream D+ pull-up connected? If USB_VBUS is instead taken from
+  the selected host's 5 V, does the hub remove the pull-up within a bounded time when that 5 V falls?

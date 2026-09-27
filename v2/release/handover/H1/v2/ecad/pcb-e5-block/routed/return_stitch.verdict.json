@@ -1,0 +1,40 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "plane_change_to_power": 0,
+  "slow": 0
+ },
+ "denominator": 0,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-e5-block.kicad_pcb",
+   "sha256_16": "686b29a734c55b9a"
+  }
+ },
+ "missing_input": null,
+ "note": "this board has no transition between two different reference nets, so RET-003 has nothing on it to judge",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "RET-003": "829568c8874fe7b6"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "RET-003"
+ ],
+ "tool": "return_stitch",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "994b3d2315bb9859"
+ },
+ "ts": "2026-09-21T12:53:01Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown",
+ "writer": {
+  "file": "ref_change.py",
+  "sha16": "09262699e6f3c692"
+ }
+}

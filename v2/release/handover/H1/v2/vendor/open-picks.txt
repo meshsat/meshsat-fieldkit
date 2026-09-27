@@ -1,0 +1,23 @@
+# Items of the V2 kit named as a CLASS with no manufacturer part number chosen, one per line with what
+# the pick needs. No datasheet can exist for these until a part is ruled, so they are not missing
+# documents: they are outstanding design decisions, and an inventory that listed only the decided
+# parts would hide them.
+#
+# Owner ruling 11 September 2026: each of these is researched against manufacturer documents and comes
+# back as a recommendation with evidence, one at a time. A line disappears from here when its part is
+# ruled, and reappears in the inventory as a part number with its datasheet.
+
+toggle-safety-covers   # RECOMMENDED: the APEM CSG series switch guard, which APEM's own page states is for the 5000M and 600H toggles, and our SOS, EMCON and ZEROIZE switches are APEM 5636ADKB-2V of that 5000 series. It carries an anti-tamper wire seal hole as standard, which suits ZEROIZE. The series document is filed in switches/ and is image-only: its OCR recovers the title and nothing else, so THE ORDER CODE IS STILL OWED and has to come from APEM's product page or a distributor
+headset-jack-U174U     # two U-174/U panel jacks, Amphenol Nexus class, drawing owed; PANEL section 19 and ASSEMBLY line 25 depend on the panel hole and the sealing method
+camera-module          # a USB camera module about 25 x 25 mm behind an 8 mm sealed window with a 1.0 mm PC disc on VHB 5915
+sealed-rj45-wall       # OPEN (27 September 2026, layer 6 closer hc6): the Bulgin PX0833 recommended here on 11 September is WITHDRAWN. It does not fit the connector plate (v2/docs/CASE-MARGINS.md section 3.3 finding 15: a wall hole of about 36 and a 38.1 flange) and its own sheet rates it 42 V and 1.5 A maximum (v2/vendor/bulgin/bulgin-px0833-sealed-rj45-coupler.pdf, CASE-MARGINS.md section 6) against the 54 V PoE feed the port carries. CASE-MARGINS.md section 6 sizes the class the plate takes (a MIL-DTL-38999 shell 15 wall-mount class, as the Glenair 233-370); the part pick, rated for the PoE feed, is owed at layers 5 and 7
+sealed-usbc-wall       # RECOMMENDED: Bulgin PXP4043/C, IP-sealed C-type USB rear panel mount with a 2 x 12 way header at the rear, IP66/IP68/IP69K, USB 3.2 up to Gen 2x2, datasheet filed in bulgin/. OWED: confirm its contact current rating carries 45 W PD (20 V at 2.25 A) before it is ordered
+m8-pod-receptacle      # RECOMMENDED: binder 86 6618 1121 00004, M8 female panel mount, 4 contacts, shieldable, THT, IP67, M10 x 0.75 rear fastened, 60 V and 4 A, -40 to +85 C. Four contacts is exactly the pod's need: 3V3, GND, SDA, SCL
+ground-stud            # the ground stud on the wall plate
+ip68-fans              # RECOMMENDED for the two 60 mm mixer fans: Same Sky CFM-6025BG68, 60 x 60 x 25 mm, 12 V, IP68, ball bearing, in the -22 variant which carries both tachometer and PWM. FINDING THAT NEEDS A RULING: no reputable maker offers an IP68 fan BELOW 60 mm. Same Sky starts at 60, Orion at 60, ebm-papst at 92. Delta lists 40 mm in its IP68 line but publishes the part numbers only through a filter its site serves by script. So the three 40 mm cooler fans are either 60 mm, or a Delta 40 mm part obtained through a distributor, or not IP68
+vhf-2m-antenna         # the 2 m whip for the VHF jack; no maker's brochure on file covers it
+xenarc-rear-frame      # the steel rear frame under the plate holding the 709GNK, four M4 x 8; a new part whose drawing is owed
+gdt-arrestors          # RECOMMENDED: PolyPhaser GTH-SFF-AL, SMA female to female bulkhead RF surge protector, DC to 6 GHz, 150 W, 10 kA, gas discharge tube, datasheet filed in polyphaser/. It passes DC, which the active GNSS antenna needs, and 150 W covers the 30 W VHF path with margin. One per antenna bulkhead that leaves the case
+geiger-tube-board      # the Geiger board and tube; RadiationD-v1.1 class with an SBM-20 tube is recorded as the class, with J305 as an alternative
+5g-jack-count          # RULED, CONDITIONAL (owner ruling D-07, 26 September 2026; v2/docs/V2-SPEC.md line 133): three 5G jacks on ANT0, ANT2 and ANT3, twelve bulkheads, at the board A site found free (X +46), if the case measurement confirms that site and the board E clamp fit; otherwise two on ANT0 and ANT2. The four-jack recommendation of 11 September is superseded. The line stays until the condition closes
+rugged-tablet          # the 8 to 10 inch rugged tablet in the lid and its bracket, which is not drawn; BUILD.md lists it among the part picks owed, and it stays here even though the kit costing treats it as an accessory

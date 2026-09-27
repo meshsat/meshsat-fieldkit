@@ -1,0 +1,88 @@
+Geometry of rb9603, probed from rockblock/rb9603.step
+
+Written by tools/kb/geom_probe.py, not hand edited, so that a CAD model's measurable
+facts can be searched and reviewed as text instead of living only in whoever opened the
+model that day. Units: mm. EVERY NUMBER IS A MEASUREMENT OF THIS FILE, NOT A
+SPECIFICATION: a vendor model may carry a connector, an antenna or a mounting boss the
+catalogue dimension leaves out, and it may be exported in any orientation. Where the
+manufacturer publishes a drawing, the drawing wins and this is how to find the number
+to check against it.
+
+source file: rockblock/rb9603.step
+sha256 (first 16): 227085867be2921a
+size: 419538 bytes
+points read: 965
+
+rb9603 ENVELOPE (single part, so the bounding box of its points is the part).
+Axes are THE FILE'S OWN: a vendor model is often exported Y up, and this reader does
+not turn it, so read the three extents as sizes and not as width, depth and height.
+  axis 1 -22.525 to 22.525   extent 45.050
+  axis 2 -6.510 to 12.300   extent 18.810
+  axis 3 -22.525 to 32.325   extent 54.850
+
+rb9603 HOLES AND ROUND FEATURES of 0.5 mm and over, coaxial duplicates collapsed.
+In an assembly a pattern is still true WITHIN the component that carries it, which is
+how a module's mounting holes come out right.
+  rb9603: diameter 0.500 : 1 hole
+      at X -2.425  Y 2.050
+  rb9603: diameter 0.600 : 10 holes   pattern 5.000 x 8.950
+      at X -18.875  Y -1.600
+      at X -18.875  Y 0.000
+      at X -18.875  Y 1.700
+      at X -18.875  Y 6.050
+      at X -18.875  Y 7.350
+      at X -13.875  Y -1.600
+      at X -13.875  Y 0.000
+      at X -13.875  Y 1.700
+      at X -13.875  Y 6.050
+      at X -13.875  Y 7.350
+  rb9603: diameter 0.700 : 6 holes   pattern 1.925 x 8.950
+      at X 13.600  Y 7.350
+      at X 14.225  Y 7.350
+      at X 15.525  Y -1.600
+      at X 15.525  Y 0.000
+      at X 15.525  Y 1.700
+      at X 15.525  Y 6.050
+  rb9603: diameter 0.854 : 1 hole
+      at X -1.525  Y -4.500
+  rb9603: diameter 1.900 : 1 hole
+      at X 14.225  Y 6.050
+  rb9603: diameter 2.000 : 2 holes   pattern 5.000 x 0.000
+      at X -18.875  Y 6.050
+      at X -13.875  Y 6.050
+  rb9603: diameter 2.500 : 4 holes   pattern 38.700 x 1.720
+      at X -19.350  Y -0.010
+      at X -19.350  Y 1.710
+      at X 19.350  Y -0.010
+      at X 19.350  Y 1.710
+  rb9603: diameter 3.200 : 2 holes   pattern 5.000 x 0.000
+      at X -18.875  Y 6.050
+      at X -13.875  Y 6.050
+  rb9603: diameter 3.300 : 1 hole
+      at X 14.225  Y 6.050
+  rb9603: diameter 3.500 : 1 hole
+      at X -1.525  Y -4.000
+  rb9603: diameter 3.700 : 2 holes   pattern 0.000 x 2.000
+      at X 18.775  Y 9.500
+      at X 18.775  Y 11.500
+  rb9603: diameter 4.000 : 1 hole
+      at X -1.525  Y -2.500
+  rb9603: diameter 4.250 : 1 hole
+      at X -2.425  Y 2.050
+  rb9603: diameter 5.000 : 4 holes   pattern 38.700 x 1.710
+      at X -19.350  Y -0.000
+      at X -19.350  Y 1.710
+      at X 19.350  Y 0.000
+      at X 19.350  Y 1.710
+  rb9603: diameter 5.050 : 1 hole
+      at X -2.425  Y 2.050
+  rb9603: diameter 5.500 : 2 holes   pattern 0.000 x 2.400
+      at X 18.775  Y -2.400
+      at X 18.775  Y 0.000
+  rb9603: diameter 6.200 : 1 hole
+      at X -2.425  Y 2.050
+  rb9603: diameter 10.300 : 3 holes   pattern 29.975 x 0.000
+      at X -16.375  Y 7.350
+      at X -7.110  Y 7.350
+      at X 13.600  Y 7.350
+

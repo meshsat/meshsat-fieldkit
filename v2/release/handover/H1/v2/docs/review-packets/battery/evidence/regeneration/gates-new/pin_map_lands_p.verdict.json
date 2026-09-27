@@ -1,0 +1,43 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "failures": 0,
+  "judged": 84,
+  "merged_pad_pins": 0,
+  "unreadable": 0
+ },
+ "denominator": 84,
+ "evidence": [],
+ "inputs": {
+  "board": "p",
+  "netlist": {
+   "path": "/root/rv/bat/run/new/v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net",
+   "sha256_16": "4342c4cbe1b43dc4"
+  }
+ },
+ "missing_input": null,
+ "note": "every part's map names every pad of its land",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "SCH-005": "9993ce195b935d6d"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "SCH-005"
+ ],
+ "tool": "pin_map_lands_p",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "60b5a5a915850caa"
+ },
+ "ts": "2026-09-26T13:33:11Z",
+ "verdict": "PASS",
+ "version": "unknown",
+ "writer": {
+  "file": "pin_map_lands.py",
+  "sha16": "a3de0a4c771355e0"
+ }
+}

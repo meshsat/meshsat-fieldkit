@@ -1,0 +1,12 @@
+read: wt/rv-emc/drafts/netlists/B-r6cand-pcb-b-compute.net
+r6int: wt/r6int/v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net
+nets changed: 0
+[]
+parts whose value changed or appeared/disappeared: 0
+read: wt/rv-emc/drafts/netlists/A-r6cand-pcb-a-power.net  r6int: wt/r6int/v2/ecad/pcb-a-power-a23/out/pcb-a-power.net  nets changed: 16 ['FE_BLEED', 'FE_BLEED_G', 'FE_CTR2', 'FE_EN', 'FE_GVDD', 'FE_LATCH', 'FE_RUN', 'FE_UVS', 'FE_VISNS', 'FE_VZ', 'GND', 'VBUS20', 'VIN_RAW', 'unconnected-(U34-NC-Pad6)', 'unconnected-(U34-NC-Pad7)', 'unconnected-(U34-NC-Pad8)']  parts changed: 24 [('C210', None, '1u 100V 1210'), ('C211', None, '10n'), ('C212', None, '100n'), ('C213', None, '2.2n'), ('C214', None, '100n'), ('C7', '3.3u', '4.7u'), ('D22', None, "BZT52C12-7-F zener, the restart guard's pull-up clamp"), ('Q36', None, '2N7002: FE_RUN high = latch sense held at 0 V (1 G, 2 S, 3 D)'), ('Q37', None, '2N7002: FE_RUN high = bleed off (1 G, 2 S, 3 D)'), ('Q38', None, 'CSD19532Q5B 100 V N-FET (the VBUS20 bleed switch)'), ('R14', '62k 1%', '91k 1%'), ('R195', None, '2k'), ('R196', None, '1k'), ('R197', None, '100k'), ('R198', None, '100k'), ('R199', None, '47k'), ('R200', None, '33k'), ('R201', None, '100k'), ('R202', None, '510R 1W 2512 (VBUS20 bleed)'), ('R203', None, '510R 1W 2512 (VBUS20 bleed)')]
+read: wt/rv-emc/drafts/netlists/D-r6cand-pcb-d-aprs.net  r6int: wt/r6int/v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net  nets changed: 0 []  parts changed: 0 []
+read: wt/rv-emc/drafts/netlists/main-pcb-c-display.net  r6int: wt/r6int/v2/ecad/pcb-c-display-c8/out/pcb-c-display.net  nets changed: 0 []  parts changed: 0 []
+board A r6int: R14/C7 on net /FE_SS
+board A r6int: R14/C7 on net /FE_UVS
+board A r6int: R14/C7 on net /VIN_RAW
+board A r6int: R14/C7 on net GND

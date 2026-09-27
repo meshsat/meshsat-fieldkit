@@ -1,0 +1,139 @@
+### Board A
+
+Intent `v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json` sha256/16 83ba5e43a6fbcccb (written 2026-09-26 18:58); stack JLC06161H-3313, outer 0.0350 mm, inner 0.0152 mm (six layers, measured (LAYER-DECISIONS-2026-09-11.md, A arm 345 open at four); copper weight OPEN).
+
+| rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
+|---|---|---|---|---:|---:|---:|---|
+| CELL+ | 14.4 (16.8) | 10.00 / 18.00 | 18.0, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 |
+| CELL_FUSED | 14.4 (16.8) | 10.00 / 18.00 | 18.0, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 |
+| VBAT | 14.4 (16.8) | 10.00 / 18.00 | 18.0, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 |
+| VIN_RAW | 12.0 (36.0) | 12.31 / 12.31 | 12.3, typical (PI-001) | 11.92 | 3.68 | 97.66 (over 40 mm) | 17 / 14 / 12 |
+| VBUS20 | 20.00 | 6.00 / 8.00 | 6.0, typical (PI-001) | 3.55 | 1.37 | 26.20 | 11 / 9 / 8 |
+| +5V_S1 | 5.10 | 2.50 / 5.00 | 2.5, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
+| +5V_S2 | 5.10 | 2.50 / 5.00 | 2.5, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
+| +5V_S3 | 5.10 | 2.50 / 5.00 | 2.5, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
+| +5V_DEV | 5.00 | 4.00 / 6.90 | 4.0, typical (PI-001) | 2.03 | 0.78 | 12.47 | 10 / 8 / 7 |
+| +3V3 | 3.30 | 0.30 / 0.60 | 0.3, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
+| +13V8_PA | 13.80 | 5.00 / 6.00 | 5.0, typical (PI-001) | 2.76 | 1.06 | 18.77 | 9 / 7 / 6 |
+| +12V_HF | 12.00 | 1.00 / 2.00 | 1.0, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |
+| +54V_POE | 54.00 | 0.30 / 0.60 | 0.3, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
+| +5V_D8 | 5.00 | 1.00 / 2.00 | 1.0, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |
+| FE_OUT | 20.0 (20.0) | 6.00 / 8.00 | 6.0, typical (PI-001) | 3.55 | 1.37 | 26.20 | 11 / 9 / 8 |
+| CH_ACN | 20.0 (20.0) | 6.00 / 8.00 | 6.0, typical (PI-001) | 3.55 | 1.37 | 26.20 | 11 / 9 / 8 |
+| S1_OUT | 5.1 (5.1) | 2.50 / 5.00 | 2.5, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
+| S3_OUT | 5.1 (5.1) | 2.50 / 5.00 | 2.5, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
+| S2_OUT | 5.1 (5.1) | 2.50 / 5.00 | 2.5, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
+| SD_OUT | 5.0 (5.0) | 4.00 / 6.90 | 4.0, typical (PI-001) | 2.03 | 0.78 | 12.47 | 10 / 8 / 7 |
+| PA_OUT | 13.8 (13.8) | 5.00 / 6.00 | 5.0, typical (PI-001) | 2.76 | 1.06 | 18.77 | 9 / 7 / 6 |
+| HF_OUT | 12.0 (12.0) | 1.00 / 2.00 | 1.0, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |
+| POE_OUT | 54.0 (54.0) | 0.30 / 0.60 | 0.3, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
+| PD_VPWR | 15.0 (15.0) | 3.00 / 3.00 | 3.0, typical (PI-001) | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 |
+| PD_SW | 15.0 (15.0) | 3.00 / 3.00 | 3.0, typical (PI-001) | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 |
+| PD_VBUS | 15.0 (15.0) | 3.00 / 3.00 | 3.0, typical (PI-001) | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 |
+| PD_OUT | 15.0 (15.0) | 3.00 / 3.00 | 3.0, typical (PI-001) | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 |
+| VHEAT_IN | 14.4 (16.8) | 0.58 / 0.90 | 0.6, typical (PI-001) | 0.14 | 0.05 | 0.85 | 2 / 2 / 1 |
+| VHEAT | 12.00 | 0.63 / 0.63 | 0.6, typical (PI-001) | 0.16 | 0.06 | 0.95 | 1 / 1 / 1 |
+| VBUS_WALL | 5.00 | 0.50 / 0.90 | 0.5, typical (PI-001) | 0.12 | 0.04 | 0.69 | 2 / 2 / 1 |
+
+### Board B
+
+Intent `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json` sha256/16 cf461c0b75ce368b (written 2026-09-26 18:59); stack JLC06161H-3313, outer 0.0350 mm, inner 0.0152 mm (six layers as built; eight (JLC08161H-2116, the same copper) under decision 43's measurement).
+
+| rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
+|---|---|---|---|---:|---:|---:|---|
+| +5V_S1 | 5.10 | 2.50 / 5.00 | 2.5, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
+| +5V_S2 | 5.10 | 4.20 / 5.00 | 4.2, typical (PI-001) | 2.17 | 0.84 | 13.64 | 7 / 6 / 5 |
+| +5V_S3 | 5.10 | 2.50 / 5.00 | 2.5, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
+| +5V_DEV | 5.00 | 3.80 / 6.00 | 3.8, typical (PI-001) | 1.89 | 0.73 | 11.36 | 9 / 7 / 6 |
+| +3V3_DEV | 3.30 | 1.20 / 2.00 | 1.2, typical (PI-001) | 0.39 | 0.15 | 2.31 | 3 / 3 / 2 |
+| +3V3_S1A | 3.30 | 0.50 / 1.50 | 0.5, typical (PI-001) | 0.12 | 0.04 | 0.69 | 3 / 2 / 2 |
+| +3V3_M2C1 | 3.30 | 0.50 / 1.50 | 0.5, typical (PI-001) | 0.12 | 0.04 | 0.69 | 3 / 2 / 2 |
+| +3V3_S1B | 3.30 | 0.90 / 1.80 | 0.9, typical (PI-001) | 0.26 | 0.10 | 1.56 | 3 / 3 / 2 |
+| +1V0_S1 | 1.00 | 0.80 / 1.20 | 0.8, typical (PI-001) | 0.22 | 0.08 | 1.32 | 2 / 2 / 2 |
+| +1V1_S1 | 1.10 | 0.40 / 0.70 | 0.4, typical (PI-001) | 0.08 | 0.03 | 0.51 | 1 / 1 / 1 |
+| +3V3_CM1 | 3.30 | 0.10 / 0.20 | 0.1, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |
+| +1V8_CM1 | 1.80 | 0.02 / 0.05 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 |
+| +3V3_S2A | 3.46 | 3.00 / 4.00 | 3.0, typical (PI-001) | 1.37 | 0.53 | 8.18 | 6 / 5 / 4 |
+| +3V3_M2C2 | 3.46 | 3.00 / 4.00 | 3.0, typical (PI-001) | 1.37 | 0.53 | 8.18 | 6 / 5 / 4 |
+| +3V3_S2B | 3.30 | 0.90 / 1.80 | 0.9, typical (PI-001) | 0.26 | 0.10 | 1.56 | 3 / 3 / 2 |
+| +1V0_S2 | 1.00 | 0.80 / 1.20 | 0.8, typical (PI-001) | 0.22 | 0.08 | 1.32 | 2 / 2 / 2 |
+| +1V1_S2 | 1.10 | 0.40 / 0.70 | 0.4, typical (PI-001) | 0.08 | 0.03 | 0.51 | 1 / 1 / 1 |
+| +3V3_CM2 | 3.30 | 0.10 / 0.20 | 0.1, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |
+| +1V8_CM2 | 1.80 | 0.02 / 0.05 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 |
+| +3V3_S3A | 3.30 | 0.50 / 1.50 | 0.5, typical (PI-001) | 0.12 | 0.04 | 0.69 | 3 / 2 / 2 |
+| +3V3_M2C3 | 3.30 | 0.50 / 1.50 | 0.5, typical (PI-001) | 0.12 | 0.04 | 0.69 | 3 / 2 / 2 |
+| +3V3_S3B | 3.30 | 0.90 / 1.80 | 0.9, typical (PI-001) | 0.26 | 0.10 | 1.56 | 3 / 3 / 2 |
+| +1V0_S3 | 1.00 | 0.80 / 1.20 | 0.8, typical (PI-001) | 0.22 | 0.08 | 1.32 | 2 / 2 / 2 |
+| +1V1_S3 | 1.10 | 0.40 / 0.70 | 0.4, typical (PI-001) | 0.08 | 0.03 | 0.51 | 1 / 1 / 1 |
+| +3V3_CM3 | 3.30 | 0.10 / 0.20 | 0.1, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |
+| +1V8_CM3 | 1.80 | 0.02 / 0.05 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 |
+| +3V3_IOCA | 3.30 | 0.12 / 0.25 | 0.1, typical (PI-001) | 0.02 | 0.01 | 0.10 | 1 / 1 / 1 |
+| +3V3_IOCB | 3.30 | 0.12 / 0.25 | 0.1, typical (PI-001) | 0.02 | 0.01 | 0.10 | 1 / 1 / 1 |
+| +3V3_IOCC | 3.30 | 0.12 / 0.25 | 0.1, typical (PI-001) | 0.02 | 0.01 | 0.10 | 1 / 1 / 1 |
+| +1V2_KSZ | 1.20 | 0.50 / 0.80 | 0.5, typical (PI-001) | 0.12 | 0.04 | 0.69 | 2 / 1 / 1 |
+| +2V5_KSZ | 2.50 | 0.15 / 0.25 | 0.1, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 |
+| +3V3_ZB | 3.30 | 0.10 / 0.30 | 0.1, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |
+| +5V_LORA | 5.00 | 0.15 / 0.70 | 0.1, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 |
+| +5V_LIME | 5.00 | 1.20 / 3.00 | 1.2, typical (PI-001) | 0.39 | 0.15 | 2.31 | 5 / 4 / 3 |
+| +5V_RB | 5.00 | 0.15 / 2.00 | 0.1, typical (PI-001) | 0.02 | 0.01 | 0.13 | 3 / 3 / 2 |
+| +5V_CAM | 5.00 | 0.25 / 0.50 | 0.2, typical (PI-001) | 0.04 | 0.02 | 0.27 | 1 / 1 / 1 |
+| +5V_HDMI | 5.00 | 0.10 / 0.50 | 0.1, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |
+| +54V_POE | 54.00 | 0.30 / 0.60 | 0.3, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
+| GND | 0.00 | 10.00 / 21.00 | 10.0, typical (PI-001) | 8.15 | 2.76 | 66.76 (over 40 mm) | 29 / 24 / 20 |
+| VBUS_QMX | 5.00 | 0.30 / 0.30 | 0.3, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
+| PANEL_5V | 5.00 | 0.60 / 0.60 | 0.6, typical (PI-001) | 0.15 | 0.06 | 0.89 | 1 / 1 / 1 |
+
+### Board C
+
+Intent `v2/ecad/pcb-c-display-c8/out/pcb-c-display-intent.json` sha256/16 5c8d991e3805016a (written 2026-09-26 10:00); stack JLC06161H-3313, outer 0.0350 mm, inner 0.0152 mm (six layers, owner decision 27 (board file still four, JLC04161H-7628, the same copper)).
+
+| rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
+|---|---|---|---|---:|---:|---:|---|
+| +5V | 5.00 | 0.60 / 1.00 | 0.6, typical (PI-001) | 0.15 | 0.06 | 0.89 | 2 / 2 / 1 |
+| +3V3 | 3.30 | 0.12 / 0.20 | 0.1, typical (PI-001) | 0.02 | 0.01 | 0.10 | 1 / 1 / 1 |
+
+### Board D
+
+Intent `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs-intent.json` sha256/16 59591c54eb29ab64 (written 2026-09-26 17:52); stack JLC04161H-7628, outer 0.0350 mm, inner 0.0152 mm (four layers, the RF ground-plane reason (LAYER-DECISIONS-2026-09-11.md)).
+
+| rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
+|---|---|---|---|---:|---:|---:|---|
+| +5V_D8 | 5.0 (5.2) | 1.00 / 2.00 | 1.0, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |
+| +3V3_D8 | 3.30 | 0.04 / 0.17 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.02 | 1 / 1 / 1 |
+| +3V4_HUB | 3.4 (3.5) | 0.04 / 0.04 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.02 | 1 / 1 / 1 |
+| +5V_SA | 5.00 | 0.35 / 1.10 | 0.3, typical (PI-001) | 0.07 | 0.03 | 0.42 | 2 / 2 / 2 |
+| +3V3 | 3.30 | 0.06 / 0.10 | 0.1, typical (PI-001) | 0.01 | 0.00 | 0.04 | 1 / 1 / 1 |
+
+### Board E
+
+Intent `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock-intent.json` sha256/16 9ae33eb17d04670e (written 2026-09-26 10:01); stack JLC04161H-7628, outer 0.0350 mm, inner 0.0152 mm (four layers, the routing half and In1 (LAYER-DECISIONS-2026-09-11.md)).
+
+| rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
+|---|---|---|---|---:|---:|---:|---|
+| CELL_F | 14.4 (16.8) | 10.00 / 18.00 | 18.0, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 |
+| CELL+ | 14.4 (16.8) | 10.00 / 18.00 | 18.0, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 |
+| VIN_RAW | 12.0 (36.0) | 6.15 / 6.15 | 6.2, typical (PI-001) | 3.67 | 1.41 | 27.42 | 9 / 7 / 6 |
+| +3V3_E6 | 3.30 | 0.35 / 0.60 | 0.3, typical (PI-001) | 0.07 | 0.03 | 0.42 | 1 / 1 / 1 |
+| +5V_E6 | 5.00 | 0.30 / 0.50 | 0.3, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
+| +5V_GEIGER | 5.00 | 0.10 / 0.10 | 0.1, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |
+| DC_IN | 12.0 (36.0) | 6.15 / 6.15 | 6.2, typical (PI-001) | 3.67 | 1.41 | 27.42 | 9 / 7 / 6 |
+| DC_F | 12.0 (36.0) | 6.15 / 6.15 | 6.2, typical (PI-001) | 3.67 | 1.41 | 27.42 | 9 / 7 / 6 |
+| DC_P | 12.0 (36.0) | 6.15 / 6.15 | 6.2, typical (PI-001) | 3.67 | 1.41 | 27.42 | 9 / 7 / 6 |
+| HS_S | 12.0 (36.0) | 6.15 / 6.15 | 6.2, typical (PI-001) | 3.67 | 1.41 | 27.42 | 9 / 7 / 6 |
+| DC_HS | 12.0 (36.0) | 6.15 / 6.15 | 6.2, typical (PI-001) | 3.67 | 1.41 | 27.42 | 9 / 7 / 6 |
+| PV_P | 17.6 (25.0) | 5.68 / 6.25 | 5.7, typical (PI-001) | 3.29 | 1.27 | 23.70 | 9 / 7 / 6 |
+| PV_IN | 17.6 (25.0) | 5.68 / 6.25 | 5.7, typical (PI-001) | 3.29 | 1.27 | 23.70 | 9 / 7 / 6 |
+| TRK_OUT | 15.10 | 6.16 / 6.16 | 6.2, typical (PI-001) | 3.68 | 1.42 | 27.50 | 9 / 7 / 6 |
+
+### Board P
+
+Intent `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack-intent.json` sha256/16 59d679f0859fc203 (written 2026-09-26 17:52); stack JLC04162H-7628, outer 0.0700 mm, inner 0.0152 mm (four layers 2 oz outer, owner decision 28; inner weight OPEN (0.5 oz default shown)).
+
+| rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
+|---|---|---|---|---:|---:|---:|---|
+| PACK_P | 14.4 (16.8) | 10.00 / 18.00 | 18.0, PWR-F12 18 A / 60 s | 11.95 | 3.36 | 195.80 (over 40 mm) | 25 / 21 / 18 |
+| CELL4 | 14.40 | 10.00 / 18.00 | 18.0, PWR-F12 18 A / 60 s | 11.95 | 3.36 | 195.80 (over 40 mm) | 25 / 21 / 18 |
+| FUSED | 14.40 | 10.00 / 18.00 | 18.0, PWR-F12 18 A / 60 s | 11.95 | 3.36 | 195.80 (over 40 mm) | 25 / 21 / 18 |
+| SCP_OUT | 14.40 | 10.00 / 18.00 | 18.0, PWR-F12 18 A / 60 s | 11.95 | 3.36 | 195.80 (over 40 mm) | 25 / 21 / 18 |
+| PACK_N (return of PACK_P) | 0.1 (0.1) | 10.00 / 18.00 | 18.0, PWR-F12 18 A / 60 s | 11.95 | 3.36 | 195.80 (over 40 mm) | 25 / 21 / 18 |
+

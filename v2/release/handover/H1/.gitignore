@@ -1,0 +1,34 @@
+# Claude Code files are local-only, never committed (owner rule)
+CLAUDE.md
+.claude/
+claude-*/
+memory/
+*claude*prompt*
+ORDER-SESSION-PROMPT.md
+
+# Python
+.venv/
+*.venv/
+__pycache__/
+*.pyc
+
+# FreeCAD
+*.FCBak
+*.FCStd1
+
+# KiCad working state (route sessions, logs, per-user prefs, backups)
+out/
+logs/
+*.kicad_prl
+*-backups/
+fp-info-cache
+_autosave-*
+~*.kicad_*
+*.lck
+*.dsn
+*.ses
+
+# OS noise
+desktop.ini
+.DS_Store
+Thumbs.db

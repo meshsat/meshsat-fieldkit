@@ -1,0 +1,37 @@
+Geometry of 1501-931-bottom, probed from peli/1500/1501-931-bottom.STEP
+
+Written by tools/kb/geom_probe.py, not hand edited, so that a CAD model's measurable
+facts can be searched and reviewed as text instead of living only in whoever opened the
+model that day. Units: unknown. EVERY NUMBER IS A MEASUREMENT OF THIS FILE, NOT A
+SPECIFICATION: a vendor model may carry a connector, an antenna or a mounting boss the
+catalogue dimension leaves out, and it may be exported in any orientation. Where the
+manufacturer publishes a drawing, the drawing wins and this is how to find the number
+to check against it.
+
+source file: peli/1500/1501-931-bottom.STEP
+sha256 (first 16): 63984a9f2128225c
+size: 141152 bytes
+points read: 400
+
+1501-931-bottom ENVELOPE (single part, so the bounding box of its points is the part).
+Axes are THE FILE'S OWN: a vendor model is often exported Y up, and this reader does
+not turn it, so read the three extents as sizes and not as width, depth and height.
+  This file also carries construction geometry far outside the body. The raw box is
+  19 x 19685 x 14, which is not the part. With the 25 outlying points removed
+  (6.2 percent of the file), the body is:
+  axis 1 -9.562 to 9.562   extent 19.125
+  axis 2 -29.721 to 0.009   extent 29.730
+  axis 3 -6.760 to 6.760   extent 13.520
+
+1501-931-bottom HOLES AND ROUND FEATURES of 0.5 mm and over, coaxial duplicates collapsed.
+In an assembly a pattern is still true WITHIN the component that carries it, which is
+how a module's mounting holes come out right.
+  1501-931-bottom: diameter 0.500 : 1 hole
+      at X -0.002  Y -2.125
+  1501-931-bottom: diameter 1.360 : 2 holes   pattern 15.511 x 0.000
+      at X -7.756  Y -3.620
+      at X 7.756  Y -3.620
+
+(1 smaller circle sizes were read and are not listed: below 0.5 mm they are edge
+fillets and pad corners, not holes.)
+

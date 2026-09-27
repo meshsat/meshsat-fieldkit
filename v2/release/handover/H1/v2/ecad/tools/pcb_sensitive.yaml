@@ -1,0 +1,349 @@
+# THE NODES THAT MUST NOT BE DISTURBED (rule ANA-001, MESHSAT-862, 16 September 2026).
+#
+# The rule asks for a list per board of the sensitive nodes with, for each, its reference, its filter and its
+# clearance from switching nodes, and Kelvin connections where the measurement demands it. It read "generation
+# intends to comply and nothing verifies it" on four boards.
+#
+# A sensitive node here is one where a few millivolts change the answer: a feedback divider that sets a rail's
+# voltage, a shunt sense pair that measures a current, a cell tap, a thermistor, a microphone input. Each entry
+# names the FILTER that makes it quiet and, where the measurement is a difference, the KELVIN pair that makes
+# it a measurement rather than an IR drop.
+#
+# `keep_mm` is this project's own number and is stated as such: it is the clearance asked of the layout between
+# that node's copper and the copper of any switching node, and no standard in this tree sets it. The tool
+# measures the real distance on the routed board and reports it beside the asked-for one, so the number can be
+# argued with from evidence rather than defended.
+
+schema_version: "1.0.0"
+generated: "2026-09-16"
+
+boards:
+
+ e5:
+   switch_nets: []
+   switch_nets_why: "nothing on this board switches: it is plated contact targets, wire lands and mounting holes,
+     generated from board A's own board file, and every conductor on it belongs to a circuit that lives on
+     another board"
+   nodes: []
+   nodes_why: "THIS BOARD HAS NO ANALOGUE NODE OF ITS OWN, which is a declared zero and not a gap (17
+     September 2026, when ANA-001 reached it because it carries the pack node). The pack node crosses it as
+     four targets and four returns; the conductors that SENSE anything, the coulomb counter's Kelvin pair and
+     the thermistor, are board P's and are declared there, and the twelve signal targets carry board A's nets
+     and are declared on board A, where the parts that read them live. What this board owes the analogue rule
+     is contact resistance and current, which MEC-001 and PI-001 judge."
+
+ a:
+   switch_nets: ["*_SW", "*_SW1", "*_SW2", "B33_SW", "FE_CS", "PA_CS", "HF_CS", "PD_CS", "POE_CS", "S2_CS", "SD_CS"]
+   # S2_CS AND SD_CS (26 September 2026, board A round 4, F-PR-04): slot rail 2 and the device rail became LM5176
+   # stages built by the same helper as the five above, so their CS node is the same common source of two low-side
+   # FETs and is declared the same way. switch_list.py named both as undeclared candidates on the regenerated netlist.
+   # WHERE A CURRENT SENSE MEETS ITS SHUNT (18 September 2026, read by kelvin_check.py, which is a REPORT and
+   # decides nothing). A sense is a measurement only if both taps meet the shunt AT the shunt; a tap that lands
+   # on a pour carrying the same current adds that copper's own drop to the signal. `element` is the pad that
+   # defines the true node and `tap` is where the sense line actually connects, both on `rail`, because the
+   # error is the drop in that rail's copper between them. The numbers come from dc_drop's solved mesh.
+   kelvin:
+    - {sense: CH_ACP_F, rail: VBUS20, element: "R16.1", tap: "R147.1", full_scale_mv: 60.0,
+       why: "the BQ25731's input-current sense across R16, a 10 mOhm shunt carrying the rail's 6.0 A: 60 mV of
+         full scale. The high side taps VBUS20 through R147 rather than R16's own pad, so this is the one the
+         generator comment of 16 September called owed; boards/a.json carries it as _charger_acp_kelvin_why"}   # the five raw CS nodes are the low-side FETs' common source: switching conductors, not sense lines (18 September 2026)
+    - {sense: CH_ACN_F, rail: CH_ACN, element: "R16.2", tap: "R146.1", full_scale_mv: 60.0,
+       why: "THE OTHER HALF OF THE SAME PAIR, and it was not declared until 20 September 2026. The record had
+         only ever asked about the high side, because that is the one that taps a pour called VBUS20; the LOW
+         side taps CH_ACN, which is the charge bus behind the shunt and carries the same 6.0 A over the same
+         26 mm to the same filter at the IC. TI's own layout table (bq25731 datasheet, item 7) asks for
+         Kelvin sensing on BOTH of RAC and RSR: 'Connect the current sense traces to the center of the pads,
+         and run current sense traces as differential pairs.' A pair sensed at one end and not the other is
+         not a differential measurement, and the two errors do not cancel: they are drops in different
+         conductors between different pads. Read the two rows together"}
+    - {sense: CH_SRP_F, rail: VBAT, element: "R17.1", tap: "R149.1", full_scale_mv: 50.0,
+       why: "THE CHARGE SHUNT WAS NEVER DECLARED AT ALL (20 September 2026). The kelvin block held two rows
+         and both were the INPUT shunt's, so kelvin_check has been reading one shunt of the charger's two
+         since it was written, and the one it never looked at is the larger current: RSR is R17, 5 mOhm
+         between CH_SRP and CELL+, carrying the pack's 10.0 A typical and 18.0 A peak, so 50.0 mV of full
+         scale at the typical against the input side's 60.0. The positive half taps CH_SRP through R149
+         rather than R17's own pad. A measurement whose denominator is a DECLARATION reads only what it was
+         told about, which is 32.222's sentence about ANA-001 arriving in a second place. S-04 (26 September
+         2026, board A round 4): CH_SRP is gone, R17 now sits between CELL_FUSED and VBAT, so this half's
+         element and tap are on VBAT, the system node"}
+    - {sense: CH_SRN_F, rail: CELL_FUSED, element: "R17.2", tap: "R148.1", full_scale_mv: 50.0,
+       why: "the other half of the charge pair, and the same argument as the input pair's low side: a pair
+         sensed at one end and not the other is not a differential measurement. The negative half taps CELL+,
+         the pack node itself, through R148, and CELL+ is the conductor this set measures at 10.0 A typical
+         and 18.0 A peak across two boards, so the copper between R17.2 and R148.1 is the one place where the
+         pack's own drop can be read straight into the charger's current loop. TI's item 7 asks for Kelvin
+         sensing on BOTH of RAC and RSR; with these two rows the report finally asks about both. S-04 (26
+         September 2026, board A round 4): the pack reaches R17 through the 25 A blade F1, so R17.2 and R148.1
+         are on CELL_FUSED, the copper between F1 and R17, and no longer on CELL+"}
+    # AND THE FIVE STAGES' OWN CURRENT LOOPS WERE NEVER DECLARED EITHER (20 September 2026). A census of every
+    # milliohm resistor on all six committed netlists says the set carries TWENTY current-sense shunts and the
+    # report had been told about FOUR. Board A alone carries seventeen and declared two, both the charger's.
+    # Ten of the fifteen it never mentioned are declarable today and they are here: each LM5176 stage has an
+    # ISNS shunt in its own output path, and the controller reads it with NO filter at all, ISNS(-) on pin 13
+    # and ISNS(+) on pin 14 straight onto the two nets the shunt separates (the stage helper writes pin 13 to
+    # the output rail and pin 14 to the stage's OUT net). So the tap IS the IC pin, the element is the shunt's
+    # own pad, and the error is the drop in the rail's copper between them.
+    #
+    # THE FULL SCALE IS THE DATASHEET'S, not an inference: the constant-current loop regulates the drop across
+    # ISNS(+) and ISNS(-) to 50 mV (lm5176-datasheet.pdf, electrical characteristics, VSNS 43 min / 50 typ /
+    # 57 max; the pin table says it in words at pin 13, 'if the sensed voltage across the ISNS(+) and ISNS(-)
+    # pins reaches 50 mV, a slow constant current (CC) control loop becomes active'). Every stage carries the
+    # same 50.0 mV whatever its shunt value, because the THRESHOLD is the denominator and the shunt is only
+    # what decides which current reaches it.
+    #
+    # WHAT IS STILL NOT DECLARABLE, and it is the same sentence in six more places. Each stage ALSO has a CS
+    # shunt to ground with a 100 R Kelvin filter on each pad, put there on 18 September for TI's layout clause
+    # 9.1, and NEITHER half can be measured: the high side taps <stage>_CS, which is the two low-side FETs'
+    # common source and is declared a switching NODE, and the low side taps GND, which is a pour and is
+    # declared a node too. dc_drop solves a potential only on a declared RAIL, so a row there would read 'the
+    # mesh solved no pad' for ever. Board P's R8 is refused for exactly this reason and so is board E's R19
+    # hot-swap sense. SIX SHUNT HALVES ON THREE BOARDS ARE SENSED THROUGH COPPER NO POWER RULE SOLVES, which
+    # is a question about the GROUND declaration and not about any one board's layout.
+    - {sense: FE_ISNS_P, rail: FE_OUT, element: "R11.1", tap: "R160.1", full_scale_mv: 50.0,
+       why: "the FE stage's constant-current loop, 10 mOhm across R11, read at ISNS(+) with no filter of any
+         kind. This is the SHARP half: FE_OUT is the conductor between the boost-side high-side FET's drain and
+         the shunt and it carries the stage's WHOLE current, 3.80 A into the charge bus, so every millivolt of it between R11.1 and
+         the pin is current the loop believes is in the inductor and is not"}
+    - {sense: FE_ISNS_N, rail: VBUS20, element: "R11.2", tap: "R161.1", full_scale_mv: 50.0,
+       why: "the other side of the same shunt, read at ISNS(-) on the output rail VBUS20. Declared as a pair with
+         the row above because the loop regulates the DIFFERENCE to 50 mV: an error on either side is an
+         error in the regulated current, and the two do not cancel, being drops in different conductors
+         between different pads"}
+    - {sense: PA_ISNS_P, rail: PA_OUT, element: "R55.1", tap: "R162.1", full_scale_mv: 50.0,
+       why: "the PA stage's constant-current loop, 2 mOhm across R55, read at ISNS(+) with no filter of any
+         kind. This is the SHARP half: PA_OUT is the conductor between the boost-side high-side FET's drain and
+         the shunt and it carries the stage's WHOLE current, 3.54 A into the 30 W PA rail, so every millivolt of it between R55.1 and
+         the pin is current the loop believes is in the inductor and is not"}
+    - {sense: PA_ISNS_N, rail: +13V8_PA, element: "R55.2", tap: "R163.1", full_scale_mv: 50.0,
+       why: "the other side of the same shunt, read at ISNS(-) on the output rail +13V8_PA. Declared as a pair with
+         the row above because the loop regulates the DIFFERENCE to 50 mV: an error on either side is an
+         error in the regulated current, and the two do not cancel, being drops in different conductors
+         between different pads"}
+    - {sense: HF_ISNS_P, rail: HF_OUT, element: "R65.1", tap: "R164.1", full_scale_mv: 50.0,
+       why: "the HF stage's constant-current loop, 10 mOhm across R65, read at ISNS(+) with no filter of any
+         kind. This is the SHARP half: HF_OUT is the conductor between the boost-side high-side FET's drain and
+         the shunt and it carries the stage's WHOLE current, the HF unit's own rail, so every millivolt of it between R65.1 and
+         the pin is current the loop believes is in the inductor and is not"}
+    - {sense: HF_ISNS_N, rail: +12V_HF, element: "R65.2", tap: "R165.1", full_scale_mv: 50.0,
+       why: "the other side of the same shunt, read at ISNS(-) on the output rail +12V_HF. Declared as a pair with
+         the row above because the loop regulates the DIFFERENCE to 50 mV: an error on either side is an
+         error in the regulated current, and the two do not cancel, being drops in different conductors
+         between different pads"}
+    - {sense: POE_ISNS_P, rail: POE_OUT, element: "R71.1", tap: "R166.1", full_scale_mv: 50.0,
+       why: "the POE stage's constant-current loop, 20 mOhm across R71, read at ISNS(+) with no filter of any
+         kind. This is the SHARP half: POE_OUT is the conductor between the boost-side high-side FET's drain and
+         the shunt and it carries the stage's WHOLE current, the 802.3at port's 54 V supply, so every millivolt of it between R71.1 and
+         the pin is current the loop believes is in the inductor and is not"}
+    - {sense: POE_ISNS_N, rail: +54V_POE, element: "R71.2", tap: "R167.1", full_scale_mv: 50.0,
+       why: "the other side of the same shunt, read at ISNS(-) on the output rail +54V_POE. Declared as a pair with
+         the row above because the loop regulates the DIFFERENCE to 50 mV: an error on either side is an
+         error in the regulated current, and the two do not cancel, being drops in different conductors
+         between different pads"}
+    - {sense: PD_ISNS_P, rail: PD_OUT, element: "R81.1", tap: "R168.1", full_scale_mv: 50.0,
+       why: "the PD stage's constant-current loop, 10 mOhm across R81, read at ISNS(+) with no filter of any
+         kind. This is the SHARP half: PD_OUT is the conductor between the boost-side high-side FET's drain and
+         the shunt and it carries the stage's WHOLE current, the USB-C outlet's 45 W supply, so every millivolt of it between R81.1 and
+         the pin is current the loop believes is in the inductor and is not"}
+    - {sense: PD_ISNS_N, rail: PD_VPWR, element: "R81.2", tap: "R169.1", full_scale_mv: 50.0,
+       why: "the other side of the same shunt, read at ISNS(-) on the output rail PD_VPWR. Declared as a pair with
+         the row above because the loop regulates the DIFFERENCE to 50 mV: an error on either side is an
+         error in the regulated current, and the two do not cancel, being drops in different conductors
+         between different pads"}
+   nodes:
+    - {net: CH_SRP_F, what: "the charger's charge-current sense, positive half of the pair across R17",
+       filter: "10 R into the pin and 100 nF across the pair, which is what the BQ25731's own pin table asks
+         for (pin 19) and what this board did not have until 16 September 2026",
+       kelvin_with: CH_SRN_F, keep_mm: 0.5}
+    - {net: CH_SRN_F, what: "the charger's charge-current sense, negative half of the pair across R17",
+       filter: "10 R into the pin and 100 nF across the pair (BQ25731 pin 19)", kelvin_with: CH_SRP_F, keep_mm: 0.5}
+    - {net: CH_ACP_F, what: "the charger's input-current sense, positive half of the pair across R16",
+       filter: "10 R into the pin and 10 nF across the pair, a 100 ns time constant inside the 47 to 200 ns
+         window the datasheet's section 10.2.2.2 asks for", kelvin_with: CH_ACN_F, keep_mm: 0.5}
+    - {net: CH_ACN_F, what: "the charger's input-current sense, negative half of the pair across R16",
+       filter: "10 R into the pin and 10 nF across the pair (BQ25731 10.2.2.2)", kelvin_with: CH_ACP_F, keep_mm: 0.5}
+    # THE SENSITIVE NET IS THE FILTERED SIDE, NEVER THE SHUNT'S OWN TERMINALS (18 September 2026, appendix
+    # 32.224 addendum). `<stage>_CS` is the node the four low-side FETs' SOURCES sit on: it carries the whole
+    # switched current of the stage, and asking it to keep 0.50 mm from switching copper asks it to keep away
+    # from the pads it is bonded to. It is a switching conductor and is declared as one below. What ANA-001
+    # must protect is the LM5176's own pair of amplifier inputs, which since 18 September sit behind 100 R in
+    # each line with 1 nF across them at the IC (the datasheet's clause 8.2.2.7 and its layout section), the
+    # same shape board A's charger already had in its `_F` nets and board E's tracker in TRK_CSP/TRK_CSN.
+    - {net: FE_CSF, what: "the front end's filtered current-sense input at pin 16", filter: "100 R from the
+        shunt's top with 1 nF across the pins (LM5176 8.2.2.7: the filter resistance may not exceed 100 R)",
+       kelvin_with: FE_CSGF, keep_mm: 0.5}
+    - {net: FE_CSGF, what: "the front end's filtered current-sense ground at pin 15", filter: "100 R from the
+        shunt's ground pad, the Kelvin return the pin table asks for", kelvin_with: FE_CSF, keep_mm: 0.5}
+    - {net: PA_CSF, what: "the PA stage's filtered current-sense input", filter: "100 R and 1 nF at the pins",
+       kelvin_with: PA_CSGF, keep_mm: 0.5}
+    - {net: PA_CSGF, what: "the PA stage's filtered current-sense ground", filter: "100 R from the shunt's ground pad",
+       kelvin_with: PA_CSF, keep_mm: 0.5}
+    - {net: HF_CSF, what: "the HF stage's filtered current-sense input", filter: "100 R and 1 nF at the pins",
+       kelvin_with: HF_CSGF, keep_mm: 0.5}
+    - {net: HF_CSGF, what: "the HF stage's filtered current-sense ground", filter: "100 R from the shunt's ground pad",
+       kelvin_with: HF_CSF, keep_mm: 0.5}
+    - {net: PD_CSF, what: "the PD stage's filtered current-sense input", filter: "100 R and 1 nF at the pins",
+       kelvin_with: PD_CSGF, keep_mm: 0.5}
+    - {net: PD_CSGF, what: "the PD stage's filtered current-sense ground", filter: "100 R from the shunt's ground pad",
+       kelvin_with: PD_CSF, keep_mm: 0.5}
+    - {net: POE_CSF, what: "the PoE stage's filtered current-sense input", filter: "100 R and 1 nF at the pins",
+       kelvin_with: POE_CSGF, keep_mm: 0.5}
+    - {net: POE_CSGF, what: "the PoE stage's filtered current-sense ground", filter: "100 R from the shunt's ground pad",
+       kelvin_with: POE_CSF, keep_mm: 0.5}
+    - {net: FE_FB, what: "the front end's feedback divider", filter: "the divider's own top and bottom resistors
+        at the controller, with the tap taken at the output island", kelvin_with: null, keep_mm: 0.5}
+    - {net: PA_FB, what: "the PA rail's feedback divider", filter: "the divider at the controller", kelvin_with: null, keep_mm: 0.5}
+    - {net: HF_FB, what: "the HF rail's feedback divider", filter: "the divider at the controller", kelvin_with: null, keep_mm: 0.5}
+    - {net: PD_FB, what: "the PD rail's feedback divider", filter: "the divider at the controller", kelvin_with: null, keep_mm: 0.5}
+    - {net: POE_FB, what: "the PoE rail's feedback divider", filter: "the divider at the controller", kelvin_with: null, keep_mm: 0.5}
+    - {net: S1_FB, what: "slot rail 1's feedback divider", filter: "31.6k/10k at the buck", kelvin_with: null, keep_mm: 0.5}
+    - {net: S2_FB, what: "slot rail 2's feedback divider", filter: "31.6k/10k at the buck", kelvin_with: null, keep_mm: 0.5}
+    - {net: S3_FB, what: "slot rail 3's feedback divider", filter: "31.6k/10k at the buck", kelvin_with: null, keep_mm: 0.5}
+    - {net: SD_FB, what: "the device rail's feedback divider", filter: "31.6k/10k at the buck", kelvin_with: null, keep_mm: 0.5}
+    - {net: B33_FB, what: "the 3.3 V logic buck's feedback", filter: "the divider at U12", kelvin_with: null, keep_mm: 0.5}
+    - {net: FE_ISNS_P, what: "the FE stage's average-current sense, positive half of the pair across its ISNS shunt",
+       filter: "100 R into the pin with 1 nF across the pair, the network the LM5176 datasheet's section
+         7.3.6 describes for these two pins; fitted 20 September 2026, before which the pins sat DIRECTLY on
+         the two power rails the shunt separates, so there was no sense net on this board to declare",
+       kelvin_with: FE_ISNS_N, keep_mm: 0.5}
+    - {net: FE_ISNS_N, what: "the FE stage's average-current sense, negative half of the pair across its ISNS shunt",
+       filter: "100 R into the pin with 1 nF across the pair, the network the LM5176 datasheet's section
+         7.3.6 describes for these two pins; fitted 20 September 2026, before which the pins sat DIRECTLY on
+         the two power rails the shunt separates, so there was no sense net on this board to declare",
+       kelvin_with: FE_ISNS_P, keep_mm: 0.5}
+    - {net: PA_ISNS_P, what: "the PA stage's average-current sense, positive half of the pair across its ISNS shunt",
+       filter: "100 R into the pin with 1 nF across the pair, the network the LM5176 datasheet's section
+         7.3.6 describes for these two pins; fitted 20 September 2026, before which the pins sat DIRECTLY on
+         the two power rails the shunt separates, so there was no sense net on this board to declare",
+       kelvin_with: PA_ISNS_N, keep_mm: 0.5}
+    - {net: PA_ISNS_N, what: "the PA stage's average-current sense, negative half of the pair across its ISNS shunt",
+       filter: "100 R into the pin with 1 nF across the pair, the network the LM5176 datasheet's section
+         7.3.6 describes for these two pins; fitted 20 September 2026, before which the pins sat DIRECTLY on
+         the two power rails the shunt separates, so there was no sense net on this board to declare",
+       kelvin_with: PA_ISNS_P, keep_mm: 0.5}
+    - {net: HF_ISNS_P, what: "the HF stage's average-current sense, positive half of the pair across its ISNS shunt",
+       filter: "100 R into the pin with 1 nF across the pair, the network the LM5176 datasheet's section
+         7.3.6 describes for these two pins; fitted 20 September 2026, before which the pins sat DIRECTLY on
+         the two power rails the shunt separates, so there was no sense net on this board to declare",
+       kelvin_with: HF_ISNS_N, keep_mm: 0.5}
+    - {net: HF_ISNS_N, what: "the HF stage's average-current sense, negative half of the pair across its ISNS shunt",
+       filter: "100 R into the pin with 1 nF across the pair, the network the LM5176 datasheet's section
+         7.3.6 describes for these two pins; fitted 20 September 2026, before which the pins sat DIRECTLY on
+         the two power rails the shunt separates, so there was no sense net on this board to declare",
+       kelvin_with: HF_ISNS_P, keep_mm: 0.5}
+    - {net: POE_ISNS_P, what: "the POE stage's average-current sense, positive half of the pair across its ISNS shunt",
+       filter: "100 R into the pin with 1 nF across the pair, the network the LM5176 datasheet's section
+         7.3.6 describes for these two pins; fitted 20 September 2026, before which the pins sat DIRECTLY on
+         the two power rails the shunt separates, so there was no sense net on this board to declare",
+       kelvin_with: POE_ISNS_N, keep_mm: 0.5}
+    - {net: POE_ISNS_N, what: "the POE stage's average-current sense, negative half of the pair across its ISNS shunt",
+       filter: "100 R into the pin with 1 nF across the pair, the network the LM5176 datasheet's section
+         7.3.6 describes for these two pins; fitted 20 September 2026, before which the pins sat DIRECTLY on
+         the two power rails the shunt separates, so there was no sense net on this board to declare",
+       kelvin_with: POE_ISNS_P, keep_mm: 0.5}
+    - {net: PD_ISNS_P, what: "the PD stage's average-current sense, positive half of the pair across its ISNS shunt",
+       filter: "100 R into the pin with 1 nF across the pair, the network the LM5176 datasheet's section
+         7.3.6 describes for these two pins; fitted 20 September 2026, before which the pins sat DIRECTLY on
+         the two power rails the shunt separates, so there was no sense net on this board to declare",
+       kelvin_with: PD_ISNS_N, keep_mm: 0.5}
+    - {net: PD_ISNS_N, what: "the PD stage's average-current sense, negative half of the pair across its ISNS shunt",
+       filter: "100 R into the pin with 1 nF across the pair, the network the LM5176 datasheet's section
+         7.3.6 describes for these two pins; fitted 20 September 2026, before which the pins sat DIRECTLY on
+         the two power rails the shunt separates, so there was no sense net on this board to declare",
+       kelvin_with: PD_ISNS_P, keep_mm: 0.5}
+
+ d:
+   switch_nets: []
+   switch_nets_why: "this board carries no switching converter; the disturbance here is the 1 W transmitter, and
+     the clearance that matters is from the exciter's own supply and antenna rather than from a switch node"
+   nodes:
+    - {net: MIC_IN, what: "the microphone summing input, millivolts", filter: "47k/1k divider and the AC
+        coupling capacitor at the codec", kelvin_with: null, keep_mm: 1.0}
+    - {net: MIC_SUM, what: "the summed microphone node", filter: "the summing network's own resistors", kelvin_with: null, keep_mm: 1.0}
+    - {net: MICAMP_IN_N, what: "the microphone amplifier's inverting input", filter: "the feedback network",
+       kelvin_with: null, keep_mm: 1.0}
+    - {net: VREF, what: "the codec's reference", filter: "1 uF at the pin", kelvin_with: null, keep_mm: 1.0}
+    - {net: HS1_MIC, what: "headset 1's microphone input, on a lead that leaves the board",
+       filter: "the AC coupling capacitor and the bias resistor at the jack", kelvin_with: null, keep_mm: 1.0}
+    - {net: HS2_MIC, what: "headset 2's microphone input", filter: "the AC coupling capacitor and the bias
+        resistor at the jack", kelvin_with: null, keep_mm: 1.0}
+    - {net: FLANGE_AIN0, what: "the flange NTC's divider at the ADC input, about 22 mV per kelvin at +85 C (round 8,
+        PWR-F15)", filter: "R93 1k and C73 100 nF at U22's AIN0", kelvin_with: null, keep_mm: 1.0}
+    - {net: FLANGE_REF, what: "the ratiometric reference input, the harness +3V3 the divider runs from",
+       filter: "R94 1k and C74 100 nF at U22's AIN1", kelvin_with: null, keep_mm: 1.0}
+
+ e:
+   switch_nets: ["TRK_SW1", "TRK_SW2", "E6_SW", "FAN1_SW", "FAN2_SW", "TRK_LSENSE"]   # TRK_LSENSE is the inductor's second terminal, 5 mOhm from TRK_SW2: a switching conductor (18 September 2026)
+   # WHERE THE TRACKER'S CURRENT SENSE MEETS ITS SHUNT (20 September 2026). Board E carried three sensitive
+   # NODES and NO kelvin block at all, so kelvin_check has never looked at this board, which is the one board
+   # whose sense pair five arms (E19 to E23) were about. The structure is board A's exactly: a shunt with a
+   # filter resistor tapping each side. R5 is 5 mOhm between TRK_LSENSE and TRK_SW2, R6 taps the high side
+   # into TRK_CSP and R7 the low side into TRK_CSN, with C16 across the pair at U5 pin 3.
+   kelvin:
+    - {sense: TRK_CSP, rail: TRK_LSENSE, element: "R5.1", tap: "R6.1", full_scale_mv: 51.7,
+       why: "the LT8705A tracker's inductor-current sense across R5, 5 mOhm. THE FULL SCALE IS DERIVED AND ITS
+         BASIS IS STATED: 5 mOhm at TRK_OUT's declared 10.33 A (round 8, R4A-N12, 26 September 2026: the panel's
+         93 W at the 9 V bus floor; it read 6.16 A, the figure at 15.1 V, and 30.8 mV), which is the inductor's own
+         current there because the stage runs in its buck region with 17.6 V in; the inductor's current is declared
+         nowhere else and in the boost region it is not the output current, so the percentage is read against
+         51.7 mV knowing that"}
+    - {sense: TRK_CSN, rail: TRK_SW2, element: "R5.2", tap: "R7.1", full_scale_mv: 51.7,
+       why: "the other half of the same pair, and the sharper one: the low side taps TRK_SW2, which is the
+         boost-side SWITCHING NODE, so the same conductor is both the sense reference and a node that swings
+         every cycle. Its drop between R5.2 and R7.1 is current the LT8705A reads that is not there. This is
+         18 September's finding measured instead of argued"}
+   nodes:
+    # THE FILTERED PAIR, NOT THE SHUNT'S TERMINALS (18 September 2026). TRK_LSENSE was declared as the tracker's
+    # current sense and it is L1 pin 2, one end of the 5 mOhm shunt R5 whose other end IS TRK_SW2: it swings with
+    # the boost half every cycle, so E17's reading of it 0.171 mm from TRK_SW1 measured a power conductor. The
+    # design's own sense pair is behind R6, R7 and C16 (10 R each with 1 nF across since round 8, the LT8705A's own
+    # Figure 13a; they were 100 R, ten times the "Resistors greater than 10 Ohm should be avoided" of 8705af p.34), which is what the
+    # controller's CSP and CSN pins see and what ANA-001 has to protect.
+    - {net: TRK_CSP, what: "the tracker's filtered inductor-current sense, positive half across the 5 mOhm shunt",
+       filter: "10 R (R6) from the shunt's inductor end with 1 nF (C16) across the pair at the controller (LT8705A 8705af Figure 13a)",
+       kelvin_with: TRK_CSN, keep_mm: 0.5}
+    - {net: TRK_CSN, what: "the tracker's filtered inductor-current sense, negative half across the 5 mOhm shunt",
+       filter: "10 R (R7) from the shunt's bridge end with 1 nF (C16) across the pair", kelvin_with: TRK_CSP, keep_mm: 0.5}
+    - {net: WATER_SENSE, what: "the floor water sensor input, a high-impedance node on a lead that leaves the
+        board", filter: "the pull-up and the 100 nF at the controller", kelvin_with: null, keep_mm: 1.0}
+
+ p:
+   switch_nets: []
+   switch_nets_why: "the pack board is linear: the only edges on it are the SMBus and the FET gate drive, and the
+     disturbance that matters is the pack's own load current in the copper, which is why every entry below is
+     a Kelvin connection rather than a clearance. AND THE ONE CANDIDATE IS NAMED HERE RATHER THAN LEFT OUT
+     (19 September 2026, found by switch_list.py, the report that asks whether this list is complete): /SW
+     carries Q1 pin 5 and Q2 pin 5, the common DRAIN of the pack's back-to-back protection pair, so it is
+     switching shaped and this list does not hold it. It is excluded as a JUDGEMENT, ranked WEAK by the report
+     itself because no inductor sits on it: it moves at a protection event and at a charge or discharge enable,
+     never at a converter's switching frequency, which is the disturbance this rule exists for. THE JUDGEMENT
+     WAS ALSO MEASURED SO IT DOES NOT HAVE TO BE ARGUED: with /SW declared as switching in a throwaway copy,
+     read on board P's own frozen board (sha d79865e7b1aceb95, identical before and after), all seven nodes are
+     measured and all seven PASS, the nearest being SRN_F at 1.717 mm and VC2_F at 2.487 mm against the 0.50
+     they ask and the rest 5.3 to 10.1 mm. So the exclusion costs this reading nothing either way, and that is
+     the reason to believe it rather than the argument above it."
+   # AND THE BOARD FILE ALREADY SAID THESE WERE KELVIN CONNECTIONS (20 September 2026). `switch_nets_why`
+   # above reads "every entry below is a Kelvin connection rather than a clearance", and the report that
+   # measures a Kelvin connection had never been given one on this board. R10 is the coulomb counter's
+   # 2 mOhm shunt between GND and PACK_N, R9 taps the PACK_N side into SRN_F and R8 taps the GND side into
+   # SRP_F; the generator's own comment sets the scale, "25 A gives 50 mV, inside the counter's range".
+   # ONLY THE PACK_N SIDE IS DECLARED, deliberately: R8 taps GND, which is a POUR and not a declared rail,
+   # so dc_drop solves no potential on it and a declaration there would read INCONCLUSIVE for ever. That the
+   # low side of a 25 A shunt is sensed through the ground plane is itself worth its own reading, and it
+   # needs GND declared before it can have one.
+   kelvin:
+    - {sense: SRN_F, rail: PACK_N, element: "R10.2", tap: "R9.1", full_scale_mv: 50.0,
+       why: "the BQ4050's coulomb counter across R10, 2 mOhm carrying the pack's own current, 50 mV of full
+         scale at the 25 A the generator's comment names. PACK_N is the conductor 20 September measured at
+         1.03 of its own current-density limit, so the copper between R10.2 and R9.1 is both the sense
+         reference and the board's one PI-001 failure"}
+   nodes:
+    - {net: SRP_F, what: "the coulomb counter's positive sense, filtered", filter: "100 R and 100 nF",
+       kelvin_with: SRN_F, keep_mm: 0.5}
+    - {net: SRN_F, what: "the coulomb counter's negative sense, filtered", filter: "100 R and 100 nF",
+       kelvin_with: SRP_F, keep_mm: 0.5}
+    - {net: VC1_F, what: "cell 1's tap, filtered", filter: "100 R and 100 nF", kelvin_with: null, keep_mm: 0.5}
+    - {net: VC2_F, what: "cell 2's tap, filtered", filter: "100 R and 100 nF", kelvin_with: null, keep_mm: 0.5}
+    - {net: VC3_F, what: "cell 3's tap, filtered", filter: "100 R and 100 nF", kelvin_with: null, keep_mm: 0.5}
+    - {net: VC4_F, what: "cell 4's tap, filtered", filter: "100 R and 100 nF", kelvin_with: null, keep_mm: 0.5}
+    - {net: TS1, what: "the cell block's thermistor", filter: "10k pull-up and the 100 nF at the gauge",
+       kelvin_with: null, keep_mm: 0.5}

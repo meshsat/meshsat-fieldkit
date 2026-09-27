@@ -1,0 +1,79 @@
+U19 | SN74LVC08APWR quad AND: LimeSDR (hub port power AND EMCON AND software), RockBLOCK (EMCON AND software), LoRa (EMCON AND software)
+   pin 1 (EMCON_HW) -> EMCON_HW
+   pin 2 (LIME_HW_EN) -> LIME_HW_EN
+   pin 3 (LIME_EN_A) -> LIME_EN_A
+   pin 4 (LIME_EN_A) -> LIME_EN_A
+   pin 5 (LIME_SW_EN) -> LIME_SW_EN
+   pin 6 (LIME_EN) -> LIME_EN
+   pin 7 (GND) -> GND
+   pin 8 (RB_EN) -> RB_EN
+   pin 9 (EMCON_HW) -> EMCON_HW
+   pin 10 (RB_SW_EN) -> RB_SW_EN
+   pin 11 (E22_EN) -> E22_EN
+   pin 12 (EMCON_HW) -> EMCON_HW
+   pin 13 (LORA_ON) -> LORA_ON
+   pin 14 (+3V3_DEV) -> +3V3_DEV
+U20 | SN74LVC08APWR quad AND: E72 radios (EMCON AND software); spare gates grounded
+   pin 1 (EMCON_HW) -> EMCON_HW
+   pin 2 (ZB_ON) -> ZB_ON
+   pin 3 (E72_EN) -> E72_EN
+   pin 4 (GND) -> GND
+   pin 5 (GND) -> GND
+   pin 6 (NC) -> unconnected-(U20-NC-Pad6)
+   pin 7 (GND) -> GND
+   pin 8 (NC) -> unconnected-(U20-NC-Pad8)
+   pin 9 (GND) -> GND
+   pin 10 (GND) -> GND
+   pin 11 (NC) -> unconnected-(U20-NC-Pad11)
+   pin 12 (GND) -> GND
+   pin 13 (GND) -> GND
+   pin 14 (+3V3_DEV) -> +3V3_DEV
+U21 | TPS22810DRV
+   pin 1 (VOUT) -> +5V_LORA
+   pin 2 (QOD) -> unconnected-(U21-QOD-Pad2)
+   pin 3 (CT) -> E22_CT
+   pin 4 (GND) -> GND
+   pin 5 (EN/UVLO) -> E22_EN
+   pin 6 (VIN) -> +5V_DEV
+   pin 7 (GND) -> GND
+U22 | TPS22810DRV
+   pin 1 (VOUT) -> +3V3_ZB
+   pin 2 (QOD) -> unconnected-(U22-QOD-Pad2)
+   pin 3 (CT) -> E72_CT
+   pin 4 (GND) -> GND
+   pin 5 (EN/UVLO) -> E72_EN
+   pin 6 (VIN) -> +3V3_DEV
+   pin 7 (GND) -> GND
+U23 | TPS259631DDAR eFuse +5V_DEV -> +5V_LIME (301R 1% (ILM: 3.0 A))
+   pin 1 (GND) -> GND
+   pin 2 (U23_DVDT) -> U23_DVDT
+   pin 3 (LIME_EN) -> LIME_EN
+   pin 4 (+5V_DEV) -> +5V_DEV
+   pin 5 (+5V_LIME) -> +5V_LIME
+   pin 6 (LIME_FLT) -> LIME_FLT
+   pin 7 (U23_ILM) -> U23_ILM
+   pin 8 (U23_OVLO) -> U23_OVLO
+   pin 9 (GND) -> GND
+U24 | TPS259631DDAR eFuse +5V_DEV -> +5V_RB (301R 1% (ILM: 3.0 A))
+   pin 1 (GND) -> GND
+   pin 2 (U24_DVDT) -> U24_DVDT
+   pin 3 (RB_EN) -> RB_EN
+   pin 4 (+5V_DEV) -> +5V_DEV
+   pin 5 (+5V_RB) -> +5V_RB
+   pin 6 (RB_FLT) -> RB_FLT
+   pin 7 (U24_ILM) -> U24_ILM
+   pin 8 (U24_OVLO) -> U24_OVLO
+   pin 9 (GND) -> GND
+Q11 | 2N7002: EMCON_ON = NOT EMCON_HW (S-01)
+   pin 1 (G) -> EMCON_HW
+   pin 2 (S) -> GND
+   pin 3 (D) -> EMCON_ON
+R58 | 10k
+   pin 1 () -> EMCON_HW
+   pin 2 () -> GND
+R513 | 10k
+   pin 1 () -> EMCON_ON
+   pin 2 () -> +3V3_DEV
+R59 | 100k
+   pin 1 () -> TX_INHIBIT_n
+   pin 2 () -> GND

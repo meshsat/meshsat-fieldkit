@@ -1,0 +1,353 @@
+Geometry of H768-01-PCB-FAN, probed from tbeam/H768-01-PCB-FAN.stp
+
+Written by tools/kb/geom_probe.py, not hand edited, so that a CAD model's measurable
+facts can be searched and reviewed as text instead of living only in whoever opened the
+model that day. Units: mm. EVERY NUMBER IS A MEASUREMENT OF THIS FILE, NOT A
+SPECIFICATION: a vendor model may carry a connector, an antenna or a mounting boss the
+catalogue dimension leaves out, and it may be exported in any orientation. Where the
+manufacturer publishes a drawing, the drawing wins and this is how to find the number
+to check against it.
+
+source file: tbeam/H768-01-PCB-FAN.stp
+sha256 (first 16): 13ffd69023a5e5e4
+size: 47286242 bytes
+points read: 188374
+
+H768-01-PCB-FAN ENVELOPE: NOT MEASURED. This file is an assembly (815 component occurrences),
+  and each component's coordinates are its own; placing them needs a CAD kernel, which this
+  reader deliberately is not. Open the model, or probe a single-part file instead.
+  For the record, the raw spread of all points, which is NOT the part size:
+  X -80.5 to 79.1, Y -62.0 to 291598.0, Z -81.9 to 400000.8
+
+H768-01-PCB-FAN HOLES AND ROUND FEATURES of 0.5 mm and over, coaxial duplicates collapsed.
+In an assembly a pattern is still true WITHIN the component that carries it, which is
+how a module's mounting holes come out right.
+  H768-01-PCB-FAN: diameter 0.500 : 44 holes   pattern 42.899 x 111.214
+      at X -5.750  Y -0.700
+      at X -5.750  Y 1.650
+      at X -5.595  Y -0.700
+      at X -4.850  Y 0.020
+      at X -4.850  Y 0.980
+      at X -3.900  Y 1.650
+      at X -3.057  Y -1.564
+      at X -3.057  Y -0.894
+      at X -2.710  Y 2.390
+      at X -2.710  Y 2.490
+      at X -2.500  Y 2.390
+      at X -2.500  Y 2.490
+  H768-01-PCB-FAN: diameter 0.510 : 1 hole
+      at X 0.000  Y 0.000
+  H768-01-PCB-FAN: diameter 0.520 : 17 holes   pattern 8.000 x 0.698
+      at X -4.000  Y 0.698
+      at X -3.700  Y 0.698
+      at X -2.900  Y 0.698
+      at X -2.600  Y 0.698
+      at X -1.800  Y 0.698
+      at X -1.500  Y 0.698
+      at X -0.700  Y 0.698
+      at X -0.400  Y 0.698
+      at X 0.000  Y 0.000
+      at X 0.400  Y 0.698
+      at X 0.700  Y 0.698
+      at X 1.500  Y 0.698
+  H768-01-PCB-FAN: diameter 0.540 : 28 holes   pattern 6.820 x 0.000
+      at X -3.577  Y -0.744
+      at X -3.377  Y -0.744
+      at X -3.157  Y -0.744
+      at X -2.777  Y -0.744
+      at X -2.577  Y -0.744
+      at X -2.357  Y -0.744
+      at X -2.017  Y -0.744
+      at X -1.817  Y -0.744
+      at X -1.518  Y -0.744
+      at X -1.318  Y -0.744
+      at X -1.017  Y -0.744
+      at X -0.817  Y -0.744
+  H768-01-PCB-FAN: diameter 0.550 : 8 holes   pattern 21.310 x 48.743
+      at X -6.000  Y 1.800
+      at X -6.000  Y 2.300
+      at X 0.000  Y 0.000
+      at X 0.000  Y 0.900
+      at X 14.560  Y 29.489
+      at X 14.560  Y 48.743
+      at X 15.310  Y 29.489
+      at X 15.310  Y 48.743
+  H768-01-PCB-FAN: diameter 0.560 : 16 holes   pattern 8.200 x 0.000
+      at X -4.100  Y -0.020
+      at X -3.600  Y -0.020
+      at X -3.000  Y -0.020
+      at X -2.500  Y -0.020
+      at X -1.900  Y -0.020
+      at X -1.400  Y -0.020
+      at X -0.800  Y -0.020
+      at X -0.300  Y -0.020
+      at X 0.300  Y -0.020
+      at X 0.800  Y -0.020
+      at X 1.400  Y -0.020
+      at X 1.900  Y -0.020
+  H768-01-PCB-FAN: diameter 0.600 : 36 holes   pattern 38.200 x 105.964
+      at X -20.202  Y 100.350
+      at X -20.202  Y 104.350
+      at X -4.900  Y 0.700
+      at X -4.900  Y 1.500
+      at X -4.637  Y -1.614
+      at X -4.337  Y -1.614
+      at X -4.120  Y 2.150
+      at X -4.000  Y 1.050
+      at X -3.700  Y 1.050
+      at X -2.900  Y 1.050
+      at X -2.600  Y 1.050
+      at X -2.211  Y 1.996
+  H768-01-PCB-FAN: diameter 0.650 : 1 hole
+      at X 0.000  Y 0.000
+  H768-01-PCB-FAN: diameter 0.700 : 48 holes   pattern 18.000 x 68.454
+      at X -9.000  Y 0.000
+      at X -9.000  Y 0.800
+      at X -6.985  Y 0.000
+      at X -6.985  Y 0.800
+      at X -5.715  Y 0.000
+      at X -5.715  Y 0.800
+      at X -4.445  Y 0.000
+      at X -4.445  Y 0.800
+      at X -3.175  Y 0.000
+      at X -3.175  Y 0.800
+      at X -3.162  Y 0.416
+      at X -3.162  Y 0.916
+  H768-01-PCB-FAN: diameter 0.750 : 3 holes   pattern 0.000 x 0.800
+      at X 0.000  Y 0.000
+      at X 0.000  Y 0.100
+      at X 0.000  Y 0.800
+  H768-01-PCB-FAN: diameter 0.780 : 1 hole
+      at X 0.000  Y 0.000
+  H768-01-PCB-FAN: diameter 0.800 : 8 holes   pattern 10.600 x 2.450
+      at X -5.750  Y 0.000
+      at X -4.850  Y 1.000
+      at X -4.830  Y 0.700
+      at X -4.830  Y 1.500
+      at X -3.700  Y 2.450
+      at X -1.750  Y 0.000
+      at X 3.700  Y 2.450
+      at X 4.850  Y 1.000
+  H768-01-PCB-FAN: diameter 0.860 : 16 holes   pattern 8.200 x 0.000
+      at X -4.100  Y -0.020
+      at X -3.600  Y -0.020
+      at X -3.000  Y -0.020
+      at X -2.500  Y -0.020
+      at X -1.900  Y -0.020
+      at X -1.400  Y -0.020
+      at X -0.800  Y -0.020
+      at X -0.300  Y -0.020
+      at X 0.300  Y -0.020
+      at X 0.800  Y -0.020
+      at X 1.400  Y -0.020
+      at X 1.900  Y -0.020
+  H768-01-PCB-FAN: diameter 0.900 : 47 holes   pattern 41.516 x 39.624
+      at X -4.000  Y 1.050
+      at X -3.700  Y 1.050
+      at X -2.900  Y 1.050
+      at X -2.642  Y 4.064
+      at X -2.642  Y 6.604
+      at X -2.642  Y 9.144
+      at X -2.642  Y 11.684
+      at X -2.642  Y 14.224
+      at X -2.642  Y 16.764
+      at X -2.642  Y 19.304
+      at X -2.642  Y 21.844
+      at X -2.642  Y 24.384
+  H768-01-PCB-FAN: diameter 0.901 : 2 holes   pattern 2.420 x 0.000
+      at X -1.377  Y 1.796
+      at X 1.043  Y 1.796
+  H768-01-PCB-FAN: diameter 1.000 : 54 holes   pattern 38.200 x 124.116
+      at X -20.202  Y 72.179
+      at X -20.202  Y 77.600
+      at X -20.202  Y 100.150
+      at X -20.202  Y 104.550
+      at X -20.202  Y 110.300
+      at X -20.202  Y 116.900
+      at X -19.702  Y 77.600
+      at X -19.702  Y 78.100
+      at X -14.054  Y 72.179
+      at X -14.054  Y 72.679
+      at X -14.054  Y 77.600
+      at X -14.054  Y 78.100
+  H768-01-PCB-FAN: diameter 1.100 : 2 holes   pattern 0.000 x 2.500
+      at X 10.800  Y 72.550
+      at X 10.800  Y 75.050
+  H768-01-PCB-FAN: diameter 1.220 : 16 holes   pattern 8.000 x 0.000
+      at X -4.000  Y 1.020
+      at X -3.700  Y 1.020
+      at X -2.900  Y 1.020
+      at X -2.600  Y 1.020
+      at X -1.800  Y 1.020
+      at X -1.500  Y 1.020
+      at X -0.700  Y 1.020
+      at X -0.400  Y 1.020
+      at X 0.400  Y 1.020
+      at X 0.700  Y 1.020
+      at X 1.500  Y 1.020
+      at X 1.800  Y 1.020
+  H768-01-PCB-FAN: diameter 1.300 : 8 holes   pattern 4.180 x 9.350
+      at X -2.380  Y 60.325
+      at X -2.380  Y 61.025
+      at X -2.380  Y 68.975
+      at X -2.380  Y 69.675
+      at X 1.800  Y 60.325
+      at X 1.800  Y 61.025
+      at X 1.800  Y 68.975
+      at X 1.800  Y 69.675
+  H768-01-PCB-FAN: diameter 1.500 : 4 holes   pattern 2.400 x 49.692
+      at X 3.000  Y -30.377
+      at X 3.000  Y 19.314
+      at X 5.400  Y -30.377
+      at X 5.400  Y 19.314
+  H768-01-PCB-FAN: diameter 1.520 : 16 holes   pattern 8.000 x 0.000
+      at X -4.000  Y 1.020
+      at X -3.700  Y 1.020
+      at X -2.900  Y 1.020
+      at X -2.600  Y 1.020
+      at X -1.800  Y 1.020
+      at X -1.500  Y 1.020
+      at X -0.700  Y 1.020
+      at X -0.400  Y 1.020
+      at X 0.400  Y 1.020
+      at X 0.700  Y 1.020
+      at X 1.500  Y 1.020
+      at X 1.800  Y 1.020
+  H768-01-PCB-FAN: diameter 1.600 : 6 holes   pattern 37.563 x 43.864
+      at X -3.362  Y 0.361
+      at X -3.362  Y 0.971
+      at X 1.001  Y 44.225
+      at X 3.028  Y 0.361
+      at X 3.028  Y 0.971
+      at X 34.201  Y 44.225
+  H768-01-PCB-FAN: diameter 1.680 : 1 hole
+      at X 0.000  Y 0.000
+  H768-01-PCB-FAN: diameter 1.700 : 1 hole
+      at X 0.000  Y 0.000
+  H768-01-PCB-FAN: diameter 1.720 : 1 hole
+      at X 0.000  Y 0.000
+  H768-01-PCB-FAN: diameter 1.840 : 1 hole
+      at X 0.000  Y -1.870
+  H768-01-PCB-FAN: diameter 1.852 : 1 hole
+      at X 0.000  Y 0.000
+  H768-01-PCB-FAN: diameter 1.860 : 1 hole
+      at X 0.000  Y 0.000
+  H768-01-PCB-FAN: diameter 1.866 : 1 hole
+      at X 0.000  Y 0.000
+  H768-01-PCB-FAN: diameter 1.900 : 4 holes   pattern 6.390 x 0.610
+      at X -3.362  Y 0.361
+      at X -3.362  Y 0.971
+      at X 3.028  Y 0.361
+      at X 3.028  Y 0.971
+  H768-01-PCB-FAN: diameter 1.960 : 4 holes   pattern 6.380 x 0.600
+      at X -3.357  Y 0.366
+      at X -3.357  Y 0.966
+      at X 3.023  Y 0.966
+      at X 3.023  Y 0.366
+  H768-01-PCB-FAN: diameter 1.992 : 1 hole
+      at X 0.000  Y 0.000
+  H768-01-PCB-FAN: diameter 1.994 : 1 hole
+      at X 0.000  Y 0.000
+  H768-01-PCB-FAN: diameter 2.000 : 15 holes   pattern 53.903 x 119.690
+      at X -19.702  Y 77.600
+      at X -15.887  Y 113.590
+      at X -14.054  Y 72.679
+      at X -14.054  Y 77.600
+      at X 0.000  Y -1.790
+      at X 0.000  Y -0.920
+      at X 0.000  Y 0.000
+      at X 1.001  Y 39.200
+      at X 2.500  Y 74.750
+      at X 2.616  Y 3.001
+      at X 7.998  Y 117.900
+      at X 8.917  Y 52.693
+  H768-01-PCB-FAN: diameter 2.100 : 2 holes   pattern 0.000 x 0.100
+      at X 0.000  Y -1.020
+      at X 0.000  Y -0.920
+  H768-01-PCB-FAN: diameter 2.160 : 4 holes   pattern 6.380 x 0.600
+      at X -3.357  Y 0.366
+      at X -3.357  Y 0.966
+      at X 3.023  Y 0.366
+      at X 3.023  Y 0.966
+  H768-01-PCB-FAN: diameter 2.500 : 2 holes   pattern 0.000 x 6.000
+      at X -4.785  Y -48.000
+      at X -4.785  Y -42.000
+  H768-01-PCB-FAN: diameter 2.560 : 4 holes   pattern 6.380 x 0.600
+      at X -3.357  Y 0.366
+      at X -3.357  Y 0.966
+      at X 3.023  Y 0.366
+      at X 3.023  Y 0.966
+  H768-01-PCB-FAN: diameter 2.700 : 1 hole
+      at X 0.000  Y 0.000
+  H768-01-PCB-FAN: diameter 3.000 : 4 holes   pattern 54.054 x 18.571
+      at X -18.854  Y 102.350
+      at X -0.300  Y 102.421
+      at X 16.646  Y 83.850
+      at X 35.200  Y 83.921
+  H768-01-PCB-FAN: diameter 3.300 : 1 hole
+      at X -3.750  Y 0.000
+  H768-01-PCB-FAN: diameter 3.500 : 6 holes   pattern 35.932 x 144.045
+      at X -3.750  Y 0.000
+      at X 3.000  Y -30.384
+      at X 3.000  Y 19.314
+      at X 5.400  Y -30.377
+      at X 5.400  Y 19.314
+      at X 32.182  Y 113.661
+  H768-01-PCB-FAN: diameter 3.700 : 1 hole
+      at X -3.750  Y 0.000
+  H768-01-PCB-FAN: diameter 4.000 : 6 holes   pattern 35.500 x 102.350
+      at X -18.854  Y 102.350
+      at X -3.750  Y 0.000
+      at X 7.000  Y 8.760
+      at X 7.200  Y 8.760
+      at X 9.200  Y 21.902
+      at X 16.646  Y 83.850
+  H768-01-PCB-FAN: diameter 4.400 : 2 holes   pattern 35.500 x 18.500
+      at X -18.854  Y 102.350
+      at X 16.646  Y 83.850
+  H768-01-PCB-FAN: diameter 4.800 : 1 hole
+      at X -3.750  Y 0.000
+  H768-01-PCB-FAN: diameter 4.952 : 2 holes   pattern 8.607 x 0.026
+      at X 17.526  Y 116.713
+      at X 26.133  Y 116.687
+  H768-01-PCB-FAN: diameter 4.953 : 1 hole
+      at X 9.070  Y 116.713
+  H768-01-PCB-FAN: diameter 5.000 : 4 holes   pattern 4.000 x 6.000
+      at X 11.498  Y 117.193
+      at X 11.498  Y 123.193
+      at X 15.498  Y 117.193
+      at X 15.498  Y 123.193
+  H768-01-PCB-FAN: diameter 5.600 : 1 hole
+      at X 9.600  Y -30.832
+  H768-01-PCB-FAN: diameter 6.000 : 9 holes   pattern 35.500 x 184.693
+      at X -18.854  Y 102.350
+      at X -4.785  Y -62.000
+      at X -4.785  Y -52.000
+      at X 9.600  Y -30.832
+      at X 11.498  Y 117.693
+      at X 11.498  Y 122.693
+      at X 15.498  Y 117.693
+      at X 15.498  Y 122.693
+      at X 16.646  Y 83.850
+  H768-01-PCB-FAN: diameter 6.500 : 2 holes   pattern 0.000 x 2.000
+      at X 13.630  Y 121.193
+      at X 13.630  Y 123.193
+  H768-01-PCB-FAN: diameter 7.000 : 2 holes   pattern 35.500 x 18.500
+      at X -18.854  Y 102.350
+      at X 16.646  Y 83.850
+  H768-01-PCB-FAN: diameter 7.122 : 1 hole
+      at X -0.522  Y 3.591
+  H768-01-PCB-FAN: diameter 7.126 : 1 hole
+      at X -0.520  Y 113.200
+  H768-01-PCB-FAN: diameter 7.127 : 1 hole
+      at X 35.420  Y 3.601
+  H768-01-PCB-FAN: diameter 7.129 : 1 hole
+      at X 35.420  Y 113.200
+  H768-01-PCB-FAN: diameter 25.579 : 1 hole
+      at X 0.555  Y -13.258
+  H768-01-PCB-FAN: diameter 25.665 : 1 hole
+      at X 0.555  Y -13.258
+
+(109 smaller circle sizes were read and are not listed: below 0.5 mm they are edge
+fillets and pad corners, not holes.)
+

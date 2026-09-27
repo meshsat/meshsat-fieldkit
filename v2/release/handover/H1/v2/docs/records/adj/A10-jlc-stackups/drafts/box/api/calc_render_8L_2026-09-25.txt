@@ -1,0 +1,812 @@
+### calculator request (8, 1.6, 1, 0.5) at 2026-09-25T21:30:45.697106Z: 17 templates
+- JLC08161H-3313 (created 2026-04-29T09:03:31.000+00:00, plateThickness 1.6, inner 0.5, defaultFlag 0, urgentState 1, name 'JLC08161H-3313(成品板厚1.57mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 3313 RC57% 4.2mil t=0.0994 Dk=4.1
+    core 0.10mm H/HOZ 不含铜 dielectric t=0.1 Dk=4.36 (Cu 0.0152/0.0152)
+    PP 2116  RC54% 4.9mil t=0.1164 Dk=4.16
+    PP 2116  RC54% 4.9mil t=0.124 Dk=4.16
+    PP 2116  RC54% 4.9mil t=0.1164 Dk=4.16
+    core 0.3mm H/HOZ 不含铜 dielectric t=0.3 Dk=4.41 (Cu 0.0152/0.0152)
+    PP 2116  RC54% 4.9mil t=0.1164 Dk=4.16
+    PP 2116  RC54% 4.9mil t=0.124 Dk=4.16
+    PP 2116  RC54% 4.9mil t=0.1164 Dk=4.16
+    core 0.10mm H/HOZ 不含铜 dielectric t=0.1 Dk=4.36 (Cu 0.0152/0.0152)
+    PP 3313 RC57% 4.2mil t=0.0994 Dk=4.1
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5736 mm
+- JLC08161H-7628 (created 2022-09-29T07:43:04.000+00:00, plateThickness 1.6, inner 0.5, defaultFlag 0, urgentState 2, name 'JLC08161H-7628(成品板厚1.59mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 7628 RC49% 8.6mil t=0.2104 Dk=4.4
+    core 0.2mm H/HOZ 不含铜 dielectric t=0.2 Dk=4.36 (Cu 0.0152/0.0152)
+    PP 7628 RC49% 8.6mil t=0.2028 Dk=4.4
+    core 0.2mm H/HOZ 不含铜 dielectric t=0.2 Dk=4.36 (Cu 0.0152/0.0152)
+    PP 7628 RC49% 8.6mil t=0.2028 Dk=4.4
+    core 0.2mm H/HOZ 不含铜 dielectric t=0.2 Dk=4.36 (Cu 0.0152/0.0152)
+    PP 7628 RC49% 8.6mil t=0.2104 Dk=4.4
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5876 mm
+- JLC08161H-2116A (created 2022-12-14T07:11:56.000+00:00, plateThickness 1.6, inner 0.5, defaultFlag 0, urgentState 2, name 'JLC08161H-2116A(特殊/成品板厚1.61mm±10%）')
+    L1 copper 1oz t=0.035
+    PP 2116  RC54% 4.9mil t=0.1164 Dk=4.16
+    core 0.25mm H/HOZ 不含铜 dielectric t=0.25 Dk=4.23 (Cu 0.0152/0.0152)
+    PP 2116  RC54% 4.9mil t=0.1164 Dk=4.16
+    PP 2116  RC54% 4.9mil t=0.1164 Dk=4.16
+    core 0.25mm H/HOZ 不含铜 dielectric t=0.25 Dk=4.23 (Cu 0.0152/0.0152)
+    PP 2116  RC54% 4.9mil t=0.1164 Dk=4.16
+    PP 2116  RC54% 4.9mil t=0.1164 Dk=4.16
+    core 0.25mm H/HOZ 不含铜 dielectric t=0.25 Dk=4.23 (Cu 0.0152/0.0152)
+    PP 2116  RC54% 4.9mil t=0.1164 Dk=4.16
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.6096 mm
+- JLC08161H-2116B (created 2025-07-15T06:00:30.000+00:00, plateThickness 1.6, inner 0.5, defaultFlag 0, urgentState 2, name 'JLC08161H-2116B(特殊/成品板厚1.57mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 2116  RC54% 4.9mil t=0.1164 Dk=4.16
+    core 0.13mm H/HOZ 不含铜 dielectric t=0.13 Dk=4.17 (Cu 0.0152/0.0152)
+    PP 2116  RC54% 4.9mil t=0.1088 Dk=4.16
+    core 0.7mm H/HOZ 不含铜 dielectric t=0.7 Dk=4.53 (Cu 0.0152/0.0152)
+    PP 2116  RC54% 4.9mil t=0.1088 Dk=4.16
+    core 0.13mm H/HOZ 不含铜 dielectric t=0.13 Dk=4.17 (Cu 0.0152/0.0152)
+    PP 2116  RC54% 4.9mil t=0.1164 Dk=4.16
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5716 mm
+- JLC08161H-2116C (created 2026-09-02T05:41:12.000+00:00, plateThickness 1.6, inner 0.5, defaultFlag 0, urgentState 1, name 'JLC08161H-2116C(特殊结构/成品板厚1.52mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 2116 RC57% 5mil t=0.1194 Dk=4.29
+    core 0.13mm H/HOZ 不含铜 dielectric t=0.13 Dk=4.17 (Cu 0.0152/0.0152)
+    PP 2116 RC57% 5mil t=0.1194 Dk=4.29
+    PP 2116 RC57% 5mil t=0.127 Dk=4.29
+    PP 2116 RC57% 5mil t=0.1194 Dk=4.29
+    core 0.13mm H/HOZ 不含铜 dielectric t=0.13 Dk=4.17 (Cu 0.0152/0.0152)
+    PP 2116 RC57% 5mil t=0.1194 Dk=4.29
+    PP 2116 RC57% 5mil t=0.127 Dk=4.29
+    PP 2116 RC57% 5mil t=0.1194 Dk=4.29
+    core 0.13mm H/HOZ 不含铜 dielectric t=0.13 Dk=4.17 (Cu 0.0152/0.0152)
+    PP 2116 RC57% 5mil t=0.1194 Dk=4.29
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5216 mm
+- JLC08161H-1080 (created 2021-11-10T08:36:11.000+00:00, plateThickness 1.6, inner 0.5, defaultFlag 0, urgentState 2, name 'JLC08161H-1080(成品板厚1.62mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 1080  RC67% 3.3mil t=0.0764 Dk=3.91
+    core 0.3mm H/HOZ 不含铜 dielectric t=0.3 Dk=4.41 (Cu 0.0152/0.0152)
+    PP 7628 RC49% 8.6mil t=0.2028 Dk=4.4
+    core 0.3mm H/HOZ 不含铜 dielectric t=0.3 Dk=4.41 (Cu 0.0152/0.0152)
+    PP 7628 RC49% 8.6mil t=0.2028 Dk=4.4
+    core 0.3mm H/HOZ 不含铜 dielectric t=0.3 Dk=4.41 (Cu 0.0152/0.0152)
+    PP 1080  RC67% 3.3mil t=0.0764 Dk=3.91
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.6196 mm
+- JLC08161H-1080A (created 2022-11-30T09:52:58.000+00:00, plateThickness 1.6, inner 0.5, defaultFlag 0, urgentState 2, name 'JLC08161H-1080A(特殊/成品板厚1.62mm±10%）')
+    L1 copper 1oz t=0.035
+    PP 1080  RC67% 3.3mil t=0.0764 Dk=3.91
+    core 0.10mm H/HOZ 不含铜 dielectric t=0.1 Dk=4.36 (Cu 0.0152/0.0152)
+    PP 7628 RC49% 8.6mil t=0.2104 Dk=4.4
+    PP 1080  RC67% 3.3mil t=0.084 Dk=3.91
+    PP 7628 RC49% 8.6mil t=0.2104 Dk=4.4
+    core 0.10mm H/HOZ 不含铜 dielectric t=0.1 Dk=4.36 (Cu 0.0152/0.0152)
+    PP 7628 RC49% 8.6mil t=0.2104 Dk=4.4
+    PP 1080  RC67% 3.3mil t=0.084 Dk=3.91
+    PP 7628 RC49% 8.6mil t=0.2104 Dk=4.4
+    core 0.10mm H/HOZ 不含铜 dielectric t=0.1 Dk=4.36 (Cu 0.0152/0.0152)
+    PP 1080  RC67% 3.3mil t=0.0764 Dk=3.91
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.6236 mm
+- JLC08161H-1080B (created 2023-03-29T08:39:04.000+00:00, plateThickness 1.6, inner 0.5, defaultFlag 0, urgentState 2, name 'JLC08161H-1080B(特殊/成品板厚1.65mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 1080  RC67% 3.3mil t=0.084 Dk=3.91
+    PP 1080  RC67% 3.3mil t=0.0764 Dk=3.91
+    core 0.15mm H/HOZ 不含铜 dielectric t=0.15 Dk=4.36 (Cu 0.0152/0.0152)
+    PP 2116  RC54% 4.9mil t=0.1164 Dk=4.16
+    PP 2116  RC54% 4.9mil t=0.124 Dk=4.16
+    PP 2116  RC54% 4.9mil t=0.1164 Dk=4.16
+    core 0.15mm H/HOZ 不含铜 dielectric t=0.15 Dk=4.36 (Cu 0.0152/0.0152)
+    PP 2116  RC54% 4.9mil t=0.1164 Dk=4.16
+    PP 2116  RC54% 4.9mil t=0.124 Dk=4.16
+    PP 2116  RC54% 4.9mil t=0.1164 Dk=4.16
+    core 0.15mm H/HOZ 不含铜 dielectric t=0.15 Dk=4.36 (Cu 0.0152/0.0152)
+    PP 1080  RC67% 3.3mil t=0.0764 Dk=3.91
+    PP 1080  RC67% 3.3mil t=0.084 Dk=3.91
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.6456 mm
+- JLC08161H-1080C (created 2025-09-05T01:16:28.000+00:00, plateThickness 1.6, inner 0.5, defaultFlag 0, urgentState 2, name 'JLC08161H-1080C(特殊/成品板厚1.55mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 1080  RC67% 3.3mil t=0.0764 Dk=3.91
+    core 0.075mm H/HOZ 不含铜 dielectric t=0.075 Dk=3.99 (Cu 0.0152/0.0152)
+    PP 7628 RC49% 8.6mil t=0.2104 Dk=4.4
+    PP 1080  RC67% 3.3mil t=0.084 Dk=3.91
+    PP 7628 RC49% 8.6mil t=0.2104 Dk=4.4
+    core 0.075mm H/HOZ 不含铜 dielectric t=0.075 Dk=3.99 (Cu 0.0152/0.0152)
+    PP 7628 RC49% 8.6mil t=0.2104 Dk=4.4
+    PP 1080  RC67% 3.3mil t=0.084 Dk=3.91
+    PP 7628 RC49% 8.6mil t=0.2104 Dk=4.4
+    core 0.075mm H/HOZ 不含铜 dielectric t=0.075 Dk=3.99 (Cu 0.0152/0.0152)
+    PP 1080  RC67% 3.3mil t=0.0764 Dk=3.91
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5486 mm
+- JLC08161H-1080D (created 2026-02-27T07:20:46.000+00:00, plateThickness 1.6, inner 0.5, defaultFlag 0, urgentState 2, name 'JLC08161H-1080D(特殊/成品板厚1.53mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 1080  RC67% 3.3mil t=0.0764 Dk=3.91
+    core 0.25mm H/HOZ 不含铜 dielectric t=0.25 Dk=4.29 (Cu 0.0152/0.0152)
+    PP 2116  RC54% 4.9mil t=0.1164 Dk=4.16
+    PP 2116  RC54% 4.9mil t=0.1164 Dk=4.16
+    core 0.25mm H/HOZ 不含铜 dielectric t=0.25 Dk=4.29 (Cu 0.0152/0.0152)
+    PP 2116  RC54% 4.9mil t=0.1164 Dk=4.16
+    PP 2116  RC54% 4.9mil t=0.1164 Dk=4.16
+    core 0.25mm H/HOZ 不含铜 dielectric t=0.25 Dk=4.29 (Cu 0.0152/0.0152)
+    PP 1080  RC67% 3.3mil t=0.0764 Dk=3.91
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5296 mm
+- JLC08161H-1080F (created 2026-08-18T03:58:07.000+00:00, plateThickness 1.6, inner 0.5, defaultFlag 0, urgentState 2, name 'JLC08161H-1080F(特殊/成品板厚1.52mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 1080  RC67% 3.3mil t=0.0764 Dk=3.91
+    core 0.10mm H/HOZ 不含铜 dielectric t=0.1 Dk=4.36 (Cu 0.0152/0.0152)
+    PP 1080  RC67% 3.3mil t=0.0688 Dk=3.91
+    core 0.9mm H/HOZ 含铜 dielectric t=0.865 Dk=4.55 (Cu 0.0152/0.0152)
+    PP 1080  RC67% 3.3mil t=0.0688 Dk=3.91
+    core 0.10mm H/HOZ 不含铜 dielectric t=0.1 Dk=4.36 (Cu 0.0152/0.0152)
+    PP 1080  RC67% 3.3mil t=0.0764 Dk=3.91
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5166 mm
+- JLC08161H-1080J (created 2026-09-17T05:54:56.000+00:00, plateThickness 1.6, inner 0.5, defaultFlag 0, urgentState 2, name 'JLC08161H-1080J(特殊/成品板厚1.5mm±10%）')
+    L1 copper 1oz t=0.035
+    PP 1080  RC67% 3.3mil t=0.0764 Dk=3.91
+    core 0.15mm H/HOZ 不含铜 dielectric t=0.15 Dk=4.36 (Cu 0.0152/0.0152)
+    PP 2116 RC57% 5mil t=0.1194 Dk=4.29
+    PP 2116 RC57% 5mil t=0.127 Dk=4.29
+    PP 2116 RC57% 5mil t=0.1194 Dk=4.29
+    core 0.15mm H/HOZ 不含铜 dielectric t=0.15 Dk=4.36 (Cu 0.0152/0.0152)
+    PP 2116 RC57% 5mil t=0.1194 Dk=4.29
+    PP 2116 RC57% 5mil t=0.127 Dk=4.29
+    PP 2116 RC57% 5mil t=0.1194 Dk=4.29
+    core 0.15mm H/HOZ 不含铜 dielectric t=0.15 Dk=4.36 (Cu 0.0152/0.0152)
+    PP 1080  RC67% 3.3mil t=0.0764 Dk=3.91
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.4956 mm
+- JLC08161H-自定义 (created 2022-08-17T12:24:07.000+00:00, plateThickness 1.6, inner 0.5, defaultFlag 0, urgentState 2, name '客户自定义层压结构')
+    L1 copper 1oz t=0.035
+    L2 copper Hoz t=0.0175
+    L3 copper Hoz t=0.0175
+    core 自定义叠构提供人工计算阻抗及叠构服务，此层压结构仅做展示 dielectric t=0.1 Dk=0.0 (Cu 0.0152/0.0152)
+    L6 copper Hoz t=0.0175
+    L7 copper Hoz t=0.0175
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 0.2704 mm
+- JLC08161H-2313 (created 2026-01-21T07:46:04.000+00:00, plateThickness 1.6, inner 0.5, defaultFlag 0, urgentState 1, name 'JLC08161H-2313(特殊结构/成品板厚1.52mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 2313 RC58% 4.09mil t=0.0964 Dk=4.27
+    core 0.13mm H/HOZ 不含铜 dielectric t=0.13 Dk=4.03 (Cu 0.0152/0.0152)
+    PP 7628 RC50% 8.5mil t=0.2084 Dk=4.46
+    PP 2313 RC58% 4.09mil t=0.0964 Dk=4.27
+    core 0.30mm H/HOZ 不含铜 dielectric t=0.3 Dk=4.56 (Cu 0.0152/0.0152)
+    PP 2313 RC58% 4.09mil t=0.0964 Dk=4.27
+    PP 7628 RC50% 8.5mil t=0.2084 Dk=4.46
+    core 0.13mm H/HOZ 不含铜 dielectric t=0.13 Dk=4.03 (Cu 0.0152/0.0152)
+    PP 2313 RC58% 4.09mil t=0.0964 Dk=4.27
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5236 mm
+- JLC08161H-2313A (created 2026-07-18T06:24:32.000+00:00, plateThickness 1.6, inner 0.5, defaultFlag 0, urgentState 1, name 'JLC08161H-2313A(特殊结构/成品板厚1.58mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 2313 RC58% 4.09mil t=0.0964 Dk=4.27
+    core 0.15mm H/HOZ 不含铜 dielectric t=0.15 Dk=4.35 (Cu 0.0152/0.0152)
+    PP 2116 RC57% 5mil t=0.1194 Dk=4.29
+    PP 2116 RC57% 5mil t=0.127 Dk=4.29
+    PP 2116 RC57% 5mil t=0.1194 Dk=4.29
+    core 0.15mm H/HOZ 不含铜 dielectric t=0.15 Dk=4.35 (Cu 0.0152/0.0152)
+    PP 2116 RC57% 5mil t=0.1194 Dk=4.29
+    PP 2116 RC57% 5mil t=0.127 Dk=4.29
+    PP 2116 RC57% 5mil t=0.1194 Dk=4.29
+    core 0.15mm H/HOZ 不含铜 dielectric t=0.15 Dk=4.35 (Cu 0.0152/0.0152)
+    PP 2313 RC58% 4.09mil t=0.0964 Dk=4.27
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5356 mm
+- JLC08161H-2116 (created 2022-09-13T12:17:02.000+00:00, plateThickness 1.6, inner 0.5, defaultFlag 1, urgentState 1, name '无要求')
+    L1 copper 1oz t=0.035
+    PP 2116  RC54% 4.9mil t=0.1164 Dk=4.16
+    core 0.3mm H/HOZ 不含铜 dielectric t=0.3 Dk=4.41 (Cu 0.0152/0.0152)
+    PP 1080  RC67% 3.3mil t=0.0764 Dk=3.91
+    PP 1080  RC67% 3.3mil t=0.0764 Dk=3.91
+    core 0.3mm H/HOZ 不含铜 dielectric t=0.3 Dk=4.41 (Cu 0.0152/0.0152)
+    PP 1080  RC67% 3.3mil t=0.0764 Dk=3.91
+    PP 1080  RC67% 3.3mil t=0.0764 Dk=3.91
+    core 0.3mm H/HOZ 不含铜 dielectric t=0.3 Dk=4.41 (Cu 0.0152/0.0152)
+    PP 2116  RC54% 4.9mil t=0.1164 Dk=4.16
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5996 mm
+- JLC08161H-2116 (created 2021-11-10T08:34:53.000+00:00, plateThickness 1.6, inner 0.5, defaultFlag 0, urgentState 1, name 'JLC08161H-2116(通用免费/成品板厚1.6mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 2116  RC54% 4.9mil t=0.1164 Dk=4.16
+    core 0.3mm H/HOZ 不含铜 dielectric t=0.3 Dk=4.41 (Cu 0.0152/0.0152)
+    PP 1080  RC67% 3.3mil t=0.0764 Dk=3.91
+    PP 1080  RC67% 3.3mil t=0.0764 Dk=3.91
+    core 0.3mm H/HOZ 不含铜 dielectric t=0.3 Dk=4.41 (Cu 0.0152/0.0152)
+    PP 1080  RC67% 3.3mil t=0.0764 Dk=3.91
+    PP 1080  RC67% 3.3mil t=0.0764 Dk=3.91
+    core 0.3mm H/HOZ 不含铜 dielectric t=0.3 Dk=4.41 (Cu 0.0152/0.0152)
+    PP 2116  RC54% 4.9mil t=0.1164 Dk=4.16
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5996 mm
+### calculator request (8, 1.6, 1, 1) at 2026-09-25T21:30:47.940981Z: 29 templates
+- JLC081611-3313 (created 2022-11-02T11:07:12.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081611-3313(成品板厚1.64mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    core 0.13mm 1/1OZ 不含铜 dielectric t=0.13 Dk=4.17 (Cu 0.03/0.03)
+    PP 7628 RC49% 8.6mil t=0.203 Dk=4.4
+    PP 7628 RC49% 8.6mil t=0.203 Dk=4.4
+    core 0.13mm 1/1OZ 不含铜 dielectric t=0.13 Dk=4.17 (Cu 0.03/0.03)
+    PP 7628 RC49% 8.6mil t=0.203 Dk=4.4
+    PP 7628 RC49% 8.6mil t=0.203 Dk=4.4
+    core 0.13mm 1/1OZ 不含铜 dielectric t=0.13 Dk=4.17 (Cu 0.03/0.03)
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.6360 mm
+- JLC081611-3313A (created 2026-01-20T07:28:03.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081611-3313A（特殊/成品板厚1.55mm±10%）')
+    L1 copper 1oz t=0.035
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    core 0.10mm 1/1OZ 不含铜 dielectric t=0.1 Dk=4.17 (Cu 0.03/0.03)
+    PP 7628 RC49% 8.6mil t=0.203 Dk=4.4
+    PP 7628 RC49% 8.6mil t=0.203 Dk=4.4
+    core 0.10mm 1/1OZ 不含铜 dielectric t=0.1 Dk=4.17 (Cu 0.03/0.03)
+    PP 7628 RC49% 8.6mil t=0.203 Dk=4.4
+    PP 7628 RC49% 8.6mil t=0.203 Dk=4.4
+    core 0.10mm 1/1OZ 不含铜 dielectric t=0.1 Dk=4.17 (Cu 0.03/0.03)
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5460 mm
+- JLC081611-3313B (created 2026-04-11T10:18:35.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081611-3313B(特殊/成品板厚1.62mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    core 0.25mm 1/1OZ 不含铜 dielectric t=0.25 Dk=4.23 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.094 Dk=4.16
+    core 0.5mm 1/1OZ 不含铜 dielectric t=0.5 Dk=4.48 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.094 Dk=4.16
+    core 0.25mm 1/1OZ 不含铜 dielectric t=0.25 Dk=4.23 (Cu 0.03/0.03)
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.6220 mm
+- JLC081611-3313C (created 2026-06-08T02:48:49.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081611-3313C(成品板厚1.55mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    core 0.25mm 1/1OZ 不含铜 dielectric t=0.25 Dk=4.23 (Cu 0.03/0.03)
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    core 0.25mm 1/1OZ 不含铜 dielectric t=0.25 Dk=4.23 (Cu 0.03/0.03)
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    core 0.25mm 1/1OZ 不含铜 dielectric t=0.25 Dk=4.23 (Cu 0.03/0.03)
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5520 mm
+- JLC081611-7628 (created 2024-01-19T06:13:54.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081611-7628(特殊/成品板厚1.59mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 7628 RC49% 8.6mil t=0.218 Dk=4.4
+    PP 7628 RC49% 8.6mil t=0.203 Dk=4.4
+    core 0.075mm 1/1OZ 不含铜 dielectric t=0.075 Dk=3.99 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.075mm 1/1OZ 不含铜 dielectric t=0.075 Dk=3.99 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.075mm 1/1OZ 不含铜 dielectric t=0.075 Dk=3.99 (Cu 0.03/0.03)
+    PP 7628 RC49% 8.6mil t=0.203 Dk=4.4
+    PP 7628 RC49% 8.6mil t=0.218 Dk=4.4
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5930 mm
+- JLC081611-7628A (created 2026-04-14T13:17:45.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081611-7628A(特殊/成品板厚1.60mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 7628 RC49% 8.6mil t=0.218 Dk=4.4
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    core 0.15mm 1/1OZ 不含铜 dielectric t=0.15 Dk=4.36 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.15mm 1/1OZ 不含铜 dielectric t=0.15 Dk=4.36 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.15mm 1/1OZ 不含铜 dielectric t=0.15 Dk=4.36 (Cu 0.03/0.03)
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    PP 7628 RC49% 8.6mil t=0.218 Dk=4.4
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5960 mm
+- JLC081611-2116A (created 2022-10-31T08:59:22.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081611-2116A(特殊/成品板厚1.64mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    core 0.10mm 1/1OZ 不含铜 dielectric t=0.1 Dk=4.17 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    PP 7628 RC49% 8.6mil t=0.218 Dk=4.4
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    core 0.10mm 1/1OZ 不含铜 dielectric t=0.1 Dk=4.17 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    PP 7628 RC49% 8.6mil t=0.218 Dk=4.4
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    core 0.10mm 1/1OZ 不含铜 dielectric t=0.1 Dk=4.17 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.6400 mm
+- JLC081611-2116B (created 2022-11-16T09:04:59.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081611-2116B(成品板厚1.57mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 2116  RC54% 4.9mil t=0.124 Dk=4.16
+    PP 7628 RC49% 8.6mil t=0.203 Dk=4.4
+    core 0.10mm 1/1OZ 不含铜 dielectric t=0.1 Dk=4.17 (Cu 0.03/0.03)
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    core 0.10mm 1/1OZ 不含铜 dielectric t=0.1 Dk=4.17 (Cu 0.03/0.03)
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    core 0.10mm 1/1OZ 不含铜 dielectric t=0.1 Dk=4.17 (Cu 0.03/0.03)
+    PP 7628 RC49% 8.6mil t=0.203 Dk=4.4
+    PP 2116  RC54% 4.9mil t=0.124 Dk=4.16
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5720 mm
+- JLC081611-2116C (created 2023-10-18T09:54:51.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081611-2116C(成品板厚1.6mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 2116  RC54% 4.9mil t=0.124 Dk=4.16
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    core 0.15mm 1/1OZ 不含铜 dielectric t=0.15 Dk=4.36 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    core 0.15mm 1/1OZ 不含铜 dielectric t=0.15 Dk=4.36 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    core 0.15mm 1/1OZ 不含铜 dielectric t=0.15 Dk=4.36 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    PP 2116  RC54% 4.9mil t=0.124 Dk=4.16
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.6020 mm
+- JLC081611-2116D (created 2024-07-24T09:51:40.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081611-2116D(特殊/成品板厚1.56mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    core 0.10mm 1/1OZ 不含铜 dielectric t=0.1 Dk=4.17 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.094 Dk=4.16
+    core 0.7mm 1/1OZ 不含铜 dielectric t=0.7 Dk=4.53 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.094 Dk=4.16
+    core 0.10mm 1/1OZ 不含铜 dielectric t=0.1 Dk=4.17 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5560 mm
+- JLC081611-2116F (created 2025-09-18T07:06:07.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081611-2116F(特殊/板厚1.46mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    core 0.15mm 1/1OZ 不含铜 dielectric t=0.15 Dk=4.36 (Cu 0.03/0.03)
+    PP 7628 RC49% 8.6mil t=0.203 Dk=4.4
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.15mm 1/1OZ 不含铜 dielectric t=0.15 Dk=4.36 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    PP 7628 RC49% 8.6mil t=0.203 Dk=4.4
+    core 0.15mm 1/1OZ 不含铜 dielectric t=0.15 Dk=4.36 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.4620 mm
+- JLC081611-2116E (created 2025-09-18T06:46:41.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081611-2116E(特殊/成品板厚1.42mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 2116  RC54% 4.9mil t=0.124 Dk=4.16
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    core 0.10mm 1/1OZ 不含铜 dielectric t=0.1 Dk=4.17 (Cu 0.03/0.03)
+    PP 7628 RC49% 8.6mil t=0.188 Dk=4.4
+    core 0.13mm 1/1OZ 不含铜 dielectric t=0.13 Dk=4.17 (Cu 0.03/0.03)
+    PP 7628 RC49% 8.6mil t=0.188 Dk=4.4
+    core 0.10mm 1/1OZ 不含铜 dielectric t=0.1 Dk=4.17 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    PP 2116  RC54% 4.9mil t=0.124 Dk=4.16
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.4220 mm
+- JLC081611-2116G (created 2026-05-26T11:42:41.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081611-2116G(特殊/板厚1.64mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    core 0.15mm 1/1OZ 不含铜 dielectric t=0.15 Dk=4.36 (Cu 0.03/0.03)
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    core 0.5mm 1/1OZ 不含铜 dielectric t=0.5 Dk=4.48 (Cu 0.03/0.03)
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    core 0.15mm 1/1OZ 不含铜 dielectric t=0.15 Dk=4.36 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.6360 mm
+- JLC081611-2116H (created 2026-06-11T11:11:20.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081611-2116H(特殊/成品板厚1.56mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    core 0.2mm 1/1OZ 不含铜 dielectric t=0.2 Dk=4.36 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.094 Dk=4.16
+    core 0.5mm 1/1OZ 不含铜 dielectric t=0.5 Dk=4.48 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.094 Dk=4.16
+    core 0.2mm 1/1OZ 不含铜 dielectric t=0.2 Dk=4.36 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5560 mm
+- JLC081611-2116L (created 2026-07-09T10:52:08.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 1, name 'JLC081611-2116L(成品板厚1.51mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 2116  RC54% 4.9mil t=0.124 Dk=4.16
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    core 0.15mm 1/1OZ 不含铜 dielectric t=0.15 Dk=4.36 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.15mm 1/1OZ 不含铜 dielectric t=0.15 Dk=4.36 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    core 0.15mm 1/1OZ 不含铜 dielectric t=0.15 Dk=4.36 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    PP 2116  RC54% 4.9mil t=0.124 Dk=4.16
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5220 mm
+- JLC081611-1080 (created 2022-04-15T09:16:42.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081611-1080（特殊/成品板厚1.67mm±10%）')
+    L1 copper 1oz t=0.035
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.10mm 1/1OZ 不含铜 dielectric t=0.1 Dk=4.17 (Cu 0.03/0.03)
+    PP 7628 RC49% 8.6mil t=0.203 Dk=4.4
+    PP 7628 RC49% 8.6mil t=0.218 Dk=4.4
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.10mm 1/1OZ 不含铜 dielectric t=0.1 Dk=4.17 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    PP 7628 RC49% 8.6mil t=0.218 Dk=4.4
+    PP 7628 RC49% 8.6mil t=0.203 Dk=4.4
+    core 0.10mm 1/1OZ 不含铜 dielectric t=0.1 Dk=4.17 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.6680 mm
+- JLC081611-1080A (created 2022-11-23T14:13:09.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081611-1080A(成品板厚1.59mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.13mm 1/1OZ 不含铜 dielectric t=0.13 Dk=4.17 (Cu 0.03/0.03)
+    PP 7628 RC49% 8.6mil t=0.203 Dk=4.4
+    PP 7628 RC49% 8.6mil t=0.203 Dk=4.4
+    core 0.13mm 1/1OZ 不含铜 dielectric t=0.13 Dk=4.17 (Cu 0.03/0.03)
+    PP 7628 RC49% 8.6mil t=0.203 Dk=4.4
+    PP 7628 RC49% 8.6mil t=0.203 Dk=4.4
+    core 0.13mm 1/1OZ 不含铜 dielectric t=0.13 Dk=4.17 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5900 mm
+- JLC081611-1080B (created 2023-01-05T11:25:33.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081611-1080B(特殊/成品板厚1.6mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.075mm 1/1OZ 不含铜 dielectric t=0.075 Dk=3.99 (Cu 0.03/0.03)
+    PP 7628 RC49% 8.6mil t=0.203 Dk=4.4
+    PP 7628 RC49% 8.6mil t=0.218 Dk=4.4
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.075mm 1/1OZ 不含铜 dielectric t=0.075 Dk=3.99 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    PP 7628 RC49% 8.6mil t=0.218 Dk=4.4
+    PP 7628 RC49% 8.6mil t=0.203 Dk=4.4
+    core 0.075mm 1/1OZ 不含铜 dielectric t=0.075 Dk=3.99 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5930 mm
+- JLC081611-1080C (created 2023-04-12T08:39:27.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081611-1080C(特殊/成品板厚1.68mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 1080  RC67% 3.3mil t=0.084 Dk=3.91
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.2mm 1/1OZ 不含铜 dielectric t=0.2 Dk=4.36 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    PP 2116  RC54% 4.9mil t=0.124 Dk=4.16
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.2mm 1/1OZ 不含铜 dielectric t=0.2 Dk=4.36 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    PP 2116  RC54% 4.9mil t=0.124 Dk=4.16
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.2mm 1/1OZ 不含铜 dielectric t=0.2 Dk=4.36 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    PP 1080  RC67% 3.3mil t=0.084 Dk=3.91
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.6800 mm
+- JLC081611-1080D (created 2023-10-20T08:23:37.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081611-1080D(成品板厚1.58mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 1080  RC67% 3.3mil t=0.084 Dk=3.91
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.25mm 1/1OZ 不含铜 dielectric t=0.25 Dk=4.23 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.25mm 1/1OZ 不含铜 dielectric t=0.25 Dk=4.23 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.25mm 1/1OZ 不含铜 dielectric t=0.25 Dk=4.23 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    PP 1080  RC67% 3.3mil t=0.084 Dk=3.91
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5820 mm
+- JLC081611-1080E (created 2025-08-26T08:00:59.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081611-1080E(特殊/成品板厚1.58mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.25mm 1/1OZ 不含铜 dielectric t=0.25 Dk=4.23 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.094 Dk=4.16
+    core 0.5mm 1/1OZ 不含铜 dielectric t=0.5 Dk=4.48 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.094 Dk=4.16
+    core 0.25mm 1/1OZ 不含铜 dielectric t=0.25 Dk=4.23 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5760 mm
+- JLC081611-1080F (created 2025-08-28T08:47:32.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081611-1080F(特殊/成品板厚1.5mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.2mm 1/1OZ 不含铜 dielectric t=0.2 Dk=4.36 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.054 Dk=3.91
+    core 0.6mm 1/1OZ 不含铜 dielectric t=0.6 Dk=4.36 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.054 Dk=3.91
+    core 0.2mm 1/1OZ 不含铜 dielectric t=0.2 Dk=4.36 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.4960 mm
+- JLC081611-1080G (created 2025-09-23T01:08:59.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081611-1080G(特殊/成品板厚1.56mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.10mm 1/1OZ 不含铜 dielectric t=0.1 Dk=4.17 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    PP 7628 RC49% 8.6mil t=0.203 Dk=4.4
+    core 0.35mm 1/1OZ 不含铜 dielectric t=0.35 Dk=4.36 (Cu 0.03/0.03)
+    PP 7628 RC49% 8.6mil t=0.203 Dk=4.4
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    core 0.10mm 1/1OZ 不含铜 dielectric t=0.1 Dk=4.17 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5620 mm
+- JLC081611-1080H (created 2026-08-05T09:27:04.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081611-1080H(特殊/成品板厚1.56mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.075mm 1/1OZ 不含铜 dielectric t=0.075 Dk=3.99 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.094 Dk=4.16
+    core 0.9mm 1/1OZ 含铜 dielectric t=0.83 Dk=4.55 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.094 Dk=4.16
+    core 0.075mm 1/1OZ 不含铜 dielectric t=0.075 Dk=3.99 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5560 mm
+- JLC081611-1080I (created 2026-08-10T00:23:45.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081611-1080I(成品板厚1.63mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.35mm 1/1OZ 不含铜 dielectric t=0.35 Dk=4.36 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.094 Dk=4.16
+    core 0.35mm 1/1OZ 不含铜 dielectric t=0.35 Dk=4.36 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.094 Dk=4.16
+    core 0.35mm 1/1OZ 不含铜 dielectric t=0.35 Dk=4.36 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.6260 mm
+- JLC081611-1080J (created 2026-09-22T06:48:30.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081611-1080J(成品板厚1.57mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.10mm 1/1OZ 不含铜 dielectric t=0.1 Dk=4.11 (Cu 0.03/0.03)
+    PP 3313 RC57% 4.2mil t=0.077 Dk=4.1
+    core 0.9mm 1/1OZ 含铜 dielectric t=0.83 Dk=4.55 (Cu 0.03/0.03)
+    PP 3313 RC57% 4.2mil t=0.077 Dk=4.1
+    core 0.10mm 1/1OZ 不含铜 dielectric t=0.1 Dk=4.17 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5720 mm
+- JLC081611-自定义 (created 2022-08-17T12:25:41.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name '客户自定义层压结构')
+    L1 copper 1oz t=0.035
+    L2 copper 1oz t=0.035
+    L3 copper 1oz t=0.035
+    core 自定义叠构提供人工计算阻抗及叠构服务，此层压结构仅做展示 dielectric t=0.1 Dk=0.0 (Cu 0.0152/0.0152)
+    L6 copper 1oz t=0.035
+    L7 copper 1oz t=0.035
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 0.3404 mm
+- JLC081611-2116 (created 2022-03-27T03:52:23.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 1, name 'JLC081611-2116(通用免费/成品板厚1.65mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    core 0.25mm 1/1OZ 不含铜 dielectric t=0.25 Dk=4.23 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    core 0.25mm 1/1OZ 不含铜 dielectric t=0.25 Dk=4.23 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    core 0.25mm 1/1OZ 不含铜 dielectric t=0.25 Dk=4.23 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.6540 mm
+- JLC081611-2116 (created 2022-09-13T12:17:02.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 1, name '无要求')
+    L1 copper 1oz t=0.035
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    core 0.25mm 1/1OZ 不含铜 dielectric t=0.25 Dk=4.23 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    core 0.25mm 1/1OZ 不含铜 dielectric t=0.25 Dk=4.23 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    core 0.25mm 1/1OZ 不含铜 dielectric t=0.25 Dk=4.23 (Cu 0.03/0.03)
+    PP 2116  RC54% 4.9mil t=0.109 Dk=4.16
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.6540 mm
+### calculator request (8, 1.6, 2, 0.5) at 2026-09-25T21:30:49.591199Z: 2 templates
+- JLC08162H-2116 (created 2023-09-25T08:05:12.000+00:00, plateThickness 1.6, inner 0.5, defaultFlag 1, urgentState 2, name 'JLC08162H-2116(通用/成品板厚1.58mm±10%)')
+    L1 copper 2oz t=0.07
+    PP 2116  RC54% 4.9mil t=0.1164 Dk=4.16
+    core 0.3mm H/HOZ 不含铜 dielectric t=0.3 Dk=4.41 (Cu 0.0152/0.0152)
+    PP 2116  RC54% 4.9mil t=0.1088 Dk=4.16
+    core 0.3mm H/HOZ 不含铜 dielectric t=0.3 Dk=4.41 (Cu 0.0152/0.0152)
+    PP 2116  RC54% 4.9mil t=0.1088 Dk=4.16
+    core 0.3mm H/HOZ 不含铜 dielectric t=0.3 Dk=4.41 (Cu 0.0152/0.0152)
+    PP 2116  RC54% 4.9mil t=0.1164 Dk=4.16
+    L8 copper 2oz t=0.07
+    sum of listed thicknesses = 1.5816 mm
+- JLC08162H-自定义 (created 2025-09-19T01:19:03.000+00:00, plateThickness 1.6, inner 0.5, defaultFlag 0, urgentState 2, name '客户自定义层压结构')
+    L1 copper 2oz t=0.07
+    L2 copper Hoz t=0.0175
+    L3 copper Hoz t=0.0175
+    core 自定义叠构提供人工计算阻抗及叠构服务，此层压结构仅做展示 dielectric t=0.1 Dk=0.0 (Cu 0.0152/0.0152)
+    L6 copper Hoz t=0.0175
+    L7 copper Hoz t=0.0175
+    L8 copper 2oz t=0.07
+    sum of listed thicknesses = 0.3404 mm
+### calculator request (8, 1.6, 2, 1) at 2026-09-25T21:30:51.867007Z: 4 templates
+- JLC081621-7628 (created 2023-09-25T08:13:28.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 1, urgentState 2, name 'JLC081621-7628(通用/成品板厚1.6mm±10%)')
+    L1 copper 2oz t=0.07
+    PP 7628 RC49% 8.6mil t=0.203 Dk=4.4
+    core 0.2mm 1/1OZ 不含铜 dielectric t=0.2 Dk=4.36 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.2mm 1/1OZ 不含铜 dielectric t=0.2 Dk=4.36 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.2mm 1/1OZ 不含铜 dielectric t=0.2 Dk=4.36 (Cu 0.03/0.03)
+    PP 7628 RC49% 8.6mil t=0.203 Dk=4.4
+    L8 copper 2oz t=0.07
+    sum of listed thicknesses = 1.6020 mm
+- JLC081621-3313 (created 2024-03-02T06:41:44.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081621-3313(特殊/成品板厚1.57mm±10%)')
+    L1 copper 2oz t=0.07
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    core 0.15mm 1/1OZ 不含铜 dielectric t=0.15 Dk=4.36 (Cu 0.03/0.03)
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    PP 2116  RC54% 4.9mil t=0.124 Dk=4.16
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    core 0.15mm 1/1OZ 不含铜 dielectric t=0.15 Dk=4.36 (Cu 0.03/0.03)
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    PP 2116  RC54% 4.9mil t=0.124 Dk=4.16
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    core 0.15mm 1/1OZ 不含铜 dielectric t=0.15 Dk=4.36 (Cu 0.03/0.03)
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    L8 copper 2oz t=0.07
+    sum of listed thicknesses = 1.5700 mm
+- JLC081621-3313A (created 2024-03-28T02:41:38.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081621-3313A(特殊/成品板厚1.6mm±10%)')
+    L1 copper 2oz t=0.07
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    core 0.2mm 1/1OZ 不含铜 dielectric t=0.2 Dk=4.36 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    PP 3313 RC57% 4.2mil t=0.107 Dk=4.1
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.2mm 1/1OZ 不含铜 dielectric t=0.2 Dk=4.36 (Cu 0.03/0.03)
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    PP 3313 RC57% 4.2mil t=0.107 Dk=4.1
+    PP 1080  RC67% 3.3mil t=0.069 Dk=3.91
+    core 0.2mm 1/1OZ 不含铜 dielectric t=0.2 Dk=4.36 (Cu 0.03/0.03)
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    L8 copper 2oz t=0.07
+    sum of listed thicknesses = 1.5940 mm
+- JLC081621-3313B (created 2026-08-31T07:39:55.000+00:00, plateThickness 1.6, inner 1.0, defaultFlag 0, urgentState 2, name 'JLC081621-3313B(特殊/成品板厚1.56mm±10%)')
+    L1 copper 2oz t=0.07
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    core 0.30mm1/1OZ不含铜 dielectric t=0.3 Dk=4.56 (Cu 0.03/0.03)
+    PP 3313 RC57% 4.2mil t=0.077 Dk=4.1
+    core 0.3mm 1/1OZ 不含铜 dielectric t=0.3 Dk=4.41 (Cu 0.03/0.03)
+    PP 3313 RC57% 4.2mil t=0.077 Dk=4.1
+    core 0.3mm 1/1OZ 不含铜 dielectric t=0.3 Dk=4.41 (Cu 0.03/0.03)
+    PP 3313 RC57% 4.2mil t=0.092 Dk=4.1
+    L8 copper 2oz t=0.07
+    sum of listed thicknesses = 1.5580 mm
+### calculator request (8, 1.6, 2, 2) at 2026-09-25T21:30:53.385767Z: 6 templates
+- JLC081622-1080 (created 2024-02-29T03:21:24.000+00:00, plateThickness 1.6, inner 2.0, defaultFlag 0, urgentState 2, name 'JLC081622-1080(特殊/成品板厚1.66mm±10%)')
+    L1 copper 2oz t=0.07
+    PP 1080 RC69% 3.39mil t=0.086 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.086 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    core 0.10mm 2/2OZ不含铜 dielectric t=0.1 Dk=4.11 (Cu 0.061/0.061)
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.086 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    core 0.10mm 2/2OZ不含铜 dielectric t=0.1 Dk=4.11 (Cu 0.061/0.061)
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.086 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    core 0.10mm 2/2OZ不含铜 dielectric t=0.1 Dk=4.11 (Cu 0.061/0.061)
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.086 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.086 Dk=3.99
+    L8 copper 2oz t=0.07
+    sum of listed thicknesses = 1.6550 mm
+- JLC081622-1080A (created 2025-03-12T09:59:18.000+00:00, plateThickness 1.6, inner 2.0, defaultFlag 0, urgentState 2, name 'JLC081622-1080A(特殊/成品板厚1.57mm±10%)')
+    L1 copper 2oz t=0.07
+    PP 1080 RC69% 3.39mil t=0.086 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    core 0.10mm 2/2OZ不含铜 dielectric t=0.1 Dk=4.11 (Cu 0.061/0.061)
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    PP 2116 RC57% 5mil t=0.127 Dk=4.29
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    core 0.10mm 2/2OZ不含铜 dielectric t=0.1 Dk=4.11 (Cu 0.061/0.061)
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    PP 2116 RC57% 5mil t=0.127 Dk=4.29
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    core 0.10mm 2/2OZ不含铜 dielectric t=0.1 Dk=4.11 (Cu 0.061/0.061)
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.086 Dk=3.99
+    L8 copper 2oz t=0.07
+    sum of listed thicknesses = 1.5650 mm
+- JLC081622-1080B (created 2025-09-01T09:16:25.000+00:00, plateThickness 1.6, inner 2.0, defaultFlag 0, urgentState 2, name 'JLC081622-1080B(特殊/成品板厚1.49mm±10%)')
+    L1 copper 2oz t=0.07
+    PP 1080 RC69% 3.39mil t=0.086 Dk=3.99
+    PP 106 RC72% 1.97mil t=0.0195 Dk=3.92
+    core 0.15mm 2/2OZ不含铜 dielectric t=0.15 Dk=4.35 (Cu 0.061/0.061)
+    PP 106 RC72% 1.97mil t=0.0195 Dk=3.92
+    PP 1080 RC69% 3.39mil t=0.086 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    core 0.15mm 2/2OZ不含铜 dielectric t=0.15 Dk=4.35 (Cu 0.061/0.061)
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.086 Dk=3.99
+    PP 106 RC72% 1.97mil t=0.0195 Dk=3.92
+    core 0.15mm 2/2OZ不含铜 dielectric t=0.15 Dk=4.35 (Cu 0.061/0.061)
+    PP 106 RC72% 1.97mil t=0.0195 Dk=3.92
+    PP 1080 RC69% 3.39mil t=0.086 Dk=3.99
+    L8 copper 2oz t=0.07
+    sum of listed thicknesses = 1.4890 mm
+- JLC081622-1080D (created 2026-08-08T05:58:26.000+00:00, plateThickness 1.6, inner 2.0, defaultFlag 0, urgentState 2, name 'JLC081622-1080D(成品板厚1.61mm±10%)')
+    L1 copper 2oz t=0.07
+    PP 1080 RC69% 3.39mil t=0.086 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    core 0.15mm 2/2OZ不含铜 dielectric t=0.15 Dk=4.35 (Cu 0.061/0.061)
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    core 0.30mm 2/2OZ不含铜 dielectric t=0.3 Dk=4.3 (Cu 0.061/0.061)
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    core 0.15mm 2/2OZ不含铜 dielectric t=0.15 Dk=4.35 (Cu 0.061/0.061)
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.086 Dk=3.99
+    L8 copper 2oz t=0.07
+    sum of listed thicknesses = 1.6110 mm
+- JLC081622-自定义 (created 2025-03-12T09:30:46.000+00:00, plateThickness 1.6, inner 2.0, defaultFlag 0, urgentState 2, name '客户自定义层压结构')
+    L1 copper 2oz t=0.07
+    L2 copper 2oz t=0.07
+    L3 copper 2oz t=0.07
+    core 自定义叠构提供人工计算阻抗及叠构服务，此层压结构仅做展示 dielectric t=0.1 Dk=0.0 (Cu 0.0152/0.0152)
+    L6 copper 2oz t=0.07
+    L7 copper 2oz t=0.07
+    L8 copper 2oz t=0.07
+    sum of listed thicknesses = 0.5504 mm
+- JLC081622-1080C (created 2026-06-10T02:52:38.000+00:00, plateThickness 1.6, inner 2.0, defaultFlag 0, urgentState 2, name 'JLC081622-1080C(成品板厚1.57mm±10%)')
+    L1 copper 2oz t=0.07
+    PP 1080 RC69% 3.39mil t=0.086 Dk=3.99
+    PP 2313 RC58% 4.09mil t=0.0735 Dk=4.27
+    core 0.15mm 2/2OZ不含铜 dielectric t=0.15 Dk=4.35 (Cu 0.061/0.061)
+    PP 2313 RC58% 4.09mil t=0.0735 Dk=4.27
+    PP 2313 RC58% 4.09mil t=0.0735 Dk=4.27
+    core 0.15mm 2/2OZ不含铜 dielectric t=0.15 Dk=4.35 (Cu 0.061/0.061)
+    PP 2313 RC58% 4.09mil t=0.0735 Dk=4.27
+    PP 2313 RC58% 4.09mil t=0.0735 Dk=4.27
+    core 0.15mm 2/2OZ不含铜 dielectric t=0.15 Dk=4.35 (Cu 0.061/0.061)
+    PP 2313 RC58% 4.09mil t=0.0735 Dk=4.27
+    PP 1080 RC69% 3.39mil t=0.086 Dk=3.99
+    L8 copper 2oz t=0.07
+    sum of listed thicknesses = 1.5690 mm
+### calculator request (8, 1.6, 1, 2) at 2026-09-25T21:30:54.776856Z: 2 templates
+- JLC081612-1080 (created 2024-05-15T07:29:51.000+00:00, plateThickness 1.6, inner 2.0, defaultFlag 0, urgentState 2, name 'JLC081612-1080(特殊/成品板厚1.59mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 1080 RC69% 3.39mil t=0.086 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.086 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    core 0.10mm 2/2OZ不含铜 dielectric t=0.1 Dk=4.11 (Cu 0.061/0.061)
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.086 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    core 0.10mm 2/2OZ不含铜 dielectric t=0.1 Dk=4.11 (Cu 0.061/0.061)
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.086 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    core 0.10mm 2/2OZ不含铜 dielectric t=0.1 Dk=4.11 (Cu 0.061/0.061)
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.086 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.086 Dk=3.99
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.5850 mm
+- JLC081612-1080A (created 2026-05-18T06:11:19.000+00:00, plateThickness 1.6, inner 2.0, defaultFlag 0, urgentState 2, name 'JLC081612-1080A(成品板厚1.61mm±10%)')
+    L1 copper 1oz t=0.035
+    PP 1080 RC69% 3.39mil t=0.086 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    core 0.10mm 2/2OZ不含铜 dielectric t=0.1 Dk=4.11 (Cu 0.061/0.061)
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.086 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    core 0.30mm 2/2OZ不含铜 dielectric t=0.3 Dk=4.3 (Cu 0.061/0.061)
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.086 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    core 0.10mm 2/2OZ不含铜 dielectric t=0.1 Dk=4.11 (Cu 0.061/0.061)
+    PP 1080 RC69% 3.39mil t=0.0555 Dk=3.99
+    PP 1080 RC69% 3.39mil t=0.086 Dk=3.99
+    L8 copper 1oz t=0.035
+    sum of listed thicknesses = 1.6130 mm

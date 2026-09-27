@@ -1,0 +1,42 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "folders": 1
+ },
+ "denominator": 0,
+ "evidence": [
+  "order folder(s) present: PCB-E1-DOCK-E6"
+ ],
+ "inputs": {
+  "declares": "E17",
+  "release": {
+   "path": "/root/sweep38/v2/release/revA",
+   "sha256_16": null
+  }
+ },
+ "missing_input": "board E declares E17 and the order set holds E6: the note beside those folders describes a board this project is not building",
+ "note": "DOC-002 asks about the document that describes THIS board",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "DOC-002": "ccf98f30a38361f7"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "DOC-002"
+ ],
+ "tool": "doc_provenance_e",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "994b3d2315bb9859"
+ },
+ "ts": "2026-09-21T12:53:15Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown",
+ "writer": {
+  "file": "doc_provenance.py",
+  "sha16": "f2e2ea02b8039562"
+ }
+}

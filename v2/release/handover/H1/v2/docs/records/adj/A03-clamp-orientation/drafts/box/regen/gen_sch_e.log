@@ -1,0 +1,18 @@
+lands: 39 footprint(s) judged, 18 pin(s) on a pad the land does not carry, 0 land(s) unreadable
+lands: Q1 pin 6 (DC_P) has no pad 6 on Package_TO_SOT_SMD:TDSON-8-1; the same net sits on a pad this land does have
+lands: Q1 pin 7 (DC_P) has no pad 7 on Package_TO_SOT_SMD:TDSON-8-1; the same net sits on a pad this land does have
+lands: Q1 pin 8 (DC_P) has no pad 8 on Package_TO_SOT_SMD:TDSON-8-1; the same net sits on a pad this land does have
+lands: Q3 pin 6 (PV_P) has no pad 6 on Package_TO_SOT_SMD:TDSON-8-1; the same net sits on a pad this land does have
+lands: Q3 pin 7 (PV_P) has no pad 7 on Package_TO_SOT_SMD:TDSON-8-1; the same net sits on a pad this land does have
+lands: Q3 pin 8 (PV_P) has no pad 8 on Package_TO_SOT_SMD:TDSON-8-1; the same net sits on a pad this land does have
+lands: Q4 pin 6 (TRK_SW1) has no pad 6 on Package_TO_SOT_SMD:TDSON-8-1; the same net sits on a pad this land does have
+lands: Q4 pin 7 (TRK_SW1) has no pad 7 on Package_TO_SOT_SMD:TDSON-8-1; the same net sits on a pad this land does have
+lands: Q4 pin 8 (TRK_SW1) has no pad 8 on Package_TO_SOT_SMD:TDSON-8-1; the same net sits on a pad this land does have
+lands: Q5 pin 6 (TRK_SW2) has no pad 6 on Package_TO_SOT_SMD:TDSON-8-1; the same net sits on a pad this land does have
+lands: Q5 pin 7 (TRK_SW2) has no pad 7 on Package_TO_SOT_SMD:TDSON-8-1; the same net sits on a pad this land does have
+lands: Q5 pin 8 (TRK_SW2) has no pad 8 on Package_TO_SOT_SMD:TDSON-8-1; the same net sits on a pad this land does have
+schlayout verify: 516 pins in 392 nets, every component one name
+layout: 4 A3 pages on a 2 x 2 sheet -> paper "User" 838.20 594.36
+wrote /root/r2/A03-clamp-orientation/out/regen/pcb-e1-dock.kicad_sch parts: 180 lib symbols: 39
+nets: 94 single-pin nets (should be empty or intentional): []
+intent: /root/r2/A03-clamp-orientation/out/regen/out/pcb-e1-dock-intent.json (18 bypass, 13 rails, 10 nodes, 5 pair classes)

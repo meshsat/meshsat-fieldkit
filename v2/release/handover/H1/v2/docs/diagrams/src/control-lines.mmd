@@ -1,0 +1,121 @@
+---
+title: "Control lines across the boards, read from the netlists named in each board's box (design diagram of an unbuilt prototype)"
+---
+flowchart LR
+  subgraph brdC["C panel backer, netlist 2834f0d8c4071d56 at faf8c981"]
+    direction TB
+    C_SW_EMCON["SW_EMCON EMCON locking toggle<br/>closed: TX_INHIBIT_n to GND"]:::switch
+    C_J_PANEL["C J_PANEL"]:::conn
+    C_U9["U9 74LVC1G17<br/>TX_INHIBIT_n gates EMCON_HW"]:::part
+    C_U3["U3 RP2040<br/>GPIO21 on EMCON_HW<br/>GPIO22 on ZEROIZE_SW<br/>GPIO13 drives SLOT_EN1<br/>GPIO14 drives SLOT_EN2<br/>GPIO15 drives SLOT_EN3<br/>GPIO19 drives PI_KILL<br/>GPIO20 drives SHORE_INHIBIT"]:::mcu
+    C_SW_ZERO["SW_ZERO ZEROIZE locking toggle, maintained<br/>closed: ZEROIZE_SW to GND"]:::switch
+    C_U12["U12 74LVC1G17<br/>ZEROIZE_SW gates ZEROIZE_HW"]:::part
+    C_pulls["pulls on C (what the line reads with its source gone)<br/>TX_INHIBIT_n: C24 10n to GND, R14 10k to +3V3<br/>ZEROIZE_SW: C20 10n to GND, R10 10k to +3V3"]:::pulls
+  end
+  subgraph brdB["B compute, netlist 669d02d07aeaae4b at 3a1f6576"]
+    direction TB
+    B_J_PANEL["B J_PANEL"]:::conn
+    B_J_AB1["B J_AB1"]:::conn
+    B_Q11["Q11 2N7002<br/>EMCON_HW high pulls EMCON_ON low"]:::part
+    B_U19["U19 SN74LVC08APWR<br/>EMCON_HW gates LIME_EN_A, to U19 to LIME_EN to U23 TPS259631DDAR (+5V_DEV) LIME_EN<br/>EMCON_HW gates E22_EN, to U21 TPS22810DRV EN/UVLO<br/>EMCON_HW gates RB_EN, to U24 TPS259631DDAR (+5V_DEV) RB_EN"]:::part
+    B_U20["U20 SN74LVC08APWR<br/>EMCON_HW gates E72_EN, to U22 TPS22810DRV EN/UVLO"]:::part
+    B_U41_U51_U61["U41, U51, U61 STM32H743VIT6<br/>U41: PC5 on EMCON_HW<br/>U51: PC5 on EMCON_HW<br/>U61: PC5 on EMCON_HW"]:::mcu
+    B_Q106_Q111_Q206_Q306_Q311["Q106, Q111, Q206, Q306, Q311 2N7002<br/>Q106: EMCON_ON high pulls WIFI_W_DIS_n low, to J_M2C1.56<br/>Q111: EMCON_ON high pulls S1A_EN low, to U103 AP64500SP-13 (+3V3_S1A) S1A_EN<br/>Q206: EMCON_ON high pulls 5G_W_DIS_n low, to J_M2C2.8<br/>Q306: EMCON_ON high pulls WIFI2_W_DIS_n low, to J_M2C3.56<br/>Q311: EMCON_ON high pulls S3A_EN low, to U303 AP64500SP-13 (+3V3_S3A) S3A_EN"]:::part
+    B_U111_U211_U311["U111, U211, U311 SN74LVC32APWR<br/>U111: EMCON_ON gates WL_nDIS1_KILL, to Q109 pulls WL_nDIS1 to U30A CM5 S1 receptacle WL_nDisable<br/>U111: EMCON_ON gates BT_nDIS1_KILL, to Q110 pulls BT_nDIS1 to U30A CM5 S1 receptacle BT_nDisable<br/>U211: EMCON_ON gates WL_nDIS2_KILL, to Q209 pulls WL_nDIS2 to U31A CM5 S2 receptacle WL_nDisable<br/>U211: EMCON_ON gates BT_nDIS2_KILL, to Q210 pulls BT_nDIS2 to U31A CM5 S2 receptacle BT_nDisable<br/>U311: EMCON_ON gates WL_nDIS3_KILL, to Q309 pulls WL_nDIS3 to U32A CM5 S3 receptacle WL_nDisable<br/>U311: EMCON_ON gates BT_nDIS3_KILL, to Q310 pulls BT_nDIS3 to U32A CM5 S3 receptacle BT_nDisable"]:::part
+    B_Q103_Q203_Q303["Q103, Q203, Q303 2N7002<br/>Q103: level stage on PI_KILL: gate +3V3_CM1, source PI_KILL_CM1 to U30A CM5 S1 receptacle GPIO17<br/>Q203: level stage on PI_KILL: gate +3V3_CM2, source PI_KILL_CM2 to U31A CM5 S2 receptacle GPIO17<br/>Q303: level stage on PI_KILL: gate +3V3_CM3, source PI_KILL_CM3 to U32A CM5 S3 receptacle GPIO17"]:::part
+    B_pulls["pulls on B (what the line reads with its source gone)<br/>TX_INHIBIT_n: R59 100k to GND<br/>EMCON_HW: R58 10k to GND<br/>EMCON_ON: R513 10k to +3V3_DEV"]:::pulls
+  end
+  subgraph brdA["A power and I/O, netlist 7b08510106687b3d at 3a1f6576"]
+    direction TB
+    A_J_AB1["A J_AB1"]:::conn
+    A_J_MEZZ1["A J_MEZZ1"]:::conn
+    A_U26["U26 SN74LVC08APWR<br/>EMCON_HW gates PA_EN, to J_MEZZ1.9; U13 LM5176PWPR (+13V8_PA) PA_EN; U30 to OUTLET_OK to U26 to POE_EN, U26 to PD_EN<br/>EMCON_HW gates HF_EN, to U15 LM5176PWPR (+12V_HF) HF_EN"]:::part
+    A_U4["U4 AP64500SP-13 (+5V_S1)<br/>SLOT_EN1 at pin 3"]:::part
+    A_U5["U5 LM5176PWPR (+5V_S2)<br/>SLOT_EN2 at pin 1"]:::part
+    A_U6["U6 AP64500SP-13 (+5V_S3)<br/>SLOT_EN3 at pin 3"]:::part
+    A_Q1["Q1 2N7002<br/>PI_KILL high pulls KILL low, to U1 LTC2954ITS8-1 KILL"]:::part
+    A_J_DOCK["A J_DOCK"]:::conn
+    A_pulls["pulls on A (what the line reads with its source gone)<br/>TX_INHIBIT_n: R145 100k to GND<br/>EMCON_HW: R102 100k to GND<br/>ZEROIZE_HW: R117 10k to +3V3<br/>SLOT_EN1: R30 100k to GND<br/>SLOT_EN2: R34 100k to GND<br/>SLOT_EN3: R38 100k to GND<br/>PI_KILL: R5 1k to GND<br/>SHORE_INHIBIT: R118 100k to GND"]:::pulls
+  end
+  subgraph brdD["D VHF APRS, netlist f13d8b70099ab03e at 458b2873"]
+    direction TB
+    D_J_HARN1["D J_HARN1"]:::conn
+    D_U12["U12 74LVC1G08<br/>TX_INHIBIT_n gates KEY, to U13 to SA_PTT_n to U2 SA868 PTT_n; U14 to PA_KEY to U15 TLV75801PDRVR PA_KEY, U20 to X_PA_KEY_B; U18 to PTT_MIR; U19 to X_KEY_B"]:::part
+    D_pulls["pulls on D (what the line reads with its source gone)<br/>TX_INHIBIT_n: R2 100k to GND"]:::pulls
+  end
+  subgraph brdE["E dock strip, netlist d910e49c5f5f50b2 at faf8c981"]
+    direction TB
+    E_J_BLK["E J_BLK"]:::conn
+    E_Q8["Q8 2N7002<br/>SHORE_INHIBIT high pulls HS_UVLO low, to U6 LM5069MM-2 HS_UVLO"]:::part
+    E_U10["U10 RP2040<br/>SHORE_INHIBIT on SHORE_INHIBIT"]:::mcu
+    E_pulls["pulls on E (what the line reads with its source gone)<br/>SHORE_INHIBIT: R26 100k to GND"]:::pulls
+  end
+  E5["E5 dock block: no schematic, its board file names the nets (pin 8 SHORE_INHIBIT passes through)"]:::conn
+  C_SW_EMCON -->|"TX_INHIBIT_n"| C_J_PANEL
+  C_SW_EMCON -->|"TX_INHIBIT_n"| C_U9
+  B_J_PANEL -->|"TX_INHIBIT_n, EMCON_HW, ZEROIZE_HW, SLOT_EN1, SLOT_EN2, SLOT_EN3, PI_KILL, SHORE_INHIBIT"| B_J_AB1
+  A_J_AB1 -->|"TX_INHIBIT_n, ZEROIZE_HW"| A_J_MEZZ1
+  D_J_HARN1 -->|"TX_INHIBIT_n"| D_U12
+  C_U9 -->|"EMCON_HW"| C_J_PANEL
+  C_U9 -.->|"EMCON_HW"| C_U3
+  B_J_PANEL -->|"EMCON_HW"| B_Q11
+  B_J_PANEL -->|"EMCON_HW"| B_U19
+  B_J_PANEL -->|"EMCON_HW"| B_U20
+  B_J_PANEL -.->|"EMCON_HW"| B_U41_U51_U61
+  A_J_AB1 -->|"EMCON_HW"| A_U26
+  B_Q11 -->|"EMCON_ON"| B_Q106_Q111_Q206_Q306_Q311
+  B_Q11 -->|"EMCON_ON"| B_U111_U211_U311
+  C_SW_ZERO -->|"ZEROIZE_SW"| C_U12
+  C_SW_ZERO -.->|"ZEROIZE_SW"| C_U3
+  C_U12 -->|"ZEROIZE_HW"| C_J_PANEL
+  C_U3 -->|"SLOT_EN1, SLOT_EN2, SLOT_EN3, PI_KILL, SHORE_INHIBIT"| C_J_PANEL
+  A_J_AB1 -->|"SLOT_EN1"| A_U4
+  A_J_AB1 -->|"SLOT_EN2"| A_U5
+  A_J_AB1 -->|"SLOT_EN3"| A_U6
+  B_J_PANEL -.->|"PI_KILL"| B_Q103_Q203_Q303
+  A_J_AB1 -->|"PI_KILL"| A_Q1
+  A_J_AB1 -->|"SHORE_INHIBIT"| A_J_DOCK
+  E_J_BLK -->|"SHORE_INHIBIT"| E_Q8
+  E_J_BLK -.->|"SHORE_INHIBIT"| E_U10
+  C_J_PANEL ===|"IF-BC-PANEL, 26-way ribbon: pins 11 TX_INHIBIT_n; 8 EMCON_HW; 10 ZEROIZE_HW; 21 SLOT_EN1; 22 SLOT_EN2; 23 SLOT_EN3; 25 PI_KILL; 26 SHORE_INHIBIT"| B_J_PANEL
+  B_J_AB1 ===|"IF-AB-RIBBON, 26-way ribbon: pins 16 TX_INHIBIT_n; 15 EMCON_HW; 20 ZEROIZE_HW; 17 SLOT_EN1; 18 SLOT_EN2; 19 SLOT_EN3; 10 PI_KILL; 21 SHORE_INHIBIT"| A_J_AB1
+  A_J_MEZZ1 ===|"IF-AD-HARNESS, 16-way harness: pins 8 TX_INHIBIT_n; 15 ZEROIZE_HW"| D_J_HARN1
+  A_J_DOCK ---|"IF-AE-DOCK, spring pins onto E5, wires to E: pins 8 SHORE_INHIBIT"| E5
+  E5 --> E_J_BLK
+  linkStyle 0 stroke:#c62828,stroke-width:2px
+  linkStyle 1 stroke:#c62828,stroke-width:2px
+  linkStyle 2 stroke:#212121,stroke-width:2px
+  linkStyle 3 stroke:#212121,stroke-width:2px
+  linkStyle 4 stroke:#c62828,stroke-width:2px
+  linkStyle 5 stroke:#c62828,stroke-width:2px
+  linkStyle 6 stroke:#c62828,stroke-width:2px,stroke-dasharray:4 3
+  linkStyle 7 stroke:#c62828,stroke-width:2px
+  linkStyle 8 stroke:#c62828,stroke-width:2px
+  linkStyle 9 stroke:#c62828,stroke-width:2px
+  linkStyle 10 stroke:#c62828,stroke-width:2px,stroke-dasharray:4 3
+  linkStyle 11 stroke:#c62828,stroke-width:2px
+  linkStyle 12 stroke:#c62828,stroke-width:2px
+  linkStyle 13 stroke:#c62828,stroke-width:2px
+  linkStyle 14 stroke:#6a1b9a,stroke-width:2px
+  linkStyle 15 stroke:#6a1b9a,stroke-width:2px,stroke-dasharray:4 3
+  linkStyle 16 stroke:#6a1b9a,stroke-width:2px
+  linkStyle 17 stroke:#212121,stroke-width:2px
+  linkStyle 18 stroke:#1565c0,stroke-width:2px
+  linkStyle 19 stroke:#1565c0,stroke-width:2px
+  linkStyle 20 stroke:#1565c0,stroke-width:2px
+  linkStyle 21 stroke:#e65100,stroke-width:2px,stroke-dasharray:4 3
+  linkStyle 22 stroke:#e65100,stroke-width:2px
+  linkStyle 23 stroke:#2e7d32,stroke-width:2px
+  linkStyle 24 stroke:#2e7d32,stroke-width:2px
+  linkStyle 25 stroke:#2e7d32,stroke-width:2px,stroke-dasharray:4 3
+  linkStyle 26 stroke:#455a64,stroke-width:3px
+  linkStyle 27 stroke:#455a64,stroke-width:3px
+  linkStyle 28 stroke:#455a64,stroke-width:3px
+  linkStyle 29 stroke:#455a64,stroke-width:3px
+  linkStyle 30 stroke:#455a64,stroke-width:3px
+  classDef conn fill:#eceff1,stroke:#455a64,color:#000
+  classDef part fill:#ffffff,stroke:#37474f,color:#000
+  classDef switch fill:#fff3e0,stroke:#e65100,color:#000
+  classDef mcu fill:#e3f2fd,stroke:#1565c0,color:#000
+  classDef pulls fill:#f5f5f5,stroke:#9e9e9e,color:#333,stroke-dasharray:3 3
+  NOTE["Colours: red EMCON (TX_INHIBIT_n, EMCON_HW, EMCON_ON); purple ZEROIZE; blue SLOT_EN1..3; orange PI_KILL; green SHORE_INHIBIT; black several families on one edge (a ribbon passing lines through); grey the board-to-board links. Dotted: a microcontroller pin or a level stage on a line that has another driver (direction set by firmware, EMCON item L1). NOT SHOWN: test points (see control-lines.md), PI_SHDN_REQ, HDMI selects, heartbeats, the kit I2C bus, timing, and the SLOT_EN hold across a panel reset, which is in no generator (ARCHITECTURE.md 4.3). Nothing here is built or measured."]:::pulls

@@ -1,0 +1,15 @@
+# A01-expander-power-up: primary sources read (repo main 82dd1e4d; vendor files read in place, text extracts under ds/)
+# sha256  path  document
+9b5cc24c3c9e286a7132e27267f98e8b8b36f02ead2157d66df2676de3a474cb  v2/vendor/ti/ti-pca9555.pdf  TI SCPS131J Mar 2021
+d3bcdc7dd4ca44cb36ef893d3dbfabbd1742dfc736557777868f6ead5d0a98e8  v2/vendor/diodes/diodes-ap64500.pdf  Diodes DS41979 Rev 5-2
+66f6bae4494f7bfe7dfdc314e508f0291d9ca1e87265cca9b6fdfeaa5cb19fe9  v2/vendor/power/tps2596.pdf  TI SLVSET8A Aug 2019
+98191bec36d43771affa3e1540f6e1737347c19a1602747ffb4327509550a820  v2/vendor/ti/lm5176-datasheet.pdf  TI SNVSAI1D Aug 2021
+9cefbf42c72e4aff19d390b7fdad24f32817c807aa5266c5ac90785c6a749299  v2/vendor/ti/ti-sn74lvc08a-quad-and.pdf  TI SCAS283W Jul 2024
+1e9e2567d15e569ecc95023a40e4fb99eb0288db842803ff78cd14fdd621d8ae  v2/vendor/power/ltc2954.pdf  ADI LTC2954 2954fb
+16ec2eac43c7374eb9e7edd7df7bdb24de6862f695e1582c68716ced4820e5f6  v2/vendor/ti/ti-tps62933.pdf  TI SLUSEA4D Aug 2022
+42af2c87de21378292500da9bafc9c074d494c9fc93af47db564b76895d7a4e5  v2/vendor/ti/ti-tps2065-tps2066-tps2067.pdf  TI SLVS490K
+3e5e927fdf63cf6a2397630987c58e947ebc80d5a1cfc93fb1fb58d98bb58973  v2/vendor/ti/bq25731-datasheet.pdf  TI SLUSE66A Jan 2021
+be56fbb75ba0ae9e26558a73c93ac3e75c2ad4e6878d3b6703de2a76d886ea8c  v2/vendor/rp2040/rpi-rp2040-datasheet.pdf  RPi RP2040 datasheet build 2025-02-20 3184e62
+7941fb423af7c6c6c8979063a7e8819bb19217ece275efcce18948950a41d9f6  ds/cj_2n7002_C8545.pdf  CJ 2N7002 rev J Sep 2016, fetched 2026-09-25 from https://datasheet.lcsc.com/datasheet/pdf/a141b8bd86b14475955ac8c4d3eea0a8.pdf?productCode=C8545 (LCSC C8545, the fitted code per JLC-CERTIFIED.tsv rows 206-215)
+NOT FETCHED: NXP PCA9555 (nxp.com returned 'Page not available'); not needed, the fitted part is TI PCA9555PWR (JLC-CERTIFIED.tsv, code C2864778)
+# note: U+2014 characters in the vendor text extracts (ds/*.txt, ti-pca9555.txt) were replaced by '-' so no file here carries an em dash; the PDFs are unchanged

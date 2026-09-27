@@ -1,0 +1,43 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "fail": 1,
+  "stages": 4
+ },
+ "denominator": 4,
+ "evidence": [
+  "DOCK_BLOCK: the conductor names v2/vendor/precidip/, which is not in this tree"
+ ],
+ "inputs": {
+  "chain": {
+   "path": "pcb_energy_chain.yaml",
+   "sha256_16": "935e524eed0ee4d1"
+  },
+  "stages": "DOCK_BLOCK,BOARD_A_NODE,BOARD_A_CONVERTERS,A_EFUSED_BRANCHES"
+ },
+ "missing_input": null,
+ "note": "the stages of the stored-energy chain that sit on this board; the chain as a whole is energy_chain, and whether it is bounded end to end is that verdict's question",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "PWR-003": "797d38a9e68a76ac"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "PWR-003"
+ ],
+ "tool": "energy_chain_a",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "60b5a5a915850caa"
+ },
+ "ts": "2026-09-26T13:33:14Z",
+ "verdict": "FAIL",
+ "version": "unknown",
+ "writer": {
+  "file": "energy_chain.py",
+  "sha16": "73b908eb6b002690"
+ }
+}

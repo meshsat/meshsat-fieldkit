@@ -1,0 +1,818 @@
+#!/usr/bin/env python3
+"""A passing fixture and a failing fixture per gate: the admission rule for the stage catalogue.
+
+Stage 0d of the control-plane programme (MESHSAT-862, 11 September 2026). The reason is the one the record
+keeps paying for: a gate that quietly stops refusing looks exactly like a gate that has nothing to refuse.
+Two of this project's halts were structurally inert for days (the pair matcher's `if !` tested the wrong
+command; the deliverable DRC histogram's pattern was a grep error), and the only thing that would have caught
+either is an input that MUST make the gate say no.
+
+So a gate is admitted to the catalogue when both fixtures exist. `t_every_gate_has_both_fixtures` is what
+makes that a rule rather than an intention: a gate with no fixture here, and no line in FIXTURE_DEBT saying
+why and what it needs, fails this file.
+
+Gates that need a board are in test_board_gates.py and skip where pcbnew is absent. This file holds the ones
+that judge a file, a folder or a number, so they run on every host including the runner.
+"""
+import os, sys, csv, json, zipfile, tempfile, subprocess
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from harness import Skip
+
+TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Gates whose fixtures are owed, each with what it needs. A line here is a declaration, not an excuse: it is
+# read by the rule below and printed, so the debt is visible in every test run rather than remembered.
+FIXTURE_DEBT = {
+}
+
+# Gates with fixtures elsewhere, so that this file's rule sees the whole catalogue.
+ELSEWHERE = {
+    "hardset.py": "test_hardset.py",
+    "erc_gate.py": "test_erc_gate.py",
+    "check_zone_nets.py": "test_board_gates.py",
+    "check_pcb_a.py": "test_board_gates.py", "check_pcb_b.py": "test_board_gates.py",
+    "check_pcb_c.py": "test_board_gates.py", "check_pcb_d.py": "test_board_gates.py",
+    "check_pcb_e.py": "test_board_gates.py", "check_pcb_p.py": "test_board_gates.py",
+}
+
+
+def _run(argv, cwd=None, env=None):
+    e = dict(os.environ); e.update(env or {})
+    p = subprocess.run([sys.executable] + argv, cwd=cwd, capture_output=True, text=True, timeout=300, env=e)
+    return p.returncode, p.stdout + p.stderr
+
+
+def _verdict(d, tool):
+    return json.load(open(os.path.join(d, "out", "%s.verdict.json" % tool)))
+
+
+# ---------------------------------------------------------------- verify_deliverable
+
+def _deliverable(d, name="brd", ncu=2, break_item=None):
+    """A minimal two-layer deliverable that satisfies every property the gate asserts."""
+    os.makedirs(d, exist_ok=True)
+    os.makedirs(os.path.join(d, "meshsat.pretty"), exist_ok=True)
+    open(os.path.join(d, "meshsat.pretty", "X.kicad_mod"), "w").write("(footprint)")
+    for it in ("README-fab.txt", "%s-drc.rpt" % name, "%s-schematic.pdf" % name, "%s-render-top.png" % name,
+               "%s-render-bottom.png" % name, "%s-1to1-top.pdf" % name, "%s-1to1-bottom-mirrored.pdf" % name,
+               "%s.kicad_pcb" % name, "%s.kicad_sch" % name, "%s.kicad_pro" % name, "%s-bom.status" % name):
+        open(os.path.join(d, it), "w").write("x\n")
+    z = zipfile.ZipFile(os.path.join(d, "%s-gerbers.zip" % name), "w")
+    for tag in ("F_Cu.gtl", "B_Cu.gbl", "F_Mask.gts", "B_Mask.gbs", "F_Paste.gtp", "B_Paste.gbp",
+                "F_Silkscreen.gto", "B_Silkscreen.gbo", "Edge_Cuts.gm1"):
+        z.writestr("%s-%s" % (name, tag), "G04*\n")
+    z.writestr("%s.drl" % name, "M48\n"); z.writestr("%s-drl_map.gbr" % name, "G04*\n"); z.close()
+    with open(os.path.join(d, "%s-cpl.csv" % name), "w", newline="") as f:
+        w = csv.writer(f); w.writerow(["Designator", "Mid X", "Mid Y", "Layer", "Rotation"])
+        w.writerow(["R1", "1.0mm", "2.0mm", "Top", "0"]); w.writerow(["C1", "3.0mm", "4.0mm", "Bottom", "90"])
+    with open(os.path.join(d, "%s-bom.csv" % name), "w", newline="") as f:
+        w = csv.writer(f); w.writerow(["Comment", "Designator", "Footprint", "LCSC Part #"])
+        w.writerow(["10k", "R1", "R_0603", "C25804"]); w.writerow(["100n", "C1", "C_0603", "C14663"])
+    if break_item: os.remove(os.path.join(d, break_item % name if "%s" in break_item else break_item))
+    return d
+
+
+def t_verify_deliverable_passes_a_complete_folder():
+    d = _deliverable(tempfile.mkdtemp(prefix="vd-pass-"))
+    rc, out = _run([os.path.join(TOOLS, "verify_deliverable.py"), d, "brd", "2"], cwd=d)
+    assert rc == 0, out
+    v = _verdict(d, "verify_deliverable")
+    assert v["verdict"] == "PASS" and v["denominator"] > 20, v
+
+
+def t_verify_deliverable_refuses_a_folder_missing_one_item():
+    d = _deliverable(tempfile.mkdtemp(prefix="vd-fail-"), break_item="%s-drc.rpt")
+    rc, out = _run([os.path.join(TOOLS, "verify_deliverable.py"), d, "brd", "2"], cwd=d)
+    assert rc == 1, out
+    v = _verdict(d, "verify_deliverable")
+    assert v["verdict"] == "FAIL" and v["counts"]["fail"] >= 1, v
+    assert any("drc.rpt" in e for e in v["evidence"]), v["evidence"]
+
+
+def t_verify_deliverable_refuses_a_gerber_zip_short_of_a_copper_layer():
+    """The 3 September defect the gate was written for: the exporter dropped In1 and In2 and the zip still
+    looked like a zip. Declaring four copper layers against a two-layer zip must fail."""
+    d = _deliverable(tempfile.mkdtemp(prefix="vd-cu-"))
+    rc, out = _run([os.path.join(TOOLS, "verify_deliverable.py"), d, "brd", "4"], cwd=d)
+    assert rc == 1, out
+    assert any("copper layers" in e for e in _verdict(d, "verify_deliverable")["evidence"]), out
+
+
+def t_verify_deliverable_refuses_a_blocked_lcsc_code():
+    d = _deliverable(tempfile.mkdtemp(prefix="vd-blk-"))
+    blocked = [l.split()[0] for l in open(os.path.join(TOOLS, "lcsc-blocked.txt"))
+               if l.strip() and not l.startswith("#")]
+    if not blocked: raise Skip("lcsc-blocked.txt is empty on this tree")
+    with open(os.path.join(d, "brd-bom.csv"), "w", newline="") as f:
+        w = csv.writer(f); w.writerow(["Comment", "Designator", "Footprint", "LCSC Part #"])
+        w.writerow(["10k", "R1", "R_0603", blocked[0]]); w.writerow(["100n", "C1", "C_0603", "C14663"])
+    rc, out = _run([os.path.join(TOOLS, "verify_deliverable.py"), d, "brd", "2"], cwd=d)
+    assert rc == 1, out
+    assert any("proved wrong" in e for e in _verdict(d, "verify_deliverable")["evidence"]), out
+
+
+# ---------------------------------------------------------------- lcsc_fill
+
+def _bom(d, rows, allow=None):
+    os.makedirs(os.path.join(d, "out", "jlc"), exist_ok=True)
+    p = os.path.join(d, "out", "jlc", "brd-bom.csv")
+    with open(p, "w", newline="") as f:
+        w = csv.writer(f); w.writerow(["Comment", "Designator", "Footprint", "LCSC Part #"]); w.writerows(rows)
+    if allow is not None: open(os.path.join(d, "lcsc-allow.txt"), "w").write(allow)
+    return p
+
+
+def t_lcsc_fill_passes_a_bom_whose_codes_are_all_good():
+    d = tempfile.mkdtemp(prefix="lf-pass-")
+    p = _bom(d, [["10k", "R1", "R_0603", "C25804"], ["100n", "C1", "C_0603", "C14663"]], allow="")
+    rc, out = _run([os.path.join(TOOLS, "lcsc_fill.py"), p], cwd=d)
+    assert rc == 0, out
+    v = _verdict(d, "lcsc_fill")
+    assert v["verdict"] == "PASS" and v["denominator"] == 2, v
+
+
+def t_lcsc_fill_refuses_a_code_the_record_has_rejected():
+    """This is the gate that could not fire until 11 September 2026: lcsc_fill only ever filled BLANKS and
+    never looked at a code that was already there, which is how all 23 blocked codes reached shipped BOMs."""
+    d = tempfile.mkdtemp(prefix="lf-blk-")
+    blocked = [l.split()[0] for l in open(os.path.join(TOOLS, "lcsc-blocked.txt"))
+               if l.strip() and not l.startswith("#")]
+    if not blocked: raise Skip("lcsc-blocked.txt is empty on this tree")
+    p = _bom(d, [["something", "U1", "SOIC-8", blocked[0]]], allow="")
+    rc, out = _run([os.path.join(TOOLS, "lcsc_fill.py"), p], cwd=d)
+    assert rc == 1, out
+    v = _verdict(d, "lcsc_fill")
+    assert v["verdict"] == "FAIL" and v["counts"]["rejected_code"] == 1, v
+
+
+def t_lcsc_fill_refuses_a_blank_that_the_project_has_not_allowed():
+    d = tempfile.mkdtemp(prefix="lf-blank-")
+    p = _bom(d, [["a part nobody mapped", "U9", "QFN-99", ""]], allow="")
+    rc, out = _run([os.path.join(TOOLS, "lcsc_fill.py"), p], cwd=d)
+    assert rc == 1, out
+    assert _verdict(d, "lcsc_fill")["counts"]["blank_over_allowance"] == 1, out
+
+
+def t_lcsc_fill_accepts_a_blank_the_project_explains():
+    d = tempfile.mkdtemp(prefix="lf-allow-")
+    p = _bom(d, [["a bench-fitted module", "U9", "QFN-99", ""]],
+             allow="bench-fitted   # fitted on the bench, never by JLC\n")
+    rc, out = _run([os.path.join(TOOLS, "lcsc_fill.py"), p], cwd=d)
+    assert rc == 0, out
+    v = _verdict(d, "lcsc_fill")
+    assert v["verdict"] == "PASS" and v["counts"]["blank_over_allowance"] == 0, v
+
+
+# ---------------------------------------------------------------- impedance_check (the analytic core)
+
+def t_impedance_selftest_passes():
+    rc, out = _run([os.path.join(TOOLS, "impedance_check.py"), "--selftest"])
+    assert rc == 0, out
+    assert "PASS" in out, out
+
+
+def t_impedance_refuses_a_board_with_no_stackup():
+    """INCONCLUSIVE, not FAIL: no stackup means no geometry was judged. It still blocks (exit 3)."""
+    try: import pcbnew  # noqa: F401
+    except Exception as e: raise Skip("no pcbnew here (%s)" % type(e).__name__)
+    d = tempfile.mkdtemp(prefix="imp-")
+    b = os.path.join(d, "brd.kicad_pcb")
+    open(b, "w").write('(kicad_pcb (version 20240108) (generator "test"))\n')
+    rc, out = _run([os.path.join(TOOLS, "impedance_check.py"), b], cwd=d)
+    assert rc == 3, (rc, out)
+    assert _verdict(d, "impedance_check")["verdict"] == "INCONCLUSIVE", out
+
+
+# ---------------------------------------------------------------- pruned_gate, the path that needs no board
+
+def t_pruned_gate_is_inconclusive_when_the_prune_step_did_not_run():
+    """escape_prune.py always writes that file, "# none pruned" included. Its absence used to return 0."""
+    d = tempfile.mkdtemp(prefix="pg-")
+    rc, out = _run([os.path.join(TOOLS, "pruned_gate.py"), os.path.join(d, "brd.kicad_pcb"),
+                    os.path.join(d, "absent-pruned.txt")], cwd=d)
+    assert rc == 3, (rc, out)
+    v = _verdict(d, "pruned_gate")
+    assert v["verdict"] == "INCONCLUSIVE" and v["denominator"] == 0, v
+
+
+# 16 September 2026: the two fixtures the declared zero needs, because "no list" means two different things.
+# `escape_prune` runs only where the board declares it, board B is the only board that does, and the other five
+# carried RTE-002 INCONCLUSIVE for ever over a case that cannot arise on them. The pair below is the whole
+# rule: a board that declares no prune stage PASSES with the declaration as its evidence, and a board that
+# declares one and has lost its list stays INCONCLUSIVE, which is where absence really is absence.
+
+def t_pruned_gate_passes_a_board_whose_pipeline_prunes_no_escape():
+    """The acceptable fixture. The board's stem is what names it: `letter_for` reads the board table."""
+    d = tempfile.mkdtemp(prefix="pg-ok-")
+    rc, out = _run([os.path.join(TOOLS, "pruned_gate.py"), os.path.join(d, "pcb-a-power.kicad_pcb"),
+                    os.path.join(d, "absent-pruned.txt")], cwd=d)
+    assert rc == 0, (rc, out)
+    v = _verdict(d, "pruned_gate")
+    assert v["verdict"] == "PASS" and v["denominator"] == 0, v
+    assert "escape_prune_before_audit" in (v.get("note") or ""), v
+
+
+def t_pruned_gate_stays_inconclusive_where_the_board_declares_the_prune_stage():
+    """The defective fixture: board B prunes escapes, so a missing list is a measurement that is gone."""
+    d = tempfile.mkdtemp(prefix="pg-b-")
+    rc, out = _run([os.path.join(TOOLS, "pruned_gate.py"), os.path.join(d, "pcb-b-compute.kicad_pcb"),
+                    os.path.join(d, "absent-pruned.txt")], cwd=d)
+    assert rc == 3, (rc, out)
+    v = _verdict(d, "pruned_gate")
+    assert v["verdict"] == "INCONCLUSIVE" and v["denominator"] == 0, v
+
+
+# ---------------------------------------------------------------- check_contracts
+
+def _netlist(path, nets):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    body = ["(export (version \"E\")", "  (nets"]
+    for i, (name, nodes) in enumerate(nets.items(), 1):
+        body.append('    (net (code "%d") (name "%s")' % (i, name))
+        for ref, pin in nodes: body.append('      (node (ref "%s") (pin "%s"))' % (ref, pin))
+        body.append("    )")
+    body += ["  )", ")"]
+    open(path, "w").write("\n".join(body) + "\n")
+
+
+def t_check_contracts_is_inconclusive_with_no_netlist_at_all():
+    """A contract set that evaluated nothing has found nothing wrong, which is not agreement."""
+    d = tempfile.mkdtemp(prefix="cc-")
+    rc, out = _run([os.path.join(TOOLS, "check_contracts.py"), d], cwd=d)
+    v = _verdict(d, "check_contracts")
+    assert rc in (1, 3), (rc, out)
+    # The three outcomes sum to the denominator: judged and passed, judged and failed, or unjudged because a
+    # board it names is absent. With no netlist at all every contract is unjudged, and the verdict says that
+    # rather than reading as a set with nothing wrong in it.
+    c = v["counts"]
+    assert v["denominator"] == c["fail"] + c["pass"] + c.get("unjudged", 0), v
+    assert v["verdict"] == "INCONCLUSIVE" and c["pass"] == 0 and c["fail"] == 0, v
+
+
+def t_check_contracts_counts_every_contract_it_evaluated():
+    """The denominator is the point: 0 FAIL of 37 and 0 FAIL of 0 used to print the same way."""
+    d = tempfile.mkdtemp(prefix="cc2-")
+    _netlist(os.path.join(d, "pcb-d-aprs", "out", "pcb-d-aprs.net"),
+             {"TX_INHIBIT_n": {("Q3", "1"), ("J_MEZZ1", "4")}, "GND": {("Q3", "2")}})
+    rc, out = _run([os.path.join(TOOLS, "check_contracts.py"), d], cwd=d)
+    v = _verdict(d, "check_contracts")
+    # NOTHING FALLS OFF THE COUNT. A contract is judged and passes, judged and fails, or names a board absent
+    # from this tree and is unjudged; the three sum to the denominator. With only one board's netlist here
+    # every contract is unjudged, so the denominator is what EXISTS rather than zero, and the verdict says so
+    # instead of reading like a clean set (17 September 2026: before, an unjudged contract was counted as a
+    # failure, which put one board's absence on another board's page).
+    c = v["counts"]
+    assert v["denominator"] > 0, v
+    assert c["fail"] + c["pass"] + c.get("unjudged", 0) == v["denominator"], v
+    assert v["verdict"] == "INCONCLUSIVE" and c["fail"] == 0, v
+    assert "absent" in (v.get("note") or ""), v.get("note")
+
+
+# ---------------------------------------------------------------- the admission rule itself
+
+def t_every_gate_has_both_fixtures():
+    """A gate is in the catalogue when an input that must fail it and an input that must pass it both exist.
+
+    This reads the test files rather than a list of intentions: a gate named by no test, and not declared in
+    FIXTURE_DEBT with what it needs, fails here. That is what stops the catalogue from growing a gate nobody
+    ever proved can say no."""
+    here = os.path.dirname(os.path.abspath(__file__))
+    sys.path.insert(0, here)
+    import test_verdict_channel as tvc
+    covered = set()
+    for fn in sorted(os.listdir(here)):
+        if not (fn.startswith("test_") and fn.endswith(".py")): continue
+        body = open(os.path.join(here, fn), errors="replace").read()
+        for g in tvc.GATES:
+            stem = g[:-3]
+            # a mention inside FIXTURE_DEBT or ELSEWHERE is a declaration, not a fixture
+            if stem in body.replace("FIXTURE_DEBT", "").replace("ELSEWHERE", ""): covered.add(g)
+    missing = [g for g in tvc.GATES if g not in covered and g not in FIXTURE_DEBT]
+    assert not missing, "these gates have no fixture and no declared debt: %s" % missing
+    for g, why in sorted(FIXTURE_DEBT.items()):
+        print("       fixture owed: %-22s %s" % (g, why))
+
+
+# ---------------------------------------------------------------- the pre-router's own preconditions
+
+def t_the_pre_router_refuses_a_board_whose_pair_classes_it_cannot_read():
+    """A pre-router that finds no pairs and reports success is a silent pass, and it is easy to hit.
+
+    Measured on the VM, 11 September 2026: run on `out/<name>-placed.kicad_pcb`, which has no project file beside it,
+    the tool printed "0 of 0 pairs laid" and exited 0 in one map mode and died with an AttributeError in the other.
+    The pair classes live in the project file; a board without one has no pairs BY CONSTRUCTION, which is not the same
+    as having laid them all."""
+    try: import pcbnew  # noqa: F401
+    except Exception as e: raise Skip("no pcbnew here (%s)" % type(e).__name__)
+    import json as _json
+    d = tempfile.mkdtemp(prefix="pp-")
+    b = os.path.join(d, "brd.kicad_pcb")
+    open(b, "w").write('(kicad_pcb (version 20240108) (generator "test"))\n')
+
+    rc, out = _run([os.path.join(TOOLS, "pair_preroute.py"), b, "--classes", "USB"], cwd=d)
+    assert rc != 0, (rc, out)
+    assert "no project file" in out, out
+    assert "0 of 0 pairs laid" not in out, "it must refuse, not report an empty success"
+
+    _json.dump({"net_settings": {"classes": [], "netclass_assignments": None}}, open(os.path.join(d, "brd.kicad_pro"), "w"))
+    rc, out = _run([os.path.join(TOOLS, "pair_preroute.py"), b, "--classes", "USB"], cwd=d)
+    assert rc != 0, (rc, out)
+    assert "no netclass_assignments" in out, out
+
+
+# ---------------------------------------------------------------- a missing board is not a broken contract
+# check_contracts reads every board's netlist out of the tree. On a rented box where only one board has been
+# regenerated, it printed eleven FAILs naming board A and A had simply never been generated there, so P3's
+# finish reported "CONTRACTS FAILED" about a design nothing had looked at (11 September 2026). A missing input
+# is INCONCLUSIVE. It still blocks: what changes is that a skipped check can no longer read as a failed one.
+
+def t_check_contracts_is_inconclusive_when_a_board_is_absent():
+    import subprocess, tempfile, json as _j
+    d = tempfile.mkdtemp(prefix="contracts-absent-")
+    os.makedirs(os.path.join(d, "out"))
+    r = subprocess.run([sys.executable, os.path.join(TOOLS, "check_contracts.py"), d],
+                       capture_output=True, text=True, cwd=d)
+    assert r.returncode == 3, (r.returncode, (r.stdout + r.stderr)[-400:])
+    assert "absent from this tree" in (r.stdout + r.stderr), (r.stdout + r.stderr)[-400:]
+    rec = _j.load(open(os.path.join(d, "out", "check_contracts.verdict.json")))
+    assert rec["verdict"] == "INCONCLUSIVE", rec
+    assert rec["counts"]["missing_boards"] > 0, rec
+
+
+def t_the_finish_treats_an_inconclusive_contract_set_differently_from_a_failed_one():
+    t = open(os.path.join(TOOLS, "finish.sh"), errors="replace").read()
+    assert 'CONTRACTS NOT JUDGED' in t, "the finish does not separate a missing board from a broken contract"
+    assert '"$CT" -eq 3' in t, "the finish does not read the INCONCLUSIVE exit code"
+
+
+# ---------------------------------------------------------------- a code is wrong FOR A PART, not in general
+# JLC-CERTIFIED.tsv carries C2836813 twice: WRONG_MODEL against "ATECC608B-SSHDA-T secure element", because
+# JLCPCB's best answer to that question is a BMI270, and CERTIFIED against "BMI270 six-axis IMU", because that
+# is exactly what the code is. Keyed on the code alone the rejection refused board E's deliverable for a part
+# whose code is right, and lcsc-blocked.txt already carried a line saying so in prose that nothing read.
+
+def _lcsc_tree(bom_rows):
+    import tempfile, shutil as _sh
+    d = tempfile.mkdtemp(prefix="lcsc-part-key-")
+    t = os.path.join(d, "v2", "ecad", "tools"); os.makedirs(t)
+    o = os.path.join(d, "v2", "release", "revA", "order"); os.makedirs(o)
+    for f in ("lcsc_fill.py", "lcsc-blocked.txt", "jlc-handfit.txt", "verdict.py"):
+        src = os.path.join(TOOLS, f)
+        if os.path.exists(src): _sh.copy(src, t)
+    with open(os.path.join(o, "JLC-CERTIFIED.tsv"), "w") as f:
+        f.write("verdict\tcomment\tfp\tboards\tqty\tneed\tbom_code\tcode\tmodel\n")
+        f.write("CERTIFIED\tBMI270 six-axis IMU (I2C 0x68)\tLGA14B\tE\t1\t5\tC2836813\tC2836813\tBMI270\n")
+        f.write("WRONG_MODEL\tATECC608B-SSHDA-T secure element\tSOIC8\tB\t1\t5\tC2836813\tC2836813\tBMI270\n")
+    bom = os.path.join(d, "bom.csv")
+    with open(bom, "w") as f:
+        f.write("Comment,Designator,Footprint,LCSC Part #\n")
+        for r in bom_rows: f.write('"%s","%s","%s","%s"\n' % r)
+    return d, os.path.join(t, "lcsc_fill.py"), bom
+
+
+def _lcsc_run(bom_rows):
+    import subprocess, shutil as _sh
+    d, script, bom = _lcsc_tree(bom_rows)
+    os.makedirs(os.path.join(d, "out"), exist_ok=True)
+    r = subprocess.run([sys.executable, script, bom], capture_output=True, text=True, cwd=d)
+    out = r.stdout + r.stderr
+    _sh.rmtree(d, ignore_errors=True)
+    return r.returncode, out
+
+
+def t_a_code_certified_for_this_part_is_not_rejected_for_someone_elses_part():
+    rc, out = _lcsc_run([("BMI270 six-axis IMU (I2C 0x68)", "U15", "LGA14B", "C2836813")])
+    assert "checked and rejected" not in out, out
+    assert rc == 0, out
+
+
+def t_the_same_code_on_the_part_it_is_wrong_for_is_still_rejected():
+    rc, out = _lcsc_run([("ATECC608B-SSHDA-T secure element", "U9", "SOIC8", "C2836813")])
+    assert "checked and rejected" in out and "WRONG_MODEL" in out, out
+    assert rc != 0, out
+
+
+def t_an_allow_line_that_covers_nothing_is_named():
+    """E's list carried `module:` for four sensor headers while the generator writes "Geiger counter module
+    (RadiationD-v1.1 class)", a bracket and not a colon, so the line matched nothing for as long as it existed
+    and the board's deliverable was refused for the five rows it was written to cover. A declaration that reads
+    as cover and provides none is worse than no declaration."""
+    import subprocess, tempfile, json as _j, shutil as _sh
+    d = tempfile.mkdtemp(prefix="stale-allow-")
+    proj = os.path.join(d, "p", "out", "jlc"); os.makedirs(proj)
+    open(os.path.join(d, "p", "lcsc-allow.txt"), "w").write("never matches this   # a line for a part no longer on the board\n")
+    bom = os.path.join(proj, "b-bom.csv")
+    open(bom, "w").write('Comment,Designator,Footprint,LCSC Part #\n"a real part","R1","R_0603","C1234"\n')
+    r = subprocess.run([sys.executable, os.path.join(TOOLS, "lcsc_fill.py"), bom], capture_output=True, text=True, cwd=d)
+    out = r.stdout + r.stderr
+    _sh.rmtree(d, ignore_errors=True)
+    assert "allow line(s) match no row" in out, out
+    assert "never matches this" in out, out
+
+
+# ---------------------------------------------------------------- two declarations, one question
+# A BOM line with no LCSC code is judged by lcsc_fill against the board's own <project>/lcsc-allow.txt, and its
+# answer is written beside the BOM as <name>-bom.status. verify_deliverable knew only tools/jlc-handfit.txt and
+# the bench prefixes, so a line the board declares in the place the project actually uses read as undeclared.
+# Board E was 34 of 35 properties on exactly that, every other gate passing and its allow list correct.
+
+def _status_folder(status, blank_designator="J_GEIGER"):
+    import tempfile, zipfile
+    d = tempfile.mkdtemp(prefix="vd-status-"); f = os.path.join(d, "meshsat-pcb-e-revA-E7"); os.makedirs(f)
+    n = "pcb-e1-dock"
+    for item in ("README-fab.txt", "%s-drc.rpt" % n, "%s-schematic.pdf" % n, "%s-render-top.png" % n,
+                 "%s-render-bottom.png" % n, "%s-1to1-top.pdf" % n, "%s-1to1-bottom-mirrored.pdf" % n,
+                 "%s.kicad_sch" % n, "%s.kicad_pro" % n):
+        open(os.path.join(f, item), "w").write("x")
+    # the board carries its phase on the silk, which is a separate property of this gate and not what is under
+    # test here; without it the fixture fails for a reason that has nothing to do with the blank-code rule
+    open(os.path.join(f, "%s.kicad_pcb" % n), "w").write('(kicad_pcb (gr_text "MESHSAT PCB-E1 DOCK REV A (E7)"))\n')
+    os.makedirs(os.path.join(f, "meshsat.pretty"))
+    if status is not None: open(os.path.join(f, "%s-bom.status" % n), "w").write(status + "\n")
+    with zipfile.ZipFile(os.path.join(f, "%s-gerbers.zip" % n), "w") as z:
+        for t in ("F_Cu.gtl", "In1_Cu.g2", "In2_Cu.g3", "B_Cu.gbl", "F_Mask.gts", "B_Mask.gbs", "F_Paste.gtp",
+                  "B_Paste.gbp", "F_Silkscreen.gto", "B_Silkscreen.gbo", "Edge_Cuts.gm1", "x.drl", "x-drl_map.gbr"):
+            z.writestr("%s-%s" % (n, t), "x")
+    open(os.path.join(f, "%s-cpl.csv" % n), "w").write(
+        'Designator,Mid X,Mid Y,Layer,Rotation\n%s,1mm,1mm,Top,0\n' % blank_designator)
+    open(os.path.join(f, "%s-bom.csv" % n), "w").write(
+        'Comment,Designator,Footprint,LCSC Part #\n"Geiger counter module (RadiationD-v1.1 class)","%s","PinHeader_1x03",""\n' % blank_designator)
+    return d, f, n
+
+
+def _vd(status):
+    import subprocess, shutil as _sh
+    d, f, n = _status_folder(status)
+    r = subprocess.run([sys.executable, os.path.join(TOOLS, "verify_deliverable.py"), f, n, "4"],
+                       capture_output=True, text=True, cwd=d)
+    out = r.stdout + r.stderr
+    _sh.rmtree(d, ignore_errors=True)
+    return r.returncode, out
+
+
+def t_a_blank_line_the_boards_own_allow_list_covers_is_accepted():
+    rc, out = _vd("OK")
+    assert "ALL PASS" in out, out
+    assert rc == 0, out
+
+
+def t_a_blank_line_with_no_status_file_is_still_refused():
+    """The deferral is to lcsc_fill's ANSWER, not to its absence: with no OK beside the BOM this gate judges the
+    blanks itself, so removing lcsc_fill from a chain cannot quietly widen what a deliverable may carry."""
+    rc, out = _vd(None)
+    assert rc != 0, out
+    assert "no OK status file beside the BOM" in out, out
+
+
+def t_a_blank_line_lcsc_fill_itself_refused_is_refused_here_too():
+    rc, out = _vd("BLANK not allow-listed")
+    assert rc != 0, out
+
+
+def t_a_blocked_code_can_name_the_land_it_is_wrong_on():
+    """`fp=<substring>` limits a block to the lands it is about.
+
+    12 September 2026: C1017 is an 0805 600 ohm ferrite. On board C's 0603 lands the certifier calls it a
+    PACKAGE_MISMATCH and it is blocked; on board D's 0805 land the same certifier calls it CERTIFIED. A block
+    keyed on the code alone refused D's finished deliverable for a part whose code is right, which is the same
+    shape as the rejection that refused board E in 32.120. Without the field a line still blocks everywhere."""
+    import tempfile, csv, subprocess, sys, os, json
+    TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    def _bom(d, fp):
+        p = os.path.join(d, "b-bom.csv")
+        with open(p, "w", newline="") as fh:
+            w = csv.writer(fh); w.writerow(["Comment", "Designator", "Footprint", "LCSC Part #"])
+            w.writerow(["600R 2A ferrite", "FB1", fp, "C1017"])
+        return p
+    blocked = os.path.join(TOOLS, "lcsc-blocked.txt")
+    lines = [l for l in open(blocked, errors="replace") if l.startswith("C1017")]
+    assert lines, "lcsc-blocked.txt no longer carries C1017, so this rule has nothing to check"
+    assert "fp=" in lines[0], "the C1017 line does not name a land: it would block D's certified 0805 part"
+    # and the parse itself, both ways round
+    for fp, blocks in (("L_0603_1608Metric", True), ("L_0805_2012Metric", False)):
+        d = tempfile.mkdtemp(prefix="blocked-land-")
+        p = _bom(d, fp)
+        # VERDICT_DIR=d (25 September 2026, MESHSAT-1357): lcsc_fill writes lcsc_fill.verdict.json, which rules CMP-002
+        # and SUP-001 read from v2/ecad/out/; run from the suite directory this fixture overwrote that evidence.
+        r = subprocess.run([sys.executable, os.path.join(TOOLS, "lcsc_fill.py"), p], capture_output=True, text=True,
+                           env=dict(os.environ, VERDICT_DIR=d))
+        hit = "is blocked" in (r.stdout + r.stderr)
+        assert hit == blocks, "on a %s land the block should be %s: %s" % (fp, blocks, (r.stdout + r.stderr)[:200])
+
+
+def t_the_per_cell_density_bar_is_lenient_and_the_tool_says_so():
+    """13 September 2026. The claim in a comment is a claim, and this one had its sign wrong for five days.
+
+    `dc_drop.py` compares the current through one raster cell with `ipc_limit(cell*t)`, the IPC-2221 current
+    for one cell's cross-section. 8 September recorded that this "overstates by the cell-to-width ratio" and
+    left the density reported rather than gated until the raster could be validated. IPC's law is
+    I = k dT^0.44 A^0.725, sublinear in area, so N cells each at their own limit carry N^0.275 times what IPC
+    allows the whole track: the per-cell bar is exact at the cell width and LENIENT everywhere else. Twelve
+    rails across four cut boards report above that bar, so the direction matters: they exceed a bar that is
+    already too generous, which makes each number a floor rather than a ceiling.
+
+    The rule computes the ratio from the tool's own `ipc_limit` and requires the tool to say which way it errs.
+    """
+    import re as _re
+    src = open(os.path.join(TOOLS, "dc_drop.py")).read()
+    m = _re.search(r'def ipc_limit\(.*?\n(?=\ndef |\n[A-Za-z_]+ =)', src, _re.S)
+    assert m, "dc_drop no longer defines ipc_limit; this rule is looking at the wrong thing"
+    ns = {}; exec(m.group(0), ns); ipc = ns["ipc_limit"]
+
+    cell = 0.5
+    for t, inner in ((0.035, False), (0.0152, True)):
+        per_cell = ipc(cell * t, 10.0, inner)
+        for w in (0.2, 0.25, 0.4, 1.0, 3.0, 6.0):
+            cells = max(1.0, w / cell)
+            ratio = (cells * per_cell) / ipc(w * t, 10.0, inner)
+            assert ratio > 1.0, ("the per-cell bar is STRICT at width %.2f mm (ratio %.2f), which contradicts "
+                                 "what dc_drop now says about itself" % (w, ratio))
+        assert abs((1.0 * per_cell) / ipc(cell * t, 10.0, inner) - 1.0) < 1e-9, "it should be exact at the cell width"
+
+    assert "LENIENT" in src and "floor" in src, \
+        "dc_drop does not tell its reader which way its density bar errs, which is how the sign stayed wrong"
+
+
+def t_the_current_density_decides_the_verdict_alongside_the_drop():
+    """OWNER RULING 16, 13 September 2026: gate it.
+
+    Twelve rails on three cut boards were over the IPC bar while every one of them read MET, because only the
+    drop decided. A rail can be electrically quiet and locally too hot at the same time, which is exactly what
+    a density check is for. The rule reads the source because the tool needs pcbnew and the runner has none;
+    the numbers themselves are measured on the box and land in the appendix.
+    """
+    import ast
+    src = open(os.path.join(TOOLS, "dc_drop.py")).read()
+    tree = ast.parse(src)
+    # A RULE THAT NAMES A VARIABLE IS A RULE ABOUT THE SPELLING (19 September 2026). This asked for an
+    # assignment to a name called `verdict`, and that name had to GO: it shadowed the verdict module inside
+    # the same function and crashed the gate on every board. The rule is about what the per-rail decision
+    # READS, so it looks for the assignment that decides MET or MISSED by its own expression, whatever the
+    # variable is called.
+    decisions = [n for n in ast.walk(tree) if isinstance(n, ast.Assign)
+                 and {"MET", "MISSED"} <= {c.value for c in ast.walk(n.value)
+                                           if isinstance(c, ast.Constant) and isinstance(c.value, str)}]
+    assert decisions, "dc_drop no longer decides MET or MISSED per rail; this rule is looking at the wrong thing"
+    names = set()
+    for v in decisions:
+        names |= {n.id for n in ast.walk(v.value) if isinstance(n, ast.Name)}
+    assert "dens_ok" in names, "the per-rail decision does not consider the current density: %s" % sorted(names)
+    assert "drop_ok" in names, "the per-rail decision no longer considers the drop: %s" % sorted(names)
+    assert "reported, not gated" not in src, "the report still calls the density ungated"
+    assert "density_dT" in src, \
+        "a rail cannot declare its own temperature rise, so the only way past the gate would be to ignore it"
+
+
+def t_the_density_is_judged_on_the_conductor_and_the_pour_tolerance_is_measured():
+    """OWNER RULING 22, 13 September 2026: judge a rail by the conductor, not by a grid square.
+
+    Ruling 16 made the density a verdict; 32.162 then measured that the per-cell number moves 41 to 56 percent
+    with the cell size and that CELL+ flips, so no tolerance of ruling 19's shape could make it honest. The
+    instrument was rebuilt instead: every TRACK is judged on its own width against IPC for its own
+    cross-section, with NO tolerance because there is no grid error left in it, and the raster keeps the POURS,
+    where 32.162 measured that it does converge (the two plane-carried rails moved 6 and 9 percent against a
+    two-fold change of cell, where every track-carried rail moved by half).
+
+    The rule holds the shape and the numbers: a conductor test that gates at 1.0, a pour tolerance of 1.10 with
+    the measurement behind it still written beside it, and a verdict that says WHICH of the two refused a rail.
+    """
+    import re as _re
+    src = open(os.path.join(TOOLS, "dc_drop.py")).read()
+    assert "cond_ratio" in src and "zone_ratio" in src, "dc_drop no longer separates the conductor and the pour"
+    m = _re.search(r'ZONE_TOL\s*=\s*([0-9.]+)', src)
+    assert m and abs(float(m.group(1)) - 1.10) < 1e-9, "the pour tolerance is not the measured 1.10"
+    assert _re.search(r'cond_ratio\s*<=\s*1\.0', src), \
+        "the conductor test carries a tolerance; it must not, because a track's width is exact"
+    assert "RULING 22" in src, "the rebuilt measure does not name the ruling that asked for it"
+    assert "6 and -9 percent" in src or "+6 and -9 percent" in src or "6 and 9" in src, \
+        "the pour tolerance no longer carries the measurement that sizes it"
+    # and the verdict must say which half refused the rail, or a reader cannot act on it
+    assert '"a track"' in src and '"a pour"' in src, "the verdict does not say whether a track or a pour failed"
+    # the conductor line must name the thing to widen
+    assert "worst CONDUCTOR" in src and "mm wide on" in src, \
+        "the conductor line does not name the conductor's width and place, which is the whole point of it"
+
+def t_a_rail_with_no_declared_load_is_not_judged():
+    """13 September 2026: a guessed load is not a measurement, and the guess was deciding boards.
+
+    dc_drop falls back to splitting a rail's current evenly over every U or J footprint on the net when the
+    intent declares no loads. On 12 September that fallback made CELL+ read 2.21 percent by pushing 10 A
+    through the charger's SENSE pin and its 0.20 mm escape. That rail was given its load and THE TOOL WAS LEFT
+    ALONE, so the same defect sat in every other undeclared rail until owner ruling 16 made the density a
+    verdict and five of the ten failing rails turned out to declare nothing.
+
+    The fix belongs to the CLASS: such a rail is UNDECLARED, neither drop nor density is judged, it still
+    blocks, and the board's verdict is INCONCLUSIVE rather than FAIL because the defect is in the intent file
+    and not in the copper. The two have different remedies and a reader must be able to tell them apart.
+    """
+    import re as _re, ast as _ast
+    src = open(os.path.join(TOOLS, "dc_drop.py")).read()
+    assert "UNDECLARED" in src, "dc_drop no longer distinguishes an undeclared rail"
+    # The branch is found in the SYNTAX TREE, not by slicing a fixed window of text. The first version of this
+    # rule read 900 characters after the `if` and broke the moment a comment was added inside the branch, which
+    # is a rule that fails for a reason having nothing to do with the property it protects.
+    tree = _ast.parse(src)
+    branch = None
+    for n in _ast.walk(tree):
+        if isinstance(n, _ast.If) and "guessed is not None" in _ast.unparse(n.test).replace(" ", " "):
+            branch = n; break
+    assert branch is not None, "dc_drop no longer has an `if guessed is not None` branch"
+    body_src = "\n".join(_ast.unparse(st) for st in branch.body)
+    assert "UNDECLARED" in body_src, "the undeclared branch does not produce an UNDECLARED verdict"
+    assert any(isinstance(st, _ast.Continue) for st in branch.body), \
+        "the undeclared branch falls through and judges the rail anyway"
+    # Both verdicts this tool writes must carry the property, not just one: since 16 September the drop and the
+    # current capacity are separate verdicts, because they have different authorities, and an undeclared rail is
+    # a property of the intent file under either of them.
+    inconclusive = _re.findall(r'_v\.INCONCLUSIVE if len\((\w+)\) == len\((\w+)\)', src)
+    assert len(inconclusive) >= 2, \
+        ("a board whose only failures are undeclared rails is still reported as FAIL, which blames the copper; "
+         "found %d of the 2 verdicts guarded" % len(inconclusive))
+    for undecl_name, rows_name in inconclusive:
+        assert undecl_name.endswith("undecl") and rows_name.endswith("rows"), (undecl_name, rows_name)
+    assert "would have put the current into" in src, \
+        "the refusal does not name the parts it would have guessed, so it does not say how to fix itself"
+
+
+# ---------------------------------------------------------------- claims_check (rule ENV-002)
+
+def _doc(d, text):
+    os.makedirs(d, exist_ok=True)
+    p = os.path.join(d, "doc.md")                 # never README.md: the allow file matches by filename substring
+    open(p, "w").write(text)
+    return p
+
+
+def t_a_rating_claimed_without_its_test_is_refused_and_an_intention_passes():
+    """Rule ENV-002, and the distinction it exists to hold.
+
+    Nothing in this project has been fabricated or powered, so a sentence saying the kit IS sealed to a rating
+    is a promise to whoever would carry it. The same sentence with "designed to" in front of it is a design
+    statement and is what this project is allowed to publish. Both are exercised here, because a screen that
+    refuses everything is as useless as one that refuses nothing.
+    """
+    d = tempfile.mkdtemp(prefix="claims-fail-")
+    bad = _doc(d, "# Kit\n\nThe case is IP67 and the enclosure is waterproof.\n")
+    rc, out = _run([os.path.join(TOOLS, "claims_check.py"), bad], cwd=d)
+    assert rc == 1, "an unqualified rating passed the claims screen:\n%s" % out[-400:]
+    v = _verdict(d, "claims_check")
+    assert v["verdict"] == "FAIL" and v["counts"]["unqualified"] >= 1, v
+
+    d2 = tempfile.mkdtemp(prefix="claims-pass-")
+    good = _doc(d2, "# Kit\n\nThe case is designed to an IP67-class construction; no rating is claimed until the\n"
+                    "bench procedure has run.\n")
+    rc2, out2 = _run([os.path.join(TOOLS, "claims_check.py"), good], cwd=d2)
+    assert rc2 == 0, "a qualified design statement was refused:\n%s" % out2[-400:]
+    assert _verdict(d2, "claims_check")["counts"]["claims"] >= 1, "the screen did not even see the sentence"
+
+
+def t_the_claims_screen_reads_a_negation_as_the_opposite_of_a_claim():
+    """"Nothing here has been field deployed" is the sentence the project is REQUIRED to carry, and the first
+    version of this screen flagged it as a claim because it contains the words. A screen that refuses the
+    correct sentence teaches its readers to delete the qualifier."""
+    d = tempfile.mkdtemp(prefix="claims-neg-")
+    p = _doc(d, "# Kit\n\nNothing here has been field deployed and no board has been powered.\n")
+    rc, out = _run([os.path.join(TOOLS, "claims_check.py"), p], cwd=d)
+    assert rc == 0, "the screen refused a sentence that denies the claim:\n%s" % out[-400:]
+
+
+def t_the_allow_file_carries_a_reason_on_every_line():
+    """An allow entry without a reason is an exemption nobody can audit, which is how the four floors of
+    12 September came to have holes in them."""
+    p = os.path.join(TOOLS, "claims-allow.txt")
+    bad = []
+    for n, line in enumerate(open(p), 1):
+        s = line.strip()
+        if not s or s.startswith("#"): continue
+        if "#" not in s: bad.append("line %d: %s" % (n, s[:70]))
+    assert not bad, "allow entries with no reason: %s" % bad
+
+
+# ---------------------------------------------------------------- derate (rule CMP-001)
+
+def _derate_netlist(d, rows, rails):
+    # NOT _netlist: this file already has one with another signature, forty lines up, and defining a second
+    # under the same name silently replaced it for every caller (the contracts fixture failed on it at once).
+    """A minimal KiCad netlist plus the intent file beside it. `rows` is [(ref, value, net)]."""
+    os.makedirs(d, exist_ok=True)
+    comps = "".join('    (comp (ref "%s") (value "%s"))\n' % (r, v) for r, v, _n in rows)
+    # grouped by NET, because two parts on one net is exactly the case being tested and writing the net twice
+    # loses the first one (which is what the first version of this fixture did, and it passed for the wrong reason)
+    by_net = {}
+    for ref, _v, net in rows: by_net.setdefault(net, []).append(ref)
+    nets = ""
+    for i, (net, refs) in enumerate(sorted(by_net.items()), 1):
+        nodes = "".join('      (node (ref "%s") (pin "1"))\n' % r for r in refs)
+        nets += '    (net (code %d) (name "/%s")\n%s      (node (ref "GND1") (pin "1")))\n' % (i, net, nodes)
+    p = os.path.join(d, "brd.net")
+    open(p, "w").write("(export (version E)\n  (components\n%s  )\n  (nets\n%s  )\n)\n" % (comps, nets))
+    json.dump({"rails": rails}, open(os.path.join(d, "brd-intent.json"), "w"))
+    return p
+
+
+def t_a_part_rated_below_the_rail_it_sits_on_is_refused():
+    """Rule CMP-001, and the finding it exists for.
+
+    Board A carried twenty-five capacitors specified `22u 50V X7R 1210`, and on the Power over Ethernet stage
+    those 50 V parts sat on a 54 VOLT output. Nothing in this project compared a part's rating with the rail it
+    is soldered to, so the only reason it was ever caught is that a person read the value string on
+    12 September while doing something else.
+    """
+    d = tempfile.mkdtemp(prefix="derate-fail-")
+    p = _derate_netlist(d, [("C1", "22u 50V X7R 1210", "P54"), ("C2", "10u 100V X7R 1210", "P54")],
+                 {"P54": {"volts": 54.0, "amps_typ": 1.0}})
+    rc, out = _run([os.path.join(TOOLS, "derate.py"), p], cwd=d)
+    assert rc == 1, "a 50 V part on a 54 V rail passed:\n%s" % out[-500:]
+    v = _verdict(d, "derate")
+    assert v["counts"]["under_rated"] == 1, v
+    assert any("C1" in e and "54" in e for e in v["evidence"]), v["evidence"]
+    assert not any("C2" in e for e in v["evidence"]), "the 100 V part was refused on a 54 V rail"
+
+
+def t_a_rail_with_no_declared_voltage_is_reported_and_never_assumed_zero():
+    """The absence case. A rated part on a net nobody declared a voltage for has been checked against nothing,
+    and a tool that treated the missing number as zero would pass every part on the board."""
+    d = tempfile.mkdtemp(prefix="derate-undecl-")
+    p = _derate_netlist(d, [("C1", "22u 50V X7R 1210", "MYSTERY")], {"OTHER": {"volts": 5.0}})
+    rc, out = _run([os.path.join(TOOLS, "derate.py"), p], cwd=d)
+    v = _verdict(d, "derate")
+    assert v["counts"]["undeclared_nets"] == 1 and v["counts"]["judged"] == 0, v
+    assert rc == 0, "an undeclared net made the board FAIL, which blames the copper for a gap in the intent file"
+    assert any("MYSTERY" in e for e in v["evidence"]), v["evidence"]
+
+
+def t_a_board_whose_intent_declares_no_rail_at_all_is_inconclusive():
+    d = tempfile.mkdtemp(prefix="derate-norail-")
+    p = _derate_netlist(d, [("C1", "22u 50V X7R 1210", "P54")], {})
+    rc, out = _run([os.path.join(TOOLS, "derate.py"), p], cwd=d)
+    assert rc == 3, "a board with no declared rail did not come out INCONCLUSIVE:\n%s" % out[-300:]
+    assert _verdict(d, "derate")["verdict"] == "INCONCLUSIVE"
+
+
+def t_the_rating_reader_does_not_invent_volts():
+    """A number without a unit is not a voltage. `2512` is a land size and `0402` is a land size, and a tool
+    that read either as a rating would refuse the whole board."""
+    sys.path.insert(0, TOOLS)
+    import derate
+    assert derate.rating("22u 50V X7R 1210") == 50.0
+    assert derate.rating("10u 6.3V") == 6.3
+    assert derate.rating("0402") is None and derate.rating("2512") is None
+    assert derate.rating("100R 1% 2512") is None
+    # two ratings in one string: the SMALLER is what the part is good for
+    assert derate.rating("in 60V out 20V") == 20.0
+
+
+def t_a_board_with_no_part_declares_its_zero_rather_than_leaving_the_last_verdict_standing():
+    """Board E5, 17 September 2026. The dock block is copper, plated targets, wire lands and four mounting
+    holes: no schematic, no netlist, no part to buy or to derate. The derating gate runs off a netlist, so it
+    never ran for E5, and rule CMP-001 read a `derate` verdict taken for another board under an older rule set
+    and called it E5's evidence. A declared zero is an answer and an undeclared zero is not.
+
+    Both proofs: the declaration is a PASS with a denominator of nothing and a reason, and a caller that gives
+    no reason still has to give the flag, so a zero can never arrive by accident."""
+    import tempfile, subprocess, json as _j
+    d = tempfile.mkdtemp(prefix="derate-empty-")
+    env = dict(os.environ, VERDICT_DIR=d)
+    p = subprocess.run([sys.executable, os.path.join(TOOLS, "derate.py"), "board.kicad_pcb",
+                        "--no-components", "it is copper and holes"], capture_output=True, text=True, env=env)
+    rec = _j.load(open(os.path.join(d, "derate.verdict.json")))
+    assert rec["verdict"] == "PASS", (rec, (p.stdout + p.stderr)[-300:])
+    assert rec["denominator"] == 0 and "declared zero" in rec["note"], rec
+    assert "copper and holes" in rec["note"], "the reason the caller gave is not in the verdict"
+    # and without the flag, a missing netlist is still INCONCLUSIVE and never a pass
+    d2 = tempfile.mkdtemp(prefix="derate-missing-")
+    subprocess.run([sys.executable, os.path.join(TOOLS, "derate.py"), os.path.join(d2, "nope.net")],
+                   capture_output=True, text=True, env=dict(os.environ, VERDICT_DIR=d2))
+    rec2 = _j.load(open(os.path.join(d2, "derate.verdict.json")))
+    assert rec2["verdict"] == "INCONCLUSIVE", rec2
+
+
+# ---------------------------------------------------------------------------------------------------------
+# A GUARDED STAGE THAT DID NOT RUN TO COMPLETION IS NOT A PASS (17 September 2026).
+#
+# Board A's `stitch_prune` segfaulted tonight before printing a line. The guard measured the same two counts
+# before and after, reverted nothing (correctly: there was nothing to revert) and wrote PASS. "The board is no
+# worse" is true of a stage that crashed and of a stage that ran and found nothing to do, and those are not the
+# same answer; the exit code was in the verdict's counts while the verdict itself said the stage was fine.
+
+def t_a_guarded_stage_that_crashes_or_times_out_is_inconclusive():
+    import os, re
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "guarded.sh"),
+               encoding="utf-8").read()
+    body = "\n".join(l for l in src.splitlines() if not l.strip().startswith("#"))
+    assert '[ "$RC" -eq 124 ] || [ "$RC" -gt 128 ]' in body, \
+        "the guard does not tell a stage that did not run from one that ran"
+    assert "verdict.INCONCLUSIVE if kept == 2" in body, \
+        "a stage that did not run to completion still writes a pass"
+    # and the finish must carry on exactly as before: the board is unchanged, so the guard returns success
+    assert '[ "$KEPT" = 2 ] && return 0' in body, \
+        "a crashed stage now stops the finish, which changes what the guard is for"
+
+
+def t_the_guard_keeps_kept_a_flag():
+    """`kept` is read as a boolean; the new state gets its own field rather than a third value in that one."""
+    import os
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "guarded.sh"),
+               encoding="utf-8").read()
+    assert '"kept": 1 if kept else 0' in src and '"completed": 0 if kept == 2 else 1' in src, src[-900:]

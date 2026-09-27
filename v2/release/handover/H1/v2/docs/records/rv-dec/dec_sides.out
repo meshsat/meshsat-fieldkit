@@ -1,0 +1,714 @@
+v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb
+  F.Cu  SMD 343  THT  28  OTHER   8
+  B.Cu  SMD   0  THT  21  OTHER   0
+    back: J_BM1 THT SMP-MAX slide-on receptacle R222M00720 (underside), VHF to the dock plug Radiall_SMPMAX_R222M00720 through_hole
+    back: J_BM10 THT SMP-MAX slide-on receptacle R222M00720 (underside), IRID to the dock plug Radiall_SMPMAX_R222M00720 through_hole
+    back: J_BM11 THT SMP-MAX slide-on receptacle R222M00720 (underside), LORA to the dock plug Radiall_SMPMAX_R222M00720 through_hole
+    back: J_BM2 THT SMP-MAX slide-on receptacle R222M00720 (underside), HF to the dock plug Radiall_SMPMAX_R222M00720 through_hole
+    back: J_BM3 THT SMP-MAX slide-on receptacle R222M00720 (underside), WIFI24 to the dock plug Radiall_SMPMAX_R222M00720 through_hole
+    back: J_BM4 THT SMP-MAX slide-on receptacle R222M00720 (underside), GNSS to the dock plug Radiall_SMPMAX_R222M00720 through_hole
+    back: J_BM5 THT SMP-MAX slide-on receptacle R222M00720 (underside), SDR to the dock plug Radiall_SMPMAX_R222M00720 through_hole
+    back: J_BM6 THT SMP-MAX slide-on receptacle R222M00720 (underside), P2P-A to the dock plug Radiall_SMPMAX_R222M00720 through_hole
+    back: J_BM7 THT SMP-MAX slide-on receptacle R222M00720 (underside), P2P-B to the dock plug Radiall_SMPMAX_R222M00720 through_hole
+    back: J_BM8 THT SMP-MAX slide-on receptacle R222M00720 (underside), 5G-MAIN to the dock plug Radiall_SMPMAX_R222M00720 through_hole
+    back: J_BM9 THT SMP-MAX slide-on receptacle R222M00720 (underside), 5G-DIV to the dock plug Radiall_SMPMAX_R222M00720 through_hole
+    back: J_CN1 THT 9 A spring pin, pack return (Mill-Max 0858 class, dock block) Mill-Max_0858_power_pin through_hole
+    back: J_CN2 THT 9 A spring pin, pack return (Mill-Max 0858 class, dock block) Mill-Max_0858_power_pin through_hole
+    back: J_CN3 THT 9 A spring pin, pack return (Mill-Max 0858 class, dock block) Mill-Max_0858_power_pin through_hole
+    back: J_CN4 THT 9 A spring pin, pack return (Mill-Max 0858 class, dock block) Mill-Max_0858_power_pin through_hole
+    back: J_CP1 THT 9 A spring pin, CELL+ (Mill-Max 0858 class, dock block) Mill-Max_0858_power_pin through_hole
+    back: J_CP2 THT 9 A spring pin, CELL+ (Mill-Max 0858 class, dock block) Mill-Max_0858_power_pin through_hole
+    back: J_CP3 THT 9 A spring pin, CELL+ (Mill-Max 0858 class, dock block) Mill-Max_0858_power_pin through_hole
+    back: J_CP4 THT 9 A spring pin, CELL+ (Mill-Max 0858 class, dock block) Mill-Max_0858_power_pin through_hole
+    back: J_DOCK THT spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-4 VIN_RAW (9 to 36 V from E6), 5-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare PogoPins_2x6 through_hole
+    back: J_PRE1 THT pre-charge pin, longer, mates first (32.24 AX) Mill-Max_0858_power_pin through_hole
+v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_pcb
+  F.Cu  SMD 431  THT  31  OTHER  26
+  B.Cu  SMD 464  THT   5  OTHER   0
+    back: C109 SMD 10u C_0805_2012Metric smd
+    back: C110 SMD 100n C_0603_1608Metric smd
+    back: C117 SMD 3.3n C_0603_1608Metric smd
+    back: C124 SMD 3.3n C_0603_1608Metric smd
+    back: C128 SMD 100n C_0603_1608Metric smd
+    back: C129 SMD 10n C_0603_1608Metric smd
+    back: C133 SMD 100n C_0603_1608Metric smd
+    back: C134 SMD 10n C_0603_1608Metric smd
+    back: C135 SMD 100n C_0603_1608Metric smd
+    back: C136 SMD 100n C_0603_1608Metric smd
+    back: C137 SMD 100n C_0603_1608Metric smd
+    back: C138 SMD 100n C_0603_1608Metric smd
+    back: C139 SMD 100n C_0603_1608Metric smd
+    back: C140 SMD 100n C_0603_1608Metric smd
+    back: C141 SMD 100n C_0603_1608Metric smd
+    back: C142 SMD 100n C_0603_1608Metric smd
+    back: C143 SMD 100n C_0603_1608Metric smd
+    back: C144 SMD 100n C_0603_1608Metric smd
+    back: C145 SMD 100n C_0603_1608Metric smd
+    back: C146 SMD 100n C_0603_1608Metric smd
+    back: C147 SMD 10u C_0805_2012Metric smd
+    back: C148 SMD 10u C_0805_2012Metric smd
+    back: C150 SMD 100n C_0603_1608Metric smd
+    back: C158 SMD 100n C_0603_1608Metric smd
+    back: C159 SMD 100n C_0402_1005Metric smd
+    back: C160 SMD 100n C_0402_1005Metric smd
+    back: C161 SMD 100n C_0402_1005Metric smd
+    back: C162 SMD 100n C_0402_1005Metric smd
+    back: C163 SMD 1u C_0603_1608Metric smd
+    back: C164 SMD 18p C_0402_1005Metric smd
+    back: C165 SMD 18p C_0402_1005Metric smd
+    back: C166 SMD 100n C_0603_1608Metric smd
+    back: C167 SMD 100n C_0603_1608Metric smd
+    back: C168 SMD 100n C_0603_1608Metric smd
+    back: C169 SMD 100n C_0603_1608Metric smd
+    back: C170 SMD 100n C_0603_1608Metric smd
+    back: C171 SMD 100n C_0603_1608Metric smd
+    back: C172 SMD 100n C_0603_1608Metric smd
+    back: C173 SMD 100n C_0603_1608Metric smd
+    back: C174 SMD 10u C_0805_2012Metric smd
+    back: C192 SMD 100n C_0603_1608Metric smd
+    back: C193 SMD 1u C_0603_1608Metric smd
+    back: C194 SMD 100n C_0603_1608Metric smd
+    back: C209 SMD 10u C_0805_2012Metric smd
+    back: C210 SMD 100n C_0603_1608Metric smd
+    back: C217 SMD 3.3n C_0603_1608Metric smd
+    back: C224 SMD 3.3n C_0603_1608Metric smd
+    back: C228 SMD 100n C_0603_1608Metric smd
+    back: C229 SMD 10n C_0603_1608Metric smd
+    back: C233 SMD 100n C_0603_1608Metric smd
+    back: C234 SMD 10n C_0603_1608Metric smd
+    back: C235 SMD 100n C_0603_1608Metric smd
+    back: C236 SMD 100n C_0603_1608Metric smd
+    back: C237 SMD 100n C_0603_1608Metric smd
+    back: C238 SMD 100n C_0603_1608Metric smd
+    back: C239 SMD 100n C_0603_1608Metric smd
+    back: C240 SMD 100n C_0603_1608Metric smd
+    back: C241 SMD 100n C_0603_1608Metric smd
+    back: C242 SMD 100n C_0603_1608Metric smd
+    back: C243 SMD 100n C_0603_1608Metric smd
+    back: C244 SMD 100n C_0603_1608Metric smd
+    back: C245 SMD 100n C_0603_1608Metric smd
+    back: C246 SMD 100n C_0603_1608Metric smd
+    back: C247 SMD 10u C_0805_2012Metric smd
+    back: C248 SMD 10u C_0805_2012Metric smd
+    back: C250 SMD 100n C_0603_1608Metric smd
+    back: C258 SMD 100n C_0603_1608Metric smd
+    back: C259 SMD 100n C_0402_1005Metric smd
+    back: C260 SMD 100n C_0402_1005Metric smd
+    back: C263 SMD 1u C_0603_1608Metric smd
+    back: C264 SMD 18p C_0402_1005Metric smd
+    back: C265 SMD 18p C_0402_1005Metric smd
+    back: C266 SMD 100n C_0603_1608Metric smd
+    back: C267 SMD 100n C_0603_1608Metric smd
+    back: C268 SMD 100n C_0603_1608Metric smd
+    back: C269 SMD 100n C_0603_1608Metric smd
+    back: C270 SMD 100n C_0603_1608Metric smd
+    back: C271 SMD 100n C_0603_1608Metric smd
+    back: C272 SMD 100n C_0603_1608Metric smd
+    back: C273 SMD 100n C_0603_1608Metric smd
+    back: C274 SMD 10u C_0805_2012Metric smd
+    back: C286 SMD 100n C_0603_1608Metric smd
+    back: C287 SMD 33p C_0402_1005Metric smd
+    back: C288 SMD 33p C_0402_1005Metric smd
+    back: C289 SMD 100n C_0603_1608Metric smd
+    back: C29 SMD 100n C_0603_1608Metric smd
+    back: C290 SMD 33p C_0402_1005Metric smd
+    back: C291 SMD 33p C_0402_1005Metric smd
+    back: C292 SMD 100n C_0603_1608Metric smd
+    back: C293 SMD 1u C_0603_1608Metric smd
+    back: C294 SMD 100n C_0603_1608Metric smd
+    back: C30 SMD 100n C_0603_1608Metric smd
+    back: C309 SMD 10u C_0805_2012Metric smd
+    back: C310 SMD 100n C_0603_1608Metric smd
+    back: C317 SMD 3.3n C_0603_1608Metric smd
+    back: C324 SMD 3.3n C_0603_1608Metric smd
+    back: C328 SMD 100n C_0603_1608Metric smd
+    back: C329 SMD 10n C_0603_1608Metric smd
+    back: C33 SMD 1n 2kV C_1812_4532Metric smd
+    back: C333 SMD 100n C_0603_1608Metric smd
+    back: C334 SMD 10n C_0603_1608Metric smd
+    back: C335 SMD 100n C_0603_1608Metric smd
+    back: C336 SMD 100n C_0603_1608Metric smd
+    back: C337 SMD 100n C_0603_1608Metric smd
+    back: C338 SMD 100n C_0603_1608Metric smd
+    back: C339 SMD 100n C_0603_1608Metric smd
+    back: C340 SMD 100n C_0603_1608Metric smd
+    back: C341 SMD 100n C_0603_1608Metric smd
+    back: C342 SMD 100n C_0603_1608Metric smd
+    back: C343 SMD 100n C_0603_1608Metric smd
+    back: C344 SMD 100n C_0603_1608Metric smd
+    back: C345 SMD 100n C_0603_1608Metric smd
+    back: C346 SMD 100n C_0603_1608Metric smd
+    back: C347 SMD 10u C_0805_2012Metric smd
+    back: C348 SMD 10u C_0805_2012Metric smd
+    back: C350 SMD 100n C_0603_1608Metric smd
+    back: C358 SMD 100n C_0603_1608Metric smd
+    back: C359 SMD 100n C_0402_1005Metric smd
+    back: C360 SMD 100n C_0402_1005Metric smd
+    back: C363 SMD 1u C_0603_1608Metric smd
+    back: C364 SMD 18p C_0402_1005Metric smd
+    back: C365 SMD 18p C_0402_1005Metric smd
+    back: C366 SMD 100n C_0603_1608Metric smd
+    back: C367 SMD 100n C_0603_1608Metric smd
+    back: C368 SMD 100n C_0603_1608Metric smd
+    back: C369 SMD 100n C_0603_1608Metric smd
+    back: C370 SMD 100n C_0603_1608Metric smd
+    back: C371 SMD 100n C_0603_1608Metric smd
+    back: C372 SMD 100n C_0603_1608Metric smd
+    back: C373 SMD 100n C_0603_1608Metric smd
+    back: C374 SMD 10u C_0805_2012Metric smd
+    back: C392 SMD 100n C_0603_1608Metric smd
+    back: C393 SMD 1u C_0603_1608Metric smd
+    back: C394 SMD 100n C_0603_1608Metric smd
+    back: C400 SMD 1u C_0603_1608Metric smd
+    back: C401 SMD 10u C_0805_2012Metric smd
+    back: C402 SMD 100n C_0603_1608Metric smd
+    back: C403 SMD 100n C_0603_1608Metric smd
+    back: C404 SMD 100n C_0603_1608Metric smd
+    back: C405 SMD 100n C_0603_1608Metric smd
+    back: C406 SMD 100n C_0603_1608Metric smd
+    back: C407 SMD 2.2u C_0603_1608Metric smd
+    back: C408 SMD 2.2u C_0603_1608Metric smd
+    back: C409 SMD 100n C_0603_1608Metric smd
+    back: C410 SMD 18p C_0402_1005Metric smd
+    back: C411 SMD 18p C_0402_1005Metric smd
+    back: C420 SMD 1u C_0603_1608Metric smd
+    back: C421 SMD 10u C_0805_2012Metric smd
+    back: C422 SMD 100n C_0603_1608Metric smd
+    back: C423 SMD 100n C_0603_1608Metric smd
+    back: C424 SMD 100n C_0603_1608Metric smd
+    back: C425 SMD 100n C_0603_1608Metric smd
+    back: C426 SMD 100n C_0603_1608Metric smd
+    back: C427 SMD 2.2u C_0603_1608Metric smd
+    back: C428 SMD 2.2u C_0603_1608Metric smd
+    back: C429 SMD 100n C_0603_1608Metric smd
+    back: C430 SMD 18p C_0402_1005Metric smd
+    back: C431 SMD 18p C_0402_1005Metric smd
+    back: C440 SMD 1u C_0603_1608Metric smd
+    back: C441 SMD 10u C_0805_2012Metric smd
+    back: C442 SMD 100n C_0603_1608Metric smd
+    back: C443 SMD 100n C_0603_1608Metric smd
+    back: C444 SMD 100n C_0603_1608Metric smd
+    back: C445 SMD 100n C_0603_1608Metric smd
+    back: C446 SMD 100n C_0603_1608Metric smd
+    back: C447 SMD 2.2u C_0603_1608Metric smd
+    back: C448 SMD 2.2u C_0603_1608Metric smd
+    back: C449 SMD 100n C_0603_1608Metric smd
+    back: C450 SMD 18p C_0402_1005Metric smd
+    back: C451 SMD 18p C_0402_1005Metric smd
+    back: C460 SMD 4.7n C_0603_1608Metric smd
+    back: C461 SMD 4.7n C_0603_1608Metric smd
+    back: C470 SMD 100n C_0603_1608Metric smd
+    back: C471 SMD 100n C_0603_1608Metric smd
+    back: C472 SMD 100n C_0603_1608Metric smd
+    back: C473 SMD 100n C_0603_1608Metric smd
+    back: C474 SMD 100n C_0603_1608Metric smd
+    back: C475 SMD 100n C_0603_1608Metric smd
+    back: C476 SMD 100n C_0603_1608Metric smd
+    back: C477 SMD 100n C_0603_1608Metric smd
+    back: C478 SMD 100n C_0603_1608Metric smd
+    back: C479 SMD 100n C_0603_1608Metric smd
+    back: C480 SMD 100n C_0603_1608Metric smd
+    back: C481 SMD 10n C_0603_1608Metric smd
+    back: C482 SMD 10n C_0603_1608Metric smd
+    back: C483 SMD 10n C_0603_1608Metric smd
+    back: C500 SMD 22p C_0402_1005Metric smd
+    back: C501 SMD 22p C_0402_1005Metric smd
+    back: C502 SMD 22p C_0402_1005Metric smd
+    back: C503 SMD 22p C_0402_1005Metric smd
+    back: C504 SMD 22p C_0402_1005Metric smd
+    back: C505 SMD 22p C_0402_1005Metric smd
+    back: C506 SMD 4.7n C_0603_1608Metric smd
+    back: C507 SMD 4.7n C_0603_1608Metric smd
+    back: J_W1A SMD U.FL: MHF4 pigtail from the slot 1 WiFi card, chain A U.FL_Hirose_U.FL-R-SMT-1_Vertical smd
+    back: J_W1B SMD U.FL: MHF4 pigtail from the slot 1 WiFi card, chain B U.FL_Hirose_U.FL-R-SMT-1_Vertical smd
+    back: J_W3A SMD U.FL: MHF4 pigtail from the slot 3 WiFi card, chain A U.FL_Hirose_U.FL-R-SMT-1_Vertical smd
+    back: J_W3B SMD U.FL: MHF4 pigtail from the slot 3 WiFi card, chain B U.FL_Hirose_U.FL-R-SMT-1_Vertical smd
+    back: J_WOA SMD U.FL: pigtail to A22's P2P jack, chain A U.FL_Hirose_U.FL-R-SMT-1_Vertical smd
+    back: J_WOB SMD U.FL: pigtail to A22's P2P jack, chain B U.FL_Hirose_U.FL-R-SMT-1_Vertical smd
+    back: LED40 SMD green IOCTRL A alive LED_0603_1608Metric smd
+    back: LED41 SMD green IOCTRL B alive LED_0603_1608Metric smd
+    back: LED42 SMD green IOCTRL C alive LED_0603_1608Metric smd
+    back: Q10 SMD 2N7002: the changeover's complement, so a voted WIFI_SEC moves both chains at once SOT-23 smd
+    back: Q3 SMD 2N7002: a voted majority pulls the bank's hub into reset SOT-23 smd
+    back: Q4 SMD 2N7002: a voted majority pulls the bank's hub into reset SOT-23 smd
+    back: Q5 SMD 2N7002: a voted majority pulls the bank's hub into reset SOT-23 smd
+    back: R10 SMD 75 R_0603_1608Metric smd
+    back: R101 SMD 1k R_0603_1608Metric smd
+    back: R102 SMD 31.6k 1% R_0603_1608Metric smd
+    back: R103 SMD 10k 1% R_0603_1608Metric smd
+    back: R104 SMD 68k (RT: 500 kHz) R_0603_1608Metric smd
+    back: R105 SMD 22k R_0603_1608Metric smd
+    back: R106 SMD 100k R_0603_1608Metric smd
+    back: R107 SMD 31.6k 1% R_0603_1608Metric smd
+    back: R108 SMD 10k 1% R_0603_1608Metric smd
+    back: R109 SMD 68k (RT: 500 kHz) R_0603_1608Metric smd
+    back: R110 SMD 22k R_0603_1608Metric smd
+    back: R111 SMD 100k R_0603_1608Metric smd
+    back: R112 SMD 100k R_0603_1608Metric smd
+    back: R113 SMD 10k 1% R_0603_1608Metric smd
+    back: R114 SMD 40.2k 1% R_0603_1608Metric smd
+    back: R115 SMD 10k 1% R_0603_1608Metric smd
+    back: R116 SMD 26.7k 1% R_0603_1608Metric smd
+    back: R117 SMD 475 1% (IREF) R_0603_1608Metric smd
+    back: R118 SMD 1.43k 1% (REXT) R_0603_1608Metric smd
+    back: R119 SMD 5.1k R_0603_1608Metric smd
+    back: R120 SMD 5.1k R_0603_1608Metric smd
+    back: R121 SMD 5.1k R_0603_1608Metric smd
+    back: R122 SMD 330 R_0603_1608Metric smd
+    back: R123 SMD 5.1k R_0603_1608Metric smd
+    back: R124 SMD 330 R_0603_1608Metric smd
+    back: R125 SMD 5.1k R_0603_1608Metric smd
+    back: R126 SMD 5.1k R_0603_1608Metric smd
+    back: R127 SMD 4.7k R_0603_1608Metric smd
+    back: R128 SMD 330 R_0603_1608Metric smd
+    back: R129 SMD 1k R_0603_1608Metric smd
+    back: R130 SMD 1k R_0603_1608Metric smd
+    back: R131 SMD 1k R_0603_1608Metric smd
+    back: R132 SMD 10k R_0603_1608Metric smd
+    back: R133 SMD 10k R_0603_1608Metric smd
+    back: R134 SMD 10k R_0603_1608Metric smd
+    back: R135 SMD 10k R_0603_1608Metric smd
+    back: R136 SMD 1k R_0603_1608Metric smd
+    back: R137 SMD 10k R_0603_1608Metric smd
+    back: R138 SMD 10k R_0603_1608Metric smd
+    back: R139 SMD 1k R_0603_1608Metric smd
+    back: R141 SMD 10k R_0603_1608Metric smd
+    back: R142 SMD 9.53k 1% R_0603_1608Metric smd
+    back: R143 SMD 90.9k 1% R_0603_1608Metric smd
+    back: R144 SMD 10k 1% R_0603_1608Metric smd
+    back: R145 SMD 10k R_0603_1608Metric smd
+    back: R146 SMD 10k R_0603_1608Metric smd
+    back: R147 SMD 1M R_0603_1608Metric smd
+    back: R148 SMD 1k R_0603_1608Metric smd
+    back: R149 SMD 10k R_0603_1608Metric smd
+    back: R150 SMD 1k R_0603_1608Metric smd
+    back: R151 SMD 10k R_0603_1608Metric smd
+    back: R152 SMD 5.1k R_0603_1608Metric smd
+    back: R153 SMD 5.1k R_0603_1608Metric smd
+    back: R154 SMD 10k R_0603_1608Metric smd
+    back: R155 SMD 10k R_0603_1608Metric smd
+    back: R156 SMD 10k R_0603_1608Metric smd
+    back: R157 SMD 10k R_0603_1608Metric smd
+    back: R158 SMD 10k R_0603_1608Metric smd
+    back: R160 SMD 100k R_0603_1608Metric smd
+    back: R161 SMD 100k R_0603_1608Metric smd
+    back: R17 SMD 2.2k R_0603_1608Metric smd
+    back: R18 SMD 2.2k R_0603_1608Metric smd
+    back: R19 SMD 15k R_0603_1608Metric smd
+    back: R20 SMD 22k R_0603_1608Metric smd
+    back: R201 SMD 1k R_0603_1608Metric smd
+    back: R202 SMD 31.6k 1% R_0603_1608Metric smd
+    back: R203 SMD 10k 1% R_0603_1608Metric smd
+    back: R204 SMD 68k (RT: 500 kHz) R_0603_1608Metric smd
+    back: R205 SMD 22k R_0603_1608Metric smd
+    back: R206 SMD 100k R_0603_1608Metric smd
+    back: R207 SMD 31.6k 1% R_0603_1608Metric smd
+    back: R208 SMD 10k 1% R_0603_1608Metric smd
+    back: R209 SMD 68k (RT: 500 kHz) R_0603_1608Metric smd
+    back: R210 SMD 22k R_0603_1608Metric smd
+    back: R211 SMD 100k R_0603_1608Metric smd
+    back: R212 SMD 100k R_0603_1608Metric smd
+    back: R213 SMD 10k 1% R_0603_1608Metric smd
+    back: R214 SMD 40.2k 1% R_0603_1608Metric smd
+    back: R215 SMD 10k 1% R_0603_1608Metric smd
+    back: R216 SMD 26.7k 1% R_0603_1608Metric smd
+    back: R217 SMD 475 1% (IREF) R_0603_1608Metric smd
+    back: R218 SMD 1.43k 1% (REXT) R_0603_1608Metric smd
+    back: R219 SMD 5.1k R_0603_1608Metric smd
+    back: R220 SMD 5.1k R_0603_1608Metric smd
+    back: R221 SMD 5.1k R_0603_1608Metric smd
+    back: R222 SMD 330 R_0603_1608Metric smd
+    back: R223 SMD 5.1k R_0603_1608Metric smd
+    back: R224 SMD 330 R_0603_1608Metric smd
+    back: R225 SMD 5.1k R_0603_1608Metric smd
+    back: R226 SMD 5.1k R_0603_1608Metric smd
+    back: R227 SMD 4.7k R_0603_1608Metric smd
+    back: R228 SMD 330 R_0603_1608Metric smd
+    back: R229 SMD 1k R_0603_1608Metric smd
+    back: R230 SMD 1k R_0603_1608Metric smd
+    back: R231 SMD 1k R_0603_1608Metric smd
+    back: R232 SMD 10k R_0603_1608Metric smd
+    back: R233 SMD 10k R_0603_1608Metric smd
+    back: R234 SMD 10k R_0603_1608Metric smd
+    back: R235 SMD 10k R_0603_1608Metric smd
+    back: R236 SMD 1k R_0603_1608Metric smd
+    back: R237 SMD 10k R_0603_1608Metric smd
+    back: R238 SMD 10k R_0603_1608Metric smd
+    back: R239 SMD 1k R_0603_1608Metric smd
+    back: R240 SMD 10k R_0603_1608Metric smd
+    back: R241 SMD 10k R_0603_1608Metric smd
+    back: R242 SMD 9.53k 1% R_0603_1608Metric smd
+    back: R243 SMD 90.9k 1% R_0603_1608Metric smd
+    back: R244 SMD 10k 1% R_0603_1608Metric smd
+    back: R245 SMD 10k R_0603_1608Metric smd
+    back: R246 SMD 10k R_0603_1608Metric smd
+    back: R247 SMD 1M R_0603_1608Metric smd
+    back: R248 SMD 1k R_0603_1608Metric smd
+    back: R249 SMD 10k R_0603_1608Metric smd
+    back: R250 SMD 1k R_0603_1608Metric smd
+    back: R251 SMD 10k R_0603_1608Metric smd
+    back: R252 SMD 5.1k R_0603_1608Metric smd
+    back: R253 SMD 5.1k R_0603_1608Metric smd
+    back: R254 SMD 10k R_0603_1608Metric smd
+    back: R255 SMD 10k R_0603_1608Metric smd
+    back: R256 SMD 10k R_0603_1608Metric smd
+    back: R257 SMD 10k R_0603_1608Metric smd
+    back: R258 SMD 10k R_0603_1608Metric smd
+    back: R260 SMD 100k R_0603_1608Metric smd
+    back: R261 SMD 100k R_0603_1608Metric smd
+    back: R301 SMD 1k R_0603_1608Metric smd
+    back: R302 SMD 31.6k 1% R_0603_1608Metric smd
+    back: R303 SMD 10k 1% R_0603_1608Metric smd
+    back: R304 SMD 68k (RT: 500 kHz) R_0603_1608Metric smd
+    back: R305 SMD 22k R_0603_1608Metric smd
+    back: R306 SMD 100k R_0603_1608Metric smd
+    back: R307 SMD 31.6k 1% R_0603_1608Metric smd
+    back: R308 SMD 10k 1% R_0603_1608Metric smd
+    back: R309 SMD 68k (RT: 500 kHz) R_0603_1608Metric smd
+    back: R310 SMD 22k R_0603_1608Metric smd
+    back: R311 SMD 100k R_0603_1608Metric smd
+    back: R312 SMD 100k R_0603_1608Metric smd
+    back: R313 SMD 10k 1% R_0603_1608Metric smd
+    back: R314 SMD 40.2k 1% R_0603_1608Metric smd
+    back: R315 SMD 10k 1% R_0603_1608Metric smd
+    back: R316 SMD 26.7k 1% R_0603_1608Metric smd
+    back: R317 SMD 475 1% (IREF) R_0603_1608Metric smd
+    back: R318 SMD 1.43k 1% (REXT) R_0603_1608Metric smd
+    back: R319 SMD 5.1k R_0603_1608Metric smd
+    back: R320 SMD 5.1k R_0603_1608Metric smd
+    back: R321 SMD 5.1k R_0603_1608Metric smd
+    back: R322 SMD 330 R_0603_1608Metric smd
+    back: R323 SMD 5.1k R_0603_1608Metric smd
+    back: R324 SMD 330 R_0603_1608Metric smd
+    back: R325 SMD 5.1k R_0603_1608Metric smd
+    back: R326 SMD 5.1k R_0603_1608Metric smd
+    back: R327 SMD 4.7k R_0603_1608Metric smd
+    back: R328 SMD 330 R_0603_1608Metric smd
+    back: R329 SMD 1k R_0603_1608Metric smd
+    back: R330 SMD 1k R_0603_1608Metric smd
+    back: R331 SMD 1k R_0603_1608Metric smd
+    back: R332 SMD 10k R_0603_1608Metric smd
+    back: R333 SMD 10k R_0603_1608Metric smd
+    back: R334 SMD 10k R_0603_1608Metric smd
+    back: R335 SMD 10k R_0603_1608Metric smd
+    back: R336 SMD 1k R_0603_1608Metric smd
+    back: R337 SMD 10k R_0603_1608Metric smd
+    back: R338 SMD 10k R_0603_1608Metric smd
+    back: R339 SMD 1k R_0603_1608Metric smd
+    back: R341 SMD 10k R_0603_1608Metric smd
+    back: R342 SMD 9.53k 1% R_0603_1608Metric smd
+    back: R343 SMD 90.9k 1% R_0603_1608Metric smd
+    back: R344 SMD 10k 1% R_0603_1608Metric smd
+    back: R345 SMD 10k R_0603_1608Metric smd
+    back: R346 SMD 10k R_0603_1608Metric smd
+    back: R347 SMD 1M R_0603_1608Metric smd
+    back: R348 SMD 1k R_0603_1608Metric smd
+    back: R349 SMD 10k R_0603_1608Metric smd
+    back: R350 SMD 1k R_0603_1608Metric smd
+    back: R351 SMD 10k R_0603_1608Metric smd
+    back: R352 SMD 5.1k R_0603_1608Metric smd
+    back: R353 SMD 5.1k R_0603_1608Metric smd
+    back: R354 SMD 10k R_0603_1608Metric smd
+    back: R355 SMD 10k R_0603_1608Metric smd
+    back: R356 SMD 10k R_0603_1608Metric smd
+    back: R357 SMD 10k R_0603_1608Metric smd
+    back: R358 SMD 10k R_0603_1608Metric smd
+    back: R360 SMD 100k R_0603_1608Metric smd
+    back: R361 SMD 100k R_0603_1608Metric smd
+    back: R470 SMD 60R4 1% R_0603_1608Metric smd
+    back: R471 SMD 60R4 1% R_0603_1608Metric smd
+    back: R472 SMD 60R4 1% R_0603_1608Metric smd
+    back: R473 SMD 60R4 1% R_0603_1608Metric smd
+    back: R474 SMD 10k R_0603_1608Metric smd
+    back: R475 SMD 10k R_0603_1608Metric smd
+    back: R476 SMD 10k R_0603_1608Metric smd
+    back: R477 SMD 100k R_0603_1608Metric smd
+    back: R478 SMD 100k R_0603_1608Metric smd
+    back: R479 SMD 100k R_0603_1608Metric smd
+    back: R480 SMD 100k R_0603_1608Metric smd
+    back: R481 SMD 100k R_0603_1608Metric smd
+    back: R482 SMD 100k R_0603_1608Metric smd
+    back: R483 SMD 100k R_0603_1608Metric smd
+    back: R484 SMD 100k R_0603_1608Metric smd
+    back: R485 SMD 100k R_0603_1608Metric smd
+    back: R486 SMD 100k R_0603_1608Metric smd
+    back: R487 SMD 100k R_0603_1608Metric smd
+    back: R488 SMD 100k R_0603_1608Metric smd
+    back: R489 SMD 100k R_0603_1608Metric smd
+    back: R490 SMD 100k R_0603_1608Metric smd
+    back: R491 SMD 100k R_0603_1608Metric smd
+    back: R492 SMD 100k R_0603_1608Metric smd
+    back: R493 SMD 100k R_0603_1608Metric smd
+    back: R494 SMD 100k R_0603_1608Metric smd
+    back: R495 SMD 100k R_0603_1608Metric smd
+    back: R496 SMD 100k R_0603_1608Metric smd
+    back: R497 SMD 100k R_0603_1608Metric smd
+    back: R498 SMD 100k R_0603_1608Metric smd
+    back: R499 SMD 100k R_0603_1608Metric smd
+    back: R500 SMD 100k R_0603_1608Metric smd
+    back: R504 SMD 60R4 1% R_0603_1608Metric smd
+    back: R505 SMD 60R4 1% R_0603_1608Metric smd
+    back: R506 SMD 60R4 1% R_0603_1608Metric smd
+    back: R507 SMD 60R4 1% R_0603_1608Metric smd
+    back: R510 SMD 10k R_0603_1608Metric smd
+    back: R63 SMD 10k R_0603_1608Metric smd
+    back: R64 SMD 10k R_0603_1608Metric smd
+    back: R65 SMD 1k R_0603_1608Metric smd
+    back: R75 SMD 10k R_0603_1608Metric smd
+    back: R76 SMD 10k R_0603_1608Metric smd
+    back: R77 SMD 1k R_0603_1608Metric smd
+    back: R87 SMD 10k R_0603_1608Metric smd
+    back: R88 SMD 10k R_0603_1608Metric smd
+    back: R89 SMD 1k R_0603_1608Metric smd
+    back: R9 SMD 75 R_0603_1608Metric smd
+    back: U40 SMD AP2112K-3.3 LDO: the private 3.3 V of controller A, its own branch off the device rail SOT-23-5 smd
+    back: U41 SMD STM32H753VITx I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset LQFP-100_14x14mm_P0.5mm smd
+    back: U43 SMD TCAN334D CAN-FD transceiver, controller A on heartbeat fabric A SOIC-8_3.9x4.9mm_P1.27mm smd
+    back: U44 SMD TCAN334D CAN-FD transceiver, controller A on heartbeat fabric B SOIC-8_3.9x4.9mm_P1.27mm smd
+    back: U50 SMD AP2112K-3.3 LDO: the private 3.3 V of controller B, its own branch off the device rail SOT-23-5 smd
+    back: U51 SMD STM32H753VITx I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset LQFP-100_14x14mm_P0.5mm smd
+    back: U53 SMD TCAN334D CAN-FD transceiver, controller B on heartbeat fabric A SOIC-8_3.9x4.9mm_P1.27mm smd
+    back: U54 SMD TCAN334D CAN-FD transceiver, controller B on heartbeat fabric B SOIC-8_3.9x4.9mm_P1.27mm smd
+    back: U60 SMD AP2112K-3.3 LDO: the private 3.3 V of controller C, its own branch off the device rail SOT-23-5 smd
+    back: U61 SMD STM32H753VITx I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset LQFP-100_14x14mm_P0.5mm smd
+    back: U63 SMD TCAN334D CAN-FD transceiver, controller C on heartbeat fabric A SOIC-8_3.9x4.9mm_P1.27mm smd
+    back: U64 SMD TCAN334D CAN-FD transceiver, controller C on heartbeat fabric B SOIC-8_3.9x4.9mm_P1.27mm smd
+    back: U70 SMD SN74LVC08APWR quad 2-input AND: the 2-of-3 majority voters of the I/O control plane TSSOP-14_4.4x5mm_P0.65mm smd
+    back: U71 SMD SN74LVC08APWR quad 2-input AND: the 2-of-3 majority voters of the I/O control plane TSSOP-14_4.4x5mm_P0.65mm smd
+    back: U72 SMD SN74LVC08APWR quad 2-input AND: the 2-of-3 majority voters of the I/O control plane TSSOP-14_4.4x5mm_P0.65mm smd
+    back: U73 SMD SN74LVC08APWR quad 2-input AND: the 2-of-3 majority voters of the I/O control plane TSSOP-14_4.4x5mm_P0.65mm smd
+    back: U74 SMD SN74LVC08APWR quad 2-input AND: the 2-of-3 majority voters of the I/O control plane TSSOP-14_4.4x5mm_P0.65mm smd
+    back: U75 SMD SN74LVC08APWR quad 2-input AND: the 2-of-3 majority voters of the I/O control plane TSSOP-14_4.4x5mm_P0.65mm smd
+    back: U76 SMD SN74LVC32APWR quad 2-input OR: the 2-of-3 majority voters of the I/O control plane TSSOP-14_4.4x5mm_P0.65mm smd
+    back: U77 SMD SN74LVC32APWR quad 2-input OR: the 2-of-3 majority voters of the I/O control plane TSSOP-14_4.4x5mm_P0.65mm smd
+    back: U78 SMD SN74LVC32APWR quad 2-input OR: the 2-of-3 majority voters of the I/O control plane TSSOP-14_4.4x5mm_P0.65mm smd
+    back: U79 SMD SN74LVC32APWR quad 2-input OR: the 2-of-3 majority voters of the I/O control plane TSSOP-14_4.4x5mm_P0.65mm smd
+    back: U80 SMD 74LVC86APW quad exclusive-or: break-before-make on each bank's select TSSOP-14_4.4x5mm_P0.65mm smd
+    back: U82 SMD SKY13351-378LF SPDT antenna changeover, chain A: OUTPUT1 the slot 1 card, OUTPUT2 the slot 3 card Skyworks_SKY13351_MLPD-6_1x1mm smd
+    back: U83 SMD SKY13351-378LF SPDT antenna changeover, chain B: OUTPUT1 the slot 1 card, OUTPUT2 the slot 3 card Skyworks_SKY13351_MLPD-6_1x1mm smd
+    back: Y2 SMD 25 MHz 3225 (CAN-FD bit timing needs a crystal, not the HSI) Crystal_SMD_3225-4Pin_3.2x2.5mm smd
+    back: Y3 SMD 25 MHz 3225 (CAN-FD bit timing needs a crystal, not the HSI) Crystal_SMD_3225-4Pin_3.2x2.5mm smd
+    back: Y4 SMD 25 MHz 3225 (CAN-FD bit timing needs a crystal, not the HSI) Crystal_SMD_3225-4Pin_3.2x2.5mm smd
+    back: J_AB1 THT A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY) IDC-Header_2x13_P2.54mm_Vertical_NarrowPad through_hole
+    back: J_AB2 THT A-B wall-port ribbon (IDC 2x5): the wall USB pair on the END row with eight grounds behind it IDC-Header_2x05_P2.54mm_Vertical_NarrowPad through_hole
+    back: U42 THT SWD pads, controller A: 3V3 SWDIO SWCLK NRST GND PinHeader_1x05_P2.54mm_Vertical through_hole
+    back: U52 THT SWD pads, controller B: 3V3 SWDIO SWCLK NRST GND PinHeader_1x05_P2.54mm_Vertical through_hole
+    back: U62 THT SWD pads, controller C: 3V3 SWDIO SWCLK NRST GND PinHeader_1x05_P2.54mm_Vertical through_hole
+v2/ecad/pcb-c-display-c8/pcb-c-display.kicad_pcb
+  F.Cu  SMD  31  THT  24  OTHER   4
+  B.Cu  SMD 135  THT   0  OTHER   0
+    back: C1 SMD 10u C_0805_2012Metric smd
+    back: C10 SMD 100n C_0603_1608Metric smd
+    back: C11 SMD 100n C_0603_1608Metric smd
+    back: C12 SMD 100n C_0603_1608Metric smd
+    back: C13 SMD 100n C_0603_1608Metric smd
+    back: C14 SMD 1u C_0603_1608Metric smd
+    back: C15 SMD 1u C_0603_1608Metric smd
+    back: C16 SMD 1u C_0603_1608Metric smd
+    back: C17 SMD 100n C_0603_1608Metric smd
+    back: C18 SMD 100n C_0603_1608Metric smd
+    back: C19 SMD 10n C_0603_1608Metric smd
+    back: C2 SMD 10u C_0805_2012Metric smd
+    back: C20 SMD 10n C_0603_1608Metric smd
+    back: C21 SMD 10n C_0603_1608Metric smd
+    back: C22 SMD 10n C_0603_1608Metric smd
+    back: C23 SMD 10n C_0603_1608Metric smd
+    back: C24 SMD 10n C_0603_1608Metric smd
+    back: C25 SMD 100n C_0603_1608Metric smd
+    back: C26 SMD 100n C_0603_1608Metric smd
+    back: C27 SMD 100n C_0603_1608Metric smd
+    back: C3 SMD 1u C_0603_1608Metric smd
+    back: C4 SMD 1u C_0603_1608Metric smd
+    back: C5 SMD 15p NP0 C_0402_1005Metric smd
+    back: C6 SMD 15p NP0 C_0402_1005Metric smd
+    back: C7 SMD 100n C_0603_1608Metric smd
+    back: C8 SMD 100n C_0603_1608Metric smd
+    back: C9 SMD 100n C_0603_1608Metric smd
+    back: D17 SMD BAT54 lamp-test tie D_SOD-123 smd
+    back: D18 SMD status (GPIO25) LED_0603_1608Metric smd
+    back: FB1 SMD ferrite 600R L_0603_1608Metric smd
+    back: FB2 SMD ferrite 600R L_0603_1608Metric smd
+    back: FB3 SMD ferrite 600R L_0603_1608Metric smd
+    back: FB4 SMD ferrite 600R L_0603_1608Metric smd
+    back: JP1 SMD BOOTSEL: short while powering to enter the USB bootloader SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm exclude_from_pos_files exclude_from_bom allow_soldermask_bridges
+    back: JP2 SMD PANEL_ID strap (closed = variant B) SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm exclude_from_pos_files exclude_from_bom allow_soldermask_bridges
+    back: J_MAINSW SMD MAIN button lead to A22 J_MAINSW (XH2.5 at the A22 end): two solder lands on the underside, soldered and beaded LeadLands_1x02 smd
+    back: J_PANEL SMD panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inhibit, HDMI selects, USB, heartbeats, slot enables, power control IDC-Header_2x13_P2.54mm_Vertical_SMD smd
+    back: J_PIJ2 SMD PI button lead: two solder lands on the underside (the controller reads it as the module shutdown request) LeadLands_1x02 smd
+    back: Q1 SMD AO3401A P-FET high side SOT-23 smd
+    back: Q2 SMD 2N7002 SOT-23 smd
+    back: Q3 SMD 2N7002 SOT-23 smd
+    back: Q4 SMD 2N7002 SOT-23 smd
+    back: R1 SMD 1k R_0603_1608Metric smd
+    back: R10 SMD 10k R_0603_1608Metric smd
+    back: R11 SMD 10k R_0603_1608Metric smd
+    back: R12 SMD 10k R_0603_1608Metric smd
+    back: R13 SMD 10k R_0603_1608Metric smd
+    back: R14 SMD 10k R_0603_1608Metric smd
+    back: R15 SMD 10k R_0603_1608Metric smd
+    back: R16 SMD 10k R_0603_1608Metric smd
+    back: R17 SMD 2.2k R_0603_1608Metric smd
+    back: R18 SMD 47R R_0603_1608Metric smd
+    back: R19 SMD 100R R_0603_1608Metric smd
+    back: R2 SMD 27R R_0603_1608Metric smd
+    back: R20 SMD 100k R_0603_1608Metric smd
+    back: R21 SMD 300R R_0603_1608Metric smd
+    back: R22 SMD 300R R_0603_1608Metric smd
+    back: R23 SMD 300R R_0603_1608Metric smd
+    back: R24 SMD 180R R_0603_1608Metric smd
+    back: R25 SMD 180R R_0603_1608Metric smd
+    back: R26 SMD 180R R_0603_1608Metric smd
+    back: R27 SMD 180R R_0603_1608Metric smd
+    back: R28 SMD 180R R_0603_1608Metric smd
+    back: R29 SMD 180R R_0603_1608Metric smd
+    back: R3 SMD 27R R_0603_1608Metric smd
+    back: R30 SMD 180R R_0603_1608Metric smd
+    back: R31 SMD 300R R_0603_1608Metric smd
+    back: R32 SMD 180R R_0603_1608Metric smd
+    back: R33 SMD 180R R_0603_1608Metric smd
+    back: R34 SMD 180R R_0603_1608Metric smd
+    back: R35 SMD 180R R_0603_1608Metric smd
+    back: R36 SMD 300R R_0603_1608Metric smd
+    back: R37 SMD 1k R_0603_1608Metric smd
+    back: R38 SMD 100k R_0603_1608Metric smd
+    back: R39 SMD 470R R_0603_1608Metric smd
+    back: R4 SMD 10k R_0603_1608Metric smd
+    back: R40 SMD 300R R_0603_1608Metric smd
+    back: R41 SMD 470R R_0603_1608Metric smd
+    back: R44 SMD 100R R_0603_1608Metric smd
+    back: R45 SMD 100k R_0603_1608Metric smd
+    back: R5 SMD 1k (BOOTSEL) R_0603_1608Metric smd
+    back: R6 SMD 1k R_0603_1608Metric smd
+    back: R7 SMD 2.2k R_0603_1608Metric smd
+    back: R8 SMD 2.2k R_0603_1608Metric smd
+    back: R9 SMD 10k R_0603_1608Metric smd
+    back: TP1 SMD SWCLK TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP10 SMD TX_INHIBIT_n TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP11 SMD EMCON_HW TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP12 SMD ZEROIZE_HW TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP13 SMD SPARE1 TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP14 SMD SPARE2 TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP15 SMD SPARE3 TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP16 SMD SPARE4 TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP17 SMD SPARE5 TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP18 SMD SPARE6 TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP19 SMD SPARE7 TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP2 SMD SWDIO TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP20 SMD SPARE8 TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP21 SMD SPARE9 TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP22 SMD SPARE10 TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP23 SMD SPARE11 TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP24 SMD SPARE12 TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP25 SMD EPD_BUSY TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP28 SMD HB1 TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP29 SMD HB2 TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP3 SMD C_RUN TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP30 SMD HB3 TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP31 SMD SLOT_EN1 TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP32 SMD SLOT_EN2 TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP33 SMD SLOT_EN3 TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP34 SMD HDMI_SEL1 TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP35 SMD HDMI_SEL2 TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP36 SMD PI_SHDN_REQ TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP37 SMD PI_KILL TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP38 SMD SHORE_INHIBIT TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP39 SMD PIJ2_A TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP4 SMD LED_RAIL TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP40 SMD PIJ2_B TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP5 SMD LED_RAIL_SW TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP6 SMD +5V TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP7 SMD +3V3 TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP8 SMD GND TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: TP9 SMD EXP_INT TestPoint_Pad_D1.5mm exclude_from_pos_files exclude_from_bom
+    back: U1 SMD PCA9555PW 0x22: LED sinks, light mode inputs TSSOP-24_4.4x7.8mm_P0.65mm smd
+    back: U10 SMD USBLC6-2SC6 SOT-23-6 smd
+    back: U11 SMD USBLC6-2SC6 SOT-23-6 smd
+    back: U2 SMD PCA9555PW 0x23: LED sinks, the battery bar, lamp test TSSOP-24_4.4x7.8mm_P0.65mm smd
+    back: U3 SMD RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master) QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm smd
+    back: U4 SMD W25Q16JVUXIQ 16 Mbit QSPI flash (USON-8: 1 CS 2 DO/IO1 3 WP/IO2 4 GND 5 DI/IO0 6 CLK 7 HOLD/IO3 8 VCC, pad) Winbond_USON-8-1EP_3x2mm_P0.5mm_EP0.2x1.6mm smd
+    back: U5 SMD TLV75533PDBV 3.3 V 500 mA LDO for the controller, expanders, e-paper and sensor (1 IN 2 GND 3 EN 4 NC 5 OUT) SOT-23-5 smd
+    back: U6 SMD USBLC6-2SC6 SOT-23-6 smd
+    back: U7 SMD USBLC6-2SC6 SOT-23-6 smd
+    back: U8 SMD USBLC6-2SC6 SOT-23-6 smd
+    back: U9 SMD 74LVC1G34 non-inverting buffer (2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3) SOT-23-5 smd
+    back: Y1 SMD 12 MHz ABM8-272-T3 (3225): 1 XIN, 3 XOUT, 2 and 4 GND Crystal_SMD_3225-4Pin_3.2x2.5mm smd
+v2/ecad/pcb-d-aprs-d9/pcb-d-aprs.kicad_pcb
+  F.Cu  SMD 128  THT   8  OTHER   4
+  B.Cu  SMD  71  THT   0  OTHER   0
+    back: C12 SMD 1u C_0603_1608Metric smd
+    back: C15 SMD 100n C_0603_1608Metric smd
+    back: C16 SMD 100n C_0603_1608Metric smd
+    back: C17 SMD 10u C_0805_2012Metric smd
+    back: C18 SMD 1u C_0603_1608Metric smd
+    back: C28 SMD 1u C_0603_1608Metric smd
+    back: C3 SMD 10u C_0805_2012Metric smd
+    back: C34 SMD 1u C_0603_1608Metric smd
+    back: C4 SMD 100n C_0603_1608Metric smd
+    back: C41 SMD 1u C_0603_1608Metric smd
+    back: C42 SMD 1u C_0603_1608Metric smd
+    back: C43 SMD 100p NP0 C_0402_1005Metric smd
+    back: C44 SMD 1n NP0 C_0402_1005Metric smd
+    back: C45 SMD 1n NP0 C_0402_1005Metric smd
+    back: C46 SMD 1u C_0603_1608Metric smd
+    back: C47 SMD 1u C_0603_1608Metric smd
+    back: C48 SMD 1u C_0603_1608Metric smd
+    back: C51 SMD 100n C_0603_1608Metric smd
+    back: C52 SMD 100n C_0603_1608Metric smd
+    back: C53 SMD 100n C_0603_1608Metric smd
+    back: C54 SMD 100n C_0603_1608Metric smd
+    back: C55 SMD 100n C_0603_1608Metric smd
+    back: C57 SMD 100n C_0603_1608Metric smd
+    back: C6 SMD 100n C_0603_1608Metric smd
+    back: C8 SMD 1u C_0603_1608Metric smd
+    back: C9 SMD 10u C_0805_2012Metric smd
+    back: D2 SMD 1N4148W coil flyback D_SOD-123 smd
+    back: R1 SMD 2.2k R_0603_1608Metric smd
+    back: R10 SMD 10k R_0603_1608Metric smd
+    back: R11 SMD 1.5k R_0603_1608Metric smd
+    back: R2 SMD 100k R_0603_1608Metric smd
+    back: R3 SMD 100k R_0603_1608Metric smd
+    back: R31 SMD 10k R_0603_1608Metric smd
+    back: R32 SMD 10k R_0603_1608Metric smd
+    back: R33 SMD 4.7k R_0603_1608Metric smd
+    back: R34 SMD 100k R_0603_1608Metric smd
+    back: R35 SMD 10k R_0603_1608Metric smd
+    back: R36 SMD 10k R_0603_1608Metric smd
+    back: R37 SMD 10k R_0603_1608Metric smd
+    back: R38 SMD 10k R_0603_1608Metric smd
+    back: R39 SMD 10k R_0603_1608Metric smd
+    back: R4 SMD 1k R_0603_1608Metric smd
+    back: R40 SMD 4.7k R_0603_1608Metric smd
+    back: R41 SMD 4.7k R_0603_1608Metric smd
+    back: R42 SMD 220k R_0603_1608Metric smd
+    back: R43 SMD 2.2k R_0603_1608Metric smd
+    back: R44 SMD 2.2k R_0603_1608Metric smd
+    back: R45 SMD 10k R_0603_1608Metric smd
+    back: R46 SMD 10k R_0603_1608Metric smd
+    back: R47 SMD 10k R_0603_1608Metric smd
+    back: R48 SMD 100 R_0603_1608Metric smd
+    back: R49 SMD 1k R_0603_1608Metric smd
+    back: R5 SMD 10k R_0603_1608Metric smd
+    back: R50 SMD 1k R_0603_1608Metric smd
+    back: R51 SMD 2.2k R_0603_1608Metric smd
+    back: R66 SMD 10k R_0603_1608Metric smd
+    back: R67 SMD 10k R_0603_1608Metric smd
+    back: R68 SMD 10k R_0603_1608Metric smd
+    back: R69 SMD 10k R_0603_1608Metric smd
+    back: R70 SMD 10k R_0603_1608Metric smd
+    back: R71 SMD 10k R_0603_1608Metric smd
+    back: R72 SMD 10k R_0603_1608Metric smd
+    back: R73 SMD 10k R_0603_1608Metric smd
+    back: R74 SMD 10k R_0603_1608Metric smd
+    back: R75 SMD 10k R_0603_1608Metric smd
+    back: R76 SMD 10k R_0603_1608Metric smd
+    back: R77 SMD 10k R_0603_1608Metric smd
+    back: R78 SMD 10k R_0603_1608Metric smd
+    back: R79 SMD 10k R_0603_1608Metric smd
+    back: R8 SMD 1.5k R_0603_1608Metric smd
+    back: R9 SMD 10k R_0603_1608Metric smd
+v2/ecad/pcb-e1-dock-e7/pcb-e1-dock.kicad_pcb
+  F.Cu  SMD 148  THT  13  OTHER  28
+  B.Cu  SMD   0  THT   0  OTHER   0
+v2/ecad/pcb-p-pack-p2/pcb-p-pack.kicad_pcb
+  F.Cu  SMD  48  THT   8  OTHER   4
+  B.Cu  SMD   0  THT   0  OTHER   0
