@@ -1928,8 +1928,15 @@ records:
           R8P-06, recorded as questions Q-P19 to Q-P21 for the battery review). Section 1's statements this reading
           cites and every other G and T item, board C's rows among them, are byte-identical, so it stands on the file
           at d8c52208916b136d
+      - >-
+          v2/docs/feasibility/DECOUPLING.md re-read at board E's round 8 docs integration of 27 September 2026: only
+          section 10's row 'G11, G13, G14 on E' changes, recording G11, G13 and G14 done in board E's generator
+          (merged in bc0f562f) and three gaps found with them (G9's two RP2040 pins on E, the BME688's VDDIO, the
+          LT8705A sense filter); the ruling, the classes, T1 to T10, every other board's G items (board C's and board
+          P's round 8 rows among them) and the placement re-read are unchanged and still unlaid, so the record stays
+          INCONCLUSIVE on the file at eb39cbaedf0e4f3b
     evidence_bound_to:
-      - "v2/docs/feasibility/DECOUPLING.md@d8c52208916b136d"
+      - "v2/docs/feasibility/DECOUPLING.md@eb39cbaedf0e4f3b"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/DECOUPLING.md section 10", "v2/ecad/tools/pcb_decisions.yaml:959-1076 (decision 42)"]
     source_check: VERIFIED
@@ -7361,10 +7368,17 @@ records:
           own round 8, so both ends of the lead carry the same tin header. ASSEMBLY.md's Pack SMBus row changes only
           its LCSC sentence (the stream's ASSEMBLY-p draft; board C's light-guide row, integrated before it, is
           untouched). So this reading stands on the files at 085f833362fbbda8 and 474a6d0c08a1061b
+      - >-
+          v2/docs/ASSEMBLY.md re-read at board E's round 8 clamp-bar integration of 27 September 2026: section 2's
+          build step 8 and section 9's E6 row now describe the printed float clamp bar (one part, twelve cavities, 22
+          M3 at the mid-pitch points; gen_pcb_e.py and check_pcb_e.py, A09 and R4E-07) where they named eleven printed
+          clamps; section 4's Pack SMBus row (C144395 at both ends since board P's round 8, integrated before it),
+          build step 7 and board C's light-guide row, which this reading cites or rests on, are byte-identical, so it
+          stands on the file at 30db27eee509212c
     evidence_bound_to:
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976"
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
-      - "v2/docs/ASSEMBLY.md@474a6d0c08a1061b"
+      - "v2/docs/ASSEMBLY.md@30db27eee509212c"
       - "v2/docs/PANEL.md@8eeb152e4d82080c"
       - "v2/ecad/tools/check_contracts.py@308fdefb90335da4"
     release_effect: BLOCKER

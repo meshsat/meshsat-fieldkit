@@ -548,7 +548,9 @@ Prototype 1: in the core D-01 names. 18 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/DECOUPLING.md re-read at board P's round 8 integration of 27 September 2026: only item G8 of section 8.3, section 10's G8 row and its A3 row change (board P's four entries declared class A, R8P-01, provisional under A3; TI's BAT and VCC feed, R8P-05, and TI's FET bypass pair of SLUSC67B 8.2.2.1.1, R8P-06, recorded as questions Q-P19 to Q-P21 for the battery review). Section 1's statements this reading cites and every other G and T item, board C's rows among them, are byte-identical, so it stands on the file at d8c52208916b136d
 
-*Bound to:* `v2/docs/feasibility/DECOUPLING.md@d8c52208916b136d`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/DECOUPLING.md re-read at board E's round 8 docs integration of 27 September 2026: only section 10's row 'G11, G13, G14 on E' changes, recording G11, G13 and G14 done in board E's generator (merged in bc0f562f) and three gaps found with them (G9's two RP2040 pins on E, the BME688's VDDIO, the LT8705A sense filter); the ruling, the classes, T1 to T10, every other board's G items (board C's and board P's round 8 rows among them) and the placement re-read are unchanged and still unlaid, so the record stays INCONCLUSIVE on the file at eb39cbaedf0e4f3b
+
+*Bound to:* `v2/docs/feasibility/DECOUPLING.md@eb39cbaedf0e4f3b`
 
 *Feasibility page:* `v2/docs/feasibility/DECOUPLING.md`, blocker ids T1, T10, G1, G14; *owner:* The integrating writer of v2/ecad/tools/ (T1 to T10); each board's writer (G1 to G14); the integrator for the placements; the session for the Diodes question.; *holds:* layout entry of A, B, C, D, E, P.
 
@@ -1999,7 +2001,9 @@ Prototype 1: in the core D-01 names. 10 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net and v2/docs/ASSEMBLY.md re-read at board P's round 8 integration of 27 September 2026: compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent comparison (v2/docs/records/r8p/box/par.txt), the netlist differs only in J_SMB's order code (none to C144395, R8P-02) and J_TS2's (C5251182 to C131337, R8P-03): no net, node, pin, value, footprint or part is added, removed or moved. Board P's J_SMB keeps its land, pins and nets (1 SMBC, 2 SMBD, 3 PACK_N, 4 PRES_J), so the lead contract this reading describes stands; it now orders C144395, B4B-XH-A(LF)(SN), the header JST's XH catalogue lists (page 5), which board E's J_SMB orders too since its own round 8, so both ends of the lead carry the same tin header. ASSEMBLY.md's Pack SMBus row changes only its LCSC sentence (the stream's ASSEMBLY-p draft; board C's light-guide row, integrated before it, is untouched). So this reading stands on the files at 085f833362fbbda8 and 474a6d0c08a1061b
 
-*Bound to:* `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`, `v2/docs/ASSEMBLY.md@474a6d0c08a1061b`, `v2/docs/PANEL.md@8eeb152e4d82080c`, `v2/ecad/tools/check_contracts.py@308fdefb90335da4`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/ASSEMBLY.md re-read at board E's round 8 clamp-bar integration of 27 September 2026: section 2's build step 8 and section 9's E6 row now describe the printed float clamp bar (one part, twelve cavities, 22 M3 at the mid-pitch points; gen_pcb_e.py and check_pcb_e.py, A09 and R4E-07) where they named eleven printed clamps; section 4's Pack SMBus row (C144395 at both ends since board P's round 8, integrated before it), build step 7 and board C's light-guide row, which this reading cites or rests on, are byte-identical, so it stands on the file at 30db27eee509212c
+
+*Bound to:* `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`, `v2/docs/ASSEMBLY.md@30db27eee509212c`, `v2/docs/PANEL.md@8eeb152e4d82080c`, `v2/ecad/tools/check_contracts.py@308fdefb90335da4`
 
 *Source (verified):* `v2/ecad/tools/gen_sch_e.py:218`; `v2/docs/ASSEMBLY.md section 4`; `v2/docs/PANEL.md section 10`
 
