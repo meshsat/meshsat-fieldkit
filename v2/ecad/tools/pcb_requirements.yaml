@@ -61,6 +61,15 @@
 # failing balance as M-02; REQ-077's forced trigger at room temperature (layer 2 B2, layer 3 R4); SC-HF-01 to SC-HF-06
 # entered as SC-58 to SC-63 with their draft names, and the validator refusing an SC- id no entry defines (layer 3, R5).
 #
+# THE RELEASE FINALIZER OF LAYERS 1 TO 3 (27 September 2026, MESHSAT-1357, after the second release check at eb9f9030,
+# v2/docs/reviews/REVIEW-LAYER-{1,2,3}-RELEASE-2-2026-09-27.md; branch fnd/rel2 rebased onto main 391d8579, where set 5
+# had taken SC-51 to SC-57 and EQ-25, so the second release attempt's choices are SC-58 to SC-63, and then onto main
+# 91894cd7, the consolidated re-take). Through v2/docs/records/rel2f/apply_registry.py: the items the second check left
+# on layers 1 and 3, not fixed a third time (the owner's execution prompt, section 4), as S-77 (layer 1, R2-B1), S-78 (layer
+# 3, B-1, the baseline) and S-79 (layer 3, B-2, the package); through post_docs_registry.py: the needs pin re-taken on
+# CONOPS's status line, which records layer 2 BASELINED, and the three readings bound to CONOPS rebound on that header
+# change alone.
+#
 # PART NAMES IN STATEMENTS. A part a statement names was ruled by the owner (the device set of 6 September 2026,
 # appendix 32.49 and 32.50; the LT8705A tracker, ruling F of 4 September 2026; the BQ4050 gauge and the second level,
 # D-15; the 4S3P Samsung INR18650-35E pack, D-06) unless the record's choices or notes name a session choice or a
@@ -148,7 +157,7 @@ written: "2026-09-26"
 baseline_state: READY_FOR_REVIEW_B
 sources_read_at: 08f3665a
 needs_document: "v2/docs/CONOPS.md"
-needs_document_sha256: 3ff59edc96a3f8f46951c57b65c7c1c1d89eaff30e21f82b7d9c383913119768
+needs_document_sha256: 4483209659dc391c9677ae8d5351ccad4805d44906f8b142fd3029e4192c96bc
 companion_documents: []
 
 # The needs of CONOPS section 2, quoted. The validator compares each statement with the needs table of the
@@ -2439,6 +2448,55 @@ open_items:
       order code in gen_sch_d.py or lcsc_fill.py, D7 and D8 are SS14 filled as C51897884 by lcsc_fill.py with no
       sheet in v2/vendor. Open until the sheets are filed (and D2 has an order code, EQ-21's class) and the
       three nets are declared nodes at the rail plus the maker's forward drop.
+  - id: S-77
+    class: SESSION
+    status: OPEN
+    title: >-
+      (Layer 1, the second release check of 27 September 2026 at eb9f9030,
+      v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2-2026-09-27.md, finding R2-B1; left open by the release finalizer because
+      it was the second attempt, the owner's execution prompt section 4; ENGINEERING-QUESTIONS EQ-27)
+      v2/docs/PRODUCT-BRIEF.md lines 256 to 258 state six feasibility blockers on the core (FEA-001 to FEA-006) where
+      this registry holds seven kind: feasibility records, every one prototype_1: core and release_effect: BLOCKER:
+      FEA-007, the kit's fit in the Peli 1450 on the case choices C1 to C6 (core under SC-04), holding the layout entry
+      of boards A, B, D, E, E5 and P and BLOCKED on the owner's purchase L-07 or his acceptance of the residual, with
+      bounds that include failure (35 of 70 case margins OPEN; M17g and M17x fail as laid out until the jumper plug is
+      picked; the pack's M4a and M5 OPEN on the undesigned hold-down S-27), is absent from the brief's open items, and
+      the brief's D-07 row (line 289) names the board E clamp fit but not the east plug layout (M17g). Open until the
+      brief carries the reviewer's fix (the sentence naming seven blockers with FEA-007, an open-items row for FEA-007
+      with the reason layer 1 can close while it is open, and the east plug layout in the D-07 row), a reviewer who
+      wrote none of the changed lines re-checks the difference at one pinned commit, and the brief is set BASELINED in
+      the commit that files that re-check. Wording only: no owner answer, purchase or test is needed. Layer 1 stays
+      IN_PROGRESS.
+  - id: S-78
+    class: SESSION
+    status: OPEN
+    title: >-
+      (Layer 3, the second release check of 27 September 2026 at eb9f9030,
+      v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2-2026-09-27.md, finding B-1, acceptance item 3.14; left open by the
+      release finalizer, the second attempt; ENGINEERING-QUESTIONS EQ-28) baseline_state still reads READY_FOR_REVIEW_B
+      and S-51 is open, although that record confirms R2 to R5 of the first release check answered with no finding of
+      substance left, on the registry at sha256/16 fb819e939f2895da. Its fix is one commit that sets baseline_state to a
+      baselined value naming the commit that carries the reviewed content, closes S-51 on that record, marks the three
+      gen_sch_b.py pointers of the choices it read as SC-51 and SC-56 (SC-58 and SC-63 here: :257, :822 and :764-766)
+      '(as read at e3aedb25)' or renumbers them to 267 and 464, 978 and 903 to 905, re-renders the trace page and
+      updates the layer 3 integrator line, with no other registry change. Since the review the branch was rebased onto
+      main 391d8579 and then 91894cd7: the registry at its head also carries set 5's records (SC-51 to SC-57, S-64 to
+      S-76 and their readings) and the consolidated re-take's re-read notes (8ea7867e to 91894cd7), the reviewed SC-51
+      to SC-56 are SC-58 to SC-63 and EQ-25 is EQ-26, and S-77, S-78 and S-79 are added, which the record says need a
+      review of their own. Open until a reviewer who wrote none of it confirms that difference and the baseline commit
+      is made as the record describes. Layer 3 stays IN_PROGRESS.
+  - id: S-79
+    class: SESSION
+    status: OPEN
+    title: >-
+      (Layer 3, the second release check of 27 September 2026 at eb9f9030,
+      v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2-2026-09-27.md, finding B-2, acceptance item 3.18; ENGINEERING-QUESTIONS
+      EQ-29) No versioned package carries the reviewed registry: the reviewed commit was on no remote branch (GitLab and
+      GitHub main were at 953f5658 when it was read) and no handover snapshot has been cut from a commit carrying its
+      content. The anchor 08f3665a is already on the public main, so LAYER-STATUS layer 3's earlier remaining item on it
+      is met. Open until the integrating session pushes the baseline commit of S-78 to main and cuts the next handover
+      snapshot from it, its manifest naming that commit; the same snapshot carries layer 1's item 14 and layer 2's
+      baselined CONOPS.
   - id: M-02
     class: OWNER_ACTION
     status: OPEN
@@ -3235,8 +3293,15 @@ records:
           section 4c's opening hand-off sentence and section 7a's opening and L-02 row change, and no number changed;
           section 2a, which this reading rests on, is byte-identical to the file at 370aca33cb44da97, so it stands on
           the file at 3ff59edc96a3f8f4
+      - >-
+          v2/docs/CONOPS.md re-read at the release finalizer of layers 1 to 3 of 27 September 2026 (fnd/rel2 rebased
+          onto main 91894cd7, after the second release check at eb9f9030): only its status header changes, line 3 (the
+          status line: layer 2 BASELINED at 79963b3b on v2/docs/reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md) and
+          lines 48 to 49 (the Review A paragraph's last sentence), with the line count kept; every section from section
+          1 on, which this reading rests on, is byte-identical to the file at 3ff59edc96a3f8f4, so it stands on the file
+          at 4483209659dc391c
     evidence_bound_to:
-      - "v2/docs/CONOPS.md@3ff59edc96a3f8f4"
+      - "v2/docs/CONOPS.md@4483209659dc391c"
       - "v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8"
       - "v2/docs/V2-SPEC.md@a92ea2ef3793a3c9"
     release_effect: BLOCKER
@@ -9674,11 +9739,18 @@ records:
           (fnd/rel2 from 953f5658, after the release reviews at f2b7fa66): only line 36 changes (the first Review A pass
           cited by its filed name); no number changed; sections 2, 3 and 4, which this reading rests on, are
           byte-identical to the file at 44a031caee47ff9a, so it stands on the file at 43361b02743cf3af
+      - >-
+          v2/docs/CONOPS.md re-read at the release finalizer of layers 1 to 3 of 27 September 2026 (fnd/rel2 rebased
+          onto main 91894cd7, after the second release check at eb9f9030): only its status header changes, line 3 (the
+          status line: layer 2 BASELINED at 79963b3b on v2/docs/reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md) and
+          lines 48 to 49 (the Review A paragraph's last sentence), with the line count kept; every section from section
+          1 on, which this reading rests on, is byte-identical to the file at 3ff59edc96a3f8f4, so it stands on the file
+          at 4483209659dc391c
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc"
       - "v2/docs/PANEL.md@7bb905740ddaebb9"
-      - "v2/docs/CONOPS.md@3ff59edc96a3f8f4"
+      - "v2/docs/CONOPS.md@4483209659dc391c"
       - "v2/docs/V2-SPEC.md@a92ea2ef3793a3c9"
       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
       - "v2/docs/TEST-PLAN.md@4f15bd02a6a8be46"
@@ -11459,9 +11531,16 @@ records:
           (fnd/rel2 from 953f5658, after the release reviews at f2b7fa66): only line 36 changes (the first Review A pass
           cited by its filed name); no number changed; section 3's paragraph beginning '**Corrected 26 September 2026.**
           This pa', which this reading rests on, is byte-identical, so it stands on the file at 43361b02743cf3af
+      - >-
+          v2/docs/CONOPS.md re-read at the release finalizer of layers 1 to 3 of 27 September 2026 (fnd/rel2 rebased
+          onto main 91894cd7, after the second release check at eb9f9030): only its status header changes, line 3 (the
+          status line: layer 2 BASELINED at 79963b3b on v2/docs/reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md) and
+          lines 48 to 49 (the Review A paragraph's last sentence), with the line count kept; every section from section
+          1 on, which this reading rests on, is byte-identical to the file at 3ff59edc96a3f8f4, so it stands on the file
+          at 4483209659dc391c
     evidence_bound_to:
       - "v2/docs/PANEL.md@7bb905740ddaebb9"
-      - "v2/docs/CONOPS.md@3ff59edc96a3f8f4"
+      - "v2/docs/CONOPS.md@4483209659dc391c"
       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
       - "v2/ecad/tools/gen_sch_a.py@5af29bbcf27bb91a"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
