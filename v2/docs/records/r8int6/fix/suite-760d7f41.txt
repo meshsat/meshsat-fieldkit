@@ -1,0 +1,71 @@
+THE SET 6 CANDIDATE'S FULL SUITE ON THE KICAD BOX, AT THE EXACT COMMIT 760d7f41
+Worker set6fix, MESHSAT-1357, 27 September 2026. Nothing here is a measurement of hardware: no board exists.
+
+RESULT   tests: 2015 passed, 0 failed, 3 skipped          EXIT 0
+         (suite-box-760d7f41.log, last two lines; sha256 4cba2cadcf3b808ac57c6294954588372c2e2ceb8aab826022e5018c43f21004,
+         the same on the box and here)
+BEFORE   tests: 2010 passed, 1 failed, 3 skipped; failed: test_reliability.t_the_committed_list_covers_every_wear_part_of_every_board
+         (at a76a246e, the archived log, sha256 54cdd7702cbc61352a2bb798d6a5e3d100708bb0c06786cc9587921b87e432f5)
+
+WHAT WAS RUN
+  commit    760d7f41db726c8150f17beb2f0aa20533fd0814, branch fnd/r8int6, one commit above a76a246e
+  bundle    r8int6-6.bundle = git bundle create ... a76a246e..fnd/r8int6, sha256
+            066fed9af748e6f627533d0ca6f6904075569f87d73dd83df7e2e135feb0bc63, verified on the box ("is okay")
+  evidence  /root/r8int6/evidence-head.tar as it stood, sha256
+            814ea3eb1427e736f2224b7266355548a0976bceaa111d2b17f8b6c0a988aa6d
+  driver    /root/r8int6/r8int6_suite.sh, byte for byte v2/docs/records/r8int6/r8int6_suite.sh, under nohup:
+            nohup ./r8int6_suite.sh 760d7f41db726c8150f17beb2f0aa20533fd0814 /root/r8int6/r8int6-6.bundle \
+                  /root/r8int6/evidence-head.tar > /root/r8int6/suite-run.out 2>&1 < /dev/null &
+  started   20:41:10 UTC, done file written 20:51:31 UTC, suite-run.out empty
+  the clone /root/r8int6/suite read HEAD 760d7f41db726c8150f17beb2f0aa20533fd0814 while the suite ran and after it
+  another stream's suite (/root/h3base) ran on the box at the same time, in its own directory; the box has 64
+  cores and its load average read 1.70 before the start and 1.60 eight minutes into the run
+
+THE FETCH, which the driver's own line cannot do
+  The driver fetches fnd/r8int6 into refs/heads/r8int6-suite of /root/r8int6/repo. That ref stands at 7cd64482,
+  the commit of the FIRST suite run, and 7cd64482 is not an ancestor of a76a246e, so the fetch is refused:
+      ! [rejected]          fnd/r8int6 -> r8int6-suite  (non-fast-forward)
+  Nothing was forced. The bundle was fetched into a fresh name, refs/heads/r8int6-suite-760d7f41, and the driver
+  was then run as it is: its own fetch is refused again and says nothing under -q, and its clone and checkout
+  find the commit. TWO THINGS TO KNOW ABOUT THE DRIVER, neither changed here:
+    * it has no "set -e", so a refused fetch or a failed checkout does not stop it, and the suite would then run
+      on whatever the clone checked out. The run at a76a246e was of that kind: a76a246e was in the repository's
+      object store and under no ref, and the checkout found it there. Read the clone's HEAD, as above.
+    * a driver that takes the ref name as its fourth argument, or fetches into refs/heads/r8int6-suite-<commit>,
+      would not meet this again.
+
+THE TWO RUNS COMPARED, test by test (every "tests: <name> PASS|FAIL|SKIP" line of both logs, sorted)
+  a76a246e: 2014 results. 760d7f41: 2018 results. 2013 are the same test with the same result. The differences:
+    > test_reliability.t_a_colon_inside_a_bracket_does_not_end_the_identity PASS                        (new)
+    > test_reliability.t_a_logic_gate_that_enables_a_sockets_supply_is_no_wear_part PASS                (new)
+    > test_reliability.t_a_module_receptacle_is_a_wear_part_though_its_reference_is_a_u PASS            (new)
+    > test_reliability.t_a_real_socket_with_a_description_after_the_colon_is_still_a_wear_part PASS     (new)
+    < test_reliability.t_the_committed_list_covers_every_wear_part_of_every_board FAIL
+    > test_reliability.t_the_committed_list_covers_every_wear_part_of_every_board PASS
+  No line of the log reads LOAD FAILED or "THIS RUN CHANGED THIS TREE'S OWN EVIDENCE".
+
+THE THREE SKIPS, the same three as at a76a246e, each a property of the host and none a test of a board
+  1. test_finish_order.t_routeflow_validate_agrees_with_these_rules (log line 1404)
+       "the profiles pin /root/gitlab/products/meshsat/meshsat-fieldkit, which exists here and is not this
+       tree, so validate's one-tree property is about the host rather than the profile"
+       The suite runs in the clone /root/r8int6/suite while the routeflow profiles name the box's main clone.
+  2. test_pairsearch.t_the_three_implementations_agree (log line 1844)
+       "no numba on this host: the heapq original and the array kernel agree, the compiled one was not run"
+       Two of the three implementations were compared; the compiled one needs numba, which the box lacks.
+  3. test_per_board_contract_verdict.t_without_pcbnew_the_tool_writes_its_own_verdict_declaring_the_absence
+     (log line 1879)
+       "pcbnew is importable here: the absence cannot be shown"
+       The test shows what the tool writes on a host WITHOUT pcbnew. It runs on the runner, where there is none.
+
+WHAT THE RUN LEFT CHANGED IN ITS CLONE (suite-box-status-760d7f41.txt; empty after the run at a76a246e)
+   M v2/docs/CURRENT-EVIDENCE.md
+  One line, written by the suite's own render (t_one_render_converges_... writes the pages in the real tree):
+    -**3 of 338 required rows changed class; 127 more changed only their first failing cause.**
+    +**3 of 338 required rows changed class; 120 more changed only their first failing cause.**
+  It is the seven reliability readings, whose writer is the file this work changed. It is read and explained in
+  validators-760d7f41.txt, and it is not answered here: the page and the re-take are the integrator's.
+
+NOTHING IS LEFT RUNNING on the box by this stream (asked after the run). The box holds, new under /root/r8int6:
+r8int6-6.bundle, done-suite-760d7f41db726c8150f17beb2f0aa20533fd0814, the ref r8int6-suite-760d7f41 in repo, and
+suite-box.log, suite-box-status.txt, suite-run.out and the clone "suite" as this run wrote them (the run at
+a76a246e's copies of those four were overwritten by the driver; its log is in the archive named above).

@@ -1,0 +1,93 @@
+THE RUNNER VALIDATORS ON THE SET 6 CANDIDATE AT 760d7f41
+Worker set6fix, MESHSAT-1357, 27 September 2026 22:42 to 22:46 CEST, host nllei01claude01 (no KiCad here).
+Tree: branch fnd/r8int6 at 760d7f41db726c8150f17beb2f0aa20533fd0814, with the candidate's gitignored evidence
+restored from the box's /root/r8int6/evidence-head.tar (sha256 814ea3eb1427e736f2224b7266355548a0976bceaa111d2b17f8b6c0a988aa6d).
+Run from v2/ecad/tools with PYTHONDONTWRITEBYTECODE=1. After every command git status --short was empty, and no
+file in the tree was written by any of them.
+
+THE EVIDENCE TAR BEFORE IT WAS EXTRACTED: 902 entries, all regular files, no absolute path and no "..";
+git check-ignore names all 902 as ignored in this worktree; 0 of them are tracked; 0 existed here already.
+
+1. python3 rules_lib.py | tail -3
+   rules_lib: 59 rule(s), 0 error(s), 0 warning(s), fingerprint 635ff031f210f48c
+   exit 0
+
+2. python3 rules_lib.py requirements | grep -v "out/rule-audit is not" | tail -8
+   rules_lib: 144 requirement record(s), 0 error(s), 0 warning(s)
+   exit 0
+
+3. python3 rules_render.py --check | tail -6
+   rules_render: ../../docs/PCB-OPEN-PAIRS.md differs from what the registry renders
+   rules_render: 16 document(s), 1 out of date
+   exit 1
+
+4. python3 rules_render.py --requirements --check | tail -2
+   rules_render: ../../docs/REQUIREMENTS-TRACE.md is current
+   exit 0
+
+5. python3 decisions_render.py --check | tail -2
+   exit 0
+   (it prints nothing when the page is current)
+
+READING OF NUMBER 3, the one refusal. It is NOT a reading bound to a file this work changed, and nothing was
+changed to answer it. The cause is where the restored audit points:
+  * v2/ecad/out/rule-audit/<board>.json, from the tar, was written on 27 September 20:07 CEST in the worktree
+    of the session that built set 6, and each row names its deciding verdict by ABSOLUTE path under
+    /tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit/3744628d-5552-4a03-8300-e043b6cdc9c8/scratchpad/wt/r8int6/
+    (293 such paths over the seven boards). That directory no longer exists on this host.
+  * open_pairs._missing_input opens that path to read the verdict's missing_input, and
+    stale_readings.open_pair_rows opens it to ask whether its tool has changed. With the path gone both
+    find nothing, so 17 pairs move from MISSING_INPUT to NOT_JUDGED (42 to 59), the per-board table follows,
+    and the section "Readings owed" (107 of 108 readings taken under a changed tool) is not rendered at all.
+    That is the whole difference between the page on disk and the page rendered here.
+  * SHOWN, without writing in the tree: the seven audits were copied OUTSIDE the tree with that prefix
+    replaced by this worktree's path, where the same verdict files do exist (all 293 resolve), and
+    rules_render.open_pairs_doc(open_pairs.collect(out_dir=<the copy>)) was compared with the page on disk:
+    "PCB-OPEN-PAIRS.md rendered from the re-based copy EQUALS the committed page", at 760d7f41, with the
+    changed reliability.py in place. REL-001 reads PASS on every board, so no reliability reading decides an
+    open pair and the change cannot move this page.
+  * WHY THE BOX DOES NOT SEE IT. The box's clone holds the same audit with the same dead paths (read there at
+    20:47 UTC while the suite ran: 49 such paths in a.json, none under /root/r8int6/suite, and /tmp/claude-1000
+    does not exist on the box). The suite's check passes there all the same
+    (test_rule_gate_mapping.t_the_documents_are_generated_and_not_hand_maintained PASS, at a76a246e in the
+    archived log and at 760d7f41 in suite-box-760d7f41.log line 2410), because the test before it,
+    t_one_render_converges_when_a_rule_judges_a_page_the_same_run_writes, runs a full rules_render WRITE against
+    the real tree, which re-takes the audit there with that tree's own paths (read on the box after the run:
+    a.json rewritten at 20:48:54 UTC, 49 paths under /root/r8int6/suite, none under /tmp/claude-1000). On this
+    host nothing re-took the audit, by the rule that a worker runs no verdict writer in its tree.
+  NEXT ACTION, the integrator's: the audit is re-taken (rules_status) in whichever tree the pages are judged
+  in, which rewrites the rows with paths of that tree. A row that carries its evidence as a path relative to
+  v2/ecad would make a restored audit portable between worktrees; that is a change to rules_status.py and
+  open_pairs.py, which this work does not touch.
+
+WHAT THE CHANGE MAKES STALE, for the re-take on the box (not taken here, by the task's rule):
+  the seven tracked readings v2/ecad/pcb-*/routed/reliability.verdict.json carry
+  writer {file reliability.py, sha16 149a48e5f2419955}; the file is now sha16 71d0872195905c9d.
+  They were taken on 2026-09-21 and already read AWAITING_REVALIDATION in the restored audit, on all seven
+  boards alike (REL-001 result PASS, evidence_cause TOOL_CHANGED "BY PROXY FOR ITS HELPERS: reliability.py is
+  byte for byte the file that wrote it", for rules_lib.py and verdict.py; retake_cause UNBOUND because the
+  reading records no netlist by content). With the file changed, the first of those sentences is no longer
+  true of any of the seven.
+  WHAT judge() RETURNS TODAY on the committed netlists, with no verdict written (wear-before-after.txt):
+  A 39, B 38, C 9, D 10, E 8, P 7 covered, 0 refusals; E5 has no netlist in this tree. The tracked readings
+  of 21 September say A 39, B 41, C 9, D 9, E 7, E5 0, P 6. Board B's difference is the three PCIe switches.
+  Why D, E and P each read one more was not traced here; their netlists are set 6's and the readings are older.
+  This is not a forecast of the re-take, which is taken on the box by the integrator.
+
+ONE GENERATED PAGE THE CHANGE MAKES STALE, seen on the box and not on this host:
+  after the suite at 760d7f41 the box's clone reads " M v2/docs/CURRENT-EVIDENCE.md" (suite-box-status-760d7f41.txt;
+  the same file was empty after the run at a76a246e). The suite's own render wrote one line differently:
+    -**3 of 338 required rows changed class; 127 more changed only their first failing cause.**
+    +**3 of 338 required rows changed class; 120 more changed only their first failing cause.**
+  Seven rows fewer, and they are the seven reliability readings. The page compares the cause the entry-script
+  instrument names with the cause the code bundle names. READ IN BOTH AUDITS, REL-001 on all seven boards:
+    restored audit (taken 18:07 UTC, reliability.py as it wrote the readings):
+        evidence_cause TOOL_CHANGED, writer_only_cause PREDATES_ARTEFACT on A, B, C, D, E and P and
+        UNBOUND on E5                                                           the two causes differ
+    the box clone's audit, re-taken by the suite at 20:48 UTC at 760d7f41:
+        evidence_cause TOOL_CHANGED, writer_only_cause TOOL_CHANGED             the two causes agree
+        "reliability.py has changed since this reading (wrote 149a48e5f2419955, now 71d0872195905c9d)"
+  The class is AWAITING_REVALIDATION in both, before and after, so no row changes class and no board's
+  readiness moves. It is a reading bound to the file this work changed, so it is reported and not answered
+  here: the page is the integrator's, and it is rendered again when the seven readings are re-taken. No test
+  of the suite fails on it.
