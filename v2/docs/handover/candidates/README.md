@@ -1,6 +1,8 @@
 # Candidates left in worktrees, exported as patches (handover H1.1)
 
-MESHSAT-1357, exported 27 September 2026 by the H1.1 editor. **Every patch here is an UNACCEPTED candidate, not design.**
+MESHSAT-1357, exported 27 September 2026 at about 07:40 CEST by the H1.1 editor. Agents were still working in some of
+these worktrees when they were exported; each patch is its worktree's state at that moment, and a later state is not
+in this package. **Every patch here is an UNACCEPTED candidate, not design.**
 None of them is merged into the repository, none has passed its last review without a blocking finding except r8b,
 and even r8b is a candidate until the integrator merges it with regeneration parity. Nothing in these patches changes
 what `LAYER-STATUS.md` says a layer's status is. They are here so a recipient of the snapshot holds the work the
@@ -17,8 +19,11 @@ git add -A`, `git diff --cached --binary --full-index <base>`). Left out, and li
 
 - the session's `drafts/` folder, except the files the candidate's own pages cite (its changed files, its drafts index
   page, and what those cite one level on); the drafts left out are scratch (pycache, per-run helpers);
-- maker documents (`v2/vendor/**/*.pdf`) and STL meshes, under the pack's own rules (maker documents are referenced by
-  sha256, STL is a tessellation the `v2/cad` scripts regenerate); each is named below with its sha256.
+- maker documents (`v2/vendor/**/*.pdf`, and the datasheets under r8b's `drafts/b/datasheets/`) and STL meshes, under
+  the pack's own rules (maker documents are referenced by sha256, STL is a tessellation the `v2/cad` scripts
+  regenerate); each is named below with its sha256. Where each document came from is in the patch itself: r8b's
+  `drafts/b/datasheets/SOURCES.txt` and `SHA256SUMS`, hc5's `drafts/hc5/README.md` (its "New files" table), hc7's
+  `drafts/hc7/sources.txt.patch`; the STL files are rebuilt by hc7's `v2/cad/build_case_release.sh`.
 
 Apply to the base commit, never to a later one without re-deriving the drafts:
 
@@ -63,7 +68,7 @@ That review has no blocking finding. Its minor findings, first line each:
 - The docs still name the old RTC: the 0x68 row of PANEL.md (left as context in PANEL-r8.patch) says DS3231M, and ARCHITECTURE.md lines 561 and 699 say DS3231MZ. U9 is now DS3231SN# (C9866, SOIC-16W), with its pins checked against 19-5170 Rev 10: 5 to 12 to GND, 13 GND, 14 VBAT, 15 SDA, 16 SCL.
 - U506 now drives EMCON_SUP push-pull onto the three supervisors' PC5 pins, which are TT_a (STM32H743 datasheet pin table). A supervisor unpowered by its bench jumper is therefore fed through the pin from U506, as main already fed it from board C's U9. This is not a regression, and L1's remedy is met as EMCON.md asked. A series resistor would bound the injection.
 - SD-EMC-2 remains open, as the author lists, for the RockBLOCK, E22 and E72 lines (no series resistance drawn) and for the two AW7915 cards. With EMCON the cards' supplies are removed, but PERST# through 100 Ohm and REFCLK still reach them, there is no discharge path, and no maker floor exists to judge against. The RM520N case holds at desk: about 77 mA of back-feed into 15 Ohm is about 1.2 V, unde ...
-- Verified with no finding against the makers' documents (worktree worktree r8b): - FAB-01 on DS40068 Rev 5-2 3.3/3.4 (U101, U201, U301). - FAB-04: 23 lines at 10 k with the loads unchanged. - FAB-02 (b)/(c): TS3DV642 Table 1 and SEL2 port mapping, 74LVC1G157GW pinout and function (Nexperia Rev. 12 Tables 3, 4, 6), PG only into 74LVC1G17 (DS35124 has no transition limit). - FAB-03 lock: every move o ...
+- Verified with no finding against the makers' documents (worktree r8b): - FAB-01 on DS40068 Rev 5-2 3.3/3.4 (U101, U201, U301). - FAB-04: 23 lines at 10 k with the loads unchanged. - FAB-02 (b)/(c): TS3DV642 Table 1 and SEL2 port mapping, 74LVC1G157GW pinout and function (Nexperia Rev. 12 Tables 3, 4, 6), PG only into 74LVC1G17 (DS35124 has no transition limit). - FAB-03 lock: every move o ...
 
 **Drafts kept in the patch:** 60. **Drafts left out:** 0.
 
