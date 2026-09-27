@@ -1,0 +1,10 @@
+# MeshSat V2 case release lid-tray-qmx-r2: sha256 of every file (sha256sum -c MANIFEST.sha256). Written 2026-09-27 by v2/cad/case_manifest.py from tree 1f26c1f2.
+efd85c5026500af5ace9643d941f010ae595bba05b4c89c164317d1cb8992fe3  README.md
+560864084763db703d1c2f0618094ad43ed90190aeb4ed856a229a49a3f00275  lid-plate-qmx-r2.dxf
+fbc58250726b58abf7a46382a15959f72fd55ed58c2079d17f8fef386f53f8f7  lid-plate-qmx-r2.step
+3847dd9ff0ac4159f55a0deb3cb55ce1fe78970d03126cbd746bccfd4cc4c710  lid-tray-qmx-r2-check.out
+1bc551c90bc4c50423442867064315cfc2e7109d4c4ff48bbcf3fd722fd0bb84  lid-tray-qmx-r2-drawing.pdf
+632507984ba8e220b557aa39e32d06622e12c9e6132243232b6c1fbdd7d09266  lid-tray-qmx-r2-frame.step
+9494a91024d4fc96ebbde26244bf57055e7e90db1b23be3692fe17895d0f5c3a  lid-tray-qmx-r2-frame.stl
+7bc5ebc6d5a8d3261959c4b37476b219581219fa8a6f444ad1f185ef4e441662  lid-tray-qmx-r2.step
+b5c817fbe08b6d2e7789978310babfa35cf9694dc5846f92602e9b625e655346  lid-tray-qmx-r2.stl

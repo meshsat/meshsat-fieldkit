@@ -1,0 +1,285 @@
+QMX lid tray r2: the fit, the face room, the retention and the fitting, from v2/cad/lid_tray_qmx_r2.py, panel1450.py and frame_seat.out (M3 nominal +19.92, worst +16.39 for a tray 28.00 from the ceiling).
+Prototype design: nothing made, printed or fitted. SCALED and INFERRED inputs are marked; the makers' figures are named.
+
+A. JACKS AND PLUGS (the set open across both end panels above the sills; sill top 1.5 above the unit's bottom face; under the RF jack the
+   hinge-end sill is cut down to the floor from y -34.2 to -8.4, 25.8 across)
+   jack    panel  v from knob edge  height (scaled)   admitted plug body   who and what
+   DC      L       10.2 ..  11.2      11.4 ..  12.4     d  18.8 (r  9.4)    lid harness: 12.0 V lead to A22 J_HF (2.1 x 5.5 barrel)
+   Audio   L       20.4 ..  21.4       8.0 ..   9.0     d  12.0 (r  6.0)    operator: earphones (3.5 mm stereo), lid open only
+   Paddle  L       32.3 ..  33.3       8.0 ..   9.0     d  12.0 (r  6.0)    operator: paddle, microphone or GPS (3.5 mm stereo), lid open only
+   RF      R        7.8 ..  12.6      10.0 ..  12.1     d  20.0 (r 10.0)    lid harness: RG-316 BNC-to-SMA jumper to A22 J_RF2
+   PTT     R       28.5 ..  30.2       7.4 ..   9.0     d  10.8 (r  5.4)    operator: PTT output to an amplifier (3.5 mm), lid open only
+   USB     R       40.6 ..  41.6       6.3 ..   7.5     d   8.6 (r  4.3)    lid harness: USB-C lead to B16 J_QMX
+   USB-C: the admitted envelope is a height, 4.3 above and below the axis; an overmold 12.35 wide (a class, INFERRED) is the other
+   bound, and the unit's own panel sets it against the PTT plug: PTT to USB centres 11.4 .. 12.1 apart, so a PTT plug beside a 12.35
+   overmold may be 10.5 across at most (the unit's panel, not the tray). Nothing of the tray lies within an end panel's outline above
+   the sills, and the long walls stop 1.5 short of the end faces; the frame's end bars lie above the unit's top face (27.1 to 30.1
+   above the plate), over every plug body. The RF jack's own nut (16.5 across corners, INFERRED) stands 2.25 above the floor at its lowest.
+   Leads (permanent: DC, RF, USB; the operator's Paddle, Audio and PTT plugs come out before the lid closes, the case closes sealed):
+   right panel to the flat ceiling's edge (case Y 115.93): 58.43; the RF jumper turns at R 12.5 (RG-316, the tree's figure), so its
+     BNC plug may reach 42.9 from the panel before its cable turns; the USB-C lead, turning at R 20.0, 35.4.
+   left panel to the flat ceiling's edge (case Y -115.93): 78.43; the DC lead loops back toward the hinge at R 20.0 west of the tray,
+     so its plug may reach 55.4 from the panel. R 20.0 is the requirement on the DC and USB lead picks (not picked).
+
+B. FACE ROOM with the lid closed, each row from the solid above the part (frame_seat.out M3's room between the face top and the lid
+   ceiling: 47.92 nominal, 44.39 at the worst, 42.11 at the worst with every unstated allowance taken twice, the sensitivity reading)
+   stack from the ceiling: bond 0.20 + lid plate 2.0 = 2.20 to the tray's mounting face; + floor 1.6 + pad gap 0.5 + unit 25.0 = 29.30 to the unit's
+   top face; + frame 3.0 = 32.30; + screw head 1.65 = 33.95; the knob tips 40.90 (knob 11.6, INFERRED)
+   the set's own allowances, none stated by a source, in the worst once and in the sensitivity reading twice:
+      0.10  bond line (INFERRED)
+      0.13  lid plate 2.0 thickness (INFERRED, EN 485-4 class as frame_seat.py's plate)
+      0.20  printed height of the tray (INFERRED)
+      0.20  printed thickness of the frame (INFERRED), on the frame and its screw heads only
+   (the r1 tray's 28.0 counted no lid plate; its ASSEMBLY.md row names a 2 mm nut plate the M3 row left out)
+   row and part        footprint, case X and Y          height  the deepest solid over it (of how many)       depth  nominal   worst   twice  verdict, min 1.00
+   M3r2.XENARC_WINDOW  X -102.9.. 102.9 Y  -94.0..  46.0   0.80  TUNE knob (22)                                40.90    +6.22   +2.26   -0.45  OPEN, on an INFERRED height of the unit's
+   M3r2.XFRAME_2       X  105.6.. 116.1 Y   10.8..  21.2   4.00  button actuator 2 (3)                         31.30   +12.62   +8.66   +5.95  MET, on an INFERRED height of the unit's
+   M3r2.XFRAME_4       X  105.6.. 116.1 Y  -69.2.. -58.8   4.00  DC plug, the body the set admits (1)          26.10   +17.82  +13.86  +11.15  MET
+   M3r2.SW_MAIN        X  137.4.. 162.6 Y   47.4..  72.6   3.50  frame back rail and ledge (7)                 32.30   +12.12   +7.96   +5.05  MET
+   M3r2.SW_PI          X  138.9.. 161.1 Y   -1.1..  21.1   2.50  frame back rail and ledge (4)                 32.30   +13.12   +8.96   +6.05  MET
+   M3r2.SW_TEST        X  138.9.. 161.1 Y  -44.1.. -21.9   2.50  frame back rail and ledge (6)                 32.30   +13.12   +8.96   +6.05  MET
+   M3r2.D1             X  126.0.. 130.0 Y   43.0..  47.0   1.50  unit body (3)                                 29.30   +17.12  +13.16  +10.45  MET
+   M3r2.D2             X  126.0.. 130.0 Y   34.0..  38.0   1.50  unit body (3)                                 29.30   +17.12  +13.16  +10.45  MET
+   M3r2.D3             X  126.0.. 130.0 Y   25.0..  29.0   1.50  unit body (3)                                 29.30   +17.12  +13.16  +10.45  MET
+   M3r2.D4             X  126.0.. 130.0 Y   16.0..  20.0   1.50  unit body (2)                                 29.30   +17.12  +13.16  +10.45  MET
+   M3r2.D5             X  126.0.. 130.0 Y    7.0..  11.0   1.50  unit body (2)                                 29.30   +17.12  +13.16  +10.45  MET
+   M3r2.D6             X  126.0.. 130.0 Y   -2.0..   2.0   1.50  unit body (3)                                 29.30   +17.12  +13.16  +10.45  MET
+   M3r2.D7             X  126.0.. 130.0 Y  -11.0..  -7.0   1.50  unit body (3)                                 29.30   +17.12  +13.16  +10.45  MET
+   M3r2.D8             X  126.0.. 130.0 Y  -20.0.. -16.0   1.50  unit body (3)                                 29.30   +17.12  +13.16  +10.45  MET
+   M3r2.D9             X  126.0.. 130.0 Y  -29.0.. -25.0   1.50  unit body (2)                                 29.30   +17.12  +13.16  +10.45  MET
+   M3r2.D10            X  126.0.. 130.0 Y  -38.0.. -34.0   1.50  frame front-end bar (6)                       32.30   +14.12   +9.96   +7.05  MET
+   M3r2.D11            X  126.0.. 130.0 Y  -47.0.. -43.0   1.50  front-end sill (left panel) (3)                5.80   +40.62  +36.66  +33.95  MET
+   M3r2.U_LIGHT        X  126.0.. 130.0 Y   61.0..  65.0   1.50  hinge-end sill, from the PTT jack east (3)     5.80   +40.62  +36.66  +33.95  MET
+   M3r2.FACE           X  100.3.. 118.3 Y   27.1..  45.1   0.00  TUNE knob (1)                                 40.90    +7.02   +3.06   +0.35  OPEN, on an INFERRED height of the unit's
+   The knob rows rest on the knob's height, which the maker does not state: 11.6 is INFERRED. They are MET at the sensitivity reading for a
+   knob up to 10.15 and at the plain worst for a knob up to 12.86; the check is T9 (chalk on the knob tips, the lid closed) or the unit in hand.
+   heights above the face, and where each is read (a seal under a head is taken as if it did not compress, a bound):
+      XENARC_WINDOW   0.80  a bound: panel1450 sets the glass level with the plate; the ruling of 2 Sep 2026 (appendix 14.6) lets a display surface stand 0.8 proud at most
+      XFRAME          4.00  a bound: ASSEMBLY.md names M4 x 8 and no head; the tallest class is taken, a cap head (ISO 4762 class, 4.00; standard not held, INFERRED)
+      SW_MAIN         3.50  C&K ATP19 sheet (Littelfuse, revised 02/05/25) page 2: S standard actuator, head 2.00; page 4: O-ring ATP19-OR 1.50 under it
+      SW_PI           2.50  C&K ATP16 sheet (5 Jul 22) page A-132: S standard/flat, head 1.5; page A-134: O-ring ATP16-OR 1 under it
+      SW_TEST         2.50  as SW_PI
+      LIGHT_GUIDE     1.50  Mentor sheet ll14-14, 1282.5004: A 7.5, B 9, so the head stands B - A = 1.5
+   face parts with no height read here and a solid of the set over them: none
+   M19 (east edge at X 171.0 inside the flat ceiling): unchanged, nominal +2.08, worst +1.70, MET
+   place: X 83.2 .. 171.0 (grown 18.8 west of r1's 102.0 for the posts; the lid ceiling is free there), Y -45.9 .. 65.9
+   knobs at case (X 109.3, Y -16.1) and (X 109.3, Y 36.1), each d 18.0: west of the buttons' column (X 137.4 .. 162.6 with its collars); their west
+   rims stand 2.6 over the monitor's window (its east edge X 102.875)
+
+C. PADS (Rogers PORON 4701-30 Very Soft, 320 kg/m3, 3.18 mm (0.125 in), black (04); standing on the plate in two floor windows 24 x 20, 960 mm2)
+   compression: nominal 1.08 (34 %), least 0.36 (13 %, thin pad, unit high), most 1.80 (51 %, thick pad, unit low)
+   so the unit always stands on the pads, pressed up against the frame's ledges; at 25 % the sheet gives 21 to 55 kPa, 20 to 53 N
+   (the sheet states 25 % only: the preload at the nominal, the least and the most compression is not stated). The unit's bottom at its
+   lowest stands 0.10 above the floor top (1.6), the hard stop toward the lid. The pads are compressed by screwing the frame down, not by
+   pushing the unit past them. The sheet: constant use to 90 C, compression set 10 % at most at 70 C, so a pad may lose up to 0.18 of its
+   compression in storage at +71 C, which the least compression above does not cover: the pads are renewed if T9 finds the unit loose.
+
+D. RETENTION. Unit and mated plugs 0.240 kg (maker's 220 g + 20 g INFERRED): 2.35 N per g. With the tray, frame and plate 0.372 kg.
+   LOAD CASE the set is designed to: 100 g on the unit and its plugs, 235 N, in each of the six directions, held still. It is the peak
+   CASE-MARGINS.md already assumes for the face under TEST-PLAN E1 (INFERRED: E1 sets 26 drops from 1.22 m, not a peak), not a measured one.
+   Material: Prusament PC Blend (TDS v1.1): interlayer 19, flexural 87, tensile 62 MPa taken (typical less spread); printed
+   floor down (the frame flat), 100 percent infill, 0.20 mm layers as the sheet's specimens; walls and posts vertical, so their tension
+   crosses the layers, and the frame's bending lies in its layers. Heat deflection 113 C at 0.45 MPa and 93 C at 1.80 MPa, over E3-S's +71 C.
+   dir  link                                                                                                                    N       g  factor
+   out  frame, back ledge bending at the wall's inner face (93.0 long, lever 2.70)                                           8990    3820    38.2  half the load on each side
+   out  frame, back rail bending between its screws and its ledge (arm 10.7, 27.1 wide at each of 3 screws)                  1983     843     8.4  half the load on each side
+   out  back frame screws, 3, each holding 1019 N and prised by 3.67 on the post's outer edge                                1664     707     7.1  half the load on each side
+   out  frame, knob-edge ledge bending at the wall's inner face (33.0 long, lever 2.20)                                      3915    1663    16.6  half the load on each side
+   out  frame, knob-edge rail bending between its screws and its ledge (arm 10.2, 26.1 wide at each of 3 screws)             2004     851     8.5  half the load on each side
+   out  knob-edge frame screws, 3, each holding 1019 N and prised by 3.55 on the post's outer edge                           1723     732     7.3  half the load on each side
+   out  M3 threads in the lid plate, the four screws between the posts (in 1.4, tip 0.6 short of the bond)                   3958    1682    16.8  INFERRED shear; the six end screws not counted
+   out  countersunk heads pulling through the 3.6 flange, the same four                                                      6544    2781    27.8  
+   out  tray flange bending between a post and the screw beside it (8.0 x 3.6, arm 5.25), eight places                       2291     973     9.7  the floor not counted
+   out* the lid plate's DP8005 bond on polypropylene: SCOPING ONLY (T-peel of 0.5 mm HDPE x perimeter 389)                    613     168          no held figure bounds it
+   x    the left panel's bottom band bearing on its sill (1.1 x 61.0 at the loose corner)                                    4160    1768    17.7  
+   x    the right panel's bottom band bearing on its sill (1.1 x 38.9 at the loose corner)                                   2653    1127    11.3  the sill cut away under the RF jack
+   x    the hinge-end sill sheared off the floor (8.0 x 52.3)                                                                3975    1689    16.9  INFERRED shear
+   x    ten M3 through the flanges and both sills, bearing on the printed holes over 3.6                                     6696    2845    28.5  friction not counted
+   y    one wall pushed outward, bending across the layers at its root (load 13.0 above it, 4.5 post pitches)                2635    1120    11.2  the frame's tie not counted
+   one frame screw holds the least of:
+       1019 N  the button head bearing on the 3.0 frame
+       1313 N  the square nut bearing on its slot's 3.0 roof
+       1520 N  the post and wall at the slot, in tension across the layers (80 mm2)
+       2264 N  the screw, A2-70 (INFERRED class)
+   Governing link on the makers' typical figures: 707 g, 7.1 times the load case (direction out: back frame screws).
+   The bond is not bounded by any held figure: its T-peel scoping number (168 g) is for a flexible strip, not a rigid 2 mm plate, and is
+   no bound; it goes to CASE-MARGINS T8 as a pull test on the case's polypropylene, after a thermal cycle (the plate and the lid expand
+   differently between -33 and +71 C, and no expansion figure of Peli's polypropylene is held). Nor does PC Blend's sheet state one, so
+   the printed tray on its aluminium plate is looked at after E3-S and E4-S as well (cracks at the ten screws, the frame flat).
+   TIGHTENING: 0.25 N m on all sixteen M3 (INFERRED; nut factor 0.2): 417 N in a screw, 42 % of what 1.4 mm of thread in the plate strips at
+   (990 N, INFERRED shear) and 41 % of what a button head bears on the frame; the r1 row's 0.4 N m would put 667 N, 67 % of the thread.
+   SUSTAINED: the pads' preload bends the frame's ledges all the time, +71 C storage included: 0.0222 MPa at the knob-edge ledges' root per
+   newton of preload, so 0.45 to 1.17 MPa at the sheet's 25 % figures, and the preload would have to reach 20 N to load the root to the
+   0.45 MPa of the sheet's 113 C heat deflection figure, 81 N for the 1.80 MPa of its 93 C figure. Both figures are over +71 C. The
+   preload at the nominal 34 % and the most 51 % compression is higher than at 25 % and not stated, so the stress there is not bounded:
+   OPEN, read after E3-S (the frame flat on the wall tops, the unit still clamped) and by T9.
+   E2 (MIL-STD-810H 514.8 Annex C, composite wheeled vehicle, 40 minutes an axis in the standard, 1 hour in TEST-PLAN): 2.24 g rms in the
+   envelope for an unknown orientation, 6.72 g at the 3 sigma the standard limits the drive to, AT THE CASE. The pads' preload keeps the unit
+   against the ledges up to 8.6 to 22.4 g (the sheet's 25 % figures over 2.35 N per g), so it stays seated if the lid passes the case's
+   vibration on magnified by less than 1.3 to 3.3. The lid's own response is not known: OPEN, read in E2 (the unit is looked at for
+   fretting on its top face's edges, the six frame screws and the ten tray screws for loosening). A unit that leaves the ledges for an
+   instant is still held: it moves 0.9 at most toward the lid, onto the pads and then the floor.
+   E1's peak on the lid is not stated by MIL-STD-810H (it sets the drop, not a pulse). Half-sine from 1.22 m over a stopping distance s:
+   s  2.0 mm:  958 g;  s  5.0 mm:  383 g;  s 10.0 mm:  192 g;  s 20.0 mm:   96 g
+   The known links hold to 707 g, which that bound passes for s >= 2.7 mm and fails below: a bound that includes failure. No board,
+   interface or purchase depends on it (the remedy, the same parts machined in 6061 or a larger bonded plate, moves no board), so the
+   retention is DESIGNED to the load case above and its verdict against E1 stays OPEN, allocated to E1 with an accelerometer on the lid
+   and to T8 for the bond.
+
+E. THE FITTING. The unit is taken at its largest: the body 0.2 larger on each overall dimension (the maker states no tolerance, INFERRED),
+   and everything that stands proud of it 0.5 wider and further out: the knobs d 18.0 and 11.6 high, the button actuators d 4.3 and 2.0 high, the
+   RF jack's nut 16.5 across corners with its barrel 14 out of the right panel, the 3.5 mm jacks' bushings d 8.0 and 3.0 out (all INFERRED from
+   the maker's photographs; the encoder shafts d 6.0 stand inside the knobs); the panel screws are countersunk and the four feet are NOT fitted.
+   Each moving item is taken with every place it passes through on a straight way in; a designed contact (the unit on the floor's stop,
+   the frame on the wall tops and on the unit's top face) may touch and may not overlap; everything else keeps 0.20, the printed parts' own
+   tolerance.
+   1. the unit lowered into the tray, from 60 above its place (the frame off)
+      solid                                          clearance  nearest to it
+      floor                                               0.40  unit body
+      knob-edge wall                                      0.30  unit body
+      knob-edge post at x -41.0                           4.30  unit body
+      knob-edge post at x -20.5                           4.30  unit body
+      knob-edge post at x +0.0                            4.30  unit body
+      knob-edge post at x +20.5                           4.30  unit body
+      knob-edge post at x +41.0                           3.76  RF jack, proud of the right panel
+      knob-edge flange                                    3.45  RF jack, proud of the right panel
+      back wall                                           0.30  unit body
+      back post at x -41.0                                4.30  unit body
+      back post at x -20.5                                4.30  unit body
+      back post at x +0.0                                 4.30  unit body
+      back post at x +20.5                                4.30  unit body
+      back post at x +41.0                                4.30  unit body
+      back flange                                         4.30  unit body
+      front-end sill (left panel)                         0.30  unit body
+      hinge-end sill, knob-edge corner                    1.75  RF jack, proud of the right panel
+      hinge-end sill, from the PTT jack east              0.30  unit body
+      screw boss at (-30.75, -39.9)                       4.30  unit body
+      screw boss at (-30.75, +39.9)                       4.30  unit body
+      screw boss at (+30.75, -39.9)                       4.30  unit body
+      screw boss at (+30.75, +39.9)                       4.30  unit body
+      screw boss at (-51.90, -39.9)                       4.31  unit body
+      screw boss at (-51.90, +0.0)                        0.30  unit body
+      screw boss at (-51.90, +39.9)                       4.31  unit body
+      screw boss at (+51.90, -39.9)                       3.45  RF jack, proud of the right panel
+      screw boss at (+51.90, +0.0)                        0.30  unit body
+      screw boss at (+51.90, +39.9)                       4.31  unit body
+      RESULT: PASS; the least clearance 0.30, unit body to the back wall
+   2. the frame lowered over the unit onto the wall tops, from 60 above its place
+      solid                                          clearance  nearest to it
+      floor                                              25.50  frame back rail and ledge
+      knob-edge wall                                      0.00  frame knob-edge ledge 1  (designed contact)
+      knob-edge post at x -41.0                           0.00  frame knob-edge ledge 1  (designed contact)
+      knob-edge post at x -20.5                           0.00  frame knob-edge rail  (designed contact)
+      knob-edge post at x +0.0                            0.00  frame knob-edge ledge 2  (designed contact)
+      knob-edge post at x +20.5                           0.00  frame knob-edge rail  (designed contact)
+      knob-edge post at x +41.0                           0.00  frame knob-edge ledge 3  (designed contact)
+      knob-edge flange                                   23.50  frame knob-edge ledge 1
+      back wall                                           0.00  frame back rail and ledge  (designed contact)
+      back post at x -41.0                                0.00  frame back rail and ledge  (designed contact)
+      back post at x -20.5                                0.00  frame back rail and ledge  (designed contact)
+      back post at x +0.0                                 0.00  frame back rail and ledge  (designed contact)
+      back post at x +20.5                                0.00  frame back rail and ledge  (designed contact)
+      back post at x +41.0                                0.00  frame back rail and ledge  (designed contact)
+      back flange                                        23.50  frame back rail and ledge
+      front-end sill (left panel)                        23.50  frame back rail and ledge
+      hinge-end sill, knob-edge corner                   23.50  frame knob-edge ledge 3
+      hinge-end sill, from the PTT jack east             23.50  frame back rail and ledge
+      screw boss at (-30.75, -39.9)                      23.50  frame knob-edge rail
+      screw boss at (-30.75, +39.9)                      23.50  frame back rail and ledge
+      screw boss at (+30.75, -39.9)                      23.50  frame knob-edge rail
+      screw boss at (+30.75, +39.9)                      23.50  frame back rail and ledge
+      screw boss at (-51.90, -39.9)                      23.50  frame knob-edge ledge 1
+      screw boss at (-51.90, +0.0)                       23.50  frame front-end bar
+      screw boss at (-51.90, +39.9)                      23.50  frame back rail and ledge
+      screw boss at (+51.90, -39.9)                      23.50  frame knob-edge ledge 3
+      screw boss at (+51.90, +0.0)                       23.50  frame hinge-end bar
+      screw boss at (+51.90, +39.9)                      23.50  frame back rail and ledge
+      unit body                                           0.00  frame back rail and ledge  (designed contact)
+      VOL knob                                            5.73  frame knob-edge ledge 1
+      TUNE knob                                           5.73  frame knob-edge ledge 3
+      button actuator 1                                   5.05  frame knob-edge ledge 2
+      button actuator 2                                   5.05  frame knob-edge ledge 2
+      Audio jack, proud of the left panel                11.50  frame front-end bar
+      Paddle jack, proud of the left panel               11.50  frame front-end bar
+      RF jack, proud of the right panel                   4.15  frame hinge-end bar
+      PTT jack, proud of the right panel                 11.50  frame hinge-end bar
+      RESULT: PASS; the least clearance 4.15, frame hinge-end bar to the RF jack, proud of the right panel
+   CONTROL 1, which must FAIL: the first pass's tray (ledges and end lintels part of the tray) and its documented way in, the unit slid
+   in from the keeper end under the ledges and that end's lintel, taken at its most generous (nominal, nothing widened, lowered 0.5 onto
+   the floor):
+      lintel at the keeper end                           -2.50  TUNE knob
+      end block (hinge end)                              -0.25  RF jack, proud of the right panel
+      knob-edge wall                                     -0.15  RF jack, proud of the right panel
+      RESULT: FAILS as it must: 3 solids of that tray stand in the unit's way
+   CONTROL 2, which must FAIL: the first pass's face-room row M3r2b against the solids of its own tray:
+      M3r2b takes SW_MAIN's room from 29.30 below the ceiling (under the unit's top face, over SW_MAIN, SW_PI, SW_TEST); the back ledge stands over it at 31.30, 2.00 deeper
+      M3r2b takes SW_PI's room from 29.30 below the ceiling (under the unit's top face, over SW_MAIN, SW_PI, SW_TEST); the back ledge stands over it at 31.30, 2.00 deeper
+      M3r2b takes SW_TEST's room from 29.30 below the ceiling (under the unit's top face, over SW_MAIN, SW_PI, SW_TEST); the back ledge stands over it at 31.30, 2.00 deeper
+      RESULT: FAILS as it must: 3 parts stand under a deeper solid than the row measured from
+
+RESULT of sections B and E: PASS (no row NOT MET, both ways in clear, both controls fail)
+
+SOLIDS (build123d 0.13.0)
+1. THE TABLE IS WHAT WAS BUILT
+   tray   built   55798.0 mm3, the table's solids   58736.1, holes and windows cut   2938.1; outside the table 0.000; bounding box the same
+   frame  built   10014.4 mm3, the table's solids   10177.8, holes and windows cut    163.4; outside the table 0.000; bounding box the same
+   M3r2.XENARC_WINDOW the built set's deepest point over it  40.90 from the ceiling, section B's  40.90
+   M3r2.XFRAME_2   the built set's deepest point over it  31.30 from the ceiling, section B's  31.30
+   M3r2.XFRAME_4   the built set's deepest point over it  26.10 from the ceiling, section B's  26.10
+   M3r2.SW_MAIN    the built set's deepest point over it  32.30 from the ceiling, section B's  32.30
+   M3r2.SW_PI      the built set's deepest point over it  32.30 from the ceiling, section B's  32.30
+   M3r2.SW_TEST    the built set's deepest point over it  32.30 from the ceiling, section B's  32.30
+   M3r2.D1         the built set's deepest point over it  29.30 from the ceiling, section B's  29.30
+   M3r2.D2         the built set's deepest point over it  29.30 from the ceiling, section B's  29.30
+   M3r2.D3         the built set's deepest point over it  29.30 from the ceiling, section B's  29.30
+   M3r2.D4         the built set's deepest point over it  29.30 from the ceiling, section B's  29.30
+   M3r2.D5         the built set's deepest point over it  29.30 from the ceiling, section B's  29.30
+   M3r2.D6         the built set's deepest point over it  29.30 from the ceiling, section B's  29.30
+   M3r2.D7         the built set's deepest point over it  29.30 from the ceiling, section B's  29.30
+   M3r2.D8         the built set's deepest point over it  29.30 from the ceiling, section B's  29.30
+   M3r2.D9         the built set's deepest point over it  29.30 from the ceiling, section B's  29.30
+   M3r2.D10        the built set's deepest point over it  32.30 from the ceiling, section B's  32.30
+   M3r2.D11        the built set's deepest point over it   5.80 from the ceiling, section B's   5.80
+   M3r2.U_LIGHT    the built set's deepest point over it   5.80 from the ceiling, section B's   5.80
+   M3r2.FACE       the built set's deepest point over it  40.90 from the ceiling, section B's  40.90
+2. IN PLACE: intersection volumes in mm3, every one must be 0.000
+   the unit at its nominal place                              tray 0.000  frame 0.000
+   DC plug d 18.8 at v 10.2 h 11.4                            tray 0.000  frame 0.000
+   DC plug d 18.8 at v 10.2 h 12.4                            tray 0.000  frame 0.000
+   DC plug d 18.8 at v 11.2 h 11.4                            tray 0.000  frame 0.000
+   DC plug d 18.8 at v 11.2 h 12.4                            tray 0.000  frame 0.000
+   Audio plug d 12.0 at v 20.4 h 8.0                          tray 0.000  frame 0.000
+   Audio plug d 12.0 at v 20.4 h 9.0                          tray 0.000  frame 0.000
+   Audio plug d 12.0 at v 21.4 h 8.0                          tray 0.000  frame 0.000
+   Audio plug d 12.0 at v 21.4 h 9.0                          tray 0.000  frame 0.000
+   Paddle plug d 12.0 at v 32.3 h 8.0                         tray 0.000  frame 0.000
+   Paddle plug d 12.0 at v 32.3 h 9.0                         tray 0.000  frame 0.000
+   Paddle plug d 12.0 at v 33.3 h 8.0                         tray 0.000  frame 0.000
+   Paddle plug d 12.0 at v 33.3 h 9.0                         tray 0.000  frame 0.000
+   RF plug d 20.0 at v 7.8 h 10.0                             tray 0.000  frame 0.000
+   RF plug d 20.0 at v 7.8 h 12.1                             tray 0.000  frame 0.000
+   RF plug d 20.0 at v 12.6 h 10.0                            tray 0.000  frame 0.000
+   RF plug d 20.0 at v 12.6 h 12.1                            tray 0.000  frame 0.000
+   PTT plug d 10.8 at v 28.5 h 7.4                            tray 0.000  frame 0.000
+   PTT plug d 10.8 at v 28.5 h 9.0                            tray 0.000  frame 0.000
+   PTT plug d 10.8 at v 30.2 h 7.4                            tray 0.000  frame 0.000
+   PTT plug d 10.8 at v 30.2 h 9.0                            tray 0.000  frame 0.000
+   USB plug d 8.6 at v 40.6 h 6.3                             tray 0.000  frame 0.000
+   USB overmold 12.35 x 8.6 at v 40.6 h 6.3                   tray 0.000  frame 0.000
+   USB plug d 8.6 at v 40.6 h 7.5                             tray 0.000  frame 0.000
+   USB overmold 12.35 x 8.6 at v 40.6 h 7.5                   tray 0.000  frame 0.000
+   USB plug d 8.6 at v 41.6 h 6.3                             tray 0.000  frame 0.000
+   USB overmold 12.35 x 8.6 at v 41.6 h 6.3                   tray 0.000  frame 0.000
+   USB plug d 8.6 at v 41.6 h 7.5                             tray 0.000  frame 0.000
+   USB overmold 12.35 x 8.6 at v 41.6 h 7.5                   tray 0.000  frame 0.000
+   knob at x -26.1 with 6 mm finger room, to 32 above its top tray 0.000  frame 0.000
+   knob at x +26.1 with 6 mm finger room, to 32 above its top tray 0.000  frame 0.000
+   CONTROL: the unit 1.0 higher, into the frame               tray 0.000  frame 773.800  (must be > 0)
+   CONTROL: the RF plug 1.0 fatter at its lowest              tray 17.348  frame 0.000  (must be > 0)
+3. THE WAY IN, position by position (every 2.0 from 60 outside to the place): the largest intersection and the least distance
+   the unit at its largest into the tray, 31 positions: intersection 0.000 mm3, least distance 0.30 (section E: 0.30, on boxes)
+   the frame over the unit, 31 positions: intersection with the tray, the unit and what stands proud 0.000 mm3, least distance to what
+   stands proud 4.15 (section E: 4.15, on boxes)
+   CONTROL: the first pass's tray and way in, 101 positions: intersection 146.009 mm3  (must be > 0)
+   masses: tray 0.0681 kg, frame 0.0122 kg (MASSES 0.0681, 0.0122)
+   RESULT: PASS: the table is what was built, nothing intersects in place or on the way in, and every control fails as it must
