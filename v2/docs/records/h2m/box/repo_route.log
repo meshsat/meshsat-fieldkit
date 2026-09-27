@@ -1,0 +1,42 @@
+=== check and extract (16:39:04)
+H2.zip: OK
+handover_pack: verify x/H2: OK
+=== handover_pack.py repo, the committed tool (16:39:05)
+handover_pack: repo /root/h2m/rtk: 2234 files of snapshot H2 (commit b89b50b4421f) committed as f4367c0b087b, working tree clean
+handover_pack: repo: one commit, no history: the validator's closed-by-commit checks read as errors, rules_render.py --check refuses REQUIREMENTS-TRACE.md, and a re-take re-renders the other boards' pages from no reading (REGENERATE.md section 9)
+repo exit 0
+second build: f4367c0b087b19c4e0cb4daffb1a29de2411ac90 f4367c0b087b19c4e0cb4daffb1a29de2411ac90
+handover_pack: repo REFUSED: /tmp/h2m-refused is under /tmp/: rules_status.py classes a reading of files there TEMP_INPUT, which never counts; choose a directory outside it (or give --allow-temp for a repository only read)
+under /tmp: exit 2
+=== the validator and the trace check before any fetch (16:39:15)
+rules_lib: 144 requirement record(s), 30 error(s), 0 warning(s)
+17
+rules_render: REQUIREMENTS-TRACE.md REFUSED: pcb_requirements.yaml does not validate (30 error(s)), so no trace page is rendered: closed item S-03 is closed by commit 458b2873, which this tree does not hold; closed item S-04 is closed by commit 458b2873, which this tree does not hold; closed item S-05 is closed by commit 93138ac1, which this tree does not hold; closed item S-43 is closed by commit dd39fb15, which this tree does not hold; closed item S-07 is closed by commit 9a151c78, which this tree does not hold
+=== section 1a's fetch, REF as its code computes it (16:39:20)
+REF=62f26a44
+     11 OK
+     17 OK
+OK v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf
+commits: 2; status: ''
+rules_lib: 144 requirement record(s), 17 error(s), 0 warning(s)
+RELEASE CHECK PASS
+rules_render: REQUIREMENTS-TRACE.md REFUSED: pcb_requirements.yaml does not validate (17 error(s)), so no trace page is rendered: closed item S-03 is closed by commit 458b2873, which this tree does not hold; closed item S-04 is closed by commit 458b2873, which this tree does not hold; closed item S-05 is closed by commit 93138ac1, which this tree does not hold; closed item S-43 is closed by commit dd39fb15, which this tree does not hold; closed item S-07 is closed by commit 9a151c78, which this tree does not hold
+=== board P's re-take (16:39:36)
+plan: 12 command(s) over 1 board(s): P 12; 0 error(s)
+retake exit 0
+{"kicad_cli": "/usr/bin/kicad-cli", "ok": true, "seconds": 16.0, "started": "2026-09-27T16:39:37+00:00"}
+verdict: rules_status           FAIL         of 339 {"FAIL": 3, "INCONCLUSIVE": 290, "PASS": 46, "WAIVED": 0, "denominator": 339, "fail_percent": 0.9, "inconclusive_percent": 85.5, "pass_percent": 13.6, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen
+verdict: rules_status           FAIL         of 339 {"FAIL": 3, "INCONCLUSIVE": 283, "PASS": 53, "WAIVED": 0, "denominator": 339, "fail_percent": 0.9, "inconclusive_percent": 83.5, "pass_percent": 15.6, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen
+verdict: rules_status           FAIL         of 339 {"FAIL": 3, "INCONCLUSIVE": 283, "PASS": 53, "WAIVED": 0, "denominator": 339, "fail_percent": 0.9, "inconclusive_percent": 83.5, "pass_percent": 15.6, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen
+rules_render: wrote ../docs/PCB-RULE-STATUS-P.md (71 lines)
+rules_render: REQUIREMENTS-TRACE.md REFUSED: pcb_requirements.yaml does not validate (17 error(s)), so no trace page is rendered: closed item S-03 is closed by commit 458b2873, which this tree does not hold; closed item S-04 is closed by commit 458b2873, which this tree does not hold; closed item S-05 is closed by commit 93138ac1, which this tree does not hold; closed item S-43 is closed by commit dd39fb15, which this tree does not hold; closed item S-07 is closed by commit 9a151c78, which this tree does not hold
+rules_render: 15 document(s), 0 out of date, 1 refused
+**Foundations incomplete; 0 boards ready for layout; 0 physically verified.**
+| P | P4 | `pcb-p-pack-p2/out/pcb-p-pack.net` 085f833362fbbda8 | none | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 6 reason(s), first PWR-001 FAIL on CURRENT_CANDIDATE evidence (BOUND) |
+  P row: PWR-001 FAIL | CURRENT_CANDIDATE (BOUND) | the reading is current and reads FAIL
+  P row: SI-001 INCONCLUSIVE | CURRENT_CANDIDATE (BOUND) | the reading is current and reads INCONCLUSIVE
+  P row: BAT-001 FAIL | CURRENT_CANDIDATE (BOUND) | the reading is current and reads FAIL
+  P row: FEA-006 | layout-entry stage open | The per-class requirement of DECOUPLING.md written from each maker's own words (
+  P row: FEA-005 | layout-entry stage open | The battery review packet complete and current on the candidate (its evidence/ch
+  P row: FEA-007 | layout-entry stage open | Per board, the desk items of CASE-FIT-UNCERTAINTIES.md section 2: board B, the j
+=== done (16:40:38)

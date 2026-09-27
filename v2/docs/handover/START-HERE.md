@@ -51,17 +51,26 @@ four boards whose schematics changed, with regeneration PARITY on all six. The c
 superseded (each merged from a later state) and are referenced rather than bundled; `candidates/README.md` stays and
 names the commit that merged each. **H2 is partial:** layers 3 to 9 are IN_PROGRESS.
 
+**After H2** (27 September 2026, not a snapshot): the fresh usability check of H2 (an AI check, not an engineering
+review) found no blocking defect and fourteen minor ones; `v2/docs/handover/H2-RESPONSE.md` answers each, with where
+and in which commit. No design file changed. The layout constraint sheets are re-bound to the H2 line's netlists and
+intents; `pcb_interfaces.yaml`'s `read_at` and `ARCHITECTURE.md` section 3.1 are re-anchored at `ef144760`; REGENERATE
+section 9 gives three routes to the re-take, one of them a repository built from the snapshot (`handover_pack.py
+repo`), with board P's run; LAYER-STATUS opens each layer with an acceptance table at H2; the glossary names the
+overloaded families and the evidence classes. The next snapshot carries these pages; H2's ZIP keeps its own.
+
 ## 1. The handover pages
 
 | Page | Read it for |
 |---|---|
 | `v2/docs/handover/START-HERE.md` (this page) | what is being built, how the repository is organised, the reading order, what you need outside the repository |
-| `v2/docs/handover/LAYER-STATUS.md` | the nine pre-PCB layers (its section "Status at handover H2" first): scope, deliverables by revision, every acceptance item met or not with its evidence, unresolved decisions, gate cycles, the next closing actions, per-board lines |
+| `v2/docs/handover/LAYER-STATUS.md` | the nine pre-PCB layers (its section "Status at handover H2" first, then each layer's acceptance table at H2, item by item, since after H2); its Appendix A keeps, per layer, the audit at `e3aedb25` (scope, deliverables by revision, every acceptance item met or not with its evidence, unresolved decisions, gate cycles, the next closing actions, per-board lines) and the integrator line |
 | `v2/docs/handover/CONTINUATION-BRIEF.md` | the decisions an incoming PCB engineer must preserve, the remaining work in dependency order, the constraints known today, the approaches that failed and why, the experiments already specified |
 | `v2/docs/handover/ENGINEERING-QUESTIONS.md` | every blocked question, one compact block each: issue, evidence, attempts, options, recommendation, expertise, cost and lead time |
 | `v2/docs/handover/REGENERATE.md` | how to regenerate the schematics and re-run the checks, and which host each step needs (written separately from these four pages) |
 | `v2/docs/handover/GLOSSARY.md` | every internal name the pages use: closers and streams, rounds, finding-id schemes, evidence labels, the title-block labels A65, D37P and E42P |
 | `v2/docs/handover/H1.1-RESPONSE.md` | the usability check of H1, finding by finding: where each is answered, in which commit, and what is left open |
+| `v2/docs/handover/H2-RESPONSE.md` | the usability check of H2 (no blocking finding, fourteen minor ones), finding by finding: where each is answered and in which commit (after H2) |
 | `v2/docs/handover/candidates/README.md` | the candidates of H1.1 (board B's round 8, the layer 2, 3, 5 and 7 closers), SUPERSEDED since, each merged from a later state; the README names each merging commit, and since H2 the patches are referenced, not bundled |
 
 ## 2. What is being built, and for whom
@@ -139,7 +148,7 @@ from.
   |---|---|---|
   | 1. Product definition | **COMPLETE** | `v2/docs/PRODUCT-BRIEF.md` BASELINED (`6b2a9965`); Review A layer 1, two release checks and the narrow verification `v2/docs/reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md` (AI reviews) |
   | 2. Concept of operations | **COMPLETE** | `v2/docs/CONOPS.md` BASELINED (`79963b3b`); Review A layer 2 and the second release check `v2/docs/reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md`, no blocking finding (AI reviews) |
-  | 3. Requirements | IN_PROGRESS | the registry validates (144 records, 0 errors) at READY_FOR_REVIEW_B; the baseline waits on S-80's wording fix and its re-check (EQ-30) |
+  | 3. Requirements | IN_PROGRESS | the registry validates (144 records, 0 errors and 0 warnings in a git checkout holding its closing commits and the gitignored readings; from the ZIP alone 13 errors and 17 warnings, and in a repository built from the ZIP 30 errors: REGENERATE.md section 7 gives each count's condition) at READY_FOR_REVIEW_B; the baseline waits on S-80's wording fix and its re-check (EQ-30) |
   | 4 to 9 | IN_PROGRESS | LAYER-STATUS, section "Status at handover H2": what landed since H1 and what remains, per layer |
 
   None is BLOCKED as a whole. Layer 3 closes with desk work; layers 4 to 9 each hold items that need a purchase, a
@@ -171,11 +180,23 @@ from.
   because most signal classes have no driver edge rate: their makers publish none (`v2/docs/PCB-GAP-REGISTER.md`,
   SI-001). Effect: SI-001 is a layout-entry reason on every one of those boards until each class carries a stated
   bound with its source, or a bring-up measurement decides it.
-  (6) **The diagrams' manifest check** (`python3 v2/docs/diagrams/tools/build.py --check`) reads 6 of 11 current,
-  because `ARCHITECTURE.md` changed outside its Mermaid blocks at `7dfbfb16` (section 8's C1 text);
-  `extract_mermaid.py --check` reads the Mermaid sources current, so the drawings' content is unchanged. Effect: none
-  on the drawings; a rebuild re-stamps `MANIFEST.json` (the diagrams' writer).
+  (6) **The diagrams' manifest check** (`python3 v2/docs/diagrams/tools/build.py --check`) reads 6 of 11 current in
+  the repository at H2, because `ARCHITECTURE.md` changed outside its Mermaid blocks at `7dfbfb16` (section 8's C1
+  text); `extract_mermaid.py --check` reads the Mermaid sources current, so the drawings' content is unchanged.
+  **Corrected after H2:** from the H2 ZIP it reads 4 of 11, because the case plan and Z-stack drawings also read
+  `v2/cad/render/scene.py` (the Z of boards E5, A and D in the render stack), which H2's `pack.yaml` excluded as
+  presentation; after H2 `pack.yaml` bundles that one file, so the next snapshot reads as the repository does. After H2
+  the repository reads 5 of 11: `pcb_interfaces.yaml`, an input of the control-lines drawing, changed in its `read_at`
+  header only, and `control_lines.py --check` reads that drawing current. Effect: none on the drawings' content; a
+  rebuild (it needs Node and a Chromium) re-stamps `MANIFEST.json` (the diagrams' writer).
   (7) **Q-B-ESC-1's final boards** stay outside the package (section 7).
+  (8) **The layout constraint sheets were stale in H2** (added after H2): `v2/docs/layout-constraints/` was bound to
+  `e3aedb25`'s netlists and intents, and `calc/rail_widths.py` on H2 changed 41 lines of its output (board A's VIN_RAW
+  12.31 A and 11.92 mm became 14.10 A and 15.29 mm on one outer face; rails PRECHG, VMON, +3V3_EMCON_EF and +3V3_EMCON
+  new on A, seventeen on B, +5V_TX on D; board E's VIN_RAW and TRK_OUT at 14.10 A and 10.33 A). After H2 the power
+  tables are regenerated and every sheet is re-bound to the H2 line's netlist and intent; what a sheet still reads at
+  `e3aedb25` is said at its top. Effect in H2: read H2's sheets' power tables through `calc/rail_widths.py`, not as
+  written.
 
 ## 3a. Where the design stands in H1 (history since H2)
 
@@ -294,7 +315,7 @@ Read in order; each layer's authoritative files first, then its status in LAYER-
 | 2. Concept of operations (COMPLETE in H2) | `v2/docs/CONOPS.md` (BASELINED; needs NEED-01 to NEED-19, missions, modes, power states, rulings), `v2/docs/OPERATING-ENVELOPE.md`, `v2/ecad/tools/pcb_envelope.yaml` | `v2/docs/PANEL.md` (operator-facing behaviour), `v2/docs/TEST-PLAN.md` (envelope limits) |
 | 3. Requirements | `v2/ecad/tools/pcb_requirements.yaml`, its generated view `v2/docs/REQUIREMENTS-TRACE.md` | `v2/ecad/tools/rules_lib.py` (the validator), `v2/ecad/tools/pcb_rules.yaml` (the board rules records name) |
 | 4. System architecture | `v2/docs/ARCHITECTURE.md` (sections 14 and 15 first: the feasibility blockers and the stale siblings) | `v2/docs/feasibility/*.md`, `v2/docs/B-FEASIBILITY.md`, `v2/docs/ARCH-PCB-B-IOHA.md`, `v2/docs/review-packets/battery/` |
-| 5. Partitioning and interfaces | `v2/ecad/tools/pcb_interfaces.yaml` (`board_to_board`, 30 contracts), `v2/docs/HW-FW-CONTRACT.md` (the firmware obligations that affect hardware), `v2/docs/ARCHITECTURE.md` sections 3, 10 and 12 | `v2/docs/PANEL.md`, `v2/docs/ASSEMBLY.md` section 4, `v2/docs/GROUNDING-AND-SHIELDS.md`, `v2/ecad/tools/check_contracts.py` |
+| 5. Partitioning and interfaces | `v2/ecad/tools/pcb_interfaces.yaml` (`board_to_board`, 30 contracts; its `read_at` names the H2 line's netlists since after H2, and each contract's `src` lines stay as that contract states them), `v2/docs/HW-FW-CONTRACT.md` (the firmware obligations that affect hardware), `v2/docs/ARCHITECTURE.md` sections 3, 10 and 12 | `v2/docs/PANEL.md`, `v2/docs/ASSEMBLY.md` section 4, `v2/docs/GROUNDING-AND-SHIELDS.md`, `v2/ecad/tools/check_contracts.py` |
 | 6. Components | `v2/vendor/SOURCES.yaml` (read each entry's update blocks, not only its top-level fields), `v2/release/revA/order/JLC-CERTIFIED.tsv` (bundled and current: it is the one file of the quarantined order folder that is not historical, the dated catalogue reading `jlc_certify.py` writes; a `pack.yaml` rule carves it out of the folder's exclusion) | `v2/docs/evidence/WRONG-MODEL-RECONCILIATION.md`, `v2/ecad/tools/pcb_part_temps.yaml`, `v2/vendor/open-picks.txt` |
 | 7. Mechanical and enclosure | `v2/docs/CASE-MARGINS.md` (sections 4 and 7), `v2/docs/CASE-FIT-UNCERTAINTIES.md`, the case release `v2/release/case-2026-09-27/`, `v2/vendor/peli/frame_seat.py` and its output `v2/vendor/peli/1450/frame_seat.out` (bundled since H1.1) | `v2/vendor/peli/1450/` (Peli STEP, DXF, drawing), `v2/docs/ARCHITECTURE.md` sections 7 to 9 and 11, `v2/docs/ASSEMBLY.md` |
 | 8. Schematics | per board: `v2/ecad/pcb-*/pcb-*.kicad_sch` and `out/*.net`, generated by `v2/ecad/tools/gen_sch_<x>.py` | `v2/docs/CURRENT-EVIDENCE.md`, `v2/docs/PCB-RULE-STATUS-<x>.md`, `v2/docs/records/r4a`, `r4b`, `r4e`, `r4p`, `r6d` |
@@ -319,7 +340,8 @@ The full instructions are `v2/docs/handover/REGENERATE.md`. In short:
   every count these pages quote. `python3 v2/ecad/tools/rules_lib.py requirements` reads 144 records with 13 errors and
   17 warnings from the ZIP: every error is a maker document the registry cites and the snapshot references rather than
   bundles (CON-017's three ST documents and eight cited since H1), and the warnings are closed-by-commit checks that
-  need git history and the gitignored readings (REGENERATE.md section 7). The representative calculation,
+  need git history and the gitignored readings (REGENERATE.md section 7, whose table gives the condition of every
+count: 0 errors and 0 warnings in a git checkout holding the history and the readings). The representative calculation,
   `energy_chain.py`, reads FAIL from the ZIP alone on one referenced citation, Mill-Max's catalogue page 28 (3.8 MB),
   and PASS of 98 once it is restored (REGENERATE.md section 6).
 - **Runs once referenced files are restored** (REGENERATE.md section 1a fetches each from the public repository's raw
@@ -349,7 +371,7 @@ leaves out. What a reader will not find, or should not use:
 | The V1 kits (`v1/`) | built, separate from V2, out of this handover's scope | `v1/README.md` |
 | Committed board layouts, their verdicts, DRC reports, Gerbers, order folders, deliverable folders under `v2/release/revA/`, EasyEDA conversions | every layout predates its corrected netlist; the order set is quarantined (decision 41); `v2/BUILD.md` is the 7 September ordering guide and is not to be used for ordering. The order folder's `JLC-CERTIFIED.tsv` is not excluded: it is bundled and current (section 5, layer 6) | `v2/docs/CURRENT-EVIDENCE.md` (candidate table) |
 | Review packets D-D12 and P-P4 at `1f614233` | superseded (`v2/release/review-packets/README.md`) | the battery packet `v2/docs/review-packets/battery/` for P |
-| Concept renders and board images | presentation, not engineering input; the renders show the 7 September arrangement | `v2/docs/CASE-MARGINS.md` for the current arrangement |
+| Concept renders and board images | presentation, not engineering input; the renders show the 7 September arrangement. So `README.md`'s and `v2/README.md`'s image links (`v2/images/`) and their links into `v1/` do not resolve inside a snapshot; both READMEs say so since after H2. One file under `v2/cad/render/`, `scene.py`, is bundled since after H2, because the case drawings read the boards' Z from it | `v2/docs/CASE-MARGINS.md` for the current arrangement |
 | Schematic-phase readings that the status pages render | they sit in gitignored `out/` folders on the build host (`.gitignore`); since the consolidated re-take (`8ea7867e`) each phase's tracked `routed/` folder also holds a copy of the current schematic-phase readings, beside older layout readings, and `pack.yaml` leaves `routed/` out as a whole (known gap 1 of section 3) | CURRENT-EVIDENCE.md classes every reading; REGENERATE.md section 9 re-takes them with `retake_schematic_phase.py` |
 | Q-B-ESC-1's final boards, DRC reports and 26 per-pass sessions | kept on the rented build host and in a session record outside the tree, named only by sha256; the host was a rented one and the files are not recoverable from this package (a known gap, not fixed in H1.1) | `v2/ecad/tools/routeflow/experiments/b_esc1/results/2026-09-26/README.md`, `v2/docs/B-FEASIBILITY.md` section 7.8 |
 | Round 8 circuit drafts, W1, W3, W5 and W7 workstream drafts, adjudications A01 to A11, board A's converter calculation scripts, the RF-002 walk tool `tx_inhibit.py`, the mismatch input `jlc-mismatch.yaml` | uncommitted session worktree drafts at `e3aedb25`; committed pages cite some of them (LAYER-STATUS lists each gap). In H1: round 8 of boards A, C, D, E and P, `tx_inhibit.py`, `jlc-mismatch.yaml`, W1's records (`v2/docs/records/w1/`) and the adjudications (`v2/docs/records/adj/`) are committed; board B's round 8 and the W3, W5 and W7 drafts are not. In H1.1: board B's round 8 and W5's contract draft ride in the candidate patches `r8b.patch` and `hc5.patch` (`v2/docs/handover/candidates/`), and hc4's and hc6's reviews, `3a1f6576`'s parity report and the H1 filing commit's message are filed in `v2/docs/records/handover/` | filing the rest is a closing action; until then, the citing page's own summary |
@@ -364,6 +386,8 @@ leaves out. What a reader will not find, or should not use:
 |---|---|---|
 | KiCad 9.0.9 with its standard libraries and `kicad-packages3d`, `kicad-cli`, `pcbnew` importable from Python 3 | schematic regeneration, ERC, PDFs, BOMs, every board-file tool | the generators and the parity baselines were produced with 9.0.9 (`v2/README.md`, section "Regenerating a board"; the module docstring of `v2/ecad/tools/netlist_parts.py`); `pin_map_lands.py` also reads the host's KiCad footprint library |
 | `mupdf-tools` | paged schematic PDFs (`build_sch.sh`) | |
+| `poppler-utils` (`pdftoppm`, `pdftotext`, `pdfinfo`) | paged schematic PDFs and the exports' read-back (`sch_pages.py`, REGENERATE.md section 1); `pack_protection.py` reads the cell sheet through `pdftotext` | 24.02.0 in the H2 run (REGENERATE.md section 1; added here after H2) |
+| Pillow | `sch_pages.py`, which cuts each schematic into A3 pages | 10.2.0 in the H2 run (REGENERATE.md section 1; added here after H2) |
 | Python 3.11 with PyYAML 6; `numpy`, `scipy` | validators, renderers, analysis tools | the stdlib-only scripts of section 6 need nothing else |
 | Java, Xvfb and the Freerouting 1.9.0 per-pass build | routing experiments only (Q-B-ESC-2, decision 43's run) | built from source by `v2/ecad/tools/routeflow/cloud/onstart.sh`; the stock jar is refused (`v2/README.md`, section "Regenerating a board") |
 | `build123d` (with OCP), `ezdxf`, `matplotlib` | the CAD generators under `v2/cad/` and the Peli STEP and DXF readers | versions are not pinned in the repository (a gap, LAYER-STATUS layer 7) |
