@@ -217,6 +217,41 @@ uA, A U35's and U37's 0.5 uA each) reach 1.09 V over the gates' 0.8 V VIL; witho
 circuit finding (the line's pull-downs against the input round 8 added), not the tool's; board D's SA868 inherits it, and
 board B's RockBLOCK 9704 and E22-900M30S, which rode only the EMCON_HW line, read PASS.
 
+AND THE ROWS AGREE WITH WHAT THE PARTS' DOCUMENTS SAY (stream d4emcon, 27 September 2026, open item S-82 and EMCON.md L6;
+taken by the session under the owner's standing rule of 26 Sep 2026; the rule that a pin no held maker document clears reads
+UNDECIDED is kept, and each UNDECIDED now names the document and the sentence it waits on). Seven changes, each with a
+defective and an acceptable fixture in tests/test_tx_inhibit.py:
+  (a) A SUPERVISOR AND A MONITOR ARE READ BY THEIR MAKERS' ROWS (MONITORS): board B's U221, a TPS3808G30 on the socket rail it
+      watches, is a load there by TI SBVS050N (its RESET an open drain, its MR and CT with nothing to source them once its
+      own VDD falls with the rail); board A's U14, an INA226 with its supply on +3V3, stays UNDECIDED on TI SBOS547C's own
+      note 3 ('Negative leakage currents can occur under different input conditions', no size stated), where it read
+      UNDECIDED on this file's having no row.
+  (b) A FET IS READ BY ITS MAKER'S PINOUT (FET_PINMAPS) where its symbol names its pins after their nets: board A's
+      CSD18510Q5B power FETs. Its rows Q14 and Q24 stay UNDECIDED, now on what TI does not state of the LM5176's gate
+      drivers with the enable low (`drive_off`), where they read 'a transistor whose type or pin map this file cannot read'.
+  (c) THE TLV75801P IS A SWITCH THIS FILE KNOWS (SWITCHES), and THE PA'S GATE BIAS IS AN ENTRY OF THE TABLE: board D's J_VGG
+      behind U15, whose enable PA_KEY is forced low by TX_INHIBIT_n through U12 and U14. It reads PASS on the six committed
+      netlists, which is EMCON.md 4.2's local closure of path (b) and CON-010's gate, read by the instrument for the first
+      time. The PA's drain supply on board A stays its own entry.
+  (d) A RAIL WHOSE SWITCH'S ENABLE HANGS ON A DEAD RAIL FALLS WITH IT (_falls_with, in own_supply): board D's U21 takes +5V_TX,
+      and the exciter with it, down with +3V3_D8, so the SA868's keying is no longer judged with its gates' rail down and
+      the exciter powered, a state the board removed in its round 8. The SA868 stays UNDECIDED on what NiceRF does not state
+      (no input threshold and no input current for PTT) and on the SN74LVC1G06's unstated off-state current while powered.
+  (e) THE RADIO'S OWN PINS ARE READ WHILE ITS SUPPLY IS OFF (_anchor_io; limit (1) until now): a `power` option is UNDECIDED
+      while anything can hold a signal pin of the radio up past the switch EMCON opened. On the six committed netlists the
+      RockBLOCK 9704 and the E22-900M30S, which read PASS, and both AW7915-AED cards, read UNDECIDED with the LimeSDR, both
+      E72 and the RM520N-GL: that is EMCON.md SD-EMC-2's back-feed, open at the desk for every one of them but the RM520N-GL,
+      whose bound (4b) this file cannot take because it judges no feed's size (7). The RockBLOCK's row quotes its maker's
+      own requirement on its input pins.
+  (f) A DRIVER WHOSE OWN SUPPLY FALLS WITH THE RAIL DRIVES NOTHING (_net_sources): a push-pull output of a logic part that
+      states Ioff and runs from the gated rail is no source on the radio's pin, so the remedy SD-EMC-2 names, a buffer on the
+      gated rail, can read PASS once it is drawn. No board draws one yet.
+  (g) ANOTHER RADIO ON THE SAME GATED RAIL IS READ IN ITS OWN ROW (_second_sources): board B's two E72 modules share +3V3_ZB.
+On the six set 6 netlists (A 0a2b5908, B 028997a6, C 3fddbb3e, D 7a2c0ac2, E 56adc974, P 760ac6f7) the walk reads, of 26
+results: PASS 15 (both lines, the six Compute Module radios, the PA's gate bias and the six censuses), UNDECIDED 11 (the
+SA868, the PA's drain supply, the QMX and board B's eight gated radios), FAIL 0; before this change, of 25: PASS 18,
+UNDECIDED 7, FAIL 0.
+
 WHAT THE WALK DOES NOT READ (named; RF-002's coverage row carries the same list with gap SOURCE_OR_APPLICABILITY_UNRESOLVED.
 Since the twelfth pass no pin on a gated conductor is a load without a word: each item is a clearance that rests on something
 other than a maker's row, named here so that none is silent, a size or a state the walk does not judge, or a false UNDECIDED,
@@ -225,8 +260,9 @@ seen):
       flag, a MOSFET's gate (fet_of: an N- or P-channel MOSFET by its symbol or part number), a resistor, a discharge FET or a
       diode to ground or to nothing, a diode whose anode is on the net, and the parts that carry the switch's output to the
       rail. A capacitor fitted reversed, its leakage and a diode's reverse leakage are not judged (7). The transmitter's own
-      anchor part is not read on its own rail, so its own I/O lines (an E22's or an E72's UART held up by its host while its
-      rail is off) are not read there.
+      anchor part is not read on its own rail; its own I/O lines (an E22's or an E72's UART held up by its host while its
+      rail is off) are read since stream d4emcon (_anchor_io), for a `power` option and for the anchor part alone: a lead to
+      the same radio on another connector (board B's J_QMX beside board A's J_HF) is a declared accessory and is not read.
   (2) The rows clear by a stated leakage or rating whose size is not judged (7): a logic input by II, a logic VCC by Ioff, a
       switch's enable by IEN or IENLKG; II is stated with VCC in its range, and an input of a part with no Ioff row whose VCC
       is down is read on it too. A switch's input is cleared only with nothing holding up a pin of it that no row clears (the
@@ -310,6 +346,20 @@ seen):
       driven to the reader's own rail. Their VT- is read at the 3 V row over the whole band (0.80 V and 0.84 V minimum, at or
       above VIL_LOW, as every row either sheet states at 3 V and above is), an inference from rows that rise with VCC, not a
       stated band. No held net on the six committed netlists is read HIGH at either family.
+
+  NAMED BY STREAM d4emcon (27 September 2026):
+  (15) A PART IS READ BY ITS NUMBER, NOT BY ITS MAKER. Board D's 74LVC1G08 (U9, U10, U12, U14) are TECH PUBLIC's (LCSC
+      C19829591, v2/vendor/techpublic/techpublic-74lvc1g08gv-c19829591.pdf, an image-only sheet read from renders) and are
+      read by the row of TI's SN74LVC1G08. The two sheets state the same pin map (A 1, B 2, GND 3, Y 4, VCC 5), VIL 0.8 V at
+      VCC 3.0 V to 3.6 V, input leakage +-5 uA and IOFF +-10 uA at VCC 0 V (TECH PUBLIC page 3, -40 to +125 C), so no reading
+      moves; a second maker's part whose figures differed would be read on the wrong row, in silence.
+  (16) A RAIL IS UP OR DOWN. The band in which a falling logic rail leaves a gate's output unspecified (0 V to 1.65 V for
+      the LVC single gates, EMCON.md L4) is not a state here: _falls_with() takes a rail down at 0 V, and the dividers that
+      close the band (boards A, B and D) are read on the feasibility page and on bench E-11.
+  (17) A LED OR A STRAP ON A RADIO'S OWN PIN IS A HOLDER. _anchor_io reads every signal pin of the anchor with
+      _net_sources(), which takes a connector, a firmware part's pin and a diode from a live net as able to hold a net up
+      whatever they are for: a card's LED pin behind its lamp, a module output read by an expander's input, a SIM holder. Each
+      is named; none is judged by size or by direction.
 
 AND IT WALKS WHAT MAIN 458b2873's BOARD B DRAWS (round 6 fourth pass, R4T-D46 and R4T-D47). S-01 inverts EMCON_HW once with a
 2N7002 switch to ground (Q11, EMCON_ON pulled up by R513) and gates each module radio with an SN74LVC32A OR; the WiFi cards'
@@ -628,7 +678,12 @@ SWITCHES = [
          off_cite="SNVSAI1D 6.5 and 7.3.3: VEN(OP) 1.17 V minimum, below which 'the PWM controller is disabled'; out of the "
                   "pin, IEN(STBY) 3 uA maximum in standby (VEN/UVLO 1.1 V) plus dIHYS(OP) 4.25 uA maximum once EN/UVLO "
                   "exceeds the operating threshold (VEN/UVLO 1.5 V), 7.25 uA at the threshold from above, -40 to +125 C "
-                  "junction"),
+                  "junction",
+         # what the maker states of its gate drivers with the enable low (stream d4emcon, 27 September 2026): the sentence a
+         # FET on the gated rail whose gate the controller drives is left UNDECIDED on
+         drive_off="TI SNVSAI1D 7.4.1 (page 20) gives the mode as 'Shutdown: VCC off, No switching', 6.5 (page 8) states "
+                   "VUV(BOOT1,2) 'HDRV1,2 shut off' and the drivers' pulldown resistance with VBOOT - VSW = 7 V, and no "
+                   "page states the level of HDRV1, HDRV2, LDRV1 or LDRV2 once VCC is off"),
     dict(name="AP64500 buck", value=r"AP64500", fp=r"SOIC-8|SO-8", en="3", out=[], sw=["8"], vin=["2"],
          cite="Diodes AP64500, DS41979 Rev. 5-2, Pin Descriptions: EN 3 'Drive EN high to turn on the regulator and "
               "low to turn it off', SW 8 'the switching node that supplies power to the output', VIN 2 'Power Input'",
@@ -639,6 +694,17 @@ SWITCHES = [
          off_cite="DS41979 Rev. 5-2, Electrical Characteristics, -40 to +85 C: VEN_L 1.03 V minimum; IEN 1 to 2 uA at VEN "
                   "1 V and 5.5 uA typical with no maximum at VEN 1.5 V, out of the pin ('Connect to VIN or leave floating "
                   "for automatic startup')"),
+    # BOARD D's U15 (stream d4emcon, 27 September 2026; EMCON.md L6: "the TLV75801P enable (the walk stops at D's U15 pin
+    # 4)"): the PA's gate bias VGG is the output of a TI TLV75801PDRVR whose EN is PA_KEY = KEY AND PA_EN, and KEY is forced
+    # low by TX_INHIBIT_n. Its enable current is stated as a typical figure only (10 nA, no maximum), so a hold of its enable
+    # against that current is not bounded (R4T-D29) and en_leak is None: such a hold reads UNDECIDED wherever it is judged.
+    dict(name="TLV758P adjustable LDO (WSON)", value=r"TLV758\d*P", fp=r"WSON|SON-6", en="4", out=["1"], sw=[], vin=["6"],
+         cite="TI TLV758P, SBVS351D (October 2023), Table 4-1 Pin Functions, DRV (WSON): OUT 1 'Regulated output voltage pin', "
+              "FB 2, GND 3, EN 4 'Drive EN less than VEN(LO) to put the LDO into shutdown mode', DNC 5, IN 6 'Input pin' "
+              "(v2/vendor/ti/ti-tlv758p.pdf)",
+         en_off=0.3, en_leak=None,
+         off_cite="SBVS351D 5.5 Electrical Characteristics (page 6), TJ -40 to +125 C: VEN(LO) 0.3 V maximum, VEN(HI) 1.0 V "
+                  "minimum; IEN 'Enable pin current' 10 nA typical at VIN = EN = 6.0 V, with no maximum stated"),
 ]
 OFF_LEVEL = 0      # every enable in SWITCHES is active high
 # A SWITCH'S OUTPUT HELD ABOVE ITS INPUT (round 6 eleventh pass, R4T-D65, the review of the tenth pass, minor L1: "consider
@@ -656,7 +722,10 @@ _REVERSE = {r"TPS22810": _TPS22810_REVERSE,
                          "then passes from OUT to IN",
             r"AP64500": "DS41979 Rev. 5-2 Absolute Maximum Ratings (page 5 of 26): VSW at most 'VIN + 0.3 (DC)' V, so a switch "
                         "node held above VIN once VIN falls with the rail (its output held up through the inductor) stands "
-                        "above that rating, and no held page says what the part then passes into VIN"}
+                        "above that rating, and no held page says what the part then passes into VIN",
+            r"TLV758\d*P": "SBVS351D 7.1.5 Reverse Current (page 19): 'Reverse current flows through the body diode on the pass "
+                           "transistor instead of the normal conducting channel', one condition being 'The output is biased "
+                           "when the input supply is not established', and 5.1 (page 4) rates VOUT at most 'VIN + 0.3' V"}
 for _sw in SWITCHES:
     _sw["reverse"] = _REVERSE.get(_sw["value"])
 # THE ENABLE PIN ON A GATED NET IS READ BY ITS MAKER'S WORDS (round 6 twelfth pass, R4T-D71; the review of the eleventh pass,
@@ -682,6 +751,9 @@ _EN_ROWS = {
                                "'A 4uA hysteresis pullup current source on the EN pin'",
                      en_from_vin="Pin Descriptions (page 3): VIN 'supplies the power to the IC as well as the step-down "
                                  "converter power MOSFETs', so the internal VCC those sources run from is made from VIN"),
+    r"TLV758\d*P": dict(en_clear="SBVS351D Table 4-1 Pin Functions (page 3): EN 'Input'; 5.5 Electrical Characteristics (page "
+                                 "6): IEN 'Enable pin current' 10 nA typical at VIN = EN = 6.0 V (a typical figure, no maximum "
+                                 "is stated); no pull-up and no current source is stated at the pin"),
 }
 for _sw in SWITCHES:
     _sw.update(_EN_ROWS.get(_sw["value"]) or {})
@@ -730,16 +802,61 @@ def switch_of(nl, ref):
     return None
 
 
+# A FET READ BY ITS MAKER'S PINOUT (stream d4emcon, 27 September 2026; taken by the session under the owner's standing rule
+# of 26 September 2026). fet_of() read a FET only where the netlist names its pins G, S and D. Board A's power FETs are
+# drawn on a generated symbol whose pins carry their nets' names (Q14: pins 1 to 3 'PA_SW2', 4 'PA_HDRV2', 5 'PA_OUT'), so
+# the walk read each as "a transistor whose type or pin map this file cannot read", which is a statement about this file and
+# not about the part: the maker's sheet is held and gives the pinout. A row here is the maker's own Top View for the package
+# the land is, as LOGIC's maps are; a FET of the family on another land, a pin the map does not place, or two pins of one
+# terminal on different nets, is not read (None, as before). Every pin of one terminal is one node, so the readers take the
+# first of them as that terminal's pin and skip the others (_fet_canon).
+FET_PINMAPS = [
+    dict(name="CSD18510Q5B", value=r"CSD18510Q5B", fp=r"PowerPAK_SO-8|SON-8|VSON", kind="N",
+         G=("4",), S=("1", "2", "3"), D=("5", "6", "7", "8", "9"),
+         cite="TI CSD18510Q5B, SLPS632 (March 2017), page 1, Top View of the SON 5 mm x 6 mm package: S 1, S 2, S 3, G 4, "
+              "D 5, D 6, D 7, D 8; 5.1 (page 3): IDSS 1 uA maximum at VGS 0 V, VDS 32 V; VGS(th) 1.2 V to 2.3 V "
+              "(v2/vendor/battery/ti-csd18510q5b.pdf)"),
+]
+
+
+def fet_map(nl, ref):
+    """The FET_PINMAPS row a part is read by, or None: its value names the part, its land is the package the row's pinout
+    is for, and its netlist names no G, S and D of its own."""
+    c = nl["comps"].get(ref) or {}
+    if not ref.startswith("Q"): return None
+    return next((r for r in FET_PINMAPS if re.search(r["value"], c.get("value", ""), re.I)
+                 and re.search(r["fp"], c.get("fp", "") or "", re.I)), None)
+
+
 def fet_of(nl, ref):
-    """("N" | "P", {G, S, D: pin}) for a FET whose netlist names its pins G/S/D, else None."""
+    """("N" | "P", {G, S, D: pin}) for a FET whose netlist names its pins G/S/D, or whose maker's pinout is held
+    (FET_PINMAPS, where the dict also carries `_roles`, {pin: terminal}, every pin of the part), else None."""
     c = nl["comps"].get(ref) or {}
     if not ref.startswith("Q"): return None
     txt = c.get("lib", "") + " " + c.get("value", "")
     kind = "P" if re.search(r"PMOS|BSS84|P-FET|P-channel|Q_PMOS", txt, re.I) else \
            "N" if re.search(r"NMOS|2N7002|BSS138|AO3400|N-FET|N-channel|Q_NMOS", txt, re.I) else None
-    if not kind: return None
     m = {nl["func"].get((ref, p), ""): p for p in pins_of(nl, ref)}
-    return (kind, {k: m[k] for k in ("G", "S", "D")}) if all(k in m for k in ("G", "S", "D")) else None
+    if kind and all(k in m for k in ("G", "S", "D")):
+        return (kind, {k: m[k] for k in ("G", "S", "D")})
+    row = fet_map(nl, ref)
+    if row is None: return None
+    ps = pins_of(nl, ref)
+    roles = {p: t for t in ("G", "S", "D") for p in row[t] if p in ps}
+    if set(ps) - set(roles): return None                              # a pin the maker's pinout does not place
+    out = {"_roles": roles, "_cite": row["cite"]}
+    for t in ("G", "S", "D"):
+        mine = sorted((p for p, r in roles.items() if r == t), key=lambda x: (len(x), x))
+        if not mine or len({nl["pin"].get((ref, p), "") for p in mine}) != 1: return None   # absent, or split over two nets
+        out[t] = mine[0]
+    return (row["kind"], out)
+
+
+def _fet_canon(pp, pin):
+    """The pin a FET's readers take for `pin`'s terminal: `pin` itself for a FET read by its own pin names, the first pin of
+    the same terminal for one read by its maker's pinout (every pin of a terminal is one node)."""
+    r = (pp.get("_roles") or {}).get(pin)
+    return pp[r] if r else pin
 
 
 def nfet_pins(nl, ref):
@@ -880,6 +997,7 @@ def reach(nl, only=None):
                 continue
             q = nfet_pins(nl, ref)
             if q is not None:
+                if pin != _fet_canon(q, pin): continue                  # a second pin of a terminal already read (FET_PINMAPS)
                 g_net, s_net = nl["pin"].get((ref, q["G"]), ""), nl["pin"].get((ref, q["S"]), "")
                 if pin in (q["D"], q["S"]) and is_rail(g_net) and lvl == 0:
                     other = q["S"] if pin == q["D"] else q["D"]
@@ -978,6 +1096,67 @@ def protection_of(nl, ref):
     """The PROTECTION_ROWS row for a part, by its value and its land, else None (R4T-D71)."""
     c = nl["comps"].get(ref) or {}
     return next((r for r in PROTECTION_ROWS if re.search(r["value"], c.get("value", ""), re.I)
+                 and re.search(r["fp"], c.get("fp", "") or "", re.I)), None)
+
+
+# A SUPERVISOR OR A MONITOR ON A GATED RAIL IS READ BY ITS MAKER'S ROWS (stream d4emcon, 27 September 2026, open item S-82;
+# taken by the session under the owner's standing rule of 26 September 2026). Board B's U221 (a TPS3808G30 on +3V3_S2A, the
+# rail it watches) and board A's U14 (an INA226 across the PA rail's shunt) were parts "no class here reads", so the RM520N-GL
+# and the PA read UNDECIDED on this file's gap and not on anything their makers say. Each row is the maker's pin table for the
+# package the land is, and every pin has a role that decides how it is read on a net that falls with a gated rail:
+#   vdd      the part's supply: a load while no pin of a role `pulled`, `timing` or `clamped` is held up from a live net off
+#            the rail (its maker ties or rates each of those to the supply, so what holds one up reaches the supply);
+#   input    an input its maker rates whatever the supply is and whose current it states INTO the pin: a load;
+#   od       an open-drain output, which only pulls low, by its maker's words: a load;
+#   pulled   a pin its maker ties to the supply inside the part; timing, a pin its maker rates at most the supply plus 0.3 V:
+#            each a load while the part's supply falls with the net or is on no live net, UNDECIDED with the supply up
+#            elsewhere (the part then sources the pin from that supply);
+#   analog   a measuring input whose maker states it independent of the supply AND that current can leave the pin under
+#            other input conditions without sizing it (the INA226's note 3): a load while the part's supply falls with the
+#            net or is on no live net, UNDECIDED with the supply up elsewhere, naming the sentence;
+#   clamped  a pin rated at most the supply plus 0.3 V (the INA226's SCL): read as `timing`;
+#   address  a strapping input with no stated current: UNDECIDED on a gated net.
+# A pin the row does not place is UNDECIDED; the part's ground with its supply up FAILS, as any part's does (_ground_read).
+MONITORS = [
+    dict(name="TPS3808 supervisor", value=r"TPS3808", fp=r"SOT-23-6", vdd=("6",), gnd=("2",),
+         roles={"1": "od", "3": "pulled", "4": "timing", "5": "input"},
+         cite="TI TPS3808, SBVS050N (August 2026), Table 5-1 Pin Functions, SOT-23: RESET 1, GND 2, MR 3, CT 4, SENSE 5, VDD 6 "
+              "(v2/vendor/ti/ti-tps3808.pdf)",
+         words={"vdd": "SBVS050N Table 5-1 (page 4): VDD 'Supply voltage' (I), and 6.5 (page 6): IDD 'Supply current (current "
+                       "into VDD pin)'",
+                "input": "SBVS050N Table 5-1 (page 4): SENSE 'is connected to the voltage to be monitored' (I); 6.1 (page 5) "
+                         "rates VSENSE to 7 V with no condition on VDD, and 6.5 (page 6) states ISENSE at the pin, 1.7 uA "
+                         "typical at VSENSE 6.5 V for the fixed versions",
+                "od": "SBVS050N Table 5-1 (page 4): 'RESET is an open-drain output', whose pull-up 'allows the reset pin to "
+                      "attain voltages higher than VDD'; 6.5 (page 6): IOH 'RESET leakage current' 300 nA maximum",
+                "pulled": "SBVS050N Table 5-1 (page 4): 'MR is internally tied to VDD by a 90kOhm pull-up resistor' (6.5, page "
+                          "6: RMR 70 kOhm minimum)",
+                "timing": "SBVS050N 6.1 (page 5): VCT at most 'VDD + 0.3' V, and Table 5-1 (page 4): CT is connected 'to VDD "
+                          "through a 40kOhm to 200kOhm resistor', left open, or to a capacitor to ground"}),
+    dict(name="INA226 monitor", value=r"^INA226", fp=r"VSSOP-10|MSOP-10", vdd=("6",), gnd=("7",),
+         roles={"1": "address", "2": "address", "3": "od", "4": "od", "5": "clamped", "8": "analog", "9": "analog",
+                "10": "analog"},
+         cite="TI INA226, SBOS547C (August 2026), Table 4-1 Pin Functions: A1 1, A0 2, Alert 3, SDA 4, SCL 5, VS 6, GND 7, "
+              "VBUS 8, IN- 9, IN+ 10 (v2/vendor/ti/ti-ina226.pdf)",
+         words={"vdd": "SBOS547C Table 4-1 (page 3): VS 'Power supply, 2.7V to 5.5V'",
+                "od": "SBOS547C Table 4-1 (page 3): Alert 'open-drain output', SDA 'open-drain input/output'; 5.1 (page 4) "
+                      "rates VSDA to 6 V with no condition on VS",
+                "clamped": "SBOS547C 5.1 Absolute Maximum Ratings (page 4): VSCL at most 'VVS + 0.3' V",
+                "address": "SBOS547C Table 4-1 (page 3): A0 and A1 'Address pin. Connect to GND, SCL, SDA, or VS', with no "
+                           "current stated at the pin",
+                "analog": "SBOS547C 6.2 (page 10): 'the common-mode input range and power-supply voltage are independent of "
+                          "each other; therefore, the bus voltage can be present with the supply voltage off, and "
+                          "reciprocally'; 5.5 (page 5) bounds 'Input leakage' at 0.5 uA maximum for '(IN+ pin) + (IN- pin), "
+                          "Power-down mode', and its note 3 (page 6) adds: 'Input leakage is positive (current flowing into "
+                          "the pin) for the conditions shown at the top of this table. Negative leakage currents can occur "
+                          "under different input conditions', whose size no page states"}),
+]
+
+
+def monitor_of(nl, ref):
+    """The MONITORS row for a part, by its value and its land, else None (stream d4emcon)."""
+    c = nl["comps"].get(ref) or {}
+    return next((r for r in MONITORS if re.search(r["value"], c.get("value", ""), re.I)
                  and re.search(r["fp"], c.get("fp", "") or "", re.I)), None)
 # A pin whose direction firmware sets, declared a reader because a series resistor makes the gate's own driver win
 # whatever firmware does: dict(board, ref, pin, through=<resistor ref>, r_min=<ohms>, why=<the arithmetic>). The
@@ -1212,6 +1391,7 @@ def census(boards, walks, k0, n0, level, allowed, target=None, fet_forced=None, 
             fq = fet_of(nl, ref)
             if fq is not None:
                 t, pp = fq
+                if pin != _fet_canon(pp, pin): continue                           # a second pin of a terminal already read
                 if pin == pp["G"]: continue                                       # a FET gate only reads
                 other = pp["D"] if pin == pp["S"] else pp["S"]
                 g_net, o_net = nl["pin"].get((ref, pp["G"]), ""), nl["pin"].get((ref, other), "")
@@ -1746,6 +1926,7 @@ def _network(boards, start, level, st, anchors=None):
             fq = fet_of(nl, ref)
             if fq is not None:
                 t, pp = fq
+                pin = _fet_canon(pp, pin)                                     # every pin of a terminal is one node (FET_PINMAPS)
                 ff = fet_family(nl, ref)
                 if pin == pp["G"]:                                            # a gate only reads, and it is decided here
                     gates.setdefault((k, n), []).append("%s %s gate" % (k, ref))
@@ -2300,6 +2481,61 @@ def _threshold(nl, k, reader, level, anchor_opt):
     return dict(pass_v=None, fail_v=None, why="its maker states no input threshold for this pin")
 
 
+# A RAIL WHOSE SWITCH'S ENABLE HANGS ON THE DEAD RAIL FALLS WITH IT (stream d4emcon, 27 September 2026; taken by the session
+# under the owner's standing rule of 26 September 2026). Board D's round 8 closed L4 case (2) with U21, a TPS22810 whose
+# EN/UVLO is a divider from +3V3_D8 (R90 11 k over R91 10 k) and whose output +5V_TX feeds the exciter, the VGG regulator and
+# the relay coil: with the keying gates' rail down the transmitter has no supply. own_supply() did not read that, so with
+# +3V3_D8 down it judged SA_PTT_n at a powered SA868 that the circuit cannot have, and the row read UNDECIDED in a state the
+# board has removed. Now, with a set of rails down, a rail also falls when it is the OUTPUT of a switch this file knows
+# (its `out` pins; a converter's switch node is not read) whose enable net carries nothing but that enable pin, capacitors,
+# test points and two-pin resistors to ground, to nothing or to a rail that is down, at least one of them to ground, and whose
+# maker bounds the enable's own current (`en_leak`), so that current into the resistors to ground at the top of their tolerance
+# stays under the stated off threshold (`en_off`). A resistor to a dead rail is taken as absent: nothing says what a dead
+# rail's loads hold it at. Anything else on the enable net (a gate's output, a pull to a live rail, a firmware pin, a
+# connector) leaves the switch as it was read before. The 0 V to 1.65 V band of a falling rail (EMCON.md L4) is not judged
+# here: a rail is up or down in this file, and the band is the feasibility page's arithmetic and bench E-11's.
+def _enable_hangs(nl, k, ref, sw, dead):
+    """The highest level (volts) the enable of switch `ref` can sit at with the (board, net) rails in `dead` down, when
+    nothing but resistors to ground or to those rails, capacitors and test points hold it; None when anything else is on
+    its net, when nothing ties it to ground, or when its maker bounds no enable current."""
+    en = nl["pin"].get((ref, sw["en"]), "")
+    if _dead(en) or is_ground(en) or sw.get("en_leak") is None: return None
+    g = 0.0
+    for r2, p2, _f2 in nl["nets"].get(en, []):
+        if (r2, p2) == (ref, sw["en"]) or re.match(r"^(#|TP|C\d)", r2): continue
+        ps = pins_of(nl, r2)
+        if not (re.match(r"^R\d", r2) and len(ps) == 2): return None
+        far = nl["pin"].get((r2, ps[1] if ps[0] == p2 else ps[0]), "")
+        ohm = _ohms(value(nl, r2))
+        if not ohm: return None
+        if is_ground(far): g += 1.0 / (ohm * (1 + _tol(value(nl, r2))))
+        elif _dead(far) or (k, far) in dead: continue
+        else: return None
+    return (sw["en_leak"] / g) if g else None
+
+
+def _falls_with(boards, k, dead):
+    """`dead`, a set of (board, net) rails that are down, with every rail of board `k` that falls with them through a switch
+    whose enable hangs on them (_enable_hangs), and what a bead or a link joins to such a rail, to a fixed point."""
+    nl = boards.get(k)
+    dead = set(dead)
+    if nl is None: return dead
+    again = True
+    while again:
+        again = False
+        for ref in sorted(nl["comps"]):
+            sw = switch_of(nl, ref) if ref.startswith("U") else None
+            if not sw or not sw.get("out"): continue
+            outs = [n for n in _pin_nets(nl, ref, sw["out"]) if (k, n) not in dead]
+            if not outs: continue
+            v = _enable_hangs(nl, k, ref, sw, dead)
+            if v is None or v >= sw["en_off"]: continue
+            for n in outs:
+                for x in _rail_conductor(boards, k, n):
+                    if x not in dead: dead.add(x); again = True
+    return dead
+
+
 def own_supply(boards, walks, k, opt, lv, anchor_pin, anchor_dead_rails):
     """(fail, undecided) for the accepted path lv on board k with each of its elements' own supply down (R4T-F9).
     anchor_pin (ref, pin) is the pin the path ends on; anchor_dead_rails are the (board, net) rails whose loss takes
@@ -2322,6 +2558,8 @@ def own_supply(boards, walks, k, opt, lv, anchor_pin, anchor_dead_rails):
     rel_refs = {ref for ref, kind, _r in elems if kind == "OD_REL"}
     if rel_refs: order.append((frozenset(), None))
     for dead, rname in order:
+        if dead:
+            dead = frozenset(_falls_with(boards, k, dead))     # and every rail whose switch's enable hangs on them
         if dead & set(anchor_dead_rails):
             continue                                           # the transmitter loses its supply with the element
         dead_keys = {(kk, n) for kk, n in dead}
@@ -2435,7 +2673,14 @@ _AW_NONE = ("no maker document states what W_DISABLE1# does on this card: AsiaRF
             "proved on the bench (owner ruling D-05, 26 September 2026)")
 TRANSMITTERS = [
     dict(name="LimeSDR Mini 2.4 in its USB 3 bay", options=[dict(board="B", ref="J_LIME", kind="power")]),
-    dict(name="RockBLOCK 9704 (Iridium)", options=[dict(board="B", ref="J_RB9704", kind="power")]),
+    dict(name="RockBLOCK 9704 (Iridium)", options=[dict(
+        board="B", ref="J_RB9704", kind="power",
+        # the maker's own requirement on the module's pins while it is shut down (stream d4emcon, 27 September 2026)
+        io_words="Ground Control, RockBLOCK 9704 hardware page (v2/vendor/rockblock/groundcontrol-docs-rockblock-9704-hardware-"
+                 "20260927.txt, fetched 27 September 2026), pin 7 I_BTD: 'When this pin is LOW there should be no voltage "
+                 "applied to any input pins, other than I_EN which will cause the 9704 to boot if driven high', and 'When "
+                 "not booted, the output states of the RockBLOCK 9704, with the exception of I_BTD, are to be considered "
+                 "undefined'")]),
     dict(name="E22-900M30S LoRa", options=[dict(board="B", ref="U12", kind="power")]),
     dict(name="E72 CC2652P Zigbee coordinator", options=[dict(board="B", ref="U13", kind="power")]),
     dict(name="E72 CC2652P OpenThread RCP", options=[dict(board="B", ref="U14", kind="power")]),
@@ -2465,7 +2710,21 @@ TRANSMITTERS = [
              # this pin with its driver unpowered can FAIL (floating, or a pull on a rail that dies with the driver)
              # and cannot PASS until NiceRF states them or the bench measures them
              pin_model=None, v_safe=None)]),
+    # THE PA HAS TWO HARDWARE PATHS, EACH READ ON ITS OWN BOARD (EMCON.md 4.2, L6; stream d4emcon, 27 September 2026): (a) its
+    # drain supply on board A, the entry this table always had, and (b) its gate bias on board D, the lead J_VGG from the
+    # TLV75801P U15 whose enable PA_KEY = KEY AND PA_EN is forced low by TX_INHIBIT_n, which is the path CON-010 names the
+    # EMCON gate of the APRS transmitter. They are two entries and not two options of one: an entry passes on any one option,
+    # so as options a regression of board A's gate to software-only drive would read PASS on board D's path and decide
+    # nothing on board A, and a result would name a board that did not decide it. (b) is read as a supply gate on the pin
+    # the lead carries (`supply_pins`), with the module maker's words for what the module does with no gate voltage
+    # (`bias_cite`), which the PASS quotes. The kit still has 17 transmitters; this table has 18 entries.
     dict(name="30 W VHF power amplifier (RA30H1317M1 on the plate)", options=[dict(board="A", ref="J_PA", kind="power")]),
+    dict(name="30 W VHF power amplifier, its gate bias (RA30H1317M1 pin 2, VGG)", options=[
+        dict(board="D", ref="J_VGG", kind="power", supply_pins=("1",),
+             bias_cite="Mitsubishi RA30H1317M1 datasheet (v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf, publication date "
+                       "Oct. 2011), page 1: pin 2 'Gate Voltage (VGG), Power Control'; 'Enhancement-Mode MOSFET Transistors "
+                       "(IDD~0 @ VDD=12.5V, VGG=0V)'; 'With a gate voltage around 3.5V (minimum), output power and drain "
+                       "current increases substantially'")]),
     dict(name="QMX HF transceiver", options=[dict(board="A", ref="J_HF", kind="power")]),
 ]
 
@@ -2476,8 +2735,7 @@ ACCESSORIES = [
     dict(board="B", ref="J_ZBDBG2", value=r"CC2652P cJTAG", why="a cJTAG bench header of an E72, on the gated +3V3_ZB"),
     dict(board="D", ref="J_PAIN", value=r"PA drive", why="the PA's RF input coax; the PA's supply is board A's J_PA"),
     dict(board="D", ref="J_PAOUT", value=r"PA output", why="the PA's RF output coax; the PA's supply is board A's J_PA"),
-    dict(board="D", ref="J_VGG", value=r"PA gate bias", why="the PA's gate-bias lead, switched on this board by "
-         "PA_KEY; the PA's supply is board A's J_PA, which is the gate this table relies on"),
+    # J_VGG left this list for TRANSMITTERS (stream d4emcon, 27 September 2026): it is the anchor of the PA's path (b).
     # stream w4b, 27 September 2026 (EMCON.md section 8's hand-off for board B's round 8):
     dict(board="B", ref="U221", value=r"TPS3808", why="the TPS3808G30 supervisor on +3V3_S2A that holds the 5G module's "
          "FULL_CARD_POWER_OFF# low for 180 to 420 ms after the rail (SD-EMC-1r8, Quectel's Tpr); its value names the RM520N, "
@@ -3248,7 +3506,55 @@ def _class_pin(nl, ref, pin, fn, falling, _depth=0, _seen=(), notes=None):
                 "rail's switch feeds the net through the diode to VBUS" % (what, "; ".join(held), prot["topology"])
         _merge(notes, tmp)
         return "load", "is the VBUS of %s, and nothing holds its I/O pins up, while %s" % (what, prot["topology"])
+    mon = monitor_of(nl, ref)
+    if mon:
+        return _monitor_pin(nl, ref, pin, fn, mon, falling, _depth, _seen, notes)
     return None, None
+
+
+def _monitor_pin(nl, ref, pin, fn, mon, falling, _depth=0, _seen=(), notes=None):
+    """(verdict, words) for a pin of a supervisor or a monitor (MONITORS) on a net that falls with a gated rail, by the role
+    its maker's row gives the pin (stream d4emcon, 27 September 2026, open item S-82). See MONITORS for the roles."""
+    what = "%s (%s)" % (ref, mon["name"])
+    W, src_doc = mon["words"], _head(mon["cite"])
+    role = "vdd" if pin in mon["vdd"] else "gnd" if pin in mon["gnd"] else mon["roles"].get(str(pin))
+    up = [n for n in _pin_nets(nl, ref, mon["vdd"]) if n not in falling]
+    if role == "gnd":
+        return _ground_read(nl, ref, mon["vdd"], what, falling)
+    if role is None:
+        return "undecided", "is pin %s (%r) of %s, which its row here does not place (%s), so whether it can feed the net is " \
+            "not known" % (pin, fn, what, src_doc)
+    if role == "input":
+        return "load", "is an input of %s, whose maker rates it whatever its supply is and states its current at the pin: %s" % (
+            what, W["input"])
+    if role == "od":
+        return "load", "is an open-drain pin of %s, which only pulls low: %s" % (what, W["od"])
+    if role == "address":
+        return "undecided", "is a strapping input of %s, and its maker states no current at it: %s" % (what, W["address"])
+    if role in ("pulled", "timing", "clamped", "analog"):
+        if up:
+            return "undecided", "is pin %s (%r) of %s, whose supply pin is on %s, which stays up with the rail off, and its " \
+                "maker's words for the pin are: %s" % (pin, fn, what, ", ".join(up), W[role])
+        return "load", "is pin %s (%r) of %s, whose own supply falls with the net or is on no live net, so the part has " \
+            "nothing to source it from: %s" % (pin, fn, what, W[role])
+    # role == "vdd": the part's supply on the net
+    if _depth + 1 > _NS_DEPTH:
+        return "undecided", "is the supply of %s, whose other pins are not read this deep" % what
+    tmp, blocks = [], []
+    for p in sorted(mon["roles"], key=lambda x: (len(x), x)):
+        r = mon["roles"][p]
+        if r not in ("pulled", "timing", "clamped"): continue
+        n = nl["pin"].get((ref, p), "")
+        src = _held(nl, ref, n, falling, _depth, _seen, tmp)
+        if src:
+            blocks.append("its pin %s (%r) is on %s, where %s %s not shown to be unable to hold it up, and %s" % (
+                p, (nl["func"].get((ref, p)) or "").strip(), n, _src_list(src), "is" if len(src) == 1 else "are", W[r]))
+    if blocks:
+        return "undecided", "is the supply pin of %s, and %s, so what holds that pin up reaches the supply" % (
+            what, "; ".join(blocks))
+    _merge(notes, tmp)
+    return "load", "is the supply pin of %s by its maker's pin table (%s), and no pin its maker ties or rates to that supply " \
+        "is held up by anything on its net: %s" % (what, src_doc, W["vdd"])
 
 
 def _join(what, w):
@@ -3348,6 +3654,7 @@ def _net_sources(nl, ref, net, on=None, _depth=0, _seen=None, notes=None):
         if r2.startswith("Q"):
             fq, bj = fet_of(nl, r2), _bjt_pins(nl, r2)
             if fq:
+                if p2 != _fet_canon(fq[1], p2): continue                # a second pin of a terminal already read
                 if p2 == fq[1]["G"]: continue
                 o = nl["pin"].get((r2, fq[1]["D"] if p2 == fq[1]["S"] else fq[1]["S"]), "")
                 if o not in falling and not _local(nl, ref, o, r2): out.append("%s, a channel from %s" % (what, o))
@@ -3370,6 +3677,15 @@ def _net_sources(nl, ref, net, on=None, _depth=0, _seen=None, notes=None):
             out.append("%s, %s" % (what, fam["unwired"])); continue
         gate = next((g for g in fam["gates"] if g[1] == p2), None) if fam else None
         if gate and gate[2] not in OPEN_DRAIN:
+            # A DRIVER WHOSE OWN SUPPLY FALLS WITH THE RAIL DRIVES NOTHING (stream d4emcon, 27 September 2026): a buffer run
+            # from the gated rail itself is the remedy SD-EMC-2 names for a host line into a gated radio, and it could not
+            # be read as one. With its VCC pin on a net that falls with the rail and an Ioff row in its sheet, its output
+            # is disabled with the rail off, by its maker's words, which the PASS carries
+            vccn = _pin_nets(nl, r2, fam.get("vcc") or ())
+            if vccn and all(v in on for v in vccn) and fam.get("ioff") is not None:
+                _merge(notes, ["%s on %s is the push-pull output of %s, whose supply (%s) falls with the rail, and its maker "
+                               "states Ioff for that state (%s)" % (what, net, fam["name"], ", ".join(vccn), fam["leak_cite"])])
+                continue
             out.append("%s, the push-pull output of %s" % (what, fam["name"])); continue
         # R4T-D65, and since the twelfth pass (R4T-D70, R4T-D71) every other pin of a switch, a logic part or a protection
         # part: a load only by its maker's words, which reach `notes`
@@ -3808,6 +4124,16 @@ def _second_sources(nl, k, rail, sref, anchor, accessories, path_refs=None):
     fail, und, notes = [], [], {}
     kind = _supply_test({k: nl}).kind
     starts = [rail] if isinstance(rail, str) else list(rail)
+    # ANOTHER RADIO ON THE SAME GATED RAIL IS READ IN ITS OWN ROW (stream d4emcon, 27 September 2026): board B's two E72
+    # modules share +3V3_ZB, and each read the other as "a part no class here reads" by its supply pin and by its reset and
+    # boot pins behind the rail's pull-ups. A part that is itself the anchor of a `power` option of this file's table on this
+    # board, whose value names a radio (RADIO: the table knows a part by its reference, and a fixture or another board may
+    # carry something else under it) and one of whose supplies this rail is, is a radio whose own pins its own row reads
+    # (_anchor_io), so it is skipped here
+    siblings = {o["ref"] for t in TRANSMITTERS for o in t["options"]
+                if o["kind"] == "power" and o["board"] == k and o["ref"] != anchor and o["ref"] in nl["comps"]
+                and RADIO.search(value(nl, o["ref"])) and not NOT_A_RADIO.search(value(nl, o["ref"]))
+                and set(_anchor_rails(nl, o)) & set(starts)}
     # the parts that carry the switch's output to the rail (an inductor, a shunt): the conductor, not a feed
     cond_refs = set(path_refs) if path_refs is not None else \
         {r for n in starts for r, _p, _f in nl["nets"].get(n, []) if re.match(r"^L\d", r)}
@@ -3835,7 +4161,7 @@ def _second_sources(nl, k, rail, sref, anchor, accessories, path_refs=None):
     while i < len(queue):
         net, where, on_cond = queue[i]; i += 1
         for ref, pin, fn in nl["nets"].get(net, []):
-            if ref in (sref, anchor) or ref in cond_refs or re.match(r"^(#|TP|C\d)", ref): continue
+            if ref in (sref, anchor) or ref in cond_refs or ref in siblings or re.match(r"^(#|TP|C\d)", ref): continue
             ps = pins_of(nl, ref)
             if re.match(r"^R\d", ref):
                 # A RESISTOR TO ANOTHER SUPPLY IS A FEED (second fix-up of round 4, 26 September 2026; R4T-D43): a 0 Ohm
@@ -3875,16 +4201,19 @@ def _second_sources(nl, k, rail, sref, anchor, accessories, path_refs=None):
                                 "table here states that its drive is off with its enable" % (", ".join(own), sref,
                                 ", ".join(drives[x] for x in own))) if own else "")); continue
                 t, pp = fq
+                if pin != _fet_canon(pp, pin): continue                              # a second pin of a terminal already read
                 if pin == pp["G"]: continue                                          # a gate only reads the rail
                 other = pp["D"] if pin == pp["S"] else pp["S"]
                 o_net, g_net = nl["pin"].get((ref, other), ""), nl["pin"].get((ref, pp["G"]), "")
                 if _dead(o_net) or is_ground(o_net) or o_net == net: continue        # a discharge FET only takes current off
+                by = (", read by its maker's pinout (%s)" % _head(pp["_cite"])) if pp.get("_cite") else ""
                 if sref and any(r2 == sref for r2, _p2, _f2 in nl["nets"].get(g_net, [])):
-                    und.append("%s: fed from %s through %s's channel (%s-channel), whose gate %s is driven by %s, the gated "
-                               "switch itself; that its gate drive is off with its enable is not stated here"
-                               % (where, o_net, ref, t, g_net, sref)); continue
-                fail.append("%s: fed from %s through %s's channel (%s-channel, gate on %s), a second switch around the gated one"
-                            % (where, o_net, ref, t, g_net)); continue
+                    sd = (switch_of(nl, sref) or {}).get("drive_off")
+                    und.append("%s: fed from %s through %s's channel (%s-channel%s), whose gate %s is driven by %s, the gated "
+                               "switch itself; that its gate drive is off with its enable is not stated %s"
+                               % (where, o_net, ref, t, by, g_net, sref, ("by its maker: %s" % sd) if sd else "here")); continue
+                fail.append("%s: fed from %s through %s's channel (%s-channel, gate on %s%s), a second switch around the gated one"
+                            % (where, o_net, ref, t, g_net, by)); continue
             sw = switch_of(nl, ref)
             if sw and (pin in sw["out"] or pin in sw["sw"]):
                 fail.append("%s: a second switch output, %s pin %s" % (where, ref, pin)); continue
@@ -3995,6 +4324,46 @@ def _second_sources(nl, k, rail, sref, anchor, accessories, path_refs=None):
                        for (r_, f_, w_), ps_ in sorted(notes.items())]
 
 
+# THE RADIO'S OWN PINS WHILE ITS SUPPLY IS OFF (stream d4emcon, 27 September 2026; EMCON.md SD-EMC-2; taken by the session
+# under the owner's standing rule of 26 September 2026). A `power` option proves that EMCON opens the radio's supply switch and
+# that nothing else feeds the rail. It did not read the radio's own signal pins (limit (1) of the header until this change),
+# so a host line held high into an unpowered radio read PASS in silence: board B's RockBLOCK 9704 with the CP2102N's TXD on
+# its RXD and two pull-ups on its outputs, where its maker writes that with the module shut down 'there should be no voltage
+# applied to any input pins, other than I_EN', and its E22-900M30S with the Compute Module's SPI and control lines on it. A
+# held line reaches the radio through whatever its maker put at that pin, past the switch EMCON opened. Now every pin of
+# the anchor that is not one of its supplies, a ground or a net EMCON forces low is read with _net_sources(): where
+# anything on its net is not shown to be unable to hold it up, the option is UNDECIDED, naming the pin and what holds it,
+# with the maker's words for such a pin where the option carries them (`io_words`) and the statement that none is held where
+# it does not. What clears a pin is what clears any net here: only loads on it (a logic input by its sheet's II, an
+# open-drain output), or a driver whose own supply falls with the rail and whose maker states Ioff (_net_sources). The size
+# of what a held line can feed is not judged (limit (7)): a bound worked out on the feasibility page closes the question at
+# the desk, not here.
+_IO_NONE = ("no held document of the radio's maker states what the unpowered radio passes from such a pin into its supply "
+            "(the back-feed of EMCON.md SD-EMC-2)")
+
+
+def _anchor_io(nl, k, opt, got, falling):
+    """(sentence, words): one sentence naming the pins of a power-gated anchor that something can hold up with its supply
+    off, or None; and the makers' words the pins that nothing can hold up were cleared on, for the PASS to carry."""
+    ref = opt["ref"]
+    own = set(_anchor_rails(nl, opt))
+    held, words = [], []
+    for p in sorted(pins_of(nl, ref), key=lambda x: (len(x), x)):
+        n = nl["pin"].get((ref, p), "")
+        if _dead(n) or is_ground(n) or n in falling or n in own: continue
+        if (got.get(n) or {}).get("level") == 0: continue                # EMCON itself holds this net low
+        tmp = []
+        src = _net_sources(nl, ref, n, falling, 0, None, notes=tmp)
+        if src:
+            held.append("pin %s (%r) on %s, where %s" % (p, (nl["func"].get((ref, p)) or "").strip(), n, _src_list(src)))
+        else:
+            _merge(words, tmp)
+    if not held: return None, words
+    return ("%s's own pins can be held up with its supply off, past the switch EMCON opens: %s%s; %s" % (
+        ref, "; ".join(held[:6]), ("; and %d more pins" % (len(held) - 6)) if len(held) > 6 else "",
+        opt.get("io_words") or _IO_NONE)), words
+
+
 def _path_census(boards, walks, lines, k, g, target):
     """(fail, undecided, boards named, absent) over every net of an accepted path: its asserted line's set-wide
     census, and each later net's conductor with that net's own driver allowed."""
@@ -4066,6 +4435,7 @@ def _judge_option(boards, walks, lines, opt):
         rails = _anchor_rails(nl, opt)
         if not rails: return False, "%s carries no supply rail" % ref, set(), set()
         why, und, good, named, absent = [], [], [], set(), set()
+        falling = set()                                  # the nets of every gated rail's conductor, for the anchor's own pins
         for rail in rails:
             sref, sw, how, spath = _source_switch(nl, rail)
             if not sref:
@@ -4090,10 +4460,19 @@ def _judge_option(boards, walks, lines, opt):
                 why.append("%s: %s" % (rail, "; ".join(f2 + f3 + f9))); continue
             if u2 or u3 or u9:
                 und.append("%s: %s" % (rail, "; ".join(u2 + u3 + u9)))
-            good.append("%s off: %s enable pin %s through %s%s%s" % (
+            good.append("%s off: %s enable pin %s through %s%s%s%s" % (
                 rail, sref, sw["en"], " > ".join(lv["path"]), (" (%s)" % how) if spath["refs"] else "",
                 # R4T-D67: a load on the rail that rests on its maker's sentence is named in the PASS, never silent
-                ("; taken on its maker's words: %s" % "; ".join(n2)) if n2 else ""))
+                ("; taken on its maker's words: %s" % "; ".join(n2)) if n2 else "",
+                ("; what the radio does with this pin at 0 V is its maker's: %s" % opt["bias_cite"]) if opt.get("bias_cite") else ""))
+            falling |= set(spath["nets"])
+        if not why:
+            # THE ANCHOR'S OWN PINS (stream d4emcon, 27 September 2026; limit (1) of the header until now): what can hold a
+            # pin of the radio itself up while its supply is off reaches the radio past its switch (EMCON.md SD-EMC-2)
+            io, io_words = _anchor_io(nl, k, opt, got, falling)
+            if io: und.append(io)
+            elif io_words and good:
+                good[-1] += "; %s's own pins, taken on their makers' words: %s" % (ref, "; ".join(io_words))
         if why: return False, "power: " + "; ".join(why), named | {k}, absent
         if und: return None, "power: " + "; ".join(good) + "; UNDECIDED: " + "; ".join(und), named | {k}, absent
         return True, "power: " + "; ".join(good), named | {k}, absent
