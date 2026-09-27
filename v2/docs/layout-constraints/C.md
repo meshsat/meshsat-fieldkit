@@ -1,6 +1,33 @@
 # Board C (control panel backer): layout constraints
 
-**Bound to the H2 line (after H2, 27 September 2026).** Candidate re-read at `ef144760`: phase C24, netlist
+**Bound to the set 6 candidate (27 September 2026, read at `760d7f41`).** This sheet's inputs stand in the block below,
+one to a line, each with its sha256/16 and the commit it last changed in, with the model and the stack the widths were
+computed on; `v2/ecad/tools/constraints_bound.py` fails when a committed input, the calculation or this sheet's power
+table moves without the others (README, "The bound block"). **Re-read on this candidate: section 2 alone.** Its power
+table is `calc/rail_widths.py`'s output on the inputs below, and the widths, currents and barrel counts the text under
+the table quotes were compared with the table and agree. **Not re-read on this candidate: sections 1 and 3 to 10**,
+which are the readings at `e3aedb25` with the H2 line's changes marked where they stand (`ef144760`, the paragraph
+below). Set 6 changed board C's netlist and intent file in `e28f91a6` (TX_INHIBIT_n fails safe with the panel unpowered;
+the supplies PWR-001 refused are declared): **+3V3 moved and EPD_VCC, LED_RAIL_SW and LED_RAIL are new rows**, each
+marked **SET 6** in the table. A line of the older sections that names a part, a net, a current or a count is compared
+with the netlist and the intent file below before it is followed, and where this sheet and a record disagree the record
+governs (README). Board C is not at layout entry: no board is (`v2/docs/CURRENT-EVIDENCE.md`, which holds the reasons
+current on this candidate; a count of reasons in a paragraph below is its own binding's).
+
+```bound
+sheet      C
+board      c
+read       2026-09-27 at 760d7f41
+current    section 2: the power table, and the figures the text under it quotes from it
+older      sections 1 and 3 to 10: read at e3aedb25, with the H2 line's changes marked at ef144760
+netlist    v2/ecad/pcb-c-display-c8/out/pcb-c-display.net sha256/16 3fddbb3edcd4248a changed e28f91a6
+intent     v2/ecad/pcb-c-display-c8/out/pcb-c-display-intent.json sha256/16 270ebb4ccf1d0e8e changed e28f91a6
+board_file v2/ecad/pcb-c-display-c8/pcb-c-display.kicad_pcb sha256/16 2a273803757c68fb changed 9527a3d2
+model      track_current.width_for_current decision 35 rise 10 K plating 18 um
+stack      JLC06161H-3313 outer 0.0350 mm inner 0.0152 mm
+```
+
+**As re-bound to the H2 line (after H2, 27 September 2026), kept as that binding's record.** Candidate re-read at `ef144760`: phase C24, netlist
 `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net` sha256/16 `11eabc2dddca5161` (round 8, `9f28c238`), intent
 `pcb-c-display-intent.json` `854436c729322993`; the committed board file `2a273803757c68fb` is the four-layer C24.
 The power figures of this sheet are checked against `calc/rail_widths.py` on that intent: +5V and +3V3 read the same.
@@ -31,13 +58,21 @@ candidate then netlist `2834f0d8c4071d56`, intent `5c8d991e3805016a`, 10 blocker
 
 ## 2. Power
 
-| rail | typ / peak A | one outer face, mm | inner, mm | barrels 0.3 / 0.4 / 0.5 mm |
-|---|---|---:|---:|---|
-| +5V (from board B's PANEL_5V over J_PANEL) | 0.60 / 1.00 | 0.15 | 0.89 | 2 / 2 / 1 |
-| +3V3 (TLV75533 LDO U5) | 0.12 / 0.20 | 0.02 | 0.10 | 1 / 1 / 1 |
+The table is `calc/rail_widths.py`'s output on the inputs this sheet's `bound` block names, row for row and cell for
+cell in the intent file's own order, and `v2/ecad/tools/constraints_bound.py` fails when the two differ; the `note`
+column is this sheet's and is not compared (README, "The bound block"). A width of 0.00 is a current under 5 mA at two
+decimals: the fabricator's floor governs there, not the current.
 
-The project file's PWR and RAIL classes are 0.5 mm wide; both rails are far inside them. Board C's feed is protected
-upstream on board B (a 2.0 A hold polyfuse whose copper there is the constraint, `B.md` section 2).
+| rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill | note |
+|---|---|---|---|---:|---:|---:|---|---|
+| +5V | 5.00 | 0.60 / 1.00 | 0.60, typical (PI-001) | 0.15 | 0.06 | 0.89 | 2 / 2 / 1 | from board B's PANEL_5V over J_PANEL |
+| +3V3 | 3.30 | 0.15 / 0.72 | 0.15, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 | **SET 6**, moved in `e28f91a6` (W4C-F5): 0.12 / 0.20 A at the H2 line. The intent file: "the figures cover the child EPD_VCC: its own loads' 0.119 A typical and 0.199 A peak plus EPD_VCC's 0.030 and 0.521 A". The outer widths do not move at two decimals and the inner goes from 0.10 to 0.13 mm. The LDO U5 (TLV75533) is rated under the declared peak: "U5 is rated 500 mA (TI SBVS320D): the excess at the peak is 0.35 uC per on-phase, 24 mV on C2, C28 and C29 at most; U5's average through a refresh is an open item read at bring-up" |
+| EPD_VCC | 3.30 | 0.03 / 0.52 | 0.03, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 | **SET 6**, new in `e28f91a6`, one of the supplies PWR-001 refused at H2: "the e-paper's switched supply: Q5 (AO3401A) from +3V3 to the panel's VDDIO and VDD and to the boost inductor L1". Of its 30 mA typical 10 mA is INFERRED for the boost; the peak is "0.5 A peak into L1 = the boost switch's current class" |
+| LED_RAIL_SW | 5.00 | 0.16 / 0.46 | 0.16, typical (PI-001) | 0.02 | 0.01 | 0.14 | 1 / 1 / 1 | **SET 6**, new in `e28f91a6`, one of the supplies PWR-001 refused at H2: "the lighting supply behind the LIGHTING toggle". Declared at 0.1593 A typical and 0.4619 A peak: "Typical: the lamps at their design currents; peak: every lamp with no forward drop at 5.25 V" |
+| LED_RAIL | 5.00 | 0.14 / 0.44 | 0.14, typical (PI-001) | 0.02 | 0.01 | 0.12 | 1 / 1 / 1 | **SET 6**, new in `e28f91a6`, one of the supplies PWR-001 refused at H2: "the PWM'd lamp rail: Q1 (AO3401A) from LED_RAIL_SW"; "18 lamps behind their series resistors, 8 mA each by design" |
+
+The project file's PWR and RAIL classes are 0.5 mm wide; all five rails are far inside them. Board C's feed is protected
+upstream on board B (F1, since round 8 an MF-MSMF110 with a 1.1 A hold, whose copper there is the constraint, `B.md` section 2).
 
 ## 3. Pairs
 
