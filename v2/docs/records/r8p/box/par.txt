@@ -1,0 +1,29 @@
+BOARD p committed  vs base_regen comps 85/85 nets 55/55 nodes 210/210 libparts 19/19  expected 0  UNEXPECTED 0  => IDENTICAL
+   noise      intent written 2026-09-26 17:52 -> 2026-09-26 22:39
+BOARD p committed  vs int_regen  comps 85/85 nets 55/55 nodes 210/210 libparts 19/19  expected 11  UNEXPECTED 0  => ONLY_EXPECTED
+   noise      intent written 2026-09-26 17:52 -> 2026-09-26 22:39
+   expected   comp J_SMB LCSC field None -> 'C144395', property None -> 'C144395'
+   expected   comp J_TS2 LCSC field 'C5251182' -> 'C131337', property 'C5251182' -> 'C131337'
+   expected   bypass C1 -> U1.1 (PBI): gains class 'A', basis (425 chars), provisional (206 chars)
+   expected   bypass C6 -> U1.32 (BAT_F): gains class 'A', basis (747 chars), provisional (206 chars)
+   expected   bypass C8 -> U1.26 (VCC_F): gains class 'A', basis (605 chars), provisional (206 chars)
+   expected   bypass C14 -> U2.1 (SEC_VDD): gains class 'A', basis (424 chars), provisional (206 chars)
+   expected   schematic body: 1 line(s) removed, 2 added: -		(property "LCSC" "C5251182" (at 706.12 30.48 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes))) | +		(property "LCSC" "C131337" (at 706.12 30.48 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes))) | +		(property "LCSC" "C144395" (at 447.04 168.91 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))
+   expected   schematic: LCSC C131337 sits in the instance of J_TS2 (wanted J_TS2)
+   expected   schematic: LCSC C144395 sits in the instance of J_SMB (wanted J_SMB)
+   expected   bom row J_SMB? LCSC '' -> 'C144395'
+   expected   bom row J_TS2 LCSC 'C5251182' -> 'C131337'
+BOARD p base_regen vs int_regen  comps 85/85 nets 55/55 nodes 210/210 libparts 19/19  expected 11  UNEXPECTED 0  => ONLY_EXPECTED
+   expected   comp J_SMB LCSC field None -> 'C144395', property None -> 'C144395'
+   expected   comp J_TS2 LCSC field 'C5251182' -> 'C131337', property 'C5251182' -> 'C131337'
+   expected   bypass C1 -> U1.1 (PBI): gains class 'A', basis (425 chars), provisional (206 chars)
+   expected   bypass C6 -> U1.32 (BAT_F): gains class 'A', basis (747 chars), provisional (206 chars)
+   expected   bypass C8 -> U1.26 (VCC_F): gains class 'A', basis (605 chars), provisional (206 chars)
+   expected   bypass C14 -> U2.1 (SEC_VDD): gains class 'A', basis (424 chars), provisional (206 chars)
+   expected   schematic body: 1 line(s) removed, 2 added: -		(property "LCSC" "C5251182" (at 706.12 30.48 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes))) | +		(property "LCSC" "C131337" (at 706.12 30.48 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes))) | +		(property "LCSC" "C144395" (at 447.04 168.91 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))
+   expected   schematic: LCSC C131337 sits in the instance of J_TS2 (wanted J_TS2)
+   expected   schematic: LCSC C144395 sits in the instance of J_SMB (wanted J_SMB)
+   expected   bom row J_SMB? LCSC '' -> 'C144395'
+   expected   bom row J_TS2 LCSC 'C5251182' -> 'C131337'
+TOTAL UNEXPECTED over all pairs: 0
+r8p_par exit 0

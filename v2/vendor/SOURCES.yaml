@@ -1718,6 +1718,37 @@ parts:
         currency: "byte-identical to ti.com on 2026-09-26"
         matches_fitted: "requirement, not the part: section 4.5 'the thermistor must have a 10-kOhm typical resistance over the normal operating temperature range and the resistance must be greater than 1.2 MOhm at the PTC trip temperature' (names Murata PRF18BA103QB1RB); the BQ4050 is a sibling gauge of the bq40z50, so applying this section to it is INFERRED"
 
+  - id: pack-blade-fuse-holder
+    function: "the 25 A MINI blade fuse of the pack node and its through-hole holder (P F1; board A's F1 uses the same holder)"
+    boards: [A, P]
+    on_main: true
+    adopted_in: "board P since P1 (appendix 32.62); entry added in round 8 stream p (R8P-04), 26 September 2026, because board P's F1 had no purchase route its own board declares (jlc_retake_45bde541.wrong_model_that_stands)"
+    schematic_name: {text: "25 A mini blade (Keystone 3568 holder): the pack's fuse", where: "v2/ecad/tools/gen_sch_p.py:246"}
+    where_rev: "fc144600"
+    fitted_mpn: "Keystone 3568 (holder); Littelfuse 0297025 MINI 297 25 A (fuse, fitted at build)"
+    package: "Fuse:Fuseholder_Blade_Mini_Keystone_3568 (KiCad land named for the holder)"
+    lcsc: "none carried: hand-fit route (tools/jlc-handfit.txt keys 3568 and '25 A mini blade'; board P's lcsc-allow.txt line, on main since the parts stream's round 8 commit 661ca3a4)"
+    lcsc_reading: {code: C5249699, model: "3568", maker: Keystone, stock: 0, read: "2026-09-26T21:15Z", source: "JLCPCB parts API (round 8 stream p, v2/docs/records/r8p/evidence/jlc-Keystone_3568.json)"}
+    identity: MATCH
+    identity_note: "the land and the value name the Keystone 3568; the catalogue page lists Cat. No. 3568 as the MINI FUSE HOLDER for Littelfuse Mini 297 or 997 series and Bussmann ATM or equivalents. The purchase is by hand (Digi-Key route in tools/jlc-handfit.txt), not a JLCPCB code, because JLCPCB lists the holder at stock 0 and a through-hole blade clip is fitted at build"
+    grade_vs_envelope: "INSIDE: holder UL temperature rating -50 to +145 C; fuse -40 to +125 C operating (tin terminals -40 to +105 C)"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/keystone/M65p42.pdf"
+        doc_id: "Keystone Electronics catalogue M65, page 42 (MINI automotive fuse clips and holders)"
+        revision: "not printed; PDF created 2015-06-26"
+        url: TBD
+        url_effect: "the file carries no source URL in this tree (v2/vendor/sources.txt names the directory only); its currency against keyelco.com is not read here"
+        sha256: "caa141ea51ac68cf80ab6e14ad2075fcfc76206451f4bfe45330005c0deaf395"
+        matches_fitted: "yes: Cat. No. 3568, MINI FUSE HOLDER, For Littelfuse Mini 297 or 997 series/Bussmann ATM or equivalents; specifications (shared with 3557-2): contacts .016 brass, tin-nickel plate; insulator nylon 4/6, UL 94V-0; UL current rating 30 A at 500 V AC; UL temperature rating -50 to +145 C"
+      - path: "v2/vendor/keystone/littelfuse-297-ficcorp.pdf"
+        doc_id: "Littelfuse MINI blade fuse rated 32 V (297 series)"
+        revision: "not printed; PDF created 2014-07-29"
+        url: TBD
+        url_effect: "a copy whose file name records a distributor; currency against littelfuse.com not read here"
+        sha256: "98a7e99bc5bbdf2abc9f329de5b779ea97fc78a3ba9aa8d8fecc0ec5b9c3a778"
+        matches_fitted: "yes: 0297025 25 A, interrupting rating 1000 A at 32 VDC, voltage rating 32 VDC, typical voltage drop 86 mV, cold resistance 2.36 mohm, I2t 625 A2s, operating -40 to +125 C (Sn -40 to +105 C)"
+
   - id: logic-nfet-2n7002
     function: "the project's default logic N-FET (the nfet() helper of every generator): on board P it holds the discharge FET off on the second level's under-voltage output (Q5, new in round 4); on B, C and D it is a level or gating stage"
     boards: [B, C, D, P]
@@ -1973,6 +2004,14 @@ parts:
       what_moved: "board E's J_SMB carries C144395 in its generator since round 8 (gen_sch_e.py:264-265 at the round 8 commit), the recommendation above: LCSC's detail record re-read 2026-09-26T21:18Z gives B4B-XH-A(LF)(SN), JST, 'Contact Plating: Tin', 1x4P, 2.5 mm, 12.4 mm, -25 to +85 C, stock 101,970; C594232's record gives B4B-XH-A-G with 'Contact Plating: Gold'. The held catalogue's page 5 lists B4B-XH-A with a tin-plated post and '(LF)(SN)' on its label, so E's line is MATCH. Board P's J_SMB still takes lcsc_fill.py's MAP code; the round 8 draft moves that line to C144395 as well (board P's generator is its writer's)"
       identity_r8e: "MATCH for E J_SMB (C144395); P J_SMB as filled follows the MAP"
       table_r8e: "JLC-CERTIFIED.tsv carries C144395 CERTIFIED since the cert stream's round 8 run (board P's J_SMB line and board B's DCF77 remote row; jlc_retake_r8cert), but no row for board E's J_SMB on C144395 yet: lcsc_fill neither fills nor refuses it (it is on the line), and the certification re-take over E's declared folder reads it (corrected at integration, 27 September 2026, from the draft's 'no row carries C144395 yet')"
+    update_round8_p:
+      read_on: "2026-09-26"
+      what_moved: "round 8 stream p (R8P-02): board P's J_SMB carries C144395 in its generator (v2/ecad/tools/gen_sch_p.py:514), so no MAP fill decides it; board E's J_SMB carries the same C144395 since its own round 8 (update_r8e above)"
+      lcsc_p: "C144395 (P J_SMB)"
+      lcsc_reading_p: {model: "B4B-XH-A(LF)(SN)", maker: JST, package: "Plugin,P=2.5mm", stock: 108967, read: "2026-09-26T21:09Z", source: "JLCPCB parts API (round 8 stream p; the record is v2/docs/review-packets/battery/evidence/jlc-r8p-C144395.json)"}
+      identity_p: MATCH
+      identity_p_note: "the held catalogue (sha256 9426b136..., page 5, Header, Top entry type table) lists B4B-XH-A, 4 circuits, without boss; post brass, copper-undercoated, tin-plated; note 1 This product displays (LF)(SN) on a label. JLCPCB's model string for C144395 is B4B-XH-A(LF)(SN), tin per its parameters. The mating housing contacts are tin as well"
+      open_on_e: "closed at integration (27 September 2026): board E's J_SMB carries C144395 since its round 8 (update_r8e above), so both ends of the SMBus lead order the same tin header"
 
   - id: jst-ph-headers
     function: "JST PH 1x5 sockets: the four cell thermistors on board P (J_TS, new in round 4) and the two headset leads on board D (J_HS1, J_HS2, already fitted)"
@@ -2004,6 +2043,13 @@ parts:
       what_moved: "the battery candidate merged in d90f30e4: board P's J_TS2 is on main with C5251182, and board D's J_VGG carries the same code. LCSC's product parameters for C5251182 (2026-09-26T18:53Z): B2B-PH-K-S-GW, JST, tin plating, PA66, UL94V-0, -25 to +85 C. The held catalogue still does not say what -GW denotes, so the code stays out of this entry's lcsc field, as the block above decided"
       candidate_match_45bde541: "no: a component mismatch under owner condition 1 until JST's own document lists B2B-PH-K-S-GW. Recommended under the owner's standing rule (the session's): C131337, B2B-PH-K-S(LF)(SN) (JST, stock 86,610 at 2026-09-26T19:00Z), which the held catalogue lists, for P J_TS2 and D J_VGG, and for lcsc_fill.py:159's MAP line, which fills a blank cell-thermistor PH2 line with C5251182"
       table_45bde541: "every JLC-CERTIFIED.tsv row carrying C5251182 (D J_VGG, P4's J_TS, P J_TS2) is WRONG_MODEL with the condition 1 reason since the parts stream's second pass (jlc_retake_45bde541.table_marks)"
+    update_round8_p:
+      read_on: "2026-09-26"
+      what_moved: "round 8 stream p (R8P-03): board P's J_TS2 moves from C5251182 (B2B-PH-K-S-GW) to C131337 (v2/ecad/tools/gen_sch_p.py:419); board D's J_VGG (gen_sch_d.py) still carries C5251182 and is board D's writer's"
+      lcsc_p: "C131337 (P J_TS2)"
+      lcsc_reading_p: {model: "B2B-PH-K-S(LF)(SN)", maker: JST, package: "Plugin,P=2mm", stock: 86615, read: "2026-09-26T21:09Z", source: "JLCPCB parts API (round 8 stream p; the record is v2/docs/review-packets/battery/evidence/jlc-r8p-C131337.json)"}
+      identity_p: MATCH
+      identity_p_note: "the held catalogue (sha256 447624f4..., page 3, Header (Through-hole type) table) lists B2B-PH-K-S, 2 circuits, top entry; post copper alloy, tin-plated; note 1 This product displays (LF)(SN) on a label. JLCPCB's model string for C131337 is B2B-PH-K-S(LF)(SN). J_TS (C157993, B5B-PH-K-S(LF)(SN)) is unchanged and already MATCH above"
 
     update_round8:
       read_on: "2026-09-26"

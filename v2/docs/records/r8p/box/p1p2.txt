@@ -1,0 +1,16 @@
+netlist   comps 85/85 nets 55/55 nodes 210 libparts 19/19  records IDENTICAL  bytes differ
+schematic bytes IDENTICAL, after date normalisation IDENTICAL
+bom       bytes IDENTICAL
+erc       violations 123/123 IDENTICAL
+intent    bypass C6 basis EXPECTED:
+            p1: ...["BAT, the primary supply, behind R5 100 ohm from CELL4. TI SLUSC67B Rev. B: 'The bq4050 gauge has an internal LDO that is internally compensated and does not require an external decoupling capacitor' (8.2.2.2.2, p.33)"]...
+            p2: ...["BAT, the primary supply, behind R5 100 ohm from CELL4. TI SLUSC67B Rev. B: 'The bq4050 gauge has an internal LDO that is internally compensated and does not require an external decoupling capacitor' (8.2.2.2.2, p.33)"]...
+intent    bypass C8 basis EXPECTED:
+            p1: ...["VCC, the secondary supply, behind R7 1 kohm from PACK_P. TI SLUSC67B Rev. B 9, p.42: 'The VCC pin is the secondary power input ... The VCC pin should be connected to the common drain of the CHG and DSG FETs'; Figure 21, p.28, feeds it from the common drain through R9 100 ohm with no capacitor on VCC; 8.2.2.2.2, p.33: no external decoupling capacitor required. The board feeds VCC from PACK_P (the discharge FET's source)"]...
+            p2: ...["VCC, the secondary supply, behind R7 1 kohm from PACK_P. TI SLUSC67B Rev. B 9, p.42: 'The VCC pin is the secondary power input ... The VCC pin should be connected to the common drain of the CHG and DSG FETs'; Figure 21, p.28, feeds it from the common drain through R9 100 ohm with no capacitor from VCC to ground; 8.2.2.2.2, p.33: no external decoupling capacitor required. The board feeds VCC from PACK_P (the discharge FET's source)"]...
+intent    written 2026-09-26 21:22 -> 2026-09-26 22:39 (noise)
+sidecar   generator_file_sha: {"boards/p.json#gen_env": "44136fa355b3678a", "gen_footprints_b16.py": "1012311c0cc661b2", "gen_footprints_e.py": "1c1fab411acfa1d5", "gen_footprints_idc.py": " -> {"boards/p.json#gen_env": "44136fa355b3678a", "gen_footprints_b16.py": "1012311c0cc661b2", "gen_footprints_e.py": "1c1fab411acfa1d5", "gen_footprints_idc.py": "
+sidecar   generator_sha: "d65822321a85f159" -> "21640b801014107a"
+sidecar   taken: "2026-09-26T21:22:47+00:00" -> "2026-09-26T22:39:40+00:00"
+PASS1 vs PASS2: ONLY_EXPECTED
+r8p2_p1p2 exit 0

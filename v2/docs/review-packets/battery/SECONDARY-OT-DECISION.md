@@ -163,7 +163,9 @@ reach the secondary; a pack that reaches it has left every temperature Samsung r
 for inspection is the intended outcome. The secondary therefore never enforces the 60 C limit itself; what does, and the
 circuit that would, are `THERMAL-COORDINATION.md` section 8.
 
-**The sensor.** The secondary has its own 103AT-2 on its own two-way socket, J_TS2 (JST B2B-PH-K-S-GW, C5251182), so an
+**The sensor.** The secondary has its own 103AT-2 on its own two-way socket, J_TS2 (JST B2B-PH-K-S(LF)(SN), C131337
+since round 8, R8P-03; the first build's B2B-PH-K-S-GW, C5251182, is withdrawn because JST's PH catalogue does not list
+the -GW suffix), so an
 unplugged J_TS blinds only the gauge and an unplugged J_TS2 only the second level. It is taped to the cell expected
 hottest (E8's note). Which cell that is depends on the pack's thermal layout (D-06: shrink-wrapped 4S3P in the east pocket
 under board B): **TBD**, owner the pack build; effect: a sensor on a cooler cell delays the secondary by the gradient.
@@ -255,6 +257,12 @@ Components 82 to 85. No other part, pin or net changed. Comment-only edits in th
 (the accuracy model above), the F2 temperature interpretation (BAT-F03), the F1 identity note (BAT-F04), the Q5 bench
 condition. New generator sha256 `e111e10a...fd7a`, identity `4ce12f9caae757d0` (equal to `sch_prov.generator_sha('p')` in
 the worktree and to the candidate netlist's sidecar); main's was `d66ae0a1...3714`.
+
+**Round 8 (26 September 2026, board P's writer).** `candidate/` was rebuilt from the round 8 board P (`MANIFEST.md`,
+Revision table): J_TS2 orders C131337, B2B-PH-K-S(LF)(SN), in place of C5251182 (R8P-03), and J_SMB orders C144395,
+B4B-XH-A(LF)(SN) (R8P-02); no part, pin, net, value or footprint moved (`candidate/netlist-diff-vs-d90f30e4.txt`). The
+table above and the generator sha256 before this paragraph are the first build's record, and so is the gates table
+below (its lcsc_fill row's blank F1 is allowed since the parts stream's round 8, 661ca3a4).
 
 **Gates, base (main regenerated) against new** (`evidence/regeneration/gates-base/`, `gates-new/`):
 

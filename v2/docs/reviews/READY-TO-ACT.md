@@ -74,13 +74,18 @@ sending, public provider options, cost and lead time, and the authorisation stil
   (sha256 `4342c4cb...` and `2dba8588...`), so the circuit the reviewer reads is the committed board P.
 - **Send condition (taken by the session, S-2):** both checks above hold at the commit whose link is sent. Round 8 has a
   board P stream; if it changes `gen_sch_p.py`, the battery stream re-issues `candidate/` and `MANIFEST.md` first, or the
-  link stays at `fc144600` and says so.
+  link stays at `fc144600` and says so. It does change it (stream p: R8P-01 to R8P-03, with R8P-05 and R8P-06 as
+  packet questions), and so did the battery stream's round 8 (THERMAL-COORDINATION.md, TEST-PLAN.md): both were merged
+  at the integration of 27 September 2026, where `candidate/` and `MANIFEST.md` were re-issued with board P's rebuild
+  script in board P's commit. The two checks above are run again at the commit whose link is sent, and the link moves
+  to it; `fc144600` is no longer the revision to send.
 - **Not to send:** `v2/release/review-packets/P-P4-1f614233/` (superseded by `d90f30e4`; it records `1f614233`). Board P's
   committed layout (P4) predates every correction and is not a review input.
 - **Owed, not blocking the send:** board P's `review_packet.py` packet at the sending revision (the change table against
   `1f614233`; section 7). The battery packet already carries the schematic PDF, native files, BOM, netlist diffs and
   calculations.
-- **Scope.** The sixteen questions of `REVIEW-REQUEST.md` section 3 (Q-P0 to Q-P99), the first review's section 2 list
+- **Scope.** The twenty-three questions of `REVIEW-REQUEST.md` section 3 (Q-P0 to Q-P99; round 8 added Q-P15 to Q-P18
+  from the battery stream and Q-P19 to Q-P21 from board P's stream), the first review's section 2 list
   (protection architecture, secondary temperature decision, fuse interpretation, FET and gate behaviour, commissioning
   jumper, the charger with its controller crashed as a state sequence), and the second review's point B (the 62.7 to
   77.5 C secondary window against the 60 C cell limit). Transport (UN 38.3, ADR) is outside it by the packet's own

@@ -1,30 +1,42 @@
 {
  "board": "pcb-p-pack",
- "written": "2026-09-26 13:33",
+ "written": "2026-09-26 22:39",
  "bypass": [
   {
    "cap": "C1",
    "part": "U1",
    "pin": "1",
-   "net": "PBI"
+   "net": "PBI",
+   "class": "A",
+   "basis": "backup reservoir on PBI. TI SLUSC67B Rev. B 8.2.2.2.2, p.33: 'The PBI pin is used as a power supply backup input pin providing power during brief transient power outages. A standard 2.2-uF ceramic capacitor is connected from the PBI pin to ground as shown in Figure 27' (Figure 21, p.28: C13 2.2 uF). Fitted: 2.2 uF, the maker's figure. Seat (A2): 10.1, p.43, 'Place all filter components as close as possible to the device'.",
+   "provisional": "DECOUPLING.md 6 A3: class A removes any millimetre bar for the protection parts' filters and reservoir; it is the session's reading until the qualified battery review (D-09) answers, and is not settled here"
   },
   {
    "cap": "C6",
    "part": "U1",
    "pin": "32",
-   "net": "BAT_F"
+   "net": "BAT_F",
+   "class": "A",
+   "basis": "BAT, the primary supply, behind R5 100 ohm from CELL4. TI SLUSC67B Rev. B: 'The bq4050 gauge has an internal LDO that is internally compensated and does not require an external decoupling capacitor' (8.2.2.2.2, p.33); 'The BAT pin should be connected to the positive termination of the battery stack' (9, p.42); 'The BAT input uses a diode (D1) to isolate and decouple it from the cells in the event of a transient dip in voltage caused by a short-circuit event' (8.2.2.3.1, p.37; Figure 21, p.28: D1 BAT54HT1 from 4P, no capacitor from BAT to ground). The maker gives no figure for this RC: R5 and C6 are the board's own, kept unchanged in front of the qualified battery review, which gets the difference as R8P-05. Seat (A1, A2): 10.1, pp.42-43.",
+   "provisional": "DECOUPLING.md 6 A3: class A removes any millimetre bar for the protection parts' filters and reservoir; it is the session's reading until the qualified battery review (D-09) answers, and is not settled here"
   },
   {
    "cap": "C8",
    "part": "U1",
    "pin": "26",
-   "net": "VCC_F"
+   "net": "VCC_F",
+   "class": "A",
+   "basis": "VCC, the secondary supply, behind R7 1 kohm from PACK_P. TI SLUSC67B Rev. B 9, p.42: 'The VCC pin is the secondary power input ... The VCC pin should be connected to the common drain of the CHG and DSG FETs'; Figure 21, p.28, feeds it from the common drain through R9 100 ohm with no capacitor from VCC to ground; 8.2.2.2.2, p.33: no external decoupling capacitor required. The board feeds VCC from PACK_P (the discharge FET's source), not from SW (the common drain), and adds C8: kept unchanged in front of the qualified battery review, which gets the difference as R8P-05. Seat (A1, A2): 10.1, pp.42-43.",
+   "provisional": "DECOUPLING.md 6 A3: class A removes any millimetre bar for the protection parts' filters and reservoir; it is the session's reading until the qualified battery review (D-09) answers, and is not settled here"
   },
   {
    "cap": "C14",
    "part": "U2",
    "pin": "1",
-   "net": "SEC_VDD"
+   "net": "SEC_VDD",
+   "class": "A",
+   "basis": "VDD of the second-level protector, behind R23 300 ohm from CELL4 (RVD and CVD). TI SLUSEG7D Rev. D Table 8-1 (8.1.1, p.14): supply voltage filter resistance RVD 100 min, 300 nom, 1k max ohm; capacitance CVD 0.05 min, 0.1 nom, 1 max uF. Fitted: 300 ohm and 100 nF, the maker's nominal figures. Seat (A1, A2): 8.4.1, p.17, 'Ensure the RC filters for the Vn and VDD pins are placed as close as possible to the target terminal'.",
+   "provisional": "DECOUPLING.md 6 A3: class A removes any millimetre bar for the protection parts' filters and reservoir; it is the session's reading until the qualified battery review (D-09) answers, and is not settled here"
   }
  ],
  "rails": {
@@ -130,5 +142,28 @@
    "z_se": 50.0
   }
  },
- "pass_through": {}
+ "pass_through": {},
+ "clamps": {
+  "D1": {
+   "direction": "uni",
+   "basis": "SMBJ20A: no C in the suffix, the unidirectional part (Littelfuse, Diodes Inc and MDD number them alike)",
+   "protected": "PACK_P",
+   "return": "PACK_N",
+   "symbol": "Device:D_Zener"
+  },
+  "D2": {
+   "direction": "bi",
+   "basis": "PESD5V0S1BA: Nexperia's S1B type, 'Bidirectional ESD protection diode'",
+   "protected": "SMBC",
+   "return": "PACK_N",
+   "symbol": "Device:D_TVS"
+  },
+  "D3": {
+   "direction": "bi",
+   "basis": "PESD5V0S1BA: Nexperia's S1B type, 'Bidirectional ESD protection diode'",
+   "protected": "SMBD",
+   "return": "PACK_N",
+   "symbol": "Device:D_TVS"
+  }
+ }
 }

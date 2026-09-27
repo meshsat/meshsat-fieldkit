@@ -38,12 +38,14 @@ unchanged; `evidence/` gains the budget script behind `THERMAL-COORDINATION.md` 
 | `candidate/pcb-p-pack.kicad_sch`, `pcb-p-pack.net`, `pcb-p-pack.net.prov.json`, `pcb-p-pack-intent.json` | the matching native KiCad 9 schematic, netlist, provenance and design-intent data |
 | `candidate/pcb-p-pack-bom.csv`, `pcb-p-pack-jlc-bom.filled.csv` | the bill of materials (KiCad export) and the JLC order BOM with LCSC codes |
 | `candidate/pcb-p-pack-erc.rpt` | KiCad ERC report: 123 warnings (library-table and wire-endpoint warnings of the generator), 0 errors |
-| `candidate/netlist-diff-vs-main.txt`, `netlist-diff-vs-first-cycle.txt` | the change against main's board P, part by part and net by net, and against this packet's first cycle (the TS network's two values) |
+| `candidate/netlist-diff-vs-main.txt`, `netlist-diff-vs-first-cycle.txt` | the change against main's board P, part by part and net by net, and against this packet's first cycle (the TS network's two values), both as built at `d90f30e4`: J_TS2's order code there is C5251182, withdrawn in round 8 (R8P-03; the next row) |
+| `candidate/netlist-diff-vs-d90f30e4.txt` | round 8 (26 September 2026): the candidate against the netlist this packet was first built on (`d90f30e4`); two connector order codes, no net, pin, value or footprint (R8P-02, R8P-03) |
 | `candidate/ts_network.py`, `ts_network.out` | the arithmetic behind the secondary's temperature network (OT window and UT margin under one accuracy model) |
 | `v2/ecad/tools/tests/test_pack_secondary_ts.py` | the fixture that holds the secondary's TS property on the generator and the netlist (it fails on main's fixed resistor and on the first cycle's 22 kohm shunt) |
 | `evidence/regeneration/` | the KiCad box run behind `candidate/`: driver, log, environment, parity of main's files, change records, gate verdicts before and after, output hashes, the fixture's recorded runs |
 | `evidence/trm_defaults_check.py`, `trm_defaults_check.out` | the mechanical sweep of the BQ4050 manual for defaults it states two ways (BAT-F13) |
-| `evidence/jlc-queries-bat.json` | the JLC parts API readings for R33, R34 and J_TS2 |
+| `evidence/jlc-queries-bat.json` | the JLC parts API readings for R33, R34 and J_TS2 as first built (C5251182, withdrawn in round 8, R8P-03) |
+| `evidence/jlc-r8p-C131337.json`, `evidence/jlc-r8p-C144395.json` | round 8: the JLC parts API records, byte for byte as read at 2026-09-26T21:09:14Z and 21:09:13Z, of the two JST headers now ordered: C131337 B2B-PH-K-S(LF)(SN) for J_TS2 (R8P-03) and C144395 B4B-XH-A(LF)(SN) for J_SMB (R8P-02) |
 | `MANIFEST.md`, `evidence/check_manifest.py` | the exact revision and the sha256 of every file above and of every document cited, and the release check that they are all present (section 5) |
 
 **Changes in this revision of board P, each with its finding** (the first seven merged on main in `faf8c981`, described in
@@ -59,6 +61,7 @@ the generator's own comments; the last made by this packet):
 | second level BQ7720700, chemical fuse SCF9550-30-05, fuse drive, arming jumper, UV hold, PTC element, test points | decision 40 / D-15 | `:228-244` (PTC), `:247-289` (F2), `:351-502` (second level, fuse drive, UV hold) |
 | terminal capacitors in series | O-12 | `:295-305` |
 | the second level's over-temperature restored (own NTC on J_TS2, R34 270 ohm, R33 18 kohm, TP15; the first cycle's 200 ohm / 22 kohm withdrawn) | BAT-F01 | `:373-419`; `SECONDARY-OT-DECISION.md` section 6 |
+| round 8: J_SMB and J_TS2 order the JST headers the catalogues list (C144395 B4B-XH-A(LF)(SN), C131337 B2B-PH-K-S(LF)(SN)); the four supply-filter entries of the intent declare class A with the maker's clauses (C1, C6, C8, C14); no net, value or footprint moves | R8P-01, R8P-02, R8P-03 | `:220, :413, :419, :514`; after `:575` |
 
 The committed board P layout (P4) predates all of these and is not for review; board P is to be re-placed and routed at
 4 layers, 2 oz (decision 28).
@@ -87,6 +90,8 @@ The committed board P layout (P4) predates all of these and is not for review; b
 | BAT-F19 | the kit with its own pack fitted cannot meet D-02a's +55 C operating margin nor E5's +60 C humidity dwell (nor the +71 C storage margin, if a stored kit were to keep its pack): the cells are rated to +60 C and the inside air is past it at those levels, by arithmetic before any test | **recorded, open** (`THERMAL-COORDINATION.md` section 9a): E3-O and E5 run as deviations with the pack outside the chamber and do not close it; routes: the enclosure heat experiment (TBD), cells rated above +60 C (reopens D-06) or a reading of D-02a (both the owner's) |
 | BAT-F20 | with FET Options CHGIN = 1 (the golden image's 0x3D) the charge inhibit above T3 and the T1 range below it hold the charge FET Q1 off whenever the pack is NOT charging, discharge included (SLUUAQ3A 4.12, 4.13, 14.2.1.1), so the kit's discharge current runs through Q1's body diode: about 2 to 3 W at the one-module reduced load and about 7 W at 10 A, on board P beside F2, R10 and RT1 (CSD17570Q5B, SLPS471D); it happens in hot use above a sensed 42 C and in cold use below 1 C (the round's second independent check, 27 September 2026) | **open** (`THERMAL-COORDINATION.md` sections 0, 4, 6 and 11): not examined against F2's local heat, RT1's trip, OTF or the E3-A, E4-O and P12 pass lines; the temperature ladder is not closed while it stands; Q-P18, Q-TI-10 |
 | BAT-F18 | "the kit charges safely with its controller crashed" was written as a result | **withdrawn** in round 8; restated as the obligations O-CHG-1 to O-CHG-8 (`CHARGER-STATE-SEQUENCE.md` section 6) |
+| R8P-05 | SLUSC67B feeds BAT from the top cell through a Schottky and VCC from the common drain of the two FETs through 100 ohm, with no capacitor from either pin to ground (Figure 21, 8.2.2.3.1, section 9); board P feeds BAT through R5 100 ohm with C6 from CELL4 and VCC through R7 1 kohm with C8 from PACK_P | question Q-P20; not changed (the circuit is frozen for this review) |
+| R8P-06 | SLUSC67B 8.2.2.1.1 (pp.29-30) specifies two capacitors across the two protection FETs, "Using two devices ensures normal operation if one becomes shorted", each with a voltage rating "adequate to hold off the applied voltage if one of the capacitors becomes shorted"; Figure 22 (p.30) and Figure 21 (p.28) draw them (TI's C1 and C2, not board P's) as 0.1 uF each in series from the cell side of the charge FET to PACK+, and 10.1.1 with Figure 47 (p.44) asks for wide copper in their loop. Board P has the terminal pair only (C11 and C12, 8.2.2.1.5). W2's F-DC-03, VERIFIED from TI's text and schematics | question Q-P21; not changed (Q1 and Q2 are packet parts; the circuit is frozen for this review) |
 
 ## 3. Questions for the qualified reviewer
 
@@ -186,7 +191,39 @@ document, the document is in this packet or in the repository at the revision in
     protection kept another way; (b) a separate charge-path FET, so that no body diode carries the discharge under the
     inhibit; or (c) a thermal budget for the diode's heat on board P, carried into the ladder, the mode table, F2's local
     hot condition, RT1's 110 to 133 C trip, OTF on the die and the E3-A, E4-O and P12 pass lines?
-20. **Anything else (Q-P99).** Any item you would block pack PCB release on that these questions miss.
+20. **Filter seats (Q-P19, DECOUPLING.md A3).** The BQ4050's PBI reservoir (C1, 2.2 uF, TI's figure), its BAT and VCC
+    filters (R5 100 ohm with C6 100 nF, R7 1 kohm with C8 100 nF) and the BQ7720700's VDD filter (R23 300 ohm with C14
+    100 nF, TI's nominal values in SLUSEG7D Table 8-1) are placed as class A (`v2/docs/feasibility/DECOUPLING.md` sections
+    5.4 and 6): the capacitor at the pin end of its RC, its ground to the IC's own ground without sharing a high-current
+    conductor, no high-current conductor between it and the pin or alongside, the nearest free seat outside the escape
+    fan, and no millimetre bar. TI's own words are "as close as possible" (SLUSC67B 10.1, SLUSEG7D 8.4.1). Acceptable for
+    these protection parts, or would you set a distance?
+21. **BAT and VCC supply (Q-P20, R8P-05).** TI's application feeds BAT from the top cell through a Schottky, D1 BAT54HT1,
+    "to isolate and decouple it from the cells in the event of a transient dip in voltage caused by a short-circuit event"
+    (SLUSC67B 8.2.2.3.1, p.37; Figure 21, p.28), and says "The VCC pin should be connected to the common drain of the CHG and
+    DSG FETs" (section 9, p.42; Figure 21: through R9 100 ohm), with no capacitor from either pin to ground (the figure's
+    one capacitor on BAT, 0.1 uF across the PTC element RT1, returns to the PTC pin) and PACK sensed through 10 kohm.
+    Board P feeds BAT from CELL4 through R5 100 ohm with C6 100 nF, VCC from PACK_P (the discharge FET's source)
+    through R7 1 kohm with C8 100 nF, and PACK through R6 1 kohm with C7 100 nF (`gen_sch_p.py:170-172`). INFERRED from
+    the FET orientation: TI's common drain is fed from the cells through the charge FET's body diode and from PACK+
+    through the discharge FET's, where board P's PACK_P is fed from the cells only while the discharge FET conducts.
+    Is the board's arrangement acceptable, or should it follow TI's? The session has not changed it: the protection
+    circuit is frozen for this review.
+22. **Protector FET bypass (Q-P21, R8P-06).** TI specifies a pair of capacitors across the protection FETs, besides the
+    terminal pair: "Capacitors C1 and C2 help protect the FETs during an ESD event. Using two devices ensures normal
+    operation if one becomes shorted. To have good ESD protection, the copper trace inductance of the capacitor leads
+    must be designed to be as short and wide as possible. Ensure that the voltage ratings of C1 and C2 are adequate to
+    hold off the applied voltage if one of the capacitors becomes shorted" (SLUSC67B 8.2.2.1.1, pp.29-30). Figure 22
+    (p.30) and Figure 21 (p.28) draw TI's C1 and C2 (not board P's parts of those names) as 0.1 uF each, in series from
+    the cell side of the charge FET (4P) to PACK+, across both FETs; 10.1.1 and Figure 47 (p.44) ask for wide copper in
+    the bypass capacitors' loop. Board P carries the terminal pair only (C11 and C12, 100 nF 50 V each, in series across
+    PACK_P and PACK_N, SLUSC67B 8.2.2.1.5, p.32); on board P, TI's pair would run from SCP_OUT to PACK_P across Q1 and
+    Q2. Should board P fit TI's 2 x 0.1 uF series pair across the FETs, each part rated to hold off the full applied
+    voltage alone with its partner shorted? The session reads that voltage as at least the whole pack, 16.8 V at 4.20 V
+    per cell, across open FETs with PACK+ held at PACK- (INFERRED; a charger or a transient on PACK+ can add to it),
+    which the 50 V class of C11 and C12 would cover. The session has not added the pair: Q1 and Q2 are parts this packet
+    lists and the protection circuit is frozen for this review.
+23. **Anything else (Q-P99).** Any item you would block pack PCB release on that these questions miss.
 
 ## 4. Questions for the part makers (prepared, not sent)
 
@@ -306,7 +343,7 @@ uses a TI BQ4050 gauge with high-side charge and discharge FETs, a TI BQ7720700 
 SCF9550-30-05 chemical fuse, a PTC element at the FETs and a 25 A blade fuse. The charger is a TI BQ25731 on another board.
 
 The review packet, with the schematic PDF, the native KiCad 9 files, the bill of materials, the protection architecture,
-the fault-state tables, the coordinated temperature thresholds and nineteen specific questions, is here:
+the fault-state tables, the coordinated temperature thresholds and twenty-two specific questions, is here:
 [link to v2/docs/review-packets/battery/ at commit ...]
 
 What I am asking for:
