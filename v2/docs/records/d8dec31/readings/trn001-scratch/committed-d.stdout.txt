@@ -1,0 +1,40 @@
+port_protect: board D declares 4 external port(s); 4 found on this netlist
+port_protect: 7 clamp(s) judged for polarity: 0 reversed, 0 drawn with a symbol that does not match the part's direction, 0 unjudged
+  CLAMP D1     OK       K/A       uni    cathode (its K pin) on +5V_D8, anode on the return GND
+  CLAMP D10    N/A      A1/A2     bi     a two-way part (PESD12VL1BA: Nexperia PESD12VL1BA product data sheet, 14 April 2023: 'Low capacitance bidirectional ESD protection diode', section 2 '
+  CLAMP D11    N/A      A1/A2     bi     a two-way part (PESD5V0S1BA: Nexperia's S1B type, 'Bidirectional ESD protection diode'): either way round is correct
+  CLAMP D12    N/A      A1/A2     bi     a two-way part (PESD5V0S1BA: Nexperia's S1B type, 'Bidirectional ESD protection diode'): either way round is correct
+  CLAMP D13    N/A      A1/A2     bi     a two-way part (PESD12VL1BA: Nexperia PESD12VL1BA product data sheet, 14 April 2023: 'Low capacitance bidirectional ESD protection diode', section 2 '
+  CLAMP D14    N/A      A1/A2     bi     a two-way part (PESD5V0S1BA: Nexperia's S1B type, 'Bidirectional ESD protection diode'): either way round is correct
+  CLAMP D9     N/A      A1/A2     bi     a two-way part (PESD5V0S1BA: Nexperia's S1B type, 'Bidirectional ESD protection diode'): either way round is correct
+  J_ANT        2 pin(s), protected off board by the PolyPhaser GTH-SFF-AL SMA surge arrestor at the antenna bulkhead (v2/vendor/polyphaser)  [the VHF antenna SMA: an outdoor conductor with a 30 W transmitte]
+  J_PAOUT      2 pin(s), protected off board by the same PolyPhaser GTH-SFF-AL SMA surge arrestor at the antenna bulkhead that J_ANT declares (v2/vendor/polyphaser). Owner decision 31, ruled 21 September 2026: J_PAOUT's coax goes to the RA30H1317M1 on the plate INSIDE the case, so no conductor of it leaves the enclosure, and every path from outside reaches it through that arrestor and then A22's J_RF1, this board's J_ANT, the T/R relay K1 and the two-section low-pass filter. Read off this board's own netlist: RF_PAOUT - L1 - RF_LPF_M - L2 - RF_LPF_OUT - K1.5 - K1.6 - RF_ANT - J_ANT.  [the power amplifier output to the antenna path, which reaches th]
+  J_HS1        5 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [a headset jack on the face, which a person plugs a headset into]
+  J_HS2        5 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [the second headset jack]
+  SKIPPED J_ANT.2 on GND: a ground or a no-connect, not judged
+  SKIPPED J_PAOUT.2 on GND: a ground or a no-connect, not judged
+  SKIPPED J_HS1.2 on GND: a ground or a no-connect, not judged
+  SKIPPED J_HS1.4 on GND: a ground or a no-connect, not judged
+  SKIPPED J_HS2.2 on GND: a ground or a no-connect, not judged
+  SKIPPED J_HS2.4 on GND: a ground or a no-connect, not judged
+port_protect: 0 connector pin(s) declared internal, 18 connector pin(s) that no entry covers
+  UNCOVERED J_FLANGE.1 on FLANGE_NTC: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_HARN1.1 on USB_D8_P: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_HARN1.10 on SDA: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_HARN1.11 on SCL: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_HARN1.12 on EXP_INT: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_HARN1.13 on +3V3: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_HARN1.15 on ZEROIZE_HW: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_HARN1.16 on AB_SPARE: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_HARN1.2 on USB_D8_N: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_HARN1.7 on TR_APRS: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_HARN1.8 on TX_INHIBIT_n: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_HARN1.9 on PA_EN: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_PAIN.1 on RF_DRV: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_PWR1.1 on +5V_D8: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_USB3.1 on +5V_D8: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_USB3.2 on USB3_N: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_USB3.3 on USB3_P: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_VGG.1 on VGG_SW: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+verdict: port_protect           INCONCLUSIVE of 21 {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 7, "clamps_one_way": 1, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unjudged": 0, "declarations_refused": 0, "declared": 4, "ground_pins_not_judged": 6, "internal_pins": 0, "not_on_netlist": 0, "ports": 4, "uncovered_pins": 18, "unprotected": 0} | every declared external conductor meets a protection part before a chip; 0 clamp(s) could not be judged for polarity and 18 connector pin(s) are covered by no entry of the declaration, so nobody has said whether they leave the case
+rc=3
