@@ -206,26 +206,37 @@ missions longer than the one pack.
 
 ### 3.1 The set as committed
 
-Board figures VERIFIED (re-read) from the committed board files, unchanged since `82dd1e4d`: the copper layer count
-from the board's layer table, the outline as the bounding box of its Edge.Cuts items, 1.6 mm thick throughout. The
-netlist column is the corrected netlist on `main`, which no committed layout carries yet.
+**Re-anchored after handover H2 (27 September 2026).** This section was written at `eadbe571`; its netlist column and
+its evidence paragraph below are re-read at `ef144760`, the H2 line (the netlists of board B's round 8 and set 5,
+unchanged since `b7f96784`), and the `eadbe571` values are kept beside them as history. Every other section of this
+page stays as read at `eadbe571` unless it says otherwise (section 0).
 
-| Board | Phase | Board sha256/16 | Netlist at `eadbe571`, last changed | Copper layers now | Layers ruled | Outline box (mm) | Role |
+Board figures VERIFIED (re-read) from the committed board files, unchanged since `82dd1e4d` (their sha256/16 re-read
+at `ef144760`, the same): the copper layer count from the board's layer table, the outline as the bounding box of its
+Edge.Cuts items, 1.6 mm thick throughout. The netlist column is the committed netlist of the declared phase at the H2
+line, which no committed layout carries yet (SCH-002 FAIL on A and B, INCONCLUSIVE on C, D, E and P).
+
+| Board | Phase | Board sha256/16 | Netlist at the H2 line (`ef144760`), last changed; at `eadbe571` (history) | Copper layers now | Layers ruled | Outline box (mm) | Role |
 |---|---|---|---|---|---|---|---|
-| A power and I/O | A32 | `58e26c67987b1daa` | `2e8923d6853ee4e1`, `458b2873` | 6 | not yet re-decided (P0 layer review, 11 Sep) | 240 x 160 | pack node, charger, every converter, eFuses, power control, the outlet interlock, the RF blind-mate row, the A-B and A-D harnesses, the dock pins |
-| B compute | B21 | `2e64b5bf2d9cd3bc` | `6048ee56c48a028b`, `458b2873` | 6 | eight measured first (decision 43; JLC08161H-2116 in `STACKS`) | 330 x 200 | three CM5 slots, PCIe switches, NVMe and M.2 cards, three USB hub banks with host muxes, three I/O supervisors, Ethernet switch, display switch, radios on USB, secure element, holdover clock |
-| C panel backer | C24 | `2a273803757c68fb` | `2834f0d8c4071d56`, `faf8c981` | 4 | six (decision 27; JLC06161H-3313) | 344 x 228 (U-shaped) | panel controller (RP2040), switches, indicators, e-paper, MAIN button, the kit I2C master |
-| D VHF APRS | D12 | `929bf82d2bf6eed4` | `f13d8b70099ab03e`, `458b2873` | 4 | not yet re-decided | 100 x 80 | SA868 exciter, T/R relay, PA drive and gate bias, full-speed USB hub, codec, headset jacks |
-| E dock strip | E17 | `a462ac2620b9b8d3` | `d910e49c5f5f50b2`, `faf8c981` | 4 | not yet re-decided | 267 x 68 | pack entry, vehicle and solar inputs, the always-on sensor controller (RP2040), sensors, the lid and tamper reed lead, fans, RF float clamps |
+| A power and I/O | A32 | `58e26c67987b1daa` | `da05dc02bc1e612f`, `b7f96784`; was `2e8923d6853ee4e1`, `458b2873` | 6 | not yet re-decided (P0 layer review, 11 Sep) | 240 x 160 | pack node, charger, every converter, eFuses, power control, the outlet interlock, the RF blind-mate row, the A-B and A-D harnesses, the dock pins |
+| B compute | B21 | `2e64b5bf2d9cd3bc` | `8b78c59754a6a0c7`, `caba1876`; was `6048ee56c48a028b`, `458b2873` | 6 | eight measured first (decision 43; JLC08161H-2116 in `STACKS`) | 330 x 200 | three CM5 slots, PCIe switches, NVMe and M.2 cards, three USB hub banks with host muxes, three I/O supervisors, Ethernet switch, display switch, radios on USB, secure element, holdover clock |
+| C panel backer | C24 | `2a273803757c68fb` | `11eabc2dddca5161`, `9f28c238`; was `2834f0d8c4071d56`, `faf8c981` | 4 | six (decision 27; JLC06161H-3313) | 344 x 228 (U-shaped) | panel controller (RP2040), switches, indicators, e-paper, MAIN button, the kit I2C master |
+| D VHF APRS | D12 | `929bf82d2bf6eed4` | `76700a687eb6187f`, `b7f96784`; was `f13d8b70099ab03e`, `458b2873` | 4 | not yet re-decided | 100 x 80 | SA868 exciter, T/R relay, PA drive and gate bias, full-speed USB hub, codec, headset jacks |
+| E dock strip | E17 | `a462ac2620b9b8d3` | `d6137f50059e5cbc`, `b7f96784`; was `d910e49c5f5f50b2`, `faf8c981` | 4 | not yet re-decided | 267 x 68 | pack entry, vehicle and solar inputs, the always-on sensor controller (RP2040), sensors, the lid and tamper reed lead, fans, RF float clamps |
 | E5 dock block | E5 | `686b29a734c55b9a` | none (no schematic) | 2 | not yet re-decided | 43 x 26 | contact targets for A's spring pins, wire lands to E |
-| P pack BMS | P4 | `d79865e7b1aceb95` | `4342c4cbe1b43dc4`, `d90f30e4` | 2 | four at 2 oz (decision 28; JLC04162H-7628 in `STACKS`) | 70 x 44 | BQ4050 gauge and primary protection, BQ7720700 secondary, charge and discharge FETs, blade fuse and chemical fuse |
+| P pack BMS | P4 | `d79865e7b1aceb95` | `085f833362fbbda8`, `7bef62bd`; was `4342c4cbe1b43dc4`, `d90f30e4` | 2 | four at 2 oz (decision 28; JLC04162H-7628 in `STACKS`) | 70 x 44 | BQ4050 gauge and primary protection, BQ7720700 secondary, charge and discharge FETs, blade fuse and chemical fuse |
 
-No board is ready for layout and none is promoted. `CURRENT-EVIDENCE.md`'s headline at `eadbe571`: "Foundations
-incomplete; 0 boards ready for layout; 0 physically verified." Of the 333 rule-board pairs, 8 rest on current-candidate
-evidence, 2 on valid historical evidence, 282 await revalidation, 20 are desk reviews, 0 are physical tests and 21 have
-no evidence; the older 212 of 333 is a historical aggregate of mixed revisions and is not quoted as readiness. What
-holds each board's layout entry is section 14.2. Board B has never routed (B21: 416 open after 40 h,
-`B-FEASIBILITY.md`).
+No board is ready for layout and none is promoted. `CURRENT-EVIDENCE.md`'s headline at the H2 line (`ef144760`, sha256/16
+`7a834fe55aea6ccd`): "Foundations incomplete; 0 boards ready for layout; 0 physically verified." Of the 338 required
+rule-board pairs, 62 rest on current-candidate evidence, 19 on valid historical evidence (66 of the two read PASS), 215
+await revalidation, 21 are desk reviews, 0 are physical tests and 21 have no evidence; the layout-entry reasons are A 7,
+B 7, C 5, D 8, E 5, P 6 and E5 2, 40 in all, after the consolidated re-take of every schematic-phase reading
+(`8ea7867e`). check_contracts.py reads PASS 99 of 99 across the six netlists (pin-map identity and presence only), and
+INT-001 is current on the six boards with a schematic and awaits revalidation on E5 (UNBOUND). The historical aggregate
+of mixed revisions (206 PASS of 338 at `ef144760`) is not quoted as readiness. At `eadbe571` (history): of 333 pairs, 8
+current-candidate, 2 valid historical, 282 awaiting revalidation, 20 desk reviews, 0 physical tests, 21 no evidence.
+What holds each board's layout entry is `CURRENT-EVIDENCE.md`, section "Layout entry, per board" (section 14.2 here is
+the `eadbe571` reading). Board B has never routed (B21: 416 open after 40 h, `B-FEASIBILITY.md`).
 
 ### 3.2 Inputs, outputs and failure boundaries
 
@@ -760,8 +771,10 @@ jumper plug is picked. Its section 7 names what closes each OPEN row, chiefly lo
 unpowered mock-up in a new case of the current moulding. Since 27 September 2026 its checks of the rows that can move
 a board are required before the layout entry of boards A, B, E and P, and that layout entry is BLOCKED on the
 purchase (FEA-007; `CASE-FIT-UNCERTAINTIES.md` sections 1, 2 and 7; `CASE-MARGINS.md` section 7, whose earlier
-fallback to the boards' fabrication release is withdrawn); boards C, D and E5 are not held by it. Nothing is asked of
-the owner; buying the case and the mock-up's parts stays his decision.
+fallback to the boards' fabrication release is withdrawn); boards C, D and E5 are not held by it. (Stated one way after
+H2: the mock-up's checks hold A, B, E and P; FEA-007's layout-entry stage also holds D and E5 on its desk items alone,
+D on W4-F17 and E5 on the dock and blind-mate tolerance stack, and holds C only at fabrication release.) Nothing is
+asked of the owner; buying the case and the mock-up's parts stays his decision.
 
 ### 7.1 The stack in Z (case frame, floor = 0)
 

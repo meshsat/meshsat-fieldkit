@@ -1,11 +1,17 @@
 # Board P (pack BMS): layout constraints
 
-A view over the records at `main` `e3aedb25` (conventions and shared rules: [README.md](README.md)). Candidate: netlist
-`v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net` sha256/16 `4342c4cbe1b43dc4` (at `d90f30e4`), intent `pcb-p-pack-intent.json`
-`59d679f0859fc203`; the committed board file `d79865e7b1aceb95` is the two-layer P4, which predates the schematic and
-decision 28. Board P is not at layout entry: 14 blocker lines (`CURRENT-EVIDENCE.md` lines 138 to 151), among them
-FEA-005 (the thermistor and sense placement constraints, which this sheet writes down for the reviewer) and FEA-006
-(G8). Round 8's board P stream is in its own worktree; re-read this sheet on the netlist that merge commits.
+**Bound to the H2 line (after H2, 27 September 2026).** Candidate re-read at `ef144760`: netlist
+`v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net` sha256/16 `085f833362fbbda8` (round 8, `7bef62bd`), intent
+`pcb-p-pack-intent.json` `6ff1b8129a5c5aff`; the committed board file `d79865e7b1aceb95` is the two-layer P4, which
+predates the schematic and decision 28. The power figures of this sheet are checked against `calc/rail_widths.py` on
+that intent: the pack path's rails read the same. Board P is not at layout entry: **6 reasons at H2**
+(`CURRENT-EVIDENCE.md`): PWR-001 FAIL (BAT_F, PBI, SEC_VDD, SW and VCC_F declared by no rail), SI-001 INCONCLUSIVE,
+BAT-001 FAIL (the gate's table `pcb_pack_protection.yaml` still describes the older generator, REQ-044), FEA-005,
+FEA-006, FEA-007. Known changes of the H2 line: round 8 is merged (`7bef62bd`: the JST headers the catalogues list,
+the supply filters declared class A, the FET bypass pair) with the temperature windows of `73d5df1e`. Every other line below is the reading at `e3aedb25`, not re-read against the H2 netlist; where it and a record disagree, the record governs (README).
+
+As first written: a view over the records at `main` `e3aedb25` (conventions and shared rules: [README.md](README.md)),
+candidate then netlist `4342c4cbe1b43dc4` (at `d90f30e4`), intent `59d679f0859fc203`, 14 blocker lines.
 
 **Board P's placement is frozen only after the qualified battery review R-BAT has answered** (FEA-005's
 FABRICATION_RELEASE stage: "its findings ... are answered before the placement is frozen and board P is released").

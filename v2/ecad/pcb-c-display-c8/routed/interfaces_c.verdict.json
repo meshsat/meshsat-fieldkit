@@ -34,7 +34,7 @@
   },
   "spec": {
    "path": "tools/pcb_interfaces.yaml",
-   "sha256_16": "a30b5d408a3dab93"
+   "sha256_16": "ee6b6b840adddba2"
   }
  },
  "missing_input": null,
@@ -50,16 +50,16 @@
   "INT-001"
  ],
  "runtime": {
-  "python": "3.12.3"
+  "python": "3.11.2"
  },
  "tool": "interfaces_c",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "248b951d750e",
+  "tools_tree_sha": "516c955c71b9e714"
  },
- "ts": "2026-09-27T13:22:42Z",
+ "ts": "2026-09-27T16:44:32Z",
  "verdict": "PASS",
- "version": "391d857966d6",
+ "version": "248b951d750e",
  "writer": {
   "file": "interfaces.py",
   "sha16": "7b7e4f3a0241cf35"
