@@ -164,32 +164,53 @@ def search(ctx, entry, cap_fp, part_fp, pin_pad, intent=None, netlist_pins=None,
     best = None; refused = {}
     max_off = max(math.hypot(v[0], v[1]) for vs in sh.values() for v in vs)
     sides = [False] + ([True] if far_ok else [])
+
+    def consider(cx, cy, which):
+        """Every orientation on every side offered, at one centre; keeps the smallest loop-equivalent distance."""
+        nonlocal best
+        for far in which:
+            for rot in dr.rotations():
+                vs = sh.get((far, rot))
+                if not vs: continue
+                # the rail pad's distance; with the rail pad unknown, the farther of the pads (a bound)
+                d = max(math.hypot(cx + v[0] - px, cy + v[1] - py) for v in vs)
+                loop = dr.loop_equivalent_mm(d, far, ctx.allow_mm or 0.0)
+                if screen is not None and loop > screen + 1e-9: continue
+                if lim["cap_mm"] is not None and loop > lim["cap_mm"] + 1e-9: continue
+                if tighten is not None and loop > tighten + 1e-9: continue
+                if best is not None and loop >= best["loop_mm"] - 1e-9: continue
+                v0 = vs[0]; w, h = v0[2], v0[3]; bx, by = cx + v0[4], cy + v0[5]
+                box = (bx - w / 2.0, by - h / 2.0, bx + w / 2.0, by + h / 2.0)
+                why = _refuse(ctx, entry, box, (cx, cy), far, own_back, near, fans, tht, rules, pcy, side_name,
+                              (px, py), w, h, conv, ref)
+                if why: refused[why] = refused.get(why, 0) + 1; continue
+                best = {"seat": (int(round(cx * MM)), int(round(cy * MM))), "far": far, "rotation": rot,
+                        "d_mm": d, "loop_mm": loop}
+
+    # 1. THE OWN-PIN WINDOW'S OWN SEATS (D3). The window is exactly one capacitor courtyard wide, so a seat in it is
+    #    centred on the pin's axis and no walk around the pin lands on that axis: they are stepped out from the
+    #    courtyard's edge, every 0.05 mm, for a class D or L entry whose pin sits at an edge.
+    if entry.get("class") in ("D", "L") and side_name is not None:
+        nx, ny = {"w": (-1.0, 0.0), "e": (1.0, 0.0), "n": (0.0, -1.0), "s": (0.0, 1.0)}[side_name]
+        ex = pcy[0] if side_name == "w" else pcy[2] if side_name == "e" else px
+        ey = pcy[1] if side_name == "n" else pcy[3] if side_name == "s" else py
+        for k in range(0, int(round(ctx.fan / 0.05)) + 1):
+            consider(ex + nx * k * 0.05, ey + ny * k * 0.05, [False])
+    # 2. THE WALK out from the pin and around it, on the part's side and on the other where that is offered
     r10 = int(round(R_START * 10)); r_end = int(round((reach + max_off) * 10))
     while r10 <= r_end:
         r = r10 / 10.0
         if best is not None and r - max_off > best["loop_mm"] + 1e-9: break
         for ang in range(0, 360, A_STEP):
             th = math.radians(ang); dx, dy = ux * math.cos(th) - uy * math.sin(th), ux * math.sin(th) + uy * math.cos(th)
-            cx, cy = px + dx * r, py + dy * r
-            for far in sides:
-                for rot in dr.rotations():
-                    vs = sh.get((far, rot))
-                    if not vs: continue
-                    # the rail pad's distance; with the rail pad unknown, the farther of the pads (a bound)
-                    d = max(math.hypot(cx + v[0] - px, cy + v[1] - py) for v in vs)
-                    loop = dr.loop_equivalent_mm(d, far, ctx.allow_mm or 0.0)
-                    if screen is not None and loop > screen + 1e-9: continue
-                    if lim["cap_mm"] is not None and loop > lim["cap_mm"] + 1e-9: continue
-                    if tighten is not None and loop > tighten + 1e-9: continue
-                    if best is not None and loop >= best["loop_mm"] - 1e-9: continue
-                    v0 = vs[0]; w, h = v0[2], v0[3]; bx, by = cx + v0[4], cy + v0[5]
-                    box = (bx - w / 2.0, by - h / 2.0, bx + w / 2.0, by + h / 2.0)
-                    why = _refuse(ctx, entry, box, (cx, cy), far, own_back, near, fans, tht, rules, pcy, side_name,
-                                  (px, py), w, h, conv, ref)
-                    if why: refused[why] = refused.get(why, 0) + 1; continue
-                    best = {"seat": (int(round(cx * MM)), int(round(cy * MM))), "far": far, "rotation": rot,
-                            "d_mm": d, "loop_mm": loop}
+            consider(px + dx * r, py + dy * r, sides)
         r10 += int(round(R_STEP * 10))
+    # 3. UNDER THE PIN, on the other side: the seat D5 prices (a dog-bone and a via pair), which no walk that starts
+    #    0.8 mm out reaches
+    if far_ok:
+        for k in range(0, 8):
+            for ang in range(0, 360, 45):
+                th = math.radians(ang); consider(px + math.cos(th) * k * 0.1, py + math.sin(th) * k * 0.1, [True])
     res = {"limit": lim, "rail": how, "far_offered": far_ok, "far_why": far_why, "converter": conv}
     if best is None:
         top = sorted(refused.items(), key=lambda kv: -kv[1])[:3]

@@ -51,7 +51,8 @@ def _fixture(tmp, with_parts):
             fp.Add(p); b.Add(fp)
     path = os.path.join(tmp, "fix.kicad_pcb"); b.Save(path)
     os.makedirs(os.path.join(tmp, "out"), exist_ok=True)
-    json.dump({"bypass": [{"cap": "C1", "part": "U1", "pin": "1", "net": "VDD"}]},
+    json.dump({"bypass": [{"cap": "C1", "part": "U1", "pin": "1", "net": "VDD", "class": "D",
+                           "basis": "the fixture's maker: a capacitor at the supply pin"}]},
               open(os.path.join(tmp, "out", "fix-intent.json"), "w"))
     return path
 

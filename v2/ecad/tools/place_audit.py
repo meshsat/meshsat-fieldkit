@@ -172,19 +172,36 @@ def main(a):
     # with a reason line, the same idiom as erc-allow.txt and lcsc-allow.txt: known, written down, and still counted in the report
     # (8 Sep 2026: declaring the D board's sixteen capacitors blocked a board that was one connection from clean, on a finding whose
     # fix is a floor-plan change across the whole set and an owner decision, so it is recorded rather than hidden or silently passed)
+    # SINCE 27 SEPTEMBER 2026 THIS IS DECISION 42's RULE AND NOT A FOURTH COPY OF THE OLD ONE (MESHSAT-1357, finding F-2 of
+    # stream d6dec). This block held every entry to 3.0 mm whatever its class and let ANY line of the allow file allow
+    # every far capacitor, quoting the file's first line for each: the two defects DECOUPLING.md 3.2(c) and 3.2(f) name
+    # in the board gate, in the placement gate too, which section 8.1 of that page does not list. The limit is the
+    # entry's class's (decoupling_rules.limit), an allowance names its capacitor (`C36: reason`), an allowed capacitor
+    # is a DEVIATION and says so, and a maker's own distance is passed by no allowance. The far side and the ground
+    # pad's via are the board gate's (intent_checks.py) and the placers': before the route there is no via to ask.
+    import decoupling_rules as _dr
     allow = os.path.join(os.path.dirname(os.path.abspath(a[0])) or ".", "bypass-allow.txt")
-    allowed = [l.strip() for l in open(allow).read().splitlines() if l.strip() and not l.startswith("#")] if os.path.exists(allow) else []
+    allowed, allow_refused = _dr.parse_allow(open(allow, encoding="utf-8", errors="replace").read()) if os.path.exists(allow) else ({}, [])
+    for _ln, _line, _why in allow_refused:
+        lines.append("NOTE  bypass-allow.txt line %d %s and allows nothing: %s" % (_ln, _why, _line[:60]))
     if it and it.get("bypass"):
-        pads = {(f.GetReference(), p.GetNumber()): p for f in fps for p in f.Pads()}; far = 0
+        pads = {(f.GetReference(), p.GetNumber()): p for f in fps for p in f.Pads()}
+        tally = {"pass": 0, "justified": 0, "recorded": 0, "fail": 0}
         for e in it["bypass"]:
             pin = pads.get((e["part"], e["pin"])); cap = [p for (ref, num), p in pads.items() if ref == e["cap"] and pin is not None and p.GetNetname() == pin.GetNetname()]
             if pin is None or not cap: continue
             d = math.hypot(cap[0].GetPosition().x - pin.GetPosition().x, cap[0].GetPosition().y - pin.GetPosition().y) / 1e6
-            if d > 3.0:
-                far += 1
-                lines.append("%s  bypass %s sits %.1f mm from %s.%s before the route (3 mm rule)%s" % ("ALLOW" if allowed else "FAIL ", e["cap"], d, e["part"], e["pin"], (" [" + allowed[0][:60] + "]") if allowed else ""))
-        lines.append("INFO  decoupling: %d of %d bypass capacitors within 3 mm of their pin%s" % (len(it["bypass"]) - far, len(it["bypass"]), " (%d allowed by bypass-allow.txt)" % far if allowed and far else ""))
-        if not allowed: coll += far
+            if e.get("class") not in _dr.CLASSES:
+                tally["fail"] += 1
+                lines.append("FAIL   bypass %s to %s.%s before the route: %s" % (e["cap"], e["part"], e["pin"], (_dr.form_problems(e) or ["no ruled class"])[0].split(": ", 1)[-1]))
+                continue
+            st, why = _dr.judge(e, d, allowed.get(e["cap"]))
+            tally[st] += 1
+            if st != "pass":
+                lines.append("%s  bypass %s to %s.%s, class %s, before the route: %s" % ({"fail": "FAIL ", "justified": "ALLOW", "recorded": "INFO "}[st], e["cap"], e["part"], e["pin"], e["class"], why.split(": ", 1)[-1]))
+        lines.append("INFO  decoupling: %d of %d bypass capacitors within their class's limit, rail pad to pin; %d justified deviation(s) named in bypass-allow.txt, %d of a class with no distance, %d past their limit"
+                     % (tally["pass"], len(it["bypass"]), tally["justified"], tally["recorded"], tally["fail"]))
+        coll += tally["fail"]
     else: lines.append("INFO  decoupling: 0 of 0 bypass entries (no intent file or none listed)")
     # 5. two classes A's phases A33 to A35 found only after a five-hour route (15 September 2026, red team round four M1):
     #    a PLANE PAD with no path to its plane (no via of its net within reach, not inside a fill of its net on its own
