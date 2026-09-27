@@ -1,0 +1,934 @@
+{
+ "board": "e",
+ "counts": {
+  "answered_nets": 4,
+  "classes": 49,
+  "contradicted_nets": 0,
+  "decided_nets": 4,
+  "layout_bound_nets": 0,
+  "low_speed_nets": 42,
+  "may_be_long_nets": 4,
+  "signal_nets": 82,
+  "undecided_nets": 36
+ },
+ "inputs": {
+  "board": "e",
+  "board_facts": {
+   "path": "tools/pcb_board_facts.yaml",
+   "sha256_16": "4a0474ddac0b1404"
+  },
+  "board_table": {
+   "path": "tools/boards/e.json",
+   "sha256_16": "72adb2e89b490449"
+  },
+  "critical_k": 6,
+  "document_1": {
+   "path": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
+   "sha256_16": "2ecb40606d4b84fe"
+  },
+  "extent_mm": 335.0,
+  "intent": {
+   "path": "pcb-e1-dock-e7/out/pcb-e1-dock-intent.json",
+   "sha256_16": "b4c90bb84593638b"
+  },
+  "netlist": {
+   "content16": "256cc3f96d41dcab",
+   "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
+   "sha256_16": "f3c1ad6153002976"
+  },
+  "project": {
+   "path": "pcb-e1-dock-e7/pcb-e1-dock.kicad_pro",
+   "sha256_16": "9f3d11f497873838"
+  },
+  "slowest_layer": "JLC04161H-7628 In2.Cu",
+  "stack_table": {
+   "path": "tools/stackup_write.py",
+   "sha256_16": "b55a3c0f58c805c2"
+  },
+  "stacks": [
+   "JLC04161H-7628"
+  ],
+  "t_pd_ps_per_mm": 7.154
+ },
+ "notes": [
+  "1 net(s) whose netlist class differs from the project file's assignment: TRK_LSENSE (netlist PWR,SENSE, project SENSE)"
+ ],
+ "rows": [
+  {
+   "basis": "a bootstrap node riding on a switch node",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "AP63205WU-7 5 V 2 A buck for the controller, the Geiger module and the fans' logic": [
+     "U12"
+    ]
+   },
+   "nets": [
+    "E6_BST"
+   ],
+   "pattern": "*_BST",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a chip's digital supply pin with its decoupling, a local rail",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "RP2040 sensor controller (USB to B16 through the dock)": [
+     "U10"
+    ]
+   },
+   "nets": [
+    "E6_DVDD"
+   ],
+   "pattern": "*_DVDD",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a resistor-divider voltage monitor into an ADC input: a DC level with a filter capacitor on it",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "RP2040 sensor controller (USB to B16 through the dock)": [
+     "U10"
+    ]
+   },
+   "nets": [
+    "CELL_MON",
+    "VIN_MON"
+   ],
+   "pattern": "*_MON",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a power-good flag, an open-drain static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "LM5069MM-2 hot-swap controller: 9 V on, 40 V off, current and power limit": [
+     "U6"
+    ],
+    "RP2040 sensor controller (USB to B16 through the dock)": [
+     "U10"
+    ]
+   },
+   "nets": [
+    "DCIN_PGD"
+   ],
+   "pattern": "*_PGD",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a counted pulse input (Geiger, DCF77): the rate is low and the edge is a comparator's, so it is treated as clocked rather than DC",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "RP2040 sensor controller (USB to B16 through the dock)": [
+     "U10"
+    ]
+   },
+   "nets": [
+    "DCF_PULSE",
+    "GEIGER_PULSE"
+   ],
+   "pattern": "*_PULSE",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a reset or run input, a static level with an RC on it",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "RP2040 sensor controller (USB to B16 through the dock)": [
+     "U10"
+    ]
+   },
+   "nets": [
+    "E6_RUN"
+   ],
+   "pattern": "*_RUN",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a sense line (water level, current sense): a DC or near-DC level read by an ADC or an amplifier",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "RP2040 sensor controller (USB to B16 through the dock)": [
+     "U10"
+    ]
+   },
+   "nets": [
+    "WATER_SENSE"
+   ],
+   "pattern": "*_SENSE",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a shutdown enable, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted": [
+     "U5"
+    ]
+   },
+   "nets": [
+    "TRK_SHDN"
+   ],
+   "pattern": "*_SHDN",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a converter switch node: the fastest edges on this board and its primary radiated source, so it is held to the strict criterion whatever its data rate",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {},
+   "nets": [
+    "FAN1_SW",
+    "FAN2_SW"
+   ],
+   "pattern": "*_SW",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a regulator's internal-supply decoupling node, a local supply",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "LM74700-Q1 ideal-diode controller: 1 VCAP 2 GND 3 EN 4 CATHODE 5 GATE 6 ANODE": [
+     "U3",
+     "U4"
+    ]
+   },
+   "nets": [
+    "U3_VCAP",
+    "U4_VCAP"
+   ],
+   "pattern": "*_VCAP",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a spare contact on the dock block, unconnected to any driver",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "BLK_SPARE"
+   ],
+   "pattern": "BLK_SPARE",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the RP2040 boot-select jumper, a static level read once at reset",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "BOOT_J"
+   ],
+   "pattern": "BOOT_J",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the fan FET's gate drive, switched by the 25 kHz PWM: a gate node with nanosecond edges",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {},
+   "nets": [
+    "FAN1_G",
+    "FAN2_G"
+   ],
+   "pattern": "FAN?_G",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the fan PWM at 25 kHz, a logic-level square wave with fast edges into a gate",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "RP2040 sensor controller (USB to B16 through the dock)": [
+     "U10"
+    ]
+   },
+   "nets": [
+    "FAN1_PWM",
+    "FAN2_PWM"
+   ],
+   "pattern": "FAN?_PWM",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the fan tachometer, two pulses a revolution through a pull-up: under a kilohertz, and the edge is the pull-up's RC rather than a driver's. Declared CLOCKED_DIGI",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "RP2040 sensor controller (USB to B16 through the dock)": [
+     "U10"
+    ]
+   },
+   "nets": [
+    "FAN1_TACH",
+    "FAN2_TACH"
+   ],
+   "pattern": "FAN?_TACH",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "U16's slew-rate capacitor, a ramp of milliseconds when the switch turns on (F-BP-02, 26 September 2026)",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TPS22810DRV": [
+     "U16"
+    ]
+   },
+   "nets": [
+    "GEIGER_CT"
+   ],
+   "pattern": "GEIGER_CT",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the enable of the Geiger rail's load switch U16, a static level from a GPIO with a 100k pull-down (F-BP-02, 26 September 2026)",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "RP2040 sensor controller (USB to B16 through the dock)": [
+     "U10"
+    ],
+    "TPS22810DRV": [
+     "U16"
+    ]
+   },
+   "nets": [
+    "GEIGER_EN"
+   ],
+   "pattern": "GEIGER_EN",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the Geiger tube's anode feed through its series resistor: a high-impedance DC bias, not a signal edge",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "RP2040 sensor controller (USB to B16 through the dock)": [
+     "U10"
+    ]
+   },
+   "nets": [
+    "GEIGER_IN"
+   ],
+   "pattern": "GEIGER_IN",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the hot-swap controller's timer, sense and undervoltage and overvoltage set pins: RC levels and divider taps, deliberately slow",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "LM5069MM-2 hot-swap controller: 9 V on, 40 V off, current and power limit": [
+     "U6"
+    ]
+   },
+   "nets": [
+    "HS_OVLO",
+    "HS_PWR",
+    "HS_TIMER",
+    "HS_UVLO"
+   ],
+   "pattern": "HS_*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the hot-swap FET gate: slew-limited by design, but it is a gate drive and is held to the strict bar",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "LM5069MM-2 hot-swap controller: 9 V on, 40 V off, current and power limit": [
+     "U6"
+    ]
+   },
+   "nets": [
+    "HS_GATE"
+   ],
+   "pattern": "HS_GATE",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the IMU's SPI chip select and its interrupt line, both driven by the RP2040 at a few MHz at most",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "BMI270 six-axis IMU (I2C 0x68): shock and tilt log, motion wake": [
+     "U15"
+    ],
+    "RP2040 sensor controller (USB to B16 through the dock)": [
+     "U10"
+    ]
+   },
+   "nets": [
+    "IMU_CSB",
+    "IMU_INT1"
+   ],
+   "pattern": "IMU_*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "an indicator LED's anode or cathode, a static level or a slow blink",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "RP2040 sensor controller (USB to B16 through the dock)": [
+     "U10"
+    ]
+   },
+   "nets": [
+    "LED_A",
+    "LED_STAT",
+    "LED_STAT_A"
+   ],
+   "pattern": "LED_*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the lightning sensor's interrupt: an edge into a GPIO, rare but not slow",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "RP2040 sensor controller (USB to B16 through the dock)": [
+     "U10"
+    ]
+   },
+   "nets": [
+    "LTG_IRQ"
+   ],
+   "pattern": "LTG_IRQ",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the pack-present line from J_SMB pin 4 through 1k to a GPIO with a 1M pull-up: a static level the gauge samples once a second (S-05, 26 September 2026)",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "RP2040 sensor controller (USB to B16 through the dock)": [
+     "U10"
+    ]
+   },
+   "nets": [
+    "PRES_IO",
+    "PRES_LEAD"
+   ],
+   "pattern": "PRES_*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a FET gate drive",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "LM74700-Q1 ideal-diode controller: 1 VCAP 2 GND 3 EN 4 CATHODE 5 GATE 6 ANODE": [
+     "U3",
+     "U4"
+    ]
+   },
+   "nets": [
+    "Q1_G",
+    "Q2_G"
+   ],
+   "pattern": "Q?_G",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM bootloader (RP2040 datasheet, XIP interface)",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "RP2040 sensor controller (USB to B16 through the dock)": [
+     "U10"
+    ],
+    "W25Q16JVUXIQ 16 Mbit QSPI flash (USON-8: 1 CS 2 DO/IO1 3 WP/IO2 4 GND 5 DI/IO0 6 CLK 7 HOLD/IO3 8 VCC, pad)": [
+     "U11"
+    ]
+   },
+   "nets": [
+    "QSPI_D0",
+    "QSPI_D1",
+    "QSPI_D2",
+    "QSPI_D3",
+    "QSPI_SCLK",
+    "QSPI_SS"
+   ],
+   "pattern": "QSPI_*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "I2C at 100 or 400 kHz with an open-drain pull-up: the edge is set by the pull-up and the bus capacitance, tens to hundreds of nanoseconds",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "BME688 inside climate: temperature, humidity, pressure, gas index (I2C 0x76)": [
+     "U14"
+    ],
+    "BMI270 six-axis IMU (I2C 0x68): shock and tilt log, motion wake": [
+     "U15"
+    ],
+    "RP2040 sensor controller (USB to B16 through the dock)": [
+     "U10"
+    ],
+    "SGP41-D-R4 VOC and NOx gas sensor, battery-bay air (I2C 0x59; DFN-6: 1 VDD 2 VSS 3 SDA 4 n/a to GND 5 VDDH 6 SCL, 7 die pad GND)": [
+     "U17"
+    ]
+   },
+   "nets": [
+    "SCL1"
+   ],
+   "pattern": "SCL*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the data half of the same I2C bus",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "BME688 inside climate: temperature, humidity, pressure, gas index (I2C 0x76)": [
+     "U14"
+    ],
+    "BMI270 six-axis IMU (I2C 0x68): shock and tilt log, motion wake": [
+     "U15"
+    ],
+    "RP2040 sensor controller (USB to B16 through the dock)": [
+     "U10"
+    ],
+    "SGP41-D-R4 VOC and NOx gas sensor, battery-bay air (I2C 0x59; DFN-6: 1 VDD 2 VSS 3 SDA 4 n/a to GND 5 VDDH 6 SCL, 7 die pad GND)": [
+     "U17"
+    ]
+   },
+   "nets": [
+    "SDA1"
+   ],
+   "pattern": "SDA*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the SGP41's VDD behind its 4.7 Ohm and 1 uF filter (datasheet Figure 6): a local supply decoupled at the pin (S-10, 26 September 2026)",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "SGP41-D-R4 VOC and NOx gas sensor, battery-bay air (I2C 0x59; DFN-6: 1 VDD 2 VSS 3 SDA 4 n/a to GND 5 VDDH 6 SCL, 7 die pad GND)": [
+     "U17"
+    ]
+   },
+   "nets": [
+    "SGP_VDD"
+   ],
+   "pattern": "SGP_VDD",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the cold-charge and shore inhibit, a static level through an optocoupler that changes state at most a few times a day",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "RP2040 sensor controller (USB to B16 through the dock)": [
+     "U10"
+    ]
+   },
+   "nets": [
+    "SHORE_INHIBIT"
+   ],
+   "pattern": "SHORE_INHIBIT",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the pack gauge's SMBus to board P (SMBC clock, SMBD data), 100 kHz open-drain with 4.7k pull-ups: the edge is set by the pull-up and the lead's capacitance (MES",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "RP2040 sensor controller (USB to B16 through the dock)": [
+     "U10"
+    ]
+   },
+   "nets": [
+    "SMBC",
+    "SMBD"
+   ],
+   "pattern": "SMB?",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the SWD debug port, a few MHz and used only on a bench with a probe attached",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "RP2040 sensor controller (USB to B16 through the dock)": [
+     "U10"
+    ]
+   },
+   "nets": [
+    "SWCLK",
+    "SWDIO"
+   ],
+   "pattern": "SW*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the lid reed contact through a 100k pull-up and a 10k/100n filter: a static level that changes when the lid is opened or shut (S-11, 26 September 2026)",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "RP2040 sensor controller (USB to B16 through the dock)": [
+     "U10"
+    ]
+   },
+   "nets": [
+    "TAMPER_IO",
+    "TAMPER_LEAD"
+   ],
+   "pattern": "TAMPER_*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the tracker's bottom gate drives, as above",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted": [
+     "U5"
+    ]
+   },
+   "nets": [
+    "TRK_BG1",
+    "TRK_BG2"
+   ],
+   "pattern": "TRK_BG*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the tracker's bootstrap nodes, which ride on the switch nodes and carry the same edges",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted": [
+     "U5"
+    ]
+   },
+   "nets": [
+    "TRK_BOOST1",
+    "TRK_BOOST2"
+   ],
+   "pattern": "TRK_BOOST*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the tracker's current-sense inputs across a shunt: millivolts of DC with a filter",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted": [
+     "U5"
+    ]
+   },
+   "nets": [
+    "TRK_CSN",
+    "TRK_CSP"
+   ],
+   "pattern": "TRK_CS*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the tracker's feedback divider taps: a DC level inside the control loop, filtered",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted": [
+     "U5"
+    ]
+   },
+   "nets": [
+    "TRK_FBIN",
+    "TRK_FBOUT"
+   ],
+   "pattern": "TRK_FB*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the tracker's current-monitor outputs, a DC level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted": [
+     "U5"
+    ]
+   },
+   "nets": [
+    "TRK_IMONI",
+    "TRK_IMONO"
+   ],
+   "pattern": "TRK_IMON*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the tracker's internal LDO output, a local supply with its own decoupling",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted": [
+     "U5"
+    ]
+   },
+   "nets": [
+    "TRK_INTVCC"
+   ],
+   "pattern": "TRK_INTVCC",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the tracker's 3.3 V LDO output, a local supply",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted": [
+     "U5"
+    ]
+   },
+   "nets": [
+    "TRK_LDO33"
+   ],
+   "pattern": "TRK_LDO33",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the tracker's frequency-setting resistor node, a DC bias",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted": [
+     "U5"
+    ]
+   },
+   "nets": [
+    "TRK_RT"
+   ],
+   "pattern": "TRK_RT",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the tracker's soft-start capacitor node, a ramp of milliseconds",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted": [
+     "U5"
+    ]
+   },
+   "nets": [
+    "TRK_SS"
+   ],
+   "pattern": "TRK_SS",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the tracker's top gate drives: amperes into a FET gate in nanoseconds",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted": [
+     "U5"
+    ]
+   },
+   "nets": [
+    "TRK_TG1",
+    "TRK_TG2"
+   ],
+   "pattern": "TRK_TG*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the tracker's error-amplifier compensation node, a capacitor and a resistor to ground",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted": [
+     "U5"
+    ]
+   },
+   "nets": [
+    "TRK_VC"
+   ],
+   "pattern": "TRK_VC",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the tracker's gate-drive supply rail, decoupled at the pin",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "TRK_VCC1"
+   ],
+   "pattern": "TRK_VCC1",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "answered": {
+    "USB_DM_R": "series resistor R30 27R to USB_E6_N (a screen)",
+    "USB_DP_R": "series resistor R29 27R to USB_E6_P (a screen)",
+    "USB_E6_N": "series resistor R30 27R to USB_DM_R (a screen)",
+    "USB_E6_P": "series resistor R29 27R to USB_DP_R (a screen)"
+   },
+   "basis": "USB 1.1 full speed at 12 Mbit/s into the RP2040's own transceiver: the bit rate is slow and the EDGES are nanoseconds, which is what the return path sees",
+   "class": "HIGH_SPEED_DIGITAL",
+   "critical_mm": 93.2,
+   "document": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
+   "drivers": {
+    "RP2040 sensor controller (USB to B16 through the dock)": [
+     "U10"
+    ]
+   },
+   "layout_bound": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 93.2 mm",
+   "nets": [
+    "USB_DM_R",
+    "USB_DP_R",
+    "USB_E6_N",
+    "USB_E6_P"
+   ],
+   "pattern": "USB_*",
+   "rise_ns": 4.0,
+   "source": "USB2-FS",
+   "status": "DECIDED",
+   "why": "USB 2.0 Table 7-9, TFR and TFF, 10 to 90 percent, a minimum: v2/vendor/standards/usb-2-0-specification-2024-09-27.md"
+  },
+  {
+   "basis": "the water probe's excitation, a DC level through a series resistor",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "WATER_A"
+   ],
+   "pattern": "WATER_A",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the 12 MHz crystal oscillator's drive node, a continuous periodic source and its loop is the classic emitter",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "RP2040 sensor controller (USB to B16 through the dock)": [
+     "U10"
+    ]
+   },
+   "nets": [
+    "XIN"
+   ],
+   "pattern": "XIN",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the other half of the same 12 MHz oscillator loop",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "RP2040 sensor controller (USB to B16 through the dock)": [
+     "U10"
+    ]
+   },
+   "nets": [
+    "XOUT",
+    "XOUT_R"
+   ],
+   "pattern": "XOUT*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  }
+ ],
+ "rule": "SI-001"
+}

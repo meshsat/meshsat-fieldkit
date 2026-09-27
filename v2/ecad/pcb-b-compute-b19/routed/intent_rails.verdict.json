@@ -1,40 +1,193 @@
 {
  "advisory": false,
  "applicable": true,
- "counts": {
-  "fail": 0,
-  "pass": 39
+ "code_bundle": {
+  "entry": "intent_checks.py",
+  "files": {
+   "boardorder.py": "298e46edcc028954",
+   "boardtable.py": "41bd92e61f12c374",
+   "hardset.py": "be29a44c4a592876",
+   "intent.py": "f1ac033e0f3c10f1",
+   "intent_checks.py": "1ad7af0c718ba940",
+   "kicad_compat.py": "6b8f77490466e939",
+   "netclass.py": "4cc1adf0ddae0390",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "return_via.py": "b61d138e54955dd4",
+   "rules_lib.py": "c0458c53923d7925",
+   "signal_class.py": "60b8647301428da4",
+   "signalnets.py": "688be12d8e42e7a4",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "5aa3d5157698ae2a",
+  "unresolved": []
  },
- "denominator": 39,
- "evidence": [],
+ "counts": {
+  "census_nets": 1929,
+  "checks": 70,
+  "declared_nodes": 14,
+  "declared_not_in_netlist": 0,
+  "declared_rails": 41,
+  "fail": 29,
+  "held_pin_roles": 265,
+  "nodes_supplying_parts": 0,
+  "power_nets": 69,
+  "rails_without_destination": 0,
+  "settled": 53,
+  "switches_unresolved": 0,
+  "undecided": 26,
+  "undeclared": 28,
+  "unmarked": 662
+ },
+ "denominator": 70,
+ "evidence": [
+  "census of the 1929 nets: 69 counted, 105 declared node, 0 ground, 53 settled, 1014 unconnected, 26 undecided, 662 unmarked",
+  "undecided, named and not counted (26): GNSS_ANT, GNSS_BIAS, IOCA_RST_n, IOCB_RST_n, IOCC_RST_n, LORA_ANT, MDI_A_N, MDI_A_P, MDI_B_N, MDI_B_P, MDI_C_N, MDI_C_P, MDI_D_N, MDI_D_P, POE_DRAIN, POE_GATE, POE_P, POE_RST_n, POE_SEN, Q1C, Q2C, Q3C, SIM2_VCC, nRPIBOOT1, nRPIBOOT2, nRPIBOOT3",
+  "settled, they supply nothing (53): BOB, BSEL1_D, BSEL2_D, BSEL3_D, CANT2_A, CANT2_B, CANT_A, CANT_B, E22_CT, E72_CT, HUB1_RST_n, HUB1_VBUS, HUB1_XI, HUB1_XO, HUB2_RST_n, HUB2_VBUS, HUB2_XI, HUB2_XO, HUB3_RST_n, HUB3_VBUS, HUB3_XI, HUB3_XO, IOCA_LDO_EN, IOCA_XI, IOCA_XO, IOCB_LDO_EN, IOCB_XI, IOCB_XO, IOCC_LDO_EN, IOCC_XI, IOCC_XO, KSZC_SS, KSZ_RST_n, KSZ_XI, KSZ_XO, S1A_COMPC, S1B_COMPC, S1C_SS, S1D_SS, S2A_COMPC, S2B_COMPC, S2C_SS, S2D_SS, S3A_COMPC, S3B_COMPC, S3C_SS, S3D_SS, TCT1, TCT2, TCT3, TCT4, U23_DVDT, U24_DVDT",
+  "power net DEV_BST is a declared rail (it is not: supply pin by its held datasheet (U25.6 BST: v2/vendor/diodes/diodes-ap63200-series-buck.pdf))",
+  "power net GNSS_3V3 is a declared rail (it is not: supply pin by name (U15.6 VDD), and capacitor C43 joins it to ground)",
+  "power net GNSS_VDD_RF is a declared rail (it is not: supply pin by its held datasheet (U11.9 VDD_RF: v2/vendor/quectel/lg290p03-hardware-design-v1.1.pdf))",
+  "power net IOCA_VCAP is a declared rail (it is not: supply pin by name (U41.48 VCAP, U41.73 VCAP), and capacitor C407 joins it to ground)",
+  "power net IOCB_VCAP is a declared rail (it is not: supply pin by name (U51.48 VCAP, U51.73 VCAP), and capacitor C427 joins it to ground)",
+  "power net IOCC_VCAP is a declared rail (it is not: supply pin by name (U61.48 VCAP, U61.73 VCAP), and capacitor C447 joins it to ground)",
+  "power net KSZC_BST is a declared rail (it is not: supply pin by its held datasheet (U26.6 BST: v2/vendor/ti/ti-tps62933.pdf))",
+  "power net RB_3V3 is a declared rail (it is not: supply pin by name (U18.6 VDD), and capacitor C59 joins it to ground)",
+  "power net S1A_BOOT is a declared rail (it is not: supply pin by its held datasheet (U103.1 BST: v2/vendor/diodes/diodes-ap64500.pdf))",
+  "power net S1B_BOOT is a declared rail (it is not: supply pin by its held datasheet (U104.1 BST: v2/vendor/diodes/diodes-ap64500.pdf))",
+  "power net S1C_BST is a declared rail (it is not: supply pin by its held datasheet (U105.6 BST: v2/vendor/ti/ti-tps62933.pdf))",
+  "power net S1D_BST is a declared rail (it is not: supply pin by its held datasheet (U106.6 BST: v2/vendor/ti/ti-tps62933.pdf))",
+  "power net S2A_BOOT is a declared rail (it is not: supply pin by its held datasheet (U203.1 BST: v2/vendor/diodes/diodes-ap64500.pdf))",
+  "power net S2B_BOOT is a declared rail (it is not: supply pin by its held datasheet (U204.1 BST: v2/vendor/diodes/diodes-ap64500.pdf))",
+  "power net S2C_BST is a declared rail (it is not: supply pin by its held datasheet (U205.6 BST: v2/vendor/ti/ti-tps62933.pdf))",
+  "power net S2D_BST is a declared rail (it is not: supply pin by its held datasheet (U206.6 BST: v2/vendor/ti/ti-tps62933.pdf))",
+  "power net S3A_BOOT is a declared rail (it is not: supply pin by its held datasheet (U303.1 BST: v2/vendor/diodes/diodes-ap64500.pdf))",
+  "power net S3B_BOOT is a declared rail (it is not: supply pin by its held datasheet (U304.1 BST: v2/vendor/diodes/diodes-ap64500.pdf))",
+  "power net S3C_BST is a declared rail (it is not: supply pin by its held datasheet (U305.6 BST: v2/vendor/ti/ti-tps62933.pdf))",
+  "power net S3D_BST is a declared rail (it is not: supply pin by its held datasheet (U306.6 BST: v2/vendor/ti/ti-tps62933.pdf))",
+  "power net SIM1_VCC is a declared rail (it is not: supply pin by type (J_SIM1.1); supply pin by name (J_SIM1.1 VCC), and capacitor C286 joins it to ground)",
+  "power net SIMC2_VCC is a declared rail (it is not: supply pin by type (J_SIM2.1); supply pin by name (J_SIM2.1 VCC), and capacitor C289 joins it to ground)",
+  "power net VBAT is a declared rail (it is not: power class PWR in the netlist; supply pin by name (U30A.76 VBAT, U31A.76 VBAT, U32A.76 VBAT, U9.6 VBAT), and supply pins of 4 parts share it; supply pin by its)",
+  "power net VBUS_FLASH1 is a declared rail (it is not: power class PWR in the netlist; supply pin by name (J_FLASH1.A4 VBUS, J_FLASH1.A9 VBUS, J_FLASH1.B4 VBUS, J_FLAS), and supply pins of 2 parts share it)",
+  "power net VBUS_FLASH2 is a declared rail (it is not: power class PWR in the netlist; supply pin by name (J_FLASH2.A4 VBUS, J_FLASH2.A9 VBUS, J_FLASH2.B4 VBUS, J_FLAS), and supply pins of 2 parts share it)",
+  "power net VBUS_FLASH3 is a declared rail (it is not: power class PWR in the netlist; supply pin by name (J_FLASH3.A4 VBUS, J_FLASH3.A9 VBUS, J_FLASH3.B4 VBUS, J_FLAS), and supply pins of 2 parts share it)",
+  "power net ZBA_3V3 is a declared rail (it is not: supply pin by name (U16.6 VDD), and capacitor C48 joins it to ground)",
+  "power net ZBB_3V3 is a declared rail (it is not: supply pin by name (U17.6 VDD), and capacitor C50 joins it to ground)",
+  "the count of declared rails equals the count of power nets carrying more than 0.00 A: 41 declared (41 of them nets of the netlist), 69 power nets not declared as nodes (by kind, a net counted under each that applies: 38 power-symbol, 15 supply-pin by type, 57 power-class, 44 supply-pin by name, 49 supply-pin by its held datasheet, 14 reached by a rail's current, 41 declared rails), 14 declared as nodes; undeclared: DEV_BST, GNSS_3V3, GNSS_VDD_RF, IOCA_VCAP, IOCB_VCAP, IOCC_VCAP, KSZC_BST, RB_3V3, S1A_BOOT, S1B_BOOT, S1C_BST, S1D_BST, S2A_BOOT, S2B_BOOT",
+  "undecided, named and not counted: GNSS_ANT: it carries the mark of a supply (M5 a lead: J_GNSS1 carries it with only ground beside it, from L3) and nothing read settles it: J_GNSS1.1, L3.2",
+  "undecided, named and not counted: GNSS_BIAS: it carries the mark of a supply (M3 resistor R23 (10R) joins it to the power net GNSS_VDD_RF, and no integrated circuit is on it) and nothing read settles it: L3.1",
+  "undecided, named and not counted: IOCA_RST_n: it carries the mark of a supply (M1 capacitor C409 to ground) and nothing read settles it: U41.14, U42.4",
+  "undecided, named and not counted: IOCB_RST_n: it carries the mark of a supply (M1 capacitor C429 to ground) and nothing read settles it: U51.14, U52.4",
+  "undecided, named and not counted: IOCC_RST_n: it carries the mark of a supply (M1 capacitor C449 to ground) and nothing read settles it: U61.14, U62.4",
+  "undecided, named and not counted: LORA_ANT: it carries the mark of a supply (M5 a lead: J_LORA1 carries it with only ground beside it, from U12) and nothing read settles it: J_LORA1.1, U12.21",
+  "undecided, named and not counted: MDI_A_N: class HV in the netlist, a clearance class whose nets carry a supply current or only its control, which the netlist does not tell apart",
+  "undecided, named and not counted: MDI_A_P: class HV in the netlist, a clearance class whose nets carry a supply current or only its control, which the netlist does not tell apart",
+  "undecided, named and not counted: MDI_B_N: class HV in the netlist, a clearance class whose nets carry a supply current or only its control, which the netlist does not tell apart",
+  "undecided, named and not counted: MDI_B_P: class HV in the netlist, a clearance class whose nets carry a supply current or only its control, which the netlist does not tell apart",
+  "undecided, named and not counted: MDI_C_N: class HV in the netlist, a clearance class whose nets carry a supply current or only its control, which the netlist does not tell apart",
+  "undecided, named and not counted: MDI_C_P: class HV in the netlist, a clearance class whose nets carry a supply current or only its control, which the netlist does not tell apart",
+  "undecided, named and not counted: MDI_D_N: class HV in the netlist, a clearance class whose nets carry a supply current or only its control, which the netlist does not tell apart",
+  "undecided, named and not counted: MDI_D_P: class HV in the netlist, a clearance class whose nets carry a supply current or only its control, which the netlist does not tell apart",
+  "undecided, named and not counted: POE_DRAIN: class HV in the netlist, a clearance class whose nets carry a supply current or only its control, which the netlist does not tell apart",
+  "undecided, named and not counted: POE_GATE: class HV in the netlist, a clearance class whose nets carry a supply current or only its control, which the netlist does not tell apart",
+  "undecided, named and not counted: POE_P: class HV in the netlist, a clearance class whose nets carry a supply current or only its control, which the netlist does not tell apart",
+  "undecided, named and not counted: POE_RST_n: class HV in the netlist, a clearance class whose nets carry a supply current or only its control, which the netlist does not tell apart"
+ ],
  "inputs": {
-  "board": {
-   "path": "pcb-b-compute.kicad_pcb",
-   "sha256_16": "2e64b5bf2d9cd3bc"
-  }
+  "board": "b",
+  "document_1": {
+   "path": "v2/vendor/diodes/diodes-ap2112-ldo.pdf",
+   "sha256_16": "ef8d376f2ec356e2"
+  },
+  "document_10": {
+   "path": "v2/vendor/ti/ti-tps2065c-slvsau6i.pdf",
+   "sha256_16": "898c093489ac30dd"
+  },
+  "document_11": {
+   "path": "v2/vendor/ti/ti-tps22810-load-switch.pdf",
+   "sha256_16": "10450eedecbc4542"
+  },
+  "document_12": {
+   "path": "v2/vendor/ti/ti-tps62933.pdf",
+   "sha256_16": "16ec2eac43c7374e"
+  },
+  "document_13": {
+   "path": "v2/vendor/ti/ti-tusb8041.pdf",
+   "sha256_16": "b715bce72e988310"
+  },
+  "document_14": {
+   "path": "v2/vendor/ti/tps23861-datasheet.pdf",
+   "sha256_16": "65262ce4766a5f8e"
+  },
+  "document_2": {
+   "path": "v2/vendor/diodes/diodes-ap63200-series-buck.pdf",
+   "sha256_16": "ef99daa3789d835b"
+  },
+  "document_3": {
+   "path": "v2/vendor/diodes/diodes-ap64500.pdf",
+   "sha256_16": "d3bcdc7dd4ca44cb"
+  },
+  "document_4": {
+   "path": "v2/vendor/microchip/microchip-ksz9897-datasheet.pdf",
+   "sha256_16": "72b89179ed6a42a7"
+  },
+  "document_5": {
+   "path": "v2/vendor/nexperia/nexperia-74lvc86a.pdf",
+   "sha256_16": "aa449c7949d141d5"
+  },
+  "document_6": {
+   "path": "v2/vendor/power/ti-csd19532q5b-n-fet.pdf",
+   "sha256_16": "353ce937cff0b719"
+  },
+  "document_7": {
+   "path": "v2/vendor/power/tps2596.pdf",
+   "sha256_16": "66f6bae4494f7bfe"
+  },
+  "document_8": {
+   "path": "v2/vendor/pulse/pulse-h5007nl.pdf",
+   "sha256_16": "76b85b47d0bd9f46"
+  },
+  "document_9": {
+   "path": "v2/vendor/quectel/lg290p03-hardware-design-v1.1.pdf",
+   "sha256_16": "422ca9a2aa5495c1"
+  },
+  "intent": {
+   "path": "pcb-b-compute-b19/out/pcb-b-compute-intent.json",
+   "sha256_16": "cf461c0b75ce368b"
+  },
+  "netlist": {
+   "content16": "70be33b07a339d6e",
+   "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
+   "sha256_16": "669d02d07aeaae4b"
+  },
+  "threshold_a": 0.0
  },
  "missing_input": null,
- "note": "every power-symbol net declared with its loads",
+ "note": "PWR-001 on the committed netlist and the intent file beside it: every power net is a declared rail, and every declared rail is a net of the netlist whose source and loads are on it. A power net is a power-symbol net, a net carrying a pin typed power_in or power_out, a net of a power class in the netlist, a net carrying a supply-named pin that a bypass entry, a capacitor to ground or a second supply pin corroborates, a net carrying a pin its held datasheet makes a supply, or a ground off a ground net (intent_checks.PIN_ROLES, each row carrying every power and ground pin of its table, each document recorded by sha), or a net a declared rail's current reaches through a two-terminal part or a transistor's channel, at a threshold of 0.00 A. FAIL CLOSED: every other net carrying the mark of a supply (a capacitor to ground, a capacitor to a power net or across one part's pins, a fuse, inductor, ferrite, diode, jumper, switch or link resistor to a power net, a transistor channel shared with one, the switched low side of a load, a lead whose other pins are all ground, a sense class) is settled only by what is read (a crystal, a held non-supply pin role, a gate, a sink to ground, a declared clamp, a switch to ground; on a lead or a sense net the connector carries what the read pins carry) and is otherwise undecided; an undecided net holds the reading at INCONCLUSIVE when nothing fails, and the census names every net's disposition. A power net declared as a node is reported, and refused when it carries the supply pins of two or more parts. Session decisions of 26 September 2026 under the owner's standing rule: the kinds of power net, the fail-closed marks and the undecided class, the 0 A threshold, the node rule",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
    "PWR-001": "6e91133d2ef9dee3"
   },
-  "rule_set_fingerprint": "ff8151db3576437b"
+  "rule_set_fingerprint": "950539a66227908b"
  },
  "rules": [
   "PWR-001"
  ],
+ "runtime": {
+  "python": "3.11.2"
+ },
  "tool": "intent_rails",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "git_head": "53a98a71b53c",
+  "tools_tree_sha": "6f6b28e777c8262b"
  },
- "ts": "2026-09-21T12:46:41Z",
- "verdict": "PASS",
- "version": "unknown",
+ "ts": "2026-09-27T00:26:17Z",
+ "verdict": "FAIL",
+ "version": "53a98a71b53c+dirty",
  "writer": {
   "file": "intent_checks.py",
-  "sha16": "41cd5935c5f46f0b"
+  "sha16": "1ad7af0c718ba940"
  }
 }

@@ -735,14 +735,14 @@ CONFIG_INPUTS = {
     # document its constant tables are transcribed from. The document is not opened at run time, but a correction of
     # it can make a constant wrong, so a change to it is a change to what the reading means.
     "fab_limits.py": ("{phase}/{stem}.kicad_pro", "../vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md"),
-    # derate.py:131-133 the intent file beside the netlist (rails and nodes). Board E5's reading is the declared zero
+    # derate.py:137-139 the intent file beside the netlist (rails and nodes). Board E5's reading is the declared zero
     # of derate.py:248-257, which opens no file.
     "derate.py": ("{phase}/out/{stem}-intent.json",),
-    # netlist_board.py:40-55 read_aliases opens tools/pad-aliases.txt, and :133-147 use it to decide which pad a
+    # netlist_board.py:40-55 read_aliases opens tools/pad-aliases.txt, and :138-153 use it to decide which pad a
     # netlist pin must land on: that is SCH-002's matching configuration, and SCH-002 is LAYOUT_RULE, the reading
     # that decides whether a layout is the candidate's. (The first audit of 26 September called this entry empty,
-    # citing :50 as a netlist read; :50 is the alias loop. Corrected the same day on a checker's finding.) :58-66
-    # and :111-112 read the netlist and the board file, which a reading of SCH-002 records by sha.
+    # citing :50 as a netlist read; :50 is the alias loop. Corrected the same day on a checker's finding.) :58-72
+    # and :117-118 read the netlist and the board file, which a reading of SCH-002 records by sha.
     "netlist_board.py": ("tools/pad-aliases.txt",),
     # netlist_parts.py:75 the netlist and :97 the board file, both recorded by sha; no other file is opened.
     "netlist_parts.py": (),
@@ -797,7 +797,7 @@ CONFIG_INPUTS = {
     # and the host's KiCad library under /usr/share/kicad/footprints, which is not in this tree and is not declared
     # (an instrument limit, stated on the page).
     "pin_map_lands.py": ("meshsat.pretty/*.kicad_mod",),
-    # clock_check.py:49 the netlist; :151-156 the board table's crystals (C_L from the parts' datasheets); :168-170
+    # clock_check.py:49 the netlist; :157-163 the board table's crystals (C_L from the parts' datasheets); :174-176
     # letter_for.
     "clock_check.py": ("tools/boards/{letter}.json",),
     # power_sequence.py:42 the netlist; :59-62 the intent file beside it (or --intent), whose rails it sequences; both
@@ -823,17 +823,64 @@ CONFIG_INPUTS = {
     # change of the table), read through the host's pdftotext; both recorded by sha (:164-173); :38 and :99 board P's
     # netlist, the declared phase's (an artefact, recorded by sha and content).
     "pack_protection.py": ("tools/pcb_pack_protection.yaml", "../vendor/battery/samsung-35e-orbtronic.pdf"),
-    # intent_checks.py:41 intent.load (intent.py:321-325, the intent file beside the board); :43-44 and
-    # signalnets.py:25-26 the project file; :161 signal_class.classify, which reads the board table's
+    # intent_checks.py:60 intent.load (intent.py:321-325, the intent file beside the board); :62-63 and
+    # signalnets.py:25-26 the project file; :180 signal_class.classify, which reads the board table's
     # signal_classes (signal_class.py:88-92, the letter by name at :68-85), as does return_via.judge (return_via.py
-    # :139-153) through :225; :244-245 bypass-allow.txt beside the board. One entry covers every verdict this file
+    # :139-153) through :244; :262-263 bypass-allow.txt beside the board. One entry covers every verdict this file
     # writes (intent_rails and the return-path, return-via and decoupling ones), so it is conservative for each.
+    # SINCE 26 SEPTEMBER 2026 (ts-net, MESHSAT-1357) intent_rails is written by rails_on_netlist, :897-1295, from the
+    # netlist and the intent file beside it (:914 and :921-932: its rails, nodes, clamps and bypass list), in the
+    # --netlist mode and in the board run whenever the netlist sits beside the board; it records both by sha (the
+    # netlist by content16 too), so the intent entry below binds by the recorded sha. The net classes it reads are the
+    # netlist's own. THIRD PASS (net3, the same night): held_roles, :877-895, reads each part's pin roles from
+    # PIN_ROLES (:506 onward, a data table in this file, so a changed row is a changed writer) and records every
+    # document a role was read from by sha as document_N (:917-919); the documents PIN_ROLES names are declared below,
+    # conservative for a board whose parts use fewer of them (a row added to PIN_ROLES with a new document is not seen
+    # here until the document is added to this entry, an instrument limit, as for any new read). FOURTH PASS (net3,
+    # 27 September 2026): every row carries every power and ground pin of its table, and six power parts gained rows,
+    # so six more documents are read (the AP2112, TLV755P, TLV758P, LM74700-Q1, TPS2065C and TPS23861 sheets). It
+    # opens no other file (rules_lib.ref_prefix and regen_compare.content_hash are code). Integration of 27 September
+    # 2026: a declared node that carries a mark is a power net for its neighbours (:1186-1194); it reads no new file.
     "intent_checks.py": ("{phase}/out/{stem}-intent.json", "{phase}/{stem}.kicad_pro", "{phase}/bypass-allow.txt",
-                         "tools/boards/{letter}.json"),
-    # edge_length.py:77 the intent file beside the board; :78-80, :86, :118 and :149 the board table's rise_ns,
-    # critical_k, signal_classes and edge_allow; :97-99 signal_class.classify (the same table); :108-110 the project
-    # file; :82 impedance_check.read_stackup reads the stack from the board file itself, which the reading records.
-    "edge_length.py": ("tools/boards/{letter}.json", "{phase}/out/{stem}-intent.json", "{phase}/{stem}.kicad_pro"),
+                         "tools/boards/{letter}.json",
+                         "../vendor/battery/ti-bq4050.pdf", "../vendor/battery/ti-bq77207.pdf",
+                         "../vendor/battery/ti-csd17570q5b.pdf", "../vendor/battery/ti-csd18510q5b.pdf",
+                         "../vendor/diodes/diodes-ap2112-ldo.pdf", "../vendor/diodes/diodes-ap63200-series-buck.pdf",
+                         "../vendor/diodes/diodes-ap64500.pdf",
+                         "../vendor/microchip/microchip-ksz9897-datasheet.pdf",
+                         "../vendor/nexperia/nexperia-74lvc86a.pdf", "../vendor/power/lt8705a.pdf",
+                         "../vendor/power/ltc2954.pdf", "../vendor/power/ti-csd19532q5b-n-fet.pdf",
+                         "../vendor/power/ti-tlv755p-ldo.pdf", "../vendor/power/tps2596.pdf",
+                         "../vendor/pulse/pulse-h5007nl.pdf", "../vendor/quectel/lg290p03-hardware-design-v1.1.pdf",
+                         "../vendor/rp2040/rpi-rp2040-datasheet.pdf", "../vendor/ti/bq25731-datasheet.pdf",
+                         "../vendor/ti/lm5176-datasheet.pdf", "../vendor/ti/ti-lm5069.pdf",
+                         "../vendor/ti/ti-lm74700-q1.pdf", "../vendor/ti/ti-pcm2912a.pdf",
+                         "../vendor/ti/ti-tlv758p.pdf", "../vendor/ti/ti-tlv9062-op-amp.pdf",
+                         "../vendor/ti/ti-tpa6132a2.pdf", "../vendor/ti/ti-tps2065c-slvsau6i.pdf",
+                         "../vendor/ti/ti-tps22810-load-switch.pdf", "../vendor/ti/ti-tps25740.pdf",
+                         "../vendor/ti/ti-tps62933.pdf", "../vendor/ti/ti-tusb2046b.pdf",
+                         "../vendor/ti/ti-tusb8041.pdf", "../vendor/ti/tps23861-datasheet.pdf"),
+    # edge_length.py, ROUTED half (verdict edge_length_routed, which no rule names today): :89 the intent file beside
+    # the board; :91-92, :98, :130 and :161 the board table's rise_ns, critical_k, signal_classes and edge_allow;
+    # signal_class.classify (the same table); :120-122 the project file; :94 impedance_check.read_stackup reads the
+    # stack from the board file itself, which the reading records.
+    # SCHEMATIC half (verdict edge_length, SI-001; schematic_table, :413 onward, ts-net 26 September 2026): :439 the
+    # intent file beside the netlist; :441, :462-466 the board table's critical_k, signal_classes (through
+    # signal_class.declarations) and edge_allow; :459-461 the project file's netclass_assignments; :384 and :440
+    # rules_lib.board_facts, the declared stack, routing layers and outline (pcb_board_facts.yaml); :368
+    # stackup_write.STACKS (a data table in an imported module, declared as stackup_gate's is); :351 every document
+    # EDGE_SOURCES names (one today). It records every one of them by sha, the netlist by content16 too. A document
+    # added to EDGE_SOURCES is not seen here until it is added to this entry (an instrument limit, as for any new read).
+    "edge_length.py": ("tools/boards/{letter}.json", "{phase}/out/{stem}-intent.json", "{phase}/{stem}.kicad_pro",
+                       "tools/pcb_board_facts.yaml", "tools/stackup_write.py",
+                       "../vendor/standards/usb-2-0-specification-2024-09-27.md"),
+    # ground_system.py:52-56 board_decl, the board table's `grounds`; :128-130 sch_prov.letter_for (every table's
+    # `name`; the reading records the letter it resolved, as port_protect's does). It was not declared at all, so a
+    # GND-001 reading that bound its artefact would still have read CONFIG_UNDECLARED (ts-net, 26 September 2026; the
+    # readings on the tree today are refused before this is asked: PREDATES_ARTEFACT, because the tool records the
+    # netlist's bare name, and TOOL_CHANGED once the R4T-F1 fix of the same day lands; GND-001 is a ROUTED_BOARD rule,
+    # so a netlist it records would not bind it either, and it is no layout-entry blocker).
+    "ground_system.py": ("tools/boards/{letter}.json",),
 }
 V2 = os.path.normpath(os.path.join(ECAD, ".."))
 _GIT_DIRTY = {}

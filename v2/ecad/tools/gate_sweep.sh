@@ -52,10 +52,12 @@ rm -rf $S; mkdir -p $S/out
 # it", and every other producer's evidence in that directory is left alone. netlist_parts is netlist_board's
 # companion (26 September 2026, MESHSAT-1357): netlist_board runs it, so it is cleared with it, or a sweep whose
 # netlist could not be rebuilt would leave the previous run's value and land reading standing for rule SCH-002.
+# edge_length_routed is edge_length's routed half since 26 September 2026 (ts-net, MESHSAT-1357): the board run
+# writes it and the schematic table (edge_length) from the sweep's regenerated netlist, so both are cleared.
 for _g in hardset-routed-board-gate check_pcb_$L check_zone_nets intent_checks intent_rails intent_decoupling \
           intent_return_path intent_return_via dc_drop dc_density impedance_check netlist_board netlist_parts class_floor \
           return_via return_stitch via_audit via_annular fab_limits stackup_gate via_current ref_change thermal spacing \
-          edge_length derate clock_check port_protect safe_lines safe_lines_$L pin_map_lands_$L erc_gate place_audit check_contracts check_contracts_$L lcsc_fill \
+          edge_length edge_length_routed derate clock_check port_protect safe_lines safe_lines_$L pin_map_lands_$L erc_gate place_audit check_contracts check_contracts_$L lcsc_fill \
           energy_chain pruned_gate power_sequence ground_system emc_sheet closer_audit reliability interfaces doc_provenance \
           sensitive_nodes assembly_set rf_line ledger_verify; do
   rm -f "$P/routed/$_g.verdict.json"
@@ -314,6 +316,8 @@ if [ "$BEFORE" != "$AFTER" ]; then
 fi
 mkdir -p $P/routed
 cp out/*.verdict.json $P/routed/ 2>/dev/null
+# the SI-001 table the edge_length verdict names, beside it (ts-net, 26 September 2026)
+cp out/edge_length.table.json $P/routed/ 2>/dev/null
 # THE DRC REPORT TRAVELS WITH THE BOARD TOO (16 September 2026). Board E's routed/ held a DRC report saying
 # zero unconnected items, written by the E9 deliverable's finish on 13 September, beside a board this sweep
 # measures at one. The report is the artefact a person opens to see WHICH connection is open, and it was

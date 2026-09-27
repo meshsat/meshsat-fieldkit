@@ -481,6 +481,32 @@ rules:
      refusal names the net so the choice is visible. The second shape is a rail the board carries and nothing on
      it consumes, such as a supply a module generates and hands out: that is still a rail and is declared with
      the receptacle as its source, which is how board B's six module-supplied rails are written.
+     26 September 2026: the netlist reading counts six kinds of power net and fails closed on every other net that
+     carries the mark of a supply, and each has its own false-refusal shape. A supply-named pin is counted only when a
+     bypass entry, a capacitor to ground or a second supply pin corroborates it, because a pin can be named for a
+     supply and be none (board B's TUSB8041 USB_VBUS is a detect input on a 90.9k and 10k divider, board D's PCM2912A
+     VIN is its microphone input); such a pin with a held datasheet row is settled by the row, and without one it is
+     undecided, not refused. A pin a held datasheet types P or PWR but describes as a sense amplifier input (the
+     BQ25731's ACN, ACP, SRN and SRP) is read as a sense input. The HV class is undecided, because on board B it holds
+     the PoE gate and reset lines as well as the port's current path. A marked net that nothing read settles is
+     undecided, never refused: a connector, a switch with a pole on a rail, a pad or a part with no PIN_ROLES row is
+     not read, so board C's panel switch lines and board D's headset lines are undecided until declared or read. What
+     is refused may still be a false refusal where a symbol types a reference or sense input power_in, or a generator
+     writes a supply token into a signal's pin function and a capacitor filters it to ground; none of the refusals of
+     26 September is of that shape (each was read against the part's held datasheet: the BQ4050 calls BAT and VCC its
+     primary and secondary power supply inputs and PBI its power supply backup input, the PCM2912A calls VDD and VCC*
+     supplies, the bootstrap pins are typed P by TI and described as the high-side driver's supply by Diodes), and one
+     that appears is settled by declaring the net as a node, visible in the reading. 27 September (fourth pass): a
+     lead (a connector whose other pins are all on ground) is undecided until a pin the board reads on it settles it,
+     so a two-pin header to a module's boot strap (board B's nRPIBOOT1 to 3, the CM5 receptacle, which no row reads)
+     or an antenna lead through a relay (board D's RF_ANT) is undecided and not refused; a net of class SENSE (board
+     P's cell taps) is undecided the same way; the switched low side of a lamp (board C's TX_K, and TX_A and
+     TX_LAMPTEST beside it through the lamp's diodes) is undecided. A ground pin a held table types G, GND or Ground
+     on a net that is not a ground is counted; none sits off ground on the six boards. 27 September (fifth pass,
+     integration): a declared node that carries a mark itself passes it on, so the source side of a switch whose drain
+     node is declared is undecided (board C's EPD_RESE, the boost switch's current shunt, which is a current path and
+     not a false refusal); a declared node with no mark of its own passes nothing, so a data line behind a 0R link
+     (board B's eSIM lines) is not marked.
    domain: POWER_TREE
    short_name: every rail is declared with its loads
    requirement: >

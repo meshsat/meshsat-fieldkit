@@ -29,6 +29,7 @@ Worktrees:
 | `rv-emc/` | review stream EMC, the per-transmitter EMCON table |
 | `rv-pwr/` | review stream PWR, the power and thermal budget |
 | `rv-zer/` | review stream ZER, the ZEROIZE key and slot lifecycle |
+| `ts-net/` | the tools stream ts-net (PWR-001 and SI-001 on the netlist), rounds 7 and 8 (its session decisions; filed at integration, 27 September 2026) |
 | `w2/` | foundation workstream 2 (power and runtime), 25 September |
 | `w4/` | foundation workstream 4 (mechanical, thermal and RF), 25 September |
 | `w6/` | foundation workstream 6 (findings review), 25 September |
@@ -187,6 +188,7 @@ Paths are relative to this folder; the source is the same path below `drafts/` i
 | `rv-zer/prices/jlc-ATECC608B-SSHDA-T.json` | `1b75f8c933d888608a11927a2df2335326ff852da6cf0cb35ae1a90c7891848e` | 11976 | `fnd/rv-zer` `drafts/prices/jlc-ATECC608B-SSHDA-T.json` | `v2/docs/feasibility/ZEROIZE.md` |
 | `rv-zer/zeroize/zer_budget.py` | `8cdad0569ec3d8140d291da79361ccc9b519592e91decb1bc1547f21624bca9e` | 20269 | `fnd/rv-zer` `drafts/zeroize/zer_budget.py` | `v2/docs/feasibility/ZEROIZE.md` |
 | `rv-zer/zeroize/zer_config.py` | `3d4271b2b9aec3e069ebc8d005f802abb07c7e90b186afc50ef5281725f4b795` | 11519 | `fnd/rv-zer` `drafts/zeroize/zer_config.py` | `v2/docs/feasibility/ZEROIZE.md` |
+| `ts-net/ts-net-decisions.md` | `78c2dba37c579c4894d12460f2901fec7816b87def759828eb514df7d51fbdff` | 19831 | `fnd/ts-net` `drafts/ts-net-decisions.md` | `v2/ecad/tools/pcb_rules_coverage.yaml` (PWR-001) |
 | `w2/w2-power.md` | `960e46bdd58bf857aeb436dc9239ee11b30060fad978ba557f560e1be50a53ec` | 27952 | `fnd/w2` `drafts/w2-power.md` | `v2/docs/feasibility/POWER-THERMAL.md` |
 | `w2/w2-runtime.md` | `2b203982023f6fe63a1eecc1103cc3ceb1b6e51f4a858fbe0e79ce365626c9db` | 16780 | `fnd/w2` `drafts/w2-runtime.md` | `v2/docs/feasibility/POWER-THERMAL.md` |
 | `w4/w4-mech-thermal-rf.md` | `ba590c405b672995eee2094ec302eb08ddfed9ca49a7411d71041ffd459bd42e` | 52637 | `fnd/w4` `drafts/w4-mech-thermal-rf.md` | `v2/docs/feasibility/POWER-THERMAL.md` |
