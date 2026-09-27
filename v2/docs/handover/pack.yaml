@@ -144,6 +144,10 @@ rules:
      role: "pages rendered from the decision and rule registries"}
   - {action: include, group: L4, glob: ["v2/docs/ARCHITECTURE.md", "v2/docs/B-FEASIBILITY.md", "v2/docs/ARCH-PCB-B-IOHA.md", "v2/docs/GROUNDING-AND-SHIELDS.md", "v2/docs/LAYER-DECISIONS-2026-09-11.md", "v2/docs/feasibility/**"],
      role: "system architecture, board B feasibility, grounding strategy, layer-count decisions and the feasibility studies (ZEROIZE, EMCON, failover fabric, power and thermal, decoupling)"}
+  - {action: include, group: L4, glob: "v2/docs/diagrams/**",
+     role: "readable renderings (SVG, PDF) of the architecture, power tree, control lines and case drawings, their Mermaid sources, the tools that draw and check them and MANIFEST.json; drawn at e3aedb25, before round 8 (the folder's README states the status)"}
+  - {action: include, group: L9, glob: ["v2/docs/STACKUP-DECISIONS.md", "v2/docs/layout-constraints/**"],
+     role: "per-board layout constraint sheets handed to layout, with their calculations, and the stackup decision record"}
   - {action: include, group: L4, glob: ["v2/ecad/tools/pcb_energy_chain.yaml", "v2/ecad/tools/pcb_pack_protection.yaml", "v2/ecad/tools/pcb_board_holds.yaml", "v2/ecad/tools/pcb_emc.yaml"],
      role: "architecture data: the stored-energy chain, pack protection, board holds and the EMC sheet"}
   - {action: include, group: L5, glob: ["v2/ecad/tools/pcb_interfaces.yaml", "v2/ecad/tools/pcb_board_facts.yaml", "v2/docs/PANEL.md"],

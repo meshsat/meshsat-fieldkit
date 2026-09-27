@@ -18,6 +18,7 @@ Worktrees:
 | folder | whose records |
 |---|---|
 | `adj/` | the eleven adjudications A01 to A11 of 25 September (filed 27 September; section *Filed 27 September 2026*) |
+| `hc4/` | the layer 4 closer hc4 (readable diagrams): the five disagreements between the energy chain and the netlists, for the energy chain's owner (filed at integration, 27 September 2026) |
 | `r4a/` | board A's author, rounds 4 to 6 (round-6 candidate, fix-ups 3 and 4) |
 | `r4b/` | board B's author, rounds 4 to 6 (round-6 candidate, box run 6) |
 | `r4e/` | board E's author, round 4 |

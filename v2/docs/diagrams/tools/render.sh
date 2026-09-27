@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Render every Mermaid source in v2/docs/diagrams/src/ to svg/ and pdf/ (MESHSAT-1357, handover layer 4).
+#
+# Tool: @mermaid-js/mermaid-cli, pinned below, run through npx; it drives a headless Chromium through Puppeteer.
+# Chromium: set CHROME_BIN to a local Chromium or chrome-headless-shell binary; without it Puppeteer uses the browser
+# it downloads itself on first run. The runner used for the committed files had Playwright's chrome-headless-shell
+# (Chrome for Testing 151.0.7922.34) and Node 20.20.2 (see ../README.md, "Toolchain").
+# Usage: bash v2/docs/diagrams/tools/render.sh [name ...]   (names without .mmd; default: every source)
+set -euo pipefail
+HERE=$(cd "$(dirname "$0")" && pwd)
+D=$(dirname "$HERE")
+MMDC_VERSION=${MMDC_VERSION:-11.12.0}
+TMP=$(mktemp -d); trap 'rm -rf "$TMP"' EXIT
+if [ -n "${CHROME_BIN:-}" ]; then
+  printf '{"executablePath":"%s","args":["--no-sandbox"]}\n' "$CHROME_BIN" > "$TMP/puppeteer.json"
+else
+  printf '{"args":["--no-sandbox"]}\n' > "$TMP/puppeteer.json"
+fi
+names=("$@")
+if [ ${#names[@]} -eq 0 ]; then for f in "$D"/src/*.mmd; do names+=("$(basename "$f" .mmd)"); done; fi
+mkdir -p "$D/svg" "$D/pdf"
+for n in "${names[@]}"; do
+  src="$D/src/$n.mmd"
+  npx -y "@mermaid-js/mermaid-cli@$MMDC_VERSION" -q -p "$TMP/puppeteer.json" -c "$HERE/mermaid.json" -b white \
+      -i "$src" -o "$D/svg/$n.svg"
+  npx -y "@mermaid-js/mermaid-cli@$MMDC_VERSION" -q -p "$TMP/puppeteer.json" -c "$HERE/mermaid.json" -b white -f \
+      -i "$src" -o "$D/pdf/$n.pdf"
+  echo "rendered $n"
+done

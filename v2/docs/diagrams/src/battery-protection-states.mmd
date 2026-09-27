@@ -1,0 +1,17 @@
+---
+title: "review-packets/battery/PROTECTION-ARCHITECTURE.md, 4. States (lines 95 to 108 of the document with sha256/16 21b0535ecafa9aa0): design diagram of an unbuilt prototype"
+---
+stateDiagram-v2
+    [*] --> Unarmed: cells connected, JP1 open
+    Unarmed --> Armed: image written and read back, TP11 low, TP15 check, JP1 closed
+    Armed --> Normal: gauge NORMAL or SLEEP, FETs on
+    Normal --> Charging: shore/vehicle/solar, inside 0 to 45 C
+    Charging --> Normal: termination (CHGFET) or input gone
+    Normal --> Recoverable: COV, CUV, OCx, OTx, UTx, AOLD, ASCx, secondary UV
+    Recoverable --> Normal: recovery condition
+    Normal --> Shutdown: MAC 0x0010 (storage, transport) or voltage shutdown
+    Shutdown --> Normal: charger voltage on PACK
+    Normal --> PermanentFail: SOV, SOT, FET fail, PTC, 2LVL, open thermistor, AFE
+    Armed --> FuseOpen: U2 COUT (OV, open wire, OT, oscillator) or U1 FUSE
+    PermanentFail --> FuseOpen: if the failure is mapped to FUSE
+    FuseOpen --> [*]: pack retired for inspection
