@@ -103,8 +103,9 @@ the set 6 candidate; board A's external-port declaration).
 
 **Outside H3.** A circuit candidate, set 6, stands on branch `fnd/r8int6`, not promoted: it draws remedies for several
 items this page lists as open (EQ-25 on board C, HOT-R1 on A and E, PWR-001's declarations on C and P and the flyback
-diodes on D and E, BAT-001's table on P, E5's INT-001). The integrating session reports its suite on the KiCad host at
-2010 passed, 1 failed, 3 skipped, the failure a checker's false positive under repair. Five desk streams, wave 5a, are
+diodes on D and E, BAT-001's table on P, E5's INT-001). Its suite on the KiCad host read 2010 passed, 1 failed, 3 skipped
+at `a76a246e`, the failure a checker's false positive, and reads 2015 passed, 0 failed, 3 skipped at `760d7f41` with
+the checker corrected (records on that branch); its readings were being re-taken when this was written. Five desk streams, wave 5a, are
 being recovered from their transcripts. None of it is in H3, and none of it is evidence until it is checked and
 promoted.
 
