@@ -299,3 +299,14 @@ No branch was deleted. The worktree registrations were archived and read back be
   `build --commit <sha> --version H3 --zip-only`, `verify v2/release/handover/H3.zip`, `sha256sum -c`. Expected: a
   ZIP under the cap of 52,428,800 bytes (a dry build from `6ec37197` was 52,122,151). Acceptance: both fresh checks
   filed, the release record complete, the package on the owner's laptop with its checksum verified there.
+
+### Checkpoint, 27 September 2026 23:50 CEST: handover H3 delivered and checked
+
+| Field | Content |
+|---|---|
+| Delivered | **Handover H3**: `v2/release/handover/H3.zip`, sha256 `6922a96d...dd07a`, 52,187,825 bytes, built from `75ad6ee5`, filed in `bd96bb61`, public, and on the owner's laptop with its checksum verified there. Layers 1, 2 and 3 are COMPLETE in it, each on AI review records; its design content is H2's. Release record: `v2/docs/handover/RELEASE-H3.md` |
+| Remaining | for H3: the twenty-eight minor findings of its two checks, answered in the pages' next edition (`H3-RESPONSE.md`). For the layers: 4 to 9 as `v2/docs/handover/LAYER-STATUS.md` lists them |
+| Engineering | the suite on H3's exact source commit reads 1998 passed, 0 failed, 2 skipped on the KiCad host. Both fresh checks found no blocking defect. An independent review of H3 (`v2/docs/reviews/2026-09-27-h3-independent-review.md`) credits layers 1 to 3 and confirms two checker defects: REL-001 can read PASS on a connector its word list does not see and on a missing netlist; TRN-001 on board A judges a declaration that names two ground pins. Both readings are LIMITED until repaired. No electrical defect is closed at this checkpoint |
+| Resources | the ledger of the checkpoint above, with these changes: part identities, edge rates and stackup finished their second pass and are with fresh checkers; the re-take of set 6 has committed its readings; started since: the desk closers for FEA-002, FEA-004 with FEA-005, FEA-006, FEA-007's desk items, decision 31's protection review and the energy budget (branches `fnd/d4emcon`, `fnd/d4chain`, `fnd/d6dec`, `fnd/d7fit`, `fnd/d8dec31`, `fnd/d4energy`), and the repair of REL-001 (`fnd/d6rel`). One KiCad host, no queue measured on it |
+| Decisions | one for the owner: thirteen IBIS models of makers and twelve captures of the fabricator's stackup data are held back from this public repository until their terms are read, because a maker's header is reported to forbid redistribution. Until he decides they are referenced by address and sha256 and fetched by a script |
+| Next | set 6 merged onto this line with its re-take; then the circuit round, one owner per generator; then handover H4 |
