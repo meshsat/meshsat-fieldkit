@@ -25,11 +25,11 @@ that owns it.
 
 | board | declared phase | netlist, sha256/16 | board file of the phase, sha256/16 | layout carries the netlist | ready for layout |
 |---|---|---|---|---|---|
-| A | A32 | `pcb-a-power-a23/out/pcb-a-power.net` 3a786cf31614fe63 | 58e26c67987b1daa | no: SCH-002 (netlist against board) reads FAIL on it | no: 18 reason(s), first SCH-001 PASS on AWAITING_REVALIDATION evidence (TOOL_CHANGED) |
-| B | B21 | `pcb-b-compute-b19/out/pcb-b-compute.net` adcc3c6736c90e9f | 2e64b5bf2d9cd3bc | no: SCH-002 (netlist against board) reads FAIL on it | no: 17 reason(s), first SCH-001 PASS on AWAITING_REVALIDATION evidence (TOOL_CHANGED) |
+| A | A32 | `pcb-a-power-a23/out/pcb-a-power.net` da05dc02bc1e612f | 58e26c67987b1daa | no: SCH-002 (netlist against board) reads FAIL on it | no: 18 reason(s), first SCH-001 PASS on AWAITING_REVALIDATION evidence (TOOL_CHANGED) |
+| B | B21 | `pcb-b-compute-b19/out/pcb-b-compute.net` 8b78c59754a6a0c7 | 2e64b5bf2d9cd3bc | no: SCH-002 (netlist against board) reads FAIL on it | no: 17 reason(s), first SCH-001 PASS on AWAITING_REVALIDATION evidence (TOOL_CHANGED) |
 | C | C24 | `pcb-c-display-c8/out/pcb-c-display.net` 11eabc2dddca5161 | 2a273803757c68fb | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 11 reason(s), first SCH-001 PASS on AWAITING_REVALIDATION evidence (TOOL_CHANGED) |
-| D | D12 | `pcb-d-aprs-d9/out/pcb-d-aprs.net` 0dad82b4b6a79290 | 929bf82d2bf6eed4 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 16 reason(s), first SCH-001 PASS on AWAITING_REVALIDATION evidence (TOOL_CHANGED) |
-| E | E17 | `pcb-e1-dock-e7/out/pcb-e1-dock.net` f3c1ad6153002976 | a462ac2620b9b8d3 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 17 reason(s), first SCH-001 PASS on AWAITING_REVALIDATION evidence (TOOL_CHANGED) |
+| D | D12 | `pcb-d-aprs-d9/out/pcb-d-aprs.net` 76700a687eb6187f | 929bf82d2bf6eed4 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 16 reason(s), first SCH-001 PASS on AWAITING_REVALIDATION evidence (TOOL_CHANGED) |
+| E | E17 | `pcb-e1-dock-e7/out/pcb-e1-dock.net` d6137f50059e5cbc | a462ac2620b9b8d3 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 17 reason(s), first SCH-001 PASS on AWAITING_REVALIDATION evidence (TOOL_CHANGED) |
 | P | P4 | `pcb-p-pack-p2/out/pcb-p-pack.net` 085f833362fbbda8 | d79865e7b1aceb95 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 16 reason(s), first SCH-001 PASS on AWAITING_REVALIDATION evidence (TOOL_CHANGED) |
 | E5 | E5 | none (no schematic) | 686b29a734c55b9a | yes: a bare contact board with no schematic (manifest no_chain): its board file is its design | no: 6 reason(s), first SCH-004 PASS on AWAITING_REVALIDATION evidence (TOOL_CHANGED) |
 
@@ -47,8 +47,7 @@ the row current, and the owner is the stream that takes that step.
 
 | what closes it first | owner | A | B | C | D | E | P | E5 | set |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| a re-take alone (the reading would be current) | board stream of that board | 11 | 12 | 9 | 9 | 11 | 12 | 4 | 68 |
-| the design or its declarations (the reading is current and is not a PASS) | board stream of that board | 1 | 0 | 0 | 1 | 1 | 0 | 0 | 3 |
+| a re-take alone (the reading would be current) | board stream of that board | 12 | 12 | 9 | 10 | 12 | 12 | 4 | 71 |
 | a deciding verification for the rule | registry writer (pcb_rules_coverage.yaml) | 0 | 0 | 0 | 0 | 1 | 1 | 1 | 3 |
 | a layout-entry requirement of a hold that gates a later stage (the hold itself stays until that stage) | board stream of that board, with the holds writer for the record | 2 | 0 | 0 | 2 | 2 | 0 | 0 | 6 |
 | the layout-entry stage of a feasibility blocker closed on its named evidence | the blocker's owner (tools/pcb_requirements.yaml) | 4 | 5 | 2 | 4 | 2 | 3 | 1 | 21 |
@@ -59,10 +58,10 @@ the row current, and the owner is the stream that takes that step.
 | A | SCH-004 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | safe_lines.py re-taken on the committed netlist | board stream A |
 | A | SCH-005 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | pin_map_lands.py re-taken on the committed netlist | board stream A |
 | A | CMP-001 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | derate.py re-taken on the committed netlist | board stream A |
-| A | PWR-001 FAIL | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads FAIL | board stream A |
+| A | PWR-001 FAIL | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | intent_checks.py re-taken on the committed netlist; today's reading is FAIL, which the re-take may repeat | board stream A |
 | A | PWR-002 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | power_sequence.py re-taken on the committed netlist | board stream A |
 | A | PWR-003 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | energy_chain.py re-taken on the committed netlist | board stream A |
-| A | SI-001 INCONCLUSIVE | AWAITING_REVALIDATION (CONFIG_CHANGED) | CURRENT_CANDIDATE (BOUND) | edge_length.py re-taken on the committed netlist; today's reading is INCONCLUSIVE, which the re-take may repeat | board stream A |
+| A | SI-001 INCONCLUSIVE | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | edge_length.py re-taken on the committed netlist; today's reading is INCONCLUSIVE, which the re-take may repeat | board stream A |
 | A | RF-002 INCONCLUSIVE | AWAITING_REVALIDATION (NOT_CURRENT_EVIDENCE) | CURRENT_CANDIDATE (BOUND) | check_contracts.py re-taken on the committed netlist; today's reading is INCONCLUSIVE, which the re-take may repeat | board stream A |
 | A | INT-001 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | check_contracts.py, interfaces.py re-taken on the committed netlist | board stream A |
 | A | TRN-001 FAIL | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | port_protect.py re-taken on the committed netlist; today's reading is FAIL, which the re-take may repeat | board stream A |
@@ -105,7 +104,7 @@ the row current, and the owner is the stream that takes that step.
 | D | SCH-004 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | safe_lines.py re-taken on the committed netlist | board stream D |
 | D | SCH-005 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | pin_map_lands.py re-taken on the committed netlist | board stream D |
 | D | CMP-001 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | derate.py re-taken on the committed netlist | board stream D |
-| D | PWR-001 FAIL | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads FAIL | board stream D |
+| D | PWR-001 FAIL | AWAITING_REVALIDATION (CONFIG_CHANGED) | CURRENT_CANDIDATE (BOUND) | intent_checks.py re-taken on the committed netlist; today's reading is FAIL, which the re-take may repeat | board stream D |
 | D | SI-001 INCONCLUSIVE | AWAITING_REVALIDATION (CONFIG_CHANGED) | CURRENT_CANDIDATE (BOUND) | edge_length.py re-taken on the committed netlist; today's reading is INCONCLUSIVE, which the re-take may repeat | board stream D |
 | D | CLK-001 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | clock_check.py re-taken on the committed netlist | board stream D |
 | D | RF-002 INCONCLUSIVE | AWAITING_REVALIDATION (NOT_CURRENT_EVIDENCE) | CURRENT_CANDIDATE (BOUND) | check_contracts.py re-taken on the committed netlist; today's reading is INCONCLUSIVE, which the re-take may repeat | board stream D |
@@ -121,10 +120,10 @@ the row current, and the owner is the stream that takes that step.
 | E | SCH-004 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | safe_lines.py re-taken on the committed netlist | board stream E |
 | E | SCH-005 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | pin_map_lands.py re-taken on the committed netlist | board stream E |
 | E | CMP-001 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | derate.py re-taken on the committed netlist | board stream E |
-| E | PWR-001 FAIL | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads FAIL | board stream E |
+| E | PWR-001 FAIL | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | intent_checks.py re-taken on the committed netlist; today's reading is FAIL, which the re-take may repeat | board stream E |
 | E | PWR-002 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | power_sequence.py re-taken on the committed netlist | board stream E |
 | E | PWR-003 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | energy_chain.py re-taken on the committed netlist | board stream E |
-| E | SI-001 INCONCLUSIVE | AWAITING_REVALIDATION (CONFIG_CHANGED) | CURRENT_CANDIDATE (BOUND) | edge_length.py re-taken on the committed netlist; today's reading is INCONCLUSIVE, which the re-take may repeat | board stream E |
+| E | SI-001 INCONCLUSIVE | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | edge_length.py re-taken on the committed netlist; today's reading is INCONCLUSIVE, which the re-take may repeat | board stream E |
 | E | CLK-001 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | clock_check.py re-taken on the committed netlist | board stream E |
 | E | RF-002 INCONCLUSIVE | NO_EVIDENCE (NO_VERDICT) | NO_EVIDENCE (NO_VERDICT) | the coverage map gives it no deciding verification (NO_VERDICT) | registry writer (pcb_rules_coverage.yaml) |
 | E | INT-001 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | check_contracts.py, interfaces.py re-taken on the committed netlist | board stream E |
@@ -229,14 +228,14 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 
 | board | CURRENT_CANDIDATE | VALID_HISTORICAL | PASS on either | AWAITING_REVALIDATION | DESK_REVIEW | PHYSICAL_TEST | NO_EVIDENCE | pairs |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| A | 2 | 0 | 1 | 46 | 3 | 0 | 4 | 55 |
+| A | 1 | 0 | 1 | 47 | 3 | 0 | 4 | 55 |
 | B | 1 | 0 | 1 | 46 | 4 | 0 | 5 | 56 |
 | C | 1 | 0 | 1 | 41 | 3 | 0 | 3 | 48 |
-| D | 2 | 0 | 1 | 43 | 3 | 0 | 3 | 51 |
-| E | 2 | 0 | 1 | 46 | 3 | 0 | 4 | 55 |
+| D | 1 | 0 | 1 | 44 | 3 | 0 | 3 | 51 |
+| E | 1 | 0 | 1 | 47 | 3 | 0 | 4 | 55 |
 | P | 1 | 0 | 1 | 41 | 3 | 0 | 3 | 48 |
 | E5 | 2 | 0 | 2 | 20 | 2 | 0 | 1 | 25 |
-| **set** | **11** | **0** | **8** | **283** | **21** | **0** | **23** | **338** |
+| **set** | **8** | **0** | **8** | **286** | **21** | **0** | **23** | **338** |
 
 ## Rules with a PASS on the current candidate
 
@@ -264,12 +263,12 @@ tool.
 
 | cause | what it means | what re-validates it | A | B | C | D | E | P | E5 | set | of which a re-take alone makes current |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| NETLIST_MISMATCH | it recorded a netlist sha other than the one the board's phase directory holds | a re-take on the committed netlist, which makes it current only when its writer's configuration is declared and committed (the next column counts the rows where that holds) | 0 | 2 | 2 | 0 | 0 | 2 | 0 | 6 | 6 |
+| NETLIST_MISMATCH | it recorded a netlist sha other than the one the board's phase directory holds | a re-take on the committed netlist, which makes it current only when its writer's configuration is declared and committed (the next column counts the rows where that holds) | 2 | 2 | 2 | 0 | 2 | 2 | 0 | 10 | 10 |
 | UNBOUND | it records no artefact by content (a release-package reading: no file of the declared phase's folder by sha), so it cannot be tied to the candidate | the gate taught to record the netlist, board or package file sha it read, then re-taken | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 7 | 0 |
 | TOOL_CHANGED | the code that wrote it has changed since: its entry script or a local module it imports (exact by the reading's code bundle; for an older reading by its writer's hash and its imports' commit dates) | re-taken under the current tool (current only when the re-take also binds its artefact and configuration), or a compatibility entry proving the change is not semantic | 41 | 40 | 34 | 38 | 42 | 35 | 16 | 246 | 64 |
 | NOT_CURRENT_EVIDENCE | the reading itself is stale (epoch, rule digest, another board, or a tool meaning change) | re-taken | 3 | 3 | 3 | 3 | 2 | 2 | 2 | 18 | 4 |
 | TEMP_INPUT | it judged files in a temporary directory, not this tree | re-taken in this tree | 0 | 0 | 1 | 0 | 0 | 1 | 1 | 3 | 0 |
-| CONFIG_CHANGED | a configuration input its writer reads (rules_status.CONFIG_INPUTS) changed after the reading | re-taken, or a `kind: config` compatibility entry showing the change does not reach what the tool reads | 1 | 0 | 0 | 1 | 1 | 0 | 0 | 3 | 3 |
+| CONFIG_CHANGED | a configuration input its writer reads (rules_status.CONFIG_INPUTS) changed after the reading | re-taken, or a `kind: config` compatibility entry showing the change does not reach what the tool reads | 0 | 0 | 0 | 2 | 0 | 0 | 0 | 2 | 2 |
 
 ## Writers whose configuration is not declared yet
 

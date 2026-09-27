@@ -34,7 +34,7 @@ later sections that section 0 supersedes also carry an inline **Superseded in H1
   a 3 V rating; the maker places it between the joined sources of the bottom FETs and GND. It blocks board E's layout
   entry (`v2/docs/layout-constraints/E.md` section 6.1).
 - **Delivered by the handover closers:** the product brief and public overviews through Review A layer 1 (layer 1,
-  still a candidate for BASELINED), readable diagrams (`v2/docs/diagrams/`, drawn before round 8), the layer 6 part
+  still a candidate for BASELINED), readable diagrams (`v2/docs/diagrams/`, drawn at `b7f96784` with round 8 and set 5), the layer 6 part
   records (`v2/docs/parts/`), and one layout constraint sheet per board with the stackup record
   (`v2/docs/layout-constraints/`, `v2/docs/STACKUP-DECISIONS.md`): step 4's constraint sheets exist; the stackup
   decisions they record still carry the cost half owed (EQ-14).

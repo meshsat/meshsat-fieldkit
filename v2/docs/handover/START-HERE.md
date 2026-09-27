@@ -150,7 +150,9 @@ and no certification claimed; no vehicle surge claim (D-16); no finished runtime
 - **Readable exports.** `v2/release/handover/_generated/<board>/`: an A3-paged schematic PDF, two BOMs named
   NOT_FOR_FAB, the ERC report, the netlist's parity with its schematic and `provenance.json`, for all six boards with a
   schematic, made at `99cde56b` on KiCad 9.0.9; regeneration from a clean extraction read PARITY on all six.
-- **Diagrams** (`v2/docs/diagrams/`) were drawn at `e3aedb25`, before round 8; their README says what that means.
+- **Diagrams** (`v2/docs/diagrams/`) are drawn at `b7f96784` (committed at `730f8489`), with round 8 on all six boards and set 5 on
+  boards A, B, D and E; their README says how they were made and checked, and what the power tree's attribution check
+  does not cover.
 - **Known gaps of H1 and H1.1.** (1) The readings behind `CURRENT-EVIDENCE.md` and `PCB-RULE-STATUS-*.md` live in the
   gitignored `v2/ecad/out/` and each board's `out/` folder and are not in the snapshot; the rendered pages are, so a
   recipient re-takes a reading rather than reading it back. REGENERATE.md section 9 states the re-take procedure,
