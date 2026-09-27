@@ -35,7 +35,9 @@ unpushed candidates are bundled as patches (`v2/docs/handover/candidates/`), the
 readings has a stated procedure (REGENERATE.md), the vendor files some checks need have a fetch route (REGENERATE.md
 section 1a), and a glossary is added (`v2/docs/handover/GLOSSARY.md`). **H1.1 is still partial: no layer is
 COMPLETE.** The design files are H1's; only the handover pages, the candidate patches, four filed records
-(`v2/docs/records/handover/`), the case scripts' reference outputs and the packer changed.
+(`v2/docs/records/handover/`), the case scripts' reference outputs and the packer changed. Each of the fifteen
+findings, where it is answered and in which commit, is in `v2/docs/handover/H1.1-RESPONSE.md`, which also names the
+parts left open.
 
 ## 1. The five handover pages
 
@@ -47,6 +49,7 @@ COMPLETE.** The design files are H1's; only the handover pages, the candidate pa
 | `v2/docs/handover/ENGINEERING-QUESTIONS.md` | every blocked question, one compact block each: issue, evidence, attempts, options, recommendation, expertise, cost and lead time |
 | `v2/docs/handover/REGENERATE.md` | how to regenerate the schematics and re-run the checks, and which host each step needs (written separately from these four pages) |
 | `v2/docs/handover/GLOSSARY.md` | every internal name the pages use: closers and streams, rounds, finding-id schemes, evidence labels, the title-block labels A65, D37P and E42P |
+| `v2/docs/handover/H1.1-RESPONSE.md` | the usability check of H1, finding by finding: where each is answered, in which commit, and what is left open |
 | `v2/docs/handover/candidates/README.md` | the UNACCEPTED candidates (board B's round 8, the layer 2, 3, 5 and 7 closers) as git patches, each with its base commit, sha256 and last review |
 
 ## 2. What is being built, and for whom
@@ -150,9 +153,11 @@ and no certification claimed; no vehicle surge claim (D-16); no finished runtime
 - **Diagrams** (`v2/docs/diagrams/`) were drawn at `e3aedb25`, before round 8; their README says what that means.
 - **Known gaps of H1 and H1.1.** (1) The readings behind `CURRENT-EVIDENCE.md` and `PCB-RULE-STATUS-*.md` live in the
   gitignored `v2/ecad/out/` and each board's `out/` folder and are not in the snapshot; the rendered pages are, so a
-  recipient re-takes a reading rather than reading it back. REGENERATE.md section 9 gives the re-take procedure: on a
-  KiCad 9.0.9 host, every writer of a schematic-phase rule per board with `VERDICT_DIR` set, then `rules_status.py`
-  and `rules_render.py`, which reproduces and updates the layout-entry status (A 17 ... E5 5). (2) The test suite needs a git checkout of the repository
+  recipient re-takes a reading rather than reading it back. REGENERATE.md section 9 states the re-take procedure in
+  words: on a KiCad 9.0.9 host, every writer of a schematic-phase rule per board with `VERDICT_DIR` set, then
+  `rules_status.py` and `rules_render.py`, which reproduces and updates the layout-entry status (A 17 ... E5 5). The
+  driver that runs it in one command arrives in the next snapshot (H2); it is not in H1.1, and was not run for it.
+  (2) The test suite needs a git checkout of the repository
   for `test_netlist_provenance` and for the registry's closed-by-commit checks; from the ZIP alone those fail
   (REGENERATE.md section 7). (3) The ZIP is deterministic per host: two builds of one commit on one host are byte for
   byte equal, on another host compare `MANIFEST.tsv`, not the ZIP's sha256. (4) Maker documents are referenced by
@@ -179,7 +184,7 @@ and no certification claimed; no vehicle surge claim (D-16); no finished runtime
 | `v2/ecad/tools/` (the rest) | the checking tools, the pipeline and its tests (`tests/run.py`) | tools; a tool's verdict is evidence only when bound to the current candidate |
 | `v2/vendor/` | makers' documents and CAD, with `SOURCES.yaml` (identity, revision, source and sha256 per critical part), `sources.txt`, `vendor-status.txt`, `open-picks.txt` | reference material under the makers' own terms; a held document does not validate a part |
 | `v2/cad/` | CAD generators of the made parts (face plate, pack box, lid tray, float clamp) and the render scene | predates the current case choices (LAYER-STATUS layer 7) |
-| `v2/release/revA/` | deliverable folders, review prints and case templates of earlier layout phases, and the order set | historical; the order set was rebuilt and quarantined (decision 41), and nothing is to be ordered from it |
+| `v2/release/revA/` | deliverable folders, review prints and case templates of earlier layout phases, and the order set | historical; the order set was rebuilt and quarantined (decision 41), and nothing is to be ordered from it. One file is the exception: `v2/release/revA/order/JLC-CERTIFIED.tsv` is bundled and current (section 5, layer 6) |
 | `v2/release/review-packets/` | review packets of boards C, D, E and P at `1f614233`; D and P superseded, C and E to be rebuilt (`v2/release/review-packets/README.md`) | review input, with the README's labels |
 
 **Generated pages: never hand-edit.** `v2/docs/CURRENT-EVIDENCE.md`, `v2/docs/PCB-RULE-STATUS-*.md`,
@@ -261,7 +266,7 @@ leaves out. What a reader will not find, or should not use:
 | Excluded or not usable | Why | Where the fact lives instead |
 |---|---|---|
 | The V1 kits (`v1/`) | built, separate from V2, out of this handover's scope | `v1/README.md` |
-| Committed board layouts, their verdicts, DRC reports, Gerbers, order folders, deliverable folders under `v2/release/revA/`, EasyEDA conversions | every layout predates its corrected netlist; the order set is quarantined (decision 41); `v2/BUILD.md` is the 7 September ordering guide and is not to be used for ordering | `v2/docs/CURRENT-EVIDENCE.md` (candidate table) |
+| Committed board layouts, their verdicts, DRC reports, Gerbers, order folders, deliverable folders under `v2/release/revA/`, EasyEDA conversions | every layout predates its corrected netlist; the order set is quarantined (decision 41); `v2/BUILD.md` is the 7 September ordering guide and is not to be used for ordering. The order folder's `JLC-CERTIFIED.tsv` is not excluded: it is bundled and current (section 5, layer 6) | `v2/docs/CURRENT-EVIDENCE.md` (candidate table) |
 | Review packets D-D12 and P-P4 at `1f614233` | superseded (`v2/release/review-packets/README.md`) | the battery packet `v2/docs/review-packets/battery/` for P |
 | Concept renders and board images | presentation, not engineering input; the renders show the 7 September arrangement | `v2/docs/CASE-MARGINS.md` for the current arrangement |
 | Schematic-phase readings that the status pages render | they sit in gitignored `out/` folders on the build host (`.gitignore`); the committed `routed/*.verdict.json` are 21 September readings of older netlists | CURRENT-EVIDENCE.md classes every reading; a consolidated re-take is a closing action, and REGENERATE.md section 9 gives its procedure |

@@ -270,15 +270,20 @@ echo "suite exit $?"
 tail -n 1 "$HO/../suite.log"
 ```
 
-Expected: `suite exit 1` and `tests: 1913 passed, 17 failed, 22 skipped` (a skip is not a pass: the 22 name what
-they could not run). **Every one of the 17 failures is caused by what the snapshot leaves out, none by a design
-finding**, and each names its missing input:
+Expected, as run from the H1 extraction: `suite exit 1` and `tests: 1913 passed, 17 failed, 22 skipped` (a skip is
+not a pass: the 22 name what they could not run). **Every one of the 17 failures is caused by what the snapshot leaves
+out, none by a design finding**, and each names its missing input (the table below). **H1.1** adds two tests to
+`test_handover_pack`. Each builds its own scratch repository with the `git` binary, as eleven of H1's twelve packer
+tests do, so from an extraction they need `git` on the path and nothing else. The whole suite was not re-run
+for H1.1; the expectation is two more passes (`1915 passed, 17 failed, 22 skipped`) with the same 17 failures. The
+packer's own tests were run from a fresh extraction of the H1.1 ZIP (`python3 run.py test_handover_pack`): 13 passed
+and 1 skipped, the skip being the test that applies `pack.yaml` to a git checkout's HEAD, which an extraction is not.
 
 | Failures | Tests | The input the snapshot does not carry |
 |---|---|---|
 | 11 | `test_requirements` (4: the registry validates, the trace page is generated, `--check`, the decision index), `test_layout_entry_stages`, `test_interfaces`, `test_emc_sheet`, `test_rails_census` (3), `test_evidence_class` (every declared writer's fixed input exists) | maker documents cited and referenced, not bundled. The seven the requirements registry cited at `e3aedb25` are bundled (`pack.yaml`, layer 3 rule), but since the layer 6 closer's merge CON-017 also binds ST's `st/st-rm0433-rev8.pdf` (40.7 MB), `st/st-stm32h743xi-datasheet-rev11.pdf` and `st/st-es0392-rev15.pdf`, about 21 MB compressed together, which the 50 MB cap of `pack.yaml` leaves out; so the registry reports 4 errors, all on CON-017. `pcb_interfaces.yaml` cites `quectel/quectel-rm520n-gl-hardware-design-v1.0.pdf`; the EMC sheet cites `ti/lm5176-datasheet.pdf` and others; the rails census reads `ti/ti-tpa6132a2.pdf` and `power/tps2596.pdf`; `intent_checks.py` declares `battery/ti-bq77207.pdf`. A tree that holds part of `v2/vendor/` is judged as holding the library, so an absent citation is a failure there, not a skip |
 | 3 | `test_block_contract` | board A's board file `pcb-a-power-a23/pcb-a-power.kicad_pcb`, excluded as a stale layout: board E5's pin map is compared with it, so from the snapshot its contract reads INCONCLUSIVE |
-| 2 | `test_doc_provenance.t_the_tree_today_is_reported_rather_than_assumed`, `test_order_readiness` | the historical order folders under `v2/release/revA/order/`, excluded |
+| 2 | `test_doc_provenance.t_the_tree_today_is_reported_rather_than_assumed`, `test_order_readiness` | the historical order folders under `v2/release/revA/order/`, excluded (all but `JLC-CERTIFIED.tsv`, which is bundled and current) |
 | 1 | `test_netlist_provenance` | the git index: it lists committed netlists with git, and an extraction has no `.git` |
 
 The requirements validator on its own, from the extraction (`cd v2/ecad; python3 tools/rules_lib.py requirements`),
@@ -340,34 +345,43 @@ says what that clone knew when it built, and "unknown" in a clone with no such r
 
 ## 9. Re-take the schematic-phase readings and re-render CURRENT-EVIDENCE
 
-**Status in H1.1: the procedure is stated, its driver lands in the next snapshot.** The layout-entry status (0 boards
-ready; reasons A 17, B 16, C 11, D 15, E 16, P 15, E5 5) and every `PCB-RULE-STATUS-<x>.md` verdict are rendered from
-readings (`*.verdict.json`) in gitignored `out/` folders that no snapshot carries (START-HERE section 3a, known gap 1).
-A driver that runs exactly the writers the layout-entry test reads, `v2/ecad/tools/retake_schematic_phase.py`, was being
-written when H1.1 was cut and is not in it; until it lands, the order below is the procedure, and it is the order that
-driver follows. None of it was run for H1.1.
+**Status in H1.1: this section states the procedure in words; its driver arrives in the next snapshot (H2).** This
+tree holds no script that runs the whole re-take, and nothing on this page stands for one: every tool named below
+exists in this tree and runs on its own, but the sequence that drives them per board was still being written when H1.1
+was cut and is not in it. None of the procedure was run for H1.1, so it carries no expected counts beyond the figures
+it starts from. Those figures are the layout-entry status (0 boards ready; reasons A 17, B 16, C 11, D 15, E 16, P 15,
+E5 5) and every `PCB-RULE-STATUS-<x>.md` verdict, rendered from readings (`*.verdict.json`) in gitignored `out/`
+folders that no snapshot carries (START-HERE section 3a, known gap 1). The steps:
 
-1. **Work in a throwaway git clone outside `/tmp`, on a KiCad 9.0.9 host** (section 1). A reading taken on files under
-   `/tmp` is classed TEMP_INPUT and never counts; a reading of an uncommitted netlist is evidence about nothing anyone
-   can check out, so every input (netlist, provenance sidecar, intent file, schematic, project, allow-lists) must be
-   tracked and unmodified (`git status --short` empty).
-2. **List what to run per board from the registries, never by hand.** For board `<x>`: every rule
-   `rules_lib.rules_for("<x>")` returns with `verification_phase: SCHEMATIC`, plus every rule a hold of
-   `pcb_board_holds.yaml` names under `layout_entry_requires` as `rule_pass`; for each, `pcb_rules_coverage.yaml` names
-   the verifying tool and the verdict names it writes. A rule verified by a desk review has no writer and is not run.
-   Each writer must be declared in `rules_status.CONFIG_INPUTS`, or its reading can never bind.
-3. **Run every writer on the committed netlist, in the board's declared phase directory, with `VERDICT_DIR` set to
-   that directory's `out/`** (the place `full.sh`'s writers write, which `rules_status.py` reads), with the arguments
-   `v2/ecad/tools/gate_sweep.sh` gives them: `erc_gate.py . <stem> --run` (with the schematic and `kicad-cli`),
-   `safe_lines.py`, `pin_map_lands.py`, `derate.py`, `intent_checks.py --netlist`, `power_sequence.py`,
-   `edge_length.py --netlist`, `clock_check.py`, `port_protect.py`, `pack_protection.py --netlist ... --check`,
-   `energy_chain.py --ecad ..`, and the rest the coverage map names for that board. Never run a writer in a working
+1. **Work in a throwaway git clone outside `/tmp`, on a KiCad 9.0.9 host** (section 1). `rules_status.py` classes a
+   reading taken on files under a temporary directory as TEMP_INPUT, which never counts, and a configuration input it
+   cannot date by a commit as changed; so every input (netlist, provenance sidecar, intent file, schematic, project,
+   allow-lists, registries) must be tracked and unmodified (`git status --short` empty) when the writers run.
+2. **List what to run per board from the registries, never by hand.** For board `<x>`: every rule that
+   `rules_lib.rules_for("<x>")` returns with `verification_phase: SCHEMATIC` in `pcb_rules.yaml`, plus every rule that
+   a hold of `pcb_board_holds.yaml` names under `layout_entry_requires` as `rule_pass`. For each, the rule's entry in
+   `pcb_rules_coverage.yaml` names the verifying tool (`verification: tool`) and the verdict it writes
+   (`verification: verdict`). A rule verified by a document or a desk review names no writing tool and is not run. A
+   writer's reading binds only when the writer is declared in `rules_status.CONFIG_INPUTS`
+   (`rules_status.py`, the block comment above it).
+3. **Run every writer on the committed netlist, from the board's declared phase directory** (the one the board's
+   routeflow profile names; CURRENT-EVIDENCE's candidate table lists it), with `VERDICT_DIR` set to that directory's
+   `out/`, or to `v2/ecad/out/` for a writer that judges the whole set; those are the folders `rules_status.py` reads
+   (`_project_dirs`). Each writer takes the netlist form its own usage line documents; for the writers the
+   schematic-phase rules name today that is `erc_gate.py . <stem> --run`, `safe_lines.py out/<stem>.net`,
+   `pin_map_lands.py out/<stem>.net <x>`, `derate.py out/<stem>.net`, `intent_checks.py --netlist out/<stem>.net`,
+   `power_sequence.py out/<stem>.net`, `edge_length.py --netlist out/<stem>.net`, `clock_check.py out/<stem>.net`,
+   `port_protect.py out/<stem>.net` and, on board P, `pack_protection.py --netlist out/<stem>.net --check`, each run
+   as `python3 ../tools/<writer> ...` from the phase directory; `energy_chain.py --ecad ..` runs from `v2/ecad/tools`
+   (section 6).
+   `v2/ecad/tools/gate_sweep.sh` shows the same netlist forms for a routed board's copy; it is not this procedure,
+   because it re-judges a routed board and files its verdicts under `routed/`. Never run a writer in a working
    checkout you keep: that writes the tree's own evidence (START-HERE section 6).
-4. **Classify and render.** From `v2/ecad`: `python3 tools/rules_status.py` three times, the integrating session's practice
-   (the last run must leave its outputs unchanged; if it does not, run it again and say so), then
-   `python3 tools/rules_render.py` to write `CURRENT-EVIDENCE.md` and the per-board status pages, and
-   `python3 tools/rules_render.py --check` to confirm they are current. Commit any configuration input
-   (`pcb_rules_coverage.yaml` and the like) BEFORE running `rules_status.py`: an uncommitted configuration input
-   reads CONFIG_CHANGED.
+4. **Classify and render.** Commit any configuration input you changed (`pcb_rules_coverage.yaml` and the like)
+   BEFORE running `rules_status.py`: an input no commit dates reads CONFIG_CHANGED. Then, from `v2/ecad`, run
+   `python3 tools/rules_status.py` three times (the integrating session's practice, because a run can move a reading
+   the next run classes; the last run must leave its outputs unchanged, and if it does not, run it again and say so),
+   then `python3 tools/rules_render.py` to write `CURRENT-EVIDENCE.md` and the per-board status pages, and
+   `python3 tools/rules_render.py --check` to confirm they are current.
 5. **Compare** the new layout-entry reasons per board with the figures above; a row that moved names the reading that
-   moved it (`CURRENT-EVIDENCE.md`, "Layout entry, per board: the exact remaining blockers").
+   moved it (`CURRENT-EVIDENCE.md`, section "Layout entry, per board: the exact remaining blockers").
