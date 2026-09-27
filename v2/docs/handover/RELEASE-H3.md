@@ -1,27 +1,28 @@
 # Handover release H3: what it is and how to check it
 
 Prepared 27 September 2026 (MESHSAT-1357) as a draft, by the writer of the H3 pages, on the structure of
-`RELEASE-H2.md`. H3 is a partial handover: **three of the nine pre-PCB layers are COMPLETE in it (1, product
+`RELEASE-H2.md`, and **completed by the integrating session on 27 September 2026 23:50 CEST**, after the build and the two fresh checks. H3 is a partial handover: **three of the nine pre-PCB layers are COMPLETE in it (1, product
 definition; 2, concept of operations; 3, requirements), and the other six carry their remaining acceptance items.**
 Nothing in it has been built, ordered, powered or measured. Every review and check it rests on is an AI review or an
 AI check, labelled as one in its own heading; none is a qualified engineering review.
 
-**Rows marked `TBD-BY-INTEGRATOR`.** A snapshot cannot carry its own checksum, so the figures of the build are written
-into this page in the repository after the build, by the integrating session. **Inside the H3 ZIP this page is the
-draft of the source commit and those rows are not filled in.** There, read the source commit in `SOURCE.txt`, the
-file list in `MANIFEST.tsv`, and the checksum in `H3.zip.sha256` beside the ZIP.
+**The rows of the build.** A snapshot cannot carry its own checksum, so the figures of the build were written into this
+page in the repository after the build. **Inside the H3 ZIP this page is the draft of the source commit and those rows
+read `TBD-BY-INTEGRATOR`.** A reader who holds only the ZIP reads the source commit in `SOURCE.txt`, the file list in
+`MANIFEST.tsv` and the checksum in `H3.zip.sha256` beside the ZIP, and finds this completed page, the two check records
+and the independent review on the public repository at the paths named below. H3 itself is not rebuilt to carry them.
 
 ## The package
 
 | Item | Value |
 |---|---|
 | File | `v2/release/handover/H3.zip` (with `H3.zip.sha256` and `H3.MANIFEST.tsv` beside it) |
-| sha256 | TBD-BY-INTEGRATOR |
-| Size | TBD-BY-INTEGRATOR (bytes and entries; included, excluded and referenced files) |
-| Snapshot commit | TBD-BY-INTEGRATOR (the commit that adds the ZIP) |
-| Source commit | TBD-BY-INTEGRATOR (every file in the ZIP is this commit's blob; `H3.MANIFEST.tsv` lists each with its git blob sha and sha256) |
-| Suite on the source commit | TBD-BY-INTEGRATOR (passed, failed, skipped, and the host: a skip is not a pass) |
-| Public | TBD-BY-INTEGRATOR (whether both commits are on `main` of `github.com/meshsat/meshsat-fieldkit`, and since when; `python3 v2/docs/records/h3/public_check.py <commit>` asks it) |
+| sha256 | `6922a96d732442e99a65d8db3f0734378bd7ea636894fca283a4b3ca424dd07a` |
+| Size | 52,187,825 bytes, 2,275 entries: 2,265 files of the source commit, the six handover pages copied to the root and the four generated files (`MANIFEST.tsv`, `SOURCE.txt`, `EXCLUDED.tsv`, `REFERENCED-SOURCES.tsv`); 4,684 files of the commit excluded and 483 referenced, not bundled. The cap is 52,428,800 bytes |
+| Snapshot commit | `bd96bb61` (adds the ZIP, its checksum and its manifest, and closes S-79) |
+| Source commit | `75ad6ee5bc98d7213b9a61d1f64cfa7ea19cc669` (every file in the ZIP is this commit's blob; `H3.MANIFEST.tsv` lists each with its git blob sha and sha256) |
+| Suite on the source commit | in a git checkout with history at `75ad6ee5`: **1998 passed, 0 failed, 2 skipped** on the KiCad host (KiCad 9.0.9; the two skips are `test_finish_order.t_routeflow_validate_agrees_with_these_rules`, whose profiles pin that host's own clone, and `test_pairsearch.t_the_three_implementations_agree`, no numba there), and **1937 passed, 0 failed, 63 skipped** on the runner, which has no KiCad. A skip is not a pass. **From the ZIP alone**, measured on H3 by the usability check on the KiCad host: 1957 passed, 20 failed, 23 skipped, the 20 failures being the 20 that `REGENERATE.md` section 7 names, each for an input the ZIP leaves out |
+| Public | both commits are on `main` of `github.com/meshsat/meshsat-fieldkit`: the source commit since 27 September 2026 21:18 UTC, before the build, so H3's `SOURCE.txt` marks it `public yes`; the snapshot commit since about 21:24 UTC. `python3 v2/docs/records/h3/public_check.py <commit>` asks it from a clone that holds the commit (from an extraction of the ZIP it cannot answer) |
 | Check | `sha256sum -c H3.zip.sha256`, then `python3 v2/ecad/tools/handover_pack.py verify H3.zip` (reads every manifest row) |
 
 ## Layers COMPLETE in H3, with the records they rest on
@@ -72,7 +73,8 @@ layout, 0 physically verified, 40 reasons (A 7, B 7, C 5, D 8, E 5, P 6, E5 2).
 | Reproduced on H2 by a fresh checker from the ZIP and the tools it names | `v2/docs/records/handover/H2-USABILITY-CHECK.md` (an AI check of usability, not of engineering): the energy chain, the power and case scripts byte for byte, board P's regeneration, PARITY on all six boards, the exports, the suite's failures with their causes, the fetch of 29 referenced files, board P's re-take |
 | Read from outside the project | `v2/docs/reviews/2026-09-27-h2-independent-review.md`, an independent review of H2 from its five delivered files, saved as the owner pasted it: it verified the archive and credits layers 1 and 2 as completed definition baselines, and names corrections, which H3's pages answer in part (the definition documents kept stable, three reproduction routes stated apart) |
 | Not repeated for H3 when this page was written | no command of `REGENERATE.md` was run on an H3 build: its expected values are those of the H2 run. Regeneration, the exports and the consolidated re-take were not run again; their inputs are byte for byte H2's. No review read layers 1 to 3 again for H3: the H3 pages correct statements and add errata, and change no definition and no requirement |
-| The two fresh checks of H3 | TBD-BY-INTEGRATOR (who checked, from which files, the verdict of each, and where each record is filed) |
+| The two fresh checks of H3 | two AI sessions that built none of H3 and wrote none of its pages, each from its own extraction of `H3.zip` and the dependencies the package declares, on 27 September 2026 21:20 to 21:50 UTC. **The coherence check of layers 1 to 3** (`v2/docs/records/handover/H3-COHERENCE-CHECK.md`): usable as the versioned package of layers 1 to 3; every statement of their status, baseline commit and review record agrees across the pages, the registry and the files H3 carries; no blocking finding, thirteen minor. **The usability check** (`v2/docs/records/handover/H3-USABILITY-CHECK.md`): usable as it says for route A and route B (the stored-energy chain and board P's regeneration both reproduced from the ZIP alone, every command of `REGENERATE.md` working as written), route C correctly stated as not passing from the ZIP; no blocking finding, fifteen minor. Each is an AI check, never a qualified review, and neither judges whether a circuit is right |
+| Read from outside the project, of H3 itself | `v2/docs/reviews/2026-09-27-h3-independent-review.md`, an independent review of H3 from its three delivered files, saved as the owner pasted it: conditional acceptance as a usable partial handover, layers 1 to 3 credited as completed definition layers within their recorded scope, layout and fabrication readiness blocked; three findings (H3-01 and H3-02, two checker defects; H3-03, the rows of this page that were blank in the package) |
 | Never done, by anyone | a qualified engineering review of any layer or board; any physical test. R-BAT, R-PWR and R-HSD are not engaged |
 
 ## Three ways to use H3
@@ -99,6 +101,27 @@ own `SOURCE.txt` marks its source commit `public no`. Both are true of their tim
 building clone knew when H2 was built, and the commits were published after it. Asked on 27 September 2026 at 20:38
 UTC, `b89b50b4` and `174d8466` are ancestors of `main` and the public repository serves both
 (`v2/docs/records/h3/public_check.out`). H2's files are not edited.
+
+## Found after the build, by the two fresh checks and the independent review
+
+None of these changes the status of layers 1 to 3. H3 is not rebuilt; each is corrected in the editable sources and
+travels in the next snapshot.
+
+| # | What was found | Effect on a reader | Where it is answered |
+|---|---|---|---|
+| g | `v2/docs/CURRENT-EVIDENCE.md` lines 8 to 9 still say the foundations are incomplete "because the requirements and architecture baselines are still open": fixed text of the renderer, true of the architecture baseline and no longer of the requirements baseline (the registry reads BASELINED at `a54b793b`) | the one unmarked sentence in a current page that contradicts layer 3's status; it errs on the cautious side, and the registry is the authority | the renderer's sentence, in the next candidate |
+| h | REL-001's PASS on every board is a reading of a word list: the tool takes its population from twelve words in the parts' value text, so a connector whose value carries none of them (an RJ45 jack, the SIM sockets, the dock's spring pins among 61 parts found) is in no denominator, and with no netlist at all the tool reads PASS of zero (the independent review's H3-01, reproduced on four fixtures) | REL-001's completeness holds for its twelve words only; the reading is LIMITED | the checker repaired on an explicit inventory with a missing input reading INCONCLUSIVE (stream `d6rel`), then re-taken |
+| f, extended | erratum f (TRN-001 on board A does not judge VIN_RAW's entry; the independent review's H3-02) is not stated at three points of use: `LAYER-STATUS.md` items 8.10 and 8.14 and `PCB-RULE-STATUS-A.md` | TRN-001's PASS on board A is LIMITED wherever it is quoted | the declaration corrected and the checker made to refuse a declaration that names no supply or signal pin and to report an exposed pin no declaration covers (the protection review stream `d8dec31`), then re-taken |
+| i | `v2/docs/layout-constraints/E.md`, inside its power table and its masked 36 V sites, still names J_BLK as VIN_RAW's exit; in the packaged netlist VIN_RAW is on P_VR pin 1 and J_BLK pins 1 to 7 and 11 are ground. The numbers are right and the sheet's head states SC-55 | a layout engineer reading board E's sheet would place the 36 V clearance at the wrong connector | the sheet, when the sheets are re-read on the current netlists |
+| j | `ENGINEERING-QUESTIONS.md` EQ-08 names boards A, B, C, E, P where FEA-007 holds A, B, D, E, E5, P at layout entry (C only at fabrication release) | D's and E5's desk items are missing from the question's recommended action | the question's next edition |
+| k | five rows of `v2/docs/records/README.md` quoted the sha256 of H3 records as they were one commit before the source commit, and ten rows name log files the repository never held (its rule `logs/` ignores them, and they were lost with the worktree) | the index disagrees with the files for those fifteen rows; `MANIFEST.tsv` is right | the index, in the commit that completes this page (`v2/docs/records/h3/refresh_readme_rows.py`) |
+| l | acceptance item 3.15 of layer 3 ("MET in substance") was judged on ten open items that no record waits on; the registry H3 carries has twenty-four, and one of them decides a verdict (S-64, under which CON-010 reads FAIL without a `waits_on`) | the failure is visible in CON-010's evidence; the link and the count are missing | the registry's links, by its writer, as a change to the baseline's open items only |
+| m | the statement "no definition change" of the restructure is made without the two exceptions its own check names (the brief's definition no longer names SC-04 or the fit as a core condition, and no longer describes the EMCON lamp); `DEFINITION-STATUS.md` reports both | a reader of the short statement alone would not know of them | the short statements, at the pages' next edition |
+
+The other minor findings (the wording of "COMPLETE since `24e7bf5a`", the counts of the requirements validator from
+the ZIP marked as H2's where H3's read 13 errors and 20 warnings, stale pointers, the record `design_difference.out`
+naming the commit before the source commit, which changes five record files and nothing else) are listed in the two
+check records and answered in `v2/docs/handover/H3-RESPONSE.md` when the pages are next edited.
 
 ## Known gaps carried from H2
 
