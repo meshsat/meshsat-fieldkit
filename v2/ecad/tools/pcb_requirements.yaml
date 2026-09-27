@@ -1884,6 +1884,42 @@ open_items:
       generated (62.1 C after BANK-R1), which part_temps.py reports once the layer-2 closer's patch to it lands: another
       part, a placement out of the hottest air, or a stated carve-out, picked at layer 6 under FEA-004; REQ-052's
       acceptance fails any part outside its published range.
+  - id: S-59
+    class: SESSION
+    status: OPEN
+    title: >-
+      (hc5-layer5: SC-HF-02) The kit I2C bus drawn as the session's three segments of v2/docs/HW-FW-CONTRACT.md section 6.5:
+      board A's targets and board D behind a TCA9517A on A (its A side local, 1.2 k pull-ups to A's +3V3, EN high);
+      board B's three supervisors, TPS23861 and KSZ9897R behind a TCA9517A on B (its B side theirs, 1.5 k pull-ups, EN
+      from U7 IO1_7 with a 10 k pull-down); the copper allowances of section 6.6 handed to layout. Until drawn, finding
+      HF-F01 stands: as one segment the bus cannot meet the 300 ns rise of its BQ25731, TPS23861 and ATECC608B.
+  - id: S-60
+    class: SESSION
+    status: OPEN
+    title: >-
+      (hc5-layer5: HF-F02) Board A's INA226 U17 senses the 54 V PoE rail with IN+ and IN- at the rail, over the part's 40 V
+      absolute maximum and 36 V input range (TI SBOS547 5.1, 5.5 note 1); a damaged monitor can hold the kit bus. Open
+      until board A's author moves the sense to the stage's VBAT side or the rail's return, or fits a part rated for the
+      rail on its maker's document (v2/docs/HW-FW-CONTRACT.md section 7).
+  - id: S-61
+    class: SESSION
+    status: OPEN
+    title: >-
+      (hc5-layer5: SC-HF-06, HF-F06) The monitor's touch USB takes board D's spare hub port J_USB3 (the session's choice
+      SC-HF-06 of v2/docs/HW-FW-CONTRACT.md section 8; no board B change; the HAL shares it to the display owner, FW-B19).
+      Owed on board D: a current limit on J_USB3's VBUS, which is +5V_D8 with no port switch, so a fault on the touch
+      lead trips board A's U23 and takes board D down; and the J_USB3 budget line (0.05 A) set from the touch
+      controller's measured draw, which USB 2.0 section 7.2.1 bounds at 100 mA unconfigured and 500 mA configured (V-B19).
+      Carried before board D's layout entry (r8int4, after hc5's second review: a fault on the touch lead removes board D,
+      whose APRS path is a prototype 1 core function under D-01, so HF-F06 is major).
+  - id: S-62
+    class: SESSION
+    status: OPEN
+    title: >-
+      (hc5-layer5: HF-F07) Board E: the Geiger module's pulse reaches GPIO7 through 22 R only, and a 5 V class module can exceed
+      the RP2040's IOVDD + 0.5 V absolute maximum (datasheet Table 622): pick the module, read its output stage, and add a
+      divider or a clamp if needed; and give the fan switches Q9, Q10 discrete gate pull-downs instead of the RP2040's pad
+      pull-down (v2/docs/HW-FW-CONTRACT.md section 7).
 
 # Items that left the open list, and what closed each: an owner ruling, a session choice, or a commit whose effect
 # was read in the file `closing_evidence` names. A record never waits on a closed item; it cites what closed it.
@@ -2601,9 +2637,11 @@ records:
           v2/docs/V2-SPEC.md re-read at integration by the layer-3 closer's apply script (27 September 2026): the line
           or row beginning '| Devices |'; correction 6 whole, which this reading rests on, byte-identical to the
           revision it was bound to (41edfc2e2e3f1961), so it stands on the file at a02ea1b6801f8916
+      - >-
+          v2/docs/ARCH-PCB-B-IOHA.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed sections 6 and 10a only (after section 6's corrected PB1/PB2 heading, the FW-B08 pointer and the segment choice SC-HF-02; 10a's per-controller part; the address block and the supervisors' part were board B's round 8 text already and are unchanged, r8int4); sections 4, 15 and 15a and line 17, which this reading cites, are unchanged, so this reading stands on the file at 55620cf51446bfc8
     evidence_bound_to:
       - "v2/docs/CONOPS.md@eb0eda7cacfe7156"
-      - "v2/docs/ARCH-PCB-B-IOHA.md@08d44b37fa8e2717"
+      - "v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8"
       - "v2/docs/V2-SPEC.md@a02ea1b6801f8916"
     release_effect: BLOCKER
     source:
@@ -3490,9 +3528,13 @@ records:
           section 2.; the text "bank 1's home host is the slot 1 module and its fa", which this reading rests on,
           byte-identical to the revision it was bound to (5479d727037c7b3e), so it stands on the file at
           4b03b1c89cf68cef
+      - >-
+          v2/docs/PANEL.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed section 1's Pass-throughs row (the monitor's touch lead to D8 J_USB3, SC-HF-06), section 3's GPIO10 to 12 row (the heartbeat source) and section 7's new paragraph on speed, pull-ups and the budget (its supervisors' row at 0x34 to 0x36, its 0x68 row and the S-07 finding closed as I3-F01 were already board B's round 8 text, b76c18cb, and are unchanged here); line 5 (bank 1's home and failover hosts) and section 2's ribbon table with its pin 15 row, which this reading rests on, are unchanged, and section 1 changes only in its Pass-throughs row (the monitor's leads), which this reading does not cite, so this reading stands on the file at 4bcbf31f44560ee1
+      - >-
+          v2/docs/ARCH-PCB-B-IOHA.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed sections 6 and 10a only (after section 6's corrected PB1/PB2 heading, the FW-B08 pointer and the segment choice SC-HF-02; 10a's per-controller part; the address block and the supervisors' part were board B's round 8 text already and are unchanged, r8int4); sections 4, 15 and 15a and line 17, which this reading cites, are unchanged, so this reading stands on the file at 55620cf51446bfc8
     evidence_bound_to:
-      - "v2/docs/ARCH-PCB-B-IOHA.md@08d44b37fa8e2717"
-      - "v2/docs/PANEL.md@4b03b1c89cf68cef"
+      - "v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8"
+      - "v2/docs/PANEL.md@4bcbf31f44560ee1"
       - "v2/ecad/tools/gen_sch_b.py@af6e5821e21b70ef"
     release_effect: ADVISORY
     source:
@@ -5886,8 +5928,10 @@ records:
           v2/docs/PANEL.md re-read at integration by the layer-3 closer's apply script (27 September 2026): section 7.,
           which this reading rests on, byte-identical to the revision it was bound to (5479d727037c7b3e), so it stands
           on the file at 4b03b1c89cf68cef
+      - >-
+          v2/docs/PANEL.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed section 1's Pass-throughs row (the monitor's touch lead to D8 J_USB3, SC-HF-06), section 3's GPIO10 to 12 row (the heartbeat source) and section 7's new paragraph on speed, pull-ups and the budget (its supervisors' row at 0x34 to 0x36, its 0x68 row and the S-07 finding closed as I3-F01 were already board B's round 8 text, b76c18cb, and are unchanged here); section 7's panel-absent paragraph, which this reading cites, is unchanged, so this reading stands on the file at 4bcbf31f44560ee1
     evidence_bound_to:
-      - "v2/docs/PANEL.md@4b03b1c89cf68cef"
+      - "v2/docs/PANEL.md@4bcbf31f44560ee1"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63"
     release_effect: ADVISORY
     source:
@@ -6538,8 +6582,10 @@ records:
           drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those
           files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the
           file at e7a7b9d05a0560ed
+      - >-
+          v2/docs/feasibility/ZEROIZE.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed the supervisors' address block only, in section 2, Z-C3 (section 3.1), row E17 of section 4 and section 9 item 8, and section 3.4's sentence on the bus clock (now declared, the budget re-run at 90 kHz holds); sections 1 and 7 are unchanged and section 4 changed only in row E17's address block, so the documentary result stands, so this reading stands on the file at 94bd922511514ca4
     evidence_bound_to:
-      - "v2/docs/feasibility/ZEROIZE.md@e7a7b9d05a0560ed"
+      - "v2/docs/feasibility/ZEROIZE.md@94bd922511514ca4"
     release_effect: MUST_JUSTIFY
     source:
       - "owner ruling D-03"
@@ -6566,11 +6612,13 @@ records:
     kind: constraint
     parent: NEED-10
     statement: >-
-      The three STM32H743 I/O supervisors' firmware is an I2C target on the kit bus at 0x30 to 0x32 only: never a
-      master, never at address 0x60 (firmware rule Z-C3), so only the panel controller commands the secure element.
+      The three STM32H743 I/O supervisors' firmware is an I2C target on the kit bus at 0x34, 0x35 and 0x36 only: never a
+      master, never at address 0x60 (firmware rule Z-C3) and never at 0x30 to 0x32, where the TPS23861's broadcast
+      address 0x30 sits (I3-F01), so only the panel controller commands the secure element.
     acceptance: >-
       The supervisor firmware's requirements carry Z-C3 and its image is covered by D-13's software-verified boot; a
-      review of the firmware shows no master transaction and no response at 0x60; the Z-EXP-C held-bus cases C-H1 to
+      review of the firmware shows no master transaction and no response at 0x60 or at 0x30 to 0x32 (bench V-B08 of
+      v2/docs/HW-FW-CONTRACT.md); the Z-EXP-C held-bus cases C-H1 to
       C-H3 show the wipe's fail-secure outcome when a supervisor holds the bus.
     allocated_to: [fw_ioctrl, b]
     verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
@@ -6595,7 +6643,9 @@ records:
       - "v2/docs/feasibility/ZEROIZE.md section 8 (R7)"
       - "v2/docs/feasibility/ZEROIZE.md section 9 (item 8)"
       - "v2/ecad/tools/gen_sch_b.py:1381"
-      - "v2/docs/ARCH-PCB-B-IOHA.md:102"
+      - "v2/docs/ARCH-PCB-B-IOHA.md section 6"
+      - "v2/docs/ARCHITECTURE.md section 5.5 (I3-F01)"
+      - "v2/docs/HW-FW-CONTRACT.md FW-B08"
     source_check: VERIFIED
     notes: >-
       Created from ZEROIZE.md's firmware rule Z-C3 (26 September 2026). The supervisors sit on I2C1 (PB6 and PB7, pins
@@ -6605,7 +6655,66 @@ records:
       correction of 26 September 2026 (CFL-016, resolved), and it records an open finding that bears on this record:
       board B's TPS23861 PoE controller (U5) answers the broadcast address 0x30 whatever its A3 pin says (TI SLUSBX9I,
       sections 7.3.13 and 8.3.3.1), and 0x30 is supervisor 1's status address; the broadcast address is fixed in the
-      part, so it is the supervisors' address that has to move, in their firmware.
+      part, so it is the supervisors' address that has to move, in their firmware. Corrected 27 September 2026 by the
+      layer 5 closer (hc5-layer5): the session's block 0x34 to 0x36 of ARCHITECTURE.md section 5.5 (I3-F01) replaces
+      0x30 to 0x32 here, with the same block drafted into PANEL.md section 7, ARCH-PCB-B-IOHA.md section 6 and
+      ZEROIZE.md Z-C3; the rule itself is unchanged. The kit bus these targets share is budgeted in
+      v2/docs/HW-FW-CONTRACT.md section 6 (the session's three segments, SC-HF-02, put the supervisors behind a buffer
+      the panel opens, which narrows R7 without replacing Z-C3).
+
+  - id: CON-026
+    kind: constraint
+    parent: NEED-10
+    statement: >-
+      Every segment of the kit I2C bus meets, at its published-maximum pin capacitance and its copper, the rise time of
+      the strictest target on it (300 ns for the BQ25731, the TPS23861, the ATECC608B and the ADS1115), with pull-ups no
+      stronger than its weakest target's 3 mA sink at 0.4 V allows, at Standard-mode 100 kHz programmed and at least
+      90 kHz achieved.
+    acceptance: >-
+      kit_i2c_budget.py reads every segment within its limit on the current netlists; after layout, the field-solver
+      reading of each segment's copper is within the allowance of v2/docs/HW-FW-CONTRACT.md section 6.6; on the
+      prototype, bench V-K01 measures tr at most 300 ns, tf between 12 and 100 ns and fSCL at least 90 kHz at each
+      segment's farthest pin.
+    allocated_to: [a, b, c, d, fw_panel]
+    verification_method: [CALCULATION, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+    verification_phase: SCHEMATIC
+    final_phase: PROTOTYPE
+    prototype_1: core
+    prototype_1_basis: NAMED
+    prototype_1_why: >-
+      A condition of ZEROIZE of the secure element, which D-01 names as core: the panel controller reaches the secure
+      element only over the kit bus (feasibility/ZEROIZE.md section 3.4), and the same bus carries every rail and radio
+      enable and the charger's configuration.
+    satisfied_by:
+      rules: []
+      decisions: []
+    rule_coverage: NONE
+    rulings: [D-03]
+    waits_on: [S-59]
+    status: DEFINED
+    evidence_result: FAIL
+    evidence_phase: SCHEMATIC
+    evidence_class: DESK_REVIEW
+    evidence:
+      - >-
+          v2/docs/records/hc5/kit_i2c_budget.py run on the netlists at e3aedb25 (v2/docs/records/hc5/kit_i2c_budget.out.txt): as one segment the pins and ribbons alone take 290 pF (SDA, published
+          maxima) against the 269 pF the TPS23861's 0.8 to 2.3 V rise allows through the drawn 1.1 k, and 166 pF at typical
+          pin capacitance leave 137 pF for copper where the committed layouts carry 1,568 mm (157 to 345 pF); the pull-ups
+          already draw 2.94 mA of the weakest sinks' 3 mA. FAIL at desk, labelled as the session's AI desk review.
+    evidence_bound_to: ["v2/docs/records/hc5/kit_i2c_budget.out.txt@e06fc107ae495173", "v2/docs/records/hc5/kit_i2c_budget.py@879154d32d95f41c"]
+    release_effect: BLOCKER
+    source:
+      - "v2/docs/HW-FW-CONTRACT.md section 6"
+      - "v2/vendor/ti/bq25731-datasheet.pdf"
+      - "v2/vendor/ti/tps23861-datasheet.pdf"
+      - "v2/vendor/microchip/microchip-atecc608b-summary-DS40002239B.pdf"
+      - "v2/vendor/ti/ti-tca9517a-i2c-buffer.pdf"
+    source_check: VERIFIED
+    notes: >-
+      Created by the layer 5 closer (hc5-layer5: kit I2C bus), 27 September 2026. The session took three segments behind two
+      TCA9517A (SC-HF-02 of v2/docs/HW-FW-CONTRACT.md section 8), which reads within every limit at desk with the copper
+      allowances of section 6.6; the constraint stays FAIL until boards A and B draw it (S-59). The bus clock (100 kHz
+      programmed, 90 kHz achieved at least) is the one feasibility/ZEROIZE.md's time budget holds at, re-run at 90 kHz.
 
   - id: REQ-036
     kind: requirement
@@ -6823,8 +6932,10 @@ records:
           drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those
           files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the
           file at e7a7b9d05a0560ed
+      - >-
+          v2/docs/feasibility/ZEROIZE.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed the supervisors' address block only, in section 2, Z-C3 (section 3.1), row E17 of section 4 and section 9 item 8, and section 3.4's sentence on the bus clock (now declared, the budget re-run at 90 kHz holds); sections 1 and 7, which this reading cites, are unchanged; Z-C3 keeps its substance with the corrected address block, so this reading stands on the file at 94bd922511514ca4
     evidence_bound_to:
-      - "v2/docs/feasibility/ZEROIZE.md@e7a7b9d05a0560ed"
+      - "v2/docs/feasibility/ZEROIZE.md@94bd922511514ca4"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/ZEROIZE.md section 7", "v2/docs/reviews/2026-09-26-foundation-progress-review.md section 3"]
     source_check: VERIFIED
@@ -8049,10 +8160,12 @@ records:
           also rests on, are byte-identical to the file at 41edfc2e2e3f1961, and line 41's circuit description (the
           key-B socket, its locating holes, the two nano-SIM holders and their TPD4E001 arrays) is unchanged, so it
           stands on the file at a02ea1b6801f8916
+      - >-
+          v2/docs/PANEL.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed section 1's Pass-throughs row (the monitor's touch lead to D8 J_USB3, SC-HF-06), section 3's GPIO10 to 12 row (the heartbeat source) and section 7's new paragraph on speed, pull-ups and the budget (its supervisors' row at 0x34 to 0x36, its 0x68 row and the S-07 finding closed as I3-F01 were already board B's round 8 text, b76c18cb, and are unchanged here); section 1 changes only in its Pass-throughs row (the monitor's leads, which this reading does not cite; its ZEROIZE and EMCON logic rows are unchanged), section 6 is unchanged, and section 7's bus table still lists the supervisors, the Ethernet switch, the PoE controller and board A's expanders from the SDA and SCL nets, now with the supervisors at their corrected block, so the resolution stands, so this reading stands on the file at 4bcbf31f44560ee1
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976"
-      - "v2/docs/PANEL.md@4b03b1c89cf68cef"
+      - "v2/docs/PANEL.md@4bcbf31f44560ee1"
       - "v2/docs/CONOPS.md@eb0eda7cacfe7156"
       - "v2/docs/V2-SPEC.md@a02ea1b6801f8916"
       - "v2/docs/OPERATING-ENVELOPE.md@9f16f5b7d634764a"
@@ -8368,7 +8481,12 @@ records:
           (J_SPI3, U12) are unchanged from the file at dedaf34ce285e5ff; round 8 changed the fabric's control plane,
           the EMCON stages and the parts, none of which moves a device between banks, so the FAIL stands on the file
           at af6e5821e21b70ef
-    evidence_bound_to: ["v2/docs/ARCH-PCB-B-IOHA.md@08d44b37fa8e2717", "v2/ecad/tools/gen_sch_b.py@af6e5821e21b70ef"]
+      - >-
+          v2/docs/ARCH-PCB-B-IOHA.md re-read at the r8int4 integration of 27 September 2026 after the layer 5 closer's
+          edit (hc5-layer5): it changed sections 6 and 10a only (the FW-B08 pointer and the segment choice SC-HF-02
+          after section 6's corrected PB1/PB2 heading, and 10a's per-controller part); sections 4 and 15, which this
+          reading rests on, are byte-identical to the file at 08d44b37fa8e2717, so it stands on the file at 55620cf51446bfc8
+    evidence_bound_to: ["v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8", "v2/ecad/tools/gen_sch_b.py@af6e5821e21b70ef"]
     release_effect: MUST_JUSTIFY
     source:
       - "owner ruling D-02b"
@@ -9621,8 +9739,10 @@ records:
           the paragraph beginning '**Corrected 26 September 2026.** This pa', which this reading rests on,
           byte-identical to the revision it was bound to (89de81a11c52f34a), so it stands on the file at
           9f16f5b7d634764a
+      - >-
+          v2/docs/PANEL.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed section 1's Pass-throughs row (the monitor's touch lead to D8 J_USB3, SC-HF-06), section 3's GPIO10 to 12 row (the heartbeat source) and section 7's new paragraph on speed, pull-ups and the budget (its supervisors' row at 0x34 to 0x36, its 0x68 row and the S-07 finding closed as I3-F01 were already board B's round 8 text, b76c18cb, and are unchanged here); section 10, which this reading cites, is unchanged, so this reading stands on the file at 4bcbf31f44560ee1
     evidence_bound_to:
-      - "v2/docs/PANEL.md@4b03b1c89cf68cef"
+      - "v2/docs/PANEL.md@4bcbf31f44560ee1"
       - "v2/docs/CONOPS.md@eb0eda7cacfe7156"
       - "v2/docs/OPERATING-ENVELOPE.md@9f16f5b7d634764a"
       - "v2/ecad/tools/gen_sch_a.py@5a97fed72c42b79d"
@@ -9771,11 +9891,15 @@ records:
           test's seventeen indicators; the PA's key-downs inside K1, K2 and C4); sections 2 and 4, which this reading
           rests on (build step 7's SMBus lead and the Pack SMBus row), are byte-identical to the file at
           30db27eee509212c, so it stands on the file at 3ba4f3fd0f794f10
+      - >-
+          v2/docs/PANEL.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed section 1's Pass-throughs row (the monitor's touch lead to D8 J_USB3, SC-HF-06), section 3's GPIO10 to 12 row (the heartbeat source) and section 7's new paragraph on speed, pull-ups and the budget (its supervisors' row at 0x34 to 0x36, its 0x68 row and the S-07 finding closed as I3-F01 were already board B's round 8 text, b76c18cb, and are unchanged here); section 10, which this reading cites, is unchanged, so this reading stands on the file at 4bcbf31f44560ee1
+      - >-
+          v2/docs/ASSEMBLY.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed section 4's Monitor touch USB row and build step 9's clause on the monitor's leads only (the touch lead's board end, D8 J_USB3, SC-HF-06); section 4's Pack SMBus row and build step 7, which this reading cites, are unchanged, so this reading stands on the file at 3a8897ef6d717a30
     evidence_bound_to:
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976"
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
-      - "v2/docs/ASSEMBLY.md@3ba4f3fd0f794f10"
-      - "v2/docs/PANEL.md@4b03b1c89cf68cef"
+      - "v2/docs/ASSEMBLY.md@3a8897ef6d717a30"
+      - "v2/docs/PANEL.md@4bcbf31f44560ee1"
       - "v2/ecad/tools/check_contracts.py@308fdefb90335da4"
     release_effect: BLOCKER
     source: ["v2/ecad/tools/gen_sch_e.py:264", "v2/docs/ASSEMBLY.md section 4", "v2/docs/PANEL.md section 10"]

@@ -7,24 +7,24 @@ Generated from the requirements registry `v2/ecad/tools/pcb_requirements.yaml`. 
 
 Every reading carries its evidence class, in the six classes of `v2/docs/CURRENT-EVIDENCE.md`: a record reads PASS only on a class that counts, never on evidence awaiting revalidation, and a desk review (the session's own reading of named files, each bound by its sha256) is never a physical test. The prototype-core functions whose feasibility is not closed are listed first, as explicit architecture feasibility blockers (review of 26 September 2026, section 3 and checkpoint item 1): a merged document is configuration control, not proof that the architecture is feasible.
 
-Registry state **READY_FOR_REVIEW_B**. Sources read at commit `95e078a1` unless an entry says otherwise. 142 records trace to 19 needs; 29 owner rulings are applied, 50 choices were taken by the session under the owner's standing rule of 26 September 2026, 37 items are open and 49 are closed.
+Registry state **READY_FOR_REVIEW_B**. Sources read at commit `95e078a1` unless an entry says otherwise. 143 records trace to 19 needs; 29 owner rulings are applied, 50 choices were taken by the session under the owner's standing rule of 26 September 2026, 41 items are open and 49 are closed.
 
 ## Summary
 
 | kind | records | prototype 1 core | deferred |
 |---|---:|---:|---:|
 | requirement (REQ) | 77 | 38 | 39 |
-| constraint (CON) | 25 | 19 | 6 |
+| constraint (CON) | 26 | 20 | 6 |
 | assumption (ASM) | 7 | 4 | 3 |
 | choice (CHO) | 3 | 2 | 1 |
 | superseded (SPD) | 6 | 0 | 0 |
 | conflict (CFL) | 18 | 9 | 9 |
 | feasibility (FEA) | 6 | 6 | 0 |
-| **all** | **142** | **78** | **58** |
+| **all** | **143** | **79** | **58** |
 
 | status | records |
 |---|---:|
-| DEFINED | 112 |
+| DEFINED | 113 |
 | SUPERSEDED | 6 |
 | CONFLICT_OPEN | 1 |
 | CONFLICT_RESOLVED | 17 |
@@ -33,7 +33,7 @@ Registry state **READY_FOR_REVIEW_B**. Sources read at commit `95e078a1` unless 
 | evidence result | records | what it means |
 |---|---:|---|
 | PASS | 21 | the record's own reading passed, at the phase named, with the file it was read from |
-| FAIL | 13 | the record's own reading failed, at the phase named; an open conflict reads FAIL on its own sources |
+| FAIL | 14 | the record's own reading failed, at the phase named; an open conflict reads FAIL on its own sources |
 | INCONCLUSIVE | 14 | a reading was taken and cannot decide |
 | NOT_JUDGED | 80 | judgeable before hardware and not yet read at requirement level (rule verdicts live in rules_status) |
 | NOT_YET_TESTED | 8 | needs the built prototype, which does not exist |
@@ -42,7 +42,7 @@ Registry state **READY_FOR_REVIEW_B**. Sources read at commit `95e078a1` unless 
 | reading | evidence class | records |
 |---|---|---:|
 | PASS | DESK_REVIEW | 21 |
-| FAIL | DESK_REVIEW | 12 |
+| FAIL | DESK_REVIEW | 13 |
 | FAIL | none: an open conflict read on its own cited sources | 1 |
 | INCONCLUSIVE | DESK_REVIEW | 14 |
 
@@ -50,7 +50,7 @@ No record reads PASS on evidence awaiting revalidation (the validator refuses it
 
 | release effect | records |
 |---|---:|
-| BLOCKER | 66 |
+| BLOCKER | 67 |
 | MUST_JUSTIFY | 54 |
 | ADVISORY | 16 |
 | NONE | 6 |
@@ -141,7 +141,7 @@ A development-board test may gate an architecture decision; a test that needs th
 | **D-02c** | 2026-09-26 | severities, altitude and service life | - | REQ-022, REQ-027, REQ-028 |
 | **D-02d** | 2026-09-26 | cold start from a cold-soaked pack | - | REQ-024, REQ-046 |
 | **D-02e** | 2026-09-26 | direct sun | - | REQ-024, ASM-006 |
-| **D-03** | 2026-09-26 | ZEROIZE | decision 30 | ASM-002, REQ-035, ASM-005, CON-020, REQ-036, REQ-038, FEA-001 |
+| **D-03** | 2026-09-26 | ZEROIZE | decision 30 | ASM-002, REQ-035, ASM-005, CON-020, CON-026, REQ-036, REQ-038, FEA-001 |
 | **D-04** | 2026-09-26 | markets and obligations | - | REQ-069, CON-008, REQ-050, REQ-053, REQ-054, REQ-055, REQ-067, REQ-056, CON-011, REQ-063 |
 | **D-05** | 2026-09-26 | EMCON meaning | - | REQ-030, REQ-071, CFL-004, REQ-032, FEA-002 |
 | **D-06** | 2026-09-26 | pack size and runtime | - | REQ-014, FEA-004, REQ-072, CON-006, REQ-075, CFL-006, CFL-012, CFL-018 |
@@ -594,7 +594,9 @@ Prototype 1: in the core D-01 names. 19 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/V2-SPEC.md re-read at integration by the layer-3 closer's apply script (27 September 2026): the line or row beginning '| Devices |'; correction 6 whole, which this reading rests on, byte-identical to the revision it was bound to (41edfc2e2e3f1961), so it stands on the file at a02ea1b6801f8916
 
-*Bound to:* `v2/docs/CONOPS.md@eb0eda7cacfe7156`, `v2/docs/ARCH-PCB-B-IOHA.md@08d44b37fa8e2717`, `v2/docs/V2-SPEC.md@a02ea1b6801f8916`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/ARCH-PCB-B-IOHA.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed sections 6 and 10a only (after section 6's corrected PB1/PB2 heading, the FW-B08 pointer and the segment choice SC-HF-02; 10a's per-controller part; the address block and the supervisors' part were board B's round 8 text already and are unchanged, r8int4); sections 4, 15 and 15a and line 17, which this reading cites, are unchanged, so this reading stands on the file at 55620cf51446bfc8
+
+*Bound to:* `v2/docs/CONOPS.md@eb0eda7cacfe7156`, `v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8`, `v2/docs/V2-SPEC.md@a02ea1b6801f8916`
 
 *Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md:17`; `v2/docs/ARCH-PCB-B-IOHA.md section 15a`; `session choice SC-02`; `v2/docs/CONOPS.md section 2a`
 
@@ -834,7 +836,11 @@ Prototype 1: in the core D-01 names. 19 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read at integration by the layer-3 closer's apply script (27 September 2026): section 1.; section 2.; the text "bank 1's home host is the slot 1 module and its fa", which this reading rests on, byte-identical to the revision it was bound to (5479d727037c7b3e), so it stands on the file at 4b03b1c89cf68cef
 
-*Bound to:* `v2/docs/ARCH-PCB-B-IOHA.md@08d44b37fa8e2717`, `v2/docs/PANEL.md@4b03b1c89cf68cef`, `v2/ecad/tools/gen_sch_b.py@af6e5821e21b70ef`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed section 1's Pass-throughs row (the monitor's touch lead to D8 J_USB3, SC-HF-06), section 3's GPIO10 to 12 row (the heartbeat source) and section 7's new paragraph on speed, pull-ups and the budget (its supervisors' row at 0x34 to 0x36, its 0x68 row and the S-07 finding closed as I3-F01 were already board B's round 8 text, b76c18cb, and are unchanged here); line 5 (bank 1's home and failover hosts) and section 2's ribbon table with its pin 15 row, which this reading rests on, are unchanged, and section 1 changes only in its Pass-throughs row (the monitor's leads), which this reading does not cite, so this reading stands on the file at 4bcbf31f44560ee1
+
+*Evidence (PASS, DESK_REVIEW):* v2/docs/ARCH-PCB-B-IOHA.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed sections 6 and 10a only (after section 6's corrected PB1/PB2 heading, the FW-B08 pointer and the segment choice SC-HF-02; 10a's per-controller part; the address block and the supervisors' part were board B's round 8 text already and are unchanged, r8int4); sections 4, 15 and 15a and line 17, which this reading cites, are unchanged, so this reading stands on the file at 55620cf51446bfc8
+
+*Bound to:* `v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8`, `v2/docs/PANEL.md@4bcbf31f44560ee1`, `v2/ecad/tools/gen_sch_b.py@af6e5821e21b70ef`
 
 *Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md section 4`; `v2/docs/ARCH-PCB-B-IOHA.md section 15`; `v2/ecad/tools/gen_sch_b.py:936`
 
@@ -1206,7 +1212,9 @@ Prototype 1: in the core D-01 names. 15 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/OPERATING-ENVELOPE.md re-read at integration by the layer-3 closer's apply script (27 September 2026): the paragraph beginning '**Corrected 26 September 2026.** This pa', which this reading rests on, byte-identical to the revision it was bound to (89de81a11c52f34a), so it stands on the file at 9f16f5b7d634764a
 
-*Bound to:* `v2/docs/PANEL.md@4b03b1c89cf68cef`, `v2/docs/CONOPS.md@eb0eda7cacfe7156`, `v2/docs/OPERATING-ENVELOPE.md@9f16f5b7d634764a`, `v2/ecad/tools/gen_sch_a.py@5a97fed72c42b79d`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md@44fdf9a022c49337`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed section 1's Pass-throughs row (the monitor's touch lead to D8 J_USB3, SC-HF-06), section 3's GPIO10 to 12 row (the heartbeat source) and section 7's new paragraph on speed, pull-ups and the budget (its supervisors' row at 0x34 to 0x36, its 0x68 row and the S-07 finding closed as I3-F01 were already board B's round 8 text, b76c18cb, and are unchanged here); section 10, which this reading cites, is unchanged, so this reading stands on the file at 4bcbf31f44560ee1
+
+*Bound to:* `v2/docs/PANEL.md@4bcbf31f44560ee1`, `v2/docs/CONOPS.md@eb0eda7cacfe7156`, `v2/docs/OPERATING-ENVELOPE.md@9f16f5b7d634764a`, `v2/ecad/tools/gen_sch_a.py@5a97fed72c42b79d`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md@44fdf9a022c49337`
 
 *Source (verified):* `v2/docs/PANEL.md section 10`; `v2/docs/CONOPS.md section 4 (Charging row)`; `v2/docs/OPERATING-ENVELOPE.md section 3`; `v2/ecad/tools/gen_sch_a.py:839-845`; `v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md`; `v2/vendor/ti/bq25731-datasheet.pdf (SLUSE66A)`
 
@@ -1499,7 +1507,9 @@ Prototype 1: not in the core. 18 record(s).
 
 *Evidence (FAIL, DESK_REVIEW):* v2/ecad/tools/gen_sch_b.py re-read by hand at the r8int4 integration of 27 September 2026 (main 38dcd764, board B's round 8, b76c18cb): the hub ports (PORTS, line 903: bank 1 the LimeSDR, the panel controller's USB_PNL, the camera and the RockBLOCK; bank 2 GNSS, both E72 and the QMX; bank 3 board D8, board E6, the wall port and the 5G module's USB), the bank ring (f = s % 3 + 1, line 936) and the LoRa module on S3's SPI (J_SPI3, U12) are unchanged from the file at dedaf34ce285e5ff; round 8 changed the fabric's control plane, the EMCON stages and the parts, none of which moves a device between banks, so the FAIL stands on the file at af6e5821e21b70ef
 
-*Bound to:* `v2/docs/ARCH-PCB-B-IOHA.md@08d44b37fa8e2717`, `v2/ecad/tools/gen_sch_b.py@af6e5821e21b70ef`
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/ARCH-PCB-B-IOHA.md re-read at the r8int4 integration of 27 September 2026 after the layer 5 closer's edit (hc5-layer5): it changed sections 6 and 10a only (the FW-B08 pointer and the segment choice SC-HF-02 after section 6's corrected PB1/PB2 heading, and 10a's per-controller part); sections 4 and 15, which this reading rests on, are byte-identical to the file at 08d44b37fa8e2717, so it stands on the file at 55620cf51446bfc8
+
+*Bound to:* `v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8`, `v2/ecad/tools/gen_sch_b.py@af6e5821e21b70ef`
 
 *Source (verified):* `owner ruling D-02b`; `v2/docs/OPERATING-ENVELOPE.md section 8 (D-02b)`; `v2/docs/OPERATING-ENVELOPE.md:285-287`; `v2/docs/MESHSAT-709-geometry-appendix.md:2860`; `v2/docs/CONOPS.md section 4c`
 
@@ -1715,7 +1725,9 @@ Prototype 1: in the core D-01 names. 9 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read at integration by the layer-3 closer's apply script (27 September 2026): section 7., which this reading rests on, byte-identical to the revision it was bound to (5479d727037c7b3e), so it stands on the file at 4b03b1c89cf68cef
 
-*Bound to:* `v2/docs/PANEL.md@4b03b1c89cf68cef`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed section 1's Pass-throughs row (the monitor's touch lead to D8 J_USB3, SC-HF-06), section 3's GPIO10 to 12 row (the heartbeat source) and section 7's new paragraph on speed, pull-ups and the budget (its supervisors' row at 0x34 to 0x36, its 0x68 row and the S-07 finding closed as I3-F01 were already board B's round 8 text, b76c18cb, and are unchanged here); section 7's panel-absent paragraph, which this reading cites, is unchanged, so this reading stands on the file at 4bcbf31f44560ee1
+
+*Bound to:* `v2/docs/PANEL.md@4bcbf31f44560ee1`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`
 
 *Source (verified):* `v2/docs/PANEL.md section 7`; `v2/ecad/tools/gen_sch_a.py:1253`; `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net (R102 pin 2 on GND)`
 
@@ -1858,13 +1870,14 @@ Prototype 1: not in the core. 2 record(s).
 
 Protect stored keys and data: erase them on command, record case opening, and fill keys only by a signed procedure.
 
-Prototype 1: in the core D-01 names. 8 record(s).
+Prototype 1: in the core D-01 names. 9 record(s).
 
 | record | kind | prototype 1 | status | verified by | earliest, final phase | rules | decisions | result | effect |
 |---|---|---|---|---|---|---|---|---|---|
 | REQ-035 | requirement | core | DEFINED | MANUAL_REVIEW, SCRIPT, PROTOTYPE_MEASUREMENT | SCHEMATIC, PROTOTYPE | SCH-004 | 30 | NOT_JUDGED | BLOCKER |
 | ASM-005 | assumption | core | DEFINED | VENDOR_CONFIRMATION, PROTOTYPE_MEASUREMENT | SCHEMATIC, PROTOTYPE | none | 30 | INCONCLUSIVE at SCHEMATIC; PROTOTYPE not yet judged, DESK_REVIEW | MUST_JUSTIFY |
 | CON-020 | constraint | core | DEFINED | MANUAL_REVIEW, PROTOTYPE_MEASUREMENT | SCHEMATIC, PROTOTYPE | none | 30 | NOT_JUDGED | BLOCKER |
+| CON-026 | constraint | core | DEFINED | CALCULATION, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT | SCHEMATIC, PROTOTYPE | none | - | FAIL at SCHEMATIC; PROTOTYPE not yet judged, DESK_REVIEW | BLOCKER |
 | REQ-036 | requirement | deferred | DEFINED | SCRIPT, PROTOTYPE_MEASUREMENT | SCHEMATIC, PROTOTYPE | SCH-004 | - | PASS at SCHEMATIC; PROTOTYPE not yet judged, DESK_REVIEW | MUST_JUSTIFY |
 | REQ-037 | requirement | deferred | DEFINED | MANUAL_REVIEW, PROTOTYPE_MEASUREMENT | SCHEMATIC, PROTOTYPE | none | - | NOT_JUDGED | MUST_JUSTIFY |
 | REQ-038 | requirement | core | DEFINED | MANUAL_REVIEW, PROTOTYPE_MEASUREMENT | SCHEMATIC, PROTOTYPE | none | - | NOT_JUDGED | BLOCKER |
@@ -1897,21 +1910,37 @@ Prototype 1: in the core D-01 names. 8 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/ZEROIZE.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the file at e7a7b9d05a0560ed
 
-*Bound to:* `v2/docs/feasibility/ZEROIZE.md@e7a7b9d05a0560ed`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/ZEROIZE.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed the supervisors' address block only, in section 2, Z-C3 (section 3.1), row E17 of section 4 and section 9 item 8, and section 3.4's sentence on the bus clock (now declared, the budget re-run at 90 kHz holds); sections 1 and 7 are unchanged and section 4 changed only in row E17's address block, so the documentary result stands, so this reading stands on the file at 94bd922511514ca4
+
+*Bound to:* `v2/docs/feasibility/ZEROIZE.md@94bd922511514ca4`
 
 *Source (verified):* `owner ruling D-03`; `v2/docs/feasibility/ZEROIZE.md`; `v2/vendor/microchip/microchip-atecc608b-datasheet.pdf (summary sheet: 'A complete document is available under NDA')`; `v2/ecad/tools/gen_sch_b.py:1264`; `v2/docs/MESHSAT-709-geometry-appendix.md:2789`
 
 *Notes:* Created by the integrator from D-03. v2/vendor/PARTS.md:118-119 records the JLC certification row for this part as WRONG_MODEL (C2836813); that is the part-identity question, not this assumption's. FEA-001 holds it. Retyped on 27 September 2026 by the layer-3 closer so that TBD marks only unsettled limits: the pass line (Z-EXP-A and Z-EXP-B pass on the fitted part) is settled, and what its failure would change stays stated: until the bench records exist the mechanism is supported, not shown, on the fitted part; board B's layout entry is held for the U8 site only (FEA-001), and the panel firmware's wipe for Z-EXP-C; if the bench fails, board B's U8 site changes to the SLB 9673 (ZEROIZE.md section 6).
 
-**CON-020** (constraint). The three STM32H743 I/O supervisors' firmware is an I2C target on the kit bus at 0x30 to 0x32 only: never a master, never at address 0x60 (firmware rule Z-C3), so only the panel controller commands the secure element.
+**CON-020** (constraint). The three STM32H743 I/O supervisors' firmware is an I2C target on the kit bus at 0x34, 0x35 and 0x36 only: never a master, never at address 0x60 (firmware rule Z-C3) and never at 0x30 to 0x32, where the TPS23861's broadcast address 0x30 sits (I3-F01), so only the panel controller commands the secure element.
 
-*Accept when:* The supervisor firmware's requirements carry Z-C3 and its image is covered by D-13's software-verified boot; a review of the firmware shows no master transaction and no response at 0x60; the Z-EXP-C held-bus cases C-H1 to C-H3 show the wipe's fail-secure outcome when a supervisor holds the bus.
+*Accept when:* The supervisor firmware's requirements carry Z-C3 and its image is covered by D-13's software-verified boot; a review of the firmware shows no master transaction and no response at 0x60 or at 0x30 to 0x32 (bench V-B08 of v2/docs/HW-FW-CONTRACT.md); the Z-EXP-C held-bus cases C-H1 to C-H3 show the wipe's fail-secure outcome when a supervisor holds the bus.
 
 *allocated to fw_ioctrl, b; rulings D-03, D-13; session choices SC-08; waits on S-40; prototype 1 core, named by an owner ruling: A condition of ZEROIZE of the secure element, which D-01 names as core: the supervisors share the secure element's SDA and SCL (ZEROIZE.md section 8, R7)..*
 
-*Source (verified):* `v2/docs/feasibility/ZEROIZE.md section 8 (R7)`; `v2/docs/feasibility/ZEROIZE.md section 9 (item 8)`; `v2/ecad/tools/gen_sch_b.py:1381`; `v2/docs/ARCH-PCB-B-IOHA.md:102`
+*Source (verified):* `v2/docs/feasibility/ZEROIZE.md section 8 (R7)`; `v2/docs/feasibility/ZEROIZE.md section 9 (item 8)`; `v2/ecad/tools/gen_sch_b.py:1381`; `v2/docs/ARCH-PCB-B-IOHA.md section 6`; `v2/docs/ARCHITECTURE.md section 5.5 (I3-F01)`; `v2/docs/HW-FW-CONTRACT.md FW-B08`
 
-*Notes:* Created from ZEROIZE.md's firmware rule Z-C3 (26 September 2026). The supervisors sit on I2C1 (PB6 and PB7, pins 92 and 93) with the secure element at 0x60 on the same bus (committed netlist v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net at eadbe571: U41, U51 and U61 pins 92 and 93 on SCL and SDA, U8 pins 5 and 6). PANEL.md section 7's bus table lists them since the S-07 correction of 26 September 2026 (CFL-016, resolved), and it records an open finding that bears on this record: board B's TPS23861 PoE controller (U5) answers the broadcast address 0x30 whatever its A3 pin says (TI SLUSBX9I, sections 7.3.13 and 8.3.3.1), and 0x30 is supervisor 1's status address; the broadcast address is fixed in the part, so it is the supervisors' address that has to move, in their firmware.
+*Notes:* Created from ZEROIZE.md's firmware rule Z-C3 (26 September 2026). The supervisors sit on I2C1 (PB6 and PB7, pins 92 and 93) with the secure element at 0x60 on the same bus (committed netlist v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net at eadbe571: U41, U51 and U61 pins 92 and 93 on SCL and SDA, U8 pins 5 and 6). PANEL.md section 7's bus table lists them since the S-07 correction of 26 September 2026 (CFL-016, resolved), and it records an open finding that bears on this record: board B's TPS23861 PoE controller (U5) answers the broadcast address 0x30 whatever its A3 pin says (TI SLUSBX9I, sections 7.3.13 and 8.3.3.1), and 0x30 is supervisor 1's status address; the broadcast address is fixed in the part, so it is the supervisors' address that has to move, in their firmware. Corrected 27 September 2026 by the layer 5 closer (hc5-layer5): the session's block 0x34 to 0x36 of ARCHITECTURE.md section 5.5 (I3-F01) replaces 0x30 to 0x32 here, with the same block drafted into PANEL.md section 7, ARCH-PCB-B-IOHA.md section 6 and ZEROIZE.md Z-C3; the rule itself is unchanged. The kit bus these targets share is budgeted in v2/docs/HW-FW-CONTRACT.md section 6 (the session's three segments, SC-HF-02, put the supervisors behind a buffer the panel opens, which narrows R7 without replacing Z-C3).
+
+**CON-026** (constraint). Every segment of the kit I2C bus meets, at its published-maximum pin capacitance and its copper, the rise time of the strictest target on it (300 ns for the BQ25731, the TPS23861, the ATECC608B and the ADS1115), with pull-ups no stronger than its weakest target's 3 mA sink at 0.4 V allows, at Standard-mode 100 kHz programmed and at least 90 kHz achieved.
+
+*Accept when:* kit_i2c_budget.py reads every segment within its limit on the current netlists; after layout, the field-solver reading of each segment's copper is within the allowance of v2/docs/HW-FW-CONTRACT.md section 6.6; on the prototype, bench V-K01 measures tr at most 300 ns, tf between 12 and 100 ns and fSCL at least 90 kHz at each segment's farthest pin.
+
+*allocated to a, b, c, d, fw_panel; rulings D-03; waits on S-59; prototype 1 core, named by an owner ruling: A condition of ZEROIZE of the secure element, which D-01 names as core: the panel controller reaches the secure element only over the kit bus (feasibility/ZEROIZE.md section 3.4), and the same bus carries every rail and radio enable and the charger's configuration..*
+
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/records/hc5/kit_i2c_budget.py run on the netlists at e3aedb25 (v2/docs/records/hc5/kit_i2c_budget.out.txt): as one segment the pins and ribbons alone take 290 pF (SDA, published maxima) against the 269 pF the TPS23861's 0.8 to 2.3 V rise allows through the drawn 1.1 k, and 166 pF at typical pin capacitance leave 137 pF for copper where the committed layouts carry 1,568 mm (157 to 345 pF); the pull-ups already draw 2.94 mA of the weakest sinks' 3 mA. FAIL at desk, labelled as the session's AI desk review.
+
+*Bound to:* `v2/docs/records/hc5/kit_i2c_budget.out.txt@e06fc107ae495173`, `v2/docs/records/hc5/kit_i2c_budget.py@879154d32d95f41c`
+
+*Source (verified):* `v2/docs/HW-FW-CONTRACT.md section 6`; `v2/vendor/ti/bq25731-datasheet.pdf`; `v2/vendor/ti/tps23861-datasheet.pdf`; `v2/vendor/microchip/microchip-atecc608b-summary-DS40002239B.pdf`; `v2/vendor/ti/ti-tca9517a-i2c-buffer.pdf`
+
+*Notes:* Created by the layer 5 closer (hc5-layer5: kit I2C bus), 27 September 2026. The session took three segments behind two TCA9517A (SC-HF-02 of v2/docs/HW-FW-CONTRACT.md section 8), which reads within every limit at desk with the copper allowances of section 6.6; the constraint stays FAIL until boards A and B draw it (S-59). The bus clock (100 kHz programmed, 90 kHz achieved at least) is the one feasibility/ZEROIZE.md's time budget holds at, re-run at 90 kHz.
 
 **REQ-036** (requirement). A sealed case-open (tamper) switch under the frame logs lid events and senses the lid for the reduced mode; it never triggers ZEROIZE.
 
@@ -1957,7 +1986,9 @@ Prototype 1: in the core D-01 names. 8 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/ZEROIZE.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the file at e7a7b9d05a0560ed
 
-*Bound to:* `v2/docs/feasibility/ZEROIZE.md@e7a7b9d05a0560ed`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/ZEROIZE.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed the supervisors' address block only, in section 2, Z-C3 (section 3.1), row E17 of section 4 and section 9 item 8, and section 3.4's sentence on the bus clock (now declared, the budget re-run at 90 kHz holds); sections 1 and 7, which this reading cites, are unchanged; Z-C3 keeps its substance with the corrected address block, so this reading stands on the file at 94bd922511514ca4
+
+*Bound to:* `v2/docs/feasibility/ZEROIZE.md@94bd922511514ca4`
 
 *Feasibility page:* `v2/docs/feasibility/ZEROIZE.md`, blocker ids FB-ZER-1, Z-EXP-A, Z-EXP-B, Z-EXP-C; *owner:* The session runs the experiments once the parts exist; the spend for the bench parts is the owner's under D-09 (L-06); residuals R2 and R7 go to the D-09 security reviewer (R-SEC).; *holds:* REQ-035, ASM-005, REQ-038; layout entry of B.
 
@@ -2307,7 +2338,11 @@ Prototype 1: in the core D-01 names. 12 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/ASSEMBLY.md re-read at the handover integration of 27 September 2026 (layer-3 closer, on main 53a98a71 with the layer-1 and layer-2 closers' files merged): the layer-2 closer's patch (its drafts/ASSEMBLY.step10-and-lamp-test.patch) changes section 8 only, commissioning steps 7 and 10 (the lamp test's seventeen indicators; the PA's key-downs inside K1, K2 and C4); sections 2 and 4, which this reading rests on (build step 7's SMBus lead and the Pack SMBus row), are byte-identical to the file at 30db27eee509212c, so it stands on the file at 3ba4f3fd0f794f10
 
-*Bound to:* `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`, `v2/docs/ASSEMBLY.md@3ba4f3fd0f794f10`, `v2/docs/PANEL.md@4b03b1c89cf68cef`, `v2/ecad/tools/check_contracts.py@308fdefb90335da4`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed section 1's Pass-throughs row (the monitor's touch lead to D8 J_USB3, SC-HF-06), section 3's GPIO10 to 12 row (the heartbeat source) and section 7's new paragraph on speed, pull-ups and the budget (its supervisors' row at 0x34 to 0x36, its 0x68 row and the S-07 finding closed as I3-F01 were already board B's round 8 text, b76c18cb, and are unchanged here); section 10, which this reading cites, is unchanged, so this reading stands on the file at 4bcbf31f44560ee1
+
+*Evidence (PASS, DESK_REVIEW):* v2/docs/ASSEMBLY.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed section 4's Monitor touch USB row and build step 9's clause on the monitor's leads only (the touch lead's board end, D8 J_USB3, SC-HF-06); section 4's Pack SMBus row and build step 7, which this reading cites, are unchanged, so this reading stands on the file at 3a8897ef6d717a30
+
+*Bound to:* `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`, `v2/docs/ASSEMBLY.md@3a8897ef6d717a30`, `v2/docs/PANEL.md@4bcbf31f44560ee1`, `v2/ecad/tools/check_contracts.py@308fdefb90335da4`
 
 *Source (verified):* `v2/ecad/tools/gen_sch_e.py:264`; `v2/docs/ASSEMBLY.md section 4`; `v2/docs/PANEL.md section 10`
 
@@ -2511,7 +2546,9 @@ Prototype 1: not in the core. 8 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/V2-SPEC.md re-read by hand at the r8int4 integration of 27 September 2026: line 41 changed only in its closing clause (the eSIM variant's order code owed under S-13, conflict CFL-010 resolved on this description, correction 22), line 29 gained NEED-03's failure set (correction 29), corrections 22 and 28 now say the SIM TVS arrays are drawn since board B's round 8 and are carried outside CFL-010, and correction 29 is new; lines 24, 34, 43 and 76 and corrections 2, 4, 7, 9, 12, 13, 19, 26 and 27, which this reading also rests on, are byte-identical to the file at 41edfc2e2e3f1961, and line 41's circuit description (the key-B socket, its locating holes, the two nano-SIM holders and their TPD4E001 arrays) is unchanged, so it stands on the file at a02ea1b6801f8916
 
-*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`, `v2/docs/PANEL.md@4b03b1c89cf68cef`, `v2/docs/CONOPS.md@eb0eda7cacfe7156`, `v2/docs/V2-SPEC.md@a02ea1b6801f8916`, `v2/docs/OPERATING-ENVELOPE.md@9f16f5b7d634764a`, `v2/docs/TEST-PLAN.md@a0de0b12ff06ba4e`, `v2/ecad/tools/pcb_decisions.yaml@b5f7162443d5ad91`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed section 1's Pass-throughs row (the monitor's touch lead to D8 J_USB3, SC-HF-06), section 3's GPIO10 to 12 row (the heartbeat source) and section 7's new paragraph on speed, pull-ups and the budget (its supervisors' row at 0x34 to 0x36, its 0x68 row and the S-07 finding closed as I3-F01 were already board B's round 8 text, b76c18cb, and are unchanged here); section 1 changes only in its Pass-throughs row (the monitor's leads, which this reading does not cite; its ZEROIZE and EMCON logic rows are unchanged), section 6 is unchanged, and section 7's bus table still lists the supervisors, the Ethernet switch, the PoE controller and board A's expanders from the SDA and SCL nets, now with the supervisors at their corrected block, so the resolution stands, so this reading stands on the file at 4bcbf31f44560ee1
+
+*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`, `v2/docs/PANEL.md@4bcbf31f44560ee1`, `v2/docs/CONOPS.md@eb0eda7cacfe7156`, `v2/docs/V2-SPEC.md@a02ea1b6801f8916`, `v2/docs/OPERATING-ENVELOPE.md@9f16f5b7d634764a`, `v2/docs/TEST-PLAN.md@a0de0b12ff06ba4e`, `v2/ecad/tools/pcb_decisions.yaml@b5f7162443d5ad91`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`
 
 *Source (verified):* `v2/docs/PANEL.md section 6`; `v2/docs/CONOPS.md section 4b`; `v2/docs/V2-SPEC.md:76 (as read at eadbe571)`; `v2/docs/OPERATING-ENVELOPE.md section 4`; `v2/docs/TEST-PLAN.md:46 (as read at eadbe571)`; `v2/ecad/tools/pcb_decisions.yaml:863-915 (as read at eadbe571)`
 
@@ -2923,7 +2960,7 @@ Every rule of the PCB rule registry a record names, and the records that name it
 
 59 of 59 rules are named by some record. Named by none: none.
 
-45 live records name no rule, so no board rule judges any part of them today: REQ-001, REQ-002, REQ-003, REQ-076, CON-001, ASM-001, REQ-004, REQ-005, REQ-006, CON-017, ASM-002, REQ-073, REQ-008, REQ-010, REQ-013, REQ-014, CON-019, REQ-069, REQ-023, REQ-074, REQ-033, REQ-034, ASM-005, CON-020, REQ-037, REQ-038, FEA-001, REQ-077, REQ-070, CFL-017, CFL-008, CFL-009, REQ-053, REQ-054, REQ-055, REQ-067, REQ-056, CON-025, CON-012, REQ-060, CFL-018, REQ-062, REQ-065, REQ-066, CON-016.
+46 live records name no rule, so no board rule judges any part of them today: REQ-001, REQ-002, REQ-003, REQ-076, CON-001, ASM-001, REQ-004, REQ-005, REQ-006, CON-017, ASM-002, REQ-073, REQ-008, REQ-010, REQ-013, REQ-014, CON-019, REQ-069, REQ-023, REQ-074, REQ-033, REQ-034, ASM-005, CON-020, CON-026, REQ-037, REQ-038, FEA-001, REQ-077, REQ-070, CFL-017, CFL-008, CFL-009, REQ-053, REQ-054, REQ-055, REQ-067, REQ-056, CON-025, CON-012, REQ-060, CFL-018, REQ-062, REQ-065, REQ-066, CON-016.
 
 ## Decisions to requirements
 
@@ -2956,7 +2993,7 @@ D-01: full design, staged acceptance. Every ruled function stays designed and fi
 | NEED-07 | no | - | REQ-024, REQ-025, REQ-074, REQ-026, ASM-004, REQ-027, REQ-028, REQ-029, CHO-003, CON-009, CFL-002, CFL-003, REQ-051, REQ-052, REQ-059, CFL-011, ASM-006 |
 | NEED-08 | yes (D-01) | REQ-030, REQ-071, CFL-004, REQ-031, REQ-032, CFL-005, CON-010, CON-021, FEA-002 | - |
 | NEED-09 | no | - | REQ-033, REQ-034 |
-| NEED-10 | yes (D-01) | REQ-035, ASM-005, CON-020, REQ-038, FEA-001 | REQ-036, REQ-037, REQ-065 |
+| NEED-10 | yes (D-01) | REQ-035, ASM-005, CON-020, CON-026, REQ-038, FEA-001 | REQ-036, REQ-037, REQ-065 |
 | NEED-11 | no | - | REQ-039, REQ-040, CFL-013 |
 | NEED-12 | no | - | REQ-041, REQ-042, REQ-043 |
 | NEED-13 | yes (D-01) | CON-019, REQ-069, REQ-044, FEA-005, REQ-045, REQ-046, REQ-075, REQ-077, CFL-006, CFL-015, CON-016 | ASM-007 |
@@ -2967,7 +3004,7 @@ D-01: full design, staged acceptance. Every ruled function stays designed and fi
 | NEED-18 | no | CON-025, CON-024 | CON-018, REQ-061, CFL-018, REQ-063 |
 | NEED-19 | yes (SC-01, taken by the session) | REQ-060 | - |
 
-### What prototype 1 is accepted on: every core BLOCKER (66)
+### What prototype 1 is accepted on: every core BLOCKER (67)
 
 Each of these stops prototype 1's acceptance while it is unmet. The scope column says whether the record is core because its need is (NEED_DEFAULT), because an owner ruling names it (NAMED), or because the session took it under the owner's standing rule (SESSION, with the choice).
 
@@ -3010,6 +3047,7 @@ Each of these stops prototype 1's acceptance while it is unmet. The scope column
 | FEA-002 | NEED-08 | feasibility | NAMED | FEASIBILITY_OPEN | INCONCLUSIVE at SCHEMATIC; PROTOTYPE not yet judged |
 | REQ-035 | NEED-10 | requirement | NAMED | DEFINED | NOT_JUDGED |
 | CON-020 | NEED-10 | constraint | NAMED | DEFINED | NOT_JUDGED |
+| CON-026 | NEED-10 | constraint | NAMED | DEFINED | FAIL at SCHEMATIC; PROTOTYPE not yet judged |
 | REQ-038 | NEED-10 | requirement | NAMED | DEFINED | NOT_JUDGED |
 | FEA-001 | NEED-10 | feasibility | NAMED | FEASIBILITY_OPEN | INCONCLUSIVE at SCHEMATIC; PROTOTYPE not yet judged |
 | REQ-044 | NEED-13 | requirement | NEED_DEFAULT | DEFINED | INCONCLUSIVE at SCHEMATIC; PROTOTYPE not yet judged |
@@ -3069,7 +3107,7 @@ Each of these stops prototype 1's acceptance while it is unmet. The scope column
 | ASM-007 | NEED-13 | deferred | SC-04 | It concerns the pack's environmental qualification, which D-01 leaves outside the core; pack safety itself is core under NEED-13. |
 | REQ-065 | NEED-10 | deferred | SC-04 | D-01 names only ZEROIZE of the secure element under NEED-10; D-13 sets the design floor, which is built into prototype 1 and reported NOT_YET_TESTED until it runs. |
 
-### Named by an owner ruling (20)
+### Named by an owner ruling (21)
 
 | record | need | prototype 1 | choice | why |
 |---|---|---|---|---|
@@ -3086,6 +3124,7 @@ Each of these stops prototype 1's acceptance while it is unmet. The scope column
 | REQ-035 | NEED-10 | core | - | D-01 names ZEROIZE of the secure element as core; D-03 defines what it is. |
 | ASM-005 | NEED-10 | core | - | A precondition of ZEROIZE of the secure element, which D-01 names as core (D-03 states it). |
 | CON-020 | NEED-10 | core | - | A condition of ZEROIZE of the secure element, which D-01 names as core: the supervisors share the secure element's SDA and SCL (ZEROIZE.md section 8, R7). |
+| CON-026 | NEED-10 | core | - | A condition of ZEROIZE of the secure element, which D-01 names as core: the panel controller reaches the secure element only over the kit bus (feasibility/ZEROIZE.md section 3.4), and the same bus carries every rail and radio enable and the charger's configuration. |
 | REQ-038 | NEED-10 | core | - | D-01 names ZEROIZE of the secure element as core, and D-03 defines it as crypto-erase of the drive and eMMC keys, so their encryption under the secure element's key is part of ZEROIZE's acceptance. |
 | FEA-001 | NEED-10 | core | - | D-01 names ZEROIZE of the secure element as core. |
 | REQ-040 | NEED-11 | deferred | - | D-01 names DCF77 among the deferred functions. |
@@ -3167,6 +3206,10 @@ SESSION items are engineering the session decides and records with authority SES
 | S-54 | SESSION | BANK-R1 in board B's generator (SC-34): the RockBLOCK and QMX hub ports exchanged (port 4 of banks 1 and 2) and the panel controller and wall USB port exchanged (bank 1 port 2, bank 3 port 3), so that slot 3 alone carries the owner's D-02b example with the SOS path; drafted for board B's owner, owed before board B's layout entry; until then REQ-052 reads FAIL on board B as generated. IOHA sections 4, 15 and 15a, ZEROIZE.md 3.3 and R4, EMCON.md 4.5 and PANEL.md line 5 follow once it lands. | REQ-052 |
 | S-55 | SESSION | The cold warm-up's bound (PWR-F09's remainder, SC-27): the warm-up brings the inside air to 0 C at -20 C ambient only up to about 3.6 W/K lid open with fans; above it the kit-to-kit link, a critical peripheral (IOHA A11), is lost at -20 C and TEST-PLAN E4-O fails. Decided by the empty-case heat-balance test (T-H1) and an extended-grade link card and SDR (layer 6), before board B's layout entry where a socket or supply changes. The envelope is not narrowed to close it. | REQ-024 |
 | S-56 | SESSION | The battery-bay SGP41 (board E U17, rated to +55 C) at the worst inside air of 60.6 C lid closed as board B is generated (62.1 C after BANK-R1), which part_temps.py reports once the layer-2 closer's patch to it lands: another part, a placement out of the hottest air, or a stated carve-out, picked at layer 6 under FEA-004; REQ-052's acceptance fails any part outside its published range. | none |
+| S-59 | SESSION | (hc5-layer5: SC-HF-02) The kit I2C bus drawn as the session's three segments of v2/docs/HW-FW-CONTRACT.md section 6.5: board A's targets and board D behind a TCA9517A on A (its A side local, 1.2 k pull-ups to A's +3V3, EN high); board B's three supervisors, TPS23861 and KSZ9897R behind a TCA9517A on B (its B side theirs, 1.5 k pull-ups, EN from U7 IO1_7 with a 10 k pull-down); the copper allowances of section 6.6 handed to layout. Until drawn, finding HF-F01 stands: as one segment the bus cannot meet the 300 ns rise of its BQ25731, TPS23861 and ATECC608B. | CON-026 |
+| S-60 | SESSION | (hc5-layer5: HF-F02) Board A's INA226 U17 senses the 54 V PoE rail with IN+ and IN- at the rail, over the part's 40 V absolute maximum and 36 V input range (TI SBOS547 5.1, 5.5 note 1); a damaged monitor can hold the kit bus. Open until board A's author moves the sense to the stage's VBAT side or the rail's return, or fits a part rated for the rail on its maker's document (v2/docs/HW-FW-CONTRACT.md section 7). | none |
+| S-61 | SESSION | (hc5-layer5: SC-HF-06, HF-F06) The monitor's touch USB takes board D's spare hub port J_USB3 (the session's choice SC-HF-06 of v2/docs/HW-FW-CONTRACT.md section 8; no board B change; the HAL shares it to the display owner, FW-B19). Owed on board D: a current limit on J_USB3's VBUS, which is +5V_D8 with no port switch, so a fault on the touch lead trips board A's U23 and takes board D down; and the J_USB3 budget line (0.05 A) set from the touch controller's measured draw, which USB 2.0 section 7.2.1 bounds at 100 mA unconfigured and 500 mA configured (V-B19). Carried before board D's layout entry (r8int4, after hc5's second review: a fault on the touch lead removes board D, whose APRS path is a prototype 1 core function under D-01, so HF-F06 is major). | none |
+| S-62 | SESSION | (hc5-layer5: HF-F07) Board E: the Geiger module's pulse reaches GPIO7 through 22 R only, and a 5 V class module can exceed the RP2040's IOVDD + 0.5 V absolute maximum (datasheet Table 622): pick the module, read its output stage, and add a divider or a clamp if needed; and give the fan switches Q9, Q10 discrete gate pull-downs instead of the RP2040's pad pull-down (v2/docs/HW-FW-CONTRACT.md section 7). | none |
 
 ## Closed items
 
@@ -3226,7 +3269,7 @@ Every item that has left the open list, and what closed it: an owner ruling, a s
 
 ## Readings
 
-### FAIL (13)
+### FAIL (14)
 
 | record | prototype 1 | effect | at | class | evidence |
 |---|---|---|---|---|---|
@@ -3238,6 +3281,7 @@ Every item that has left the open list, and what closed it: an owner ruling, a s
 | REQ-071 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/EMCON.md sections 0a, 4.4 and 5a read at its sixth revision (stream r8docs, 26 September 2026): no row meets the bound as drawn. Locally the SA868 (no maker threshold), the RockBLOCK 9704 (its module runs on two 10 F supercapacitors of its own after its supply gate opens, with its ENABLE held by board B's U6 alone, about 16 J) and the RM520N-GL (SD-EMC-1's stages not drawn)... |
 | REQ-032 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/EMCON.md sections 0, 4.5 and 7 read at eadbe571: the RM520N-GL's only inhibit as drawn is W_DISABLE1#, a firmware-mediated airplane mode whose timing, boot behaviour and configurability Quectel does not state; SD-EMC-1's supply removal is not drawn on board B; v2/docs/feasibility/EMCON.md section 7, L3: with +3V3_DEV lost on board B the gates of the six CM5 radios, the two A... |
 | CON-021 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/EMCON.md section 0 read at eadbe571: as drawn no indication of the EMCON lines is independent of firmware (the TX lamp's supply exists only while the panel controller drives PANEL_PWM); board C's committed netlist v2/ecad/pcb-c-display-c8/out/pcb-c-display.net carries no EMCON lamp; v2/docs/feasibility/EMCON.md re-read at the records filing of 26 September 2026 (428c697c): o... |
+| CON-026 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/records/hc5/kit_i2c_budget.py run on the netlists at e3aedb25 (v2/docs/records/hc5/kit_i2c_budget.out.txt): as one segment the pins and ribbons alone take 290 pF (SDA, published maxima) against the 269 pF the TPS23861's 0.8 to 2.3 V rise allows through the drawn 1.1 k, and 166 pF at typical pin capacitance leave 137 pF for copper where the committed layouts carry 1,568 mm (157 to 345 pF... |
 | REQ-077 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/ecad/tools/gen_sch_e.py read at e3aedb25 (27 September 2026, c23): board E's spare dock contact BLK_SPARE (J_BLK pin 12) reaches only the test point TP7, and the sensor controller U10, the pack gauge's only SMBus host (J_SMB), has its GPIO19 (pin 30) not connected, so its only link to anything that removes the kit's load is its USB (R29, R30, J_BLK pins 9 and 10) to board B's bank 3 hub and... |
 | CFL-006 | core | ADVISORY | SCHEMATIC | DESK_REVIEW | v2/ecad/tools/pcb_pack_protection.yaml, v2/ecad/tools/pcb_energy_chain.yaml and v2/ecad/tools/pcb_board_facts.yaml read after the layer-3 closer's correction (27 September 2026): each names the one 4S3P block of Samsung INR18650-35E, about 145 Wh, and the protection table carries one parallel count, 3, as D-06 rules; the enclosure does not: v2/cad/pack_4s.py still draws the wrapped 4S4P block (... |
 | CFL-017 | deferred | ADVISORY | SCHEMATIC | - | its own sources disagree: v2/docs/TEST-PLAN.md:18-19 (as read at eadbe571); v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 2; v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 5; v2/docs/review-packets/battery/THERMAL-COORDINATION.md sections 9 and 9a; v2/docs/OPERATING-ENVELOPE.md section 8 |
