@@ -1,0 +1,15 @@
+counts (committed, candidate): {'components': [187, 189], 'nets': [124, 124], 'pins': [577, 582]}
+components_added: ['Q11', 'R58']
+components_removed: []
+nets_added: ['HOT_R1_G']
+nets_removed: ['unconnected-(U10-NC-Pad30)']
+changed D7: {'field:LCSC': [None, 'C51897884'], 'property:LCSC': [None, 'C51897884']}
+changed D8: {'field:LCSC': [None, 'C51897884'], 'property:LCSC': [None, 'C51897884']}
+changed J_BLK: {'value': ['solder lands for the 12 signal wires to the block board underside (mirror of A22 J_DOCK): 1-7 GND, 8 SHORE_INHIBIT, 9 USB D+, 10 USB D-, 11 GND, 12 spare (VIN_RAW crosses on P_VR since EQ-16)', 'solder lands for the 12 signal wires to the block board underside (mirror of A22 J_DOCK): 1-7 GND, 8 SHORE_INHIBIT, 9 USB D+, 10 USB D-, 11 GND, 12 HOT-R1 hot stop line, open drain Q11 (SC-50; VIN_RAW crosses on P_VR since EQ-16)']}
+pin moved U10.30: unconnected-(U10-NC-Pad30) -> HOT_R1_G
+pin added Q11.1 on HOT_R1_G
+pin added Q11.2 on GND
+pin added Q11.3 on BLK_SPARE
+pin added R58.1 on HOT_R1_G
+pin added R58.2 on GND
+RESULT: ONLY THE EXPECTED CHANGES

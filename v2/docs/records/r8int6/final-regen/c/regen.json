@@ -1,0 +1,98 @@
+{
+ "board": "c",
+ "board_table_phase": "C24",
+ "commands": [
+  {
+   "argv": [
+    "kicad-cli",
+    "sch",
+    "export",
+    "bom",
+    "--fields",
+    "Reference,Value,Footprint,LCSC,${QUANTITY}",
+    "--group-by",
+    "Value,Footprint",
+    "--sort-field",
+    "Reference",
+    "-o",
+    "/root/r8int6/rg-out-932cf9d755d91c60d98b90911c9da52af1127037/c/committed/pcb-c-display-bom.csv",
+    "pcb-c-display.kicad_sch"
+   ],
+   "cwd": "v2/ecad/pcb-c-display-c8",
+   "exit": 0,
+   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\nWrote bill of materials to '/root/r8int6/rg-out-932cf9d755d91c60d98b90911c9da52af1127037/c/committed/pcb-c-display-bom.csv'.\n",
+   "started_utc": "2026-09-27T18:04:13Z"
+  },
+  {
+   "argv": [
+    "kicad-cli",
+    "sch",
+    "erc",
+    "--severity-all",
+    "--format",
+    "json",
+    "-o",
+    "/root/r8int6/rg-out-932cf9d755d91c60d98b90911c9da52af1127037/c/committed/pcb-c-display-erc.json",
+    "pcb-c-display.kicad_sch"
+   ],
+   "cwd": "v2/ecad/pcb-c-display-c8",
+   "exit": 0,
+   "output_tail": "Found 330 violations\nSaved ERC Report to /root/r8int6/rg-out-932cf9d755d91c60d98b90911c9da52af1127037/c/committed/pcb-c-display-erc.json\n",
+   "started_utc": "2026-09-27T18:04:13Z"
+  },
+  {
+   "argv": [
+    "/usr/bin/python3",
+    "../tools/gen_sch_c.py",
+    "pcb-c-display.kicad_sch",
+    "pcb-c-display"
+   ],
+   "cwd": "v2/ecad/pcb-c-display-c8",
+   "exit": 0,
+   "output_tail": "lands: 31 footprint(s) judged, 0 pin(s) on a pad the land does not carry, 0 land(s) unreadable\nschlayout verify: 580 pins in 514 nets, every component one name\nlayout: 5 A3 pages on a 2 x 3 sheet -> paper \"User\" 838.20 891.54\nwrote pcb-c-display.kicad_sch parts: 224 lib symbols: 33\nnets: 140 single-pin nets (should be empty or intentional): []\nintent: /root/r8int6/rg-932cf9d755d91c60d98b90911c9da52af1127037/v2/ecad/pcb-c-display-c8/out/pcb-c-display-intent.json (24 bypass, 5 rails, 58 nodes, 5 pair classes)\n",
+   "started_utc": "2026-09-27T18:04:14Z"
+  },
+  {
+   "argv": [
+    "bash",
+    "../tools/build_sch.sh",
+    ".",
+    "pcb-c-display"
+   ],
+   "cwd": "v2/ecad/pcb-c-display-c8",
+   "exit": 0,
+   "output_tail": "ERC: violations (out/pcb-c-display-erc.json, out/pcb-c-display-erc.rpt; erc_gate.py decides)\nnetlist: out/pcb-c-display.net\nsch_prov: pcb-c-display.net written by generator 0ace9f5aaf1f36b2 (boards/c.json#gen_env, gen_footprints_b16.py, gen_footprints_e.py, gen_footprints_idc.py, gen_footprints_panel.py, gen_sch_c.py, intent.py, kisch.py, schlayout.py, and 60 land(s) in meshsat.pretty)\nsheet pdf: out/pcb-c-display-schematic-sheet.pdf\nsch_pages: 2 x 3 cells, 5 pages kept of 6 tiles\npdf: out/pcb-c-display-schematic.pdf\nbom: out/pcb-c-display-bom.csv\n",
+   "started_utc": "2026-09-27T18:04:18Z"
+  }
+ ],
+ "comparisons": {
+  "bom": "PARITY",
+  "erc": "PARITY_AFTER_NOISE",
+  "intent": "PARITY_AFTER_NOISE",
+  "netlist": "PARITY_AFTER_NOISE",
+  "schematic": "PARITY"
+ },
+ "gen_env": null,
+ "lands_changed_by_the_footprint_generators": [],
+ "phase_directory": "pcb-c-display-c8",
+ "phase_label_used": "C24",
+ "result": "PARITY",
+ "stem": "pcb-c-display",
+ "taken_utc": "2026-09-27T18:04:24Z",
+ "versions": {
+  "kicad_cli": "9.0.9",
+  "mutool": "mutool version 1.23.10",
+  "packages": {
+   "kicad": "9.0.9~ubuntu24.04.1",
+   "kicad-footprints": "9.0.9~ubuntu24.04.1",
+   "kicad-symbols": "9.0.9~ubuntu24.04.1",
+   "mupdf-tools": "1.23.10+ds1-1build3",
+   "poppler-utils": "24.02.0-1ubuntu9.9"
+  },
+  "pdfinfo": "pdfinfo version 24.02.0",
+  "platform": "Linux-6.8.0-134-generic-x86_64-with-glibc2.39",
+  "py_PIL": "10.2.0",
+  "py_yaml": "6.0.1",
+  "python": "3.12.3"
+ }
+}

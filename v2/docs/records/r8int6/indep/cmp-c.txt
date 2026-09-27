@@ -1,0 +1,191 @@
+{
+ "components_only_a": [],
+ "components_only_b": {
+  "R50": {
+   "value": "10k 1%",
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "field:LCSC": "C25804",
+   "field:Footprint": "Resistor_SMD:R_0603_1608Metric",
+   "field:Datasheet": "",
+   "field:Description": "",
+   "lib": "Device:R"
+  },
+  "R51": {
+   "value": "10k",
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "field:LCSC": "C25804",
+   "field:Footprint": "Resistor_SMD:R_0603_1608Metric",
+   "field:Datasheet": "",
+   "field:Description": "",
+   "lib": "Device:R"
+  }
+ },
+ "components_changed": {
+  "R14": {
+   "field:LCSC": [
+    "C25804",
+    "C4190"
+   ],
+   "value": [
+    "10k",
+    "2.2k 1%"
+   ]
+  }
+ },
+ "nets_only_a": [],
+ "nets_only_b": [],
+ "nets_changed": {
+  "/RAIL_SENSE": {
+   "removed": [],
+   "added": [
+    [
+     "R51",
+     "1",
+     null,
+     "passive"
+    ]
+   ],
+   "class": [
+    "Default",
+    "Default"
+   ]
+  },
+  "/TX_INHIBIT_n": {
+   "removed": [],
+   "added": [
+    [
+     "R50",
+     "1",
+     null,
+     "passive"
+    ]
+   ],
+   "class": [
+    "Default",
+    "Default"
+   ]
+  },
+  "GND": {
+   "removed": [],
+   "added": [
+    [
+     "R50",
+     "2",
+     null,
+     "passive"
+    ],
+    [
+     "R51",
+     "2",
+     null,
+     "passive"
+    ]
+   ],
+   "class": [
+    "PWR",
+    "PWR"
+   ]
+  }
+ },
+ "pins_moved_or_retyped": [
+  [
+   [
+    "R50",
+    "1"
+   ],
+   null,
+   [
+    "/TX_INHIBIT_n",
+    [
+     null,
+     "passive"
+    ]
+   ]
+  ],
+  [
+   [
+    "R50",
+    "2"
+   ],
+   null,
+   [
+    "GND",
+    [
+     null,
+     "passive"
+    ]
+   ]
+  ],
+  [
+   [
+    "R51",
+    "1"
+   ],
+   null,
+   [
+    "/RAIL_SENSE",
+    [
+     null,
+     "passive"
+    ]
+   ]
+  ],
+  [
+   [
+    "R51",
+    "2"
+   ],
+   null,
+   [
+    "GND",
+    [
+     null,
+     "passive"
+    ]
+   ]
+  ]
+ ],
+ "counts": {
+  "a": [
+   217,
+   153,
+   584
+  ],
+  "b": [
+   219,
+   153,
+   588
+  ]
+ },
+ "expected_change_list": {
+  "file": "v2/docs/records/w4c/parity/expected-c-netlist.json",
+  "result": "MATCH",
+  "observed": {
+   "components_only_a": [],
+   "components_only_b": [
+    "R50",
+    "R51"
+   ],
+   "components_changed": {
+    "R14": [
+     "field:LCSC",
+     "value"
+    ]
+   },
+   "nets_only_a": [],
+   "nets_only_b": [],
+   "nets_changed": {
+    "/RAIL_SENSE": [
+     "R51.1"
+    ],
+    "/TX_INHIBIT_n": [
+     "R50.1"
+    ],
+    "GND": [
+     "R50.2",
+     "R51.2"
+    ]
+   }
+  }
+ }
+}

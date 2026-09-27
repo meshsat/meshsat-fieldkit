@@ -1,0 +1,120 @@
+{
+ "board": "b",
+ "board_table_phase": "B21",
+ "commands": [
+  {
+   "argv": [
+    "kicad-cli",
+    "sch",
+    "export",
+    "bom",
+    "--fields",
+    "Reference,Value,Footprint,LCSC,${QUANTITY}",
+    "--group-by",
+    "Value,Footprint",
+    "--sort-field",
+    "Reference",
+    "-o",
+    "/root/r8int6/rg-out-932cf9d755d91c60d98b90911c9da52af1127037/b/committed/pcb-b-compute-bom.csv",
+    "pcb-b-compute.kicad_sch"
+   ],
+   "cwd": "v2/ecad/pcb-b-compute-b19",
+   "exit": 0,
+   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\nWrote bill of materials to '/root/r8int6/rg-out-932cf9d755d91c60d98b90911c9da52af1127037/b/committed/pcb-b-compute-bom.csv'.\n",
+   "started_utc": "2026-09-27T18:01:40Z"
+  },
+  {
+   "argv": [
+    "kicad-cli",
+    "sch",
+    "erc",
+    "--severity-all",
+    "--format",
+    "json",
+    "-o",
+    "/root/r8int6/rg-out-932cf9d755d91c60d98b90911c9da52af1127037/b/committed/pcb-b-compute-erc.json",
+    "pcb-b-compute.kicad_sch"
+   ],
+   "cwd": "v2/ecad/pcb-b-compute-b19",
+   "exit": 0,
+   "output_tail": "Found 2912 violations\nSaved ERC Report to /root/r8int6/rg-out-932cf9d755d91c60d98b90911c9da52af1127037/b/committed/pcb-b-compute-erc.json\n",
+   "started_utc": "2026-09-27T18:01:44Z"
+  },
+  {
+   "argv": [
+    "/usr/bin/python3",
+    "../tools/gen_footprints_b16.py",
+    "../meshsat.pretty"
+   ],
+   "cwd": "v2/ecad/pcb-b-compute-b19",
+   "exit": 0,
+   "output_tail": "gen_footprints_b16: 12 footprints written and loaded: Ebyte_E22-900M30S, LQFP-128_14x14mm_P0.4mm_EP6.0, M2_B-Key_Socket_3052, M2_B-Key_Socket_3052_TE2199119, M2_M-Key_Socket_2242, NiceRF_SA868, Pulse_H5007NL, Quectel_LG290P, Skyworks_SKY13351_MLPD-6_1x1mm, TQFP-128_14x14mm_P0.4mm_EP10.0, Texas_RKS0020A_VQFN-20_2.5x4.5mm, Texas_RSE0010A_UQFN-10_1.5x2mm\n",
+   "started_utc": "2026-09-27T18:01:48Z"
+  },
+  {
+   "argv": [
+    "/usr/bin/python3",
+    "../tools/gen_footprints_idc.py",
+    "../meshsat.pretty"
+   ],
+   "cwd": "v2/ecad/pcb-b-compute-b19",
+   "exit": 0,
+   "output_tail": "gen_footprints_idc: wrote IDC-Header_2x05_P2.54mm_Vertical_NarrowPad, 10 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)\ngen_footprints_idc: wrote IDC-Header_2x07_P2.54mm_Vertical_NarrowPad, 14 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)\ngen_footprints_idc: wrote IDC-Header_2x08_P2.54mm_Vertical_NarrowPad, 16 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)\ngen_footprints_idc: wrote IDC-Header_2x09_P2.54mm_Vertical_NarrowPad, 18 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)\ngen_footprints_idc: wrote IDC-Header_2x10_P2.54mm_Vertical_NarrowPad, 20 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)\ngen_footprints_idc: wrote IDC-Header_2x13_P2.54mm_Vertical_NarrowPad, 26 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)\ngen_footprints_idc: wrote IDC-Header_2x20_P2.54mm_Vertical_NarrowPad, 40 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)\ngen_footprints_idc: 7 footprint(s)\n",
+   "started_utc": "2026-09-27T18:01:48Z"
+  },
+  {
+   "argv": [
+    "/usr/bin/python3",
+    "../tools/gen_sch_b.py",
+    "pcb-b-compute.kicad_sch",
+    "pcb-b-compute"
+   ],
+   "cwd": "v2/ecad/pcb-b-compute-b19",
+   "exit": 0,
+   "output_tail": "lands: 68 footprint(s) judged, 0 pin(s) on a pad the land does not carry, 0 land(s) unreadable\nschlayout: WARNING cell U101 of section 'SLOT S1: COMPUTE MODULE 5, PCIe SWITCH, ' is larger than a page (266 x 304 mm)\nschlayout: WARNING cell U102 of section 'SLOT S1: COMPUTE MODULE 5, PCIe SWITCH, ' is larger than a page (401 x 131 mm)\nschlayout: WARNING cell U201 of section 'SLOT S2: COMPUTE MODULE 5, PCIe SWITCH, ' is larger than a page (266 x 304 mm)\nschlayout: WARNING cell U301 of section 'SLOT S3: COMPUTE MODULE 5, PCIe SWITCH, ' is larger than a page (266 x 304 mm)\nschlayout verify: 4801 pins in 3921 nets, every component one name\nlayout: 43 A3 pages on a 6 x 8 sheet -> paper \"User\" 2514.60 2377.44\nwrote pcb-b-compute.kicad_sch parts: 1328 lib symbols: 162\nnets: 973 single-pin nets (should be empty or intentional): []\nintent: /root/r8int6/rg-932cf9d755d91c60d98b90911c9da52af1127037/v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json (281 bypass, 58 rails, 154 nodes, 5 pair classes)\n",
+   "started_utc": "2026-09-27T18:01:48Z"
+  },
+  {
+   "argv": [
+    "bash",
+    "../tools/build_sch.sh",
+    ".",
+    "pcb-b-compute"
+   ],
+   "cwd": "v2/ecad/pcb-b-compute-b19",
+   "exit": 0,
+   "output_tail": "ERC: violations (out/pcb-b-compute-erc.json, out/pcb-b-compute-erc.rpt; erc_gate.py decides)\nnetlist: out/pcb-b-compute.net\nsch_prov: pcb-b-compute.net written by generator d242446f0eef3122 (boards/b.json#gen_env, gen_footprints_b16.py, gen_footprints_e.py, gen_footprints_idc.py, gen_footprints_panel.py, gen_sch_b.py, idc_pads.py, intent.py, kisch.py, schlayout.py, and 60 land(s) in meshsat.pretty)\nsheet pdf: out/pcb-b-compute-schematic-sheet.pdf\nsch_pages: 6 x 8 cells, 43 pages kept of 48 tiles\npdf: out/pcb-b-compute-schematic.pdf\nbom: out/pcb-b-compute-bom.csv\n",
+   "started_utc": "2026-09-27T18:01:58Z"
+  }
+ ],
+ "comparisons": {
+  "bom": "PARITY",
+  "erc": "PARITY_AFTER_NOISE",
+  "intent": "PARITY_AFTER_NOISE",
+  "netlist": "PARITY_AFTER_NOISE",
+  "schematic": "PARITY"
+ },
+ "gen_env": null,
+ "lands_changed_by_the_footprint_generators": [],
+ "phase_directory": "pcb-b-compute-b19",
+ "phase_label_used": "B21",
+ "result": "PARITY",
+ "stem": "pcb-b-compute",
+ "taken_utc": "2026-09-27T18:04:13Z",
+ "versions": {
+  "kicad_cli": "9.0.9",
+  "mutool": "mutool version 1.23.10",
+  "packages": {
+   "kicad": "9.0.9~ubuntu24.04.1",
+   "kicad-footprints": "9.0.9~ubuntu24.04.1",
+   "kicad-symbols": "9.0.9~ubuntu24.04.1",
+   "mupdf-tools": "1.23.10+ds1-1build3",
+   "poppler-utils": "24.02.0-1ubuntu9.9"
+  },
+  "pdfinfo": "pdfinfo version 24.02.0",
+  "platform": "Linux-6.8.0-134-generic-x86_64-with-glibc2.39",
+  "py_PIL": "10.2.0",
+  "py_yaml": "6.0.1",
+  "python": "3.12.3"
+ }
+}
