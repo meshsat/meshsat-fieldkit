@@ -1,0 +1,88 @@
+# host: vast.ai box 52646493; atlc 4.6.1-6build1 extracted under /root/hc9; stack_solves.py sha256 7848a0d98dda47e5b69210d1cfabae8422f9326cb1b18d3956442176afe46c88; run 2026-09-27T00:23Z
+stack_solves: atlc at 200 px/mm, cut-off 0.01; Zdiff in ohm
+
+## cal-out: CAL 6L 3313 outer, h 0.0994 er 4.1, masked
+   0.127/0.127 -> 90.7 (recorded 90.7, difference +0.0)
+
+## cal-in: CAL 6L 3313 inner, symmetric h 0.6057 er 4.45
+   0.127/0.127 -> 102.0 (recorded 102.0, difference -0.0)
+
+## 6L-out: 6L JLC06161H-3313 outer (F over In1 / B over In4): microstrip h 0.0994 er 4.1, masked
+   w \ s     0.127    0.152    0.200
+   0.090     102.8    108.1    113.5
+   0.100      99.2    104.2    109.2
+   0.110      96.8    100.6    105.3
+   0.127      90.7     94.3     99.2
+   0.150      85.7     88.7     92.5
+   0.180      79.0     81.6     84.9
+   0.200      75.2     77.6     80.7
+   gap 0.127 -> 85 ohm: w 0.153; 90 ohm: w 0.130; 100 ohm: w 0.098
+   gap 0.152 -> 85 ohm: w 0.166; 90 ohm: w 0.145; 100 ohm: w 0.112
+   gap 0.200 -> 85 ohm: w 0.180; 90 ohm: w 0.160; 100 ohm: w 0.125
+
+## 6L-in-asis: 6L 3313 In2 as B21 uses it: In1 GND 0.55 core er 4.6 above, In4 split 5 V planes 0.674 below (In3 routing, not drawn), er 4.16 below
+   w \ s     0.127    0.152    0.200
+   0.075     119.1    125.9    137.0
+   0.090     113.4    119.9    130.4
+   0.100     110.2    116.4    126.6
+   0.110     107.4    113.4    123.3
+   0.127     104.8    110.5    118.7
+   0.150      98.4    103.8    113.2
+   0.180      93.4     98.9    107.2
+   0.210      89.7     94.4    102.2
+   gap 0.127 -> 85 ohm: outside the solved widths; 90 ohm: w 0.208; 100 ohm: w 0.144
+   gap 0.152 -> 85 ohm: outside the solved widths; 90 ohm: outside the solved widths; 100 ohm: w 0.173
+   gap 0.200 -> 85 ohm: outside the solved widths; 90 ohm: outside the solved widths; 100 ohm: outside the solved widths
+
+## 6L-A2-In2: 6L 3313 option A2, In2 between In3 GND (0.1088 2116 er 4.16) and In1 GND (0.55 core er 4.6)
+   w \ s     0.127    0.152    0.200
+   0.075     106.7    110.9    116.7
+   0.090     100.0    103.8    109.1
+   0.100      96.1     99.7    104.7
+   0.110      92.7     96.0    100.8
+   0.127      88.7     91.7     94.7
+   0.150      81.5     84.2     88.1
+   0.180      75.1     77.4     80.8
+   0.210      69.7     71.8     74.7
+   gap 0.127 -> 85 ohm: w 0.139; 90 ohm: w 0.121; 100 ohm: w 0.090
+   gap 0.152 -> 85 ohm: w 0.148; 90 ohm: w 0.132; 100 ohm: w 0.099
+   gap 0.200 -> 85 ohm: w 0.163; 90 ohm: w 0.143; 100 ohm: w 0.112
+
+## 8L-out: 8L JLC08161H-2116 outer (F over In1 / B over In6): microstrip h 0.1164 er 4.16, masked
+   w \ s     0.127    0.152    0.200
+   0.090     105.9    110.9    118.0
+   0.100     102.4    107.2    113.8
+   0.110      99.2    103.7    110.0
+   0.127      95.8     98.3    104.0
+   0.150      89.3     92.8     97.3
+   0.180      82.9     85.9     89.9
+   0.200      79.1     82.0     85.6
+   gap 0.127 -> 85 ohm: w 0.170; 90 ohm: w 0.148; 100 ohm: w 0.107
+   gap 0.152 -> 85 ohm: w 0.184; 90 ohm: w 0.162; 100 ohm: w 0.122
+   gap 0.200 -> 85 ohm: outside the solved widths; 90 ohm: w 0.180; 100 ohm: w 0.141
+
+## 8L-in: 8L JLC08161H-2116 inner signal layer between a plane across 0.1528 (2 x 1080, er 3.91) and a plane across 0.3 (core, er 4.41)
+   w \ s     0.127    0.152    0.200
+   0.075     114.4    119.5    126.9
+   0.090     107.8    112.4    119.3
+   0.100     104.0    108.4    114.9
+   0.110     100.5    104.8    110.9
+   0.127      96.8    100.6    104.7
+   0.150      89.5     92.9     98.0
+   0.180      83.0     86.0     90.4
+   0.210      77.6     80.2     84.1
+   gap 0.127 -> 85 ohm: w 0.171; 90 ohm: w 0.148; 100 ohm: w 0.112
+   gap 0.152 -> 85 ohm: w 0.185; 90 ohm: w 0.163; 100 ohm: w 0.129
+   gap 0.200 -> 85 ohm: w 0.206; 90 ohm: w 0.182; 100 ohm: w 0.143
+
+## se-4L: 4L JLC04161H-7628 outer (boards D, E): microstrip h 0.2104 er 4.4, masked
+   w 0.12: 76.6  w 0.14: 72.7  w 0.16: 69.3  w 0.18: 66.2  w 0.20: 63.4  w 0.24: 58.5  w 0.30: 52.6  w 0.35: 48.5  w 0.40: 45.3
+   50 ohm single-ended -> w 0.332
+
+## se-6L: 6L JLC06161H-3313 outer (boards A, B, C): microstrip h 0.0994 er 4.1, masked
+   w 0.12: 56.2  w 0.14: 52.5  w 0.16: 49.3  w 0.18: 46.4  w 0.20: 44.0  w 0.24: 39.7  w 0.30: 34.8  w 0.35: 31.5  w 0.40: 28.8
+   50 ohm single-ended -> w 0.155
+
+## se-8L: 8L JLC08161H-2116 outer (board B candidate): microstrip h 0.1164 er 4.16, masked
+   w 0.12: 60.0  w 0.14: 56.3  w 0.16: 53.0  w 0.18: 50.1  w 0.20: 47.5  w 0.24: 43.1  w 0.30: 37.9  w 0.35: 34.4  w 0.40: 31.6
+   50 ohm single-ended -> w 0.181

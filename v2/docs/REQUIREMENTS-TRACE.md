@@ -7,7 +7,7 @@ Generated from the requirements registry `v2/ecad/tools/pcb_requirements.yaml`. 
 
 Every reading carries its evidence class, in the six classes of `v2/docs/CURRENT-EVIDENCE.md`: a record reads PASS only on a class that counts, never on evidence awaiting revalidation, and a desk review (the session's own reading of named files, each bound by its sha256) is never a physical test. The prototype-core functions whose feasibility is not closed are listed first, as explicit architecture feasibility blockers (review of 26 September 2026, section 3 and checkpoint item 1): a merged document is configuration control, not proof that the architecture is feasible.
 
-Registry state **DRAFT_FOR_REVIEW_C**. Sources read at commit `eadbe571` unless an entry says otherwise. 132 records trace to 19 needs; 28 owner rulings are applied, 12 choices were taken by the session under the owner's standing rule of 26 September 2026, 35 items are open and 39 are closed.
+Registry state **DRAFT_FOR_REVIEW_C**. Sources read at commit `eadbe571` unless an entry says otherwise. 132 records trace to 19 needs; 28 owner rulings are applied, 12 choices were taken by the session under the owner's standing rule of 26 September 2026, 36 items are open and 39 are closed.
 
 ## Summary
 
@@ -526,9 +526,9 @@ Prototype 1: in the core D-01 names. 18 record(s).
 
 *Feasibility page:* `v2/docs/feasibility/FAILOVER-FABRIC.md`, blocker ids FB-FAB-1, FB-FAB-2, FB-FAB-3, FB-FAB-4, FB-FAB-5, FB-FAB-6, FB-FAB-7, FB-FAB-8; *owner:* Board B's author (FB-FAB-2 to FB-FAB-7), the integrator (FB-FAB-1, the run order of FB-FAB-6), an outside high-speed reviewer once the owner approves R-HSD (L-05), bring-up (FB-FAB-8).; *holds:* REQ-004, REQ-006, CON-003, CON-022; layout entry of B.
 
-*Source (verified):* `v2/docs/feasibility/FAILOVER-FABRIC.md section 10`; `v2/docs/reviews/2026-09-26-foundation-progress-review.md section 3`
+*Source (verified):* `v2/docs/feasibility/FAILOVER-FABRIC.md section 10`; `v2/docs/reviews/2026-09-26-foundation-progress-review.md section 3`; `v2/docs/STACKUP-DECISIONS.md section 4`; `v2/docs/layout-constraints/B.md`
 
-*Notes:* Owner condition 7 of 25 September 2026: a passing escape trial only permits further investigation, and an experiment under decision 43 stays EXPERIMENTAL.
+*Notes:* Owner condition 7 of 25 September 2026: a passing escape trial only permits further investigation, and an experiment under decision 43 stays EXPERIMENTAL. 27 September 2026 (handover layer 9): the pair widths the candidate stacks need are solved at desk (atlc, calibrated on the tree's two recorded solves) in v2/docs/STACKUP-DECISIONS.md section 4: both option A2 and JLC08161H-2116 give one class width per target on every routing layer; A2 keeps three controlled routing layers and the eight-layer row four. That is FB-FAB-7's field-solver impedance for the candidates, not for a chosen stack, so nothing in this record closes on it.
 
 **FEA-006** (feasibility). Decision 42 is ruled per capacitor class (R, D, L, A, B1, B2) from the makers' own words, and nothing is laid for it: the tool changes T1 to T10 and the generator changes G1 to G14 belong to their writers, and the escape cost of the own-pin windows is measured only on each board's next placement; board B's fine-pitch parts carry no declared decoupling, and five circuit gaps stand (among them the STM32H743's VDDA with no capacitor of its own).
 
@@ -841,9 +841,9 @@ Prototype 1: in the core D-01 names. 14 record(s).
 
 *Feasibility page:* `v2/docs/feasibility/POWER-THERMAL.md`, blocker ids PWR-F12, PWR-F13, PWR-F15; *owner:* The session (loads, duty cycles, 'aged'); the battery-protection stream (PWR-F12, the gauge's two over-current levels); board A's owner (the pack-node copper); board D's owner (the flange sensor, PWR-F15); the owner only for money (an early case, R-PWR under L-04).; *holds:* REQ-014, REQ-018; layout entry of A, D.
 
-*Source (verified):* `v2/docs/feasibility/POWER-THERMAL.md section 11`; `v2/docs/reviews/2026-09-26-foundation-progress-review.md section 4`
+*Source (verified):* `v2/docs/feasibility/POWER-THERMAL.md section 11`; `v2/docs/reviews/2026-09-26-foundation-progress-review.md section 4`; `v2/docs/layout-constraints/A.md section 2`; `v2/docs/STACKUP-DECISIONS.md section 3.1`
 
-*Notes:* The review of 26 September 2026, section 4: keep power, thermal and mechanical bounds provisional; the +35 C and +25 C restrictions are proposed controls until supported by analysis and measurement.
+*Notes:* The review of 26 September 2026, section 4: keep power, thermal and mechanical bounds provisional; the +35 C and +25 C restrictions are proposed controls until supported by analysis and measurement. 27 September 2026 (handover layer 9): board A's pack-path WIDTH at 18 A is derived as a layout constraint under decision 35 (v2/docs/layout-constraints/A.md section 2: 23.91 mm on one 1 oz outer face, 11.95 mm at 2 oz, no inner layer; two outer faces at 6.72 mm each only where dc_drop reads an equal share); the COPPER WEIGHT is not decided (v2/docs/STACKUP-DECISIONS.md section 3.1), so the layout-entry stage stays open on it.
 
 **REQ-015** (requirement). A 9 to 36 V vehicle and shore input runs the kit and charges the pack, with reverse-polarity protection, under- and over-voltage limits, a line filter designed to MIL-STD-461 limits, a NATO 2-pin plug cable and the MIL-DTL-38999 receptacle. The input is not qualified against any vehicle surge standard and is not intended for 24 V military vehicle buses (D-16).
 
@@ -1933,9 +1933,9 @@ Prototype 1: in the core D-01 names. 10 record(s).
 
 *Feasibility page:* `v2/docs/review-packets/battery/REVIEW-REQUEST.md`, blocker ids BAT-F01, BAT-F14, BAT-F20, Q-TI-1, Q-TI-7, Q-TI-10; *owner:* The owner engages the reviewer from a quote (D-09, L-03); the battery-protection stream prepares and answers; the reviewer, not yet engaged, is an electronics engineer outside the agents that wrote the design, with the qualification D-09 names.; *holds:* REQ-044; layout entry of P.
 
-*Source (verified):* `v2/docs/review-packets/battery/REVIEW-REQUEST.md`; `v2/docs/review-packets/battery/PROTECTION-ARCHITECTURE.md`; `v2/docs/reviews/REVIEW-ROUTES.md`; `v2/docs/reviews/2026-09-26-foundation-progress-review.md section 2`
+*Source (verified):* `v2/docs/review-packets/battery/REVIEW-REQUEST.md`; `v2/docs/review-packets/battery/PROTECTION-ARCHITECTURE.md`; `v2/docs/reviews/REVIEW-ROUTES.md`; `v2/docs/reviews/2026-09-26-foundation-progress-review.md section 2`; `v2/docs/layout-constraints/P.md section 5`
 
-*Notes:* The review of 26 September 2026, section 2: a documented protection architecture and a qualified human review of the actual schematic and BOM are required before pack PCB release; the fuse's ratings are interpreted for the assembled application (FUSE-INTERPRETATION.md) and the charger with a crashed controller is reviewed as a state sequence (CHARGER-STATE-SEQUENCE.md).
+*Notes:* The review of 26 September 2026, section 2: a documented protection architecture and a qualified human review of the actual schematic and BOM are required before pack PCB release; the fuse's ratings are interpreted for the assembled application (FUSE-INTERPRETATION.md) and the charger with a crashed controller is reviewed as a state sequence (CHARGER-STATE-SEQUENCE.md). 27 September 2026 (handover layer 9): the thermistor, Kelvin and commissioning-access constraints the layout-entry stage asks to have stated are collected for the R-BAT reviewer in v2/docs/layout-constraints/P.md section 5; the packet's release check and the secondary protection's coordination statement stay the battery stream's.
 
 **REQ-045** (requirement). From the cells to every load, the maximum fault current is bounded at each stage by a protective element sized for that stage's conductors and connectors, coordinated with what it protects.
 
@@ -2075,6 +2075,8 @@ Prototype 1: in the core D-01 names. 4 record(s).
 *allocated to a, b, c, d, e, p.*
 
 *Source (verified):* `v2/ecad/tools/pcb_rules.yaml (TST-001)`; `v2/docs/ARCH-PCB-B-IOHA.md:31`; `v2/docs/PANEL.md:27`; `v2/docs/MESHSAT-709-geometry-appendix.md:3064 (gauge golden image over SMBus)`
+
+*Notes:* 27 September 2026 (handover layer 9): the per-board test access list (W5) this acceptance names is not in the tree. Each v2/docs/layout-constraints/<board>.md lists what the committed netlist carries (test points, programming interfaces, boot and arming jumpers) and PCB-BRING-UP.md gives the rail order; that is an input to the list, not the list.
 
 **REQ-049** (requirement). The sealed Glenair 233-370 USB receptacle on the connector plate is the maintenance console and key-fill port; the USB-C outlet carries power only (D-12).
 
@@ -2744,6 +2746,7 @@ SESSION items are engineering the session decides and records with authority SES
 | S-44 | SESSION | The hardware EMCON lamp on board C, driven from the line state with no processor in its path, and its light-guide hole in the face plate (SD-EMC-6, EMCON.md section 7). | CON-021, FEA-002 |
 | S-45 | SESSION | BAT-001's instrument brought to board P as generated: pack_protection still reads FAIL on the regenerated board P ("no second protector and no chemical fuse", battery packet evidence gates-new/pack_protection.log), because its inputs describe the old pack. | REQ-044, FEA-005 |
 | S-46 | SESSION | Finding BAT-F20 (round 8, the battery stream's second independent check, 27 September 2026): with FET Options CHGIN = 1 the charge inhibit above T3 and the T1 range below it hold board P's charge FET Q1 off whenever the pack is not charging, discharge included (SLUUAQ3A 4.12, 4.13, 14.2.1.1), so the kit's discharge current runs through Q1's body diode, about 2 to 3 W at the reduced load and about 7 W at 10 A on board P. Open until one option is taken and carried into the ladder, the mode table, F2's analysis and the E3-A, E4-O and P12 pass lines: (a) a FET Options setting that keeps discharge on, with the charge-start protection kept another way; (b) a separate charge-path FET; (c) a thermal budget for the diode. Asked of the qualified reviewer (REVIEW-REQUEST.md Q-P18) and of TI (Q-TI-10). | FEA-005 |
+| S-47 | SESSION | Finding HC9-E1 (handover layer 9, 27 September 2026; v2/docs/layout-constraints/E.md section 6.1 item 1): board E's LT8705A solar tracker has its current-sense resistor R5 in series with the inductor (L1 pin 2 to TRK_SW2, gen_sch_e.py line 481 at 53a98a71) and the sources of Q4 and Q5 on GND, so the controller's CSP and CSN pins, rated -0.3 V to 3 V (v2/vendor/power/lt8705a.pdf p.2), would sit at up to the 15.1 V output. The maker puts RSENSE between the joined sources of M2 and M3 and GND (Figure 1 p.13, Figure 14 p.35, the circuits on p.1 and p.41, the layout checklist p.36). It blocks board E's next placement and is open until gen_sch_e.py carries the bottom-leg sense with Kelvin taps, its knock-ons are made (pcb_sensitive.yaml board e, gen_pcb_e3.py PATTERNS, boards/e.json: TRK_LSENSE goes away) and board E is regenerated with parity. The same reading's smaller items travel with it: GATEVCC's own 4.7 uF and the four supply-pin bypass declarations (E.md section 5), MODE tied to GND with the FBIN loop (E.md section 6.1 item 9) and the Schottky boost diodes (item 10). | none |
 
 ## Closed items
 

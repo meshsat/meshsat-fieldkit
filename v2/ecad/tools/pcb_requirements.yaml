@@ -957,6 +957,20 @@ open_items:
       Options setting that keeps discharge on, with the charge-start protection kept another way; (b) a separate
       charge-path FET; (c) a thermal budget for the diode. Asked of the qualified reviewer (REVIEW-REQUEST.md Q-P18) and of
       TI (Q-TI-10).
+  - id: S-47
+    class: SESSION
+    status: OPEN
+    title: >-
+      Finding HC9-E1 (handover layer 9, 27 September 2026; v2/docs/layout-constraints/E.md section 6.1 item 1): board
+      E's LT8705A solar tracker has its current-sense resistor R5 in series with the inductor (L1 pin 2 to TRK_SW2,
+      gen_sch_e.py line 481 at 53a98a71) and the sources of Q4 and Q5 on GND, so the controller's CSP and CSN pins,
+      rated -0.3 V to 3 V (v2/vendor/power/lt8705a.pdf p.2), would sit at up to the 15.1 V output. The maker puts
+      RSENSE between the joined sources of M2 and M3 and GND (Figure 1 p.13, Figure 14 p.35, the circuits on p.1 and
+      p.41, the layout checklist p.36). It blocks board E's next placement and is open until gen_sch_e.py carries the
+      bottom-leg sense with Kelvin taps, its knock-ons are made (pcb_sensitive.yaml board e, gen_pcb_e3.py PATTERNS,
+      boards/e.json: TRK_LSENSE goes away) and board E is regenerated with parity. The same reading's smaller items
+      travel with it: GATEVCC's own 4.7 uF and the four supply-pin bypass declarations (E.md section 5), MODE tied to
+      GND with the FBIN loop (E.md section 6.1 item 9) and the Schottky boost diodes (item 10).
 
 # Items that left the open list, and what closed each: an owner ruling, a session choice, or a commit whose effect
 # was read in the file `closing_evidence` names. A record never waits on a closed item; it cites what closed it.
@@ -1818,11 +1832,15 @@ records:
     evidence_bound_to:
       - "v2/docs/feasibility/FAILOVER-FABRIC.md@4646ad528ec4b3c6"
     release_effect: BLOCKER
-    source: ["v2/docs/feasibility/FAILOVER-FABRIC.md section 10", "v2/docs/reviews/2026-09-26-foundation-progress-review.md section 3"]
+    source: ["v2/docs/feasibility/FAILOVER-FABRIC.md section 10", "v2/docs/reviews/2026-09-26-foundation-progress-review.md section 3", "v2/docs/STACKUP-DECISIONS.md section 4", "v2/docs/layout-constraints/B.md"]
     source_check: VERIFIED
     notes: >-
       Owner condition 7 of 25 September 2026: a passing escape trial only permits further investigation, and an
-      experiment under decision 43 stays EXPERIMENTAL.
+      experiment under decision 43 stays EXPERIMENTAL. 27 September 2026 (handover layer 9): the pair widths the
+      candidate stacks need are solved at desk (atlc, calibrated on the tree's two recorded solves) in
+      v2/docs/STACKUP-DECISIONS.md section 4: both option A2 and JLC08161H-2116 give one class width per target on
+      every routing layer; A2 keeps three controlled routing layers and the eight-layer row four. That is FB-FAB-7's
+      field-solver impedance for the candidates, not for a chosen stack, so nothing in this record closes on it.
 
   - id: FEA-006
     kind: feasibility
@@ -2650,11 +2668,15 @@ records:
     evidence_bound_to:
       - "v2/docs/feasibility/POWER-THERMAL.md@465abd3bb9c97416"
     release_effect: BLOCKER
-    source: ["v2/docs/feasibility/POWER-THERMAL.md section 11", "v2/docs/reviews/2026-09-26-foundation-progress-review.md section 4"]
+    source: ["v2/docs/feasibility/POWER-THERMAL.md section 11", "v2/docs/reviews/2026-09-26-foundation-progress-review.md section 4", "v2/docs/layout-constraints/A.md section 2", "v2/docs/STACKUP-DECISIONS.md section 3.1"]
     source_check: VERIFIED
     notes: >-
       The review of 26 September 2026, section 4: keep power, thermal and mechanical bounds provisional; the +35 C and
-      +25 C restrictions are proposed controls until supported by analysis and measurement.
+      +25 C restrictions are proposed controls until supported by analysis and measurement. 27 September 2026
+      (handover layer 9): board A's pack-path WIDTH at 18 A is derived as a layout constraint under decision 35
+      (v2/docs/layout-constraints/A.md section 2: 23.91 mm on one 1 oz outer face, 11.95 mm at 2 oz, no inner
+      layer; two outer faces at 6.72 mm each only where dc_drop reads an equal share); the COPPER WEIGHT is not
+      decided (v2/docs/STACKUP-DECISIONS.md section 3.1), so the layout-entry stage stays open on it.
 
   - id: REQ-015
     kind: requirement
@@ -5590,12 +5612,16 @@ records:
       - "v2/docs/review-packets/battery/PROTECTION-ARCHITECTURE.md"
       - "v2/docs/reviews/REVIEW-ROUTES.md"
       - "v2/docs/reviews/2026-09-26-foundation-progress-review.md section 2"
+      - "v2/docs/layout-constraints/P.md section 5"
     source_check: VERIFIED
     notes: >-
       The review of 26 September 2026, section 2: a documented protection architecture and a qualified human review of
       the actual schematic and BOM are required before pack PCB release; the fuse's ratings are interpreted for the
       assembled application (FUSE-INTERPRETATION.md) and the charger with a crashed controller is reviewed as a state
-      sequence (CHARGER-STATE-SEQUENCE.md).
+      sequence (CHARGER-STATE-SEQUENCE.md). 27 September 2026 (handover layer 9): the thermistor, Kelvin and
+      commissioning-access constraints the layout-entry stage asks to have stated are collected for the R-BAT
+      reviewer in v2/docs/layout-constraints/P.md section 5; the packet's release check and the secondary
+      protection's coordination statement stay the battery stream's.
 
   - id: REQ-045
     kind: requirement
@@ -5757,6 +5783,11 @@ records:
       - "v2/docs/PANEL.md:27"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:3064 (gauge golden image over SMBus)"
     source_check: VERIFIED
+    notes: >-
+      27 September 2026 (handover layer 9): the per-board test access list (W5) this acceptance names is not in
+      the tree. Each v2/docs/layout-constraints/<board>.md lists what the committed netlist carries (test points,
+      programming interfaces, boot and arming jumpers) and PCB-BRING-UP.md gives the rail order; that is an input
+      to the list, not the list.
 
   - id: REQ-049
     kind: requirement
