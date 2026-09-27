@@ -13,9 +13,9 @@ Measured on board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5.
 
 | historical aggregate, mixed revisions | rules | percent of this board's required rules |
 |---|---|---|
-| PASS | 19 | 76.0 |
-| FAIL | 2 | 8.0 |
-| INCONCLUSIVE | 4 | 16.0 |
+| PASS | 18 | 72.0 |
+| FAIL | 4 | 16.0 |
+| INCONCLUSIVE | 3 | 12.0 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **25** | 100.0 |
 
@@ -23,7 +23,7 @@ Measured on board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5.
 |---|---|---|---|---|
 | ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **PASS** | OPERATING-ENVELOPE.md is the record that was verified (sha 43361b02743cf3af) |
 | ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 91 |
-| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts_e5 PASS of 33 |
+| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **FAIL** | check_contracts_e5 FAIL: {'fail': 10, 'pass': 28} |
 | SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **PASS** | safe_lines_e5 PASS of 0 |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **PASS** | derate PASS of 0 |
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_e5 was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
@@ -32,7 +32,7 @@ Measured on board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5.
 | STK-001 the stackup is declared, feasible and in the board | BLOCKER | ROUTED_BOARD | **FAIL** | stackup_gate FAIL: {'compared': 8, 'copper_layers': 2, 'disagreements': 1} |
 | STK-002 a layer count is decided and costed | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | an owner decision is open: layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against si |
 | ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **PASS** | sensitive_nodes PASS of 1 |
-| INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | taken under rule set ff8151db3576437b, current is 635ff031f210f48c |
+| INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **FAIL** | check_contracts_e5 FAIL: {'fail': 10, 'pass': 28} |
 | TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **PASS** | port_protect_e5 PASS of 0 |
 | PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | closer_audit PASS of 16 |
 | RTE-001 geometry a fabricator will build | BLOCKER | ROUTED_BOARD | **PASS** | fab_limits PASS of 8 |

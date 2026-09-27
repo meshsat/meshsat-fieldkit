@@ -1,0 +1,65 @@
+== walk-main_netlists-set6 (swapped: M v2/ecad/tools/tx_inhibit.py)
+   A: INCONCLUSIVE of 9   {"fail": 0, "pass": 6, "undecided": 3, "unjudged": 0}
+        - undecided: RF-002 the asserted line EMCON_HW: nothing on any board but its own source can drive it, and with that source unpowered or unplugged its own pull-downs hold it under 0.8 V against every pin's stated current, every other part powered or not
+        - undecided: RF-002 30 W VHF power amplifier (RA30H1317M1 on the plate): EMCON reaches it in hardware (A power on J_PA)
+        - undecided: RF-002 QMX HF transceiver: EMCON reaches it in hardware (A power on J_HF)
+   B: FAIL         of 20  {"fail": 10, "pass": 4, "undecided": 6, "unjudged": 0}
+        - RF-002 RM520N-GL 5G module: EMCON reaches it in hardware (B rf_disable on J_M2C2 or B power on J_M2C2)
+        - RF-002 AW7915-AED WiFi link card, slot 1: EMCON reaches it in hardware (B rf_disable on J_M2C1 or B power on J_M2C1)
+        - RF-002 AW7915-AED WiFi link card, slot 3: EMCON reaches it in hardware (B rf_disable on J_M2C3 or B power on J_M2C3)
+        - RF-002 Compute Module 5 slot S1 on-module WiFi: EMCON reaches it in hardware (B rf_disable on U30A)
+        - RF-002 Compute Module 5 slot S1 on-module Bluetooth: EMCON reaches it in hardware (B rf_disable on U30A)
+        - RF-002 Compute Module 5 slot S2 on-module WiFi: EMCON reaches it in hardware (B rf_disable on U31A)
+        - RF-002 Compute Module 5 slot S2 on-module Bluetooth: EMCON reaches it in hardware (B rf_disable on U31A)
+        - RF-002 Compute Module 5 slot S3 on-module WiFi: EMCON reaches it in hardware (B rf_disable on U32A)
+        - RF-002 Compute Module 5 slot S3 on-module Bluetooth: EMCON reaches it in hardware (B rf_disable on U32A)
+        - RF-002 B: every part that names a radio is a listed transmitter, an accessory or a receiver
+        - undecided: RF-002 the asserted line EMCON_HW: nothing on any board but its own source can drive it, and with that source unpowered or unplugged its own pull-downs hold it under 0.8 V against every pin's stated current, every other part powered or not
+        - undecided: RF-002 LimeSDR Mini 2.4 in its USB 3 bay: EMCON reaches it in hardware (B power on J_LIME)
+        - undecided: RF-002 RockBLOCK 9704 (Iridium): EMCON reaches it in hardware (B power on J_RB9704)
+        - undecided: RF-002 E22-900M30S LoRa: EMCON reaches it in hardware (B power on U12)
+        - undecided: RF-002 E72 CC2652P Zigbee coordinator: EMCON reaches it in hardware (B power on U13)
+        - undecided: RF-002 E72 CC2652P OpenThread RCP: EMCON reaches it in hardware (B power on U14)
+   C: INCONCLUSIVE of 6   {"fail": 0, "pass": 5, "undecided": 1, "unjudged": 0}
+        - undecided: RF-002 the asserted line EMCON_HW: nothing on any board but its own source can drive it, and with that source unpowered or unplugged its own pull-downs hold it under 0.8 V against every pin's stated current, every other part powered or not
+   D: INCONCLUSIVE of 8   {"fail": 0, "pass": 7, "undecided": 1, "unjudged": 0}
+        - undecided: RF-002 SA868 VHF exciter: EMCON reaches it in hardware (D key on U2)
+   E: PASS         of 1   {"fail": 0, "pass": 1, "undecided": 0, "unjudged": 0}
+   P: PASS         of 1   {"fail": 0, "pass": 1, "undecided": 0, "unjudged": 0}
+== walk-set6_netlists-main (swapped: M v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json M v2/ecad/pcb-a-power-a23/out/pcb-a-power.net M v2/ecad/pcb-a-power-a23/out/pcb-a-power.net.prov.json M v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_sch M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net.prov.json M v2/ecad/pcb-b-compute-b19/)
+   A: INCONCLUSIVE of 6   {"fail": 0, "pass": 0, "undecided": 0, "unjudged": 6}
+        - unjudged, the other board is absent: transmit inhibit present on A (J_AB1)
+        - unjudged, the other board is absent: A: no device drives TX_INHIBIT_n, the panel toggle is its only source (a device on it is a gate input by its maker's pin table)
+        - unjudged, the other board is absent: A: EMCON_HW reaches only gate inputs on this board, never an output
+        - unjudged, the other board is absent: A: TX_INHIBIT_n is pulled DOWN on this board, so a missing panel inhibits
+        - unjudged, the other board is absent: RF-002 30 W VHF power amplifier (RA30H1317M1 on the plate): EMCON reaches it in hardware
+        - unjudged, the other board is absent: RF-002 QMX HF transceiver: EMCON reaches it in hardware
+   B: INCONCLUSIVE of 17  {"fail": 0, "pass": 0, "undecided": 0, "unjudged": 17}
+        - unjudged, the other board is absent: transmit inhibit present on B (J_PANEL)
+        - unjudged, the other board is absent: B: no device drives TX_INHIBIT_n, the panel toggle is its only source (a device on it is a gate input by its maker's pin table)
+        - unjudged, the other board is absent: B: TX_INHIBIT_n is pulled DOWN on this board, so a missing panel inhibits
+        - unjudged, the other board is absent: RF-002 LimeSDR Mini 2.4 in its USB 3 bay: EMCON reaches it in hardware
+        - unjudged, the other board is absent: RF-002 RockBLOCK 9704 (Iridium): EMCON reaches it in hardware
+        - unjudged, the other board is absent: RF-002 E22-900M30S LoRa: EMCON reaches it in hardware
+        - unjudged, the other board is absent: RF-002 E72 CC2652P Zigbee coordinator: EMCON reaches it in hardware
+        - unjudged, the other board is absent: RF-002 E72 CC2652P OpenThread RCP: EMCON reaches it in hardware
+        - unjudged, the other board is absent: RF-002 RM520N-GL 5G module: EMCON reaches it in hardware
+        - unjudged, the other board is absent: RF-002 AW7915-AED WiFi link card, slot 1: EMCON reaches it in hardware
+        - unjudged, the other board is absent: RF-002 AW7915-AED WiFi link card, slot 3: EMCON reaches it in hardware
+        - unjudged, the other board is absent: RF-002 Compute Module 5 slot S1 on-module WiFi: EMCON reaches it in hardware
+        - unjudged, the other board is absent: RF-002 Compute Module 5 slot S1 on-module Bluetooth: EMCON reaches it in hardware
+        - unjudged, the other board is absent: RF-002 Compute Module 5 slot S2 on-module WiFi: EMCON reaches it in hardware
+        - unjudged, the other board is absent: RF-002 Compute Module 5 slot S2 on-module Bluetooth: EMCON reaches it in hardware
+        - unjudged, the other board is absent: RF-002 Compute Module 5 slot S3 on-module WiFi: EMCON reaches it in hardware
+        - unjudged, the other board is absent: RF-002 Compute Module 5 slot S3 on-module Bluetooth: EMCON reaches it in hardware
+   C: INCONCLUSIVE of 3   {"fail": 0, "pass": 0, "undecided": 0, "unjudged": 3}
+        - unjudged, the other board is absent: transmit inhibit present on C (SW_EMCON)
+        - unjudged, the other board is absent: C7: SW_EMCON drives TX_INHIBIT_n, EMCON_HW leaves on J_PANEL
+        - unjudged, the other board is absent: C7: U9 buffers TX_INHIBIT_n into EMCON_HW rather than inverting it
+   D: INCONCLUSIVE of 4   {"fail": 0, "pass": 0, "undecided": 0, "unjudged": 4}
+        - unjudged, the other board is absent: transmit inhibit present on D (J_HARN1)
+        - unjudged, the other board is absent: D8: TX_INHIBIT_n from J_HARN1 into the KEY gate
+        - unjudged, the other board is absent: D: TX_INHIBIT_n is pulled DOWN on this board, so a missing panel inhibits
+        - unjudged, the other board is absent: RF-002 SA868 VHF exciter: EMCON reaches it in hardware
+   E: no reading written
+   P: no reading written
