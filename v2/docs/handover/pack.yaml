@@ -60,8 +60,16 @@ rules:
      reason: "an earlier handover snapshot: snapshots are immutable copies, never inputs of the next one"}
   - {action: include, group: L8, glob: "v2/release/handover/_generated/**",
      role: "exports of the committed schematic of the declared phase (paged PDF, sheet PDF, BOMs, ERC, netlist parity) with provenance.json naming the schematic sha256 and the kicad-cli that made them"}
-  - {action: include, group: EV, glob: "v2/docs/handover/candidates/**",
-     role: "UNACCEPTED candidate: a worktree's full change against its base commit, exported as a git patch because the branch was never pushed (candidates/README.md gives the base, the sha256, the layer and the last review with its blocking findings); not design"}
+  # H2 (27 September 2026): the five patches of H1.1 are SUPERSEDED (board B's round 8 merged at b76c18cb, the layer 2,
+  # 3, 5 and 7 closers at 95e078a1, 53292f81, 0da2778b and c351115d from later worktree states) and their bytes are in
+  # the repository at every commit since 98ce9f83, so they are the lowest-value bundled files: moved to `reference` to
+  # keep the ZIP under max_zip_bytes (about 3.9 MB compressed; the H2 exports and the case release outgrew the margin
+  # H1.1 left). The README stays bundled; REFERENCED-SOURCES.tsv lists each patch with its git blob sha, and
+  # REGENERATE.md section 1a fetches one from the public repository. Deleting the `reference` rule bundles them again.
+  - {action: include, group: EV, glob: "v2/docs/handover/candidates/README.md",
+     role: "the candidates of H1.1 (SUPERSEDED since, each merged from a later state): base, sha256, layer and last review of each patch, and where each landed"}
+  - {action: reference, glob: "v2/docs/handover/candidates/*.patch",
+     reason: "a SUPERSEDED H1.1 candidate patch (UNACCEPTED work exported from an unpushed worktree, since merged from a later state: candidates/README.md names the commit); the lowest-value bundled file, moved out in H2 to keep the ZIP under max_zip_bytes; the repository holds it at the snapshot commit and its git blob sha here identifies it"}
   - {action: include, group: H0, glob: "v2/docs/handover/**",
      role: "handover page, pack specification or regeneration instructions"}
 

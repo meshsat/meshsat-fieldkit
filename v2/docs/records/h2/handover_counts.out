@@ -1,0 +1,78 @@
+handover_counts: repository root .
+
+[CURRENT-EVIDENCE.md sha256/16 7a834fe55aea6ccd]
+headline: Foundations incomplete; 0 boards ready for layout; 0 physically verified.
+candidate table (board, phase, netlist sha256/16, ready):
+  A A32 netlist da05dc02bc1e612f | no: 7 reason(s), first SI-001 INCONCLUSIVE on VALID_HISTORICAL evidence (RATIONALE)
+  B B21 netlist 8b78c59754a6a0c7 | no: 7 reason(s), first SI-001 INCONCLUSIVE on VALID_HISTORICAL evidence (RATIONALE)
+  C C24 netlist 11eabc2dddca5161 | no: 5 reason(s), first PWR-001 FAIL on VALID_HISTORICAL evidence (RATIONALE)
+  D D12 netlist 76700a687eb6187f | no: 8 reason(s), first PWR-001 INCONCLUSIVE on VALID_HISTORICAL evidence (RATIONALE)
+  E E17 netlist d6137f50059e5cbc | no: 5 reason(s), first PWR-001 INCONCLUSIVE on VALID_HISTORICAL evidence (RATIONALE)
+  P P4 netlist 085f833362fbbda8 | no: 6 reason(s), first PWR-001 FAIL on VALID_HISTORICAL evidence (RATIONALE)
+  E5 E5 netlist none | no: 2 reason(s), first INT-001 PASS on AWAITING_REVALIDATION evidence (UNBOUND)
+layout-entry reasons by what closes them first (A B C D E P E5 set):
+  the design or its declarations (the reading is current and is not a PASS): 2 2 3 3 2 3 0 15
+  a deciding verification for the rule: 0 0 0 0 0 0 1 1
+  a layout-entry requirement of a hold that gates a later stage (the hold itself stays until: 1 0 0 1 1 0 0 3
+  the layout-entry stage of a feasibility blocker closed on its named evidence: 4 5 2 4 2 3 1 21
+  total: A 7, B 7, C 5, D 8, E 5, P 6, E5 2, set 40
+layout-entry blocker rows per board (40 rows):
+  A (7): SI-001 INCONCLUSIVE; RF-002 FAIL; decision 31; FEA-006; FEA-004; FEA-002; FEA-007
+  B (7): SI-001 INCONCLUSIVE; RF-002 FAIL; FEA-003; FEA-006; FEA-002; FEA-001; FEA-007
+  C (5): PWR-001 FAIL; SI-001 INCONCLUSIVE; RF-002 FAIL; FEA-006; FEA-002
+  D (8): PWR-001 INCONCLUSIVE; SI-001 INCONCLUSIVE; RF-002 FAIL; decision 31; FEA-006; FEA-004; FEA-002; FEA-007
+  E (5): PWR-001 INCONCLUSIVE; SI-001 INCONCLUSIVE; decision 31; FEA-006; FEA-007
+  P (6): PWR-001 FAIL; SI-001 INCONCLUSIVE; BAT-001 FAIL; FEA-006; FEA-005; FEA-007
+  E5 (2): INT-001 PASS; FEA-007
+
+[pcb_requirements.yaml sha256/16 9a3aed63341c8eaa]
+baseline_state: READY_FOR_REVIEW_B; sources_read_at: 08f3665a
+needs: 19
+records: 144
+owner_rulings: 29
+session_choices: 63 (SC-01 to SC-63)
+open_items: 60
+closed_items: 50
+records by prefix: ASM 7, CFL 18, CHO 3, CON 26, FEA 7, REQ 77, SPD 6
+open items by class: CONDITIONAL 1, LATER 6, OWNER_ACTION 1, SESSION 52
+open item ids: D-18 L-01 L-03 L-04 L-05 L-06 L-07 S-01 S-02 S-12 S-13 S-22 S-23 S-27 S-28 S-32 S-33 S-34 S-35 S-36 S-40 S-41 S-42 S-44 S-45 S-46 S-47 S-57 S-58 S-48 S-49 S-50 S-51 S-52 S-53 S-54 S-55 S-56 S-59 S-60 S-61 S-62 S-63 S-64 S-65 S-66 S-67 S-68 S-69 S-70 S-71 S-72 S-73 S-74 S-75 S-76 S-78 S-79 S-80 M-02
+feasibility records (7):
+  FEA-001 FEASIBILITY_OPEN prototype_1=core evidence_result=INCONCLUSIVE: ZEROIZE on the fitted ATECC608B
+  FEA-002 FEASIBILITY_OPEN prototype_1=core evidence_result=INCONCLUSIVE: EMCON guarantees per transmitter (the 5G module and the WiFi cards among them)
+  FEA-003 FEASIBILITY_OPEN prototype_1=core evidence_result=INCONCLUSIVE: the three-slot failover fabric: its escape strategy and signal integrity
+  FEA-004 FEASIBILITY_OPEN prototype_1=core evidence_result=INCONCLUSIVE: the power and thermal bounds
+  FEA-005 FEASIBILITY_OPEN prototype_1=core evidence_result=INCONCLUSIVE: battery protection, awaiting the qualified review
+  FEA-006 FEASIBILITY_OPEN prototype_1=core evidence_result=INCONCLUSIVE: decoupling placement per class
+  FEA-007 FEASIBILITY_OPEN prototype_1=core evidence_result=INCONCLUSIVE: the kit's fit in the Peli 1450 on the chosen arrangement (C1 to C6)
+
+[ENGINEERING-QUESTIONS.md]
+index rows: 30 (EQ-01 to EQ-30); question sections: 30; by group: A. design work 18, B. physical evidence 5, C. external authorisation 7
+
+[v2/release/handover/_generated]
+  A (pcb-a-power-a23): made at 763bccdf, label A65, table phase A32, schematic 54b24eb100332ed5 (is the committed one), netlist da05dc02bc1e612f, parity PARITY_AFTER_NOISE, 16 pages, 586 BOM rows (371 without LCSC, 316 of them R/C/L), ERC warning 1522, result OK
+  B (pcb-b-compute-b19): made at 763bccdf, label B21, table phase B21, schematic 76c29fa7f88a39e0 (is the committed one), netlist 8b78c59754a6a0c7, parity PARITY_AFTER_NOISE, 43 pages, 1179 BOM rows (880 without LCSC, 839 of them R/C/L), ERC error 7, warning 2872, result OK
+  C (pcb-c-display-c8): made at 99cde56b, label C24, table phase C24, schematic f566ea89fb3e3af4 (is the committed one), netlist 11eabc2dddca5161, parity PARITY_AFTER_NOISE, 5 pages, 167 BOM rows (79 without LCSC, 36 of them R/C/L), ERC warning 328, result OK
+  D (pcb-d-aprs-d9): made at 763bccdf, label D37P, table phase D12, schematic 7fde601712562b24 (is the committed one), netlist 76700a687eb6187f, parity PARITY_AFTER_NOISE, 7 pages, 218 BOM rows (138 without LCSC, 126 of them R/C/L), ERC warning 445, result OK
+  E (pcb-e1-dock-e7): made at 763bccdf, label E42P, table phase E17, schematic bd50de114865448b (is the committed one), netlist d6137f50059e5cbc, parity PARITY_AFTER_NOISE, 4 pages, 174 BOM rows (112 without LCSC, 85 of them R/C/L), ERC warning 367, result OK
+  P (pcb-p-pack-p2): made at 99cde56b, label P4, table phase P4, schematic 47e0bc19e8e18cf0 (is the committed one), netlist 085f833362fbbda8, parity PARITY_AFTER_NOISE, 2 pages, 69 BOM rows (50 without LCSC, 44 of them R/C/L), ERC warning 123, result OK
+  BOM rows per reference over the six boards: 2393; without an LCSC code 1630; of those R/C/L 1446
+
+[declared phases, boards/<x>.json] A A32, B B21, C C24, D D12, E E17, E5 E5, P P4
+
+[review records of layers 1 to 3, sha256/16]
+  v2/docs/reviews/REVIEW-A-LAYER-1-2026-09-27.md d469a268fe0b8768
+  v2/docs/reviews/REVIEW-A-LAYER-2-2026-09-27-pass1.md e854c2a46ea3d542
+  v2/docs/reviews/REVIEW-A-LAYER-2-2026-09-27.md 77b20ca4042f0855
+  v2/docs/reviews/REVIEW-B-LAYER-3-2026-09-27.md 7a6c679f446b1baa
+  v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2-2026-09-27.md a0d8e6be2dcebcf6
+  v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md 2bd065d12f50298d
+  v2/docs/reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md a4f0e88e48c304ee
+  v2/docs/reviews/REVIEW-LAYER-2-RELEASE-2026-09-27.md cb7c773b9b193e1f
+  v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2-2026-09-27.md cf8c73fb288be2fb
+  v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2026-09-27.md 1c3bc2d99f9efb51
+  v2/docs/reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md ae70b1a7811ecea1
+  v2/docs/PRODUCT-BRIEF.md d36bf76b3dea8b30: **Status: BASELINED as layer 1 of the foundation baseline (MESHSAT-1357) in the commit that files
+  v2/docs/CONOPS.md 4483209659dc391c: **Status: BASELINED as layer 2 of the foundation baseline (MESHSAT-1357) at `79963b3b`, the commit that carrie
+  v2/docs/OPERATING-ENVELOPE.md 43361b02743cf3af: **Status: ADOPTED. Owner decision 34 was ruled by the session on 21 September 2026**, under the owner's
+  v2/docs/TEST-PLAN.md 4f15bd02a6a8be46
+  v2/ecad/tools/pcb_envelope.yaml bbcc2b5cbb721372
