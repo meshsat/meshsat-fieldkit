@@ -1,0 +1,1675 @@
+The hardware inhibit paths of the kit's 17 transmitters, walked on the committed netlists (stream d4emcon)
+  board A  pcb-a-power-a23/out/pcb-a-power.net  sha256/16 0a2b59087bcc2678
+  board B  pcb-b-compute-b19/out/pcb-b-compute.net  sha256/16 028997a6c5e8810f
+  board C  pcb-c-display-c8/out/pcb-c-display.net  sha256/16 3fddbb3edcd4248a
+  board D  pcb-d-aprs-d9/out/pcb-d-aprs.net  sha256/16 7a2c0ac2190b141a
+  board E  pcb-e1-dock-e7/out/pcb-e1-dock.net  sha256/16 56adc9746d61c4e0
+  board P  pcb-p-pack-p2/out/pcb-p-pack.net  sha256/16 760ac6f74d62d194
+
+======================================================================================================================
+PATH 1  SA868 VHF exciter (board D, U2): keying pin forced to receive
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> ribbon: board C J_PANEL pin 11 (TX_INHIBIT_n)  ==  board B J_PANEL pin 11 (TX_INHIBIT_n)
+  [B] net TX_INHIBIT_n  (3 nodes)
+      J_AB1     pin 16   Pin_16           A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+      J_PANEL   pin 11   Pin_11           panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMC
+      R59       pin 1    -                100k  -> GND
+  >> ribbon: board B J_AB1 pin 16 (TX_INHIBIT_n)  ==  board A J_AB1 pin 16 (TX_INHIBIT_n)
+  [A] net TX_INHIBIT_n  (5 nodes)
+      J_AB1     pin 16   Pin_16           A-B interconnect (IDC 2x13, top side) to B16's underside header
+      J_MEZZ1   pin 8    Pin_8            D8 mezzanine harness (IDC 2x8): its USB pair, the PTT mirror, the inhibit, the PA rail s
+      R145      pin 1    -                100k  -> GND
+      U35       pin 1    TX_INHIBIT_n     SN74AUP1G08DBVR AND: PA_TXOK = TX_INHIBIT_n AND EMCON_HW (the PA rail's EMCON gate)
+      U37       pin 1    TX_INHIBIT_n     SN74AUP1G08DBVR AND: HF_TXOK = TX_INHIBIT_n AND EMCON_HW (the HF rail's EMCON gate)
+  >> ribbon: board A J_MEZZ1 pin 8 (TX_INHIBIT_n)  ==  board D J_HARN1 pin 8 (TX_INHIBIT_n)
+  [D] net TX_INHIBIT_n  (4 nodes)
+      J_HARN1   pin 8    Pin_8            A22 mezzanine harness J_MEZZ1 (IDC 2x8): USB pair, PTT mirror, inhibit, PA rail state, I
+      R2        pin 1    -                100k  -> GND
+      TP15      pin 1    1                TX_INHIBIT_n
+      U12       pin 2    TX_INHIBIT_n     74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)
+  >> D U12: in by pin 2 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (KEY, 'KEY'): AND, KEY = PTT_ANY AND TX_INHIBIT_n
+       74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON) [SOT-23-5]
+       runs from +3V3_D8
+  [D] net KEY  (8 nodes)
+      R49       pin 1    -                1k  -> LED_TX_A
+      R84       pin 1    -                10k  -> GND
+      TP3       pin 1    1                KEY
+      U12       pin 4    KEY              74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)
+      U13       pin 2    KEY              74LVC1G06 open-drain inverter (2 A 4 Y): KEY -> SA868 PTT (low = transmit; released = re
+      U14       pin 1    KEY              74LVC1G08 AND: PA_KEY = KEY AND PA_EN (A22's PA rail state)
+      U18       pin 2    KEY              74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): KEY -> PTT_MIR, the one-way driver of the P
+      U19       pin 2    KEY              74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): KEY read back into U16 IO0_3, one way (VCC 
+  >> D U13: in by pin 2 (KEY, 'KEY'), out by pin 4 (SA_PTT_n, 'SA_PTT_n'): open-drain inverter: KEY low releases SA_PTT_n
+       74LVC1G06 open-drain inverter (2 A 4 Y): KEY -> SA868 PTT (low = transmit; released = receive, held by R88 and R89) [SOT-23-5]
+       runs from +3V3_D8
+  [D] net SA_PTT_n  (4 nodes)
+      R88       pin 2    -                1.2k  -> +5V_SA
+      R89       pin 1    -                2k  -> GND
+      U2        pin 5    PTT_n            NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A)
+      U13       pin 4    SA_PTT_n         74LVC1G06 open-drain inverter (2 A 4 Y): KEY -> SA868 PTT (low = transmit; released = re
+  == TARGET D U2 pin 5 ('PTT_n') on SA_PTT_n: the SA868's PTT
+       NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A)
+
+======================================================================================================================
+PATH 2b  RA30H1317M1 30 W PA, path (b): gate bias off on board D
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> ribbon: board C J_PANEL pin 11 (TX_INHIBIT_n)  ==  board B J_PANEL pin 11 (TX_INHIBIT_n)
+  [B] net TX_INHIBIT_n  (3 nodes)
+      J_AB1     pin 16   Pin_16           A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+      J_PANEL   pin 11   Pin_11           panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMC
+      R59       pin 1    -                100k  -> GND
+  >> ribbon: board B J_AB1 pin 16 (TX_INHIBIT_n)  ==  board A J_AB1 pin 16 (TX_INHIBIT_n)
+  [A] net TX_INHIBIT_n  (5 nodes)
+      J_AB1     pin 16   Pin_16           A-B interconnect (IDC 2x13, top side) to B16's underside header
+      J_MEZZ1   pin 8    Pin_8            D8 mezzanine harness (IDC 2x8): its USB pair, the PTT mirror, the inhibit, the PA rail s
+      R145      pin 1    -                100k  -> GND
+      U35       pin 1    TX_INHIBIT_n     SN74AUP1G08DBVR AND: PA_TXOK = TX_INHIBIT_n AND EMCON_HW (the PA rail's EMCON gate)
+      U37       pin 1    TX_INHIBIT_n     SN74AUP1G08DBVR AND: HF_TXOK = TX_INHIBIT_n AND EMCON_HW (the HF rail's EMCON gate)
+  >> ribbon: board A J_MEZZ1 pin 8 (TX_INHIBIT_n)  ==  board D J_HARN1 pin 8 (TX_INHIBIT_n)
+  [D] net TX_INHIBIT_n  (4 nodes)
+      J_HARN1   pin 8    Pin_8            A22 mezzanine harness J_MEZZ1 (IDC 2x8): USB pair, PTT mirror, inhibit, PA rail state, I
+      R2        pin 1    -                100k  -> GND
+      TP15      pin 1    1                TX_INHIBIT_n
+      U12       pin 2    TX_INHIBIT_n     74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)
+  >> D U12: in by pin 2 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (KEY, 'KEY'): AND, KEY = PTT_ANY AND TX_INHIBIT_n
+       74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON) [SOT-23-5]
+       runs from +3V3_D8
+  [D] net KEY  (8 nodes)
+      R49       pin 1    -                1k  -> LED_TX_A
+      R84       pin 1    -                10k  -> GND
+      TP3       pin 1    1                KEY
+      U12       pin 4    KEY              74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)
+      U13       pin 2    KEY              74LVC1G06 open-drain inverter (2 A 4 Y): KEY -> SA868 PTT (low = transmit; released = re
+      U14       pin 1    KEY              74LVC1G08 AND: PA_KEY = KEY AND PA_EN (A22's PA rail state)
+      U18       pin 2    KEY              74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): KEY -> PTT_MIR, the one-way driver of the P
+      U19       pin 2    KEY              74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): KEY read back into U16 IO0_3, one way (VCC 
+  >> D U14: in by pin 1 (KEY, 'KEY'), out by pin 4 (PA_KEY, 'PA_KEY'): AND, PA_KEY = KEY AND PA_EN
+       74LVC1G08 AND: PA_KEY = KEY AND PA_EN (A22's PA rail state) [SOT-23-5]
+       runs from +3V3_D8
+  [D] net PA_KEY  (7 nodes)
+      R50       pin 1    -                1k  -> LED_PA_A
+      R52       pin 1    -                1k  -> RLY_DRV
+      R85       pin 1    -                10k  -> GND
+      TP4       pin 1    1                PA_KEY
+      U14       pin 4    PA_KEY           74LVC1G08 AND: PA_KEY = KEY AND PA_EN (A22's PA rail state)
+      U15       pin 4    PA_KEY           TLV75801PDRVR adjustable LDO, PA gate bias VGG 4.48 V while PA_KEY is high (1 OUT 2 FB 3
+      U20       pin 2    PA_KEY           74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): PA_KEY read back into U16 IO0_4, one way (V
+  >> D U15: in by pin 4 (PA_KEY, 'PA_KEY'), out by pin 1 (VGG_SW, 'VGG_SW'): adjustable LDO, EN to OUT: the PA's gate bias
+       TLV75801PDRVR adjustable LDO, PA gate bias VGG 4.48 V while PA_KEY is high (1 OUT 2 FB 3 GND 4 EN 5 DNC 6 IN 7 pad) [WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm]
+       runs from +5V_TX
+  [D] net VGG_SW  (5 nodes)
+      C62       pin 1    -                2.2u 16V X5R  -> GND
+      J_VGG     pin 1    Pin_1            JST-PH 1x2 socket: PA gate bias, VGG GND (the lead runs to the RA30H1317M1 VGG pin)
+      R82       pin 1    -                71.5k 1%  -> VGG_FB
+      TP7       pin 1    1                VGG_SW
+      U15       pin 1    VGG_SW           TLV75801PDRVR adjustable LDO, PA gate bias VGG 4.48 V while PA_KEY is high (1 OUT 2 FB 3
+  == TARGET D J_VGG pin 1 ('Pin_1') on VGG_SW: the lead to the PA module's VGG pin
+       JST-PH 1x2 socket: PA gate bias, VGG GND (the lead runs to the RA30H1317M1 VGG pin)
+
+======================================================================================================================
+PATH 2b-relay  RA30H1317M1 30 W PA, path (b): the T/R relay at rest
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> ribbon: board C J_PANEL pin 11 (TX_INHIBIT_n)  ==  board B J_PANEL pin 11 (TX_INHIBIT_n)
+  [B] net TX_INHIBIT_n  (3 nodes)
+      J_AB1     pin 16   Pin_16           A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+      J_PANEL   pin 11   Pin_11           panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMC
+      R59       pin 1    -                100k  -> GND
+  >> ribbon: board B J_AB1 pin 16 (TX_INHIBIT_n)  ==  board A J_AB1 pin 16 (TX_INHIBIT_n)
+  [A] net TX_INHIBIT_n  (5 nodes)
+      J_AB1     pin 16   Pin_16           A-B interconnect (IDC 2x13, top side) to B16's underside header
+      J_MEZZ1   pin 8    Pin_8            D8 mezzanine harness (IDC 2x8): its USB pair, the PTT mirror, the inhibit, the PA rail s
+      R145      pin 1    -                100k  -> GND
+      U35       pin 1    TX_INHIBIT_n     SN74AUP1G08DBVR AND: PA_TXOK = TX_INHIBIT_n AND EMCON_HW (the PA rail's EMCON gate)
+      U37       pin 1    TX_INHIBIT_n     SN74AUP1G08DBVR AND: HF_TXOK = TX_INHIBIT_n AND EMCON_HW (the HF rail's EMCON gate)
+  >> ribbon: board A J_MEZZ1 pin 8 (TX_INHIBIT_n)  ==  board D J_HARN1 pin 8 (TX_INHIBIT_n)
+  [D] net TX_INHIBIT_n  (4 nodes)
+      J_HARN1   pin 8    Pin_8            A22 mezzanine harness J_MEZZ1 (IDC 2x8): USB pair, PTT mirror, inhibit, PA rail state, I
+      R2        pin 1    -                100k  -> GND
+      TP15      pin 1    1                TX_INHIBIT_n
+      U12       pin 2    TX_INHIBIT_n     74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)
+  >> D U12: in by pin 2 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (KEY, 'KEY'): AND, KEY = PTT_ANY AND TX_INHIBIT_n
+       74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON) [SOT-23-5]
+       runs from +3V3_D8
+  [D] net KEY  (8 nodes)
+      R49       pin 1    -                1k  -> LED_TX_A
+      R84       pin 1    -                10k  -> GND
+      TP3       pin 1    1                KEY
+      U12       pin 4    KEY              74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)
+      U13       pin 2    KEY              74LVC1G06 open-drain inverter (2 A 4 Y): KEY -> SA868 PTT (low = transmit; released = re
+      U14       pin 1    KEY              74LVC1G08 AND: PA_KEY = KEY AND PA_EN (A22's PA rail state)
+      U18       pin 2    KEY              74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): KEY -> PTT_MIR, the one-way driver of the P
+      U19       pin 2    KEY              74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): KEY read back into U16 IO0_3, one way (VCC 
+  >> D U14: in by pin 1 (KEY, 'KEY'), out by pin 4 (PA_KEY, 'PA_KEY'): AND, PA_KEY = KEY AND PA_EN
+       74LVC1G08 AND: PA_KEY = KEY AND PA_EN (A22's PA rail state) [SOT-23-5]
+       runs from +3V3_D8
+  [D] net PA_KEY  (7 nodes)
+      R50       pin 1    -                1k  -> LED_PA_A
+      R52       pin 1    -                1k  -> RLY_DRV
+      R85       pin 1    -                10k  -> GND
+      TP4       pin 1    1                PA_KEY
+      U14       pin 4    PA_KEY           74LVC1G08 AND: PA_KEY = KEY AND PA_EN (A22's PA rail state)
+      U15       pin 4    PA_KEY           TLV75801PDRVR adjustable LDO, PA gate bias VGG 4.48 V while PA_KEY is high (1 OUT 2 FB 3
+      U20       pin 2    PA_KEY           74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): PA_KEY read back into U16 IO0_4, one way (V
+  >> D R52: in by pin 1 (PA_KEY, ''), out by pin 2 (RLY_DRV, ''): gate resistor
+       1k [R_0603_1608Metric]
+  [D] net RLY_DRV  (3 nodes)
+      Q2        pin 1    G                2N7002 relay coil
+      R52       pin 2    -                1k  -> PA_KEY
+      R53       pin 1    -                100k  -> GND
+  >> D Q2: in by pin 1 (RLY_DRV, 'G'), out by pin 3 (RLY_K, 'D'): N-channel FET, gate to drain: the relay coil's low side
+       2N7002 relay coil [SOT-23]
+  [D] net RLY_K  (3 nodes)
+      D2        pin 2    A                1N4148W coil flyback  -> +5V_TX
+      K1        pin 8    -                Omron G6K-2F-Y 5 VDC DPDT signal relay, T/R
+      Q2        pin 3    D                2N7002 relay coil
+  == TARGET D K1 pin 8 ('') on RLY_K: the relay coil
+       Omron G6K-2F-Y 5 VDC DPDT signal relay, T/R
+
+======================================================================================================================
+PATH 2a  RA30H1317M1 30 W PA, path (a): drain supply off on board A, from TX_INHIBIT_n
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> ribbon: board C J_PANEL pin 11 (TX_INHIBIT_n)  ==  board B J_PANEL pin 11 (TX_INHIBIT_n)
+  [B] net TX_INHIBIT_n  (3 nodes)
+      J_AB1     pin 16   Pin_16           A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+      J_PANEL   pin 11   Pin_11           panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMC
+      R59       pin 1    -                100k  -> GND
+  >> ribbon: board B J_AB1 pin 16 (TX_INHIBIT_n)  ==  board A J_AB1 pin 16 (TX_INHIBIT_n)
+  [A] net TX_INHIBIT_n  (5 nodes)
+      J_AB1     pin 16   Pin_16           A-B interconnect (IDC 2x13, top side) to B16's underside header
+      J_MEZZ1   pin 8    Pin_8            D8 mezzanine harness (IDC 2x8): its USB pair, the PTT mirror, the inhibit, the PA rail s
+      R145      pin 1    -                100k  -> GND
+      U35       pin 1    TX_INHIBIT_n     SN74AUP1G08DBVR AND: PA_TXOK = TX_INHIBIT_n AND EMCON_HW (the PA rail's EMCON gate)
+      U37       pin 1    TX_INHIBIT_n     SN74AUP1G08DBVR AND: HF_TXOK = TX_INHIBIT_n AND EMCON_HW (the HF rail's EMCON gate)
+  >> A U35: in by pin 1 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (PA_TXOK, 'PA_TXOK'): AND, PA_TXOK = TX_INHIBIT_n AND EMCON_HW
+       SN74AUP1G08DBVR AND: PA_TXOK = TX_INHIBIT_n AND EMCON_HW (the PA rail's EMCON gate) [SOT-23-5]
+       runs from +3V3_EMCON
+  [A] net PA_TXOK  (3 nodes)
+      R207      pin 1    -                100k  -> GND
+      U35       pin 4    PA_TXOK          SN74AUP1G08DBVR AND: PA_TXOK = TX_INHIBIT_n AND EMCON_HW (the PA rail's EMCON gate)
+      U36       pin 1    PA_TXOK          SN74AUP1G08DBVR AND: PA_EN = PA_TXOK AND PA_HOLD (the software hold, through U40)
+  >> A U36: in by pin 1 (PA_TXOK, 'PA_TXOK'), out by pin 4 (PA_EN, 'PA_EN'): AND, PA_EN = PA_TXOK AND PA_HOLD
+       SN74AUP1G08DBVR AND: PA_EN = PA_TXOK AND PA_HOLD (the software hold, through U40) [SOT-23-5]
+       runs from +3V3_EMCON
+  [A] net PA_EN  (4 nodes)
+      J_MEZZ1   pin 9    Pin_9            D8 mezzanine harness (IDC 2x8): its USB pair, the PTT mirror, the inhibit, the PA rail s
+      R58       pin 1    -                10k 1%  -> PA_UVLO
+      U30       pin 2    PA_EN            SN74LVC1G00DBVR NAND: OUTLET_OK = NOT (TR_APRS AND PA_EN), the outlet interlock
+      U36       pin 4    PA_EN            SN74AUP1G08DBVR AND: PA_EN = PA_TXOK AND PA_HOLD (the software hold, through U40)
+  >> A R58: in by pin 1 (PA_EN, ''), out by pin 2 (PA_UVLO, ''): upper leg of the enable divider
+       10k 1% [R_0603_1608Metric]
+  [A] net PA_UVLO  (3 nodes)
+      R58       pin 2    -                10k 1%  -> PA_EN
+      R59       pin 1    -                15k 1%  -> GND
+      U13       pin 1    PA_UVLO          LM5176PWPR buck-boost controller, +13V8_PA from VBAT
+  >> A U13: in by pin 1 (PA_UVLO, 'PA_UVLO'), out by pin 12 (+13V8_PA, '+13V8_PA'): buck-boost controller, EN/UVLO; VOSNS sits on the rail
+       LM5176PWPR buck-boost controller, +13V8_PA from VBAT [HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP2.85x5.4mm]
+       runs from PA_VINP
+  [A] net +13V8_PA  (14 nodes)
+      C65       pin 1    -                10u 50V X7R 1210  -> GND
+      C66       pin 1    -                10u 50V X7R 1210  -> GND
+      C67       pin 1    -                10u 50V X7R 1210  -> GND
+      C170      pin 1    -                470u 25V Panasonic EEHZK1E471P hybrid polymer (10.2 mm)  -> GND
+      C171      pin 1    -                470u 25V Panasonic EEHZK1E471P hybrid polymer (10.2 mm)  -> GND
+      C195      pin 1    -                100n  -> GND
+      J_PA      pin 1    Pin_1            13.8 V to the PA module on the face plate (JST-VH, 16 AWG): + -
+      R50       pin 1    -                162k 1%  -> PA_FB
+      R55       pin 2    -                6mOhm 1% 2512 (ISNS)  -> PA_OUT
+      R163      pin 1    -                100R 1% (ISNS- filter, Kelvin from the shunt's rail pad)  -> PA_ISNS_N
+      U13       pin 12   +13V8_PA         LM5176PWPR buck-boost controller, +13V8_PA from VBAT
+      U13       pin 24   +13V8_PA         LM5176PWPR buck-boost controller, +13V8_PA from VBAT
+      U14       pin 8    +13V8_PA         INA226 PA rail monitor (0x46)
+      U14       pin 9    +13V8_PA         INA226 PA rail monitor (0x46)
+  == TARGET A J_PA pin 1 ('Pin_1') on +13V8_PA: the PA module's drain supply
+       13.8 V to the PA module on the face plate (JST-VH, 16 AWG): + -
+
+======================================================================================================================
+PATH 2a-hw  RA30H1317M1 30 W PA, path (a): the same gate from EMCON_HW
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> C U9: in by pin 2 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (EMCON_HW, 'EMCON_HW'): Schmitt buffer, EMCON_HW = TX_INHIBIT_n
+       74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibit [SOT-23-5]
+       runs from +3V3
+  [C] net EMCON_HW  (5 nodes)
+      J_PANEL   pin 8    Pin_8            panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      TP11      pin 1    1                EMCON_HW
+      U9        pin 4    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U13       pin 2    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 6    EMCON_HW         SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> ribbon: board C J_PANEL pin 8 (EMCON_HW)  ==  board B J_PANEL pin 8 (EMCON_HW)
+  [B] net EMCON_HW  (16 nodes)
+      J_AB1     pin 15   Pin_15           A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+      J_PANEL   pin 8    Pin_8            panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMC
+      R58       pin 1    -                4.7k 1%  -> GND
+      TP7       pin 1    1                EMCON_HW
+      U112      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 
+      U116      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's car
+      U212      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 
+      U216      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's car
+      U312      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 
+      U316      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's car
+      U501      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 1, EMCON AND hub port power
+      U503      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2)
+      U504      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2)
+      U505      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2)
+      U506      pin 2    EMCON_HW         74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the supervisors' read of EMCON_HW, so 
+      U536      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), 
+  >> ribbon: board B J_AB1 pin 15 (EMCON_HW)  ==  board A J_AB1 pin 15 (EMCON_HW)
+  [A] net EMCON_HW  (5 nodes)
+      J_AB1     pin 15   Pin_15           A-B interconnect (IDC 2x13, top side) to B16's underside header
+      R102      pin 1    -                10k 1%  -> GND
+      TP15      pin 1    1                EMCON_HW
+      U35       pin 2    EMCON_HW         SN74AUP1G08DBVR AND: PA_TXOK = TX_INHIBIT_n AND EMCON_HW (the PA rail's EMCON gate)
+      U37       pin 2    EMCON_HW         SN74AUP1G08DBVR AND: HF_TXOK = TX_INHIBIT_n AND EMCON_HW (the HF rail's EMCON gate)
+  >> A U35: in by pin 2 (EMCON_HW, 'EMCON_HW'), out by pin 4 (PA_TXOK, 'PA_TXOK'): AND, PA_TXOK = TX_INHIBIT_n AND EMCON_HW
+       SN74AUP1G08DBVR AND: PA_TXOK = TX_INHIBIT_n AND EMCON_HW (the PA rail's EMCON gate) [SOT-23-5]
+       runs from +3V3_EMCON
+  [A] net PA_TXOK  (3 nodes)
+      R207      pin 1    -                100k  -> GND
+      U35       pin 4    PA_TXOK          SN74AUP1G08DBVR AND: PA_TXOK = TX_INHIBIT_n AND EMCON_HW (the PA rail's EMCON gate)
+      U36       pin 1    PA_TXOK          SN74AUP1G08DBVR AND: PA_EN = PA_TXOK AND PA_HOLD (the software hold, through U40)
+
+======================================================================================================================
+PATH 3  QMX HF transceiver (board A, J_HF): DC input removed, from TX_INHIBIT_n
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> ribbon: board C J_PANEL pin 11 (TX_INHIBIT_n)  ==  board B J_PANEL pin 11 (TX_INHIBIT_n)
+  [B] net TX_INHIBIT_n  (3 nodes)
+      J_AB1     pin 16   Pin_16           A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+      J_PANEL   pin 11   Pin_11           panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMC
+      R59       pin 1    -                100k  -> GND
+  >> ribbon: board B J_AB1 pin 16 (TX_INHIBIT_n)  ==  board A J_AB1 pin 16 (TX_INHIBIT_n)
+  [A] net TX_INHIBIT_n  (5 nodes)
+      J_AB1     pin 16   Pin_16           A-B interconnect (IDC 2x13, top side) to B16's underside header
+      J_MEZZ1   pin 8    Pin_8            D8 mezzanine harness (IDC 2x8): its USB pair, the PTT mirror, the inhibit, the PA rail s
+      R145      pin 1    -                100k  -> GND
+      U35       pin 1    TX_INHIBIT_n     SN74AUP1G08DBVR AND: PA_TXOK = TX_INHIBIT_n AND EMCON_HW (the PA rail's EMCON gate)
+      U37       pin 1    TX_INHIBIT_n     SN74AUP1G08DBVR AND: HF_TXOK = TX_INHIBIT_n AND EMCON_HW (the HF rail's EMCON gate)
+  >> A U37: in by pin 1 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (HF_TXOK, 'HF_TXOK'): AND, HF_TXOK = TX_INHIBIT_n AND EMCON_HW
+       SN74AUP1G08DBVR AND: HF_TXOK = TX_INHIBIT_n AND EMCON_HW (the HF rail's EMCON gate) [SOT-23-5]
+       runs from +3V3_EMCON
+  [A] net HF_TXOK  (3 nodes)
+      R208      pin 1    -                100k  -> GND
+      U37       pin 4    HF_TXOK          SN74AUP1G08DBVR AND: HF_TXOK = TX_INHIBIT_n AND EMCON_HW (the HF rail's EMCON gate)
+      U38       pin 1    HF_TXOK          SN74AUP1G08DBVR AND: HF_EN = HF_TXOK AND HF_HOLD (the software hold, through U40)
+  >> A U38: in by pin 1 (HF_TXOK, 'HF_TXOK'), out by pin 4 (HF_EN, 'HF_EN'): AND, HF_EN = HF_TXOK AND HF_HOLD
+       SN74AUP1G08DBVR AND: HF_EN = HF_TXOK AND HF_HOLD (the software hold, through U40) [SOT-23-5]
+       runs from +3V3_EMCON
+  [A] net HF_EN  (2 nodes)
+      R124      pin 1    -                10k 1%  -> HF_UVLO
+      U38       pin 4    HF_EN            SN74AUP1G08DBVR AND: HF_EN = HF_TXOK AND HF_HOLD (the software hold, through U40)
+  >> A R124: in by pin 1 (HF_EN, ''), out by pin 2 (HF_UVLO, ''): upper leg of the enable divider
+       10k 1% [R_0603_1608Metric]
+  [A] net HF_UVLO  (3 nodes)
+      R124      pin 2    -                10k 1%  -> HF_EN
+      R125      pin 1    -                15k 1%  -> GND
+      U15       pin 1    HF_UVLO          LM5176PWPR buck-boost controller, +12V_HF from VBAT
+  >> A U15: in by pin 1 (HF_UVLO, 'HF_UVLO'), out by pin 12 (+12V_HF, '+12V_HF'): buck-boost controller, EN/UVLO; VOSNS sits on the rail
+       LM5176PWPR buck-boost controller, +12V_HF from VBAT [HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP2.85x5.4mm]
+       runs from HF_VINP
+  [A] net +12V_HF  (12 nodes)
+      C109      pin 1    -                10u 50V X7R 1210  -> GND
+      C110      pin 1    -                10u 50V X7R 1210  -> GND
+      C111      pin 1    -                10u 50V X7R 1210  -> GND
+      C172      pin 1    -                150u 25V Panasonic EEHZK1E151XP hybrid polymer (7.7 mm)  -> GND
+      C173      pin 1    -                150u 25V Panasonic EEHZK1E151XP hybrid polymer (7.7 mm)  -> GND
+      C196      pin 1    -                100n  -> GND
+      J_HF      pin 1    Pin_1            12.0 V to the QMX HF unit in its lid tray (JST-VH, in the lid harness): + -
+      R60       pin 1    -                140k 1%  -> HF_FB
+      R65       pin 2    -                10mOhm 1% 2512 (ISNS)  -> HF_OUT
+      R165      pin 1    -                100R 1% (ISNS- filter, Kelvin from the shunt's rail pad)  -> HF_ISNS_N
+      U15       pin 12   +12V_HF          LM5176PWPR buck-boost controller, +12V_HF from VBAT
+      U15       pin 24   +12V_HF          LM5176PWPR buck-boost controller, +12V_HF from VBAT
+  == TARGET A J_HF pin 1 ('Pin_1') on +12V_HF: the QMX's DC input
+       12.0 V to the QMX HF unit in its lid tray (JST-VH, in the lid harness): + -
+
+======================================================================================================================
+PATH 3-hw  QMX HF transceiver: the same gate from EMCON_HW
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> C U9: in by pin 2 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (EMCON_HW, 'EMCON_HW'): Schmitt buffer, EMCON_HW = TX_INHIBIT_n
+       74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibit [SOT-23-5]
+       runs from +3V3
+  [C] net EMCON_HW  (5 nodes)
+      J_PANEL   pin 8    Pin_8            panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      TP11      pin 1    1                EMCON_HW
+      U9        pin 4    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U13       pin 2    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 6    EMCON_HW         SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> ribbon: board C J_PANEL pin 8 (EMCON_HW)  ==  board B J_PANEL pin 8 (EMCON_HW)
+  [B] net EMCON_HW  (16 nodes)
+      J_AB1     pin 15   Pin_15           A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+      J_PANEL   pin 8    Pin_8            panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMC
+      R58       pin 1    -                4.7k 1%  -> GND
+      TP7       pin 1    1                EMCON_HW
+      U112      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 
+      U116      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's car
+      U212      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 
+      U216      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's car
+      U312      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 
+      U316      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's car
+      U501      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 1, EMCON AND hub port power
+      U503      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2)
+      U504      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2)
+      U505      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2)
+      U506      pin 2    EMCON_HW         74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the supervisors' read of EMCON_HW, so 
+      U536      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), 
+  >> ribbon: board B J_AB1 pin 15 (EMCON_HW)  ==  board A J_AB1 pin 15 (EMCON_HW)
+  [A] net EMCON_HW  (5 nodes)
+      J_AB1     pin 15   Pin_15           A-B interconnect (IDC 2x13, top side) to B16's underside header
+      R102      pin 1    -                10k 1%  -> GND
+      TP15      pin 1    1                EMCON_HW
+      U35       pin 2    EMCON_HW         SN74AUP1G08DBVR AND: PA_TXOK = TX_INHIBIT_n AND EMCON_HW (the PA rail's EMCON gate)
+      U37       pin 2    EMCON_HW         SN74AUP1G08DBVR AND: HF_TXOK = TX_INHIBIT_n AND EMCON_HW (the HF rail's EMCON gate)
+  >> A U37: in by pin 2 (EMCON_HW, 'EMCON_HW'), out by pin 4 (HF_TXOK, 'HF_TXOK'): AND, HF_TXOK = TX_INHIBIT_n AND EMCON_HW
+       SN74AUP1G08DBVR AND: HF_TXOK = TX_INHIBIT_n AND EMCON_HW (the HF rail's EMCON gate) [SOT-23-5]
+       runs from +3V3_EMCON
+  [A] net HF_TXOK  (3 nodes)
+      R208      pin 1    -                100k  -> GND
+      U37       pin 4    HF_TXOK          SN74AUP1G08DBVR AND: HF_TXOK = TX_INHIBIT_n AND EMCON_HW (the HF rail's EMCON gate)
+      U38       pin 1    HF_TXOK          SN74AUP1G08DBVR AND: HF_EN = HF_TXOK AND HF_HOLD (the software hold, through U40)
+
+======================================================================================================================
+PATH 4  RockBLOCK 9704 (board B, J_RB9704): supply removed
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> C U9: in by pin 2 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (EMCON_HW, 'EMCON_HW'): Schmitt buffer, EMCON_HW = TX_INHIBIT_n
+       74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibit [SOT-23-5]
+       runs from +3V3
+  [C] net EMCON_HW  (5 nodes)
+      J_PANEL   pin 8    Pin_8            panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      TP11      pin 1    1                EMCON_HW
+      U9        pin 4    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U13       pin 2    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 6    EMCON_HW         SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> ribbon: board C J_PANEL pin 8 (EMCON_HW)  ==  board B J_PANEL pin 8 (EMCON_HW)
+  [B] net EMCON_HW  (16 nodes)
+      J_AB1     pin 15   Pin_15           A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+      J_PANEL   pin 8    Pin_8            panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMC
+      R58       pin 1    -                4.7k 1%  -> GND
+      TP7       pin 1    1                EMCON_HW
+      U112      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 
+      U116      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's car
+      U212      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 
+      U216      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's car
+      U312      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 
+      U316      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's car
+      U501      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 1, EMCON AND hub port power
+      U503      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2)
+      U504      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2)
+      U505      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2)
+      U506      pin 2    EMCON_HW         74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the supervisors' read of EMCON_HW, so 
+      U536      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), 
+  >> B U503: in by pin 1 (EMCON_HW, 'EMCON_HW'), out by pin 4 (RB_EN, 'RB_EN'): AND, RB_EN = EMCON_HW AND RB_SW_EN
+       SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2) [SOT-23-5]
+       runs from +3V3_DEV
+  [B] net RB_EN  (2 nodes)
+      R530      pin 1    -                10k 1%  -> RB_UVLO
+      U503      pin 4    RB_EN            SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2)
+  >> B R530: in by pin 1 (RB_EN, ''), out by pin 2 (RB_UVLO, ''): upper leg of the enable divider
+       10k 1% [R_0603_1608Metric]
+  [B] net RB_UVLO  (3 nodes)
+      R515      pin 1    -                15k 1%  -> GND
+      R530      pin 2    -                10k 1%  -> RB_EN
+      U24       pin 3    RB_UVLO          TPS259631DDAR eFuse +5V_DEV -> +5V_RB (301R 1% (ILM: 3.0 A))
+  >> B U24: in by pin 3 (RB_UVLO, 'RB_UVLO'), out by pin 5 (+5V_RB, '+5V_RB'): eFuse, EN/UVLO to OUT
+       TPS259631DDAR eFuse +5V_DEV -> +5V_RB (301R 1% (ILM: 3.0 A)) [SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm]
+       runs from +5V_DEV
+  [B] net +5V_RB  (4 nodes)
+      C63       pin 1    -                22u 6.3V  -> GND
+      J_RB9704  pin 15   Pin_15           RockBLOCK 9704 16-pin (IDC 2x8) on the Ground Control bracket
+      TP15      pin 1    1                +5V_RB
+      U24       pin 5    +5V_RB           TPS259631DDAR eFuse +5V_DEV -> +5V_RB (301R 1% (ILM: 3.0 A))
+  == TARGET B J_RB9704 pin 15 ('Pin_15') on +5V_RB: the RockBLOCK's V_IN+
+       RockBLOCK 9704 16-pin (IDC 2x8) on the Ground Control bracket
+
+======================================================================================================================
+PATH 4-en  RockBLOCK 9704: the module's ENABLE forced low
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> C U9: in by pin 2 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (EMCON_HW, 'EMCON_HW'): Schmitt buffer, EMCON_HW = TX_INHIBIT_n
+       74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibit [SOT-23-5]
+       runs from +3V3
+  [C] net EMCON_HW  (5 nodes)
+      J_PANEL   pin 8    Pin_8            panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      TP11      pin 1    1                EMCON_HW
+      U9        pin 4    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U13       pin 2    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 6    EMCON_HW         SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> ribbon: board C J_PANEL pin 8 (EMCON_HW)  ==  board B J_PANEL pin 8 (EMCON_HW)
+  [B] net EMCON_HW  (16 nodes)
+      J_AB1     pin 15   Pin_15           A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+      J_PANEL   pin 8    Pin_8            panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMC
+      R58       pin 1    -                4.7k 1%  -> GND
+      TP7       pin 1    1                EMCON_HW
+      U112      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 
+      U116      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's car
+      U212      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 
+      U216      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's car
+      U312      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 
+      U316      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's car
+      U501      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 1, EMCON AND hub port power
+      U503      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2)
+      U504      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2)
+      U505      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2)
+      U506      pin 2    EMCON_HW         74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the supervisors' read of EMCON_HW, so 
+      U536      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), 
+  >> B U536: in by pin 1 (EMCON_HW, 'EMCON_HW'), out by pin 4 (RB_IEN, 'RB_IEN'): AND, RB_IEN = EMCON_HW AND RB_SW_IEN
+       SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), EMCON AND software (EMCON.md 4.4, W4B-D1) [SOT-23-5]
+       runs from +3V3_DEV
+  [B] net RB_IEN  (3 nodes)
+      J_RB9704  pin 3    Pin_3            RockBLOCK 9704 16-pin (IDC 2x8) on the Ground Control bracket
+      R527      pin 1    -                10k  -> GND
+      U536      pin 4    RB_IEN           SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), 
+  == TARGET B J_RB9704 pin 3 ('Pin_3') on RB_IEN: the RockBLOCK's I_EN
+       RockBLOCK 9704 16-pin (IDC 2x8) on the Ground Control bracket
+
+======================================================================================================================
+PATH 5  RM520N-GL 5G module (board B, J_M2C2): supply removed at once
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> C U9: in by pin 2 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (EMCON_HW, 'EMCON_HW'): Schmitt buffer, EMCON_HW = TX_INHIBIT_n
+       74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibit [SOT-23-5]
+       runs from +3V3
+  [C] net EMCON_HW  (5 nodes)
+      J_PANEL   pin 8    Pin_8            panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      TP11      pin 1    1                EMCON_HW
+      U9        pin 4    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U13       pin 2    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 6    EMCON_HW         SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> ribbon: board C J_PANEL pin 8 (EMCON_HW)  ==  board B J_PANEL pin 8 (EMCON_HW)
+  [B] net EMCON_HW  (16 nodes)
+      J_AB1     pin 15   Pin_15           A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+      J_PANEL   pin 8    Pin_8            panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMC
+      R58       pin 1    -                4.7k 1%  -> GND
+      TP7       pin 1    1                EMCON_HW
+      U112      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 
+      U116      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's car
+      U212      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 
+      U216      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's car
+      U312      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 
+      U316      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's car
+      U501      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 1, EMCON AND hub port power
+      U503      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2)
+      U504      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2)
+      U505      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2)
+      U506      pin 2    EMCON_HW         74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the supervisors' read of EMCON_HW, so 
+      U536      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), 
+  >> B U216: in by pin 1 (EMCON_HW, 'EMCON_HW'), out by pin 4 (S2A_EN, 'S2A_EN'): AND on the slot's own 5 V, S2A_EN = EMCON_HW AND PCIE_PWR_EN2
+       SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's card-socket supply enable = EMCON AND PCIE_PWR_EN2, run from +5V_ [SOT-23-5]
+       runs from +5V_S2
+  [B] net S2A_EN  (2 nodes)
+      U203      pin 3    S2A_EN           AP64500SP-13 5 A buck, 3.3 V rail +3V3_S2A
+      U216      pin 4    S2A_EN           SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's car
+  >> B U203: in by pin 3 (S2A_EN, 'S2A_EN'), out by pin 8 (S2A_SW, 'S2A_SW'): buck converter, EN to its switch node
+       AP64500SP-13 5 A buck, 3.3 V rail +3V3_S2A [SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm]
+       runs from +5V_S2
+  [B] net S2A_SW  (3 nodes)
+      C211      pin 2    -                100n  -> S2A_BOOT
+      L201      pin 1    1                3.3uH XAL6030-332ME  -> +3V3_S2A
+      U203      pin 8    S2A_SW           AP64500SP-13 5 A buck, 3.3 V rail +3V3_S2A
+  >> B L201: in by pin 1 (S2A_SW, '1'), out by pin 2 (+3V3_S2A, '2'): the buck's inductor
+       3.3uH XAL6030-332ME [L_Coilcraft_XAL6060-XXX]
+       runs from +3V3_S2A
+  [B] net +3V3_S2A  (16 nodes)
+      C200      pin 1    -                100n  -> GND
+      C214      pin 1    -                22u 10V X7R 1210  -> GND
+      C215      pin 1    -                22u 10V X7R 1210  -> GND
+      C216      pin 1    -                22u 10V X7R 1210  -> GND
+      L201      pin 2    2                3.3uH XAL6030-332ME  -> S2A_SW
+      R202      pin 1    -                33.2k 1%  -> S2A_FB
+      R234      pin 2    -                10k  -> CARD2_CLKREQ_n
+      R237      pin 2    -                10k  -> 5G_W_DIS_n
+      R238      pin 2    -                10k  -> 5G_PWROFF_n
+      R239      pin 1    -                1k  -> LED_5G_A
+      R265      pin 1    -                5mOhm 1% 2512 (Kelvin shunt: card socket current, W5 TESTACCESS-B)  -> +3V3_M2C2
+      R297      pin 1    -                49.9k 1%  -> 5G_TPR_CT
+      TP24      pin 1    1                +3V3_S2A
+      TP202     pin 1    1                +3V3_S2A
+      U221      pin 5    +3V3_S2A         TPS3808G30DBVR supervisor on +3V3_S2A: holds FULL_CARD_POWER_OFF# low for 180 to 420 ms 
+      U221      pin 6    +3V3_S2A         TPS3808G30DBVR supervisor on +3V3_S2A: holds FULL_CARD_POWER_OFF# low for 180 to 420 ms 
+  >> B R265: in by pin 1 (+3V3_S2A, ''), out by pin 2 (+3V3_M2C2, ''): Kelvin shunt, 5 mOhm
+       5mOhm 1% 2512 (Kelvin shunt: card socket current, W5 TESTACCESS-B) [R_2512_6332Metric]
+       runs from +3V3_M2C2, +3V3_S2A
+  [B] net +3V3_M2C2  (22 nodes)
+      C257      pin 1    -                22u 6.3V  -> GND
+      C258      pin 1    -                100n  -> GND
+      C520      pin 1    -                220u 6.3V KEMET T520B227M006ATE025 polymer tantalum 25 mOhm (RM520N HD 3.3.1 bulk)  -> GND
+      C521      pin 1    -                220u 6.3V KEMET T520B227M006ATE025 polymer tantalum 25 mOhm (RM520N HD 3.3.1 bulk)  -> GND
+      C522      pin 1    -                6.8n 50V X7R  -> GND
+      C523      pin 1    -                220p 50V C0G  -> GND
+      C524      pin 1    -                68p 50V C0G  -> GND
+      C525      pin 1    -                100n  -> GND
+      C526      pin 1    -                220p 50V C0G  -> GND
+      C527      pin 1    -                68p 50V C0G  -> GND
+      C528      pin 1    -                15p 50V C0G  -> GND
+      C529      pin 1    -                9.1p 50V C0G  -> GND
+      C530      pin 1    -                4.7p 50V C0G  -> GND
+      D520      pin 1    K                SMBJ5.0A  -> GND
+      J_M2C2    pin 2    3.3V             M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or
+      J_M2C2    pin 4    3.3V             M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or
+      J_M2C2    pin 70   3.3V             M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or
+      J_M2C2    pin 72   3.3V             M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or
+      J_M2C2    pin 74   3.3V             M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or
+      R265      pin 2    -                5mOhm 1% 2512 (Kelvin shunt: card socket current, W5 TESTACCESS-B)  -> +3V3_S2A
+      R295      pin 1    -                15R 1% 2512 1W (EMCON discharge of +3V3_M2C2, SD-EMC-1)  -> 5G_DCHG
+      TP203     pin 1    1                +3V3_M2C2
+  == TARGET B J_M2C2 pin 2 ('3.3V') on +3V3_M2C2: the card socket's 3.3 V pins
+       M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the module's ANT0, ANT2 and, subject t
+
+======================================================================================================================
+PATH 5-off  RM520N-GL: FULL_CARD_POWER_OFF# low at once
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> C U9: in by pin 2 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (EMCON_HW, 'EMCON_HW'): Schmitt buffer, EMCON_HW = TX_INHIBIT_n
+       74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibit [SOT-23-5]
+       runs from +3V3
+  [C] net EMCON_HW  (5 nodes)
+      J_PANEL   pin 8    Pin_8            panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      TP11      pin 1    1                EMCON_HW
+      U9        pin 4    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U13       pin 2    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 6    EMCON_HW         SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> ribbon: board C J_PANEL pin 8 (EMCON_HW)  ==  board B J_PANEL pin 8 (EMCON_HW)
+  [B] net EMCON_HW  (16 nodes)
+      J_AB1     pin 15   Pin_15           A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+      J_PANEL   pin 8    Pin_8            panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMC
+      R58       pin 1    -                4.7k 1%  -> GND
+      TP7       pin 1    1                EMCON_HW
+      U112      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 
+      U116      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's car
+      U212      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 
+      U216      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's car
+      U312      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 
+      U316      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's car
+      U501      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 1, EMCON AND hub port power
+      U503      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2)
+      U504      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2)
+      U505      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2)
+      U506      pin 2    EMCON_HW         74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the supervisors' read of EMCON_HW, so 
+      U536      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), 
+  >> B U212: in by pin 2 (EMCON_HW, 'EMCON_HW'), out by pin 4 (EMCON_ON2, 'EMCON_ON2'): inverter on the module's own 3.3 V
+       SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 V (EMCON L3) [SOT-23-5]
+       runs from +3V3_CM2
+  [B] net EMCON_ON2  (8 nodes)
+      Q212      pin 1    G                AO3400A: EMCON discharges the 5G module's rail through R295 (SD-EMC-1, SD-EMC-2)
+      R296      pin 1    -                10k  -> GND
+      TP204     pin 1    1                EMCON_ON2
+      U212      pin 4    EMCON_ON2        SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 
+      U213      pin 1    EMCON_ON2        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's WL
+      U213      pin 3    EMCON_ON2        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's WL
+      U215      pin 1    EMCON_ON2        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's ca
+      U220      pin 1    EMCON_ON2        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls FULL_CARD_P
+  >> B U220: in by pin 1 (EMCON_ON2, 'EMCON_ON2'), out by pin 6 (5G_PWROFF_n, '5G_PWROFF_n'): open-drain inverter
+       SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls FULL_CARD_POWER_OFF# low at once (SD-EMC-1); channel 2 spare [SOT-23-6]
+       runs from +3V3_CM2
+  [B] net 5G_PWROFF_n  (5 nodes)
+      J_M2C2    pin 6    ~{FULL_CARD_POWE M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or
+      Q207      pin 3    D                2N7002 expander -> FULL_CARD_POWER_OFF#
+      R238      pin 1    -                10k  -> +3V3_S2A
+      U220      pin 6    5G_PWROFF_n      SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls FULL_CARD_P
+      U221      pin 1    5G_PWROFF_n      TPS3808G30DBVR supervisor on +3V3_S2A: holds FULL_CARD_POWER_OFF# low for 180 to 420 ms 
+  == TARGET B J_M2C2 pin 6 ('~{FULL_CARD_POWER_OFF}') on 5G_PWROFF_n: the module's FULL_CARD_POWER_OFF#
+       M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the module's ANT0, ANT2 and, subject t
+
+======================================================================================================================
+PATH 5-wd  RM520N-GL: W_DISABLE1# low at once (firmware-mediated, not counted)
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> C U9: in by pin 2 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (EMCON_HW, 'EMCON_HW'): Schmitt buffer, EMCON_HW = TX_INHIBIT_n
+       74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibit [SOT-23-5]
+       runs from +3V3
+  [C] net EMCON_HW  (5 nodes)
+      J_PANEL   pin 8    Pin_8            panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      TP11      pin 1    1                EMCON_HW
+      U9        pin 4    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U13       pin 2    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 6    EMCON_HW         SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> ribbon: board C J_PANEL pin 8 (EMCON_HW)  ==  board B J_PANEL pin 8 (EMCON_HW)
+  [B] net EMCON_HW  (16 nodes)
+      J_AB1     pin 15   Pin_15           A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+      J_PANEL   pin 8    Pin_8            panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMC
+      R58       pin 1    -                4.7k 1%  -> GND
+      TP7       pin 1    1                EMCON_HW
+      U112      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 
+      U116      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's car
+      U212      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 
+      U216      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's car
+      U312      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 
+      U316      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's car
+      U501      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 1, EMCON AND hub port power
+      U503      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2)
+      U504      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2)
+      U505      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2)
+      U506      pin 2    EMCON_HW         74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the supervisors' read of EMCON_HW, so 
+      U536      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), 
+  >> B U212: in by pin 2 (EMCON_HW, 'EMCON_HW'), out by pin 4 (EMCON_ON2, 'EMCON_ON2'): inverter on the module's own 3.3 V
+       SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 V (EMCON L3) [SOT-23-5]
+       runs from +3V3_CM2
+  [B] net EMCON_ON2  (8 nodes)
+      Q212      pin 1    G                AO3400A: EMCON discharges the 5G module's rail through R295 (SD-EMC-1, SD-EMC-2)
+      R296      pin 1    -                10k  -> GND
+      TP204     pin 1    1                EMCON_ON2
+      U212      pin 4    EMCON_ON2        SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 
+      U213      pin 1    EMCON_ON2        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's WL
+      U213      pin 3    EMCON_ON2        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's WL
+      U215      pin 1    EMCON_ON2        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's ca
+      U220      pin 1    EMCON_ON2        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls FULL_CARD_P
+  >> B U215: in by pin 1 (EMCON_ON2, 'EMCON_ON2'), out by pin 6 (5G_W_DIS_n, '5G_W_DIS_n'): open-drain inverter
+       SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's card W_DISABLE1# low (L7); channel 2 spare since W4B-D3 [SOT-23-6]
+       runs from +3V3_CM2
+  [B] net 5G_W_DIS_n  (3 nodes)
+      J_M2C2    pin 8    ~{W_DISABLE1}    M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or
+      R237      pin 1    -                10k  -> +3V3_S2A
+      U215      pin 6    5G_W_DIS_n       SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's ca
+  == TARGET B J_M2C2 pin 8 ('~{W_DISABLE1}') on 5G_W_DIS_n: the module's W_DISABLE1#
+       M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the module's ANT0, ANT2 and, subject t
+
+======================================================================================================================
+PATH 5-dchg  RM520N-GL: the socket rail discharged and held through 15 Ohm
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> C U9: in by pin 2 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (EMCON_HW, 'EMCON_HW'): Schmitt buffer, EMCON_HW = TX_INHIBIT_n
+       74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibit [SOT-23-5]
+       runs from +3V3
+  [C] net EMCON_HW  (5 nodes)
+      J_PANEL   pin 8    Pin_8            panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      TP11      pin 1    1                EMCON_HW
+      U9        pin 4    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U13       pin 2    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 6    EMCON_HW         SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> ribbon: board C J_PANEL pin 8 (EMCON_HW)  ==  board B J_PANEL pin 8 (EMCON_HW)
+  [B] net EMCON_HW  (16 nodes)
+      J_AB1     pin 15   Pin_15           A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+      J_PANEL   pin 8    Pin_8            panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMC
+      R58       pin 1    -                4.7k 1%  -> GND
+      TP7       pin 1    1                EMCON_HW
+      U112      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 
+      U116      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's car
+      U212      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 
+      U216      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's car
+      U312      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 
+      U316      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's car
+      U501      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 1, EMCON AND hub port power
+      U503      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2)
+      U504      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2)
+      U505      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2)
+      U506      pin 2    EMCON_HW         74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the supervisors' read of EMCON_HW, so 
+      U536      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), 
+  >> B U212: in by pin 2 (EMCON_HW, 'EMCON_HW'), out by pin 4 (EMCON_ON2, 'EMCON_ON2'): inverter on the module's own 3.3 V
+       SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 V (EMCON L3) [SOT-23-5]
+       runs from +3V3_CM2
+  [B] net EMCON_ON2  (8 nodes)
+      Q212      pin 1    G                AO3400A: EMCON discharges the 5G module's rail through R295 (SD-EMC-1, SD-EMC-2)
+      R296      pin 1    -                10k  -> GND
+      TP204     pin 1    1                EMCON_ON2
+      U212      pin 4    EMCON_ON2        SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 
+      U213      pin 1    EMCON_ON2        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's WL
+      U213      pin 3    EMCON_ON2        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's WL
+      U215      pin 1    EMCON_ON2        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's ca
+      U220      pin 1    EMCON_ON2        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls FULL_CARD_P
+  >> B Q212: in by pin 1 (EMCON_ON2, 'G'), out by pin 3 (5G_DCHG, 'D'): N-channel FET, gate to drain
+       AO3400A: EMCON discharges the 5G module's rail through R295 (SD-EMC-1, SD-EMC-2) [SOT-23]
+  [B] net 5G_DCHG  (2 nodes)
+      Q212      pin 3    D                AO3400A: EMCON discharges the 5G module's rail through R295 (SD-EMC-1, SD-EMC-2)
+      R295      pin 2    -                15R 1% 2512 1W (EMCON discharge of +3V3_M2C2, SD-EMC-1)  -> +3V3_M2C2
+  >> B R295: in by pin 2 (5G_DCHG, ''), out by pin 1 (+3V3_M2C2, ''): 15 Ohm 1 W
+       15R 1% 2512 1W (EMCON discharge of +3V3_M2C2, SD-EMC-1) [R_2512_6332Metric]
+       runs from +3V3_M2C2
+  [B] net +3V3_M2C2  (22 nodes)
+      C257      pin 1    -                22u 6.3V  -> GND
+      C258      pin 1    -                100n  -> GND
+      C520      pin 1    -                220u 6.3V KEMET T520B227M006ATE025 polymer tantalum 25 mOhm (RM520N HD 3.3.1 bulk)  -> GND
+      C521      pin 1    -                220u 6.3V KEMET T520B227M006ATE025 polymer tantalum 25 mOhm (RM520N HD 3.3.1 bulk)  -> GND
+      C522      pin 1    -                6.8n 50V X7R  -> GND
+      C523      pin 1    -                220p 50V C0G  -> GND
+      C524      pin 1    -                68p 50V C0G  -> GND
+      C525      pin 1    -                100n  -> GND
+      C526      pin 1    -                220p 50V C0G  -> GND
+      C527      pin 1    -                68p 50V C0G  -> GND
+      C528      pin 1    -                15p 50V C0G  -> GND
+      C529      pin 1    -                9.1p 50V C0G  -> GND
+      C530      pin 1    -                4.7p 50V C0G  -> GND
+      D520      pin 1    K                SMBJ5.0A  -> GND
+      J_M2C2    pin 2    3.3V             M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or
+      J_M2C2    pin 4    3.3V             M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or
+      J_M2C2    pin 70   3.3V             M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or
+      J_M2C2    pin 72   3.3V             M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or
+      J_M2C2    pin 74   3.3V             M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or
+      R265      pin 2    -                5mOhm 1% 2512 (Kelvin shunt: card socket current, W5 TESTACCESS-B)  -> +3V3_S2A
+      R295      pin 1    -                15R 1% 2512 1W (EMCON discharge of +3V3_M2C2, SD-EMC-1)  -> 5G_DCHG
+      TP203     pin 1    1                +3V3_M2C2
+  == TARGET B J_M2C2 pin 2 ('3.3V') on +3V3_M2C2: the card socket's 3.3 V pins
+       M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the module's ANT0, ANT2 and, subject t
+
+======================================================================================================================
+PATH 6  AW7915-AED WiFi card, slot 1 (board B, J_M2C1): supply removed
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> C U9: in by pin 2 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (EMCON_HW, 'EMCON_HW'): Schmitt buffer, EMCON_HW = TX_INHIBIT_n
+       74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibit [SOT-23-5]
+       runs from +3V3
+  [C] net EMCON_HW  (5 nodes)
+      J_PANEL   pin 8    Pin_8            panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      TP11      pin 1    1                EMCON_HW
+      U9        pin 4    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U13       pin 2    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 6    EMCON_HW         SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> ribbon: board C J_PANEL pin 8 (EMCON_HW)  ==  board B J_PANEL pin 8 (EMCON_HW)
+  [B] net EMCON_HW  (16 nodes)
+      J_AB1     pin 15   Pin_15           A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+      J_PANEL   pin 8    Pin_8            panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMC
+      R58       pin 1    -                4.7k 1%  -> GND
+      TP7       pin 1    1                EMCON_HW
+      U112      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 
+      U116      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's car
+      U212      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 
+      U216      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's car
+      U312      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 
+      U316      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's car
+      U501      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 1, EMCON AND hub port power
+      U503      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2)
+      U504      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2)
+      U505      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2)
+      U506      pin 2    EMCON_HW         74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the supervisors' read of EMCON_HW, so 
+      U536      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), 
+  >> B U116: in by pin 1 (EMCON_HW, 'EMCON_HW'), out by pin 4 (S1A_EN, 'S1A_EN'): AND on the slot's own 5 V, S1A_EN = EMCON_HW AND PCIE_PWR_EN1
+       SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's card-socket supply enable = EMCON AND PCIE_PWR_EN1, run from +5V_ [SOT-23-5]
+       runs from +5V_S1
+  [B] net S1A_EN  (2 nodes)
+      U103      pin 3    S1A_EN           AP64500SP-13 5 A buck, 3.3 V rail +3V3_S1A
+      U116      pin 4    S1A_EN           SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's car
+  >> B U103: in by pin 3 (S1A_EN, 'S1A_EN'), out by pin 8 (S1A_SW, 'S1A_SW'): buck converter, EN to its switch node
+       AP64500SP-13 5 A buck, 3.3 V rail +3V3_S1A [SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm]
+       runs from +5V_S1
+  [B] net S1A_SW  (3 nodes)
+      C111      pin 2    -                100n  -> S1A_BOOT
+      L101      pin 1    1                3.3uH XAL6030-332ME  -> +3V3_S1A
+      U103      pin 8    S1A_SW           AP64500SP-13 5 A buck, 3.3 V rail +3V3_S1A
+  >> B L101: in by pin 1 (S1A_SW, '1'), out by pin 2 (+3V3_S1A, '2'): the buck's inductor
+       3.3uH XAL6030-332ME [L_Coilcraft_XAL6060-XXX]
+       runs from +3V3_S1A
+  [B] net +3V3_S1A  (12 nodes)
+      C114      pin 1    -                22u 10V X7R 1210  -> GND
+      C115      pin 1    -                22u 10V X7R 1210  -> GND
+      C116      pin 1    -                22u 10V X7R 1210  -> GND
+      L101      pin 2    2                3.3uH XAL6030-332ME  -> S1A_SW
+      R102      pin 1    -                31.6k 1%  -> S1A_FB
+      R134      pin 2    -                10k  -> CARD1_CLKREQ_n
+      R137      pin 2    -                10k  -> WIFI_W_DIS_n
+      R138      pin 2    -                10k  -> WIFI_W_DIS2_n
+      R139      pin 1    -                1k  -> LED_WIFI_A
+      R165      pin 1    -                5mOhm 1% 2512 (Kelvin shunt: card socket current, W5 TESTACCESS-B)  -> +3V3_M2C1
+      TP20      pin 1    1                +3V3_S1A
+      TP102     pin 1    1                +3V3_S1A
+  >> B R165: in by pin 1 (+3V3_S1A, ''), out by pin 2 (+3V3_M2C1, ''): Kelvin shunt, 5 mOhm
+       5mOhm 1% 2512 (Kelvin shunt: card socket current, W5 TESTACCESS-B) [R_2512_6332Metric]
+       runs from +3V3_M2C1, +3V3_S1A
+  [B] net +3V3_M2C1  (8 nodes)
+      C157      pin 1    -                22u 6.3V  -> GND
+      C158      pin 1    -                100n  -> GND
+      J_M2C1    pin 2    3.3V             M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (
+      J_M2C1    pin 4    3.3V             M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (
+      J_M2C1    pin 72   3.3V             M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (
+      J_M2C1    pin 74   3.3V             M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (
+      R165      pin 2    -                5mOhm 1% 2512 (Kelvin shunt: card socket current, W5 TESTACCESS-B)  -> +3V3_S1A
+      TP103     pin 1    1                +3V3_M2C1
+  == TARGET B J_M2C1 pin 2 ('3.3V') on +3V3_M2C1: the card socket's 3.3 V pins
+       M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (two MHF4 leads to A22's P2P jacks)
+
+======================================================================================================================
+PATH 7  AW7915-AED WiFi card, slot 3 (board B, J_M2C3): supply removed
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> C U9: in by pin 2 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (EMCON_HW, 'EMCON_HW'): Schmitt buffer, EMCON_HW = TX_INHIBIT_n
+       74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibit [SOT-23-5]
+       runs from +3V3
+  [C] net EMCON_HW  (5 nodes)
+      J_PANEL   pin 8    Pin_8            panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      TP11      pin 1    1                EMCON_HW
+      U9        pin 4    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U13       pin 2    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 6    EMCON_HW         SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> ribbon: board C J_PANEL pin 8 (EMCON_HW)  ==  board B J_PANEL pin 8 (EMCON_HW)
+  [B] net EMCON_HW  (16 nodes)
+      J_AB1     pin 15   Pin_15           A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+      J_PANEL   pin 8    Pin_8            panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMC
+      R58       pin 1    -                4.7k 1%  -> GND
+      TP7       pin 1    1                EMCON_HW
+      U112      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 
+      U116      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's car
+      U212      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 
+      U216      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's car
+      U312      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 
+      U316      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's car
+      U501      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 1, EMCON AND hub port power
+      U503      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2)
+      U504      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2)
+      U505      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2)
+      U506      pin 2    EMCON_HW         74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the supervisors' read of EMCON_HW, so 
+      U536      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), 
+  >> B U316: in by pin 1 (EMCON_HW, 'EMCON_HW'), out by pin 4 (S3A_EN, 'S3A_EN'): AND on the slot's own 5 V, S3A_EN = EMCON_HW AND PCIE_PWR_EN3
+       SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's card-socket supply enable = EMCON AND PCIE_PWR_EN3, run from +5V_ [SOT-23-5]
+       runs from +5V_S3
+  [B] net S3A_EN  (2 nodes)
+      U303      pin 3    S3A_EN           AP64500SP-13 5 A buck, 3.3 V rail +3V3_S3A
+      U316      pin 4    S3A_EN           SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's car
+  >> B U303: in by pin 3 (S3A_EN, 'S3A_EN'), out by pin 8 (S3A_SW, 'S3A_SW'): buck converter, EN to its switch node
+       AP64500SP-13 5 A buck, 3.3 V rail +3V3_S3A [SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm]
+       runs from +5V_S3
+  [B] net S3A_SW  (3 nodes)
+      C311      pin 2    -                100n  -> S3A_BOOT
+      L301      pin 1    1                3.3uH XAL6030-332ME  -> +3V3_S3A
+      U303      pin 8    S3A_SW           AP64500SP-13 5 A buck, 3.3 V rail +3V3_S3A
+  >> B L301: in by pin 1 (S3A_SW, '1'), out by pin 2 (+3V3_S3A, '2'): the buck's inductor
+       3.3uH XAL6030-332ME [L_Coilcraft_XAL6060-XXX]
+       runs from +3V3_S3A
+  [B] net +3V3_S3A  (12 nodes)
+      C314      pin 1    -                22u 10V X7R 1210  -> GND
+      C315      pin 1    -                22u 10V X7R 1210  -> GND
+      C316      pin 1    -                22u 10V X7R 1210  -> GND
+      L301      pin 2    2                3.3uH XAL6030-332ME  -> S3A_SW
+      R302      pin 1    -                31.6k 1%  -> S3A_FB
+      R334      pin 2    -                10k  -> CARD3_CLKREQ_n
+      R337      pin 2    -                10k  -> WIFI2_W_DIS_n
+      R338      pin 2    -                10k  -> WIFI2_W_DIS2_n
+      R339      pin 1    -                1k  -> LED_WIFI2_A
+      R365      pin 1    -                5mOhm 1% 2512 (Kelvin shunt: card socket current, W5 TESTACCESS-B)  -> +3V3_M2C3
+      TP28      pin 1    1                +3V3_S3A
+      TP302     pin 1    1                +3V3_S3A
+  >> B R365: in by pin 1 (+3V3_S3A, ''), out by pin 2 (+3V3_M2C3, ''): Kelvin shunt, 5 mOhm
+       5mOhm 1% 2512 (Kelvin shunt: card socket current, W5 TESTACCESS-B) [R_2512_6332Metric]
+       runs from +3V3_M2C3, +3V3_S3A
+  [B] net +3V3_M2C3  (8 nodes)
+      C357      pin 1    -                22u 6.3V  -> GND
+      C358      pin 1    -                100n  -> GND
+      J_M2C3    pin 2    3.3V             M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: the second AsiaRF AW7915-AED (two MH
+      J_M2C3    pin 4    3.3V             M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: the second AsiaRF AW7915-AED (two MH
+      J_M2C3    pin 72   3.3V             M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: the second AsiaRF AW7915-AED (two MH
+      J_M2C3    pin 74   3.3V             M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: the second AsiaRF AW7915-AED (two MH
+      R365      pin 2    -                5mOhm 1% 2512 (Kelvin shunt: card socket current, W5 TESTACCESS-B)  -> +3V3_S3A
+      TP303     pin 1    1                +3V3_M2C3
+  == TARGET B J_M2C3 pin 2 ('3.3V') on +3V3_M2C3: the card socket's 3.3 V pins
+       M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: the second AsiaRF AW7915-AED (two MHF4 leads to the antenna changeover U82 and U83)
+
+======================================================================================================================
+PATH 8  CM5 slot 1 WiFi (U30A pin 89)
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> C U9: in by pin 2 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (EMCON_HW, 'EMCON_HW'): Schmitt buffer, EMCON_HW = TX_INHIBIT_n
+       74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibit [SOT-23-5]
+       runs from +3V3
+  [C] net EMCON_HW  (5 nodes)
+      J_PANEL   pin 8    Pin_8            panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      TP11      pin 1    1                EMCON_HW
+      U9        pin 4    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U13       pin 2    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 6    EMCON_HW         SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> ribbon: board C J_PANEL pin 8 (EMCON_HW)  ==  board B J_PANEL pin 8 (EMCON_HW)
+  [B] net EMCON_HW  (16 nodes)
+      J_AB1     pin 15   Pin_15           A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+      J_PANEL   pin 8    Pin_8            panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMC
+      R58       pin 1    -                4.7k 1%  -> GND
+      TP7       pin 1    1                EMCON_HW
+      U112      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 
+      U116      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's car
+      U212      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 
+      U216      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's car
+      U312      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 
+      U316      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's car
+      U501      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 1, EMCON AND hub port power
+      U503      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2)
+      U504      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2)
+      U505      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2)
+      U506      pin 2    EMCON_HW         74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the supervisors' read of EMCON_HW, so 
+      U536      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), 
+  >> B U112: in by pin 2 (EMCON_HW, 'EMCON_HW'), out by pin 4 (EMCON_ON1, 'EMCON_ON1'): inverter on the module's own 3.3 V, EMCON_ON = NOT EMCON_HW
+       SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 V (EMCON L3) [SOT-23-5]
+       runs from +3V3_CM1
+  [B] net EMCON_ON1  (5 nodes)
+      TP104     pin 1    1                EMCON_ON1
+      U112      pin 4    EMCON_ON1        SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 
+      U113      pin 1    EMCON_ON1        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's WL
+      U113      pin 3    EMCON_ON1        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's WL
+      U115      pin 1    EMCON_ON1        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's ca
+  >> B U113: in by pin 1 (EMCON_ON1, 'EMCON_ON1'), out by pin 6 (WL_nDIS1, 'WL_nDIS1'): open-drain inverter, channel 1
+       SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's WL_nDisable and BT_nDisable low (L3, L7) [SOT-23-6]
+       runs from +3V3_CM1
+  [B] net WL_nDIS1  (3 nodes)
+      U113      pin 6    WL_nDIS1         SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's WL
+      U114      pin 6    WL_nDIS1         SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): the panel's off request
+      U30A      pin 89   WL_nDisable      Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM
+  == TARGET B U30A pin 89 ('WL_nDisable') on WL_nDIS1: the module's WL_nDisable
+       Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted
+
+======================================================================================================================
+PATH 9  CM5 slot 2 WiFi (U31A pin 89)
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> C U9: in by pin 2 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (EMCON_HW, 'EMCON_HW'): Schmitt buffer, EMCON_HW = TX_INHIBIT_n
+       74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibit [SOT-23-5]
+       runs from +3V3
+  [C] net EMCON_HW  (5 nodes)
+      J_PANEL   pin 8    Pin_8            panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      TP11      pin 1    1                EMCON_HW
+      U9        pin 4    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U13       pin 2    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 6    EMCON_HW         SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> ribbon: board C J_PANEL pin 8 (EMCON_HW)  ==  board B J_PANEL pin 8 (EMCON_HW)
+  [B] net EMCON_HW  (16 nodes)
+      J_AB1     pin 15   Pin_15           A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+      J_PANEL   pin 8    Pin_8            panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMC
+      R58       pin 1    -                4.7k 1%  -> GND
+      TP7       pin 1    1                EMCON_HW
+      U112      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 
+      U116      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's car
+      U212      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 
+      U216      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's car
+      U312      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 
+      U316      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's car
+      U501      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 1, EMCON AND hub port power
+      U503      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2)
+      U504      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2)
+      U505      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2)
+      U506      pin 2    EMCON_HW         74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the supervisors' read of EMCON_HW, so 
+      U536      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), 
+  >> B U212: in by pin 2 (EMCON_HW, 'EMCON_HW'), out by pin 4 (EMCON_ON2, 'EMCON_ON2'): inverter on the module's own 3.3 V, EMCON_ON = NOT EMCON_HW
+       SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 V (EMCON L3) [SOT-23-5]
+       runs from +3V3_CM2
+  [B] net EMCON_ON2  (8 nodes)
+      Q212      pin 1    G                AO3400A: EMCON discharges the 5G module's rail through R295 (SD-EMC-1, SD-EMC-2)
+      R296      pin 1    -                10k  -> GND
+      TP204     pin 1    1                EMCON_ON2
+      U212      pin 4    EMCON_ON2        SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 
+      U213      pin 1    EMCON_ON2        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's WL
+      U213      pin 3    EMCON_ON2        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's WL
+      U215      pin 1    EMCON_ON2        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's ca
+      U220      pin 1    EMCON_ON2        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls FULL_CARD_P
+  >> B U213: in by pin 1 (EMCON_ON2, 'EMCON_ON2'), out by pin 6 (WL_nDIS2, 'WL_nDIS2'): open-drain inverter, channel 1
+       SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's WL_nDisable and BT_nDisable low (L3, L7) [SOT-23-6]
+       runs from +3V3_CM2
+  [B] net WL_nDIS2  (3 nodes)
+      U213      pin 6    WL_nDIS2         SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's WL
+      U214      pin 6    WL_nDIS2         SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): the panel's off request
+      U31A      pin 89   WL_nDisable      Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM
+  == TARGET B U31A pin 89 ('WL_nDisable') on WL_nDIS2: the module's WL_nDisable
+       Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted
+
+======================================================================================================================
+PATH 10  CM5 slot 3 WiFi (U32A pin 89)
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> C U9: in by pin 2 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (EMCON_HW, 'EMCON_HW'): Schmitt buffer, EMCON_HW = TX_INHIBIT_n
+       74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibit [SOT-23-5]
+       runs from +3V3
+  [C] net EMCON_HW  (5 nodes)
+      J_PANEL   pin 8    Pin_8            panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      TP11      pin 1    1                EMCON_HW
+      U9        pin 4    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U13       pin 2    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 6    EMCON_HW         SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> ribbon: board C J_PANEL pin 8 (EMCON_HW)  ==  board B J_PANEL pin 8 (EMCON_HW)
+  [B] net EMCON_HW  (16 nodes)
+      J_AB1     pin 15   Pin_15           A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+      J_PANEL   pin 8    Pin_8            panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMC
+      R58       pin 1    -                4.7k 1%  -> GND
+      TP7       pin 1    1                EMCON_HW
+      U112      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 
+      U116      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's car
+      U212      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 
+      U216      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's car
+      U312      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 
+      U316      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's car
+      U501      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 1, EMCON AND hub port power
+      U503      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2)
+      U504      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2)
+      U505      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2)
+      U506      pin 2    EMCON_HW         74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the supervisors' read of EMCON_HW, so 
+      U536      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), 
+  >> B U312: in by pin 2 (EMCON_HW, 'EMCON_HW'), out by pin 4 (EMCON_ON3, 'EMCON_ON3'): inverter on the module's own 3.3 V, EMCON_ON = NOT EMCON_HW
+       SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 V (EMCON L3) [SOT-23-5]
+       runs from +3V3_CM3
+  [B] net EMCON_ON3  (5 nodes)
+      TP304     pin 1    1                EMCON_ON3
+      U312      pin 4    EMCON_ON3        SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 
+      U313      pin 1    EMCON_ON3        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's WL
+      U313      pin 3    EMCON_ON3        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's WL
+      U315      pin 1    EMCON_ON3        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's ca
+  >> B U313: in by pin 1 (EMCON_ON3, 'EMCON_ON3'), out by pin 6 (WL_nDIS3, 'WL_nDIS3'): open-drain inverter, channel 1
+       SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's WL_nDisable and BT_nDisable low (L3, L7) [SOT-23-6]
+       runs from +3V3_CM3
+  [B] net WL_nDIS3  (3 nodes)
+      U313      pin 6    WL_nDIS3         SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's WL
+      U314      pin 6    WL_nDIS3         SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): the panel's off request
+      U32A      pin 89   WL_nDisable      Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM
+  == TARGET B U32A pin 89 ('WL_nDisable') on WL_nDIS3: the module's WL_nDisable
+       Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted
+
+======================================================================================================================
+PATH 11  CM5 slot 1 Bluetooth (U30A pin 91)
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> C U9: in by pin 2 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (EMCON_HW, 'EMCON_HW'): Schmitt buffer, EMCON_HW = TX_INHIBIT_n
+       74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibit [SOT-23-5]
+       runs from +3V3
+  [C] net EMCON_HW  (5 nodes)
+      J_PANEL   pin 8    Pin_8            panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      TP11      pin 1    1                EMCON_HW
+      U9        pin 4    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U13       pin 2    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 6    EMCON_HW         SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> ribbon: board C J_PANEL pin 8 (EMCON_HW)  ==  board B J_PANEL pin 8 (EMCON_HW)
+  [B] net EMCON_HW  (16 nodes)
+      J_AB1     pin 15   Pin_15           A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+      J_PANEL   pin 8    Pin_8            panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMC
+      R58       pin 1    -                4.7k 1%  -> GND
+      TP7       pin 1    1                EMCON_HW
+      U112      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 
+      U116      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's car
+      U212      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 
+      U216      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's car
+      U312      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 
+      U316      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's car
+      U501      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 1, EMCON AND hub port power
+      U503      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2)
+      U504      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2)
+      U505      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2)
+      U506      pin 2    EMCON_HW         74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the supervisors' read of EMCON_HW, so 
+      U536      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), 
+  >> B U112: in by pin 2 (EMCON_HW, 'EMCON_HW'), out by pin 4 (EMCON_ON1, 'EMCON_ON1'): inverter on the module's own 3.3 V, EMCON_ON = NOT EMCON_HW
+       SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 V (EMCON L3) [SOT-23-5]
+       runs from +3V3_CM1
+  [B] net EMCON_ON1  (5 nodes)
+      TP104     pin 1    1                EMCON_ON1
+      U112      pin 4    EMCON_ON1        SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 
+      U113      pin 1    EMCON_ON1        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's WL
+      U113      pin 3    EMCON_ON1        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's WL
+      U115      pin 1    EMCON_ON1        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's ca
+  >> B U113: in by pin 3 (EMCON_ON1, 'EMCON_ON1'), out by pin 4 (BT_nDIS1, 'BT_nDIS1'): open-drain inverter, channel 2
+       SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's WL_nDisable and BT_nDisable low (L3, L7) [SOT-23-6]
+       runs from +3V3_CM1
+  [B] net BT_nDIS1  (3 nodes)
+      U113      pin 4    BT_nDIS1         SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's WL
+      U114      pin 4    BT_nDIS1         SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): the panel's off request
+      U30A      pin 91   BT_nDisable      Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM
+  == TARGET B U30A pin 91 ('BT_nDisable') on BT_nDIS1: the module's BT_nDisable
+       Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted
+
+======================================================================================================================
+PATH 12  CM5 slot 2 Bluetooth (U31A pin 91)
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> C U9: in by pin 2 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (EMCON_HW, 'EMCON_HW'): Schmitt buffer, EMCON_HW = TX_INHIBIT_n
+       74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibit [SOT-23-5]
+       runs from +3V3
+  [C] net EMCON_HW  (5 nodes)
+      J_PANEL   pin 8    Pin_8            panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      TP11      pin 1    1                EMCON_HW
+      U9        pin 4    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U13       pin 2    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 6    EMCON_HW         SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> ribbon: board C J_PANEL pin 8 (EMCON_HW)  ==  board B J_PANEL pin 8 (EMCON_HW)
+  [B] net EMCON_HW  (16 nodes)
+      J_AB1     pin 15   Pin_15           A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+      J_PANEL   pin 8    Pin_8            panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMC
+      R58       pin 1    -                4.7k 1%  -> GND
+      TP7       pin 1    1                EMCON_HW
+      U112      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 
+      U116      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's car
+      U212      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 
+      U216      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's car
+      U312      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 
+      U316      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's car
+      U501      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 1, EMCON AND hub port power
+      U503      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2)
+      U504      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2)
+      U505      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2)
+      U506      pin 2    EMCON_HW         74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the supervisors' read of EMCON_HW, so 
+      U536      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), 
+  >> B U212: in by pin 2 (EMCON_HW, 'EMCON_HW'), out by pin 4 (EMCON_ON2, 'EMCON_ON2'): inverter on the module's own 3.3 V, EMCON_ON = NOT EMCON_HW
+       SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 V (EMCON L3) [SOT-23-5]
+       runs from +3V3_CM2
+  [B] net EMCON_ON2  (8 nodes)
+      Q212      pin 1    G                AO3400A: EMCON discharges the 5G module's rail through R295 (SD-EMC-1, SD-EMC-2)
+      R296      pin 1    -                10k  -> GND
+      TP204     pin 1    1                EMCON_ON2
+      U212      pin 4    EMCON_ON2        SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 
+      U213      pin 1    EMCON_ON2        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's WL
+      U213      pin 3    EMCON_ON2        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's WL
+      U215      pin 1    EMCON_ON2        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's ca
+      U220      pin 1    EMCON_ON2        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls FULL_CARD_P
+  >> B U213: in by pin 3 (EMCON_ON2, 'EMCON_ON2'), out by pin 4 (BT_nDIS2, 'BT_nDIS2'): open-drain inverter, channel 2
+       SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's WL_nDisable and BT_nDisable low (L3, L7) [SOT-23-6]
+       runs from +3V3_CM2
+  [B] net BT_nDIS2  (3 nodes)
+      U213      pin 4    BT_nDIS2         SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's WL
+      U214      pin 4    BT_nDIS2         SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): the panel's off request
+      U31A      pin 91   BT_nDisable      Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM
+  == TARGET B U31A pin 91 ('BT_nDisable') on BT_nDIS2: the module's BT_nDisable
+       Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted
+
+======================================================================================================================
+PATH 13  CM5 slot 3 Bluetooth (U32A pin 91)
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> C U9: in by pin 2 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (EMCON_HW, 'EMCON_HW'): Schmitt buffer, EMCON_HW = TX_INHIBIT_n
+       74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibit [SOT-23-5]
+       runs from +3V3
+  [C] net EMCON_HW  (5 nodes)
+      J_PANEL   pin 8    Pin_8            panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      TP11      pin 1    1                EMCON_HW
+      U9        pin 4    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U13       pin 2    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 6    EMCON_HW         SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> ribbon: board C J_PANEL pin 8 (EMCON_HW)  ==  board B J_PANEL pin 8 (EMCON_HW)
+  [B] net EMCON_HW  (16 nodes)
+      J_AB1     pin 15   Pin_15           A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+      J_PANEL   pin 8    Pin_8            panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMC
+      R58       pin 1    -                4.7k 1%  -> GND
+      TP7       pin 1    1                EMCON_HW
+      U112      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 
+      U116      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's car
+      U212      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 
+      U216      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's car
+      U312      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 
+      U316      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's car
+      U501      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 1, EMCON AND hub port power
+      U503      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2)
+      U504      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2)
+      U505      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2)
+      U506      pin 2    EMCON_HW         74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the supervisors' read of EMCON_HW, so 
+      U536      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), 
+  >> B U312: in by pin 2 (EMCON_HW, 'EMCON_HW'), out by pin 4 (EMCON_ON3, 'EMCON_ON3'): inverter on the module's own 3.3 V, EMCON_ON = NOT EMCON_HW
+       SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 V (EMCON L3) [SOT-23-5]
+       runs from +3V3_CM3
+  [B] net EMCON_ON3  (5 nodes)
+      TP304     pin 1    1                EMCON_ON3
+      U312      pin 4    EMCON_ON3        SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 
+      U313      pin 1    EMCON_ON3        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's WL
+      U313      pin 3    EMCON_ON3        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's WL
+      U315      pin 1    EMCON_ON3        SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's ca
+  >> B U313: in by pin 3 (EMCON_ON3, 'EMCON_ON3'), out by pin 4 (BT_nDIS3, 'BT_nDIS3'): open-drain inverter, channel 2
+       SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's WL_nDisable and BT_nDisable low (L3, L7) [SOT-23-6]
+       runs from +3V3_CM3
+  [B] net BT_nDIS3  (3 nodes)
+      U313      pin 4    BT_nDIS3         SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's WL
+      U314      pin 4    BT_nDIS3         SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): the panel's off request
+      U32A      pin 91   BT_nDisable      Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM
+  == TARGET B U32A pin 91 ('BT_nDisable') on BT_nDIS3: the module's BT_nDisable
+       Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted
+
+======================================================================================================================
+PATH 14  E22-900M30S LoRa (board B, U12): supply removed
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> C U9: in by pin 2 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (EMCON_HW, 'EMCON_HW'): Schmitt buffer, EMCON_HW = TX_INHIBIT_n
+       74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibit [SOT-23-5]
+       runs from +3V3
+  [C] net EMCON_HW  (5 nodes)
+      J_PANEL   pin 8    Pin_8            panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      TP11      pin 1    1                EMCON_HW
+      U9        pin 4    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U13       pin 2    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 6    EMCON_HW         SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> ribbon: board C J_PANEL pin 8 (EMCON_HW)  ==  board B J_PANEL pin 8 (EMCON_HW)
+  [B] net EMCON_HW  (16 nodes)
+      J_AB1     pin 15   Pin_15           A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+      J_PANEL   pin 8    Pin_8            panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMC
+      R58       pin 1    -                4.7k 1%  -> GND
+      TP7       pin 1    1                EMCON_HW
+      U112      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 
+      U116      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's car
+      U212      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 
+      U216      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's car
+      U312      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 
+      U316      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's car
+      U501      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 1, EMCON AND hub port power
+      U503      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2)
+      U504      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2)
+      U505      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2)
+      U506      pin 2    EMCON_HW         74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the supervisors' read of EMCON_HW, so 
+      U536      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), 
+  >> B U504: in by pin 1 (EMCON_HW, 'EMCON_HW'), out by pin 4 (E22_EN, 'E22_EN'): AND, E22_EN = EMCON_HW AND LORA_ON
+       SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2) [SOT-23-5]
+       runs from +3V3_DEV
+  [B] net E22_EN  (2 nodes)
+      R531      pin 1    -                10k 1%  -> E22_UVLO
+      U504      pin 4    E22_EN           SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2)
+  >> B R531: in by pin 1 (E22_EN, ''), out by pin 2 (E22_UVLO, ''): upper leg of the enable divider
+       10k 1% [R_0603_1608Metric]
+  [B] net E22_UVLO  (3 nodes)
+      R516      pin 1    -                15k 1%  -> GND
+      R531      pin 2    -                10k 1%  -> E22_EN
+      U21       pin 5    EN/UVLO          TPS22810DRV
+  >> B U21: in by pin 5 (E22_UVLO, 'EN/UVLO'), out by pin 1 (+5V_LORA, 'VOUT'): load switch, EN/UVLO to VOUT
+       TPS22810DRV [WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm]
+       runs from +5V_DEV
+  [B] net +5V_LORA  (7 nodes)
+      C46       pin 1    -                10u  -> GND
+      C47       pin 1    -                100n  -> GND
+      TP16      pin 1    1                +5V_LORA
+      U12       pin 9    VCC              Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1: TXEN GPIO4, RXEN GPIO5, DIO1 GPIO24,
+      U12       pin 10   VCC              Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1: TXEN GPIO4, RXEN GPIO5, DIO1 GPIO24,
+      U21       pin 1    VOUT             TPS22810DRV
+      U21       pin 2    QOD              TPS22810DRV
+  == TARGET B U12 pin 9 ('VCC') on +5V_LORA: the E22's VCC
+       Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1: TXEN GPIO4, RXEN GPIO5, DIO1 GPIO24, BUSY GPIO23, NRST GPIO26; EU power cap in meshtasticd
+
+======================================================================================================================
+PATH 15  E72 CC2652P Zigbee coordinator (board B, U13): supply removed
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> C U9: in by pin 2 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (EMCON_HW, 'EMCON_HW'): Schmitt buffer, EMCON_HW = TX_INHIBIT_n
+       74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibit [SOT-23-5]
+       runs from +3V3
+  [C] net EMCON_HW  (5 nodes)
+      J_PANEL   pin 8    Pin_8            panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      TP11      pin 1    1                EMCON_HW
+      U9        pin 4    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U13       pin 2    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 6    EMCON_HW         SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> ribbon: board C J_PANEL pin 8 (EMCON_HW)  ==  board B J_PANEL pin 8 (EMCON_HW)
+  [B] net EMCON_HW  (16 nodes)
+      J_AB1     pin 15   Pin_15           A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+      J_PANEL   pin 8    Pin_8            panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMC
+      R58       pin 1    -                4.7k 1%  -> GND
+      TP7       pin 1    1                EMCON_HW
+      U112      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 
+      U116      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's car
+      U212      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 
+      U216      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's car
+      U312      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 
+      U316      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's car
+      U501      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 1, EMCON AND hub port power
+      U503      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2)
+      U504      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2)
+      U505      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2)
+      U506      pin 2    EMCON_HW         74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the supervisors' read of EMCON_HW, so 
+      U536      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), 
+  >> B U505: in by pin 1 (EMCON_HW, 'EMCON_HW'), out by pin 4 (E72_EN, 'E72_EN'): AND, E72_EN = EMCON_HW AND ZB_ON
+       SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2) [SOT-23-5]
+       runs from +3V3_DEV
+  [B] net E72_EN  (3 nodes)
+      R517      pin 1    -                10k  -> GND
+      U22       pin 5    EN/UVLO          TPS22810DRV
+      U505      pin 4    E72_EN           SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2)
+  >> B U22: in by pin 5 (E72_EN, 'EN/UVLO'), out by pin 1 (+3V3_ZB, 'VOUT'): load switch, EN/UVLO to VOUT
+       TPS22810DRV [WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm]
+       runs from +3V3_DEV
+  [B] net +3V3_ZB  (14 nodes)
+      C53       pin 1    -                10u  -> GND
+      C54       pin 1    -                100n  -> GND
+      C55       pin 1    -                100n  -> GND
+      J_ZBDBG1  pin 1    Pin_1            CC2652P cJTAG ZBA (bench): 3V3 GND TMSC TCKC RESET
+      J_ZBDBG2  pin 1    Pin_1            CC2652P cJTAG ZBB (bench): 3V3 GND TMSC TCKC RESET
+      R28       pin 2    -                10k  -> ZBA_RST_n
+      R29       pin 2    -                10k  -> ZBB_RST_n
+      R30       pin 2    -                10k  -> ZBA_BSL
+      R31       pin 2    -                10k  -> ZBB_BSL
+      TP17      pin 1    1                +3V3_ZB
+      U13       pin 20   +3V3_ZB          Ebyte E72-2G4M20S1E CC2652P (Zigbee coordinator): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BS
+      U14       pin 20   +3V3_ZB          Ebyte E72-2G4M20S1E CC2652P (OpenThread RCP for Matter): 7 DIO_12 RX, 8 DIO_13 TX, 10 DI
+      U22       pin 1    VOUT             TPS22810DRV
+      U22       pin 2    QOD              TPS22810DRV
+  == TARGET B U13 pin 20 ('+3V3_ZB') on +3V3_ZB: the E72's VCC
+       Ebyte E72-2G4M20S1E CC2652P (Zigbee coordinator): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge
+
+======================================================================================================================
+PATH 16  E72 CC2652P OpenThread RCP (board B, U14): supply removed
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> C U9: in by pin 2 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (EMCON_HW, 'EMCON_HW'): Schmitt buffer, EMCON_HW = TX_INHIBIT_n
+       74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibit [SOT-23-5]
+       runs from +3V3
+  [C] net EMCON_HW  (5 nodes)
+      J_PANEL   pin 8    Pin_8            panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      TP11      pin 1    1                EMCON_HW
+      U9        pin 4    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U13       pin 2    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 6    EMCON_HW         SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> ribbon: board C J_PANEL pin 8 (EMCON_HW)  ==  board B J_PANEL pin 8 (EMCON_HW)
+  [B] net EMCON_HW  (16 nodes)
+      J_AB1     pin 15   Pin_15           A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+      J_PANEL   pin 8    Pin_8            panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMC
+      R58       pin 1    -                4.7k 1%  -> GND
+      TP7       pin 1    1                EMCON_HW
+      U112      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 
+      U116      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's car
+      U212      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 
+      U216      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's car
+      U312      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 
+      U316      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's car
+      U501      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 1, EMCON AND hub port power
+      U503      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2)
+      U504      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2)
+      U505      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2)
+      U506      pin 2    EMCON_HW         74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the supervisors' read of EMCON_HW, so 
+      U536      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), 
+  >> B U505: in by pin 1 (EMCON_HW, 'EMCON_HW'), out by pin 4 (E72_EN, 'E72_EN'): AND, E72_EN = EMCON_HW AND ZB_ON
+       SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2) [SOT-23-5]
+       runs from +3V3_DEV
+  [B] net E72_EN  (3 nodes)
+      R517      pin 1    -                10k  -> GND
+      U22       pin 5    EN/UVLO          TPS22810DRV
+      U505      pin 4    E72_EN           SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2)
+  >> B U22: in by pin 5 (E72_EN, 'EN/UVLO'), out by pin 1 (+3V3_ZB, 'VOUT'): load switch, EN/UVLO to VOUT
+       TPS22810DRV [WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm]
+       runs from +3V3_DEV
+  [B] net +3V3_ZB  (14 nodes)
+      C53       pin 1    -                10u  -> GND
+      C54       pin 1    -                100n  -> GND
+      C55       pin 1    -                100n  -> GND
+      J_ZBDBG1  pin 1    Pin_1            CC2652P cJTAG ZBA (bench): 3V3 GND TMSC TCKC RESET
+      J_ZBDBG2  pin 1    Pin_1            CC2652P cJTAG ZBB (bench): 3V3 GND TMSC TCKC RESET
+      R28       pin 2    -                10k  -> ZBA_RST_n
+      R29       pin 2    -                10k  -> ZBB_RST_n
+      R30       pin 2    -                10k  -> ZBA_BSL
+      R31       pin 2    -                10k  -> ZBB_BSL
+      TP17      pin 1    1                +3V3_ZB
+      U13       pin 20   +3V3_ZB          Ebyte E72-2G4M20S1E CC2652P (Zigbee coordinator): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BS
+      U14       pin 20   +3V3_ZB          Ebyte E72-2G4M20S1E CC2652P (OpenThread RCP for Matter): 7 DIO_12 RX, 8 DIO_13 TX, 10 DI
+      U22       pin 1    VOUT             TPS22810DRV
+      U22       pin 2    QOD              TPS22810DRV
+  == TARGET B U14 pin 20 ('+3V3_ZB') on +3V3_ZB: the E72's VCC
+       Ebyte E72-2G4M20S1E CC2652P (OpenThread RCP for Matter): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge
+
+======================================================================================================================
+PATH 17  LimeSDR Mini 2.4 (board B, J_LIME): USB VBUS removed
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> C U9: in by pin 2 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (EMCON_HW, 'EMCON_HW'): Schmitt buffer, EMCON_HW = TX_INHIBIT_n
+       74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibit [SOT-23-5]
+       runs from +3V3
+  [C] net EMCON_HW  (5 nodes)
+      J_PANEL   pin 8    Pin_8            panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      TP11      pin 1    1                EMCON_HW
+      U9        pin 4    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U13       pin 2    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 6    EMCON_HW         SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> ribbon: board C J_PANEL pin 8 (EMCON_HW)  ==  board B J_PANEL pin 8 (EMCON_HW)
+  [B] net EMCON_HW  (16 nodes)
+      J_AB1     pin 15   Pin_15           A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+      J_PANEL   pin 8    Pin_8            panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMC
+      R58       pin 1    -                4.7k 1%  -> GND
+      TP7       pin 1    1                EMCON_HW
+      U112      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 
+      U116      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's car
+      U212      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 
+      U216      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's car
+      U312      pin 2    EMCON_HW         SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 
+      U316      pin 1    EMCON_HW         SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's car
+      U501      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 1, EMCON AND hub port power
+      U503      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2)
+      U504      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2)
+      U505      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2)
+      U506      pin 2    EMCON_HW         74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the supervisors' read of EMCON_HW, so 
+      U536      pin 1    EMCON_HW         SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), 
+  >> B U501: in by pin 1 (EMCON_HW, 'EMCON_HW'), out by pin 4 (LIME_EN_A, 'LIME_EN_A'): AND, LIME_EN_A = EMCON_HW AND LIME_HW_EN
+       SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 1, EMCON AND hub port power (L2) [SOT-23-5]
+       runs from +3V3_DEV
+  [B] net LIME_EN_A  (2 nodes)
+      U501      pin 4    LIME_EN_A        SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 1, EMCON AND hub port power
+      U502      pin 1    LIME_EN_A        SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 2, AND software
+  >> B U502: in by pin 1 (LIME_EN_A, 'LIME_EN_A'), out by pin 4 (LIME_EN, 'LIME_EN'): AND, LIME_EN = LIME_EN_A AND LIME_SW_EN
+       SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 2, AND software [SOT-23-5]
+       runs from +3V3_DEV
+  [B] net LIME_EN  (2 nodes)
+      R529      pin 1    -                10k 1%  -> LIME_UVLO
+      U502      pin 4    LIME_EN          SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 2, AND software
+  >> B R529: in by pin 1 (LIME_EN, ''), out by pin 2 (LIME_UVLO, ''): upper leg of the enable divider
+       10k 1% [R_0603_1608Metric]
+  [B] net LIME_UVLO  (3 nodes)
+      R514      pin 1    -                15k 1%  -> GND
+      R529      pin 2    -                10k 1%  -> LIME_EN
+      U23       pin 3    LIME_UVLO        TPS259631DDAR eFuse +5V_DEV -> +5V_LIME (301R 1% (ILM: 3.0 A))
+  >> B U23: in by pin 3 (LIME_UVLO, 'LIME_UVLO'), out by pin 5 (+5V_LIME, '+5V_LIME'): eFuse, EN/UVLO to OUT
+       TPS259631DDAR eFuse +5V_DEV -> +5V_LIME (301R 1% (ILM: 3.0 A)) [SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm]
+       runs from +5V_DEV
+  [B] net +5V_LIME  (5 nodes)
+      C58       pin 1    -                22u 6.3V  -> GND
+      J_LIME    pin 1    VBUS             USB 3.0 type A receptacle (Wuerth 692122030100 land): the LimeSDR Mini 2.4 in its bay
+      TP14      pin 1    1                +5V_LIME
+      U23       pin 5    +5V_LIME         TPS259631DDAR eFuse +5V_DEV -> +5V_LIME (301R 1% (ILM: 3.0 A))
+      U33       pin 5    VBUS             USBLC6-2SC6
+  == TARGET B J_LIME pin 1 ('VBUS') on +5V_LIME: the LimeSDR's USB VBUS
+       USB 3.0 type A receptacle (Wuerth 692122030100 land): the LimeSDR Mini 2.4 in its bay
+
+======================================================================================================================
+PATH lamp  The hardware EMCON lamp (board C, D22; SD-EMC-6, CON-021)
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> C U14: in by pin 3 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (EMCLAMP_Y, 'EMCLAMP_Y'): configurable gate wired NOR(TX_INHIBIT_n, EMCON_HW)
+       SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 1 In1 on GND, 2 GND, 3 In0 TX_INHIBIT_n, 4 Y, 5 VCC, 6 In2 EMC [SOT-23-6]
+       runs from +3V3
+  [C] net EMCLAMP_Y  (2 nodes)
+      R48       pin 1    -                100R  -> EMCLAMP_G
+      U14       pin 4    EMCLAMP_Y        SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> C R48: in by pin 1 (EMCLAMP_Y, ''), out by pin 2 (EMCLAMP_G, ''): gate resistor
+       100R [R_0603_1608Metric]
+  [C] net EMCLAMP_G  (3 nodes)
+      Q7        pin 1    G                Si2300DS-T1-GE3 N-FET (Vishay, SOT-23, G S D like the 2N7002 symbol; RDS(on) 85 mOhm max
+      R48       pin 2    -                100R  -> EMCLAMP_Y
+      R49       pin 1    -                10k  -> GND
+  >> C Q7: in by pin 1 (EMCLAMP_G, 'G'), out by pin 3 (EMCLAMP_K, 'D'): N-channel FET, gate to drain: the lamp's sink
+       Si2300DS-T1-GE3 N-FET (Vishay, SOT-23, G S D like the 2N7002 symbol; RDS(on) 85 mOhm max at VGS 2.5 V, VGS(th) 0.6 to 1.5 V): the EMCON lamp's sink [SOT-23]
+  [C] net EMCLAMP_K  (2 nodes)
+      D22       pin 1    K                3 mm EMCON amber (hardware, no processor), sunlight viewable  -> EMCLAMP_A
+      Q7        pin 3    D                Si2300DS-T1-GE3 N-FET (Vishay, SOT-23, G S D like the 2N7002 symbol; RDS(on) 85 mOhm max
+  == TARGET C D22 pin 1 ('K') on EMCLAMP_K: the lamp's cathode
+       3 mm EMCON amber (hardware, no processor), sunlight viewable
+
+======================================================================================================================
+PATH lamp-hw  The EMCON lamp's second input
+  [C] net TX_INHIBIT_n  (8 nodes)
+      C24       pin 1    -                10n  -> GND
+      J_PANEL   pin 11   Pin_11           panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      R14       pin 1    -                2.2k 1%  -> +3V3
+      R50       pin 1    -                10k 1%  -> GND
+      SW_EMCON  pin 1    Pin_1            EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_H
+      TP10      pin 1    1                TX_INHIBIT_n
+      U9        pin 2    TX_INHIBIT_n     74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 3    TX_INHIBIT_n     SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> C U9: in by pin 2 (TX_INHIBIT_n, 'TX_INHIBIT_n'), out by pin 4 (EMCON_HW, 'EMCON_HW'): Schmitt buffer, EMCON_HW = TX_INHIBIT_n
+       74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibit [SOT-23-5]
+       runs from +3V3
+  [C] net EMCON_HW  (5 nodes)
+      J_PANEL   pin 8    Pin_8            panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inh
+      TP11      pin 1    1                EMCON_HW
+      U9        pin 4    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U13       pin 2    EMCON_HW         74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): 
+      U14       pin 6    EMCON_HW         SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+  >> C U14: in by pin 6 (EMCON_HW, 'EMCON_HW'), out by pin 4 (EMCLAMP_Y, 'EMCLAMP_Y'): configurable gate wired NOR(TX_INHIBIT_n, EMCON_HW)
+       SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 1 In1 on GND, 2 GND, 3 In0 TX_INHIBIT_n, 4 Y, 5 VCC, 6 In2 EMC [SOT-23-6]
+       runs from +3V3
+  [C] net EMCLAMP_Y  (2 nodes)
+      R48       pin 1    -                100R  -> EMCLAMP_G
+      U14       pin 4    EMCLAMP_Y        SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 
+
+======================================================================================================================
+paths declared: 27; transmitter rows covered: 1, 2b, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
+RESULT: every declared hop holds on the netlists
