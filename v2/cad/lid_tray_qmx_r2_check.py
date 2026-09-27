@@ -384,7 +384,7 @@ def report():
     L_ = []
     ok = True
     L_.append("QMX lid tray r2: the fit, the face room, the retention and the fitting, from v2/cad/lid_tray_qmx_r2.py, panel1450.py and frame_seat.out (%s)." % (
-        "M3 nominal %+.2f, worst %+.2f for a tray %.2f from the ceiling" % (R["M3"]["nom"], R["M3"]["worst"], m3_tray(R))))
+        "the room between the face top and the lid ceiling, %.2f nominal and %.2f at the worst" % room(R)[:2]))
     L_.append("Prototype design: nothing made, printed or fitted. SCALED and INFERRED inputs are marked; the makers' figures are named.")
     L_.append("")
     # ---- A
@@ -428,8 +428,8 @@ def report():
     L_.append("   the set's own allowances, none stated by a source, in the worst once and in the sensitivity reading twice:")
     for l, t in OWN_TOLS: L_.append("      %.2f  %s" % (t, l))
     L_.append("      %.2f  %s, on the frame and its screw heads only" % (FRAME_TOL[1], FRAME_TOL[0]))
-    L_.append("   (the r1 tray's %.1f counted no lid plate; its ASSEMBLY.md row names a 2 mm nut plate the M3 row left out)" % R1_TRAY if abs(m3_tray(R) - R1_TRAY) < 1e-9 else
-              "   (frame_seat.out's M3 reads the r2 stack)")
+    L_.append("   (the room is frame_seat.out's M3 with the tray depth that row subtracted added back: the r1 tray's %.1f, which counted no lid plate, or the" % R1_TRAY)
+    L_.append("   depth the row's label states once frame_seat.py reads the r2 stack; the room is the same either way)")
     L_.append("   %-19s %-32s %6s  %-44s %6s  %7s %7s %7s  %s" % ("row and part", "footprint, case X and Y", "height", "the deepest solid over it (of how many)", "depth", "nominal", "worst", "twice", "verdict, min %.2f" % MIN_MECH))
     rows = face_rows(E + plug_envelopes()[0], None, R)
     for r in rows:
