@@ -302,9 +302,12 @@ leaves out. What a reader will not find, or should not use:
   a desk review is never a physical test.
 - Where the records disagree at `e3aedb25`, CONTINUATION-BRIEF section 8 says which one to follow; for what changed
   since, section 0 of the same brief is the newer.
-- Citations name a file and its section heading. Where a code or data file is cited by line (`file:line`), the line
-  is at `e3aedb25`: open that file at `e3aedb25` on the public repository (REGENERATE.md section 1 gives the URL
-  pattern) to follow it.
+- Citations name a file and its section heading. Where these handover pages cite a code or data file by line
+  (`file:line`), the line is at `e3aedb25`: open that file at `e3aedb25` on the public repository (REGENERATE.md
+  section 1 gives the URL pattern) to follow it. A `file:line` in a `source` field of the requirements registry
+  (`v2/ecad/tools/pcb_requirements.yaml`) is at the commit the registry's `sources_read_at` names, unless the entry
+  names its own commit ("as read at ..."); since the release check of layers 1 to 3 that commit is `08f3665a`
+  (`v2/docs/records/r8int4/citations-reread-release.md`).
 - Where these pages recommend an option, it is a recommendation. A closer who takes an engineering choice records it
   in `pcb_requirements.yaml` `session_choices` in the SC-nn form (the question, what was taken, why, and "Reverse by
   ..."), never as the owner's.
