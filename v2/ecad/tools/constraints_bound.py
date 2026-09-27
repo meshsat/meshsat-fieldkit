@@ -36,7 +36,9 @@ WHAT FAILS, each naming the sheet, the input and both values:
      byte;
   6. a typed list that has outlived its subject: a pack-path root the intent file no longer declares, a maker's
      figure for a rail the intent file no longer declares or has caught up with, a net of board E5's table that its
-     board file does not carry.
+     board file does not carry;
+  7. a row whose note still opens with the mark --emit leaves on a row that moved or is new: the numbers are the
+     tool's and nobody has yet said, from the intent file's own text, what moved them.
 
 THE ONE COLUMN IT DOES NOT COMPARE is a sheet table's last column when it is headed `note`: that column is the
 sheet's own words about a row (what moved, and why, from the intent file's text). A number in a note is a quotation
@@ -47,9 +49,12 @@ environment, which is how retake_schematic_phase.py and gate_sweep.sh run every 
 board, `constraints_bound_<letter>`, and with no `--board` the set's `constraints_bound` beside them.
 
 Usage: constraints_bound.py [--board <letter>] [--root <repository>] [--out-dir <dir>] [--no-git] [--json]
-       constraints_bound.py --emit <letter> [--root <repository>]
+       constraints_bound.py --emit <letter> [--sheet] [--root <repository>]
   --emit prints the `bound` block and the section 2 tables as the sheet should carry them now, with the notes the
-  sheet already holds kept by rail and every row that moved or is new marked for its explanation. It writes nothing.
+  sheet already holds kept by rail and every row that moved or is new marked for its explanation. With --sheet it
+  prints the WHOLE sheet so re-bound (its block's hashes, commits and `read` line, its model and stack, its tables;
+  every other line as it stands), for whoever re-binds to put in the sheet's place. It writes nothing, and the sheet
+  it prints fails the check until each marked row is explained.
 Exit: 0 PASS, 1 FAIL, 3 INCONCLUSIVE (the calculation could not be run here), 2 usage.
 """
 import os, sys, json, hashlib, datetime, subprocess, importlib.util
@@ -73,6 +78,10 @@ FENCE = "```"
 OPEN = FENCE + "bound"
 NOTE = "note"
 POWER_SECTION = "2."
+# What --emit writes in the note of a row that moved or is new. A note that still opens with one of them is a row
+# nobody has explained, and the check fails on it: a re-binding by machine cannot pass for a re-reading.
+MARK_MOVED = "**MOVED, explain it**"
+MARK_NEW = "**NEW ROW, explain it**"
 
 
 # ------------------------------------------------------------------------------------------------------------------
@@ -357,9 +366,14 @@ def compare_table(c, kind, want, got, what):
     if not missing and not extra:
         c.ok(rails_got == rails_want, "%s: the rows are not in the tool's order (the intent file's own)" % what)
     by = {r[0]: r for r in got["rows"] if r}
+    noted = len(got["head"]) == len(want["head"]) + 1
     for w in want["rows"]:
         g = by.get(w[0])
         if g is None: continue
+        if noted and len(g) > len(want["head"]):
+            c.ok(not g[len(want["head"])].startswith((MARK_MOVED, MARK_NEW)),
+                 "%s, rail %s: its note still opens with the re-binding's mark, so the row moved or is new and nobody "
+                 "has explained it from the intent file's own text" % (what, w[0]))
         for k, col in enumerate(want["head"]):
             if k == 0: continue
             have = g[k] if k < len(g) else ""
@@ -661,12 +675,12 @@ def emit_tables(letter, root=None, calc=None):
         for r in tab["rows"]:
             was = old.get((head, r[0]))
             if was is None:
-                note = "**NEW ROW, explain it from the intent file's own text**"
+                note = MARK_NEW + " from the intent file's own text"
             else:
                 cells, note = was
                 moved = ["`%s` was %s" % (h, cells[k] if k < len(cells) else "absent")
                          for k, h in enumerate(head) if k and (cells[k] if k < len(cells) else "") != r[k]]
-                if moved: note = ("**MOVED, explain it** (%s) %s" % ("; ".join(moved), note)).strip()
+                if moved: note = ("%s (%s) %s" % (MARK_MOVED, "; ".join(moved), note)).strip()
             L.append("| " + " | ".join(x.replace("|", "\\|") for x in list(r) + [note]) + " |")
         L.append("")
     return L
@@ -676,9 +690,94 @@ def emit(letter, root=None, calc=None):
     return "\n".join(emit_block(letter, root, calc) + [""] + emit_tables(letter, root, calc))
 
 
+def emit_sheet(letter, root=None, calc=None, today=None):
+    """The whole sheet re-bound, as text: its block's inputs at the committed files' hashes and commits, its `read`
+    line, its model and stack, and section 2's tables as the tool prints them now with the sheet's notes kept and
+    every row that moved or is new marked. Every other line is the sheet's own. Raises ValueError for a sheet with no
+    bound block in its opening: a first binding is written by whoever reads the sheet, never emitted."""
+    root = os.path.abspath(root or ROOT)
+    RW = calc or load_calc()
+    name = SHEETS.get(letter) or (letter.upper() + ".md")
+    with open(os.path.join(root, *(SHEET_DIR + (name,))), encoding="utf-8") as f: text = f.read()
+    lines = text.split("\n")
+    secs = sections(lines)
+    blocks = bound_blocks(secs[0][2])
+    if not blocks: raise ValueError("%s carries no bound block in its opening; there is nothing to re-bind" % name)
+    said = read_bound(blocks[0])
+    t = RW.rows(letter, root)
+    gs = git_state(root)
+    fresh = {}
+    for l in RW.bound_lines(t):
+        w = l.split()
+        fresh[w[0]] = l
+
+    def input_line(role, path):
+        now = sha16(os.path.join(root, path))
+        rc, last = _git(root, "log", "-1", "--format=%h", "--", path) if gs is not None else (1, "")
+        was = said["inputs"].get(role) or {}
+        if not (rc == 0 and last):
+            last = was.get("changed") if was.get("sha16") == now and was.get("path") == path and was.get("changed") else "UNKNOWN"
+        return "%-10s %s sha256/16 %s changed %s" % (role, path, now or "absent", last)
+    rc, head = _git(root, "rev-parse", "--short=8", "HEAD") if gs is not None else (1, "")
+    reads = {role: rel for role, rel, _sha in t["inputs"]}
+    out_block, seen, last_input = [], set(), None
+    for n, raw in blocks[0]["body"]:
+        key = raw.split()[0]
+        if key in INPUT_ROLES:
+            out_block.append(input_line(key, reads.get(key) or said["inputs"].get(key, {}).get("path") or raw.split()[1]))
+            seen.add(key); last_input = len(out_block)
+        elif key in ("model", "stack"): out_block.append(fresh[key])
+        elif key == "read":
+            out_block.append("read       %s at %s" % (today or datetime.date.today().isoformat(),
+                                                      head if rc == 0 and head else "UNKNOWN"))
+        else: out_block.append(raw)
+        seen.add(key)
+    missing = [input_line(role, rel) for role, rel in reads.items() if role not in seen]
+    at = last_input if last_input is not None else len(out_block)
+    out_block[at:at] = missing
+    for key in ("model", "stack"):
+        if key not in seen: out_block.append(fresh[key])
+    if "read" not in seen:
+        out_block.append("read       %s at %s" % (today or datetime.date.today().isoformat(), head if rc == 0 and head else "UNKNOWN"))
+    a = blocks[0]["line"]                                     # the fence's line, 1-based; the opening starts at line 1
+    b = next(i for i in range(a, len(lines)) if lines[i].strip() == FENCE)
+    edits = [(a, b, out_block)]                                # replace lines[a:b], the block's body
+    # section 2's tables
+    new_tabs, cur = {}, None
+    for l in emit_tables(letter, root, RW):
+        c = split_row(l)
+        if c is None: continue
+        if c[0] == "rail" and not is_rule(c):
+            cur = tuple(c[:-1]); new_tabs[cur] = []
+        new_tabs[cur].append((c, l))
+    power = [x for x in secs if x[0] and x[0][0] == POWER_SECTION]
+    if len(power) != 1: raise ValueError("%s has %d sections numbered 2" % (name, len(power)))
+    placed, end = set(), None
+    for tab in tables(power[0][2], power[0][1]):
+        noted = bool(tab["head"]) and tab["head"][-1] == NOTE
+        head = tuple(tab["head"][:-1]) if noted else tuple(tab["head"])
+        if head not in new_tabs: continue
+        rows = new_tabs[head]
+        keep_note = noted or any(c[-1] for c, _l in rows[2:])
+        body = [l if keep_note else "| " + " | ".join(x.replace("|", "\\|") for x in c[:-1]) + " |"
+                for c, l in rows]
+        if not keep_note: body[1] = "|" + "|".join(RW.ALIGN.get(h, "---") for h in head) + "|"
+        first = tab["line"] - 1                               # 0-based index of the table's header line
+        edits.append((first, first + 2 + len(tab["rows"]), body))
+        placed.add(head); end = first + 2 + len(tab["rows"])
+    sec_end = power[0][1] + len(power[0][2])                  # 0-based index just past section 2's last line
+    for head, rows in new_tabs.items():
+        if head in placed: continue
+        where = end if end is not None else sec_end
+        edits.append((where, where, [""] + [l for _c, l in rows] + ([""] if end is None else [])))
+    for x, y, new in sorted(edits, key=lambda e: e[0], reverse=True):
+        lines[x:y] = new
+    return "\n".join(lines)
+
+
 # ------------------------------------------------------------------------------------------------------------------
 def main(argv):
-    known = {"--board": 1, "--root": 1, "--out-dir": 1, "--emit": 1, "--no-git": 0, "--json": 0}
+    known = {"--board": 1, "--root": 1, "--out-dir": 1, "--emit": 1, "--sheet": 0, "--no-git": 0, "--json": 0}
     i, bad = 0, []
     while i < len(argv):                      # an unknown or incomplete option is refused, never ignored
         k = argv[i]
@@ -695,6 +794,11 @@ def main(argv):
     if one:
         if one.lower() not in RW.ORDER:
             print("constraints_bound: no board %r; the boards are %s" % (one, ", ".join(RW.ORDER))); return _v.USAGE
+        if "--sheet" in argv:
+            try: sys.stdout.write(emit_sheet(one.lower(), root, RW))
+            except (ValueError, OSError) as e:
+                print("constraints_bound: %s" % e); return _v.USAGE
+            return 0
         print(emit(one.lower(), root, RW))
         return 0
     only = _v.opt(argv, "--board", None)

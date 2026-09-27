@@ -78,20 +78,31 @@ a quotation and names its source beside it; the check cannot vouch for it, and t
    in the set's;
 6. a typed list of the calculation has outlived its subject: a pack-path root or a maker's-figure rail the intent
    file no longer declares, a maker's figure the declaration has caught up with, a net of E5's table its board file
-   does not carry.
+   does not carry;
+7. a row's note still opens with the mark the re-binding leaves on a row that moved or is new (step 3 below).
 
 It prints and writes nothing by default; `--out-dir DIR` (or the pipeline's `VERDICT_DIR`) gets one verdict per board,
 `constraints_bound_<letter>`. Its fixtures are `v2/ecad/tools/tests/test_constraints_bound.py`: the H2 defect with
 its own numbers, a width narrowed by hand, a sheet with no declaration and a stale output must fail, a consistent
 tree must pass, and one test judges this tree.
 
-**To re-bind a sheet** when an input has moved: run `python3 v2/docs/layout-constraints/calc/rail_widths.py --markdown`
-into `calc/rail_widths.out`; run `python3 v2/ecad/tools/constraints_bound.py --emit <letter>`, which prints the block
-and the tables the sheet should carry, with the notes it already holds and every row that moved or is new marked;
-put them in the sheet, **explain each marked row from the intent file's own text and name the commit or finding that
-moved it**, correct the block's `current` and `older` lines and the opening paragraph to say which sections were
-re-read; run the check. Never copy a width from a report, a review or an older page: a width is the tool's output on
-the committed input or it is not in the table.
+**To re-bind a sheet** when an input has moved:
+
+1. `python3 v2/docs/layout-constraints/calc/rail_widths.py --markdown > v2/docs/layout-constraints/calc/rail_widths.out`
+2. `python3 v2/ecad/tools/constraints_bound.py --emit <letter> --sheet` prints the whole sheet re-bound: the block's
+   hashes, commits and `read` line, the model and the stack, and section 2's tables as the tool prints them now, with
+   the notes the sheet holds kept by rail. Every other line is the sheet's own. Put it in the sheet's place. (Without
+   `--sheet` it prints the block and the tables alone.)
+3. **Every row that moved or is new carries a mark in its note, and the check fails on the mark.** Replace each with
+   what moved the row, from the intent file's own text, and the commit or finding that moved it. A re-binding by
+   machine gives a sheet the right numbers; it cannot say why they changed, and a sheet is read by somebody who
+   needs to know.
+4. Correct the block's `current` and `older` lines and the opening paragraph to say which sections were re-read on
+   the new candidate, and re-read the text under section 2's tables against the tables.
+5. `python3 v2/ecad/tools/constraints_bound.py` until it passes.
+
+Never copy a width from a report, a review or an older page: a width is the tool's output on the committed input or
+it is not in the table.
 
 ## What a sheet is, and what it is not
 

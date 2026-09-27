@@ -57,8 +57,8 @@ RULE = '''
      new part that carries no rail, or with nothing but a new `written` stamp, the hashes part, and the sheet
      fails with every width unchanged (set 6 did exactly this to four boards of seven). That refusal is kept on
      purpose: nothing can know that no row moved until the calculation has been run again, running it takes
-     under a second, and `constraints_bound.py --emit` prints the block to put in the sheet with the rows that
-     moved marked, which is none. (2) The commit a sheet names for an input is not the one git names, in a clone
+     under a second, and `constraints_bound.py --emit <letter> --sheet` prints the sheet re-bound with the rows
+     that moved marked, which is none. (2) The commit a sheet names for an input is not the one git names, in a clone
      whose history was cut short: the comparison is made only where git answers for the tree and the clone is not
      shallow, and an extraction with no history is told apart and not failed for it. (3) A cell that differs in
      form and not in value (11.9 for 11.92): cells are compared as the tool prints them, because a sheet that
@@ -102,7 +102,8 @@ RULE = '''
      the stack table's. (4) Every cell of the sheet's power tables but the note equals what the calculation prints
      on those inputs, row for row, and section 2 holds no table of widths the calculation does not print. (5) The
      committed output of the calculation equals a fresh run. (6) No typed list of the calculation names a rail the
-     intent file no longer declares.
+     intent file no longer declares. (7) No row's note still opens with the mark a re-binding by machine leaves on
+     a row that moved or is new: each such row is explained from the intent file's own text.
    rationale: >
      At handover H2 board A's sheet gave VIN_RAW as 12.31 A and 11.92 mm on one outer face while the committed
      intent file declared 14.10 A, which the same model sizes at 15.29 mm. The sheet had been written on one

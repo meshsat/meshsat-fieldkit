@@ -534,9 +534,62 @@ def t_emit_prints_what_the_sheet_should_carry_and_marks_what_moved():
         assert _files(root) == before
         rows = {c[0]: c for c in (CB.split_row(l) for l in text.split("\n")) if c}
         assert rows["+3V3"][-1] == "the logic rail", rows["+3V3"]
-        assert rows["VIN_RAW"][-1].startswith("**MOVED, explain it**") and "was 11.92" in rows["VIN_RAW"][-1], rows["VIN_RAW"]
-        assert rows["VMON"][-1].startswith("**NEW ROW"), rows["VMON"]
+        assert rows["VIN_RAW"][-1].startswith(CB.MARK_MOVED) and "was 11.92" in rows["VIN_RAW"][-1], rows["VIN_RAW"]
+        assert rows["VMON"][-1].startswith(CB.MARK_NEW), rows["VMON"]
         assert rows["CELL+"][-1] == "", rows["CELL+"]
+    finally:
+        shutil.rmtree(root)
+
+
+def t_a_sheet_re_bound_by_machine_fails_until_each_row_that_moved_is_explained():
+    """--emit --sheet prints the whole sheet with the new hashes and the tool's cells, which is everything the check
+    compares. If that passed, a re-binding would be one command and no reading: the H2 defect with a green check. A
+    row that moved or is new carries the mark, and the mark fails."""
+    root = _tree(vin_raw=12.31)
+    try:
+        _write_sheet(root, notes={"+3V3": "the logic rail", "VIN_RAW": "the input filter's output"})
+        before = open(_sheet(root), encoding="utf-8").read()
+        _write_intent(root, vin_raw=14.10, extra={"VMON": {"volts": 14.4, "amps_typ": 0.69, "amps_peak": 1.0}})
+        _write_out(root)
+        assert _judge(root)["fails"], "the sheet of the older intent file passed"
+        files = _files(root)
+        text = CB.emit_sheet("a", root, RW, today="2026-09-28")
+        assert _files(root) == files and open(_sheet(root), encoding="utf-8").read() == before, "emit wrote something"
+        # every line outside the block and section 2's table is the sheet's own
+        a, b = before.split("\n"), text.split("\n")
+        assert len(b) == len(a) + 1, (len(a), len(b))                       # one row more: VMON
+        assert [l for l in a if l.startswith("## ") or "90 ohm" in l or "pack path is outer" in l] == \
+               [l for l in b if l.startswith("## ") or "90 ohm" in l or "pack path is outer" in l]
+        assert "read       2026-09-28 at UNKNOWN" in b and "current    section 2" not in text
+        with open(_sheet(root), "w", encoding="utf-8") as f: f.write(text)
+        f1 = _judge(root)["fails"]
+        assert len(f1) == 2 and all("still opens with the re-binding's mark" in x for x in f1), f1
+        assert any("rail VIN_RAW" in x for x in f1) and any("rail VMON" in x for x in f1), f1
+        rows = {c[0]: c for c in (CB.split_row(l) for l in b) if c}
+        assert rows["+3V3"][-1] == "the logic rail"
+        assert rows["VIN_RAW"][-1].startswith(CB.MARK_MOVED) and rows["VIN_RAW"][-1].endswith("the input filter's output")
+        assert "`outer mm` was 11.92" in rows["VIN_RAW"][-1] and rows["VIN_RAW"][4] == "15.29", rows["VIN_RAW"]
+        # explained, it passes
+        s2 = open(_sheet(root), encoding="utf-8").read()
+        s2 = s2.replace(rows["VIN_RAW"][-1], "14.10 A since the front end's ISNS limit was declared (R4A-N12)")
+        s2 = s2.replace(rows["VMON"][-1], "new: the monitor's supply behind the eFuse U21")
+        with open(_sheet(root), "w", encoding="utf-8") as f: f.write(s2)
+        assert not _judge(root)["fails"], _judge(root)["fails"]
+        # and emitted again it is itself: nothing moved, nothing marked
+        assert CB.emit_sheet("a", root, RW, today="2026-09-28") == s2
+    finally:
+        shutil.rmtree(root)
+
+
+def t_a_sheet_with_no_block_is_not_emitted():
+    root = _tree()
+    try:
+        s = open(_sheet(root), encoding="utf-8").read()
+        a, b = s.index(CB.OPEN), s.index(CB.FENCE + "\n", s.index(CB.OPEN) + 1)
+        with open(_sheet(root), "w", encoding="utf-8") as f: f.write(s[:a] + s[b + len(CB.FENCE) + 1:])
+        try: CB.emit_sheet("a", root, RW)
+        except ValueError as e: assert "no bound block" in str(e)
+        else: raise AssertionError("a sheet nobody has bound was given a binding by machine")
     finally:
         shutil.rmtree(root)
 
@@ -582,6 +635,17 @@ def t_THE_REAL_TREE_every_sheet_says_what_was_re_read_and_what_is_older():
         assert b, "%s carries no bound block in its opening" % name
         keys = [raw.split()[0] for _n, raw in b[0]["body"]]
         assert "current" in keys and "older" in keys, (name, keys)
+
+
+def t_THE_REAL_TREE_every_sheet_emitted_again_is_itself():
+    """Nothing has moved since the sheets were bound, so the sheet the tool would print is the sheet, but for the
+    commit and the date of its `read` line. The day this fails without the test above failing, --emit has drifted."""
+    _yaml_or_skip()
+    for letter, name in sorted(CB.SHEETS.items()):
+        have = open(os.path.join(CB.ROOT, *(SHEETS + (name,))), encoding="utf-8").read().split("\n")
+        want = CB.emit_sheet(letter, None, RW).split("\n")
+        diff = [(a, b) for a, b in zip(have, want) if a != b]
+        assert len(have) == len(want) and all(a.split()[:1] == ["read"] == b.split()[:1] for a, b in diff), (name, diff[:3])
 
 
 def t_THE_REAL_TREE_the_tool_by_default_leaves_the_tree_alone():
