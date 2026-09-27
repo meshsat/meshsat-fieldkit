@@ -1017,7 +1017,7 @@ A session that wrote none of the restructure, its heads, its status page, its ma
 
 | file | sha256 | bytes | verdict | cited by |
 |---|---|---:|---|---|
-| `v2/docs/reviews/DEFINITION-RESTRUCTURE-CHECK-2026-09-27.md` | `4c09af64cb214448681a4424719bb88fe4e8bcca75a84821db088ea8cc164e33` | 19325 | CONTENT_PRESERVED; minor findings m1 to m6, none blocking; m1 and m5 answered on `v2/docs/handover/DEFINITION-STATUS.md` | `v2/docs/handover/DEFINITION-STATUS.md` (the check of the map) |
+| `v2/docs/reviews/DEFINITION-RESTRUCTURE-CHECK-2026-09-27.md` | `4c09af64cb214448681a4424719bb88fe4e8bcca75a84821db088ea8cc164e33` | 19325 | CONTENT_PRESERVED; minor findings m1 to m6, none blocking; m1 and m5 answered on `v2/docs/handover/DEFINITION-STATUS.md` | `v2/docs/handover/DEFINITION-STATUS.md` (the check of the map and the re-stamp); `v2/docs/PRODUCT-BRIEF.md` and `v2/docs/CONOPS.md` (status); `v2/docs/handover/LAYER-STATUS.md` (layers 1 and 2); registry REQ-005, CFL-014 and CFL-016 |
 
 ## Maker documents: where each is filed in `v2/vendor/`
 

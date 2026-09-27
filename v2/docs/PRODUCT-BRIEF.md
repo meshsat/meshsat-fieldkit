@@ -1,8 +1,12 @@
 # MeshSat field kit V2: product brief
 
-**Status: layer 1 of the foundation baseline (MESHSAT-1357), BASELINED at `6b2a9965`.** How it was reviewed and
-baselined is recorded in the appendix at the end of this file; how this file's present text relates to the text
-baselined at that commit, and the current state of everything this brief depends on, is `handover/DEFINITION-STATUS.md`.
+**Status: layer 1 of the foundation baseline (MESHSAT-1357), BASELINED at `a9f212c7`,** an editorial restructure with
+no definition change of the text baselined at `6b2a9965`: the check of the restructure, `reviews/DEFINITION-RESTRUCTURE-CHECK-2026-09-27.md`
+(an AI check, CONTENT_PRESERVED), found every definition statement of that text here word for word, and the baseline
+rests on the release records `reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md` and
+`reviews/REVIEW-LAYER-1-RELEASE-2-2026-09-27.md`. How it was reviewed and baselined is recorded in the appendix at
+the end of this file; how this file's text relates to the text baselined at `6b2a9965`, and the current state of
+everything this brief depends on, is `handover/DEFINITION-STATUS.md`.
 
 **When this brief is reopened (the rule of the independent review of handover H2, `reviews/2026-09-27-h2-independent-review.md` section 4).** This definition is reopened only when a requirement, the scope,
 the operating concept or a product decision changes. A changed count or a circuit correction updates the status page,
