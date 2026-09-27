@@ -1,13 +1,17 @@
 # MeshSat field kit V2: continuation brief for an incoming engineer
 
-Written 27 September 2026 (MESHSAT-1357) from the repository at commit `e3aedb25`. Paths are repository paths;
-file:line citations are lines at `e3aedb25`. Read `v2/docs/handover/START-HERE.md` first; the per-layer detail behind
+Written 27 September 2026 (MESHSAT-1357) from the repository at commit `e3aedb25`. Paths are repository paths.
+Citations of a Markdown page name its section heading (since H1.1); a citation of a code or data file by line is a
+line at `e3aedb25`, which the public repository serves at
+`https://raw.githubusercontent.com/meshsat/meshsat-fieldkit/e3aedb25/<path>`. Internal names are defined in
+`v2/docs/handover/GLOSSARY.md`. Read `v2/docs/handover/START-HERE.md` first; the per-layer detail behind
 every line below is in `v2/docs/handover/LAYER-STATUS.md`, and each blocked question is written out in
 `v2/docs/handover/ENGINEERING-QUESTIONS.md` (EQ-01 to EQ-21).
 
 **Handover H1.** The snapshot carries this brief as written at `e3aedb25` plus section 0 below, which states what
 changed up to the H1 source commit (main `84e52461`, circuit round 8 sets 1 and 2, and the handover branch, last design
-change `99cde56b`). Where section 0 and a later section disagree, section 0 is the newer.
+change `99cde56b`). Where section 0 and a later section disagree, section 0 is the newer; since H1.1 the sentences of
+later sections that section 0 supersedes also carry an inline **Superseded in H1** mark.
 
 ## 0. What changed between `e3aedb25` and H1
 
@@ -15,8 +19,13 @@ change `99cde56b`). Where section 0 and a later section disagree, section 0 is t
   EMCON lines; C reads EMCON one way and has a hardware EMCON lamp; D powers its transmit chain only while its EMCON
   gates are in range and reads the PA flange temperature; E declares its raw bus from both feeds and fits the
   decoupling its makers ask for; P orders the JST headers the catalogues list. **Board B's round 8 is not merged**
-  (worktree `fnd/r8b`, EQ-20): H1's board B is still B21's pre-round-8 netlist. Step 3 of section 1 therefore
-  remains for board B only.
+  (worktree `fnd/r8b`, EQ-20; bundled since H1.1 as the UNACCEPTED candidate patch
+  `v2/docs/handover/candidates/r8b.patch` on base `fc144600`): H1's board B is still B21's pre-round-8 netlist. Step
+  3 of section 1 therefore remains for board B only.
+- **SIM.** Session choice SC-13 (27 September 2026, `pcb_requirements.yaml`) takes Quectel's compatible design for
+  USIM2, which `gen_sch_b.py` already carries: two nano-SIM holders, the second behind four 0 ohm links, so one board
+  also builds the eSIM-plus-nano-SIM configuration the owner approved. CFL-010 stays open only for the SIM TVS array
+  (at most 10 pF) and the eSIM variant's order code; section 8's SIM row is superseded.
 - **Checks.** PWR-001 and SI-001 are judged on the committed netlists and PWR-001 fails closed on every undeclared
   supply (EQ-19); RF-002 walks every transmitter's hardware inhibit path and cannot yet decide TX_INHIBIT_n through
   board C's SN74LVC1G57 (EQ-18). No board is ready for layout: reasons A 17, B 16, C 11, D 15, E 16, P 15, E5 5.
@@ -31,10 +40,13 @@ change `99cde56b`). Where section 0 and a later section disagree, section 0 is t
   decisions they record still carry the cost half owed (EQ-14).
 - **Exports.** Paged schematic PDFs, NOT_FOR_FAB BOMs, ERC and netlist parity of every board at `99cde56b`, with
   regeneration PARITY on all six (`v2/release/handover/_generated/`, REGENERATE.md).
-- **Not in H1:** the layer 2, 3, 5 and 7 closers' work (candidates in worktrees, LAYER-STATUS "Candidates left in
-  worktrees"), board B's round 8, and hc9's and hc6's drafts for other owners.
+- **Not in H1's design:** the layer 2, 3, 5 and 7 closers' work (candidates in worktrees, LAYER-STATUS "Candidates
+  left in worktrees"), board B's round 8, and hc9's and hc6's drafts for other owners. Since H1.1 the first two are
+  bundled as UNACCEPTED candidate patches (`v2/docs/handover/candidates/`: `hc2.patch`, `hc3.patch`, `hc5.patch`,
+  `hc7.patch`, `r8b.patch`), each with its base, sha256 and last review's blocking findings in the folder's README.
 - **Known gaps of H1.** The readings behind `CURRENT-EVIDENCE.md` and `PCB-RULE-STATUS-*.md` live in the gitignored
-  `v2/ecad/out/` and each board's `out/` folder and are not in the snapshot; the rendered pages are. The test suite
+  `v2/ecad/out/` and each board's `out/` folder and are not in the snapshot; the rendered pages are. REGENERATE.md
+  section 9 gives the re-take procedure that reproduces and updates them. The test suite
   needs a git checkout for `test_netlist_provenance` and for the registry's closed-by-commit checks (REGENERATE.md
   section 7). The ZIP's bytes are deterministic per host only: compare `MANIFEST.tsv`, not the ZIP's sha256, across
   hosts.
@@ -54,9 +66,13 @@ If you are taking over the design, in this order:
    storage and transport configuration of the pack, and the core requirement limits.
 3. Integrate the circuit corrections that were in flight at `e3aedb25` (round 8, on every board), one board at a time,
    with regeneration parity, then take one consolidated re-take of every schematic-phase reading on a KiCad 9.0.9 host
-   (layer 8 actions 1 to 3).
+   (layer 8 actions 1 to 3; the procedure is REGENERATE.md section 9). **Superseded in H1:** round 8 is merged for A,
+   C, D, E and P; for board B, apply `v2/docs/handover/candidates/r8b.patch` to `fc144600`, re-derive its drafted
+   page patches on the current text, and merge it with parity.
 4. Decide the stackups per board with a written measurement and cost (P0 rule), and write one layout constraint sheet
-   per board (layer 9 actions 6 and 8). Run board B's bounded experiment Q-B-ESC-2 before any whole-board route.
+   per board (layer 9 actions 6 and 8). **Superseded in H1:** the sheets and the stackup record exist
+   (`v2/docs/layout-constraints/`, `v2/docs/STACKUP-DECISIONS.md`); the cost half of each stackup decision is owed
+   (EQ-14). Run board B's bounded experiment Q-B-ESC-2 before any whole-board route.
 5. Ask the owner for the authorisations on the critical path: the empty-case heat test and the case mock-up (before
    hot-part placement and outlines freeze), the ZEROIZE bench (before board B's layout entry), R-BAT (before board P's
    release and the pack build), and the R-PWR and R-HSD decisions (ENGINEERING-QUESTIONS, groups B and C;
@@ -144,13 +160,13 @@ reversal each names). "Recorded in" names where the ruling is authoritative.
 
 ### 2.6 Process rules
 
-- The owner's seven standing conditions (`v2/docs/EXECUTION-PLAN.md` lines 90 to 98): a part substitution is a mismatch
+- The owner's seven standing conditions (`v2/docs/EXECUTION-PLAN.md` section "Standing conditions (owner, 25 September 2026)"): a part substitution is a mismatch
   until proven; a runtime figure stays provisional until computed properly; a test limit above the envelope may be a
   qualification margin; one writer per shared file; "the generator is current" is shown by regenerating and comparing;
   skipped tests are not passes and a hold lifts only on fresh evidence; board B feasibility evidence permits further
   investigation only, and experiments stay EXPERIMENTAL.
-- Stage-specific gates (EXECUTION-PLAN lines 100 to 131; section 5.1 below).
-- Two attempts, then a change of method (EXECUTION-PLAN lines 28 to 32; the owner's prompt, section 4).
+- Stage-specific gates (EXECUTION-PLAN section "Stage gates: layout entry, fabrication release, prototype verification"; section 5.1 below).
+- Two attempts, then a change of method (EXECUTION-PLAN section "Priority from 27 September 2026 01:20 CEST: the engineering handover"; the owner's prompt, section 4).
 - AI review is labelled AI review and never stands in for a qualified review a record requires.
 - Decision authority: money, outside contact, publication and promotion are the owner's. Engineering choices were the
   session's under the owner's rulings of 21 and 26 September 2026 (appendix 32.362 onward; `owner_rulings`
@@ -159,7 +175,7 @@ reversal each names). "Recorded in" names where the ruling is authoritative.
 
 ## 3. Scope exceptions and deferrals, not to be read as settled design
 
-- **SC-02**: LoRa and cellular data are exceptions to NEED-03 for prototype 1. The public requirement (V2-SPEC line 29,
+- **SC-02**: LoRa and cellular data are exceptions to NEED-03 for prototype 1. The public requirement (V2-SPEC section "Compute, storage, expansion (B16, about 330 x 200 mm; the distributed fabric of 32.52)",
   "every device visible to all modules") names no exception; SC-02 narrows it, reversibly.
 - **D-01's deferred functions** (Geiger, lightning, DCF77, the outside pod, camera, net audio recording, the tablet
   bracket, the NVG claim, HF, a second pack) stay designed and fitted; only their tests are deferred. Their parts,
@@ -183,8 +199,8 @@ parallel with isolated owners.
 | 0 | Contradiction fixes that need no circuit (supervisor addresses 0x34 to 0x36; H743 texts; stale siblings; section 8 below) | nothing | no |
 | 0 | Case geometry: C1 to C6 into `panel1450.py` and the CAD; the jumper plug and RJ45 picks; the Z stack drawn; pack hold-down and stack retention designed; the blind-mate tolerance stack (L7 actions 1 to 10) | nothing (board C regenerates only if the backer offsets change) | no |
 | 0 | Desk analyses: `impedance_2d` solves for board B's six-layer re-assignment and eight-layer stack; board A's pack-path copper at 18 A under decision 35; a lumped thermal model with sensitivities; channel budgets from primary documents; RF coexistence budget | nothing | no |
-| 1 | Round 8 circuit corrections merged board by board with parity (EMCON remedies, FAB-01 to FAB-04, SD-EMC-1, the SLOT_EN hold, the flange sensor, decoupling classes G1 to G14, VIN_RAW, SIM, U9, U.FL codes, GND-002, the monitor touch USB port); the tools merges (PWR-001 and SI-001 on the netlist; mismatch persistence) | step 0 decisions that change circuits (reduced mode, SIM, touch USB) | no |
-| 2 | One consolidated re-take of every schematic-phase reading in a clean clone on a KiCad 9.0.9 host; CURRENT-EVIDENCE re-rendered | step 1 | no |
+| 1 | Round 8 circuit corrections merged board by board with parity (in H1 only board B's remains: `candidates/r8b.patch`, UNACCEPTED) (EMCON remedies, FAB-01 to FAB-04, SD-EMC-1, the SLOT_EN hold, the flange sensor, decoupling classes G1 to G14, VIN_RAW, SIM, U9, U.FL codes, GND-002, the monitor touch USB port); the tools merges (PWR-001 and SI-001 on the netlist; mismatch persistence) | step 0 decisions that change circuits (reduced mode, SIM, touch USB) | no |
+| 2 | One consolidated re-take of every schematic-phase reading in a clean clone on a KiCad 9.0.9 host; CURRENT-EVIDENCE re-rendered (procedure: REGENERATE.md section 9) | step 1 | no |
 | 3 | ARCHITECTURE.md and `pcb_interfaces.yaml` re-anchored; contracts for the uncovered interfaces; Review C (L4, L5); FEA-003 and FEA-004 restaged | step 2 | no |
 | 3 | Parts: certification re-take, per-board BOMs with identity, review packets for A and B (first), D, P, C, E; functional circuit review per board; decision 31 protection-topology review for A, D, E (L6, L8) | step 2 | no |
 | 4 | Stackup decision table per board; per-board layout constraint sheets; PWR-F12 in the registries; TEST-PLAN additions (L9) | steps 2 and 3 | prices per layer count (EQ-14) |
@@ -194,7 +210,7 @@ parallel with isolated owners.
 
 ## 5. Constraints for the PCB engineer known today
 
-### 5.1 Stage gates (`v2/docs/EXECUTION-PLAN.md` lines 100 to 131)
+### 5.1 Stage gates (`v2/docs/EXECUTION-PLAN.md`, section "Stage gates: layout entry, fabrication release, prototype verification")
 
 | Stage | Needs | May not need |
 |---|---|---|
@@ -202,7 +218,7 @@ parallel with isolated owners.
 | Fabrication release | the layout implements the reviewed schematic (SCH-002 PASS) and passes the physical protection, parity and routed-board checks; the fabrication-release stages (qualified reviews where a blocker names one, the enclosure heat experiment before hot-part placement is frozen) | a fabricated board or a built kit |
 | Prototype verification | the physical tests of TEST-PLAN and the feasibility pages on the built kit | nothing earlier stands in for them |
 
-Per board, beyond its rule evidence, layout entry also needs (EXECUTION-PLAN lines 118 to 126): A: decision 31's review
+Per board, beyond its rule evidence, layout entry also needs (EXECUTION-PLAN, the per-board table of that section): A: decision 31's review
 on A's netlist with U31 fitted and TRN-001 PASS, FEA-002 (EMCON lines), FEA-004 (the chain re-declared at 18 A for 60
 s and A's pack-path copper constraint), FEA-006. B: FEA-001 (Z-EXP-A and B, or the switch taken), FEA-002 (SD-EMC-1,
 L1 to L4, L7), FEA-003 (FB-FAB-1 to 5 on the netlist, the escape strategy and stack, channel budgets), FEA-006,
@@ -218,10 +234,11 @@ desk with its placement constraints, the charger state sequence), FEA-006. E5: i
 - No layout-entry item checks case geometry, a decided stackup, or pre-layout impedance feasibility.
 - The `board_to_board` contracts are read by no tool; open contract findings (I-03, R4A-N13, W4-F17, the SLOT_EN hold)
   must be checked by hand at layout entry.
-- R-PWR's timing disagrees between records (before A's layout entry in REVIEW-ROUTES line 22, L-04 and ARCHITECTURE
+- R-PWR's timing disagrees between records (before A's layout entry in REVIEW-ROUTES section "Summary", L-04 and ARCHITECTURE
   14.2; not gated in EXECUTION-PLAN or FEA-004). Until reconciled, treat it as required before A's layout is committed.
 - PWR-001 and SI-001 read only board files at `e3aedb25`; their readings become current only once the netlist tools
-  merge.
+  merge. **Superseded in H1:** both are judged on the committed netlists since round 8 (section 0; LAYER-STATUS layer 9
+  integrator line); their readings still await the consolidated re-take.
 
 ### 5.2 Stackups, decided and undecided (all 1.6 mm)
 
@@ -240,7 +257,10 @@ predates decisions 27, 28 and 43; follow the decisions.
 
 ### 5.3 Placement, current and return-path constraints known today
 
-Written nowhere as one sheet per board yet (layer 9 action 8 owes them). What is known:
+**Superseded in H1:** the per-board sheets exist, `v2/docs/layout-constraints/<A|B|C|D|E|E5|P>.md` with their
+calculations, and they are the constraint record to follow. The list below is the `e3aedb25` summary they were
+written from, kept for its reasoning. At `e3aedb25` the sheets were written nowhere (layer 9 action 8 owed them). What
+was known:
 
 - **Board A.** The pack node (CELL+, CELL_FUSED, VBAT) carries 18 A for 60 s on every PA key-down (PWR-F12): width per
   section 5.2, on outer copper; R17 (5 mOhm charge shunt) dissipates 1.62 W at 18 A on a 3 W part with no maker sheet
@@ -303,7 +323,7 @@ single-module generation).
 
 **Why it failed.** The circuits under the copper had not been reviewed against written requirements. When the
 foundation re-baseline of 25 and 26 September checked the generators against requirements, it found design defects at
-circuit and part level (`v2/docs/EXECUTION-PLAN.md` line 144): board B's PCIe downstream and LimeSDR SuperSpeed pairs
+circuit and part level (`v2/docs/EXECUTION-PLAN.md` section "Log"): board B's PCIe downstream and LimeSDR SuperSpeed pairs
 wired transmitter to transmitter; the charger's cell-count strap selecting 2S; ten one-way clamps and rectifiers drawn
 reversed; the pack gauge on the wrong land; the 5G socket keyed M; EMCON not reaching the compute modules' own radios;
 and only about 145 Wh of pack fitting the case. Every routed layout therefore implements a superseded netlist
@@ -312,7 +332,7 @@ routed-board gates had measured the copper against the netlist they were given, 
 Layer counts had been inherited from the first board rather than decided (`v2/docs/LAYER-DECISIONS-2026-09-11.md`,
 opening), and readiness had been reported as percentages that mixed revisions (the 212 of 333 figure, withdrawn by the
 owner's review of 26 September, section 1). The owner's first review put it plainly: "More router capacity will not
-resolve those particular questions" (`v2/docs/reviews/2026-09-26-foundation-progress-review.md` line 14).
+resolve those particular questions" (`v2/docs/reviews/2026-09-26-foundation-progress-review.md` section "Assessment").
 
 **What it leaves that is useful.** The generators, the placement and escape tooling, the gate library, measured facts
 about each board's routability on its stack, and the method's own lessons in the appendix. None of the layouts is a
@@ -371,7 +391,7 @@ rebuilt while the designs they judged kept changing. Recorded instances:
   provenance hashed only the writing script, not its helpers (item 2); after code-bundle provenance (`b9600c4a`) most
   readings are AWAITING_REVALIDATION.
 - Two schematic-phase rules (PWR-001, SI-001) have tools that read only a board file, so they can never be current
-  before a layout exists (CURRENT-EVIDENCE lines 56 to 62).
+  before a layout exists (CURRENT-EVIDENCE section "Layout entry, per board: the exact remaining blockers").
 - The EMCON page is in its sixth revision after four checker cycles (EMCON.md sections 9 to 9d), and POWER-THERMAL
   went through five checker cycles; both are useful, and both still leave their core questions open.
 
@@ -380,7 +400,7 @@ repeated failure, and checkers were bound to artefacts (board files, older netli
 decided. The owner's second review: "The remaining risk is allowing verification-tool development and procedural holds
 to dominate the schedule" (section 5, closing).
 
-**What to do instead** (EXECUTION-PLAN lines 28 to 32; the owner's prompt, section 4): after two unsuccessful attempts
+**What to do instead** (EXECUTION-PLAN section "Priority from 27 September 2026 01:20 CEST: the engineering handover"; the owner's prompt, section 4): after two unsuccessful attempts
 on the same issue, change method (a targeted experiment, a qualified review, or a justified alternative) or record a
 blocker with its engineering question; a source-backed manual review is acceptable where the criteria allow it and is
 labelled as such, never as an automated PASS; apply each check at the stage where its evidence can exist.
@@ -394,7 +414,7 @@ labelled as such, never as an automated PASS; apply each check at the stage wher
 | **Empty-case heat-balance test** | the sealed Peli 1450's inside-air-to-ambient conductance (lid open and closed, fans on and off) and the PA flange patch rise | `v2/docs/feasibility/POWER-THERMAL.md` section 10; `v2/docs/reviews/READY-TO-ACT.md` section 5 | case EUR 168.90 and frame EUR 29.66 excl. VAT, logger GBP 349 (all VERIFIED at the READY-TO-ACT reading); plate blank, heaters, fans, thermocouples, supply TBD; 1 to 2 days bench; runs in the same case as the mock-up, heat test first while undrilled | the owner's purchase authorisation; a person to run it (EQ-05) |
 | **ZEROIZE bench Z-EXP-A, B, C** | GenKey mode 0x04 on the fitted ATECC608B-SSHDA-T after lock (A, about 2 h, three parts); power cut during GenKey 1,000 times on each of two parts (B); the panel's own wipe with power cuts (C, needs the panel firmware) | `v2/docs/feasibility/ZEROIZE.md` section 5; READY-TO-ACT section 3 | VERIFIED parts USD 8.09 + USD 2.95 + GBP 3.80, USD 58.00 more for the MikroE socket board if obtainable; DM320118 and instruments TBD | L-06 purchase; someone to wire the rig; a reachable lab host (EQ-06) |
 | **EMCON early bench rows** | E-01 row 5 (the SA868 PTT pin's threshold, bare module into a dummy load); E-05 (the RM520N-GL's W_DISABLE1# on an evaluation board); E-12's early parts (T_off, T_cut, T_boot for SD-EMC-1) | `v2/docs/feasibility/EMCON.md` section 6; READY-TO-ACT section 4 | analyser EUR 159.46 excl. VAT (tinySA Ultra+) or EUR 6,509 (bench tier); module, evaluation board, SA868, SIM, RF parts TBD | the RM520N-GL and SA868 order codes pinned first; a licensed operator for the SA868; purchase authorisation. Not a layout-entry gate if SD-EMC-1's fallback (iii) is drawn in circuit |
-| **F2 coupon test** | does the SCF9550-30-05 chemical fuse stay inside its rating at 18 A for 60 s from a +55 C block? | POWER-THERMAL line 1136; `v2/docs/review-packets/battery/FUSE-INTERPRETATION.md` | a supply or load of at least 20 A, a temperature-controlled block, a thermocouple; part cost and time TBD | purchase; or Eaton's written answer instead (EQ-07) |
+| **F2 coupon test** | does the SCF9550-30-05 chemical fuse stay inside its rating at 18 A for 60 s from a +55 C block? | POWER-THERMAL section "11. Closed, open, and the handover"; `v2/docs/review-packets/battery/FUSE-INTERPRETATION.md` | a supply or load of at least 20 A, a temperature-controlled block, a thermocouple; part cost and time TBD | purchase; or Eaton's written answer instead (EQ-07) |
 | **Case mock-up T1 to T11** | the case margins resting on Peli's unpublished tolerances, the frame seat, the jumper route, the arrestor o-ring | `v2/docs/CASE-MARGINS.md` sections 5 and 7; READY-TO-ACT section 6 | arrestors 12 x USD 78.99, monitor USD 569.00, CM5 passive cooler GBP 4.80 (VERIFIED); made parts by quote once drawn (JLCCNC from 3 business days) | the made parts' drawings (L7 action 1); purchase authorisation (EQ-08) |
 | **Ethernet link test on development hardware** (optional) | does the CM5's PHY accept a capacitively coupled PHY-to-PHY gigabit link with the KSZ9897? | `v2/docs/reviews/INT-002-PRE-LAYOUT-ASSESSMENT.md` sections 5 and 7 | a CM5 IO board, a KSZ9897 evaluation board, a traffic generator; not priced | purchase; otherwise INT-003 on the built board (EQ-09) |
 | Desk experiments (no cost) | impedance solves for B's A2 six-layer re-assignment and the eight-layer stack; A's 18 A copper under a 60 s transient; a lumped thermal model with sensitivities | B-FEASIBILITY sections 4 and 5; POWER-THERMAL; `v2/ecad/tools/impedance_2d.py`, `track_current.py` | none | none |
@@ -403,31 +423,31 @@ labelled as such, never as an automated PASS; apply each check at the stage wher
 
 | Topic | Follow | Stale or conflicting | State |
 |---|---|---|---|
-| Supervisor kit-bus addresses | 0x34 to 0x36 (`v2/docs/ARCHITECTURE.md` lines 130, 556; finding I3-F01: 0x30 is the TPS23861 PoE controller's broadcast address) | PANEL.md line 157, ZEROIZE.md lines 106, 192, 660, CON-020, S-41, IOHA line 99 say 0x30 to 0x32 | propagation owed |
-| Supervisor MCU | STM32H743VIT6 on PB6/PB7 (`gen_sch_b.py` lines 281 to 289; netlist U41, U51, U61) | V2-SPEC lines 82 and 135, IOHA sections 6 and 10a, EXECUTION-PLAN line 92 describe an H753 | the peripheral compatibility matrix (condition 1) is still owed |
-| Runtime | POWER-THERMAL section 0 and 6: 2.5 h (PS-IDLE-SPEC) and 1.7 h (PS-TYP) aged, bounds 1.3 to 3.3 h and 0.9 to 2.3 h, PROVISIONAL | CONOPS lines 252 to 254, 389 to 398 and V2-SPEC line 23 carry 3.4 h and 1.8 h | edit owed |
-| Inside-air rise and the +35 C and +25 C restrictions | POWER-THERMAL 9.1 to 9.3: per-state bounds; the restrictions are proposed controls | OPERATING-ENVELOPE lines 96 to 115 and 150, `pcb_envelope.yaml` lines 33 and 36 to 38, V2-SPEC line 73 (10 K and 16 K; stated as design) | edit owed; the numbers wait on EQ-05 |
-| Antenna bulkheads | CASE-MARGINS C2: twelve arrestor bulkheads at Z 59 on two RF entry plates (the third 5G jack conditional) | `README.md`, `v2/README.md`, V2-SPEC line 10, `v2/BUILD.md`, `panel1450.py` lines 116 to 118, ASSEMBLY line 145 (eleven couplers at Z 88); GROUNDING-AND-SHIELDS line 15 (nine) | edit and regeneration owed |
-| Face plate and connector plate | C1 (377.2 x 263.0 on ten 6-32 from above, face top 106.52) and C3 (114.0 x 68.3 x 5.0) | `panel1450.py` lines 16 to 26 (365.5 x 249.5 on M3 from below, 101.4), ASSEMBLY lines 38, 43, 146, REQ-047 ("ten M3"), `case_wall_cutouts.py` | CAD owed |
-| The pack | D-06: one 4S3P, about 145 Wh, shrink-wrapped | `v2/BUILD.md` line 41, `pcb_pack_protection.yaml` line 24, `pcb_energy_chain.yaml` lines 19, 46, 53, `pcb_board_facts.yaml` line 259 (4S4P or about 200 Wh); `gen_sch_a.py` line 1228 and `gen_sch_e.py` lines 192 to 193 (the withdrawn BB-2590/U) | edits owed; the checker inputs make BAT-001 read FAIL on P |
+| Supervisor kit-bus addresses | 0x34 to 0x36 (`v2/docs/ARCHITECTURE.md` sections "1.2 Still open, and the choices the session took" and "5.5 Ethernet, display, the kit I2C bus and the supervisor fabric"; finding I3-F01: 0x30 is the TPS23861 PoE controller's broadcast address) | PANEL.md section "7. The kit I2C bus (the controller is the master; the modules read everything over USB)", ZEROIZE.md sections "2. What D-03 needs from the part, as checkable properties" and "3.1 Slot map" and "9. Recommendation (taken by the session under the owner's standing rule of 26 September 2026)", CON-020, S-41, IOHA section "6. The control plane" say 0x30 to 0x32 | propagation owed |
+| Supervisor MCU | STM32H743VIT6 on PB6/PB7 (`gen_sch_b.py` lines 281 to 289; netlist U41, U51, U61) | V2-SPEC sections "Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11)" and "Corrections, 26 September 2026", IOHA sections 6 and 10a, EXECUTION-PLAN section "Standing conditions (owner, 25 September 2026)" describe an H753 | the peripheral compatibility matrix (condition 1) is still owed |
+| Runtime | POWER-THERMAL section 0 and 6: 2.5 h (PS-IDLE-SPEC) and 1.7 h (PS-TYP) aged, bounds 1.3 to 3.3 h and 0.9 to 2.3 h, PROVISIONAL | CONOPS section "4a. Power states", 389 to 398 and V2-SPEC section "Power" carry 3.4 h and 1.8 h | edit owed |
+| Inside-air rise and the +35 C and +25 C restrictions | POWER-THERMAL 9.1 to 9.3: per-state bounds; the restrictions are proposed controls | OPERATING-ENVELOPE sections "3. The inside is not the outside" and "4. The envelope this proposes", `pcb_envelope.yaml` lines 33 and 36 to 38, V2-SPEC section "Thermal and environment" (10 K and 16 K; stated as design) | edit owed; the numbers wait on EQ-05 |
+| Antenna bulkheads | CASE-MARGINS C2: twelve arrestor bulkheads at Z 59 on two RF entry plates (the third 5G jack conditional) | `README.md`, `v2/README.md`, V2-SPEC section "Case and construction", `v2/BUILD.md`, `panel1450.py` lines 116 to 118, ASSEMBLY section "4. Leads" (eleven couplers at Z 88); GROUNDING-AND-SHIELDS section "What the kit is made of, which is what makes this decision what it is" (nine) | edit and regeneration owed |
+| Face plate and connector plate | C1 (377.2 x 263.0 on ten 6-32 from above, face top 106.52) and C3 (114.0 x 68.3 x 5.0) | `panel1450.py` lines 16 to 26 (365.5 x 249.5 on M3 from below, 101.4), ASSEMBLY sections "1. Fasteners" and "4. Leads", REQ-047 ("ten M3"), `case_wall_cutouts.py` | CAD owed |
+| The pack | D-06: one 4S3P, about 145 Wh, shrink-wrapped | `v2/BUILD.md` section "2. Everything else to buy", `pcb_pack_protection.yaml` line 24, `pcb_energy_chain.yaml` lines 19, 46, 53, `pcb_board_facts.yaml` line 259 (4S4P or about 200 Wh); `gen_sch_a.py` line 1228 and `gen_sch_e.py` lines 192 to 193 (the withdrawn BB-2590/U) | edits owed; the checker inputs make BAT-001 read FAIL on P |
 | Pack protection parts | board P's netlist: F2 SCF9550-30-05, U2 BQ7720700DSSR, RT1 | `pcb_pack_protection.yaml` lines 33 to 34 ("no chemical fuse, no second protector") | edit owed |
-| Storage with or without the pack | open (CFL-017): CONOPS line 228 and TEST-PLAN line 8 (pack out) against REQ-025 and OPERATING-ENVELOPE lines 154 to 155 (pack fitted) | | a product decision from the need (layer 2) |
-| SIM | the generator as drawn (two nano-SIM holders with an eSIM build option) describes the board; open (CFL-010) | V2-SPEC line 41 (eSIM plus nano-SIM) | a decision owed (layer 1) |
-| 5G socket | key B, TE 2199119-3, since `458b2873` (V2-SPEC correction 9); the maker's two locating holes are missing (S-12) | PRODUCT-BRIEF lines 44 to 46 ("wrong key") | edit owed |
-| EMCON gaps | the compute modules' radios and the WiFi card supplies are on the line since `458b2873`; the open gap is the 5G module's supply removal, SD-EMC-1 (CONOPS lines 313 to 318, PANEL line 142, V2-SPEC line 140) | PRODUCT-BRIEF lines 63 to 68, `v2/README.md` line 5 | edit owed |
-| Q-B-ESC-1 | it ran on 26 September (B-FEASIBILITY 7.8, `4cd20d54`) | ARCHITECTURE line 1314; FAILOVER-FABRIC sections 1, 8.2, 10; FEA-003's text | edit owed |
-| Pack SMBus lead check | it exists (`check_contracts.py` lines 486 to 534, since `93138ac1`) | `pcb_interfaces.yaml` line 474, ARCHITECTURE line 1115 | edit owed |
-| Panel heartbeat source | undecided between PANEL line 79 (the supervisor) and ARCHITECTURE line 1009 (the CM5 bridge on GPIO16) | | resolve in the hardware and firmware contract (layer 5) |
-| Panel LED count | sixteen indicators D1 to D16 (PANEL section 1, the generator); the lamp test's "17" is open item S-39, and the hardware EMCON lamp (CON-021) may add one | PANEL line 184 | decision owed |
+| Storage with or without the pack | open (CFL-017): CONOPS section "4. Operating modes" and TEST-PLAN section "1. Test articles and conditions" (pack out) against REQ-025 and OPERATING-ENVELOPE section "4. The envelope this proposes" (pack fitted) | | a product decision from the need (layer 2) |
+| SIM | SC-13 (SESSION, 27 September 2026): Quectel's compatible design for USIM2 as `gen_sch_b.py` draws it, two nano-SIM holders with the second behind four 0 ohm links, so the same board builds the owner-approved eSIM-plus-nano-SIM configuration; prototype 1 is built with two nano-SIMs | V2-SPEC section "Bearers and radios" (eSIM plus nano-SIM, as the default) | **Superseded in H1:** decided by SC-13; CFL-010 stays open only for the SIM TVS array (at most 10 pF) and the eSIM variant's order code (layers 6 and 8) |
+| 5G socket | key B, TE 2199119-3, since `458b2873` (V2-SPEC correction 9); the maker's two locating holes are missing (S-12) | PRODUCT-BRIEF section "What the V2 kit is" ("wrong key") | edit owed |
+| EMCON gaps | the compute modules' radios and the WiFi card supplies are on the line since `458b2873`; the open gap is the 5G module's supply removal, SD-EMC-1 (CONOPS section "4b. What EMCON does to each radio, as generated", PANEL section "6. Hardware lines (work with the controller dead)", V2-SPEC section "Corrections, 26 September 2026") | PRODUCT-BRIEF section "What the V2 kit is", `v2/README.md` section "V2: the Peli 1450 carrier set (MESHSAT-830 generation)" | edit owed |
+| Q-B-ESC-1 | it ran on 26 September (B-FEASIBILITY 7.8, `4cd20d54`) | ARCHITECTURE section "15. What this page does not claim, and what is still owed"; FAILOVER-FABRIC sections 1, 8.2, 10; FEA-003's text | edit owed |
+| Pack SMBus lead check | it exists (`check_contracts.py` lines 486 to 534, since `93138ac1`) | `pcb_interfaces.yaml` line 474, ARCHITECTURE section "12. Interface contracts" | edit owed |
+| Panel heartbeat source | undecided between PANEL section "3. Controller pin map (RP2040 `U3`)" (the supervisor) and ARCHITECTURE section "10.1 Who owns what" (the CM5 bridge on GPIO16) | | resolve in the hardware and firmware contract (layer 5) |
+| Panel LED count | sixteen indicators D1 to D16 (PANEL section 1, the generator); the lamp test's "17" is open item S-39, and the hardware EMCON lamp (CON-021) may add one | PANEL section "9. Indicator semantics, controls and the e-paper" | decision owed |
 | Layout-entry blocker count | CURRENT-EVIDENCE at `b9600c4a`: 92 lines | EXECUTION-PLAN checkpoint of 26 September 20:45: 74 (before the re-classing) | none; the generated page is current |
 | Board revisions | declared phases A32, B21, C24, D12, E17, E5, P4 (`boards/*.json`) | `README.md` and `v2/README.md` revision rows (A24, B19, D11, E9); title-block labels A65, D37P, E42P | edit owed; document the label key |
-| Pack-path width at 18 A | decision 35's model: 23.91 mm at 1 oz outer, 11.95 mm at 2 oz | POWER-THERMAL line 971 (16.18 and 8.09 mm from IPC-2221A) | edit owed |
-| Mock-up timing | before board outlines and connector places freeze (CASE-MARGINS section 7, seventh revision; the owner's second review, section 3) | CONOPS line 267 and READY-TO-ACT 6.1 ("at the build") | edit owed |
-| E5 test with a vent | no vent anywhere (appendix 32.53, REQ-020) | TEST-PLAN line 20 (CFL-008) | edit owed |
+| Pack-path width at 18 A | decision 35's model: 23.91 mm at 1 oz outer, 11.95 mm at 2 oz | POWER-THERMAL section "10. Findings, the proposed experiment and prepared questions" (16.18 and 8.09 mm from IPC-2221A) | edit owed |
+| Mock-up timing | before board outlines and connector places freeze (CASE-MARGINS section 7, seventh revision; the owner's second review, section 3) | CONOPS section "4a. Power states" and READY-TO-ACT 6.1 ("at the build") | edit owed |
+| E5 test with a vent | no vent anywhere (appendix 32.53, REQ-020) | TEST-PLAN section "2. MIL-STD-810 methods, as applied" (CFL-008) | edit owed |
 | Resolved conflicts that still fail | CFL-006, CFL-009, CFL-007 read CONFLICT_RESOLVED but their sources still contradict | | make the sources true (layer 3 action 6) |
 | Stackup records | decisions 27, 28, 43 | `v2/docs/LAYER-DECISIONS-2026-09-11.md`; `boards/a.json` and `boards/c.json` rationales; STK-002's "an owner decision is open" | edit owed |
 | Board C Q2 to Q4 | 2N7002 C8545, CERTIFIED in `JLC-CERTIFIED.tsv` (the committed netlist) | a WRONG_MODEL row for an "Si1308EDL class" switch in the same table dates from a board C generator before 12 September and does not apply | none for the design; the stale row can be dropped at the next certification |
-| Publication of board E's files | decision 31's hold on E forbids "any publication of the board file or its evidence" (`pcb_board_holds.yaml` line 160) | the repository is public on its GitHub mirror (REVIEW-ROUTES line 44) | publication is the owner's to decide |
+| Publication of board E's files | decision 31's hold on E forbids "any publication of the board file or its evidence" (`pcb_board_holds.yaml` line 160) | the repository is public on its GitHub mirror (REVIEW-ROUTES section "How the owner would engage a reviewer (every route)") | publication is the owner's to decide |
 
 ## 9. What this brief does not settle
 

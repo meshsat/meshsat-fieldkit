@@ -7,6 +7,14 @@ view that `v2/docs/EXECUTION-PLAN.md` line 18 names. It is a view over the exist
 registry: requirements stay in `v2/ecad/tools/pcb_requirements.yaml`, decisions in `v2/ecad/tools/pcb_decisions.yaml`,
 evidence classes in `v2/docs/CURRENT-EVIDENCE.md`.
 
+**How to read this page in H1.1.** The section "Status at handover H1" and each layer's `INTEGRATOR LINE` are the
+current status. **Every other line (the per-layer audit: acceptance tables, deliverables, cycles, actions) is the
+audit at `e3aedb25`, and its file:line citations are lines at `e3aedb25`**, not at the snapshot: open the cited file at
+`e3aedb25` on the public repository (`https://raw.githubusercontent.com/meshsat/meshsat-fieldkit/e3aedb25/<path>`) to
+follow one. An acceptance row the H1 work has since met or changed carries an inline mark, **Superseded in H1, see the
+integrator line**, followed by what changed; an unmarked "no" is still open unless its layer's integrator line says
+otherwise. The internal names used here are defined in `v2/docs/handover/GLOSSARY.md`.
+
 **Prototype framing.** No V2 board has been fabricated, ordered, assembled, powered or measured. Every review of the
 current design so far is an AI review (an author session and a separate refuting session), labelled as such; none of
 it is electrical sign-off.
@@ -37,7 +45,7 @@ labelled AI review); the *board streams* r8a, r8b, r8c, r8d, r8e and r8p are the
 unmerged branches (`fnd/<name>`), which a snapshot does not carry. An incoming team maps these roles to its own
 people. "Owner" means the project owner, who alone decides money, outside contact, publication and promotion.
 
-**Blocked questions** are written out once each in `v2/docs/handover/ENGINEERING-QUESTIONS.md` (EQ-01 to EQ-14) and
+**Blocked questions** are written out once each in `v2/docs/handover/ENGINEERING-QUESTIONS.md` (EQ-01 to EQ-14 at `e3aedb25`; **superseded in H1, see the integrator lines**: EQ-01 to EQ-21, round 8 added EQ-15 to EQ-21) and
 referred to here by id.
 
 **Board names.** Boards are named by letter and declared phase (A32, B21, C24, D12, E17, E5, P4, from
@@ -69,8 +77,14 @@ below says what moved since `e3aedb25` and what remains. **H1 is a partial hando
 **Layout entry at H1** (`CURRENT-EVIDENCE.md`, generated): 0 boards ready; reasons A 17, B 16, C 11, D 15, E 16, P 15,
 E5 5. **Round 8 findings that are new since `e3aedb25`** are ENGINEERING-QUESTIONS EQ-15 to EQ-21.
 
-**Candidates left in worktrees** (branches `fnd/<name>` from `e3aedb25`, never pushed, so a recipient of H1 does not
-hold them; the integrating session merges each once its last review has no blocking item):
+**Candidates left in worktrees** (branches `fnd/<name>` from `e3aedb25`, r8b from `fc144600`, never pushed; the
+integrating session merges each once its last review has no blocking item). **Since H1.1 each is bundled as an
+UNACCEPTED candidate patch**, `v2/docs/handover/candidates/<name>.patch`, with its base commit, sha256 and the last
+review's blocking findings written out in `v2/docs/handover/candidates/README.md`. A step on this page that says
+"merge r8b" or "after the r8b merge" means: apply `candidates/r8b.patch` to `fc144600` and merge it with regeneration
+parity; the same holds for hc2, hc3, hc5 and hc7. The table's last column is the state when H1 was cut; the README
+gives the state at export (hc2, hc5 and hc7: second review FAIL with two blocking findings each; hc3: first review
+FAIL with six; r8b: second check with no blocking finding).
 
 | Closer | Layer | Files | Review state when H1 was cut |
 |---|---|---|---|
@@ -78,7 +92,7 @@ hold them; the integrating session merges each once its last review has no block
 | hc3 | 3 | `pcb_requirements.yaml`, `REQUIREMENTS-TRACE.md`, `pcb_board_facts.yaml`, `pcb_energy_chain.yaml`, `pcb_pack_protection.yaml`, drafts | first review running; its drafts number new open items from S-47, which hc9 now holds on this branch, so they renumber at merge |
 | hc5 | 5 | `HW-FW-CONTRACT.md`, new interface contracts, records `hc5/`, `w5/` | first review PASS_WITH_FIXES with three blocking items (ARCHITECTURE section 12's claim that every interface is owned at both ends; IF-EXT-ETH judged by INT-001 on the MDI pairs; HW-FW-CONTRACT FW-A02's reason); second review running |
 | hc7 | 7 | `v2/cad/` generators and drawings, `zstack`, `CASE-FIT-UNCERTAINTIES.md`, `release/case-2026-09-27/`, `test_case_geometry.py` | first review PASS_WITH_FIXES with three blocking items (`panel1450.py` falls back silently when `zstack.json` is missing; the `frame_seat.py` draft changes U51's height; outline-deciding rows deferred to fabrication release); second pass running |
-| r8b | 8 (board B) | board B's round 8 circuit, `FAILOVER-FABRIC` and IOHA patches | not merged; residual stated (EQ-20); its IOHA patch must be re-derived on hc6's reconciled text |
+| r8b | 8 (board B) | board B's round 8 circuit, `FAILOVER-FABRIC` and IOHA patches | not merged; residual stated (EQ-20); its IOHA patch must be re-derived on hc6's reconciled text; `candidates/r8b.patch` |
 
 ## Summary at `e3aedb25` (the audit)
 
@@ -450,7 +464,7 @@ unmerged branch already drafts an SC-12)
    exception with its reason) and carry the exceptions into REQ-004, ASM-001 and every public NEED-03 statement.
    Integrator with boards A, B, C authors; after round 8 for any mitigation; about 4 h.
 5. Resolve CFL-010: one SIM description in V2-SPEC and the generator, the SIM TVS array (at most 10 pF) fitted; read
-   CFL-010 on the committed B netlist. Board B author and integrator; after the r8b merge; about 2 h.
+   CFL-010 on the committed B netlist. Board B author and integrator; after the r8b merge (`candidates/r8b.patch`); about 2 h.
 6. Make the resolved conflicts true on their sources: the pack files to the 4S3P INR18650-35E, about 145 Wh (CFL-006,
    S-27); `_product` citing OPERATING-ENVELOPE (CFL-003); TEST-PLAN's closed-lid state and test (CFL-009) and each
    test's purpose (CFL-007); re-read the CFLs on bound files, following the integration recipe (commit config inputs
@@ -615,7 +629,7 @@ protection (4958), FEA-006 decoupling (1756).
    section 6; re-render the trace. Integrator; none; about 1 h.
 3. Bring IOHA 6 and 10a to the H743 on PB6/PB7 and FAILOVER-FABRIC 1, 8.1, 8.2 and 10 to `458b2873` and `4cd20d54`; fix
    the FEA-001 notes and the "pending merge" sentences; rebind the FEA readings. Integrator; none; about 2 h.
-4. Restage FEA-003 as in the first two cycles above. Integrator; after r8b's FAB-01 to FAB-04; half a day.
+4. Restage FEA-003 as in the first two cycles above. Integrator; after r8b's FAB-01 to FAB-04 (`candidates/r8b.patch`); half a day.
 5. Restage FEA-004 as in the third and fourth cycles. Integrator; none; about 1 h.
 6. Merge PWR-F12 into `pcb_energy_chain.yaml` and `pcb_pack_protection.yaml` (10 A, 18 A for 60 s, 20 A for 2 s, F2 as
    a stage, 4S3P); derive A's pack-path copper constraint at 18 A; choose R17 with its maker sheet. Battery stream and
@@ -626,7 +640,7 @@ protection (4958), FEA-006 decoupling (1756).
    streams and integrator; round 8.
 8. Run Q-B-ESC-2 (5 USD cap) and then decision 43's eight-layer whole-board run (capped, EXPERIMENTAL) on the post-round
    8 B netlist; record in B-FEASIBILITY 7.9 and FEA-003. Placement stream and integrator on a build host; after the r8b
-   merge and the router import fix; about 3 box-hours per run.
+   merge (`candidates/r8b.patch`) and the router import fix; about 3 box-hours per run.
 9. Channel budgets from primary documents (USB 3.2 Gen 1 from USB-IF; the TUSB8041, TMUXHS4212 and TS3DV642 layout
    guides; PCIe CEM and HDMI where public) against the placement screen's lengths (FB-FAB-7). Half a day.
 10. Narrow the thermal bound at desk (a documented lumped model of the Peli 1450 with sensitivity analysis), settle
@@ -667,7 +681,7 @@ protection (4958), FEA-006 decoupling (1756).
   staged only at P's fabrication release. R-BAT not engaged. Four-layer 2 oz regeneration owed (decision 28).
 - E5: no feasibility blocker names it; the D-14 insulating cap not drawn or sourced (S-22).
 
-> **INTEGRATOR LINE, layer 4:** status at `e3aedb25` IN_PROGRESS; status now: IN_PROGRESS; as of commit: H1; items closed since `e3aedb25`: readable diagrams of the context, board interconnect, power tree, power-up, lanes and fabric, control lines, battery states and the case (`v2/docs/diagrams/`, hc4; drawn at `e3aedb25`, before round 8, and not rebuilt: `build.py --check` reads 0 of 11 current, and `power_tree.py`'s attribution check is not complete, as its README says); `ARCHITECTURE.md` 5.5, 6.1, 13.3, 15 and `ARCH-PCB-B-IOHA.md` 6 and 10a reconciled with the STM32H743 compatibility page (hc6); round 8 gated board A's PA and HF rails on both EMCON lines (`c0133147`), powered board D's transmit chain only while its EMCON gates are in range (`76235aad`) and gave board C a hardware EMCON lamp (`9f28c238`); review record: hc4's two AI reviews (not filed as a record; the second FAILed only on the power-tree claim, fixed at merge). New since `e3aedb25`: BAT-F20 (EQ-15), board A's +3V3 overvoltage window (EQ-17), RF-002's undecided TX_INHIBIT_n line (EQ-18), board B's round 8 residual (EQ-20). Remaining: FEA-001 to FEA-006 as in this section; the diagrams rebuilt on the round 8 netlists after `power_tree.py`'s TREE follows board D; Review C.
+> **INTEGRATOR LINE, layer 4:** status at `e3aedb25` IN_PROGRESS; status now: IN_PROGRESS; as of commit: H1; items closed since `e3aedb25`: readable diagrams of the context, board interconnect, power tree, power-up, lanes and fabric, control lines, battery states and the case (`v2/docs/diagrams/`, hc4; drawn at `e3aedb25`, before round 8, and not rebuilt: `build.py --check` reads 0 of 11 current, and `power_tree.py`'s attribution check is not complete, as its README says); `ARCHITECTURE.md` 5.5, 6.1, 13.3, 15 and `ARCH-PCB-B-IOHA.md` 6 and 10a reconciled with the STM32H743 compatibility page (hc6); round 8 gated board A's PA and HF rails on both EMCON lines (`c0133147`), powered board D's transmit chain only while its EMCON gates are in range (`76235aad`) and gave board C a hardware EMCON lamp (`9f28c238`); review record: hc4's two AI reviews (filed in H1.1 as `v2/docs/records/handover/hc4-reviews.md`; the second FAILed only on the power-tree claim, fixed at merge). New since `e3aedb25`: BAT-F20 (EQ-15), board A's +3V3 overvoltage window (EQ-17), RF-002's undecided TX_INHIBIT_n line (EQ-18), board B's round 8 residual (EQ-20). Remaining: FEA-001 to FEA-006 as in this section; the diagrams rebuilt on the round 8 netlists after `power_tree.py`'s TREE follows board D; Review C.
 
 ---
 
@@ -767,7 +781,7 @@ to C4, rows M14 and M17); layer 8 netlists.
    E's sensor, pod, tamper, water and fan leads, A's J_HEAT, P's cell and thermistor leads, B's cooler fans), each with
    ends, parts, pins, levels, current, hot-plug and judge. Interfaces stream, integrator; after round 8.
 3. Rule and draw the monitor touch USB path (port reallocation or added capacity on B, its failover behaviour with
-   HDMI_SEL); record as a SESSION decision. Board B author; after r8b and before Q-B-ESC-2 fixes B's netlist.
+   HDMI_SEL); record as a SESSION decision. Board B author; after r8b (`candidates/r8b.patch`) and before Q-B-ESC-2 fixes B's netlist.
 4. Design and draw the SLOT_EN hold on C or A with its power-loss and ZEROIZE interplay; update IF-BC-PANEL,
    IF-AB-RIBBON, PANEL section 5, ARCHITECTURE 4.3. Board C (or A) author; after r8c or r8a.
 5. Propagate 0x34 to 0x36 (CON-020, S-41, PANEL 7, IOHA 6 and 10a, ZEROIZE Z-C3); state the kit I2C speed, pull-ups
@@ -775,7 +789,7 @@ to C4, rows M14 and M17); layer 8 netlists.
 6. Re-declare VIN_RAW on A and E from the r8e derivation after review; decide the dock contact remedy including one
    open contact and derating; update IF-AE-DOCK, E5 targets and FW-A16. Boards A and E authors; after r8e.
 7. Close I-03 and the PANEL_5V coordination with held ratings: file the JST-VH catalogue and an IDC header and ribbon
-   datasheet, pick MPNs, reconcile both ends. Boards A and B authors, parts stream; after r8b.
+   datasheet, pick MPNs, reconcile both ends. Boards A and B authors, parts stream; after r8b (`candidates/r8b.patch`).
 8. Implement GND-002 in A and B; rewrite GROUNDING-AND-SHIELDS.md to the arrestor plates and decision 29 as ruled.
    Boards A and B authors, integrator; after round 8.
 9. Draw D-07's third site on A (X +46) and E's clamp with the clamp bar (R4E-07); pick the east jumper plug so M17g and
@@ -931,7 +945,7 @@ parts; the FB-ZER-1 bench result for U8; owner authority for purchases and R-PWR
   candidate; R-BAT pending.
 - E5: no placed parts (17 footprints: targets, holes, wire lands); the D-14 insulating cap neither drawn nor sourced.
 
-> **INTEGRATOR LINE, layer 6:** status at `e3aedb25` IN_PROGRESS; status now: IN_PROGRESS; as of commit: `99cde56b` (H1); items closed since `e3aedb25`: the STM32H743 compatibility matrix against the H753 and the errata (`v2/docs/parts/STM32H743-COMPATIBILITY.md`), procurement constraints and alternatives with dated public readings (`PROCUREMENT.md`), the grade of every fitted active part and connector against the envelope (`GRADE-CHECK.md`, regenerated at H1 for round 8's boards C and P), fourteen new SOURCES entries and the maker documents behind them (hc6; its review, an AI review, has no blocking item); `jlc_certify.py` reads the declared mismatches (`661ca3a4`); review record: hc6's review (not filed as a record). Remaining: the generators write no MPN field, and 1497 of the 2205 per-reference rows of the six schematic BOMs carry no LCSC code, 1322 of them resistors, capacitors and inductors (EQ-21); the generator changes hc6 recommends (HC6-SC-3, HC6-SC-6 to HC6-SC-9: board B's T1 to the Pulse HX6096NL, the crystals, the IDC headers, the Mill-Max pins, consigned lines); `pcb_part_temps.patch` of `fnd/hc6` with its part_temps re-take; PROCUREMENT.md's readings for HX6096NL and four alternatives, not filed; U8 (EQ-06); R-PWR (EQ-11); LimeSDR Mini 2.4 and AW7915-AED OUTSIDE the envelope; the INFERRED order codes of the SA868 and the RM520N-GL; `PARTS.md` regeneration.
+> **INTEGRATOR LINE, layer 6:** status at `e3aedb25` IN_PROGRESS; status now: IN_PROGRESS; as of commit: `99cde56b` (H1); items closed since `e3aedb25`: the STM32H743 compatibility matrix against the H753 and the errata (`v2/docs/parts/STM32H743-COMPATIBILITY.md`), procurement constraints and alternatives with dated public readings (`PROCUREMENT.md`), the grade of every fitted active part and connector against the envelope (`GRADE-CHECK.md`, regenerated at H1 for round 8's boards C and P), fourteen new SOURCES entries and the maker documents behind them (hc6; its review, an AI review, has no blocking item); `jlc_certify.py` reads the declared mismatches (`661ca3a4`); review record: hc6's review (filed in H1.1 as `v2/docs/records/handover/hc6-review.md`). Remaining: the generators write no MPN field, and 1497 of the 2205 per-reference rows of the six schematic BOMs carry no LCSC code, 1322 of them resistors, capacitors and inductors (EQ-21); the generator changes hc6 recommends (HC6-SC-3, HC6-SC-6 to HC6-SC-9: board B's T1 to the Pulse HX6096NL, the crystals, the IDC headers, the Mill-Max pins, consigned lines); `pcb_part_temps.patch` of `fnd/hc6` with its part_temps re-take; PROCUREMENT.md's readings for HX6096NL and four alternatives, not filed; U8 (EQ-06); R-PWR (EQ-11); LimeSDR Mini 2.4 and AW7915-AED OUTSIDE the envelope; the INFERRED order codes of the SA868 and the RM520N-GL; `PARTS.md` regeneration.
 
 ---
 
@@ -1157,14 +1171,14 @@ wrote these pages has no `pcbnew`).
 | # | Item | Met | Evidence |
 |---|---|---|---|
 | 8.1 | Current native schematic per board | yes | all six committed; each sidecar's schematic sha equals the file. They are the committed candidates only: round 8 rewrites all six, and the defects below stay open on them |
-| 8.2 | Readable PDFs of the current schematics | no | PDFs of the exact committed schematic exist only for C, E (packets) and P (battery candidate); A, B, D have none |
+| 8.2 | Readable PDFs of the current schematics | no | PDFs of the exact committed schematic exist only for C, E (packets) and P (battery candidate); A, B, D have none. **Superseded in H1, see the integrator line:** A3-paged PDFs of all six committed schematics at `99cde56b` in `v2/release/handover/_generated/<board>/` (board B's is the pre-round-8 B21) |
 | 8.3 | Generator inputs and source | yes | tracked; every file named in each sidecar matches HEAD. Gaps: no regeneration README (see `v2/docs/handover/REGENERATE.md`); the title labels A65, D37P, E42P undocumented |
 | 8.4 | Netlists | yes | committed with sidecars and intent files for all six boards |
-| 8.5 | BOMs | no | current only in the C and E packets and P's candidate; none for A, B, D |
+| 8.5 | BOMs | no | current only in the C and E packets and P's candidate; none for A, B, D. **Superseded in H1, see the integrator line:** two NOT_FOR_FAB BOMs per board for all six at `99cde56b` (`v2/release/handover/_generated/`); the MPN gap of layer 6 stands |
 | 8.6 | Functional circuit reviews completed | no | no whole-board, function-by-function review for any board; rounds 4 to 6 reviewed the corrections (AI author plus AI refuter); R-BAT, R-PWR, R-HSD not done |
 | 8.7 | Exact part and land mapping | no | SCH-005 readings are 21 September readings on older netlists (AWAITING_REVALIDATION). WRONG_MODEL on current parts: B U9 (SOIC-8 land, SOIC-16 code), B U80, A U1 suffix, amber LEDs coded yellow (B LED14, 24, 25, 34; D LED2, 5), JST plating variants (A J_HEAT, J_MAINSW; D J_VGG; E J_SMB; P J_TS2) and E's J_TAMP parser row. Mismatch persistence is not yet a checker input. (Board C's Q2 to Q4 are 2N7002 C8545 on the committed netlist and CERTIFIED; the table's WRONG_MODEL row for an "Si1308EDL class" switch dates from a board C generator before 12 September and does not apply) |
-| 8.8 | Relevant ERC completed | no | no ERC report of the committed A and B schematics anywhere; C, D, E, P readings bound to the current schematic sit untracked and read TOOL_CHANGED; tracked ERC reports exist for C, E and P; only warnings except B's five allow-listed errors; the kicad-cli "annotation errors" warning on C, D, E, P exports is unexplained |
-| 8.9 | Regeneration shown by regenerating and comparing | no | `3a1f6576`'s message reports PARITY on 36 artefacts, but the compare outputs stayed on the build host; W7's parity record is not filed; only the battery packet files parity outputs |
+| 8.8 | Relevant ERC completed | no | **Superseded in H1, see the integrator line:** an ERC report of every committed schematic at `99cde56b` is in `v2/release/handover/_generated/` (B five errors, allow-listed, plus warnings; the rest warnings only); the ERC readings bound to the current schematics still await the re-take (REGENERATE.md section 9). At `e3aedb25`: no ERC report of the committed A and B schematics anywhere; C, D, E, P readings bound to the current schematic sit untracked and read TOOL_CHANGED; tracked ERC reports exist for C, E and P; only warnings except B's five allow-listed errors; the kicad-cli "annotation errors" warning on C, D, E, P exports is unexplained |
+| 8.9 | Regeneration shown by regenerating and comparing | no | `3a1f6576`'s message reports PARITY on 36 artefacts (filed in H1.1 as `v2/docs/records/handover/3a1f6576-commit-message.txt`), but the compare outputs stayed on the build host; W7's parity record is not filed; only the battery packet files parity outputs. **Superseded in H1, see the integrator line:** regeneration of all six boards from a clean extraction read PARITY with the stated netlist hashes, and the parity reports are in `v2/release/handover/_generated/<board>/`; the usability check of H1 reproduced it on its own KiCad 9.0.9 host |
 | 8.10 | Known schematic-affecting defects closed per board | no | open: TRN-001 FAIL on A and B (clamp symbol), PWR-003 FAIL on B, BAT-001 FAIL on P, FEA-002 EMCON items, FEA-003 FB-FAB-1 to 5 on B, FEA-001 U8, FEA-004 D flange sensor, FEA-006 G1 to G14 in all six generators, FEA-005 P coordination |
 | 8.11 | Board-specific completion marked explicitly | no | this page did not exist at `e3aedb25` |
 | 8.12 | Review D per board gates layout entry | no | none of its four items is complete for any board |
@@ -1273,7 +1287,7 @@ wrote these pages has no `pcbnew`).
 - E5 (`pcb-e5-block`): NOT APPLICABLE to layer 8 (no schematic by construction); its contract binds once A's layout
   carries A's netlist.
 
-> **INTEGRATOR LINE, layer 8:** status at `e3aedb25` IN_PROGRESS; status now: IN_PROGRESS; as of commit: H1; per board: A open (round 8 regenerated, `c0133147`; PWR-001 FAIL on current evidence, EQ-19; +3V3 window, EQ-17), B open (round 8 NOT merged, in `fnd/r8b`, EQ-20; PWR-001 FAIL on current evidence, 28 supplies undeclared), C open (round 8 regenerated, `9f28c238`, netlist `11eabc2d`; PWR-001 and SI-001 read on the older netlist; RF-002 undecided on U14, EQ-18), D open (round 8, `76235aad`; PWR-001 FAIL on current evidence), E open (round 8, `bc0f562f`; PWR-001 FAIL on current evidence; HC9-E1, S-47, the LT8705A sense resistor in the inductor leg, blocks layout entry), P open (round 8, `7bef62bd`, netlist `085f8333`; BAT-F20, EQ-15; PWR-001 and SI-001 awaiting the re-take), E5 not applicable; items closed since `e3aedb25`: readable paged PDFs, two NOT_FOR_FAB BOMs, ERC and netlist parity of all six boards at `99cde56b` with provenance, and regeneration PARITY of all six from a clean extraction (`v2/release/handover/_generated/`, REGENERATE.md sections 4 and 5). Remaining: board B's round 8 merged with parity; the consolidated re-take of every schematic-phase reading on the committed netlists; PWR-001's supply declarations on A, B, D and E; the per-board functional circuit reviews; HC9-E1 on E; BAT-F20 on P; the qualified reviews (EQ-10 to EQ-12).
+> **INTEGRATOR LINE, layer 8:** status at `e3aedb25` IN_PROGRESS; status now: IN_PROGRESS; as of commit: H1; per board: A open (round 8 regenerated, `c0133147`; PWR-001 FAIL on current evidence, EQ-19; +3V3 window, EQ-17), B open (round 8 NOT merged, in `fnd/r8b`, exported in H1.1 as `v2/docs/handover/candidates/r8b.patch`, EQ-20; PWR-001 FAIL on current evidence, 28 supplies undeclared), C open (round 8 regenerated, `9f28c238`, netlist `11eabc2d`; PWR-001 and SI-001 read on the older netlist; RF-002 undecided on U14, EQ-18), D open (round 8, `76235aad`; PWR-001 FAIL on current evidence), E open (round 8, `bc0f562f`; PWR-001 FAIL on current evidence; HC9-E1, S-47, the LT8705A sense resistor in the inductor leg, blocks layout entry), P open (round 8, `7bef62bd`, netlist `085f8333`; BAT-F20, EQ-15; PWR-001 and SI-001 awaiting the re-take), E5 not applicable; items closed since `e3aedb25`: readable paged PDFs, two NOT_FOR_FAB BOMs, ERC and netlist parity of all six boards at `99cde56b` with provenance, and regeneration PARITY of all six from a clean extraction (`v2/release/handover/_generated/`, REGENERATE.md sections 4 and 5). Remaining: board B's round 8 merged with parity; the consolidated re-take of every schematic-phase reading on the committed netlists; PWR-001's supply declarations on A, B, D and E; the per-board functional circuit reviews; HC9-E1 on E; BAT-F20 on P; the qualified reviews (EQ-10 to EQ-12).
 
 ---
 
@@ -1425,7 +1439,7 @@ layer 2 envelope and modes; decisions 7, 27, 28, 35, 42, 43, 46 and the PWR-F12,
     acceptance holds on the corrected netlist. Board A stream.
 15. INT-002 follow-ups: decide a magnetics footprint provision or record the respin fallback with its cost; state the
     coupling capacitors' voltage and dielectric; prepare (not send) the Raspberry Pi or Broadcom question. Board B
-    stream; after r8b (re-pin the 48-net digest).
+    stream; after r8b (`candidates/r8b.patch`; re-pin the 48-net digest).
 16. TEST-PLAN: add the heat-balance, lid-open and lid-closed rise and PA patch tests; rewrite E3's pass line to D-02a's
     two lines with POWER-THERMAL 9.2's ceilings. Test-plan owner.
 17. One re-take of every schematic-phase reading on the committed round 8 netlists in a clean clone (as layer 8

@@ -1,0 +1,35 @@
+fix(v2): boards A and B draw their ten one-way clamps with a cathode pin, and all six boards are regenerated with parity [MESHSAT-1357]
+
+The ten unidirectional suppressors of boards A and B were drawn on KiCad's Device:D_TVS. That is the bidirectional
+symbol, and its pins A1/A2 name no cathode, so TRN-001 read FAIL on both boards (A: 4 symbol mismatches, B: 6). Each
+part was already the right way round, with pad 1, the banded cathode, on its conductor.
+
+They now go through kisch.tvs(), as boards D and P already do. The direction is read from the part number
+(kisch.tvs_direction), the protected conductor and its return are named, and the call is recorded in the board's
+intent under "clamps":
+  A: D1 SMCJ18A VBAT, D2 SMCJ40A VIN_RAW, D3 SMBJ5.0A +3V3, D4 SMBJ18A PD_VBUS
+  B: D1 SMBJ5.0A +5V_DEV, D2 SMBJ58A +54V_POE, D101/D201/D301 SMBJ6.0A +5V_S1..S3, D520 SMBJ5.0A +3V3_M2C2
+Each call replaces its own line, so no line number moves in either generator.
+
+kisch.py's comments now cite the Littelfuse SMBJ, Diodes DS19002, MDD SMBJ and Nexperia PESD12VL1BA sheets at their
+filed v2/vendor paths, each sha256 read off the filed bytes and equal to v2/vendor/SOURCES.yaml. They cite DS18004
+at v2/vendor/diodes/diodes-bzt52c-ds18004.pdf, and they correct the stale line saying board E's D3 had no code.
+
+kisch.py is in every board's generator identity, so boards A, B, C, D, E and P were regenerated on the KiCad box
+(9.0.9), next to main's own generators:
+- main's generators against main's committed files: PARITY or PARITY_AFTER_NOISE on all 36 artefacts;
+- an independent comparison (every part record, every net's nodes with pin, pinfunction and pintype, libparts,
+  intents, schematic bodies) finds 0 unexpected differences. A and B change only the ten clamps: libsource
+  D_TVS to D_Zener, pin names A1/A2 to K/A on the same nets, and the intent gains clamps. ERC changes only the
+  symbol name in the ten lib_symbol_issues warnings. BOMs are at parity. C, D, E and P change only their sidecars.
+
+Every schematic-phase gate reads the same before and after except TRN-001: A goes from FAIL to PASS of 26 and B from
+FAIL to PASS of 17, both with 0 reversed and 0 symbol mismatches. PCB-BRING-UP.md and ROTATION-CHECKLIST.md were
+re-rendered and are byte-identical.
+
+Decision 31's holds on A, D and E stay: its resolution is in their netlists but in no committed layout.
+
+Suite on the box: 1629 passed, 7 failed, 2 skipped on this set alone. The seven are the requirements registry's
+readings pinned to the changed generators and netlists, rebound by the integrator's draft. With that draft applied:
+1636 passed, 0 failed, 2 skipped.
+

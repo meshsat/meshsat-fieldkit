@@ -251,3 +251,29 @@ def t_the_committed_spec_classifies_every_file_of_this_tree():
         g.close()
     assert not pl["loose"], "%d file(s) at HEAD are classified by no rule, first: %s" % (len(pl["loose"]), pl["loose"][:5])
     assert pl["boards"], "the spec resolved no board phase directory"
+
+
+def t_source_names_the_public_repository_the_commits_the_pages_cite_and_the_candidates():
+    """H1.1 (usability check of H1, findings M5 and M12): SOURCE.txt names where the repository is, lists every commit
+    id the handover pages name with its date and whether it is in the snapshot's history, and carries each candidate
+    patch's sha256, so a recipient without git history can place a commit id and check a patch."""
+    d, first = _repo()
+    patch = b"diff --git a/x b/x\n"
+    spec = SPEC.replace("sources_yaml:", 'public: {repository: "https://example.invalid/r", raw_file_url: "https://example.invalid/raw/<commit>/<path>", '
+                        'public_ref: refs/remotes/origin/main}\nsources_yaml:')
+    extra = {"v2/docs/handover/pack.yaml": spec.encode(),
+             "v2/docs/handover/START-HERE.md": ("# start here\nwritten from `%s`; also `deadbeef`, not a commit\n" % first[:8]).encode(),
+             "v2/docs/handover/candidates/c1.patch": patch}
+    for p, data in extra.items():
+        full = os.path.join(d, *p.split("/")); os.makedirs(os.path.dirname(full), exist_ok=True)
+        open(full, "wb").write(data)
+    _git(d, "add", "-A"); _git(d, "commit", "-q", "-m", "second [MESHSAT-1]")
+    c = _git(d, "rev-parse", "HEAD")
+    text = open(os.path.join(_build(d, c)["snapshot"], "SOURCE.txt"), encoding="utf-8").read()
+    assert "public repository: https://example.invalid/r" in text, text
+    assert "raw file at a commit: https://example.invalid/raw/<commit>/<path>" in text
+    assert "  %s " % first[:8] in text and "  %s " % c[:8] in text, "a cited commit or the snapshot's own is missing"
+    assert "deadbeef" not in text.split("commit timeline")[1].split("\n\n")[0], "a token that is no commit was listed"
+    assert "public unknown" in text, "a clone with no public ref must say unknown, not guess"
+    assert "second\n" in text or "second " in text, "the tracker trailer should be dropped, the subject kept"
+    assert "v2/docs/handover/candidates/c1.patch: %d bytes, sha256 %s" % (len(patch), hashlib.sha256(patch).hexdigest()) in text

@@ -174,12 +174,12 @@ owner's money, outside contact or a value only he can set.
 
 | | |
 |---|---|
-| **Exact issue** | Board B's round 8 circuit (the failover fabric's lock and re-arm timing, among others) exists only in the worktree `fnd/r8b`, so H1's board B is the pre-round-8 B21 netlist. Its own record states one residual: a vote returning within about 13 ns of the select buffer's threshold decision (its 7.0 ns delay plus an XOR's 5.8 ns) while a flapping vote has parked ARM's node within about 30 uV of ARM's lower threshold could make an enable pulse under 13 ns; no single change and no single return reaches it, and the simulation's aimed adversary did not. |
+| **Exact issue** | Board B's round 8 circuit (the failover fabric's lock and re-arm timing, among others) exists only in the worktree `fnd/r8b` (bundled since H1.1 as the UNACCEPTED candidate patch `v2/docs/handover/candidates/r8b.patch`, base `fc144600`), so H1's board B is the pre-round-8 B21 netlist. Its own record states one residual: a vote returning within about 13 ns of the select buffer's threshold decision (its 7.0 ns delay plus an XOR's 5.8 ns) while a flapping vote has parked ARM's node within about 30 uV of ARM's lower threshold could make an enable pulse under 13 ns; no single change and no single return reaches it, and the simulation's aimed adversary did not. |
 | **Affected** | Board B's netlist and every reading on it; FEA-003's fabric half; `ARCH-PCB-B-IOHA.md` (r8b's patch must be re-derived on the text hc6 reconciled); FAILOVER-FABRIC. |
-| **Evidence** | `fnd/r8b` `drafts/r8-decisions.md` (not in H1). |
+| **Evidence** | `drafts/r8-decisions.md` of `fnd/r8b`, with the simulator `drafts/b/tools/bbm_sim_r8b.py` and its outputs `drafts/b/evidence/bbm-sim-*.txt`: not in H1's design; since H1.1 all are inside `v2/docs/handover/candidates/r8b.patch` (apply it to `fc144600`, or read the added files in the patch text). The candidate's last independent check (an AI review) had no blocking finding (`candidates/README.md`). |
 | **Attempts and results** | The record's break-before-make simulation on the regenerated netlist (seed 27, 1,500 random waveforms per bank): 19,976 runs, 56,342 select moves, 0 violations, least lead 61.5 us, least hold 198 us; with the static-1 hazard in every 74LVC1G157, 22,121 runs, 0 violations. A simulation, not a bench result. |
 | **Viable options** | Merge with the residual stated as a bounded risk, or add a minimum-pulse filter on the enable and re-simulate. |
-| **Recommended next action** | Merge r8b with parity and the residual written into FAILOVER-FABRIC; R-HSD (EQ-12) judges whether a sub-13 ns enable pulse matters to the switches it drives. |
+| **Recommended next action** | Merge r8b (apply `candidates/r8b.patch` to `fc144600`, re-derive its drafted page patches on the current text) with parity and the residual written into FAILOVER-FABRIC; R-HSD (EQ-12) judges whether a sub-13 ns enable pulse matters to the switches it drives. |
 | **Expertise or equipment** | A high-speed or logic-timing reviewer. |
 | **Cost and lead time** | Desk work; R-HSD's cost. |
 
