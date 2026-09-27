@@ -158,6 +158,8 @@ rules:
      role: "part data: fuse derating tables, part temperature grades, blocked and hand-fit order codes, package and pad aliases"}
   - {action: include, group: L6, glob: ["v2/docs/evidence/COMPATIBILITY.md", "v2/docs/evidence/WRONG-MODEL-RECONCILIATION.md", "v2/docs/respin-lcsc-2026-09-04.md", "v2/docs/respin-footprints-2026-09-04.md"],
      role: "part compatibility and wrong-model reconciliation records, and the order-code and footprint research"}
+  - {action: include, group: L6, glob: "v2/docs/parts/**",
+     role: "component records of the layer 6 closer: the supervisor MCU compatibility matrix, procurement constraints and alternatives with dated public stock readings, and the generated grade check of every fitted active part and connector against the envelope"}
   - {action: include, group: L6, glob: "v2/ecad/meshsat.pretty/**", role: "the project's own land patterns (a generator input: their content is in the netlist provenance)"}
 
   # ---------------------------------------------------------------- layer 9: the documents the energy chain cites, bundled so it runs from the snapshot

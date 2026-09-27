@@ -49,3 +49,6 @@ qrp-labs/qrplabs-qmx-schematics-rev5.pdf   # QMX PCB Rev 5 schematic, five page 
 qrp-labs/qrplabs-qmx-schematics-rev3.pdf   # QMX PCB Rev 3/4 schematic, five page images, no text layer beyond the page titles
 qrp-labs/qrplabs-qmx-schematics-rev2.pdf   # QMX PCB Rev 2 schematic, five page images, no text layer beyond the page titles
 qrp-labs/qrplabs-qmx-schematics-rev1-a.pdf   # QMX PCB Rev 1 schematic, five page images, no text layer beyond the page titles
+
+crystals/yxc-ysx321sl-x322525mob4si.pdf   # YXC YSX321SL crystal sheet, 1 page, a single raster image, no font objects (read visually on 27 September 2026 for v2/docs/parts/STM32H743-COMPATIBILITY.md section 7)
+pulse/pulse-hx6096nl-datasheet-rev-a.pdf   # Pulse HX6096NL sheet, 3 pages of raster, 13 characters of text (one CID font carrying the part number only); read visually on 27 September 2026 for SOURCES.yaml ethernet-magnetics and v2/docs/parts/PROCUREMENT.md section 4

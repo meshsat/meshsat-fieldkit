@@ -1,0 +1,2498 @@
+{
+ "what": "the datasheet LCSC serves for each active or connector code, fetched 2026-09-27 (URL, sha256, bytes) and the lines of its text layer that state a temperature range; the PDFs are not filed; an em dash in a quoted line is written as a colon (the repository rule)",
+ "rows": [
+  {
+   "code": "C111822",
+   "model": "LM5069MM-2/NOPB",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/2b87cbebbd5e4ec9a4da8d6cdd765b9b.pdf?productCode=C111822",
+   "fetched_utc": "2026-09-27T00:19:46Z",
+   "sha256": "00b05c8c10466bc6cb74ee930a717cfdb264a9277c4e159a372678b81ba99ee3",
+   "bytes": 2155357,
+   "pages": 38,
+   "hits": [
+    {
+     "page": 5,
+     "line": "Minimum and maximum limits are specified through test, design, or statistical correlation at TJ= –40°C to 125°C. Typical"
+    },
+    {
+     "page": 6,
+     "line": "Minimum and maximum limits are specified through test, design, or statistical correlation at TJ= –40°C to 125°C. Typical"
+    }
+   ]
+  },
+  {
+   "code": "C113974",
+   "model": "SMBJ5.0A",
+   "brand": "MDD(Microdiode Semiconductor)",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/2fdb55289569ebfc0bc21eab3853afe6.pdf?productCode=C113974",
+   "fetched_utc": "2026-09-27T00:19:47Z",
+   "sha256": "95385273b5009dc9ec2f2a432e07e215f71626b825bd53a9f5525f4186566d3b",
+   "bytes": 1215362,
+   "pages": 6,
+   "hits": [
+    {
+     "page": 1,
+     "line": "Operating junction and Storage Temperature Range. TJ,TSTG -65 to +150 ℃"
+    }
+   ]
+  },
+  {
+   "code": "C114409",
+   "model": "STM32H743VIT6",
+   "brand": "ST",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/880ee2974c46763ce43da1468b8b0b74.pdf?productCode=C114409",
+   "fetched_utc": "2026-09-27T00:19:48Z",
+   "sha256": "9c74d2015445f7c3c2c9076fc13a2665c8f6fecec7898d128dac836d6d39314b",
+   "bytes": 4943396,
+   "pages": 358,
+   "hits": [
+    {
+     "page": 18,
+     "line": "STM32H742xI/G and STM32H743xI/G devices operate in the –40 to +85 °C temperature"
+    },
+    {
+     "page": 21,
+     "line": "Junction temperature: –40 to + 125 °C"
+    },
+    {
+     "page": 21,
+     "line": "3. The product junction temperature must be kept within the –40 to +105 °C temperature range."
+    },
+    {
+     "page": 22,
+     "line": "6. The product junction temperature must be kept within the –40 to +125 °C temperature range."
+    },
+    {
+     "page": 107,
+     "line": "TSTG Storage temperature range − 65 to +150"
+    },
+    {
+     "page": 130,
+     "line": "temperature (factory calibrated) TJ=-40 to 125 °C"
+    },
+    {
+     "page": 131,
+     "line": "HSI oscillator frequency drift over TJ=-20 to 105 °C −1(3) - 1(3) %"
+    },
+    {
+     "page": 131,
+     "line": "temperature (reference is 64 MHz) TJ=−40 to TJmax °C −2(3) - 1(3)"
+    },
+    {
+     "page": 132,
+     "line": "temperature TJ = −40 to 125 °C - −11(3) 7.5(3)"
+    },
+    {
+     "page": 132,
+     "line": "fLSI(1) LSI frequency TJ = –40 to 105 °C, VDD = kHz"
+    },
+    {
+     "page": 134,
+     "line": "The characteristics are given at TJ = –40 to 125 °C unless otherwise specified."
+    },
+    {
+     "page": 135,
+     "line": "NEND Endurance TJ = –40 to +125 °C (6 suffix versions) 10 kcycles"
+    },
+    {
+     "page": 213,
+     "line": "TSTG Storage temperature range − 65 to +150"
+    },
+    {
+     "page": 237,
+     "line": "ACCHSI48_REL(3)(4) TJ=-40 to 125 °C –4.5 - 3.5 %"
+    },
+    {
+     "page": 238,
+     "line": "HSI oscillator frequency drift over TJ=-20 to 105 °C −1(3) - 1(3) %"
+    },
+    {
+     "page": 238,
+     "line": "temperature (reference is 64 MHz) TJ=−40 to TJmax °C −2(3) - 1(3)"
+    },
+    {
+     "page": 238,
+     "line": "temperature TJ = −40 to 125 °C - −11(3) 7.5(3)"
+    },
+    {
+     "page": 239,
+     "line": "TJ = –40 to 110 °C, VDD = 1.62 to"
+    },
+    {
+     "page": 239,
+     "line": "fLSI LSI frequency TJ = –40 to 125 °C, VDD = 1.62 to kHz"
+    },
+    {
+     "page": 242,
+     "line": "The characteristics are given at TJ = –40 to 125 °C unless otherwise specified."
+    },
+    {
+     "page": 243,
+     "line": "NEND Endurance TJ = –40 to +125 °C (6 suffix versions) 10 kcycles"
+    },
+    {
+     "page": 352,
+     "line": "6 = Industrial temperature range, –40 to 85 °C"
+    }
+   ]
+  },
+  {
+   "code": "C124196",
+   "model": "BZT52C12-7-F",
+   "brand": "DIODES",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/2ab659bd861bd3db83ae423c098a297a.pdf?productCode=C124196",
+   "fetched_utc": "2026-09-27T00:19:50Z",
+   "sha256": "0fbd7d137524820f0160594065cbceb8c6b3188757c328416d08fceb7418202f",
+   "bytes": 395331,
+   "pages": 6,
+   "hits": [
+    {
+     "page": 2,
+     "line": "Operating and Storage Temperature Range TJ, TSTG -65 to +150 °C"
+    }
+   ]
+  },
+  {
+   "code": "C12624",
+   "model": "KT-0603G",
+   "brand": "Hubei KENTO Elec",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/69e84a3abd84e5ab5856c47a2d0334ce.pdf?productCode=C12624",
+   "fetched_utc": "2026-09-27T00:19:50Z",
+   "sha256": "770831ccd4b3ab793a5d4df9fbf8aeaa80170f904de09f4032b09357595872ad",
+   "bytes": 576251,
+   "pages": 12,
+   "hits": [
+    {
+     "page": 3,
+     "line": "Topr -40°C ~ + 85°C"
+    },
+    {
+     "page": 3,
+     "line": "Tstg -40°C ~ + 85°C"
+    }
+   ]
+  },
+  {
+   "code": "C128396",
+   "model": "TS3USB221ARSER",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/3647cd8a9b46449fbb5150d6d6b603c3.pdf?productCode=C128396",
+   "fetched_utc": "2026-09-27T00:19:51Z",
+   "sha256": "2b0749e0feb6cedf24d3934df2963084f231317dc32ccfb8c52f80e95a6d6d3f",
+   "bytes": 1198738,
+   "pages": 26,
+   "hits": [
+    {
+     "page": 1,
+     "line": "air temperature range from –40°C to 85°C."
+    },
+    {
+     "page": 5,
+     "line": "over operating range, TA = –40°C to 85°C, VCC = 3.3 V ±10%, GND = 0 V"
+    },
+    {
+     "page": 6,
+     "line": "over operating range, TA = –40°C to 85°C, VCC = 2.5 V ±10%, GND = 0 V"
+    },
+    {
+     "page": 6,
+     "line": "over operating range, TA = –40°C to 85°C, VCC = 3.3 V ±10%, GND = 0 V"
+    },
+    {
+     "page": 6,
+     "line": "over operating range, TA = –40°C to 85°C, VCC = 2.5 V ±10%, GND = 0 V"
+    },
+    {
+     "page": 12,
+     "line": "× 1.5 mm) and is characterized over the free air temperature range from –40°C to 85°C."
+    }
+   ]
+  },
+  {
+   "code": "C129189",
+   "model": "SKY13351-378LF",
+   "brand": "SKYWORKS",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/20b5b65d857145669d3028ff7cb0308b.pdf?productCode=C129189",
+   "fetched_utc": "2026-09-27T00:19:52Z",
+   "sha256": "878d1d44ee03b65c55b8075fd5ae6cf154c3e973f0c0ef4873f280c65ef7860c",
+   "bytes": 868153,
+   "pages": 11,
+   "hits": []
+  },
+  {
+   "code": "C131334",
+   "model": "B4B-PH-K-S(LF)(SN)",
+   "brand": "JST",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/6324c8615b21464c92f0a46fe6f6545c.pdf?productCode=C131334",
+   "fetched_utc": "2026-09-27T00:19:53Z",
+   "sha256": "53d4704a03e4fc2bf756a24d6c0dfaa80e9ef3a41ed28621a4eeba632967e8b9",
+   "bytes": 229376,
+   "pages": 5,
+   "hits": []
+  },
+  {
+   "code": "C135085",
+   "model": "SMBJ58A-13-F",
+   "brand": "DIODES",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/a98dcba2e58a9f9a1a005c1c0c468785.pdf?productCode=C135085",
+   "fetched_utc": "2026-09-27T00:19:54Z",
+   "sha256": "752945fa3acaf46947c4f9ffdca98027af4ffb4845c5250713f0b608a547d97f",
+   "bytes": 498941,
+   "pages": 7,
+   "hits": [
+    {
+     "page": 2,
+     "line": "Operating Temperature Range TJ -55 to +150 C"
+    },
+    {
+     "page": 2,
+     "line": "Storage Temperature Range TSTG -55 to +175 C"
+    }
+   ]
+  },
+  {
+   "code": "C148250",
+   "model": "BSC028N06NS",
+   "brand": "Infineon",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/0ee6668d612fe4d6661ddc31bcb9aa36.pdf?productCode=C148250",
+   "fetched_utc": "2026-09-27T00:19:54Z",
+   "sha256": "2959653166e981f9de24cd9c141c44490ecc62acba5971ec8c0b263eca9708e0",
+   "bytes": 486139,
+   "pages": 10,
+   "hits": [
+    {
+     "page": 2,
+     "line": "Operating and storage temperature T j, T stg -55 ... 150 °C"
+    }
+   ]
+  },
+  {
+   "code": "C151256",
+   "model": "SMBJ18A",
+   "brand": "Littelfuse",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/4ab84a227fae39f9eac85241b8264ead.pdf?productCode=C151256",
+   "fetched_utc": "2026-09-27T00:19:55Z",
+   "sha256": "d7df155be4b1f612085401e8c946f065e284d65a0e7de22b9225a7b73946e51b",
+   "bytes": 947504,
+   "pages": 7,
+   "hits": [
+    {
+     "page": 1,
+     "line": "Operating Temperature Range TJ -65 to 150 °C"
+    },
+    {
+     "page": 1,
+     "line": "Storage Temperature Range TSTG -65 to 175 °C"
+    }
+   ]
+  },
+  {
+   "code": "C15127",
+   "model": "AO3401A",
+   "brand": "AOS",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/fee353dd1e9e0bc90b295f14f381aa4c.pdf?productCode=C15127",
+   "fetched_utc": "2026-09-27T00:19:56Z",
+   "sha256": "0d8e3261ae280e007b5837fff60c55142f2d92af71edc4d02aee6f7a760a785c",
+   "bytes": 326568,
+   "pages": 6,
+   "hits": [
+    {
+     "page": 1,
+     "line": "Junction and Storage Temperature Range TJ, TSTG -55 to 150 °C"
+    }
+   ]
+  },
+  {
+   "code": "C151394",
+   "model": "74LVC1G17W5-7",
+   "brand": "DIODES",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/414902844c9c073fc86165207cab097c.pdf?productCode=C151394",
+   "fetched_utc": "2026-09-27T00:19:56Z",
+   "sha256": "029f345a1e7be917fee46d47c49a61963938e0aab1631b019fe7eddb014fb548",
+   "bytes": 534960,
+   "pages": 19,
+   "hits": [
+    {
+     "page": 2,
+     "line": "TJ Operating Junction Temperature -40 to +150 °C"
+    },
+    {
+     "page": 2,
+     "line": "TSTG Storage Temperature -65 to +150 °C"
+    },
+    {
+     "page": 4,
+     "line": "Electrical Characteristics (@ TA = -40°C to +85°C. All typical values are at VCC = 3.3V, TA = +25°C.)"
+    },
+    {
+     "page": 5,
+     "line": "Electrical Characteristics (continued) (@ TA = -40°C to +125°C. All typical values are at VCC = 3.3V, TA = +25°C.)"
+    },
+    {
+     "page": 6,
+     "line": "TA = -40°C to +85°C, CL = 15pF as noted (See Figure 1)"
+    },
+    {
+     "page": 6,
+     "line": "TA = -40°C to +85°C, CL = 30pF or 50pF as noted (See Figure 2)"
+    },
+    {
+     "page": 6,
+     "line": "TA = -40°C to +125°C, CL = 15pF as noted (See Figure 1)"
+    },
+    {
+     "page": 6,
+     "line": "TA = -40°C to +125°C, CL = 30pF or 50pF as noted (See Figure 2)"
+    }
+   ]
+  },
+  {
+   "code": "C1518769",
+   "model": "ATECC608B-SSHDA-T",
+   "brand": "MICROCHIP",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/c376a4ba087c5afe6e6a5fa26e1e604f.pdf?productCode=C1518769",
+   "fetched_utc": "2026-09-27T00:19:57Z",
+   "sha256": "519e2edac0deefe1755a98e30b8ce2a5a2ff9b9c39acda333bb625b87bdac3ff",
+   "bytes": 927627,
+   "pages": 29,
+   "hits": [
+    {
+     "page": 1,
+     "line": "– Standard Industrial Temperature Range: -40℃ to +85℃"
+    },
+    {
+     "page": 1,
+     "line": "– Extended Industrial Temperature Range: -40℃ to +100℃"
+    },
+    {
+     "page": 6,
+     "line": "Operating Temperature -40°C to +100°C"
+    },
+    {
+     "page": 6,
+     "line": "Storage Temperature -65°C to +150°C"
+    },
+    {
+     "page": 7,
+     "line": "Unless otherwise specified, applicable from TA = -40°C to +100°C, VCC = +2.0V to +5.5V, CL = 100 pF."
+    },
+    {
+     "page": 9,
+     "line": "Unless otherwise specified, applicable over recommended operating range from TA = -40°C to +100°C, VCC = +2.0V to +5.5V, CL"
+    },
+    {
+     "page": 12,
+     "line": "– Standard Industrial Temperature Range: -40℃ to +85℃"
+    },
+    {
+     "page": 12,
+     "line": "– Standard Industrial Temperature Range: -40℃ to +100℃"
+    },
+    {
+     "page": 25,
+     "line": "Temperature Range H Standard Industrial Temperature Range: -40 ℃ to 85 ℃"
+    },
+    {
+     "page": 25,
+     "line": "V Extended Industrial Temperature Range: -40 ℃ to 100 ℃"
+    }
+   ]
+  },
+  {
+   "code": "C157482",
+   "model": "TS3DV642A0RUAR",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/0fa074ce780a4decbf27378470a31577.pdf?productCode=C157482",
+   "fetched_utc": "2026-09-27T00:19:58Z",
+   "sha256": "5e837c12d2a76012f46dbd70ff8ce8fa2e93e7489ca86f08e8d5f1b717c2d469",
+   "bytes": 1862715,
+   "pages": 32,
+   "hits": []
+  },
+  {
+   "code": "C157570",
+   "model": "BQ4050RSMR",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/af544880386147908edcdabf7a4b1bce.pdf?productCode=C157570",
+   "fetched_utc": "2026-09-27T00:19:59Z",
+   "sha256": "e08bd52b8fc1fec9f7ea5fcb44b2387498b21d207086eef72950b40eaf9ff8b1",
+   "bytes": 1936541,
+   "pages": 55,
+   "hits": [
+    {
+     "page": 8,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 8,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 9,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 9,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 9,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 9,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 10,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 10,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 10,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 10,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 11,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 11,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 11,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 11,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 12,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 12,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 12,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 13,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 13,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 13,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 13,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 14,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 14,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 14,
+     "line": "IPTC TA = –40°C to 110°C 200 290 350 nA"
+    },
+    {
+     "page": 14,
+     "line": "tPTC(DELAY) PTC delay time TA = –40°C to 110°C 40 80 145 ms"
+    },
+    {
+     "page": 14,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 14,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 14,
+     "line": "TA = –20°C to 70°C, includes frequency drift –2.5% ±0.25% 2.5%"
+    },
+    {
+     "page": 14,
+     "line": "TA = –40°C to 85°C, includes frequency drift –3.5% ±0.25% 3.5%"
+    },
+    {
+     "page": 14,
+     "line": "TA = –20°C to 85°C, oscillator frequency within"
+    },
+    {
+     "page": 15,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 15,
+     "line": "TA = –20°C to 70°C, includes frequency drift –1.5% ±0.25% 1.5%"
+    },
+    {
+     "page": 15,
+     "line": "TA = –40°C to 85°C, includes frequency drift –2.5 ±0.25 2.5"
+    },
+    {
+     "page": 15,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 15,
+     "line": "voltage drift TA = –40°C to 85°C, after trim ±80"
+    },
+    {
+     "page": 15,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 15,
+     "line": "voltage drift TA = –40°C to 85°C, after trim ±80"
+    },
+    {
+     "page": 15,
+     "line": "Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC ="
+    },
+    {
+     "page": 15,
+     "line": "tPROGWORD TA = –40°C to 85°C 40 µs"
+    },
+    {
+     "page": 15,
+     "line": "tMASSERASE Mass-erase time TA = –40°C to 85°C 40 ms"
+    }
+   ]
+  },
+  {
+   "code": "C157991",
+   "model": "B5B-XH-A(LF)(SN)",
+   "brand": "JST",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/51bbcb0476af7caf7f697437212da775.pdf?productCode=C157991",
+   "fetched_utc": "2026-09-27T00:19:59Z",
+   "sha256": "389be59ed37c479038b3b5902d064f056f27a3c966bebbdda2f1a5a4bbde20a8",
+   "bytes": 193920,
+   "pages": 6,
+   "hits": []
+  },
+  {
+   "code": "C157993",
+   "model": "B5B-PH-K-S(LF)(SN)",
+   "brand": "JST",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/6c6fce4367275d84ec6a99bf09f1250f.pdf?productCode=C157993",
+   "fetched_utc": "2026-09-27T00:20:00Z",
+   "sha256": "4e41351f09263b950a29282923e6f6ef7c5bc95b538fe8db9d1d1e4a8c082918",
+   "bytes": 118956,
+   "pages": 4,
+   "hits": []
+  },
+  {
+   "code": "C158012",
+   "model": "B2B-XH-A(LF)(SN)",
+   "brand": "JST",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/51bbcb0476af7caf7f697437212da775.pdf?productCode=C158012",
+   "fetched_utc": "2026-09-27T00:20:01Z",
+   "sha256": "389be59ed37c479038b3b5902d064f056f27a3c966bebbdda2f1a5a4bbde20a8",
+   "bytes": 193920,
+   "pages": 6,
+   "hits": []
+  },
+  {
+   "code": "C160390",
+   "model": "BM04B-SRSS-TB(LF)(SN)",
+   "brand": "JST",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/00659630c8ad1e2184fc3218d8262faf.pdf?productCode=C160390",
+   "fetched_utc": "2026-09-27T00:20:01Z",
+   "sha256": "25c2aa750d4a0918ba86cd8181b9eb7f30db70c22dc4ec975a07bcdb17257655",
+   "bytes": 105656,
+   "pages": 5,
+   "hits": []
+  },
+  {
+   "code": "C164047",
+   "model": "TAXM25M4RFBCCT2T",
+   "brand": "Yajingxin",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/3086cc872f6c9505eebaf3751fb73fcd.pdf?productCode=C164047",
+   "fetched_utc": "2026-09-27T00:20:02Z",
+   "sha256": "cf02a0872e39ea73aafe2589609f263899165c8daaf7fbb55f808a89d23dbbc2",
+   "bytes": 754041,
+   "pages": 11,
+   "hits": [
+    {
+     "page": 5,
+     "line": "Low Temperature Storage -40℃±2℃ Time： 96±1 Hours △R≤ 5ohm"
+    }
+   ]
+  },
+  {
+   "code": "C164058",
+   "model": "TAXM24M4RFBCCT2T",
+   "brand": "Yajingxin",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/4b1280dbecf44eb39d47f5ba9df27380.pdf?productCode=C164058",
+   "fetched_utc": "2026-09-27T00:20:03Z",
+   "sha256": "a242cb4c3e6600190e5cd24ced4e0f379494d00aa5c23da28e93f3c56a2be03f",
+   "bytes": 115634,
+   "pages": 2,
+   "hits": []
+  },
+  {
+   "code": "C165948",
+   "model": "TYPE-C-31-M-12",
+   "brand": "Korean Hroparts Elec",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/9e56b777c022540fcce7c7f67825f55e.pdf?productCode=C165948",
+   "fetched_utc": "2026-09-27T00:20:03Z",
+   "sha256": "6ae33d50ac47820114661138dc4e4659f40fdc5d4f485b46685dfec338da1a9e",
+   "bytes": 118176,
+   "pages": 2,
+   "hits": []
+  },
+  {
+   "code": "C17313",
+   "model": "MF-MSMF050-2",
+   "brand": "BOURNS",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/966b70449c8743eeb73635e5bb46e4f4.pdf?productCode=C17313",
+   "fetched_utc": "2026-09-27T00:20:04Z",
+   "sha256": "1cfc3ae1da3d5aed41e614d85d3c01dea2fa67d14c760e882e400a1138ee1cd8",
+   "bytes": 386743,
+   "pages": 6,
+   "hits": [
+    {
+     "page": 1,
+     "line": "Operating Temperature.......................................... -40 °C to +85 °C"
+    }
+   ]
+  },
+  {
+   "code": "C176945",
+   "model": "AP2112K-2.5TRG1",
+   "brand": "DIODES",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/5b29baebdc4332b382a530ff21092301.pdf?productCode=C176945",
+   "fetched_utc": "2026-09-27T00:20:04Z",
+   "sha256": "ef8d376f2ec356e29172eb9e053819a0ebdcc576dba7fc9ab0505c568427920f",
+   "bytes": 755270,
+   "pages": 19,
+   "hits": [
+    {
+     "page": 1,
+     "line": " Operation Temperature Range: -40°C to +85°C"
+    },
+    {
+     "page": 3,
+     "line": "TSTG Storage Temperature Range -65 to +150 °C"
+    },
+    {
+     "page": 4,
+     "line": "Coefficient TA = -40°C to +85°C"
+    },
+    {
+     "page": 5,
+     "line": "Coefficient TA = -40°C to +85°C"
+    },
+    {
+     "page": 6,
+     "line": "Coefficient TA = -40°C to +85°C"
+    },
+    {
+     "page": 7,
+     "line": "Temperature Coefficient TA = -40°C to +85°C"
+    },
+    {
+     "page": 8,
+     "line": "Coefficient TA = -40°C to +85°C"
+    },
+    {
+     "page": 9,
+     "line": "TA=-40 C TA=-40 C"
+    },
+    {
+     "page": 9,
+     "line": "58 TA=-40 C"
+    },
+    {
+     "page": 10,
+     "line": "TA= -40 C"
+    },
+    {
+     "page": 10,
+     "line": "TA=-40 C"
+    },
+    {
+     "page": 10,
+     "line": "o TA=-40 C"
+    },
+    {
+     "page": 10,
+     "line": "300 TA=-40 C o"
+    }
+   ]
+  },
+  {
+   "code": "C19224",
+   "model": "PESD5V0S1BA,115",
+   "brand": "Nexperia",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/dd1aa251f61f8aba7aba621165608b08.pdf?productCode=C19224",
+   "fetched_utc": "2026-09-27T00:20:05Z",
+   "sha256": "6546e415b8885ea3790c91629034c6b4e5c6961d5fde734e55dfa479dd8dc49a",
+   "bytes": 223015,
+   "pages": 12,
+   "hits": []
+  },
+  {
+   "code": "C19829591",
+   "model": "74LVC1G08GV",
+   "brand": "TECH PUBLIC",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/e335bb6567581dcd835345d1662386ee.pdf?productCode=C19829591",
+   "fetched_utc": "2026-09-27T00:20:06Z",
+   "sha256": "37d1f4d4afb932981a81fe12eb752143105ccbb17e399e04bd163c8b75f2ff0a",
+   "bytes": 2016731,
+   "pages": 7,
+   "hits": []
+  },
+  {
+   "code": "C2040",
+   "model": "RP2040",
+   "brand": "Raspberry Pi",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/3dad1d8f987a4e00bfc677055df1f959.pdf?productCode=C2040",
+   "fetched_utc": "2026-09-27T00:20:06Z",
+   "sha256": "8ca7cede0476b9a7dcb4e5f7669e2dc249c55ea6f9782a63cdd0fae228580724",
+   "bytes": 4920747,
+   "pages": 648,
+   "hits": []
+  },
+  {
+   "code": "C20625731",
+   "model": "ABM8-272-T3",
+   "brand": "ABRACON",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/d5520a242c89eeaef42f6496027f72da.pdf?productCode=C20625731",
+   "fetched_utc": "2026-09-27T00:20:09Z",
+   "sha256": "f4b5787cbc51e7f6366333491ec09884ad406dd348fe540040f0fc043ab5457f",
+   "bytes": 691102,
+   "pages": 5,
+   "hits": []
+  },
+  {
+   "code": "C2070920",
+   "model": "AP64500SP-13",
+   "brand": "DIODES",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/33f261fea70469dad53d64b3fab8d8d9.pdf?productCode=C2070920",
+   "fetched_utc": "2026-09-27T00:20:10Z",
+   "sha256": "d3bcdc7dd4ca44cb36ef893d3dbfabbd1742dfc736557777868f6ead5d0a98e8",
+   "bytes": 1278269,
+   "pages": 27,
+   "hits": [
+    {
+     "page": 5,
+     "line": "TST Storage Temperature -65 to +150 °C"
+    },
+    {
+     "page": 6,
+     "line": "ambient temperature range, -40°C to +85°C, and input-voltage range, 3.8V to 40V, unless otherwise specified.)"
+    }
+   ]
+  },
+  {
+   "code": "C2071056",
+   "model": "AP63205WU-7",
+   "brand": "DIODES",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/94820cc9e44613233ddcc1a15801eca3.pdf?productCode=C2071056",
+   "fetched_utc": "2026-09-27T00:20:11Z",
+   "sha256": "ef99daa3789d835bc025dfcb4c605c5c2e6d3e7223e86d40b33e6b497ea5a722",
+   "bytes": 1226090,
+   "pages": 19,
+   "hits": [
+    {
+     "page": 4,
+     "line": "TST Storage Temperature -65 to +150 °C"
+    },
+    {
+     "page": 5,
+     "line": "temperature range, -40°C to +85°C, and input voltage range, 3.8V to 32V.)"
+    }
+   ]
+  },
+  {
+   "code": "C20917",
+   "model": "AO3400A",
+   "brand": "AOS",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/130876b936da464599428c58fd8de8f6.pdf?productCode=C20917",
+   "fetched_utc": "2026-09-27T00:20:11Z",
+   "sha256": "e5bfeef6cd3aa209f2e191ba42d5616259e8e7143ff01ed6c532b8ec3b13ab73",
+   "bytes": 491520,
+   "pages": 6,
+   "hits": [
+    {
+     "page": 1,
+     "line": "Junction and Storage Temperature Range TJ, TSTG -55 to 150 °C"
+    }
+   ]
+  },
+  {
+   "code": "C210837",
+   "model": "MF-MSMF200-2",
+   "brand": "BOURNS",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/a24fb2ca04c8aa40d8c57ff2ffdfaed8.pdf?productCode=C210837",
+   "fetched_utc": "2026-09-27T00:20:12Z",
+   "sha256": "e0cfbb785a81edd0d8e9a2021d3ab8b571e899fb677af8e1f4309e6ae7322f5e",
+   "bytes": 622888,
+   "pages": 6,
+   "hits": [
+    {
+     "page": 1,
+     "line": "Operating Temperature.......................................... -40 °C to +85 °C"
+    }
+   ]
+  },
+  {
+   "code": "C2155778",
+   "model": "TPS259631DDAR",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/eb69383e37f171723878a7a5eaf76f9b.pdf?productCode=C2155778",
+   "fetched_utc": "2026-09-27T00:20:13Z",
+   "sha256": "f90688525fc943c1582b61448cfd304b11be9d20018db4fa75aa8a2e807012a8",
+   "bytes": 4540600,
+   "pages": 49,
+   "hits": []
+  },
+  {
+   "code": "C224047",
+   "model": "SMCJ28A",
+   "brand": "Littelfuse",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C224047",
+   "fetched_utc": "2026-09-27T00:20:13Z",
+   "sha256": "6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea",
+   "bytes": 984493,
+   "pages": 7,
+   "hits": [
+    {
+     "page": 1,
+     "line": "Operating Temperature Range TJ -65 to 150 °C"
+    },
+    {
+     "page": 1,
+     "line": "Storage Temperature Range TSTG -65 to 175 °C Pb-free and the terminal"
+    }
+   ]
+  },
+  {
+   "code": "C224052",
+   "model": "SMCJ40A",
+   "brand": "Littelfuse",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C224052",
+   "fetched_utc": "2026-09-27T00:20:14Z",
+   "sha256": "6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea",
+   "bytes": 984493,
+   "pages": 7,
+   "hits": [
+    {
+     "page": 1,
+     "line": "Operating Temperature Range TJ -65 to 150 °C"
+    },
+    {
+     "page": 1,
+     "line": "Storage Temperature Range TSTG -65 to 175 °C Pb-free and the terminal"
+    }
+   ]
+  },
+  {
+   "code": "C2286",
+   "model": "KT-0603R",
+   "brand": "Hubei KENTO Elec",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/011ec3e8cb1e825f6961d29bc4db4c7a.pdf?productCode=C2286",
+   "fetched_utc": "2026-09-27T00:20:15Z",
+   "sha256": "a3bac1cc9c59cb306ad03512945cce12c87bb54252abc223b796e1d20d41d4a1",
+   "bytes": 610865,
+   "pages": 12,
+   "hits": [
+    {
+     "page": 3,
+     "line": "Topr -40°C ~ + 85°C"
+    },
+    {
+     "page": 3,
+     "line": "Tstg -40°C ~ + 85°C"
+    }
+   ]
+  },
+  {
+   "code": "C2287",
+   "model": "KT-0603Y",
+   "brand": "Hubei KENTO Elec",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/ba7b73648918210433b88ee1f2fd7ebf.pdf?productCode=C2287",
+   "fetched_utc": "2026-09-27T00:20:15Z",
+   "sha256": "86f7efb743b271c3cc9d63a09ae3c2fd457c8ea8513dae81b350436317520574",
+   "bytes": 611838,
+   "pages": 12,
+   "hits": [
+    {
+     "page": 3,
+     "line": "Topr -40°C ~ + 85°C"
+    },
+    {
+     "page": 3,
+     "line": "Tstg -40°C ~ + 85°C"
+    }
+   ]
+  },
+  {
+   "code": "C2288",
+   "model": "KT-0603B",
+   "brand": "Hubei KENTO Elec",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/1096dc34dcf507e4677a7d79542be828.pdf?productCode=C2288",
+   "fetched_utc": "2026-09-27T00:20:16Z",
+   "sha256": "02c15544e1aa1c636eea10b988a48a5dd5c75193570cbaf221f4db89781598d2",
+   "bytes": 572911,
+   "pages": 12,
+   "hits": [
+    {
+     "page": 3,
+     "line": "Topr -40°C ~ + 85°C"
+    },
+    {
+     "page": 3,
+     "line": "Tstg -40°C ~ + 85°C"
+    }
+   ]
+  },
+  {
+   "code": "C252308",
+   "model": "6CS06000F20UCG",
+   "brand": "SJK",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/f187f2daf1734b3ee6118065b8c67aa8.pdf?productCode=C252308",
+   "fetched_utc": "2026-09-27T00:20:17Z",
+   "sha256": "0f9adadabd957eebbba77c4cea96b1caaeeb6dc010c0c25df10cb15661055654",
+   "bytes": 477406,
+   "pages": 5,
+   "hits": []
+  },
+  {
+   "code": "C265283",
+   "model": "B2B-XH-A-GU",
+   "brand": "JST",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/51bbcb0476af7caf7f697437212da775.pdf?productCode=C265283",
+   "fetched_utc": "2026-09-27T00:20:17Z",
+   "sha256": "389be59ed37c479038b3b5902d064f056f27a3c966bebbdda2f1a5a4bbde20a8",
+   "bytes": 193920,
+   "pages": 6,
+   "hits": []
+  },
+  {
+   "code": "C268712",
+   "model": "SS2040FL",
+   "brand": "PANJIT",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/fbe7b074b28942710b4075bd637e687d.pdf?productCode=C268712",
+   "fetched_utc": "2026-09-27T00:20:18Z",
+   "sha256": "24333acdc9df9032e4c80601c94b77f21ac38d15221125f600f01a71a9ee1aba",
+   "bytes": 367089,
+   "pages": 6,
+   "hits": [
+    {
+     "page": 1,
+     "line": "Operating Junction and Storage Temperature Range T J , T ST G -50 to +150 O"
+    }
+   ]
+  },
+  {
+   "code": "C274411",
+   "model": "B2P-VH-BL(LF)(SN)",
+   "brand": "JST",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/006bebef7621e2c18c7add533c1e8e41.pdf?productCode=C274411",
+   "fetched_utc": "2026-09-27T00:20:19Z",
+   "sha256": "97c3926eddca11dab96ce233b50406a5d10b6cf8949c5626ac178ee27f227f2b",
+   "bytes": 116660,
+   "pages": 5,
+   "hits": []
+  },
+  {
+   "code": "C2836813",
+   "model": "BMI270",
+   "brand": "Bosch",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/3a58504f6333c054470bbde99576876b.pdf?productCode=C2836813",
+   "fetched_utc": "2026-09-27T00:20:19Z",
+   "sha256": "3ab915ed1d81d0eaa5ff1d1aed62b2b491260c9d59afbf79bb23fb477e015612",
+   "bytes": 3830973,
+   "pages": 163,
+   "hits": []
+  },
+  {
+   "code": "C2843335",
+   "model": "W25Q16JVUXIQ",
+   "brand": "Winbond",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/d3c58607e6ba6e09270cabeea8f1c416.pdf?productCode=C2843335",
+   "fetched_utc": "2026-09-27T00:20:21Z",
+   "sha256": "fd02060c7dc9f20c9b95ef818a5e8ab91575daf746fe41e8159df11cfd9067b5",
+   "bytes": 14053490,
+   "pages": 76,
+   "hits": []
+  },
+  {
+   "code": "C2864778",
+   "model": "PCA9555PWR",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/7bbcfb211a16f3322a731796439ce31b.pdf?productCode=C2864778",
+   "fetched_utc": "2026-09-27T00:20:24Z",
+   "sha256": "4ce64b390114098efa7991642db621b46ccfb9adfa11cac5270a67002023eea0",
+   "bytes": 3208497,
+   "pages": 50,
+   "hits": [
+    {
+     "page": 27,
+     "line": "(1) TA = –40°C to 85°C (unless otherwise noted)"
+    }
+   ]
+  },
+  {
+   "code": "C2871143",
+   "model": "TCAN334DR",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/f2707b1456cf2afce8742dadc0584ff5.pdf?productCode=C2871143",
+   "fetched_utc": "2026-09-27T00:20:25Z",
+   "sha256": "528d649ac40e49dc6bb5867848ed631d81e9c81c65da9549ddc3332430fe5451",
+   "bytes": 2215556,
+   "pages": 46,
+   "hits": [
+    {
+     "page": 6,
+     "line": "over operating free-air temperature range, TJ = –40°C to 150°C. All typical values are at 25°C and supply voltages of VCC ="
+    },
+    {
+     "page": 7,
+     "line": "over operating free-air temperature range, TJ = –40°C to 150°C. All typical values are at 25°C and supply voltages of VCC ="
+    }
+   ]
+  },
+  {
+   "code": "C2871872",
+   "model": "BQ25731RSNR",
+   "brand": "TI",
+   "url": "https://www.ti.com/cn/lit/ds/symlink/bq25731.pdf",
+   "fetched_utc": "2026-09-27T00:20:25Z",
+   "sha256": "f4c1b09117e36158a2bc1660102e308f57bc9f89459b87e0fb06738485feb524",
+   "bytes": 3557791,
+   "pages": 104,
+   "hits": [
+    {
+     "page": 9,
+     "line": "VVBUS_UVLOZ < VVBUS < VVBUSOV_FALL , TJ = -40°C to +125°C, and TJ = 25°C for typical values (unless otherwise noted)"
+    },
+    {
+     "page": 10,
+     "line": "VVBUS_UVLOZ < VVBUS < VVBUSOV_FALL , TJ = -40°C to +125°C, and TJ = 25°C for typical values (unless otherwise noted)"
+    },
+    {
+     "page": 11,
+     "line": "VVBUS_UVLOZ < VVBUS < VVBUSOV_FALL , TJ = -40°C to +125°C, and TJ = 25°C for typical values (unless otherwise noted)"
+    },
+    {
+     "page": 12,
+     "line": "VVBUS_UVLOZ < VVBUS < VVBUSOV_FALL , TJ = -40°C to +125°C, and TJ = 25°C for typical values (unless otherwise noted)"
+    },
+    {
+     "page": 13,
+     "line": "VVBUS_UVLOZ < VVBUS < VVBUSOV_FALL , TJ = -40°C to +125°C, and TJ = 25°C for typical values (unless otherwise noted)"
+    },
+    {
+     "page": 14,
+     "line": "VVBUS_UVLOZ < VVBUS < VVBUSOV_FALL , TJ = -40°C to +125°C, and TJ = 25°C for typical values (unless otherwise noted)"
+    },
+    {
+     "page": 15,
+     "line": "VVBUS_UVLOZ < VVBUS < VVBUSOV_FALL , TJ = -40°C to +125°C, and TJ = 25°C for typical values (unless otherwise noted)"
+    },
+    {
+     "page": 16,
+     "line": "VVBUS_UVLOZ < VVBUS < VVBUSOV_FALL , TJ = -40°C to +125°C, and TJ = 25°C for typical values (unless otherwise noted)"
+    },
+    {
+     "page": 17,
+     "line": "VVBUS_UVLOZ < VVBUS < VVBUSOV_FALL , TJ = -40°C to +125°C, and TJ = 25°C for typical values (unless otherwise noted)"
+    },
+    {
+     "page": 18,
+     "line": "VVBUS_UVLOZ < VVBUS < VVBUSOV_FALL , TJ = -40°C to +125°C, and TJ = 25°C for typical values (unless otherwise noted)"
+    }
+   ]
+  },
+  {
+   "code": "C2876308",
+   "model": "TLV75801PDRVR",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/04b78ab118976e2ba8b7add30e8fd87f.pdf?productCode=C2876308",
+   "fetched_utc": "2026-09-27T00:20:27Z",
+   "sha256": "6f381a87d3e91ac051da62686b2ce8af63480a24cb5be31459e85a17770c2947",
+   "bytes": 3091087,
+   "pages": 36,
+   "hits": [
+    {
+     "page": 5,
+     "line": "at operating temperature range (TJ = –40°C to +125°C),VIN = VOUT(NOM) + 0.5 V or 1.5 V (whichever isgreater), IOUT = 1 mA,"
+    },
+    {
+     "page": 6,
+     "line": "at operating temperature range (TJ = –40°C to +125°C),VIN = VOUT(NOM) + 0.5 V or 1.5 V (whichever isgreater), IOUT = 1 mA,"
+    }
+   ]
+  },
+  {
+   "code": "C2876544",
+   "model": "CSD18510Q5B",
+   "brand": "TI",
+   "url": "https://www.ti.com/cn/lit/ds/symlink/csd18510q5b.pdf",
+   "fetched_utc": "2026-09-27T00:20:28Z",
+   "sha256": "cb747de812f6685995917335ec78c663fbf1cee0942db9a3e5b1c375147a601a",
+   "bytes": 640349,
+   "pages": 13,
+   "hits": []
+  },
+  {
+   "code": "C2877852",
+   "model": "TLV75801PDBVR",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/04b78ab118976e2ba8b7add30e8fd87f.pdf?productCode=C2877852",
+   "fetched_utc": "2026-09-27T00:20:29Z",
+   "sha256": "6f381a87d3e91ac051da62686b2ce8af63480a24cb5be31459e85a17770c2947",
+   "bytes": 3091087,
+   "pages": 36,
+   "hits": [
+    {
+     "page": 5,
+     "line": "at operating temperature range (TJ = –40°C to +125°C),VIN = VOUT(NOM) + 0.5 V or 1.5 V (whichever isgreater), IOUT = 1 mA,"
+    },
+    {
+     "page": 6,
+     "line": "at operating temperature range (TJ = –40°C to +125°C),VIN = VOUT(NOM) + 0.5 V or 1.5 V (whichever isgreater), IOUT = 1 mA,"
+    }
+   ]
+  },
+  {
+   "code": "C2927698",
+   "model": "MDT420M02001",
+   "brand": "Amphenol",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/0a18973b62e866141800e2074652057e.pdf?productCode=C2927698",
+   "fetched_utc": "2026-09-27T00:20:30Z",
+   "sha256": "1246e4aa4fdfc05efbd20b5b30a7f1bc1942f0813c567f0a9f9c1d92b5345113",
+   "bytes": 128452,
+   "pages": 2,
+   "hits": []
+  },
+  {
+   "code": "C2941042",
+   "model": "LM74700QDBVRQ1",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/447cabab1808fa061ec80788e97d5328.pdf?productCode=C2941042",
+   "fetched_utc": "2026-09-27T00:20:31Z",
+   "sha256": "59c554056e8d280869e5264c7c9bb5fb44a25324cac430a7888959caf5c2ccbd",
+   "bytes": 3468054,
+   "pages": 37,
+   "hits": [
+    {
+     "page": 6,
+     "line": "TJ = –40°C to +125°C; typical values at TJ = 25°C, V(ANODE) = 12 V, C(VCAP) = 0.1 µF, V(EN) = 3.3 V, over operating free-air"
+    },
+    {
+     "page": 7,
+     "line": "TJ = –40°C to +125°C; typical values at TJ = 25°C, V(ANODE) = 12 V, C(VCAP) = 0.1 µF, V(EN) = 3.3 V, over operating free-air"
+    },
+    {
+     "page": 7,
+     "line": "TJ = –40°C to +125°C; typical values at TJ = 25°C, V(ANODE) = 12 V, C(VCAP) = 0.1 µF, V(EN) = 3.3 V, over operating free-air"
+    }
+   ]
+  },
+  {
+   "code": "C2977809",
+   "model": "2199230-4",
+   "brand": "TE Connectivity",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/87d9fca5272edbdb09f40bfd84104271.pdf?productCode=C2977809",
+   "fetched_utc": "2026-09-27T00:20:31Z",
+   "sha256": "3e2f380fe945f5246122692dd3ab7dc4926c343c7155346eac803b4b251ac7e2",
+   "bytes": 344203,
+   "pages": 5,
+   "hits": []
+  },
+  {
+   "code": "C29781241",
+   "model": "LG290P03AAMD",
+   "brand": "Quectel",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/ee3943bb2f7995e3708ead817158af6a.pdf?productCode=C29781241",
+   "fetched_utc": "2026-09-27T00:20:32Z",
+   "sha256": "c260af42b97e03d5ba89bcf4ecc07a93778790c11a6ab71975603f30f656b5b6",
+   "bytes": 1773756,
+   "pages": 60,
+   "hits": []
+  },
+  {
+   "code": "C2986059",
+   "model": "19-217/GHC-YR1S2/6T",
+   "brand": "EVERLIGHT",
+   "url": "https://www.everlighteurope.com/custom/files/datasheets/DSE-0025583.pdf",
+   "fetched_utc": "2026-09-27T00:20:33Z",
+   "sha256": "4d0eb56e7dc66ab0a81ca648a8f56c5c1442ab5c74ac46bc298478b02533aa17",
+   "bytes": 867146,
+   "pages": 12,
+   "hits": [
+    {
+     "page": 2,
+     "line": "Operating Temperature Topr -40 ~ +85 ℃"
+    },
+    {
+     "page": 2,
+     "line": "Storage Temperature Tstg -40 ~ +90 ℃"
+    }
+   ]
+  },
+  {
+   "code": "C3174425",
+   "model": "132134",
+   "brand": "Amphenol",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/fba079997beff0cb821b1f5068243546.pdf?productCode=C3174425",
+   "fetched_utc": "2026-09-27T00:20:34Z",
+   "sha256": "1ec1d365bf5bf9e1598cf7cf2c90747ba11f06607f4c6a28ca6d30a0aab56034",
+   "bytes": 212216,
+   "pages": 2,
+   "hits": []
+  },
+  {
+   "code": "C3200405",
+   "model": "TPS62933DRLR",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/8822d9443d3405e5b17304ebbb56ac2c.pdf?productCode=C3200405",
+   "fetched_utc": "2026-09-27T00:20:35Z",
+   "sha256": "ae5022ec46b03cff41c586334c9d2fe9f3072d0648708f2fc3fa0daa23e75e7f",
+   "bytes": 4231939,
+   "pages": 51,
+   "hits": [
+    {
+     "page": 6,
+     "line": "导致器件参数或功能规格下降的各项条件。TJ = –40°C 至 +150°C，VIN = 3.8V 至 30V（除非另有说明）。"
+    },
+    {
+     "page": 6,
+     "line": "TJ = -40°C 至 150°C 784 800 816 mV"
+    },
+    {
+     "page": 7,
+     "line": "导致器件参数或功能规格下降的各项条件。TJ = –40°C 至 +150°C，VIN = 3.8V 至 30V（除非另有说明）。"
+    },
+    {
+     "page": 8,
+     "line": "导致器件参数或功能规格下降的各项条件。TJ = –40°C 至 +150°C，VIN = 3.8V 至 30V（除非另有说明）。"
+    },
+    {
+     "page": 9,
+     "line": "TJ = –40°C 至 150°C，VIN = 12V（除非另有说明）。"
+    },
+    {
+     "page": 10,
+     "line": "TJ = –40°C 至 150°C，VIN = 12V（除非另有说明）。"
+    },
+    {
+     "page": 11,
+     "line": "TJ = –40°C 至 150°C，VIN = 12V（除非另有说明）。"
+    },
+    {
+     "page": 12,
+     "line": "TJ = –40°C 至 150°C，VIN = 12V（除非另有说明）。"
+    },
+    {
+     "page": 13,
+     "line": "TJ = –40°C 至 150°C，VIN = 12V（除非另有说明）。"
+    },
+    {
+     "page": 14,
+     "line": "TJ = –40°C 至 150°C，VIN = 12V（除非另有说明）。"
+    },
+    {
+     "page": 15,
+     "line": "TJ = –40°C 至 150°C，VIN = 12V（除非另有说明）。"
+    }
+   ]
+  },
+  {
+   "code": "C350562",
+   "model": "SN74LVC86APWR",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/7554be2b4f9a63fefa425850cf2a6be9.pdf?productCode=C350562",
+   "fetched_utc": "2026-09-27T00:20:35Z",
+   "sha256": "fd927292d995122654117c47465984a0d8b531deec1922e4bbb5a14d4b480947",
+   "bytes": 1122567,
+   "pages": 23,
+   "hits": [
+    {
+     "page": 3,
+     "line": "Ptot Power dissipation TA = –40°C to 125°C (5) (6) 500 mW"
+    },
+    {
+     "page": 4,
+     "line": "TA = 25°C –40 TO 85°C –40 TO 125°C UNIT"
+    },
+    {
+     "page": 5,
+     "line": "PARAMETER TEST CONDITIONS VCC TA = 25°C –40 TO 85°C –40 TO 125°C UNIT"
+    },
+    {
+     "page": 5,
+     "line": "PARAMETER VCC TA = 25°C –40 TO 85°C –40 TO 125°C UNIT"
+    }
+   ]
+  },
+  {
+   "code": "C352974",
+   "model": "SN74LVC32APWR",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/67474b6d5bc4304e74866b896d89cebf.pdf?productCode=C352974",
+   "fetched_utc": "2026-09-27T00:20:36Z",
+   "sha256": "5b06705d2a556b117133f78860bce9f68f365090877cbb0f2ad22697fb4634b8",
+   "bytes": 1418448,
+   "pages": 33,
+   "hits": [
+    {
+     "page": 1,
+     "line": "–40°C to +125°C, and –55°C to +125°C is designed for 1.65-V to 3.6-V VCC operation."
+    },
+    {
+     "page": 4,
+     "line": "Ptot Power dissipation TA = –40°C to +125°C 500 mW"
+    },
+    {
+     "page": 5,
+     "line": "TA = 25°C –40 to +85°C –40 to +125°C UNIT"
+    },
+    {
+     "page": 6,
+     "line": "PARAMETER TEST CONDITIONS VCC TA = 25°C –40 to +85°C –40 to +125°C UNIT"
+    },
+    {
+     "page": 7,
+     "line": "PARAMETER VCC TA = 25°C –40 to +85°C –40 to +125°C UNIT"
+    }
+   ]
+  },
+  {
+   "code": "C353882",
+   "model": "TPS2065CDBVR",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/01697fcb2b75abe400b8f1521d84f8bc.pdf?productCode=C353882",
+   "fetched_utc": "2026-09-27T00:20:37Z",
+   "sha256": "b3e89ad1c821f6712f870948e52900276b05edaae5862264d15e238caab84197",
+   "bytes": 2081834,
+   "pages": 45,
+   "hits": [
+    {
+     "page": 1,
+     "line": "• Ambient Temperature Range: –40°C to 85°C supply to provide regulated power when the output is"
+    },
+    {
+     "page": 7,
+     "line": "each part number. Parametrics over a wider operational range are shown in Electrical Characteristics: –40°C ≤ TJ ≤ 125°C (1)."
+    }
+   ]
+  },
+  {
+   "code": "C364296",
+   "model": "SMBJ20A",
+   "brand": "MDD(Microdiode Semiconductor)",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/2fdb55289569ebfc0bc21eab3853afe6.pdf?productCode=C364296",
+   "fetched_utc": "2026-09-27T00:20:38Z",
+   "sha256": "95385273b5009dc9ec2f2a432e07e215f71626b825bd53a9f5525f4186566d3b",
+   "bytes": 1215362,
+   "pages": 6,
+   "hits": [
+    {
+     "page": 1,
+     "line": "Operating junction and Storage Temperature Range. TJ,TSTG -65 to +150 ℃"
+    }
+   ]
+  },
+  {
+   "code": "C3656912",
+   "model": "TMUXHS4212IRKSR",
+   "brand": "TI",
+   "url": "https://www.ti.com/cn/lit/ds/symlink/tmuxhs4212.pdf",
+   "fetched_utc": "2026-09-27T00:20:39Z",
+   "sha256": "34fa7c385e6aa8987e44a346219e15beac36e645e45b01d6542169f5b8e6d729",
+   "bytes": 2589328,
+   "pages": 30,
+   "hits": []
+  },
+  {
+   "code": "C3659325",
+   "model": null,
+   "brand": null,
+   "url": null,
+   "error": "LCSC serves no datasheet URL"
+  },
+  {
+   "code": "C3664478",
+   "model": "BME688",
+   "brand": "Bosch",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/b2ef52257c4751a5d99b0e71b12958e9.pdf?productCode=C3664478",
+   "fetched_utc": "2026-09-27T00:20:40Z",
+   "sha256": "a039ca3b0ee1e7b8d6836b9de6113de3afe4b867053128a6b7905629853a1e67",
+   "bytes": 2052945,
+   "pages": 61,
+   "hits": []
+  },
+  {
+   "code": "C3670061",
+   "model": "SCF9550-30-05",
+   "brand": "EATON",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/9ec696b89f8ddf60bf66834f95d0293a.pdf?productCode=C3670061",
+   "fetched_utc": "2026-09-27T00:20:41Z",
+   "sha256": "3ecc2424acfa1753c2aec0b62d5706d4f25b7a08e731795c0d84d59938a3158e",
+   "bytes": 738112,
+   "pages": 6,
+   "hits": [
+    {
+     "page": 4,
+     "line": "Operating temperature: -20 °C to +60 °C"
+    },
+    {
+     "page": 4,
+     "line": "Storage temperature: -10 °C to +40 °C < 90% RH"
+    }
+   ]
+  },
+  {
+   "code": "C3681715",
+   "model": "BQ7720700DSSR",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/ec31f728ca16b864e3fe605ef244af88.pdf?productCode=C3681715",
+   "fetched_utc": "2026-09-27T00:20:41Z",
+   "sha256": "5757dabfe85d76be9652441a3dd322c436807d5d4f1fc91b2241d826a066ca07",
+   "bytes": 1439777,
+   "pages": 27,
+   "hits": [
+    {
+     "page": 5,
+     "line": "Typical values stated where TA = 25°C and VDD = 25 V, MIN/MAX values stated where TA = –40°C to 85°C and VDD = 5 V"
+    },
+    {
+     "page": 6,
+     "line": "Typical values stated where TA = 25°C and VDD = 25 V, MIN/MAX values stated where TA = –40°C to 85°C and VDD = 5 V"
+    },
+    {
+     "page": 7,
+     "line": "Typical values stated where TA = 25°C and VDD = 25 V, MIN/MAX values stated where TA = –40°C to 85°C and VDD = 5 V"
+    },
+    {
+     "page": 7,
+     "line": "Typical values stated where TA = 25°C and VDD = 25 V, MIN/MAX values stated where TA = –40°C to 85°C and VDD = 5 V"
+    }
+   ]
+  },
+  {
+   "code": "C3685740",
+   "model": "TPS37A010122DSKR",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/b4cc17b1ec381ff29ed9bd78cbc43e80.pdf?productCode=C3685740",
+   "fetched_utc": "2026-09-27T00:20:42Z",
+   "sha256": "8ba79a88a3e3be3ffe65d9d93d2e28a5d9a532f8b38c955f8c07674cdc1e43cd",
+   "bytes": 5365295,
+   "pages": 49,
+   "hits": [
+    {
+     "page": 7,
+     "line": "voltage VPU = 5.5 V, and load CLOAD = 10 pF. The operating free-air temperature range TA = – 40°C to 125°C, unless"
+    },
+    {
+     "page": 8,
+     "line": "voltage VPU = 5.5 V, and load CLOAD = 10 pF. The operating free-air temperature range TA = – 40°C to 125°C, unless"
+    },
+    {
+     "page": 9,
+     "line": "– 40°C to 125°C, unless otherwise noted. Typical values are at TA = 25°C and VDD = 16 V and VIT = 6.5 V (VIT refers to"
+    }
+   ]
+  },
+  {
+   "code": "C374030",
+   "model": "SMCJ18A",
+   "brand": "Littelfuse",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C374030",
+   "fetched_utc": "2026-09-27T00:20:43Z",
+   "sha256": "6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea",
+   "bytes": 984493,
+   "pages": 7,
+   "hits": [
+    {
+     "page": 1,
+     "line": "Operating Temperature Range TJ -65 to 150 °C"
+    },
+    {
+     "page": 1,
+     "line": "Storage Temperature Range TSTG -65 to 175 °C Pb-free and the terminal"
+    }
+   ]
+  },
+  {
+   "code": "C38558",
+   "model": "PESD12VL1BA,115",
+   "brand": "Nexperia",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/635822dff4ae48ff8ae972126ca771e2.pdf?productCode=C38558",
+   "fetched_utc": "2026-09-27T00:20:44Z",
+   "sha256": "2bbeee7c7389f652e636dc603b0fcabdb24ae55278426bb45e798ca20d579d81",
+   "bytes": 307701,
+   "pages": 17,
+   "hits": []
+  },
+  {
+   "code": "C398356",
+   "model": "TLV9062IDGKR",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/b3f500e21835dc38634fe987feaa838a.pdf?productCode=C398356",
+   "fetched_utc": "2026-09-27T00:20:44Z",
+   "sha256": "424562d65438d8ae659d72b3b20405ffb77b7aa47abc0a58a15836549d0d648a",
+   "bytes": 5430516,
+   "pages": 76,
+   "hits": [
+    {
+     "page": 1,
+     "line": "• Extended temperature range: –40°C to 125°C"
+    },
+    {
+     "page": 15,
+     "line": "VS = 5 V, TA = –40°C to 125°C ±2"
+    },
+    {
+     "page": 15,
+     "line": "dVOS/dT Drift VS = 5 V, TA = –40°C to 125°C ±0.53 µV/°C"
+    },
+    {
+     "page": 15,
+     "line": "TA = –40°C to 125°C"
+    },
+    {
+     "page": 15,
+     "line": "TA = –40°C to 125°C"
+    },
+    {
+     "page": 15,
+     "line": "TA = –40°C to 125°C"
+    },
+    {
+     "page": 15,
+     "line": "TA = –40°C to 125°C"
+    },
+    {
+     "page": 16,
+     "line": "VS = 5.5 V, IO = 0 mA, TA = –40°C to 125°C 800"
+    },
+    {
+     "page": 17,
+     "line": "TA = –40°C to 125°C"
+    },
+    {
+     "page": 18,
+     "line": "VS = 5.5 V VCM = –0.1 V to 5.6 V TA= –40°C to 125°C"
+    },
+    {
+     "page": 19,
+     "line": "TA= –40°C to 125°C RL= 10 kΩ VS = 5.5 V"
+    }
+   ]
+  },
+  {
+   "code": "C404027",
+   "model": "TLV75533PDBVR",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/107eeb995f1c91f292b91a59221db472.pdf?productCode=C404027",
+   "fetched_utc": "2026-09-27T00:20:46Z",
+   "sha256": "44ac688d7e51f85259134abcffeed6cd1ae61234dfd2b6dea2b0607d8ad0d015",
+   "bytes": 2730985,
+   "pages": 43,
+   "hits": [
+    {
+     "page": 5,
+     "line": "at operating temperature range (TJ = –40°C to 125°C), VIN = VOUT(NOM) + 0.5 V or 2.0 V (whichever is greater), IOUT = 1 mA,"
+    },
+    {
+     "page": 6,
+     "line": "at operating temperature range (TJ = –40°C to 125°C), VIN = VOUT(NOM) + 0.5 V or 2.0 V (whichever is greater), IOUT = 1 mA,"
+    }
+   ]
+  },
+  {
+   "code": "C411294",
+   "model": null,
+   "brand": null,
+   "url": null,
+   "error": "LCSC serves no datasheet URL"
+  },
+  {
+   "code": "C434808",
+   "model": "U.FL-R-SMT(10)",
+   "brand": "HRS",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/ed724b9ee28536c28fee4171a29923cc.pdf?productCode=C434808",
+   "fetched_utc": "2026-09-27T00:20:46Z",
+   "sha256": "6949727d3bc42a67f6115848d3e5bc7dd4c41db28de7a4b6f0c2f2f5731dcdd2",
+   "bytes": 197730,
+   "pages": 8,
+   "hits": [
+    {
+     "page": 7,
+     "line": "(2) Storage conditions - Temperature: -10 to +40ç, Humidity: 85% max."
+    }
+   ]
+  },
+  {
+   "code": "C442493",
+   "model": "LM5176PWPR",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/8f6d9221df6d81440ff2743fda58dfc9.pdf?productCode=C442493",
+   "fetched_utc": "2026-09-27T00:20:47Z",
+   "sha256": "0a7ca1950193f5cd5a074745417ccd239e16e6b62ee379646b5cd94d65a056e0",
+   "bytes": 2019649,
+   "pages": 43,
+   "hits": [
+    {
+     "page": 6,
+     "line": "Typical values correspond to TJ = 25°C. Minimum and maximum limits apply over the –40°C to 125°C junction temperature"
+    },
+    {
+     "page": 7,
+     "line": "Typical values correspond to TJ = 25°C. Minimum and maximum limits apply over the –40°C to 125°C junction temperature"
+    },
+    {
+     "page": 8,
+     "line": "Typical values correspond to TJ = 25°C. Minimum and maximum limits apply over the –40°C to 125°C junction temperature"
+    }
+   ]
+  },
+  {
+   "code": "C465737",
+   "model": "SN74LVC08APWR",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/477facb0ea0e5fb2223aa7d270ad8745.pdf?productCode=C465737",
+   "fetched_utc": "2026-09-27T00:20:48Z",
+   "sha256": "6a4c06be0ad4dd90e6920ce4be94f9ff9ec3a21a58cf5e30a5bb30b218b3db5d",
+   "bytes": 1468380,
+   "pages": 37,
+   "hits": [
+    {
+     "page": 5,
+     "line": "Ptot Power dissipation TA = –40°C to +125°C 500 mW"
+    },
+    {
+     "page": 6,
+     "line": "TA = 25°C –40°C to +85°C –40°C to +125°C UNIT"
+    },
+    {
+     "page": 7,
+     "line": "PARAMETER TEST CONDITIONS VCC TA = 25°C –40°C to +85°C –40°C to +125°C UNIT"
+    }
+   ]
+  },
+  {
+   "code": "C473333",
+   "model": "CSD19532Q5B",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/39b01006ad3e36302e39a97f5f98b1a8.pdf?productCode=C473333",
+   "fetched_utc": "2026-09-27T00:20:49Z",
+   "sha256": "1ee776198061bf8a89fb925db669c94d59c7218b05a4ab10f3c1a7c2fda125aa",
+   "bytes": 888481,
+   "pages": 14,
+   "hits": []
+  },
+  {
+   "code": "C475497",
+   "model": "PCM2912APJTR",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/f82d7e741a2cd2dd2e8078a3b7690c37.pdf?productCode=C475497",
+   "fetched_utc": "2026-09-27T00:20:49Z",
+   "sha256": "52048c5511c4f8ca130b3a2671efa20a19d5a704cb68480c07059963174a5565",
+   "bytes": 1165794,
+   "pages": 35,
+   "hits": []
+  },
+  {
+   "code": "C488151",
+   "model": "TPD2E2U06QDBZRQ1",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/67b8e852b6473570f506733059d66a25.pdf?productCode=C488151",
+   "fetched_utc": "2026-09-27T00:20:50Z",
+   "sha256": "52e00a75fa68f4dbcbda7c9e944c7080348404840728a504139c16f52455e22f",
+   "bytes": 1536091,
+   "pages": 26,
+   "hits": [
+    {
+     "page": 1,
+     "line": "• Industrial Temperature Range: –40°C to +125°C"
+    },
+    {
+     "page": 8,
+     "line": "and is qualified to operate from –40°C to +125°C."
+    },
+    {
+     "page": 8,
+     "line": "This device is designed to operate from –40°C to +125°C."
+    }
+   ]
+  },
+  {
+   "code": "C49851",
+   "model": "INA226AIDGSR",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/c67b965eb2a01e8d671b6f15d639e314.pdf?productCode=C49851",
+   "fetched_utc": "2026-09-27T00:20:51Z",
+   "sha256": "eb6683997aa6cea3b736a42afc7402ecc38fd701e1217e746b8992b02df864d2",
+   "bytes": 1164146,
+   "pages": 40,
+   "hits": []
+  },
+  {
+   "code": "C500767",
+   "model": "PI7C9X2G404SLBFDEX",
+   "brand": "DIODES",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/690ad6981bea9b832987a26098140783.pdf?productCode=C500767",
+   "fetched_utc": "2026-09-27T00:20:52Z",
+   "sha256": "dfdd9650bea346324e8496163ef480c5995b7dc063cfdcf621f8e21b18b2eec8",
+   "bytes": 1180651,
+   "pages": 91,
+   "hits": []
+  },
+  {
+   "code": "C504893",
+   "model": "VEML7700-TR",
+   "brand": "VISHAY",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/f8f2c90dfc18f5894f6ce6110e05fac2.pdf?productCode=C504893",
+   "fetched_utc": "2026-09-27T00:20:53Z",
+   "sha256": "3bb1ace34f6fbf99203f847c0c928ee9d7e101ac10342d3234038713ba959244",
+   "bytes": 219617,
+   "pages": 14,
+   "hits": []
+  },
+  {
+   "code": "C51118",
+   "model": "AP2112K-3.3TRG1",
+   "brand": "DIODES",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/5b29baebdc4332b382a530ff21092301.pdf?productCode=C51118",
+   "fetched_utc": "2026-09-27T00:20:53Z",
+   "sha256": "ef8d376f2ec356e29172eb9e053819a0ebdcc576dba7fc9ab0505c568427920f",
+   "bytes": 755270,
+   "pages": 19,
+   "hits": [
+    {
+     "page": 1,
+     "line": " Operation Temperature Range: -40°C to +85°C"
+    },
+    {
+     "page": 3,
+     "line": "TSTG Storage Temperature Range -65 to +150 °C"
+    },
+    {
+     "page": 4,
+     "line": "Coefficient TA = -40°C to +85°C"
+    },
+    {
+     "page": 5,
+     "line": "Coefficient TA = -40°C to +85°C"
+    },
+    {
+     "page": 6,
+     "line": "Coefficient TA = -40°C to +85°C"
+    },
+    {
+     "page": 7,
+     "line": "Temperature Coefficient TA = -40°C to +85°C"
+    },
+    {
+     "page": 8,
+     "line": "Coefficient TA = -40°C to +85°C"
+    },
+    {
+     "page": 9,
+     "line": "TA=-40 C TA=-40 C"
+    },
+    {
+     "page": 9,
+     "line": "58 TA=-40 C"
+    },
+    {
+     "page": 10,
+     "line": "TA= -40 C"
+    },
+    {
+     "page": 10,
+     "line": "TA=-40 C"
+    },
+    {
+     "page": 10,
+     "line": "o TA=-40 C"
+    },
+    {
+     "page": 10,
+     "line": "300 TA=-40 C o"
+    }
+   ]
+  },
+  {
+   "code": "C51897884",
+   "model": null,
+   "brand": null,
+   "url": null,
+   "error": "LCSC serves no datasheet URL"
+  },
+  {
+   "code": "C5251182",
+   "model": "B2B-PH-K-S-GW",
+   "brand": "JST",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/6c6fce4367275d84ec6a99bf09f1250f.pdf?productCode=C5251182",
+   "fetched_utc": "2026-09-27T00:20:54Z",
+   "sha256": "4e41351f09263b950a29282923e6f6ef7c5bc95b538fe8db9d1d1e4a8c082918",
+   "bytes": 118956,
+   "pages": 4,
+   "hits": []
+  },
+  {
+   "code": "C526347",
+   "model": "74LVC1G34W5-7",
+   "brand": "DIODES",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/503f758cbfae5f8fb3af4c191162ccaa.pdf?productCode=C526347",
+   "fetched_utc": "2026-09-27T00:20:55Z",
+   "sha256": "efd2d7978bb880b7e07e05dee034b87701f12b834aa8132b6f61ce3705187a98",
+   "bytes": 498243,
+   "pages": 18,
+   "hits": [
+    {
+     "page": 2,
+     "line": "TJ Operating Junction Temperature -40 to +150 °C"
+    },
+    {
+     "page": 2,
+     "line": "TSTG Storage Temperature -65 to +150 °C"
+    },
+    {
+     "page": 5,
+     "line": "From To TA = -40°C to +85°C TA = -40°C to +125°C"
+    }
+   ]
+  },
+  {
+   "code": "C527679",
+   "model": "TPS22810DRVR",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/76a32ce6750c422fd3becfcf29ff49a4.pdf?productCode=C527679",
+   "fetched_utc": "2026-09-27T00:20:55Z",
+   "sha256": "86a0cb4ef6ab74848346abf709932f0dcd04516562340d498de0c485112c0ab3",
+   "bytes": 2762603,
+   "pages": 38,
+   "hits": []
+  },
+  {
+   "code": "C529279",
+   "model": "CSD17570Q5B",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/e3d8f44385e71194f9c774cae94f05f5.pdf?productCode=C529279",
+   "fetched_utc": "2026-09-27T00:20:56Z",
+   "sha256": "b840f8e710287fcb627f434f115815775798a380a946fd38247c6e9bca256d5d",
+   "bytes": 925352,
+   "pages": 14,
+   "hits": []
+  },
+  {
+   "code": "C534330",
+   "model": "BSC039N06NS",
+   "brand": "Infineon",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/8e4886fa29da7cb0f19c73d556cca14b.pdf?productCode=C534330",
+   "fetched_utc": "2026-09-27T00:20:57Z",
+   "sha256": "8d95c1da9c78b3afb037e1f80c3bea1ed0f874f689e3a0c96d926dafe6a437b9",
+   "bytes": 1344705,
+   "pages": 14,
+   "hits": [
+    {
+     "page": 3,
+     "line": "Operating and storage temperature Tj,\u0002Tstg -55 - 150 °C"
+    }
+   ]
+  },
+  {
+   "code": "C5352930",
+   "model": null,
+   "brand": null,
+   "url": null,
+   "error": "LCSC serves no datasheet URL"
+  },
+  {
+   "code": "C5355286",
+   "model": null,
+   "brand": null,
+   "url": null,
+   "error": "LCSC serves no datasheet URL"
+  },
+  {
+   "code": "C544309",
+   "model": "TPS25740ARGER",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/9aac1e0d7a7ce0e0b00b43613fc271d7.pdf?productCode=C544309",
+   "fetched_utc": "2026-09-27T00:20:58Z",
+   "sha256": "7e194c4d808d53a08238421995a1cd79faa59b7c50f630407fe73b72378ef80c",
+   "bytes": 3497060,
+   "pages": 67,
+   "hits": []
+  },
+  {
+   "code": "C544686",
+   "model": "TUSB8041IRGCR",
+   "brand": "TI",
+   "url": "https://www.ti.com/cn/lit/gpn/tusb8041",
+   "fetched_utc": "2026-09-27T00:20:59Z",
+   "sha256": "fbab35d6db2e54aac9675ddd4f213b916b729bdb9d347c3445783ec5faebb1f5",
+   "bytes": 2083878,
+   "pages": 51,
+   "hits": []
+  },
+  {
+   "code": "C556165",
+   "model": "BC857B",
+   "brand": "Slkor",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/171c362deabfedc4642f786eeb3a3121.pdf?productCode=C556165",
+   "fetched_utc": "2026-09-27T00:21:00Z",
+   "sha256": "b27e6044426e3c6009ed18c960878c7838cabacc4453fdb1ec761dfda4e1323d",
+   "bytes": 1927188,
+   "pages": 5,
+   "hits": []
+  },
+  {
+   "code": "C580654",
+   "model": "LTC2954ITS8-1#TRMPBF",
+   "brand": "ADI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/6dcabef26deb7d84371cb87e253c14bf.pdf?productCode=C580654",
+   "fetched_utc": "2026-09-27T00:21:01Z",
+   "sha256": "1e9e2567d15e569ecc95023a40e4fb99eb0288db842803ff78cd14fdd621d8ae",
+   "bytes": 458024,
+   "pages": 19,
+   "hits": [
+    {
+     "page": 5,
+     "line": "TA = –45°C"
+    }
+   ]
+  },
+  {
+   "code": "C590866",
+   "model": "2199119-3",
+   "brand": "TE Connectivity",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/3d7fde4601fb7ebe13b6fff009797ee7.pdf?productCode=C590866",
+   "fetched_utc": "2026-09-27T00:21:01Z",
+   "sha256": "d8f58c5892aec2ef9505032a774ee9a4da52c3d9363604440bd3125a76f02012",
+   "bytes": 5532784,
+   "pages": 9,
+   "hits": []
+  },
+  {
+   "code": "C594232",
+   "model": "B4B-XH-A-G",
+   "brand": "JST",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/485421544f25c5da0b66911e3e2aa47d.pdf?productCode=C594232",
+   "fetched_utc": "2026-09-27T00:21:02Z",
+   "sha256": "f6519dda21d88127f1683f5908e021c8b03155d8e354b861229a117b8fea41be",
+   "bytes": 1262131,
+   "pages": 6,
+   "hits": [
+    {
+     "page": 1,
+     "line": "• Temperature range: -25℃ to +85℃"
+    }
+   ]
+  },
+  {
+   "code": "C6296715",
+   "model": "SIM8060-6-0-14-00-A",
+   "brand": "Global Connector Technology",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/c405e8aeed0ec875198c54d054045968.pdf?productCode=C6296715",
+   "fetched_utc": "2026-09-27T00:21:03Z",
+   "sha256": "308e737190f889044fca1339a2c8d0085ce2da2fbe4df81e119482578e396418",
+   "bytes": 276571,
+   "pages": 8,
+   "hits": [
+    {
+     "page": 2,
+     "line": "Operating Temperature Range -20°C to +85°C"
+    },
+    {
+     "page": 2,
+     "line": "Storage Temperature -40°C to +70°C"
+    }
+   ]
+  },
+  {
+   "code": "C638299",
+   "model": "KSZ9897RTXI",
+   "brand": "MICROCHIP",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/830a9ec6e45d8cbf1c01b4a68523d9f4.pdf?productCode=C638299",
+   "fetched_utc": "2026-09-27T00:21:04Z",
+   "sha256": "72b89179ed6a42a7bafa737de31a21fc28db6f0852bcc7964546bc99b0c7d064",
+   "bytes": 1377774,
+   "pages": 197,
+   "hits": [
+    {
+     "page": 8,
+     "line": "The KSZ9897R is available in commercial (0°C to +70°C) and industrial (-40°C to +85°C) temperature ranges. An inter-"
+    }
+   ]
+  },
+  {
+   "code": "C6384935",
+   "model": "H5007NL",
+   "brand": "PULSE",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/f313adee6325482aa7d30b2d8c6b7e9d.pdf?productCode=C6384935",
+   "fetched_utc": "2026-09-27T00:21:05Z",
+   "sha256": "b6efc1aab09b47ecce8a4f340fc1f00746cadcb9d1943fc8457641bdf2eba677",
+   "bytes": 513916,
+   "pages": 3,
+   "hits": [
+    {
+     "page": 1,
+     "line": "1. HX = extended temperature version -40°C to +85°C 3. MSL = Moisture Sensitivity Level: a = 1, b = 2, c = 3, d = 4"
+    }
+   ]
+  },
+  {
+   "code": "C674164",
+   "model": "LT8705AEUHF#TRPBF",
+   "brand": "ADI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/f14444a692e8f998db783eaa7f33f0d3.pdf?productCode=C674164",
+   "fetched_utc": "2026-09-27T00:21:06Z",
+   "sha256": "8f552a0b57677bfa7e4a5d5d0fac56d56fbbd1a6f65a9ee7aaaf8743cd534ec3",
+   "bytes": 657320,
+   "pages": 45,
+   "hits": [
+    {
+     "page": 2,
+     "line": "SRVO_FBIN, SRVO_FBOUT Voltage............ –0.3V to 30V Storage Temperature Range................... –65°C to 150°C"
+    },
+    {
+     "page": 6,
+     "line": "CLKOUT Duty Cycle TJ = –40°C 22.7 %"
+    },
+    {
+     "page": 6,
+     "line": "from 0°C to 125°C junction temperature. Specifications over the –40°C M3, or parallel Schottky diodes when present. The SW1 and SW2 pins"
+    },
+    {
+     "page": 6,
+     "line": "LT8705AI is guaranteed over the full –40°C to 125°C junction temperature Note 8: This IC includes overtemperature protection that is intended"
+    },
+    {
+     "page": 6,
+     "line": "range. The LT8705AH is guaranteed over the full –40°C to 150°C operating to protect the device during momentary overload conditions. Junction"
+    },
+    {
+     "page": 6,
+     "line": "–55°C to 150°C operating junction temperature range. Operating lifetime is when overtemperature protection is active. Continuous operation above"
+    }
+   ]
+  },
+  {
+   "code": "C69901",
+   "model": "TPA6132A2RTER",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/3634de5e5702453599a1961ad2702ea2.pdf?productCode=C69901",
+   "fetched_utc": "2026-09-27T00:21:07Z",
+   "sha256": "9c704fdf305cc1fb988a316026b840794e74b9b496e5dadf85ee94c58d66e315",
+   "bytes": 1342781,
+   "pages": 29,
+   "hits": []
+  },
+  {
+   "code": "C699536",
+   "model": "TMP117AIDRVR",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/0699b9914f7bf2b65910d6272a760ab5.pdf?productCode=C699536",
+   "fetched_utc": "2026-09-27T00:21:08Z",
+   "sha256": "76928aec2a39af235aa738338917a3509fd8363d1dd7844cc0694331d32e8f2d",
+   "bytes": 2230061,
+   "pages": 51,
+   "hits": [
+    {
+     "page": 1,
+     "line": "– ±0.25 °C (maximum) from –55 °C to 125 °C temperature result with a resolution of 0.0078 °C"
+    },
+    {
+     "page": 1,
+     "line": "• Operating temperature range: –55 °C to 150 °C temperature range of –20 °C to 50 °C with no"
+    },
+    {
+     "page": 5,
+     "line": "V+ Supply voltage, TA = -55 °C to 150 °C 1.8 3.3 5.5 V"
+    },
+    {
+     "page": 5,
+     "line": "V+ Supply voltage, TA = -55 °C to 70 °C 1.7 5.5 V"
+    },
+    {
+     "page": 6,
+     "line": "Over free-air temperature range and V+ = 1.7 V to 5.5 V for TA = -55 °C to 70 °C, or V+ = 1.8 V to 5.5 V for TA = -55 °C to"
+    },
+    {
+     "page": 7,
+     "line": "Over free-air temperature range and V+ = 1.7 V to 5.5 V for TA = -55 °C to 70 °C, or V+ = 1.8 V to 5.5 V for TA = -55 °C to"
+    },
+    {
+     "page": 7,
+     "line": "Over free-air temperature range and V+ = 1.7 V to 5.5 V for TA = -55 °C to 70 °C, or V+ = 1.8 V to 5.5 V for TA = -55 °C to"
+    },
+    {
+     "page": 7,
+     "line": "Over free-air temperature range and V+ = 1.7 V to 5.5 V for TA = -55 °C to 70 °C, or V+ = 1.8 V to 5.5 V for TA = -55 °C to"
+    },
+    {
+     "page": 11,
+     "line": "ambient air operating temperature range of –55 °C to 150 °C. Figure 7-1 shows a block diagram of the TMP117."
+    }
+   ]
+  },
+  {
+   "code": "C702369",
+   "model": "TUSB2046IBVFR",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/918b9d3ed5804d82700e55a8bb4b5d84.pdf?productCode=C702369",
+   "fetched_utc": "2026-09-27T00:21:09Z",
+   "sha256": "e65ad4b550a003093f0a3db74720a46ef43a38bf95a493dd9618aa71389182e7",
+   "bytes": 2301011,
+   "pages": 34,
+   "hits": []
+  },
+  {
+   "code": "C72271",
+   "model": "SI2300DS-T1-GE3",
+   "brand": "VISHAY",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/aac1a2a1068e4c1b9cd7bd467ebba3aa.pdf?productCode=C72271",
+   "fetched_utc": "2026-09-27T00:21:10Z",
+   "sha256": "3c52e6b858f4e6ea6683624080c8428519d5f6b745d08a00ac9f1f349e917e7a",
+   "bytes": 241065,
+   "pages": 11,
+   "hits": [
+    {
+     "page": 1,
+     "line": "Operating Junction and Storage Temperature Range TJ, Tstg - 55 to 150"
+    }
+   ]
+  },
+  {
+   "code": "C7435219",
+   "model": "10164227-1004A1RLF",
+   "brand": "Amphenol",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/f541aaa18865d3ac3bcd9b3e669f9a59.pdf?productCode=C7435219",
+   "fetched_utc": "2026-09-27T00:21:10Z",
+   "sha256": "0edf3ab9304f0f7ada1f79187e60ea6c6f593dd8ed81827d6e96e9b827e68b02",
+   "bytes": 1553342,
+   "pages": 7,
+   "hits": []
+  },
+  {
+   "code": "C7502705",
+   "model": "BAT54W",
+   "brand": "R+O",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/ff1378297995998b12f7103bcafc2a22.pdf?productCode=C7502705",
+   "fetched_utc": "2026-09-27T00:21:11Z",
+   "sha256": "fdd697de478c59e1bd24e207f67a3a6eefecb1e32812afc77adca0c44f9a3c5c",
+   "bytes": 235084,
+   "pages": 4,
+   "hits": []
+  },
+  {
+   "code": "C7519",
+   "model": "USBLC6-2SC6",
+   "brand": "ST",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/0d3a2ab954b34651a0695e7ccf534db0.pdf?productCode=C7519",
+   "fetched_utc": "2026-09-27T00:21:12Z",
+   "sha256": "8ba7ab4ec1781b7f6052f5999a2304bd611c0ed2b5e8f36ffa5092552932a42e",
+   "bytes": 224255,
+   "pages": 15,
+   "hits": [
+    {
+     "page": 2,
+     "line": "Tstg Storage temperature range -55 to +150 °C"
+    },
+    {
+     "page": 2,
+     "line": "Tj Operating junction temperature range -40 to +125 °C"
+    }
+   ]
+  },
+  {
+   "code": "C780769",
+   "model": "AP63203WU-7",
+   "brand": "DIODES",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/94820cc9e44613233ddcc1a15801eca3.pdf?productCode=C780769",
+   "fetched_utc": "2026-09-27T00:21:13Z",
+   "sha256": "ef99daa3789d835bc025dfcb4c605c5c2e6d3e7223e86d40b33e6b497ea5a722",
+   "bytes": 1226090,
+   "pages": 19,
+   "hits": [
+    {
+     "page": 4,
+     "line": "TST Storage Temperature -65 to +150 °C"
+    },
+    {
+     "page": 5,
+     "line": "temperature range, -40°C to +85°C, and input voltage range, 3.8V to 32V.)"
+    }
+   ]
+  },
+  {
+   "code": "C7826",
+   "model": "SN74LVC1G00DBVR",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/223017af1e634724bd3b4ed5780aaa61.pdf?productCode=C7826",
+   "fetched_utc": "2026-09-27T00:21:14Z",
+   "sha256": "c0ba2b5f4216fa2dcaff3b659464d6d97117f415400255b9b99e6128407d3bd3",
+   "bytes": 1403791,
+   "pages": 34,
+   "hits": []
+  },
+  {
+   "code": "C7827",
+   "model": "SN74LVC1G04DBVR",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/cbb5b11e6f66448a899553349c0f7b2e.pdf?productCode=C7827",
+   "fetched_utc": "2026-09-27T00:21:15Z",
+   "sha256": "e4868736b7ec680ef5003aa6b980547bfbaa3f1364ef4c3bfe36aa027448fcff",
+   "bytes": 1421406,
+   "pages": 36,
+   "hits": []
+  },
+  {
+   "code": "C80273",
+   "model": "SMCJ40CA",
+   "brand": "Littelfuse",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C80273",
+   "fetched_utc": "2026-09-27T00:21:16Z",
+   "sha256": "6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea",
+   "bytes": 984493,
+   "pages": 7,
+   "hits": [
+    {
+     "page": 1,
+     "line": "Operating Temperature Range TJ -65 to 150 °C"
+    },
+    {
+     "page": 1,
+     "line": "Storage Temperature Range TSTG -65 to 175 °C Pb-free and the terminal"
+    }
+   ]
+  },
+  {
+   "code": "C81598",
+   "model": "1N4148W",
+   "brand": "ST(Semtech)",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/8abd7fc00ebe41ffb03ad1383c10753b.pdf?productCode=C81598",
+   "fetched_utc": "2026-09-27T00:21:16Z",
+   "sha256": "54de8e4089bb8221cf6cf191ee3acc2bdb20c9933cf59e7b5de3ef4ee291ce3f",
+   "bytes": 271760,
+   "pages": 4,
+   "hits": [
+    {
+     "page": 1,
+     "line": "Storage Temperature Range Tstg - 65 to + 150 ℃"
+    }
+   ]
+  },
+  {
+   "code": "C83152",
+   "model": "BAT46W-7-F",
+   "brand": "DIODES",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/18e08184e5865113cc055d7c9a1d2463.pdf?productCode=C83152",
+   "fetched_utc": "2026-09-27T00:21:17Z",
+   "sha256": "3bc31f4a5302521c7e298f95aef7e3425ea68ae287bd28a6cfa8d0689fcbe56b",
+   "bytes": 621388,
+   "pages": 6,
+   "hits": [
+    {
+     "page": 2,
+     "line": "Operating Temperature Range TJ -55 to +125 °C"
+    },
+    {
+     "page": 2,
+     "line": "Storage Temperature Range TSTG -55 to +150 °C"
+    },
+    {
+     "page": 3,
+     "line": "N TA = -55°C"
+    },
+    {
+     "page": 3,
+     "line": "I TA = -55°C"
+    }
+   ]
+  },
+  {
+   "code": "C83270",
+   "model": "SMBJ6.0A",
+   "brand": "Littelfuse",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/4ab84a227fae39f9eac85241b8264ead.pdf?productCode=C83270",
+   "fetched_utc": "2026-09-27T00:21:18Z",
+   "sha256": "d7df155be4b1f612085401e8c946f065e284d65a0e7de22b9225a7b73946e51b",
+   "bytes": 947504,
+   "pages": 7,
+   "hits": [
+    {
+     "page": 1,
+     "line": "Operating Temperature Range TJ -65 to 150 °C"
+    },
+    {
+     "page": 1,
+     "line": "Storage Temperature Range TSTG -65 to 175 °C"
+    }
+   ]
+  },
+  {
+   "code": "C840103",
+   "model": "SN74LVC1G06DBVR",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/3f2f00e2e4e8683fddcfe2937b161eac.pdf?productCode=C840103",
+   "fetched_utc": "2026-09-27T00:21:19Z",
+   "sha256": "14e26d712acd6e99d8c3b2a5d2f82fb8cc6837d3d105bb2755cef25ff78db4d0",
+   "bytes": 2298348,
+   "pages": 46,
+   "hits": [
+    {
+     "page": 6,
+     "line": "over recommended operating free-air temperature range, TA = –40°C to +85°C (unless otherwise noted) (see Figure 3)"
+    },
+    {
+     "page": 6,
+     "line": "over recommended operating free-air temperature range, TA = –40°C to +125°C (unless otherwise noted) (see Figure 3)"
+    }
+   ]
+  },
+  {
+   "code": "C8545",
+   "model": "2N7002",
+   "brand": "JSCJ",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/a141b8bd86b14475955ac8c4d3eea0a8.pdf?productCode=C8545",
+   "fetched_utc": "2026-09-27T00:21:20Z",
+   "sha256": "7941fb423af7c6c6c8979063a7e8819bb19217ece275efcce18948950a41d9f6",
+   "bytes": 1575038,
+   "pages": 6,
+   "hits": [
+    {
+     "page": 1,
+     "line": "Storage Temperature Tstg -50 ~+150"
+    }
+   ]
+  },
+  {
+   "code": "C88373",
+   "model": "U.FL-R-SMT-1(10)",
+   "brand": "HRS",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/ed724b9ee28536c28fee4171a29923cc.pdf?productCode=C88373",
+   "fetched_utc": "2026-09-27T00:21:20Z",
+   "sha256": "6949727d3bc42a67f6115848d3e5bc7dd4c41db28de7a4b6f0c2f2f5731dcdd2",
+   "bytes": 197730,
+   "pages": 8,
+   "hits": [
+    {
+     "page": 7,
+     "line": "(2) Storage conditions - Temperature: -10 to +40ç, Humidity: 85% max."
+    }
+   ]
+  },
+  {
+   "code": "C916313",
+   "model": "2086581001",
+   "brand": "MOLEX",
+   "url": "https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/208/208658/2086581001_sd.pdf?inline\\",
+   "fetched_utc": "2026-09-27T00:21:21Z",
+   "error": "fetch failed: curl: (92) HTTP/2 stream 1 was not closed cleanly: INTERNAL_ERROR (err 2)\n"
+  },
+  {
+   "code": "C93245",
+   "model": "TPS23861PWR",
+   "brand": "TI",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/44e38b86f5764ecd942da541b381eb2c.pdf?productCode=C93245",
+   "fetched_utc": "2026-09-27T00:21:21Z",
+   "sha256": "42b8d60b32f6fa6b3ad376abbf4b912a241fe2e6b23b2c5013032d8f490ba996",
+   "bytes": 2176624,
+   "pages": 110,
+   "hits": [
+    {
+     "page": 16,
+     "line": "5.5 TJ=-40°C"
+    },
+    {
+     "page": 16,
+     "line": "TJ=-40°C 108"
+    },
+    {
+     "page": 17,
+     "line": "TJ=-40°C"
+    }
+   ]
+  },
+  {
+   "code": "C964632",
+   "model": "CP2102N-A02-GQFN28R",
+   "brand": "SILICON LABS",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/11ab89ca3026e9cb7cc85ffe9557abff.pdf?productCode=C964632",
+   "fetched_utc": "2026-09-27T00:21:22Z",
+   "sha256": "70ea7a01045ccfb0c69f35f37bd65160a1080b54169cac1806416e482c796b53",
+   "bytes": 2251916,
+   "pages": 49,
+   "hits": [
+    {
+     "page": 2,
+     "line": "Temperature Grade : –40 to +85 °C (G)"
+    }
+   ]
+  },
+  {
+   "code": "C9866",
+   "model": "DS3231SN#T&R",
+   "brand": "MAXIM",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/5101f986439e4595b0e0d04ae2a48583.pdf?productCode=C9866",
+   "fetched_utc": "2026-09-27T00:21:23Z",
+   "sha256": "ec27766ea72ac63e94aff3d81536fcfd37067072a9ea40037017562dc9b5abfb",
+   "bytes": 381096,
+   "pages": 21,
+   "hits": [
+    {
+     "page": 1,
+     "line": "time clock (RTC) with an integrated temperature- ♦ Accuracy ±3.5ppm from -40°C to +85°C"
+    },
+    {
+     "page": 2,
+     "line": "Voltage Range on VCC, VBAT, 32kHz, SCL, SDA, RST, Storage Temperature Range ...............................-40°C to +85°C"
+    },
+    {
+     "page": 2,
+     "line": "(noncondensing) .............................................-40°C to +85°C Soldering Temperature....................................See the Handling,"
+    },
+    {
+     "page": 19,
+     "line": "Changed TA = -40°C to +85°C to TA = TMIN to TMAX. 2, 3, 4"
+    }
+   ]
+  },
+  {
+   "code": "C98733",
+   "model": "XT60-M.",
+   "brand": "Changzhou Amass Elec",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/bf4ed80d93eda3bacf37967ce1d2662b.pdf?productCode=C98733",
+   "fetched_utc": "2026-09-27T00:21:23Z",
+   "sha256": "94e4568e3abe8ab516137588aea475872c0714cc2cc357be52e3a80e842c1780",
+   "bytes": 278437,
+   "pages": 2,
+   "hits": []
+  }
+ ]
+}

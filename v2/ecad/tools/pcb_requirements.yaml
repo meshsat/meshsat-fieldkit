@@ -1014,9 +1014,11 @@ open_items:
     class: SESSION
     status: OPEN
     title: >-
-      The STM32H743 compatibility matrix of every peripheral the supervisor firmware uses (FDCAN at or below 1 Mbps,
-      I2C1 as a target at 0x30 to 0x32, GPIO, the independent watchdog, SWD) retained with its DS12110 sources, and the
-      supervisor firmware built for the H743 (review of 26 September 2026: text agreement alone is "partly met").
+      The supervisor firmware built for the STM32H743 (CON-017 clause 4, the firmware stage) with the obligations
+      v2/docs/parts/STM32H743-COMPATIBILITY.md sections 5, 6 and 9 name: FDCAN at or below 1 Mbps with edge filtering
+      off, I2C1 a target only at 0x34 to 0x36 (ARCHITECTURE.md 5.5, I3-F01) with the kernel clock at 10 MHz or more
+      and the first byte preloaded (ES0392 2.19.3, 2.19.9), the IWDG started by option byte, BOR level 3, PC5 an input,
+      and a REV_ID read at boot. The matrix itself was delivered on 27 September 2026 (layer 6 closer hc6).
   - id: S-42
     class: SESSION
     status: OPEN
@@ -1646,9 +1648,13 @@ records:
           changed lines 3, 9, 10, 11, 13, 23, 24, 34, 41, 42, 51, 70, 73, 76 and 90 and added corrections 20 to 27; line
           32 and correction 6, which this reading cites, are byte-identical, so it stands on the file at
           dd9a92946a8d186f
+      - >-
+          v2/docs/ARCH-PCB-B-IOHA.md re-read when the layer 6 closer's reconciliation was applied (27 September
+          2026, drafts/hc6/apply_registry.py): sections 10a, 6 differ from e3aedb25's; sections 4, 15 and 15a and line 17
+          are byte-identical, so this reading stands on the file at 26fed4e40e0da078
     evidence_bound_to:
       - "v2/docs/CONOPS.md@122c921af6e3de40"
-      - "v2/docs/ARCH-PCB-B-IOHA.md@6c3c93b7f32f953a"
+      - "v2/docs/ARCH-PCB-B-IOHA.md@26fed4e40e0da078"
       - "v2/docs/V2-SPEC.md@dd9a92946a8d186f"
     release_effect: BLOCKER
     source:
@@ -2105,13 +2111,17 @@ records:
       the BOM, and the regenerated board B netlist matches the committed one apart from that text (D-13, plan
       condition 1); what the design needs of the part is shown compatible, not only named.
     acceptance: >-
-      (1) gen_sch_b.py and board B's BOM name the STM32H743VIT6 for all three supervisors and the pin map is unchanged;
-      (2) regeneration parity traces every other netlist difference to a finding; (3) the compatibility matrix of every
-      peripheral the supervisor firmware uses is retained with its DS12110 sources; (4) the supervisor firmware builds
-      for the STM32H743.
-    allocated_to: [b, fw_ioctrl]
+      At SCHEMATIC: (1) gen_sch_b.py and board B's BOM name the STM32H743VIT6 for all three supervisors and the pin map
+      is unchanged; (2) regeneration parity traces every other netlist difference to a finding; (3) the compatibility
+      matrix of every pin, peripheral and feature the schematic and the supervisor firmware use is retained with its
+      DS12110 sources, and no requirement depends on an STM32H753-only unit. At ASSEMBLY: (5) the fitted supervisors are
+      silicon revision V or X (marking V or X; DBGMCU_IDC REV_ID 0x2003 or 0x2001; ES0392 Rev 15 section 2.24.2). At the
+      firmware stage (final_phase): (4) the supervisor firmware builds for the STM32H743 and refuses to run both FDCAN
+      fabrics on revision Y or W.
+    allocated_to: [b, fw_ioctrl, procedure]
     verification_method: [SCRIPT, MANUAL_REVIEW]
     verification_phase: SCHEMATIC
+    final_phase: PROTOTYPE
     prototype_1: core
     prototype_1_basis: NEED_DEFAULT
     satisfied_by:
@@ -2121,17 +2131,30 @@ records:
     rulings: [D-13]
     waits_on: [S-41]
     status: DEFINED
-    evidence_result: INCONCLUSIVE
+    evidence_result: PASS
     evidence_phase: SCHEMATIC
     evidence_class: DESK_REVIEW
     evidence:
+      - >-
+          (3) holds (layer 6 closer hc6, 27 September 2026): v2/docs/parts/STM32H743-COMPATIBILITY.md reads every pin
+          the three supervisors use (30 of 100; 14 supplies, 56 unconnected) in DS12110 Rev 10 and Rev 11 (Table 9 I/O
+          structure, Table 10 alternate functions: FDCAN1 PD0/PD1 AF9, FDCAN2 PB12/PB13 AF9, I2C1 PB6/PB7 AF4, SWD
+          PA13/PA14 AF0), the electrical features the design relies on in the revision V tables (Rev 11 Tables 109, 110,
+          112, 114, 116, 131, 147), the peripherals in RM0433 Rev 8 (FDCAN chapter 56, I2C chapter 47, IWDG option bit
+          IWDG1_SW, GPIO reset state p.533) and the errata in ES0392 Rev 15; RM0433 Table 2 (p.103) lists CRYP, HASH,
+          secure access mode, RSS and the secure-only flash area as not available on the STM32H743 and no requirement,
+          generator line or feasibility page uses one. The pin map was checked against the committed netlist when this
+          reading was bound (U41, U51 and U61, pin numbers and functions). Clause (5) is ASSEMBLY's and clause (4) the
+          firmware stage's (final_phase), so they do not decide this SCHEMATIC reading
       - >-
           (1) and (2) hold: v2/ecad/tools/gen_sch_b.py:281-289 and :1145-1146 read at eadbe571 name STM32H743VIT6
           (JLCPCB C114409) with the pin table checked again for both parts, the committed netlist
           v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net carries U41, U51 and U61 as STM32H743VIT6, and 458b2873's
           parity run traced every difference to a finding
       - >-
-          (3) and (4) cannot be decided: no supervisor firmware exists, and the peripherals it uses are named across
+          Earlier reading (INCONCLUSIVE, 26 September 2026), superseded on 27 September 2026 for (3) by the first item
+          above and for (4) by final_phase: (3) and (4) cannot be decided: no supervisor firmware exists, and the
+          peripherals it uses are named across
           ARCH-PCB-B-IOHA.md section 6, v2/docs/feasibility/FAILOVER-FABRIC.md (FAB-05, FDCAN at 1 Mbps) and
           v2/docs/feasibility/ZEROIZE.md section 7 (no H753-only unit needed) without one matrix (review of 26
           September 2026: "Partly met")
@@ -2148,12 +2171,21 @@ records:
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_b.py@dedaf34ce285e5ff"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
+      - "v2/docs/parts/STM32H743-COMPATIBILITY.md@67335ea42747e22f"
+      - "v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf@f6e620179006c8c4"
+      - "v2/vendor/st/st-rm0433-rev8.pdf@9ba54135736a47a3"
+      - "v2/vendor/st/st-es0392-rev15.pdf@effe23b2b79ec4ee"
     release_effect: BLOCKER
-    source: ["owner ruling D-13", "v2/ecad/tools/gen_sch_b.py:1145-1146", "v2/docs/reviews/2026-09-26-foundation-progress-review.md"]
+    source: ["owner ruling D-13", "v2/ecad/tools/gen_sch_b.py:1145-1146", "v2/docs/reviews/2026-09-26-foundation-progress-review.md", "v2/docs/parts/STM32H743-COMPATIBILITY.md", "v2/vendor/st/st-es0392-rev15.pdf section 2.24.2"]
     source_check: VERIFIED
     history: >-
       Read FAIL at d468613e (the symbol read STM32H753VI); the text, value and order line are aligned in 458b2873 (S-30,
-      closed). Clauses (3) and (4) follow the review of 26 September 2026 and owner condition 1.
+      closed). Clauses (3) and (4) follow the review of 26 September 2026 and owner condition 1. INCONCLUSIVE until 27
+      September 2026, when the layer 6 closer wrote the matrix of clause (3), moved clause (4) to the firmware stage
+      (final_phase PROTOTYPE: the build cannot change a pin, land, net or part, and held at SCHEMATIC it blocked the
+      schematic record on a deliverable the layout does not need) and added clause (5) from ES0392 Rev 15 section 2.24.2
+      (with two FDCANs, revision Y or W CPU reads of the message RAM may be wrong, no workaround); both taken by the
+      session under the owner's standing rule of 26 September 2026 (STM32H743-COMPATIBILITY.md section 9, HC6-SC-1).
     notes: >-
       Created by the integrator from D-13. No rule of pcb_rules.yaml judges a symbol value against the part bought, so
       the reading is the record's own.
@@ -2338,8 +2370,12 @@ records:
           are byte-identical; line 5 (bank 1's home and failover hosts) and section 2's ribbon table, which this
           reading rests on, are byte-identical, and section 1 changes only in its Indicators and EMCON logic rows, so
           it stands on the file at 8eeb152e4d82080c
+      - >-
+          v2/docs/ARCH-PCB-B-IOHA.md re-read when the layer 6 closer's reconciliation was applied (27 September
+          2026, drafts/hc6/apply_registry.py): sections 10a, 6 differ from e3aedb25's; sections 4, 15 and 15a and line 17
+          are byte-identical, so this reading stands on the file at 26fed4e40e0da078
     evidence_bound_to:
-      - "v2/docs/ARCH-PCB-B-IOHA.md@6c3c93b7f32f953a"
+      - "v2/docs/ARCH-PCB-B-IOHA.md@26fed4e40e0da078"
       - "v2/docs/PANEL.md@8eeb152e4d82080c"
       - "v2/ecad/tools/gen_sch_b.py@dedaf34ce285e5ff"
     release_effect: ADVISORY
@@ -3825,8 +3861,18 @@ records:
           firmware), the PWR-F15 row of section 10, and adds finding PWR-F16 (a hung controller with a PTT held is bounded
           by nothing; its PA_EN formula brought to board A's round 8 at integration); section 9.4, which this reading cites,
           is byte-identical, so the record stays FAIL
+      - >-
+          v2/docs/parts/GRADE-CHECK.md (layer 6 closer hc6, 27 September 2026; generated by
+          v2/docs/parts/grade_check.py from the committed netlists, lcsc_fill.py's MAP, the JLCPCB certification
+          table, pcb_envelope.yaml and v2/docs/parts/grade-sources.yaml) judges every fitted active part and connector of the
+          six schematic boards and the modules, cells and wall parts no netlist carries. Board lines: OUTSIDE 1, AT_LIMIT 8, INSIDE_HOT_ONLY 3, TBD 8, INSIDE 123, NOT_A_COMPONENT 3; modules,
+          cells and wall parts: OUTSIDE 2, CARVE_OUT 1, AT_LIMIT 3, TBD 5, INSIDE 8; lines no row covers: 0. OUTSIDE: board B's T1 (Pulse H5007NL, 0 to +70 C), the
+          LimeSDR Mini v2.4 and the AW7915-AED cards, the three parts this record already names, so it stays FAIL.
+          A desk record beside the rule, not the rule's input: pcb_part_temps.yaml still carries the rule's rows
     evidence_bound_to:
       - "v2/docs/feasibility/POWER-THERMAL.md@465abd3bb9c97416"
+      - "v2/docs/parts/GRADE-CHECK.md@e68bd0bbd89272aa"
+      - "v2/docs/parts/grade-sources.yaml@436f6616df519760"
     release_effect: MUST_JUSTIFY
     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:18527-18540 (32.360)", "v2/ecad/tools/pcb_part_temps.yaml", "v2/docs/feasibility/POWER-THERMAL.md section 9.4"]
     source_check: VERIFIED

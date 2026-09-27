@@ -593,9 +593,7 @@ with that.
   the 5 Mbps the generator comment and IOHA section 6 claimed (FAB-05; the IOHA text is corrected in this baseline, the
   generator comment is board B's writer's). The owner accepted the H743 (D-13): the schematic text and the BOM read
   STM32H743VIT6 since `458b2873`, and pin parity is 100 of 100 on both parts (`v2/docs/records/r4b/pin_parity.py` of that round,
-  RECORDED). Owner condition 1 is not closed by the text: the peripherals the supervisors use (FDCAN1 and FDCAN2, I2C1,
-  GPIO) are read in the H743's own datasheet (`FAILOVER-FABRIC.md` section 4.9), and the firmware and build evidence
-  that would prove compatibility do not exist. The firmware floor is software-verified boot on the supervisors; a
+  RECORDED). Owner condition 1 is closed at the schematic stage by `v2/docs/parts/STM32H743-COMPATIBILITY.md` (27 September 2026): every pin, alternate function and electrical feature the supervisors use is read in DS12110 Rev 10 and Rev 11, RM0433 Rev 8 and ES0392 Rev 15, and no requirement uses an STM32H753-only unit (RM0433 Table 2). It carries a silicon-revision constraint (V or X only: ES0392 section 2.24.2, two FDCANs) checked at goods-in, and firmware obligations; the firmware build is CON-017's firmware-stage clause. The firmware floor is software-verified boot on the supervisors; a
   hardware root of trust is required at a production trigger.
 
 ```mermaid
@@ -639,7 +637,7 @@ Rendered for readers without a Mermaid viewer: [`diagrams/svg/arch-5-5-lanes-and
 | Controller | Board | Powered from | Reset and boot | Watchdog | Debug |
 |---|---|---|---|---|---|
 | 3 x CM5 (CM5108064) | B | slot rail +5V_Sx, enabled by SLOT_ENx | eMMC; rpiboot jumper and USB-C per slot; PMIC_EN and PWR_BUT not connected | OS watchdog (INFERRED); heartbeat HBx to the panel and the supervisors | J_DBGx: UART0, module I2C |
-| 3 x STM32H743 I/O supervisors | B | a private AP2112K 3.3 V each from +5V_DEV, with a fit-to-disable jumper per LDO (`458b2873`) | RC reset; BOOT0 to GND | IWDG and BOR by design; option-byte start TBD (RM0433 not held) | SMD SWD land in the netlist (the B21 board carries the through-hole land, W7-R2-01); the LDO's dissipation bounds the firmware clock (PWR-F04) |
+| 3 x STM32H743 I/O supervisors | B | a private AP2112K 3.3 V each from +5V_DEV, with a fit-to-disable jumper per LDO (`458b2873`) | RC reset; BOOT0 to GND | IWDG and BOR by design; the IWDG starts in hardware (option byte IWDG1_SW = 0) and BOR level 3 is set at provisioning (RM0433 Rev 8 pp.179, 214; `v2/docs/parts/STM32H743-COMPATIBILITY.md` HC6-SC-4, HC6-SC-5) | SMD SWD land in the netlist (the B21 board carries the through-hole land, W7-R2-01); the LDO's dissipation bounds the firmware clock (PWR-F04) |
 | RP2040 panel controller | C | C's LDO from PANEL_5V = +5V_DEV | RUN pull-up; BOOTSEL by solder jumper; USB bootloader over bank 1 | software-configured (the battery packet asks for the hardware watchdog) | SWD test points |
 | RP2040 sensor controller | E | always on while the pack is connected (AP63205 EN tied to CELL_F) | as C | software-configured | SWD test points |
 | BQ4050 | P | the cells | internal | AFE watchdog; host watchdog enabled at 10 s by an explicit write (BAT-F10, `PRIMARY-CONFIGURATION.md`) | P test points |
@@ -1207,7 +1205,7 @@ own findings (FAB, SD-EMC, L, PWR-F, BAT-F, DEC) are carried by section 14, not 
 | W1-F04, W5-F11 | The approved tamper switch was placed on no board | NETLIST CORRECTED (`faf8c981`: the sealed reed on board E's J_TAMP, also the lid sensor of D-02b) |
 | W1-F03, W5-ZEROIZE | ZEROIZE was described four incompatible ways | RULED (D-03); the SW_ZERO string and the local sense corrected (`faf8c981`); FB-ZER-1 (section 14) |
 | W5-TESTACCESS-B | Board B had no GND test point, no current shunt, supervisor LDOs that could not be switched off, no pads for several IOHA tests | NETLIST CORRECTED (`458b2873`: test access, Kelvin shunts on the card rails, a fit-to-disable jumper per supervisor LDO; the CAN break links and pads are round 6's); its coverage against IOHA A4 to A10 is not re-read here |
-| W6-F1 | STM32H753VI in the schematic against STM32H743VIT6 bought | RULED (D-13); text and BOM aligned (`458b2873`); condition 1's firmware and build evidence do not exist yet (section 5.5) |
+| W6-F1 | STM32H753VI in the schematic against STM32H743VIT6 bought | RULED (D-13); text and BOM aligned (`458b2873`); compatibility shown at the schematic stage (`v2/docs/parts/STM32H743-COMPATIBILITY.md`); the firmware build is CON-017's firmware-stage clause and the silicon revision (V or X) an ASSEMBLY check |
 
 ### 13.4 Major: EMCON and RF
 
@@ -1345,9 +1343,7 @@ Xenarc's and the heatsink's drawings, the spacers, the jumper plug, the arrestor
 the tests owed to `TEST-PLAN.md` listed above; the review packets for A, B and D after round 7 (`ccf5808e`); the owner's
 spending decisions for R-PWR and R-HSD. Sibling records still stale at `eadbe571`, for their writers: `CONOPS.md`
 section 4 (the Transport row's "fits no chemical fuse and holds PTC disabled", the Charging row's topology) and sections
-4a and 6 (the runtime figures, PWR-F07); `ARCH-PCB-B-IOHA.md` section 6 (the supervisor addresses, the PB1/PB2 finding
-now corrected, "baseline 3x STM32H753") and section 10a (the H753 text), outside the fabric stream's corrections this
-baseline applies; `ZEROIZE.md` section 9 item 8 (Z-C3's addresses); `PANEL.md` section 7's I2C table;
+4a and 6 (the runtime figures, PWR-F07); `ARCH-PCB-B-IOHA.md` section 6 (the supervisor addresses, the PB1/PB2 finding now corrected, "baseline 3x STM32H753") and section 10a (the H753 text), outside the fabric stream's corrections this baseline applies (the H743 sentences reconciled on 27 September 2026 with `v2/docs/parts/STM32H743-COMPATIBILITY.md`); `ZEROIZE.md` section 9 item 8 (Z-C3's addresses); `PANEL.md` section 7's I2C table;
 `GROUNDING-AND-SHIELDS.md` line 39 and its "nine SMA"; `ASSEMBLY.md` section 4 (the RF jumpers row, the 5G pigtails row,
 the wall USB host row); `TEST-PLAN.md` section 4 (the SDR as the EMCON instrument) and the vent steps of E5 and E8;
 `v2/BUILD.md` lines 45 and 75; the generator strings `gen_sch_b.py:643` ("subject to D-08"), `:1160` ("5 Mbps") and

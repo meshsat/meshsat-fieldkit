@@ -1,0 +1,875 @@
+{
+ "what": "JLCPCB public parts API answers (POST https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList, the endpoint jlc_certify.py uses), keyword = the LCSC code, no login, no cart",
+ "rows": [
+  {
+   "code": "C114409",
+   "read_utc": "2026-09-27T00:18:25Z",
+   "hit": {
+    "componentCode": "C114409",
+    "componentModelEn": "STM32H743VIT6",
+    "componentBrandEn": "STMicroelectronics",
+    "componentSpecificationEn": "LQFP-100(14x14)",
+    "componentLibraryType": "expand",
+    "stockCount": 4265,
+    "initialPrice": 12.1325,
+    "describe": "-40℃~+85℃ 1.71V~3.6V 12bit 16bit 1MB 2MB 32 Bit 480MHz 82 ARM Cortex-M7 Built-in FLASH LQFP-100(14x14) Microcontrollers (MCU/MPU/SOC) ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C5271084",
+   "read_utc": "2026-09-27T00:18:26Z",
+   "hit": {
+    "componentCode": "C5271084",
+    "componentModelEn": "STM32H743VIT6TR",
+    "componentBrandEn": "STMicroelectronics",
+    "componentSpecificationEn": "LQFP-100(14x14)",
+    "componentLibraryType": "expand",
+    "stockCount": 894,
+    "initialPrice": 11.9083,
+    "describe": "-40℃~+85℃ 1.71V~3.6V 12bit 16bit 1MB 2MB 32 Bit 480MHz 82 ARM Cortex-M7 Built-in+External FLASH LQFP-100(14x14) Microcontrollers (MCU/MPU/SOC) ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C730206",
+   "read_utc": "2026-09-27T00:18:27Z",
+   "hit": {
+    "componentCode": "C730206",
+    "componentModelEn": "STM32H753VIT6",
+    "componentBrandEn": "STMicroelectronics",
+    "componentSpecificationEn": "LQFP-100(14x14)",
+    "componentLibraryType": "expand",
+    "stockCount": 0,
+    "initialPrice": 17.3112,
+    "describe": "-40℃~+85℃ 1.71V~3.6V 1MB 2MB 32 Bit 480MHz 82 ARM Cortex-M7 Built-in FLASH LQFP-100(14x14) Microcontrollers (MCU/MPU/SOC) ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C164047",
+   "read_utc": "2026-09-27T00:18:28Z",
+   "hit": {
+    "componentCode": "C164047",
+    "componentModelEn": "TAXM25M4RFBCCT2T",
+    "componentBrandEn": "Yajingxin",
+    "componentSpecificationEn": "SMD3225-4P",
+    "componentLibraryType": "expand",
+    "stockCount": 3,
+    "initialPrice": 0.0592,
+    "describe": "-40℃~+85℃ 12pF 25MHz 80Ω SMD crystal oscillator ±10ppm ±50ppm SMD3225-4P Crystals ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C9006",
+   "read_utc": "2026-09-27T00:18:29Z",
+   "hit": {
+    "componentCode": "C9006",
+    "componentModelEn": "X322525MOB4SI",
+    "componentBrandEn": "YXC Crystal Oscillators",
+    "componentSpecificationEn": "SMD3225-4P",
+    "componentLibraryType": "base",
+    "stockCount": 165557,
+    "initialPrice": 0.0944,
+    "describe": "-40℃~+85℃ 12pF 25MHz 50Ω Crystal Oscillator ±10ppm ±20ppm SMD3225-4P Crystals ROHS"
+   },
+   "n": 4
+  },
+  {
+   "code": "C91750",
+   "read_utc": "2026-09-27T00:18:30Z",
+   "hit": {
+    "componentCode": "C91750",
+    "componentModelEn": "X1E0000210139",
+    "componentBrandEn": "Seiko Epson",
+    "componentSpecificationEn": "SMD3225-4P",
+    "componentLibraryType": "expand",
+    "stockCount": 6098,
+    "initialPrice": 0.2605,
+    "describe": "-40℃~+85℃ 12pF 25MHz 40Ω Crystal Oscillator ±10ppm SMD3225-4P Crystals ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C638299",
+   "read_utc": "2026-09-27T00:18:31Z",
+   "hit": {
+    "componentCode": "C638299",
+    "componentModelEn": "KSZ9897RTXI",
+    "componentBrandEn": "Microchip Tech",
+    "componentSpecificationEn": "TQFP-128(14x14)",
+    "componentLibraryType": "expand",
+    "stockCount": 205,
+    "initialPrice": 18.3115,
+    "describe": "-40℃~+85℃ 1.8V、2.5V、3.3V 1Gbps I2C、SPI TQFP-128(14x14) Interface - Specialized ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C500767",
+   "read_utc": "2026-09-27T00:18:32Z",
+   "hit": {
+    "componentCode": "C500767",
+    "componentModelEn": "PI7C9X2G404SLBFDEX",
+    "componentBrandEn": "Diodes Incorporated",
+    "componentSpecificationEn": "LQFP-128-EP(14x14)",
+    "componentLibraryType": "expand",
+    "stockCount": 2770,
+    "initialPrice": 7.8047,
+    "describe": "-40℃~+85℃ 5Gbps PCIe LQFP-128-EP(14x14) Interface - Specialized ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C544686",
+   "read_utc": "2026-09-27T00:18:33Z",
+   "hit": {
+    "componentCode": "C544686",
+    "componentModelEn": "TUSB8041IRGCR",
+    "componentBrandEn": "Texas Instruments",
+    "componentSpecificationEn": "QFN-64-EP(9x9)",
+    "componentLibraryType": "expand",
+    "stockCount": 3180,
+    "initialPrice": 4.055,
+    "describe": "-40℃~+85℃ 0.99V~1.26V、3V~3.6V 33mA 4 778mA Hub I2C、SMBus USB 2.0、USB 3.0 QFN-64-EP(9x9) USB HUB Controllers ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C157482",
+   "read_utc": "2026-09-27T00:18:34Z",
+   "hit": {
+    "componentCode": "C157482",
+    "componentModelEn": "TS3DV642A0RUAR",
+    "componentBrandEn": "Texas Instruments",
+    "componentSpecificationEn": "WFQFN-42-EP(3.5x9)",
+    "componentLibraryType": "expand",
+    "stockCount": 3913,
+    "initialPrice": 1.3966,
+    "describe": "-40℃~+85℃ 0.5pF 100us 12 2.6V~4.5V 2:1 40ps 6.5Ω 7.5GHz WFQFN-42-EP(3.5x9) Analog Switches, Multiplexers ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C3656912",
+   "read_utc": "2026-09-27T00:18:35Z",
+   "hit": {
+    "componentCode": "C3656912",
+    "componentModelEn": "TMUXHS4212IRKSR",
+    "componentBrandEn": "Texas Instruments",
+    "componentSpecificationEn": "VQFN-20(4.5x2.5)",
+    "componentLibraryType": "expand",
+    "stockCount": 3909,
+    "initialPrice": 1.2359,
+    "describe": "1.71V~1.98V、3V~3.6V 100ns 100ns 2 2:1 8.4Ω VQFN-20(4.5x2.5) Analog Switches, Multiplexers ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C128396",
+   "read_utc": "2026-09-27T00:18:36Z",
+   "hit": {
+    "componentCode": "C128396",
+    "componentModelEn": "TS3USB221ARSER",
+    "componentBrandEn": "Texas Instruments",
+    "componentSpecificationEn": "UQFN-10(1.5x2)",
+    "componentLibraryType": "expand",
+    "stockCount": 92234,
+    "initialPrice": 0.2612,
+    "describe": "-40℃~+85℃ 12ns 2.3V~3.6V 250ps 2:1 30ns 6pF 6Ω 900MHz USB UQFN-10(1.5x2) Analog Switches - Special Purpose ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C93245",
+   "read_utc": "2026-09-27T00:18:37Z",
+   "hit": {
+    "componentCode": "C93245",
+    "componentModelEn": "TPS23861PWR",
+    "componentBrandEn": "Texas Instruments",
+    "componentSpecificationEn": "TSSOP-28",
+    "componentLibraryType": "expand",
+    "stockCount": 26,
+    "initialPrice": 2.5301,
+    "describe": "-40℃~+85℃ 25.5W 3.3V 4 44V~57V IEEE 802.3 at(PoE+) Overcurrent Protection Power Sourcing Equipment (PSE) TSSOP-28 Power Over Ethernet (PoE) Controllers ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C6384935",
+   "read_utc": "2026-09-27T00:18:38Z",
+   "hit": {
+    "componentCode": "C6384935",
+    "componentModelEn": "H5007NL",
+    "componentBrandEn": "Pulse Elec",
+    "componentSpecificationEn": "SMD-24P,17.5x12.2mm",
+    "componentLibraryType": "expand",
+    "stockCount": 306,
+    "initialPrice": 1.749,
+    "describe": "0℃~+70℃ 1.5kV 12.2mm 17.5mm 1CT:1CT 5.72mm SMD-24P,17.5x12.2mm Pulse Transformers ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C1518769",
+   "read_utc": "2026-09-27T00:18:39Z",
+   "hit": {
+    "componentCode": "C1518769",
+    "componentModelEn": "ATECC608B-SSHDA-T",
+    "componentBrandEn": "Microchip Tech",
+    "componentSpecificationEn": "SOIC-8",
+    "componentLibraryType": "expand",
+    "stockCount": 2342,
+    "initialPrice": 0.9955,
+    "describe": "-40℃~+85℃ 150nA 2V~5.5V I2C、1-Wire SHA-256、ECDSA、ECDH、HMAC、AES-128 SOIC-8 Security Verification / Encryption ICs ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C9866",
+   "read_utc": "2026-09-27T00:18:40Z",
+   "hit": {
+    "componentCode": "C9866",
+    "componentModelEn": "DS3231SN#T&R",
+    "componentBrandEn": "Analog Devices Inc./Maxim Integrated",
+    "componentSpecificationEn": "SOIC-16-300mil",
+    "componentLibraryType": "expand",
+    "stockCount": 4686,
+    "initialPrice": 9.2013,
+    "describe": "-40℃~+85℃ 0.84uA 2.3V~5.5V 200uA Built-in I2C Temperature compensation、Programmable clock output、Alarm function Yes SOIC-16-300mil Real Time Clocks ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C157570",
+   "read_utc": "2026-09-27T00:18:40Z",
+   "hit": {
+    "componentCode": "C157570",
+    "componentModelEn": "BQ4050RSMR",
+    "componentBrandEn": "Texas Instruments",
+    "componentSpecificationEn": "VQFN-32-EP(4x4)",
+    "componentLibraryType": "expand",
+    "stockCount": 15945,
+    "initialPrice": 1.2391,
+    "describe": "-40℃~+85℃ 1~4 2.2V~26V 336uA Lithium Battery Protection IC、Balancing IC SMBus Support VQFN-32-EP(4x4) Battery Management ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C3681715",
+   "read_utc": "2026-09-27T00:18:41Z",
+   "hit": {
+    "componentCode": "C3681715",
+    "componentModelEn": "BQ7720700DSSR",
+    "componentBrandEn": "Texas Instruments",
+    "componentSpecificationEn": "WSON-12(2x3)",
+    "componentLibraryType": "expand",
+    "stockCount": 3,
+    "initialPrice": 2.1193,
+    "describe": "-40℃~+110℃ 2.25V 2uA 3~7 5V~38.5V Lithium Battery Protection IC Support WSON-12(2x3) Battery Management ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C3670061",
+   "read_utc": "2026-09-27T00:18:42Z",
+   "hit": {
+    "componentCode": "C3670061",
+    "componentModelEn": "SCF9550-30-05",
+    "componentBrandEn": "EATON",
+    "componentSpecificationEn": "-",
+    "componentLibraryType": "expand",
+    "stockCount": 0,
+    "initialPrice": 1.093,
+    "describe": "- Fuse/Current Protector ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C2871872",
+   "read_utc": "2026-09-27T00:18:43Z",
+   "hit": {
+    "componentCode": "C2871872",
+    "componentModelEn": "BQ25731RSNR",
+    "componentBrandEn": "Texas Instruments",
+    "componentSpecificationEn": "QFN-32(4x4)",
+    "componentLibraryType": "expand",
+    "stockCount": 1137,
+    "initialPrice": 3.0222,
+    "describe": "-40℃~+85℃ 16.2A 1~5 22uA 26V Charging IC Constant current charging、Programmable charging current、Soft-start、Under-voltage lockout、Overcurrent Protection、Overvoltage protection I2C Not supported QFN-32(4x4) Battery Management ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C442493",
+   "read_utc": "2026-09-27T00:18:44Z",
+   "hit": {
+    "componentCode": "C442493",
+    "componentModelEn": "LM5176PWPR",
+    "componentBrandEn": "Texas Instruments",
+    "componentSpecificationEn": "HTSSOP-28-EP",
+    "componentLibraryType": "expand",
+    "stockCount": 12309,
+    "initialPrice": 3.8504,
+    "describe": "-40℃~+125℃@(TJ) 1 4.2V~55V 600kHz 800mV~55V Adjustable Boost、Buck Buck-Boost Yes HTSSOP-28-EP DC-DC Converters ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C544309",
+   "read_utc": "2026-09-27T00:18:45Z",
+   "hit": {
+    "componentCode": "C544309",
+    "componentModelEn": "TPS25740ARGER",
+    "componentBrandEn": "Texas Instruments",
+    "componentSpecificationEn": "VQFN-24-EP(4x4)",
+    "componentLibraryType": "expand",
+    "stockCount": 2949,
+    "initialPrice": 1.5314,
+    "describe": "-40℃~+125℃ 1.8mA 4.65V~25V 8.5uA USB Type-C 1.2 VQFN-24-EP(4x4) USB Converters ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C2155778",
+   "read_utc": "2026-09-27T00:18:46Z",
+   "hit": {
+    "componentCode": "C2155778",
+    "componentModelEn": "TPS259631DDAR",
+    "componentBrandEn": "Texas Instruments",
+    "componentSpecificationEn": "SOPowerPAD-8",
+    "componentLibraryType": "expand",
+    "stockCount": 4423,
+    "initialPrice": 0.7324,
+    "describe": "-40℃~+125℃ 1 1.7mm 131mΩ 2.7V~19V 3.9mm 4.91mm Integrated FET Surface Mount SOPowerPAD-8 Surge Protection Devices (SPDs) ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C580654",
+   "read_utc": "2026-09-27T00:18:47Z",
+   "hit": {
+    "componentCode": "C580654",
+    "componentModelEn": "LTC2954ITS8-1#TRMPBF",
+    "componentBrandEn": "Analog Devices",
+    "componentSpecificationEn": "TSOT-23-8",
+    "componentLibraryType": "expand",
+    "stockCount": 197,
+    "initialPrice": 6.957,
+    "describe": "-40℃~+85℃ 2.7V~26.4V 256ms 6uA Open-drain TSOT-23-8 Power Distribution Switches ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C2657885",
+   "read_utc": "2026-09-27T00:18:48Z",
+   "hit": {
+    "componentCode": "C2657885",
+    "componentModelEn": "LTC2954ITS8-1#TRPBF",
+    "componentBrandEn": "Analog Devices",
+    "componentSpecificationEn": "TSOT-23-8",
+    "componentLibraryType": "expand",
+    "stockCount": 0,
+    "initialPrice": 5.2551,
+    "describe": "-40℃~+85℃ 2.7V~26.4V 256ms 6uA Active High Open-drain TSOT-23-8 Power Distribution Switches ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C674164",
+   "read_utc": "2026-09-27T00:18:49Z",
+   "hit": {
+    "componentCode": "C674164",
+    "componentModelEn": "LT8705AEUHF#TRPBF",
+    "componentBrandEn": "Analog Devices",
+    "componentSpecificationEn": "QFN-38-EP(5x7)",
+    "componentLibraryType": "expand",
+    "stockCount": 3,
+    "initialPrice": 24.4971,
+    "describe": "-40℃~+125℃@(TA) 1.3V~80V 100kHz~400kHz 2.8V~80V Adjustable Buck-Boost Buck-Boost External Yes QFN-38-EP(5x7) DC-DC Converters ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C29781241",
+   "read_utc": "2026-09-27T00:18:50Z",
+   "hit": {
+    "componentCode": "C29781241",
+    "componentModelEn": "LG290P03AAMD",
+    "componentBrandEn": "Quectel",
+    "componentSpecificationEn": "SMD",
+    "componentLibraryType": "expand",
+    "stockCount": 73,
+    "initialPrice": 86.0652,
+    "describe": "SMD GNSS Modules ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C411294",
+   "read_utc": "2026-09-27T00:18:51Z",
+   "hit": {
+    "componentCode": "C411294",
+    "componentModelEn": "E22-900M30S",
+    "componentBrandEn": "Chengdu Ebyte Elec Tech",
+    "componentSpecificationEn": "SMD,38.5x24mm",
+    "componentLibraryType": "expand",
+    "stockCount": 551,
+    "initialPrice": 7.1811,
+    "describe": "-151dBm 12km 14mA 2.5V~5.5V 31dBm 650mA Continuous frequency coverage IPEX interface LoRa SPI SMD,38.5x24mm LoRa Modules ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C5352930",
+   "read_utc": "2026-09-27T00:18:52Z",
+   "hit": {
+    "componentCode": "C5352930",
+    "componentModelEn": "E72-2G4M20S1E",
+    "componentBrandEn": "Chengdu Ebyte Elec Tech",
+    "componentSpecificationEn": "-",
+    "componentLibraryType": "expand",
+    "stockCount": 0,
+    "initialPrice": 16.7915,
+    "describe": "Module reset function、Integrated antenna、AES encryption、Restore factory settings function - RF Modules ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C7435219",
+   "read_utc": "2026-09-27T00:18:53Z",
+   "hit": {
+    "componentCode": "C7435219",
+    "componentModelEn": "10164227-1004A1RLF",
+    "componentBrandEn": "Amphenol ICC",
+    "componentSpecificationEn": "SMD,P=0.4mm",
+    "componentLibraryType": "expand",
+    "stockCount": 1238,
+    "initialPrice": 3.4607,
+    "describe": "0.4mm 100P 2 300mA 30V Copper alloy Gold Surface Mount,Vertical SMD,P=0.4mm Board-to-Board and Backplane Connector ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C590866",
+   "read_utc": "2026-09-27T00:18:54Z",
+   "hit": {
+    "componentCode": "C590866",
+    "componentModelEn": "2199119-3",
+    "componentBrandEn": "TE Connectivity",
+    "componentSpecificationEn": "SMD,P=0.5mm",
+    "componentLibraryType": "expand",
+    "stockCount": 1427,
+    "initialPrice": 1.8221,
+    "describe": "-40℃~+80℃ 0.5mm 67P Copper alloy Gold Surface Mount, Right Angle SMD,P=0.5mm Edgeboard Connectors ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C2977809",
+   "read_utc": "2026-09-27T00:18:55Z",
+   "hit": {
+    "componentCode": "C2977809",
+    "componentModelEn": "2199230-4",
+    "componentBrandEn": "TE Connectivity",
+    "componentSpecificationEn": "SMD,P=0.5mm,Surface Mount，Right Angle",
+    "componentLibraryType": "expand",
+    "stockCount": 6464,
+    "initialPrice": 1.7117,
+    "describe": "-40℃~+80℃ 0.5mm 67P Copper alloy Gold Surface Mount, Right Angle SMD,P=0.5mm,卧贴 Edgeboard Connectors ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C2927698",
+   "read_utc": "2026-09-27T00:18:56Z",
+   "hit": {
+    "componentCode": "C2927698",
+    "componentModelEn": "MDT420M02001",
+    "componentBrandEn": "Amphenol ICC",
+    "componentSpecificationEn": "SMD,P=0.5mm",
+    "componentLibraryType": "expand",
+    "stockCount": 7153,
+    "initialPrice": 1.5753,
+    "describe": "-40℃~+80℃ 500mA 50V Black Copper alloy Gold Surface Mount,Vertical SMD,P=0.5mm IDC Connectors ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C2871143",
+   "read_utc": "2026-09-27T00:18:57Z",
+   "hit": {
+    "componentCode": "C2871143",
+    "componentModelEn": "TCAN334DR",
+    "componentBrandEn": "Texas Instruments",
+    "componentSpecificationEn": "SOIC-8",
+    "componentLibraryType": "expand",
+    "stockCount": 479,
+    "initialPrice": 3.0871,
+    "describe": "-40℃~+125℃ 1Mbps 20uA 3V~3.6V 60mA CAN Transceiver SOIC-8 CAN Transceivers ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C964632",
+   "read_utc": "2026-09-27T00:18:58Z",
+   "hit": {
+    "componentCode": "C964632",
+    "componentModelEn": "CP2102N-A02-GQFN28R",
+    "componentBrandEn": "SKYWORKS/SILICON LABS",
+    "componentSpecificationEn": "QFN-28-EP(5x5)",
+    "componentLibraryType": "expand",
+    "stockCount": 42884,
+    "initialPrice": 1.827,
+    "describe": "-40℃~+85℃@(Ta) 1.3uA 3V~3.6V 9.5mA USB 2.0 USB to UART QFN-28-EP(5x5) USB Converters ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C2040",
+   "read_utc": "2026-09-27T00:18:59Z",
+   "hit": {
+    "componentCode": "C2040",
+    "componentModelEn": "RP2040",
+    "componentBrandEn": "Raspberry Pi",
+    "componentSpecificationEn": "LQFN-56(7x7)",
+    "componentLibraryType": "expand",
+    "stockCount": 72848,
+    "initialPrice": 0.9874,
+    "describe": "12bit 133MHz 30 LQFN-56(7x7) Microcontrollers (MCU/MPU/SOC) ROHS"
+   },
+   "n": 6
+  },
+  {
+   "code": "C274411",
+   "read_utc": "2026-09-27T00:19:00Z",
+   "hit": {
+    "componentCode": "C274411",
+    "componentModelEn": "B2P-VH-BL(LF)(SN)",
+    "componentBrandEn": "JST",
+    "componentSpecificationEn": "Plugin,P=3.96mm",
+    "componentLibraryType": "expand",
+    "stockCount": 45436,
+    "initialPrice": 0.0886,
+    "describe": "-25℃~+85℃ 1 10A 1x2P 2 250V 2P 3.96mm 7.86mm 8.5mm 9.4mm Blue Brass Glass-Fiber Reinforced PBT Through Hole Tin UL94V-0 VH 插件,P=3.96mm Wire To Board Connector ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C3174425",
+   "read_utc": "2026-09-27T00:19:01Z",
+   "hit": {
+    "componentCode": "C3174425",
+    "componentModelEn": "132134",
+    "componentBrandEn": "Amphenol ICC",
+    "componentSpecificationEn": "Plugin",
+    "componentLibraryType": "expand",
+    "stockCount": 1654,
+    "initialPrice": 4.4935,
+    "describe": "-65℃~+165℃ 1 18GHz 50Ω 9.53mm Board Side Inner Bore Positive Pin SMA 插件 Coaxial Connectors (RF) ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C88373",
+   "read_utc": "2026-09-27T00:19:02Z",
+   "hit": {
+    "componentCode": "C88373",
+    "componentModelEn": "U.FL-R-SMT-1(10)",
+    "componentBrandEn": "HRS(Hirose)",
+    "componentSpecificationEn": "SMD",
+    "componentLibraryType": "expand",
+    "stockCount": 40968,
+    "initialPrice": 0.2217,
+    "describe": "-40℃~+90℃ 1 1.25mm 2mm 50Ω 6GHz Board Side IPEX Male Pin SMD Coaxial Connectors (RF) ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C434808",
+   "read_utc": "2026-09-27T00:19:02Z",
+   "hit": {
+    "componentCode": "C434808",
+    "componentModelEn": "U.FL-R-SMT(10)",
+    "componentBrandEn": "HRS(Hirose)",
+    "componentSpecificationEn": "SMD",
+    "componentLibraryType": "expand",
+    "stockCount": 21861,
+    "initialPrice": 0.3589,
+    "describe": "-40℃~+90℃ 1 1.25mm 2mm 50Ω 6GHz Board Side IPEX Male Pin SMD Coaxial Connectors (RF) ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C916313",
+   "read_utc": "2026-09-27T00:19:03Z",
+   "hit": {
+    "componentCode": "C916313",
+    "componentModelEn": "2086581001",
+    "componentBrandEn": "MOLEX",
+    "componentSpecificationEn": "SMD",
+    "componentLibraryType": "expand",
+    "stockCount": 4823,
+    "initialPrice": 1.5184,
+    "describe": "19P Female HDMI-A Surface Mount, Right Angle SMD HDMI Connectors ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C129189",
+   "read_utc": "2026-09-27T00:19:04Z",
+   "hit": {
+    "componentCode": "C129189",
+    "componentModelEn": "SKY13351-378LF",
+    "componentBrandEn": "Skyworks Solutions",
+    "componentSpecificationEn": "DFN-6-EP(1x1)",
+    "componentLibraryType": "expand",
+    "stockCount": 16960,
+    "initialPrice": 0.7211,
+    "describe": "-40℃~+85℃ 0.35dB 1.8V~5V 20MHz~6GHz 24dB SPDT DFN-6-EP(1x1) RF Switches ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C5355286",
+   "read_utc": "2026-09-27T00:19:05Z",
+   "hit": {
+    "componentCode": "C5355286",
+    "componentModelEn": "692122030100",
+    "componentBrandEn": "Wurth Elektronik",
+    "componentSpecificationEn": "SMD",
+    "componentLibraryType": "expand",
+    "stockCount": 85,
+    "initialPrice": 3.2122,
+    "describe": "-20℃~+85℃ 1 1.8A 30V 9P Blue Female Type-A USB 3.2 SMD USB Connectors ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C165948",
+   "read_utc": "2026-09-27T00:19:06Z",
+   "hit": {
+    "componentCode": "C165948",
+    "componentModelEn": "TYPE-C-31-M-12",
+    "componentBrandEn": "Korean Hroparts Elec",
+    "componentSpecificationEn": "SMD",
+    "componentLibraryType": "expand",
+    "stockCount": 168976,
+    "initialPrice": 0.1855,
+    "describe": "-30℃~+80℃ 1 10,000 cycles 16P 20V 5A 7.35mm Female Surface Mount, Right Angle Type-C SMD USB Connectors ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C6296715",
+   "read_utc": "2026-09-27T00:19:07Z",
+   "hit": {
+    "componentCode": "C6296715",
+    "componentModelEn": "SIM8060-6-0-14-00-A",
+    "componentBrandEn": "Global Connector Technology",
+    "componentSpecificationEn": "SMD",
+    "componentLibraryType": "expand",
+    "stockCount": 3858,
+    "initialPrice": 1.6402,
+    "describe": "-20℃~+85℃ 1.42mm 125V Connector and Ejector Hinged Lid Nano-SIM Card SMD SIM Card Connectors ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C2836813",
+   "read_utc": "2026-09-27T00:19:08Z",
+   "hit": {
+    "componentCode": "C2836813",
+    "componentModelEn": "BMI270",
+    "componentBrandEn": "Bosch Sensortec",
+    "componentSpecificationEn": "LGA-14(2.5x3)",
+    "componentLibraryType": "expand",
+    "stockCount": 2250,
+    "initialPrice": 2.8419,
+    "describe": "-40℃~+85℃ 1.71V~3.6V 16bit 2KB 3.5uA Accelerometer Gyroscope SPI、I2C X,Y,Z X,Y,Z ±16g ±2000dps LGA-14(2.5x3) Accelerometers ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C3664478",
+   "read_utc": "2026-09-27T00:19:09Z",
+   "hit": {
+    "componentCode": "C3664478",
+    "componentModelEn": "BME688",
+    "componentBrandEn": "Bosch Sensortec",
+    "componentSpecificationEn": "SMD-8P",
+    "componentLibraryType": "expand",
+    "stockCount": 700,
+    "initialPrice": 11.7119,
+    "describe": "-40℃~+85℃ 0%RH~100%RH 1.71V~3.6V 2.1uA I2C、SPI ±0.5℃ ±3%RH SMD-8P Temperature and Humidity Sensor ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C3659325",
+   "read_utc": "2026-09-27T00:19:10Z",
+   "hit": {
+    "componentCode": "C3659325",
+    "componentModelEn": "SGP41-D-R4",
+    "componentBrandEn": "Sensirion",
+    "componentSpecificationEn": "DFN-6(2.4x2.4)",
+    "componentLibraryType": "expand",
+    "stockCount": 2567,
+    "initialPrice": 8.9495,
+    "describe": "DFN-6(2.4x2.4) VOC Sensors ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C111822",
+   "read_utc": "2026-09-27T00:19:11Z",
+   "hit": {
+    "componentCode": "C111822",
+    "componentModelEn": "LM5069MM-2/NOPB",
+    "componentBrandEn": "Texas Instruments",
+    "componentSpecificationEn": "VSSOP-10-0.5mm",
+    "componentLibraryType": "expand",
+    "stockCount": 6673,
+    "initialPrice": 5.1447,
+    "describe": "-40℃~+125℃ 1 1.1mm 16uA 2mA 3mm 3mm 55mV 9V~80V External FET Overcurrent Protection、Short-Circuit  Protection、Under-voltage lockout Surface Mount VSSOP-10-0.5mm Surge Protection Devices (SPDs) ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C2941042",
+   "read_utc": "2026-09-27T00:19:12Z",
+   "hit": {
+    "componentCode": "C2941042",
+    "componentModelEn": "LM74700QDBVRQ1",
+    "componentBrandEn": "Texas Instruments",
+    "componentSpecificationEn": "SOT-23-6",
+    "componentLibraryType": "expand",
+    "stockCount": 2311,
+    "initialPrice": 1.7182,
+    "describe": "-40℃~+150℃ 11mA 15V 2.37A 20mV 3.2V~65V 65V 80uA External FET Reverse current blocking、Reverse polarity protection、With enable SOT-23-6 ORing Controllers ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C3001507",
+   "read_utc": "2026-09-27T00:19:13Z",
+   "hit": {
+    "componentCode": "C3001507",
+    "componentModelEn": "SA868-U",
+    "componentBrandEn": "G-NiceRF",
+    "componentSpecificationEn": "SMD,19x35.6mm",
+    "componentLibraryType": "expand",
+    "stockCount": 1,
+    "initialPrice": 12.4556,
+    "describe": "Sleep wake-up function SMD,19x35.6mm RF Modules ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C52140339",
+   "read_utc": "2026-09-27T00:19:14Z",
+   "hit": {
+    "componentCode": "C52140339",
+    "componentModelEn": "SA868S",
+    "componentBrandEn": "G-NiceRF",
+    "componentSpecificationEn": "SMD,35.6x19mm",
+    "componentLibraryType": "expand",
+    "stockCount": 0,
+    "initialPrice": 0.0203,
+    "describe": "SMD,35.6x19mm SMT ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C2070920",
+   "read_utc": "2026-09-27T00:19:15Z",
+   "hit": {
+    "componentCode": "C2070920",
+    "componentModelEn": "AP64500SP-13",
+    "componentBrandEn": "Diodes Incorporated",
+    "componentSpecificationEn": "SO-8-EP",
+    "componentLibraryType": "expand",
+    "stockCount": 3354,
+    "initialPrice": 1.7409,
+    "describe": "-40℃~+85℃ 1 100kHz~2.2MHz 25uA 3.8V~40V 5A 800mV~39V Adjustable Buck Buck Built-in Yes SO-8-EP DC-DC Converters ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C3200405",
+   "read_utc": "2026-09-27T00:19:16Z",
+   "hit": {
+    "componentCode": "C3200405",
+    "componentModelEn": "TPS62933DRLR",
+    "componentBrandEn": "Texas Instruments",
+    "componentSpecificationEn": "SOT-583",
+    "componentLibraryType": "expand",
+    "stockCount": 39309,
+    "initialPrice": 0.5879,
+    "describe": "-40℃~+150℃@(TJ) 1 12uA 2.2MHz 3.8V~30V 3A 800mV~22V Adjustable Buck Buck Built-in Yes SOT-583 DC-DC Converters ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C98733",
+   "read_utc": "2026-09-27T00:19:17Z",
+   "hit": {
+    "componentCode": "C98733",
+    "componentModelEn": "XT60-M.",
+    "componentBrandEn": "Changzhou Amass Elec",
+    "componentSpecificationEn": "-",
+    "componentLibraryType": "expand",
+    "stockCount": 23789,
+    "initialPrice": 0.3768,
+    "describe": "-、Banana Connector 3.5mm Male Yellow - Power connector / plug connector"
+   },
+   "n": 1
+  },
+  {
+   "code": "C473333",
+   "read_utc": "2026-09-27T00:19:18Z",
+   "hit": {
+    "componentCode": "C473333",
+    "componentModelEn": "CSD19532Q5B",
+    "componentBrandEn": "Texas Instruments",
+    "componentSpecificationEn": "SON-8(5x6)",
+    "componentLibraryType": "expand",
+    "stockCount": 2745,
+    "initialPrice": 2.1339,
+    "describe": "-55℃~+150℃ 1 N-channel 100A 100V 18pF 195W 2.6V 4.6mΩ@6V 4.81nF 48nC@10V 706pF N-Channel SON-8(5x6) MOSFETs ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C2876544",
+   "read_utc": "2026-09-27T00:19:19Z",
+   "hit": {
+    "componentCode": "C2876544",
+    "componentModelEn": "CSD18510Q5B",
+    "componentBrandEn": "Texas Instruments",
+    "componentSpecificationEn": "VSON-8(5x6)",
+    "componentLibraryType": "expand",
+    "stockCount": 838,
+    "initialPrice": 1.3966,
+    "describe": "-55℃~+150℃ 0.96mΩ@10V 1 N-channel 11.4nF 153nC@10V 156W 2.3V 300A 40V VSON-8(5x6) MOSFETs ROHS"
+   },
+   "n": 1
+  },
+  {
+   "code": "C529279",
+   "read_utc": "2026-09-27T00:19:20Z",
+   "hit": {
+    "componentCode": "C529279",
+    "componentModelEn": "CSD17570Q5B",
+    "componentBrandEn": "Texas Instruments",
+    "componentSpecificationEn": "SON-8(5x6)",
+    "componentLibraryType": "expand",
+    "stockCount": 111,
+    "initialPrice": 1.8383,
+    "describe": "-55℃~+150℃ 0.56mΩ@10V 1 N-channel 1.14nF 1.5V 1.89nF 100A 13.6nF 3.2W 30V 93nC@4.5V N-Channel SON-8(5x6) MOSFETs ROHS"
+   },
+   "n": 1
+  }
+ ]
+}

@@ -1,0 +1,5673 @@
+{
+ "what": "FindChips (Supplyframe) public search pages, https://www.findchips.com/search/<query>, no login: one row per distributor offer as the page lists it; an aggregator reading, not the distributor itself; the same stock figure repeats across a distributor's packaging rows",
+ "rows": [
+  {
+   "query": "RM520N-GL",
+   "url": "https://www.findchips.com/search/RM520N-GL",
+   "read_utc": "2026-09-27T00:03:33Z",
+   "rows": [
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RM520NGLAA-M20-ESIM15",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "RM520NGLAA-M20-ESIM15",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RM520NGLAA-M20-PC15",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "RM520NGLAA-M20-PC15",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RM520NGLAA-M20-SGASA",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "RM520NGLAA-M20-SGASA",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RM520NGLAA-M20-ESIM",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "RM520NGLAA-M20-ESIM",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RM520NGLAP-M20-SGASA",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "RM520NGLAP-M20-SGASA",
+     "stock": "0"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "2958-RM520NGLAA-M20-PC15-ND",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "RM520NGLAA-M20-PC15",
+     "stock": "0 Tray"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "2958-RM520NGLAA-M20-SGASA-ND",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "RM520NGLAA-M20-SGASA",
+     "stock": "0 Tray"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "2958-RM520NGLAA-M20-ESIM-ND",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "RM520NGLAA-M20-ESIM",
+     "stock": "0 Tray"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "2958-RM520NGLAP-M20-SGASATR-ND",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "RM520NGLAP-M20-SGASA",
+     "stock": "0 Tape & Reel"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "2958-RM520NGLAA-M20-ESIM15-ND",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "RM520NGLAA-M20-ESIM15",
+     "stock": "0 Tray"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Quectel Wireless Solutions Co., Ltd",
+     "mpn": "RM520NGLAA-M20-FC23",
+     "stock": "48"
+    },
+    {
+     "distributor": "Unikey Electronic Pte Ltd",
+     "sku": "",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "RM520NGLAA-M20-SGASA",
+     "stock": "300"
+    },
+    {
+     "distributor": "Unikey Electronic Pte Ltd",
+     "sku": "",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "RM520NGLAA-M20-PC15",
+     "stock": "0"
+    }
+   ]
+  },
+  {
+   "query": "RM520NGL",
+   "url": "https://www.findchips.com/search/RM520NGL",
+   "read_utc": "2026-09-27T00:03:34Z",
+   "rows": [
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RM520NGLAA-M20-ESIM15",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "RM520NGLAA-M20-ESIM15",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RM520NGLAA-M20-PC15",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "RM520NGLAA-M20-PC15",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RM520NGLAA-M20-SGASA",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "RM520NGLAA-M20-SGASA",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RM520NGLAA-M20-ESIM",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "RM520NGLAA-M20-ESIM",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RM520NGLAP-M20-SGASA",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "RM520NGLAP-M20-SGASA",
+     "stock": "0"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "2958-RM520NGLAA-M20-PC15-ND",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "RM520NGLAA-M20-PC15",
+     "stock": "0 Tray"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "2958-RM520NGLAA-M20-ESIM-ND",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "RM520NGLAA-M20-ESIM",
+     "stock": "0 Tray"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "2958-RM520NGLAA-M20-SGASA-ND",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "RM520NGLAA-M20-SGASA",
+     "stock": "0 Tray"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "2958-RM520NGLAP-M20-SGASATR-ND",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "RM520NGLAP-M20-SGASA",
+     "stock": "0 Tape & Reel"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "2958-RM520NGLAA-M20-ESIM15-ND",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "RM520NGLAA-M20-ESIM15",
+     "stock": "0 Tray"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Quectel Wireless Solutions Co., Ltd",
+     "mpn": "RM520NGLAA-M20-FC23",
+     "stock": "48"
+    },
+    {
+     "distributor": "Unikey Electronic Pte Ltd",
+     "sku": "",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "RM520NGLAA-M20-SGASA",
+     "stock": "300"
+    },
+    {
+     "distributor": "Unikey Electronic Pte Ltd",
+     "sku": "",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "RM520NGLAA-M20-PC15",
+     "stock": "0"
+    }
+   ]
+  },
+  {
+   "query": "SA868",
+   "url": "https://www.findchips.com/search/SA868",
+   "read_utc": "2026-09-27T00:03:35Z",
+   "rows": [
+    {
+     "distributor": "Chip 1 Exchange",
+     "sku": "",
+     "mfr": "",
+     "mpn": "HSA-868TEB2-W-NI",
+     "stock": "3757"
+    },
+    {
+     "distributor": "LCSC",
+     "sku": "",
+     "mfr": "G-NiceRF",
+     "mpn": "SA868-U",
+     "stock": "1"
+    }
+   ]
+  },
+  {
+   "query": "0858-0-15-20-82-14-11-0",
+   "url": "https://www.findchips.com/search/0858-0-15-20-82-14-11-0",
+   "read_utc": "2026-09-27T00:11:42Z",
+   "rows": [
+    {
+     "distributor": "Farnell",
+     "sku": "2908977",
+     "mfr": "Mill-Max Mfg Corp",
+     "mpn": "0858-0-15-20-82-14-11-0",
+     "stock": "1401"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "ED10088-ND",
+     "mfr": "Mill-Max Mfg Corp",
+     "mpn": "0858-0-15-20-82-14-11-0",
+     "stock": "18646 Bulk"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000005665865",
+     "mfr": "Mill-Max Mfg Corp",
+     "mpn": "0858-0-15-20-82-14-11-0",
+     "stock": "0"
+    },
+    {
+     "distributor": "Heilind Europe",
+     "sku": "MMX0858-0-15-20-82-14-110",
+     "mfr": "Mill-Max Mfg Corp",
+     "mpn": "0858-0-15-20-82-14-11-0",
+     "stock": "Europe - 0 in Stock"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Mill-Max Mfg Corp",
+     "mpn": "0858-0-15-20--82-14-11-0",
+     "stock": "17"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Mill-Max Mfg Corp",
+     "mpn": "0858-0-15-20-82-14-11-0 REV B",
+     "stock": "1500"
+    }
+   ]
+  },
+  {
+   "query": "SCF9550-30-05",
+   "url": "https://www.findchips.com/search/SCF9550-30-05",
+   "read_utc": "2026-09-27T00:13:37Z",
+   "rows": [
+    {
+     "distributor": "Avnet Americas",
+     "sku": "SCF9550-30-05",
+     "mfr": "Eaton Corporation",
+     "mpn": "SCF9550-30-05",
+     "stock": "0"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "283-SCF9550-30-05CT-ND",
+     "mfr": "Eaton Bussmann",
+     "mpn": "SCF9550-30-05",
+     "stock": "907 Cut Tape"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "283-SCF9550-30-05DKR-ND",
+     "mfr": "Eaton Bussmann",
+     "mpn": "SCF9550-30-05",
+     "stock": "907 Digi-Reel®"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "283-SCF9550-30-05TR-ND",
+     "mfr": "Eaton Bussmann",
+     "mpn": "SCF9550-30-05",
+     "stock": "0 Tape & Reel"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000006370342",
+     "mfr": "Eaton Bussmann",
+     "mpn": "SCF9550-30-05",
+     "stock": "0"
+    }
+   ]
+  },
+  {
+   "query": "BQ7720700DSSR",
+   "url": "https://www.findchips.com/search/BQ7720700DSSR",
+   "read_utc": "2026-09-27T00:13:40Z",
+   "rows": [
+    {
+     "distributor": "DigiKey",
+     "sku": "296-BQ7720700DSSRDKR-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "BQ7720700DSSR",
+     "stock": "2648 Digi-Reel®"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "296-BQ7720700DSSRTR-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "BQ7720700DSSR",
+     "stock": "2648 Tape & Reel"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "296-BQ7720700DSSRCT-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "BQ7720700DSSR",
+     "stock": "2648 Cut Tape"
+    }
+   ]
+  },
+  {
+   "query": "BQ7720700DSST",
+   "url": "https://www.findchips.com/search/BQ7720700DSST",
+   "read_utc": "2026-09-27T00:13:42Z",
+   "rows": [
+    {
+     "distributor": "DigiKey",
+     "sku": "296-BQ7720700DSSRDKR-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "BQ7720700DSSR",
+     "stock": "2648 Digi-Reel®"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "296-BQ7720700DSSRTR-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "BQ7720700DSSR",
+     "stock": "2648 Tape & Reel"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "296-BQ7720700DSSRCT-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "BQ7720700DSSR",
+     "stock": "2648 Cut Tape"
+    }
+   ]
+  },
+  {
+   "query": "TAXM25M4RFBCCT2T",
+   "url": "https://www.findchips.com/search/TAXM25M4RFBCCT2T",
+   "read_utc": "2026-09-27T00:13:45Z",
+   "rows": [
+    {
+     "distributor": "LCSC",
+     "sku": "",
+     "mfr": "Yajingxin",
+     "mpn": "TAXM25M4RFBCCT2T",
+     "stock": "19150"
+    }
+   ]
+  },
+  {
+   "query": "X322525MOB4SI",
+   "url": "https://www.findchips.com/search/X322525MOB4SI",
+   "read_utc": "2026-09-27T00:13:48Z",
+   "rows": [
+    {
+     "distributor": "LCSC",
+     "sku": "",
+     "mfr": "YangXing Technology",
+     "mpn": "X322525MOB4SI",
+     "stock": "40815"
+    },
+    {
+     "distributor": "Unikey Electronic Pte Ltd",
+     "sku": "",
+     "mfr": "YangXing Technology",
+     "mpn": "X322525MOB4SI",
+     "stock": "89666"
+    }
+   ]
+  },
+  {
+   "query": "X1E0000210139",
+   "url": "https://www.findchips.com/search/X1E0000210139",
+   "read_utc": "2026-09-27T00:13:50Z",
+   "rows": [
+    {
+     "distributor": "Farnell",
+     "sku": "1712843RL",
+     "mfr": "Seiko Epson Corporation",
+     "mpn": "X1E0000210132",
+     "stock": "11547"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "1712843",
+     "mfr": "Seiko Epson Corporation",
+     "mpn": "X1E0000210132",
+     "stock": "11547"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "2428539",
+     "mfr": "Seiko Epson Corporation",
+     "mpn": "X1E0000210132",
+     "stock": "0"
+    }
+   ]
+  },
+  {
+   "query": "STM32H743VIT6",
+   "url": "https://www.findchips.com/search/STM32H743VIT6",
+   "read_utc": "2026-09-27T00:13:53Z",
+   "rows": [
+    {
+     "distributor": "Avnet Americas",
+     "sku": "STM32H743VIT6",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H743VIT6",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "STM32H743VIT6TR",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H743VIT6TR",
+     "stock": "0"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "2820776",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H743VIT6",
+     "stock": "0"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4904676",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H743VIT6TR",
+     "stock": "0"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4904676RL",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H743VIT6TR",
+     "stock": "0"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "497-17720-ND",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H743VIT6",
+     "stock": "0 Tray"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "497-STM32H743VIT6TR-ND",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H743VIT6TR",
+     "stock": "0 Tape & Reel"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "497-STM32H743VIT6TRCT-ND",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H743VIT6TR",
+     "stock": "0 Cut Tape"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "497-STM32H743VIT6TRDKR-ND",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H743VIT6TR",
+     "stock": "0 Digi-Reel®"
+    },
+    {
+     "distributor": "TME",
+     "sku": "STM32H743VIT6",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H743VIT6",
+     "stock": "39"
+    },
+    {
+     "distributor": "TME",
+     "sku": "STM32H743VIT6TR",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H743VIT6TR",
+     "stock": "0"
+    },
+    {
+     "distributor": "Schukat electronic",
+     "sku": "STM32H743VIT6",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H743VIT6",
+     "stock": "176"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H743VIT6",
+     "stock": "27796"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H743VIT6TR",
+     "stock": "25230"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H743VIT6",
+     "stock": "14300"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "",
+     "mpn": "STM32H743VIT6",
+     "stock": "16000"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H743VIT6TR",
+     "stock": "13860"
+    }
+   ]
+  },
+  {
+   "query": "STM32H753VIT6",
+   "url": "https://www.findchips.com/search/STM32H753VIT6",
+   "read_utc": "2026-09-27T00:13:56Z",
+   "rows": [
+    {
+     "distributor": "Avnet Americas",
+     "sku": "STM32H753VIT6",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H753VIT6",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "STM32H753VIT6E",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H753VIT6E",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "STM32H753VIT6TR",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H753VIT6TR",
+     "stock": "0"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "2851000",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H753VIT6",
+     "stock": "0"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "497-18566-ND",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H753VIT6",
+     "stock": "0 Tray"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "497-STM32H753VIT6TR-ND",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H753VIT6TR",
+     "stock": "0 Tape & Reel"
+    },
+    {
+     "distributor": "TME",
+     "sku": "STM32H753VIT6",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H753VIT6",
+     "stock": "0"
+    },
+    {
+     "distributor": "TME",
+     "sku": "STM32H753VIT6TR",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H753VIT6TR",
+     "stock": "0"
+    },
+    {
+     "distributor": "Schukat electronic",
+     "sku": "STM32H753VIT6",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H753VIT6",
+     "stock": "0"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H753VIT6",
+     "stock": "5899"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "STMicroelectronics",
+     "mpn": "STM32H753VIT6",
+     "stock": "4740"
+    }
+   ]
+  },
+  {
+   "query": "KSZ9897RTXI",
+   "url": "https://www.findchips.com/search/KSZ9897RTXI",
+   "read_utc": "2026-09-27T00:13:59Z",
+   "rows": [
+    {
+     "distributor": "Farnell",
+     "sku": "2920816",
+     "mfr": "Microchip Technology Inc",
+     "mpn": "KSZ9897RTXI",
+     "stock": "5"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "KSZ9897RTXI",
+     "mfr": "Microchip Technology Inc",
+     "mpn": "KSZ9897RTXI",
+     "stock": "40"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "03AC6128",
+     "mfr": "Microchip Technology Inc",
+     "mpn": "KSZ9897RTXI",
+     "stock": "4 Partner Stock"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "KSZ9897RTXI-TR",
+     "mfr": "Microchip Technology Inc",
+     "mpn": "KSZ9897RTXI-TR",
+     "stock": "0"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "KSZ9897RTXI-ND",
+     "mfr": "Microchip Technology Inc",
+     "mpn": "KSZ9897RTXI",
+     "stock": "4969 Tray"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "KSZ9897RTXI-DKR-ND",
+     "mfr": "Microchip Technology Inc",
+     "mpn": "KSZ9897RTXI-TR",
+     "stock": "0 Digi-Reel®"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "KSZ9897RTXI-TR-ND",
+     "mfr": "Microchip Technology Inc",
+     "mpn": "KSZ9897RTXI-TR",
+     "stock": "0 Tape & Reel"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "KSZ9897RTXI-CT-ND",
+     "mfr": "Microchip Technology Inc",
+     "mpn": "KSZ9897RTXI-TR",
+     "stock": "0 Cut Tape"
+    },
+    {
+     "distributor": "Microchip Technology Inc",
+     "sku": "KSZ9897RTXI",
+     "mfr": "Microchip Technology Inc",
+     "mpn": "KSZ9897RTXI",
+     "stock": "In Stock: 0 and Alternates Available"
+    },
+    {
+     "distributor": "Microchip Technology Inc",
+     "sku": "KSZ9897RTXI-TR",
+     "mfr": "Microchip Technology Inc",
+     "mpn": "KSZ9897RTXI-TR",
+     "stock": "In Stock: 0 and Alternates Available"
+    },
+    {
+     "distributor": "RS",
+     "sku": "1773898",
+     "mfr": "Microchip Technology Inc",
+     "mpn": "KSZ9897RTXI",
+     "stock": "3"
+    },
+    {
+     "distributor": "RS",
+     "sku": "1773550",
+     "mfr": "Microchip Technology Inc",
+     "mpn": "KSZ9897RTXI",
+     "stock": "3"
+    },
+    {
+     "distributor": "RS",
+     "sku": "1773898P",
+     "mfr": "Microchip Technology Inc",
+     "mpn": "KSZ9897RTXI",
+     "stock": "3"
+    },
+    {
+     "distributor": "ComSIT Europe",
+     "sku": "",
+     "mfr": "mct",
+     "mpn": "KSZ9897RTXI",
+     "stock": "Stock DE - 57 Stock ES - 0 Stock US - 0 Stock MX - 0 Stock CN - 0 Stock HK - 0"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Microchip Technology Inc",
+     "mpn": "KSZ9897RTXI",
+     "stock": "4100"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Microchip Technology Inc",
+     "mpn": "KSZ9897RTXI-TR",
+     "stock": "3840"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Microchip Technology Inc",
+     "mpn": "KSZ9897RTXI",
+     "stock": "15000"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Microchip Technology Inc",
+     "mpn": "KSZ9897RTXI-TR",
+     "stock": "14240"
+    }
+   ]
+  },
+  {
+   "query": "PI7C9X2G404SLBFDEX",
+   "url": "https://www.findchips.com/search/PI7C9X2G404SLBFDEX",
+   "read_utc": "2026-09-27T00:14:02Z",
+   "rows": [
+    {
+     "distributor": "Avnet Americas",
+     "sku": "PI7C9X2G404SLBFDEX",
+     "mfr": "Diodes Incorporated",
+     "mpn": "PI7C9X2G404SLBFDEX",
+     "stock": "0"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "31-PI7C9X2G404SLBFDEXCT-ND",
+     "mfr": "Diodes Incorporated",
+     "mpn": "PI7C9X2G404SLBFDEX",
+     "stock": "70 Cut Tape"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "31-PI7C9X2G404SLBFDEXTR-ND",
+     "mfr": "Diodes Incorporated",
+     "mpn": "PI7C9X2G404SLBFDEX",
+     "stock": "70 Tape & Reel"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "31-PI7C9X2G404SLBFDEXDKR-ND",
+     "mfr": "Diodes Incorporated",
+     "mpn": "PI7C9X2G404SLBFDEX",
+     "stock": "70 Digi-Reel®"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Diodes Incorporated",
+     "mpn": "PI7C9X2G404SLBFDEX",
+     "stock": "49000"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Diodes Incorporated",
+     "mpn": "PI7C9X2G404SLBFDEX",
+     "stock": "9420"
+    }
+   ]
+  },
+  {
+   "query": "TUSB8041IRGCR",
+   "url": "https://www.findchips.com/search/TUSB8041IRGCR",
+   "read_utc": "2026-09-27T00:14:04Z",
+   "rows": [
+    {
+     "distributor": "DigiKey",
+     "sku": "296-41027-1-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "TUSB8041IRGCR",
+     "stock": "1304 Cut Tape"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "296-41027-6-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "TUSB8041IRGCR",
+     "stock": "1304 Digi-Reel®"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "296-41027-2-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "TUSB8041IRGCR",
+     "stock": "1304 Tape & Reel"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Texas Instruments",
+     "mpn": "TUSB8041IRGCR",
+     "stock": "28640"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Texas Instruments",
+     "mpn": "TUSB8041IRGCR",
+     "stock": "23680"
+    }
+   ]
+  },
+  {
+   "query": "TS3DV642A0RUAR",
+   "url": "https://www.findchips.com/search/TS3DV642A0RUAR",
+   "read_utc": "2026-09-27T00:14:07Z",
+   "rows": [
+    {
+     "distributor": "Farnell",
+     "sku": "3124995",
+     "mfr": "Texas Instruments",
+     "mpn": "TS3DV642A0RUAR",
+     "stock": "0"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "3124995RL",
+     "mfr": "Texas Instruments",
+     "mpn": "TS3DV642A0RUAR",
+     "stock": "0"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "296-39510-2-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "TS3DV642A0RUAR",
+     "stock": "2443 Tape & Reel"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "296-39510-1-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "TS3DV642A0RUAR",
+     "stock": "1443 Cut Tape"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "296-39510-6-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "TS3DV642A0RUAR",
+     "stock": "1443 Digi-Reel®"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Texas Instruments",
+     "mpn": "TS3DV642A0RUAR",
+     "stock": "1342"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Texas Instruments",
+     "mpn": "TS3DV642A0RUAR",
+     "stock": "24540"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Texas Instruments",
+     "mpn": "TS3DV642A0RUAR",
+     "stock": "32920"
+    }
+   ]
+  },
+  {
+   "query": "TMUXHS4212IRKSR",
+   "url": "https://www.findchips.com/search/TMUXHS4212IRKSR",
+   "read_utc": "2026-09-27T00:14:09Z",
+   "rows": [
+    {
+     "distributor": "DigiKey",
+     "sku": "296-TMUXHS4212IRKSRTR-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "TMUXHS4212IRKSR",
+     "stock": "0 Tape & Reel"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "296-TMUXHS4212IRKSRDKR-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "TMUXHS4212IRKSR",
+     "stock": "0 Digi-Reel®"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "296-TMUXHS4212IRKSRCT-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "TMUXHS4212IRKSR",
+     "stock": "0 Cut Tape"
+    },
+    {
+     "distributor": "TME",
+     "sku": "TMUXHS4212IRKSR",
+     "mfr": "Texas Instruments",
+     "mpn": "TMUXHS4212IRKSR",
+     "stock": "0"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Texas Instruments",
+     "mpn": "TMUXHS4212IRKSR",
+     "stock": "5772"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Texas Instruments",
+     "mpn": "TMUXHS4212IRKSR",
+     "stock": "21730"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Texas Instruments",
+     "mpn": "TMUXHS4212IRKSR",
+     "stock": "13870"
+    }
+   ]
+  },
+  {
+   "query": "TPS23861PWR",
+   "url": "https://www.findchips.com/search/TPS23861PWR",
+   "read_utc": "2026-09-27T00:14:12Z",
+   "rows": [
+    {
+     "distributor": "DigiKey",
+     "sku": "296-TPS23861PWRTR-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "TPS23861PWR",
+     "stock": "8813 Tape & Reel"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "296-TPS23861PWRCT-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "TPS23861PWR",
+     "stock": "8813 Cut Tape"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "296-TPS23861PWRDKR-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "TPS23861PWR",
+     "stock": "0 Digi-Reel®"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Texas Instruments",
+     "mpn": "TPS23861PWR",
+     "stock": "111"
+    },
+    {
+     "distributor": "Sensible Micro Corporation",
+     "sku": "SMC-TPS23861PWR",
+     "mfr": "Texas Instruments",
+     "mpn": "TPS23861PWR",
+     "stock": "2345"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Texas Instruments",
+     "mpn": "TPS23861PWR",
+     "stock": "84660"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Texas Instruments",
+     "mpn": "TPS23861PWR",
+     "stock": "20950"
+    }
+   ]
+  },
+  {
+   "query": "H5007NL",
+   "url": "https://www.findchips.com/search/H5007NL",
+   "read_utc": "2026-09-27T00:14:15Z",
+   "rows": [
+    {
+     "distributor": "Farnell",
+     "sku": "3861161",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "H5007NL",
+     "stock": "632"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4780156",
+     "mfr": "YAGEO Corporation",
+     "mpn": "H5007NLT",
+     "stock": "0"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4127192",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "H5007NLT",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "H5007NLT",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "H5007NLT",
+     "stock": "600"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "H5007NL",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "H5007NL",
+     "stock": "589"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "553-1334-ND",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "H5007NL",
+     "stock": "6838 Tube"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "553-1535-2-ND",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "H5007NLT",
+     "stock": "5015 Tape & Reel"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "553-1535-6-ND",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "H5007NLT",
+     "stock": "5015 Digi-Reel®"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "553-1535-1-ND",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "H5007NLT",
+     "stock": "215 Cut Tape"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "H5007NLST-ND",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "H5007NLST",
+     "stock": "0 Tape & Reel"
+    },
+    {
+     "distributor": "TME",
+     "sku": "H5007NL",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "H5007NL",
+     "stock": "384"
+    },
+    {
+     "distributor": "TME",
+     "sku": "H5007NLT",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "H5007NLT",
+     "stock": "29"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "H5007NL",
+     "stock": "12"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "H5007NL",
+     "stock": "237"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "H5007NLT",
+     "stock": "166"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "H5007NLT",
+     "stock": "676"
+    },
+    {
+     "distributor": "ComSIT Europe",
+     "sku": "",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "H5007NL",
+     "stock": "Stock DE - 251 Stock ES - 0 Stock US - 0 Stock MX - 0 Stock CN - 0 Stock HK - 0"
+    },
+    {
+     "distributor": "Sensible Micro Corporation",
+     "sku": "SMC-H5007NLT",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "H5007NLT",
+     "stock": "0"
+    },
+    {
+     "distributor": "Chip 1 Exchange",
+     "sku": "",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "H5007NL",
+     "stock": "105"
+    },
+    {
+     "distributor": "Chip 1 Exchange",
+     "sku": "",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "H5007NL",
+     "stock": "6"
+    },
+    {
+     "distributor": "Chip 1 Exchange",
+     "sku": "",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "H5007NLT",
+     "stock": "300"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "H5007NL",
+     "stock": "17000"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "H5007NLT",
+     "stock": "1212"
+    },
+    {
+     "distributor": "New Advantage Corporation",
+     "sku": "XSFP00000322774",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "H5007NL",
+     "stock": "300"
+    },
+    {
+     "distributor": "LCSC",
+     "sku": "",
+     "mfr": "Shenzhen CND-TEK Industrial Co Ltd",
+     "mpn": "H5007NLTP-CND",
+     "stock": "321"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "H5007NL",
+     "stock": "10080"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "H5007NLT",
+     "stock": "10080"
+    }
+   ]
+  },
+  {
+   "query": "HX5004NL",
+   "url": "https://www.findchips.com/search/HX5004NL",
+   "read_utc": "2026-09-27T00:14:17Z",
+   "rows": [
+    {
+     "distributor": "Avnet Americas",
+     "sku": "HX5004NL",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "HX5004NL",
+     "stock": "700"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "HX5004NLT",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "HX5004NLT",
+     "stock": "600"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "3861179",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "HX5004NL",
+     "stock": "500"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4127178",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "HX5004NLT",
+     "stock": "480"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "553-1760-2-ND",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "HX5004NLT",
+     "stock": "4801 Tape & Reel"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "553-1760-1-ND",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "HX5004NLT",
+     "stock": "4801 Cut Tape"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "553-1760-6-ND",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "HX5004NLT",
+     "stock": "4801 Digi-Reel®"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "553-1343-ND",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "HX5004NL",
+     "stock": "1734 Tube"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "HX5004NL",
+     "stock": "226"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "HX5004NLT",
+     "stock": "6267"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "HX5004NLT",
+     "stock": "811"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "HX5004NL",
+     "stock": "10500"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "HX5004NLT",
+     "stock": "10010"
+    },
+    {
+     "distributor": "ADMATI Agencies",
+     "sku": "",
+     "mfr": "Pulse Electronics",
+     "mpn": "HX5004NLT",
+     "stock": "245"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "HX5004NL",
+     "stock": "4079"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "HX5004NLT",
+     "stock": "3780"
+    }
+   ]
+  },
+  {
+   "query": "ATECC608B-SSHDA-T",
+   "url": "https://www.findchips.com/search/ATECC608B-SSHDA-T",
+   "read_utc": "2026-09-27T00:14:20Z",
+   "rows": [
+    {
+     "distributor": "Avnet Americas",
+     "sku": "ATECC608B-SSHDA-T",
+     "mfr": "Microchip Technology Inc",
+     "mpn": "ATECC608B-SSHDA-T",
+     "stock": "8000"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "150-ATECC608B-SSHDA-TCT-ND",
+     "mfr": "Microchip Technology Inc",
+     "mpn": "ATECC608B-SSHDA-T",
+     "stock": "534 Cut Tape"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "150-ATECC608B-SSHDA-TDKR-ND",
+     "mfr": "Microchip Technology Inc",
+     "mpn": "ATECC608B-SSHDA-T",
+     "stock": "534 Digi-Reel®"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "150-ATECC608B-SSHDA-TTR-ND",
+     "mfr": "Microchip Technology Inc",
+     "mpn": "ATECC608B-SSHDA-T",
+     "stock": "534 Tape & Reel"
+    },
+    {
+     "distributor": "Microchip Technology Inc",
+     "sku": "ATECC608B-SSHDA-T",
+     "mfr": "Microchip Technology Inc",
+     "mpn": "ATECC608B-SSHDA-T",
+     "stock": "In Stock: 0 and Alternates Available"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Microchip Technology Inc",
+     "mpn": "ATECC608B-SSHDA-T",
+     "stock": "5"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Microchip Technology Inc",
+     "mpn": "ATECC608B-SSHDA-T",
+     "stock": "55740"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Microchip Technology Inc",
+     "mpn": "ATECC608B-SSHDA-T",
+     "stock": "51240"
+    }
+   ]
+  },
+  {
+   "query": "DS3231SN#T&R",
+   "url": "https://www.findchips.com/search/DS3231SN#T&R",
+   "read_utc": "2026-09-27T00:14:23Z",
+   "rows": [
+    {
+     "distributor": "Farnell",
+     "sku": "2518948",
+     "mfr": "Analog Devices Inc",
+     "mpn": "DS3231SN#",
+     "stock": "5012"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "2798760RL",
+     "mfr": "Analog Devices Inc",
+     "mpn": "DS3231SN#T&R",
+     "stock": "3853"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "2798760",
+     "mfr": "Analog Devices Inc",
+     "mpn": "DS3231SN#T&R",
+     "stock": "3853"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "DS3231SN#T&RDKR-ND",
+     "mfr": "Maxim Integrated Products",
+     "mpn": "DS3231SN#T&R",
+     "stock": "5933 Digi-Reel®"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "DS3231SN#T&RTR-ND",
+     "mfr": "Maxim Integrated Products",
+     "mpn": "DS3231SN#T&R",
+     "stock": "5933 Tape & Reel"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "DS3231SN#T&RCT-ND",
+     "mfr": "Maxim Integrated Products",
+     "mpn": "DS3231SN#T&R",
+     "stock": "5928 Cut Tape"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "DS3231SN#-ND",
+     "mfr": "Maxim Integrated Products",
+     "mpn": "DS3231SN#",
+     "stock": "2605 Tube"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "DS3231S#-ND",
+     "mfr": "Maxim Integrated Products",
+     "mpn": "DS3231S#",
+     "stock": "1211 Tube"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "DS3231S-ND",
+     "mfr": "Maxim Integrated Products",
+     "mpn": "DS3231S",
+     "stock": "0 Tube"
+    },
+    {
+     "distributor": "TME",
+     "sku": "DS3231SN",
+     "mfr": "Analog Devices Inc",
+     "mpn": "DS3231SN#",
+     "stock": "8"
+    },
+    {
+     "distributor": "TME",
+     "sku": "DS3231SN+TR",
+     "mfr": "Analog Devices Inc",
+     "mpn": "DS3231SN+T&R",
+     "stock": "1111"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Maxim Integrated Products",
+     "mpn": "DS3231SN",
+     "stock": "14"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Dallas Semiconductor",
+     "mpn": "DS3231SN#",
+     "stock": "80"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Maxim Integrated Products",
+     "mpn": "DS3231SN#",
+     "stock": "22"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Maxim Integrated Products",
+     "mpn": "DS3231SN#T&R",
+     "stock": "1"
+    },
+    {
+     "distributor": "ComSIT Europe",
+     "sku": "",
+     "mfr": "Maxim Integrated Products",
+     "mpn": "DS3231SN",
+     "stock": "Stock DE - 0 Stock ES - 0 Stock US - 188 Stock MX - 0 Stock CN - 0 Stock HK - 0"
+    },
+    {
+     "distributor": "Sensible Micro Corporation",
+     "sku": "SMC-DS3231SN",
+     "mfr": "Maxim Integrated Products",
+     "mpn": "DS3231SN",
+     "stock": "5"
+    },
+    {
+     "distributor": "Sensible Micro Corporation",
+     "sku": "SMC-DS3231SN#",
+     "mfr": "Maxim Integrated Products",
+     "mpn": "DS3231SN#",
+     "stock": "168"
+    },
+    {
+     "distributor": "Sensible Micro Corporation",
+     "sku": "SMC-DS3231SN#T&R",
+     "mfr": "Maxim Integrated Products",
+     "mpn": "DS3231SN#T&R",
+     "stock": "557"
+    },
+    {
+     "distributor": "Schukat electronic",
+     "sku": "DS3231SN-T+R",
+     "mfr": "Maxim Integrated Products",
+     "mpn": "DS3231SN#T&R",
+     "stock": "0"
+    },
+    {
+     "distributor": "Chip 1 Exchange",
+     "sku": "",
+     "mfr": "MAXAD",
+     "mpn": "DS3231SN#T&R",
+     "stock": "1000"
+    },
+    {
+     "distributor": "Chip 1 Exchange",
+     "sku": "",
+     "mfr": "Maxim Integrated Products",
+     "mpn": "DS3231SN#T&R",
+     "stock": "1760"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Analog Devices Inc",
+     "mpn": "DS3231SN",
+     "stock": "14480"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Analog Devices Inc",
+     "mpn": "DS3231SN#",
+     "stock": "8700"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Analog Devices Inc",
+     "mpn": "DS3231SN#T&R",
+     "stock": "13690"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Maxim Integrated Products",
+     "mpn": "DS3231SN#T&R",
+     "stock": "2236"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Maxim Integrated Products",
+     "mpn": "DS3231SN",
+     "stock": "6000"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Maxim Integrated Products",
+     "mpn": "DS3231SN+",
+     "stock": "6000"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Maxim Integrated Products",
+     "mpn": "DS3231SN#T",
+     "stock": "5490"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Maxim Integrated Products",
+     "mpn": "DS3231SN#",
+     "stock": "6000"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Maxim Integrated Products",
+     "mpn": "DS3231SN#T&R",
+     "stock": "5560"
+    }
+   ]
+  },
+  {
+   "query": "BQ4050RSMR",
+   "url": "https://www.findchips.com/search/BQ4050RSMR",
+   "read_utc": "2026-09-27T00:14:26Z",
+   "rows": [
+    {
+     "distributor": "DigiKey",
+     "sku": "296-48498-1-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "BQ4050RSMR",
+     "stock": "5311 Cut Tape"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "296-48498-6-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "BQ4050RSMR",
+     "stock": "5311 Digi-Reel®"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "296-48498-2-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "BQ4050RSMR",
+     "stock": "5311 Tape & Reel"
+    },
+    {
+     "distributor": "TME",
+     "sku": "BQ4050RSMR",
+     "mfr": "Texas Instruments",
+     "mpn": "BQ4050RSMR",
+     "stock": "98"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Texas Instruments",
+     "mpn": "BQ4050RSMR",
+     "stock": "984"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Texas Instruments",
+     "mpn": "BQ4050RSMR",
+     "stock": "78500"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Texas Instruments",
+     "mpn": "BQ4050RSMR",
+     "stock": "66000"
+    }
+   ]
+  },
+  {
+   "query": "BQ25731RSNR",
+   "url": "https://www.findchips.com/search/BQ25731RSNR",
+   "read_utc": "2026-09-27T00:14:28Z",
+   "rows": [
+    {
+     "distributor": "DigiKey",
+     "sku": "296-BQ25731RSNRCT-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "BQ25731RSNR",
+     "stock": "0 Cut Tape"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "296-BQ25731RSNRTR-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "BQ25731RSNR",
+     "stock": "0 Tape & Reel"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "296-BQ25731RSNRDKR-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "BQ25731RSNR",
+     "stock": "0 Digi-Reel®"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Texas Instruments",
+     "mpn": "BQ25731RSNR",
+     "stock": "8260"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Texas Instruments",
+     "mpn": "BQ25731RSNR",
+     "stock": "8780"
+    }
+   ]
+  },
+  {
+   "query": "LM5176PWPR",
+   "url": "https://www.findchips.com/search/LM5176PWPR",
+   "read_utc": "2026-09-27T00:14:31Z",
+   "rows": [
+    {
+     "distributor": "DigiKey",
+     "sku": "296-49223-1-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "LM5176PWPR",
+     "stock": "332 Cut Tape"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "296-49223-2-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "LM5176PWPR",
+     "stock": "332 Tape & Reel"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "296-49223-6-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "LM5176PWPR",
+     "stock": "332 Digi-Reel®"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Texas Instruments",
+     "mpn": "LM5176PWPR",
+     "stock": "47"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Texas Instruments",
+     "mpn": "LM5176PWPR",
+     "stock": "10880"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Texas Instruments",
+     "mpn": "LM5176PWPR",
+     "stock": "18750"
+    }
+   ]
+  },
+  {
+   "query": "TPS25740ARGER",
+   "url": "https://www.findchips.com/search/TPS25740ARGER",
+   "read_utc": "2026-09-27T00:14:33Z",
+   "rows": [
+    {
+     "distributor": "DigiKey",
+     "sku": "296-51886-2-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "TPS25740ARGER",
+     "stock": "0 Tape & Reel"
+    },
+    {
+     "distributor": "Chip 1 Exchange",
+     "sku": "",
+     "mfr": "Texas Instruments",
+     "mpn": "TPS25740ARGER",
+     "stock": "874"
+    }
+   ]
+  },
+  {
+   "query": "TPS259631DDAR",
+   "url": "https://www.findchips.com/search/TPS259631DDAR",
+   "read_utc": "2026-09-27T00:14:36Z",
+   "rows": [
+    {
+     "distributor": "DigiKey",
+     "sku": "296-TPS259631DDARTR-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "TPS259631DDAR",
+     "stock": "2576 Tape & Reel"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "296-TPS259631DDARCT-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "TPS259631DDAR",
+     "stock": "2576 Cut Tape"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "296-TPS259631DDARDKR-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "TPS259631DDAR",
+     "stock": "2576 Digi-Reel®"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Texas Instruments",
+     "mpn": "TPS259631DDAR",
+     "stock": "28947"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Texas Instruments",
+     "mpn": "TPS259631DDAR",
+     "stock": "100110"
+    }
+   ]
+  },
+  {
+   "query": "LTC2954ITS8-1#TRPBF",
+   "url": "https://www.findchips.com/search/LTC2954ITS8-1#TRPBF",
+   "read_utc": "2026-09-27T00:14:38Z",
+   "rows": [
+    {
+     "distributor": "Farnell",
+     "sku": "4027756RL",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LTC2954ITS8-1#TRPBF",
+     "stock": "648"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4027756",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LTC2954ITS8-1#TRPBF",
+     "stock": "648"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4027755",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LTC2954ITS8-1#TRMPBF",
+     "stock": "0"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4027755RL",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LTC2954ITS8-1#TRMPBF",
+     "stock": "0"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "505-LTC2954ITS8-1#TRMPBFTR-ND",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LTC2954ITS8-1#TRMPBF",
+     "stock": "4836 Tape & Reel"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "505-LTC2954ITS8-1#TRMPBFCT-ND",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LTC2954ITS8-1#TRMPBF",
+     "stock": "4836 Cut Tape"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "505-LTC2954ITS8-1#TRMPBFDKR-ND",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LTC2954ITS8-1#TRMPBF",
+     "stock": "4836 Digi-Reel®"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "LTC2954ITS8-1#TRPBFCT-ND",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LTC2954ITS8-1#TRPBF",
+     "stock": "4807 Cut Tape"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "LTC2954ITS8-1#TRPBFTR-ND",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LTC2954ITS8-1#TRPBF",
+     "stock": "4807 Tape & Reel"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "LTC2954ITS8-1#TRPBFDKR-ND",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LTC2954ITS8-1#TRPBF",
+     "stock": "4807 Digi-Reel®"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "LTC2954ITS8-1#PBF-ND",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LTC2954ITS8-1#PBF",
+     "stock": "0 Bulk"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Linear Technology",
+     "mpn": "LTC2954ITS8-1#TRMPBF",
+     "stock": "38"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LTC2954ITS8-1#TRMPBF",
+     "stock": "14210"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LTC2954ITS8-1#TRPBF",
+     "stock": "14260"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Linear Technology",
+     "mpn": "LTC2954ITS8-1#TRMPBF",
+     "stock": "10710"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Linear Technology",
+     "mpn": "LTC2954ITS8-1#TRPBF",
+     "stock": "6500"
+    }
+   ]
+  },
+  {
+   "query": "LT8705AEUHF#TRPBF",
+   "url": "https://www.findchips.com/search/LT8705AEUHF#TRPBF",
+   "read_utc": "2026-09-27T00:14:41Z",
+   "rows": [
+    {
+     "distributor": "Farnell",
+     "sku": "4026339",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LT8705AEUHF#PBF",
+     "stock": "1"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "505-LT8705AEUHF#TRPBFTR-ND",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LT8705AEUHF#TRPBF",
+     "stock": "2438 Tape & Reel"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "505-LT8705AEUHF#PBF-ND",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LT8705AEUHF#PBF",
+     "stock": "155 Tube"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "LT8705AEUHF-ND",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LT8705AEUHF",
+     "stock": "0 Tube"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LT8705AEUHF#PBF",
+     "stock": "5"
+    }
+   ]
+  },
+  {
+   "query": "LG290P03AAMD",
+   "url": "https://www.findchips.com/search/LG290P03AAMD",
+   "read_utc": "2026-09-27T00:14:43Z",
+   "rows": [
+    {
+     "distributor": "Avnet Americas",
+     "sku": "LG290P03AAMD",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "LG290P03AAMD",
+     "stock": "0"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "2958-LG290P03AAMDCT-ND",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "LG290P03AAMD",
+     "stock": "35 Cut Tape"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "2958-LG290P03AAMDDKR-ND",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "LG290P03AAMD",
+     "stock": "35 Digi-Reel®"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "2958-LG290P03AAMDTR-ND",
+     "mfr": "Quectel Wireless Solutions Co Ltd",
+     "mpn": "LG290P03AAMD",
+     "stock": "35 Tape & Reel"
+    }
+   ]
+  },
+  {
+   "query": "E22-900M30S",
+   "url": "https://www.findchips.com/search/E22-900M30S",
+   "read_utc": "2026-09-27T00:14:46Z",
+   "rows": [
+    {
+     "distributor": "Unikey Electronic Pte Ltd",
+     "sku": "",
+     "mfr": "Chengdu Ebyte Electronic Technology Co Ltd",
+     "mpn": "E22-900M30S",
+     "stock": "480"
+    }
+   ]
+  },
+  {
+   "query": "E72-2G4M20S1E",
+   "url": "https://www.findchips.com/search/E72-2G4M20S1E",
+   "read_utc": "2026-09-27T00:14:49Z",
+   "rows": []
+  },
+  {
+   "query": "CM5108064",
+   "url": "https://www.findchips.com/search/CM5108064",
+   "read_utc": "2026-09-27T00:14:51Z",
+   "rows": [
+    {
+     "distributor": "Farnell",
+     "sku": "4575892",
+     "mfr": "Raspberry Pi",
+     "mpn": "CM5108064",
+     "stock": "0"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4575927",
+     "mfr": "Raspberry Pi",
+     "mpn": "CM5108064B",
+     "stock": "0"
+    },
+    {
+     "distributor": "TME",
+     "sku": "SC1602",
+     "mfr": "Raspberry Pi",
+     "mpn": "RPI CM5 CM5108064 8GB RAM 64GB EMMC BLE",
+     "stock": "0"
+    }
+   ]
+  },
+  {
+   "query": "RockBLOCK 9704",
+   "url": "https://www.findchips.com/search/RockBLOCK 9704",
+   "read_utc": "2026-09-27T00:14:54Z",
+   "rows": []
+  },
+  {
+   "query": "AW7915-AED",
+   "url": "https://www.findchips.com/search/AW7915-AED",
+   "read_utc": "2026-09-27T00:14:56Z",
+   "rows": [
+    {
+     "distributor": "DigiKey",
+     "sku": "612-AW-79-03-G-D-125-075-ND",
+     "mfr": "Samtec Inc",
+     "mpn": "AW-79-03-G-D-125-075",
+     "stock": "0 Bulk"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000005068150",
+     "mfr": "Samtec Inc",
+     "mpn": "AW-79-03-G-D-125-075",
+     "stock": "0"
+    }
+   ]
+  },
+  {
+   "query": "R222M00720",
+   "url": "https://www.findchips.com/search/R222M00720",
+   "read_utc": "2026-09-27T00:14:59Z",
+   "rows": [
+    {
+     "distributor": "Avnet Americas",
+     "sku": "R222M00720",
+     "mfr": "Radiall",
+     "mpn": "R222M00720",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "R222M00720W",
+     "mfr": "Radiall",
+     "mpn": "R222M00720W",
+     "stock": "0"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "2201-R222M00720-ND",
+     "mfr": "Radiall",
+     "mpn": "R222M00720",
+     "stock": "1335 Bulk"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "2201-R222M00720W-ND",
+     "mfr": "Radiall",
+     "mpn": "R222M00720W",
+     "stock": "0 Bulk"
+    }
+   ]
+  },
+  {
+   "query": "R222M80500",
+   "url": "https://www.findchips.com/search/R222M80500",
+   "read_utc": "2026-09-27T00:15:01Z",
+   "rows": [
+    {
+     "distributor": "Avnet Americas",
+     "sku": "R222M80500",
+     "mfr": "Radiall",
+     "mpn": "R222M80500",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "R222M80500W",
+     "mfr": "Radiall",
+     "mpn": "R222M80500W",
+     "stock": "0"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "2201-R222M80500W-ND",
+     "mfr": "Radiall",
+     "mpn": "R222M80500W",
+     "stock": "349 Bulk"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "2201-R222M80500-ND",
+     "mfr": "Radiall",
+     "mpn": "R222M80500",
+     "stock": "0 Bulk"
+    }
+   ]
+  },
+  {
+   "query": "813-S1-012-10-016101",
+   "url": "https://www.findchips.com/search/813-S1-012-10-016101",
+   "read_utc": "2026-09-27T00:15:04Z",
+   "rows": [
+    {
+     "distributor": "DigiKey",
+     "sku": "3937-813-S1-012-10-016101-ND",
+     "mfr": "JRH ELECTRONICS",
+     "mpn": "813-S1-012-10-016101",
+     "stock": "18 Bulk"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "813-S1-012-10-016101-ND",
+     "mfr": "PRECI-DIP SSA",
+     "mpn": "813-S1-012-10-016101",
+     "stock": "0 Bulk"
+    }
+   ]
+  },
+  {
+   "query": "GTH-SFF-AL",
+   "url": "https://www.findchips.com/search/GTH-SFF-AL",
+   "read_utc": "2026-09-27T00:15:06Z",
+   "rows": [
+    {
+     "distributor": "Pasternack Enterprises US",
+     "sku": "GTH-SFF-AL",
+     "mfr": "Pasternack Enterprises",
+     "mpn": "GTH-SFF-AL",
+     "stock": "0"
+    }
+   ]
+  },
+  {
+   "query": "233-370",
+   "url": "https://www.findchips.com/search/233-370",
+   "read_utc": "2026-09-27T00:15:09Z",
+   "rows": [
+    {
+     "distributor": "Farnell",
+     "sku": "4233370",
+     "mfr": "Molex",
+     "mpn": "19003-0108",
+     "stock": "2500"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "2333701",
+     "mfr": "Bourns Inc",
+     "mpn": "SRR1208-332KL",
+     "stock": "182"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "2333701RL",
+     "mfr": "Bourns Inc",
+     "mpn": "SRR1208-332KL",
+     "stock": "182"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "2333705",
+     "mfr": "Bourns Inc",
+     "mpn": "SRR1208-472KL",
+     "stock": "610"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "2333705RL",
+     "mfr": "Bourns Inc",
+     "mpn": "SRR1208-472KL",
+     "stock": "610"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "2333709RL",
+     "mfr": "Bourns Inc",
+     "mpn": "SRR1208-682KL",
+     "stock": "800"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "2333709",
+     "mfr": "Bourns Inc",
+     "mpn": "SRR1208-682KL",
+     "stock": "800"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "2333706RL",
+     "mfr": "Bourns Inc",
+     "mpn": "SRR1208-561KL",
+     "stock": "7"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "2333706",
+     "mfr": "Bourns Inc",
+     "mpn": "SRR1208-561KL",
+     "stock": "7"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "2333702",
+     "mfr": "Bourns Inc",
+     "mpn": "SRR1208-391KL",
+     "stock": "0"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "2333702RL",
+     "mfr": "Bourns Inc",
+     "mpn": "SRR1208-391KL",
+     "stock": "0"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "2333707RL",
+     "mfr": "Bourns Inc",
+     "mpn": "SRR1208-562KL",
+     "stock": "0"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "2333707",
+     "mfr": "Bourns Inc",
+     "mpn": "SRR1208-562KL",
+     "stock": "0"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "3233370",
+     "mfr": "KEMET Corporation",
+     "mpn": "CA064X332K5RACTU",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "233-370M00-172AANH",
+     "mfr": "Glenair Inc",
+     "mpn": "233-370M00-172AANH",
+     "stock": "13 Factory Stock"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "233-370M07-172AANH",
+     "mfr": "Glenair Inc",
+     "mpn": "233-370M07-172AANH",
+     "stock": "14 Factory Stock"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "1233370000",
+     "mfr": "Weidmüller Interface GmbH & Co. KG",
+     "mpn": "1233370000",
+     "stock": "0"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "3937-233-370M00-172AANH-ND",
+     "mfr": "JRH ELECTRONICS",
+     "mpn": "233-370M00-172AANH",
+     "stock": "66 Bulk"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "3937-233-370M07-172AANH-ND",
+     "mfr": "JRH ELECTRONICS",
+     "mpn": "233-370M07-172AANH",
+     "stock": "66 Bulk"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "1233370000-ND",
+     "mfr": "Weidmüller Interface GmbH & Co. KG",
+     "mpn": "1233370000",
+     "stock": "0 Bulk"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000005233370",
+     "mfr": "TE Connectivity",
+     "mpn": "1633127-5",
+     "stock": "0"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000002333706",
+     "mfr": "TE Connectivity",
+     "mpn": "2-1625813-8",
+     "stock": "0"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000007233370",
+     "mfr": "TE Connectivity",
+     "mpn": "NB22614001",
+     "stock": "0"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000003233370",
+     "mfr": "Samtec Inc",
+     "mpn": "QTT-116-03-G-T",
+     "stock": "0"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000002233370",
+     "mfr": "Samtec Inc",
+     "mpn": "SSW-113-02-SM-D-RA",
+     "stock": "681"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000002333709",
+     "mfr": "TE Connectivity",
+     "mpn": "2-1625827-2",
+     "stock": "0"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000002333708",
+     "mfr": "TE Connectivity",
+     "mpn": "2-1625827-1",
+     "stock": "0"
+    },
+    {
+     "distributor": "Heilind Europe",
+     "sku": "TSS20023337-00",
+     "mfr": "TE Connectivity",
+     "mpn": "20023337-00",
+     "stock": "Europe - 0 in Stock"
+    },
+    {
+     "distributor": "Powell Electronics",
+     "sku": "",
+     "mfr": "Glenair Inc",
+     "mpn": "233-370NF07-152AANH",
+     "stock": "2"
+    },
+    {
+     "distributor": "NAC",
+     "sku": "XSDXS0000233370",
+     "mfr": "ASUSTeK Computer Inc",
+     "mpn": "B1403CVA-XS54",
+     "stock": "24"
+    }
+   ]
+  },
+  {
+   "query": "709GNK",
+   "url": "https://www.findchips.com/search/709GNK",
+   "read_utc": "2026-09-27T00:15:11Z",
+   "rows": [
+    {
+     "distributor": "DigiKey",
+     "sku": "3378-709GNK-ND",
+     "mfr": "Xenarc Technologies Corp",
+     "mpn": "709GNK",
+     "stock": "6"
+    }
+   ]
+  },
+  {
+   "query": "RA30H1317M1",
+   "url": "https://www.findchips.com/search/RA30H1317M1",
+   "read_utc": "2026-09-27T00:15:14Z",
+   "rows": [
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Mitsubishi Electric",
+     "mpn": "RA30H1317M1-501",
+     "stock": "3000"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Mitsubishi Electric",
+     "mpn": "RA30H1317M-101",
+     "stock": "2768"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Mitsubishi Electric",
+     "mpn": "RA30H1317M1-501",
+     "stock": "1000"
+    }
+   ]
+  },
+  {
+   "query": "10164227-1004A1RLF",
+   "url": "https://www.findchips.com/search/10164227-1004A1RLF",
+   "read_utc": "2026-09-27T00:15:17Z",
+   "rows": [
+    {
+     "distributor": "Farnell",
+     "sku": "4137146",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "10164227-1004A1RLF",
+     "stock": "0"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4137111",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "10164227-1004A1RLF",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "10164227-1004A1RLF",
+     "mfr": "Amphenol Corporation",
+     "mpn": "10164227-1004A1RLF",
+     "stock": "0"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "609-10164227-1004A1RLFCT-ND",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "10164227-1004A1RLF",
+     "stock": "66 Cut Tape"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "609-10164227-1004A1RLFTR-ND",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "10164227-1004A1RLF",
+     "stock": "66 Tape & Reel"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "609-10164227-1004A1RLFDKR-ND",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "10164227-1004A1RLF",
+     "stock": "66 Digi-Reel®"
+    }
+   ]
+  },
+  {
+   "query": "2199119-3",
+   "url": "https://www.findchips.com/search/2199119-3",
+   "read_utc": "2026-09-27T00:15:20Z",
+   "rows": [
+    {
+     "distributor": "Avnet Americas",
+     "sku": "2199119-3",
+     "mfr": "TE Connectivity",
+     "mpn": "2199119-3",
+     "stock": "1200"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "1-2199119-3",
+     "mfr": "TE Connectivity",
+     "mpn": "1-2199119-3",
+     "stock": "0"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "2377471",
+     "mfr": "TE Connectivity",
+     "mpn": "2199119-3",
+     "stock": "1795"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "2377492",
+     "mfr": "TE Connectivity",
+     "mpn": "2199119-3",
+     "stock": "0"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4884276",
+     "mfr": "TE Connectivity",
+     "mpn": "1-2199119-3",
+     "stock": "0"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "A115899CT-ND",
+     "mfr": "TE Connectivity",
+     "mpn": "2199119-3",
+     "stock": "8926 Cut Tape"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "A115899TR-ND",
+     "mfr": "TE Connectivity",
+     "mpn": "2199119-3",
+     "stock": "8926 Tape & Reel"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "A115899DKR-ND",
+     "mfr": "TE Connectivity",
+     "mpn": "2199119-3",
+     "stock": "8926 Digi-Reel®"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "17-1-2199119-3TR-ND",
+     "mfr": "TE Connectivity",
+     "mpn": "1-2199119-3",
+     "stock": "0 Tape & Reel"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "5831-1-2199119-3-ND",
+     "mfr": "WEE",
+     "mpn": "1-2199119-3",
+     "stock": "0"
+    },
+    {
+     "distributor": "RS",
+     "sku": "302547",
+     "mfr": "TE Connectivity",
+     "mpn": "2199119-3",
+     "stock": "1190"
+    },
+    {
+     "distributor": "RS",
+     "sku": "302546",
+     "mfr": "TE Connectivity",
+     "mpn": "2199119-3",
+     "stock": "1190"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000003951907",
+     "mfr": "TE Connectivity",
+     "mpn": "2199119-3",
+     "stock": "0"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000005732238",
+     "mfr": "TE Connectivity",
+     "mpn": "1-2199119-3",
+     "stock": "0"
+    },
+    {
+     "distributor": "Heilind Europe",
+     "sku": "AMP2199119-3",
+     "mfr": "TE Connectivity",
+     "mpn": "2199119-3",
+     "stock": "Europe - 0 in Stock"
+    },
+    {
+     "distributor": "Heilind Europe",
+     "sku": "AMP1-2199119-3",
+     "mfr": "TE Connectivity",
+     "mpn": "1-2199119-3",
+     "stock": "Europe - 0 in Stock"
+    },
+    {
+     "distributor": "TME",
+     "sku": "21991193-TEC",
+     "mfr": "TE Connectivity",
+     "mpn": "2199119-3",
+     "stock": "6000"
+    },
+    {
+     "distributor": "TME",
+     "sku": "121991193-TEC-0",
+     "mfr": "TE Connectivity",
+     "mpn": "1-2199119-3",
+     "stock": "4800"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "TE Connectivity",
+     "mpn": "2199119-3",
+     "stock": "60"
+    },
+    {
+     "distributor": "Chip 1 Exchange",
+     "sku": "",
+     "mfr": "TE Connectivity",
+     "mpn": "2199119-3",
+     "stock": "57437"
+    },
+    {
+     "distributor": "Chip 1 Exchange",
+     "sku": "",
+     "mfr": "TE Connectivity",
+     "mpn": "1-2199119-3",
+     "stock": "9360"
+    },
+    {
+     "distributor": "New Advantage Corporation",
+     "sku": "XSKDRABA0012403",
+     "mfr": "TE Connectivity",
+     "mpn": "2199119-3",
+     "stock": "14400"
+    }
+   ]
+  },
+  {
+   "query": "2199230-4",
+   "url": "https://www.findchips.com/search/2199230-4",
+   "read_utc": "2026-09-27T00:15:23Z",
+   "rows": [
+    {
+     "distributor": "Avnet Americas",
+     "sku": "2199230-4",
+     "mfr": "TE Connectivity",
+     "mpn": "2199230-4",
+     "stock": "3000"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "1-2199230-4",
+     "mfr": "TE Connectivity",
+     "mpn": "1-2199230-4",
+     "stock": "3000"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "3398678",
+     "mfr": "TE Connectivity",
+     "mpn": "2199230-4",
+     "stock": "7656"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4801808",
+     "mfr": "TE Connectivity",
+     "mpn": "1-2199230-4",
+     "stock": "7000"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "3794235",
+     "mfr": "TE Connectivity",
+     "mpn": "1-2199230-4",
+     "stock": "4641"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4434102",
+     "mfr": "TE Connectivity",
+     "mpn": "2199230-4",
+     "stock": "0"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4731763",
+     "mfr": "TE Connectivity",
+     "mpn": "2199230-4",
+     "stock": "0"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "17-1-2199230-4DKR-ND",
+     "mfr": "TE Connectivity",
+     "mpn": "1-2199230-4",
+     "stock": "4555 Digi-Reel®"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "17-1-2199230-4CT-ND",
+     "mfr": "TE Connectivity",
+     "mpn": "1-2199230-4",
+     "stock": "4555 Cut Tape"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "17-1-2199230-4TR-ND",
+     "mfr": "TE Connectivity",
+     "mpn": "1-2199230-4",
+     "stock": "4555 Tape & Reel"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "A115904DKR-ND",
+     "mfr": "TE Connectivity",
+     "mpn": "2199230-4",
+     "stock": "0 Digi-Reel®"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "A115904CT-ND",
+     "mfr": "TE Connectivity",
+     "mpn": "2199230-4",
+     "stock": "0 Cut Tape"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "A115904TR-ND",
+     "mfr": "TE Connectivity",
+     "mpn": "2199230-4",
+     "stock": "0 Tape & Reel"
+    },
+    {
+     "distributor": "RS",
+     "sku": "2411331",
+     "mfr": "TE Connectivity",
+     "mpn": "2199230-4",
+     "stock": "950"
+    },
+    {
+     "distributor": "RS",
+     "sku": "2411332",
+     "mfr": "TE Connectivity",
+     "mpn": "2199230-4",
+     "stock": "950"
+    },
+    {
+     "distributor": "RS",
+     "sku": "2411332P",
+     "mfr": "TE Connectivity",
+     "mpn": "2199230-4",
+     "stock": "950"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000004961640",
+     "mfr": "TE Connectivity",
+     "mpn": "2199230-4",
+     "stock": "0"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000005526103",
+     "mfr": "TE Connectivity",
+     "mpn": "1-2199230-4",
+     "stock": "0"
+    },
+    {
+     "distributor": "Heilind Europe",
+     "sku": "AMP2199230-4",
+     "mfr": "TE Connectivity",
+     "mpn": "2199230-4",
+     "stock": "Europe - 0 in Stock"
+    },
+    {
+     "distributor": "Heilind Europe",
+     "sku": "AMP1-2199230-4",
+     "mfr": "TE Connectivity",
+     "mpn": "1-2199230-4",
+     "stock": "Europe - 0 in Stock"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "TE Connectivity",
+     "mpn": "2199230-4",
+     "stock": "5018"
+    },
+    {
+     "distributor": "Powell Electronics",
+     "sku": "",
+     "mfr": "TE Connectivity",
+     "mpn": "2199230-4",
+     "stock": "25"
+    },
+    {
+     "distributor": "Powell Electronics",
+     "sku": "",
+     "mfr": "TE Connectivity",
+     "mpn": "1-2199230-4",
+     "stock": "5042"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "TE Connectivity",
+     "mpn": "2199230-4",
+     "stock": "22000"
+    },
+    {
+     "distributor": "New Advantage Corporation",
+     "sku": "XSKDRABA0106882",
+     "mfr": "TE Connectivity",
+     "mpn": "2199230-4",
+     "stock": "14000"
+    },
+    {
+     "distributor": "New Advantage Corporation",
+     "sku": "XSFP00000171283",
+     "mfr": "TE Connectivity",
+     "mpn": "2199230-4",
+     "stock": "6000"
+    }
+   ]
+  },
+  {
+   "query": "RJHSE-5380",
+   "url": "https://www.findchips.com/search/RJHSE-5380",
+   "read_utc": "2026-09-27T00:15:25Z",
+   "rows": [
+    {
+     "distributor": "Farnell",
+     "sku": "1849916",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "RJHSE5380",
+     "stock": "362"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "3882589",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "RJHSE-5380-04",
+     "stock": "541"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4867402",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE-5380-04",
+     "stock": "540"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "2709016",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "RJHSE-5380-08",
+     "stock": "73"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4867404",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE5380A4",
+     "stock": "167"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "1860580",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "RJHSE-5380",
+     "stock": "0"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4366784",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE538004",
+     "stock": "0"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4366786",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE5380A8",
+     "stock": "0"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "1860605",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "RJHSE538002",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RJHSE5380",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE5380",
+     "stock": "3497"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "83K8228",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE-5380",
+     "stock": "1050 Partner Stock"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RJHSE5380A3",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE5380A3",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RJHSE5380A1",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE5380A1",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RJHSE5380A2",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE5380A2",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RJHSE5380010T",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE5380010T",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RJHSE5380020B",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE5380020B",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RJHSE538008",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE538008",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RJHSE5380A4",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE5380A4",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RJHSE538004",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE538004",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RJHSE5380H1",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE5380H1",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RJHSE538003",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE538003",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RJHSE5380A8",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE5380A8",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RJHSE538002",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE538002",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "28T0112",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE538002",
+     "stock": "6 Partner Stock"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "664-RJHSE5380-ND",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "RJHSE5380",
+     "stock": "9306 Tray"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "664-RJHSE538002-ND",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "RJHSE538002",
+     "stock": "5274 Tray"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "RJHSE538004-ND",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "RJHSE538004",
+     "stock": "370 Tray"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "RJHSE5380A2-ND",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "RJHSE5380A2",
+     "stock": "123 Tray"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "RJHSE538008-ND",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "RJHSE538008",
+     "stock": "113 Tray"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "664-RJHSE5380A3-ND",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "RJHSE5380A3",
+     "stock": "0 Tray"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "RJHSE5380A1-ND",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "RJHSE5380A1",
+     "stock": "0 Tray"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "RJHSE5380A4-ND",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "RJHSE5380A4",
+     "stock": "0 Tray"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "664-RJHSE5380H1-ND",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "RJHSE5380H1",
+     "stock": "0 Tray"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "664-RJHSE538003-ND",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "RJHSE538003",
+     "stock": "0 Tray"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "RJHSE5380A8-ND",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "RJHSE5380A8",
+     "stock": "0 Tray"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "664-RJHSE5380010TTR-ND",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "RJHSE5380010T",
+     "stock": "0 Tape & Reel"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "664-RJHSE5380020B-ND",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "RJHSE5380020B",
+     "stock": "0 Tube"
+    },
+    {
+     "distributor": "TME",
+     "sku": "RJHSE5380010T-0",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE-5380-010-T",
+     "stock": "22500"
+    },
+    {
+     "distributor": "TME",
+     "sku": "RJHSE538002",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "RJHSE538002",
+     "stock": "16"
+    },
+    {
+     "distributor": "TME",
+     "sku": "RJHSE-5380",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "RJHSE5380",
+     "stock": "294"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE-5380",
+     "stock": "92"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE-5380-02",
+     "stock": "46"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE-5380-03",
+     "stock": "106"
+    },
+    {
+     "distributor": "Powell Electronics",
+     "sku": "",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE-5380-04",
+     "stock": "79"
+    },
+    {
+     "distributor": "Powell Electronics",
+     "sku": "",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE5380A4",
+     "stock": "122"
+    },
+    {
+     "distributor": "Powell Electronics",
+     "sku": "",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE538004",
+     "stock": "44"
+    },
+    {
+     "distributor": "Powell Electronics",
+     "sku": "",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE5380A8",
+     "stock": "17"
+    },
+    {
+     "distributor": "PEI Genesis",
+     "sku": "Amphenol RJHSE-5380-02",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE-5380-02",
+     "stock": "0"
+    },
+    {
+     "distributor": "PEI Genesis",
+     "sku": "Amphenol RJHSE538002",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE538002",
+     "stock": "0"
+    },
+    {
+     "distributor": "ComSIT Europe",
+     "sku": "",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE538004",
+     "stock": "Stock DE - 1440 Stock ES - 0 Stock US - 0 Stock MX - 0 Stock CN - 0 Stock HK - 0"
+    },
+    {
+     "distributor": "Sensible Micro Corporation",
+     "sku": "SMC-RJHSE538004",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE538004",
+     "stock": "5"
+    },
+    {
+     "distributor": "Chip 1 Exchange",
+     "sku": "",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE-5380-04",
+     "stock": "2392"
+    },
+    {
+     "distributor": "Chip 1 Exchange",
+     "sku": "",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE-5380-010-T",
+     "stock": "29718"
+    },
+    {
+     "distributor": "Chip 1 Exchange",
+     "sku": "",
+     "mfr": "",
+     "mpn": "RJHSE-5380-02",
+     "stock": "60"
+    },
+    {
+     "distributor": "New Advantage Corporation",
+     "sku": "XSKDRABA0001356",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE-5380",
+     "stock": "6480"
+    },
+    {
+     "distributor": "New Advantage Corporation",
+     "sku": "XSKDRABA0001357",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE-5380-02",
+     "stock": "280"
+    },
+    {
+     "distributor": "New Advantage Corporation",
+     "sku": "XSFP00000334749",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE538004",
+     "stock": "200"
+    },
+    {
+     "distributor": "New Advantage Corporation",
+     "sku": "XSFP00000061733",
+     "mfr": "Amphenol Corporation",
+     "mpn": "RJHSE5380",
+     "stock": "8880"
+    }
+   ]
+  },
+  {
+   "query": "CP2102N-A02-GQFN28R",
+   "url": "https://www.findchips.com/search/CP2102N-A02-GQFN28R",
+   "read_utc": "2026-09-27T00:15:28Z",
+   "rows": [
+    {
+     "distributor": "Farnell",
+     "sku": "3387003",
+     "mfr": "Silicon Laboratories Inc",
+     "mpn": "CP2102N-A02-GQFN28R",
+     "stock": "0"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "3387003RL",
+     "mfr": "Silicon Laboratories Inc",
+     "mpn": "CP2102N-A02-GQFN28R",
+     "stock": "0"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "336-5890-6-ND",
+     "mfr": "Silicon Laboratories Inc",
+     "mpn": "CP2102N-A02-GQFN28R",
+     "stock": "8347 Digi-Reel®"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "336-5890-2-ND",
+     "mfr": "Silicon Laboratories Inc",
+     "mpn": "CP2102N-A02-GQFN28R",
+     "stock": "8347 Tape & Reel"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "336-5890-1-ND",
+     "mfr": "Silicon Laboratories Inc",
+     "mpn": "CP2102N-A02-GQFN28R",
+     "stock": "8345 Cut Tape"
+    },
+    {
+     "distributor": "Ameya Holding Limited",
+     "sku": "",
+     "mfr": "Silicon Laboratories Inc",
+     "mpn": "CP2102N-A02-GQFN28R",
+     "stock": "1500"
+    },
+    {
+     "distributor": "Schukat electronic",
+     "sku": "CP2102NA02GQFN28R",
+     "mfr": "Silicon Laboratories Inc",
+     "mpn": "CP2102N-A02-GQFN28R",
+     "stock": "7437"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Silicon Laboratories Inc",
+     "mpn": "CP2102N-A02-GQFN28R",
+     "stock": "47430"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Silicon Laboratories Inc",
+     "mpn": "CP2102N-A02-GQFN28R",
+     "stock": "149930"
+    },
+    {
+     "distributor": "Braemac Americas-Symmetry",
+     "sku": "",
+     "mfr": "Silicon Laboratories Inc",
+     "mpn": "CP2102N-A02-GQFN28R",
+     "stock": "0"
+    }
+   ]
+  },
+  {
+   "query": "RP2040",
+   "url": "https://www.findchips.com/search/RP2040",
+   "read_utc": "2026-09-27T00:15:30Z",
+   "rows": [
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RF179-74SP3-72RP2-0400",
+     "mfr": "Samtec Inc",
+     "mpn": "RF179-74SP3-72RP2-0400",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RF179-72RP2-72RP2-0400",
+     "mfr": "Samtec Inc",
+     "mpn": "RF179-72RP2-72RP2-0400",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RF179-74BJ3-77RP2-0400",
+     "mfr": "Samtec Inc",
+     "mpn": "RF179-74BJ3-77RP2-0400",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RF179-74BJ3-72RP2-0403",
+     "mfr": "Samtec Inc",
+     "mpn": "RF179-74BJ3-72RP2-0403",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RF179-74BJ3-72RP2-0400",
+     "mfr": "Samtec Inc",
+     "mpn": "RF179-74BJ3-72RP2-0400",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "RF179-72SP2-72RP2-0400",
+     "mfr": "Samtec Inc",
+     "mpn": "RF179-72SP2-72RP2-0400",
+     "stock": "0"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "3766082",
+     "mfr": "Raspberry Pi",
+     "mpn": "RP2040CT",
+     "stock": "14862"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "3766082RL",
+     "mfr": "Raspberry Pi",
+     "mpn": "RP2040CT",
+     "stock": "14862"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "3766080",
+     "mfr": "Raspberry Pi",
+     "mpn": "RP2040TR13",
+     "stock": "17000"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "3942216",
+     "mfr": "Cytron Technologies",
+     "mpn": "MAKER-PI-RP2040",
+     "stock": "21"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4871668",
+     "mfr": "Cytron Technologies",
+     "mpn": "MAKER-UNO-RP2040",
+     "stock": "19"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4871665",
+     "mfr": "Cytron Technologies",
+     "mpn": "MAKER-NANO-RP2040",
+     "stock": "19"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "3766079",
+     "mfr": "Raspberry Pi",
+     "mpn": "RP2040TR7",
+     "stock": "0"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "3614-MAKER-NANO-RP2040-ND",
+     "mfr": "Cytron Technologies",
+     "mpn": "MAKER-NANO-RP2040",
+     "stock": "227 Box"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "3614-MAKER-PI-RP2040-ND",
+     "mfr": "Cytron Technologies",
+     "mpn": "MAKER-PI-RP2040",
+     "stock": "75 Box"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "3614-MAKER-UNO-RP2040-ND",
+     "mfr": "Cytron Technologies",
+     "mpn": "MAKER-UNO-RP2040",
+     "stock": "31 Box"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "1188-RP2040-PICO-W-ND",
+     "mfr": "Olimex",
+     "mpn": "RP2040-PICO-W",
+     "stock": "22 Bulk"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "1050-NANO-RP2040-ENTRY-KIT-ND",
+     "mfr": "Arduino",
+     "mpn": "NANO-RP2040-ENTRY",
+     "stock": "18 Bulk"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "1188-RP2040-PICO-PC-ND",
+     "mfr": "Olimex",
+     "mpn": "RP2040-PICO-PC",
+     "stock": "12 Bulk"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "1188-RP2040-PICO-HDR-ND",
+     "mfr": "Olimex",
+     "mpn": "RP2040-PICO-HDR",
+     "stock": "8 Bulk"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "1188-RP2040-PICO-W-HDR-ND",
+     "mfr": "Olimex",
+     "mpn": "RP2040-PICO-W-HDR",
+     "stock": "4 Bulk"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "1188-RP2040-PICO-ND",
+     "mfr": "Olimex",
+     "mpn": "RP2040-PICO",
+     "stock": "2 Bulk"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "1188-RP2040PC-ND",
+     "mfr": "Olimex",
+     "mpn": "RP2040PC",
+     "stock": "0 Bulk"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "1188-BOX-RP2040PC-ND",
+     "mfr": "Olimex",
+     "mpn": "BOX-RP2040PC",
+     "stock": "0 Bulk"
+    },
+    {
+     "distributor": "RS",
+     "sku": "2211611",
+     "mfr": "Raspberry Pi",
+     "mpn": "RP2040",
+     "stock": "2430"
+    },
+    {
+     "distributor": "RS",
+     "sku": "2211610",
+     "mfr": "Raspberry Pi",
+     "mpn": "RP2040",
+     "stock": "2000"
+    },
+    {
+     "distributor": "RS",
+     "sku": "2211609",
+     "mfr": "Raspberry Pi",
+     "mpn": "RP2040",
+     "stock": "660"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000003604950",
+     "mfr": "Samtec Inc",
+     "mpn": "RF179-74SP3-72RP2-0400",
+     "stock": "0"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000003604848",
+     "mfr": "Samtec Inc",
+     "mpn": "RF179-72RP2-72RP2-0400",
+     "stock": "0"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000003529076",
+     "mfr": "Samtec Inc",
+     "mpn": "RF179-74BJ3-77RP2-0400",
+     "stock": "0"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000005037676",
+     "mfr": "Samtec Inc",
+     "mpn": "RF179-74BJ2-72RP2-0400",
+     "stock": "0"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000003604916",
+     "mfr": "Samtec Inc",
+     "mpn": "RF179-74BJ3-72RP2-0403",
+     "stock": "0"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000003604915",
+     "mfr": "Samtec Inc",
+     "mpn": "RF179-74BJ3-72RP2-0400",
+     "stock": "0"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000003604879",
+     "mfr": "Samtec Inc",
+     "mpn": "RF179-72SP2-72RP2-0400",
+     "stock": "0"
+    },
+    {
+     "distributor": "TME",
+     "sku": "AKX00042",
+     "mfr": "Arduino",
+     "mpn": "IOT BUNDLE RP2040",
+     "stock": "0"
+    },
+    {
+     "distributor": "TME",
+     "sku": "SEEED-102010428",
+     "mfr": "Seeed Development Ltd",
+     "mpn": "XIAO RP2040",
+     "stock": "90"
+    },
+    {
+     "distributor": "TME",
+     "sku": "SC0914-13",
+     "mfr": "Raspberry Pi",
+     "mpn": "IC RP2040 (RP2B2) T&R 3400 (13 REEL)",
+     "stock": "0"
+    },
+    {
+     "distributor": "TME",
+     "sku": "SC0914-7",
+     "mfr": "Raspberry Pi",
+     "mpn": "IC RP2040 (RP2B2) T&R 500 (7 REEL)",
+     "stock": "312"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Raspberry Pi Ltd",
+     "mpn": "RASPBERRY PI PICO - RP2040",
+     "stock": "342"
+    },
+    {
+     "distributor": "LCSC",
+     "sku": "",
+     "mfr": "Waveshare Electronics",
+     "mpn": "RP2040-LCD-0.96",
+     "stock": "9"
+    },
+    {
+     "distributor": "LCSC",
+     "sku": "",
+     "mfr": "Waveshare Electronics",
+     "mpn": "RP2040-ZERO",
+     "stock": "1"
+    },
+    {
+     "distributor": "LCSC",
+     "sku": "",
+     "mfr": "Waveshare Electronics",
+     "mpn": "RP2040-ONE",
+     "stock": "4"
+    },
+    {
+     "distributor": "LCSC",
+     "sku": "",
+     "mfr": "Waveshare Electronics",
+     "mpn": "RP2040-PLUS",
+     "stock": "3"
+    },
+    {
+     "distributor": "LCSC",
+     "sku": "",
+     "mfr": "Waveshare Electronics",
+     "mpn": "RP2040-LCD-1.28",
+     "stock": "7"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Raspberry Pi",
+     "mpn": "RP2040",
+     "stock": "19000"
+    }
+   ]
+  },
+  {
+   "query": "B2P-VH-BL",
+   "url": "https://www.findchips.com/search/B2P-VH-BL",
+   "read_utc": "2026-09-27T00:15:33Z",
+   "rows": [
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "JST Manufacturing",
+     "mpn": "B2P-VH-B(LF)(SN)",
+     "stock": "118"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "JST Manufacturing",
+     "mpn": "B2P-VH-B(LF)(SN)",
+     "stock": "40240"
+    },
+    {
+     "distributor": "New Advantage Corporation",
+     "sku": "XSFP00000360969",
+     "mfr": "JST Manufacturing",
+     "mpn": "B2P-VH-B(LF)(SN)",
+     "stock": "2000"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "JST Manufacturing",
+     "mpn": "B2P-VH-B(LF)(SN)",
+     "stock": "7760"
+    }
+   ]
+  },
+  {
+   "query": "3568",
+   "url": "https://www.findchips.com/search/3568",
+   "read_utc": "2026-09-27T00:15:35Z",
+   "rows": [
+    {
+     "distributor": "Avnet Americas",
+     "sku": "MAL202135689E3",
+     "mfr": "Vishay Intertechnologies",
+     "mpn": "MAL202135689E3",
+     "stock": "2000"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "111356-8",
+     "mfr": "TE Connectivity",
+     "mpn": "111356-8",
+     "stock": "694"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "HM2DK3568PLF",
+     "mfr": "Amphenol Corporation",
+     "mpn": "HM2DK3568PLF",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "418356823RR",
+     "mfr": "Amphenol Corporation",
+     "mpn": "418-3568-23RR",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "418356823RRR",
+     "mfr": "Amphenol Corporation",
+     "mpn": "418-3568-23RRR",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "MKT1813568016",
+     "mfr": "Vishay Intertechnologies",
+     "mpn": "MKT1813568016",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "BPXX00060635680M00",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "BPXX00060635680M00",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "MKT1813568256",
+     "mfr": "Vishay Intertechnologies",
+     "mpn": "MKT1813568256",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "3-1752356-8",
+     "mfr": "TE Connectivity",
+     "mpn": "3-1752356-8",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "418356825L",
+     "mfr": "Amphenol Corporation",
+     "mpn": "418-3568-25L",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "2935680000",
+     "mfr": "Weidmüller Interface GmbH & Co. KG",
+     "mpn": "2935680000",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "3-568176-9",
+     "mfr": "TE Connectivity",
+     "mpn": "3-568176-9",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "BPXX00060635681T00",
+     "mfr": "Pulse Electronics Corporation",
+     "mpn": "BPXX00060635681T00",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "1511173568",
+     "mfr": "Molex",
+     "mpn": "151117-3568",
+     "stock": "0"
+    },
+    {
+     "distributor": "Avnet Americas",
+     "sku": "1356880000",
+     "mfr": "Weidmüller Interface GmbH & Co. KG",
+     "mpn": "1356880000",
+     "stock": "0"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "3850311",
+     "mfr": "KERN & SOHN GmbH",
+     "mpn": "356-87",
+     "stock": "4"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "3019542",
+     "mfr": "SPC Multicomp",
+     "mpn": "MC003568",
+     "stock": "31"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4333082",
+     "mfr": "SPC Multicomp",
+     "mpn": "MP013568",
+     "stock": "322"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4780984",
+     "mfr": "TE Connectivity",
+     "mpn": "356835-1",
+     "stock": "9"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "2850553",
+     "mfr": "Weidmüller Interface GmbH & Co. KG",
+     "mpn": "1356850000",
+     "stock": "16"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4372862",
+     "mfr": "Amphenol Corporation",
+     "mpn": "HM2DK3568PLF",
+     "stock": "873"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "1165416",
+     "mfr": "Vishay Intertechnologies",
+     "mpn": "MAL203035689E3",
+     "stock": "1464"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4025405",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LTC3568IDD#PBF",
+     "stock": "31"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "1166849",
+     "mfr": "Vishay Intertechnologies",
+     "mpn": "MKT1813568255G",
+     "stock": "395"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "2408316",
+     "mfr": "Coilcraft Inc",
+     "mpn": "LPS6235-685MRC",
+     "stock": "20"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "2408316RL",
+     "mfr": "Coilcraft Inc",
+     "mpn": "LPS6235-685MRC",
+     "stock": "20"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4626003",
+     "mfr": "Kyocera AVX Components",
+     "mpn": "REF1835681M100B",
+     "stock": "265"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4025403",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LTC3568EDD#TRPBF",
+     "stock": "1894"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4025403RL",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LTC3568EDD#TRPBF",
+     "stock": "1894"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "4473101",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "10173568-00011LF",
+     "stock": "450"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "36-3568-ND",
+     "mfr": "Keystone Electronics Corp",
+     "mpn": "3568",
+     "stock": "110899 Bulk"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "2337-35681404-ND",
+     "mfr": "SAB Bröckskes",
+     "mpn": "35681404",
+     "stock": "10580"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "2337-35680204D-ND",
+     "mfr": "SAB Bröckskes",
+     "mpn": "35680204D",
+     "stock": "7183"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "1528-2397-ND",
+     "mfr": "Adafruit Industries",
+     "mpn": "3568",
+     "stock": "1541 Bulk"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "2337-35680204-ND",
+     "mfr": "SAB Bröckskes",
+     "mpn": "35680204",
+     "stock": "954"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "5672-3QHTF32-13.568-PD-ND",
+     "mfr": "Mercury Electronic Ind Co Ltd",
+     "mpn": "3QHTF32-13.568-PD",
+     "stock": "250"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "5672-18QHTF22-13.568-PD-ND",
+     "mfr": "Mercury Electronic Ind Co Ltd",
+     "mpn": "18QHTF22-13.568-PD",
+     "stock": "250"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "5672-18QHTF53-56.840-OE-ND",
+     "mfr": "Mercury Electronic Ind Co Ltd",
+     "mpn": "18QHTF53-56.840-OE",
+     "stock": "250"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "5672-25QHTF22-13.568-PD-ND",
+     "mfr": "Mercury Electronic Ind Co Ltd",
+     "mpn": "25QHTF22-13.568-PD",
+     "stock": "250"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "5672-VMQF574T25-13.568-1.0/-40+85-ND",
+     "mfr": "Mercury Electronic Ind Co Ltd",
+     "mpn": "VMQF574T25-13.568-1.0/-40+85",
+     "stock": "250"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "609-HM2DK3568PLF-ND",
+     "mfr": "Amphenol Communications Solutions",
+     "mpn": "HM2DK3568PLF",
+     "stock": "124 Bulk"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "6336-35-689-ND",
+     "mfr": "GC Electronics",
+     "mpn": "35-689",
+     "stock": "89 Bulk"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "3568-3568-ISP200OSUPPORTOVIMAGINGSENSOR-ND-ND",
+     "mfr": "Aitronics Inc",
+     "mpn": "3568-ISP200O SUPPORTOVIMAGINGSENSOR-ND",
+     "stock": "50 Tray"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "5664-418-3568-23RR-600313-ND",
+     "mfr": "PEI-GENESIS",
+     "mpn": "418-3568-23RR",
+     "stock": "4"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "3720-3568-ND",
+     "mfr": "Heyco",
+     "mpn": "3568",
+     "stock": "0 Bulk"
+    },
+    {
+     "distributor": "TE Connectivity",
+     "sku": "",
+     "mfr": "TE Connectivity",
+     "mpn": "2-35684-1",
+     "stock": "11380"
+    },
+    {
+     "distributor": "TE Connectivity",
+     "sku": "",
+     "mfr": "TE Connectivity",
+     "mpn": "35684",
+     "stock": "53713"
+    },
+    {
+     "distributor": "RS",
+     "sku": "1233568",
+     "mfr": "RS Pro",
+     "mpn": "1233568",
+     "stock": "16"
+    },
+    {
+     "distributor": "RS",
+     "sku": "1263568",
+     "mfr": "RS Pro",
+     "mpn": "1263568",
+     "stock": "408"
+    },
+    {
+     "distributor": "RS",
+     "sku": "9113568",
+     "mfr": "RS Pro",
+     "mpn": "9113568",
+     "stock": "4620"
+    },
+    {
+     "distributor": "RS",
+     "sku": "4993568",
+     "mfr": "RS Pro",
+     "mpn": "4993568",
+     "stock": "24"
+    },
+    {
+     "distributor": "RS",
+     "sku": "1253568",
+     "mfr": "RS Pro",
+     "mpn": "1253568",
+     "stock": "16"
+    },
+    {
+     "distributor": "RS",
+     "sku": "1953568",
+     "mfr": "RS Pro",
+     "mpn": "1953568",
+     "stock": "23"
+    },
+    {
+     "distributor": "RS",
+     "sku": "183568",
+     "mfr": "RS Pro",
+     "mpn": "183568",
+     "stock": "12"
+    },
+    {
+     "distributor": "RS",
+     "sku": "727419",
+     "mfr": "Exacompta",
+     "mpn": "53568E",
+     "stock": "80"
+    },
+    {
+     "distributor": "RS",
+     "sku": "7199854",
+     "mfr": "MENDA",
+     "mpn": "35686",
+     "stock": "143"
+    },
+    {
+     "distributor": "RS",
+     "sku": "1849850",
+     "mfr": "Eccel Technology Ltd",
+     "mpn": "RFID-ANT1356-80X80-800 V1",
+     "stock": "107"
+    },
+    {
+     "distributor": "RS",
+     "sku": "1854252",
+     "mfr": "Vishay Intertechnologies",
+     "mpn": "MKT1813568255",
+     "stock": "5"
+    },
+    {
+     "distributor": "RS",
+     "sku": "2864250",
+     "mfr": "Weidmüller Interface GmbH & Co. KG",
+     "mpn": "FM 4/TS35 -687900000",
+     "stock": "8090"
+    },
+    {
+     "distributor": "RS",
+     "sku": "216786",
+     "mfr": "OPTIBELT GmbH",
+     "mpn": "EPJ 356 8",
+     "stock": "48"
+    },
+    {
+     "distributor": "RS",
+     "sku": "2613048",
+     "mfr": "Baumer Electric Ag",
+     "mpn": "11235685",
+     "stock": "1"
+    },
+    {
+     "distributor": "RS",
+     "sku": "7948079",
+     "mfr": "Rubbermaid",
+     "mpn": "1883568",
+     "stock": "1"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000002285064",
+     "mfr": "Keystone Electronics Corp",
+     "mpn": "3568",
+     "stock": "3970"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000002152580",
+     "mfr": "Sensata Circuit Breakers",
+     "mpn": "IULHPK111-1REC4-35686-300",
+     "stock": "0"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000000717950",
+     "mfr": "Sensata Circuit Breakers",
+     "mpn": "AP112-35-68",
+     "stock": "0"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000006141712",
+     "mfr": "TE Connectivity",
+     "mpn": "3-1752356-8",
+     "stock": "0"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000002341043",
+     "mfr": "TE Connectivity",
+     "mpn": "3-568176-9",
+     "stock": "0"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000005843298",
+     "mfr": "Keystone Electronics Corp",
+     "mpn": "3568-15",
+     "stock": "0"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000003794098",
+     "mfr": "Carling Technologies",
+     "mpn": "468-35686-001",
+     "stock": "0"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000006143345",
+     "mfr": "TE Connectivity",
+     "mpn": "8-1752356-8",
+     "stock": "0"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000000932308",
+     "mfr": "TE Connectivity",
+     "mpn": "3-568176-1",
+     "stock": "0"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000006141908",
+     "mfr": "TE Connectivity",
+     "mpn": "4-1752356-8",
+     "stock": "0"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000003938508",
+     "mfr": "OMRON Electronic Components",
+     "mpn": "70230-3568",
+     "stock": "0"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000003794100",
+     "mfr": "Carling Technologies",
+     "mpn": "468-35688-001",
+     "stock": "0"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000000932309",
+     "mfr": "TE Connectivity",
+     "mpn": "3-568176-2",
+     "stock": "0"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000002736428",
+     "mfr": "Sensata Circuit Breakers",
+     "mpn": "IEG1-33568-30-V",
+     "stock": "0"
+    },
+    {
+     "distributor": "Sager",
+     "sku": "000000000003793921",
+     "mfr": "Carling Technologies",
+     "mpn": "348-35682-003",
+     "stock": "0"
+    },
+    {
+     "distributor": "Rochester Electronics",
+     "sku": "",
+     "mfr": "Allegro MicroSystems LLC",
+     "mpn": "APS13568ELJATR",
+     "stock": "18000"
+    },
+    {
+     "distributor": "Rochester Electronics",
+     "sku": "",
+     "mfr": "Cypress Semiconductor",
+     "mpn": "CYRF89435-68LTXC",
+     "stock": "59"
+    },
+    {
+     "distributor": "Rochester Electronics",
+     "sku": "",
+     "mfr": "Cypress Semiconductor",
+     "mpn": "CYRF89535-68LTXC",
+     "stock": "37"
+    },
+    {
+     "distributor": "Rochester Electronics",
+     "sku": "",
+     "mfr": "Renesas Electronics Corporation",
+     "mpn": "2SC3568(1)-S6-AZ",
+     "stock": "771"
+    },
+    {
+     "distributor": "Rochester Electronics",
+     "sku": "",
+     "mfr": "Renesas Electronics Corporation",
+     "mpn": "2SC3568(2)-S6-AZ",
+     "stock": "652"
+    },
+    {
+     "distributor": "Rochester Electronics",
+     "sku": "",
+     "mfr": "Renesas Electronics Corporation",
+     "mpn": "2SC3568(8)-AZ",
+     "stock": "9976"
+    },
+    {
+     "distributor": "Rochester Electronics",
+     "sku": "",
+     "mfr": "Renesas Electronics Corporation",
+     "mpn": "2SC3568-AZ",
+     "stock": "5153"
+    },
+    {
+     "distributor": "Heilind Europe",
+     "sku": "KEY3568",
+     "mfr": "Keystone Electronics Corp",
+     "mpn": "3568",
+     "stock": "Europe - 7900 in Stock"
+    },
+    {
+     "distributor": "Heilind Europe",
+     "sku": "APE418-3568-23RR",
+     "mfr": "Amphenol Limited",
+     "mpn": "418-3568-23RR",
+     "stock": "Europe - 0 in Stock"
+    },
+    {
+     "distributor": "Heilind Europe",
+     "sku": "APE418-3568-23RRR",
+     "mfr": "Amphenol Limited",
+     "mpn": "418-3568-23RRR",
+     "stock": "Europe - 0 in Stock"
+    },
+    {
+     "distributor": "Heilind Europe",
+     "sku": "SCB1-1735-356898",
+     "mfr": "Schaltbau Holding Ag",
+     "mpn": "1-1735-356898",
+     "stock": "Europe - 0 in Stock"
+    },
+    {
+     "distributor": "Heilind Europe",
+     "sku": "APE418-3568-25L",
+     "mfr": "Amphenol Limited",
+     "mpn": "418-3568-25L",
+     "stock": "Europe - 0 in Stock"
+    },
+    {
+     "distributor": "Heilind Europe",
+     "sku": "AME2CMA103568R1000",
+     "mfr": "Amphenol Sine Systems",
+     "mpn": "2CMA103568R1000",
+     "stock": "Europe - 0 in Stock"
+    },
+    {
+     "distributor": "Heilind Europe",
+     "sku": "MMM7000133568",
+     "mfr": "3M Interconnect",
+     "mpn": "7000133568",
+     "stock": "Europe - 0 in Stock"
+    },
+    {
+     "distributor": "Heilind Europe",
+     "sku": "MOL151117-3568",
+     "mfr": "Molex",
+     "mpn": "151117-3568",
+     "stock": "Europe - 0 in Stock"
+    },
+    {
+     "distributor": "Heilind Europe",
+     "sku": "APE418-3568-15",
+     "mfr": "Amphenol Limited",
+     "mpn": "418-3568-15",
+     "stock": "Europe - 0 in Stock"
+    },
+    {
+     "distributor": "Heilind Europe",
+     "sku": "APE418-3568-15T",
+     "mfr": "Amphenol Limited",
+     "mpn": "418-3568-15T",
+     "stock": "Europe - 0 in Stock"
+    },
+    {
+     "distributor": "Heilind Europe",
+     "sku": "APE418-3568-25RR",
+     "mfr": "Amphenol Limited",
+     "mpn": "418-3568-25RR",
+     "stock": "Europe - 0 in Stock"
+    },
+    {
+     "distributor": "Heilind Europe",
+     "sku": "APE418-3568-25T",
+     "mfr": "Amphenol Limited",
+     "mpn": "418-3568-25T",
+     "stock": "Europe - 0 in Stock"
+    },
+    {
+     "distributor": "Heilind Europe",
+     "sku": "AMP3-568176-1",
+     "mfr": "TE Connectivity",
+     "mpn": "3-568176-1",
+     "stock": "Europe - 0 in Stock"
+    },
+    {
+     "distributor": "Heilind Europe",
+     "sku": "APE418-3568-15L",
+     "mfr": "Amphenol Limited",
+     "mpn": "418-3568-15L",
+     "stock": "Europe - 0 in Stock"
+    },
+    {
+     "distributor": "Heilind Europe",
+     "sku": "APE418-3568-23M",
+     "mfr": "Amphenol Limited",
+     "mpn": "418-3568-23M",
+     "stock": "Europe - 0 in Stock"
+    },
+    {
+     "distributor": "TME",
+     "sku": "KEYS3568",
+     "mfr": "Keystone Electronics Corp",
+     "mpn": "3568",
+     "stock": "8356"
+    },
+    {
+     "distributor": "TME",
+     "sku": "B-1/8",
+     "mfr": "Festo",
+     "mpn": "3568",
+     "stock": "11"
+    },
+    {
+     "distributor": "TME",
+     "sku": "HM2DK3568PLF-AMP",
+     "mfr": "Amphenol Corporation",
+     "mpn": "HM2DK3568PLF",
+     "stock": "970"
+    },
+    {
+     "distributor": "TME",
+     "sku": "KT-853568S",
+     "mfr": "KING TONY",
+     "mpn": "853568S",
+     "stock": "0"
+    },
+    {
+     "distributor": "TME",
+     "sku": "33503568-APT-0",
+     "mfr": "Aptiv PLC",
+     "mpn": "33503568",
+     "stock": "5000"
+    },
+    {
+     "distributor": "TME",
+     "sku": "B41888E3568M009",
+     "mfr": "TDK Corporation",
+     "mpn": "B41888E3568M009",
+     "stock": "0"
+    },
+    {
+     "distributor": "TME",
+     "sku": "1356880000",
+     "mfr": "Weidmüller Interface GmbH & Co. KG",
+     "mpn": "1356880000",
+     "stock": "0"
+    },
+    {
+     "distributor": "TME",
+     "sku": "MIKROE-3568",
+     "mfr": "MikroElektronika",
+     "mpn": "MIKROE-3568",
+     "stock": "3"
+    },
+    {
+     "distributor": "TME",
+     "sku": "1335680000",
+     "mfr": "Weidmüller Interface GmbH & Co. KG",
+     "mpn": "1335680000",
+     "stock": "0"
+    },
+    {
+     "distributor": "TME",
+     "sku": "SLY4.035.68.Z",
+     "mfr": "Fischer Elektronik GmbH & Co KG",
+     "mpn": "SLY403568Z",
+     "stock": "0"
+    },
+    {
+     "distributor": "TME",
+     "sku": "1356850000",
+     "mfr": "Weidmüller Interface GmbH & Co. KG",
+     "mpn": "1356850000",
+     "stock": "0"
+    },
+    {
+     "distributor": "TME",
+     "sku": "14373568-TEC",
+     "mfr": "TE Connectivity",
+     "mpn": "1437356-8",
+     "stock": "250"
+    },
+    {
+     "distributor": "TME",
+     "sku": "REA1635680M400B",
+     "mfr": "Kyocera AVX Components",
+     "mpn": "REA1635680M400B",
+     "stock": "0"
+    },
+    {
+     "distributor": "TME",
+     "sku": "B41888E3568M000",
+     "mfr": "TDK Corporation",
+     "mpn": "B41888E3568M000",
+     "stock": "0"
+    },
+    {
+     "distributor": "TME",
+     "sku": "SLY4.035.68.G",
+     "mfr": "Fischer Elektronik GmbH & Co KG",
+     "mpn": "SLY403568G",
+     "stock": "0"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Keystone Electronics Corp",
+     "mpn": "3568",
+     "stock": "104"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Yazaki Corp",
+     "mpn": "7157-3568-40",
+     "stock": "9218"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Switchcraft Conxall",
+     "mpn": "C0035683",
+     "stock": "68"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Vishay BCcomponents",
+     "mpn": "222237035682",
+     "stock": "1925"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Vishay Ohmtek",
+     "mpn": "L35681-01",
+     "stock": "10"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Agilent Technologies Inc",
+     "mpn": "HLMP3568",
+     "stock": "203"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Linear Technology",
+     "mpn": "LTC3568IDD#PBF",
+     "stock": "112"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "United Chemi-Con Inc",
+     "mpn": "KS23568LIST53",
+     "stock": "100"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "",
+     "mpn": "5905-00-903-5687",
+     "stock": "3"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "",
+     "mpn": "YT-23568-1",
+     "stock": "22"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LTC3568EDD#TRPBF",
+     "stock": "14"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "ILSI America LLC",
+     "mpn": "HCOH-5161CH-35.686",
+     "stock": "28"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "Avago Technologies",
+     "mpn": "HLMP-3568",
+     "stock": "2000"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "",
+     "mpn": "CLD3568A",
+     "stock": "63"
+    },
+    {
+     "distributor": "Bristol Electronics",
+     "sku": "",
+     "mfr": "TDK Electronics",
+     "mpn": "B39458-M3568-M201-S01",
+     "stock": "1940"
+    },
+    {
+     "distributor": "GUDECO Handelsgesellschaft GmbH",
+     "sku": "54.10.36",
+     "mfr": "",
+     "mpn": "1073568",
+     "stock": "0"
+    },
+    {
+     "distributor": "GUDECO Handelsgesellschaft GmbH",
+     "sku": "83.10.61",
+     "mfr": "Fischer Elektronik GmbH & Co KG",
+     "mpn": "SLY 4 035 68 Z",
+     "stock": "0"
+    },
+    {
+     "distributor": "GUDECO Handelsgesellschaft GmbH",
+     "sku": "80.73.63",
+     "mfr": "Fischer Elektronik GmbH & Co KG",
+     "mpn": "SL 14 235 68 G",
+     "stock": "0"
+    },
+    {
+     "distributor": "GUDECO Handelsgesellschaft GmbH",
+     "sku": "80.73.64",
+     "mfr": "Fischer Elektronik GmbH & Co KG",
+     "mpn": "SL 14 235 68 Z",
+     "stock": "0"
+    },
+    {
+     "distributor": "GUDECO Handelsgesellschaft GmbH",
+     "sku": "54.80.30",
+     "mfr": "",
+     "mpn": "3035686",
+     "stock": "0"
+    },
+    {
+     "distributor": "GUDECO Handelsgesellschaft GmbH",
+     "sku": "54.99.02",
+     "mfr": "",
+     "mpn": "3073568",
+     "stock": "0"
+    },
+    {
+     "distributor": "GUDECO Handelsgesellschaft GmbH",
+     "sku": "54.80.32",
+     "mfr": "",
+     "mpn": "3035688",
+     "stock": "0"
+    },
+    {
+     "distributor": "GUDECO Handelsgesellschaft GmbH",
+     "sku": "83.10.59",
+     "mfr": "Fischer Elektronik GmbH & Co KG",
+     "mpn": "SLY 4 035 68 G",
+     "stock": "0"
+    },
+    {
+     "distributor": "GUDECO Handelsgesellschaft GmbH",
+     "sku": "54.80.31",
+     "mfr": "",
+     "mpn": "3035687",
+     "stock": "0"
+    },
+    {
+     "distributor": "GUDECO Handelsgesellschaft GmbH",
+     "sku": "54.46.76",
+     "mfr": "Phoenix Contact",
+     "mpn": "1435687",
+     "stock": "0"
+    },
+    {
+     "distributor": "GUDECO Handelsgesellschaft GmbH",
+     "sku": "55.22.84",
+     "mfr": "",
+     "mpn": "1133568",
+     "stock": "0"
+    },
+    {
+     "distributor": "GUDECO Handelsgesellschaft GmbH",
+     "sku": "55.17.94",
+     "mfr": "",
+     "mpn": "3273568",
+     "stock": "0"
+    },
+    {
+     "distributor": "GUDECO Handelsgesellschaft GmbH",
+     "sku": "49.20.01",
+     "mfr": "Phoenix Contact",
+     "mpn": "1735688",
+     "stock": "0"
+    },
+    {
+     "distributor": "GUDECO Handelsgesellschaft GmbH",
+     "sku": "83.10.60",
+     "mfr": "Fischer Elektronik GmbH & Co KG",
+     "mpn": "SLY 4 035 68 S",
+     "stock": "0"
+    },
+    {
+     "distributor": "GUDECO Handelsgesellschaft GmbH",
+     "sku": "47.35.68",
+     "mfr": "Murata Manufacturing Co Ltd",
+     "mpn": "GRM155C81H333ME19D",
+     "stock": "0"
+    },
+    {
+     "distributor": "PEI Genesis",
+     "sku": "Amphenol 418-3568-23RR",
+     "mfr": "Amphenol Corporation",
+     "mpn": "418-3568-23RR",
+     "stock": "4"
+    },
+    {
+     "distributor": "PEI Genesis",
+     "sku": "Amphenol 418-3568-25L",
+     "mfr": "Amphenol Corporation",
+     "mpn": "418-3568-25L",
+     "stock": "14"
+    },
+    {
+     "distributor": "PEI Genesis",
+     "sku": "Amphenol 418-3568-25RR",
+     "mfr": "Amphenol Corporation",
+     "mpn": "418-3568-25RR",
+     "stock": "8"
+    },
+    {
+     "distributor": "PEI Genesis",
+     "sku": "Amphenol 418-3568-25SR",
+     "mfr": "Amphenol Corporation",
+     "mpn": "418-3568-25SR",
+     "stock": "42"
+    },
+    {
+     "distributor": "PEI Genesis",
+     "sku": "Amphenol 418-3568-17T",
+     "mfr": "Amphenol Corporation",
+     "mpn": "418-3568-17T",
+     "stock": "15"
+    },
+    {
+     "distributor": "PEI Genesis",
+     "sku": "Amphenol 418-3568-23L",
+     "mfr": "Amphenol Corporation",
+     "mpn": "418-3568-23L",
+     "stock": "201"
+    },
+    {
+     "distributor": "PEI Genesis",
+     "sku": "Amphenol 418-3568-23R",
+     "mfr": "Amphenol Corporation",
+     "mpn": "418-3568-23R",
+     "stock": "20"
+    },
+    {
+     "distributor": "PEI Genesis",
+     "sku": "Amphenol 418-3568-21L",
+     "mfr": "Amphenol Corporation",
+     "mpn": "418-3568-21L",
+     "stock": "0"
+    },
+    {
+     "distributor": "PEI Genesis",
+     "sku": "Amphenol 418-3568-23",
+     "mfr": "Amphenol Corporation",
+     "mpn": "418-3568-23",
+     "stock": "0"
+    },
+    {
+     "distributor": "PEI Genesis",
+     "sku": "Amphenol 418-3568-21",
+     "mfr": "Amphenol Corporation",
+     "mpn": "418-3568-21",
+     "stock": "0"
+    },
+    {
+     "distributor": "PEI Genesis",
+     "sku": "Amphenol 418-3568-13",
+     "mfr": "Amphenol Corporation",
+     "mpn": "418-3568-13",
+     "stock": "0"
+    },
+    {
+     "distributor": "PEI Genesis",
+     "sku": "Amphenol 418-3568-21RR",
+     "mfr": "Amphenol Corporation",
+     "mpn": "418-3568-21RR",
+     "stock": "20"
+    },
+    {
+     "distributor": "PEI Genesis",
+     "sku": "Sunbank Electronics SE97-035-6-8",
+     "mfr": "SOURIAU-SUNBANK",
+     "mpn": "SE97-035-6-8",
+     "stock": "0"
+    },
+    {
+     "distributor": "PEI Genesis",
+     "sku": "Amphenol 418-3568-17",
+     "mfr": "Amphenol Corporation",
+     "mpn": "418-3568-17",
+     "stock": "69"
+    },
+    {
+     "distributor": "PEI Genesis",
+     "sku": "Amphenol 418-3568-25R",
+     "mfr": "Amphenol Corporation",
+     "mpn": "418-3568-25R",
+     "stock": "33"
+    },
+    {
+     "distributor": "Powell Electronics",
+     "sku": "",
+     "mfr": "Heyco",
+     "mpn": "3568",
+     "stock": "3960"
+    },
+    {
+     "distributor": "Powell Electronics",
+     "sku": "",
+     "mfr": "Amphenol FCi",
+     "mpn": "HM2DK3568PLF",
+     "stock": "640"
+    },
+    {
+     "distributor": "Powell Electronics",
+     "sku": "",
+     "mfr": "Amphenol Corporation",
+     "mpn": "88-443568-53P",
+     "stock": "6"
+    },
+    {
+     "distributor": "Powell Electronics",
+     "sku": "",
+     "mfr": "TE Connectivity",
+     "mpn": "3-568176-1",
+     "stock": "2"
+    },
+    {
+     "distributor": "Powell Electronics",
+     "sku": "",
+     "mfr": "Amphenol Corporation",
+     "mpn": "88-443568-53S",
+     "stock": "1"
+    },
+    {
+     "distributor": "Powell Electronics",
+     "sku": "",
+     "mfr": "TE Connectivity",
+     "mpn": "3-568176-2",
+     "stock": "5"
+    },
+    {
+     "distributor": "Powell Electronics",
+     "sku": "",
+     "mfr": "TE Connectivity",
+     "mpn": "1437356-8",
+     "stock": "165"
+    },
+    {
+     "distributor": "Powell Electronics",
+     "sku": "",
+     "mfr": "TE Connectivity",
+     "mpn": "356885-4",
+     "stock": "1"
+    },
+    {
+     "distributor": "Powell Electronics",
+     "sku": "",
+     "mfr": "Amphenol Corporation",
+     "mpn": "88-443568-21P",
+     "stock": "6"
+    },
+    {
+     "distributor": "Powell Electronics",
+     "sku": "",
+     "mfr": "TE Connectivity",
+     "mpn": "3-568176-3",
+     "stock": "1"
+    },
+    {
+     "distributor": "Powell Electronics",
+     "sku": "",
+     "mfr": "TE Connectivity",
+     "mpn": "1-356885-4",
+     "stock": "137"
+    },
+    {
+     "distributor": "Powell Electronics",
+     "sku": "",
+     "mfr": "Heyco",
+     "mpn": "3568B",
+     "stock": "264"
+    },
+    {
+     "distributor": "Powell Electronics",
+     "sku": "",
+     "mfr": "Amphenol Corporation",
+     "mpn": "87-463568-35T",
+     "stock": "8"
+    },
+    {
+     "distributor": "Powell Electronics",
+     "sku": "",
+     "mfr": "TE Connectivity",
+     "mpn": "1-1752356-8",
+     "stock": "3"
+    },
+    {
+     "distributor": "Powell Electronics",
+     "sku": "",
+     "mfr": "TE Connectivity",
+     "mpn": "356835-1",
+     "stock": "349"
+    },
+    {
+     "distributor": "ComSIT Europe",
+     "sku": "",
+     "mfr": "Coilcraft Inc",
+     "mpn": "LPS6235682MLC",
+     "stock": "Stock DE - 350 Stock ES - 0 Stock US - 0 Stock MX - 0 Stock CN - 0 Stock HK - 0"
+    },
+    {
+     "distributor": "NexGen Digital",
+     "sku": "",
+     "mfr": "Coilcraft Inc",
+     "mpn": "LPS6235-683ML",
+     "stock": "106"
+    },
+    {
+     "distributor": "Chip 1 Exchange",
+     "sku": "",
+     "mfr": "",
+     "mpn": "HEX15-13.56875MHZ-12-40R-F-H2-T3-W2-T",
+     "stock": "765"
+    },
+    {
+     "distributor": "Chip 1 Exchange",
+     "sku": "",
+     "mfr": "Coilcraft Inc",
+     "mpn": "LPS6235-683MRC",
+     "stock": "700"
+    },
+    {
+     "distributor": "Chip 1 Exchange",
+     "sku": "",
+     "mfr": "H&S",
+     "mpn": "12535682-",
+     "stock": "1300"
+    },
+    {
+     "distributor": "Chip 1 Exchange",
+     "sku": "",
+     "mfr": "Keystone Electronics Corp",
+     "mpn": "3568-",
+     "stock": "760"
+    },
+    {
+     "distributor": "Chip 1 Exchange",
+     "sku": "",
+     "mfr": "",
+     "mpn": "PE356811",
+     "stock": "2"
+    },
+    {
+     "distributor": "Chip 1 Exchange",
+     "sku": "",
+     "mfr": "Philips Semiconductors",
+     "mpn": "2222-135-68102",
+     "stock": "9000"
+    },
+    {
+     "distributor": "Dynamic Solutions GmbH",
+     "sku": "",
+     "mfr": "Phoenix Contact",
+     "mpn": "1073568",
+     "stock": "1600"
+    },
+    {
+     "distributor": "Dynamic Solutions GmbH",
+     "sku": "",
+     "mfr": "Phoenix Contact",
+     "mpn": "2203568",
+     "stock": "670"
+    },
+    {
+     "distributor": "Dynamic Solutions GmbH",
+     "sku": "",
+     "mfr": "Phoenix Contact",
+     "mpn": "3035686",
+     "stock": "1500"
+    },
+    {
+     "distributor": "Dynamic Solutions GmbH",
+     "sku": "",
+     "mfr": "Phoenix Contact",
+     "mpn": "1613568",
+     "stock": "450"
+    },
+    {
+     "distributor": "Dynamic Solutions GmbH",
+     "sku": "",
+     "mfr": "Phoenix Contact",
+     "mpn": "3073568",
+     "stock": "2200"
+    },
+    {
+     "distributor": "Dynamic Solutions GmbH",
+     "sku": "",
+     "mfr": "Phoenix Contact",
+     "mpn": "3035688",
+     "stock": "4000"
+    },
+    {
+     "distributor": "Dynamic Solutions GmbH",
+     "sku": "",
+     "mfr": "Phoenix Contact",
+     "mpn": "3035687",
+     "stock": "670"
+    },
+    {
+     "distributor": "Dynamic Solutions GmbH",
+     "sku": "",
+     "mfr": "Phoenix Contact",
+     "mpn": "1435687",
+     "stock": "410"
+    },
+    {
+     "distributor": "Dynamic Solutions GmbH",
+     "sku": "",
+     "mfr": "Phoenix Contact",
+     "mpn": "1133568",
+     "stock": "1600"
+    },
+    {
+     "distributor": "Dynamic Solutions GmbH",
+     "sku": "",
+     "mfr": "Phoenix Contact",
+     "mpn": "3273568",
+     "stock": "450"
+    },
+    {
+     "distributor": "Dynamic Solutions GmbH",
+     "sku": "",
+     "mfr": "Phoenix Contact",
+     "mpn": "1583568",
+     "stock": "450"
+    },
+    {
+     "distributor": "Dynamic Solutions GmbH",
+     "sku": "",
+     "mfr": "Phoenix Contact",
+     "mpn": "1735688",
+     "stock": "670"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LTC3568IDD#PBF",
+     "stock": "4500"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LTC3568EDD#TRPBF",
+     "stock": "22510"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LTC3568IDD#TRPBF",
+     "stock": "4600"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Rockchip Electronics Co Ltd",
+     "mpn": "RK3568",
+     "stock": "825"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Linear Technology",
+     "mpn": "LTC3568EDD",
+     "stock": "22530"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LTC3568EDD#PBF",
+     "stock": "6500"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "onsemi",
+     "mpn": "PN3568",
+     "stock": "46000"
+    },
+    {
+     "distributor": "Unikey Electronic Pte Ltd",
+     "sku": "",
+     "mfr": "isc",
+     "mpn": "2SK3568",
+     "stock": "10000"
+    },
+    {
+     "distributor": "Unikey Electronic Pte Ltd",
+     "sku": "",
+     "mfr": "Phoenix Contact",
+     "mpn": "3035686",
+     "stock": "800"
+    },
+    {
+     "distributor": "Unikey Electronic Pte Ltd",
+     "sku": "",
+     "mfr": "Phoenix Contact",
+     "mpn": "3035688",
+     "stock": "25"
+    },
+    {
+     "distributor": "Unikey Electronic Pte Ltd",
+     "sku": "",
+     "mfr": "Phoenix Contact",
+     "mpn": "3035687",
+     "stock": "37"
+    },
+    {
+     "distributor": "Unikey Electronic Pte Ltd",
+     "sku": "",
+     "mfr": "Phoenix Contact",
+     "mpn": "1435687",
+     "stock": "5"
+    },
+    {
+     "distributor": "Unikey Electronic Pte Ltd",
+     "sku": "",
+     "mfr": "Phoenix Contact",
+     "mpn": "3273568",
+     "stock": "7"
+    },
+    {
+     "distributor": "Unikey Electronic Pte Ltd",
+     "sku": "",
+     "mfr": "isc",
+     "mpn": "2SC3568",
+     "stock": "10000"
+    },
+    {
+     "distributor": "NAC",
+     "sku": "XSDXS0000259833",
+     "mfr": "Cables To Go",
+     "mpn": "C2G43568",
+     "stock": "19"
+    },
+    {
+     "distributor": "NAC",
+     "sku": "3M0000000079532",
+     "mfr": "3M Electronics",
+     "mpn": "7010535681",
+     "stock": "0"
+    },
+    {
+     "distributor": "NAC",
+     "sku": "XSDXS0000008308",
+     "mfr": "PCI",
+     "mpn": "341-3568PC",
+     "stock": "0"
+    },
+    {
+     "distributor": "NAC",
+     "sku": "3M0000000077122",
+     "mfr": "3M Electronics",
+     "mpn": "7100173568",
+     "stock": "0"
+    },
+    {
+     "distributor": "NAC",
+     "sku": "3M0000000024586",
+     "mfr": "3M Electronics",
+     "mpn": "7000133568",
+     "stock": "0"
+    },
+    {
+     "distributor": "NAC",
+     "sku": "3M0000000021845",
+     "mfr": "3M Electronics",
+     "mpn": "51115723568",
+     "stock": "0"
+    },
+    {
+     "distributor": "NAC",
+     "sku": "3M0000000069190",
+     "mfr": "3M Electronics",
+     "mpn": "7010535684",
+     "stock": "0"
+    },
+    {
+     "distributor": "NAC",
+     "sku": "3M0000000048585",
+     "mfr": "3M Electronics",
+     "mpn": "7100135688",
+     "stock": "0"
+    },
+    {
+     "distributor": "NAC",
+     "sku": "WPI000000005788",
+     "mfr": "World Products Inc",
+     "mpn": "PCY2130D35682",
+     "stock": "0"
+    },
+    {
+     "distributor": "NAC",
+     "sku": "WPI000000005809",
+     "mfr": "World Products Inc",
+     "mpn": "PCY2130F35682",
+     "stock": "0"
+    },
+    {
+     "distributor": "NAC",
+     "sku": "XSDXS0000257138",
+     "mfr": "Axiom Manufacturing",
+     "mpn": "AXG103568",
+     "stock": "0"
+    },
+    {
+     "distributor": "NAC",
+     "sku": "3M0000000048599",
+     "mfr": "3M Electronics",
+     "mpn": "7100135689",
+     "stock": "0"
+    },
+    {
+     "distributor": "NAC",
+     "sku": "3M0000000047735",
+     "mfr": "3M Electronics",
+     "mpn": "7010533568",
+     "stock": "0"
+    },
+    {
+     "distributor": "NAC",
+     "sku": "3M0000000056200",
+     "mfr": "3M Electronics",
+     "mpn": "7010303568",
+     "stock": "0"
+    },
+    {
+     "distributor": "NAC",
+     "sku": "3M0000000075182",
+     "mfr": "3M Electronics",
+     "mpn": "7100233568",
+     "stock": "0"
+    },
+    {
+     "distributor": "Braemac Americas-Symmetry",
+     "sku": "",
+     "mfr": "Abracon Corporation",
+     "mpn": "ABM82-13.56875MHZ-E2G-T",
+     "stock": "0"
+    },
+    {
+     "distributor": "Braemac Americas-Symmetry",
+     "sku": "",
+     "mfr": "Abracon Corporation",
+     "mpn": "ASPIAIG-S4035-680M-T",
+     "stock": "0"
+    },
+    {
+     "distributor": "Braemac Americas-Symmetry",
+     "sku": "",
+     "mfr": "Abracon Corporation",
+     "mpn": "ILCX13-IH1F18-13.56875 MHZ",
+     "stock": "0"
+    },
+    {
+     "distributor": "LCSC",
+     "sku": "",
+     "mfr": "Dongguan Chengxing Electronics Co Ltd",
+     "mpn": "H35684J2SC41GC2FM0R",
+     "stock": "140"
+    },
+    {
+     "distributor": "New Advantage Corporation",
+     "sku": "XSRC00000004628",
+     "mfr": "Analog Devices Inc",
+     "mpn": "LTC3568EDD#PBF",
+     "stock": "17"
+    },
+    {
+     "distributor": "New Advantage Corporation",
+     "sku": "XSFP00000356838",
+     "mfr": "TE Connectivity",
+     "mpn": "5-2176331-0",
+     "stock": "8000"
+    },
+    {
+     "distributor": "New Advantage Corporation",
+     "sku": "XSFP00000356890",
+     "mfr": "Vishay Semiconductors",
+     "mpn": "BZX84C9V1-E3-08",
+     "stock": "6000"
+    },
+    {
+     "distributor": "New Advantage Corporation",
+     "sku": "XSFP00000356825",
+     "mfr": "TE Connectivity",
+     "mpn": "2176331-8",
+     "stock": "8000"
+    },
+    {
+     "distributor": "New Advantage Corporation",
+     "sku": "XSFP00000356896",
+     "mfr": "Vishay BCcomponents",
+     "mpn": "CRCW060316R2FKEC",
+     "stock": "440000"
+    },
+    {
+     "distributor": "New Advantage Corporation",
+     "sku": "XSFP00000283568",
+     "mfr": "Vishay BCcomponents",
+     "mpn": "CRCW121047R0FKEA",
+     "stock": "20000"
+    },
+    {
+     "distributor": "New Advantage Corporation",
+     "sku": "XSFP00000356856",
+     "mfr": "TDK Electronics",
+     "mpn": "B32922C3104M003",
+     "stock": "38000"
+    },
+    {
+     "distributor": "New Advantage Corporation",
+     "sku": "XSFP00000356899",
+     "mfr": "Vishay BCcomponents",
+     "mpn": "CRCW12101R20FKEAHP",
+     "stock": "10000"
+    },
+    {
+     "distributor": "New Advantage Corporation",
+     "sku": "XSFP00000356835",
+     "mfr": "TE Connectivity",
+     "mpn": "4-2176397-1",
+     "stock": "8000"
+    },
+    {
+     "distributor": "New Advantage Corporation",
+     "sku": "XSFP00000356881",
+     "mfr": "Eaton Corporation",
+     "mpn": "BK-GMC-250-R",
+     "stock": "900"
+    },
+    {
+     "distributor": "New Advantage Corporation",
+     "sku": "XSFP00000103568",
+     "mfr": "Panasonic Electronic Components",
+     "mpn": "EEV-TG2A101M",
+     "stock": "500"
+    },
+    {
+     "distributor": "New Advantage Corporation",
+     "sku": "XSFP00000356822",
+     "mfr": "Everlight Electronics Co Ltd",
+     "mpn": "19-213/R7C-AQ1R2/5T",
+     "stock": "80000"
+    },
+    {
+     "distributor": "New Advantage Corporation",
+     "sku": "XSFP00000356803",
+     "mfr": "Amphenol Corporation",
+     "mpn": "10018783-10202TLF",
+     "stock": "880"
+    },
+    {
+     "distributor": "New Advantage Corporation",
+     "sku": "XSFP00000356811",
+     "mfr": "Kyocera AVX Components",
+     "mpn": "12061C102KAT2A",
+     "stock": "228000"
+    },
+    {
+     "distributor": "New Advantage Corporation",
+     "sku": "XSFP00000356858",
+     "mfr": "TDK Electronics",
+     "mpn": "B65804P2204X",
+     "stock": "37800"
+    },
+    {
+     "distributor": "Greenchips",
+     "sku": "",
+     "mfr": "Cypress Semiconductor",
+     "mpn": "CYRF89435-68LTXC",
+     "stock": "352"
+    },
+    {
+     "distributor": "Greenchips",
+     "sku": "",
+     "mfr": "Cypress Semiconductor",
+     "mpn": "CYRF89435-68LTXC",
+     "stock": "828"
+    },
+    {
+     "distributor": "Pasternack Enterprises US",
+     "sku": "PE3568LF/HS-24",
+     "mfr": "Pasternack Enterprises",
+     "mpn": "PE3568LF/HS-24",
+     "stock": "0"
+    },
+    {
+     "distributor": "Pasternack Enterprises US",
+     "sku": "PE3568-60",
+     "mfr": "Pasternack Enterprises",
+     "mpn": "PE3568-60",
+     "stock": "0"
+    },
+    {
+     "distributor": "Pasternack Enterprises US",
+     "sku": "PE3568-24",
+     "mfr": "Pasternack Enterprises",
+     "mpn": "PE3568-24",
+     "stock": "0"
+    },
+    {
+     "distributor": "Pasternack Enterprises US",
+     "sku": "PE3W23568",
+     "mfr": "Pasternack Enterprises",
+     "mpn": "PE3W23568",
+     "stock": "0"
+    },
+    {
+     "distributor": "Pasternack Enterprises US",
+     "sku": "PE3568LF/HS-60",
+     "mfr": "Pasternack Enterprises",
+     "mpn": "PE3568LF/HS-60",
+     "stock": "0"
+    },
+    {
+     "distributor": "Pasternack Enterprises US",
+     "sku": "PE3568LF-48",
+     "mfr": "Pasternack Enterprises",
+     "mpn": "PE3568LF-48",
+     "stock": "0"
+    },
+    {
+     "distributor": "Pasternack Enterprises US",
+     "sku": "PE3568-72",
+     "mfr": "Pasternack Enterprises",
+     "mpn": "PE3568-72",
+     "stock": "0"
+    },
+    {
+     "distributor": "Pasternack Enterprises US",
+     "sku": "PE3568LF-12",
+     "mfr": "Pasternack Enterprises",
+     "mpn": "PE3568LF-12",
+     "stock": "4125"
+    },
+    {
+     "distributor": "Pasternack Enterprises US",
+     "sku": "PE3568LF-72",
+     "mfr": "Pasternack Enterprises",
+     "mpn": "PE3568LF-72",
+     "stock": "0"
+    },
+    {
+     "distributor": "Pasternack Enterprises US",
+     "sku": "PE3W03568/HS",
+     "mfr": "Pasternack Enterprises",
+     "mpn": "PE3W03568/HS",
+     "stock": "0"
+    },
+    {
+     "distributor": "Pasternack Enterprises US",
+     "sku": "PE3568-36",
+     "mfr": "Pasternack Enterprises",
+     "mpn": "PE3568-36",
+     "stock": "0"
+    },
+    {
+     "distributor": "Pasternack Enterprises US",
+     "sku": "PE3568LF/HS",
+     "mfr": "Pasternack Enterprises",
+     "mpn": "PE3568LF/HS",
+     "stock": "0"
+    },
+    {
+     "distributor": "Pasternack Enterprises US",
+     "sku": "PE3568",
+     "mfr": "Pasternack Enterprises",
+     "mpn": "PE3568",
+     "stock": "0"
+    },
+    {
+     "distributor": "Pasternack Enterprises US",
+     "sku": "PE3568LF/HS-12",
+     "mfr": "Pasternack Enterprises",
+     "mpn": "PE3568LF/HS-12",
+     "stock": "0"
+    },
+    {
+     "distributor": "Pasternack Enterprises US",
+     "sku": "PE35684LF",
+     "mfr": "Pasternack Enterprises",
+     "mpn": "PE35684LF",
+     "stock": "0"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Keystone Electronics Corp",
+     "mpn": "3568",
+     "stock": "4000"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Rockchip Electronics Co Ltd",
+     "mpn": "RK3568B2",
+     "stock": "4900"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Linear Technology",
+     "mpn": "LTC3568EDD#TRPBF",
+     "stock": "2410"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Linear Technology",
+     "mpn": "LTC3568EDD#PBF",
+     "stock": "2460"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Rockchip Electronics Co Ltd",
+     "mpn": "RK3568J",
+     "stock": "776"
+    }
+   ]
+  },
+  {
+   "query": "LMS-MINI-2",
+   "url": "https://www.findchips.com/search/LMS-MINI-2",
+   "read_utc": "2026-09-27T00:15:38Z",
+   "rows": [
+    {
+     "distributor": "LCSC",
+     "sku": "",
+     "mfr": "Leiditech",
+     "mpn": "LM-SM712",
+     "stock": "7580"
+    },
+    {
+     "distributor": "Unikey Electronic Pte Ltd",
+     "sku": "",
+     "mfr": "Leiditech",
+     "mpn": "LM-SM712",
+     "stock": "4724"
+    }
+   ]
+  },
+  {
+   "query": "TCAN334DR",
+   "url": "https://www.findchips.com/search/TCAN334DR",
+   "read_utc": "2026-09-27T00:15:41Z",
+   "rows": [
+    {
+     "distributor": "Farnell",
+     "sku": "3124716RL",
+     "mfr": "Texas Instruments",
+     "mpn": "TCAN334DR",
+     "stock": "317"
+    },
+    {
+     "distributor": "Farnell",
+     "sku": "3124716",
+     "mfr": "Texas Instruments",
+     "mpn": "TCAN334DR",
+     "stock": "317"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "296-44139-1-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "TCAN334DR",
+     "stock": "0 Cut Tape"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "296-44139-6-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "TCAN334DR",
+     "stock": "0 Digi-Reel®"
+    },
+    {
+     "distributor": "DigiKey",
+     "sku": "296-44139-2-ND",
+     "mfr": "Texas Instruments",
+     "mpn": "TCAN334DR",
+     "stock": "0 Tape & Reel"
+    },
+    {
+     "distributor": "ComSIT Europe",
+     "sku": "",
+     "mfr": "Texas Instruments",
+     "mpn": "TCAN334DR",
+     "stock": "74"
+    },
+    {
+     "distributor": "Win Source Electronics",
+     "sku": "",
+     "mfr": "Texas Instruments",
+     "mpn": "TCAN334DR",
+     "stock": "7530"
+    },
+    {
+     "distributor": "Chip Stock",
+     "sku": "",
+     "mfr": "Texas Instruments",
+     "mpn": "TCAN334DR",
+     "stock": "40020"
+    }
+   ]
+  }
+ ]
+}
