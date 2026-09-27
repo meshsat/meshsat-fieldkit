@@ -1,7 +1,7 @@
 {
  "board": "b",
  "board_table_phase": "B21",
- "bom_rows_per_reference": 1015,
+ "bom_rows_per_reference": 1179,
  "commands": [
   {
    "argv": [
@@ -12,26 +12,26 @@
     "--exclude-drawing-sheet",
     "--exclude-pdf-property-popups",
     "-o",
-    "/root/h1/ex-out/.pcb-b-compute-schematic-sheet.pdf",
+    "/root/h2/ex-out/.pcb-b-compute-schematic-sheet.pdf",
     "pcb-b-compute.kicad_sch"
    ],
    "cwd": "v2/ecad/pcb-b-compute-b19",
    "exit": 0,
-   "output_tail": "Plotted to '/root/h1/ex-out/.pcb-b-compute-schematic-sheet.pdf'.\nDone.\n",
-   "started_utc": "2026-09-27T04:41:25Z"
+   "output_tail": "Plotted to '/root/h2/ex-out/.pcb-b-compute-schematic-sheet.pdf'.\nDone.\n",
+   "started_utc": "2026-09-27T15:16:58Z"
   },
   {
    "argv": [
     "/usr/bin/python3",
-    "/root/h1/ex/src/v2/ecad/tools/sch_pages.py",
+    "/root/h2/src/v2/ecad/tools/sch_pages.py",
     "pcb-b-compute.kicad_sch",
-    "/root/h1/ex-out/.pcb-b-compute-schematic-sheet.pdf",
-    "/root/h1/ex-out/pcb-b-compute-b19/pcb-b-compute-schematic.pdf"
+    "/root/h2/ex-out/.pcb-b-compute-schematic-sheet.pdf",
+    "/root/h2/ex-out/pcb-b-compute-b19/pcb-b-compute-schematic.pdf"
    ],
    "cwd": "v2/ecad/pcb-b-compute-b19",
    "exit": 0,
-   "output_tail": "sch_pages: 6 x 7 cells, 38 pages kept of 42 tiles\n",
-   "started_utc": "2026-09-27T04:41:32Z"
+   "output_tail": "sch_pages: 6 x 8 cells, 43 pages kept of 48 tiles\n",
+   "started_utc": "2026-09-27T15:17:06Z"
   },
   {
    "argv": [
@@ -46,13 +46,13 @@
     "--sort-field",
     "Reference",
     "-o",
-    "/root/h1/ex-out/pcb-b-compute-b19/NOT_FOR_FAB-pcb-b-compute-bom.csv",
+    "/root/h2/ex-out/pcb-b-compute-b19/NOT_FOR_FAB-pcb-b-compute-bom.csv",
     "pcb-b-compute.kicad_sch"
    ],
    "cwd": "v2/ecad/pcb-b-compute-b19",
    "exit": 0,
-   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\nWrote bill of materials to '/root/h1/ex-out/pcb-b-compute-b19/NOT_FOR_FAB-pcb-b-compute-bom.csv'.\n",
-   "started_utc": "2026-09-27T04:42:58Z"
+   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\nWrote bill of materials to '/root/h2/ex-out/pcb-b-compute-b19/NOT_FOR_FAB-pcb-b-compute-bom.csv'.\n",
+   "started_utc": "2026-09-27T15:18:55Z"
   },
   {
    "argv": [
@@ -71,13 +71,13 @@
     "--sort-field",
     "Reference",
     "-o",
-    "/root/h1/ex-out/pcb-b-compute-b19/NOT_FOR_FAB-pcb-b-compute-bom-per-reference.csv",
+    "/root/h2/ex-out/pcb-b-compute-b19/NOT_FOR_FAB-pcb-b-compute-bom-per-reference.csv",
     "pcb-b-compute.kicad_sch"
    ],
    "cwd": "v2/ecad/pcb-b-compute-b19",
    "exit": 0,
-   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\nWrote bill of materials to '/root/h1/ex-out/pcb-b-compute-b19/NOT_FOR_FAB-pcb-b-compute-bom-per-reference.csv'.\n",
-   "started_utc": "2026-09-27T04:43:01Z"
+   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\nWrote bill of materials to '/root/h2/ex-out/pcb-b-compute-b19/NOT_FOR_FAB-pcb-b-compute-bom-per-reference.csv'.\n",
+   "started_utc": "2026-09-27T15:18:59Z"
   },
   {
    "argv": [
@@ -88,13 +88,13 @@
     "--format",
     "json",
     "-o",
-    "/root/h1/ex-out/pcb-b-compute-b19/pcb-b-compute-erc.json",
+    "/root/h2/ex-out/pcb-b-compute-b19/pcb-b-compute-erc.json",
     "pcb-b-compute.kicad_sch"
    ],
    "cwd": "v2/ecad/pcb-b-compute-b19",
    "exit": 0,
-   "output_tail": "Found 2398 violations\nSaved ERC Report to /root/h1/ex-out/pcb-b-compute-b19/pcb-b-compute-erc.json\n",
-   "started_utc": "2026-09-27T04:43:04Z"
+   "output_tail": "Found 2879 violations\nSaved ERC Report to /root/h2/ex-out/pcb-b-compute-b19/pcb-b-compute-erc.json\n",
+   "started_utc": "2026-09-27T15:19:02Z"
   },
   {
    "argv": [
@@ -105,13 +105,13 @@
     "--format",
     "report",
     "-o",
-    "/root/h1/ex-out/pcb-b-compute-b19/pcb-b-compute-erc.rpt",
+    "/root/h2/ex-out/pcb-b-compute-b19/pcb-b-compute-erc.rpt",
     "pcb-b-compute.kicad_sch"
    ],
    "cwd": "v2/ecad/pcb-b-compute-b19",
    "exit": 0,
-   "output_tail": "Found 2398 violations\nSaved ERC Report to /root/h1/ex-out/pcb-b-compute-b19/pcb-b-compute-erc.rpt\n",
-   "started_utc": "2026-09-27T04:43:07Z"
+   "output_tail": "Found 2879 violations\nSaved ERC Report to /root/h2/ex-out/pcb-b-compute-b19/pcb-b-compute-erc.rpt\n",
+   "started_utc": "2026-09-27T15:19:06Z"
   },
   {
    "argv": [
@@ -122,13 +122,13 @@
     "--format",
     "kicadsexpr",
     "-o",
-    "/root/h1/ex-out/.pcb-b-compute.export.net",
+    "/root/h2/ex-out/.pcb-b-compute.export.net",
     "pcb-b-compute.kicad_sch"
    ],
    "cwd": "v2/ecad/pcb-b-compute-b19",
    "exit": 0,
    "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\n",
-   "started_utc": "2026-09-27T04:43:10Z"
+   "started_utc": "2026-09-27T15:19:10Z"
   },
   {
    "argv": [
@@ -141,58 +141,58 @@
    "exit": 0
   }
  ],
- "commit": "99cde56b60f7a40a1b0826acf85ae7e064a976b9",
- "committed_netlist_sha256": "669d02d07aeaae4be388beb904361d95daacc43bbee3e294cd81e1a714fe4e87",
+ "commit": "763bccdf25026cb8b3f28f7a57b68ae7ac784d5d",
+ "committed_netlist_sha256": "8b78c59754a6a0c7f8157faa971b994cc4c818256f63650a19d6ec3cf06fc7b0",
  "driver": {
   "path": "v2/ecad/tools/handover_exports.py",
   "sha256": "dc212f1b06ae34149b643425819dea6d4d85bbb078545b16e4f7c0534f98d69b"
  },
  "erc_violations_by_severity": {
-  "error": 5,
-  "warning": 2393
+  "error": 7,
+  "warning": 2872
  },
  "host": "Linux-6.8.0-134-generic-x86_64-with-glibc2.39",
  "kicad_cli": "9.0.9",
  "netlist_parity_with_the_schematic": "PARITY_AFTER_NOISE",
  "outputs": {
   "NOT_FOR_FAB-pcb-b-compute-bom-per-reference.csv": {
-   "bytes": 80207,
-   "sha256": "f6f5f98b19d0998808fb25bc5929109bec564aca55b5e81f0776256236ca3d0f"
+   "bytes": 95624,
+   "sha256": "ea32db6672cfa8787b3c73576de926d0150f0b171fdf5a8ff1a076e09ae9e42c"
   },
   "NOT_FOR_FAB-pcb-b-compute-bom.csv": {
-   "bytes": 29817,
-   "sha256": "5e5961effab984e2efdcdca438e4249bea74b2fc98e06e66f233613bbaae4776"
+   "bytes": 38718,
+   "sha256": "92e601a8908e1b12e1621761bf11a3f40a3c38a8eeaa5dc87247eb445525dc2f"
   },
   "pcb-b-compute-erc.json": {
-   "bytes": 1528396,
-   "sha256": "3b89e3de7b3e6c803b82cd2dcb2fe82ed2d125ed2f57156ee0942b7518a79e1c"
+   "bytes": 1834807,
+   "sha256": "b83b5af459fb32a55814f5a80a794060404342ab94626229bdaba2befea1b7c0"
   },
   "pcb-b-compute-erc.rpt": {
-   "bytes": 360843,
-   "sha256": "422c5a8db16f07e70129778e63af97122a984558ba50c13c5cb987bca07db57c"
+   "bytes": 432855,
+   "sha256": "1d969b92f0d2484b8914e9c0a1a4a02716b4674978601971a2ec73f72ae715a5"
   },
   "pcb-b-compute-net-parity.json": {
-   "bytes": 720,
-   "sha256": "fe1bbb17e8eb6c012bd9471fb529792c18862b7ea349f9f4b7c5c46af2795cc7"
+   "bytes": 714,
+   "sha256": "2d072973dda7586d13782cfb78a643d999ec65bc585337a1d00b90e3d09df2ee"
   },
   "pcb-b-compute-schematic.pdf": {
-   "bytes": 6292081,
-   "sha256": "c9bab2a0d50302d621eb6c760a1437afde7a175222a4cc872d689c7de8fa9574"
+   "bytes": 7109424,
+   "sha256": "69251c68a0a9f23de60066e4fe257c44ddcec1bf0b32a320638b8a69fc43f5f9"
   }
  },
- "paged_pdf_page1_text_chars": 2700,
- "paged_pdf_pages": 38,
+ "paged_pdf_page1_text_chars": 2724,
+ "paged_pdf_pages": 43,
  "phase_directory": "v2/ecad/pcb-b-compute-b19",
  "python": "3.12.3",
  "result": "OK",
  "schematic": "v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_sch",
  "schematic_phase_label": "B21",
- "schematic_sha256": "d6a25e63622e20dade5617c16089eb97aad3a29d5c062065cdc95ff5fe277880",
- "sheet_pdf_page1_text_chars": 93182,
+ "schematic_sha256": "76c29fa7f88a39e07fd7a19adec687c4fb6c9813f3495df0fc990f3d607ae556",
+ "sheet_pdf_page1_text_chars": 103126,
  "sheet_pdf_pages": 1,
- "sheet_pdf_sha256_not_kept": "d96d89fe10afea5648da65ca9b158a35b05024374aea00bbb0fc7ee97b438e82",
+ "sheet_pdf_sha256_not_kept": "6ff3a91e502dc6869efb2048a7605fd1858f20bfa1b2be2b2cafa5d3b8460faf",
  "stem": "pcb-b-compute",
- "taken_utc": "2026-09-27T04:43:22Z",
+ "taken_utc": "2026-09-27T15:19:23Z",
  "versions": {
   "kicad_cli": "9.0.9",
   "mutool": "mutool version 1.23.10",

@@ -12,26 +12,26 @@
     "--exclude-drawing-sheet",
     "--exclude-pdf-property-popups",
     "-o",
-    "/root/h1/ex-out/.pcb-d-aprs-schematic-sheet.pdf",
+    "/root/h2/ex-out/.pcb-d-aprs-schematic-sheet.pdf",
     "pcb-d-aprs.kicad_sch"
    ],
    "cwd": "v2/ecad/pcb-d-aprs-d9",
    "exit": 0,
-   "output_tail": "Plotted to '/root/h1/ex-out/.pcb-d-aprs-schematic-sheet.pdf'.\nDone.\n",
-   "started_utc": "2026-09-27T04:43:28Z"
+   "output_tail": "Plotted to '/root/h2/ex-out/.pcb-d-aprs-schematic-sheet.pdf'.\nDone.\n",
+   "started_utc": "2026-09-27T15:19:23Z"
   },
   {
    "argv": [
     "/usr/bin/python3",
-    "/root/h1/ex/src/v2/ecad/tools/sch_pages.py",
+    "/root/h2/src/v2/ecad/tools/sch_pages.py",
     "pcb-d-aprs.kicad_sch",
-    "/root/h1/ex-out/.pcb-d-aprs-schematic-sheet.pdf",
-    "/root/h1/ex-out/pcb-d-aprs-d9/pcb-d-aprs-schematic.pdf"
+    "/root/h2/ex-out/.pcb-d-aprs-schematic-sheet.pdf",
+    "/root/h2/ex-out/pcb-d-aprs-d9/pcb-d-aprs-schematic.pdf"
    ],
    "cwd": "v2/ecad/pcb-d-aprs-d9",
    "exit": 0,
    "output_tail": "sch_pages: 3 x 3 cells, 7 pages kept of 9 tiles\n",
-   "started_utc": "2026-09-27T04:43:29Z"
+   "started_utc": "2026-09-27T15:19:24Z"
   },
   {
    "argv": [
@@ -46,13 +46,13 @@
     "--sort-field",
     "Reference",
     "-o",
-    "/root/h1/ex-out/pcb-d-aprs-d9/NOT_FOR_FAB-pcb-d-aprs-bom.csv",
+    "/root/h2/ex-out/pcb-d-aprs-d9/NOT_FOR_FAB-pcb-d-aprs-bom.csv",
     "pcb-d-aprs.kicad_sch"
    ],
    "cwd": "v2/ecad/pcb-d-aprs-d9",
    "exit": 0,
-   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\nWrote bill of materials to '/root/h1/ex-out/pcb-d-aprs-d9/NOT_FOR_FAB-pcb-d-aprs-bom.csv'.\n",
-   "started_utc": "2026-09-27T04:43:32Z"
+   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\nWrote bill of materials to '/root/h2/ex-out/pcb-d-aprs-d9/NOT_FOR_FAB-pcb-d-aprs-bom.csv'.\n",
+   "started_utc": "2026-09-27T15:19:27Z"
   },
   {
    "argv": [
@@ -71,13 +71,13 @@
     "--sort-field",
     "Reference",
     "-o",
-    "/root/h1/ex-out/pcb-d-aprs-d9/NOT_FOR_FAB-pcb-d-aprs-bom-per-reference.csv",
+    "/root/h2/ex-out/pcb-d-aprs-d9/NOT_FOR_FAB-pcb-d-aprs-bom-per-reference.csv",
     "pcb-d-aprs.kicad_sch"
    ],
    "cwd": "v2/ecad/pcb-d-aprs-d9",
    "exit": 0,
-   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\nWrote bill of materials to '/root/h1/ex-out/pcb-d-aprs-d9/NOT_FOR_FAB-pcb-d-aprs-bom-per-reference.csv'.\n",
-   "started_utc": "2026-09-27T04:43:32Z"
+   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\nWrote bill of materials to '/root/h2/ex-out/pcb-d-aprs-d9/NOT_FOR_FAB-pcb-d-aprs-bom-per-reference.csv'.\n",
+   "started_utc": "2026-09-27T15:19:27Z"
   },
   {
    "argv": [
@@ -88,13 +88,13 @@
     "--format",
     "json",
     "-o",
-    "/root/h1/ex-out/pcb-d-aprs-d9/pcb-d-aprs-erc.json",
+    "/root/h2/ex-out/pcb-d-aprs-d9/pcb-d-aprs-erc.json",
     "pcb-d-aprs.kicad_sch"
    ],
    "cwd": "v2/ecad/pcb-d-aprs-d9",
    "exit": 0,
-   "output_tail": "Found 445 violations\nSaved ERC Report to /root/h1/ex-out/pcb-d-aprs-d9/pcb-d-aprs-erc.json\n",
-   "started_utc": "2026-09-27T04:43:33Z"
+   "output_tail": "Found 445 violations\nSaved ERC Report to /root/h2/ex-out/pcb-d-aprs-d9/pcb-d-aprs-erc.json\n",
+   "started_utc": "2026-09-27T15:19:28Z"
   },
   {
    "argv": [
@@ -105,13 +105,13 @@
     "--format",
     "report",
     "-o",
-    "/root/h1/ex-out/pcb-d-aprs-d9/pcb-d-aprs-erc.rpt",
+    "/root/h2/ex-out/pcb-d-aprs-d9/pcb-d-aprs-erc.rpt",
     "pcb-d-aprs.kicad_sch"
    ],
    "cwd": "v2/ecad/pcb-d-aprs-d9",
    "exit": 0,
-   "output_tail": "Found 445 violations\nSaved ERC Report to /root/h1/ex-out/pcb-d-aprs-d9/pcb-d-aprs-erc.rpt\n",
-   "started_utc": "2026-09-27T04:43:34Z"
+   "output_tail": "Found 445 violations\nSaved ERC Report to /root/h2/ex-out/pcb-d-aprs-d9/pcb-d-aprs-erc.rpt\n",
+   "started_utc": "2026-09-27T15:19:29Z"
   },
   {
    "argv": [
@@ -122,13 +122,13 @@
     "--format",
     "kicadsexpr",
     "-o",
-    "/root/h1/ex-out/.pcb-d-aprs.export.net",
+    "/root/h2/ex-out/.pcb-d-aprs.export.net",
     "pcb-d-aprs.kicad_sch"
    ],
    "cwd": "v2/ecad/pcb-d-aprs-d9",
    "exit": 0,
    "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\n",
-   "started_utc": "2026-09-27T04:43:34Z"
+   "started_utc": "2026-09-27T15:19:29Z"
   },
   {
    "argv": [
@@ -141,8 +141,8 @@
    "exit": 0
   }
  ],
- "commit": "99cde56b60f7a40a1b0826acf85ae7e064a976b9",
- "committed_netlist_sha256": "0dad82b4b6a79290cb1b281be336522bfe61b20730bbd0f1804708426ae96ec0",
+ "commit": "763bccdf25026cb8b3f28f7a57b68ae7ac784d5d",
+ "committed_netlist_sha256": "76700a687eb6187f6894ff973deb6ad1efa48716ae45f179a73bb3c6066a4139",
  "driver": {
   "path": "v2/ecad/tools/handover_exports.py",
   "sha256": "dc212f1b06ae34149b643425819dea6d4d85bbb078545b16e4f7c0534f98d69b"
@@ -164,19 +164,19 @@
   },
   "pcb-d-aprs-erc.json": {
    "bytes": 283668,
-   "sha256": "c40fc9d7e9f2143a4f39525e18e8635010306ede36d170d17aa8083bff582481"
+   "sha256": "138c77303e4aeb520ed9c000e31a38abecb81565f987f9f4f73fe9549131f293"
   },
   "pcb-d-aprs-erc.rpt": {
    "bytes": 66898,
-   "sha256": "5cce63940541140685147f5689a25a7722b99bbe04f5cbe3b844b7b01c851075"
+   "sha256": "e7a83fca40abd0cdacfad31b0013ceb96596db6c00d10c6e6f3626c0ede6d647"
   },
   "pcb-d-aprs-net-parity.json": {
-   "bytes": 706,
-   "sha256": "21dfc83b28d4c4a525577f88290e5ca3c2f8b3b4ee6010c4b40d267a401a7988"
+   "bytes": 704,
+   "sha256": "6b8df1784bc0ac5371e46c3faccd9708144d4ef4c8dfcd6ea7202858957d92d0"
   },
   "pcb-d-aprs-schematic.pdf": {
-   "bytes": 875148,
-   "sha256": "823148afe7c4141cc7de5f47c83af83fa15c8b8e8fea3c40e05c1ff18f3d2e4e"
+   "bytes": 874136,
+   "sha256": "c2639c60b5067f617e725fa84ecf3b82e657382465eb267d0fd02a70e2f66b14"
   }
  },
  "paged_pdf_page1_text_chars": 2192,
@@ -186,12 +186,12 @@
  "result": "OK",
  "schematic": "v2/ecad/pcb-d-aprs-d9/pcb-d-aprs.kicad_sch",
  "schematic_phase_label": "D37P",
- "schematic_sha256": "4adfe0c87e44db5e4fa3c6f16f2a8073a8b37ebab5a54206dd3d41d32798b773",
+ "schematic_sha256": "7fde601712562b2480e7467cd4da61eb93e207f0aa39241a446febae4e2c7f52",
  "sheet_pdf_page1_text_chars": 13395,
  "sheet_pdf_pages": 1,
- "sheet_pdf_sha256_not_kept": "7b1905b1d5fc394e4d7e3f91d6cfee5a11492e5c801bf423f6b636f1fa4f3641",
+ "sheet_pdf_sha256_not_kept": "7013c6f27c9d0844629e6e5940cac53a9a271d68f55616573d81a17ad4f83be0",
  "stem": "pcb-d-aprs",
- "taken_utc": "2026-09-27T04:43:36Z",
+ "taken_utc": "2026-09-27T15:19:31Z",
  "versions": {
   "kicad_cli": "9.0.9",
   "mutool": "mutool version 1.23.10",

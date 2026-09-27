@@ -1,4 +1,4 @@
-# Candidates left in worktrees, exported as patches (handover H1.1)
+# Candidates left in worktrees, exported as patches (handover H1.1; SUPERSEDED, every one merged since)
 
 MESHSAT-1357, exported 27 September 2026 at about 07:40 CEST by the H1.1 editor. Agents were still working in some of
 these worktrees when they were exported; each patch is its worktree's state at that moment, and a later state is not
@@ -8,10 +8,26 @@ in this package. **Every patch here is an UNACCEPTED candidate, not design.**
 set 4 branch `fnd/r8int4` merged hc2 and hc3 (`95e078a1`, `53292f81`), hc5 (`0da2778b`) and hc7 (`c351115d`) from
 their later worktree states, after the targeted fixers c23, c5 and c7. Those commits, not these patches, are the
 design from then on; `LAYER-STATUS.md`'s integrator lines say what landed. The patches stay here as the H1.1 record.
-None of them is merged into the repository, none has passed its last review without a blocking finding except r8b,
-and even r8b is a candidate until the integrator merges it with regeneration parity. Nothing in these patches changes
-what `LAYER-STATUS.md` says a layer's status is. They are here so a recipient of the snapshot holds the work the
-session had in flight and can apply it, review it or redo it, instead of meeting a branch name that was never pushed.
+The rest of this page is as written at export: when exported, none of them was merged into the repository, none had
+passed its last review without a blocking finding except r8b, and even r8b was a candidate until the integrator merged
+it with regeneration parity. Nothing in these patches changes what `LAYER-STATUS.md` says a layer's status is. They
+were exported so a recipient of H1.1 held the work the session had in flight and could apply it, review it or redo it,
+instead of meeting a branch name that was never pushed.
+
+**In handover H2 and later snapshots the five patches are referenced, not bundled** (`pack.yaml`, the rule on
+`v2/docs/handover/candidates/*.patch`, taken by the H2 assembler under the owner's standing rule of 26 September 2026):
+superseded as above, they were the lowest-value bundled files when the H2 exports and the case release took the ZIP
+over `pack.yaml`'s cap of 52,428,800 bytes. This README stays bundled. `REFERENCED-SOURCES.tsv` lists each patch with
+its git blob sha, and `REGENERATE.md` section 1a's fetch retrieves one from the public repository and checks it by
+that sha; the table below still gives each patch's sha256.
+
+| Candidate | Superseded by (the commit that merged a later state of the same work) |
+|---|---|
+| r8b | `b76c18cb` (board B's round 8 on main after its second independent check, integrated in `cc3313f3`) |
+| hc2 | `95e078a1` (with the targeted fixer c23 and `fnd/hc1`'s held patches) |
+| hc3 | `95e078a1` and `53292f81` (the citations re-anchored) |
+| hc5 | `0da2778b` (with the targeted fixer c5) |
+| hc7 | `c351115d` (with the targeted fixer c7) |
 
 Prototype framing: no V2 board has been fabricated, ordered, assembled, powered or measured. Every review named below
 is an AI review (an author agent and a separate checking agent), not an electrical or mechanical sign-off.
@@ -53,7 +69,7 @@ The full base ids: r8b `fc144600544c005c280d6614d26a94dfd3f88511`; hc2 `e3aedb25
 
 ## r8b: layer 8, schematics (board B only)
 
-**Status: UNACCEPTED candidate.** Branch `fnd/r8b` in a session worktree, never pushed; base `fc144600`.
+**Status at export: UNACCEPTED candidate. SUPERSEDED since by `b76c18cb`** (a later state of the same work, merged on main). Branch `fnd/r8b` in a session worktree, never pushed; base `fc144600`.
 
 **What it holds.** Board B's circuit round 8: the bank fabric's locked break-before-make (FAB-03) and power-good read through Schmitt buffers, the new M.2 B-key land `M2_B-Key_Socket_3052_TE2199119`, the regenerated schematic, netlist, intent and provenance of `pcb-b-compute-b19`, and the integrator's drafts under `drafts/b/` (patches to FAILOVER-FABRIC, ARCH-PCB-B-IOHA, EMCON, PANEL, CONOPS, DECOUPLING, V2-SPEC, the registry and the generated pages; the break-before-make simulator `drafts/b/tools/bbm_sim_r8b.py` and its outputs under `drafts/b/evidence/`) with the decision log `drafts/r8-decisions.md` that ENGINEERING-QUESTIONS EQ-20 cites.
 
@@ -89,7 +105,7 @@ That review has no blocking finding. Its minor findings, first line each:
 
 ## hc2: layer 2, concept of operations
 
-**Status: UNACCEPTED candidate.** Branch `fnd/hc2` in a session worktree, never pushed; base `e3aedb25`.
+**Status at export: UNACCEPTED candidate. SUPERSEDED since by `95e078a1`** (a later state of the same work, merged). Branch `fnd/hc2` in a session worktree, never pushed; base `e3aedb25`.
 
 **What it holds.** The layer 2 closer's pass 2: `CONOPS.md`, `OPERATING-ENVELOPE.md`, `PANEL.md`, `TEST-PLAN.md`, `pcb_envelope.yaml`, the Review A layer 2 record `v2/docs/reviews/REVIEW-A-LAYER-2-2026-09-27.md`, and the drafts that record cites (registry, coverage, part_temps and gen_sch_b BANK-R1 patches, `pwr_red2.py` and its output, the layer status draft, the hand-offs).
 
@@ -118,7 +134,7 @@ Blocking findings of that review, as the reviewer wrote them:
 
 ## hc3: layer 3, requirements
 
-**Status: UNACCEPTED candidate.** Branch `fnd/hc3` in a session worktree, never pushed; base `e3aedb25`.
+**Status at export: UNACCEPTED candidate. SUPERSEDED since by `95e078a1` and `53292f81`** (a later state of the same work, merged). Branch `fnd/hc3` in a session worktree, never pushed; base `e3aedb25`.
 
 **What it holds.** The layer 3 closer's work: `pcb_requirements.yaml` (140 records at the closer's pass 1, every pass line settled, every rule given a parent), the regenerated `REQUIREMENTS-TRACE.md`, `pcb_board_facts.yaml`, `pcb_energy_chain.yaml`, `pcb_pack_protection.yaml`, the Review B layer 3 record `v2/docs/reviews/REVIEW-B-LAYER-3-2026-09-27.md`, and the drafts that record cites (the registry apply script, citation re-reads, the blocked questions, the transcribed standards and the PVGIS reading under `drafts/hc3/vendor/`).
 
@@ -143,7 +159,7 @@ Blocking findings of that review, as the reviewer wrote them:
 
 ## hc5: layer 5, partitioning and interfaces
 
-**Status: UNACCEPTED candidate.** Branch `fnd/hc5` in a session worktree, never pushed; base `e3aedb25`.
+**Status at export: UNACCEPTED candidate. SUPERSEDED since by `0da2778b`** (a later state of the same work, merged). Branch `fnd/hc5` in a session worktree, never pushed; base `e3aedb25`.
 
 **What it holds.** The layer 5 closer's pass 2: `v2/docs/HW-FW-CONTRACT.md` (the hardware and firmware contract, version 1), the records under `v2/docs/records/hc5/` (the kit I2C budget and the contract field check with their outputs, the USB 2.0 clauses cited), the two worktree drafts filed as records (`records/w5/`, `records/r4a/r4-hwfw-contract.md`), and the apply scripts under `drafts/hc5/` with their README (eighteen new interface contracts, ARCHITECTURE section 12, the registry and index edits).
 
@@ -167,7 +183,7 @@ Blocking findings of that review, as the reviewer wrote them:
 
 ## hc7: layer 7, mechanical and enclosure
 
-**Status: UNACCEPTED candidate.** Branch `fnd/hc7` in a session worktree, never pushed; base `e3aedb25`.
+**Status at export: UNACCEPTED candidate. SUPERSEDED since by `c351115d`** (a later state of the same work, merged). Branch `fnd/hc7` in a session worktree, never pushed; base `e3aedb25`.
 
 **What it holds.** The layer 7 closer's pass 2: the case set C1 to C6 from one geometry source (`v2/cad/` generators: face plate, frame legs, connector plate, RF entry plates, the Z stack `zstack.py`/`zstack.json`, drawings and the release script), `v2/docs/CASE-FIT-UNCERTAINTIES.md`, `panel1450.py`, `z_budget.py`, `case_wall_cutouts.py`, `test_case_geometry.py`, the release folder `v2/release/case-2026-09-27/` (STEP, DXF, dimensioned PDFs, board envelopes), and the drafts its pages cite (`drafts/hc7/`: CASE-MARGINS, ASSEMBLY, READY-TO-ACT and CONOPS patches, the check_pcb_c, rules_status and stage_chain patches, box readings under `drafts/hc7/records/`).
 
@@ -201,4 +217,6 @@ Blocking findings of that review, as the reviewer wrote them:
 `LAYER-STATUS.md` ("Candidates left in worktrees"), `CONTINUATION-BRIEF.md` sections 0 and 4, and
 `ENGINEERING-QUESTIONS.md` EQ-20 name these patches. A step that says "merge r8b" means: apply `r8b.patch` to
 `fc144600`, re-derive its drafted page patches on the current text, regenerate board B on a KiCad 9.0.9 host with
-parity (REGENERATE.md sections 2 and 3), and only then commit it as design.
+parity (REGENERATE.md sections 2 and 3), and only then commit it as design. **Since H2 those steps are history:** every
+patch is superseded by the commit named in the table at the top of this page, and a recipient reads the design at the
+snapshot commit, not these patches.

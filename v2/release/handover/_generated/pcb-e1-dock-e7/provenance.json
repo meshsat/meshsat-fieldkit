@@ -1,7 +1,7 @@
 {
  "board": "e",
  "board_table_phase": "E17",
- "bom_rows_per_reference": 170,
+ "bom_rows_per_reference": 174,
  "commands": [
   {
    "argv": [
@@ -12,26 +12,26 @@
     "--exclude-drawing-sheet",
     "--exclude-pdf-property-popups",
     "-o",
-    "/root/h1/ex-out/.pcb-e1-dock-schematic-sheet.pdf",
+    "/root/h2/ex-out/.pcb-e1-dock-schematic-sheet.pdf",
     "pcb-e1-dock.kicad_sch"
    ],
    "cwd": "v2/ecad/pcb-e1-dock-e7",
    "exit": 0,
-   "output_tail": "Plotted to '/root/h1/ex-out/.pcb-e1-dock-schematic-sheet.pdf'.\nDone.\n",
-   "started_utc": "2026-09-27T04:43:36Z"
+   "output_tail": "Plotted to '/root/h2/ex-out/.pcb-e1-dock-schematic-sheet.pdf'.\nDone.\n",
+   "started_utc": "2026-09-27T15:19:31Z"
   },
   {
    "argv": [
     "/usr/bin/python3",
-    "/root/h1/ex/src/v2/ecad/tools/sch_pages.py",
+    "/root/h2/src/v2/ecad/tools/sch_pages.py",
     "pcb-e1-dock.kicad_sch",
-    "/root/h1/ex-out/.pcb-e1-dock-schematic-sheet.pdf",
-    "/root/h1/ex-out/pcb-e1-dock-e7/pcb-e1-dock-schematic.pdf"
+    "/root/h2/ex-out/.pcb-e1-dock-schematic-sheet.pdf",
+    "/root/h2/ex-out/pcb-e1-dock-e7/pcb-e1-dock-schematic.pdf"
    ],
    "cwd": "v2/ecad/pcb-e1-dock-e7",
    "exit": 0,
    "output_tail": "sch_pages: 2 x 2 cells, 4 pages kept of 4 tiles\n",
-   "started_utc": "2026-09-27T04:43:37Z"
+   "started_utc": "2026-09-27T15:19:32Z"
   },
   {
    "argv": [
@@ -46,13 +46,13 @@
     "--sort-field",
     "Reference",
     "-o",
-    "/root/h1/ex-out/pcb-e1-dock-e7/NOT_FOR_FAB-pcb-e1-dock-bom.csv",
+    "/root/h2/ex-out/pcb-e1-dock-e7/NOT_FOR_FAB-pcb-e1-dock-bom.csv",
     "pcb-e1-dock.kicad_sch"
    ],
    "cwd": "v2/ecad/pcb-e1-dock-e7",
    "exit": 0,
-   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\nWrote bill of materials to '/root/h1/ex-out/pcb-e1-dock-e7/NOT_FOR_FAB-pcb-e1-dock-bom.csv'.\n",
-   "started_utc": "2026-09-27T04:43:38Z"
+   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\nWrote bill of materials to '/root/h2/ex-out/pcb-e1-dock-e7/NOT_FOR_FAB-pcb-e1-dock-bom.csv'.\n",
+   "started_utc": "2026-09-27T15:19:33Z"
   },
   {
    "argv": [
@@ -71,13 +71,13 @@
     "--sort-field",
     "Reference",
     "-o",
-    "/root/h1/ex-out/pcb-e1-dock-e7/NOT_FOR_FAB-pcb-e1-dock-bom-per-reference.csv",
+    "/root/h2/ex-out/pcb-e1-dock-e7/NOT_FOR_FAB-pcb-e1-dock-bom-per-reference.csv",
     "pcb-e1-dock.kicad_sch"
    ],
    "cwd": "v2/ecad/pcb-e1-dock-e7",
    "exit": 0,
-   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\nWrote bill of materials to '/root/h1/ex-out/pcb-e1-dock-e7/NOT_FOR_FAB-pcb-e1-dock-bom-per-reference.csv'.\n",
-   "started_utc": "2026-09-27T04:43:38Z"
+   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\nWrote bill of materials to '/root/h2/ex-out/pcb-e1-dock-e7/NOT_FOR_FAB-pcb-e1-dock-bom-per-reference.csv'.\n",
+   "started_utc": "2026-09-27T15:19:33Z"
   },
   {
    "argv": [
@@ -88,13 +88,13 @@
     "--format",
     "json",
     "-o",
-    "/root/h1/ex-out/pcb-e1-dock-e7/pcb-e1-dock-erc.json",
+    "/root/h2/ex-out/pcb-e1-dock-e7/pcb-e1-dock-erc.json",
     "pcb-e1-dock.kicad_sch"
    ],
    "cwd": "v2/ecad/pcb-e1-dock-e7",
    "exit": 0,
-   "output_tail": "Found 365 violations\nSaved ERC Report to /root/h1/ex-out/pcb-e1-dock-e7/pcb-e1-dock-erc.json\n",
-   "started_utc": "2026-09-27T04:43:39Z"
+   "output_tail": "Found 367 violations\nSaved ERC Report to /root/h2/ex-out/pcb-e1-dock-e7/pcb-e1-dock-erc.json\n",
+   "started_utc": "2026-09-27T15:19:34Z"
   },
   {
    "argv": [
@@ -105,13 +105,13 @@
     "--format",
     "report",
     "-o",
-    "/root/h1/ex-out/pcb-e1-dock-e7/pcb-e1-dock-erc.rpt",
+    "/root/h2/ex-out/pcb-e1-dock-e7/pcb-e1-dock-erc.rpt",
     "pcb-e1-dock.kicad_sch"
    ],
    "cwd": "v2/ecad/pcb-e1-dock-e7",
    "exit": 0,
-   "output_tail": "Found 365 violations\nSaved ERC Report to /root/h1/ex-out/pcb-e1-dock-e7/pcb-e1-dock-erc.rpt\n",
-   "started_utc": "2026-09-27T04:43:40Z"
+   "output_tail": "Found 367 violations\nSaved ERC Report to /root/h2/ex-out/pcb-e1-dock-e7/pcb-e1-dock-erc.rpt\n",
+   "started_utc": "2026-09-27T15:19:35Z"
   },
   {
    "argv": [
@@ -122,13 +122,13 @@
     "--format",
     "kicadsexpr",
     "-o",
-    "/root/h1/ex-out/.pcb-e1-dock.export.net",
+    "/root/h2/ex-out/.pcb-e1-dock.export.net",
     "pcb-e1-dock.kicad_sch"
    ],
    "cwd": "v2/ecad/pcb-e1-dock-e7",
    "exit": 0,
    "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\n",
-   "started_utc": "2026-09-27T04:43:40Z"
+   "started_utc": "2026-09-27T15:19:35Z"
   },
   {
    "argv": [
@@ -141,42 +141,42 @@
    "exit": 0
   }
  ],
- "commit": "99cde56b60f7a40a1b0826acf85ae7e064a976b9",
- "committed_netlist_sha256": "f3c1ad6153002976407f48bf1c4d6890c9832f2cbc9986d37d9b74776b146c9b",
+ "commit": "763bccdf25026cb8b3f28f7a57b68ae7ac784d5d",
+ "committed_netlist_sha256": "d6137f50059e5cbc35cd420967aa1bf5bbf3760fd255f9384bc86a5546fc4fb0",
  "driver": {
   "path": "v2/ecad/tools/handover_exports.py",
   "sha256": "dc212f1b06ae34149b643425819dea6d4d85bbb078545b16e4f7c0534f98d69b"
  },
  "erc_violations_by_severity": {
-  "warning": 365
+  "warning": 367
  },
  "host": "Linux-6.8.0-134-generic-x86_64-with-glibc2.39",
  "kicad_cli": "9.0.9",
  "netlist_parity_with_the_schematic": "PARITY_AFTER_NOISE",
  "outputs": {
   "NOT_FOR_FAB-pcb-e1-dock-bom-per-reference.csv": {
-   "bytes": 15579,
-   "sha256": "8eca4c7a9842b9cf831eb32942efea971914c5f5a21b408fad916b1eaa6d0003"
+   "bytes": 16043,
+   "sha256": "c2d9bac38c92fa173335579f00c4f212741969c4946bc8f01488aa6f4aeab597"
   },
   "NOT_FOR_FAB-pcb-e1-dock-bom.csv": {
-   "bytes": 11055,
-   "sha256": "25d494921d2b803021700420a655089d0b85c7d59bb9794b50c729c7e451c32c"
+   "bytes": 11389,
+   "sha256": "001f6aa2d9a8f56f2ca4c3883fce4386bb616c6f6c57b1a1441c372a26f2442a"
   },
   "pcb-e1-dock-erc.json": {
-   "bytes": 232662,
-   "sha256": "0c7604e3edd7cb444e09e5c1d21e048a70edd6b17a2173882039343cfd1f7550"
+   "bytes": 233952,
+   "sha256": "7eda8a2717709811716168c8446aebea84c317e2f1cd9d7642a7d594ead351cc"
   },
   "pcb-e1-dock-erc.rpt": {
-   "bytes": 54724,
-   "sha256": "397a6067d09f2a640f3036a50fc66bfee48e6753dc250bb93b08c283886768cc"
+   "bytes": 55048,
+   "sha256": "96de248df3a7e040d95ad6c66be7c2b6c8e5a295d5b2efab65385e945c24ae35"
   },
   "pcb-e1-dock-net-parity.json": {
    "bytes": 708,
-   "sha256": "2ced26c5c70ab2e37592acf4f4b0e3b24b227d90acca16492a0c0ea6dc0742fb"
+   "sha256": "7b1e615e3dd7779a5adcc859fe03fc2b9c005fc67873b367a45e8daac3397497"
   },
   "pcb-e1-dock-schematic.pdf": {
-   "bytes": 636718,
-   "sha256": "56297a5b05ea12e7dbb9a51ded8acbb25c54acd23db79b76519735e254b039f9"
+   "bytes": 648278,
+   "sha256": "08fd4999af7f610d8f0284c68530cf449c12e75dad5ac3e6bc6c06dcb9d483ab"
   }
  },
  "paged_pdf_page1_text_chars": 2104,
@@ -186,12 +186,12 @@
  "result": "OK",
  "schematic": "v2/ecad/pcb-e1-dock-e7/pcb-e1-dock.kicad_sch",
  "schematic_phase_label": "E42P",
- "schematic_sha256": "e6137ea442932e4d55e6be3381881af6b7e12caef17c1b168c400093707f8a02",
- "sheet_pdf_page1_text_chars": 10061,
+ "schematic_sha256": "bd50de114865448bac269565d6deebc997aa1c27207a5fb43468baa3b38ac997",
+ "sheet_pdf_page1_text_chars": 10278,
  "sheet_pdf_pages": 1,
- "sheet_pdf_sha256_not_kept": "409d16c0535199018a7ed7ef9e8116c2e777d8fac7ff60b1638145841632e9ce",
+ "sheet_pdf_sha256_not_kept": "59ae427a0ca521a1de607462a6a8d06521655a0f8c7cfd0ecc022cc4d100e79e",
  "stem": "pcb-e1-dock",
- "taken_utc": "2026-09-27T04:43:41Z",
+ "taken_utc": "2026-09-27T15:19:36Z",
  "versions": {
   "kicad_cli": "9.0.9",
   "mutool": "mutool version 1.23.10",

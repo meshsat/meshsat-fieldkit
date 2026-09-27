@@ -1,7 +1,7 @@
 {
  "board": "a",
  "board_table_phase": "A32",
- "bom_rows_per_reference": 566,
+ "bom_rows_per_reference": 586,
  "commands": [
   {
    "argv": [
@@ -12,26 +12,26 @@
     "--exclude-drawing-sheet",
     "--exclude-pdf-property-popups",
     "-o",
-    "/root/h1/ex-out/.pcb-a-power-schematic-sheet.pdf",
+    "/root/h2/ex-out/.pcb-a-power-schematic-sheet.pdf",
     "pcb-a-power.kicad_sch"
    ],
    "cwd": "v2/ecad/pcb-a-power-a23",
    "exit": 0,
-   "output_tail": "Plotted to '/root/h1/ex-out/.pcb-a-power-schematic-sheet.pdf'.\nDone.\n",
-   "started_utc": "2026-09-27T04:41:01Z"
+   "output_tail": "Plotted to '/root/h2/ex-out/.pcb-a-power-schematic-sheet.pdf'.\nDone.\n",
+   "started_utc": "2026-09-27T15:16:33Z"
   },
   {
    "argv": [
     "/usr/bin/python3",
-    "/root/h1/ex/src/v2/ecad/tools/sch_pages.py",
+    "/root/h2/src/v2/ecad/tools/sch_pages.py",
     "pcb-a-power.kicad_sch",
-    "/root/h1/ex-out/.pcb-a-power-schematic-sheet.pdf",
-    "/root/h1/ex-out/pcb-a-power-a23/pcb-a-power-schematic.pdf"
+    "/root/h2/ex-out/.pcb-a-power-schematic-sheet.pdf",
+    "/root/h2/ex-out/pcb-a-power-a23/pcb-a-power-schematic.pdf"
    ],
    "cwd": "v2/ecad/pcb-a-power-a23",
    "exit": 0,
-   "output_tail": "sch_pages: 4 x 4 cells, 14 pages kept of 16 tiles\n",
-   "started_utc": "2026-09-27T04:41:04Z"
+   "output_tail": "sch_pages: 4 x 4 cells, 16 pages kept of 16 tiles\n",
+   "started_utc": "2026-09-27T15:16:36Z"
   },
   {
    "argv": [
@@ -46,13 +46,13 @@
     "--sort-field",
     "Reference",
     "-o",
-    "/root/h1/ex-out/pcb-a-power-a23/NOT_FOR_FAB-pcb-a-power-bom.csv",
+    "/root/h2/ex-out/pcb-a-power-a23/NOT_FOR_FAB-pcb-a-power-bom.csv",
     "pcb-a-power.kicad_sch"
    ],
    "cwd": "v2/ecad/pcb-a-power-a23",
    "exit": 0,
-   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\nWrote bill of materials to '/root/h1/ex-out/pcb-a-power-a23/NOT_FOR_FAB-pcb-a-power-bom.csv'.\n",
-   "started_utc": "2026-09-27T04:41:16Z"
+   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\nWrote bill of materials to '/root/h2/ex-out/pcb-a-power-a23/NOT_FOR_FAB-pcb-a-power-bom.csv'.\n",
+   "started_utc": "2026-09-27T15:16:49Z"
   },
   {
    "argv": [
@@ -71,13 +71,13 @@
     "--sort-field",
     "Reference",
     "-o",
-    "/root/h1/ex-out/pcb-a-power-a23/NOT_FOR_FAB-pcb-a-power-bom-per-reference.csv",
+    "/root/h2/ex-out/pcb-a-power-a23/NOT_FOR_FAB-pcb-a-power-bom-per-reference.csv",
     "pcb-a-power.kicad_sch"
    ],
    "cwd": "v2/ecad/pcb-a-power-a23",
    "exit": 0,
-   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\nWrote bill of materials to '/root/h1/ex-out/pcb-a-power-a23/NOT_FOR_FAB-pcb-a-power-bom-per-reference.csv'.\n",
-   "started_utc": "2026-09-27T04:41:17Z"
+   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\nWrote bill of materials to '/root/h2/ex-out/pcb-a-power-a23/NOT_FOR_FAB-pcb-a-power-bom-per-reference.csv'.\n",
+   "started_utc": "2026-09-27T15:16:50Z"
   },
   {
    "argv": [
@@ -88,13 +88,13 @@
     "--format",
     "json",
     "-o",
-    "/root/h1/ex-out/pcb-a-power-a23/pcb-a-power-erc.json",
+    "/root/h2/ex-out/pcb-a-power-a23/pcb-a-power-erc.json",
     "pcb-a-power.kicad_sch"
    ],
    "cwd": "v2/ecad/pcb-a-power-a23",
    "exit": 0,
-   "output_tail": "Found 1528 violations\nSaved ERC Report to /root/h1/ex-out/pcb-a-power-a23/pcb-a-power-erc.json\n",
-   "started_utc": "2026-09-27T04:41:18Z"
+   "output_tail": "Found 1522 violations\nSaved ERC Report to /root/h2/ex-out/pcb-a-power-a23/pcb-a-power-erc.json\n",
+   "started_utc": "2026-09-27T15:16:51Z"
   },
   {
    "argv": [
@@ -105,13 +105,13 @@
     "--format",
     "report",
     "-o",
-    "/root/h1/ex-out/pcb-a-power-a23/pcb-a-power-erc.rpt",
+    "/root/h2/ex-out/pcb-a-power-a23/pcb-a-power-erc.rpt",
     "pcb-a-power.kicad_sch"
    ],
    "cwd": "v2/ecad/pcb-a-power-a23",
    "exit": 0,
-   "output_tail": "Found 1528 violations\nSaved ERC Report to /root/h1/ex-out/pcb-a-power-a23/pcb-a-power-erc.rpt\n",
-   "started_utc": "2026-09-27T04:41:20Z"
+   "output_tail": "Found 1522 violations\nSaved ERC Report to /root/h2/ex-out/pcb-a-power-a23/pcb-a-power-erc.rpt\n",
+   "started_utc": "2026-09-27T15:16:53Z"
   },
   {
    "argv": [
@@ -122,13 +122,13 @@
     "--format",
     "kicadsexpr",
     "-o",
-    "/root/h1/ex-out/.pcb-a-power.export.net",
+    "/root/h2/ex-out/.pcb-a-power.export.net",
     "pcb-a-power.kicad_sch"
    ],
    "cwd": "v2/ecad/pcb-a-power-a23",
    "exit": 0,
    "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\n",
-   "started_utc": "2026-09-27T04:41:21Z"
+   "started_utc": "2026-09-27T15:16:54Z"
   },
   {
    "argv": [
@@ -141,57 +141,57 @@
    "exit": 0
   }
  ],
- "commit": "99cde56b60f7a40a1b0826acf85ae7e064a976b9",
- "committed_netlist_sha256": "3a786cf31614fe63725f57227b6160226d5d945a99401fcb7c279e7ff51ec78a",
+ "commit": "763bccdf25026cb8b3f28f7a57b68ae7ac784d5d",
+ "committed_netlist_sha256": "da05dc02bc1e612fccadd62fb0f2aab74337bbb651048f44e1257bdd9de32e01",
  "driver": {
   "path": "v2/ecad/tools/handover_exports.py",
   "sha256": "dc212f1b06ae34149b643425819dea6d4d85bbb078545b16e4f7c0534f98d69b"
  },
  "erc_violations_by_severity": {
-  "warning": 1528
+  "warning": 1522
  },
  "host": "Linux-6.8.0-134-generic-x86_64-with-glibc2.39",
  "kicad_cli": "9.0.9",
  "netlist_parity_with_the_schematic": "PARITY_AFTER_NOISE",
  "outputs": {
   "NOT_FOR_FAB-pcb-a-power-bom-per-reference.csv": {
-   "bytes": 47191,
-   "sha256": "62f45d80971d0ec553ed52145b35c8d95eaf2bf78ee08760cfb2238435caa65f"
+   "bytes": 49234,
+   "sha256": "17b2739dae37f9739b6d92afeac5d763ee9543a7b6daef53a1f5da0feab1101e"
   },
   "NOT_FOR_FAB-pcb-a-power-bom.csv": {
-   "bytes": 19271,
-   "sha256": "8415a2957c5ecf603912b05f9f0bf455387305a6cd7a3fa5ee7eb921ba349f56"
+   "bytes": 20059,
+   "sha256": "f0eec9a40c1fb30f5fb7567cf4c848e85ec8c71aa8653785f9f05470694eb35d"
   },
   "pcb-a-power-erc.json": {
-   "bytes": 970013,
-   "sha256": "aa5582e9dd5e1d876d685e0e74d6f9f244b7496aba5e8ef913c22829b70fa6e2"
+   "bytes": 966658,
+   "sha256": "fb3f38c5783848b8482be03d0e46c8cf7a233d54bac632a98f8d34381831172f"
   },
   "pcb-a-power-erc.rpt": {
-   "bytes": 226281,
-   "sha256": "af80897fbf6e995d6cec4a72ce2cf134b24d89536b7cde1db2d0f242d721a22e"
+   "bytes": 225889,
+   "sha256": "2941a7538f41a8e1f2a16b53c3b1ad2fdfdb2e1aec03ed3220da049e6eb65802"
   },
   "pcb-a-power-net-parity.json": {
-   "bytes": 710,
-   "sha256": "583a95d3b34d6d27212a40df5d0741429655f031258d3346033235af1067ad5e"
+   "bytes": 707,
+   "sha256": "673a69739e8b67d278933f9e30810aca834cefa1d6f45ba5991c1975dc075b6a"
   },
   "pcb-a-power-schematic.pdf": {
-   "bytes": 2299984,
-   "sha256": "249e703fa9efd0e43e6f7f22b6f9f7d661973d5356cb2d46a851d132f33b3971"
+   "bytes": 2404062,
+   "sha256": "11df771054bee038aaf5cea0b9c316f95cedcda5c30fe2e5c4d9dea81ba0b20a"
   }
  },
- "paged_pdf_page1_text_chars": 2622,
- "paged_pdf_pages": 14,
+ "paged_pdf_page1_text_chars": 1593,
+ "paged_pdf_pages": 16,
  "phase_directory": "v2/ecad/pcb-a-power-a23",
  "python": "3.12.3",
  "result": "OK",
  "schematic": "v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_sch",
  "schematic_phase_label": "A65",
- "schematic_sha256": "e96c92ab344d4305a741901e69707580162ef7c78c3e538dc40751bcedf2d534",
- "sheet_pdf_page1_text_chars": 34348,
+ "schematic_sha256": "54b24eb100332ed55699f829f2d5f6ee354e65ae2dbe6c826f9ecc562b0f9db8",
+ "sheet_pdf_page1_text_chars": 35848,
  "sheet_pdf_pages": 1,
- "sheet_pdf_sha256_not_kept": "d39b0171d3ada8daa48cd20d05a09e64e31980b62c7d84d97193f5866dca89c3",
+ "sheet_pdf_sha256_not_kept": "297959f5d75739b7b0dcb31c86567b933e5a82ba11b56732e0fff7b868191197",
  "stem": "pcb-a-power",
- "taken_utc": "2026-09-27T04:41:25Z",
+ "taken_utc": "2026-09-27T15:16:58Z",
  "versions": {
   "kicad_cli": "9.0.9",
   "mutool": "mutool version 1.23.10",
