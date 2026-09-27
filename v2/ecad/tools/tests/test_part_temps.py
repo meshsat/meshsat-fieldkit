@@ -80,8 +80,16 @@ def t_the_hot_bar_comes_from_the_envelopes_own_carve_out():
     from the data rather than carry a literal."""
     import part_temps as PT
     env, _decl = _files()
-    m, why = PT.inside_air_max(env)
-    assert m == 51, m
+    # THE FIXTURE, NOT THE TREE (27 September 2026): the envelope now carries its worst inside air directly, so the
+    # 7 September derivation is checked on a copy without that figure, and the figure itself on the real file.
+    old = {k: v for k, v in env.items() if k != "worst_inside_air_c"}
+    m, why = PT.inside_air_max(old)
+    assert m == max(old["ambient_c"]["in_use"]["max"] + old["inside_air_rise_k"]["one_module_lid_open"],
+                    35 + old["inside_air_rise_k"]["three_modules_loaded_lid_open"]), m
     assert "reduced mode" in why, why
+    if env.get("worst_inside_air_c"):
+        m2, why2 = PT.inside_air_max(env)
+        assert m2 == max(env["worst_inside_air_c"]["lid_open"], env["worst_inside_air_c"]["lid_closed"]), m2
+        assert "heat stage" in why2, why2
     src = open(os.path.join(TOOLS, "part_temps.py"), encoding="utf-8").read()
     assert "= 51" not in src, "the inside-air bar is a literal in the tool"

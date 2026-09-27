@@ -256,11 +256,11 @@ p:
   pair_classes: []
   max_rail_voltage_v: 14.4
   max_rail_current_a: 18
-  energy_source: true           # THE battery board: 4S block, about 200 Wh
+  energy_source: true           # THE battery board: one 4S3P block of Samsung INR18650-35E, about 145 Wh (owner ruling D-06)
   carries_pack_node: true
   external_ports: false # declares external_ports: [] with its reason
   cells_series: 4
-  pack_energy_wh: 200
+  pack_energy_wh: 145
   fuses: [F1 25 A mini blade]
   protection_fets: 2            # CSD17570Q5B in series, common drain, BQ4050 CHG/DSG
   gauge: BQ4050
@@ -278,8 +278,8 @@ p:
 _product:
   enclosure: Peli 1450 with a 3 mm aluminium face plate, sealed, no vent opening anywhere
   ingress_claim: IP67-class construction, untested; never labelled IP68
-  operating_modes: [lid open full power, lid closed reduced, blackout, NVG, EMCON]
-  environment: field portable, unconditioned, vehicle transport; no temperature range ruled yet
+  operating_modes: "the modes of v2/docs/CONOPS.md section 4, its mode table (cited, not copied, so that it cannot go stale; CFL-003)"
+  environment: "field portable, unconditioned, vehicle transport; the adopted envelope is v2/docs/OPERATING-ENVELOPE.md (decision 34, 21 September 2026, with owner rulings D-02a to D-02e) at the sha256 that pcb_envelope.yaml pins as document_sha256 and ENV-001 checks"
   energy_chain: "cells (P) -> XT60 -> E (F3 25 A) -> 12 AWG -> e5 (four 9 A targets) -> A (F1 25 A) -> everything"
   galvanic_barriers: 1          # B's H5007NL on the wall Ethernet port
   above_48v: [a, b]             # +54V_POE only

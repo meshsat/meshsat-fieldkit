@@ -16,10 +16,10 @@
 #   3. the fault current available at that point             -> `prospective_fault_a` with its derivation
 #   4. the element downstream it is protecting               -> `protects`
 #
-# WHAT IS NOT KNOWN IS WRITTEN AS NOT KNOWN. The pack is "4S3P or 4S4P, about 200 Wh" in the P generator's own
-# header and the exact configuration is still a research item, so the prospective fault current is given as a
-# RANGE derived from the cell's own impedance for both, and the coordination is checked against the WORST of
-# them. A single number invented here would be the kind of assertion this registry exists to stop.
+# WHAT IS NOT KNOWN IS WRITTEN AS NOT KNOWN. The pack is one 4S3P block of Samsung INR18650-35E, about 145 Wh (D-06;
+# it read "4S3P or 4S4P, about 200 Wh" before), and the prospective fault current keeps the RANGE derived from the
+# cell's own impedance for both counts, which brackets 4S3P with margin; coordination is checked against its WORST
+# end. A single number invented here would be the kind of assertion this registry exists to stop.
 
 schema_version: "1.0.0"
 generated: "2026-09-16"
@@ -43,14 +43,14 @@ stages:
 
  - id: PACK_CELLS
    board: P
-   from: "the 4S block (4S3P or 4S4P, about 200 Wh; gen_sch_p.py header)"
+   from: "the 4S3P block (Samsung INR18650-35E, about 145 Wh; owner ruling D-06; gen_sch_p.py header)"
    to: "CELL4, the top cell tap at the fuse"
    continuous_a: 10.0
    peak_a: 18.0
    conductor: {what: "2 oz locked bands on board P plus the cell block's own nickel strip", rating_a: 25.0,
                basis: "gen_pcb_p3.py power bands at 2 oz; IPC-2221 for a 6 mm band at 2 oz is above 25 A at 10 K"}
    prospective_fault_a: {low: 240, high: 480,
-                         basis: "4 series stages of 3 or 4 parallel 35 mOhm cells: 4 x 35/4 = 35 mOhm (4S4P) or
+                         basis: "4 series stages of 3 parallel 35 mOhm cells (D-06; 4S4P shown for the range): 4 x 35/4 = 35 mOhm (4S4P) or
                            4 x 35/3 = 47 mOhm (4S3P), plus about 15 mOhm of strip and lead. At 16.8 V full
                            charge that is 350 A and 270 A from the AC impedance; the DC resistance is higher,
                            so the real figure is lower and the range above brackets both configurations with

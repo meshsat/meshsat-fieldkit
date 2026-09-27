@@ -1,0 +1,364 @@
+{
+ "source": "pwr_red2.out",
+ "model_sha256": "469d0820b046ef6ff5aceadf422b4166de3d6a02bc50fa5b0c3644704f0f9556",
+ "budget": {
+  "published_terms_K": {
+   "thermistor interchangeability": 0.71,
+   "pull-up drift": 0.4,
+   "sensor lag": 0.8,
+   "detection (the gauge's 1 s decision plus 2 s delay)": 0.16
+  },
+  "sum_K": 2.07,
+  "two_TBD_terms": "the gauge's own ADC and fit, the sensed cell to the hottest cell (P14)",
+  "stop_extra_detection_K": 0.06
+ },
+ "thresholds": {
+  "C1 cell trigger": {
+   "reading_C": 55.0,
+   "true_cell_at_most_C": 57.07,
+   "inside_60C_by_K": 2.93
+  },
+  "hot stop H1 (shed)": {
+   "reading_C": 56.5,
+   "true_cell_at_most_C": 58.57,
+   "inside_60C_by_K": 1.43,
+   "with_its_own_extra_detection_K": 0.06
+  },
+  "hot stop H2 (shutdown)": {
+   "reading_C": 57.0,
+   "true_cell_at_most_C": 59.07,
+   "inside_60C_by_K": 0.93,
+   "with_its_own_extra_detection_K": 0.06
+  },
+  "gauge OTD": {
+   "reading_C": 57.5,
+   "true_cell_at_most_C": 59.57,
+   "inside_60C_by_K": 0.43
+  }
+ },
+ "spacing_in_the_reading_K": {
+  "C1 to H1": 1.5,
+  "H1 to H2": 0.5,
+  "H2 to OTD": 0.5,
+  "H1 release below H1": 10.0
+ },
+ "ambients_C": {
+  "PS-SURV (slot 2 alone, the heat stage as board B is generated)": {
+   "lid closed": {
+    "on the pack": {
+     "H1 at": {
+      "independent_bound_worst_to_best": [
+       34.8,
+       47.4
+      ],
+      "design_record_3253_worst_to_best": [
+       41.4,
+       45.0
+      ]
+     },
+     "H2 at": {
+      "independent_bound_worst_to_best": [
+       35.3,
+       47.9
+      ],
+      "design_record_3253_worst_to_best": [
+       41.9,
+       45.5
+      ]
+     },
+     "cells_at_40C_ambient_C": {
+      "independent_bound_worst_to_best": [
+       61.7,
+       49.1
+      ],
+      "design_record_3253_worst_to_best": [
+       55.1,
+       51.5
+      ]
+     },
+     "H1 acts inside the envelope (at or below +40 C)": {
+      "independent_bound_worst": true,
+      "independent_bound_best": false,
+      "design_record_3253_worst": false,
+      "design_record_3253_best": false
+     }
+    },
+    "on an input": {
+     "H1 at": {
+      "independent_bound_worst_to_best": [
+       35.9,
+       47.7
+      ],
+      "design_record_3253_worst_to_best": [
+       41.9,
+       45.6
+      ]
+     },
+     "H2 at": {
+      "independent_bound_worst_to_best": [
+       36.4,
+       48.2
+      ],
+      "design_record_3253_worst_to_best": [
+       42.4,
+       46.1
+      ]
+     },
+     "cells_at_40C_ambient_C": {
+      "independent_bound_worst_to_best": [
+       60.6,
+       48.8
+      ],
+      "design_record_3253_worst_to_best": [
+       54.6,
+       50.9
+      ]
+     },
+     "H1 acts inside the envelope (at or below +40 C)": {
+      "independent_bound_worst": true,
+      "independent_bound_best": false,
+      "design_record_3253_worst": false,
+      "design_record_3253_best": false
+     }
+    }
+   },
+   "lid open": {
+    "on the pack": {
+     "H1 at": {
+      "independent_bound_worst_to_best": [
+       37.5,
+       48.5
+      ],
+      "design_record_3253_worst_to_best": [
+       48.7,
+       49.4
+      ]
+     },
+     "H2 at": {
+      "independent_bound_worst_to_best": [
+       38.0,
+       49.0
+      ],
+      "design_record_3253_worst_to_best": [
+       49.2,
+       49.9
+      ]
+     },
+     "cells_at_40C_ambient_C": {
+      "independent_bound_worst_to_best": [
+       59.0,
+       48.0
+      ],
+      "design_record_3253_worst_to_best": [
+       47.8,
+       47.1
+      ]
+     },
+     "H1 acts inside the envelope (at or below +40 C)": {
+      "independent_bound_worst": true,
+      "independent_bound_best": false,
+      "design_record_3253_worst": false,
+      "design_record_3253_best": false
+     }
+    },
+    "on an input": {
+     "H1 at": {
+      "independent_bound_worst_to_best": [
+       38.6,
+       48.8
+      ],
+      "design_record_3253_worst_to_best": [
+       49.2,
+       49.9
+      ]
+     },
+     "H2 at": {
+      "independent_bound_worst_to_best": [
+       39.1,
+       49.3
+      ],
+      "design_record_3253_worst_to_best": [
+       49.7,
+       50.4
+      ]
+     },
+     "cells_at_40C_ambient_C": {
+      "independent_bound_worst_to_best": [
+       57.9,
+       47.7
+      ],
+      "design_record_3253_worst_to_best": [
+       47.3,
+       46.6
+      ]
+     },
+     "H1 acts inside the envelope (at or below +40 C)": {
+      "independent_bound_worst": true,
+      "independent_bound_best": false,
+      "design_record_3253_worst": false,
+      "design_record_3253_best": false
+     }
+    }
+   }
+  },
+  "PS-SURV-R (slot 3 alone, the heat stage after BANK-R1)": {
+   "lid closed": {
+    "on the pack": {
+     "H1 at": {
+      "independent_bound_worst_to_best": [
+       33.2,
+       46.7
+      ],
+      "design_record_3253_worst_to_best": [
+       40.3,
+       44.2
+      ]
+     },
+     "H2 at": {
+      "independent_bound_worst_to_best": [
+       33.7,
+       47.2
+      ],
+      "design_record_3253_worst_to_best": [
+       40.8,
+       44.7
+      ]
+     },
+     "cells_at_40C_ambient_C": {
+      "independent_bound_worst_to_best": [
+       63.3,
+       49.8
+      ],
+      "design_record_3253_worst_to_best": [
+       56.2,
+       52.3
+      ]
+     },
+     "H1 acts inside the envelope (at or below +40 C)": {
+      "independent_bound_worst": true,
+      "independent_bound_best": false,
+      "design_record_3253_worst": false,
+      "design_record_3253_best": false
+     }
+    },
+    "on an input": {
+     "H1 at": {
+      "independent_bound_worst_to_best": [
+       34.4,
+       47.1
+      ],
+      "design_record_3253_worst_to_best": [
+       40.9,
+       44.8
+      ]
+     },
+     "H2 at": {
+      "independent_bound_worst_to_best": [
+       34.9,
+       47.6
+      ],
+      "design_record_3253_worst_to_best": [
+       41.4,
+       45.3
+      ]
+     },
+     "cells_at_40C_ambient_C": {
+      "independent_bound_worst_to_best": [
+       62.1,
+       49.4
+      ],
+      "design_record_3253_worst_to_best": [
+       55.6,
+       51.7
+      ]
+     },
+     "H1 acts inside the envelope (at or below +40 C)": {
+      "independent_bound_worst": true,
+      "independent_bound_best": false,
+      "design_record_3253_worst": false,
+      "design_record_3253_best": false
+     }
+    }
+   },
+   "lid open": {
+    "on the pack": {
+     "H1 at": {
+      "independent_bound_worst_to_best": [
+       36.1,
+       47.9
+      ],
+      "design_record_3253_worst_to_best": [
+       48.1,
+       48.8
+      ]
+     },
+     "H2 at": {
+      "independent_bound_worst_to_best": [
+       36.6,
+       48.4
+      ],
+      "design_record_3253_worst_to_best": [
+       48.6,
+       49.3
+      ]
+     },
+     "cells_at_40C_ambient_C": {
+      "independent_bound_worst_to_best": [
+       60.4,
+       48.6
+      ],
+      "design_record_3253_worst_to_best": [
+       48.4,
+       47.7
+      ]
+     },
+     "H1 acts inside the envelope (at or below +40 C)": {
+      "independent_bound_worst": true,
+      "independent_bound_best": false,
+      "design_record_3253_worst": false,
+      "design_record_3253_best": false
+     }
+    },
+    "on an input": {
+     "H1 at": {
+      "independent_bound_worst_to_best": [
+       37.3,
+       48.3
+      ],
+      "design_record_3253_worst_to_best": [
+       48.7,
+       49.4
+      ]
+     },
+     "H2 at": {
+      "independent_bound_worst_to_best": [
+       37.8,
+       48.8
+      ],
+      "design_record_3253_worst_to_best": [
+       49.2,
+       49.9
+      ]
+     },
+     "cells_at_40C_ambient_C": {
+      "independent_bound_worst_to_best": [
+       59.2,
+       48.2
+      ],
+      "design_record_3253_worst_to_best": [
+       47.8,
+       47.1
+      ]
+     },
+     "H1 acts inside the envelope (at or below +40 C)": {
+      "independent_bound_worst": true,
+      "independent_bound_best": false,
+      "design_record_3253_worst": false,
+      "design_record_3253_best": false
+     }
+    }
+   }
+  }
+ },
+ "reading": "INFERRED. The hot stop's first step acts inside the envelope at the independent bound's worst corner in every configuration, and at no corner of the design record's own conductance (appendix 32.53); where between them the enclosure lies is FEA-004's, measured by the empty-case heat-balance test (TEST-PLAN.md T-H1). No figure here is a measurement."
+}

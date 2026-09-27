@@ -48,7 +48,16 @@ def _yaml(path):
 
 
 def inside_air_max(env):
-    """The worst inside air the envelope's own numbers allow, and the sentence that explains it."""
+    """The worst inside air the envelope's own numbers allow, and the sentence that explains it.
+
+    Since 27 September 2026 the envelope carries it directly (`worst_inside_air_c`: the in-use maximum with the kit
+    shed to its last stage, at the independent bound's lowest conductance, OPERATING-ENVELOPE.md section 3), and the
+    7 September carve-out and rises below are kept there only as the record; this reads the new figure when present."""
+    w = env.get("worst_inside_air_c")
+    if w:
+        m = max(w["lid_open"], w["lid_closed"])
+        return m, ("the envelope's worst inside air in use: the in-use maximum with the kit shed to its heat stage, at "
+                   "the independent bound's lowest conductance, %s C lid open and %s C lid closed" % (w["lid_open"], w["lid_closed"]))
     a = env["ambient_c"]["in_use"]
     rise = env["inside_air_rise_k"]
     reduced_above = None
@@ -143,7 +152,7 @@ def main(argv):
     print("part_temps: %d part instance(s) judged of %d on %d board(s) against the adopted envelope; "
           "%d outside it, %d declared carve-out(s), %d with no range in this tree"
           % (judged, comps, len(res), len(fails), len(notes), undec))
-    print("  the worst inside air this envelope allows is %d C: %s" % (inside_max, inside_why))
+    print("  the worst inside air this envelope allows is %s C: %s" % (inside_max, inside_why))
     for f in fails[:20]:
         print("  OUTSIDE %s" % f)
     for n in notes[:8]:

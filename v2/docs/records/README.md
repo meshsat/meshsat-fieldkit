@@ -19,6 +19,8 @@ Worktrees:
 |---|---|
 | `adj/` | the eleven adjudications A01 to A11 of 25 September (filed 27 September; section *Filed 27 September 2026*) |
 | `handover/` | filed by the handover's H1.1 editor, 27 September 2026, so the handover pages' citations can be traced: hc4's two reviews and hc6's review, rendered from the session's workflow journal (AI reviews); the messages of commits `3a1f6576` (the parity report of 36 artefacts) and `a8652172` (the H1 filing, with the suite results); `3a1f6576-commit-message.txt` sha256 382d1771c084903b; `a8652172-commit-message.txt` sha256 15d4f2b04fd46883; `hc4-reviews.md` sha256 6941573f2b81298b; `hc6-review.md` sha256 3a72258e350d3ad7 |
+| `hc2/` | the layer 2 closer hc2 (concept of operations, envelope and test plan) and its targeted fixer c23: the power and heat arithmetic the pages cite and the closer's hand-offs (filed at integration, 27 September 2026) |
+| `hc3/` | the layer 3 closer hc3 (requirements registry) and its targeted fixer c23: the hand re-read of every carried citation, the list the apply script checks, the fixer's answer to each finding, and the layer's open questions and status row (filed at integration, 27 September 2026) |
 | `hc4/` | the layer 4 closer hc4 (readable diagrams): the five disagreements between the energy chain and the netlists, for the energy chain's owner (filed at integration, 27 September 2026) |
 | `r4a/` | board A's author, rounds 4 to 6 (round-6 candidate, fix-ups 3 and 4) |
 | `r4b/` | board B's author, rounds 4 to 6 (round-6 candidate, box run 6) |
@@ -28,6 +30,7 @@ Worktrees:
 | `r6d/` | board D's author, round 6 |
 | `r8b/` | board B's author, round 8 (the round's decision record, its tools, evidence and per-finding change list, and the decoupling classes; filed at integration, 27 September 2026, `drafts/b/X` at `r8b/X`); `r8b/integration/` holds the integration's own box procedure, comparator and logs |
 | `r8d/` | board D's author, round 8 (the regeneration's independent comparison, gates and suite; filed at integration, 27 September 2026) |
+| `r8int4/` | the integrator of set 4 of the handover (27 September 2026, branch `fnd/r8int4`): the scripts that merged the layer 2 and 3 closers, the re-take driver, the hardware-firmware contract and the case release onto main `38dcd764`, the hand re-reads they needed and the apply logs |
 | `r8p/` | board P's author, round 8 (the regeneration's independent comparison and the second pass against the first, and the JLC record of F1's holder; filed at integration, 27 September 2026). Board P's generator names `drafts/p/` at `gen_sch_p.py:587` and `:598`: the stream's battery-packet drafts, landed in `v2/docs/review-packets/battery/` by the same commit |
 | `rv-bat/` | review stream BAT, the battery and protection review packet |
 | `rv-dec/` | review stream DEC, decision 42 (decoupling placement) |
@@ -46,6 +49,21 @@ Paths are relative to this folder; the source is the same path below `drafts/` i
 
 | file | sha256 | bytes | source worktree and path | cited by |
 |---|---|---:|---|---|
+| `hc2/LAYER-STATUS-layer2.md` | `e9afbcd47112a10619abab33c8378fceeeab05dbe726f740b59ac46213cf3729` | 8272 | `fnd/hc2` `drafts/LAYER-STATUS-layer2.md` | `v2/docs/handover/LAYER-STATUS.md` (layer 2) |
+| `hc2/handoffs.md` | `60bfcc5f205a09fc23eb249a0aa012c30da38cbec6d4c4d9333253916be53943` | 29166 | `fnd/hc2` `drafts/handoffs.md` | `v2/docs/handover/LAYER-STATUS.md` (layer 2) |
+| `hc2/hotstop_bounds.out` | `5f03619f7bf5c476e57f90ef17e161989ceac6e9b0df8b40b25d60ed5dfdf825` | 8163 | `fnd/hc2` `drafts/hotstop_bounds.out` | `v2/docs/CONOPS.md`<br>`v2/docs/OPERATING-ENVELOPE.md`<br>`v2/ecad/tools/pcb_envelope.yaml`<br>`v2/ecad/tools/pcb_requirements.yaml` |
+| `hc2/hotstop_bounds.py` | `ed8f8c6b4c3bed083883439ccfb9fc1a96bb4c3864fc4dc3bc3f934beb1dcf8f` | 8097 | `fnd/hc2` `drafts/hotstop_bounds.py` | `v2/docs/CONOPS.md` (section 4c) |
+| `hc2/pwr_red2.out` | `835910e807d588c481951dc879e030b55d893453bd124872b9310a99bed46db6` | 13896 | `fnd/hc2` `drafts/pwr_red2.out` | `v2/docs/CONOPS.md`<br>`v2/docs/OPERATING-ENVELOPE.md`<br>`v2/ecad/tools/pcb_envelope.yaml` |
+| `hc2/pwr_red2.py` | `5790bc7e444bebc4b6b7b6616c4641dfe602185631992d19aeb223eb51e9feec` | 12629 | `fnd/hc2` `drafts/pwr_red2.py` | `v2/docs/CONOPS.md`<br>`v2/docs/OPERATING-ENVELOPE.md` |
+| `hc2/sc.md` | `83cca82cce9d4c43ff5f238a61d2bb4ee0338e600237a3d2cc0ab85ad1f6f055` | 20465 | `fnd/hc2` `drafts/sc.md` | the layer 2 closer's session choices, numbered in `v2/ecad/tools/pcb_requirements.yaml` |
+| `hc3/apply_registry.py` | `009770cb4413f14acbb235cbcf92a897288bba85cdd84e46d9d1abb8134a38de` | 362929 | `fnd/hc3` `drafts/hc3/apply_registry.py` (generated from the `ops_*.py` beside it in that worktree) | the registry change of this integration, by record id |
+| `hc3/blocked-questions-layer-3.md` | `c6a8d3693cc962b6f28daa75f05f04c3c1778af276c6cc68fd07194bab992491` | 21559 | `fnd/hc3` `drafts/hc3/blocked-questions-layer-3.md` | `v2/docs/handover/ENGINEERING-QUESTIONS.md`<br>`v2/docs/handover/LAYER-STATUS.md` (layer 3) |
+| `hc3/c23-response.md` | `add69d02b8232a6b11514938f203a47d7de32d8cdc564c8c705d94543b569509` | 22303 | `fnd/hc3` `drafts/c23-response.md` (the same bytes as `fnd/hc2` `drafts/c23-response.md`) | `v2/docs/handover/LAYER-STATUS.md` (layers 2 and 3) |
+| `hc3/citations-reread.md` | `62bbcc4c84e5ec30be51712da5bf08567c75d572ab0a39c79cb61724ba44afdc` | 17762 | `fnd/hc3` `drafts/hc3/citations-reread.md` | `v2/ecad/tools/pcb_requirements.yaml` (header comment) |
+| `hc3/layer-status-layer-3.md` | `9a2d72a87446eced17899dd80a80943874a85b0ad4f573bdb3fc43c76c03c89e` | 4942 | `fnd/hc3` `drafts/hc3/layer-status-layer-3.md` | `v2/docs/handover/LAYER-STATUS.md` (layer 3) |
+| `hc3/reviewed-citations.json` | `4b4e4031bf44ef9770c147286150d4f7358a2daa42b7ed9ec276b19c5dce93e4` | 7826 | `fnd/hc3` `drafts/hc3/reviewed-citations.json` | the apply script's citation guard (`citations-reread.md`) |
+| `hc3/reviewed-pairs.json` | `6275e1cdc16a026eec30e39992dbcfafc45343a197973fc1d77f9740adf65769` | 6453 | `fnd/hc3` `drafts/hc3/reviewed-pairs.json` | the apply script's citation guard (`citations-reread.md`, last section) |
+| `hc3/sc.md` | `b94932ed0253247254ed8e1d45ffd7421665221ec0002780c3a08351298e9fba` | 22259 | `fnd/hc3` `drafts/sc.md` | the layer 3 closer's session choices, numbered in `v2/ecad/tools/pcb_requirements.yaml` |
 | `r4a/r4-decisions.md` | `2e5a0c20fc9d4f25d70d3defda2aaee056ed6b340584447fddc711898377bee2` | 101439 | `fnd/r4a` `drafts/r4-decisions.md` | `v2/docs/feasibility/EMCON.md`<br>`v2/docs/feasibility/POWER-THERMAL.md` |
 | `r4a/r4-open-items.md` | `0c58f8a3574801b15b39ae06e377710e4c41646fe71d2dd81c8257733d259c91` | 27963 | `fnd/r4a` `drafts/r4-open-items.md` | `v2/docs/feasibility/POWER-THERMAL.md` |
 | `r4b/box/r6-run6/README.txt` | `3977a8c3646ec82921c9bb2be1103f2c3ad55b192178ed2ac849e1d999ecbfae` | 1877 | `fnd/r4b` `drafts/box/r6-run6/README.txt` | `v2/docs/feasibility/FAILOVER-FABRIC.md` |
@@ -149,6 +167,14 @@ Paths are relative to this folder; the source is the same path below `drafts/` i
 | `r8d/r8d_regen.sh` | `297651d22f4e3797360fb6517080c6a2e52865d81da9052aec7f0507dc155db1` | 8865 | `fnd/r8d` `drafts/d/records/r8d_regen.sh` | board D's round 8 commit (MESHSAT-1357) |
 | `r8d/r8d_set.sh` | `fa34ed5489c48ab438c3d9e98c465e8cdec35c5c4ce16a8ff092325496070a64` | 5804 | `fnd/r8d` `drafts/d/records/r8d_set.sh` | board D's round 8 commit (MESHSAT-1357) |
 | `r8d/r8d_suite.sh` | `c6ce1bdea945d1e606500e3f10dad8aa192e6b4609ff46d73080b9311e8efdc8` | 4908 | `fnd/r8d` `drafts/d/records/r8d_suite.sh` | board D's round 8 commit (MESHSAT-1357) |
+| `r8int4/c23-apply-registry.log` | `58ba20cf0bc76a485419303b4c4809b715f93f0cd98f868b0d712239f01b562c` | 26515 | `fnd/r8int4` (the integrator's scratch, filed at integration), the apply script's output | the registry change of this integration |
+| `r8int4/citations-reread-r8int4.md` | `d04ab7bdc144337fdf1034dad2bed98aa510c0949b941de207daec3650a13fce` | 4400 | `fnd/r8int4` (the integrator's scratch, filed at integration) | `v2/ecad/tools/pcb_requirements.yaml` (CFL-016, REQ-052, CFL-006 evidence) |
+| `r8int4/edit_c23_contradictions.py` | `148842e6c512fb93d9c4862965b3224796961ff5ec4e4be9e1ad67d3404de782` | 5678 | `fnd/r8int4` (the integrator's scratch, filed at integration) | `v2/docs/CONOPS.md`<br>`v2/docs/OPERATING-ENVELOPE.md`<br>`v2/ecad/tools/pcb_envelope.yaml` |
+| `r8int4/edit_cfl010_reconcile.py` | `fd575e8ac00bd3a9e078b0df1496959c3fdf0b4bc9ffe62211357a570693d459` | 2280 | `fnd/r8int4` (the integrator's scratch, filed at integration) | `v2/docs/V2-SPEC.md`<br>`v2/docs/PRODUCT-BRIEF.md` |
+| `r8int4/edit_layer2_emcon_face.py` | `fba349a250a52a651bd65b306a47c66a4431d238891619530d1ff55e5cd298f0` | 7547 | `fnd/r8int4` (the integrator's scratch, filed at integration) | `v2/docs/CONOPS.md`<br>`v2/docs/PANEL.md` (fnd/hc1's held patch re-derived) |
+| `r8int4/file_records.py` | `2eb2b099e40427d8be8665b08f12d40288b2fc3e04c47126a277aa2ace240ad3` | 1883 | `fnd/r8int4` (the integrator's scratch, filed at integration) | this README's rows for `hc2/`, `hc3/` and `r8int4/` |
+| `r8int4/post_c23_registry.py` | `fb45b9a3d81169ad9741ec130058d135be725778e7d1a4a0591868584fb43621` | 5177 | `fnd/r8int4` (the integrator's scratch, filed at integration) | `v2/ecad/tools/pcb_requirements.yaml` (CFL-016, REQ-024, FEA-004) |
+| `r8int4/post_c23_registry2.py` | `63266ee51d8741cf5e8054b6f6b2486bc6c59577d57ca0ed7e4f72f42bac96a8` | 2724 | `fnd/r8int4` (the integrator's scratch, filed at integration) | `v2/ecad/tools/pcb_requirements.yaml` (REQ-052, CFL-006) |
 | `r8p/box/p1p2.txt` | `646d9a381f5eb076fa9b6012cdf7864c5f4f224ea2bc6b950b35c334b09f6b4f` | 2293 | `fnd/r8p` `drafts/p/box/p1p2.txt` | `v2/ecad/tools/pcb_requirements.yaml` (REQ-044) |
 | `r8p/box/par.txt` | `31644e678a7e539a1783cdba34655d9ae96d85ab80fd7b82f1c634b82d07fbd5` | 3115 | `fnd/r8p` `drafts/p/box/par.txt` | `v2/ecad/tools/pcb_requirements.yaml` (REQ-044, CFL-015, CFL-016, CON-016) |
 | `r8p/evidence/asked-Keystone_3568.txt` | `519f23ee3d8ffe0721c842337b0f41d41e80b77e9868c250fc839a2c5c35f45a` | 21 | `fnd/r8p` `drafts/p/evidence/asked-Keystone_3568.txt` | `v2/vendor/SOURCES.yaml` (pack-blade-fuse-holder) |

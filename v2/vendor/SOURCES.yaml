@@ -3399,3 +3399,51 @@ documents_filed_hc1:
   - "27 September 2026 (closer hc6): DONE: RM0433 (Rev 8), DS12110's newest revision (Rev 11) and ES0392 (Rev 15) are filed and read (io-supervisor-mcu, update_53a98a71); entries for the RockBLOCK 9704, LimeSDR Mini v2, AW7915-AED, TPS23861, Preci-Dip 813, Mill-Max 0858 (its product page and catalogue page 28 filed), Radiall SMP-MAX, JST VH (its catalogue filed), the IDC headers, sockets and cable (Wurth sheets filed), the wall D38999 and 233-370, PolyPhaser GTH-SFF-AL, Xenarc 709GNK, CM5108064 and board B's 25 MHz crystals; cellular-socket's fitted TE 2199119-3 recorded (update_53a98a71). The DS3231 is round 8's (r8b rtc-ds3231sn)"
   - "27 September 2026 (closer hc6): STILL OWED from that pass: a NiceRF document naming the SA868's VHF order code (session pick SA868-V, INFERRED from NiceRF's band suffixes) and its V1.4 sheet (the file host did not resolve from this host); a Quectel ordering document decoding RM520NGLAA-M20-SGASA (session pick, INFERRED from distributors' descriptions); a Pulse document rating the fitted H5007NL for PoE current, or board B's author taking HX6096NL (ethernet-magnetics, update_53a98a71, poe_finding); Eaton's answer on whether the SCF9550's 'Storage temperature: -10 C to +40 C' binds the mounted fuse; the Molex 208658 HDMI receptacle sheet (molex.com and LCSC's copy did not answer); the Keystone 3568 and 3034 ranges; order codes for J_PRE1's longer pin, the panel LEDs, the headset jacks, the sounder and the header modules (NOT_PINNED); the exact D38999 and 233-370 dash numbers (layers 5 and 7); the Preci-Dip 813 contact current rating; the land comparisons the IDC and Mill-Max picks create (CMP-002, at layout entry)"
   - "27 September 2026 (closer hc6): new grade findings (v2/docs/parts/GRADE-CHECK.md): the LimeSDR Mini v2 (0 to +70 C, storage 0 to +70 C) and the AW7915-AED (0 or -10 to +70 C) are OUTSIDE the envelope, beside the known H5007NL; each needs a decision recorded in PROCUREMENT.md section 4. JLCPCB short against five kits at 2026-09-27T00:18Z and again at 03:59Z: E72-2G4M20S1E (0 of 10), LT8705AEUHF#TRPBF (3 of 5), BQ7720700DSSR (3 of 5), SCF9550-30-05 (0 of 5), the 25 MHz C164047 (3 of 20), and round 8's LTC2954ITS8-1#TRPBF (0 of 5)"
+
+# ADDED 27 SEPTEMBER 2026 (MESHSAT-1357, layer 3 closer, worktree fnd/hc3). Outside `parts:` on purpose, as
+# documents_filed_hc1 of the layer 1 closer: standards, not part documents, so they join no BOM line.
+documents_filed_hc3:
+  - for_entry: null
+    role: "the EMCON bench pass line of REQ-030 and REQ-071 (hardware EMCON, NEED-08): reference bandwidths, measurement ranges and the receiver and idle-transmitter line; session choice of 27 September 2026 under the owner's standing rule"
+    path: "v2/vendor/standards/erc-rec-74-01-2022-05.md"
+    doc_id: "ERC Recommendation 74-01, Unwanted emissions in the spurious domain, CEPT ECC; a TRANSCRIPTION of the introduction, Table 1, recommends 4 and 11 to 13, and Table 2's last row"
+    revision: "Approved 1998, Corrected 23 May 2022 (Edition May 2022)"
+    url: "https://docdb.cept.org/download/4014 (its certificate did not verify from this host on 2026-09-27; read from https://web.archive.org/web/20230801193213/https://docdb.cept.org/download/4014)"
+    fetched: "2026-09-27, curl from the runner, 732,952 bytes, 36 pages"
+    sha256_of_the_file_read: "c2f3400a21891971f37f070c2d44bf9d628aed93f2ec4248e1631ec75a637524"
+    filing_note: "fetched, not redistributed, as for every standard in v2/vendor/standards/; the kit claims no conformity with it (owner ruling D-04)"
+    status: VERIFIED
+    matches_fitted: "not a part document: the measurement threshold of the EMCON bench rows"
+  - for_entry: null
+    role: "the edition and installation row of the MIL-STD-461 characterisation runs TEST-PLAN M1 to M5 (REQ-063, S-18 closed); session choice of 27 September 2026 under the owner's standing rule"
+    path: "v2/vendor/standards/mil-std-461g-requirement-matrix.md"
+    doc_id: "MIL-STD-461G, Requirements for the Control of Electromagnetic Interference Characteristics of Subsystems and Equipment; a TRANSCRIPTION of Table V's three ground rows"
+    revision: "11 December 2015, superseding MIL-STD-461F; whether a later edition supersedes it was not checked"
+    url: "https://s3vi.ndc.nasa.gov/ssri-kb/static/resources/MIL-STD-461G.pdf (a copy whose footers read 'Downloaded from http://www.everyspec.com')"
+    fetched: "2026-09-27, curl from the runner, 3,456,938 bytes, 280 pages"
+    sha256_of_the_file_read: "491f015e386136b58af90e86066533ca073d31210913a766cb236cf05a876bb8"
+    filing_note: "fetched, not redistributed; Table V read by the column positions of the file's text layer (printed page 26, PDF page 40)"
+    status: VERIFIED
+    matches_fitted: "not a part document: the test standard of TEST-PLAN M1 to M5"
+  - for_entry: null
+    role: "the solar resource of M1's energy balance (REQ-016's split, the M1 balance record and the solar input's layer-4 open item): the reference day of a session choice of 27 September 2026 under the owner's standing rule"
+    path: "v2/vendor/solar/pvgis-leiden-monthly-2015-2020.json"
+    doc_id: "PVGIS 5.2 monthly radiation (MRcalc) for 52.160 N, 4.497 E (Leiden), PVGIS-SARAH2 radiation and ERA5 meteorology, 2015 to 2020, horizontal and optimally inclined (40 degrees) planes, horizon from the DEM"
+    revision: "the API's answer of 27 September 2026 (PVGIS 5.2, European Commission Joint Research Centre)"
+    url: "https://re.jrc.ec.europa.eu/api/v5_2/MRcalc?lat=52.160&lon=4.497&horirrad=1&optrad=1&outputformat=json&startyear=2015&endyear=2020"
+    fetched: "2026-09-27, curl from the runner, 5,965 bytes"
+    sha256_of_the_file_read: "bb2f165c642a36f0f48a9a628b259baf3108b26fb54e138070a1a24a694cd035"
+    filing_note: "the API's JSON answer filed as fetched (public data of the European Commission, reused with attribution); the September mean on the optimal plane is 4.014 kWh/m2 a day and the April to September mean 5.221"
+    status: VERIFIED
+    matches_fitted: "not a part document: the solar resource of the mission balance"
+  - for_entry: null
+    role: "the night-vision compatibility target of REQ-034 (the NVG panel mode, NEED-09): the NVIS type and class, TABLE III's radiance rows and the NVIS compatible examination; session choice of 27 September 2026 (second pass, Review B finding B3) under the owner's standing rule"
+    path: "v2/vendor/standards/mil-std-3009-nvis-2001-02-02.md"
+    doc_id: "MIL-STD-3009, Lighting, Aircraft, Night Vision Imaging System (NVIS) Compatible, Department of Defense Interface Standard; a TRANSCRIPTION of 1.3, 3.1.1 to 3.1.4, 3.2.2, 3.8, 3.10, 4.3.5.8, 4.3.5.9.2, TABLE II's warning rows, TABLE III's named rows and 5.7.2 to 5.7.2.2"
+    revision: "2 February 2001, superseding MIL-L-85762A; Distribution Statement A; whether a later revision or validation notice supersedes it was not checked"
+    url: "https://dev.appliedavionics.com/www/pdf/MIL-STD-3009.pdf (found through a public search; listed on DLA's ASSIST QuickSearch)"
+    fetched: "2026-09-27, curl from the runner, 474,332 bytes, 237 pages"
+    sha256_of_the_file_read: "93d3435906c13e14c0db8748b895dd061ff6758fd0becd6293f202e1735b2008"
+    filing_note: "fetched, not redistributed, as for every standard in v2/vendor/standards/; the kit claims no conformity with it and no night-vision compatibility until the examination has passed (owner ruling D-01)"
+    status: VERIFIED
+    matches_fitted: "not a part document: the design target and test of the NVG mode"

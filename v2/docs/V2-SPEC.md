@@ -26,7 +26,7 @@ The node, the inputs, every rail with its part and its EMCON gate: appendix 32.5
 ## Compute, storage, expansion (B16, about 330 x 200 mm; the distributed fabric of 32.52)
 | Item | Specification |
 |---|---|
-| Requirement | no single CM5 is a single point of failure: one, two or three modules in any slot, every device visible to all modules, the OS and the HAL adopt devices, k3s on top |
+| Requirement | no single CM5 is a single point of failure: one, two or three modules in any slot, every device visible to all modules, the OS and the HAL adopt devices, k3s on top; four shared elements are outside it (correction 29) |
 | Compute | three identical CM5 slots (8 GB, 64 GB eMMC, wireless) joined by a five-port Gigabit switch chip with the sealed wall port and a spare header |
 | Per slot | a PCIe switch (Diodes PI7C9X2G404SL, one upstream and three downstream lanes; 32.54) feeding one NVMe M.2 M-key 2242 (storage replicated across slots by k3s) and one card slot (slot 1 the WiFi link card, slot 2 the 5G module, slot 3 the second WiFi link card, correction 5); a four-port USB 3 hub with device headers; HDMI into the three-input display switch; time-pulse and heartbeat lines |
 | Devices | most radios, the sensor controller and the panel are USB devices on a slot's hub (USB-serial bridges for the UART radios, two RP2040-class controllers for the panel and the sensors, a USB audio and control set for the APRS board); the HAL shares them to the other modules over the network. Not everything is on a hub: the LoRa module is on slot 3's SPI, the 5G module's data on slot 2's PCIe lane (its management link is USB), the two WiFi link cards on the PCIe switches of slots 1 and 3, the compute modules' own WiFi and Bluetooth on each module, and the secure element, the holdover clock and the TMP117 on the kit I2C bus (correction 6). **The physical owner is a hardware fabric choice, not a cabling one:** each of the three hub banks is switched between a home module and one neighbour by a 2-of-3 voted selection driven by three I/O supervisors (`ARCH-PCB-B-IOHA.md`), so the loss of one module is meant to move its bank rather than remove it. The WiFi link cards do not move; the antennas move to the second card through the voted changeover. The LoRa module and the 5G data path have no second path and go with their module (`ARCH-PCB-B-IOHA.md` section 15), the named exceptions to line 29's requirement for prototype 1 (`ARCH-PCB-B-IOHA.md` section 15a; correction 6). Compute redundancy through k3s is not peripheral redundancy and was never the same thing; the WiFi link cards and the NVMe drives are the only duplicated devices |
@@ -38,7 +38,7 @@ The node, the inputs, every rail with its part and its EMCON gate: appendix 32.5
 | Bearer | Device | Where |
 |---|---|---|
 | Satellite | RockBLOCK 9704 SMA (Iridium Messaging Transport) with the Maxtena M1621HCT-P-SMA helical | B16 UART, east jack |
-| Cellular | 5G module on M.2 B-key (the Quectel RM520N-GL, the working assumption of 32.49 that the generator carries, a key-B module, on a key-B socket since `458b2873` whose land carries the maker's two locating holes since board B's round 8 (correction 28); SIM 2 on the module's own USIM2 pins since `458b2873`; corrections 9 and 19), three antenna jacks on ANT0, ANT2 and ANT3 if the case measurement confirms the extra site, otherwise two on ANT0 and ANT2 (owner ruling D-07, 26 Sep 2026; correction 12), dual SIM as two nano-SIM holders, SIM 1 on the module's (U)SIM1 pins and SIM 2 on its USIM2 pins behind four 0 ohm links at the module, so that the same board also builds the eSIM-plus-nano-SIM configuration of appendix 32.50 item 12 with an eSIM-fitted module variant and the four links left off (Quectel RM520N series hardware design v1.1 section 4.1.6, Figure 19); prototype 1 is built with two nano-SIMs (the session's choice SC-13 under the owner's standing rule of 26 September 2026; correction 22); the SIM TVS array the maker asks for (at most 10 pF) is fitted since board B's round 8, a TI TPD4E001 on each holder (correction 28), and the eSIM variant's order code is owed (open item S-13, conflict CFL-010) | B16 PCIe, east jacks |
+| Cellular | 5G module on M.2 B-key (the Quectel RM520N-GL, the working assumption of 32.49 that the generator carries, a key-B module, on a key-B socket since `458b2873` whose land carries the maker's two locating holes since board B's round 8 (correction 28); SIM 2 on the module's own USIM2 pins since `458b2873`; corrections 9 and 19), three antenna jacks on ANT0, ANT2 and ANT3 if the case measurement confirms the extra site, otherwise two on ANT0 and ANT2 (owner ruling D-07, 26 Sep 2026; correction 12), dual SIM as two nano-SIM holders, SIM 1 on the module's (U)SIM1 pins and SIM 2 on its USIM2 pins behind four 0 ohm links at the module, so that the same board also builds the eSIM-plus-nano-SIM configuration of appendix 32.50 item 12 with an eSIM-fitted module variant and the four links left off (Quectel RM520N series hardware design v1.1 section 4.1.6, Figure 19); prototype 1 is built with two nano-SIMs (the session's choice SC-13 under the owner's standing rule of 26 September 2026; correction 22); the SIM TVS array the maker asks for (at most 10 pF) is fitted since board B's round 8, a TI TPD4E001 on each holder (correction 28), and the eSIM variant's order code is owed (open item S-13; conflict CFL-010 is resolved on this description, correction 22) | B16 PCIe, east jacks |
 | Kit-to-kit WiFi | **two** AsiaRF AW7915-AED (MT7915, 2.4 and 5 GHz) for mesh or point-to-point links without an access point, one on slot 1 and one on slot 3, sharing the two antennas through a voted RF changeover so the link survives one module loss (only one radio is live at a time) | B16 PCIe, two jacks, on the west wall by case choice C2 (on the east wall as generated; correction 20) |
 | Local WiFi and Bluetooth | the CM5's own radio with Raspberry Pi's certified antenna kit; on the EMCON line since `458b2873` through open drains that only pull its disable pins low (corrections 4 and 19) | west jack |
 | LoRa mesh | bare 1 W SPI module of the E22-900M30S class (SX1262 + 30 dBm amplifier), meshtasticd on the CM5, EU power capped in software | B16 SPI, east jack |
@@ -178,9 +178,11 @@ has been built, powered or measured.
     nothing that was ruled, and does not make the default build wait on an order code nobody has. Building prototype 1
     with two nano-SIMs is the session's default and departs from the configuration the owner approved, eSIM plus
     nano-SIM (appendix 32.50 item 12, approved with the other eleven on 6 September 2026), until the eSIM variant's
-    order code is named; that code stays on the components layer's list. Still owed, so
-    CFL-010 stays open: the SIM TVS array of at most 10 pF that section 4.1.7 of the same document asks for, on board
-    B's schematic, and the eSIM variant's order code before an eSIM build is bought. Reverse by making the eSIM
+    order code is named; that code stays on the components layer's list. Still owed, and carried outside
+    conflict CFL-010, which the requirements registry resolves on this description (its writer's second pass, after
+    Review B of layer 3, finding B6): the SIM TVS array of at most 10 pF that section 4.1.7 of the same document asks
+    for, on board B's schematic (board B's SIM TVS constraint in the registry, drawn since board B's round 8, correction
+    28), and the eSIM variant's order code before an eSIM build is bought (open item S-13). Reverse by making the eSIM
     configuration the default build once that code is named; no board change either way.
 23. **Thermal (line 73).** Session reading of `feasibility/POWER-THERMAL.md` sections 0 and 9.3 (finding PWR-F08): the
     +35 C and +25 C restrictions the owner accepted with D-02b are derived from 32.53's 10 K and 16 K rises; with the
@@ -231,5 +233,15 @@ has been built, powered or measured.
     locally; end to end no row closes. Board B's EMCON stages are single gates and open-drain logic outputs run per slot
     from each module's own 3.3 V (Q212, the 5G socket rail's discharge FET, aside). The key-B socket's land carries the
     two locating holes of TE drawing C-2199119 rev F sheet 3 (S-12), and each SIM holder carries a TI TPD4E001 (1.5 pF,
-    the TVS half of S-13 and correction 22; the eSIM variant's order code is still owed, so CFL-010 stays open). Nothing
-    is built.
+    board B's SIM TVS constraint of correction 22). The eSIM variant's order code is still owed (open item S-13, the
+    components layer's); it is not part of conflict CFL-010, which the requirements registry resolves on correction 22's
+    description. Nothing is built.
+29. **NEED-03's failure set (line 29).** Choice of the layer 3 closer, taken by the session under the owner's standing
+    rule of 26 September 2026 (requirements registry, the session choice on NEED-03's failure set; record ASM-002): the
+    requirement covers the loss of one compute module or one I/O supervisor in every way it can fail (dead, unpowered
+    while its neighbours run, held in reset, wedged, or shorted on its own rails), and a failed module or supervisor
+    must not take a shared element down with it (REQ-073). Four shared elements are outside that set and are single
+    points of failure of the kit as generated: the `+5V_DEV` and `+3V3_DEV` converters on board A (one each), the
+    `J_PANEL` ribbon, the KSZ9897R Ethernet switch, and the kit I2C bus with the panel controller as its one master.
+    None is claimed as covered, none is a risk the owner accepted, and whether each is mitigated is layer 4 work (open
+    item S-36). The kit is never described as having no single point of failure.
