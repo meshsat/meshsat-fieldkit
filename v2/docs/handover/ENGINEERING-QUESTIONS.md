@@ -5,7 +5,7 @@ are repository paths; file:line citations are lines at `e3aedb25` (including the
 line), which the public repository serves at `https://raw.githubusercontent.com/meshsat/meshsat-fieldkit/e3aedb25/<path>`.
 **Handover H1 adds EQ-15 to EQ-21**, the questions circuit round 8 (main `84e52461`) and the handover closers raised;
 their citations are at the H1 source commit named in the snapshot's `SOURCE.txt` (`8a19fe29` for H1; H1.1 changes no
-design file those questions cite). Internal names are defined in `v2/docs/handover/GLOSSARY.md`. Every blocked question the audit found in the nine
+design file those questions cite). **After H1.1 (set 4, branch `fnd/r8int4`, 27 September 2026)** EQ-22 to EQ-24 are added, EQ-05 carries the hot stop's firing inside the envelope and EQ-20 its merge; their citations are at that branch's commits. Internal names are defined in `v2/docs/handover/GLOSSARY.md`. Every blocked question the audit found in the nine
 pre-PCB layers is here once, deduplicated across layers, in the form the owner asked for
 (`v2/docs/reviews/2026-09-27-handover-execution-prompt.md` section 6): the exact issue, what it affects, the evidence,
 what was tried, the viable options, the recommended next action, the expertise or equipment needed, and cost and lead
@@ -29,7 +29,7 @@ holds the prepared request texts (not sent).
 | EQ-02 | Does the RockBLOCK 9704 stop transmitting within 1 s under EMCON? | A. design work | 4, 8 | B | FEA-002's RockBLOCK row |
 | EQ-03 | How may the kit travel with its 145 Wh built-for-the-kit pack? | A. design work | 2, 3 | none | a transport claim only |
 | EQ-04 | Does a CM5 radio keep its certification through a blind-mate and a bulkhead? | A. design work | 3 | B, case | nothing if the recommended route is taken |
-| EQ-05 | What is the sealed case's thermal conductance, and is the hot end feasible? | B. physical evidence | 2, 4, 7, 9 | A, B, D, P | freezing hot-part placement and the pack location; the +35 and +25 C figures |
+| EQ-05 | What is the sealed case's thermal conductance, and is the hot end feasible (the hot stop's firing inside the envelope included)? | B. physical evidence | 2, 3, 4, 7, 9 | A, B, D, P | freezing hot-part placement and the pack location; the +35 and +25 C figures; REQ-052 and REQ-024 at +40 C wherever the hot stop fires |
 | EQ-06 | Can the fitted ATECC608B's keys be destroyed after lock, safely under power loss? | B. physical evidence | 4, 6, 8 | B | B's layout entry for the U8 site |
 | EQ-07 | Does the chemical fuse F2 hold 18 A for 60 s from a +55 C block? | B. physical evidence | 4, 9 | P (A) | P's fabrication release; P's F2 part identity |
 | EQ-08 | Do the case margins that rest on unpublished tolerances hold? | B. physical evidence | 7 | A, B, C, E, P | final outlines and connector places |
@@ -44,8 +44,11 @@ holds the prepared request texts (not sent).
 | EQ-17 | Board A's +3V3 overvoltage window between the SN74AUP1G08's 4.6 V maximum and D3's 6.4 V clamp | A. design work | 4, 8 | A | the EMCON gating on A's PA and HF rails |
 | EQ-18 | RF-002 cannot decide TX_INHIBIT_n through board C's U14 (SN74LVC1G57) | A. design work | 4, 8, 9 | C (A, B, D) | RF-002 on every board whose transmitter rides TX_INHIBIT_n |
 | EQ-19 | PWR-001's undeclared supplies on boards A, B, D and E | A. design work | 8, 9 | A, B, D, E (C, P) | PWR-001 on four boards on current evidence; their layout entry |
-| EQ-20 | Board B's round 8 circuit is unmerged, with a sub-13 ns enable pulse window left | A. design work | 4, 8 | B | B's netlist, every B reading, FEA-003's fabric half |
+| EQ-20 | Board B's round 8 circuit (merged at `b76c18cb` after H1.1), with a sub-13 ns enable pulse window left | A. design work | 4, 8 | B | the residual's judgement (R-HSD); FEA-003's fabric half |
 | EQ-21 | The generators write no MPN; 1497 of 2205 BOM rows carry no order code | A. design work | 6, 8 | all six | layer 6's exact identity per BOM line |
+| EQ-22 | The hot stop's signal path HOT-R1 is in neither board A's nor board E's generator | A. design work | 2, 3, 5, 8 | A, E | REQ-077 (FAIL until drawn); the layout entry of A and E |
+| EQ-23 | Does a non-destructive, firmware-free hardware stage stand behind the hot stop (S-58)? | C. external authorisation | 2, 3, 4, 8 | A, E, P | the layout entry of A, E and P; REQ-044, REQ-046, REQ-077 |
+| EQ-24 | The QMX lid tray does not fit the unit's connector layout (jacks on both end panels) | A. design work | 7 | none (a made part) | printing the tray (S-63) |
 
 Group A items can be answered under existing authority; group B needs hardware and so a purchase; group C needs the
 owner's money, outside contact or a value only he can set.
@@ -182,7 +185,7 @@ owner's money, outside contact or a value only he can set.
 | **Evidence** | `drafts/r8-decisions.md` of `fnd/r8b`, with the simulator `drafts/b/tools/bbm_sim_r8b.py` and its outputs `drafts/b/evidence/bbm-sim-*.txt`: not in H1's design; since H1.1 all are inside `v2/docs/handover/candidates/r8b.patch` (apply it to `fc144600`, or read the added files in the patch text). The candidate's last independent check (an AI review) had no blocking finding (`candidates/README.md`). |
 | **Attempts and results** | The record's break-before-make simulation on the regenerated netlist (seed 27, 1,500 random waveforms per bank): 19,976 runs, 56,342 select moves, 0 violations, least lead 61.5 us, least hold 198 us; with the static-1 hazard in every 74LVC1G157, 22,121 runs, 0 violations. A simulation, not a bench result. |
 | **Viable options** | Merge with the residual stated as a bounded risk, or add a minimum-pulse filter on the enable and re-simulate. |
-| **Recommended next action** | Merge r8b (apply `candidates/r8b.patch` to `fc144600`, re-derive its drafted page patches on the current text) with parity and the residual written into FAILOVER-FABRIC; R-HSD (EQ-12) judges whether a sub-13 ns enable pulse matters to the switches it drives. |
+| **Recommended next action** | Merge r8b (apply `candidates/r8b.patch` to `fc144600`, re-derive its drafted page patches on the current text) with parity and the residual written into FAILOVER-FABRIC; R-HSD (EQ-12) judges whether a sub-13 ns enable pulse matters to the switches it drives. **Done for the merge after H1.1:** board B's round 8 is on main at `b76c18cb` (integrated in `cc3313f3`) and FAILOVER-FABRIC states the residual (its round 8 section); what remains is R-HSD's judgement and the re-take of B's readings on its new netlist. |
 | **Expertise or equipment** | A high-speed or logic-timing reviewer. |
 | **Cost and lead time** | Desk work; R-HSD's cost. |
 
@@ -199,15 +202,41 @@ owner's money, outside contact or a value only he can set.
 | **Expertise or equipment** | None. |
 | **Cost and lead time** | Desk work. |
 
+### EQ-22. The hot stop's signal path, HOT-R1, is in no generator (S-57)
+
+| | |
+|---|---|
+| **Exact issue** | Past the heat stage the kit acts on the pack's measured cell temperature (the hot stop, `v2/docs/CONOPS.md` section 4c; requirement REQ-077; session choices SC-49 and SC-50). Board E's sensor controller is the pack gauge's only SMBus host; the panel controller, which owns the slot enables, the switched loads and `PI_KILL`, reaches it as generated only over USB through a compute module's bridge, which the heat stage as board B is generated does not host and which the stop's own first step removes. HOT-R1, the session's line from the sensor controller's GPIO19 through an open-drain 2N7002 on board E over the dock's spare contact (E `J_BLK` pin 12 to A `J_DOCK` pin 12) to board A's expander input and `EXP_INT`, with a 10 k pull-up on A, is drawn on neither board. |
+| **Affected** | REQ-077 (FAIL on the generated boards until drawn), boards A and E, IF-AE-DOCK's pin 12, the sensor and panel controllers' firmware contracts, `TEST-PLAN.md` E3-H. |
+| **Evidence** | `gen_sch_e.py` at `a8652172` (unchanged since): `J_BLK` pin 12 (`BLK_SPARE`) reaches only TP7, U10's GPIO19 (pin 30) is not connected; `gen_sch_a.py`: `J_DOCK` pin 12 (`DOCK_SPARE`) lands on U27 pin 18, whose `EXP_INT` (R110) is the panel controller's interrupt; `gen_sch_c.py` (U3 GPIO24 `EXP_INT`, GPIO13 to 15 `SLOT_EN`, GPIO19 `PI_KILL`); `v2/docs/records/hc3/blocked-questions-layer-3.md` item 13. |
+| **Attempts and results** | A stand-in on board B's TMP117 was drafted and kept only as the fallback for a lost sensor controller (+55.0 and +56.0 C), because the finding asks for the cells' own temperature on every input state. |
+| **Viable options** | (a) HOT-R1 as taken (SC-50): four line states (1 Hz ok, 5 Hz H1, held low H2, held high detector lost); (b) a USB-only path, which needs a module hosting both controllers' banks to keep running in the heat stage (not as generated; H1 stops it anyway); (c) a kit-bus device on board E that the panel polls (a part and a bus branch through a dock with no spare pair). |
+| **Recommended next action** | (a) at the next regeneration of boards A and E, before their layout entry; then E3-H on the bench. |
+| **Expertise or equipment** | The board A and E authors; the E3-H bench check. |
+| **Cost and lead time** | One transistor and two resistors per kit; desk work at the next regeneration. |
+
+### EQ-24. The QMX lid tray does not fit the unit's connector layout (S-63)
+
+| | |
+|---|---|
+| **Exact issue** | The QMX lid tray released in `v2/release/case-2026-09-27/lid-tray-qmx/` (sheet 14) has cable notches in one end wall only, while the held QRP Labs QMX manual (1_04_004, pages 7 to 9) puts the DC jack on the left panel and the BNC and USB-C on the right panel. The unit's 95 x 63 x 25 and the notch heights are checked against no maker drawing. |
+| **Affected** | The tray (a made part) and its print; the lid harness' route; nothing on a board (`J_QMX`, `J_HF` and `J_RF2` stay). |
+| **Evidence** | `v2/docs/CASE-FIT-UNCERTAINTIES.md` section 3; sheet 14 note 4; `ASSEMBLY.md`'s QMX row; the release README; `v2/docs/records/hc7/c7-response.md`. |
+| **Attempts and results** | Found by the layer 7 fixer c7 while drawing sheet 14, which draws the part where `scene.py` places it with its turned-end twin dotted; no direction is chosen for the notched end. |
+| **Viable options** | (a) Revise the tray from the QMX enclosure drawing (notches or openings at both ends, the pocket from the maker's figures) before it is printed; (b) keep the tray and route the DC lead round the unit (a cable strain and a lid-closing risk); (c) a strap-only mount without a tray (loses the tray's retention). |
+| **Recommended next action** | (a): desk work on a made part, no board moves and no money. |
+| **Expertise or equipment** | The case writer; the maker's enclosure drawing (to be filed in `v2/vendor/`). |
+| **Cost and lead time** | Desk work; a reprint of the tray when the prototype's printed parts are made. |
+
 ## B. Physical evidence
 
 ### EQ-05. The sealed case's thermal conductance and the hot end
 
 | | |
 |---|---|
-| **Exact issue** | The inside-air-to-ambient conductance of the sealed Peli 1450 with its aluminium face plate and fans is known only as a bound: 1.22 to 2.85 W/K lid open with fans on (1.06 to 2.49 lid closed) on the independent W4 model, against 3.0 to 3.3 W/K in appendix 32.53, a spread of about 2.3 times. On the low end, three typical modules at +20 C put the cells at up to 81 C against their 60 C discharge limit, the charge hold-off could fall anywhere from -18 to +19 C, and the PA's flange patch reaches 95 to 118 C in a 60 s key-down against the maker's 90 C reliability and +100 C case figures. The bound includes failure and nothing has been measured. |
-| **Affected** | FEA-004; D-02b's reduced mode (S-24) and its accepted consequences; the +35 C and +25 C controls; CON-013, REQ-014, REQ-052, REQ-059; THM-001 on every board; hot-part placement on A, B, D and P; the pack location; fans (D-18); board D's flange sensor (PWR-F15); NEED-03 availability across the envelope; possibly the thermal architecture. |
-| **Evidence** | `v2/docs/feasibility/POWER-THERMAL.md` section 0 items 5 and 7, sections 9.1 to 9.3 and 10 (lines 745 to 770, 794 to 806, 851 to 863, 1043 to 1056); `v2/docs/ARCHITECTURE.md` sections 8.2 and 8.4; `v2/docs/records/w4/w4-scratch-thermal.py`; appendix 32.53 (line 2860) and 32.56 (line 2940); the owner's second review, finding B. |
+| **Exact issue** | The inside-air-to-ambient conductance of the sealed Peli 1450 with its aluminium face plate and fans is known only as a bound: 1.22 to 2.85 W/K lid open with fans on (1.06 to 2.49 lid closed) on the independent W4 model, against 3.0 to 3.3 W/K in appendix 32.53, a spread of about 2.3 times. On the low end, three typical modules at +20 C put the cells at up to 81 C against their 60 C discharge limit, the charge hold-off could fall anywhere from -18 to +19 C, and the PA's flange patch reaches 95 to 118 C in a 60 s key-down against the maker's 90 C reliability and +100 C case figures. The bound includes failure and nothing has been measured. **Since the layer 2 merge (set 4, `95e078a1`) the question also decides whether the hot stop fires inside the envelope:** past the heat stage the kit sheds to its minimum load when the hottest cell reads +56.5 C and shuts down at +57.0 C (REQ-077, SC-49); at the independent bound's worst corner its first step acts from +33.2 C lid closed and +36.1 C lid open, on appendix 32.53's conductance not below +40.3 C and +48.1 C (`v2/docs/records/hc2/hotstop_bounds.out`, INFERRED). Where it fires at +40 C the kit runs no module there on any supply, so REQ-052's stage criteria and REQ-024's use at +40 C are not met there (recorded, not waived); REQ-077 requires the stop to keep the cells inside +60 C and the design intends it to, once HOT-R1 is drawn (EQ-22) and on the provisional error budget (`TEST-PLAN.md` P14). |
+| **Affected** | FEA-004; REQ-077 and, wherever the hot stop fires at +40 C, REQ-052's stage criteria and REQ-024's use at +40 C; D-02b's reduced mode (S-24) and its accepted consequences; the +35 C and +25 C controls; CON-013, REQ-014, REQ-052, REQ-059; THM-001 on every board; hot-part placement on A, B, D and P; the pack location; fans (D-18); board D's flange sensor (PWR-F15); NEED-03 availability across the envelope; possibly the thermal architecture. |
+| **Evidence** | `v2/docs/feasibility/POWER-THERMAL.md` section 0 items 5 and 7, sections 9.1 to 9.3 and 10 (lines 745 to 770, 794 to 806, 851 to 863, 1043 to 1056); `v2/docs/ARCHITECTURE.md` sections 8.2 and 8.4; `v2/docs/records/w4/w4-scratch-thermal.py`; appendix 32.53 (line 2860) and 32.56 (line 2940); the owner's second review, finding B; for the hot stop, `v2/docs/CONOPS.md` section 4c, `v2/docs/records/hc2/hotstop_bounds.py` and `.out`, and `v2/docs/records/hc3/blocked-questions-layer-3.md` item 15. |
 | **Attempts and results** | Two independent desk models and five checker cycles on POWER-THERMAL narrowed the loads but cannot narrow the conductance. The session made the behaviour control-driven (C1 to C4, key-down rules K1 to K5, PROVISIONAL) so it no longer bets on either end. |
 | **Viable options** | (a) The empty-case heat-balance test now, on the prototype's own case: a plate blank, 20, 40 and 60 W of resistive heat on a dummy stack, fans on and off, lid open and closed, plus a 45 to 83 W block at the PA flange site run for 20, 30 and 60 s. (b) A desk lumped or CFD model to narrow the bound; it does not replace the test. (c) Wait for TEST-PLAN E3 on the built kit, accepting that placement and the three-module claim may change after fabrication. (d) Design to the pessimistic bound (shedding to one module from low ambients), which narrows a core function and needs the owner. Lowering the hot end of the envelope is not an option: it lowers a requirement. |
 | **Recommended next action** | Now: (b), define the reduced mode S-24 against the pessimistic bound, and state behaviour on measured internal thresholds so layer 2 can close. Before hot-part placement of A, B, D and P and the pack location are frozen: (a). The case and frame are prototype parts bought early, so the decision is when to buy them, not whether; run the heat test first while the case is undrilled, then the mock-up (EQ-08) in the same case (READY-TO-ACT section 11, S-1). Restage FEA-004 so the test gates hot-part placement and holds board B too. |
@@ -334,3 +363,16 @@ owner's money, outside contact or a value only he can set.
 | **Recommended next action** | (a) once round 8 has fixed the outlines; (b) meanwhile. |
 | **Expertise or equipment** | The owner's fabricator account. |
 | **Cost and lead time** | No cost; minutes per board. |
+
+### EQ-23. A non-destructive hardware stage behind the hot stop (S-58)
+
+| | |
+|---|---|
+| **Exact issue** | The hot stop is firmware in two controllers (the sensor controller detects, the panel controller acts). What stands behind it on an input is destructive: board P's second level from 62.7 C blows the chemical fuse F2, and the gauge's SOT from 64.2 C and the PTC are permanent. Whether a firmware-free stage that removes the kit's heat without destroying the pack is required is a protection-architecture judgement. |
+| **Affected** | REQ-077, REQ-044, REQ-046; boards A, E and P; Q-P15 of the battery packet. |
+| **Evidence** | `v2/docs/review-packets/battery/THERMAL-COORDINATION.md` sections 4 (L8 to L12), 7 and 8 (the hold that would enforce 60 C in hardware opens the pack's FETs, which removes no heat on an input); `v2/docs/records/hc3/blocked-questions-layer-3.md` item 14. |
+| **Attempts and results** | None drawn; the battery packet's section 8 put its hold to the reviewer rather than adding it. |
+| **Viable options** | (a) None: the firmware stop, then the destructive backstops (TI's own layering); (b) the packet's hold on board P alone (removes no heat on an input); (c) a comparator on its own thermistor on the hottest cell, at most 57.5 C with its tolerance and 5 K of hysteresis, taking board A's `KILL` low without firmware (a second dock contact, or a hardware decode of HOT-R1's held-low state on board A). |
+| **Recommended next action** | (c), put to the D-09 battery-and-protection reviewer (R-BAT, EQ-10) together with Q-P15; the session keeps (a) with HOT-R1 until the review answers. Decided before the layout entry of boards A, E and P. |
+| **Expertise or equipment** | Battery protection and functional safety (the D-09 reviewer); the bench readings P14 and E3-H. |
+| **Cost and lead time** | A comparator, a reference, a thermistor and a transistor per kit (no part filed: TBD); R-BAT's quote and lead time (the owner's money, approved in principle by D-09). |
