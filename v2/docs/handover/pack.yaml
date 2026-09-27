@@ -1,0 +1,194 @@
+# v2/docs/handover/pack.yaml: what the engineering handover snapshot carries (MESHSAT-1357, 27 September 2026).
+#
+# Read by v2/ecad/tools/handover_pack.py FROM THE COMMIT it builds (never from a working tree). Every file of that
+# commit must be classified by exactly one rule below, or the build is refused: an unclassified file is a handover gap.
+#
+# RULES ARE ORDERED AND THE FIRST MATCH DECIDES. Put an exception ABOVE the broad rule it carves out of. A glob is a
+# whole repository path: `*` inside one directory, `**` across directories, `[!_]` a negated class. `{phase}` and
+# `{stem}` expand once per board with a schematic chain to its DECLARED phase directory and stem (readiness_manifest.json
+# and the routeflow profile, the way phase_artefacts.phase_dir reads them).
+#
+#   include    bundled; `group` is the layer it serves (the owner's nine pre-PCB layers of the execution prompt of
+#              27 September 2026, section 3, plus the support groups below) and `role` says what the file is for
+#   exclude    left out and listed in EXCLUDED.tsv with `kind` and `reason`: stale layouts, historical order sets,
+#              superseded packets, presentation renders, earlier project directories, V1
+#   reference  left out for size and listed in REFERENCED-SOURCES.tsv with the SOURCES.yaml entries that cite it
+#
+# A group label is not a status. Whether a layer is COMPLETE is LAYER-STATUS.md's statement, with its evidence.
+
+schema: 1
+title: MeshSat field kit V2 engineering handover
+max_zip_bytes: 52428800
+sources_yaml: v2/vendor/SOURCES.yaml
+
+pages:              # copied to the snapshot root when the commit holds them (the integrator writes them)
+  - v2/docs/handover/START-HERE.md
+  - v2/docs/handover/LAYER-STATUS.md
+  - v2/docs/handover/CONTINUATION-BRIEF.md
+  - v2/docs/handover/ENGINEERING-QUESTIONS.md
+  - v2/docs/handover/REGENERATE.md
+
+boards:
+  manifest: v2/ecad/tools/readiness_manifest.json
+  profiles: v2/ecad/tools/routeflow/*.json
+  ecad: v2/ecad
+
+groups:
+  H0: "handover pages, the pack spec and the regeneration instructions"
+  L1: "layer 1, vision and product definition"
+  L2: "layer 2, concept of operations"
+  L3: "layer 3, requirements (with the rule and decision registries)"
+  L4: "layer 4, system architecture (with the feasibility studies)"
+  L5: "layer 5, partitioning and interfaces"
+  L6: "layer 6, components"
+  L7: "layer 7, mechanical and enclosure"
+  L8: "layer 8, schematics"
+  L9: "layer 9, pre-layout design analysis"
+  EV: "verification results, reviews and records, with the pages that classify them"
+  T:  "tools: generators, checks and their tests"
+  HIST: "history: superseded or process records, kept only to trace a ruling; never an authority"
+
+rules:
+  # ---------------------------------------------------------------- snapshots never contain snapshots
+  - {action: exclude, kind: earlier-snapshot, glob: ["v2/release/handover/[!_]*/**", "v2/release/handover/*.zip", "v2/release/handover/*.zip.sha256"],
+     reason: "an earlier handover snapshot: snapshots are immutable copies, never inputs of the next one"}
+  - {action: include, group: L8, glob: "v2/release/handover/_generated/**",
+     role: "exports of the committed schematic of the declared phase (paged PDF, sheet PDF, BOMs, ERC, netlist parity) with provenance.json naming the schematic sha256 and the kicad-cli that made them"}
+  - {action: include, group: H0, glob: "v2/docs/handover/**",
+     role: "handover page, pack specification or regeneration instructions"}
+
+  # ---------------------------------------------------------------- the declared phase of every board with a schematic
+  - {action: include, group: L8, glob: "v2/ecad/{phase}/{stem}.kicad_sch", role: "native KiCad 9 schematic of the declared phase (written by the board's generator)"}
+  - {action: include, group: L8, glob: "v2/ecad/{phase}/{stem}.kicad_pro", role: "KiCad project file of the declared phase (net classes, ERC settings)"}
+  - {action: include, group: L8, glob: "v2/ecad/{phase}/fp-lib-table", role: "footprint library table (points at ../meshsat.pretty)"}
+  - {action: include, group: L8, glob: "v2/ecad/{phase}/*-allow.txt", role: "allow-list with a reason per line, read by a check of this board (ERC, LCSC, bypass)"}
+  - {action: include, group: L8, glob: "v2/ecad/{phase}/out/{stem}.net", role: "netlist exported from the committed schematic (the design every schematic-phase rule judges)"}
+  - {action: include, group: L8, glob: "v2/ecad/{phase}/out/{stem}-intent.json", role: "electrical intent written by the generator (rails, nodes, classes) beside the netlist"}
+  - {action: include, group: L8, glob: "v2/ecad/{phase}/out/{stem}.net.prov.json", role: "provenance sidecar: the generator files that wrote the netlist, by content (sch_prov.py)"}
+  - {action: exclude, kind: stale-layout, glob: "v2/ecad/{phase}/{stem}.kicad_pcb",
+     reason: "the phase's placed and routed layout, cut from an earlier netlist: v2/docs/CURRENT-EVIDENCE.md, table 'The candidate each board is judged against', reads SCH-002 (netlist against board) FAIL or INCONCLUSIVE, so the layout does not carry the committed netlist. Layout is layer 10 and restarts from the reviewed schematic; the placement generators gen_pcb_*.py are in the tools"}
+  - {action: exclude, kind: stale-layout, glob: "v2/ecad/{phase}/routed/**",
+     reason: "verdicts, DRC reports and pre-route copies taken on that earlier layout; the current classification of every reading is v2/docs/CURRENT-EVIDENCE.md"}
+
+  # ---------------------------------------------------------------- board E5 has no schematic: its board file is its design
+  - {action: include, group: L8, glob: ["v2/ecad/pcb-e5-block/pcb-e5-block.kicad_pcb", "v2/ecad/pcb-e5-block/pcb-e5-block.kicad_pro", "v2/ecad/pcb-e5-block/fp-lib-table"],
+     role: "board E5 (dock block): a bare contact board with no schematic chain, so its board file is its design (readiness_manifest.json no_chain)"}
+  - {action: include, group: EV, glob: "v2/ecad/pcb-e5-block/routed/**",
+     role: "board E5's gate verdicts on its board file (AWAITING_REVALIDATION per v2/docs/CURRENT-EVIDENCE.md)"}
+
+  # ---------------------------------------------------------------- earlier project directories, second-tool conversions
+  # readiness_manifest.json names each board by its STEM directory (v2/ecad/pcb-a-power, ...), and the tools fall back to
+  # it where no profile names a phase directory; the suite holds that the directory exists (test_rule_gate_mapping). Its
+  # footprint table and allow-lists are byte-identical to the declared phase directory's at e3aedb25, so they are
+  # bundled to keep the directory; its schematic, board and project files are an earlier phase and stay out.
+  - {action: include, group: L8, glob: ["v2/ecad/pcb-a-power/fp-lib-table", "v2/ecad/pcb-b-compute/fp-lib-table", "v2/ecad/pcb-c-display/fp-lib-table", "v2/ecad/pcb-d-aprs/fp-lib-table", "v2/ecad/pcb-e1-dock/fp-lib-table", "v2/ecad/pcb-p-pack/fp-lib-table",
+                                          "v2/ecad/pcb-a-power/*-allow.txt", "v2/ecad/pcb-b-compute/*-allow.txt", "v2/ecad/pcb-c-display/*-allow.txt", "v2/ecad/pcb-d-aprs/*-allow.txt", "v2/ecad/pcb-e1-dock/*-allow.txt", "v2/ecad/pcb-p-pack/*-allow.txt"],
+     role: "the stem directory readiness_manifest.json names (an earlier phase): only its footprint table and allow-lists, so the directory the tools fall back to exists"}
+  - {action: exclude, kind: superseded-phase, glob: ["v2/ecad/pcb-a-power/**", "v2/ecad/pcb-b-compute/**", "v2/ecad/pcb-c-display/**", "v2/ecad/pcb-d-aprs/**", "v2/ecad/pcb-e1-dock/**", "v2/ecad/pcb-p-pack/**"],
+     reason: "an earlier phase's project directory; the declared phase directory (routeflow profile) is the one bundled"}
+  - {action: exclude, kind: retired-board, glob: ["v2/ecad/pcb-c-ring/**", "v2/ecad/pcb-e2-rfjunction/**"],
+     reason: "a retired board (ring R1 retired at C5, RF junction E2 retired 5 September 2026); not in the current set"}
+  - {action: exclude, kind: second-tool-conversion, glob: "v2/ecad/easyeda-pro/**",
+     reason: "EasyEDA Pro import sets and exports of earlier layouts (A22, A32, B19, C17, D11, E9, P4); a conversion of layouts that are not current"}
+
+  # ---------------------------------------------------------------- mechanical: editable CAD and drawings
+  - {action: exclude, kind: derived-mesh, glob: ["v2/release/revA/case/**/*.stl", "v2/release/revA/module/*.stl"],
+     reason: "an STL tessellation of the STEP beside it (regenerated by the v2/cad scripts)"}
+  - {action: include, group: L7, glob: ["v2/release/revA/case/**", "v2/release/revA/module/**"],
+     role: "case and module CAD as released for Rev A (STEP, DXF, dimensioned PDF, marking SVG); generated by the v2/cad scripts"}
+  - {action: exclude, kind: presentation, glob: "v2/cad/render/**",
+     reason: "presentation renders (GLB board models, Blender scene, render STLs): not an engineering input"}
+  - {action: include, group: L7, glob: ["v2/cad/*.py", "v2/cad/*.json"],
+     role: "editable parametric CAD (build123d) and the stack height map; the source of the case and module files"}
+  - {action: include, group: L7, glob: ["v2/docs/CASE-MARGINS.md", "v2/docs/ASSEMBLY.md"],
+     role: "case margins and fit study (CASE-MARGINS) and assembly, fasteners and coatings (ASSEMBLY, written for the MESHSAT-830 board phases)"}
+  - {action: include, group: L7, glob: ["v2/vendor/peli/**/*.py", "v2/vendor/peli/**/*.txt", "v2/vendor/probes/*.py"],
+     role: "case geometry read from Peli's CAD (text extractions and the scripts that read them)"}
+
+  # ---------------------------------------------------------------- historical order sets and layout deliverables
+  - {action: include, group: L6, glob: "v2/release/revA/order/JLC-CERTIFIED.tsv",
+     role: "dated JLCPCB catalogue readings per order code (jlc_certify.py); a catalogue reading, not evidence of grade or land (SOURCES.yaml header)"}
+  - {action: include, group: L6, glob: "v2/release/revA/order/jlc-rotations.csv",
+     role: "JLCPCB placement rotation offsets per land (assembly data read by make_handoff.py; a fabrication-stage input)"}
+  - {action: exclude, kind: historical-order-set, glob: "v2/release/revA/order/**",
+     reason: "the JLCPCB upload sets, carts and order log of earlier layout phases (A22, B16, C24, D8, E6, E5, P4 and the superseded folder); nothing was ordered and none carries the current netlist"}
+  - {action: exclude, kind: stale-layout, glob: ["v2/release/revA/boards/**", "v2/release/revA/review/**"],
+     reason: "deliverable folders and review sheets of earlier layout phases (gerbers, BOM and CPL, DRC, renders, 1:1 prints); none carries the current netlist"}
+  - {action: exclude, kind: historical-order-set, glob: "v2/BUILD.md",
+     reason: "the build guide for ordering the MESHSAT-830 generation (A22, B16, C7, D8, E6, P1) from release/revA/order; that set is superseded and nothing is to be ordered from it"}
+
+  # ---------------------------------------------------------------- review packets
+  - {action: exclude, kind: superseded-packet, glob: ["v2/release/review-packets/D-D12-1f614233/**", "v2/release/review-packets/P-P4-1f614233/**"],
+     reason: "SUPERSEDED per v2/release/review-packets/README.md (D by 458b2873, P by d90f30e4); a review of that board uses the packet or record the README names"}
+  - {action: exclude, kind: packet-to-rebuild, glob: ["v2/release/review-packets/C-C24-1f614233/**", "v2/release/review-packets/E-E17-1f614233/**"],
+     reason: "built at 1f614233 with a SOURCES.yaml part map that has changed since; v2/release/review-packets/README.md says it is 'rebuilt before it is sent', and the handover carries the current schematic exports in v2/release/handover/_generated instead"}
+  - {action: include, group: EV, glob: ["v2/release/review-packets/README.md", "v2/release/review-packets/attribution/**"],
+     role: "which review packet is current for which board, and the hand-read change attribution of each"}
+  - {action: include, group: EV, glob: "v2/docs/review-packets/**",
+     role: "review packet for a qualified reviewer (the battery packet is board P's current review input, per v2/release/review-packets/README.md)"}
+
+  # ---------------------------------------------------------------- presentation and out of scope
+  - {action: exclude, kind: presentation, glob: "v2/images/**", reason: "concept renders and board images for presentation: not an engineering input"}
+  - {action: exclude, kind: out-of-scope, glob: "v1/**", reason: "the V1 kits (tesseract, parallax): built, separate from the V2 design, not part of this handover"}
+
+  # ---------------------------------------------------------------- layer 1 to layer 5 documents and registries
+  - {action: include, group: L1, glob: "v2/docs/PRODUCT-BRIEF.md", role: "product purpose, users, prototype scope, exclusions and outcome"}
+  - {action: include, group: L1, glob: ["README.md", "v2/README.md", "LICENSE", ".gitignore"], role: "repository overview, licence (CERN-OHL-S-2.0) and ignore rules"}
+  - {action: include, group: L2, glob: ["v2/docs/CONOPS.md", "v2/docs/OPERATING-ENVELOPE.md"], role: "concept of operations and the operating envelope"}
+  - {action: include, group: L2, glob: "v2/ecad/tools/pcb_envelope.yaml", role: "the operating envelope as data (read by part_temps.py and the envelope rules)"}
+  - {action: include, group: L3, glob: ["v2/docs/REQUIREMENTS-TRACE.md", "v2/docs/TEST-PLAN.md", "v2/docs/V2-SPEC.md"],
+     role: "requirements with source, verification stage and method (REQUIREMENTS-TRACE, generated from pcb_requirements.yaml), the qualification test plan, and the V2 specification as of 7 September 2026"}
+  - {action: include, group: L3, glob: ["v2/ecad/tools/pcb_requirements.yaml", "v2/ecad/tools/pcb_rules.yaml", "v2/ecad/tools/pcb_rules_coverage.yaml", "v2/ecad/tools/pcb_decisions.yaml", "v2/ecad/tools/pcb_programme_stages.yaml", "v2/ecad/tools/readiness_manifest.json", "v2/ecad/tools/reserved.json"],
+     role: "requirement, rule, decision and stage registries (the one authority for each; the pages under v2/docs are rendered from them)"}
+  - {action: include, group: L3, glob: ["v2/docs/OWNER-DECISIONS-OPEN.md", "v2/docs/PCB-GOLDEN-RULES.md", "v2/docs/PCB-RULE-COVERAGE.md"],
+     role: "pages rendered from the decision and rule registries"}
+  - {action: include, group: L4, glob: ["v2/docs/ARCHITECTURE.md", "v2/docs/B-FEASIBILITY.md", "v2/docs/ARCH-PCB-B-IOHA.md", "v2/docs/GROUNDING-AND-SHIELDS.md", "v2/docs/LAYER-DECISIONS-2026-09-11.md", "v2/docs/feasibility/**"],
+     role: "system architecture, board B feasibility, grounding strategy, layer-count decisions and the feasibility studies (ZEROIZE, EMCON, failover fabric, power and thermal, decoupling)"}
+  - {action: include, group: L4, glob: ["v2/ecad/tools/pcb_energy_chain.yaml", "v2/ecad/tools/pcb_pack_protection.yaml", "v2/ecad/tools/pcb_board_holds.yaml", "v2/ecad/tools/pcb_emc.yaml"],
+     role: "architecture data: the stored-energy chain, pack protection, board holds and the EMC sheet"}
+  - {action: include, group: L5, glob: ["v2/ecad/tools/pcb_interfaces.yaml", "v2/ecad/tools/pcb_board_facts.yaml", "v2/docs/PANEL.md"],
+     role: "board-to-board interfaces, per-board facts and the panel software contract"}
+
+  # ---------------------------------------------------------------- layer 6: part identity and sources
+  - {action: include, group: L6, glob: ["v2/ecad/tools/pcb_fuse_derating.yaml", "v2/ecad/tools/pcb_part_temps.yaml", "v2/ecad/tools/lcsc-blocked.txt", "v2/ecad/tools/jlc-handfit.txt", "v2/ecad/tools/package-aliases.txt", "v2/ecad/tools/pad-aliases.txt"],
+     role: "part data: fuse derating tables, part temperature grades, blocked and hand-fit order codes, package and pad aliases"}
+  - {action: include, group: L6, glob: ["v2/docs/evidence/COMPATIBILITY.md", "v2/docs/evidence/WRONG-MODEL-RECONCILIATION.md", "v2/docs/respin-lcsc-2026-09-04.md", "v2/docs/respin-footprints-2026-09-04.md"],
+     role: "part compatibility and wrong-model reconciliation records, and the order-code and footprint research"}
+  - {action: include, group: L6, glob: "v2/ecad/meshsat.pretty/**", role: "the project's own land patterns (a generator input: their content is in the netlist provenance)"}
+
+  # ---------------------------------------------------------------- layer 9: the documents the energy chain cites, bundled so it runs from the snapshot
+  # AN EXCEPTION to "datasheets are referenced, not bundled", taken by the packer on 27 September 2026 and open to the
+  # integrator: the handover's representative calculation (REGENERATE.md) is energy_chain.py, which checks that every
+  # rating's basis document exists; with these eight files (6.8 MB) it judges every citation from the snapshot alone.
+  # Deleting this rule returns them to REFERENCED-SOURCES.tsv and energy_chain.py then reports each citation as missing.
+  - {action: include, group: L9, glob: ["v2/vendor/battery/amass-xt60-spec-tme.pdf", "v2/vendor/battery/littelfuse-287-atof.pdf", "v2/vendor/battery/samsung-35e-orbtronic.pdf", "v2/vendor/battery/ti-bq4050.pdf", "v2/vendor/battery/ti-csd17570q5b.pdf", "v2/vendor/diodes/diodes-ap64500.pdf", "v2/vendor/power/bourns-mf-msmf-pptc.pdf", "v2/vendor/precidip/**"],
+     role: "a maker document pcb_energy_chain.yaml cites as the basis of a rating; bundled so energy_chain.py can check its citations from the snapshot"}
+
+  # ---------------------------------------------------------------- layer 3: the documents the requirements registry cites, bundled so it validates from the snapshot
+  # A second exception to "datasheets are referenced, not bundled", taken by the H1 assembler on 27 September 2026 on the
+  # integrating session's instruction: `rules_lib.py requirements` checks that every source a requirement cites exists,
+  # and these seven files (about 20.7 MB) are the ones pcb_requirements.yaml cites that no other include rule carries
+  # (diodes-ap64500.pdf rides with the energy chain above). With them the registry validates from the ZIP alone.
+  # Deleting this rule returns them to REFERENCED-SOURCES.tsv and the validator then reports each citation as missing.
+  - {action: include, group: L3, glob: ["v2/vendor/rockblock/rb9704-sch-2B1.pdf", "v2/vendor/cm5/cm5-datasheet.pdf", "v2/vendor/ti/ti-pca9555.pdf", "v2/vendor/microchip/microchip-atecc608b-datasheet.pdf", "v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf", "v2/vendor/ti/bq25731-datasheet.pdf", "v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf"],
+     role: "a maker document pcb_requirements.yaml cites as a requirement's source; bundled so rules_lib.py requirements validates from the snapshot"}
+
+  # ---------------------------------------------------------------- vendor: the index and text extractions in, the documents referenced
+  - {action: include, group: L6, glob: ["v2/vendor/**/*.yaml", "v2/vendor/**/*.md", "v2/vendor/**/*.txt", "v2/vendor/**/*.py", "v2/vendor/**/*.json", "v2/vendor/**/*.adoc", "v2/vendor/**/*.c", "v2/vendor/**/*.h"],
+     role: "vendor index (SOURCES.yaml, PARTS.md, sources.txt), per-folder notes and text extractions of maker documents"}
+  - {action: reference, glob: "v2/vendor/**",
+     reason: "a maker document or CAD model (PDF, STEP, DXF, HTML, images, archives): cited, not bundled for size; the repository at the snapshot commit holds it, and its sha256 here identifies it"}
+
+  # ---------------------------------------------------------------- evidence, reviews and records
+  - {action: include, group: EV, glob: ["v2/docs/CURRENT-EVIDENCE.md", "v2/docs/PCB-RULE-STATUS-*.md", "v2/docs/PCB-OPEN-PAIRS.md", "v2/docs/PCB-GAP-REGISTER.md", "v2/docs/PCB-PROTOTYPE-UNKNOWNS.md", "v2/docs/PCB-BRING-UP.md", "v2/docs/PCB-ETA.md", "v2/docs/PCB-ROTATION-CHECKLIST.md"],
+     role: "generated status pages: every reading classified against the current candidate, per board, with the exact remaining blockers"}
+  - {action: include, group: EV, glob: ["v2/docs/EXECUTION-PLAN.md", "v2/docs/reviews/**", "v2/docs/records/**", "v2/docs/evidence/**"],
+     role: "execution plan, the owner's reviews and prompts, review routes, and the filed records of each work round"}
+
+  # ---------------------------------------------------------------- history: kept to trace a ruling, never an authority
+  - {action: include, group: HIST, glob: ["v2/docs/MESHSAT-709-geometry-appendix.md", "v2/docs/OWNER-DECISIONS-2026-09-11.md", "v2/docs/RED-TEAM-*.md", "v2/docs/research-*.md", "v2/docs/respin-*.md", "v2/docs/routeflow-methodology.md", "v2/docs/ROUTEFLOW-PHASES.md", "v2/docs/PAIR-*.md", "v2/docs/CONTROL-PLANE.md", "v2/docs/AGENTIC-SYSTEM.md"],
+     role: "history: the design record (every ruling, every audit round) and superseded research and process records; trace a ruling here, never take it as the current state"}
+
+  # ---------------------------------------------------------------- the tools: generators, checks, tests
+  - {action: include, group: T, glob: "v2/ecad/tools/**",
+     role: "tools: schematic and placement generators, their inputs (board tables, profiles), the checks and their fixtures"}
