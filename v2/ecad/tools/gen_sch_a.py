@@ -45,7 +45,7 @@ _intent.rail("CELL_FUSED", 14.4, 10.0, 18.0, "F1", v_work=16.8, converted=False,
 # LM5176 stages (F-PR-04), whose input current enters at their buck-side high FETs Q28 and Q32 and not at the
 # controllers, and the heater's regulated rail enters at its eFuse U22 (F-PR-06).
 _intent.rail("VBAT", 14.4, 10.0, 18.0, "R17", always_on=True, v_work=16.8, converted=False, fed_from="CELL_FUSED",
-             always_on_why="the system node (VSYS): nothing on this board switches it. The pack reaches it through the 25 A blade F1 and the RSR shunt R17, opened only by the pack's own BQ4050 FETs and the blade; the charger's converter feeds it from shore through Q10", loads={"U4": 2.0, "Q28": 2.0, "U6": 2.0, "Q32": 2.0, "Q11": 1.5, "U15": 0.3, "U12": 0.2, "U22": 0.65}, note="the 4S system node (VSYS) behind the RSR shunt R17; 10 A continuous, 18 A peak by the pack's rating (32.55)")
+             always_on_why="the system node (VSYS): nothing on this board switches it. The pack reaches it through the 25 A blade F1 and the RSR shunt R17, opened only by the pack's own BQ4050 FETs and the blade; the charger's converter feeds it from shore through Q10", loads={"U4": 2.0, "Q28": 2.0, "U6": 2.0, "Q32": 2.0, "Q11": 1.5, "U15": 0.3, "U12": 0.2, "U22": 0.65, "U21": 0.69}, note="the 4S system node (VSYS) behind the RSR shunt R17; 10 A continuous, 18 A peak by the pack's rating (32.55)")
 # VIN_RAW RECONCILED WITH BOARD E (third fix-up of round 4, 26 September 2026; board E's F-IN-02 on main faf8c981 handed
 # this line to this board). Board E declares its VIN_RAW at 6.15 A typical and peak: its LM5069 U6 with R19 = 10 mOhm
 # limits the VEHICLE entry at VCL / RS, 4.85 / 5.5 / 6.15 A (ti-lm5069.pdf SNVS452G), and a unit at VCL max passes 6.15 A
@@ -115,15 +115,19 @@ for _n, _sh in (("1", "R31"), ("2", "R35"), ("3", "R39")):
 _intent.rail("+5V_DEV", 5.0, 4.0, 6.9, "R43", loads={"J_5V_DEV": 3.2, "U23": 0.5, "U32": 0.3}, budget=0.02, share=0.005, switch="U7", efficiency=0.90, fed_from="VBAT", note="the USB devices, the LimeSDR bay and the RockBLOCK behind their switches, the D8 mezzanine behind U23 and the wall host port behind U32; the net starts at the ISNS shunt R43. 9 September 2026 (ARCH-PCB-B-IOHA): +0.8 A because B16's three hub banks had to leave the slot rails. 26 September 2026 (F-PR-04, D-12): the converter is an LM5176 stage with a 7.2 A minimum average limit, and the Glenair port's 0.9 A takes the peak to 6.9 A.")
 # LOADS DECLARED 13 September 2026, apportioning the declared 0.3 A rather than measuring it: this is logic,
 # tens of milliamps a part, and the biggest single draw is the gated 3.3 V leaving on the mezzanine harness.
+# 27 September 2026 (EQ-17): U39, the EMCON gates' eFuse, passes their 0.4 mA and draws its own IQ, 0.19 to 0.26 mA
+# (SLVSET8A 7.5), 0.7 mA in all; U40, the open-drain buffer, draws at most 10 uA (SCES308L 6.5, ICC).
 _intent.rail("+3V3", 3.3, 0.3, 0.6, "L7", budget=0.03, share=0.015, switch="U12", efficiency=0.88, fed_from="VBAT",
              loads={"J_MEZZ1": 0.10, "U8": 0.03, "U9": 0.03, "U10": 0.03, "U11": 0.03,
-                    "U14": 0.02, "U17": 0.02, "U26": 0.02, "U27": 0.01, "U28": 0.01}, note="this board's logic (two PCA9555, five INA226, the LTC2954, the controllers' VCC pins: tens of mA each; the 1 A of the first intent was a placeholder, 32.69); the net starts at the TPS62933 inductor L7")
+                    "U14": 0.02, "U17": 0.02, "U26": 0.02, "U27": 0.01, "U28": 0.01, "U39": 0.0007, "U40": 0.00001}, note="this board's logic (two PCA9555, five INA226, the LTC2954, the controllers' VCC pins: tens of mA each; the 1 A of the first intent was a placeholder, 32.69); the net starts at the TPS62933 inductor L7")
 _intent.rail("+13V8_PA", 13.8, 5.0, 6.0, "R55", loads={"J_PA": 6.0}, switch="U13", efficiency=0.93, fed_from="VBAT", enable_net="PA_UVLO",
              note="the RA30H1317M1 on the face plate; U13's EN/UVLO is PA_UVLO, 0.6 of the EMCON gate's output PA_EN since round 8 (26 September 2026)")
 _intent.rail("+12V_HF", 12.0, 1.0, 2.0, "R65", budget=0.03, loads={"J_HF": 1.0}, switch="U15", efficiency=0.93, fed_from="VBAT", enable_net="HF_UVLO",
              note="the QMX; U15's EN/UVLO is HF_UVLO, 0.6 of the EMCON gate's output HF_EN since round 8 (26 September 2026)")   # the whole rail leaves at J_HF for the HF unit in the lid tray
 _intent.rail("+54V_POE", 54.0, 0.3, 0.6, "R71", loads={"J_54V": 0.3}, budget=0.02, share=0.005, switch="U16", efficiency=0.88, fed_from="VBAT",
-             note="the TPS23861 PSE on B16")   # the whole rail leaves at J_54V on the VH lead to B
+             enable_net="POE_UVLO",
+             note="the TPS23861 PSE on B16; U16's EN/UVLO is POE_UVLO, 0.6 of the interlock gate's output POE_EN since 27 "
+                  "September 2026 (it sat on POE_EN itself behind a 62 k with both pins on that net)")   # the whole rail leaves at J_54V on the VH lead to B
 SYMDIR = "/usr/share/kicad/symbols/"
 
 # ----------------------------------------------------------------- s-expression helpers
@@ -208,6 +212,18 @@ for k in range(1, 5):
     part("J_CP%d" % k, "Connector", "Conn_01x01_Pin", "9 A spring pin, CELL+ (Mill-Max 0858 class, dock block)", "MMPIN", {"1": "CELL+"})
     part("J_CN%d" % k, "Connector", "Conn_01x01_Pin", "9 A spring pin, pack return (Mill-Max 0858 class, dock block)", "MMPIN", {"1": "GND"})
 part("J_PRE1", "Connector", "Conn_01x01_Pin", "pre-charge pin, longer, mates first (32.24 AX)", "MMPIN", {"1": "PRECHG"}); r("R1", "10R 2W 2512", "PRECHG", "CELL+", "RS2512")
+# PRECHG IS A CONDUCTOR OF THE PACK NODE AND WAS DECLARED AS NOTHING (27 September 2026, EQ-19, stream w3a): PWR-001 read
+# it UNDECIDED (R1 links it to CELL+, and the pin itself is not read). It is the pre-charge path of 32.24 AX: the longer
+# pin mates first and CELL+'s capacitance charges from the pack through R1, 10 Ohm, so the current is a decaying pulse
+# whose peak is the pack's 16.8 V over 10 Ohm, 1.68 A, into a fully discharged node; once the main CELL+ pins mate, R1
+# carries only the millivolts between the two contacts, so the continuous current is declared 0. A rail, not a node: its
+# current enters at J_PRE1 and goes into R1. Whether R1 (2 W, 2512) stands the pulse, E = C V^2 / 2 of CELL+'s whole
+# capacitance, is not answered here and is recorded as an open item.
+_intent.rail("PRECHG", 14.4, 0.0, 1.68, "J_PRE1", loads={"R1": 1.68}, v_work=16.8, converted=False,
+             always_on=True, always_on_why="the pack's pre-charge pin (32.24 AX): live whenever the pack is seated, "
+                                           "switched by nothing on this board",
+             note="the pre-charge pin's conductor to R1 (10 Ohm) and CELL+: 1.68 A at most, the pack's 16.8 V into a "
+                  "discharged node, decaying as CELL+ charges; 0 A once the main pins have mated")
 # S-04, 26 September 2026: the blade now sits between the pack node and the RSR shunt, so VBAT (the system node,
 # the charger's VSYS) is reached through F1 and R17 in series. The fuse's position in the pack path is unchanged:
 # it is still the first element every pack ampere meets on this board, charge and discharge.
@@ -351,8 +367,11 @@ def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, cs_
     bypass when it is given.
     en_node, en_vals (round 8, 26 September 2026, MESHSAT-1357 EMCON L4): the EN/UVLO pin sits on its own net en_node
     behind a divider from the enable line `en`, en_vals = ((top value, lcsc), (bottom value, lcsc)). Without en_node the
-    divider's middle is N("EN"), which for the PA, HF, PoE and PD stages IS the enable line's own name, so their 62 k
-    top resistor had both pins on one net (a part doing nothing; kept as it was on PoE and PD, which EMCON does not gate).
+    divider's middle was N("EN"), which for the PA, HF, PoE and PD stages IS the enable line's own name, so their 62 k
+    top resistor had both pins on one net (a part doing nothing). PoE and PD kept it until 27 September 2026 (stream w3a),
+    when they took the PA and HF divider; since then no stage uses the default and it is REFUSED: a stage with an EN
+    divider names its node and its values (a 62 k over 10 k divider from a 3.3 V logic line gives 0.46 V, which never
+    reaches VEN(OP), W2 F-SQ-04, and from a line named <p>_EN it is a part with both pins on one net).
     vin_cap = (ref, value, lcsc) (round 8, DECOUPLING.md G1): the VIN pin's own 0.1 uF to AGND, SNVSAI1D 10.1 p.30
     ("Bypass the VIN pin to AGND with a low ESR ceramic capacitor located close to the controller IC. A 0.1-uF ceramic
     capacitor is typically used"), REQUIRED on a stage without vin_block, whose blocking-diode capacitor already is that
@@ -501,7 +520,8 @@ def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, cs_
         (_etv, _etl), (_ebv, _ebl) = en_vals
         r(ret, _etv, en, en_node, lcsc=_etl); r(reb, _ebv, en_node, "GND", lcsc=_ebl)
     elif en_div:
-        r(ret, "62k 1%", en, N("EN")); r(reb, "10k 1%", N("EN"), "GND")
+        raise SystemExit("lm5176 %s: an EN divider needs its own node and values (en_node, en_vals); the default 62k/10k "
+                         "into N('EN') is refused since 27 September 2026 (see the docstring)" % p)
     elif ret or reb:
         raise SystemExit("lm5176 %s: en_div=False takes no EN divider references, and %s/%s were given" % (p, ret, reb))
     r(rmd, "100k (MODE: CCM)", N("MODE"), N("VCC"))
@@ -913,6 +933,18 @@ def buck5(n, uref, en, out, refs, ina, a1, a0):
     _intent.node("S%s_SW" % n, _intent.rail_volts("VBAT"),
                  "the AP64500's switching node on the %s stage: it swings to VBAT, the pack node that feeds "
                  "the buck, and a diode drop below ground on the other half of the cycle" % out, v_min=-1.0)
+    # THE BOOTSTRAP IS A SUPPLY AND IT WAS DECLARED AS NOTHING (27 September 2026, MESHSAT-1357 EQ-19, stream w3a). Rule
+    # PWR-001 on the netlist reads S1_BOOT and S3_BOOT as power nets by the AP64500's held row (pin 1 BST, "BST supplies
+    # the drive for the high-side n-channel power MOSFET", Diodes DS41979 Rev 5-2 pin table) and failed board A on them.
+    # It is a NODE, not a rail: it carries the one controller's BST pin and its own 100 nF to SW, and nothing else. It
+    # rides on S<n>_SW at the bootstrap capacitor's charge, for which the sheet states one bound, the absolute maximum
+    # "VBST Bootstrap Pin Voltage VSW - 0.3 to VSW + 6.0 V" (DS41979 Absolute Maximum Ratings); its quiescent current is
+    # specified at "VBST - VSW = 5V". 6.0 V is the bias declared, the larger of the two, so a part across it is judged
+    # against the most it can see.
+    _intent.node("S%s_BOOT" % n, _intent.rail_volts("VBAT") + 6.0,
+                 "the AP64500's bootstrap supply on the %s stage (pin 1 BST): it rides on S%s_SW at up to 6.0 V, the "
+                 "sheet's VSW + 6.0 V absolute maximum for BST (DS41979 Rev 5-2), and supplies only the part's own "
+                 "high-side driver" % (out, n), rides_on="S%s_SW" % n, bias_v=6.0)
 buck5("1", "U4", "SLOT_EN1", "+5V_S1", ["L3", "C28", "C29", "C30", "C31", "C32", "C33", "R28", "R29", "R30", "R31", "R45", "R129", "C112"], "U8", "GND", "GND")        # 0x40
 buck5("3", "U6", "SLOT_EN3", "+5V_S3", ["L5", "C40", "C41", "C42", "C43", "C44", "C45", "R36", "R37", "R38", "R39", "R47", "R131", "C114"], "U10", "+3V3", "GND")      # 0x44
 # F-PR-04, 26 September 2026 (MESHSAT-1357; W2 F-PR-04): SLOT 2 AND THE DEVICE RAIL LEAVE THE AP64500. The AP64500
@@ -974,6 +1006,16 @@ ic("U12", 8, "TPS62933DRLR 3 A buck, 3.3 V logic", "SOT583", {"1": "NC", "2": "R
 _intent.node("B33_SW", _intent.rail_volts("VBAT"),
              "the TPS62933's switching node: it swings to VBAT, the pack node that feeds the 3.3 V buck, and "
              "a diode drop below ground on the other half of the cycle", v_min=-1.0)
+# B33_BST AND HT_BST ARE THE TWO TPS62933s' BOOTSTRAP SUPPLIES (27 September 2026, EQ-19, stream w3a): power nets by the
+# held row (pin 6 BST, "Bootstrap capacitor connection for high-side FET driver", TI SLUSEA4D pin table) that no
+# declaration named, so PWR-001 failed board A on both. Each is a NODE: one controller's BST pin and its own 100 nF to SW.
+# It rides on its SW node at the bootstrap charge, whose recommended maximum is "BST-SW -0.1 to 5.5 V" (SLUSEA4D 8.3;
+# absolute maximum 6 V, 8.1), so 5.5 V is the bias declared.
+_TPS62933_BST = 5.5
+_intent.node("B33_BST", _intent.net_volts("B33_SW") + _TPS62933_BST,
+             "the 3.3 V buck U12's bootstrap supply (pin 6 BST): it rides on B33_SW at up to 5.5 V, SLUSEA4D 8.3's "
+             "recommended BST-SW maximum, and supplies only the part's own high-side driver",
+             rides_on="B33_SW", bias_v=_TPS62933_BST)
 part("L7", "Device", "L", "4.7uH XAL4030-472ME", "L4030", {"1": "B33_SW", "2": "+3V3"}); c("C52", "100n", "B33_BST", "B33_SW"); c("C53", "10n", "B33_SS", "GND"); c("C54", "10u 25V 1210", "VBAT", "GND", "C1210")
 # ROUND 8 (26 September 2026, DECOUPLING.md G2): THE 0.1 uF AT U12's VIN. TI SLUSEA4D 12.1 p.40: "Place a 0.1-uF ceramic
 # decoupling capacitor or capacitors as close as possible to VIN and GND pins, which is key to EMI reduction"; U12 had
@@ -1027,12 +1069,29 @@ vh2("J_HF", "12.0 V to the QMX HF unit in its lid tray (JST-VH, in the lid harne
 # at +24 percent and CSLOPE at -5 percent give 2.84 V at 10 V in and 2.89 V at 9 V, 0.11 to 0.16 V under the ceiling
 # (the re-review's minor item 3; round 4's 22 uH and 820 pF gave 2.50 V). Its loop is designed with the 15 uH
 # (item (3) of the helper).
+# THE ENABLE DIVIDER OF THE PoE AND USB-C STAGES GETS ITS OWN NODE (27 September 2026, MESHSAT-1357, board A stream
+# w3a). Read on main 38dcd764's netlist: R74 had both pins on POE_EN and R133 both pins on PD_EN, because the helper's
+# default divider named its middle N("EN"), which for these two stages IS the enable line (the helper's own docstring
+# said so, "a part doing nothing"). So U16's and U19's EN/UVLO pins sat straight on U26's LVC08A outputs with only the
+# 10 k to ground, and the 62 k did nothing. They take the divider round 8 gave the PA and HF stages, for the same
+# reason: EN/UVLO at 0.6 of the gate output, R74/R133 10 k over R75/R134 15 k (1 percent) into POE_UVLO and PD_UVLO.
+# TI SNVSAI1D 6.5 p.6: VEN(STBY) 0.55 / 0.82 / 0.97 V, VEN(OP) 1.17 / 1.22 / 1.29 V, IEN(STBY) 3 uA and dIHYS(OP)
+# 4.25 uA at most, both SOURCED out of the pin (7.3.3 p.15), so they only raise EN. Low: the LVC08A's VOL is 0.2 V at
+# most at 100 uA, -40 to 85 C (SCAS283W 5.7), EN = 0.6 x 0.2 + 6 k x 7.25 uA = 0.16 V, under VEN(STBY)'s 0.55 V minimum:
+# shutdown. High: VOH is VCC - 0.2 V at 100 uA (5.7; the divider draws about 0.13 mA), and +3V3 is 3.21 V at least (TPS62933 VFB 784 mV
+# at -40 to 150 C with R48/R49 at their 1 percent corners, SLUSEA4D 8.5), so EN is 0.6 x 3.0 = 1.8 V or more against
+# VEN(OP)'s 1.29 V maximum. And the partial-supply property round 8 wanted on the PA and HF stages holds here too: EN
+# reaches 1.17 V only with the gate's output at (1.17 - 6 k x 7.25 uA) / 0.6 = 1.88 V or more, which needs the LVC08A's
+# own supply above its 1.65 V specified minimum (SCAS283W 5.4), so no unspecified supply level of U26 can start a stage.
+# 10 k is C25804 and 15 k C22809, the codes R58/R59 and R124/R125 carry. Session decision under the owner's standing
+# rule of 26 September 2026, reversible by restoring en_node=None here (the netlist then carries the two dead parts again).
 lm5176("POE", "U16", "VBAT", "+54V_POE", "POE_EN", "665k", "L10", "15uH XAL1010-153ME (Isat 15.5 A)", "CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)", "C473333",
        ["Q17", "Q18", "Q19", "Q20", "R66", "R67", "R68", "C150", "R70", "C75", "C76", "C77", "C78", "C79", "C80", "R71", "R72", "R73", "R74", "R75", "C81", "C82", "C83", "C84", "C85", "R121"], cs_filter=("R156", "R157", "C126"), isns_filter=("R166", "R167", "C131"), isns="20m", rcs="10m", bias="VBAT",
        cout="10u 100V X7R 1210",   # +54V_POE: a 50 V part on a 54 V rail is over its rating (decision 10)
        cslope=("560p", "C43962"), boot_diodes=("D15", "D16"), l_lcsc="C2802562",
        comp=(("4.7k", "C23162"), ("100n", "C14663"), ("470p", "C27694")), cout_extra=("C176", "C177"), bias_cap="C197",
-       vin_cap=("C221", "100n", "C14663"))   # fix-up loop: five output ceramics, PM 65, GM 13.1 dB, 1.5 to 8.6 kHz, 3.8 Ohm against 4.5   # R69 retired 26 Sep 2026; CSLOPE 560 pF for the 15 uH of R4A-N7 (was 820 pF for the 22 uH part that does not exist)
+       vin_cap=("C221", "100n", "C14663"),
+       en_node="POE_UVLO", en_vals=(("10k 1%", "C25804"), ("15k 1%", "C22809")))   # fix-up loop: five output ceramics, PM 65, GM 13.1 dB, 1.5 to 8.6 kHz, 3.8 Ohm against 4.5   # R69 retired 26 Sep 2026; CSLOPE 560 pF for the 15 uH of R4A-N7 (was 820 pF for the 22 uH part that does not exist)
 # second fix-up (26 Sep 2026): no bulk; worst output ceramic 0.37 A rms at 10 V in (bulk_ripple.py); on the widened loop band PM 63.6, GM 12.0 dB
 ic("U17", 10, "INA226 PoE rail monitor (0x47)", "VSSOP10", {"1": "+3V3", "2": "SCL", "3": "INA_ALERT", "4": "SDA", "5": "SCL", "6": "+3V3", "7": "GND", "8": "NC", "9": "+54V_POE", "10": "POE_OUT"}, "C49851")   # VBUS pin open: 54 V exceeds its 36 V range
 vh2("J_54V", "54 V to the PoE injector on B16 (JST-VH): + -", "+54V_POE")
@@ -1063,11 +1122,12 @@ vh2("J_54V", "54 V to the PoE injector on B16 (JST-VH): + -", "+54V_POE")
 # every rule that looks at copper still looks at all four conductors.
 _PD_A, _PD_V, _PD_BUDGET = 3.0, 15.0, 0.0067
 _intent.rail("PD_VPWR", _PD_V, _PD_A, _PD_A, "R81", loads={"Q27": _PD_A}, v_work=_PD_V, budget=_PD_BUDGET,
-             switch="U19", efficiency=0.93, fed_from="VBAT",
+             switch="U19", efficiency=0.93, fed_from="VBAT", enable_net="PD_UVLO",
              note="the PD supply between the stage's ISNS shunt R81 and the VBUS switch Q27, at the "
                   "TPS25740A's highest advertised profile (5, 9 and 15 V at 3 A, 45 W): the LM5176's "
                   "feedback divider is switched by CTL1 and CTL2, so 15 V is the stage's ceiling and the "
-                  "voltage every part on this net is judged against")
+                  "voltage every part on this net is judged against. U19's EN/UVLO is PD_UVLO, 0.6 of the "
+                  "interlock gate's output PD_EN since 27 September 2026")
 _intent.rail("PD_SW", _PD_V, _PD_A, _PD_A, "Q27", loads={"R138": _PD_A}, v_work=_PD_V, budget=_PD_BUDGET,
              converted=False, series_of="PD_VPWR",
              note="the PD supply behind Q27, the VBUS switch, on its way to the outlet's own 10 mOhm ISNS "
@@ -1085,17 +1145,53 @@ lm5176("PD", "U19", "VBAT", "PD_VPWR", "PD_EN", "105k", "L11", "6.8uH XAL1010-68
        ["Q21", "Q22", "Q25", "Q26", "R76", "R77", "R78", "C151", "R80", "C86", "C87", "C88", "C89", "C90", "C91", "R81", "R127", "R128", "R133", "R134", "C92", "C116", "C117", "C118", "C119", "R135"], cs_filter=("R158", "R159", "C127"), isns_filter=("R168", "R169", "C132"), isns="10m", rfb_val="20k 1% (R_FBL)",
        out_budget=_PD_BUDGET, cslope=("470p", "C27694"), boot_diodes=("D17", "D18"),
        bias="VBAT", comp=(("3.3k", "C22978"), ("220n", "C160828"), ("1.5n", "C37788")), bulk=("C174", "C175"), bulk_part="E471", bias_cap="C198",
-       vin_cap=("C222", "100n", "C14663"))   # fix-up: BIAS on VBAT (R4A-N6, the 5 V profile); loop PM 70, GM 15 dB, 0.65 to 8.4 kHz   # 26 Sep 2026: CSLOPE 544 pF dead-beat, 470 pF C0G; R79 retired
+       vin_cap=("C222", "100n", "C14663"),
+       en_node="PD_UVLO", en_vals=(("10k 1%", "C25804"), ("15k 1%", "C22809")))   # fix-up: BIAS on VBAT (R4A-N6, the 5 V profile); loop PM 70, GM 15 dB, 0.65 to 8.4 kHz   # 26 Sep 2026: CSLOPE 544 pF dead-beat, 470 pF C0G; R79 retired
 # second fix-up (26 Sep 2026): bulk ripple 1.25 A rms per EEHZK1E471P at 10 V in and 15 V 3 A, 45 percent of 2.8 A (bulk_ripple.py); on the widened loop band PM 70.3, GM 9.85 dB
 r("R136", "21.0k 1% (R_FBL2: 9 V when CTL2 is low)", "PD_FB", "PD_CTL2"); r("R137", "14.0k 1% (R_FBL1: 15 V when CTL1 is low too)", "PD_FB", "PD_CTL1")
+# EN9V IS TIED LOW (27 September 2026, MESHSAT-1357, stream w3a, found while reading this part's DVDD for EQ-19). Pin 8
+# sat on PD_DVDD, and TI SLVSDG8B is plain about what that does: the pin table p.4, "For TPS25740A: If it is pulled low,
+# then the 9 V PDO may be transmitted. If it is not pulled low, the 9-V PDO will not be advertised"; VIH for EN9V is
+# 1.4 V minimum (7.3) and DVDD is 1.75 to 1.95 V (7.5), so the pin read HIGH; and Table 2 p.28 (TPS25740A) gives EN9V
+# High with HIPWR direct to DVDD as "5, 15" only. This outlet is drawn and declared for 5, 9 and 15 V (the header above,
+# R136's 9 V feedback leg, PD_VPWR's note), so the 9 V profile the stage was built for was never offered. Pin 8 to GND is
+# Table 2's first row, "Low / Connected to DVDD or GND directly / 5, 9, 15". Session decision under the owner's standing
+# rule of 26 September 2026, restoring a function the design states; reversed by putting pin 8 back on PD_DVDD.
 ic("U18", 25, "TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)", "QFN24", {
- "1": "PD_VTX", "2": "PD_CC1", "3": "PD_CC2", "4": "GND", "5": "PD_DVDD", "6": "PD_CTL1", "7": "PD_CTL2", "8": "PD_DVDD", "9": "GND", "10": "GND", "11": "PD_UFP", "12": "PD_DVDD", "13": "PD_DVDD",
+ "1": "PD_VTX", "2": "PD_CC1", "3": "PD_CC2", "4": "GND", "5": "PD_DVDD", "6": "PD_CTL1", "7": "PD_CTL2", "8": "GND", "9": "GND", "10": "GND", "11": "PD_UFP", "12": "PD_DVDD", "13": "PD_DVDD",
  "14": "PD_VAUX", "15": "PD_GD", "16": "PD_VAUX", "17": "+5V_DEV", "18": "GND", "19": "PD_SW", "20": "PD_VPWR", "21": "PD_VBUS", "22": "PD_GDNG", "23": "PD_SW", "24": "PD_DSCG", "25": "GND"}, "C544309")
 nfet("Q27", "CSD18510Q5B 40 V N-FET (VBUS switch)", "PD_GDNG", "PD_VPWR", "PD_SW"); r("R138", "10mOhm 1% 2512 (ISNS)", "PD_SW", "PD_VBUS", "RS2512"); r("R139", "43R 1W 2512 (DSCG)", "PD_DSCG", "PD_VBUS", "RS2512")
 # R141 is 698k, not the 700k the stage was drawn with: 700k is not an E96 value, JLCPCB carries
 # none in 0603, and 0.3 percent on a gate-bias divider is nothing.
 r("R140", "1M (GD to VPWR, 9.1.3)", "PD_VPWR", "PD_GD"); r("R141", "698k", "PD_GD", "GND"); r("R142", "10k", "PD_UFP", "+3V3"); r("R143", "4.7k", "PD_SW_EN", "GND")   # S-14 and S-08, 26 Sep 2026: the expander's software hold, ANDed with OUTLET_OK in U26
 c("C93", "100n", "PD_VTX", "GND"); c("C94", "220n", "PD_DVDD", "GND"); c("C95", "100n", "PD_VAUX", "GND"); c("C96", "330p", "PD_CC1", "GND"); c("C97", "330p", "PD_CC2", "GND"); c("C120", "10u 25V 1210", "PD_VBUS", "GND", "C1210")
+# THE TPS25740A's THREE OWN SUPPLIES, DECLARED (27 September 2026, EQ-19, stream w3a). PWR-001 on the netlist reads
+# PD_VTX, PD_VAUX and PD_DVDD as power nets by the part's held row and by the DVDD pins' names, and they were declared as
+# nothing. Each is the part's OWN regulator output with its own bypass capacitor, carrying pins of U18 alone, so each is
+# a NODE (a supply that reaches two parts would be a rail). Values from TI SLVSDG8B:
+#   PD_VTX   pin 1, "Bypass pin for transmit driver supply" (pin table p.4), V(VTX) 1.050 / 1.125 / 1.200 V, not
+#            transmitting, 0 to 2 mA (7.5); absolute maximum 2.1 V (7.1). C93 100 nF, C(VTX) 0.09 / 0.10 / 0.11 uF (7.3).
+#   PD_VAUX  pin 16, "Internally regulated rail for use by the power management circuits" (p.5), and pin 14 PCTRL tied
+#            to it (full power), V(VAUX) 2.875 / 3.2 / 4.1 V at 0 to 25 uA external load (7.5); absolute maximum 4.5 V.
+#   PD_DVDD  pin 13, "Internally regulated 1.85 V rail for external use up to 35 mA" (p.5), with HIPWR (pin 5) and PSEL
+#            (pin 12) strapped to it, V(DVDD) 1.75 / 1.85 / 1.95 V and 1.7 to 2 V under a load step (7.5), so 2.0 V is
+#            the most a part on it sees; absolute maximum 2.1 V.
+_intent.node("PD_VTX", 1.2, "the TPS25740A's transmit-driver supply (pin 1 VTX), its own regulator output bypassed by C93: "
+             "V(VTX) 1.200 V maximum (SLVSDG8B 7.5); it supplies only U18's BMC transmitter")
+_intent.node("PD_VAUX", 4.1, "the TPS25740A's auxiliary rail (pin 16 VAUX) bypassed by C95, with U18's own PCTRL on it: "
+             "V(VAUX) 4.1 V maximum (SLVSDG8B 7.5); it may carry 25 uA of external load and carries U18's pins alone")
+_intent.node("PD_DVDD", 2.0, "the TPS25740A's 1.85 V rail (pin 13 DVDD) bypassed by C94, strapping U18's own HIPWR and "
+             "PSEL: V(DVDD) 1.95 V maximum and 2 V under a load step (SLVSDG8B 7.5); it carries U18's pins alone")
+# PD_CC1 AND PD_CC2 ARE THE CONFIGURATION CHANNEL, NOT SUPPLIES, AND PWR-001 COULD NOT TELL (27 September 2026, stream
+# w3a): each carries a capacitor to ground (C96, C97, the C(RX) SLVSDG8B 7.3 asks for, 200 to 600 pF), which is the mark of
+# a supply, beside the outlet's connector and U31, neither of which the rule reads, so it read them UNDECIDED. Declared as
+# nodes with the voltage the maker allows on them: CC1 and CC2 are recommended at 0 to 5.5 V (7.3) and rated 6 V absolute
+# (7.1), and what drives them is the part's own Rp current source (8.3.1, "The device uses a current source to implement
+# the pull up resistance USB Type-C requires for Sources"; "Current sourcing CC1, CC2: Internally limited", 7.1).
+for _cc, _pin, _crx in (("PD_CC1", "2", "C96"), ("PD_CC2", "3", "C97")):
+    _intent.node(_cc, 5.5, "the USB-C outlet's configuration channel (U18 pin %s, J_USBC_OUT, U31, %s 330 pF): driven by "
+                 "the TPS25740A's internally limited Rp current source and recommended at 0 to 5.5 V (SLVSDG8B 7.3, 8.3.1); "
+                 "a signal with its receive capacitor, not a supply" % (_pin, _crx))
 kisch.tvs("D4", "SMBJ18A (VBUS clamp at the outlet)", "PD_VBUS", "GND", "TVS")   # TRN-001 / S-09 (ts-tvs, 26 Sep 2026): a one-way part, drawn K/A by kisch.tvs() (Device:D_Zener, K pin 1 on PD_VBUS, A pin 2 on GND; direction from the part number, recorded in the intent under "clamps"); nets, value, land and code as before (lcsc_fill fits Littelfuse C151256, v2/vendor/power/littelfuse-smbj-series-tvs.pdf)
 # D-12, 26 September 2026 (owner ruling): THE USB-C OUTLET IS POWER ONLY. Its data pair used to arrive on J_USBW,
 # the pigtail's data side; that path now goes to the sealed Glenair 233-370 (below, at J_USBW), and this header
@@ -1132,6 +1228,20 @@ def efuse(uref, vin, vout, en, flt, refs, ilim, ovlo_top="100k 1%", ovlo_lcsc=""
 # It releases at 16.2 to 17.6 V. At 14.4 V the OVLO pin sits at 0.94 V, inside its 0.5 to 2 V range. 143 k is
 # UNI-ROYAL 0603WAF1433T5E, 1 percent 0603, LCSC C22877 (JLCPCB API, 26 September 2026).
 efuse("U21", "VBAT", "VMON", "MON_EN", "MON_FLT", ["C98", "R90", "R91", "R92", "R93", "C99"], "750R 1% (ILM: 1.2 A)", ovlo_top="143k 1%", ovlo_lcsc="C22877"); vh2("J_MON", "monitor supply lead to the Xenarc (JST-VH): + -", "VMON")
+# VMON IS THE MONITOR'S SUPPLY, A RAIL, AND IT WAS DECLARED AS NOTHING (27 September 2026, MESHSAT-1357 EQ-19, stream
+# w3a). PWR-001 on the netlist reads it as a power net by the TPS2596's held row (pin 5 OUT, the power output) and failed
+# board A on it; boards/a.json's signal table called it "a voltage monitor divider tap into an ADC", which it is not: it
+# is U21's output, the whole supply of the Xenarc 709GNK on the face plate, leaving on the two-pin lead J_MON. Its
+# numbers are the monitor maker's (Xenarc 709GNK product manual V2, Specifications: "Operating Voltage Range : DC 10V ~
+# 35V", "Power Consumption: <= 10W"): 10 W at the pack's 14.4 V nominal is 0.69 A, the typical declared, and 10 W at
+# the monitor's own 10 V floor is 1.0 A, the peak declared, which no pack voltage the monitor runs from can exceed and
+# which sits under U21's 1.2 A limit (R90 750 R, TPS2596 equation 7). Its voltage is VBAT's through the eFuse, 16.8 V at
+# the pack's termination (U21's OVLO opens at 17.6 to 19.0 V, above), inside the monitor's 35 V. Budget 3 percent: the
+# monitor runs down to 10 V, 4.4 V under nominal, so the lead's drop is not what limits it.
+_intent.rail("VMON", 14.4, 0.69, 1.0, "U21", loads={"J_MON": 0.69}, v_work=16.8, budget=0.03, converted=False, fed_from="VBAT",
+             source_ic="U21 is a TPS2596 eFuse: its OUT pin IS the power path, which is what an eFuse is",
+             note="the Xenarc 709GNK monitor's supply behind the eFuse U21 (limit 1.2 A, MON_EN), out at the J_MON lead: "
+                  "10 W at most (maker's manual), 0.69 A at 14.4 V and 1.0 A at the monitor's 10 V floor")
 # F-PR-06, 26 September 2026 (W2 F-PR-06): THE HEATER MAT GETS A REGULATED 12 V RAIL. The mat is an RS PRO 245-556,
 # "Power Rating 7.5W", "Supply Voltage 12V dc" (rs-pro-245-556-heater-mat-sheet.pdf): 19.2 Ohm, so VBAT drove it at
 # 10.8 W at 14.4 V and 14.7 W at 16.8 V, 196 percent of its rating, once the OVLO fix above lets U22 conduct. Three
@@ -1165,6 +1275,10 @@ _intent.rail("VHEAT_IN", 14.4, 0.58, 0.9, "U22", source_ic="U22 is a TPS2596 eFu
 _intent.rail("VHEAT", 12.0, 0.63, 0.63, "L12", loads={"J_HEAT": 0.63}, switch="U33", efficiency=0.90, fed_from="VHEAT_IN", budget=0.03,
              note="F-PR-06, 26 September 2026: the heater mat's regulated 12.0 V, 0.63 A into its 19.2 Ohm at the mat's own 7.5 W rating")
 _intent.node("HT_SW", 16.8, "the heater buck's switching node: it swings to VBAT through U22, and a diode drop below ground", v_min=-1.0)
+_intent.node("HT_BST", _intent.net_volts("HT_SW") + _TPS62933_BST,
+             "the heater buck U33's bootstrap supply (pin 6 BST): it rides on HT_SW at up to 5.5 V, SLUSEA4D 8.3's "
+             "recommended BST-SW maximum, and supplies only the part's own high-side driver (see B33_BST)",
+             rides_on="HT_SW", bias_v=_TPS62933_BST)
 # U23 on +5V_DEV (S-08, 26 September 2026): 40.2k over 10k trips at 5.87 to 6.12 V nominal and releases at 5.42 to 5.67 V (5.33 V at the 1
 # percent extremes), above the 5.09 V rail and its 2 percent, and puts its OVLO pin at 1.01 V, inside the 0.5 to 2 V
 # the sheet recommends (the minor half of F-SQ-06). 40.2 k is C12447, certified on this board already.
@@ -1218,7 +1332,8 @@ efuse("U23", "+5V_DEV", "+5V_D8", "D8_EN", "D8_FLT", ["C102", "R98", "R99", "R10
 # (c) THE GATE'S OWN SUPPLY (L4). The AUP family is specified from 0.8 V (SCES502Q 5.3 p.5), and EN/UVLO is no longer
 #     the gate's output but 0.6 of it: R58/R124 10 k over R59/R125 15 k (1 percent) into PA_UVLO and HF_UVLO. So EN
 #     reaches VEN(OP)'s 1.17 V minimum only with the gate's output at (1.17 - 6 k x 7.25 uA) / 0.606 = 1.86 V or
-#     more, which needs the gate's own +3V3 at 1.86 V or more (VO 0 to VCC, 5.3), where its VIL is 0.35 x VCC = 0.65 V
+#     more, which needs the gate's own supply (+3V3 in round 8, +3V3_EMCON behind U39 since EQ-17 below) at 1.86 V or
+#     more (VO 0 to VCC, 5.3), where its VIL is 0.35 x VCC = 0.65 V
 #     or higher (5.3; 0.7 V at 2.3 to 2.7 V, 0.9 V at 3 to 3.6 V; between the tabulated bands INFERRED by monotony).
 #     Both lines' asserted levels (12 mV and 0.59 V above, 0 V at the contact) read LOW there, so no supply level of
 #     the gate lets an asserted line enable the stage. 7.25 uA is the pin's IEN(STBY) 3 uA plus dIHYS(OP) 4.25 uA
@@ -1236,12 +1351,83 @@ efuse("U23", "+5V_DEV", "+5V_D8", "D8_EN", "D8_FLT", ["C102", "R98", "R99", "R10
 # Recommended Operating Conditions note 1: "All unused inputs of the device must be held at VCC or GND").
 ic("U26", 14, "SN74LVC08APWR quad AND: the outlet interlock for PoE and USB-C (sections 3 and 4; 1 and 2 unused)", "TSSOP14", {
  "1": "GND", "2": "GND", "3": "NC", "4": "GND", "5": "GND", "6": "NC", "7": "GND", "8": "POE_EN", "9": "POE_SW_EN", "10": "OUTLET_OK", "11": "PD_EN", "12": "PD_SW_EN", "13": "OUTLET_OK", "14": "+3V3"}, "C465737")
+# EQ-17, TAKEN (27 September 2026, MESHSAT-1357, board A stream w3a): THE FOUR EMCON GATES LIVE ON THEIR OWN PROTECTED
+# SUPPLY, AND NOTHING FROM THE +3V3 DOMAIN REACHES THEIR INPUTS. The finding (commit c0133147, EMCON.md 4a and 7): the
+# SN74AUP1G08's absolute maximum VCC, VI and VO are 4.6 V (SCES502Q 5.1 p.5), and +3V3's only clamp D3, an SMBJ5.0A, does
+# not conduct below 6.40 V (VBR 6.40 to 7.00 V at 10 mA, MDD SMBJ series), so a +3V3 fault between 4.6 V and 6.4 V (board
+# D's 5 V reaching the +3V3 pin of J_MEZZ1 on board D, U12's feedback top resistor R48 open, U12 itself) could destroy the gates that
+# hold the PA and HF rails off, and their state after damage is not stated. Three options were weighed from the makers'
+# documents:
+#   (a) a lower clamp on +3V3 whose clamping voltage stays under 4.6 V at the fault current. REFUSED: the fault current is
+#       U12's high-side limit, 4.2 to 5.8 A (SLUSEA4D 8.5 IHS_LIMIT), and no TVS or zener in this tree clamps under 4.6 V at
+#       amperes (the lowest SMBJ, the 5.0A, is 9.2 V at its IPP; a BZT52C3V9 is already 3.7 to 4.1 V at 5 mA with 90 Ohm
+#       of ZZT, DS18004), while a crowbar across the whole logic rail is a second protection system for every part on it;
+#   (b) a gate family rated above the clamp. REFUSED: the SN74LVC1G08 is rated 6.5 V (TI SCES217AA 5.1), still inside
+#       D3's 6.40 to 7.00 V (and 9.2 V at IPP), and its 5 uA II and 10 uA Ioff (5.5) undo round 8's hold on TX_INHIBIT_n
+#       and EMCON_HW (L2, SD-A8-2);
+#   (c) a series element that cannot pass the fault, and nothing else of the +3V3 domain on the gates' pins. TAKEN.
+# WHAT IS DRAWN, every value from the part's own sheet:
+#   U39, a TPS259631DDAR eFuse (the part board A already carries four times; TI SLVSET8A), from +3V3 to +3V3_EMCON_EF,
+#       with its adjustable overvoltage LOCKOUT: R211 23.2 k over R212 10 k (1 percent) put OVLO at 1 / 3.32 of +3V3, so
+#       the FET opens at VOVLO(R) 1.17 / 1.20 / 1.22 V (7.5), +3V3 = 3.83 to 4.11 V over both resistors' 1 percent, in
+#       tOVLO 1.3 us typical (7.6), and closes again below VOVLO(F) 1.08 / 1.13 V, 3.54 to 3.80 V. Normal +3V3 is 3.21 to
+#       3.45 V (U12: VFB 784 to 816 mV, -40 to 150 C, SLUSEA4D 8.5, R48/R49 at 1 percent), so it neither trips in service
+#       nor fails to recover. OVLO sits at 0.97 to 1.04 V in service, inside the pin's 0.5 to 2 V (7.3), and at 21 V of
+#       IN, the part's absolute maximum, at 6.3 V under its own 7 V. EN/UVLO is RAIL_EN, U12's own enable (R2 over R184:
+#       4.71 V at 16.8 V of VBAT, 5.05 V at the SMCJ18A's 18 V standoff, under EN's 6 V recommended and 7 V absolute
+#       maximum), so it is independent of the rail it guards: EN tied to IN through 100 k (TI's note 2 to 7.3) would follow
+#       a +3V3 fault past 7 V. IN's UVP (2.46 to 2.58 V rising) keeps the gates unpowered until +3V3 is up. ILM 4.7 k:
+#       Equation 7, 903 / 4700 - 0.0112 = 0.18 A, inside RILM's 453 to 7869 Ohm; dVdt 10 nF as on the other eFuses.
+#       FLT (open drain, 10 k to +3V3, R210) is EMCON_EF_FLT on U28 P1.2, the spare EXP2_SP3 was, with TP3 kept on it:
+#       the cut asserts FLT (Table 3 p.25, "Cut-off (OVLO) ... FLT Asserted Yes"), so firmware can log a +3V3 overvoltage.
+#   R213, 100 R, from +3V3_EMCON_EF to +3V3_EMCON, with the gates' own four 100 nF behind it: 40 us, so the 1.3 us that
+#       tOVLO takes (typical; the sheet states no maximum) passes to the gates as a fraction of the step. Worst case, a
+#       hard short to a 5.25 V rail held for 5 us before the cut, the gates see (5.25 - 3.4) x 5 / 40 = 0.23 V more,
+#       3.6 V; a runaway of U12 at its 5.8 A limit into about 30 uF of rail capacitance, 0.19 V/us, adds 0.17 V (3.5 us
+#       from 3.45 V to the 4.11 V trip, then 5 us before the cut, s T^2 / 2 RC). Its own drop is at most 125 mV (the four gates' 0.39 mA of load,
+#       0.2 mA of dICC and the two 10 k pull-ups below), so the gates run at 3.08 V or more, inside round 8's 3.0 to 3.6 V
+#       band (VOH 2.67 V at VCC 3 V, SCES502Q 5.5).
+#   U40, an SN74LVC2G07DBVR dual open-drain buffer on +3V3 (TI SCES308L; C37708, JLCPCB API 27 September 2026 10:06 UTC,
+#       stock 156,572), re-drives the two software holds PA_SW_EN and HF_SW_EN, which come from U27 at +3V3's level, into
+#       PA_HOLD and HF_HOLD with R214 and R215 (10 k) up to +3V3_EMCON (the names keep them out of the board's PA_SW*
+#       and HF_SW* switch-node net classes). An open-drain output cannot drive high (1Y pin 6, 2Y pin 4, "Open-drain
+#       output"), so U36's and U38's input B is never above the protected rail: with the eFuse cut it is pulled up to 0 V. U40 is rated 6.5 V on VCC, VI and VO (SCES308L 6.1), above the whole 4.6 to 6.4 V window, and
+#       its inputs stay held by R103 and R104 (4.7 k) exactly as U36's and U38's were: 100 uA of the expander's power-up
+#       pull-up gives 0.49 V against its 0.8 V VIL (6.3, VCC 3 to 3.6 V). The 10 k pull-up edge is about 120 ns into
+#       about 12 pF, inside the AUP's 200 ns/V (SCES502Q 5.3); VOL is 0.1 V at 100 uA and 0.4 V at 16 mA (SCES308L 6.5),
+#       against the AUP's 0.9 V VIL.
+# WHAT A +3V3 OVERVOLTAGE DOES NOW. Up to 21 V on +3V3 (U39's IN absolute maximum) the gates' supply is cut at 4.11 V or
+# less and none of their pins is driven by the +3V3 domain: their outputs fall with their supply, R58/R59 and R124/R125
+# pull PA_UVLO and HF_UVLO under VEN(STBY), and the PA and HF stages SHUT DOWN, which is the EMCON-safe state, for as
+# long as the fault lasts. The residual is the rest of +3V3 (U27 and U28 at 6.0 V, the INA226s at 6.0 V, U26, U30 and U40
+# at 6.5 V against D3's 6.40 V minimum), which is not an EMCON path and is recorded as an open item for the rail's clamp.
+# Session decision under the owner's standing rule of 26 September 2026 (EQ-17); reversed by putting U35 to U38 back on
+# +3V3 with U36 pin 2 on PA_SW_EN and U38 pin 2 on HF_SW_EN, and removing U39, U40, R209 to R215, C224 to C226.
+efuse("U39", "+3V3", "+3V3_EMCON_EF", "RAIL_EN", "EMCON_EF_FLT", ["C224", "R209", "R210", "R211", "R212", "C225"],
+      "4.7k 1% (ILM: 0.18 A)", ovlo_top="23.2k 1%", ovlo_lcsc="C23346", ilim_lcsc="C23162")
+r("R213", "100R 1% (EMCON gates' supply filter)", "+3V3_EMCON_EF", "+3V3_EMCON", lcsc="C22775")
+ic("U40", 6, "SN74LVC2G07DBVR dual open-drain buffer: the software holds into the EMCON gates' supply domain", "SOT236",
+   {"1": "PA_SW_EN", "2": "GND", "3": "HF_SW_EN", "4": "HF_HOLD", "5": "+3V3", "6": "PA_HOLD"}, "C37708")
+c("C226", "100n", "+3V3", "GND", lcsc="C14663")
+r("R214", "10k 1%", "PA_HOLD", "+3V3_EMCON", lcsc="C25804"); r("R215", "10k 1%", "HF_HOLD", "+3V3_EMCON", lcsc="C25804")
 _AUP = "C139409"   # TI SN74AUP1G08DBVR
-ic("U35", 5, "SN74AUP1G08DBVR AND: PA_TXOK = TX_INHIBIT_n AND EMCON_HW (the PA rail's EMCON gate)", "SOT235", {"1": "TX_INHIBIT_n", "2": "EMCON_HW", "3": "GND", "4": "PA_TXOK", "5": "+3V3"}, _AUP); c("C215", "100n", "+3V3", "GND", lcsc="C14663")
-ic("U36", 5, "SN74AUP1G08DBVR AND: PA_EN = PA_TXOK AND PA_SW_EN (the software hold)", "SOT235", {"1": "PA_TXOK", "2": "PA_SW_EN", "3": "GND", "4": "PA_EN", "5": "+3V3"}, _AUP); c("C216", "100n", "+3V3", "GND", lcsc="C14663")
-ic("U37", 5, "SN74AUP1G08DBVR AND: HF_TXOK = TX_INHIBIT_n AND EMCON_HW (the HF rail's EMCON gate)", "SOT235", {"1": "TX_INHIBIT_n", "2": "EMCON_HW", "3": "GND", "4": "HF_TXOK", "5": "+3V3"}, _AUP); c("C217", "100n", "+3V3", "GND", lcsc="C14663")
-ic("U38", 5, "SN74AUP1G08DBVR AND: HF_EN = HF_TXOK AND HF_SW_EN (the software hold)", "SOT235", {"1": "HF_TXOK", "2": "HF_SW_EN", "3": "GND", "4": "HF_EN", "5": "+3V3"}, _AUP); c("C218", "100n", "+3V3", "GND", lcsc="C14663")
+ic("U35", 5, "SN74AUP1G08DBVR AND: PA_TXOK = TX_INHIBIT_n AND EMCON_HW (the PA rail's EMCON gate)", "SOT235", {"1": "TX_INHIBIT_n", "2": "EMCON_HW", "3": "GND", "4": "PA_TXOK", "5": "+3V3_EMCON"}, _AUP); c("C215", "100n", "+3V3_EMCON", "GND", lcsc="C14663")
+ic("U36", 5, "SN74AUP1G08DBVR AND: PA_EN = PA_TXOK AND PA_HOLD (the software hold, through U40)", "SOT235", {"1": "PA_TXOK", "2": "PA_HOLD", "3": "GND", "4": "PA_EN", "5": "+3V3_EMCON"}, _AUP); c("C216", "100n", "+3V3_EMCON", "GND", lcsc="C14663")
+ic("U37", 5, "SN74AUP1G08DBVR AND: HF_TXOK = TX_INHIBIT_n AND EMCON_HW (the HF rail's EMCON gate)", "SOT235", {"1": "TX_INHIBIT_n", "2": "EMCON_HW", "3": "GND", "4": "HF_TXOK", "5": "+3V3_EMCON"}, _AUP); c("C217", "100n", "+3V3_EMCON", "GND", lcsc="C14663")
+ic("U38", 5, "SN74AUP1G08DBVR AND: HF_EN = HF_TXOK AND HF_HOLD (the software hold, through U40)", "SOT235", {"1": "HF_TXOK", "2": "HF_HOLD", "3": "GND", "4": "HF_EN", "5": "+3V3_EMCON"}, _AUP); c("C218", "100n", "+3V3_EMCON", "GND", lcsc="C14663")
 r("R207", "100k", "PA_TXOK", "GND", lcsc="C25803"); r("R208", "100k", "HF_TXOK", "GND", lcsc="C25803")
+# The two rails the eFuse makes (EQ-17 above; PWR-001 counts both). The load is the four gates' outputs into their
+# dividers and pull-downs: U36 into R58/R59 (25 k) and board D's R3 (100 k), 0.17 mA; U38 into R124/R125, 0.13 mA; U35
+# and U37 into R207 and R208, 0.03 mA each; 0.39 mA in all at 3.3 V, and 1.25 mA at worst with dICC and both pull-ups
+# low. The peak also covers the dVdt ramp into the 0.4 uF (10 nF: 4.4 V/ms, SLVSET8A 7.5 IDVDT and GDVDT, 1.8 mA).
+_intent.rail("+3V3_EMCON_EF", 3.3, 0.0004, 0.002, "U39", loads={"R213": 0.0004}, converted=False, fed_from="+3V3",
+             source_ic="U39 is a TPS2596 eFuse: its OUT pin IS the power path, which is what an eFuse is",
+             note="EQ-17, 27 September 2026: the EMCON gates' supply behind the eFuse U39 (OVLO cut at 3.83 to 4.11 V of "
+                  "+3V3, EN on RAIL_EN), before its 100 R filter R213")
+_intent.rail("+3V3_EMCON", 3.3, 0.0004, 0.002, "R213", loads={"U35": 0.00003, "U36": 0.00017, "U37": 0.00003, "U38": 0.00013},
+             converted=False, series_of="+3V3_EMCON_EF",
+             note="EQ-17, 27 September 2026: the four SN74AUP1G08 EMCON gates' own supply behind R213, with their four "
+                  "100 nF and the software holds' 10 k pull-ups R214 and R215")
 ic("U30", 5, "SN74LVC1G00DBVR NAND: OUTLET_OK = NOT (TR_APRS AND PA_EN), the outlet interlock", "SOT235", {"1": "TR_APRS", "2": "PA_EN", "3": "GND", "4": "OUTLET_OK", "5": "+3V3"}, "C7826"); c("C153", "100n", "+3V3", "GND")
 # S-08, 26 September 2026 (adjudication A01, W2 F-SQ-07, W5-F1): the pull-downs on the expander-driven enables are
 # 4.7 k, not 100 k. The TI PCA9555 pulls every undriven I/O up through about 100 k at power-up (SCPS131J 8.1 and
@@ -1263,9 +1449,9 @@ part("U27", "Interface_Expansion", "PCA9555PW", "PCA9555PW (0x21): enables and s
 part("U28", "Interface_Expansion", "PCA9555PW", "PCA9555PW (0x24): power-good lines, spares", "EXP", {
  "24": "+3V3", "12": "GND", "22": "SCL", "23": "SDA", "1": "EXP_INT", "21": "GND", "2": "GND", "3": "+3V3",
  "4": "USBX_EN", "5": "USBX_FLT", "6": "EXP2_SPC", "7": "EXP2_SPD", "8": "PA_PGOOD", "9": "POE_PGOOD", "10": "HF_PGOOD", "11": "PD_PGOOD",
- "13": "PD_SW_EN", "14": "PD_UFP", "15": "EXP2_SP3", "16": "EXP2_SP4", "17": "EXP2_SP5", "18": "EXP2_SP6", "19": "EXP2_SP7", "20": "EXP2_SP8"}, "C2864778")
+ "13": "PD_SW_EN", "14": "PD_UFP", "15": "EMCON_EF_FLT", "16": "EXP2_SP4", "17": "EXP2_SP5", "18": "EXP2_SP6", "19": "EXP2_SP7", "20": "EXP2_SP8"}, "C2864778")
 c("C106", "100n", "+3V3", "GND"); c("C107", "100n", "+3V3", "GND"); r("R110", "10k", "EXP_INT", "+3V3"); r("R111", "4.7k", "MON_EN", "GND"); r("R112", "4.7k", "HEAT_EN", "GND"); r("R113", "4.7k", "D8_EN", "GND"); r("R114", "4.7k", "POE_SW_EN", "GND")   # S-08 and S-14, 26 Sep 2026
-for k in range(3, 9): tp("TP%d" % k, "EXP2_SP%d" % k)
+for k in range(3, 9): tp("TP%d" % k, "EMCON_EF_FLT" if k == 3 else "EXP2_SP%d" % k)   # 27 Sep 2026 (EQ-17): U28 P1.2 reads U39's FLT, TP3 kept on it
 for k, nm in enumerate(("USBX_EN", "USBX_FLT", "EXP2_SPC", "EXP2_SPD"), 1): tp("TP%d" % (22 + k), nm)   # D-12, 26 Sep 2026: U28's first two spares now switch and watch the wall host port's VBUS, and keep their test points
 # --- the A to B ribbon J_AB1 (2x13, top side, at (-90, 76)) and the D8 mezzanine harness J_MEZZ1 (2x8)
 # 10 September 2026 (MESHSAT-862): the ribbon pairs sit in one row of the header, ground pins on both sides (the same change in
@@ -1343,7 +1529,7 @@ SECTIONS = [("PACK NODE OVER THE DOCK BLOCK (32.56): 9 A PINS, PRE-CHARGE, 25 A 
             ("POE RAIL: LM5176 BOOST 54 V 0.6 A, INA226 0x47", ["U16", "Q17", "Q18", "Q19", "Q20", "L10", "R66", "R67", "R68", "C150", "R70", "C75", "C76", "C77", "C78", "C79", "C80", "R71", "R72", "R73", "R74", "R75", "C81", "C82", "C83", "C84", "C85", "C176", "C177", "C197", "C221", "R121", "D15", "D16", "U17", "J_54V"]),
             ("USB-C PD OUTLET: TPS25740A + LM5176 5/9/15 V STAGE", ["U19", "Q21", "Q22", "Q25", "Q26", "L11", "R76", "R77", "R78", "C151", "R80", "C86", "C87", "C88", "C89", "C90", "C91", "R81", "R127", "R128", "R133", "R134", "C92", "C116", "C117", "C118", "C119", "C174", "C175", "C198", "C222", "R135", "R136", "R137", "U18", "Q27", "R138", "R139", "R140", "R141", "R142", "R143", "C93", "C94", "C95", "C96", "C97", "C120", "D4", "D17", "D18", "J_USBC_OUT", "U31"]),
             ("EFUSES: MONITOR, HEATER (12.0 V BUCK), D8 5 V", ["U21", "C98", "R90", "R91", "R92", "R93", "C99", "J_MON", "U22", "C100", "R94", "R95", "R96", "R97", "C101", "U33", "L12", "C157", "C158", "C159", "C160", "C161", "C162", "R191", "R192", "R193", "R194", "J_HEAT", "U23", "C102", "R98", "R99", "R100", "R101", "C103", "J_MEZZ_PWR1"]),
-            ("EMCON GATES 74AUP1G08 (BOTH LINES), OUTLET INTERLOCK 74LVC08, EXPANDERS 0x21 0x24", ["U35", "C215", "U36", "C216", "U37", "C217", "U38", "C218", "R207", "R208", "U26", "U30", "C153", "R102", "C104", "R103", "R104", "U27", "U28", "C106", "C107", "R110", "R111", "R112", "R113", "R114"] + ["TP%d" % k for k in range(3, 9)] + ["TP23", "TP24", "TP25", "TP26"]),
+            ("EMCON GATES 74AUP1G08 (BOTH LINES) ON THEIR OWN SUPPLY (U39 EFUSE, U40), OUTLET INTERLOCK 74LVC08, EXPANDERS 0x21 0x24", ["U39", "C224", "R209", "R210", "R211", "R212", "C225", "R213", "U40", "C226", "R214", "R215", "U35", "C215", "U36", "C216", "U37", "C217", "U38", "C218", "R207", "R208", "U26", "U30", "C153", "R102", "C104", "R103", "R104", "U27", "U28", "C106", "C107", "R110", "R111", "R112", "R113", "R114"] + ["TP%d" % k for k in range(3, 9)] + ["TP23", "TP24", "TP25", "TP26"]),
             ("RIBBON J_AB1 2x13, WALL-PORT RIBBON J_AB2 2x5, MEZZANINE HARNESS J_MEZZ1 2x8, GLENAIR WALL USB HOST PORT", ["J_AB1", "J_AB2", "J_MEZZ1", "R116", "R117", "R118", "J_USBW", "U29", "U32", "C154", "R186", "R187", "R188", "R189", "C155", "R190", "C156"] + [p["ref"] for p in P if p["ref"] == "R145"]),
             ("ELEVEN BLIND-MATE RF SITES: SMA JACK (TOP) + SMP-MAX RECEPTACLE (UNDERSIDE)", ["J_RF%d" % k for k in range(1, 12)] + ["J_BM%d" % k for k in range(1, 12)]),
             ("TEST POINTS, FLAGS", ["TP%d" % k for k in range(9, 23)] + ["TP27"] + [p["ref"] for p in P if p["ref"].startswith("#FLG")])]
@@ -1368,7 +1554,8 @@ _intent.bypass("C153", "U30", "5", "+3V3")   # 26 September 2026: the outlet int
 # via the recommended bypass capacitor" (TI SLVSDG8B pin table p.5), whose recommendation is C(DVDD) 0.198 / 0.22 /
 # 0.242 uF (p.7): a regulator output, class L, declared against its own output pin (decision 42 L1).
 for _k, (_cap, _u) in enumerate((("C215", "U35"), ("C216", "U36"), ("C217", "U37"), ("C218", "U38"))):
-    _intent.bypass(_cap, _u, "5", "+3V3")
+    _intent.bypass(_cap, _u, "5", "+3V3_EMCON")   # EQ-17 (27 September 2026): the gates' own protected supply
+_intent.bypass("C226", "U40", "5", "+3V3")   # EQ-17: U40's own decoupling
 _intent.bypass("C223", "U12", "3", "VBAT")
 for _b in _intent._I["bypass"]:
     if _b["cap"] == "C94": _b["pin"] = "13"   # DVDD, not HIPWR (above)
@@ -1384,7 +1571,8 @@ for _cap, _cl, _basis, _x in (
         ("C106", "D", "TI SCPS131J (PCA9555): " + _LVC_BYP, {}),
         ("C107", "D", "TI SCPS131J (PCA9555): " + _LVC_BYP, {}),
         ("C153", "D", "TI SCES212AC (SN74LVC1G00): " + _LVC_BYP, {}),
-        ("C215", "D", _AUP_BYP, {}), ("C216", "D", _AUP_BYP, {}), ("C217", "D", _AUP_BYP, {}), ("C218", "D", _AUP_BYP, {})):
+        ("C215", "D", _AUP_BYP, {}), ("C216", "D", _AUP_BYP, {}), ("C217", "D", _AUP_BYP, {}), ("C218", "D", _AUP_BYP, {}),
+        ("C226", "D", "TI SCES308L (SN74LVC2G07) 10 p.10: 'For devices with a single supply a 0.1-uF capacitor is recommended'", {})):
     _cls(_cap, _cl, _basis, **_x)
 # G3: C190 and C191 against the BQ25731's input loop, with the VBUS capacitors (CBUS), RAC (R16), Q1 and Q2 (Q7 and Q8 here).
 _loop("U3", "input", ("C20", "C21", "C22", "C190", "C191"), ("R16", "Q7", "Q8"),

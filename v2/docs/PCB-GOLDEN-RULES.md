@@ -504,14 +504,19 @@ ON THE BOARD declared, every rail a net OF THE BOARD) are SCH-002's question and
 the finish still blocks on. Board A's `tools/boards/a.json` still describes VMON as "a voltage monitor
 divider tap into an ADC" (LOW_SPEED_OR_DC); it is the eFuse U21's output feeding the Xenarc monitor's supply
 lead (ILM 1.2 A), and PWR-001 refuses it until the intent declares it as a rail with U21 as its source and
-J_MON as its load (board A's writer). WHAT THE FAIL-CLOSED READING DOES NOT SEE, by its own premises
-(intent_checks.py, pass (6)): a supply to a part that the design forgot to decouple and that no name, type,
-class, held role or rail current points at; a supply that runs from one connector pin to another with nothing
-between them; a supply through a resistor above 10 ohms to a part with no decoupling of its own on the net (a
-lamp's current-limited feed is such a path, and the rail's own load list states it); a supply that a part
-with NO held row delivers straight to a connector that also carries a line that is not ground (M5 marks a
-lead only when every other pin of the connector is on ground; a held row reads the output wherever it goes);
-the switched low side of a load that is itself a connector (left out so that an open-drain line into a module
+J_MON as its load (board A's writer). SET 5, BOARD A (stream w3a, integrated in fnd/r8int5, 27 September
+2026): gen_sch_a.py declares every net named above for A, each from its maker's sheet (VMON, PRECHG,
++3V3_EMCON_EF and +3V3_EMCON as rails; B33_BST, HT_BST, S1_BOOT, S3_BOOT, PD_VTX, PD_VAUX, PD_DVDD, PD_CC1
+and PD_CC2 as nodes), and a.json's VMON entry now names the eFuse output; on A's regenerated netlist the
+stream read PASS of 35 (34 declared rails, 0 undecided, 0 undeclared) in its scratch, which the consolidated
+re-take takes in the tree. WHAT THE FAIL-CLOSED READING DOES NOT SEE, by its own premises (intent_checks.py,
+pass (6)): a supply to a part that the design forgot to decouple and that no name, type, class, held role or
+rail current points at; a supply that runs from one connector pin to another with nothing between them; a
+supply through a resistor above 10 ohms to a part with no decoupling of its own on the net (a lamp's
+current-limited feed is such a path, and the rail's own load list states it); a supply that a part with NO
+held row delivers straight to a connector that also carries a line that is not ground (M5 marks a lead only
+when every other pin of the connector is on ground; a held row reads the output wherever it goes); the
+switched low side of a load that is itself a connector (left out so that an open-drain line into a module
 socket is not marked; a fan's switched return is marked where its flyback diode joins it to a power net, as
 on board E); a current path through a part of three or more pins that is neither a transistor nor a held part
 (a relay's contacts, a multi-pole switch). INSTANCES OF THESE STATED LIMITS ON THE COMMITTED NETLISTS, named

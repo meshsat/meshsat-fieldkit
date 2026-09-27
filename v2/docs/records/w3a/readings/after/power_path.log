@@ -1,0 +1,12 @@
+/root/w3a/cand/v2/ecad/pcb-a-power-a23/../tools/power_path.py:51: SyntaxWarning: invalid escape sequence '\d'
+  """{net: [(ref, pin), ...]} and the set of references, from KiCad's s-expression netlist.
+/root/w3a/cand/v2/ecad/tools/power_path.py:51: SyntaxWarning: invalid escape sequence '\d'
+  """{net: [(ref, pin), ...]} and the set of references, from KiCad's s-expression netlist.
+power_path: +3V3         declares  0.30 A typ /  0.60 peak and feeds 1 converter(s) drawing  0.00 /  0.00
+power_path: +5V_DEV      declares  4.00 A typ /  6.90 peak and feeds 1 converter(s) drawing  0.50 /  0.90
+power_path: CELL_FUSED   declares 10.00 A typ / 18.00 peak and feeds 1 converter(s) drawing 10.00 / 18.00
+power_path: VBAT         declares 10.00 A typ / 18.00 peak and feeds 11 converter(s) drawing 16.53 / 24.51  <-- SHORT
+power_path: VHEAT_IN     declares  0.58 A typ /  0.90 peak and feeds 1 converter(s) drawing  0.58 /  0.58
+power_path: VIN_RAW      declares 12.31 A typ / 12.31 peak and feeds 1 converter(s) drawing 10.75 / 14.34
+power_path: 0 net(s) carry a declared rail's current through one of its own source or load parts without being a rail: 0 declared a node and 0 NOT DECLARED AT ALL, of 34 rail(s) and 89 node(s)
+verdict: power_path             PASS         {"feeds": 6, "feeds_short": 1, "nodes": 89, "rails": 34, "segments": 0, "undeclared": 0} | every declared node that carries a declared rail's current through one of that rail's own load parts: a candidate segment of a power path that no power rule is looking at. It REPORTS: some of these are genuinely nodes and the declaration is where that is written down, with its reason.

@@ -1,0 +1,6 @@
+lands: 42 footprint(s) judged, 0 pin(s) on a pad the land does not carry, 0 land(s) unreadable
+schlayout verify: 1803 pins in 1413 nets, every component one name
+layout: 15 A3 pages on a 4 x 4 sheet -> paper "User" 1676.40 1188.72
+wrote pcb-a-power.kicad_sch parts: 631 lib symbols: 101
+nets: 345 single-pin nets (should be empty or intentional): []
+intent: /root/w3a/cand2/v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json (56 bypass, 34 rails, 89 nodes, 5 pair classes)

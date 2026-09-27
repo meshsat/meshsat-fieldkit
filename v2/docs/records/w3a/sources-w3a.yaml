@@ -1,0 +1,50 @@
+# Board A stream w3a (MESHSAT-1357, 27 September 2026): the v2/vendor/SOURCES.yaml rows its change needs. A DRAFT:
+# SOURCES.yaml is the parts stream's file, so these rows are merged by the integrator (or the parts stream) in that file's
+# own form. Every document named here is already filed in v2/vendor; nothing new was fetched. Codes were read from the
+# JLCPCB parts API (the request jlc_certify.py makes) at the times given.
+
+# 1. NEW ENTRY: U40, the open-drain buffer that re-drives the software holds into the EMCON gates' supply domain.
+  - id: emcon-holds-buffer-board-a
+    function: "board A's U40: re-drives the PA and HF software holds (PA_SW_EN, HF_SW_EN from U27) as open-drain outputs PA_HOLD and HF_HOLD into U36 and U38, pulled up to +3V3_EMCON, so no pin of the EMCON gates is driven from the +3V3 domain (EQ-17, stream w3a)"
+    boards: [A]
+    on_main: false
+    adopted_in: "board A stream w3a (worktree fnd/w3a on main 38dcd764, 27 September 2026)"
+    schematic_name: {text: "SN74LVC2G07DBVR dual open-drain buffer", where: "v2/ecad/tools/gen_sch_a.py:1409 (U40) in the candidate"}
+    fitted_mpn: "SN74LVC2G07DBVR"
+    package: "SOT-23 (DBV) 6"
+    lcsc: "C37708 (Texas Instruments SN74LVC2G07DBVR, SOT-23-6, stock 156,572: JLCPCB parts API, 2026-09-27T10:06Z)"
+    identity: MATCH
+    status: VERIFIED
+    grade_vs_envelope: "INSIDE: -40 to +125 C (SCES308L 6.3, TA)"
+    documents:
+      - path: "v2/vendor/ti/ti-sn74lvc2g07.pdf"
+        doc_id: "TI SCES308"
+        revision: "Rev. L, August 2001, revised May 2015"
+        sha256: "71bbb2fc452e2949b332c030b004b094ba679ac8cce27123f806a0a6b1fde660"
+        matches_fitted: "yes: the orderable addendum lists SN74LVC2G07DBVR, SOT-23 (DBV) 6, 3000 LARGE T&R, -40 to 125 C; Pin Functions 1A 1, GND 2, 2A 3, 2Y 4, VCC 5, 1Y 6"
+    rows_read: "6.1: VCC, VI and VO (high-impedance or power-off) absolute maximum 6.5 V; 6.3: VCC 1.65 to 5.5 V, VIH 2 V and VIL 0.8 V at VCC 3 to 3.6 V, input transition 10 ns/V at 3.3 V; 6.5: VOL 0.1 V at 100 uA and 0.4 V at 16 mA (3 V), II 5 uA, Ioff 10 uA, ICC 10 uA; 10 (p.10): 0.1 uF per VCC pin; page 1: open-drain outputs, Ioff for partial power down"
+# and the v2/vendor/SOURCES.yaml files row of v2/vendor/ti/ti-sn74lvc2g07.pdf: matches_fitted becomes
+#   'board A U40 (stream w3a); and a LOGIC row of tools/tx_inhibit.py'
+
+# 2. UPDATE of board-a-efuses: U39 is a fifth instance of the same part, on +3V3 (the EMCON gates' supply).
+#   update_w3a:
+#     read_on: "2026-09-27"
+#     what_moved: "board A stream w3a adds U39 (TPS259631DDAR, C2155778, stock 4,423 at 2026-09-27T09:51Z) from +3V3 to +3V3_EMCON_EF, EN on RAIL_EN, OVLO 23.2 k over 10 k (3.83 to 4.11 V), ILM 4.7 k (0.18 A, equation 7), dVdt 10 nF, FLT to U28 P1.2; rows read for it: 7.1 (IN 21 V, EN and OVLO 7 V absolute), 7.3 (EN 6 V, OVLO 0.5 to 2 V recommended, note 2), 7.5 (VOVLO(R) 1.17 / 1.20 / 1.22 V, VOVLO(F) 1.08 / 1.10 / 1.13 V, VUVP(R) 2.46 to 2.58 V, IQ 193 / 259 uA, IDVDT and GDVDT), 7.6 (tOVLO 1.3 us typical), 8.3.6 Table 3 (OVLO cut-off asserts FLT)"
+#     where: "v2/ecad/tools/gen_sch_a.py:1406 (U39) in the candidate"
+
+# 3. UPDATE of emcon-gates-board-a: its rows_read note on 5.1 said the +3V3 overvoltage between the gates' 4.6 V and D3's
+#    6.40 V was OPEN in EMCON.md section 7. Replace that parenthesis with:
+#    "(EQ-17, taken by board A stream w3a on 27 September 2026: the gates run from +3V3_EMCON behind U39's overvoltage
+#     lockout at 3.83 to 4.11 V and U40 keeps the +3V3 domain off their inputs; EMCON.md section 4a)"
+#    and its schematic_name where: "v2/ecad/tools/gen_sch_a.py:1414-1417 (U35 to U38)".
+
+# 4. The resistor codes the change names (JLCPCB parts API, 2026-09-27T09:51Z to 10:06Z, all UNI-ROYAL 0603 1 percent):
+#    C23346 0603WAF2322T5E 23.2 kOhm (R211, stock 150,748); C23162 0603WAF4701T5E 4.7 kOhm (R209); C22775 0603WAF1000T5E
+#    100 Ohm (R213); C25804 0603WAF1002T5E 10 kOhm (R74, R133, R214, R215); C22809 0603WAF1502T5E 15 kOhm (R75, R134).
+
+# 5. The TPS25740A row (ti-tps25740.pdf, SLVSDG8B): rows newly relied on by w3a: the pin table p.4 (EN9V: 'If it is
+#    pulled low, then the 9 V PDO may be transmitted'), 7.3 (EN9V VIH 1.4 V; CC1 and CC2 0 to 5.5 V; C(RX) 200 to
+#    600 pF), 7.5 (V(VTX), V(VAUX), V(DVDD)), Table 2 p.28 (TPS25740A voltage programming), 8.3.1 (Rp current source).
+
+# 6. The Xenarc 709GNK entry (monitor-xenarc-709gnk): the manual's Specifications, 'Operating Voltage Range : DC 10V ~
+#    35V' and 'Power Consumption: <= 10W', are now read for board A's VMON rail declaration (0.69 A typical, 1.0 A peak).

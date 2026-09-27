@@ -1,0 +1,7 @@
+erc_gate: --run ERC taken on schematic 3c34f26af02e with kicad-cli 9.0.9
+erc_gate: warning  endpoint_off_grid                        459
+erc_gate: warning  lib_symbol_issues                        926
+erc_gate: warning  unconnected_wire_endpoint                133
+erc_gate: netlist tied: the report, the schematic and the netlist's own provenance agree on schematic 3c34f26af02e
+erc_gate: no blocking error (1518 violations, 0 error(s) allow-listed with a reason, warnings 1518)
+verdict: erc_gate               PASS         of 1518 {"allowed": 0, "blocking": 0, "violations": 1518}

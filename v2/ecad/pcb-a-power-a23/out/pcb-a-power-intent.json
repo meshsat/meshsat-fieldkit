@@ -1,6 +1,6 @@
 {
  "board": "pcb-a-power",
- "written": "2026-09-26 21:59",
+ "written": "2026-09-27 10:26",
  "bypass": [
   {
    "cap": "C8",
@@ -430,7 +430,7 @@
    "cap": "C215",
    "part": "U35",
    "pin": "5",
-   "net": "+3V3",
+   "net": "+3V3_EMCON",
    "class": "D",
    "basis": "TI SCES502Q (SN74AUP1G08) 9 p.14: 'For devices with a single supply, 0.1 uF is recommended ... The bypass capacitor should be installed as close to the power terminal as possible'"
   },
@@ -438,7 +438,7 @@
    "cap": "C216",
    "part": "U36",
    "pin": "5",
-   "net": "+3V3",
+   "net": "+3V3_EMCON",
    "class": "D",
    "basis": "TI SCES502Q (SN74AUP1G08) 9 p.14: 'For devices with a single supply, 0.1 uF is recommended ... The bypass capacitor should be installed as close to the power terminal as possible'"
   },
@@ -446,7 +446,7 @@
    "cap": "C217",
    "part": "U37",
    "pin": "5",
-   "net": "+3V3",
+   "net": "+3V3_EMCON",
    "class": "D",
    "basis": "TI SCES502Q (SN74AUP1G08) 9 p.14: 'For devices with a single supply, 0.1 uF is recommended ... The bypass capacitor should be installed as close to the power terminal as possible'"
   },
@@ -454,9 +454,17 @@
    "cap": "C218",
    "part": "U38",
    "pin": "5",
-   "net": "+3V3",
+   "net": "+3V3_EMCON",
    "class": "D",
    "basis": "TI SCES502Q (SN74AUP1G08) 9 p.14: 'For devices with a single supply, 0.1 uF is recommended ... The bypass capacitor should be installed as close to the power terminal as possible'"
+  },
+  {
+   "cap": "C226",
+   "part": "U40",
+   "pin": "5",
+   "net": "+3V3",
+   "class": "D",
+   "basis": "TI SCES308L (SN74LVC2G07) 10 p.10: 'For devices with a single supply a 0.1-uF capacitor is recommended'"
   },
   {
    "cap": "C223",
@@ -509,7 +517,8 @@
     "Q11": 1.5,
     "U15": 0.3,
     "U12": 0.2,
-    "U22": 0.65
+    "U22": 0.65,
+    "U21": 0.69
    },
    "note": "the 4S system node (VSYS) behind the RSR shunt R17; 10 A continuous, 18 A peak by the pack's rating (32.55)",
    "always_on": true,
@@ -626,7 +635,9 @@
     "U17": 0.02,
     "U26": 0.02,
     "U27": 0.01,
-    "U28": 0.01
+    "U28": 0.01,
+    "U39": 0.0007,
+    "U40": 1e-05
    },
    "note": "this board's logic (two PCA9555, five INA226, the LTC2954, the controllers' VCC pins: tens of mA each; the 1 A of the first intent was a placeholder, 32.69); the net starts at the TPS62933 inductor L7",
    "budget": 0.03,
@@ -672,10 +683,11 @@
    "loads": {
     "J_54V": 0.3
    },
-   "note": "the TPS23861 PSE on B16",
+   "note": "the TPS23861 PSE on B16; U16's EN/UVLO is POE_UVLO, 0.6 of the interlock gate's output POE_EN since 27 September 2026 (it sat on POE_EN itself behind a 62 k with both pins on that net)",
    "budget": 0.02,
    "share": 0.005,
    "switch": "U16",
+   "enable_net": "POE_UVLO",
    "efficiency": 0.88,
    "fed_from": "VBAT"
   },
@@ -690,6 +702,20 @@
    "note": "BUDGET FROM THE TIGHTEST CONSUMER'S DATASHEET, 16 September 2026, replacing a number this project had only asserted. The consumers of this rail sit on board D and the tightest of them is the PCM2912A USB codec, whose recommended operating VBUS is 4.35 V minimum (v2/vendor/ti/ti-pcm2912a.pdf, Recommended Operating Conditions); the next is the CP2102N, whose 3.3 V regulator leaves regulation below VREGIN 4.1 V (v2/vendor/silabs/silabs-cp2102n.pdf). The source is board A's eFuse output on the 5.0 V device rail, and at a 2 percent source tolerance its worst case is 4.90 V, so the IR drop that keeps the codec in its recommended range is 550 mV, 11 percent. The declared budget is 6 percent, 300 mV, which leaves the codec at 4.60 V with 250 mV in hand. The 3 percent it replaces was derived from nothing and was tighter than the parts ask for. THIS BOARD'S SHARE is 4 of the 6 points, because the long copper is here: the eFuse sits at case (90, 66) and the mezzanine header at (-8, -18), about 129 mm apart, and the route measures 134 mV at 1.0 A, 2.68 percent. Board D's own half measures 0.58. The APRS board's 5 V behind the eFuse U23 (ILM 453R, 2.0 A), leaving on the mezzanine JST-VH. Board D declares the same rail with its own consumers. ONE CONDUCTOR, ONE BUDGET (16 September 2026): board D declares 3 percent end to end with its reason, and this board carries the half from the eFuse to the connector, so its share is 1.5. Until today each board measured its own half against the whole, and this half alone reads 2.68 percent, which is the finding: A's copper is spending nearly all of a budget it shares with D",
    "budget": 0.06,
    "share": 0.04,
+   "converted": false
+  },
+  "PRECHG": {
+   "volts": 14.4,
+   "amps_typ": 0.0,
+   "amps_peak": 1.68,
+   "source": "J_PRE1",
+   "loads": {
+    "R1": 1.68
+   },
+   "note": "the pre-charge pin's conductor to R1 (10 Ohm) and CELL+: 1.68 A at most, the pack's 16.8 V into a discharged node, decaying as CELL+ charges; 0 A once the main pins have mated",
+   "always_on": true,
+   "always_on_why": "the pack's pre-charge pin (32.24 AX): live whenever the pack is seated, switched by nothing on this board",
+   "v_work": 16.8,
    "converted": false
   },
   "FE_OUT": {
@@ -817,9 +843,10 @@
    "loads": {
     "Q27": 3.0
    },
-   "note": "the PD supply between the stage's ISNS shunt R81 and the VBUS switch Q27, at the TPS25740A's highest advertised profile (5, 9 and 15 V at 3 A, 45 W): the LM5176's feedback divider is switched by CTL1 and CTL2, so 15 V is the stage's ceiling and the voltage every part on this net is judged against",
+   "note": "the PD supply between the stage's ISNS shunt R81 and the VBUS switch Q27, at the TPS25740A's highest advertised profile (5, 9 and 15 V at 3 A, 45 W): the LM5176's feedback divider is switched by CTL1 and CTL2, so 15 V is the stage's ceiling and the voltage every part on this net is judged against. U19's EN/UVLO is PD_UVLO, 0.6 of the interlock gate's output PD_EN since 27 September 2026",
    "budget": 0.0067,
    "switch": "U19",
+   "enable_net": "PD_UVLO",
    "efficiency": 0.93,
    "v_work": 15.0,
    "fed_from": "VBAT"
@@ -866,6 +893,20 @@
    "converted": false,
    "series_of": "PD_VPWR"
   },
+  "VMON": {
+   "volts": 14.4,
+   "amps_typ": 0.69,
+   "amps_peak": 1.0,
+   "source": "U21",
+   "loads": {
+    "J_MON": 0.69
+   },
+   "note": "the Xenarc 709GNK monitor's supply behind the eFuse U21 (limit 1.2 A, MON_EN), out at the J_MON lead: 10 W at most (maker's manual), 0.69 A at 14.4 V and 1.0 A at the monitor's 10 V floor",
+   "budget": 0.03,
+   "v_work": 16.8,
+   "converted": false,
+   "fed_from": "VBAT"
+  },
   "VHEAT_IN": {
    "volts": 14.4,
    "amps_typ": 0.58,
@@ -893,6 +934,33 @@
    "switch": "U33",
    "efficiency": 0.9,
    "fed_from": "VHEAT_IN"
+  },
+  "+3V3_EMCON_EF": {
+   "volts": 3.3,
+   "amps_typ": 0.0004,
+   "amps_peak": 0.002,
+   "source": "U39",
+   "loads": {
+    "R213": 0.0004
+   },
+   "note": "EQ-17, 27 September 2026: the EMCON gates' supply behind the eFuse U39 (OVLO cut at 3.83 to 4.11 V of +3V3, EN on RAIL_EN), before its 100 R filter R213",
+   "converted": false,
+   "fed_from": "+3V3"
+  },
+  "+3V3_EMCON": {
+   "volts": 3.3,
+   "amps_typ": 0.0004,
+   "amps_peak": 0.002,
+   "source": "R213",
+   "loads": {
+    "U35": 3e-05,
+    "U36": 0.00017,
+    "U37": 3e-05,
+    "U38": 0.00013
+   },
+   "note": "EQ-17, 27 September 2026: the four SN74AUP1G08 EMCON gates' own supply behind R213, with their four 100 nF and the software holds' 10 k pull-ups R214 and R215",
+   "converted": false,
+   "series_of": "+3V3_EMCON_EF"
   },
   "VBUS_WALL": {
    "volts": 5.0,
@@ -1052,10 +1120,24 @@
    "v_min": -1.0,
    "basis": "the AP64500's switching node on the +5V_S1 stage: it swings to VBAT, the pack node that feeds the buck, and a diode drop below ground on the other half of the cycle"
   },
+  "S1_BOOT": {
+   "v_max": 20.4,
+   "v_min": 0.0,
+   "basis": "the AP64500's bootstrap supply on the +5V_S1 stage (pin 1 BST): it rides on S1_SW at up to 6.0 V, the sheet's VSW + 6.0 V absolute maximum for BST (DS41979 Rev 5-2), and supplies only the part's own high-side driver",
+   "rides_on": "S1_SW",
+   "bias_v": 6.0
+  },
   "S3_SW": {
    "v_max": 14.4,
    "v_min": -1.0,
    "basis": "the AP64500's switching node on the +5V_S3 stage: it swings to VBAT, the pack node that feeds the buck, and a diode drop below ground on the other half of the cycle"
+  },
+  "S3_BOOT": {
+   "v_max": 20.4,
+   "v_min": 0.0,
+   "basis": "the AP64500's bootstrap supply on the +5V_S3 stage (pin 1 BST): it rides on S3_SW at up to 6.0 V, the sheet's VSW + 6.0 V absolute maximum for BST (DS41979 Rev 5-2), and supplies only the part's own high-side driver",
+   "rides_on": "S3_SW",
+   "bias_v": 6.0
   },
   "S2_SW1": {
    "v_max": 14.4,
@@ -1149,6 +1231,13 @@
    "v_max": 14.4,
    "v_min": -1.0,
    "basis": "the TPS62933's switching node: it swings to VBAT, the pack node that feeds the 3.3 V buck, and a diode drop below ground on the other half of the cycle"
+  },
+  "B33_BST": {
+   "v_max": 19.9,
+   "v_min": 0.0,
+   "basis": "the 3.3 V buck U12's bootstrap supply (pin 6 BST): it rides on B33_SW at up to 5.5 V, SLUSEA4D 8.3's recommended BST-SW maximum, and supplies only the part's own high-side driver",
+   "rides_on": "B33_SW",
+   "bias_v": 5.5
   },
   "PA_SW1": {
    "v_max": 14.4,
@@ -1336,10 +1425,42 @@
    "v_min": 0.0,
    "basis": "LM5176 stage PD, VBAT to PD_VPWR: the filtered current-sense ground at pin 15, 100 R from the shunt's ground pad (the Kelvin return TI's pin table asks for)"
   },
+  "PD_VTX": {
+   "v_max": 1.2,
+   "v_min": 0.0,
+   "basis": "the TPS25740A's transmit-driver supply (pin 1 VTX), its own regulator output bypassed by C93: V(VTX) 1.200 V maximum (SLVSDG8B 7.5); it supplies only U18's BMC transmitter"
+  },
+  "PD_VAUX": {
+   "v_max": 4.1,
+   "v_min": 0.0,
+   "basis": "the TPS25740A's auxiliary rail (pin 16 VAUX) bypassed by C95, with U18's own PCTRL on it: V(VAUX) 4.1 V maximum (SLVSDG8B 7.5); it may carry 25 uA of external load and carries U18's pins alone"
+  },
+  "PD_DVDD": {
+   "v_max": 2.0,
+   "v_min": 0.0,
+   "basis": "the TPS25740A's 1.85 V rail (pin 13 DVDD) bypassed by C94, strapping U18's own HIPWR and PSEL: V(DVDD) 1.95 V maximum and 2 V under a load step (SLVSDG8B 7.5); it carries U18's pins alone"
+  },
+  "PD_CC1": {
+   "v_max": 5.5,
+   "v_min": 0.0,
+   "basis": "the USB-C outlet's configuration channel (U18 pin 2, J_USBC_OUT, U31, C96 330 pF): driven by the TPS25740A's internally limited Rp current source and recommended at 0 to 5.5 V (SLVSDG8B 7.3, 8.3.1); a signal with its receive capacitor, not a supply"
+  },
+  "PD_CC2": {
+   "v_max": 5.5,
+   "v_min": 0.0,
+   "basis": "the USB-C outlet's configuration channel (U18 pin 3, J_USBC_OUT, U31, C97 330 pF): driven by the TPS25740A's internally limited Rp current source and recommended at 0 to 5.5 V (SLVSDG8B 7.3, 8.3.1); a signal with its receive capacitor, not a supply"
+  },
   "HT_SW": {
    "v_max": 16.8,
    "v_min": -1.0,
    "basis": "the heater buck's switching node: it swings to VBAT through U22, and a diode drop below ground"
+  },
+  "HT_BST": {
+   "v_max": 22.3,
+   "v_min": 0.0,
+   "basis": "the heater buck U33's bootstrap supply (pin 6 BST): it rides on HT_SW at up to 5.5 V, SLUSEA4D 8.3's recommended BST-SW maximum, and supplies only the part's own high-side driver (see B33_BST)",
+   "rides_on": "HT_SW",
+   "bias_v": 5.5
   }
  },
  "pair_classes": {
