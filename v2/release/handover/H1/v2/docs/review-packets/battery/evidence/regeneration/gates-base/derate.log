@@ -1,0 +1,3 @@
+derate: 6 rated part-on-net pair(s) judged at a 20% margin over 5 declared rail(s) and 2 declared node(s), 0 of them against the part maker's own reference circuit; 20 part(s) carry no rating in their value and were not judged; 0 net(s) carry a rated part and no declared voltage
+verdict: derate                 PASS         of 6 {"by_vendor_reference": 0, "judged": 6, "undeclared_nets": 0, "under_rated": 0, "unrated_parts": 20} | a part's rating against the declared voltage of the rail it is soldered to; DC-bias capacitance derating is NOT checked here and is an open gap
+CMP-001 derate exit 0

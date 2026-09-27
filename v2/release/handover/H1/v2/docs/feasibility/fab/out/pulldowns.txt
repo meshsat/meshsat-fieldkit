@@ -1,0 +1,50 @@
+== af8a9186f981210c48104eaf5742fb4cd4f80d12aa0f13bc5d887e75c922a380  $SP/wt/r4b/drafts/box/r6-run6/tint/regen/pcb-b-compute.net
+R480  SEL1_A      value 100k  pads ['GND', 'SEL1_A']        loads U41.22,U70.1,U70.9                       leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R481  SEL1_B      value 100k  pads ['GND', 'SEL1_B']        loads U51.22,U70.2,U70.4                       leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R482  SEL1_C      value 100k  pads ['GND', 'SEL1_C']        loads U61.22,U70.10,U70.5                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R483  SEL2_A      value 100k  pads ['GND', 'SEL2_A']        loads U41.23,U70.13,U71.5                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R484  SEL2_B      value 100k  pads ['GND', 'SEL2_B']        loads U51.23,U70.12,U71.1                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R485  SEL2_C      value 100k  pads ['GND', 'SEL2_C']        loads U61.23,U71.2,U71.4                       leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R486  SEL3_A      value 100k  pads ['GND', 'SEL3_A']        loads U41.24,U71.10,U72.2                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R487  SEL3_B      value 100k  pads ['GND', 'SEL3_B']        loads U51.24,U71.13,U71.9                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R488  SEL3_C      value 100k  pads ['GND', 'SEL3_C']        loads U61.24,U71.12,U72.1                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R489  HUBRST1_A   value 100k  pads ['GND', 'HUBRST1_A']     loads U41.25,U72.12,U72.4                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R490  HUBRST1_B   value 100k  pads ['GND', 'HUBRST1_B']     loads U51.25,U72.10,U72.5                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R491  HUBRST1_C   value 100k  pads ['GND', 'HUBRST1_C']     loads U61.25,U72.13,U72.9                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R492  HUBRST2_A   value 100k  pads ['GND', 'HUBRST2_A']     loads U41.28,U73.1,U73.9                       leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R493  HUBRST2_B   value 100k  pads ['GND', 'HUBRST2_B']     loads U51.28,U73.2,U73.4                       leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R494  HUBRST2_C   value 100k  pads ['GND', 'HUBRST2_C']     loads U61.28,U73.10,U73.5                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R495  HUBRST3_A   value 100k  pads ['GND', 'HUBRST3_A']     loads U41.29,U73.13,U74.5                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R496  HUBRST3_B   value 100k  pads ['GND', 'HUBRST3_B']     loads U51.29,U73.12,U74.1                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R497  HUBRST3_C   value 100k  pads ['GND', 'HUBRST3_C']     loads U61.29,U74.2,U74.4                       leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R498  WSEC_A      value 100k  pads ['GND', 'WSEC_A']        loads U41.37,U74.10,U75.2                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R499  WSEC_B      value 100k  pads ['GND', 'WSEC_B']        loads U51.37,U74.13,U74.9                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R500  WSEC_C      value 100k  pads ['GND', 'WSEC_C']        loads U61.37,U74.12,U75.1                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R15   HDMI_SEL1   value 100k  pads ['GND', 'HDMI_SEL1']     loads U3.17                                    leak 10.00 uA  VIL 0.5  V@value 1.000  V@10k 0.100  FAIL
+R16   HDMI_SEL2   value 100k  pads ['GND', 'HDMI_SEL2']     loads U4.17                                    leak 10.00 uA  VIL 0.5  V@value 1.000  V@10k 0.100  FAIL
+lines 23 (21 controller outputs + 2 display selects), FAIL 23
+== 0e72edb5d755316f6a55ce915c1c23103ecc11054904f813ec2942aca7e975c9  /home/claude-runner/gitlab/products/meshsat/meshsat-fieldkit/v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net
+R480  SEL1_A      value 100k  pads ['GND', 'SEL1_A']        loads U41.22,U70.1,U70.9                       leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R481  SEL1_B      value 100k  pads ['GND', 'SEL1_B']        loads U51.22,U70.2,U70.4                       leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R482  SEL1_C      value 100k  pads ['GND', 'SEL1_C']        loads U61.22,U70.10,U70.5                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R483  SEL2_A      value 100k  pads ['GND', 'SEL2_A']        loads U41.23,U70.13,U71.5                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R484  SEL2_B      value 100k  pads ['GND', 'SEL2_B']        loads U51.23,U70.12,U71.1                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R485  SEL2_C      value 100k  pads ['GND', 'SEL2_C']        loads U61.23,U71.2,U71.4                       leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R486  SEL3_A      value 100k  pads ['GND', 'SEL3_A']        loads U41.24,U71.10,U72.2                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R487  SEL3_B      value 100k  pads ['GND', 'SEL3_B']        loads U51.24,U71.13,U71.9                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R488  SEL3_C      value 100k  pads ['GND', 'SEL3_C']        loads U61.24,U71.12,U72.1                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R489  HUBRST1_A   value 100k  pads ['GND', 'HUBRST1_A']     loads U41.25,U72.12,U72.4                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R490  HUBRST1_B   value 100k  pads ['GND', 'HUBRST1_B']     loads U51.25,U72.10,U72.5                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R491  HUBRST1_C   value 100k  pads ['GND', 'HUBRST1_C']     loads U61.25,U72.13,U72.9                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R492  HUBRST2_A   value 100k  pads ['GND', 'HUBRST2_A']     loads U41.28,U73.1,U73.9                       leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R493  HUBRST2_B   value 100k  pads ['GND', 'HUBRST2_B']     loads U51.28,U73.2,U73.4                       leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R494  HUBRST2_C   value 100k  pads ['GND', 'HUBRST2_C']     loads U61.28,U73.10,U73.5                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R495  HUBRST3_A   value 100k  pads ['GND', 'HUBRST3_A']     loads U41.29,U73.13,U74.5                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R496  HUBRST3_B   value 100k  pads ['GND', 'HUBRST3_B']     loads U51.29,U73.12,U74.1                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R497  HUBRST3_C   value 100k  pads ['GND', 'HUBRST3_C']     loads U61.29,U74.2,U74.4                       leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R498  WSEC_A      value 100k  pads ['GND', 'WSEC_A']        loads U41.37,U74.10,U75.2                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R499  WSEC_B      value 100k  pads ['GND', 'WSEC_B']        loads U51.37,U74.13,U74.9                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R500  WSEC_C      value 100k  pads ['GND', 'WSEC_C']        loads U61.37,U74.12,U75.1                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+R15   HDMI_SEL1   value 100k  pads ['GND', 'HDMI_SEL1']     loads U3.17                                    leak 10.00 uA  VIL 0.5  V@value 1.000  V@10k 0.100  FAIL
+R16   HDMI_SEL2   value 100k  pads ['GND', 'HDMI_SEL2']     loads U4.17                                    leak 10.00 uA  VIL 0.5  V@value 1.000  V@10k 0.100  FAIL
+lines 23 (21 controller outputs + 2 display selects), FAIL 23

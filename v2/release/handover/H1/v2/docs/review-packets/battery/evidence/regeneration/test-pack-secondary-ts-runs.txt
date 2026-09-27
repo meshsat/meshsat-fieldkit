@@ -1,0 +1,61 @@
+# tests/test_pack_secondary_ts.py run by hand on each artefact, 2026-09-26T13:51:03Z, runner, worktree fnd/rv-bat at 1f614233 plus this stream's change
+# test file sha256 26316ddfe7fc1e1bb6ef2605aa57cba3fde1f213739a07503baf604a4f24222f
+
+## main 1f614233 generator (git show 1f614233:v2/ecad/tools/gen_sch_p.py)
+sha256 d66ae0a15be1dc4e8a755dab6e5996a1ece5bd2bc2d9a6c93b365c1b75e53714
+batcmp/gen_sch_p.main-1f614233.py: 49 parts read; U2 pin 12 on TS_SEC; shunt cap 18000 ohm; lowest UT resistance at TUT_ACC 21516 ohm
+FAIL
+  - TS does not reach an off-board thermistor socket through a series resistor: the second level has no temperature sensor of its own (a fixed resistor to GND holds TS at one reading and disables its over-temperature, the design the review of 26 September 2026 refused)
+exit 1
+
+## main 1f614233 committed netlist (v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net)
+sha256 3c925191447136ac5ec22f251bf608b76744849d953bffa0488734e21b358103
+batcmp/pcb-p-pack.main-1f614233.net: 82 parts read; U2 pin 12 on TS_SEC; shunt cap 18000 ohm; lowest UT resistance at TUT_ACC 21516 ohm
+FAIL
+  - TS does not reach an off-board thermistor socket through a series resistor: the second level has no temperature sensor of its own (a fixed resistor to GND holds TS at one reading and disables its over-temperature, the design the review of 26 September 2026 refused)
+exit 1
+
+## first-cycle candidate netlist, R34 200R / R33 22k (drafts/box/bat-cycle1/new/files/pcb-p-pack.net)
+sha256 4df605c1c9a9d2dbf17b4758cb1fe65205800668a19e30fb6f70b0daa1c4bfc4
+drafts/box/bat-cycle1/new/files/pcb-p-pack.net: 85 parts read; U2 pin 12 on TS_SEC; shunt cap 18000 ohm; lowest UT resistance at TUT_ACC 21516 ohm
+FAIL
+  - the shunt from TS to GND is 22000 ohm, above the 18000 ohm cap: with the NTC open it reads 22364 ohm at +1 percent and -40 C, and the chip may apply its lowest UT threshold at 21516 ohm (26.7 kohm moved by TUT_ACC's +5 C), so an unplugged lead or a cold cell could read as under-temperature and open the fuse
+exit 1
+
+## candidate generator (v2/ecad/tools/gen_sch_p.py)
+sha256 e111e10a047f587eee8e32d005440d527d630d68b9a1970028b39c87fc12fd7a
+v2/ecad/tools/gen_sch_p.py: 51 parts read; U2 pin 12 on TS_SEC; shunt cap 18000 ohm; lowest UT resistance at TUT_ACC 21516 ohm
+PASS
+exit 0
+
+## candidate netlist regenerated on the box (candidate/pcb-p-pack.net)
+sha256 4342c4cbe1b43dc43dd2ef28817e7f3c027baecf829ddf340ccf01fbab4b0fa5
+v2/docs/review-packets/battery/candidate/pcb-p-pack.net: 85 parts read; U2 pin 12 on TS_SEC; shunt cap 18000 ohm; lowest UT resistance at TUT_ACC 21516 ohm
+PASS
+exit 0
+
+## the suite's test_pack_secondary_ts with main 1f614233's gen_sch_p.py swapped into a copy of this worktree's tools (no board or packet netlist in the copy)
+tests: test_pack_secondary_ts.t_a_bare_socket_with_no_cap_fails PASS
+tests: test_pack_secondary_ts.t_a_capacitor_on_ts_fails         PASS
+tests: test_pack_secondary_ts.t_a_fixed_resistor_alone_on_ts_fails PASS
+tests: test_pack_secondary_ts.t_a_series_resistor_that_moves_the_trip_fails PASS
+tests: test_pack_secondary_ts.t_an_on_board_sensor_fails        PASS
+tests: test_pack_secondary_ts.t_the_cap_itself_clears_the_chips_lowest_ut_resistance PASS
+tests: test_pack_secondary_ts.t_the_current_netlist_holds_the_property SKIP no board P netlist on this host was written by this tree's generator: ecad/pcb-p-pack-p2/out/pcb-p-pack.net absent | docs/review-packets/battery/candidate/pcb-p-pack.net absent
+tests: test_pack_secondary_ts.t_the_first_cycles_22k_shunt_fails_the_cap PASS
+tests: test_pack_secondary_ts.t_the_generator_in_this_tree_holds_the_property FAIL ['TS does not reach an off-board thermistor socket through a series resistor: the second level has no temperature sensor of its own (a fixed resistor to GND holds TS at one reading and disables its over-temperature, the design the review of 26 September 2026 refused)']
+tests: test_pack_secondary_ts.t_the_taken_network_passes        PASS
+tests: 8 passed, 1 failed, 1 skipped; failed: test_pack_secondary_ts.t_the_generator_in_this_tree_holds_the_property
+
+## the same in this worktree
+tests: test_pack_secondary_ts.t_a_bare_socket_with_no_cap_fails PASS
+tests: test_pack_secondary_ts.t_a_capacitor_on_ts_fails         PASS
+tests: test_pack_secondary_ts.t_a_fixed_resistor_alone_on_ts_fails PASS
+tests: test_pack_secondary_ts.t_a_series_resistor_that_moves_the_trip_fails PASS
+tests: test_pack_secondary_ts.t_an_on_board_sensor_fails        PASS
+tests: test_pack_secondary_ts.t_the_cap_itself_clears_the_chips_lowest_ut_resistance PASS
+tests: test_pack_secondary_ts.t_the_current_netlist_holds_the_property PASS
+tests: test_pack_secondary_ts.t_the_first_cycles_22k_shunt_fails_the_cap PASS
+tests: test_pack_secondary_ts.t_the_generator_in_this_tree_holds_the_property PASS
+tests: test_pack_secondary_ts.t_the_taken_network_passes        PASS
+tests: 10 passed, 0 failed, 0 skipped

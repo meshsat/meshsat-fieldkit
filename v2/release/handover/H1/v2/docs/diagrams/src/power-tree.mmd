@@ -1,0 +1,295 @@
+---
+title: "Power tree read from the netlists named in each board's box and pcb_energy_chain.yaml sha256/16 935e524eed0ee4d1 (design diagram of an unbuilt prototype)"
+---
+flowchart LR
+  subgraph brdP["P pack BMS, netlist 4342c4cbe1b43dc4 at d90f30e4"]
+    P_CELL4(["CELL4"]):::rail
+    P_FUSED(["FUSED"]):::rail
+    P_SCP_OUT(["SCP_OUT"]):::rail
+    P_PACK_P(["PACK_P"]):::rail
+    src_P_W_BP["W_BP: 4S cell block (D-06: 4S3P Samsung 35E)"]:::source
+  end
+  subgraph brdE["E dock strip, netlist d910e49c5f5f50b2 at faf8c981"]
+    E_CELL_(["CELL+"]):::rail
+    E_CELL_F(["CELL_F"]):::rail
+    E__5V_E6(["+5V_E6"]):::rail
+    E__3V3_E6(["+3V3_E6"]):::rail
+    E__5V_GEIGER(["+5V_GEIGER"]):::rail
+    E_DC_IN(["DC_IN"]):::rail
+    E_DC_F(["DC_F"]):::rail
+    E_DC_P(["DC_P"]):::rail
+    E_DC_HS(["DC_HS"]):::rail
+    E_VIN_RAW(["VIN_RAW"]):::rail
+    E_PV_IN(["PV_IN"]):::rail
+    E_PV_P(["PV_P"]):::rail
+    E_TRK_OUT(["TRK_OUT"]):::rail
+    src_E_J_DCIN["J_DCIN: vehicle or shore, 9 to 36 V"]:::source
+    src_E_J_SOLAR["J_SOLAR: solar panel"]:::source
+    load_E_J_FAN1["J_FAN1: mixer fans J_FAN1, J_FAN2"]:::load
+  end
+  subgraph brdA["A power and I/O, netlist 7b08510106687b3d at 3a1f6576"]
+    A_CELL_(["CELL+"]):::rail
+    A_CELL_FUSED(["CELL_FUSED"]):::rail
+    A_VBAT(["VBAT"]):::rail
+    A_VIN_RAW(["VIN_RAW"]):::rail
+    A_VBUS20(["VBUS20"]):::rail
+    A__5V_S1(["+5V_S1"]):::rail
+    A__5V_S2(["+5V_S2"]):::rail
+    A__5V_S3(["+5V_S3"]):::rail
+    A__5V_DEV(["+5V_DEV"]):::rail
+    A__3V3(["+3V3"]):::rail
+    A__13V8_PA(["+13V8_PA"]):::rail
+    A__12V_HF(["+12V_HF"]):::rail
+    A__54V_POE(["+54V_POE"]):::rail
+    A_PD_VPWR(["PD_VPWR"]):::rail
+    A_PD_VBUS(["PD_VBUS"]):::rail
+    A_VMON(["VMON"]):::rail
+    A_VHEAT_IN(["VHEAT_IN"]):::rail
+    A_VHEAT(["VHEAT"]):::rail
+    A__5V_D8(["+5V_D8"]):::rail
+    A_VBUS_WALL(["VBUS_WALL"]):::rail
+    load_A_J_PA["J_PA: 30 W PA on the face plate"]:::load
+    load_A_J_HF["J_HF: QMX HF in the lid"]:::load
+    load_A_J_MON["J_MON: Xenarc monitor"]:::load
+    load_A_J_HEAT["J_HEAT: pack heater mat"]:::load
+    load_A_J_USBC_OUT["J_USBC_OUT: wall USB-C outlet"]:::load
+    load_A_J_USBW["J_USBW: Glenair USB host port"]:::load
+  end
+  subgraph brdB["B compute, netlist 669d02d07aeaae4b at 3a1f6576"]
+    B__5V_S1(["+5V_S1"]):::rail
+    B__3V3_S1A(["+3V3_S1A"]):::rail
+    B__3V3_S1B(["+3V3_S1B"]):::rail
+    B__1V0_S1(["+1V0_S1"]):::rail
+    B__3V3_M2C1(["+3V3_M2C1"]):::rail
+    B__5V_S2(["+5V_S2"]):::rail
+    B__3V3_S2A(["+3V3_S2A"]):::rail
+    B__3V3_S2B(["+3V3_S2B"]):::rail
+    B__1V0_S2(["+1V0_S2"]):::rail
+    B__3V3_M2C2(["+3V3_M2C2"]):::rail
+    B__5V_S3(["+5V_S3"]):::rail
+    B__3V3_S3A(["+3V3_S3A"]):::rail
+    B__3V3_S3B(["+3V3_S3B"]):::rail
+    B__1V0_S3(["+1V0_S3"]):::rail
+    B__3V3_M2C3(["+3V3_M2C3"]):::rail
+    B__5V_DEV(["+5V_DEV"]):::rail
+    B__1V1_S1(["+1V1_S1"]):::rail
+    B__1V1_S2(["+1V1_S2"]):::rail
+    B__1V1_S3(["+1V1_S3"]):::rail
+    B__3V3_DEV(["+3V3_DEV"]):::rail
+    B__1V2_KSZ(["+1V2_KSZ"]):::rail
+    B__2V5_KSZ(["+2V5_KSZ"]):::rail
+    B__3V3_IOCA(["+3V3_IOCA"]):::rail
+    B__3V3_IOCB(["+3V3_IOCB"]):::rail
+    B__3V3_IOCC(["+3V3_IOCC"]):::rail
+    B__5V_LIME(["+5V_LIME"]):::rail
+    B__5V_RB(["+5V_RB"]):::rail
+    B__5V_LORA(["+5V_LORA"]):::rail
+    B__3V3_ZB(["+3V3_ZB"]):::rail
+    B__5V_CAM(["+5V_CAM"]):::rail
+    B_PANEL_5V(["PANEL_5V"]):::rail
+    B__5V_HDMI(["+5V_HDMI"]):::rail
+    B_VBUS_QMX(["VBUS_QMX"]):::rail
+    B__54V_POE(["+54V_POE"]):::rail
+    load_B_U5["U5: wall RJ45 PoE (TPS23861)"]:::load
+  end
+  subgraph brdC["C panel backer, netlist 2834f0d8c4071d56 at faf8c981"]
+    C__5V(["+5V"]):::rail
+    C__3V3(["+3V3"]):::rail
+  end
+  subgraph brdD["D VHF APRS, netlist f13d8b70099ab03e at 458b2873"]
+    D__5V_D8(["+5V_D8"]):::rail
+    D__3V3_D8(["+3V3_D8"]):::rail
+    D__3V4_HUB(["+3V4_HUB"]):::rail
+    D__5V_SA(["+5V_SA"]):::rail
+    D_VGG_SW(["VGG_SW"]):::rail
+    D__3V3(["+3V3"]):::rail
+  end
+  E5["E5 dock block: no schematic, its board names the nets"]:::lead
+  src_P_W_BP --> P_CELL4
+  src_E_J_DCIN --> E_DC_IN
+  src_E_J_SOLAR --> E_PV_IN
+  P_CELL4 -->|"pack blade fuse: F1 25 A mini blade [chain PACK_CELLS: 10.0 A cont., 18.0 A peak]"| P_FUSED
+  P_FUSED -->|"chemical fuse: F2 SCF9550-30-05 self-control fuse"| P_SCP_OUT
+  P_SCP_OUT -->|"charge and discharge FETs, the BQ4050 drives their gates: U1 BQ4050RSMR + Q1 CSD17570Q5B + Q2 CSD17570Q5B [chain PACK_FETS: 10.0 A cont., 18.0 A peak]"| P_PACK_P
+  E_CELL_ -->|"dock strip pack fuse: F3 25 A mini blade [chain DOCK_ENTRY: 10.0 A cont., 18.0 A peak]"| E_CELL_F
+  E_CELL_F -->|"always-on 5 V: U12 AP63205WU-7"| E__5V_E6
+  E__5V_E6 -->|"sensor 3.3 V: U13 TLV75533PDBVR"| E__3V3_E6
+  E__5V_E6 -->|"Geiger load switch: U16 TPS22810DRV"| E__5V_GEIGER
+  E_DC_IN -->|"vehicle and shore fuse: F1 10 A mini blade [chain SHORE_INPUT: 8.0 A cont., 10.0 A peak]"| E_DC_F
+  E_DC_F -->|"ideal diode: Q1 BSC039N06NS + U3 LM74700-Q1"| E_DC_P
+  E_DC_P -->|"hot swap, 9 V on, 40 V off: U6 LM5069MM-2 + R19 10mOhm"| E_DC_HS
+  E_DC_HS -->|"common-mode choke: L2 Bourns SRF1260-1R5Y"| E_VIN_RAW
+  E_PV_IN -->|"solar fuse: F2 10 A mini blade"| E_PV_P
+  E_PV_P -->|"solar tracker (bench-fitted): Q3 BSC028N06NS + U5 LT8705A + R5 5 mOhm + Q6 BSC039N06NS"| E_TRK_OUT
+  E_TRK_OUT -->|"ideal diode OR: Q2 BSC039N06NS + U4 LM74700-Q1"| E_VIN_RAW
+  A_CELL_ -->|"power board pack fuse: F1 25 A mini blade [chain BOARD_A_NODE/BOARD_A_CONVERTERS: 10.0 A cont., 18.0 A peak]"| A_CELL_FUSED
+  A_CELL_FUSED -->|"charge current shunt (loads on the VSYS side): R17 5mOhm"| A_VBAT
+  A_VIN_RAW -->|"front end, 20 V bus: Q2 CSD19532Q5B + U2 LM5176PWPR + R11 10mOhm"| A_VBUS20
+  A_VBUS20 -->|"4S charger, no battery FET: U3 BQ25731RSNR + R16 10mOhm"| A_VBAT
+  A_VBAT -->|"slot 1 rail (SLOT_EN1): U4 AP64500SP-13 + R31 5mOhm"| A__5V_S1
+  A_VBAT -->|"slot 2 rail (SLOT_EN2): U5 LM5176PWPR + R35 6mOhm"| A__5V_S2
+  A_VBAT -->|"slot 3 rail (SLOT_EN3): U6 AP64500SP-13 + R39 5mOhm"| A__5V_S3
+  A_VBAT -->|"device rail (DEV_EN): U7 LM5176PWPR + R43 6mOhm"| A__5V_DEV
+  A_VBAT -->|"logic 3.3 V (RAIL_EN): U12 TPS62933DRLR"| A__3V3
+  A_VBAT -->|"PA drain rail (PA_EN): U13 LM5176PWPR + R55 6mOhm"| A__13V8_PA
+  A_VBAT -->|"HF rail (HF_EN): U15 LM5176PWPR + R65 10mOhm"| A__12V_HF
+  A_VBAT -->|"PoE feed (POE_EN): U16 LM5176PWPR + R71 20mOhm"| A__54V_POE
+  A_VBAT -->|"USB-C PD supply (PD_EN): U19 LM5176PWPR + R81 10mOhm"| A_PD_VPWR
+  A_PD_VPWR -->|"USB-C PD source, power only: U18 TPS25740ARGER + R138 10mOhm"| A_PD_VBUS
+  A_VBAT -->|"monitor eFuse (MON_EN): U21 TPS259631DDAR"| A_VMON
+  A_VBAT -->|"heater eFuse (HEAT_EN): U22 TPS259631DDAR"| A_VHEAT_IN
+  A_VHEAT_IN -->|"heater 12.0 V: U33 TPS62933DRLR"| A_VHEAT
+  A__5V_DEV -->|"board D feed eFuse (D8_EN): U23 TPS259631DDAR [chain A_EFUSED_BRANCHES: 1.0 A cont., 2.0 A peak]"| A__5V_D8
+  A__5V_DEV -->|"Glenair port VBUS eFuse: U32 TPS259631DDAR"| A_VBUS_WALL
+  B__5V_S1 -->|"slot 1 card 3.3 V: U103 AP64500SP-13"| B__3V3_S1A
+  B__5V_S1 -->|"slot 1 NVMe 3.3 V: U104 AP64500SP-13"| B__3V3_S1B
+  B__5V_S1 -->|"slot 1 PCIe switch core: U105 TPS62933DRLR"| B__1V0_S1
+  B__3V3_S1A -->|"card socket shunt: R165 5mOhm"| B__3V3_M2C1
+  B__5V_S2 -->|"slot 2 card 3.3 V: U203 AP64500SP-13"| B__3V3_S2A
+  B__5V_S2 -->|"slot 2 NVMe 3.3 V: U204 AP64500SP-13"| B__3V3_S2B
+  B__5V_S2 -->|"slot 2 PCIe switch core: U205 TPS62933DRLR"| B__1V0_S2
+  B__3V3_S2A -->|"card socket shunt: R265 5mOhm"| B__3V3_M2C2
+  B__5V_S3 -->|"slot 3 card 3.3 V: U303 AP64500SP-13"| B__3V3_S3A
+  B__5V_S3 -->|"slot 3 NVMe 3.3 V: U304 AP64500SP-13"| B__3V3_S3B
+  B__5V_S3 -->|"slot 3 PCIe switch core: U305 TPS62933DRLR"| B__1V0_S3
+  B__3V3_S3A -->|"card socket shunt: R365 5mOhm"| B__3V3_M2C3
+  B__5V_DEV -->|"bank 1 hub core: U106 TPS62933DRLR"| B__1V1_S1
+  B__5V_DEV -->|"bank 2 hub core: U206 TPS62933DRLR"| B__1V1_S2
+  B__5V_DEV -->|"bank 3 hub core: U306 TPS62933DRLR"| B__1V1_S3
+  B__5V_DEV -->|"shared logic 3.3 V: U25 AP63203WU-7"| B__3V3_DEV
+  B__5V_DEV -->|"Ethernet switch core: U26 TPS62933DRLR"| B__1V2_KSZ
+  B__3V3_DEV -->|"Ethernet switch analog: U27 AP2112K-2.5"| B__2V5_KSZ
+  B__5V_DEV -->|"supervisor A: U40 AP2112K-3.3"| B__3V3_IOCA
+  B__5V_DEV -->|"supervisor B: U50 AP2112K-3.3"| B__3V3_IOCB
+  B__5V_DEV -->|"supervisor C: U60 AP2112K-3.3"| B__3V3_IOCC
+  B__5V_DEV -->|"LimeSDR eFuse: U23 TPS259631DDAR"| B__5V_LIME
+  B__5V_DEV -->|"RockBLOCK eFuse: U24 TPS259631DDAR"| B__5V_RB
+  B__5V_DEV -->|"LoRa load switch: U21 TPS22810DRV"| B__5V_LORA
+  B__3V3_DEV -->|"E72 load switch: U22 TPS22810DRV"| B__3V3_ZB
+  B__5V_DEV -->|"camera switch: U28 TPS2065CDBV"| B__5V_CAM
+  B__5V_DEV -->|"panel feed polyfuse: F1 2A hold 1812 [chain B_PANEL_5V: 0.6 A cont., 1.0 A peak]"| B_PANEL_5V
+  B__5V_DEV -->|"HDMI 5 V polyfuse: F2 0.5A hold 1812 [chain B_HDMI_5V: 0.2 A cont., 0.3 A peak]"| B__5V_HDMI
+  B__5V_DEV -->|"QMX USB polyfuse: F3 0.5A hold 1812 [chain B_QMX_5V: 0.3 A cont., 0.5 A peak]"| B_VBUS_QMX
+  C__5V -->|"panel 3.3 V: U5 TLV75533PDBV"| C__3V3
+  D__5V_D8 -->|"board D 3.3 V: U1 TLV75533PDBV"| D__3V3_D8
+  D__5V_D8 -->|"hub 3.44 V: U17 TLV75801PDBVR"| D__3V4_HUB
+  D__5V_D8 -->|"exciter supply ferrite: FB1 600R 2A ferrite"| D__5V_SA
+  D__5V_D8 -->|"PA gate bias (PA_KEY): U15 TLV75801PDRVR"| D_VGG_SW
+  P_PACK_P ==>|"W_P to J_BATT: pack lead, 12 AWG, XT60"| E_CELL_
+  E_CELL_F ---|"P_CP 12 AWG to E5, four 9 A spring pins J_CP1..4"| E5
+  E5 --> A_CELL_
+  E_VIN_RAW ---|"J_BLK E5 targets 1 to 4, spring pins J_DOCK 1 to 4"| E5
+  E5 --> A_VIN_RAW
+  A__5V_S1 ==>|"J_5V_S1 to J_5V_S1: JST-VH lead, 16 AWG"| B__5V_S1
+  A__5V_S2 ==>|"J_5V_S2 to J_5V_S2: JST-VH lead, 16 AWG"| B__5V_S2
+  A__5V_S3 ==>|"J_5V_S3 to J_5V_S3: JST-VH lead, 16 AWG"| B__5V_S3
+  A__5V_DEV ==>|"J_5V_DEV to J_5V_DEV: JST-VH lead"| B__5V_DEV
+  A__54V_POE ==>|"J_54V to J_54V: JST-VH lead"| B__54V_POE
+  A__5V_D8 ==>|"J_MEZZ_PWR1 to J_PWR1: JST-VH lead"| D__5V_D8
+  A__3V3 ==>|"J_MEZZ1 to J_HARN1: harness pin 13"| D__3V3
+  B_PANEL_5V ==>|"J_PANEL to J_PANEL: panel ribbon pins 1 and 2"| C__5V
+  A__13V8_PA --> load_A_J_PA
+  A__12V_HF --> load_A_J_HF
+  A_VMON --> load_A_J_MON
+  A_VHEAT --> load_A_J_HEAT
+  A_PD_VBUS --> load_A_J_USBC_OUT
+  A_VBUS_WALL --> load_A_J_USBW
+  B__54V_POE --> load_B_U5
+  E_CELL_F --> load_E_J_FAN1
+  linkStyle 0 stroke:#2e7d32,stroke-width:1.5px
+  linkStyle 1 stroke:#2e7d32,stroke-width:1.5px
+  linkStyle 2 stroke:#2e7d32,stroke-width:1.5px
+  linkStyle 3 stroke:#c62828,stroke-width:3px
+  linkStyle 4 stroke:#e65100,stroke-width:1.5px
+  linkStyle 5 stroke:#c62828,stroke-width:3px
+  linkStyle 6 stroke:#c62828,stroke-width:3px
+  linkStyle 7 stroke:#37474f,stroke-width:1.5px
+  linkStyle 8 stroke:#37474f,stroke-width:1.5px
+  linkStyle 9 stroke:#37474f,stroke-width:1.5px
+  linkStyle 10 stroke:#c62828,stroke-width:3px
+  linkStyle 11 stroke:#37474f,stroke-width:1.5px
+  linkStyle 12 stroke:#37474f,stroke-width:1.5px
+  linkStyle 13 stroke:#37474f,stroke-width:1.5px
+  linkStyle 14 stroke:#e65100,stroke-width:1.5px
+  linkStyle 15 stroke:#37474f,stroke-width:1.5px
+  linkStyle 16 stroke:#37474f,stroke-width:1.5px
+  linkStyle 17 stroke:#c62828,stroke-width:3px
+  linkStyle 18 stroke:#37474f,stroke-width:1.5px
+  linkStyle 19 stroke:#37474f,stroke-width:1.5px
+  linkStyle 20 stroke:#37474f,stroke-width:1.5px
+  linkStyle 21 stroke:#37474f,stroke-width:1.5px
+  linkStyle 22 stroke:#37474f,stroke-width:1.5px
+  linkStyle 23 stroke:#37474f,stroke-width:1.5px
+  linkStyle 24 stroke:#37474f,stroke-width:1.5px
+  linkStyle 25 stroke:#37474f,stroke-width:1.5px
+  linkStyle 26 stroke:#37474f,stroke-width:1.5px
+  linkStyle 27 stroke:#37474f,stroke-width:1.5px
+  linkStyle 28 stroke:#37474f,stroke-width:1.5px
+  linkStyle 29 stroke:#37474f,stroke-width:1.5px
+  linkStyle 30 stroke:#37474f,stroke-width:1.5px
+  linkStyle 31 stroke:#37474f,stroke-width:1.5px
+  linkStyle 32 stroke:#37474f,stroke-width:1.5px
+  linkStyle 33 stroke:#37474f,stroke-width:1.5px
+  linkStyle 34 stroke:#c62828,stroke-width:3px
+  linkStyle 35 stroke:#37474f,stroke-width:1.5px
+  linkStyle 36 stroke:#37474f,stroke-width:1.5px
+  linkStyle 37 stroke:#37474f,stroke-width:1.5px
+  linkStyle 38 stroke:#37474f,stroke-width:1.5px
+  linkStyle 39 stroke:#37474f,stroke-width:1.5px
+  linkStyle 40 stroke:#37474f,stroke-width:1.5px
+  linkStyle 41 stroke:#37474f,stroke-width:1.5px
+  linkStyle 42 stroke:#37474f,stroke-width:1.5px
+  linkStyle 43 stroke:#37474f,stroke-width:1.5px
+  linkStyle 44 stroke:#37474f,stroke-width:1.5px
+  linkStyle 45 stroke:#37474f,stroke-width:1.5px
+  linkStyle 46 stroke:#37474f,stroke-width:1.5px
+  linkStyle 47 stroke:#37474f,stroke-width:1.5px
+  linkStyle 48 stroke:#37474f,stroke-width:1.5px
+  linkStyle 49 stroke:#37474f,stroke-width:1.5px
+  linkStyle 50 stroke:#37474f,stroke-width:1.5px
+  linkStyle 51 stroke:#37474f,stroke-width:1.5px
+  linkStyle 52 stroke:#37474f,stroke-width:1.5px
+  linkStyle 53 stroke:#37474f,stroke-width:1.5px
+  linkStyle 54 stroke:#37474f,stroke-width:1.5px
+  linkStyle 55 stroke:#37474f,stroke-width:1.5px
+  linkStyle 56 stroke:#37474f,stroke-width:1.5px
+  linkStyle 57 stroke:#37474f,stroke-width:1.5px
+  linkStyle 58 stroke:#37474f,stroke-width:1.5px
+  linkStyle 59 stroke:#37474f,stroke-width:1.5px
+  linkStyle 60 stroke:#37474f,stroke-width:1.5px
+  linkStyle 61 stroke:#37474f,stroke-width:1.5px
+  linkStyle 62 stroke:#c62828,stroke-width:3px
+  linkStyle 63 stroke:#c62828,stroke-width:3px
+  linkStyle 64 stroke:#c62828,stroke-width:3px
+  linkStyle 65 stroke:#37474f,stroke-width:1.5px
+  linkStyle 66 stroke:#37474f,stroke-width:1.5px
+  linkStyle 67 stroke:#37474f,stroke-width:1.5px
+  linkStyle 68 stroke:#e65100,stroke-width:1.5px
+  linkStyle 69 stroke:#37474f,stroke-width:1.5px
+  linkStyle 70 stroke:#1565c0,stroke-width:3px
+  linkStyle 71 stroke:#1565c0,stroke-width:3px
+  linkStyle 72 stroke:#1565c0,stroke-width:3px
+  linkStyle 73 stroke:#1565c0,stroke-width:3px
+  linkStyle 74 stroke:#1565c0,stroke-width:3px
+  linkStyle 75 stroke:#1565c0,stroke-width:3px
+  linkStyle 76 stroke:#1565c0,stroke-width:3px
+  linkStyle 77 stroke:#1565c0,stroke-width:3px
+  linkStyle 78 stroke:#1565c0,stroke-width:3px
+  linkStyle 79 stroke:#1565c0,stroke-width:3px
+  linkStyle 80 stroke:#1565c0,stroke-width:3px
+  linkStyle 81 stroke:#1565c0,stroke-width:3px
+  linkStyle 82 stroke:#1565c0,stroke-width:3px
+  linkStyle 83 stroke:#6d4c41,stroke-width:1.5px
+  linkStyle 84 stroke:#6d4c41,stroke-width:1.5px
+  linkStyle 85 stroke:#6d4c41,stroke-width:1.5px
+  linkStyle 86 stroke:#6d4c41,stroke-width:1.5px
+  linkStyle 87 stroke:#6d4c41,stroke-width:1.5px
+  linkStyle 88 stroke:#6d4c41,stroke-width:1.5px
+  linkStyle 89 stroke:#6d4c41,stroke-width:1.5px
+  linkStyle 90 stroke:#6d4c41,stroke-width:1.5px
+  classDef rail fill:#fffde7,stroke:#827717,color:#000
+  classDef source fill:#e8f5e9,stroke:#2e7d32,color:#000
+  classDef load fill:#efebe9,stroke:#6d4c41,color:#000
+  classDef lead fill:#e3f2fd,stroke:#1565c0,color:#000
+  classDef note fill:#f5f5f5,stroke:#9e9e9e,color:#333,stroke-dasharray:3 3
+  NOTE["Rounded nodes are nets as the netlists name them (each board's own names: board B's VBAT is its CR2032 net). Red edges are stages of pcb_energy_chain.yaml with its declared continuous and peak current; orange, a fuse or polyfuse; grey, a converter, load switch or eFuse; blue, a lead between boards. Which parts make each stage (the part names on each edge) is typed in tools/power_tree.py, not found by it; every build checks that typing against the netlist: the path runs only through the named parts, the FETs a named controller drives and the inductors on their switching nodes, each named part is required, a controller counts only through the FET gates it drives on the path, and 2697 wrong entries (swapped controllers and shunts among them) are refused. It does not check that a stage works; power-tree.md has the method and its limits. NOT SHOWN: currents drawn, losses and heat (POWER-THERMAL.md), which rail is on in which power state, grounds and returns, the CM5 modules' internal rails, clamps and bulk capacitors. The chain file predates owner ruling D-06 and PWR-F12: see power-tree.md. Nothing here is built, powered or measured."]:::note

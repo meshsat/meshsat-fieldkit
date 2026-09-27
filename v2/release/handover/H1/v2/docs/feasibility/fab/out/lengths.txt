@@ -1,0 +1,23 @@
+board sha256 62facf0952ff4c01cb0a47698ec6870b5fae0f0d9b836bf95db6c3c7bae166dd
+PCIe up, slot 1                               U30B > U101                       117.6 mm
+PCIe to NVMe, slot 1                          U101 > J_M2N1                      53.9 mm
+PCIe to card, slot 1                          U101 > J_M2C1                      81.1 mm
+USB home, slot 1 to bank 1 hub                U30B > U109 > U102                185.2 mm
+USB failover, slot 1 USB3-1 to bank 3 hub     U30B > U309 > U302                241.6 mm
+Ethernet, slot 1 to KSZ9897R                  U30A > U1                          92.8 mm
+PCIe up, slot 2                               U31B > U201                       140.0 mm
+PCIe to NVMe, slot 2                          U201 > J_M2N2                      44.5 mm
+PCIe to card, slot 2                          U201 > J_M2C2                      70.7 mm
+USB home, slot 2 to bank 2 hub                U31B > U209 > U202                117.9 mm
+USB failover, slot 2 USB3-1 to bank 1 hub     U31B > U109 > U102                255.2 mm
+Ethernet, slot 2 to KSZ9897R                  U31A > U1                         162.8 mm
+PCIe up, slot 3                               U32B > U301                       129.0 mm
+PCIe to NVMe, slot 3                          U301 > J_M2N3                      57.7 mm
+PCIe to card, slot 3                          U301 > J_M2C3                      88.5 mm
+USB home, slot 3 to bank 3 hub                U32B > U309 > U302                196.6 mm
+USB failover, slot 3 USB3-1 to bank 2 hub     U32B > U209 > U202                187.9 mm
+Ethernet, slot 3 to KSZ9897R                  U32A > U1                         232.8 mm
+HDMI, slot 1 to J_HDMI                        U30B > U3 > U4 > J_HDMI           396.2 mm
+HDMI, slot 2 to J_HDMI                        U31B > U3 > U4 > J_HDMI           326.2 mm
+HDMI, slot 3 to J_HDMI                        U32B > U4 > J_HDMI                256.2 mm
+LimeSDR, bank 1 hub to J_LIME                 U102 > J_LIME                     217.0 mm

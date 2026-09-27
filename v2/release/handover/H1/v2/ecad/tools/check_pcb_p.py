@@ -1,0 +1,75 @@
+#!/usr/bin/env python3
+"""PCB-P P1 numeric gate (MESHSAT-830, appendix 32.62): outline 70 x 44, four M3 holes at (+-32, +-19), two copper layers, the power path parts at their sites,
+the locked bands present on both layers at 4 mm for every power net, every part on the top side, the gauge U1 on the QFN-32 land."""
+import sys, pcbnew
+import os as _bo, sys as _bs; _bs.path.insert(0, _bo.path.dirname(_bo.path.abspath(__file__)))
+import verdict as _vh; _vh.crash_hook("check_pcb_p", sys.argv[1:])   # a crash in this module body writes INCONCLUSIVE, never nothing (18 Sep 2026)
+import boardtable as _bt   # the copper layer count is a DECLARATION in boards/<letter>.json, never a
+                           # literal here: six gates carried one, so a layer decision meant editing a
+                           # gate, and two experiments came back with their only failure being the gate
+                           # describing the previous decision (board A, 12 September; board C, today)
+b = pcbnew.LoadBoard(sys.argv[1]); OX, OY = 100.0, 100.0; fails = []; checked = []; _intent_reported = []
+def case(v): return (round(v.x / 1e6 - OX, 3), round(OY - v.y / 1e6, 3))
+def check(c, m):
+    print(("PASS " if c else "FAIL ") + m)
+    checked.append(m)
+    if not c: fails.append(m)
+fps = {f.GetReference(): f for f in b.GetFootprints()}
+bb = b.GetBoardEdgesBoundingBox(); w, h = bb.GetWidth() / 1e6, bb.GetHeight() / 1e6
+check(abs(w - 70) < 0.3 and abs(h - 44) < 0.3, "outline 70 x 44 (got %.1f x %.1f)" % (w, h))
+# THE COPPER LAYER COUNT IS A DECLARATION, NEVER A LITERAL (16 September 2026). A literal here meant a
+# layer decision was a gate edit, and twice a measurement came back whose ONLY failure was the gate
+# describing the previous decision: board A four layers on 12 September (510 of 511) and board C six
+# layers on 16 September. Under the P0 ruling every board's count is open, so it lives in the board
+# table with its reason and is read here; a board that declares none keeps the count written below.
+_LAYERS = _bt.value("p", "copper_layers", 2)
+check(b.GetCopperLayerCount() == _LAYERS, "%d copper layers as board P declares them" % _LAYERS)
+for ref, (x, y) in (("H1", (-32, -19)), ("H2", (32, -19)), ("H3", (-32, 19)), ("H4", (32, 19))):
+    f = fps.get(ref); p = case(f.GetPosition()) if f else None
+    check(f is not None and abs(p[0] - x) < 0.05 and abs(p[1] - y) < 0.05, "hole %s at (%d, %d)%s" % (ref, x, y, "" if f is None else " got %s" % (p,)))
+for ref in ("U1", "F1", "Q1", "Q2", "R10", "W_BP", "W_BN", "W_P", "W_N", "J_CELL", "J_TS", "J_SMB", "D1", "D2"): check(ref in fps, "present %s" % ref)
+check("U1" in fps and "QFN-32-1EP_5x5mm_P0.5mm" in fps["U1"].GetFPIDAsString(), "U1 on the QFN-32 5x5 land")
+SITES = {"W_BP": (-27, 12.5), "F1": (-15.6, 15), "Q1": (0, 15), "Q2": (8, 15), "W_P": (26, 12.5), "W_BN": (-27, -12.5), "R10": (-18, -15), "W_N": (-8, -13.5), "J_CELL": (12, -17.5), "J_TS": (30.5, -9), "J_SMB": (30.5, 2)}
+for ref, (x, y) in SITES.items():
+    f = fps.get(ref)
+    if f is None: continue
+    fb = f.GetBoundingBox(False, False); cx, cy = case(pcbnew.VECTOR2I((fb.GetLeft() + fb.GetRight()) // 2, (fb.GetTop() + fb.GetBottom()) // 2))
+    check(abs(cx - x) < 0.8 and abs(cy - y) < 0.8, "%s box centre at (%.1f, %.1f) got (%.1f, %.1f)" % (ref, x, y, cx, cy))
+flipped = [f.GetReference() for f in b.GetFootprints() if f.IsFlipped()]
+check(not flipped, "every part on the top side%s" % ("" if not flipped else ": " + ",".join(flipped[:6])))
+for net in ("CELL4", "FUSED", "SW", "PACK_P", "PACK_N", "GND"):
+    for L in (pcbnew.F_Cu, pcbnew.B_Cu):
+        n = sum(1 for t in b.GetTracks() if t.GetClass() == "PCB_TRACK" and t.GetLayer() == L and t.GetNetname().lstrip("/") == net and t.GetWidth() >= pcbnew.FromMM(2.7) and t.IsLocked())
+        check(n >= 1, "locked band of %s on %s (%d)" % (net, b.GetLayerName(L), n))
+import os as _os, sys as _sys; _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__))); import copper_checks as _cc; _cc.MIN_COVER = 0.3; print(_cc.run(b, check))   # P2: a two-layer board whose router uses the underside keeps 30 percent of the ground pour (the return of a BMS board at SMBus speeds); every piece must still be anchored   # 8 Sep 2026 (MESHSAT-862)
+# 8 Sep 2026 (MESHSAT-862 Stage C): the intent gates (return path under the pair-class nets, decoupling loops, the rails of the intent file)
+if any(t.GetClass() == "PCB_TRACK" and not t.IsLocked() for t in b.GetTracks()):
+    import os as _os3, sys as _sys3; _sys3.path.insert(0, _os3.path.dirname(_os3.path.abspath(__file__))); import intent_checks as _ic
+    # THE INTENT ITEMS ARE REPORTED HERE AND DECIDED BY THEIR OWN VERDICTS (16 September 2026). They are five
+    # rules with five authorities (the return path, the return via, the decoupling loop, the rails, the rest)
+    # and `intent_checks` already writes a verdict for each. Counting them in THIS gate's failure list as well
+    # made one composite verdict fail every rule it is mapped to: board D routed 0 hard and 0 unrouted with a
+    # single item open, one signal via short of a ground via, and that EMC item failed the MECHANICAL rule
+    # MEC-001 on six boards through this gate. The same defect must not be counted twice under two authorities.
+    _intent_fails = []
+    def _intent_check(c, m):
+        print(("PASS " if c else "FAIL ") + m)
+        _intent_reported.append(m)
+        if not c: _intent_fails.append(m)
+    print(_ic.run(b, _intent_check, sys.argv[1]))
+print("\nRESULT:", "ALL PASS" if not fails else "%d FAIL" % len(fails))
+# The verdict is a file and the exit code, and the denominator travels with it: a bare "0 FAIL" is what a
+# gate that ran, a gate that loaded an empty board and a gate whose checks were all skipped all print.
+# MESHSAT-862, 11 Sep 2026.
+import os as _osv, sys as _sysv
+_sysv.path.insert(0, _osv.path.dirname(_osv.path.abspath(__file__)))
+import verdict as _v
+_nfp = len(list(b.GetFootprints()))
+_sysv.exit(_v.write("check_pcb_p",
+                    _v.INCONCLUSIVE if not _nfp else (_v.PASS if not fails else _v.FAIL),
+                    counts={"fail": len(fails), "pass": len(checked) - len(fails), "footprints": _nfp,
+                            "intent_items_reported": len(_intent_reported)},
+                    denominator=len(checked),
+                    evidence=fails,
+                    inputs={"board": sys.argv[1]},
+                    note="" if _nfp else "the board loaded with no footprints, so nothing here is a judgement of a board"))

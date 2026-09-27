@@ -1,0 +1,99 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "agree": 1980,
+  "aliased_pins": 0,
+  "board_footprints": 400,
+  "board_only_inert": 0,
+  "fail": 60,
+  "netlist_refs": 428
+ },
+ "denominator": 2040,
+ "evidence": [
+  "C121 is in the netlist and not on the board",
+  "C122 is in the netlist and not on the board",
+  "C123 is in the netlist and not on the board",
+  "C124 is in the netlist and not on the board",
+  "C125 is in the netlist and not on the board",
+  "C126 is in the netlist and not on the board",
+  "C127 is in the netlist and not on the board",
+  "C128 is in the netlist and not on the board",
+  "C129 is in the netlist and not on the board",
+  "C130 is in the netlist and not on the board",
+  "C131 is in the netlist and not on the board",
+  "C132 is in the netlist and not on the board",
+  "R146 is in the netlist and not on the board",
+  "R147 is in the netlist and not on the board",
+  "R148 is in the netlist and not on the board",
+  "R149 is in the netlist and not on the board",
+  "R150 is in the netlist and not on the board",
+  "R151 is in the netlist and not on the board",
+  "R152 is in the netlist and not on the board",
+  "R153 is in the netlist and not on the board",
+  "R154 is in the netlist and not on the board",
+  "R155 is in the netlist and not on the board",
+  "R156 is in the netlist and not on the board",
+  "R157 is in the netlist and not on the board",
+  "R158 is in the netlist and not on the board",
+  "R159 is in the netlist and not on the board",
+  "R160 is in the netlist and not on the board",
+  "R161 is in the netlist and not on the board",
+  "R162 is in the netlist and not on the board",
+  "R163 is in the netlist and not on the board",
+  "R164 is in the netlist and not on the board",
+  "R165 is in the netlist and not on the board",
+  "R166 is in the netlist and not on the board",
+  "R167 is in the netlist and not on the board",
+  "R168 is in the netlist and not on the board",
+  "R169 is in the netlist and not on the board",
+  "U13.13 is +13V8_PA on the board and PA_ISNS_N in the netlist",
+  "U13.14 is PA_OUT on the board and PA_ISNS_P in the netlist",
+  "U13.15 is GND on the board and PA_CSGF in the netlist",
+  "U13.16 is PA_CS on the board and PA_CSF in the netlist",
+  "U15.13 is +12V_HF on the board and HF_ISNS_N in the netlist",
+  "U15.14 is HF_OUT on the board and HF_ISNS_P in the netlist",
+  "U15.15 is GND on the board and HF_CSGF in the netlist",
+  "U15.16 is HF_CS on the board and HF_CSF in the netlist",
+  "U16.13 is +54V_POE on the board and POE_ISNS_N in the netlist",
+  "U16.14 is POE_OUT on the board and POE_ISNS_P in the netlist",
+  "U16.15 is GND on the board and POE_CSGF in the netlist",
+  "U16.16 is POE_CS on the board and POE_CSF in the netlist",
+  "U19.13 is PD_VPWR on the board and PD_ISNS_N in the netlist",
+  "U19.14 is PD_OUT on the board and PD_ISNS_P in the netlist"
+ ],
+ "inputs": {
+  "board": {
+   "path": "/root/r2/A04-board-a-hold-criterion/repo/v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb",
+   "sha256_16": "58e26c67987b1daa"
+  },
+  "netlist": {
+   "path": "/root/r2/A04-board-a-hold-criterion/repo/v2/ecad/pcb-a-power-a23/out/pcb-a-power.net",
+   "sha256_16": "aa1372ba3932610f"
+  }
+ },
+ "missing_input": null,
+ "note": "the board against the schematic it was placed from",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "SCH-002": "a7f873603faeb223"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "SCH-002"
+ ],
+ "tool": "netlist_board",
+ "tools": {
+  "git_head": "82dd1e4dc44e",
+  "tools_tree_sha": "354b2ba2a308d8ed"
+ },
+ "ts": "2026-09-25T21:30:13Z",
+ "verdict": "FAIL",
+ "version": "82dd1e4dc44e",
+ "writer": {
+  "file": "netlist_board.py",
+  "sha16": "309086c5bd63d252"
+ }
+}

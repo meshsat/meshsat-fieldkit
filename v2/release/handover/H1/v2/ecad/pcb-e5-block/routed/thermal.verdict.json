@@ -1,0 +1,37 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {},
+ "denominator": 0,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-e5-block.kicad_pcb",
+   "sha256_16": "686b29a734c55b9a"
+  }
+ },
+ "missing_input": null,
+ "note": "no rail and no declared dissipator: nothing to estimate",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "THM-001": "c2ee6d9135d5bf83"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "THM-001"
+ ],
+ "tool": "thermal",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "994b3d2315bb9859"
+ },
+ "ts": "2026-09-21T12:53:05Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown",
+ "writer": {
+  "file": "thermal.py",
+  "sha16": "5b8aade8ce28be00"
+ }
+}

@@ -1,0 +1,19 @@
+EMCON_HW (5 nodes):
+   J_AB1.15 (Pin_15) | A-B interconnect (IDC 2x13, top side) to B16's underside header
+   R102.1  | 100k
+   TP15.1 (1) | EMCON_HW
+   U26.1 (EMCON_HW) | SN74LVC08APWR quad AND: EMCON gates for the PA rail, the HF rail and the D8 inhibit
+   U26.4 (EMCON_HW) | SN74LVC08APWR quad AND: EMCON gates for the PA rail, the HF rail and the D8 inhibit
+PA_EN (6 nodes):
+   J_MEZZ1.9 (Pin_9) | D8 mezzanine harness (IDC 2x8): its USB pair, the PTT mirror, the inhibit, the PA rail state, I2C
+   R58.1  | 62k 1%
+   R58.2  | 62k 1%
+   R59.1  | 10k 1%
+   U13.1 (PA_EN) | LM5176PWPR buck-boost controller, +13V8_PA from VBAT
+   U26.3 (PA_EN) | SN74LVC08APWR quad AND: EMCON gates for the PA rail, the HF rail and the D8 inhibit
+HF_EN (5 nodes):
+   R124.1  | 62k 1%
+   R124.2  | 62k 1%
+   R125.1  | 10k 1%
+   U15.1 (HF_EN) | LM5176PWPR buck-boost controller, +12V_HF from VBAT
+   U26.6 (HF_EN) | SN74LVC08APWR quad AND: EMCON gates for the PA rail, the HF rail and the D8 inhibit

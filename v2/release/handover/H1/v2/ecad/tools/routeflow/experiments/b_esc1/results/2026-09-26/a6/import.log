@@ -1,0 +1,41 @@
+21:21:03: Debug: Adding duplicate image handler for 'PNG file'
+21:21:03: Debug: Adding duplicate image handler for 'JPEG file'
+21:21:03: Debug: Adding duplicate image handler for 'TIFF file'
+21:21:03: Debug: Adding duplicate image handler for 'GIF file'
+21:21:03: Debug: Adding duplicate image handler for 'PNM file'
+21:21:03: Debug: Adding duplicate image handler for 'PCX file'
+21:21:03: Debug: Adding duplicate image handler for 'IFF file'
+21:21:03: Debug: Adding duplicate image handler for 'Windows icon file'
+21:21:03: Debug: Adding duplicate image handler for 'Windows cursor file'
+21:21:03: Debug: Adding duplicate image handler for 'Windows animated cursor file'
+21:21:03: Debug: Adding duplicate image handler for 'TGA file'
+21:21:03: Debug: Adding duplicate image handler for 'XPM file'
+ses_via_drill: 2474 via(s) on the board, 284 named by the session, 246 drill(s) restored from the session's padstack names
+ses_import_lock: import True, tracks before 6423, locked 2737 of groups ['S3'], removed 28 others, after 9132
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.
+swig/python detected a memory leak of type 'PCB_VIA *', no destructor found.

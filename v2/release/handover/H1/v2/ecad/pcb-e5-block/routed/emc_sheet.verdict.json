@@ -1,0 +1,40 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "boards": 1,
+  "fail": 0,
+  "paths": 1,
+  "sources": 0
+ },
+ "denominator": 2,
+ "evidence": [],
+ "inputs": {
+  "board": "e5",
+  "sheet": "pcb_emc.yaml"
+ },
+ "missing_input": null,
+ "note": "the EMC sheet against the boards: every switching part in a netlist declared as a source with a basis this tree holds, every victim and source present, every coupling path carrying a measure and its evidence, and a pre-compliance plan per board. It computes no emission and knows no edge rate a datasheet does not publish; the measurement half of the rule is the laboratory stage",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "EMC-001": "c866a74c3041e5e4"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "EMC-001"
+ ],
+ "tool": "emc_sheet",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "994b3d2315bb9859"
+ },
+ "ts": "2026-09-21T12:53:07Z",
+ "verdict": "PASS",
+ "version": "unknown",
+ "writer": {
+  "file": "emc_sheet.py",
+  "sha16": "fa3789c3a634513f"
+ }
+}

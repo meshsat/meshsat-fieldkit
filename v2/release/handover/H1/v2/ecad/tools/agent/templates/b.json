@@ -1,0 +1,30 @@
+{
+ "_what": "The run shape for board B's DIFF100 pass, the 48 pairs that carry the board (boards/b.json, 12 September 2026). The layer set and the inner geometry are RESERVED and are set here from the board's declaration, never by the proposer: an inner-layer pair is a stripline and its geometry is an impedance target. The slack, the slim retry and the via mode are the board's measured values and an arm may move them. 12 September 2026: the source project is the placement carrying the 2.4 mm couple gap (placed board md5 952eecba618c), which is the board's current best at 22 of 48 on this pass; the arm is measured against that board and no other.",
+ "board": "pcb-b-compute",
+ "letter": "b",
+ "source_project": "pcb-b-compute-b19cg24",
+ "placed": "out/pcb-b-compute-placed.kicad_pcb",
+ "timeout_s": 10800,
+ "_denominator": 48,
+ "passes": [
+  {
+   "classes": "DIFF100",
+   "env": {
+    "PAIR_CORRIDOR_SLACK": 0.08,
+    "PAIR_CORRIDOR_SLACK_SLIM": 0.03,
+    "PAIR_VIA_MODE": "min",
+    "PAIR_COVER_LEGS": 1,
+    "PAIR_CLASS_CLEAR": 1,
+    "PAIR_BUDGET": 0,
+    "PAIR_LAYERS": "F.Cu,In2.Cu,In3.Cu,B.Cu",
+    "PAIR_HOP_LAYERS": "In2.Cu,In3.Cu",
+    "PAIR_INNER": "DIFF100:0.13/0.127"
+   },
+   "_env_why": "15 September 2026 22:39 CEST: this pass is the board's OWN first pair pass, boards/b.json pair_env plus pair_passes[0], not a hand-copied dict. The five placement cycles of the evening ran without PAIR_COVER_LEGS and PAIR_CLASS_CLEAR, so their numbers (35 at 2.4, 38 at 2.6) were measured on a basis the production chain does not use; B20's chain laid 31 at 2.6. tests/test_agent_contract.py holds the two in agreement."
+  }
+ ],
+ "_runs": "pair",
+ "_runs_why": "What this run actually executes. arms.py re-runs the pre-router on an already placed board, so a knob read only by the placement generator cannot act and the validator refuses it rather than letting the arm measure nothing.",
+ "_max_arms": 4,
+ "_max_arms_why": "Board B's pair run. Four arms a cycle: the DIFF100 pass is the measurement and one pass is about ten minutes on the placement box, so four fit inside one wall-clock cycle and the box admits twenty-four. Declared explicitly on 16 September 2026 because an absent value used to mean one silently."
+}

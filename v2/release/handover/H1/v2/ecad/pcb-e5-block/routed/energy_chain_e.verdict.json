@@ -1,0 +1,38 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "fail": 0,
+  "stages": 3
+ },
+ "denominator": 3,
+ "evidence": [],
+ "inputs": {
+  "chain": "pcb_energy_chain.yaml",
+  "stages": "PACK_LEAD,DOCK_ENTRY,SHORE_INPUT"
+ },
+ "missing_input": null,
+ "note": "the stages of the stored-energy chain that sit on this board; the chain as a whole is energy_chain, and whether it is bounded end to end is that verdict's question",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "PWR-003": "797d38a9e68a76ac"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "PWR-003"
+ ],
+ "tool": "energy_chain_e",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "994b3d2315bb9859"
+ },
+ "ts": "2026-09-21T12:53:16Z",
+ "verdict": "PASS",
+ "version": "unknown",
+ "writer": {
+  "file": "energy_chain.py",
+  "sha16": "73b908eb6b002690"
+ }
+}

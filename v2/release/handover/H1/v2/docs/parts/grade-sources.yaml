@@ -1,0 +1,2254 @@
+# v2/docs/parts/grade-sources.yaml: the operating range of every fitted active part and connector of the six schematic
+# boards, and of the modules, cells and wall parts no netlist carries, with the document each range was read from.
+#
+# Written 27 September 2026 (MESHSAT-1357, pre-PCB layer 6, closer hc6) from readings made that night. Prototype design:
+# nothing here has been built, bought for assembly or measured. `grade_check.py` beside this file joins it to the
+# committed netlists and writes GRADE-CHECK.md; it does not change, and is not read by, pcb_part_temps.yaml, whose rule
+# (CMP-001/ENV-001, part_temps.py) stays advisory on its own thirteen rows.
+#
+# A ROW. `code` (the LCSC code a BOM line carries, or the one lcsc_fill.py gives a blank line) or `match` (footprint and,
+# where needed, a word of the value) for a line with no code; `min_c`/`max_c` the range; `kind` TA (ambient or free-air
+# operating), TJ (junction only: the ambient check then needs the part's dissipation, layer 9) or TCASE; `where` inside,
+# outside_face, plate, pack or outside, which picks the hot bar; `source.class`:
+#   held                   a maker document in v2/vendor (path given)
+#   maker sheet as LCSC serves it   the maker's sheet from LCSC's datasheet link, fetched 2026-09-27 with its sha256;
+#                          not filed in v2/vendor (a copy is re-fetchable from the URL)
+#   LCSC parametric        LCSC's own transcription; it disagreed with the maker's sheet more than once this night
+#                          (C164047 ESR, the JST VH/PH ranges), so it is used only where no sheet was read
+#   none read              no range read: the row reads TBD and is counted, never assumed fine
+#   maker sheet (round 8 stream copy)   the maker's sheet a round 8 board stream fetched and will file in v2/vendor
+#                          (worktrees r8b and r8c, drafts/<board>/datasheets/); cited by the maker's URL and sha256
+#                          until it is filed. Added 27 September 2026 so that those streams' parts join a row
+#                          when their netlists land; a row whose code no netlist carries is not shown on the page
+# `carve_out` repeats the envelope's own words for a part it declares; `not_a_component` marks copper with no part.
+#
+# Session picks named in rows (HC6-SC-7 IDC headers, HC6-SC-8 Mill-Max pin) are recommendations recorded on
+# v2/docs/parts/PROCUREMENT.md; the generators that would carry them belong to the board authors. A quote reproduces the
+# maker's words, except that an em dash in the original is written as a colon (the repository's no-em-dash rule).
+
+coded:
+- code: C111822
+  part: LM5069MM-2/NOPB
+  maker: TI
+  min_c: -40
+  max_c: 125
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/2b87cbebbd5e4ec9a4da8d6cdd765b9b.pdf?productCode=C111822
+    sha256: 00b05c8c10466bc6cb74ee930a717cfdb264a9277c4e159a372678b81ba99ee3
+    fetched_utc: '2026-09-27T00:19:46Z'
+    clause: p.5
+    quote: Minimum and maximum limits are specified through test, design, or statistical correlation at TJ= –40°C to 125°C. Typical
+- code: C113974
+  part: SMBJ5.0A
+  maker: MDD(Microdiode Semiconductor)
+  min_c: -65
+  max_c: 150
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/2fdb55289569ebfc0bc21eab3853afe6.pdf?productCode=C113974
+    sha256: 95385273b5009dc9ec2f2a432e07e215f71626b825bd53a9f5525f4186566d3b
+    fetched_utc: '2026-09-27T00:19:47Z'
+    clause: p.1
+    quote: Operating junction and Storage Temperature Range. TJ,TSTG -65 to +150 ℃
+- code: C114409
+  part: STM32H743VIT6
+  maker: ST
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/880ee2974c46763ce43da1468b8b0b74.pdf?productCode=C114409
+    sha256: 9c74d2015445f7c3c2c9076fc13a2665c8f6fecec7898d128dac836d6d39314b
+    fetched_utc: '2026-09-27T00:19:48Z'
+    clause: p.18
+    quote: STM32H742xI/G and STM32H743xI/G devices operate in the –40 to +85 °C temperature
+- code: C124196
+  part: BZT52C12-7-F
+  maker: DIODES
+  min_c: -65
+  max_c: 150
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/2ab659bd861bd3db83ae423c098a297a.pdf?productCode=C124196
+    sha256: 0fbd7d137524820f0160594065cbceb8c6b3188757c328416d08fceb7418202f
+    fetched_utc: '2026-09-27T00:19:50Z'
+    clause: p.2
+    quote: Operating and Storage Temperature Range TJ, TSTG -65 to +150 °C
+- code: C12624
+  part: KT-0603G
+  maker: Hubei KENTO Elec
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/69e84a3abd84e5ab5856c47a2d0334ce.pdf?productCode=C12624
+    sha256: 770831ccd4b3ab793a5d4df9fbf8aeaa80170f904de09f4032b09357595872ad
+    fetched_utc: '2026-09-27T00:19:50Z'
+    clause: p.3
+    quote: Topr -40°C ~ + 85°C
+- code: C128396
+  part: TS3USB221ARSER
+  maker: TI
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/3647cd8a9b46449fbb5150d6d6b603c3.pdf?productCode=C128396
+    sha256: 2b0749e0feb6cedf24d3934df2963084f231317dc32ccfb8c52f80e95a6d6d3f
+    fetched_utc: '2026-09-27T00:19:51Z'
+    clause: p.1
+    quote: air temperature range from –40°C to 85°C.
+- code: C129189
+  part: SKY13351-378LF
+  maker: SKYWORKS
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/rf/skyworks-sky13351-378lf-spdt.pdf
+    clause: recommended operating conditions
+    quote: Operating temperature TOP –40 +85 C
+- code: C131334
+  part: B4B-PH-K-S(LF)(SN)
+  maker: JST
+  min_c: -40
+  max_c: 105
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/connectors/jst-ph-catalogue.pdf
+    clause: specifications
+    quote: 'Temperature range: -40℃ to +105℃ (LCSC serves an older sheet reading -25 to +85)'
+- code: C131337
+  part: B2B-PH-K-S(LF)(SN)
+  maker: JST
+  min_c: -40
+  max_c: 105
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/connectors/jst-ph-catalogue.pdf
+    clause: 'specifications (round 8: board D J_VGG at 53a98a71)'
+    quote: 'Temperature range: -40℃ to +105℃ (including temperature rise in applying electrical current)'
+- code: C135085
+  part: SMBJ58A-13-F
+  maker: DIODES
+  min_c: -55
+  max_c: 150
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/a98dcba2e58a9f9a1a005c1c0c468785.pdf?productCode=C135085
+    sha256: 752945fa3acaf46947c4f9ffdca98027af4ffb4845c5250713f0b608a547d97f
+    fetched_utc: '2026-09-27T00:19:54Z'
+    clause: p.2
+    quote: Operating Temperature Range TJ -55 to +150 C
+- code: C135822
+  part: 74LVC1G157GW,125
+  maker: Nexperia
+  min_c: -40
+  max_c: 125
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet (round 8 stream copy)
+    url: https://assets.nexperia.com/documents/data-sheet/74LVC1G157.pdf
+    sha256: 62f9b85c44785ca14f681958a44df1a1106f0006d050e93b20c56d738d15e789
+    fetched_utc: 2026-09-26T21:17Z to 21:30Z (stream b)
+    clause: Rev. 12, Table 6 recommended operating conditions p.4 (board B U513 to U520, U524 to U529 in worktree r8b)
+    quote: Tamb ambient temperature -40 - +125 °C
+- code: C139409
+  part: SN74AUP1G08DBVR
+  maker: TI
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/ti/ti-sn74aup1g08.pdf
+    clause: 'SCES502Q (revised March 2024), Recommended Operating Conditions p.6 (round 8: board A U35 to U38 at 53a98a71)'
+    quote: TA Operating free-air temperature –40 85 °C
+- code: C144395
+  part: B4B-XH-A(LF)(SN)
+  maker: JST
+  min_c: -25
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/connectors/jst-xh-catalogue.pdf
+    clause: 'specifications (round 8: board E J_SMB at 53a98a71; board P J_SMB, blank in its netlist, filled by lcsc_fill.py MAP)'
+    quote: 'Temperature range: -25℃ to +85℃'
+- code: C148250
+  part: BSC028N06NS
+  maker: Infineon
+  min_c: -55
+  max_c: 150
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/0ee6668d612fe4d6661ddc31bcb9aa36.pdf?productCode=C148250
+    sha256: 2959653166e981f9de24cd9c141c44490ecc62acba5971ec8c0b263eca9708e0
+    fetched_utc: '2026-09-27T00:19:54Z'
+    clause: p.2
+    quote: Operating and storage temperature T j, T stg -55 ... 150 °C
+- code: C151256
+  part: SMBJ18A
+  maker: Littelfuse
+  min_c: -65
+  max_c: 150
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/4ab84a227fae39f9eac85241b8264ead.pdf?productCode=C151256
+    sha256: d7df155be4b1f612085401e8c946f065e284d65a0e7de22b9225a7b73946e51b
+    fetched_utc: '2026-09-27T00:19:55Z'
+    clause: p.1
+    quote: Operating Temperature Range TJ -65 to 150 °C
+- code: C15127
+  part: AO3401A
+  maker: AOS
+  min_c: -55
+  max_c: 150
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/fee353dd1e9e0bc90b295f14f381aa4c.pdf?productCode=C15127
+    sha256: 0d8e3261ae280e007b5837fff60c55142f2d92af71edc4d02aee6f7a760a785c
+    fetched_utc: '2026-09-27T00:19:56Z'
+    clause: maximum ratings
+    quote: Junction and Storage Temperature Range TJ, TSTG -55 to 150 °C
+- code: C151394
+  part: 74LVC1G17W5-7
+  maker: DIODES
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/414902844c9c073fc86165207cab097c.pdf?productCode=C151394
+    sha256: 029f345a1e7be917fee46d47c49a61963938e0aab1631b019fe7eddb014fb548
+    fetched_utc: '2026-09-27T00:19:56Z'
+    clause: p.4
+    quote: Electrical Characteristics (@ TA = -40°C to +85°C. All typical values are at VCC = 3.3V, TA = +25°C.)
+- code: C1518769
+  part: ATECC608B-SSHDA-T
+  maker: MICROCHIP
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/c376a4ba087c5afe6e6a5fa26e1e604f.pdf?productCode=C1518769
+    sha256: 519e2edac0deefe1755a98e30b8ce2a5a2ff9b9c39acda333bb625b87bdac3ff
+    fetched_utc: '2026-09-27T00:19:57Z'
+    clause: p.1
+    quote: '– Standard Industrial Temperature Range: -40℃ to +85℃'
+- code: C157482
+  part: TS3DV642A0RUAR
+  maker: TI
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/0fa074ce780a4decbf27378470a31577.pdf?productCode=C157482
+    sha256: 5e837c12d2a76012f46dbd70ff8ce8fa2e93e7489ca86f08e8d5f1b717c2d469
+    fetched_utc: '2026-09-27T00:19:58Z'
+    clause: Recommended Operating Conditions
+    quote: TA Operating free-air temperature –40 85 °C
+- code: C157570
+  part: BQ4050RSMR
+  maker: TI
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: pack
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/af544880386147908edcdabf7a4b1bce.pdf?productCode=C157570
+    sha256: e08bd52b8fc1fec9f7ea5fcb44b2387498b21d207086eef72950b40eaf9ff8b1
+    fetched_utc: '2026-09-27T00:19:59Z'
+    clause: p.8
+    quote: Typical values stated where TA = 25°C and VCC = 14.4 V, Min/Max values stated where TA = –40°C to 85°C and VCC =
+- code: C157991
+  part: B5B-XH-A(LF)(SN)
+  maker: JST
+  min_c: -25
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/connectors/jst-xh-catalogue.pdf
+    clause: specifications
+    quote: 'Temperature range: -25℃ to +85℃ (including temperature rise in applying electrical current)'
+- code: C157993
+  part: B5B-PH-K-S(LF)(SN)
+  maker: JST
+  min_c: -40
+  max_c: 105
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/connectors/jst-ph-catalogue.pdf
+    clause: specifications
+    quote: 'Temperature range: -40℃ to +105℃'
+- code: C158012
+  part: B2B-XH-A(LF)(SN)
+  maker: JST
+  min_c: -25
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/connectors/jst-xh-catalogue.pdf
+    clause: specifications
+    quote: 'Temperature range: -25℃ to +85℃'
+- code: C160390
+  part: BM04B-SRSS-TB(LF)(SN)
+  maker: JST
+  min_c: -25
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: LCSC parametric (a distributor transcription, not a sheet)
+    quote: Operating Temperature -25℃~+85℃ (JST SH catalogue not held)
+- code: C164047
+  part: TAXM25M4RFBCCT2T
+  maker: Yajingxin
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/crystals/yajingxin-taxm25m4rfbcct2t-spec-2026-08-26.pdf
+    clause: item 5 (Yajingxin specification, issue 2026-08-26)
+    quote: Operating Temperature Range -40℃~+85℃
+- code: C164058
+  part: TAXM24M4RFBCCT2T
+  maker: Yajingxin
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/4b1280dbecf44eb39d47f5ba9df27380.pdf?productCode=C164058
+    sha256: a242cb4c3e6600190e5cd24ced4e0f379494d00aa5c23da28e93f3c56a2be03f
+    fetched_utc: '2026-09-27T00:20:03Z'
+    clause: item 11
+    quote: Operating Temperature Range -40 85 ℃
+- code: C165948
+  part: TYPE-C-31-M-12
+  maker: Korean Hroparts Elec
+  min_c: -30
+  max_c: 80
+  kind: TA
+  where: inside
+  source:
+    class: LCSC parametric (a distributor transcription, not a sheet)
+    quote: Operating Temperature -30℃~+80℃
+- code: C17313
+  part: MF-MSMF050-2
+  maker: BOURNS
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/966b70449c8743eeb73635e5bb46e4f4.pdf?productCode=C17313
+    sha256: 1cfc3ae1da3d5aed41e614d85d3c01dea2fa67d14c760e882e400a1138ee1cd8
+    fetched_utc: '2026-09-27T00:20:04Z'
+    clause: p.1
+    quote: Operating Temperature.......................................... -40 °C to +85 °C
+- code: C176945
+  part: AP2112K-2.5TRG1
+  maker: DIODES
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/5b29baebdc4332b382a530ff21092301.pdf?productCode=C176945
+    sha256: ef8d376f2ec356e29172eb9e053819a0ebdcc576dba7fc9ab0505c568427920f
+    fetched_utc: '2026-09-27T00:20:04Z'
+    clause: p.1
+    quote: ' Operation Temperature Range: -40°C to +85°C'
+- code: C189211
+  part: TPS3808G30DBVR
+  maker: TI
+  min_c: -40
+  max_c: 125
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet (round 8 stream copy)
+    url: https://www.ti.com/lit/ds/symlink/tps3808.pdf
+    sha256: 74d889c0f68af88032f1633c26381817cc03e10d9fd3b4c177a044ad3ed86eed
+    fetched_utc: 2026-09-26T21:17Z to 21:30Z (stream b)
+    clause: 'SBVS050N, Electrical Characteristics p.6 (board B U221 in worktree r8b); Absolute Maximum Ratings p.5 note 2: TJ = TA is
+      assumed for the part''s low dissipation'
+    quote: over operating temperature range (TJ = –40°C to 125°C)
+- code: C19224
+  part: PESD5V0S1BA,115
+  maker: Nexperia
+  min_c: -55
+  max_c: 150
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/dd1aa251f61f8aba7aba621165608b08.pdf?productCode=C19224
+    sha256: 6546e415b8885ea3790c91629034c6b4e5c6961d5fde734e55dfa479dd8dc49a
+    fetched_utc: '2026-09-27T00:20:05Z'
+    clause: limiting values
+    quote: Tamb ambient temperature -55 150 °C
+- code: C19829591
+  part: 74LVC1G08GV
+  maker: TECH PUBLIC
+  min_c: -40
+  max_c: 125
+  kind: TA
+  where: inside
+  source:
+    class: LCSC parametric (a distributor transcription, not a sheet)
+    quote: Operating Temperature -40℃~+125℃
+- code: C2040
+  part: RP2040
+  maker: Raspberry Pi
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf
+    clause: revision history p.639
+    quote: RP2040 now qualified to -40°C, minimum operating temperature changed from -20°C to -40°C
+- code: C20625731
+  part: ABM8-272-T3
+  maker: ABRACON
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/d5520a242c89eeaef42f6496027f72da.pdf?productCode=C20625731
+    sha256: f4b5787cbc51e7f6366333491ec09884ad406dd348fe540040f0fc043ab5457f
+    fetched_utc: '2026-09-27T00:20:09Z'
+    clause: specifications
+    quote: Operating Temperature -40 +85 ºC
+- code: C2070920
+  part: AP64500SP-13
+  maker: DIODES
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/33f261fea70469dad53d64b3fab8d8d9.pdf?productCode=C2070920
+    sha256: d3bcdc7dd4ca44cb36ef893d3dbfabbd1742dfc736557777868f6ead5d0a98e8
+    fetched_utc: '2026-09-27T00:20:10Z'
+    clause: p.6
+    quote: ambient temperature range, -40°C to +85°C, and input-voltage range, 3.8V to 40V, unless otherwise specified.)
+- code: C2071056
+  part: AP63205WU-7
+  maker: DIODES
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/94820cc9e44613233ddcc1a15801eca3.pdf?productCode=C2071056
+    sha256: ef99daa3789d835bc025dfcb4c605c5c2e6d3e7223e86d40b33e6b497ea5a722
+    fetched_utc: '2026-09-27T00:20:11Z'
+    clause: p.5
+    quote: temperature range, -40°C to +85°C, and input voltage range, 3.8V to 32V.)
+- code: C20917
+  part: AO3400A
+  maker: AOS
+  min_c: -55
+  max_c: 150
+  kind: TJ
+  where: pack
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/130876b936da464599428c58fd8de8f6.pdf?productCode=C20917
+    sha256: e5bfeef6cd3aa209f2e191ba42d5616259e8e7143ff01ed6c532b8ec3b13ab73
+    fetched_utc: '2026-09-27T00:20:11Z'
+    clause: maximum ratings
+    quote: Junction and Storage Temperature Range TJ, TSTG -55 to 150 °C
+- code: C210837
+  part: MF-MSMF200-2
+  maker: BOURNS
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/a24fb2ca04c8aa40d8c57ff2ffdfaed8.pdf?productCode=C210837
+    sha256: e0cfbb785a81edd0d8e9a2021d3ab8b571e899fb677af8e1f4309e6ae7322f5e
+    fetched_utc: '2026-09-27T00:20:12Z'
+    clause: p.1
+    quote: Operating Temperature.......................................... -40 °C to +85 °C
+- code: C2155778
+  part: TPS259631DDAR
+  maker: TI
+  min_c: -40
+  max_c: 125
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/eb69383e37f171723878a7a5eaf76f9b.pdf?productCode=C2155778
+    sha256: f90688525fc943c1582b61448cfd304b11be9d20018db4fa75aa8a2e807012a8
+    fetched_utc: '2026-09-27T00:20:13Z'
+    clause: Recommended Operating Conditions
+    quote: TJ Junction temperature –40 125 °C
+- code: C224047
+  part: SMCJ28A
+  maker: Littelfuse
+  min_c: -65
+  max_c: 150
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C224047
+    sha256: 6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea
+    fetched_utc: '2026-09-27T00:20:13Z'
+    clause: p.1
+    quote: Operating Temperature Range TJ -65 to 150 °C
+- code: C224052
+  part: SMCJ40A
+  maker: Littelfuse
+  min_c: -65
+  max_c: 150
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C224052
+    sha256: 6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea
+    fetched_utc: '2026-09-27T00:20:14Z'
+    clause: p.1
+    quote: Operating Temperature Range TJ -65 to 150 °C
+- code: C2286
+  part: KT-0603R
+  maker: Hubei KENTO Elec
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/011ec3e8cb1e825f6961d29bc4db4c7a.pdf?productCode=C2286
+    sha256: a3bac1cc9c59cb306ad03512945cce12c87bb54252abc223b796e1d20d41d4a1
+    fetched_utc: '2026-09-27T00:20:15Z'
+    clause: p.3
+    quote: Topr -40°C ~ + 85°C
+- code: C2287
+  part: KT-0603Y
+  maker: Hubei KENTO Elec
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/ba7b73648918210433b88ee1f2fd7ebf.pdf?productCode=C2287
+    sha256: 86f7efb743b271c3cc9d63a09ae3c2fd457c8ea8513dae81b350436317520574
+    fetched_utc: '2026-09-27T00:20:15Z'
+    clause: p.3
+    quote: Topr -40°C ~ + 85°C
+- code: C2288
+  part: KT-0603B
+  maker: Hubei KENTO Elec
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/1096dc34dcf507e4677a7d79542be828.pdf?productCode=C2288
+    sha256: 02c15544e1aa1c636eea10b988a48a5dd5c75193570cbaf221f4db89781598d2
+    fetched_utc: '2026-09-27T00:20:16Z'
+    clause: p.3
+    quote: Topr -40°C ~ + 85°C
+- code: C252308
+  part: 6CS06000F20UCG
+  maker: SJK
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: LCSC parametric (a distributor transcription, not a sheet)
+    quote: Operating Temperature -40℃~+85℃
+- code: C265283
+  part: B2B-XH-A-GU
+  maker: JST
+  min_c: -25
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/connectors/jst-xh-catalogue.pdf
+    clause: 'specifications (the -GU suffix is not in this catalogue: SOURCES condition 1 row)'
+    quote: 'Temperature range: -25℃ to +85℃'
+- code: C2657885
+  part: LTC2954ITS8-1#TRPBF
+  maker: ADI
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/power/ltc2954.pdf
+    clause: 'Absolute Maximum Ratings (round 8: board A U1 at 53a98a71)'
+    quote: Operating Temperature Range LTC2954I-1 -40°C to 85°C
+- code: C268712
+  part: SS2040FL
+  maker: PANJIT
+  min_c: -50
+  max_c: 150
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/fbe7b074b28942710b4075bd637e687d.pdf?productCode=C268712
+    sha256: 24333acdc9df9032e4c80601c94b77f21ac38d15221125f600f01a71a9ee1aba
+    fetched_utc: '2026-09-27T00:20:18Z'
+    clause: p.1
+    quote: Operating Junction and Storage Temperature Range T J , T ST G -50 to +150 O
+- code: C274411
+  part: B2P-VH-BL(LF)(SN)
+  maker: JST
+  min_c: -40
+  max_c: 105
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/connectors/jst-vh-catalogue.pdf
+    clause: p.1 specifications (fetched 2026-09-27; LCSC serves an older sheet reading -25 to +85)
+    quote: 'Temperature range: -40℃ to +105℃ (including temperature rise in applying electrical current)'
+- code: C2836813
+  part: BMI270
+  maker: Bosch
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/bosch/bosch-bmi270.pdf
+    clause: operating conditions
+    quote: TA -40 +85 °C
+- code: C2843335
+  part: W25Q16JVUXIQ
+  maker: Winbond
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: LCSC parametric (a distributor transcription, not a sheet)
+    quote: Operating Temperature -40℃~+85℃
+- code: C2864778
+  part: PCA9555PWR
+  maker: TI
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/7bbcfb211a16f3322a731796439ce31b.pdf?productCode=C2864778
+    sha256: 4ce64b390114098efa7991642db621b46ccfb9adfa11cac5270a67002023eea0
+    fetched_utc: '2026-09-27T00:20:24Z'
+    clause: p.27
+    quote: (1) TA = –40°C to 85°C (unless otherwise noted)
+- code: C2871143
+  part: TCAN334DR
+  maker: TI
+  min_c: -40
+  max_c: 150
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/f2707b1456cf2afce8742dadc0584ff5.pdf?productCode=C2871143
+    sha256: 528d649ac40e49dc6bb5867848ed631d81e9c81c65da9549ddc3332430fe5451
+    fetched_utc: '2026-09-27T00:20:25Z'
+    clause: p.6
+    quote: over operating free-air temperature range, TJ = –40°C to 150°C. All typical values are at 25°C and supply voltages of VCC
+      =
+- code: C2871872
+  part: BQ25731RSNR
+  maker: TI
+  min_c: -40
+  max_c: 125
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://www.ti.com/cn/lit/ds/symlink/bq25731.pdf
+    sha256: f4c1b09117e36158a2bc1660102e308f57bc9f89459b87e0fb06738485feb524
+    fetched_utc: '2026-09-27T00:20:25Z'
+    clause: p.9
+    quote: VVBUS_UVLOZ < VVBUS < VVBUSOV_FALL , TJ = -40°C to +125°C, and TJ = 25°C for typical values (unless otherwise noted)
+- code: C2876308
+  part: TLV75801PDRVR
+  maker: TI
+  min_c: -40
+  max_c: 125
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/04b78ab118976e2ba8b7add30e8fd87f.pdf?productCode=C2876308
+    sha256: 6f381a87d3e91ac051da62686b2ce8af63480a24cb5be31459e85a17770c2947
+    fetched_utc: '2026-09-27T00:20:27Z'
+    clause: p.5
+    quote: at operating temperature range (TJ = –40°C to +125°C),VIN = VOUT(NOM) + 0.5 V or 1.5 V (whichever isgreater), IOUT = 1 mA,
+- code: C2876544
+  part: CSD18510Q5B
+  maker: TI
+  min_c: -55
+  max_c: 150
+  kind: TA
+  where: inside
+  source:
+    class: LCSC parametric (a distributor transcription, not a sheet)
+    quote: Operating Temperature -55℃~+150℃
+- code: C2877852
+  part: TLV75801PDBVR
+  maker: TI
+  min_c: -40
+  max_c: 125
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/04b78ab118976e2ba8b7add30e8fd87f.pdf?productCode=C2877852
+    sha256: 6f381a87d3e91ac051da62686b2ce8af63480a24cb5be31459e85a17770c2947
+    fetched_utc: '2026-09-27T00:20:29Z'
+    clause: p.5
+    quote: at operating temperature range (TJ = –40°C to +125°C),VIN = VOUT(NOM) + 0.5 V or 1.5 V (whichever isgreater), IOUT = 1 mA,
+- code: C2927698
+  part: MDT420M02001
+  maker: Amphenol
+  min_c: -40
+  max_c: 80
+  kind: TA
+  where: inside
+  source:
+    class: LCSC parametric (a distributor transcription, not a sheet)
+    quote: Operating Temperature -40℃~+80℃
+- code: C2941042
+  part: LM74700QDBVRQ1
+  maker: TI
+  min_c: -40
+  max_c: 125
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/447cabab1808fa061ec80788e97d5328.pdf?productCode=C2941042
+    sha256: 59c554056e8d280869e5264c7c9bb5fb44a25324cac430a7888959caf5c2ccbd
+    fetched_utc: '2026-09-27T00:20:31Z'
+    clause: p.6
+    quote: TJ = –40°C to +125°C; typical values at TJ = 25°C, V(ANODE) = 12 V, C(VCAP) = 0.1 µF, V(EN) = 3.3 V, over operating free-air
+- code: C2977809
+  part: 2199230-4
+  maker: TE Connectivity
+  min_c: -40
+  max_c: 80
+  kind: TA
+  where: inside
+  source:
+    class: LCSC parametric (a distributor transcription, not a sheet)
+    quote: Operating Temperature -40℃~+80℃
+- code: C29781241
+  part: LG290P03AAMD
+  maker: Quectel
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/quectel/lg290p03-hardware-design-v1.1.pdf
+    clause: operating temperature (pcb_part_temps.yaml row)
+    quote: operating temperature -40 to +85 C
+- code: C2986059
+  part: 19-217/GHC-YR1S2/6T
+  maker: EVERLIGHT
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://www.everlighteurope.com/custom/files/datasheets/DSE-0025583.pdf
+    sha256: 4d0eb56e7dc66ab0a81ca648a8f56c5c1442ab5c74ac46bc298478b02533aa17
+    fetched_utc: '2026-09-27T00:20:33Z'
+    clause: p.2
+    quote: Operating Temperature Topr -40 ~ +85 ℃
+- code: C3174425
+  part: '132134'
+  maker: Amphenol
+  min_c: -65
+  max_c: 165
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/fba079997beff0cb821b1f5068243546.pdf?productCode=C3174425
+    sha256: 1ec1d365bf5bf9e1598cf7cf2c90747ba11f06607f4c6a28ca6d30a0aab56034
+    fetched_utc: '2026-09-27T00:20:34Z'
+    clause: drawing notes
+    quote: 'TEMPERATURE RANGE: -65 TO +165'
+- code: C3200405
+  part: TPS62933DRLR
+  maker: TI
+  min_c: -40
+  max_c: 150
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/8822d9443d3405e5b17304ebbb56ac2c.pdf?productCode=C3200405
+    sha256: ae5022ec46b03cff41c586334c9d2fe9f3072d0648708f2fc3fa0daa23e75e7f
+    fetched_utc: '2026-09-27T00:20:35Z'
+    clause: p.6
+    quote: 导致器件参数或功能规格下降的各项条件。TJ = –40°C 至 +150°C，VIN = 3.8V 至 30V（除非另有说明）。
+- code: C350562
+  part: SN74LVC86APWR
+  maker: TI
+  min_c: -40
+  max_c: 125
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/7554be2b4f9a63fefa425850cf2a6be9.pdf?productCode=C350562
+    sha256: fd927292d995122654117c47465984a0d8b531deec1922e4bbb5a14d4b480947
+    fetched_utc: '2026-09-27T00:20:35Z'
+    clause: p.3
+    quote: Ptot Power dissipation TA = –40°C to 125°C (5) (6) 500 mW
+- code: C352974
+  part: SN74LVC32APWR
+  maker: TI
+  min_c: -40
+  max_c: 125
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/67474b6d5bc4304e74866b896d89cebf.pdf?productCode=C352974
+    sha256: 5b06705d2a556b117133f78860bce9f68f365090877cbb0f2ad22697fb4634b8
+    fetched_utc: '2026-09-27T00:20:36Z'
+    clause: p.1
+    quote: –40°C to +125°C, and –55°C to +125°C is designed for 1.65-V to 3.6-V VCC operation.
+- code: C353882
+  part: TPS2065CDBVR
+  maker: TI
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/01697fcb2b75abe400b8f1521d84f8bc.pdf?productCode=C353882
+    sha256: b3e89ad1c821f6712f870948e52900276b05edaae5862264d15e238caab84197
+    fetched_utc: '2026-09-27T00:20:37Z'
+    clause: p.1
+    quote: '• Ambient Temperature Range: –40°C to 85°C supply to provide regulated power when the output is'
+- code: C364296
+  part: SMBJ20A
+  maker: MDD(Microdiode Semiconductor)
+  min_c: -65
+  max_c: 150
+  kind: TJ
+  where: pack
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/2fdb55289569ebfc0bc21eab3853afe6.pdf?productCode=C364296
+    sha256: 95385273b5009dc9ec2f2a432e07e215f71626b825bd53a9f5525f4186566d3b
+    fetched_utc: '2026-09-27T00:20:38Z'
+    clause: p.1
+    quote: Operating junction and Storage Temperature Range. TJ,TSTG -65 to +150 ℃
+- code: C3656912
+  part: TMUXHS4212IRKSR
+  maker: TI
+  min_c: -40
+  max_c: 105
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/ti/ti-tmuxhs4212.pdf
+    clause: Recommended Operating Conditions
+    quote: 'TA Operating free-air/ambient temperature: TMUXHS4212 0 to 70, TMUXHS4212I -40 to 105 (the fitted code is the I part)'
+- code: C3659325
+  part: Sensirion SGP41-D-R4
+  maker: ''
+  min_c: -20
+  max_c: 55
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/sensirion/sgp41-datasheet.pdf
+    clause: specifications
+    quote: Operating temperature range −20 to +55 °C
+- code: C3664478
+  part: BME688
+  maker: Bosch
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: LCSC parametric (a distributor transcription, not a sheet)
+    quote: Operating Temperature -40℃~+85℃
+- code: C3670061
+  part: SCF9550-30-05
+  maker: EATON
+  min_c: -20
+  max_c: 60
+  kind: TA
+  where: pack
+  source:
+    class: held
+    document: v2/vendor/battery/eaton-scf9550-elx1135.pdf
+    clause: General specifications
+    quote: 'Operating temperature: -20 °C to +60 °C; Storage temperature: -10 °C to +40 °C < 90% RH; Storage duration: 1 year'
+- code: C3681715
+  part: BQ7720700DSSR
+  maker: TI
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: pack
+  source:
+    class: held
+    document: v2/vendor/battery/ti-bq77207.pdf
+    clause: Recommended Operating Conditions
+    quote: TA Ambient temperature -40 85 °C
+- code: C3685740
+  part: TPS37A010122DSKR
+  maker: TI
+  min_c: -40
+  max_c: 125
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/b4cc17b1ec381ff29ed9bd78cbc43e80.pdf?productCode=C3685740
+    sha256: 8ba79a88a3e3be3ffe65d9d93d2e28a5d9a532f8b38c955f8c07674cdc1e43cd
+    fetched_utc: '2026-09-27T00:20:42Z'
+    clause: p.7
+    quote: voltage VPU = 5.5 V, and load CLOAD = 10 pF. The operating free-air temperature range TA = – 40°C to 125°C, unless
+- code: C374030
+  part: SMCJ18A
+  maker: Littelfuse
+  min_c: -65
+  max_c: 150
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C374030
+    sha256: 6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea
+    fetched_utc: '2026-09-27T00:20:43Z'
+    clause: p.1
+    quote: Operating Temperature Range TJ -65 to 150 °C
+- code: C37593
+  part: ADS1115IDGSR
+  maker: TI
+  min_c: -40
+  max_c: 125
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/ti/ti-ads1115-sbas444e.pdf
+    clause: 'SBAS444E (revised December 2024), Recommended Operating Conditions p.4 (round 8: board D U22 at 53a98a71)'
+    quote: TA Operating ambient temperature –40 125 °C
+- code: C38558
+  part: PESD12VL1BA,115
+  maker: Nexperia
+  min_c: -65
+  max_c: 150
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/635822dff4ae48ff8ae972126ca771e2.pdf?productCode=C38558
+    sha256: 2bbeee7c7389f652e636dc603b0fcabdb24ae55278426bb45e798ca20d579d81
+    fetched_utc: '2026-09-27T00:20:44Z'
+    clause: limiting values
+    quote: Tamb ambient temperature −65 +150 °C
+- code: C398356
+  part: TLV9062IDGKR
+  maker: TI
+  min_c: -40
+  max_c: 125
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/b3f500e21835dc38634fe987feaa838a.pdf?productCode=C398356
+    sha256: 424562d65438d8ae659d72b3b20405ffb77b7aa47abc0a58a15836549d0d648a
+    fetched_utc: '2026-09-27T00:20:44Z'
+    clause: p.1
+    quote: '• Extended temperature range: –40°C to 125°C'
+- code: C402162
+  part: SN74LVC2G06DBVR
+  maker: TI
+  min_c: -40
+  max_c: 125
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet (round 8 stream copy)
+    url: https://www.ti.com/lit/ds/symlink/sn74lvc2g06.pdf
+    sha256: b5533064ff102afca29c87df4ce5b6b1771dd5eb5f869ed787c07ef66ece5910
+    fetched_utc: 2026-09-26T21:17Z to 21:30Z (stream b)
+    clause: SCES307J, Recommended Operating Conditions p.5 (board B U113 to U115, U213 to U215, U220, U313 to U315 in worktree r8b)
+    quote: TA Operating free-air temperature –40 125 °C
+- code: C404027
+  part: TLV75533PDBVR
+  maker: TI
+  min_c: -40
+  max_c: 125
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/107eeb995f1c91f292b91a59221db472.pdf?productCode=C404027
+    sha256: 44ac688d7e51f85259134abcffeed6cd1ae61234dfd2b6dea2b0607d8ad0d015
+    fetched_utc: '2026-09-27T00:20:46Z'
+    clause: p.5
+    quote: at operating temperature range (TJ = –40°C to 125°C), VIN = VOUT(NOM) + 0.5 V or 2.0 V (whichever is greater), IOUT = 1 mA,
+- code: C411294
+  part: Ebyte E22-900M30S
+  maker: ''
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/lora/ebyte-e22-900m30s-user-manual-en-v1.20.pdf
+    clause: specification table
+    quote: Operating temperature -40 85, Industrial design
+- code: C434808
+  part: U.FL-R-SMT(10)
+  maker: HRS
+  min_c: -40
+  max_c: 90
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/ed724b9ee28536c28fee4171a29923cc.pdf?productCode=C434808
+    sha256: 6949727d3bc42a67f6115848d3e5bc7dd4c41db28de7a4b6f0c2f2f5731dcdd2
+    fetched_utc: '2026-09-27T00:20:46Z'
+    clause: ratings
+    quote: Operating temperature range -40 to +90 C
+- code: C442493
+  part: LM5176PWPR
+  maker: TI
+  min_c: -40
+  max_c: 125
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/8f6d9221df6d81440ff2743fda58dfc9.pdf?productCode=C442493
+    sha256: 0a7ca1950193f5cd5a074745417ccd239e16e6b62ee379646b5cd94d65a056e0
+    fetched_utc: '2026-09-27T00:20:47Z'
+    clause: p.6
+    quote: Typical values correspond to TJ = 25°C. Minimum and maximum limits apply over the –40°C to 125°C junction temperature
+- code: C465736
+  part: TPD4E001DBVR
+  maker: TI
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet (round 8 stream copy)
+    url: https://www.ti.com/lit/ds/symlink/tpd4e001.pdf
+    sha256: e10f97586a1aa314c9e379a2afa0e8ce2c00e3428f53497b81164d52e121b677
+    fetched_utc: 2026-09-26T21:17Z to 21:30Z (stream b)
+    clause: SLLS682P, Recommended Operating Conditions p.4 (board B U222, U223 in worktree r8b)
+    quote: TA Operating free-air temperature –40 85 °C
+- code: C465737
+  part: SN74LVC08APWR
+  maker: TI
+  min_c: -40
+  max_c: 125
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/477facb0ea0e5fb2223aa7d270ad8745.pdf?productCode=C465737
+    sha256: 6a4c06be0ad4dd90e6920ce4be94f9ff9ec3a21a58cf5e30a5bb30b218b3db5d
+    fetched_utc: '2026-09-27T00:20:48Z'
+    clause: p.5
+    quote: Ptot Power dissipation TA = –40°C to +125°C 500 mW
+- code: C473333
+  part: CSD19532Q5B
+  maker: TI
+  min_c: -55
+  max_c: 150
+  kind: TA
+  where: inside
+  source:
+    class: LCSC parametric (a distributor transcription, not a sheet)
+    quote: Operating Temperature -55℃~+150℃
+- code: C475497
+  part: PCM2912APJTR
+  maker: TI
+  min_c: -25
+  max_c: 70
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/ti/ti-pcm2912a.pdf
+    clause: Recommended Operating Conditions
+    quote: TA Operating free-air temperature –25 70 °C
+- code: C485080
+  part: SN74LVC1G57DBVR
+  maker: TI
+  min_c: -40
+  max_c: 125
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet (round 8 stream copy)
+    url: https://www.ti.com/lit/ds/symlink/sn74lvc1g57.pdf
+    sha256: 078364de617898af0dd4cee99931ab1d36b622824a06e8f9b7fa95087644af24
+    fetched_utc: 2026-09-26 about 21:10Z (stream c)
+    clause: SCES414P, Recommended Operating Conditions p.4, all packages but BGA (board C U14 in worktree r8c)
+    quote: TA Operating free-air temperature, All other packages –40 125 °C
+- code: C488151
+  part: TPD2E2U06QDBZRQ1
+  maker: TI
+  min_c: -40
+  max_c: 125
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/67b8e852b6473570f506733059d66a25.pdf?productCode=C488151
+    sha256: 52e00a75fa68f4dbcbda7c9e944c7080348404840728a504139c16f52455e22f
+    fetched_utc: '2026-09-27T00:20:50Z'
+    clause: p.1
+    quote: '• Industrial Temperature Range: –40°C to +125°C'
+- code: C49851
+  part: INA226AIDGSR
+  maker: TI
+  min_c: -40
+  max_c: 125
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/c67b965eb2a01e8d671b6f15d639e314.pdf?productCode=C49851
+    sha256: eb6683997aa6cea3b736a42afc7402ecc38fd701e1217e746b8992b02df864d2
+    fetched_utc: '2026-09-27T00:20:51Z'
+    clause: Recommended Operating Conditions
+    quote: TA Operating free-air temperature –40 125 °C
+- code: C500767
+  part: PI7C9X2G404SLBFDEX
+  maker: DIODES
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/diodes/diodes-pi7c9x2g404sl.pdf
+    clause: features, section 12.4
+    quote: Industrial Temperature Range -40 to 85 C
+- code: C504893
+  part: VEML7700-TR
+  maker: VISHAY
+  min_c: -25
+  max_c: 85
+  kind: TA
+  where: outside_face
+  source:
+    class: held
+    document: v2/vendor/vishay/veml7700-datasheet.pdf
+    clause: Absolute Maximum Ratings
+    quote: Operation temperature range Tamb -25 +85 °C
+- code: C51118
+  part: AP2112K-3.3TRG1
+  maker: DIODES
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/5b29baebdc4332b382a530ff21092301.pdf?productCode=C51118
+    sha256: ef8d376f2ec356e29172eb9e053819a0ebdcc576dba7fc9ab0505c568427920f
+    fetched_utc: '2026-09-27T00:20:53Z'
+    clause: p.1
+    quote: ' Operation Temperature Range: -40°C to +85°C'
+- code: C51897884
+  part: SS14 (Zhengxin, SMB)
+  maker: ''
+  where: inside
+  source:
+    class: none read
+  note: 'no range read in any sheet or record this session: TBD'
+- code: C5251182
+  part: B2B-PH-K-S-GW
+  maker: JST
+  min_c: -40
+  max_c: 105
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/connectors/jst-ph-catalogue.pdf
+    clause: 'specifications (the -GW suffix is not in this catalogue: SOURCES condition 1 row)'
+    quote: 'Temperature range: -40℃ to +105℃'
+- code: C526347
+  part: 74LVC1G34W5-7
+  maker: DIODES
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/503f758cbfae5f8fb3af4c191162ccaa.pdf?productCode=C526347
+    sha256: efd2d7978bb880b7e07e05dee034b87701f12b834aa8132b6f61ce3705187a98
+    fetched_utc: '2026-09-27T00:20:55Z'
+    clause: p.5
+    quote: From To TA = -40°C to +85°C TA = -40°C to +125°C
+- code: C527679
+  part: TPS22810DRVR
+  maker: TI
+  min_c: -40
+  max_c: 105
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/76a32ce6750c422fd3becfcf29ff49a4.pdf?productCode=C527679
+    sha256: 86a0cb4ef6ab74848346abf709932f0dcd04516562340d498de0c485112c0ab3
+    fetched_utc: '2026-09-27T00:20:55Z'
+    clause: Recommended Operating Conditions
+    quote: TA Operating free-air temperature (1) –40 105 °C
+- code: C529279
+  part: CSD17570Q5B
+  maker: TI
+  min_c: -55
+  max_c: 150
+  kind: TA
+  where: pack
+  source:
+    class: LCSC parametric (a distributor transcription, not a sheet)
+    quote: Operating Temperature -55℃~+150℃
+- code: C534330
+  part: BSC039N06NS
+  maker: Infineon
+  min_c: -55
+  max_c: 150
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/8e4886fa29da7cb0f19c73d556cca14b.pdf?productCode=C534330
+    sha256: 8d95c1da9c78b3afb037e1f80c3bea1ed0f874f689e3a0c96d926dafe6a437b9
+    fetched_utc: '2026-09-27T00:20:57Z'
+    clause: p.3
+    quote: "Operating and storage temperature Tj,\x02Tstg -55 - 150 °C"
+- code: C5352930
+  part: Ebyte E72-2G4M20S1E
+  maker: ''
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/zigbee/ebyte-e72-2g4m20s1e-user-manual.pdf
+    clause: specification table
+    quote: Operating temperature -40 +85 Industrial grade
+- code: C5355286
+  part: Wurth 692122030100 (USB 3.0 A)
+  maker: ''
+  min_c: -20
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/connectors/wurth-wr-com-usb3-a-692122030100.pdf
+    clause: Material Properties
+    quote: Operating Temperature -20 C up to +85 C; Rated Current 1.8 A
+- code: C544309
+  part: TPS25740ARGER
+  maker: TI
+  min_c: -40
+  max_c: 125
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/9aac1e0d7a7ce0e0b00b43613fc271d7.pdf?productCode=C544309
+    sha256: 7e194c4d808d53a08238421995a1cd79faa59b7c50f630407fe73b72378ef80c
+    fetched_utc: '2026-09-27T00:20:58Z'
+    clause: Recommended Operating Conditions
+    quote: TJ Operating junction temperature -40 125 °C
+- code: C544686
+  part: TUSB8041IRGCR
+  maker: TI
+  min_c: -40
+  max_c: 105
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://www.ti.com/cn/lit/gpn/tusb8041
+    sha256: fbab35d6db2e54aac9675ddd4f213b916b729bdb9d347c3445783ec5faebb1f5
+    fetched_utc: '2026-09-27T00:20:59Z'
+    clause: Recommended Operating Conditions
+    quote: TJ Operating junction temperature –40 105 °C
+- code: C556165
+  part: BC857B
+  maker: Slkor
+  max_c: 150
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/171c362deabfedc4642f786eeb3a3121.pdf?productCode=C556165
+    sha256: b27e6044426e3c6009ed18c960878c7838cabacc4453fdb1ec761dfda4e1323d
+    fetched_utc: '2026-09-27T00:21:00Z'
+    clause: maximum ratings
+    quote: TJ Junction Temperature 150 C; Tstg -65 to +150 C (no operating minimum stated)
+- code: C580654
+  part: LTC2954ITS8-1#TRMPBF
+  maker: ADI
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/power/ltc2954.pdf
+    clause: Absolute Maximum Ratings
+    quote: Operating Temperature Range LTC2954I-1 -40°C to 85°C
+- code: C590866
+  part: 2199119-3
+  maker: TE Connectivity
+  min_c: -40
+  max_c: 80
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/m2/te-2199119-m2-b-key.pdf
+    clause: 'TE''s M.2 Quick Reference Guide 1-1773702-1 (01/2014) p.6, the M.2 connector family''s product specifications 108-115042
+      and 108-115049 (LCSC''s parametric agrees: -40 to +80 C)'
+    quote: Service Temperature -40 ~ +80˚C
+- code: C594232
+  part: B4B-XH-A-G
+  maker: JST
+  min_c: -25
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/connectors/jst-xh-catalogue.pdf
+    clause: 'specifications (the -G suffix is not in this catalogue: SOURCES condition 1 row)'
+    quote: 'Temperature range: -25℃ to +85℃'
+- code: C6296715
+  part: SIM8060-6-0-14-00-A
+  maker: Global Connector Technology
+  min_c: -20
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/c405e8aeed0ec875198c54d054045968.pdf?productCode=C6296715
+    sha256: 308e737190f889044fca1339a2c8d0085ce2da2fbe4df81e119482578e396418
+    fetched_utc: '2026-09-27T00:21:03Z'
+    clause: p.2 (the held connectors/gct-sim8060-nano-sim-socket.pdf reads -40 to +85; the worse of the two is taken)
+    quote: Operating Temperature Range -20°C to +85°C
+- code: C638299
+  part: KSZ9897RTXI
+  maker: MICROCHIP
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/830a9ec6e45d8cbf1c01b4a68523d9f4.pdf?productCode=C638299
+    sha256: 72b89179ed6a42a7bafa737de31a21fc28db6f0852bcc7964546bc99b0c7d064
+    fetched_utc: '2026-09-27T00:21:04Z'
+    clause: p.8
+    quote: The KSZ9897R is available in commercial (0°C to +70°C) and industrial (-40°C to +85°C) temperature ranges. An inter-
+- code: C6384935
+  part: H5007NL
+  maker: PULSE
+  min_c: 0
+  max_c: 70
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/pulse/pulse-h5007nl.pdf
+    clause: p.1
+    quote: 'Electrical Specifications @ 25°C : Operating Temperature 0°C to 70°C'
+- code: C674164
+  part: LT8705AEUHF#TRPBF
+  maker: ADI
+  min_c: -40
+  max_c: 125
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/f14444a692e8f998db783eaa7f33f0d3.pdf?productCode=C674164
+    sha256: 8f552a0b57677bfa7e4a5d5d0fac56d56fbbd1a6f65a9ee7aaaf8743cd534ec3
+    fetched_utc: '2026-09-27T00:21:06Z'
+    clause: p.6
+    quote: 'LT8705AI is guaranteed over the full –40°C to 125°C junction temperature Note 8: This IC includes overtemperature protection
+      that is intended'
+- code: C69901
+  part: TPA6132A2RTER
+  maker: TI
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/ti/ti-tpa6132a2.pdf
+    clause: Recommended Operating Conditions
+    quote: Operating free-air temperature range, TA –40 85 °C
+- code: C699536
+  part: TMP117AIDRVR
+  maker: TI
+  min_c: -55
+  max_c: 150
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/ti/ti-tmp117-temperature.pdf
+    clause: features
+    quote: 'Operating temperature range: –55 °C to 150 °C'
+- code: C702369
+  part: TUSB2046IBVFR
+  maker: TI
+  min_c: -40
+  max_c: 115
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/918b9d3ed5804d82700e55a8bb4b5d84.pdf?productCode=C702369
+    sha256: e65ad4b550a003093f0a3db74720a46ef43a38bf95a493dd9618aa71389182e7
+    fetched_utc: '2026-09-27T00:21:09Z'
+    clause: Absolute Maximum Ratings
+    quote: TJ Junction temperature range –40 115 °C
+- code: C72271
+  part: SI2300DS-T1-GE3
+  maker: VISHAY
+  min_c: -55
+  max_c: 150
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/aac1a2a1068e4c1b9cd7bd467ebba3aa.pdf?productCode=C72271
+    sha256: 3c52e6b858f4e6ea6683624080c8428519d5f6b745d08a00ac9f1f349e917e7a
+    fetched_utc: '2026-09-27T00:21:10Z'
+    clause: p.1
+    quote: Operating Junction and Storage Temperature Range TJ, Tstg - 55 to 150
+- code: C7435219
+  part: 10164227-1004A1RLF
+  maker: Amphenol
+  min_c: -40
+  max_c: 125
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/cm5/amphenol-10164227-bergstak-0.40mm-product-sheet.pdf
+    clause: features
+    quote: 'Operating Temperature Range: -40 C to +125 C'
+- code: C7502705
+  part: BAT54W
+  maker: R+O
+  min_c: -55
+  max_c: 150
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/ff1378297995998b12f7103bcafc2a22.pdf?productCode=C7502705
+    sha256: fdd697de478c59e1bd24e207f67a3a6eefecb1e32812afc77adca0c44f9a3c5c
+    fetched_utc: '2026-09-27T00:21:11Z'
+    clause: maximum ratings
+    quote: Junction temperature Tj -55 to +150 ℃
+- code: C7519
+  part: USBLC6-2SC6
+  maker: ST
+  min_c: -40
+  max_c: 125
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/0d3a2ab954b34651a0695e7ccf534db0.pdf?productCode=C7519
+    sha256: 8ba7ab4ec1781b7f6052f5999a2304bd611c0ed2b5e8f36ffa5092552932a42e
+    fetched_utc: '2026-09-27T00:21:12Z'
+    clause: p.2
+    quote: Tj Operating junction temperature range -40 to +125 °C
+- code: C7666
+  part: SN74LVC1G08DBVR
+  maker: TI
+  min_c: -40
+  max_c: 125
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/ti/ti-sn74lvc1g08.pdf
+    clause: Recommended Operating Conditions p.5 (round 8, board B U501 to U505 in worktree r8b)
+    quote: TA Operating free-air temperature –40 125 °C
+- code: C780769
+  part: AP63203WU-7
+  maker: DIODES
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/94820cc9e44613233ddcc1a15801eca3.pdf?productCode=C780769
+    sha256: ef99daa3789d835bc025dfcb4c605c5c2e6d3e7223e86d40b33e6b497ea5a722
+    fetched_utc: '2026-09-27T00:21:13Z'
+    clause: p.5
+    quote: temperature range, -40°C to +85°C, and input voltage range, 3.8V to 32V.)
+- code: C7826
+  part: SN74LVC1G00DBVR
+  maker: TI
+  min_c: -40
+  max_c: 125
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/223017af1e634724bd3b4ed5780aaa61.pdf?productCode=C7826
+    sha256: c0ba2b5f4216fa2dcaff3b659464d6d97117f415400255b9b99e6128407d3bd3
+    fetched_utc: '2026-09-27T00:21:14Z'
+    clause: Recommended Operating Conditions
+    quote: TA Operating free-air temperature –40 125 °C
+- code: C7827
+  part: SN74LVC1G04DBVR
+  maker: TI
+  min_c: -40
+  max_c: 125
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/cbb5b11e6f66448a899553349c0f7b2e.pdf?productCode=C7827
+    sha256: e4868736b7ec680ef5003aa6b980547bfbaa3f1364ef4c3bfe36aa027448fcff
+    fetched_utc: '2026-09-27T00:21:15Z'
+    clause: Recommended Operating Conditions
+    quote: TA Operating free-air temperature –40 125 °C
+- code: C80273
+  part: SMCJ40CA
+  maker: Littelfuse
+  min_c: -65
+  max_c: 150
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C80273
+    sha256: 6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea
+    fetched_utc: '2026-09-27T00:21:16Z'
+    clause: p.1
+    quote: Operating Temperature Range TJ -65 to 150 °C
+- code: C81598
+  part: 1N4148W
+  maker: ST(Semtech)
+  max_c: 150
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/8abd7fc00ebe41ffb03ad1383c10753b.pdf?productCode=C81598
+    sha256: 54de8e4089bb8221cf6cf191ee3acc2bdb20c9933cf59e7b5de3ef4ee291ce3f
+    fetched_utc: '2026-09-27T00:21:16Z'
+    clause: maximum ratings
+    quote: Junction Temperature Tj 150 C; Tstg -65 to +150 C (no operating minimum stated)
+- code: C83152
+  part: BAT46W-7-F
+  maker: DIODES
+  min_c: -55
+  max_c: 125
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/18e08184e5865113cc055d7c9a1d2463.pdf?productCode=C83152
+    sha256: 3bc31f4a5302521c7e298f95aef7e3425ea68ae287bd28a6cfa8d0689fcbe56b
+    fetched_utc: '2026-09-27T00:21:17Z'
+    clause: p.2
+    quote: Operating Temperature Range TJ -55 to +125 °C
+- code: C83270
+  part: SMBJ6.0A
+  maker: Littelfuse
+  min_c: -65
+  max_c: 150
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/4ab84a227fae39f9eac85241b8264ead.pdf?productCode=C83270
+    sha256: d7df155be4b1f612085401e8c946f065e284d65a0e7de22b9225a7b73946e51b
+    fetched_utc: '2026-09-27T00:21:18Z'
+    clause: p.1
+    quote: Operating Temperature Range TJ -65 to 150 °C
+- code: C840103
+  part: SN74LVC1G06DBVR
+  maker: TI
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/3f2f00e2e4e8683fddcfe2937b161eac.pdf?productCode=C840103
+    sha256: 14e26d712acd6e99d8c3b2a5d2f82fb8cc6837d3d105bb2755cef25ff78db4d0
+    fetched_utc: '2026-09-27T00:21:19Z'
+    clause: p.6
+    quote: over recommended operating free-air temperature range, TA = –40°C to +85°C (unless otherwise noted) (see Figure 3)
+- code: C8545
+  part: 2N7002
+  maker: JSCJ
+  max_c: 150
+  kind: TJ
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/a141b8bd86b14475955ac8c4d3eea0a8.pdf?productCode=C8545
+    sha256: 7941fb423af7c6c6c8979063a7e8819bb19217ece275efcce18948950a41d9f6
+    fetched_utc: '2026-09-27T00:21:20Z'
+    clause: maximum ratings
+    quote: Junction Temperature TJ 150; Storage Temperature Tstg -50 to +150 (no operating minimum stated)
+- code: C88373
+  part: U.FL-R-SMT-1(10)
+  maker: HRS
+  min_c: -40
+  max_c: 90
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/ed724b9ee28536c28fee4171a29923cc.pdf?productCode=C88373
+    sha256: 6949727d3bc42a67f6115848d3e5bc7dd4c41db28de7a4b6f0c2f2f5731dcdd2
+    fetched_utc: '2026-09-27T00:21:20Z'
+    clause: ratings
+    quote: Operating temperature range -40 to +90 C
+- code: C89647
+  part: MF-MSMF110-2
+  maker: Bourns
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/power/bourns-mf-msmf-pptc.pdf
+    clause: p.3 (round 8, board B F1 in worktree r8b)
+    quote: Operating Temperature -40 °C to +85 °C
+- code: C916313
+  part: '2086581001'
+  maker: MOLEX
+  where: inside
+  source:
+    class: none read
+  note: 'no range read in any sheet or record this session: TBD'
+- code: C93245
+  part: TPS23861PWR
+  maker: TI
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/ti/tps23861-datasheet.pdf
+    clause: Recommended Operating Conditions
+    quote: TA Operating free-air temperature -40 85 °C
+- code: C964632
+  part: CP2102N-A02-GQFN28R
+  maker: SILICON LABS
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/11ab89ca3026e9cb7cc85ffe9557abff.pdf?productCode=C964632
+    sha256: 70ea7a01045ccfb0c69f35f37bd65160a1080b54169cac1806416e482c796b53
+    fetched_utc: '2026-09-27T00:21:22Z'
+    clause: p.2
+    quote: 'Temperature Grade : –40 to +85 °C (G)'
+- code: C9866
+  part: DS3231SN#T&R
+  maker: MAXIM
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: maker sheet as LCSC serves it
+    url: https://datasheet.lcsc.com/datasheet/pdf/5101f986439e4595b0e0d04ae2a48583.pdf?productCode=C9866
+    sha256: ec27766ea72ac63e94aff3d81536fcfd37067072a9ea40037017562dc9b5abfb
+    fetched_utc: '2026-09-27T00:21:23Z'
+    clause: p.1
+    quote: time clock (RTC) with an integrated temperature- ♦ Accuracy ±3.5ppm from -40°C to +85°C
+- code: C98733
+  part: XT60-M.
+  maker: Changzhou Amass Elec
+  min_c: -20
+  max_c: 120
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/battery/amass-xt60e-m-shoptronica.pdf
+    clause: specification table
+    quote: WELD METAL / TEMPERATURE -20 C to 120 C (the label as printed)
+
+uncoded:
+- match:
+    fp: Fuseholder_Blade_Mini_Keystone_3568
+  part: Keystone 3568 mini blade fuse holder
+  maker: Keystone
+  where: inside
+  source:
+    class: none read
+    note: the held Keystone catalogue page (v2/vendor/keystone/M65p42.pdf) states no temperature range
+  note: TBD; the holders of board E have no purchase route (SOURCES.yaml wrong_model_that_stands)
+- match:
+    fp: Hirose_FH34SRJ-24S
+  part: Hirose FH34SRJ-24S-0.5SH(50)
+  maker: Hirose
+  min_c: -55
+  max_c: 105
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/hirose/hirose-fh34-series-ffc-connectors.pdf
+    clause: ratings
+    quote: Operating Temperature (Note 2) -55 to +105 C
+- match:
+    fp: IDC-Header_2x05_P2.54mm_Vertical_NarrowPad
+  part: Wurth WR-BHD 61201021621 (session pick HC6-SC-7; JLCPCB C4355000)
+  maker: Wurth Elektronik
+  min_c: -40
+  max_c: 105
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/connectors/wurth-wr-bhd-box-header-61201021621.pdf
+    clause: Material Properties
+    quote: Operating Temperature -40 C up to +105 C; Rated Current 3 A
+- match:
+    fp: IDC-Header_2x08_P2.54mm_Vertical_NarrowPad
+  part: Wurth WR-BHD 61201621621 (session pick HC6-SC-7; JLCPCB C5364137)
+  maker: Wurth Elektronik
+  min_c: -40
+  max_c: 105
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/connectors/wurth-wr-bhd-box-header-61201621621.pdf
+    clause: Material Properties
+    quote: Operating Temperature -40 C up to +105 C; Rated Current 3 A
+- match:
+    fp: IDC-Header_2x13_P2.54mm_Vertical_NarrowPad
+  part: Wurth WR-BHD 61202621621 (session pick HC6-SC-7; JLCPCB C17586777)
+  maker: Wurth Elektronik
+  min_c: -40
+  max_c: 105
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/connectors/wurth-wr-bhd-box-header-61202621621.pdf
+    clause: Material Properties
+    quote: Operating Temperature -40 C up to +105 C; Rated Current 3 A
+- match:
+    fp: IDC-Header_2x13_P2.54mm_Vertical_SMD
+  part: XFCN BH254VS-26P (session pick HC6-SC-7; JLCPCB C48687640); land comparison owed
+  maker: XFCN
+  min_c: -40
+  max_c: 105
+  kind: TA
+  where: inside
+  source:
+    class: LCSC parametric (a distributor transcription, not a sheet)
+    quote: Operating Temperature -40 to +105 C (LCSC detail, 2026-09-27T00:20Z)
+- match:
+    fp: LED_D3.0mm
+  part: 3 mm panel LEDs, sunlight viewable (no order code)
+  maker: not pinned
+  where: outside_face
+  source:
+    class: none read
+  note: 'NOT_PINNED: the sixteen panel LEDs of board C name a colour and a size only; no part, so no range'
+- match:
+    fp: LeadLands_1x02
+  part: solder lands for a lead (no component)
+  maker: '-'
+  not_a_component: true
+- match:
+    fp: Mill-Max_0858_power_pin
+    value: 9 A spring pin
+  part: Mill-Max 0858-0-15-20-82-14-11-0 (session pick HC6-SC-8)
+  maker: Mill-Max
+  min_c: -55
+  max_c: 125
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/connectors/millmax-0858-product-page-20260927.html
+    clause: Tech Specs
+    quote: 'Operating Temperature Range: -55/+125 C; Mounting Hole .044 in (1,118 mm); Soldertail .040 in (1,016 mm)'
+- match:
+    fp: Mill-Max_0858_power_pin
+    value: pre-charge pin
+  part: pre-charge pin, longer than the 0858 (no order code)
+  maker: not pinned
+  where: inside
+  source:
+    class: none read
+  note: 'NOT_PINNED: the mate-first pin must be longer than the 0858 it sits beside (32.24 AX) and no Mill-Max part is named'
+- match:
+    fp: NiceRF_SA868
+  part: NiceRF SA868 (VHF variant; order code SA868-V, see PROCUREMENT.md)
+  maker: NiceRF
+  min_c: -30
+  max_c: 70
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf
+    clause: electrical parameters
+    quote: Working Temperature range -30 25 70 C
+- match:
+    fp: PanelJack_17mm
+  part: U-174/U headset jack, Amphenol Nexus class (drawing owed)
+  maker: not pinned
+  where: outside_face
+  source:
+    class: none read
+  note: NOT_PINNED
+- match:
+    fp: PanelSounder
+  part: Floyd Bell MC-09-530-Q class sounder
+  maker: Floyd Bell
+  min_c: -20
+  max_c: 65
+  kind: TA
+  where: outside_face
+  source:
+    class: held
+    document: v2/vendor/seals/floydbell-mc-09-530-q-spec.pdf
+    clause: specifications
+    quote: Operating Temperature -20 C to +65 C
+  note: the part is named as a class; the range is the named model's
+- match:
+    fp: PanelSwitch_16mm
+  part: C&K ATP16 series (ATP16-SL1-403-M0SA-04G, ATP16-SL1-203-M0SA-04G)
+  maker: C&K
+  min_c: -20
+  max_c: 70
+  kind: TA
+  where: outside_face
+  source:
+    class: held
+    document: v2/vendor/switches/ck-atp16-series-datasheet.pdf
+    clause: specifications
+    quote: 'OPERATING TEMPERATURE: -20 C to +70 C'
+- match:
+    fp: PanelSwitch_19mm
+  part: C&K ATP19-SL1-603-B0SA-03G
+  maker: C&K
+  min_c: -20
+  max_c: 55
+  kind: TA
+  where: outside_face
+  source:
+    class: held
+    document: v2/vendor/switches/ck-atp19-series-datasheet.pdf
+    clause: specifications
+    quote: Operating Temperature -20 C to 55 C
+- match:
+    fp: PinHeader_
+  part: 2.54 mm pin header or bench jumper land (no order code)
+  maker: not pinned
+  where: inside
+  source:
+    class: none read
+  note: 'NOT_PINNED: commodity headers for leads and bench jumpers; most are bench-only (not fitted in service)'
+- match:
+    fp: PogoPins_2x6
+  part: Preci-Dip 813-S1-012-10-016101
+  maker: Preci-Dip
+  min_c: -55
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/precidip/precidip-813-spring-loaded-connector-pages-31-34.pdf
+    clause: p.31 general specifications
+    quote: OPERATING TEMPERATURE RANGE -55 ... +125 C (-55 ... +85 C with music wire spring); the narrower figure is taken because the
+      spring of the -016101 suffix is not decoded here
+- match:
+    fp: PogoTargets_2x6
+  part: solder lands (no component)
+  maker: '-'
+  not_a_component: true
+- match:
+    fp: SolderPad_8x6
+  part: solder pad for a 12 AWG wire (no component)
+  maker: '-'
+  not_a_component: true
+- match:
+    fp: RJ45_Amphenol_RJHSE5380
+  part: Amphenol RJHSE-5380 (no order code on the line)
+  maker: Amphenol
+  min_c: -55
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/connectors/amphenol-rjhse5380-rj45-jack.pdf
+    clause: features
+    quote: 'Operating Temperature: -55 C to +85 C'
+- match:
+    fp: Radiall_SMPMAX_R222M00720
+  part: Radiall R222M00720 (SMP-MAX receptacle)
+  maker: Radiall
+  min_c: -55
+  max_c: 165
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/rf/radiall-R222M00720-tds.pdf
+    clause: p.1
+    quote: Operating temperature -55/+165 C
+- match:
+    fp: Relay_DPDT_Omron_G6K-2F-Y
+  part: Omron G6K-2F-Y DC5
+  maker: Omron
+  min_c: -40
+  max_c: 70
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/omron/omron-g6k-signal-relay.pdf
+    clause: ratings
+    quote: Ambient operating temperature -40 to 70 C (with no icing or condensation)
+- match:
+    fp: ToggleBody_DPDT
+  part: NKK M2044SD3A01
+  maker: NKK
+  min_c: -30
+  max_c: 85
+  kind: TA
+  where: outside_face
+  source:
+    class: held
+    document: v2/vendor/switches/nkk-m-series-toggles-datasheet.pdf
+    clause: specifications
+    quote: 'Operating Temp Range: -30 C through +85 C'
+- match:
+    fp: ToggleBody_SPDT
+  part: APEM 5636ADKB-2V (5000 series)
+  maker: APEM
+  min_c: -30
+  max_c: 85
+  kind: TA
+  where: outside_face
+  source:
+    class: held
+    document: v2/vendor/seals/apem-5000-series-catalogue.pdf
+    clause: specifications
+    quote: 'Operating temperature range: -40 C to +85 C, and -30 C to +85 C for some families; the narrower figure is taken because
+      the page is not tied to the 5636 here'
+- match:
+    fp: BatteryHolder_Keystone_3034_1x20mm
+  part: Keystone 3034 CR2032 holder
+  maker: Keystone
+  where: inside
+  source:
+    class: none read
+    note: no Keystone 3034 sheet held
+  note: TBD
+
+modules:
+- part: Raspberry Pi Compute Module 5, CM5108064 (three, bench-fitted on board B)
+  maker: Raspberry Pi
+  min_c: -20
+  max_c: 85
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/cm5/cm5-datasheet.pdf
+    clause: 4.4 (pcb_part_temps.yaml row)
+    quote: -20 to +85 C, non-condensing (RF best to +75)
+- part: Ground Control RockBLOCK 9704 SMA (board B, J_RB9704)
+  maker: Ground Control
+  min_c: -40
+  max_c: 70
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/rockblock/groundcontrol-docs-rockblock-9704-specification-20260927.html
+    clause: specification
+    quote: Operating Temperature -40C to +70C, <95% RH (also the product page); the held data sheet RB9704-001-JUN26 states no range
+- part: LimeSDR Mini v2 (board version v2.4), in its bay on J_LIME
+  maker: Lime Microsystems
+  min_c: 0
+  max_c: 70
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/limesdr/myriadrf-limesdr-mini-2-0-page-20260925.html
+    clause: Environmental
+    quote: Operating Temperature 0 C to +70 C, Commercial-grade; Storage Temperature 0 C to +70 C
+- part: AsiaRF AW7915-AED WiFi 6 card (two, board B J_M2C1 and J_M2C3)
+  maker: AsiaRF
+  min_c: 0
+  max_c: 70
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/wifi/asiarf-AW7915-AED_V1.pdf
+    clause: specifications
+    quote: 'Temperature Operating: 0 C ~ +70 C (the product page of 26 September 2026, wifi/asiarf-aw7915-aed-product-page-20260926.html,
+      reads -10 C ~ +70 C; either is outside)'
+- part: Quectel RM520N-GL 5G module (board B J_M2C2)
+  maker: Quectel
+  min_c: -30
+  max_c: 75
+  kind: TA
+  where: inside
+  source:
+    class: held
+    document: v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf
+    clause: Temperature Range
+    quote: Operating temperature range -30 C to +75 C; extended -40 C to +85 C (3GPP deviations allowed)
+- part: Xenarc 709GNK monitor (face plate)
+  maker: Xenarc
+  min_c: -20
+  max_c: 70
+  kind: TA
+  where: plate
+  source:
+    class: held
+    document: v2/vendor/xenarc/xenarc-709gnk-product-manual-v2.pdf
+    clause: specifications
+    quote: 'Operating Temperature: -4 F ~ 158 F (-20 C ~ 70 C); Storage -30 C ~ 80 C'
+- part: Pervasive Displays E2370KS0C1 e-paper (board C)
+  maker: Pervasive Displays
+  min_c: -15
+  max_c: 60
+  kind: TA
+  where: outside_face
+  carve_out: below -15 C the e-paper is outside its operating range and updates slowly or not at all, which the envelope declares as
+    a degraded display and not a dead kit
+  source:
+    class: held
+    document: v2/vendor/pdi/pdi-e2370ks0c1-flyer.pdf
+    clause: specifications
+    quote: Operation Temperature -15~60 C
+- part: Mitsubishi RA30H1317M1 VHF PA (face plate)
+  maker: Mitsubishi
+  min_c: -30
+  max_c: 100
+  kind: TCASE
+  where: plate
+  source:
+    class: held
+    document: v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf
+    clause: maximum ratings
+    quote: Tcase(OP) Operation Case Temperature Range -30 to +100 C
+- part: QRP Labs QMX HF transceiver (lid tray)
+  maker: QRP Labs
+  where: inside
+  source:
+    class: none read
+    note: the held operating and CAT manuals state no operating range
+- part: Maxtena M1621HCT-P-SMA helical (Iridium antenna)
+  maker: Maxtena
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: outside
+  source:
+    class: held
+    document: v2/vendor/rockblock/maxtena-m1621hct-p-sma-datasheet.pdf
+    clause: specifications
+    quote: Operating temp. from -40 C to 85 C
+- part: Quectel YEGD006U1A GNSS puck (and the brochure's other antennas)
+  maker: Quectel
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: outside
+  source:
+    class: held
+    document: v2/vendor/quectel/quectel-antenna-brochure-2025-12.pdf
+    clause: antenna rows
+    quote: Operation temperature -40 C to +85 C
+- part: PolyPhaser GTH-SFF-AL RF arrestor (wall)
+  maker: Amphenol PolyPhaser
+  min_c: -40
+  max_c: 85
+  kind: TA
+  where: outside
+  source:
+    class: held
+    document: v2/vendor/polyphaser/polyphaser-gth-sff-al-sma-surge-protector.pdf
+    clause: Temperature
+    quote: Operating Range -40 to +85 deg C
+- part: Glenair and Amphenol MIL-DTL-38999 Series III wall receptacles (DC, USB feed-through 233-370)
+  maker: Glenair / Amphenol
+  min_c: -65
+  max_c: 175
+  kind: TA
+  where: outside
+  source:
+    class: held
+    document: v2/vendor/d38999/amphenol-d38999-iii-federal.pdf
+    clause: p.60
+    quote: 'Temperature: -65 C to +175 C (Series III environmental class; the Glenair 233-370 sheet held states no range)'
+- part: Bulgin PX0833 sealed RJ45 coupler (wall, CASE-MARGINS.md section 6)
+  maker: Bulgin
+  min_c: -20
+  max_c: 70
+  kind: TA
+  where: outside
+  source:
+    class: held
+    document: v2/vendor/bulgin/bulgin-px0833-sealed-rj45-coupler.pdf
+    clause: specifications
+    quote: 'Min Operating Temperature: -20 C; Max Operating Temperature: +70 C'
+  note: CASE-MARGINS.md section 6 already refuses this part for the 54 V PoE feed and for fit; the grade is at the floor as well
+- part: Bulgin PXP4043/C sealed USB-C (wall)
+  maker: Bulgin
+  min_c: -40
+  max_c: 70
+  kind: TA
+  where: outside
+  source:
+    class: held
+    document: v2/vendor/bulgin/bulgin-pxp4043c-usb-c-rear-panel.pdf
+    clause: specifications
+    quote: 'Min Operating Temperature: -40 C; Max Operating Temperature: +70 C'
+- part: 4S pack cells
+  maker: not pinned
+  where: pack
+  source:
+    class: none read
+    note: 'pcb_part_temps.yaml owed list: the cells'' sheet is owed; the envelope quotes Li-ion class limits'
+- part: IP68 fans (coolers and mixers; D-18 conditional)
+  maker: not pinned
+  where: inside
+  source:
+    class: none read
+    note: the held Sunon catalogue extract states no range in its text layer; the fan pick is open (audit decision, D-18)
+- part: CR2032 coin cell (board B BT1)
+  maker: not pinned
+  where: inside
+  source:
+    class: none read
+- part: sensor and receiver modules on headers (AS3935 CJMCU-3935 class, DCF77 receiver, Geiger RadiationD-v1.1 class, outside pod,
+    camera)
+  maker: not pinned
+  where: inside
+  source:
+    class: none read
+  note: 'NOT_PINNED: named as classes'

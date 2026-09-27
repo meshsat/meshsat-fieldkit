@@ -1,0 +1,99 @@
+== pcb-b-compute-b19/pcb-b-compute
+fanned parts (numbered copper pads, >= 8, closest two <= 1.0 mm): 61 (F 47, B 14); through-hole parts: 36
+SMD footprints on B.Cu overlapping the fan box of a F.Cu part: 92
+SMD footprints on F.Cu overlapping the fan box of a B.Cu part: 3
+
+C112  22u 10V X U103   SOIC-8-1EP_3.9x4.9mm_P1.27mm_E pin 2   far side under the pin open
+C113  22u 10V X U103   SOIC-8-1EP_3.9x4.9mm_P1.27mm_E pin 2   far side under the pin open
+C119  22u 10V X U104   SOIC-8-1EP_3.9x4.9mm_P1.27mm_E pin 2   far side under the pin open
+C120  22u 10V X U104   SOIC-8-1EP_3.9x4.9mm_P1.27mm_E pin 2   far side under the pin open
+C125  10u       U105   SOT-583-8                      pin 3   far side under the pin REFUSED: its own part is fanned
+C130  10u       U106   SOT-583-8                      pin 3   far side under the pin REFUSED: its own part is fanned
+C212  22u 10V X U203   SOIC-8-1EP_3.9x4.9mm_P1.27mm_E pin 2   far side under the pin open
+C213  22u 10V X U203   SOIC-8-1EP_3.9x4.9mm_P1.27mm_E pin 2   far side under the pin open
+C219  22u 10V X U204   SOIC-8-1EP_3.9x4.9mm_P1.27mm_E pin 2   far side under the pin open
+C220  22u 10V X U204   SOIC-8-1EP_3.9x4.9mm_P1.27mm_E pin 2   far side under the pin open
+C225  10u       U205   SOT-583-8                      pin 3   far side under the pin REFUSED: its own part is fanned
+C230  10u       U206   SOT-583-8                      pin 3   far side under the pin REFUSED: its own part is fanned
+C312  22u 10V X U303   SOIC-8-1EP_3.9x4.9mm_P1.27mm_E pin 2   far side under the pin open
+C313  22u 10V X U303   SOIC-8-1EP_3.9x4.9mm_P1.27mm_E pin 2   far side under the pin open
+C319  22u 10V X U304   SOIC-8-1EP_3.9x4.9mm_P1.27mm_E pin 2   far side under the pin open
+C320  22u 10V X U304   SOIC-8-1EP_3.9x4.9mm_P1.27mm_E pin 2   far side under the pin open
+C325  10u       U305   SOT-583-8                      pin 3   far side under the pin REFUSED: its own part is fanned
+C330  10u       U306   SOT-583-8                      pin 3   far side under the pin REFUSED: its own part is fanned
+C7    10u       U26    SOT-583-8                      pin 3   far side under the pin REFUSED: its own part is fanned
+C4    10u       U25    TSOT-23-6                      pin 2   far side under the pin open
+C5    22u 6.3V  U25    TSOT-23-6                      pin 1   far side under the pin open
+C6    22u 6.3V  U25    TSOT-23-6                      pin 1   far side under the pin open
+C12   1u        U27    SOT-23-5                       pin 5   far side under the pin open
+C13   1u        U27    SOT-23-5                       pin 1   far side under the pin open
+C36   100n      U5     TSSOP-28_4.4x9.7mm_P0.65mm     pin 1   far side under the pin REFUSED: its own part is fanned
+C37   100n      U5     TSSOP-28_4.4x9.7mm_P0.65mm     pin 1   far side under the pin REFUSED: its own part is fanned
+C38   100n      U5     TSSOP-28_4.4x9.7mm_P0.65mm     pin 1   far side under the pin REFUSED: its own part is fanned
+C69   100n      U8     SOIC-8_3.9x4.9mm_P1.27mm       pin 8   far side under the pin REFUSED: inside U61
+C70   100n      U9     SOIC-8_3.9x4.9mm_P1.27mm       pin 2   far side under the pin open
+C71   100n      U9     SOIC-8_3.9x4.9mm_P1.27mm       pin 2   far side under the pin open
+
+summary: {"fanned_part": 10, "under_pin_in_other_fan": 1, "under_pin_open": 19, "not_on_board": 0}
+
+== pcb-c-display-c8/pcb-c-display
+fanned parts (numbered copper pads, >= 8, closest two <= 1.0 mm): 5 (F 1, B 4); through-hole parts: 24
+SMD footprints on B.Cu overlapping the fan box of a F.Cu part: 0
+SMD footprints on F.Cu overlapping the fan box of a B.Cu part: 0
+
+C7    100n      U3     QFN-56-1EP_7x7mm_P0.4mm_EP3.2x pin 1   far side under the pin REFUSED: its own part is fanned
+C8    100n      U3     QFN-56-1EP_7x7mm_P0.4mm_EP3.2x pin 10  far side under the pin REFUSED: its own part is fanned
+C9    100n      U3     QFN-56-1EP_7x7mm_P0.4mm_EP3.2x pin 22  far side under the pin REFUSED: its own part is fanned
+C10   100n      U3     QFN-56-1EP_7x7mm_P0.4mm_EP3.2x pin 33  far side under the pin REFUSED: its own part is fanned
+C11   100n      U3     QFN-56-1EP_7x7mm_P0.4mm_EP3.2x pin 42  far side under the pin REFUSED: its own part is fanned
+C12   100n      U3     QFN-56-1EP_7x7mm_P0.4mm_EP3.2x pin 49  far side under the pin REFUSED: its own part is fanned
+C13   100n      U4     Winbond_USON-8-1EP_3x2mm_P0.5m pin 8   far side under the pin REFUSED: its own part is fanned
+C14   1u        U3     QFN-56-1EP_7x7mm_P0.4mm_EP3.2x pin 23  far side under the pin REFUSED: its own part is fanned
+C15   1u        U3     QFN-56-1EP_7x7mm_P0.4mm_EP3.2x pin 50  far side under the pin REFUSED: its own part is fanned
+C16   1u        U3     QFN-56-1EP_7x7mm_P0.4mm_EP3.2x pin 44  far side under the pin REFUSED: its own part is fanned
+C3    1u        U5     SOT-23-5                       pin 1   far side under the pin open
+C4    1u        U5     SOT-23-5                       pin 5   far side under the pin open
+C17   100n      U1     TSSOP-24_4.4x7.8mm_P0.65mm     pin 24  far side under the pin REFUSED: its own part is fanned
+C18   100n      U2     TSSOP-24_4.4x7.8mm_P0.65mm     pin 24  far side under the pin REFUSED: its own part is fanned
+C25   100n      U9     SOT-23-5                       pin 5   far side under the pin open
+C39   U12    pin 5   not on this board
+C38   100n      U_LIGHT Vishay_VEML7700                pin 2   far side under the pin open
+C29   100n      J_EPD  Hirose_FH34SRJ-24S             pin 15  far side under the pin REFUSED: its own part is fanned
+C28   4.7u      J_EPD  Hirose_FH34SRJ-24S             pin 16  far side under the pin REFUSED: its own part is fanned
+
+summary: {"fanned_part": 14, "under_pin_in_other_fan": 0, "under_pin_open": 4, "not_on_board": 1}
+
+== pcb-d-aprs-d9/pcb-d-aprs
+fanned parts (numbered copper pads, >= 8, closest two <= 1.0 mm): 6 (F 6, B 0); through-hole parts: 8
+SMD footprints on B.Cu overlapping the fan box of a F.Cu part: 18
+SMD footprints on F.Cu overlapping the fan box of a B.Cu part: 0
+
+C51   100n      U9     SOT-23-5                       pin 5   far side under the pin open   | its present far-side seat: clear of every fan box and through-hole courtyard
+C52   100n      U10    SOT-23-5                       pin 5   far side under the pin open   | its present far-side seat: clear of every fan box and through-hole courtyard
+C53   100n      U11    SOT-23-5                       pin 5   far side under the pin open   | its present far-side seat: clear of every fan box and through-hole courtyard
+C54   100n      U12    SOT-23-5                       pin 5   far side under the pin REFUSED: inside U16   | its present far-side seat: clear of every fan box and through-hole courtyard
+C55   100n      U13    SOT-23-5                       pin 5   far side under the pin REFUSED: inside U16   | its present far-side seat: clear of every fan box and through-hole courtyard
+C56   100n      U14    SOT-23-5                       pin 5   far side under the pin open
+C7    1u        U1     SOT-23-5                       pin 1   far side under the pin open
+C8    1u        U1     SOT-23-5                       pin 5   far side under the pin open   | its present far-side seat: clear of every fan box and through-hole courtyard
+C9    10u       U1     SOT-23-5                       pin 5   far side under the pin open   | its present far-side seat: clear of every fan box and through-hole courtyard
+C15   100n      U4     LQFP-32_7x7mm_P0.8mm           pin 3   far side under the pin REFUSED: its own part is fanned   | its present far-side seat: INADMISSIBLE, overlaps the fan box of U7
+C16   100n      U4     LQFP-32_7x7mm_P0.8mm           pin 3   far side under the pin REFUSED: its own part is fanned   | its present far-side seat: INADMISSIBLE, overlaps the fan box of U7
+C17   10u       U4     LQFP-32_7x7mm_P0.8mm           pin 3   far side under the pin REFUSED: its own part is fanned   | its present far-side seat: clear of every fan box and through-hole courtyard
+C64   U17    pin 1   not on this board
+C65   U17    pin 5   not on this board
+C61   4.7n      U15    WSON-6-1EP_2x2mm_P0.65mm_EP1x1 pin 6   far side under the pin open
+C62   100n      U15    WSON-6-1EP_2x2mm_P0.65mm_EP1x1 pin 1   far side under the pin open
+C18   1u        U6     TQFP-32_7x7mm_P0.8mm           pin 2   far side under the pin REFUSED: its own part is fanned   | its present far-side seat: clear of every fan box and through-hole courtyard
+C19   1u        U6     TQFP-32_7x7mm_P0.8mm           pin 5   far side under the pin REFUSED: its own part is fanned
+C20   1u        U6     TQFP-32_7x7mm_P0.8mm           pin 15  far side under the pin REFUSED: its own part is fanned
+C21   1u        U6     TQFP-32_7x7mm_P0.8mm           pin 19  far side under the pin REFUSED: its own part is fanned
+C22   1u        U6     TQFP-32_7x7mm_P0.8mm           pin 21  far side under the pin REFUSED: its own part is fanned
+C23   1u        U6     TQFP-32_7x7mm_P0.8mm           pin 26  far side under the pin REFUSED: its own part is fanned
+C31   1u        U7     QFN-16-1EP_3x3mm_P0.5mm_EP1.75 pin 12  far side under the pin REFUSED: its own part is fanned
+C32   1u        U7     QFN-16-1EP_3x3mm_P0.5mm_EP1.75 pin 14  far side under the pin REFUSED: its own part is fanned
+C33   10u       U7     QFN-16-1EP_3x3mm_P0.5mm_EP1.75 pin 14  far side under the pin REFUSED: its own part is fanned
+C39   100n      U8     VSSOP-8_3x3mm_P0.65mm          pin 8   far side under the pin REFUSED: its own part is fanned
+
+summary: {"fanned_part": 13, "under_pin_in_other_fan": 2, "under_pin_open": 9, "not_on_board": 2}
+

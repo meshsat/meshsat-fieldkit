@@ -1,0 +1,17 @@
+A07 minimum fix sketch (not applied; one writer per file, condition 4; each regeneration proven by a netlist diff, condition 5)
+E (gen_sch_e.py):
+  :117-120 FP.update add  "XH4": "Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical"
+  :136 replace ph("J_SMB", 6, ...) with
+       part("J_SMB", "Connector_Generic", "Conn_01x04", "SMBus lead from P1 J_SMB (JST-XH 1x4): SCL0 SDA0 GND, pin 4 PRES not connected", "XH4", {"1": "SCL0", "2": "SDA0", "3": "GND", "4": "NC"})
+       (lcsc_fill.py:158 then assigns C594232 by re.match on the value and JST_XH_B4B in the footprint, lcsc_fill.py:238)
+  pcb-e1-dock*/lcsc-allow.txt:7 "(XH or pin header)" line removed
+  :131 and :349 comments: no BB-2590 sections; GPIO2/3 are the RP2040's I2C1 block, GPIO4/5 its I2C0 (Table 279)
+  parity: netlist diff shows only J_SMB (footprint, pins 1 and 2 swapped roles onto SCL0/SDA0, SDA1/SCL1 lose J_SMB, one GND pin)
+P (gen_sch_p.py):
+  :172 J_SMB pin 3 GND -> PACK_N (TI SLUSC67B Figure 21: J2 VSS on CHGND with J4 PACK-, not the cell-side GND)
+  :171 D2 (separate defect, own issue): VBUS pin 5 is on VCC_F (PACK_P through R7 1k, 12 to 16.8 V) against USBLC6-2 VRM 5.25 V / VBR 6 V;
+       TI's own arrangement is two 5.6 V zeners (MM3Z5V6C) from SMBC and SMBD to the pack-side ground (Figures 21 and 30)
+  parity: netlist diff shows only J_SMB.3 (and D2 if taken)
+Lead: JST XH 1x4 at both ends, pin n to pin n, 26 AWG twisted, 350 mm
+Docs: ASSEMBLY.md:45, :60, :140; PANEL.md:128, :155; a new appendix entry correcting 32.62 (line 3062) rather than editing it
+Gate: check_contracts.py gets a J_SMB contract (today 0 occurrences): same family, pitch, count, and pin n role equal on P and E

@@ -1,0 +1,11 @@
+# Comment substrings whose BOM line may carry no LCSC code, one per line with the reason after a #.
+# lcsc_fill.py refuses any other blank (it resolves this file three dirnames up from out/jlc/<name>-bom.csv).
+# A line here means JLCPCB never places that part: it is a lead, a solder land, a bench header, or a part
+# bought elsewhere with a route in tools/jlc-handfit.txt. It is NOT a place to park a part nobody has chosen.
+
+(JST-XH          # cell tap and SMBus leads, made up with the pack
+# (JST-PH        REMOVED 12 September 2026: the sockets on the board carry their codes and are placed (since round 8,
+#                  26 September 2026: J_TS C157993 B5B-PH-K-S(LF)(SN), J_TS2 C131337 B2B-PH-K-S(LF)(SN); the -GW part
+#                  C5251182 is withdrawn, R8P-03). The LEAD is made up with the pack; the socket is not the lead.
+12 AWG           # pack and cell-block wires soldered to lands, not placed parts
+mini blade (Keystone 3568 holder)   # F1, the pack's 25 A fuse: holder and fuse fitted at build as on boards A and E (route in tools/jlc-handfit.txt, '3568' and '25 A mini blade'). Added 26 Sep 2026 (MESHSAT-1357 round 8, the parts stream's draft 03)

@@ -1,0 +1,42 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "fail": 0,
+  "pass": 6,
+  "unjudged": 3
+ },
+ "denominator": 9,
+ "evidence": [
+  "unjudged, the other board is absent: dock 2x6 contact map identical on A (J_DOCK) and E (J_BLK)",
+  "unjudged, the other board is absent: rail CELL+: the shares sum to 1.0% within the 2.0% the rail declares",
+  "unjudged, the other board is absent: rail VIN_RAW: the shares sum to 2.0% within the 2.0% the rail declares"
+ ],
+ "inputs": {
+  "boards": "A,B,C,D,E,P"
+ },
+ "missing_input": "3 of this board's contracts name a board absent from this tree",
+ "note": "3 of this board's contracts name a board absent from this tree and were not judged",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "SCH-003": "ddf200a8e65c127b"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "SCH-003"
+ ],
+ "tool": "check_contracts_e",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "60b5a5a915850caa"
+ },
+ "ts": "2026-09-26T13:33:14Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown",
+ "writer": {
+  "file": "check_contracts.py",
+  "sha16": "4f4cb3a61d808820"
+ }
+}

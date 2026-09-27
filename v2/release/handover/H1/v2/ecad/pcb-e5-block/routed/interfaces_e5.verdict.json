@@ -1,0 +1,40 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "assignments": 0,
+  "disagreements": 0
+ },
+ "denominator": 0,
+ "evidence": [
+  "The dock block carries no interface of its own. Its every net is board A's, read off A's board file by position under each spring pin, and what it holds is twelve plated contact targets, four pack targets, a pre-charge target and the wire lands beneath them. The interfaces those conductors belong to are declared on the boards at their ends, and what this board owes them is contact and current, which MEC-001 and PI-001 judge."
+ ],
+ "inputs": {
+  "board": "e5",
+  "spec": "pcb_interfaces.yaml"
+ },
+ "missing_input": null,
+ "note": "board E5 declares that no interface of its own carries a target, with its reason",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "INT-001": "6c054dd67edd4099"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "INT-001"
+ ],
+ "tool": "interfaces_e5",
+ "tools": {
+  "git_head": "14a43af795eb",
+  "tools_tree_sha": "66ea9068e975c684"
+ },
+ "ts": "2026-09-21T20:17:17Z",
+ "verdict": "PASS",
+ "version": "14a43af795eb+dirty",
+ "writer": {
+  "file": "interfaces.py",
+  "sha16": "462f21176406879c"
+ }
+}

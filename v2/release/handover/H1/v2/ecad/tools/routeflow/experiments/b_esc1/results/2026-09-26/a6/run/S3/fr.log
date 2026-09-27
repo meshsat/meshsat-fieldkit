@@ -1,0 +1,144 @@
+2026-09-26 18:50:32.035 [main] INFO  Freerouting v1.9.0 (build-date: 2026-09-25)
+2026-09-26 18:50:32.084 [main] INFO  Settings were loaded from freerouting.json
+2026-09-26 18:50:33.104 [main] INFO  Opening 'out/routeflow/b-esc1/a6/run/S3/job.dsn'...
+2026-09-26 18:50:33.478 [ForkJoinPool.commonPool-worker-1] INFO  New version available: v2.4.1
+2026-09-26 18:50:36.980 [main] WARN  The normalization of net '/ETH2_P2_N' failed.
+2026-09-26 18:50:37.020 [main] WARN  The normalization of net '/ETH3_P2_N' failed.
+2026-09-26 18:50:37.238 [main] WARN  The normalization of net '/HOST3_1D_N' failed.
+2026-09-26 18:50:37.330 [main] WARN  The normalization of net '/LIME_SSRX_P' failed.
+2026-09-26 18:50:37.357 [main] WARN  The normalization of net '/LIME_SSTX_N' failed.
+2026-09-26 18:50:37.450 [main] WARN  The normalization of net '/PCIE3_CLK_N' failed.
+2026-09-26 18:50:37.647 [main] WARN  The normalization of net '/SWP4_C_N' failed.
+2026-09-26 19:47:04.394 [Thread-33] INFO  Starting auto-routing...
+WARNING: Runtime environment or build system does not support multi-release JARs. This will impact location-based features.
+2026-09-26 19:47:06.039 [Thread-33] ERROR The normalization of net '/PCIE3_CLK_N' failed.
+java.lang.Exception: We reached the maximum normalization depth (16).
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:677) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:672) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.BasicBoard.normalize_traces(BasicBoard.java:897) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.get_instance(InsertFoundConnectionAlgo.java:80) [freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.autoroute.AutorouteEngine.autoroute_connection(AutorouteEngine.java:195) [freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_item(BatchAutorouter.java:449) [freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_pass(BatchAutorouter.java:323) [freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_passes(BatchAutorouter.java:173) [freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.interactive.BatchAutorouterThread.thread_action(BatchAutorouterThread.java:90) [freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.interactive.InteractiveActionThread.run(InteractiveActionThread.java:56) [freerouting-1.9.0-mesh.jar:unspecified]
+2026-09-26 19:47:06.039 [Thread-33] ERROR The normalization of net '/PCIE3_CLK_N' failed.
+java.lang.Exception: We reached the maximum normalization depth (16).
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:677) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:672) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.BasicBoard.normalize_traces(BasicBoard.java:897) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.get_instance(InsertFoundConnectionAlgo.java:80) [freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.autoroute.AutorouteEngine.autoroute_connection(AutorouteEngine.java:195) [freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_item(BatchAutorouter.java:449) [freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_pass(BatchAutorouter.java:323) [freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_passes(BatchAutorouter.java:173) [freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.interactive.BatchAutorouterThread.thread_action(BatchAutorouterThread.java:90) [freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.interactive.InteractiveActionThread.run(InteractiveActionThread.java:56) [freerouting-1.9.0-mesh.jar:unspecified]
+2026-09-26 19:47:32.093 [Thread-33] ERROR The normalization of net '/PCIE3_CLK_N' failed.
+java.lang.Exception: We reached the maximum normalization depth (16).
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:677) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:672) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.BasicBoard.normalize_traces(BasicBoard.java:897) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.get_instance(InsertFoundConnectionAlgo.java:80) [freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.autoroute.AutorouteEngine.autoroute_connection(AutorouteEngine.java:195) [freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_item(BatchAutorouter.java:449) [freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_pass(BatchAutorouter.java:323) [freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_passes(BatchAutorouter.java:173) [freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.interactive.BatchAutorouterThread.thread_action(BatchAutorouterThread.java:90) [freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.interactive.InteractiveActionThread.run(InteractiveActionThread.java:56) [freerouting-1.9.0-mesh.jar:unspecified]
+2026-09-26 19:47:32.093 [Thread-33] ERROR The normalization of net '/PCIE3_CLK_N' failed.
+java.lang.Exception: We reached the maximum normalization depth (16).
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:677) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:701) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.PolylineTrace.normalize(PolylineTrace.java:672) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.board.BasicBoard.normalize_traces(BasicBoard.java:897) ~[freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.get_instance(InsertFoundConnectionAlgo.java:80) [freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.autoroute.AutorouteEngine.autoroute_connection(AutorouteEngine.java:195) [freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_item(BatchAutorouter.java:449) [freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_pass(BatchAutorouter.java:323) [freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_passes(BatchAutorouter.java:173) [freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.interactive.BatchAutorouterThread.thread_action(BatchAutorouterThread.java:90) [freerouting-1.9.0-mesh.jar:unspecified]
+	at app.freerouting.interactive.InteractiveActionThread.run(InteractiveActionThread.java:56) [freerouting-1.9.0-mesh.jar:unspecified]
+2026-09-26 19:48:25.702 [Thread-33] WARN  FloatLine: Parameter is null
+2026-09-26 19:48:25.706 [Thread-33] WARN  FloatLine: Parameter is null
+2026-09-26 19:52:52.312 [Thread-33] INFO  MeshSat: session written after pass 1 to out/routeflow/b-esc1/a6/run/S3/route.ses
+2026-09-26 20:00:02.933 [Thread-33] INFO  MeshSat: session written after pass 2 to out/routeflow/b-esc1/a6/run/S3/route.ses
+2026-09-26 20:07:57.570 [Thread-33] INFO  MeshSat: session written after pass 3 to out/routeflow/b-esc1/a6/run/S3/route.ses
+2026-09-26 20:12:15.006 [Thread-33] WARN  LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: next_room is null
+2026-09-26 20:15:44.360 [Thread-33] INFO  MeshSat: session written after pass 4 to out/routeflow/b-esc1/a6/run/S3/route.ses
+2026-09-26 20:23:32.729 [Thread-33] INFO  MeshSat: session written after pass 5 to out/routeflow/b-esc1/a6/run/S3/route.ses
+2026-09-26 20:31:08.464 [Thread-33] INFO  MeshSat: session written after pass 6 to out/routeflow/b-esc1/a6/run/S3/route.ses
+2026-09-26 20:38:50.513 [Thread-33] INFO  MeshSat: session written after pass 7 to out/routeflow/b-esc1/a6/run/S3/route.ses
+2026-09-26 20:46:16.102 [Thread-33] INFO  MeshSat: session written after pass 8 to out/routeflow/b-esc1/a6/run/S3/route.ses
+2026-09-26 20:53:14.601 [Thread-33] INFO  MeshSat: session written after pass 9 to out/routeflow/b-esc1/a6/run/S3/route.ses
+2026-09-26 21:01:04.921 [Thread-33] INFO  MeshSat: session written after pass 10 to out/routeflow/b-esc1/a6/run/S3/route.ses
+2026-09-26 21:07:41.608 [Thread-33] INFO  MeshSat: session written after pass 11 to out/routeflow/b-esc1/a6/run/S3/route.ses
+2026-09-26 21:15:10.918 [Thread-33] INFO  MeshSat: session written after pass 12 to out/routeflow/b-esc1/a6/run/S3/route.ses

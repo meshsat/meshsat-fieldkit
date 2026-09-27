@@ -1,0 +1,13 @@
+Fetched 2026-09-25 between 21:24 and 21:32 UTC from the runner.
+te.com live: https://www.te.com/en/product-1-2199119-5.html and product-2199119-5.html -> HTTP 403 (Akamai "Access Denied", ref 18.618e1002.1790371493.18b9cf3); saved as https___www.te.com_en_product-*.html
+wb_1-2199119-5_20251212.html      https://web.archive.org/web/20251212214840id_/https://www.te.com/en/product-1-2199119-5.html (gzip; .dec.html is the decompressed body)
+wb_1-2199119-5_20250609.html      https://web.archive.org/web/20250609180326id_/https://www.te.com/en/product-1-2199119-5.html
+wb_2199119-5_20250609.html        https://web.archive.org/web/20250609180326id_/https://www.te.com/en/product-2199119-5.html
+wb_1-2199119-5_usa_20180126.html  https://web.archive.org/web/20180126210011id_/https://www.te.com/usa-en/product-1-2199119-5.html
+wb_2199119-5_usa_20231016.html    https://web.archive.org/web/20231016191132id_/https://www.te.com/usa-en/product-2199119-5.html
+te_CD_2199119_B1.pdf              https://web.archive.org/web/20240629111304id_/https://www.te.com/commerce/DocumentDelivery/DDEController?Action=showdoc&DocId=Customer+Drawing%7F2199119%7FB1%7Fpdf%7FEnglish%7FENG_CD_2199119_B1.pdf%7F1-2199119-5  (content is customer drawing C-2199119 rev F, ECR-19-011878, 19MAR2020; the 2023-03-13 capture of the ..._F.pdf URL is byte-identical)
+te_cd_p2_table.png / te_cd_p2_hi.png / te_cd_p3.png / te_cd_p2.png   renders of sheets 2 and 3 of that drawing (mutool)
+lcsc_C574849_api.json             https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C574849
+lcsc_C574849_datasheet.pdf        https://datasheet.lcsc.com/datasheet/pdf/3d7fde4601fb7ebe13b6fff009797ee7.pdf?productCode=C574849  (byte-identical to v2/vendor/m2/te-2199119-m2-b-key.pdf, sha256 d8f58c58...)
+lcsc_C4594496_api.json, lcsc_C41430835_api.json, lcsc_C2803770_api.json   same LCSC endpoint
+jlc_<keyword>.json                POST https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList {"keyword":..,"currentPage":1,"pageSize":12,"searchSource":"search"} at 2026-09-25T21:31:48Z (jlc_query_time.txt)

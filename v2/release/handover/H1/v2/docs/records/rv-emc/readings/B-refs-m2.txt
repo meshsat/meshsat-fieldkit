@@ -1,0 +1,54 @@
+Q106 | 2N7002: EMCON_ON pulls W_DISABLE1# low (open drain)
+   pin 1 (G) -> EMCON_ON
+   pin 2 (S) -> GND
+   pin 3 (D) -> WIFI_W_DIS_n
+Q111 | 2N7002: EMCON removes the WiFi card's supply (S-01)
+   pin 1 (G) -> EMCON_ON
+   pin 2 (S) -> GND
+   pin 3 (D) -> S1A_EN
+Q206 | 2N7002: EMCON_ON pulls W_DISABLE1# low (open drain)
+   pin 1 (G) -> EMCON_ON
+   pin 2 (S) -> GND
+   pin 3 (D) -> 5G_W_DIS_n
+Q306 | 2N7002: EMCON_ON pulls W_DISABLE1# low (open drain)
+   pin 1 (G) -> EMCON_ON
+   pin 2 (S) -> GND
+   pin 3 (D) -> WIFI2_W_DIS_n
+Q311 | 2N7002: EMCON removes the WiFi card's supply (S-01)
+   pin 1 (G) -> EMCON_ON
+   pin 2 (S) -> GND
+   pin 3 (D) -> S3A_EN
+U103 | AP64500SP-13 5 A buck, 3.3 V rail +3V3_S1A
+   pin 1 (S1A_BOOT) -> S1A_BOOT
+   pin 2 (+5V_S1) -> +5V_S1
+   pin 3 (S1A_EN) -> S1A_EN
+   pin 4 (S1A_RT) -> S1A_RT
+   pin 5 (S1A_FB) -> S1A_FB
+   pin 6 (S1A_COMP) -> S1A_COMP
+   pin 7 (GND) -> GND
+   pin 8 (S1A_SW) -> S1A_SW
+   pin 9 (GND) -> GND
+U203 | AP64500SP-13 5 A buck, 3.3 V rail +3V3_S2A
+   pin 1 (S2A_BOOT) -> S2A_BOOT
+   pin 2 (+5V_S2) -> +5V_S2
+   pin 3 (PCIE_PWR_EN2) -> PCIE_PWR_EN2
+   pin 4 (S2A_RT) -> S2A_RT
+   pin 5 (S2A_FB) -> S2A_FB
+   pin 6 (S2A_COMP) -> S2A_COMP
+   pin 7 (GND) -> GND
+   pin 8 (S2A_SW) -> S2A_SW
+   pin 9 (GND) -> GND
+U303 | AP64500SP-13 5 A buck, 3.3 V rail +3V3_S3A
+   pin 1 (S3A_BOOT) -> S3A_BOOT
+   pin 2 (+5V_S3) -> +5V_S3
+   pin 3 (S3A_EN) -> S3A_EN
+   pin 4 (S3A_RT) -> S3A_RT
+   pin 5 (S3A_FB) -> S3A_FB
+   pin 6 (S3A_COMP) -> S3A_COMP
+   pin 7 (GND) -> GND
+   pin 8 (S3A_SW) -> S3A_SW
+   pin 9 (GND) -> GND
+Q207 | 2N7002 expander -> FULL_CARD_POWER_OFF#
+   pin 1 (G) -> 5G_OFF
+   pin 2 (S) -> GND
+   pin 3 (D) -> 5G_PWROFF_n

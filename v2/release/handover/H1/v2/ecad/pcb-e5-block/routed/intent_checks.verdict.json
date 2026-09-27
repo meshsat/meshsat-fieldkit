@@ -1,0 +1,38 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "fail": 1,
+  "pass": 0,
+  "unclaimed": 1
+ },
+ "denominator": 1,
+ "evidence": [
+  "intent file present (out/<stem>-intent.json from the schematic generator)"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-e5-block.kicad_pcb",
+   "sha256_16": "686b29a734c55b9a"
+  }
+ },
+ "missing_input": null,
+ "note": "the whole file; each rule also has its own verdict (intent_return_path, intent_return_via, intent_decoupling, intent_rails)",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [],
+ "tool": "intent_checks",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "994b3d2315bb9859"
+ },
+ "ts": "2026-09-21T12:52:59Z",
+ "verdict": "FAIL",
+ "version": "unknown",
+ "writer": {
+  "file": "intent_checks.py",
+  "sha16": "41cd5935c5f46f0b"
+ }
+}

@@ -1,0 +1,35 @@
+Geometry of 1521-931 Top PID 7-24-2025, probed from peli/1520/1521-931 Top PID 7-24-2025.STEP
+
+Written by tools/kb/geom_probe.py, not hand edited, so that a CAD model's measurable
+facts can be searched and reviewed as text instead of living only in whoever opened the
+model that day. Units: unknown. EVERY NUMBER IS A MEASUREMENT OF THIS FILE, NOT A
+SPECIFICATION: a vendor model may carry a connector, an antenna or a mounting boss the
+catalogue dimension leaves out, and it may be exported in any orientation. Where the
+manufacturer publishes a drawing, the drawing wins and this is how to find the number
+to check against it.
+
+source file: peli/1520/1521-931 Top PID 7-24-2025.STEP
+sha256 (first 16): c697cc87e60b277e
+size: 65954 bytes
+points read: 220
+
+1521-931 Top PID 7-24-2025 ENVELOPE (single part, so the bounding box of its points is the part).
+Axes are THE FILE'S OWN: a vendor model is often exported Y up, and this reader does
+not turn it, so read the three extents as sizes and not as width, depth and height.
+  axis 1 -9.871 to 9.871   extent 19.743
+  axis 2 -0.000 to 28.429   extent 28.429
+  axis 3 -7.350 to 7.350   extent 14.700
+
+1521-931 Top PID 7-24-2025 HOLES AND ROUND FEATURES of 0.5 mm and over, coaxial duplicates collapsed.
+In an assembly a pattern is still true WITHIN the component that carries it, which is
+how a module's mounting holes come out right.
+  1521-931 Top PID 7-24-2025: diameter 0.693 : 2 holes   pattern 17.662 x 0.000
+      at X -8.831  Y 1.155
+      at X 8.831  Y 1.155
+  1521-931 Top PID 7-24-2025: diameter 1.279 : 2 holes   pattern 16.464 x 0.000
+      at X -8.232  Y 0.000
+      at X 8.232  Y 0.000
+  1521-931 Top PID 7-24-2025: diameter 1.360 : 2 holes   pattern 16.493 x 0.000
+      at X -8.246  Y 1.135
+      at X 8.246  Y 1.135
+

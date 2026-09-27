@@ -1,0 +1,700 @@
+OCR of switches/apem-switch-guards-series.pdf, a drawing with no text layer
+
+Read by tools/kb/kb_ocr.py at 300 dpi with tesseract, because this document carries no
+font objects: its lettering is drawn as vector paths and no text extractor can reach it.
+
+THIS IS AN INDEX, NOT A SOURCE OF NUMBERS. OCR misreads exactly the characters that matter
+on a drawing: a decimal point, a tolerance, an H7, a 6 against an 8. Use this to find WHICH
+drawing to open. Then open it:  pdftoppm -r 300 -png -f <page> -l <page> v2/vendor/switches/apem-switch-guards-series.pdf
+Every dimension quoted anywhere in this project must come from the drawing, never from here.
+
+LEGIBILITY: 493 word-like tokens in 4330 characters.
+
+--- apem-switch-guards-series, page 1, as read by OCR ---
+s
+S
+y
+«OG
+a»
+Ss
+Switch guards
+For switch series 12000 - 3500 - 600H - 6000
+DISTINCTIVE FEATURES
+Prevent accidental lever operation
+Many options available
+Designed for @ 11.9 or @ 12 mm bushing
+Models for 2 or 3 positions switches
+@ 1.5mm holes for wiring a seal optional
+LI]) ENVIRONMENTAL SPECIFICATIONS
+Men
+—_
+¢ Salt spray test : 96 hours (IEC 68-2-11)
+——
+ban
+* Operating temperature : -40 °C to +85 °C (-40 °F to +185 °F)
+hee Ss
+APEM products may be recycled at end-of-life for the re-claiming of valuable metal components
+MATERIALS
+¢ Support plate : black stainless steel
+¢ Cap : thermoset or thermoplastic (20PN, 200PN, 300PN)
+APEM products may be recycled at end-of-life for the re-claiming of valuable metal components
+The company reserves the right to change specifications without notice.
+
+--- apem-switch-guards-series, page 2, as read by OCR ---
+Switch guards
+For switch series 12000 - 3500 - 600H - 6000
+as
+14.00
+49.00
+SERIES 20 - WITH STANDARD BUSHING
+(551)
+(1.929)
+FOR 2-POSITION SWITCHES
+Lever returned then locked in
+Model No
+Color
+down position (OFF)
+22
+Grey
+4
+23
+White
+24
+on
+Orange
+On
+on
+Tio
+ts
+25
+Black
+7
+26
+Red
+N+
+27
+Green
+ed
+re
+sue
+28
+Yellow
+vy
+SY
+BB
+(866)
+22.00
+29
+Blue
+25/28
+Black/yellow striped
+as
+SERIES 20PN - WITH STANDARD BUSHING
+14.00
+(551)
+FOR 2-POSITION SWITCHES
+Lever returned then locked in
+Model No
+Color
+down position (OFF)
+D)i
+Pato)
+ree
+20
+22PN
+Grey
+|
+Or
+23PN
+White
+L.~---
+24PN
+Orange
+ah
+on
+og
+ran
+~
+= ——— —- — 1b
+25PN
+Black
+vo
+====L TP y
+vA
+26PN
+Red
+see
+a
+whe
+8e
+o=
+—-
+27PN
+Green
+xO
+Dy
+a
+Span
+28PN
+Yellow
+\ i L/
+29PN
+Blue
+(885
+1.102)
+28.00
+On this model, holes for wiring a seal are standard.
+as
+SERIES 30
+14.00
+49.00
+(551)
+1.929)
+FOR 3-POSITION SWITCHES
+Lever returned then locked in
+Model No
+Color
+upper position
+32
+Grey
+33
+White
+ecss
+34
+Orange
+ti
+b—7™.
+35
+Black
+Or
+a
+36
+Red
+st
+So
+om
+37
+Green
+Co
+a
+38
+Yellow
+Ni
+39
+Blue
+(669)
+17.00
+(866)
+22.00
+35/38
+Black/yellow striped
+Es
+SERIES 40 - WITH STANDARD BUSHING
+(551)
+14.00
+(1.929)
+49.00
+FOR 2-POSITION SWITCHES
+Lever returned then locked in
+Model No
+Color
+upper position
+42
+Grey
+43
+White
+als
+44
+Orange
+ate}
+oF
+45
+Black
+Or
+Th
+ro
+46
+Red
+Nap
+on
+47
+Green
+So
+Co
+ro
+48
+Yellow
+a
+17.00
+Ni
+22.00
+49
+Blue
+(669)
+(866)
+Model 140 (with smaller aperture)
+45/48
+recommended for the 12000 series
+Black/yellow striped
+2
+
+--- apem-switch-guards-series, page 3, as read by OCR ---
+Switch guards
+For switch series 12000 - 3500 - 600H - 6000
+Es
+14.00
+(551)
+(i828)
+SERIES 80
+FOR 3-POSITION SWITCHES
+Lever returned then locked in
+Model No
+Color
+Nef
+center position
+82
+Grey
+--4
+83
+White
+84
+Orange
+ate)
+oF
+oo
+MK-- 4
+ne
+On
+Pits}
+a
+85
+Black
+a
+J
+86
+Red
+~rie-
+|
+So
+87
+Green
+re
+=== 4
+88
+Yellow
+A
+SY
+89
+Blue
+(669)
+(866)
+22.00
+Es
+14.00
+(551)
+(828)
+SERIES 200 - WITH STANDARD BUSHING
+FOR 2-POSITION SWITCHES
+Lever returned then locked either in
+Nett
+lower or in upper position
+Model No
+Color
+202
+Grey
+-~
+203
+White
+oe
+ate)
+204
+Or
+on
+ee
+fal
+Orange
+205
+Black
+a
+oS
+So
+206
+Red
+ane
+re
+L---
+207
+Green
+j----4
+3 _!
+208
+Yellow
+(669)
+(866)
+22.00
+209
+Blue
+as
+14.00
+SERIES 200PN - FOR 2 OR 3-POSITION SWITCHES
+(.551)
+ACTION PREVENTER
+Lever not locked, but protected in the
+Model No
+Color
+wo
+Pesca
+=O
+position where left by the user
+(+—--—
+CX)
+202PN
+Grey
+}.----
+ween eee
+~\y
+203PN
+White
+ete.
+204PN
+So
+on
+—
+acti toy,
+-
+Orange
+vo
+ght
+ae ee
+=----7
+=
+‘Mu
+205PN
+Black
+Pe
+-—*
+ae
+~ue
+206PN
+Red
+it)
+on
+207PN
+Green
+=O
+aS
+------
+ae ee
+oo
+208PN
+Yellow
+209PN
+Blue
+(869)
+G03)
+as
+SERIES 50
+(so
+(1.929)
+FOR 2-POSITION SWITCHES
+Lever returned then locked in down
+position (OFF)
+Model No
+Color
+52
+Grey
+53
+White
+— 4
+54
+Orange
+ate)
+oF
+55
+Black
+Or
+on
+56
+Red
+Nt
+o>
+57
+Green
+CoO
+re
+sue
+58
+Yellow
+NN - |. -/
+59
+Blue
+17.00
+SY
+22.00
+(.669)
+(866)
+55/58
+Black/yellow striped
+
+--- apem-switch-guards-series, page 4, as read by OCR ---
+Switch guards
+For switch series 12000 - 3500 - 600H - 6000
+Es
+14.00
+(551)
+1.929)
+SERIES 60
+FOR 3-POSITION SWITCHES
+Lever returned then locked in
+Model No
+Color
+upper position
+62
+Grey
+63
+White
+eos
+Tin
+oF
+a
+64
+Orange
+OF
+--
+65
+Black
+NV +twH
+66
+Red
+os
+Co
+ts
+rl
+67
+Green
+68
+Yellow
+17.00
+SY
+22.00
+69
+Blue
+(.669)
+(866)
+65/68
+Black/yellow striped
+Es
+(551)
+14.00
+1.929)
+SERIES 70
+FOR 2-POSITION SWITCHES
+Lever returned then locked in
+Model No
+Color
+upper position
+72
+Grey
+73
+White
+eos
+oF
+74
+Orange
+or
+th
+th
+——ST
+ry
+75
+Black
+V+twH
+os
+76
+Red
+Co
+Ns
+rl
+77
+Green
+78
+Yellow
+\ | oA
+\
+22.00
+(a
+(866)
+79
+Blue
+Model 170 (with smaller aperture)
+75/78
+recommended for the 12000 series.
+Black/yellow striped
+as
+SERIES 100
+(551)
+14.00
+(1.929)
+49.00
+FOR 3-POSITION SWITCHES
+Lever returned then locked in
+center position
+Neff
+Model No
+Color
+102
+Grey
+--4
+103
+White
+oF
+-|-
+104
+Orange
+Or
+Pits}
+To
+{|i |
+105
+Black
+Et
+106
+Red
+ae
+So
+a
+re
+CO
+107
+Green
+ee.
+Nh
+108
+Yellow
+Ni
+22.00
+(.669)
+(866)
+109
+Blue
+as
+14.00
+SERIES 300PN
+(551)
+FOR 2 OR 3-POSITION SWITCHES
+Neff
+Lever not locked, but protected in the
+w®
+any
+position where left by the user.
+Model No
+Color
+oe
+pres
+Xe}
+302PN
+Grey
+b.----
+waa a--e
+-|-
+Les
+303PN
+White
+oa
+Soo
+Li} if
+A
+| =
+==
+aciiiey
+304PN
+Orange
+ve
+ah
+——
+a
+=-7-%
+aa
+305PN
+Black
+Lb
+y
+—_.
+~ue
+306PN
+Red
+bate)
+Se
+os
+------
+aS
+— 4h
+--—
+307PN
+Green
+-.---
+308PN
+Yellow
+309PN
+Blue
+Bg
+4 a
+
+--- apem-switch-guards-series, page 5, as read by OCR ---
+Switch guards
+For switch series 12000 - 3500 - 600H - 6000
+Es
+14.00
+49.00
+SERIES 500
+(551)
+(1.929)
+FOR 2-POSITION SWITCHES
+Lever returned then locked either in
+Neff
+lower or in upper position
+Model No
+Color
+502
+Grey
+503
+White
+-~
+on
+ate)
+oF
+504
+Orange
+Or
+a
+any
+a:
+505
+Black
+a
+506
+Red
+anne
+oo
+----
+507
+Green
+Ni--4
+= =
+Ni
+508
+Yellow
+(669)
+17.00
+(866)
+22.00
+509
+Blue
+OPTIONS
+P
+Holes for wiring a seal
+Cap engraving available : consult factory.
+F=
+(.059DIA)
+@1.50
+

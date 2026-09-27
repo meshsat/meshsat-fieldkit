@@ -1,0 +1,28 @@
+TX_INHIBIT_n (6 nodes):
+   C24.1  | 10n
+   J_PANEL.11 (Pin_11) | panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inhibit, HDMI selects, USB, heartbe
+   R14.1  | 10k
+   SW_EMCON.1 (Pin_1) | EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_HW low, the same sense; APEM 5636
+   TP10.1 (1) | TX_INHIBIT_n
+   U9.2 (TX_INHIBIT_n) | 74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; l
+EMCON_HW (4 nodes):
+   J_PANEL.8 (Pin_8) | panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inhibit, HDMI selects, USB, heartbe
+   TP11.1 (1) | EMCON_HW
+   U3.32 (GPIO21) | RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)
+   U9.4 (EMCON_HW) | 74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; l
+SW_EMCON | EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_HW low, the same sense; APEM 5636ADKB-2V, hinged safe
+   pin 1 (Pin_1) -> TX_INHIBIT_n
+   pin 2 (Pin_2) -> GND
+   pin 3 (Pin_3) -> unconnected-(SW_EMCON-Pin_3-Pad3)
+U9 | 74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitt
+   pin 1 (NC) -> unconnected-(U9-NC-Pad1)
+   pin 2 (TX_INHIBIT_n) -> TX_INHIBIT_n
+   pin 3 (GND) -> GND
+   pin 4 (EMCON_HW) -> EMCON_HW
+   pin 5 (+3V3) -> +3V3
+R14 | 10k
+   pin 1 () -> TX_INHIBIT_n
+   pin 2 () -> +3V3
+C24 | 10n
+   pin 1 () -> TX_INHIBIT_n
+   pin 2 () -> GND

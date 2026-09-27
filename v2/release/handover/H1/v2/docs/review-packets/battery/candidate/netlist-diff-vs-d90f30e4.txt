@@ -1,0 +1,10 @@
+components: base 85, new 85
+REMOVED components (0):
+ADDED components (0):
+CHANGED components:
+  ~ J_SMB  LCSC      '' -> 'C144395'
+  ~ J_TS2  LCSC      'C5251182' -> 'C131337'
+PIN NET CHANGES on components present on both sides:
+NETS only in base: []
+NETS only in new: []
+NETS on both sides whose node set changed:

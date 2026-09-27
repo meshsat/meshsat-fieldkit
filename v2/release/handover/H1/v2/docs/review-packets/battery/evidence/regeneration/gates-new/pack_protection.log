@@ -1,0 +1,6 @@
+pack_protection: 9 function(s) over 14 cell limit(s) and 5 device(s), 45 check(s), 1 failure(s)
+  note PACK_OVER_CURRENT_CHARGE: 5.0 A against 6.0 A for 3 cells in parallel (max_charge_current_ma)
+  note PACK_OVER_CURRENT_DISCHARGE: 20.0 A against 24.0 A for 3 cells in parallel (max_continuous_discharge_ma)
+  note PACK_OVER_CURRENT_DISCHARGE_2: 30.0 A against 39.0 A for 3 cells in parallel (max_pulse_discharge_ma)
+  FAIL BAT-001 asks for protection IN HARDWARE, INDEPENDENT OF ANY SOFTWARE, and 9 of 9 functions are implemented by a device whose thresholds live in firmware, with no second protector and no chemical fuse on this board: gen_sch_p.py: `no chemical fuse (the 25 A mini blade is the fuse)`, PTC and PTCEN tied off, and no second protector IC. Every CELL-LEVEL protection below is the
+BAT-001 pack_protection exit 0

@@ -1,0 +1,54 @@
+Geometry of 1521-931 PID 7-24-2025, probed from peli/1520/1521-931 PID 7-24-2025.DXF
+
+Written by tools/kb/geom_probe.py, not hand edited, so that a CAD model's measurable
+facts can be searched and reviewed as text instead of living only in whoever opened the
+model that day. Units: drawing units (a DXF declares no unit here). EVERY NUMBER IS A MEASUREMENT OF THIS FILE, NOT A
+SPECIFICATION: a vendor model may carry a connector, an antenna or a mounting boss the
+catalogue dimension leaves out, and it may be exported in any orientation. Where the
+manufacturer publishes a drawing, the drawing wins and this is how to find the number
+to check against it.
+
+source file: peli/1520/1521-931 PID 7-24-2025.DXF
+sha256 (first 16): 3112ae183fedda7b
+size: 10389754 bytes
+points read: 39899
+
+1521-931 PID 7-24-2025 EXTENTS OF THE DRAWING SHEET. This is a 2D drawing, not a solid: the box below
+is the sheet, several views sit on it at different places, and only the circle
+centres further down are positions within a view.
+Axes are THE FILE'S OWN: a vendor model is often exported Y up, and this reader does
+not turn it, so read the three extents as sizes and not as width, depth and height.
+  axis 1 -41.714 to 852.590   extent 894.304
+  axis 2 0.000 to 765.257   extent 765.257
+  axis 3 0.000 to 0.000   extent 0.000
+
+1521-931 PID 7-24-2025 HOLES AND ROUND FEATURES of 0.5 mm and over, coaxial duplicates collapsed.
+In an assembly a pattern is still true WITHIN the component that carries it, which is
+how a module's mounting holes come out right.
+  1521-931 PID 7-24-2025: diameter 0.974 : 1 hole
+      at X 393.411  Y 283.900
+  1521-931 PID 7-24-2025: diameter 1.058 : 1 hole
+      at X 201.075  Y 112.984
+  1521-931 PID 7-24-2025: diameter 1.185 : 1 hole
+      at X 201.075  Y 261.413
+  1521-931 PID 7-24-2025: diameter 1.950 : 1 hole
+      at X 201.075  Y 112.984
+  1521-931 PID 7-24-2025: diameter 2.735 : 1 hole
+      at X 201.075  Y 112.984
+  1521-931 PID 7-24-2025: diameter 4.447 : 1 hole
+      at X 201.075  Y 261.413
+  1521-931 PID 7-24-2025: diameter 7.778 : 1 hole
+      at X 201.075  Y 261.413
+  1521-931 PID 7-24-2025: diameter 8.013 : 1 hole
+      at X 201.075  Y 261.413
+  1521-931 PID 7-24-2025: diameter 8.035 : 1 hole
+      at X 201.075  Y 261.413
+  1521-931 PID 7-24-2025: diameter 8.054 : 1 hole
+      at X 201.075  Y 261.413
+  1521-931 PID 7-24-2025: diameter 8.098 : 1 hole
+      at X 201.075  Y 261.413
+  1521-931 PID 7-24-2025: diameter 10.408 : 1 hole
+      at X 201.075  Y 261.413
+  1521-931 PID 7-24-2025: diameter 10.624 : 1 hole
+      at X 201.075  Y 261.413
+

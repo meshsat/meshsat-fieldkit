@@ -1,0 +1,39 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "declared": 0,
+  "fail": 0,
+  "measured": 0
+ },
+ "denominator": 1,
+ "evidence": [],
+ "inputs": {
+  "board": "e5",
+  "list": "pcb_sensitive.yaml"
+ },
+ "missing_input": null,
+ "note": "every sensitive node declared with its filter and its Kelvin partner where the measurement is a difference, and, where pcbnew is present, the real distance from each one to the nearest switching copper measured on the routed board and reported beside the clearance the board asks for. The clearances are this project's own",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "ANA-001": "efb6e1511c4ca89f"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "ANA-001"
+ ],
+ "tool": "sensitive_nodes",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "994b3d2315bb9859"
+ },
+ "ts": "2026-09-21T12:53:09Z",
+ "verdict": "PASS",
+ "version": "unknown",
+ "writer": {
+  "file": "sensitive_nodes.py",
+  "sha16": "f52a2a103672601a"
+ }
+}

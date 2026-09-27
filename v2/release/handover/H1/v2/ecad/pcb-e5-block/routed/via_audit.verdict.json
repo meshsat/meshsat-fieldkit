@@ -1,0 +1,43 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "below_floor": 0,
+  "below_ring": 0,
+  "plated_holes": 14,
+  "via_in_pad": 2,
+  "vias": 12
+ },
+ "denominator": 12,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-e5-block.kicad_pcb",
+   "sha256_16": "686b29a734c55b9a"
+  }
+ },
+ "missing_input": null,
+ "note": "every via at or above the board's own minimum diameter and drill; the annular ring is judged separately in via_annular.verdict.json, and no floor is declared for it",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "VIA-001": "e30d2ff6d03fdb93"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "VIA-001"
+ ],
+ "tool": "via_audit",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "994b3d2315bb9859"
+ },
+ "ts": "2026-09-21T12:53:03Z",
+ "verdict": "PASS",
+ "version": "unknown",
+ "writer": {
+  "file": "via_audit.py",
+  "sha16": "07e650e0efda1dd1"
+ }
+}

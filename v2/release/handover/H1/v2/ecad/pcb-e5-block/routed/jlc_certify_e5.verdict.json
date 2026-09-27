@@ -1,0 +1,34 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {},
+ "denominator": 0,
+ "evidence": [],
+ "inputs": {},
+ "missing_input": null,
+ "note": "this board's deliverable carries no component row to certify (a bare board: copper, holes and targets); a declared zero, not an absence",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "CMP-002": "0228f21aeb49073d",
+   "SUP-001": "c1197ffafeee55ed"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "CMP-002",
+  "SUP-001"
+ ],
+ "tool": "jlc_certify_e5",
+ "tools": {
+  "git_head": "26b809006d62",
+  "tools_tree_sha": "987482dd6e4cf65d"
+ },
+ "ts": "2026-09-26T07:53:39Z",
+ "verdict": "PASS",
+ "version": "26b809006d62+dirty",
+ "writer": {
+  "file": "jlc_certify.py",
+  "sha16": "76eadc959673d682"
+ }
+}

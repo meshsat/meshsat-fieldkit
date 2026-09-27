@@ -1,0 +1,54 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "derate.py",
+  "files": {
+   "derate.py": "6c29d1b9a523d385",
+   "rules_lib.py": "c0458c53923d7925",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "4c4fc2aca3d8e542",
+  "unresolved": []
+ },
+ "counts": {
+  "judged": 0,
+  "rated_parts": 0
+ },
+ "denominator": 0,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-e5-block.kicad_pcb",
+   "sha256_16": "686b29a734c55b9a"
+  }
+ },
+ "missing_input": null,
+ "note": "this board carries no rated part to judge: this board has no schematic and no BOM: it is copper, plated targets, wire lands and mounting holes. A declared zero, not an absence",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "CMP-001": "117de3adbf51c9c8"
+  },
+  "rule_set_fingerprint": "950539a66227908b"
+ },
+ "rules": [
+  "CMP-001"
+ ],
+ "runtime": {
+  "python": "3.11.2"
+ },
+ "tool": "derate",
+ "tools": {
+  "git_head": "53a98a71b53c",
+  "tools_tree_sha": "6f6b28e777c8262b"
+ },
+ "ts": "2026-09-27T00:26:22Z",
+ "verdict": "PASS",
+ "version": "53a98a71b53c+dirty",
+ "writer": {
+  "file": "derate.py",
+  "sha16": "6c29d1b9a523d385"
+ }
+}

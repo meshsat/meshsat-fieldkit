@@ -1,0 +1,37 @@
+{
+ "advisory": false,
+ "applicable": false,
+ "counts": {},
+ "denominator": 0,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-e5-block.kicad_pcb",
+   "sha256_16": "686b29a734c55b9a"
+  }
+ },
+ "missing_input": null,
+ "note": "no rail on this board reaches 20 V",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "ISO-001": "667f32d6b8d7a34b"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "ISO-001"
+ ],
+ "tool": "spacing",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "994b3d2315bb9859"
+ },
+ "ts": "2026-09-21T12:53:06Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown",
+ "writer": {
+  "file": "spacing.py",
+  "sha16": "d58ce94c56df4d68"
+ }
+}

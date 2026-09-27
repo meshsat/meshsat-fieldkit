@@ -1,0 +1,39 @@
+# Drift check of main ccf5808e against the files EMCON.md cites (read-only; 2026-09-26 18:25 CEST)
+## commits b69f20db..ccf5808e
+ccf5808e feat(review): review packets for boards C, D, E and P at 1f614233, every change read by hand, and the qualified review routes [MESHSAT-1357]
+dec770cd docs(status): the open-pairs page follows decision 42's ruling [MESHSAT-1357]
+9d566e8b docs(feasibility): decision 42 is ruled by class from the makers' words, the fan follows the escape pass, and the other side is a seat on boards B, C and D outside every fan [MESHSAT-1357]
+a5266aa8 docs(feasibility): board B's failover fabric gets a reviewed lane, pin and clock map, its contracts and its blockers [MESHSAT-1357]
+9b0635d1 docs(feasibility): ZEROIZE on the fitted ATECC608B, with the supervisors' bus access and a wipe bounded whatever the bus does [MESHSAT-1357]
+26e847bc feat(evidence): every rule-board reading is classed against the current candidate, and CURRENT-EVIDENCE.md names what closes each layout-entry blocker [MESHSAT-1357]
+## modified, deleted or renamed among the cited paths (git diff --stat --diff-filter=MDR b69f20db ccf5808e)
+(empty above = no cited file changed)
+## added among the cited paths (--diff-filter=A)
+ v2/vendor/diodes/diodes-74lvc1g17.pdf                | Bin 0 -> 534960 bytes
+ v2/vendor/diodes/diodes-74lvc1g34.pdf                | Bin 0 -> 498243 bytes
+ v2/vendor/diodes/diodes-bat46w.pdf                   | Bin 0 -> 621388 bytes
+ v2/vendor/diodes/diodes-smbj-ds19002.pdf             | Bin 0 -> 498941 bytes
+ v2/vendor/power/aos-ao3400a-n-mosfet.pdf             | Bin 0 -> 317848 bytes
+ v2/vendor/power/jscj-2n7002-c8545.pdf                | Bin 0 -> 1575038 bytes
+ v2/vendor/power/littelfuse-smbj-series-tvs.pdf       | Bin 0 -> 947504 bytes
+ v2/vendor/power/mdd-smbj-series-tvs.pdf              | Bin 0 -> 1215362 bytes
+ v2/vendor/power/panjit-ss2020fl-series.pdf           | Bin 0 -> 767550 bytes
+ v2/vendor/ti/ti-sn74lvc1g00.pdf                      | Bin 0 -> 2845572 bytes
+ v2/vendor/ti/ti-sn74lvc1g04.pdf                      | Bin 0 -> 2748219 bytes
+ v2/vendor/ti/ti-sn74lvc1g06.pdf                      | Bin 0 -> 2771450 bytes
+ v2/vendor/ti/ti-sn74lvc1g08.pdf                      | Bin 0 -> 2837825 bytes
+ v2/vendor/ti/ti-tlv758p.pdf                          | Bin 0 -> 3441410 bytes
+ v2/vendor/ti/ti-tpd2e2u06-q1.pdf                     | Bin 0 -> 1282364 bytes
+ v2/vendor/ti/ti-tusb2046b-slls413l-addendum-2025.pdf | Bin 0 -> 1756404 bytes
+ 16 files changed, 0 insertions(+), 0 deletions(-)
+## generator sha256 (first 16) at ccf5808e
+gen_sch_a.py a0452054ec04cf5d
+gen_sch_b.py 6e3d880901fd3030
+gen_sch_c.py 5f1ce2dd66ed7d2d
+gen_sch_d.py 39c5713b947d253f
+## the 2N7002 sheet
+v2/vendor/power/jscj-2n7002-c8545.pdf 7941fb423af7c6c6
+## SN74LVC1G04 Ioff row (section 5.5, Electrical Characteristics; header SCES214AF APRIL 1999 REVISED OCTOBER 2025)
+Ioff VI or VO = 5.5V 0 ±10 ±10 μA
+## FAILOVER-FABRIC.md, slot card rail row
+348:| slot card | `+3V3_S{s}A` | U{s}03; slots 1, 3 on `PCIE_PWR_EN` and EMCON (Q{s}11), slot 2 on `PCIE_PWR_EN2` alone | the card socket |

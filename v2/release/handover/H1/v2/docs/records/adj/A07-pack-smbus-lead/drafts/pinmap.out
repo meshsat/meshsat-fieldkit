@@ -1,0 +1,12 @@
+== pcb-p-pack-p2/out/pcb-p-pack.net
+  pin 1 /SMBC | on net: D2 J_SMB R20 TP9 
+  pin 2 /SMBD | on net: D2 J_SMB R21 TP10 
+  pin 3 GND | on net: C1 C10 C2 C3 C4 C5 C6 C7 C8 D2 J_CELL J_SMB J_TS R10 (+8)
+  pin 4 /PRES | on net: J_SMB R14 U1 
+== pcb-e1-dock-e7/out/pcb-e1-dock.net
+  pin 1 /SDA0 | on net: J_SMB R34 U10 
+  pin 2 /SCL0 | on net: J_SMB R35 U10 
+  pin 3 /SDA1 | on net: D9 J_LTG J_POD J_SMB R36 U10 U14 U15 
+  pin 4 /SCL1 | on net: D9 J_LTG J_POD J_SMB R37 U10 U14 U15 
+  pin 5 GND | on net: C1 C11 C12 C13 C14 C15 C19 C20 C21 C22 C23 C24 C25 C26 (+65)
+  pin 6 GND | on net: C1 C11 C12 C13 C14 C15 C19 C20 C21 C22 C23 C24 C25 C26 (+65)

@@ -1,0 +1,20 @@
+{
+ "label": "EXPERIMENTAL (Q-B-ESC-1)",
+ "agree": true,
+ "differences": [],
+ "place_audit_counts": {
+  "collisions": 10,
+  "fine_pitch": 75,
+  "footprints": 957,
+  "measured": 75
+ },
+ "s3_nets": 146,
+ "groups": {
+  "S1": 158,
+  "S2": 157,
+  "DEVW": 116,
+  "S3": 146,
+  "GLOBAL": 183,
+  "DEVE": 84
+ }
+}

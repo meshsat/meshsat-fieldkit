@@ -1,0 +1,309 @@
+Geometry of limesdr-mini-2v4, probed from limesdr/limesdr-mini-2v4.step
+
+Written by tools/kb/geom_probe.py, not hand edited, so that a CAD model's measurable
+facts can be searched and reviewed as text instead of living only in whoever opened the
+model that day. Units: mm. EVERY NUMBER IS A MEASUREMENT OF THIS FILE, NOT A
+SPECIFICATION: a vendor model may carry a connector, an antenna or a mounting boss the
+catalogue dimension leaves out, and it may be exported in any orientation. Where the
+manufacturer publishes a drawing, the drawing wins and this is how to find the number
+to check against it.
+
+source file: limesdr/limesdr-mini-2v4.step
+sha256 (first 16): 5a8d09d9f90230db
+size: 33312523 bytes
+points read: 131584
+
+limesdr-mini-2v4 ENVELOPE (single part, so the bounding box of its points is the part).
+Axes are THE FILE'S OWN: a vendor model is often exported Y up, and this reader does
+not turn it, so read the three extents as sizes and not as width, depth and height.
+  This file also carries construction geometry far outside the body. The raw box is
+  800063 x 800026 x 583202, which is not the part. With the 15274 outlying points removed
+  (11.6 percent of the file), the body is:
+  axis 1 -15.350 to 79.020   extent 94.370
+  axis 2 -0.200 to 31.570   extent 31.770
+  axis 3 -23.984 to 22.184   extent 46.168
+
+limesdr-mini-2v4 HOLES AND ROUND FEATURES of 0.5 mm and over, coaxial duplicates collapsed.
+In an assembly a pattern is still true WITHIN the component that carries it, which is
+how a module's mounting holes come out right.
+  limesdr-mini-2v4: diameter 0.500 : 128 centres (too many to be a hole pattern, not listed)
+  limesdr-mini-2v4: diameter 0.520 : 8 holes   pattern 1.000 x 8.000
+      at X -14.150  Y 19.685
+      at X -14.150  Y 18.685
+      at X -14.150  Y 12.685
+      at X -14.150  Y 11.685
+      at X -13.150  Y 17.185
+      at X -13.150  Y 16.185
+      at X -13.150  Y 15.185
+      at X -13.150  Y 14.185
+  limesdr-mini-2v4: diameter 0.540 : 8 holes   pattern 6.600 x 2.000
+      at X 35.025  Y 27.300
+      at X 35.025  Y 29.300
+      at X 37.025  Y 27.300
+      at X 37.025  Y 29.300
+      at X 39.625  Y 27.300
+      at X 39.625  Y 29.300
+      at X 41.625  Y 27.300
+      at X 41.625  Y 29.300
+  limesdr-mini-2v4: diameter 0.596 : 10 holes   pattern 0.000 x 8.530
+      at X -8.895  Y 19.950
+      at X -8.895  Y 19.420
+      at X -8.895  Y 17.950
+      at X -8.895  Y 17.420
+      at X -8.895  Y 15.950
+      at X -8.895  Y 15.420
+      at X -8.895  Y 13.950
+      at X -8.895  Y 13.420
+      at X -8.895  Y 11.950
+      at X -8.895  Y 11.420
+  limesdr-mini-2v4: diameter 0.600 : 69 centres (too many to be a hole pattern, not listed)
+  limesdr-mini-2v4: diameter 0.700 : 34 holes   pattern 18.921 x 21.785
+      at X 46.124  Y 27.168
+      at X 46.484  Y 27.529
+      at X 46.532  Y 26.760
+      at X 46.892  Y 27.121
+      at X 47.022  Y 28.066
+      at X 47.382  Y 28.427
+      at X 47.430  Y 27.658
+      at X 47.790  Y 28.019
+      at X 47.920  Y 28.964
+      at X 48.280  Y 29.325
+      at X 48.328  Y 28.556
+      at X 48.689  Y 28.917
+  limesdr-mini-2v4: diameter 0.704 : 1 hole
+      at X 47.635  Y 25.932
+  limesdr-mini-2v4: diameter 0.800 : 20 holes   pattern 67.388 x 31.370
+      at X -1.013  Y 19.185
+      at X -1.013  Y 18.185
+      at X -1.013  Y 16.935
+      at X -1.013  Y 16.435
+      at X -1.013  Y 14.935
+      at X -1.013  Y 14.435
+      at X -1.013  Y 13.185
+      at X -1.013  Y 12.085
+      at X 2.000  Y 21.135
+      at X 2.000  Y 10.235
+      at X 2.625  Y 31.370
+      at X 2.625  Y 0.000
+  limesdr-mini-2v4: diameter 0.840 : 10 holes   pattern 0.000 x 9.000
+      at X -2.970  Y 20.185
+      at X -2.970  Y 19.185
+      at X -2.970  Y 18.185
+      at X -2.970  Y 17.185
+      at X -2.970  Y 16.185
+      at X -2.970  Y 15.185
+      at X -2.970  Y 14.185
+      at X -2.970  Y 13.185
+      at X -2.970  Y 12.185
+      at X -2.970  Y 11.185
+  limesdr-mini-2v4: diameter 0.900 : 18 holes   pattern 89.995 x 19.862
+      at X -15.350  Y 21.235
+      at X -15.350  Y 10.135
+      at X -0.950  Y 21.235
+      at X -0.950  Y 10.135
+      at X 2.052  Y 21.235
+      at X 2.052  Y 10.135
+      at X 2.450  Y 17.935
+      at X 2.450  Y 13.435
+      at X 36.025  Y 28.300
+      at X 40.625  Y 28.300
+      at X 65.145  Y 8.437
+      at X 65.145  Y 22.937
+  limesdr-mini-2v4: diameter 1.000 : 42 holes   pattern 60.920 x 29.780
+      at X -4.620  Y 19.950
+      at X -4.620  Y 19.420
+      at X -4.620  Y 17.950
+      at X -4.620  Y 17.420
+      at X -4.620  Y 15.950
+      at X -4.620  Y 15.420
+      at X -4.620  Y 13.950
+      at X -4.620  Y 13.420
+      at X -4.620  Y 11.950
+      at X -4.620  Y 11.420
+      at X -2.050  Y 20.185
+      at X -2.050  Y 19.185
+  limesdr-mini-2v4: diameter 1.020 : 8 holes   pattern 1.000 x 8.000
+      at X -14.150  Y 19.685
+      at X -14.150  Y 18.685
+      at X -14.150  Y 12.685
+      at X -14.150  Y 11.685
+      at X -13.150  Y 17.185
+      at X -13.150  Y 16.185
+      at X -13.150  Y 15.185
+      at X -13.150  Y 14.185
+  limesdr-mini-2v4: diameter 1.100 : 35 holes   pattern 78.945 x 20.775
+      at X -9.900  Y 19.181
+      at X -9.900  Y 18.685
+      at X -9.900  Y 17.185
+      at X -9.900  Y 16.185
+      at X -9.900  Y 15.185
+      at X -9.900  Y 14.185
+      at X -9.900  Y 12.685
+      at X -9.900  Y 12.185
+      at X -9.900  Y 11.685
+      at X 2.450  Y 13.485
+      at X 2.450  Y 17.985
+      at X 3.550  Y 19.935
+  limesdr-mini-2v4: diameter 1.137 : 1 hole
+      at X 18.058  Y 18.718
+  limesdr-mini-2v4: diameter 1.199 : 10 holes   pattern 0.000 x 5.480
+      at X 27.616  Y 22.445
+      at X 27.616  Y 23.715
+      at X 27.616  Y 24.985
+      at X 27.616  Y 26.255
+      at X 27.616  Y 27.525
+      at X 27.616  Y 22.045
+      at X 27.616  Y 23.315
+      at X 27.616  Y 24.585
+      at X 27.616  Y 25.855
+      at X 27.616  Y 27.125
+  limesdr-mini-2v4: diameter 1.200 : 10 holes   pattern 0.000 x 5.480
+      at X 29.685  Y 22.445
+      at X 29.685  Y 23.715
+      at X 29.685  Y 24.985
+      at X 29.685  Y 26.255
+      at X 29.685  Y 27.525
+      at X 29.685  Y 22.045
+      at X 29.685  Y 23.315
+      at X 29.685  Y 24.585
+      at X 29.685  Y 25.855
+      at X 29.685  Y 27.125
+  limesdr-mini-2v4: diameter 1.250 : 1 hole
+      at X 30.935  Y 11.935
+  limesdr-mini-2v4: diameter 1.300 : 10 holes   pattern 70.058 x 14.500
+      at X -1.013  Y 19.185
+      at X -1.013  Y 18.185
+      at X -1.013  Y 16.935
+      at X -1.013  Y 16.435
+      at X -1.013  Y 14.935
+      at X -1.013  Y 14.435
+      at X -1.013  Y 13.185
+      at X -1.013  Y 12.085
+      at X 69.045  Y 8.437
+      at X 69.045  Y 22.937
+  limesdr-mini-2v4: diameter 1.500 : 20 holes   pattern 76.695 x 19.862
+      at X -2.050  Y 20.185
+      at X -2.050  Y 19.185
+      at X -2.050  Y 18.185
+      at X -2.050  Y 17.185
+      at X -2.050  Y 16.185
+      at X -2.050  Y 15.185
+      at X -2.050  Y 14.185
+      at X -2.050  Y 13.185
+      at X -2.050  Y 12.185
+      at X -2.050  Y 11.185
+      at X 36.025  Y 28.300
+      at X 40.625  Y 28.300
+  limesdr-mini-2v4: diameter 1.582 : 2 holes   pattern 4.600 x 0.000
+      at X 36.025  Y 28.300
+      at X 40.625  Y 28.300
+  limesdr-mini-2v4: diameter 1.600 : 2 holes   pattern 4.600 x 0.000
+      at X 36.025  Y 28.300
+      at X 40.625  Y 28.300
+  limesdr-mini-2v4: diameter 1.660 : 2 holes   pattern 4.600 x 0.000
+      at X 36.025  Y 28.300
+      at X 40.625  Y 28.300
+  limesdr-mini-2v4: diameter 1.724 : 10 holes   pattern 0.000 x 8.530
+      at X -8.212  Y 19.950
+      at X -8.212  Y 19.420
+      at X -8.212  Y 17.950
+      at X -8.212  Y 17.420
+      at X -8.212  Y 15.950
+      at X -8.212  Y 15.420
+      at X -8.212  Y 13.950
+      at X -8.212  Y 13.420
+      at X -8.212  Y 11.950
+      at X -8.212  Y 11.420
+  limesdr-mini-2v4: diameter 1.772 : 2 holes   pattern 4.600 x 0.000
+      at X 36.025  Y 28.300
+      at X 40.625  Y 28.300
+  limesdr-mini-2v4: diameter 1.773 : 2 holes   pattern 4.600 x 0.000
+      at X 36.025  Y 28.300
+      at X 40.625  Y 28.300
+  limesdr-mini-2v4: diameter 1.778 : 2 holes   pattern 4.600 x 0.000
+      at X 36.025  Y 28.300
+      at X 40.625  Y 28.300
+  limesdr-mini-2v4: diameter 1.800 : 2 holes   pattern 4.600 x 0.000
+      at X 36.025  Y 28.300
+      at X 40.625  Y 28.300
+  limesdr-mini-2v4: diameter 1.801 : 2 holes   pattern 4.600 x 0.000
+      at X 36.025  Y 28.300
+      at X 40.625  Y 28.300
+  limesdr-mini-2v4: diameter 1.804 : 2 holes   pattern 4.600 x 0.000
+      at X 36.025  Y 28.300
+      at X 40.625  Y 28.300
+  limesdr-mini-2v4: diameter 1.890 : 2 holes   pattern 4.600 x 0.000
+      at X 36.025  Y 28.300
+      at X 40.625  Y 28.300
+  limesdr-mini-2v4: diameter 2.000 : 2 holes   pattern 4.600 x 0.000
+      at X 36.025  Y 28.300
+      at X 40.625  Y 28.300
+  limesdr-mini-2v4: diameter 2.224 : 10 holes   pattern 0.000 x 8.530
+      at X -8.212  Y 19.950
+      at X -8.212  Y 19.420
+      at X -8.212  Y 17.950
+      at X -8.212  Y 17.420
+      at X -8.212  Y 15.950
+      at X -8.212  Y 15.420
+      at X -8.212  Y 13.950
+      at X -8.212  Y 13.420
+      at X -8.212  Y 11.950
+      at X -8.212  Y 11.420
+  limesdr-mini-2v4: diameter 2.600 : 1 hole
+      at X 66.486  Y 15.685
+  limesdr-mini-2v4: diameter 3.000 : 4 holes   pattern 30.000 x 31.770
+      at X 26.500  Y -0.200
+      at X 26.500  Y 31.570
+      at X 56.500  Y -0.200
+      at X 56.500  Y 31.570
+  limesdr-mini-2v4: diameter 3.200 : 4 holes   pattern 0.000 x 25.100
+      at X 2.500  Y 3.130
+      at X 2.500  Y 4.230
+      at X 2.500  Y 27.130
+      at X 2.500  Y 28.230
+  limesdr-mini-2v4: diameter 3.207 : 1 hole
+      at X -2.796  Y 15.685
+  limesdr-mini-2v4: diameter 4.000 : 2 holes   pattern 0.000 x 14.500
+      at X 69.645  Y 8.437
+      at X 69.645  Y 22.937
+  limesdr-mini-2v4: diameter 4.001 : 4 holes   pattern 64.999 x 27.369
+      at X 2.001  Y 2.001
+      at X 2.001  Y 29.369
+      at X 66.999  Y 29.369
+      at X 66.999  Y 2.001
+  limesdr-mini-2v4: diameter 4.200 : 8 holes   pattern 9.500 x 14.500
+      at X 69.045  Y 8.437
+      at X 69.045  Y 22.937
+      at X 69.545  Y 8.437
+      at X 69.545  Y 22.937
+      at X 74.545  Y 8.437
+      at X 74.545  Y 22.937
+      at X 78.545  Y 8.437
+      at X 78.545  Y 22.937
+  limesdr-mini-2v4: diameter 4.400 : 2 holes   pattern 0.000 x 14.500
+      at X 78.645  Y 8.437
+      at X 78.645  Y 22.937
+  limesdr-mini-2v4: diameter 4.900 : 2 holes   pattern 0.000 x 14.500
+      at X 78.645  Y 8.437
+      at X 78.645  Y 22.937
+  limesdr-mini-2v4: diameter 5.100 : 8 holes   pattern 7.800 x 14.500
+      at X 70.745  Y 8.437
+      at X 70.745  Y 22.937
+      at X 73.145  Y 8.437
+      at X 73.145  Y 22.937
+      at X 77.895  Y 8.437
+      at X 77.895  Y 22.937
+      at X 78.545  Y 8.437
+      at X 78.545  Y 22.937
+  limesdr-mini-2v4: diameter 5.300 : 2 holes   pattern 0.000 x 14.500
+      at X 70.645  Y 8.437
+      at X 70.645  Y 22.937
+  limesdr-mini-2v4: diameter 10.100 : 4 holes   pattern 13.850 x 11.700
+      at X 17.950  Y 11.500
+      at X 17.950  Y -0.200
+      at X 20.100  Y 5.875
+      at X 31.800  Y 5.875
+
+(28 smaller circle sizes were read and are not listed: below 0.5 mm they are edge
+fillets and pad corners, not holes.)
+

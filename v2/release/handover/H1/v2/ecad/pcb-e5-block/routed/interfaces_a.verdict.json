@@ -1,0 +1,38 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "assignments": 1,
+  "disagreements": 0
+ },
+ "denominator": 1,
+ "evidence": [],
+ "inputs": {
+  "board": "a",
+  "spec": "pcb_interfaces.yaml"
+ },
+ "missing_input": null,
+ "note": "every interface's impedance target and matching tolerance against the specification of the part that defines it, from pcb_interfaces.yaml; the sources are the hosts' and the modules' own datasheets",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "INT-001": "6c054dd67edd4099"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "INT-001"
+ ],
+ "tool": "interfaces_a",
+ "tools": {
+  "git_head": "14a43af795eb",
+  "tools_tree_sha": "66ea9068e975c684"
+ },
+ "ts": "2026-09-21T20:17:16Z",
+ "verdict": "PASS",
+ "version": "14a43af795eb+dirty",
+ "writer": {
+  "file": "interfaces.py",
+  "sha16": "462f21176406879c"
+ }
+}

@@ -1,0 +1,89 @@
+[
+ {
+  "cap": "C1",
+  "value": "2.2u",
+  "cap_fp": "C_0805_2012Metric",
+  "part": "U1",
+  "part_value": "BQ4050RSMR: SMBus 1.1 gas gauge, primary",
+  "part_fp": "QFN-32-1EP_5x5mm_P0.5mm_EP3.1x3.1mm",
+  "pin": "1",
+  "part_pads": 42,
+  "gate_lim": 3.0,
+  "fan_now": true,
+  "pitch_now": 0.5,
+  "fan_cu": true,
+  "pitch_cu": 0.5,
+  "escaped": true,
+  "fan_ruled": true,
+  "cap_courtyard": [
+   3.4,
+   1.96
+  ],
+  "part_has_courtyard": true,
+  "dmin_outside_fan": 4.56,
+  "dmin_outside_courtyard": 2.36,
+  "d_now_centre": 11.03,
+  "d_gate_pad_to_pin": 10.11,
+  "over_gate_limit": true
+ },
+ {
+  "cap": "C6",
+  "value": "100n",
+  "cap_fp": "C_0603_1608Metric",
+  "part": "U1",
+  "part_value": "BQ4050RSMR: SMBus 1.1 gas gauge, primary",
+  "part_fp": "QFN-32-1EP_5x5mm_P0.5mm_EP3.1x3.1mm",
+  "pin": "32",
+  "part_pads": 42,
+  "gate_lim": 3.0,
+  "fan_now": true,
+  "pitch_now": 0.5,
+  "fan_cu": true,
+  "pitch_cu": 0.5,
+  "escaped": true,
+  "fan_ruled": true,
+  "cap_courtyard": [
+   2.96,
+   1.46
+  ],
+  "part_has_courtyard": true,
+  "dmin_outside_fan": 3.623,
+  "dmin_outside_courtyard": 1.422,
+  "d_now_centre": 11.42,
+  "d_gate_pad_to_pin": 11.03,
+  "over_gate_limit": true
+ },
+ {
+  "cap": "C8",
+  "value": "100n",
+  "cap_fp": "C_0603_1608Metric",
+  "part": "U1",
+  "part_value": "BQ4050RSMR: SMBus 1.1 gas gauge, primary",
+  "part_fp": "QFN-32-1EP_5x5mm_P0.5mm_EP3.1x3.1mm",
+  "pin": "26",
+  "part_pads": 42,
+  "gate_lim": 3.0,
+  "fan_now": true,
+  "pitch_now": 0.5,
+  "fan_cu": true,
+  "pitch_cu": 0.5,
+  "escaped": true,
+  "fan_ruled": true,
+  "cap_courtyard": [
+   2.96,
+   1.46
+  ],
+  "part_has_courtyard": true,
+  "dmin_outside_fan": 3.623,
+  "dmin_outside_courtyard": 1.422,
+  "d_now_centre": 14.97,
+  "d_gate_pad_to_pin": 14.39,
+  "over_gate_limit": true
+ },
+ {
+  "cap": "C14",
+  "part": "U2",
+  "pin": "1",
+  "note": "not on this board"
+ }
+]

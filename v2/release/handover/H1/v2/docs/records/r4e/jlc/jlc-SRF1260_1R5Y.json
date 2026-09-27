@@ -1,0 +1,158 @@
+{
+ "keyword": "SRF1260-1R5Y",
+ "asked_utc": "2026-09-26T00:00:06.555622Z",
+ "list": [
+  {
+   "componentId": 8291084,
+   "componentLibraryType": "expand",
+   "stockCount": 0,
+   "componentTypeEn": "Power Inductors",
+   "erpComponentName": "1.5uH \u00b130% 18.3A",
+   "componentSource": "shop",
+   "lcscGoodsUrl": "https://www.lcsc.com/product-detail/power-inductors_bourns-srf1260-1r5y_C7320434.html",
+   "componentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 1.4291
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 11,
+     "productPrice": 1.4291
+    },
+    {
+     "startNumber": 12,
+     "endNumber": 199,
+     "productPrice": 1.4291
+    },
+    {
+     "startNumber": 200,
+     "endNumber": 399,
+     "productPrice": 0.5701
+    },
+    {
+     "startNumber": 400,
+     "endNumber": 799,
+     "productPrice": 0.5522
+    },
+    {
+     "startNumber": 800,
+     "endNumber": -1,
+     "productPrice": 0.5424
+    }
+   ],
+   "buyComponentPrices": [
+    {
+     "startNumber": 800,
+     "endNumber": -1,
+     "productPrice": 0.5225
+    },
+    {
+     "startNumber": 400,
+     "endNumber": 799,
+     "productPrice": 0.5319
+    },
+    {
+     "startNumber": 200,
+     "endNumber": 399,
+     "productPrice": 0.5491
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 11,
+     "productPrice": 1.3767
+    },
+    {
+     "startNumber": 12,
+     "endNumber": 199,
+     "productPrice": 1.3767
+    },
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 1.3767
+    }
+   ],
+   "firstSortAccessId": "85c6b138230a4e15a2194c0849a3d6ae",
+   "secondSortAccessId": "b3e40b0323bb4714b4f411a802fab96e",
+   "canPresaleNumber": 0,
+   "componentProductType": 0,
+   "mergedComponentCode": null,
+   "urlSuffix": "BOURNS-SRF12601R5Y/C7320434",
+   "leastPatchNumber": 0,
+   "lossNumber": 0,
+   "isBuyComponent": "1",
+   "noBuyReason": null,
+   "componentAlternativesCode": null,
+   "replaceUrlSuffix": null,
+   "preferredComponentFlag": false,
+   "allowPostFlag": true,
+   "score": null,
+   "idleFlag": null,
+   "estimateDate": null,
+   "fullReelPrice": null,
+   "encapsulationNumber": 400,
+   "shopCostPrice": 0.0,
+   "preMinPurchaseNum": 7,
+   "minPurchaseNum": 7,
+   "initialPrice": 1.4291,
+   "componentCode": "C7320434",
+   "componentBrandEn": "BOURNS",
+   "componentModelEn": "SRF1260-1R5Y",
+   "componentImageUrl": null,
+   "productBigImageAccessId": null,
+   "productBigImageAccessIdUrl": null,
+   "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2312272152_BOURNS-SRF1260-1R5Y_C7320434.pdf",
+   "dataManualFileAccessId": "8597542991728676864",
+   "dataManualFileAccessIdUrl": null,
+   "dataManualOfficialLink": "",
+   "componentName": "BOURNS SRF1260-1R5Y",
+   "minImage": null,
+   "minImageAccessId": null,
+   "minImageAccessIdUrl": null,
+   "imageList": null,
+   "manufacturerBlackFlag": null,
+   "componentNameEn": null,
+   "componentSpecificationEn": "SMD-4P,12.5x12.5mm",
+   "describe": "1.5uH 13.8A 18.3A 7.3m\u03a9 \u00b130% SMD-4P,12.5x12.5mm Power Inductors ROHS",
+   "attributes": [
+    {
+     "attribute_name_en": "Current - Saturation(Isat)",
+     "attribute_value_name": "18.3A"
+    },
+    {
+     "attribute_name_en": "Inductance",
+     "attribute_value_name": "1.5uH"
+    },
+    {
+     "attribute_name_en": "Tolerance",
+     "attribute_value_name": "\u00b130%"
+    },
+    {
+     "attribute_name_en": "Current Rating",
+     "attribute_value_name": "13.8A"
+    },
+    {
+     "attribute_name_en": "DC Resistance(DCR)",
+     "attribute_value_name": "7.3m\u03a9"
+    }
+   ],
+   "rankScore": null,
+   "firstSortName": "Power Inductors",
+   "secondSortName": "Inductors, Coils, Chokes",
+   "componentBrandHigh": null,
+   "remarkHigh": null,
+   "componentModelHigh": "<span class='lucene_highlight_class'>SRF1260-1R5Y</span>",
+   "componentCodeHigh": null,
+   "componentSpecificationHigh": null,
+   "rohsFlag": 1,
+   "shopShowPriceFlag": true,
+   "shopShowForeignPriceFlag": true,
+   "shopRealPriceFlag": true,
+   "assemblyComponentFlag": false,
+   "rohsFileId": null,
+   "rohsUrl": null
+  }
+ ]
+}

@@ -1,0 +1,169 @@
+{
+ "board": "pcb-p-pack",
+ "written": "2026-09-26 22:39",
+ "bypass": [
+  {
+   "cap": "C1",
+   "part": "U1",
+   "pin": "1",
+   "net": "PBI",
+   "class": "A",
+   "basis": "backup reservoir on PBI. TI SLUSC67B Rev. B 8.2.2.2.2, p.33: 'The PBI pin is used as a power supply backup input pin providing power during brief transient power outages. A standard 2.2-uF ceramic capacitor is connected from the PBI pin to ground as shown in Figure 27' (Figure 21, p.28: C13 2.2 uF). Fitted: 2.2 uF, the maker's figure. Seat (A2): 10.1, p.43, 'Place all filter components as close as possible to the device'.",
+   "provisional": "DECOUPLING.md 6 A3: class A removes any millimetre bar for the protection parts' filters and reservoir; it is the session's reading until the qualified battery review (D-09) answers, and is not settled here"
+  },
+  {
+   "cap": "C6",
+   "part": "U1",
+   "pin": "32",
+   "net": "BAT_F",
+   "class": "A",
+   "basis": "BAT, the primary supply, behind R5 100 ohm from CELL4. TI SLUSC67B Rev. B: 'The bq4050 gauge has an internal LDO that is internally compensated and does not require an external decoupling capacitor' (8.2.2.2.2, p.33); 'The BAT pin should be connected to the positive termination of the battery stack' (9, p.42); 'The BAT input uses a diode (D1) to isolate and decouple it from the cells in the event of a transient dip in voltage caused by a short-circuit event' (8.2.2.3.1, p.37; Figure 21, p.28: D1 BAT54HT1 from 4P, no capacitor from BAT to ground). The maker gives no figure for this RC: R5 and C6 are the board's own, kept unchanged in front of the qualified battery review, which gets the difference as R8P-05. Seat (A1, A2): 10.1, pp.42-43.",
+   "provisional": "DECOUPLING.md 6 A3: class A removes any millimetre bar for the protection parts' filters and reservoir; it is the session's reading until the qualified battery review (D-09) answers, and is not settled here"
+  },
+  {
+   "cap": "C8",
+   "part": "U1",
+   "pin": "26",
+   "net": "VCC_F",
+   "class": "A",
+   "basis": "VCC, the secondary supply, behind R7 1 kohm from PACK_P. TI SLUSC67B Rev. B 9, p.42: 'The VCC pin is the secondary power input ... The VCC pin should be connected to the common drain of the CHG and DSG FETs'; Figure 21, p.28, feeds it from the common drain through R9 100 ohm with no capacitor from VCC to ground; 8.2.2.2.2, p.33: no external decoupling capacitor required. The board feeds VCC from PACK_P (the discharge FET's source), not from SW (the common drain), and adds C8: kept unchanged in front of the qualified battery review, which gets the difference as R8P-05. Seat (A1, A2): 10.1, pp.42-43.",
+   "provisional": "DECOUPLING.md 6 A3: class A removes any millimetre bar for the protection parts' filters and reservoir; it is the session's reading until the qualified battery review (D-09) answers, and is not settled here"
+  },
+  {
+   "cap": "C14",
+   "part": "U2",
+   "pin": "1",
+   "net": "SEC_VDD",
+   "class": "A",
+   "basis": "VDD of the second-level protector, behind R23 300 ohm from CELL4 (RVD and CVD). TI SLUSEG7D Rev. D Table 8-1 (8.1.1, p.14): supply voltage filter resistance RVD 100 min, 300 nom, 1k max ohm; capacitance CVD 0.05 min, 0.1 nom, 1 max uF. Fitted: 300 ohm and 100 nF, the maker's nominal figures. Seat (A1, A2): 8.4.1, p.17, 'Ensure the RC filters for the Vn and VDD pins are placed as close as possible to the target terminal'.",
+   "provisional": "DECOUPLING.md 6 A3: class A removes any millimetre bar for the protection parts' filters and reservoir; it is the session's reading until the qualified battery review (D-09) answers, and is not settled here"
+  }
+ ],
+ "rails": {
+  "PACK_P": {
+   "volts": 14.4,
+   "amps_typ": 10.0,
+   "amps_peak": 18.0,
+   "source": "W_P",
+   "loads": {
+    "Q2": 10.0
+   },
+   "note": "the pack lead. THE SWITCH IS THE GAUGE: Q2 is the discharge FET and the BQ4050 drives its gate on DSG_G, so the pack terminal is live only while the gauge allows it, which is the first stage of the energy chain",
+   "switch": "U1",
+   "enable_net": "DSG_R",
+   "v_work": 16.8,
+   "converted": false
+  },
+  "CELL4": {
+   "volts": 14.4,
+   "amps_typ": 10.0,
+   "amps_peak": 18.0,
+   "source": "W_BP",
+   "loads": {
+    "F1": 10.0
+   },
+   "note": "the top cell node from the block strip",
+   "always_on": true,
+   "always_on_why": "the cell block itself: there is nothing upstream of it to switch, which is why everything downstream is protected rather than enabled",
+   "converted": false
+  },
+  "FUSED": {
+   "volts": 14.4,
+   "amps_typ": 10.0,
+   "amps_peak": 18.0,
+   "source": "F1",
+   "loads": {
+    "F2": 10.0
+   },
+   "note": "after the blade fuse, into the chemical fuse F2 (round 4, 26 September 2026: it fed Q1 directly until then)",
+   "always_on": true,
+   "always_on_why": "the cell node after the 25 A blade: a fuse is protection and not a switch",
+   "converted": false,
+   "fed_from": "CELL4"
+  },
+  "SCP_OUT": {
+   "volts": 14.4,
+   "amps_typ": 10.0,
+   "amps_peak": 18.0,
+   "source": "F2",
+   "loads": {
+    "Q1": 10.0
+   },
+   "note": "after the SCF9550-30-05 chemical fuse, into the charge FET's source",
+   "always_on": true,
+   "always_on_why": "the cell node after the chemical fuse: a fuse is protection and not a switch, and the heater that opens it is driven only by a protection event",
+   "converted": false,
+   "fed_from": "FUSED"
+  },
+  "PACK_N": {
+   "volts": 0.05,
+   "amps_typ": 10.0,
+   "amps_peak": 18.0,
+   "source": "W_N",
+   "loads": {
+    "R10": 10.0
+   },
+   "note": "the pack negative from the 12 AWG lead land W_N to the 2 mOhm coulomb-counting shunt R10, at the pack's own 10.0 A typical and 18.0 A peak. Its own potential is 50 mV at 25 A, which is what a part on it is judged against; its DROP is judged against PACK_P, the rail it returns, because a percentage of 50 mV is not a bar anybody could state",
+   "always_on": true,
+   "always_on_why": "both protection FETs are in the positive path (Q1 on FUSED, Q2 on PACK_P), so nothing on this board is in series with the pack's negative: it runs from the lead land W_N through the 2 mOhm shunt R10 to ground with no switching part in it, which is what high-side protection means",
+   "v_work": 0.05,
+   "converted": false,
+   "returns": "PACK_P"
+  }
+ },
+ "nodes": {
+  "GND": {
+   "v_max": 0.0,
+   "v_min": 0.0,
+   "basis": "the board's reference, so a part between a live net and ground is judged against the live net rather than reported as sitting on an undeclared one"
+  },
+  "PACK_MID": {
+   "v_max": 16.8,
+   "v_min": 0.0,
+   "basis": "the midpoint of the series terminal pair (SLUSC67B 8.2.2.1.5): about half the pack in normal operation, and the whole of it, 16.8 V at 4.20 V per cell, across one capacitor when the other has shorted"
+  }
+ },
+ "pair_classes": {
+  "USB": {
+   "z_diff": 90.0,
+   "z_se": 50.0
+  },
+  "DIFF100": {
+   "z_diff": 100.0,
+   "z_se": 50.0
+  },
+  "PCIE": {
+   "z_diff": 100.0
+  },
+  "HDMI": {
+   "z_diff": 100.0
+  },
+  "RF": {
+   "z_se": 50.0
+  }
+ },
+ "pass_through": {},
+ "clamps": {
+  "D1": {
+   "direction": "uni",
+   "basis": "SMBJ20A: no C in the suffix, the unidirectional part (Littelfuse, Diodes Inc and MDD number them alike)",
+   "protected": "PACK_P",
+   "return": "PACK_N",
+   "symbol": "Device:D_Zener"
+  },
+  "D2": {
+   "direction": "bi",
+   "basis": "PESD5V0S1BA: Nexperia's S1B type, 'Bidirectional ESD protection diode'",
+   "protected": "SMBC",
+   "return": "PACK_N",
+   "symbol": "Device:D_TVS"
+  },
+  "D3": {
+   "direction": "bi",
+   "basis": "PESD5V0S1BA: Nexperia's S1B type, 'Bidirectional ESD protection diode'",
+   "protected": "SMBD",
+   "return": "PACK_N",
+   "symbol": "Device:D_TVS"
+  }
+ }
+}

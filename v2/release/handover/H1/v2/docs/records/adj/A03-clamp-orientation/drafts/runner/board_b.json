@@ -1,0 +1,721 @@
+{
+ "board": "pcb-b-compute-b19/pcb-b-compute.kicad_pcb",
+ "sha256_16": "2e64b5bf2d9cd3bc",
+ "parts": {
+  "D2": {
+   "lib": "D_SMB",
+   "layer": "F.Cu",
+   "at": [
+    11.705,
+    191.285
+   ],
+   "ref": "D2",
+   "value": "SMBJ58A",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -2.15,
+     "y": 0.0,
+     "net": "/+54V_POE"
+    },
+    "2": {
+     "x": 2.15,
+     "y": 0.0,
+     "net": "GND"
+    }
+   },
+   "vertical_marks": {
+    "F.SilkS": [
+     -3.66
+    ],
+    "F.Fab": [
+     -2.3,
+     -0.649,
+     0.501,
+     2.3
+    ]
+   },
+   "silk_vertical_on_pad1_side": [
+    -3.66
+   ],
+   "silk_vertical_on_pad2_side": [],
+   "fab_vertical": [
+    -2.3,
+    -0.649,
+    0.501,
+    2.3
+   ],
+   "line": 9801
+  },
+  "U207": {
+   "lib": "SOT-23-6",
+   "layer": "F.Cu",
+   "at": [
+    168.52,
+    84.5
+   ],
+   "ref": "U207",
+   "value": "USBLC6-2SC6",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -1.1375,
+     "y": -0.95,
+     "net": "/USB_OTG_P2"
+    },
+    "2": {
+     "x": -1.1375,
+     "y": 0.0,
+     "net": "GND"
+    },
+    "3": {
+     "x": -1.1375,
+     "y": 0.95,
+     "net": "/USB_OTG_N2"
+    },
+    "4": {
+     "x": 1.1375,
+     "y": 0.95,
+     "net": "/USB_OTG_N2"
+    },
+    "5": {
+     "x": 1.1375,
+     "y": 0.0,
+     "net": "/VBUS_FLASH2"
+    },
+    "6": {
+     "x": 1.1375,
+     "y": -0.95,
+     "net": "/USB_OTG_P2"
+    }
+   },
+   "vertical_marks": {
+    "F.Fab": [
+     0.8,
+     -0.8
+    ]
+   },
+   "line": 13540
+  },
+  "U307": {
+   "lib": "SOT-23-6",
+   "layer": "F.Cu",
+   "at": [
+    200.275,
+    182.5
+   ],
+   "ref": "U307",
+   "value": "USBLC6-2SC6",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -1.1375,
+     "y": -0.95,
+     "net": "/USB_OTG_P3"
+    },
+    "2": {
+     "x": -1.1375,
+     "y": 0.0,
+     "net": "GND"
+    },
+    "3": {
+     "x": -1.1375,
+     "y": 0.95,
+     "net": "/USB_OTG_N3"
+    },
+    "4": {
+     "x": 1.1375,
+     "y": 0.95,
+     "net": "/USB_OTG_N3"
+    },
+    "5": {
+     "x": 1.1375,
+     "y": 0.0,
+     "net": "/VBUS_FLASH3"
+    },
+    "6": {
+     "x": 1.1375,
+     "y": -0.95,
+     "net": "/USB_OTG_P3"
+    }
+   },
+   "vertical_marks": {
+    "F.Fab": [
+     0.8,
+     -0.8
+    ]
+   },
+   "line": 16610
+  },
+  "D101": {
+   "lib": "D_SMB",
+   "layer": "F.Cu",
+   "at": [
+    81.66,
+    182.875
+   ],
+   "ref": "D101",
+   "value": "SMBJ6.0A (6.0 V standoff on the 5.1 V slot rail)",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -2.15,
+     "y": 0.0,
+     "net": "/+5V_S1"
+    },
+    "2": {
+     "x": 2.15,
+     "y": 0.0,
+     "net": "GND"
+    }
+   },
+   "vertical_marks": {
+    "F.SilkS": [
+     -3.66
+    ],
+    "F.Fab": [
+     -2.3,
+     -0.649,
+     0.501,
+     2.3
+    ]
+   },
+   "silk_vertical_on_pad1_side": [
+    -3.66
+   ],
+   "silk_vertical_on_pad2_side": [],
+   "fab_vertical": [
+    -2.3,
+    -0.649,
+    0.501,
+    2.3
+   ],
+   "line": 20278
+  },
+  "U107": {
+   "lib": "SOT-23-6",
+   "layer": "F.Cu",
+   "at": [
+    68.275,
+    182.5
+   ],
+   "ref": "U107",
+   "value": "USBLC6-2SC6",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -1.1375,
+     "y": -0.95,
+     "net": "/USB_OTG_P1"
+    },
+    "2": {
+     "x": -1.1375,
+     "y": 0.0,
+     "net": "GND"
+    },
+    "3": {
+     "x": -1.1375,
+     "y": 0.95,
+     "net": "/USB_OTG_N1"
+    },
+    "4": {
+     "x": 1.1375,
+     "y": 0.95,
+     "net": "/USB_OTG_N1"
+    },
+    "5": {
+     "x": 1.1375,
+     "y": 0.0,
+     "net": "/VBUS_FLASH1"
+    },
+    "6": {
+     "x": 1.1375,
+     "y": -0.95,
+     "net": "/USB_OTG_P1"
+    }
+   },
+   "vertical_marks": {
+    "F.Fab": [
+     0.8,
+     -0.8
+    ]
+   },
+   "line": 36803
+  },
+  "D1": {
+   "lib": "D_SMB",
+   "layer": "F.Cu",
+   "at": [
+    3.11,
+    191.285
+   ],
+   "ref": "D1",
+   "value": "SMBJ5.0A",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -2.15,
+     "y": 0.0,
+     "net": "/+5V_DEV"
+    },
+    "2": {
+     "x": 2.15,
+     "y": 0.0,
+     "net": "GND"
+    }
+   },
+   "vertical_marks": {
+    "F.SilkS": [
+     -3.66
+    ],
+    "F.Fab": [
+     -2.3,
+     -0.649,
+     0.501,
+     2.3
+    ]
+   },
+   "silk_vertical_on_pad1_side": [
+    -3.66
+   ],
+   "silk_vertical_on_pad2_side": [],
+   "fab_vertical": [
+    -2.3,
+    -0.649,
+    0.501,
+    2.3
+   ],
+   "line": 62081
+  },
+  "U19": {
+   "lib": "TSSOP-14_4.4x5mm_P0.65mm",
+   "layer": "F.Cu",
+   "at": [
+    106.075,
+    35.64
+   ],
+   "ref": "U19",
+   "value": "SN74LVC08APWR quad AND: LimeSDR (hub port power AND EMCON AND software), RockBLOCK (EMCON AND software), LoRa (EMCON AND software)",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -2.8625,
+     "y": -1.95,
+     "net": "/EMCON_HW"
+    },
+    "2": {
+     "x": -2.8625,
+     "y": -1.3,
+     "net": "/LIME_HW_EN"
+    },
+    "3": {
+     "x": -2.8625,
+     "y": -0.65,
+     "net": "/LIME_EN_A"
+    },
+    "4": {
+     "x": -2.8625,
+     "y": 0.0,
+     "net": "/LIME_EN_A"
+    },
+    "5": {
+     "x": -2.8625,
+     "y": 0.65,
+     "net": "/LIME_SW_EN"
+    },
+    "6": {
+     "x": -2.8625,
+     "y": 1.3,
+     "net": "/LIME_EN"
+    },
+    "7": {
+     "x": -2.8625,
+     "y": 1.95,
+     "net": "GND"
+    },
+    "8": {
+     "x": 2.8625,
+     "y": 1.95,
+     "net": "/RB_EN"
+    },
+    "9": {
+     "x": 2.8625,
+     "y": 1.3,
+     "net": "/EMCON_HW"
+    },
+    "10": {
+     "x": 2.8625,
+     "y": 0.65,
+     "net": "/RB_SW_EN"
+    },
+    "11": {
+     "x": 2.8625,
+     "y": 0.0,
+     "net": "/E22_EN"
+    },
+    "12": {
+     "x": 2.8625,
+     "y": -0.65,
+     "net": "/EMCON_HW"
+    },
+    "13": {
+     "x": 2.8625,
+     "y": -1.3,
+     "net": "/LORA_ON"
+    },
+    "14": {
+     "x": 2.8625,
+     "y": -1.95,
+     "net": "/+3V3_DEV"
+    }
+   },
+   "vertical_marks": {
+    "F.Fab": [
+     2.2,
+     -2.2
+    ]
+   },
+   "line": 65633
+  },
+  "U37": {
+   "lib": "SOT-23-6",
+   "layer": "F.Cu",
+   "at": [
+    112.825,
+    48.43
+   ],
+   "ref": "U37",
+   "value": "USBLC6-2SC6",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -1.1375,
+     "y": -0.95,
+     "net": "/USB_PNL_P"
+    },
+    "2": {
+     "x": -1.1375,
+     "y": 0.0,
+     "net": "GND"
+    },
+    "3": {
+     "x": -1.1375,
+     "y": 0.95,
+     "net": "/USB_PNL_N"
+    },
+    "4": {
+     "x": 1.1375,
+     "y": 0.95,
+     "net": "/USB_PNL_N"
+    },
+    "5": {
+     "x": 1.1375,
+     "y": 0.0,
+     "net": "/+3V3_DEV"
+    },
+    "6": {
+     "x": 1.1375,
+     "y": -0.95,
+     "net": "/USB_PNL_P"
+    }
+   },
+   "vertical_marks": {
+    "F.Fab": [
+     0.8,
+     -0.8
+    ]
+   },
+   "line": 75898
+  },
+  "U29": {
+   "lib": "SOT-23-6",
+   "layer": "F.Cu",
+   "at": [
+    104.275,
+    48.43
+   ],
+   "ref": "U29",
+   "value": "USBLC6-2SC6",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -1.1375,
+     "y": -0.95,
+     "net": "/USB_WALL_P"
+    },
+    "2": {
+     "x": -1.1375,
+     "y": 0.0,
+     "net": "GND"
+    },
+    "3": {
+     "x": -1.1375,
+     "y": 0.95,
+     "net": "/USB_WALL_N"
+    },
+    "4": {
+     "x": 1.1375,
+     "y": 0.95,
+     "net": "/USB_WALL_N"
+    },
+    "5": {
+     "x": 1.1375,
+     "y": 0.0,
+     "net": "/+3V3_DEV"
+    },
+    "6": {
+     "x": 1.1375,
+     "y": -0.95,
+     "net": "/USB_WALL_P"
+    }
+   },
+   "vertical_marks": {
+    "F.Fab": [
+     0.8,
+     -0.8
+    ]
+   },
+   "line": 78695
+  },
+  "D301": {
+   "lib": "D_SMB",
+   "layer": "F.Cu",
+   "at": [
+    221.0,
+    182.875
+   ],
+   "ref": "D301",
+   "value": "SMBJ6.0A (6.0 V standoff on the 5.1 V slot rail)",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -2.15,
+     "y": 0.0,
+     "net": "/+5V_S3"
+    },
+    "2": {
+     "x": 2.15,
+     "y": 0.0,
+     "net": "GND"
+    }
+   },
+   "vertical_marks": {
+    "F.SilkS": [
+     -3.66
+    ],
+    "F.Fab": [
+     -2.3,
+     -0.649,
+     0.501,
+     2.3
+    ]
+   },
+   "silk_vertical_on_pad1_side": [
+    -3.66
+   ],
+   "silk_vertical_on_pad2_side": [],
+   "fab_vertical": [
+    -2.3,
+    -0.649,
+    0.501,
+    2.3
+   ],
+   "line": 80773
+  },
+  "D201": {
+   "lib": "D_SMB",
+   "layer": "F.Cu",
+   "at": [
+    168.565,
+    99.825
+   ],
+   "ref": "D201",
+   "value": "SMBJ6.0A (6.0 V standoff on the 5.1 V slot rail)",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -2.15,
+     "y": 0.0,
+     "net": "/+5V_S2"
+    },
+    "2": {
+     "x": 2.15,
+     "y": 0.0,
+     "net": "GND"
+    }
+   },
+   "vertical_marks": {
+    "F.SilkS": [
+     -3.66
+    ],
+    "F.Fab": [
+     -2.3,
+     -0.649,
+     0.501,
+     2.3
+    ]
+   },
+   "silk_vertical_on_pad1_side": [
+    -3.66
+   ],
+   "silk_vertical_on_pad2_side": [],
+   "fab_vertical": [
+    -2.3,
+    -0.649,
+    0.501,
+    2.3
+   ],
+   "line": 81725
+  },
+  "U33": {
+   "lib": "SOT-23-6",
+   "layer": "F.Cu",
+   "at": [
+    250.275,
+    106.8
+   ],
+   "ref": "U33",
+   "value": "USBLC6-2SC6",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -1.1375,
+     "y": -0.95,
+     "net": "/LIME_DP"
+    },
+    "2": {
+     "x": -1.1375,
+     "y": 0.0,
+     "net": "GND"
+    },
+    "3": {
+     "x": -1.1375,
+     "y": 0.95,
+     "net": "/LIME_DM"
+    },
+    "4": {
+     "x": 1.1375,
+     "y": 0.95,
+     "net": "/LIME_DM"
+    },
+    "5": {
+     "x": 1.1375,
+     "y": 0.0,
+     "net": "/+5V_LIME"
+    },
+    "6": {
+     "x": 1.1375,
+     "y": -0.95,
+     "net": "/LIME_DP"
+    }
+   },
+   "vertical_marks": {
+    "F.Fab": [
+     0.8,
+     -0.8
+    ]
+   },
+   "line": 90064
+  },
+  "U35": {
+   "lib": "SOT-23-6",
+   "layer": "F.Cu",
+   "at": [
+    14.175,
+    178.5
+   ],
+   "ref": "U35",
+   "value": "USBLC6-2SC6",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -1.1375,
+     "y": -0.95,
+     "net": "/QMX_DP"
+    },
+    "2": {
+     "x": -1.1375,
+     "y": 0.0,
+     "net": "GND"
+    },
+    "3": {
+     "x": -1.1375,
+     "y": 0.95,
+     "net": "/QMX_DM"
+    },
+    "4": {
+     "x": 1.1375,
+     "y": 0.95,
+     "net": "/QMX_DM"
+    },
+    "5": {
+     "x": 1.1375,
+     "y": 0.0,
+     "net": "/VBUS_QMX"
+    },
+    "6": {
+     "x": 1.1375,
+     "y": -0.95,
+     "net": "/QMX_DP"
+    }
+   },
+   "vertical_marks": {
+    "F.Fab": [
+     0.8,
+     -0.8
+    ]
+   },
+   "line": 93466
+  },
+  "U34": {
+   "lib": "SOT-23-6",
+   "layer": "F.Cu",
+   "at": [
+    281.92,
+    50.325
+   ],
+   "ref": "U34",
+   "value": "USBLC6-2SC6",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -1.1375,
+     "y": -0.95,
+     "net": "/CAM_DP"
+    },
+    "2": {
+     "x": -1.1375,
+     "y": 0.0,
+     "net": "GND"
+    },
+    "3": {
+     "x": -1.1375,
+     "y": 0.95,
+     "net": "/CAM_DM"
+    },
+    "4": {
+     "x": 1.1375,
+     "y": 0.95,
+     "net": "/CAM_DM"
+    },
+    "5": {
+     "x": 1.1375,
+     "y": 0.0,
+     "net": "/+5V_CAM"
+    },
+    "6": {
+     "x": 1.1375,
+     "y": -0.95,
+     "net": "/CAM_DP"
+    }
+   },
+   "vertical_marks": {
+    "F.Fab": [
+     0.8,
+     -0.8
+    ]
+   },
+   "line": 106179
+  }
+ }
+}

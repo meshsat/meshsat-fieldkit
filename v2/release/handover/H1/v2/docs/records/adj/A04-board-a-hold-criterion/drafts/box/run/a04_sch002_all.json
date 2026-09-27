@@ -1,0 +1,512 @@
+{
+ "missing_on_board": [
+  {
+   "ref": "C121",
+   "netlist_nets": [
+    "CH_ACN_F",
+    "CH_ACP_F"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "C122",
+   "netlist_nets": [
+    "CH_SRN_F",
+    "CH_SRP_F"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "C123",
+   "netlist_nets": [
+    "FE_CSF",
+    "FE_CSGF"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "C124",
+   "netlist_nets": [
+    "PA_CSF",
+    "PA_CSGF"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "C125",
+   "netlist_nets": [
+    "HF_CSF",
+    "HF_CSGF"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "C126",
+   "netlist_nets": [
+    "POE_CSF",
+    "POE_CSGF"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "C127",
+   "netlist_nets": [
+    "PD_CSF",
+    "PD_CSGF"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "C128",
+   "netlist_nets": [
+    "FE_ISNS_N",
+    "FE_ISNS_P"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "C129",
+   "netlist_nets": [
+    "PA_ISNS_N",
+    "PA_ISNS_P"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "C130",
+   "netlist_nets": [
+    "HF_ISNS_N",
+    "HF_ISNS_P"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "C131",
+   "netlist_nets": [
+    "POE_ISNS_N",
+    "POE_ISNS_P"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "C132",
+   "netlist_nets": [
+    "PD_ISNS_N",
+    "PD_ISNS_P"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "R146",
+   "netlist_nets": [
+    "CH_ACN",
+    "CH_ACN_F"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "R147",
+   "netlist_nets": [
+    "CH_ACP_F",
+    "VBUS20"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "R148",
+   "netlist_nets": [
+    "CELL+",
+    "CH_SRN_F"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "R149",
+   "netlist_nets": [
+    "CH_SRP",
+    "CH_SRP_F"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "R150",
+   "netlist_nets": [
+    "FE_CS",
+    "FE_CSF"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "R151",
+   "netlist_nets": [
+    "FE_CSGF",
+    "GND"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "R152",
+   "netlist_nets": [
+    "PA_CS",
+    "PA_CSF"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "R153",
+   "netlist_nets": [
+    "GND",
+    "PA_CSGF"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "R154",
+   "netlist_nets": [
+    "HF_CS",
+    "HF_CSF"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "R155",
+   "netlist_nets": [
+    "GND",
+    "HF_CSGF"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "R156",
+   "netlist_nets": [
+    "POE_CS",
+    "POE_CSF"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "R157",
+   "netlist_nets": [
+    "GND",
+    "POE_CSGF"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "R158",
+   "netlist_nets": [
+    "PD_CS",
+    "PD_CSF"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "R159",
+   "netlist_nets": [
+    "GND",
+    "PD_CSGF"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "R160",
+   "netlist_nets": [
+    "FE_ISNS_P",
+    "FE_OUT"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "R161",
+   "netlist_nets": [
+    "FE_ISNS_N",
+    "VBUS20"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "R162",
+   "netlist_nets": [
+    "PA_ISNS_P",
+    "PA_OUT"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "R163",
+   "netlist_nets": [
+    "+13V8_PA",
+    "PA_ISNS_N"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "R164",
+   "netlist_nets": [
+    "HF_ISNS_P",
+    "HF_OUT"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "R165",
+   "netlist_nets": [
+    "+12V_HF",
+    "HF_ISNS_N"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "R166",
+   "netlist_nets": [
+    "POE_ISNS_P",
+    "POE_OUT"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "R167",
+   "netlist_nets": [
+    "+54V_POE",
+    "POE_ISNS_N"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "R168",
+   "netlist_nets": [
+    "PD_ISNS_P",
+    "PD_OUT"
+   ],
+   "touches_external": false
+  },
+  {
+   "ref": "R169",
+   "netlist_nets": [
+    "PD_ISNS_N",
+    "PD_VPWR"
+   ],
+   "touches_external": false
+  }
+ ],
+ "board_only_live": [],
+ "pad_net": [
+  {
+   "ref": "U13",
+   "pin": "13",
+   "netlist": "PA_ISNS_N",
+   "board": "+13V8_PA",
+   "touches_external": false
+  },
+  {
+   "ref": "U13",
+   "pin": "14",
+   "netlist": "PA_ISNS_P",
+   "board": "PA_OUT",
+   "touches_external": false
+  },
+  {
+   "ref": "U13",
+   "pin": "15",
+   "netlist": "PA_CSGF",
+   "board": "GND",
+   "touches_external": false
+  },
+  {
+   "ref": "U13",
+   "pin": "16",
+   "netlist": "PA_CSF",
+   "board": "PA_CS",
+   "touches_external": false
+  },
+  {
+   "ref": "U15",
+   "pin": "13",
+   "netlist": "HF_ISNS_N",
+   "board": "+12V_HF",
+   "touches_external": false
+  },
+  {
+   "ref": "U15",
+   "pin": "14",
+   "netlist": "HF_ISNS_P",
+   "board": "HF_OUT",
+   "touches_external": false
+  },
+  {
+   "ref": "U15",
+   "pin": "15",
+   "netlist": "HF_CSGF",
+   "board": "GND",
+   "touches_external": false
+  },
+  {
+   "ref": "U15",
+   "pin": "16",
+   "netlist": "HF_CSF",
+   "board": "HF_CS",
+   "touches_external": false
+  },
+  {
+   "ref": "U16",
+   "pin": "13",
+   "netlist": "POE_ISNS_N",
+   "board": "+54V_POE",
+   "touches_external": false
+  },
+  {
+   "ref": "U16",
+   "pin": "14",
+   "netlist": "POE_ISNS_P",
+   "board": "POE_OUT",
+   "touches_external": false
+  },
+  {
+   "ref": "U16",
+   "pin": "15",
+   "netlist": "POE_CSGF",
+   "board": "GND",
+   "touches_external": false
+  },
+  {
+   "ref": "U16",
+   "pin": "16",
+   "netlist": "POE_CSF",
+   "board": "POE_CS",
+   "touches_external": false
+  },
+  {
+   "ref": "U19",
+   "pin": "13",
+   "netlist": "PD_ISNS_N",
+   "board": "PD_VPWR",
+   "touches_external": false
+  },
+  {
+   "ref": "U19",
+   "pin": "14",
+   "netlist": "PD_ISNS_P",
+   "board": "PD_OUT",
+   "touches_external": false
+  },
+  {
+   "ref": "U19",
+   "pin": "15",
+   "netlist": "PD_CSGF",
+   "board": "GND",
+   "touches_external": false
+  },
+  {
+   "ref": "U19",
+   "pin": "16",
+   "netlist": "PD_CSF",
+   "board": "PD_CS",
+   "touches_external": false
+  },
+  {
+   "ref": "U2",
+   "pin": "13",
+   "netlist": "FE_ISNS_N",
+   "board": "VBUS20",
+   "touches_external": false
+  },
+  {
+   "ref": "U2",
+   "pin": "14",
+   "netlist": "FE_ISNS_P",
+   "board": "FE_OUT",
+   "touches_external": false
+  },
+  {
+   "ref": "U2",
+   "pin": "15",
+   "netlist": "FE_CSGF",
+   "board": "GND",
+   "touches_external": false
+  },
+  {
+   "ref": "U2",
+   "pin": "16",
+   "netlist": "FE_CSF",
+   "board": "FE_CS",
+   "touches_external": false
+  },
+  {
+   "ref": "U3",
+   "pin": "19",
+   "netlist": "CH_SRN_F",
+   "board": "CELL+",
+   "touches_external": false
+  },
+  {
+   "ref": "U3",
+   "pin": "2",
+   "netlist": "CH_ACN_F",
+   "board": "CH_ACN",
+   "touches_external": false
+  },
+  {
+   "ref": "U3",
+   "pin": "20",
+   "netlist": "CH_SRP_F",
+   "board": "CH_SRP",
+   "touches_external": false
+  },
+  {
+   "ref": "U3",
+   "pin": "3",
+   "netlist": "CH_ACP_F",
+   "board": "VBUS20",
+   "touches_external": false
+  }
+ ],
+ "value": [
+  {
+   "ref": "C11",
+   "netlist": "10u 100V X7R 1210",
+   "board": "10u 50V X7R 1210",
+   "touches_external": true
+  },
+  {
+   "ref": "C12",
+   "netlist": "10u 100V X7R 1210",
+   "board": "10u 50V X7R 1210",
+   "touches_external": true
+  },
+  {
+   "ref": "D2",
+   "netlist": "SMCJ40A (VIN_RAW clamp behind E6's filter: 40 V standoff on a line specified to 36)",
+   "board": "SMCJ33A (VIN_RAW clamp behind E6's filter)",
+   "touches_external": true
+  }
+ ],
+ "footprint": [],
+ "counts": {
+  "missing_on_board": 36,
+  "board_only_live": 0,
+  "pad_net": 24,
+  "value": 3,
+  "footprint": 0
+ },
+ "sch002_equivalent_fail_count": 60,
+ "any_touches_external": [
+  {
+   "ref": "C11",
+   "netlist": "10u 100V X7R 1210",
+   "board": "10u 50V X7R 1210",
+   "touches_external": true
+  },
+  {
+   "ref": "C12",
+   "netlist": "10u 100V X7R 1210",
+   "board": "10u 50V X7R 1210",
+   "touches_external": true
+  },
+  {
+   "ref": "D2",
+   "netlist": "SMCJ40A (VIN_RAW clamp behind E6's filter: 40 V standoff on a line specified to 36)",
+   "board": "SMCJ33A (VIN_RAW clamp behind E6's filter)",
+   "touches_external": true
+  }
+ ]
+}

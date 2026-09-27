@@ -1,0 +1,165 @@
+# Boards held by an open decision (MESHSAT-862, 16 September 2026).
+#
+# A HOLD IS NOT A RULE RESULT. Every rule on a held board may read PASS and the board is still not promotable,
+# because what holds it is a question nobody has answered, not a measurement nobody has taken. Keeping it in
+# the rule results would mean either inventing a failing rule, which is false, or leaving the board looking
+# releasable, which is worse. So it is its own data, read by the three places that could otherwise let a held
+# board through: the generated status page, the final gate, and the order-set builder.
+#
+# LIFTING A HOLD IS A DATA EDIT, and that is the point. When the owner rules, the entry is deleted with the
+# ruling quoted in the commit message; until then no tool can promote the board and no argument in a log can
+# either.
+#
+# The four status fields are the owner's own words of 16 September 2026 and are carried verbatim wherever the
+# board is reported.
+#
+# STAGES (26 September 2026, MESHSAT-1357; the review of the 22:35 progress report, finding A). A hold names the stage
+# it gates, one of:
+#   LAYOUT_ENTRY            the board may not enter layout while it stands (the default for a hold that names none);
+#   FABRICATION_RELEASE     the board may be laid out, and no orderable package or promotion exists while it stands;
+#   PROTOTYPE_VERIFICATION  the built board may not be accepted while it stands.
+# Decision 31's holds lifted only on a corrected LAYOUT with SCH-002 PASS while layout entry needed them absent, which
+# is a deadlock for boards A, D and E. They gate FABRICATION_RELEASE now, and each carries `layout_entry_requires`:
+# what entering layout needs from it, counted by rules_status.layout_entry exactly like the rule evidence. This moves
+# WHEN a check applies and waives none: the final gate, the order-set builder, the order-readiness notes and the review
+# packets refuse a held board whatever its stage, as before. Requirement kinds (rules_status._requirement):
+#   rule_pass     {rule}: the rule reads PASS on this board on evidence that counts as the current candidate's;
+#   fitted_parts  {parts: [{ref, part, lcsc, at: [REF.PIN]}]}: each part in the current netlist with its value's part
+#                 number and LCSC code exactly as listed, and a pin on the net of every conductor it is `at`;
+#   review        {document, sha256, netlist_sha16}: the review record exists, is the pinned text, and read the netlist
+#                 the board holds now. A null pin is a review nobody has written yet, and it is not met.
+# Restaged by the session on 26 September 2026 under the owner's standing rule of that day. The review of the 22:35
+# report (v2/docs/reviews/2026-09-26-second-checkpoint-review.md, finding A) asks for stage-specific acceptance and
+# for the fabrication hold to stay until its own evidence exists; so these three holds are staged at fabrication
+# release, each with the requirements layout entry can meet. Reverse by removing `stage` and `layout_entry_requires`.
+
+schema_version: "1.0.0"
+
+holds:
+
+ a:
+   decision: 31
+   opened: "2026-09-17"
+   title: "board A's exposed-port protection"
+   stage: FABRICATION_RELEASE
+   ROUTING_STATUS: OPEN
+   ELECTRICAL_PROTECTION_STATUS: BLOCKED_DECISION_31
+   FAB_READINESS: NOT_READY
+   PUBLICATION_STATUS: HELD
+   why: "decision 31 was ruled on 21 September 2026 (the session's, pcb_decisions.yaml) and its executed record reads
+     the ruled protection in the schematic of the declared phase and in no layout: J_USBC_OUT.2 and .3 are answered by
+     U18's own CC protection through the declaration in tools/boards/a.json and, since D-17, also meet U31, a
+     TPD2E2U06QDBZRQ1 (C488151), at the connector; netlist 7b08510106687b3d, port_protect PASS of 26 with 0 reversed.
+     The committed board predates it and SCH-002 does not read PASS on it, so no layout carries the protection yet.
+     Until 26 September this hold held layout entry; it gates fabrication release since (see the file's header). The
+     measurement it was opened on (17 September): TRN-001 read FAIL on board A with two of its thirteen judged
+     conductors meeting their clamp only through an active part"
+   layout_entry_requires:
+     - kind: review
+       what: "decision 31's protection topology reviewed on this board's current netlist: every exposed conductor, the
+         part it meets first, the clamp's rating against decision 34's level, and the placement and return-path
+         constraints the layout must keep (the clamp at the entry, its ground return short and on the plane)"
+       document: "v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md"
+       sha256: null
+       netlist_sha16: null
+     - kind: fitted_parts
+       what: "the exact fitted parts decision 31's executed record lists for board A, at their conductors"
+       parts:
+         - {ref: U31, part: TPD2E2U06QDBZRQ1, lcsc: C488151, at: [J_USBC_OUT.2, J_USBC_OUT.3]}
+     - kind: rule_pass
+       what: "TRN-001 PASS on the current netlist"
+       rule: TRN-001
+   permitted: "a review package clearly quarantined as NOT_FOR_FAB may be generated, and the board may enter layout
+     once every layout_entry_requires above is met and the rest of its layout-entry test passes"
+   forbidden: "any orderable fabrication package, any promotion of the board or its folder"
+   lifts_when: "the layout of the declared phase implements the reviewed schematic: SCH-002 PASS on it on
+     current-candidate evidence, TRN-001 PASS on that layout's netlist, each part of layout_entry_requires on its land
+     at its conductor with the placement and return path the review states, the release's physical checks of the
+     board (hardset, the release DRC) clean, and this entry deleted with that evidence named in the commit"
+
+ d:
+   decision: 31
+   opened: "2026-09-17"
+   title: "board D's exposed-port protection"
+   stage: FABRICATION_RELEASE
+   ROUTING_STATUS: PASS
+   ELECTRICAL_PROTECTION_STATUS: BLOCKED_DECISION_31
+   FAB_READINESS: NOT_READY
+   PUBLICATION_STATUS: HELD
+   why: "decision 31 was ruled on 21 September 2026 (the session's) and its executed record reads the ruled protection
+     in the schematic of the declared phase and in no layout: J_PAOUT declared off board at the PolyPhaser GTH-SFF-AL,
+     and the headset conductors each clamped at the jack by a single-line bidirectional part, substituted by the
+     session for the ruled PESD5V0S2BT (D9, D11, D12, D14 PESD5V0S1BA C19224; D10, D13 PESD12VL1BA C38558); netlist
+     f13d8b70099ab03e, port_protect PASS of 21 with 0 reversed. The committed board predates it. Until 26 September
+     this hold held layout entry; it gates fabrication release since. The measurement it was opened on (17 September):
+     seven of board D's seven judged conductors reached a semiconductor with nothing between them"
+   layout_entry_requires:
+     - kind: review
+       what: "decision 31's protection topology reviewed on this board's current netlist: every exposed conductor, the
+         part it meets first, the clamp's rating against decision 34's level, and the placement and return-path
+         constraints the layout must keep (the clamp at the entry, its ground return short and on the plane)"
+       document: "v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md"
+       sha256: null
+       netlist_sha16: null
+     - kind: fitted_parts
+       what: "the exact fitted parts decision 31's executed record lists for board D, at their conductors"
+       parts:
+         - {ref: D9, part: PESD5V0S1BA, lcsc: C19224, at: [J_HS1.1]}
+         - {ref: D10, part: PESD12VL1BA, lcsc: C38558, at: [J_HS1.3]}
+         - {ref: D11, part: PESD5V0S1BA, lcsc: C19224, at: [J_HS1.5]}
+         - {ref: D12, part: PESD5V0S1BA, lcsc: C19224, at: [J_HS2.1]}
+         - {ref: D13, part: PESD12VL1BA, lcsc: C38558, at: [J_HS2.3]}
+         - {ref: D14, part: PESD5V0S1BA, lcsc: C19224, at: [J_HS2.5]}
+     - kind: rule_pass
+       what: "TRN-001 PASS on the current netlist"
+       rule: TRN-001
+   permitted: "a review package clearly quarantined as NOT_FOR_FAB may be generated, and the board may enter layout
+     once every layout_entry_requires above is met and the rest of its layout-entry test passes"
+   forbidden: "any orderable fabrication package, any promotion of the board or its folder"
+   lifts_when: "the layout of the declared phase implements the reviewed schematic: SCH-002 PASS on it on
+     current-candidate evidence, TRN-001 PASS on that layout's netlist, each part of layout_entry_requires on its land
+     at its conductor with the placement and return path the review states, the release's physical checks of the
+     board (hardset, the release DRC) clean, and this entry deleted with that evidence named in the commit"
+
+ e:
+   decision: 31
+   opened: "2026-09-16"
+   title: "board E's exposed-port protection"
+   stage: FABRICATION_RELEASE
+   ROUTING_STATUS: PASS
+   ELECTRICAL_PROTECTION_STATUS: BLOCKED_DECISION_31
+   FAB_READINESS: NOT_READY
+   PUBLICATION_STATUS: HELD
+   why: "decision 31 was ruled on 21 September 2026 (the session's) and its executed record reads the ruled protection
+     in the schematic of the declared phase and in no layout: D9, a USBLC6-2SC6 (C7519), on the sensor pod's J_POD.1,
+     .3 and .4, and D10, the SMCJ40CA (C80273, substituted by the session for the ruled SMCJ40A because DC_F is ahead
+     of the reverse-polarity FET), between F1 and Q1 on DC_F; netlist d910e49c5f5f50b2, port_protect PASS of 13 with 0
+     reversed. The committed board predates it. Until 26 September this hold held layout entry; it gates fabrication
+     release since. The measurement it was opened on (16 and 17 September): of five judged conductors one met its
+     clamp behind an active part (the shore inlet, through F1 and Q1) and three reached a semiconductor with nothing
+     between them (the pod's 3.3 V feed and its two I2C lines)"
+   layout_entry_requires:
+     - kind: review
+       what: "decision 31's protection topology reviewed on this board's current netlist: every exposed conductor, the
+         part it meets first, the clamp's rating against decision 34's level, and the placement and return-path
+         constraints the layout must keep (the clamp at the entry, its ground return short and on the plane)"
+       document: "v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md"
+       sha256: null
+       netlist_sha16: null
+     - kind: fitted_parts
+       what: "the exact fitted parts decision 31's executed record lists for board E, at their conductors"
+       parts:
+         - {ref: D9, part: USBLC6-2SC6, lcsc: C7519, at: [J_POD.1, J_POD.3, J_POD.4]}
+         - {ref: D10, part: SMCJ40CA, lcsc: C80273, at: [F1.2, Q1.1, J_DCIN.2]}
+     - kind: rule_pass
+       what: "TRN-001 PASS on the current netlist"
+       rule: TRN-001
+   permitted: "a review package clearly quarantined as NOT_FOR_FAB may be generated, so the board can be read
+     and reviewed while it is held, and the board may enter layout once every layout_entry_requires above is met and
+     the rest of its layout-entry test passes"
+   forbidden: "any orderable fabrication package, any promotion of the board or its folder, any publication of
+     the board file or its evidence"
+   lifts_when: "the layout of the declared phase implements the reviewed schematic: SCH-002 PASS on it on
+     current-candidate evidence, TRN-001 PASS on that layout's netlist, each part of layout_entry_requires on its land
+     at its conductor with the placement and return path the review states, the release's physical checks of the
+     board (hardset, the release DRC) clean, and this entry deleted with that evidence named in the commit"

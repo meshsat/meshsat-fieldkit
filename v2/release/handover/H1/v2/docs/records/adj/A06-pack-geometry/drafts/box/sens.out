@@ -1,0 +1,125 @@
+=== WRAP 0 per side, JOINT 0 per section, U.FL lead 0
+  4S3P 18650  enclosure east NO: nearest 3x2 end X spare -1.65 Y spare 29.50
+  4S3P 18650  enclosure west NO: nearest 3x2 side X spare -20.42 Y spare 25.50
+  4S3P 18650  stepped   east NO: nearest 3x2 end X spare -1.65 Y spare 29.50
+  4S3P 18650  stepped   west NO: nearest 3x2 side X spare -20.42 Y spare 25.50
+  4S3P 18650  minimal   east FITS: 38.50)  X spare   2.35  Y spare   37.50  Z clear   6.90 at WIFISW: six U.FL (mated 2.5 max, Hirose U.FL catalogue Sep 2  .. worst base: Z clear 5.69
+  4S3P 18650  minimal   west NO: nearest 3x2 side X spare -16.42 Y spare 29.50
+  4S4P 18650  enclosure east NO: nearest 3x2 side X spare -20.42 Y spare 40.25
+  4S4P 18650  enclosure west NO: nearest 3x2 side X spare -20.42 Y spare -39.75
+  4S4P 18650  stepped   east NO: nearest 3x2 side X spare -20.42 Y spare 40.25
+  4S4P 18650  stepped   west NO: nearest 3x2 side X spare -20.42 Y spare -39.75
+  4S4P 18650  minimal   east NO: nearest 3x2 side X spare -16.42 Y spare 44.25
+  4S4P 18650  minimal   west NO: nearest 3x2 side X spare -16.42 Y spare -35.75
+  4S2P 21700  enclosure east NO: best height -14.61 (nest2+2 end at J_AB2 mated IDC socket plus ribbon leaving for A's)
+  4S2P 21700  enclosure west NO: nearest 2x2 side X spare -7.87 Y spare 15.70
+  4S2P 21700  stepped   east NO: best height -0.21 (nest2+2 end at WIFISW: six U.FL (mated 2.5 max, Hirose U.FL catal)
+  4S2P 21700  stepped   west NO: nearest 2x2 side X spare -7.87 Y spare 15.70
+  4S2P 21700  minimal   east FITS: 41.61)  X spare   4.12  Y spare   27.70  Z clear   3.79 at WIFISW: six U.FL (mated 2.5 max, Hirose U.FL catalogue Sep 2  .. worst base: Z clear 2.58
+  4S2P 21700  minimal   west NO: nearest 2x2 side X spare -3.87 Y spare 19.70
+  4S3P 21700  enclosure east NO: nearest 2x2 side X spare -7.87 Y spare 25.55
+  4S3P 21700  enclosure west NO: nearest 3x2 side X spare -29.42 Y spare 15.70
+  4S3P 21700  stepped   east NO: nearest 2x2 side X spare -7.87 Y spare 25.55
+  4S3P 21700  stepped   west NO: nearest 3x2 side X spare -29.42 Y spare 15.70
+  4S3P 21700  minimal   east NO: nearest 2x2 side X spare -3.87 Y spare 29.55
+  4S3P 21700  minimal   west NO: nearest 3x2 side X spare -25.42 Y spare 19.70
+=== WRAP 0.5 per side, JOINT 1.0 per section, U.FL lead 0
+  4S3P 18650  enclosure east NO: nearest 3x2 end X spare -2.65 Y spare 26.50
+  4S3P 18650  enclosure west NO: nearest 3x2 side X spare -21.42 Y spare 22.50
+  4S3P 18650  stepped   east NO: nearest 3x2 end X spare -2.65 Y spare 26.50
+  4S3P 18650  stepped   west NO: nearest 3x2 side X spare -21.42 Y spare 22.50
+  4S3P 18650  minimal   east FITS: 39.50)  X spare   1.35  Y spare   34.50  Z clear   5.90 at WIFISW: six U.FL (mated 2.5 max, Hirose U.FL catalogue Sep 2  .. worst base: Z clear 4.69
+  4S3P 18650  minimal   west NO: nearest 3x2 side X spare -17.42 Y spare 26.50
+  4S4P 18650  enclosure east NO: nearest 3x2 side X spare -21.42 Y spare 36.25
+  4S4P 18650  enclosure west NO: nearest 3x2 side X spare -21.42 Y spare -43.75
+  4S4P 18650  stepped   east NO: nearest 3x2 side X spare -21.42 Y spare 36.25
+  4S4P 18650  stepped   west NO: nearest 3x2 side X spare -21.42 Y spare -43.75
+  4S4P 18650  minimal   east NO: nearest 3x2 side X spare -17.42 Y spare 40.25
+  4S4P 18650  minimal   west NO: nearest 3x2 side X spare -17.42 Y spare -39.75
+  4S2P 21700  enclosure east NO: best height -18.50 (2x2 end at J_AB2 mated IDC socket plus ribbon leaving for A's)
+  4S2P 21700  enclosure west NO: nearest 2x2 side X spare -8.87 Y spare 12.70
+  4S2P 21700  stepped   east NO: best height -4.10 (2x2 end at WIFISW: six U.FL (mated 2.5 max, Hirose U.FL catal)
+  4S2P 21700  stepped   west NO: nearest 2x2 side X spare -8.87 Y spare 12.70
+  4S2P 21700  minimal   east FITS: 42.61)  X spare   3.12  Y spare   24.70  Z clear   2.79 at WIFISW: six U.FL (mated 2.5 max, Hirose U.FL catalogue Sep 2  .. worst base: Z clear 1.58
+  4S2P 21700  minimal   west NO: nearest 2x2 side X spare -4.87 Y spare 16.70
+  4S3P 21700  enclosure east NO: nearest 2x2 side X spare -8.87 Y spare 21.55
+  4S3P 21700  enclosure west NO: nearest 3x2 side X spare -30.42 Y spare 12.70
+  4S3P 21700  stepped   east NO: nearest 2x2 side X spare -8.87 Y spare 21.55
+  4S3P 21700  stepped   west NO: nearest 3x2 side X spare -30.42 Y spare 12.70
+  4S3P 21700  minimal   east NO: nearest 2x2 side X spare -4.87 Y spare 25.55
+  4S3P 21700  minimal   west NO: nearest 3x2 side X spare -26.42 Y spare 16.70
+=== WRAP 0.5 per side, JOINT 1.0 per section, U.FL lead 1.37
+  4S3P 18650  enclosure east NO: nearest 3x2 end X spare -2.65 Y spare 26.50
+  4S3P 18650  enclosure west NO: nearest 3x2 side X spare -21.42 Y spare 22.50
+  4S3P 18650  stepped   east NO: nearest 3x2 end X spare -2.65 Y spare 26.50
+  4S3P 18650  stepped   west NO: nearest 3x2 side X spare -21.42 Y spare 22.50
+  4S3P 18650  minimal   east FITS: 39.50)  X spare   1.35  Y spare   34.50  Z clear   4.53 at WIFISW: six U.FL (mated 2.5 max, Hirose U.FL catalogue Sep 2  .. worst base: Z clear 3.32
+  4S3P 18650  minimal   west NO: nearest 3x2 side X spare -17.42 Y spare 26.50
+  4S4P 18650  enclosure east NO: nearest 3x2 side X spare -21.42 Y spare 36.25
+  4S4P 18650  enclosure west NO: nearest 3x2 side X spare -21.42 Y spare -43.75
+  4S4P 18650  stepped   east NO: nearest 3x2 side X spare -21.42 Y spare 36.25
+  4S4P 18650  stepped   west NO: nearest 3x2 side X spare -21.42 Y spare -43.75
+  4S4P 18650  minimal   east NO: nearest 3x2 side X spare -17.42 Y spare 40.25
+  4S4P 18650  minimal   west NO: nearest 3x2 side X spare -17.42 Y spare -39.75
+  4S2P 21700  enclosure east NO: best height -18.50 (2x2 end at J_AB2 mated IDC socket plus ribbon leaving for A's)
+  4S2P 21700  enclosure west NO: nearest 2x2 side X spare -8.87 Y spare 12.70
+  4S2P 21700  stepped   east NO: best height -5.47 (2x2 end at WIFISW: six U.FL (mated 2.5 max, Hirose U.FL catal)
+  4S2P 21700  stepped   west NO: nearest 2x2 side X spare -8.87 Y spare 12.70
+  4S2P 21700  minimal   east FITS: 42.61)  X spare   3.12  Y spare   24.70  Z clear   1.42 at WIFISW: six U.FL (mated 2.5 max, Hirose U.FL catalogue Sep 2  .. worst base: Z clear 0.21
+  4S2P 21700  minimal   west NO: nearest 2x2 side X spare -4.87 Y spare 16.70
+  4S3P 21700  enclosure east NO: nearest 2x2 side X spare -8.87 Y spare 21.55
+  4S3P 21700  enclosure west NO: nearest 3x2 side X spare -30.42 Y spare 12.70
+  4S3P 21700  stepped   east NO: nearest 2x2 side X spare -8.87 Y spare 21.55
+  4S3P 21700  stepped   west NO: nearest 3x2 side X spare -30.42 Y spare 12.70
+  4S3P 21700  minimal   east NO: nearest 2x2 side X spare -4.87 Y spare 25.55
+  4S3P 21700  minimal   west NO: nearest 3x2 side X spare -26.42 Y spare 16.70
+=== WRAP 0.75 per side, JOINT 1.5 per section, U.FL lead 1.37
+  4S3P 18650  enclosure east NO: nearest 3x2 end X spare -3.15 Y spare 25.00
+  4S3P 18650  enclosure west NO: nearest 3x2 side X spare -21.92 Y spare 21.00
+  4S3P 18650  stepped   east NO: nearest 3x2 end X spare -3.15 Y spare 25.00
+  4S3P 18650  stepped   west NO: nearest 3x2 side X spare -21.92 Y spare 21.00
+  4S3P 18650  minimal   east FITS: 40.00)  X spare   0.85  Y spare   33.00  Z clear   4.03 at WIFISW: six U.FL (mated 2.5 max, Hirose U.FL catalogue Sep 2  .. worst base: Z clear 2.82
+  4S3P 18650  minimal   west NO: nearest 3x2 side X spare -17.92 Y spare 25.00
+  4S4P 18650  enclosure east NO: nearest 3x2 side X spare -21.92 Y spare 34.25
+  4S4P 18650  enclosure west NO: nearest 3x2 side X spare -21.92 Y spare -45.75
+  4S4P 18650  stepped   east NO: nearest 3x2 side X spare -21.92 Y spare 34.25
+  4S4P 18650  stepped   west NO: nearest 3x2 side X spare -21.92 Y spare -45.75
+  4S4P 18650  minimal   east NO: nearest 3x2 side X spare -17.92 Y spare 38.25
+  4S4P 18650  minimal   west NO: nearest 3x2 side X spare -17.92 Y spare -41.75
+  4S2P 21700  enclosure east NO: best height -19.00 (2x2 end at J_AB2 mated IDC socket plus ribbon leaving for A's)
+  4S2P 21700  enclosure west NO: nearest 2x2 side X spare -9.37 Y spare 11.20
+  4S2P 21700  stepped   east NO: best height -5.97 (2x2 end at WIFISW: six U.FL (mated 2.5 max, Hirose U.FL catal)
+  4S2P 21700  stepped   west NO: nearest 2x2 side X spare -9.37 Y spare 11.20
+  4S2P 21700  minimal   east FITS: 43.11)  X spare   2.62  Y spare   23.20  Z clear   0.92 at WIFISW: six U.FL (mated 2.5 max, Hirose U.FL catalogue Sep 2  .. worst base: Z clear -0.29
+  4S2P 21700  minimal   west NO: nearest 2x2 side X spare -5.37 Y spare 15.20
+  4S3P 21700  enclosure east NO: nearest 2x2 side X spare -9.37 Y spare 19.55
+  4S3P 21700  enclosure west NO: nearest 3x2 side X spare -30.92 Y spare 11.20
+  4S3P 21700  stepped   east NO: nearest 2x2 side X spare -9.37 Y spare 19.55
+  4S3P 21700  stepped   west NO: nearest 3x2 side X spare -30.92 Y spare 11.20
+  4S3P 21700  minimal   east NO: nearest 2x2 side X spare -5.37 Y spare 23.55
+  4S3P 21700  minimal   west NO: nearest 3x2 side X spare -26.92 Y spare 15.20
+=== WRAP 1.0 per side, JOINT 2.0 per section, U.FL lead 1.37
+  4S3P 18650  enclosure east NO: nearest 3x2 end X spare -3.65 Y spare 23.50
+  4S3P 18650  enclosure west NO: nearest 3x2 side X spare -22.42 Y spare 19.50
+  4S3P 18650  stepped   east NO: nearest 3x2 end X spare -3.65 Y spare 23.50
+  4S3P 18650  stepped   west NO: nearest 3x2 side X spare -22.42 Y spare 19.50
+  4S3P 18650  minimal   east FITS: 40.50)  X spare   0.35  Y spare   31.50  Z clear   3.53 at WIFISW: six U.FL (mated 2.5 max, Hirose U.FL catalogue Sep 2  .. worst base: Z clear 2.32
+  4S3P 18650  minimal   west NO: nearest 3x2 side X spare -18.42 Y spare 23.50
+  4S4P 18650  enclosure east NO: nearest 3x2 side X spare -22.42 Y spare 32.25
+  4S4P 18650  enclosure west NO: nearest 3x2 side X spare -22.42 Y spare -47.75
+  4S4P 18650  stepped   east NO: nearest 3x2 side X spare -22.42 Y spare 32.25
+  4S4P 18650  stepped   west NO: nearest 3x2 side X spare -22.42 Y spare -47.75
+  4S4P 18650  minimal   east NO: nearest 3x2 side X spare -18.42 Y spare 36.25
+  4S4P 18650  minimal   west NO: nearest 3x2 side X spare -18.42 Y spare -43.75
+  4S2P 21700  enclosure east NO: best height -19.50 (2x2 end at J_AB2 mated IDC socket plus ribbon leaving for A's)
+  4S2P 21700  enclosure west NO: nearest 2x2 side X spare -9.87 Y spare 9.70
+  4S2P 21700  stepped   east NO: best height -6.47 (2x2 end at WIFISW: six U.FL (mated 2.5 max, Hirose U.FL catal)
+  4S2P 21700  stepped   west NO: nearest 2x2 side X spare -9.87 Y spare 9.70
+  4S2P 21700  minimal   east FITS: 43.61)  X spare   2.12  Y spare   21.70  Z clear   0.42 at WIFISW: six U.FL (mated 2.5 max, Hirose U.FL catalogue Sep 2  .. worst base: Z clear -0.79
+  4S2P 21700  minimal   west NO: nearest 2x2 side X spare -5.87 Y spare 13.70
+  4S3P 21700  enclosure east NO: nearest 2x2 side X spare -9.87 Y spare 17.55
+  4S3P 21700  enclosure west NO: nearest 3x2 side X spare -31.42 Y spare 9.70
+  4S3P 21700  stepped   east NO: nearest 2x2 side X spare -9.87 Y spare 17.55
+  4S3P 21700  stepped   west NO: nearest 3x2 side X spare -31.42 Y spare 9.70
+  4S3P 21700  minimal   east NO: nearest 2x2 side X spare -5.87 Y spare 21.55
+  4S3P 21700  minimal   west NO: nearest 3x2 side X spare -27.42 Y spare 13.70

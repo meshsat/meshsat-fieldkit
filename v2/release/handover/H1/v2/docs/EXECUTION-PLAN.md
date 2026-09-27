@@ -1,0 +1,187 @@
+# V2 execution plan (MESHSAT-1357, foundation baseline)
+
+Started 25 September 2026. This is the short, hand-kept execution record for rebuilding the V2 field kit from its engineering foundations. The foundations are the product definition, the requirements with their verification method, the architecture and budgets, the interface contracts, and the review of parts and circuits. After those comes per-board design readiness for a specified prototype build.
+
+It is a prototype design programme. **Nothing here has been built, and no board has been ordered.** Progress is reported as reviewed milestones and verification coverage, never as a single percentage of the whole. Rule-level readiness stays in the generated pages (`PCB-RULE-STATUS-*.md`, `PCB-OPEN-PAIRS.md`, `OWNER-DECISIONS-OPEN.md`).
+
+## Priority from 27 September 2026 01:20 CEST: the engineering handover
+
+The owner's execution prompt of 27 September (`v2/docs/reviews/2026-09-27-handover-execution-prompt.md`) makes a
+portable engineering handover the immediate delivery: completed pre-PCB layers that an engineer or a company can take
+over without this session. It corrects priorities; the scope, the rulings, the seven conditions and the stage gates
+below stand.
+
+- **The nine pre-PCB layers** (the owner's numbering): 1 product definition, 2 concept of operations, 3 requirements,
+  4 system architecture, 5 partitioning and interfaces, 6 components, 7 mechanical and enclosure, 8 schematics,
+  9 pre-layout design analysis; PCB layout is layer 10. Each layer's scope, deliverables by revision, acceptance
+  items, status (NOT_STARTED, IN_PROGRESS, BLOCKED or COMPLETE) and next closing action are kept in
+  `v2/docs/handover/LAYER-STATUS.md`, a view over the existing records, never a second registry. COMPLETE means
+  complete for the layer's own engineering purpose with its review; it never means a later physical test has passed.
+  An AI review is labelled as one and does not stand in for a qualified review a record requires.
+- **The handover snapshot** is built from one commit into `v2/release/handover/<version>/` (START-HERE, layer
+  table, continuation brief, one engineering question per blocked item, manifest with every file's revision and
+  sha256, and a ZIP). The editable documents in `v2/docs/` stay the authority; a snapshot is an immutable copy. The
+  first snapshot is partial and says so. One fresh checker, who did not build it, tests it for usability.
+- **Order of work:** the earliest unfinished layers close first; circuit round 8 (layer 8) continues in parallel;
+  no routing campaign resumes. Board B's Q-B-ESC-2 stays a bounded feasibility experiment for FEA-003 and runs only
+  on the netlist that follows round 8.
+- **Two attempts, then a change of method.** A check loop that has not closed an issue in two passes is reassessed
+  (targeted experiment, qualified review or a justified alternative) or recorded as a blocker with its engineering
+  question. The RF-002 transmitter walk, past its second pass long ago, gets one final method change (every pin not
+  cleared by a held document reads UNDECIDED); whatever it yields is merged with its limits named or recorded as a
+  blocker with a manual-review route.
+
+## Baseline, 25 September 2026 22:33 CEST
+
+| Item | Value |
+|---|---|
+| Repository head at start | `e6291404` (then `a0ad97d9` and `9d66316f`, two hygiene commits) |
+| Tools tree | `v2/ecad/tools` at `31a6527011da` |
+| Rule set | fingerprint `ff8151db3576437b`, manifest `2026-09-16.1`, 58 rules |
+| Local suite | 1345 passed, 0 failed, 60 skipped (the skips are not passes; they are being accounted for, see below) |
+| Open owner decisions | 30 (ZEROIZE), 40 (pack protection), 42 (decoupling); 27, 28, 41 and 43 ruled 25 September (appendix 32.365) |
+| Stackups on record | JLC04161H-7628, JLC06161H-3313, 2L, 2L-2oz. No 4-layer 2 oz row (board P) and no 8-layer row (board B) yet |
+| Compute | no rented box at the start; one KiCad box rented at 22:25 for the regeneration and re-take jobs below |
+
+| Board | Declared phase | Project directory | Board sha (as measured by the status pages) | Readiness | Hold |
+|---|---|---|---|---|---|
+| A power + I/O | A32 | `pcb-a-power-a23` | 58e26c67987b1daa | NOT_READY | decision 31 (lifted only on fresh evidence) |
+| B compute | B21 | `pcb-b-compute-b19` | 2e64b5bf2d9cd3bc | NOT_READY, not routed (416 open) | |
+| C panel backer | C24 | `pcb-c-display-c8` | 2a273803757c68fb | NOT_READY | |
+| D VHF APRS | D12 | `pcb-d-aprs-d9` | 929bf82d2bf6eed4 | NOT_READY | decision 31 (lifted only on fresh evidence) |
+| E1 dock strip | E17 | `pcb-e1-dock-e7` | a462ac2620b9b8d3 | NOT_READY | decision 31 (lifted only on fresh evidence) |
+| E5 dock block | E5 | `pcb-e5-block` | 686b29a734c55b9a | NOT_READY | |
+| P pack BMS | P4 | `pcb-p-pack-p2` | d79865e7b1aceb95 | NOT_READY | |
+
+## The reviews, and what each one gates
+
+| Review | Content | Gates |
+|---|---|---|
+| A, product and envelope | product brief, concept of operations, operating modes, simultaneity and duty cycles, runtime, environment, ZEROIZE meaning, markets and obligations | requirements that depend on those answers |
+| B, requirements with verification | requirement records with acceptance criteria, verification method and stage; the test plan traced to them | the architecture budgets and test access |
+| C, architecture and feasibility | budgets with margins; interfaces owned on both ends; board B feasibility | per-board parts and circuit review |
+| D, parts and circuits, per board | exact part identities; symbol, footprint and pad parity; circuit review by function; regeneration parity | that board's layout entry |
+
+Review A is held in two parts, layer 1 (the product brief and the public pages) and layer 2 (the concept of operations
+and the operating envelope). Each is an AI review by one fresh reviewer who wrote none of the pages, labelled as an AI
+review and never a qualified review, against the layer's row of section 3 and the tests of section 2 of the owner's
+handover prompt, recorded at `v2/docs/reviews/REVIEW-A-LAYER-<n>-<date>.md`; layer 1's definition in full is the last
+section of `PRODUCT-BRIEF.md` (the session's choice under the owner's standing rule of 26 September 2026, registry
+SC-16). No record in this tree requires a qualified review of layers 1 or 2; the qualified reviews named elsewhere
+(D-09 and `reviews/REVIEW-ROUTES.md`) are not replaced by it.
+
+Milestones, each reported separately:
+- FOUNDATIONS_BASELINED
+- DESIGN_READY_FOR_LAYOUT (per board)
+- DESIGN_PACKAGE_READY_FOR_PROTOTYPE
+- PROTOTYPE_FAB_RELEASED
+- PROTOTYPE_VERIFIED
+- PRODUCTION_RELEASE_READY
+
+## Workstreams (first working day)
+
+| # | Workstream | Output |
+|---|---|---|
+| W1 | Systems and requirements | product brief, concept of operations, candidate requirements, conflict list, owner decision table |
+| W2 | Power and electronics | power tree, worst-case budgets, runtime per pack configuration (provisional until the modes and the pack are fixed), protection and decoupling review |
+| W3 | Interfaces and board B | board-to-board contracts, lane and bandwidth allocation, board B congestion diagnosis and one bounded escape trial |
+| W4 | Mechanical, thermal and RF | tolerance and mass budgets, thermal budget, antenna plan, a measurement request for the physical case |
+| W5 | Firmware and testability | hardware/firmware contract, test access per board, the test plan classified by purpose |
+| W6 | Independent verification and manufacturing | part identity and source audit, the STM32H753/H743 compatibility question, fabricator stackup questions |
+| W7 | Regeneration and evidence integrity | regeneration parity for every board, an account of every skipped test, the decision 31 holds, asset dispositions |
+
+Rules for the workstreams:
+- Each workstream works in its own worktree. Only the integrating session merges and commits.
+- A shared record (`ARCHITECTURE.md`, requirement IDs, board-to-board interface entries) has one writer, the integrator.
+- Every consequential finding is challenged by an independent reviewer before it is merged. Agreement between reviewers is review, not physical evidence.
+
+## Standing conditions (owner, 25 September 2026)
+
+1. A part substitution is a component mismatch until compatibility is proven. The schematic's STM32H753 against the STM32H743 bought is open until then.
+2. A runtime figure stays provisional until it is computed per pack configuration from usable energy, losses, temperature, ageing and the real modes.
+3. A test limit above the operating envelope may be an intended qualification margin. Its purpose is recorded before it is changed.
+4. One writer per shared file. Workers test in isolation.
+5. "The generator is current" is shown by regenerating and comparing, not asserted.
+6. Skipped tests are not passes. A hold is lifted only on fresh evidence that matches the board's actual configuration.
+7. Board B feasibility evidence permits further investigation only. A committed layout candidate needs its schematic, parts, interfaces, stackup and mechanics reviewed first. Experiments stay EXPERIMENTAL.
+
+## Stage gates: layout entry, fabrication release, prototype verification
+
+The review of the 22:35 progress report (`v2/docs/reviews/2026-09-26-second-checkpoint-review.md`, finding A) found
+gates that could never be satisfied because they waited for the thing they gated: decision 31's holds lifted only on a
+corrected layout while layout entry needed them gone, INT-002 was a schematic gate closed only by a test on the built
+board B, and several feasibility blockers held layout entry until a placement or a bench test. Every gate now names its
+stage. Moving a check to its stage changes when it applies; it waives nothing. The acceptance criteria live in the
+registries (`tools/pcb_board_holds.yaml`, `tools/pcb_requirements.yaml` stages, `tools/pcb_rules.yaml` INT-002 and
+INT-003); `rules_status.layout_entry` computes the layout-entry test and CURRENT-EVIDENCE.md renders it.
+
+| Stage | What it needs | What it may not need |
+|---|---|---|
+| Layout entry | per board: every required schematic-phase rule a PASS on current-candidate evidence; reviewed protection topology, exact fitted parts, corrected schematic, owned interfaces, placement and return-path constraints; each feasibility blocker's layout-entry stage closed (desk evidence, or a development-board test where an architecture decision turns on it) | a layout, a fabricated board or a built kit |
+| Fabrication release | the actual layout implements the reviewed schematic (SCH-002 PASS on current-candidate evidence) and passes the physical protection, parity and routed-board checks; the fabrication-release stages (the qualified reviews where a blocker names one, the bounded enclosure heat experiment before hot-part placement is frozen) | a fabricated board or a built kit |
+| Prototype verification | the physical tests of TEST-PLAN and the feasibility pages, on the built kit | nothing earlier stands in for them; a desk review is never a physical test |
+
+Milestones, per board, in the order they can close (none is closed today):
+
+| Board | Layout entry also needs, beyond its rule evidence | Fabrication release also needs | Prototype verification |
+|---|---|---|---|
+| A | decision 31: the protection-topology review on A's netlist, U31 as fitted, TRN-001 PASS; FEA-002 (EMCON lines L1 to L4, L7); FEA-004 (the chain re-declared at 18 A for 60 s and A's pack-path copper constraint); FEA-006 (decoupling classes in the generator) | decision 31's hold lifted on the layout; FEA-002 RF-002 PASS; FEA-004 the heat-balance test and A's routed copper at 18 A; FEA-006 class seats read on the placement | FEA-002 E-01 to E-12; FEA-004 bring-up readings and TEST-PLAN E3 |
+| B | FEA-001 (Z-EXP-A and Z-EXP-B on development parts, or the switch taken); FEA-002 (SD-EMC-1 drawn, L1 to L4, L7); FEA-003 (FB-FAB-1 to FB-FAB-5 on the netlist, the escape strategy from Q-B-ESC-1 and decision 43's stack, the channel budgets); FEA-006; INT-002's pre-layout assessment current on its 48 nets | FEA-001 U8 as selected; FEA-002; FEA-003 complete placement and route, routed lengths, the fabricator's impedance record, the qualified high-speed review R-HSD; FEA-006 | INT-003 (the three module links at 1000M, error free, cold and hot); FEA-001 Z-EXP-C and REQ-035; FEA-002 bench; FEA-003 IOHA A1 to A14 and the reference clock |
+| C | FEA-002 (the hardware EMCON lamp, L1); FEA-006 | FEA-002 (RF-002, the lamp's light-guide hole); FEA-006 | FEA-002 bench |
+| D | decision 31: the review on D's netlist, D9 to D14 as fitted, TRN-001 PASS; FEA-002; FEA-004 (the PA flange sensor drawn); FEA-006 | decision 31's hold lifted on the layout; FEA-002; FEA-004 heat-balance test; FEA-006 | FEA-002 E-01, E-02; FEA-004 the flange against a thermocouple |
+| E | decision 31: the review on E's netlist, D9 and D10 as fitted, TRN-001 PASS; FEA-006 | decision 31's hold lifted on the layout; FEA-006 | TEST-PLAN rows of its interfaces |
+| P | FEA-005 (the packet current on the candidate, the secondary coordination at desk with its placement constraints, the charger state sequence); FEA-006 | FEA-004 F2 at 18 A for 60 s by Eaton's answer or a coupon test; FEA-005 the qualified battery review answered; FEA-006 | FEA-004 extended protection test; FEA-005 golden image and O-9 |
+| E5 | its rule evidence alone (no hold, no feasibility stage names it) | its release package bound by content | the mate test of its contact targets |
+
+Taken by the session under the owner's standing rule of 26 September 2026 (the review named what each stage needs and
+left the allocation of each item to the session): the stage of every item above, the three requirement kinds of a
+later-staged hold (rule_pass, fitted_parts, review), and INT-002's split into a pre-layout assessment and INT-003's
+bench test. Reverse by moving an item back, which the validators allow only if its evidence can exist at that stage.
+
+## Compute and spend
+
+| Date | Resource | Purpose | Rate | Cap | State |
+|---|---|---|---|---|---|
+| 25 Sep 22:25 | vast.ai 52646493 (64 vCPU, 251 GB) | the full suite with KiCad, regeneration parity, adjudication readings, every circuit regeneration, the review packets; later the board B escape trial | 0.121 to 0.142 USD/h | about 10 USD for the foundation rounds | running; 19.9 host-hours and 2.88 USD spent at 26 Sep 18:24 (credit 125.11 USD); 22.3 host-hours and 3.19 USD at 26 Sep 20:45 (credit 124.80 USD) |
+
+Credit at the start: 127.99 USD. A box is destroyed when its last result is fetched and verified.
+
+## Log
+
+- 25 Sep 22:33: baseline recorded; workstreams W1 to W7 running; KiCad box setting up.
+- 25 Sep 22:40 to 26 Sep 00:20: round 1 (seven workstreams, seven independent challengers, one completeness critic) and round 2 (eleven adjudications from primary sources and box readings, seven fix passes, publish checks). Design defects found at the circuit and part level, among them: board B's PCIe downstream and LimeSDR SuperSpeed pairs wired transmitter to transmitter; the charger's cell-count strap selecting 2S; ten one-way clamps and rectifiers drawn reversed; the pack gauge on the wrong land; the 5G socket keyed M; EMCON not reaching the compute modules' own radios; only about 145 Wh of pack fitting the case. Regeneration parity proven for boards A, B, C, D, E and P (E5 identical in copper).
+- 25 Sep 23:10 and 26 Sep 00:20: four test fixtures were found writing into this tree's own evidence and were isolated (2ba560ec, 82dd1e4d). Correction: 82dd1e4d's message says CMP-002 and SUP-001 do not read the lcsc_fill verdict; they do (the readiness takes the worst of every verdict a rule names), so the fixture output had been standing in for the real reading. It was removed from the evidence folder, and those pairs read INCONCLUSIVE until a real re-take.
+- 25 Sep 23:27 to 26 Sep 00:55: the owner ruled the foundation questions D-01 to D-17 one at a time, each at the recommendation (recorded in CONOPS section 7, the requirements registry, the envelope, decisions 30 and 40, appendix 32.366), then set a standing rule: he is not asked again, and the session takes the recommended option and records it.
+- 26 Sep 01:00 to 09:00: round 3 integration and its fix-up merged: d468613e (stackup rows for boards P and B, the part source record), 4ec785d8 (rulings, decisions 30 and 40, PANEL, IOHA, ASSEMBLY and envelope corrections), 68bc9e8f (product brief, concept of operations, V2-SPEC and READMEs), 6104cb81 (SCH-002 compares values and lands, certification demands the exact part and land, rules_status reads only the phase directory). Suite 1408 passed, 0 failed, 60 skipped. Open pairs rose from 118 to 128 because SCH-002 and CMP-002/SUP-001 now read INCONCLUSIVE on several boards until fresh re-takes under the corrected tools.
+- 26 Sep: round 4 (Review D circuit corrections per board, each regenerated on the box and independently reviewed) and round 5 (remaining fix-ups, re-reviews, and one integration tree regenerated for every board) running.
+- 26 Sep 12:32 to 18:20: rounds 4 to 6 merged the circuit corrections of boards C, D, E and P (faf8c981) and A, B and D (458b2873), each regenerated from its generator with every netlist difference traced to a finding and independently reviewed; the shared checking tools are in round 7. The case margins and the owner's D-08 reversal, D-08a, SC-02 and the transport correction landed in b69f20db.
+- 26 Sep 14:12: the owner supplied a review of the 13:05 progress report and ordered it executed (v2/docs/reviews/2026-09-26-foundation-progress-review.md, 1f614233). Executed so far: evidence classes (26e847bc), ZEROIZE feasibility (9b0635d1), the failover fabric map (a5266aa8), decision 42 ruled by part class (9d566e8b), review packets for C, D, E and P plus the review routes and the vendor filing (ccf5808e), and the battery protection packet with board P's secondary over-temperature restored (d90f30e4). Running: EMCON inhibit table and power/thermal budget (last checker items), round 7 (shared tools, then every board regenerated).
+
+### Checkpoint, 26 September 2026 18:24 CEST (the review's section 6 terms)
+
+**Headline** (v2/docs/CURRENT-EVIDENCE.md): foundations incomplete; 0 boards ready for layout; 0 physically verified. The earlier 212 of 333 figure is a historical aggregate of mixed revisions and is not quoted as readiness.
+
+| Item | State |
+|---|---|
+| Elapsed since the baseline (25 Sep 22:33) | 19 h 51 min |
+| Host-hours and spend | one KiCad build host, 19.9 h, 2.88 USD; credit 125.11 USD |
+| Experiments completed | none routed since the re-baseline (the board B eight-layer escape trial is specified, not run) |
+| Evidence made current | every rule-board reading classed: 8 current candidate, 2 valid historical, 282 awaiting revalidation, 20 desk review, 0 physical test, 21 no evidence (the per-board layout-entry blockers are listed in CURRENT-EVIDENCE.md) |
+| Blockers closed with evidence | the circuit corrections of all six schematic boards (each reviewed, regenerated, traced); board P's secondary over-temperature restored on its own thermistor; decision 42 ruled per part class from the makers' documents; contaminating fixtures isolated and their evidence invalidated |
+| Blockers open, bounded | ZEROIZE on the fitted ATECC608B (a bounded development-device experiment specified); EMCON guarantees for the 5G module and WiFi cards (bench proof specified); the failover fabric's escape strategy and signal integrity; the battery packet awaiting the approved qualified reviewer; two new qualified review routes (board A power, board B high-speed digital) needing the owner's spending approval; the requirements registry and architecture page (re-anchoring to main, then merge) |
+| Next verifiable result | round 7 merged with every board regenerated and the clamp polarity and RF-002 transmitter checks reading the real boards; review packets for A, B and D; the requirements and architecture candidate merged with its feasibility blockers explicit |
+
+### Checkpoint, 26 September 2026 20:45 CEST
+
+**Headline** (v2/docs/CURRENT-EVIDENCE.md): foundations incomplete; 0 boards ready for layout; 0 physically verified.
+
+| Item | State |
+|---|---|
+| Elapsed since the baseline (25 Sep 22:33) | 22 h 12 min |
+| Host-hours and spend | one KiCad build host, 22.3 h, 3.19 USD; credit 124.80 USD |
+| Experiments completed | none routed (the board B escape trial Q-B-ESC-1 is specified with its driver in tools/routeflow/experiments/b_esc1/, not run) |
+| Evidence made current | unchanged in class: 8 current candidate, 2 valid historical, 282 awaiting revalidation, 20 desk review, 0 physical test, 21 no evidence. The layout-entry blockers are 74: 27 close with a re-take alone, 31 once a tool records the artefact it judged, 12 once PWR-001's and SI-001's tools judge the netlist, 1 needs a deciding verification (INT-002 on B), 3 are decision 31's holds on A, D and E |
+| Blockers closed with evidence | review item 1: the requirements registry (131 records, six FEA feasibility blockers, validator and generated trace) and the architecture page with board-to-board contracts and board B's escape diagnosis and trial specification (9f848223, 7808734f, 70819008); round 7b's shared tools: clamp polarity judged from the part number on every board, the pack SMBus lead a cross-board contract, maker-named lands on the rotation checklist, every board regenerated with schematics byte-identical (93138ac1); S-05 closed and CFL-015 resolved with the assembly guide and panel contract describing the lead as generated (16fa4c23) |
+| Blockers open, bounded | as at 18:24, plus: TRN-001 reads FAIL on A and B on the clamp symbol (0 reversed); the RF-002 transmitter walk is in its review loop and not merged |
+| Running | tools stream (seven writers record the artefact they judge; PWR-001 and SI-001 on the netlist; A's and B's clamps on the one-way symbol with every board regenerated); published contracts rewritten against the circuits (S-07); parts (certification re-take, owed source entries); records filing (every drafts/ record a committed page cites, filed in the tree); the RF-002 walk's review loop |
+| Next verifiable result | the tools stream merged, then one re-take of every schematic-phase reading on the committed netlists in a clean clone on the box, which is the step that can move boards to layout entry |

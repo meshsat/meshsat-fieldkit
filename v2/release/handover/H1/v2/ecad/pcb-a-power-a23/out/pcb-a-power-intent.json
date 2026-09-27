@@ -1,0 +1,1682 @@
+{
+ "board": "pcb-a-power",
+ "written": "2026-09-26 21:59",
+ "bypass": [
+  {
+   "cap": "C8",
+   "part": "U2",
+   "pin": "23",
+   "net": "FE_VCC",
+   "class": "L",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the VCC bypass capacitor close to the controller IC, between the VCC and PGND pins'; 7.3.2 p.15: 'A ceramic capacitor of 16 V or higher voltage rating and a value between 1 uF and 4.7 uF is required'",
+   "value_floor": "1u",
+   "value_ceiling": "4.7u",
+   "esr_bound": null
+  },
+  {
+   "cap": "C192",
+   "part": "U2",
+   "pin": "24",
+   "net": "VBUS20",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the BIAS bypass capacitor close to the controller IC, between the BIAS and PGND pins. A 0.1-uF ceramic capacitor is typically used'"
+  },
+  {
+   "cap": "C123",
+   "part": "U2",
+   "pin": "16",
+   "net": "FE_CSF",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the filter capacitor for the current sense signal as close to the IC pins as possible'"
+  },
+  {
+   "cap": "C128",
+   "part": "U2",
+   "pin": "14",
+   "net": "FE_ISNS_P",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the average current loop filter capacitor close to the IC between the ISNS(+) and ISNS(-) pins'"
+  },
+  {
+   "cap": "C207",
+   "part": "U2",
+   "pin": "2",
+   "net": "FE_VINP",
+   "class": "D",
+   "basis": "TI SNVSAI1D (LM5176) 10.1 p.30: 'Bypass the VIN pin to AGND with a low ESR ceramic capacitor located close to the controller IC. A 0.1-uF ceramic capacitor is typically used'"
+  },
+  {
+   "cap": "C210",
+   "part": "U34",
+   "pin": "1",
+   "net": "FE_GVDD",
+   "class": "D",
+   "basis": "TI SNVSBJ1E (TPS37A) pin table: VDD 'Input Supply Voltage: Bypass with a 0.1 uF capacitor to GND' (the sheet is r4a's drafts/datasheets/ti-tps37.pdf, sha256 d6aed9d9, not yet filed under v2/vendor); the fitted 1 uF behind R196 is also VDD's filter"
+  },
+  {
+   "cap": "C29",
+   "part": "U4",
+   "pin": "2",
+   "net": "VBAT",
+   "class": "R",
+   "basis": "Diodes DS41979 Rev 5-2 (AP64500), Layout item 2 p.23: 'Place the input capacitors as closely across VIN and GND as possible'"
+  },
+  {
+   "cap": "C30",
+   "part": "U4",
+   "pin": "2",
+   "net": "VBAT",
+   "class": "R",
+   "basis": "Diodes DS41979 Rev 5-2 (AP64500), Layout item 2 p.23: 'Place the input capacitors as closely across VIN and GND as possible'"
+  },
+  {
+   "cap": "C41",
+   "part": "U6",
+   "pin": "2",
+   "net": "VBAT",
+   "class": "R",
+   "basis": "Diodes DS41979 Rev 5-2 (AP64500), Layout item 2 p.23: 'Place the input capacitors as closely across VIN and GND as possible'"
+  },
+  {
+   "cap": "C42",
+   "part": "U6",
+   "pin": "2",
+   "net": "VBAT",
+   "class": "R",
+   "basis": "Diodes DS41979 Rev 5-2 (AP64500), Layout item 2 p.23: 'Place the input capacitors as closely across VIN and GND as possible'"
+  },
+  {
+   "cap": "C136",
+   "part": "U5",
+   "pin": "23",
+   "net": "S2_VCC",
+   "class": "L",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the VCC bypass capacitor close to the controller IC, between the VCC and PGND pins'; 7.3.2 p.15: 'A ceramic capacitor of 16 V or higher voltage rating and a value between 1 uF and 4.7 uF is required'",
+   "value_floor": "1u",
+   "value_ceiling": "4.7u",
+   "esr_bound": null
+  },
+  {
+   "cap": "C193",
+   "part": "U5",
+   "pin": "24",
+   "net": "VBAT",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the BIAS bypass capacitor close to the controller IC, between the BIAS and PGND pins. A 0.1-uF ceramic capacitor is typically used'"
+  },
+  {
+   "cap": "C138",
+   "part": "U5",
+   "pin": "16",
+   "net": "S2_CSF",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the filter capacitor for the current sense signal as close to the IC pins as possible'"
+  },
+  {
+   "cap": "C139",
+   "part": "U5",
+   "pin": "14",
+   "net": "S2_ISNS_P",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the average current loop filter capacitor close to the IC between the ISNS(+) and ISNS(-) pins'"
+  },
+  {
+   "cap": "C219",
+   "part": "U5",
+   "pin": "2",
+   "net": "VBAT",
+   "class": "D",
+   "basis": "TI SNVSAI1D (LM5176) 10.1 p.30: 'Bypass the VIN pin to AGND with a low ESR ceramic capacitor located close to the controller IC. A 0.1-uF ceramic capacitor is typically used'"
+  },
+  {
+   "cap": "C143",
+   "part": "U7",
+   "pin": "23",
+   "net": "SD_VCC",
+   "class": "L",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the VCC bypass capacitor close to the controller IC, between the VCC and PGND pins'; 7.3.2 p.15: 'A ceramic capacitor of 16 V or higher voltage rating and a value between 1 uF and 4.7 uF is required'",
+   "value_floor": "1u",
+   "value_ceiling": "4.7u",
+   "esr_bound": null
+  },
+  {
+   "cap": "C194",
+   "part": "U7",
+   "pin": "24",
+   "net": "VBAT",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the BIAS bypass capacitor close to the controller IC, between the BIAS and PGND pins. A 0.1-uF ceramic capacitor is typically used'"
+  },
+  {
+   "cap": "C145",
+   "part": "U7",
+   "pin": "16",
+   "net": "SD_CSF",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the filter capacitor for the current sense signal as close to the IC pins as possible'"
+  },
+  {
+   "cap": "C146",
+   "part": "U7",
+   "pin": "14",
+   "net": "SD_ISNS_P",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the average current loop filter capacitor close to the IC between the ISNS(+) and ISNS(-) pins'"
+  },
+  {
+   "cap": "C220",
+   "part": "U7",
+   "pin": "2",
+   "net": "VBAT",
+   "class": "D",
+   "basis": "TI SNVSAI1D (LM5176) 10.1 p.30: 'Bypass the VIN pin to AGND with a low ESR ceramic capacitor located close to the controller IC. A 0.1-uF ceramic capacitor is typically used'"
+  },
+  {
+   "cap": "C60",
+   "part": "U13",
+   "pin": "23",
+   "net": "PA_VCC",
+   "class": "L",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the VCC bypass capacitor close to the controller IC, between the VCC and PGND pins'; 7.3.2 p.15: 'A ceramic capacitor of 16 V or higher voltage rating and a value between 1 uF and 4.7 uF is required'",
+   "value_floor": "1u",
+   "value_ceiling": "4.7u",
+   "esr_bound": null
+  },
+  {
+   "cap": "C195",
+   "part": "U13",
+   "pin": "24",
+   "net": "+13V8_PA",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the BIAS bypass capacitor close to the controller IC, between the BIAS and PGND pins. A 0.1-uF ceramic capacitor is typically used'"
+  },
+  {
+   "cap": "C124",
+   "part": "U13",
+   "pin": "16",
+   "net": "PA_CSF",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the filter capacitor for the current sense signal as close to the IC pins as possible'"
+  },
+  {
+   "cap": "C129",
+   "part": "U13",
+   "pin": "14",
+   "net": "PA_ISNS_P",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the average current loop filter capacitor close to the IC between the ISNS(+) and ISNS(-) pins'"
+  },
+  {
+   "cap": "C208",
+   "part": "U13",
+   "pin": "2",
+   "net": "PA_VINP",
+   "class": "D",
+   "basis": "TI SNVSAI1D (LM5176) 10.1 p.30: 'Bypass the VIN pin to AGND with a low ESR ceramic capacitor located close to the controller IC. A 0.1-uF ceramic capacitor is typically used'"
+  },
+  {
+   "cap": "C71",
+   "part": "U15",
+   "pin": "23",
+   "net": "HF_VCC",
+   "class": "L",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the VCC bypass capacitor close to the controller IC, between the VCC and PGND pins'; 7.3.2 p.15: 'A ceramic capacitor of 16 V or higher voltage rating and a value between 1 uF and 4.7 uF is required'",
+   "value_floor": "1u",
+   "value_ceiling": "4.7u",
+   "esr_bound": null
+  },
+  {
+   "cap": "C196",
+   "part": "U15",
+   "pin": "24",
+   "net": "+12V_HF",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the BIAS bypass capacitor close to the controller IC, between the BIAS and PGND pins. A 0.1-uF ceramic capacitor is typically used'"
+  },
+  {
+   "cap": "C125",
+   "part": "U15",
+   "pin": "16",
+   "net": "HF_CSF",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the filter capacitor for the current sense signal as close to the IC pins as possible'"
+  },
+  {
+   "cap": "C130",
+   "part": "U15",
+   "pin": "14",
+   "net": "HF_ISNS_P",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the average current loop filter capacitor close to the IC between the ISNS(+) and ISNS(-) pins'"
+  },
+  {
+   "cap": "C209",
+   "part": "U15",
+   "pin": "2",
+   "net": "HF_VINP",
+   "class": "D",
+   "basis": "TI SNVSAI1D (LM5176) 10.1 p.30: 'Bypass the VIN pin to AGND with a low ESR ceramic capacitor located close to the controller IC. A 0.1-uF ceramic capacitor is typically used'"
+  },
+  {
+   "cap": "C78",
+   "part": "U16",
+   "pin": "23",
+   "net": "POE_VCC",
+   "class": "L",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the VCC bypass capacitor close to the controller IC, between the VCC and PGND pins'; 7.3.2 p.15: 'A ceramic capacitor of 16 V or higher voltage rating and a value between 1 uF and 4.7 uF is required'",
+   "value_floor": "1u",
+   "value_ceiling": "4.7u",
+   "esr_bound": null
+  },
+  {
+   "cap": "C197",
+   "part": "U16",
+   "pin": "24",
+   "net": "VBAT",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the BIAS bypass capacitor close to the controller IC, between the BIAS and PGND pins. A 0.1-uF ceramic capacitor is typically used'"
+  },
+  {
+   "cap": "C126",
+   "part": "U16",
+   "pin": "16",
+   "net": "POE_CSF",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the filter capacitor for the current sense signal as close to the IC pins as possible'"
+  },
+  {
+   "cap": "C131",
+   "part": "U16",
+   "pin": "14",
+   "net": "POE_ISNS_P",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the average current loop filter capacitor close to the IC between the ISNS(+) and ISNS(-) pins'"
+  },
+  {
+   "cap": "C221",
+   "part": "U16",
+   "pin": "2",
+   "net": "VBAT",
+   "class": "D",
+   "basis": "TI SNVSAI1D (LM5176) 10.1 p.30: 'Bypass the VIN pin to AGND with a low ESR ceramic capacitor located close to the controller IC. A 0.1-uF ceramic capacitor is typically used'"
+  },
+  {
+   "cap": "C89",
+   "part": "U19",
+   "pin": "23",
+   "net": "PD_VCC",
+   "class": "L",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the VCC bypass capacitor close to the controller IC, between the VCC and PGND pins'; 7.3.2 p.15: 'A ceramic capacitor of 16 V or higher voltage rating and a value between 1 uF and 4.7 uF is required'",
+   "value_floor": "1u",
+   "value_ceiling": "4.7u",
+   "esr_bound": null
+  },
+  {
+   "cap": "C198",
+   "part": "U19",
+   "pin": "24",
+   "net": "VBAT",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the BIAS bypass capacitor close to the controller IC, between the BIAS and PGND pins. A 0.1-uF ceramic capacitor is typically used'"
+  },
+  {
+   "cap": "C127",
+   "part": "U19",
+   "pin": "16",
+   "net": "PD_CSF",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the filter capacitor for the current sense signal as close to the IC pins as possible'"
+  },
+  {
+   "cap": "C132",
+   "part": "U19",
+   "pin": "14",
+   "net": "PD_ISNS_P",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the average current loop filter capacitor close to the IC between the ISNS(+) and ISNS(-) pins'"
+  },
+  {
+   "cap": "C222",
+   "part": "U19",
+   "pin": "2",
+   "net": "VBAT",
+   "class": "D",
+   "basis": "TI SNVSAI1D (LM5176) 10.1 p.30: 'Bypass the VIN pin to AGND with a low ESR ceramic capacitor located close to the controller IC. A 0.1-uF ceramic capacitor is typically used'"
+  },
+  {
+   "cap": "C159",
+   "part": "U33",
+   "pin": "3",
+   "net": "VHEAT_IN",
+   "class": "R",
+   "basis": "TI SLUSEA4D (TPS62933) 12.1 p.40: 'the most critical PCB feature is the loop formed by the input capacitors and power ground'; 'Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins'"
+  },
+  {
+   "cap": "C160",
+   "part": "U33",
+   "pin": "3",
+   "net": "VHEAT_IN",
+   "class": "R",
+   "basis": "TI SLUSEA4D (TPS62933) 12.1 p.40: 'the most critical PCB feature is the loop formed by the input capacitors and power ground'; 'Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins'"
+  },
+  {
+   "cap": "C4",
+   "part": "U1",
+   "pin": "1",
+   "net": "VBAT",
+   "class": "D",
+   "basis": "ADI 2954fb (LTC2954) pin functions p.6: 'VIN: Power Supply Input: 2.7V to 26.4V'; the sheet states no capacitor, class D by role, the generator's own 1 uF (decision 42 D1)"
+  },
+  {
+   "cap": "C19",
+   "part": "U3",
+   "pin": "7",
+   "net": "CH_VDDA",
+   "class": "A",
+   "basis": "TI SLUSE66A (BQ25731) pin table p.7: VDDA 'Internal reference bias pin. Connect a 10-Ohm resistor from REGN to VDDA and a 1-uF ceramic capacitor from VDDA to power ground' (R18 and C19: the RC the maker draws)"
+  },
+  {
+   "cap": "C54",
+   "part": "U12",
+   "pin": "3",
+   "net": "VBAT",
+   "class": "R",
+   "basis": "TI SLUSEA4D (TPS62933) 12.1 p.40: 'the most critical PCB feature is the loop formed by the input capacitors and power ground'; 'Place the inductor, input and output capacitors, and the IC on the same layer'"
+  },
+  {
+   "cap": "C94",
+   "part": "U18",
+   "pin": "13",
+   "net": "PD_DVDD",
+   "class": "L",
+   "basis": "TI SLVSDG8B (TPS25740A) pin table p.5: DVDD 'Internally regulated 1.85 V rail ... Connect this pin to GND via the recommended bypass capacitor'; p.7: C(DVDD) 0.198 / 0.22 / 0.242 uF",
+   "value_floor": "198n",
+   "value_ceiling": "242n",
+   "esr_bound": null
+  },
+  {
+   "cap": "C104",
+   "part": "U26",
+   "pin": "14",
+   "net": "+3V3",
+   "class": "D",
+   "basis": "TI SCAS283W (SN74LVC08A): the maker's sheet ties no value or distance to VCC; class D by role (a supply pin's own decoupling), the generator's own 100 nF (decision 42 D1)"
+  },
+  {
+   "cap": "C106",
+   "part": "U27",
+   "pin": "24",
+   "net": "+3V3",
+   "class": "D",
+   "basis": "TI SCPS131J (PCA9555): the maker's sheet ties no value or distance to VCC; class D by role (a supply pin's own decoupling), the generator's own 100 nF (decision 42 D1)"
+  },
+  {
+   "cap": "C107",
+   "part": "U28",
+   "pin": "24",
+   "net": "+3V3",
+   "class": "D",
+   "basis": "TI SCPS131J (PCA9555): the maker's sheet ties no value or distance to VCC; class D by role (a supply pin's own decoupling), the generator's own 100 nF (decision 42 D1)"
+  },
+  {
+   "cap": "C153",
+   "part": "U30",
+   "pin": "5",
+   "net": "+3V3",
+   "class": "D",
+   "basis": "TI SCES212AC (SN74LVC1G00): the maker's sheet ties no value or distance to VCC; class D by role (a supply pin's own decoupling), the generator's own 100 nF (decision 42 D1)"
+  },
+  {
+   "cap": "C215",
+   "part": "U35",
+   "pin": "5",
+   "net": "+3V3",
+   "class": "D",
+   "basis": "TI SCES502Q (SN74AUP1G08) 9 p.14: 'For devices with a single supply, 0.1 uF is recommended ... The bypass capacitor should be installed as close to the power terminal as possible'"
+  },
+  {
+   "cap": "C216",
+   "part": "U36",
+   "pin": "5",
+   "net": "+3V3",
+   "class": "D",
+   "basis": "TI SCES502Q (SN74AUP1G08) 9 p.14: 'For devices with a single supply, 0.1 uF is recommended ... The bypass capacitor should be installed as close to the power terminal as possible'"
+  },
+  {
+   "cap": "C217",
+   "part": "U37",
+   "pin": "5",
+   "net": "+3V3",
+   "class": "D",
+   "basis": "TI SCES502Q (SN74AUP1G08) 9 p.14: 'For devices with a single supply, 0.1 uF is recommended ... The bypass capacitor should be installed as close to the power terminal as possible'"
+  },
+  {
+   "cap": "C218",
+   "part": "U38",
+   "pin": "5",
+   "net": "+3V3",
+   "class": "D",
+   "basis": "TI SCES502Q (SN74AUP1G08) 9 p.14: 'For devices with a single supply, 0.1 uF is recommended ... The bypass capacitor should be installed as close to the power terminal as possible'"
+  },
+  {
+   "cap": "C223",
+   "part": "U12",
+   "pin": "3",
+   "net": "VBAT",
+   "class": "R",
+   "basis": "TI SLUSEA4D (TPS62933) 12.1 p.40: 'Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins, which is key to EMI reduction' (round 8, G2)"
+  }
+ ],
+ "rails": {
+  "CELL+": {
+   "volts": 14.4,
+   "amps_typ": 10.0,
+   "amps_peak": 18.0,
+   "source": "J_CP1",
+   "loads": {
+    "F1": 10.0
+   },
+   "note": "the pack node on the dock block contacts. S-04, 26 September 2026: the pack current leaves this node through F1, the 25 A blade, into CELL_FUSED and on through the RSR shunt R17 into VBAT, the system node (TI SLUSE66A Figure 10-1). R1 is the 10 R pre-charge trickle and TP14 a test point. Undeclared, dc_drop split the 10 A over every non-passive part on the net and pushed amps through a sense escape, reading 2.21 percent at a 0.5 mm cell and 2.75 at 0.25 against a 2 percent budget: the same correction VIN_RAW carries above, and for the same reason (12 September 2026, A24)",
+   "share": 0.005,
+   "always_on": true,
+   "always_on_why": "the pack node as it arrives on the dock block contacts; it is switched on board E and in the pack, never here",
+   "v_work": 16.8,
+   "converted": false
+  },
+  "CELL_FUSED": {
+   "volts": 14.4,
+   "amps_typ": 10.0,
+   "amps_peak": 18.0,
+   "source": "F1",
+   "loads": {
+    "R17": 10.0
+   },
+   "note": "S-04, 26 September 2026: the pack node behind the 25 A blade F1 and ahead of the 5 mOhm RSR shunt R17 (the BQ25731's battery side, SRN through R148). It carries the pack's charge and discharge current, 10.0 A typical and 18.0 A peak, and is counted once as a segment of CELL+",
+   "v_work": 16.8,
+   "converted": false,
+   "series_of": "CELL+"
+  },
+  "VBAT": {
+   "volts": 14.4,
+   "amps_typ": 10.0,
+   "amps_peak": 18.0,
+   "source": "R17",
+   "loads": {
+    "U4": 2.0,
+    "Q28": 2.0,
+    "U6": 2.0,
+    "Q32": 2.0,
+    "Q11": 1.5,
+    "U15": 0.3,
+    "U12": 0.2,
+    "U22": 0.65
+   },
+   "note": "the 4S system node (VSYS) behind the RSR shunt R17; 10 A continuous, 18 A peak by the pack's rating (32.55)",
+   "always_on": true,
+   "always_on_why": "the system node (VSYS): nothing on this board switches it. The pack reaches it through the 25 A blade F1 and the RSR shunt R17, opened only by the pack's own BQ4050 FETs and the blade; the charger's converter feeds it from shore through Q10",
+   "v_work": 16.8,
+   "converted": false,
+   "fed_from": "CELL_FUSED"
+  },
+  "VIN_RAW": {
+   "volts": 12.0,
+   "amps_typ": 12.31,
+   "amps_peak": 12.31,
+   "source": "J_DOCK",
+   "loads": {
+    "Q2": 11.31,
+    "C11": 0.5,
+    "C12": 0.5
+   },
+   "note": "shore, vehicle and panel input from E6 over the dock: board E's vehicle entry (LM5069 U6, 6.15 A at VCL max, 10 A fuse) and its panel tracker (TRK_OUT, 6.16 A) ORed onto one bus, 12.31 A together (third fix-up of round 4, 26 September 2026, reconciled with board E's F-IN-02); the current enters the front end at Q2's drain and the input caps (the LM5176 U2 draws only its bias: a load named U2 put 8 A into two QFN pins and read 3.3 percent, 32.69)",
+   "budget": 0.02,
+   "share": 0.015,
+   "always_on": true,
+   "always_on_why": "shore and vehicle input arriving over the dock behind board E's own 10 A blade and ideal diode; this board does not switch it, it consumes it",
+   "v_work": 36.0,
+   "converted": false
+  },
+  "VBUS20": {
+   "volts": 20.0,
+   "amps_typ": 6.0,
+   "amps_peak": 8.0,
+   "source": "R11",
+   "loads": {
+    "R16": 6.0
+   },
+   "note": "the charge bus, BQ25731 up to 8 A; the stage's output is its ISNS shunt R11, not the controller U2",
+   "switch": "U2",
+   "efficiency": 0.93,
+   "fed_from": "VIN_RAW"
+  },
+  "+5V_S1": {
+   "volts": 5.1,
+   "amps_typ": 2.5,
+   "amps_peak": 5.0,
+   "source": "R31",
+   "loads": {
+    "J_5V_S1": 5.0
+   },
+   "note": "one CM5 slot with its cooler fan; 5 A peak at the module; the rail net starts at the INA226 shunt. This board's share of the 2 percent is 0.5 point, measured 0.07",
+   "budget": 0.02,
+   "share": 0.005,
+   "switch": "U4",
+   "efficiency": 0.9,
+   "fed_from": "VBAT"
+  },
+  "+5V_S2": {
+   "volts": 5.1,
+   "amps_typ": 2.5,
+   "amps_peak": 5.0,
+   "source": "R35",
+   "loads": {
+    "J_5V_S2": 5.0
+   },
+   "note": "one CM5 slot with its cooler fan; 5 A peak at the module; the rail net starts at the INA226 shunt. This board's share of the 2 percent is 0.5 point, measured 0.07",
+   "budget": 0.02,
+   "share": 0.005,
+   "switch": "U5",
+   "efficiency": 0.9,
+   "fed_from": "VBAT"
+  },
+  "+5V_S3": {
+   "volts": 5.1,
+   "amps_typ": 2.5,
+   "amps_peak": 5.0,
+   "source": "R39",
+   "loads": {
+    "J_5V_S3": 5.0
+   },
+   "note": "one CM5 slot with its cooler fan; 5 A peak at the module; the rail net starts at the INA226 shunt. This board's share of the 2 percent is 0.5 point, measured 0.07",
+   "budget": 0.02,
+   "share": 0.005,
+   "switch": "U6",
+   "efficiency": 0.9,
+   "fed_from": "VBAT"
+  },
+  "+5V_DEV": {
+   "volts": 5.0,
+   "amps_typ": 4.0,
+   "amps_peak": 6.9,
+   "source": "R43",
+   "loads": {
+    "J_5V_DEV": 3.2,
+    "U23": 0.5,
+    "U32": 0.3
+   },
+   "note": "the USB devices, the LimeSDR bay and the RockBLOCK behind their switches, the D8 mezzanine behind U23 and the wall host port behind U32; the net starts at the ISNS shunt R43. 9 September 2026 (ARCH-PCB-B-IOHA): +0.8 A because B16's three hub banks had to leave the slot rails. 26 September 2026 (F-PR-04, D-12): the converter is an LM5176 stage with a 7.2 A minimum average limit, and the Glenair port's 0.9 A takes the peak to 6.9 A.",
+   "budget": 0.02,
+   "share": 0.005,
+   "switch": "U7",
+   "efficiency": 0.9,
+   "fed_from": "VBAT"
+  },
+  "+3V3": {
+   "volts": 3.3,
+   "amps_typ": 0.3,
+   "amps_peak": 0.6,
+   "source": "L7",
+   "loads": {
+    "J_MEZZ1": 0.1,
+    "U8": 0.03,
+    "U9": 0.03,
+    "U10": 0.03,
+    "U11": 0.03,
+    "U14": 0.02,
+    "U17": 0.02,
+    "U26": 0.02,
+    "U27": 0.01,
+    "U28": 0.01
+   },
+   "note": "this board's logic (two PCA9555, five INA226, the LTC2954, the controllers' VCC pins: tens of mA each; the 1 A of the first intent was a placeholder, 32.69); the net starts at the TPS62933 inductor L7",
+   "budget": 0.03,
+   "share": 0.015,
+   "switch": "U12",
+   "efficiency": 0.88,
+   "fed_from": "VBAT"
+  },
+  "+13V8_PA": {
+   "volts": 13.8,
+   "amps_typ": 5.0,
+   "amps_peak": 6.0,
+   "source": "R55",
+   "loads": {
+    "J_PA": 6.0
+   },
+   "note": "the RA30H1317M1 on the face plate; U13's EN/UVLO is PA_UVLO, 0.6 of the EMCON gate's output PA_EN since round 8 (26 September 2026)",
+   "switch": "U13",
+   "enable_net": "PA_UVLO",
+   "efficiency": 0.93,
+   "fed_from": "VBAT"
+  },
+  "+12V_HF": {
+   "volts": 12.0,
+   "amps_typ": 1.0,
+   "amps_peak": 2.0,
+   "source": "R65",
+   "loads": {
+    "J_HF": 1.0
+   },
+   "note": "the QMX; U15's EN/UVLO is HF_UVLO, 0.6 of the EMCON gate's output HF_EN since round 8 (26 September 2026)",
+   "budget": 0.03,
+   "switch": "U15",
+   "enable_net": "HF_UVLO",
+   "efficiency": 0.93,
+   "fed_from": "VBAT"
+  },
+  "+54V_POE": {
+   "volts": 54.0,
+   "amps_typ": 0.3,
+   "amps_peak": 0.6,
+   "source": "R71",
+   "loads": {
+    "J_54V": 0.3
+   },
+   "note": "the TPS23861 PSE on B16",
+   "budget": 0.02,
+   "share": 0.005,
+   "switch": "U16",
+   "efficiency": 0.88,
+   "fed_from": "VBAT"
+  },
+  "+5V_D8": {
+   "volts": 5.0,
+   "amps_typ": 1.0,
+   "amps_peak": 2.0,
+   "source": "U23",
+   "loads": {
+    "J_MEZZ_PWR1": 1.0
+   },
+   "note": "BUDGET FROM THE TIGHTEST CONSUMER'S DATASHEET, 16 September 2026, replacing a number this project had only asserted. The consumers of this rail sit on board D and the tightest of them is the PCM2912A USB codec, whose recommended operating VBUS is 4.35 V minimum (v2/vendor/ti/ti-pcm2912a.pdf, Recommended Operating Conditions); the next is the CP2102N, whose 3.3 V regulator leaves regulation below VREGIN 4.1 V (v2/vendor/silabs/silabs-cp2102n.pdf). The source is board A's eFuse output on the 5.0 V device rail, and at a 2 percent source tolerance its worst case is 4.90 V, so the IR drop that keeps the codec in its recommended range is 550 mV, 11 percent. The declared budget is 6 percent, 300 mV, which leaves the codec at 4.60 V with 250 mV in hand. The 3 percent it replaces was derived from nothing and was tighter than the parts ask for. THIS BOARD'S SHARE is 4 of the 6 points, because the long copper is here: the eFuse sits at case (90, 66) and the mezzanine header at (-8, -18), about 129 mm apart, and the route measures 134 mV at 1.0 A, 2.68 percent. Board D's own half measures 0.58. The APRS board's 5 V behind the eFuse U23 (ILM 453R, 2.0 A), leaving on the mezzanine JST-VH. Board D declares the same rail with its own consumers. ONE CONDUCTOR, ONE BUDGET (16 September 2026): board D declares 3 percent end to end with its reason, and this board carries the half from the eFuse to the connector, so its share is 1.5. Until today each board measured its own half against the whole, and this half alone reads 2.68 percent, which is the finding: A's copper is spending nearly all of a budget it shares with D",
+   "budget": 0.06,
+   "share": 0.04,
+   "converted": false
+  },
+  "FE_OUT": {
+   "volts": 20.0,
+   "amps_typ": 6.0,
+   "amps_peak": 8.0,
+   "source": "Q5",
+   "loads": {
+    "R11": 6.0
+   },
+   "note": "LM5176 stage FE, VIN_RAW to VBUS20: the output conductor between Q5's drain tab and the ISNS shunt R11, at the stage's whole output current. It was a node until 20 September 2026, so no power rule had ever looked at it.",
+   "v_work": 20.0,
+   "converted": false,
+   "series_of": "VBUS20"
+  },
+  "CH_ACN": {
+   "volts": 20.0,
+   "amps_typ": 6.0,
+   "amps_peak": 8.0,
+   "source": "R16",
+   "loads": {
+    "Q7": 6.0
+   },
+   "note": "the charger's input node BEHIND the 10 mOhm input shunt R16: the same 20 V charge bus as VBUS20 and the same 6.0 A, from the shunt's far pad to the BQ25731's high-side FET Q7 and the half bridge's 10 nF and 1 nF (R4A-N8, 26 September 2026: the three 10 uF input capacitors are on VBUS20, in front of the shunt, as SLUSE66A 10.2.2.4 asks). VBUS20 is the rail INTO the shunt (source R11, load R16) and this is the rail out of it: DIFFERENT COPPER, which is why both need judging, and the SAME WATTS, which is why this one is declared a series segment of VBUS20 so the board's power total counts the path once. Declared 20 September 2026 because it had been a `node`, which is documented as a net that is not a rail, and the consequence was that nothing solved it: no PI-001, no PI-002, and no low-side reading for the Kelvin report",
+   "v_work": 20.0,
+   "converted": false,
+   "series_of": "VBUS20"
+  },
+  "S1_OUT": {
+   "volts": 5.1,
+   "amps_typ": 2.5,
+   "amps_peak": 5.0,
+   "source": "L3",
+   "loads": {
+    "R31": 2.5
+   },
+   "note": "the AP64500 stage's output between the inductor L3 and the 5 mOhm shunt R31, at the whole of the rail's own current. Declared 20 September 2026: it had been declared as nothing at all",
+   "v_work": 5.1,
+   "converted": false,
+   "series_of": "+5V_S1"
+  },
+  "S3_OUT": {
+   "volts": 5.1,
+   "amps_typ": 2.5,
+   "amps_peak": 5.0,
+   "source": "L5",
+   "loads": {
+    "R39": 2.5
+   },
+   "note": "the AP64500 stage's output between the inductor L5 and the 5 mOhm shunt R39, at the whole of the rail's own current. Declared 20 September 2026: it had been declared as nothing at all",
+   "v_work": 5.1,
+   "converted": false,
+   "series_of": "+5V_S3"
+  },
+  "S2_OUT": {
+   "volts": 5.1,
+   "amps_typ": 2.5,
+   "amps_peak": 5.0,
+   "source": "Q31",
+   "loads": {
+    "R35": 2.5
+   },
+   "note": "LM5176 stage S2, VBAT to +5V_S2: the output conductor between Q31's drain tab and the ISNS shunt R35, at the stage's whole output current. It was a node until 20 September 2026, so no power rule had ever looked at it.",
+   "v_work": 5.1,
+   "converted": false,
+   "series_of": "+5V_S2"
+  },
+  "SD_OUT": {
+   "volts": 5.0,
+   "amps_typ": 4.0,
+   "amps_peak": 6.9,
+   "source": "Q35",
+   "loads": {
+    "R43": 4.0
+   },
+   "note": "LM5176 stage SD, VBAT to +5V_DEV: the output conductor between Q35's drain tab and the ISNS shunt R43, at the stage's whole output current. It was a node until 20 September 2026, so no power rule had ever looked at it.",
+   "v_work": 5.0,
+   "converted": false,
+   "series_of": "+5V_DEV"
+  },
+  "PA_OUT": {
+   "volts": 13.8,
+   "amps_typ": 5.0,
+   "amps_peak": 6.0,
+   "source": "Q14",
+   "loads": {
+    "R55": 5.0
+   },
+   "note": "LM5176 stage PA, VBAT to +13V8_PA: the output conductor between Q14's drain tab and the ISNS shunt R55, at the stage's whole output current. It was a node until 20 September 2026, so no power rule had ever looked at it.",
+   "v_work": 13.8,
+   "converted": false,
+   "series_of": "+13V8_PA"
+  },
+  "HF_OUT": {
+   "volts": 12.0,
+   "amps_typ": 1.0,
+   "amps_peak": 2.0,
+   "source": "Q24",
+   "loads": {
+    "R65": 1.0
+   },
+   "note": "LM5176 stage HF, VBAT to +12V_HF: the output conductor between Q24's drain tab and the ISNS shunt R65, at the stage's whole output current. It was a node until 20 September 2026, so no power rule had ever looked at it.",
+   "v_work": 12.0,
+   "converted": false,
+   "series_of": "+12V_HF"
+  },
+  "POE_OUT": {
+   "volts": 54.0,
+   "amps_typ": 0.3,
+   "amps_peak": 0.6,
+   "source": "Q20",
+   "loads": {
+    "R71": 0.3
+   },
+   "note": "LM5176 stage POE, VBAT to +54V_POE: the output conductor between Q20's drain tab and the ISNS shunt R71, at the stage's whole output current. It was a node until 20 September 2026, so no power rule had ever looked at it.",
+   "v_work": 54.0,
+   "converted": false,
+   "series_of": "+54V_POE"
+  },
+  "PD_VPWR": {
+   "volts": 15.0,
+   "amps_typ": 3.0,
+   "amps_peak": 3.0,
+   "source": "R81",
+   "loads": {
+    "Q27": 3.0
+   },
+   "note": "the PD supply between the stage's ISNS shunt R81 and the VBUS switch Q27, at the TPS25740A's highest advertised profile (5, 9 and 15 V at 3 A, 45 W): the LM5176's feedback divider is switched by CTL1 and CTL2, so 15 V is the stage's ceiling and the voltage every part on this net is judged against",
+   "budget": 0.0067,
+   "switch": "U19",
+   "efficiency": 0.93,
+   "v_work": 15.0,
+   "fed_from": "VBAT"
+  },
+  "PD_SW": {
+   "volts": 15.0,
+   "amps_typ": 3.0,
+   "amps_peak": 3.0,
+   "source": "Q27",
+   "loads": {
+    "R138": 3.0
+   },
+   "note": "the PD supply behind Q27, the VBUS switch, on its way to the outlet's own 10 mOhm ISNS shunt R138: the same 3 A and the same 15 V ceiling",
+   "budget": 0.0067,
+   "v_work": 15.0,
+   "converted": false,
+   "series_of": "PD_VPWR"
+  },
+  "PD_VBUS": {
+   "volts": 15.0,
+   "amps_typ": 3.0,
+   "amps_peak": 3.0,
+   "source": "R138",
+   "loads": {
+    "J_USBC_OUT": 3.0
+   },
+   "note": "the USB-C outlet itself, behind the ISNS shunt and out at J_USBC_OUT: the same 3 A and the same 15 V ceiling",
+   "budget": 0.0067,
+   "v_work": 15.0,
+   "converted": false,
+   "series_of": "PD_VPWR"
+  },
+  "PD_OUT": {
+   "volts": 15.0,
+   "amps_typ": 3.0,
+   "amps_peak": 3.0,
+   "source": "Q26",
+   "loads": {
+    "R81": 3.0
+   },
+   "note": "LM5176 stage PD, VBAT to PD_VPWR: the output conductor between Q26's drain tab and the ISNS shunt R81, at the stage's whole output current. It was a node until 20 September 2026, so no power rule had ever looked at it.",
+   "budget": 0.0067,
+   "v_work": 15.0,
+   "converted": false,
+   "series_of": "PD_VPWR"
+  },
+  "VHEAT_IN": {
+   "volts": 14.4,
+   "amps_typ": 0.58,
+   "amps_peak": 0.9,
+   "source": "U22",
+   "loads": {
+    "U33": 0.58
+   },
+   "note": "F-PR-06, 26 September 2026: the heater branch between the eFuse U22 and its 12 V buck U33, at VBAT; 7.5 W / 0.9 / 14.4 V = 0.58 A typical, 0.65 A at the 12.9 V edge of regulation (below it the buck is at maximum duty and the mat takes less), under U22's 1.0 A limit",
+   "budget": 0.03,
+   "v_work": 16.8,
+   "converted": false,
+   "fed_from": "VBAT"
+  },
+  "VHEAT": {
+   "volts": 12.0,
+   "amps_typ": 0.63,
+   "amps_peak": 0.63,
+   "source": "L12",
+   "loads": {
+    "J_HEAT": 0.63
+   },
+   "note": "F-PR-06, 26 September 2026: the heater mat's regulated 12.0 V, 0.63 A into its 19.2 Ohm at the mat's own 7.5 W rating",
+   "budget": 0.03,
+   "switch": "U33",
+   "efficiency": 0.9,
+   "fed_from": "VHEAT_IN"
+  },
+  "VBUS_WALL": {
+   "volts": 5.0,
+   "amps_typ": 0.5,
+   "amps_peak": 0.9,
+   "source": "U32",
+   "loads": {
+    "J_USBW": 0.9
+   },
+   "note": "D-12, 26 September 2026: the Glenair 233-370 host port's VBUS behind the eFuse U32 (limit 0.89 A), out at the J_USBW lead; USB 2.0 asks 4.75 V at the port, so from a 5.09 V source the eFuse and the copper share 340 mV",
+   "budget": 0.03,
+   "converted": false,
+   "fed_from": "+5V_DEV"
+  }
+ },
+ "nodes": {
+  "FE_SW1": {
+   "v_max": 12.0,
+   "v_min": -1.0,
+   "basis": "LM5176 stage FE, VIN_RAW to VBUS20: the buck-side switching node reaches the input rail"
+  },
+  "FE_SW2": {
+   "v_max": 20.0,
+   "v_min": -1.0,
+   "basis": "LM5176 stage FE, VIN_RAW to VBUS20: the boost-side switching node reaches the output rail"
+  },
+  "FE_BOOT1": {
+   "v_max": 19.6,
+   "v_min": 0.0,
+   "basis": "LM5176 stage FE, VIN_RAW to VBUS20: the bootstrap rides on SW1 at the controller's 7.6 V VCC",
+   "rides_on": "FE_SW1",
+   "bias_v": 7.6
+  },
+  "FE_BOOT2": {
+   "v_max": 27.6,
+   "v_min": 0.0,
+   "basis": "LM5176 stage FE, VIN_RAW to VBUS20: the bootstrap rides on SW2 at the controller's 7.6 V VCC",
+   "rides_on": "FE_SW2",
+   "bias_v": 7.6
+  },
+  "FE_VCC": {
+   "v_max": 7.6,
+   "v_min": 0.0,
+   "basis": "LM5176 stage FE, VIN_RAW to VBUS20: the controller's own regulator output, 7.6 V typical"
+  },
+  "FE_VISNS": {
+   "v_max": 36.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage FE, VIN_RAW to VBUS20: the controller's VIN sense pin behind its series 2 k (SNVSAI1D 7.3.7, Figure 8-1): the input rail's service maximum; the pin draws microamps, so the resistor drops millivolts"
+  },
+  "FE_VINP": {
+   "v_max": 36.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage FE, VIN_RAW to VBUS20: the controller's VIN pin behind its series blocking diode (SNVSAI1D 7.3.2, Figure 7-1): the input rail's service maximum less a diode drop, never above it"
+  },
+  "FE_CS": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage FE, VIN_RAW to VBUS20: the current-sense node: the drop across a 5m Ohm shunt, under a volt at any current this stage carries"
+  },
+  "FE_CSF": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage FE, VIN_RAW to VBUS20: the filtered current-sense input at pin 16, 100 R from the shunt's top"
+  },
+  "FE_CSGF": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage FE, VIN_RAW to VBUS20: the filtered current-sense ground at pin 15, 100 R from the shunt's ground pad (the Kelvin return TI's pin table asks for)"
+  },
+  "FE_GVDD": {
+   "v_max": 36.0,
+   "v_min": 0.0,
+   "basis": "restart guard (fourth fix-up, R4A-N15): U34's VDD, VIN_RAW behind R196 (1 k at 2.6 uA: millivolts); the clamp's 64.5 V is inside VDD's 65 V"
+  },
+  "FE_UVS": {
+   "v_max": 3.56,
+   "v_min": 0.0,
+   "basis": "restart guard (fourth fix-up, R4A-N15): SENSE2, VIN_RAW over R14 / R15 (10 / 101 of it)"
+  },
+  "FE_LATCH": {
+   "v_max": 20.7,
+   "v_min": 0.0,
+   "basis": "restart guard (fourth fix-up, R4A-N15): SENSE1 on VBUS20 through R197 when Q36 is off (VBUS20's 20.7 V maximum); 0 V while the stage runs"
+  },
+  "FE_CTR2": {
+   "v_max": 5.5,
+   "v_min": 0.0,
+   "basis": "restart guard (fourth fix-up, R4A-N15): U34's CTR2 delay capacitor: SNVSBJ1E recommends 0 to 5.5 V on the pin (6 V absolute)"
+  },
+  "FE_VZ": {
+   "v_max": 12.7,
+   "v_min": 0.0,
+   "basis": "restart guard (fourth fix-up, R4A-N15): VIN_RAW through R200 clamped by D22, BZT52C12 11.4 to 12.7 V (DS18004)"
+  },
+  "FE_RUN": {
+   "v_max": 12.7,
+   "v_min": 0.0,
+   "basis": "restart guard (fourth fix-up, R4A-N15): U34's two open-drain RESET outputs pulled to FE_VZ by R198"
+  },
+  "FE_EN": {
+   "v_max": 8.9,
+   "v_min": 0.0,
+   "basis": "restart guard (fourth fix-up, R4A-N15): U2's EN/UVLO pin, FE_RUN (at most FE_VZ's 12.7 V) over R199 / R206, 0.68 of it, plus the pin's own 7 uA into 32 k (0.2 V)"
+  },
+  "FE_BLEED_G": {
+   "v_max": 12.7,
+   "v_min": 0.0,
+   "basis": "restart guard (fourth fix-up, R4A-N15): Q38's gate, FE_VZ through R201 while Q37 is off"
+  },
+  "FE_BLEED": {
+   "v_max": 20.7,
+   "v_min": 0.0,
+   "basis": "restart guard (fourth fix-up, R4A-N15): Q38's drain, VBUS20 through the four 510 Ohm bleed resistors (VBUS20's 20.7 V while Q38 is off)"
+  },
+  "CH_SW1": {
+   "v_max": 20.0,
+   "v_min": -1.0,
+   "basis": "BQ25731 buck-side switching node: it reaches the 20 V input bus"
+  },
+  "CH_SW2": {
+   "v_max": 16.8,
+   "v_min": -1.0,
+   "basis": "BQ25731 boost-side switching node: it reaches the pack"
+  },
+  "CH_BTST1": {
+   "v_max": 26.0,
+   "v_min": 0.0,
+   "basis": "the bootstrap rides on CH_SW1 at REGN, the charger's own 6 V regulator",
+   "rides_on": "CH_SW1",
+   "bias_v": 6.0
+  },
+  "CH_BTST2": {
+   "v_max": 22.8,
+   "v_min": 0.0,
+   "basis": "the bootstrap rides on CH_SW2 at REGN",
+   "rides_on": "CH_SW2",
+   "bias_v": 6.0
+  },
+  "REGN": {
+   "v_max": 6.0,
+   "v_min": 0.0,
+   "basis": "the BQ25731's own 6 V regulator output, which supplies both gate drivers"
+  },
+  "CH_VDDA": {
+   "v_max": 6.0,
+   "v_min": 0.0,
+   "basis": "the charger's analogue supply, REGN through R18"
+  },
+  "GND": {
+   "v_max": 0.0,
+   "v_min": 0.0,
+   "basis": "the board's reference. It is declared so that a part between a live net and ground is judged against the live net rather than reported as sitting on an undeclared one"
+  },
+  "S1_SW": {
+   "v_max": 14.4,
+   "v_min": -1.0,
+   "basis": "the AP64500's switching node on the +5V_S1 stage: it swings to VBAT, the pack node that feeds the buck, and a diode drop below ground on the other half of the cycle"
+  },
+  "S3_SW": {
+   "v_max": 14.4,
+   "v_min": -1.0,
+   "basis": "the AP64500's switching node on the +5V_S3 stage: it swings to VBAT, the pack node that feeds the buck, and a diode drop below ground on the other half of the cycle"
+  },
+  "S2_SW1": {
+   "v_max": 14.4,
+   "v_min": -1.0,
+   "basis": "LM5176 stage S2, VBAT to +5V_S2: the buck-side switching node reaches the input rail"
+  },
+  "S2_SW2": {
+   "v_max": 5.1,
+   "v_min": -1.0,
+   "basis": "LM5176 stage S2, VBAT to +5V_S2: the boost-side switching node reaches the output rail"
+  },
+  "S2_BOOT1": {
+   "v_max": 22.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage S2, VBAT to +5V_S2: the bootstrap rides on SW1 at the controller's 7.6 V VCC",
+   "rides_on": "S2_SW1",
+   "bias_v": 7.6
+  },
+  "S2_BOOT2": {
+   "v_max": 12.7,
+   "v_min": 0.0,
+   "basis": "LM5176 stage S2, VBAT to +5V_S2: the bootstrap rides on SW2 at the controller's 7.6 V VCC",
+   "rides_on": "S2_SW2",
+   "bias_v": 7.6
+  },
+  "S2_VCC": {
+   "v_max": 7.6,
+   "v_min": 0.0,
+   "basis": "LM5176 stage S2, VBAT to +5V_S2: the controller's own regulator output, 7.6 V typical"
+  },
+  "S2_CS": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage S2, VBAT to +5V_S2: the current-sense node: the drop across a 5m Ohm shunt, under a volt at any current this stage carries"
+  },
+  "S2_CSF": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage S2, VBAT to +5V_S2: the filtered current-sense input at pin 16, 100 R from the shunt's top"
+  },
+  "S2_CSGF": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage S2, VBAT to +5V_S2: the filtered current-sense ground at pin 15, 100 R from the shunt's ground pad (the Kelvin return TI's pin table asks for)"
+  },
+  "SD_SW1": {
+   "v_max": 14.4,
+   "v_min": -1.0,
+   "basis": "LM5176 stage SD, VBAT to +5V_DEV: the buck-side switching node reaches the input rail"
+  },
+  "SD_SW2": {
+   "v_max": 5.0,
+   "v_min": -1.0,
+   "basis": "LM5176 stage SD, VBAT to +5V_DEV: the boost-side switching node reaches the output rail"
+  },
+  "SD_BOOT1": {
+   "v_max": 22.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage SD, VBAT to +5V_DEV: the bootstrap rides on SW1 at the controller's 7.6 V VCC",
+   "rides_on": "SD_SW1",
+   "bias_v": 7.6
+  },
+  "SD_BOOT2": {
+   "v_max": 12.6,
+   "v_min": 0.0,
+   "basis": "LM5176 stage SD, VBAT to +5V_DEV: the bootstrap rides on SW2 at the controller's 7.6 V VCC",
+   "rides_on": "SD_SW2",
+   "bias_v": 7.6
+  },
+  "SD_VCC": {
+   "v_max": 7.6,
+   "v_min": 0.0,
+   "basis": "LM5176 stage SD, VBAT to +5V_DEV: the controller's own regulator output, 7.6 V typical"
+  },
+  "SD_CS": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage SD, VBAT to +5V_DEV: the current-sense node: the drop across a 5m Ohm shunt, under a volt at any current this stage carries"
+  },
+  "SD_CSF": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage SD, VBAT to +5V_DEV: the filtered current-sense input at pin 16, 100 R from the shunt's top"
+  },
+  "SD_CSGF": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage SD, VBAT to +5V_DEV: the filtered current-sense ground at pin 15, 100 R from the shunt's ground pad (the Kelvin return TI's pin table asks for)"
+  },
+  "B33_SW": {
+   "v_max": 14.4,
+   "v_min": -1.0,
+   "basis": "the TPS62933's switching node: it swings to VBAT, the pack node that feeds the 3.3 V buck, and a diode drop below ground on the other half of the cycle"
+  },
+  "PA_SW1": {
+   "v_max": 14.4,
+   "v_min": -1.0,
+   "basis": "LM5176 stage PA, VBAT to +13V8_PA: the buck-side switching node reaches the input rail"
+  },
+  "PA_SW2": {
+   "v_max": 13.8,
+   "v_min": -1.0,
+   "basis": "LM5176 stage PA, VBAT to +13V8_PA: the boost-side switching node reaches the output rail"
+  },
+  "PA_BOOT1": {
+   "v_max": 22.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage PA, VBAT to +13V8_PA: the bootstrap rides on SW1 at the controller's 7.6 V VCC",
+   "rides_on": "PA_SW1",
+   "bias_v": 7.6
+  },
+  "PA_BOOT2": {
+   "v_max": 21.4,
+   "v_min": 0.0,
+   "basis": "LM5176 stage PA, VBAT to +13V8_PA: the bootstrap rides on SW2 at the controller's 7.6 V VCC",
+   "rides_on": "PA_SW2",
+   "bias_v": 7.6
+  },
+  "PA_VCC": {
+   "v_max": 7.6,
+   "v_min": 0.0,
+   "basis": "LM5176 stage PA, VBAT to +13V8_PA: the controller's own regulator output, 7.6 V typical"
+  },
+  "PA_VINP": {
+   "v_max": 16.8,
+   "v_min": 0.0,
+   "basis": "LM5176 stage PA, VBAT to +13V8_PA: the controller's VIN pin behind its series blocking diode (SNVSAI1D 7.3.2, Figure 7-1): the input rail's service maximum less a diode drop, never above it"
+  },
+  "PA_CS": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage PA, VBAT to +13V8_PA: the current-sense node: the drop across a 5m Ohm shunt, under a volt at any current this stage carries"
+  },
+  "PA_CSF": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage PA, VBAT to +13V8_PA: the filtered current-sense input at pin 16, 100 R from the shunt's top"
+  },
+  "PA_CSGF": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage PA, VBAT to +13V8_PA: the filtered current-sense ground at pin 15, 100 R from the shunt's ground pad (the Kelvin return TI's pin table asks for)"
+  },
+  "HF_SW1": {
+   "v_max": 14.4,
+   "v_min": -1.0,
+   "basis": "LM5176 stage HF, VBAT to +12V_HF: the buck-side switching node reaches the input rail"
+  },
+  "HF_SW2": {
+   "v_max": 12.0,
+   "v_min": -1.0,
+   "basis": "LM5176 stage HF, VBAT to +12V_HF: the boost-side switching node reaches the output rail"
+  },
+  "HF_BOOT1": {
+   "v_max": 22.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage HF, VBAT to +12V_HF: the bootstrap rides on SW1 at the controller's 7.6 V VCC",
+   "rides_on": "HF_SW1",
+   "bias_v": 7.6
+  },
+  "HF_BOOT2": {
+   "v_max": 19.6,
+   "v_min": 0.0,
+   "basis": "LM5176 stage HF, VBAT to +12V_HF: the bootstrap rides on SW2 at the controller's 7.6 V VCC",
+   "rides_on": "HF_SW2",
+   "bias_v": 7.6
+  },
+  "HF_VCC": {
+   "v_max": 7.6,
+   "v_min": 0.0,
+   "basis": "LM5176 stage HF, VBAT to +12V_HF: the controller's own regulator output, 7.6 V typical"
+  },
+  "HF_VINP": {
+   "v_max": 16.8,
+   "v_min": 0.0,
+   "basis": "LM5176 stage HF, VBAT to +12V_HF: the controller's VIN pin behind its series blocking diode (SNVSAI1D 7.3.2, Figure 7-1): the input rail's service maximum less a diode drop, never above it"
+  },
+  "HF_CS": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage HF, VBAT to +12V_HF: the current-sense node: the drop across a 5m Ohm shunt, under a volt at any current this stage carries"
+  },
+  "HF_CSF": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage HF, VBAT to +12V_HF: the filtered current-sense input at pin 16, 100 R from the shunt's top"
+  },
+  "HF_CSGF": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage HF, VBAT to +12V_HF: the filtered current-sense ground at pin 15, 100 R from the shunt's ground pad (the Kelvin return TI's pin table asks for)"
+  },
+  "POE_SW1": {
+   "v_max": 14.4,
+   "v_min": -1.0,
+   "basis": "LM5176 stage POE, VBAT to +54V_POE: the buck-side switching node reaches the input rail"
+  },
+  "POE_SW2": {
+   "v_max": 54.0,
+   "v_min": -1.0,
+   "basis": "LM5176 stage POE, VBAT to +54V_POE: the boost-side switching node reaches the output rail"
+  },
+  "POE_BOOT1": {
+   "v_max": 22.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage POE, VBAT to +54V_POE: the bootstrap rides on SW1 at the controller's 7.6 V VCC",
+   "rides_on": "POE_SW1",
+   "bias_v": 7.6
+  },
+  "POE_BOOT2": {
+   "v_max": 61.6,
+   "v_min": 0.0,
+   "basis": "LM5176 stage POE, VBAT to +54V_POE: the bootstrap rides on SW2 at the controller's 7.6 V VCC",
+   "rides_on": "POE_SW2",
+   "bias_v": 7.6
+  },
+  "POE_VCC": {
+   "v_max": 7.6,
+   "v_min": 0.0,
+   "basis": "LM5176 stage POE, VBAT to +54V_POE: the controller's own regulator output, 7.6 V typical"
+  },
+  "POE_CS": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage POE, VBAT to +54V_POE: the current-sense node: the drop across a 10m Ohm shunt, under a volt at any current this stage carries"
+  },
+  "POE_CSF": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage POE, VBAT to +54V_POE: the filtered current-sense input at pin 16, 100 R from the shunt's top"
+  },
+  "POE_CSGF": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage POE, VBAT to +54V_POE: the filtered current-sense ground at pin 15, 100 R from the shunt's ground pad (the Kelvin return TI's pin table asks for)"
+  },
+  "PD_SW1": {
+   "v_max": 14.4,
+   "v_min": -1.0,
+   "basis": "LM5176 stage PD, VBAT to PD_VPWR: the buck-side switching node reaches the input rail"
+  },
+  "PD_SW2": {
+   "v_max": 15.0,
+   "v_min": -1.0,
+   "basis": "LM5176 stage PD, VBAT to PD_VPWR: the boost-side switching node reaches the output rail"
+  },
+  "PD_BOOT1": {
+   "v_max": 22.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage PD, VBAT to PD_VPWR: the bootstrap rides on SW1 at the controller's 7.6 V VCC",
+   "rides_on": "PD_SW1",
+   "bias_v": 7.6
+  },
+  "PD_BOOT2": {
+   "v_max": 22.6,
+   "v_min": 0.0,
+   "basis": "LM5176 stage PD, VBAT to PD_VPWR: the bootstrap rides on SW2 at the controller's 7.6 V VCC",
+   "rides_on": "PD_SW2",
+   "bias_v": 7.6
+  },
+  "PD_VCC": {
+   "v_max": 7.6,
+   "v_min": 0.0,
+   "basis": "LM5176 stage PD, VBAT to PD_VPWR: the controller's own regulator output, 7.6 V typical"
+  },
+  "PD_CS": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage PD, VBAT to PD_VPWR: the current-sense node: the drop across a 5m Ohm shunt, under a volt at any current this stage carries"
+  },
+  "PD_CSF": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage PD, VBAT to PD_VPWR: the filtered current-sense input at pin 16, 100 R from the shunt's top"
+  },
+  "PD_CSGF": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage PD, VBAT to PD_VPWR: the filtered current-sense ground at pin 15, 100 R from the shunt's ground pad (the Kelvin return TI's pin table asks for)"
+  },
+  "HT_SW": {
+   "v_max": 16.8,
+   "v_min": -1.0,
+   "basis": "the heater buck's switching node: it swings to VBAT through U22, and a diode drop below ground"
+  }
+ },
+ "pair_classes": {
+  "USB": {
+   "z_diff": 90.0,
+   "z_se": 50.0
+  },
+  "DIFF100": {
+   "z_diff": 100.0,
+   "z_se": 50.0
+  },
+  "PCIE": {
+   "z_diff": 100.0
+  },
+  "HDMI": {
+   "z_diff": 100.0
+  },
+  "RF": {
+   "z_se": 50.0
+  }
+ },
+ "pass_through": {},
+ "clamps": {
+  "D1": {
+   "direction": "uni",
+   "basis": "SMCJ18A: no C in the suffix, the unidirectional part (Littelfuse, Diodes Inc and MDD number them alike)",
+   "protected": "VBAT",
+   "return": "GND",
+   "symbol": "Device:D_Zener"
+  },
+  "D2": {
+   "direction": "uni",
+   "basis": "SMCJ40A: no C in the suffix, the unidirectional part (Littelfuse, Diodes Inc and MDD number them alike)",
+   "protected": "VIN_RAW",
+   "return": "GND",
+   "symbol": "Device:D_Zener"
+  },
+  "D3": {
+   "direction": "uni",
+   "basis": "SMBJ5.0A: no C in the suffix, the unidirectional part (Littelfuse, Diodes Inc and MDD number them alike)",
+   "protected": "+3V3",
+   "return": "GND",
+   "symbol": "Device:D_Zener"
+  },
+  "D4": {
+   "direction": "uni",
+   "basis": "SMBJ18A: no C in the suffix, the unidirectional part (Littelfuse, Diodes Inc and MDD number them alike)",
+   "protected": "PD_VBUS",
+   "return": "GND",
+   "symbol": "Device:D_Zener"
+  }
+ },
+ "power_loops": [
+  {
+   "converter": "U2",
+   "loop": "input",
+   "caps": [
+    "C11",
+    "C12"
+   ],
+   "parts": [
+    "Q2",
+    "Q3",
+    "R12"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the input filter capacitor CIN, the power MOSFETs QL1 and QH1, and the sense resistor RSENSE close together to minimize the loop area for input switching current in buck operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U2",
+   "loop": "output",
+   "caps": [
+    "C13",
+    "C14",
+    "C15",
+    "C181",
+    "C182",
+    "C183",
+    "C184",
+    "C185",
+    "C186",
+    "C187",
+    "C188",
+    "C189",
+    "C201",
+    "C202",
+    "C203",
+    "C204",
+    "C205",
+    "C206",
+    "C163",
+    "C178",
+    "C179",
+    "C180",
+    "C199",
+    "C200"
+   ],
+   "parts": [
+    "Q4",
+    "Q5",
+    "R12"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the output filter capacitor COUT, the power MOSFETs QL2 and QH2, and the sense resistor RSENSE close together to minimize the loop area for output switching current in boost operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U5",
+   "loop": "input",
+   "caps": [
+    "C35",
+    "C36"
+   ],
+   "parts": [
+    "Q28",
+    "Q29",
+    "R170"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the input filter capacitor CIN, the power MOSFETs QL1 and QH1, and the sense resistor RSENSE close together to minimize the loop area for input switching current in buck operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U5",
+   "loop": "output",
+   "caps": [
+    "C37",
+    "C38",
+    "C39",
+    "C164",
+    "C165",
+    "C166"
+   ],
+   "parts": [
+    "Q30",
+    "Q31",
+    "R170"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the output filter capacitor COUT, the power MOSFETs QL2 and QH2, and the sense resistor RSENSE close together to minimize the loop area for output switching current in boost operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U7",
+   "loop": "input",
+   "caps": [
+    "C47",
+    "C48"
+   ],
+   "parts": [
+    "Q32",
+    "Q33",
+    "R177"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the input filter capacitor CIN, the power MOSFETs QL1 and QH1, and the sense resistor RSENSE close together to minimize the loop area for input switching current in buck operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U7",
+   "loop": "output",
+   "caps": [
+    "C49",
+    "C50",
+    "C51",
+    "C167",
+    "C168",
+    "C169"
+   ],
+   "parts": [
+    "Q34",
+    "Q35",
+    "R177"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the output filter capacitor COUT, the power MOSFETs QL2 and QH2, and the sense resistor RSENSE close together to minimize the loop area for output switching current in boost operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U13",
+   "loop": "input",
+   "caps": [
+    "C63",
+    "C64"
+   ],
+   "parts": [
+    "Q11",
+    "Q12",
+    "R56"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the input filter capacitor CIN, the power MOSFETs QL1 and QH1, and the sense resistor RSENSE close together to minimize the loop area for input switching current in buck operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U13",
+   "loop": "output",
+   "caps": [
+    "C65",
+    "C66",
+    "C67",
+    "C170",
+    "C171"
+   ],
+   "parts": [
+    "Q13",
+    "Q14",
+    "R56"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the output filter capacitor COUT, the power MOSFETs QL2 and QH2, and the sense resistor RSENSE close together to minimize the loop area for output switching current in boost operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U15",
+   "loop": "input",
+   "caps": [
+    "C74",
+    "C108"
+   ],
+   "parts": [
+    "Q15",
+    "Q16",
+    "R122"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the input filter capacitor CIN, the power MOSFETs QL1 and QH1, and the sense resistor RSENSE close together to minimize the loop area for input switching current in buck operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U15",
+   "loop": "output",
+   "caps": [
+    "C109",
+    "C110",
+    "C111",
+    "C172",
+    "C173"
+   ],
+   "parts": [
+    "Q23",
+    "Q24",
+    "R122"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the output filter capacitor COUT, the power MOSFETs QL2 and QH2, and the sense resistor RSENSE close together to minimize the loop area for output switching current in boost operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U16",
+   "loop": "input",
+   "caps": [
+    "C81",
+    "C82"
+   ],
+   "parts": [
+    "Q17",
+    "Q18",
+    "R72"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the input filter capacitor CIN, the power MOSFETs QL1 and QH1, and the sense resistor RSENSE close together to minimize the loop area for input switching current in buck operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U16",
+   "loop": "output",
+   "caps": [
+    "C83",
+    "C84",
+    "C85",
+    "C176",
+    "C177"
+   ],
+   "parts": [
+    "Q19",
+    "Q20",
+    "R72"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the output filter capacitor COUT, the power MOSFETs QL2 and QH2, and the sense resistor RSENSE close together to minimize the loop area for output switching current in boost operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U19",
+   "loop": "input",
+   "caps": [
+    "C92",
+    "C116"
+   ],
+   "parts": [
+    "Q21",
+    "Q22",
+    "R127"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the input filter capacitor CIN, the power MOSFETs QL1 and QH1, and the sense resistor RSENSE close together to minimize the loop area for input switching current in buck operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U19",
+   "loop": "output",
+   "caps": [
+    "C117",
+    "C118",
+    "C119",
+    "C174",
+    "C175"
+   ],
+   "parts": [
+    "Q25",
+    "Q26",
+    "R127"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the output filter capacitor COUT, the power MOSFETs QL2 and QH2, and the sense resistor RSENSE close together to minimize the loop area for output switching current in boost operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U3",
+   "loop": "input",
+   "caps": [
+    "C20",
+    "C21",
+    "C22",
+    "C190",
+    "C191"
+   ],
+   "parts": [
+    "R16",
+    "Q7",
+    "Q8"
+   ],
+   "class": "R",
+   "basis": "TI SLUSE66A (BQ25731) Table 12-1 rule 2 p.93: 'VBUS capacitors, RAC, Q1 and Q2 form a small loop 1. It is best to put them on the same side ... After RAC before Q1 and Q2 power stage recommend to put 10 nF + 1 nF (0402 package) decoupling capacitors as close as possible to IC'",
+   "same_side": true
+  }
+ ]
+}

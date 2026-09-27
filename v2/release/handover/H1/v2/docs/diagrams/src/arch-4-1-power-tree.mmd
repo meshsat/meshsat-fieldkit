@@ -1,0 +1,36 @@
+---
+title: "ARCHITECTURE.md, 4.1 The power tree as generated (lines 270 to 302 of the document with sha256/16 4ad3ba63938e8d85): design diagram of an unbuilt prototype"
+---
+flowchart LR
+  subgraph PB["board P"]
+    CELLS["4S3P 18650 cells, about 145 Wh (D-06)"] --> PF1["F1 25 A blade"] --> PF2["F2 SCF9550 chemical fuse"] --> PQ["Q1 charge, Q2 discharge FETs; BQ4050 primary, BQ7720700 secondary"] --> PACK["PACK_P"]
+  end
+  PACK -->|"XT60, 12 AWG"| EF3["E: F3 25 A to CELL_F"]
+  subgraph EB["board E"]
+    EF3 --> CF["CELL_F"]
+    CF --> E5V["AP63205 5 V, always on: sensor RP2040, sensors, fan logic"]
+    DCIN["vehicle or shore 9 to 36 V"] --> HS["F1 10 A, LM74700, LM5069 hot swap, 6.15 A declared"] --> VR["VIN_RAW"]
+    SOL["solar"] --> TRK["F2 10 A, LT8705A tracker (bench-fitted), 6.16 A, ORed"] --> VR
+  end
+  CF -->|"dock block, 4 x 9 A pins"| CELLP
+  VR -->|"dock pins 1 to 4, 12.31 A declared"| FE
+  subgraph AB["board A"]
+    FE["U2 LM5176 front end, 20 V; U34 restart guard"] --> CHG["U3 BQ25731 charger, 4S, no BATFET"] --> VBAT
+    CELLP["CELL+"] --> AF1["F1 25 A"] --> RSR["R17 5 mOhm charge shunt"] --> VBAT["VBAT = VSYS 10.0 to 16.8 V"]
+    VBAT --> S1["U4, U6 AP64500: +5V_S1, +5V_S3"]
+    VBAT --> S2["U5 LM5176: +5V_S2, 7.2 A minimum limit"]
+    VBAT --> DEV["U7 LM5176: +5V_DEV, 7.2 A minimum limit"]
+    VBAT --> L33["U12 TPS62933: +3V3 logic"]
+    VBAT --> PAR["U13 LM5176: +13V8_PA, its own average current loop"]
+    VBAT --> HFR["U15 LM5176: +12V_HF"]
+    VBAT --> POE["U16 LM5176 boost: +54V_POE"]
+    VBAT --> PD["U19 LM5176 and U18 TPS25740A: USB-C PD out, power only"]
+    VBAT --> MON["U21 eFuse: monitor"]
+    VBAT --> HEAT["U22 eFuse, U33 12.0 V buck: heater mat"]
+    DEV --> D8["U23 eFuse: +5V_D8"]
+    DEV --> GLEN["U32 eFuse: Glenair port VBUS"]
+  end
+  S1 --> BSL["B: slots 1 and 3"]
+  S2 --> BSL2["B: slot 2"]
+  DEV --> BDEV["B: hubs, supervisors, radios, KSZ, PANEL_5V to C"]
+  POE --> BPOE["B: PoE out"]

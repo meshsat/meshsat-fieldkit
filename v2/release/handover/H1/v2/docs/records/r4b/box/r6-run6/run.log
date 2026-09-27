@@ -1,0 +1,211 @@
+r6b6: start 2026-09-26T10:51:51Z
+r6b6: disk overlay          80G   33G   48G  41% /
+r6b6: r6main = faf8c981c9806e3be70ed3b4d4517c718f98a16d
+r6b6: popup patch applied to tint
+6e3d880901fd30306c0fa8bda35a86da6450d7e4bb15217f9cc3225da8d5faef  /root/r6/b/gen_sch_b.py
+28904a37f2f1810399e553f522d73fcc7848afc4d6ce3cce21556bffd70ccd4d  /root/r6/b/check_pcb_b.py
+720892aefe56ceb2dff099b16dd7421d2f78c42b86ccb49629085872a834c324  /root/r6/b/check_pcb_b.pass3.py
+de16673f18c690bb695a7bb390444b54edbea581aabdae9d43d123bea4eeadce  /root/r6/b/sch_pages-popups-r5.patch
+8cd7bebf1e1f7e10fd39868dab0efad6be73550a3273fea73ceb1e3a2016fa0d  /root/r6/b/pass3.net
+41f2a897b4fbf2ce8dcd934ec27562662f0ae5b6d37b50e3c17f0d1d342ee88e  /root/r6/b/main-faf8c981.bundle
+r6b6: tclean head faf8c981c9806e3be70ed3b4d4517c718f98a16d status: 
+r6b6: t6 head faf8c981c9806e3be70ed3b4d4517c718f98a16d status:  M v2/ecad/tools/check_pcb_b.py  M v2/ecad/tools/gen_sch_b.py 
+r6b6: tint head faf8c981c9806e3be70ed3b4d4517c718f98a16d status:  M v2/ecad/tools/build_sch.sh  M v2/ecad/tools/check_pcb_b.py  M v2/ecad/tools/gen_sch_b.py  M v2/ecad/tools/sch_pages.py  M v2/ecad/tools/tests/test_schematic_pages.py 
+r6b6: tclean rules_render --check exit 1
+rules_render: ../../docs/PCB-ETA.md differs from what the registry renders
+rules_render: 6 document(s), 1 out of date
+r6b6: tclean decisions_render --check exit 1
+decisions_render: ../../docs/OWNER-DECISIONS-OPEN.md differs from what the register renders
+r6b6: tclean assembly_set --checklist exit 3
+verdict: assembly_set           INCONCLUSIVE of 43 {"boards": 7, "fail": 0, "table_present": true, "unchecked_footprints": 43, "unverified_rows": 0} | every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own preview. A footprint with no row goes to the assembler with KiCad's rotation unchanged, which is an assumption rather than a verification, and the list is the checklist for the session that has the preview
+r6b6: main's tool rewrites main's committed checklist byte for byte
+r6b6: tclean status after the checks: 
+r6b6: tclean meshsat.pretty after the footprint generators: 0 changed
+r6b6: tclean compiles
+r6b6: tclean swallowed-calls exit 0
+r6b6: tclean gen_sch exit 0
+wrote pcb-b-compute.kicad_sch parts: 976 lib symbols: 103
+nets: 844 single-pin nets (should be empty or intentional): []
+intent: /root/r6/b/tclean/v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json (30 bypass, 38 rails, 29 nodes, 5 pair classes)
+r6b6: tclean build_sch exit 0
+ERC: violations (out/pcb-b-compute-erc.json, out/pcb-b-compute-erc.rpt; erc_gate.py decides)
+netlist: out/pcb-b-compute.net
+sch_prov: pcb-b-compute.net written by generator 2764bc16221aca89 (boards/b.json#gen_env, gen_footprints_b16.py, gen_footprints_e.py, gen_footprints_idc.py, gen_footprints_panel.py, gen_sch_b.py, idc_pads.py, intent.py, kisch.py, schlayout.py, and 59 land(s) in meshsat.pretty)
+sheet pdf: out/pcb-b-compute-schematic-sheet.pdf
+sch_pages: 6 x 7 cells, 37 pages kept of 42 tiles
+pdf: out/pcb-b-compute-schematic.pdf
+bom: out/pcb-b-compute-bom.csv
+r6b6: tclean poppler errors: 0
+r6b6: tclean paged schematic Pages: 37
+r6b6: main's generator on faf8c981 against the committed B21 files schematic exit 0 ['kind', 'phase_labels', 'noise_removed', 'result']
+r6b6: main's generator on faf8c981 against the committed B21 files netlist exit 0 ['kind', 'phase_labels', 'noise_removed', 'design_header']
+r6b6: main's generator on faf8c981 against the committed B21 files intent exit 0 ['kind', 'keys_changed', 'result']
+r6b6: t6 meshsat.pretty after the footprint generators: 0 changed
+r6b6: t6 compiles
+r6b6: t6 swallowed-calls exit 0
+r6b6: t6 gen_sch exit 0
+wrote pcb-b-compute.kicad_sch parts: 1151 lib symbols: 107
+nets: 915 single-pin nets (should be empty or intentional): []
+intent: /root/r6/b/t6/v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json (41 bypass, 41 rails, 105 nodes, 5 pair classes)
+r6b6: t6 build_sch exit 0
+ERC: violations (out/pcb-b-compute-erc.json, out/pcb-b-compute-erc.rpt; erc_gate.py decides)
+netlist: out/pcb-b-compute.net
+sch_prov: pcb-b-compute.net written by generator ffaaf9606f526757 (boards/b.json#gen_env, gen_footprints_b16.py, gen_footprints_e.py, gen_footprints_idc.py, gen_footprints_panel.py, gen_sch_b.py, idc_pads.py, intent.py, kisch.py, schlayout.py, and 59 land(s) in meshsat.pretty)
+sheet pdf: out/pcb-b-compute-schematic-sheet.pdf
+sch_pages: 6 x 7 cells, 0 pages kept of 42 tiles
+pdf: out/pcb-b-compute-schematic.pdf
+bom: out/pcb-b-compute-bom.csv
+r6b6: t6 poppler errors: 336
+r6b6: t6 paged schematic Pages: 0
+r6b6: t6 SCH-001 erc_gate exit 0
+verdict: erc_gate               PASS         of 2398 {"allowed": 5, "blocking": 0, "violations": 2398} | 5 error(s) allow-listed with a reason
+r6b6: t6 safe_lines exit 0
+verdict: safe_lines             PASS         of 5 {"floating": 0, "lines": 5, "listened": 1, "on_netlist": 5} | 1 line(s) this board reads hold the safe state with its own copper; the rest are driven here or only cross it
+r6b6: t6 pin_map_lands exit 0
+verdict: pin_map_lands_b        PASS         of 1102 {"failures": 0, "judged": 1102, "merged_pad_pins": 0, "unreadable": 0} | every part's map names every pad of its land
+r6b6: t6 derate exit 0
+verdict: derate                 PASS         of 234 {"by_vendor_reference": 0, "judged": 234, "undeclared_nets": 0, "under_rated": 0, "unrated_parts": 319} | a part's rating against the declared voltage of the rail it is soldered to; DC-bias capacitance derating is NOT checked here and is an open gap
+r6b6: t6 power_sequence exit 0
+verdict: power_sequence         PASS         of 41 {"always_on": 22, "deadlocks": 0, "rails": 41, "segments": 5, "unresolved": 0} | each rail's enable derived from the netlist and the part that drives it named; a rail whose enable is driven only by a device powered from that same rail cannot start and is a failure. The ORDER between rails is reported as the graph and not decided here, because which order is correct is a property of the modules' own datasheets
+r6b6: t6 power_path exit 0
+verdict: power_path             PASS         {"feeds": 5, "feeds_short": 0, "nodes": 105, "rails": 41, "segments": 0, "undeclared": 0} | every declared node that carries a declared rail's current through one of that rail's own load parts: a candidate segment of a power path that no power rule is looking at. It REPORTS: some of these are genuinely nodes and the declaration is where that is written down, with its reason.
+r6b6: t6 port_protect exit 0
+verdict: port_protect           PASS         of 11 {"answered_in_part": 0, "behind_an_active_part": 0, "declared": 2, "not_on_netlist": 0, "ports": 2, "unprotected": 0} | every declared external conductor meets a protection part before a chip
+r6b6: t6 clock_check exit 0
+verdict: clock_check            PASS         of 7 {"bad": 0, "crystals": 7, "undeclared": 0} | every crystal has two matched load capacitors to ground, its own IC alone on its nets, and a network that presents what the part's own datasheet asks for within 20 percent
+r6b6: t6 review_nets exit 0
+issues: 27
+r6b6: t6 check_contracts exit 3
+verdict: check_contracts        INCONCLUSIVE of 91 {"boards_without_intent": 0, "fail": 0, "missing_boards": 1, "pass": 59, "rails_unsplit": 0, "unjudged": 32} | A absent from this tree, so nothing that names them was judged
+r6b6: t6 energy_chain exit 0
+verdict: energy_chain           PASS         of 98 {"checks": 98, "citations_unjudged": 0, "coordination_findings": 1, "fail": 0, "selection_findings": 0, "stages": 12} | THE CHAIN END TO END, which is BAT-002's question; a selection finding against ECSS 6.17 belongs to the stage that has it and is in energy_chain_<letter>, rule PWR-003. Every rating against its own source document, every protective element against the board's netlist, and the four coordination tests (the element is below what it protects, above the path's peak, able to interrupt what is available, and followed by the stage it protects)
+r6b6: t6 netlist_board exit 1
+netlist_board: FAIL (this gate, exit 1); netlist_parts: FAIL (values and lands); rule SCH-002 reads both
+r6b6: t6 netlist_parts exit 1
+verdict: netlist_parts          FAIL         of 1860 {"agree": 1831, "footprint_differs": 3, "lcsc_differs_reported": 0, "only_board": 27, "only_netlist": 173, "shared_refs": 930, "value_differs": 26} | value and footprint name per shared reference, board against the netlist it was placed from
+r6b6: t6 board file = committed B21
+r6b6: t6 check_pcb_b (this pass) on B21 exit 1
+RESULT: 60 FAIL
+verdict: check_pcb_b            FAIL         of 2211 {"fail": 60, "footprints": 957, "intent_items_reported": 742, "pass": 2151, "route_items_reported": 21}
+r6b6: t6 check_pcb_b (pass 3) on B21 exit 1
+RESULT: 56 FAIL
+verdict: check_pcb_b            FAIL         of 2207 {"fail": 56, "footprints": 957, "intent_items_reported": 742, "pass": 2151, "route_items_reported": 21}
+r6b6: t6 check_pcb_b (committed) on B21 exit 0
+RESULT: ALL PASS
+verdict: check_pcb_b            PASS         of 2169 {"fail": 0, "footprints": 957, "intent_items_reported": 742, "pass": 2169, "route_items_reported": 21}
+r6b6:    97 /root/r6/b/out6/t6/v/fails.edited.txt
+r6b6:    93 /root/r6/b/out6/t6/v/fails.pass3.txt
+r6b6:    37 /root/r6/b/out6/t6/v/fails.committed.txt
+r6b6:     4 /root/r6/b/out6/t6/v/new_vs_pass3.txt
+r6b6:     0 /root/r6/b/out6/t6/v/lost_vs_pass3.txt
+r6b6:     0 /root/r6/b/out6/t6/v/lost_vs_committed.txt
+r6b6:   231 total
+r6b6: tint meshsat.pretty after the footprint generators: 0 changed
+r6b6: tint compiles
+r6b6: tint swallowed-calls exit 0
+r6b6: tint gen_sch exit 0
+wrote pcb-b-compute.kicad_sch parts: 1151 lib symbols: 107
+nets: 915 single-pin nets (should be empty or intentional): []
+intent: /root/r6/b/tint/v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json (41 bypass, 41 rails, 105 nodes, 5 pair classes)
+r6b6: tint build_sch exit 0
+ERC: violations (out/pcb-b-compute-erc.json, out/pcb-b-compute-erc.rpt; erc_gate.py decides)
+netlist: out/pcb-b-compute.net
+sch_prov: pcb-b-compute.net written by generator ffaaf9606f526757 (boards/b.json#gen_env, gen_footprints_b16.py, gen_footprints_e.py, gen_footprints_idc.py, gen_footprints_panel.py, gen_sch_b.py, idc_pads.py, intent.py, kisch.py, schlayout.py, and 59 land(s) in meshsat.pretty)
+sheet pdf: out/pcb-b-compute-schematic-sheet.pdf
+sch_pages: 6 x 7 cells, 38 pages kept of 42 tiles
+pdf: out/pcb-b-compute-schematic.pdf
+bom: out/pcb-b-compute-bom.csv
+r6b6: tint poppler errors: 0
+r6b6: tint paged schematic Pages: 38
+r6b6: parity t6 vs tint schematic exit 0 ['kind', 'phase_labels', 'noise_removed', 'result']
+r6b6: parity t6 vs tint netlist exit 0 ['kind', 'phase_labels', 'noise_removed', 'design_header']
+r6b6: parity t6 vs tint intent exit 0 ['kind', 'keys_changed', 'result']
+r6b6: parity t6 vs tint provenance exit 0 ['kind', 'keys_changed', 'result']
+r6b6: parity t6 vs tint bom exit 0 ['kind', 'rows', 'result']
+r6b6: parity t6 vs tint erc exit 0 ['kind', 'violations', 'by_type', 'result']
+r6b6: committed B21 (faf8c981) vs this pass (DIFFERENT is intended) netlist exit 1 ['kind', 'phase_labels', 'noise_removed', 'design_header']
+r6b6: fix-up pass 3 vs this pass netlist exit 1 ['kind', 'phase_labels', 'noise_removed', 'design_header']
+r6b6: tint after regen:  M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json  M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net  M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net.prov.json  M v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_sch  M v2/ecad/tools/build_sch.sh  M v2/ecad/tools/check_pcb_b.py  M v2/ecad/tools/gen_sch_b.py  M v2/ecad/tools/sch_pages.py  M v2/ecad/tools/tests/test_schematic_pages.py 
+r6b6: tint assembly_set --checklist exit 3
+verdict: assembly_set           INCONCLUSIVE of 45 {"boards": 7, "fail": 0, "table_present": true, "unchecked_footprints": 45, "unverified_rows": 0} | every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own preview. A footprint with no row goes to the assembler with KiCad's rotation unchanged, which is an assumption rather than a verification, and the list is the checklist for the session that has the preview
+r6b6: tint rules_render --check exit 1
+rules_render: ../../docs/PCB-ETA.md differs from what the registry renders
+rules_render: ../../docs/PCB-BRING-UP.md differs from what the registry renders
+rules_render: 6 document(s), 2 out of date
+r6b6: tint decisions_render --check exit 1
+decisions_render: ../../docs/OWNER-DECISIONS-OPEN.md differs from what the register renders
+r6b6: rules_render --check differs from clean main:
+2c2,3
+< rules_render: 6 document(s), 1 out of date
+---
+> rules_render: ../../docs/PCB-BRING-UP.md differs from what the registry renders
+> rules_render: 6 document(s), 2 out of date
+r6b6: pages B's regeneration moves: docs/PCB-BRING-UP.md
+r6b6: tint rules_render --no-refresh exit 0
+rules_render: wrote ../../docs/PCB-BRING-UP.md (213 lines)
+rules_render: wrote ../../docs/PCB-ETA.md (93 lines)
+r6b6: v2/docs/PCB-ETA.md restored to HEAD (clean main refuses it too, not this round's)
+r6b6:  v2/docs/PCB-BRING-UP.md | 33 ++++++++++++++++++---------------
+r6b6:  1 file changed, 18 insertions(+), 15 deletions(-)
+r6b6: tint rules_render --check after the re-render exit 1
+rules_render: ../../docs/PCB-ETA.md differs from what the registry renders
+rules_render: 6 document(s), 1 out of date
+r6b6: decisions_render --check reads the same on tint as on clean main
+r6b6: checklist diff:
+diff --git a/v2/release/revA/order/ROTATION-CHECKLIST.md b/v2/release/revA/order/ROTATION-CHECKLIST.md
+index 74d34a84..1c7c4286 100644
+--- a/v2/release/revA/order/ROTATION-CHECKLIST.md
++++ b/v2/release/revA/order/ROTATION-CHECKLIST.md
+@@ -14,6 +14,7 @@ zero is a real answer and is recorded the same way; what the rule refuses is the
+ | footprint | boards | one designator | offset (deg) | compared on |
+ |---|---|---|---|---|
+ | `BatteryHolder_Keystone_3034_1x20mm` | B | BT1 |  |  |
++| `CP_EIA-3528-21_Kemet-B` | B | C520 |  |  |
+ | `CP_Elec_6.3x7.7` | E | C11 |  |  |
+ | `CP_Elec_8x6.7` | E | C24 |  |  |
+ | `Crystal_SMD_3225-4Pin_3.2x2.5mm` | B, C, E | Y1 |  |  |
+@@ -38,6 +39,7 @@ zero is a real answer and is recorded the same way; what the rule refuses is the
+ | `LQFP-128_14x14mm_P0.4mm_EP6.0` | B | U101 |  |  |
+ | `LQFP-32_7x7mm_P0.8mm` | D | U4 |  |  |
+ | `PinHeader_1x02_P2.54mm_Vertical` | B | J_RPIBOOT1 |  |  |
++| `PinHeader_1x02_P2.54mm_Vertical_SMD_Pin1Left` | B | J_IOCOFF_A |  |  |
+ | `PinHeader_1x03_P2.54mm_Vertical` | B, E | J_GNSS2 |  |  |
+ | `PinHeader_1x04_P2.54mm_Vertical` | B, E | J_CAM |  |  |
+ | `PinHeader_1x05_P2.54mm_Vertical` | A, B, E | J_USBC_OUT |  |  |
+@@ -57,4 +59,4 @@ zero is a real answer and is recorded the same way; what the rule refuses is the
+ | `VSSOP-8_3x3mm_P0.65mm` | D | U8 |  |  |
+ | `WSON-12-1EP_3x2mm_P0.5mm_EP1x2.65` | P | U2 |  |  |
+ 
+-43 footprint(s) to compare, over 7 board(s).
++45 footprint(s) to compare, over 7 board(s).
+r6b6: tint before the suite:  M v2/docs/PCB-BRING-UP.md  M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json  M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net  M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net.prov.json  M v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_sch  M v2/ecad/tools/build_sch.sh  M v2/ecad/tools/check_pcb_b.py  M v2/ecad/tools/gen_sch_b.py  M v2/ecad/tools/sch_pages.py  M v2/ecad/tools/tests/test_schematic_pages.py  M v2/release/revA/order/ROTATION-CHECKLIST.md 
+r6b6: tint tracked diff  11 files changed, 37051 insertions(+), 28589 deletions(-)
+r6b6: suite tint exit 0
+tests: 1472 passed, 0 failed, 12 skipped
+FAIL pair X has one leg routed and one not (P 0.00 mm, N 13.19 mm)
+FAIL pair X has one leg routed and one not (P 0.00 mm, N 13.19 mm)
+FAIL a mounting hole is not where the case says
+FAIL a mounting hole is not where the case says
+FAIL  A and B disagree
+FAIL  B: PCIE1_RX_P has exactly one series AC coupling capacitor
+FAIL  C: something of C's own
+  C   meshsat-pcb-c-revA-C1              FAIL   1 FAIL (35 of 36 properties)
+  A   meshsat-pcb-a-revA-A1              FAIL   1 FAIL (35 of 36 properties)
+  D   (no deliverable folder)            FAIL   a required board with no folder is a failure of the set
+  contracts : contracts: 2 FAIL of 42
+final_gate: 7 of 7 folder(s) pass, 0 quote-only, 0 missing, contracts FAIL, parts PASS
+r6b6: the suite left the tint tree status unchanged
+r6b6: integration set:
+6b97f4004f1b5ced21845cb6699d6963ca5e5fb82277b007836313ecbc4ca9de  ./v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json
+af8a9186f981210c48104eaf5742fb4cd4f80d12aa0f13bc5d887e75c922a380  ./v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net
+4c1d9b2665324943f35830cb6161e0694c8178c98abcfba25e406d4472e2cd55  ./v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net.prov.json
+f29dcc911327c520e34dac60c7edbc7f269a7e1b5a7e82d5a486ed3e7b7a269a  ./v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_sch
+93362c20c54e9edc727b4b369d6f9a9817547a9ba55a609506ba98fb90db65a3  ./v2/ecad/tools/build_sch.sh
+28904a37f2f1810399e553f522d73fcc7848afc4d6ce3cce21556bffd70ccd4d  ./v2/ecad/tools/check_pcb_b.py
+6e3d880901fd30306c0fa8bda35a86da6450d7e4bb15217f9cc3225da8d5faef  ./v2/ecad/tools/gen_sch_b.py
+f4fe37141904cb617341e7a72de4078107149b9b6a2351a0af096fe07e060f74  ./v2/ecad/tools/sch_pages.py
+568bcf115c0edd8e79111c1981266d31a9bb3e0a16e00579b02d569241ab97a4  ./v2/ecad/tools/tests/test_schematic_pages.py
+694c5cfbb8f8bd3e5a609abcb2d6a9d2ef2279e11a422af4ebe795eaea528af4  ./v2/release/revA/order/ROTATION-CHECKLIST.md
+r6b6: main clone untouched
+r6b6: disk overlay          80G   39G   42G  48% /
+r6b6: done 2026-09-26T11:33:20Z

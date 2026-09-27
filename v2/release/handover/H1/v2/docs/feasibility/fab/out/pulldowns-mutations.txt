@@ -1,0 +1,8 @@
+## fixed.net sha256 67d073f60c8a9a21
+lines 23 (21 controller outputs + 2 display selects), FAIL 0
+## mut_r500_100k.net sha256 62b4db7b409935e3
+R500  WSEC_C      value 100k  pads ['GND', 'WSEC_C']        loads U61.37,U74.12,U75.1                      leak 20.25 uA  VIL 0.8  V@value 2.025  V@10k 0.203  FAIL
+lines 23 (21 controller outputs + 2 display selects), FAIL 1
+## mut_r498_gone.net sha256 58f0e5f757cf9443
+R498  WSEC_A      value None  pads None                     loads U41.37,U74.10,U75.2                      leak 20.25 uA  VIL 0.8  V@value n/a  V@10k 0.203  FAIL  UNKNOWN LOADS R998.1
+lines 23 (21 controller outputs + 2 display selects), FAIL 1

@@ -1,0 +1,2420 @@
+{
+ "keyword": "SMCJ40CA",
+ "asked_utc": "2026-09-25T23:58:25.310035Z",
+ "list": [
+  {
+   "componentId": 10915,
+   "componentLibraryType": "expand",
+   "stockCount": 54,
+   "componentTypeEn": "ESD and Surge Protection (TVS/ESD)",
+   "erpComponentName": "\u53cc\u5411TVS 40V\u622a\u6b62 \u5cf0\u503c\u6d6a\u6d8c\u7535\u6d41\uff1a23.3A@10/1000us",
+   "componentSource": "shop",
+   "lcscGoodsUrl": "https://www.lcsc.com/product-detail/esd-and-surge-protection-tvs-esd_ruilon-shenzhen-ruilongyuan-elec-smcj40ca_C10373.html",
+   "componentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.3112
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.2571
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.2341
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2499,
+     "productPrice": 0.1951
+    },
+    {
+     "startNumber": 2500,
+     "endNumber": 4999,
+     "productPrice": 0.1823
+    },
+    {
+     "startNumber": 5000,
+     "endNumber": -1,
+     "productPrice": 0.1745
+    }
+   ],
+   "buyComponentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.2998
+    },
+    {
+     "startNumber": 2500,
+     "endNumber": 4999,
+     "productPrice": 0.1756
+    },
+    {
+     "startNumber": 5000,
+     "endNumber": -1,
+     "productPrice": 0.1681
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.2477
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.2255
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2499,
+     "productPrice": 0.1879
+    }
+   ],
+   "firstSortAccessId": "68f218c9a74e4148a83415d14e926c64",
+   "secondSortAccessId": "434702f18e684c28a613a717cb768f2b",
+   "canPresaleNumber": 53,
+   "componentProductType": 0,
+   "mergedComponentCode": null,
+   "urlSuffix": "10915-SMCJ40CA/C10373",
+   "leastPatchNumber": 2,
+   "lossNumber": 0,
+   "isBuyComponent": "1",
+   "noBuyReason": null,
+   "componentAlternativesCode": null,
+   "replaceUrlSuffix": null,
+   "preferredComponentFlag": false,
+   "allowPostFlag": true,
+   "score": null,
+   "idleFlag": null,
+   "estimateDate": null,
+   "fullReelPrice": null,
+   "encapsulationNumber": 500,
+   "shopCostPrice": 0.66,
+   "preMinPurchaseNum": 29,
+   "minPurchaseNum": 1,
+   "initialPrice": 0.3112,
+   "componentCode": "C10373",
+   "componentBrandEn": "RUILON(Shenzhen Ruilongyuan Elec)",
+   "componentModelEn": "SMCJ40CA",
+   "componentImageUrl": "",
+   "productBigImageAccessId": "8553297692186341376",
+   "productBigImageAccessIdUrl": null,
+   "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_RUILON-Shenzhen-Ruilongyuan-Elec-SMCJ40CA_C10373.pdf",
+   "dataManualFileAccessId": "8586172355761098752",
+   "dataManualFileAccessIdUrl": null,
+   "dataManualOfficialLink": "",
+   "componentName": "RUILON SMCJ40CA",
+   "minImage": "",
+   "minImageAccessId": "8553297692949299200",
+   "minImageAccessIdUrl": null,
+   "imageList": [
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    }
+   ],
+   "manufacturerBlackFlag": null,
+   "componentNameEn": null,
+   "componentSpecificationEn": "DO-214AB(SMC)",
+   "describe": "-55\u2103~+150\u2103 1.5kW@10/1000us 23.3A@10/1000us 40V 51.1V 5uA 64.5V Bidirectional TVS DO-214AB(SMC) ESD and Surge Protection (TVS/ESD) ROHS",
+   "attributes": [
+    {
+     "attribute_name_en": "Operating Temperature",
+     "attribute_value_name": "-55\u2103~+150\u2103"
+    },
+    {
+     "attribute_name_en": "Type",
+     "attribute_value_name": "TVS"
+    },
+    {
+     "attribute_name_en": "Peak Pulse Power Dissipation (Ppp)",
+     "attribute_value_name": "1.5kW@10/1000us"
+    },
+    {
+     "attribute_name_en": "Number of Channels",
+     "attribute_value_name": "1"
+    },
+    {
+     "attribute_name_en": "Clamping Voltage",
+     "attribute_value_name": "64.5V"
+    },
+    {
+     "attribute_name_en": "Polarity",
+     "attribute_value_name": "Bidirectional"
+    },
+    {
+     "attribute_name_en": "Voltage - Breakdown",
+     "attribute_value_name": "51.1V"
+    },
+    {
+     "attribute_name_en": "Peak Pulse Current (Ipp)",
+     "attribute_value_name": "23.3A@10/1000us"
+    },
+    {
+     "attribute_name_en": "Reverse Stand-Off Voltage (Vrwm)",
+     "attribute_value_name": "40V"
+    },
+    {
+     "attribute_name_en": "Reverse Leakage Current (Ir)",
+     "attribute_value_name": "5uA"
+    }
+   ],
+   "rankScore": null,
+   "firstSortName": "ESD and Surge Protection (TVS/ESD)",
+   "secondSortName": "Circuit Protection",
+   "componentBrandHigh": null,
+   "remarkHigh": null,
+   "componentModelHigh": "<span class='lucene_highlight_class'>SMCJ40CA</span>",
+   "componentCodeHigh": null,
+   "componentSpecificationHigh": null,
+   "rohsFlag": 1,
+   "shopShowPriceFlag": true,
+   "shopShowForeignPriceFlag": true,
+   "shopRealPriceFlag": true,
+   "assemblyComponentFlag": false,
+   "rohsFileId": null,
+   "rohsUrl": null
+  },
+  {
+   "componentId": 81419,
+   "componentLibraryType": "expand",
+   "stockCount": 4960,
+   "componentTypeEn": "ESD and Surge Protection (TVS/ESD)",
+   "erpComponentName": "\u53cc\u5411TVS 40V\u622a\u6b62 \u5cf0\u503c\u6d6a\u6d8c\u7535\u6d41\uff1a23.3A",
+   "componentSource": "shop",
+   "lcscGoodsUrl": "https://www.lcsc.com/product-detail/esd-and-surge-protection-tvs-esd_littelfuse-smcj40ca_C80273.html",
+   "componentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.3511
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.2907
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.2648
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2999,
+     "productPrice": 0.2324
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 5999,
+     "productPrice": 0.218
+    },
+    {
+     "startNumber": 6000,
+     "endNumber": -1,
+     "productPrice": 0.2094
+    }
+   ],
+   "buyComponentPrices": [
+    {
+     "startNumber": 3000,
+     "endNumber": 5999,
+     "productPrice": 0.21
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.255
+    },
+    {
+     "startNumber": 6000,
+     "endNumber": -1,
+     "productPrice": 0.2017
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2999,
+     "productPrice": 0.2239
+    },
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.3383
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.2801
+    }
+   ],
+   "firstSortAccessId": "68f218c9a74e4148a83415d14e926c64",
+   "secondSortAccessId": "434702f18e684c28a613a717cb768f2b",
+   "canPresaleNumber": 4940,
+   "componentProductType": 0,
+   "mergedComponentCode": null,
+   "urlSuffix": "Littelfuse-SMCJ40CA/C80273",
+   "leastPatchNumber": 2,
+   "lossNumber": 0,
+   "isBuyComponent": "1",
+   "noBuyReason": null,
+   "componentAlternativesCode": null,
+   "replaceUrlSuffix": null,
+   "preferredComponentFlag": false,
+   "allowPostFlag": true,
+   "score": null,
+   "idleFlag": null,
+   "estimateDate": null,
+   "fullReelPrice": null,
+   "encapsulationNumber": 3000,
+   "shopCostPrice": 0.73945,
+   "preMinPurchaseNum": 26,
+   "minPurchaseNum": 1,
+   "initialPrice": 0.3511,
+   "componentCode": "C80273",
+   "componentBrandEn": "Littelfuse",
+   "componentModelEn": "SMCJ40CA",
+   "componentImageUrl": "",
+   "productBigImageAccessId": "8582982124010426368",
+   "productBigImageAccessIdUrl": null,
+   "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Littelfuse-SMCJ40CA_C80273.pdf",
+   "dataManualFileAccessId": "8588879952603459584",
+   "dataManualFileAccessIdUrl": null,
+   "dataManualOfficialLink": "",
+   "componentName": "Littelfuse SMCJ40CA",
+   "minImage": "",
+   "minImageAccessId": "8582982124983234560",
+   "minImageAccessIdUrl": null,
+   "imageList": [
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    }
+   ],
+   "manufacturerBlackFlag": null,
+   "componentNameEn": null,
+   "componentSpecificationEn": "DO-214AB",
+   "describe": "-65\u2103~+150\u2103 1.5kW 23.3A 40V 44.4V 64.5V Bidirectional IEC 61000-4-2 TVS DO-214AB ESD and Surge Protection (TVS/ESD) ROHS",
+   "attributes": [
+    {
+     "attribute_name_en": "Operating Temperature",
+     "attribute_value_name": "-65\u2103~+150\u2103"
+    },
+    {
+     "attribute_name_en": "Type",
+     "attribute_value_name": "TVS"
+    },
+    {
+     "attribute_name_en": "Peak Pulse Power Dissipation (Ppp)",
+     "attribute_value_name": "1.5kW@10/1000us"
+    },
+    {
+     "attribute_name_en": "Number of Channels",
+     "attribute_value_name": "1"
+    },
+    {
+     "attribute_name_en": "level of protection",
+     "attribute_value_name": "IEC 61000-4-2"
+    },
+    {
+     "attribute_name_en": "Clamping Voltage",
+     "attribute_value_name": "64.5V"
+    },
+    {
+     "attribute_name_en": "Polarity",
+     "attribute_value_name": "Bidirectional"
+    },
+    {
+     "attribute_name_en": "Peak Pulse Current (Ipp)",
+     "attribute_value_name": "23.3A"
+    },
+    {
+     "attribute_name_en": "Voltage - Breakdown",
+     "attribute_value_name": "44.4V"
+    },
+    {
+     "attribute_name_en": "Reverse Stand-Off Voltage (Vrwm)",
+     "attribute_value_name": "40V"
+    }
+   ],
+   "rankScore": null,
+   "firstSortName": "ESD and Surge Protection (TVS/ESD)",
+   "secondSortName": "Circuit Protection",
+   "componentBrandHigh": null,
+   "remarkHigh": null,
+   "componentModelHigh": "<span class='lucene_highlight_class'>SMCJ40CA</span>",
+   "componentCodeHigh": null,
+   "componentSpecificationHigh": null,
+   "rohsFlag": 1,
+   "shopShowPriceFlag": true,
+   "shopShowForeignPriceFlag": true,
+   "shopRealPriceFlag": true,
+   "assemblyComponentFlag": false,
+   "rohsFileId": null,
+   "rohsUrl": null
+  },
+  {
+   "componentId": 144954,
+   "componentLibraryType": "expand",
+   "stockCount": 759,
+   "componentTypeEn": "ESD and Surge Protection (TVS/ESD)",
+   "erpComponentName": "\u53cc\u5411TVS 40V\u622a\u6b62 \u5cf0\u503c\u6d6a\u6d8c\u7535\u6d41\uff1a746A@8/20us",
+   "componentSource": "shop",
+   "lcscGoodsUrl": "https://www.lcsc.com/product-detail/esd-and-surge-protection-tvs-esd_stmicroelectronics-smcj40ca-tr_C133647.html",
+   "componentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 0.3736
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 0.3638
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 0.3573
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 101,
+     "productPrice": 0.3508
+    },
+    {
+     "startNumber": 102,
+     "endNumber": 103,
+     "productPrice": 0.3508
+    },
+    {
+     "startNumber": 104,
+     "endNumber": -1,
+     "productPrice": 0.3508
+    }
+   ],
+   "buyComponentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 0.3598
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 0.3505
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 0.3442
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 101,
+     "productPrice": 0.3379
+    },
+    {
+     "startNumber": 104,
+     "endNumber": -1,
+     "productPrice": 0.3379
+    },
+    {
+     "startNumber": 102,
+     "endNumber": 103,
+     "productPrice": 0.3379
+    }
+   ],
+   "firstSortAccessId": "68f218c9a74e4148a83415d14e926c64",
+   "secondSortAccessId": "434702f18e684c28a613a717cb768f2b",
+   "canPresaleNumber": 757,
+   "componentProductType": 0,
+   "mergedComponentCode": null,
+   "urlSuffix": "STMicroelectronics-SMCJ40CATR/C133647",
+   "leastPatchNumber": 2,
+   "lossNumber": 0,
+   "isBuyComponent": "1",
+   "noBuyReason": null,
+   "componentAlternativesCode": null,
+   "replaceUrlSuffix": null,
+   "preferredComponentFlag": false,
+   "allowPostFlag": true,
+   "score": null,
+   "idleFlag": null,
+   "estimateDate": null,
+   "fullReelPrice": null,
+   "encapsulationNumber": 2500,
+   "shopCostPrice": 1.45769,
+   "preMinPurchaseNum": 25,
+   "minPurchaseNum": 1,
+   "initialPrice": 0.3736,
+   "componentCode": "C133647",
+   "componentBrandEn": "STMicroelectronics",
+   "componentModelEn": "SMCJ40CA-TR",
+   "componentImageUrl": "",
+   "productBigImageAccessId": "8582982500545679360",
+   "productBigImageAccessIdUrl": null,
+   "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_STMicroelectronics-SMCJ40CA-TR_C133647.pdf",
+   "dataManualFileAccessId": "8588879993380483072",
+   "dataManualFileAccessIdUrl": null,
+   "dataManualOfficialLink": "",
+   "componentName": "ST SMCJ40CA-TR",
+   "minImage": "",
+   "minImageAccessId": "8582982501442719744",
+   "minImageAccessIdUrl": null,
+   "imageList": [
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    }
+   ],
+   "manufacturerBlackFlag": null,
+   "componentNameEn": null,
+   "componentSpecificationEn": "SMC(DO-214AB)",
+   "describe": "-55\u2103~+150\u2103 10kW@8/20us 1uA 40V 46.7V 746A@8/20us 84V Bidirectional IEC 61000-4-2\u3001IEC 61000-4-5 TVS SMC(DO-214AB) ESD and Surge Protection (TVS/ESD) ROHS",
+   "attributes": [
+    {
+     "attribute_name_en": "Operating Temperature",
+     "attribute_value_name": "-55\u2103~+150\u2103"
+    },
+    {
+     "attribute_name_en": "Type",
+     "attribute_value_name": "TVS"
+    },
+    {
+     "attribute_name_en": "Peak Pulse Power Dissipation (Ppp)",
+     "attribute_value_name": "10kW@8/20us"
+    },
+    {
+     "attribute_name_en": "Number of Channels",
+     "attribute_value_name": "1"
+    },
+    {
+     "attribute_name_en": "level of protection",
+     "attribute_value_name": "IEC 61000-4-2\u3001IEC 61000-4-5"
+    },
+    {
+     "attribute_name_en": "Clamping Voltage",
+     "attribute_value_name": "84V"
+    },
+    {
+     "attribute_name_en": "Polarity",
+     "attribute_value_name": "Bidirectional"
+    },
+    {
+     "attribute_name_en": "Voltage - Breakdown",
+     "attribute_value_name": "46.7V"
+    },
+    {
+     "attribute_name_en": "Peak Pulse Current (Ipp)",
+     "attribute_value_name": "746A@8/20us"
+    },
+    {
+     "attribute_name_en": "Reverse Stand-Off Voltage (Vrwm)",
+     "attribute_value_name": "40V"
+    },
+    {
+     "attribute_name_en": "Reverse Leakage Current (Ir)",
+     "attribute_value_name": "1uA"
+    }
+   ],
+   "rankScore": null,
+   "firstSortName": "ESD and Surge Protection (TVS/ESD)",
+   "secondSortName": "Circuit Protection",
+   "componentBrandHigh": null,
+   "remarkHigh": null,
+   "componentModelHigh": "<span class='lucene_highlight_class'>SMCJ40CA</span>-TR",
+   "componentCodeHigh": null,
+   "componentSpecificationHigh": null,
+   "rohsFlag": 1,
+   "shopShowPriceFlag": true,
+   "shopShowForeignPriceFlag": true,
+   "shopRealPriceFlag": true,
+   "assemblyComponentFlag": false,
+   "rohsFileId": null,
+   "rohsUrl": null
+  },
+  {
+   "componentId": 146478,
+   "componentLibraryType": "expand",
+   "stockCount": 2,
+   "componentTypeEn": "ESD and Surge Protection (TVS/ESD)",
+   "erpComponentName": "\u53cc\u5411TVS 40V\u622a\u6b62 \u5cf0\u503c\u6d6a\u6d8c\u7535\u6d41\uff1a23.2A",
+   "componentSource": "shop",
+   "lcscGoodsUrl": "https://www.lcsc.com/product-detail/esd-and-surge-protection-tvs-esd_diodes-incorporated-smcj40ca-13-f_C135167.html",
+   "componentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 0.3208
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 0.2534
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 0.2245
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 499,
+     "productPrice": 0.1883
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 999,
+     "productPrice": 0.1723
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": -1,
+     "productPrice": 0.1626
+    }
+   ],
+   "buyComponentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 0.309
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 0.2441
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 0.2162
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 999,
+     "productPrice": 0.1659
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 499,
+     "productPrice": 0.1814
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": -1,
+     "productPrice": 0.1566
+    }
+   ],
+   "firstSortAccessId": "68f218c9a74e4148a83415d14e926c64",
+   "secondSortAccessId": "434702f18e684c28a613a717cb768f2b",
+   "canPresaleNumber": 2,
+   "componentProductType": 0,
+   "mergedComponentCode": null,
+   "urlSuffix": "DiodesIncorporated-SMCJ40CA_13F/C135167",
+   "leastPatchNumber": 2,
+   "lossNumber": 0,
+   "isBuyComponent": "1",
+   "noBuyReason": null,
+   "componentAlternativesCode": null,
+   "replaceUrlSuffix": null,
+   "preferredComponentFlag": false,
+   "allowPostFlag": true,
+   "score": null,
+   "idleFlag": null,
+   "estimateDate": null,
+   "fullReelPrice": null,
+   "encapsulationNumber": 3000,
+   "shopCostPrice": 0.82428,
+   "preMinPurchaseNum": 41,
+   "minPurchaseNum": 1,
+   "initialPrice": 0.3208,
+   "componentCode": "C135167",
+   "componentBrandEn": "Diodes Incorporated",
+   "componentModelEn": "SMCJ40CA-13-F",
+   "componentImageUrl": "",
+   "productBigImageAccessId": "8583370058018541568",
+   "productBigImageAccessIdUrl": null,
+   "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Diodes-Incorporated-SMCJ40CA-13-F_C135167.pdf",
+   "dataManualFileAccessId": "8560079224707825666",
+   "dataManualFileAccessIdUrl": null,
+   "dataManualOfficialLink": "",
+   "componentName": "DIODES SMCJ40CA-13-F",
+   "minImage": "",
+   "minImageAccessId": "8583370058952925184",
+   "minImageAccessIdUrl": null,
+   "imageList": [
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    }
+   ],
+   "manufacturerBlackFlag": null,
+   "componentNameEn": null,
+   "componentSpecificationEn": "SMC",
+   "describe": "-55\u2103~+150\u2103 1.5kW 23.2A 40V 49.1V 5uA 64.5V Bidirectional TVS SMC ESD and Surge Protection (TVS/ESD) ROHS",
+   "attributes": [
+    {
+     "attribute_name_en": "Operating Temperature",
+     "attribute_value_name": "-55\u2103~+150\u2103"
+    },
+    {
+     "attribute_name_en": "Type",
+     "attribute_value_name": "TVS"
+    },
+    {
+     "attribute_name_en": "Number of Channels",
+     "attribute_value_name": "1"
+    },
+    {
+     "attribute_name_en": "Peak Pulse Power Dissipation (Ppp)",
+     "attribute_value_name": "1.5kW"
+    },
+    {
+     "attribute_name_en": "Clamping Voltage",
+     "attribute_value_name": "64.5V"
+    },
+    {
+     "attribute_name_en": "Polarity",
+     "attribute_value_name": "Bidirectional"
+    },
+    {
+     "attribute_name_en": "Voltage - Breakdown",
+     "attribute_value_name": "49.1V"
+    },
+    {
+     "attribute_name_en": "Peak Pulse Current (Ipp)",
+     "attribute_value_name": "23.2A"
+    },
+    {
+     "attribute_name_en": "Reverse Stand-Off Voltage (Vrwm)",
+     "attribute_value_name": "40V"
+    },
+    {
+     "attribute_name_en": "Reverse Leakage Current (Ir)",
+     "attribute_value_name": "5uA"
+    }
+   ],
+   "rankScore": null,
+   "firstSortName": "ESD and Surge Protection (TVS/ESD)",
+   "secondSortName": "Circuit Protection",
+   "componentBrandHigh": null,
+   "remarkHigh": null,
+   "componentModelHigh": "<span class='lucene_highlight_class'>SMCJ40CA</span>-13-F",
+   "componentCodeHigh": null,
+   "componentSpecificationHigh": null,
+   "rohsFlag": 1,
+   "shopShowPriceFlag": true,
+   "shopShowForeignPriceFlag": true,
+   "shopRealPriceFlag": true,
+   "assemblyComponentFlag": false,
+   "rohsFileId": null,
+   "rohsUrl": null
+  },
+  {
+   "componentId": 163420,
+   "componentLibraryType": "expand",
+   "stockCount": 3737,
+   "componentTypeEn": "ESD and Surge Protection (TVS/ESD)",
+   "erpComponentName": "\u53cc\u5411TVS 40V\u622a\u6b62 \u5cf0\u503c\u6d6a\u6d8c\u7535\u6d41\uff1a23.3A@10/1000us",
+   "componentSource": "shop",
+   "lcscGoodsUrl": "https://www.lcsc.com/product-detail/esd-and-surge-protection-tvs-esd_born-smcj40ca_C152080.html",
+   "componentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.1935
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.1542
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.1374
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2999,
+     "productPrice": 0.1163
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 5999,
+     "productPrice": 0.1071
+    },
+    {
+     "startNumber": 6000,
+     "endNumber": -1,
+     "productPrice": 0.1014
+    }
+   ],
+   "buyComponentPrices": [
+    {
+     "startNumber": 3000,
+     "endNumber": 5999,
+     "productPrice": 0.1031
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.1324
+    },
+    {
+     "startNumber": 6000,
+     "endNumber": -1,
+     "productPrice": 0.0977
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2999,
+     "productPrice": 0.1121
+    },
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.1864
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.1485
+    }
+   ],
+   "firstSortAccessId": "68f218c9a74e4148a83415d14e926c64",
+   "secondSortAccessId": "434702f18e684c28a613a717cb768f2b",
+   "canPresaleNumber": 3722,
+   "componentProductType": 0,
+   "mergedComponentCode": null,
+   "urlSuffix": "BORN-SMCJ40CA/C152080",
+   "leastPatchNumber": 2,
+   "lossNumber": 0,
+   "isBuyComponent": "1",
+   "noBuyReason": null,
+   "componentAlternativesCode": null,
+   "replaceUrlSuffix": null,
+   "preferredComponentFlag": false,
+   "allowPostFlag": true,
+   "score": null,
+   "idleFlag": null,
+   "estimateDate": null,
+   "fullReelPrice": null,
+   "encapsulationNumber": 3000,
+   "shopCostPrice": 0.48,
+   "preMinPurchaseNum": 47,
+   "minPurchaseNum": 1,
+   "initialPrice": 0.1935,
+   "componentCode": "C152080",
+   "componentBrandEn": "BORN",
+   "componentModelEn": "SMCJ40CA",
+   "componentImageUrl": "",
+   "productBigImageAccessId": "8583435450636124160",
+   "productBigImageAccessIdUrl": null,
+   "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_BORN-SMCJ40CA_C152080.pdf",
+   "dataManualFileAccessId": "8757247519229255680",
+   "dataManualFileAccessIdUrl": null,
+   "dataManualOfficialLink": "",
+   "componentName": "BORN SMCJ40CA",
+   "minImage": "",
+   "minImageAccessId": "8583435451545882624",
+   "minImageAccessIdUrl": null,
+   "imageList": [
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    }
+   ],
+   "manufacturerBlackFlag": null,
+   "componentNameEn": null,
+   "componentSpecificationEn": "SMC(DO-214AB)",
+   "describe": "1.5kW@10/1000us 1uA 23.3A@10/1000us 40V 49.1V 64.5V Bidirectional TVS SMC(DO-214AB) ESD and Surge Protection (TVS/ESD) ROHS",
+   "attributes": [
+    {
+     "attribute_name_en": "Operating Temperature",
+     "attribute_value_name": "-55\u2103~+150\u2103"
+    },
+    {
+     "attribute_name_en": "Type",
+     "attribute_value_name": "TVS"
+    },
+    {
+     "attribute_name_en": "Peak Pulse Power Dissipation (Ppp)",
+     "attribute_value_name": "1.5kW@10/1000us"
+    },
+    {
+     "attribute_name_en": "Number of Channels",
+     "attribute_value_name": "1"
+    },
+    {
+     "attribute_name_en": "Clamping Voltage",
+     "attribute_value_name": "64.5V"
+    },
+    {
+     "attribute_name_en": "Polarity",
+     "attribute_value_name": "Bidirectional"
+    },
+    {
+     "attribute_name_en": "Peak Pulse Current (Ipp)",
+     "attribute_value_name": "23.3A@10/1000us"
+    },
+    {
+     "attribute_name_en": "Voltage - Breakdown",
+     "attribute_value_name": "49.1V"
+    },
+    {
+     "attribute_name_en": "Reverse Stand-Off Voltage (Vrwm)",
+     "attribute_value_name": "40V"
+    },
+    {
+     "attribute_name_en": "Reverse Leakage Current (Ir)",
+     "attribute_value_name": "1uA"
+    }
+   ],
+   "rankScore": null,
+   "firstSortName": "ESD and Surge Protection (TVS/ESD)",
+   "secondSortName": "Circuit Protection",
+   "componentBrandHigh": null,
+   "remarkHigh": null,
+   "componentModelHigh": "<span class='lucene_highlight_class'>SMCJ40CA</span>",
+   "componentCodeHigh": null,
+   "componentSpecificationHigh": null,
+   "rohsFlag": 1,
+   "shopShowPriceFlag": true,
+   "shopShowForeignPriceFlag": true,
+   "shopRealPriceFlag": true,
+   "assemblyComponentFlag": false,
+   "rohsFileId": null,
+   "rohsUrl": null
+  },
+  {
+   "componentId": 195869,
+   "componentLibraryType": "expand",
+   "stockCount": 1,
+   "componentTypeEn": "ESD and Surge Protection (TVS/ESD)",
+   "erpComponentName": "\u53cc\u5411TVS 40V\u622a\u6b62 \u5cf0\u503c\u6d6a\u6d8c\u7535\u6d41\uff1a23.3A@10/1000us",
+   "componentSource": "shop",
+   "lcscGoodsUrl": "https://www.lcsc.com/product-detail/esd-and-surge-protection-tvs-esd_onsemi-smcj40ca_C184465.html",
+   "componentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 0.7503
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 0.6058
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 0.5343
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 499,
+     "productPrice": 0.4629
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 999,
+     "productPrice": 0.4206
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": -1,
+     "productPrice": 0.3979
+    }
+   ],
+   "buyComponentPrices": [
+    {
+     "startNumber": 500,
+     "endNumber": 999,
+     "productPrice": 0.4052
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 0.5147
+    },
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 0.7228
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 0.5835
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 499,
+     "productPrice": 0.4459
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": -1,
+     "productPrice": 0.3833
+    }
+   ],
+   "firstSortAccessId": "68f218c9a74e4148a83415d14e926c64",
+   "secondSortAccessId": "434702f18e684c28a613a717cb768f2b",
+   "canPresaleNumber": 1,
+   "componentProductType": 0,
+   "mergedComponentCode": null,
+   "urlSuffix": "onsemi-SMCJ40CA/C184465",
+   "leastPatchNumber": 2,
+   "lossNumber": 0,
+   "isBuyComponent": "1",
+   "noBuyReason": null,
+   "componentAlternativesCode": null,
+   "replaceUrlSuffix": null,
+   "preferredComponentFlag": false,
+   "allowPostFlag": true,
+   "score": null,
+   "idleFlag": null,
+   "estimateDate": null,
+   "fullReelPrice": null,
+   "encapsulationNumber": 3000,
+   "shopCostPrice": 2.04953,
+   "preMinPurchaseNum": 15,
+   "minPurchaseNum": 1,
+   "initialPrice": 0.7503,
+   "componentCode": "C184465",
+   "componentBrandEn": "onsemi",
+   "componentModelEn": "SMCJ40CA",
+   "componentImageUrl": "",
+   "productBigImageAccessId": "8582984881739194368",
+   "productBigImageAccessIdUrl": null,
+   "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_1811141523_onsemi-SMCJ40CA_C184465.pdf",
+   "dataManualFileAccessId": "8586185627054854144",
+   "dataManualFileAccessIdUrl": null,
+   "dataManualOfficialLink": "",
+   "componentName": "onsemi SMCJ40CA",
+   "minImage": "",
+   "minImageAccessId": "8582984882666000384",
+   "minImageAccessIdUrl": null,
+   "imageList": [
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    }
+   ],
+   "manufacturerBlackFlag": null,
+   "componentNameEn": null,
+   "componentSpecificationEn": "SMC(DO-214AB)",
+   "describe": "1.5kW@10/1000us 23.3A@10/1000us 40V 49.1V 5uA 64.5V Bidirectional TVS SMC(DO-214AB) ESD and Surge Protection (TVS/ESD) ROHS",
+   "attributes": [
+    {
+     "attribute_name_en": "Type",
+     "attribute_value_name": "TVS"
+    },
+    {
+     "attribute_name_en": "Peak Pulse Power Dissipation (Ppp)",
+     "attribute_value_name": "1.5kW@10/1000us"
+    },
+    {
+     "attribute_name_en": "Number of Channels",
+     "attribute_value_name": "1"
+    },
+    {
+     "attribute_name_en": "Clamping Voltage",
+     "attribute_value_name": "64.5V"
+    },
+    {
+     "attribute_name_en": "Polarity",
+     "attribute_value_name": "Bidirectional"
+    },
+    {
+     "attribute_name_en": "Peak Pulse Current (Ipp)",
+     "attribute_value_name": "23.3A@10/1000us"
+    },
+    {
+     "attribute_name_en": "Voltage - Breakdown",
+     "attribute_value_name": "49.1V"
+    },
+    {
+     "attribute_name_en": "Reverse Stand-Off Voltage (Vrwm)",
+     "attribute_value_name": "40V"
+    },
+    {
+     "attribute_name_en": "Reverse Leakage Current (Ir)",
+     "attribute_value_name": "5uA"
+    }
+   ],
+   "rankScore": null,
+   "firstSortName": "ESD and Surge Protection (TVS/ESD)",
+   "secondSortName": "Circuit Protection",
+   "componentBrandHigh": null,
+   "remarkHigh": null,
+   "componentModelHigh": "<span class='lucene_highlight_class'>SMCJ40CA</span>",
+   "componentCodeHigh": null,
+   "componentSpecificationHigh": null,
+   "rohsFlag": 1,
+   "shopShowPriceFlag": true,
+   "shopShowForeignPriceFlag": true,
+   "shopRealPriceFlag": true,
+   "assemblyComponentFlag": false,
+   "rohsFileId": null,
+   "rohsUrl": null
+  },
+  {
+   "componentId": 293541,
+   "componentLibraryType": "expand",
+   "stockCount": 5683,
+   "componentTypeEn": "ESD and Surge Protection (TVS/ESD)",
+   "erpComponentName": "\u53cc\u5411TVS 40V\u622a\u6b62 \u5cf0\u503c\u6d6a\u6d8c\u7535\u6d41\uff1a23.3A",
+   "componentSource": "shop",
+   "lcscGoodsUrl": "https://www.lcsc.com/product-detail/esd-and-surge-protection-tvs-esd_brightking-smcj40ca-tr13_C310051.html",
+   "componentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.16
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.1293
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.1141
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2999,
+     "productPrice": 0.1025
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 5999,
+     "productPrice": 0.0887
+    },
+    {
+     "startNumber": 6000,
+     "endNumber": -1,
+     "productPrice": 0.0842
+    }
+   ],
+   "buyComponentPrices": [
+    {
+     "startNumber": 3000,
+     "endNumber": 5999,
+     "productPrice": 0.0855
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.1099
+    },
+    {
+     "startNumber": 6000,
+     "endNumber": -1,
+     "productPrice": 0.0811
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2999,
+     "productPrice": 0.0988
+    },
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.1541
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.1246
+    }
+   ],
+   "firstSortAccessId": "68f218c9a74e4148a83415d14e926c64",
+   "secondSortAccessId": "434702f18e684c28a613a717cb768f2b",
+   "canPresaleNumber": 5677,
+   "componentProductType": 0,
+   "mergedComponentCode": null,
+   "urlSuffix": "Brightking-SMCJ40CATR13/C310051",
+   "leastPatchNumber": 2,
+   "lossNumber": 1,
+   "isBuyComponent": "1",
+   "noBuyReason": null,
+   "componentAlternativesCode": null,
+   "replaceUrlSuffix": null,
+   "preferredComponentFlag": false,
+   "allowPostFlag": true,
+   "score": null,
+   "idleFlag": null,
+   "estimateDate": null,
+   "fullReelPrice": null,
+   "encapsulationNumber": 3000,
+   "shopCostPrice": 0.39278,
+   "preMinPurchaseNum": 70,
+   "minPurchaseNum": 1,
+   "initialPrice": 0.16,
+   "componentCode": "C310051",
+   "componentBrandEn": "Brightking",
+   "componentModelEn": "SMCJ40CA/TR13",
+   "componentImageUrl": "",
+   "productBigImageAccessId": "8582985383214780416",
+   "productBigImageAccessIdUrl": null,
+   "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Brightking-SMCJ40CA-TR13_C310051.pdf",
+   "dataManualFileAccessId": "8586187313994452992",
+   "dataManualFileAccessIdUrl": null,
+   "dataManualOfficialLink": "",
+   "componentName": "Brightking SMCJ40CA/TR13",
+   "minImage": "",
+   "minImageAccessId": "8582985384153763840",
+   "minImageAccessIdUrl": null,
+   "imageList": [
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    }
+   ],
+   "manufacturerBlackFlag": null,
+   "componentNameEn": null,
+   "componentSpecificationEn": "SMC(DO-214AB)",
+   "describe": "-65\u2103~+150\u2103 1.5kW 1uA 23.3A 40V 44.4V 64.5V Bidirectional IEC 61000-4-2 TVS SMC(DO-214AB) ESD and Surge Protection (TVS/ESD) ROHS",
+   "attributes": [
+    {
+     "attribute_name_en": "Operating Temperature",
+     "attribute_value_name": "-65\u2103~+150\u2103"
+    },
+    {
+     "attribute_name_en": "Type",
+     "attribute_value_name": "TVS"
+    },
+    {
+     "attribute_name_en": "Number of Channels",
+     "attribute_value_name": "1"
+    },
+    {
+     "attribute_name_en": "Peak Pulse Power Dissipation (Ppp)",
+     "attribute_value_name": "1.5kW"
+    },
+    {
+     "attribute_name_en": "level of protection",
+     "attribute_value_name": "IEC 61000-4-2"
+    },
+    {
+     "attribute_name_en": "Clamping Voltage",
+     "attribute_value_name": "64.5V"
+    },
+    {
+     "attribute_name_en": "Polarity",
+     "attribute_value_name": "Bidirectional"
+    },
+    {
+     "attribute_name_en": "Peak Pulse Current (Ipp)",
+     "attribute_value_name": "23.3A"
+    },
+    {
+     "attribute_name_en": "Voltage - Breakdown",
+     "attribute_value_name": "44.4V"
+    },
+    {
+     "attribute_name_en": "Reverse Stand-Off Voltage (Vrwm)",
+     "attribute_value_name": "40V"
+    },
+    {
+     "attribute_name_en": "Reverse Leakage Current (Ir)",
+     "attribute_value_name": "1uA"
+    }
+   ],
+   "rankScore": null,
+   "firstSortName": "ESD and Surge Protection (TVS/ESD)",
+   "secondSortName": "Circuit Protection",
+   "componentBrandHigh": null,
+   "remarkHigh": null,
+   "componentModelHigh": "<span class='lucene_highlight_class'>SMCJ40CA</span>/TR13",
+   "componentCodeHigh": null,
+   "componentSpecificationHigh": null,
+   "rohsFlag": 1,
+   "shopShowPriceFlag": true,
+   "shopShowForeignPriceFlag": true,
+   "shopRealPriceFlag": true,
+   "assemblyComponentFlag": false,
+   "rohsFileId": null,
+   "rohsUrl": null
+  },
+  {
+   "componentId": 326960,
+   "componentLibraryType": "expand",
+   "stockCount": 3041,
+   "componentTypeEn": "ESD and Surge Protection (TVS/ESD)",
+   "erpComponentName": "\u53cc\u5411TVS 40V\u622a\u6b62 \u5cf0\u503c\u6d6a\u6d8c\u7535\u6d41\uff1a23.26A",
+   "componentSource": "shop",
+   "lcscGoodsUrl": "https://www.lcsc.com/product-detail/esd-and-surge-protection-tvs-esd_dowo-smcj40ca_C350849.html",
+   "componentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.1035
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.0824
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.072
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2999,
+     "productPrice": 0.0611
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 5999,
+     "productPrice": 0.0548
+    },
+    {
+     "startNumber": 6000,
+     "endNumber": -1,
+     "productPrice": 0.0515
+    }
+   ],
+   "buyComponentPrices": [
+    {
+     "startNumber": 500,
+     "endNumber": 2999,
+     "productPrice": 0.0589
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 5999,
+     "productPrice": 0.0528
+    },
+    {
+     "startNumber": 6000,
+     "endNumber": -1,
+     "productPrice": 0.0496
+    },
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.0997
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.0694
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.0794
+    }
+   ],
+   "firstSortAccessId": "68f218c9a74e4148a83415d14e926c64",
+   "secondSortAccessId": "434702f18e684c28a613a717cb768f2b",
+   "canPresaleNumber": 3034,
+   "componentProductType": 0,
+   "mergedComponentCode": null,
+   "urlSuffix": "DOWO-SMCJ40CA/C350849",
+   "leastPatchNumber": 2,
+   "lossNumber": 1,
+   "isBuyComponent": "1",
+   "noBuyReason": null,
+   "componentAlternativesCode": null,
+   "replaceUrlSuffix": null,
+   "preferredComponentFlag": false,
+   "allowPostFlag": true,
+   "score": null,
+   "idleFlag": null,
+   "estimateDate": null,
+   "fullReelPrice": null,
+   "encapsulationNumber": 3000,
+   "shopCostPrice": 0.27008,
+   "preMinPurchaseNum": 110,
+   "minPurchaseNum": 1,
+   "initialPrice": 0.1035,
+   "componentCode": "C350849",
+   "componentBrandEn": "DOWO",
+   "componentModelEn": "SMCJ40CA",
+   "componentImageUrl": "",
+   "productBigImageAccessId": "8583425308082491392",
+   "productBigImageAccessIdUrl": null,
+   "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_DOWO-SMCJ40CA_C350849.pdf",
+   "dataManualFileAccessId": "8588907272453951488",
+   "dataManualFileAccessIdUrl": null,
+   "dataManualOfficialLink": "",
+   "componentName": "DOWO SMCJ40CA",
+   "minImage": "",
+   "minImageAccessId": "8583425309006319616",
+   "minImageAccessIdUrl": null,
+   "imageList": [
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    }
+   ],
+   "manufacturerBlackFlag": null,
+   "componentNameEn": null,
+   "componentSpecificationEn": "SMC(DO-214AB)",
+   "describe": "-55\u2103~+150\u2103 1.5kW@10/1000us 1uA 23.26A 40V 44.4V 64.5V Bidirectional IEC 61000-4-2 TVS SMC(DO-214AB) ESD and Surge Protection (TVS/ESD) ROHS",
+   "attributes": [
+    {
+     "attribute_name_en": "Operating Temperature",
+     "attribute_value_name": "-55\u2103~+150\u2103"
+    },
+    {
+     "attribute_name_en": "Type",
+     "attribute_value_name": "TVS"
+    },
+    {
+     "attribute_name_en": "Peak Pulse Power Dissipation (Ppp)",
+     "attribute_value_name": "1.5kW@10/1000us"
+    },
+    {
+     "attribute_name_en": "Number of Channels",
+     "attribute_value_name": "1"
+    },
+    {
+     "attribute_name_en": "level of protection",
+     "attribute_value_name": "IEC 61000-4-2"
+    },
+    {
+     "attribute_name_en": "Clamping Voltage",
+     "attribute_value_name": "64.5V"
+    },
+    {
+     "attribute_name_en": "Polarity",
+     "attribute_value_name": "Bidirectional"
+    },
+    {
+     "attribute_name_en": "Peak Pulse Current (Ipp)",
+     "attribute_value_name": "23.26A"
+    },
+    {
+     "attribute_name_en": "Voltage - Breakdown",
+     "attribute_value_name": "44.4V"
+    },
+    {
+     "attribute_name_en": "Reverse Stand-Off Voltage (Vrwm)",
+     "attribute_value_name": "40V"
+    },
+    {
+     "attribute_name_en": "Reverse Leakage Current (Ir)",
+     "attribute_value_name": "1uA"
+    }
+   ],
+   "rankScore": null,
+   "firstSortName": "ESD and Surge Protection (TVS/ESD)",
+   "secondSortName": "Circuit Protection",
+   "componentBrandHigh": null,
+   "remarkHigh": null,
+   "componentModelHigh": "<span class='lucene_highlight_class'>SMCJ40CA</span>",
+   "componentCodeHigh": null,
+   "componentSpecificationHigh": null,
+   "rohsFlag": 1,
+   "shopShowPriceFlag": true,
+   "shopShowForeignPriceFlag": true,
+   "shopRealPriceFlag": true,
+   "assemblyComponentFlag": false,
+   "rohsFileId": null,
+   "rohsUrl": null
+  },
+  {
+   "componentId": 336675,
+   "componentLibraryType": "expand",
+   "stockCount": 359,
+   "componentTypeEn": "ESD and Surge Protection (TVS/ESD)",
+   "erpComponentName": "\u53cc\u5411TVS 40V\u622a\u6b62 \u5cf0\u503c\u8109\u51b2\u7535\u6d41\uff1a23.3A",
+   "componentSource": "shop",
+   "lcscGoodsUrl": "https://www.lcsc.com/product-detail/esd-and-surge-protection-tvs-esd_shenzhen-jinkaisheng-elec-smcj40ca_C362106.html",
+   "componentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.171
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.1363
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.1215
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2999,
+     "productPrice": 0.103
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 5999,
+     "productPrice": 0.084
+    },
+    {
+     "startNumber": 6000,
+     "endNumber": -1,
+     "productPrice": 0.0791
+    }
+   ],
+   "buyComponentPrices": [
+    {
+     "startNumber": 3000,
+     "endNumber": 5999,
+     "productPrice": 0.0809
+    },
+    {
+     "startNumber": 6000,
+     "endNumber": -1,
+     "productPrice": 0.0762
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2999,
+     "productPrice": 0.0992
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.1171
+    },
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.1647
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.1313
+    }
+   ],
+   "firstSortAccessId": "68f218c9a74e4148a83415d14e926c64",
+   "secondSortAccessId": "434702f18e684c28a613a717cb768f2b",
+   "canPresaleNumber": 359,
+   "componentProductType": 0,
+   "mergedComponentCode": null,
+   "urlSuffix": "Shenzhen_JinkaishengElec-SMCJ40CA/C362106",
+   "leastPatchNumber": 2,
+   "lossNumber": 1,
+   "isBuyComponent": "1",
+   "noBuyReason": null,
+   "componentAlternativesCode": null,
+   "replaceUrlSuffix": null,
+   "preferredComponentFlag": false,
+   "allowPostFlag": true,
+   "score": null,
+   "idleFlag": null,
+   "estimateDate": null,
+   "fullReelPrice": null,
+   "encapsulationNumber": 3000,
+   "shopCostPrice": 0.42317,
+   "preMinPurchaseNum": 67,
+   "minPurchaseNum": 1,
+   "initialPrice": 0.171,
+   "componentCode": "C362106",
+   "componentBrandEn": "Shenzhen Jinkaisheng Elec",
+   "componentModelEn": "SMCJ40CA",
+   "componentImageUrl": "",
+   "productBigImageAccessId": "8583454158658162688",
+   "productBigImageAccessIdUrl": null,
+   "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_1912111437_Shenzhen-Jinkaisheng-Elec-SMCJ40CA_C362106.pdf",
+   "dataManualFileAccessId": "8588911553014218752",
+   "dataManualFileAccessIdUrl": null,
+   "dataManualOfficialLink": "",
+   "componentName": "JKSEMI SMCJ40CA",
+   "minImage": "",
+   "minImageAccessId": "8583454159538966528",
+   "minImageAccessIdUrl": null,
+   "imageList": [
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    }
+   ],
+   "manufacturerBlackFlag": null,
+   "componentNameEn": null,
+   "componentSpecificationEn": "SMC(DO214AB)",
+   "describe": "1.5kW 1uA 23.3A 40V 44.4V 64.5V Bidirectional TVS SMC(DO214AB) ESD and Surge Protection (TVS/ESD) ROHS",
+   "attributes": [
+    {
+     "attribute_name_en": "Operating Temperature",
+     "attribute_value_name": "-55\u2103~+150\u2103"
+    },
+    {
+     "attribute_name_en": "Type",
+     "attribute_value_name": "TVS"
+    },
+    {
+     "attribute_name_en": "Number of Channels",
+     "attribute_value_name": "1"
+    },
+    {
+     "attribute_name_en": "Peak Pulse Power Dissipation (Ppp)",
+     "attribute_value_name": "1.5kW"
+    },
+    {
+     "attribute_name_en": "Clamping Voltage",
+     "attribute_value_name": "64.5V"
+    },
+    {
+     "attribute_name_en": "Polarity",
+     "attribute_value_name": "Bidirectional"
+    },
+    {
+     "attribute_name_en": "Peak Pulse Current (Ipp)",
+     "attribute_value_name": "23.3A"
+    },
+    {
+     "attribute_name_en": "Voltage - Breakdown",
+     "attribute_value_name": "44.4V"
+    },
+    {
+     "attribute_name_en": "Reverse Stand-Off Voltage (Vrwm)",
+     "attribute_value_name": "40V"
+    },
+    {
+     "attribute_name_en": "Reverse Leakage Current (Ir)",
+     "attribute_value_name": "1uA"
+    }
+   ],
+   "rankScore": null,
+   "firstSortName": "ESD and Surge Protection (TVS/ESD)",
+   "secondSortName": "Circuit Protection",
+   "componentBrandHigh": null,
+   "remarkHigh": null,
+   "componentModelHigh": "<span class='lucene_highlight_class'>SMCJ40CA</span>",
+   "componentCodeHigh": null,
+   "componentSpecificationHigh": null,
+   "rohsFlag": 1,
+   "shopShowPriceFlag": true,
+   "shopShowForeignPriceFlag": true,
+   "shopRealPriceFlag": true,
+   "assemblyComponentFlag": false,
+   "rohsFileId": null,
+   "rohsUrl": null
+  },
+  {
+   "componentId": 397594,
+   "componentLibraryType": "expand",
+   "stockCount": 4998,
+   "componentTypeEn": "ESD and Surge Protection (TVS/ESD)",
+   "erpComponentName": "\u53cc\u5411TVS 40V\u622a\u6b62 \u5cf0\u503c\u8109\u51b2\u7535\u6d41\uff1a23.3A",
+   "componentSource": "shop",
+   "lcscGoodsUrl": "https://www.lcsc.com/product-detail/esd-and-surge-protection-tvs-esd_mdd-microdiode-semiconductor-smcj40ca_C408369.html",
+   "componentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.1428
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.1123
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.097
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2999,
+     "productPrice": 0.0856
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 5999,
+     "productPrice": 0.072
+    },
+    {
+     "startNumber": 6000,
+     "endNumber": -1,
+     "productPrice": 0.0674
+    }
+   ],
+   "buyComponentPrices": [
+    {
+     "startNumber": 3000,
+     "endNumber": 5999,
+     "productPrice": 0.0694
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.0934
+    },
+    {
+     "startNumber": 6000,
+     "endNumber": -1,
+     "productPrice": 0.065
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2999,
+     "productPrice": 0.0825
+    },
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.1376
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.1081
+    }
+   ],
+   "firstSortAccessId": "68f218c9a74e4148a83415d14e926c64",
+   "secondSortAccessId": "434702f18e684c28a613a717cb768f2b",
+   "canPresaleNumber": 4988,
+   "componentProductType": 0,
+   "mergedComponentCode": null,
+   "urlSuffix": "397594-SMCJ40CA/C408369",
+   "leastPatchNumber": 2,
+   "lossNumber": 1,
+   "isBuyComponent": "1",
+   "noBuyReason": null,
+   "componentAlternativesCode": null,
+   "replaceUrlSuffix": null,
+   "preferredComponentFlag": false,
+   "allowPostFlag": true,
+   "score": null,
+   "idleFlag": null,
+   "estimateDate": null,
+   "fullReelPrice": null,
+   "encapsulationNumber": 3000,
+   "shopCostPrice": 0.33,
+   "preMinPurchaseNum": 81,
+   "minPurchaseNum": 1,
+   "initialPrice": 0.1428,
+   "componentCode": "C408369",
+   "componentBrandEn": "MDD(Microdiode Semiconductor)",
+   "componentModelEn": "SMCJ40CA",
+   "componentImageUrl": "",
+   "productBigImageAccessId": "8583492020232441856",
+   "productBigImageAccessIdUrl": null,
+   "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2408090953_MDD-Microdiode-Semiconductor-SMCJ40CA_C408369.pdf",
+   "dataManualFileAccessId": "8755796808113373184",
+   "dataManualFileAccessIdUrl": null,
+   "dataManualOfficialLink": "",
+   "componentName": "MDD(Microdiode Semiconductor) SMCJ40CA",
+   "minImage": "",
+   "minImageAccessId": "8583492021310918656",
+   "minImageAccessIdUrl": null,
+   "imageList": [
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    }
+   ],
+   "manufacturerBlackFlag": null,
+   "componentNameEn": null,
+   "componentSpecificationEn": "DO-214AB(SMC)",
+   "describe": "-65\u2103~+150\u2103 1.5kW 1uA 23.3A 40V 49.1V 64.5V Bidirectional TVS DO-214AB(SMC) ESD and Surge Protection (TVS/ESD) ROHS",
+   "attributes": [
+    {
+     "attribute_name_en": "Operating Temperature",
+     "attribute_value_name": "-65\u2103~+150\u2103"
+    },
+    {
+     "attribute_name_en": "Type",
+     "attribute_value_name": "TVS"
+    },
+    {
+     "attribute_name_en": "Junction Capacitance",
+     "attribute_value_name": "-"
+    },
+    {
+     "attribute_name_en": "Number of Channels",
+     "attribute_value_name": "1"
+    },
+    {
+     "attribute_name_en": "Peak Pulse Power Dissipation (Ppp)",
+     "attribute_value_name": "1.5kW"
+    },
+    {
+     "attribute_name_en": "level of protection",
+     "attribute_value_name": "-"
+    },
+    {
+     "attribute_name_en": "Clamping Voltage",
+     "attribute_value_name": "64.5V"
+    },
+    {
+     "attribute_name_en": "Polarity",
+     "attribute_value_name": "Bidirectional"
+    },
+    {
+     "attribute_name_en": "Voltage - Breakdown",
+     "attribute_value_name": "49.1V"
+    },
+    {
+     "attribute_name_en": "Peak Pulse Current (Ipp)",
+     "attribute_value_name": "23.3A"
+    },
+    {
+     "attribute_name_en": "Reverse Stand-Off Voltage (Vrwm)",
+     "attribute_value_name": "40V"
+    },
+    {
+     "attribute_name_en": "Reverse Leakage Current (Ir)",
+     "attribute_value_name": "1uA"
+    }
+   ],
+   "rankScore": null,
+   "firstSortName": "ESD and Surge Protection (TVS/ESD)",
+   "secondSortName": "Circuit Protection",
+   "componentBrandHigh": null,
+   "remarkHigh": null,
+   "componentModelHigh": "<span class='lucene_highlight_class'>SMCJ40CA</span>",
+   "componentCodeHigh": null,
+   "componentSpecificationHigh": null,
+   "rohsFlag": 1,
+   "shopShowPriceFlag": true,
+   "shopShowForeignPriceFlag": true,
+   "shopRealPriceFlag": true,
+   "assemblyComponentFlag": false,
+   "rohsFileId": null,
+   "rohsUrl": null
+  },
+  {
+   "componentId": 436728,
+   "componentLibraryType": "expand",
+   "stockCount": 2560,
+   "componentTypeEn": "ESD and Surge Protection (TVS/ESD)",
+   "erpComponentName": "40V\u622a\u6b62 \u5cf0\u503c\u6d6a\u6d8c\u7535\u6d41\uff1a23.3A@10/1000us",
+   "componentSource": "shop",
+   "lcscGoodsUrl": "https://www.lcsc.com/product-detail/esd-and-surge-protection-tvs-esd_shandong-jingdao-microelectronics-smcj40ca_C438214.html",
+   "componentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.1056
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.084
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.0731
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2999,
+     "productPrice": 0.065
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 5999,
+     "productPrice": 0.0585
+    },
+    {
+     "startNumber": 6000,
+     "endNumber": -1,
+     "productPrice": 0.0553
+    }
+   ],
+   "buyComponentPrices": [
+    {
+     "startNumber": 3000,
+     "endNumber": 5999,
+     "productPrice": 0.0564
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.0704
+    },
+    {
+     "startNumber": 6000,
+     "endNumber": -1,
+     "productPrice": 0.0532
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2999,
+     "productPrice": 0.0626
+    },
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.1017
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.0809
+    }
+   ],
+   "firstSortAccessId": "68f218c9a74e4148a83415d14e926c64",
+   "secondSortAccessId": "434702f18e684c28a613a717cb768f2b",
+   "canPresaleNumber": 2505,
+   "componentProductType": 0,
+   "mergedComponentCode": null,
+   "urlSuffix": "436728-SMCJ40CA/C438214",
+   "leastPatchNumber": 2,
+   "lossNumber": 1,
+   "isBuyComponent": "1",
+   "noBuyReason": null,
+   "componentAlternativesCode": null,
+   "replaceUrlSuffix": null,
+   "preferredComponentFlag": false,
+   "allowPostFlag": true,
+   "score": null,
+   "idleFlag": null,
+   "estimateDate": null,
+   "fullReelPrice": null,
+   "encapsulationNumber": 3000,
+   "shopCostPrice": 0.27792,
+   "preMinPurchaseNum": 108,
+   "minPurchaseNum": 1,
+   "initialPrice": 0.1056,
+   "componentCode": "C438214",
+   "componentBrandEn": "Shandong Jingdao Microelectronics",
+   "componentModelEn": "SMCJ40CA",
+   "componentImageUrl": "",
+   "productBigImageAccessId": "8583489923093970944",
+   "productBigImageAccessIdUrl": null,
+   "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Shandong-Jingdao-Microelectronics-SMCJ40CA_C438214.pdf",
+   "dataManualFileAccessId": "8588918288798142464",
+   "dataManualFileAccessIdUrl": null,
+   "dataManualOfficialLink": "",
+   "componentName": "Jingdao Microelectronics SMCJ40CA",
+   "minImage": "",
+   "minImageAccessId": "8583489924053655552",
+   "minImageAccessIdUrl": null,
+   "imageList": [
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    }
+   ],
+   "manufacturerBlackFlag": null,
+   "componentNameEn": null,
+   "componentSpecificationEn": "SMC",
+   "describe": "-55\u2103~+150\u2103 1 1.5kW@10/1000us 1uA 23.3A@10/1000us 40V 49.1V 64.5V SMC ESD and Surge Protection (TVS/ESD) ROHS",
+   "attributes": [
+    {
+     "attribute_name_en": "Operating Temperature",
+     "attribute_value_name": "-55\u2103~+150\u2103"
+    },
+    {
+     "attribute_name_en": "Type",
+     "attribute_value_name": "TVS"
+    },
+    {
+     "attribute_name_en": "Peak Pulse Power Dissipation (Ppp)",
+     "attribute_value_name": "1.5kW@10/1000us"
+    },
+    {
+     "attribute_name_en": "Number of Channels",
+     "attribute_value_name": "1"
+    },
+    {
+     "attribute_name_en": "Clamping Voltage",
+     "attribute_value_name": "64.5V"
+    },
+    {
+     "attribute_name_en": "Polarity",
+     "attribute_value_name": "Bidirectional"
+    },
+    {
+     "attribute_name_en": "Peak Pulse Current (Ipp)",
+     "attribute_value_name": "23.3A@10/1000us"
+    },
+    {
+     "attribute_name_en": "Voltage - Breakdown",
+     "attribute_value_name": "49.1V"
+    },
+    {
+     "attribute_name_en": "Reverse Stand-Off Voltage (Vrwm)",
+     "attribute_value_name": "40V"
+    },
+    {
+     "attribute_name_en": "Reverse Leakage Current (Ir)",
+     "attribute_value_name": "1uA"
+    }
+   ],
+   "rankScore": null,
+   "firstSortName": "ESD and Surge Protection (TVS/ESD)",
+   "secondSortName": "Circuit Protection",
+   "componentBrandHigh": null,
+   "remarkHigh": null,
+   "componentModelHigh": "<span class='lucene_highlight_class'>SMCJ40CA</span>",
+   "componentCodeHigh": null,
+   "componentSpecificationHigh": null,
+   "rohsFlag": 1,
+   "shopShowPriceFlag": true,
+   "shopShowForeignPriceFlag": true,
+   "shopRealPriceFlag": true,
+   "assemblyComponentFlag": false,
+   "rohsFileId": null,
+   "rohsUrl": null
+  },
+  {
+   "componentId": 540998,
+   "componentLibraryType": "expand",
+   "stockCount": 20,
+   "componentTypeEn": "ESD and Surge Protection (TVS/ESD)",
+   "erpComponentName": "\u53cc\u5411TVS 40V\u622a\u6b62 \u5cf0\u503c\u6d6a\u6d8c\u7535\u6d41\uff1a23.3A",
+   "componentSource": "shop",
+   "lcscGoodsUrl": "https://www.lcsc.com/product-detail/esd-and-surge-protection-tvs-esd_brightking-smcj40ca-at-tr7_C523403.html",
+   "componentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 0.2475
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 0.1965
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 0.1746
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 499,
+     "productPrice": 0.1473
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 999,
+     "productPrice": 0.1473
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": -1,
+     "productPrice": 0.1473
+    }
+   ],
+   "buyComponentPrices": [
+    {
+     "startNumber": 500,
+     "endNumber": 999,
+     "productPrice": 0.1419
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": -1,
+     "productPrice": 0.1419
+    },
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 0.2385
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 0.1682
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 0.1893
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 499,
+     "productPrice": 0.1419
+    }
+   ],
+   "firstSortAccessId": "68f218c9a74e4148a83415d14e926c64",
+   "secondSortAccessId": "434702f18e684c28a613a717cb768f2b",
+   "canPresaleNumber": 20,
+   "componentProductType": 0,
+   "mergedComponentCode": null,
+   "urlSuffix": "Brightking-SMCJ40CA_ATTR7/C523403",
+   "leastPatchNumber": 2,
+   "lossNumber": 0,
+   "isBuyComponent": "1",
+   "noBuyReason": null,
+   "componentAlternativesCode": null,
+   "replaceUrlSuffix": null,
+   "preferredComponentFlag": false,
+   "allowPostFlag": true,
+   "score": null,
+   "idleFlag": null,
+   "estimateDate": null,
+   "fullReelPrice": null,
+   "encapsulationNumber": 500,
+   "shopCostPrice": 0.624,
+   "preMinPurchaseNum": 52,
+   "minPurchaseNum": 1,
+   "initialPrice": 0.2475,
+   "componentCode": "C523403",
+   "componentBrandEn": "Brightking",
+   "componentModelEn": "SMCJ40CA-AT/TR7",
+   "componentImageUrl": "",
+   "productBigImageAccessId": "8583462742511013888",
+   "productBigImageAccessIdUrl": null,
+   "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Brightking-SMCJ40CA-AT-TR7_C523403.pdf",
+   "dataManualFileAccessId": "8588912649270931456",
+   "dataManualFileAccessIdUrl": null,
+   "dataManualOfficialLink": "",
+   "componentName": "Brightking SMCJ40CA-AT/TR7",
+   "minImage": "",
+   "minImageAccessId": "8583462743332962304",
+   "minImageAccessIdUrl": null,
+   "imageList": [
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    }
+   ],
+   "manufacturerBlackFlag": null,
+   "componentNameEn": null,
+   "componentSpecificationEn": "SMC(DO-214AB)",
+   "describe": "-55\u2103~+150\u2103 1.5kW@10/1000us 1uA 23.3A 40V 44.4V 64.5V Bidirectional TVS SMC(DO-214AB) ESD and Surge Protection (TVS/ESD) ROHS",
+   "attributes": [
+    {
+     "attribute_name_en": "Operating Temperature",
+     "attribute_value_name": "-55\u2103~+150\u2103"
+    },
+    {
+     "attribute_name_en": "Type",
+     "attribute_value_name": "TVS"
+    },
+    {
+     "attribute_name_en": "Peak Pulse Power Dissipation (Ppp)",
+     "attribute_value_name": "1.5kW@10/1000us"
+    },
+    {
+     "attribute_name_en": "Number of Channels",
+     "attribute_value_name": "1"
+    },
+    {
+     "attribute_name_en": "Clamping Voltage",
+     "attribute_value_name": "64.5V"
+    },
+    {
+     "attribute_name_en": "Polarity",
+     "attribute_value_name": "Bidirectional"
+    },
+    {
+     "attribute_name_en": "Peak Pulse Current (Ipp)",
+     "attribute_value_name": "23.3A"
+    },
+    {
+     "attribute_name_en": "Voltage - Breakdown",
+     "attribute_value_name": "44.4V"
+    },
+    {
+     "attribute_name_en": "Reverse Stand-Off Voltage (Vrwm)",
+     "attribute_value_name": "40V"
+    },
+    {
+     "attribute_name_en": "Reverse Leakage Current (Ir)",
+     "attribute_value_name": "1uA"
+    }
+   ],
+   "rankScore": null,
+   "firstSortName": "ESD and Surge Protection (TVS/ESD)",
+   "secondSortName": "Circuit Protection",
+   "componentBrandHigh": null,
+   "remarkHigh": null,
+   "componentModelHigh": "<span class='lucene_highlight_class'>SMCJ40CA</span>-AT/TR7",
+   "componentCodeHigh": null,
+   "componentSpecificationHigh": null,
+   "rohsFlag": 1,
+   "shopShowPriceFlag": true,
+   "shopShowForeignPriceFlag": true,
+   "shopRealPriceFlag": true,
+   "assemblyComponentFlag": false,
+   "rohsFileId": null,
+   "rohsUrl": null
+  }
+ ]
+}

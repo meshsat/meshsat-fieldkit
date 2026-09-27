@@ -1,0 +1,41 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "blank_over_allowance": 1,
+  "rejected_code": 0,
+  "rows": 34,
+  "stale_allow_lines": 0
+ },
+ "denominator": 34,
+ "evidence": [
+  "{'Comment': \"25 A mini blade (Keystone 3568 holder): the pack's fuse\", 'Designator': 'F1', 'Footprint': 'Fuseholder_Blade_Mini_Keystone_3568', 'LCSC Part #': ''}"
+ ],
+ "inputs": {},
+ "missing_input": null,
+ "note": "",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "CMP-002": "0228f21aeb49073d",
+   "SUP-001": "c1197ffafeee55ed"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "CMP-002",
+  "SUP-001"
+ ],
+ "tool": "lcsc_fill",
+ "tools": {
+  "git_head": "1f614233998c",
+  "tools_tree_sha": "60b5a5a915850caa"
+ },
+ "ts": "2026-09-26T13:34:47Z",
+ "verdict": "FAIL",
+ "version": "1f614233998c+dirty",
+ "writer": {
+  "file": "lcsc_fill.py",
+  "sha16": "da4dbe667e26d0eb"
+ }
+}

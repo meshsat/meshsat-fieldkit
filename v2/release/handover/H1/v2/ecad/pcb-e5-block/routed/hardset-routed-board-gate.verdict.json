@@ -1,0 +1,51 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "by_type": {},
+  "hard": 0,
+  "report": {
+   "silk_over_copper": 4
+  },
+  "stage": "post",
+  "types_checked": 15,
+  "unrouted": 0,
+  "unrouted_at_cap": false
+ },
+ "denominator": 15,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-e5-block.kicad_pcb",
+   "sha256_16": "686b29a734c55b9a"
+  },
+  "drc": {
+   "path": "out/pcb-e5-block-drc.json",
+   "sha256_16": "39067008b4c3677f"
+  }
+ },
+ "missing_input": null,
+ "note": "routed-board gate (routed board: hard and unrouted must both be zero) (exit code stays the reader contract of --score and --counts)",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "RTE-002": "66d69a0c02e07594"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "RTE-002"
+ ],
+ "tool": "hardset-routed-board-gate",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "994b3d2315bb9859"
+ },
+ "ts": "2026-09-21T12:52:57Z",
+ "verdict": "PASS",
+ "version": "unknown",
+ "writer": {
+  "file": "hardset.py",
+  "sha16": "be29a44c4a592876"
+ }
+}

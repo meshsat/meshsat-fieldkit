@@ -1,0 +1,212 @@
+{
+ "board": "c",
+ "board_table_phase": "C24",
+ "bom_rows_per_reference": 167,
+ "commands": [
+  {
+   "argv": [
+    "kicad-cli",
+    "sch",
+    "export",
+    "pdf",
+    "--exclude-drawing-sheet",
+    "--exclude-pdf-property-popups",
+    "-o",
+    "/root/h1/ex-out/.pcb-c-display-schematic-sheet.pdf",
+    "pcb-c-display.kicad_sch"
+   ],
+   "cwd": "v2/ecad/pcb-c-display-c8",
+   "exit": 0,
+   "output_tail": "Plotted to '/root/h1/ex-out/.pcb-c-display-schematic-sheet.pdf'.\nDone.\n",
+   "started_utc": "2026-09-27T04:43:22Z"
+  },
+  {
+   "argv": [
+    "/usr/bin/python3",
+    "/root/h1/ex/src/v2/ecad/tools/sch_pages.py",
+    "pcb-c-display.kicad_sch",
+    "/root/h1/ex-out/.pcb-c-display-schematic-sheet.pdf",
+    "/root/h1/ex-out/pcb-c-display-c8/pcb-c-display-schematic.pdf"
+   ],
+   "cwd": "v2/ecad/pcb-c-display-c8",
+   "exit": 0,
+   "output_tail": "sch_pages: 2 x 3 cells, 5 pages kept of 6 tiles\n",
+   "started_utc": "2026-09-27T04:43:23Z"
+  },
+  {
+   "argv": [
+    "kicad-cli",
+    "sch",
+    "export",
+    "bom",
+    "--fields",
+    "Reference,Value,Footprint,LCSC,${QUANTITY}",
+    "--group-by",
+    "Value,Footprint",
+    "--sort-field",
+    "Reference",
+    "-o",
+    "/root/h1/ex-out/pcb-c-display-c8/NOT_FOR_FAB-pcb-c-display-bom.csv",
+    "pcb-c-display.kicad_sch"
+   ],
+   "cwd": "v2/ecad/pcb-c-display-c8",
+   "exit": 0,
+   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\nWrote bill of materials to '/root/h1/ex-out/pcb-c-display-c8/NOT_FOR_FAB-pcb-c-display-bom.csv'.\n",
+   "started_utc": "2026-09-27T04:43:24Z"
+  },
+  {
+   "argv": [
+    "kicad-cli",
+    "sch",
+    "export",
+    "bom",
+    "--fields",
+    "Reference,Value,Footprint,LCSC,Description,Datasheet,${DNP}",
+    "--labels",
+    "Reference,Value,Footprint,LCSC,Description,Datasheet,DNP",
+    "--group-by",
+    "",
+    "--ref-range-delimiter",
+    "",
+    "--sort-field",
+    "Reference",
+    "-o",
+    "/root/h1/ex-out/pcb-c-display-c8/NOT_FOR_FAB-pcb-c-display-bom-per-reference.csv",
+    "pcb-c-display.kicad_sch"
+   ],
+   "cwd": "v2/ecad/pcb-c-display-c8",
+   "exit": 0,
+   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\nWrote bill of materials to '/root/h1/ex-out/pcb-c-display-c8/NOT_FOR_FAB-pcb-c-display-bom-per-reference.csv'.\n",
+   "started_utc": "2026-09-27T04:43:25Z"
+  },
+  {
+   "argv": [
+    "kicad-cli",
+    "sch",
+    "erc",
+    "--severity-all",
+    "--format",
+    "json",
+    "-o",
+    "/root/h1/ex-out/pcb-c-display-c8/pcb-c-display-erc.json",
+    "pcb-c-display.kicad_sch"
+   ],
+   "cwd": "v2/ecad/pcb-c-display-c8",
+   "exit": 0,
+   "output_tail": "Found 328 violations\nSaved ERC Report to /root/h1/ex-out/pcb-c-display-c8/pcb-c-display-erc.json\n",
+   "started_utc": "2026-09-27T04:43:25Z"
+  },
+  {
+   "argv": [
+    "kicad-cli",
+    "sch",
+    "erc",
+    "--severity-all",
+    "--format",
+    "report",
+    "-o",
+    "/root/h1/ex-out/pcb-c-display-c8/pcb-c-display-erc.rpt",
+    "pcb-c-display.kicad_sch"
+   ],
+   "cwd": "v2/ecad/pcb-c-display-c8",
+   "exit": 0,
+   "output_tail": "Found 328 violations\nSaved ERC Report to /root/h1/ex-out/pcb-c-display-c8/pcb-c-display-erc.rpt\n",
+   "started_utc": "2026-09-27T04:43:26Z"
+  },
+  {
+   "argv": [
+    "kicad-cli",
+    "sch",
+    "export",
+    "netlist",
+    "--format",
+    "kicadsexpr",
+    "-o",
+    "/root/h1/ex-out/.pcb-c-display.export.net",
+    "pcb-c-display.kicad_sch"
+   ],
+   "cwd": "v2/ecad/pcb-c-display-c8",
+   "exit": 0,
+   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\n",
+   "started_utc": "2026-09-27T04:43:27Z"
+  },
+  {
+   "argv": [
+    "regen_compare.py",
+    "pair",
+    "netlist",
+    "<committed out/pcb-c-display.net>",
+    "<export of the committed schematic>"
+   ],
+   "exit": 0
+  }
+ ],
+ "commit": "99cde56b60f7a40a1b0826acf85ae7e064a976b9",
+ "committed_netlist_sha256": "11eabc2dddca516198ee2af7474ba5608c6538d961bea93e72e2629d244dd26f",
+ "driver": {
+  "path": "v2/ecad/tools/handover_exports.py",
+  "sha256": "dc212f1b06ae34149b643425819dea6d4d85bbb078545b16e4f7c0534f98d69b"
+ },
+ "erc_violations_by_severity": {
+  "warning": 328
+ },
+ "host": "Linux-6.8.0-134-generic-x86_64-with-glibc2.39",
+ "kicad_cli": "9.0.9",
+ "netlist_parity_with_the_schematic": "PARITY_AFTER_NOISE",
+ "outputs": {
+  "NOT_FOR_FAB-pcb-c-display-bom-per-reference.csv": {
+   "bytes": 15129,
+   "sha256": "e9e7e0a8585341d869d53232faeba7f96cadcad10dd099b65fc51fb514ed12df"
+  },
+  "NOT_FOR_FAB-pcb-c-display-bom.csv": {
+   "bytes": 8913,
+   "sha256": "279189c1d34e6bf6be451f774c335f771b51911e683cc5a451758bd33914526b"
+  },
+  "pcb-c-display-erc.json": {
+   "bytes": 210198,
+   "sha256": "498b88313140d77875f23fb8c24240ea7fe63aa9aa4f547bed59ecfbda276822"
+  },
+  "pcb-c-display-erc.rpt": {
+   "bytes": 50411,
+   "sha256": "34ea285c64451d7aee3c059805d2be7dd900991a8f74d838a72e0c940dbf591d"
+  },
+  "pcb-c-display-net-parity.json": {
+   "bytes": 715,
+   "sha256": "5d57ad78574c022a8b5eb25b11d54fd0e0dab6b16e931e8017ca4393b1fa56ca"
+  },
+  "pcb-c-display-schematic.pdf": {
+   "bytes": 782795,
+   "sha256": "5cb87050fbe1da2967a4ab5adfbe51a67621322fa423504b75e9d456de7b2a07"
+  }
+ },
+ "paged_pdf_page1_text_chars": 2782,
+ "paged_pdf_pages": 5,
+ "phase_directory": "v2/ecad/pcb-c-display-c8",
+ "python": "3.12.3",
+ "result": "OK",
+ "schematic": "v2/ecad/pcb-c-display-c8/pcb-c-display.kicad_sch",
+ "schematic_phase_label": "C24",
+ "schematic_sha256": "f566ea89fb3e3af478e73f1541a136df8f2a8235458e786c4fc2cc6254a0d6f8",
+ "sheet_pdf_page1_text_chars": 12427,
+ "sheet_pdf_pages": 1,
+ "sheet_pdf_sha256_not_kept": "44861edacd803471814b323a5a18f0b8436db21e783430d64ed65dc2b816e2e7",
+ "stem": "pcb-c-display",
+ "taken_utc": "2026-09-27T04:43:28Z",
+ "versions": {
+  "kicad_cli": "9.0.9",
+  "mutool": "mutool version 1.23.10",
+  "packages": {
+   "kicad": "9.0.9~ubuntu24.04.1",
+   "kicad-footprints": "9.0.9~ubuntu24.04.1",
+   "kicad-symbols": "9.0.9~ubuntu24.04.1",
+   "mupdf-tools": "1.23.10+ds1-1build3",
+   "poppler-utils": "24.02.0-1ubuntu9.9"
+  },
+  "pdfinfo": "pdfinfo version 24.02.0",
+  "platform": "Linux-6.8.0-134-generic-x86_64-with-glibc2.39",
+  "py_PIL": "10.2.0",
+  "py_yaml": "6.0.1",
+  "python": "3.12.3"
+ },
+ "what": "exports of the committed schematic of one board, for the engineering handover"
+}

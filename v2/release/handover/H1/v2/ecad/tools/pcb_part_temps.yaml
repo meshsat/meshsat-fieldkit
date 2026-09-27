@@ -1,0 +1,98 @@
+# WHAT EACH PART'S OWN MAKER PUBLISHES AS ITS OPERATING TEMPERATURE RANGE (rules CMP-001 and ENV-001,
+# 21 September 2026).
+#
+# The envelope was adopted on 21 September (decision 34) and `pcb_envelope.yaml` carries it as data. This file
+# is the other half of the comparison: the range each part states, read out of the sheet in this tree, with the
+# clause it was read from. It exists because NO RULE IN THIS PROJECT HAS EVER COMPARED THE TWO, and the first
+# part looked at under the adopted envelope was outside it.
+#
+# WHAT A ROW IS. A quotation from a document in `v2/vendor/`, never a guess and never a class figure dressed as
+# a datasheet number: where the sheet is owed, the row says so and the part is NOT judged. A row may declare a
+# CARVE-OUT, which is the envelope's own words about a part that is knowingly outside its range at an extreme
+# (the e-paper below -15 C, the pack cells at the charge limit); a carve-out is reported and never silently
+# passed.
+#
+# HOW A PART IS MATCHED. By its JLCPCB order code where it has one, because that is what the BOM carries and
+# what is bought; otherwise by a substring of the schematic's own value or comment, which is what a
+# bench-fitted module has. A part that matches nothing is UNDECLARED and counted, never assumed fine.
+schema_version: 1
+generated: "2026-09-21"
+
+parts:
+  - {name: "Pulse H5007NL 1000BASE-T magnetics", lcsc: "C6384935", where: inside,
+     min_c: 0, max_c: 70,
+     source: {title: "Pulse H5007 family datasheet", clause: "Electrical Specifications, Operating Temperature",
+              quote: "Electrical Specifications @ 25C - Operating Temperature 0C to 70C",
+              url_or_path: "v2/vendor/pulse/pulse-h5007nl.pdf", accessed: "2026-09-21"},
+     note: "the HX parts of the same sheet are the extended-temperature version, -40 to +85 C (note 1), and the
+       Mechanicals page groups H5004, HX5004 and H5007 on one outline, so HX5004NL is the candidate; PIN
+       COMPATIBILITY IS NOT CLAIMED here and is the first thing to check before a swap"}
+
+  - {name: "Pervasive Displays E2370KS0C1 e-paper", where: outside_face, match: "E2370KS0C1",
+     min_c: -15, max_c: 60,
+     carve_out: "below -15 C the e-paper is outside its operating range and updates slowly or not at all, which
+       the envelope declares as a degraded display and not a dead kit",
+     source: {title: "PDI E2370KS0C1 flyer", clause: "operating temperature",
+              url_or_path: "v2/vendor/pdi/pdi-e2370ks0c1-flyer.pdf", accessed: "2026-09-16"}}
+
+  - {name: "Sensirion SGP41 VOC sensor", where: inside, match: "SGP41",
+     min_c: -20, max_c: 55,
+     source: {title: "Sensirion SGP41 datasheet", clause: "operating conditions",
+              url_or_path: "v2/vendor/sensirion/sgp41-datasheet.pdf", accessed: "2026-09-16"}}
+
+  - {name: "Xenarc 709GNK monitor", where: in_the_plate, match: "709GNK",
+     min_c: -20, max_c: 70,
+     source: {title: "Xenarc 709GNK product manual v2", clause: "specifications, operating temperature",
+              url_or_path: "v2/vendor/xenarc/xenarc-709gnk-product-manual-v2.pdf", accessed: "2026-09-16"}}
+
+  - {name: "TRACO TEN 40-2412WIN", where: inside, match: "TEN 40-2412WIN",
+     min_c: -40, max_c: 75,
+     source: {title: "TRACO TEN 40WIN datasheet", clause: "operating temperature range",
+              url_or_path: "v2/vendor/traco/ten40win_datasheet-3049699.pdf", accessed: "2026-09-16"}}
+
+  - {name: "Quectel RM520N-GL 5G module", where: inside, match: "RM520N",
+     min_c: -30, max_c: 75,
+     source: {title: "Quectel RM520N-GL specification brief", clause: "operating temperature (extended -40 to +85)",
+              url_or_path: "v2/vendor/quectel/quectel-rm520n-gl-5g-specification-brief.pdf", accessed: "2026-09-16"}}
+
+  - {name: "Raspberry Pi Compute Module 5", where: inside, match: "CM5",
+     min_c: -20, max_c: 85,
+     source: {title: "Raspberry Pi Compute Module 5 datasheet", clause: "4.4 environmental, non-condensing (RF best to +75)",
+              url_or_path: "v2/vendor/cm5/cm5-datasheet.pdf", accessed: "2026-09-16"}}
+
+  - {name: "Ebyte E22-900M30S LoRa module", where: inside, match: "E22-900M30S",
+     min_c: -40, max_c: 85,
+     source: {title: "Ebyte E22-900M30S user manual v1.20", clause: "operating temperature",
+              url_or_path: "v2/vendor/lora/ebyte-e22-900m30s-user-manual-en-v1.20.pdf", accessed: "2026-09-16"}}
+
+  - {name: "Ebyte E72-2G4M20S1E", where: inside, match: "E72-2G4M20S1E",
+     min_c: -40, max_c: 85,
+     source: {title: "Ebyte E72-2G4M20S1E user manual", clause: "operating temperature",
+              url_or_path: "v2/vendor/zigbee/ebyte-e72-2g4m20s1e-user-manual.pdf", accessed: "2026-09-16"}}
+
+  - {name: "Quectel LG290P GNSS", where: inside, match: "LG290P",
+     min_c: -40, max_c: 85,
+     source: {title: "Quectel LG290P hardware design v1.1", clause: "operating temperature",
+              url_or_path: "v2/vendor/quectel/lg290p03-hardware-design-v1.1.pdf", accessed: "2026-09-16"}}
+
+  - {name: "Amphenol M.2 B-key socket", where: inside, match: "MDT420B01001",
+     min_c: -40, max_c: 80,
+     source: {title: "Amphenol MDT420B01001 M.2 B-key drawing", clause: "operating temperature",
+              url_or_path: "v2/vendor/m2/amphenol-mdt420b01001-m2-b-key.pdf", accessed: "2026-09-16"}}
+
+  - {name: "NiceRF SA868 VHF module", where: inside, match: "SA868",
+     min_c: -30, max_c: 70,
+     source: {title: "NiceRF SA868 datasheet v1.3", clause: "working temperature range, -30 / 25 / 70",
+              url_or_path: "v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf", accessed: "2026-09-20"}}
+
+  - {name: "the pack's protection board", where: pack, match: "PCB-LIS1A15",
+     min_c: -40, max_c: 85,
+     source: {title: "Batteryspace product specification 274", clause: "operating temperature (storage -40 to +125)",
+              url_or_path: "v2/vendor/battery/batteryspace-prod-spec-274.pdf", accessed: "2026-09-20"}}
+
+# Rows whose sheet this project does not hold. They are NOT judged and they are NOT assumed fine.
+owed:
+  - {name: "the 4S pack cells", where: pack,
+     why: "the envelope's table carries the Li-ion CLASS limits (0 to +45 C charge, -10 to +60 C discharge) and
+       says in its own words that the pack's sheet is owed. A class limit is not a datasheet number, so no row
+       above claims it and this rule does not judge the cells."}

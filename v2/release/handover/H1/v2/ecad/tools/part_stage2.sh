@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+# part_stage2.sh <project dir> <name> <passes> <timeout s> <group list>: after the GLOBAL job: import its session and lock its nets, export the DSN
+# again (planes and power layers as the route scripts do), re-partition, route every listed group concurrently, wait, merge, DRC, report.
+# Env: FR_PLANE_NETS (csv) and FR_POWER_LAYERS as for route_one.sh. Marker STAGE2-DONE.
+# PART_REGIONS: the region spec for dsn_partition (NAME:xmax,...,LAST), the SAME the caller's stage 1 used. Without it the
+# re-partition took board B's default regions (DEVW, S1, S2, S3, DEVE), so board A's groups WEST, MID and EAST matched no
+# net and every region job auto-routed nothing in half a second (A46, 18 September 2026).
+set -uo pipefail
+cd "$1"; N="$2"; P="$3"; T="$4"; PARTS="$5"; W=$PWD/out/part; PJ=$W/part.json
+echo "stage2: groups [$PARTS] passes $P timeout $T"; cp $N.kicad_pro out/$N-preroute.kicad_pro 2>/dev/null   # every board KiCad loads or checks needs the project file beside it (net classes, via sizes), or the DRC reports the default class
+python3 ../tools/ses_import_lock.py out/$N-preroute.kicad_pcb $W/GLOBAL/route.ses $PJ GLOBAL $W/stage1.kicad_pcb 2>&1 | grep -v -E "Debug|leak"
+cp $N.kicad_pro $W/stage1.kicad_pro
+bash ../tools/dsn_export.sh $W/stage1.kicad_pcb $W/stage2-raw.dsn "${FR_PLANE_NETS:-}" "${FR_POWER_LAYERS:-}" 2>&1 | grep -v -E "Debug|leak"
+python3 ../tools/dsn_partition.py $W/stage1.kicad_pcb $W/stage2-raw.dsn $W/stage2.dsn $W/part2.json ${PART_REGIONS:+--regions=$PART_REGIONS} 2>&1 | grep -v -E "Debug|leak" | grep -v "^partition [A-Z]"
+# 16 September 2026: THE DEFAULT IS THE MODE THAT WORKS. This read `${PART_SEQ:-0}`, so a launcher that said
+# nothing got the CONCURRENT mode, which the paragraph below has said since 10 September cannot work, and
+# tonight three board B partition arms spent about three hours of a rented box each reproducing exactly the
+# result it predicts: 549, 614 and 760 boundary conflicts on the merged board, against the 1,121 of the run
+# that taught it. A tool whose own comment says a mode does not work must not hand you that mode by default.
+# PART_SEQ=0 is still there for anyone who wants to measure the concurrent case again, and now has to ask.
+#
+# 10 September 2026 (B19, appendix 32.93): PART_SEQ=1 routes the groups ONE AT A TIME, importing and locking each result
+# before the next job's DSN is exported, so a group sees its predecessors' copper as obstacles. Concurrent jobs cannot:
+# each one only knows the locked copper of stage 1, so their boundaries collide, and on B19 the merge of five concurrent
+# regions carried 1,121 hard violations that three rip passes could only bring to about 400. Sequential costs wall clock
+# (five jobs in a row rather than five at once) and buys a merge that has nothing to reconcile.
+for G in $PARTS; do rm -rf $W/$G $W/route-$G.log; done   # 10 Sep 2026: the merge and the report used to pick up the sessions and logs of a PREVIOUS pass for a group this pass never reached
+if [ "${PART_SEQ:-1}" = 1 ]; then
+  for G in $PARTS; do
+    echo "stage2: sequential group $G"
+    bash ../tools/route_part.sh $W $W/stage2.dsn $G $P $T $W/part2.json > $W/route-$G.log 2>&1
+    [ -s $W/$G/route.ses ] || { echo "stage2: $G wrote no session, stopping the chain here"; break; }
+    # THE IMPORT IS CHECKED, AND IT WRITES BESIDE THE BOARD RATHER THAN OVER IT (18 September 2026, B22). This line
+    # read and wrote the same path and its status was thrown away by the pipe, so when `ses_import_lock` raised on
+    # S3's session the loop carried on: DEVE was routed against a board with no S3 copper, every group still printed
+    # PART-DONE, and the merge at the end described a board nobody had built (the true open count was 597 once the
+    # five sessions were re-merged by hand). A step that cannot be skipped silently is a step that stops the chain.
+    python3 ../tools/ses_import_lock.py $W/stage1.kicad_pcb $W/$G/route.ses $W/part2.json $G $W/stage1-next.kicad_pcb > $W/import-$G.log 2>&1
+    _irc=$?; grep -av -E "Debug|leak" $W/import-$G.log | tail -1
+    if [ "$_irc" != 0 ] || [ ! -s $W/stage1-next.kicad_pcb ]; then
+      echo "stage2: $G did not import (exit $_irc), stopping the chain here rather than merging a board without it"
+      tail -4 $W/import-$G.log; break
+    fi
+    mv $W/stage1-next.kicad_pcb $W/stage1.kicad_pcb; cp $N.kicad_pro $W/stage1.kicad_pro 2>/dev/null
+    bash ../tools/dsn_export.sh $W/stage1.kicad_pcb $W/stage2-raw.dsn "${FR_PLANE_NETS:-}" "${FR_POWER_LAYERS:-}" 2>&1 | tail -1
+    python3 ../tools/dsn_partition.py $W/stage1.kicad_pcb $W/stage2-raw.dsn $W/stage2.dsn $W/part2.json ${PART_REGIONS:+--regions=$PART_REGIONS} 2>&1 | tail -1
+  done
+else
+  for G in $PARTS; do bash ../tools/route_part.sh $W $W/stage2.dsn $G $P $T $W/part2.json > $W/route-$G.log 2>&1 & done
+  wait
+fi
+for G in $PARTS; do tail -2 $W/route-$G.log; done
+# 10 September 2026: in sequential mode every group's session was ALREADY imported and locked into stage1 as it finished, so
+# merging the same sessions again laid each group's copper a second time on top of itself (B19: 1,770 DEVW tracks added to a
+# board that already carried them, and the duplicate pieces read as clearance and shorting violations). The sequential board
+# is stage1 as it stands.
+if [ "${PART_SEQ:-1}" = 1 ]; then
+  cp $W/stage1.kicad_pcb $W/merged.kicad_pcb
+  echo "stage2: sequential mode, the merged board is stage1 (each group was imported and locked as it finished)"
+else
+  ARGS=""; for G in $PARTS; do [ -s $W/$G/route.ses ] && ARGS="$ARGS $G=$W/$G/route.ses"; done
+  python3 ../tools/ses_merge.py $W/stage1.kicad_pcb $W/part2.json $W/merged.kicad_pcb $ARGS 2>&1 | grep -v -E "Debug|leak"
+fi
+cp $N.kicad_pro $W/merged.kicad_pro
+# The one hard set reports here too (10 September 2026, round-two red teams C1).
+../tools/drc.sh $W/merged.kicad_pcb $W/merged-drc.json && python3 ../tools/hardset.py $W/merged-drc.json post --label "stage2 merged" | head -2
+echo "STAGE2-DONE $(date -u +%H:%M:%S)"

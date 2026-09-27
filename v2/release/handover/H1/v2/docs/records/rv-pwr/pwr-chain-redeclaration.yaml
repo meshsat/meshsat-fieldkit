@@ -1,0 +1,132 @@
+# PWR-F12: a PROPOSED re-declaration of the pack chain's current contract (stream PWR, MESHSAT-1357, 26 September 2026,
+# second to fifth cycles; citations at main 01469100). A draft for the battery-protection stream, which owns pcb_pack_protection.yaml and
+# pcb_energy_chain.yaml. It is NOT in the gate's schema: `pack_protection.py` and `energy_chain.py` decide how these
+# values are carried. Taken by the session under the owner's standing rule of 26 September 2026; PROVISIONAL.
+#
+# WHY. On main (01469100; the two pack YAML files and dc_drop.py are unchanged since 1f614233, gen_sch_p.py's lines moved at d90f30e4):
+# - every stage of pcb_energy_chain.yaml declares continuous_a 10.0 and peak_a 18.0 (lines 48 to 153), and so does
+#   pcb_pack_protection.yaml (lines 28, 29);
+# - neither file declares a duration for the peak. The design record gives two key-down figures, both written
+#   before this pack was ruled (32.62, line 3054): appendix 32.53 line 2860, "The 200 W peak (PA key-down) lasts
+#   minutes", and 32.56 line 2940, "a 20 s key-down at 45 W warms the local patch about 15 K", the plate patch the
+#   PA's flange bolts to (fifth cycle: the fourth had called 32.53's the only one);
+# - the protection test proves 10 A for an hour (line 114);
+# - dc_drop judges board A's pack-node conductors at amps_typ, 10 A (dc_drop.py lines 258 to 264);
+# - the energy chain does not carry the chemical fuse F2 (Eaton SCF9550-30-05), which is in series between the blade
+#   and the charge FET on main (gen_sch_p.py lines 64 to 76 and 247 to 289; fnd/r4p drafts/r4-decisions.md O-13);
+# - on main since 458b2873 board A's 5 mOhm charge shunt R17 is in the pack's discharge path too (S-04,
+#   gen_sch_a.py lines 26 to 37 and 716 to 722): 1.62 W at 18 A against a 3 W part whose maker's sheet is not held.
+# Against it (v2/docs/feasibility/POWER-THERMAL.md):
+# - modes the design can switch on sustain 15.3 A (PS-TYP with both outlets) to 18.4 A (PS-BUSY with both) at the end
+#   of discharge if no control sheds them (section 7.1);
+# - every PA key-down draws more than 10 A for most of the discharge: the PA keyed on its own over PS-TYP draws 10.0 A
+#   at a 14.4 V stack and 14.6 A at 10.0 V, and D-11's all-transmit up to 18 A (sections 7.1 and 7.2). Both are
+#   bounded to 60 s per key-down (K1: a PROVISIONAL tightening of 32.53's "minutes", three times 32.56's 20 s, and
+#   on the PA side also ended by the flange cut C4), which makes up to 18 A a service current for at most 60 s and
+#   answers the question appendix 32.244 left open, "service current or fault current";
+# - nothing protective acts between 10 A and 20 A for any duration: the gauge's OCD is 20 A for 2 s (line 110), and
+#   the 25 A ATOF blades carry 19 A at the 65 C column of the maker's derating (pcb_fuse_derating.yaml line 46).
+
+pack_current_contract:
+  continuous_a: 10.0
+  continuous_basis: >-
+    Unchanged value, now held by controls C2 (the outlet budget) and C3 (the current trigger for module shedding),
+    both acting at a 10 s average above 9.0 A (POWER-THERMAL.md section 9.3). Kept at 10 A because board A's pack
+    node at 1 oz needs 7.19 mm at 10 A (appendix 32.244).
+  service_short_time:
+    current_a: 18.0
+    duration_s: 60
+    basis: >-
+      Every PA key-down (POWER-THERMAL.md section 7.2): at most 60 s, at least 2 s apart, keyed only with every cell
+      at or under +55 C, the inside air at or under +50 C, the PA's flange at or under +75 C (fifth cycle, PWR-F15)
+      and the 10 s average pack current at or under 9.0 A, with the outlets, the pack heater and the standby WiFi
+      card off and the other loads at typical. All-transmit only above a 15.5 V rest voltage, the PA keyed on its
+      own only above 12.4 V, so the predicted pack current stays at or under 18 A (on main, with R17 in the path,
+      the bases are 15.31 V and 11.95 V); the in-key guard C4 unkeys the PA if the gauge reads more than 18 A or a
+      cell under 2.70 V, or the PA's flange reads +85 C.
+    consequence: >-
+      Board A's pack-path copper (on main CELL+, CELL_FUSED and VBAT, gen_sch_a.py lines 24, 34 and 47; VBAT and
+      CH_SRP at 1f614233) is judged at 18 A unless a transient thermal analysis of that copper at 60 s shows otherwise: 16.18 mm at 1 oz, 8.09 mm at 2 oz (appendix 32.244). A 2 oz price goes to the owner.
+  trip:
+    level_assignment_open: >-
+      Fifth cycle. This draft calls the declared 20 A for 2 s OCD2 and the backstop OCD1. The battery stream's proposed
+      golden image (main 01469100, v2/docs/review-packets/battery/PRIMARY-CONFIGURATION.md lines 120 and 121) puts
+      the 20 A for 2 s on OCD1 and proposes OCD2 at 24 A for 1 s, TBD by its reviewer. The gauge has two firmware
+      levels (SLUUAQ3A 2.5), so the two proposals ask for three settings. This draft needs one level at 11 A for 90 s
+      and one at 20 A for 2 s, whatever they are called; above 20 A the AFE's AOLD (30 A class, 20 ms, the same
+      packet's line 122) acts in hardware. OPEN with the battery stream, which owns the golden image.
+    OCD2: {threshold_a: 20.0, delay_s: 2.0, note: "the PACK_OVER_CURRENT_DISCHARGE row now declared (pcb_pack_protection.yaml lines 107 to 110)"}
+    OCD1: {threshold_a: 11.0, delay_s: 90,
+           basis: "SLUUAQ3A section 2.5 (two independent overcurrent-in-discharge protections) and 14.9.6 (threshold
+             in mA, delay 0 to 255 s): opens the discharge FET on a sustained current above the continuous rating if
+             C2 and C3 fail; a 60 s key-down passes with 30 s to spare, and the 2 s gap between key-downs gives the
+             gauge at least one status decision under 11 A, which returns OCD1 from Alert to Normal (2.5, state
+             table; status decisions at 1 s intervals, 5.2)"}
+    OCD_recovery: {threshold_ma: 200, delay_s: 5,
+           basis: "SLUUAQ3A 14.9.8, the defaults, kept: after an OCD trip the discharge FET closes again only when
+             the pack has been CHARGED at 200 mA or more for 5 s. On battery a backstop trip therefore leaves the
+             kit dark until an input returns. Taken as the safe state: a trip means C2 to C4 have failed, and
+             restarting into the same load would repeat it"}
+    SOCD_constraint: >-
+      SLUUAQ3A 3.5 and 14.10.4: Safety Overcurrent in Discharge is a PERMANENT failure (default -10000 mA for 5 s),
+      disabled by default (Enabled PF A = 0x00, 14.2.5.1; the battery stream found that word's text contradictory,
+      PRIMARY-CONFIGURATION.md line 79). The golden image (fnd/r4p O-10) lists the permanent-fail events that drive
+      FUSE and does not name SOCD, and the battery stream's proposed image (line 137) writes Enabled PF A = 0x53 with
+      SOCD at 0 until its reviewer answers. It must stay so, or SOCD must sit above OCD2's 20 A: at its
+      default, any PA key-down of more than 5 s at more than 10 A would fire F2 and end the pack's life.
+
+parts_on_the_path:
+  rated_above_18_a:
+    - {what: "cells, 3P", continuous_a: 24.0, source: "samsung-35e-orbtronic.pdf 3.8 (8 A per cell)"}
+    - {what: "25 A ATOF blades F1 (P), F3 (E), F1 (A)", continuous_a: 19.0, at_ambient_c: 65,
+       source: "pcb_fuse_derating.yaml line 46 (Littelfuse 287 ATOF, 18 Aug 2022, page 3)"}
+    - {what: "Keystone 3568 mini blade holders of the three blades", ul_current_a: 30.0, ul_temperature_c: [-50, 145],
+       source: "Keystone catalogue M65 page 42 (fetched 26 September 2026, drafts/datasheets/keystone-m65-p42-mini-fuse-holders.pdf,
+         sha256 caa141ea51ac68cf80ab6e14ad2075fcfc76206451f4bfe45330005c0deaf395): the specification block the page
+         sets between the 3557-2 and the 3568; that it covers the 3568 is read from the layout (INFERRED)"}
+    - {what: "Q1 and Q2, CSD17570Q5B", continuous_a: 53.0, at_ambient_c: 25,
+       source: "v2/vendor/battery/ti-csd17570q5b.pdf (SLPS471D): Absolute Maximum Ratings, 53 A continuous at TA 25 C
+         on a 1 in2 2 oz pad (typical RthJA 40 C/W), TJ to 150 C; 5.1, RDS(on) 0.69 mOhm maximum at VGS 10 V and 0.92
+         at 4.5 V (25 C, rising when hot); 5.2, RthJA 50 C/W maximum on 1 in2 of 2 oz copper. At 18 A each dissipates
+         about 0.3 W at 25 C junction, so about +15 K over its board on that copper: rated above 18 A at +60 C
+         (INFERRED; board P's copper per FET is not measured)"}
+    - {what: "Amass XT60", continuous_a: 30.0, source: "pcb_energy_chain.yaml line 93"}
+    - {what: "dock block, four spring pins in parallel", continuous_a: 36.0, source: "pcb_energy_chain.yaml line 124"}
+    - {what: "board P and board E 2 oz bands", continuous_a: 25.0, source: "pcb_energy_chain.yaml lines 50 and 108 (declared)"}
+  declared_only:
+    - {what: "R10, the 2 mOhm coulomb-counting shunt", declared: "2m 2512 2W (sense)", source: "gen_sch_p.py line 209",
+       at_18_a_w: 0.65, note: "no part number and no maker sheet: its rating above its own rated ambient is the
+         battery stream's part pick"}
+    - {what: "R17, board A's 5 mOhm RSR charge-current shunt, in the discharge path on main since 458b2873 (S-04)",
+       declared: "5mOhm 1% 2512 (RSR, charge current sense)", source: "gen_sch_a.py lines 716 to 722",
+       at_18_a_w: 1.62, note: "the fitted part is rated 3 W (LCSC C500739, read back from the JLCPCB API on 26
+         September 2026); its maker's datasheet is not held, so its rating at the board's temperature is open (board
+         A's owner)"}
+  not_proven_at_18_a:
+    - {what: "F2, Eaton SCF9550-30-05 chemical fuse", rating_a: 30.0, operating_c: [-20, 60],
+       self_heating_w_at_18_a: [0.32, 0.81],
+       source: "gen_sch_p.py lines 247 to 289 (Eaton ELX1135: 100 percent of rating for 1 hour minimum, operating -20 to
+         +60 C, no current derating published, fuse DCR 1.0 to 2.5 mOhm); fnd/r4p drafts/r4-decisions.md O-8 and O-13",
+       status: "at 18 A, 60 percent of its rating, 'the risk is judged low, not proven: F2's case temperature is a
+         thermal-test reading' (gen_sch_p.py lines 273 to 276; the battery stream's FUSE-INTERPRETATION.md). It sits at the block's temperature, and a key-down may start with a cell at +55 C, so its margin to
+         +60 C during a key-down is UNKNOWN: its thermal resistance is not published. Its permanent opening kills the
+         pack, and the energy chain does not carry it (O-13)"}
+  not_yet_judged_at_18_a:
+    - {what: "board A's pack path: CELL+, CELL_FUSED and VBAT on main (VBAT and CH_SRP at 1f614233)", judged_at_a: 10.0,
+       source: "dc_drop.py lines 258 to 264; appendix 32.244 to 32.246"}
+
+closes_when:
+  - "the chain declares 18 A for 60 s as a service rating (both YAML files) and carries F2 as a stage (O-13)"
+  - "board A's pack-path copper (CELL+, CELL_FUSED and VBAT on main) is judged at 18 A, and R17's rating at 1.62 W is shown"
+  - "F2's case temperature is shown at or under +60 C after 18 A for 60 s from a block at +55 C (the protection test
+     below), or Eaton answers the battery stream's question on its behaviour above +60 C; failing both, the key-down
+     gate of +55 C is lowered by F2's measured rise over the cells"
+  - "the golden image keeps SOCD off the FUSE list or above OCD2"
+  - "R10's part is picked with its rating at the pack's temperature"
+
+protection_test_additions:
+  - "18 A for 60 s from a block at +55 C on its hottest thermistor: Q2 stays closed, no cell passes +60 C, and a
+     thermocouple on F2's body reads at most +60 C"
+  - "11.5 A held: Q2 opens at 90 s +- the gauge's timing tolerance, and stays open until a charge of 200 mA or more
+     for 5 s"
+  - "12 A for 30 s, 2 s at 5 A, 12 A for 30 s: Q2 stays closed (the OCD1 timer returns to Normal in the gap)"

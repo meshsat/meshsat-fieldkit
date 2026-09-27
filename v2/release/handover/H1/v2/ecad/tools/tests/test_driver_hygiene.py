@@ -1,0 +1,1670 @@
+#!/usr/bin/env python3
+"""Three rules: how a driver waits, how a tool chooses the board it judges, and how a pass walks a board.
+
+Stage 0a and 0d of the control-plane programme (MESHSAT-862, 11 September 2026, v2/docs/CONTROL-PLANE.md).
+
+WAITS. A wait without a deadline makes a job immortal and nothing says so. Twelve finishes and
+`finish_b_after.sh` were bounded on 10 September; `long_route.sh` still held one on 11 September, waiting on
+any Freerouting process started outside its own flock, and a stray java process would have held it for ever.
+
+BOARD CHOICE. A tool must never learn which board to judge by globbing a project directory. `pcb-b-compute/`
+carried `b5m.kicad_pcb`, the 2 September B5 board, beside `pcb-b-compute.kicad_pcb`, and `b5m` sorts FIRST.
+A wave script that globbed the directory on 11 September exported a BOM for B from a nine-day-old board and
+nothing in its output said which board it had read. The stale file is gone; this rule is what stops the next
+one from mattering. A board comes from the board table (`tools/boards/<letter>.json`) or from an argument.
+
+BOARD ORDER. A pass that LAYS copper greedily must not walk the board in the board file's own order, because
+that order follows the random UUID KiCad mints for every item. Measured on 11 September: two runs of the D
+chain on identical input differed in four tracks and four vias, the escape stubs of /MICAMP_OUT and /SAU_RST.
+`boardorder.py` carries the stable order and the whole story; this rule is what stops a fifth laying pass
+from being written without it.
+"""
+import os, re, glob, sys, json, tempfile, subprocess
+
+TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ECAD = os.path.dirname(TOOLS)
+
+LOOP = re.compile(r"^\s*(?:while|until)\b")
+DEADLINE = re.compile(r"-ge\s+\"?\$\{[A-Z_]+:-\d+\}|-gt\s+\d+")
+GLOB_BOARD = re.compile(r"ls\s+\"?\$?\{?\w*\}?\"?/?\*\.kicad_pcb|glob\.glob\([^)]*\*\.kicad_pcb")
+
+
+def _loops(path):
+    """Each loop as (start line, body text), from the header to the `done` that closes it.
+
+    A one-line loop closes on its OWN line. Getting that wrong is not academic: the first version of this
+    rule ran past the end of `while ... do sleep 20; done` and swallowed the next loop's `-gt 900`, so it
+    reported the unbounded wait in long_route.sh as bounded. A rule that passes on the tree it was written
+    to fail is worse than no rule, which is why every rule here is run against the pre-fix tree."""
+    lines = open(path, errors="replace").read().splitlines()
+    for i, line in enumerate(lines):
+        if not LOOP.match(line): continue
+        if re.search(r"\bdone\b", line):
+            yield i + 1, line; continue
+        body = [line]
+        for j in range(i + 1, min(i + 40, len(lines))):
+            body.append(lines[j])
+            if re.search(r"\bdone\b", lines[j]): break
+        yield i + 1, "\n".join(body)
+
+
+def t_every_wait_loop_has_a_deadline():
+    bad = []
+    for p in sorted(glob.glob(os.path.join(TOOLS, "*.sh"))):
+        for n, body in _loops(p):
+            if "sleep" not in body: continue          # not a wait
+            if "kill -0" in body: continue            # bounded by the child it watches, which has its own timeout
+            if not DEADLINE.search(body):
+                bad.append("%s:%d" % (os.path.basename(p), n))
+    assert not bad, "a wait loop with no deadline makes the job immortal: %s" % bad
+
+
+def t_no_tool_picks_a_board_by_globbing_a_project_directory():
+    bad = []
+    for p in sorted(glob.glob(os.path.join(TOOLS, "*.sh")) + glob.glob(os.path.join(TOOLS, "*.py"))):
+        for n, line in enumerate(open(p, errors="replace"), 1):
+            if line.lstrip().startswith(("#", '"')): continue
+            if not GLOB_BOARD.search(line): continue
+            # a deliverable folder holds exactly one board by construction and verify_deliverable gates that
+            if "release" in line or "boards/" in line: continue
+            bad.append("%s:%d %s" % (os.path.basename(p), n, line.strip()[:70]))
+    assert not bad, "a tool guesses which board to judge: %s" % bad
+
+
+def t_no_project_directory_holds_a_second_board():
+    """The hazard the rule above protects against, checked where it lives: one board per project directory,
+    so that a glob anywhere (a wave script, a one-off, a future tool) cannot pick the wrong one."""
+    bad = []
+    for d in sorted(glob.glob(os.path.join(ECAD, "pcb-*"))):
+        if not os.path.isdir(d): continue
+        boards = [os.path.basename(b) for b in glob.glob(os.path.join(d, "*.kicad_pcb"))]
+        if len(boards) > 1: bad.append("%s: %s" % (os.path.basename(d), sorted(boards)))
+    assert not bad, "a project directory holds more than one board: %s" % bad
+
+
+# ---------------------------------------------------------------- board order
+
+# Passes that lay copper GREEDILY, walking the board and taking room as they go, so that what fits depends
+# on the order they walk in. A new one belongs here with the others.
+LAYING = ("escape.py", "prefanout.py", "join_adjacent_pins.py", "pour_stitch.py", "return_via.py", "gnd_grid.py")
+
+# The other ways a tool in this tree creates copper, each of which lays from its own ordered source rather
+# than from the board's file order, so a random uuid cannot reach it. These are classifications, not
+# excuses: a file lands in one of them because someone read it.
+GENERATORS = "lay from their own component and region lists, in the order those lists are written"
+POST_ROUTE = "work from an explicit list (a DRC report, a pruned-pad list, a named net), not from board order"
+ONE_OFFS = "board-specific hand fixes for one phase, each naming its own items"
+
+CLASSIFIED = {
+    "gen_pcb_e5.py": GENERATORS, "gen_pcb_p3.py": GENERATORS, "gen_pcb_a3.py": GENERATORS,
+    "gen_pcb_b3.py": GENERATORS, "gen_pcb_c3.py": GENERATORS, "gen_pcb_d3.py": GENERATORS,
+    "power_copper.py": GENERATORS,
+    "finish_stubs.py": POST_ROUTE, "fix_pad_escapes.py": POST_ROUTE, "gap_closer_checked.py": POST_ROUTE,
+    "stub_router.py": POST_ROUTE, "pair_preroute.py": POST_ROUTE, "pair_shadow.py": POST_ROUTE,
+    "via_parallel.py": POST_ROUTE,   # lays beside the barrels dc_drop's solved mesh names, in the order of that file
+    "zone_pad_via.py": POST_ROUTE, "escape_prune.py": POST_ROUTE, "stub_accept.py": POST_ROUTE,
+    "rail_prune.py": POST_ROUTE,   # removes the router's parallel copper on a rail; it re-creates a piece only to put back one the net needed (15 Sep 2026)
+    "cleanup_dangling.py": POST_ROUTE, "straighten.py": POST_ROUTE, "via_merge.py": POST_ROUTE,
+    "meander.py": POST_ROUTE, "ses_import_lock.py": POST_ROUTE, "ses_merge.py": POST_ROUTE,
+    "part_reconcile.py": POST_ROUTE, "hand_route.py": POST_ROUTE, "direct_close.py": POST_ROUTE,
+    "fix_a15_node.py": ONE_OFFS, "fix_a17_node.py": ONE_OFFS, "fix_a19_node.py": ONE_OFFS,
+    "fix_a21_bands.py": ONE_OFFS, "bus_a21.py": ONE_OFFS, "bump_a18.py": ONE_OFFS,
+    "fix_c7_u3.py": ONE_OFFS, "fix_d10_hubdm1.py": ONE_OFFS, "d9_gndvia.py": ONE_OFFS, "post_fix_a.py": ONE_OFFS,
+    "post_fix_b4.py": ONE_OFFS, "post_fix_b13.py": ONE_OFFS, "post_fix_d.py": ONE_OFFS,
+}
+
+CREATES_COPPER = re.compile(r"pcbnew\.(PCB_VIA|PCB_TRACK|PCB_ARC)\s*\(")
+# Only a loop at column zero: in these scripts that is the pass itself. A `for f in b.GetFootprints()` inside
+# a helper is building an obstacle list, and the same obstacles come out whatever order it walks in.
+WALKS_FILE_ORDER = re.compile(r"^for\s+[\w, ()]+\s+in\s+(?:list\()?\w+\.(GetFootprints|Zones)\(\)")
+
+
+def t_a_pass_that_lays_copper_walks_the_board_in_a_stable_order():
+    bad = []
+    for fn in LAYING:
+        p = os.path.join(TOOLS, fn)
+        if not os.path.exists(p): bad.append("%s is listed as a laying pass and does not exist" % fn); continue
+        src = open(p, errors="replace").read()
+        if not CREATES_COPPER.search(src):
+            bad.append("%s is listed as a laying pass but creates no copper" % fn); continue
+        if "import boardorder" not in src:
+            bad.append("%s lays copper and does not use boardorder" % fn); continue
+        for n, line in enumerate(src.splitlines(), 1):
+            if WALKS_FILE_ORDER.match(line):
+                bad.append("%s:%d walks the board in file order while laying copper" % (fn, n))
+    assert not bad, "the board's own order follows a random uuid: %s" % bad
+
+
+def t_every_copper_laying_tool_is_classified():
+    """The rule above is only as good as its list. A tool that creates copper and is classified nowhere must
+    be read by a person and put in one of the four buckets, here, in writing."""
+    unclassified = []
+    for fn in sorted(os.listdir(TOOLS)):
+        if not fn.endswith(".py"): continue
+        if fn in LAYING or fn in CLASSIFIED: continue
+        if CREATES_COPPER.search(open(os.path.join(TOOLS, fn), errors="replace").read()):
+            unclassified.append(fn)
+    assert not unclassified, ("these create copper and are classified nowhere; read each and put it in "
+                              "LAYING (and give it boardorder) or in CLASSIFIED: %s" % unclassified)
+
+
+# ---------------------------------------------------------------- work budgets
+
+# Passes whose cost grows with the square of the board's copper, so they must be bounded in WORK. Seconds are not
+# a budget here: a clock decided a result in this project twice, and the fix both times was to count the work.
+QUADRATIC = {
+    "straighten.py": ("STRAIGHTEN_BUDGET", "the shortcut test is O(copper on the layer) per candidate; on E7 it "
+                                           "ran over an hour inside a finish and the finish was killed by hand "
+                                           "(appendix 32.89, 9 September 2026)"),
+}
+
+
+def t_a_quadratic_pass_carries_a_work_budget():
+    bad = []
+    for fn, (env, why) in QUADRATIC.items():
+        p = os.path.join(TOOLS, fn)
+        if not os.path.exists(p): bad.append("%s is listed and does not exist" % fn); continue
+        src = open(p, errors="replace").read()
+        if env not in src: bad.append("%s has no %s (%s)" % (fn, env, why)); continue
+        if "os.environ" not in src.split(env)[1][:120]: bad.append("%s does not read %s from the environment" % (fn, env))
+        if "capped" not in src: bad.append("%s spends a budget and never says when it ran out" % fn)
+    assert not bad, "an unbounded quadratic pass makes a job immortal without saying so: %s" % bad
+
+
+# ---------------------------------------------------------------- silent fallbacks
+
+def t_the_router_does_not_fall_back_to_the_stock_jar_in_silence():
+    """Round-two H5. Our build writes a session after every pass; the stock one writes one only when the whole job
+    ends, so a cut run leaves nothing, and every pass ceiling in every profile exists because of that. route_one.sh
+    chose the stock jar silently when ours was absent, and `onstart.sh` never built ours, so every fresh box routed
+    on stock while the pipeline behaved as though it had not. The fallback has to be a decision, not a silence.
+
+    12 September 2026: the decision moved into `fr_jar.sh`, because route_one.sh was the only launcher making it."""
+    src = open(os.path.join(TOOLS, "fr_jar.sh"), errors="replace").read()
+    assert "FR_REQUIRE_MESH" in src, "there is no way to require the patched jar"
+    tail = src[src.index("FR_REQUIRE_MESH"):]
+    assert "return 2" in tail[:1200], "requiring it must refuse, not warn and continue"
+    i = src.index('freerouting-1.9.0.jar"')
+    assert "WARNING" in src[max(0, i - 400):i], "taking the stock jar must say so loudly"
+
+
+def t_every_freerouting_launcher_takes_the_one_jar_answer():
+    """12 September 2026. `jar_in_use()` gave the python side one answer in the middle of this same defect: a record
+    that named the stock jar while the patched one ran. The SHELL side kept the original of it. route_one.sh chose
+    properly; cont_route.sh, route_part.sh and long_route.sh each pinned `~/bin/freerouting-1.9.0.jar` by name, and
+    route_pcb.sh took `ls ~/bin/freerouting-*.jar | tail -1`, which is 2.4.1 on a host that has it, launched with
+    1.9.0 arguments under whatever java is first on PATH.
+
+    Every one of them runs under a `timeout`, which is what makes the pin cost something rather than merely being
+    untidy: on the stock jar a capped run leaves no session at all. cont_route.sh is declared at 80 passes in 900
+    seconds against a board whose 60 passes take four hours, so the continuation could never have kept anything.
+    fr_probe.sh is exempt and takes its jar as an argument, because comparing two jars is its whole purpose, and
+    cont21.sh names 2.1.0 in its own name."""
+    exempt = {"fr_probe.sh", "fr_jar.sh", "cont21.sh"}
+    launches, names = [], []
+    for f in sorted(os.listdir(TOOLS)):
+        if not f.endswith(".sh") or f in exempt: continue
+        src = "\n".join(l for l in open(os.path.join(TOOLS, f), errors="replace").read().splitlines()
+                        if not l.lstrip().startswith("#"))
+        chooses = "fr_jar " in src or "fr_jar)" in src
+        if "-jar" in src and not chooses: launches.append(f)          # runs the router itself
+        if "freerouting-" in src and ".jar" in src and not chooses: names.append(f)   # or pins one by name for a caller
+    assert not launches, "these launch the router without fr_jar.sh: %s" % ", ".join(launches)
+    assert not names, "these name a jar file rather than asking fr_jar.sh: %s" % ", ".join(names)
+
+
+def t_every_capped_router_run_asks_for_the_per_pass_session():
+    """The per-pass session is the only reason a cap is survivable, and it is a `-D` property the launcher has to
+    pass. route_one.sh passed it; cont_route.sh and route_part.sh did not, so even on our own jar their timeouts
+    threw the whole run away. The stock jar ignores an unknown property, so the line is safe with either."""
+    for f in ("route_one.sh", "cont_route.sh", "route_part.sh"):
+        src = open(os.path.join(TOOLS, f), errors="replace").read()
+        i = src.index("-jar ")
+        line = src[src.rindex("\n", 0, i) + 1:src.index("\n", i)]
+        assert "freerouting.ses_per_pass" in line, \
+            "%s runs the router under a timeout without asking for a session per pass" % f
+
+def t_the_verdict_horizon_is_taken_before_the_chain_runs():
+    """`pre_started` is the timestamp that decides which verdicts belong to this stage. Taken AFTER the chain,
+    it excludes every verdict the chain just wrote and the stage reads as "no verdicts at all", which
+    verdict.collect treats as INCONCLUSIVE. It was in that position for one commit on 11 September 2026 and the
+    unit test for the collector could not see it, because the defect is where the line sits, not what it does."""
+    src = open(os.path.join(TOOLS, "routeflow.py"), errors="replace").read()
+    i = src.index("pre_started =")   # the expression changed once; the POSITION is what this rule is about
+    j = src.index("rc = sh(expand(argv", i - 4000 if i > 4000 else 0)
+    assert i < j, "pre_started is taken after the pre-route chain runs, so it excludes the chain's own verdicts"
+
+
+def t_the_verdict_horizon_is_actually_passed_to_the_collector():
+    """Computing a horizon and not passing it is the same as having none, and that is what happened: the edit
+    that added `since=since` to the collect call was lost when an assertion later in the same patch script
+    aborted before the file was written. `pre_started` was computed, journalled and dropped, and boards P and E
+    were each blocked three times by a verdict their own earlier finish had written.
+
+    The rule that catches it is about the CALL, not the value: two earlier rules checked that the horizon exists
+    and where it is taken, and both passed throughout."""
+    src = open(os.path.join(TOOLS, "routeflow.py"), errors="replace").read()
+    i = src.index("def judge_verdicts(")
+    body = src[i:src.index("\ndef ", i + 10)]
+    assert "verdict.collect(" in body, body[:200]
+    call = body[body.index("verdict.collect("):]
+    call = call[:call.index(")") + 1]
+    assert "since=" in call, "judge_verdicts collects without the horizon it was given: %s" % call
+
+
+def t_a_round_starts_with_a_clean_verdict_channel():
+    """The horizon has one-second resolution, so a verdict written in the same second as the stage began is not
+    'before' it: P's round-two pre stage was blocked by a verify_deliverable its round-one finish had written
+    0 seconds earlier. The round clears out/*.verdict.json before the chain runs, which also makes a gate that
+    does not re-run read as absent rather than as its previous answer."""
+    src = open(os.path.join(TOOLS, "routeflow.py"), errors="replace").read()
+    i = src.index("pre_started =")
+    window = src[max(0, i - 900):i]
+    assert "*.verdict.json" in window and "os.remove" in window, \
+        "a round does not clear the verdict channel before its chain runs"
+    j = src.index("rc = sh(expand(argv", i)
+    assert src.index("*.verdict.json") < j, "the clear happens after the chain has already written verdicts"
+
+
+def t_the_straightener_merges_a_whole_pass_before_reindexing():
+    """The merge phase rebuilt its index over every live segment and restarted the scan after EACH merge, which
+    is O(n squared) in segments. Board E reached the quality pass with 3,862 segments after the stub router
+    closed three nets with 2,178-cell paths, and this ran for over an hour. A pass takes every merge it can find
+    and only then re-indexes, and every merge is charged to the work budget so the bound is not a clock."""
+    src = open(os.path.join(TOOLS, "straighten.py"), errors="replace").read()
+    i = src.index("while changed")
+    body = src[i:src.index("# 2.", i)]
+    assert "break" not in body.split("if same_line_opposite")[-1], \
+        "the merge loop still restarts after a single merge"
+    assert "checks[0] < BUDGET" in body, "the merge loop is not bounded by the work budget"
+    assert "touched" in body, "the pass does not guard against merging a segment twice"
+
+
+def t_nothing_records_a_jar_by_a_default_string():
+    """Every place that RECORDED which jar ran carried its own default, '~/bin/freerouting-1.9.0.jar', so with
+    nothing pinned the journal line, the provenance file and the benchmark row all named the STOCK jar while the
+    patched one ran. A record that says something other than what happened is what this channel exists to
+    remove. One function answers the question and everything that records a jar calls it."""
+    src = open(os.path.join(TOOLS, "routeflow.py"), errors="replace").read()
+    assert "def jar_in_use(" in src, "there is no single answer to which jar ran"
+    body = src[src.index("def jar_in_use("):]
+    body = body[:body.index("\ndef ", 10)]
+    rest = src.replace(body, "")
+    for line in rest.splitlines():
+        if "freerouting-1.9.0.jar" not in line: continue
+        if line.strip().startswith("#"): continue
+        assert ("preflight" in line or "checks.append" in line or "endswith" in line or "ok(" in line), \
+            "a jar is recorded by a default string rather than by jar_in_use(): %s" % line.strip()[:120]
+
+
+def t_the_supervisor_keeps_the_best_routed_board_of_a_run():
+    """A remedy can make a board worse and every round re-routes from scratch, so the supervisor was discarding
+    a good board to keep a bad one: board E went 0 hard and 1 open in round one, then 0 hard and 23 opens after
+    the via_costs remedy, and the 1-open board was gone. Every other stage in this pipeline keeps a result only
+    if it improves (cont_route.sh, stub_accept.py, quality_pass.sh); the supervisor did not."""
+    src = open(os.path.join(TOOLS, "routeflow.py"), errors="replace").read()
+    assert "best_board = (None, None, 0)" in src, "the run does not track a best board"
+    i = src.index("def run(profile_fn")
+    body = src[i:]
+    assert "RESTORED_BEST" in body, "nothing restores the best board when the rounds run out"
+    k = body.index("def _restore_best_and_finish(")
+    assert "shutil.copy(best_board[1]" in body[k:k + 1200], "the restore does not put the best board back"
+    # and a restored board is not a finished board: the finish is what closes the last opens, runs every gate
+    # and cuts the deliverable, and it last ran on the round being discarded.
+    assert "restored best board" in body, "the restored board never gets its finish"
+    # 14 September 2026: EVERY exit restores it, not the budget stop alone. A30 ended STOPPED_NEEDS_GENERATOR
+    # with round two's worse board in the phase directory and round one's better one unfinished on disk.
+    for exit_ in ('status = "STOPPED_BUDGET"', 'status = "STOPPED_NEEDS_GENERATOR"'):
+        j = body.index(exit_)
+        assert "_restore_best_and_finish(status)" in body[j:j + 400], "%s does not restore the best board" % exit_
+    # and a round that is worse than the best is not finished at all: an hour of stub router and closure
+    # ladder on a board about to be discarded, while the better board's finished state is regenerated over.
+    assert "FINISH_SKIPPED" in body, "a worse round's board still gets the whole finish"
+
+
+def t_a_phase_copy_declares_what_its_board_declares():
+    """A phase directory is a copy of its board's project, and the declaration files travel with the copy:
+    `lcsc-allow.txt`, `erc-allow.txt`, `bypass-allow.txt`. They are TRACKED, so a copy taken before a fix keeps
+    the old declaration and every `git reset --hard` restores it.
+
+    Board E was a clean board on 12 September, 0 hard and 0 unrouted through every gate, and its deliverable was
+    refused for five sensor headers whose allow line had been corrected hours earlier in `pcb-e1-dock` while
+    `pcb-e1-dock-e7` still carried the sixteen-line version. The board was judged against a declaration that is
+    not the one in the repo."""
+    ecad = os.path.dirname(TOOLS)
+    bad = []
+    for d in sorted(glob.glob(os.path.join(ecad, "pcb-*-*"))):
+        m = re.fullmatch(r"(pcb-[a-z0-9]+-[a-z0-9]+)-([a-z]\d+)", os.path.basename(d))
+        if not m: continue
+        canon = os.path.join(ecad, m.group(1))
+        if not os.path.isdir(canon): continue
+        for f in ("lcsc-allow.txt", "erc-allow.txt", "bypass-allow.txt"):
+            a, b = os.path.join(canon, f), os.path.join(d, f)
+            if not os.path.exists(a): continue
+            if not os.path.exists(b): bad.append("%s has no %s" % (os.path.basename(d), f)); continue
+            if open(a, errors="replace").read() != open(b, errors="replace").read():
+                bad.append("%s/%s differs from %s's" % (os.path.basename(d), f, m.group(1)))
+    assert not bad, "a phase copy declares something its board does not: %s" % bad
+
+
+def t_the_restored_board_brings_its_project_files():
+    """The project file carries the net-class assignments every gate reads, and a remedy can change the route
+    block between rounds. A board from round N under a project file from round N+1 is the B19 trap of
+    9 September again, where a copied project directory had no netclass_assignments and every gate judged the
+    board against the Default class."""
+    src = open(os.path.join(TOOLS, "routeflow.py"), errors="replace").read()
+    i = src.index("RESTORED_BEST")
+    window = src[max(0, i - 800):i]
+    assert ".kicad_pro" in window and ".kicad_prl" in window, \
+        "the restore copies only the board, leaving the previous round's project file beside it"
+
+
+def t_a_timing_wrapper_comes_after_the_function_it_wraps():
+    """`X = _timed("bucket", X)` above `def X` is a NameError at import, and the file still compiles.
+
+    11 September 2026: three buckets were added to the pre-router's profile and two of them named functions
+    defined two hundred lines further down. Compiling proved nothing, which is the standing lesson of this
+    project in another costume: the error lives on the import path, not in the parse."""
+    src_path = os.path.join(TOOLS, "pair_preroute.py")
+    src = open(src_path, errors="replace").read()
+    lines = src.splitlines()
+    defined = {}
+    for i, ln in enumerate(lines):
+        m = re.match(r"def (\w+)\(", ln)
+        if m and m.group(1) not in defined: defined[m.group(1)] = i
+        m = re.match(r"class (\w+)[\(:]", ln)
+        if m and m.group(1) not in defined: defined[m.group(1)] = i
+    bad = []
+    for i, ln in enumerate(lines):
+        m = re.match(r"(\w+)(?:\.\w+)? = _timed\(", ln.strip())
+        if not m: continue
+        name = m.group(1)
+        if name in defined and defined[name] > i:
+            bad.append("line %d wraps %s, which is defined at line %d" % (i + 1, name, defined[name] + 1))
+    assert not bad, "a timing wrapper runs before its function exists:\n  " + "\n  ".join(bad)
+
+
+def t_the_compiled_stub_search_defaults_off_without_numba():
+    """`PAIR_FAST_STUBS` must default from the kernel's own HAVE_NUMBA, never from a bare "1".
+
+    11 September 2026: the stub search moved onto pairsearch's kernel and is 14.7x on B19 WITH numba. Without
+    numba that same kernel is a numpy heap in a Python loop, which is slower than the heapq it replaces, so a
+    bare default would quietly make every host that lacks numba worse while the measurement that justified the
+    change was taken on one that has it."""
+    from harness import pre_router_source; src = pre_router_source(TOOLS)
+    m = re.search(r'_FAST_STUBS = os\.environ\.get\("PAIR_FAST_STUBS",\s*([^)]*)\)', src)
+    assert m, "pair_preroute.py has no _FAST_STUBS default to check"
+    assert "HAVE_NUMBA" in m.group(1), "the default is %s: it must read pairsearch.HAVE_NUMBA" % m.group(1).strip()
+
+
+def t_no_router_takes_an_auto_selected_x_display_alone():
+    """Two routes on one host must not race for a display.
+
+    12 September 2026: `xvfb-run -a` chooses by racing, so two routes a minute apart can land on the same display.
+    (The suspicion that this had killed C10's router at pass 24 was WRONG, and is recorded here because a false
+    cause in a comment outlives the bug it invents.) `-n` names a number and `-a` still walks forward from it."""
+    import os, re
+    tools = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    bad = []
+    for f in sorted(x for x in os.listdir(tools) if x.endswith(".sh")):
+        for ln in open(os.path.join(tools, f), errors="replace"):
+            if ln.lstrip().startswith("#"): continue   # a comment may quote the defect it describes
+            code = ln.split(" #", 1)[0]                # and so may a trailing one
+            for m in re.finditer(r"xvfb-run\s+(-[a-z]+\s+)*", code):
+                seg = m.group(0)
+                if "-n" not in seg and "-a" in seg: bad.append("%s: %s" % (f, code.strip()[:80]))
+    assert not bad, "a router takes an auto-selected display with no number of its own:\n  " + "\n  ".join(bad)
+
+
+def t_no_script_kills_every_display_on_the_host():
+    """`pkill -9 -f "^Xvfb"` cleared one script's stale display by killing every virtual display on the machine,
+    which would take every other route's router with it. A named display makes the problem local."""
+    import os, re
+    tools = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    bad = [f for f in sorted(os.listdir(tools)) if f.endswith(".sh")
+           and re.search(r"pkill[^\n]*\^?Xvfb", open(os.path.join(tools, f), errors="replace").read())]
+    assert not bad, "these scripts kill every Xvfb on the host: " + ", ".join(bad)
+
+def t_the_contention_order_tool_is_classified():
+    """Every tool in this directory is one of the declared classes; a new one must say which."""
+    import os
+    tools = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    assert os.path.exists(os.path.join(tools, "pair_order_from_plan.py")), "the contention-order tool is gone"
+    s = open(os.path.join(tools, "pair_order_from_plan.py"), errors="replace").read()
+    assert "PAIR_ORDER_FILE" not in s or "plan" in s, "the tool must say what it consumes"
+    assert "appendix 32.137" in s, "a tool born of a measurement carries the section that measured it"
+
+
+def t_a_board_is_never_drcd_without_its_project_file():
+    """A board file whose `.kicad_pro` is not beside it under its own stem is checked against the DEFAULT net
+    class: hundreds of false clearance and via violations, with nothing in the output saying which class set was
+    used. It has cost this pipeline twice. First on 7 September 2026, when `pcb-b-compute-b19` was staged from a
+    B15-era project file and `intent_checks.py` crashed on `netclass_assignments: None` against btest's 396.
+    Then on 12 September, when `cont_route.sh` scored its `-before` copy, whose stem no project file matches, and
+    printed "before hard 1074" for a board the finish had measured at hard 0 one minute earlier.
+
+    The check belongs at the one place that judges rather than in each caller, and it is a refusal, because a
+    number computed against the wrong rules is worse than no number."""
+    src = open(os.path.join(TOOLS, "drc.sh"), errors="replace").read()
+    assert "kicad_pro" in src, "drc.sh does not look for the board's project file"
+    i = src.index("${B%.kicad_pcb}.kicad_pro")   # the test itself, not the comment that explains it
+    assert "exit 1" in src[i:i + 700], "drc.sh warns about a missing project file instead of refusing"
+    assert "DRC_REQUIRE_PROJECT" in src, "there is no way to judge a board against the default classes deliberately"
+    # and every shell tool that makes a copy of a board under a NEW stem and scores it must copy the project too
+    src = open(os.path.join(TOOLS, "cont_route.sh"), errors="replace").read()
+    assert '"$W/$N-before.kicad_pro"' in src, "the continuation scores a board copy with no project file beside it"
+
+
+def t_the_stub_router_checks_that_a_closure_closed_anything():
+    """A claimed closure that does not close is worse than a refusal: the finish reads the count, the record
+    reads the count, and the board carries a via that touches nothing. A24's /+3V3 was reported as
+    "closed: 0 tracks, 1 vias, path 1 cells" in two separate runs and the DRC named the same open pair after
+    both, because the search reaches a GOAL CELL, which is the target cluster's copper grown by the search
+    margin, and a via dropped in such a cell can touch no copper at all. Every closure is checked against
+    KiCad's own connectivity now and taken back off the board when it did not connect (12 September 2026)."""
+    src = open(os.path.join(TOOLS, "stub_router.py"), errors="replace").read()
+    assert "GetUnconnectedCount" in src, "the stub router does not ask KiCad whether its closure connected anything"
+    i = src.index("closed += 1")
+    # the window is the acceptance block, and it grew on 16 September when the refusal learnt to try landing on
+    # the copper first and to report the distances it measured: the property is the same, the text is longer
+    window = src[max(0, i - 3000):i]
+    assert "NOT CLOSED" in window and "b.Remove(t)" in window, \
+        "a closure that did not connect is still counted as one"
+
+
+def t_no_post_route_pass_rewrites_a_phase_or_a_stackup_onto_the_silk():
+    """The facts on a board's silk belong to the generator that knows them. `silk_fix_all.py` ran in every finish
+    AFTER the generators and rewrote each board's title to a stale phase and a stale stackup: A's to "REV A (A18)"
+    and "285 x 160 x 1.6 mm FR-4, 4 layers ... 2026-09-04" on a board that is A24, 240 x 160, six layers; B's to
+    "REV A (B12)" and "245x170x1.6 4L"; C's to "REV A, C5". A24's routed board carries A18 on its front silk
+    because of it, and `verify_deliverable` refuses a deliverable whose silk names another phase, so this cost a
+    board its last step after the copper was finished (12 September 2026). D's rule set had already been dropped
+    for the same reason on 8 September, which is how the shape of this was recognisable."""
+    src = open(os.path.join(TOOLS, "silk_fix_all.py"), errors="replace").read()
+    body = src[src.index("RULES = {"):src.index("\nb = pcbnew.LoadBoard")]
+    bad = [l for l in body.splitlines()
+           if "text=" in l and re.search(r"REV A|\d+\s*x\s*\d+|\d\s*layers|\dL\b", l)]
+    assert not bad, "a legend rule writes a phase, a size or a layer count onto the silk: %s" % (bad[0].strip()[:120],)
+
+
+def t_the_stub_router_reads_its_plane_nets_from_the_board():
+    """A net in PLANES takes a different branch: its goal becomes any cell a via may stand in, on the assumption
+    that a pour carries the rest of the connection. The set was the hard-coded string "GND,+5V,+3V3,CELL+", and
+    A24 has no +3V3 pour, so for /+3V3 the stub router never searched for the other cluster at all. It dropped one
+    via beside the source and reported "closed: 0 tracks, 1 vias, path 1 cells", twice, in two separate runs, and
+    the DRC named the same open pair after both (12 September 2026). A board's plane nets are a fact about the
+    board, and a fact about the board is read from the board."""
+    src = open(os.path.join(TOOLS, "stub_router.py"), errors="replace").read()
+    i = src.index("PLANES = ")
+    body = src[i:i + 600]
+    assert "GetFilledArea" in body, "the plane-net set is not read from the board's filled zones"
+    assert "_PLANES_ARG" in body, "there is no way to name the plane nets deliberately"
+
+
+def t_a_via_standing_in_a_pad_of_its_own_net_is_not_dangling():
+    """`cleanup_dangling.py` counted the TRACKS touching a via and removed it below two. A via that joins a pad on
+    one layer to a track on another has one track and one pad, and it was removed as dangling: A24's /+3V3 via at
+    (233.4, 134.9) joined pad C104.1 to a B.Cu track, and the board went from 0 unrouted to 1 in the first ten
+    seconds of its finish, after the copper had been closed and measured (12 September 2026). A via in a pad of
+    its own net is the whole point of a via in a pad, and the same file already counts a track that merely passes
+    OVER a via."""
+    src = open(os.path.join(TOOLS, "cleanup_dangling.py"), errors="replace").read()
+    i = src.index("n = sum(1 for t in T")
+    window = src[i:i + 1400]
+    assert "HitTest" in window, "a via's connection count ignores the pads of its own net"
+    assert window.index("HitTest") < window.index("if n <= 1"), "the pad is counted after the decision"
+
+
+def t_a_leg_refusal_says_where_it_was_refused():
+    """"the legs clear no smoothing of the centreline" was the largest single failure class on B19 and read the
+    same whether the leg was refused in open board or a millimetre from its own pad. Those are different
+    findings: 30 of 46 refusals measured on 12 September 2026 were within 2 mm of one of the pair's own pads, at
+    J_HDMI, T1 and the pairs' own coupling capacitors, which is a placement answer and not a search one, and the
+    only reason it was ever seen is that a knob nobody would remember to set happened to be on. The failure line
+    carries the position, the layer, the distance to the pair's nearest own pad and which side of 2 mm it is."""
+    from harness import pre_router_source; src = pre_router_source(TOOLS)
+    i = src.index("the legs clear no smoothing of the centreline%s")
+    window = src[max(0, i - 1400):i]
+    assert "at the station" in window and "out in the corridor" in window, \
+        "the leg-fit failure does not say whether it was refused at a station or in the corridor"
+    assert "_leg_hit[0]" in window, "the failure line does not read the recorded refusal point"
+
+
+def t_a_nearness_window_carries_the_pads_own_reach():
+    """A window measured from a pad's CENTRE misses a pad that is wide (MESHSAT-862, 12 September 2026).
+
+    `escape.py` checks every candidate via against every other pad, and skipped the check entirely when
+    the pad's centre was more than a fixed 6 mm away. BT1 on board B is a CR2032 holder whose pad 2 is a
+    land many millimetres across, so an escape via three millimetres from its edge sat eight from its
+    centre, was never tested, and landed inside the pad: 53 of the 82 hard DRC violations left on B19's
+    placed board after the land patterns were corrected. The window carries the pad's own half extent
+    now. The rule is general because the mistake is: a proximity test against an extended shape may not
+    be short-circuited on the distance to its centre.
+    """
+    import re as _re
+    src = open(os.path.join(TOOLS, "escape.py"), errors="replace").read()
+    hits = _re.findall(r"abs\(v\.[xy] - qp\.[xy]\) > ([^:\n]+)", src)
+    if not hits:
+        raise AssertionError("escape.py no longer has the nearness window this rule guards")
+    for h in hits:
+        if "qreach" not in h:
+            raise AssertionError("escape.py short-circuits a pad test on the distance to the pad CENTRE "
+                                 "with no allowance for the pad's own size: %s" % h.strip())
+
+
+def t_a_margin_against_the_board_is_the_boards_own():
+    """`prefanout.py`'s in-pad fallback kept a number typed into the tool (MESHSAT-862, 12 September 2026).
+
+    It placed a via at a pad's centre whenever every other-net pad was at least 0.15 mm away, while board
+    B's own hole clearance is 0.19 mm and its minimum clearance 0.127: a via could satisfy the tool and
+    fail the DRC, which is 25 of the 45 hard violations left on B19's placed board after the land patterns
+    and the escape window were corrected. A margin that is not the board's is a second opinion about the
+    board.
+    """
+    import re as _re
+    src = open(os.path.join(TOOLS, "prefanout.py"), errors="replace").read()
+    if "m_HoleClearance" not in src or "INPAD_CLR" not in src:
+        raise AssertionError("prefanout.py does not read the board's own hole and minimum clearance")
+    for m in _re.finditer(r"qr \+ VIA_D / 2 \+ ([A-Za-z_(0-9.)]+)", src):
+        if "INPAD_CLR" not in m.group(1):
+            raise AssertionError("the in-pad fallback keeps a typed margin from other pads: %s" % m.group(1))
+
+
+def t_no_via_is_laid_without_a_clearance_test():
+    """`escape.py`'s exposed-pad loop added thermal vias unconditionally (MESHSAT-862, 12 September 2026).
+
+    A thermal via sits inside its own exposed pad, so it looked safe. It is a THROUGH via and this board
+    is assembled on both sides: it emerges on B.Cu among the underside decoupling and landed on other
+    parts' pads, which is 25 of the hard violations on B19's placed board. The same shape as the
+    pre-router's six unasked emissions in 32.135: an exemption that is true of the pad is not true of the
+    other side of the board. Every via this file lays passes clear() now.
+    """
+    import re as _re
+    src = open(os.path.join(TOOLS, "escape.py"), errors="replace").read()
+    body = src.split('"""', 2)[2] if src.count('"""') >= 2 else src
+    for m in _re.finditer(r"\n(\s*)via = pcbnew\.PCB_VIA\(b\)", body):
+        start = max(0, m.start() - 700)
+        window = body[start:m.start()]
+        if "clear(" not in window:
+            raise AssertionError("escape.py lays a via with no clearance test in the 700 characters before it: "
+                                 "...%s" % body[m.start():m.start() + 90].strip())
+
+
+def t_a_run_whose_tools_and_board_come_from_different_trees_is_refused():
+    """13 September 2026, written after making the mistake and watching it produce a number.
+
+    Every routeflow profile pins `repo`, and `run` reads that key in preference to the directory the command
+    was given in. That is right for a production run and silently wrong for a measurement: an arm copied the
+    tree, patched ONE number in a generator and ran `tools/routeflow.py run tools/routeflow/d.json` inside
+    the copy. The pinned repo sent every stage to the box clone instead, so the chain regenerated and routed
+    the PRODUCTION board with the PRODUCTION tools, overwrote a committed phase board on the way, and would
+    have reported an open count the arm's patch had never touched. Three of the four agentic nulls of 11
+    September had this shape: a result identical to the baseline reads exactly like an honest answer.
+
+    Two rules, because either alone is passable. The first runs a copied routeflow against a real profile and
+    requires the refusal. The second requires both entry points to ask, since a guard wired into one of them
+    is a guard for half the runs.
+    """
+    import shutil
+    prof = os.path.join(TOOLS, "routeflow", "d.json")
+    d = tempfile.mkdtemp(prefix="onetree-")
+    iso = os.path.join(d, "ecad", "tools"); os.makedirs(iso)
+    for f in os.listdir(TOOLS):
+        if f.endswith(".py"): shutil.copy(os.path.join(TOOLS, f), iso)
+    repo = os.path.join(d, "repo"); os.makedirs(os.path.join(repo, "v2", "ecad", "pcb-d-aprs-d9"))
+    p = json.load(open(prof)); p["repo"] = repo
+    pf = os.path.join(d, "d.json"); json.dump(p, open(pf, "w"))
+    # the copied tools carry no boards/ directory, so the letter profile's <PHASE> is given here (15 September 2026)
+    r = subprocess.run([sys.executable, os.path.join(iso, "routeflow.py"), "run", pf, "--phase", "D12"],
+                       capture_output=True, text=True, timeout=180, cwd=d)
+    out = r.stdout + r.stderr
+    assert r.returncode == 2, "a run whose tools and board come from different trees was not refused: rc=%s\n%s" % (r.returncode, out[-2000:])
+    assert "REFUSED" in out and "different trees" in out, out[-2000:]
+    # and nothing was written into the board's tree before the refusal
+    assert not os.path.exists(os.path.join(repo, "v2", "ecad", "pcb-d-aprs-d9", "out")), \
+        "the refusal came after routeflow had already written into the tree it was refusing to touch"
+
+
+def t_both_routeflow_entry_points_ask_whether_it_is_one_tree():
+    src = open(os.path.join(TOOLS, "routeflow.py")).read()
+    for fn in ("def run(", "def experiment("):
+        i = src.index(fn)
+        body = src[i:src.index("\ndef ", i + 1)]
+        assert "one_tree(" in body, "%s does not ask whether its tools and its board come from one tree" % fn.strip("def (")
+
+
+def t_the_cross_board_check_reads_the_declared_phase_directory():
+    """Forty-one directories match `pcb-b-compute*` on the box, every one an arm laid down to measure a
+    knob, and taking the NEWEST of them puts an arm's netlist into the one check that exists to compare
+    boards with each other. That is the wrong-tree defect of 32.153 in the cross-board gate.
+
+    The phase a board cuts is declared in boards/<letter>.json and the routeflow profile of that phase names
+    its project directory, so the directory is read rather than guessed. The glob stays as the fallback."""
+    import os
+    src = open(os.path.join(TOOLS, "check_contracts.py")).read()
+    assert "def netlist_path(" in src, "there is no one answer to which netlist a board's contract is read from"
+    body = src[src.find("def netlist_path("):src.find("def load(")]
+    assert '"boards"' in body and '"routeflow"' in body, (
+        "the netlist directory is not resolved from the declared phase and its profile")
+    for fn in ("def load(", "def _value_of("):
+        i = src.find(fn)
+        blk = src[i:i + 600]
+        assert "netlist_path(" in blk, "%s still finds its own netlist, so the two can disagree" % fn
+        assert "getmtime" not in blk, "%s still takes the newest directory that matches the stem" % fn
+
+
+def t_an_empty_pin_map_is_a_missing_board_and_not_a_disagreement_on_every_pin():
+    """C17's finish in an isolated tree read B's J_PANEL map as twenty-six empty strings, and the ribbon
+    contract said 'differs on pins [1..26]', refusing a board that was 0 hard, 0 unrouted and clean on every
+    other gate. A comparison with nothing is not a result in either direction."""
+    import os
+    src = open(os.path.join(TOOLS, "check_contracts.py")).read()
+    assert "_empty = [k for k, m in ((\"B\", mb), (\"C\", mc)) if not any(m.values())]" in src, "an empty side is not detected"
+    assert "MISSING.extend(k for k in _empty if k not in MISSING)" in src, "an empty side is not counted as a missing board"
+    assert 'check(bool(_empty) or (mb and all(mb.values()) and not diff), "J_PANEL 2x13 map identical on B and C"' in src, (
+        "the ribbon contract still fails on an empty side instead of reading INCONCLUSIVE")
+
+
+def t_b_runs_no_gate_before_placement():
+    """check_pcb_b's I/O high-availability checks read empty lists on the 27-footprint mechanical board: 52
+    FAIL lines before the placement, and routeflow's pre-route judge blocks on any of them. B19 was unrunnable
+    under routeflow since those checks were written, and nobody saw it because every B measurement ran as an
+    arm whose driver reads only the pair count."""
+    import os, json
+    b = json.load(open(os.path.join(TOOLS, "boards", "b.json")))
+    assert b.get("gate_before_placement") is False, "B still runs its gate on the mechanical board"
+    assert "52 FAIL" in b.get("_gate_before_placement_why", ""), "the reason is not recorded with its number"
+
+
+def t_the_router_launcher_dismisses_a_modal_warning_it_would_otherwise_wait_on():
+    """B19's first route (15 Sep 2026) sat three hours on Freerouting's "normalization of net failed" dialog under Xvfb,
+    computing nothing. route_one.sh grew its own CPU-stall watchdog that pressed Return, and on 26 September 2026 (round 8,
+    review finding F) it was replaced by the shared watcher, which reads what the dialog says before it answers. So:
+    route_one.sh sources fr_dialog_watch.sh, confirms the import with the probe BEFORE it starts the router, runs
+    fr_watch beside the router with the router's own log, and keeps no inline watchdog of its own. The box setup
+    installs xdotool so the watcher can answer."""
+    s = open(os.path.join(TOOLS, "route_one.sh")).read()
+    code = "\n".join(l for l in s.splitlines() if not l.lstrip().startswith("#"))
+    assert 'fr_dialog_watch.sh"' in code, "route_one.sh does not source the shared watcher"
+    assert "fr_import_probe " in code and "fr_watch " in code, "route_one.sh has no import probe or no watcher"
+    assert code.index("fr_import_probe ") < code.index("-jar "), "the import must be confirmed before the router starts"
+    assert code.index("fr_watch ") > code.index("-jar "), "the watcher must run beside the router"
+    assert "xdotool" not in code and "_CPU0" not in code, "route_one.sh still carries a watchdog of its own"
+    m = re.search(r'fr_watch "\$_RPID" "\$_XDISP" "\$ADSN" "[^"]*" "([^"]+)"', code)
+    assert m and m.group(1).endswith("fr.log"), "route_one.sh does not give the watcher the router's log"
+    o = open(os.path.join(TOOLS, "routeflow", "cloud", "onstart.sh")).read()
+    assert "xdotool" in o, "a new box would have no xdotool for the watchdog"
+
+
+def t_the_optimiser_is_bounded_and_the_autoroute_session_survives_it():
+    """The optimiser has held this box for hours after the route was already on disk.
+
+    Our build writes the Specctra session after every autoroute pass, so the moment the autoroute finishes the
+    result exists; the optimiser then improves length and vias and its work reaches the board only if the
+    WHOLE job ends before the time limit. E8 on 14 September 2026: fifteen minutes of autoroute, two hours
+    forty of optimiser, nothing used. E12: twenty-eight minutes of autoroute converging at pass 232 of 260, and
+    an optimiser that would have run to the three-hour cap and been killed with nothing kept.
+
+    So the optimiser gets a bound, in SECONDS rather than in Freerouting's -oit (a threshold in percent with no
+    time in it), and it is stopped by PID rather than by a pattern that could match another route on the same
+    host. Round 8 (26 September 2026) moved the bound into the shared watcher with the watchdog it lived in;
+    route_one.sh asks for it with FRW_OPT_BOUND=1 and names its session.
+    """
+    ro = open(os.path.join(TOOLS, "route_one.sh")).read()
+    assert "FRW_OPT_BOUND=1" in ro and 'FRW_SES="$ASES"' in ro, "route_one.sh does not ask for the optimiser bound"
+    s = open(os.path.join(TOOLS, "fr_dialog_watch.sh")).read()
+    body = s[s.index("fr_watch() {"):s.index("fr_import_probe() {")]
+    assert "Auto-routing was completed" in body, "nothing notices that the autoroute has finished"
+    assert "FR_OPT_MAX_S" in body, "the optimiser bound cannot be set or removed"
+    assert 'kill -TERM "$_J"' in body, "the optimiser is not stopped by the pid the watchdog already holds"
+    # the session has to be on disk before anything is stopped, or the attempt scores 9999 and the round is lost
+    k = body.find("stopping the optimiser")
+    assert k > 0 and body.rfind('[ -s "${FRW_SES:-/nonexistent}" ]', 0, k) > 0, "the optimiser may only be stopped once a session exists"
+    # and the bound is off for every other launcher
+    for f in ("route_part.sh", "cont_route.sh", "route_pcb.sh", "fr_probe.sh"):
+        assert "FRW_OPT_BOUND=1" not in open(os.path.join(TOOLS, f)).read(), "%s bounds an optimiser it never asked to" % f
+
+
+def t_every_python_block_embedded_in_a_shell_tool_parses():
+    """export_jlc.sh (15 Sep 2026) carried a python heredoc with an unclosed parenthesis for one commit: the shell parsed,
+    the suite passed, and every deliverable re-cut on that commit kept its old fab note because the export failed
+    silently inside finish_board.sh. A heredoc is code and is compiled here."""
+    import glob, re
+    bad = []
+    for sh in sorted(glob.glob(os.path.join(TOOLS, "*.sh"))):
+        s = open(sh).read()
+        for m in re.finditer(r"<<'PY'\n(.*?)\nPY\n", s, re.S):
+            try: compile(m.group(1), sh, "exec")
+            except SyntaxError as e: bad.append("%s: %s" % (os.path.basename(sh), e))
+    assert not bad, "; ".join(bad)
+
+
+def t_the_placed_board_drc_fails_closed():
+    """Red team report 1, P1 (16 September 2026): full.sh ran the placed-board DRC with `|| true`, so a DRC that
+    did not run printed UNMEASURED and the chain carried on into a five-hour route. The cheap gate in front of
+    the expensive stage is worth nothing if its own failure is a pass."""
+    src = open(os.path.join(TOOLS, "full.sh")).read()
+    i = src.index("placed-drc.json")
+    win = src[max(0, i - 400):i + 1200]
+    assert "drc.sh $N.kicad_pcb out/$N-placed-drc.json >/dev/null 2>&1 || true" not in win, \
+        "the placed-board DRC still swallows its own exit status"
+    assert "DRCRC" in win and "block \"the placed-board DRC did not run" in win, \
+        "the chain does not block when the placed-board DRC fails to run"
+    assert "UNMEASURED and nothing below it is a measurement" in src, \
+        "an unreadable placed-board DRC report does not block"
+
+
+def t_the_gate_sweep_is_read_only_by_construction():
+    """A sweep exists to produce EVIDENCE about a board, so it must not be able to change the board it judges.
+
+    Two properties, both mechanical. It names no tool that writes copper, and `return_via.py` appears only with
+    --check, because that one file is a judge and a fixer and only the judge belongs here. And it compares the
+    board's sha256 before and after, writing no evidence if they differ: the project has lost boards to a tool
+    that ran where nobody expected it (a clone's stale board rsynced over a finished phase board, 15 September),
+    so "it does not write" is asserted against the artefact rather than trusted.
+    """
+    p = os.path.join(TOOLS, "gate_sweep.sh")
+    from harness import Skip
+    if not os.path.exists(p): raise Skip("the gate sweep does not exist in this tree")
+    src = open(p).read()
+    fixers = ["stub_router.py", "pour_stitch.py", "zone_pad_via.py", "cleanup_dangling.py", "stitch_prune.py",
+              "rail_prune.py", "straighten.py", "gnd_grid.py", "escape.py", "direct_close.py", "unknot.py",
+              "quality_pass.sh", "pair_preroute.py", "silk_fix_all.py"]
+    named = [f for f in fixers if f in src]
+    assert not named, "a read-only sweep names tools that write copper: %s" % named
+    for line in src.splitlines():
+        if "return_via.py" in line and not line.strip().startswith("#"):
+            assert "--check" in line, "return_via runs as the FIXER in the sweep: %s" % line.strip()[:110]
+    assert "BEFORE" in src and "AFTER" in src and "sha256sum" in src, \
+        "the sweep does not take the board's hash before and after"
+    assert "no evidence written" in src, "the sweep does not refuse to write evidence when the board changed"
+
+
+def t_a_function_whose_stdout_is_read_as_a_number_lets_nothing_else_write_to_it():
+    """A tool that prints prose on stdout, called inside a function whose stdout is captured as a count.
+
+    On 15 September 2026 drc.sh gained a cost line ("drc: 3 s, 82 violation(s), board f7c80ab"), correctly:
+    the block that printed it had been sitting after `exit 0` and the pipeline could not say what its twelve
+    DRC calls per finish cost. The line went to stdout, and two scoring helpers read their counts off the
+    stdout of a function that calls drc.sh first: `read H0 U0` took "drc:" and "3". `[ "$H1" -eq 0 ]` on a
+    non-numeric string is false, so from that day every continuation route on every board was discarded
+    however much it improved, and the pair matcher compared a multi-line string.
+
+    Neither tool changed. The seam did. So the rule is about the seam: inside a function that returns a
+    number on stdout, every other command redirects its own.
+    """
+    import glob
+    bad = []
+    for p in sorted(glob.glob(os.path.join(TOOLS, "*.sh"))):
+        src = open(p, errors="replace").read()
+        for m in re.finditer(r"^(\w+)\s*\(\)\s*\{(.*?)^\}", src, re.M | re.S):
+            name, body = m.group(1), m.group(2)
+            # is this function's stdout read as a value anywhere in the file?
+            if not re.search(r"(\$\(\s*%s\b|<\s*<\(\s*%s\b)" % (name, name), src): continue
+            for line in body.splitlines():
+                s = line.strip()
+                if not s or s.startswith("#"): continue
+                if "drc.sh" not in s: continue
+                if ">&2" in s or ">/dev/null" in s or "> /dev/null" in s: continue
+                bad.append("%s: %s() calls drc.sh without redirecting its stdout, which is read as a number"
+                           % (os.path.basename(p), name))
+    assert not bad, "; ".join(bad)
+
+
+def t_every_launcher_that_starts_freerouting_under_xvfb_dismisses_its_modal_dialog():
+    """The fix went to one launcher of two, and the other was the parallel route.
+
+    On 15 September 2026 board B's router sat three hours on Freerouting's "The normalization of net
+    failed" warning under Xvfb, and `route_one.sh` got a watchdog. `route_part.sh` launches the same jar the
+    same way and never received it: the first confined partition run of board B, on 16 September, stalled on
+    exactly that warning. A router under Xvfb that can be stopped by a dialog needs the watcher wherever it is
+    launched, and since round 8 (26 September 2026) the watcher must be given the router's LOG, because what a
+    dialog says is read there before it is answered, and every launcher confirms the import with the probe first.
+    """
+    import glob
+    bad = []
+    for p in sorted(glob.glob(os.path.join(TOOLS, "*.sh"))):
+        s = open(p, errors="replace").read()
+        if "xvfb-run" not in s or "-jar" not in s: continue
+        if os.path.basename(p) == "fr_dialog_watch.sh": continue          # the watcher's own probe run
+        code = "\n".join(l for l in s.splitlines() if not l.lstrip().startswith("#"))
+        if not ("fr_dialog_watch.sh" in code and "fr_watch " in code):
+            bad.append("%s launches Freerouting under Xvfb with no watcher" % os.path.basename(p)); continue
+        for m in re.finditer(r"fr_watch\s+(.*)", code):
+            if m.group(0).startswith("fr_watch()"): continue
+            args = re.findall(r'"[^"]*"|\S+', m.group(1).split(";")[0].split("||")[0])
+            if len(args) < 5: bad.append("%s calls fr_watch without the router's log: %s" % (os.path.basename(p), m.group(0)[:100]))
+        if "fr_import_probe " not in code:
+            bad.append("%s starts a route without confirming its import (fr_import_probe)" % os.path.basename(p))
+    assert not bad, "; ".join(bad)
+
+
+def t_the_dialog_watchdog_watches_the_jvm_and_not_its_wrapper():
+    """The watchdog read a pid whose CPU never moves, so it could not tell a stall from work.
+
+    `pgrep -f "java .*-de <dsn>"` matches the `timeout` and `xvfb-run` wrappers as well as the JVM. They
+    start first, so they sort first, and `head -1` returns one of them. Its CPU time is static for the
+    whole run, so the stall comparison was true on every poll and the watchdog sent Return every sixty
+    seconds whatever the router was doing: it dismissed dialogs by firing blindly, which is why it read as
+    working. Measured 16 September 2026 on board B's partition run, where the selection returned the
+    `timeout` process and the real JVM sat at 0.0 cores until Return was sent to it by hand.
+
+    A watchdog that cannot observe the thing it guards is a timer with extra steps.
+    """
+    s = open(os.path.join(TOOLS, "fr_dialog_watch.sh"), errors="replace").read()
+    assert "pgrep -x java" in s, "the watchdog still selects by pattern, which matches the wrappers"
+    assert "/proc/$_P/cmdline" in s, "nothing confirms the JVM it found is routing THIS dsn"
+    assert "/proc/$_J/environ" in s, "the display is guessed rather than read from the process"
+    # and it must not stop watching: Freerouting raises one dialog per failing net, at any pass
+    assert "1200" not in s, "the watchdog still gives up after twenty minutes"
+
+
+def t_the_dialog_watchdog_finds_the_modal_by_its_title_and_not_only_by_a_flat_cpu():
+    """26 September 2026, board B's escape trial Q-B-ESC-1: both arms sat 57 minutes on Freerouting's
+    "DSN file reader" warning with the watchdog running and silent. An idle JVM's garbage collector and AWT
+    threads still tick, so a CPU-flat trigger is never true while the router waits for a click. The modal
+    is found by its window title on the JVM's own display.
+
+    Round 8, the same night: the CPU-flat trigger is GONE, because all it could ever do was press Return on a
+    window nobody had identified. Every titled window is either one of Freerouting's own non-modal frames or
+    Java's internal windows (ignored by name), the DSN reader's dialog (answered only after its content is
+    read), or refused."""
+    s = open(os.path.join(TOOLS, "fr_dialog_watch.sh"), errors="replace").read()
+    code = "\n".join(l for l in s.splitlines() if not l.lstrip().startswith("#"))
+    assert "search --onlyvisible --name ''" in code, "the windows on the router's display are not enumerated"
+    assert "DSN file reader - Freerouting" in code, "the DSN reader's dialog is not known by its title"
+    assert "Board Layout - Freerouting" in code and "General Settings" in code, "Freerouting's own frames would be refused"
+    assert "_STILL" not in code and "/proc/$_J/stat" not in code, "the CPU-flat trigger is still there"
+    assert "windowactivate" not in code, "windowactivate needs a window manager Xvfb has not got; it fails and takes the key with it"
+    assert "window-refused" in code, "a window nobody has read is not refused"
+
+
+def t_a_dialog_is_answered_only_after_what_it_says_is_read():
+    """Review finding F, 26 September 2026: "automatically pressing Return on a DSN file reader warning should require
+    understanding that warning". The only Return the watcher sends is in its dismissal, and the dismissal is reached
+    only on the branch where `fr_import_check.py classify` accepted every entry of the dialog."""
+    s = open(os.path.join(TOOLS, "fr_dialog_watch.sh"), errors="replace").read()
+    code = "\n".join(l for l in s.splitlines() if not l.lstrip().startswith("#"))
+    keys = [m.start() for m in re.finditer(r"key --clearmodifiers Return", code)]
+    d0, d1 = code.index("_frw_dismiss() {"), code.index("\n}\n", code.index("_frw_dismiss() {"))
+    assert keys and all(d0 < k < d1 for k in keys), "Return is sent outside the dismissal"
+    w = code[code.index("fr_watch() {"):]
+    c = w.index('classify "$_LOG" "$_DSN"'); g = w.index('if [ "$_rc" = 0 ]; then', c); call = w.index('_frw_dismiss "$_W"', g)
+    assert c < g < call, "the dialog is dismissed before, or without, its content being classified"
+    assert "_frw_visible" in code[d0:d1], "the dismissal does not check that the dialog is gone"
+
+
+def t_racing_attempts_differ_in_something_the_router_reads():
+    """Freerouting is deterministic, so N attempts with identical parameters are one attempt run N times.
+
+    Measured 5 September 2026: three parallel attempts differing only in their pass ceiling returned
+    byte-identical results, because the autorouter finished before any ceiling bound. route_parallel.sh took
+    a list of pass counts and gave every attempt the same rules file, so the parallelism it offered was real
+    only when a ceiling happened to bind. The capability probe of 6 September found the lever the router does
+    read: via_costs 200 against the default 50 cut board D's vias by 25 percent for 13 percent more length.
+
+    A variant is now `<passes>[:<via_costs>[:<ripup>]]` and carries its own rules file. A bare number keeps
+    the old meaning, so no existing caller changes.
+    """
+    s = open(os.path.join(TOOLS, "route_parallel.sh"), errors="replace").read()
+    assert "fr_rules.py" in s, "attempts cannot differ in the one thing 1.9.0 honours"
+    assert "--via-costs" in s, "the via cost is not per attempt"
+    assert 'FR_RULES="$PWD/out/par/$K/variant.rules"' in s, "the rules file is not handed to the attempt that owns it"
+    # the old form must still work: a bare pass count takes the caller's own rules
+    assert 'if [ "$REST" = "$V" ]' in s, "a bare pass count is no longer accepted"
+
+
+def t_the_sweep_judges_the_folder_of_the_declared_phase_and_not_the_first_one_a_glob_returns():
+    """16 September 2026. `ls <boards>/*-E*/pcb-e1-dock-bom.csv | head -1` returns the folder cut on
+    4 September, because E4 sorts before E9: board E's order codes were judged against a bill of materials
+    eleven days and five phases old, and so was every other board's, each reading its own oldest folder.
+
+    This is the "a tool picks a board by globbing a directory" rule of 11 September, in a tool written after
+    it. The phase a board is cutting is declared in boards/<letter>.json and nowhere else."""
+    src = open(os.path.join(TOOLS, "gate_sweep.sh"), encoding="utf-8").read()
+    # the phase comes from the board's own declaration: its table, or the registry's facts for a board that
+    # has no table (board E5). Either is a declaration; a glob over the folders is not.
+    assert ('boards", "%s.json" % letter' in src or "boards/$L.json" in src), \
+        "the sweep does not read the declared phase for the order-code gate"
+    assert "phase_declared" in src, "the sweep has no phase for a board with no board table"
+    # COMMENTS DO NOT RESOLVE ANYTHING, and the first version of this read them: the paragraph explaining where
+    # the allow file lives names `<project>/out/jlc/<name>-bom.csv` and was read as a resolution without a phase
+    # (17 September 2026, the same lesson closer_audit.py carries about counting a tool named in a comment).
+    lines = [l for l in src.splitlines() if not l.strip().startswith("#")
+             and (l.strip().startswith("_BOM=") or "-bom.csv" in l)]
+    assert lines, "no line in the sweep resolves a bill of materials"
+    for l in lines:
+        if "-bom.csv" not in l: continue
+        # `$_FOLDER` is the folder AT the declared phase, resolved one line above from `$_PHASE`, so a path
+        # built on it is anchored to the declaration exactly as one built on `$_PHASE` is.
+        assert ("$_PHASE" in l or "$_FOLDER" in l), \
+            "a bill of materials is resolved without the declared phase: %s" % l.strip()
+
+
+def t_the_sweep_removes_the_verdicts_of_the_gates_it_is_about_to_run():
+    """A gate that cannot run must leave NO verdict, not the previous run's. The sweep copies what it produced
+    into <phase>/routed/, and an old answer taken on the SAME board passes the freshness check, so it reads as
+    this sweep's result. Board E's order-code FAIL of 16 September was exactly that, carried in from a sweep in
+    another tree."""
+    src = open(os.path.join(TOOLS, "gate_sweep.sh"), encoding="utf-8").read()
+    assert 'rm -f "$P/routed/$_g.verdict.json"' in src, "the sweep keeps stale verdicts for gates it runs"
+    i = src.index('rm -f "$P/routed/$_g.verdict.json"')
+    assert i < src.index("--- board gate") if "--- board gate" in src else True, \
+        "the removal must happen before the gates run"
+    for g in ("derate", "lcsc_fill", "check_contracts", "place_audit"):
+        assert g in src[src.index("for _g in"):i], "%s is not in the list the sweep clears" % g
+
+
+# 16 September 2026: A BLOCK THAT DOES NOT CARRY ITS OWN CAUSE COSTS A ROUND TRIP TO THE BOX.
+# A38's pre-route gate printed `BLOCK placement generator exit 1` and stopped. The reason was in the chain's
+# own log four hundred lines up (`unplaced: ['C121', 'C122', 'R146', 'R147', 'R148', 'R149']`, six parts the
+# schematic had gained that morning with no seat in the packer), and `block`'s optional `tail -5` would not
+# have shown it either: KiCad's python prints one "swig/python detected a memory leak of type 'FOOTPRINT *'"
+# line per footprint, so the last five lines of any placement log are five of those.
+def _block_faults(src):
+    """The faults in a chain script's refusal path, as a list. Empty means the script says why it stopped."""
+    bad = []
+    for line in src.splitlines():
+        s = line.strip()
+        if s.startswith("block () ") or s.startswith("block() "):
+            if "memory leak" not in s:
+                bad.append("block() tails a log without filtering the swig leak noise")
+        if 'block "placement generator' in s:
+            why = s.split("exit $GEN3", 1)[-1]
+            if "$" not in why:
+                bad.append("the placement generator's block carries no reason from the log: %s" % s)
+    return bad
+
+
+def t_a_block_that_stops_a_chain_carries_its_own_cause():
+    src = open(os.path.join(TOOLS, "full.sh"), encoding="utf-8").read()
+    assert _block_faults(src) == [], _block_faults(src)
+    # The defective fixture: the two lines as they stood before this change. The rule must refuse them,
+    # or it is a rule that passes on the tree it was written against.
+    before = ('block () { echo "BLOCK $1" | tee out/preroute-gate.txt >/dev/null; echo "BLOCK $1"; '
+              '[ -n "${2:-}" ] && tail -5 "$2"; echo PREROUTE-DONE BLOCK; exit 1; }\n'
+              '[ "$GEN3" -eq 0 ] || block "placement generator exit $GEN3"\n')
+    assert len(_block_faults(before)) == 2, "the rule does not refuse the text it was written against: %s" % _block_faults(before)
+
+
+def t_a_finish_refusal_a_route_cannot_change_stops_the_run():
+    """16 September 2026. Board C23 routed 0 hard and 0 unrouted of 133 nets and its finish was refused by rule
+    TRN-001: four conductors on the face jack and the main switch reach a chip with nothing between. That is a
+    property of the SCHEMATIC and owner decision 31, on a board whose copper is finished. The supervisor turned
+    every finish refusal on a clean route into the OPEN signature, whose remedies are a different via cost and
+    thirty percent more passes, and started another route. It would have done that until the round budget ran
+    out, at about half an hour of a rented box per round."""
+    src = open(os.path.join(TOOLS, "routeflow.py"), encoding="utf-8").read()
+    assert 'sig = finish_blocker(flog)' in src, "a refused finish is still read as opens whatever refused it"
+    assert 'if sig == "CLEAN": sig = "OPEN"' not in src, "the unconditional mapping is still there"
+    assert "NOT_A_ROUTE" in src, "the reasons a route cannot change are not named"
+    import importlib.util, tempfile
+    spec = importlib.util.spec_from_file_location("rf_t", os.path.join(TOOLS, "routeflow.py"))
+    rf = importlib.util.module_from_spec(spec); spec.loader.exec_module(rf)
+    d = tempfile.mkdtemp(prefix="rf-blk-")
+    ports = os.path.join(d, "ports.log")
+    open(ports, "w").write("routed-board gate: hard 0 unrouted 0\n"
+                           "C23 PORTS a conductor leaves the case and meets a chip with nothing between "
+                           "(rule TRN-001)\n")
+    sig = rf.finish_blocker(ports)
+    assert sig.startswith("NOT_A_ROUTE:"), sig
+    assert rf.remedy(sig, {"route": {}}, set())[0] is None, "a refusal a route cannot change still gets a remedy"
+    opens = os.path.join(d, "open.log")
+    open(opens, "w").write("routed-board gate: hard 0 unrouted 3\nPRUNED PAD NOT REACHED by the router\n")
+    assert rf.finish_blocker(opens) == "OPEN", "a real open must still be read as one"
+    assert rf.finish_blocker(os.path.join(d, "absent.log")) == "OPEN", "an unreadable log must not stop a run"
+
+
+def t_no_driver_is_patched_while_a_copy_of_it_is_running():
+    """16 September 2026, learnt again and written down. bash reads a shell script INCREMENTALLY by byte
+    offset, so editing one under a running instance makes that instance resume at the wrong place: patching
+    /root/sweep_set.sh while the previous sweep was still in its gates stage made it try to execute a line of
+    the embedded python (`syntax error near unexpected token "project",`) and abort. The record has carried
+    'never overwrite a running bash script' since 8 September for CHAINS; a driver is a bash script too.
+
+    This rule cannot see the box, so what it holds is the property that makes the mistake survivable: every
+    driver this tree generates is written to a PER-LAUNCH copy, so a patch to the template never reaches an
+    instance already running. `run_phase.sh` does this (`/root/drivers/`), and the rule is that it keeps
+    doing it."""
+    for name in ("run_phase.sh", "refinish.sh"):
+        p = os.path.join(TOOLS, "routeflow", "cloud", name)
+        if not os.path.exists(p):
+            p = os.path.join(TOOLS, name)
+        if not os.path.exists(p):
+            continue
+        src = open(p, encoding="utf-8").read()
+        assert "drivers/" in src or "mktemp" in src or "per-launch" in src, \
+            "%s launches a driver without giving it its own copy, so patching the template hits a running run" % name
+
+
+def t_a_tool_does_not_default_to_a_mode_its_own_comment_says_does_not_work():
+    """16 September 2026. part_stage2.sh has carried this since 10 September: concurrent region jobs each know
+    only stage 1's locked copper, so their boundaries collide, and on B19 the merge of five concurrent regions
+    carried 1,121 hard violations that three rip passes could only bring to about 400. The flag that selects
+    the working mode read `${PART_SEQ:-0}`, so a launcher that said nothing got the broken one, and three
+    board B partition arms spent about three hours of a rented box each reproducing the predicted result:
+    549, 614 and 760 boundary conflicts on the merged board.
+
+    The rule is general and cheap to keep: where a shell tool's own prose says a mode does not work, the
+    default must not be that mode."""
+    src = open(os.path.join(TOOLS, "part_stage2.sh"), encoding="utf-8").read()
+    # CODE, not prose. The comment beside the fix quotes the defect it removed, and a rule that reads its own
+    # explanation as the defect can never be satisfied; test_order_codes.py carries the same sentence for the
+    # same reason. Only the lines that bash executes are judged.
+    code = "\n".join(l for l in src.splitlines() if not l.lstrip().startswith("#"))
+    assert "${PART_SEQ:-1}" in code, "the partition stage defaults to the concurrent mode again"
+    assert "${PART_SEQ:-0}" not in code, "one of the two tests still defaults to the concurrent mode"
+    # and the reason is still written beside it, because a default with no reason is the next thing to drift
+    assert "cannot work" in src or "Concurrent jobs cannot" in src, \
+        "the paragraph explaining why sequential is the default is gone"
+
+
+def t_no_deliverable_folder_is_AHEAD_of_the_phase_its_board_file_declares():
+    """A cut that took its phase from the command line, 16 September 2026.
+
+    `boards/<letter>.json` declares the phase, and the set gate refuses a folder that names an EARLIER one:
+    that folder is a board this set is no longer building. The reverse says something worse and nothing was
+    reading it. Board C's newest folder was C24, cut and committed from the board this tree holds, while
+    `boards/c.json` still said C18: the cut had been given a phase on the command line, so the current
+    deliverable read STALE against a declaration six phases behind it, and the only way to tell that from a
+    genuinely stale folder was to open the board and look at its silk.
+
+    A folder ahead of the declaration is always a bookkeeping failure, never a state the pipeline can reach on
+    its own, because the generators stamp what this file says."""
+    import json, glob, re
+    from harness import Skip
+    boards = os.path.join(TOOLS, "boards")
+    rel = os.path.join(os.path.dirname(os.path.dirname(TOOLS)), "release", "revA", "boards")
+    if not os.path.isdir(rel): raise Skip("no release tree here")
+    bad = []
+    for f in sorted(glob.glob(os.path.join(boards, "*.json"))):
+        letter = os.path.basename(f)[:-5]
+        try: declared = (json.load(open(f, encoding="utf-8")) or {}).get("phase")
+        except ValueError: continue
+        if not declared: continue
+        m = re.match(r"^([A-Z]+)(\d+)$", declared.upper())
+        if not m: continue
+        stem, num = m.group(1), int(m.group(2))
+        for d in sorted(glob.glob(os.path.join(rel, "meshsat-pcb-%s-revA-*" % letter))):
+            n = os.path.basename(d).split("-")[-1].upper()
+            if n == "QUOTE": n = os.path.basename(d).split("-")[-2].upper()
+            mm = re.match(r"^(%s)(\d+)$" % stem, n)
+            if mm and int(mm.group(2)) > num:
+                bad.append("%s: the folder %s is ahead of the phase boards/%s.json declares (%s)"
+                           % (letter.upper(), os.path.basename(d), letter, declared))
+    assert not bad, "; ".join(bad)
+
+
+def t_a_phase_on_the_command_line_must_be_the_one_the_board_declares():
+    """Board C, 17 September 2026: cut and committed as C24, a folder that passes 38 of its 38 properties,
+    while boards/c.json still said C18, so the set gate read the current deliverable as stale against a
+    declaration six phases behind it. The phase is a fact about the board, not an argument: the generators
+    stamp it on the silk, the finish names the folder after it and the set gate judges the folder by it.
+
+    An arm may still lead the declaration, because an arm's board may never be adopted, and it says so with
+    ROUTEFLOW_PHASE_UNDECLARED=1 rather than by drifting."""
+    import json as _j, tempfile, shutil
+    from harness import Skip
+    sys.path.insert(0, TOOLS)
+    import routeflow as RF
+    prof = {"board": "pcb-c-display", "project": "pcb-c-display-c8", "phase": "<PHASE>"}
+    decl = None
+    bf = os.path.join(TOOLS, "boards", "c.json")
+    if os.path.exists(bf): decl = _j.load(open(bf)).get("phase")
+    if not decl: raise Skip("board C declares no phase in this tree")
+    # the declared phase resolves
+    assert RF.resolve_phase(prof, decl)["phase"] == decl
+    # another one is refused, and the message says what to do
+    try:
+        RF.resolve_phase(prof, "C99")
+        raise AssertionError("a phase the board does not declare was accepted")
+    except SystemExit as e:
+        assert "boards/c.json declares" in str(e) and "ROUTEFLOW_PHASE_UNDECLARED" in str(e), str(e)
+    # an arm may lead the declaration deliberately
+    os.environ["ROUTEFLOW_PHASE_UNDECLARED"] = "1"
+    try: assert RF.resolve_phase(prof, "C99")["phase"] == "C99"
+    finally: os.environ.pop("ROUTEFLOW_PHASE_UNDECLARED", None)
+
+
+def t_the_sweep_finds_a_phase_for_a_board_with_no_board_table():
+    """Board E5 is a bare contact interposer with no schematic chain and therefore no `boards/e5.json`. The
+    sweep read its declared phase from that file alone, got an empty string, skipped the order-code gate with
+    "e5 declares no phase", and left CMP-002 and SUP-001 inconclusive on the board whose deliverable folder is
+    the one in this release that passes its own gate. The registry's facts have carried `phase_declared: E5`
+    since they were written, and the sweep already falls back to them for the board's NAME (17 September 2026).
+    """
+    import os, sys
+    src = open(os.path.join(TOOLS, "gate_sweep.sh"), encoding="utf-8").read()
+    body = "\n".join(l for l in src.splitlines() if not l.strip().startswith("#"))
+    assert "phase_declared" in body, "the sweep has no fallback for a board with no board table"
+    sys.path.insert(0, TOOLS)
+    import rules_lib
+    f = rules_lib.board_facts()
+    for letter, fact in sorted(f.items()):
+        if not isinstance(fact, dict) or str(letter).startswith("_"): continue
+        p = os.path.join(TOOLS, "boards", "%s.json" % letter)
+        if os.path.exists(p): continue
+        assert fact.get("phase_declared"), \
+            "board %s has neither a board table nor a declared phase in the facts" % letter
+
+
+def t_the_finished_board_of_a_round_is_kept_and_not_only_the_routed_one():
+    """`best-round<N>.kicad_pcb` is what the ROUTER produced. The finish then spends an hour of stub router,
+    direct closure, pruning and widening on it and usually ends with FEWER open connections, and that board
+    lives in the project directory where the next round's pre stage regenerates straight over it. Board A's two
+    arms lost theirs that way on 17 September: the router left 25 and 23 open, the finishes reached 20 and 23,
+    and after the remedy rounds started only the router's boards survived. One file copy per round keeps the
+    better artefact."""
+    import os
+    src = open(os.path.join(TOOLS, "routeflow.py"), encoding="utf-8").read()
+    body = "\n".join(l for l in src.splitlines() if not l.strip().startswith("#"))
+    assert 'finished-round%d.kicad_pcb' in body, "routeflow does not keep the finished board of a round"
+    i = body.index("finished-round%d.kicad_pcb")
+    j = body.index("judge_finish(flog")
+    assert i > j, "the finished board is kept before the finish has run"
+    assert "shutil.copy2" in body[i - 400:i + 400], "the finished board is named but not copied"
+
+
+def t_a_supervisor_killed_by_its_own_cap_takes_its_router_with_it():
+    """Every routeflow run is launched under `timeout <cap>`. When that cap fires the supervisor is killed
+    where it stands, inside a blocking wait on a router that was NOT killed with it: board A's second round was
+    found on 17 September with its driver three quarters of an hour dead and its router still going, reparented
+    to init, 3 h 04 into a route whose session nobody would ever import. A rented box's thread held by a job
+    with no supervisor.
+
+    Executed, not read: a child process runs `routeflow.sh(['sleep', '600'])` under the handler, gets SIGTERM,
+    and the sleep must be gone with it."""
+    import os, sys, time, signal, subprocess, tempfile
+    prog = ("import sys, os; sys.path.insert(0, %r); import routeflow as R;"
+            "R._install_signal_handlers(); open(%r, 'w').write(str(os.getpid()));"
+            "R.sh(['sleep', '600'], '/tmp', %r)")
+    with tempfile.TemporaryDirectory() as d:
+        pidf, log = os.path.join(d, "pid"), os.path.join(d, "log")
+        p = subprocess.Popen([sys.executable, "-c", prog % (TOOLS, pidf, log)])
+        for _ in range(100):
+            time.sleep(0.1)
+            if os.path.exists(pidf): break
+        time.sleep(0.6)
+        kids = subprocess.run(["pgrep", "-P", str(p.pid)], capture_output=True, text=True).stdout.split()
+        assert kids, "the stage never started"
+        child = kids[0]
+        p.send_signal(signal.SIGTERM)
+        p.wait(timeout=30)
+        time.sleep(0.5)
+        alive = subprocess.run(["ps", "-o", "pid=", "-p", child], capture_output=True, text=True).stdout.strip()
+        assert not alive, "the stage outlived the supervisor, which is the defect this rule exists for"
+        assert p.returncode in (143, 130, -15), p.returncode
+
+
+def t_the_partition_stage_two_repartitions_with_the_callers_regions():
+    """A46 (18 September 2026): part_stage2.sh re-partitioned with dsn_partition's DEFAULT regions (board B's), so
+    board A's WEST, MID and EAST groups matched no net and every region job routed nothing in half a second while the
+    driver reported PART-DONE for each. The caller's region spec travels in PART_REGIONS."""
+    s = open(os.path.join(TOOLS, "part_stage2.sh"), encoding="utf-8").read()
+    i = s.find("dsn_partition.py"); assert i > 0
+    assert "PART_REGIONS" in s[i:i + 300], "part_stage2.sh re-partitions without the caller's --regions"
+
+
+def t_the_partition_stops_when_a_group_does_not_import():
+    """B22 (18 September 2026): `ses_import_lock` raised on S3's session, the loop threw the status away through a
+    pipe and read and wrote the same board path, so the next group was routed against a board without S3's copper and
+    every group still reported PART-DONE. An import that fails stops the chain, and it writes beside the board."""
+    s = open(os.path.join(TOOLS, "part_stage2.sh"), encoding="utf-8").read()
+    i = s.find("ses_import_lock.py $W/stage1.kicad_pcb")
+    assert i > 0, "the sequential import moved"
+    blk = s[i:i + 700]
+    assert "stage1-next.kicad_pcb" in blk, "the import still writes over the board it reads"
+    assert "_irc" in blk and "break" in blk, "the import's status is not checked and the loop does not stop on it"
+
+
+def t_an_arm_may_declare_what_it_depends_on_and_the_launcher_proves_it():
+    """D16, 18 September 2026: an arm staged at 18:39 UTC to measure a pre-lay, and the fix that makes a pre-lay
+    work landed at 19:10. Its tree carried the old `stub_router`, its pre-lay closed 0 of 3, and the run
+    measured nothing while looking exactly like a result (0 hard, 9 unrouted). A tree carries the tools it was
+    staged with; an arm can SAY what it needs, and then the launcher answers rather than the operator's memory.
+
+    THE DEFECTIVE FIXTURE is a run whose declaration names a literal the tools do not carry: it must block.
+    THE ACCEPTABLE FIXTURE names one they do: it must not."""
+    import importlib.util, os, tempfile, io, contextlib
+    TOOLSDIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    spec = importlib.util.spec_from_file_location("rf_arm", os.path.join(TOOLSDIR, "routeflow.py"))
+    rf = importlib.util.module_from_spec(spec); spec.loader.exec_module(rf)
+    d = tempfile.mkdtemp(prefix="requires-")
+    t = os.path.join(d, "v2", "ecad", "tools"); os.makedirs(t)
+    open(os.path.join(t, "stub_router.py"), "w").write('X = os.environ.get("STUB_POUR_OBSTACLE", "1")\n')
+
+    def run(reqs):
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc = rf.preflight(d, reqs)
+        return rc, buf.getvalue()
+
+    rc_bad, out_bad = run(["STUB_LOCK"])
+    assert rc_bad != 0, "a run whose declared requirement is absent from its own tools started anyway"
+    assert "would measure nothing" in out_bad, out_bad[-300:]
+    _rc_ok, out_ok = run(["STUB_POUR_OBSTACLE"])
+    assert "PASS  requires STUB_POUR_OBSTACLE" in out_ok, out_ok[-300:]
+    # and a run that declares nothing is unchanged: this adds no check to the boards already running
+    _rc_none, out_none = run([])
+    assert "requires " not in out_none, out_none[-200:]
+
+
+def t_the_declaration_travels_from_the_profile():
+    """A requirement nothing reads is the defect this project keeps finding (`budget_rounds` in twelve profiles,
+    `--png` in three usage lines). The call site must pass the profile's own list."""
+    import os
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "routeflow.py"),
+               encoding="utf-8").read()
+    assert 'preflight(repo, list(prof.get("requires") or []) + list(requires or []))' in src, (
+        "the declaration never reaches preflight")
+    assert '"--requires"' in src and "[--requires A,B]" in src, (
+        "an arm cannot declare its requirement without editing the shared profile, which is how it gets forgotten")
+
+
+def t_a_gate_that_dies_on_a_signal_is_tried_once_more_before_it_blocks():
+    """19 September 2026: E21's chain blocked at `place_audit` on a SEGMENTATION FAULT with an empty log and no
+    image, and the same tool on the same board file passed with 0 predicted collisions two minutes later.
+    Blocking on a crash is right (a gate that did not finish is not a pass, board A's `stitch_prune` on
+    17 September wrote PASS having segfaulted before printing a line). Throwing an hour of chain work away for
+    a process that died is not. The retry must be exactly once, must be limited to a SIGNAL exit (128 and
+    above, never an ordinary non-zero verdict, or a real FAIL would be re-rolled until it passed), and the
+    second exit must be the one that decides."""
+    import os
+    T = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    full = open(os.path.join(T, "full.sh"), encoding="utf-8").read()
+    i = full.index("pa_run () {")
+    blk = full[i:full.index("grep -E \"FAIL|predicted|decoupling\"", i)]
+    assert blk.count("pa_run;") == 2, "the gate is not run exactly twice at most"
+    assert '"$PA" -ge 128' in blk, "the retry is not limited to a signal exit"
+    assert "PA=$PA2" in blk, "the second run's exit is not the one that decides"
+
+
+def t_no_tool_calls_a_path_function_on_the_os_module_itself():
+    """`os.abspath` DOES NOT EXIST AND THE ERROR IS INVISIBLE (MESHSAT-862, 20 September 2026).
+
+    Three times in one hour, in two tools, a local alias of `os` was followed by a function that lives in
+    `os.path`. Every one raises AttributeError, and the first was inside a bare `except Exception` that set
+    an empty string, so the barrel provenance recorded nothing and looked exactly like a generator that had
+    placed no barrels. It cost two chain runs, and what found it was making the except say why.
+
+    THE RULE PARSES RATHER THAN GREPS, and its first version did not: written as a regular expression it
+    matched the examples in its own docstring and failed on itself, which is the `pkill -f` self-match in
+    another costume. An AST walk sees attribute accesses and never sees a string."""
+    import ast as _ast, glob as _g
+    PATHFN = {"abspath", "basename", "dirname", "join", "splitext", "relpath",
+              "isfile", "isdir", "exists", "normpath", "realpath"}
+    bad = []
+    for f in sorted(_g.glob(os.path.join(TOOLS, "*.py"))) + sorted(_g.glob(os.path.join(TOOLS, "tests", "*.py"))):
+        try: tree = _ast.parse(open(f, encoding="utf-8").read())
+        except SyntaxError: continue
+        aliases = {"os"}
+        for n in _ast.walk(tree):
+            if isinstance(n, _ast.Import):
+                for a in n.names:
+                    if a.name == "os" and a.asname: aliases.add(a.asname)
+        for n in _ast.walk(tree):
+            if not isinstance(n, _ast.Call): continue
+            fn = n.func
+            if (isinstance(fn, _ast.Attribute) and fn.attr in PATHFN
+                    and isinstance(fn.value, _ast.Name) and fn.value.id in aliases):
+                bad.append("%s:%d  %s.%s(" % (os.path.basename(f), fn.lineno, fn.value.id, fn.attr))
+    assert not bad, ("a path function is called on the os module itself, which raises AttributeError the "
+                     "moment that branch runs:\n  " + "\n  ".join(sorted(set(bad))[:12]))
+
+
+def t_a_run_refuses_to_start_without_room_to_write_its_result():
+    """A ROUTE THAT CANNOT WRITE ITS RESULT IS FIVE HOURS SPENT FOR NOTHING (MESHSAT-862, 20 September 2026).
+
+    The hub filled to 100 percent with 184 K free while four boards routed. A54's router finished at hard 0
+    and 20 unrouted of 264, its finish ran every closer it has (stub, dots, direct_close, the pair round,
+    stitch_prune), and routeflow then ended `TOOL_CRASH` on `[Errno 28] No space left on device` at the
+    moment it tried to KEEP its own board. Its landing driver found no frozen tree and said so, correctly.
+    Nothing was lost only because the closers' board was still on disk and could be read where it stood.
+
+    Preflight already asks about memory and load and knew nothing about disk, and the space was spent by
+    dead arm trees elsewhere rather than by the run itself, which is why no stage could see it coming.
+    Measured before the bar was chosen: a route's whole `out/` is 93 MB on board A and 22 MB on board E, so
+    the number is headroom for the keep, the frozen tree a lander makes and whatever else shares the box,
+    not an estimate of this run's appetite."""
+    s = open(os.path.join(TOOLS, "routeflow.py"), encoding="utf-8").read()
+    assert "statvfs" in s, "routeflow's preflight never asks how much room the run has to write its result"
+    i = s.find("def preflight(")
+    assert 0 < i < s.find("statvfs"), "the disk check is not inside preflight, so a run does not refuse on it"
+    assert "disk free >= 2 GB" in s, "the disk check has no stated bar"
+    assert "TOOL_CRASH" in s.split("statvfs")[0][-900:], \
+        "the disk check does not carry the measurement that set it, so the next reader cannot judge the bar"
+
+
+def t_the_slow_host_timeout_stretch_reaches_the_production_run():
+    """THE DEFECTIVE FIXTURE (20 September 2026). `ROUTEFLOW_TIMEOUT_SCALE` was read in `experiment` alone
+    while its own line calls it "every route timeout", so a PRODUCTION run given it accepted the variable and
+    routed at the profile's own cap. Board D's D29 was launched at 4x to answer whether D28's fifteen opens
+    were the clock and its route line printed the same 3600 s: an arm with no variable in it, which is the
+    worst kind, because its number looks like a result. Caught by reading the route line rather than the exit
+    status. This is a parse and not a byte window: `run` must compute its FR_TIMEOUT from the scale."""
+    import ast, os
+    here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    src = open(os.path.join(here, "routeflow.py"), encoding="utf-8").read()
+    tree = ast.parse(src)
+    run = [n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == "run"]
+    assert run, "routeflow.run is gone, so this rule is about a tool that no longer exists"
+    body = ast.dump(run[0])
+    assert "ROUTEFLOW_TIMEOUT_SCALE" in body, \
+        "routeflow.run does not read ROUTEFLOW_TIMEOUT_SCALE, so a production run given it routes at the " \
+        "profile's own cap and the arm has no variable in it"
+
+
+def t_the_stretch_says_so_when_it_is_not_one():
+    """THE ACCEPTABLE FIXTURE'S OTHER HALF: a knob that changes a run silently is a knob whose arrival nothing
+    proves, which is 12 September's defect by name. When the scale is not 1 the run PRINTS the old cap and the
+    new one, so the log itself carries the evidence that the variable arrived."""
+    import os, re
+    here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    src = open(os.path.join(here, "routeflow.py"), encoding="utf-8").read()
+    assert re.search(r"ROUTEFLOW_TIMEOUT_SCALE=%g stretches this route", src), \
+        "the run does not say when the stretch applies, so nothing in the log proves the knob arrived"
+
+
+def t_the_session_importer_is_not_the_partition_importer():
+    """20 September 2026. Reading a route's board from a frozen session, the snapshot was handed to
+    `ses_import_lock.py`, which is the PARTITION importer and takes five arguments (board, ses, part.json,
+    groups, out). It raised, NOTHING was imported, and the board then read was the PLACED one at KiCad's 499
+    unconnected cap, which looks exactly like a result. A cap is never a denominator. `ses_apply.py` is the
+    plain operation, the same two steps route_one.sh runs: ImportSpecctraSES and then the drill restore,
+    because the importer leaves every via's drill UNDEFINED."""
+    import ast, os
+    here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    src = open(os.path.join(here, "ses_apply.py"), encoding="utf-8").read()
+    tree = ast.parse(src)
+    names = {n.func.attr for n in ast.walk(tree)
+             if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute)}
+    assert "ImportSpecctraSES" in names, "the session importer does not import a session"
+    assert "restore_board" in names, \
+        "the session importer does not restore the drills, so every via takes its class drill (18 September)"
+    lock = open(os.path.join(here, "ses_import_lock.py"), encoding="utf-8").read()
+    assert "sys.argv[1:6]" in lock, \
+        "ses_import_lock no longer takes five arguments, so this rule is about a tool that changed"
+
+
+# ------------------------------------------------------------------------------------------------------------------
+# THE WATCHER, RUN (round 8 of MESHSAT-1357, 26 September 2026). A fake `java` (a bash script of that name, which is
+# what `pgrep -x java` and /proc/<pid>/cmdline see) writes a Freerouting log and raises windows in a fake `xdotool`'s
+# state; the fake xdotool behaves as Xvfb was MEASURED to behave on the box that night: windowactivate fails for want
+# of a window manager, and a Return reaches the dialog only when X focus is on the dialog's own focus proxy. Seconds
+# on the runner, no X server, no JVM.
+_FAKE_XDOTOOL = r'''#!/bin/bash
+S="$FAKEX"; cmd="$1"; shift
+case "$cmd" in
+  search)
+    name=""; while [ $# -gt 0 ]; do case "$1" in --name) name="$2"; shift;; esac; shift; done
+    while read -r id title; do [ -n "$id" ] || continue; if [ -z "$name" ] || [[ "$title" =~ $name ]]; then echo "$id"; fi; done < "$S/windows";;
+  getwindowname) grep -q "^$1 " "$S/windows" || exit 1; grep -m1 "^$1 " "$S/windows" | cut -d' ' -f2-;;
+  getwindowfocus) cat "$S/focus";;
+  windowfocus) [ "$1" = --sync ] && shift; echo "$1" > "$S/focus"; echo "windowfocus $1" >> "$S/keys.log";;
+  key) echo "key $* focus=$(cat "$S/focus")" >> "$S/keys.log"
+       if [ -f "$S/dialog" ] && [ "$(cat "$S/focus")" = "$(cat "$S/proxy")" ]; then
+         grep -v "^$(cat "$S/dialog") " "$S/windows" > "$S/w2"; mv "$S/w2" "$S/windows"; fi;;
+  getwindowgeometry) printf 'WINDOW=%s\nX=10\nY=10\nWIDTH=1000\nHEIGHT=600\nSCREEN=0\n' "${2:-$1}";;
+  mousemove) echo "mousemove $*" >> "$S/keys.log";;
+  windowactivate) echo "Your windowmanager claims not to support _NET_ACTIVE_WINDOW" >&2; echo "windowactivate $*" >> "$S/keys.log"; exit 1;;
+esac
+'''
+_FAKE_JAVA = r'''#!/bin/bash
+# fake java: -de <dsn> <mode>; writes the log on stdout the way log4j does, and windows into $FAKEX
+S="$FAKEX"; DSN="$2"; MODE="$3"
+ts() { date +"%Y-%m-%d %H:%M:%S.%3N"; }
+echo "$(ts) [main] INFO  Freerouting v1.9.0 (build-date: 2026-09-25)"
+echo "$(ts) [main] INFO  Opening '$DSN'..."
+printf '100 Board Layout - Freerouting\n110 FocusProxy\n111 Content window\n120 General Settings\n' > "$S/windows"
+echo 110 > "$S/focus"
+case "$MODE" in
+  known|unknown)
+    echo "$(ts) [main] WARN  The normalization of net '/PCIE3_CLK_N' failed."
+    [ "$MODE" = unknown ] && echo "$(ts) [main] WARN  Wiring.read_via_scope: net with name 'NOPE' not found at 'NOPE'"
+    printf '200 DSN file reader - Freerouting\n211 Content window\n213 FocusProxy\n' >> "$S/windows"
+    echo 200 > "$S/dialog"; echo 213 > "$S/proxy"; echo 200 > "$S/focus"      # focus moved off the proxy, as it was
+    while grep -q "^200 " "$S/windows"; do sleep 0.1; done
+    echo "$(ts) [Thread-33] INFO  Starting auto-routing..."
+    echo "$(ts) [Thread-33] INFO  Auto-routing was completed in 0.10 seconds.";;
+  exception)
+    printf '300 Exception Occurred\n' >> "$S/windows"; while :; do sleep 0.1; done;;
+  silent)
+    echo "$(ts) [main] WARN  Network.insert_net_class: via rule not found at 'kicad_default'"
+    echo "$(ts) [Thread-33] INFO  Starting auto-routing..."; while :; do sleep 0.1; done;;
+  quick-unknown|quick-known)
+    # a job shorter than one poll (board E5's route took 4.1 s, every probe without a dialog ends about 1 s after its
+    # import): it logs its import, routes, writes its session and ENDS before the watcher's next look
+    [ "$MODE" = quick-known ] && echo "$(ts) [main] WARN  The normalization of net '/PCIE3_CLK_N' failed."
+    echo "$(ts) [main] INFO  Opening 'job.rules'..."
+    [ "$MODE" = quick-unknown ] && echo "$(ts) [main] WARN  RulesFile.add_rules: layer not found at 'In9.Cu'"
+    echo "$(ts) [Thread-33] INFO  Starting auto-routing..."
+    echo "$(ts) [Thread-33] INFO  Auto-routing was completed in 0.40 seconds."
+    : > "$S/windows"; exit 0;;
+  quick-frame)
+    # MainApplication.java:372-376: create_board_frame returned null, WARN and System.exit(1)
+    echo "$(ts) [main] WARN  Couldn't create window frame"; : > "$S/windows"; exit 1;;
+  quick-cut)
+    # a JVM that dies in the middle of its import (a crash or a kill): no line that ends an import
+    : > "$S/windows"; exit 137;;
+esac
+'''
+
+
+def _watch(mode, default_poll=False):
+    """Run fr_watch against the fake router in `mode`; returns (rc, keys log, watch record, fake java alive, output,
+    import record). default_poll=True runs the watcher as the launchers do, at its default poll (FRW_POLL 5 s)."""
+    import shutil
+    d = tempfile.mkdtemp(); b = os.path.join(d, "bin"); x = os.path.join(d, "x"); os.makedirs(b); os.makedirs(x)
+    for name, src in (("xdotool", _FAKE_XDOTOOL), ("java", _FAKE_JAVA)):
+        open(os.path.join(b, name), "w").write(src); os.chmod(os.path.join(b, name), 0o755)
+    open(os.path.join(x, "keys.log"), "w").close(); open(os.path.join(x, "windows"), "w").close()
+    dsn = os.path.join(d, "job.dsn"); log = os.path.join(d, "fr.log")
+    polls = "" if default_poll else "FRW_POLL=0.3 FRW_POLL_ROUTE=0.3 FRW_STOP_GRACE=0.3 "
+    script = r'''
+set -u
+. "%(tools)s/fr_dialog_watch.sh"
+"%(b)s/java" -de "%(dsn)s" %(mode)s > "%(log)s" 2>&1 &
+J=$!
+%(polls)sfr_watch "$J" 977 "%(dsn)s" fixture "%(log)s"; rc=$?
+kill -0 $J 2>/dev/null && { echo ALIVE; kill -KILL $J; }
+echo "RC=$rc"
+''' % {"tools": TOOLS, "b": b, "dsn": dsn, "mode": mode, "log": log, "polls": polls}
+    env = {k: v for k, v in os.environ.items() if not k.startswith(("FRW_", "FR_"))}   # the watcher's own defaults
+    env.update(PATH=b + ":" + env.get("PATH", ""), FAKEX=x, DISPLAY=":977", XAUTHORITY=os.path.join(d, "xa"))
+    try:
+        r = subprocess.run(["bash", "-c", script], capture_output=True, text=True, env=env, timeout=60)
+    finally:
+        subprocess.run(["pkill", "-KILL", "-f", "[/]%s/bin/java" % os.path.basename(d)], capture_output=True)
+    m = re.search(r"RC=(\d+)", r.stdout)
+    rec = json.load(open(log + ".watch.json")) if os.path.exists(log + ".watch.json") else {}
+    keys = open(os.path.join(x, "keys.log")).read()
+    imp = json.load(open(log + ".import.json")) if os.path.exists(log + ".import.json") else None
+    out = (int(m.group(1)) if m else None, keys, rec, "ALIVE" in r.stdout, r.stdout + r.stderr, imp)
+    shutil.rmtree(d, ignore_errors=True)
+    return out
+
+
+def t_the_watcher_answers_a_dialog_whose_every_warning_is_known():
+    """The known warning of board B, a dialog that took focus off its proxy: focus goes back to the proxy, Return is
+    sent, the dialog is confirmed gone, and the record says so. windowactivate is never tried."""
+    rc, keys, rec, alive, out, imp = _watch("known")
+    assert rc == 0, out
+    assert "windowfocus 213" in keys and "key --clearmodifiers Return focus=213" in keys, keys
+    assert "windowactivate" not in keys, keys
+    ev = [e.get("event") for e in rec.get("events", [])]
+    assert "dialog-dismissed" in ev and "routing-started" in ev, ev
+    assert rec.get("decision") == "CONTINUE", rec.get("decision")
+
+
+def t_the_watcher_refuses_a_dialog_it_does_not_understand():
+    rc, keys, rec, alive, out, imp = _watch("unknown")
+    assert rc == 3, out
+    assert "key" not in keys, "a Return reached a dialog carrying an unknown warning: %s" % keys
+    assert not alive, "the router is still running after the refusal"
+    assert "IMPORT-REFUSED" in out and rec.get("decision") == "REFUSED", out
+
+
+def t_the_watcher_refuses_a_window_it_has_not_identified():
+    """"Exception Occurred" is DefaultExceptionHandler's modal; a Return would dismiss an exception unread."""
+    rc, keys, rec, alive, out, imp = _watch("exception")
+    assert rc == 3 and "key" not in keys and not alive, out
+    assert any(e.get("event") == "window-refused" and e.get("title") == "Exception Occurred" for e in rec.get("events", [])), rec
+
+
+def t_the_watcher_reads_an_import_that_raised_no_dialog():
+    """A warning logged during the import that raised no window (here a via rule the class did not find) is still a
+    warning: the watcher reads the import's lines when routing starts, and stops the router."""
+    rc, keys, rec, alive, out, imp = _watch("silent")
+    assert rc == 3 and not alive, out
+    assert any(e.get("event") == "import-refused" for e in rec.get("events", [])), rec
+
+
+def t_the_watcher_reads_the_import_of_a_router_that_ended_between_two_polls():
+    """Round 8, pass 2 (the independent check of 26 September 2026 reproduced it with these fakes): the loop read the
+    import only on a poll that saw routing start, so a job that imported, routed and ENDED between two polls left it
+    unread and fr_watch returned 0. Every import probe without a dialog is such a job, and so was board E5's 4.1 s
+    route, whose directory held no fr.log.import.json. Run as the launchers run it, at the default poll: an unknown
+    rules-file warning logged by a router that is already gone is refused, and the session it left is not taken."""
+    rc, keys, rec, alive, out, imp = _watch("quick-unknown", default_poll=True)
+    assert rc == 3, out
+    assert imp is not None and imp.get("decision") == "REFUSE" and imp.get("router_exited") is True, imp
+    assert any("RulesFile.add_rules" in x for x in imp.get("reasons", [])), imp
+    ev = rec.get("events", [])
+    assert any(e.get("event") == "import-refused" and e.get("when") == "after-exit" for e in ev), ev
+    assert rec.get("decision") == "REFUSED" and "IMPORT-REFUSED" in out, (rec.get("decision"), out)
+
+
+def t_the_import_of_a_router_that_ended_between_two_polls_is_still_accepted_when_it_is_known():
+    """The other way: the same short job whose one warning is board B's known normalisation line is read after it
+    ended, accepted, and its record carries the warned net that fr_after_route passes to the final session check."""
+    rc, keys, rec, alive, out, imp = _watch("quick-known", default_poll=True)
+    assert rc == 0, out
+    assert imp is not None and imp.get("decision") == "CONTINUE" and imp.get("warned_nets") == ["/PCIE3_CLK_N"], imp
+    assert any(e.get("event") == "import-read" and e.get("when") == "after-exit" for e in rec.get("events", [])), rec
+    assert rec.get("decision") is None and "IMPORT-REFUSED" not in out, (rec.get("decision"), out)
+
+
+def t_an_import_the_router_did_not_finish_is_refused_and_not_left_unread():
+    """Two import failures that raise no dialog and log no warning the loop would ever see: the jar could not build
+    its board frame (MainApplication.java:372-376, a WARN and System.exit(1)), and a JVM that died in the middle of
+    its import. Both ended between two polls; both must fail rather than read as a quiet run."""
+    for mode, why in (("quick-frame", "could not build its board"), ("quick-cut", "ended during its import")):
+        rc, keys, rec, alive, out, imp = _watch(mode, default_poll=True)
+        assert rc == 3, (mode, out)
+        assert imp is not None and any(why in x for x in imp.get("reasons", [])), (mode, imp)
+
+
+def t_a_launcher_that_never_opened_the_dsn_has_no_import_to_refuse():
+    """A log with no "Opening" line had no import: nothing is classified, the record says so, and the code stays 0
+    (the launchers then fail on the missing session, as before)."""
+    import shutil
+    d = tempfile.mkdtemp(); log = os.path.join(d, "fr.log")
+    open(log, "w").write("Error: Unable to access jarfile /nonexistent.jar\n")
+    script = '. "%s/fr_dialog_watch.sh"; sleep 0.5 & L=$!; fr_watch "$L" 977 "%s/job.dsn" fixture "%s"; echo "RC=$?"' % (TOOLS, d, log)
+    r = subprocess.run(["bash", "-c", script], capture_output=True, text=True, timeout=60)
+    rec = json.load(open(log + ".watch.json"))
+    shutil.rmtree(d, ignore_errors=True)
+    assert "RC=0" in r.stdout, r.stdout + r.stderr
+    assert any(e.get("event") == "no-import" for e in rec.get("events", [])), rec
+
+
+# a fake jar for the import probe that applies Freerouting 1.9.0's own design-name rule: the design is named after the
+# DSN's file name up to its first dot (gui/MainApplication.java:597-599) and a -dr rules file naming anything else logs
+# "RulesFile.read: design_name not matching" (designforms/specctra/RulesFile.java:71-74); it writes back $FAKEX/back.dsn
+_FAKE_PROBE_JAVA = r"""#!/bin/bash
+de=""; out=""; dr=""
+while [ $# -gt 0 ]; do case "$1" in -de) de="$2"; shift;; -do) out="$2"; shift;; -dr) dr="$2"; shift;; esac; shift; done
+ts() { date +"%Y-%m-%d %H:%M:%S.%3N"; }
+echo "$de" > "$FAKEX/de"
+echo "$(ts) [main] INFO  Freerouting v1.9.0 (build-date: 2026-09-25)"
+echo "$(ts) [main] INFO  Opening '$de'..."
+if [ -n "$dr" ]; then
+  echo "$(ts) [main] INFO  Opening '$dr'..."
+  design=$(basename "$de"); design="${design%%.*}"
+  name=$(head -1 "$dr" | sed -n 's/^(rules PCB \(.*\)$/\1/p')
+  [ "$name" = "$design" ] || echo "$(ts) [main] WARN  RulesFile.read: design_name not matching at 'x'"
+fi
+echo "$(ts) [Thread-33] INFO  Starting auto-routing..."
+echo "$(ts) [Thread-33] INFO  Auto-routing was completed in 0.00 seconds."
+cp "$FAKEX/back.dsn" "$out"
+"""
+_FAKE_XVFB_RUN = r"""#!/bin/bash
+while [ $# -gt 0 ]; do case "$1" in -a) shift; break;; -n) shift 2;; *) shift;; esac; done
+exec "$@"
+"""
+
+
+def _probe_with_rules(rules_name):
+    """fr_import_probe on the import-check fixture DSN, saved as board.dsn, with a -dr rules file named `rules_name`;
+    returns (rc, the -de path the jar was given, output)."""
+    import importlib.util, shutil
+    sp = importlib.util.spec_from_file_location("meshsat_fic_fixture", os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_fr_import_check.py"))
+    fic = importlib.util.module_from_spec(sp); sp.loader.exec_module(fic)
+    d = tempfile.mkdtemp(); b = os.path.join(d, "bin"); x = os.path.join(d, "x"); w = os.path.join(d, "run")
+    for q in (b, x, w): os.makedirs(q)
+    for name, src in (("xdotool", _FAKE_XDOTOOL), ("java", _FAKE_PROBE_JAVA), ("xvfb-run", _FAKE_XVFB_RUN)):
+        open(os.path.join(b, name), "w").write(src); os.chmod(os.path.join(b, name), 0o755)
+    open(os.path.join(x, "keys.log"), "w").close(); open(os.path.join(x, "windows"), "w").close()
+    open(os.path.join(x, "back.dsn"), "w").write(fic.BACK)
+    dsn = os.path.join(w, "board.dsn"); open(dsn, "w").write(fic.DSN)
+    rules = os.path.join(w, "board.rules")
+    open(rules, "w").write("(rules PCB %s\n  (autoroute_settings (fanout off) (autoroute on) (postroute on) (via_costs 200))\n)\n" % rules_name)
+    script = '. "%s/fr_dialog_watch.sh"; fr_import_probe "%s" "%s" fixture -dr "%s"; echo "RC=$?"' % (TOOLS, dsn, w, rules)
+    env = {k: v for k, v in os.environ.items() if not k.startswith(("FRW_", "FR_"))}
+    env.update(PATH=b + ":" + env.get("PATH", ""), FAKEX=x, FR_PROBE_JAR="/nonexistent/freerouting-1.9.0-mesh.jar",
+               DISPLAY=":977", XAUTHORITY=os.path.join(d, "xa"))
+    try:
+        r = subprocess.run(["bash", "-c", script], capture_output=True, text=True, env=env, timeout=120)
+    finally:
+        subprocess.run(["pkill", "-KILL", "-f", "[/]%s/bin/java" % os.path.basename(d)], capture_output=True)
+    de = open(os.path.join(x, "de")).read().strip() if os.path.exists(os.path.join(x, "de")) else None
+    m = re.search(r"RC=(\d+)", r.stdout)
+    shutil.rmtree(d, ignore_errors=True)
+    return (int(m.group(1)) if m else None), de, r.stdout + r.stderr
+
+
+def t_the_import_probe_gives_the_jar_the_design_name_the_route_gives_it():
+    """Round 8, pass 2, measured on the box on board E5: the probe's copy was import-probe-in.dsn, so Freerouting named
+    the design "import-probe-in" and every -dr rules file warned "design_name not matching", which the route itself,
+    given <name>.dsn, would not. The copy keeps the DSN's file name now: a rules file named after the DSN's stem passes
+    the probe, one named anything else is still refused (the warning is not known, and means another design's rules)."""
+    rc, de, out = _probe_with_rules("board")
+    assert rc == 0, out
+    assert de and os.path.basename(de) == "board.dsn" and os.path.basename(os.path.dirname(de)) == "import-probe-in", de
+    rc, de, out = _probe_with_rules("../out/board.dsn")        # fr_rules.py's name today: the DSN's (pcb ...) path
+    assert rc == 3 and "design_name not matching" in out, out
+
+
+def t_the_watcher_never_takes_another_trees_router_with_the_same_relative_dsn():
+    """Two clones running the same driver name the same relative DSN (out/routeflow/b-esc1/a6/run/S3/job.dsn), so a JVM
+    whose command line carries that string is not necessarily this watcher's: with a relative DSN the JVM must also be
+    working in this directory. Here another tree's router shows an "Exception Occurred" window; the watcher, in its
+    own directory with its own launcher, must neither answer it nor stop it."""
+    import shutil
+    d = tempfile.mkdtemp(); b = os.path.join(d, "bin"); x = os.path.join(d, "x"); other = os.path.join(d, "other"); mine = os.path.join(d, "mine")
+    for p in (b, x, os.path.join(other, "out"), os.path.join(mine, "out")): os.makedirs(p)
+    for name, src in (("xdotool", _FAKE_XDOTOOL), ("java", _FAKE_JAVA)):
+        open(os.path.join(b, name), "w").write(src); os.chmod(os.path.join(b, name), 0o755)
+    open(os.path.join(x, "keys.log"), "w").close(); open(os.path.join(x, "windows"), "w").close()
+    script = r'''
+set -u
+. "%(tools)s/fr_dialog_watch.sh"
+( cd "%(other)s" && exec "%(b)s/java" -de out/job.dsn exception > out/fr.log 2>&1 ) &
+O=$!
+sleep 0.5
+cd "%(mine)s"; : > out/fr.log
+sleep 2 & L=$!
+FRW_POLL=0.3 FRW_STOP_GRACE=0.3 fr_watch "$L" 977 out/job.dsn mine "%(mine)s/out/fr.log"; rc=$?
+kill -0 $O 2>/dev/null && echo OTHER-ALIVE
+kill -KILL $O 2>/dev/null
+echo "RC=$rc"
+''' % {"tools": TOOLS, "b": b, "other": other, "mine": mine}
+    env = dict(os.environ); env.update(PATH=b + ":" + env.get("PATH", ""), FAKEX=x, DISPLAY=":977", XAUTHORITY=os.path.join(d, "xa"))
+    try:
+        r = subprocess.run(["bash", "-c", script], capture_output=True, text=True, env=env, timeout=60)
+    finally:
+        subprocess.run(["pkill", "-KILL", "-f", "[/]%s/bin/java" % os.path.basename(d)], capture_output=True)
+    keys = open(os.path.join(x, "keys.log")).read()
+    shutil.rmtree(d, ignore_errors=True)
+    assert "RC=0" in r.stdout and "OTHER-ALIVE" in r.stdout, r.stdout + r.stderr
+    assert "IMPORT-REFUSED" not in r.stdout and not keys, "the watcher acted on another tree's router: %s %s" % (r.stdout, keys)

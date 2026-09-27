@@ -1,0 +1,326 @@
+#!/usr/bin/env python3
+"""A rail's layer transition is carried by the vias at it, and the vias are counted and rated (rule PI-003,
+MESHSAT-862, 16 September 2026).
+
+The record has carried "about 2.5 A per 0.4 mm hole" in a generator comment since 5 September, and nothing has
+ever measured a board against it. A rail that dives to an inner plane through one via is a rail whose whole
+current crosses one plated barrel: the barrel is thin copper on the wall of a hole, not a track, and it is the
+one place in a power path this project has never judged.
+
+WHERE EVERY NUMBER COMES FROM, because a fabrication limit invented here would be exactly what this registry
+exists to refuse:
+
+  * the PLATING THICKNESS is the fabricator's own published figure, 18 um average hole plating, from
+    `v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md` (section "Holes and vias"). A board may
+    declare `via_plating_um` to override it with its own quotation.
+  * the BARREL CROSS-SECTION is geometry: a hole of diameter d plated to thickness t has an annulus of
+    pi * (d + t) * t of copper. Nothing else is assumed: no pad, no track, no fill.
+  * the CURRENT a cross-section carries at a temperature rise is IPC-2221's curve, the same expression
+    `dc_drop.py` already uses for track density, with the INTERNAL constant, because a via barrel is enclosed
+    by laminate on every side. IPC-2221 itself is not in this tree, so this rule carries SOURCE_UNVERIFIED and
+    the number is a calculation this project made, not a limit a document gave it.
+  * the RAIL CURRENT is the board's own intent file, the same place `dc_drop` reads it.
+
+WHAT IT JUDGES. For each declared rail, the vias of that net are grouped into SITES: a site is a cluster of
+this net's vias within `--site-mm` (default 6 mm) of each other, which is what a layer transition looks like
+on these boards (a dive, a stitch field, a fan). The rail's peak current must be carried by the site that has
+the least capacity, because a transition is a series element: every ampere that changes layer there goes
+through those barrels. A rail with no via at all is reported and not failed: it never changes layer.
+
+Usage: via_current.py <board.kicad_pcb> [--rise-k 10] [--site-mm 6] [--json]
+"""
+import os, sys, math, json
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+import verdict as _v
+import boardtable as _bt
+
+PLATING_UM = 18.0        # the fabricator's published average hole plating
+K_INTERNAL = 0.024       # IPC-2221's constant for an internal conductor
+MM2_TO_MIL2 = 1550.0031
+
+
+def ampacity(drill_mm, rise_k, plating_um=PLATING_UM):
+    """The current a plated hole's barrel may carry, under the model DECISION 35 ruled (21 September 2026).
+
+    A barrel is an INTERNAL conductor by construction, so no external factor applies, and `K_INTERNAL` above
+    is what this file used to type for itself. `track_current.conservative` is the one place that decides the
+    model now: the most conservative of the three Annex D fits at each area. A barrel's cross-section is small
+    (a 0.4 mm hole at 18 um of plating is 0.0236 mm2, two orders below the 0.268 mm2 crossover), so THIS
+    READING DOES NOT MOVE under the ruling and the check was made rather than assumed: the fits agree below
+    the crossover and IPC-2221A is the lowest there."""
+    t = plating_um / 1000.0
+    area_mm2 = math.pi * (drill_mm + t) * t
+    import track_current as _tc
+    amps, _model = _tc.conservative(area_mm2, rise_k)
+    return amps, area_mm2
+
+
+
+def placed_snapshot_note(tool, path):
+    """Say so when the board handed to a pre-route barrel tool is the PLACED SNAPSHOT (20 September 2026).
+
+    `full.sh` copies `out/<N>-placed.kicad_pcb` at line 170 and takes the PREROUTE_STOP_AFTER_PLACE exit at
+    212, while `rail_barrels --apply`, the stage that fills a short crossing, runs at 309. So that snapshot
+    is a board written BEFORE the stage that answers this question, and reading a shortfall off it reports
+    something the chain fills forty lines later. It cost a wrong sentence to the owner about board D, whose
+    chain at HEAD lays the missing barrel by itself and then reads 6 of 6 crossings carrying what they need.
+
+    Both tools deliberately ACCEPT a snapshot (they strip the suffix to find the intent beside it), so this
+    is not a refusal: it is the tool saying which board it was given. A reading nobody can place is how a
+    number about an old artefact becomes a finding, which is this week's defect three times over."""
+    import os as _o
+    if _o.path.splitext(_o.path.basename(path))[0].endswith("-placed"):
+        print("%s: THIS IS THE PLACED SNAPSHOT, which the chain writes BEFORE the stage that fills a short "
+              "crossing (rail_barrels --apply), so a shortfall read here is not the chain's answer: read the "
+              "project's own board after the chain has run" % tool)
+        return True
+    return False
+
+
+def barrels_for(amps, drill_mm, rise_k=10.0, plating_um=PLATING_UM):
+    """How many barrels of this drill a current needs (18 September 2026).
+
+    This rule fails in one shape on every board measured today: a layer transition the generator gave ONE barrel
+    where the solved mesh puts more current through it than one barrel's wall carries (board D 1.22, board E
+    1.48, board A as far as 3.77 across thirty-two sites). The arithmetic was always available to the generator,
+    which knows the point, the drill and the rail's declared current, and it simply was not asked; `power_copper`
+    asks it now and refuses a stitch that is short. Ceil, never round: half a barrel carries nothing."""
+    import math
+    lim = ampacity(drill_mm, rise_k, plating_um)[0]
+    return max(1, int(math.ceil(float(amps) / lim))) if lim > 0 else 1
+
+def advisory_for(rows):
+    """Is this reading a measurement for the record rather than a bar?
+
+    The flag is about ATTRIBUTION and nothing else: where a rail has no solved barrel current the whole rail
+    is attributed to its weakest cluster of vias, which on these boards is often a lone stitch via carrying
+    almost none of it, and a failure read that way is an assumption. An attributed reading can only ADD
+    failures to a measured one and never remove one, so a rail the mesh DID solve and found over its own
+    barrels decides this verdict whatever the rest of the board is missing. The flag stays exactly where the
+    reading would otherwise be a pass."""
+    measured = [r for r in rows if r.get("measured")]
+    if bool(rows) and len(measured) == len(rows): return False
+    return not [r for r in measured if not r.get("ok")]
+
+
+def sites(pts, reach):
+    """Single-link clusters of via positions: a transition is a group of barrels that sit together."""
+    out = []
+    left = list(range(len(pts)))
+    while left:
+        seed = left.pop(0); group = [seed]; moved = True
+        while moved:
+            moved = False
+            for i in list(left):
+                if any(math.hypot(pts[i][0] - pts[g][0], pts[i][1] - pts[g][1]) <= reach for g in group):
+                    group.append(i); left.remove(i); moved = True
+        out.append(group)
+    return out
+
+
+def crosses_layers(copper_layers):
+    """Does this net change layer ANYWHERE, before any via of it is called a transition?
+
+    Board E's HS_S, 20 September 2026. The attributed reading named a site of ONE via carrying the rail's
+    whole 10.00 A peak against 0.65 A, fifteen times over, the worst number on the board. Read off the
+    routed board: all 38.4 mm of that net's copper is on F.Cu, it has no zone anywhere, and its five vias
+    reach bare laminate on B.Cu, because the fanout gives every pad a via whether the net leaves the layer
+    or not. The via the reading named sits at U6 pin 1, the LM5069's current-sense input, which carries
+    microamps. So the rail changes layer NOWHERE and the site is a judgement about a transition that does
+    not exist.
+
+    The tool already declines a rail with NO via at all ("it never changes layer"), and that guard asks a
+    question cheaper than the fact it guards: having a via is not crossing with it. This asks the fact.
+    A net's copper is its tracks, its zones AND its pads, and pads are counted deliberately even though a
+    through-hole pad puts every net that has one on every layer: a plated component hole IS a barrel the
+    current may cross at, so counting it can only keep a failure that would otherwise be dropped. The
+    guard is for the case that is not arguable, a net whose copper lies on one layer.
+
+    It applies to the ATTRIBUTED branch only. Where dc_drop's mesh solved the barrels, the current in each
+    one is measured and a barrel carrying nothing is already judged on the nothing it carries."""
+    return len({l for l in (copper_layers or []) if l}) > 1
+
+
+def main(a):
+    if not a: print(__doc__); return _v.USAGE
+    path = a[0]
+    rise = float(a[a.index("--rise-k") + 1]) if "--rise-k" in a else 10.0
+    reach = float(a[a.index("--site-mm") + 1]) if "--site-mm" in a else 6.0
+    import pcbnew
+    import intent
+    mm = lambda v: v / 1e6
+    b = pcbnew.LoadBoard(path)
+    it = intent.load(path)
+    out_dir = os.path.join(os.path.dirname(os.path.abspath(path)), "out")
+    if not it or not (it.get("rails") or {}):
+        print("via_current: no intent file for this board, so no rail current is known")
+        return _v.write("via_current", _v.INCONCLUSIVE, denominator=0, inputs={"board": path},
+                        note="no intent file, so no rail current is known and no via could be judged",
+                        out_dir=out_dir)
+    letter = _bt.letter_for(path)
+    plating = float(_bt.value(letter, "via_plating_um", PLATING_UM))
+    vias, copper = {}, {}
+    for t in b.GetTracks():
+        if t.GetClass() == "PCB_VIA":
+            vias.setdefault(t.GetNetname().lstrip("/"), []).append(
+                (mm(t.GetPosition().x), mm(t.GetPosition().y), round(mm(t.GetDrill()), 4)))
+            continue
+        copper.setdefault(t.GetNetname().lstrip("/"), set()).add(b.GetLayerName(t.GetLayer()))
+    # a net's copper is its tracks, its zones and its pads: see crosses_layers() for why the pads count
+    for z in b.Zones():
+        _n = z.GetNetname().lstrip("/")
+        for _l in (list(z.GetLayerSet().Seq()) or [z.GetFirstLayer()]):   # the tree's own idiom (stitch_prune)
+            _ln = b.GetLayerName(_l)
+            if _ln.endswith(".Cu"): copper.setdefault(_n, set()).add(_ln)
+    for _fp in b.GetFootprints():
+        for _pad in _fp.Pads():
+            _n = _pad.GetNetname().lstrip("/")
+            for _l in _pad.GetLayerSet().CuStack():
+                copper.setdefault(_n, set()).add(b.GetLayerName(_l))
+    # THE CURRENT EACH BARREL ACTUALLY CARRIES, WHERE THE MESH HAS BEEN SOLVED (16 September 2026).
+    # `dc_drop.py` solves a resistive mesh over this board's copper and computes the current in every barrel on
+    # the way; it writes them beside the board now. With that file the question stops being "can this rail's
+    # weakest cluster of its own vias carry the whole rail" and becomes "does any barrel carry more than it is
+    # rated for", which is the question, and a lone stitch via at the end of a pour is judged on the almost
+    # nothing it carries instead of on the rail's entire current. Without the file the old reading stands and
+    # the verdict stays ADVISORY, because that reading is an assumption about attribution and not a measurement.
+    measured = {}
+    _mp = os.path.join(out_dir, os.path.splitext(os.path.basename(path))[0] + "-via-currents.json")
+    if os.path.exists(_mp):
+        try:
+            _md = json.load(open(_mp, encoding="utf-8"))
+            for _n, _vs in (_md.get("nets") or {}).items():
+                measured[_n.lstrip("/")] = _vs
+        except Exception as _e:
+            print("via_current: the barrel currents beside this board could not be read (%s)" % _e)
+
+    # EVERY BARREL OVER ITS RATING IS NAMED, not only its rail's worst (18 September 2026). The counts below
+    # are per RAIL, which is what the denominator means and what the note says; but the reader of a failure is
+    # the person who has to draw copper at the site, and board D's +5V_SA crosses layers TWICE with a single
+    # barrel at each crossing, both carrying the whole 1.10 A. The record said "one barrel" for a day because
+    # this list held one line per rail. `barrel_sites.py` is the map of what stands around each of them.
+    rows, bad, bad_sites, no_via = [], [], [], []
+    for net, r in sorted((it.get("rails") or {}).items()):
+        # WHICH CURRENT THIS RULE ASKS ABOUT, AND WHY (20 September 2026, appendix 32.245). A BARREL is judged
+        # at the PEAK. It has almost no thermal mass and a far higher current density than the conductor
+        # feeding it, so the case that decides it is the worst the rail ever carries, not its continuous
+        # load. The conductor rules PI-001 and PI-002 ask `amps_typ` for the opposite reason: IPC's 10 K rise
+        # is a STEADY-STATE limit. So a via on VBAT is judged at 18 A while the track feeding it is judged at
+        # 10, on the same board and from the same declaration, and the two rules' numbers are NOT comparable.
+        # That is deliberate physics and it was undocumented until it was found by reading all four tools.
+        amps = float(r.get("amps_peak") or r.get("amps_typ") or 0)
+        if amps <= 0: continue
+        key = net.lstrip("/")
+        vs = vias.get(key, [])
+        if not vs:
+            no_via.append("%s carries %.2f A and has no via: it never changes layer" % (net, amps)); continue
+        if key in measured and measured[key]:
+            # Every barrel against its own rating, on the current the mesh put through it.
+            worst_m = None
+            for _b in measured[key]:
+                _lim = ampacity(float(_b.get("drill_mm") or 0.4), rise, plating)[0]
+                _cur = float(_b.get("amps") or 0.0)
+                if _lim <= 0: continue
+                if worst_m is None or _cur / _lim > worst_m[0]:
+                    worst_m = (_cur / _lim, _cur, _lim, float(_b.get("x") or 0), float(_b.get("y") or 0))
+            if worst_m is not None:
+                _ratio, _cur, _lim, _x, _y = worst_m
+                rows.append(dict(net=net, amps=amps, barrels=len(measured[key]), measured=True,
+                                 worst_barrel_a=round(_cur, 3), worst_barrel_limit_a=round(_lim, 3),
+                                 at=(round(_x, 2), round(_y, 2)), ok=_ratio <= 1.0))
+                if _ratio > 1.0:
+                    bad.append("%s: a barrel at (%.1f, %.1f) carries %.2f A of the solved mesh against %.2f A "
+                               "for its own wall at %.0f K (%.0f um plating), ratio %.2f"
+                               % (net, _x, _y, _cur, _lim, rise, plating, _ratio))
+                for _b in measured[key]:
+                    _l2 = ampacity(float(_b.get("drill_mm") or 0.4), rise, plating)[0]
+                    _c2 = float(_b.get("amps") or 0.0)
+                    if _l2 > 0 and _c2 / _l2 > 1.0:
+                        bad_sites.append("%s: barrel at (%.1f, %.1f), %.2f A against %.2f A, ratio %.2f"
+                                         % (net, float(_b.get("x") or 0), float(_b.get("y") or 0), _c2, _l2, _c2 / _l2))
+                continue
+        if not crosses_layers(copper.get(key)):
+            no_via.append("%s carries %.2f A through %d via(s) and all of its copper is on one layer (%s): "
+                          "it changes layer nowhere, so those vias are fanout stubs reaching nothing and none "
+                          "of them is a transition to judge"
+                          % (net, amps, len(vs), ", ".join(sorted(copper.get(key) or ["no copper"]))))
+            rows.append(dict(net=net, amps=amps, sites=0, worst_vias=0, measured=False, ok=True,
+                             no_layer_change=True))
+            continue
+        worst = None
+        for g in sites([(v[0], v[1]) for v in vs], reach):
+            cap = sum(ampacity(vs[i][2], rise, plating)[0] for i in g)
+            if worst is None or cap < worst[0]: worst = (cap, len(g), vs[g[0]][0], vs[g[0]][1])
+        cap, n, x, y = worst
+        rows.append(dict(net=net, amps=amps, sites=len(sites([(v[0], v[1]) for v in vs], reach)),
+                         worst_vias=n, worst_capacity_a=round(cap, 3), at=(round(x, 2), round(y, 2)),
+                         measured=False, ok=cap >= amps))
+        if cap < amps:
+            bad.append("%s: %.2f A crosses a transition of %d via(s) at (%.1f, %.1f) rated %.2f A at %.0f K "
+                       "(%.0f um plating), attributed rather than measured"
+                       % (net, amps, n, x, y, cap, rise, plating))
+    print("via_current: %d rail(s) with vias judged at %.0f K rise and %.0f um plating, %d over their weakest "
+          "transition; %d rail(s) carry no via" % (len(rows), rise, plating, len(bad), len(no_via)))
+    for x in bad[:20]: print("  FAIL %s" % x)
+    for x in no_via[:6]: print("  note %s" % x)
+    if "--json" in a: print(json.dumps(rows, indent=1))
+    # ADVISORY UNTIL IT KNOWS WHICH VIA THE CURRENT CROSSES (16 September 2026, its first run on real boards).
+    # It found something on all seven and most of it is the same false shape: a rail's WEAKEST site is often a
+    # lone stitch via at the end of a pour, which carries almost none of the rail's current, while the current
+    # itself travels in a band with a field of vias under it. Board E's CELL_F reads "18 A through 1 via" and
+    # board P's FUSED the same, which is not what that copper does. The arithmetic is right and the ATTRIBUTION
+    # is not: a via of the rail's net is not the same thing as a via the rail's current crosses, and telling
+    # them apart needs the per-element current that `dc_drop`'s solved mesh already computes. So this is a
+    # measurement for the record, not a bar: it is written, listed and hashed like any other verdict, the
+    # collector leaves it out of the stage's worst, and the readiness reads the rule as unverified rather than
+    # failed. A gate that refuses eleven rails on board A for a reason its author already doubts is exactly the
+    # heuristic-as-law this registry exists to remove.
+    # ...AND IT IS A BAR AGAIN ONCE EVERY RAIL IS MEASURED (16 September 2026). The advisory flag was about
+    # ATTRIBUTION and nothing else. Where every judged rail's barrels carry the current `dc_drop`'s solved mesh
+    # put through them, the attribution is a measurement and the reason to hold the verdict back is gone; where
+    # even one rail falls back to the attributed reading, it stays advisory and the note says which.
+    # ...AND A BARREL PROVED OVER ITS RATING IS NOT HELD BACK BY A RAIL NOBODY SOLVED (18 September 2026).
+    # Board E read INCONCLUSIVE with two barrels over their own wall on rails the mesh HAD solved, because a
+    # fourth rail carried no solved current: an established failure softened by an absence somewhere else on
+    # the board. The flag is about ATTRIBUTION and nothing else, and an attributed reading can only ADD
+    # failures to a measured one, never remove one, so where a MEASURED rail is over its rating the verdict is
+    # a failure whatever the coverage. The flag stays exactly where the reading would otherwise be a PASS.
+    _measured = [r for r in rows if r.get("measured")]
+    _all_measured = bool(rows) and len(_measured) == len(rows)
+    _measured_fail = [r for r in rows if r.get("measured") and not r.get("ok")]
+    _why = ("every rail's barrels against IPC-2221's curve for a barrel of the fabricator's own plating "
+            "thickness, on the current dc_drop's solved mesh puts through each of them. The curve is the "
+            "internal-conductor model published with its constants in ECSS-Q-ST-70-12C Annex D (D.4), "
+            "transcribed in v2/vendor/standards/ and implemented in tools/track_current.py"
+            if _all_measured else
+            "%d of %d judged rail(s) are over their own barrels on the current dc_drop's solved mesh put "
+            "through them, which is a measurement and decides this reading; the %d rail(s) with no solved "
+            "current are judged by attributing the whole rail to its weakest cluster of vias, which can only "
+            "add failures to the ones named here and never remove one (IPC-2221's curve, ECSS-Q-ST-70-12C "
+            "Annex D D.4, the fabricator's own plating)"
+            % (len(_measured_fail), len(_measured), len(rows) - len(_measured))
+            if _measured_fail else
+            "every rail's weakest layer transition against IPC-2221's curve (ECSS-Q-ST-70-12C Annex D D.4) for "
+            "a barrel of the fabricator's own plating thickness. ADVISORY: %d of %d judged rail(s) have no "
+            "solved barrel current beside this board, so for those the rail's WHOLE current is attributed to "
+            "its weakest cluster of vias, which on these boards is often a lone stitch via carrying almost none"
+            % (len(rows) - len(_measured), len(rows)))
+    return _v.write("via_current", _v.FAIL if bad else (_v.INCONCLUSIVE if not rows else _v.PASS),
+                    counts={"rails": len(rows), "over": len(bad), "no_via": len(no_via),
+                            "measured_rails": len(_measured), "over_barrels": len(bad_sites),
+                            "no_layer_change": len([r for r in rows if r.get("no_layer_change")])},
+                    denominator=len(rows), evidence=(bad + bad_sites)[:24], advisory=advisory_for(rows),
+                    inputs={"board": path, "rise_k": rise, "plating_um": plating, "site_mm": reach},
+                    note=("no declared rail on this board carries a via, so nothing was judged" if not rows
+                          else _why),
+                    out_dir=out_dir)
+
+
+if __name__ == "__main__":
+    # EVERY GATE LEAVES A READING WHEN IT RAISES (18 September 2026). The thirteen one-line entries of this
+    # morning were the gates a crash had already cost a verdict; these are the rest of the deciding gates in
+    # the coverage map, guarded the same way, so a rule whose tool raised reads INCONCLUSIVE naming the
+    # exception rather than 'no verdict', which the registry reads as nobody having looked.
+    sys.exit(_v.guard("via_current", main, sys.argv[1:]))

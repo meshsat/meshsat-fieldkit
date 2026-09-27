@@ -1,0 +1,226 @@
+#!/usr/bin/env python3
+"""Does this board need the layers it has? The evidence, never the change (MESHSAT-862, 12 Sep 2026).
+
+The owner reopened every board's layer count as a P0 on 11 September, and the record's problem was that
+four layers had NO written rationale at all while the promotions to six were session decisions recorded
+inside an owner rulings list. A decision needs the measurement that forced it and the cost it adds.
+
+**This tool takes that measurement and it changes nothing.** The layer count and the stackup are a
+reserved class (`reserved.json`: `gen_pcb_*.py SetCopperLayerCount`, `stackup_write.py STACKS`), so a
+patch that touches either is refused before any test runs, whatever mode the pipeline is in. The line
+this draws is worth stating because it is easy to blur: MEASURING a reserved change is exactly what P0
+asked for, and it is done in an isolated worktree that never lands; ADOPTING one is the owner's.
+
+What it reads, per board, and why each piece is in the answer:
+
+  * WHAT EACH LAYER CARRIES (`layer_audit.py`): an inner layer with no routed track at all is carrying a
+    plane, and a plane's job is answerable by `dc_drop.py`. E1 dock is the case in point: four layers,
+    two inner ones, NOT ONE routed track between them.
+  * WHAT THE ROUTING NEEDS: the share of track length on inner layers. A board where the inner layers
+    carry a third of the copper is not a board you take layers from without a re-route to prove it.
+  * WHAT THE POWER NEEDS (`dc_drop.py` on the board as it stands, and on a copy with the inner power
+    copper deleted): this is the measurement that settled E on 12 September, 13 mV on CELL_F and 28 mV
+    on VIN_RAW, and it is the half that can be answered without routing anything.
+  * WHAT THE PAIRS NEED (`impedance_check.py`): an inner-layer pair is a stripline, so removing its
+    layers is an impedance question and not only a routing one.
+
+The verdict is one of: NOT_FREED (these numbers do not free a layer), QUESTION (nothing here forces the
+count and the experiment is owed), or INCONCLUSIVE (something could not be measured). It is never
+"REDUCE", because that is a decision and not a measurement.
+
+**NOT_FREED IS NOT "THE LAYERS ARE NECESSARY", and the distinction is the whole point of this file.**
+Give a router six layers and it will spread copper over six; the share of routed length on the inner
+layers measures what the router DID, not what the board NEEDED, and reading it as necessity is
+circular. A board at 68 percent inner might route perfectly well at four layers with the copper
+distributed differently. The only measurement that settles a layer count is A ROUTE AT THE LOWER COUNT,
+and this tool cannot run one: it says so in every verdict it returns.
+
+Usage: layer_judge.py <board.kicad_pcb> [--intent out/<name>-intent.json] [--out-dir out] [--json f.json]
+"""
+import os, re, sys, json, argparse, subprocess
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+import verdict                                                     # noqa: E402
+
+INNER = ("In1.Cu", "In2.Cu", "In3.Cu", "In4.Cu")
+
+
+def _run(cmd, **kw):
+    return subprocess.run(cmd, capture_output=True, text=True, timeout=kw.pop("timeout", 900), **kw)
+
+
+def audit(board, out_dir):
+    """What each copper layer carries, from the tool that already answers that."""
+    j = os.path.join(out_dir, "layer_audit.json")
+    r = _run([sys.executable, os.path.join(HERE, "layer_audit.py"), board, "--json", j])
+    if not os.path.exists(j):
+        return None, (r.stderr or r.stdout).strip()[-300:]
+    return json.load(open(j)), ""
+
+
+def _row(a, board):
+    """layer_audit writes a LIST of per-board dicts; this is the one for our board, with its own keys."""
+    base = os.path.basename(board)
+    for r in (a if isinstance(a, list) else [a]):
+        if isinstance(r, dict) and (r.get("board") == base or r.get("board") == board):
+            return r
+    return (a[0] if isinstance(a, list) and a and isinstance(a[0], dict) else {})
+
+
+
+def _without_inner_pours(board, intent, idle, out_dir):
+    """(met, missed, why) for a COPY of this board with every pour on the idle inner layers deleted.
+
+    It writes into out_dir and never touches the board it was given. The project file travels with the copy,
+    because a board without its .kicad_pro is judged against the default net class and that has cost this
+    project an evening before (7 September 2026)."""
+    import shutil
+    try:
+        import pcbnew
+    except Exception as e:
+        return 0, 0, "pcbnew is not importable here (%s)" % e
+    try:
+        # THE COPY LIVES IN ITS OWN DIRECTORY, UNDER THE SAME STEM. dc_drop finds a board's intent by its own
+        # convention, out/<stem>-intent.json beside the board, so a copy under a new name in out/ sends it
+        # looking in out/out/ and it reads no rail at all: the first two runs of this measurement reported
+        # "dc_drop said nothing about the copy" for exactly that. And the copy may not sit in the project
+        # directory, because a project directory that holds a second board is refused by this project's own
+        # driver-hygiene rule and has cost it a day (17 September 2026).
+        stem = os.path.splitext(os.path.basename(board))[0]
+        d = os.path.join(out_dir, "layer-copy"); os.makedirs(os.path.join(d, "out"), exist_ok=True)
+        cp = os.path.join(d, stem + ".kicad_pcb")
+        shutil.copy(board, cp)
+        pro = os.path.splitext(board)[0] + ".kicad_pro"
+        if os.path.exists(pro): shutil.copy(pro, os.path.splitext(cp)[0] + ".kicad_pro")
+        # AND THE INTENT, UNDER THE COPY'S OWN NAME. dc_drop takes a board and finds its intent beside it as
+        # out/<stem>-intent.json; the path this function was handed is not an argument dc_drop reads. The first
+        # run of this measurement therefore solved a board with no declared rail at all and printed nothing,
+        # which the caller reported honestly as "dc_drop said nothing about the copy" (17 September 2026).
+        shutil.copy(intent, os.path.join(d, "out", stem + "-intent.json"))
+        b = pcbnew.LoadBoard(cp)
+        names = set(idle)
+        gone = 0
+        for z in list(b.Zones()):
+            if z.GetIsRuleArea(): continue
+            if b.GetLayerName(z.GetFirstLayer()) in names: b.Remove(z); gone += 1
+        if not gone: return 0, 0, "no pour of %s to delete" % ", ".join(idle)
+        pcbnew.ZONE_FILLER(b).Fill(b.Zones())
+        pcbnew.SaveBoard(cp, b)
+        r = _run([sys.executable, os.path.join(HERE, "dc_drop.py"), os.path.basename(cp)], cwd=d)
+        met = len(re.findall(r"\bMET\b", r.stdout)); missed = len(re.findall(r"\bMISSED|\bNOT MET", r.stdout))
+        if not met and not missed: return 0, 0, "dc_drop said nothing about the copy"
+        return met, missed, ""
+    except Exception as e:
+        return 0, 0, "%s: %s" % (type(e).__name__, e)
+
+
+def judge(board, out_dir="out", intent=None):
+    os.makedirs(out_dir, exist_ok=True)
+    a, err = audit(board, out_dir)
+    if a is None:
+        return {"verdict": verdict.INCONCLUSIVE, "why": "layer_audit could not read the board: %s" % err,
+                "counts": {}, "evidence": []}
+    r0 = _row(a, board)
+    if not r0:
+        return {"verdict": verdict.INCONCLUSIVE, "why": "layer_audit wrote no row for this board",
+                "counts": {}, "evidence": []}
+    per = r0.get("per_layer") or {}
+    idle = list(r0.get("plane_only_inner") or [])
+    counts = {"copper_layers": int(r0.get("copper_layers") or 0),
+              "inner_layers_with_no_routed_track": len(idle),
+              "inner_track_share_pct": round(100.0 * float(r0.get("inner_share") or 0), 1),
+              "inner_signal_mm": round(float(r0.get("inner_signal_mm") or 0), 1),
+              "vias": int(r0.get("vias") or 0)}
+    ev = ["%s, %d copper layers (%s)" % (r0.get("board"), counts["copper_layers"], ", ".join(r0.get("layers") or []))]
+    for L, d in per.items():
+        if not str(L).startswith("In"):
+            continue
+        ev.append("%-8s %5d tracks %8.1f mm  zones: %s"
+                  % (L, d.get("tracks", 0), d.get("mm", 0.0), ", ".join(d.get("zones") or []) or "-"))
+    ev.append("inner layers carrying no routed track: %s" % (", ".join(idle) or "none"))
+    ev.append("share of routed length on inner layers: %.1f percent" % counts["inner_track_share_pct"])
+
+    # IS THIS BOARD ROUTED AT ALL? Every escape, fanout stub and pre-routed pair here is locked and the
+    # router's own copper is not, so a board whose copper is almost entirely locked has never been
+    # routed. Judging what its layers NEED from what they CARRY is meaningless on such a board, and the
+    # first version of this tool did exactly that: it read two placed phase copies and called four and
+    # two idle inner layers a QUESTION, when the same boards routed read 82.5 and 55.3 percent inner.
+    tot = float(r0.get("total_mm") or 0.0)
+    lock = float(r0.get("locked_mm") or 0.0)
+    counts["locked_share_pct"] = round(100.0 * lock / tot, 1) if tot else 0.0
+    ev.append("locked copper: %.0f of %.0f mm, %.1f percent" % (lock, tot, counts["locked_share_pct"]))
+    if tot < 1.0 or counts["locked_share_pct"] >= 90.0:
+        return {"verdict": verdict.INCONCLUSIVE, "counts": counts, "evidence": ev,
+                "why": ("this board is not routed: %.1f percent of its copper is locked, which is the escapes "
+                        "and the pre-routed pairs and nothing else. What its layers carry says nothing about "
+                        "what they need. Judge the ROUTED board" % counts["locked_share_pct"])}
+
+    # The power half, where an intent file exists: what the rails read as the board stands, AND what they read
+    # on a copy with the idle inner pours deleted. The second measurement is the one this file's own docstring
+    # promised from the day it was written and the code never made: it printed "Run dc_drop with those pours
+    # deleted" and asked a person to do it, which is how board E's 13 mV and 28 mV came to be measured by hand
+    # on 12 September and never again (17 September 2026). A tool that names the measurement it will not take
+    # is the same shape as a documented option nothing reads.
+    if intent and os.path.exists(intent):
+        r = _run([sys.executable, os.path.join(HERE, "dc_drop.py"), board, intent], cwd=os.path.dirname(board) or ".")
+        met = len(re.findall(r"\bMET\b", r.stdout)); missed = len(re.findall(r"\bMISSED|\bNOT MET", r.stdout))
+        counts["rails_met"] = met; counts["rails_missed"] = missed
+        ev.append("dc_drop on the board as it stands: %d rail(s) MET, %d not" % (met, missed))
+        if idle:
+            m2, x2, why2 = _without_inner_pours(board, intent, idle, out_dir)
+            if why2:
+                ev.append("the board without its idle inner pours could not be measured: %s" % why2)
+            else:
+                counts["rails_met_without_idle_inner"] = m2
+                counts["rails_missed_without_idle_inner"] = x2
+                ev.append("dc_drop on a COPY with the pours of %s deleted: %d rail(s) MET, %d not"
+                          % (", ".join(idle), m2, x2))
+    else:
+        ev.append("no intent file given, so the power half of this question is not answered here")
+
+    # The verdict, and it is deliberately not allowed to say REDUCE.
+    if counts.get("copper_layers", 0) <= 2:
+        v, why = verdict.PASS, "a two-layer board has no inner layer to question"
+    elif idle and counts["inner_track_share_pct"] < 1.0:
+        v, why = (verdict.FAIL,
+                  "QUESTION: %d inner layer(s) carry no routed track at all, so what they carry is a plane and "
+                  "the question is a power one. Run dc_drop with those pours deleted; if the rails still meet "
+                  "their budget, nothing in this board's own copper forces this layer count and the decision "
+                  "belongs in the owner's file with these numbers" % len(idle))
+    elif counts["inner_track_share_pct"] >= 15.0:
+        v, why = (verdict.PASS,
+                  "NOT_FREED: the inner layers carry %.1f percent of this board's routed length, so removing "
+                  "them is a re-route and not an edit. THIS IS NOT EVIDENCE THAT THE LAYERS ARE NEEDED: a "
+                  "router given six layers uses six, so this measures what it did and not what the board "
+                  "requires. The only thing that settles the count is a route at the lower count reaching zero "
+                  "open, and that experiment is not run here" % counts["inner_track_share_pct"])
+    else:
+        v, why = (verdict.FAIL,
+                  "QUESTION: the inner layers carry only %.1f percent of the routed length and none is idle, "
+                  "which forces nothing either way. A route at the lower count is the measurement owed"
+                  % counts["inner_track_share_pct"])
+    return {"verdict": v, "why": why, "counts": counts, "evidence": ev}
+
+
+def main(argv):
+    ap = argparse.ArgumentParser(description="the evidence for a board's layer count, never the change")
+    ap.add_argument("board"); ap.add_argument("--intent", default=None)
+    ap.add_argument("--out-dir", default="out"); ap.add_argument("--json", default=None)
+    a = ap.parse_args(argv)
+    r = judge(a.board, a.out_dir, a.intent)
+    print("layer_judge: %s" % r["why"])
+    for e in r["evidence"]:
+        print("   %s" % e)
+    print("layer_judge: THIS TOOL CHANGES NOTHING and it does not prove a layer is needed. The count is settled")
+    print("             by a ROUTE AT THE LOWER COUNT, which is not run here; the layer count and the stackup are")
+    print("             a reserved class and the owner rules on them.")
+    if a.json:
+        json.dump(r, open(a.json, "w"), indent=1)
+    return verdict.write("layer_judge", r["verdict"], counts=r["counts"],
+                         denominator=r["counts"].get("copper_layers", 1), evidence=r["evidence"],
+                         note=r["why"][:300], out_dir=a.out_dir)
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

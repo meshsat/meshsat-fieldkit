@@ -1,0 +1,25 @@
+# Drift check of main 01469100 against ccf5808e for the files EMCON.md cites (read-only; 2026-09-26 18:28 CEST)
+## commits
+01469100 docs(plan): checkpoint of 26 September 18:24 in the review's terms: blockers closed, evidence classed, host-hours and spend [MESHSAT-1357]
+d90f30e4 fix(v2): board P's secondary over-temperature returns on its own thermistor and the battery protection packet is ready for a qualified reviewer [MESHSAT-1357]
+## modified, deleted or renamed among the cited paths
+ v2/ecad/pcb-p-pack-p2/out/pcb-p-pack-intent.json   |    2 +-
+ v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net           |  145 ++-
+ v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net.prov.json |    8 +-
+ v2/ecad/pcb-p-pack-p2/pcb-p-pack.kicad_sch         | 1179 ++++++++++++--------
+ v2/vendor/SOURCES.yaml                             |   26 +
+ v2/vendor/sources.txt                              |    4 +
+ v2/vendor/vendor-status.txt                        |    4 +
+ 7 files changed, 831 insertions(+), 537 deletions(-)
+## board P netlist: the copy read here (drafts/netlists/main-pcb-p-pack.net) against 01469100's
+01469100 v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net sha256 4342c4cbe1b43dc4
+read: drafts/netlists/main-pcb-p-pack.net  other: p-new.net
+nets changed: 3 ['/TS_SEC', '/TS_SEC_J', 'GND']
+parts changed: 5 [('J_TS2', None, 'second-level cell thermistor socket, JST-PH 1x2 (Semitec 103AT-2 on the hottest cell): 1 TS_SEC_J, 2 VSS'), ('R33', '10k', '18k'), ('R34', None, '270R'), ('TP15', None, 'TS_SEC'), ('U2', 'BQ7720700DSSR: second-level cell OV 4.325 V / UV 2.25 V / open wire, TS on a fixed 10k, 3S-7S (SLUSEG7D)', 'BQ7720700DSSR: second-level cell OV 4.325 V / UV 2.25 V / open wire / OT 70 C on its own 103AT-2 (J_TS2), 3S-7S (SLUSEG7D)')]
+## SOURCES.yaml still carries logic-nfet-2n7002
+1173:  - id: logic-nfet-2n7002
+## generator sha256 (first 16) at 01469100
+gen_sch_a.py a0452054ec04cf5d
+gen_sch_b.py 6e3d880901fd3030
+gen_sch_c.py 5f1ce2dd66ed7d2d
+gen_sch_d.py 39c5713b947d253f

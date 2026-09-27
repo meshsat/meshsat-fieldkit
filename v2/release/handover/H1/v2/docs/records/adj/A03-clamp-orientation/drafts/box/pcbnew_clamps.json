@@ -1,0 +1,1968 @@
+{
+ "pcb-a-power-a23/pcb-a-power.kicad_pcb": {
+  "sha256_16": "58e26c67987b1daa",
+  "parts": {
+   "D4": {
+    "fpid": "D_SMB",
+    "value": "SMBJ18A (VBUS clamp at the outlet)",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     163.06,
+     50.875
+    ],
+    "pads": {
+     "1": {
+      "net": "/PD_VBUS",
+      "x": 160.91,
+      "y": 50.875
+     },
+     "2": {
+      "net": "GND",
+      "x": 165.21,
+      "y": 50.875
+     }
+    },
+    "fab_apex": [
+     [
+      162.411,
+      50.876
+     ]
+    ],
+    "fab_apex_nearest_pad": [
+     [
+      "1",
+      1.501
+     ]
+    ],
+    "silk_centroid": [
+     161.52,
+     50.875
+    ],
+    "silk_centroid_nearest_pad": [
+     "1",
+     0.61
+    ]
+   },
+   "D1": {
+    "fpid": "D_SMC",
+    "value": "SMCJ18A (VBAT clamp)",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     37.57,
+     157.975
+    ],
+    "pads": {
+     "1": {
+      "net": "/VBAT",
+      "x": 34.17,
+      "y": 157.975
+     },
+     "2": {
+      "net": "GND",
+      "x": 40.97,
+      "y": 157.975
+     }
+    },
+    "fab_apex": [
+     [
+      36.921,
+      157.976
+     ]
+    ],
+    "fab_apex_nearest_pad": [
+     [
+      "1",
+      2.751
+     ]
+    ],
+    "silk_centroid": [
+     35.739,
+     157.975
+    ],
+    "silk_centroid_nearest_pad": [
+     "1",
+     1.569
+    ]
+   },
+   "D2": {
+    "fpid": "D_SMC",
+    "value": "SMCJ33A (VIN_RAW clamp behind E6's filter)",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     37.57,
+     69.475
+    ],
+    "pads": {
+     "1": {
+      "net": "/VIN_RAW",
+      "x": 34.17,
+      "y": 69.475
+     },
+     "2": {
+      "net": "GND",
+      "x": 40.97,
+      "y": 69.475
+     }
+    },
+    "fab_apex": [
+     [
+      36.921,
+      69.476
+     ]
+    ],
+    "fab_apex_nearest_pad": [
+     [
+      "1",
+      2.751
+     ]
+    ],
+    "silk_centroid": [
+     35.739,
+     69.475
+    ],
+    "silk_centroid_nearest_pad": [
+     "1",
+     1.569
+    ]
+   },
+   "U29": {
+    "fpid": "SOT-23-6",
+    "value": "USBLC6-2SC6",
+    "side": "F",
+    "orientation_deg": 90.0,
+    "pos": [
+     253.0875,
+     125.0
+    ],
+    "pads": {
+     "1": {
+      "net": "/USB_WALL_P",
+      "x": 252.1375,
+      "y": 126.1375
+     },
+     "2": {
+      "net": "GND",
+      "x": 253.0875,
+      "y": 126.1375
+     },
+     "3": {
+      "net": "/USB_WALL_N",
+      "x": 254.0375,
+      "y": 126.1375
+     },
+     "4": {
+      "net": "/USB_WALL_N",
+      "x": 254.0375,
+      "y": 123.8625
+     },
+     "5": {
+      "net": "/+5V_DEV",
+      "x": 253.0875,
+      "y": 123.8625
+     },
+     "6": {
+      "net": "/USB_WALL_P",
+      "x": 252.1375,
+      "y": 123.8625
+     }
+    },
+    "fab_apex": [],
+    "fab_apex_nearest_pad": [],
+    "silk_centroid": [
+     253.09,
+     125.0
+    ],
+    "silk_centroid_nearest_pad": [
+     "5",
+     1.138
+    ]
+   },
+   "D3": {
+    "fpid": "D_SMB",
+    "value": "SMBJ5.0A",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     108.32,
+     121.625
+    ],
+    "pads": {
+     "1": {
+      "net": "+3V3",
+      "x": 106.17,
+      "y": 121.625
+     },
+     "2": {
+      "net": "GND",
+      "x": 110.47,
+      "y": 121.625
+     }
+    },
+    "fab_apex": [
+     [
+      107.671,
+      121.626
+     ]
+    ],
+    "fab_apex_nearest_pad": [
+     [
+      "1",
+      1.501
+     ]
+    ],
+    "silk_centroid": [
+     106.78,
+     121.625
+    ],
+    "silk_centroid_nearest_pad": [
+     "1",
+     0.61
+    ]
+   }
+  }
+ },
+ "pcb-b-compute-b19/pcb-b-compute.kicad_pcb": {
+  "sha256_16": "2e64b5bf2d9cd3bc",
+  "parts": {
+   "D2": {
+    "fpid": "D_SMB",
+    "value": "SMBJ58A",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     11.705,
+     191.285
+    ],
+    "pads": {
+     "1": {
+      "net": "/+54V_POE",
+      "x": 9.555,
+      "y": 191.285
+     },
+     "2": {
+      "net": "GND",
+      "x": 13.855,
+      "y": 191.285
+     }
+    },
+    "fab_apex": [
+     [
+      11.056,
+      191.286
+     ]
+    ],
+    "fab_apex_nearest_pad": [
+     [
+      "1",
+      1.501
+     ]
+    ],
+    "silk_centroid": [
+     10.165,
+     191.285
+    ],
+    "silk_centroid_nearest_pad": [
+     "1",
+     0.61
+    ]
+   },
+   "U207": {
+    "fpid": "SOT-23-6",
+    "value": "USBLC6-2SC6",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     168.52,
+     84.5
+    ],
+    "pads": {
+     "1": {
+      "net": "/USB_OTG_P2",
+      "x": 167.3825,
+      "y": 83.55
+     },
+     "2": {
+      "net": "GND",
+      "x": 167.3825,
+      "y": 84.5
+     },
+     "3": {
+      "net": "/USB_OTG_N2",
+      "x": 167.3825,
+      "y": 85.45
+     },
+     "4": {
+      "net": "/USB_OTG_N2",
+      "x": 169.6575,
+      "y": 85.45
+     },
+     "5": {
+      "net": "/VBUS_FLASH2",
+      "x": 169.6575,
+      "y": 84.5
+     },
+     "6": {
+      "net": "/USB_OTG_P2",
+      "x": 169.6575,
+      "y": 83.55
+     }
+    },
+    "fab_apex": [],
+    "fab_apex_nearest_pad": [],
+    "silk_centroid": [
+     168.52,
+     84.5
+    ],
+    "silk_centroid_nearest_pad": [
+     "5",
+     1.137
+    ]
+   },
+   "U307": {
+    "fpid": "SOT-23-6",
+    "value": "USBLC6-2SC6",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     200.275,
+     182.5
+    ],
+    "pads": {
+     "1": {
+      "net": "/USB_OTG_P3",
+      "x": 199.1375,
+      "y": 181.55
+     },
+     "2": {
+      "net": "GND",
+      "x": 199.1375,
+      "y": 182.5
+     },
+     "3": {
+      "net": "/USB_OTG_N3",
+      "x": 199.1375,
+      "y": 183.45
+     },
+     "4": {
+      "net": "/USB_OTG_N3",
+      "x": 201.4125,
+      "y": 183.45
+     },
+     "5": {
+      "net": "/VBUS_FLASH3",
+      "x": 201.4125,
+      "y": 182.5
+     },
+     "6": {
+      "net": "/USB_OTG_P3",
+      "x": 201.4125,
+      "y": 181.55
+     }
+    },
+    "fab_apex": [],
+    "fab_apex_nearest_pad": [],
+    "silk_centroid": [
+     200.275,
+     182.5
+    ],
+    "silk_centroid_nearest_pad": [
+     "5",
+     1.137
+    ]
+   },
+   "D101": {
+    "fpid": "D_SMB",
+    "value": "SMBJ6.0A (6.0 V standoff on the 5.1 V slot rail)",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     81.66,
+     182.875
+    ],
+    "pads": {
+     "1": {
+      "net": "/+5V_S1",
+      "x": 79.51,
+      "y": 182.875
+     },
+     "2": {
+      "net": "GND",
+      "x": 83.81,
+      "y": 182.875
+     }
+    },
+    "fab_apex": [
+     [
+      81.011,
+      182.876
+     ]
+    ],
+    "fab_apex_nearest_pad": [
+     [
+      "1",
+      1.501
+     ]
+    ],
+    "silk_centroid": [
+     80.12,
+     182.875
+    ],
+    "silk_centroid_nearest_pad": [
+     "1",
+     0.61
+    ]
+   },
+   "U107": {
+    "fpid": "SOT-23-6",
+    "value": "USBLC6-2SC6",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     68.275,
+     182.5
+    ],
+    "pads": {
+     "1": {
+      "net": "/USB_OTG_P1",
+      "x": 67.1375,
+      "y": 181.55
+     },
+     "2": {
+      "net": "GND",
+      "x": 67.1375,
+      "y": 182.5
+     },
+     "3": {
+      "net": "/USB_OTG_N1",
+      "x": 67.1375,
+      "y": 183.45
+     },
+     "4": {
+      "net": "/USB_OTG_N1",
+      "x": 69.4125,
+      "y": 183.45
+     },
+     "5": {
+      "net": "/VBUS_FLASH1",
+      "x": 69.4125,
+      "y": 182.5
+     },
+     "6": {
+      "net": "/USB_OTG_P1",
+      "x": 69.4125,
+      "y": 181.55
+     }
+    },
+    "fab_apex": [],
+    "fab_apex_nearest_pad": [],
+    "silk_centroid": [
+     68.275,
+     182.5
+    ],
+    "silk_centroid_nearest_pad": [
+     "5",
+     1.137
+    ]
+   },
+   "D1": {
+    "fpid": "D_SMB",
+    "value": "SMBJ5.0A",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     3.11,
+     191.285
+    ],
+    "pads": {
+     "1": {
+      "net": "/+5V_DEV",
+      "x": 0.96,
+      "y": 191.285
+     },
+     "2": {
+      "net": "GND",
+      "x": 5.26,
+      "y": 191.285
+     }
+    },
+    "fab_apex": [
+     [
+      2.461,
+      191.286
+     ]
+    ],
+    "fab_apex_nearest_pad": [
+     [
+      "1",
+      1.501
+     ]
+    ],
+    "silk_centroid": [
+     1.57,
+     191.285
+    ],
+    "silk_centroid_nearest_pad": [
+     "1",
+     0.61
+    ]
+   },
+   "U19": {
+    "fpid": "TSSOP-14_4.4x5mm_P0.65mm",
+    "value": "SN74LVC08APWR quad AND: LimeSDR (hub port power AND EMCON AND software), RockBLOCK (EMCON AND software), LoRa (EMCON AND software)",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     106.075,
+     35.64
+    ],
+    "pads": {
+     "1": {
+      "net": "/EMCON_HW",
+      "x": 103.2125,
+      "y": 33.69
+     },
+     "2": {
+      "net": "/LIME_HW_EN",
+      "x": 103.2125,
+      "y": 34.34
+     },
+     "3": {
+      "net": "/LIME_EN_A",
+      "x": 103.2125,
+      "y": 34.99
+     },
+     "4": {
+      "net": "/LIME_EN_A",
+      "x": 103.2125,
+      "y": 35.64
+     },
+     "5": {
+      "net": "/LIME_SW_EN",
+      "x": 103.2125,
+      "y": 36.29
+     },
+     "6": {
+      "net": "/LIME_EN",
+      "x": 103.2125,
+      "y": 36.94
+     },
+     "7": {
+      "net": "GND",
+      "x": 103.2125,
+      "y": 37.59
+     },
+     "8": {
+      "net": "/RB_EN",
+      "x": 108.9375,
+      "y": 37.59
+     },
+     "9": {
+      "net": "/EMCON_HW",
+      "x": 108.9375,
+      "y": 36.94
+     },
+     "10": {
+      "net": "/RB_SW_EN",
+      "x": 108.9375,
+      "y": 36.29
+     },
+     "11": {
+      "net": "/E22_EN",
+      "x": 108.9375,
+      "y": 35.64
+     },
+     "12": {
+      "net": "/EMCON_HW",
+      "x": 108.9375,
+      "y": 34.99
+     },
+     "13": {
+      "net": "/LORA_ON",
+      "x": 108.9375,
+      "y": 34.34
+     },
+     "14": {
+      "net": "/+3V3_DEV",
+      "x": 108.9375,
+      "y": 33.69
+     }
+    },
+    "fab_apex": [],
+    "fab_apex_nearest_pad": [],
+    "silk_centroid": [
+     106.075,
+     35.64
+    ],
+    "silk_centroid_nearest_pad": [
+     "4",
+     2.862
+    ]
+   },
+   "U37": {
+    "fpid": "SOT-23-6",
+    "value": "USBLC6-2SC6",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     112.825,
+     48.43
+    ],
+    "pads": {
+     "1": {
+      "net": "/USB_PNL_P",
+      "x": 111.6875,
+      "y": 47.48
+     },
+     "2": {
+      "net": "GND",
+      "x": 111.6875,
+      "y": 48.43
+     },
+     "3": {
+      "net": "/USB_PNL_N",
+      "x": 111.6875,
+      "y": 49.38
+     },
+     "4": {
+      "net": "/USB_PNL_N",
+      "x": 113.9625,
+      "y": 49.38
+     },
+     "5": {
+      "net": "/+3V3_DEV",
+      "x": 113.9625,
+      "y": 48.43
+     },
+     "6": {
+      "net": "/USB_PNL_P",
+      "x": 113.9625,
+      "y": 47.48
+     }
+    },
+    "fab_apex": [],
+    "fab_apex_nearest_pad": [],
+    "silk_centroid": [
+     112.825,
+     48.43
+    ],
+    "silk_centroid_nearest_pad": [
+     "5",
+     1.138
+    ]
+   },
+   "U29": {
+    "fpid": "SOT-23-6",
+    "value": "USBLC6-2SC6",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     104.275,
+     48.43
+    ],
+    "pads": {
+     "1": {
+      "net": "/USB_WALL_P",
+      "x": 103.1375,
+      "y": 47.48
+     },
+     "2": {
+      "net": "GND",
+      "x": 103.1375,
+      "y": 48.43
+     },
+     "3": {
+      "net": "/USB_WALL_N",
+      "x": 103.1375,
+      "y": 49.38
+     },
+     "4": {
+      "net": "/USB_WALL_N",
+      "x": 105.4125,
+      "y": 49.38
+     },
+     "5": {
+      "net": "/+3V3_DEV",
+      "x": 105.4125,
+      "y": 48.43
+     },
+     "6": {
+      "net": "/USB_WALL_P",
+      "x": 105.4125,
+      "y": 47.48
+     }
+    },
+    "fab_apex": [],
+    "fab_apex_nearest_pad": [],
+    "silk_centroid": [
+     104.275,
+     48.43
+    ],
+    "silk_centroid_nearest_pad": [
+     "5",
+     1.137
+    ]
+   },
+   "D301": {
+    "fpid": "D_SMB",
+    "value": "SMBJ6.0A (6.0 V standoff on the 5.1 V slot rail)",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     221.0,
+     182.875
+    ],
+    "pads": {
+     "1": {
+      "net": "/+5V_S3",
+      "x": 218.85,
+      "y": 182.875
+     },
+     "2": {
+      "net": "GND",
+      "x": 223.15,
+      "y": 182.875
+     }
+    },
+    "fab_apex": [
+     [
+      220.351,
+      182.876
+     ]
+    ],
+    "fab_apex_nearest_pad": [
+     [
+      "1",
+      1.501
+     ]
+    ],
+    "silk_centroid": [
+     219.46,
+     182.875
+    ],
+    "silk_centroid_nearest_pad": [
+     "1",
+     0.61
+    ]
+   },
+   "D201": {
+    "fpid": "D_SMB",
+    "value": "SMBJ6.0A (6.0 V standoff on the 5.1 V slot rail)",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     168.565,
+     99.825
+    ],
+    "pads": {
+     "1": {
+      "net": "/+5V_S2",
+      "x": 166.415,
+      "y": 99.825
+     },
+     "2": {
+      "net": "GND",
+      "x": 170.715,
+      "y": 99.825
+     }
+    },
+    "fab_apex": [
+     [
+      167.916,
+      99.826
+     ]
+    ],
+    "fab_apex_nearest_pad": [
+     [
+      "1",
+      1.501
+     ]
+    ],
+    "silk_centroid": [
+     167.025,
+     99.825
+    ],
+    "silk_centroid_nearest_pad": [
+     "1",
+     0.61
+    ]
+   },
+   "U33": {
+    "fpid": "SOT-23-6",
+    "value": "USBLC6-2SC6",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     250.275,
+     106.8
+    ],
+    "pads": {
+     "1": {
+      "net": "/LIME_DP",
+      "x": 249.1375,
+      "y": 105.85
+     },
+     "2": {
+      "net": "GND",
+      "x": 249.1375,
+      "y": 106.8
+     },
+     "3": {
+      "net": "/LIME_DM",
+      "x": 249.1375,
+      "y": 107.75
+     },
+     "4": {
+      "net": "/LIME_DM",
+      "x": 251.4125,
+      "y": 107.75
+     },
+     "5": {
+      "net": "/+5V_LIME",
+      "x": 251.4125,
+      "y": 106.8
+     },
+     "6": {
+      "net": "/LIME_DP",
+      "x": 251.4125,
+      "y": 105.85
+     }
+    },
+    "fab_apex": [],
+    "fab_apex_nearest_pad": [],
+    "silk_centroid": [
+     250.275,
+     106.8
+    ],
+    "silk_centroid_nearest_pad": [
+     "5",
+     1.137
+    ]
+   },
+   "U35": {
+    "fpid": "SOT-23-6",
+    "value": "USBLC6-2SC6",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     14.175,
+     178.5
+    ],
+    "pads": {
+     "1": {
+      "net": "/QMX_DP",
+      "x": 13.0375,
+      "y": 177.55
+     },
+     "2": {
+      "net": "GND",
+      "x": 13.0375,
+      "y": 178.5
+     },
+     "3": {
+      "net": "/QMX_DM",
+      "x": 13.0375,
+      "y": 179.45
+     },
+     "4": {
+      "net": "/QMX_DM",
+      "x": 15.3125,
+      "y": 179.45
+     },
+     "5": {
+      "net": "/VBUS_QMX",
+      "x": 15.3125,
+      "y": 178.5
+     },
+     "6": {
+      "net": "/QMX_DP",
+      "x": 15.3125,
+      "y": 177.55
+     }
+    },
+    "fab_apex": [],
+    "fab_apex_nearest_pad": [],
+    "silk_centroid": [
+     14.175,
+     178.5
+    ],
+    "silk_centroid_nearest_pad": [
+     "5",
+     1.137
+    ]
+   },
+   "U34": {
+    "fpid": "SOT-23-6",
+    "value": "USBLC6-2SC6",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     281.92,
+     50.325
+    ],
+    "pads": {
+     "1": {
+      "net": "/CAM_DP",
+      "x": 280.7825,
+      "y": 49.375
+     },
+     "2": {
+      "net": "GND",
+      "x": 280.7825,
+      "y": 50.325
+     },
+     "3": {
+      "net": "/CAM_DM",
+      "x": 280.7825,
+      "y": 51.275
+     },
+     "4": {
+      "net": "/CAM_DM",
+      "x": 283.0575,
+      "y": 51.275
+     },
+     "5": {
+      "net": "/+5V_CAM",
+      "x": 283.0575,
+      "y": 50.325
+     },
+     "6": {
+      "net": "/CAM_DP",
+      "x": 283.0575,
+      "y": 49.375
+     }
+    },
+    "fab_apex": [],
+    "fab_apex_nearest_pad": [],
+    "silk_centroid": [
+     281.92,
+     50.325
+    ],
+    "silk_centroid_nearest_pad": [
+     "2",
+     1.137
+    ]
+   }
+  }
+ },
+ "pcb-c-display-c8/pcb-c-display.kicad_pcb": {
+  "sha256_16": "2a273803757c68fb",
+  "parts": {
+   "D19": {
+    "fpid": "D_SOD-123F",
+    "value": "SS2040FL: EPD_SW -> VGH",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     199.94,
+     98.775
+    ],
+    "pads": {
+     "1": {
+      "net": "/EPD_SW",
+      "x": 198.54,
+      "y": 98.775
+     },
+     "2": {
+      "net": "/EPD_VGH",
+      "x": 201.34,
+      "y": 98.775
+     }
+    },
+    "fab_apex": [
+     [
+      199.59,
+      98.775
+     ]
+    ],
+    "fab_apex_nearest_pad": [
+     [
+      "1",
+      1.05
+     ]
+    ],
+    "silk_centroid": [
+     199.263,
+     98.775
+    ],
+    "silk_centroid_nearest_pad": [
+     "1",
+     0.723
+    ]
+   },
+   "D20": {
+    "fpid": "D_SOD-123F",
+    "value": "SS2040FL: pump clamp",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     205.635,
+     98.775
+    ],
+    "pads": {
+     "1": {
+      "net": "/EPD_PUMP",
+      "x": 204.235,
+      "y": 98.775
+     },
+     "2": {
+      "net": "GND",
+      "x": 207.035,
+      "y": 98.775
+     }
+    },
+    "fab_apex": [
+     [
+      205.285,
+      98.775
+     ]
+    ],
+    "fab_apex_nearest_pad": [
+     [
+      "1",
+      1.05
+     ]
+    ],
+    "silk_centroid": [
+     204.958,
+     98.775
+    ],
+    "silk_centroid_nearest_pad": [
+     "1",
+     0.723
+    ]
+   },
+   "D21": {
+    "fpid": "D_SOD-123F",
+    "value": "SS2040FL: pump -> VGL",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     211.33,
+     98.775
+    ],
+    "pads": {
+     "1": {
+      "net": "/EPD_VGL",
+      "x": 209.93,
+      "y": 98.775
+     },
+     "2": {
+      "net": "/EPD_PUMP",
+      "x": 212.73,
+      "y": 98.775
+     }
+    },
+    "fab_apex": [
+     [
+      210.98,
+      98.775
+     ]
+    ],
+    "fab_apex_nearest_pad": [
+     [
+      "1",
+      1.05
+     ]
+    ],
+    "silk_centroid": [
+     210.653,
+     98.775
+    ],
+    "silk_centroid_nearest_pad": [
+     "1",
+     0.723
+    ]
+   },
+   "U11": {
+    "fpid": "SOT-23-6",
+    "value": "USBLC6-2SC6",
+    "side": "B",
+    "orientation_deg": 0.0,
+    "pos": [
+     453.675,
+     282.235
+    ],
+    "pads": {
+     "1": {
+      "net": "/PIJ2_A2",
+      "x": 452.5375,
+      "y": 283.185
+     },
+     "2": {
+      "net": "GND",
+      "x": 452.5375,
+      "y": 282.235
+     },
+     "3": {
+      "net": "/PIJ2_B2",
+      "x": 452.5375,
+      "y": 281.285
+     },
+     "4": {
+      "net": "/PIJ2_B2",
+      "x": 454.8125,
+      "y": 281.285
+     },
+     "5": {
+      "net": "/+3V3",
+      "x": 454.8125,
+      "y": 282.235
+     },
+     "6": {
+      "net": "/PIJ2_A2",
+      "x": 454.8125,
+      "y": 283.185
+     }
+    },
+    "fab_apex": [],
+    "fab_apex_nearest_pad": [],
+    "silk_centroid": [
+     453.675,
+     282.235
+    ],
+    "silk_centroid_nearest_pad": [
+     "2",
+     1.137
+    ]
+   },
+   "U8": {
+    "fpid": "SOT-23-6",
+    "value": "USBLC6-2SC6",
+    "side": "B",
+    "orientation_deg": 0.0,
+    "pos": [
+     437.375,
+     282.235
+    ],
+    "pads": {
+     "1": {
+      "net": "/TR_APRS",
+      "x": 436.2375,
+      "y": 283.185
+     },
+     "2": {
+      "net": "GND",
+      "x": 436.2375,
+      "y": 282.235
+     },
+     "3": {
+      "net": "/EXP_INT",
+      "x": 436.2375,
+      "y": 281.285
+     },
+     "4": {
+      "net": "/EXP_INT",
+      "x": 438.5125,
+      "y": 281.285
+     },
+     "5": {
+      "net": "/+3V3",
+      "x": 438.5125,
+      "y": 282.235
+     },
+     "6": {
+      "net": "/TR_APRS",
+      "x": 438.5125,
+      "y": 283.185
+     }
+    },
+    "fab_apex": [],
+    "fab_apex_nearest_pad": [],
+    "silk_centroid": [
+     437.375,
+     282.235
+    ],
+    "silk_centroid_nearest_pad": [
+     "2",
+     1.137
+    ]
+   },
+   "U10": {
+    "fpid": "SOT-23-6",
+    "value": "USBLC6-2SC6",
+    "side": "B",
+    "orientation_deg": 0.0,
+    "pos": [
+     445.525,
+     282.235
+    ],
+    "pads": {
+     "1": {
+      "net": "/MAINSW_A2",
+      "x": 444.3875,
+      "y": 283.185
+     },
+     "2": {
+      "net": "GND",
+      "x": 444.3875,
+      "y": 282.235
+     },
+     "3": {
+      "net": "/MAINSW_B2",
+      "x": 444.3875,
+      "y": 281.285
+     },
+     "4": {
+      "net": "/MAINSW_B2",
+      "x": 446.6625,
+      "y": 281.285
+     },
+     "5": {
+      "net": "/+3V3",
+      "x": 446.6625,
+      "y": 282.235
+     },
+     "6": {
+      "net": "/MAINSW_A2",
+      "x": 446.6625,
+      "y": 283.185
+     }
+    },
+    "fab_apex": [],
+    "fab_apex_nearest_pad": [],
+    "silk_centroid": [
+     445.525,
+     282.235
+    ],
+    "silk_centroid_nearest_pad": [
+     "2",
+     1.137
+    ]
+   },
+   "D17": {
+    "fpid": "D_SOD-123",
+    "value": "BAT54 lamp-test tie",
+    "side": "B",
+    "orientation_deg": 0.0,
+    "pos": [
+     340.02,
+     308.775
+    ],
+    "pads": {
+     "1": {
+      "net": "/TX_LAMPTEST",
+      "x": 338.37,
+      "y": 308.775
+     },
+     "2": {
+      "net": "/TX_K",
+      "x": 341.67,
+      "y": 308.775
+     }
+    },
+    "fab_apex": [
+     [
+      339.67,
+      308.775
+     ]
+    ],
+    "fab_apex_nearest_pad": [
+     [
+      "1",
+      1.3
+     ]
+    ],
+    "silk_centroid": [
+     339.265,
+     308.775
+    ],
+    "silk_centroid_nearest_pad": [
+     "1",
+     0.895
+    ]
+   },
+   "U6": {
+    "fpid": "SOT-23-6",
+    "value": "USBLC6-2SC6",
+    "side": "B",
+    "orientation_deg": 0.0,
+    "pos": [
+     421.075,
+     282.235
+    ],
+    "pads": {
+     "1": {
+      "net": "/USB_PNL_P",
+      "x": 419.9375,
+      "y": 283.185
+     },
+     "2": {
+      "net": "GND",
+      "x": 419.9375,
+      "y": 282.235
+     },
+     "3": {
+      "net": "/USB_PNL_N",
+      "x": 419.9375,
+      "y": 281.285
+     },
+     "4": {
+      "net": "/USB_PNL_N",
+      "x": 422.2125,
+      "y": 281.285
+     },
+     "5": {
+      "net": "/+3V3",
+      "x": 422.2125,
+      "y": 282.235
+     },
+     "6": {
+      "net": "/USB_PNL_P",
+      "x": 422.2125,
+      "y": 283.185
+     }
+    },
+    "fab_apex": [],
+    "fab_apex_nearest_pad": [],
+    "silk_centroid": [
+     421.075,
+     282.235
+    ],
+    "silk_centroid_nearest_pad": [
+     "5",
+     1.137
+    ]
+   },
+   "U7": {
+    "fpid": "SOT-23-6",
+    "value": "USBLC6-2SC6",
+    "side": "B",
+    "orientation_deg": 0.0,
+    "pos": [
+     429.225,
+     282.235
+    ],
+    "pads": {
+     "1": {
+      "net": "/SDA",
+      "x": 428.0875,
+      "y": 283.185
+     },
+     "2": {
+      "net": "GND",
+      "x": 428.0875,
+      "y": 282.235
+     },
+     "3": {
+      "net": "/SCL",
+      "x": 428.0875,
+      "y": 281.285
+     },
+     "4": {
+      "net": "/SCL",
+      "x": 430.3625,
+      "y": 281.285
+     },
+     "5": {
+      "net": "/+3V3",
+      "x": 430.3625,
+      "y": 282.235
+     },
+     "6": {
+      "net": "/SDA",
+      "x": 430.3625,
+      "y": 283.185
+     }
+    },
+    "fab_apex": [],
+    "fab_apex_nearest_pad": [],
+    "silk_centroid": [
+     429.225,
+     282.235
+    ],
+    "silk_centroid_nearest_pad": [
+     "5",
+     1.137
+    ]
+   }
+  }
+ },
+ "pcb-d-aprs-d9/pcb-d-aprs.kicad_pcb": {
+  "sha256_16": "929bf82d2bf6eed4",
+  "parts": {
+   "U5": {
+    "fpid": "SOT-23-6",
+    "value": "USBLC6-2SC6",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     109.0,
+     83.8875
+    ],
+    "pads": {
+     "1": {
+      "net": "/USB_D8_P",
+      "x": 107.8625,
+      "y": 82.9375
+     },
+     "2": {
+      "net": "GND",
+      "x": 107.8625,
+      "y": 83.8875
+     },
+     "3": {
+      "net": "/USB_D8_N",
+      "x": 107.8625,
+      "y": 84.8375
+     },
+     "4": {
+      "net": "/USB_D8_N",
+      "x": 110.1375,
+      "y": 84.8375
+     },
+     "5": {
+      "net": "/+5V_D8",
+      "x": 110.1375,
+      "y": 83.8875
+     },
+     "6": {
+      "net": "/USB_D8_P",
+      "x": 110.1375,
+      "y": 82.9375
+     }
+    },
+    "fab_apex": [],
+    "fab_apex_nearest_pad": [],
+    "silk_centroid": [
+     109.0,
+     83.89
+    ],
+    "silk_centroid_nearest_pad": [
+     "5",
+     1.138
+    ]
+   },
+   "D1": {
+    "fpid": "D_SMB",
+    "value": "SMBJ5.0A",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     67.32,
+     68.875
+    ],
+    "pads": {
+     "1": {
+      "net": "GND",
+      "x": 65.17,
+      "y": 68.875
+     },
+     "2": {
+      "net": "/+5V_D8",
+      "x": 69.47,
+      "y": 68.875
+     }
+    },
+    "fab_apex": [
+     [
+      66.671,
+      68.876
+     ]
+    ],
+    "fab_apex_nearest_pad": [
+     [
+      "1",
+      1.501
+     ]
+    ],
+    "silk_centroid": [
+     65.78,
+     68.875
+    ],
+    "silk_centroid_nearest_pad": [
+     "1",
+     0.61
+    ]
+   },
+   "D2": {
+    "fpid": "D_SOD-123",
+    "value": "1N4148W coil flyback",
+    "side": "B",
+    "orientation_deg": 0.0,
+    "pos": [
+     79.02,
+     106.275
+    ],
+    "pads": {
+     "1": {
+      "net": "/+5V_D8",
+      "x": 77.37,
+      "y": 106.275
+     },
+     "2": {
+      "net": "/RLY_K",
+      "x": 80.67,
+      "y": 106.275
+     }
+    },
+    "fab_apex": [
+     [
+      78.67,
+      106.275
+     ]
+    ],
+    "fab_apex_nearest_pad": [
+     [
+      "1",
+      1.3
+     ]
+    ],
+    "silk_centroid": [
+     78.265,
+     106.275
+    ],
+    "silk_centroid_nearest_pad": [
+     "1",
+     0.895
+    ]
+   }
+  }
+ },
+ "pcb-e1-dock-e7/pcb-e1-dock.kicad_pcb": {
+  "sha256_16": "a462ac2620b9b8d3",
+  "parts": {
+   "D1": {
+    "fpid": "D_SMC",
+    "value": "SMCJ40A (input surge: 40 V standoff on a line specified to 36 V, clamping 64.5 V)",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     98.93,
+     200.975
+    ],
+    "pads": {
+     "1": {
+      "net": "/GND_V",
+      "x": 95.53,
+      "y": 200.975
+     },
+     "2": {
+      "net": "/DC_P",
+      "x": 102.33,
+      "y": 200.975
+     }
+    },
+    "fab_apex": [
+     [
+      98.281,
+      200.976
+     ]
+    ],
+    "fab_apex_nearest_pad": [
+     [
+      "1",
+      2.751
+     ]
+    ],
+    "silk_centroid": [
+     97.099,
+     200.975
+    ],
+    "silk_centroid_nearest_pad": [
+     "1",
+     1.569
+    ]
+   },
+   "D2": {
+    "fpid": "D_SMC",
+    "value": "SMCJ40A (bus clamp: 40 V standoff on the 9 to 36 V bus)",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     59.98,
+     199.975
+    ],
+    "pads": {
+     "1": {
+      "net": "GND",
+      "x": 56.58,
+      "y": 199.975
+     },
+     "2": {
+      "net": "/VIN_RAW",
+      "x": 63.38,
+      "y": 199.975
+     }
+    },
+    "fab_apex": [
+     [
+      59.331,
+      199.976
+     ]
+    ],
+    "fab_apex_nearest_pad": [
+     [
+      "1",
+      2.751
+     ]
+    ],
+    "silk_centroid": [
+     58.149,
+     199.975
+    ],
+    "silk_centroid_nearest_pad": [
+     "1",
+     1.569
+    ]
+   },
+   "D5": {
+    "fpid": "D_SOD-123",
+    "value": "BAT54 boost diode INTVCC -> BOOST1",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     159.93,
+     206.595
+    ],
+    "pads": {
+     "1": {
+      "net": "/TRK_BOOST1",
+      "x": 158.28,
+      "y": 206.595
+     },
+     "2": {
+      "net": "/TRK_INTVCC",
+      "x": 161.58,
+      "y": 206.595
+     }
+    },
+    "fab_apex": [
+     [
+      159.58,
+      206.595
+     ]
+    ],
+    "fab_apex_nearest_pad": [
+     [
+      "1",
+      1.3
+     ]
+    ],
+    "silk_centroid": [
+     159.175,
+     206.595
+    ],
+    "silk_centroid_nearest_pad": [
+     "1",
+     0.895
+    ]
+   },
+   "D3": {
+    "fpid": "D_SMC",
+    "value": "SMCJ18A (pack node clamp)",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     17.72,
+     197.475
+    ],
+    "pads": {
+     "1": {
+      "net": "GND",
+      "x": 14.32,
+      "y": 197.475
+     },
+     "2": {
+      "net": "/CELL_F",
+      "x": 21.12,
+      "y": 197.475
+     }
+    },
+    "fab_apex": [
+     [
+      17.071,
+      197.476
+     ]
+    ],
+    "fab_apex_nearest_pad": [
+     [
+      "1",
+      2.751
+     ]
+    ],
+    "silk_centroid": [
+     15.889,
+     197.475
+    ],
+    "silk_centroid_nearest_pad": [
+     "1",
+     1.569
+    ]
+   },
+   "D6": {
+    "fpid": "D_SOD-123",
+    "value": "BAT54 boost diode INTVCC -> BOOST2",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     165.925,
+     206.595
+    ],
+    "pads": {
+     "1": {
+      "net": "/TRK_BOOST2",
+      "x": 164.275,
+      "y": 206.595
+     },
+     "2": {
+      "net": "/TRK_INTVCC",
+      "x": 167.575,
+      "y": 206.595
+     }
+    },
+    "fab_apex": [
+     [
+      165.575,
+      206.595
+     ]
+    ],
+    "fab_apex_nearest_pad": [
+     [
+      "1",
+      1.3
+     ]
+    ],
+    "silk_centroid": [
+     165.17,
+     206.595
+    ],
+    "silk_centroid_nearest_pad": [
+     "1",
+     0.895
+    ]
+   },
+   "D8": {
+    "fpid": "D_SMB",
+    "value": "SS14 flyback across fan 2",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     17.915,
+     184.375
+    ],
+    "pads": {
+     "1": {
+      "net": "/CELL_F",
+      "x": 15.765,
+      "y": 184.375
+     },
+     "2": {
+      "net": "/FAN2_SW",
+      "x": 20.065,
+      "y": 184.375
+     }
+    },
+    "fab_apex": [
+     [
+      17.266,
+      184.376
+     ]
+    ],
+    "fab_apex_nearest_pad": [
+     [
+      "1",
+      1.501
+     ]
+    ],
+    "silk_centroid": [
+     16.375,
+     184.375
+    ],
+    "silk_centroid_nearest_pad": [
+     "1",
+     0.61
+    ]
+   },
+   "D4": {
+    "fpid": "D_SMC",
+    "value": "SMCJ28A (panel surge: 28 V standoff, conducting from 31.1 V, below the 35 V bulk capacitors)",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     129.57,
+     203.325
+    ],
+    "pads": {
+     "1": {
+      "net": "GND",
+      "x": 126.17,
+      "y": 203.325
+     },
+     "2": {
+      "net": "/PV_P",
+      "x": 132.97,
+      "y": 203.325
+     }
+    },
+    "fab_apex": [
+     [
+      128.921,
+      203.326
+     ]
+    ],
+    "fab_apex_nearest_pad": [
+     [
+      "1",
+      2.751
+     ]
+    ],
+    "silk_centroid": [
+     127.739,
+     203.325
+    ],
+    "silk_centroid_nearest_pad": [
+     "1",
+     1.569
+    ]
+   },
+   "D7": {
+    "fpid": "D_SMB",
+    "value": "SS14 flyback across fan 1",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     9.32,
+     184.375
+    ],
+    "pads": {
+     "1": {
+      "net": "/CELL_F",
+      "x": 7.17,
+      "y": 184.375
+     },
+     "2": {
+      "net": "/FAN1_SW",
+      "x": 11.47,
+      "y": 184.375
+     }
+    },
+    "fab_apex": [
+     [
+      8.671,
+      184.376
+     ]
+    ],
+    "fab_apex_nearest_pad": [
+     [
+      "1",
+      1.501
+     ]
+    ],
+    "silk_centroid": [
+     7.78,
+     184.375
+    ],
+    "silk_centroid_nearest_pad": [
+     "1",
+     0.61
+    ]
+   }
+  }
+ },
+ "pcb-e5-block/pcb-e5-block.kicad_pcb": {
+  "sha256_16": "686b29a734c55b9a",
+  "parts": {}
+ },
+ "pcb-p-pack-p2/pcb-p-pack.kicad_pcb": {
+  "sha256_16": "d79865e7b1aceb95",
+  "parts": {
+   "D2": {
+    "fpid": "SOT-23-6",
+    "value": "USBLC6-2SC6 ESD clamp on the SMBus pair",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     108.075,
+     90.5
+    ],
+    "pads": {
+     "1": {
+      "net": "/SMBC",
+      "x": 106.9375,
+      "y": 89.55
+     },
+     "2": {
+      "net": "GND",
+      "x": 106.9375,
+      "y": 90.5
+     },
+     "3": {
+      "net": "/SMBD",
+      "x": 106.9375,
+      "y": 91.45
+     },
+     "4": {
+      "net": "/SMBD",
+      "x": 109.2125,
+      "y": 91.45
+     },
+     "5": {
+      "net": "/VCC_F",
+      "x": 109.2125,
+      "y": 90.5
+     },
+     "6": {
+      "net": "/SMBC",
+      "x": 109.2125,
+      "y": 89.55
+     }
+    },
+    "fab_apex": [],
+    "fab_apex_nearest_pad": [],
+    "silk_centroid": [
+     108.075,
+     90.5
+    ],
+    "silk_centroid_nearest_pad": [
+     "5",
+     1.138
+    ]
+   },
+   "D1": {
+    "fpid": "D_SMB",
+    "value": "SMBJ20A",
+    "side": "F",
+    "orientation_deg": 0.0,
+    "pos": [
+     116.47,
+     90.875
+    ],
+    "pads": {
+     "1": {
+      "net": "/PACK_N",
+      "x": 114.32,
+      "y": 90.875
+     },
+     "2": {
+      "net": "/PACK_P",
+      "x": 118.62,
+      "y": 90.875
+     }
+    },
+    "fab_apex": [
+     [
+      115.821,
+      90.876
+     ]
+    ],
+    "fab_apex_nearest_pad": [
+     [
+      "1",
+      1.501
+     ]
+    ],
+    "silk_centroid": [
+     114.93,
+     90.875
+    ],
+    "silk_centroid_nearest_pad": [
+     "1",
+     0.61
+    ]
+   }
+  }
+ }
+}

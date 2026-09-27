@@ -1,0 +1,36 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "feeds": 2,
+  "feeds_short": 0,
+  "nodes": 2,
+  "rails": 5,
+  "segments": 0,
+  "undeclared": 0
+ },
+ "denominator": null,
+ "evidence": [],
+ "inputs": {
+  "board": "p"
+ },
+ "missing_input": null,
+ "note": "every declared node that carries a declared rail's current through one of that rail's own load parts: a candidate segment of a power path that no power rule is looking at. It REPORTS: some of these are genuinely nodes and the declaration is where that is written down, with its reason.",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [],
+ "tool": "power_path",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "60b5a5a915850caa"
+ },
+ "ts": "2026-09-26T13:33:12Z",
+ "verdict": "PASS",
+ "version": "unknown",
+ "writer": {
+  "file": "power_path.py",
+  "sha16": "d587cd5843213f62"
+ }
+}

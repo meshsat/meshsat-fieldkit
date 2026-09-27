@@ -1,0 +1,34 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "folder": 1,
+  "held": 0,
+  "quote": 0,
+  "stale": 0
+ },
+ "denominator": 1,
+ "evidence": [
+  "ALL PASS (21 of 21 properties)"
+ ],
+ "inputs": {
+  "folder": "meshsat-pcb-e5-revA-E5"
+ },
+ "missing_input": null,
+ "note": "this board's own deliverable folder, judged on its own; the set's verdict is final_gate",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "4a03222f910fe5f5"
+ },
+ "rules": [
+  "DOC-001"
+ ],
+ "tool": "final_gate_e5",
+ "tools": {
+  "git_head": "a8a1d7bd7198",
+  "tools_tree_sha": "cf42b4be5bfdca7b"
+ },
+ "ts": "2026-09-17T17:01:42Z",
+ "verdict": "PASS",
+ "version": "a8a1d7bd7198"
+}

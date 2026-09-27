@@ -1,0 +1,3 @@
+arm,job_start_utc,job_end_utc,ended_by,job_wall_s,input_load_s,blocked_on_dialog_s,active_routing_s,completed_passes,active_in_completed_passes_s,active_after_last_session_lost_s,blocked_share_of_wall
+a6,18:50:31,21:20:39.000,job cap (exit 124),9008.0,6.6,3386.7,5614.6,12,5286.5,328.1,0.376
+a8,18:50:31,21:11:55.600,plateau kill by the watcher (PLATEAU),8484.6,6.8,3388.6,5089.2,14,5073.6,15.6,0.399

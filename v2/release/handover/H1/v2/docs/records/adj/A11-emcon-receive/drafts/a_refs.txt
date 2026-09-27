@@ -1,0 +1,57 @@
+U26 | SN74LVC08APWR quad AND: EMCON gates for the PA rail, the HF rail and the D8 inhibit
+   pin 2 (PA_SW_EN) -> PA_SW_EN
+   pin 3 (PA_EN) -> PA_EN
+   pin 5 (HF_SW_EN) -> HF_SW_EN
+   pin 6 (HF_EN) -> HF_EN
+U13 | LM5176PWPR buck-boost controller, +13V8_PA from VBAT
+   pin 1 (PA_EN) -> PA_EN
+   pin 4 (PA_MODE) -> PA_MODE
+   pin 6 (PA_RT) -> PA_RT
+   pin 7 (PA_SLOPE) -> PA_SLOPE
+   pin 8 (PA_SS) -> PA_SS
+   pin 9 (PA_COMP) -> PA_COMP
+   pin 11 (PA_FB) -> PA_FB
+   pin 12 (+13V8_PA) -> +13V8_PA
+   pin 13 (PA_ISNS_N) -> PA_ISNS_N
+   pin 14 (PA_ISNS_P) -> PA_ISNS_P
+   pin 15 (PA_CSGF) -> PA_CSGF
+   pin 16 (PA_CSF) -> PA_CSF
+   pin 17 (PA_PGOOD) -> PA_PGOOD
+   pin 18 (PA_SW2) -> PA_SW2
+   pin 19 (PA_HDRV2) -> PA_HDRV2
+   pin 20 (PA_BOOT2) -> PA_BOOT2
+   pin 21 (PA_LDRV2) -> PA_LDRV2
+   pin 23 (PA_VCC) -> PA_VCC
+   pin 24 (+13V8_PA) -> +13V8_PA
+   pin 25 (PA_LDRV1) -> PA_LDRV1
+   pin 26 (PA_BOOT1) -> PA_BOOT1
+   pin 27 (PA_HDRV1) -> PA_HDRV1
+   pin 28 (PA_SW1) -> PA_SW1
+U15 | LM5176PWPR buck-boost controller, +12V_HF from VBAT
+   pin 1 (HF_EN) -> HF_EN
+   pin 4 (HF_MODE) -> HF_MODE
+   pin 6 (HF_RT) -> HF_RT
+   pin 7 (HF_SLOPE) -> HF_SLOPE
+   pin 8 (HF_SS) -> HF_SS
+   pin 9 (HF_COMP) -> HF_COMP
+   pin 11 (HF_FB) -> HF_FB
+   pin 12 (+12V_HF) -> +12V_HF
+   pin 13 (HF_ISNS_N) -> HF_ISNS_N
+   pin 14 (HF_ISNS_P) -> HF_ISNS_P
+   pin 15 (HF_CSGF) -> HF_CSGF
+   pin 16 (HF_CSF) -> HF_CSF
+   pin 17 (HF_PGOOD) -> HF_PGOOD
+   pin 18 (HF_SW2) -> HF_SW2
+   pin 19 (HF_HDRV2) -> HF_HDRV2
+   pin 20 (HF_BOOT2) -> HF_BOOT2
+   pin 21 (HF_LDRV2) -> HF_LDRV2
+   pin 23 (HF_VCC) -> HF_VCC
+   pin 24 (+12V_HF) -> +12V_HF
+   pin 25 (HF_LDRV1) -> HF_LDRV1
+   pin 26 (HF_BOOT1) -> HF_BOOT1
+   pin 27 (HF_HDRV1) -> HF_HDRV1
+   pin 28 (HF_SW1) -> HF_SW1
+J_PA | 13.8 V to the PA module on the face plate (JST-VH, 16 AWG): + -
+   pin 1 (Pin_1) -> +13V8_PA
+J_HF | 12.0 V to the QMX HF unit in its lid tray (JST-VH, in the lid harness): + -
+   pin 1 (Pin_1) -> +12V_HF

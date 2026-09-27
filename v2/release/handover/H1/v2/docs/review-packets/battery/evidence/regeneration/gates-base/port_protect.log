@@ -1,0 +1,3 @@
+port_protect: board P declares 0 external port(s); 0 found on this netlist
+verdict: port_protect           PASS         of 0 {"ports": 0, "unprotected": 0} | this board declares that no conductor of its own leaves the enclosure, so the rule is true of it with nothing to check: Rule TRN-001, 16 September 2026. NOTHING ON BOARD P LEAVES THE ENCLOSURE, and this is the sentence that says so rather than a file nobody wrote. P is the pack's own protection and 
+TRN-001 port_protect exit 0

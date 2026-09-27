@@ -1,0 +1,14 @@
+# Netlists read by EMCON.md against main 458b2873 (git show 458b2873:<path>, read 17:15 CEST 26 Sep 2026); tool drafts/tools/netcompare.py
+# main 458b2873 sha256: 2e8923d6853ee4e1 A, 6048ee56c48a028b B, 2834f0d8c4071d56 C, f13d8b70099ab03e D
+read: drafts/netlists/A-r6cand-pcb-a-power.net  other: main 458b2873 v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
+nets changed: 16 ['/FE_BLEED', '/FE_BLEED_G', '/FE_CTR2', '/FE_EN', '/FE_GVDD', '/FE_LATCH', '/FE_RUN', '/FE_UVS', '/FE_VISNS', '/FE_VZ', '/VBUS20', '/VIN_RAW', 'GND', 'unconnected-(U34-NC-Pad6)', 'unconnected-(U34-NC-Pad7)', 'unconnected-(U34-NC-Pad8)']
+parts changed: 24 [('C210', None, '1u 100V 1210'), ('C211', None, '10n'), ('C212', None, '100n'), ('C213', None, '2.2n'), ('C214', None, '100n'), ('C7', '3.3u', '4.7u'), ('D22', None, "BZT52C12-7-F zener, the restart guard's pull-up clamp"), ('Q36', None, '2N7002: FE_RUN high = latch sense held at 0 V (1 G, 2 S, 3 D)'), ('Q37', None, '2N7002: FE_RUN high = bleed off (1 G, 2 S, 3 D)'), ('Q38', None, 'CSD19532Q5B 100 V N-FET (the VBUS20 bleed switch)'), ('R14', '62k 1%', '91k 1%'), ('R195', None, '2k'), ('R196', None, '1k'), ('R197', None, '100k'), ('R198', None, '100k'), ('R199', None, '47k'), ('R200', None, '33k'), ('R201', None, '100k'), ('R202', None, '510R 1W 2512 (VBUS20 bleed)'), ('R203', None, '510R 1W 2512 (VBUS20 bleed)'), ('R204', None, '510R 1W 2512 (VBUS20 bleed)'), ('R205', None, '510R 1W 2512 (VBUS20 bleed)'), ('R206', None, '100k'), ('U34', None, "TPS37A010122DSKR 65 V OV/UV supervisor: the FE's enable and its restart latch")]
+read: drafts/netlists/B-r6cand-pcb-b-compute.net  other: main 458b2873 v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net
+nets changed: 0 []
+parts changed: 0 []
+read: drafts/netlists/D-r6cand-pcb-d-aprs.net  other: main 458b2873 v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net
+nets changed: 0 []
+parts changed: 0 []
+read: drafts/netlists/main-pcb-c-display.net  other: main 458b2873 v2/ecad/pcb-c-display-c8/out/pcb-c-display.net
+nets changed: 0 []
+parts changed: 0 []

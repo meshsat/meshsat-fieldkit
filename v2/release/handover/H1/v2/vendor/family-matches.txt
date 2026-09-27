@@ -1,0 +1,30 @@
+# Parts whose document names the FAMILY but never the exact order code, one per line with the reason.
+# kb_inventory.py FAILS on an undeclared one, and that is the point: this file is where someone has
+# to say out loud why a family sheet is enough for a specific part.
+#
+# It exists because two of these were wrong. `USBLC6-2SC6` was "covered" by a u-blox integration
+# manual that merely mentions the part, and `FH34SRJ-24S-0.5SH` by a Pervasive Displays driving-circuit
+# note. Neither is the manufacturer's document and neither part had one here; both were fetched on
+# 11 September 2026. A family match is only acceptable when the document is the MANUFACTURER'S OWN and
+# the order code is that family's options appended, which is what each reason below has to establish.
+
+# --- an order code is the family plus its options, from the manufacturer's own sheet ---
+TPS2065CDBV   # TI's TPS2061/2/3/5/6/7 sheet: the ordering table gives TPS2065DBV, SOT-23 (DBV) 5 pin, and C is the carrier/temperature option
+INA219AxDCN   # TI's INA219 sheet: x is the accuracy grade (A or B) and DCN the SOT-23-8 package, both in its ordering table
+TMP117xxDRV   # TI's TMP117 sheet: xx is the grade and DRV the WSON-6 package, both in its ordering table
+STM32H753VITx # ST's STM32H753xI datasheet: V is the 100 pin package, I the 2 MB flash, T the tray/tape option
+LG290P03AAMD  # Quectel's LG290P03 specification and hardware design: AAMD is the variant suffix of the documented module
+EL817S         # Everlight's EL817 series sheet: S is the SMD lead-form option of the same optocoupler
+ATP19-SL1-603-B0SA-03G   # C&K's ATP19 series sheet carries the ordering system these option fields index
+ATP16-SL1-403-M0SA-04G   # C&K's ATP16 series sheet, same ordering system
+ATP16-SL1-203-M0SA-04G   # C&K's ATP16 series sheet, same ordering system
+M2044SD3A01   # NKK's M series toggle sheet: M2044 is the DPDT ON-ON-ON circuit, SD3A01 the bushing, lever and terminal options
+AT428H         # NKK's accessories and hardware catalogue: AT428 is the boot, H the colour/material option
+D38999/26FC4SN # Glenair's D38999/26 sheet: FC4SN is shell 13, insert 13-4, key N, socket contacts, all from its own tables
+M85049/38S13N  # Glenair's M85049/38 strain-relief sheet: S13N is the shell size and finish from its own table
+FH34SRJ-24S-0.5SH   # Hirose's own FH34 series catalogue: 24S is the way count and 0.5SH the pitch and height, from its ordering page
+XAL1010-223ME  # Coilcraft's XAL1010 sheet: 223 is the inductance code and ME the packaging, from its own part table
+XAL1510-103MED # Coilcraft's XAL1510 sheet, same part table
+XAL4020-472ME  # Coilcraft's XAL40xx sheet, same part table
+XAL6060-332ME  # Coilcraft's XAL60xx sheet, same part table
+USBLC6-2SC6   # ST's USBLC6-2 datasheet: SC6 is the SOT-23-6 package option in its own ordering table

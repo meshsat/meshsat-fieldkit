@@ -1,0 +1,49 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "fail": 0,
+  "pass": 33
+ },
+ "denominator": 33,
+ "evidence": [],
+ "inputs": {
+  "block": {
+   "path": "pcb-e5-block.kicad_pcb",
+   "sha256_16": "686b29a734c55b9a"
+  },
+  "board": {
+   "from": "argv",
+   "path": "pcb-e5-block.kicad_pcb",
+   "sha256_16": "686b29a734c55b9a"
+  },
+  "board_a": {
+   "path": "/root/sweep38/v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb",
+   "sha256_16": "58e26c67987b1daa"
+  }
+ },
+ "missing_input": null,
+ "note": "the dock block against the board whose spring pins land on it, matched by position; board E5 has no netlist and this contract is between two BOARDS",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "SCH-003": "ddf200a8e65c127b"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "SCH-003"
+ ],
+ "tool": "check_contracts_e5",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "994b3d2315bb9859"
+ },
+ "ts": "2026-09-21T12:53:13Z",
+ "verdict": "PASS",
+ "version": "unknown",
+ "writer": {
+  "file": "block_contract.py",
+  "sha16": "b8533c8fde76ee32"
+ }
+}

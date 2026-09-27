@@ -1,0 +1,40 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "boards": 1,
+  "classes": 2,
+  "covered": 0,
+  "fail": 0
+ },
+ "denominator": 2,
+ "evidence": [],
+ "inputs": {
+  "board": "e5",
+  "list": "pcb_reliability.yaml"
+ },
+ "missing_input": null,
+ "note": "every part that carries load or sees cycling falls in a declared class with its cycle figure or the reason it has none, its load and the measure taken. It tests nothing: REL-001 is verified at the prototype and no board has been built",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "REL-001": "d94df1c6a3ff6010"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "REL-001"
+ ],
+ "tool": "reliability",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "994b3d2315bb9859"
+ },
+ "ts": "2026-09-21T12:53:08Z",
+ "verdict": "PASS",
+ "version": "unknown",
+ "writer": {
+  "file": "reliability.py",
+  "sha16": "149a48e5f2419955"
+ }
+}

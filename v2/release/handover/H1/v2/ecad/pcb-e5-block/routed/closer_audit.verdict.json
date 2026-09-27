@@ -1,0 +1,40 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "declared": 16,
+  "fail": 0,
+  "in_finish": 16,
+  "uncovered_classes": 0
+ },
+ "denominator": 16,
+ "evidence": [],
+ "inputs": {
+  "board": "e5",
+  "closers": "pcb_closers.yaml"
+ },
+ "missing_input": null,
+ "note": "every copper-changing stage of the finish declares the defect class it repairs and why prevention was not possible, and a class repaired more than once names what now prevents it. A class that names NOTHING is reported as uncovered and fails this rule, because that is the rule's second half unmet rather than a silence",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "PLC-002": "b4c23ff75d81a174"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "PLC-002"
+ ],
+ "tool": "closer_audit",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "994b3d2315bb9859"
+ },
+ "ts": "2026-09-21T12:53:08Z",
+ "verdict": "PASS",
+ "version": "unknown",
+ "writer": {
+  "file": "closer_audit.py",
+  "sha16": "fd296cc7fbcca99c"
+ }
+}
