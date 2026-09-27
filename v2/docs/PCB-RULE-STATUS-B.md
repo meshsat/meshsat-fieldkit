@@ -13,24 +13,24 @@ Measured on board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21.
 
 | historical aggregate, mixed revisions | rules | percent of this board's required rules |
 |---|---|---|
-| PASS | 19 | 33.9 |
-| FAIL | 4 | 7.1 |
-| INCONCLUSIVE | 33 | 58.9 |
+| PASS | 20 | 35.7 |
+| FAIL | 5 | 8.9 |
+| INCONCLUSIVE | 31 | 55.4 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **56** | 100.0 |
 
 | rule | effect | phase | result | why |
 |---|---|---|---|---|
 | ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **PASS** | OPERATING-ENVELOPE.md is the record that was verified (sha 44a031caee47ff9a) |
-| ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | no claims_check verdict for this board |
+| ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 86 |
 | SCH-001 ERC clean or explained | BLOCKER | SCHEMATIC | **PASS** | erc_gate PASS of 2879 |
 | SCH-002 board matches its netlist | BLOCKER | PLACED_BOARD | **FAIL** | netlist_board FAIL: {'agree': 6752, 'aliased_pins': 0, 'board_footprints': 957, 'board_only_inert': 0, 'fail': 1, 'netlist_refs': 931} |
 | SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed  |
 | SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **PASS** | safe_lines_b PASS of 5 |
 | SCH-005 every pad of a part's land carries a net or a declared no-connect | BLOCKER | SCHEMATIC | **PASS** | pin_map_lands_b PASS of 1270 |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **PASS** | derate PASS of 240 |
-| CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 4a03222f910fe5f5, current is 635ff031f210f48c |
-| SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 4a03222f910fe5f5, current is 635ff031f210f48c |
+| CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_b was taken 2026-09-20T14:11:40, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
+| SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_b was taken 2026-09-20T14:11:40, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
 | PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **PASS** | intent_rails PASS of 59 |
 | PWR-002 sequencing and inrush | MUST_JUSTIFY | SCHEMATIC | **PASS** | power_sequence PASS of 58 |
 | PWR-003 protection coordination | BLOCKER | SCHEMATIC | **PASS** | energy_chain_b PASS of 3 |
@@ -68,12 +68,12 @@ Measured on board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21.
 | PLN-001 no orphan copper | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed  |
 | EMC-001 source, path, victim | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed  |
 | MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **PASS** | check_pcb_b PASS of 2169 |
-| DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 4a03222f910fe5f5, current is 635ff031f210f48c |
+| DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | verify_deliverable_b INCONCLUSIVE: the folder judged here is meshsat-pcb-b-revA-B19-quote and this board declares B21, so its properties are a reading |
 | DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was |
 | TST-001 the board can be brought up safely | MUST_JUSTIFY | SCHEMATIC | **PASS** | PCB-BRING-UP.md is current with the registry |
 | REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **PASS** | reliability PASS of 47 |
-| DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 4a03222f910fe5f5, current is 635ff031f210f48c |
+| DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | final_gate_b INCONCLUSIVE: a deliverable folder at the declared phase B21: the only folder is meshsat-pcb-b-revA-B19-quote, a quote, and a folder is j |
 | DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **INCONCLUSIVE** | doc_provenance_b INCONCLUSIVE: board B declares B21 and the order set holds B16: the note beside those folders describes a board this project is not b |
-| OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | no final_gate verdict for this board |
+| OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 339 |
 | SGN-002 a prototype-only unknown is named | MUST_JUSTIFY | RELEASE_PACKAGE | **PASS** | PCB-PROTOTYPE-UNKNOWNS.md is current with the registry |

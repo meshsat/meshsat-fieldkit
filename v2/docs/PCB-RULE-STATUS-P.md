@@ -13,16 +13,16 @@ Measured on board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4.
 
 | historical aggregate, mixed revisions | rules | percent of this board's required rules |
 |---|---|---|
-| PASS | 29 | 60.4 |
-| FAIL | 7 | 14.6 |
-| INCONCLUSIVE | 12 | 25.0 |
+| PASS | 32 | 66.7 |
+| FAIL | 8 | 16.7 |
+| INCONCLUSIVE | 8 | 16.7 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **48** | 100.0 |
 
 | rule | effect | phase | result | why |
 |---|---|---|---|---|
 | ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **PASS** | OPERATING-ENVELOPE.md is the record that was verified (sha 44a031caee47ff9a) |
-| ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | no claims_check verdict for this board |
+| ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 86 |
 | SCH-001 ERC clean or explained | BLOCKER | SCHEMATIC | **PASS** | erc_gate PASS of 123 |
 | SCH-002 board matches its netlist | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | no netlist_parts verdict for this board |
 | SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts_p PASS of 9 |
@@ -58,14 +58,14 @@ Measured on board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4.
 | PLN-001 no orphan copper | BLOCKER | ROUTED_BOARD | **PASS** | check_zone_nets PASS of 1 |
 | EMC-001 source, path, victim | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | emc_sheet PASS of 2 |
 | MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **PASS** | check_pcb_p PASS of 46 |
-| DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 4a03222f910fe5f5, current is 635ff031f210f48c |
+| DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **PASS** | verify_deliverable_p PASS of 1 |
 | DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was |
 | TST-001 the board can be brought up safely | MUST_JUSTIFY | SCHEMATIC | **PASS** | PCB-BRING-UP.md is current with the registry |
 | REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **PASS** | reliability PASS of 9 |
 | BAT-001 the cell block is protected in hardware | BLOCKER | SCHEMATIC | **FAIL** | pack_protection FAIL: {'checks': 45, 'devices': 5, 'fail': 1, 'functions': 9, 'limits': 14, 'software_only': 9} |
 | BAT-002 the energy chain is bounded end to end | BLOCKER | SCHEMATIC | **PASS** | energy_chain PASS of 98 |
-| DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | taken under rule set 4a03222f910fe5f5, current is 635ff031f210f48c |
+| DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **PASS** | final_gate_p PASS of 1 |
 | DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **PASS** | doc_provenance_p PASS of 1 |
-| OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | no final_gate verdict for this board |
+| OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 339 |
 | SGN-002 a prototype-only unknown is named | MUST_JUSTIFY | RELEASE_PACKAGE | **PASS** | PCB-PROTOTYPE-UNKNOWNS.md is current with the registry |

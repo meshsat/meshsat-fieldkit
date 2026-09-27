@@ -145,7 +145,7 @@ whose evidence class differs from what the entry-script instrument of 20 Septemb
 evidence; a row whose class stayed the same and whose first failing cause moved (most often to TOOL_CHANGED
 from a cause checked after it) is counted but not listed.
 
-**2 of 338 required rows changed class; 95 more changed only their first failing cause.**
+**2 of 338 required rows changed class; 116 more changed only their first failing cause.**
 
 | board | rule | result | entry script alone | code bundle | files that moved |
 |---|---|---|---|---|---|
@@ -165,14 +165,14 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 
 | board | CURRENT_CANDIDATE | VALID_HISTORICAL | PASS on either | AWAITING_REVALIDATION | DESK_REVIEW | PHYSICAL_TEST | NO_EVIDENCE | pairs |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| A | 13 | 0 | 11 | 33 | 3 | 0 | 6 | 55 |
-| B | 13 | 0 | 11 | 32 | 4 | 0 | 7 | 56 |
-| C | 10 | 0 | 7 | 30 | 3 | 0 | 5 | 48 |
-| D | 11 | 0 | 8 | 32 | 3 | 0 | 5 | 51 |
-| E | 14 | 0 | 12 | 33 | 3 | 0 | 5 | 55 |
-| P | 14 | 0 | 11 | 27 | 3 | 0 | 4 | 48 |
-| E5 | 6 | 0 | 6 | 14 | 2 | 0 | 3 | 25 |
-| **set** | **81** | **0** | **66** | **201** | **21** | **0** | **35** | **338** |
+| A | 13 | 0 | 11 | 35 | 3 | 0 | 4 | 55 |
+| B | 13 | 0 | 11 | 34 | 4 | 0 | 5 | 56 |
+| C | 10 | 0 | 7 | 32 | 3 | 0 | 3 | 48 |
+| D | 11 | 0 | 8 | 34 | 3 | 0 | 3 | 51 |
+| E | 14 | 0 | 12 | 35 | 3 | 0 | 3 | 55 |
+| P | 14 | 0 | 11 | 29 | 3 | 0 | 2 | 48 |
+| E5 | 6 | 0 | 6 | 16 | 2 | 0 | 1 | 25 |
+| **set** | **81** | **0** | **66** | **215** | **21** | **0** | **21** | **338** |
 
 ## Rules with a PASS on the current candidate
 
@@ -258,9 +258,9 @@ tool.
 
 | cause | what it means | what re-validates it | A | B | C | D | E | P | E5 | set | of which a re-take alone makes current |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| UNBOUND | it records no artefact by content (a release-package reading: no file of the declared phase's folder by sha), so it cannot be tied to the candidate | the gate taught to record the netlist, board or package file sha it read, then re-taken | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 7 | 0 |
-| TOOL_CHANGED | the code that wrote it has changed since: its entry script or a local module it imports (exact by the reading's code bundle; for an older reading by its writer's hash and its imports' commit dates) | re-taken under the current tool (current only when the re-take also binds its artefact and configuration), or a compatibility entry proving the change is not semantic | 28 | 27 | 24 | 27 | 28 | 21 | 8 | 163 | 9 |
-| NOT_CURRENT_EVIDENCE | the reading itself is stale (epoch, rule digest, another board, or a tool meaning change) | re-taken | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 28 | 0 |
+| UNBOUND | it records no artefact by content (a release-package reading: no file of the declared phase's folder by sha), so it cannot be tied to the candidate | the gate taught to record the netlist, board or package file sha it read, then re-taken | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 14 | 0 |
+| TOOL_CHANGED | the code that wrote it has changed since: its entry script or a local module it imports (exact by the reading's code bundle; for an older reading by its writer's hash and its imports' commit dates) | re-taken under the current tool (current only when the re-take also binds its artefact and configuration), or a compatibility entry proving the change is not semantic | 31 | 30 | 27 | 30 | 31 | 24 | 11 | 184 | 9 |
+| NOT_CURRENT_EVIDENCE | the reading itself is stale (epoch, rule digest, another board, or a tool meaning change) | re-taken | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 14 | 0 |
 | TEMP_INPUT | it judged files in a temporary directory, not this tree | re-taken in this tree | 0 | 0 | 1 | 0 | 0 | 1 | 1 | 3 | 0 |
 
 ## Writers whose configuration is not declared yet
@@ -280,14 +280,16 @@ stream, which audits each writer by reading it, file and line.
 | `check_pcb_e.py` | MEC-001 |
 | `check_pcb_p.py` | MEC-001 |
 | `check_zone_nets.py` | PLN-001 |
+| `claims_check.py` | ENV-002 |
 | `class_floor.py` | IMP-002 |
 | `closer_audit.py` | PLC-002 |
 | `dc_drop.py` | PI-001, PI-002 |
 | `doc_provenance.py` | DOC-002 |
 | `emc_sheet.py` | EMC-001 |
-| `final_gate.py` | DOC-001 |
+| `final_gate.py` | DOC-001, OUT-001 |
 | `hardset.py` | PLC-001, RTE-002 |
 | `impedance_check.py` | IMP-001, PAIR-001 |
+| `layer_judge.py` | STK-002 |
 | `ledger_verify.py` | DOC-002 |
 | `place_audit.py` | PLC-001 |
 | `pruned_gate.py` | RTE-002 |
@@ -335,7 +337,7 @@ tools that have changed since, across every board's revisions.
 
 | historical aggregate, mixed revisions | PASS | FAIL | INCONCLUSIVE | WAIVED | pairs |
 |---|---:|---:|---:|---:|---:|
-| rule-board pairs | 193 (57.1 percent, mixed revisions) | 37 | 108 | 0 | 338 |
+| rule-board pairs | 206 (60.9 percent, mixed revisions) | 44 | 88 | 0 | 338 |
 
 ## How this page is computed
 

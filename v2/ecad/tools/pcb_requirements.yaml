@@ -7034,11 +7034,18 @@ records:
           this reading moves from INCONCLUSIVE to FAIL on the file at ffa585abf6c0a5c7. Taken by the session under the
           owner's standing rule of 26 September 2026, not by the owner; reversed by setting evidence_result back to
           INCONCLUSIVE with the reason. The remedy is EQ-25's design work, under FEA-002
+      - >-
+          v2/docs/CURRENT-EVIDENCE.md re-rendered on main's working checkout after the consolidated re-take's readings
+          were installed there (27 September 2026): rules_status three times and rules_render with every gitignored
+          reading main holds. The rows this record rests on read the same as in the clean clone's render; only later-phase
+          rows differ, because main also holds older release and layout readings the clean clone did not (NO_EVIDENCE 35
+          there, 21 here; current-candidate 81 and PASS on the current candidate 66 in both), so this reading stands on
+          the file at 3835e2850bae6aea
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
       - "v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3"
-      - "v2/docs/CURRENT-EVIDENCE.md@ffa585abf6c0a5c7"
+      - "v2/docs/CURRENT-EVIDENCE.md@3835e2850bae6aea"
     release_effect: BLOCKER
     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2825", "v2/docs/PANEL.md section 6", "v2/docs/feasibility/EMCON.md sections 4.1 and 4.2"]
     source_check: VERIFIED
@@ -8321,10 +8328,17 @@ records:
           Board P's other reasons move to current evidence too (PWR-001 FAIL, SI-001 INCONCLUSIVE, RF-002 PASS on
           inhibit_chain_p), and none of them is a reason this reading rests on, so it stands INCONCLUSIVE on the file at
           ffa585abf6c0a5c7
+      - >-
+          v2/docs/CURRENT-EVIDENCE.md re-rendered on main's working checkout after the consolidated re-take's readings
+          were installed there (27 September 2026): rules_status three times and rules_render with every gitignored
+          reading main holds. The rows this record rests on read the same as in the clean clone's render; only later-phase
+          rows differ, because main also holds older release and layout readings the clean clone did not (NO_EVIDENCE 35
+          there, 21 here; current-candidate 81 and PASS on the current candidate 66 in both), so this reading stands on
+          the file at 3835e2850bae6aea
     evidence_bound_to:
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
       - "v2/ecad/tools/gen_sch_p.py@91ccbb922c427d43"
-      - "v2/docs/CURRENT-EVIDENCE.md@ffa585abf6c0a5c7"
+      - "v2/docs/CURRENT-EVIDENCE.md@3835e2850bae6aea"
       - "v2/docs/review-packets/battery/REVIEW-REQUEST.md@91a257430cbeb53a"
     release_effect: BLOCKER
     source:
