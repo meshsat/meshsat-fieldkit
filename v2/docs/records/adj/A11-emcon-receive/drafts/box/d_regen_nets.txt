@@ -1,0 +1,30 @@
+TX_INHIBIT_n (4 nodes):
+   J_HARN1.8 (Pin_8) | A22 mezzanine harness J_MEZZ1 (IDC 2x8): USB pair, PTT mirror, inhibit, PA rail state, I2C, 3.3 V
+   R2.1  | 100k
+   TP15.1 (1) | TX_INHIBIT_n
+   U12.2 (TX_INHIBIT_n) | 74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)
+KEY (8 nodes):
+   Q6.2 (S) | 2N7002
+   R48.1  | 100
+   R49.1  | 1k
+   R72.1  | 10k
+   TP3.1 (1) | KEY
+   U12.4 (KEY) | 74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)
+   U13.2 (KEY) | 74LVC1G04 inverter: KEY -> SA868 PTT (low = transmit)
+   U14.1 (KEY) | 74LVC1G08 AND: PA_KEY = KEY AND PA_EN (A22's PA rail state)
+SA_PTT_n (2 nodes):
+   U13.4 (SA_PTT_n) | 74LVC1G04 inverter: KEY -> SA868 PTT (low = transmit)
+   U2.5 (PTT_n) | NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A)
+PA_KEY (7 nodes):
+   Q7.2 (S) | 2N7002
+   R50.1  | 1k
+   R52.1  | 1k
+   R74.1  | 10k
+   TP4.1 (1) | PA_KEY
+   U14.4 (PA_KEY) | 74LVC1G08 AND: PA_KEY = KEY AND PA_EN (A22's PA rail state)
+   U15.5 (EN/UVLO) | TPS22810DRV
+SA_PD (4 nodes):
+   Q8.2 (S) | 2N7002
+   R76.1  | 10k
+   TP14.1 (1) | SA_PD
+   U2.6 (PD) | NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A)

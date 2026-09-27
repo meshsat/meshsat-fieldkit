@@ -1,0 +1,13 @@
+clone HEAD 82dd1e4d
+gen_sch_a exit 0
+netlist a exit 0
+gen_sch_b exit 0
+netlist b exit 0
+gen_sch_c exit 0
+netlist c exit 0
+gen_sch_d exit 0
+netlist d exit 0
+gen_sch_e exit 0
+netlist e exit 0
+gen_sch_p exit 0
+netlist p exit 0

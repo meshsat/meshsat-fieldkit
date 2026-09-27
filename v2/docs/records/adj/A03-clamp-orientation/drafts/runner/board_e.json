@@ -1,0 +1,370 @@
+{
+ "board": "pcb-e1-dock-e7/pcb-e1-dock.kicad_pcb",
+ "sha256_16": "a462ac2620b9b8d3",
+ "parts": {
+  "D1": {
+   "lib": "D_SMC",
+   "layer": "F.Cu",
+   "at": [
+    98.93,
+    200.975
+   ],
+   "ref": "D1",
+   "value": "SMCJ40A (input surge: 40 V standoff on a line specified to 36 V, clamping 64.5 V)",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -3.4,
+     "y": 0.0,
+     "net": "/GND_V"
+    },
+    "2": {
+     "x": 3.4,
+     "y": 0.0,
+     "net": "/DC_P"
+    }
+   },
+   "vertical_marks": {
+    "F.SilkS": [
+     -4.91
+    ],
+    "F.Fab": [
+     -3.55,
+     -0.649,
+     0.501,
+     3.55
+    ]
+   },
+   "silk_vertical_on_pad1_side": [
+    -4.91
+   ],
+   "silk_vertical_on_pad2_side": [],
+   "fab_vertical": [
+    -3.55,
+    -0.649,
+    0.501,
+    3.55
+   ],
+   "line": 2701
+  },
+  "D2": {
+   "lib": "D_SMC",
+   "layer": "F.Cu",
+   "at": [
+    59.98,
+    199.975
+   ],
+   "ref": "D2",
+   "value": "SMCJ40A (bus clamp: 40 V standoff on the 9 to 36 V bus)",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -3.4,
+     "y": 0.0,
+     "net": "GND"
+    },
+    "2": {
+     "x": 3.4,
+     "y": 0.0,
+     "net": "/VIN_RAW"
+    }
+   },
+   "vertical_marks": {
+    "F.SilkS": [
+     -4.91
+    ],
+    "F.Fab": [
+     -3.55,
+     -0.649,
+     0.501,
+     3.55
+    ]
+   },
+   "silk_vertical_on_pad1_side": [
+    -4.91
+   ],
+   "silk_vertical_on_pad2_side": [],
+   "fab_vertical": [
+    -3.55,
+    -0.649,
+    0.501,
+    3.55
+   ],
+   "line": 5549
+  },
+  "D5": {
+   "lib": "D_SOD-123",
+   "layer": "F.Cu",
+   "at": [
+    159.93,
+    206.595
+   ],
+   "ref": "D5",
+   "value": "BAT54 boost diode INTVCC -> BOOST1",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -1.65,
+     "y": 0.0,
+     "net": "/TRK_BOOST1"
+    },
+    "2": {
+     "x": 1.65,
+     "y": 0.0,
+     "net": "/TRK_INTVCC"
+    }
+   },
+   "vertical_marks": {
+    "F.SilkS": [
+     -2.36
+    ],
+    "F.Fab": [
+     -1.4,
+     -0.35,
+     -0.35,
+     0.25,
+     1.4
+    ]
+   },
+   "silk_vertical_on_pad1_side": [
+    -2.36
+   ],
+   "silk_vertical_on_pad2_side": [],
+   "fab_vertical": [
+    -1.4,
+    -0.35,
+    -0.35,
+    0.25,
+    1.4
+   ],
+   "line": 13645
+  },
+  "D3": {
+   "lib": "D_SMC",
+   "layer": "F.Cu",
+   "at": [
+    17.72,
+    197.475
+   ],
+   "ref": "D3",
+   "value": "SMCJ18A (pack node clamp)",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -3.4,
+     "y": 0.0,
+     "net": "GND"
+    },
+    "2": {
+     "x": 3.4,
+     "y": 0.0,
+     "net": "/CELL_F"
+    }
+   },
+   "vertical_marks": {
+    "F.SilkS": [
+     -4.91
+    ],
+    "F.Fab": [
+     -3.55,
+     -0.649,
+     0.501,
+     3.55
+    ]
+   },
+   "silk_vertical_on_pad1_side": [
+    -4.91
+   ],
+   "silk_vertical_on_pad2_side": [],
+   "fab_vertical": [
+    -3.55,
+    -0.649,
+    0.501,
+    3.55
+   ],
+   "line": 16760
+  },
+  "D6": {
+   "lib": "D_SOD-123",
+   "layer": "F.Cu",
+   "at": [
+    165.925,
+    206.595
+   ],
+   "ref": "D6",
+   "value": "BAT54 boost diode INTVCC -> BOOST2",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -1.65,
+     "y": 0.0,
+     "net": "/TRK_BOOST2"
+    },
+    "2": {
+     "x": 1.65,
+     "y": 0.0,
+     "net": "/TRK_INTVCC"
+    }
+   },
+   "vertical_marks": {
+    "F.SilkS": [
+     -2.36
+    ],
+    "F.Fab": [
+     -1.4,
+     -0.35,
+     -0.35,
+     0.25,
+     1.4
+    ]
+   },
+   "silk_vertical_on_pad1_side": [
+    -2.36
+   ],
+   "silk_vertical_on_pad2_side": [],
+   "fab_vertical": [
+    -1.4,
+    -0.35,
+    -0.35,
+    0.25,
+    1.4
+   ],
+   "line": 18307
+  },
+  "D8": {
+   "lib": "D_SMB",
+   "layer": "F.Cu",
+   "at": [
+    17.915,
+    184.375
+   ],
+   "ref": "D8",
+   "value": "SS14 flyback across fan 2",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -2.15,
+     "y": 0.0,
+     "net": "/CELL_F"
+    },
+    "2": {
+     "x": 2.15,
+     "y": 0.0,
+     "net": "/FAN2_SW"
+    }
+   },
+   "vertical_marks": {
+    "F.SilkS": [
+     -3.66
+    ],
+    "F.Fab": [
+     -2.3,
+     -0.649,
+     0.501,
+     2.3
+    ]
+   },
+   "silk_vertical_on_pad1_side": [
+    -3.66
+   ],
+   "silk_vertical_on_pad2_side": [],
+   "fab_vertical": [
+    -2.3,
+    -0.649,
+    0.501,
+    2.3
+   ],
+   "line": 20957
+  },
+  "D4": {
+   "lib": "D_SMC",
+   "layer": "F.Cu",
+   "at": [
+    129.57,
+    203.325
+   ],
+   "ref": "D4",
+   "value": "SMCJ28A (panel surge: 28 V standoff, conducting from 31.1 V, below the 35 V bulk capacitors)",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -3.4,
+     "y": 0.0,
+     "net": "GND"
+    },
+    "2": {
+     "x": 3.4,
+     "y": 0.0,
+     "net": "/PV_P"
+    }
+   },
+   "vertical_marks": {
+    "F.SilkS": [
+     -4.91
+    ],
+    "F.Fab": [
+     -3.55,
+     -0.649,
+     0.501,
+     3.55
+    ]
+   },
+   "silk_vertical_on_pad1_side": [
+    -4.91
+   ],
+   "silk_vertical_on_pad2_side": [],
+   "fab_vertical": [
+    -3.55,
+    -0.649,
+    0.501,
+    3.55
+   ],
+   "line": 24244
+  },
+  "D7": {
+   "lib": "D_SMB",
+   "layer": "F.Cu",
+   "at": [
+    9.32,
+    184.375
+   ],
+   "ref": "D7",
+   "value": "SS14 flyback across fan 1",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -2.15,
+     "y": 0.0,
+     "net": "/CELL_F"
+    },
+    "2": {
+     "x": 2.15,
+     "y": 0.0,
+     "net": "/FAN1_SW"
+    }
+   },
+   "vertical_marks": {
+    "F.SilkS": [
+     -3.66
+    ],
+    "F.Fab": [
+     -2.3,
+     -0.649,
+     0.501,
+     2.3
+    ]
+   },
+   "silk_vertical_on_pad1_side": [
+    -3.66
+   ],
+   "silk_vertical_on_pad2_side": [],
+   "fab_vertical": [
+    -2.3,
+    -0.649,
+    0.501,
+    2.3
+   ],
+   "line": 31584
+  }
+ }
+}

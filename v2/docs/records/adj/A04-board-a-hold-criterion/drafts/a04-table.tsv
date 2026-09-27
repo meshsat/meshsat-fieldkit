@@ -1,0 +1,20 @@
+ref	role	conductor nets	netlist value	board value	value	footprint (netlist / board)	land vs library	pad nets	polarity (cathode mark / pad1 net nl,board)	row
+C11	on the conductor	VIN_RAW	10u 100V X7R 1210	10u 50V X7R 1210	DIFFERENT	Capacitor_SMD:C_1210_3225Metric / C_1210_3225Metric	identical	all 2 equal	n/a	DIFFERENT
+C12	on the conductor	VIN_RAW	10u 100V X7R 1210	10u 50V X7R 1210	DIFFERENT	Capacitor_SMD:C_1210_3225Metric / C_1210_3225Metric	identical	all 2 equal	n/a	DIFFERENT
+C120	on the conductor	PD_VBUS	10u 25V 1210	10u 25V 1210	equal	Capacitor_SMD:C_1210_3225Metric / C_1210_3225Metric	identical	all 2 equal	n/a	SAME
+C96	on the conductor	PD_CC1	330p	330p	equal	Capacitor_SMD:C_0603_1608Metric / C_0603_1608Metric	identical	all 2 equal	n/a	SAME
+C97	on the conductor	PD_CC2	330p	330p	equal	Capacitor_SMD:C_0603_1608Metric / C_0603_1608Metric	identical	all 2 equal	n/a	SAME
+D2	PROTECTION	VIN_RAW	SMCJ40A (VIN_RAW clamp behind E6's filter: 40 V standoff on 	SMCJ33A (VIN_RAW clamp behind E6's filter)	DIFFERENT	Diode_SMD:D_SMC / D_SMC	identical	all 2 equal	pad 1 / VIN_RAW,VIN_RAW	DIFFERENT
+D4	PROTECTION	PD_VBUS	SMBJ18A (VBUS clamp at the outlet)	SMBJ18A (VBUS clamp at the outlet)	equal	Diode_SMD:D_SMB / D_SMB	identical	all 2 equal	pad 1 / PD_VBUS,PD_VBUS	SAME
+J_AB2	on the conductor	USB_WALL_N,USB_WALL_P	A-B wall-port ribbon (IDC 2x5): the wall USB pair on the END	A-B wall-port ribbon (IDC 2x5): the wall USB pair on the END	equal	meshsat:IDC-Header_2x05_P2.54mm_Vertical_NarrowPad / IDC-Header_2x05_P2.54mm_Vertical_NarrowPad	identical	all 10 equal	n/a	SAME
+J_DOCK	port connector	VIN_RAW	spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-	spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-	equal	meshsat:PogoPins_2x6 / PogoPins_2x6	identical	all 12 equal	n/a	SAME
+J_USBC_OUT	port connector	PD_CC1,PD_CC2,PD_VBUS	wall USB-C outlet, power side (pigtail header): VBUS CC1 CC2	wall USB-C outlet, power side (pigtail header): VBUS CC1 CC2	equal	Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical / PinHeader_1x05_P2.54mm_Vertical	identical	all 5 equal	n/a	SAME
+J_USBW	port connector	USB_WALL_N,USB_WALL_P	JST-PH 1x4 socket: the wall USB-C data pair to B16 passes he	JST-PH 1x4 socket: the wall USB-C data pair to B16 passes he	equal	Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical / JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical	identical	all 4 equal	n/a	SAME
+Q2	on the conductor	VIN_RAW	CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 	CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 	equal	Package_SO:PowerPAK_SO-8_Single / PowerPAK_SO-8_Single	identical	all 5 equal	n/a	SAME
+R138	on the conductor	PD_VBUS	10mOhm 1% 2512 (ISNS)	10mOhm 1% 2512 (ISNS)	equal	Resistor_SMD:R_2512_6332Metric / R_2512_6332Metric	identical	all 2 equal	n/a	SAME
+R139	on the conductor	PD_VBUS	43R 1W 2512 (DSCG)	43R 1W 2512 (DSCG)	equal	Resistor_SMD:R_2512_6332Metric / R_2512_6332Metric	identical	all 2 equal	n/a	SAME
+R14	on the conductor	VIN_RAW	62k 1%	62k 1%	equal	Resistor_SMD:R_0603_1608Metric / R_0603_1608Metric	identical	all 2 equal	n/a	SAME
+TP13	on the conductor	VIN_RAW	VIN_RAW	VIN_RAW	equal	TestPoint:TestPoint_Pad_D1.5mm / TestPoint_Pad_D1.5mm	identical	all 1 equal	n/a	SAME
+U18	protection inside part (decision 31 declaration)	PD_CC1,PD_CC2,PD_VBUS	TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9,	TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9,	equal	Package_DFN_QFN:QFN-24-1EP_4x4mm_P0.5mm_EP2.5x2.5mm / QFN-24-1EP_4x4mm_P0.5mm_EP2.5x2.5mm	identical	all 25 equal	n/a	SAME
+U2	on the conductor	VIN_RAW	LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW	LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW	equal	Package_SO:HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP2.85x5.4mm / HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP2.85x5.4mm	identical	pin 13: netlist FE_ISNS_N, board ['VBUS20']; pin 14: netlist FE_ISNS_P, board ['FE_OUT']; pin 15: netlist FE_CSGF, board ['GND']; pin 16: netlist FE_CSF, board ['FE_CS']	n/a	DIFFERENT
+U29	PROTECTION	USB_WALL_N,USB_WALL_P	USBLC6-2SC6	USBLC6-2SC6	equal	Package_TO_SOT_SMD:SOT-23-6 / SOT-23-6	identical	all 6 equal	n/a	SAME

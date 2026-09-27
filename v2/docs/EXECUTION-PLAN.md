@@ -62,6 +62,14 @@ below stand.
 | C, architecture and feasibility | budgets with margins; interfaces owned on both ends; board B feasibility | per-board parts and circuit review |
 | D, parts and circuits, per board | exact part identities; symbol, footprint and pad parity; circuit review by function; regeneration parity | that board's layout entry |
 
+Review A is held in two parts, layer 1 (the product brief and the public pages) and layer 2 (the concept of operations
+and the operating envelope). Each is an AI review by one fresh reviewer who wrote none of the pages, labelled as an AI
+review and never a qualified review, against the layer's row of section 3 and the tests of section 2 of the owner's
+handover prompt, recorded at `v2/docs/reviews/REVIEW-A-LAYER-<n>-<date>.md`; layer 1's definition in full is the last
+section of `PRODUCT-BRIEF.md` (the session's choice under the owner's standing rule of 26 September 2026, registry
+SC-16). No record in this tree requires a qualified review of layers 1 or 2; the qualified reviews named elsewhere
+(D-09 and `reviews/REVIEW-ROUTES.md`) are not replaced by it.
+
 Milestones, each reported separately:
 - FOUNDATIONS_BASELINED
 - DESIGN_READY_FOR_LAYOUT (per board)

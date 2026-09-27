@@ -1,0 +1,104 @@
+VCC (A +3V3) = 3.328 V
+
+DEV_EN  (A U27.11 -> U7 AP64500 EN), Rd_eff 100.00k, pin source +1.0 uA; AP64500 VEN_H max 1.25 / VEN_L min 1.03
+   Rpu 33.3k  IIL spec bound (100 uA at 0 V)        V = 2.522 V  -> ON
+   Rpu 44k    ICC max 1.3 mA/16 at 3.6 V (derived)  V = 2.337 V  -> ON
+   Rpu 82k    ICC typ 0.7 mA/16 at 3.6 V (derived)  V = 1.871 V  -> ON
+   Rpu 100k   drawn value, Fig 8-2                  V = 1.714 V  -> ON
+   Rpu 150k   1.5x drawn                            V = 1.391 V  -> ON
+   Rpu 200k   2x drawn                              V = 1.176 V  -> UNDEFINED
+   guaranteed ON needs Rpu <= 181k; OFF needs Rpu >= 247k
+
+HEAT_EN  (A U27.6 -> U22 TPS259631 EN/UVLO), Rd_eff 100.00k, pin source -0.1 uA; TPS2596 VUVLO(R) max 1.22
+   Rpu 33.3k  IIL spec bound (100 uA at 0 V)        V = 2.495 V  -> ON
+   Rpu 44k    ICC max 1.3 mA/16 at 3.6 V (derived)  V = 2.303 V  -> ON
+   Rpu 82k    ICC typ 0.7 mA/16 at 3.6 V (derived)  V = 1.821 V  -> ON
+   Rpu 100k   drawn value, Fig 8-2                  V = 1.659 V  -> ON
+   Rpu 150k   1.5x drawn                            V = 1.325 V  -> ON
+   Rpu 200k   2x drawn                              V = 1.103 V  -> UNDEFINED
+   guaranteed ON needs Rpu <= 171k; OFF needs Rpu >= 206k
+
+MON_EN  (A U27.5 -> U21 TPS259631 EN/UVLO), Rd_eff 100.00k, pin source -0.1 uA; TPS2596 VUVLO(R) max 1.22
+   Rpu 33.3k  IIL spec bound (100 uA at 0 V)        V = 2.495 V  -> ON
+   Rpu 44k    ICC max 1.3 mA/16 at 3.6 V (derived)  V = 2.303 V  -> ON
+   Rpu 82k    ICC typ 0.7 mA/16 at 3.6 V (derived)  V = 1.821 V  -> ON
+   Rpu 100k   drawn value, Fig 8-2                  V = 1.659 V  -> ON
+   Rpu 150k   1.5x drawn                            V = 1.325 V  -> ON
+   Rpu 200k   2x drawn                              V = 1.103 V  -> UNDEFINED
+   guaranteed ON needs Rpu <= 171k; OFF needs Rpu >= 206k
+
+D8_EN  (A U27.7 -> U23 TPS259631 EN/UVLO), Rd_eff 100.00k, pin source -0.1 uA; TPS2596 VUVLO(R) max 1.22
+   Rpu 33.3k  IIL spec bound (100 uA at 0 V)        V = 2.495 V  -> ON
+   Rpu 44k    ICC max 1.3 mA/16 at 3.6 V (derived)  V = 2.303 V  -> ON
+   Rpu 82k    ICC typ 0.7 mA/16 at 3.6 V (derived)  V = 1.821 V  -> ON
+   Rpu 100k   drawn value, Fig 8-2                  V = 1.659 V  -> ON
+   Rpu 150k   1.5x drawn                            V = 1.325 V  -> ON
+   Rpu 200k   2x drawn                              V = 1.103 V  -> UNDEFINED
+   guaranteed ON needs Rpu <= 171k; OFF needs Rpu >= 206k
+
+POE_EN  (A U27.8 -> U16 LM5176 EN/UVLO), Rd_eff 9.09k, pin source +3.0 uA; LM5176 VEN(OP) MIN 1.17 (worst for OFF), R75 10k + R114 100k
+   Rpu 33.3k  IIL spec bound (100 uA at 0 V)        V = 0.735 V  -> UNDEFINED
+   Rpu 44k    ICC max 1.3 mA/16 at 3.6 V (derived)  V = 0.589 V  -> UNDEFINED
+   Rpu 82k    ICC typ 0.7 mA/16 at 3.6 V (derived)  V = 0.356 V  -> OFF
+   Rpu 100k   drawn value, Fig 8-2                  V = 0.302 V  -> OFF
+   Rpu 150k   1.5x drawn                            V = 0.216 V  -> OFF
+   Rpu 200k   2x drawn                              V = 0.171 V  -> OFF
+   guaranteed ON needs Rpu <= 17k; OFF needs Rpu >= 48k
+
+PD_EN  (A U28.13 -> U19 LM5176 EN/UVLO), Rd_eff 9.09k, pin source +3.0 uA; LM5176 VEN(OP) MIN 1.17 (worst for OFF), R134 10k + R143 100k
+   Rpu 33.3k  IIL spec bound (100 uA at 0 V)        V = 0.735 V  -> UNDEFINED
+   Rpu 44k    ICC max 1.3 mA/16 at 3.6 V (derived)  V = 0.589 V  -> UNDEFINED
+   Rpu 82k    ICC typ 0.7 mA/16 at 3.6 V (derived)  V = 0.356 V  -> OFF
+   Rpu 100k   drawn value, Fig 8-2                  V = 0.302 V  -> OFF
+   Rpu 150k   1.5x drawn                            V = 0.216 V  -> OFF
+   Rpu 200k   2x drawn                              V = 0.171 V  -> OFF
+   guaranteed ON needs Rpu <= 17k; OFF needs Rpu >= 48k
+
+PA_SW_EN  (A U27.9 -> U26 LVC08 1B), Rd_eff 100.00k, pin source +5.0 uA; LVC08 VIH 2.0 / VIL 0.8
+   Rpu 33.3k  IIL spec bound (100 uA at 0 V)        V = 2.622 V  -> ON
+   Rpu 44k    ICC max 1.3 mA/16 at 3.6 V (derived)  V = 2.460 V  -> ON
+   Rpu 82k    ICC typ 0.7 mA/16 at 3.6 V (derived)  V = 2.051 V  -> ON
+   Rpu 100k   drawn value, Fig 8-2                  V = 1.914 V  -> UNDEFINED
+   Rpu 150k   1.5x drawn                            V = 1.631 V  -> UNDEFINED
+   Rpu 200k   2x drawn                              V = 1.443 V  -> UNDEFINED
+   guaranteed ON needs Rpu <= 89k; OFF needs Rpu >= 843k
+
+HF_SW_EN  (A U27.10 -> U26 LVC08 2B), Rd_eff 100.00k, pin source +5.0 uA; LVC08 VIH 2.0 / VIL 0.8
+   Rpu 33.3k  IIL spec bound (100 uA at 0 V)        V = 2.622 V  -> ON
+   Rpu 44k    ICC max 1.3 mA/16 at 3.6 V (derived)  V = 2.460 V  -> ON
+   Rpu 82k    ICC typ 0.7 mA/16 at 3.6 V (derived)  V = 2.051 V  -> ON
+   Rpu 100k   drawn value, Fig 8-2                  V = 1.914 V  -> UNDEFINED
+   Rpu 150k   1.5x drawn                            V = 1.631 V  -> UNDEFINED
+   Rpu 200k   2x drawn                              V = 1.443 V  -> UNDEFINED
+   guaranteed ON needs Rpu <= 89k; OFF needs Rpu >= 843k
+
+CHG_INHIBIT  (A U27.4 -> Q6 2N7002 gate), Rd_eff 100.00k, pin source +0.0 uA; 2N7002 Vth 1.0 / 1.6 / 2.5
+   Rpu 33.3k  IIL spec bound (100 uA at 0 V)        V = 2.497 V  -> UNDEFINED
+   Rpu 44k    ICC max 1.3 mA/16 at 3.6 V (derived)  V = 2.306 V  -> UNDEFINED
+   Rpu 82k    ICC typ 0.7 mA/16 at 3.6 V (derived)  V = 1.826 V  -> UNDEFINED
+   Rpu 100k   drawn value, Fig 8-2                  V = 1.664 V  -> UNDEFINED
+   Rpu 150k   1.5x drawn                            V = 1.331 V  -> UNDEFINED
+   Rpu 200k   2x drawn                              V = 1.109 V  -> UNDEFINED
+   guaranteed ON needs Rpu <= 33k; OFF needs Rpu >= 233k
+
+DEV_EN typical: Rpu 100k, IEN 1.5 uA -> 1.739 V; after turn-on IEN 5.5 uA -> 1.939 V
+DEV_EN typical: Rpu 82k,  IEN 1.5 uA -> 1.893 V
+DEV_EN with U27 unpowered (+3V3 off, rail at 0 V through its loads): IEN 1..2 uA x (100k || 100k) = 0.050..0.100 V
+DEV_EN if a PCA9535 (no pull-up) were fitted and R42 kept: IEN 1..2 uA x 100k = 0.10..0.20 V < VEN_L 1.03 V: deadlock
+DEV_EN fix R42 100k to +3V3 instead of GND: V = VCC = 3.33 V (any Rpu), >> 1.25 V
+DEV_EN fix with +3V3 off: IEN 2 uA x (R42 100k + R48/R49 41.6k to GND) = 0.28 V < 1.03 V
+
+pull-down 10.0k: resistive worst (Rpu 33.3k) 0.807 V; current-source worst (100 uA) 1.050 V; drive cost 0.33 mA
+pull-down 4.7k: resistive worst (Rpu 33.3k) 0.432 V; current-source worst (100 uA) 0.494 V; drive cost 0.71 mA
+
+U21/U22 OVLO trips at VBAT = 12.87 V (VOVLO(R) min 1.17 V, 100k/10k)
+U21/U22 OVLO trips at VBAT = 13.20 V (VOVLO(R) typ 1.20 V, 100k/10k)
+U21/U22 OVLO trips at VBAT = 13.42 V (VOVLO(R) max 1.22 V, 100k/10k)
+U21/U22 OVLO releases below VBAT = 11.88 V (VOVLO(F) min 1.08 V)
+U21/U22 OVLO releases below VBAT = 12.10 V (VOVLO(F) typ 1.10 V)
+U21/U22 OVLO releases below VBAT = 12.43 V (VOVLO(F) max 1.13 V)
+VBAT declared 14.4 V nominal, v_work 16.8 V (gen_sch_a.py:28)
+U23 (from +5V_DEV 5.1 V): OVLO pin = 0.464 V (recommended range 0.5 to 2 V)
+proposal 143k/10k: trip 17.9 to 18.7 V, release 16.5 to 17.3 V
+
+F-SQ-04 divider restored literally (62k over 10k from a 3.328 V logic high): EN/UVLO = 0.462 V < VEN(OP) min 1.17 V: stage never runs

@@ -1,0 +1,150 @@
+{
+ "fetched_utc": "2026-09-25T21:30:29Z (C19224 and C224052 a few minutes earlier)",
+ "api": "https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=<code>",
+ "records": {
+  "C113974": {
+   "productModel": "SMBJ5.0A",
+   "brand": "MDD(Microdiode Semiconductor)",
+   "package": "DO-214AA(SMB)",
+   "polarity": "Unidirectional",
+   "config": null,
+   "vrwm": "5V",
+   "pdfUrl": "https://datasheet.lcsc.com/datasheet/pdf/2fdb55289569ebfc0bc21eab3853afe6.pdf?productCode=C113974",
+   "raw_sha256_16": "5999bd16032e9e9b"
+  },
+  "C135085": {
+   "productModel": "SMBJ58A-13-F",
+   "brand": "DIODES",
+   "package": "SMB",
+   "polarity": "Unidirectional",
+   "config": null,
+   "vrwm": "58V",
+   "pdfUrl": "https://datasheet.lcsc.com/datasheet/pdf/a98dcba2e58a9f9a1a005c1c0c468785.pdf?productCode=C135085",
+   "raw_sha256_16": "e9d87b15d1b40ede"
+  },
+  "C151256": {
+   "productModel": "SMBJ18A",
+   "brand": "Littelfuse",
+   "package": "DO-214AA",
+   "polarity": "Unidirectional",
+   "config": null,
+   "vrwm": "18V",
+   "pdfUrl": "https://datasheet.lcsc.com/datasheet/pdf/4ab84a227fae39f9eac85241b8264ead.pdf?productCode=C151256",
+   "raw_sha256_16": "cd1004c4f2fda7e2"
+  },
+  "C19224": {
+   "productModel": "PESD5V0S1BA,115",
+   "brand": "Nexperia",
+   "package": "SOD-323",
+   "polarity": "Bidirectional",
+   "config": null,
+   "vrwm": "5V",
+   "pdfUrl": "https://datasheet.lcsc.com/datasheet/pdf/dd1aa251f61f8aba7aba621165608b08.pdf?productCode=C19224",
+   "raw_sha256_16": "3cd63afc41c45283"
+  },
+  "C224047": {
+   "productModel": "SMCJ28A",
+   "brand": "Littelfuse",
+   "package": "DO-214AB",
+   "polarity": "Unidirectional",
+   "config": null,
+   "vrwm": "28V",
+   "pdfUrl": "https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C224047",
+   "raw_sha256_16": "ccb876725c2b9c13"
+  },
+  "C224052": {
+   "productModel": "SMCJ40A",
+   "brand": "Littelfuse",
+   "package": "DO-214AB",
+   "polarity": "Unidirectional",
+   "config": null,
+   "vrwm": "40V",
+   "pdfUrl": "https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C224052",
+   "raw_sha256_16": "9acc3b7108f79cf4"
+  },
+  "C268712": {
+   "productModel": "SS2040FL",
+   "brand": "PANJIT",
+   "package": "SOD-123FL",
+   "polarity": null,
+   "config": "1 Independent",
+   "vrwm": null,
+   "pdfUrl": "https://datasheet.lcsc.com/datasheet/pdf/fbe7b074b28942710b4075bd637e687d.pdf?productCode=C268712",
+   "raw_sha256_16": "074699d0724c7fe4"
+  },
+  "C364296": {
+   "productModel": "SMBJ20A",
+   "brand": "MDD(Microdiode Semiconductor)",
+   "package": "DO-214AA(SMB)",
+   "polarity": "Unidirectional",
+   "config": null,
+   "vrwm": "20V",
+   "pdfUrl": "https://datasheet.lcsc.com/datasheet/pdf/2fdb55289569ebfc0bc21eab3853afe6.pdf?productCode=C364296",
+   "raw_sha256_16": "4b46e17dcd800a8e"
+  },
+  "C374030": {
+   "productModel": "SMCJ18A",
+   "brand": "Littelfuse",
+   "package": "DO-214AB",
+   "polarity": "Unidirectional",
+   "config": null,
+   "vrwm": "18V",
+   "pdfUrl": "https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C374030",
+   "raw_sha256_16": "a9b666c5696b401c"
+  },
+  "C42371548": {
+   "productModel": "SMCJ33A",
+   "brand": "R+O",
+   "package": "SMC(DO-214AB)",
+   "polarity": "Unidirectional",
+   "config": null,
+   "vrwm": "33V",
+   "pdfUrl": "https://datasheet.lcsc.com/datasheet/pdf/63434cf44d11833c6d7a145dda2ad39c.pdf?productCode=C42371548",
+   "raw_sha256_16": "408b2160e815d183"
+  },
+  "C42371550": {
+   "productModel": "SMCJ15A",
+   "brand": "R+O",
+   "package": "SMC(DO-214AB)",
+   "polarity": "Unidirectional",
+   "config": null,
+   "vrwm": "15V",
+   "pdfUrl": "https://datasheet.lcsc.com/datasheet/pdf/63434cf44d11833c6d7a145dda2ad39c.pdf?productCode=C42371550",
+   "raw_sha256_16": "964a30eb84dfc2ae"
+  },
+  "C51897884": {
+   "result": null,
+   "raw_sha256_16": "a86e135fd9e76049"
+  },
+  "C7502705": {
+   "productModel": "BAT54W",
+   "brand": "R+O",
+   "package": "SOD-123",
+   "polarity": null,
+   "config": "Standalone",
+   "vrwm": null,
+   "pdfUrl": "https://datasheet.lcsc.com/datasheet/pdf/ff1378297995998b12f7103bcafc2a22.pdf?productCode=C7502705",
+   "raw_sha256_16": "a09ffbf3429f1a04"
+  },
+  "C7519": {
+   "productModel": "USBLC6-2SC6",
+   "brand": "ST",
+   "package": "SOT-23-6L",
+   "polarity": "Unidirectional",
+   "config": null,
+   "vrwm": "5.25V",
+   "pdfUrl": "https://datasheet.lcsc.com/datasheet/pdf/0d3a2ab954b34651a0695e7ccf534db0.pdf?productCode=C7519",
+   "raw_sha256_16": "6de1e045de7d5233"
+  },
+  "C83270": {
+   "productModel": "SMBJ6.0A",
+   "brand": "Littelfuse",
+   "package": "DO-214AA",
+   "polarity": "Unidirectional",
+   "config": null,
+   "vrwm": "6V",
+   "pdfUrl": "https://datasheet.lcsc.com/datasheet/pdf/4ab84a227fae39f9eac85241b8264ead.pdf?productCode=C83270",
+   "raw_sha256_16": "3f9b679830d55c1c"
+  }
+ }
+}

@@ -1,0 +1,842 @@
+{
+ "ids": {
+  "netlist": {
+   "path": "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net",
+   "sha256": "aa1372ba3932610f27c3fd5aac5a5e1663600c1cae4a5f92712b9710f114d4f4",
+   "worktree_sha256": "aa1372ba3932610f27c3fd5aac5a5e1663600c1cae4a5f92712b9710f114d4f4",
+   "last_commit": "0d1e2ef6 2026-09-20T14:23:13+02:00"
+  },
+  "intent": {
+   "path": "v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json",
+   "sha256": "abeb227d673b3af39f12b17f6b8f0094412e93ded959a0e9f1321decfb3f51f0",
+   "worktree_sha256": "abeb227d673b3af39f12b17f6b8f0094412e93ded959a0e9f1321decfb3f51f0",
+   "last_commit": "0d1e2ef6 2026-09-20T14:23:13+02:00"
+  },
+  "board": {
+   "path": "v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb",
+   "sha256": "58e26c67987b1daa8eb236777a435480617ba0e918e263a5398e5060d64db3e9",
+   "worktree_sha256": "58e26c67987b1daa8eb236777a435480617ba0e918e263a5398e5060d64db3e9",
+   "last_commit": "b7e0d28f 2026-09-15T07:50:52+02:00"
+  },
+  "board_table": {
+   "path": "v2/ecad/tools/boards/a.json",
+   "sha256": "0fd6672749bc8875e36e4c6093c8f37ea6e33cd1119a83155b436a77a156172c",
+   "worktree_sha256": "0fd6672749bc8875e36e4c6093c8f37ea6e33cd1119a83155b436a77a156172c",
+   "last_commit": "1bf7fca1 2026-09-21T23:45:42+02:00"
+  },
+  "commit": "82dd1e4dc44efabeee1164a995cda4e866610f3d"
+ },
+ "phase_texts": [
+  {
+   "text": "MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A32)",
+   "layer": "F.Silkscreen"
+  }
+ ],
+ "board_table_phase": "A32",
+ "external_ports": [
+  {
+   "ref": "J_DOCK",
+   "pins": [
+    "1",
+    "2"
+   ],
+   "why": "shore and vehicle DC arriving over the dock from the wall receptacle; the USB pair and the spare on this same connector are board A to board E INSIDE the case and are not external conductors"
+  },
+  {
+   "ref": "J_USBW",
+   "why": "the wall USB host port through the MIL-DTL-38999 receptacle: a person plugs a stranger's stick into this"
+  },
+  {
+   "ref": "J_USBC_OUT",
+   "why": "the USB-C outlet on the connector plate, out of the case",
+   "protected_in_part": {
+    "pins": [
+     "2",
+     "3"
+    ],
+    "part": "U18",
+    "cite": "TI TPS25740A datasheet, v2/vendor/ti/ti-tps25740.pdf section 9.1.1 System-Level ESD Protection: 'The device has ESD protection built into the CC1 and CC2 pins so that no external protection is necessary.' Its absolute maximum on CC1 and CC2 is -0.3 to 6 V, and the VBUS path its own Figure 37 clamps is D4, an SMBJ18A, which this board already carries. Owner decision 31, ruled by the session on 21 September 2026 against the IEC 61000-4-2 level 4 that decision 34 states."
+   },
+   "_protected_in_part_why": "pins 2 and 3 are PD_CC1 and PD_CC2 and they reach U18 pins 2 and 3 with only their own CC capacitors C96 and C97 between, which is the finding port_protect made; what it could not know is that the pins they arrive at carry the protection themselves, which is the part maker's own sentence and not this project's judgement"
+  }
+ ],
+ "conductors": [
+  {
+   "port": "J_DOCK",
+   "pin": "1",
+   "net": "VIN_RAW",
+   "declared_pin": true
+  },
+  {
+   "port": "J_DOCK",
+   "pin": "2",
+   "net": "VIN_RAW",
+   "declared_pin": true
+  },
+  {
+   "port": "J_DOCK",
+   "pin": "3",
+   "net": "VIN_RAW",
+   "declared_pin": false
+  },
+  {
+   "port": "J_DOCK",
+   "pin": "4",
+   "net": "VIN_RAW",
+   "declared_pin": false
+  },
+  {
+   "port": "J_USBW",
+   "pin": "1",
+   "net": "USB_WALL_P",
+   "declared_pin": true
+  },
+  {
+   "port": "J_USBW",
+   "pin": "2",
+   "net": "USB_WALL_N",
+   "declared_pin": true
+  },
+  {
+   "port": "J_USBC_OUT",
+   "pin": "1",
+   "net": "PD_VBUS",
+   "declared_pin": true
+  },
+  {
+   "port": "J_USBC_OUT",
+   "pin": "2",
+   "net": "PD_CC1",
+   "declared_pin": true
+  },
+  {
+   "port": "J_USBC_OUT",
+   "pin": "3",
+   "net": "PD_CC2",
+   "declared_pin": true
+  }
+ ],
+ "node_sets": {
+  "PD_CC1": {
+   "conductor_pins": [
+    "J_USBC_OUT.2"
+   ],
+   "netlist_nodes": [
+    "C96.1",
+    "J_USBC_OUT.2",
+    "U18.2"
+   ],
+   "board_nodes": [
+    "C96.1",
+    "J_USBC_OUT.2",
+    "U18.2"
+   ],
+   "equal": true,
+   "netlist_only": [],
+   "board_only": []
+  },
+  "PD_CC2": {
+   "conductor_pins": [
+    "J_USBC_OUT.3"
+   ],
+   "netlist_nodes": [
+    "C97.1",
+    "J_USBC_OUT.3",
+    "U18.3"
+   ],
+   "board_nodes": [
+    "C97.1",
+    "J_USBC_OUT.3",
+    "U18.3"
+   ],
+   "equal": true,
+   "netlist_only": [],
+   "board_only": []
+  },
+  "PD_VBUS": {
+   "conductor_pins": [
+    "J_USBC_OUT.1"
+   ],
+   "netlist_nodes": [
+    "C120.1",
+    "D4.1",
+    "J_USBC_OUT.1",
+    "R138.2",
+    "R139.2",
+    "U18.21"
+   ],
+   "board_nodes": [
+    "C120.1",
+    "D4.1",
+    "J_USBC_OUT.1",
+    "R138.2",
+    "R139.2",
+    "U18.21"
+   ],
+   "equal": true,
+   "netlist_only": [],
+   "board_only": []
+  },
+  "USB_WALL_N": {
+   "conductor_pins": [
+    "J_USBW.2"
+   ],
+   "netlist_nodes": [
+    "J_AB2.2",
+    "J_USBW.2",
+    "U29.3",
+    "U29.4"
+   ],
+   "board_nodes": [
+    "J_AB2.2",
+    "J_USBW.2",
+    "U29.3",
+    "U29.4"
+   ],
+   "equal": true,
+   "netlist_only": [],
+   "board_only": []
+  },
+  "USB_WALL_P": {
+   "conductor_pins": [
+    "J_USBW.1"
+   ],
+   "netlist_nodes": [
+    "J_AB2.1",
+    "J_USBW.1",
+    "U29.1",
+    "U29.6"
+   ],
+   "board_nodes": [
+    "J_AB2.1",
+    "J_USBW.1",
+    "U29.1",
+    "U29.6"
+   ],
+   "equal": true,
+   "netlist_only": [],
+   "board_only": []
+  },
+  "VIN_RAW": {
+   "conductor_pins": [
+    "J_DOCK.1",
+    "J_DOCK.2",
+    "J_DOCK.3",
+    "J_DOCK.4"
+   ],
+   "netlist_nodes": [
+    "C11.1",
+    "C12.1",
+    "D2.1",
+    "J_DOCK.1",
+    "J_DOCK.2",
+    "J_DOCK.3",
+    "J_DOCK.4",
+    "Q2.5",
+    "R14.1",
+    "TP13.1",
+    "U2.2",
+    "U2.3"
+   ],
+   "board_nodes": [
+    "C11.1",
+    "C12.1",
+    "D2.1",
+    "J_DOCK.1",
+    "J_DOCK.2",
+    "J_DOCK.3",
+    "J_DOCK.4",
+    "Q2.5",
+    "R14.1",
+    "TP13.1",
+    "U2.2",
+    "U2.3"
+   ],
+   "equal": true,
+   "netlist_only": [],
+   "board_only": []
+  }
+ },
+ "rows": [
+  {
+   "ref": "C11",
+   "role": "on the conductor",
+   "on_nets": [
+    "VIN_RAW"
+   ],
+   "netlist_value": "10u 100V X7R 1210",
+   "board_value": "10u 50V X7R 1210",
+   "value_equal": false,
+   "netlist_footprint": "Capacitor_SMD:C_1210_3225Metric",
+   "board_fpid": "C_1210_3225Metric",
+   "footprint_name_equal": true,
+   "land_vs_library": "IDENTICAL to Capacitor_SMD:C_1210_3225Metric",
+   "land_detail": null,
+   "netlist_lcsc": null,
+   "board_lcsc": null,
+   "pad_net_diffs": [],
+   "pins_compared": 2,
+   "board_layer": "F.Cu",
+   "board_pos_mm": [
+    35.0,
+    45.5
+   ],
+   "board_rot": 90.0,
+   "verdict": "DIFFERENT"
+  },
+  {
+   "ref": "C12",
+   "role": "on the conductor",
+   "on_nets": [
+    "VIN_RAW"
+   ],
+   "netlist_value": "10u 100V X7R 1210",
+   "board_value": "10u 50V X7R 1210",
+   "value_equal": false,
+   "netlist_footprint": "Capacitor_SMD:C_1210_3225Metric",
+   "board_fpid": "C_1210_3225Metric",
+   "footprint_name_equal": true,
+   "land_vs_library": "IDENTICAL to Capacitor_SMD:C_1210_3225Metric",
+   "land_detail": null,
+   "netlist_lcsc": null,
+   "board_lcsc": null,
+   "pad_net_diffs": [],
+   "pins_compared": 2,
+   "board_layer": "F.Cu",
+   "board_pos_mm": [
+    35.0,
+    51.0
+   ],
+   "board_rot": 90.0,
+   "verdict": "DIFFERENT"
+  },
+  {
+   "ref": "C120",
+   "role": "on the conductor",
+   "on_nets": [
+    "PD_VBUS"
+   ],
+   "netlist_value": "10u 25V 1210",
+   "board_value": "10u 25V 1210",
+   "value_equal": true,
+   "netlist_footprint": "Capacitor_SMD:C_1210_3225Metric",
+   "board_fpid": "C_1210_3225Metric",
+   "footprint_name_equal": true,
+   "land_vs_library": "IDENTICAL to Capacitor_SMD:C_1210_3225Metric",
+   "land_detail": null,
+   "netlist_lcsc": null,
+   "board_lcsc": null,
+   "pad_net_diffs": [],
+   "pins_compared": 2,
+   "board_layer": "F.Cu",
+   "board_pos_mm": [
+    161.835,
+    56.975
+   ],
+   "board_rot": 0.0,
+   "verdict": "SAME"
+  },
+  {
+   "ref": "C96",
+   "role": "on the conductor",
+   "on_nets": [
+    "PD_CC1"
+   ],
+   "netlist_value": "330p",
+   "board_value": "330p",
+   "value_equal": true,
+   "netlist_footprint": "Capacitor_SMD:C_0603_1608Metric",
+   "board_fpid": "C_0603_1608Metric",
+   "footprint_name_equal": true,
+   "land_vs_library": "IDENTICAL to Capacitor_SMD:C_0603_1608Metric",
+   "land_detail": null,
+   "netlist_lcsc": null,
+   "board_lcsc": null,
+   "pad_net_diffs": [],
+   "pins_compared": 2,
+   "board_layer": "F.Cu",
+   "board_pos_mm": [
+    152.105,
+    61.215
+   ],
+   "board_rot": 0.0,
+   "verdict": "SAME"
+  },
+  {
+   "ref": "C97",
+   "role": "on the conductor",
+   "on_nets": [
+    "PD_CC2"
+   ],
+   "netlist_value": "330p",
+   "board_value": "330p",
+   "value_equal": true,
+   "netlist_footprint": "Capacitor_SMD:C_0603_1608Metric",
+   "board_fpid": "C_0603_1608Metric",
+   "footprint_name_equal": true,
+   "land_vs_library": "IDENTICAL to Capacitor_SMD:C_0603_1608Metric",
+   "land_detail": null,
+   "netlist_lcsc": null,
+   "board_lcsc": null,
+   "pad_net_diffs": [],
+   "pins_compared": 2,
+   "board_layer": "F.Cu",
+   "board_pos_mm": [
+    156.315,
+    61.215
+   ],
+   "board_rot": 0.0,
+   "verdict": "SAME"
+  },
+  {
+   "ref": "D2",
+   "role": "PROTECTION",
+   "on_nets": [
+    "VIN_RAW"
+   ],
+   "netlist_value": "SMCJ40A (VIN_RAW clamp behind E6's filter: 40 V standoff on a line specified to 36)",
+   "board_value": "SMCJ33A (VIN_RAW clamp behind E6's filter)",
+   "value_equal": false,
+   "netlist_footprint": "Diode_SMD:D_SMC",
+   "board_fpid": "D_SMC",
+   "footprint_name_equal": true,
+   "land_vs_library": "IDENTICAL to Diode_SMD:D_SMC",
+   "land_detail": null,
+   "netlist_lcsc": "C224052",
+   "board_lcsc": null,
+   "pad_net_diffs": [],
+   "pins_compared": 2,
+   "board_layer": "F.Cu",
+   "board_pos_mm": [
+    37.57,
+    69.475
+   ],
+   "board_rot": 0.0,
+   "polarity": {
+    "perpendicular_silk_offsets_toward_pad1_mm": [
+     4.91
+    ],
+    "cathode_mark_beside": "pad 1",
+    "netlist_pad1": "VIN_RAW",
+    "netlist_pad2": "GND",
+    "board_pad1": [
+     "VIN_RAW"
+    ],
+    "board_pad2": [
+     "GND"
+    ],
+    "library_cathode_mark_beside": "pad 1"
+   },
+   "verdict": "DIFFERENT"
+  },
+  {
+   "ref": "D4",
+   "role": "PROTECTION",
+   "on_nets": [
+    "PD_VBUS"
+   ],
+   "netlist_value": "SMBJ18A (VBUS clamp at the outlet)",
+   "board_value": "SMBJ18A (VBUS clamp at the outlet)",
+   "value_equal": true,
+   "netlist_footprint": "Diode_SMD:D_SMB",
+   "board_fpid": "D_SMB",
+   "footprint_name_equal": true,
+   "land_vs_library": "IDENTICAL to Diode_SMD:D_SMB",
+   "land_detail": null,
+   "netlist_lcsc": null,
+   "board_lcsc": null,
+   "pad_net_diffs": [],
+   "pins_compared": 2,
+   "board_layer": "F.Cu",
+   "board_pos_mm": [
+    163.06,
+    50.875
+   ],
+   "board_rot": 0.0,
+   "polarity": {
+    "perpendicular_silk_offsets_toward_pad1_mm": [
+     3.66
+    ],
+    "cathode_mark_beside": "pad 1",
+    "netlist_pad1": "PD_VBUS",
+    "netlist_pad2": "GND",
+    "board_pad1": [
+     "PD_VBUS"
+    ],
+    "board_pad2": [
+     "GND"
+    ],
+    "library_cathode_mark_beside": "pad 1"
+   },
+   "verdict": "SAME"
+  },
+  {
+   "ref": "J_AB2",
+   "role": "on the conductor",
+   "on_nets": [
+    "USB_WALL_N",
+    "USB_WALL_P"
+   ],
+   "netlist_value": "A-B wall-port ribbon (IDC 2x5): the wall USB pair on the END row with eight grounds behind it",
+   "board_value": "A-B wall-port ribbon (IDC 2x5): the wall USB pair on the END row with eight grounds behind it",
+   "value_equal": true,
+   "netlist_footprint": "meshsat:IDC-Header_2x05_P2.54mm_Vertical_NarrowPad",
+   "board_fpid": "IDC-Header_2x05_P2.54mm_Vertical_NarrowPad",
+   "footprint_name_equal": true,
+   "land_vs_library": "IDENTICAL to meshsat:IDC-Header_2x05_P2.54mm_Vertical_NarrowPad",
+   "land_detail": null,
+   "netlist_lcsc": null,
+   "board_lcsc": null,
+   "pad_net_diffs": [],
+   "pins_compared": 10,
+   "board_layer": "F.Cu",
+   "board_pos_mm": [
+    245.752,
+    126.08
+   ],
+   "board_rot": 180.0,
+   "verdict": "SAME"
+  },
+  {
+   "ref": "J_DOCK",
+   "role": "port connector",
+   "on_nets": [
+    "VIN_RAW"
+   ],
+   "netlist_value": "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-4 VIN_RAW (9 to 36 V from E6), 5-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare",
+   "board_value": "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-4 VIN_RAW (9 to 36 V from E6), 5-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare",
+   "value_equal": true,
+   "netlist_footprint": "meshsat:PogoPins_2x6",
+   "board_fpid": "PogoPins_2x6",
+   "footprint_name_equal": true,
+   "land_vs_library": "IDENTICAL to meshsat:PogoPins_2x6",
+   "land_detail": null,
+   "netlist_lcsc": null,
+   "board_lcsc": null,
+   "pad_net_diffs": [],
+   "pins_compared": 12,
+   "board_layer": "B.Cu",
+   "board_pos_mm": [
+    74.0,
+    180.0
+   ],
+   "board_rot": 0.0,
+   "verdict": "SAME"
+  },
+  {
+   "ref": "J_USBC_OUT",
+   "role": "port connector",
+   "on_nets": [
+    "PD_CC1",
+    "PD_CC2",
+    "PD_VBUS"
+   ],
+   "netlist_value": "wall USB-C outlet, power side (pigtail header): VBUS CC1 CC2 GND GND",
+   "board_value": "wall USB-C outlet, power side (pigtail header): VBUS CC1 CC2 GND GND",
+   "value_equal": true,
+   "netlist_footprint": "Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical",
+   "board_fpid": "PinHeader_1x05_P2.54mm_Vertical",
+   "footprint_name_equal": true,
+   "land_vs_library": "IDENTICAL to Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical",
+   "land_detail": null,
+   "netlist_lcsc": null,
+   "board_lcsc": null,
+   "pad_net_diffs": [],
+   "pins_compared": 5,
+   "board_layer": "F.Cu",
+   "board_pos_mm": [
+    254.92,
+    84.0
+   ],
+   "board_rot": 90.0,
+   "verdict": "SAME"
+  },
+  {
+   "ref": "J_USBW",
+   "role": "port connector",
+   "on_nets": [
+    "USB_WALL_N",
+    "USB_WALL_P"
+   ],
+   "netlist_value": "JST-PH 1x4 socket: the wall USB-C data pair to B16 passes here on the ribbon, this is the pigtail's data side (D+ D- GND GND)",
+   "board_value": "JST-PH 1x4 socket: the wall USB-C data pair to B16 passes here on the ribbon, this is the pigtail's data side (D+ D- GND GND)",
+   "value_equal": true,
+   "netlist_footprint": "Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical",
+   "board_fpid": "JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical",
+   "footprint_name_equal": true,
+   "land_vs_library": "IDENTICAL to Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical",
+   "land_detail": null,
+   "netlist_lcsc": "C131334",
+   "board_lcsc": null,
+   "pad_net_diffs": [],
+   "pins_compared": 4,
+   "board_layer": "F.Cu",
+   "board_pos_mm": [
+    259.45,
+    125.0
+   ],
+   "board_rot": 90.0,
+   "verdict": "SAME"
+  },
+  {
+   "ref": "Q2",
+   "role": "on the conductor",
+   "on_nets": [
+    "VIN_RAW"
+   ],
+   "netlist_value": "CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)",
+   "board_value": "CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)",
+   "value_equal": true,
+   "netlist_footprint": "Package_SO:PowerPAK_SO-8_Single",
+   "board_fpid": "PowerPAK_SO-8_Single",
+   "footprint_name_equal": true,
+   "land_vs_library": "IDENTICAL to Package_SO:PowerPAK_SO-8_Single",
+   "land_detail": null,
+   "netlist_lcsc": "C473333",
+   "board_lcsc": null,
+   "pad_net_diffs": [],
+   "pins_compared": 5,
+   "board_layer": "F.Cu",
+   "board_pos_mm": [
+    42.195,
+    45.5
+   ],
+   "board_rot": 0.0,
+   "verdict": "SAME"
+  },
+  {
+   "ref": "R138",
+   "role": "on the conductor",
+   "on_nets": [
+    "PD_VBUS"
+   ],
+   "netlist_value": "10mOhm 1% 2512 (ISNS)",
+   "board_value": "10mOhm 1% 2512 (ISNS)",
+   "value_equal": true,
+   "netlist_footprint": "Resistor_SMD:R_2512_6332Metric",
+   "board_fpid": "R_2512_6332Metric",
+   "footprint_name_equal": true,
+   "land_vs_library": "IDENTICAL to Resistor_SMD:R_2512_6332Metric",
+   "land_detail": null,
+   "netlist_lcsc": null,
+   "board_lcsc": null,
+   "pad_net_diffs": [],
+   "pins_compared": 2,
+   "board_layer": "F.Cu",
+   "board_pos_mm": [
+    171.79,
+    50.555
+   ],
+   "board_rot": 0.0,
+   "verdict": "SAME"
+  },
+  {
+   "ref": "R139",
+   "role": "on the conductor",
+   "on_nets": [
+    "PD_VBUS"
+   ],
+   "netlist_value": "43R 1W 2512 (DSCG)",
+   "board_value": "43R 1W 2512 (DSCG)",
+   "value_equal": true,
+   "netlist_footprint": "Resistor_SMD:R_2512_6332Metric",
+   "board_fpid": "R_2512_6332Metric",
+   "footprint_name_equal": true,
+   "land_vs_library": "IDENTICAL to Resistor_SMD:R_2512_6332Metric",
+   "land_detail": null,
+   "netlist_lcsc": null,
+   "board_lcsc": null,
+   "pad_net_diffs": [],
+   "pins_compared": 2,
+   "board_layer": "F.Cu",
+   "board_pos_mm": [
+    154.455,
+    57.305
+   ],
+   "board_rot": 0.0,
+   "verdict": "SAME"
+  },
+  {
+   "ref": "R14",
+   "role": "on the conductor",
+   "on_nets": [
+    "VIN_RAW"
+   ],
+   "netlist_value": "62k 1%",
+   "board_value": "62k 1%",
+   "value_equal": true,
+   "netlist_footprint": "Resistor_SMD:R_0603_1608Metric",
+   "board_fpid": "R_0603_1608Metric",
+   "footprint_name_equal": true,
+   "land_vs_library": "IDENTICAL to Resistor_SMD:R_0603_1608Metric",
+   "land_detail": null,
+   "netlist_lcsc": null,
+   "board_lcsc": null,
+   "pad_net_diffs": [],
+   "pins_compared": 2,
+   "board_layer": "F.Cu",
+   "board_pos_mm": [
+    38.315,
+    78.555
+   ],
+   "board_rot": 0.0,
+   "verdict": "SAME"
+  },
+  {
+   "ref": "TP13",
+   "role": "on the conductor",
+   "on_nets": [
+    "VIN_RAW"
+   ],
+   "netlist_value": "VIN_RAW",
+   "board_value": "VIN_RAW",
+   "value_equal": true,
+   "netlist_footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+   "board_fpid": "TestPoint_Pad_D1.5mm",
+   "footprint_name_equal": true,
+   "land_vs_library": "IDENTICAL to TestPoint:TestPoint_Pad_D1.5mm",
+   "land_detail": null,
+   "netlist_lcsc": null,
+   "board_lcsc": null,
+   "pad_net_diffs": [],
+   "pins_compared": 1,
+   "board_layer": "F.Cu",
+   "board_pos_mm": [
+    37.625,
+    75.325
+   ],
+   "board_rot": 0.0,
+   "verdict": "SAME"
+  },
+  {
+   "ref": "U18",
+   "role": "protection inside part (decision 31 declaration)",
+   "on_nets": [
+    "PD_CC1",
+    "PD_CC2",
+    "PD_VBUS"
+   ],
+   "netlist_value": "TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)",
+   "board_value": "TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)",
+   "value_equal": true,
+   "netlist_footprint": "Package_DFN_QFN:QFN-24-1EP_4x4mm_P0.5mm_EP2.5x2.5mm",
+   "board_fpid": "QFN-24-1EP_4x4mm_P0.5mm_EP2.5x2.5mm",
+   "footprint_name_equal": true,
+   "land_vs_library": "IDENTICAL to Package_DFN_QFN:QFN-24-1EP_4x4mm_P0.5mm_EP2.5x2.5mm",
+   "land_detail": null,
+   "netlist_lcsc": "C544309",
+   "board_lcsc": null,
+   "pad_net_diffs": [],
+   "pins_compared": 25,
+   "board_layer": "F.Cu",
+   "board_pos_mm": [
+    160.188,
+    45.0
+   ],
+   "board_rot": 0.0,
+   "verdict": "SAME"
+  },
+  {
+   "ref": "U2",
+   "role": "on the conductor",
+   "on_nets": [
+    "VIN_RAW"
+   ],
+   "netlist_value": "LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW",
+   "board_value": "LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW",
+   "value_equal": true,
+   "netlist_footprint": "Package_SO:HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP2.85x5.4mm",
+   "board_fpid": "HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP2.85x5.4mm",
+   "footprint_name_equal": true,
+   "land_vs_library": "IDENTICAL to Package_SO:HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP2.85x5.4mm",
+   "land_detail": null,
+   "netlist_lcsc": "C442493",
+   "board_lcsc": null,
+   "pad_net_diffs": [
+    "pin 13: netlist FE_ISNS_N, board ['VBUS20']",
+    "pin 14: netlist FE_ISNS_P, board ['FE_OUT']",
+    "pin 15: netlist FE_CSGF, board ['GND']",
+    "pin 16: netlist FE_CSF, board ['FE_CS']"
+   ],
+   "pins_compared": 29,
+   "board_layer": "F.Cu",
+   "board_pos_mm": [
+    56.0,
+    54.047
+   ],
+   "board_rot": 0.0,
+   "verdict": "DIFFERENT"
+  },
+  {
+   "ref": "U29",
+   "role": "PROTECTION",
+   "on_nets": [
+    "USB_WALL_N",
+    "USB_WALL_P"
+   ],
+   "netlist_value": "USBLC6-2SC6",
+   "board_value": "USBLC6-2SC6",
+   "value_equal": true,
+   "netlist_footprint": "Package_TO_SOT_SMD:SOT-23-6",
+   "board_fpid": "SOT-23-6",
+   "footprint_name_equal": true,
+   "land_vs_library": "IDENTICAL to Package_TO_SOT_SMD:SOT-23-6",
+   "land_detail": null,
+   "netlist_lcsc": "C7519",
+   "board_lcsc": null,
+   "pad_net_diffs": [],
+   "pins_compared": 6,
+   "board_layer": "F.Cu",
+   "board_pos_mm": [
+    253.088,
+    125.0
+   ],
+   "board_rot": 90.0,
+   "verdict": "SAME"
+  }
+ ],
+ "trn001": {
+  "on_committed_netlist": {
+   "fail_lines": [],
+   "missing": [],
+   "declared": 3,
+   "in_part": [
+    "J_USBC_OUT.2 on PD_CC1: protection inside U18, cited: TI TPS25740A datasheet, v2/vendor/ti/ti-tps25740.pdf section 9.1.1 System-Level ESD Protection: 'The device has ESD protection built into the CC1 and CC2 pins so that no external protection is necessary.' Its absolute maximum on CC1 and CC2 is -0.3 to 6 V, and the VBUS path its own Figure 37 clamps is D4, an SMBJ18A, which this board already carries. Owner decision 31, ruled by the session on 21 September 2026 against the IEC 61000-4-2 level 4 that decision 34 states.",
+    "J_USBC_OUT.3 on PD_CC2: protection inside U18, cited: TI TPS25740A datasheet, v2/vendor/ti/ti-tps25740.pdf section 9.1.1 System-Level ESD Protection: 'The device has ESD protection built into the CC1 and CC2 pins so that no external protection is necessary.' Its absolute maximum on CC1 and CC2 is -0.3 to 6 V, and the VBUS path its own Figure 37 clamps is D4, an SMBJ18A, which this board already carries. Owner decision 31, ruled by the session on 21 September 2026 against the IEC 61000-4-2 level 4 that decision 34 states."
+   ]
+  },
+  "on_board_connectivity_and_values": {
+   "fail_lines": [],
+   "missing": [],
+   "declared": 3,
+   "in_part": [
+    "J_USBC_OUT.2 on PD_CC1: protection inside U18, cited: TI TPS25740A datasheet, v2/vendor/ti/ti-tps25740.pdf section 9.1.1 System-Level ESD Protection: 'The device has ESD protection built into the CC1 and CC2 pins so that no external protection is necessary.' Its absolute maximum on CC1 and CC2 is -0.3 to 6 V, and the VBUS path its own Figure 37 clamps is D4, an SMBJ18A, which this board already carries. Owner decision 31, ruled by the session on 21 September 2026 against the IEC 61000-4-2 level 4 that decision 34 states.",
+    "J_USBC_OUT.3 on PD_CC2: protection inside U18, cited: TI TPS25740A datasheet, v2/vendor/ti/ti-tps25740.pdf section 9.1.1 System-Level ESD Protection: 'The device has ESD protection built into the CC1 and CC2 pins so that no external protection is necessary.' Its absolute maximum on CC1 and CC2 is -0.3 to 6 V, and the VBUS path its own Figure 37 clamps is D4, an SMBJ18A, which this board already carries. Owner decision 31, ruled by the session on 21 September 2026 against the IEC 61000-4-2 level 4 that decision 34 states."
+   ]
+  }
+ },
+ "values_swapped_into_board_values_net": [
+  {
+   "ref": "C11",
+   "netlist": "10u 100V X7R 1210",
+   "board": "10u 50V X7R 1210"
+  },
+  {
+   "ref": "C12",
+   "netlist": "10u 100V X7R 1210",
+   "board": "10u 50V X7R 1210"
+  },
+  {
+   "ref": "D2",
+   "netlist": "SMCJ40A (VIN_RAW clamp behind E6's filter: 40 V standoff on a line specified to 36)",
+   "board": "SMCJ33A (VIN_RAW clamp behind E6's filter)"
+  }
+ ],
+ "counts": {
+  "netlist_refs": 428,
+  "board_footprints": 400,
+  "rows": 19,
+  "rows_different": 4
+ },
+ "pcbnew_version": "9.0.9"
+}

@@ -1,0 +1,72 @@
+WIFI_W_DIS_n (3 nodes):
+   J_M2C1.56 (~{W_DISABLE1}) | M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (two MHF4 leads to A22's P2P jack
+   Q106.2 (S) | 2N7002 EMCON -> W_DISABLE1#
+   R137.1  | 10k
+WIFI_W_DIS2_n (2 nodes):
+   J_M2C1.54 (~{W_DISABLE2}) | M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (two MHF4 leads to A22's P2P jack
+   R138.1  | 10k
+5G_W_DIS_n (3 nodes):
+   J_M2C2.8 (~{W_DISABLE1}) | M.2 B-key 3052 socket, TE 1-2199119-5, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; two antenna leads to
+   Q206.2 (S) | 2N7002 EMCON -> W_DISABLE1#
+   R237.1  | 10k
+5G_PWROFF_n (3 nodes):
+   J_M2C2.6 (~{FULL_CARD_POWER_OFF}) | M.2 B-key 3052 socket, TE 1-2199119-5, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; two antenna leads to
+   Q207.3 (D) | 2N7002 expander -> FULL_CARD_POWER_OFF#
+   R238.1  | 10k
+5G_OFF (3 nodes):
+   Q207.1 (G) | 2N7002 expander -> FULL_CARD_POWER_OFF#
+   R61.1  | 100k
+   U6.10 (IO0_6) | PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)
+WIFI2_W_DIS_n (3 nodes):
+   J_M2C3.56 (~{W_DISABLE1}) | M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: the second AsiaRF AW7915-AED (two MHF4 leads to the antenna changeov
+   Q306.2 (S) | 2N7002 EMCON -> W_DISABLE1#
+   R337.1  | 10k
+WIFI2_W_DIS2_n (2 nodes):
+   J_M2C3.54 (~{W_DISABLE2}) | M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: the second AsiaRF AW7915-AED (two MHF4 leads to the antenna changeov
+   R338.1  | 10k
+WL_nDIS1 (2 nodes):
+   U30A.89 (WL_nDisable) | Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted
+   U6.13 (IO1_0) | PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)
+WL_nDIS2 (2 nodes):
+   U31A.89 (WL_nDisable) | Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted
+   U6.14 (IO1_1) | PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)
+WL_nDIS3 (2 nodes):
+   U32A.89 (WL_nDisable) | Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted
+   U6.15 (IO1_2) | PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)
+BT_nDIS1 (2 nodes):
+   U30A.91 (BT_nDisable) | Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted
+   U6.16 (IO1_3) | PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)
+BT_nDIS2 (2 nodes):
+   U31A.91 (BT_nDisable) | Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted
+   U6.17 (IO1_4) | PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)
+BT_nDIS3 (2 nodes):
+   U32A.91 (BT_nDisable) | Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted
+   U6.18 (IO1_5) | PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)
+RB_IEN (2 nodes):
+   J_RB9704.3 (Pin_3) | RockBLOCK 9704 16-pin (IDC 2x8) on the Ground Control bracket
+   U6.19 (IO1_6) | PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)
+RB_CTRL (2 nodes):
+   J_RB9704.6 (Pin_6) | RockBLOCK 9704 16-pin (IDC 2x8) on the Ground Control bracket
+   U6.20 (IO1_7) | PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)
+VBUS_QMX (3 nodes):
+   F3.2  | 0.5A hold 1812
+   J_QMX.1 (Pin_1) | QMX USB lead (bank 2 hub, port 4): VBUS D- D+ GND; pigtail to the unit's USB-C
+   U35.5 (VBUS) | USBLC6-2SC6
+PCIE_PWR_EN1 (3 nodes):
+   R106.1  | 100k
+   U103.3 (PCIE_PWR_EN1) | AP64500SP-13 5 A buck, 3.3 V rail +3V3_S1A
+   U30B.106 (PCIE_PWR_EN) | Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side)
+PCIE_PWR_EN2 (3 nodes):
+   R206.1  | 100k
+   U203.3 (PCIE_PWR_EN2) | AP64500SP-13 5 A buck, 3.3 V rail +3V3_S2A
+   U31B.106 (PCIE_PWR_EN) | Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side)
+PCIE_PWR_EN3 (3 nodes):
+   R306.1  | 100k
+   U303.3 (PCIE_PWR_EN3) | AP64500SP-13 5 A buck, 3.3 V rail +3V3_S3A
+   U32B.106 (PCIE_PWR_EN) | Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side)
+LORA_TXEN (2 nodes):
+   U12.7 (TXEN) | Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1: TXEN GPIO4, RXEN GPIO5, DIO1 GPIO24, BUSY GPIO23, NRST GPIO26; EU po
+   U32A.54 (GPIO4) | Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted
+LORA_RXEN (2 nodes):
+   U12.6 (RXEN) | Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1: TXEN GPIO4, RXEN GPIO5, DIO1 GPIO24, BUSY GPIO23, NRST GPIO26; EU po
+   U32A.34 (GPIO5) | Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted

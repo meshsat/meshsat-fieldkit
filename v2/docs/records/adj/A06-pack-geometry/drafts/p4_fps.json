@@ -1,0 +1,2062 @@
+[
+ {
+  "ref": "R18",
+  "value": "5.1k",
+  "lib": "R_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -39.685,
+   8.635,
+   0.0
+  ],
+  "crtyd_case": [
+   -41.165,
+   7.905,
+   -38.205,
+   9.365
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "TP3",
+  "value": "CHG_R",
+  "lib": "TestPoint_Pad_D1.5mm",
+  "layer": "F.Cu",
+  "at_case": [
+   -81.125,
+   12.875,
+   0.0
+  ],
+  "crtyd_case": [
+   -82.375,
+   11.625,
+   -79.875,
+   14.125
+  ],
+  "crtyd_pts": 4,
+  "models": []
+ },
+ {
+  "ref": "TP9",
+  "value": "SMBC",
+  "lib": "TestPoint_Pad_D1.5mm",
+  "layer": "F.Cu",
+  "at_case": [
+   -81.125,
+   1.625,
+   0.0
+  ],
+  "crtyd_case": [
+   -82.375,
+   0.375,
+   -79.875,
+   2.875
+  ],
+  "crtyd_pts": 4,
+  "models": []
+ },
+ {
+  "ref": "R1",
+  "value": "100R",
+  "lib": "R_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -66.685,
+   6.025,
+   0.0
+  ],
+  "crtyd_case": [
+   -68.165,
+   5.295,
+   -65.205,
+   6.755
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "Q1",
+  "value": "CSD17570Q5B 30 V N-FET, charge switch",
+  "lib": "PowerPAK_SO-8_Single",
+  "layer": "F.Cu",
+  "at_case": [
+   -49.805,
+   25.0,
+   0.0
+  ],
+  "crtyd_case": [
+   -53.355,
+   22.25,
+   -46.255,
+   27.75
+  ],
+  "crtyd_pts": 8,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Package_SO.3dshapes/PowerPAK_SO-8_Single.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "J_CELL",
+  "value": "cell tap sense wires from the 4S block (JST-XH 1x5): B- C1 C2 C3 B+; the current leaves through W_BP and W_BN",
+  "lib": "JST_XH_B5B-XH-A_1x05_P2.50mm_Vertical",
+  "layer": "F.Cu",
+  "at_case": [
+   -43.0,
+   -6.975,
+   0.0
+  ],
+  "crtyd_case": [
+   -45.95,
+   -10.875,
+   -30.05,
+   -4.125
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Connector_JST.3dshapes/JST_XH_B5B-XH-A_1x05_P2.50mm_Vertical.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "R9",
+  "value": "100R",
+  "lib": "R_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -58.265,
+   3.315,
+   0.0
+  ],
+  "crtyd_case": [
+   -59.745,
+   2.585,
+   -56.785,
+   4.045
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "R2",
+  "value": "100R",
+  "lib": "R_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -62.475,
+   6.025,
+   0.0
+  ],
+  "crtyd_case": [
+   -63.955,
+   5.295,
+   -60.995,
+   6.755
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "R4",
+  "value": "100R",
+  "lib": "R_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -54.055,
+   6.025,
+   0.0
+  ],
+  "crtyd_case": [
+   -55.535,
+   5.295,
+   -52.575,
+   6.755
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "C5",
+  "value": "100n",
+  "lib": "C_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -66.685,
+   8.735,
+   0.0
+  ],
+  "crtyd_case": [
+   -68.165,
+   8.005,
+   -65.205,
+   9.465
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "TP6",
+  "value": "FUSED",
+  "lib": "TestPoint_Pad_D1.5mm",
+  "layer": "F.Cu",
+  "at_case": [
+   -77.375,
+   9.125,
+   0.0
+  ],
+  "crtyd_case": [
+   -78.625,
+   7.875,
+   -76.125,
+   10.375
+  ],
+  "crtyd_pts": 4,
+  "models": []
+ },
+ {
+  "ref": "R14",
+  "value": "10k",
+  "lib": "R_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -39.685,
+   11.345,
+   0.0
+  ],
+  "crtyd_case": [
+   -41.165,
+   10.615,
+   -38.205,
+   12.075
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "TP4",
+  "value": "DSG_R",
+  "lib": "TestPoint_Pad_D1.5mm",
+  "layer": "F.Cu",
+  "at_case": [
+   -77.375,
+   12.875,
+   0.0
+  ],
+  "crtyd_case": [
+   -78.625,
+   11.625,
+   -76.125,
+   14.125
+  ],
+  "crtyd_pts": 4,
+  "models": []
+ },
+ {
+  "ref": "R15",
+  "value": "10k",
+  "lib": "R_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -35.475,
+   11.345,
+   0.0
+  ],
+  "crtyd_case": [
+   -36.955,
+   10.615,
+   -33.995,
+   12.075
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "C2",
+  "value": "100n",
+  "lib": "C_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -53.96,
+   20.645,
+   0.0
+  ],
+  "crtyd_case": [
+   -55.44,
+   19.915,
+   -52.48,
+   21.375
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "TP1",
+  "value": "BTP_INT",
+  "lib": "TestPoint_Pad_D1.5mm",
+  "layer": "F.Cu",
+  "at_case": [
+   -81.125,
+   16.625,
+   0.0
+  ],
+  "crtyd_case": [
+   -82.375,
+   15.375,
+   -79.875,
+   17.875
+  ],
+  "crtyd_pts": 4,
+  "models": []
+ },
+ {
+  "ref": "J_SMB",
+  "value": "SMBus lead to E6 J_SMB (JST-XH 1x4): SMBC SMBD GND PRES",
+  "lib": "JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical",
+  "layer": "F.Cu",
+  "at_case": [
+   -20.025,
+   8.25,
+   90.0
+  ],
+  "crtyd_case": [
+   -22.875,
+   5.3,
+   -16.125,
+   18.7
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Connector_JST.3dshapes/JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "TP2",
+  "value": "FUSE",
+  "lib": "TestPoint_Pad_D1.5mm",
+  "layer": "F.Cu",
+  "at_case": [
+   -77.375,
+   16.625,
+   0.0
+  ],
+  "crtyd_case": [
+   -78.625,
+   15.375,
+   -76.125,
+   17.875
+  ],
+  "crtyd_pts": 4,
+  "models": []
+ },
+ {
+  "ref": "R17",
+  "value": "10M",
+  "lib": "R_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -43.895,
+   8.635,
+   0.0
+  ],
+  "crtyd_case": [
+   -45.375,
+   7.905,
+   -42.415,
+   9.365
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "D1",
+  "value": "SMBJ20A",
+  "lib": "D_SMB",
+  "layer": "F.Cu",
+  "at_case": [
+   -33.53,
+   19.125,
+   0.0
+  ],
+  "crtyd_case": [
+   -37.18,
+   16.875,
+   -29.88,
+   21.375
+  ],
+  "crtyd_pts": 8,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Diode_SMD.3dshapes/D_SMB.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "Q2",
+  "value": "CSD17570Q5B 30 V N-FET, discharge switch",
+  "lib": "PowerPAK_SO-8_Single",
+  "layer": "F.Cu",
+  "at_case": [
+   -42.195,
+   25.0,
+   180.0
+  ],
+  "crtyd_case": [
+   -45.745,
+   22.25,
+   -38.645,
+   27.75
+  ],
+  "crtyd_pts": 8,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Package_SO.3dshapes/PowerPAK_SO-8_Single.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "R8",
+  "value": "100R",
+  "lib": "R_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -62.475,
+   3.315,
+   0.0
+  ],
+  "crtyd_case": [
+   -63.955,
+   2.585,
+   -60.995,
+   4.045
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "C3",
+  "value": "100n",
+  "lib": "C_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -49.75,
+   20.645,
+   0.0
+  ],
+  "crtyd_case": [
+   -51.23,
+   19.915,
+   -48.27,
+   21.375
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "R12",
+  "value": "10k",
+  "lib": "R_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -33.835,
+   14.895,
+   0.0
+  ],
+  "crtyd_case": [
+   -35.315,
+   14.165,
+   -32.355,
+   15.625
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "R10",
+  "value": "2m 2512 2W (sense)",
+  "lib": "R_2512_6332Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -68.0,
+   -5.0,
+   0.0
+  ],
+  "crtyd_case": [
+   -71.83,
+   -6.93,
+   -64.17,
+   -3.07
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_2512_6332Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "C11",
+  "value": "100n 50V",
+  "lib": "C_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -39.685,
+   5.925,
+   0.0
+  ],
+  "crtyd_case": [
+   -41.165,
+   5.195,
+   -38.205,
+   6.655
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "C6",
+  "value": "100n",
+  "lib": "C_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -62.475,
+   8.735,
+   0.0
+  ],
+  "crtyd_case": [
+   -63.955,
+   8.005,
+   -60.995,
+   9.465
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "W_BP",
+  "value": "cell block B+ (12 AWG from the block's positive strip)",
+  "lib": "SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm",
+  "layer": "F.Cu",
+  "at_case": [
+   -77.0,
+   22.5,
+   0.0
+  ],
+  "crtyd_case": [
+   -79.55,
+   20.0,
+   -74.45,
+   25.0
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Connector_Wire.3dshapes/SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "R21",
+  "value": "100R",
+  "lib": "R_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -43.895,
+   5.925,
+   0.0
+  ],
+  "crtyd_case": [
+   -45.375,
+   5.195,
+   -42.415,
+   6.655
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "U1",
+  "value": "BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B)",
+  "lib": "QFN-32-1EP_5x5mm_P0.5mm_EP3.1x3.1mm",
+  "layer": "F.Cu",
+  "at_case": [
+   -66.67,
+   16.045,
+   0.0
+  ],
+  "crtyd_case": [
+   -69.8,
+   12.915,
+   -63.54,
+   19.175
+  ],
+  "crtyd_pts": 40,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Package_DFN_QFN.3dshapes/QFN-32-1EP_5x5mm_P0.5mm_EP3.1x3.1mm.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "F1",
+  "value": "25 A mini blade (Keystone 3568 holder): the pack's fuse",
+  "lib": "Fuseholder_Blade_Mini_Keystone_3568",
+  "layer": "F.Cu",
+  "at_case": [
+   -70.56,
+   26.7,
+   0.0
+  ],
+  "crtyd_case": [
+   -73.85,
+   21.38,
+   -57.35,
+   28.62
+  ],
+  "crtyd_pts": 8,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Fuse.3dshapes/Fuseholder_Blade_Mini_Keystone_3568.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "H1",
+  "value": "M3 into the enclosure boss",
+  "lib": "MountingHole_3.2mm_M3",
+  "layer": "F.Cu",
+  "at_case": [
+   -82.0,
+   -9.0,
+   0.0
+  ],
+  "crtyd_case": [
+   -85.45,
+   -12.45,
+   -78.55,
+   -5.55
+  ],
+  "crtyd_pts": 4,
+  "models": []
+ },
+ {
+  "ref": "H4",
+  "value": "M3 into the enclosure boss",
+  "lib": "MountingHole_3.2mm_M3",
+  "layer": "F.Cu",
+  "at_case": [
+   -18.0,
+   29.0,
+   0.0
+  ],
+  "crtyd_case": [
+   -21.45,
+   25.55,
+   -14.55,
+   32.45
+  ],
+  "crtyd_pts": 4,
+  "models": []
+ },
+ {
+  "ref": "R11",
+  "value": "10k",
+  "lib": "R_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -38.045,
+   14.895,
+   0.0
+  ],
+  "crtyd_case": [
+   -39.525,
+   14.165,
+   -36.565,
+   15.625
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "H3",
+  "value": "M3 into the enclosure boss",
+  "lib": "MountingHole_3.2mm_M3",
+  "layer": "F.Cu",
+  "at_case": [
+   -82.0,
+   29.0,
+   0.0
+  ],
+  "crtyd_case": [
+   -85.45,
+   25.55,
+   -78.55,
+   32.45
+  ],
+  "crtyd_pts": 4,
+  "models": []
+ },
+ {
+  "ref": "R6",
+  "value": "1k",
+  "lib": "R_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -70.895,
+   3.315,
+   0.0
+  ],
+  "crtyd_case": [
+   -72.375,
+   2.585,
+   -69.415,
+   4.045
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "TP5",
+  "value": "SW",
+  "lib": "TestPoint_Pad_D1.5mm",
+  "layer": "F.Cu",
+  "at_case": [
+   -81.125,
+   9.125,
+   0.0
+  ],
+  "crtyd_case": [
+   -82.375,
+   7.875,
+   -79.875,
+   10.375
+  ],
+  "crtyd_pts": 4,
+  "models": []
+ },
+ {
+  "ref": "D2",
+  "value": "USBLC6-2SC6 ESD clamp on the SMBus pair",
+  "lib": "SOT-23-6",
+  "layer": "F.Cu",
+  "at_case": [
+   -41.925,
+   19.5,
+   0.0
+  ],
+  "crtyd_case": [
+   -43.975,
+   17.8,
+   -39.875,
+   21.2
+  ],
+  "crtyd_pts": 24,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Package_TO_SOT_SMD.3dshapes/SOT-23-6.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "C10",
+  "value": "100n",
+  "lib": "C_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -70.895,
+   6.025,
+   0.0
+  ],
+  "crtyd_case": [
+   -72.375,
+   5.295,
+   -69.415,
+   6.755
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "C4",
+  "value": "100n",
+  "lib": "C_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -70.895,
+   8.735,
+   0.0
+  ],
+  "crtyd_case": [
+   -72.375,
+   8.005,
+   -69.415,
+   9.465
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "R7",
+  "value": "1k",
+  "lib": "R_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -66.685,
+   3.315,
+   0.0
+  ],
+  "crtyd_case": [
+   -68.165,
+   2.585,
+   -65.205,
+   4.045
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "W_N",
+  "value": "pack lead - (12 AWG to the XT60 on E6 J_BATT pin 1)",
+  "lib": "SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm",
+  "layer": "F.Cu",
+  "at_case": [
+   -58.0,
+   -3.5,
+   0.0
+  ],
+  "crtyd_case": [
+   -60.55,
+   -6.0,
+   -55.45,
+   -1.0
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Connector_Wire.3dshapes/SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "C1",
+  "value": "2.2u",
+  "lib": "C_0805_2012Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -58.39,
+   20.395,
+   0.0
+  ],
+  "crtyd_case": [
+   -60.09,
+   19.415,
+   -56.69,
+   21.375
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0805_2012Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "W_BN",
+  "value": "cell block B- (12 AWG from the block's negative strip)",
+  "lib": "SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm",
+  "layer": "F.Cu",
+  "at_case": [
+   -77.0,
+   -2.5,
+   0.0
+  ],
+  "crtyd_case": [
+   -79.55,
+   -5.0,
+   -74.45,
+   0.0
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Connector_Wire.3dshapes/SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "C9",
+  "value": "100n",
+  "lib": "C_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -49.845,
+   8.735,
+   0.0
+  ],
+  "crtyd_case": [
+   -51.325,
+   8.005,
+   -48.365,
+   9.465
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "TP8",
+  "value": "PACK_N",
+  "lib": "TestPoint_Pad_D1.5mm",
+  "layer": "F.Cu",
+  "at_case": [
+   -77.375,
+   5.375,
+   0.0
+  ],
+  "crtyd_case": [
+   -78.625,
+   4.125,
+   -76.125,
+   6.625
+  ],
+  "crtyd_pts": 4,
+  "models": []
+ },
+ {
+  "ref": "C12",
+  "value": "100n 50V",
+  "lib": "C_1206_3216Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -43.075,
+   14.475,
+   0.0
+  ],
+  "crtyd_case": [
+   -45.375,
+   13.325,
+   -40.775,
+   15.625
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_1206_3216Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "R20",
+  "value": "100R",
+  "lib": "R_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -31.265,
+   8.635,
+   0.0
+  ],
+  "crtyd_case": [
+   -32.745,
+   7.905,
+   -29.785,
+   9.365
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "R19",
+  "value": "10M",
+  "lib": "R_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -35.475,
+   8.635,
+   0.0
+  ],
+  "crtyd_case": [
+   -36.955,
+   7.905,
+   -33.995,
+   9.365
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "J_TS",
+  "value": "cell thermistor (JST-PH 1x2): the 103AT in the block",
+  "lib": "JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical",
+  "layer": "F.Cu",
+  "at_case": [
+   -20.05,
+   0.0,
+   90.0
+  ],
+  "crtyd_case": [
+   -22.25,
+   -2.45,
+   -16.75,
+   4.45
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Connector_JST.3dshapes/JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "C8",
+  "value": "100n",
+  "lib": "C_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -54.055,
+   8.735,
+   0.0
+  ],
+  "crtyd_case": [
+   -55.535,
+   8.005,
+   -52.575,
+   9.465
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "C7",
+  "value": "100n",
+  "lib": "C_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -58.265,
+   8.735,
+   0.0
+  ],
+  "crtyd_case": [
+   -59.745,
+   8.005,
+   -56.785,
+   9.465
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "R5",
+  "value": "100R",
+  "lib": "R_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -49.845,
+   6.025,
+   0.0
+  ],
+  "crtyd_case": [
+   -51.325,
+   5.295,
+   -48.365,
+   6.755
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "H2",
+  "value": "M3 into the enclosure boss",
+  "lib": "MountingHole_3.2mm_M3",
+  "layer": "F.Cu",
+  "at_case": [
+   -18.0,
+   -9.0,
+   0.0
+  ],
+  "crtyd_case": [
+   -21.45,
+   -12.45,
+   -14.55,
+   -5.55
+  ],
+  "crtyd_pts": 4,
+  "models": []
+ },
+ {
+  "ref": "R3",
+  "value": "100R",
+  "lib": "R_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -58.265,
+   6.025,
+   0.0
+  ],
+  "crtyd_case": [
+   -59.745,
+   5.295,
+   -56.785,
+   6.755
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "R16",
+  "value": "5.1k",
+  "lib": "R_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -31.265,
+   11.345,
+   0.0
+  ],
+  "crtyd_case": [
+   -32.745,
+   10.615,
+   -29.785,
+   12.075
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "TP10",
+  "value": "SMBD",
+  "lib": "TestPoint_Pad_D1.5mm",
+  "layer": "F.Cu",
+  "at_case": [
+   -77.375,
+   1.625,
+   0.0
+  ],
+  "crtyd_case": [
+   -78.625,
+   0.375,
+   -76.125,
+   2.875
+  ],
+  "crtyd_pts": 4,
+  "models": []
+ },
+ {
+  "ref": "TP7",
+  "value": "PACK_P",
+  "lib": "TestPoint_Pad_D1.5mm",
+  "layer": "F.Cu",
+  "at_case": [
+   -81.125,
+   5.375,
+   0.0
+  ],
+  "crtyd_case": [
+   -82.375,
+   4.125,
+   -79.875,
+   6.625
+  ],
+  "crtyd_pts": 4,
+  "models": []
+ },
+ {
+  "ref": "R13",
+  "value": "10k",
+  "lib": "R_0603_1608Metric",
+  "layer": "F.Cu",
+  "at_case": [
+   -43.895,
+   11.345,
+   0.0
+  ],
+  "crtyd_case": [
+   -45.375,
+   10.615,
+   -42.415,
+   12.075
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0603_1608Metric.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ },
+ {
+  "ref": "W_P",
+  "value": "pack lead + (12 AWG to the XT60 on E6 J_BATT pin 2)",
+  "lib": "SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm",
+  "layer": "F.Cu",
+  "at_case": [
+   -24.0,
+   22.5,
+   0.0
+  ],
+  "crtyd_case": [
+   -26.55,
+   20.0,
+   -21.45,
+   25.0
+  ],
+  "crtyd_pts": 2,
+  "models": [
+   {
+    "path": "${KICAD9_3DMODEL_DIR}/Connector_Wire.3dshapes/SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm.step",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "rotate": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "hide": false
+   }
+  ]
+ }
+]

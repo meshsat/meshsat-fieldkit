@@ -1,0 +1,6 @@
+lands: 34 footprint(s) judged, 0 pin(s) on a pad the land does not carry, 0 land(s) unreadable
+schlayout verify: 583 pins in 472 nets, every component one name
+layout: 6 A3 pages on a 3 x 2 sheet -> paper "User" 1257.30 594.36
+wrote /root/r2/A03-clamp-orientation/out/regen/pcb-d-aprs.kicad_sch parts: 220 lib symbols: 36
+nets: 133 single-pin nets (should be empty or intentional): []
+intent: /root/r2/A03-clamp-orientation/out/regen/out/pcb-d-aprs-intent.json (22 bypass, 4 rails, 4 nodes, 5 pair classes)

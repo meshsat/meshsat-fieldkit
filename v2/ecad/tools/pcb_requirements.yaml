@@ -483,6 +483,16 @@ owner_rulings:
       - "v2/ecad/tools/pcb_decisions.yaml:1077-1129"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:18725"
       - "v2/docs/EXECUTION-PLAN.md:71"
+  - id: public-docs
+    authority: OWNER
+    ruled_on: "2026-09-25"
+    title: "the foundation documents are published directly"
+    ruling: >-
+      The new foundation documents (the product brief, the concept of operations, the requirements and the decision
+      table) go directly into the public repository's v2/docs/, not into a private draft area first. Ruled on the
+      evening of 25 September 2026 and written down that day only in the session's own notes; recorded here on 27
+      September 2026 by the layer 1 closer (MESHSAT-1357).
+    source: ["owner ruling public-docs", "v2/docs/PRODUCT-BRIEF.md (Constraints fixed by owner rulings)"]
   - id: standing-rule
     authority: OWNER
     ruled_on: "2026-09-26"
@@ -732,6 +742,87 @@ session_choices:
       so no qualification condition is chosen by what the circuit can pass
       (v2/docs/review-packets/battery/THERMAL-COORDINATION.md sections 3, 4, 5, 9 and 9a).
     source: ["v2/docs/review-packets/battery/THERMAL-COORDINATION.md sections 9 and 9a", "owner ruling D-02a"]
+  - id: SC-13
+    authority: SESSION
+    under: standing-rule
+    taken_on: "2026-09-27"
+    question: "One description of the dual SIM (S-13, CFL-010): eSIM plus nano-SIM, or the generator's two nano-SIM holders?"
+    taken: >-
+      Quectel's compatible design for USIM2 (RM520N series hardware design v1.1 section 4.1.6, Figure 19), which
+      gen_sch_b.py already carries: SIM 1 a nano-SIM holder on (U)SIM1, SIM 2 a nano-SIM holder on USIM2 behind four
+      0 ohm links at the module, so the same board also builds appendix 32.50 item 12's eSIM-plus-nano-SIM
+      configuration with an eSIM-fitted module variant and the links left off. Prototype 1 is built with two nano-SIMs,
+      a session default that departs from the configuration the owner approved (eSIM plus nano-SIM, appendix 32.50 item
+      12) until the eSIM variant's order code is named; that code stays on the components layer's list.
+    why: >-
+      It keeps both configurations on one board with no board change and drops nothing the owner approved, where an
+      eSIM default would wait on an order code no held document names (v2/vendor/SOURCES.yaml, the RM520N-GL entry).
+      The SIM TVS array of at most 10 pF (section 4.1.7) and the eSIM variant's code stay owed under S-13, so CFL-010
+      stays open. Reverse by making the eSIM configuration the default build once that code is named; no board change
+      either way.
+    source:
+      - "v2/docs/V2-SPEC.md:41 and correction 22"
+      - "v2/ecad/tools/gen_sch_b.py:672-697"
+      - "v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf sections 4.1.6 and 4.1.7"
+  - id: SC-14
+    authority: SESSION
+    under: standing-rule
+    taken_on: "2026-09-27"
+    question: "REQ-023: which carried-mass limit does the kit design to?"
+    taken: >-
+      The kit, closed and latched with the pack and the lid's carried items fitted, is designed to weigh under 45.4 kg
+      (100 lb) with its largest dimension under 91 cm (36 in): the man-packed or man-portable row of MIL-STD-810H
+      Method 516.8 Table 516.8-IX, whose 122 cm and 26 drops the owner ruled as TEST-PLAN E1 (D-02c).
+    why: >-
+      The ruled E1 severity presumes that category, so it is the one limit the sources already imply; a tighter
+      one-person carry limit would need an ergonomics source this tree does not hold, and none is claimed. At desk the
+      sourced floor is about 7.0 kg (ARCHITECTURE.md section 11), and the case's exterior is 417.6 x 330.2 x 173.2 mm on
+      Peli's product page, about 478 mm long over the arrestor rows (CASE-MARGINS.md sections 2.2 and 3.4), the table
+      classifying by the outside of the item and its case. Reverse by stating another limit: a
+      lighter one tightens the design; a heavier one moves E1 into another row (eight corner drops from 76 cm), which
+      changes D-02c and so goes to the owner.
+    source:
+      - "v2/vendor/standards/mil-std-810h-method-516-8.md (Table 516.8-IX)"
+      - "owner ruling D-02c"
+      - "v2/docs/V2-SPEC.md correction 25"
+  - id: SC-15
+    authority: SESSION
+    under: standing-rule
+    taken_on: "2026-09-27"
+    question: "How the public pages present the 7 September deliverables and the V2 build guide."
+    taken: >-
+      v2/BUILD.md stays as the 7 September generation's guide, headed as history and not for ordering (decision 41; 0
+      boards ready for layout), with the lines that contradicted the baseline corrected in place and marked; both
+      READMEs give each board's newest deliverable folder beside its declared phase and say that every folder predates
+      the circuit corrections of 26 September 2026.
+    why: >-
+      BUILD.md is the only end-to-end assembly narrative in the tree and most of its parts and steps still stand, so
+      withdrawing it would lose that, while its head removes the risk that a reader orders boards whose layouts do not
+      carry the corrected netlists. Publishing engineering status is what the owner's handover prompt of 27 September
+      2026 asks for, and nothing is advertised to the envelope. Reverse by withdrawing the page or its section 1.
+    source: ["v2/BUILD.md", "README.md", "v2/README.md", "v2/ecad/tools/pcb_decisions.yaml (decision 41)"]
+  - id: SC-16
+    authority: SESSION
+    under: standing-rule
+    taken_on: "2026-09-27"
+    question: "Who holds Review A for layer 1, against what, and where is it recorded?"
+    taken: >-
+      One fresh reviewer, a session or person that wrote none of the pages, holds an AI review, labelled as one and
+      never a qualified review, of PRODUCT-BRIEF.md, README.md, v2/README.md, v2/BUILD.md and V2-SPEC.md at one pinned
+      commit, against the layer 1 row of section 3 and the tests of section 2 of the owner's handover prompt; the
+      record is v2/docs/reviews/REVIEW-A-LAYER-1-<date>.md, headed "AI review (not a qualified engineering review)";
+      the first pass is REVIEW-A-LAYER-1-2026-09-27.md; blocking findings are fixed and re-checked once, and after
+      two unsuccessful passes the method changes; the brief is BASELINED at the commit that files a record with no open
+      blocking finding. Layer 2's part of Review A is held the same way by its own fresh reviewer.
+    why: >-
+      EXECUTION-PLAN.md names Review A's content and what it gates but no reviewer, criteria or record, so nobody could
+      pass it (handover audit of 27 September 2026); no record in this tree requires an engineer's review of layer 1,
+      and the owner's handover prompt allows an AI review labelled as one where none is mandated. Reverse by requiring
+      an engineer's review of layer 1, which this AI review would not stand in for.
+    source:
+      - "v2/docs/PRODUCT-BRIEF.md (Review A, layer 1)"
+      - "v2/docs/reviews/2026-09-27-handover-execution-prompt.md sections 2 and 3"
+      - "v2/docs/EXECUTION-PLAN.md:60"
 
 # What is still open. SESSION items are engineering the session decides and records with authority SESSION;
 # OWNER_ACTION is something the owner has ruled that he does or sets himself; LATER a money item he approves from a
@@ -805,9 +896,10 @@ open_items:
     class: SESSION
     status: OPEN
     title: >-
-      One SIM description: V2-SPEC line 41 says eSIM plus nano-SIM, the generator fits two nano-SIM holders with an
-      eSIM build option (the 0 ohm links of Quectel HD v1.1 Figure 19); and the SIM TVS array the HD asks for (at most
-      10 pF) fitted. SIM 2 is on the module's own pins since 458b2873.
+      The SIM TVS array the HD asks for (at most 10 pF, Quectel HD v1.1 section 4.1.7) fitted on board B, and the order
+      code of an eSIM-fitted RM520N-GL named before an eSIM build is bought. The description is settled by session
+      choice SC-13 (V2-SPEC line 41, correction 22: the compatible design of HD Figure 19, two nano-SIM holders with an
+      eSIM build option). SIM 2 is on the module's own pins since 458b2873.
   - id: S-14
     class: SESSION
     status: OPEN
@@ -1549,10 +1641,15 @@ records:
           4's Transport and Storage rows changed, each in place (the restriction of SC-12: a kit with its pack fitted never
           left where the temperature may exceed +60 C, and the pack stored apart inside its cells' rating); the needs table
           is byte-identical and no row or section this reading cites is among the two, so it stands on the file at 122c921af6e3de40
+      - >-
+          v2/docs/V2-SPEC.md re-read at the layer 1 closing of 27 September 2026 (worktree fnd/hc1, from e3aedb25): it
+          changed lines 3, 9, 10, 11, 13, 23, 24, 34, 41, 42, 51, 70, 73, 76 and 90 and added corrections 20 to 27; line
+          32 and correction 6, which this reading cites, are byte-identical, so it stands on the file at
+          dd9a92946a8d186f
     evidence_bound_to:
       - "v2/docs/CONOPS.md@122c921af6e3de40"
       - "v2/docs/ARCH-PCB-B-IOHA.md@6c3c93b7f32f953a"
-      - "v2/docs/V2-SPEC.md@df8ac22603440bc5"
+      - "v2/docs/V2-SPEC.md@dd9a92946a8d186f"
     release_effect: BLOCKER
     source:
       - "v2/docs/ARCH-PCB-B-IOHA.md:17"
@@ -3320,11 +3417,14 @@ records:
     kind: requirement
     candidate: CAND-038
     parent: NEED-06
-    statement: "The kit's carried mass is limited to a stated value."
-    acceptance: "TBD: no mass requirement exists anywhere in the sources."
-    tbd_effect: >-
-      Pack size (4S4P or a second pack), the monitor (1.2 kg), the aluminium plate and the case cannot be traded
-      against a limit; the transit drop severity also depends on mass.
+    statement: >-
+      The kit, closed and latched with the pack and the lid's carried items fitted, weighs under 45.4 kg (100 lb) and
+      its largest dimension is under 91 cm (36 in): the man-packed or man-portable category of MIL-STD-810H Method
+      516.8 Table 516.8-IX, which the ruled transit drop E1 (26 drops from 1.22 m, owner ruling D-02c) presumes.
+    acceptance: >-
+      At desk, the mass budget of ARCHITECTURE.md section 11 and the case outline stay inside both limits; at assembly,
+      the kit as the statement defines it is weighed under 45.4 kg and its largest outside dimension measured under
+      91 cm.
     allocated_to: [kit]
     verification_method: [CALCULATION, PROTOTYPE_MEASUREMENT]
     verification_phase: PLACED_BOARD
@@ -3335,11 +3435,18 @@ records:
       rules: []
       decisions: []
     rule_coverage: NONE
-    status: TBD
+    choices: [SC-14]
+    status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
-    source: ["none (gap): no mass figure in V2-SPEC.md, OPERATING-ENVELOPE.md or 32.49 to 32.62 beyond single parts"]
+    source:
+      - "session choice SC-14"
+      - "v2/vendor/standards/mil-std-810h-method-516-8.md (Table 516.8-IX)"
+      - "owner ruling D-02c"
     source_check: VERIFIED
+    history: >-
+      Read TBD until 27 September 2026 ("no mass requirement exists anywhere in the sources"); the layer 1 closer set
+      the limit from the category the ruled E1 severity presumes (session choice SC-14; V2-SPEC.md correction 25).
 
   - id: REQ-024
     kind: requirement
@@ -6058,12 +6165,25 @@ records:
           added, removed or moved; the D-15 floor this reading cites (gen_sch_p.py:243, :288, :414-502) is the same
           circuit (line 419 carries J_TS2's new order code only) and no document this record names states either code,
           so it stands on the file at 085f833362fbbda8
+      - >-
+          v2/docs/V2-SPEC.md re-read at the layer 1 closing of 27 September 2026 (worktree fnd/hc1, from e3aedb25): it
+          changed lines 3, 9, 10, 11, 13, 23, 24, 34, 41, 42, 51, 70, 73, 76 and 90 and added corrections 20 to 27; line
+          43 and corrections 2, 4, 7, 9, 12, 13 and 19 are byte-identical; line 34 changed only in naming the wrapping
+          keys as two key-encryption keys, both destroyed, as its own parenthetical and feasibility/ZEROIZE.md section 3
+          already said (correction 27, finding N1 of the second pass of Review A, layer 1), with its trigger, wipe order
+          and circuit unchanged; line 24 keeps its description of the circuit as generated at 45bde541 byte for byte and
+          changed only in what it says EMCON still owes, which now follows v2/docs/feasibility/EMCON.md section 0a
+          (sixth revision: the radio's own chain closed at desk for 14 of 17 transmitters, open for the SA868, the
+          RockBLOCK 9704 and the RM520N-GL; 0 of 17 end to end; correction 26, after finding B1 of the first pass of
+          Review A, layer 1); line 41 changed only in its dual-SIM clause (session choice SC-13, correction 22); line 76
+          only in its owed list (the SIM TVS array, and the EMCON items of correction 26); none of these describes a
+          circuit that faf8c981, 458b2873 or d90f30e4 replaced, so the reading stands on the file at dd9a92946a8d186f
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976"
       - "v2/docs/PANEL.md@8eeb152e4d82080c"
       - "v2/docs/CONOPS.md@122c921af6e3de40"
-      - "v2/docs/V2-SPEC.md@df8ac22603440bc5"
+      - "v2/docs/V2-SPEC.md@dd9a92946a8d186f"
       - "v2/docs/OPERATING-ENVELOPE.md@89de81a11c52f34a"
       - "v2/docs/TEST-PLAN.md@86742b72d44adce6"
       - "v2/ecad/tools/pcb_decisions.yaml@b5f7162443d5ad91"
@@ -6572,6 +6692,7 @@ records:
       rules: [DOC-002]
       decisions: []
     rule_coverage: PARTIAL
+    choices: [SC-13]
     waits_on: [S-13]
     status: CONFLICT_OPEN
     evidence_result: FAIL
@@ -6595,8 +6716,16 @@ records:
           only at lines 441, 671, 832 and 876 (board B's one-way clamps D1, D2, D101, D201, D301 and D520 now drawn
           through kisch.tvs()); every line number is kept and this reading cites none of those lines, so it stands on the
           file at dedaf34ce285e5ff
+      - >-
+          v2/docs/V2-SPEC.md:41 and :76 re-read at the layer 1 closing of 27 September 2026 (worktree fnd/hc1, from
+          e3aedb25): line 41 now gives one description, Quectel's compatible design of HD v1.1 section 4.1.6 (Figure 19)
+          with two nano-SIM holders and an eSIM build option, prototype 1 built with two nano-SIMs (session choice
+          SC-13, correction 22), which is what v2/ecad/tools/gen_sch_b.py:672-697 carries; the conflict stays open on
+          the rest of its acceptance: the SIM TVS array of at most 10 pF (HD section 4.1.7) is not in the generator
+          (S-13), and the order code of an eSIM-fitted variant is not named (v2/vendor/SOURCES.yaml, the RM520N-GL
+          entry)
     evidence_bound_to:
-      - "v2/docs/V2-SPEC.md@df8ac22603440bc5"
+      - "v2/docs/V2-SPEC.md@dd9a92946a8d186f"
       - "v2/ecad/tools/gen_sch_b.py@dedaf34ce285e5ff"
     release_effect: BLOCKER
     source:
@@ -7180,8 +7309,12 @@ records:
           capacitors C59 to C62 (on E6_DVDD and +3V3_E6, to GND), J_BATT's value text, J_SMB's order code (C594232 to
           C144395), R6 and R7's value (100 R to 10 R) and the title block's comment 2; DCF_PULSE still runs from J_DCF pin 3
           to the sensor controller U10 and nowhere else, so this reading stands on the file at f3c1ad6153002976
+      - >-
+          v2/docs/V2-SPEC.md re-read at the layer 1 closing of 27 September 2026 (worktree fnd/hc1, from e3aedb25): it
+          changed lines 3, 9, 10, 11, 13, 23, 24, 34, 41, 42, 51, 70, 73, 76 and 90 and added corrections 20 to 27; line
+          35 and correction 8 are byte-identical, so this reading stands on the file at dd9a92946a8d186f
     evidence_bound_to:
-      - "v2/docs/V2-SPEC.md@df8ac22603440bc5"
+      - "v2/docs/V2-SPEC.md@dd9a92946a8d186f"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976"
     release_effect: ADVISORY
     source: ["v2/docs/V2-SPEC.md:35", "v2/ecad/tools/gen_sch_e.py:581"]

@@ -1,0 +1,145 @@
+### request (4, 1.6, 1, 0.5) at 2026-09-25T21:26:04.288363Z
+1) No requirement (templateName JLC04161H-7628, code 20220913081702565, enable True, default True, expedited True, compressionThickness 1.5862, laminationType 1, plateType 1, fixedFee 0.0)
+  Top Layer: Copper 0.035mm
+  prepreg 7628*1 0.21040mm
+  core block [1.1mm H/HOZ with copper]: Inner Layer L2 Copper 0.0152mm | Core Core 1.065mm | Inner Layer L3 Copper 0.0152mm
+  prepreg 7628*1 0.21040mm
+  Bottom Layer: Copper 0.035mm
+2) JLC04161H-7628 (templateName JLC04161H-7628, code 20211110053231, enable True, default False, expedited True, compressionThickness 1.5862, laminationType 1, plateType 1, fixedFee 0.0)
+  Top Layer: Copper 0.035mm
+  prepreg 7628*1 0.21040mm
+  core block [1.1mm H/HOZ with copper]: Inner Layer L2 Copper 0.0152mm | Core Core 1.065mm | Inner Layer L3 Copper 0.0152mm
+  prepreg 7628*1 0.21040mm
+  Bottom Layer: Copper 0.035mm
+3) JLC04161H-3313 (templateName JLC04161H-3313, code 20211110053321, enable True, default False, expedited True, compressionThickness 1.5642, laminationType 2, plateType 1, fixedFee 0.0)
+  Top Layer: Copper 0.035mm
+  prepreg 3313*1 0.09940mm
+  core block [1.3mm H/HOZ with copper]: Inner Layer L2 Copper 0.0152mm | Core Core 1.265mm | Inner Layer L3 Copper 0.0152mm
+  prepreg 3313*1 0.09940mm
+  Bottom Layer: Copper 0.035mm
+6) JLC04161H-1080 (templateName JLC04161H-1080, code 20211110040316, enable True, default False, expedited False, compressionThickness 1.5182, laminationType 2, plateType 1, fixedFee 110.0)
+  Top Layer: Copper 0.035mm
+  prepreg 1080*1 0.07640mm
+  core block [1.3mm H/HOZ with copper]: Inner Layer L2 Copper 0.0152mm | Core Core 1.265mm | Inner Layer L3 Copper 0.0152mm
+  prepreg 1080*1 0.07640mm
+  Bottom Layer: Copper 0.035mm
+7) JLC04161H-7628A (templateName JLC04161H-7628A, code 20221015043406712, enable True, default False, expedited False, compressionThickness 1.5542, laminationType 2, plateType 1, fixedFee 330.0)
+  Top Layer: Copper 0.035mm
+  prepreg 7628*1 0.218mm
+  prepreg 1080*1 0.07640mm
+  core block [0.9mm H/HOZ with copper]: Inner Layer L2 Copper 0.0152mm | Core Core 0.865mm | Inner Layer L3 Copper 0.0152mm
+  prepreg 1080*1 0.07640mm
+  prepreg 7628*1 0.218mm
+  Bottom Layer: Copper 0.035mm
+7) JLC04161H-3313A (templateName JLC04161H-3313A, code 20221109041028832, enable True, default False, expedited False, compressionThickness 1.5782, laminationType 2, plateType 1, fixedFee 330.0)
+  Top Layer: Copper 0.035mm
+  prepreg 3313*1 0.107mm
+  prepreg 3313*1 0.09940mm
+  core block [1.1mm H/HOZ with copper]: Inner Layer L2 Copper 0.0152mm | Core Core 1.065mm | Inner Layer L3 Copper 0.0152mm
+  prepreg 3313*1 0.09940mm
+  prepreg 3313*1 0.107mm
+  Bottom Layer: Copper 0.035mm
+7) JLC04161H-1080A (templateName JLC04161H-1080A, code 20220926073459683, enable True, default False, expedited True, compressionThickness 1.4862, laminationType 2, plateType 1, fixedFee 330.0)
+  Top Layer: Copper 0.035mm
+  prepreg 1080*1 0.084mm
+  prepreg 1080*1 0.07640mm
+  core block [1.1mm H/HOZ with copper]: Inner Layer L2 Copper 0.0152mm | Core Core 1.065mm | Inner Layer L3 Copper 0.0152mm
+  prepreg 1080*1 0.07640mm
+  prepreg 1080*1 0.084mm
+  Bottom Layer: Copper 0.035mm
+7) JLC04161H-7628B (templateName JLC04161H-7628B, code 20221118071355865, enable True, default False, expedited False, compressionThickness 1.6052, laminationType 2, plateType 1, fixedFee 330.0)
+  Top Layer: Copper 0.035mm
+  prepreg 7628*1 0.218mm
+  prepreg 7628*1 0.218mm
+  prepreg 2116*1 0.11640mm
+  core block [0.4mm H/HOZ without copper]: Inner Layer L2 Copper 0.0152mm | Core Core 0.4mm | Inner Layer L3 Copper 0.0152mm
+  prepreg 2116*1 0.11640mm
+  prepreg 7628*1 0.218mm
+  prepreg 7628*1 0.218mm
+  Bottom Layer: Copper 0.035mm
+7) JLC04161H-2116A (templateName JLC04161H-2116A, code 20220901050831, enable True, default False, expedited False, compressionThickness 1.6172, laminationType 2, plateType 1, fixedFee 330.0)
+  Top Layer: Copper 0.035mm
+  prepreg 2116*1 0.124mm
+  prepreg 7628*1 0.218mm
+  prepreg 2116*1 0.11640mm
+  core block [0.6mm H/HOZ without copper]: Inner Layer L2 Copper 0.0152mm | Core Core 0.6mm | Inner Layer L3 Copper 0.0152mm
+  prepreg 2116*1 0.11640mm
+  prepreg 7628*1 0.218mm
+  prepreg 2116*1 0.124mm
+  Bottom Layer: Copper 0.035mm
+7) JLC04161H-2116B (templateName JLC04161H-2116B, code 20220916120025662, enable True, default False, expedited False, compressionThickness 1.6342, laminationType 2, plateType 1, fixedFee 330.0)
+  Top Layer: Copper 0.035mm
+  prepreg 2116*1 0.124mm
+  prepreg 7628*1 0.21040mm
+  core block [0.9mm H/HOZ with copper]: Inner Layer L2 Copper 0.0152mm | Core Core 0.865mm | Inner Layer L3 Copper 0.0152mm
+  prepreg 7628*1 0.21040mm
+  prepreg 2116*1 0.124mm
+  Bottom Layer: Copper 0.035mm
+7) JLC04161H-2116C (templateName JLC04161H-2116C, code 20220919080311682, enable True, default False, expedited False, compressionThickness 1.5662, laminationType 2, plateType 1, fixedFee 330.0)
+  Top Layer: Copper 0.035mm
+  prepreg 2116*1 0.124mm
+  prepreg 1080*1 0.07640mm
+  core block [1.1mm H/HOZ with copper]: Inner Layer L2 Copper 0.0152mm | Core Core 1.065mm | Inner Layer L3 Copper 0.0152mm
+  prepreg 1080*1 0.07640mm
+  prepreg 2116*1 0.124mm
+  Bottom Layer: Copper 0.035mm
+7) JLC04161H-7628G (templateName JLC04161H-7628G, code 202607130748059522, enable True, default False, expedited False, compressionThickness 1.6252, laminationType 2, plateType 1, fixedFee 0.0)
+  Top Layer: Copper 0.035mm
+  prepreg 7628*1 0.218mm
+  prepreg 7628*1 0.218mm
+  prepreg 1080*1 0.07640mm
+  core block [0.5mm H/HOZ without copper]: Inner Layer L2 Copper 0.0152mm | Core Core 0.5mm | Inner Layer L3 Copper 0.0152mm
+  prepreg 1080*1 0.07640mm
+  prepreg 7628*1 0.218mm
+  prepreg 7628*1 0.218mm
+  Bottom Layer: Copper 0.035mm
+8) JLC04161H-2116 (templateName JLC04161H-2116, code 202407040505581973, enable True, default False, expedited False, compressionThickness 1.5982, laminationType 2, plateType 1, fixedFee 0.0)
+  Top Layer: Copper 0.035mm
+  prepreg 2116*1 0.11640mm
+  core block [1.3mm H/HOZ with copper]: Inner Layer L2 Copper 0.0152mm | Core Core 1.265mm | Inner Layer L3 Copper 0.0152mm
+  prepreg 2116*1 0.11640mm
+  Bottom Layer: Copper 0.035mm
+8) JLC04161H-7628E (templateName JLC04161H-7628E, code 202502170326462422, enable True, default False, expedited False, compressionThickness 1.5572, laminationType 2, plateType 1, fixedFee 0.0)
+  Top Layer: Copper 0.035mm
+  prepreg 7628*1 0.218mm
+  prepreg 7628*1 0.21040mm
+  core block [0.6mm H/HOZ without copper]: Inner Layer L2 Copper 0.0152mm | Core Core 0.6mm | Inner Layer L3 Copper 0.0152mm
+  prepreg 7628*1 0.21040mm
+  prepreg 7628*1 0.218mm
+  Bottom Layer: Copper 0.035mm
+9) JLC04161H-2116D (templateName JLC04161H-2116D, code 202407230313541981, enable True, default False, expedited False, compressionThickness 1.4692, laminationType 2, plateType 1, fixedFee 0.0)
+  Top Layer: Copper 0.035mm
+  prepreg 2116*1 0.124mm
+  prepreg 7628*1 0.21040mm
+  core block [0.7mm H/HOZ without copper]: Inner Layer L2 Copper 0.0152mm | Core Core 0.7mm | Inner Layer L3 Copper 0.0152mm
+  prepreg 7628*1 0.21040mm
+  prepreg 2116*1 0.124mm
+  Bottom Layer: Copper 0.035mm
+9) JLC04161H-7628F (templateName JLC04161H-7628F, code 202503060414532482, enable True, default False, expedited False, compressionThickness 1.6432, laminationType 2, plateType 1, fixedFee 0.0)
+  Top Layer: Copper 0.035mm
+  prepreg 7628*1 0.218mm
+  prepreg 7628*1 0.218mm
+  prepreg 7628*1 0.21040mm
+  core block [0.25mm H/HOZ without copper]: Inner Layer L2 Copper 0.0152mm | Core Core 0.25mm | Inner Layer L3 Copper 0.0152mm
+  prepreg 7628*1 0.21040mm
+  prepreg 7628*1 0.218mm
+  prepreg 7628*1 0.218mm
+  Bottom Layer: Copper 0.035mm
+10) JLC04161H-2116E (templateName JLC04161H-2116E, code 202505140905562583, enable True, default False, expedited False, compressionThickness 1.4462, laminationType 2, plateType 1, fixedFee 0.0)
+  Top Layer: Copper 0.035mm
+  prepreg 2116*1 0.124mm
+  prepreg 2116*1 0.11640mm
+  core block [0.9mm H/HOZ with copper]: Inner Layer L2 Copper 0.0152mm | Core Core 0.865mm | Inner Layer L3 Copper 0.0152mm
+  prepreg 2116*1 0.11640mm
+  prepreg 2116*1 0.124mm
+  Bottom Layer: Copper 0.035mm
+12) JLC04161H-7628C (templateName JLC04161H-7628C, code 202301190342121053, enable True, default False, expedited False, compressionThickness 1.5432, laminationType 2, plateType 1, fixedFee 0.0)
+  Top Layer: Copper 0.035mm
+  prepreg 7628*1 0.218mm
+  prepreg 7628*1 0.218mm
+  prepreg 7628*1 0.21040mm
+  core block [0.15mm H/HOZ without copper]: Inner Layer L2 Copper 0.0152mm | Core Core 0.15mm | Inner Layer L3 Copper 0.0152mm
+  prepreg 7628*1 0.21040mm
+  prepreg 7628*1 0.218mm
+  prepreg 7628*1 0.218mm
+  Bottom Layer: Copper 0.035mm

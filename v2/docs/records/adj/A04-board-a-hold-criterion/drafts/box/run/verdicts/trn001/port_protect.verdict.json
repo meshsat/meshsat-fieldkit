@@ -1,0 +1,40 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "answered_in_part": 2,
+  "behind_an_active_part": 0,
+  "declared": 3,
+  "not_on_netlist": 0,
+  "ports": 3,
+  "unprotected": 0
+ },
+ "denominator": 21,
+ "evidence": [],
+ "inputs": {
+  "board": "a",
+  "netlist": {
+   "path": "/root/r2/A04-board-a-hold-criterion/repo/v2/ecad/pcb-a-power-a23/out/pcb-a-power.net",
+   "sha256_16": "aa1372ba3932610f"
+  }
+ },
+ "missing_input": null,
+ "note": "every declared external conductor meets a protection part before a chip",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [],
+ "tool": "port_protect",
+ "tools": {
+  "git_head": "82dd1e4dc44e",
+  "tools_tree_sha": "354b2ba2a308d8ed"
+ },
+ "ts": "2026-09-25T21:30:12Z",
+ "verdict": "PASS",
+ "version": "82dd1e4dc44e",
+ "writer": {
+  "file": "port_protect.py",
+  "sha16": "f99d9cfc6698197a"
+ }
+}

@@ -1,0 +1,290 @@
+# A: v2/ecad/pcb-a-power-a23/out/pcb-a-power.net (committed in 0d1e2ef6, the last commit to gen_sch_a.py; netlist date 2026-09-20T12:21:38Z)
+/DEV_EN R42.1 U27.11 U7.3
+    R42.1  100k  
+    U27.11  PCA9555PW (0x21): enables and status  C2864778
+    U7.3  AP64500SP-13 5 A buck, 5.1 V rail +5V_DEV  C2070920
+/RAIL_EN R2.1 TP16.1 U1.6 U12.2
+    R2.1  100k  
+    TP16.1  RAIL_EN  
+    U1.6  LTC2954CTS8-1 push-button on/off controller  C683782
+    U12.2  TPS62933DRLR 3 A buck, 3.3 V logic  C3200405
+/MON_EN R111.1 U21.3 U27.5
+    R111.1  100k  
+    U21.3  TPS259631DDAR eFuse VBAT -> VMON (750R 1% (ILM: 1.2 A))  C2155778
+    U27.5  PCA9555PW (0x21): enables and status  C2864778
+/HEAT_EN R112.1 U22.3 U27.6
+    R112.1  100k  
+    U22.3  TPS259631DDAR eFuse VBAT -> VHEAT (909R 1% (ILM: 1.0 A))  C2155778
+    U27.6  PCA9555PW (0x21): enables and status  C2864778
+/D8_EN R113.1 U23.3 U27.7
+    R113.1  100k  
+    U23.3  TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (453R 1% (ILM: 2.0 A))  C2155778
+    U27.7  PCA9555PW (0x21): enables and status  C2864778
+/POE_EN R114.1 R74.1 R74.2 R75.1 U16.1 U27.8
+    R114.1  100k  
+    R74.1  62k 1%  
+    R74.2  62k 1%  
+    R75.1  10k 1%  
+    U16.1  LM5176PWPR buck-boost controller, +54V_POE from VBAT  C442493
+    U27.8  PCA9555PW (0x21): enables and status  C2864778
+/PA_SW_EN R103.1 U26.2 U27.9
+    R103.1  100k  
+    U26.2  SN74LVC08APWR quad AND: EMCON gates for the PA rail, the HF rail and the D8 inhibit  C465737
+    U27.9  PCA9555PW (0x21): enables and status  C2864778
+/HF_SW_EN R104.1 U26.5 U27.10
+    R104.1  100k  
+    U26.5  SN74LVC08APWR quad AND: EMCON gates for the PA rail, the HF rail and the D8 inhibit  C465737
+    U27.10  PCA9555PW (0x21): enables and status  C2864778
+/CHG_INHIBIT Q6.1 R21.1 U27.4
+    Q6.1  2N7002: CHG_INHIBIT high = ILIM_HIZ low = charger in HiZ  
+    R21.1  100k  
+    U27.4  PCA9555PW (0x21): enables and status  C2864778
+/PD_EN R133.1 R133.2 R134.1 R143.1 U19.1 U28.13
+    R133.1  62k 1%  
+    R133.2  62k 1%  
+    R134.1  10k 1%  
+    R143.1  100k  
+    U19.1  LM5176PWPR buck-boost controller, PD_VPWR from VBAT  C442493
+    U28.13  PCA9555PW (0x24): power-good lines, spares  C2864778
+/EMCON_HW J_AB1.15 R102.1 TP15.1 U26.1 U26.4
+    J_AB1.15  A-B interconnect (IDC 2x13, top side) to B16's underside header  
+    R102.1  100k  
+    TP15.1  EMCON_HW  
+    U26.1  SN74LVC08APWR quad AND: EMCON gates for the PA rail, the HF rail and the D8 inhibit  C465737
+    U26.4  SN74LVC08APWR quad AND: EMCON gates for the PA rail, the HF rail and the D8 inhibit  C465737
+/PA_EN J_MEZZ1.9 R58.1 R58.2 R59.1 U13.1 U26.3
+    J_MEZZ1.9  D8 mezzanine harness (IDC 2x8): its USB pair, the PTT mirror, the inhibit, the PA rail state, I2C  
+    R58.1  62k 1%  
+    R58.2  62k 1%  
+    R59.1  10k 1%  
+    U13.1  LM5176PWPR buck-boost controller, +13V8_PA from VBAT  C442493
+    U26.3  SN74LVC08APWR quad AND: EMCON gates for the PA rail, the HF rail and the D8 inhibit  C465737
+/HF_EN R124.1 R124.2 R125.1 U15.1 U26.6
+    R124.1  62k 1%  
+    R124.2  62k 1%  
+    R125.1  10k 1%  
+    U15.1  LM5176PWPR buck-boost controller, +12V_HF from VBAT  C442493
+    U26.6  SN74LVC08APWR quad AND: EMCON gates for the PA rail, the HF rail and the D8 inhibit  C465737
+/SLOT_EN1 J_AB1.17 R30.1 U4.3
+    J_AB1.17  A-B interconnect (IDC 2x13, top side) to B16's underside header  
+    R30.1  100k  
+    U4.3  AP64500SP-13 5 A buck, 5.1 V rail +5V_S1  C2070920
+/SLOT_EN2 J_AB1.18 R34.1 U5.3
+    J_AB1.18  A-B interconnect (IDC 2x13, top side) to B16's underside header  
+    R34.1  100k  
+    U5.3  AP64500SP-13 5 A buck, 5.1 V rail +5V_S2  C2070920
+/SLOT_EN3 J_AB1.19 R38.1 U6.3
+    J_AB1.19  A-B interconnect (IDC 2x13, top side) to B16's underside header  
+    R38.1  100k  
+    U6.3  AP64500SP-13 5 A buck, 5.1 V rail +5V_S3  C2070920
+/SDA J_AB1.11 J_MEZZ1.10 TP17.1 U10.4 U11.4 U14.2 U14.4 U17.4 U27.23 U28.23 U3.12 U8.4 U9.4
+    J_AB1.11  A-B interconnect (IDC 2x13, top side) to B16's underside header  
+    J_MEZZ1.10  D8 mezzanine harness (IDC 2x8): its USB pair, the PTT mirror, the inhibit, the PA rail state, I2C  
+    TP17.1  SDA  
+    U10.4  INA226 rail monitor +5V_S3  C49851
+    U11.4  INA226 rail monitor +5V_DEV  C49851
+    U14.2  INA226 PA rail monitor (0x46)  C49851
+    U14.4  INA226 PA rail monitor (0x46)  C49851
+    U17.4  INA226 PoE rail monitor (0x47)  C49851
+    U27.23  PCA9555PW (0x21): enables and status  C2864778
+    U28.23  PCA9555PW (0x24): power-good lines, spares  C2864778
+    U3.12  BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B  C2871872
+    U8.4  INA226 rail monitor +5V_S1  C49851
+    U9.4  INA226 rail monitor +5V_S2  C49851
+/SCL J_AB1.12 J_MEZZ1.11 TP18.1 U10.5 U11.5 U14.5 U17.2 U17.5 U27.22 U28.22 U3.13 U8.5 U9.5
+    J_AB1.12  A-B interconnect (IDC 2x13, top side) to B16's underside header  
+    J_MEZZ1.11  D8 mezzanine harness (IDC 2x8): its USB pair, the PTT mirror, the inhibit, the PA rail state, I2C  
+    TP18.1  SCL  
+    U10.5  INA226 rail monitor +5V_S3  C49851
+    U11.5  INA226 rail monitor +5V_DEV  C49851
+    U14.5  INA226 PA rail monitor (0x46)  C49851
+    U17.2  INA226 PoE rail monitor (0x47)  C49851
+    U17.5  INA226 PoE rail monitor (0x47)  C49851
+    U27.22  PCA9555PW (0x21): enables and status  C2864778
+    U28.22  PCA9555PW (0x24): power-good lines, spares  C2864778
+    U3.13  BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B  C2871872
+    U8.5  INA226 rail monitor +5V_S1  C49851
+    U9.5  INA226 rail monitor +5V_S2  C49851
+/KILL Q1.3 R4.1 U1.8
+    Q1.3  2N7002: panel controller high = pull KILL low = power off (1 G, 2 S, 3 D)  
+    R4.1  100k  
+    U1.8  LTC2954CTS8-1 push-button on/off controller  C683782
+/PI_KILL J_AB1.10 Q1.1 R5.1
+    J_AB1.10  A-B interconnect (IDC 2x13, top side) to B16's underside header  
+    Q1.1  2N7002: panel controller high = pull KILL low = power off (1 G, 2 S, 3 D)  
+    R5.1  100k  
+/U21_OVLO R92.2 R93.1 U21.8
+    R92.2  100k 1%  
+    R93.1  10k 1% (OVLO)  
+    U21.8  TPS259631DDAR eFuse VBAT -> VMON (750R 1% (ILM: 1.2 A))  C2155778
+/U22_OVLO R96.2 R97.1 U22.8
+    R96.2  100k 1%  
+    R97.1  10k 1% (OVLO)  
+    U22.8  TPS259631DDAR eFuse VBAT -> VHEAT (909R 1% (ILM: 1.0 A))  C2155778
+/U23_OVLO R100.2 R101.1 U23.8
+    R100.2  100k 1%  
+    R101.1  10k 1% (OVLO)  
+    U23.8  TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (453R 1% (ILM: 2.0 A))  C2155778
+
+# B: v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net (committed 8ce0b892 2026-09-20 08:55, after the last gen_sch_b.py commit 7da050be 05:26)
+/SDA J_AB1.11 J_PANEL.4 R54.1 TP10.1 U1.98 U10.6 U41.35 U5.4 U5.5 U51.35 U6.23 U61.35 U7.23 U8.5 U9.7
+    J_AB1.11  A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)  
+    J_PANEL.4  panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMCON/ZEROIZE/TX_INHIBIT, HDMI selects, heartbeats, slot enables, power control lines  
+    R54.1  2.2k  
+    TP10.1  SDA  
+    U1.98  Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 the CM5 slots (PHY to PHY), port 4 the wall RJ45; I2C management on the kit bus  C638299
+    U10.6  TMP117AIDRVR board temperature under the coolers (I2C 0x49; WSON-6: 1 SCL 2 GND 3 ALERT 4 V+ 5 ADD0 6 SDA 7 thermal pad)  C699536
+    U41.35  STM32H753VITx I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset  C114409
+    U5.4  TI TPS23861PWR PoE PSE controller, port 1 to the wall RJ45 (802.3at), I2C on the kit bus  C93245
+    U5.5  TI TPS23861PWR PoE PSE controller, port 1 to the wall RJ45 (802.3at), I2C on the kit bus  C93245
+    U51.35  STM32H753VITx I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset  C114409
+    U6.23  PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)  C2864778
+    U61.35  STM32H753VITx I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset  C114409
+    U7.23  PCA9555PW 0x25: inputs (faults, RockBLOCK status) and spares  C2864778
+    U8.5  ATECC608B-SSHDA-T secure element (I2C 0x60): keys behind ZEROIZE  C1518769
+    U9.7  DS3231MZ+ holdover clock (I2C 0x68), CR2032 backed  C9866
+/SCL J_AB1.12 J_PANEL.5 R55.1 TP11.1 U1.101 U10.1 U41.36 U5.3 U51.36 U6.22 U61.36 U7.22 U8.6 U9.8
+    J_AB1.12  A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)  
+    J_PANEL.5  panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMCON/ZEROIZE/TX_INHIBIT, HDMI selects, heartbeats, slot enables, power control lines  
+    R55.1  2.2k  
+    TP11.1  SCL  
+    U1.101  Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 the CM5 slots (PHY to PHY), port 4 the wall RJ45; I2C management on the kit bus  C638299
+    U10.1  TMP117AIDRVR board temperature under the coolers (I2C 0x49; WSON-6: 1 SCL 2 GND 3 ALERT 4 V+ 5 ADD0 6 SDA 7 thermal pad)  C699536
+    U41.36  STM32H753VITx I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset  C114409
+    U5.3  TI TPS23861PWR PoE PSE controller, port 1 to the wall RJ45 (802.3at), I2C on the kit bus  C93245
+    U51.36  STM32H753VITx I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset  C114409
+    U6.22  PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)  C2864778
+    U61.36  STM32H753VITx I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset  C114409
+    U7.22  PCA9555PW 0x25: inputs (faults, RockBLOCK status) and spares  C2864778
+    U8.6  ATECC608B-SSHDA-T secure element (I2C 0x60): keys behind ZEROIZE  C1518769
+    U9.8  DS3231MZ+ holdover clock (I2C 0x68), CR2032 backed  C9866
+/PANEL_5V F1.2 J_PANEL.1 J_PANEL.2
+    F1.2  2A hold 1812  
+    J_PANEL.1  panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMCON/ZEROIZE/TX_INHIBIT, HDMI selects, heartbeats, slot enables, power control lines  
+    J_PANEL.2  panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMCON/ZEROIZE/TX_INHIBIT, HDMI selects, heartbeats, slot enables, power control lines  
+/SLOT_EN1 J_AB1.17 J_PANEL.21
+    J_AB1.17  A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)  
+    J_PANEL.21  panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMCON/ZEROIZE/TX_INHIBIT, HDMI selects, heartbeats, slot enables, power control lines  
+/SLOT_EN2 J_AB1.18 J_PANEL.22
+    J_AB1.18  A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)  
+    J_PANEL.22  panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMCON/ZEROIZE/TX_INHIBIT, HDMI selects, heartbeats, slot enables, power control lines  
+/SLOT_EN3 J_AB1.19 J_PANEL.23
+    J_AB1.19  A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)  
+    J_PANEL.23  panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMCON/ZEROIZE/TX_INHIBIT, HDMI selects, heartbeats, slot enables, power control lines  
+/EMCON_HW J_AB1.15 J_PANEL.8 Q106.3 Q206.3 Q306.3 R58.1 TP7.1 U19.1 U19.12 U19.9 U20.1 U41.33 U51.33 U61.33
+    J_AB1.15  A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)  
+    J_PANEL.8  panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMCON/ZEROIZE/TX_INHIBIT, HDMI selects, heartbeats, slot enables, power control lines  
+    Q106.3  2N7002 EMCON -> W_DISABLE1#  C8545
+    Q206.3  2N7002 EMCON -> W_DISABLE1#  C8545
+    Q306.3  2N7002 EMCON -> W_DISABLE1#  C8545
+    R58.1  100k  
+    TP7.1  EMCON_HW  
+    U19.1  SN74LVC08APWR quad AND: LimeSDR (hub port power AND EMCON AND software), RockBLOCK (EMCON AND software), LoRa (EMCON AND software)  C465737
+    U19.12  SN74LVC08APWR quad AND: LimeSDR (hub port power AND EMCON AND software), RockBLOCK (EMCON AND software), LoRa (EMCON AND software)  C465737
+    U19.9  SN74LVC08APWR quad AND: LimeSDR (hub port power AND EMCON AND software), RockBLOCK (EMCON AND software), LoRa (EMCON AND software)  C465737
+    U20.1  SN74LVC08APWR quad AND: E72 radios (EMCON AND software); spare gates grounded  C465737
+    U41.33  STM32H753VITx I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset  C114409
+    U51.33  STM32H753VITx I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset  C114409
+    U61.33  STM32H753VITx I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset  C114409
+/TX_INHIBIT_n J_AB1.16 J_PANEL.11 R59.1
+    J_AB1.16  A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)  
+    J_PANEL.11  panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMCON/ZEROIZE/TX_INHIBIT, HDMI selects, heartbeats, slot enables, power control lines  
+    R59.1  100k  
+/KSZ_RST Q2.1 R60.1 U6.4
+    Q2.1  2N7002 expander -> switch reset  C8545
+    R60.1  100k  
+    U6.4  PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)  C2864778
+/LIME_SW_EN R50.1 U19.5 U6.5
+    R50.1  100k  
+    U19.5  SN74LVC08APWR quad AND: LimeSDR (hub port power AND EMCON AND software), RockBLOCK (EMCON AND software), LoRa (EMCON AND software)  C465737
+    U6.5  PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)  C2864778
+/RB_SW_EN R51.1 U19.10 U6.6
+    R51.1  100k  
+    U19.10  SN74LVC08APWR quad AND: LimeSDR (hub port power AND EMCON AND software), RockBLOCK (EMCON AND software), LoRa (EMCON AND software)  C465737
+    U6.6  PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)  C2864778
+/LORA_ON R52.1 U19.13 U6.7
+    R52.1  100k  
+    U19.13  SN74LVC08APWR quad AND: LimeSDR (hub port power AND EMCON AND software), RockBLOCK (EMCON AND software), LoRa (EMCON AND software)  C465737
+    U6.7  PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)  C2864778
+/ZB_ON R53.1 U20.2 U6.8
+    R53.1  100k  
+    U20.2  SN74LVC08APWR quad AND: E72 radios (EMCON AND software); spare gates grounded  C465737
+    U6.8  PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)  C2864778
+/CAM_EN R48.1 U28.4 U6.9
+    R48.1  100k  
+    U28.4  TPS2065CDBV  
+    U6.9  PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)  C2864778
+/5G_OFF Q207.1 R61.1 U6.10
+    Q207.1  2N7002 expander -> FULL_CARD_POWER_OFF#  C8545
+    R61.1  100k  
+    U6.10  PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)  C2864778
+/5G_RESET Q208.1 R62.1 U6.11
+    Q208.1  2N7002 expander -> RESET#  C8545
+    R62.1  100k  
+    U6.11  PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)  C2864778
+/WL_nDIS1 U30A.89 U6.13
+    U30A.89  Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted  C7435219
+    U6.13  PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)  C2864778
+/BT_nDIS1 U30A.91 U6.16
+    U30A.91  Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted  C7435219
+    U6.16  PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)  C2864778
+/RB_IEN J_RB9704.3 U6.19
+    J_RB9704.3  RockBLOCK 9704 16-pin (IDC 2x8) on the Ground Control bracket  
+    U6.19  PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)  C2864778
+/RB_CTRL J_RB9704.6 U6.20
+    J_RB9704.6  RockBLOCK 9704 16-pin (IDC 2x8) on the Ground Control bracket  
+    U6.20  PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)  C2864778
+
+# C: v2/ecad/pcb-c-display-c8/out/pcb-c-display.net
+/+5V BZ1.2 C1.1 C3.1 J_PANEL.1 J_PANEL.2 SW_LIGHT.2 TP6.1 U5.1 U5.3
+    BZ1.2  IP67 panel-mount sounder, 5 V DC continuous, bezel gasket on the face, two flying leads (Floyd Bell MC-09-530-Q class)  
+    C1.1  10u  C15850
+    C3.1  1u  
+    J_PANEL.1  panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inhibit, HDMI selects, USB, heartbeats, slot enables, power control  
+    J_PANEL.2  panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inhibit, HDMI selects, USB, heartbeats, slot enables, power control  
+    SW_LIGHT.2  LIGHTING DAY/NIGHT/BLACKOUT toggle DPDT ON-ON-ON (pole 1: rail, pole 2: sense); NKK M2044SD3A01 on the D3 splashproof bushing, its O-ring (spare AT516) under the nut on the face, AT428H boot; D hole, flat toward +X  
+    TP6.1  +5V  
+    U5.1  TLV75533PDBV 3.3 V 500 mA LDO for the controller, expanders, e-paper and sensor (1 IN 2 GND 3 EN 4 NC 5 OUT)  
+    U5.3  TLV75533PDBV 3.3 V 500 mA LDO for the controller, expanders, e-paper and sensor (1 IN 2 GND 3 EN 4 NC 5 OUT)  
+/SDA J_PANEL.4 R7.1 U1.23 U2.23 U3.2 U7.1 U7.6 U_LIGHT.4
+    J_PANEL.4  panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inhibit, HDMI selects, USB, heartbeats, slot enables, power control  
+    R7.1  2.2k  
+    U1.23  PCA9555PW 0x22: LED sinks, light mode inputs  C2864778
+    U2.23  PCA9555PW 0x23: LED sinks, the battery bar, lamp test  C2864778
+    U3.2  RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)  C2040
+    U7.1  USBLC6-2SC6  C7519
+    U7.6  USBLC6-2SC6  C7519
+    U_LIGHT.4  Vishay VEML7700 ambient light sensor (1 SCL 2 VDD 3 GND 4 SDA), I2C 0x10  C504893
+/SCL J_PANEL.5 R8.1 U1.22 U2.22 U3.3 U7.3 U7.4 U_LIGHT.1
+    J_PANEL.5  panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inhibit, HDMI selects, USB, heartbeats, slot enables, power control  
+    R8.1  2.2k  
+    U1.22  PCA9555PW 0x22: LED sinks, light mode inputs  C2864778
+    U2.22  PCA9555PW 0x23: LED sinks, the battery bar, lamp test  C2864778
+    U3.3  RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)  C2040
+    U7.3  USBLC6-2SC6  C7519
+    U7.4  USBLC6-2SC6  C7519
+    U_LIGHT.1  Vishay VEML7700 ambient light sensor (1 SCL 2 VDD 3 GND 4 SDA), I2C 0x10  C504893
+/SLOT_EN1 J_PANEL.21 TP31.1 U3.16
+    J_PANEL.21  panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inhibit, HDMI selects, USB, heartbeats, slot enables, power control  
+    TP31.1  SLOT_EN1  
+    U3.16  RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)  C2040
+/EMCON_HW J_PANEL.8 TP11.1 U3.32 U9.4
+    J_PANEL.8  panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inhibit, HDMI selects, USB, heartbeats, slot enables, power control  
+    TP11.1  EMCON_HW  
+    U3.32  RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)  C2040
+    U9.4  74LVC1G34 non-inverting buffer (2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3)  
+/TX_INHIBIT_n C24.1 J_PANEL.11 R14.1 SW_EMCON.1 TP10.1 U9.2
+    C24.1  10n  C57112
+    J_PANEL.11  panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inhibit, HDMI selects, USB, heartbeats, slot enables, power control  
+    R14.1  10k  C25804
+    SW_EMCON.1  EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_HW low, the same sense; APEM 5636ADKB-2V, hinged safety cover); K front seal in the keyed 6.5 hole  
+    TP10.1  TX_INHIBIT_n  
+    U9.2  74LVC1G34 non-inverting buffer (2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3)  
+
+# D: v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net
+/SDA J_HARN1.10 U16.23
+    J_HARN1.10  A22 mezzanine harness J_MEZZ1 (IDC 2x8): USB pair, PTT mirror, inhibit, PA rail state, I2C, 3.3 V  
+    U16.23  PCA9555PW 0x26: COS, PTT states, KEY, PA_KEY in; exciter PD, amplifier EN, codec mute out; eight spares  
+/SCL J_HARN1.11 U16.22
+    J_HARN1.11  A22 mezzanine harness J_MEZZ1 (IDC 2x8): USB pair, PTT mirror, inhibit, PA rail state, I2C, 3.3 V  
+    U16.22  PCA9555PW 0x26: COS, PTT states, KEY, PA_KEY in; exciter PD, amplifier EN, codec mute out; eight spares  
