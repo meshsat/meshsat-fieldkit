@@ -57,6 +57,9 @@ placed = {}
 for ref in comps:                                                   # the holes are already on the board from gen_pcb_e.py
     if ref in existing: existing[ref].SetValue(comps[ref][0]); placed[ref] = existing[ref]
 # ---------------------------------------------------------------- dock layout (case mm): the target block under PCB-A's J_DOCK, the DC entry at the port end, the buck in the middle
+# EQ-16 (w3de, 27 September 2026): P_VR (VIN_RAW) and P_VN (GND), board E's 12 AWG pads to the dock block's VIN_RAW
+# power pins, are NOT in FIXED yet: their places follow E5's two new wire holes, which E5's owner lays against board
+# A's J_VR1-4 and J_VN1-4 (layer 7). Until they are added here the placement stops with 'unplaced: P_VN, P_VR'.
 FIXED = {"J_BLK": (-80, -76.5, 0, False), "P_CP": (-104, -108, 0, False), "P_CN": (-94, -108, 0, False), "PAD_W1": (-84, -108, 0, False), "PAD_W2": (-74, -108, 0, False), "J_BATT": (-138, -108, 0, False), "F3": (-120, -108, 0, False),
          "J_DCIN": (-64, -108, 0, False), "F1": (-48, -108, 0, False), "J_SOLAR": (-22, -108, 0, False), "F2": (-6, -108, 0, False),
          "U5": (32.8, -91, 0, False), "L1": (46, -103, 0, False), "U10": (86, -94, 0, False),
@@ -130,7 +133,7 @@ REGIONS = [
  ("ENTRYA", (-54, -103, -26, -83), ["U3", "Q1", "C4", "R1", "D1", "D10", "C2", "TP1", "TP2", "Q8", "R26"], False),   # D10: owner decision 31, the inlet clamp at the entry (its distance to F1 is read off the placed board)
  ("TRKIN",  (-26, -103, -2, -81), ["D4", "C11", "C12", "C13", "C14", "C15", "TP5"], False),
  ("TRKW",   (-2, -103, 28, -81), ["Q3", "Q4", "Q5", "Q6", "R5", "C16", "C17", "C18", "D5", "D6"], False),   # R6 and R7 left this list for fixed seats at the shunt (18 September 2026)
- ("TRKS",   (39.5, -95.5, 56, -80), ["C19", "C20", "C21", "C22", "C23", "R8", "R9", "R10", "R11", "R12", "R13", "R14", "R15", "R16", "R17"], False),
+ ("TRKS",   (39.5, -95.5, 56, -80), ["C19", "C20", "C63", "C64", "C21", "C22", "C23", "R8", "R9", "R10", "R11", "R12", "R13", "R14", "R15", "R16", "R17"], False),
  ("TRKOUT", (56, -112, 78, -81), ["C24", "C25", "C26", "C27", "U4", "Q2", "C28", "R18", "TP6"], False),
  ("SENS",   (40, -78, 52, -46), ["U14", "C48", "U15", "R51", "C49", "C50", "R38", "R39", "C51", "R40", "R41"], False),
  ("TPS",    (78, -112, 118, -107), ["TP4", "TP7"], False),
@@ -480,7 +483,7 @@ ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr))
 DEFAULT = (0.127, 0.25, 0.6, 0.3); cls(ns.GetDefaultNetclass(), *DEFAULT)   # 0.127: the 0.4 mm escape rows of the RP2040 (E6 round 4)
-PATTERNS = [("DC_*", "PWR"), ("HS_S", "PWR"), ("GND", "PWR"), ("GND_V", "PWR"), ("VIN_RAW", "PWR"), ("PV_*", "PWR"), ("TRK_OUT", "PWR"), ("TRK_SW*", "SW"), ("TRK_LSENSE", "PWR"), ("+5V_E6", "PWR"), ("E6_SW", "SW"), ("CELL+", "BANK"), ("CELL_F", "BANK"), ("USB_E6_*", "USB")]
+PATTERNS = [("DC_*", "PWR"), ("HS_S", "PWR"), ("GND", "PWR"), ("GND_V", "PWR"), ("VIN_RAW", "PWR"), ("PV_*", "PWR"), ("TRK_OUT", "PWR"), ("TRK_SW*", "SW"), ("TRK_CS", "PWR"), ("+5V_E6", "PWR"), ("E6_SW", "SW"), ("CELL+", "BANK"), ("CELL_F", "BANK"), ("USB_E6_*", "USB")]
 # SENSE: every net pcb_sensitive.yaml declares for this board, in a class of its own with the default geometry, listed ahead
 # of the table so a sensitive net wins over the power pattern that also names it (TRK_LSENSE sat in PWR beside TRK_SW2, the net
 # ANA-001 asks it to keep 0.50 mm from, and a class cannot be kept away from itself). The DSN class-pair clearance of

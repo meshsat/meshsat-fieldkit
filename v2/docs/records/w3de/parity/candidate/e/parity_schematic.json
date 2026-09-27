@@ -1,0 +1,119 @@
+{
+ "kind": "schematic",
+ "phase_labels": [
+  [
+   "E42P"
+  ],
+  [
+   "E42P"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N1_title_date": 1,
+   "N2_page_frame_date": 4,
+   "L1_comment1_phase": 1,
+   "L2_frame_phase": 4
+  },
+  {
+   "N1_title_date": 1,
+   "N2_page_frame_date": 4,
+   "L1_comment1_phase": 1,
+   "L2_frame_phase": 4
+  }
+ ],
+ "result": "DIFFERENT",
+ "parts_only_committed": [],
+ "parts_only_other": [
+  "C63",
+  "C64",
+  "P_VN",
+  "P_VR"
+ ],
+ "parts_changed": [
+  [
+   "J_BLK",
+   [
+    "solder lands for the 12 signal wires to the block board underside (mirror of A22 J_DOCK): 1-4 VIN_RAW, 5-7 GND, 8 SHORE_INHIBIT, 9 USB D+, 10 USB D-, 11 GND, 12 spare",
+    "PogoTargets_2x6",
+    ""
+   ],
+   [
+    "solder lands for the 12 signal wires to the block board underside (mirror of A22 J_DOCK): 1-7 GND, 8 SHORE_INHIBIT, 9 USB D+, 10 USB D-, 11 GND, 12 spare (VIN_RAW crosses on P_VR since EQ-16)",
+    "PogoTargets_2x6",
+    ""
+   ]
+  ]
+ ],
+ "lib_symbols_only_committed": [],
+ "lib_symbols_only_other": [],
+ "lib_symbols_changed": [],
+ "line_counts": [
+  17358,
+  17411
+ ],
+ "changed_lines": 4819,
+ "changed_lines_sample": [
+  "-\t(text \"PANEL TRACKER  |  BLOCK LANDS (MIRROR OF A22 J_DOCK)\" (exclude_from_sim no) (at 424.18 12.06 0) (effects (font (size 1.50 1.50)) (justify left bottom)) (uuid \"aa2f81e9-66f8-5fc5-8b71-0d8862854683\"))",
+  "+\t(text \"PANEL TRACKER  |  BLOCK LANDS (MIRROR OF A22 J_DOCK) AND THE VIN_RAW POWER PADS (EQ-16)\" (exclude_from_sim no) (at 424.18 12.06 0) (effects (font (size 1.50 1.50)) (justify left bottom)) (uuid \"aa2f81e9-66f8-5fc5-8b71-0d8862854683\"",
+  "-\t(text \"BLOCK LANDS (MIRROR OF A22 J_DOCK)\" (exclude_from_sim no) (at 429.26 219.71 0) (effects (font (size 1.80 1.80) bold) (justify left bottom)) (uuid \"b90260d1-cf7a-56cd-8479-a7815d955feb\"))",
+  "+\t(text \"BLOCK LANDS (MIRROR OF A22 J_DOCK) AND THE VIN_RAW POWER PADS (EQ-16)\" (exclude_from_sim no) (at 429.26 234.95 0) (effects (font (size 1.80 1.80) bold) (justify left bottom)) (uuid \"b90260d1-cf7a-56cd-8479-a7815d955feb\"))",
+  "-\t(symbol (lib_id \"Connector_Generic:Conn_02x20_Odd_Even\") (at 488.95 53.34 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid \"ab281628-0201-5b30-9907-098a6d1517ac\")",
+  "-\t\t(property \"Reference\" \"U5\" (at 497.84 25.93 0) (effects (font (size 1.27 1.27)) (justify left bottom)))",
+  "-\t\t(property \"Value\" \"LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted\" (at 497.84 27.94 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "-\t\t(property \"Footprint\" \"Package_DFN_QFN:WQFN-38-1EP_5x7mm_P0.5mm_EP3.15x5.15mm\" (at 488.95 53.34 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "-\t\t(property \"Datasheet\" \"\" (at 488.95 53.34 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "-\t\t(property \"Description\" \"\" (at 488.95 53.34 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "-\t\t(property \"LCSC\" \"C674164\" (at 488.95 53.34 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t(symbol (lib_id \"Connector_Generic:Conn_02x20_Odd_Even\") (at 476.25 53.34 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid \"ab281628-0201-5b30-9907-098a6d1517ac\")",
+  "+\t\t(property \"Reference\" \"U5\" (at 485.14 25.93 0) (effects (font (size 1.27 1.27)) (justify left bottom)))",
+  "+\t\t(property \"Value\" \"LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted\" (at 485.14 27.94 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t\t(property \"Footprint\" \"Package_DFN_QFN:WQFN-38-1EP_5x7mm_P0.5mm_EP3.15x5.15mm\" (at 476.25 53.34 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t\t(property \"Datasheet\" \"\" (at 476.25 53.34 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t\t(property \"Description\" \"\" (at 476.25 53.34 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t\t(property \"LCSC\" \"C674164\" (at 476.25 53.34 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "-\t(text \"LT8705A buck-boost controller\" (exclude_from_sim no) (at 497.84 27.94 0) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"d3853a83-1d6d-516f-9584-54207d1ea8ef\"))",
+  "-\t(label \"TRK_SHDN\" (at 482.60 30.48 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"df7773b7-a715-5618-8b64-9c80faa321f4\"))",
+  "-\t(label \"TRK_CSP\" (at 482.60 33.02 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"89645722-9079-5218-8360-5d8afd110e9a\"))",
+  "-\t(label \"TRK_FBIN\" (at 482.60 35.56 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"b068c0df-d65d-55a3-8a79-0b9e90a44bbf\"))",
+  "-\t(label \"TRK_IMONO\" (at 482.60 38.10 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"d9f5faa6-91d5-50f7-9171-d1fe27814ba6\"))",
+  "-\t(label \"TRK_SS\" (at 482.60 40.64 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"fcd9d2f0-b0d9-5ecd-a6ac-17e9ef3a6710\"))",
+  "-\t(global_label \"GND\" (shape input) (at 481.33 43.18 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right)) (uuid \"bc654ab0-bc9e-502a-9230-7659ce66ff4a\")",
+  "-\t\t(property \"Intersheetrefs\" \"${INTERSHEET_REFS}\" (at 481.33 43.18 0) (effects (font (size 1.27 1.27)) (hide yes)))",
+  "-\t)",
+  "-\t(global_label \"GND\" (shape input) (at 481.33 45.72 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right)) (uuid \"0ebeaecd-1162-5ceb-aafc-462a9f2a73fe\")",
+  "-\t\t(property \"Intersheetrefs\" \"${INTERSHEET_REFS}\" (at 481.33 45.72 0) (effects (font (size 1.27 1.27)) (hide yes)))",
+  "-\t)",
+  "-\t(label \"TRK_INTVCC\" (at 482.60 48.26 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"e83d8eb5-954f-506b-a9a6-737519e0fcfb\"))",
+  "-\t(label \"TRK_BOOST2\" (at 482.60 50.80 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"2c765ca3-f5aa-5b35-9fe4-dc574d8ac5e9\"))",
+  "-\t(label \"TRK_SW2\" (at 482.60 53.34 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"110817c4-ed99-504a-9f4e-879992109d01\"))",
+  "-\t(label \"TRK_SW1\" (at 482.60 55.88 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"4c7e9c02-525f-575d-a7b7-8824377e5b4c\"))",
+  "-\t(label \"TRK_BOOST1\" (at 482.60 58.42 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"f8cba876-fb80-52b5-b3e6-6e813329381d\"))",
+  "-\t(no_connect (at 483.87 60.96) (uuid \"d263f0d8-5ffd-50d5-809c-6d525a2d834e\"))",
+  "-\t(no_connect (at 483.87 63.50) (uuid \"6c97d59c-7ab9-54ab-b740-735b4f89c0a1\"))",
+  "-\t(label \"TRK_OUT\" (at 482.60 66.04 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"1c145bb0-e4c7-55d3-a121-0f0fae7738e1\"))",
+  "-\t(label \"TRK_OUT\" (at 481.33 68.58 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"9ce64f27-d3ba-5199-a5b9-38b109e44d63\"))",
+  "-\t(label \"PV_P\" (at 481.33 71.12 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"66192c54-ef13-539f-868e-70c9e4df9fe0\"))",
+  "-\t(label \"TRK_INTVCC\" (at 481.33 73.66 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"bd39b03c-6c8d-5cf1-b024-d05ac93fdc2c\"))",
+  "-\t(global_label \"GND\" (shape input) (at 481.33 76.20 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right)) (uuid \"0771edbe-2924-52fe-8645-36129d537ab0\")",
+  "-\t\t(property \"Intersheetrefs\" \"${INTERSHEET_REFS}\" (at 481.33 76.20 0) (effects (font (size 1.27 1.27)) (hide yes)))",
+  "-\t)",
+  "-\t(global_label \"GND\" (shape input) (at 481.33 78.74 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right)) (uuid \"2371aad1-1ade-56ab-9b74-33c7cef34f39\")",
+  "-\t\t(property \"Intersheetrefs\" \"${INTERSHEET_REFS}\" (at 481.33 78.74 0) (effects (font (size 1.27 1.27)) (hide yes)))",
+  "-\t)",
+  "-\t(label \"TRK_CSN\" (at 497.84 30.48 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"c46f7a9e-2b5d-5eba-98f0-99f6eaa13e67\"))",
+  "-\t(label \"TRK_LDO33\" (at 497.84 33.02 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"425e0f63-8c47-50c5-b214-d0dc63418b9a\"))",
+  "-\t(label \"TRK_FBOUT\" (at 497.84 35.56 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"05c21581-e8d5-5901-a810-3a61c7e72a40\"))",
+  "-\t(label \"TRK_VC\" (at 497.84 38.10 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"d3d91e54-a27c-5c48-9f2b-7b9d22c9404b\"))",
+  "-\t(no_connect (at 496.57 40.64) (uuid \"402251e6-86a1-5f08-bdaf-afc07a3f47bb\"))",
+  "-\t(label \"TRK_RT\" (at 497.84 43.18 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"88321287-6fc9-5d63-ae69-16de7dd2342c\"))",
+  "-\t(label \"TRK_BG1\" (at 499.11 45.72 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"c2f0c05f-db5f-5826-b778-c5f552ea51bb\"))",
+  "-\t(label \"TRK_BG2\" (at 499.11 48.26 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"dbbd14fb-3bae-5141-8965-2d3b045a8230\"))",
+  "-\t(label \"TRK_TG2\" (at 499.11 50.80 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"1191a0f7-24f1-57a3-ae37-90a7f18b85a7\"))",
+  "-\t(no_connect (at 496.57 53.34) (uuid \"b8b2208a-b776-57fc-af85-35c48d4eb481\"))",
+  "-\t(label \"TRK_TG1\" (at 499.11 55.88 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"5521bf54-5f3c-5b83-92d9-af59849585eb\"))",
+  "-\t(no_connect (at 496.57 58.42) (uuid \"a4b1f8c2-a1ce-59a4-b27e-5b3ecc7f6d9c\"))",
+  "-\t(no_connect (at 496.57 60.96) (uuid \"b8dfc874-794f-5e30-a923-e2ae1c1e07d7\"))"
+ ],
+ "bucket_hint": "PARTS"
+}

@@ -1,6 +1,6 @@
 {
  "board": "pcb-a-power",
- "written": "2026-09-27 10:26",
+ "written": "2026-09-27 12:33",
  "bypass": [
   {
    "cap": "C8",
@@ -529,15 +529,20 @@
   },
   "VIN_RAW": {
    "volts": 12.0,
-   "amps_typ": 12.31,
-   "amps_peak": 12.31,
-   "source": "J_DOCK",
+   "amps_typ": 14.1,
+   "amps_peak": 14.1,
+   "source": [
+    "J_VR1",
+    "J_VR2",
+    "J_VR3",
+    "J_VR4"
+   ],
    "loads": {
-    "Q2": 11.31,
+    "Q2": 13.1,
     "C11": 0.5,
     "C12": 0.5
    },
-   "note": "shore, vehicle and panel input from E6 over the dock: board E's vehicle entry (LM5069 U6, 6.15 A at VCL max, 10 A fuse) and its panel tracker (TRK_OUT, 6.16 A) ORed onto one bus, 12.31 A together (third fix-up of round 4, 26 September 2026, reconciled with board E's F-IN-02); the current enters the front end at Q2's drain and the input caps (the LM5176 U2 draws only its bias: a load named U2 put 8 A into two QFN pins and read 3.3 percent, 32.69)",
+   "note": "shore, vehicle and panel input from E6 over the dock: board E's vehicle entry (LM5069 U6, 6.15 A at VCL max, 10 A fuse) and its panel tracker (TRK_OUT, 6.16 A) ORed onto one bus, 12.31 A together at those two figures (third fix-up of round 4, 26 September 2026, reconciled with board E's F-IN-02), declared at board E's 14.10 A since R8E-N01 (27 September 2026: this board's front end at its ISNS limit drawing from a 9.0 V bus, R4A-N12) and crossing the dock on the Mill-Max power pins J_VR1 to J_VR4 (EQ-16); the current enters the front end at Q2's drain and the input caps (the LM5176 U2 draws only its bias: a load named U2 put 8 A into two QFN pins and read 3.3 percent, 32.69)",
    "budget": 0.02,
    "share": 0.015,
    "always_on": true,

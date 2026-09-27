@@ -1,6 +1,6 @@
 {
  "board": "pcb-e1-dock",
- "written": "2026-09-26 21:45",
+ "written": "2026-09-27 10:43",
  "bypass": [
   {
    "cap": "C16",
@@ -9,6 +9,42 @@
    "net": "TRK_CSP",
    "class": "A",
    "basis": "LT8705A datasheet 8705af (v2/vendor/power/lt8705a.pdf): Inductor Current Sense Filtering and Figure 13a (p.34), \"The network should be placed as close as possible to the IC\"; PCB layout \"The optional filter network capacitor between CSP and CSN should be as close as possible to the IC\" (p.36). A sense filter, not a supply capacitor: of the ruled classes only A (a capacitor at the pin end of its series resistors, the nearest free seat, A1 and A2) states that seat, where D's 3.0 mm screen answers a supply question it does not ask and dropping the declaration (R4) would lose the seat ANA-001 needs. Taken by the session under the owner's standing rule of 26 September 2026"
+  },
+  {
+   "cap": "C63",
+   "part": "U5",
+   "pin": "15",
+   "net": "TRK_INTVCC",
+   "class": "D",
+   "basis": "8705af: GATEVCC (Pin 15) \"Must be connected to the INTVCC pin ... Locally bypass to GND\" (p.11); \"The bypass capacitance from GATEVCC to GND should be at least ten times the CB1 or CB2 capacitance\" (p.28), C17 and C18 being 470 nF; \"Connect the INTVCC and GATEVCC bypass capacitors close to the IC\" (p.36)"
+  },
+  {
+   "cap": "C64",
+   "part": "U5",
+   "pin": "34",
+   "net": "PV_P",
+   "class": "D",
+   "basis": "LT8705A datasheet 8705af (v2/vendor/power/lt8705a.pdf): VIN (Pin 34) \"Main Input Supply Pin. It must be locally bypassed to ground\" (p.12); the front-page circuit fits 1 uF there (p.1)"
+  },
+  {
+   "cap": "C19",
+   "part": "U5",
+   "pin": "35",
+   "net": "TRK_INTVCC",
+   "class": "L",
+   "basis": "8705af: INTVCC (Pin 35) \"Internal 6.35V Regulator Output ... Bypass this pin to ground with a minimum 4.7uF ceramic capacitor\" (p.12); p.36 as C63",
+   "value_floor": "4.7u",
+   "esr_max": "not stated by the maker (TBD)"
+  },
+  {
+   "cap": "C20",
+   "part": "U5",
+   "pin": "4",
+   "net": "TRK_LDO33",
+   "class": "L",
+   "basis": "8705af: LDO33 (Pin 4) \"3.3V Regulator Output. Bypass this pin to ground with a minimum 0.1uF ceramic capacitor\" (p.11)",
+   "value_floor": "0.1u",
+   "esr_max": "not stated by the maker (TBD)"
   },
   {
    "cap": "C38",
@@ -252,9 +288,9 @@
     "Q2"
    ],
    "loads": {
-    "J_BLK": 14.1
+    "P_VR": 14.1
    },
-   "note": "the raw bus to the dock block: the vehicle and shore entry after the filter choke (L2 pad 3, 10 A fuse) AND the panel tracker through its ideal diode (Q2's drain), ORed on the same copper to J_BLK. Declared at 14.10 A typical and peak (R4A-N12, 26 September 2026): board A's front end at its ISNS limit (5.7 A at 20.7 V, 0.93) drawing from a 9.0 V bus, which the two feeds can supply together (vehicle up to 6.15 A at U6's VCL max, tracker 10.33 A at the panel's 93 W). The vehicle path alone stays 6.15 A (F-IN-02) and its five segments are declared at that. THIS BOARD'S SHARE is 0.5 of the rail's 2 percent (16 September 2026): the entry, the choke and the dock block are a short run on this strip and measured 0.16 percent at the old 8 A, while board A carries the same current from the dock across the power board to its front end and measured 0.86, so the 1.5 points go there",
+   "note": "the raw bus to the dock block: the vehicle and shore entry after the filter choke (L2 pad 3, 10 A fuse) AND the panel tracker through its ideal diode (Q2's drain), ORed on the same copper to P_VR, the 12 AWG pad to the dock's four VIN_RAW power pins (EQ-16, 27 September 2026; until then J_BLK pins 1 to 4). Declared at 14.10 A typical and peak (R4A-N12, 26 September 2026): board A's front end at its ISNS limit (5.7 A at 20.7 V, 0.93) drawing from a 9.0 V bus, which the two feeds can supply together (vehicle up to 6.15 A at U6's VCL max, tracker 10.33 A at the panel's 93 W). The vehicle path alone stays 6.15 A (F-IN-02) and its five segments are declared at that. THIS BOARD'S SHARE is 0.5 of the rail's 2 percent (16 September 2026): the entry, the choke and the dock block are a short run on this strip and measured 0.16 percent at the old 8 A, while board A carries the same current from the dock across the power board to its front end and measured 0.86, so the 1.5 points go there",
    "budget": 0.02,
    "share": 0.005,
    "switch": "U6",
@@ -275,7 +311,8 @@
     "U17": 0.005,
     "J_DCF": 0.03,
     "J_LTG": 0.03,
-    "J_POD": 0.1
+    "J_POD": 0.1,
+    "R57": 0.0046
    },
    "note": "the sensor controller's own 3.3 V from U13: the RP2040, the sensors and the three sealed sensor headers. A logic rail at a third of an amp over long thin tracks is fine at 3 percent",
    "budget": 0.03,
@@ -426,6 +463,20 @@
    "efficiency": 0.93,
    "converted": true,
    "fed_from": "PV_P"
+  },
+  "SGP_VDD": {
+   "volts": 3.3,
+   "amps_typ": 0.0046,
+   "amps_peak": 0.0046,
+   "source": "R57",
+   "loads": {
+    "U17": 0.0046
+   },
+   "note": "the SGP41's VDD behind its RC element (R57 4.7 Ohm, C57 1 uF; Sensirion SGP41 v1.0 2.5 and Figure 6), declared at the whole part's 4.6 mA maximum (Table 2, VDD and VDDH together at 3.3 V), which bounds this pin's share; R57 drops at most 22 mV at it",
+   "always_on": true,
+   "always_on_why": "the SGP41's VDD branch behind the 4.7 Ohm filter resistor R57 from +3V3_E6, which is always on by its own declaration; a resistor is not a switch",
+   "converted": false,
+   "fed_from": "+3V3_E6"
   }
  },
  "nodes": {
@@ -445,6 +496,16 @@
    "basis": "LM74700-Q1 VCAP: the internal charge pump sits about 10 V above the anode DC_F",
    "rides_on": "DC_F",
    "bias_v": 10.0
+  },
+  "TRK_CS": {
+   "v_max": 1.0,
+   "v_min": -1.0,
+   "basis": "the LT8705A's current-sense node, the joined sources of M2 (Q4) and M3 (Q5) above the 5 mOhm RSENSE R5 to ground (8705af Figure 1 p.13, p.1 and p.41 circuits): the shunt's drop, about 0.13 V at the controller's highest sense threshold (p.22), negative while M2 conducts in the buck region; declared +-1.0 V as board A declares its LM5176 CS nodes"
+  },
+  "TRK_LDO33": {
+   "v_max": 3.35,
+   "v_min": 0.0,
+   "basis": "the LT8705A's own 3.3 V regulator output (pin 4): 3.23 / 3.295 / 3.35 V at 5 mA (8705af Electrical Characteristics, p.3), absolute maximum 5 V (p.2); it carries U5's LDO33 and MODE pins and C20"
   },
   "TRK_SW1": {
    "v_max": 25.0,
@@ -486,6 +547,24 @@
    "v_max": 16.8,
    "v_min": -1.0,
    "basis": "the AP63205's switching node: it swings to CELL_F, which is the pack at its 4S termination of 16.8 V, and a diode drop below ground on the other half of the cycle"
+  },
+  "E6_BST": {
+   "v_max": 22.8,
+   "v_min": -1.3,
+   "basis": "the AP63205's bootstrap (pin 6 BST): it rides on E6_SW, 'VBST Bootstrap Voltage VSW - 0.3 to VSW + 6.0 V' (Diodes DS41326 Rev. 3-2, Absolute Maximum Ratings, p.4), so at most E6_SW's 16.8 V plus 6.0 V; C30 (100 nF, p.2) holds it",
+   "rides_on": "E6_SW",
+   "bias_v": 6.0
+  },
+  "E6_DVDD": {
+   "v_max": 1.34,
+   "v_min": 0.0,
+   "basis": "the RP2040's own core regulator output VREG_VOUT (pin 45) joined off-chip to its DVDD pins (23, 50): 1.1 V at reset, settable 0.80 to 1.30 V by VSEL (RP2040 datasheet 2.10.3, VREG register), +-3 percent (Table 192), DVDD operating 1.05 to 1.16 V (Table 634); v_max is the highest setting at +3 percent",
+   "v_work": 1.13
+  },
+  "WATER_SENSE": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "the water electrodes' ADC input (U10 GPIO26/ADC0): electrode A is +3V3_E6 through R38 (1M), and water between the pads lifts electrode B against R39 (1M) to ground, so at most +3V3_E6's 3.3 V; a sense input, no supply"
   }
  },
  "pair_classes": {

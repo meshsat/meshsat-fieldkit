@@ -122,8 +122,10 @@ stages:
    continuous_a: 10.0
    peak_a: 18.0
    conductor: {what: "four CELL+ and four return Mill-Max spring pins in parallel", rating_a: 36.0,
-               basis: "9 A per pin, four in parallel (appendix 32.22 and the Mill-Max drawing in
-                 v2/vendor/precidip/); the block's own copper is 2 oz"}
+               basis: "9 A per pin, four in parallel (appendix 32.22; the maker's page is filed at
+                 v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf, 'Rated Current (Free air):
+                 Continuous 9 amps @ 10 C temperature rise', 'Contact Resistance: 20 mOhm max'; it had been cited
+                 in v2/vendor/precidip/, which holds the Preci-Dip signal contacts only); the block's own copper is 2 oz"}
    prospective_fault_a: {low: 240, high: 480, basis: "behind two blades, both 25 A"}
    protection: {ref: F3, what: "board E's 25 A blade, upstream", rating_a: 25.0, interrupting_a: 1000.0,
                 i2t_a2s: 1000.0, basis: "v2/vendor/battery/littelfuse-287-atof.pdf"}
@@ -189,8 +191,13 @@ stages:
    board: E
    from: "J_DCIN, the vehicle and shore DC inlet"
    to: "VIN_RAW"
-   continuous_a: 8.0
-   peak_a: 10.0
+   # F-IN-02 (26 September 2026, gen_sch_e.py _VEH_T and _VEH_P) and this line since 27 September 2026 (w3de): the
+   # hot-swap U6 (LM5069, R19 = 10 mOhm) limits the entry at VCL / RS, 4.85 / 5.5 / 6.15 A (TI SNVS452G), and a unit at
+   # VCL max carries 6.15 A continuously without limiting, so 6.15 A is the path's continuous AND peak current (its
+   # circuit breaker lets up to 13 A through for at most tCB 1.2 us, an edge no thermal or fuse rule reads). It read 8.0
+   # and 10.0 A, figures from before the hot-swap existed; tests/test_energy_chain.py holds it to the generator now.
+   continuous_a: 6.15
+   peak_a: 6.15
    conductor: {what: "board E's input bands at 2 oz", rating_a: 10.0, basis: "gen_pcb_e3.py"}
    prospective_fault_a: {low: 0, high: 200,
                          basis: "NOT MEASURED AND NOT KNOWN: the source is a vehicle electrical system or a
@@ -210,9 +217,11 @@ stages:
                 and the lid open is ambient plus 16 K, so 56 C, which the table reads at its 65 C column. This
                 number moves with owner decision 34 and is declared where the envelope can be seen to move it."}
    protects: null
-   note: "an ideal-diode FET and an SMCJ33A clamp sit behind this fuse; decision 31 records that the clamp's
-     33 V stand-off is wrong against the board's own declared 9 to 36 V input range, which is a part choice
-     and not a coordination error"
+   note: "an ideal-diode FET, the hot-swap and the input filter sit behind this fuse. The clamp decision 31 found
+     wrong (an SMCJ33A whose 33 V stand-off sat inside the declared 9 to 36 V input range) was corrected on board E at
+     faf8c981: D10 is an SMCJ40CA at the entry, in front of the ideal-diode FET, and D1 an SMCJ40A behind it. Since
+     27 September 2026 the stage carries the vehicle path's 6.15 A (F-IN-02), which F1 carries at 77 percent of the
+     8.0 A the ATOF table allows at its 65 C column"
 
  - id: B_PANEL_5V
    fed_by: BOARD_A_CONVERTERS

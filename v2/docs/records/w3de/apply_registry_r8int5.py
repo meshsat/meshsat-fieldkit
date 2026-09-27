@@ -1,0 +1,120 @@
+"""r8int5 INTEGRATION COPY of stream w3de's apply_registry.py (27 September 2026, on main 953f5658 with the w3t, w3a and
+w3b commits). Steps 1 to 3 (three session choices, three open items, S-47's progress) are the stream's own text, run
+from its script with four corrections: the independent checks' 2:1 contact-spread case in the choice and in
+W3DE-DOCK-R1, ARCHITECTURE.md brought to 14.10 A in the same integration, board A's half regenerated here on board A's
+w3a generator instead of the drafted a-half/, and drafts/w3de/ paths named as the filed records. Step 4, the rebinding,
+is re-derived: board A's files are w3a's plus the dock half (not main's plus the dock half), the notes start with the
+path they re-read, the three records r8int4 bound to gen_sch_e.py or pcb_energy_chain.yaml (REQ-072, REQ-077, CFL-006)
+are re-read too, and the `source` lines stay anchored at sources_read_at (not moved). Usage: <tree root>"""
+import hashlib, os, re, sys
+ROOT = sys.argv[1]
+K = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(K, '..', 'common'))
+import edlib
+REG = os.path.join(ROOT, "v2", "ecad", "tools", "pcb_requirements.yaml")
+if "Finding W3DE-DOCK-R1: the dock's ground current" in open(REG).read():
+    raise SystemExit("apply_registry_r8int5 (w3de): already applied")
+src = open(os.path.join(K, "apply_registry.py"), encoding="utf-8").read()
+prefix = src[:src.index("# ---------------------------------------------------------------------------------------------------------- 4. rebinding")]
+FIX = [
+ ('''"about 2.24 A with one open (64 percent) at the conservative 32.1 A. Reverse by''',
+  '''"about 2.24 A with one open (64 percent) at the conservative 32.1 A with even sharing, and to 2.44 to 2.58 A at a 2:1 "
+  "spread among the eight (W3DE-DOCK-R1). Reverse by'''),
+ ('''"step 2 (patch_assembly_dock.py, with E5's holes), and v2/docs/ARCHITECTURE.md, whose "
+      "IF-AE-DOCK lines (the E5 arrow, the VIN_RAW row of its current table and the interface table's row) still "
+      "describe four VIN_RAW contacts at 12.31 A (drafts/w3de/EQ16-dock-vin-raw.md section 4)."),''',
+  '''"step 2 (patch_assembly_dock.py, with E5's holes); v2/docs/ARCHITECTURE.md's IF-AE-DOCK lines were brought to "
+      "14.10 A on the power pins in the same integration."),'''),
+ ('''"its 85 C. Owed to TEST-PLAN.md:''',
+  '''"its 85 C; with a 2:1 resistance spread among the eight 813 ground contacts (the independent check) the lowest carries "
+      "2.44 A, 2.58 A with one open, 80.3 and 83.6 C at the 51 C inside air and 94 to 98 C at the +55 C margin. Owed to "
+      "TEST-PLAN.md:'''),
+ ('''drafts/w3de/a-half/, regenerated on the KiCad box with parity''', '''regenerated on the KiCad box with parity on board A's w3a generator at the set 5 integration'''),
+]
+for a, b in FIX:
+    assert prefix.count(a) == 1, a[:80]
+    prefix = prefix.replace(a, b)
+prefix = prefix.replace("drafts/w3de/", "v2/docs/records/w3de/")
+prefix = prefix.replace('ROOT = sys.argv[1]', 'ROOT = %r' % ROOT, 1)
+g = {"__name__": "w3de_prefix"}
+exec(compile(prefix, "apply_registry.py (steps 1 to 3)", "exec"), g)
+s = g["s"]; SCA, SCB, SCC, SX, SY, SZ = (g[k] for k in ("SCA", "SCB", "SCC", "SX", "SY", "SZ"))
+import yaml; yaml.safe_load(s)
+open(REG, "w", encoding="utf-8").write(s)
+
+# ---- 4. rebinding, re-derived
+A_NET, A_GEN = "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net", "v2/ecad/tools/gen_sch_a.py"
+D_NET = "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net"
+E_NET, E_GEN = "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net", "v2/ecad/tools/gen_sch_e.py"
+CC, EC = "v2/ecad/tools/check_contracts.py", "v2/ecad/tools/pcb_energy_chain.yaml"
+WHEN = "at the r8int5 integration of 27 September 2026 (stream w3de, boards D and E, and board A's half of EQ-16)"
+BASE = {
+ A_NET: A_NET + " regenerated " + WHEN + " on the KiCad box with main's chain (handover_exports.py regen, PHASE A65, on board "
+        "A's w3a generator with the dock half): compared with the file at {OLD} component by component and net by net by two "
+        "independent readers (stream w3de's net_compare.py against expected-a-netlist.json, 'ONLY THE EXPECTED CHANGES', and "
+        "stream w3a's netcmp.py; v2/docs/records/w3de/parity-r8int5/), it differs only in J_VR1 to J_VR4 (VIN_RAW) and J_VN1 "
+        "to J_VN4 (GND) added and J_DOCK's value and pins 1 to 4 (VIN_RAW to GND)",
+ A_GEN: A_GEN + " re-read " + WHEN + ": stream w3de's patch_gen_sch_a_dock.py applied to board A's w3a file, with two comment "
+        "corrections from w3de's independent checks (the return pins' share of the ground current and the round 4 VIN_RAW "
+        "paragraph marked as history): _VIN_RAW_A becomes board E's 14.10 A under R8E-N01, VIN_RAW's source J_VR1 to J_VR4 "
+        "and its note, J_VR1 to J_VR4 and J_VN1 to J_VN4 with their comment after R1, J_DOCK's value and pins 1 to 4, and "
+        "the section list; lines after 66 move down by 5 and lines after the pre-charge pin by 23",
+ D_NET: D_NET + " regenerated by stream w3de on 27 September 2026 and integrated " + WHEN.replace("at the ", "in the ", 1) +
+        " (gen_sch_d.py changed in its intent declarations and comments only): identical to the file at {OLD} in every "
+        "component and every net's pins (v2/docs/records/w3de/net_compare.py; regen_compare.py pair netlist PARITY_AFTER_NOISE)",
+ E_NET: E_NET + " regenerated by stream w3de on 27 September 2026 and integrated " + WHEN.replace("at the ", "in the ", 1) +
+        ": it differs from the file at {OLD} only in C63, C64, P_VR and P_VN added, J_BLK's value and its pins 1 to 4 "
+        "(VIN_RAW to GND), the tracker's bottom-leg sense (Q4 and Q5 pins 1 to 3 GND to TRK_CS, R5 TRK_LSENSE/TRK_SW2 to "
+        "TRK_CS/GND, R6 pin 1 to TRK_CS, R7 pin 1 to GND, L1 pin 2 to TRK_SW2, the net TRK_LSENSE gone) and U5 pin 37 (GND "
+        "to TRK_LDO33), every component and every net's pins compared (v2/docs/records/w3de/net_compare.py against "
+        "parity/expected-e-netlist.json)",
+ E_GEN: E_GEN + " re-read " + WHEN + ": S-47's bottom-leg sense (TRK_CS, R5 to GND, R6 and R7 its Kelvin taps, L1 from TRK_SW1 "
+        "to TRK_SW2), MODE on LDO33, C63 and C64 with four declared bypasses (" + SCB + "), EQ-16's board E half (J_BLK pins 1 "
+        "to 4 to GND, P_VR, P_VN) and the PWR-001 declarations (" + SCC + ")",
+ CC: CC + " re-read " + WHEN + " (stream w3de's patch_check_contracts_dock.py): section 5a gains three EQ-16 dock checks "
+        "(board A's four VIN_RAW pins and four return pins, board E's P_VR and P_VN, no VIN_RAW on an 813 contact); every "
+        "line naming J_SMB is byte-identical (sha256/16 c78df21055972aa1 before and after)",
+ EC: EC + " re-read " + WHEN + " (stream w3de's patch_energy_chain.py): the SHORE_INPUT stage's currents (6.15 A, F-IN-02) "
+        "and note, and the DOCK_BLOCK stage's Mill-Max citation, change; the header and the pack source are byte-identical",
+}
+WHY = {
+ "CON-019": {D_NET: "U14, U18, R48, TR_APRS, KEY and PA_EN on board D are among the unchanged",
+             A_NET: "on board A U30, U26, OUTLET_OK, POE_EN, PD_EN, U16, U19 and PA_EN (U36's output) are unchanged",
+             A_GEN: "the interlock's lines are unchanged in content (S-14's comment, U26 and U30 moved down by 23)"},
+ "CON-018": {A_NET: "U31 (TPD2E2U06QDBZRQ1) on PD_CC1 and PD_CC2 at J_USBC_OUT, and C96 and C97, are unchanged",
+             A_GEN: "U31's lines are unchanged in content (moved down by 23)"},
+ "CFL-005": {A_NET: "R102 (EMCON_HW to GND), R145 on TX_INHIBIT_n and the slot enable pull-downs are unchanged"},
+ "CFL-014": {A_NET: "the strap R26 and R27 from CH_VDDA, R17 from VBAT to CELL_FUSED and F1 from CELL_FUSED to CELL+ are "
+                    "unchanged; VIN_RAW is not a conductor of the charger or pack path this record reads",
+             A_GEN: "the generator's lines 18 to 48 and the strap's lines are unchanged in content"},
+ "CFL-002": {E_NET: "U17 (the SGP41), its supply network (R57, C57, C58) and SDA1 and SCL1 are unchanged",
+             E_GEN: "U17's statement is unchanged and the intent now declares SGP_VDD a rail (" + SCC + ")"},
+ "CON-010": {D_NET: "U12, U13, U14, U15 and their nets are among the unchanged",
+             A_NET: "board A's PA_EN (U35, U36) and its gates are unchanged"},
+ "REQ-036": {E_NET: "J_TAMP, R52, R53, C52, TAMPER_LEAD, TAMPER_IO and U12's CELL_F pins are unchanged, and no board routes the "
+                    "lead to ZEROIZE_HW or the panel controller",
+             E_GEN: "the tamper block's lines are unchanged in content"},
+ "CFL-016": {D_NET: "none of the parts or nets this record cites on board D is among the changes",
+             E_NET: "none of the parts or nets this record cites on board E is among the changes",
+             A_NET: "on board A the startup enables, the outlet interlock U30 and U26 and the wall data path J_USBW are unchanged"},
+ "CFL-013": {E_NET: "DCF_PULSE still runs from J_DCF pin 3 to U10 and nowhere else"},
+ "CFL-015": {E_NET: "J_SMB and its four nets are unchanged",
+             CC: "the J_SMB contract this reading cites is that text"},
+ "CON-016": {D_NET: "board D's D1 is unchanged", E_NET: "board E's D1 to D4 and D10 are unchanged",
+             A_NET: "board A's D1 to D4 are unchanged"},
+ "REQ-072": {E_GEN: "the solar stage this reading rests on (J_SOLAR for a 100 W panel, F2 10 A, D4 SMCJ28A, the FBIN point of "
+                    "17.6 V at 5.68 A) is unchanged; the sense and MODE changes move no figure it uses"},
+ "REQ-077": {E_GEN: "J_BLK pin 12 is still BLK_SPARE with TP7 its only other node and U10's GPIO19 (pin 30) is still not "
+                    "connected: HOT-R1 (S-57) is drawn on neither board"},
+ "CFL-006": {EC: "the pack's configuration this reading rests on is the same text"},
+}
+res = {r["id"]: r.get("evidence_result") for r in yaml.safe_load(open(REG))["records"]}
+done = []
+for rid, per in WHY.items():
+    for path, why in per.items():
+        note = BASE[path] + "; " + why + ", so it stands " + str(res[rid]) + " on the file at {NEW}"
+        old = edlib.rebind(REG, rid, path, ROOT, note)
+        done.append("%s:%s" % (rid, os.path.basename(path)) + ("" if old else " (already current)"))
+yaml.safe_load(open(REG))
+print("apply_registry_r8int5 (w3de): %s, %s, %s added; %s, %s, %s opened; S-47 updated; rebound %s"
+      % (SCA, SCB, SCC, SX, SY, SZ, ", ".join(done)))

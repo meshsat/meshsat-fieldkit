@@ -61,9 +61,14 @@ _intent.rail("VBAT", 14.4, 10.0, 18.0, "R17", always_on=True, v_work=16.8, conve
 # (v2/vendor/precidip/precidip-813-spring-loaded-connector-pages-31-34.pdf) if they share evenly: R4A-N13. Board E's
 # own VIN_RAW (L2 to J_BLK) carries the tracker's current on the same copper and declares the vehicle's alone: a board E
 # item recorded there (R4A-N12), not changed here. The host's side of the same limit is FW-A16 (IIN_HOST).
-_VIN_RAW_A = 6.15 + 6.16
-_intent.rail("VIN_RAW", 12.0, _VIN_RAW_A, _VIN_RAW_A, "J_DOCK", loads={"Q2": _VIN_RAW_A - 1.0, "C11": 0.5, "C12": 0.5}, budget=0.02, share=0.015, v_work=36.0, converted=False,
-             always_on=True, always_on_why="shore and vehicle input arriving over the dock behind board E's own 10 A blade and ideal diode; this board does not switch it, it consumes it", note="shore, vehicle and panel input from E6 over the dock: board E's vehicle entry (LM5069 U6, 6.15 A at VCL max, 10 A fuse) and its panel tracker (TRK_OUT, 6.16 A) ORed onto one bus, 12.31 A together (third fix-up of round 4, 26 September 2026, reconciled with board E's F-IN-02); the current enters the front end at Q2's drain and the input caps (the LM5176 U2 draws only its bias: a load named U2 put 8 A into two QFN pins and read 3.3 percent, 32.69)")
+# R8E-N01 (27 September 2026, EQ-16): board E declares its VIN_RAW at 14.10 A since round 8 (R4A-N12: this board's front
+# end at its ISNS limit, 5.7 A at 20.7 V over 0.93, drawing from a 9.0 V bus, which the vehicle's 6.15 A and the
+# tracker's 10.33 A can supply together); the 12.31 A above was the sum of board E's two earlier figures. The round 4
+# paragraph above is that history: since EQ-16 the four 813 contacts of J_DOCK carry no VIN_RAW (J_VR1 to J_VR4 do), so
+# R4A-N13's supply half and R8E-N01 are answered, and IF-AE-DOCK declares this one figure at both ends.
+_VIN_RAW_A = round(5.7 * 20.7 / 0.93 / 9.0, 2)   # 14.10 A, board E's _FE_A
+_intent.rail("VIN_RAW", 12.0, _VIN_RAW_A, _VIN_RAW_A, ["J_VR1", "J_VR2", "J_VR3", "J_VR4"], loads={"Q2": _VIN_RAW_A - 1.0, "C11": 0.5, "C12": 0.5}, budget=0.02, share=0.015, v_work=36.0, converted=False,
+             always_on=True, always_on_why="shore and vehicle input arriving over the dock behind board E's own 10 A blade and ideal diode; this board does not switch it, it consumes it", note="shore, vehicle and panel input from E6 over the dock: board E's vehicle entry (LM5069 U6, 6.15 A at VCL max, 10 A fuse) and its panel tracker (TRK_OUT, 6.16 A) ORed onto one bus, 12.31 A together at those two figures (third fix-up of round 4, 26 September 2026, reconciled with board E's F-IN-02), declared at board E's 14.10 A since R8E-N01 (27 September 2026: this board's front end at its ISNS limit drawing from a 9.0 V bus, R4A-N12) and crossing the dock on the Mill-Max power pins J_VR1 to J_VR4 (EQ-16); the current enters the front end at Q2's drain and the input caps (the LM5176 U2 draws only its bias: a load named U2 put 8 A into two QFN pins and read 3.3 percent, 32.69)")
 # LOADS DECLARED 13 September 2026. This rail carried none and dc_drop guessed, putting 6 A into U3, whose
 # only pads on this net are the charger's 0.13 and 0.20 mm VBUS SENSE pins. The real path is the whole charge
 # current through R16, the 10 mOhm 2512 input-current shunt, and on into the charger; U3's pins sense the bus
@@ -212,6 +217,24 @@ for k in range(1, 5):
     part("J_CP%d" % k, "Connector", "Conn_01x01_Pin", "9 A spring pin, CELL+ (Mill-Max 0858 class, dock block)", "MMPIN", {"1": "CELL+"})
     part("J_CN%d" % k, "Connector", "Conn_01x01_Pin", "9 A spring pin, pack return (Mill-Max 0858 class, dock block)", "MMPIN", {"1": "GND"})
 part("J_PRE1", "Connector", "Conn_01x01_Pin", "pre-charge pin, longer, mates first (32.24 AX)", "MMPIN", {"1": "PRECHG"}); r("R1", "10R 2W 2512", "PRECHG", "CELL+", "RS2512")
+# EQ-16 / R8E-N01 (27 September 2026, drafted by board E's stream w3de, taken under the owner's standing rule of 26
+# September 2026): VIN_RAW CROSSES THE DOCK ON FOUR 9 A POWER PINS WITH FOUR MORE FOR ITS RETURN, AS CELL+ DOES. At board
+# E's declared 14.10 A the four Preci-Dip 813 contacts of J_DOCK carried 3.53 A each against their "OPERATING CURRENT Max.
+# 3.5 A" (v2/vendor/precidip/precidip-813-spring-loaded-connector-pages-31-34.pdf, p.34), 4.70 A with one open, and
+# the maker publishes no current-temperature curve for them (only "-55 ... +85 C with music wire spring", p.31). Mill-Max
+# states its 085x power pins at "Continuous 9 amps @ 10 C temperature rise", "Contact Resistance: 20 mOhm max",
+# "-55/+125 C" (v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf): four carry 3.53 A each, 4.70 A with
+# one open (52 percent, about 3 K of rise). The four return pins take part of the ground current, not all of it: the
+# dock's ground current shares the pack's return pins, these four and the eight 813 ground contacts in the ratio of
+# their resistances, which the makers bound only from above, so about half of it still crosses the 813 contacts. At the
+# conservative 32.1 A of ground current (14.10 A and the pack's 18.0 A at once) an 813 ground contact carries about
+# 2.1 A with even sharing and 2.2 A with one open, and 2.44 to 2.58 A at a 2:1 spread among the eight, which at the +55 C
+# margin reaches about 94 to 98 C under the assumed 60 K rise at 3.5 A, over the 813's 85 C: finding W3DE-DOCK-R1, a
+# bench measurement owed (v2/docs/records/w3de/dock_contacts.py and EQ16-dock-vin-raw.md). E5 carries their targets and
+# two 12 AWG holes to board E's P_VR and P_VN.
+for k in range(1, 5):
+    part("J_VR%d" % k, "Connector", "Conn_01x01_Pin", "9 A spring pin, VIN_RAW (Mill-Max 0858 class, dock block; EQ-16)", "MMPIN", {"1": "VIN_RAW"})
+    part("J_VN%d" % k, "Connector", "Conn_01x01_Pin", "9 A spring pin, VIN_RAW return (Mill-Max 0858 class, dock block; EQ-16)", "MMPIN", {"1": "GND"})
 # PRECHG IS A CONDUCTOR OF THE PACK NODE AND WAS DECLARED AS NOTHING (27 September 2026, EQ-19, stream w3a): PWR-001 read
 # it UNDECIDED (R1 links it to CELL+, and the pin itself is not read). It is the pre-charge path of 32.24 AX: the longer
 # pin mates first and CELL+'s capacitance charges from the pack through R1, 10 Ohm, so the current is a decaying pulse
@@ -239,8 +262,8 @@ part("F1", "Device", "Fuse", "25 A mini blade (Keystone 3568 holder): pack node 
 # were, on the old VBAT. They are about 25 uF effective at 16.8 V. The VSYS side keeps its own 50 uF effective (the
 # same section): C23 to C25 at Q10 and the input capacitors of every converter on VBAT. D1 stays on VBAT.
 c("C1", "47u 25V", "CELL_FUSED", "GND", "C100u"); c("C2", "47u 25V", "CELL_FUSED", "GND", "C100u"); c("C3", "10u 25V 1210", "CELL_FUSED", "GND", "C1210"); kisch.tvs("D1", "SMCJ18A (VBAT clamp)", "VBAT", "GND", "TVSC", "C374030")   # TRN-001 / S-09 (ts-tvs, 26 Sep 2026): a one-way part, drawn K/A by kisch.tvs() (Device:D_Zener, K pin 1 on VBAT, A pin 2 on GND; direction from the part number, recorded in the intent under "clamps"); nets, value, land and code as before (Littelfuse C374030, v2/vendor/power/littelfuse-smcj-series-tvs.pdf)
-part("J_DOCK", "Connector_Generic", "Conn_01x12", "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-4 VIN_RAW (9 to 36 V from E6), 5-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare", "POGO12",
-     {"1": "VIN_RAW", "2": "VIN_RAW", "3": "VIN_RAW", "4": "VIN_RAW", "5": "GND", "6": "GND", "7": "GND", "8": "SHORE_INHIBIT", "9": "USB_E6_P", "10": "USB_E6_N", "11": "GND", "12": "DOCK_SPARE"})
+part("J_DOCK", "Connector_Generic", "Conn_01x12", "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare (VIN_RAW crosses on J_VR1-4 since EQ-16)", "POGO12",
+     {"1": "GND", "2": "GND", "3": "GND", "4": "GND", "5": "GND", "6": "GND", "7": "GND", "8": "SHORE_INHIBIT", "9": "USB_E6_P", "10": "USB_E6_N", "11": "GND", "12": "DOCK_SPARE"})
 # --- main power control LTC2954-1 (ltc2954.pdf): the panel MAIN button, EN to every converter's enable (RAIL_EN), INT = shutdown request, KILL from the panel controller through Q1
 # S-08, 26 September 2026 (MESHSAT-1357; W2 F-SQ-02 and F-SQ-03, W5-F2, F5, F6, F15, F16, W6-F15). Six changes to
 # this block, each against the LTC2954 sheet held at v2/vendor/power/ltc2954.pdf (2954fb):
@@ -1514,7 +1537,7 @@ kisch.configure(power=POWER, stub=STUB, root=ROOT, project=PROJECT, seed=PROJECT
 # layout: columns, top-down cursor; group order = list order with section titles
 def refs_with(prefixes, exclude=()):
     return [p["ref"] for p in P if any(p["ref"] == x or p["ref"].startswith(x) for x in prefixes) and p["ref"] not in exclude]
-SECTIONS = [("PACK NODE OVER THE DOCK BLOCK (32.56): 9 A PINS, PRE-CHARGE, 25 A BLADE, DOCK SIGNAL PINS", ["J_CP1", "J_CP2", "J_CP3", "J_CP4", "J_CN1", "J_CN2", "J_CN3", "J_CN4", "J_PRE1", "R1", "F1", "C1", "C2", "C3", "D1", "J_DOCK"]),
+SECTIONS = [("PACK NODE OVER THE DOCK BLOCK (32.56): 9 A PINS, PRE-CHARGE, 25 A BLADE, DOCK SIGNAL PINS", ["J_CP1", "J_CP2", "J_CP3", "J_CP4", "J_CN1", "J_CN2", "J_CN3", "J_CN4", "J_PRE1", "R1", "F1", "C1", "C2", "C3", "D1", "J_DOCK"] + ["J_VR%d" % k for k in range(1, 5)] + ["J_VN%d" % k for k in range(1, 5)]),
             ("MAIN POWER CONTROL LTC2954", ["U1", "C4", "R2", "R184", "R3", "R4", "C152", "Q1", "R5", "J_MAINSW"]),
             ("FRONT END: LM5176 FROM THE 9 TO 36 V INPUT TO THE 20 V CHARGE BUS", ["U2", "Q2", "Q3", "Q4", "Q5", "L1", "R6", "R7", "R8", "C147", "R10", "C5", "C6", "C7", "C8", "C9", "C10", "R11", "R12", "R13", "R14", "R15", "C11", "C12", "C13", "C14", "C15", "R119", "D2", "D9", "D10", "C163", "C178", "C179", "C180"] + ["C%d" % k for k in range(181, 190)] + ["C192", "C199", "C200"] + ["C%d" % k for k in range(201, 207)] + ["D19", "C207"]
              + ["R195", "U34", "R196", "C210", "C211", "C212", "R197", "Q36", "R200", "D22", "C214", "R198", "R199", "R206", "C213", "Q37", "R201", "Q38", "R202", "R203", "R204", "R205"]),   # fourth fix-up: VISNS's 2 k and the restart guard (R4A-N15)

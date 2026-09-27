@@ -276,7 +276,12 @@ coverage:
      intent_other, which the finish still blocks on. Board A's `tools/boards/a.json` still describes VMON as \"a
      voltage monitor divider tap into an ADC\" (LOW_SPEED_OR_DC); it is the eFuse U21's output feeding the Xenarc
      monitor's supply lead (ILM 1.2 A), and PWR-001 refuses it until the intent declares it as a rail with U21 as its
-     source and J_MON as its load (board A's writer). SET 5, BOARD B (stream w3b, integrated in fnd/r8int5, 27 September
+     source and J_MON as its load (board A's writer). SET 5, BOARDS D AND E (stream w3de, integrated in fnd/r8int5, 27
+     September 2026, SC-57): gen_sch_d.py declares the PCM2912A's five regulator outputs, SAU_3V3 and the TPA6132A2's
+     charge pump as nodes, gen_sch_e.py TRK_LDO33, E6_DVDD and E6_BST as nodes and SGP_VDD as a rail, and the nets the
+     reading left undecided whose working voltage the circuit states are declared nodes; TRK_LSENSE is gone with S-47's
+     bottom-leg sense (its successor TRK_CS is a node). In the stream's scratch PWR-001 read INCONCLUSIVE with 0 fails on
+     both: RLY_K on D and FAN1_SW, FAN2_SW on E wait on their flyback diodes' sheets (S-76). SET 5, BOARD B (stream w3b, integrated in fnd/r8int5, 27 September
      2026): gen_sch_b.py declares every net named above for B (17 rails and 40 nodes, VBAT renamed VBAT_RTC by W3B-R1, and
      GNSS_RF_IN, undecided once the antenna feed was declared); on B's regenerated netlist the stream read PASS of 59 in its
      scratch, which the consolidated re-take takes in the tree; GNSS_ANT, GNSS_BIAS, GNSS_VDD_RF and the three SIM supplies

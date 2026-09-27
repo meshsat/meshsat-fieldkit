@@ -291,15 +291,65 @@ def t_the_makers_table_decides_where_it_exists_and_refuses_an_overload():
     assert any("allows 19.0 A at its 65 C column" in f for f in bad["derate_fails"]), bad["derate_fails"]
 
 
-def t_the_shore_inlet_passes_on_the_maker_s_figure_and_says_it_has_no_margin():
-    """The acceptable fixture AND the honest reading: 8.0 A against the 8.0 A the maker allows at 65 C is a
-    pass with nothing left, and it must not read like a pass at 40 percent."""
-    import subprocess, sys, os
+def t_the_shore_inlet_is_judged_on_the_maker_s_figure_and_says_what_is_left():
+    """The honest reading of the stage as it is: since F-IN-02 the vehicle path carries 6.15 A (the hot-swap's VCL max
+    over its 10 mOhm), printed 6.2 A by the gate's one decimal, against the 8.0 A the ATOF table allows at its 65 C
+    column: a pass with margin, which must not read "no margin" (the reading of the 8.0 A stage before 27 September
+    2026). The no-margin wording itself is held on a synthetic stage by
+    t_a_fuse_at_the_whole_of_its_column_says_it_has_no_margin, below."""
+    import subprocess, sys, os, re
     r = subprocess.run([sys.executable, os.path.join(TOOLS, "energy_chain.py")],
                        capture_output=True, text=True, cwd=TOOLS)
     out = r.stdout
-    assert "SHORE_INPUT: F1 carries 8.0 A where atof287 allows 8.0 A at its 65 C column" in out, out[-1500:]
-    assert "no margin against the maker's own figure" in out, out[-1500:]
+    assert "SHORE_INPUT: F1 carries 6.2 A where atof287 allows 8.0 A at its 65 C column" in out, out[-1500:]
+    line = [l for l in out.splitlines() if "SHORE_INPUT: F1 carries" in l]
+    assert line and "no margin against the maker's own figure" not in line[0], line
+
+
+def t_the_shore_stage_carries_the_vehicle_path_figure_board_e_declares():
+    """27 September 2026 (w3de): F-IN-02 moved board E's vehicle entry to 6.15 A on 26 September and this chain kept
+    8.0 and 10.0 A for a day, so two BLOCKER rules judged a fuse at a current its path cannot carry. The stage is held
+    to the generator's own _VEH_T and _VEH_P, read by parsing gen_sch_e.py (the tree's rule for detectors: parse,
+    never grep)."""
+    import ast, yaml
+    tree = ast.parse(open(os.path.join(TOOLS, "gen_sch_e.py"), encoding="utf-8").read())
+    got = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Tuple) \
+           and isinstance(node.value, ast.Tuple):
+            for t, v in zip(node.targets[0].elts, node.value.elts):
+                if isinstance(t, ast.Name) and t.id in ("_VEH_T", "_VEH_P") and isinstance(v, ast.Constant):
+                    got[t.id] = float(v.value)
+    assert set(got) == {"_VEH_T", "_VEH_P"}, "board E's generator no longer states _VEH_T and _VEH_P as a pair: %r" % got
+    chain = yaml.safe_load(open(os.path.join(TOOLS, "pcb_energy_chain.yaml"), encoding="utf-8"))
+    st = [s for s in chain["stages"] if s["id"] == "SHORE_INPUT"]
+    assert st, "the chain has no SHORE_INPUT stage"
+    assert float(st[0]["continuous_a"]) == got["_VEH_T"] and float(st[0]["peak_a"]) == got["_VEH_P"], \
+        (st[0]["continuous_a"], st[0]["peak_a"], got)
+
+
+AT_THE_LIMIT = (FUSED.replace("continuous_a: 10.0", "continuous_a: 8.0\n   derating: {table: atof287, ambient_c: 56}")
+                     .replace("peak_a: 18.0", "peak_a: 8.0")
+                     .replace('what: "25 A blade", rating_a: 25.0', 'what: "10 A blade", rating_a: 10.0'))
+
+
+def t_a_fuse_at_the_whole_of_its_column_says_it_has_no_margin():
+    """A PASS AT THE LIMIT IS NOT A PASS WITH ROOM, held on a synthetic stage (27 September 2026, w3de). Until F-IN-02's
+    correction the committed SHORE_INPUT stage (8.0 A of a 10 A fuse at the 65 C column) was the only reading that
+    carried this wording, so correcting the stage left energy_chain.py's at-limit branch with no fixture. A 10 A atof287
+    fuse at 8.0 A continuous and 56 C ambient is read at the 65 C column (never interpolated), which allows exactly
+    8.0 A: a pass, judged as one, that must say it has no margin. The same fuse at 7.5 A, under 95 percent of 8.0 A,
+    is a pass with room and must not."""
+    r = _run(AT_THE_LIMIT)
+    assert not r["derate_fails"] and not r["stage_fails"], (r["derate_fails"], r["stage_fails"])
+    at = [n for n in r["notes"] if "F1 carries 8.0 A where atof287 allows 8.0 A at its 65 C column" in n]
+    assert len(at) == 1, r["notes"]
+    assert "no margin against the maker's own figure" in at[0], at[0]
+    room = _run(AT_THE_LIMIT.replace("continuous_a: 8.0", "continuous_a: 7.5"))
+    assert not room["derate_fails"], room["derate_fails"]
+    under = [n for n in room["notes"] if "F1 carries 7.5 A where atof287 allows 8.0 A at its 65 C column" in n]
+    assert len(under) == 1, room["notes"]
+    assert "no margin" not in under[0], under[0]
 
 
 def t_a_branch_declares_what_feeds_it_rather_than_being_known_by_name():

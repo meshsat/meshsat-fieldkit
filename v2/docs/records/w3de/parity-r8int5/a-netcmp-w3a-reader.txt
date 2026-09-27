@@ -1,0 +1,218 @@
+{
+ "components_only_a": [],
+ "components_only_b": [
+  "J_VN1",
+  "J_VN2",
+  "J_VN3",
+  "J_VN4",
+  "J_VR1",
+  "J_VR2",
+  "J_VR3",
+  "J_VR4"
+ ],
+ "components_changed": {
+  "J_DOCK": {
+   "value": [
+    "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-4 VIN_RAW (9 to 36 V from E6), 5-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare",
+    "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare (VIN_RAW crosses on J_VR1-4 since EQ-16)"
+   ]
+  }
+ },
+ "nets_only_a": {},
+ "nets_only_b": {},
+ "nets_changed": {
+  "/VIN_RAW": {
+   "removed": [
+    [
+     "J_DOCK",
+     "1"
+    ],
+    [
+     "J_DOCK",
+     "2"
+    ],
+    [
+     "J_DOCK",
+     "3"
+    ],
+    [
+     "J_DOCK",
+     "4"
+    ]
+   ],
+   "added": [
+    [
+     "J_VR1",
+     "1"
+    ],
+    [
+     "J_VR2",
+     "1"
+    ],
+    [
+     "J_VR3",
+     "1"
+    ],
+    [
+     "J_VR4",
+     "1"
+    ]
+   ],
+   "class": [
+    "Default",
+    "Default"
+   ]
+  },
+  "GND": {
+   "removed": [],
+   "added": [
+    [
+     "J_DOCK",
+     "1"
+    ],
+    [
+     "J_DOCK",
+     "2"
+    ],
+    [
+     "J_DOCK",
+     "3"
+    ],
+    [
+     "J_DOCK",
+     "4"
+    ],
+    [
+     "J_VN1",
+     "1"
+    ],
+    [
+     "J_VN2",
+     "1"
+    ],
+    [
+     "J_VN3",
+     "1"
+    ],
+    [
+     "J_VN4",
+     "1"
+    ]
+   ],
+   "class": [
+    "PWR",
+    "PWR"
+   ]
+  }
+ },
+ "pins_moved": [
+  [
+   [
+    "J_DOCK",
+    "1"
+   ],
+   "/VIN_RAW",
+   "GND"
+  ],
+  [
+   [
+    "J_DOCK",
+    "2"
+   ],
+   "/VIN_RAW",
+   "GND"
+  ],
+  [
+   [
+    "J_DOCK",
+    "3"
+   ],
+   "/VIN_RAW",
+   "GND"
+  ],
+  [
+   [
+    "J_DOCK",
+    "4"
+   ],
+   "/VIN_RAW",
+   "GND"
+  ],
+  [
+   [
+    "J_VN1",
+    "1"
+   ],
+   null,
+   "GND"
+  ],
+  [
+   [
+    "J_VN2",
+    "1"
+   ],
+   null,
+   "GND"
+  ],
+  [
+   [
+    "J_VN3",
+    "1"
+   ],
+   null,
+   "GND"
+  ],
+  [
+   [
+    "J_VN4",
+    "1"
+   ],
+   null,
+   "GND"
+  ],
+  [
+   [
+    "J_VR1",
+    "1"
+   ],
+   null,
+   "/VIN_RAW"
+  ],
+  [
+   [
+    "J_VR2",
+    "1"
+   ],
+   null,
+   "/VIN_RAW"
+  ],
+  [
+   [
+    "J_VR3",
+    "1"
+   ],
+   null,
+   "/VIN_RAW"
+  ],
+  [
+   [
+    "J_VR4",
+    "1"
+   ],
+   null,
+   "/VIN_RAW"
+  ]
+ ],
+ "counts": {
+  "a": [
+   603,
+   356,
+   1786
+  ],
+  "b": [
+   611,
+   356,
+   1794
+  ]
+ }
+}

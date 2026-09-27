@@ -1,0 +1,40 @@
+{
+ "kind": "netlist",
+ "phase_labels": [
+  [
+   "A65"
+  ],
+  [
+   "A65"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  },
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  }
+ ],
+ "design_header": [
+  [
+   "/root/r8-a/repo/v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_sch",
+   "2026-09-26T21:59:49+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ],
+  [
+   "/root/w3de/base/v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_sch",
+   "2026-09-27T11:21:03+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ]
+ ],
+ "content_hash": [
+  "66797255f4591a23",
+  "66797255f4591a23"
+ ],
+ "result": "PARITY_AFTER_NOISE"
+}

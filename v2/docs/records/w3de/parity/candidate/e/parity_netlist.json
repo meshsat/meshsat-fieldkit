@@ -1,0 +1,341 @@
+{
+ "kind": "netlist",
+ "phase_labels": [
+  [
+   "E42P"
+  ],
+  [
+   "E42P"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  },
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  }
+ ],
+ "design_header": [
+  [
+   "/root/r8-e/cs/v2/ecad/pcb-e1-dock-e7/pcb-e1-dock.kicad_sch",
+   "2026-09-26T21:45:17+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ],
+  [
+   "/root/w3de/final/v2/ecad/pcb-e1-dock-e7/pcb-e1-dock.kicad_sch",
+   "2026-09-27T10:33:37+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ]
+ ],
+ "content_hash": [
+  "256cc3f96d41dcab",
+  "b8d237f0b8d759f5"
+ ],
+ "counts": {
+  "comps": [
+   183,
+   187
+  ],
+  "nets": [
+   124,
+   124
+  ]
+ },
+ "comps_only_committed": [],
+ "comps_only_other": [
+  "C63",
+  "C64",
+  "P_VN",
+  "P_VR"
+ ],
+ "comps_changed": [
+  [
+   "J_BLK",
+   {
+    "value": [
+     "solder lands for the 12 signal wires to the block board underside (mirror of A22 J_DOCK): 1-4 VIN_RAW, 5-7 GND, 8 SHORE_INHIBIT, 9 USB D+, 10 USB D-, 11 GND, 12 spare",
+     "solder lands for the 12 signal wires to the block board underside (mirror of A22 J_DOCK): 1-7 GND, 8 SHORE_INHIBIT, 9 USB D+, 10 USB D-, 11 GND, 12 spare (VIN_RAW crosses on P_VR since EQ-16)"
+    ]
+   }
+  ]
+ ],
+ "comps_uuid_shifted": 123,
+ "nets_only_committed": [
+  "/TRK_LSENSE"
+ ],
+ "nets_only_other": [
+  "/TRK_CS"
+ ],
+ "nets_changed": [
+  [
+   "/PV_P",
+   [],
+   [
+    [
+     "C64",
+     "1",
+     "",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "/TRK_INTVCC",
+   [],
+   [
+    [
+     "C63",
+     "1",
+     "",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "/TRK_LDO33",
+   [],
+   [
+    [
+     "U5",
+     "37",
+     "Pin_37",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "/TRK_SW2",
+   [
+    [
+     "R5",
+     "2",
+     "",
+     "passive"
+    ],
+    [
+     "R7",
+     "1",
+     "",
+     "passive"
+    ]
+   ],
+   [
+    [
+     "L1",
+     "2",
+     "2",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "/VIN_RAW",
+   [
+    [
+     "J_BLK",
+     "1",
+     "Pin_1",
+     "passive"
+    ],
+    [
+     "J_BLK",
+     "2",
+     "Pin_2",
+     "passive"
+    ],
+    [
+     "J_BLK",
+     "3",
+     "Pin_3",
+     "passive"
+    ],
+    [
+     "J_BLK",
+     "4",
+     "Pin_4",
+     "passive"
+    ]
+   ],
+   [
+    [
+     "P_VR",
+     "1",
+     "Pin_1",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "GND",
+   [
+    [
+     "Q4",
+     "1",
+     "S",
+     "passive"
+    ],
+    [
+     "Q4",
+     "2",
+     "S",
+     "passive"
+    ],
+    [
+     "Q4",
+     "3",
+     "S",
+     "passive"
+    ],
+    [
+     "Q5",
+     "1",
+     "S",
+     "passive"
+    ],
+    [
+     "Q5",
+     "2",
+     "S",
+     "passive"
+    ],
+    [
+     "Q5",
+     "3",
+     "S",
+     "passive"
+    ],
+    [
+     "U5",
+     "37",
+     "Pin_37",
+     "passive"
+    ]
+   ],
+   [
+    [
+     "C63",
+     "2",
+     "",
+     "passive"
+    ],
+    [
+     "C64",
+     "2",
+     "",
+     "passive"
+    ],
+    [
+     "J_BLK",
+     "1",
+     "Pin_1",
+     "passive"
+    ],
+    [
+     "J_BLK",
+     "2",
+     "Pin_2",
+     "passive"
+    ],
+    [
+     "J_BLK",
+     "3",
+     "Pin_3",
+     "passive"
+    ],
+    [
+     "J_BLK",
+     "4",
+     "Pin_4",
+     "passive"
+    ],
+    [
+     "P_VN",
+     "1",
+     "Pin_1",
+     "passive"
+    ],
+    [
+     "R5",
+     "2",
+     "",
+     "passive"
+    ],
+    [
+     "R7",
+     "1",
+     "",
+     "passive"
+    ]
+   ]
+  ]
+ ],
+ "changed_lines": 362,
+ "changed_lines_sample": [
+  "-      (tstamps \"88903be7-d4d2-5991-8bea-81be7adc8905\"))",
+  "+      (tstamps \"b4aca53e-0299-55b5-9dd9-a200bc741e45\"))",
+  "-      (tstamps \"361d9834-ed48-530b-8850-84e1ef33d44a\"))",
+  "+      (tstamps \"98cd5f33-a3df-5f5c-a7fb-526fb6315ca9\"))",
+  "-      (tstamps \"a854241e-835a-5ab9-875e-9c0660da8807\"))",
+  "+      (tstamps \"0311a507-3ca8-5f28-b43b-50023d9eee38\"))",
+  "-      (tstamps \"87964b37-032c-564c-943d-eabbe92637c7\"))",
+  "+      (tstamps \"e3849cc5-d42c-54a9-b5b2-c95b527891ff\"))",
+  "-      (tstamps \"b69fada0-78cb-521f-8155-de3812a5b68e\"))",
+  "+      (tstamps \"da302d7e-fcea-5cb9-abeb-37bc6482d4a0\"))",
+  "-      (tstamps \"aee8e49a-5679-57b4-97e3-a080d1d888bc\"))",
+  "+      (tstamps \"bc72d46c-af82-55db-9c6b-d6b339694c5a\"))",
+  "-      (tstamps \"f56fb220-4498-58e9-82c5-2ba10a358d70\"))",
+  "+      (tstamps \"a8d60ccc-27bb-5c14-aaee-799ba311d062\"))",
+  "-      (tstamps \"cef15da3-e767-5552-96c5-c5e5d856d22f\"))",
+  "+      (tstamps \"0d33c495-1443-54fc-add2-3b896152fd1b\"))",
+  "-      (tstamps \"bb117ed5-8b9c-5041-a5c7-ae65246a5929\"))",
+  "+      (tstamps \"d2c52d3c-b257-5bce-a5b2-45a092b240c3\"))",
+  "-      (tstamps \"034b64f3-28d2-5fc6-8e37-ee9bfa6fa446\"))",
+  "+      (tstamps \"1ee071cf-f0f1-51d6-a094-6705e0ddf3ae\"))",
+  "-      (tstamps \"0d33c495-1443-54fc-add2-3b896152fd1b\"))",
+  "+      (tstamps \"1a70e619-7428-58c7-b5c7-1e6114aa2805\"))",
+  "-      (tstamps \"4107789f-0331-5299-af78-5f869483d220\"))",
+  "+      (tstamps \"42002ab0-fcd6-5534-9533-f0b272cbf3f6\"))",
+  "-      (tstamps \"eb1107ab-5aca-59d0-a230-2551861e6680\"))",
+  "+      (tstamps \"0c4448b0-4480-5c14-9f63-36ac831f8242\"))",
+  "-      (tstamps \"ab90c272-4d6f-5448-b82e-14269994068c\"))",
+  "+      (tstamps \"cc39e6e9-c2c8-5810-bb9a-bf66f3e73199\"))",
+  "-      (tstamps \"942246ff-5993-5a8b-b585-1a5e595fa301\"))",
+  "+      (tstamps \"cdcb096d-fc92-53a0-b8f3-baf98d478606\"))",
+  "-      (tstamps \"19182165-0a09-570c-8652-b93686c630fe\"))",
+  "+      (tstamps \"d47fc896-7116-5cbb-930d-8da996d6a30c\"))",
+  "-      (tstamps \"30e63cbf-c4f3-51d3-bac0-40935dfc9b4f\"))",
+  "+      (tstamps \"7ee69587-ba3e-51b7-83cf-ea759b78d400\"))",
+  "-      (tstamps \"d468dd05-d177-5f70-aafc-6cdfc7f4d7f0\"))",
+  "+      (tstamps \"d2fe670c-571c-5e35-ba79-b0c13f643d38\"))",
+  "-      (tstamps \"7d868df2-465e-5219-a3d3-2d12f8465805\"))",
+  "+      (tstamps \"b1c67843-6498-5d9b-9c78-7563ef1b6c4d\"))",
+  "-      (tstamps \"abb2bcf1-44f3-5672-9c6e-9a075cb903bb\"))",
+  "+      (tstamps \"0ffad0eb-56f6-5701-b5f2-beebc2586f65\"))",
+  "-      (tstamps \"182a502c-75e3-5803-b933-57f27fa746b2\"))",
+  "+      (tstamps \"fd29e601-b7e6-521a-bb85-cf219f76ec1c\"))",
+  "-      (tstamps \"2f8fefee-bf34-5221-8cd8-2b7113faefe7\"))",
+  "+      (tstamps \"471e3034-6179-5398-9fff-8320d8f4b6a2\"))",
+  "-      (tstamps \"df9a13c8-2110-51d3-a992-2713120acf3f\"))",
+  "+      (tstamps \"15d01f4f-4d0c-5761-9d0b-502888bd06d6\"))",
+  "-      (tstamps \"a799ee93-13b1-5e81-b499-2e0d1f2e4605\"))",
+  "+      (tstamps \"818265e4-6ca5-5f89-b2ac-f7790257a6ce\"))",
+  "-      (tstamps \"0852cd30-d0c3-51c0-9573-1394be6cf67c\"))",
+  "+      (tstamps \"38bef95b-1600-5c98-bacb-85b5843a8a6c\"))",
+  "-      (tstamps \"d3c924cf-11c8-5d98-b7bb-028b7b21de7d\"))",
+  "+      (tstamps \"14feea7f-6615-5b74-8c0b-d47138647818\"))",
+  "-      (tstamps \"fc7a22a2-338a-5341-9c86-7b814f17bff2\"))",
+  "+      (tstamps \"9b6ad788-8744-556f-ab7c-26b488d94aa2\"))",
+  "-      (tstamps \"285e0d68-b886-5766-9383-2944f58487ad\"))",
+  "+      (tstamps \"6aa6a242-8d02-538d-b980-23394669c96a\"))",
+  "-      (tstamps \"fea4eb42-221e-5566-9da0-e5841e57287b\"))",
+  "+      (tstamps \"e22e1f14-52ba-55c9-946e-70d7f65b8ef8\"))",
+  "-      (tstamps \"94ec5fb5-0996-5e16-b622-ef7f9a51d0ba\"))",
+  "+      (tstamps \"71db4c23-3095-54ef-9131-2fea54bd576c\"))"
+ ],
+ "result": "DIFFERENT"
+}

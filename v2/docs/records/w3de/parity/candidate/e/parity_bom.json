@@ -1,0 +1,68 @@
+{
+ "kind": "bom",
+ "rows": [
+  105,
+  107
+ ],
+ "rows_only_committed": [
+  [
+   "C19",
+   "4.7u 25V",
+   "Capacitor_SMD:C_1206_3216Metric",
+   "",
+   "1"
+  ],
+  [
+   "C23,C30,C38-C44,C46,C48-C52,C55,C59-C62",
+   "100n",
+   "Capacitor_SMD:C_0603_1608Metric",
+   "C14663",
+   "20"
+  ],
+  [
+   "J_BLK?",
+   "solder lands for the 12 signal wires to the block board underside (mirror of A22 J_DOCK): 1-4 VIN_RAW, 5-7 GND, 8 SHORE_INHIBIT, 9 USB D+, 10 USB D-, 11 GND, 12 spare",
+   "meshsat:PogoTargets_2x6",
+   "",
+   "1"
+  ]
+ ],
+ "rows_only_other": [
+  [
+   "C19,C63",
+   "4.7u 25V",
+   "Capacitor_SMD:C_1206_3216Metric",
+   "",
+   "2"
+  ],
+  [
+   "C23,C30,C38-C44,C46,C48-C52,C55,C59-C62,C64",
+   "100n",
+   "Capacitor_SMD:C_0603_1608Metric",
+   "C14663",
+   "21"
+  ],
+  [
+   "J_BLK?",
+   "solder lands for the 12 signal wires to the block board underside (mirror of A22 J_DOCK): 1-7 GND, 8 SHORE_INHIBIT, 9 USB D+, 10 USB D-, 11 GND, 12 spare (VIN_RAW crosses on P_VR since EQ-16)",
+   "meshsat:PogoTargets_2x6",
+   "",
+   "1"
+  ],
+  [
+   "P_VN?",
+   "solder pad, 12 AWG wire to the block board VIN_RAW return targets (board A's four 9 A power pins J_VN1-4, EQ-16)",
+   "meshsat:SolderPad_8x6",
+   "",
+   "1"
+  ],
+  [
+   "P_VR?",
+   "solder pad, 12 AWG wire to the block board VIN_RAW targets (board A's four 9 A power pins J_VR1-4, EQ-16)",
+   "meshsat:SolderPad_8x6",
+   "",
+   "1"
+  ]
+ ],
+ "result": "DIFFERENT"
+}

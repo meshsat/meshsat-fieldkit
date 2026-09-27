@@ -234,6 +234,47 @@ class MissingInput(Exception):
     is not a rewrite either: the renderer refuses the document and names the input it could not read."""
 
 
+def _source_one(src):
+    """The kind of one designator: see bringup_kind."""
+    src = str(src or "")
+    if not src: return "input"
+    if src.startswith("J"): return "input"
+    if re.match(r"^F\d", src): return "input"
+    if re.match(r"^(L|FB)\d", src): return "ask"
+    return "derived"
+
+
+def bringup_kind(r):
+    """input, derived, or ASK: what a rail's declared source says about where it comes from.
+
+    A connector or a fuse is an input; the board receives that rail. A part is a converter output; the
+    board makes it. AN INDUCTOR OR A FERRITE IS NEITHER, and pretending otherwise is how a first draft
+    of this page told a bench supply to put 3.3 V onto board A's logic rail: L7 is a buck's OUTPUT
+    inductor there, and L2 on board E is a filter choke on the incoming 12 V. The tool cannot tell those
+    apart from the declaration, so it says so instead of choosing.
+
+    A LIST SOURCE (27 September 2026, set 5, w3de check 2): a rail whose current enters at several designators at
+    once declares them as a list, as board A's VIN_RAW does since EQ-16 (J_VR1 to J_VR4). It is an input only when
+    EVERY element is an input designator (J..., F<n>); one inductor or ferrite among them makes it ASK, and any
+    other part makes it derived. Before, the list was read through str(), which starts with '[', so board A's main
+    input moved out of 'Applied, in this order' and the page told the reader it is never applied from the bench."""
+    src = (r or {}).get("source")
+    if isinstance(src, (list, tuple)):
+        if not src: return "input"
+        kinds = [_source_one(x) if str(x or "") else "derived" for x in src]
+        if all(k == "input" for k in kinds): return "input"
+        if "ask" in kinds: return "ask"
+        return "derived"
+    return _source_one(src)
+
+
+def _source_text(r):
+    """A rail's declared source as the page prints it: a list as its designators joined by commas."""
+    src = (r or {}).get("source")
+    if isinstance(src, (list, tuple)): return ", ".join(str(x) for x in src)
+    return src
+
+
 def bringup_doc(reg, cov):
     """TST-001: how each board is brought up the first time, generated from what the boards themselves declare.
 
@@ -280,24 +321,8 @@ def bringup_doc(reg, cov):
         n_boards += 1
         rails = it["rails"]
 
-        def kind(r):
-            """input, derived, or ASK: what a rail's declared source says about where it comes from.
-
-            A connector or a fuse is an input; the board receives that rail. A part is a converter output; the
-            board makes it. AN INDUCTOR OR A FERRITE IS NEITHER, and pretending otherwise is how a first draft
-            of this page told a bench supply to put 3.3 V onto board A's logic rail: L7 is a buck's OUTPUT
-            inductor there, and L2 on board E is a filter choke on the incoming 12 V. The tool cannot tell those
-            apart from the declaration, so it says so instead of choosing.
-            """
-            src = str((r or {}).get("source") or "")
-            if not src: return "input"
-            if src.startswith("J"): return "input"
-            if re.match(r"^F\d", src): return "input"
-            if re.match(r"^(L|FB)\d", src): return "ask"
-            return "derived"
-
         by = {"input": [], "derived": [], "ask": []}
-        for k, v in rails.items(): by[kind(v)].append((k, v))
+        for k, v in rails.items(): by[bringup_kind(v)].append((k, v))
         for g in by.values(): g.sort(key=lambda kv: float((kv[1] or {}).get("volts") or 0))
         inputs, derived, ask = by["input"], by["derived"], by["ask"]
         L += ["", "**Applied, in this order.**", "",
@@ -306,7 +331,7 @@ def bringup_doc(reg, cov):
             loads = ", ".join(sorted((r.get("loads") or {}).keys())[:6]) or "nothing declared"
             L.append("| %d | %s | %.2f V | %.2f A | %s | %s |"
                      % (n, net.lstrip("/"), float(r.get("volts") or 0), float(r.get("amps_typ") or 0),
-                        r.get("source") or "another board or the pack", loads))
+                        _source_text(r) or "another board or the pack", loads))
         if not inputs:
             L.append("| | | | | | this board receives no rail of its own: it is powered entirely from another board |")
         L += ["", "**Measured, in this order, after the inputs are up.**", "",
@@ -315,7 +340,7 @@ def bringup_doc(reg, cov):
             loads = ", ".join(sorted((r.get("loads") or {}).keys())[:6]) or "nothing declared"
             v = float(r.get("volts") or 0)
             L.append("| %d | %s | %.2f V (%.2f to %.2f) | %s | %s |"
-                     % (n, net.lstrip("/"), v, v * 0.95, v * 1.05, r.get("source") or "?", loads))
+                     % (n, net.lstrip("/"), v, v * 0.95, v * 1.05, _source_text(r) or "?", loads))
         if not derived:
             L.append("| | | | | this board makes no rail of its own |")
         if ask:
@@ -326,7 +351,7 @@ def bringup_doc(reg, cov):
                 loads = ", ".join(sorted((r.get("loads") or {}).keys())[:6]) or "nothing declared"
                 L.append("| %s | %.2f V | %.2f A | %s | %s |"
                          % (net.lstrip("/"), float(r.get("volts") or 0), float(r.get("amps_typ") or 0),
-                            r.get("source"), loads))
+                            _source_text(r), loads))
         L.append("")
     L += ["", _wrap("%d board(s) have an intent file in this tree and are listed. Every number here is a DESIGN "
                     "figure from the board's own declaration and not a measurement: there is nothing to measure "

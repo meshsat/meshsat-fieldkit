@@ -1,0 +1,26 @@
+{
+ "kind": "schematic",
+ "phase_labels": [
+  [
+   "A65"
+  ],
+  [
+   "A65"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N1_title_date": 1,
+   "N2_page_frame_date": 14,
+   "L1_comment1_phase": 1,
+   "L2_frame_phase": 14
+  },
+  {
+   "N1_title_date": 1,
+   "N2_page_frame_date": 14,
+   "L1_comment1_phase": 1,
+   "L2_frame_phase": 14
+  }
+ ],
+ "result": "PARITY_AFTER_NOISE"
+}

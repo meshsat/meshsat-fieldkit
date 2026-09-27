@@ -1,0 +1,7 @@
+{
+ "kind": "intent",
+ "keys_changed": [
+  "rails"
+ ],
+ "result": "DIFFERENT"
+}
