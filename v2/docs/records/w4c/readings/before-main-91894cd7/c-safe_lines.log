@@ -1,0 +1,8 @@
+safe_lines: board C declares 6 safety line(s)
+  TX_INHIBIT_n     safe low  source    pull down [C24 (10n)] pull up [R14 (10k to +3V3)] drivers [SW_EMCON (EMCON locking toggle (closed)] reads [U14.3 (SN74LVC1G57DBVR configurable), U9.2 (74LVC1G17 Schmitt-trigger no)] leaves on [J_PANEL.11]
+  EMCON_HW         safe low  source    pull down [-] pull up [-] drivers [-] reads [U13.2 (74LVC1G17 Schmitt-trigger no), U14.6 (SN74LVC1G57DBVR configurable), U9.4 (74LVC1G17 Schmitt-trigger no)] leaves on [J_PANEL.8]
+  ZEROIZE_HW       safe high source    pull down [-] pull up [-] drivers [-] reads [U12.4 (74LVC1G17 Schmitt-trigger no)] leaves on [J_PANEL.10]
+  ZEROIZE_SW       safe high listens   pull down [C20 (10n)] pull up [R10 (10k to +3V3)] drivers [SW_ZERO (ZEROIZE locking toggle, main)] reads [U12.2 (74LVC1G17 Schmitt-trigger no), U3.34 (RP2040 panel controller (USB)] leaves on [-]
+  PI_KILL          safe low  source    pull down [-] pull up [-] drivers [-] reads [U3.30 (RP2040 panel controller (USB)] leaves on [J_PANEL.25]
+  SHORE_INHIBIT    safe low  source    pull down [-] pull up [-] drivers [-] reads [U3.31 (RP2040 panel controller (USB)] leaves on [J_PANEL.26]
+verdict: safe_lines             PASS         of 6 {"floating": 0, "lines": 6, "listened": 1, "on_netlist": 6} | 1 line(s) this board reads hold the safe state with its own copper; the rest are driven here or only cross it

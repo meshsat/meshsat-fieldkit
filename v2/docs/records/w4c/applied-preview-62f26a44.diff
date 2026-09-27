@@ -1,0 +1,946 @@
+# Stream w4c pass 2: what integration steps 2 to 5 (apply_registry.py, patch_docs.py, the vendor filing, rules_lib and rules_render --requirements) wrote in a throwaway clone of main 62f26a44 on the KiCad box, 27 September 2026; board C's six stream files and the filed PDF are left out (they are the worktree's own files and a binary).
+diff --git a/v2/docs/ARCHITECTURE.md b/v2/docs/ARCHITECTURE.md
+index 170fc2a5..909b5c85 100644
+--- a/v2/docs/ARCHITECTURE.md
++++ b/v2/docs/ARCHITECTURE.md
+@@ -665,7 +665,7 @@ Source: W5 round 2 contract with A01, A02, A07 and A11 applied, re-read against
+ | Line | Driven by | Consumed by | With the panel ribbon out | Source |
+ |---|---|---|---|---|
+ | EMCON_HW | C's U9, a 74LVC1G17 Schmitt buffer of TX_INHIBIT_n | A's PA and HF gates (U26; in board A's round 8 candidate U35 and U37, which AND it with TX_INHIBIT_n), B's radio gates (U19, U20) and B's Q11, which inverts it into EMCON_ON | LOW: EMCON asserted | A R102 100 k (10 k 1% in board A's round 8 candidate, `gen_sch_a.py:1253`), B R58 10 k to GND (`gen_sch_a.py:1112` at `45bde541`, `gen_sch_b.py:1024`); the line's hold with its source gone is UNDECIDED as drawn (EMCON L2) |
+-| TX_INHIBIT_n | C's SW_EMCON (to GND) with R14 10 k up on C | D's KEY gate; A and B | LOW: inhibited | R145 (A), R59 (B), R2 (D), 100 k each |
++| TX_INHIBIT_n | C's SW_EMCON (to GND) with R14 up on C: 2.2 k 1 % since EQ-25 (stream w4c, 27 September 2026), 10 k at `eadbe571` | D's KEY gate; A and B | LOW: inhibited | R145 (A), R59 (B), R2 (D), 100 k each; and R50 (C), 10 k 1 % since EQ-25, which holds the line with the panel connected but unpowered (0.24 V against the 0.8 V VIL under the RF-002 walk's worst-case Ioff sums; 1.09 V before, W3T-F1) |
+ | ZEROIZE_SW | C's covered SW_ZERO (to GND) | **only** C's RP2040 GPIO22 | not on the ribbon | `gen_sch_c.py:168-178`, `:217` |
+ | ZEROIZE_HW | C's U12, a buffered copy of ZEROIZE_SW (`faf8c981`) | nothing acts on it: in the committed netlists it reaches A's pull-up R117 and test points on B (TP8), C (TP12) and D (TP9) | HIGH: no wipe | R117 10 k to A's +3V3 (`gen_sch_a.py:1150`); U12's Ioff keeps R117 off C's rail |
+ | SLOT_EN1..3 | C's RP2040 GPIO13 to 15 | A's slot converters U4 to U6 | LOW: every slot off | R30, R34, R38 |
+diff --git a/v2/docs/HW-FW-CONTRACT.md b/v2/docs/HW-FW-CONTRACT.md
+index 55d03247..3bc91408 100644
+--- a/v2/docs/HW-FW-CONTRACT.md
++++ b/v2/docs/HW-FW-CONTRACT.md
+@@ -192,6 +192,7 @@ those is DRAWN on `main` from that commit. `fnd/r8b` is still a candidate.
+ | `fnd/r8d` (in `fnd/r8int1` 76235aad) | FW-D02 | ADS1115 at 0x48 for the flange; +5V_TX gated by +3V3_D8's band |
+ | `fnd/r8e` (in `fnd/r8int1` bc0f562f) | FW-A16 | VIN_RAW declared at 14.10 A from both feeds; the 80 % rule stands |
+ | `fnd/r8bat` | FW-C09, FW-P01 | the pack readings' 10 s fallback to the reduced mode; the round-8 charge window in the golden image |
++| `fnd/w4c` | FW-C07 | TX_INHIBIT_n's `R14` 2.2 k 1 % and `R50` 10 k 1 % (EQ-25): no firmware duty, nothing drives the line; RAIL_SENSE (GPIO 26, ADC0) now reads `LED_RAIL_SW` through the `R15`/`R51` divider (W4C-F1): about 2.5 V present, 0 V at BLACKOUT (PANEL.md section 3) |
+ 
+ ## 5. Verification items this contract adds (V-nn)
+ 
+diff --git a/v2/docs/PANEL.md b/v2/docs/PANEL.md
+index 1ee88b3a..99d47e6b 100644
+--- a/v2/docs/PANEL.md
++++ b/v2/docs/PANEL.md
+@@ -54,7 +54,7 @@ Hardware record: `MESHSAT-709-geometry-appendix.md` sections 32.52 (fabric), 32.
+ | Sounder | `BZ1` IP67 panel sounder on `+5V` through `Q4` from `PWM1` | controller |
+ | Ambient light | `U_LIGHT` VEML7700 (I2C 0x10) under its own light guide | controller |
+ | ZEROIZE | `SW_ZERO` pulls the local net `ZEROIZE_SW` low (10k pull-up `R10`, 10 nF `C20`), which the controller reads on GPIO 22; `U12`, a 74LVC1G17 buffer, copies it onto `ZEROIZE_HW` for the ribbons, where the line reaches a test point on B16, a 10k pull-up (`R117`) on A22 and a test point on D8, and no other part listens (decision 30; `gen_sch_c.py:168-178` and `:217` at `45bde541`, corrected 26 September 2026: until `faf8c981` the toggle sat on `ZEROIZE_HW` itself) | controller firmware: the crypto-erase of section 6 |
+-| EMCON logic | `U9` 74LVC1G17 Schmitt-trigger buffer: `EMCON_HW` follows `TX_INHIBIT_n`, both LOW = inhibited (corrected 9 September 2026, red team C1: the part was an inverter and both consumer boards were built on low = silence, so asserting EMCON enabled the PA and released both M.2 radios; a Schmitt input since `faf8c981`, because the toggle's node rises with a 77 us time constant, far outside the 74LVC1G34's input slew limit, `gen_sch_c.py:157-166`). Since round 8 of MESHSAT-1357 (26 September 2026): the controller reads `EMCON_HW` only through `U13`, a second 74LVC1G17, and `R46` (1k) on GPIO 21, so no firmware pin sits on the line (`feasibility/EMCON.md` item L1); and the hardware EMCON lamp of SD-EMC-6 is drawn: `U14`, a TI SN74LVC1G57 wired as a NOR with Schmitt inputs, reads `TX_INHIBIT_n` and `EMCON_HW` and turns on `Q7` (Si2300DS), which sinks `D22` from `LED_RAIL_SW` through `R47` (470R), so the lamp is lit only while both lines read LOW, with no processor in its path. Its light-guide hole in the plate beside `SW_EMCON` is owed (S-44) | hardware |
++| EMCON logic | `U9` 74LVC1G17 Schmitt-trigger buffer: `EMCON_HW` follows `TX_INHIBIT_n`, both LOW = inhibited (corrected 9 September 2026, red team C1: the part was an inverter and both consumer boards were built on low = silence, so asserting EMCON enabled the PA and released both M.2 radios; a Schmitt input since `faf8c981`, because the toggle's node rises with a 77 us time constant, far outside the 74LVC1G34's input slew limit, `gen_sch_c.py:157-166`). Since EQ-25 (stream w4c, 27 September 2026, SC-64) `R14` is 2.2 k 1 % and `R50` (10 k 1 %) holds `TX_INHIBIT_n` down on this board too: with the panel unpowered the line reads 0.24 V under the RF-002 walk's worst-case Ioff sums (1.09 V before), released it rests at 2.57 V (2.37 V at the adverse ends), and it rises with a 17 us time constant. Since round 8 of MESHSAT-1357 (26 September 2026): the controller reads `EMCON_HW` only through `U13`, a second 74LVC1G17, and `R46` (1k) on GPIO 21, so no firmware pin sits on the line (`feasibility/EMCON.md` item L1); and the hardware EMCON lamp of SD-EMC-6 is drawn: `U14`, a TI SN74LVC1G57 wired as a NOR with Schmitt inputs, reads `TX_INHIBIT_n` and `EMCON_HW` and turns on `Q7` (Si2300DS), which sinks `D22` from `LED_RAIL_SW` through `R47` (470R), so the lamp is lit only while both lines read LOW, with no processor in its path. Its light-guide hole in the plate beside `SW_EMCON` is owed (S-44) | hardware |
+ | Pass-throughs | the Xenarc 709GNK monitor's connector block (its HDMI and 12 V leads go below the plate to B16 `J_HDMI` and A22 `J_MON`, its USB touch lead to D8 `J_USB3` through the adapter of `ASSEMBLY.md` section 4: the session's choice SC-HF-06 of 27 September 2026, `HW-FW-CONTRACT.md` section 8), two U-174/U headset jacks `J_HSJ1`/`J_HSJ2` (leads to D8 `J_HS1`/`J_HS2`), the USB camera module behind the sealed window (lead to B16 `J_CAM`) | not the panel's |
+ 
+ ## 2. The ribbon `J_PANEL` (2x13, 2.54 mm; B16 `J_PANEL` carries the same map, checked by `check_contracts.py`)
+@@ -95,7 +95,7 @@ Hardware record: `MESHSAT-709-geometry-appendix.md` sections 32.52 (fabric), 32.
+ | 23 | TR_APRS | read back of D8's KEY line (the TX lamp state) |
+ | 24 | EXP_INT | the expanders' interrupt, active low |
+ | 25 | LED_STAT | the controller's own status LED `D18` (on the board, not on the face) |
+-| 26 (ADC0) | RAIL_SENSE | `LED_RAIL_SW` through 10k: the LED rail is present when the LIGHTING toggle is not at BLACKOUT |
++| 26 (ADC0) | RAIL_SENSE | `LED_RAIL_SW` through the `R15`/`R51` 10k/10k divider (W4C-F1, 27 September 2026: through `R15` alone the pin sat above IOVDD, RP2040 datasheet 2.9.5): about 2.5 V (2.65 V at most) while the LED rail is present, 0 V at BLACKOUT; the pin is an ADC input (IE low, OD high); the rail is present above 1.25 V |
+ | 27 | TEST_SW | TEST / ACK button, pressed = low (10k pull-up, 10 nF) |
+ | 28 | SOS_SW | SOS locking toggle, closed = low (10k pull-up, 10 nF) |
+ | 29 | EPD_PWR_n | the e-paper's 3.3 V switch `Q5`, low = on |
+@@ -146,7 +146,7 @@ The controller owns three lines per slot: `HBn` in, `SLOT_ENn` out, and the disp
+ 
+ | Line | Source | Effect |
+ |---|---|---|
+-| TX_INHIBIT_n | `SW_EMCON` closed = low (10k pull-up `R14` on C7, 10 nF `C24`; A22, B16 and D8 each hold it down with 100k so a cut ribbon inhibits) | D8's KEY gate cannot key the SA868 and the PA (`KEY = PTT_ANY AND TX_INHIBIT_n`); since board A's round 8 candidate (26 September 2026) A22 also reads it, ANDed with `EMCON_HW` into the enables of the PA and HF converters (`U35`, `U37`, SN74AUP1G08, `gen_sch_a.py:1240-1243`), so those two rails do not depend on the firmware pins that reach `EMCON_HW` (`feasibility/EMCON.md` section 4a); the bridge additionally holds every bearer; on C7, with `EMCON_HW`, it lights the EMCON lamp `D22` through `U14` (since round 8) |
++| TX_INHIBIT_n | `SW_EMCON` closed = low (pull-up `R14` on C7, 2.2k 1 % since EQ-25 and 10k before, 10 nF `C24`, and `R50` (10k 1 %, since EQ-25) down on C7, so the line reads inhibited with the panel unpowered, 0.24 V under the RF-002 walk's worst-case Ioff sums (section 1); A22, B16 and D8 each hold it down with 100k so a cut ribbon inhibits) | D8's KEY gate cannot key the SA868 and the PA (`KEY = PTT_ANY AND TX_INHIBIT_n`); since board A's round 8 candidate (26 September 2026) A22 also reads it, ANDed with `EMCON_HW` into the enables of the PA and HF converters (`U35`, `U37`, SN74AUP1G08, `gen_sch_a.py:1240-1243`), so those two rails do not depend on the firmware pins that reach `EMCON_HW` (`feasibility/EMCON.md` section 4a); the bridge additionally holds every bearer; on C7, with `EMCON_HW`, it lights the EMCON lamp `D22` through `U14` (since round 8) |
+ | EMCON_HW | `U9` buffer, low while TX_INHIBIT_n is low; with the ribbon out B16's `R58` (4.7 k 1 percent since board B's round 8; 10k before) and A22's `R102` (10k 1% since board A's round 8 candidate; 100k before) hold it low | as generated at `45bde541` on A22 it is ANDed into the enables of the PA and HF converters (`U26`, `gen_sch_a.py:1102`), and in board A's round 8 candidate it is the second input of `U35` and `U37`, beside `TX_INHIBIT_n` (`gen_sch_a.py:1240-1243`); as generated in board B's round 8 (27 September 2026, MESHSAT-1357), on B16 each single gate `U501` to `U505` (SN74LVC1G08, which state Ioff) ANDs it into the supply enables of the LimeSDR, the RockBLOCK, the LoRa module and both E72; each slot inverts it into its own `EMCON_ON1..3` in `U112`, `U212`, `U312`, run from that module's own 3.3 V, so a lost `+3V3_DEV` no longer releases a module radio; from there SN74LVC2G06 open-drain outputs pull the module's `WL_nDisable` and `BT_nDisable` low (`U113`, `U213`, `U313`, with the panel's off requests on `U114`, `U214`, `U314`), and `U115`, `U215`, `U315` pull each card's `W_DISABLE1#` and its buck's enable low, so all three card supplies go, the 5G module's included; the 5G module's `FULL_CARD_POWER_OFF#` falls at once (`U220`) and its socket rail is discharged through 15 Ohm (`Q212`, an AO3400A whose sheet states its threshold and channel resistance at 25 C only, and `R295`), a bound of about 1.2 ms from EMCON to the module's 3.135 V power-off floor plus 1.8 ms per mF of the module's own input capacitance, which no held document states (`feasibility/EMCON.md` section 4b, SD-EMC-1 as re-decided in round 8); the three supervisors read it through the buffer `U506` (`EMCON_SUP`), so no firmware pin sits on the line (`U506` drives `EMCON_SUP` push-pull, so a supervisor its bench jumper leaves unpowered is fed through its PC5 pin, as board C's `U9` fed it before the round); D8's KEY gate makes VHF/APRS the one transmit-only case. Ruled 32.50 item 3 ("every transmitter") and, on 26 September 2026, by the owner's D-05: **under EMCON the radios go DARK.** Every radio with an emission path is powered off or RF-disabled in hardware; the VHF path keeps listening (D8's gate is on transmit only, as ruled); GNSS, DCF77 and the lightning detector continue. The cost of the 5G supply removal is Quectel's flash warning, accepted as a residual; the bridge's AT+CFUN=0 on EMCON remains care of the module's flash, not the inhibit. Open: the back-feed of SD-EMC-2 into the RockBLOCK, the E22 and the E72 (the load switches now discharge their outputs; the lines' series resistance is not drawn). No row has been shown on a bench (`feasibility/EMCON.md` section 6). **Corrected 26 September 2026 (S-07):** this row said the compute modules' own radios had no hardware path from EMCON and the WiFi cards only a disable pin of unproven effect, which was the circuit before `458b2873`. **Corrected 27 September 2026 (round 8):** it described `EMCON_ON` from `Q11` and `R513` on `+3V3_DEV`, 2N7002 open drains, `U19`/`U20` and the supervisors' PC5 on the line, and the 5G module's disable pin as its only path |
+ | ZEROIZE_HW | `SW_ZERO` closed = `ZEROIZE_SW` low, and `U12` drives `ZEROIZE_HW` low with it | the toggle is read by the controller's GPIO 22 on `ZEROIZE_SW`, the only listener: `ZEROIZE_HW` reaches test points on B16 and D8 and A22's pull-up `R117`, and no hardware line reaches the slots, the supervisors or the drives. Decision 30, ruled by the owner on 26 September 2026: a CRYPTO-ERASE through the secure element. Every drive and eMMC key is wrapped by key-encryption keys only B16's ATECC608B holds (two of them, both needed to unlock a drive, `feasibility/ZEROIZE.md` section 3); held closed 5 s, the controller destroys both first over the kit bus by regenerating them in place (the GenKey command), then tells the running modules to drop the keys they hold in RAM, then drops `SLOT_EN1..3`. It is firmware and provisioning, and it rests on one precondition: that the fitted part lets those keys be destroyed after its zones are locked. `feasibility/ZEROIZE.md` closes that from Microchip's public documents (a desk result; the full ATECC608B datasheet stays under NDA) and leaves the physical demonstration on the fitted part to bench experiments Z-EXP-A and Z-EXP-B (S-35), with the SLB 9673 TPM 2.0 on B16's `U8` site as the fallback. Accepted by the owner: a drive unlocks at boot only through the secure element, this controller and the kit bus. The controller shows the armed state |
+ | TR_APRS | D8's real KEY line | the TX lamp |
+diff --git a/v2/docs/REQUIREMENTS-TRACE.md b/v2/docs/REQUIREMENTS-TRACE.md
+index 45b89cb8..8f166981 100644
+--- a/v2/docs/REQUIREMENTS-TRACE.md
++++ b/v2/docs/REQUIREMENTS-TRACE.md
+@@ -7,7 +7,7 @@ Generated from the requirements registry `v2/ecad/tools/pcb_requirements.yaml`.
+ 
+ Every reading carries its evidence class, in the six classes of `v2/docs/CURRENT-EVIDENCE.md`: a record reads PASS only on a class that counts, never on evidence awaiting revalidation, and a desk review (the session's own reading of named files, each bound by its sha256) is never a physical test. The prototype-core functions whose feasibility is not closed are listed first, as explicit architecture feasibility blockers (review of 26 September 2026, section 3 and checkpoint item 1): a merged document is configuration control, not proof that the architecture is feasible.
+ 
+-Registry state **READY_FOR_REVIEW_B**. Sources read at commit `08f3665a` unless an entry says otherwise. 144 records trace to 19 needs; 29 owner rulings are applied, 63 choices were taken by the session under the owner's standing rule of 26 September 2026, 60 items are open and 49 are closed.
++Registry state **READY_FOR_REVIEW_B**. Sources read at commit `08f3665a` unless an entry says otherwise. 144 records trace to 19 needs; 29 owner rulings are applied, 66 choices were taken by the session under the owner's standing rule of 26 September 2026, 60 items are open and 50 are closed.
+ 
+ ## Summary
+ 
+@@ -302,6 +302,9 @@ The owner ruled on 26 September 2026 that he is not asked further questions: whe
+ | **SC-61** | The hot-plug rules pcb_interfaces.yaml marked '(proposed)' (HW-FW-CONTRACT.md section 8). | Adopted as written: IF-BC-PANEL, IF-AB-RIBBON, IF-AB-POWER, IF-A-PA and IF-LID-HF are mated and unmated with the kit off. | - | - | none |
+ | **SC-62** | The I/O supervisors' clock stretch on the kit bus and the master's SCL hold (HW-FW-CONTRACT.md sections 3.7 and 8). | Each supervisor stretches SCL for at most 1 ms (FW-B08, V-B08); the master never holds SCL low for more than 10 ms, and recovers a stuck bus with nine SCL pulses and a STOP (FW-K04, V-K02). | - | - | none |
+ | **SC-63** | Where the Xenarc 709GNK monitor's touch USB connects, and how it follows the display owner (HW-FW-CONTRACT.md section 8; the audit's unresolved decision, ASSEMBLY.md having named 'a B16 slot hub header' with no designator). | Board D's spare hub port J_USB3 (PH 1x4), through a USB A receptacle to PH adapter lead made up at build; the touch follows the display owner by the HAL's network share (FW-B19); carried in pcb_int... | - | - | none |
++| **SC-64** | EQ-25 on board C (stream w4c, 27 September 2026): with board C unpowered, TX_INHIBIT_n read 1.09 V against the 0.8 V VIL the RF-002 walk applies (W3T-F1, S-64). How is it held under VIL with margin under the walk's worst-case Ioff convention, without losing the released level or the asserted one while board C is powered? | Option (a) of S-64, on board C alone: R14 10k to 2.2k 1 percent (UNI-ROYAL 0603WAF2201T5E, C4190) and a new R50, 10k 1 percent (0603WAF1002T5E, C25804), from TX_INHIBIT_n to GND (v2/ecad/tools/gen_... | S-64 | - | none |
++| **SC-65** | Which kind does each supply PWR-001 refused on board C take (EQ-19 for board C: C_DVDD, EPD_VCC, LED_RAIL and LED_RAIL_SW undeclared), and how are the eleven nets it left UNDECIDED settled (EMCLAMP_A, EMCLAMP_K, EPD_RESE, LIGHT_DAY_n, LIGHT_NIGHT_n, TEST_SW, TX_A, TX_INHIBIT_n, TX_K, TX_LAMPTEST, ZEROIZE_SW)? | Rails: EPD_VCC (the e-paper's switched 3.3 V, Q5 to the panel's VDDIO and VDD and to the boost inductor L1; 30 mA typical, 0.521 A peak; switch Q5, enable EPD_PWR_n), LED_RAIL_SW (+5V behind the LI... | - | - | none |
++| **SC-66** | Board C's RAIL_SENSE (U3 GPIO26, ADC0) sat on the 5 V LED_RAIL_SW through R15 alone, above the RP2040's IOVDD (finding W4C-F1, read while declaring LED_RAIL_SW for PWR-001). How is it bounded? | R51, 10k (UNI-ROYAL 0603WAF1002T5E, C25804), from RAIL_SENSE to GND, making R15 and R51 the divider PANEL.md section 1's LED-rail row already names: at most 2.65 V at 5.25 V, 0 V at BLACKOUT (pole... | - | - | none |
+ 
+ **SC-01**, taken by the session on 2026-09-26 under the owner's ruling `standing-rule`. Yes: NEED-19 is added to the core D-01 names, with SOS as D-10 defines it. Why: D-10 defines SOS's action (firmware only), and W1's decision table recommended NEED-19 for the core; D-01 as ruled did not name it. CONOPS section 2a publishes the same choice.
+ 
+@@ -429,6 +432,12 @@ The owner ruled on 26 September 2026 that he is not asked further questions: whe
+ 
+ **SC-63**, taken by the session on 2026-09-27 under the owner's ruling `standing-rule`. Board D's spare hub port J_USB3 (PH 1x4), through a USB A receptacle to PH adapter lead made up at build; the touch follows the display owner by the HAL's network share (FW-B19); carried in pcb_interfaces.yaml IF-MON, ARCHITECTURE.md section 12, ASSEMBLY.md section 4 and build step 9, and PANEL.md section 1. Its costs are finding HF-F06, owed on board D before its layout entry (S-61). Why: Every one of board B's twelve hub ports is allocated (gen_sch_b.py:764-766); J_USB3 exists for a lead made up at build, needs no board B change (board B's floor plan is open under FB-FAB-6), matches the leads table's PH housing, and a full-speed hub carries a HID touch (USB 2.0 section 7.1 Table 7-1, v2/docs/records/hc5/usb-2-0-clauses-cited.md); appendix 32.52 makes the HAL's network share the kit's way to reach a device on another module. Drafted as SC-HF-06 in HW-FW-CONTRACT.md section 8 on 27 September 2026 by the layer 5 closer, and entered here by the second release attempt of layers 1 to 3 the same day (layer 3's release check, R5), so that the registry is the one record of it. Reverse by a board B port reallocation or added downstream capacity on board B, after which J_USB3 returns to spare.
+ 
++**SC-64**, taken by the session on 2026-09-27 under the owner's ruling `standing-rule`. Option (a) of S-64, on board C alone: R14 10k to 2.2k 1 percent (UNI-ROYAL 0603WAF2201T5E, C4190) and a new R50, 10k 1 percent (0603WAF1002T5E, C25804), from TX_INHIBIT_n to GND (v2/ecad/tools/gen_sch_c.py, the R14 line and the note at the end of the design). On the regenerated netlist (v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@3fddbb3edcd4248a) the walk reads the line PASS: 0.243 V with board C unpowered (1.085 V before) and 0.178 V with the A-D mezzanine out as well (1.103 V before); every other fail-safe state is unchanged, the highest 0.578 V (boards A and D with the A-B ribbon out). Released, 2.57 V nominal and 2.37 V at the adverse ends (2.54 V and 2.11 V before); asserted, the toggle's contact holds the line at ground and R14 draws 1.59 mA. Why: One board, the board whose round 8 lamp gate U14 added the Ioff that lifted the line, and the lowest failed-safe level of the three options S-64 names ((b) board B's R59 at 10k with R14 2.2k, 0.26 V on two boards; (c) the three pull-downs at 47k with R14 4.7k, 0.51 V on four boards). It also lifts the released level at the adverse ends over the about 2.15 V VT+ this tree reads for U9 at 3.3 V, which R14 at 10k did not (2.11 V). The toggle's current stays inside the APEM 5636ADKB's gold-plated contacts' range (10 uA at 5 V to 100 mA at 30 VDC) and under the walk's 4 mA pull limit. Latency: asserting is the contact itself, settled within its 2 ms bounce; release crosses U9's VT+ after about 31 us (144 us before); with board C's supply gone R50 and the three pull-downs hold the line with a 78 us time constant; each far inside REQ-071's 1 s. The FAIL rested on the walk's worst-case convention (an unpowered part passes its Ioff), so this is margin, not the repair of a demonstrated defect. Reverse by option (b) or (c) if a measured Ioff (bench E-01, E-11) or a later reader on the line changes the sums.
++
++**SC-65**, taken by the session on 2026-09-27 under the owner's ruling `standing-rule`. Rails: EPD_VCC (the e-paper's switched 3.3 V, Q5 to the panel's VDDIO and VDD and to the boost inductor L1; 30 mA typical, 0.521 A peak; switch Q5, enable EPD_PWR_n), LED_RAIL_SW (+5V behind the LIGHTING toggle's pole 1: Q1, the EMCON lamp's R47, the MAIN ring's R39, Q1's gate pull-up R17 and the sense divider; declared always on with the reason that no line enables it) and LED_RAIL (Q1 to the eighteen lamp resistors; switch Q1, enable Q1_G), each converted False and fed from its parent. A node for C_DVDD, the RP2040's own core regulator output (1.30 V by VSEL, 1.16 V in service). Nodes for the eleven undecided nets at the voltages the circuit states (TX_INHIBIT_n, ZEROIZE_SW, TEST_SW, LIGHT_DAY_n and LIGHT_NIGHT_n at 3.333 V; EMCLAMP_A, EMCLAMP_K, TX_A, TX_K and TX_LAMPTEST at 5.0 V; EPD_RESE by the panel maker's reference) and for the lamp feed and return nets the rails' named loads reach (the fifteen indicators' anodes and cathodes, PIRING_A, TESTRING_A, MAINRING_A and Q1_G at 5.0 V, RAIL_SENSE at 2.65 V). +3V3's load Q5 moves from 1 mA to EPD_VCC's 30 mA, and +3V3's own figures cover its child EPD_VCC (0.149 A typical and 0.72 A peak, finding W4C-F5 of the stream's independent check; U5's headroom under the boost's 0.5 A class figure is open item S-80, read at bring-up). PWR-001 reads PASS of 6 on the regenerated netlist (census: 5 counted, 57 declared node, 3 settled, 0 undecided, 74 unmarked); power_path PASS (0 short), power_sequence PASS of 5. Why: The kinds board D and E's SC-57 and board B's stream w3b used: a rail where a current reaches more than one place or a switched load, a node where the net is one part's own supply, a lamp's feed or a signal. The figures are the makers': RP2040 datasheet 2.10.3, Table 189 and Table 634; UltraChip UC8253c A0.6 page 59 (IVDD 0.1, IVDDIO 0.1 and IVDDA 20.0 mA operating maximum at 3.0 V and 25 C, the only column the sheet gives; the driver PDi's flyer names for the E2370KS0C1) plus 10 mA INFERRED for the boost, whose output power no held document states, to be read at bring-up; PDi driving-circuit note Rev.02 page 4 note (1) for the boost's 0.5 A switch-current class and page 10 BOM item 9 for the sense resistor (EPD_RESE is declared by that reference, so no DC figure is invented for a chopped current); TI SBVS320D's 1 percent for +3V3; TI SCPS131J for the expanders' 5 V tolerant I/O. The lamps carry no part number, so their typical is the 8 mA the series resistors were chosen for and their peak the 5.25 V / R bound that needs no forward voltage. Reverse any node by a load on it that is another part's supply, and EPD_VCC's typical by the bench reading.
++
++**SC-66**, taken by the session on 2026-09-27 under the owner's ruling `standing-rule`. R51, 10k (UNI-ROYAL 0603WAF1002T5E, C25804), from RAIL_SENSE to GND, making R15 and R51 the divider PANEL.md section 1's LED-rail row already names: at most 2.65 V at 5.25 V, 0 V at BLACKOUT (pole 1 open, R15 and R51 hold it down). Why: The maker: 'the voltage on the ADC analogue inputs must not exceed IOVDD ... Voltages greater than IOVDD will result in leakage currents through the ESD protection diodes' (RP2040 datasheet 2.9.5 and 4.9 notes), with VPIN at most IOVDD + 0.5 V (Table 622); through 10k alone the pin sat on its diode with about 0.15 mA into +3V3 whenever the lamps were lit. A larger series resistor only lowers that current, a clamp adds a part and still injects, and moving the sense to an expander input moves a function the firmware reads today; the divider is one 0603 of a reel the board carries. The firmware's threshold for 'present' (about 2.5 V, 0 V absent) is the PANEL.md writer's. Reverse by a measured reason the pin must see the rail undivided.
++
+ ## Needs, requirements, rules and verification
+ 
+ One section per need. The table is the trace; the paragraphs under it carry each record's statement, its pass line and where it comes from.
+@@ -925,7 +934,9 @@ Prototype 1: in the core D-01 names. 19 record(s).
+ 
+ *Evidence (PASS, DESK_REVIEW):* v2/ecad/tools/gen_sch_b.py re-read at stream w3b's merge of 27 September 2026 (MESHSAT-1357, board B: PWR-001 declarations, decision 42 classes, W3B-F1, W3B-F2): the generator gains intent declarations only (17 rails and 40 nodes for PWR-001, each with its maker's figure; the +54V_POE load list names R13 and U5's own 7 mA; U11's +3V3_DEV load is the LG290P's 135 mA peak plus its antenna's 30 mA), the decision 42 class and basis on every decoupling entry, and two circuit changes: W3B-F1, RSENS R525 (22 Ohm) and RDRAIN R526 (47 Ohm) between the TPS23861's SEN1 and DRAIN1 and the port (SLUSBX9I p.5, 6.5), and W3B-F2, C72 to C74 (4.7 uF, 100 nF, 33 pF) at the LG290P's V_BCKP (hardware design V1.1 3.2.2); and W3B-R1, the coin-cell net VBAT renamed VBAT_RTC (board A's pack node is VBAT, and the contracts key a rail by its name); lines above each cited range moved: the ring is still f = s % 3 + 1, now at line 988, and nothing of the bank fabric changed, so it stands PASS on the file at 6957adda1bb5f23a
+ 
+-*Bound to:* `v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8`, `v2/docs/PANEL.md@7bb905740ddaebb9`, `v2/ecad/tools/gen_sch_b.py@6957adda1bb5f23a`
++*Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read after stream w4c's edit of 27 September 2026 (read against the file at 7bb905740ddaebb9): three table rows change, section 1's EMCON logic row, which gains one sentence on board C's R14 (2.2 k 1 %) and R50 (10 k 1 %) with the line's failed-safe and released levels and its 17 us rise, section 3's GPIO 26 row, which describes RAIL_SENSE through the R15/R51 divider (W4C-F1), and section 6's TX_INHIBIT_n row, whose source column now names R14 at 2.2k 1 % and R50 (10k 1 %) on C7 beside the three consumer pull-downs (it named a 10k pull-up and the three 100k only), as board C's regenerated netlist at 3fddbb3edcd4248a carries them; every other line is byte-identical; line 5 (bank 1's home and failover hosts), the rest of section 1 and section 2's ribbon table with its pin 15 row, which this reading rests on, are unchanged: none of the three changed rows names a bank or a host, so it stands PASS on the file at b73c5059a8934dca
++
++*Bound to:* `v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8`, `v2/docs/PANEL.md@b73c5059a8934dca`, `v2/ecad/tools/gen_sch_b.py@6957adda1bb5f23a`
+ 
+ *Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md section 4`; `v2/docs/ARCH-PCB-B-IOHA.md section 15`; `v2/ecad/tools/gen_sch_b.py:936`
+ 
+@@ -1051,7 +1062,11 @@ Prototype 1: not in the core. 7 record(s).
+ 
+ *Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read at the r8int5 integration of board A's stream w3a (27 September 2026) with its document edits applied (read against the file at e0a05db36b6e836d): four places change, all about board A's +3V3 overvoltage (EQ-17): section 4a's paragraph 'A fault outside RF-002's named states: +3V3 overvoltage' now reads CLOSED AT DESK (local) with a bound, the four SN74AUP1G08 gates U35 to U38 on +3V3_EMCON behind the eFuse U39 (overvoltage lockout at 3.83 to 4.11 V of +3V3) with the software holds through U40's open drains, the gates kept under 4.6 V while D3 holds +3V3 at 9.2 V or less unless U39's tOVLO exceeds about 9.5 us, and the rest of +3V3 against D3 (U30 on PA_EN, U40) left as a registry open item; section 6's E-11 row gains that +3V3 injection on board A with its pass line; section 7's row for that fault reads closed at desk with the bound; section 8's board A bullet says so; every other line is byte-identical, among them sections 0 and 0a (its rows and counts), 1 to 4 with 4.1 to 4.18, the rest of 4a, 4b, 5, 5a, every other row of 6 and 7, the rest of 8, and 9 to 9d; section 0's TX-lamp sentence and bench E-02, on which this reading rests, are byte-identical and no part of the lamp's path moved, so it stands FAIL on the file at 1d4a491d9718e6d3.
+ 
+-*Bound to:* `v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161`
++*Evidence (FAIL, DESK_REVIEW):* v2/ecad/pcb-c-display-c8/out/pcb-c-display.net regenerated by stream w4c on 27 September 2026 (EQ-25 and PWR-001 on board C, MESHSAT-1357) on the KiCad box with main's chain (handover_exports.py regen, PHASE C24; main's own regeneration at 91894cd7 reads PARITY_AFTER_NOISE against the committed file and MATCH against an empty change list): compared with the file at 11eabc2dddca5161 component by component and net by net (pin, pinfunction, pintype) by two independent readers (stream w4c's netcmp_w4c.py against expected-c-netlist.json, MATCH, and stream w3a's netcmp.py; v2/docs/records/w4c/parity/), it differs only in R14 (10k C25804 to 2.2k 1% C4190), R50 (10k 1%, C25804) added from TX_INHIBIT_n to GND and R51 (10k, C25804) added from RAIL_SENSE to GND; the intent beside it declares three more rails and forty-seven nodes and raises +3V3 to cover EPD_VCC, which moves no part (SC-65, S-80); no node of TX_A, TX_K, Q3_G, TR_APRS, LED_RAIL, Q1 or Q2 changed, so the TX lamp's anode is still LED_RAIL behind Q1 and Q2 and the lamp still needs the controller's PANEL_PWM, so it stands FAIL on the file at 3fddbb3edcd4248a
++
++*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read after stream w4c's edit of 27 September 2026 (read against the file at 1d4a491d9718e6d3): five places change, all about the TX_INHIBIT_n line on board C: section 2's Source, conductor and pull-down bullets (rewrapped), which name R14 at 2.2 k 1 percent and R50 (10 k 1 percent) to GND and the line's level with board C unpowered (0.24 V, 1.09 V before, W3T-F1); section 4.1's Default bullet (rewrapped), which names R50 beside R2, R145 and R59 and the walk's reading with and without it; and section 4b's W3T-F1 paragraph, which gains one closing sentence (the line PASS on board C's regenerated netlist at 3fddbb3edcd4248a, board D's SA868 keying back to its own UNDECIDED, the released and asserted levels and the latency); every other line is byte-identical, among them sections 0, 0a, 1, 3, 4 with 4.2 to 4.18, 4a, the rest of 4b, 5, 5a, 6, 7, 8 and 9 to 9d; section 0's TX-lamp sentence and bench E-02, on which this reading rests, are byte-identical, so it stands FAIL on the file at 9c9d5e80e366b2f9
++
++*Bound to:* `v2/docs/feasibility/EMCON.md@9c9d5e80e366b2f9`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@3fddbb3edcd4248a`
+ 
+ *Source (verified):* `v2/docs/PANEL.md:135`; `v2/docs/PANEL.md:189`
+ 
+@@ -1335,7 +1350,9 @@ Prototype 1: in the core D-01 names. 15 record(s).
+ 
+ *Evidence (PASS, DESK_REVIEW):* v2/docs/CONOPS.md re-read at the release finalizer of layers 1 to 3 of 27 September 2026 (fnd/rel2 rebased onto main 91894cd7, after the second release check at eb9f9030): only its status header changes, line 3 (the status line: layer 2 BASELINED at 79963b3b on v2/docs/reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md) and lines 48 to 49 (the Review A paragraph's last sentence), with the line count kept; every section from section 1 on, which this reading rests on, is byte-identical to the file at 3ff59edc96a3f8f4, so it stands on the file at 4483209659dc391c
+ 
+-*Bound to:* `v2/docs/PANEL.md@7bb905740ddaebb9`, `v2/docs/CONOPS.md@4483209659dc391c`, `v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af`, `v2/ecad/tools/gen_sch_a.py@5af29bbcf27bb91a`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f`, `v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md@44fdf9a022c49337`
++*Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read after stream w4c's edit of 27 September 2026 (read against the file at 7bb905740ddaebb9): three table rows change, section 1's EMCON logic row, which gains one sentence on board C's R14 (2.2 k 1 %) and R50 (10 k 1 %) with the line's failed-safe and released levels and its 17 us rise, section 3's GPIO 26 row, which describes RAIL_SENSE through the R15/R51 divider (W4C-F1), and section 6's TX_INHIBIT_n row, whose source column now names R14 at 2.2k 1 % and R50 (10k 1 %) on C7 beside the three consumer pull-downs (it named a 10k pull-up and the three 100k only), as board C's regenerated netlist at 3fddbb3edcd4248a carries them; every other line is byte-identical; section 10, which this reading cites, is byte-identical, so it stands PASS on the file at b73c5059a8934dca
++
++*Bound to:* `v2/docs/PANEL.md@b73c5059a8934dca`, `v2/docs/CONOPS.md@4483209659dc391c`, `v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af`, `v2/ecad/tools/gen_sch_a.py@5af29bbcf27bb91a`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f`, `v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md@44fdf9a022c49337`
+ 
+ *Source (verified):* `v2/docs/PANEL.md section 10`; `v2/docs/CONOPS.md section 4 (Charging row)`; `v2/docs/OPERATING-ENVELOPE.md section 3`; `v2/ecad/tools/gen_sch_a.py:839-845`; `v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md`; `v2/vendor/ti/bq25731-datasheet.pdf (SLUSE66A)`
+ 
+@@ -1745,7 +1762,9 @@ Prototype 1: in the core D-01 names. 9 record(s).
+ 
+ *Evidence (FAIL, DESK_REVIEW):* v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w3b's merge of 27 September 2026 (MESHSAT-1357, board B: PWR-001 declarations, decision 42 classes, W3B-F1, W3B-F2) on the KiCad box with main's chain (main's own generator reproduces main's committed schematic, netlist, intent, provenance, BOM and ERC: PARITY or PARITY_AFTER_NOISE) and compared by the integration's own comparator (v2/docs/records/r8b/integration/indep_cmp.py) record by record and net by net: 5 parts added (R525, R526, C72, C73, C74), 1 part changed (TP6's value, the net it names), 3 nets added (POE_SEN_PIN, POE_DRAIN_PIN, VBAT_RTC), 1 removed (VBAT), 3 changed (POE_SEN and POE_DRAIN by U5 leaving and R525 or R526 joining, GND by C72 to C74 joining), 0 unexplained against v2/docs/records/w3b/expected_w3b.json and 2 unexplained when W3B-F1's parts are dropped from it; VBAT_RTC carries every node VBAT carried plus C72 to C74 pin 1 (v2/docs/records/w3b/tools/rename_check.py); no EMCON or TX_INHIBIT_n net or part changed, and tools/tx_inhibit.py on it with main's A, C and D netlists reads board B's walk as before (inhibit_chain_b FAIL 10, PASS 3, UNDECIDED 7), so this reading stands on the file at 8b78c59754a6a0c7
+ 
+-*Bound to:* `v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7`
++*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read after stream w4c's edit of 27 September 2026 (read against the file at 1d4a491d9718e6d3): five places change, all about the TX_INHIBIT_n line on board C: section 2's Source, conductor and pull-down bullets (rewrapped), which name R14 at 2.2 k 1 percent and R50 (10 k 1 percent) to GND and the line's level with board C unpowered (0.24 V, 1.09 V before, W3T-F1); section 4.1's Default bullet (rewrapped), which names R50 beside R2, R145 and R59 and the walk's reading with and without it; and section 4b's W3T-F1 paragraph, which gains one closing sentence (the line PASS on board C's regenerated netlist at 3fddbb3edcd4248a, board D's SA868 keying back to its own UNDECIDED, the released and asserted levels and the latency); every other line is byte-identical, among them sections 0, 0a, 1, 3, 4 with 4.2 to 4.18, 4a, the rest of 4b, 5, 5a, 6, 7, 8 and 9 to 9d; what the FAIL rests on is unchanged (the RockBLOCK's local chain, the SA868's missing receive threshold, L3 and RF-002's reading of board B); the changed places move the TX_INHIBIT_n line's fail-safe state with board C unpowered to PASS on the candidate, which this record's 'a board is unpowered' clause needs and none of those depends on, so it stands FAIL on the file at 9c9d5e80e366b2f9
++
++*Bound to:* `v2/docs/feasibility/EMCON.md@9c9d5e80e366b2f9`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7`
+ 
+ *Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2787 (item 3)`; `v2/docs/PANEL.md section 6`; `v2/docs/TEST-PLAN.md:54`; `v2/docs/feasibility/EMCON.md`; `v2/ecad/tools/pcb_rules_coverage.yaml:776-952`
+ 
+@@ -1779,7 +1798,9 @@ Prototype 1: in the core D-01 names. 9 record(s).
+ 
+ *Evidence (FAIL, DESK_REVIEW):* v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w3b's merge of 27 September 2026 (MESHSAT-1357, board B: PWR-001 declarations, decision 42 classes, W3B-F1, W3B-F2) on the KiCad box with main's chain (main's own generator reproduces main's committed schematic, netlist, intent, provenance, BOM and ERC: PARITY or PARITY_AFTER_NOISE) and compared by the integration's own comparator (v2/docs/records/r8b/integration/indep_cmp.py) record by record and net by net: 5 parts added (R525, R526, C72, C73, C74), 1 part changed (TP6's value, the net it names), 3 nets added (POE_SEN_PIN, POE_DRAIN_PIN, VBAT_RTC), 1 removed (VBAT), 3 changed (POE_SEN and POE_DRAIN by U5 leaving and R525 or R526 joining, GND by C72 to C74 joining), 0 unexplained against v2/docs/records/w3b/expected_w3b.json and 2 unexplained when W3B-F1's parts are dropped from it; VBAT_RTC carries every node VBAT carried plus C72 to C74 pin 1 (v2/docs/records/w3b/tools/rename_check.py); RB_IEN still joins J_RB9704 pin 3 and U6 pin 19 only, so this reading stands on the file at 8b78c59754a6a0c7
+ 
+-*Bound to:* `v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7`, `v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568`
++*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read after stream w4c's edit of 27 September 2026 (read against the file at 1d4a491d9718e6d3): five places change, all about the TX_INHIBIT_n line on board C: section 2's Source, conductor and pull-down bullets (rewrapped), which name R14 at 2.2 k 1 percent and R50 (10 k 1 percent) to GND and the line's level with board C unpowered (0.24 V, 1.09 V before, W3T-F1); section 4.1's Default bullet (rewrapped), which names R50 beside R2, R145 and R59 and the walk's reading with and without it; and section 4b's W3T-F1 paragraph, which gains one closing sentence (the line PASS on board C's regenerated netlist at 3fddbb3edcd4248a, board D's SA868 keying back to its own UNDECIDED, the released and asserted levels and the latency); every other line is byte-identical, among them sections 0, 0a, 1, 3, 4 with 4.2 to 4.18, 4a, the rest of 4b, 5, 5a, 6, 7, 8 and 9 to 9d; section 5a and section 0a's end-to-end column are byte-identical; the added sentence states the line's own latency (the contact's 2 ms bounce, a release of about 31 us) and sections 2 and 4.1 state R14's value and R50, none of which closes a row, so it stands FAIL on the file at 9c9d5e80e366b2f9
++
++*Bound to:* `v2/docs/feasibility/EMCON.md@9c9d5e80e366b2f9`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7`, `v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568`
+ 
+ *Source (verified):* `v2/docs/feasibility/EMCON.md section 5a`; `v2/docs/reviews/2026-09-26-second-checkpoint-review.md section 2C`
+ 
+@@ -1861,7 +1882,9 @@ Prototype 1: in the core D-01 names. 9 record(s).
+ 
+ *Evidence (FAIL, DESK_REVIEW):* v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w3b's merge of 27 September 2026 (MESHSAT-1357, board B: PWR-001 declarations, decision 42 classes, W3B-F1, W3B-F2) on the KiCad box with main's chain (main's own generator reproduces main's committed schematic, netlist, intent, provenance, BOM and ERC: PARITY or PARITY_AFTER_NOISE) and compared by the integration's own comparator (v2/docs/records/r8b/integration/indep_cmp.py) record by record and net by net: 5 parts added (R525, R526, C72, C73, C74), 1 part changed (TP6's value, the net it names), 3 nets added (POE_SEN_PIN, POE_DRAIN_PIN, VBAT_RTC), 1 removed (VBAT), 3 changed (POE_SEN and POE_DRAIN by U5 leaving and R525 or R526 joining, GND by C72 to C74 joining), 0 unexplained against v2/docs/records/w3b/expected_w3b.json and 2 unexplained when W3B-F1's parts are dropped from it; VBAT_RTC carries every node VBAT carried plus C72 to C74 pin 1 (v2/docs/records/w3b/tools/rename_check.py); no EMCON net, radio enable or radio supply switch changed (the SIM and GNSS antenna supplies gained declarations only), and tools/tx_inhibit.py reads board B's walk as before (inhibit_chain_b FAIL 10, PASS 3, UNDECIDED 7), so this reading stands on the file at 8b78c59754a6a0c7
+ 
+-*Bound to:* `v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7`
++*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read after stream w4c's edit of 27 September 2026 (read against the file at 1d4a491d9718e6d3): five places change, all about the TX_INHIBIT_n line on board C: section 2's Source, conductor and pull-down bullets (rewrapped), which name R14 at 2.2 k 1 percent and R50 (10 k 1 percent) to GND and the line's level with board C unpowered (0.24 V, 1.09 V before, W3T-F1); section 4.1's Default bullet (rewrapped), which names R50 beside R2, R145 and R59 and the walk's reading with and without it; and section 4b's W3T-F1 paragraph, which gains one closing sentence (the line PASS on board C's regenerated netlist at 3fddbb3edcd4248a, board D's SA868 keying back to its own UNDECIDED, the released and asserted levels and the latency); every other line is byte-identical, among them sections 0, 0a, 1, 3, 4 with 4.2 to 4.18, 4a, the rest of 4b, 5, 5a, 6, 7, 8 and 9 to 9d; sections 4.4 and 4.5, L3 and L4 and 4b's paragraphs on the 5G module and the back-feed, on which this reading rests, are byte-identical; the changed places are about TX_INHIBIT_n's pulls and fail-safe state, so it stands FAIL on the file at 9c9d5e80e366b2f9
++
++*Bound to:* `v2/docs/feasibility/EMCON.md@9c9d5e80e366b2f9`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7`
+ 
+ *Source (verified):* `v2/ecad/tools/gen_sch_b.py:813-880`; `v2/ecad/tools/gen_sch_b.py:511-531`; `v2/docs/feasibility/EMCON.md section 4`; `v2/docs/MESHSAT-709-geometry-appendix.md:2930`; `owner ruling D-05`
+ 
+@@ -1905,7 +1928,9 @@ Prototype 1: in the core D-01 names. 9 record(s).
+ 
+ *Evidence (PASS, DESK_REVIEW):* v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at the r8int5 integration of 27 September 2026 (stream w3de, boards D and E, and board A's half of EQ-16) on the KiCad box with main's chain (handover_exports.py regen, PHASE A65, on board A's w3a generator with the dock half): compared with the file at c57d119d21f45fe9 component by component and net by net by two independent readers (stream w3de's net_compare.py against expected-a-netlist.json, 'ONLY THE EXPECTED CHANGES', and stream w3a's netcmp.py; v2/docs/records/w3de/parity-r8int5/), it differs only in J_VR1 to J_VR4 (VIN_RAW) and J_VN1 to J_VN4 (GND) added and J_DOCK's value and pins 1 to 4 (VIN_RAW to GND); R102 (EMCON_HW to GND), R145 on TX_INHIBIT_n and the slot enable pull-downs are unchanged, so it stands PASS on the file at da05dc02bc1e612f
+ 
+-*Bound to:* `v2/docs/PANEL.md@7bb905740ddaebb9`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f`
++*Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read after stream w4c's edit of 27 September 2026 (read against the file at 7bb905740ddaebb9): three table rows change, section 1's EMCON logic row, which gains one sentence on board C's R14 (2.2 k 1 %) and R50 (10 k 1 %) with the line's failed-safe and released levels and its 17 us rise, section 3's GPIO 26 row, which describes RAIL_SENSE through the R15/R51 divider (W4C-F1), and section 6's TX_INHIBIT_n row, whose source column now names R14 at 2.2k 1 % and R50 (10k 1 %) on C7 beside the three consumer pull-downs (it named a 10k pull-up and the three 100k only), as board C's regenerated netlist at 3fddbb3edcd4248a carries them; every other line is byte-identical; section 7's panel-absent paragraph, which this reading cites, is byte-identical; section 6's EMCON_HW row is unchanged and its TX_INHIBIT_n row still names R145 on board A, and with the panel's ribbon out board C's R50 is not on the conductor that paragraph describes, so it stands PASS on the file at b73c5059a8934dca
++
++*Bound to:* `v2/docs/PANEL.md@b73c5059a8934dca`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f`
+ 
+ *Source (verified):* `v2/docs/PANEL.md section 7`; `v2/ecad/tools/gen_sch_a.py:1253`; `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net (R102 pin 2 on GND)`
+ 
+@@ -1975,7 +2000,9 @@ Prototype 1: in the core D-01 names. 9 record(s).
+ 
+ *Evidence (FAIL, DESK_REVIEW):* v2/docs/CURRENT-EVIDENCE.md re-read at the rebase of the second release attempt of layers 1 to 3 onto main 91894cd7 (27 September 2026, the release finalizer, fnd/rel2), rendered after rules_status ran three times on the committed tree 7dfbfb16: the requirements validator's change in rules_lib.py moves the code bundles of edge_length.py, intent_checks.py and derate.py, and under the three kind: tool entries of v2/docs/evidence/COMPATIBILITY.md (edge_length.py's added by v2/docs/records/rel2f/apply_compat.py) SI-001 and PWR-001 on boards A, B, C, D, E and P and CMP-001 on all seven boards move from CURRENT_CANDIDATE to VALID_HISTORICAL, which counts as current (81 current rows before and after), and the class-change note, the counts, the reuse table and the register's entry count follow; board D's RF-002 and SCH-004 rows keep the class and cause read above, so this constraint's own reasons are unchanged and it stays INCONCLUSIVE, on the file at 7a834fe55aea6ccd
+ 
+-*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f`, `v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3`, `v2/docs/CURRENT-EVIDENCE.md@7a834fe55aea6ccd`
++*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read after stream w4c's edit of 27 September 2026 (read against the file at 1d4a491d9718e6d3): five places change, all about the TX_INHIBIT_n line on board C: section 2's Source, conductor and pull-down bullets (rewrapped), which name R14 at 2.2 k 1 percent and R50 (10 k 1 percent) to GND and the line's level with board C unpowered (0.24 V, 1.09 V before, W3T-F1); section 4.1's Default bullet (rewrapped), which names R50 beside R2, R145 and R59 and the walk's reading with and without it; and section 4b's W3T-F1 paragraph, which gains one closing sentence (the line PASS on board C's regenerated netlist at 3fddbb3edcd4248a, board D's SA868 keying back to its own UNDECIDED, the released and asserted levels and the latency); every other line is byte-identical, among them sections 0, 0a, 1, 3, 4 with 4.2 to 4.18, 4a, the rest of 4b, 5, 5a, 6, 7, 8 and 9 to 9d; section 4.1's Default bullet now names board C's R50 beside R2, R145 and R59 and the walk's reading of the line on board C's netlist with it (PASS) and without it (FAIL at 1.085 V, W3T-F1), where it read PASS with no figure; the gate's trace this reading cites (KEY = PTT_ANY AND TX_INHIBIT_n, U14, U15, U13), the rest of 4.1 and section 4.2 are byte-identical, and the SA868's row stays open on its maker's missing threshold (bench E-01), so it stands FAIL on the file at 9c9d5e80e366b2f9
++
++*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f`, `v2/docs/feasibility/EMCON.md@9c9d5e80e366b2f9`, `v2/docs/CURRENT-EVIDENCE.md@7a834fe55aea6ccd`
+ 
+ *Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2825`; `v2/docs/PANEL.md section 6`; `v2/docs/feasibility/EMCON.md sections 4.1 and 4.2`
+ 
+@@ -2005,7 +2032,11 @@ Prototype 1: in the core D-01 names. 9 record(s).
+ 
+ *Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read at the r8int5 integration of board A's stream w3a (27 September 2026) with its document edits applied (read against the file at e0a05db36b6e836d): four places change, all about board A's +3V3 overvoltage (EQ-17): section 4a's paragraph 'A fault outside RF-002's named states: +3V3 overvoltage' now reads CLOSED AT DESK (local) with a bound, the four SN74AUP1G08 gates U35 to U38 on +3V3_EMCON behind the eFuse U39 (overvoltage lockout at 3.83 to 4.11 V of +3V3) with the software holds through U40's open drains, the gates kept under 4.6 V while D3 holds +3V3 at 9.2 V or less unless U39's tOVLO exceeds about 9.5 us, and the rest of +3V3 against D3 (U30 on PA_EN, U40) left as a registry open item; section 6's E-11 row gains that +3V3 injection on board A with its pass line; section 7's row for that fault reads closed at desk with the bound; section 8's board A bullet says so; every other line is byte-identical, among them sections 0 and 0a (its rows and counts), 1 to 4 with 4.1 to 4.18, the rest of 4a, 4b, 5, 5a, every other row of 6 and 7, the rest of 8, and 9 to 9d; section 7's common-element row (board C's lamp D22, U14 and Q7, its plate light guide still owed), which this reading cites, is byte-identical, so it stands FAIL on the file at 1d4a491d9718e6d3.
+ 
+-*Bound to:* `v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161`
++*Evidence (FAIL, DESK_REVIEW):* v2/ecad/pcb-c-display-c8/out/pcb-c-display.net regenerated by stream w4c on 27 September 2026 (EQ-25 and PWR-001 on board C, MESHSAT-1357) on the KiCad box with main's chain (handover_exports.py regen, PHASE C24; main's own regeneration at 91894cd7 reads PARITY_AFTER_NOISE against the committed file and MATCH against an empty change list): compared with the file at 11eabc2dddca5161 component by component and net by net (pin, pinfunction, pintype) by two independent readers (stream w4c's netcmp_w4c.py against expected-c-netlist.json, MATCH, and stream w3a's netcmp.py; v2/docs/records/w4c/parity/), it differs only in R14 (10k C25804 to 2.2k 1% C4190), R50 (10k 1%, C25804) added from TX_INHIBIT_n to GND and R51 (10k, C25804) added from RAIL_SENSE to GND; the intent beside it declares three more rails and forty-seven nodes and raises +3V3 to cover EPD_VCC, which moves no part (SC-65, S-80); D22, R47, Q7, R48, R49 and U14 keep every node; U14's input TX_INHIBIT_n now rests at 2.57 V released (2.37 V at the adverse ends, over its about 2.04 V VT+ at 3.3 V; 2.54 V and 2.11 V before) and at ground asserted, so the lamp's gate reads both states with more margin and nothing in its path changed; the plate's light guide is still owed, so it stands FAIL on the file at 3fddbb3edcd4248a
++
++*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read after stream w4c's edit of 27 September 2026 (read against the file at 1d4a491d9718e6d3): five places change, all about the TX_INHIBIT_n line on board C: section 2's Source, conductor and pull-down bullets (rewrapped), which name R14 at 2.2 k 1 percent and R50 (10 k 1 percent) to GND and the line's level with board C unpowered (0.24 V, 1.09 V before, W3T-F1); section 4.1's Default bullet (rewrapped), which names R50 beside R2, R145 and R59 and the walk's reading with and without it; and section 4b's W3T-F1 paragraph, which gains one closing sentence (the line PASS on board C's regenerated netlist at 3fddbb3edcd4248a, board D's SA868 keying back to its own UNDECIDED, the released and asserted levels and the latency); every other line is byte-identical, among them sections 0, 0a, 1, 3, 4 with 4.2 to 4.18, 4a, the rest of 4b, 5, 5a, 6, 7, 8 and 9 to 9d; section 7's common-element row (board C's lamp D22, U14 and Q7, its plate light guide still owed), which this reading cites, is byte-identical, so it stands FAIL on the file at 9c9d5e80e366b2f9
++
++*Bound to:* `v2/docs/feasibility/EMCON.md@9c9d5e80e366b2f9`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@3fddbb3edcd4248a`
+ 
+ *Source (verified):* `v2/docs/feasibility/EMCON.md section 7 (the common element)`; `session choice SC-11`
+ 
+@@ -2041,7 +2072,9 @@ Prototype 1: in the core D-01 names. 9 record(s).
+ 
+ *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w3b's merge of 27 September 2026 (MESHSAT-1357, board B: PWR-001 declarations, decision 42 classes, W3B-F1, W3B-F2) on the KiCad box with main's chain (main's own generator reproduces main's committed schematic, netlist, intent, provenance, BOM and ERC: PARITY or PARITY_AFTER_NOISE) and compared by the integration's own comparator (v2/docs/records/r8b/integration/indep_cmp.py) record by record and net by net: 5 parts added (R525, R526, C72, C73, C74), 1 part changed (TP6's value, the net it names), 3 nets added (POE_SEN_PIN, POE_DRAIN_PIN, VBAT_RTC), 1 removed (VBAT), 3 changed (POE_SEN and POE_DRAIN by U5 leaving and R525 or R526 joining, GND by C72 to C74 joining), 0 unexplained against v2/docs/records/w3b/expected_w3b.json and 2 unexplained when W3B-F1's parts are dropped from it; VBAT_RTC carries every node VBAT carried plus C72 to C74 pin 1 (v2/docs/records/w3b/tools/rename_check.py); no transmitter's inhibit chain changed, and tools/tx_inhibit.py reads board B's walk as before (inhibit_chain_b FAIL 10, PASS 3, UNDECIDED 7), so this reading stands on the file at 8b78c59754a6a0c7
+ 
+-*Bound to:* `v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7`, `v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3`
++*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read after stream w4c's edit of 27 September 2026 (read against the file at 1d4a491d9718e6d3): five places change, all about the TX_INHIBIT_n line on board C: section 2's Source, conductor and pull-down bullets (rewrapped), which name R14 at 2.2 k 1 percent and R50 (10 k 1 percent) to GND and the line's level with board C unpowered (0.24 V, 1.09 V before, W3T-F1); section 4.1's Default bullet (rewrapped), which names R50 beside R2, R145 and R59 and the walk's reading with and without it; and section 4b's W3T-F1 paragraph, which gains one closing sentence (the line PASS on board C's regenerated netlist at 3fddbb3edcd4248a, board D's SA868 keying back to its own UNDECIDED, the released and asserted levels and the latency); every other line is byte-identical, among them sections 0, 0a, 1, 3, 4 with 4.2 to 4.18, 4a, the rest of 4b, 5, 5a, 6, 7, 8 and 9 to 9d; section 7 is byte-identical and none of the items this reading names as remaining moves (the RockBLOCK's ENABLE, the SA868's threshold, L4 on U501 to U505, the back-feed, the plate's light guide, RF-002's model gap on board B, every bench test); the changed places close W3T-F1 on the candidate only, so it stands INCONCLUSIVE on the file at 9c9d5e80e366b2f9
++
++*Bound to:* `v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7`, `v2/docs/feasibility/EMCON.md@9c9d5e80e366b2f9`
+ 
+ *Feasibility page:* `v2/docs/feasibility/EMCON.md`, blocker ids SD-EMC-1, SD-EMC-2, SD-EMC-6, SD-EMC-7, E-04, E-05, E-07, E-12; *owner:* Board B's author (SD-EMC-1, L2, L3, L4, L7), boards A, C and D's authors for their gates, the tools author for RF-002's instrument (L6), and the TEST-PLAN owner for the bench rows and the silence latency.; *holds:* REQ-030, REQ-032, REQ-071, CON-021; layout entry of A, B, C, D.
+ 
+@@ -2602,7 +2635,9 @@ Prototype 1: in the core D-01 names. 12 record(s).
+ 
+ *Evidence (PASS, DESK_REVIEW):* v2/ecad/tools/check_contracts.py re-read at the r8int5 integration of 27 September 2026 (stream w3de, boards D and E, and board A's half of EQ-16) (stream w3de's patch_check_contracts_dock.py): section 5a gains three EQ-16 dock checks (board A's four VIN_RAW pins and four return pins, board E's P_VR and P_VN, no VIN_RAW on an 813 contact); every line naming J_SMB is byte-identical (sha256/16 c78df21055972aa1 before and after); the J_SMB contract this reading cites is that text, so it stands PASS on the file at 5e14f456a0791c35
+ 
+-*Bound to:* `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`, `v2/docs/ASSEMBLY.md@b49f853f450d49ee`, `v2/docs/PANEL.md@7bb905740ddaebb9`, `v2/ecad/tools/check_contracts.py@5e14f456a0791c35`
++*Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read after stream w4c's edit of 27 September 2026 (read against the file at 7bb905740ddaebb9): three table rows change, section 1's EMCON logic row, which gains one sentence on board C's R14 (2.2 k 1 %) and R50 (10 k 1 %) with the line's failed-safe and released levels and its 17 us rise, section 3's GPIO 26 row, which describes RAIL_SENSE through the R15/R51 divider (W4C-F1), and section 6's TX_INHIBIT_n row, whose source column now names R14 at 2.2k 1 % and R50 (10k 1 %) on C7 beside the three consumer pull-downs (it named a 10k pull-up and the three 100k only), as board C's regenerated netlist at 3fddbb3edcd4248a carries them; every other line is byte-identical; section 10's SMBus sentences, which this reading cites, are byte-identical, so it stands PASS on the file at b73c5059a8934dca
++
++*Bound to:* `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`, `v2/docs/ASSEMBLY.md@b49f853f450d49ee`, `v2/docs/PANEL.md@b73c5059a8934dca`, `v2/ecad/tools/check_contracts.py@5e14f456a0791c35`
+ 
+ *Source (verified):* `v2/ecad/tools/gen_sch_e.py:264`; `v2/docs/ASSEMBLY.md section 4`; `v2/docs/PANEL.md section 10`
+ 
+@@ -2646,7 +2681,9 @@ Prototype 1: in the core D-01 names. 12 record(s).
+ 
+ *Evidence (FAIL, DESK_REVIEW):* v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at the r8int5 integration of 27 September 2026 (stream w3de, boards D and E, and board A's half of EQ-16) on the KiCad box with main's chain (handover_exports.py regen, PHASE A65, on board A's w3a generator with the dock half): compared with the file at c57d119d21f45fe9 component by component and net by net by two independent readers (stream w3de's net_compare.py against expected-a-netlist.json, 'ONLY THE EXPECTED CHANGES', and stream w3a's netcmp.py; v2/docs/records/w3de/parity-r8int5/), it differs only in J_VR1 to J_VR4 (VIN_RAW) and J_VN1 to J_VN4 (GND) added and J_DOCK's value and pins 1 to 4 (VIN_RAW to GND); board A's D1 to D4 are unchanged, so it stands FAIL on the file at da05dc02bc1e612f
+ 
+-*Bound to:* `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161`, `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`
++*Evidence (FAIL, DESK_REVIEW):* v2/ecad/pcb-c-display-c8/out/pcb-c-display.net regenerated by stream w4c on 27 September 2026 (EQ-25 and PWR-001 on board C, MESHSAT-1357) on the KiCad box with main's chain (handover_exports.py regen, PHASE C24; main's own regeneration at 91894cd7 reads PARITY_AFTER_NOISE against the committed file and MATCH against an empty change list): compared with the file at 11eabc2dddca5161 component by component and net by net (pin, pinfunction, pintype) by two independent readers (stream w4c's netcmp_w4c.py against expected-c-netlist.json, MATCH, and stream w3a's netcmp.py; v2/docs/records/w4c/parity/), it differs only in R14 (10k C25804 to 2.2k 1% C4190), R50 (10k 1%, C25804) added from TX_INHIBIT_n to GND and R51 (10k, C25804) added from RAIL_SENSE to GND; the intent beside it declares three more rails and forty-seven nodes and raises +3V3 to cover EPD_VCC, which moves no part (SC-65, S-80); D19 to D21 keep every node and record, and the two parts added are resistors, no clamp and no rectifier, so it stands FAIL on the file at 3fddbb3edcd4248a
++
++*Bound to:* `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@3fddbb3edcd4248a`, `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`
+ 
+ *Source (verified):* `v2/ecad/tools/gen_sch_e.py:351`; `v2/ecad/tools/gen_sch_p.py:344`; `v2/ecad/tools/gen_sch_d.py:300-302`; `v2/ecad/tools/gen_sch_c.py:325-331`
+ 
+@@ -2858,7 +2895,11 @@ Prototype 1: not in the core. 8 record(s).
+ 
+ *Evidence (PASS, DESK_REVIEW):* v2/docs/CONOPS.md re-read at the release finalizer of layers 1 to 3 of 27 September 2026 (fnd/rel2 rebased onto main 91894cd7, after the second release check at eb9f9030): only its status header changes, line 3 (the status line: layer 2 BASELINED at 79963b3b on v2/docs/reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md) and lines 48 to 49 (the Review A paragraph's last sentence), with the line count kept; every section from section 1 on, which this reading rests on, is byte-identical to the file at 3ff59edc96a3f8f4, so it stands on the file at 4483209659dc391c
+ 
+-*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc`, `v2/docs/PANEL.md@7bb905740ddaebb9`, `v2/docs/CONOPS.md@4483209659dc391c`, `v2/docs/V2-SPEC.md@a92ea2ef3793a3c9`, `v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af`, `v2/docs/TEST-PLAN.md@4f15bd02a6a8be46`, `v2/ecad/tools/pcb_decisions.yaml@b5f7162443d5ad91`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`
++*Evidence (PASS, DESK_REVIEW):* v2/ecad/pcb-c-display-c8/out/pcb-c-display.net regenerated by stream w4c on 27 September 2026 (EQ-25 and PWR-001 on board C, MESHSAT-1357) on the KiCad box with main's chain (handover_exports.py regen, PHASE C24; main's own regeneration at 91894cd7 reads PARITY_AFTER_NOISE against the committed file and MATCH against an empty change list): compared with the file at 11eabc2dddca5161 component by component and net by net (pin, pinfunction, pintype) by two independent readers (stream w4c's netcmp_w4c.py against expected-c-netlist.json, MATCH, and stream w3a's netcmp.py; v2/docs/records/w4c/parity/), it differs only in R14 (10k C25804 to 2.2k 1% C4190), R50 (10k 1%, C25804) added from TX_INHIBIT_n to GND and R51 (10k, C25804) added from RAIL_SENSE to GND; the intent beside it declares three more rails and forty-seven nodes and raises +3V3 to cover EPD_VCC, which moves no part (SC-65, S-80); U9 is still the 74LVC1G17 from TX_INHIBIT_n to EMCON_HW and the ZEROIZE toggle still on the local ZEROIZE_SW at GPIO 22 with U12 copying it onto ZEROIZE_HW; the LED rail sense is now the divider PANEL.md section 1's LED-rail row names (R15 and R51), and the two PANEL.md sentences the change dates (section 1's '77 us time constant', section 3's GPIO 26 'through 10k') are drafted for the PANEL.md writer (v2/docs/records/w4c/patch_docs.py), so it stands PASS on the file at 3fddbb3edcd4248a
++
++*Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read after stream w4c's edit of 27 September 2026 (read against the file at 7bb905740ddaebb9): three table rows change, section 1's EMCON logic row, which gains one sentence on board C's R14 (2.2 k 1 %) and R50 (10 k 1 %) with the line's failed-safe and released levels and its 17 us rise, section 3's GPIO 26 row, which describes RAIL_SENSE through the R15/R51 divider (W4C-F1), and section 6's TX_INHIBIT_n row, whose source column now names R14 at 2.2k 1 % and R50 (10k 1 %) on C7 beside the three consumer pull-downs (it named a 10k pull-up and the three 100k only), as board C's regenerated netlist at 3fddbb3edcd4248a carries them; every other line is byte-identical; two changed rows are in sections 1 and 6, which this record's acceptance asks to describe the circuit as generated, and both now name R14 at 2.2 k 1 % and R50 as the regenerated netlist carries them; section 3's GPIO 26 row names the divider the same netlist carries; section 6's other rows and section 7 are byte-identical, so it stands PASS on the file at b73c5059a8934dca
++
++*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc`, `v2/docs/PANEL.md@b73c5059a8934dca`, `v2/docs/CONOPS.md@4483209659dc391c`, `v2/docs/V2-SPEC.md@a92ea2ef3793a3c9`, `v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af`, `v2/docs/TEST-PLAN.md@4f15bd02a6a8be46`, `v2/ecad/tools/pcb_decisions.yaml@b5f7162443d5ad91`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@3fddbb3edcd4248a`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`
+ 
+ *Source (verified):* `v2/docs/PANEL.md section 6`; `v2/docs/CONOPS.md section 4b`; `v2/docs/V2-SPEC.md:76 (as read at eadbe571)`; `v2/docs/OPERATING-ENVELOPE.md section 4`; `v2/docs/TEST-PLAN.md:46 (as read at eadbe571)`; `v2/ecad/tools/pcb_decisions.yaml:863-915 (as read at eadbe571)`
+ 
+@@ -3552,7 +3593,6 @@ SESSION items are engineering the session decides and records with authority SES
+ | S-61 | SESSION | (hc5-layer5: SC-63, drafted as SC-HF-06; HF-F06) The monitor's touch USB takes board D's spare hub port J_USB3 (the session's choice SC-63, drafted as SC-HF-06 in v2/docs/HW-FW-CONTRACT.md section 8; no board B change; the HAL shares it to the display owner, FW-B19). Owed on board D: a current limit on J_USB3's VBUS, which is +5V_D8 with no port switch, so a fault on the touch lead trips board A's U23 and takes board D down; and the J_USB3 budget line (0.05 A) set from the touch controller's measured draw, which USB 2.0 section 7.2.1 bounds at 100 mA unconfigured and 500 mA configured (V-B19). Carried before board D's layout entry (r8int4, after hc5's second review: a fault on the touch lead removes board D, whose APRS path is a prototype 1 core function under D-01, so HF-F06 is major). | none |
+ | S-62 | SESSION | (hc5-layer5: HF-F07) Board E: the Geiger module's pulse reaches GPIO7 through 22 R only, and a 5 V class module can exceed the RP2040's IOVDD + 0.5 V absolute maximum (datasheet Table 622): pick the module, read its output stage, and add a divider or a clamp if needed; and give the fan switches Q9, Q10 discrete gate pull-downs instead of the RP2040's pad pull-down (v2/docs/HW-FW-CONTRACT.md section 7). | none |
+ | S-63 | SESSION | (r8int4: the QMX lid tray) The QMX lid tray released in v2/release/case-2026-09-27/lid-tray-qmx/ (sheet 14) does not fit the unit's connector layout: the held QRP Labs QMX manual (1_04_004, pages 7 to 9) puts the DC jack on the left panel and the BNC and USB-C on the right panel, and the tray has notches in one end wall only; the unit's 95 x 63 x 25 and the notch heights are checked against no maker drawing. Revise the tray from the QMX enclosure drawing before it is printed (v2/docs/CASE-FIT-UNCERTAINTIES.md section 3; the layer 7 fixer c7). Desk work on a made part: no board moves (J_QMX, J_HF and J_RF2 stay) and nothing is bought. ENGINEERING-QUESTIONS EQ-24. | none |
+-| S-64 | SESSION | Finding W3T-F1 (EQ-18's row, stream w3t, 27 September 2026; v2/ecad/tools/tx_inhibit.py with the SN74LVC1G57 row): with board C unpowered, TX_INHIBIT_n's three 100 kOhm pull-downs (board A R145, board B R59, board D R2) hold it at up to 1.09 V against 31 uA of stated pin current (board C's U9 and U14 at Ioff 10 uA each, DS35124 Rev. 8-2 and SCES414P 6.5; board D's U12 10 uA; board A's U35 and U37 0.5 uA each), over the 0.8 V VIL the walk applies to the gates that read it (TI states 0.9 V for board A's SN74AUP1G08s, 0.8 V for board D's U12), so RF-002's fail-safe state FAILS on boards A to D and board D's SA868 keying inherits it; before round 8's lamp gate U14 the same state read 0.74 V. The FAIL is under the walk's worst-case leakage convention (an unpowered part passes its Ioff); the sheets also state II at VCC 0 V, and with U9, U14 and D's U12 at II the line reads about 0.42 V, so it is not a demonstrated defect, and the remedy is margin. For board C's next circuit round. Open until the line stays under 0.8 V in every fail-safe state with its idle HIGH still above its readers' VIH: (a) board C: R14 10 k to 2.2 k 1 percent and a 10 k 1 percent pull-down on TX_INHIBIT_n (about 0.24 V failed safe, 2.37 V idle at the adverse ends), one board, the session's recommendation; (b) board B's R59 to 10 k 1 percent with R14 to 2.2 k; (c) all three pull-downs to 47 k with R14 to 4.7 k. The arithmetic is in v2/docs/records/w3t/HANDOFF.md section 2 and v2/docs/records/w3t/w3t-decisions.md section 5; engineering question EQ-25. | none |
+ | S-65 | SESSION | Board A's +3V3 clamp D3 (SMBJ5.0A: VBR 6.40 to 7.00 V at 10 mA, 9.2 V at IPP, MDD SMBJ series) sits above the absolute maximum of the rest of the rail: U27 and U28 (PCA9555, 6.0 V, SCPS131J), the six INA226 (6.0 V, SBOS547C), U26, U30 and U40 (6.5 V). A +3V3 fault between 6.0 V and D3's clamp at the fault current (U12's 4.2 to 5.8 A) can damage them. Since EQ-17 the gates' supply is cut at 4.11 V or less, but two of these parts still reach EMCON: U30 (SN74LVC1G00 on +3V3) has an input on PA_EN itself, and U40's outputs are the software-hold inputs of U36 and U38, so a part damaged between 6.5 V and D3's clamp leaves those nets in an unstated state (the TX_INHIBIT_n AND EMCON_HW path through U35 and U37 is unaffected unless U40 fails shorted to its supply); open until the rail's protection is decided with the fault current bound (a clamp that holds at that current, a crowbar with the TPS62933's hiccup, or the fault accepted with its bound). | none |
+ | S-66 | SESSION | R1, the pre-charge resistor (10 Ohm, 2 W, 2512) on PRECHG, takes the whole energy of charging CELL+'s capacitance from the pack, C V^2 / 2 at 16.8 V, in one pulse of about 10 Ohm x C: its single-pulse rating from its maker's sheet (none is held for the part fitted) against that energy is not checked, nor the partly seated pack (the pre-charge pin mated, the main pins not), where R1 carries the load. PRECHG is declared at 1.68 A peak. | none |
+ | S-67 | SESSION | Board A's switching nodes fed from VBAT (B33_SW, S1_SW, S3_SW and the LM5176 stages' SW1 and BOOT1) are declared at VBAT's 14.4 V nominal (intent.net_volts reads `volts`), not its 16.8 V working maximum (`v_work`), and the new bootstrap nodes B33_BST, HT_BST, S1_BOOT and S3_BOOT follow them; no rated part's verdict moves today (the parts across them are judged at their bias, the rest carry no rating), but the declared peak understates the node. | none |
+@@ -3569,6 +3609,7 @@ SESSION items are engineering the session decides and records with authority SES
+ | S-78 | SESSION | (Layer 3, the second release check of 27 September 2026 at eb9f9030, v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2-2026-09-27.md, finding B-1, acceptance item 3.14; left open by the release finalizer, the second attempt; ENGINEERING-QUESTIONS EQ-28) baseline_state still reads READY_FOR_REVIEW_B and S-51 is open, although that record confirms R2 to R5 of the first release check answered with no finding of substance left, on the registry at sha256/16 fb819e939f2895da. Its fix is one commit that sets baseline_state to a baselined value naming the commit that carries the reviewed content, closes S-51 on that record, marks the three gen_sch_b.py pointers of the choices it read as SC-51 and SC-56 (SC-58 and SC-63 here: :257, :822 and :764-766) '(as read at e3aedb25)' or renumbers them to 267 and 464, 978 and 903 to 905, re-renders the trace page and updates the layer 3 integrator line, with no other registry change. Since the review the branch was rebased onto main 391d8579 and then 91894cd7: the registry at its head also carries set 5's records (SC-51 to SC-57, S-64 to S-76 and their readings) and the consolidated re-take's re-read notes (8ea7867e to 91894cd7), the reviewed SC-51 to SC-56 are SC-58 to SC-63 and EQ-25 is EQ-26, and S-77, S-78 and S-79 are added, which the record says need a review of their own. Open until a reviewer who wrote none of it confirms that difference and the baseline commit is made as the record describes. Layer 3 stays IN_PROGRESS. | none |
+ | S-79 | SESSION | (Layer 3, the second release check of 27 September 2026 at eb9f9030, v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2-2026-09-27.md, finding B-2, acceptance item 3.18; ENGINEERING-QUESTIONS EQ-29) No versioned package carries the reviewed registry: the reviewed commit was on no remote branch (GitLab and GitHub main were at 953f5658 when it was read) and no handover snapshot has been cut from a commit carrying its content. The anchor 08f3665a is already on the public main, so LAYER-STATUS layer 3's earlier remaining item on it is met. Open until the integrating session pushes the baseline commit of S-78 to main and cuts the next handover snapshot from it, its manifest naming that commit; the same snapshot carries layer 1's item 14 and layer 2's baselined CONOPS. | none |
+ | M-02 | OWNER_ACTION | M1's failing energy balance, the owner's part (27 September 2026, the second release attempt of layers 1 to 3; layer 3's release check, R2; reported to the owner, not asked, under his standing rule of 26 September 2026). On D-06's one 4S3P pack the kit does not run M1 through a single night on pack and solar alone, whatever the panel's rating, and REQ-072 reads FAIL at desk (S-53 is the session's part: the input path's rating). Only the owner can take the routes that carry the night by reopening his own rulings, a larger pack (D-06) or the second pack D-01 defers, which has no location found; or accept, as a residual risk, that prototype 1 does not meet M1 on pack and solar alone. The session's recommendation and the arithmetic are ENGINEERING-QUESTIONS EQ-13. Decided before boards A, E and P enter layout, because the answer can move the pack pocket, board E's solar stage (D4, F2, J_SOLAR) and board A's front end. Until then REQ-072 stays FAIL, CONOPS M1 states that a night needs an overnight input on the 9 to 36 V entry, and nothing is lowered: neither REQ-016 nor REQ-072 is restated to fit. | REQ-072 |
++| S-80 | SESSION | Finding W4C-F5 (stream w4c, 27 September 2026; board C; the stream's independent check): +3V3 declared a 0.20 A peak while its child EPD_VCC declares 0.521 A (the e-paper boost's 0.5 A switch-current class into L1, PDi driving-circuit note Rev.02 page 4 note (1)); since the check +3V3 declares 0.149 A typical and 0.72 A peak (its own loads' 0.119 and 0.199 A plus EPD_VCC's 0.030 and 0.521 A), so its copper from U5 and C2 to Q5 is judged at what it can carry: within each boost on-phase (about 1.6 us, 10 uH to 0.5 A from 3.135 V) C28 behind Q5's at most 85 mOhm (AO3401A) is a 0.40 us time constant, so most of the inductor's current comes through Q5. U5, a TLV75533, is rated 500 mA (IOUT; ICL 560 mA minimum; TI SBVS320D 5.3 and 5.5): the 0.22 A by which the peak exceeds it, held for no longer than one on-phase, is at most 0.35 uC, 24 mV on C2, C28 and C29 (14.8 uF nominal) against the rail's 99 mV budget, but what U5 carries on average through a refresh rests on the boost's output power, which no held document states (EPD_VCC's 10 mA share is INFERRED). The same reading decides +5V: its declared 1.0 A peak (and pcb_energy_chain.yaml's B_PANEL_5V peak_a, under board B's F1 at 1.1 A hold) covers U5 only while U5 draws at most 0.508 A beside LED_RAIL_SW's 0.462 A and the sounder's 0.03 A; power_path's feed sum reads +5V's children at 0.94 A because it scales a rail without an efficiency by its voltage ratio, where an LDO's input current is its output current. Open until bring-up reads U5's output current, averaged over the boost's switching period, and +3V3 at U3's IOVDD through a full e-paper refresh (the UC8253c's booster soft start and an update) with the lamps lit at DAY: closed when +3V3 stays inside its 3 percent budget and U5's average at or under 500 mA; otherwise board C's next circuit round sizes a local bulk on EPD_VCC from the measured on-phase or feeds the e-paper from a supply with the headroom, and +5V's peak and B_PANEL_5V's follow the reading. v2/ecad/tools/gen_sch_c.py (the +3V3 declaration and the check after EPD_VCC's). | none |
+ 
+ ## Closed items
+ 
+@@ -3625,6 +3666,7 @@ Every item that has left the open list, and what closed it: an owner ruling, a s
+ | S-19 | session choice SC-30 | ZEROIZE success indications. |
+ | S-39 | session choice SC-30 | PANEL.md's LED count reconciled: section 1 and the generator carry 16 panel indicators (D1 to D16), and section 9's lamp test says 17. |
+ | L-02 | session choice SC-21 | The mission duration for M1's pack-plus-solar energy balance, which D-06 leaves for the owner to set later (the id is kept; its class was LATER, which is for money, then OWNER_ACTION). SC-21 governs it: under the owner's standing rule of 26 September 2026 the session set 72 hours, recorded as the session's, and the owner's own setting replaces it whenever he gives one (stated once on 27 September 2026, layer 3's release check, R2). What only the owner can decide about M1's failing balance is M-02. |
++| S-64 | session choice SC-64 | Finding W3T-F1 (EQ-18's row, stream w3t, 27 September 2026; v2/ecad/tools/tx_inhibit.py with the SN74LVC1G57 row): with board C unpowered, TX_INHIBIT_n's three 100 kOhm pull-downs (board A R145, board B R59, board D R2) hold it at up to 1.09 V against 31 uA of stated pin current (board C's U9 and U14 at Ioff 10 uA each, DS35124 Rev. 8-2 and SCES414P 6.5; board D's U12 10 uA; board A's U35 and U37 0.5 uA each), over the 0.8 V VIL the walk applies to the gates that read it (TI states 0.9 V for board A's SN74AUP1G08s, 0.8 V for board D's U12), so RF-002's fail-safe state FAILS on boards A to D and board D's SA868 keying inherits it; before round 8's lamp gate U14 the same state read 0.74 V. The FAIL is under the walk's worst-case leakage convention (an unpowered part passes its Ioff); the sheets also state II at VCC 0 V, and with U9, U14 and D's U12 at II the line reads about 0.42 V, so it is not a demonstrated defect, and the remedy is margin. For board C's next circuit round. Open until the line stays under 0.8 V in every fail-safe state with its idle HIGH still above its readers' VIH: (a) board C: R14 10 k to 2.2 k 1 percent and a 10 k 1 percent pull-down on TX_INHIBIT_n (about 0.24 V failed safe, 2.37 V idle at the adverse ends), one board, the session's recommendation; (b) board B's R59 to 10 k 1 percent with R14 to 2.2 k; (c) all three pull-downs to 47 k with R14 to 4.7 k. The arithmetic is in v2/docs/records/w3t/HANDOFF.md section 2 and v2/docs/records/w3t/w3t-decisions.md section 5; engineering question EQ-25. |
+ 
+ ## Readings
+ 
+diff --git a/v2/docs/feasibility/EMCON.md b/v2/docs/feasibility/EMCON.md
+index b404542c..3dd97dcf 100644
+--- a/v2/docs/feasibility/EMCON.md
++++ b/v2/docs/feasibility/EMCON.md
+@@ -374,21 +374,27 @@ verdict does not decide this table.
+ 
+ Both lines are LOW when EMCON is asserted.
+ 
+-- **Source.** `SW_EMCON` on board C, an APEM 5636ADKB-2V locking toggle, single pole ON-NONE-ON (lug 1
+-  `TX_INHIBIT_n`, lug 2 GND, lug 3 unconnected; `gen_sch_c.py:115` to `117`, `:211`). Closed pulls `TX_INHIBIT_n` low
+-  against R14 (10 k to C's +3V3) and C24 (10 nF) (`gen_sch_c.py:150`; `main-pcb-c-display.net:4113`).
+-- **`TX_INHIBIT_n` is one conductor across four boards and three ribbons:** board C (R14, C24, TP10, U9's input) to
+-  `J_PANEL` pin 11, board B (R59), `J_AB1` pin 16, board A (R145), `J_MEZZ1` pin 8, board D (R2, U12 pin 2)
+-  (`main-pcb-c-display.net:4113`, `B-r6cand-pcb-b-compute.net:22317`, `A-r6cand-pcb-a-power.net:10816`,
++- **Source.** `SW_EMCON` on board C, an APEM 5636ADKB-2V locking toggle, single pole ON-NONE-ON (lug 1 `TX_INHIBIT_n`,
++  lug 2 GND, lug 3 unconnected; `gen_sch_c.py:115` to `117`, `:211`). Closed pulls `TX_INHIBIT_n` low against R14 and
++  C24 (10 nF) (`gen_sch_c.py:150`; `main-pcb-c-display.net:4113`), where R14 was 10 k to C's +3V3. Since EQ-25 (stream
++  w4c, 27 September 2026, SC-64) R14 is 2.2 k 1 percent and R50, 10 k 1 percent, holds the node to GND on board C as
++  well (`gen_sch_c.py`, the R14 line and the EQ-25 note at the end of the design; board C's netlist at sha256/16
++  3fddbb3edcd4248a).
++- **`TX_INHIBIT_n` is one conductor across four boards and three ribbons:** board C (R14, C24, TP10, U9's input, and
++  R50 since EQ-25) to `J_PANEL` pin 11, board B (R59), `J_AB1` pin 16, board A (R145), `J_MEZZ1` pin 8, board D (R2,
++  U12 pin 2) (`main-pcb-c-display.net:4113`, `B-r6cand-pcb-b-compute.net:22317`, `A-r6cand-pcb-a-power.net:10816`,
+   `D-r6cand-pcb-d-aprs.net:4514`). Its neighbours on the flat cables are `ZEROIZE_HW` and `HDMI_SEL1` (panel ribbon
+   pins 10 and 12), `EMCON_HW` and `SLOT_EN1` (`J_AB1` pins 15 and 17), `TR_APRS` and `PA_EN` (`J_MEZZ1` pins 7 and 9)
+   (`v2/docs/records/rv-emc/readings/tx-inhibit-conductor.txt`).
+ - **`EMCON_HW`** follows through U9, a 74LVC1G17 Schmitt buffer on board C (`gen_sch_c.py:166`;
+   `main-pcb-c-display.net:3702`), and runs over `J_PANEL` pin 8 and `J_AB1` pin 15 to boards B and A. It is derived
+   from the `TX_INHIBIT_n` node, so the two lines are not independent upstream of U9.
+-- **Pull-downs that assert the lines with the source gone:** `TX_INHIBIT_n` has 100 k on A (R145), B (R59) and D (R2).
+-  `EMCON_HW` has B's R58 at 10 k (candidate) and A's R102 at 100 k (`B-r6cand-pcb-b-compute.net:19944`,
+-  `A-r6cand-pcb-a-power.net:9736`). Board A's round 8 netlist makes R102 10 k 1% (section 4a).
++- **Pull-downs that assert the lines with the source gone:** `TX_INHIBIT_n` has 100 k on A (R145), B (R59) and D (R2),
++  and since EQ-25 (stream w4c, 27 September 2026, SC-64) 10 k 1 percent on C (R50): with board C unpowered and the
++  panel ribbon in, the three 100 k alone let the stated Ioff of the gates on the line lift it to 1.09 V against the
++  0.8 V VIL the RF-002 walk applies (W3T-F1, section 4b), and with R50 it reads 0.24 V. `EMCON_HW` has B's R58 at 10 k
++  (candidate) and A's R102 at 100 k (`B-r6cand-pcb-b-compute.net:19944`, `A-r6cand-pcb-a-power.net:9736`). Board A's
++  round 8 netlist makes R102 10 k 1% (section 4a).
+ - **Hardware readers of `EMCON_HW`:**
+   - A's U26 pins 1 and 4 (SN74LVC08A); on board A's round 8 netlist U35 and U37 pin 2 (SN74AUP1G08, section 4a);
+   - B's U19 pins 1, 9, 12 and U20 pin 1 (SN74LVC08A);
+@@ -459,8 +465,10 @@ supply while its gate is off. "Shared" lists the section 3 items the row inherit
+ - **Active level.** `TX_INHIBIT_n` LOW gives KEY LOW, U13 off, and pin 5 at the divider's level. The SA868 v1.3 pin
+   table gives pin 5 as "0" TX and "1" RX, with no level stated for either.
+ - **Default.** `TX_INHIBIT_n` follows the toggle. With the panel unpowered or any ribbon cut, R2, R145 and R59 hold it
+-  low (tool: the `TX_INHIBIT_n` line PASS). R84 (10 k) holds KEY low against the gates' leakage when their own rail is at
+-  0 V: 0.43 V at most against U19's 0.8 V VIL, 0.51 V with the harness +3V3 down too (`gen_sch_d.py:592`; r6d R6D-3).
++  low, and board C's R50 (10 k 1 percent, since EQ-25) with them wherever the panel ribbon stays in (tool: the
++  `TX_INHIBIT_n` line PASS on board C's netlist with R50, 0.243 V with the panel unpowered; without R50 it read FAIL
++  at 1.085 V, W3T-F1, section 4b). R84 (10 k) holds KEY low against the gates' leakage when their own rail is at 0 V:
++  0.43 V at most against U19's 0.8 V VIL, 0.51 V with the harness +3V3 down too (`gen_sch_d.py:592`; r6d R6D-3).
+ - **Controller failure.** No controller can drive KEY:
+   - D's PCA9555 U16 reads KEY and PA_KEY through the one-way buffers U19 and U20 and 1 k (R86, R87);
+   - board C's RP2040 sees the PTT mirror only through U18 and R48 (220 Ohm);
+@@ -1174,7 +1182,7 @@ of A's U35 and U37) into the line's three 100 kOhm pull-downs reaches 1.09 V ove
+ before U14), and board D's SA868 keying inherits it. That is the L2 sum's counterpart on `TX_INHIBIT_n` (31 uA into
+ 35 k, where `EMCON_HW`'s 111.2 uA into 3.23 k reads 0.36 V), a FAIL under the walk's worst-case leakage convention
+ (with the stated II at VCC 0 V the line reads about 0.42 V), not a demonstrated defect: finding W3T-F1, open item
+-S-64, engineering question EQ-25, for board C's next circuit round (`v2/docs/records/w3t/`).
++S-64, engineering question EQ-25, for board C's next circuit round (`v2/docs/records/w3t/`). **Since stream w4c (EQ-25, 27 September 2026, SC-64, which closes S-64)** board C carries option (a): `R14` 2.2 k 1 percent and `R50`, 10 k 1 percent, from `TX_INHIBIT_n` to GND. On the regenerated netlist the walk reads the line PASS: 0.243 V with board C unpowered (1.085 V before) and 0.178 V with the A-D mezzanine out as well (1.103 V before); board D's SA868 keying returns to its own UNDECIDED (the SA_PTT_n threshold its maker does not state). Released, the line rests at 2.57 V (2.37 V at the adverse ends, 2.11 V before); asserted, the toggle's contact holds it at ground. Latency is unchanged in kind: asserting is the contact (settled within its 2 ms bounce); the release crosses U9's VT+ after about 31 us (`v2/docs/records/w4c/`).
+ 
+ ## 5. Decisions taken by the session under the owner's standing rule of 26 September 2026
+ 
+diff --git a/v2/docs/handover/ENGINEERING-QUESTIONS.md b/v2/docs/handover/ENGINEERING-QUESTIONS.md
+index 61d22e6e..0806f536 100644
+--- a/v2/docs/handover/ENGINEERING-QUESTIONS.md
++++ b/v2/docs/handover/ENGINEERING-QUESTIONS.md
+@@ -49,7 +49,7 @@ holds the prepared request texts (not sent).
+ | EQ-22 | The hot stop's signal path HOT-R1 is in neither board A's nor board E's generator | A. design work | 2, 3, 5, 8 | A, E | REQ-077 (FAIL until drawn); the layout entry of A and E |
+ | EQ-23 | Does a non-destructive, firmware-free hardware stage stand behind the hot stop (S-58)? | C. external authorisation | 2, 3, 4, 8 | A, E, P | the layout entry of A, E and P; REQ-044, REQ-046, REQ-077 |
+ | EQ-24 | The QMX lid tray does not fit the unit's connector layout (jacks on both end panels) | A. design work | 7 | none (a made part) | printing the tray (S-63) |
+-| EQ-25 | TX_INHIBIT_n's fail-safe level with board C unpowered, 1.09 V against a 0.8 V VIL (W3T-F1) | A. design work | 4, 8, 9 | C (A, B, D) | RF-002 on boards A to D and board D's SA868 keying (S-64) |
++| EQ-25 | TX_INHIBIT_n's fail-safe level with board C unpowered, 1.09 V against a 0.8 V VIL (W3T-F1) | A. design work | 4, 8, 9 | C (A, B, D) | answered on board C by stream w4c (SC-64, S-64 closed): R14 2.2 k and R50 10 k, the line PASS on the candidate; board D's SA868 keying back to its own UNDECIDED |
+ | EQ-26 | The kit with its own pack cannot take the +55 C operating, +60 C humid or storage margins (BAT-F19, CFL-017) | C. external authorisation | 2, 3, 4 | P (the pack pocket) | nothing before layout; REQ-051's margins with the pack, and how the qualification report states them |
+ | EQ-27 | The product brief counts six core feasibility blockers where the registry holds seven (FEA-007, the kit's fit in the Peli 1450, is missing) | A. design work | 1 | none (the brief) | the brief's BASELINED state and layer 1 (S-77) |
+ | EQ-28 | The requirements registry's baseline is not recorded, and the rebase onto set 5 added registry content its reviewer did not read | A. design work | 3 | none | `baseline_state`, S-51 and layer 3 (S-78) |
+@@ -175,7 +175,7 @@ owner's money, outside contact or a value only he can set.
+ | **Exact issue** | Since round 8 set 2, PWR-001 is judged on the committed netlist and fails closed on every supply. It reads FAIL on current evidence on A (VMON, the bootstraps, PD_VTX, PD_VAUX, PD_DVDD), B (28 supplies undeclared, 26 undecided; declared since stream w3b, 27 September 2026: 17 rails and 40 nodes, each from its maker's sheet, and PWR-001 read PASS of 59 in the stream's scratch on the candidate netlist, awaiting the consolidated re-take), D (AMP_CPN, AMP_CPP, AMP_HPVSS, the PCM2912A's regulator outputs, SAU_3V3) and E (E6_BST, E6_DVDD, SGP_VDD, TRK_LDO33, TRK_LSENSE); on C and P the FAIL was read on an older netlist and awaits the re-take. |
+ | **Affected** | PWR-001 and the layout entry of every board; each generator's intent declarations. |
+ | **Evidence** | Commit `84e52461`'s body; `v2/docs/CURRENT-EVIDENCE.md`; `v2/docs/records/ts-net/ts-net-decisions.md` (TSN-D1, what counts as a power net). |
+-| **Attempts and results** | The rule's instrument changed in `940cbcdf`; no board's intent has been extended yet. **Set 5 (`fnd/r8int5`), board A (stream w3a):** VMON, PRECHG, +3V3_EMCON_EF and +3V3_EMCON declared as rails, B33_BST, HT_BST, S1_BOOT, S3_BOOT, PD_VTX, PD_VAUX, PD_DVDD, PD_CC1 and PD_CC2 as nodes, each from its maker's sheet; PWR-001 on A's regenerated netlist reads PASS of 35 (34 declared rails, 0 undecided). **Board B (stream w3b):** every one of the 28 undeclared and 26 undecided nets declared, a rail where it carries a current (VBAT_RTC, the coin-cell net renamed from VBAT by W3B-R1, the three flashing VBUS, the SIM supplies, the GNSS antenna feed, the PoE port's feed and return conductors) and a node where it is one part's own supply or a signal (the fourteen bootstraps, the four CP2102N regulator outputs, the three STM32H743 VCAP, the resets, nRPIBOOT, the PWR-LED feeds, the RF pads, the PoE control lines); one more net, GNSS_RF_IN, became undecided once the antenna feed was declared and is declared too; PWR-001 read PASS of 59 in the stream's scratch. Reading the TPS23861 and LG290P sheets for it found W3B-F1 and W3B-F2 (drawn) and S-71 to S-73 (open). **Boards D and E (stream w3de):** every supply PWR-001 refused is declared by its maker's kind (SC-57): on D the PCM2912A's five regulator outputs, SAU_3V3 and the TPA6132A2's charge pump as nodes; on E TRK_LDO33, E6_DVDD and E6_BST as nodes and SGP_VDD as a rail; the nets the reading left undecided whose working voltage the circuit states are declared nodes. PWR-001 read INCONCLUSIVE with 0 fails on both in the stream's scratch: RLY_K on D and FAN1_SW, FAN2_SW on E wait on their flyback diodes' sheets (S-76). Board E's tracker senses on its bottom leg since S-47's core (SC-56). **Status:** A and B read PASS and D and E INCONCLUSIVE in the streams' scratch; the consolidated re-take takes them in the tree. |
++| **Attempts and results** | The rule's instrument changed in `940cbcdf`; no board's intent has been extended yet. **Set 5 (`fnd/r8int5`), board A (stream w3a):** VMON, PRECHG, +3V3_EMCON_EF and +3V3_EMCON declared as rails, B33_BST, HT_BST, S1_BOOT, S3_BOOT, PD_VTX, PD_VAUX, PD_DVDD, PD_CC1 and PD_CC2 as nodes, each from its maker's sheet; PWR-001 on A's regenerated netlist reads PASS of 35 (34 declared rails, 0 undecided). **Board B (stream w3b):** every one of the 28 undeclared and 26 undecided nets declared, a rail where it carries a current (VBAT_RTC, the coin-cell net renamed from VBAT by W3B-R1, the three flashing VBUS, the SIM supplies, the GNSS antenna feed, the PoE port's feed and return conductors) and a node where it is one part's own supply or a signal (the fourteen bootstraps, the four CP2102N regulator outputs, the three STM32H743 VCAP, the resets, nRPIBOOT, the PWR-LED feeds, the RF pads, the PoE control lines); one more net, GNSS_RF_IN, became undecided once the antenna feed was declared and is declared too; PWR-001 read PASS of 59 in the stream's scratch. Reading the TPS23861 and LG290P sheets for it found W3B-F1 and W3B-F2 (drawn) and S-71 to S-73 (open). **Boards D and E (stream w3de):** every supply PWR-001 refused is declared by its maker's kind (SC-57): on D the PCM2912A's five regulator outputs, SAU_3V3 and the TPA6132A2's charge pump as nodes; on E TRK_LDO33, E6_DVDD and E6_BST as nodes and SGP_VDD as a rail; the nets the reading left undecided whose working voltage the circuit states are declared nodes. PWR-001 read INCONCLUSIVE with 0 fails on both in the stream's scratch: RLY_K on D and FAN1_SW, FAN2_SW on E wait on their flyback diodes' sheets (S-76). Board E's tracker senses on its bottom leg since S-47's core (SC-56). **Board C (stream w4c, 27 September 2026):** the consolidated re-take read FAIL of 7 on C's committed netlist (C_DVDD, EPD_VCC, LED_RAIL and LED_RAIL_SW undeclared, eleven nets undecided); declared by their makers' kinds (SC-65): EPD_VCC, LED_RAIL_SW and LED_RAIL as rails, C_DVDD as the RP2040's own regulator node, the eleven nets and the lamp feeds as nodes at the voltages the circuit states, EPD_RESE by the panel maker's reference; PWR-001 read PASS of 6 in the stream's scratch on the regenerated netlist (0 undecided). +3V3's own figures cover its child EPD_VCC (0.149 A typical, 0.72 A peak, finding W4C-F5 of the stream's independent check), and U5's headroom under the e-paper boost's 0.5 A class figure is open item S-80, read at bring-up. Declaring LED_RAIL_SW found W4C-F1 (RAIL_SENSE above IOVDD), drawn as the R15/R51 divider. **Status:** A, B and C read PASS and D and E INCONCLUSIVE in the streams' scratch; the consolidated re-take takes them in the tree. |
+ | **Viable options** | Declare each supply in the board's intent (rail or node, with its source and limits), or show it is not a supply by the rule's own definition. |
+ | **Recommended next action** | Each board stream declares its list, then the consolidated re-take. |
+ | **Expertise or equipment** | None. |
+@@ -227,9 +227,9 @@ owner's money, outside contact or a value only he can set.
+ | **Exact issue** | With board C unpowered, `TX_INHIBIT_n` is held low only by its three 100 kOhm pull-downs (board A R145, board B R59, board D R2; 35 kOhm together at 5 percent) against 31 uA of stated pin current: board C's U9 (74LVC1G17, Ioff 10 uA, DS35124) and U14 (SN74LVC1G57, Ioff 10 uA, SCES414P 6.5), board D's U12 (10 uA) and board A's U35 and U37 (0.5 uA each). That is 1.09 V, over the 0.8 V VIL the RF-002 walk applies to its readers (TI states 0.9 V for A's SN74AUP1G08s and 0.8 V for D's U12, which reads the line when only board C is off), so RF-002's fail-safe state FAILS on boards A to D and board D's SA868 keying inherits it. Before round 8's lamp gate U14 the same state read 0.74 V. |
+ | **Affected** | RF-002 (`inhibit_chain_a` to `_d`), board D's SA868 keying row in `v2/docs/feasibility/EMCON.md`, FEA-002; the open item S-64 in `v2/ecad/tools/pcb_requirements.yaml`. |
+ | **Evidence** | `v2/docs/records/w3t/w3t-decisions.md` section 5 and `HANDOFF.md` section 2 (the arithmetic of every option); `readings/inhibit-chain-before-after.txt` there; board C's `gen_sch_c.py` (R14, U9, U14). |
+-| **Attempts and results** | Found by stream w3t's re-take after EQ-18's row (27 September 2026, integrated in `fnd/r8int5`). The FAIL rests on the walk's worst-case leakage convention (round 6: an unpowered part passes its Ioff, a part that may be either the larger of II and Ioff). The three sheets also state II at VCC 0 V (SCES414P 1 uA, DS35124 5 uA, SCES217AA 5 uA): with only U14 at II the line reads about 0.77 V, with U9, U14 and D's U12 at II about 0.42 V. So it is a FAIL under the tree's convention, not a demonstrated defect; the remedy is margin. Each option below was checked with the walk on an in-memory copy of the netlists and reads the line PASS; board D's SA868 then returns to its own UNDECIDED (its maker states no PTT threshold). |
++| **Attempts and results** | Found by stream w3t's re-take after EQ-18's row (27 September 2026, integrated in `fnd/r8int5`). The FAIL rests on the walk's worst-case leakage convention (round 6: an unpowered part passes its Ioff, a part that may be either the larger of II and Ioff). The three sheets also state II at VCC 0 V (SCES414P 1 uA, DS35124 5 uA, SCES217AA 5 uA): with only U14 at II the line reads about 0.77 V, with U9, U14 and D's U12 at II about 0.42 V. So it is a FAIL under the tree's convention, not a demonstrated defect; the remedy is margin. Each option below was checked with the walk on an in-memory copy of the netlists and reads the line PASS; board D's SA868 then returns to its own UNDECIDED (its maker states no PTT threshold). **Stream w4c (27 September 2026):** option (a) drawn on board C (`R14` 2.2 k 1 percent, `R50` 10 k 1 percent) in `gen_sch_c.py` and regenerated on the KiCad box with parity (main's generator reproduces main's files; the candidate differs by R14's value and code and R50 and R51 alone, every component and every net's pins compared). On the candidate the walk reads the line PASS (0.243 V where it read 1.085 V, 0.178 V where it read 1.103 V): inhibit_chain A INCONCLUSIVE (0 fail, 7 pass, 2 undecided), B FAIL (its own ten), C PASS (6 of 6), D INCONCLUSIVE (the SA868's own threshold). Released 2.57 V (2.37 V at the adverse ends, over U9's about 2.15 V VT+, which R14 10k missed at 2.11 V); asserted at ground; latency the contact's 2 ms bounce, release about 31 us. SC-64 closes S-64 (`v2/docs/records/w4c/`). **Status:** answered on the candidate; the consolidated re-take makes it current in the tree. |
+ | **Viable options** | (a) Board C: R14 10 k to 2.2 k 1 percent and a new 10 k 1 percent pull-down on `TX_INHIBIT_n`: about 0.24 V failed safe, idle HIGH 2.57 V nominal and 2.37 V at the adverse ends (above U14's about 2.04 V and U9's about 2.15 V VT+ at 3.3 V), the toggle sinking 1.6 mA; one board. (b) Board B's R59 to 10 k 1 percent with R14 2.2 k: 0.26 V, idle 2.41 V adverse; two boards. (c) All three pull-downs to 47 k with R14 4.7 k: 0.51 V, idle 2.27 V adverse; four boards. Main's idle HIGH is 2.54 V nominal and 2.11 V adverse: every option widens it. |
+-| **Recommended next action** | (a) at board C's next circuit round, regenerated with parity, then the RF-002 re-take on boards A to D. |
++| **Recommended next action** | (a) drawn by stream w4c (SC-64); the RF-002 re-take on boards A to D at the integration that merges it, then bench E-01 and E-11 for the lines' real levels. |
+ | **Expertise or equipment** | None beyond the board C stream; bench E-01 and E-11 for the lines' real levels. |
+ | **Cost and lead time** | One resistor changed and one added on board C; desk work. |
+ 
+diff --git a/v2/ecad/tools/pcb_requirements.yaml b/v2/ecad/tools/pcb_requirements.yaml
+index f23fe8ea..ebf56b81 100644
+--- a/v2/ecad/tools/pcb_requirements.yaml
++++ b/v2/ecad/tools/pcb_requirements.yaml
+@@ -1911,6 +1911,108 @@ session_choices:
+       capacity on board B, after which J_USB3 returns to spare.
+     source: ["v2/docs/HW-FW-CONTRACT.md section 8", "v2/docs/records/hc5/usb-2-0-clauses-cited.md"]
+ 
++  - id: SC-64
++    authority: SESSION
++    under: standing-rule
++    taken_on: "2026-09-27"
++    question: >-
++      EQ-25 on board C (stream w4c, 27 September 2026): with board C unpowered, TX_INHIBIT_n read 1.09 V against the 0.8
++      V VIL the RF-002 walk applies (W3T-F1, S-64). How is it held under VIL with margin under the walk's worst-case
++      Ioff convention, without losing the released level or the asserted one while board C is powered?
++    taken: >-
++      Option (a) of S-64, on board C alone: R14 10k to 2.2k 1 percent (UNI-ROYAL 0603WAF2201T5E, C4190) and a new R50,
++      10k 1 percent (0603WAF1002T5E, C25804), from TX_INHIBIT_n to GND (v2/ecad/tools/gen_sch_c.py, the R14 line and the
++      note at the end of the design). On the regenerated netlist
++      (v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@3fddbb3edcd4248a) the walk reads the line PASS: 0.243 V with board
++      C unpowered (1.085 V before) and 0.178 V with the A-D mezzanine out as well (1.103 V before); every other
++      fail-safe state is unchanged, the highest 0.578 V (boards A and D with the A-B ribbon out). Released, 2.57 V
++      nominal and 2.37 V at the adverse ends (2.54 V and 2.11 V before); asserted, the toggle's contact holds the line
++      at ground and R14 draws 1.59 mA.
++    why: >-
++      One board, the board whose round 8 lamp gate U14 added the Ioff that lifted the line, and the lowest failed-safe
++      level of the three options S-64 names ((b) board B's R59 at 10k with R14 2.2k, 0.26 V on two boards; (c) the three
++      pull-downs at 47k with R14 4.7k, 0.51 V on four boards). It also lifts the released level at the adverse ends over
++      the about 2.15 V VT+ this tree reads for U9 at 3.3 V, which R14 at 10k did not (2.11 V). The toggle's current
++      stays inside the APEM 5636ADKB's gold-plated contacts' range (10 uA at 5 V to 100 mA at 30 VDC) and under the
++      walk's 4 mA pull limit. Latency: asserting is the contact itself, settled within its 2 ms bounce; release crosses
++      U9's VT+ after about 31 us (144 us before); with board C's supply gone R50 and the three pull-downs hold the line
++      with a 78 us time constant; each far inside REQ-071's 1 s. The FAIL rested on the walk's worst-case convention (an
++      unpowered part passes its Ioff), so this is margin, not the repair of a demonstrated defect. Reverse by option (b)
++      or (c) if a measured Ioff (bench E-01, E-11) or a later reader on the line changes the sums.
++    closes: [S-64]
++    source:
++      - "v2/ecad/tools/gen_sch_c.py (R14, R50, the EQ-25 note at the end of the design)"
++      - "v2/ecad/tools/tx_inhibit.py (fail_safe, VIL_LOW, PULL_MA_MAX, TOL_DEFAULT, RAIL_TOL)"
++      - "v2/docs/records/w4c/readings/after-candidate/fail-safe-states-TX_INHIBIT_n.txt and ../before-main-91894cd7/"
++      - "v2/docs/records/w3t/HANDOFF.md section 2"
++      - "v2/vendor/seals/apem-5000-series-datasheet-rs-copy.pdf page 2 (contact ratings, contact resistance, bounce)"
++      - "v2/vendor/diodes/diodes-74lvc1g17.pdf page 4; v2/vendor/ti/ti-sn74lvc1g57.pdf 6.5"
++  - id: SC-65
++    authority: SESSION
++    under: standing-rule
++    taken_on: "2026-09-27"
++    question: >-
++      Which kind does each supply PWR-001 refused on board C take (EQ-19 for board C: C_DVDD, EPD_VCC, LED_RAIL and
++      LED_RAIL_SW undeclared), and how are the eleven nets it left UNDECIDED settled (EMCLAMP_A, EMCLAMP_K, EPD_RESE,
++      LIGHT_DAY_n, LIGHT_NIGHT_n, TEST_SW, TX_A, TX_INHIBIT_n, TX_K, TX_LAMPTEST, ZEROIZE_SW)?
++    taken: >-
++      Rails: EPD_VCC (the e-paper's switched 3.3 V, Q5 to the panel's VDDIO and VDD and to the boost inductor L1; 30 mA
++      typical, 0.521 A peak; switch Q5, enable EPD_PWR_n), LED_RAIL_SW (+5V behind the LIGHTING toggle's pole 1: Q1, the
++      EMCON lamp's R47, the MAIN ring's R39, Q1's gate pull-up R17 and the sense divider; declared always on with the
++      reason that no line enables it) and LED_RAIL (Q1 to the eighteen lamp resistors; switch Q1, enable Q1_G), each
++      converted False and fed from its parent. A node for C_DVDD, the RP2040's own core regulator output (1.30 V by
++      VSEL, 1.16 V in service). Nodes for the eleven undecided nets at the voltages the circuit states (TX_INHIBIT_n,
++      ZEROIZE_SW, TEST_SW, LIGHT_DAY_n and LIGHT_NIGHT_n at 3.333 V; EMCLAMP_A, EMCLAMP_K, TX_A, TX_K and TX_LAMPTEST at
++      5.0 V; EPD_RESE by the panel maker's reference) and for the lamp feed and return nets the rails' named loads reach
++      (the fifteen indicators' anodes and cathodes, PIRING_A, TESTRING_A, MAINRING_A and Q1_G at 5.0 V, RAIL_SENSE at
++      2.65 V). +3V3's load Q5 moves from 1 mA to EPD_VCC's 30 mA, and +3V3's own figures cover its child EPD_VCC (0.149
++      A typical and 0.72 A peak, finding W4C-F5 of the stream's independent check; U5's headroom under the boost's 0.5 A
++      class figure is open item S-80, read at bring-up). PWR-001 reads PASS of 6 on the regenerated netlist (census: 5
++      counted, 57 declared node, 3 settled, 0 undecided, 74 unmarked); power_path PASS (0 short), power_sequence PASS of
++      5.
++    why: >-
++      The kinds board D and E's SC-57 and board B's stream w3b used: a rail where a current reaches more than one place
++      or a switched load, a node where the net is one part's own supply, a lamp's feed or a signal. The figures are the
++      makers': RP2040 datasheet 2.10.3, Table 189 and Table 634; UltraChip UC8253c A0.6 page 59 (IVDD 0.1, IVDDIO 0.1
++      and IVDDA 20.0 mA operating maximum at 3.0 V and 25 C, the only column the sheet gives; the driver PDi's flyer
++      names for the E2370KS0C1) plus 10 mA INFERRED for the boost, whose output power no held document states, to be
++      read at bring-up; PDi driving-circuit note Rev.02 page 4 note (1) for the boost's 0.5 A switch-current class and
++      page 10 BOM item 9 for the sense resistor (EPD_RESE is declared by that reference, so no DC figure is invented for
++      a chopped current); TI SBVS320D's 1 percent for +3V3; TI SCPS131J for the expanders' 5 V tolerant I/O. The lamps
++      carry no part number, so their typical is the 8 mA the series resistors were chosen for and their peak the 5.25 V
++      / R bound that needs no forward voltage. Reverse any node by a load on it that is another part's supply, and
++      EPD_VCC's typical by the bench reading.
++    source:
++      - "v2/ecad/tools/gen_sch_c.py (the PWR-001 declarations at the end of the design, +3V3's loads)"
++      - "v2/ecad/tools/intent_checks.py (PWR-001 on the netlist)"
++      - "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf 2.10.3, Tables 189 and 634"
++      - "v2/vendor/pdi/ultrachip-uc8253c-a0.6.pdf page 59 (filed from v2/docs/records/w4c/vendor/)"
++      - "v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf pages 4 and 10"
++      - "v2/docs/records/w4c/readings/after-candidate/c-intent_rails.verdict.json"
++      - "v2/docs/handover/ENGINEERING-QUESTIONS.md EQ-19"
++  - id: SC-66
++    authority: SESSION
++    under: standing-rule
++    taken_on: "2026-09-27"
++    question: >-
++      Board C's RAIL_SENSE (U3 GPIO26, ADC0) sat on the 5 V LED_RAIL_SW through R15 alone, above the RP2040's IOVDD
++      (finding W4C-F1, read while declaring LED_RAIL_SW for PWR-001). How is it bounded?
++    taken: >-
++      R51, 10k (UNI-ROYAL 0603WAF1002T5E, C25804), from RAIL_SENSE to GND, making R15 and R51 the divider PANEL.md
++      section 1's LED-rail row already names: at most 2.65 V at 5.25 V, 0 V at BLACKOUT (pole 1 open, R15 and R51 hold
++      it down).
++    why: >-
++      The maker: 'the voltage on the ADC analogue inputs must not exceed IOVDD ... Voltages greater than IOVDD will
++      result in leakage currents through the ESD protection diodes' (RP2040 datasheet 2.9.5 and 4.9 notes), with VPIN at
++      most IOVDD + 0.5 V (Table 622); through 10k alone the pin sat on its diode with about 0.15 mA into +3V3 whenever
++      the lamps were lit. A larger series resistor only lowers that current, a clamp adds a part and still injects, and
++      moving the sense to an expander input moves a function the firmware reads today; the divider is one 0603 of a reel
++      the board carries. The firmware's threshold for 'present' (about 2.5 V, 0 V absent) is the PANEL.md writer's.
++      Reverse by a measured reason the pin must see the rail undivided.
++    source:
++      - "v2/ecad/tools/gen_sch_c.py (R51, the W4C-F1 note at the end of the design)"
++      - "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf 2.9.5, 4.9, Tables 622 and 625"
++      - "v2/docs/PANEL.md section 1 (LED rail row) and section 3 (GPIO 26)"
+ # What is still open. SESSION items are engineering the session decides and records with authority SESSION;
+ # OWNER_ACTION is something the owner has ruled that he does or sets himself, or that only he can do because it reopens
+ # his own ruling or accepts a residual risk (reported to him, never asked, under his standing rule of 26 September
+@@ -2285,25 +2387,6 @@ open_items:
+       95 x 63 x 25 and the notch heights are checked against no maker drawing. Revise the tray from the QMX enclosure
+       drawing before it is printed (v2/docs/CASE-FIT-UNCERTAINTIES.md section 3; the layer 7 fixer c7). Desk work on a
+       made part: no board moves (J_QMX, J_HF and J_RF2 stay) and nothing is bought. ENGINEERING-QUESTIONS EQ-24.
+-  - id: S-64
+-    class: SESSION
+-    status: OPEN
+-    title: >-
+-      Finding W3T-F1 (EQ-18's row, stream w3t, 27 September 2026; v2/ecad/tools/tx_inhibit.py with the SN74LVC1G57 row): with board C
+-      unpowered, TX_INHIBIT_n's three 100 kOhm pull-downs (board A R145, board B R59, board D R2) hold it at up to
+-      1.09 V against 31 uA of stated pin current (board C's U9 and U14 at Ioff 10 uA each, DS35124 Rev. 8-2 and
+-      SCES414P 6.5; board D's U12 10 uA; board A's U35 and U37 0.5 uA each), over the 0.8 V VIL the walk applies
+-      to the gates that read it (TI states 0.9 V for board A's SN74AUP1G08s, 0.8 V for board D's U12), so RF-002's
+-      fail-safe state FAILS on boards A to D and board D's SA868 keying inherits it; before round 8's lamp gate U14
+-      the same state read 0.74 V. The FAIL is under the walk's worst-case leakage convention (an unpowered part
+-      passes its Ioff); the sheets also state II at VCC 0 V, and with U9, U14 and D's U12 at II the line reads
+-      about 0.42 V, so it is not a demonstrated defect, and the remedy is margin. For board C's next circuit round.
+-      Open until the line stays under 0.8 V in every fail-safe
+-      state with its idle HIGH still above its readers' VIH: (a) board C: R14 10 k to 2.2 k 1 percent and a 10 k 1
+-      percent pull-down on TX_INHIBIT_n (about 0.24 V failed safe, 2.37 V idle at the adverse ends), one board, the
+-      session's recommendation; (b) board B's R59 to 10 k 1 percent with R14 to 2.2 k; (c) all three pull-downs to
+-      47 k with R14 to 4.7 k. The arithmetic is in v2/docs/records/w3t/HANDOFF.md section 2 and
+-      v2/docs/records/w3t/w3t-decisions.md section 5; engineering question EQ-25.
+   - id: S-65
+     class: SESSION
+     status: OPEN
+@@ -2511,6 +2594,29 @@ open_items:
+       boards A, E and P enter layout, because the answer can move the pack pocket, board E's solar stage (D4, F2,
+       J_SOLAR) and board A's front end. Until then REQ-072 stays FAIL, CONOPS M1 states that a night needs an overnight
+       input on the 9 to 36 V entry, and nothing is lowered: neither REQ-016 nor REQ-072 is restated to fit.
++  - id: S-80
++    class: SESSION
++    status: OPEN
++    title: >-
++      Finding W4C-F5 (stream w4c, 27 September 2026; board C; the stream's independent check): +3V3 declared a 0.20 A
++      peak while its child EPD_VCC declares 0.521 A (the e-paper boost's 0.5 A switch-current class into L1, PDi
++      driving-circuit note Rev.02 page 4 note (1)); since the check +3V3 declares 0.149 A typical and 0.72 A peak (its
++      own loads' 0.119 and 0.199 A plus EPD_VCC's 0.030 and 0.521 A), so its copper from U5 and C2 to Q5 is judged at
++      what it can carry: within each boost on-phase (about 1.6 us, 10 uH to 0.5 A from 3.135 V) C28 behind Q5's at most
++      85 mOhm (AO3401A) is a 0.40 us time constant, so most of the inductor's current comes through Q5. U5, a TLV75533,
++      is rated 500 mA (IOUT; ICL 560 mA minimum; TI SBVS320D 5.3 and 5.5): the 0.22 A by which the peak exceeds it, held
++      for no longer than one on-phase, is at most 0.35 uC, 24 mV on C2, C28 and C29 (14.8 uF nominal) against the rail's
++      99 mV budget, but what U5 carries on average through a refresh rests on the boost's output power, which no held
++      document states (EPD_VCC's 10 mA share is INFERRED). The same reading decides +5V: its declared 1.0 A peak (and
++      pcb_energy_chain.yaml's B_PANEL_5V peak_a, under board B's F1 at 1.1 A hold) covers U5 only while U5 draws at most
++      0.508 A beside LED_RAIL_SW's 0.462 A and the sounder's 0.03 A; power_path's feed sum reads +5V's children at 0.94
++      A because it scales a rail without an efficiency by its voltage ratio, where an LDO's input current is its output
++      current. Open until bring-up reads U5's output current, averaged over the boost's switching period, and +3V3 at
++      U3's IOVDD through a full e-paper refresh (the UC8253c's booster soft start and an update) with the lamps lit at
++      DAY: closed when +3V3 stays inside its 3 percent budget and U5's average at or under 500 mA; otherwise board C's
++      next circuit round sizes a local bulk on EPD_VCC from the measured on-phase or feeds the e-paper from a supply
++      with the headroom, and +5V's peak and B_PANEL_5V's follow the reading. v2/ecad/tools/gen_sch_c.py (the +3V3
++      declaration and the check after EPD_VCC's).
+ 
+ # Items that left the open list, and what closed each: an owner ruling, a session choice, or a commit whose effect
+ # was read in the file `closing_evidence` names. A record never waits on a closed item; it cites what closed it.
+@@ -2800,6 +2906,24 @@ closed_items:
+       standing rule of 26 September 2026 the session set 72 hours, recorded as the session's, and the owner's own
+       setting replaces it whenever he gives one (stated once on 27 September 2026, layer 3's release check, R2). What
+       only the owner can decide about M1's failing balance is M-02.
++  - id: S-64
++    closed_by: SC-64
++    title: >-
++      Finding W3T-F1 (EQ-18's row, stream w3t, 27 September 2026; v2/ecad/tools/tx_inhibit.py with the SN74LVC1G57 row): with board C
++      unpowered, TX_INHIBIT_n's three 100 kOhm pull-downs (board A R145, board B R59, board D R2) hold it at up to
++      1.09 V against 31 uA of stated pin current (board C's U9 and U14 at Ioff 10 uA each, DS35124 Rev. 8-2 and
++      SCES414P 6.5; board D's U12 10 uA; board A's U35 and U37 0.5 uA each), over the 0.8 V VIL the walk applies
++      to the gates that read it (TI states 0.9 V for board A's SN74AUP1G08s, 0.8 V for board D's U12), so RF-002's
++      fail-safe state FAILS on boards A to D and board D's SA868 keying inherits it; before round 8's lamp gate U14
++      the same state read 0.74 V. The FAIL is under the walk's worst-case leakage convention (an unpowered part
++      passes its Ioff); the sheets also state II at VCC 0 V, and with U9, U14 and D's U12 at II the line reads
++      about 0.42 V, so it is not a demonstrated defect, and the remedy is margin. For board C's next circuit round.
++      Open until the line stays under 0.8 V in every fail-safe
++      state with its idle HIGH still above its readers' VIH: (a) board C: R14 10 k to 2.2 k 1 percent and a 10 k 1
++      percent pull-down on TX_INHIBIT_n (about 0.24 V failed safe, 2.37 V idle at the adverse ends), one board, the
++      session's recommendation; (b) board B's R59 to 10 k 1 percent with R14 to 2.2 k; (c) all three pull-downs to
++      47 k with R14 to 4.7 k. The arithmetic is in v2/docs/records/w3t/HANDOFF.md section 2 and
++      v2/docs/records/w3t/w3t-decisions.md section 5; engineering question EQ-25.
+ 
+ records:
+   - id: REQ-001
+@@ -4281,9 +4405,20 @@ records:
+           net VBAT renamed VBAT_RTC (board A's pack node is VBAT, and the contracts key a rail by its name); lines
+           above each cited range moved: the ring is still f = s % 3 + 1, now at line 988, and nothing of the bank
+           fabric changed, so it stands PASS on the file at 6957adda1bb5f23a
++      - >-
++          v2/docs/PANEL.md re-read after stream w4c's edit of 27 September 2026 (read against the file at
++          7bb905740ddaebb9): three table rows change, section 1's EMCON logic row, which gains one sentence on board C's
++          R14 (2.2 k 1 %) and R50 (10 k 1 %) with the line's failed-safe and released levels and its 17 us rise, section
++          3's GPIO 26 row, which describes RAIL_SENSE through the R15/R51 divider (W4C-F1), and section 6's TX_INHIBIT_n
++          row, whose source column now names R14 at 2.2k 1 % and R50 (10k 1 %) on C7 beside the three consumer
++          pull-downs (it named a 10k pull-up and the three 100k only), as board C's regenerated netlist at
++          3fddbb3edcd4248a carries them; every other line is byte-identical; line 5 (bank 1's home and failover hosts),
++          the rest of section 1 and section 2's ribbon table with its pin 15 row, which this reading rests on, are
++          unchanged: none of the three changed rows names a bank or a host, so it stands PASS on the file at
++          b73c5059a8934dca
+     evidence_bound_to:
+       - "v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8"
+-      - "v2/docs/PANEL.md@7bb905740ddaebb9"
++      - "v2/docs/PANEL.md@b73c5059a8934dca"
+       - "v2/ecad/tools/gen_sch_b.py@6957adda1bb5f23a"
+     release_effect: ADVISORY
+     source:
+@@ -4564,9 +4699,32 @@ records:
+           4b, 5, 5a, every other row of 6 and 7, the rest of 8, and 9 to 9d; section 0's TX-lamp sentence and bench
+           E-02, on which this reading rests, are byte-identical and no part of the lamp's path moved, so it stands
+           FAIL on the file at 1d4a491d9718e6d3.
++      - >-
++          v2/ecad/pcb-c-display-c8/out/pcb-c-display.net regenerated by stream w4c on 27 September 2026 (EQ-25 and
++          PWR-001 on board C, MESHSAT-1357) on the KiCad box with main's chain (handover_exports.py regen, PHASE C24;
++          main's own regeneration at 91894cd7 reads PARITY_AFTER_NOISE against the committed file and MATCH against an
++          empty change list): compared with the file at 11eabc2dddca5161 component by component and net by net (pin,
++          pinfunction, pintype) by two independent readers (stream w4c's netcmp_w4c.py against expected-c-netlist.json,
++          MATCH, and stream w3a's netcmp.py; v2/docs/records/w4c/parity/), it differs only in R14 (10k C25804 to 2.2k 1%
++          C4190), R50 (10k 1%, C25804) added from TX_INHIBIT_n to GND and R51 (10k, C25804) added from RAIL_SENSE to
++          GND; the intent beside it declares three more rails and forty-seven nodes and raises +3V3 to cover EPD_VCC,
++          which moves no part (SC-65, S-80); no node of TX_A, TX_K, Q3_G, TR_APRS, LED_RAIL, Q1 or Q2 changed, so the TX
++          lamp's anode is still LED_RAIL behind Q1 and Q2 and the lamp still needs the controller's PANEL_PWM, so it
++          stands FAIL on the file at 3fddbb3edcd4248a
++      - >-
++          v2/docs/feasibility/EMCON.md re-read after stream w4c's edit of 27 September 2026 (read against the file at
++          1d4a491d9718e6d3): five places change, all about the TX_INHIBIT_n line on board C: section 2's Source,
++          conductor and pull-down bullets (rewrapped), which name R14 at 2.2 k 1 percent and R50 (10 k 1 percent) to GND
++          and the line's level with board C unpowered (0.24 V, 1.09 V before, W3T-F1); section 4.1's Default bullet
++          (rewrapped), which names R50 beside R2, R145 and R59 and the walk's reading with and without it; and section
++          4b's W3T-F1 paragraph, which gains one closing sentence (the line PASS on board C's regenerated netlist at
++          3fddbb3edcd4248a, board D's SA868 keying back to its own UNDECIDED, the released and asserted levels and the
++          latency); every other line is byte-identical, among them sections 0, 0a, 1, 3, 4 with 4.2 to 4.18, 4a, the
++          rest of 4b, 5, 5a, 6, 7, 8 and 9 to 9d; section 0's TX-lamp sentence and bench E-02, on which this reading
++          rests, are byte-identical, so it stands FAIL on the file at 9c9d5e80e366b2f9
+     evidence_bound_to:
+-      - "v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3"
+-      - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161"
++      - "v2/docs/feasibility/EMCON.md@9c9d5e80e366b2f9"
++      - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@3fddbb3edcd4248a"
+     release_effect: MUST_JUSTIFY
+     source: ["v2/docs/PANEL.md:135", "v2/docs/PANEL.md:189"]
+     source_check: VERIFIED
+@@ -6416,8 +6574,22 @@ records:
+           (v2/docs/records/w3b/tools/rename_check.py); no EMCON or TX_INHIBIT_n net or part changed, and
+           tools/tx_inhibit.py on it with main's A, C and D netlists reads board B's walk as before (inhibit_chain_b
+           FAIL 10, PASS 3, UNDECIDED 7), so this reading stands on the file at 8b78c59754a6a0c7
++      - >-
++          v2/docs/feasibility/EMCON.md re-read after stream w4c's edit of 27 September 2026 (read against the file at
++          1d4a491d9718e6d3): five places change, all about the TX_INHIBIT_n line on board C: section 2's Source,
++          conductor and pull-down bullets (rewrapped), which name R14 at 2.2 k 1 percent and R50 (10 k 1 percent) to GND
++          and the line's level with board C unpowered (0.24 V, 1.09 V before, W3T-F1); section 4.1's Default bullet
++          (rewrapped), which names R50 beside R2, R145 and R59 and the walk's reading with and without it; and section
++          4b's W3T-F1 paragraph, which gains one closing sentence (the line PASS on board C's regenerated netlist at
++          3fddbb3edcd4248a, board D's SA868 keying back to its own UNDECIDED, the released and asserted levels and the
++          latency); every other line is byte-identical, among them sections 0, 0a, 1, 3, 4 with 4.2 to 4.18, 4a, the
++          rest of 4b, 5, 5a, 6, 7, 8 and 9 to 9d; what the FAIL rests on is unchanged (the RockBLOCK's local chain, the
++          SA868's missing receive threshold, L3 and RF-002's reading of board B); the changed places move the
++          TX_INHIBIT_n line's fail-safe state with board C unpowered to PASS on the candidate, which this record's 'a
++          board is unpowered' clause needs and none of those depends on, so it stands FAIL on the file at
++          9c9d5e80e366b2f9
+     evidence_bound_to:
+-      - "v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3"
++      - "v2/docs/feasibility/EMCON.md@9c9d5e80e366b2f9"
+       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
+     release_effect: BLOCKER
+     source:
+@@ -6579,8 +6751,21 @@ records:
+           W3B-F1's parts are dropped from it; VBAT_RTC carries every node VBAT carried plus C72 to C74 pin 1
+           (v2/docs/records/w3b/tools/rename_check.py); RB_IEN still joins J_RB9704 pin 3 and U6 pin 19 only, so this
+           reading stands on the file at 8b78c59754a6a0c7
++      - >-
++          v2/docs/feasibility/EMCON.md re-read after stream w4c's edit of 27 September 2026 (read against the file at
++          1d4a491d9718e6d3): five places change, all about the TX_INHIBIT_n line on board C: section 2's Source,
++          conductor and pull-down bullets (rewrapped), which name R14 at 2.2 k 1 percent and R50 (10 k 1 percent) to GND
++          and the line's level with board C unpowered (0.24 V, 1.09 V before, W3T-F1); section 4.1's Default bullet
++          (rewrapped), which names R50 beside R2, R145 and R59 and the walk's reading with and without it; and section
++          4b's W3T-F1 paragraph, which gains one closing sentence (the line PASS on board C's regenerated netlist at
++          3fddbb3edcd4248a, board D's SA868 keying back to its own UNDECIDED, the released and asserted levels and the
++          latency); every other line is byte-identical, among them sections 0, 0a, 1, 3, 4 with 4.2 to 4.18, 4a, the
++          rest of 4b, 5, 5a, 6, 7, 8 and 9 to 9d; section 5a and section 0a's end-to-end column are byte-identical; the
++          added sentence states the line's own latency (the contact's 2 ms bounce, a release of about 31 us) and
++          sections 2 and 4.1 state R14's value and R50, none of which closes a row, so it stands FAIL on the file at
++          9c9d5e80e366b2f9
+     evidence_bound_to:
+-      - "v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3"
++      - "v2/docs/feasibility/EMCON.md@9c9d5e80e366b2f9"
+       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
+       - "v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568"
+     release_effect: BLOCKER
+@@ -6876,8 +7061,20 @@ records:
+           (the SIM and GNSS antenna supplies gained declarations only), and tools/tx_inhibit.py reads board B's walk
+           as before (inhibit_chain_b FAIL 10, PASS 3, UNDECIDED 7), so this reading stands on the file at
+           8b78c59754a6a0c7
++      - >-
++          v2/docs/feasibility/EMCON.md re-read after stream w4c's edit of 27 September 2026 (read against the file at
++          1d4a491d9718e6d3): five places change, all about the TX_INHIBIT_n line on board C: section 2's Source,
++          conductor and pull-down bullets (rewrapped), which name R14 at 2.2 k 1 percent and R50 (10 k 1 percent) to GND
++          and the line's level with board C unpowered (0.24 V, 1.09 V before, W3T-F1); section 4.1's Default bullet
++          (rewrapped), which names R50 beside R2, R145 and R59 and the walk's reading with and without it; and section
++          4b's W3T-F1 paragraph, which gains one closing sentence (the line PASS on board C's regenerated netlist at
++          3fddbb3edcd4248a, board D's SA868 keying back to its own UNDECIDED, the released and asserted levels and the
++          latency); every other line is byte-identical, among them sections 0, 0a, 1, 3, 4 with 4.2 to 4.18, 4a, the
++          rest of 4b, 5, 5a, 6, 7, 8 and 9 to 9d; sections 4.4 and 4.5, L3 and L4 and 4b's paragraphs on the 5G module
++          and the back-feed, on which this reading rests, are byte-identical; the changed places are about
++          TX_INHIBIT_n's pulls and fail-safe state, so it stands FAIL on the file at 9c9d5e80e366b2f9
+     evidence_bound_to:
+-      - "v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3"
++      - "v2/docs/feasibility/EMCON.md@9c9d5e80e366b2f9"
+       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
+     release_effect: BLOCKER
+     source:
+@@ -7030,8 +7227,19 @@ records:
+           v2/docs/records/w3de/parity-r8int5/), it differs only in J_VR1 to J_VR4 (VIN_RAW) and J_VN1 to J_VN4 (GND)
+           added and J_DOCK's value and pins 1 to 4 (VIN_RAW to GND); R102 (EMCON_HW to GND), R145 on TX_INHIBIT_n and
+           the slot enable pull-downs are unchanged, so it stands PASS on the file at da05dc02bc1e612f
++      - >-
++          v2/docs/PANEL.md re-read after stream w4c's edit of 27 September 2026 (read against the file at
++          7bb905740ddaebb9): three table rows change, section 1's EMCON logic row, which gains one sentence on board C's
++          R14 (2.2 k 1 %) and R50 (10 k 1 %) with the line's failed-safe and released levels and its 17 us rise, section
++          3's GPIO 26 row, which describes RAIL_SENSE through the R15/R51 divider (W4C-F1), and section 6's TX_INHIBIT_n
++          row, whose source column now names R14 at 2.2k 1 % and R50 (10k 1 %) on C7 beside the three consumer
++          pull-downs (it named a 10k pull-up and the three 100k only), as board C's regenerated netlist at
++          3fddbb3edcd4248a carries them; every other line is byte-identical; section 7's panel-absent paragraph, which
++          this reading cites, is byte-identical; section 6's EMCON_HW row is unchanged and its TX_INHIBIT_n row still
++          names R145 on board A, and with the panel's ribbon out board C's R50 is not on the conductor that paragraph
++          describes, so it stands PASS on the file at b73c5059a8934dca
+     evidence_bound_to:
+-      - "v2/docs/PANEL.md@7bb905740ddaebb9"
++      - "v2/docs/PANEL.md@b73c5059a8934dca"
+       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
+     release_effect: ADVISORY
+     source:
+@@ -7321,10 +7529,24 @@ records:
+           counts, the reuse table and the register's entry count follow; board D's RF-002 and SCH-004 rows keep the
+           class and cause read above, so this constraint's own reasons are unchanged and it stays INCONCLUSIVE, on the
+           file at 7a834fe55aea6ccd
++      - >-
++          v2/docs/feasibility/EMCON.md re-read after stream w4c's edit of 27 September 2026 (read against the file at
++          1d4a491d9718e6d3): five places change, all about the TX_INHIBIT_n line on board C: section 2's Source,
++          conductor and pull-down bullets (rewrapped), which name R14 at 2.2 k 1 percent and R50 (10 k 1 percent) to GND
++          and the line's level with board C unpowered (0.24 V, 1.09 V before, W3T-F1); section 4.1's Default bullet
++          (rewrapped), which names R50 beside R2, R145 and R59 and the walk's reading with and without it; and section
++          4b's W3T-F1 paragraph, which gains one closing sentence (the line PASS on board C's regenerated netlist at
++          3fddbb3edcd4248a, board D's SA868 keying back to its own UNDECIDED, the released and asserted levels and the
++          latency); every other line is byte-identical, among them sections 0, 0a, 1, 3, 4 with 4.2 to 4.18, 4a, the
++          rest of 4b, 5, 5a, 6, 7, 8 and 9 to 9d; section 4.1's Default bullet now names board C's R50 beside R2, R145
++          and R59 and the walk's reading of the line on board C's netlist with it (PASS) and without it (FAIL at 1.085
++          V, W3T-F1), where it read PASS with no figure; the gate's trace this reading cites (KEY = PTT_ANY AND
++          TX_INHIBIT_n, U14, U15, U13), the rest of 4.1 and section 4.2 are byte-identical, and the SA868's row stays
++          open on its maker's missing threshold (bench E-01), so it stands FAIL on the file at 9c9d5e80e366b2f9
+     evidence_bound_to:
+       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f"
+       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
+-      - "v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3"
++      - "v2/docs/feasibility/EMCON.md@9c9d5e80e366b2f9"
+       - "v2/docs/CURRENT-EVIDENCE.md@7a834fe55aea6ccd"
+     release_effect: BLOCKER
+     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2825", "v2/docs/PANEL.md section 6", "v2/docs/feasibility/EMCON.md sections 4.1 and 4.2"]
+@@ -7453,9 +7675,34 @@ records:
+           4b, 5, 5a, every other row of 6 and 7, the rest of 8, and 9 to 9d; section 7's common-element row (board C's
+           lamp D22, U14 and Q7, its plate light guide still owed), which this reading cites, is byte-identical, so it
+           stands FAIL on the file at 1d4a491d9718e6d3.
++      - >-
++          v2/ecad/pcb-c-display-c8/out/pcb-c-display.net regenerated by stream w4c on 27 September 2026 (EQ-25 and
++          PWR-001 on board C, MESHSAT-1357) on the KiCad box with main's chain (handover_exports.py regen, PHASE C24;
++          main's own regeneration at 91894cd7 reads PARITY_AFTER_NOISE against the committed file and MATCH against an
++          empty change list): compared with the file at 11eabc2dddca5161 component by component and net by net (pin,
++          pinfunction, pintype) by two independent readers (stream w4c's netcmp_w4c.py against expected-c-netlist.json,
++          MATCH, and stream w3a's netcmp.py; v2/docs/records/w4c/parity/), it differs only in R14 (10k C25804 to 2.2k 1%
++          C4190), R50 (10k 1%, C25804) added from TX_INHIBIT_n to GND and R51 (10k, C25804) added from RAIL_SENSE to
++          GND; the intent beside it declares three more rails and forty-seven nodes and raises +3V3 to cover EPD_VCC,
++          which moves no part (SC-65, S-80); D22, R47, Q7, R48, R49 and U14 keep every node; U14's input TX_INHIBIT_n
++          now rests at 2.57 V released (2.37 V at the adverse ends, over its about 2.04 V VT+ at 3.3 V; 2.54 V and 2.11
++          V before) and at ground asserted, so the lamp's gate reads both states with more margin and nothing in its
++          path changed; the plate's light guide is still owed, so it stands FAIL on the file at 3fddbb3edcd4248a
++      - >-
++          v2/docs/feasibility/EMCON.md re-read after stream w4c's edit of 27 September 2026 (read against the file at
++          1d4a491d9718e6d3): five places change, all about the TX_INHIBIT_n line on board C: section 2's Source,
++          conductor and pull-down bullets (rewrapped), which name R14 at 2.2 k 1 percent and R50 (10 k 1 percent) to GND
++          and the line's level with board C unpowered (0.24 V, 1.09 V before, W3T-F1); section 4.1's Default bullet
++          (rewrapped), which names R50 beside R2, R145 and R59 and the walk's reading with and without it; and section
++          4b's W3T-F1 paragraph, which gains one closing sentence (the line PASS on board C's regenerated netlist at
++          3fddbb3edcd4248a, board D's SA868 keying back to its own UNDECIDED, the released and asserted levels and the
++          latency); every other line is byte-identical, among them sections 0, 0a, 1, 3, 4 with 4.2 to 4.18, 4a, the
++          rest of 4b, 5, 5a, 6, 7, 8 and 9 to 9d; section 7's common-element row (board C's lamp D22, U14 and Q7, its
++          plate light guide still owed), which this reading cites, is byte-identical, so it stands FAIL on the file at
++          9c9d5e80e366b2f9
+     evidence_bound_to:
+-      - "v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3"
+-      - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161"
++      - "v2/docs/feasibility/EMCON.md@9c9d5e80e366b2f9"
++      - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@3fddbb3edcd4248a"
+     release_effect: BLOCKER
+     source: ["v2/docs/feasibility/EMCON.md section 7 (the common element)", "session choice SC-11"]
+     source_check: VERIFIED
+@@ -7658,10 +7905,23 @@ records:
+           (v2/docs/records/w3b/tools/rename_check.py); no transmitter's inhibit chain changed, and
+           tools/tx_inhibit.py reads board B's walk as before (inhibit_chain_b FAIL 10, PASS 3, UNDECIDED 7), so this
+           reading stands on the file at 8b78c59754a6a0c7
++      - >-
++          v2/docs/feasibility/EMCON.md re-read after stream w4c's edit of 27 September 2026 (read against the file at
++          1d4a491d9718e6d3): five places change, all about the TX_INHIBIT_n line on board C: section 2's Source,
++          conductor and pull-down bullets (rewrapped), which name R14 at 2.2 k 1 percent and R50 (10 k 1 percent) to GND
++          and the line's level with board C unpowered (0.24 V, 1.09 V before, W3T-F1); section 4.1's Default bullet
++          (rewrapped), which names R50 beside R2, R145 and R59 and the walk's reading with and without it; and section
++          4b's W3T-F1 paragraph, which gains one closing sentence (the line PASS on board C's regenerated netlist at
++          3fddbb3edcd4248a, board D's SA868 keying back to its own UNDECIDED, the released and asserted levels and the
++          latency); every other line is byte-identical, among them sections 0, 0a, 1, 3, 4 with 4.2 to 4.18, 4a, the
++          rest of 4b, 5, 5a, 6, 7, 8 and 9 to 9d; section 7 is byte-identical and none of the items this reading names
++          as remaining moves (the RockBLOCK's ENABLE, the SA868's threshold, L4 on U501 to U505, the back-feed, the
++          plate's light guide, RF-002's model gap on board B, every bench test); the changed places close W3T-F1 on the
++          candidate only, so it stands INCONCLUSIVE on the file at 9c9d5e80e366b2f9
+     evidence_bound_to:
+       - "v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568"
+       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
+-      - "v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3"
++      - "v2/docs/feasibility/EMCON.md@9c9d5e80e366b2f9"
+     release_effect: BLOCKER
+     source: ["v2/docs/feasibility/EMCON.md section 7", "v2/docs/reviews/2026-09-26-foundation-progress-review.md section 3"]
+     source_check: VERIFIED
+@@ -9746,10 +10006,36 @@ records:
+           lines 48 to 49 (the Review A paragraph's last sentence), with the line count kept; every section from section
+           1 on, which this reading rests on, is byte-identical to the file at 3ff59edc96a3f8f4, so it stands on the file
+           at 4483209659dc391c
++      - >-
++          v2/ecad/pcb-c-display-c8/out/pcb-c-display.net regenerated by stream w4c on 27 September 2026 (EQ-25 and
++          PWR-001 on board C, MESHSAT-1357) on the KiCad box with main's chain (handover_exports.py regen, PHASE C24;
++          main's own regeneration at 91894cd7 reads PARITY_AFTER_NOISE against the committed file and MATCH against an
++          empty change list): compared with the file at 11eabc2dddca5161 component by component and net by net (pin,
++          pinfunction, pintype) by two independent readers (stream w4c's netcmp_w4c.py against expected-c-netlist.json,
++          MATCH, and stream w3a's netcmp.py; v2/docs/records/w4c/parity/), it differs only in R14 (10k C25804 to 2.2k 1%
++          C4190), R50 (10k 1%, C25804) added from TX_INHIBIT_n to GND and R51 (10k, C25804) added from RAIL_SENSE to
++          GND; the intent beside it declares three more rails and forty-seven nodes and raises +3V3 to cover EPD_VCC,
++          which moves no part (SC-65, S-80); U9 is still the 74LVC1G17 from TX_INHIBIT_n to EMCON_HW and the ZEROIZE
++          toggle still on the local ZEROIZE_SW at GPIO 22 with U12 copying it onto ZEROIZE_HW; the LED rail sense is now
++          the divider PANEL.md section 1's LED-rail row names (R15 and R51), and the two PANEL.md sentences the change
++          dates (section 1's '77 us time constant', section 3's GPIO 26 'through 10k') are drafted for the PANEL.md
++          writer (v2/docs/records/w4c/patch_docs.py), so it stands PASS on the file at 3fddbb3edcd4248a
++      - >-
++          v2/docs/PANEL.md re-read after stream w4c's edit of 27 September 2026 (read against the file at
++          7bb905740ddaebb9): three table rows change, section 1's EMCON logic row, which gains one sentence on board C's
++          R14 (2.2 k 1 %) and R50 (10 k 1 %) with the line's failed-safe and released levels and its 17 us rise, section
++          3's GPIO 26 row, which describes RAIL_SENSE through the R15/R51 divider (W4C-F1), and section 6's TX_INHIBIT_n
++          row, whose source column now names R14 at 2.2k 1 % and R50 (10k 1 %) on C7 beside the three consumer
++          pull-downs (it named a 10k pull-up and the three 100k only), as board C's regenerated netlist at
++          3fddbb3edcd4248a carries them; every other line is byte-identical; two changed rows are in sections 1 and 6,
++          which this record's acceptance asks to describe the circuit as generated, and both now name R14 at 2.2 k 1 %
++          and R50 as the regenerated netlist carries them; section 3's GPIO 26 row names the divider the same netlist
++          carries; section 6's other rows and section 7 are byte-identical, so it stands PASS on the file at
++          b73c5059a8934dca
+     evidence_bound_to:
+       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f"
+       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc"
+-      - "v2/docs/PANEL.md@7bb905740ddaebb9"
++      - "v2/docs/PANEL.md@b73c5059a8934dca"
+       - "v2/docs/CONOPS.md@4483209659dc391c"
+       - "v2/docs/V2-SPEC.md@a92ea2ef3793a3c9"
+       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
+@@ -9757,7 +10043,7 @@ records:
+       - "v2/ecad/tools/pcb_decisions.yaml@b5f7162443d5ad91"
+       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
+       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
+-      - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161"
++      - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@3fddbb3edcd4248a"
+       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
+     release_effect: BLOCKER
+     source:
+@@ -11538,8 +11824,17 @@ records:
+           lines 48 to 49 (the Review A paragraph's last sentence), with the line count kept; every section from section
+           1 on, which this reading rests on, is byte-identical to the file at 3ff59edc96a3f8f4, so it stands on the file
+           at 4483209659dc391c
++      - >-
++          v2/docs/PANEL.md re-read after stream w4c's edit of 27 September 2026 (read against the file at
++          7bb905740ddaebb9): three table rows change, section 1's EMCON logic row, which gains one sentence on board C's
++          R14 (2.2 k 1 %) and R50 (10 k 1 %) with the line's failed-safe and released levels and its 17 us rise, section
++          3's GPIO 26 row, which describes RAIL_SENSE through the R15/R51 divider (W4C-F1), and section 6's TX_INHIBIT_n
++          row, whose source column now names R14 at 2.2k 1 % and R50 (10k 1 %) on C7 beside the three consumer
++          pull-downs (it named a 10k pull-up and the three 100k only), as board C's regenerated netlist at
++          3fddbb3edcd4248a carries them; every other line is byte-identical; section 10, which this reading cites, is
++          byte-identical, so it stands PASS on the file at b73c5059a8934dca
+     evidence_bound_to:
+-      - "v2/docs/PANEL.md@7bb905740ddaebb9"
++      - "v2/docs/PANEL.md@b73c5059a8934dca"
+       - "v2/docs/CONOPS.md@4483209659dc391c"
+       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
+       - "v2/ecad/tools/gen_sch_a.py@5af29bbcf27bb91a"
+@@ -11728,11 +12023,20 @@ records:
+           EQ-16 dock checks (board A's four VIN_RAW pins and four return pins, board E's P_VR and P_VN, no VIN_RAW on an
+           813 contact); every line naming J_SMB is byte-identical (sha256/16 c78df21055972aa1 before and after); the
+           J_SMB contract this reading cites is that text, so it stands PASS on the file at 5e14f456a0791c35
++      - >-
++          v2/docs/PANEL.md re-read after stream w4c's edit of 27 September 2026 (read against the file at
++          7bb905740ddaebb9): three table rows change, section 1's EMCON logic row, which gains one sentence on board C's
++          R14 (2.2 k 1 %) and R50 (10 k 1 %) with the line's failed-safe and released levels and its 17 us rise, section
++          3's GPIO 26 row, which describes RAIL_SENSE through the R15/R51 divider (W4C-F1), and section 6's TX_INHIBIT_n
++          row, whose source column now names R14 at 2.2k 1 % and R50 (10k 1 %) on C7 beside the three consumer
++          pull-downs (it named a 10k pull-up and the three 100k only), as board C's regenerated netlist at
++          3fddbb3edcd4248a carries them; every other line is byte-identical; section 10's SMBus sentences, which this
++          reading cites, are byte-identical, so it stands PASS on the file at b73c5059a8934dca
+     evidence_bound_to:
+       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc"
+       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
+       - "v2/docs/ASSEMBLY.md@b49f853f450d49ee"
+-      - "v2/docs/PANEL.md@7bb905740ddaebb9"
++      - "v2/docs/PANEL.md@b73c5059a8934dca"
+       - "v2/ecad/tools/check_contracts.py@5e14f456a0791c35"
+     release_effect: BLOCKER
+     source: ["v2/ecad/tools/gen_sch_e.py:264", "v2/docs/ASSEMBLY.md section 4", "v2/docs/PANEL.md section 10"]
+@@ -12086,10 +12390,21 @@ records:
+           v2/docs/records/w3de/parity-r8int5/), it differs only in J_VR1 to J_VR4 (VIN_RAW) and J_VN1 to J_VN4 (GND)
+           added and J_DOCK's value and pins 1 to 4 (VIN_RAW to GND); board A's D1 to D4 are unchanged, so it stands FAIL
+           on the file at da05dc02bc1e612f
++      - >-
++          v2/ecad/pcb-c-display-c8/out/pcb-c-display.net regenerated by stream w4c on 27 September 2026 (EQ-25 and
++          PWR-001 on board C, MESHSAT-1357) on the KiCad box with main's chain (handover_exports.py regen, PHASE C24;
++          main's own regeneration at 91894cd7 reads PARITY_AFTER_NOISE against the committed file and MATCH against an
++          empty change list): compared with the file at 11eabc2dddca5161 component by component and net by net (pin,
++          pinfunction, pintype) by two independent readers (stream w4c's netcmp_w4c.py against expected-c-netlist.json,
++          MATCH, and stream w3a's netcmp.py; v2/docs/records/w4c/parity/), it differs only in R14 (10k C25804 to 2.2k 1%
++          C4190), R50 (10k 1%, C25804) added from TX_INHIBIT_n to GND and R51 (10k, C25804) added from RAIL_SENSE to
++          GND; the intent beside it declares three more rails and forty-seven nodes and raises +3V3 to cover EPD_VCC,
++          which moves no part (SC-65, S-80); D19 to D21 keep every node and record, and the two parts added are
++          resistors, no clamp and no rectifier, so it stands FAIL on the file at 3fddbb3edcd4248a
+     evidence_bound_to:
+       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
+       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
+-      - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161"
++      - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@3fddbb3edcd4248a"
+       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f"
+       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc"
+       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
+diff --git a/v2/ecad/tools/pcb_rules_coverage.yaml b/v2/ecad/tools/pcb_rules_coverage.yaml
+index c7518523..96b8cca4 100644
+--- a/v2/ecad/tools/pcb_rules_coverage.yaml
++++ b/v2/ecad/tools/pcb_rules_coverage.yaml
+@@ -959,7 +959,7 @@ coverage:
+      connectors, converter enables and an AP64500 enable behind their pulls, so its modules would not pass there if a slot
+      rail were gated), every I/O of that supply's domain, on both parts that carry a module, held up by nothing, and no
+      logic part or switch (but one with Ioff and a power-off rating) running from a gated rail with an output held up.
+-     READING ON THIS INTEGRATION's six committed netlists (27 September 2026: A 3a786cf3, D 0dad82b4 and E f3c1ad61 as round 8 regenerated them, B 669d02d0, C 2834f0d8 and P 4342c4cb as at fc144600), with this file: check_contracts PASS of 96; inhibit_chain A FAIL (1 fail, 6 pass, 2 undecided: the EMCON_HW line, which the STM32 and RP2040 pins on it fail; the 30 W VHF PA's and the QMX HF's supply gates UNDECIDED, walked from TX_INHIBIT_n alone through the SN74AUP1G08s U35 to U38, on board A's INA226 U14 and the LM5176s' boost-leg FETs Q14 and Q24, whose drive no held table states off with the enable), B FAIL (15 fail, 4 pass, 1 undecided: the EMCON_HW line and all fourteen transmitters, the LimeSDR, the RockBLOCK 9704, the E22, both E72s, the RM520N-GL, both AW7915 cards and the six on-module Compute Module radios; the classification undecided, since J_QMX's declaration as a data lead rests on a QRP Labs statement not yet held), C FAIL (1 fail, 5 pass: the EMCON_HW line), D INCONCLUSIVE (7 pass, 1 undecided: the SA868 exciter's keying), E PASS, P PASS. Board A's two supply gates move from FAIL (they inherited the EMCON_HW line's FAIL, the path of the line the queue took first) to UNDECIDED on round 8's netlist; nothing else moved against a6f87e9d's readings, and the verdicts per board are the same. Board C's and board P's round 8 netlists, committed after this, are read at the consolidated re-take. READING WITH EQ-18's ROW (stream w3t, 27 September 2026, verdicts written to the stream's scratch) on main 38dcd764's six netlists (A 3a786cf3, B adcc3c67, C 11eabc2d, D 0dad82b4, E f3c1ad61, P 085f8333): inhibit_chain A FAIL (1 fail, 6 pass, 2 undecided), B FAIL (11 fail, 6 pass, 3 undecided), C FAIL (1 fail, 5 pass), D FAIL (2 fail, 6 pass), E PASS, P PASS, where the file before the row read A INCONCLUSIVE (5 pass, 4 undecided), B FAIL (10 fail, 3 pass, 7 undecided), C INCONCLUSIVE (4 pass, 2 undecided), D INCONCLUSIVE (6 pass, 2 undecided), E PASS, P PASS. The EMCON_HW line moves from UNDECIDED (board C's U14 pin 6) to PASS, and board B's RockBLOCK 9704 and E22-900M30S, which rode only on it, to PASS; the TX_INHIBIT_n line moves from UNDECIDED (U14 pin 3) to FAIL, and board D's SA868 keying with it: with board C unpowered its three 100 kOhm pull-downs (A R145, B R59, D R2) against 31 uA of stated pin current (C's U9 and U14 at Ioff 10 uA each, D's U12 10 uA, A's U35 and U37 0.5 uA each) reach 1.09 V over the gates' 0.8 V VIL, where without U14 the same state read 0.74 V. The FAIL rests on the walk's worst-case leakage convention (an unpowered part passes its Ioff; the three sheets also state II at VCC 0 V, and with U9, U14 and D's U12 at II the line reads about 0.42 V), and the walk applies VIL 0.8 V to every reader (TI states 0.9 V for A's SN74AUP1G08, 0.8 V for D's U12, which reads the line when only board C is off): a FAIL under that convention, not a demonstrated defect (open item W3T-F1 in pcb_requirements.yaml, corrected at the r8int5 integration from the independent check). The
++     READING ON THIS INTEGRATION's six committed netlists (27 September 2026: A 3a786cf3, D 0dad82b4 and E f3c1ad61 as round 8 regenerated them, B 669d02d0, C 2834f0d8 and P 4342c4cb as at fc144600), with this file: check_contracts PASS of 96; inhibit_chain A FAIL (1 fail, 6 pass, 2 undecided: the EMCON_HW line, which the STM32 and RP2040 pins on it fail; the 30 W VHF PA's and the QMX HF's supply gates UNDECIDED, walked from TX_INHIBIT_n alone through the SN74AUP1G08s U35 to U38, on board A's INA226 U14 and the LM5176s' boost-leg FETs Q14 and Q24, whose drive no held table states off with the enable), B FAIL (15 fail, 4 pass, 1 undecided: the EMCON_HW line and all fourteen transmitters, the LimeSDR, the RockBLOCK 9704, the E22, both E72s, the RM520N-GL, both AW7915 cards and the six on-module Compute Module radios; the classification undecided, since J_QMX's declaration as a data lead rests on a QRP Labs statement not yet held), C FAIL (1 fail, 5 pass: the EMCON_HW line), D INCONCLUSIVE (7 pass, 1 undecided: the SA868 exciter's keying), E PASS, P PASS. Board A's two supply gates move from FAIL (they inherited the EMCON_HW line's FAIL, the path of the line the queue took first) to UNDECIDED on round 8's netlist; nothing else moved against a6f87e9d's readings, and the verdicts per board are the same. Board C's and board P's round 8 netlists, committed after this, are read at the consolidated re-take. READING WITH EQ-18's ROW (stream w3t, 27 September 2026, verdicts written to the stream's scratch) on main 38dcd764's six netlists (A 3a786cf3, B adcc3c67, C 11eabc2d, D 0dad82b4, E f3c1ad61, P 085f8333): inhibit_chain A FAIL (1 fail, 6 pass, 2 undecided), B FAIL (11 fail, 6 pass, 3 undecided), C FAIL (1 fail, 5 pass), D FAIL (2 fail, 6 pass), E PASS, P PASS, where the file before the row read A INCONCLUSIVE (5 pass, 4 undecided), B FAIL (10 fail, 3 pass, 7 undecided), C INCONCLUSIVE (4 pass, 2 undecided), D INCONCLUSIVE (6 pass, 2 undecided), E PASS, P PASS. The EMCON_HW line moves from UNDECIDED (board C's U14 pin 6) to PASS, and board B's RockBLOCK 9704 and E22-900M30S, which rode only on it, to PASS; the TX_INHIBIT_n line moves from UNDECIDED (U14 pin 3) to FAIL, and board D's SA868 keying with it: with board C unpowered its three 100 kOhm pull-downs (A R145, B R59, D R2) against 31 uA of stated pin current (C's U9 and U14 at Ioff 10 uA each, D's U12 10 uA, A's U35 and U37 0.5 uA each) reach 1.09 V over the gates' 0.8 V VIL, where without U14 the same state read 0.74 V. The FAIL rests on the walk's worst-case leakage convention (an unpowered part passes its Ioff; the three sheets also state II at VCC 0 V, and with U9, U14 and D's U12 at II the line reads about 0.42 V), and the walk applies VIL 0.8 V to every reader (TI states 0.9 V for A's SN74AUP1G08, 0.8 V for D's U12, which reads the line when only board C is off): a FAIL under that convention, not a demonstrated defect (open item W3T-F1 in pcb_requirements.yaml, corrected at the r8int5 integration from the independent check). FIXED ON BOARD C BY STREAM w4c (EQ-25, 27 September 2026, SC-64, which closes S-64; verdicts in the stream's scratch on the KiCad box): R14 2.2k 1 percent and R50 10k 1 percent on board C's candidate netlist 3fddbb3edcd4248a, the other five at main 91894cd7: the TX_INHIBIT_n line PASS (0.243 V with board C unpowered, which read 1.085 V; 0.178 V with the A-D mezzanine out as well, which read 1.103 V), inhibit_chain A INCONCLUSIVE (0 fail, 7 pass, 2 undecided), B FAIL (10 fail, 7 pass, 3 undecided), C PASS (6 of 6), D INCONCLUSIVE (0 fail, 7 pass, 1 undecided: the SA868 keying back to its own UNDECIDED, the SA_PTT_n threshold its maker does not state), E PASS, P PASS; main's own re-take in the same scratch read the committed A FAIL (1, 6, 2), B FAIL (11, 6, 3), C FAIL (1, 5, 0), D FAIL (2, 6, 0) (v2/docs/records/w4c/readings/). The
+      instrument's declared tables (TRANSMITTERS, MATES, PIN_READERS, READER_TAPS, ACCESSORIES, RECEIVE_ONLY, OWED,
+      FW_PIN_TABLES, LOGIC, SWITCHES and PROTECTION_ROWS with their stated paths and rows) each carry their basis and are held
+      to it by tests/test_tx_inhibit.py",
+diff --git a/v2/vendor/SOURCES.yaml b/v2/vendor/SOURCES.yaml
+index 8faadaad..792d2de3 100644
+--- a/v2/vendor/SOURCES.yaml
++++ b/v2/vendor/SOURCES.yaml
+@@ -3418,6 +3418,25 @@ parts:
+       - "F1 (independent check 2 of 27 September 2026, condition 1): C89647 is Bourns MF-MSMF110-2, which LCSC lists at 1.1 A, 6 V and 100 A; the held sheet's MF-MSMF110 rows are /8X, /16X, /16, /24X and /33X, not the plain part, so the 1.10 A hold and 2.20 A trip rest on the How-to-Order code and the Vmax, Imax and Thermal Derating rows (0.85, 0.77, 0.71 A at 50, 60, 70 C) are the siblings'. Closed by filing a Bourns sheet that lists the plain MF-MSMF110 or by ordering MF-MSMF110/8X-2. The siblings' table also gives 0.95 A of hold at 40 C, under board C's declared 1.0 A peak inside the sealed case, so the 'must stay a peak' contract of pcb_energy_chain.yaml B_PANEL_5V owes board C and PANEL.md a duration"
+       - "Q212 (independent checks 1 and 2): the AO3400A sheet (Rev 3.1) states VGS(th) 0.65 to 1.45 V and RDS(on) 48 mOhm at VGS 2.5 V at TJ 25 C only; SD-EMC-1r8's discharge bound rests on Q212 conducting at about 3.1 V of gate drive into 15 Ohm, a large margin that no held row states over -40 to +85 C (EMCON.md section 4b, L7)"
+ 
++  - id: epd-driver-uc8253c
++    function: "the driver inside board C's e-paper panel (Pervasive Displays E2370KS0C1, on J_EPD): its supply currents bound EPD_VCC's declared typical (PWR-001, stream w4c)"
++    boards: [C]
++    on_main: false
++    adopted_in: "fnd/w4c (27 September 2026), pending merge"
++    schematic_name: {text: "the panel on J_EPD (EPD_VCC to J_EPD pins 15 and 16)", where: "v2/ecad/tools/gen_sch_c.py (J_EPD; the EPD_VCC rail declaration)"}
++    fitted_mpn: "E2370KS0C1 (Pervasive Displays), driver UC8253c inside the panel"
++    identity: MATCH
++    status: VERIFIED
++    documents:
++      - path: "v2/vendor/pdi/ultrachip-uc8253c-a0.6.pdf"
++        doc_id: "UltraChip 03-DTS-1891 UC8253c_A0.6 (for TFT_module_Use_Only)"
++        revision: "ES Specifications, IC version c_A, datasheet revision 0.6, 13 October 2020 (PDF created 21 October 2020, 75 pages)"
++        url: "https://www.elecrow.com/download/product/DIE01237S/UC8253_Datasheet.pdf"
++        fetched: "2026-09-27T14:12Z, HTTP 200 application/pdf"
++        sha256: "bee25538177b8cc6f67c1ffe696d8fd09bda7842b42e021fb9bd41a3da91c125"
++        currency: "UltraChip publishes no public copy; this is the maker's document as a module maker serves it"
++        matches_fitted: "yes for the driver: the PDi flyer names CHIP-UC8253c for the E2370KS0C1; DC characteristics (page 59): VDD, VDDIO and VDDA 2.3 / 3.3 / 3.6 V; IVDD digital operating current 0.1 mA max, IVDDIO IO operating current 0.1 mA max, IVDDA DCDC operating current 20.0 mA max at VDD = VDDA = VDDIO = 3.0 V, 25 C; absolute maximum VDD, VDDIO, VDDA -0.3 to +6.0 V (page 58). The panel's own current (the boost's inductor current) is not in this sheet"
++
+ owed:
+   - "DONE 26 September 2026 (integration I6): sources.txt file lines for the six documents added on 25 and 26 September and for this file, a vendor-status.txt line for each, a vendor-noindex.txt line for the text-less TE drawing, and the correction of sources.txt's m2 folder line and the same sentence in README.md ('key to be read from the drawing': the drawing says key M)"
+   - "the appendix entry recording that the conditional pick at appendix line 2884 resolved to its else-branch (the drawing says key M); the appendix is not a vendor file"

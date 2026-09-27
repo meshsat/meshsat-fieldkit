@@ -1,0 +1,22 @@
+fragment A,B,C,D  down C      cut -                                        ok True  v 0.243
+fragment A,D      down -      cut A-B J_AB1                                ok True  v 0.578
+fragment B,C      down C      cut A-B J_AB1                                ok True  v None
+fragment A,B,D    down -      cut B-C J_PANEL                              ok True  v 0.385
+fragment C        down C      cut B-C J_PANEL                              ok True  v None
+fragment A,D      down -      cut A-B J_AB1;B-C J_PANEL                    ok True  v 0.578
+fragment C        down C      cut A-B J_AB1;B-C J_PANEL                    ok True  v None
+fragment B        down -      cut A-B J_AB1;B-C J_PANEL                    ok True  v None
+fragment D        down -      cut A-D J_MEZZ1                              ok True  v 0.525
+fragment A,B,C    down C      cut A-D J_MEZZ1                              ok True  v 0.178
+fragment D        down -      cut A-B J_AB1;A-D J_MEZZ1                    ok True  v 0.525
+fragment B,C      down C      cut A-B J_AB1;A-D J_MEZZ1                    ok True  v None
+fragment A        down -      cut A-B J_AB1;A-D J_MEZZ1                    ok True  v 0.105
+fragment D        down -      cut B-C J_PANEL;A-D J_MEZZ1                  ok True  v 0.525
+fragment C        down C      cut B-C J_PANEL;A-D J_MEZZ1                  ok True  v None
+fragment A,B      down -      cut B-C J_PANEL;A-D J_MEZZ1                  ok True  v 0.053
+fragment D        down -      cut A-B J_AB1;B-C J_PANEL;A-D J_MEZZ1        ok True  v 0.525
+fragment C        down C      cut A-B J_AB1;B-C J_PANEL;A-D J_MEZZ1        ok True  v None
+fragment B        down -      cut A-B J_AB1;B-C J_PANEL;A-D J_MEZZ1        ok True  v None
+fragment A        down -      cut A-B J_AB1;B-C J_PANEL;A-D J_MEZZ1        ok True  v 0.105
+fail: []
+undecided: []

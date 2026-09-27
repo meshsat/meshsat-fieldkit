@@ -343,3 +343,4 @@ slkor/slkor-bc857b-c556165.pdf   # https://datasheet.lcsc.com/datasheet/pdf/171c
 ti/ti-sn74lv1t08.pdf   # https://www.ti.com/lit/ds/symlink/sn74lv1t08.pdf, fetched 2026-09-27T14:25Z by stream w4b (SCLS739F, October 2025), sha256 cb0644caef3b0ded
 rockblock/groundcontrol-docs-rockblock-9704-hardware-20260927.html   # https://docs.groundcontrol.com/iot/rockblock-9704/hardware, fetched 2026-09-27T14:05Z by stream w4b, sha256 e02ea57445550ecb
 rockblock/groundcontrol-docs-rockblock-9704-hardware-20260927.txt   # the plain-text rendering of the .html beside it, made by stream w4b, sha256 d94f62eee7f2de2e
+pdi/ultrachip-uc8253c-a0.6.pdf   # https://www.elecrow.com/download/product/DIE01237S/UC8253_Datasheet.pdf, fetched 2026-09-27T14:12Z by stream w4c (UltraChip 03-DTS-1891 UC8253c A0.6 as Elecrow serves it; UltraChip publishes no public copy), sha256 bee25538177b8cc6

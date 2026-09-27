@@ -1,0 +1,119 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "intent_checks.py",
+  "files": {
+   "boardorder.py": "298e46edcc028954",
+   "boardtable.py": "41bd92e61f12c374",
+   "hardset.py": "be29a44c4a592876",
+   "intent.py": "f1ac033e0f3c10f1",
+   "intent_checks.py": "1ad7af0c718ba940",
+   "kicad_compat.py": "6b8f77490466e939",
+   "netclass.py": "4cc1adf0ddae0390",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "return_via.py": "b61d138e54955dd4",
+   "rules_lib.py": "c0458c53923d7925",
+   "signal_class.py": "60b8647301428da4",
+   "signalnets.py": "688be12d8e42e7a4",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "5aa3d5157698ae2a",
+  "unresolved": []
+ },
+ "counts": {
+  "census_nets": 153,
+  "checks": 7,
+  "declared_nodes": 1,
+  "declared_not_in_netlist": 0,
+  "declared_rails": 2,
+  "fail": 5,
+  "held_pin_roles": 22,
+  "nodes_supplying_parts": 0,
+  "power_nets": 6,
+  "rails_without_destination": 0,
+  "settled": 3,
+  "switches_unresolved": 0,
+  "undecided": 11,
+  "undeclared": 4,
+  "unmarked": 109
+ },
+ "denominator": 7,
+ "evidence": [
+  "census of the 153 nets: 6 counted, 10 declared node, 1 ground, 3 settled, 13 unconnected, 11 undecided, 109 unmarked",
+  "undecided, named and not counted (11): EMCLAMP_A, EMCLAMP_K, EPD_RESE, LIGHT_DAY_n, LIGHT_NIGHT_n, TEST_SW, TX_A, TX_INHIBIT_n, TX_K, TX_LAMPTEST, ZEROIZE_SW",
+  "settled, they supply nothing (3): SOS_SW, XIN, XOUT",
+  "power net C_DVDD is a declared rail (it is not: supply pin by name (U3.23 DVDD, U3.45 VREG_VOUT, U3.50 DVDD), and the intent's bypass list decouples it (C14:U3.45, C15:U3.50); supply pin by its held datasheet)",
+  "power net EPD_VCC is a declared rail (it is not: power class PWR in the netlist; supply pin by name (J_EPD.15 VDDIO, J_EPD.16 VDD), and the intent's bypass list decouples it (C29:J_EPD.15, C28:J_EPD.16); switc)",
+  "power net LED_RAIL is a declared rail (it is not: power class PWR in the netlist)",
+  "power net LED_RAIL_SW is a declared rail (it is not: power class PWR in the netlist)",
+  "the count of declared rails equals the count of power nets carrying more than 0.00 A: 2 declared (2 of them nets of the netlist), 6 power nets not declared as nodes (by kind, a net counted under each that applies: 2 power-symbol, 1 supply-pin by type, 5 power-class, 5 supply-pin by name, 3 supply-pin by its held datasheet, 1 reached by a rail's current, 2 declared rails), 1 declared as nodes; undeclared: C_DVDD, EPD_VCC, LED_RAIL, LED_RAIL_SW",
+  "undecided, named and not counted: EMCLAMP_A: it carries the mark of a supply (M3 D22 joins it to the undecided net EMCLAMP_K) and nothing read settles it: D22.2",
+  "undecided, named and not counted: EMCLAMP_K: it carries the mark of a supply (M4 the switched return of D22: the channel of Q7 sinks it to ground) and nothing read settles it: D22.1, Q7.3",
+  "undecided, named and not counted: EPD_RESE: it carries the mark of a supply (M4 the channel of Q6 with the net EPD_SW) and nothing read settles it: J_EPD.3, Q6.2",
+  "undecided, named and not counted: LIGHT_DAY_n: it carries the mark of a supply (M1 capacitor C22 to ground) and nothing read settles it: SW_LIGHT.5, U1.13",
+  "undecided, named and not counted: LIGHT_NIGHT_n: it carries the mark of a supply (M1 capacitor C23 to ground) and nothing read settles it: SW_LIGHT.6, U1.14",
+  "undecided, named and not counted: TEST_SW: it carries the mark of a supply (M1 capacitor C21 to ground) and nothing read settles it: SW_TEST.1, U3.39",
+  "undecided, named and not counted: TX_A: it carries the mark of a supply (M3 D3 joins it to the undecided net TX_K) and nothing read settles it: D3.2",
+  "undecided, named and not counted: TX_INHIBIT_n: it carries the mark of a supply (M1 capacitor C24 to ground) and nothing read settles it: J_PANEL.11, SW_EMCON.1, U14.3, U9.2",
+  "undecided, named and not counted: TX_K: it carries the mark of a supply (M4 the switched return of D17, D3: the channel of Q3 sinks it to ground) and nothing read settles it: D17.2, D3.1, Q3.3",
+  "undecided, named and not counted: TX_LAMPTEST: it carries the mark of a supply (M3 D17 joins it to the undecided net TX_K) and nothing read settles it: D17.1, U2.13",
+  "undecided, named and not counted: ZEROIZE_SW: it carries the mark of a supply (M1 capacitor C20 to ground) and nothing read settles it: SW_ZERO.1, U12.2, U3.34",
+  "declared as a node, not a rail: EPD_VDDD (supply pin by name (J_EPD.18 VDDD), and capacitor C34 joins it to ground)",
+  "settled, it supplies nothing: SOS_SW: nothing on it supplies: SW_SOS.1 a switch to ground; U3.40 GPIO28 / ADC2 (signal, rpi-rp2040-datasheet.pdf)",
+  "settled, it supplies nothing: XIN: an oscillator net: Y1 is a crystal or resonator",
+  "settled, it supplies nothing: XOUT: an oscillator net: Y1 is a crystal or resonator"
+ ],
+ "inputs": {
+  "board": "c",
+  "document_1": {
+   "path": "v2/vendor/power/ti-tlv755p-ldo.pdf",
+   "sha256_16": "7eb7bc6935bf6c1d"
+  },
+  "document_2": {
+   "path": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+   "sha256_16": "be56fbb75ba0ae9e"
+  },
+  "intent": {
+   "path": "out/pcb-c-display-intent.json",
+   "sha256_16": "854436c729322993"
+  },
+  "netlist": {
+   "content16": "96c2678f4a3303b8",
+   "path": "out/pcb-c-display.net",
+   "sha256_16": "11eabc2dddca5161"
+  },
+  "threshold_a": 0.0
+ },
+ "missing_input": null,
+ "note": "PWR-001 on the committed netlist and the intent file beside it: every power net is a declared rail, and every declared rail is a net of the netlist whose source and loads are on it. A power net is a power-symbol net, a net carrying a pin typed power_in or power_out, a net of a power class in the netlist, a net carrying a supply-named pin that a bypass entry, a capacitor to ground or a second supply pin corroborates, a net carrying a pin its held datasheet makes a supply, or a ground off a ground net (intent_checks.PIN_ROLES, each row carrying every power and ground pin of its table, each document recorded by sha), or a net a declared rail's current reaches through a two-terminal part or a transistor's channel, at a threshold of 0.00 A. FAIL CLOSED: every other net carrying the mark of a supply (a capacitor to ground, a capacitor to a power net or across one part's pins, a fuse, inductor, ferrite, diode, jumper, switch or link resistor to a power net, a transistor channel shared with one, the switched low side of a load, a lead whose other pins are all ground, a sense class) is settled only by what is read (a crystal, a held non-supply pin role, a gate, a sink to ground, a declared clamp, a switch to ground; on a lead or a sense net the connector carries what the read pins carry) and is otherwise undecided; an undecided net holds the reading at INCONCLUSIVE when nothing fails, and the census names every net's disposition. A power net declared as a node is reported, and refused when it carries the supply pins of two or more parts. Session decisions of 26 September 2026 under the owner's standing rule: the kinds of power net, the fail-closed marks and the undecided class, the 0 A threshold, the node rule",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "PWR-001": "6e91133d2ef9dee3"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "PWR-001"
+ ],
+ "runtime": {
+  "kicad": "9.0.9-9.0.9~ubuntu24.04.1",
+  "python": "3.12.3"
+ },
+ "tool": "intent_rails",
+ "tools": {
+  "git_head": "91894cd7f196",
+  "tools_tree_sha": "784492a16eb43399"
+ },
+ "ts": "2026-09-27T15:38:33Z",
+ "verdict": "FAIL",
+ "version": "91894cd7f196",
+ "writer": {
+  "file": "intent_checks.py",
+  "sha16": "1ad7af0c718ba940"
+ }
+}

@@ -1,0 +1,76 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "safe_lines.py",
+  "files": {
+   "boardtable.py": "41bd92e61f12c374",
+   "intent.py": "f1ac033e0f3c10f1",
+   "kisch.py": "3e28374d15be25e0",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "port_protect.py": "2d69facd3c25c8a4",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "safe_lines.py": "8529487f405ec55d",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "7e3540d47e33f75e",
+  "unresolved": []
+ },
+ "counts": {
+  "floating": 0,
+  "lines": 6,
+  "listened": 4,
+  "on_netlist": 6
+ },
+ "denominator": 6,
+ "evidence": [
+  "EMCON_HW: safe low, pull down [R102 (10k 1%)], pull up [none], drivers [none], reads [U35.2 (SN74AUP1G08DBVR AND: PA_TXOK), U37.2 (SN74AUP1G08DBVR AND: HF_TXOK)], leaves on [J_AB1.15]",
+  "PI_KILL: safe low, pull down [R5 (1k)], pull up [none], drivers [none], reads [Q1.1 (2N7002: panel controller hig)], leaves on [J_AB1.10]",
+  "KILL: safe high, pull down [none], pull up [R4 (100k to +3V3)], drivers [none], reads [Q1.3 (2N7002: panel controller hig), U1.8 (LTC2954ITS8-1 push-button on)], leaves on [none]",
+  "TX_INHIBIT_n: safe low, pull down [R145 (100k)], pull up [none], drivers [none], reads [U35.1 (SN74AUP1G08DBVR AND: PA_TXOK), U37.1 (SN74AUP1G08DBVR AND: HF_TXOK)], leaves on [J_AB1.16, J_MEZZ1.8]",
+  "ZEROIZE_HW: safe high, pull down [none], pull up [R117 (10k to +3V3)], drivers [none], reads [none], leaves on [J_AB1.20, J_MEZZ1.15]",
+  "SHORE_INHIBIT: safe low, pull down [R118 (100k)], pull up [none], drivers [none], reads [none], leaves on [J_AB1.21, J_DOCK.8]"
+ ],
+ "inputs": {
+  "board": "a",
+  "intent": {
+   "path": "out/pcb-a-power-intent.json",
+   "sha256_16": "92dd3b1cda9046b8"
+  },
+  "netlist": {
+   "content16": "2c5c1d5a388cc95f",
+   "path": "out/pcb-a-power.net",
+   "sha256_16": "da05dc02bc1e612f"
+  }
+ },
+ "missing_input": null,
+ "note": "4 line(s) this board reads hold the safe state with its own copper; the rest are driven here or only cross it",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "SCH-004": "0d3209a18476cc88"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "SCH-004"
+ ],
+ "runtime": {
+  "python": "3.12.3"
+ },
+ "tool": "safe_lines",
+ "tools": {
+  "git_head": "91894cd7f196",
+  "tools_tree_sha": "784492a16eb43399"
+ },
+ "ts": "2026-09-27T15:35:42Z",
+ "verdict": "PASS",
+ "version": "91894cd7f196",
+ "writer": {
+  "file": "safe_lines.py",
+  "sha16": "8529487f405ec55d"
+ }
+}

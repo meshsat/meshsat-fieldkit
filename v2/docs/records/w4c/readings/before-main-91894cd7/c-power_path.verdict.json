@@ -1,0 +1,51 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "power_path.py",
+  "files": {
+   "power_path.py": "d587cd5843213f62",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "58a3e65f7da43262",
+  "unresolved": []
+ },
+ "counts": {
+  "feeds": 1,
+  "feeds_short": 0,
+  "nodes": 11,
+  "rails": 2,
+  "segments": 1,
+  "undeclared": 0
+ },
+ "denominator": null,
+ "evidence": [
+  "BZ_K (node) carries +5V's 0.03 A through BZ1"
+ ],
+ "inputs": {
+  "board": "c"
+ },
+ "missing_input": null,
+ "note": "every declared node that carries a declared rail's current through one of that rail's own load parts: a candidate segment of a power path that no power rule is looking at. It REPORTS: some of these are genuinely nodes and the declaration is where that is written down, with its reason.",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [],
+ "runtime": {
+  "python": "3.12.3"
+ },
+ "tool": "power_path",
+ "tools": {
+  "git_head": "91894cd7f196",
+  "tools_tree_sha": "784492a16eb43399"
+ },
+ "ts": "2026-09-27T15:38:43Z",
+ "verdict": "PASS",
+ "version": "91894cd7f196",
+ "writer": {
+  "file": "power_path.py",
+  "sha16": "d587cd5843213f62"
+ }
+}

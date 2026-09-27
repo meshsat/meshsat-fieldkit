@@ -676,7 +676,7 @@ Source: W5 round 2 contract with A01, A02, A07 and A11 applied, re-read against 
 | Line | Driven by | Consumed by | With the panel ribbon out | Source |
 |---|---|---|---|---|
 | EMCON_HW | C's U9, a 74LVC1G17 Schmitt buffer of TX_INHIBIT_n | A's PA and HF gates (U26; in board A's round 8 candidate U35 and U37, which AND it with TX_INHIBIT_n), B's radio gates (U19, U20) and B's Q11, which inverts it into EMCON_ON | LOW: EMCON asserted | A R102 100 k (10 k 1% in board A's round 8 candidate, `gen_sch_a.py:1253`), B R58 10 k to GND (`gen_sch_a.py:1112` at `45bde541`, `gen_sch_b.py:1024`); the line's hold with its source gone is UNDECIDED as drawn (EMCON L2) |
-| TX_INHIBIT_n | C's SW_EMCON (to GND) with R14 10 k up on C | D's KEY gate; A and B | LOW: inhibited | R145 (A), R59 (B), R2 (D), 100 k each |
+| TX_INHIBIT_n | C's SW_EMCON (to GND) with R14 up on C: 2.2 k 1 % since EQ-25 (stream w4c, 27 September 2026), 10 k at `eadbe571` | D's KEY gate; A and B | LOW: inhibited | R145 (A), R59 (B), R2 (D), 100 k each; and R50 (C), 10 k 1 % since EQ-25, which holds the line with the panel connected but unpowered (0.24 V against the 0.8 V VIL under the RF-002 walk's worst-case Ioff sums; 1.09 V before, W3T-F1) |
 | ZEROIZE_SW | C's covered SW_ZERO (to GND) | **only** C's RP2040 GPIO22 | not on the ribbon | `gen_sch_c.py:168-178`, `:217` |
 | ZEROIZE_HW | C's U12, a buffered copy of ZEROIZE_SW (`faf8c981`) | nothing acts on it: in the committed netlists it reaches A's pull-up R117 and test points on B (TP8), C (TP12) and D (TP9) | HIGH: no wipe | R117 10 k to A's +3V3 (`gen_sch_a.py:1150`); U12's Ioff keeps R117 off C's rail |
 | SLOT_EN1..3 | C's RP2040 GPIO13 to 15 | A's slot converters U4 to U6 | LOW: every slot off | R30, R34, R38 |

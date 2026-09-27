@@ -1,0 +1,33 @@
+{
+ "components_only_a": [],
+ "components_only_b": {},
+ "components_changed": {},
+ "nets_only_a": [],
+ "nets_only_b": [],
+ "nets_changed": {},
+ "pins_moved_or_retyped": [],
+ "counts": {
+  "a": [
+   219,
+   153,
+   588
+  ],
+  "b": [
+   219,
+   153,
+   588
+  ]
+ },
+ "expected_change_list": {
+  "file": "expected-empty.json",
+  "result": "MATCH",
+  "observed": {
+   "components_only_a": [],
+   "components_only_b": [],
+   "components_changed": {},
+   "nets_only_a": [],
+   "nets_only_b": [],
+   "nets_changed": {}
+  }
+ }
+}

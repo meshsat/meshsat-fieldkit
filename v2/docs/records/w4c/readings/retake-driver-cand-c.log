@@ -1,0 +1,40 @@
+retake_schematic_phase: a verdict directory; verdicts to /root/w4c/rt-cand/<phase>/out
+  T=/root/w4c/cand/v2/ecad/tools  E=/root/w4c/cand/v2/ecad  (every command: cd <cwd>; VERDICT_DIR=<cwd>/out python3 ...)
+
+board C  pcb-c-display-c8  declared phase C24  netlist pcb-c-display-c8/out/pcb-c-display.net
+  ENV-001  BLOCKER                                               desk review of a pinned document: re-reviewed, not re-taken
+  SCH-001  BLOCKER      erc_gate                                 re-take
+  SCH-005  BLOCKER      pin_map_lands_c                          re-take
+  CMP-001  BLOCKER      derate                                   re-take
+  PWR-001  BLOCKER      intent_rails                             re-take
+  SI-001   MUST_JUSTIFY edge_length                              re-take
+  CLK-001  BLOCKER      clock_check                              re-take
+  RF-002   BLOCKER      inhibit_chain_c                          re-take
+  INT-001  BLOCKER      interfaces_c,check_contracts             re-take
+  TRN-001  BLOCKER      port_protect_c                           re-take
+  TST-001  MUST_JUSTIFY                                          desk review of a pinned document: re-reviewed, not re-taken
+  9 command(s), cwd /root/w4c/rt-cand/pcb-c-display-c8
+    $ python3 $T/erc_gate.py . pcb-c-display --run   # SCH-001
+    $ python3 $T/pin_map_lands.py out/pcb-c-display.net c   # SCH-005
+    $ python3 $T/derate.py out/pcb-c-display.net   # CMP-001
+    $ python3 $T/intent_checks.py --netlist out/pcb-c-display.net   # PWR-001
+    $ python3 $T/edge_length.py --netlist out/pcb-c-display.net   # SI-001
+    $ python3 $T/clock_check.py out/pcb-c-display.net   # CLK-001
+    $ python3 $T/check_contracts.py $E   # RF-002, INT-001
+    $ python3 $T/interfaces.py   # INT-001
+    $ python3 $T/port_protect.py out/pcb-c-display.net   # TRN-001
+
+plan: 9 command(s) over 1 board(s): C 9; 0 error(s)
+
+  C   erc_gate.py        rc 0       1.7s  erc_gate PASS
+  C   pin_map_lands.py   rc 0       0.6s  pin_map_lands_c PASS
+  C   derate.py          rc 0       0.8s  derate PASS
+  C   intent_checks.py   rc 0       1.0s  intent_rails PASS
+  C   edge_length.py     rc 3       0.8s  edge_length INCONCLUSIVE
+  C   clock_check.py     rc 0       0.8s  clock_check PASS
+  C   check_contracts.py rc 0       4.7s  inhibit_chain_c PASS, check_contracts PASS
+  C   interfaces.py      rc 0       1.9s  interfaces_c PASS
+  C   port_protect.py    rc 0       0.9s  port_protect_c PASS
+
+board C   pcb-c-display-c8 10 reading(s) in 13.2s: check_contracts PASS, clock_check PASS, derate PASS, edge_length INCONCLUSIVE, erc_gate PASS, inhibit_chain_c PASS, intent_rails PASS, interfaces_c PASS, pin_map_lands_c PASS, port_protect_c PASS
+retake_schematic_phase: done in 13.3s

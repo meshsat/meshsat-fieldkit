@@ -1,0 +1,72 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "energy_chain.py",
+  "files": {
+   "energy_chain.py": "2eb665d0e50ee781",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "4fd063ddc5515429",
+  "unresolved": []
+ },
+ "counts": {
+  "fail": 0,
+  "stages": 3
+ },
+ "denominator": 3,
+ "evidence": [],
+ "inputs": {
+  "chain": {
+   "path": "tools/pcb_energy_chain.yaml",
+   "sha256_16": "a09ca0293afd1f7c"
+  },
+  "derating": {
+   "path": "tools/pcb_fuse_derating.yaml",
+   "sha256_16": "5d1f81e183dcad49"
+  },
+  "netlist_e": {
+   "content16": "b8d237f0b8d759f5",
+   "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
+   "sha256_16": "d6137f50059e5cbc"
+  },
+  "netlist_p": {
+   "content16": "efe60479293f0004",
+   "path": "pcb-p-pack-p2/out/pcb-p-pack.net",
+   "sha256_16": "085f833362fbbda8"
+  },
+  "stages": "PACK_LEAD,DOCK_ENTRY,SHORE_INPUT"
+ },
+ "missing_input": null,
+ "note": "the stages of the stored-energy chain that sit on this board; the chain as a whole is energy_chain, and whether it is bounded end to end is that verdict's question",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "PWR-003": "797d38a9e68a76ac"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "PWR-003"
+ ],
+ "runtime": {
+  "python": "3.12.3"
+ },
+ "tool": "energy_chain_e",
+ "tools": {
+  "git_head": "a21eae092a53",
+  "tools_tree_sha": "d73b97b4332e9c6f"
+ },
+ "ts": "2026-09-27T15:36:55Z",
+ "verdict": "PASS",
+ "version": "a21eae092a53",
+ "writer": {
+  "file": "energy_chain.py",
+  "sha16": "2eb665d0e50ee781"
+ }
+}

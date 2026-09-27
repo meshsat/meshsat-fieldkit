@@ -263,3 +263,4 @@ adi/adi-ds3231sn.pdf   current   # DS3231SN, board B's holdover clock U9, the pa
 ti/ti-sn74lv1t08.pdf   current   # SN74LV1T08DBVR, board B's card-buck enable gates U116, U216, U316 (stream w4b, W4B-D3; SOURCES.yaml logic-and-lv1t08)
 rockblock/groundcontrol-docs-rockblock-9704-hardware-20260927.html   current   # the RockBLOCK 9704 hardware page: I_EN, P_EN, I_BTD and the startup and shutdown sequences (stream w4b, W4B-D1)
 rockblock/groundcontrol-docs-rockblock-9704-hardware-20260927.txt   current   # the plain-text rendering of the hardware page beside it
+pdi/ultrachip-uc8253c-a0.6.pdf   current   # UC8253c, the driver inside board C's E2370KS0C1 panel: EPD_VCC's supply currents (PWR-001, stream w4c; SOURCES.yaml epd-driver-uc8253c)

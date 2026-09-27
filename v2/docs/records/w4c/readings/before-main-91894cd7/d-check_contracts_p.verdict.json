@@ -1,0 +1,79 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "check_contracts.py",
+  "files": {
+   "boardtable.py": "41bd92e61f12c374",
+   "check_contracts.py": "5e14f456a0791c35",
+   "intent.py": "f1ac033e0f3c10f1",
+   "kisch.py": "3e28374d15be25e0",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "sch_prov.py": "a98e5a71ac74ccee",
+   "tx_inhibit.py": "67cba7a55beebc1d",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "86f82710cd723e3c",
+  "unresolved": []
+ },
+ "counts": {
+  "fail": 0,
+  "pass": 9,
+  "undecided": 0,
+  "unjudged": 0
+ },
+ "denominator": 9,
+ "evidence": [],
+ "inputs": {
+  "boards": "A,B,C,D,E,P",
+  "intent_e": {
+   "path": "pcb-e1-dock-e7/out/pcb-e1-dock-intent.json",
+   "sha256_16": "5913e38b20333d35"
+  },
+  "intent_p": {
+   "path": "pcb-p-pack-p2/out/pcb-p-pack-intent.json",
+   "sha256_16": "6ff1b8129a5c5aff"
+  },
+  "netlist_e": {
+   "content16": "b8d237f0b8d759f5",
+   "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
+   "sha256_16": "d6137f50059e5cbc"
+  },
+  "netlist_p": {
+   "content16": "efe60479293f0004",
+   "path": "pcb-p-pack-p2/out/pcb-p-pack.net",
+   "sha256_16": "085f833362fbbda8"
+  }
+ },
+ "missing_input": null,
+ "note": "the contracts that name this board; the set's own verdict is check_contracts",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "SCH-003": "ddf200a8e65c127b"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "SCH-003"
+ ],
+ "runtime": {
+  "python": "3.12.3"
+ },
+ "tool": "check_contracts_p",
+ "tools": {
+  "git_head": "91894cd7f196",
+  "tools_tree_sha": "784492a16eb43399"
+ },
+ "ts": "2026-09-27T15:36:30Z",
+ "verdict": "PASS",
+ "version": "91894cd7f196",
+ "writer": {
+  "file": "check_contracts.py",
+  "sha16": "5e14f456a0791c35"
+ }
+}

@@ -1,0 +1,146 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "intent_checks.py",
+  "files": {
+   "boardorder.py": "298e46edcc028954",
+   "boardtable.py": "41bd92e61f12c374",
+   "hardset.py": "be29a44c4a592876",
+   "intent.py": "f1ac033e0f3c10f1",
+   "intent_checks.py": "1ad7af0c718ba940",
+   "kicad_compat.py": "6b8f77490466e939",
+   "netclass.py": "4cc1adf0ddae0390",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "return_via.py": "b61d138e54955dd4",
+   "rules_lib.py": "c0458c53923d7925",
+   "signal_class.py": "60b8647301428da4",
+   "signalnets.py": "688be12d8e42e7a4",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "5aa3d5157698ae2a",
+  "unresolved": []
+ },
+ "counts": {
+  "census_nets": 188,
+  "checks": 7,
+  "declared_nodes": 13,
+  "declared_not_in_netlist": 0,
+  "declared_rails": 6,
+  "fail": 0,
+  "held_pin_roles": 55,
+  "nodes_supplying_parts": 0,
+  "power_nets": 6,
+  "rails_without_destination": 0,
+  "settled": 16,
+  "switches_unresolved": 0,
+  "undecided": 1,
+  "undeclared": 0,
+  "unmarked": 94
+ },
+ "denominator": 7,
+ "evidence": [
+  "census of the 188 nets: 6 counted, 27 declared node, 1 ground, 16 settled, 43 unconnected, 1 undecided, 94 unmarked",
+  "undecided, named and not counted (1): RLY_K",
+  "settled, they supply nothing (16): AMP_INL_N, AMP_INR_N, HS1_MIC_AC, HS2_MIC_AC, HUB_RST_n, HUB_XTAL1, HUB_XTAL2R, MICAMP_IN_N, MICAMP_OUT, PCM_VCOM1, PCM_VCOM2, PCM_VIN, PCM_XTI, PCM_XTO, TXSUP_CT, VREF",
+  "undecided, named and not counted: RLY_K: it carries the mark of a supply (M3 D2 joins it to the power net +5V_TX; M4 the switched return of D2, K1: the channel of Q2 sinks it to ground) and nothing read settles it: D2.2, K1.8, Q2.3",
+  "declared as a node, not a rail: AMP_CPN (supply pin by its held datasheet (U7.9 CPN: v2/vendor/ti/ti-tpa6132a2.pdf))",
+  "declared as a node, not a rail: AMP_CPP (supply pin by its held datasheet (U7.11 CPP: v2/vendor/ti/ti-tpa6132a2.pdf))",
+  "declared as a node, not a rail: AMP_HPVDD (supply pin by name (U7.12 HPVDD), and the intent's bypass list decouples it (C31:U7.12); supply pin by its held datashee)",
+  "declared as a node, not a rail: AMP_HPVSS (supply pin by name (U7.8 HPVSS), and capacitor C29 joins it to ground; supply pin by its held datasheet (U7.8 HPVSS: v2/)",
+  "declared as a node, not a rail: FLANGE_NTC (series conductor: the load R92 of rail +3V3 at 0.00 A)",
+  "declared as a node, not a rail: PCM_VCCA (supply pin by name (U6.15 VCCA), and the intent's bypass list decouples it (C20:U6.15); supply pin by its held datasheet)",
+  "declared as a node, not a rail: PCM_VCCL (supply pin by name (U6.19 VCCL), and the intent's bypass list decouples it (C21:U6.19); supply pin by its held datasheet)",
+  "declared as a node, not a rail: PCM_VCCP (supply pin by name (U6.26 VCCP), and the intent's bypass list decouples it (C23:U6.26); supply pin by its held datasheet)",
+  "declared as a node, not a rail: PCM_VCCR (supply pin by name (U6.21 VCCR), and the intent's bypass list decouples it (C22:U6.21); supply pin by its held datasheet)",
+  "declared as a node, not a rail: PCM_VDD (supply pin by name (U6.5 VDD), and the intent's bypass list decouples it (C19:U6.5); supply pin by its held datasheet (U)",
+  "settled, it supplies nothing: AMP_INL_N: nothing on it supplies: U7.1 INL- (signal, ti-tpa6132a2.pdf)",
+  "settled, it supplies nothing: AMP_INR_N: nothing on it supplies: U7.4 INR- (signal, ti-tpa6132a2.pdf)",
+  "settled, it supplies nothing: HS1_MIC_AC: only resistors, capacitors and test points",
+  "settled, it supplies nothing: HS2_MIC_AC: only resistors, capacitors and test points",
+  "settled, it supplies nothing: HUB_RST_n: nothing on it supplies: U4.4 RESET (reset, ti-tusb2046b.pdf)",
+  "settled, it supplies nothing: HUB_XTAL1: an oscillator net: Y1 is a crystal or resonator",
+  "settled, it supplies nothing: HUB_XTAL2R: an oscillator net: Y1 is a crystal or resonator",
+  "settled, it supplies nothing: MICAMP_IN_N: nothing on it supplies: U8.2 IN1\u2013 (signal, ti-tlv9062-op-amp.pdf)",
+  "settled, it supplies nothing: MICAMP_OUT: nothing on it supplies: U8.1 OUT1 (signal, ti-tlv9062-op-amp.pdf)",
+  "settled, it supplies nothing: PCM_VCOM1: nothing on it supplies: U6.11 VCOM1 (reference, ti-pcm2912a.pdf)",
+  "settled, it supplies nothing: PCM_VCOM2: nothing on it supplies: U6.12 VCOM2 (reference, ti-pcm2912a.pdf)",
+  "settled, it supplies nothing: PCM_VIN: nothing on it supplies: U6.16 VIN (signal, ti-pcm2912a.pdf)",
+  "settled, it supplies nothing: PCM_XTI: an oscillator net: Y2 is a crystal or resonator",
+  "settled, it supplies nothing: PCM_XTO: an oscillator net: Y2 is a crystal or resonator",
+  "settled, it supplies nothing: TXSUP_CT: nothing on it supplies: U21.3 CT (timing, ti-tps22810-load-switch.pdf)",
+  "settled, it supplies nothing: VREF: nothing on it supplies: U8.3 IN1+ (signal, ti-tlv9062-op-amp.pdf); U8.5 IN2+ (signal, ti-tlv9062-op-amp.pdf)"
+ ],
+ "inputs": {
+  "board": "d",
+  "document_1": {
+   "path": "v2/vendor/power/ti-tlv755p-ldo.pdf",
+   "sha256_16": "7eb7bc6935bf6c1d"
+  },
+  "document_2": {
+   "path": "v2/vendor/ti/ti-pcm2912a.pdf",
+   "sha256_16": "61d048c255190975"
+  },
+  "document_3": {
+   "path": "v2/vendor/ti/ti-tlv758p.pdf",
+   "sha256_16": "4a86306d6734f1f4"
+  },
+  "document_4": {
+   "path": "v2/vendor/ti/ti-tlv9062-op-amp.pdf",
+   "sha256_16": "18e67fa48b2a3c2e"
+  },
+  "document_5": {
+   "path": "v2/vendor/ti/ti-tpa6132a2.pdf",
+   "sha256_16": "e8a23e00bd0bbc17"
+  },
+  "document_6": {
+   "path": "v2/vendor/ti/ti-tps22810-load-switch.pdf",
+   "sha256_16": "10450eedecbc4542"
+  },
+  "document_7": {
+   "path": "v2/vendor/ti/ti-tusb2046b.pdf",
+   "sha256_16": "d02d0b8af5cbdb1b"
+  },
+  "intent": {
+   "path": "out/pcb-d-aprs-intent.json",
+   "sha256_16": "443fd745879d3022"
+  },
+  "netlist": {
+   "content16": "ecc07f382c735835",
+   "path": "out/pcb-d-aprs.net",
+   "sha256_16": "76700a687eb6187f"
+  },
+  "threshold_a": 0.0
+ },
+ "missing_input": null,
+ "note": "PWR-001 on the committed netlist and the intent file beside it: every power net is a declared rail, and every declared rail is a net of the netlist whose source and loads are on it. A power net is a power-symbol net, a net carrying a pin typed power_in or power_out, a net of a power class in the netlist, a net carrying a supply-named pin that a bypass entry, a capacitor to ground or a second supply pin corroborates, a net carrying a pin its held datasheet makes a supply, or a ground off a ground net (intent_checks.PIN_ROLES, each row carrying every power and ground pin of its table, each document recorded by sha), or a net a declared rail's current reaches through a two-terminal part or a transistor's channel, at a threshold of 0.00 A. FAIL CLOSED: every other net carrying the mark of a supply (a capacitor to ground, a capacitor to a power net or across one part's pins, a fuse, inductor, ferrite, diode, jumper, switch or link resistor to a power net, a transistor channel shared with one, the switched low side of a load, a lead whose other pins are all ground, a sense class) is settled only by what is read (a crystal, a held non-supply pin role, a gate, a sink to ground, a declared clamp, a switch to ground; on a lead or a sense net the connector carries what the read pins carry) and is otherwise undecided; an undecided net holds the reading at INCONCLUSIVE when nothing fails, and the census names every net's disposition. A power net declared as a node is reported, and refused when it carries the supply pins of two or more parts. Session decisions of 26 September 2026 under the owner's standing rule: the kinds of power net, the fail-closed marks and the undecided class, the 0 A threshold, the node rule",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "PWR-001": "6e91133d2ef9dee3"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "PWR-001"
+ ],
+ "runtime": {
+  "kicad": "9.0.9-9.0.9~ubuntu24.04.1",
+  "python": "3.12.3"
+ },
+ "tool": "intent_rails",
+ "tools": {
+  "git_head": "a21eae092a53",
+  "tools_tree_sha": "d73b97b4332e9c6f"
+ },
+ "ts": "2026-09-27T15:37:31Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "a21eae092a53",
+ "writer": {
+  "file": "intent_checks.py",
+  "sha16": "1ad7af0c718ba940"
+ }
+}

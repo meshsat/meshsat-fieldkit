@@ -1,0 +1,122 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "edge_length.py",
+  "files": {
+   "boardorder.py": "298e46edcc028954",
+   "boardtable.py": "41bd92e61f12c374",
+   "edge_length.py": "fd66cbd9bce2fa7b",
+   "hardset.py": "be29a44c4a592876",
+   "impedance_check.py": "e2495a04e16fc600",
+   "intent.py": "f1ac033e0f3c10f1",
+   "intent_checks.py": "1ad7af0c718ba940",
+   "kicad_compat.py": "6b8f77490466e939",
+   "netclass.py": "4cc1adf0ddae0390",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "return_via.py": "b61d138e54955dd4",
+   "rules_lib.py": "c0458c53923d7925",
+   "signal_class.py": "60b8647301428da4",
+   "signalnets.py": "688be12d8e42e7a4",
+   "stackup_write.py": "b55a3c0f58c805c2",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "9882ad1bc5620724",
+  "unresolved": []
+ },
+ "counts": {
+  "answered_nets": 18,
+  "classes": 45,
+  "contradicted_nets": 0,
+  "decided_nets": 20,
+  "layout_bound_nets": 2,
+  "low_speed_nets": 88,
+  "may_be_long_nets": 20,
+  "signal_nets": 135,
+  "undecided_nets": 27
+ },
+ "denominator": 135,
+ "evidence": [
+  "UNDECIDED (no declaration) (UNKNOWN, 8 net(s)): no signal-class declaration names these nets, so neither their class nor their edge is kno; ICs on them: ADS1115IDGSR 16-bit ADC at 0x48 (1 ADDR 2 ALERT/RDY 3 GND 4 AIN0 5 AIN1 6 AIN2 7 AIN3 8 VDD 9 SDA 10 SCL): the flange NTC over +3V3, ratiometric U22, TLV75801PDBVR adjustable LDO, +3V4_HUB 3.44 V for the hub (1 IN 2 GND 3 EN 4 FB 5 OUT) U17, TLV75801PDRVR adjustable LDO, PA gate bias VGG 4.48 V while PA_KEY is high (1 OUT 2 FB 3 GND 4 EN 5 DNC 6 IN 7 pad) U15, TPS22810DRV load switch, +5V_TX on while +3V3_D8 is above 2.23 to 2.78 V (EN/UVLO divider R90 R91, QOD through R95) U21",
+  "UNDECIDED EXP_INT (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: PCA9555PW 0x26: COS, PTT states, KEY, PA_KEY in; exciter PD, amplifier EN, codec mute out; eight spares U16",
+  "UNDECIDED HUB_RST_n (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: TUSB2046IBVFR four-port USB 2.0 full-speed hub (TI, LQFP-32 VF, -40 to 85 C, VCC 3.3 to 3.6 from +3V4_HUB; BUSPWR low = self-powered, EXTMEM high, GANGED high, TSTMODE low) U4",
+  "UNDECIDED HUB_XTAL* (HIGH_SPEED_DIGITAL, 3 net(s)): no edge is declared and no held document states one; ICs on them: TUSB2046IBVFR four-port USB 2.0 full-speed hub (TI, LQFP-32 VF, -40 to 85 C, VCC 3.3 to 3.6 from +3V4_HUB; BUSPWR low = self-powered, EXTMEM high, GANGED high, TSTMODE low) U4",
+  "UNDECIDED PCM_XT* (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: TI PCM2912A USB audio codec (TQFP-32): mono input from the exciter, stereo output to the headphone amplifier and the transmit sum U6",
+  "UNDECIDED RF_* (HIGH_SPEED_DIGITAL, 8 net(s)): no edge is declared and no held document states one; ICs on them: NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A) U2",
+  "UNDECIDED SA_RXD (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: CP2102N-A02-GQFN28 USB-UART bridge (SAU) U3, NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A) U2",
+  "UNDECIDED SA_TXD (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: CP2102N-A02-GQFN28 USB-UART bridge (SAU) U3, NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A) U2",
+  "UNDECIDED SCL (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: ADS1115IDGSR 16-bit ADC at 0x48 (1 ADDR 2 ALERT/RDY 3 GND 4 AIN0 5 AIN1 6 AIN2 7 AIN3 8 VDD 9 SDA 10 SCL): the flange NTC over +3V3, ratiometric U22, PCA9555PW 0x26: COS, PTT states, KEY, PA_KEY in; exciter PD, amplifier EN, codec mute out; eight spares U16",
+  "UNDECIDED SDA (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: ADS1115IDGSR 16-bit ADC at 0x48 (1 ADDR 2 ALERT/RDY 3 GND 4 AIN0 5 AIN1 6 AIN2 7 AIN3 8 VDD 9 SDA 10 SCL): the flange NTC over +3V3, ratiometric U22, PCA9555PW 0x26: COS, PTT states, KEY, PA_KEY in; exciter PD, amplifier EN, codec mute out; eight spares U16",
+  "LAYOUT_BOUND HUB_DM* (HIGH_SPEED_DIGITAL, 0.5 ns, critical 15.1 mm): HUB_DM4",
+  "LAYOUT_BOUND HUB_DP* (HIGH_SPEED_DIGITAL, 0.5 ns, critical 15.1 mm): HUB_DP4"
+ ],
+ "inputs": {
+  "board": "d",
+  "board_facts": {
+   "path": "tools/pcb_board_facts.yaml",
+   "sha256_16": "07af4d0f2b166694"
+  },
+  "board_table": {
+   "path": "tools/boards/d.json",
+   "sha256_16": "e0f787a8bfe117a1"
+  },
+  "critical_k": 6,
+  "document_1": {
+   "path": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
+   "sha256_16": "2ecb40606d4b84fe"
+  },
+  "extent_mm": 180.0,
+  "intent": {
+   "path": "out/pcb-d-aprs-intent.json",
+   "sha256_16": "443fd745879d3022"
+  },
+  "netlist": {
+   "content16": "ecc07f382c735835",
+   "path": "out/pcb-d-aprs.net",
+   "sha256_16": "76700a687eb6187f"
+  },
+  "project": {
+   "path": "pcb-d-aprs-d9/pcb-d-aprs.kicad_pro",
+   "sha256_16": "a820c200f1b4a542"
+  },
+  "slowest_layer": "JLC04161H-7628 F.Cu",
+  "stack_table": {
+   "path": "tools/stackup_write.py",
+   "sha256_16": "b55a3c0f58c805c2"
+  },
+  "stacks": [
+   "JLC04161H-7628"
+  ],
+  "t_pd_ps_per_mm": 5.521
+ },
+ "missing_input": null,
+ "note": "SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (UNDECIDED where none does), the critical length l = t_r / (k t_pd) on the slowest layer of every stack the board may be drawn on, and whether the netlist carries an impedance target, a series termination or a declaration where a net may be electrically long. The routed lengths are the layout gate's (edge_length_routed). The table is edge_length.table.json beside this verdict. Session decisions of 26 September 2026: LOW_SPEED_OR_DC asked no edge, the first matching entry decides, the slowest layer of the declared and ruled stacks, the stripline bound, the corner-to-corner extent, the project file's class where the netlist says Default",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "SI-001": "e67c393563c5d8ce"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "SI-001"
+ ],
+ "runtime": {
+  "python": "3.12.3"
+ },
+ "tool": "edge_length",
+ "tools": {
+  "git_head": "a21eae092a53",
+  "tools_tree_sha": "d73b97b4332e9c6f"
+ },
+ "ts": "2026-09-27T15:37:32Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "a21eae092a53",
+ "writer": {
+  "file": "edge_length.py",
+  "sha16": "fd66cbd9bce2fa7b"
+ }
+}

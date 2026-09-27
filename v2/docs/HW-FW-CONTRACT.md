@@ -193,6 +193,7 @@ those is DRAWN on `main` from that commit. `fnd/r8b` is still a candidate.
 | `fnd/r8e` (in `fnd/r8int1` bc0f562f) | FW-A16 | VIN_RAW declared at 14.10 A from both feeds; the 80 % rule stands |
 | `fnd/r8bat` | FW-C09, FW-P01 | the pack readings' 10 s fallback to the reduced mode; the round-8 charge window in the golden image |
 | `fnd/w4b` (r8int6) | FW-B13 | the RockBLOCK's ENABLE is EMCON_HW AND U6's request RB_SW_IEN in U536; the panel raises the request only with +5V_RB up and, after an EMCON, only once RB_STATUS reads low (`feasibility/EMCON.md` 4c) |
+| `fnd/w4c` | FW-C07; RAIL_SENSE, which no FW-C row covers yet (the contract writer's) | TX_INHIBIT_n's `R14` 2.2 k 1 % and `R50` 10 k 1 % (EQ-25): no firmware duty, nothing drives the line; RAIL_SENSE (GPIO 26, ADC0) now reads `LED_RAIL_SW` through the `R15`/`R51` divider (W4C-F1): about 2.5 V present, 0 V at BLACKOUT (PANEL.md section 3) |
 
 ## 5. Verification items this contract adds (V-nn)
 

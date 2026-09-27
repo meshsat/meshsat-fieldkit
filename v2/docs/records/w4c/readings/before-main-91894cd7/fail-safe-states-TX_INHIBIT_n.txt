@@ -1,0 +1,22 @@
+fragment A,B,C,D  down C      cut -                                        ok False v 1.085
+fragment B,C      down C      cut A-B J_AB1                                ok True  v None
+fragment A,D      down -      cut A-B J_AB1                                ok True  v 0.578
+fragment C        down C      cut B-C J_PANEL                              ok True  v None
+fragment A,B,D    down -      cut B-C J_PANEL                              ok True  v 0.385
+fragment C        down C      cut A-B J_AB1;B-C J_PANEL                    ok True  v None
+fragment A,D      down -      cut A-B J_AB1;B-C J_PANEL                    ok True  v 0.578
+fragment B        down -      cut A-B J_AB1;B-C J_PANEL                    ok True  v None
+fragment A,B,C    down C      cut A-D J_MEZZ1                              ok False v 1.103
+fragment D        down -      cut A-D J_MEZZ1                              ok True  v 0.525
+fragment B,C      down C      cut A-B J_AB1;A-D J_MEZZ1                    ok True  v None
+fragment A        down -      cut A-B J_AB1;A-D J_MEZZ1                    ok True  v 0.105
+fragment D        down -      cut A-B J_AB1;A-D J_MEZZ1                    ok True  v 0.525
+fragment C        down C      cut B-C J_PANEL;A-D J_MEZZ1                  ok True  v None
+fragment A,B      down -      cut B-C J_PANEL;A-D J_MEZZ1                  ok True  v 0.053
+fragment D        down -      cut B-C J_PANEL;A-D J_MEZZ1                  ok True  v 0.525
+fragment C        down C      cut A-B J_AB1;B-C J_PANEL;A-D J_MEZZ1        ok True  v None
+fragment A        down -      cut A-B J_AB1;B-C J_PANEL;A-D J_MEZZ1        ok True  v 0.105
+fragment D        down -      cut A-B J_AB1;B-C J_PANEL;A-D J_MEZZ1        ok True  v 0.525
+fragment B        down -      cut A-B J_AB1;B-C J_PANEL;A-D J_MEZZ1        ok True  v None
+fail: ["with board C unpowered (the line's source there is off), boards A, B, C, D: TX_INHIBIT_n rises to 1.09 V (the bound: with A's +3V3_EMCON up and every other part at the worse of its powered and unpowered current; ideal one-way elements, no forward drop; every pin's stated current, -40 to +85 C; pulls to a fixed node at the adverse end of their tolerance (5 percent where the value states none) and rails 5 percent high; series resistors and a maker's own pull nominal), at or above the 0.8 V VIL of the gates that read it (A U35 pin 1; A U37 pin 1); pull-downs A R145 100k, B R59 100k, D R2 100k; nothing lifts it; pin currents A U35 pin 1 (II, 74AUP1G08 AND) 0.5 uA, A U37 pin 1 (II, 74AUP1G08 AND) 0.5 uA, C U14 pin 3 unpowered (Ioff, 74LVC1G57 configurable gate) 10.0 uA, C U9 pin 2 unpowered (Ioff, 74LVC1G17 Schmitt buffer) 10.0 uA, D U12 pin 2 (Ioff, 74LVC1G08 AND, powered or not) 10.0 uA. The whole-board states that also fail: boards C, D unpowered and A, B powered 1.09 V; boards B, C, D unpowered and A powered 1.09 V; boards A, C unpowered and B, D powered 0.92 V"]
+undecided: []

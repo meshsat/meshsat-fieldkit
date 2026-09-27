@@ -329,7 +329,7 @@
    "hazard": "every transmitter in the kit is released",
    "safe_state": "low",
    "role": "source",
-   "why": "the panel's locking toggle SW_EMCON shorts it to ground and R14 holds it up, so the switch asserts by pulling low and the consumer boards each hold their own pull-down. On this board it is read only by logic inputs: U9 (the Schmitt buffer into EMCON_HW) and, since round 8 of MESHSAT-1357 (26 September 2026), U14, the EMCON lamp's NOR gate (SD-EMC-6); both state Ioff"
+   "why": "the panel's locking toggle SW_EMCON shorts it to ground and R14 (2.2k 1%) holds it up, so the switch asserts by pulling low and the consumer boards each hold their own pull-down; since EQ-25 (27 September 2026, stream w4c, S-64) R50 (10k 1%) holds it down on this board too, so with this board unpowered the line reads 0.24 V under the walk's worst-case Ioff sums (1.09 V before), and released it rests at 2.57 V (2.37 V at the adverse ends). On this board it is read only by logic inputs: U9 (the Schmitt buffer into EMCON_HW) and, since round 8 of MESHSAT-1357 (26 September 2026), U14, the EMCON lamp's NOR gate (SD-EMC-6); both state Ioff"
   },
   {
    "net": "EMCON_HW",

@@ -1,0 +1,112 @@
+{
+ "components_only_a": [],
+ "components_only_b": [
+  "R50",
+  "R51"
+ ],
+ "components_changed": {
+  "R14": {
+   "value": [
+    "10k",
+    "2.2k 1%"
+   ],
+   "field:LCSC": [
+    "C25804",
+    "C4190"
+   ]
+  }
+ },
+ "nets_only_a": {},
+ "nets_only_b": {},
+ "nets_changed": {
+  "/RAIL_SENSE": {
+   "removed": [],
+   "added": [
+    [
+     "R51",
+     "1"
+    ]
+   ],
+   "class": [
+    "Default",
+    "Default"
+   ]
+  },
+  "/TX_INHIBIT_n": {
+   "removed": [],
+   "added": [
+    [
+     "R50",
+     "1"
+    ]
+   ],
+   "class": [
+    "Default",
+    "Default"
+   ]
+  },
+  "GND": {
+   "removed": [],
+   "added": [
+    [
+     "R50",
+     "2"
+    ],
+    [
+     "R51",
+     "2"
+    ]
+   ],
+   "class": [
+    "PWR",
+    "PWR"
+   ]
+  }
+ },
+ "pins_moved": [
+  [
+   [
+    "R50",
+    "1"
+   ],
+   null,
+   "/TX_INHIBIT_n"
+  ],
+  [
+   [
+    "R50",
+    "2"
+   ],
+   null,
+   "GND"
+  ],
+  [
+   [
+    "R51",
+    "1"
+   ],
+   null,
+   "/RAIL_SENSE"
+  ],
+  [
+   [
+    "R51",
+    "2"
+   ],
+   null,
+   "GND"
+  ]
+ ],
+ "counts": {
+  "a": [
+   217,
+   153,
+   584
+  ],
+  "b": [
+   219,
+   153,
+   588
+  ]
+ }
+}

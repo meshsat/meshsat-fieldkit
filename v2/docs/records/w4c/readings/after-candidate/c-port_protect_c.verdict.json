@@ -1,0 +1,75 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "port_protect.py",
+  "files": {
+   "boardtable.py": "41bd92e61f12c374",
+   "intent.py": "f1ac033e0f3c10f1",
+   "kisch.py": "3e28374d15be25e0",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "port_protect.py": "2d69facd3c25c8a4",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "0fe457dc75321185",
+  "unresolved": []
+ },
+ "counts": {
+  "answered_in_part": 0,
+  "behind_an_active_part": 0,
+  "clamps": 0,
+  "clamps_one_way": 0,
+  "clamps_reversed": 0,
+  "clamps_symbol_mismatch": 0,
+  "clamps_unjudged": 0,
+  "declared": 2,
+  "not_on_netlist": 0,
+  "ports": 2,
+  "unprotected": 0
+ },
+ "denominator": 4,
+ "evidence": [],
+ "inputs": {
+  "board": "c",
+  "intent": {
+   "path": "out/pcb-c-display-intent.json",
+   "sha256_16": "270ebb4ccf1d0e8e"
+  },
+  "netlist": {
+   "content16": "ebde053efc0a3906",
+   "path": "out/pcb-c-display.net",
+   "sha256_16": "3fddbb3edcd4248a"
+  }
+ },
+ "missing_input": null,
+ "note": "every declared external conductor meets a protection part before a chip, and every clamp is drawn and placed the right way round",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "TRN-001": "5d38bd6db7d4e11f"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "TRN-001"
+ ],
+ "runtime": {
+  "python": "3.12.3"
+ },
+ "tool": "port_protect_c",
+ "tools": {
+  "git_head": "a21eae092a53",
+  "tools_tree_sha": "d73b97b4332e9c6f"
+ },
+ "ts": "2026-09-27T15:36:46Z",
+ "verdict": "PASS",
+ "version": "a21eae092a53",
+ "writer": {
+  "file": "port_protect.py",
+  "sha16": "2d69facd3c25c8a4"
+ }
+}

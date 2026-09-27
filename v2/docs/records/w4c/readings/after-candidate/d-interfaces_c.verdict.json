@@ -1,0 +1,67 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "interfaces.py",
+  "files": {
+   "interfaces.py": "7b7e4f3a0241cf35",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "4194f0262a1a8566",
+  "unresolved": []
+ },
+ "counts": {
+  "assignments": 1,
+  "disagreements": 0
+ },
+ "denominator": 1,
+ "evidence": [],
+ "inputs": {
+  "board": "c",
+  "intent": {
+   "path": "pcb-c-display-c8/out/pcb-c-display-intent.json",
+   "sha256_16": "270ebb4ccf1d0e8e"
+  },
+  "netlist": {
+   "content16": "ebde053efc0a3906",
+   "path": "pcb-c-display-c8/out/pcb-c-display.net",
+   "sha256_16": "3fddbb3edcd4248a"
+  },
+  "spec": {
+   "path": "tools/pcb_interfaces.yaml",
+   "sha256_16": "a30b5d408a3dab93"
+  }
+ },
+ "missing_input": null,
+ "note": "every interface's impedance target and matching tolerance against the specification of the part that defines it, from pcb_interfaces.yaml; the sources are the hosts' and the modules' own datasheets",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "INT-001": "6c054dd67edd4099"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "INT-001"
+ ],
+ "runtime": {
+  "python": "3.12.3"
+ },
+ "tool": "interfaces_c",
+ "tools": {
+  "git_head": "a21eae092a53",
+  "tools_tree_sha": "d73b97b4332e9c6f"
+ },
+ "ts": "2026-09-27T15:37:40Z",
+ "verdict": "PASS",
+ "version": "a21eae092a53",
+ "writer": {
+  "file": "interfaces.py",
+  "sha16": "7b7e4f3a0241cf35"
+ }
+}

@@ -381,21 +381,27 @@ verdict does not decide this table.
 
 Both lines are LOW when EMCON is asserted.
 
-- **Source.** `SW_EMCON` on board C, an APEM 5636ADKB-2V locking toggle, single pole ON-NONE-ON (lug 1
-  `TX_INHIBIT_n`, lug 2 GND, lug 3 unconnected; `gen_sch_c.py:115` to `117`, `:211`). Closed pulls `TX_INHIBIT_n` low
-  against R14 (10 k to C's +3V3) and C24 (10 nF) (`gen_sch_c.py:150`; `main-pcb-c-display.net:4113`).
-- **`TX_INHIBIT_n` is one conductor across four boards and three ribbons:** board C (R14, C24, TP10, U9's input) to
-  `J_PANEL` pin 11, board B (R59), `J_AB1` pin 16, board A (R145), `J_MEZZ1` pin 8, board D (R2, U12 pin 2)
-  (`main-pcb-c-display.net:4113`, `B-r6cand-pcb-b-compute.net:22317`, `A-r6cand-pcb-a-power.net:10816`,
+- **Source.** `SW_EMCON` on board C, an APEM 5636ADKB-2V locking toggle, single pole ON-NONE-ON (lug 1 `TX_INHIBIT_n`,
+  lug 2 GND, lug 3 unconnected; `gen_sch_c.py:115` to `117`, `:211`). Closed pulls `TX_INHIBIT_n` low against R14 and
+  C24 (10 nF) (`gen_sch_c.py:150`; `main-pcb-c-display.net:4113`), where R14 was 10 k to C's +3V3. Since EQ-25 (stream
+  w4c, 27 September 2026, SC-67) R14 is 2.2 k 1 percent and R50, 10 k 1 percent, holds the node to GND on board C as
+  well (`gen_sch_c.py`, the R14 line and the EQ-25 note at the end of the design; board C's netlist at sha256/16
+  3fddbb3edcd4248a).
+- **`TX_INHIBIT_n` is one conductor across four boards and three ribbons:** board C (R14, C24, TP10, U9's input, and
+  R50 since EQ-25) to `J_PANEL` pin 11, board B (R59), `J_AB1` pin 16, board A (R145), `J_MEZZ1` pin 8, board D (R2,
+  U12 pin 2) (`main-pcb-c-display.net:4113`, `B-r6cand-pcb-b-compute.net:22317`, `A-r6cand-pcb-a-power.net:10816`,
   `D-r6cand-pcb-d-aprs.net:4514`). Its neighbours on the flat cables are `ZEROIZE_HW` and `HDMI_SEL1` (panel ribbon
   pins 10 and 12), `EMCON_HW` and `SLOT_EN1` (`J_AB1` pins 15 and 17), `TR_APRS` and `PA_EN` (`J_MEZZ1` pins 7 and 9)
   (`v2/docs/records/rv-emc/readings/tx-inhibit-conductor.txt`).
 - **`EMCON_HW`** follows through U9, a 74LVC1G17 Schmitt buffer on board C (`gen_sch_c.py:166`;
   `main-pcb-c-display.net:3702`), and runs over `J_PANEL` pin 8 and `J_AB1` pin 15 to boards B and A. It is derived
   from the `TX_INHIBIT_n` node, so the two lines are not independent upstream of U9.
-- **Pull-downs that assert the lines with the source gone:** `TX_INHIBIT_n` has 100 k on A (R145), B (R59) and D (R2).
-  `EMCON_HW` has B's R58 at 10 k (candidate) and A's R102 at 100 k (`B-r6cand-pcb-b-compute.net:19944`,
-  `A-r6cand-pcb-a-power.net:9736`). Board A's round 8 netlist makes R102 10 k 1% (section 4a).
+- **Pull-downs that assert the lines with the source gone:** `TX_INHIBIT_n` has 100 k on A (R145), B (R59) and D (R2),
+  and since EQ-25 (stream w4c, 27 September 2026, SC-67) 10 k 1 percent on C (R50): with board C unpowered and the
+  panel ribbon in, the three 100 k alone let the stated Ioff of the gates on the line lift it to 1.09 V against the
+  0.8 V VIL the RF-002 walk applies (W3T-F1, section 4b), and with R50 it reads 0.24 V. `EMCON_HW` has B's R58 at 10 k
+  (candidate) and A's R102 at 100 k (`B-r6cand-pcb-b-compute.net:19944`, `A-r6cand-pcb-a-power.net:9736`). Board A's
+  round 8 netlist makes R102 10 k 1% (section 4a).
 - **Hardware readers of `EMCON_HW`:**
   - A's U26 pins 1 and 4 (SN74LVC08A); on board A's round 8 netlist U35 and U37 pin 2 (SN74AUP1G08, section 4a);
   - B's U19 pins 1, 9, 12 and U20 pin 1 (SN74LVC08A);
@@ -466,8 +472,10 @@ supply while its gate is off. "Shared" lists the section 3 items the row inherit
 - **Active level.** `TX_INHIBIT_n` LOW gives KEY LOW, U13 off, and pin 5 at the divider's level. The SA868 v1.3 pin
   table gives pin 5 as "0" TX and "1" RX, with no level stated for either.
 - **Default.** `TX_INHIBIT_n` follows the toggle. With the panel unpowered or any ribbon cut, R2, R145 and R59 hold it
-  low (tool: the `TX_INHIBIT_n` line PASS). R84 (10 k) holds KEY low against the gates' leakage when their own rail is at
-  0 V: 0.43 V at most against U19's 0.8 V VIL, 0.51 V with the harness +3V3 down too (`gen_sch_d.py:592`; r6d R6D-3).
+  low, and board C's R50 (10 k 1 percent, since EQ-25) with them wherever the panel ribbon stays in (tool: the
+  `TX_INHIBIT_n` line PASS on board C's netlist with R50, 0.243 V with the panel unpowered; without R50 it read FAIL
+  at 1.085 V, W3T-F1, section 4b). R84 (10 k) holds KEY low against the gates' leakage when their own rail is at 0 V:
+  0.43 V at most against U19's 0.8 V VIL, 0.51 V with the harness +3V3 down too (`gen_sch_d.py:592`; r6d R6D-3).
 - **Controller failure.** No controller can drive KEY:
   - D's PCA9555 U16 reads KEY and PA_KEY through the one-way buffers U19 and U20 and 1 k (R86, R87);
   - board C's RP2040 sees the PTT mirror only through U18 and R48 (220 Ohm);
@@ -1181,7 +1189,7 @@ of A's U35 and U37) into the line's three 100 kOhm pull-downs reaches 1.09 V ove
 before U14), and board D's SA868 keying inherits it. That is the L2 sum's counterpart on `TX_INHIBIT_n` (31 uA into
 35 k, where `EMCON_HW`'s 111.2 uA into 3.23 k reads 0.36 V), a FAIL under the walk's worst-case leakage convention
 (with the stated II at VCC 0 V the line reads about 0.42 V), not a demonstrated defect: finding W3T-F1, open item
-S-64, engineering question EQ-25, for board C's next circuit round (`v2/docs/records/w3t/`).
+S-64, engineering question EQ-25, for board C's next circuit round (`v2/docs/records/w3t/`). **Since stream w4c (EQ-25, 27 September 2026, SC-67, which closes S-64)** board C carries option (a): `R14` 2.2 k 1 percent and `R50`, 10 k 1 percent, from `TX_INHIBIT_n` to GND. On the regenerated netlist the walk reads the line PASS: 0.243 V with board C unpowered (1.085 V before) and 0.178 V with the A-D mezzanine out as well (1.103 V before); board D's SA868 keying returns to its own UNDECIDED (the SA_PTT_n threshold its maker does not state). Released, the line rests at 2.57 V (2.37 V at the adverse ends, 2.11 V before); asserted, the toggle's contact holds it at ground. Latency is unchanged in kind: asserting is the contact (settled within its 2 ms bounce); the release crosses U9's VT+ after about 31 us (`v2/docs/records/w4c/`).
 
 ## 4c. Stream w4b, board B: the RockBLOCK's ENABLE, L4 case (2) on the supply enables, the card rails on each slot's own 5 V, and RF-002's walk
 
