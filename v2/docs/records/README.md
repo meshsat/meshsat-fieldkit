@@ -24,6 +24,7 @@ Worktrees:
 | `r4t/` | the shared tools' author, rounds 4 to 7 (still being edited when this was filed) |
 | `r6d/` | board D's author, round 6 |
 | `r8d/` | board D's author, round 8 (the regeneration's independent comparison, gates and suite; filed at integration, 27 September 2026) |
+| `r8p/` | board P's author, round 8 (the regeneration's independent comparison and the second pass against the first, and the JLC record of F1's holder; filed at integration, 27 September 2026). Board P's generator names `drafts/p/` at `gen_sch_p.py:587` and `:598`: the stream's battery-packet drafts, landed in `v2/docs/review-packets/battery/` by the same commit |
 | `rv-bat/` | review stream BAT, the battery and protection review packet |
 | `rv-dec/` | review stream DEC, decision 42 (decoupling placement) |
 | `rv-emc/` | review stream EMC, the per-transmitter EMCON table |
@@ -87,6 +88,10 @@ Paths are relative to this folder; the source is the same path below `drafts/` i
 | `r8d/r8d_regen.sh` | `297651d22f4e3797360fb6517080c6a2e52865d81da9052aec7f0507dc155db1` | 8865 | `fnd/r8d` `drafts/d/records/r8d_regen.sh` | board D's round 8 commit (MESHSAT-1357) |
 | `r8d/r8d_set.sh` | `fa34ed5489c48ab438c3d9e98c465e8cdec35c5c4ce16a8ff092325496070a64` | 5804 | `fnd/r8d` `drafts/d/records/r8d_set.sh` | board D's round 8 commit (MESHSAT-1357) |
 | `r8d/r8d_suite.sh` | `c6ce1bdea945d1e606500e3f10dad8aa192e6b4609ff46d73080b9311e8efdc8` | 4908 | `fnd/r8d` `drafts/d/records/r8d_suite.sh` | board D's round 8 commit (MESHSAT-1357) |
+| `r8p/box/p1p2.txt` | `646d9a381f5eb076fa9b6012cdf7864c5f4f224ea2bc6b950b35c334b09f6b4f` | 2293 | `fnd/r8p` `drafts/p/box/p1p2.txt` | `v2/ecad/tools/pcb_requirements.yaml` (REQ-044) |
+| `r8p/box/par.txt` | `31644e678a7e539a1783cdba34655d9ae96d85ab80fd7b82f1c634b82d07fbd5` | 3115 | `fnd/r8p` `drafts/p/box/par.txt` | `v2/ecad/tools/pcb_requirements.yaml` (REQ-044, CFL-015, CFL-016, CON-016) |
+| `r8p/evidence/asked-Keystone_3568.txt` | `519f23ee3d8ffe0721c842337b0f41d41e80b77e9868c250fc839a2c5c35f45a` | 21 | `fnd/r8p` `drafts/p/evidence/asked-Keystone_3568.txt` | `v2/vendor/SOURCES.yaml` (pack-blade-fuse-holder) |
+| `r8p/evidence/jlc-Keystone_3568.json` | `0959de51a5f57256dfd3f3f8ce7083914d5d2bb64fdcec6a3ec1dee56e7cb59e` | 12422 | `fnd/r8p` `drafts/p/evidence/jlc-Keystone_3568.json` | `v2/vendor/SOURCES.yaml` (pack-blade-fuse-holder) |
 | `rv-bat/bat-integration-notes.md` | `af4516bccc528c3e309a9237fa060357ac26961de499458f0b19a6f9f640bc5b` | 12303 | `fnd/rv-bat` `drafts/bat-integration-notes.md` | `v2/docs/review-packets/battery/MANIFEST.md` |
 | `rv-bat/box/bat-cycle1/new/files/pcb-p-pack.net` | `4df605c1c9a9d2dbf17b4758cb1fe65205800668a19e30fb6f70b0daa1c4bfc4` | 91969 | `fnd/rv-bat` `drafts/box/bat-cycle1/new/files/pcb-p-pack.net` | `v2/docs/review-packets/battery/evidence/regeneration/test-pack-secondary-ts-runs.txt` |
 | `rv-bat/box/bat-cycle1/new/files/pcb-p-pack.net.prov.json` | `e6fe22a3cc3df7d6d08c2a0de930d6de4a4eca1bc5e876bccf967717b3f95638` | 8498 | `fnd/rv-bat` `drafts/box/bat-cycle1/new/files/pcb-p-pack.net.prov.json` | `v2/docs/review-packets/battery/evidence/regeneration/test-pack-secondary-ts-runs.txt` |
@@ -258,6 +263,8 @@ sed -e '3s|.*|    (source "/root/r6/a/run2/repo/v2/ecad/pcb-a-power-a23/pcb-a-po
 | `fnd/r4a` `drafts/box/fixup3-run2/x6main/pcb-a-power.net` | `e7c50a4f212a510a7df37693bd600af64539b2f3077ef7cb8e96bb150beb96c5` | `v2/docs/feasibility/EMCON.md` | `v2/docs/records/rv-emc/netlists/A-r6cand-pcb-a-power.net` (filed from `fnd/rv-emc`) |
 | `fnd/r6d` `drafts/box/rf002/new/pcb-d-aprs.net` | `9aae5bf93a104abcbf14568657b79d11704cb243971415fd0bc0ac6911263a94` | `v2/docs/evidence/WRONG-MODEL-RECONCILIATION.md` | `v2/docs/records/rv-emc/netlists/D-r6cand-pcb-d-aprs.net` (filed from `fnd/rv-emc`) |
 | `fnd/rv-fab` `drafts/fab/` (scripts and `out/`) | per file in `v2/docs/feasibility/fab/out/SHA256SUMS-scripts.txt` | `v2/docs/feasibility/FAILOVER-FABRIC.md` | filed by the integration of 26 September 2026 in `v2/docs/feasibility/fab/`, byte for byte except `out/fabmap.json`, whose two scratch paths were elided on filing; its `drafts/fab/txt/` extractions derive from PDFs held in `v2/vendor/` and were not filed |
+| `fnd/r8p` `drafts/p/evidence/jlc-C131337.json` | `2ee4d08175b47aa352577a4c716170e0e98be56c4ca775dbb1e6cb6e8af80c49` | `v2/vendor/SOURCES.yaml` (jst-ph-headers) | `v2/docs/review-packets/battery/evidence/jlc-r8p-C131337.json` (filed by board P's round 8 commit) |
+| `fnd/r8p` `drafts/p/evidence/jlc-C144395.json` | `ba023e4cf92f1e33e02ee8bfa6a8fe36c6d5d8e577511b6dd9f3601850f0481d` | `v2/vendor/SOURCES.yaml` (pack-and-lid-leads-jst-xh) | `v2/docs/review-packets/battery/evidence/jlc-r8p-C144395.json` (filed by board P's round 8 commit) |
 
 ## Maker documents: where each is filed in `v2/vendor/`
 

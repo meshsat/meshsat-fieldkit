@@ -217,7 +217,7 @@ r("R10", "2m 2512 2W (sense)", "GND", "PACK_N", "RS2512")                       
 # resistors: TI's circuit and EVM carry no capacitor on any TS input, the settling limit for one would be in the technical reference
 # manual (SLUUAQ3, not held), and one filtered input beside three unfiltered ones was not a design anybody chose.
 # The socket is JST B5B-PH-K-S(LF)(SN), LCSC C157993 (JLC API 26 September 2026: JST, stock 161,968), the five-way member of the
-# PH family whose two-way B2B-PH-K-S-GW (C5251182) this board already buys; KiCad's JST_PH_B5B-PH-K land is drawn for it.
+# PH family whose two-way B2B-PH-K-S(LF)(SN) (C131337, J_TS2 below) this board also buys; KiCad's JST_PH_B5B-PH-K land is drawn for it.
 part("J_TS", "Connector_Generic", "Conn_01x05", "JST-PH 1x5 socket for the four cell thermistors (Semitec 103AT-2, one per series group of the 4S3P block): TS1 TS2 TS3 TS4 VSS", "PH5",
      {"1": "TS1", "2": "TS2", "3": "TS3", "4": "TS4", "5": "GND"}, "C157993")
 r("R14", "10k", "PRES", "GND"); r("R15", "10k", "DISP", "GND")                                                  # embedded pack: present; no LED display
@@ -410,13 +410,13 @@ part("W_BN", "Connector", "Conn_01x01_Pin", "cell block B- (12 AWG from the bloc
 # item, as for the gauge's four. The property is held by tests/test_pack_secondary_ts.py, on fixtures and on this generator.
 # Codes (JLC API 26 September 2026, drafts/box/jlc-queries-bat.json): R34 UNI-ROYAL 0603WAF2700T5E, 270 ohm 1 percent 100 ppm/C, C22966
 # (basic, stock 801,146); R33 UNI-ROYAL 0603WAF1802T5E, 18 kohm 1 percent 100 ppm/C, C25810 (basic, stock 869,648; lcsc_fill's MAP has
-# no "18k" rule, so the code is carried here); J_TS2 JST B2B-PH-K-S-GW, C5251182 (JST, stock 37,049), MAP's cell-thermistor PH2 row.
+# no "18k" rule, so the code is carried here); J_TS2 JST B2B-PH-K-S(LF)(SN), C131337 since round 8 (R8P-03, on its part line below).
 synth("U2", "BQ77207", "BQ7720700DSSR: second-level cell OV 4.325 V / UV 2.25 V / open wire / OT 70 C on its own 103AT-2 (J_TS2), 3S-7S (SLUSEG7D)", "DSS12",
       {1: "SEC_VDD", 2: "SEC_V4", 3: "SEC_V4", 4: "SEC_V4", 5: "SEC_V4", 6: "SEC_V3", 7: "SEC_V2", 8: "SEC_V1", 9: "GND", 10: "SEC_COUT", 11: "SEC_DOUT", 12: "TS_SEC", 13: "GND"}, "C3681715")
 r("R33", "18k", "TS_SEC", "GND", lcsc="C25810")                                                             # the shunt that caps the network under every UT resistance at TUT_ACC
 r("R34", "270R", "TS_SEC", "TS_SEC_J", lcsc="C22966")                                                       # the series leg that puts the 70 C trip back
 part("J_TS2", "Connector_Generic", "Conn_01x02", "second-level cell thermistor socket, JST-PH 1x2 (Semitec 103AT-2 on the hottest cell): 1 TS_SEC_J, 2 VSS", "PH2",
-     {"1": "TS_SEC_J", "2": "GND"}, "C5251182")
+     {"1": "TS_SEC_J", "2": "GND"}, "C131337")   # R8P-03, round 8 (26 September 2026), owner condition 1: C5251182 orders JST B2B-PH-K-S-GW, a -GW suffix JST's PH catalogue (v2/vendor/connectors/jst-ph-catalogue.pdf, sha256 447624f4, page 3, "Header (Through-hole type)" table) does not list (v2/vendor/SOURCES.yaml jlc_retake_45bde541.condition_1_mismatches). C131337 is B2B-PH-K-S(LF)(SN), the table's own 2-circuit top-entry header ("Post: Copper alloy, tin-plated"; note 1 "This product displays (LF)(SN) on a label"), JLC API 2026-09-26T21:09Z: JST, stock 86,615. Same land, pins and nets
 # R23 carries its code (fix-up of 26 September 2026): no lcsc_fill MAP rule reads "300R". UNI-ROYAL 0603WAF3000T5E, 300 ohm 1 percent
 # 0603, LCSC C23025, a JLC basic part (JLC API 26 September 2026: stock 1,671,357).
 r("R23", "300R", "CELL4", "SEC_VDD", lcsc="C23025"); c("C14", "100n", "SEC_VDD", "GND")                        # RVD and CVD
@@ -511,7 +511,7 @@ r("R20", "100R", "SMBC_I", "SMBC"); r("R21", "100R", "SMBD_I", "SMBD")
 # counter sees every ampere. The lead's ground is STILL in parallel with the 12 AWG return between board P and board E: about 60 mohm
 # of 26 AWG and crimps against about 2.5 mohm of 12 AWG and XT60, so it carries roughly 4 percent of the return, about 0.7 A at 18 A.
 # That is a harness matter for board E's author and the harness owner (O-5), not a counting error.
-part("J_SMB", "Connector_Generic", "Conn_01x04", "SMBus lead to E6 J_SMB (JST-XH 1x4): SMBC SMBD GND(pack side of the shunt) PRES", "XH4", {"1": "SMBC", "2": "SMBD", "3": "PACK_N", "4": "PRES_J"})
+part("J_SMB", "Connector_Generic", "Conn_01x04", "SMBus lead to E6 J_SMB (JST-XH 1x4): SMBC SMBD GND(pack side of the shunt) PRES", "XH4", {"1": "SMBC", "2": "SMBD", "3": "PACK_N", "4": "PRES_J"}, "C144395")   # R8P-02, round 8 (26 September 2026), owner condition 1: the line carried no code and lcsc_fill.py:158's MAP filled C594232, JST B4B-XH-A-G (gold contacts per LCSC), which JST's XH catalogue (v2/vendor/connectors/jst-xh-catalogue.pdf, sha256 9426b136, page 5, Header "Top entry type" table) does not list (v2/vendor/SOURCES.yaml jlc_retake_45bde541). C144395 is B4B-XH-A(LF)(SN), the table's own 4-circuit header without boss ("Post: Brass, copper-undercoated, tin-plated"; note 1 "This product displays (LF)(SN) on a label"), JLC API 2026-09-26T21:09Z: JST, stock 108,967. Pinned here so no fill decides it; same land, pins and nets
 for i, net in enumerate(("BTP_INT", "FUSE", "CHG_R", "DSG_R", "SW", "FUSED", "PACK_P", "PACK_N", "SMBC", "SMBD", "FUSE_G", "SEC_DOUT", "SCP_OUT", "FUSE_GQ", "TS_SEC"), 1): part("TP%d" % i, "Connector", "TestPoint", net, "TP", {"1": net})   # TP11 to TP13 (round 4): the fuse gate, the second level's UV output and the protected cell node, for the commissioning checks; TP14 (fix-up, 26 September 2026): the FET side of JP1, so the arming is verified by continuity TP11 to TP14, COM (black) on TP14 (see JP1); TP15 (review stream BAT, 26 September 2026): the second level's TS node, read with J_TS2 plugged and unplugged to prove its NTC is connected (see U2)
 for i, net in enumerate(("CELL4", "CELL1", "CELL2", "CELL3", "PACK_P", "PACK_N", "FUSED", "SCP_OUT", "SW", "GND"), 1): part("#FLG%02d" % i, "power", "PWR_FLAG", "PWR_FLAG", "", {"1": net})
 # ----------------------------------------------------------------- emit (as B15)
@@ -573,4 +573,57 @@ print("nets:", len(nets), "single-pin nets (should be empty or intentional):", s
 # supply pins (26 September 2026: plus U2's VDD, C14). The cell sense RCs (C2 to C5), the PACK and coulomb-counter filters (C7, C9), U2's CIN ladder (C15 to C18),
 # the PTC capacitor (C13), the fuse gate capacitor (C19) and the terminal ESD capacitors (C11, C12) are not decoupling and are not listed (the
 # thermistor filter C10 is gone since round 4, F-PK-02); `intent.write` refuses an entry whose capacitor is not on that pin's net.
+#
+# R8P-01, ROUND 8 (26 September 2026): THE FOUR ENTRIES TAKE THEIR CLASS, ITEM G8 OF v2/docs/feasibility/DECOUPLING.md (decision 42,
+# section 6, class A: "an analog supply pin behind a series resistor, or a backup reservoir"; A1 topology, A2 the nearest free seat
+# outside the fan, no fixed millimetre bar; A3 PROVISIONAL for these protection parts until the qualified battery review answers).
+# Each entry carries its class and its basis, the maker's words with document, revision, section and page, read from the filed copies
+# (v2/vendor/battery/ti-bq4050.pdf, SLUSC67B Rev. B, sha256 2664e33f; v2/vendor/battery/ti-bq77207.pdf, SLUSEG7D Rev. D, sha256
+# 45c1c99e). NOTHING ELECTRICAL CHANGES: the protection circuit is frozen in front of that review (v2/docs/review-packets/battery/),
+# so no value, net or part moves, and the maker's figures are kept where the board has them (C1 2.2 uF; C14 100 nF with R23 300 ohm).
+# `intent.bypass` takes no class yet (DECOUPLING.md 8.1 T5, the tools owner's), so class, basis and provisional are written onto its entries;
+# schlayout reads only cap, part and pin, so the schematic does not move.
+# Reading the makers for G8 found that TI's application schematic has no capacitor from BAT or VCC to ground and feeds the two pins
+# differently (R8P-05, below in C6's and C8's basis): a question for the qualified reviewer, recorded in drafts/p/ for the battery
+# packet's owner, not a change here. It also found the bypass pair TI specifies across the two protection FETs, which this board does
+# not carry (R8P-06, W2's F-DC-03, VERIFIED from TI's text and schematics): SLUSC67B Rev. B 8.2.2.1.1, pp.29-30, "Capacitors C1 and C2
+# help protect the FETs during an ESD event. Using two devices ensures normal operation if one becomes shorted. To have good ESD
+# protection, the copper trace inductance of the capacitor leads must be designed to be as short and wide as possible. Ensure that the
+# voltage ratings of C1 and C2 are adequate to hold off the applied voltage if one of the capacitors becomes shorted"; Figure 22, p.30,
+# and Figure 21, p.28, draw TI's C1 and C2 (not this board's parts of those names), 0.1 uF each, in series from the cell side of the
+# charge FET (4P) to PACK+, across both FETs; 10.1.1 and Figure 47, p.44, ask for wide copper in the bypass capacitors' loop. Here the
+# pair would run from SCP_OUT to PACK_P across Q1 and Q2, beside the terminal pair C11 and C12 (8.2.2.1.5, p.32). Q1 and Q2 are parts
+# the battery packet lists and the protection circuit is frozen in front of its review, so whether to fit TI's 2 x 0.1 uF series pair,
+# each part rated to hold off the applied voltage alone with its partner shorted, goes to the qualified reviewer as question Q-P17
+# (drafts/p/), not a change here.
+_G8_CLASS_A = {
+ "C1": "backup reservoir on PBI. TI SLUSC67B Rev. B 8.2.2.2.2, p.33: 'The PBI pin is used as a power supply backup input pin "
+       "providing power during brief transient power outages. A standard 2.2-uF ceramic capacitor is connected from the PBI pin to "
+       "ground as shown in Figure 27' (Figure 21, p.28: C13 2.2 uF). Fitted: 2.2 uF, the maker's figure. Seat (A2): 10.1, p.43, "
+       "'Place all filter components as close as possible to the device'.",
+ "C6": "BAT, the primary supply, behind R5 100 ohm from CELL4. TI SLUSC67B Rev. B: 'The bq4050 gauge has an internal LDO that is "
+       "internally compensated and does not require an external decoupling capacitor' (8.2.2.2.2, p.33); 'The BAT pin should be "
+       "connected to the positive termination of the battery stack' (9, p.42); 'The BAT input uses a diode (D1) to isolate and "
+       "decouple it from the cells in the event of a transient dip in voltage caused by a short-circuit event' (8.2.2.3.1, p.37; "
+       "Figure 21, p.28: D1 BAT54HT1 from 4P, no capacitor from BAT to ground). The maker gives no figure for this RC: R5 and C6 are the board's "
+       "own, kept unchanged in front of the qualified battery review, which gets the difference as R8P-05. Seat (A1, A2): 10.1, "
+       "pp.42-43.",
+ "C8": "VCC, the secondary supply, behind R7 1 kohm from PACK_P. TI SLUSC67B Rev. B 9, p.42: 'The VCC pin is the secondary power "
+       "input ... The VCC pin should be connected to the common drain of the CHG and DSG FETs'; Figure 21, p.28, feeds it from the "
+       "common drain through R9 100 ohm with no capacitor from VCC to ground; 8.2.2.2.2, p.33: no external decoupling capacitor required. The "
+       "board feeds VCC from PACK_P (the discharge FET's source), not from SW (the common drain), and adds C8: kept unchanged in "
+       "front of the qualified battery review, which gets the difference as R8P-05. Seat (A1, A2): 10.1, pp.42-43.",
+ "C14": "VDD of the second-level protector, behind R23 300 ohm from CELL4 (RVD and CVD). TI SLUSEG7D Rev. D Table 8-1 (8.1.1, "
+        "p.14): supply voltage filter resistance RVD 100 min, 300 nom, 1k max ohm; capacitance CVD 0.05 min, 0.1 nom, 1 max uF. "
+        "Fitted: 300 ohm and 100 nF, the maker's nominal figures. Seat (A1, A2): 8.4.1, p.17, 'Ensure the RC filters for the Vn and "
+        "VDD pins are placed as close as possible to the target terminal'.",
+}
+_G8_PROVISIONAL = ("DECOUPLING.md 6 A3: class A removes any millimetre bar for the protection parts' filters and reservoir; it is the "
+                   "session's reading until the qualified battery review (D-09) answers, and is not settled here")
+_g8_seen = [b["cap"] for b in _intent._I["bypass"] if b["cap"] in _G8_CLASS_A]
+if sorted(_g8_seen) != sorted(_G8_CLASS_A):
+    raise SystemExit("R8P-01: the class A declarations name %s, the bypass entries carry %s" % (sorted(_G8_CLASS_A), sorted(_g8_seen)))
+for _b in _intent._I["bypass"]:
+    if _b["cap"] in _G8_CLASS_A:
+        _b.update({"class": "A", "basis": _G8_CLASS_A[_b["cap"]], "provisional": _G8_PROVISIONAL})
 _intent.write(OUT, PROJECT, P)   # 8 Sep 2026 (MESHSAT-862): design intent as data, out/<project>-intent.json

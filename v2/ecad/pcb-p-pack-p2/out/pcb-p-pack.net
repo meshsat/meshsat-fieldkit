@@ -1,7 +1,7 @@
 (export (version "E")
   (design
-    (source "/root/rv/bat/run/new/v2/ecad/pcb-p-pack-p2/pcb-p-pack.kicad_sch")
-    (date "2026-09-26T13:33:07+0000")
+    (source "/root/r8-p/tree/v2/ecad/pcb-p-pack-p2/pcb-p-pack.kicad_sch")
+    (date "2026-09-26T22:39:38+0000")
     (tool "Eeschema 9.0.9-9.0.9~ubuntu24.04.1")
     (sheet (number "1") (name "/") (tstamps "/")
       (title_block
@@ -383,10 +383,12 @@
       (value "SMBus lead to E6 J_SMB (JST-XH 1x4): SMBC SMBD GND(pack side of the shunt) PRES")
       (footprint "Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical")
       (fields
+        (field (name "LCSC") "C144395")
         (field (name "Footprint") "Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical")
         (field (name "Datasheet"))
         (field (name "Description")))
       (libsource (lib "Connector_Generic") (part "Conn_01x04") (description "Generic connector, single row, 01x04, script generated (kicad-library-utils/schlib/autogen/connector/)"))
+      (property (name "LCSC") (value "C144395"))
       (property (name "Sheetname") (value ""))
       (property (name "Sheetfile") (value "pcb-p-pack.kicad_sch"))
       (property (name "ki_keywords") (value "connector"))
@@ -413,12 +415,12 @@
       (value "second-level cell thermistor socket, JST-PH 1x2 (Semitec 103AT-2 on the hottest cell): 1 TS_SEC_J, 2 VSS")
       (footprint "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical")
       (fields
-        (field (name "LCSC") "C5251182")
+        (field (name "LCSC") "C131337")
         (field (name "Footprint") "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical")
         (field (name "Datasheet"))
         (field (name "Description")))
       (libsource (lib "Connector_Generic") (part "Conn_01x02") (description "Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"))
-      (property (name "LCSC") (value "C5251182"))
+      (property (name "LCSC") (value "C131337"))
       (property (name "Sheetname") (value ""))
       (property (name "Sheetfile") (value "pcb-p-pack.kicad_sch"))
       (property (name "ki_keywords") (value "connector"))
