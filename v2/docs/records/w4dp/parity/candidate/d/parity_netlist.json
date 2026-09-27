@@ -1,0 +1,92 @@
+{
+ "kind": "netlist",
+ "phase_labels": [
+  [
+   "D37P"
+  ],
+  [
+   "D37P"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  },
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  }
+ ],
+ "design_header": [
+  [
+   "/root/w3de/final/v2/ecad/pcb-d-aprs-d9/pcb-d-aprs.kicad_sch",
+   "2026-09-27T10:33:24+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ],
+  [
+   "/root/w4dp/cand/v2/ecad/pcb-d-aprs-d9/pcb-d-aprs.kicad_sch",
+   "2026-09-27T14:28:03+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ]
+ ],
+ "content_hash": [
+  "ecc07f382c735835",
+  "be4194ed867c8406"
+ ],
+ "counts": {
+  "comps": [
+   245,
+   245
+  ],
+  "nets": [
+   188,
+   188
+  ]
+ },
+ "comps_only_committed": [],
+ "comps_only_other": [],
+ "comps_changed": [
+  [
+   "D2",
+   {
+    "fields": [
+     {
+      "Footprint": "Diode_SMD:D_SOD-123"
+     },
+     {
+      "LCSC": "C81598",
+      "Footprint": "Diode_SMD:D_SOD-123"
+     }
+    ],
+    "properties": [
+     {
+      "Sheetname": "",
+      "Sheetfile": "pcb-d-aprs.kicad_sch",
+      "ki_keywords": "diode",
+      "ki_fp_filters": "D*SOD?123*"
+     },
+     {
+      "LCSC": "C81598",
+      "Sheetname": "",
+      "Sheetfile": "pcb-d-aprs.kicad_sch",
+      "ki_keywords": "diode",
+      "ki_fp_filters": "D*SOD?123*"
+     }
+    ]
+   }
+  ]
+ ],
+ "comps_uuid_shifted": 0,
+ "nets_only_committed": [],
+ "nets_only_other": [],
+ "nets_changed": [],
+ "changed_lines": 2,
+ "changed_lines_sample": [
+  "+        (field (name \"LCSC\") \"C81598\")",
+  "+      (property (name \"LCSC\") (value \"C81598\"))"
+ ],
+ "result": "DIFFERENT"
+}

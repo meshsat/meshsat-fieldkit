@@ -1,0 +1,72 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "safe_lines.py",
+  "files": {
+   "boardtable.py": "41bd92e61f12c374",
+   "intent.py": "f1ac033e0f3c10f1",
+   "kisch.py": "3e28374d15be25e0",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "port_protect.py": "2d69facd3c25c8a4",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "safe_lines.py": "8529487f405ec55d",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "7e3540d47e33f75e",
+  "unresolved": []
+ },
+ "counts": {
+  "floating": 0,
+  "lines": 2,
+  "listened": 1,
+  "on_netlist": 2
+ },
+ "denominator": 2,
+ "evidence": [
+  "TX_INHIBIT_n: safe low, pull down [R2 (100k)], pull up [none], drivers [none], reads [U12.2 (74LVC1G08 AND: KEY = PTT_ANY)], leaves on [J_HARN1.8]",
+  "ZEROIZE_HW: safe high, pull down [none], pull up [none], drivers [none], reads [none], leaves on [J_HARN1.15]"
+ ],
+ "inputs": {
+  "board": "d",
+  "intent": {
+   "path": "out/pcb-d-aprs-intent.json",
+   "sha256_16": "8d9f3b2256521b0d"
+  },
+  "netlist": {
+   "content16": "be4194ed867c8406",
+   "path": "out/pcb-d-aprs.net",
+   "sha256_16": "7a2c0ac2190b141a"
+  }
+ },
+ "missing_input": null,
+ "note": "1 line(s) this board reads hold the safe state with its own copper; the rest are driven here or only cross it",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "SCH-004": "0d3209a18476cc88"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "SCH-004"
+ ],
+ "runtime": {
+  "python": "3.12.3"
+ },
+ "tool": "safe_lines_d",
+ "tools": {
+  "git_head": "9490b0952437",
+  "tools_tree_sha": "43bf3db652f99a8a"
+ },
+ "ts": "2026-09-27T14:46:53Z",
+ "verdict": "PASS",
+ "version": "9490b0952437",
+ "writer": {
+  "file": "safe_lines.py",
+  "sha16": "8529487f405ec55d"
+ }
+}

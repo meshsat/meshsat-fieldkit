@@ -1,0 +1,18 @@
+{
+ "kind": "erc",
+ "violations": [
+  123,
+  123
+ ],
+ "by_type": [
+  {
+   "warning:lib_symbol_issues": 106,
+   "warning:unconnected_wire_endpoint": 17
+  },
+  {
+   "warning:lib_symbol_issues": 106,
+   "warning:unconnected_wire_endpoint": 17
+  }
+ ],
+ "result": "PARITY_AFTER_NOISE"
+}

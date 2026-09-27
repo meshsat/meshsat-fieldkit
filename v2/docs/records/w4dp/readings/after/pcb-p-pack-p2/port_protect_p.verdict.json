@@ -1,0 +1,71 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "port_protect.py",
+  "files": {
+   "boardtable.py": "41bd92e61f12c374",
+   "intent.py": "f1ac033e0f3c10f1",
+   "kisch.py": "3e28374d15be25e0",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "port_protect.py": "2d69facd3c25c8a4",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "0fe457dc75321185",
+  "unresolved": []
+ },
+ "counts": {
+  "clamps": 3,
+  "clamps_one_way": 1,
+  "clamps_reversed": 0,
+  "clamps_symbol_mismatch": 0,
+  "clamps_unjudged": 0,
+  "ports": 0,
+  "unprotected": 0
+ },
+ "denominator": 3,
+ "evidence": [],
+ "inputs": {
+  "board": "p",
+  "intent": {
+   "path": "out/pcb-p-pack-intent.json",
+   "sha256_16": "12f92bd3ce7a8264"
+  },
+  "netlist": {
+   "content16": "efe60479293f0004",
+   "path": "out/pcb-p-pack.net",
+   "sha256_16": "760ac6f74d62d194"
+  }
+ },
+ "missing_input": null,
+ "note": "this board declares that no conductor of its own leaves the enclosure, so the rule is true of it with nothing to check: Rule TRN-001, 16 September 2026. NOTHING ON BOARD P LEAVES THE ENCLOSURE, and this is the sentence that says so rather than a file nobody wrote. P is the pack's own protection and ",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "TRN-001": "5d38bd6db7d4e11f"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "TRN-001"
+ ],
+ "runtime": {
+  "python": "3.12.3"
+ },
+ "tool": "port_protect_p",
+ "tools": {
+  "git_head": "552748e11647",
+  "tools_tree_sha": "4ab49fc20a299683"
+ },
+ "ts": "2026-09-27T15:28:18Z",
+ "verdict": "PASS",
+ "version": "552748e11647",
+ "writer": {
+  "file": "port_protect.py",
+  "sha16": "2d69facd3c25c8a4"
+ }
+}

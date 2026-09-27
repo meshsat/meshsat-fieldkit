@@ -1,0 +1,73 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "pack_protection.py",
+  "files": {
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "pack_protection.py": "bcd644b9822c724d",
+   "phase_artefacts.py": "96642ce767188c73",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "6d0d821117a0fae9",
+  "unresolved": []
+ },
+ "counts": {
+  "checks": 45,
+  "devices": 5,
+  "fail": 1,
+  "functions": 9,
+  "limits": 14,
+  "software_only": 9
+ },
+ "denominator": 45,
+ "evidence": [
+  "BAT-001 asks for protection IN HARDWARE, INDEPENDENT OF ANY SOFTWARE, and 9 of 9 functions are implemented by a device whose thresholds live in firmware, with no second protector and no chemical fuse on this board: gen_sch_p.py: `no chemical fuse (the 25 A mini blade is the fuse)`, PTC and PTCEN tied off, and no second protector IC. Every CELL-LEVEL protection below is the"
+ ],
+ "inputs": {
+  "board": "p",
+  "cell_spec": {
+   "path": "../vendor/battery/samsung-35e-orbtronic.pdf",
+   "sha256_16": "5ec577b952b9dc51"
+  },
+  "netlist": {
+   "content16": "efe60479293f0004",
+   "path": "out/pcb-p-pack.net",
+   "sha256_16": "085f833362fbbda8"
+  },
+  "table": {
+   "path": "tools/pcb_pack_protection.yaml",
+   "sha256_16": "1cd670d6c7685645"
+  }
+ },
+ "missing_input": null,
+ "note": "every protection this requirement names, with the device that implements it, its configured threshold, the cell limit it is derived from (quoted and re-read from the cell maker's own specification) and the test that will demonstrate it on the prototype; the currents are judged at the pack's worst parallel count",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "BAT-001": "a52425ef3e75ea0c"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "BAT-001"
+ ],
+ "runtime": {
+  "python": "3.12.3"
+ },
+ "tool": "pack_protection",
+ "tools": {
+  "git_head": "91894cd7f196",
+  "tools_tree_sha": "784492a16eb43399"
+ },
+ "ts": "2026-09-27T14:30:05Z",
+ "verdict": "FAIL",
+ "version": "91894cd7f196",
+ "writer": {
+  "file": "pack_protection.py",
+  "sha16": "bcd644b9822c724d"
+ }
+}

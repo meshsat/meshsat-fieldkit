@@ -1,0 +1,55 @@
+{
+ "kind": "schematic",
+ "phase_labels": [
+  [
+   "D37P"
+  ],
+  [
+   "D37P"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N1_title_date": 1,
+   "N2_page_frame_date": 7,
+   "L1_comment1_phase": 1,
+   "L2_frame_phase": 7
+  },
+  {
+   "N1_title_date": 1,
+   "N2_page_frame_date": 7,
+   "L1_comment1_phase": 1,
+   "L2_frame_phase": 7
+  }
+ ],
+ "result": "DIFFERENT",
+ "parts_only_committed": [],
+ "parts_only_other": [],
+ "parts_changed": [
+  [
+   "D2",
+   [
+    "1N4148W coil flyback",
+    "D_SOD-123",
+    ""
+   ],
+   [
+    "1N4148W coil flyback",
+    "D_SOD-123",
+    "C81598"
+   ]
+  ]
+ ],
+ "lib_symbols_only_committed": [],
+ "lib_symbols_only_other": [],
+ "lib_symbols_changed": [],
+ "line_counts": [
+  16734,
+  16735
+ ],
+ "changed_lines": 1,
+ "changed_lines_sample": [
+  "+\t\t(property \"LCSC\" \"C81598\" (at 434.34 95.25 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))"
+ ],
+ "bucket_hint": "PARTS"
+}

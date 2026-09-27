@@ -1,0 +1,12 @@
+nodes added: CELL1 v_max=4.375 v_work=4.2
+nodes added: CELL2 v_max=8.75 v_work=8.4
+nodes added: CELL3 v_max=13.125 v_work=12.6
+nodes added: FUSE_G v_max=7.7 v_work=4.25
+nodes added: FUSE_GQ v_max=7.6 v_work=4.25
+nodes added: PBI v_max=16.8 v_work=16.8
+rails added: BAT_F v_work=16.8 fed_from=CELL4 always_on=True
+rails added: SCP_HTR v_work=16.8 switch=Q3 enable_net=FUSE_GQ
+rails added: SEC_VDD v_work=16.8 fed_from=CELL4 always_on=True
+rails added: SW v_work=16.8 series_of=SCP_OUT
+rails added: VCC_F v_work=16.8 switch=U1 enable_net=DSG_R fed_from=PACK_P
+every other key of main's intent: unchanged

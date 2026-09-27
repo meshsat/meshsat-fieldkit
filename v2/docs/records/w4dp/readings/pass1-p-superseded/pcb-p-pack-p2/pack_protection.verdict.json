@@ -1,0 +1,75 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "pack_protection.py",
+  "files": {
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "pack_protection.py": "bcd644b9822c724d",
+   "phase_artefacts.py": "96642ce767188c73",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "6d0d821117a0fae9",
+  "unresolved": []
+ },
+ "counts": {
+  "checks": 63,
+  "devices": 13,
+  "fail": 3,
+  "functions": 14,
+  "limits": 14,
+  "software_only": 9
+ },
+ "denominator": 63,
+ "evidence": [
+  "FUSE_OVER_CURRENT_DISCHARGE trips at 33.8 A and 3 cells in parallel are rated 24.0 A (max_continuous_discharge_ma)",
+  "SECOND_LEVEL_CELL_UNDER_VOLTAGE trips at 2.25, BELOW the cell maker's own overdischarge_protect_v of 2.3",
+  "SECOND_LEVEL_OVER_TEMPERATURE allows -inf to 70.0 and the cell maker allows -10.0 to 60.0"
+ ],
+ "inputs": {
+  "board": "p",
+  "cell_spec": {
+   "path": "../vendor/battery/samsung-35e-orbtronic.pdf",
+   "sha256_16": "5ec577b952b9dc51"
+  },
+  "netlist": {
+   "content16": "efe60479293f0004",
+   "path": "out/pcb-p-pack.net",
+   "sha256_16": "e0889e59db3a9e63"
+  },
+  "table": {
+   "path": "tools/pcb_pack_protection.yaml",
+   "sha256_16": "ab1dbc3f3f69aa46"
+  }
+ },
+ "missing_input": null,
+ "note": "every protection this requirement names, with the device that implements it, its configured threshold, the cell limit it is derived from (quoted and re-read from the cell maker's own specification) and the test that will demonstrate it on the prototype; the currents are judged at the pack's worst parallel count",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "BAT-001": "a52425ef3e75ea0c"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "BAT-001"
+ ],
+ "runtime": {
+  "python": "3.12.3"
+ },
+ "tool": "pack_protection",
+ "tools": {
+  "git_head": "9490b0952437",
+  "tools_tree_sha": "43bf3db652f99a8a"
+ },
+ "ts": "2026-09-27T14:47:20Z",
+ "verdict": "FAIL",
+ "version": "9490b0952437",
+ "writer": {
+  "file": "pack_protection.py",
+  "sha16": "bcd644b9822c724d"
+ }
+}

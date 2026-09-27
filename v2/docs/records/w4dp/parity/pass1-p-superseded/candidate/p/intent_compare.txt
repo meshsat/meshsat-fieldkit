@@ -1,0 +1,11 @@
+nodes added: CELL1
+nodes added: CELL2
+nodes added: CELL3
+nodes added: FUSE_G
+nodes added: FUSE_GQ
+nodes added: PBI
+rails added: BAT_F
+rails added: SCP_HTR
+rails added: SEC_VDD
+rails added: SW
+rails added: VCC_F

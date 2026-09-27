@@ -227,6 +227,7 @@ missing, not because the board has no rails.
 |---|---|---|---|---|---|
 | 1 | FUSED | 14.40 V | 10.00 A | F1 | F2 |
 | 2 | SCP_OUT | 14.40 V | 10.00 A | F2 | Q1 |
+| 3 | SCP_HTR | 14.40 V | 3.50 A | F2 | Q3 |
 
 **Measured, in this order, after the inputs are up.**
 
@@ -235,6 +236,10 @@ missing, not because the board has no rails.
 | 1 | PACK_N | 0.05 V (0.05 to 0.05) | W_N | R10 |
 | 2 | PACK_P | 14.40 V (13.68 to 15.12) | W_P | Q2 |
 | 3 | CELL4 | 14.40 V (13.68 to 15.12) | W_BP | F1 |
+| 4 | BAT_F | 14.40 V (13.68 to 15.12) | R5 | U1 |
+| 5 | VCC_F | 14.40 V (13.68 to 15.12) | R7 | U1 |
+| 6 | SEC_VDD | 14.40 V (13.68 to 15.12) | R23 | U2 |
+| 7 | SW | 14.40 V (13.68 to 15.12) | Q1 | Q2 |
 
 
 6 board(s) have an intent file in this tree and are listed. Every number here is a DESIGN figure from the

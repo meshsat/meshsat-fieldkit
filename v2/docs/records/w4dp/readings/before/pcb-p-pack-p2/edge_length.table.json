@@ -1,0 +1,296 @@
+{
+ "board": "p",
+ "counts": {
+  "answered_nets": 0,
+  "classes": 13,
+  "contradicted_nets": 0,
+  "decided_nets": 0,
+  "layout_bound_nets": 0,
+  "low_speed_nets": 22,
+  "may_be_long_nets": 0,
+  "signal_nets": 44,
+  "undecided_nets": 22
+ },
+ "inputs": {
+  "board": "p",
+  "board_facts": {
+   "path": "tools/pcb_board_facts.yaml",
+   "sha256_16": "07af4d0f2b166694"
+  },
+  "board_table": {
+   "path": "tools/boards/p.json",
+   "sha256_16": "fb26e422307afb21"
+  },
+  "critical_k": 6,
+  "extent_mm": 114.0,
+  "intent": {
+   "path": "out/pcb-p-pack-intent.json",
+   "sha256_16": "6ff1b8129a5c5aff"
+  },
+  "netlist": {
+   "content16": "efe60479293f0004",
+   "path": "out/pcb-p-pack.net",
+   "sha256_16": "085f833362fbbda8"
+  },
+  "project": {
+   "path": "pcb-p-pack-p2/pcb-p-pack.kicad_pro",
+   "sha256_16": "9c9da1f900f7ef59"
+  },
+  "slowest_layer": "JLC04162H-7628 In1.Cu",
+  "stack_table": {
+   "path": "tools/stackup_write.py",
+   "sha256_16": "b55a3c0f58c805c2"
+  },
+  "stacks": [
+   "2L-2oz",
+   "JLC04162H-7628"
+  ],
+  "t_pd_ps_per_mm": 6.997
+ },
+ "notes": [],
+ "rows": [
+  {
+   "basis": "",
+   "class": "UNKNOWN",
+   "drivers": {
+    "BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm": [
+     "U1"
+    ],
+    "BQ7720700DSSR: second-level cell OV 4.325 V / UV 2.25 V / open wire / OT 70 C on its own 103AT-2 (J_TS2), 3S-7S (SLUSEG7D)": [
+     "U2"
+    ]
+   },
+   "nets": [
+    "FUSE",
+    "FUSE_G",
+    "FUSE_GQ",
+    "PACK_F",
+    "PACK_MID",
+    "PRES_J",
+    "PTC",
+    "SCP_HTR",
+    "SEC_COUT",
+    "SEC_DOUT",
+    "SEC_V1",
+    "SEC_V2",
+    "SEC_V3",
+    "SEC_V4",
+    "SEC_VDD",
+    "TS_SEC",
+    "TS_SEC_J"
+   ],
+   "pattern": "(no declaration)",
+   "rise_ns": null,
+   "status": "UNDECIDED",
+   "why": "no signal-class declaration names these nets, so neither their class nor their edge is known"
+  },
+  {
+   "basis": "the battery sense node through its filter",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm": [
+     "U1"
+    ]
+   },
+   "nets": [
+    "BAT_F"
+   ],
+   "pattern": "BAT_F",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the gauge's battery-trip interrupt, an edge into the host",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm": [
+     "U1"
+    ]
+   },
+   "nets": [
+    "BTP_INT"
+   ],
+   "pattern": "BTP_INT",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a cell tap, a DC node of the pack",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "CELL1",
+    "CELL2",
+    "CELL3"
+   ],
+   "pattern": "CELL?",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the charge FET gate drive and its return, switched at most once per charge cycle",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm": [
+     "U1"
+    ]
+   },
+   "nets": [
+    "CHG_G",
+    "CHG_R"
+   ],
+   "pattern": "CHG_*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the display-request button input, pressed by a person",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm": [
+     "U1"
+    ]
+   },
+   "nets": [
+    "DISP"
+   ],
+   "pattern": "DISP",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the discharge FET gate drive and its return, the same",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm": [
+     "U1"
+    ]
+   },
+   "nets": [
+    "DSG_G",
+    "DSG_R"
+   ],
+   "pattern": "DSG_*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the push-button input of the gauge, the same",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm": [
+     "U1"
+    ]
+   },
+   "nets": [
+    "PBI"
+   ],
+   "pattern": "PBI",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the pack-present pin, a static level pulled through a resistor",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm": [
+     "U1"
+    ]
+   },
+   "nets": [
+    "PRES"
+   ],
+   "pattern": "PRES",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "SMBus at 100 kHz, open drain, the edge set by the pull-up and the bus capacitance",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm": [
+     "U1"
+    ]
+   },
+   "nets": [
+    "SMBC",
+    "SMBC_I",
+    "SMBD",
+    "SMBD_I"
+   ],
+   "pattern": "SMB*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a shunt sense line through its filter, millivolts of DC",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm": [
+     "U1"
+    ]
+   },
+   "nets": [
+    "SRN_F",
+    "SRP_F"
+   ],
+   "pattern": "SR?_F",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a thermistor divider, a DC level changing with temperature",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm": [
+     "U1"
+    ]
+   },
+   "nets": [
+    "TS1",
+    "TS2",
+    "TS3",
+    "TS4"
+   ],
+   "pattern": "TS?",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a cell-voltage sense line through its filter, DC by construction",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm": [
+     "U1"
+    ]
+   },
+   "nets": [
+    "VC1_F",
+    "VC2_F",
+    "VC3_F",
+    "VC4_F",
+    "VCC_F"
+   ],
+   "pattern": "VC?_F",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  }
+ ],
+ "rule": "SI-001"
+}

@@ -1,0 +1,26 @@
+{
+ "kind": "bom",
+ "rows": [
+  96,
+  96
+ ],
+ "rows_only_committed": [
+  [
+   "D2",
+   "1N4148W coil flyback",
+   "Diode_SMD:D_SOD-123",
+   "",
+   "1"
+  ]
+ ],
+ "rows_only_other": [
+  [
+   "D2",
+   "1N4148W coil flyback",
+   "Diode_SMD:D_SOD-123",
+   "C81598",
+   "1"
+  ]
+ ],
+ "result": "DIFFERENT"
+}

@@ -549,6 +549,118 @@ def layout(page_h):
     missing = [p["ref"] for p in P if p["ref"] not in placed]
     if missing: raise SystemExit("unplaced parts: %s" % missing)
     return x + COLW
+# PWR-001 ON BOARD P (stream w4dp, 27 September 2026, MESHSAT-1357; EQ-19's board P half). The reading on the committed netlist
+# (085f8333) was FAIL, 6 of 11: BAT_F, PBI, SEC_VDD, SW and VCC_F carried power and no declaration, and CELL1 to CELL3, FUSE_G,
+# FUSE_GQ and SCP_HTR carried the mark of a supply that nothing read settled. Every one is declared here from the makers' own
+# documents and this board's own parts, and NOTHING ELECTRICAL CHANGES: the protection circuit stays frozen in front of the
+# qualified battery review (v2/docs/review-packets/battery/), so no value, net, pin or part moves and the netlist is the one
+# that review holds; only the intent file this generator writes beside it gains the declarations. The rule's own kinds decide
+# rail or node (SC-57's reading of it): a supply branch fed through a board part is a RAIL (as board E's SGP_VDD), a part's own
+# internal supply or a tap is a NODE. Session decisions under the owner's standing rule of 26 September 2026 (W4DP-D3 in
+# drafts/w4dp/); each is reversed by a load on its net that the declaration does not name.
+#
+# BAT_F: the gauge's "Primary power supply input pin" (TI SLUSC67B Rev. B, pin table p.4, pin 32 BAT), behind R5 (100 ohm) and C6
+# from the cell stack CELL4. The gauge's NORMAL-mode supply current is 336 uA typical with CHG and DSG on (6.5, p.8); TI states no
+# maximum, so the typical figure is declared and R5 drops 34 mV at it. PTCEN (pin 24), an input of the gauge's PTC comparator
+# (6.23), sits on the same net as TI says ("Connect to BAT"). Nothing switches CELL4, so nothing switches this branch.
+_intent.rail("BAT_F", 14.4, 0.00034, 0.00034, "R5", loads={"U1": 0.00034}, fed_from="CELL4", converted=False, v_work=16.8,
+             always_on=True, always_on_why="the gauge's BAT branch behind R5 (100 ohm) from CELL4, the cell stack, which "
+                                           "nothing switches (CELL4's own declaration); a resistor is not a switch",
+             note="U1's primary supply (SLUSC67B pin 32, 'Primary power supply input pin'): 336 uA typical in NORMAL mode "
+                  "(6.5; no maximum stated), 75 and 52 uA in SLEEP, 1.6 uA in SHUTDOWN; R5 100 ohm and C6 100 nF are the "
+                  "board's own filter (R8P-05, a question for the qualified battery review)")
+# VCC_F: the gauge's "Secondary power supply input" (pin table p.4, pin 26 VCC), behind R7 (1 kohm) and C8 from the pack terminal
+# PACK_P. The gauge moves its supply from BAT to VCC only when BAT, the whole stack through R5, falls below VSWITCHOVER-, 1.95 to
+# 2.2 V (6.6, p.8): about 0.5 V a cell, far below the second level's under-voltage hold (2.25 V a cell, 9.0 V for the stack). So
+# in service this branch carries leakage, and only a stack that deep draws the gauge's whole NORMAL current through it (declared
+# as the peak). It is live when PACK_P is, so it is switched by what switches PACK_P: the gauge's DSG drive on DSG_R, PACK_P's
+# own declared switch.
+_intent.rail("VCC_F", 14.4, 0.0, 0.00034, "R7", loads={"U1": 0.00034}, fed_from="PACK_P", converted=False, v_work=16.8,
+             switch="U1", enable_net="DSG_R",
+             note="U1's secondary supply (SLUSC67B pin 26, 'Secondary power supply input'), from the pack terminal through "
+                  "R7 1 kohm: it takes over below BAT's 1.95 to 2.2 V switchover (6.6), so its typical current is zero and "
+                  "its peak the gauge's 336 uA NORMAL current (6.5); live whenever PACK_P is, which the gauge's DSG drive "
+                  "switches (PACK_P's declaration) or a charger holds up. TI's figure feeds VCC from the FETs' common drain "
+                  "through 100 ohm; this board's PACK_P feed is the difference R8P-05 puts to the qualified battery review")
+# SEC_VDD: the second level's "Power supply" (TI SLUSEG7D Rev. D, 12-Pin Functions p.4, pin 1 VDD), behind R23 (RVD 300 ohm) and
+# C14 (CVD) from CELL4 as Table 8-1 specifies. Supply current 3.5 uA at most with no fault and 25 uA at most with a fault and
+# COUT active (6.5, p.7), and while it drives COUT and DOUT high the outputs' current comes through this pin too: COUT into the
+# fuse gate divider (R29 20 kohm into R31 || R32 = 48.5 kohm with JP1 closed, 88 uA at the output's 6 V minimum, the arithmetic
+# at R29 below) and DOUT into R28 (100 kohm, 60 uA): 0.18 mA declared as the peak, a 54 mV drop in R23.
+_intent.rail("SEC_VDD", 14.4, 0.0000035, 0.00018, "R23", loads={"U2": 0.00018}, fed_from="CELL4", converted=False, v_work=16.8,
+             always_on=True, always_on_why="the second level's VDD branch behind R23 (300 ohm) from CELL4, the cell stack, which "
+                                           "nothing switches; the protector must be powered in every state, SHUTDOWN included",
+             note="U2's supply (SLUSEG7D pin 1 VDD; RVD 300 ohm and CVD 100 nF, Table 8-1): ICC 3.5 uA at most without a fault, "
+                  "25 uA at most with one (6.5), plus the COUT and DOUT drive while a fault holds them high, about 88 uA into "
+                  "the fuse gate divider and 60 uA into R28; 0.18 mA declared as the peak")
+# PBI: the gauge's "Power supply backup input pin" (pin table p.3, pin 1), which TI fits with "a standard 2.2-uF ceramic capacitor
+# ... from the PBI pin to ground" to provide "power during brief transient power outages" (8.2.2.2.2, p.33; C1 here). Nothing on
+# the board feeds it but the part itself (C1 is its only other connection), and it supplies only the part: a node. Its bound is
+# taken as the gauge's own supply, BAT or VCC, both at most the pack's 16.8 V at 4.20 V per cell (an inference: TI states no PBI
+# voltage; 6.3 lists PBI in the same 2.2 to 26 V supply range as BAT and VCC, and 6.1 the same 30 V absolute maximum).
+_intent.node("PBI", 16.8, "the BQ4050's own backup reservoir on pin 1 ('Power supply backup input pin', SLUSC67B pin table; C1 "
+             "2.2 uF per 8.2.2.2.2): fed by nothing on the board but the part, and bounded by the gauge's own BAT or VCC "
+             "supply, at most the pack's 16.8 V at 4.20 V per cell (TI states no PBI voltage; 6.3 and 6.1 rate it with BAT "
+             "and VCC); it supplies only U1", v_work=16.8)
+# SW: the common drain of the two protection FETs, the pack's whole current between Q1 and Q2 (10 A typical, 18 A peak, the
+# rails either side of it). A segment of the discharge path that SCP_OUT feeds, so its power is counted there (`series_of`), and
+# live whenever SCP_OUT is: with Q1 off its body diode still conducts from its source on SCP_OUT to its drain on SW. That is also
+# finding BAT-F20 (S-46, open and not answered here): with FET Options CHGIN = 1 the gauge holds Q1 off whenever the pack is not
+# charging, so the kit's discharge current crosses Q1's body diode, about 7 W on board P at 10 A.
+_intent.rail("SW", 14.4, 10.0, 18.0, "Q1", loads={"Q2": 10.0}, series_of="SCP_OUT", converted=False, v_work=16.8,
+             note="the common drain of Q1 and Q2 (CSD17570Q5B, TI SLPS471D), the pack's whole current: 10 A typical and 18 A "
+                  "peak as SCP_OUT and PACK_P carry it; discharge current enters through Q1 (its channel, or its body diode "
+                  "while the gauge holds CHG off: BAT-F20, S-46, open) and leaves through Q2, and charge current the other way")
+# SCP_HTR: the SCF9550-30-05's heater terminal (Eaton ELX1135 page 1, pin 3) to Q3's drain. With Q3 off it rests at the cell stack
+# through the heater (16.8 V at most); a protection event turns Q3 on and the heater carries 16.8 V / 4.8 ohm = 3.5 A at most
+# (10.5 V / 8.0 ohm = 1.3 A at least) for up to the 60 s Eaton gives it to open the fuse. That is long against a conductor's
+# thermal time constant, so the event current is declared as the typical one too: PI-001 judges this copper at 3.5 A as a
+# continuous current, which a heater path that must stay intact until F2 opens needs, and PI-003 its barrels at the same figure.
+_intent.rail("SCP_HTR", 14.4, 3.5, 3.5, "F2", loads={"Q3": 3.5}, switch="Q3", enable_net="FUSE_GQ", converted=False,
+             v_work=16.8,
+             note="the chemical fuse's heater return (Eaton SCF9550-30-05, ELX1135: heater 4.8 to 8.0 ohm, operating 10.5 to "
+                  "23.5 V, opens the fuse within 60 s): 1.3 to 3.5 A for up to 60 s while Q3 (AO3400A) is on, zero "
+                  "otherwise; declared at 3.5 A typical as well as peak because a 60 s event is a steady state for copper")
+# CELL1 to CELL3: the tap wires from J_CELL, sense and balance conductors of U1 (through R1 to R3, 100 ohm) and U2 (through R24 to
+# R26, 1 kohm), with no part taking a supply from them. Each is at most its count of cells at the highest a cell reaches before
+# hardware acts: the second level's over-voltage, 4.325 V, whose accuracy is +-20 mV from 0 to 60 C and +-50 mV from -40 to
+# 110 C (SLUSEG7D Device Comparison Table and 6.5, VOV_ACC), so 4.375 V per cell; in service 4.20 V per cell (Samsung
+# INR18650-35E Ver. 1.1, 3.2).
+for _k in (1, 2, 3):
+    _intent.node("CELL%d" % _k, round(4.375 * _k, 3), "cell tap %d of the 4S block (J_CELL pin %d): %d cell(s) in series, at "
+                 "most 4.375 V each before the second level acts (BQ7720700 over-voltage 4.325 V, +-50 mV from -40 to 110 C, "
+                 "SLUSEG7D 6.5) and 4.20 V each in service (Samsung 35E Ver. 1.1, 3.2); a sense and balance conductor of U1 "
+                 "and U2, no part takes its supply here" % (_k, _k + 1, _k), v_work=round(4.20 * _k, 3))
+# FUSE_G and FUSE_GQ: the fuse gate drive (see R29 to R32 above). Two sources drive FUSE_G. (1) The gauge's FUSE output: VOH 6 to 8.65 V
+# with VBAT at 8 V or more and at most VBAT below it, output impedance RAFEFUSE 2 to 3.2 kohm (SLUSC67B 6.20, p.13), through R30.
+# (2) The second level's COUT through R29. The BQ7720700 is the Active High 6V option (SLUSEG7D Device Comparison Table), which TI
+# states as "active HIGH with drive to 6V" (7.3.6), specifies at 6 V minimum at 100 uA (6.5, VOUT_AH), and uses in its system
+# example to drive FET gates directly ("For the BQ77207 device to drive the CHG and DSG FETs, the active high 6V option is
+# preferred", 8.2). Its level does not follow VDD: that is the separate Active High VDD option (6.5, VDD - VCOUT 0 to 1.5 V).
+# THE BOUND (second pass of 27 September 2026, correcting the first, which took COUT at VDD, 16.8 V, and missed that the
+# over-voltage state that drives COUT puts the stack at about 17.3 to 17.5 V, which on that basis would have put FUSE_GQ past
+# Q3's +-12 V). The node is a weighted mean of the gauge's branch and COUT's branch, so it is highest with the gauge at its
+# 8.65 V through its lowest impedance and R29 not loading: 8.65 x 51 / (2 + 5.1 + 51) = 7.59 V on FUSE_G with JP1 open, and
+# 8.65 x 48.5 / (2 + 5.1 + 48.5) = 7.55 V on FUSE_GQ with JP1 closed (R31 || R32); with every resistor 1 percent at its worst
+# (R30 low, R31 and R32 high) 7.61 V and 7.56 V, declared as 7.7 V and 7.6 V. COUT holds the node at or under those for any high
+# level up to 7.6 V, 1.6 V over the 6 V TI drives it to, and alone (the gauge's FUSE pin an input, 150 to 330 nA of pull-up) it
+# would need over 10 V to reach them. TI states no maximum for the 6V drive, so that level is this declaration's reading of
+# TI's "drive to 6V", not a figure TI prints; a TI maximum above 7.6 V, or a bench reading of the Active High 6V output (TP11 with
+# COUT driving, or TP12, DOUT's identical stage) above it, reverses the declaration. Q3's gate then sees at most 7.6 V against the
+# AO3400A's +-12 V VGS (AOS Rev 3.1). The design points are 4.25 V (COUT alone at 6 V, JP1 closed, v_work) and 3.78 V (the gauge
+# alone at its minimum); FUSE_GQ is 0 V through R32 while JP1 is open. Nodes: a gate drive supplies nothing.
+for _n, _vmax, _why in (("FUSE_G", 7.7, "the fuse gate drive where the gauge's FUSE (through R30) and the second level's COUT "
+                                       "(through R29) meet: at most 7.7 V, the gauge's 8.65 V VOH maximum through its 2 kohm "
+                                       "RAFEFUSE minimum and R30 into R31 with JP1 open (SLUSC67B 6.20; 7.61 V with 1 percent "
+                                       "resistors at their worst), COUT being the BQ7720700's Active High 6V drive (SLUSEG7D "
+                                       "7.3.6, 'drive to 6V'), which keeps the node under that bound for any high level up to "
+                                       "7.6 V; 4.25 V with COUT driving and 3.78 V with the gauge driving at their minima"),
+                        ("FUSE_GQ", 7.6, "Q3's gate behind the arming jumper JP1: FUSE_G's voltage once JP1 is closed, where R32 "
+                                         "joins R31, at most 7.6 V (the gauge's 8.65 V through 2 kohm and R30 into R31 || R32, "
+                                         "7.56 V with 1 percent resistors at their worst; COUT's Active High 6V drive under it "
+                                         "for any level up to 7.6 V), under the AO3400A's +-12 V VGS; 0 V through R32 while "
+                                         "JP1 is open")):
+    _intent.node(_n, _vmax, _why, v_work=4.25)
 _intent.bypass("C1", "U1", "1", "PBI")        # the backup supply on PBI
 _intent.bypass("C6", "U1", "32", "BAT_F")     # BAT, the primary supply
 _intent.bypass("C8", "U1", "26", "VCC_F")     # VCC, the secondary supply from the pack terminal

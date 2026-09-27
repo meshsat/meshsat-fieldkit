@@ -800,7 +800,35 @@ led("LED6", "green receive (AUDIO_ON low)", "LED_RX_A", "SA_AUDIO_ON_n"); r("R51
 #     rest: exciter ANT (3) -> 2 = RX node = 7 -> 6 = antenna SMA (receive, and the exciter's 2 W direct when the PA is off); keyed with the PA: 3 -> 4 = pad -> PA drive, PA output -> LPF -> 5 -> 6
 part("K1", "Relay", "G6K-2", "Omron G6K-2F-Y 5 VDC DPDT signal relay, T/R", "RELAY", {"1": "+5V_TX", "8": "RLY_K", "3": "RF_SA", "2": "RF_RX", "4": "RF_PAD_IN", "6": "RF_ANT", "7": "RF_RX", "5": "RF_LPF_OUT"})
 nfet("Q2", "RLY_DRV", "GND", "RLY_K", "2N7002 relay coil"); r("R52", "1k", "PA_KEY", "RLY_DRV"); r("R53", "100k", "RLY_DRV", "GND")
-part("D2", "Diode", "1N4148W", "1N4148W coil flyback", "SOD123", {"1": "+5V_TX", "2": "RLY_K"}); c("C57", "100n", "+5V_TX", "GND")   # the coil, its flyback and its capacitor on U21's +5V_TX since round 8 (EMCON L4)
+# D2 CARRIES ITS ORDER CODE (S-76 and EQ-21's class, stream w4dp, 27 September 2026, MESHSAT-1357). It was a bare "1N4148W"
+# that only lcsc_fill.py's MAP turned into a code at the JLC BOM stage, so the schematic named a class and no maker. The code is
+# the one that fill already chose and JLC-CERTIFIED.tsv certified on 26 September 2026 (row "1N4148W coil flyback", D_SOD-123):
+# LCSC C81598, 1N4148W by SEMTECH ELECTRONICS LTD. (LCSC's brand "ST(Semtech)", not Semtech Corporation), SOD-123, a JLC basic
+# part; JLC API 2026-09-27: stock 5,220,610, "150mA 1A 1V@50mA 1uA@75V 400mW 4ns 75V". The maker's sheet as LCSC serves it is
+# filed as v2/vendor/power/st-semtech-1n4148w-c81598.pdf (Rev 05, 20/09/2016, sha256 54de8e40, the file grade-sources.yaml
+# already read for its 150 C junction). PINS PER THAT SHEET'S PINNING TABLE: 1 cathode, 2 anode (SOD-123, marking W1), which is
+# KiCad's Diode:1N4148W (1 K, 2 A) and its D_SOD-123 land (pad 1 the cathode band): the cathode on +5V_TX and the anode on the
+# coil's switched end, the flyback orientation. Ratings from the same sheet: VR 75 V, IF(AV) 150 mA, IFSM 1 A for 1 ms,
+# VF at most 0.855 V at 10 mA, 1.0 V at 50 mA and 1.25 V at 150 mA (25 C), trr at most 4 ns. The value text is unchanged, so the
+# certified row still matches (Comment, Footprint) and no pin, net or land moves: the netlist changes by D2's LCSC field alone.
+part("D2", "Diode", "1N4148W", "1N4148W coil flyback", "SOD123", {"1": "+5V_TX", "2": "RLY_K"}, "C81598"); c("C57", "100n", "+5V_TX", "GND")   # the coil, its flyback and its capacitor on U21's +5V_TX since round 8 (EMCON L4)
+# PWR-001 (S-76, stream w4dp, 27 September 2026, MESHSAT-1357): RLY_K WAS THE BOARD'S LAST UNDECIDED NET. It is the relay coil's
+# switched low end (K1 pin 8, Q2's drain, D2's anode): M3 joins it to +5V_TX through D2 and M4 reads Q2 sinking it to ground,
+# and nothing on it takes a supply, so it is declared a node the way the rule's text says (a switch's current path), as the
+# stream w3de declared the headset lines. Its voltage: at rest it sits at +5V_TX through the coil, 5.23 V at most (+5V_TX's
+# v_work); with Q2 on it is at Q2's drop; at release the coil's current commutates into D2 and the node rises to +5V_TX plus
+# D2's forward drop. That current is the coil's own: 21.1 mA at 5 V into 237 ohm (Omron G6K, Cat. No. K106-E1-11, the 5 VDC
+# coil row), whose resistance is stated at 23 C +-10 percent; at 5.23 V, -10 percent and the copper's fall to -20 C (about 17
+# percent over 43 K, the copper coefficient and not an Omron figure) it is at most about 30 mA. D2's sheet gives VF at most
+# 1.0 V at 50 mA and 1.25 V at 150 mA at 25 C and no temperature coefficient, so the node is declared at 5.23 + 1.25 = 6.5 V:
+# the 150 mA row bounds a 30 mA current with room for the cold end a silicon junction's drop rises into. Parts on it: Q2
+# (2N7002, VDS 60 V), D2 (VR 75 V, reverse-biased at most 5.23 V with Q2 on) and the coil. Session decision under the owner's
+# standing rule of 26 September 2026 (W4DP-D2 in drafts/w4dp/); reverse by a part on RLY_K that draws its supply from it.
+_intent.node("RLY_K", 6.5, "the T/R relay coil's switched low end (K1 pin 8, Q2 drain, D2 anode): at rest +5V_TX through the "
+             "coil (5.23 V at most, +5V_TX's v_work), at release +5V_TX plus D2's forward drop while the coil's current "
+             "(at most about 30 mA: Omron G6K 5 VDC coil, 21.1 mA and 237 ohm +-10 percent at 23 C, colder copper lower) "
+             "commutates into D2, whose maker states VF at most 1.25 V at 150 mA (SEMTECH ELECTRONICS 1N4148W Rev 05, "
+             "LCSC C81598); no part takes its supply here", v_work=5.23)
 r("R54", "27 1% 2010", "RF_PAD_IN", "RF_PAD_M", "R2010"); r("R55", "36 1% 2010", "RF_PAD_M", "GND", "R2010"); r("R56", "27 1% 2010", "RF_PAD_M", "RF_DRV", "R2010")   # 10 dB T-pad, 0.5 W in, 50 mW to the PA
 part("J_PAIN", "Connector", "Conn_Coaxial", "U.FL socket: PA drive (coax to the RA30H1317M1 input on the plate)", "UFL", {"1": "RF_DRV", "2": "GND"}, "C88373")
 part("J_PAOUT", "Connector", "Conn_Coaxial", "SMA jack: PA output (coax from the RA30H1317M1 output on the plate)", "SMA", {"1": "RF_PAOUT", "2": "GND"}, "C3174425")

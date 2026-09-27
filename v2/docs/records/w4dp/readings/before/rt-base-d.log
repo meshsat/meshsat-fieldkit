@@ -1,0 +1,43 @@
+retake_schematic_phase: a verdict directory; verdicts to /root/w4dp/rt-base/<phase>/out
+  T=/root/w4dp/base/v2/ecad/tools  E=/root/w4dp/base/v2/ecad  (every command: cd <cwd>; VERDICT_DIR=<cwd>/out python3 ...)
+
+board D  pcb-d-aprs-d9  declared phase D12  netlist pcb-d-aprs-d9/out/pcb-d-aprs.net
+  ENV-001  BLOCKER                                               desk review of a pinned document: re-reviewed, not re-taken
+  SCH-001  BLOCKER      erc_gate                                 re-take
+  SCH-004  BLOCKER      safe_lines_d                             re-take
+  SCH-005  BLOCKER      pin_map_lands_d                          re-take
+  CMP-001  BLOCKER      derate                                   re-take
+  PWR-001  BLOCKER      intent_rails                             re-take
+  SI-001   MUST_JUSTIFY edge_length                              re-take
+  CLK-001  BLOCKER      clock_check                              re-take
+  RF-002   BLOCKER      inhibit_chain_d                          re-take
+  INT-001  BLOCKER      interfaces_d,check_contracts             re-take
+  TRN-001  BLOCKER      port_protect_d                           re-take
+  TST-001  MUST_JUSTIFY                                          desk review of a pinned document: re-reviewed, not re-taken
+  10 command(s), cwd /root/w4dp/rt-base/pcb-d-aprs-d9
+    $ python3 $T/erc_gate.py . pcb-d-aprs --run   # SCH-001
+    $ python3 $T/safe_lines.py out/pcb-d-aprs.net   # SCH-004
+    $ python3 $T/pin_map_lands.py out/pcb-d-aprs.net d   # SCH-005
+    $ python3 $T/derate.py out/pcb-d-aprs.net   # CMP-001
+    $ python3 $T/intent_checks.py --netlist out/pcb-d-aprs.net   # PWR-001
+    $ python3 $T/edge_length.py --netlist out/pcb-d-aprs.net   # SI-001
+    $ python3 $T/clock_check.py out/pcb-d-aprs.net   # CLK-001
+    $ python3 $T/check_contracts.py $E   # RF-002, INT-001
+    $ python3 $T/interfaces.py   # INT-001
+    $ python3 $T/port_protect.py out/pcb-d-aprs.net   # TRN-001
+
+plan: 10 command(s) over 1 board(s): D 10; 0 error(s)
+
+  D   erc_gate.py        rc 0       1.7s  erc_gate PASS
+  D   safe_lines.py      rc 0       0.7s  safe_lines_d PASS
+  D   pin_map_lands.py   rc 0       0.6s  pin_map_lands_d PASS
+  D   derate.py          rc 0       0.8s  derate PASS
+  D   intent_checks.py   rc 3       1.0s  intent_rails INCONCLUSIVE
+  D   edge_length.py     rc 3       0.9s  edge_length INCONCLUSIVE
+  D   clock_check.py     rc 0       0.8s  clock_check PASS
+  D   check_contracts.py rc 0       4.8s  inhibit_chain_d FAIL, check_contracts PASS
+  D   interfaces.py      rc 0       1.9s  interfaces_d PASS
+  D   port_protect.py    rc 0       0.9s  port_protect_d PASS
+
+board D   pcb-d-aprs-d9 11 reading(s) in 14.1s: check_contracts PASS, clock_check PASS, derate PASS, edge_length INCONCLUSIVE, erc_gate PASS, inhibit_chain_d FAIL, intent_rails INCONCLUSIVE, interfaces_d PASS, pin_map_lands_d PASS, port_protect_d PASS, safe_lines_d PASS
+retake_schematic_phase: done in 14.3s

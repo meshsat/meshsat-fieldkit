@@ -155,6 +155,7 @@ diodes/diodes-smbj-ds19002.pdf   current   # SMBJ58A-13-F, board B's PoE clamp D
 nexperia/nexperia-pesd12vl1ba.pdf   current   # PESD12VL1BA, board D's microphone clamps D10 and D13
 power/aos-ao3400a-n-mosfet.pdf   current   # AO3400A, board P's fuse heater FET Q3
 power/jscj-2n7002-c8545.pdf   current   # the JSCJ 2N7002 behind C8545, the logic N-FET on B, D and P
+power/st-semtech-1n4148w-c81598.pdf   current   # the SEMTECH ELECTRONICS 1N4148W behind C81598, board D's relay flyback D2
 power/littelfuse-smbj-series-tvs.pdf   current   # Littelfuse SMBJ series: SMBJ6.0A (D D1) and SMBJ18A (A D4)
 power/mdd-smbj-series-tvs.pdf   current   # MDD SMBJ series: SMBJ5.0A (A, B, D clamps) and SMBJ20A (P D1)
 power/panjit-ss2020fl-series.pdf   current   # PANJIT SS2040FL, board C's e-paper boost rectifiers D19 to D21

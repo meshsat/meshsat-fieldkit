@@ -1,0 +1,341 @@
+{
+ "boards": [
+  {
+   "letter": "p",
+   "phase_dir": "pcb-p-pack-p2",
+   "refused": null,
+   "steps": [
+    {
+     "writer": "erc_gate.py",
+     "rules": [
+      "SCH-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/w4dp/candr/v2/ecad/tools/erc_gate.py",
+      ".",
+      "pcb-p-pack",
+      "--run"
+     ],
+     "rc": 0,
+     "seconds": 1.4,
+     "readings": {
+      "erc_gate": {
+       "result": "PASS",
+       "ts": "2026-09-27T15:28:04Z",
+       "written": true,
+       "denominator": 125,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "erc_gate: warning  unconnected_wire_endpoint                17\nerc_gate: netlist tied: the report, the schematic and the netlist's own provenance agree on schematic a58d0eecc7ab\nerc_gate: no blocking error (125 violations, 0 error(s) allow-listed with a reason, warnings 125)\nverdict: erc_gate               PASS         of 125 {\"allowed\": 0, \"blocking\": 0, \"violations\": 125}",
+     "t0": 1790522884.2883697
+    },
+    {
+     "writer": "safe_lines.py",
+     "rules": [
+      "SCH-004"
+     ],
+     "argv": [
+      "python3",
+      "/root/w4dp/candr/v2/ecad/tools/safe_lines.py",
+      "out/pcb-p-pack.net"
+     ],
+     "rc": 0,
+     "seconds": 0.7,
+     "readings": {
+      "safe_lines_p": {
+       "result": "PASS",
+       "ts": "2026-09-27T15:28:05Z",
+       "written": true,
+       "denominator": 0,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "safe_lines: board P declares 0 safety line(s)\nverdict: safe_lines             PASS         of 0 {\"floating\": 0, \"lines\": 0, \"listened\": 0, \"on_netlist\": 0} | this board declares that no line of its own inhibits a hazard, with its reason",
+     "t0": 1790522885.7357168
+    },
+    {
+     "writer": "pin_map_lands.py",
+     "rules": [
+      "SCH-005"
+     ],
+     "argv": [
+      "python3",
+      "/root/w4dp/candr/v2/ecad/tools/pin_map_lands.py",
+      "out/pcb-p-pack.net",
+      "p"
+     ],
+     "rc": 0,
+     "seconds": 0.6,
+     "readings": {
+      "pin_map_lands_p": {
+       "result": "PASS",
+       "ts": "2026-09-27T15:28:06Z",
+       "written": true,
+       "denominator": 85,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "pin_map_lands: board P: 85 part(s) judged against their land, 0 failure(s), 0 pin(s) on a merged pad, 0 land(s) unreadable\nverdict: pin_map_lands_p        PASS         of 85 {\"failures\": 0, \"judged\": 85, \"merged_pad_pins\": 0, \"unreadable\": 0} | every part's map names every pad of its land",
+     "t0": 1790522886.4197123
+    },
+    {
+     "writer": "derate.py",
+     "rules": [
+      "CMP-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/w4dp/candr/v2/ecad/tools/derate.py",
+      "out/pcb-p-pack.net"
+     ],
+     "rc": 0,
+     "seconds": 0.8,
+     "readings": {
+      "derate": {
+       "result": "PASS",
+       "ts": "2026-09-27T15:28:07Z",
+       "written": true,
+       "denominator": 6,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "derate: 6 rated part-on-net pair(s) judged at a 20% margin over 10 declared rail(s) and 8 declared node(s), 0 of them against the part maker's own reference circuit; 20 part(s) carry no rating in their value and were not judged; 0 net(s) carry a rated part and no declared voltage\nverdict: derate                 PASS         of 6 {\"by_vendor_reference\": 0, \"judged\": 6, \"undeclared_nets\": 0, \"under_rated\": 0, \"unrated_parts\": 20} | a part's rating against the declared voltage of the rail it is soldered to; DC-bias capacitance derating is NOT checked here and is an open gap",
+     "t0": 1790522887.0445602
+    },
+    {
+     "writer": "intent_checks.py",
+     "rules": [
+      "PWR-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/w4dp/candr/v2/ecad/tools/intent_checks.py",
+      "--netlist",
+      "out/pcb-p-pack.net"
+     ],
+     "rc": 0,
+     "seconds": 0.9,
+     "readings": {
+      "intent_rails": {
+       "result": "PASS",
+       "ts": "2026-09-27T15:28:08Z",
+       "written": true,
+       "denominator": 11,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "SETTLED  VC3_F: nothing on it supplies: U1.3 VC3 (sense, ti-bq4050.pdf)\nSETTLED  VC4_F: nothing on it supplies: U1.2 VC4 (sense, ti-bq4050.pdf)\nCENSUS  10 counted, 7 declared node, 1 ground, 12 settled, 4 unconnected, 0 undecided, 21 unmarked\nverdict: intent_rails           PASS         of 11 {\"census_nets\": 55, \"checks\": 11, \"declared_nodes\": 1, \"declared_not_in_netlist\": 0, \"declared_rails\": 10, \"fail\": 0, \"held_pin_roles\": 41, \"nodes_supplying_parts\": 0, \"power_nets\": 10, \"rails_without_destination\": 0, \"settled\": 12, \"switches_unresolved\": 0, \"undecided\": 0, \"undeclared\": 0, \"unmarked\": 21} | PWR-001 on the committed netlist and the intent file beside it: every power net is a declared rail, and every declared rail is a net of the netlist whose source and loads are on it. A power net is a power-symbol net, a net carrying a pin typed power_in or power_out, a net of a power class in the netlist, a net carrying a supply-named pin that a bypass entry, a capacitor to ground or a second supply pin corroborates, a net carrying a pin its held datasheet makes a supply, or a ground off a ground net (intent_checks.PIN_ROLES, each row carrying every power and ground pin of its table, each document recorded by sha), or a net a declared rail's current reaches through a two-terminal part or a transistor's channel, at a threshold of 0.00 A. FAIL CLOSED: every other net carrying the mark of a supply (a capacitor to ground, a capacitor to a power net or across one part's pins, a fuse, inductor, ferrite, diode, jumper, switch or link resistor to a power net, a transistor channel shared with one, the switched low side of a load, a lead whose other pins are all ground, a sense class) is settled only by what is read (a crystal, a held non-supply pin role, a gate, a sink to ground, a declared clamp, a switch to ground; on a lead or a sense net the connector carries what the read pins carry) and is otherwise undecided; an undecided net holds the reading at INCONCLUSIVE when nothing fails, and the census names every net's disposition. A power net declared as a node is reported, and refused when it carries the supply pins of two or more parts. Session decisions of 26 September 2026 under the owner's standing rule: the kinds of power net, the fail-closed marks and the undecided class, the 0 A threshold, the node rule",
+     "t0": 1790522887.8471942
+    },
+    {
+     "writer": "power_sequence.py",
+     "rules": [
+      "PWR-002"
+     ],
+     "argv": [
+      "python3",
+      "/root/w4dp/candr/v2/ecad/tools/power_sequence.py",
+      "out/pcb-p-pack.net"
+     ],
+     "rc": 0,
+     "seconds": 0.6,
+     "readings": {
+      "power_sequence": {
+       "result": "PASS",
+       "ts": "2026-09-27T15:28:08Z",
+       "written": true,
+       "denominator": 10,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  SEC_VDD      source R23            ALWAYS ON\n  VCC_F        source R7,U1          enable DSG_R          driven by R18 on ?, TP4 on ?\n  SW           source Q1             ALWAYS ON\nverdict: power_sequence         PASS         of 10 {\"always_on\": 6, \"deadlocks\": 0, \"rails\": 10, \"segments\": 1, \"unresolved\": 0} | each rail's enable derived from the netlist and the part that drives it named; a rail whose enable is driven only by a device powered from that same rail cannot start and is a failure. The ORDER between rails is reported as the graph and not decided here, because which order is correct is a property of the modules' own datasheets",
+     "t0": 1790522888.7680101
+    },
+    {
+     "writer": "energy_chain.py",
+     "rules": [
+      "PWR-003",
+      "BAT-002"
+     ],
+     "argv": [
+      "python3",
+      "/root/w4dp/candr/v2/ecad/tools/energy_chain.py",
+      "--ecad",
+      "/root/w4dp/candr/v2/ecad"
+     ],
+     "rc": 0,
+     "seconds": 1.2,
+     "readings": {
+      "energy_chain_p": {
+       "result": "PASS",
+       "ts": "2026-09-27T15:28:10Z",
+       "written": true,
+       "denominator": 3,
+       "missing_input": null
+      },
+      "energy_chain": {
+       "result": "PASS",
+       "ts": "2026-09-27T15:28:10Z",
+       "written": true,
+       "denominator": 98,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  note SHORE_INPUT: F1 carries 6.2 A where atof287 allows 8.0 A at its 65 C column (the stage is judged at 56 C, datasheet revised 18 August 2022, page 3, Temperature Table: max. allo)\n  note SHORE_INPUT: the fault current available at F1 is not established, so ECSS 6.17.3c (the source delivers three times the fuse rating) cannot be judged here; it is part of the operating envelope, owner decision 34\n  note SHORE_INPUT: F1 melts in about 2.9 ms at 200 A (I2t 115 A2s)\nverdict: energy_chain           PASS         of 98 {\"checks\": 98, \"citations_unjudged\": 0, \"coordination_findings\": 0, \"fail\": 0, \"selection_findings\": 0, \"stages\": 12} | THE CHAIN END TO END, which is BAT-002's question; a selection finding against ECSS 6.17 belongs to the stage that has it and is in energy_chain_<letter>, rule PWR-003. Every rating against its own source document, every protective element against the board's netlist, and the four coordination tests (the element is below what it protects, above the path's peak, able to interrupt what is available, and followed by the stage it protects)",
+     "t0": 1790522889.3937495
+    },
+    {
+     "writer": "edge_length.py",
+     "rules": [
+      "SI-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/w4dp/candr/v2/ecad/tools/edge_length.py",
+      "--netlist",
+      "out/pcb-p-pack.net"
+     ],
+     "rc": 3,
+     "seconds": 0.8,
+     "readings": {
+      "edge_length": {
+       "result": "INCONCLUSIVE",
+       "ts": "2026-09-27T15:28:10Z",
+       "written": true,
+       "denominator": 40,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  LOW_SPEED_OR_DC SR?_F                  LOW_SPEED_OR_DC        2 net(s)\n  LOW_SPEED_OR_DC TS?                    LOW_SPEED_OR_DC        4 net(s)\n  LOW_SPEED_OR_DC VC?_F                  LOW_SPEED_OR_DC        4 net(s)\nverdict: edge_length            INCONCLUSIVE of 40 {\"answered_nets\": 0, \"classes\": 12, \"contradicted_nets\": 0, \"decided_nets\": 0, \"layout_bound_nets\": 0, \"low_speed_nets\": 20, \"may_be_long_nets\": 0, \"signal_nets\": 40, \"undecided_nets\": 20} | SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (UNDECIDED where none does), the critical length l = t_r / (k t_pd) on the slowest layer of every stack the board may be drawn on, and whether the netlist carries an impedance target, a series termination or a declaration where a net may be electrically long. The routed lengths are the layout gate's (edge_length_routed). The table is edge_length.table.json beside this verdict. Session decisions of 26 September 2026: LOW_SPEED_OR_DC asked no edge, the first matching entry decides, the slowest layer of the declared and ruled stacks, the stripline bound, the corner-to-corner extent, the project file's class where the netlist says Default",
+     "t0": 1790522890.615924
+    },
+    {
+     "writer": "check_contracts.py",
+     "rules": [
+      "RF-002",
+      "INT-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/w4dp/candr/v2/ecad/tools/check_contracts.py",
+      "/root/w4dp/candr/v2/ecad"
+     ],
+     "rc": 0,
+     "seconds": 4.8,
+     "readings": {
+      "inhibit_chain_p": {
+       "result": "PASS",
+       "ts": "2026-09-27T15:28:16Z",
+       "written": true,
+       "denominator": 1,
+       "missing_input": null
+      },
+      "check_contracts": {
+       "result": "PASS",
+       "ts": "2026-09-27T15:28:16Z",
+       "written": true,
+       "denominator": 99,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "\nALL CONTRACTS PASS\nRF-002's transmitter walk (section 15a, decides inhibit_chain_<letter> only): 12 FAIL, 5 UNDECIDED, 8 PASS\nverdict: check_contracts        PASS         of 99 {\"boards_without_intent\": 0, \"fail\": 0, \"missing_boards\": 0, \"pass\": 99, \"rails_unsplit\": 0, \"undecided\": 0, \"unjudged\": 0}",
+     "t0": 1790522891.421292
+    },
+    {
+     "writer": "interfaces.py",
+     "rules": [
+      "INT-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/w4dp/candr/v2/ecad/tools/interfaces.py"
+     ],
+     "rc": 0,
+     "seconds": 1.9,
+     "readings": {
+      "interfaces_p": {
+       "result": "PASS",
+       "ts": "2026-09-27T15:28:18Z",
+       "written": true,
+       "denominator": 1,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  note D USB_FULL_SPEED: no impedance target, which is what its parts' datasheets say\n  note E USB_FULL_SPEED: no impedance target, which is what its parts' datasheets say\n  note P SMBUS_GAUGE: no impedance target, which is what its parts' datasheets say\nverdict: interfaces             PASS         of 12 {\"assignments\": 12, \"boards\": 7, \"disagreements\": 0} | every interface's impedance target and matching tolerance against the specification of the part that defines it, from pcb_interfaces.yaml; the sources are the hosts' and the modules' own datasheets; each board also carries its own interfaces_<letter> verdict, because a set-level result deciding every board's own is a defect this project has already met once",
+     "t0": 1790522896.2320435
+    },
+    {
+     "writer": "port_protect.py",
+     "rules": [
+      "TRN-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/w4dp/candr/v2/ecad/tools/port_protect.py",
+      "out/pcb-p-pack.net"
+     ],
+     "rc": 0,
+     "seconds": 0.9,
+     "readings": {
+      "port_protect_p": {
+       "result": "PASS",
+       "ts": "2026-09-27T15:28:18Z",
+       "written": true,
+       "denominator": 3,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  CLAMP D1     OK       K/A       uni    cathode (its K pin) on PACK_P, anode on the return PACK_N\n  CLAMP D2     N/A      A1/A2     bi     a two-way part (PESD5V0S1BA: Nexperia's S1B type, 'Bidirectional ESD protection diode'): either way round is correct\n  CLAMP D3     N/A      A1/A2     bi     a two-way part (PESD5V0S1BA: Nexperia's S1B type, 'Bidirectional ESD protection diode'): either way round is correct\nverdict: port_protect           PASS         of 3 {\"clamps\": 3, \"clamps_one_way\": 1, \"clamps_reversed\": 0, \"clamps_symbol_mismatch\": 0, \"clamps_unjudged\": 0, \"ports\": 0, \"unprotected\": 0} | this board declares that no conductor of its own leaves the enclosure, so the rule is true of it with nothing to check: Rule TRN-001, 16 September 2026. NOTHING ON BOARD P LEAVES THE ENCLOSURE, and this is the sentence that says so rather than a file nobody wrote. P is the pack's own protection and",
+     "t0": 1790522898.1643577
+    },
+    {
+     "writer": "pack_protection.py",
+     "rules": [
+      "BAT-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/w4dp/candr/v2/ecad/tools/pack_protection.py",
+      "--netlist",
+      "out/pcb-p-pack.net",
+      "--check"
+     ],
+     "rc": 1,
+     "seconds": 0.9,
+     "readings": {
+      "pack_protection": {
+       "result": "FAIL",
+       "ts": "2026-09-27T15:28:19Z",
+       "written": true,
+       "denominator": 63,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  FAIL FUSE_OVER_CURRENT_DISCHARGE trips at 33.8 A and 3 cells in parallel are rated 24.0 A (max_continuous_discharge_ma)\n  FAIL SECOND_LEVEL_CELL_UNDER_VOLTAGE trips at 2.25, BELOW the cell maker's own overdischarge_protect_v of 2.3\n  FAIL SECOND_LEVEL_OVER_TEMPERATURE allows -inf to 70.0 and the cell maker allows -10.0 to 60.0\nverdict: pack_protection        FAIL         of 63 {\"checks\": 63, \"devices\": 13, \"fail\": 3, \"functions\": 14, \"limits\": 14, \"software_only\": 9} | every protection this requirement names, with the device that implements it, its configured threshold, the cell limit it is derived from (quoted and re-read from the cell maker's own specification) and the test that will demonstrate it on the prototype; the currents are judged at the pack's worst parallel count",
+     "t0": 1790522899.0435255
+    }
+   ],
+   "seconds": 15.7,
+   "routed": []
+  }
+ ],
+ "ok": true,
+ "kicad_cli": "/usr/bin/kicad-cli",
+ "started": "2026-09-27T15:28:04+00:00",
+ "tree_touched": [],
+ "seconds": 15.8
+}

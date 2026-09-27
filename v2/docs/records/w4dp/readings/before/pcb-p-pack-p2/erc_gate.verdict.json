@@ -1,0 +1,79 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "erc_gate.py",
+  "files": {
+   "erc_gate.py": "bb4bf868c515f37a",
+   "intent.py": "f1ac033e0f3c10f1",
+   "kisch.py": "3e28374d15be25e0",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "sch_prov.py": "a98e5a71ac74ccee",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "0d2dedd042c32274",
+  "unresolved": []
+ },
+ "counts": {
+  "allowed": 0,
+  "blocking": 0,
+  "violations": 125
+ },
+ "denominator": 125,
+ "evidence": [],
+ "inputs": {
+  "board": "p",
+  "erc_report": {
+   "path": "./out/pcb-p-pack-erc.json",
+   "sha256_16": "57cc5b41173e5bb4"
+  },
+  "netlist": {
+   "content16": "efe60479293f0004",
+   "path": "./out/pcb-p-pack.net",
+   "sha256_16": "085f833362fbbda8"
+  },
+  "netlist_tie": {
+   "proved": true,
+   "why": "the report, the schematic and the netlist's own provenance agree on schematic 47e0bc19e8e1"
+  },
+  "project": {
+   "path": ".",
+   "sha256_16": null
+  },
+  "schematic": {
+   "path": "./pcb-p-pack.kicad_sch",
+   "sha256_16": "47e0bc19e8e18cf0"
+  }
+ },
+ "missing_input": null,
+ "note": "",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "SCH-001": "64784cfeedc67195"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "SCH-001"
+ ],
+ "runtime": {
+  "python": "3.12.3"
+ },
+ "tool": "erc_gate",
+ "tools": {
+  "git_head": "91894cd7f196",
+  "tools_tree_sha": "784492a16eb43399"
+ },
+ "ts": "2026-09-27T14:29:51Z",
+ "verdict": "PASS",
+ "version": "91894cd7f196",
+ "writer": {
+  "file": "erc_gate.py",
+  "sha16": "bb4bf868c515f37a"
+ }
+}

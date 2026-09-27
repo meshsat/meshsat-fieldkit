@@ -1,6 +1,6 @@
 {
  "board": "pcb-d-aprs",
- "written": "2026-09-27 10:33",
+ "written": "2026-09-27 14:28",
  "bypass": [
   {
    "cap": "C51",
@@ -485,6 +485,12 @@
    "v_min": 0.0,
    "basis": "the push-to-talk level stage's far side (Q5's drain), U16's P-port input pulled to the harness +3V3 through R71 (10k): at most +3V3's declared 3.3 V; an input, no supply",
    "v_work": 3.3
+  },
+  "RLY_K": {
+   "v_max": 6.5,
+   "v_min": 0.0,
+   "basis": "the T/R relay coil's switched low end (K1 pin 8, Q2 drain, D2 anode): at rest +5V_TX through the coil (5.23 V at most, +5V_TX's v_work), at release +5V_TX plus D2's forward drop while the coil's current (at most about 30 mA: Omron G6K 5 VDC coil, 21.1 mA and 237 ohm +-10 percent at 23 C, colder copper lower) commutates into D2, whose maker states VF at most 1.25 V at 150 mA (SEMTECH ELECTRONICS 1N4148W Rev 05, LCSC C81598); no part takes its supply here",
+   "v_work": 5.23
   },
   "RF_PAOUT": {
    "v_max": 110.0,

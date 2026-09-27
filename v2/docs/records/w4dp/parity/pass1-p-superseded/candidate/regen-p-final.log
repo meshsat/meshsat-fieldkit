@@ -1,0 +1,1 @@
+handover_exports: regen p (pcb-p-pack-p2, PHASE=P4): exits [0, 0, 0], {'schematic': 'PARITY_AFTER_NOISE', 'netlist': 'PARITY_AFTER_NOISE', 'intent': 'DIFFERENT', 'bom': 'PARITY', 'erc': 'PARITY_AFTER_NOISE'}, lands moved 0: DIFFERENT_OR_INCOMPLETE
