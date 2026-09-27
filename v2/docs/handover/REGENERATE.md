@@ -19,12 +19,13 @@ the commits between them change only the four handover pages and this page. The 
 regeneration had also been run once before, on a clean `git archive` of `99cde56b` (the last design change), with
 the same results. A content hash or a count quoted below is what those runs printed; the RESULT classes (PARITY,
 PARITY_AFTER_NOISE, the causes of the failures) are what to expect on another day. Commands outside the ZIP route
-(section 7's repository route, section 8) say how far they were re-run.
+(section 7's repository route, sections 8 and 9) say how far they were re-run.
 
 **Edition H1.1.** The commands below name `H1`; for H1.1 read `H1.1` wherever a command names the ZIP or its folder.
 H1.1's design files, tools and exports are H1's; it adds the candidate patches, the glossary, four filed records,
-the case scripts' reference outputs and the packer's new `SOURCE.txt` lines. Sections 1a and 9 are new in H1.1. The
-repository holds H1.1 as `v2/release/handover/H1.1.zip` with `H1.1.zip.sha256` and `H1.1.MANIFEST.tsv` beside it (the
+the case scripts' reference outputs and the packer's new `SOURCE.txt` lines. Section 1a is new in H1.1. Section 9
+stated the re-take in words only in H1.1; from the commit after H1.1 on it carries its driver,
+`retake_schematic_phase.py`, and is run by it. The repository holds H1.1 as `v2/release/handover/H1.1.zip` with `H1.1.zip.sha256` and `H1.1.MANIFEST.tsv` beside it (the
 packer's `--zip-only` mode), not as an unzipped folder; `unzip` creates the `H1.1/` folder the commands expect.
 
 ## 1. Prerequisites (the versions the commands were run with)
@@ -345,43 +346,110 @@ says what that clone knew when it built, and "unknown" in a clone with no such r
 
 ## 9. Re-take the schematic-phase readings and re-render CURRENT-EVIDENCE
 
-**Status in H1.1: this section states the procedure in words; its driver arrives in the next snapshot (H2).** This
-tree holds no script that runs the whole re-take, and nothing on this page stands for one: every tool named below
-exists in this tree and runs on its own, but the sequence that drives them per board was still being written when H1.1
-was cut and is not in it. None of the procedure was run for H1.1, so it carries no expected counts beyond the figures
-it starts from. Those figures are the layout-entry status (0 boards ready; reasons A 17, B 16, C 11, D 15, E 16, P 15,
-E5 5) and every `PCB-RULE-STATUS-<x>.md` verdict, rendered from readings (`*.verdict.json`) in gitignored `out/`
-folders that no snapshot carries (START-HERE section 3a, known gap 1). The steps:
+`v2/docs/CURRENT-EVIDENCE.md` says, for every board, which schematic-phase rows a re-take alone would make current
+evidence (`rules_status.retake_projection`). `v2/ecad/tools/retake_schematic_phase.py` is the command that takes those
+re-takes. It was added after H1.1, so neither the H1 nor the H1.1 snapshot carries it (H1.1's section 9 stated the
+procedure in words only); it is in the repository from the commit that adds this section on. It enumerates from the
+registries the pages already use, never from a hand list: every applicable rule verified at SCHEMATIC (`rules_lib.rules_for` and each rule's `verification_phase`) and every rule a
+hold names as a `rule_pass` layout-entry requirement; the coverage map `pcb_rules_coverage.yaml` for each rule's
+maturity and verdict names; `rules_status.CONFIG_INPUTS`, which must declare every writer (or its reading could never
+bind); and `readiness_manifest.json` with each board's routeflow profile for the phase directory. It then runs each
+writer on the committed netlist and schematic of the board's declared phase with the pipeline's arguments
+(`gate_sweep.sh` for every writer, `erc_gate.py --run` as `full.sh` runs it, `intent_checks.py` and `edge_length.py` in
+their `--netlist` modes, which write the schematic-phase verdict alone). A verdict whose writer it does not know is an
+error in the plan, never a skip. A rule verified by a desk review of a pinned document (ENV-001, INT-002, TST-001) is
+listed and not run. It decides nothing: `rules_status.py` reads what it writes and `rules_render.py` renders the pages.
 
-1. **Work in a throwaway git clone outside `/tmp`, on a KiCad 9.0.9 host** (section 1). `rules_status.py` classes a
-   reading taken on files under a temporary directory as TEMP_INPUT, which never counts, and a configuration input it
-   cannot date by a commit as changed; so every input (netlist, provenance sidecar, intent file, schematic, project,
-   allow-lists, registries) must be tracked and unmodified (`git status --short` empty) when the writers run.
-2. **List what to run per board from the registries, never by hand.** For board `<x>`: every rule that
-   `rules_lib.rules_for("<x>")` returns with `verification_phase: SCHEMATIC` in `pcb_rules.yaml`, plus every rule that
-   a hold of `pcb_board_holds.yaml` names under `layout_entry_requires` as `rule_pass`. For each, the rule's entry in
-   `pcb_rules_coverage.yaml` names the verifying tool (`verification: tool`) and the verdict it writes
-   (`verification: verdict`). A rule verified by a document or a desk review names no writing tool and is not run. A
-   writer's reading binds only when the writer is declared in `rules_status.CONFIG_INPUTS`
-   (`rules_status.py`, the block comment above it).
-3. **Run every writer on the committed netlist, from the board's declared phase directory** (the one the board's
-   routeflow profile names; CURRENT-EVIDENCE's candidate table lists it), with `VERDICT_DIR` set to that directory's
-   `out/`, or to `v2/ecad/out/` for a writer that judges the whole set; those are the folders `rules_status.py` reads
-   (`_project_dirs`). Each writer takes the netlist form its own usage line documents; for the writers the
-   schematic-phase rules name today that is `erc_gate.py . <stem> --run`, `safe_lines.py out/<stem>.net`,
-   `pin_map_lands.py out/<stem>.net <x>`, `derate.py out/<stem>.net`, `intent_checks.py --netlist out/<stem>.net`,
-   `power_sequence.py out/<stem>.net`, `edge_length.py --netlist out/<stem>.net`, `clock_check.py out/<stem>.net`,
-   `port_protect.py out/<stem>.net` and, on board P, `pack_protection.py --netlist out/<stem>.net --check`, each run
-   as `python3 ../tools/<writer> ...` from the phase directory; `energy_chain.py --ecad ..` runs from `v2/ecad/tools`
-   (section 6).
-   `v2/ecad/tools/gate_sweep.sh` shows the same netlist forms for a routed board's copy; it is not this procedure,
-   because it re-judges a routed board and files its verdicts under `routed/`. Never run a writer in a working
-   checkout you keep: that writes the tree's own evidence (START-HERE section 6).
-4. **Classify and render.** Commit any configuration input you changed (`pcb_rules_coverage.yaml` and the like)
-   BEFORE running `rules_status.py`: an input no commit dates reads CONFIG_CHANGED. Then, from `v2/ecad`, run
-   `python3 tools/rules_status.py` three times (the integrating session's practice, because a run can move a reading
-   the next run classes; the last run must leave its outputs unchanged, and if it does not, run it again and say so),
-   then `python3 tools/rules_render.py` to write `CURRENT-EVIDENCE.md` and the per-board status pages, and
-   `python3 tools/rules_render.py --check` to confirm they are current.
-5. **Compare** the new layout-entry reasons per board with the figures above; a row that moved names the reading that
-   moved it (`CURRENT-EVIDENCE.md`, section "Layout entry, per board: the exact remaining blockers").
+**Where it runs.** It needs a git clone outside `/tmp` (every input must be tracked and unmodified, `git status
+--short` empty; an extraction without `.git` refuses every board; and `rules_status.py` classes a reading taken on
+files under a temporary directory as TEMP_INPUT, which never counts) and `kicad-cli` 9.0.9 for `erc_gate.py --run`
+(without it that step is reported SKIPPED and the run INCOMPLETE: a skip is not a pass). `--in-place` writes into the tree's own evidence folders, which nobody does by
+hand in a working checkout, so it is run in a THROWAWAY CLONE and the clone is deleted afterwards. It opens no socket.
+
+```
+git clone <repository> ~/rtk
+cd ~/rtk
+git checkout <commit>
+cd v2/ecad
+python3 tools/retake_schematic_phase.py --plan --in-place
+python3 tools/retake_schematic_phase.py --run --in-place --routed --json > ../../../retake.json 2> ../../../retake.log
+echo "retake exit $?"
+for i in 1 2 3; do python3 tools/rules_status.py > ../../../status-$i.log 2>&1; tail -n 1 ../../../status-$i.log; done
+python3 tools/rules_render.py
+python3 tools/rules_render.py --check
+sed -n 5p ../docs/CURRENT-EVIDENCE.md
+```
+
+If you changed a configuration input (`pcb_rules_coverage.yaml` and the like), commit it BEFORE the first
+`rules_status.py` run: an input no commit dates reads CONFIG_CHANGED. The last of the three runs must leave its
+outputs unchanged; if it does not, run it again and say so. `rules_render.py --check` must then read the pages current.
+
+`--plan` prints, per board, every rule in scope with its action and every command, and ends with the plan size;
+`--board <x>` limits either mode to one board. `--run --in-place` runs each board's commands in its phase directory
+with `VERDICT_DIR=<phase>/out` (where `rules_status.py` reads), refuses a board whose inputs are not committed or
+changed under the run, and exits 1 if a step wrote no reading. `--routed` also copies the re-taken readings, and the
+SI-001 table `edge_length.py` writes beside its verdict, into `<phase>/routed/`, the tracked evidence home
+`gate_sweep.sh` copies to, so a clone's re-take can be committed; it is refused without `--in-place`. `--json` puts the
+result alone on stdout (each step's command, exit status, time and readings) and the plan and progress on stderr.
+The set-level writers (`energy_chain.py`, `check_contracts.py`, `interfaces.py`) also write into each board's
+`<phase>/out`, once per board, as `gate_sweep.sh` runs them, rather than into `v2/ecad/out/` (H1.1's wording of this
+section named `v2/ecad/out/`); `rules_status.py` reads both folders (`_project_dirs`). `--verdict-dir DIR`, instead of
+`--in-place`, stages each board's committed inputs under `DIR` (outside the repository) and runs there, and the run fails if any writer touched the tree's evidence folders; those readings are for reading,
+not for `rules_status.py`, which reads the tree only (and names a reading of a file under `/tmp` TEMP_INPUT). Three
+`rules_status.py` runs, because the first writes the audit's own reading `rules_complete`, which the next one reads.
+
+**How it was verified.** The figures below are the trial's, on `a8652172`. Main has moved since: board B's round 8
+netlist landed at `b76c18cb` and its netlist readings await this re-take (CURRENT-EVIDENCE at `cc3313f3`), so a
+re-take at a later commit gives other counts for B at least; the commit that re-takes this tree's evidence records its
+own. The commands above were run between 09:13 and 09:21 UTC on 27 September 2026 on the rented
+64-core Ubuntu 24.04 host with KiCad 9.0.9 and Python 3.12.3, in a clean clone of main at `a8652172` (the H1 commit;
+`git status` empty), built from that host's own clone of an earlier main plus an incremental git bundle, with the driver
+copied in as the only untracked file (its code as committed; the committed file differs only in its docstring, and it
+prints the same plan byte for byte). `rules_status.py` was also run three times before the re-take. Times: the plan
+under 1 s; the run 113 s for 73 commands (11 to 22 s per board: `check_contracts.py` about 6 s and `erc_gate.py --run`
+1.4 to 4.8 s of each); each `rules_status.py` 13 to 15 s; `rules_render.py` 18 s. The same run with
+`--verdict-dir /root/rtk/vd` wrote the same 83 readings with the same results and touched none of the tree's evidence
+folders. The clone was deleted afterwards; no reading of it was copied anywhere.
+
+Plan size: 73 commands over 7 boards (A 12, B 12, C 9, D 10, E 12, E5 6, P 12), 76 rule-board pairs re-taken, 14
+desk-review pairs listed, 83 verdicts. The results, per board (a FAIL or an INCONCLUSIVE is the design's or its
+declarations' answer, now on current evidence, not the driver's):
+
+| Board | Commands, rules re-taken, verdicts | Readings written | Layout-entry reasons before, after | What still holds layout entry |
+|---|---|---|---|---|
+| A | 12, 13, 14 | 14: 10 PASS; `intent_rails` FAIL (9 of 39 checks), `inhibit_chain_a` FAIL (1 failed, 3 undecided of 9), `edge_length` INCONCLUSIVE (118 of 283 signal nets undecided), `clock_check` INCONCLUSIVE, which `rules_status` reads as not applicable (no crystal) | 17, 7 | PWR-001 FAIL, SI-001 INCONCLUSIVE, RF-002 FAIL; decision 31's review requirement; FEA-002, FEA-004, FEA-006 |
+| B | 12, 12, 13 | 13: 9 PASS; `intent_rails` FAIL (29 of 70), `energy_chain_b` FAIL (B_PANEL_5V: 2.0 A protection on a 1.2 A conductor), `inhibit_chain_b` FAIL (15 of 20), `edge_length` INCONCLUSIVE (492 of 835 undecided) | 16, 8 | PWR-001, PWR-003 and RF-002 FAIL, SI-001 INCONCLUSIVE; FEA-001, FEA-002, FEA-003, FEA-006 |
+| C | 9, 9, 10 | 10: 7 PASS; `intent_rails` FAIL (5 of 7), `inhibit_chain_c` FAIL (1 failed, 1 undecided of 6), `edge_length` INCONCLUSIVE (33 of 134) | 11, 5 | PWR-001 and RF-002 FAIL, SI-001 INCONCLUSIVE; FEA-002, FEA-006 |
+| D | 10, 10, 11 | 11: 8 PASS; `intent_rails` FAIL (10 of 16), `inhibit_chain_d` INCONCLUSIVE (2 undecided of 8), `edge_length` INCONCLUSIVE (27 of 135) | 15, 7 | PWR-001 FAIL, SI-001 and RF-002 INCONCLUSIVE; decision 31's review requirement; FEA-002, FEA-004, FEA-006 |
+| E | 12, 13, 14 | 14: 12 PASS (`inhibit_chain_e` among them); `intent_rails` FAIL (6 of 20), `edge_length` INCONCLUSIVE (36 of 82) | 16, 4 | PWR-001 FAIL, SI-001 INCONCLUSIVE; decision 31's review requirement; FEA-006 |
+| E5 | 6, 6, 7 | 7: 7 PASS | 5, 1 | INT-001: PASS, still AWAITING_REVALIDATION (UNBOUND) |
+| P | 12, 13, 14 | 14: 11 PASS (`inhibit_chain_p` among them); `intent_rails` FAIL (6 of 11), `pack_protection` FAIL (9 of 9 functions have firmware thresholds, no second protector, no chemical fuse), `edge_length` INCONCLUSIVE (22 of 44) | 15, 5 | PWR-001 and BAT-001 FAIL, SI-001 INCONCLUSIVE; FEA-005, FEA-006 |
+
+In total the layout-entry reasons went from 95 to 37, and the page's row "a re-take alone" (63 at H1) is empty: 18
+reasons are current readings that are not a PASS (board streams), 3 are decision 31's review requirement on boards A,
+D and E, 15 are the layout-entry stages of feasibility blockers FEA-001 to FEA-006, and 1 is E5's INT-001. That is the
+only schematic-phase reading of the set that a re-take leaves AWAITING_REVALIDATION: the coverage map reads
+`check_contracts`'s set verdict for it, which records every netlist it read and no board file of E5 (it has none to
+read), so it cannot bind; `block_contract.py` writes `check_contracts_e5` from E5's board file and board A's, and the
+rule can bind once the coverage map names that per-board verdict (a change for the registry writer, through an apply
+script). No board is ready for layout, before or after. The historical mixed-revision aggregate of `rules_status.py`
+went from PASS 188, FAIL 38, INCONCLUSIVE 112 to PASS 190, FAIL 41, INCONCLUSIVE 107 of 338 (the first run before the
+re-take read 181 and 119: see above); it is not a readiness figure.
+
+The "before" above is the clean clone's, which holds only tracked readings. The committed `CURRENT-EVIDENCE.md` was
+rendered in a working checkout that also holds gitignored readings under `out/`, so a row's result can differ from a
+clean clone's: board A's and B's TRN-001 read FAIL there and PASS in the clean clone, both awaiting revalidation, and the
+per-board reason counts were the same. After the re-take TRN-001 reads PASS on current evidence on all seven boards.
+
+**Choices taken by the session in this driver** (under the owner's standing rule of 26 September 2026; ruled by the
+session, not by the owner; each is reversed by the edit named):
+
+- `--routed` is refused without `--in-place`: `routed/` is tracked evidence, and a copy there from a staged run would
+  put readings of copies into the tree. Reversed by removing the `routed` clause of `check_call`.
+- The set-level writers (`energy_chain.py`, `check_contracts.py`, `interfaces.py`) run once per board, as
+  `gate_sweep.sh` runs them, so each board's evidence directory holds the reading its rules are read from, at about
+  9 s per board. Reversed by running them once and copying their verdicts to each board.
+- `--routed` copies `edge_length.table.json` with the `edge_length` verdict, only when the same step wrote it, as
+  `gate_sweep.sh` copies it. Reversed by emptying `COMPANIONS`.
+- An unknown or incomplete argument is refused (a misspelt `--in-place` is never read as "not in place"), and `--json`
+  puts the result alone on stdout. Reversed in `main`.
