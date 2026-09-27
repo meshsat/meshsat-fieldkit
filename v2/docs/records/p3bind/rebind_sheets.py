@@ -17,9 +17,12 @@ note gives for an OLDER candidate (12.31 A, 11.92 mm at e3aedb25) is rail_widths
 (records/p3bind/rail-moves.md), and the commit a note names for a change is the first whose intent file carries
 today's currents (records/p3bind/rail-commits.md).
 
-IT REFUSES A SECOND RUN (a sheet that already carries a bound block), and after writing it runs the check and fails
-unless every sheet passes. To re-bind the sheets another day use `constraints_bound.py --emit <letter>`, which prints
-the block and the tables with the notes a sheet already holds.
+IT STARTS FROM THE SHEETS AS THEY STOOD AT 760d7f41, read out of git, so its output is a function of that commit's
+sheets, the calculation and the notes below, and running it again gives the same bytes. It writes a sheet only while
+the working copy is that commit's text or its own output: a sheet somebody has edited since (the other sections are
+re-read by other workers) is refused, never overwritten. After writing it runs the check and fails unless every sheet
+passes. To re-bind the sheets another day use `constraints_bound.py --emit <letter>`, which prints the block and the
+tables with the notes a sheet already holds.
 Usage: rebind_sheets.py [--dry-run]
 """
 import os, sys, json
@@ -30,6 +33,7 @@ sys.path.insert(0, os.path.join(ROOT, "v2", "ecad", "tools"))
 import constraints_bound as CB
 
 READ = ("2026-09-27", "760d7f41")
+BASE = "760d7f41"
 H2_LEAD = "**Bound to the H2 line (after H2, 27 September 2026).**"
 H2_KEPT = "**As re-bound to the H2 line (after H2, 27 September 2026), kept as that binding's record.**"
 FIRST = {"e5": "A view over the records at `main` `e3aedb25`"}
@@ -62,6 +66,7 @@ SET6 = {
 OLDER = {
     "e5": "the readings at `e3aedb25`, with what the H2 line changed stated in the paragraph below (`ef144760`)",
 }
+AGAINST = {"e5": "the board file and the chain below"}
 
 # The notes. {letter: {"main" | "sized": {rail as the tool prints it: (text, [quotations])}}}
 H2 = "**H2**"
@@ -227,10 +232,14 @@ NOTES = {
     }},
 }
 
-TABLE_SAYS = ("The table is `calc/rail_widths.py`'s output on the inputs this sheet's `bound` block names, row for row and "
-              "cell for cell in the intent file's own order, and `v2/ecad/tools/constraints_bound.py` fails when the two "
-              "differ; the `note` column is this sheet's and is not compared (README, \"The bound block\"). A width of "
-              "0.00 is a current under 5 mA at two decimals: the fabricator's floor governs there, not the current.")
+TABLE_SAYS = ("The table is `calc/rail_widths.py`'s output on the inputs this sheet's `bound` block names, row for row in "
+              "the tool's own order and cell for cell, and `v2/ecad/tools/constraints_bound.py` fails when the two "
+              "differ; the `note` column is this sheet's and is not compared (README, \"The bound block\"). A width "
+              "printed 0.00 is under 0.005 mm, a current of a few milliamperes: the fabricator's floor governs there, "
+              "not the current.")
+SIZED_SAYS = ("Sized at the maker's figure, above the declaration (`calc/rail_widths.py` SIZED_TO; "
+              "`v2/docs/feasibility/POWER-THERMAL.md` section 10). The declaration is unchanged and is board B's owner's "
+              "to correct; until it is, these are the widths and barrel counts to follow:")
 
 # Sentences of section 2 the new table made untrue: (old, new). Each old text must stand exactly once in section 2.
 EDITS = {
@@ -288,10 +297,11 @@ def opening(letter, RW):
          "this candidate: section 2 alone.** Its power table is `calc/rail_widths.py`'s output on the inputs below, and "
          "the widths, currents and barrel counts the text under the table quotes were compared with the table and agree. "
          "**Not re-read on this candidate: sections 1 and 3 to %d**, which are %s. %s A line of the older sections that "
-         "names a part, a net, a current or a count is compared with the netlist and the intent file below before it is "
+         "names a part, a net, a current or a count is compared with %s before it is "
          "followed, and where this sheet and a record disagree the record governs (README). %s is not at layout entry: "
          "no board is (`v2/docs/CURRENT-EVIDENCE.md`, which holds the reasons current on this candidate; a count of "
-         "reasons in a paragraph below is its own binding's).") % (READ[1], n, older, SET6[letter], NAME[letter])
+         "reasons in a paragraph below is its own binding's).") % (
+             READ[1], n, older, SET6[letter], AGAINST.get(letter, "the netlist and the intent file below"), NAME[letter])
     return wrap(p)
 
 
@@ -329,31 +339,33 @@ def notes_for(letter, RW):
 
 
 def tables(letter, RW):
+    """Section 2's tables as lines: the tool's cells, this script's notes. A table none of whose rows has a note
+    carries no note column (the check takes a table with the column or without it)."""
     notes = notes_for(letter, RW)
-    out, head = [], None
+    groups, head = [], None
     for l in CB.emit_tables(letter, ROOT, RW):
         c = CB.split_row(l)
-        if c is None:
-            if l.strip(): out.append(l)
-            elif out and out[-1] != "": out.append("")
-            continue
-        if CB.is_rule(c): out.append(l); continue
+        if c is None or CB.is_rule(c): continue
         if c[0] == "rail":
-            if head is not None and RW.rows(letter, ROOT)["sized"]:
-                out.append("Sized at the maker's figure, above the declaration (`calc/rail_widths.py` SIZED_TO; "
-                           "`v2/docs/feasibility/POWER-THERMAL.md` section 10). The declaration is unchanged and is "
-                           "board B's owner's to correct; until it is, these are the widths and barrel counts to follow:")
-                out.append("")
-            head = tuple(c[:-1]); out.append(l); continue
-        c[-1] = notes.get((head, c[0]), "")
-        out.append("| " + " | ".join(x.replace("|", "\\|") for x in c) + " |")
-    while out and out[-1] == "": out.pop()
+            head = tuple(c[:-1]); groups.append((head, [])); continue
+        groups[-1][1].append((c[:-1], notes.get((head, c[0]), "")))
+    assert groups and groups[0][0] == tuple(RW.HEAD)
+    out = []
+    for k, (head, rows) in enumerate(groups):
+        if k:
+            assert head == tuple(RW.HEAD_SIZED), head
+            out += [""] + wrap(SIZED_SAYS) + [""]
+        noted = any(n for _c, n in rows)
+        out.append("| " + " | ".join(list(head) + ([CB.NOTE] if noted else [])) + " |")
+        out.append("|" + "|".join(RW.ALIGN.get(h, "---") for h in head) + ("|---|" if noted else "|"))
+        for c, n in rows:
+            out.append("| " + " | ".join(x.replace("|", "\\|") for x in c + ([n] if noted else [])) + " |")
     return out
 
 
 def rebind(letter, RW, text):
     lines = text.split("\n")
-    assert CB.OPEN not in [l.strip() for l in lines], "%s already carries a bound block: this script runs once" % letter
+    assert CB.OPEN not in [l.strip() for l in lines], "%s at %s already carries a bound block" % (letter, BASE)
     # ---- the opening
     lead = FIRST.get(letter, H2_LEAD)
     at = [i for i, l in enumerate(lines) if l.startswith(lead)]
@@ -399,20 +411,32 @@ def main(argv):
     RW = CB.load_calc()
     global NSEC, TABLE_SAYS_WRAPPED
     TABLE_SAYS_WRAPPED = "\n".join(wrap(TABLE_SAYS))
-    NSEC, done = {}, {}
+    NSEC, todo, refused = {}, {}, []
     for letter, name in sorted(CB.SHEETS.items()):
-        p = os.path.join(ROOT, *(CB.SHEET_DIR + (name,)))
-        with open(p, encoding="utf-8") as f: text = f.read()
-        NSEC[letter] = max(int(l.split()[1].rstrip(".")) for l in text.split("\n") if l.startswith("## "))
-        new = rebind(letter, RW, text)
-        assert new != text
-        assert outside(new) == outside(text), "%s: a line outside the opening and section 2 changed" % name
+        rel = "/".join(CB.SHEET_DIR + (name,))
+        rc, _full = CB._git(ROOT, "rev-parse", "--verify", "--quiet", BASE + "^{commit}")
+        assert rc == 0, "this repository does not hold %s" % BASE
+        import subprocess
+        r = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (BASE, rel)], capture_output=True)
+        assert r.returncode == 0, rel
+        base = r.stdout.decode("utf-8")
+        NSEC[letter] = max(int(l.split()[1].rstrip(".")) for l in base.split("\n") if l.startswith("## "))
+        new = rebind(letter, RW, base)
+        assert new != base
+        assert outside(new) == outside(base), "%s: a line outside the opening and section 2 changed" % name
         assert len(CB.bound_blocks(new.split("\n"))) == 1
-        done[p] = new
+        with open(os.path.join(ROOT, rel), encoding="utf-8") as f: cur = f.read()
+        if cur == new: print("rebind: %-3s already this script's output" % letter.upper())
+        elif cur == base: todo[os.path.join(ROOT, rel)] = new
+        else: refused.append(rel)
+    if refused:
+        print("rebind: REFUSED, edited since %s and not this script's output: %s. Nothing written; use "
+              "constraints_bound.py --emit and edit the sheet" % (BASE, ", ".join(refused)))
+        return 2
     if "--dry-run" in argv:
-        for p, new in done.items(): print("would write %s (%d lines)" % (os.path.relpath(p, ROOT), new.count("\n")))
+        for p, new in todo.items(): print("would write %s (%d lines)" % (os.path.relpath(p, ROOT), new.count("\n")))
         return 0
-    for p, new in done.items():
+    for p, new in todo.items():
         with open(p, "w", encoding="utf-8") as f: f.write(new)
     bad = []
     for letter in RW.ORDER:

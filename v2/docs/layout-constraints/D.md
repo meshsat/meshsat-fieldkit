@@ -56,10 +56,10 @@ sensor (a Semitec 103AT-2 NTC on a two-wire lead to `J_FLANGE`, read by U22, a T
 
 ## 2. Power
 
-The table is `calc/rail_widths.py`'s output on the inputs this sheet's `bound` block names, row for row and cell for
-cell in the intent file's own order, and `v2/ecad/tools/constraints_bound.py` fails when the two differ; the `note`
-column is this sheet's and is not compared (README, "The bound block"). A width of 0.00 is a current under 5 mA at two
-decimals: the fabricator's floor governs there, not the current.
+The table is `calc/rail_widths.py`'s output on the inputs this sheet's `bound` block names, row for row in the tool's
+own order and cell for cell, and `v2/ecad/tools/constraints_bound.py` fails when the two differ; the `note` column is
+this sheet's and is not compared (README, "The bound block"). A width printed 0.00 is under 0.005 mm, a current of a few
+milliamperes: the fabricator's floor governs there, not the current.
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill | note |
 |---|---|---|---|---:|---:|---:|---|---|
