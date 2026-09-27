@@ -26,7 +26,7 @@ a sheet are named once, in the sheet's own `bound` block, and compared with the 
 ## The bound block
 
 **Why it exists** (the independent review of handover H2, `v2/docs/reviews/2026-09-27-h2-independent-review.md`,
-finding 3 A). At H2 board A's sheet gave VIN_RAW as 12.31 A and 11.92 mm on one outer face while the committed intent
+section 3 A). At H2 board A's sheet gave VIN_RAW as 12.31 A and 11.92 mm on one outer face while the committed intent
 file declared 14.10 A, which is 15.29 mm: the sheet had been written against one candidate, the boards had moved, and
 nothing compared the page with its inputs. Set 6 then moved every board's netlist again. The rule since: **derived
 data a designer will follow names the inputs it was computed from by their hashes, and a check fails when the
@@ -61,8 +61,9 @@ parsed:
 
 **The power tables of section 2** are the tables `calc/rail_widths.py` prints for the board, in its columns and its
 row order, with one more column, `note`, which is the sheet's own: what a rail is, what moved and why in the intent
-file's own words, and the commit that moved it. **The check compares every cell but the note.** A number in a note is
-a quotation and names its source beside it; the check cannot vouch for it, and the record it names governs.
+file's own words, and the commit that moved it. **The check compares every cell but the note**, of which it asks one
+thing: that it no longer opens with the mark a re-binding leaves on a row that moved. A number in a note is a
+quotation and names its source beside it; the check cannot vouch for it, and the record it names governs.
 
 **The check**, `v2/ecad/tools/constraints_bound.py`, fails, naming the sheet, the input and both values, when:
 
