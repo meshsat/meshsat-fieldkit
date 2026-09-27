@@ -142,20 +142,20 @@ functions:
  - id: CHARGE_TEMPERATURE_WINDOW
    what: "the cells are charged outside the temperature window the cell maker allows"
    device: U1
-   threshold: {low: 0.0, high: 45.0, unit: C, per: cell, delay_s: 2.0, sensor: "TS1 to TS4 at the cell surface"}
+   threshold: {low: 1.0, high: 44.0, unit: C, per: cell, delay_s: 2.0, sensor: "TS1 to TS4 at the cell surface", why: "inside 0 to 45 C by the gauge's own error budget, THERMAL-COORDINATION.md section 3; the charge ranges T1 1 C, T3 42 C (no charge starts above it) and T4 43 C sit inside it"}
    derived_from: charge_temp_c
    direction: inside_window
-   test: "the block in a chamber at -5 C and at +50 C with the charger live: Q1 stays open at both, and closes
-     between 5 C and 40 C; the thermistors read the CELL SURFACE, so the sensor's own position is part of the test"
+   test: "the block in a chamber at -5 C and at +48 C with the charger live and a reference thermocouple on every cell: Q1 stays open at both and closes between 5 C and 39 C,
+     and it is open before any cell surface reads above 45.0 C or below 0.0 C on the references; the thermistors read the CELL SURFACE, so the sensor's own position is part of the test"
 
  - id: DISCHARGE_TEMPERATURE_WINDOW
    what: "the cells are discharged outside the temperature window the cell maker allows"
    device: U1
-   threshold: {low: -10.0, high: 60.0, unit: C, per: cell, delay_s: 2.0, sensor: "TS1 to TS4 at the cell surface"}
+   threshold: {low: -9.0, high: 57.5, unit: C, per: cell, delay_s: 2.0, sensor: "TS1 to TS4 at the cell surface", why: "inside -10 to 60 C by the gauge's own error budget, THERMAL-COORDINATION.md section 3"}
    derived_from: discharge_temp_c
    direction: inside_window
-   test: "the block in a chamber at -15 C and at +65 C under a 2 A load: Q2 opens at both and closes inside
-     the window"
+   test: "the block in a chamber at -15 C, then at +59 C raised in 0.5 K steps to +60 C at most, under a 2 A load with a reference thermocouple on every cell: Q2 opens at both before any cell surface
+     passes -10.0 C or +60.0 C on the references, and closes inside the window; never above +60 C (the second level's lowest trip is 62.7 C, the gauge's SOT can act from 64.2 C)"
 
  - id: PRECHARGE_WINDOW
    what: "a deeply discharged cell is charged at full current, or a dead cell is charged at all"
