@@ -19,7 +19,7 @@ never searched as text). It asserts the statement and exits 1 where it does not 
 It reads git only (`git diff --name-status`, `git show <commit>:<path>`), so it needs a checkout that holds both
 commits; it does not run from an extracted snapshot, which has no history. It writes nothing but standard output.
 
-Usage (from the repository root): python3 v2/docs/records/h3/design_difference.py [commit]
+Usage (from any folder of the checkout): python3 v2/docs/records/h3/design_difference.py [commit]
 """
 import fnmatch, hashlib, json, subprocess, sys
 
@@ -60,8 +60,24 @@ KEEP = ("statement", "acceptance", "prototype_1", "prototype_1_basis", "prototyp
         "feasibility_page", "owner")
 
 
+def _top():
+    """The repository's top level, asked of git from this file's own folder, so that the script reads the same
+    tree whatever folder it is started in. Run from its own folder on 27 September 2026 it listed no file (a git
+    pathspec is relative to the working directory), compared nothing, and still printed that the statement holds:
+    a pass of nothing. Every git call now runs at the top level, and comparing nothing is a failure (main)."""
+    import os
+    here = os.path.dirname(os.path.abspath(__file__))
+    return subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=here, capture_output=True,
+                          check=True).stdout.decode().strip()
+
+
+TOP = _top()
+# The six declared phase folders with a schematic, and E5's board file: what MUST be among the files compared.
+MUST_COMPARE = ["-a23/", "-b19/", "-c8/", "-d9/", "-e7/", "-p2/"]
+
+
 def git(*a):
-    return subprocess.run(["git"] + list(a), capture_output=True, check=True).stdout
+    return subprocess.run(["git"] + list(a), cwd=TOP, capture_output=True, check=True).stdout
 
 
 def show(commit, path):
@@ -183,6 +199,13 @@ def main():
                 print("  same    %s %s" % (p, b))
     print("  %d schematic, netlist, intent and provenance files (and E5's board file) compared, %d the same"
           % (len(wanted), n_same))
+    for d in MUST_COMPARE:
+        for ext in (".kicad_sch", ".net"):
+            if not any(d in p and p.endswith(ext) for p in wanted):
+                print("  NOTHING COMPARED for the declared phase %s (%s)" % (d.strip("-/"), ext))
+                bad.append("no %s compared for the declared phase %s" % (ext, d.strip("-/")))
+    if "v2/ecad/pcb-e5-block/pcb-e5-block.kicad_pcb" not in wanted:
+        print("  NOTHING COMPARED for board E5's board file"); bad.append("E5's board file not compared")
 
     # ------------------------------------------------------------ the requirements registry
     P = "v2/ecad/tools/pcb_requirements.yaml"
@@ -225,10 +248,12 @@ def main():
 
     # ------------------------------------------------------------ the exports against the committed files
     print("\n[exports under v2/release/handover/_generated at %s, against the files of that commit]" % AT)
+    n_exports = 0
     for p in sorted(x for x in git("ls-tree", "-r", "--name-only", head, "--",
                                    "v2/release/handover/_generated").decode().splitlines()
                     if x.endswith("/provenance.json")):
         j = json.loads(show(head, p))
+        n_exports += 1
         sch = hashlib.sha256(show(head, j["schematic"])).hexdigest()
         net = hashlib.sha256(show(head, "%s/out/%s.net" % (j["phase_directory"], j["stem"]))).hexdigest()
         ok_s, ok_n = sch == j["schematic_sha256"], net == j.get("committed_netlist_sha256")
@@ -237,6 +262,10 @@ def main():
             net[:16], "is the one the export names" if ok_n else "is NOT the one the export names"))
         if not (ok_s and ok_n):
             bad.append("export %s" % p)
+
+    if n_exports < len(MUST_COMPARE):
+        print("  %d export(s) read where %d boards have a schematic" % (n_exports, len(MUST_COMPARE)))
+        bad.append("%d exports read, %d expected" % (n_exports, len(MUST_COMPARE)))
 
     print("\nresult: %s" % ("THE STATEMENT HOLDS: no design file, generator or checking tool differs from H2's source "
                             "commit" if not bad else "THE STATEMENT DOES NOT HOLD: " + "; ".join(bad)))
