@@ -434,6 +434,9 @@ def judge(letter, root=None, calc=None, git=None):
     for role, d in sorted(said["inputs"].items()):
         now = sha16(os.path.join(root, d["path"]))
         c.ok(now is not None, "the %s it declares, %s, is not in this tree" % (role, d["path"]))
+        # every input the sheet declares is recorded, read by the calculation or not (board A's sheet declares the
+        # committed layout its older sections were read on): a reading is then stale when that file moves too
+        if role not in res["inputs"]: record(role, d["path"])
         if now is not None:
             c.ok(now == d["sha16"], "the %s %s: the sheet was computed on sha256/16 %s and the committed file is %s"
                  % (role, d["path"], d["sha16"], now))
