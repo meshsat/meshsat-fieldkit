@@ -1,0 +1,3 @@
+claims_check: 91 claim sentence(s) in 12 document(s), 0 without a qualifier, an evidence reference or a declared reason
+verdict: claims_check           PASS         of 91 {"claims": 91, "unqualified": 0} | a rating claimed without its test is a promise to whoever carries the kit
+claims_check exit 0

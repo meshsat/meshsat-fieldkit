@@ -1,0 +1,33 @@
+A   NOT_READY                    PASS 30  FAIL 14  INCONCLUSIVE 11  WAIVED 0  of 55 required rule(s), historical aggregate
+    board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32
+    layout entry: not ready, 18 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-002, FEA-004, FEA-006, FEA-007
+B   NOT_READY                    PASS 20  FAIL 5  INCONCLUSIVE 31  WAIVED 0  of 56 required rule(s), historical aggregate
+    board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21
+    layout entry: not ready, 17 reason(s); feasibility at later stages: FEA-001, FEA-002, FEA-003, FEA-006, FEA-007
+C   NOT_READY                    PASS 33  FAIL 6  INCONCLUSIVE 9  WAIVED 0  of 48 required rule(s), historical aggregate
+    board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24
+    layout entry: not ready, 11 reason(s); feasibility at later stages: FEA-002, FEA-006, FEA-007
+D   NOT_READY                    PASS 35  FAIL 3  INCONCLUSIVE 13  WAIVED 0  of 51 required rule(s), historical aggregate
+    board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12
+    layout entry: not ready, 16 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-002, FEA-004, FEA-006
+E   NOT_READY                    PASS 36  FAIL 6  INCONCLUSIVE 13  WAIVED 0  of 55 required rule(s), historical aggregate
+    board E17 (pcb-e1-dock-e7, a462ac2620b9b8d3), declares E17
+    layout entry: not ready, 17 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-006, FEA-007
+E5  NOT_READY                    PASS 19  FAIL 2  INCONCLUSIVE 4  WAIVED 0  of 25 required rule(s), historical aggregate
+    board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5
+    layout entry: not ready, 3 reason(s)
+P   NOT_READY                    PASS 32  FAIL 8  INCONCLUSIVE 8  WAIVED 0  of 48 required rule(s), historical aggregate
+    board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4
+    layout entry: not ready, 14 reason(s); feasibility at later stages: FEA-004, FEA-005, FEA-006, FEA-007
+
+readiness: NOT_READY   (manifest 2026-09-16.1, rule set 635ff031f210f48c, promotion frozen)
+historical aggregate, mixed revisions: PASS 60.7%  waived 0.0%  failed 13.0%  inconclusive 26.3%  of 338 applicable required rule-board pair(s)
+evidence: 13 PASS on the current candidate; CURRENT_CANDIDATE 12  VALID_HISTORICAL 1  AWAITING_REVALIDATION 283  DESK_REVIEW 21  PHYSICAL_TEST 0  NO_EVIDENCE 21
+provenance: 3 required row(s) changed evidence class when the code bundle replaced the entry-script hash (127 changed cause within the class)
+evidence: 2 reading(s) refused as invalidated by content (v2/docs/evidence/INVALIDATED-*.md): out/hardset.verdict.json, out/routeflow_validate.verdict.json
+
+NOTE: 3 reading(s) that declare a MISSING INPUT stand in front of a measured one, because the measured one was taken under a superseded version of the rule it decides (asked rule by rule where the verdict carries its digests, and by the set fingerprint where it does not). Re-take those on the board, where the tool has its input (retake_gate.sh), rather than reading the page as an answer:
+  final_gate_b           displaces a reading taken under 4a03222f910fe5f5; it lacked: a deliverable folder at the declared phase B21: the only folder is meshsat-pcb-b-revA-B19-quote, a quote, and a folder i
+  jlc_certify_b          displaces a reading taken under 4a03222f910fe5f5; it lacked: no deliverable folder at the declared phase B21, so this board's parts were not certified against the board this tree ho
+  verify_deliverable_b   displaces a reading taken under 4a03222f910fe5f5; it lacked: the folder judged here is meshsat-pcb-b-revA-B19-quote and this board declares B21, so its properties are a reading of a
+verdict: rules_status           FAIL         of 338 {"FAIL": 44, "INCONCLUSIVE": 89, "PASS": 205, "WAIVED": 0, "denominator": 338, "fail_percent": 13.0, "inconclusive_percent": 26.3, "pass_percent": 60.7, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen
