@@ -71,8 +71,7 @@ time and are listed separately below.
 
 ## Measured route history
 
-This tree holds no routeflow journal, so no route duration is recorded here (the journals are gitignored and
-live beside the boards that were routed).A board's re-route is elapsed time, not engineering time, and several run at once on the rented box.
+Route durations this tree has recorded, in minutes per attempt: median 6.8, worst 20.2, over 2 board(s).A board's re-route is elapsed time, not engineering time, and several run at once on the rented box.
 
 ## Assumptions
 
