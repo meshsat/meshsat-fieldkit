@@ -1,0 +1,16 @@
+# inhibit_chain_<letter>, check_contracts.py on main 38dcd764's six netlists, VERDICT_DIR in the stream's scratch
+## before (main's tx_inhibit.py, sha256 1d01e6d2)
+A INCONCLUSIVE {'fail': 0, 'pass': 5, 'undecided': 4, 'unjudged': 0} den 9
+B FAIL {'fail': 10, 'pass': 3, 'undecided': 7, 'unjudged': 0} den 20
+C INCONCLUSIVE {'fail': 0, 'pass': 4, 'undecided': 2, 'unjudged': 0} den 6
+D INCONCLUSIVE {'fail': 0, 'pass': 6, 'undecided': 2, 'unjudged': 0} den 8
+E PASS {'fail': 0, 'pass': 1, 'undecided': 0, 'unjudged': 0} den 1
+P PASS {'fail': 0, 'pass': 1, 'undecided': 0, 'unjudged': 0} den 1
+## after (stream w3t's tx_inhibit.py, sha256 67cba7a55beebc1d)
+A FAIL {'fail': 1, 'pass': 6, 'undecided': 2, 'unjudged': 0} den 9
+B FAIL {'fail': 11, 'pass': 6, 'undecided': 3, 'unjudged': 0} den 20
+C FAIL {'fail': 1, 'pass': 5, 'undecided': 0, 'unjudged': 0} den 6
+D FAIL {'fail': 2, 'pass': 6, 'undecided': 0, 'unjudged': 0} den 8
+E PASS {'fail': 0, 'pass': 1, 'undecided': 0, 'unjudged': 0} den 1
+P PASS {'fail': 0, 'pass': 1, 'undecided': 0, 'unjudged': 0} den 1
+## check_contracts (set): PASS of 96 before and after

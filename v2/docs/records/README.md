@@ -41,6 +41,7 @@ Worktrees:
 | `ts-net/` | the tools stream ts-net (PWR-001 and SI-001 on the netlist), rounds 7 and 8 (its session decisions; filed at integration, 27 September 2026) |
 | `w1/` | foundation workstream 1 (systems and requirements): the owner decision table, the conflict list and the candidate requirements, 25 September (filed 27 September) |
 | `w2/` | foundation workstream 2 (power and runtime), 25 September |
+| `w3t/` | the tools stream w3t (EQ-18, the SN74LVC1G57 row of the RF-002 walk) and its finding W3T-F1, filed at the r8int5 integration of 27 September 2026; `w3t-decisions.md` and `HANDOFF.md` carry the independent check's corrections (marked 'corrected at integration'), and `apply_registry.py` is the copy that ran (both files computed before either is written, the W3T-F1 wording corrected) |
 | `w4/` | foundation workstream 4 (mechanical, thermal and RF), 25 September |
 | `w6/` | foundation workstream 6 (findings review), 25 September |
 | `hc5/` | the layer 5 closer (27 September): the kit I2C bus budget, its script and two outputs, the interface contracts' field check with its output, and the USB 2.0 clauses it cites; authored in the tree, not filed from drafts |
@@ -330,6 +331,12 @@ Paths are relative to this folder; the source is the same path below `drafts/` i
 | `ts-net/ts-net-decisions.md` | `78c2dba37c579c4894d12460f2901fec7816b87def759828eb514df7d51fbdff` | 19831 | `fnd/ts-net` `drafts/ts-net-decisions.md` | `v2/ecad/tools/pcb_rules_coverage.yaml` (PWR-001) |
 | `w2/w2-power.md` | `960e46bdd58bf857aeb436dc9239ee11b30060fad978ba557f560e1be50a53ec` | 27952 | `fnd/w2` `drafts/w2-power.md` | `v2/docs/feasibility/POWER-THERMAL.md` |
 | `w2/w2-runtime.md` | `2b203982023f6fe63a1eecc1103cc3ceb1b6e51f4a858fbe0e79ce365626c9db` | 16780 | `fnd/w2` `drafts/w2-runtime.md` | `v2/docs/feasibility/POWER-THERMAL.md` |
+| `w3t/HANDOFF.md` | `c5f06cc02981bbcfc40bf0bf8448b3346070485d6ef122bc5269191a090538fa` | 5878 | `fnd/w3t` `drafts/w3t/HANDOFF.md` | v2/ecad/tools/pcb_requirements.yaml (S-64)<br>v2/docs/handover/ENGINEERING-QUESTIONS.md (EQ-25) |
+| `w3t/apply_registry.py` | `649dfa5f83719566360047592f6957d52aa720b4121a8869e273eaf34c8d7a02` | 13863 | `fnd/w3t` `drafts/w3t/apply_registry.py` | the r8int5 integration (it applied RF-002's coverage row and S-64) |
+| `w3t/readings/inhibit-chain-before-after.txt` | `5f9acd1b9d969a3105618f36c58f009aa623e9fe77836327a27b2a429e91ac3b` | 1113 | `fnd/w3t` `drafts/w3t/readings/inhibit-chain-before-after.txt` | v2/docs/handover/ENGINEERING-QUESTIONS.md (EQ-25) |
+| `w3t/readings/walk-after-w3t.json` | `f3376a666688f87c7ad5dffd656b255d0fd4b49e58475682f01c01ad5f27ce03` | 20131 | `fnd/w3t` `drafts/w3t/readings/walk-after-w3t.json` | w3t-decisions.md section 4 |
+| `w3t/readings/walk-before-main-38dcd764.json` | `34130f160f66f1b57c7f1c6494ea9aaa6081a7314df81e08a2861af50b2f3a8d` | 21077 | `fnd/w3t` `drafts/w3t/readings/walk-before-main-38dcd764.json` | w3t-decisions.md section 4 |
+| `w3t/w3t-decisions.md` | `d9d695e4a0f5c19426d7f9625b634fb0ba7dcc5cea5c209e0ce0bbb06e6a907f` | 12585 | `fnd/w3t` `drafts/w3t/w3t-decisions.md` | v2/ecad/tools/pcb_requirements.yaml (S-64)<br>v2/docs/handover/ENGINEERING-QUESTIONS.md (EQ-18, EQ-25)<br>v2/docs/feasibility/EMCON.md (section 4b) |
 | `w4/w4-mech-thermal-rf.md` | `ba590c405b672995eee2094ec302eb08ddfed9ca49a7411d71041ffd459bd42e` | 52637 | `fnd/w4` `drafts/w4-mech-thermal-rf.md` | `v2/docs/feasibility/POWER-THERMAL.md` |
 | `w4/w4-scratch-thermal.py` | `6c83da5f7e3e4f0f5393bfe0f609ba02c423adbadfa3661a245d0a9b778e65c3` | 9871 | `fnd/w4` `drafts/w4-scratch-thermal.py` | `v2/docs/feasibility/POWER-THERMAL.md` |
 | `w6/w6-findings.md` | `4cde4801efe8aeb2c0a1942240553d2da8bd623a012486dee0730a41ffb04bf8` | 40483 | `fnd/w6` `drafts/w6-findings.md` | `v2/docs/feasibility/DECOUPLING.md` |

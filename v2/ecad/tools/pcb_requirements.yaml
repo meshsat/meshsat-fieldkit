@@ -1945,6 +1945,25 @@ open_items:
       95 x 63 x 25 and the notch heights are checked against no maker drawing. Revise the tray from the QMX enclosure
       drawing before it is printed (v2/docs/CASE-FIT-UNCERTAINTIES.md section 3; the layer 7 fixer c7). Desk work on a
       made part: no board moves (J_QMX, J_HF and J_RF2 stay) and nothing is bought. ENGINEERING-QUESTIONS EQ-24.
+  - id: S-64
+    class: SESSION
+    status: OPEN
+    title: >-
+      Finding W3T-F1 (EQ-18's row, stream w3t, 27 September 2026; v2/ecad/tools/tx_inhibit.py with the SN74LVC1G57 row): with board C
+      unpowered, TX_INHIBIT_n's three 100 kOhm pull-downs (board A R145, board B R59, board D R2) hold it at up to
+      1.09 V against 31 uA of stated pin current (board C's U9 and U14 at Ioff 10 uA each, DS35124 Rev. 8-2 and
+      SCES414P 6.5; board D's U12 10 uA; board A's U35 and U37 0.5 uA each), over the 0.8 V VIL the walk applies
+      to the gates that read it (TI states 0.9 V for board A's SN74AUP1G08s, 0.8 V for board D's U12), so RF-002's
+      fail-safe state FAILS on boards A to D and board D's SA868 keying inherits it; before round 8's lamp gate U14
+      the same state read 0.74 V. The FAIL is under the walk's worst-case leakage convention (an unpowered part
+      passes its Ioff); the sheets also state II at VCC 0 V, and with U9, U14 and D's U12 at II the line reads
+      about 0.42 V, so it is not a demonstrated defect, and the remedy is margin. For board C's next circuit round.
+      Open until the line stays under 0.8 V in every fail-safe
+      state with its idle HIGH still above its readers' VIH: (a) board C: R14 10 k to 2.2 k 1 percent and a 10 k 1
+      percent pull-down on TX_INHIBIT_n (about 0.24 V failed safe, 2.37 V idle at the adverse ends), one board, the
+      session's recommendation; (b) board B's R59 to 10 k 1 percent with R14 to 2.2 k; (c) all three pull-downs to
+      47 k with R14 to 4.7 k. The arithmetic is in v2/docs/records/w3t/HANDOFF.md section 2 and
+      v2/docs/records/w3t/w3t-decisions.md section 5; engineering question EQ-25.
 
 # Items that left the open list, and what closed each: an owner ruling, a session choice, or a commit whose effect
 # was read in the file `closing_evidence` names. A record never waits on a closed item; it cites what closed it.
@@ -3856,8 +3875,15 @@ records:
           end to end 0 of 17), section 2's readers, section 3's status cells for L1 to L4 and L7, section 4's row 5
           and sections 7 and 8 follow it; section 0's TX-lamp sentence and E-02 are byte-identical and no board C part
           moved, so the record stays FAIL on the file at 421a291f7ce4cda2
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the r8int5 integration of 27 September 2026 (stream w3t, EQ-18):
+          section 4b gains one dated paragraph (the RF-002 walk now reads board C's U14 as the NOR its wiring selects;
+          on main 38dcd764's netlists EMCON_HW reads PASS and TX_INHIBIT_n FAILS on its fail-safe state at 1.09 V under
+          the walk's worst-case leakage convention, finding W3T-F1) and section 8's tools hand-off notes U14's model
+          done; every other section, sections 0, 0a, 4.1 to 4.18, 4a, 5, 5a, 6, 7 and 9 included, is byte-identical. The
+          statements this reading rests on are unchanged, so it stays FAIL on the file at e0a05db36b6e836d
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@421a291f7ce4cda2"
+      - "v2/docs/feasibility/EMCON.md@e0a05db36b6e836d"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161"
     release_effect: MUST_JUSTIFY
     source: ["v2/docs/PANEL.md:135", "v2/docs/PANEL.md:189"]
@@ -5529,8 +5555,15 @@ records:
           per-finding list (v2/docs/records/r8b/expected_r8b.json; 0 unexplained, 56 with two findings' entries
           dropped); against the author's own netlist it differs only in U115, U215 and U315's value text, so this
           reading stands on the file at adcc3c6736c90e9f
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the r8int5 integration of 27 September 2026 (stream w3t, EQ-18):
+          section 4b gains one dated paragraph (the RF-002 walk now reads board C's U14 as the NOR its wiring selects;
+          on main 38dcd764's netlists EMCON_HW reads PASS and TX_INHIBIT_n FAILS on its fail-safe state at 1.09 V under
+          the walk's worst-case leakage convention, finding W3T-F1) and section 8's tools hand-off notes U14's model
+          done; every other section, sections 0, 0a, 4.1 to 4.18, 4a, 5, 5a, 6, 7 and 9 included, is byte-identical. The
+          statements this reading rests on are unchanged, so it stays FAIL on the file at e0a05db36b6e836d
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@421a291f7ce4cda2"
+      - "v2/docs/feasibility/EMCON.md@e0a05db36b6e836d"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
     release_effect: BLOCKER
     source:
@@ -5659,8 +5692,15 @@ records:
           per-finding list (v2/docs/records/r8b/expected_r8b.json; 0 unexplained, 56 with two findings' entries
           dropped); against the author's own netlist it differs only in U115, U215 and U315's value text; RB_IEN still
           joins J_RB9704 pin 3 and U6 pin 19 only, so this reading stands on the file at adcc3c6736c90e9f
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the r8int5 integration of 27 September 2026 (stream w3t, EQ-18):
+          section 4b gains one dated paragraph (the RF-002 walk now reads board C's U14 as the NOR its wiring selects;
+          on main 38dcd764's netlists EMCON_HW reads PASS and TX_INHIBIT_n FAILS on its fail-safe state at 1.09 V under
+          the walk's worst-case leakage convention, finding W3T-F1) and section 8's tools hand-off notes U14's model
+          done; every other section, sections 0, 0a, 4.1 to 4.18, 4a, 5, 5a, 6, 7 and 9 included, is byte-identical. The
+          statements this reading rests on are unchanged, so it stays FAIL on the file at e0a05db36b6e836d
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@421a291f7ce4cda2"
+      - "v2/docs/feasibility/EMCON.md@e0a05db36b6e836d"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
       - "v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568"
     release_effect: BLOCKER
@@ -5898,8 +5938,15 @@ records:
           per-finding list (v2/docs/records/r8b/expected_r8b.json; 0 unexplained, 56 with two findings' entries
           dropped); against the author's own netlist it differs only in U115, U215 and U315's value text, so this
           reading stands on the file at adcc3c6736c90e9f
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the r8int5 integration of 27 September 2026 (stream w3t, EQ-18):
+          section 4b gains one dated paragraph (the RF-002 walk now reads board C's U14 as the NOR its wiring selects;
+          on main 38dcd764's netlists EMCON_HW reads PASS and TX_INHIBIT_n FAILS on its fail-safe state at 1.09 V under
+          the walk's worst-case leakage convention, finding W3T-F1) and section 8's tools hand-off notes U14's model
+          done; every other section, sections 0, 0a, 4.1 to 4.18, 4a, 5, 5a, 6, 7 and 9 included, is byte-identical. The
+          statements this reading rests on are unchanged, so it stays FAIL on the file at e0a05db36b6e836d
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@421a291f7ce4cda2"
+      - "v2/docs/feasibility/EMCON.md@e0a05db36b6e836d"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
     release_effect: BLOCKER
     source:
@@ -6203,10 +6250,19 @@ records:
           boards moving from TOOL_CHANGED to UNBOUND (claims_check re-taken under its current tool after f2b7fa66);
           board D's RF-002 and SCH-004 keep the class and cause read above, so this constraint's own reasons are
           unchanged and it stays INCONCLUSIVE, so it stands on the file at ed8d4fbaefde46f7
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the r8int5 integration of 27 September 2026 (stream w3t, EQ-18):
+          section 4b gains one dated paragraph (the RF-002 walk now reads board C's U14 as the NOR its wiring selects;
+          on main 38dcd764's netlists EMCON_HW reads PASS and TX_INHIBIT_n FAILS on its fail-safe state at 1.09 V under
+          the walk's worst-case leakage convention, finding W3T-F1) and section 8's tools hand-off notes U14's model
+          done; every other section, sections 0, 0a, 4.1 to 4.18, 4a, 5, 5a, 6, 7 and 9 included, is byte-identical. The
+          trace this constraint cites (board D's U12, U14, U15, U13) and the SA868's open row are unchanged; the SA868
+          keying now inherits the line's FAIL in the walk, which adds a reason and removes none, so it stays
+          INCONCLUSIVE on the file at e0a05db36b6e836d
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63"
-      - "v2/docs/feasibility/EMCON.md@421a291f7ce4cda2"
+      - "v2/docs/feasibility/EMCON.md@e0a05db36b6e836d"
       - "v2/docs/CURRENT-EVIDENCE.md@ed8d4fbaefde46f7"
     release_effect: BLOCKER
     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2825", "v2/docs/PANEL.md section 6", "v2/docs/feasibility/EMCON.md sections 4.1 and 4.2"]
@@ -6312,8 +6368,15 @@ records:
           end to end 0 of 17), section 2's readers, section 3's status cells for L1 to L4 and L7, section 4's row 5
           and sections 7 and 8 follow it; board C's lamp (D22, U14, Q7) and its plate light guide, still owed, read as
           before, so the record stays FAIL on the light-guide clause, on the file at 421a291f7ce4cda2
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the r8int5 integration of 27 September 2026 (stream w3t, EQ-18):
+          section 4b gains one dated paragraph (the RF-002 walk now reads board C's U14 as the NOR its wiring selects;
+          on main 38dcd764's netlists EMCON_HW reads PASS and TX_INHIBIT_n FAILS on its fail-safe state at 1.09 V under
+          the walk's worst-case leakage convention, finding W3T-F1) and section 8's tools hand-off notes U14's model
+          done; every other section, sections 0, 0a, 4.1 to 4.18, 4a, 5, 5a, 6, 7 and 9 included, is byte-identical. The
+          statements this reading rests on are unchanged, so it stays FAIL on the file at e0a05db36b6e836d
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@421a291f7ce4cda2"
+      - "v2/docs/feasibility/EMCON.md@e0a05db36b6e836d"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/EMCON.md section 7 (the common element)", "session choice SC-11"]
@@ -6479,10 +6542,19 @@ records:
           per-finding list (v2/docs/records/r8b/expected_r8b.json; 0 unexplained, 56 with two findings' entries
           dropped); against the author's own netlist it differs only in U115, U215 and U315's value text, so this
           reading stands on the file at adcc3c6736c90e9f
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the r8int5 integration of 27 September 2026 (stream w3t, EQ-18):
+          section 4b gains one dated paragraph (the RF-002 walk now reads board C's U14 as the NOR its wiring selects;
+          on main 38dcd764's netlists EMCON_HW reads PASS and TX_INHIBIT_n FAILS on its fail-safe state at 1.09 V under
+          the walk's worst-case leakage convention, finding W3T-F1) and section 8's tools hand-off notes U14's model
+          done; every other section, sections 0, 0a, 4.1 to 4.18, 4a, 5, 5a, 6, 7 and 9 included, is byte-identical. The
+          blocker's per-transmitter rows, its stages and its hold are unchanged; the new paragraph adds a FAIL on
+          TX_INHIBIT_n's fail-safe level for board C's next round and closes none, so it stays INCONCLUSIVE on the file
+          at e0a05db36b6e836d
     evidence_bound_to:
       - "v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
-      - "v2/docs/feasibility/EMCON.md@421a291f7ce4cda2"
+      - "v2/docs/feasibility/EMCON.md@e0a05db36b6e836d"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/EMCON.md section 7", "v2/docs/reviews/2026-09-26-foundation-progress-review.md section 3"]
     source_check: VERIFIED

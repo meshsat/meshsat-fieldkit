@@ -1152,6 +1152,15 @@ line's FAIL that boards A and C carried on main: `inhibit_chain_a` reads INCONCL
 the walk does not model either. These are the tool's model gaps, handed to the tools author in section 8, not circuit
 findings; no model was added at integration, because an unchecked row in the walk is a tool change without its
 independent check (as board C's integration decided for U14), so the walk's reading fails closed meanwhile.
+**Since stream w3t (EQ-18, integrated in `fnd/r8int5`, 27 September 2026)** the walk reads U14 as the NOR its wiring
+selects (SCES414P Figure 7, In1 on the part's own GND; any other wiring UNDECIDED). On main `38dcd764`'s netlists the
+`EMCON_HW` line then reads PASS, and board B's RockBLOCK 9704 and E22 with it, while `TX_INHIBIT_n` FAILS on its
+fail-safe state: with board C unpowered, 31 uA of stated pin current (the Ioff of C's U9 and U14 and D's U12, the II
+of A's U35 and U37) into the line's three 100 kOhm pull-downs reaches 1.09 V over the 0.8 V VIL the walk applies (0.74 V
+before U14), and board D's SA868 keying inherits it. That is the L2 sum's counterpart on `TX_INHIBIT_n` (31 uA into
+35 k, where `EMCON_HW`'s 111.2 uA into 3.23 k reads 0.36 V), a FAIL under the walk's worst-case leakage convention
+(with the stated II at VCC 0 V the line reads about 0.42 V), not a demonstrated defect: finding W3T-F1, open item
+S-64, engineering question EQ-25, for board C's next circuit round (`v2/docs/records/w3t/`).
 
 ## 5. Decisions taken by the session under the owner's standing rule of 26 September 2026
 
@@ -1740,7 +1749,8 @@ firmware revisions, the RM520N-GL's recorded configuration and the fitted QMX PC
   TLV75801P enable and path (b) of the PA. Count board C's round-8 inputs in R4T-D37's sums, with U3's GPIO21 no longer
   on `EMCON_HW`: on `EMCON_HW`, U13 pin 2 (II +-5 uA, IOFF +-10 uA at VCC 0, DS35124 Rev. 8-2 page 4) and U14 pin 6
   (II +-1 uA, Ioff +-10 uA at VCC 0, SCES414P page 5); on `TX_INHIBIT_n`, U14 pin 3 (the same); and model U14's
-  SN74LVC1G57 pin map (1 In1, 2 GND, 3 In0, 4 Y, 5 VCC, 6 In2). Board B's round 8 (section 4b): model the SN74LVC2G06
+  SN74LVC1G57 pin map (1 In1, 2 GND, 3 In0, 4 Y, 5 VCC, 6 In2) (done by stream w3t for EQ-18: U14's row, and U13's and
+  U14's II and Ioff counted, section 4b). Board B's round 8 (section 4b): model the SN74LVC2G06
   (TI SCES307J, DBV: 1 1A, 2 GND, 3 2A, 4 2Y, 5 VCC, 6 1Y; open-drain outputs, VOL 0.1 V at 100 uA and 0.4 V at 16 mA at
   VCC 3 V, Ioff +-10 uA), without which the walk reads every board B open-drain stage 'EMCON does not reach it'; claim
   U221 (TPS3808G30, whose value names the RM520N; it holds FULL_CARD_POWER_OFF# low on release and is not the radio's
