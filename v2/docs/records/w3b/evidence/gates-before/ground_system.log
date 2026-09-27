@@ -1,0 +1,4 @@
+ground_system: 1 ground net(s): GND
+  note one ground (GND) and the board declares it
+verdict: ground_system          PASS         of 1 {"crossings": 0, "fail": 0, "grounds": 1, "signals_crossing": 0} | one ground declared, or every partition declared with its crossing points and the signals that cross; found from the netlist and compared with the board's own declaration
+exit 0

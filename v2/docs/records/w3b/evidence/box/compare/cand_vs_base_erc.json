@@ -1,0 +1,156 @@
+{
+ "kind": "erc",
+ "violations": [
+  2869,
+  2879
+ ],
+ "by_type": [
+  {
+   "error:pin_to_pin": 5,
+   "error:power_pin_not_driven": 2,
+   "warning:endpoint_off_grid": 598,
+   "warning:lib_symbol_issues": 1979,
+   "warning:unconnected_wire_endpoint": 285
+  },
+  {
+   "error:pin_to_pin": 5,
+   "error:power_pin_not_driven": 2,
+   "warning:endpoint_off_grid": 599,
+   "warning:lib_symbol_issues": 1987,
+   "warning:unconnected_wire_endpoint": 286
+  }
+ ],
+ "only_committed": [
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Horizontal Wire, length 0.0254 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Horizontal Wire, length 2.1780 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Vertical Wire, length 0.0254 mm"
+   ]
+  ]
+ ],
+ "only_other": [
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Horizontal Wire, length 0.0127 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Horizontal Wire, length 0.0191 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Horizontal Wire, length 0.1016 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Horizontal Wire, length 2.2034 mm"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'Device'",
+   [
+    "Symbol C72 [C]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'Device'",
+   [
+    "Symbol C73 [C]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'Device'",
+   [
+    "Symbol C74 [C]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'Device'",
+   [
+    "Symbol R525 [R]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'Device'",
+   [
+    "Symbol R526 [R]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR668 [GND]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR669 [GND]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR670 [GND]"
+   ]
+  ],
+  [
+   "warning",
+   "unconnected_wire_endpoint",
+   "Unconnected wire endpoint",
+   [
+    "Horizontal Wire, length 0.0254 mm"
+   ]
+  ]
+ ],
+ "result": "DIFFERENT"
+}

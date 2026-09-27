@@ -1,0 +1,38 @@
+w3b: compare start 2026-09-27T10:22:27Z
+w3b: == main's generator against main's committed board B files (base)
+base_vs_committed        schematic  exit 0  PARITY
+base_vs_committed        netlist    exit 0  PARITY_AFTER_NOISE
+base_vs_committed        intent     exit 0  PARITY_AFTER_NOISE
+base_vs_committed        provenance exit 0  PARITY_AFTER_NOISE
+base_vs_committed        bom        exit 0  PARITY
+base_vs_committed        erc        exit 0  PARITY_AFTER_NOISE
+w3b: == the candidate against main regenerated (cand vs base)
+cand_vs_base             schematic  exit 1  DIFFERENT
+cand_vs_base             netlist    exit 1  DIFFERENT
+cand_vs_base             intent     exit 1  DIFFERENT
+cand_vs_base             bom        exit 1  DIFFERENT
+cand_vs_base             erc        exit 1  DIFFERENT
+w3b: == independent netlist comparison (indep_cmp.py) with the w3b expected-change list
+w3b: committed main -> cand exit 1
+parts 1265 -> 1270 (+5 -0 ~0); nets 2002 -> 2004 (+2 -0 ~4)
+unexplained: 1
+  UNEXPLAINED nets_changed GND ['C72', 'C73', 'C74']
+w3b: main regenerated -> cand exit 1
+parts 1265 -> 1270 (+5 -0 ~0); nets 2002 -> 2004 (+2 -0 ~4)
+unexplained: 1
+  UNEXPLAINED nets_changed GND ['C72', 'C73', 'C74']
+w3b: committed main -> main regenerated (raw)
+parts 1265 -> 1265 (+0 -0 ~0); nets 2002 -> 2002 (+0 -0 ~0)
+{
+ "parts_added": [],
+w3b: with W3B-F1 parts_added dropped (must refuse) exit 1 unexplained 3
+w3b: base status after compare:
+     M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json
+     M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net
+     M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net.prov.json
+w3b: cand status after compare:
+     M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json
+     M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net
+     M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net.prov.json
+     M v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_sch
+w3b: compare done 2026-09-27T10:22:36Z

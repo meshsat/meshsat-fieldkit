@@ -1,0 +1,66 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "intent_checks.py",
+  "files": {
+   "boardorder.py": "298e46edcc028954",
+   "boardtable.py": "41bd92e61f12c374",
+   "hardset.py": "be29a44c4a592876",
+   "intent.py": "f1ac033e0f3c10f1",
+   "intent_checks.py": "1ad7af0c718ba940",
+   "kicad_compat.py": "6b8f77490466e939",
+   "netclass.py": "4cc1adf0ddae0390",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "return_via.py": "b61d138e54955dd4",
+   "rules_lib.py": "c0458c53923d7925",
+   "signal_class.py": "60b8647301428da4",
+   "signalnets.py": "688be12d8e42e7a4",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "5aa3d5157698ae2a",
+  "unresolved": []
+ },
+ "counts": {
+  "fail": 3,
+  "pass": 39
+ },
+ "denominator": 42,
+ "evidence": [
+  "intent rail +3V3_M2C1 is a net of the board",
+  "intent rail +3V3_M2C2 is a net of the board",
+  "intent rail +3V3_M2C3 is a net of the board"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "2e64b5bf2d9cd3bc"
+  }
+ },
+ "missing_input": null,
+ "note": "checks this file makes that no rule bucket claims yet",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [],
+ "runtime": {
+  "kicad": "9.0.9-9.0.9~ubuntu24.04.1",
+  "python": "3.12.3"
+ },
+ "tool": "intent_other",
+ "tools": {
+  "git_head": "38dcd76442a1",
+  "tools_tree_sha": "a2f69336ab196da0"
+ },
+ "ts": "2026-09-27T10:34:54Z",
+ "verdict": "FAIL",
+ "version": "38dcd76442a1",
+ "writer": {
+  "file": "intent_checks.py",
+  "sha16": "1ad7af0c718ba940"
+ }
+}

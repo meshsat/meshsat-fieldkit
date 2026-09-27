@@ -1,0 +1,12 @@
+port_protect: board B declares 2 external port(s); 2 found on this netlist
+port_protect: 6 clamp(s) judged for polarity: 0 reversed, 0 drawn with a symbol that does not match the part's direction, 0 unjudged
+  CLAMP D1     OK       K/A       uni    cathode (its K pin) on +5V_DEV, anode on the return GND
+  CLAMP D101   OK       K/A       uni    cathode (its K pin) on +5V_S1, anode on the return GND
+  CLAMP D2     OK       K/A       uni    cathode (its K pin) on +54V_POE, anode on the return GND
+  CLAMP D201   OK       K/A       uni    cathode (its K pin) on +5V_S2, anode on the return GND
+  CLAMP D301   OK       K/A       uni    cathode (its K pin) on +5V_S3, anode on the return GND
+  CLAMP D520   OK       K/A       uni    cathode (its K pin) on +3V3_M2C2, anode on the return GND
+  J_ETH        9 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [the internal RJ45 whose patch lead reaches the sealed wall RJ45:]
+  J_54V        2 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [the Power over Ethernet feed, which leaves the case on that same]
+verdict: port_protect           PASS         of 17 {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 6, "clamps_one_way": 6, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unjudged": 0, "declared": 2, "not_on_netlist": 0, "ports": 2, "unprotected": 0} | every declared external conductor meets a protection part before a chip, and every clamp is drawn and placed the right way round
+exit 0

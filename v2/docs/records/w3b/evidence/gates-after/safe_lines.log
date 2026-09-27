@@ -1,0 +1,8 @@
+safe_lines: board B declares 5 safety line(s)
+  EMCON_HW         safe low  listens   pull down [R58 (4.7k 1%)] pull up [-] drivers [-] reads [U112.2 (SN74LVC1G04DBVR inverter (2 ), U212.2 (SN74LVC1G04DBVR inverter (2 ), U312.2 (SN74LVC1G04DBVR inverter (2 )] leaves on [J_AB1.15, J_PANEL.8]
+  TX_INHIBIT_n     safe low  carries   pull down [R59 (100k)] pull up [-] drivers [-] reads [-] leaves on [J_AB1.16, J_PANEL.11]
+  PI_KILL          safe low  source    pull down [-] pull up [-] drivers [-] reads [Q103.3 (2N7002), Q203.3 (2N7002), Q303.3 (2N7002)] leaves on [J_AB1.10, J_PANEL.25]
+  ZEROIZE_HW       safe high carries   pull down [-] pull up [-] drivers [-] reads [-] leaves on [J_AB1.20, J_PANEL.10]
+  SHORE_INHIBIT    safe low  carries   pull down [-] pull up [-] drivers [-] reads [-] leaves on [J_AB1.21, J_PANEL.26]
+verdict: safe_lines             PASS         of 5 {"floating": 0, "lines": 5, "listened": 1, "on_netlist": 5} | 1 line(s) this board reads hold the safe state with its own copper; the rest are driven here or only cross it
+exit 0

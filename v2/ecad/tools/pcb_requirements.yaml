@@ -2106,6 +2106,54 @@ open_items:
       (+3V3 over 3.83 to 4.11 V, or U39's thermal shutdown); the panel firmware reads it, logs a +3V3 overvoltage and
       treats the PA and HF rails as unavailable while it is low. PANEL.md's bus table and the firmware contract carry
       it.
+  - id: S-71
+    class: SESSION
+    status: OPEN
+    title: >-
+      Finding W3B-A (stream w3b, 27 September 2026; board B): the LG290P's active antenna feed departs from Quectel's
+      reference (LG290P(03) hardware design V1.1 5.2, Figure 17, p.35): the bias inductor L3 is 27 nH where "The
+      recommended value of L1 should be at least 68 nH"; the maker's C4 (100 pF) and C5 (100 nF) at the feed are not
+      drawn (GNSS_BIAS and GNSS_VDD_RF carry no capacitor); no ESD device D1 ("junction capacitance ... cannot be more
+      than 0.6 pF and a transient voltage suppressor is recommended") is on the antenna input; and the DC block C42 is
+      47 pF where the maker's C1 is 100 pF. R23 (10 Ohm, the maker's R2) is as drawn. The antenna's own current is
+      held in no document (20 mA typical and 30 mA peak are INFERRED in gen_sch_b.py's GNSS_VDD_RF declaration). Open
+      until board B's generator carries the feed as Figure 17 draws it, with an inductor and an ESD part whose
+      datasheets are held and whose self-resonance and capacitance are read at L1 to L5, or a written deviation with
+      its reason, and the kit antenna's current is read from its maker.
+  - id: S-72
+    class: SESSION
+    status: OPEN
+    title: >-
+      Finding W3B-B (stream w3b, 27 September 2026; board B): W3B-F2 draws the LG290P's recommended 4.7 uF, 100 nF and
+      33 pF at V_BCKP but not the TVS the same sentence recommends (hardware design V1.1 3.2.2, p.25): the maker's
+      figures feed V_BCKP from an always-on supply or an LDO, board B from its on-board CR2032 BT1, and a TVS pick
+      needs a held datasheet and a standby leakage the cell can carry. With it, the coin cell's drain: VBAT_RTC (VBAT
+      until W3B-R1) feeds three CM5 RTCs (6 uA each unpowered, CM5 datasheet Table 9), the DS3231SN (3.0 uA maximum,
+      19-5170 Rev 10) and the LG290P's backup domain (12 uA typical and 57 uA maximum in Backup mode, Table 11), about
+      31 uA typical and 78 uA worst with the kit stored, against a cell whose capacity no held document states. Open
+      until the TVS is picked or ruled out with its reason and the stored life is computed from a held CR2032
+      datasheet and carried into CONOPS's storage scenario. The same reading's paragraph before it (3.2.1, p.24; the
+      independent check) recommends a TVS plus 10 uF, 100 nF and 33 pF at VCC pin 23, smallest closest, advises
+      against a switching DC-DC and asks for an MCU-controlled VCC: board B has C40 (100 nF) and C41 (10 uF) on
+      +3V3_DEV not declared against U11 pin 23, no 33 pF, no TVS, and feeds VCC from the always-on AP63203 buck;
+      recorded with this item.
+  - id: S-73
+    class: SESSION
+    status: OPEN
+    title: >-
+      Finding W3B-C (stream w3b, 27 September 2026; board B): two TPS23861 items W3B-F1 does not close. C34 (100 nF
+      100 V on +54V_POE) is the capacitor TI asks at VPWR ("Bypass VPWR to AGND using a 0.1-uF capacitor", SLUSBX9I
+      p.5) and is not declared against U5 pin 28, so DEC-001 will not seat it (a declaration moves the sheet layout,
+      left to board B's next circuit round); and KSENSA (pin 18, "Kelvin point connection for SEN1 and SEN2") is on
+      GND in the schematic, so its Kelvin tap at R12's ground pad is a layout constraint for
+      v2/docs/layout-constraints/B.md. The independent check found more of the same reading (SLUSBX9I 8.3.4.2, p.90):
+      TI's per-port parts CPn (0.1 uF 100 V from VPWR to the port negative, +54V_POE to POE_DRAIN), the port TVS DPnA
+      (58 V standoff, 95 V maximum clamp, across the port) and the port fuse FPn are absent; Q1 (CSD19532Q5B) departs
+      from TI's QPn guidance (CISS under 2000 pF, QG under 50 nC at 12.5 V) with Ciss 3700 pF typical and Qg 48 nC at
+      10 V typical (62 maximum); RDRNn and RSENn go near QPn's drain and source (layout constraints); and the RM520N
+      HD 4.1.7 asks USIM_VDD and ground traces of at least 0.5 mm, which the SIM rails' 50 mA declarations do not
+      carry. None was introduced by w3b. Open until C34 is declared, the per-port parts are drawn or a deviation is
+      written with its reason, and the constraints are written.
 
 # Items that left the open list, and what closed each: an owner ruling, a session choice, or a commit whose effect
 # was read in the file `closing_evidence` names. A record never waits on a closed item; it cites what closed it.
@@ -2544,9 +2592,33 @@ records:
           per-finding list (v2/docs/records/r8b/expected_r8b.json; 0 unexplained, 56 with two findings' entries
           dropped); against the author's own netlist it differs only in U115, U215 and U315's value text, so this
           reading stands on the file at adcc3c6736c90e9f
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at stream w3b's merge of 27 September 2026 (MESHSAT-1357, board B:
+          PWR-001 declarations, decision 42 classes, W3B-F1, W3B-F2): the generator gains intent declarations only
+          (17 rails and 40 nodes for PWR-001, each with its maker's figure; the +54V_POE load list names R13 and
+          U5's own 7 mA; U11's +3V3_DEV load is the LG290P's 135 mA peak plus its antenna's 30 mA), the decision 42
+          class and basis on every decoupling entry, and two circuit changes: W3B-F1, RSENS R525 (22 Ohm) and RDRAIN
+          R526 (47 Ohm) between the TPS23861's SEN1 and DRAIN1 and the port (SLUSBX9I p.5, 6.5), and W3B-F2, C72 to
+          C74 (4.7 uF, 100 nF, 33 pF) at the LG290P's V_BCKP (hardware design V1.1 3.2.2); and W3B-R1, the coin-cell
+          net VBAT renamed VBAT_RTC (board A's pack node is VBAT, and the contracts key a rail by its name); lines
+          above each cited range moved: the device set is untouched (no device part added, removed or re-coded; the
+          five new parts are passives), J_M2C2 is still on the key-B land at line 759 and U9 is still the DS3231SN#,
+          so the land half stays closed at desk and the certification half stands, on the file at 6957adda1bb5f23a
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w3b's merge of 27 September 2026
+          (MESHSAT-1357, board B: PWR-001 declarations, decision 42 classes, W3B-F1, W3B-F2) on the KiCad box with
+          main's chain (main's own generator reproduces main's committed schematic, netlist, intent, provenance, BOM
+          and ERC: PARITY or PARITY_AFTER_NOISE) and compared by the integration's own comparator
+          (v2/docs/records/r8b/integration/indep_cmp.py) record by record and net by net: 5 parts added (R525, R526,
+          C72, C73, C74), 1 part changed (TP6's value, the net it names), 3 nets added (POE_SEN_PIN, POE_DRAIN_PIN,
+          VBAT_RTC), 1 removed (VBAT), 3 changed (POE_SEN and POE_DRAIN by U5 leaving and R525 or R526 joining, GND
+          by C72 to C74 joining), 0 unexplained against v2/docs/records/w3b/expected_w3b.json and 2 unexplained when
+          W3B-F1's parts are dropped from it; VBAT_RTC carries every node VBAT carried plus C72 to C74 pin 1
+          (v2/docs/records/w3b/tools/rename_check.py); no device changes, so this reading stands on the file at
+          8b78c59754a6a0c7
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@af6e5821e21b70ef"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
+      - "v2/ecad/tools/gen_sch_b.py@6957adda1bb5f23a"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
       - "v2/docs/evidence/WRONG-MODEL-RECONCILIATION.md@97b1f63aa6ea11f1"
     release_effect: MUST_JUSTIFY
     source:
@@ -2994,9 +3066,22 @@ records:
           dropped); against the author's own netlist it differs only in U115, U215 and U315's value text; R480 to
           R500, R15 and R16 are 10 k on it and the lock, arm and motion parts sit where section 9a says, so this
           reading stands on the file at adcc3c6736c90e9f
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w3b's merge of 27 September 2026
+          (MESHSAT-1357, board B: PWR-001 declarations, decision 42 classes, W3B-F1, W3B-F2) on the KiCad box with
+          main's chain (main's own generator reproduces main's committed schematic, netlist, intent, provenance, BOM
+          and ERC: PARITY or PARITY_AFTER_NOISE) and compared by the integration's own comparator
+          (v2/docs/records/r8b/integration/indep_cmp.py) record by record and net by net: 5 parts added (R525, R526,
+          C72, C73, C74), 1 part changed (TP6's value, the net it names), 3 nets added (POE_SEN_PIN, POE_DRAIN_PIN,
+          VBAT_RTC), 1 removed (VBAT), 3 changed (POE_SEN and POE_DRAIN by U5 leaving and R525 or R526 joining, GND
+          by C72 to C74 joining), 0 unexplained against v2/docs/records/w3b/expected_w3b.json and 2 unexplained when
+          W3B-F1's parts are dropped from it; VBAT_RTC carries every node VBAT carried plus C72 to C74 pin 1
+          (v2/docs/records/w3b/tools/rename_check.py); R480 to R500, R15 and R16 are still 10 k on it and the lock,
+          arm and motion parts sit where FAILOVER-FABRIC.md section 9a says; the stream touches no part or net of
+          the fabric, so this reading stands on the file at 8b78c59754a6a0c7
     evidence_bound_to:
       - "v2/docs/feasibility/FAILOVER-FABRIC.md@a0ad3d7436cd126d"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
     release_effect: BLOCKER
     source:
       - "v2/docs/ARCH-PCB-B-IOHA.md:87-93"
@@ -3077,9 +3162,22 @@ records:
           per-finding list (v2/docs/records/r8b/expected_r8b.json; 0 unexplained, 56 with two findings' entries
           dropped); against the author's own netlist it differs only in U115, U215 and U315's value text; PG1 to PG3,
           their buffers and the qualifier muxes are on it, so this reading stands on the file at adcc3c6736c90e9f
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w3b's merge of 27 September 2026
+          (MESHSAT-1357, board B: PWR-001 declarations, decision 42 classes, W3B-F1, W3B-F2) on the KiCad box with
+          main's chain (main's own generator reproduces main's committed schematic, netlist, intent, provenance, BOM
+          and ERC: PARITY or PARITY_AFTER_NOISE) and compared by the integration's own comparator
+          (v2/docs/records/r8b/integration/indep_cmp.py) record by record and net by net: 5 parts added (R525, R526,
+          C72, C73, C74), 1 part changed (TP6's value, the net it names), 3 nets added (POE_SEN_PIN, POE_DRAIN_PIN,
+          VBAT_RTC), 1 removed (VBAT), 3 changed (POE_SEN and POE_DRAIN by U5 leaving and R525 or R526 joining, GND
+          by C72 to C74 joining), 0 unexplained against v2/docs/records/w3b/expected_w3b.json and 2 unexplained when
+          W3B-F1's parts are dropped from it; VBAT_RTC carries every node VBAT carried plus C72 to C74 pin 1
+          (v2/docs/records/w3b/tools/rename_check.py); PG1 to PG3, their buffers and the qualifier muxes are on it
+          unchanged; the stream touches no part or net of the fabric, so this reading stands on the file at
+          8b78c59754a6a0c7
     evidence_bound_to:
       - "v2/docs/feasibility/FAILOVER-FABRIC.md@a0ad3d7436cd126d"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/FAILOVER-FABRIC.md section 5.2", "v2/docs/feasibility/FAILOVER-FABRIC.md section 10"]
     source_check: VERIFIED
@@ -3328,8 +3426,16 @@ records:
           writes them and the seats owed with B's next cut; the ruling, the classes, T1 to T10, every other board's
           rows and the placement re-read are byte-identical and still unlaid, so the record stays INCONCLUSIVE on the
           file at c918952e6de4eff4
+      - >-
+          v2/docs/feasibility/DECOUPLING.md re-read at the r8int5 integration of stream w3b (27 September 2026): one row
+          changes, section 10's 'G4 to G7, G10' row, whose last sentences now say board B's generator writes class and
+          basis on every declaration (the r8b map with C65, C66, C508 and C509 corrected, C72 to C74 added, 277 entries)
+          where they said it did not yet; the seats still wait for board B's next placement, T1 to T10 and G1 to G14's
+          other rows are byte-identical, and the blocker's closing evidence (the per-class requirement merged with
+          DEC-001, each generator read back, the circuit gaps closed) is not met by a class being written, so it stays
+          INCONCLUSIVE on the file at 9f604241158c678f
     evidence_bound_to:
-      - "v2/docs/feasibility/DECOUPLING.md@c918952e6de4eff4"
+      - "v2/docs/feasibility/DECOUPLING.md@9f604241158c678f"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/DECOUPLING.md section 10", "v2/ecad/tools/pcb_decisions.yaml:1001-1118 (decision 42)"]
     source_check: VERIFIED
@@ -3459,9 +3565,36 @@ records:
           per-finding list (v2/docs/records/r8b/expected_r8b.json; 0 unexplained, 56 with two findings' entries
           dropped); against the author's own netlist it differs only in U115, U215 and U315's value text, so this
           reading stands INCONCLUSIVE on the file at adcc3c6736c90e9f
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at stream w3b's merge of 27 September 2026 (MESHSAT-1357, board B:
+          PWR-001 declarations, decision 42 classes, W3B-F1, W3B-F2): the generator gains intent declarations only
+          (17 rails and 40 nodes for PWR-001, each with its maker's figure; the +54V_POE load list names R13 and
+          U5's own 7 mA; U11's +3V3_DEV load is the LG290P's 135 mA peak plus its antenna's 30 mA), the decision 42
+          class and basis on every decoupling entry, and two circuit changes: W3B-F1, RSENS R525 (22 Ohm) and RDRAIN
+          R526 (47 Ohm) between the TPS23861's SEN1 and DRAIN1 and the port (SLUSBX9I p.5, 6.5), and W3B-F2, C72 to
+          C74 (4.7 uF, 100 nF, 33 pF) at the LG290P's V_BCKP (hardware design V1.1 3.2.2); and W3B-R1, the coin-cell
+          net VBAT renamed VBAT_RTC (board A's pack node is VBAT, and the contracts key a rail by its name); lines
+          above each cited range moved: U41, U51 and U61 are still STM32H743VIT6 (C114409) with the same pin table
+          (line 1596); the stream adds the declarations of their VCAP (a node, VCORE at most 1.40 V, DS12110 Rev 10
+          p.27 and Table 122 on p.212; the generator's comment and node basis cite Table 123, a slip the independent
+          check found) and NRST (a node at the controller's 3.3 V) and the classes of their capacitors, none of
+          which moves a pin, so clauses (1) and (2) hold and (3) and (4) still cannot be decided, on the file at
+          6957adda1bb5f23a
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w3b's merge of 27 September 2026
+          (MESHSAT-1357, board B: PWR-001 declarations, decision 42 classes, W3B-F1, W3B-F2) on the KiCad box with
+          main's chain (main's own generator reproduces main's committed schematic, netlist, intent, provenance, BOM
+          and ERC: PARITY or PARITY_AFTER_NOISE) and compared by the integration's own comparator
+          (v2/docs/records/r8b/integration/indep_cmp.py) record by record and net by net: 5 parts added (R525, R526,
+          C72, C73, C74), 1 part changed (TP6's value, the net it names), 3 nets added (POE_SEN_PIN, POE_DRAIN_PIN,
+          VBAT_RTC), 1 removed (VBAT), 3 changed (POE_SEN and POE_DRAIN by U5 leaving and R525 or R526 joining, GND
+          by C72 to C74 joining), 0 unexplained against v2/docs/records/w3b/expected_w3b.json and 2 unexplained when
+          W3B-F1's parts are dropped from it; VBAT_RTC carries every node VBAT carried plus C72 to C74 pin 1
+          (v2/docs/records/w3b/tools/rename_check.py); U41, U51 and U61's pins are on the same nets, so this reading
+          stands INCONCLUSIVE on the file at 8b78c59754a6a0c7
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@af6e5821e21b70ef"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
+      - "v2/ecad/tools/gen_sch_b.py@6957adda1bb5f23a"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
       - "v2/docs/parts/STM32H743-COMPATIBILITY.md@67335ea42747e22f"
       - "v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf@f6e620179006c8c4"
       - "v2/vendor/st/st-rm0433-rev8.pdf@9ba54135736a47a3"
@@ -3763,10 +3896,21 @@ records:
           from EXP2_SP3 to EMCON_EF_FLT with TP3); every other line of the file is byte-identical; line 5 (bank 1's
           home and failover hosts), section 1 and section 2's ribbon table with its pin 15 row, which this reading
           rests on, are byte-identical, so it stands PASS on the file at 7bb905740ddaebb9.
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at stream w3b's merge of 27 September 2026 (MESHSAT-1357, board B:
+          PWR-001 declarations, decision 42 classes, W3B-F1, W3B-F2): the generator gains intent declarations only
+          (17 rails and 40 nodes for PWR-001, each with its maker's figure; the +54V_POE load list names R13 and
+          U5's own 7 mA; U11's +3V3_DEV load is the LG290P's 135 mA peak plus its antenna's 30 mA), the decision 42
+          class and basis on every decoupling entry, and two circuit changes: W3B-F1, RSENS R525 (22 Ohm) and RDRAIN
+          R526 (47 Ohm) between the TPS23861's SEN1 and DRAIN1 and the port (SLUSBX9I p.5, 6.5), and W3B-F2, C72 to
+          C74 (4.7 uF, 100 nF, 33 pF) at the LG290P's V_BCKP (hardware design V1.1 3.2.2); and W3B-R1, the coin-cell
+          net VBAT renamed VBAT_RTC (board A's pack node is VBAT, and the contracts key a rail by its name); lines
+          above each cited range moved: the ring is still f = s % 3 + 1, now at line 988, and nothing of the bank
+          fabric changed, so it stands PASS on the file at 6957adda1bb5f23a
     evidence_bound_to:
       - "v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8"
       - "v2/docs/PANEL.md@7bb905740ddaebb9"
-      - "v2/ecad/tools/gen_sch_b.py@af6e5821e21b70ef"
+      - "v2/ecad/tools/gen_sch_b.py@6957adda1bb5f23a"
     release_effect: ADVISORY
     source:
       - "v2/docs/ARCH-PCB-B-IOHA.md section 4"
@@ -5784,9 +5928,22 @@ records:
           RockBLOCK's local chain (its own supercapacitors, ENABLE held by U6), the SA868's missing receive threshold
           and RF-002's reading of board B; the PA and HF stages now also shut down on a +3V3 overvoltage, which none
           of those depends on, so it stands FAIL on the file at 1d4a491d9718e6d3.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w3b's merge of 27 September 2026
+          (MESHSAT-1357, board B: PWR-001 declarations, decision 42 classes, W3B-F1, W3B-F2) on the KiCad box with
+          main's chain (main's own generator reproduces main's committed schematic, netlist, intent, provenance, BOM
+          and ERC: PARITY or PARITY_AFTER_NOISE) and compared by the integration's own comparator
+          (v2/docs/records/r8b/integration/indep_cmp.py) record by record and net by net: 5 parts added (R525, R526,
+          C72, C73, C74), 1 part changed (TP6's value, the net it names), 3 nets added (POE_SEN_PIN, POE_DRAIN_PIN,
+          VBAT_RTC), 1 removed (VBAT), 3 changed (POE_SEN and POE_DRAIN by U5 leaving and R525 or R526 joining, GND
+          by C72 to C74 joining), 0 unexplained against v2/docs/records/w3b/expected_w3b.json and 2 unexplained when
+          W3B-F1's parts are dropped from it; VBAT_RTC carries every node VBAT carried plus C72 to C74 pin 1
+          (v2/docs/records/w3b/tools/rename_check.py); no EMCON or TX_INHIBIT_n net or part changed, and
+          tools/tx_inhibit.py on it with main's A, C and D netlists reads board B's walk as before (inhibit_chain_b
+          FAIL 10, PASS 3, UNDECIDED 7), so this reading stands on the file at 8b78c59754a6a0c7
     evidence_bound_to:
       - "v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
     release_effect: BLOCKER
     source:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2787 (item 3)"
@@ -5935,9 +6092,21 @@ records:
           4b, 5, 5a, every other row of 6 and 7, the rest of 8, and 9 to 9d; section 5a (every time term and fault
           condition) and section 0a's end-to-end column, which closes no row, are byte-identical, so no row meets the
           requirement at desk, so it stands FAIL on the file at 1d4a491d9718e6d3.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w3b's merge of 27 September 2026
+          (MESHSAT-1357, board B: PWR-001 declarations, decision 42 classes, W3B-F1, W3B-F2) on the KiCad box with
+          main's chain (main's own generator reproduces main's committed schematic, netlist, intent, provenance, BOM
+          and ERC: PARITY or PARITY_AFTER_NOISE) and compared by the integration's own comparator
+          (v2/docs/records/r8b/integration/indep_cmp.py) record by record and net by net: 5 parts added (R525, R526,
+          C72, C73, C74), 1 part changed (TP6's value, the net it names), 3 nets added (POE_SEN_PIN, POE_DRAIN_PIN,
+          VBAT_RTC), 1 removed (VBAT), 3 changed (POE_SEN and POE_DRAIN by U5 leaving and R525 or R526 joining, GND
+          by C72 to C74 joining), 0 unexplained against v2/docs/records/w3b/expected_w3b.json and 2 unexplained when
+          W3B-F1's parts are dropped from it; VBAT_RTC carries every node VBAT carried plus C72 to C74 pin 1
+          (v2/docs/records/w3b/tools/rename_check.py); RB_IEN still joins J_RB9704 pin 3 and U6 pin 19 only, so this
+          reading stands on the file at 8b78c59754a6a0c7
     evidence_bound_to:
       - "v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
       - "v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568"
     release_effect: BLOCKER
     source:
@@ -6017,9 +6186,33 @@ records:
           per-finding list (v2/docs/records/r8b/expected_r8b.json; 0 unexplained, 56 with two findings' entries
           dropped); against the author's own netlist it differs only in U115, U215 and U315's value text; the nodes
           above are on it, so this reading stands PASS on the file at adcc3c6736c90e9f
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at stream w3b's merge of 27 September 2026 (MESHSAT-1357, board B:
+          PWR-001 declarations, decision 42 classes, W3B-F1, W3B-F2): the generator gains intent declarations only
+          (17 rails and 40 nodes for PWR-001, each with its maker's figure; the +54V_POE load list names R13 and
+          U5's own 7 mA; U11's +3V3_DEV load is the LG290P's 135 mA peak plus its antenna's 30 mA), the decision 42
+          class and basis on every decoupling entry, and two circuit changes: W3B-F1, RSENS R525 (22 Ohm) and RDRAIN
+          R526 (47 Ohm) between the TPS23861's SEN1 and DRAIN1 and the port (SLUSBX9I p.5, 6.5), and W3B-F2, C72 to
+          C74 (4.7 uF, 100 nF, 33 pF) at the LG290P's V_BCKP (hardware design V1.1 3.2.2); and W3B-R1, the coin-cell
+          net VBAT renamed VBAT_RTC (board A's pack node is VBAT, and the contracts key a rail by its name); lines
+          above each cited range moved: the block this reading cites is byte-identical and now at lines 872 to 918
+          (WL_nDIS and BT_nDIS pulled low only through U113 to U115 and their slot 2 and 3 copies, run from
+          +3V3_CM{s}; U6 drives only the requests), so it stands PASS on the file at 6957adda1bb5f23a
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w3b's merge of 27 September 2026
+          (MESHSAT-1357, board B: PWR-001 declarations, decision 42 classes, W3B-F1, W3B-F2) on the KiCad box with
+          main's chain (main's own generator reproduces main's committed schematic, netlist, intent, provenance, BOM
+          and ERC: PARITY or PARITY_AFTER_NOISE) and compared by the integration's own comparator
+          (v2/docs/records/r8b/integration/indep_cmp.py) record by record and net by net: 5 parts added (R525, R526,
+          C72, C73, C74), 1 part changed (TP6's value, the net it names), 3 nets added (POE_SEN_PIN, POE_DRAIN_PIN,
+          VBAT_RTC), 1 removed (VBAT), 3 changed (POE_SEN and POE_DRAIN by U5 leaving and R525 or R526 joining, GND
+          by C72 to C74 joining), 0 unexplained against v2/docs/records/w3b/expected_w3b.json and 2 unexplained when
+          W3B-F1's parts are dropped from it; VBAT_RTC carries every node VBAT carried plus C72 to C74 pin 1
+          (v2/docs/records/w3b/tools/rename_check.py); WL_nDIS1..3 and BT_nDIS1..3 carry the same nodes, so this
+          reading stands PASS on the file at 8b78c59754a6a0c7
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@af6e5821e21b70ef"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
+      - "v2/ecad/tools/gen_sch_b.py@6957adda1bb5f23a"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
     release_effect: ADVISORY
     source:
       - "v2/ecad/tools/gen_sch_b.py:820-866"
@@ -6194,9 +6387,23 @@ records:
           byte-identical, among them sections 0 and 0a (its rows and counts), 1 to 4 with 4.1 to 4.18, the rest of 4a,
           4b, 5, 5a, every other row of 6 and 7, the rest of 8, and 9 to 9d; sections 4.4, 4.5 and 4b and L3 and L4,
           on which this reading rests, are byte-identical, so it stands FAIL on the file at 1d4a491d9718e6d3.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w3b's merge of 27 September 2026
+          (MESHSAT-1357, board B: PWR-001 declarations, decision 42 classes, W3B-F1, W3B-F2) on the KiCad box with
+          main's chain (main's own generator reproduces main's committed schematic, netlist, intent, provenance, BOM
+          and ERC: PARITY or PARITY_AFTER_NOISE) and compared by the integration's own comparator
+          (v2/docs/records/r8b/integration/indep_cmp.py) record by record and net by net: 5 parts added (R525, R526,
+          C72, C73, C74), 1 part changed (TP6's value, the net it names), 3 nets added (POE_SEN_PIN, POE_DRAIN_PIN,
+          VBAT_RTC), 1 removed (VBAT), 3 changed (POE_SEN and POE_DRAIN by U5 leaving and R525 or R526 joining, GND
+          by C72 to C74 joining), 0 unexplained against v2/docs/records/w3b/expected_w3b.json and 2 unexplained when
+          W3B-F1's parts are dropped from it; VBAT_RTC carries every node VBAT carried plus C72 to C74 pin 1
+          (v2/docs/records/w3b/tools/rename_check.py); no EMCON net, radio enable or radio supply switch changed
+          (the SIM and GNSS antenna supplies gained declarations only), and tools/tx_inhibit.py reads board B's walk
+          as before (inhibit_chain_b FAIL 10, PASS 3, UNDECIDED 7), so this reading stands on the file at
+          8b78c59754a6a0c7
     evidence_bound_to:
       - "v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
     release_effect: BLOCKER
     source:
       - "v2/ecad/tools/gen_sch_b.py:813-880"
@@ -6893,9 +7100,22 @@ records:
           SA868's threshold, L4 on U501 to U505, the back-feed into the RockBLOCK, E22 and E72, the plate's light
           guide, RF-002's model gap on board B and every bench test), and each of those rows is byte-identical; bench
           E-11 gains a board A step and closes none, so it stands INCONCLUSIVE on the file at 1d4a491d9718e6d3.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w3b's merge of 27 September 2026
+          (MESHSAT-1357, board B: PWR-001 declarations, decision 42 classes, W3B-F1, W3B-F2) on the KiCad box with
+          main's chain (main's own generator reproduces main's committed schematic, netlist, intent, provenance, BOM
+          and ERC: PARITY or PARITY_AFTER_NOISE) and compared by the integration's own comparator
+          (v2/docs/records/r8b/integration/indep_cmp.py) record by record and net by net: 5 parts added (R525, R526,
+          C72, C73, C74), 1 part changed (TP6's value, the net it names), 3 nets added (POE_SEN_PIN, POE_DRAIN_PIN,
+          VBAT_RTC), 1 removed (VBAT), 3 changed (POE_SEN and POE_DRAIN by U5 leaving and R525 or R526 joining, GND
+          by C72 to C74 joining), 0 unexplained against v2/docs/records/w3b/expected_w3b.json and 2 unexplained when
+          W3B-F1's parts are dropped from it; VBAT_RTC carries every node VBAT carried plus C72 to C74 pin 1
+          (v2/docs/records/w3b/tools/rename_check.py); no transmitter's inhibit chain changed, and
+          tools/tx_inhibit.py reads board B's walk as before (inhibit_chain_b FAIL 10, PASS 3, UNDECIDED 7), so this
+          reading stands on the file at 8b78c59754a6a0c7
     evidence_bound_to:
       - "v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
       - "v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/EMCON.md section 7", "v2/docs/reviews/2026-09-26-foundation-progress-review.md section 3"]
@@ -8812,6 +9032,19 @@ records:
           in section 7's bus table, which this record's acceptance asks to describe the circuit as generated, and it
           now names U28 P1.2 as EMCON_EF_FLT, which is what board A's w3a netlist carries, where 'spares' no longer
           was; sections 1 and 6 are byte-identical, so it stands PASS on the file at 7bb905740ddaebb9.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w3b's merge of 27 September 2026
+          (MESHSAT-1357, board B: PWR-001 declarations, decision 42 classes, W3B-F1, W3B-F2) on the KiCad box with
+          main's chain (main's own generator reproduces main's committed schematic, netlist, intent, provenance, BOM
+          and ERC: PARITY or PARITY_AFTER_NOISE) and compared by the integration's own comparator
+          (v2/docs/records/r8b/integration/indep_cmp.py) record by record and net by net: 5 parts added (R525, R526,
+          C72, C73, C74), 1 part changed (TP6's value, the net it names), 3 nets added (POE_SEN_PIN, POE_DRAIN_PIN,
+          VBAT_RTC), 1 removed (VBAT), 3 changed (POE_SEN and POE_DRAIN by U5 leaving and R525 or R526 joining, GND
+          by C72 to C74 joining), 0 unexplained against v2/docs/records/w3b/expected_w3b.json and 2 unexplained when
+          W3B-F1's parts are dropped from it; VBAT_RTC carries every node VBAT carried plus C72 to C74 pin 1
+          (v2/docs/records/w3b/tools/rename_check.py); the documents this reading binds describe nothing the stream
+          changed (their VBAT is board A's pack node; the TPS23861's sense wiring, the V_BCKP capacitors and the
+          coin-cell net's name appear in none of them), so this reading stands on the file at 8b78c59754a6a0c7
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976"
@@ -8822,7 +9055,7 @@ records:
       - "v2/docs/TEST-PLAN.md@701c1020053e7903"
       - "v2/ecad/tools/pcb_decisions.yaml@b5f7162443d5ad91"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@c57d119d21f45fe9"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161"
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
     release_effect: BLOCKER
@@ -9157,7 +9390,19 @@ records:
           edit (hc5-layer5): it changed sections 6 and 10a only (the FW-B08 pointer and the segment choice SC-HF-02
           after section 6's corrected PB1/PB2 heading, and 10a's per-controller part); sections 4 and 15, which this
           reading rests on, are byte-identical to the file at 08d44b37fa8e2717, so it stands on the file at 55620cf51446bfc8
-    evidence_bound_to: ["v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8", "v2/ecad/tools/gen_sch_b.py@af6e5821e21b70ef"]
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at stream w3b's merge of 27 September 2026 (MESHSAT-1357, board B:
+          PWR-001 declarations, decision 42 classes, W3B-F1, W3B-F2): the generator gains intent declarations only
+          (17 rails and 40 nodes for PWR-001, each with its maker's figure; the +54V_POE load list names R13 and
+          U5's own 7 mA; U11's +3V3_DEV load is the LG290P's 135 mA peak plus its antenna's 30 mA), the decision 42
+          class and basis on every decoupling entry, and two circuit changes: W3B-F1, RSENS R525 (22 Ohm) and RDRAIN
+          R526 (47 Ohm) between the TPS23861's SEN1 and DRAIN1 and the port (SLUSBX9I p.5, 6.5), and W3B-F2, C72 to
+          C74 (4.7 uF, 100 nF, 33 pF) at the LG290P's V_BCKP (hardware design V1.1 3.2.2); and W3B-R1, the coin-cell
+          net VBAT renamed VBAT_RTC (board A's pack node is VBAT, and the contracts key a rail by its name); lines
+          above each cited range moved: the hub ports, the bank ring (f = s % 3 + 1, now at line 988) and the LoRa
+          module on S3's SPI (J_SPI3, U12) are unchanged; the stream moves no device between banks, so the reading
+          stands FAIL on the file at 6957adda1bb5f23a
+    evidence_bound_to: ["v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8", "v2/ecad/tools/gen_sch_b.py@6957adda1bb5f23a"]
     release_effect: MUST_JUSTIFY
     source:
       - "owner ruling D-02b"
@@ -9568,8 +9813,26 @@ records:
           input capacitance as 1.5 pF typical and no maximum (v2/vendor/ti/ti-tpd4e001.pdf, SLLS682P section 5.4), a
           sixth of the module maker's 10 pF. The schematic half stands PASS on the file at af6e5821e21b70ef; the
           placement half (beside the holder) is the placed board's.
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at stream w3b's merge of 27 September 2026 (MESHSAT-1357, board B:
+          PWR-001 declarations, decision 42 classes, W3B-F1, W3B-F2): the generator gains intent declarations only
+          (17 rails and 40 nodes for PWR-001, each with its maker's figure; the +54V_POE load list names R13 and
+          U5's own 7 mA; U11's +3V3_DEV load is the LG290P's 135 mA peak plus its antenna's 30 mA), the decision 42
+          class and basis on every decoupling entry, and two circuit changes: W3B-F1, RSENS R525 (22 Ohm) and RDRAIN
+          R526 (47 Ohm) between the TPS23861's SEN1 and DRAIN1 and the port (SLUSBX9I p.5, 6.5), and W3B-F2, C72 to
+          C74 (4.7 uF, 100 nF, 33 pF) at the LG290P's V_BCKP (hardware design V1.1 3.2.2); and W3B-R1, the coin-cell
+          net VBAT renamed VBAT_RTC (board A's pack node is VBAT, and the contracts key a rail by its name); lines
+          above each cited range moved: the SIM block is at lines 788 to 847; the holders, the 0 Ohm links and the
+          TVS arrays U222 and U223 are unchanged, and the stream adds only the SIM supplies' rail declarations
+          (SIM1_VCC, SIM2_VCC, SIMC2_VCC). The arrays re-read at stream w3b's merge of 27 September 2026
+          (MESHSAT-1357, board B: PWR-001 declarations, decision 42 classes, W3B-F1, W3B-F2): TI TPD4E001DBVR, 1.5
+          pF typical (CI/O, SLLS682P; v2/vendor/ti/ti-tpd4e001.pdf), and tools/jlc_certify.py's own certify() on the
+          two BOM rows (value, SOT-23-6 land, C465736, quantity 1 each) reads CERTIFIED: model TPD4E001DBVR, Texas
+          Instruments, SOT-23-6, stock 17,211 against 5 needed, asked 27 September 2026
+          (v2/docs/records/w3b/evidence/jlc-certify-w3b.txt), a catalogue reading and not a grade; so it stands PASS
+          on the file at 6957adda1bb5f23a
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@af6e5821e21b70ef"
+      - "v2/ecad/tools/gen_sch_b.py@6957adda1bb5f23a"
     release_effect: BLOCKER
     source:
       - "v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf section 4.1.7"
@@ -10830,9 +11093,32 @@ records:
           per-finding list (v2/docs/records/r8b/expected_r8b.json; 0 unexplained, 56 with two findings' entries
           dropped); against the author's own netlist it differs only in U115, U215 and U315's value text, so this
           reading stands on the file at adcc3c6736c90e9f
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at stream w3b's merge of 27 September 2026 (MESHSAT-1357, board B:
+          PWR-001 declarations, decision 42 classes, W3B-F1, W3B-F2): the generator gains intent declarations only
+          (17 rails and 40 nodes for PWR-001, each with its maker's figure; the +54V_POE load list names R13 and
+          U5's own 7 mA; U11's +3V3_DEV load is the LG290P's 135 mA peak plus its antenna's 30 mA), the decision 42
+          class and basis on every decoupling entry, and two circuit changes: W3B-F1, RSENS R525 (22 Ohm) and RDRAIN
+          R526 (47 Ohm) between the TPS23861's SEN1 and DRAIN1 and the port (SLUSBX9I p.5, 6.5), and W3B-F2, C72 to
+          C74 (4.7 uF, 100 nF, 33 pF) at the LG290P's V_BCKP (hardware design V1.1 3.2.2); and W3B-R1, the coin-cell
+          net VBAT renamed VBAT_RTC (board A's pack node is VBAT, and the contracts key a rail by its name); lines
+          above each cited range moved: J_M2C2's socket, land and pin map are unchanged (line 759), so the land
+          clause holds at desk and D-07's third jack still waits, on the file at 6957adda1bb5f23a
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w3b's merge of 27 September 2026
+          (MESHSAT-1357, board B: PWR-001 declarations, decision 42 classes, W3B-F1, W3B-F2) on the KiCad box with
+          main's chain (main's own generator reproduces main's committed schematic, netlist, intent, provenance, BOM
+          and ERC: PARITY or PARITY_AFTER_NOISE) and compared by the integration's own comparator
+          (v2/docs/records/r8b/integration/indep_cmp.py) record by record and net by net: 5 parts added (R525, R526,
+          C72, C73, C74), 1 part changed (TP6's value, the net it names), 3 nets added (POE_SEN_PIN, POE_DRAIN_PIN,
+          VBAT_RTC), 1 removed (VBAT), 3 changed (POE_SEN and POE_DRAIN by U5 leaving and R525 or R526 joining, GND
+          by C72 to C74 joining), 0 unexplained against v2/docs/records/w3b/expected_w3b.json and 2 unexplained when
+          W3B-F1's parts are dropped from it; VBAT_RTC carries every node VBAT carried plus C72 to C74 pin 1
+          (v2/docs/records/w3b/tools/rename_check.py); J_M2C2's nets are unchanged, so this reading stands on the
+          file at 8b78c59754a6a0c7
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@af6e5821e21b70ef"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
+      - "v2/ecad/tools/gen_sch_b.py@6957adda1bb5f23a"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
     release_effect: BLOCKER
     source:
       - "v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf (key B p.15 and p.20; Table 32)"
@@ -10973,9 +11259,22 @@ records:
           the same schematic byte for byte and the same netlist but for its header's source path and date. board A's
           clamps D1 to D4 are unchanged on the same nets; port_protect on the new netlist reads 5 clamps, 0 reversed,
           0 drawn with a mismatched symbol (PASS of 26); the reading stands on the file at c57d119d21f45fe9.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w3b's merge of 27 September 2026
+          (MESHSAT-1357, board B: PWR-001 declarations, decision 42 classes, W3B-F1, W3B-F2) on the KiCad box with
+          main's chain (main's own generator reproduces main's committed schematic, netlist, intent, provenance, BOM
+          and ERC: PARITY or PARITY_AFTER_NOISE) and compared by the integration's own comparator
+          (v2/docs/records/r8b/integration/indep_cmp.py) record by record and net by net: 5 parts added (R525, R526,
+          C72, C73, C74), 1 part changed (TP6's value, the net it names), 3 nets added (POE_SEN_PIN, POE_DRAIN_PIN,
+          VBAT_RTC), 1 removed (VBAT), 3 changed (POE_SEN and POE_DRAIN by U5 leaving and R525 or R526 joining, GND
+          by C72 to C74 joining), 0 unexplained against v2/docs/records/w3b/expected_w3b.json and 2 unexplained when
+          W3B-F1's parts are dropped from it; VBAT_RTC carries every node VBAT carried plus C72 to C74 pin 1
+          (v2/docs/records/w3b/tools/rename_check.py); board B's six one-way clamps (D1, D2, D101, D201, D301, D520)
+          are unchanged, port_protect reads 0 reversed on it and the stream adds no rectifier, so the record stays
+          FAIL on the rectifier clause, so this reading stands on the file at 8b78c59754a6a0c7
     evidence_bound_to:
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@c57d119d21f45fe9"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161"
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976"

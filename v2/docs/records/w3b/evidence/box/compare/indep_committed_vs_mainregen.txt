@@ -1,0 +1,9 @@
+parts 1265 -> 1265 (+0 -0 ~0); nets 2002 -> 2002 (+0 -0 ~0)
+{
+ "parts_added": [],
+ "parts_removed": [],
+ "parts_changed": {},
+ "nets_added": [],
+ "nets_removed": [],
+ "nets_changed": {}
+}

@@ -1,0 +1,2 @@
+old /VBAT 7 nodes, new /VBAT_RTC 10 nodes; only in the new: [('C72', '1', 'passive'), ('C73', '1', 'passive'), ('C74', '1', 'passive')]; only in the old: []; pin functions changed: [(('U9', '14', 'passive'), 'VBAT', 'VBAT_RTC')]
+RENAME PARITY

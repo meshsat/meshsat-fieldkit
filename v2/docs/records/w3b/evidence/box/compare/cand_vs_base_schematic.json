@@ -1,0 +1,122 @@
+{
+ "kind": "schematic",
+ "phase_labels": [
+  [
+   "B21"
+  ],
+  [
+   "B21"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N1_title_date": 1,
+   "N2_page_frame_date": 43,
+   "L1_comment1_phase": 1,
+   "L2_frame_phase": 43
+  },
+  {
+   "N1_title_date": 1,
+   "N2_page_frame_date": 43,
+   "L1_comment1_phase": 1,
+   "L2_frame_phase": 43
+  }
+ ],
+ "result": "DIFFERENT",
+ "parts_only_committed": [],
+ "parts_only_other": [
+  "C72",
+  "C73",
+  "C74",
+  "R525",
+  "R526"
+ ],
+ "parts_changed": [
+  [
+   "TP6",
+   [
+    "VBAT",
+    "TestPoint_Pad_D1.5mm",
+    ""
+   ],
+   [
+    "VBAT_RTC",
+    "TestPoint_Pad_D1.5mm",
+    ""
+   ]
+  ]
+ ],
+ "lib_symbols_only_committed": [],
+ "lib_symbols_only_other": [],
+ "lib_symbols_changed": [
+  "meshsat_ic:U9"
+ ],
+ "line_counts": [
+  89987,
+  90085
+ ],
+ "changed_lines": 17936,
+ "changed_lines_sample": [
+  "-\t\t\t\t\t\t\t(name \"VBAT\"",
+  "+\t\t\t\t\t\t\t(name \"VBAT_RTC\"",
+  "-\t(symbol (lib_id \"Device:Battery_Cell\") (at 259.08 90.17 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid \"6dc8e0b9-6411-5c38-8a2d-0ebe1f86667a\")",
+  "-\t\t(property \"Reference\" \"BT1\" (at 262.64 81.81 0) (effects (font (size 1.27 1.27)) (justify left bottom)))",
+  "-\t\t(property \"Value\" \"CR2032 holder Keystone 3034: VBAT for the three modules' RTCs, the LG290P backup and the DS3231\" (at 262.64 83.82 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "-\t\t(property \"Footprint\" \"Battery:BatteryHolder_Keystone_3034_1x20mm\" (at 259.08 90.17 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "-\t\t(property \"Datasheet\" \"\" (at 259.08 90.17 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "-\t\t(property \"Description\" \"\" (at 259.08 90.17 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t(symbol (lib_id \"Device:Battery_Cell\") (at 259.08 96.52 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid \"6dc8e0b9-6411-5c38-8a2d-0ebe1f86667a\")",
+  "+\t\t(property \"Reference\" \"BT1\" (at 262.64 88.16 0) (effects (font (size 1.27 1.27)) (justify left bottom)))",
+  "+\t\t(property \"Value\" \"CR2032 holder Keystone 3034: VBAT for the three modules' RTCs, the LG290P backup and the DS3231\" (at 262.64 90.17 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t\t(property \"Footprint\" \"Battery:BatteryHolder_Keystone_3034_1x20mm\" (at 259.08 96.52 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t\t(property \"Datasheet\" \"\" (at 259.08 96.52 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t\t(property \"Description\" \"\" (at 259.08 96.52 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "-\t(text \"CR2032 holder Keystone 3034\" (exclude_from_sim no) (at 262.64 83.82 0) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"384e65b4-e51c-5b5f-953b-a5484f73af02\"))",
+  "-\t(label \"VBAT\" (at 259.08 82.55 90) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"2940c245-b7dc-5786-b1b9-c70753a5e84b\"))",
+  "-\t(symbol (lib_id \"power:GND\") (at 259.08 95.25 180) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (fields_autoplaced yes) (uuid \"218700e6-0167-5d4c-aee2-ff360737c79f\")",
+  "-\t\t(property \"Reference\" \"#PWR013\" (at 260.35 93.98 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "-\t\t(property \"Value\" \"GND\" (at 260.35 96.52 0) (effects (font (size 1.27 1.27)) (justify left bottom)))",
+  "-\t\t(property \"Footprint\" \"\" (at 259.08 95.25 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "-\t\t(property \"Datasheet\" \"\" (at 259.08 95.25 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "-\t\t(property \"Description\" \"\" (at 259.08 95.25 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t(text \"CR2032 holder Keystone 3034\" (exclude_from_sim no) (at 262.64 90.17 0) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"384e65b4-e51c-5b5f-953b-a5484f73af02\"))",
+  "+\t(label \"VBAT_RTC\" (at 259.08 88.90 90) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"2940c245-b7dc-5786-b1b9-c70753a5e84b\"))",
+  "+\t(symbol (lib_id \"power:GND\") (at 259.08 101.60 180) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (fields_autoplaced yes) (uuid \"218700e6-0167-5d4c-aee2-ff360737c79f\")",
+  "+\t\t(property \"Reference\" \"#PWR013\" (at 260.35 100.33 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t\t(property \"Value\" \"GND\" (at 260.35 102.87 0) (effects (font (size 1.27 1.27)) (justify left bottom)))",
+  "+\t\t(property \"Footprint\" \"\" (at 259.08 101.60 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t\t(property \"Datasheet\" \"\" (at 259.08 101.60 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t\t(property \"Description\" \"\" (at 259.08 101.60 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "-\t(wire (pts (xy 259.08 85.09) (xy 259.08 82.55)) (stroke (width 0) (type default)) (uuid \"f0df0e8a-6073-5f64-bd09-04cbe802847c\"))",
+  "-\t(wire (pts (xy 259.08 92.71) (xy 259.08 95.25)) (stroke (width 0) (type default)) (uuid \"006c3138-bd3c-5e31-9235-f9fc533fe916\"))",
+  "+\t(wire (pts (xy 259.08 91.44) (xy 259.08 88.90)) (stroke (width 0) (type default)) (uuid \"f0df0e8a-6073-5f64-bd09-04cbe802847c\"))",
+  "+\t(wire (pts (xy 259.08 99.06) (xy 259.08 101.60)) (stroke (width 0) (type default)) (uuid \"006c3138-bd3c-5e31-9235-f9fc533fe916\"))",
+  "-\t\t(property \"Value\" \"VBAT\" (at 101.09 144.65 0) (effects (font (size 1.27 1.27)) (justify left bottom)))",
+  "+\t\t(property \"Value\" \"VBAT_RTC\" (at 101.09 144.65 0) (effects (font (size 1.27 1.27)) (justify left bottom)))",
+  "-\t(label \"VBAT\" (at 99.06 147.32 270) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"c521eb0a-4a2f-55cd-b24b-ca67f715808f\"))",
+  "+\t(label \"VBAT_RTC\" (at 99.06 147.32 270) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"c521eb0a-4a2f-55cd-b24b-ca67f715808f\"))",
+  "-\t(symbol (lib_id \"Connector:TestPoint\") (at 115.57 144.78 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board yes) (dnp no) (uuid \"497babb4-5d41-5308-acbc-ff53bf7a692d\")",
+  "-\t\t(property \"Reference\" \"TP7\" (at 117.60 142.43 0) (effects (font (size 1.27 1.27)) (justify left bottom)))",
+  "-\t\t(property \"Value\" \"EMCON_HW\" (at 117.60 144.65 0) (effects (font (size 1.27 1.27)) (justify left bottom)))",
+  "-\t\t(property \"Footprint\" \"TestPoint:TestPoint_Pad_D1.5mm\" (at 115.57 144.78 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "-\t\t(property \"Datasheet\" \"\" (at 115.57 144.78 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "-\t\t(property \"Description\" \"\" (at 115.57 144.78 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t(symbol (lib_id \"Connector:TestPoint\") (at 121.92 144.78 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board yes) (dnp no) (uuid \"497babb4-5d41-5308-acbc-ff53bf7a692d\")",
+  "+\t\t(property \"Reference\" \"TP7\" (at 123.95 142.43 0) (effects (font (size 1.27 1.27)) (justify left bottom)))",
+  "+\t\t(property \"Value\" \"EMCON_HW\" (at 123.95 144.65 0) (effects (font (size 1.27 1.27)) (justify left bottom)))",
+  "+\t\t(property \"Footprint\" \"TestPoint:TestPoint_Pad_D1.5mm\" (at 121.92 144.78 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t\t(property \"Datasheet\" \"\" (at 121.92 144.78 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t\t(property \"Description\" \"\" (at 121.92 144.78 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "-\t(label \"EMCON_HW\" (at 115.57 147.32 270) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"0361f064-a671-5d24-8f45-dc41c9ba7d3c\"))",
+  "-\t(wire (pts (xy 115.57 144.78) (xy 115.57 147.32)) (stroke (width 0) (type default)) (uuid \"44249720-a0f2-5c1d-8459-cd52e0907b24\"))",
+  "-\t(symbol (lib_id \"Connector:TestPoint\") (at 138.43 144.78 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board yes) (dnp no) (uuid \"c95d36fb-7424-58da-abce-c7680eada565\")",
+  "-\t\t(property \"Reference\" \"TP8\" (at 140.46 142.43 0) (effects (font (size 1.27 1.27)) (justify left bottom)))",
+  "-\t\t(property \"Value\" \"ZEROIZE_HW\" (at 140.46 144.65 0) (effects (font (size 1.27 1.27)) (justify left bottom)))",
+  "-\t\t(property \"Footprint\" \"TestPoint:TestPoint_Pad_D1.5mm\" (at 138.43 144.78 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "-\t\t(property \"Datasheet\" \"\" (at 138.43 144.78 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "-\t\t(property \"Description\" \"\" (at 138.43 144.78 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t(label \"EMCON_HW\" (at 121.92 147.32 270) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"0361f064-a671-5d24-8f45-dc41c9ba7d3c\"))",
+  "+\t(wire (pts (xy 121.92 144.78) (xy 121.92 147.32)) (stroke (width 0) (type default)) (uuid \"44249720-a0f2-5c1d-8459-cd52e0907b24\"))"
+ ],
+ "bucket_hint": "PARTS"
+}

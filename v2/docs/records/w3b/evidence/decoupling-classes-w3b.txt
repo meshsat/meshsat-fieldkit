@@ -1,0 +1,17 @@
+candidate entries 277, map entries 274, keys equal: False
+CORRECTED ('C508', 'U503', '5'): map R (AP64500 input capacitor (DS41979 Layout p.23)) -> D (TI SN74LVC1G08 SCES217AA (v2/vendor/ti/ti-sn74lvc1g08.pdf): "For the S)
+CORRECTED ('C509', 'U504', '5'): map R (AP64500 input capacitor (DS41979 Layout p.23)) -> D (TI SN74LVC1G08 SCES217AA (v2/vendor/ti/ti-sn74lvc1g08.pdf): "For the S)
+CLAUSE    ('C65', 'U501', '5'): class D kept; map clause 'PI7C9X2G404SL: no maker requirement (DS40068 3.5); the gener' -> TI SN74LVC1G08 SCES217AA (v2/vendor/ti/ti-sn74lvc1g08.pdf): "For the S
+CLAUSE    ('C66', 'U502', '5'): class D kept; map clause 'TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38' -> TI SN74LVC1G08 SCES217AA (v2/vendor/ti/ti-sn74lvc1g08.pdf): "For the S
+NEW       ('C72', 'U11', '22'): class D (Quectel LG290P(03) hardware design V1.1 (v2/vendor/quectel/lg290p03-ha)
+NEW       ('C73', 'U11', '22'): class D (Quectel LG290P(03) hardware design V1.1 (v2/vendor/quectel/lg290p03-ha)
+NEW       ('C74', 'U11', '22'): class D (Quectel LG290P(03) hardware design V1.1 (v2/vendor/quectel/lg290p03-ha)
+candidate classes: {'R': 29, 'D': 224, 'B2': 10, 'B1': 3, 'L': 11}
+map classes:       {'R': 31, 'D': 219, 'B2': 10, 'B1': 3, 'L': 11}
+census pcb-a-power-intent.json                       55 of  55 entries carry a ruled class and a basis {'L': 8, 'D': 38, 'R': 8, 'A': 1}
+census pcb-c-display-intent.json                     24 of  24 entries carry a ruled class and a basis {'D': 21, 'L': 2, 'B2': 1}
+census pcb-d-aprs-intent.json                        31 of  31 entries carry a ruled class and a basis {'D': 19, 'L': 10, 'B1': 1, 'B2': 1}
+census pcb-e1-dock-intent.json                       25 of  25 entries carry a ruled class and a basis {'A': 2, 'D': 19, 'L': 2, 'R': 2}
+census pcb-p-pack-intent.json                         4 of   4 entries carry a ruled class and a basis {'A': 4}
+census pcb-b-compute-intent.json                    277 of 277 entries carry a ruled class and a basis {'R': 29, 'D': 224, 'B2': 10, 'B1': 3, 'L': 11}
+unexplained: 0

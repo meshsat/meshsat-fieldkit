@@ -1,0 +1,12 @@
+w3b: setup start 2026-09-27T10:29:16Z
+overlay          80G   17G   64G  21% /
+d3be3d5d4f0b6e5912e4b783a433d4b2dee724c6125a4b92e74dd6075de63c99  main-inc.bundle
+6957adda1bb5f23a03b1dcd85959b741f189fa6b20db7e24af2b67defcedc5fe  gen_sch_b.py
+5190f103398fca28723f3cab50fbc72ba591c5fb3a6099ea9f0f85bf35302789  indep_cmp.py
+1b2c50bbfad8ea5e994b0138edf97af6c69ccd37a486664f81b04c452e9f8a82  expected_w3b.json
+The bundle uses this hash algorithm: sha1
+w3b: cand overlay 6e8d4c01:  1 file changed, 389 insertions(+), 13 deletions(-)
+w3b: base head 38dcd764 status 0
+w3b: cand head 6e8d4c01 status 0
+overlay          80G   17G   64G  21% /
+w3b: setup done 2026-09-27T10:30:10Z

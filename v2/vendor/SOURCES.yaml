@@ -2396,6 +2396,26 @@ parts:
   # - the Xenarc 709GNK (entry monitor-xenarc-709gnk): the manual's 'Operating Voltage Range : DC 10V ~ 35V' and 'Power
   #   Consumption: <= 10W' are now read for board A's VMON rail declaration (0.69 A typical, 1.0 A peak).
 
+  - id: pnp-led-buffer-bc857b
+    function: "board B's power-LED buffers Q101, Q201, Q301 (the CM5 asks LED_nPWR to be buffered, pin 95): the collector Q{s}C feeds the red LED through R{s}50 1k"
+    boards: [B]
+    on_main: false
+    adopted_in: "board B's generator since B16; the maker's sheet filed by stream w3b, 27 September 2026 (integrated in fnd/r8int5)"
+    schematic_name: {text: "BC857", where: "v2/ecad/tools/gen_sch_b.py (slot loop, Q(1)); lcsc_fill.py MAP (r\"^BC857\\b\", \"SOT-23\")"}
+    fitted_mpn: "BC857B (Slkor, SLKORMICRO Elec.)"
+    package: "SOT-23"
+    lcsc: "C556165"
+    identity: MATCH
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/slkor/slkor-bc857b-c556165.pdf"
+        doc_id: "Slkor BC856-BC858 TRANSISTOR PNP"
+        revision: "not printed; 4 pages"
+        url: "https://datasheet.lcsc.com/datasheet/pdf/171c362deabfedc4642f786eeb3a3121.pdf?productCode=C556165 (from wmsc.lcsc.com product detail C556165, pdfUrl; Nexperia's BC857_SER.pdf answered a bot challenge and Wayback holds no copy)"
+        fetched: "2026-09-27T10:17Z, HTTP 200 application/pdf"
+        sha256: "b27e6044426e3c6009ed18c960878c7838cabacc4453fdb1ec761dfda4e1323d"
+        matches_fitted: "yes: SOT-23 1 BASE 2 EMITTER 3 COLLECTOR (p.1), the symbol's 1 B 2 E 3 C; VCEO -45 V, IC -0.1 A, hFE 220 to 475 for the B grade (pp.1-2)"
+
   - id: stage-current-shunts
     function: "2512 current shunts of board A's LM5176 stages (R35, R43, R55 in the candidate)"
     boards: [A]

@@ -1,1650 +1,2273 @@
 {
  "board": "pcb-b-compute",
- "written": "2026-09-27 04:51",
+ "written": "2026-09-27 10:30",
  "bypass": [
   {
    "cap": "C112",
    "part": "U103",
    "pin": "2",
-   "net": "+5V_S1"
+   "net": "+5V_S1",
+   "class": "R",
+   "basis": "Diodes AP64500 DS41979 Rev 5-2 (v2/vendor/diodes/diodes-ap64500.pdf): pin 2 VIN \"Power Input. VIN supplies the power to the IC as well as the step-down converter power MOSFETs\" (p.3); PCB Layout item 2 \"Place the input capacitors as closely across VIN and GND as possible\" (p.23)",
+   "same_side": true
   },
   {
    "cap": "C113",
    "part": "U103",
    "pin": "2",
-   "net": "+5V_S1"
+   "net": "+5V_S1",
+   "class": "R",
+   "basis": "Diodes AP64500 DS41979 Rev 5-2 (v2/vendor/diodes/diodes-ap64500.pdf): pin 2 VIN \"Power Input. VIN supplies the power to the IC as well as the step-down converter power MOSFETs\" (p.3); PCB Layout item 2 \"Place the input capacitors as closely across VIN and GND as possible\" (p.23)",
+   "same_side": true
   },
   {
    "cap": "C119",
    "part": "U104",
    "pin": "2",
-   "net": "+5V_S1"
+   "net": "+5V_S1",
+   "class": "R",
+   "basis": "Diodes AP64500 DS41979 Rev 5-2 (v2/vendor/diodes/diodes-ap64500.pdf): pin 2 VIN \"Power Input. VIN supplies the power to the IC as well as the step-down converter power MOSFETs\" (p.3); PCB Layout item 2 \"Place the input capacitors as closely across VIN and GND as possible\" (p.23)",
+   "same_side": true
   },
   {
    "cap": "C120",
    "part": "U104",
    "pin": "2",
-   "net": "+5V_S1"
+   "net": "+5V_S1",
+   "class": "R",
+   "basis": "Diodes AP64500 DS41979 Rev 5-2 (v2/vendor/diodes/diodes-ap64500.pdf): pin 2 VIN \"Power Input. VIN supplies the power to the IC as well as the step-down converter power MOSFETs\" (p.3); PCB Layout item 2 \"Place the input capacitors as closely across VIN and GND as possible\" (p.23)",
+   "same_side": true
   },
   {
    "cap": "C605",
    "part": "U105",
    "pin": "3",
-   "net": "+5V_S1"
+   "net": "+5V_S1",
+   "class": "R",
+   "basis": "TI TPS62933 SLUSEA4D (v2/vendor/ti/ti-tps62933.pdf) 12.1 Layout Guidelines (p.40): \"the most critical PCB feature is the loop formed by the input capacitors and power ground\", \"Place the inductor, input and output capacitors, and the IC on the same layer\", \"Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins, which is key to EMI reduction\"; declared against VIN (pin 3)",
+   "same_side": true
   },
   {
    "cap": "C125",
    "part": "U105",
    "pin": "3",
-   "net": "+5V_S1"
+   "net": "+5V_S1",
+   "class": "R",
+   "basis": "TI TPS62933 SLUSEA4D (v2/vendor/ti/ti-tps62933.pdf) 12.1 Layout Guidelines (p.40): \"the most critical PCB feature is the loop formed by the input capacitors and power ground\", \"Place the inductor, input and output capacitors, and the IC on the same layer\", \"Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins, which is key to EMI reduction\"; declared against VIN (pin 3)",
+   "same_side": true
   },
   {
    "cap": "C606",
    "part": "U106",
    "pin": "3",
-   "net": "+5V_DEV"
+   "net": "+5V_DEV",
+   "class": "R",
+   "basis": "TI TPS62933 SLUSEA4D (v2/vendor/ti/ti-tps62933.pdf) 12.1 Layout Guidelines (p.40): \"the most critical PCB feature is the loop formed by the input capacitors and power ground\", \"Place the inductor, input and output capacitors, and the IC on the same layer\", \"Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins, which is key to EMI reduction\"; declared against VIN (pin 3)",
+   "same_side": true
   },
   {
    "cap": "C130",
    "part": "U106",
    "pin": "3",
-   "net": "+5V_DEV"
+   "net": "+5V_DEV",
+   "class": "R",
+   "basis": "TI TPS62933 SLUSEA4D (v2/vendor/ti/ti-tps62933.pdf) 12.1 Layout Guidelines (p.40): \"the most critical PCB feature is the loop formed by the input capacitors and power ground\", \"Place the inductor, input and output capacitors, and the IC on the same layer\", \"Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins, which is key to EMI reduction\"; declared against VIN (pin 3)",
+   "same_side": true
   },
   {
    "cap": "C135",
    "part": "U101",
    "pin": "1",
-   "net": "+3V3_S1B"
+   "net": "+3V3_S1B",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C136",
    "part": "U101",
    "pin": "49",
-   "net": "+3V3_S1B"
+   "net": "+3V3_S1B",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C137",
    "part": "U101",
    "pin": "96",
-   "net": "+3V3_S1B"
+   "net": "+3V3_S1B",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C138",
    "part": "U101",
    "pin": "82",
-   "net": "+3V3_S1B"
+   "net": "+3V3_S1B",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C139",
    "part": "U101",
    "pin": "15",
-   "net": "+3V3_S1B"
+   "net": "+3V3_S1B",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C140",
    "part": "U101",
    "pin": "113",
-   "net": "+3V3_S1B"
+   "net": "+3V3_S1B",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C141",
    "part": "U101",
    "pin": "3",
-   "net": "+1V0_S1"
+   "net": "+1V0_S1",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C142",
    "part": "U101",
    "pin": "29",
-   "net": "+1V0_S1"
+   "net": "+1V0_S1",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C143",
    "part": "U101",
    "pin": "55",
-   "net": "+1V0_S1"
+   "net": "+1V0_S1",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C144",
    "part": "U101",
    "pin": "91",
-   "net": "+1V0_S1"
+   "net": "+1V0_S1",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C145",
    "part": "U101",
    "pin": "13",
-   "net": "+1V0_S1"
+   "net": "+1V0_S1",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C146",
    "part": "U101",
    "pin": "105",
-   "net": "+1V0_S1"
+   "net": "+1V0_S1",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C147",
    "part": "U101",
    "pin": "64",
-   "net": "+3V3_S1B"
+   "net": "+3V3_S1B",
+   "class": "B2",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 (v2/vendor/diodes/diodes-pi7c9x2g404sl.pdf) 3.5 Power Pins (p.14) states no decoupling requirement; this 10 uF is the generator's own bulk with no maker placement clause (DECOUPLING.md B2 and section 10: the Diodes reference design is asked)"
   },
   {
    "cap": "C148",
    "part": "U101",
    "pin": "62",
-   "net": "+1V0_S1"
+   "net": "+1V0_S1",
+   "class": "B2",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 (v2/vendor/diodes/diodes-pi7c9x2g404sl.pdf) 3.5 Power Pins (p.14) states no decoupling requirement; this 10 uF is the generator's own bulk with no maker placement clause (DECOUPLING.md B2 and section 10: the Diodes reference design is asked)"
   },
   {
    "cap": "C197",
    "part": "U112",
    "pin": "5",
-   "net": "+3V3_CM1"
+   "net": "+3V3_CM1",
+   "class": "D",
+   "basis": "TI SN74LVC1G04 SCES214AF (v2/vendor/ti/ti-sn74lvc1g04.pdf): \"Each VCC pin should have a good bypass capacitor to prevent power disturbance. For devices with a single supply, a 0.1uF capacitor is recommended\" (Power Supply Recommendations, p.12)"
   },
   {
    "cap": "C183",
    "part": "U113",
    "pin": "5",
-   "net": "+3V3_CM1"
+   "net": "+3V3_CM1",
+   "class": "D",
+   "basis": "TI SN74LVC2G06 SCES307J (v2/vendor/ti/ti-sn74lvc2g06.pdf): \"Each VCC pin must have a good bypass capacitor in order to prevent power disturbance. For devices with a single supply, a 0.1-uF capacitor is recommended\" (Power Supply Recommendations, p.11)"
   },
   {
    "cap": "C184",
    "part": "U114",
    "pin": "5",
-   "net": "+3V3_CM1"
+   "net": "+3V3_CM1",
+   "class": "D",
+   "basis": "TI SN74LVC2G06 SCES307J (v2/vendor/ti/ti-sn74lvc2g06.pdf): \"Each VCC pin must have a good bypass capacitor in order to prevent power disturbance. For devices with a single supply, a 0.1-uF capacitor is recommended\" (Power Supply Recommendations, p.11)"
   },
   {
    "cap": "C185",
    "part": "U115",
    "pin": "5",
-   "net": "+3V3_CM1"
+   "net": "+3V3_CM1",
+   "class": "D",
+   "basis": "TI SN74LVC2G06 SCES307J (v2/vendor/ti/ti-sn74lvc2g06.pdf): \"Each VCC pin must have a good bypass capacitor in order to prevent power disturbance. For devices with a single supply, a 0.1-uF capacitor is recommended\" (Power Supply Recommendations, p.11)"
   },
   {
    "cap": "C166",
    "part": "U102",
    "pin": "5",
-   "net": "+1V1_S1"
+   "net": "+1V1_S1",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C167",
    "part": "U102",
    "pin": "8",
-   "net": "+1V1_S1"
+   "net": "+1V1_S1",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C168",
    "part": "U102",
    "pin": "13",
-   "net": "+1V1_S1"
+   "net": "+1V1_S1",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C169",
    "part": "U102",
    "pin": "21",
-   "net": "+1V1_S1"
+   "net": "+1V1_S1",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C601",
    "part": "U102",
    "pin": "28",
-   "net": "+1V1_S1"
+   "net": "+1V1_S1",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C602",
    "part": "U102",
    "pin": "31",
-   "net": "+1V1_S1"
+   "net": "+1V1_S1",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C603",
    "part": "U102",
    "pin": "51",
-   "net": "+1V1_S1"
+   "net": "+1V1_S1",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C604",
    "part": "U102",
    "pin": "57",
-   "net": "+1V1_S1"
+   "net": "+1V1_S1",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C170",
    "part": "U102",
    "pin": "16",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C171",
    "part": "U102",
    "pin": "34",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C172",
    "part": "U102",
    "pin": "52",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C173",
    "part": "U102",
    "pin": "63",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C174",
    "part": "L104",
    "pin": "2",
-   "net": "+1V1_S1"
+   "net": "+1V1_S1",
+   "class": "B1",
+   "basis": "TI TUSB8041 SLLSEE4E (v2/vendor/ti/ti-tusb8041.pdf): \"All power rails require a 10 uF capacitor or 1 uF capacitors for stability and noise immunity. These bulk capacitors can be placed anywhere on the power rail\" (10.1, p.37); \"the large bulk capacitors associated with each power rail should be placed as close as possible to the voltage regulators\" (11.1.1 item 7, p.38): declared against the 1.1 V regulator's output, the TPS62933's inductor pad (DECOUPLING.md B1)"
   },
   {
    "cap": "C192",
    "part": "U109",
    "pin": "6",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI TMUXHS4212 SLASEP7A (v2/vendor/ti/ti-tmuxhs4212.pdf): 9.2.1.2 \"See the application schematics on recommended decouple capacitors from VCC pins to ground\" (p.14), Figure 9-2's 0.1 uF at VCC (p.13); this is that 0.1 uF"
   },
   {
    "cap": "C193",
    "part": "U109",
    "pin": "6",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI TMUXHS4212 SLASEP7A (v2/vendor/ti/ti-tmuxhs4212.pdf): 9.2.1.2 \"See the application schematics on recommended decouple capacitors from VCC pins to ground\" (p.14), Figure 9-2's 0.1 uF at VCC (p.13); the 1 uF beside it is this generator's own (DECOUPLING.md D1)"
   },
   {
    "cap": "C194",
    "part": "U110",
    "pin": "10",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI TS3USB221A SCDS277C (v2/vendor/ti/ti-ts3usb221a.pdf): \"A bypass capacitor is recommended to be placed as close to the supply pin VCC\" (p.15)"
   },
   {
    "cap": "C212",
    "part": "U203",
    "pin": "2",
-   "net": "+5V_S2"
+   "net": "+5V_S2",
+   "class": "R",
+   "basis": "Diodes AP64500 DS41979 Rev 5-2 (v2/vendor/diodes/diodes-ap64500.pdf): pin 2 VIN \"Power Input. VIN supplies the power to the IC as well as the step-down converter power MOSFETs\" (p.3); PCB Layout item 2 \"Place the input capacitors as closely across VIN and GND as possible\" (p.23)",
+   "same_side": true
   },
   {
    "cap": "C213",
    "part": "U203",
    "pin": "2",
-   "net": "+5V_S2"
+   "net": "+5V_S2",
+   "class": "R",
+   "basis": "Diodes AP64500 DS41979 Rev 5-2 (v2/vendor/diodes/diodes-ap64500.pdf): pin 2 VIN \"Power Input. VIN supplies the power to the IC as well as the step-down converter power MOSFETs\" (p.3); PCB Layout item 2 \"Place the input capacitors as closely across VIN and GND as possible\" (p.23)",
+   "same_side": true
   },
   {
    "cap": "C219",
    "part": "U204",
    "pin": "2",
-   "net": "+5V_S2"
+   "net": "+5V_S2",
+   "class": "R",
+   "basis": "Diodes AP64500 DS41979 Rev 5-2 (v2/vendor/diodes/diodes-ap64500.pdf): pin 2 VIN \"Power Input. VIN supplies the power to the IC as well as the step-down converter power MOSFETs\" (p.3); PCB Layout item 2 \"Place the input capacitors as closely across VIN and GND as possible\" (p.23)",
+   "same_side": true
   },
   {
    "cap": "C220",
    "part": "U204",
    "pin": "2",
-   "net": "+5V_S2"
+   "net": "+5V_S2",
+   "class": "R",
+   "basis": "Diodes AP64500 DS41979 Rev 5-2 (v2/vendor/diodes/diodes-ap64500.pdf): pin 2 VIN \"Power Input. VIN supplies the power to the IC as well as the step-down converter power MOSFETs\" (p.3); PCB Layout item 2 \"Place the input capacitors as closely across VIN and GND as possible\" (p.23)",
+   "same_side": true
   },
   {
    "cap": "C635",
    "part": "U205",
    "pin": "3",
-   "net": "+5V_S2"
+   "net": "+5V_S2",
+   "class": "R",
+   "basis": "TI TPS62933 SLUSEA4D (v2/vendor/ti/ti-tps62933.pdf) 12.1 Layout Guidelines (p.40): \"the most critical PCB feature is the loop formed by the input capacitors and power ground\", \"Place the inductor, input and output capacitors, and the IC on the same layer\", \"Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins, which is key to EMI reduction\"; declared against VIN (pin 3)",
+   "same_side": true
   },
   {
    "cap": "C225",
    "part": "U205",
    "pin": "3",
-   "net": "+5V_S2"
+   "net": "+5V_S2",
+   "class": "R",
+   "basis": "TI TPS62933 SLUSEA4D (v2/vendor/ti/ti-tps62933.pdf) 12.1 Layout Guidelines (p.40): \"the most critical PCB feature is the loop formed by the input capacitors and power ground\", \"Place the inductor, input and output capacitors, and the IC on the same layer\", \"Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins, which is key to EMI reduction\"; declared against VIN (pin 3)",
+   "same_side": true
   },
   {
    "cap": "C636",
    "part": "U206",
    "pin": "3",
-   "net": "+5V_DEV"
+   "net": "+5V_DEV",
+   "class": "R",
+   "basis": "TI TPS62933 SLUSEA4D (v2/vendor/ti/ti-tps62933.pdf) 12.1 Layout Guidelines (p.40): \"the most critical PCB feature is the loop formed by the input capacitors and power ground\", \"Place the inductor, input and output capacitors, and the IC on the same layer\", \"Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins, which is key to EMI reduction\"; declared against VIN (pin 3)",
+   "same_side": true
   },
   {
    "cap": "C230",
    "part": "U206",
    "pin": "3",
-   "net": "+5V_DEV"
+   "net": "+5V_DEV",
+   "class": "R",
+   "basis": "TI TPS62933 SLUSEA4D (v2/vendor/ti/ti-tps62933.pdf) 12.1 Layout Guidelines (p.40): \"the most critical PCB feature is the loop formed by the input capacitors and power ground\", \"Place the inductor, input and output capacitors, and the IC on the same layer\", \"Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins, which is key to EMI reduction\"; declared against VIN (pin 3)",
+   "same_side": true
   },
   {
    "cap": "C235",
    "part": "U201",
    "pin": "1",
-   "net": "+3V3_S2B"
+   "net": "+3V3_S2B",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C236",
    "part": "U201",
    "pin": "49",
-   "net": "+3V3_S2B"
+   "net": "+3V3_S2B",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C237",
    "part": "U201",
    "pin": "96",
-   "net": "+3V3_S2B"
+   "net": "+3V3_S2B",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C238",
    "part": "U201",
    "pin": "82",
-   "net": "+3V3_S2B"
+   "net": "+3V3_S2B",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C239",
    "part": "U201",
    "pin": "15",
-   "net": "+3V3_S2B"
+   "net": "+3V3_S2B",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C240",
    "part": "U201",
    "pin": "113",
-   "net": "+3V3_S2B"
+   "net": "+3V3_S2B",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C241",
    "part": "U201",
    "pin": "3",
-   "net": "+1V0_S2"
+   "net": "+1V0_S2",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C242",
    "part": "U201",
    "pin": "29",
-   "net": "+1V0_S2"
+   "net": "+1V0_S2",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C243",
    "part": "U201",
    "pin": "55",
-   "net": "+1V0_S2"
+   "net": "+1V0_S2",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C244",
    "part": "U201",
    "pin": "91",
-   "net": "+1V0_S2"
+   "net": "+1V0_S2",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C245",
    "part": "U201",
    "pin": "13",
-   "net": "+1V0_S2"
+   "net": "+1V0_S2",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C246",
    "part": "U201",
    "pin": "105",
-   "net": "+1V0_S2"
+   "net": "+1V0_S2",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C247",
    "part": "U201",
    "pin": "64",
-   "net": "+3V3_S2B"
+   "net": "+3V3_S2B",
+   "class": "B2",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 (v2/vendor/diodes/diodes-pi7c9x2g404sl.pdf) 3.5 Power Pins (p.14) states no decoupling requirement; this 10 uF is the generator's own bulk with no maker placement clause (DECOUPLING.md B2 and section 10: the Diodes reference design is asked)"
   },
   {
    "cap": "C248",
    "part": "U201",
    "pin": "62",
-   "net": "+1V0_S2"
+   "net": "+1V0_S2",
+   "class": "B2",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 (v2/vendor/diodes/diodes-pi7c9x2g404sl.pdf) 3.5 Power Pins (p.14) states no decoupling requirement; this 10 uF is the generator's own bulk with no maker placement clause (DECOUPLING.md B2 and section 10: the Diodes reference design is asked)"
   },
   {
    "cap": "C520",
    "part": "J_M2C2",
    "pin": "2",
-   "net": "+3V3_M2C2"
+   "net": "+3V3_M2C2",
+   "class": "D",
+   "basis": "Quectel RM520N series hardware design V1.1 (v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf) 3.3.1 (p.29): \"two bypass capacitors of 220 uF with low ESR should be used, and a multi-layer ceramic chip capacitor (MLCC) array should also be used\"; Figure 6 (p.30) draws 220 uF, 100 nF, 6.8 nF, 220 pF, 68 pF at the PMU pins 2 and 4 and 220 uF, 100 nF, 220 pF, 68 pF, 15 pF, 9.1 pF, 4.7 pF at the APT pins 70, 72, 74: capacitors the maker ties to the module's supply pins"
   },
   {
    "cap": "C521",
    "part": "J_M2C2",
    "pin": "70",
-   "net": "+3V3_M2C2"
+   "net": "+3V3_M2C2",
+   "class": "D",
+   "basis": "Quectel RM520N series hardware design V1.1 (v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf) 3.3.1 (p.29): \"two bypass capacitors of 220 uF with low ESR should be used, and a multi-layer ceramic chip capacitor (MLCC) array should also be used\"; Figure 6 (p.30) draws 220 uF, 100 nF, 6.8 nF, 220 pF, 68 pF at the PMU pins 2 and 4 and 220 uF, 100 nF, 220 pF, 68 pF, 15 pF, 9.1 pF, 4.7 pF at the APT pins 70, 72, 74: capacitors the maker ties to the module's supply pins"
   },
   {
    "cap": "C522",
    "part": "J_M2C2",
    "pin": "2",
-   "net": "+3V3_M2C2"
+   "net": "+3V3_M2C2",
+   "class": "D",
+   "basis": "Quectel RM520N series hardware design V1.1 (v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf) 3.3.1 (p.29): \"two bypass capacitors of 220 uF with low ESR should be used, and a multi-layer ceramic chip capacitor (MLCC) array should also be used\"; Figure 6 (p.30) draws 220 uF, 100 nF, 6.8 nF, 220 pF, 68 pF at the PMU pins 2 and 4 and 220 uF, 100 nF, 220 pF, 68 pF, 15 pF, 9.1 pF, 4.7 pF at the APT pins 70, 72, 74: capacitors the maker ties to the module's supply pins"
   },
   {
    "cap": "C523",
    "part": "J_M2C2",
    "pin": "2",
-   "net": "+3V3_M2C2"
+   "net": "+3V3_M2C2",
+   "class": "D",
+   "basis": "Quectel RM520N series hardware design V1.1 (v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf) 3.3.1 (p.29): \"two bypass capacitors of 220 uF with low ESR should be used, and a multi-layer ceramic chip capacitor (MLCC) array should also be used\"; Figure 6 (p.30) draws 220 uF, 100 nF, 6.8 nF, 220 pF, 68 pF at the PMU pins 2 and 4 and 220 uF, 100 nF, 220 pF, 68 pF, 15 pF, 9.1 pF, 4.7 pF at the APT pins 70, 72, 74: capacitors the maker ties to the module's supply pins"
   },
   {
    "cap": "C524",
    "part": "J_M2C2",
    "pin": "2",
-   "net": "+3V3_M2C2"
+   "net": "+3V3_M2C2",
+   "class": "D",
+   "basis": "Quectel RM520N series hardware design V1.1 (v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf) 3.3.1 (p.29): \"two bypass capacitors of 220 uF with low ESR should be used, and a multi-layer ceramic chip capacitor (MLCC) array should also be used\"; Figure 6 (p.30) draws 220 uF, 100 nF, 6.8 nF, 220 pF, 68 pF at the PMU pins 2 and 4 and 220 uF, 100 nF, 220 pF, 68 pF, 15 pF, 9.1 pF, 4.7 pF at the APT pins 70, 72, 74: capacitors the maker ties to the module's supply pins"
   },
   {
    "cap": "C525",
    "part": "J_M2C2",
    "pin": "70",
-   "net": "+3V3_M2C2"
+   "net": "+3V3_M2C2",
+   "class": "D",
+   "basis": "Quectel RM520N series hardware design V1.1 (v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf) 3.3.1 (p.29): \"two bypass capacitors of 220 uF with low ESR should be used, and a multi-layer ceramic chip capacitor (MLCC) array should also be used\"; Figure 6 (p.30) draws 220 uF, 100 nF, 6.8 nF, 220 pF, 68 pF at the PMU pins 2 and 4 and 220 uF, 100 nF, 220 pF, 68 pF, 15 pF, 9.1 pF, 4.7 pF at the APT pins 70, 72, 74: capacitors the maker ties to the module's supply pins"
   },
   {
    "cap": "C526",
    "part": "J_M2C2",
    "pin": "70",
-   "net": "+3V3_M2C2"
+   "net": "+3V3_M2C2",
+   "class": "D",
+   "basis": "Quectel RM520N series hardware design V1.1 (v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf) 3.3.1 (p.29): \"two bypass capacitors of 220 uF with low ESR should be used, and a multi-layer ceramic chip capacitor (MLCC) array should also be used\"; Figure 6 (p.30) draws 220 uF, 100 nF, 6.8 nF, 220 pF, 68 pF at the PMU pins 2 and 4 and 220 uF, 100 nF, 220 pF, 68 pF, 15 pF, 9.1 pF, 4.7 pF at the APT pins 70, 72, 74: capacitors the maker ties to the module's supply pins"
   },
   {
    "cap": "C527",
    "part": "J_M2C2",
    "pin": "70",
-   "net": "+3V3_M2C2"
+   "net": "+3V3_M2C2",
+   "class": "D",
+   "basis": "Quectel RM520N series hardware design V1.1 (v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf) 3.3.1 (p.29): \"two bypass capacitors of 220 uF with low ESR should be used, and a multi-layer ceramic chip capacitor (MLCC) array should also be used\"; Figure 6 (p.30) draws 220 uF, 100 nF, 6.8 nF, 220 pF, 68 pF at the PMU pins 2 and 4 and 220 uF, 100 nF, 220 pF, 68 pF, 15 pF, 9.1 pF, 4.7 pF at the APT pins 70, 72, 74: capacitors the maker ties to the module's supply pins"
   },
   {
    "cap": "C528",
    "part": "J_M2C2",
    "pin": "70",
-   "net": "+3V3_M2C2"
+   "net": "+3V3_M2C2",
+   "class": "D",
+   "basis": "Quectel RM520N series hardware design V1.1 (v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf) 3.3.1 (p.29): \"two bypass capacitors of 220 uF with low ESR should be used, and a multi-layer ceramic chip capacitor (MLCC) array should also be used\"; Figure 6 (p.30) draws 220 uF, 100 nF, 6.8 nF, 220 pF, 68 pF at the PMU pins 2 and 4 and 220 uF, 100 nF, 220 pF, 68 pF, 15 pF, 9.1 pF, 4.7 pF at the APT pins 70, 72, 74: capacitors the maker ties to the module's supply pins"
   },
   {
    "cap": "C529",
    "part": "J_M2C2",
    "pin": "70",
-   "net": "+3V3_M2C2"
+   "net": "+3V3_M2C2",
+   "class": "D",
+   "basis": "Quectel RM520N series hardware design V1.1 (v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf) 3.3.1 (p.29): \"two bypass capacitors of 220 uF with low ESR should be used, and a multi-layer ceramic chip capacitor (MLCC) array should also be used\"; Figure 6 (p.30) draws 220 uF, 100 nF, 6.8 nF, 220 pF, 68 pF at the PMU pins 2 and 4 and 220 uF, 100 nF, 220 pF, 68 pF, 15 pF, 9.1 pF, 4.7 pF at the APT pins 70, 72, 74: capacitors the maker ties to the module's supply pins"
   },
   {
    "cap": "C530",
    "part": "J_M2C2",
    "pin": "70",
-   "net": "+3V3_M2C2"
+   "net": "+3V3_M2C2",
+   "class": "D",
+   "basis": "Quectel RM520N series hardware design V1.1 (v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf) 3.3.1 (p.29): \"two bypass capacitors of 220 uF with low ESR should be used, and a multi-layer ceramic chip capacitor (MLCC) array should also be used\"; Figure 6 (p.30) draws 220 uF, 100 nF, 6.8 nF, 220 pF, 68 pF at the PMU pins 2 and 4 and 220 uF, 100 nF, 220 pF, 68 pF, 15 pF, 9.1 pF, 4.7 pF at the APT pins 70, 72, 74: capacitors the maker ties to the module's supply pins"
   },
   {
    "cap": "C286",
    "part": "U222",
    "pin": "5",
-   "net": "SIM1_VCC"
+   "net": "SIM1_VCC",
+   "class": "D",
+   "basis": "TI TPD4E001 SLLS682P (v2/vendor/ti/ti-tpd4e001.pdf): pin VCC \"Power-supply input. Bypass VCC to GND with a 0.1-uF ceramic capacitor\" (p.3); 8.1 item 2 \"Place a 0.1uF capacitor very close to the VCC pin\" (p.9)"
   },
   {
    "cap": "C289",
    "part": "U223",
    "pin": "5",
-   "net": "SIMC2_VCC"
+   "net": "SIMC2_VCC",
+   "class": "D",
+   "basis": "TI TPD4E001 SLLS682P (v2/vendor/ti/ti-tpd4e001.pdf): pin VCC \"Power-supply input. Bypass VCC to GND with a 0.1-uF ceramic capacitor\" (p.3); 8.1 item 2 \"Place a 0.1uF capacitor very close to the VCC pin\" (p.9)"
   },
   {
    "cap": "C297",
    "part": "U212",
    "pin": "5",
-   "net": "+3V3_CM2"
+   "net": "+3V3_CM2",
+   "class": "D",
+   "basis": "TI SN74LVC1G04 SCES214AF (v2/vendor/ti/ti-sn74lvc1g04.pdf): \"Each VCC pin should have a good bypass capacitor to prevent power disturbance. For devices with a single supply, a 0.1uF capacitor is recommended\" (Power Supply Recommendations, p.12)"
   },
   {
    "cap": "C261",
    "part": "U213",
    "pin": "5",
-   "net": "+3V3_CM2"
+   "net": "+3V3_CM2",
+   "class": "D",
+   "basis": "TI SN74LVC2G06 SCES307J (v2/vendor/ti/ti-sn74lvc2g06.pdf): \"Each VCC pin must have a good bypass capacitor in order to prevent power disturbance. For devices with a single supply, a 0.1-uF capacitor is recommended\" (Power Supply Recommendations, p.11)"
   },
   {
    "cap": "C262",
    "part": "U214",
    "pin": "5",
-   "net": "+3V3_CM2"
+   "net": "+3V3_CM2",
+   "class": "D",
+   "basis": "TI SN74LVC2G06 SCES307J (v2/vendor/ti/ti-sn74lvc2g06.pdf): \"Each VCC pin must have a good bypass capacitor in order to prevent power disturbance. For devices with a single supply, a 0.1-uF capacitor is recommended\" (Power Supply Recommendations, p.11)"
   },
   {
    "cap": "C285",
    "part": "U215",
    "pin": "5",
-   "net": "+3V3_CM2"
+   "net": "+3V3_CM2",
+   "class": "D",
+   "basis": "TI SN74LVC2G06 SCES307J (v2/vendor/ti/ti-sn74lvc2g06.pdf): \"Each VCC pin must have a good bypass capacitor in order to prevent power disturbance. For devices with a single supply, a 0.1-uF capacitor is recommended\" (Power Supply Recommendations, p.11)"
   },
   {
    "cap": "C299",
    "part": "U220",
    "pin": "5",
-   "net": "+3V3_CM2"
+   "net": "+3V3_CM2",
+   "class": "D",
+   "basis": "TI SN74LVC2G06 SCES307J (v2/vendor/ti/ti-sn74lvc2g06.pdf): \"Each VCC pin must have a good bypass capacitor in order to prevent power disturbance. For devices with a single supply, a 0.1-uF capacitor is recommended\" (Power Supply Recommendations, p.11)"
   },
   {
    "cap": "C200",
    "part": "U221",
    "pin": "6",
-   "net": "+3V3_S2A"
+   "net": "+3V3_S2A",
+   "class": "D",
+   "basis": "TI TPS3808 SBVS050N (v2/vendor/ti/ti-tps3808.pdf) layout: \"Place a 0.1-uF ceramic capacitor near the VDD pin\" (p.15)"
   },
   {
    "cap": "C266",
    "part": "U202",
    "pin": "5",
-   "net": "+1V1_S2"
+   "net": "+1V1_S2",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C267",
    "part": "U202",
    "pin": "8",
-   "net": "+1V1_S2"
+   "net": "+1V1_S2",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C268",
    "part": "U202",
    "pin": "13",
-   "net": "+1V1_S2"
+   "net": "+1V1_S2",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C269",
    "part": "U202",
    "pin": "21",
-   "net": "+1V1_S2"
+   "net": "+1V1_S2",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C631",
    "part": "U202",
    "pin": "28",
-   "net": "+1V1_S2"
+   "net": "+1V1_S2",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C632",
    "part": "U202",
    "pin": "31",
-   "net": "+1V1_S2"
+   "net": "+1V1_S2",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C633",
    "part": "U202",
    "pin": "51",
-   "net": "+1V1_S2"
+   "net": "+1V1_S2",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C634",
    "part": "U202",
    "pin": "57",
-   "net": "+1V1_S2"
+   "net": "+1V1_S2",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C270",
    "part": "U202",
    "pin": "16",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C271",
    "part": "U202",
    "pin": "34",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C272",
    "part": "U202",
    "pin": "52",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C273",
    "part": "U202",
    "pin": "63",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C274",
    "part": "L204",
    "pin": "2",
-   "net": "+1V1_S2"
+   "net": "+1V1_S2",
+   "class": "B1",
+   "basis": "TI TUSB8041 SLLSEE4E (v2/vendor/ti/ti-tusb8041.pdf): \"All power rails require a 10 uF capacitor or 1 uF capacitors for stability and noise immunity. These bulk capacitors can be placed anywhere on the power rail\" (10.1, p.37); \"the large bulk capacitors associated with each power rail should be placed as close as possible to the voltage regulators\" (11.1.1 item 7, p.38): declared against the 1.1 V regulator's output, the TPS62933's inductor pad (DECOUPLING.md B1)"
   },
   {
    "cap": "C292",
    "part": "U209",
    "pin": "6",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI TMUXHS4212 SLASEP7A (v2/vendor/ti/ti-tmuxhs4212.pdf): 9.2.1.2 \"See the application schematics on recommended decouple capacitors from VCC pins to ground\" (p.14), Figure 9-2's 0.1 uF at VCC (p.13); this is that 0.1 uF"
   },
   {
    "cap": "C293",
    "part": "U209",
    "pin": "6",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI TMUXHS4212 SLASEP7A (v2/vendor/ti/ti-tmuxhs4212.pdf): 9.2.1.2 \"See the application schematics on recommended decouple capacitors from VCC pins to ground\" (p.14), Figure 9-2's 0.1 uF at VCC (p.13); the 1 uF beside it is this generator's own (DECOUPLING.md D1)"
   },
   {
    "cap": "C294",
    "part": "U210",
    "pin": "10",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI TS3USB221A SCDS277C (v2/vendor/ti/ti-ts3usb221a.pdf): \"A bypass capacitor is recommended to be placed as close to the supply pin VCC\" (p.15)"
   },
   {
    "cap": "C312",
    "part": "U303",
    "pin": "2",
-   "net": "+5V_S3"
+   "net": "+5V_S3",
+   "class": "R",
+   "basis": "Diodes AP64500 DS41979 Rev 5-2 (v2/vendor/diodes/diodes-ap64500.pdf): pin 2 VIN \"Power Input. VIN supplies the power to the IC as well as the step-down converter power MOSFETs\" (p.3); PCB Layout item 2 \"Place the input capacitors as closely across VIN and GND as possible\" (p.23)",
+   "same_side": true
   },
   {
    "cap": "C313",
    "part": "U303",
    "pin": "2",
-   "net": "+5V_S3"
+   "net": "+5V_S3",
+   "class": "R",
+   "basis": "Diodes AP64500 DS41979 Rev 5-2 (v2/vendor/diodes/diodes-ap64500.pdf): pin 2 VIN \"Power Input. VIN supplies the power to the IC as well as the step-down converter power MOSFETs\" (p.3); PCB Layout item 2 \"Place the input capacitors as closely across VIN and GND as possible\" (p.23)",
+   "same_side": true
   },
   {
    "cap": "C319",
    "part": "U304",
    "pin": "2",
-   "net": "+5V_S3"
+   "net": "+5V_S3",
+   "class": "R",
+   "basis": "Diodes AP64500 DS41979 Rev 5-2 (v2/vendor/diodes/diodes-ap64500.pdf): pin 2 VIN \"Power Input. VIN supplies the power to the IC as well as the step-down converter power MOSFETs\" (p.3); PCB Layout item 2 \"Place the input capacitors as closely across VIN and GND as possible\" (p.23)",
+   "same_side": true
   },
   {
    "cap": "C320",
    "part": "U304",
    "pin": "2",
-   "net": "+5V_S3"
+   "net": "+5V_S3",
+   "class": "R",
+   "basis": "Diodes AP64500 DS41979 Rev 5-2 (v2/vendor/diodes/diodes-ap64500.pdf): pin 2 VIN \"Power Input. VIN supplies the power to the IC as well as the step-down converter power MOSFETs\" (p.3); PCB Layout item 2 \"Place the input capacitors as closely across VIN and GND as possible\" (p.23)",
+   "same_side": true
   },
   {
    "cap": "C665",
    "part": "U305",
    "pin": "3",
-   "net": "+5V_S3"
+   "net": "+5V_S3",
+   "class": "R",
+   "basis": "TI TPS62933 SLUSEA4D (v2/vendor/ti/ti-tps62933.pdf) 12.1 Layout Guidelines (p.40): \"the most critical PCB feature is the loop formed by the input capacitors and power ground\", \"Place the inductor, input and output capacitors, and the IC on the same layer\", \"Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins, which is key to EMI reduction\"; declared against VIN (pin 3)",
+   "same_side": true
   },
   {
    "cap": "C325",
    "part": "U305",
    "pin": "3",
-   "net": "+5V_S3"
+   "net": "+5V_S3",
+   "class": "R",
+   "basis": "TI TPS62933 SLUSEA4D (v2/vendor/ti/ti-tps62933.pdf) 12.1 Layout Guidelines (p.40): \"the most critical PCB feature is the loop formed by the input capacitors and power ground\", \"Place the inductor, input and output capacitors, and the IC on the same layer\", \"Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins, which is key to EMI reduction\"; declared against VIN (pin 3)",
+   "same_side": true
   },
   {
    "cap": "C666",
    "part": "U306",
    "pin": "3",
-   "net": "+5V_DEV"
+   "net": "+5V_DEV",
+   "class": "R",
+   "basis": "TI TPS62933 SLUSEA4D (v2/vendor/ti/ti-tps62933.pdf) 12.1 Layout Guidelines (p.40): \"the most critical PCB feature is the loop formed by the input capacitors and power ground\", \"Place the inductor, input and output capacitors, and the IC on the same layer\", \"Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins, which is key to EMI reduction\"; declared against VIN (pin 3)",
+   "same_side": true
   },
   {
    "cap": "C330",
    "part": "U306",
    "pin": "3",
-   "net": "+5V_DEV"
+   "net": "+5V_DEV",
+   "class": "R",
+   "basis": "TI TPS62933 SLUSEA4D (v2/vendor/ti/ti-tps62933.pdf) 12.1 Layout Guidelines (p.40): \"the most critical PCB feature is the loop formed by the input capacitors and power ground\", \"Place the inductor, input and output capacitors, and the IC on the same layer\", \"Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins, which is key to EMI reduction\"; declared against VIN (pin 3)",
+   "same_side": true
   },
   {
    "cap": "C335",
    "part": "U301",
    "pin": "1",
-   "net": "+3V3_S3B"
+   "net": "+3V3_S3B",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C336",
    "part": "U301",
    "pin": "49",
-   "net": "+3V3_S3B"
+   "net": "+3V3_S3B",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C337",
    "part": "U301",
    "pin": "96",
-   "net": "+3V3_S3B"
+   "net": "+3V3_S3B",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C338",
    "part": "U301",
    "pin": "82",
-   "net": "+3V3_S3B"
+   "net": "+3V3_S3B",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C339",
    "part": "U301",
    "pin": "15",
-   "net": "+3V3_S3B"
+   "net": "+3V3_S3B",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C340",
    "part": "U301",
    "pin": "113",
-   "net": "+3V3_S3B"
+   "net": "+3V3_S3B",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C341",
    "part": "U301",
    "pin": "3",
-   "net": "+1V0_S3"
+   "net": "+1V0_S3",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C342",
    "part": "U301",
    "pin": "29",
-   "net": "+1V0_S3"
+   "net": "+1V0_S3",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C343",
    "part": "U301",
    "pin": "55",
-   "net": "+1V0_S3"
+   "net": "+1V0_S3",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C344",
    "part": "U301",
    "pin": "91",
-   "net": "+1V0_S3"
+   "net": "+1V0_S3",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C345",
    "part": "U301",
    "pin": "13",
-   "net": "+1V0_S3"
+   "net": "+1V0_S3",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C346",
    "part": "U301",
    "pin": "105",
-   "net": "+1V0_S3"
+   "net": "+1V0_S3",
+   "class": "D",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)"
   },
   {
    "cap": "C347",
    "part": "U301",
    "pin": "64",
-   "net": "+3V3_S3B"
+   "net": "+3V3_S3B",
+   "class": "B2",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 (v2/vendor/diodes/diodes-pi7c9x2g404sl.pdf) 3.5 Power Pins (p.14) states no decoupling requirement; this 10 uF is the generator's own bulk with no maker placement clause (DECOUPLING.md B2 and section 10: the Diodes reference design is asked)"
   },
   {
    "cap": "C348",
    "part": "U301",
    "pin": "62",
-   "net": "+1V0_S3"
+   "net": "+1V0_S3",
+   "class": "B2",
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 (v2/vendor/diodes/diodes-pi7c9x2g404sl.pdf) 3.5 Power Pins (p.14) states no decoupling requirement; this 10 uF is the generator's own bulk with no maker placement clause (DECOUPLING.md B2 and section 10: the Diodes reference design is asked)"
   },
   {
    "cap": "C397",
    "part": "U312",
    "pin": "5",
-   "net": "+3V3_CM3"
+   "net": "+3V3_CM3",
+   "class": "D",
+   "basis": "TI SN74LVC1G04 SCES214AF (v2/vendor/ti/ti-sn74lvc1g04.pdf): \"Each VCC pin should have a good bypass capacitor to prevent power disturbance. For devices with a single supply, a 0.1uF capacitor is recommended\" (Power Supply Recommendations, p.12)"
   },
   {
    "cap": "C383",
    "part": "U313",
    "pin": "5",
-   "net": "+3V3_CM3"
+   "net": "+3V3_CM3",
+   "class": "D",
+   "basis": "TI SN74LVC2G06 SCES307J (v2/vendor/ti/ti-sn74lvc2g06.pdf): \"Each VCC pin must have a good bypass capacitor in order to prevent power disturbance. For devices with a single supply, a 0.1-uF capacitor is recommended\" (Power Supply Recommendations, p.11)"
   },
   {
    "cap": "C384",
    "part": "U314",
    "pin": "5",
-   "net": "+3V3_CM3"
+   "net": "+3V3_CM3",
+   "class": "D",
+   "basis": "TI SN74LVC2G06 SCES307J (v2/vendor/ti/ti-sn74lvc2g06.pdf): \"Each VCC pin must have a good bypass capacitor in order to prevent power disturbance. For devices with a single supply, a 0.1-uF capacitor is recommended\" (Power Supply Recommendations, p.11)"
   },
   {
    "cap": "C385",
    "part": "U315",
    "pin": "5",
-   "net": "+3V3_CM3"
+   "net": "+3V3_CM3",
+   "class": "D",
+   "basis": "TI SN74LVC2G06 SCES307J (v2/vendor/ti/ti-sn74lvc2g06.pdf): \"Each VCC pin must have a good bypass capacitor in order to prevent power disturbance. For devices with a single supply, a 0.1-uF capacitor is recommended\" (Power Supply Recommendations, p.11)"
   },
   {
    "cap": "C366",
    "part": "U302",
    "pin": "5",
-   "net": "+1V1_S3"
+   "net": "+1V1_S3",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C367",
    "part": "U302",
    "pin": "8",
-   "net": "+1V1_S3"
+   "net": "+1V1_S3",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C368",
    "part": "U302",
    "pin": "13",
-   "net": "+1V1_S3"
+   "net": "+1V1_S3",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C369",
    "part": "U302",
    "pin": "21",
-   "net": "+1V1_S3"
+   "net": "+1V1_S3",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C661",
    "part": "U302",
    "pin": "28",
-   "net": "+1V1_S3"
+   "net": "+1V1_S3",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C662",
    "part": "U302",
    "pin": "31",
-   "net": "+1V1_S3"
+   "net": "+1V1_S3",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C663",
    "part": "U302",
    "pin": "51",
-   "net": "+1V1_S3"
+   "net": "+1V1_S3",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C664",
    "part": "U302",
    "pin": "57",
-   "net": "+1V1_S3"
+   "net": "+1V1_S3",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C370",
    "part": "U302",
    "pin": "16",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C371",
    "part": "U302",
    "pin": "34",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C372",
    "part": "U302",
    "pin": "52",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C373",
    "part": "U302",
    "pin": "63",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\""
   },
   {
    "cap": "C374",
    "part": "L304",
    "pin": "2",
-   "net": "+1V1_S3"
+   "net": "+1V1_S3",
+   "class": "B1",
+   "basis": "TI TUSB8041 SLLSEE4E (v2/vendor/ti/ti-tusb8041.pdf): \"All power rails require a 10 uF capacitor or 1 uF capacitors for stability and noise immunity. These bulk capacitors can be placed anywhere on the power rail\" (10.1, p.37); \"the large bulk capacitors associated with each power rail should be placed as close as possible to the voltage regulators\" (11.1.1 item 7, p.38): declared against the 1.1 V regulator's output, the TPS62933's inductor pad (DECOUPLING.md B1)"
   },
   {
    "cap": "C392",
    "part": "U309",
    "pin": "6",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI TMUXHS4212 SLASEP7A (v2/vendor/ti/ti-tmuxhs4212.pdf): 9.2.1.2 \"See the application schematics on recommended decouple capacitors from VCC pins to ground\" (p.14), Figure 9-2's 0.1 uF at VCC (p.13); this is that 0.1 uF"
   },
   {
    "cap": "C393",
    "part": "U309",
    "pin": "6",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI TMUXHS4212 SLASEP7A (v2/vendor/ti/ti-tmuxhs4212.pdf): 9.2.1.2 \"See the application schematics on recommended decouple capacitors from VCC pins to ground\" (p.14), Figure 9-2's 0.1 uF at VCC (p.13); the 1 uF beside it is this generator's own (DECOUPLING.md D1)"
   },
   {
    "cap": "C394",
    "part": "U310",
    "pin": "10",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI TS3USB221A SCDS277C (v2/vendor/ti/ti-ts3usb221a.pdf): \"A bypass capacitor is recommended to be placed as close to the supply pin VCC\" (p.15)"
   },
   {
    "cap": "C571",
    "part": "U26",
    "pin": "3",
-   "net": "+5V_DEV"
+   "net": "+5V_DEV",
+   "class": "R",
+   "basis": "TI TPS62933 SLUSEA4D (v2/vendor/ti/ti-tps62933.pdf) 12.1 Layout Guidelines (p.40): \"the most critical PCB feature is the loop formed by the input capacitors and power ground\", \"Place the inductor, input and output capacitors, and the IC on the same layer\", \"Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins, which is key to EMI reduction\"; declared against VIN (pin 3)",
+   "same_side": true
   },
   {
    "cap": "C7",
    "part": "U26",
    "pin": "3",
-   "net": "+5V_DEV"
+   "net": "+5V_DEV",
+   "class": "R",
+   "basis": "TI TPS62933 SLUSEA4D (v2/vendor/ti/ti-tps62933.pdf) 12.1 Layout Guidelines (p.40): \"the most critical PCB feature is the loop formed by the input capacitors and power ground\", \"Place the inductor, input and output capacitors, and the IC on the same layer\", \"Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins, which is key to EMI reduction\"; declared against VIN (pin 3)",
+   "same_side": true
   },
   {
    "cap": "C17",
    "part": "U1",
    "pin": "61",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C20",
    "part": "U1",
    "pin": "77",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C23",
    "part": "U1",
    "pin": "99",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C26",
    "part": "U1",
    "pin": "61",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C19",
    "part": "U1",
    "pin": "10",
-   "net": "+2V5_KSZ"
+   "net": "+2V5_KSZ",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C22",
    "part": "U1",
    "pin": "22",
-   "net": "+2V5_KSZ"
+   "net": "+2V5_KSZ",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C25",
    "part": "U1",
    "pin": "33",
-   "net": "+2V5_KSZ"
+   "net": "+2V5_KSZ",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C545",
    "part": "U1",
    "pin": "44",
-   "net": "+2V5_KSZ"
+   "net": "+2V5_KSZ",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C546",
    "part": "U1",
    "pin": "111",
-   "net": "+2V5_KSZ"
+   "net": "+2V5_KSZ",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C547",
    "part": "U1",
    "pin": "122",
-   "net": "+2V5_KSZ"
+   "net": "+2V5_KSZ",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C548",
    "part": "U1",
    "pin": "128",
-   "net": "+2V5_KSZ"
+   "net": "+2V5_KSZ",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C18",
    "part": "U1",
    "pin": "11",
-   "net": "+1V2_KSZ"
+   "net": "+1V2_KSZ",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C21",
    "part": "U1",
    "pin": "23",
-   "net": "+1V2_KSZ"
+   "net": "+1V2_KSZ",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C24",
    "part": "U1",
    "pin": "45",
-   "net": "+1V2_KSZ"
+   "net": "+1V2_KSZ",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C531",
    "part": "U1",
    "pin": "56",
-   "net": "+1V2_KSZ"
+   "net": "+1V2_KSZ",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C532",
    "part": "U1",
    "pin": "74",
-   "net": "+1V2_KSZ"
+   "net": "+1V2_KSZ",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C533",
    "part": "U1",
    "pin": "87",
-   "net": "+1V2_KSZ"
+   "net": "+1V2_KSZ",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C534",
    "part": "U1",
    "pin": "104",
-   "net": "+1V2_KSZ"
+   "net": "+1V2_KSZ",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C535",
    "part": "U1",
    "pin": "110",
-   "net": "+1V2_KSZ"
+   "net": "+1V2_KSZ",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C536",
    "part": "U1",
    "pin": "3",
-   "net": "+1V2_KSZ"
+   "net": "+1V2_KSZ",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C537",
    "part": "U1",
    "pin": "14",
-   "net": "+1V2_KSZ"
+   "net": "+1V2_KSZ",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C538",
    "part": "U1",
    "pin": "19",
-   "net": "+1V2_KSZ"
+   "net": "+1V2_KSZ",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C539",
    "part": "U1",
    "pin": "30",
-   "net": "+1V2_KSZ"
+   "net": "+1V2_KSZ",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C540",
    "part": "U1",
    "pin": "36",
-   "net": "+1V2_KSZ"
+   "net": "+1V2_KSZ",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C541",
    "part": "U1",
    "pin": "41",
-   "net": "+1V2_KSZ"
+   "net": "+1V2_KSZ",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C542",
    "part": "U1",
    "pin": "114",
-   "net": "+1V2_KSZ"
+   "net": "+1V2_KSZ",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C543",
    "part": "U1",
    "pin": "119",
-   "net": "+1V2_KSZ"
+   "net": "+1V2_KSZ",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C544",
    "part": "U1",
    "pin": "124",
-   "net": "+1V2_KSZ"
+   "net": "+1V2_KSZ",
+   "class": "D",
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin"
   },
   {
    "cap": "C27",
    "part": "U1",
    "pin": "11",
-   "net": "+1V2_KSZ"
+   "net": "+1V2_KSZ",
+   "class": "B2",
+   "basis": "Microchip KSZ9897R DS00002330D Figure 4-8 (p.51) draws the 22 uF on DVDDL, AVDDL and AVDDH and the 10 uF on VDDIO in an example figure with no placement clause (DECOUPLING.md B2)"
   },
   {
    "cap": "C549",
    "part": "U1",
    "pin": "3",
-   "net": "+1V2_KSZ"
+   "net": "+1V2_KSZ",
+   "class": "B2",
+   "basis": "Microchip KSZ9897R DS00002330D Figure 4-8 (p.51) draws the 22 uF on DVDDL, AVDDL and AVDDH and the 10 uF on VDDIO in an example figure with no placement clause (DECOUPLING.md B2)"
   },
   {
    "cap": "C28",
    "part": "U1",
    "pin": "10",
-   "net": "+2V5_KSZ"
+   "net": "+2V5_KSZ",
+   "class": "B2",
+   "basis": "Microchip KSZ9897R DS00002330D Figure 4-8 (p.51) draws the 22 uF on DVDDL, AVDDL and AVDDH and the 10 uF on VDDIO in an example figure with no placement clause (DECOUPLING.md B2)"
   },
   {
    "cap": "C550",
    "part": "U1",
    "pin": "61",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "B2",
+   "basis": "Microchip KSZ9897R DS00002330D Figure 4-8 (p.51) draws the 22 uF on DVDDL, AVDDL and AVDDH and the 10 uF on VDDIO in an example figure with no placement clause (DECOUPLING.md B2)"
   },
   {
    "cap": "C564",
    "part": "U519",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Nexperia 74LVC1G157 Rev. 12 (v2/vendor/nexperia/nexperia-74lvc1g157.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C565",
    "part": "U520",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Nexperia 74LVC1G157 Rev. 12 (v2/vendor/nexperia/nexperia-74lvc1g157.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
+  },
+  {
+   "cap": "C72",
+   "part": "U11",
+   "pin": "22",
+   "net": "VBAT_RTC",
+   "class": "D",
+   "basis": "Quectel LG290P(03) hardware design V1.1 (v2/vendor/quectel/lg290p03-hardware-design-v1.1.pdf) 3.2.2 (p.25): \"It is recommended to place a TVS and a combination of a 4.7 uF, a 100 nF and a 33 pF decoupling capacitor near the V_BCKP pin\" (Figure 6); W3B-F2, the TVS still open"
+  },
+  {
+   "cap": "C73",
+   "part": "U11",
+   "pin": "22",
+   "net": "VBAT_RTC",
+   "class": "D",
+   "basis": "Quectel LG290P(03) hardware design V1.1 (v2/vendor/quectel/lg290p03-hardware-design-v1.1.pdf) 3.2.2 (p.25): \"It is recommended to place a TVS and a combination of a 4.7 uF, a 100 nF and a 33 pF decoupling capacitor near the V_BCKP pin\" (Figure 6); W3B-F2, the TVS still open"
+  },
+  {
+   "cap": "C74",
+   "part": "U11",
+   "pin": "22",
+   "net": "VBAT_RTC",
+   "class": "D",
+   "basis": "Quectel LG290P(03) hardware design V1.1 (v2/vendor/quectel/lg290p03-hardware-design-v1.1.pdf) 3.2.2 (p.25): \"It is recommended to place a TVS and a combination of a 4.7 uF, a 100 nF and a 33 pF decoupling capacitor near the V_BCKP pin\" (Figure 6); W3B-F2, the TVS still open"
   },
   {
    "cap": "C43",
    "part": "U15",
    "pin": "6",
-   "net": "GNSS_3V3"
+   "net": "GNSS_3V3",
+   "class": "L",
+   "basis": "Silicon Labs CP2102N data sheet Rev 1.5 (v2/vendor/silabs/silabs-cp2102n.pdf), the bus-powered figure (p.5): \"4.7 uF and 0.1 uF bypass capacitors required for each power pin placed as close to the pins as possible\"; VDD is the internal regulator's \"3.3 V (out)\" (p.5; VREGOUT 3.1 to 3.6 V, p.12)",
+   "value_floor": "4.7u",
+   "esr_max": "not stated by the maker"
   },
   {
    "cap": "C44",
    "part": "U15",
    "pin": "6",
-   "net": "GNSS_3V3"
+   "net": "GNSS_3V3",
+   "class": "D",
+   "basis": "Silicon Labs CP2102N data sheet Rev 1.5 (v2/vendor/silabs/silabs-cp2102n.pdf), the bus-powered figure (p.5): \"4.7 uF and 0.1 uF bypass capacitors required for each power pin placed as close to the pins as possible\""
   },
   {
    "cap": "C551",
    "part": "U15",
    "pin": "7",
-   "net": "+5V_DEV"
+   "net": "+5V_DEV",
+   "class": "D",
+   "basis": "Silicon Labs CP2102N data sheet Rev 1.5 (v2/vendor/silabs/silabs-cp2102n.pdf), the bus-powered figure (p.5): \"4.7 uF and 0.1 uF bypass capacitors required for each power pin placed as close to the pins as possible\""
   },
   {
    "cap": "C552",
    "part": "U15",
    "pin": "7",
-   "net": "+5V_DEV"
+   "net": "+5V_DEV",
+   "class": "D",
+   "basis": "Silicon Labs CP2102N data sheet Rev 1.5 (v2/vendor/silabs/silabs-cp2102n.pdf), the bus-powered figure (p.5): \"4.7 uF and 0.1 uF bypass capacitors required for each power pin placed as close to the pins as possible\""
   },
   {
    "cap": "C48",
    "part": "U16",
    "pin": "6",
-   "net": "ZBA_3V3"
+   "net": "ZBA_3V3",
+   "class": "L",
+   "basis": "Silicon Labs CP2102N data sheet Rev 1.5 (v2/vendor/silabs/silabs-cp2102n.pdf), the bus-powered figure (p.5): \"4.7 uF and 0.1 uF bypass capacitors required for each power pin placed as close to the pins as possible\"; VDD is the internal regulator's \"3.3 V (out)\" (p.5; VREGOUT 3.1 to 3.6 V, p.12)",
+   "value_floor": "4.7u",
+   "esr_max": "not stated by the maker"
   },
   {
    "cap": "C49",
    "part": "U16",
    "pin": "6",
-   "net": "ZBA_3V3"
+   "net": "ZBA_3V3",
+   "class": "D",
+   "basis": "Silicon Labs CP2102N data sheet Rev 1.5 (v2/vendor/silabs/silabs-cp2102n.pdf), the bus-powered figure (p.5): \"4.7 uF and 0.1 uF bypass capacitors required for each power pin placed as close to the pins as possible\""
   },
   {
    "cap": "C553",
    "part": "U16",
    "pin": "7",
-   "net": "+5V_DEV"
+   "net": "+5V_DEV",
+   "class": "D",
+   "basis": "Silicon Labs CP2102N data sheet Rev 1.5 (v2/vendor/silabs/silabs-cp2102n.pdf), the bus-powered figure (p.5): \"4.7 uF and 0.1 uF bypass capacitors required for each power pin placed as close to the pins as possible\""
   },
   {
    "cap": "C554",
    "part": "U16",
    "pin": "7",
-   "net": "+5V_DEV"
+   "net": "+5V_DEV",
+   "class": "D",
+   "basis": "Silicon Labs CP2102N data sheet Rev 1.5 (v2/vendor/silabs/silabs-cp2102n.pdf), the bus-powered figure (p.5): \"4.7 uF and 0.1 uF bypass capacitors required for each power pin placed as close to the pins as possible\""
   },
   {
    "cap": "C50",
    "part": "U17",
    "pin": "6",
-   "net": "ZBB_3V3"
+   "net": "ZBB_3V3",
+   "class": "L",
+   "basis": "Silicon Labs CP2102N data sheet Rev 1.5 (v2/vendor/silabs/silabs-cp2102n.pdf), the bus-powered figure (p.5): \"4.7 uF and 0.1 uF bypass capacitors required for each power pin placed as close to the pins as possible\"; VDD is the internal regulator's \"3.3 V (out)\" (p.5; VREGOUT 3.1 to 3.6 V, p.12)",
+   "value_floor": "4.7u",
+   "esr_max": "not stated by the maker"
   },
   {
    "cap": "C51",
    "part": "U17",
    "pin": "6",
-   "net": "ZBB_3V3"
+   "net": "ZBB_3V3",
+   "class": "D",
+   "basis": "Silicon Labs CP2102N data sheet Rev 1.5 (v2/vendor/silabs/silabs-cp2102n.pdf), the bus-powered figure (p.5): \"4.7 uF and 0.1 uF bypass capacitors required for each power pin placed as close to the pins as possible\""
   },
   {
    "cap": "C555",
    "part": "U17",
    "pin": "7",
-   "net": "+5V_DEV"
+   "net": "+5V_DEV",
+   "class": "D",
+   "basis": "Silicon Labs CP2102N data sheet Rev 1.5 (v2/vendor/silabs/silabs-cp2102n.pdf), the bus-powered figure (p.5): \"4.7 uF and 0.1 uF bypass capacitors required for each power pin placed as close to the pins as possible\""
   },
   {
    "cap": "C556",
    "part": "U17",
    "pin": "7",
-   "net": "+5V_DEV"
+   "net": "+5V_DEV",
+   "class": "D",
+   "basis": "Silicon Labs CP2102N data sheet Rev 1.5 (v2/vendor/silabs/silabs-cp2102n.pdf), the bus-powered figure (p.5): \"4.7 uF and 0.1 uF bypass capacitors required for each power pin placed as close to the pins as possible\""
   },
   {
    "cap": "C59",
    "part": "U18",
    "pin": "6",
-   "net": "RB_3V3"
+   "net": "RB_3V3",
+   "class": "L",
+   "basis": "Silicon Labs CP2102N data sheet Rev 1.5 (v2/vendor/silabs/silabs-cp2102n.pdf), the bus-powered figure (p.5): \"4.7 uF and 0.1 uF bypass capacitors required for each power pin placed as close to the pins as possible\"; VDD is the internal regulator's \"3.3 V (out)\" (p.5; VREGOUT 3.1 to 3.6 V, p.12)",
+   "value_floor": "4.7u",
+   "esr_max": "not stated by the maker"
   },
   {
    "cap": "C60",
    "part": "U18",
    "pin": "6",
-   "net": "RB_3V3"
+   "net": "RB_3V3",
+   "class": "D",
+   "basis": "Silicon Labs CP2102N data sheet Rev 1.5 (v2/vendor/silabs/silabs-cp2102n.pdf), the bus-powered figure (p.5): \"4.7 uF and 0.1 uF bypass capacitors required for each power pin placed as close to the pins as possible\""
   },
   {
    "cap": "C557",
    "part": "U18",
    "pin": "7",
-   "net": "+5V_DEV"
+   "net": "+5V_DEV",
+   "class": "D",
+   "basis": "Silicon Labs CP2102N data sheet Rev 1.5 (v2/vendor/silabs/silabs-cp2102n.pdf), the bus-powered figure (p.5): \"4.7 uF and 0.1 uF bypass capacitors required for each power pin placed as close to the pins as possible\""
   },
   {
    "cap": "C558",
    "part": "U18",
    "pin": "7",
-   "net": "+5V_DEV"
+   "net": "+5V_DEV",
+   "class": "D",
+   "basis": "Silicon Labs CP2102N data sheet Rev 1.5 (v2/vendor/silabs/silabs-cp2102n.pdf), the bus-powered figure (p.5): \"4.7 uF and 0.1 uF bypass capacitors required for each power pin placed as close to the pins as possible\""
   },
   {
    "cap": "C65",
    "part": "U501",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI SN74LVC1G08 SCES217AA (v2/vendor/ti/ti-sn74lvc1g08.pdf): \"For the SN74LVC1G08, a 0.1uF bypass capacitor is recommended\" (Power Supply Recommendations, p.14)"
   },
   {
    "cap": "C66",
    "part": "U502",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI SN74LVC1G08 SCES217AA (v2/vendor/ti/ti-sn74lvc1g08.pdf): \"For the SN74LVC1G08, a 0.1uF bypass capacitor is recommended\" (Power Supply Recommendations, p.14)"
   },
   {
    "cap": "C508",
    "part": "U503",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI SN74LVC1G08 SCES217AA (v2/vendor/ti/ti-sn74lvc1g08.pdf): \"For the SN74LVC1G08, a 0.1uF bypass capacitor is recommended\" (Power Supply Recommendations, p.14)"
   },
   {
    "cap": "C509",
    "part": "U504",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI SN74LVC1G08 SCES217AA (v2/vendor/ti/ti-sn74lvc1g08.pdf): \"For the SN74LVC1G08, a 0.1uF bypass capacitor is recommended\" (Power Supply Recommendations, p.14)"
   },
   {
    "cap": "C510",
    "part": "U505",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI SN74LVC1G08 SCES217AA (v2/vendor/ti/ti-sn74lvc1g08.pdf): \"For the SN74LVC1G08, a 0.1uF bypass capacitor is recommended\" (Power Supply Recommendations, p.14)"
   },
   {
    "cap": "C511",
    "part": "U506",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Diodes 74LVC1G34 DS36108 Rev. 10-2 (v2/vendor/diodes/diodes-74lvc1g34.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C402",
    "part": "U41",
    "pin": "11",
-   "net": "+3V3_IOCA"
+   "net": "+3V3_IOCA",
+   "class": "D",
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"a 100 nF ceramic capacitor for each VDD pin\"; 7.4 (p.32): \"each power supply pair must be decoupled with filtering ceramic capacitors (100 nF)\""
   },
   {
    "cap": "C403",
    "part": "U41",
    "pin": "27",
-   "net": "+3V3_IOCA"
+   "net": "+3V3_IOCA",
+   "class": "D",
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"a 100 nF ceramic capacitor for each VDD pin\"; 7.4 (p.32): \"each power supply pair must be decoupled with filtering ceramic capacitors (100 nF)\""
   },
   {
    "cap": "C404",
    "part": "U41",
    "pin": "50",
-   "net": "+3V3_IOCA"
+   "net": "+3V3_IOCA",
+   "class": "D",
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"a 100 nF ceramic capacitor for each VDD pin\"; 7.4 (p.32): \"each power supply pair must be decoupled with filtering ceramic capacitors (100 nF)\""
   },
   {
    "cap": "C405",
    "part": "U41",
    "pin": "75",
-   "net": "+3V3_IOCA"
+   "net": "+3V3_IOCA",
+   "class": "D",
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"a 100 nF ceramic capacitor for each VDD pin\"; 7.4 (p.32): \"each power supply pair must be decoupled with filtering ceramic capacitors (100 nF)\""
   },
   {
    "cap": "C406",
    "part": "U41",
    "pin": "100",
-   "net": "+3V3_IOCA"
+   "net": "+3V3_IOCA",
+   "class": "D",
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"a 100 nF ceramic capacitor for each VDD pin\"; 7.4 (p.32): \"each power supply pair must be decoupled with filtering ceramic capacitors (100 nF)\""
   },
   {
    "cap": "C401",
    "part": "U41",
    "pin": "50",
-   "net": "+3V3_IOCA"
+   "net": "+3V3_IOCA",
+   "class": "D",
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"one single tantalum or ceramic capacitor (of 4.7 uF minimum capacitance) for the package\"; 7.4 (p.32): \"one single tantalum or ceramic capacitor (min. 4.7 uF) ... placed as close as possible to, or below, the appropriate pins\": tied to the pins, so class D, not bulk"
   },
   {
    "cap": "C407",
    "part": "U41",
    "pin": "48",
-   "net": "IOCA_VCAP"
+   "net": "IOCA_VCAP",
+   "class": "L",
+   "basis": "ST AN4938 Rev 7 (v2/vendor/st/st-an4938-rev7.pdf) 2.1: \"The LDO regulator requires a capacitor on VCAP pins\" (p.10); ST DS12110 Rev 10 (v2/vendor/st/st-stm32h743xi-datasheet.pdf) 6.3.2 Table 25 (p.107): CEXT 2.2 uF (+-20 percent tolerated), ESR < 100 mOhm, \"Two external capacitors can be connected to VCAP pins\"",
+   "value_floor": "2.2u (-20 percent)",
+   "esr_max": "100 mOhm"
   },
   {
    "cap": "C408",
    "part": "U41",
    "pin": "73",
-   "net": "IOCA_VCAP"
+   "net": "IOCA_VCAP",
+   "class": "L",
+   "basis": "ST AN4938 Rev 7 (v2/vendor/st/st-an4938-rev7.pdf) 2.1: \"The LDO regulator requires a capacitor on VCAP pins\" (p.10); ST DS12110 Rev 10 (v2/vendor/st/st-stm32h743xi-datasheet.pdf) 6.3.2 Table 25 (p.107): CEXT 2.2 uF (+-20 percent tolerated), ESR < 100 mOhm, \"Two external capacitors can be connected to VCAP pins\"",
+   "value_floor": "2.2u (-20 percent)",
+   "esr_max": "100 mOhm"
   },
   {
    "cap": "C412",
    "part": "U41",
    "pin": "21",
-   "net": "+3V3_IOCA"
+   "net": "+3V3_IOCA",
+   "class": "D",
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"VDDA pin must be connected to two external decoupling capacitors (100 nF ceramic capacitors and a 1 uF tantalum or ceramic capacitor)\""
   },
   {
    "cap": "C413",
    "part": "U41",
    "pin": "21",
-   "net": "+3V3_IOCA"
+   "net": "+3V3_IOCA",
+   "class": "D",
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"VDDA pin must be connected to two external decoupling capacitors (100 nF ceramic capacitors and a 1 uF tantalum or ceramic capacitor)\""
   },
   {
    "cap": "C400",
    "part": "U40",
    "pin": "1",
-   "net": "+5V_DEV"
+   "net": "+5V_DEV",
+   "class": "D",
+   "basis": "Diodes AP2112 DS39724 Rev. 2-2 (v2/vendor/diodes/diodes-ap2112-ldo.pdf): \"Stable with 1.0uF Flexible Cap\" (Features, p.1); the typical application's CIN and COUT of 1 uF (p.2); every electrical table at \"CIN = 1.0uF (Ceramic), COUT = 1.0uF (Ceramic)\" (pp.4-7): an LDO's input capacitor is class D (DECOUPLING.md section 6)"
   },
   {
    "cap": "C422",
    "part": "U51",
    "pin": "11",
-   "net": "+3V3_IOCB"
+   "net": "+3V3_IOCB",
+   "class": "D",
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"a 100 nF ceramic capacitor for each VDD pin\"; 7.4 (p.32): \"each power supply pair must be decoupled with filtering ceramic capacitors (100 nF)\""
   },
   {
    "cap": "C423",
    "part": "U51",
    "pin": "27",
-   "net": "+3V3_IOCB"
+   "net": "+3V3_IOCB",
+   "class": "D",
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"a 100 nF ceramic capacitor for each VDD pin\"; 7.4 (p.32): \"each power supply pair must be decoupled with filtering ceramic capacitors (100 nF)\""
   },
   {
    "cap": "C424",
    "part": "U51",
    "pin": "50",
-   "net": "+3V3_IOCB"
+   "net": "+3V3_IOCB",
+   "class": "D",
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"a 100 nF ceramic capacitor for each VDD pin\"; 7.4 (p.32): \"each power supply pair must be decoupled with filtering ceramic capacitors (100 nF)\""
   },
   {
    "cap": "C425",
    "part": "U51",
    "pin": "75",
-   "net": "+3V3_IOCB"
+   "net": "+3V3_IOCB",
+   "class": "D",
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"a 100 nF ceramic capacitor for each VDD pin\"; 7.4 (p.32): \"each power supply pair must be decoupled with filtering ceramic capacitors (100 nF)\""
   },
   {
    "cap": "C426",
    "part": "U51",
    "pin": "100",
-   "net": "+3V3_IOCB"
+   "net": "+3V3_IOCB",
+   "class": "D",
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"a 100 nF ceramic capacitor for each VDD pin\"; 7.4 (p.32): \"each power supply pair must be decoupled with filtering ceramic capacitors (100 nF)\""
   },
   {
    "cap": "C421",
    "part": "U51",
    "pin": "50",
-   "net": "+3V3_IOCB"
+   "net": "+3V3_IOCB",
+   "class": "D",
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"one single tantalum or ceramic capacitor (of 4.7 uF minimum capacitance) for the package\"; 7.4 (p.32): \"one single tantalum or ceramic capacitor (min. 4.7 uF) ... placed as close as possible to, or below, the appropriate pins\": tied to the pins, so class D, not bulk"
   },
   {
    "cap": "C427",
    "part": "U51",
    "pin": "48",
-   "net": "IOCB_VCAP"
+   "net": "IOCB_VCAP",
+   "class": "L",
+   "basis": "ST AN4938 Rev 7 (v2/vendor/st/st-an4938-rev7.pdf) 2.1: \"The LDO regulator requires a capacitor on VCAP pins\" (p.10); ST DS12110 Rev 10 (v2/vendor/st/st-stm32h743xi-datasheet.pdf) 6.3.2 Table 25 (p.107): CEXT 2.2 uF (+-20 percent tolerated), ESR < 100 mOhm, \"Two external capacitors can be connected to VCAP pins\"",
+   "value_floor": "2.2u (-20 percent)",
+   "esr_max": "100 mOhm"
   },
   {
    "cap": "C428",
    "part": "U51",
    "pin": "73",
-   "net": "IOCB_VCAP"
+   "net": "IOCB_VCAP",
+   "class": "L",
+   "basis": "ST AN4938 Rev 7 (v2/vendor/st/st-an4938-rev7.pdf) 2.1: \"The LDO regulator requires a capacitor on VCAP pins\" (p.10); ST DS12110 Rev 10 (v2/vendor/st/st-stm32h743xi-datasheet.pdf) 6.3.2 Table 25 (p.107): CEXT 2.2 uF (+-20 percent tolerated), ESR < 100 mOhm, \"Two external capacitors can be connected to VCAP pins\"",
+   "value_floor": "2.2u (-20 percent)",
+   "esr_max": "100 mOhm"
   },
   {
    "cap": "C432",
    "part": "U51",
    "pin": "21",
-   "net": "+3V3_IOCB"
+   "net": "+3V3_IOCB",
+   "class": "D",
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"VDDA pin must be connected to two external decoupling capacitors (100 nF ceramic capacitors and a 1 uF tantalum or ceramic capacitor)\""
   },
   {
    "cap": "C433",
    "part": "U51",
    "pin": "21",
-   "net": "+3V3_IOCB"
+   "net": "+3V3_IOCB",
+   "class": "D",
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"VDDA pin must be connected to two external decoupling capacitors (100 nF ceramic capacitors and a 1 uF tantalum or ceramic capacitor)\""
   },
   {
    "cap": "C420",
    "part": "U50",
    "pin": "1",
-   "net": "+5V_DEV"
+   "net": "+5V_DEV",
+   "class": "D",
+   "basis": "Diodes AP2112 DS39724 Rev. 2-2 (v2/vendor/diodes/diodes-ap2112-ldo.pdf): \"Stable with 1.0uF Flexible Cap\" (Features, p.1); the typical application's CIN and COUT of 1 uF (p.2); every electrical table at \"CIN = 1.0uF (Ceramic), COUT = 1.0uF (Ceramic)\" (pp.4-7): an LDO's input capacitor is class D (DECOUPLING.md section 6)"
   },
   {
    "cap": "C442",
    "part": "U61",
    "pin": "11",
-   "net": "+3V3_IOCC"
+   "net": "+3V3_IOCC",
+   "class": "D",
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"a 100 nF ceramic capacitor for each VDD pin\"; 7.4 (p.32): \"each power supply pair must be decoupled with filtering ceramic capacitors (100 nF)\""
   },
   {
    "cap": "C443",
    "part": "U61",
    "pin": "27",
-   "net": "+3V3_IOCC"
+   "net": "+3V3_IOCC",
+   "class": "D",
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"a 100 nF ceramic capacitor for each VDD pin\"; 7.4 (p.32): \"each power supply pair must be decoupled with filtering ceramic capacitors (100 nF)\""
   },
   {
    "cap": "C444",
    "part": "U61",
    "pin": "50",
-   "net": "+3V3_IOCC"
+   "net": "+3V3_IOCC",
+   "class": "D",
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"a 100 nF ceramic capacitor for each VDD pin\"; 7.4 (p.32): \"each power supply pair must be decoupled with filtering ceramic capacitors (100 nF)\""
   },
   {
    "cap": "C445",
    "part": "U61",
    "pin": "75",
-   "net": "+3V3_IOCC"
+   "net": "+3V3_IOCC",
+   "class": "D",
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"a 100 nF ceramic capacitor for each VDD pin\"; 7.4 (p.32): \"each power supply pair must be decoupled with filtering ceramic capacitors (100 nF)\""
   },
   {
    "cap": "C446",
    "part": "U61",
    "pin": "100",
-   "net": "+3V3_IOCC"
+   "net": "+3V3_IOCC",
+   "class": "D",
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"a 100 nF ceramic capacitor for each VDD pin\"; 7.4 (p.32): \"each power supply pair must be decoupled with filtering ceramic capacitors (100 nF)\""
   },
   {
    "cap": "C441",
    "part": "U61",
    "pin": "50",
-   "net": "+3V3_IOCC"
+   "net": "+3V3_IOCC",
+   "class": "D",
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"one single tantalum or ceramic capacitor (of 4.7 uF minimum capacitance) for the package\"; 7.4 (p.32): \"one single tantalum or ceramic capacitor (min. 4.7 uF) ... placed as close as possible to, or below, the appropriate pins\": tied to the pins, so class D, not bulk"
   },
   {
    "cap": "C447",
    "part": "U61",
    "pin": "48",
-   "net": "IOCC_VCAP"
+   "net": "IOCC_VCAP",
+   "class": "L",
+   "basis": "ST AN4938 Rev 7 (v2/vendor/st/st-an4938-rev7.pdf) 2.1: \"The LDO regulator requires a capacitor on VCAP pins\" (p.10); ST DS12110 Rev 10 (v2/vendor/st/st-stm32h743xi-datasheet.pdf) 6.3.2 Table 25 (p.107): CEXT 2.2 uF (+-20 percent tolerated), ESR < 100 mOhm, \"Two external capacitors can be connected to VCAP pins\"",
+   "value_floor": "2.2u (-20 percent)",
+   "esr_max": "100 mOhm"
   },
   {
    "cap": "C448",
    "part": "U61",
    "pin": "73",
-   "net": "IOCC_VCAP"
+   "net": "IOCC_VCAP",
+   "class": "L",
+   "basis": "ST AN4938 Rev 7 (v2/vendor/st/st-an4938-rev7.pdf) 2.1: \"The LDO regulator requires a capacitor on VCAP pins\" (p.10); ST DS12110 Rev 10 (v2/vendor/st/st-stm32h743xi-datasheet.pdf) 6.3.2 Table 25 (p.107): CEXT 2.2 uF (+-20 percent tolerated), ESR < 100 mOhm, \"Two external capacitors can be connected to VCAP pins\"",
+   "value_floor": "2.2u (-20 percent)",
+   "esr_max": "100 mOhm"
   },
   {
    "cap": "C452",
    "part": "U61",
    "pin": "21",
-   "net": "+3V3_IOCC"
+   "net": "+3V3_IOCC",
+   "class": "D",
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"VDDA pin must be connected to two external decoupling capacitors (100 nF ceramic capacitors and a 1 uF tantalum or ceramic capacitor)\""
   },
   {
    "cap": "C453",
    "part": "U61",
    "pin": "21",
-   "net": "+3V3_IOCC"
+   "net": "+3V3_IOCC",
+   "class": "D",
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"VDDA pin must be connected to two external decoupling capacitors (100 nF ceramic capacitors and a 1 uF tantalum or ceramic capacitor)\""
   },
   {
    "cap": "C440",
    "part": "U60",
    "pin": "1",
-   "net": "+5V_DEV"
+   "net": "+5V_DEV",
+   "class": "D",
+   "basis": "Diodes AP2112 DS39724 Rev. 2-2 (v2/vendor/diodes/diodes-ap2112-ldo.pdf): \"Stable with 1.0uF Flexible Cap\" (Features, p.1); the typical application's CIN and COUT of 1 uF (p.2); every electrical table at \"CIN = 1.0uF (Ceramic), COUT = 1.0uF (Ceramic)\" (pp.4-7): an LDO's input capacitor is class D (DECOUPLING.md section 6)"
   },
   {
    "cap": "C480",
    "part": "U80",
    "pin": "14",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI SN74LVC86A SCAS288R (v2/vendor/ti/ti-sn74lvc86a.pdf): \"Each VCC pin should have a good bypass capacitor to prevent power disturbance. For devices with a single supply, 0.1 uF is recommended\" (Power Supply Recommendations, p.11)"
   },
   {
    "cap": "C566",
    "part": "U81",
    "pin": "14",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI SN74LVC86A SCAS288R (v2/vendor/ti/ti-sn74lvc86a.pdf): \"Each VCC pin should have a good bypass capacitor to prevent power disturbance. For devices with a single supply, 0.1 uF is recommended\" (Power Supply Recommendations, p.11)"
   },
   {
    "cap": "C567",
    "part": "U84",
    "pin": "14",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI SN74LVC32A SCAS286U (v2/vendor/ti/ti-sn74lvc32a-quad-or.pdf): \"Each VCC pin should have a good bypass capacitor to prevent power disturbance. For devices with a single supply, 0.1 uF is recommended\" (Power Supply Recommendations, p.11)"
   },
   {
    "cap": "C572",
    "part": "U85",
    "pin": "14",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI SN74LVC32A SCAS286U (v2/vendor/ti/ti-sn74lvc32a-quad-or.pdf): \"Each VCC pin should have a good bypass capacitor to prevent power disturbance. For devices with a single supply, 0.1 uF is recommended\" (Power Supply Recommendations, p.11)"
   },
   {
    "cap": "C585",
    "part": "U530",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Diodes 74LVC1G17 DS35124 Rev. 8-2 (v2/vendor/diodes/diodes-74lvc1g17.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C588",
    "part": "U533",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI SN74LVC1G04 SCES214AF (v2/vendor/ti/ti-sn74lvc1g04.pdf): \"Each VCC pin should have a good bypass capacitor to prevent power disturbance. For devices with a single supply, a 0.1uF capacitor is recommended\" (Power Supply Recommendations, p.12)"
   },
   {
    "cap": "C586",
    "part": "U531",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Diodes 74LVC1G17 DS35124 Rev. 8-2 (v2/vendor/diodes/diodes-74lvc1g17.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C589",
    "part": "U534",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI SN74LVC1G04 SCES214AF (v2/vendor/ti/ti-sn74lvc1g04.pdf): \"Each VCC pin should have a good bypass capacitor to prevent power disturbance. For devices with a single supply, a 0.1uF capacitor is recommended\" (Power Supply Recommendations, p.12)"
   },
   {
    "cap": "C587",
    "part": "U532",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Diodes 74LVC1G17 DS35124 Rev. 8-2 (v2/vendor/diodes/diodes-74lvc1g17.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C590",
    "part": "U535",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI SN74LVC1G04 SCES214AF (v2/vendor/ti/ti-sn74lvc1g04.pdf): \"Each VCC pin should have a good bypass capacitor to prevent power disturbance. For devices with a single supply, a 0.1uF capacitor is recommended\" (Power Supply Recommendations, p.12)"
   },
   {
    "cap": "C576",
    "part": "U521",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Diodes 74LVC1G17 DS35124 Rev. 8-2 (v2/vendor/diodes/diodes-74lvc1g17.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C579",
    "part": "U524",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Nexperia 74LVC1G157 Rev. 12 (v2/vendor/nexperia/nexperia-74lvc1g157.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C582",
    "part": "U527",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Nexperia 74LVC1G157 Rev. 12 (v2/vendor/nexperia/nexperia-74lvc1g157.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C512",
    "part": "U507",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Diodes 74LVC1G17 DS35124 Rev. 8-2 (v2/vendor/diodes/diodes-74lvc1g17.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C515",
    "part": "U510",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Diodes 74LVC1G17 DS35124 Rev. 8-2 (v2/vendor/diodes/diodes-74lvc1g17.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C518",
    "part": "U513",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Nexperia 74LVC1G157 Rev. 12 (v2/vendor/nexperia/nexperia-74lvc1g157.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C561",
    "part": "U516",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Nexperia 74LVC1G157 Rev. 12 (v2/vendor/nexperia/nexperia-74lvc1g157.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C577",
    "part": "U522",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Diodes 74LVC1G17 DS35124 Rev. 8-2 (v2/vendor/diodes/diodes-74lvc1g17.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C580",
    "part": "U525",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Nexperia 74LVC1G157 Rev. 12 (v2/vendor/nexperia/nexperia-74lvc1g157.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C583",
    "part": "U528",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Nexperia 74LVC1G157 Rev. 12 (v2/vendor/nexperia/nexperia-74lvc1g157.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C513",
    "part": "U508",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Diodes 74LVC1G17 DS35124 Rev. 8-2 (v2/vendor/diodes/diodes-74lvc1g17.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C516",
    "part": "U511",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Diodes 74LVC1G17 DS35124 Rev. 8-2 (v2/vendor/diodes/diodes-74lvc1g17.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C519",
    "part": "U514",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Nexperia 74LVC1G157 Rev. 12 (v2/vendor/nexperia/nexperia-74lvc1g157.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C562",
    "part": "U517",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Nexperia 74LVC1G157 Rev. 12 (v2/vendor/nexperia/nexperia-74lvc1g157.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C578",
    "part": "U523",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Diodes 74LVC1G17 DS35124 Rev. 8-2 (v2/vendor/diodes/diodes-74lvc1g17.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C581",
    "part": "U526",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Nexperia 74LVC1G157 Rev. 12 (v2/vendor/nexperia/nexperia-74lvc1g157.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C584",
    "part": "U529",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Nexperia 74LVC1G157 Rev. 12 (v2/vendor/nexperia/nexperia-74lvc1g157.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C514",
    "part": "U509",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Diodes 74LVC1G17 DS35124 Rev. 8-2 (v2/vendor/diodes/diodes-74lvc1g17.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C517",
    "part": "U512",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Diodes 74LVC1G17 DS35124 Rev. 8-2 (v2/vendor/diodes/diodes-74lvc1g17.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C560",
    "part": "U515",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Nexperia 74LVC1G157 Rev. 12 (v2/vendor/nexperia/nexperia-74lvc1g157.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C563",
    "part": "U518",
    "pin": "5",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Nexperia 74LVC1G157 Rev. 12 (v2/vendor/nexperia/nexperia-74lvc1g157.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C4",
    "part": "U25",
    "pin": "3",
-   "net": "+5V_DEV"
+   "net": "+5V_DEV",
+   "class": "R",
+   "basis": "Diodes AP63200/AP63201/AP63203/AP63205 DS41326 Rev. 3-2 (v2/vendor/diodes/diodes-ap63200-series-buck.pdf): pin 3 VIN \"Bypass VIN to GND with a suitably large capacitor\" (p.2); 11 Input Capacitor (p.13); PCB Layout item 4 \"Place the VIN capacitors as close to the device as possible\" (p.15). G10: declared at VIN, not EN",
+   "same_side": true
   },
   {
    "cap": "C5",
    "part": "L1",
    "pin": "2",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "R",
+   "basis": "the AP63203 U25's output capacitors, declared against the output loop, L1's output pad, and not against the FB sense pin (DECOUPLING.md R4 and G10; DS41326 Rev. 3-2 pin 1 FB, p.2): a converter's own power-stage part (R2), on the IC's layer (SLUSEA4D 12.1, p.40, the same rule for its sibling buck)",
+   "same_side": true
   },
   {
    "cap": "C6",
    "part": "L1",
    "pin": "2",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "R",
+   "basis": "the AP63203 U25's output capacitors, declared against the output loop, L1's output pad, and not against the FB sense pin (DECOUPLING.md R4 and G10; DS41326 Rev. 3-2 pin 1 FB, p.2): a converter's own power-stage part (R2), on the IC's layer (SLUSEA4D 12.1, p.40, the same rule for its sibling buck)",
+   "same_side": true
   },
   {
    "cap": "C12",
    "part": "U27",
    "pin": "5",
-   "net": "+2V5_KSZ"
+   "net": "+2V5_KSZ",
+   "class": "L",
+   "basis": "Diodes AP2112 DS39724 Rev. 2-2 (v2/vendor/diodes/diodes-ap2112-ldo.pdf): \"Stable with 1.0uF Flexible Cap\" (Features, p.1); the typical application's CIN and COUT of 1 uF (p.2); every electrical table at \"CIN = 1.0uF (Ceramic), COUT = 1.0uF (Ceramic)\" (pp.4-7): the LDO's output capacitor",
+   "value_floor": "1.0u",
+   "esr_max": "not stated by the maker"
   },
   {
    "cap": "C13",
    "part": "U27",
    "pin": "1",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Diodes AP2112 DS39724 Rev. 2-2 (v2/vendor/diodes/diodes-ap2112-ldo.pdf): \"Stable with 1.0uF Flexible Cap\" (Features, p.1); the typical application's CIN and COUT of 1 uF (p.2); every electrical table at \"CIN = 1.0uF (Ceramic), COUT = 1.0uF (Ceramic)\" (pp.4-7): an LDO's input capacitor is class D (DECOUPLING.md section 6)"
   },
   {
    "cap": "C36",
    "part": "U5",
    "pin": "1",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI TPS23861 SLUSBX9I (v2/vendor/ti/tps23861-datasheet.pdf), pin VDD: \"Digital 3.3-V supply. Bypass VDD to DGND using a 0.1-uF capacitor\" (p.5)"
   },
   {
    "cap": "C37",
    "part": "U3",
    "pin": "1",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI TS3DV642 SCDS343F (v2/vendor/ti/ti-ts3dv642.pdf): \"VCC decoupling capacitor 0.1 uF\" (design requirements, p.18) and \"Decoupling capacitors should be used between power supply pin and ground pin\" (layout, p.23); G5: declared at the switch's own VCC, pin 1"
   },
   {
    "cap": "C38",
    "part": "U4",
    "pin": "1",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI TS3DV642 SCDS343F (v2/vendor/ti/ti-ts3dv642.pdf): \"VCC decoupling capacitor 0.1 uF\" (design requirements, p.18) and \"Decoupling capacitors should be used between power supply pin and ground pin\" (layout, p.23); G5: declared at the switch's own VCC, pin 1"
   },
   {
    "cap": "C69",
    "part": "U8",
    "pin": "8",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Microchip ATECC608B DS40002239A (v2/vendor/microchip/microchip-atecc608b-datasheet.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
   },
   {
    "cap": "C70",
    "part": "U9",
    "pin": "2",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "Maxim DS3231 19-5170 Rev 10 (v2/vendor/adi/adi-ds3231sn.pdf), pin VCC: \"DC Power Pin for Primary Power Supply. This pin should be decoupled using a 0.1uF to 1.0uF capacitor\" (p.9)"
   },
   {
    "cap": "C71",
    "part": "U10",
    "pin": "4",
-   "net": "+3V3_DEV"
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI TMP117 SNOSD82D (v2/vendor/ti/ti-tmp117-temperature.pdf) Power Supply Recommendations: \"The recommended value for this supply bypass capacitor is 100 nF\" (p.35)"
   }
  ],
  "rails": {
@@ -1747,7 +2370,7 @@
     "U1": 0.25,
     "U22": 0.25,
     "U27": 0.15,
-    "U11": 0.05,
+    "U11": 0.165,
     "U5": 0.02,
     "U6": 0.01,
     "U7": 0.01,
@@ -2281,9 +2904,10 @@
    "amps_peak": 0.6,
    "source": "J_54V",
    "loads": {
-    "U5": 0.6
+    "R13": 0.593,
+    "U5": 0.007
    },
-   "note": "the Power over Ethernet feed arriving from board A's own +54V_POE stage, into the TPS23861 injector U5. It is a rail of board A and a load of this one",
+   "note": "the Power over Ethernet feed arriving from board A's own +54V_POE stage: the port current through R13 to POE_P and the TPS23861 injector U5's own VPWR supply (at most 7 mA). It is a rail of board A and a load of this one",
    "budget": 0.02,
    "share": 0.015,
    "always_on": true,
@@ -2342,6 +2966,242 @@
    "always_on_why": "the return, which nothing switches",
    "converted": false
   },
+  "VBUS_FLASH1": {
+   "volts": 5.0,
+   "amps_typ": 1e-08,
+   "amps_peak": 1.5e-07,
+   "source": "J_FLASH1",
+   "loads": {
+    "U107": 1.5e-07
+   },
+   "note": "slot 1's flashing receptacle VBUS: it feeds only the USBLC6-2SC6's VBUS reference (pin 5), at most 150 nA at VRM 5.25 V (ST DS4260 Rev 7, p.2); the module is powered from the slot rail, never from this",
+   "always_on": true,
+   "always_on_why": "the flashing host's own VBUS, present only while a cable is plugged into J_FLASH1; nothing on this board switches it",
+   "converted": false
+  },
+  "SIM1_VCC": {
+   "volts": 3.0,
+   "amps_typ": 0.01,
+   "amps_peak": 0.05,
+   "source": "J_M2C2",
+   "loads": {
+    "J_SIM1": 0.05,
+    "U222": 1e-07
+   },
+   "note": "SIM 1's supply from the module's USIM1_VDD (1.8 or 3.0 V by card class, HD v1.1 pin table) to the holder J_SIM1 and the ESD array U222's VCC; 50 mA peak INFERRED from SIMCom's figure for the same output (A7672X/A7670X HD V1.03), the RM520N HD giving none; declared at 3.3 V worst like the card lines",
+   "always_on": true,
+   "always_on_why": "the RM520N's own USIM1_VDD output (HD v1.1 pin 36, PO): the module turns it on and off with the card, and nothing on this board can switch it",
+   "converted": false,
+   "v_max": 3.3
+  },
+  "SIM2_VCC": {
+   "volts": 3.0,
+   "amps_typ": 0.01,
+   "amps_peak": 0.05,
+   "source": "J_M2C2",
+   "loads": {
+    "R272": 0.05
+   },
+   "note": "SIM 2's supply from the module's USIM2_VDD (1.8 or 3.0 V by card class, HD v1.1 pin table) to R272, the eSIM option link at the module (HD 4.1.6 Figure 19); 50 mA peak INFERRED from SIMCom's figure for the same output (A7672X/A7670X HD V1.03), the RM520N HD giving none; declared at 3.3 V worst like the card lines",
+   "always_on": true,
+   "always_on_why": "the RM520N's own USIM2_VDD output (HD v1.1 pin 48, PO): the module turns it on and off with the card, and nothing on this board can switch it",
+   "converted": false,
+   "v_max": 3.3
+  },
+  "SIMC2_VCC": {
+   "volts": 3.0,
+   "amps_typ": 0.01,
+   "amps_peak": 0.05,
+   "source": "R272",
+   "loads": {
+    "J_SIM2": 0.05,
+    "U223": 1e-07
+   },
+   "note": "SIM 2's supply at the holder, past the 0 Ohm eSIM option link R272: the same current as SIM2_VCC, to J_SIM2 and the ESD array U223's VCC (ICC at most 100 nA, SLLS682P 5.5)",
+   "converted": false,
+   "series_of": "SIM2_VCC",
+   "v_max": 3.3
+  },
+  "VBUS_FLASH2": {
+   "volts": 5.0,
+   "amps_typ": 1e-08,
+   "amps_peak": 1.5e-07,
+   "source": "J_FLASH2",
+   "loads": {
+    "U207": 1.5e-07
+   },
+   "note": "slot 2's flashing receptacle VBUS: it feeds only the USBLC6-2SC6's VBUS reference (pin 5), at most 150 nA at VRM 5.25 V (ST DS4260 Rev 7, p.2); the module is powered from the slot rail, never from this",
+   "always_on": true,
+   "always_on_why": "the flashing host's own VBUS, present only while a cable is plugged into J_FLASH2; nothing on this board switches it",
+   "converted": false
+  },
+  "VBUS_FLASH3": {
+   "volts": 5.0,
+   "amps_typ": 1e-08,
+   "amps_peak": 1.5e-07,
+   "source": "J_FLASH3",
+   "loads": {
+    "U307": 1.5e-07
+   },
+   "note": "slot 3's flashing receptacle VBUS: it feeds only the USBLC6-2SC6's VBUS reference (pin 5), at most 150 nA at VRM 5.25 V (ST DS4260 Rev 7, p.2); the module is powered from the slot rail, never from this",
+   "always_on": true,
+   "always_on_why": "the flashing host's own VBUS, present only while a cable is plugged into J_FLASH3; nothing on this board switches it",
+   "converted": false
+  },
+  "VBAT_RTC": {
+   "volts": 3.0,
+   "amps_typ": 8e-06,
+   "amps_peak": 0.00065,
+   "source": "BT1",
+   "loads": {
+    "U30A": 6e-06,
+    "U31A": 6e-06,
+    "U32A": 6e-06,
+    "U9": 0.000575,
+    "U11": 5.7e-05
+   },
+   "note": "the CR2032's 3 V to the three modules' RTC inputs (pin 76), the DS3231SN's VBAT (pin 14) and the LG290P's V_BCKP (pin 22): about 8 uA with everything powered (3 x 1.7 + 3 + 0.1), 650 uA at the coincident worst (a DS3231 temperature conversion), 3 x 6 + 3.0 + 57 = 78 uA with the kit stored",
+   "always_on": true,
+   "always_on_why": "a primary cell in its holder: nothing switches it, and every part on it takes its backup current from it whenever its own supply is down",
+   "converted": false
+  },
+  "POE_P": {
+   "volts": 54.0,
+   "amps_typ": 0.3,
+   "amps_peak": 0.6,
+   "source": "R13",
+   "loads": {
+    "T1": 0.6
+   },
+   "note": "the port's positive feed from the 0 Ohm link R13 to T1's centre tap MCT1 (pin 24), a series segment of +54V_POE at the port's 0.60 A peak; VVPWR at most 57 V (SLUSBX9I 6.3)",
+   "converted": false,
+   "series_of": "+54V_POE",
+   "v_max": 57.0
+  },
+  "MDI_A_P": {
+   "volts": 54.0,
+   "amps_typ": 0.15,
+   "amps_peak": 0.3,
+   "source": "T1",
+   "loads": {
+    "J_ETH": 0.3
+   },
+   "note": "half the port's feed from T1's cable-side winding to the jack's pin 1 (802.3 Alternative A, pair 1-2): a series segment of POE_P carrying half its current, and a 1000BASE-T signal conductor",
+   "converted": false,
+   "series_of": "POE_P",
+   "v_max": 57.0
+  },
+  "MDI_A_N": {
+   "volts": 54.0,
+   "amps_typ": 0.15,
+   "amps_peak": 0.3,
+   "source": "T1",
+   "loads": {
+    "J_ETH": 0.3
+   },
+   "note": "half the port's feed from T1's cable-side winding to the jack's pin 2 (802.3 Alternative A, pair 1-2): a series segment of POE_P carrying half its current, and a 1000BASE-T signal conductor",
+   "converted": false,
+   "series_of": "POE_P",
+   "v_max": 57.0
+  },
+  "MDI_B_P": {
+   "volts": 0.15,
+   "amps_typ": 0.15,
+   "amps_peak": 0.3,
+   "source": "J_ETH",
+   "loads": {
+    "T1": 0.3
+   },
+   "note": "half the port's return from the jack's pin 3 into T1's cable-side winding (pair 3-6), at the sense voltage with the port on (0.60 A x 0.25 Ohm) and up to 57 V with it off; the TPS23861 turns the port on through Q1's gate, POE_GATE; also a 1000BASE-T signal conductor",
+   "switch": "Q1",
+   "enable_net": "POE_GATE",
+   "converted": false,
+   "returns": "+54V_POE",
+   "v_max": 57.0
+  },
+  "MDI_B_N": {
+   "volts": 0.15,
+   "amps_typ": 0.15,
+   "amps_peak": 0.3,
+   "source": "J_ETH",
+   "loads": {
+    "T1": 0.3
+   },
+   "note": "half the port's return from the jack's pin 6 into T1's cable-side winding (pair 3-6), at the sense voltage with the port on (0.60 A x 0.25 Ohm) and up to 57 V with it off; the TPS23861 turns the port on through Q1's gate, POE_GATE; also a 1000BASE-T signal conductor",
+   "switch": "Q1",
+   "enable_net": "POE_GATE",
+   "converted": false,
+   "returns": "+54V_POE",
+   "v_max": 57.0
+  },
+  "POE_DRAIN": {
+   "volts": 0.15,
+   "amps_typ": 0.3,
+   "amps_peak": 0.6,
+   "source": "T1",
+   "loads": {
+    "Q1": 0.6
+   },
+   "note": "the port's return from T1's centre tap MCT2 (pin 21) to the drain of the port switch Q1, with the TPS23861's DRAIN1 monitor on it through R526: near the sense voltage with the port on, up to 57 V with it off (the FET's drain is the one node the powered device lifts)",
+   "switch": "Q1",
+   "enable_net": "POE_GATE",
+   "converted": false,
+   "returns": "+54V_POE",
+   "v_max": 57.0
+  },
+  "POE_SEN": {
+   "volts": 0.15,
+   "amps_typ": 0.3,
+   "amps_peak": 0.6,
+   "source": "Q1",
+   "loads": {
+    "R12": 0.6
+   },
+   "note": "the port's return from Q1's source to the 0.25 Ohm sense resistor R12: 0.15 V at 0.60 A, and the part cuts the port at VSHORT2X, 357 to 408 mV (SLUSBX9I 6.5), so a part on it sees at most 0.41 V; the TPS23861's SEN1 reads it through R525",
+   "switch": "Q1",
+   "enable_net": "POE_GATE",
+   "converted": false,
+   "returns": "+54V_POE",
+   "v_max": 0.41
+  },
+  "GNSS_VDD_RF": {
+   "volts": 3.3,
+   "amps_typ": 0.02,
+   "amps_peak": 0.03,
+   "source": "U11",
+   "loads": {
+    "R23": 0.03
+   },
+   "note": "the active antenna's supply from the LG290P's VDD_RF to R23; 20 mA typical and 30 mA peak INFERRED (no held antenna datasheet states it); an antenna short is bounded by R23, 3.3 V / 10 Ohm, a fault current",
+   "always_on": true,
+   "always_on_why": "VDD_RF follows the LG290P's VCC, +3V3_DEV, which is always on (HD V1.1 3.2: 'Only if the VCC is turned off, VDD_RF is turned off')",
+   "converted": false,
+   "fed_from": "+3V3_DEV"
+  },
+  "GNSS_BIAS": {
+   "volts": 3.3,
+   "amps_typ": 0.02,
+   "amps_peak": 0.03,
+   "source": "R23",
+   "loads": {
+    "L3": 0.03
+   },
+   "note": "the antenna feed between R23 (the maker's short-circuit resistor R2) and the bias inductor L3: a series segment of GNSS_VDD_RF",
+   "converted": false,
+   "series_of": "GNSS_VDD_RF"
+  },
+  "GNSS_ANT": {
+   "volts": 3.3,
+   "amps_typ": 0.02,
+   "amps_peak": 0.03,
+   "source": "L3",
+   "loads": {
+    "J_GNSS1": 0.03
+   },
+   "note": "the antenna feed from L3 to the U.FL J_GNSS1, shared with the RF the antenna returns (DC-blocked from RF_IN by C42): a series segment of GNSS_VDD_RF",
+   "converted": false,
+   "series_of": "GNSS_VDD_RF"
+  },
   "VBUS_QMX": {
    "volts": 5.0,
    "amps_typ": 0.3,
@@ -2378,20 +3238,48 @@
    "v_min": -1.0,
    "basis": "the +3V3_S1A buck's switching node: it swings to +5V_S1, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
   },
+  "S1A_BOOT": {
+   "v_max": 11.1,
+   "v_min": 0.0,
+   "basis": "the +3V3_S1A AP64500's bootstrap (pin 1 BST, DS41979 Rev 5-2 p.3): it rides on S1A_SW at up to 6.0 V (VBST absolute maximum VSW + 6.0 V, p.5), so it reaches +5V_S1 plus 6.0 V with the high side on",
+   "rides_on": "S1A_SW",
+   "bias_v": 6.0
+  },
   "S1B_SW": {
    "v_max": 5.1,
    "v_min": -1.0,
    "basis": "the +3V3_S1B buck's switching node: it swings to +5V_S1, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
+  },
+  "S1B_BOOT": {
+   "v_max": 11.1,
+   "v_min": 0.0,
+   "basis": "the +3V3_S1B AP64500's bootstrap (pin 1 BST, DS41979 Rev 5-2 p.3): it rides on S1B_SW at up to 6.0 V (VBST absolute maximum VSW + 6.0 V, p.5), so it reaches +5V_S1 plus 6.0 V with the high side on",
+   "rides_on": "S1B_SW",
+   "bias_v": 6.0
   },
   "S1C_SW": {
    "v_max": 5.1,
    "v_min": -1.0,
    "basis": "the +1V0_S1 buck's switching node: it swings to +5V_S1, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
   },
+  "S1C_BST": {
+   "v_max": 10.6,
+   "v_min": 0.0,
+   "basis": "the +1V0_S1 TPS62933's bootstrap (pin 6 BST, SLUSEA4D p.3): it rides on S1C_SW at up to 5.5 V (BST-SW recommended -0.1 to 5.5 V, p.5), so it reaches +5V_S1 plus 5.5 V with the high side on",
+   "rides_on": "S1C_SW",
+   "bias_v": 5.5
+  },
   "S1D_SW": {
    "v_max": 5.0,
    "v_min": -1.0,
    "basis": "the +1V1_S1 buck's switching node: it swings to +5V_DEV, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
+  },
+  "S1D_BST": {
+   "v_max": 10.5,
+   "v_min": 0.0,
+   "basis": "the +1V1_S1 TPS62933's bootstrap (pin 6 BST, SLUSEA4D p.3): it rides on S1D_SW at up to 5.5 V (BST-SW recommended -0.1 to 5.5 V, p.5), so it reaches +5V_DEV plus 5.5 V with the high side on",
+   "rides_on": "S1D_SW",
+   "bias_v": 5.5
   },
   "PCIE1_RXSW_P": {
    "v_max": 3.6,
@@ -2523,6 +3411,16 @@
    "v_min": 0.0,
    "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
   },
+  "Q1C": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "slot 1's power-LED feed, the BC857 buffer Q101's collector (pin 3) into R150 1k and the red LED: it can only reach the module's own 3.3 V on the emitter, less the transistor's saturation voltage"
+  },
+  "nRPIBOOT1": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "slot 1's nRPIBOOT (CM5 pin 93, p.21): an input pulled up inside the module through 10 kOhm to CM5_3.3V, grounded only by the bench jumper J_RPIBOOT1"
+  },
   "LED_5V_A2": {
    "v_max": 5.0,
    "v_min": 0.0,
@@ -2532,6 +3430,13 @@
    "v_max": 5.1,
    "v_min": -1.0,
    "basis": "the +3V3_S2A buck's switching node: it swings to +5V_S2, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
+  },
+  "S2A_BOOT": {
+   "v_max": 11.1,
+   "v_min": 0.0,
+   "basis": "the +3V3_S2A AP64500's bootstrap (pin 1 BST, DS41979 Rev 5-2 p.3): it rides on S2A_SW at up to 6.0 V (VBST absolute maximum VSW + 6.0 V, p.5), so it reaches +5V_S2 plus 6.0 V with the high side on",
+   "rides_on": "S2A_SW",
+   "bias_v": 6.0
   },
   "S2A_COMP": {
    "v_max": 5.1,
@@ -2543,15 +3448,36 @@
    "v_min": -1.0,
    "basis": "the +3V3_S2B buck's switching node: it swings to +5V_S2, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
   },
+  "S2B_BOOT": {
+   "v_max": 11.1,
+   "v_min": 0.0,
+   "basis": "the +3V3_S2B AP64500's bootstrap (pin 1 BST, DS41979 Rev 5-2 p.3): it rides on S2B_SW at up to 6.0 V (VBST absolute maximum VSW + 6.0 V, p.5), so it reaches +5V_S2 plus 6.0 V with the high side on",
+   "rides_on": "S2B_SW",
+   "bias_v": 6.0
+  },
   "S2C_SW": {
    "v_max": 5.1,
    "v_min": -1.0,
    "basis": "the +1V0_S2 buck's switching node: it swings to +5V_S2, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
   },
+  "S2C_BST": {
+   "v_max": 10.6,
+   "v_min": 0.0,
+   "basis": "the +1V0_S2 TPS62933's bootstrap (pin 6 BST, SLUSEA4D p.3): it rides on S2C_SW at up to 5.5 V (BST-SW recommended -0.1 to 5.5 V, p.5), so it reaches +5V_S2 plus 5.5 V with the high side on",
+   "rides_on": "S2C_SW",
+   "bias_v": 5.5
+  },
   "S2D_SW": {
    "v_max": 5.0,
    "v_min": -1.0,
    "basis": "the +1V1_S2 buck's switching node: it swings to +5V_DEV, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
+  },
+  "S2D_BST": {
+   "v_max": 10.5,
+   "v_min": 0.0,
+   "basis": "the +1V1_S2 TPS62933's bootstrap (pin 6 BST, SLUSEA4D p.3): it rides on S2D_SW at up to 5.5 V (BST-SW recommended -0.1 to 5.5 V, p.5), so it reaches +5V_DEV plus 5.5 V with the high side on",
+   "rides_on": "S2D_SW",
+   "bias_v": 5.5
   },
   "PCIE2_RXSW_P": {
    "v_max": 3.6,
@@ -2728,6 +3654,16 @@
    "v_min": 0.0,
    "basis": "a SIM card line at the holder, swinging to USIM2_VDD, which the module sets to 1.8 or 3.0 V (HD v1.1 pin table: 1.8/3.0 V, Class B and C cards); declared at 3.3 V for the 50 V capacitor on it"
   },
+  "Q2C": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "slot 2's power-LED feed, the BC857 buffer Q201's collector (pin 3) into R250 1k and the red LED: it can only reach the module's own 3.3 V on the emitter, less the transistor's saturation voltage"
+  },
+  "nRPIBOOT2": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "slot 2's nRPIBOOT (CM5 pin 93, p.21): an input pulled up inside the module through 10 kOhm to CM5_3.3V, grounded only by the bench jumper J_RPIBOOT2"
+  },
   "LED_5V_A3": {
    "v_max": 5.0,
    "v_min": 0.0,
@@ -2738,20 +3674,48 @@
    "v_min": -1.0,
    "basis": "the +3V3_S3A buck's switching node: it swings to +5V_S3, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
   },
+  "S3A_BOOT": {
+   "v_max": 11.1,
+   "v_min": 0.0,
+   "basis": "the +3V3_S3A AP64500's bootstrap (pin 1 BST, DS41979 Rev 5-2 p.3): it rides on S3A_SW at up to 6.0 V (VBST absolute maximum VSW + 6.0 V, p.5), so it reaches +5V_S3 plus 6.0 V with the high side on",
+   "rides_on": "S3A_SW",
+   "bias_v": 6.0
+  },
   "S3B_SW": {
    "v_max": 5.1,
    "v_min": -1.0,
    "basis": "the +3V3_S3B buck's switching node: it swings to +5V_S3, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
+  },
+  "S3B_BOOT": {
+   "v_max": 11.1,
+   "v_min": 0.0,
+   "basis": "the +3V3_S3B AP64500's bootstrap (pin 1 BST, DS41979 Rev 5-2 p.3): it rides on S3B_SW at up to 6.0 V (VBST absolute maximum VSW + 6.0 V, p.5), so it reaches +5V_S3 plus 6.0 V with the high side on",
+   "rides_on": "S3B_SW",
+   "bias_v": 6.0
   },
   "S3C_SW": {
    "v_max": 5.1,
    "v_min": -1.0,
    "basis": "the +1V0_S3 buck's switching node: it swings to +5V_S3, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
   },
+  "S3C_BST": {
+   "v_max": 10.6,
+   "v_min": 0.0,
+   "basis": "the +1V0_S3 TPS62933's bootstrap (pin 6 BST, SLUSEA4D p.3): it rides on S3C_SW at up to 5.5 V (BST-SW recommended -0.1 to 5.5 V, p.5), so it reaches +5V_S3 plus 5.5 V with the high side on",
+   "rides_on": "S3C_SW",
+   "bias_v": 5.5
+  },
   "S3D_SW": {
    "v_max": 5.0,
    "v_min": -1.0,
    "basis": "the +1V1_S3 buck's switching node: it swings to +5V_DEV, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
+  },
+  "S3D_BST": {
+   "v_max": 10.5,
+   "v_min": 0.0,
+   "basis": "the +1V1_S3 TPS62933's bootstrap (pin 6 BST, SLUSEA4D p.3): it rides on S3D_SW at up to 5.5 V (BST-SW recommended -0.1 to 5.5 V, p.5), so it reaches +5V_DEV plus 5.5 V with the high side on",
+   "rides_on": "S3D_SW",
+   "bias_v": 5.5
   },
   "PCIE3_RXSW_P": {
    "v_max": 3.6,
@@ -2883,15 +3847,139 @@
    "v_min": 0.0,
    "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
   },
+  "Q3C": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "slot 3's power-LED feed, the BC857 buffer Q301's collector (pin 3) into R350 1k and the red LED: it can only reach the module's own 3.3 V on the emitter, less the transistor's saturation voltage"
+  },
+  "nRPIBOOT3": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "slot 3's nRPIBOOT (CM5 pin 93, p.21): an input pulled up inside the module through 10 kOhm to CM5_3.3V, grounded only by the bench jumper J_RPIBOOT3"
+  },
   "DEV_SW": {
    "v_max": 5.0,
    "v_min": -1.0,
    "basis": "the AP63203's switching node for +3V3_DEV: it swings to +5V_DEV, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
   },
+  "DEV_BST": {
+   "v_max": 11.0,
+   "v_min": 0.0,
+   "basis": "the AP63203's bootstrap (U25 pin 6 BST, DS41326 Rev. 3-2 p.2): it rides on DEV_SW at up to 6.0 V (VBST absolute maximum VSW + 6.0 V, p.4), so it reaches +5V_DEV plus 6.0 V with the high side on",
+   "rides_on": "DEV_SW",
+   "bias_v": 6.0
+  },
   "KSZC_SW": {
    "v_max": 5.0,
    "v_min": -1.0,
    "basis": "the +1V2_KSZ buck's switching node: it swings to +5V_DEV, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
+  },
+  "KSZC_BST": {
+   "v_max": 10.5,
+   "v_min": 0.0,
+   "basis": "the +1V2_KSZ TPS62933's bootstrap (pin 6 BST, SLUSEA4D p.3): it rides on KSZC_SW at up to 5.5 V (BST-SW recommended -0.1 to 5.5 V, p.5), so it reaches +5V_DEV plus 5.5 V with the high side on",
+   "rides_on": "KSZC_SW",
+   "bias_v": 5.5
+  },
+  "MDI_C_P": {
+   "v_max": 57.0,
+   "v_min": 0.0,
+   "basis": "a cable-side conductor of the PoE port on pairs 4-5 or 7-8, which carry no feed on this board (Alternative A); declared at the feed's 57 V (VVPWR maximum, SLUSBX9I 6.3) because it is the same port's cable side, a 1000BASE-T signal conductor referenced through 75 Ohm to BOB"
+  },
+  "MDI_C_N": {
+   "v_max": 57.0,
+   "v_min": 0.0,
+   "basis": "a cable-side conductor of the PoE port on pairs 4-5 or 7-8, which carry no feed on this board (Alternative A); declared at the feed's 57 V (VVPWR maximum, SLUSBX9I 6.3) because it is the same port's cable side, a 1000BASE-T signal conductor referenced through 75 Ohm to BOB"
+  },
+  "MDI_D_P": {
+   "v_max": 57.0,
+   "v_min": 0.0,
+   "basis": "a cable-side conductor of the PoE port on pairs 4-5 or 7-8, which carry no feed on this board (Alternative A); declared at the feed's 57 V (VVPWR maximum, SLUSBX9I 6.3) because it is the same port's cable side, a 1000BASE-T signal conductor referenced through 75 Ohm to BOB"
+  },
+  "MDI_D_N": {
+   "v_max": 57.0,
+   "v_min": 0.0,
+   "basis": "a cable-side conductor of the PoE port on pairs 4-5 or 7-8, which carry no feed on this board (Alternative A); declared at the feed's 57 V (VVPWR maximum, SLUSBX9I 6.3) because it is the same port's cable side, a 1000BASE-T signal conductor referenced through 75 Ohm to BOB"
+  },
+  "POE_GATE": {
+   "v_max": 12.5,
+   "v_min": 0.0,
+   "basis": "the TPS23861's GATE1 output to Q1's gate: VGOH 10 to 12.5 V (SLUSBX9I 6.5), absolute maximum 13 V (6.1)"
+  },
+  "POE_RST_n": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "the TPS23861's RESET input, \"internally pulled up to VDD\" (SLUSBX9I p.5) and by R11 to +3V3_DEV"
+  },
+  "POE_SEN_PIN": {
+   "v_max": 0.41,
+   "v_min": 0.0,
+   "basis": "SEN1 of the TPS23861 behind RSENS R525 (22 Ohm, SLUSBX9I p.5): it follows POE_SEN, at most VSHORT2X 408 mV (6.5); SEN1 absolute maximum 3 V (6.1)"
+  },
+  "POE_DRAIN_PIN": {
+   "v_max": 57.0,
+   "v_min": 0.0,
+   "basis": "DRAIN1 of the TPS23861 behind RDRAIN R526 (47 Ohm, SLUSBX9I p.5): it follows POE_DRAIN, up to 57 V with the port off (VVPWR maximum, 6.3; DRAIN1 absolute maximum 70 V, 6.1)"
+  },
+  "GNSS_RF_IN": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "the LG290P's RF input (pin 11 RF_IN, 50 Ohm, LG290P(03) hardware design V1.1 p.21) behind the 47 pF DC block C42: RF at most 10 dBm (PRF_IN, Table 9, p.37), declared at the 3.3 V antenna feed C42 blocks"
+  },
+  "GNSS_3V3": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "the U15's internal regulator output on VDD (pin 6): 3.1 to 3.6 V (VREGOUT, CP2102N data sheet Rev 1.5 p.12, '3.3 V (out)' in the p.5 figure), feeding only the part itself, its RSTb pull-up and its two bypass capacitors"
+  },
+  "LORA_ANT": {
+   "v_max": 22.4,
+   "v_min": 0.0,
+   "basis": "the E22-900M30S's antenna pad (pin 21, 50 Ohm, user manual v1.20 p.5) to J_LORA1: 31 dBm maximum (p.3) is 11.2 V peak into 50 Ohm and 22.4 V with the lead fully reflecting"
+  },
+  "ZBA_3V3": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "the U16's internal regulator output on VDD (pin 6): 3.1 to 3.6 V (VREGOUT, CP2102N data sheet Rev 1.5 p.12, '3.3 V (out)' in the p.5 figure), feeding only the part itself, its RSTb pull-up and its two bypass capacitors"
+  },
+  "ZBB_3V3": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "the U17's internal regulator output on VDD (pin 6): 3.1 to 3.6 V (VREGOUT, CP2102N data sheet Rev 1.5 p.12, '3.3 V (out)' in the p.5 figure), feeding only the part itself, its RSTb pull-up and its two bypass capacitors"
+  },
+  "RB_3V3": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "the U18's internal regulator output on VDD (pin 6): 3.1 to 3.6 V (VREGOUT, CP2102N data sheet Rev 1.5 p.12, '3.3 V (out)' in the p.5 figure), feeding only the part itself, its RSTb pull-up and its two bypass capacitors"
+  },
+  "IOCA_VCAP": {
+   "v_max": 1.4,
+   "v_min": 0.0,
+   "basis": "controller A's VCAP pins 48 and 73: the STM32H743's internal LDO output VCORE, 1.0 to 1.35 V by voltage scaling (DS12110 Rev 10 p.27), at most 1.40 V at VOS0 (Table 123, p.212)"
+  },
+  "IOCA_RST_n": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "controller A's NRST (pin 14): an input with an embedded weak pull-up (DS12110 Rev 10 p.63), pulled to the controller's own 3.3 V by R63 and held by the reset capacitor C409; it can reach that rail only"
+  },
+  "IOCB_VCAP": {
+   "v_max": 1.4,
+   "v_min": 0.0,
+   "basis": "controller B's VCAP pins 48 and 73: the STM32H743's internal LDO output VCORE, 1.0 to 1.35 V by voltage scaling (DS12110 Rev 10 p.27), at most 1.40 V at VOS0 (Table 123, p.212)"
+  },
+  "IOCB_RST_n": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "controller B's NRST (pin 14): an input with an embedded weak pull-up (DS12110 Rev 10 p.63), pulled to the controller's own 3.3 V by R75 and held by the reset capacitor C429; it can reach that rail only"
+  },
+  "IOCC_VCAP": {
+   "v_max": 1.4,
+   "v_min": 0.0,
+   "basis": "controller C's VCAP pins 48 and 73: the STM32H743's internal LDO output VCORE, 1.0 to 1.35 V by voltage scaling (DS12110 Rev 10 p.27), at most 1.40 V at VOS0 (Table 123, p.212)"
+  },
+  "IOCC_RST_n": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "controller C's NRST (pin 14): an input with an embedded weak pull-up (DS12110 Rev 10 p.63), pulled to the controller's own 3.3 V by R87 and held by the reset capacitor C449; it can reach that rail only"
   },
   "BSEL1_D": {
    "v_max": 3.3,

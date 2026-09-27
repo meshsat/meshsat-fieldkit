@@ -1,0 +1,5 @@
+certify signature: (rec, cache, handfit, aliases, refresh=False, mismatches=None)
+{"row": "TPD4E001DBVR SIM 1 ESD array (IO1 RST, IO2 CLK, IO3 IO, VCC ", "code": "C465736", "ev": {"verdict": "CERTIFIED", "model": "TPD4E001DBVR", "brand": "Texas Instruments", "pkg": "SOT-23-6", "stock": 17211, "need": 5, "asked": "2026-09-27", "note": ""}}
+{"row": "TPD4E001DBVR SIM 2 ESD array (IO1 RST, IO2 CLK, IO3 IO, VCC ", "code": "C465736", "ev": {"verdict": "CERTIFIED", "model": "TPD4E001DBVR", "brand": "Texas Instruments", "pkg": "SOT-23-6", "stock": 17211, "need": 5, "asked": "2026-09-27", "note": ""}}
+{"row": "47R", "code": "C23182", "ev": {"verdict": "CERTIFIED", "model": "0603WAF470JT5E", "brand": "UNI-ROYAL(Uniroyal Elec)", "pkg": "0603", "stock": 1281687, "need": 5, "asked": "2026-09-27", "note": ""}}
+{"row": "22R", "code": "C23345", "ev": {"verdict": "CERTIFIED", "model": "0603WAF220JT5E", "brand": "UNI-ROYAL(Uniroyal Elec)", "pkg": "0603", "stock": 9434552, "need": 35, "asked": "2026-09-27", "note": ""}}

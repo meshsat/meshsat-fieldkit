@@ -1,0 +1,8 @@
+power_path: +3V3_DEV     declares  1.20 A typ /  2.00 peak and feeds 3 converter(s) drawing  0.27 /  0.58
+power_path: +5V_DEV      declares  3.80 A typ /  6.00 peak and feeds 13 converter(s) drawing  3.56 /  9.72
+power_path: +5V_S1       declares  2.50 A typ /  5.00 peak and feeds 3 converter(s) drawing  1.21 /  2.70
+power_path: +5V_S2       declares  4.20 A typ /  5.00 peak and feeds 3 converter(s) drawing  3.16 /  4.68
+power_path: +5V_S3       declares  2.50 A typ /  5.00 peak and feeds 3 converter(s) drawing  1.21 /  2.70
+power_path: 0 net(s) carry a declared rail's current through one of its own source or load parts without being a rail: 0 declared a node and 0 NOT DECLARED AT ALL, of 58 rail(s) and 154 node(s)
+verdict: power_path             PASS         {"feeds": 5, "feeds_short": 0, "nodes": 154, "rails": 58, "segments": 0, "undeclared": 0} | every declared node that carries a declared rail's current through one of that rail's own load parts: a candidate segment of a power path that no power rule is looking at. It REPORTS: some of these are genuinely nodes and the declaration is where that is written down, with its reason.
+exit 0

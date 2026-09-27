@@ -1,0 +1,44 @@
+power_sequence: 41 rail(s); 22 always on
+  +1V0_S1      source L103,U105      enable EN33_S1        driven by R111 on +3V3_CM1, R112 on GND, U104 on +5V_S1+GND
+  +1V0_S2      source L203,U205      enable EN33_S2        driven by R211 on +3V3_CM2, R212 on GND, U204 on +5V_S2+GND
+  +1V0_S3      source L303,U305      enable EN33_S3        driven by R311 on +3V3_CM3, R312 on GND, U304 on +5V_S3+GND
+  +1V1_S1      source L104           ALWAYS ON
+  +1V1_S2      source L204           ALWAYS ON
+  +1V1_S3      source L304           ALWAYS ON
+  +1V2_KSZ     source L2             ALWAYS ON
+  +1V8_CM1     source U30A           ALWAYS ON
+  +1V8_CM2     source U31A           ALWAYS ON
+  +1V8_CM3     source U32A           ALWAYS ON
+  +2V5_KSZ     source U27            ALWAYS ON
+  +3V3_CM1     source U30A           ALWAYS ON
+  +3V3_CM2     source U31A           ALWAYS ON
+  +3V3_CM3     source U32A           ALWAYS ON
+  +3V3_DEV     source L1             ALWAYS ON
+  +3V3_IOCA    source U40            ALWAYS ON
+  +3V3_IOCB    source U50            ALWAYS ON
+  +3V3_IOCC    source U60            ALWAYS ON
+  +3V3_S1A     source L101,U103      enable S1A_EN         driven by R164 on ?, U115 on +3V3_CM1+GND
+  +3V3_S1B     source L102,U104      enable EN33_S1        driven by R111 on +3V3_CM1, R112 on GND, U105 on +5V_S1+GND
+  +3V3_S2A     source L201,U203      enable S2A_EN         driven by R264 on ?, U215 on +3V3_CM2+GND
+  +3V3_S2B     source L202,U204      enable EN33_S2        driven by R211 on +3V3_CM2, R212 on GND, U205 on +5V_S2+GND
+  +3V3_S3A     source L301,U303      enable S3A_EN         driven by R364 on ?, U315 on +3V3_CM3+GND
+  +3V3_S3B     source L302,U304      enable EN33_S3        driven by R311 on +3V3_CM3, R312 on GND, U305 on +5V_S3+GND
+  +3V3_ZB      source U22            enable E72_EN         driven by R517 on GND, U505 on +3V3_DEV+GND
+  +54V_POE     source J_54V          ALWAYS ON
+  +5V_CAM      source U28            enable CAM_EN         driven by R48 on GND, U6 on +3V3_DEV+GND
+  +5V_DEV      source J_5V_DEV       ALWAYS ON
+  +5V_HDMI     source F2             ALWAYS ON
+  +5V_LIME     source U23            enable LIME_EN        driven by R514 on GND, U502 on +3V3_DEV+GND
+  +5V_LORA     source U21            enable E22_EN         driven by R516 on GND, U504 on +3V3_DEV+GND
+  +5V_RB       source U24            enable RB_EN          driven by R515 on GND, U503 on +3V3_DEV+GND
+  +5V_S1       source J_5V_S1        ALWAYS ON
+  +5V_S2       source J_5V_S2        ALWAYS ON
+  +5V_S3       source J_5V_S3        ALWAYS ON
+  GND          source J_5V_S1,J_5V_S2,J_5V_S3,J_5V_DEV ALWAYS ON
+  +3V3_M2C1    source R165           enable S1A_EN         driven by nothing on this board
+  +3V3_M2C2    source R265           enable S2A_EN         driven by nothing on this board
+  +3V3_M2C3    source R365           enable S3A_EN         driven by nothing on this board
+  PANEL_5V     source F1             ALWAYS ON
+  VBUS_QMX     source F3             ALWAYS ON
+verdict: power_sequence         PASS         of 41 {"always_on": 22, "deadlocks": 0, "rails": 41, "segments": 5, "unresolved": 0} | each rail's enable derived from the netlist and the part that drives it named; a rail whose enable is driven only by a device powered from that same rail cannot start and is a failure. The ORDER between rails is reported as the graph and not decided here, because which order is correct is a property of the modules' own datasheets
+exit 0

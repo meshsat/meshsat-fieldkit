@@ -1,0 +1,205 @@
+{
+ "kind": "netlist",
+ "phase_labels": [
+  [
+   "B21"
+  ],
+  [
+   "B21"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  },
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  }
+ ],
+ "design_header": [
+  [
+   "/root/w3b/base/v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_sch",
+   "2026-09-27T10:30:38+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ],
+  [
+   "/root/w3b/cand/v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_sch",
+   "2026-09-27T10:30:38+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ]
+ ],
+ "content_hash": [
+  "1992622c2519ed0d",
+  "39d83d25efcd75a6"
+ ],
+ "counts": {
+  "comps": [
+   1265,
+   1270
+  ],
+  "nets": [
+   2002,
+   2004
+  ]
+ },
+ "comps_only_committed": [],
+ "comps_only_other": [
+  "C72",
+  "C73",
+  "C74",
+  "R525",
+  "R526"
+ ],
+ "comps_changed": [
+  [
+   "TP6",
+   {
+    "value": [
+     "VBAT",
+     "VBAT_RTC"
+    ]
+   }
+  ]
+ ],
+ "comps_uuid_shifted": 433,
+ "nets_only_committed": [
+  "/VBAT"
+ ],
+ "nets_only_other": [
+  "/POE_DRAIN_PIN",
+  "/POE_SEN_PIN",
+  "/VBAT_RTC"
+ ],
+ "nets_changed": [
+  [
+   "/POE_DRAIN",
+   [
+    [
+     "U5",
+     "16",
+     "DRAIN1",
+     "passive"
+    ]
+   ],
+   [
+    [
+     "R526",
+     "1",
+     "",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "/POE_SEN",
+   [
+    [
+     "U5",
+     "15",
+     "SEN1",
+     "passive"
+    ]
+   ],
+   [
+    [
+     "R525",
+     "1",
+     "",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "GND",
+   [],
+   [
+    [
+     "C72",
+     "2",
+     "",
+     "passive"
+    ],
+    [
+     "C73",
+     "2",
+     "",
+     "passive"
+    ],
+    [
+     "C74",
+     "2",
+     "",
+     "passive"
+    ]
+   ]
+  ]
+ ],
+ "changed_lines": 3680,
+ "changed_lines_sample": [
+  "-      (tstamps \"146c7779-eefc-5c4b-8e21-dc7b1024fbfa\"))",
+  "+      (tstamps \"b398fcfb-eedb-57e7-9d8c-56573387feb2\"))",
+  "-      (tstamps \"e73fdf41-5fa1-5473-b31c-62dce86b0127\"))",
+  "+      (tstamps \"14f4dfff-85c7-5b7b-b23f-85443a8fe20b\"))",
+  "-      (tstamps \"2a14f176-6196-5b95-9bb7-3321403ac6c9\"))",
+  "+      (tstamps \"a36b8168-0f9d-5d3b-83f4-cd729adf675f\"))",
+  "-      (tstamps \"6f1be230-e0e2-52ad-8395-3e5a0dbd8a12\"))",
+  "+      (tstamps \"b506ac8e-56eb-5f05-9631-97b94f72becc\"))",
+  "-      (tstamps \"34a18fe7-5435-5eb0-8562-d0796560df18\"))",
+  "+      (tstamps \"5d7db56a-caea-55ca-8fe8-e573aa8a29ee\"))",
+  "-      (tstamps \"a706ace9-2d51-510f-8dcc-4ece298e5e58\"))",
+  "+      (tstamps \"a52b3a2a-c607-5030-a51f-d3442fa76e5e\"))",
+  "-      (tstamps \"b8656e86-90e7-52cf-a200-9810f4904bf3\"))",
+  "+      (tstamps \"babd8b80-9580-5cb5-ac12-4dc105c850fe\"))",
+  "-      (tstamps \"0365b2aa-ec76-50b8-8c8b-29f57b526d21\"))",
+  "+      (tstamps \"bfc08159-6ae1-5ef6-8131-1ace4701f296\"))",
+  "-      (tstamps \"5260dac2-6047-5ae0-a5ce-3a895896b4ac\"))",
+  "+      (tstamps \"0771d55f-9a26-5839-a2c3-d525d8d650e3\"))",
+  "-      (tstamps \"dabc1e98-75c9-5e85-ac5f-1486fe84f2a0\"))",
+  "+      (tstamps \"8f54591d-6594-5820-a623-f56dc4778f04\"))",
+  "-      (tstamps \"24e61dcd-7474-524b-984d-7ed096a2110e\"))",
+  "+      (tstamps \"f334a335-8c2f-5d10-9008-bace6d0034f4\"))",
+  "-      (tstamps \"0f048074-6e4a-5af3-b70c-7c1464c86572\"))",
+  "+      (tstamps \"0c946190-c92c-53b3-9d48-84d2e4ba2ab5\"))",
+  "-      (tstamps \"a1d3039c-ac16-523e-acf3-8c912dbe1cf6\"))",
+  "+      (tstamps \"426833b7-fb35-5df0-a665-3b67e0c6181a\"))",
+  "-      (tstamps \"930ef49c-a92c-5a6a-890e-faee5a3e21d9\"))",
+  "+      (tstamps \"543a417e-d1dd-5250-a701-60a7ee8aa24d\"))",
+  "-      (tstamps \"506b5a7b-244e-5d74-ba51-f452c61f11e5\"))",
+  "+      (tstamps \"39f82441-c814-52fe-a8f8-0ff91cf166b3\"))",
+  "-      (tstamps \"8c2b61f3-9693-56a8-aa69-97c46eba687c\"))",
+  "+      (tstamps \"7b07aefb-d9fc-5d00-9613-4c526ba1aca7\"))",
+  "-      (tstamps \"e058af31-e4b4-501f-bfa7-58c2d64e55ed\"))",
+  "+      (tstamps \"bbdec319-8187-5829-b460-836c1c3e37b9\"))",
+  "-      (tstamps \"aa1dc1f0-7450-59aa-898f-aef3c22634ab\"))",
+  "+      (tstamps \"2808354e-95b4-5211-937e-5777f382eee0\"))",
+  "-      (tstamps \"f712ee89-7747-5aee-afdb-c105021fee99\"))",
+  "+      (tstamps \"b447d5b1-cbab-5c2b-b9f7-50d1fda93da4\"))",
+  "-      (tstamps \"60bfc46c-b2bb-5645-977c-790eda712192\"))",
+  "+      (tstamps \"090f6768-b9bb-55cd-82d0-76f89e52958e\"))",
+  "-      (tstamps \"39935f23-81df-5c11-a6ae-b2a95e433b2f\"))",
+  "+      (tstamps \"2ddca4f7-1598-58e0-9e42-d0bdbd5ec86b\"))",
+  "-      (tstamps \"b9369b90-7c98-55ce-b591-a9b8c01e8963\"))",
+  "+      (tstamps \"5ae15dba-33d9-5f9a-915d-3021f6b9b4e8\"))",
+  "-      (tstamps \"5aab5bb5-5e31-58c6-8a3a-762e1adf1b37\"))",
+  "+      (tstamps \"f8672151-ef15-5caf-b5b5-7c915eb69840\"))",
+  "-      (tstamps \"8c0e4e9e-0833-5265-bdbd-40fd1b37077f\"))",
+  "+      (tstamps \"ee344c0a-72f0-5703-af01-bee4677787ba\"))",
+  "-      (tstamps \"bb321713-a0dc-5732-b5bf-283cbc08e2ef\"))",
+  "+      (tstamps \"0bf4a81b-5662-5ec1-a5af-1a59b371c84e\"))",
+  "-      (tstamps \"a7f741e5-c330-5af4-86d7-5fa105e12e3a\"))",
+  "+      (tstamps \"93cee66e-57f1-54a9-848c-3bf6fa2be1e1\"))",
+  "-      (tstamps \"0e3b999e-561b-51c4-a8ac-3a9fe6710012\"))",
+  "+      (tstamps \"917a79aa-f6d8-54e3-82d6-e939af9800fa\"))",
+  "-      (tstamps \"3af27ae1-86e0-5c47-85b3-00ed61254c1e\"))",
+  "+      (tstamps \"3cc448ef-24f9-5783-ac0e-104ee0345ea0\"))",
+  "-      (tstamps \"c17f0c53-f57c-5728-ad35-1a9b752a678b\"))",
+  "+      (tstamps \"d7a74d16-947a-54dc-98f4-116d019d60d3\"))",
+  "-      (tstamps \"cf0a7fbf-619a-5a9b-b0cf-9174262de9c3\"))",
+  "+      (tstamps \"973c13a3-cadf-5453-ae35-ecacd03ac761\"))"
+ ],
+ "result": "DIFFERENT"
+}

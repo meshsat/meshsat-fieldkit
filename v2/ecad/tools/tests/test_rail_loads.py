@@ -57,7 +57,9 @@ def t_a_rails_loads_sum_to_about_its_declared_current():
         for line, args in _calls(src):
             m = re.search(r'loads\s*=\s*\{(.*?)\}', args, re.S)
             if not m: continue
-            nums = [float(x) for x in re.findall(r':\s*([0-9.]+)', m.group(1))]
+            # a load written in scientific notation (board B's SIMC2_VCC gives U223's ICC as 1e-7 A since stream w3b)
+            # is read as the number it is: '[0-9.]+' alone read 1e-7 as 1 A (the r8int5 integration, 27 September 2026)
+            nums = [float(x) for x in re.findall(r':\s*([0-9.]+(?:[eE][-+]?[0-9]+)?)', m.group(1))]
             amps = re.match(r'\s*"[^"]+"\s*,\s*[0-9.]+\s*,\s*([0-9.]+)\s*,\s*([0-9.]+)', args)
             if not amps or not nums: continue
             typ = float(amps.group(1)); peak = float(amps.group(2)); tot = sum(nums)

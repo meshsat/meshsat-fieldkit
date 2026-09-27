@@ -1,0 +1,4 @@
+parts 1265 -> 1270 (+5 -0 ~1); nets 2002 -> 2004 (+3 -1 ~3)
+unexplained: 2
+  UNEXPLAINED parts_added R525
+  UNEXPLAINED parts_added R526

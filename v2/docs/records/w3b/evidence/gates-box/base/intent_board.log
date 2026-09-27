@@ -1,0 +1,1052 @@
+PASS  return path under 5G_OFF (LOW_SPEED_OR_DC): a reference exists under 176.5 of 178.2 mm [a module power-off request, a static level]
+PASS  return path under 5G_RESET (LOW_SPEED_OR_DC): a reference exists under 71.9 of 71.9 mm [a module reset held for milliseconds by an RC]
+PASS  return path under BANK1_UPD_N (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.6 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under BANK1_UPD_P (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.6 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under BANK1_UPRX_N (USB, CONTROLLED_IMPEDANCE): 0.0 of 29.9 mm without a plane on a neighbouring layer (limit 10.0; 1.9 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under BANK1_UPRX_P (USB, CONTROLLED_IMPEDANCE): 0.0 of 29.9 mm without a plane on a neighbouring layer (limit 10.0; 1.2 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under BANK1_UPTX_N (USB, CONTROLLED_IMPEDANCE): 0.9 of 44.2 mm without a plane on a neighbouring layer (limit 10.0; 2.4 mm more is this net's own via anti-pads, which RET-003 judges; 1.5 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under BANK1_UPTX_P (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.9 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under BANK2_UPD_N (USB, CONTROLLED_IMPEDANCE): 0.8 of 58.4 mm without a plane on a neighbouring layer (limit 10.0; 2.8 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under BANK2_UPD_P (USB, CONTROLLED_IMPEDANCE): 2.4 of 58.4 mm without a plane on a neighbouring layer (limit 10.0; 7.2 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under BANK2_UPTX_N (USB, CONTROLLED_IMPEDANCE): 0.9 of 13.2 mm without a plane on a neighbouring layer (limit 10.0; 2.6 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under BANK3_UPD_N (USB, CONTROLLED_IMPEDANCE): 0.0 of 42.2 mm without a plane on a neighbouring layer (limit 10.0; 0.8 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under BANK3_UPD_P (USB, CONTROLLED_IMPEDANCE): 0.0 of 42.2 mm without a plane on a neighbouring layer (limit 10.0; 1.2 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under BANK3_UPRX_N (USB, CONTROLLED_IMPEDANCE): 1.8 of 28.0 mm without a plane on a neighbouring layer (limit 10.0; 4.1 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under BANK3_UPTX_N (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.7 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under BANK3_UPTX_P (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.9 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under BOB (Default, CLOCKED_DIGITAL): 0.0 of 15.7 mm without a plane on a neighbouring layer (limit 30.0) [the break-before-make timing node of the same logic]
+PASS  return path under BOE1_n (Default, CLOCKED_DIGITAL): 2.6 of 137.1 mm without a plane on a neighbouring layer (limit 30.0; 9.2 mm more is this net's own via anti-pads, which RET-003 judges; 2.8 mm more is another conductor's via anti-pad, a hole the return goes around) [a mux output enable, a logic edge in the break-before-make sequence]
+PASS  return path under BOE2_n (Default, CLOCKED_DIGITAL): 8.8 of 213.2 mm without a plane on a neighbouring layer (limit 32.0; 9.1 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [a mux output enable, a logic edge in the break-before-make sequence]
+PASS  return path under BOE3_n (Default, CLOCKED_DIGITAL): 8.2 of 251.4 mm without a plane on a neighbouring layer (limit 37.7; 8.9 mm more is this net's own via anti-pads, which RET-003 judges; 0.9 mm more is another conductor's via anti-pad, a hole the return goes around) [a mux output enable, a logic edge in the break-before-make sequence]
+PASS  return path under BSEL1 (Default, CLOCKED_DIGITAL): 6.1 of 281.4 mm without a plane on a neighbouring layer (limit 42.2; 12.8 mm more is this net's own via anti-pads, which RET-003 judges; 3.0 mm more is another conductor's via anti-pad, a hole the return goes around) [a bank-select line into the mux logic]
+PASS  return path under BSEL1_D (Default, CLOCKED_DIGITAL): 0.0 of 53.7 mm without a plane on a neighbouring layer (limit 30.0; 6.8 mm more is this net's own via anti-pads, which RET-003 judges) [a bank-select line into the mux logic]
+PASS  return path under BSEL2 (Default, CLOCKED_DIGITAL): 13.5 of 463.4 mm without a plane on a neighbouring layer (limit 69.5; 13.2 mm more is this net's own via anti-pads, which RET-003 judges; 6.2 mm more is another conductor's via anti-pad, a hole the return goes around) [a bank-select line into the mux logic]
+PASS  return path under BSEL2_D (Default, CLOCKED_DIGITAL): 1.1 of 39.5 mm without a plane on a neighbouring layer (limit 30.0; 4.8 mm more is this net's own via anti-pads, which RET-003 judges) [a bank-select line into the mux logic]
+PASS  return path under BSEL3 (Default, CLOCKED_DIGITAL): 16.0 of 394.9 mm without a plane on a neighbouring layer (limit 59.2; 13.2 mm more is this net's own via anti-pads, which RET-003 judges; 9.2 mm more is another conductor's via anti-pad, a hole the return goes around) [a bank-select line into the mux logic]
+PASS  return path under BSEL3_D (Default, CLOCKED_DIGITAL): 0.0 of 42.8 mm without a plane on a neighbouring layer (limit 30.0) [a bank-select line into the mux logic]
+PASS  return path under BT_nDIS1 (LOW_SPEED_OR_DC): a reference exists under 76.8 of 78.1 mm [a module's Bluetooth-disable pin, a static level]
+PASS  return path under BT_nDIS2 (LOW_SPEED_OR_DC): a reference exists under 50.2 of 53.4 mm [a module's Bluetooth-disable pin, a static level]
+PASS  return path under BT_nDIS3 (LOW_SPEED_OR_DC): a reference exists under 130.0 of 133.6 mm [a module's Bluetooth-disable pin, a static level]
+PASS  return path under CAM_DM (USB, CONTROLLED_IMPEDANCE): 6.1 of 20.9 mm without a plane on a neighbouring layer (limit 10.0; 1.7 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under CAM_DP (USB, CONTROLLED_IMPEDANCE): 1.7 of 24.1 mm without a plane on a neighbouring layer (limit 10.0; 1.1 mm more is this net's own via anti-pads, which RET-003 judges; 1.8 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under CAM_EN (LOW_SPEED_OR_DC): a reference exists under 327.6 of 336.0 mm [an enable, a static level with an RC on it]
+PASS  return path under CAM_FLT (LOW_SPEED_OR_DC): a reference exists under 309.7 of 319.4 mm [a fault flag, an open-drain static level]
+PASS  return path under CANH_A (Default, CLOCKED_DIGITAL): 2.6 of 51.2 mm without a plane on a neighbouring layer (limit 30.0; 6.3 mm more is this net's own via anti-pads, which RET-003 judges) [a CAN-FD fabric between the three controllers, up to 5 Mbit/s on a ter]
+PASS  return path under CANH_B (Default, CLOCKED_DIGITAL): 7.2 of 165.6 mm without a plane on a neighbouring layer (limit 30.0; 4.6 mm more is this net's own via anti-pads, which RET-003 judges; 0.9 mm more is another conductor's via anti-pad, a hole the return goes around) [a CAN-FD fabric between the three controllers, up to 5 Mbit/s on a ter]
+PASS  return path under CANL_B (Default, CLOCKED_DIGITAL): 0.0 of 46.4 mm without a plane on a neighbouring layer (limit 30.0; 4.5 mm more is this net's own via anti-pads, which RET-003 judges) [a CAN-FD fabric between the three controllers, up to 5 Mbit/s on a ter]
+PASS  return path under CANT2_A (Default, CLOCKED_DIGITAL): 1.8 of 13.7 mm without a plane on a neighbouring layer (limit 30.0) [a CAN bus termination node]
+PASS  return path under CANT2_B (Default, CLOCKED_DIGITAL): 0.5 of 11.7 mm without a plane on a neighbouring layer (limit 30.0) [a CAN bus termination node]
+PASS  return path under CANT_A (Default, CLOCKED_DIGITAL): 0.0 of 16.5 mm without a plane on a neighbouring layer (limit 30.0) [a CAN-FD fabric between the three controllers, up to 5 Mbit/s on a ter]
+PASS  return path under CANT_B (Default, CLOCKED_DIGITAL): 0.0 of 12.0 mm without a plane on a neighbouring layer (limit 30.0) [a CAN-FD fabric between the three controllers, up to 5 Mbit/s on a ter]
+PASS  return path under CARD1_CLK_N (USB, CONTROLLED_IMPEDANCE): 1.8 of 78.9 mm without a plane on a neighbouring layer (limit 10.0; 3.5 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under CARD1_CLK_P (USB, CONTROLLED_IMPEDANCE): 3.8 of 78.9 mm without a plane on a neighbouring layer (limit 10.0; 5.4 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under CARD1_TX_N (USB, CONTROLLED_IMPEDANCE): 0.8 of 119.1 mm without a plane on a neighbouring layer (limit 10.0; 5.1 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under CARD1_TX_P (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.8 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under CARD2_CLKREQ_n (LOW_SPEED_OR_DC): a reference exists under 131.8 of 131.8 mm [a PCIe clock request, an open-drain static level in this design]
+PASS  return path under CARD2_CLK_P (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.8 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under CARD2_RX_N (USB, CONTROLLED_IMPEDANCE): 7.0 of 92.6 mm without a plane on a neighbouring layer (limit 10.0; 4.9 mm more is this net's own via anti-pads, which RET-003 judges; 0.5 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under CARD2_RX_P (USB, CONTROLLED_IMPEDANCE): 6.0 of 92.7 mm without a plane on a neighbouring layer (limit 10.0; 7.3 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under CARD2_TX_N (USB, CONTROLLED_IMPEDANCE): 1.8 of 91.0 mm without a plane on a neighbouring layer (limit 10.0; 4.0 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under CARD2_TX_P (USB, CONTROLLED_IMPEDANCE): 0.7 of 91.0 mm without a plane on a neighbouring layer (limit 10.0; 3.3 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under CARD3_CLKREQ_n (LOW_SPEED_OR_DC): a reference exists under 133.1 of 135.8 mm [a PCIe clock request, an open-drain static level in this design]
+PASS  return path under CARD3_CLK_N (USB, CONTROLLED_IMPEDANCE): 3.7 of 111.7 mm without a plane on a neighbouring layer (limit 10.0; 1.3 mm more is this net's own via anti-pads, which RET-003 judges; 5.7 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under CARD3_CLK_P (USB, CONTROLLED_IMPEDANCE): 2.5 of 113.4 mm without a plane on a neighbouring layer (limit 10.0; 5.2 mm more is this net's own via anti-pads, which RET-003 judges; 3.1 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under CARD3_RX_P (USB, CONTROLLED_IMPEDANCE): 0.5 of 124.9 mm without a plane on a neighbouring layer (limit 10.0; 6.0 mm more is this net's own via anti-pads, which RET-003 judges; 0.8 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under CARD3_TX_N (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.0 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under CC1_F1 (LOW_SPEED_OR_DC): a reference exists under 107.9 of 107.9 mm [a USB configuration-channel node after its filter]
+PASS  return path under CC1_F2 (LOW_SPEED_OR_DC): a reference exists under 59.1 of 59.1 mm [a USB configuration-channel node after its filter]
+PASS  return path under CC1_F3 (LOW_SPEED_OR_DC): a reference exists under 104.1 of 106.7 mm [a USB configuration-channel node after its filter]
+PASS  return path under CC2_F1 (LOW_SPEED_OR_DC): a reference exists under 63.8 of 63.8 mm [a USB configuration-channel node after its filter]
+PASS  return path under CC2_F2 (LOW_SPEED_OR_DC): a reference exists under 61.9 of 61.9 mm [a USB configuration-channel node after its filter]
+PASS  return path under CC2_F3 (LOW_SPEED_OR_DC): a reference exists under 97.0 of 100.6 mm [a USB configuration-channel node after its filter]
+PASS  return path under DEV_BST (Default, HIGH_SPEED_DIGITAL): 0.0 of 26.6 mm without a plane on a neighbouring layer (limit 10.0; 3.3 mm more is this net's own via anti-pads, which RET-003 judges) [a bootstrap node riding on a switch node]
+PASS  return path under E22_CT (LOW_SPEED_OR_DC): a reference exists under 19.8 of 19.8 mm [a radio module's antenna-switch control line, a static level held for a whole pa]
+PASS  return path under E22_EN (LOW_SPEED_OR_DC): a reference exists under 214.0 of 217.9 mm [an enable, a static level with an RC on it]
+PASS  return path under E72_CT (LOW_SPEED_OR_DC): a reference exists under 15.6 of 15.6 mm [a radio module's antenna-switch control line, a static level held for a whole pa]
+PASS  return path under E72_EN (LOW_SPEED_OR_DC): a reference exists under 223.1 of 228.0 mm [an enable, a static level with an RC on it]
+PASS  return path under EMCON_HW (LOW_SPEED_OR_DC): a reference exists under 419.6 of 439.7 mm [the emission-control line, a static level]
+PASS  return path under EN33_S1 (LOW_SPEED_OR_DC): a reference exists under 50.9 of 50.9 mm [a per-slot 3.3 V rail enable, a static level]
+PASS  return path under EN33_S2 (LOW_SPEED_OR_DC): a reference exists under 4.2 of 4.2 mm [a per-slot 3.3 V rail enable, a static level]
+PASS  return path under EN33_S3 (LOW_SPEED_OR_DC): a reference exists under 51.4 of 55.3 mm [a per-slot 3.3 V rail enable, a static level]
+PASS  return path under ETH1_P2_N (DIFF100, CONTROLLED_IMPEDANCE): 1.2 of 110.2 mm without a plane on a neighbouring layer (limit 10.0; 3.6 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under ETH1_P2_P (DIFF100, CONTROLLED_IMPEDANCE): 1.2 of 110.2 mm without a plane on a neighbouring layer (limit 10.0; 3.9 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under ETH1_P3_N (DIFF100, CONTROLLED_IMPEDANCE): 1.9 of 116.4 mm without a plane on a neighbouring layer (limit 10.0; 3.0 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under ETH1_P3_P (DIFF100, CONTROLLED_IMPEDANCE): 0.9 of 116.4 mm without a plane on a neighbouring layer (limit 10.0; 3.6 mm more is this net's own via anti-pads, which RET-003 judges; 1.9 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under ETH2_P0_N (DIFF100, CONTROLLED_IMPEDANCE): 0.0 of 118.5 mm without a plane on a neighbouring layer (limit 10.0; 5.6 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under ETH2_P0_P (DIFF100, CONTROLLED_IMPEDANCE): 0.0 of 118.5 mm without a plane on a neighbouring layer (limit 10.0; 4.7 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under ETH2_P2_N (DIFF100, CONTROLLED_IMPEDANCE): 1.7 of 126.9 mm without a plane on a neighbouring layer (limit 10.0; 5.4 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under ETH2_P2_P (DIFF100, CONTROLLED_IMPEDANCE): 2.1 of 126.9 mm without a plane on a neighbouring layer (limit 10.0; 4.2 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under ETH2_P3_N (DIFF100, CONTROLLED_IMPEDANCE): 0.5 of 124.5 mm without a plane on a neighbouring layer (limit 10.0; 1.4 mm more is this net's own via anti-pads, which RET-003 judges; 1.5 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under ETH2_P3_P (DIFF100, CONTROLLED_IMPEDANCE): 2.3 of 124.5 mm without a plane on a neighbouring layer (limit 10.0; 4.1 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under ETH3_P0_N (DIFF100, CONTROLLED_IMPEDANCE): 1.8 of 109.4 mm without a plane on a neighbouring layer (limit 10.0; 1.7 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under ETH3_P0_P (DIFF100, CONTROLLED_IMPEDANCE): 2.1 of 111.6 mm without a plane on a neighbouring layer (limit 10.0; 5.7 mm more is this net's own via anti-pads, which RET-003 judges; 4.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under ETH3_P1_N (DIFF100, CONTROLLED_IMPEDANCE): 2.8 of 112.1 mm without a plane on a neighbouring layer (limit 10.0; 0.7 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under ETH3_P1_P (DIFF100, CONTROLLED_IMPEDANCE): 1.7 of 112.1 mm without a plane on a neighbouring layer (limit 10.0; 5.1 mm more is this net's own via anti-pads, which RET-003 judges; 0.8 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under ETH3_P2_N (DIFF100, CONTROLLED_IMPEDANCE): 0.0 of 114.0 mm without a plane on a neighbouring layer (limit 10.0; 1.5 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under ETH3_P2_P (DIFF100, CONTROLLED_IMPEDANCE): 1.7 of 114.0 mm without a plane on a neighbouring layer (limit 10.0; 3.1 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under ETH3_P3_N (DIFF100, CONTROLLED_IMPEDANCE): 0.0 of 108.5 mm without a plane on a neighbouring layer (limit 10.0; 3.2 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under ETH3_P3_P (DIFF100, CONTROLLED_IMPEDANCE): 0.7 of 108.5 mm without a plane on a neighbouring layer (limit 10.0; 1.4 mm more is this net's own via anti-pads, which RET-003 judges; 1.4 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under EXP_INT (Default, CLOCKED_DIGITAL): 12.2 of 552.0 mm without a plane on a neighbouring layer (limit 82.8; 25.9 mm more is this net's own via anti-pads, which RET-003 judges; 2.6 mm more is another conductor's via anti-pad, a hole the return goes around) [an expander interrupt, an edge into a GPIO]
+PASS  return path under EXP_SPARE1 (LOW_SPEED_OR_DC): a reference exists under 105.9 of 107.9 mm [an unused expander pin, driven by nothing]
+PASS  return path under EXP_SPARE10 (LOW_SPEED_OR_DC): a reference exists under 128.0 of 129.9 mm [an unused expander pin, driven by nothing]
+PASS  return path under EXP_SPARE11 (LOW_SPEED_OR_DC): a reference exists under 92.8 of 95.5 mm [an unused expander pin, driven by nothing]
+PASS  return path under EXP_SPARE2 (LOW_SPEED_OR_DC): a reference exists under 113.4 of 115.3 mm [an unused expander pin, driven by nothing]
+PASS  return path under EXP_SPARE3 (LOW_SPEED_OR_DC): a reference exists under 113.9 of 120.1 mm [an unused expander pin, driven by nothing]
+PASS  return path under EXP_SPARE4 (LOW_SPEED_OR_DC): a reference exists under 122.0 of 123.8 mm [an unused expander pin, driven by nothing]
+PASS  return path under EXP_SPARE5 (LOW_SPEED_OR_DC): a reference exists under 119.8 of 119.8 mm [an unused expander pin, driven by nothing]
+PASS  return path under EXP_SPARE6 (LOW_SPEED_OR_DC): a reference exists under 115.0 of 116.9 mm [an unused expander pin, driven by nothing]
+PASS  return path under EXP_SPARE7 (LOW_SPEED_OR_DC): a reference exists under 123.0 of 125.9 mm [an unused expander pin, driven by nothing]
+PASS  return path under EXP_SPARE8 (LOW_SPEED_OR_DC): a reference exists under 120.4 of 123.3 mm [an unused expander pin, driven by nothing]
+PASS  return path under EXP_SPARE9 (LOW_SPEED_OR_DC): a reference exists under 124.3 of 127.2 mm [an unused expander pin, driven by nothing]
+PASS  return path under FAN_PWM2 (Default, CLOCKED_DIGITAL): 0.0 of 20.2 mm without a plane on a neighbouring layer (limit 30.0; 2.7 mm more is this net's own via anti-pads, which RET-003 judges; 2.3 mm more is another conductor's via anti-pad, a hole the return goes around) [a fan PWM at 25 kHz into a gate]
+PASS  return path under FAN_PWM3 (Default, CLOCKED_DIGITAL): 4.2 of 162.7 mm without a plane on a neighbouring layer (limit 30.0; 6.5 mm more is this net's own via anti-pads, which RET-003 judges; 6.3 mm more is another conductor's via anti-pad, a hole the return goes around) [a fan PWM at 25 kHz into a gate]
+PASS  return path under FAN_TACHO1 (Default, CLOCKED_DIGITAL): 1.3 of 34.9 mm without a plane on a neighbouring layer (limit 30.0; 2.5 mm more is this net's own via anti-pads, which RET-003 judges) [a fan tachometer, two pulses a revolution through a pull-up]
+PASS  return path under FAN_TACHO2 (Default, CLOCKED_DIGITAL): 0.0 of 35.3 mm without a plane on a neighbouring layer (limit 30.0; 2.6 mm more is this net's own via anti-pads, which RET-003 judges; 0.7 mm more is another conductor's via anti-pad, a hole the return goes around) [a fan tachometer, two pulses a revolution through a pull-up]
+PASS  return path under FAN_TACHO3 (Default, CLOCKED_DIGITAL): 0.0 of 51.2 mm without a plane on a neighbouring layer (limit 30.0; 1.7 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [a fan tachometer, two pulses a revolution through a pull-up]
+PASS  return path under GNSS_3V3 (LOW_SPEED_OR_DC): a reference exists under 77.2 of 78.1 mm [a GNSS module supply node]
+PASS  return path under GNSS_ANT (Default, HIGH_SPEED_DIGITAL): 1.8 of 74.1 mm without a plane on a neighbouring layer (limit 10.0) [an antenna feed, radio frequency by definition]
+PASS  return path under GNSS_BIAS (LOW_SPEED_OR_DC): a reference exists under 20.6 of 20.6 mm [an antenna bias feed, DC through a choke]
+PASS  return path under GNSS_DM (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.7 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under GNSS_DP (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.8 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under GNSS_PPS (Default, CLOCKED_DIGITAL): 6.9 of 323.3 mm without a plane on a neighbouring layer (limit 48.5; 13.1 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the GNSS pulse per second: one edge a second, and the EDGE is the whol]
+PASS  return path under GNSS_PPS_CM3 (Default, CLOCKED_DIGITAL): 2.1 of 172.7 mm without a plane on a neighbouring layer (limit 30.0; 10.8 mm more is this net's own via anti-pads, which RET-003 judges; 4.1 mm more is another conductor's via anti-pad, a hole the return goes around) [the GNSS pulse per second: one edge a second, and the EDGE is the whol]
+PASS  return path under GNSS_RF_IN (Default, HIGH_SPEED_DIGITAL): 0.0 of 16.3 mm without a plane on a neighbouring layer (limit 10.0) [a receiver's radio-frequency input]
+PASS  return path under GNSS_RST (Default, CLOCKED_DIGITAL): 1.3 of 52.8 mm without a plane on a neighbouring layer (limit 30.0; 1.6 mm more is this net's own via anti-pads, which RET-003 judges; 2.1 mm more is another conductor's via anti-pad, a hole the return goes around) [a reset line, as above]
+PASS  return path under GNSS_RST_n (Default, CLOCKED_DIGITAL): 0.0 of 21.2 mm without a plane on a neighbouring layer (limit 30.0; 5.1 mm more is this net's own via anti-pads, which RET-003 judges) [a reset line: a logic edge whose timing is a specified property of the]
+PASS  return path under GNSS_RXD (Default, CLOCKED_DIGITAL): 2.0 of 121.9 mm without a plane on a neighbouring layer (limit 30.0; 6.0 mm more is this net's own via anti-pads, which RET-003 judges; 0.8 mm more is another conductor's via anti-pad, a hole the return goes around) [a UART receive line to a module]
+PASS  return path under GNSS_TXD (Default, CLOCKED_DIGITAL): 2.0 of 121.8 mm without a plane on a neighbouring layer (limit 30.0; 5.1 mm more is this net's own via anti-pads, which RET-003 judges; 1.7 mm more is another conductor's via anti-pad, a hole the return goes around) [a UART transmit line to a module]
+PASS  return path under GNSS_VDD_RF (LOW_SPEED_OR_DC): a reference exists under 16.1 of 16.1 mm [a hub's reference-resistor node, DC]
+PASS  return path under HB1 (Default, CLOCKED_DIGITAL): 9.4 of 446.5 mm without a plane on a neighbouring layer (limit 67.0; 11.4 mm more is this net's own via anti-pads, which RET-003 judges) [a heartbeat between a controller and a module, a slow square wave that]
+PASS  return path under HB2 (Default, CLOCKED_DIGITAL): 11.4 of 500.2 mm without a plane on a neighbouring layer (limit 75.0; 12.7 mm more is this net's own via anti-pads, which RET-003 judges; 5.5 mm more is another conductor's via anti-pad, a hole the return goes around) [a heartbeat between a controller and a module, a slow square wave that]
+PASS  return path under HB3 (Default, CLOCKED_DIGITAL): 20.2 of 545.2 mm without a plane on a neighbouring layer (limit 81.8; 17.4 mm more is this net's own via anti-pads, which RET-003 judges; 11.0 mm more is another conductor's via anti-pad, a hole the return goes around) [a heartbeat between a controller and a module, a slow square wave that]
+PASS  return path under HB_CM1 (Default, CLOCKED_DIGITAL): 3.5 of 288.5 mm without a plane on a neighbouring layer (limit 43.3; 14.3 mm more is this net's own via anti-pads, which RET-003 judges; 1.5 mm more is another conductor's via anti-pad, a hole the return goes around) [a heartbeat between a controller and a module, a slow square wave that]
+PASS  return path under HB_CM3 (Default, CLOCKED_DIGITAL): 4.9 of 213.6 mm without a plane on a neighbouring layer (limit 32.0; 13.5 mm more is this net's own via anti-pads, which RET-003 judges; 1.8 mm more is another conductor's via anti-pad, a hole the return goes around) [a heartbeat between a controller and a module, a slow square wave that]
+PASS  return path under HDMI1_CEC (LOW_SPEED_OR_DC): a reference exists under 181.6 of 184.5 mm [the HDMI consumer-electronics control line, a single wire at about 400 bit/s]
+PASS  return path under HDMI1_CK_N (DIFF100, CONTROLLED_IMPEDANCE): 7.4 of 165.9 mm without a plane on a neighbouring layer (limit 10.0; 0.3 mm more is this net's own via anti-pads, which RET-003 judges; 1.8 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMI1_CK_P (DIFF100, CONTROLLED_IMPEDANCE): 8.1 of 165.9 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMI1_D0_N (DIFF100, CONTROLLED_IMPEDANCE): 1.2 of 179.6 mm without a plane on a neighbouring layer (limit 10.0; 0.6 mm more is this net's own via anti-pads, which RET-003 judges; 2.2 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMI1_D0_P (DIFF100, CONTROLLED_IMPEDANCE): 1.0 of 179.6 mm without a plane on a neighbouring layer (limit 10.0; 1.5 mm more is this net's own via anti-pads, which RET-003 judges; 2.9 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMI1_D2_N (DIFF100, CONTROLLED_IMPEDANCE): 8.5 of 167.5 mm without a plane on a neighbouring layer (limit 10.0; 1.5 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMI1_D2_P (DIFF100, CONTROLLED_IMPEDANCE): 8.0 of 167.5 mm without a plane on a neighbouring layer (limit 10.0; 1.4 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMI1_HPD (LOW_SPEED_OR_DC): a reference exists under 171.0 of 175.7 mm [an HDMI hot-plug detect, a static level]
+PASS  return path under HDMI1_SCL (Default, CLOCKED_DIGITAL): 8.4 of 235.4 mm without a plane on a neighbouring layer (limit 35.3; 8.2 mm more is this net's own via anti-pads, which RET-003 judges) [an HDMI display data channel clock, I2C rates]
+PASS  return path under HDMI1_SDA (Default, CLOCKED_DIGITAL): 6.4 of 245.7 mm without a plane on a neighbouring layer (limit 36.8; 6.9 mm more is this net's own via anti-pads, which RET-003 judges; 5.1 mm more is another conductor's via anti-pad, a hole the return goes around) [the data half of the same channel]
+PASS  return path under HDMI2_CEC (LOW_SPEED_OR_DC): a reference exists under 120.4 of 124.2 mm [the HDMI consumer-electronics control line, a single wire at about 400 bit/s]
+PASS  return path under HDMI2_CK_N (DIFF100, CONTROLLED_IMPEDANCE): 4.8 of 96.7 mm without a plane on a neighbouring layer (limit 10.0; 2.2 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMI2_CK_P (DIFF100, CONTROLLED_IMPEDANCE): 7.1 of 96.7 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMI2_D0_N (DIFF100, CONTROLLED_IMPEDANCE): 1.6 of 100.9 mm without a plane on a neighbouring layer (limit 10.0; 1.0 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMI2_D0_P (DIFF100, CONTROLLED_IMPEDANCE): 0.9 of 100.9 mm without a plane on a neighbouring layer (limit 10.0; 0.8 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMI2_D1_N (DIFF100, CONTROLLED_IMPEDANCE): 9.1 of 118.8 mm without a plane on a neighbouring layer (limit 10.0; 7.8 mm more is this net's own via anti-pads, which RET-003 judges; 1.8 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMI2_D2_P (DIFF100, CONTROLLED_IMPEDANCE): 3.1 of 125.0 mm without a plane on a neighbouring layer (limit 10.0; 6.5 mm more is this net's own via anti-pads, which RET-003 judges; 0.4 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMI2_HPD (LOW_SPEED_OR_DC): a reference exists under 131.6 of 136.2 mm [an HDMI hot-plug detect, a static level]
+PASS  return path under HDMI2_SCL (Default, CLOCKED_DIGITAL): 2.0 of 135.5 mm without a plane on a neighbouring layer (limit 30.0; 7.5 mm more is this net's own via anti-pads, which RET-003 judges; 2.7 mm more is another conductor's via anti-pad, a hole the return goes around) [an HDMI display data channel clock, I2C rates]
+PASS  return path under HDMI2_SDA (Default, CLOCKED_DIGITAL): 4.7 of 140.7 mm without a plane on a neighbouring layer (limit 30.0; 8.2 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the data half of the same channel]
+PASS  return path under HDMI3_CEC (LOW_SPEED_OR_DC): a reference exists under 51.1 of 51.1 mm [the HDMI consumer-electronics control line, a single wire at about 400 bit/s]
+PASS  return path under HDMI3_CK_N (DIFF100, CONTROLLED_IMPEDANCE): 1.1 of 58.7 mm without a plane on a neighbouring layer (limit 10.0; 2.6 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMI3_CK_P (DIFF100, CONTROLLED_IMPEDANCE): 1.1 of 58.7 mm without a plane on a neighbouring layer (limit 10.0; 4.2 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMI3_D0_N (DIFF100, CONTROLLED_IMPEDANCE): 1.7 of 55.0 mm without a plane on a neighbouring layer (limit 10.0; 0.7 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMI3_D0_P (DIFF100, CONTROLLED_IMPEDANCE): 0.9 of 55.0 mm without a plane on a neighbouring layer (limit 10.0; 0.8 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMI3_D1_N (DIFF100, CONTROLLED_IMPEDANCE): 6.0 of 56.0 mm without a plane on a neighbouring layer (limit 10.0; 0.7 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMI3_D1_P (DIFF100, CONTROLLED_IMPEDANCE): 4.5 of 56.0 mm without a plane on a neighbouring layer (limit 10.0; 1.1 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMI3_D2_N (DIFF100, CONTROLLED_IMPEDANCE): 2.9 of 56.8 mm without a plane on a neighbouring layer (limit 10.0; 3.5 mm more is this net's own via anti-pads, which RET-003 judges; 1.5 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMI3_HPD (LOW_SPEED_OR_DC): a reference exists under 52.0 of 53.6 mm [an HDMI hot-plug detect, a static level]
+PASS  return path under HDMI3_SCL (Default, CLOCKED_DIGITAL): 3.6 of 77.2 mm without a plane on a neighbouring layer (limit 30.0; 8.1 mm more is this net's own via anti-pads, which RET-003 judges; 2.2 mm more is another conductor's via anti-pad, a hole the return goes around) [an HDMI display data channel clock, I2C rates]
+PASS  return path under HDMI3_SDA (Default, CLOCKED_DIGITAL): 2.0 of 84.1 mm without a plane on a neighbouring layer (limit 30.0; 6.2 mm more is this net's own via anti-pads, which RET-003 judges) [the data half of the same channel]
+PASS  return path under HDMIM_CK_N (DIFF100, CONTROLLED_IMPEDANCE): 0.0 of 25.4 mm without a plane on a neighbouring layer (limit 10.0; 2.7 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMIM_CK_P (DIFF100, CONTROLLED_IMPEDANCE): 1.0 of 25.4 mm without a plane on a neighbouring layer (limit 10.0; 1.9 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMIM_D0_N (DIFF100, CONTROLLED_IMPEDANCE): 1.6 of 22.6 mm without a plane on a neighbouring layer (limit 10.0; 1.1 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMIM_D0_P (DIFF100, CONTROLLED_IMPEDANCE): 0.9 of 22.6 mm without a plane on a neighbouring layer (limit 10.0; 2.4 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMIM_D2_P (DIFF100, CONTROLLED_IMPEDANCE): 0.0 of 34.6 mm without a plane on a neighbouring layer (limit 10.0; 0.7 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMIM_SCL (Default, CLOCKED_DIGITAL): 0.0 of 22.1 mm without a plane on a neighbouring layer (limit 30.0; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [an HDMI display data channel clock, I2C rates]
+PASS  return path under HDMIM_SDA (Default, CLOCKED_DIGITAL): 0.0 of 24.4 mm without a plane on a neighbouring layer (limit 30.0) [the data half of the same channel]
+PASS  return path under HDMIO_CK_N (DIFF100, CONTROLLED_IMPEDANCE): 2.9 of 188.9 mm without a plane on a neighbouring layer (limit 10.0; 6.1 mm more is this net's own via anti-pads, which RET-003 judges; 1.8 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMIO_D0_N (DIFF100, CONTROLLED_IMPEDANCE): 0.7 of 188.5 mm without a plane on a neighbouring layer (limit 10.0; 3.8 mm more is this net's own via anti-pads, which RET-003 judges; 2.3 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMIO_D0_P (DIFF100, CONTROLLED_IMPEDANCE): 0.0 of 188.6 mm without a plane on a neighbouring layer (limit 10.0; 4.0 mm more is this net's own via anti-pads, which RET-003 judges; 1.5 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMIO_D1_P (DIFF100, CONTROLLED_IMPEDANCE): 5.3 of 193.8 mm without a plane on a neighbouring layer (limit 10.0; 9.3 mm more is this net's own via anti-pads, which RET-003 judges; 2.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMIO_D2_N (DIFF100, CONTROLLED_IMPEDANCE): 1.2 of 180.5 mm without a plane on a neighbouring layer (limit 10.0; 1.9 mm more is this net's own via anti-pads, which RET-003 judges; 1.3 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMIO_D2_P (DIFF100, CONTROLLED_IMPEDANCE): 1.2 of 180.5 mm without a plane on a neighbouring layer (limit 10.0; 1.5 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under HDMIO_HPD (LOW_SPEED_OR_DC): a reference exists under 206.9 of 212.9 mm [an HDMI hot-plug detect, a static level]
+PASS  return path under HDMIO_SCL (Default, CLOCKED_DIGITAL): 6.2 of 220.7 mm without a plane on a neighbouring layer (limit 33.1; 4.5 mm more is this net's own via anti-pads, which RET-003 judges) [an HDMI display data channel clock, I2C rates]
+PASS  return path under HDMIO_SDA (Default, CLOCKED_DIGITAL): 24.6 of 208.1 mm without a plane on a neighbouring layer (limit 31.2; 6.5 mm more is this net's own via anti-pads, which RET-003 judges) [the data half of the same channel]
+PASS  return path under HDMI_SEL1 (LOW_SPEED_OR_DC): a reference exists under 242.3 of 257.3 mm [the display switch's select lines, static levels changed by a person or by the p]
+PASS  return path under HDMI_SEL2 (LOW_SPEED_OR_DC): a reference exists under 247.6 of 261.6 mm [the display switch's select lines, static levels changed by a person or by the p]
+PASS  return path under HDMI_SW_EN (LOW_SPEED_OR_DC): a reference exists under 45.0 of 47.7 mm [an enable, a static level with an RC on it]
+PASS  return path under HOST1_0D_N (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.6 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST1_0D_P (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.7 mm without a plane on a neighbouring layer (limit 10.0; 0.8 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST1_0RX_N (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.6 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST1_0RX_P (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.7 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST1_0TX_N (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.9 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST1_0TX_P (USB, CONTROLLED_IMPEDANCE): 7.9 of 178.1 mm without a plane on a neighbouring layer (limit 10.0; 6.3 mm more is this net's own via anti-pads, which RET-003 judges; 4.2 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST1_1D_N (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.7 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST1_1D_P (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.6 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST1_1RX_N (USB, CONTROLLED_IMPEDANCE): 0.0 of 2.0 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST1_1RX_P (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.9 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST1_1TX_N (USB, CONTROLLED_IMPEDANCE): 8.7 of 176.9 mm without a plane on a neighbouring layer (limit 10.0; 5.3 mm more is this net's own via anti-pads, which RET-003 judges; 3.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST1_1TX_P (USB, CONTROLLED_IMPEDANCE): 6.9 of 176.9 mm without a plane on a neighbouring layer (limit 10.0; 9.9 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST2_0D_N (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.6 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST2_0D_P (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.7 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST2_0RX_N (USB, CONTROLLED_IMPEDANCE): 3.1 of 134.4 mm without a plane on a neighbouring layer (limit 10.0; 2.4 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST2_0RX_P (USB, CONTROLLED_IMPEDANCE): 2.4 of 134.4 mm without a plane on a neighbouring layer (limit 10.0; 2.7 mm more is this net's own via anti-pads, which RET-003 judges; 0.7 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST2_0TX_P (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.7 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST2_1D_N (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.7 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST2_1D_P (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.6 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST2_1RX_N (USB, CONTROLLED_IMPEDANCE): 5.3 of 182.0 mm without a plane on a neighbouring layer (limit 10.0; 4.5 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST2_1RX_P (USB, CONTROLLED_IMPEDANCE): 4.5 of 182.0 mm without a plane on a neighbouring layer (limit 10.0; 6.9 mm more is this net's own via anti-pads, which RET-003 judges; 1.7 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST2_1TX_N (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.7 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST2_1TX_P (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.6 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST3_0D_N (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.6 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST3_0D_P (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.7 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST3_0RX_N (USB, CONTROLLED_IMPEDANCE): 1.1 of 146.0 mm without a plane on a neighbouring layer (limit 10.0; 0.8 mm more is this net's own via anti-pads, which RET-003 judges; 2.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST3_0RX_P (USB, CONTROLLED_IMPEDANCE): 1.4 of 146.0 mm without a plane on a neighbouring layer (limit 10.0; 1.1 mm more is this net's own via anti-pads, which RET-003 judges; 2.5 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST3_0TX_N (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.9 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST3_0TX_P (USB, CONTROLLED_IMPEDANCE): 2.5 of 157.6 mm without a plane on a neighbouring layer (limit 10.0; 8.9 mm more is this net's own via anti-pads, which RET-003 judges; 10.5 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST3_1D_N (USB, CONTROLLED_IMPEDANCE): 2.8 of 226.9 mm without a plane on a neighbouring layer (limit 11.3; 7.7 mm more is this net's own via anti-pads, which RET-003 judges; 1.2 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST3_1D_P (USB, CONTROLLED_IMPEDANCE): 0.7 of 226.9 mm without a plane on a neighbouring layer (limit 11.3; 11.0 mm more is this net's own via anti-pads, which RET-003 judges; 2.8 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+FAIL  return path under HOST3_1RX_N (USB, CONTROLLED_IMPEDANCE): 11.0 of 192.5 mm without a plane on a neighbouring layer (limit 10.0; 8.2 mm more is this net's own via anti-pads, which RET-003 judges; 5.2 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HOST3_1TX_N (USB, CONTROLLED_IMPEDANCE): 4.2 of 227.8 mm without a plane on a neighbouring layer (limit 11.4; 7.2 mm more is this net's own via anti-pads, which RET-003 judges; 6.9 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HUB1_D1TX_P (USB, CONTROLLED_IMPEDANCE): 0.0 of 31.7 mm without a plane on a neighbouring layer (limit 10.0; 2.6 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under HUB1_PWRPOL (USB, CONTROLLED_IMPEDANCE): 0.0 of 22.4 mm without a plane on a neighbouring layer (limit 10.0; 1.9 mm more is this net's own via anti-pads, which RET-003 judges; 1.9 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HUB1_RST_n (USB, CONTROLLED_IMPEDANCE): 5.8 of 42.7 mm without a plane on a neighbouring layer (limit 10.0; 3.6 mm more is this net's own via anti-pads, which RET-003 judges; 0.6 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HUB1_SMBUS_n (USB, CONTROLLED_IMPEDANCE): 0.5 of 24.0 mm without a plane on a neighbouring layer (limit 10.0; 1.9 mm more is this net's own via anti-pads, which RET-003 judges; 3.6 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HUB1_VBUS (USB, CONTROLLED_IMPEDANCE): 0.5 of 32.0 mm without a plane on a neighbouring layer (limit 10.0; 2.2 mm more is this net's own via anti-pads, which RET-003 judges; 1.7 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HUB1_XI (USB, CONTROLLED_IMPEDANCE): 0.0 of 49.0 mm without a plane on a neighbouring layer (limit 10.0; 3.4 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under HUB2_RST_n (USB, CONTROLLED_IMPEDANCE): 7.2 of 189.3 mm without a plane on a neighbouring layer (limit 10.0; 5.9 mm more is this net's own via anti-pads, which RET-003 judges; 6.7 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HUB2_VBUS (USB, CONTROLLED_IMPEDANCE): 0.0 of 34.5 mm without a plane on a neighbouring layer (limit 10.0; 4.4 mm more is this net's own via anti-pads, which RET-003 judges; 2.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HUB2_XI (USB, CONTROLLED_IMPEDANCE): 0.0 of 8.1 mm without a plane on a neighbouring layer (limit 10.0; 1.0 mm more is this net's own via anti-pads, which RET-003 judges; 2.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HUB2_XO (USB, CONTROLLED_IMPEDANCE): 0.8 of 49.1 mm without a plane on a neighbouring layer (limit 10.0; 7.8 mm more is this net's own via anti-pads, which RET-003 judges; 0.9 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HUB3_PWRPOL (USB, CONTROLLED_IMPEDANCE): 0.0 of 17.3 mm without a plane on a neighbouring layer (limit 10.0; 1.7 mm more is this net's own via anti-pads, which RET-003 judges; 1.6 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HUB3_R1 (USB, CONTROLLED_IMPEDANCE): 2.8 of 39.2 mm without a plane on a neighbouring layer (limit 10.0; 1.9 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HUB3_RST_n (USB, CONTROLLED_IMPEDANCE): 6.5 of 290.7 mm without a plane on a neighbouring layer (limit 14.5; 9.2 mm more is this net's own via anti-pads, which RET-003 judges; 5.7 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HUB3_SMBUS_n (USB, CONTROLLED_IMPEDANCE): 2.2 of 25.4 mm without a plane on a neighbouring layer (limit 10.0; 2.8 mm more is this net's own via anti-pads, which RET-003 judges; 0.3 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HUB3_VBUS (USB, CONTROLLED_IMPEDANCE): 0.0 of 2.6 mm without a plane on a neighbouring layer (limit 10.0; 0.9 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HUB3_XI (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.5 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under HUB3_XO (USB, CONTROLLED_IMPEDANCE): 1.0 of 76.3 mm without a plane on a neighbouring layer (limit 10.0; 8.6 mm more is this net's own via anti-pads, which RET-003 judges; 2.7 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HUBRST1_A (USB, CONTROLLED_IMPEDANCE): 3.7 of 93.8 mm without a plane on a neighbouring layer (limit 10.0; 9.4 mm more is this net's own via anti-pads, which RET-003 judges; 5.5 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HUBRST1_AB (USB, CONTROLLED_IMPEDANCE): 2.8 of 29.6 mm without a plane on a neighbouring layer (limit 10.0; 3.6 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under HUBRST1_B (USB, CONTROLLED_IMPEDANCE): 3.9 of 92.7 mm without a plane on a neighbouring layer (limit 10.0; 10.1 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HUBRST1_BC (USB, CONTROLLED_IMPEDANCE): 0.0 of 21.0 mm without a plane on a neighbouring layer (limit 10.0; 2.3 mm more is this net's own via anti-pads, which RET-003 judges; 0.9 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HUBRST1_C (USB, CONTROLLED_IMPEDANCE): 1.8 of 49.8 mm without a plane on a neighbouring layer (limit 10.0; 2.2 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under HUBRST1_CA (USB, CONTROLLED_IMPEDANCE): 1.6 of 18.7 mm without a plane on a neighbouring layer (limit 10.0; 2.8 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under HUBRST1_O1 (USB, CONTROLLED_IMPEDANCE): 2.5 of 7.7 mm without a plane on a neighbouring layer (limit 10.0; 2.2 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under HUBRST1_VOTE (USB, CONTROLLED_IMPEDANCE): 3.0 of 55.9 mm without a plane on a neighbouring layer (limit 10.0; 6.6 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under HUBRST2_A (USB, CONTROLLED_IMPEDANCE): 0.9 of 88.9 mm without a plane on a neighbouring layer (limit 10.0; 8.0 mm more is this net's own via anti-pads, which RET-003 judges; 3.8 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HUBRST2_AB (USB, CONTROLLED_IMPEDANCE): 3.5 of 18.8 mm without a plane on a neighbouring layer (limit 10.0; 2.3 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under HUBRST2_B (USB, CONTROLLED_IMPEDANCE): 1.0 of 64.6 mm without a plane on a neighbouring layer (limit 10.0; 10.1 mm more is this net's own via anti-pads, which RET-003 judges; 2.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HUBRST2_BC (USB, CONTROLLED_IMPEDANCE): 0.9 of 21.1 mm without a plane on a neighbouring layer (limit 10.0; 2.1 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HUBRST2_C (USB, CONTROLLED_IMPEDANCE): 5.0 of 59.2 mm without a plane on a neighbouring layer (limit 10.0; 4.9 mm more is this net's own via anti-pads, which RET-003 judges; 2.8 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HUBRST2_CA (USB, CONTROLLED_IMPEDANCE): 1.0 of 12.8 mm without a plane on a neighbouring layer (limit 10.0; 2.2 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under HUBRST2_O1 (USB, CONTROLLED_IMPEDANCE): 0.0 of 4.8 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under HUBRST2_VOTE (USB, CONTROLLED_IMPEDANCE): 0.0 of 58.9 mm without a plane on a neighbouring layer (limit 10.0; 8.3 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under HUBRST3_A (USB, CONTROLLED_IMPEDANCE): 5.3 of 91.6 mm without a plane on a neighbouring layer (limit 10.0; 8.3 mm more is this net's own via anti-pads, which RET-003 judges; 1.4 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HUBRST3_AB (USB, CONTROLLED_IMPEDANCE): 0.0 of 18.0 mm without a plane on a neighbouring layer (limit 10.0; 3.0 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under HUBRST3_B (USB, CONTROLLED_IMPEDANCE): 0.0 of 52.4 mm without a plane on a neighbouring layer (limit 10.0; 4.6 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under HUBRST3_BC (USB, CONTROLLED_IMPEDANCE): 0.0 of 16.0 mm without a plane on a neighbouring layer (limit 10.0; 3.5 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under HUBRST3_C (USB, CONTROLLED_IMPEDANCE): 0.0 of 68.4 mm without a plane on a neighbouring layer (limit 10.0; 6.9 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under HUBRST3_CA (USB, CONTROLLED_IMPEDANCE): 2.6 of 19.4 mm without a plane on a neighbouring layer (limit 10.0; 2.2 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under HUBRST3_O1 (USB, CONTROLLED_IMPEDANCE): 1.1 of 8.6 mm without a plane on a neighbouring layer (limit 10.0; 2.4 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under HUBRST3_VOTE (USB, CONTROLLED_IMPEDANCE): 2.7 of 66.3 mm without a plane on a neighbouring layer (limit 10.0; 4.8 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under IOCA_BOOT0 (LOW_SPEED_OR_DC): a reference exists under 41.0 of 41.0 mm [a controller's boot-select strap, read once at reset]
+PASS  return path under IOCA_CAN1_RX (Default, CLOCKED_DIGITAL): 0.0 of 20.6 mm without a plane on a neighbouring layer (limit 30.0; 3.2 mm more is this net's own via anti-pads, which RET-003 judges) [a controller's CAN transmit or receive pin]
+PASS  return path under IOCA_CAN1_TX (Default, CLOCKED_DIGITAL): 0.5 of 26.3 mm without a plane on a neighbouring layer (limit 30.0; 3.1 mm more is this net's own via anti-pads, which RET-003 judges) [a controller's CAN transmit or receive pin]
+PASS  return path under IOCA_CAN2_RX (Default, CLOCKED_DIGITAL): 0.0 of 37.9 mm without a plane on a neighbouring layer (limit 30.0; 1.0 mm more is this net's own via anti-pads, which RET-003 judges) [a controller's CAN transmit or receive pin]
+PASS  return path under IOCA_CAN2_TX (Default, CLOCKED_DIGITAL): 0.0 of 40.7 mm without a plane on a neighbouring layer (limit 30.0; 1.8 mm more is this net's own via anti-pads, which RET-003 judges) [a controller's CAN transmit or receive pin]
+PASS  return path under IOCA_LED_A (LOW_SPEED_OR_DC): a reference exists under 51.9 of 52.7 mm [an indicator LED anode or cathode]
+PASS  return path under IOCA_LED_K (LOW_SPEED_OR_DC): a reference exists under 6.3 of 6.3 mm [an indicator LED anode or cathode]
+PASS  return path under IOCA_RST_n (Default, CLOCKED_DIGITAL): 4.3 of 103.8 mm without a plane on a neighbouring layer (limit 30.0; 3.8 mm more is this net's own via anti-pads, which RET-003 judges) [a reset line: a logic edge whose timing is a specified property of the]
+PASS  return path under IOCA_SWCLK (Default, CLOCKED_DIGITAL): 1.7 of 26.5 mm without a plane on a neighbouring layer (limit 30.0; 1.0 mm more is this net's own via anti-pads, which RET-003 judges) [a debug clock, a few megahertz and used only with a probe attached]
+PASS  return path under IOCA_SWDIO (Default, CLOCKED_DIGITAL): 0.8 of 33.6 mm without a plane on a neighbouring layer (limit 30.0; 2.6 mm more is another conductor's via anti-pad, a hole the return goes around) [the data half of the same debug port]
+PASS  return path under IOCA_VCAP (LOW_SPEED_OR_DC): a reference exists under 67.8 of 70.2 mm [an internal-supply decoupling node, a local rail]
+PASS  return path under IOCA_XI (Default, HIGH_SPEED_DIGITAL): 3.1 of 117.6 mm without a plane on a neighbouring layer (limit 10.0; 2.9 mm more is this net's own via anti-pads, which RET-003 judges) [a crystal drive node, a continuous periodic source]
+PASS  return path under IOCA_XO (Default, HIGH_SPEED_DIGITAL): 2.3 of 108.1 mm without a plane on a neighbouring layer (limit 10.0; 6.8 mm more is this net's own via anti-pads, which RET-003 judges) [the other half of the same crystal loop]
+PASS  return path under IOCB_BOOT0 (LOW_SPEED_OR_DC): a reference exists under 33.4 of 33.4 mm [a controller's boot-select strap, read once at reset]
+PASS  return path under IOCB_CAN1_RX (Default, CLOCKED_DIGITAL): 4.0 of 19.5 mm without a plane on a neighbouring layer (limit 30.0) [a controller's CAN transmit or receive pin]
+PASS  return path under IOCB_CAN1_TX (Default, CLOCKED_DIGITAL): 1.1 of 19.4 mm without a plane on a neighbouring layer (limit 30.0; 2.6 mm more is this net's own via anti-pads, which RET-003 judges) [a controller's CAN transmit or receive pin]
+PASS  return path under IOCB_CAN2_RX (Default, CLOCKED_DIGITAL): 2.8 of 35.6 mm without a plane on a neighbouring layer (limit 30.0; 4.4 mm more is this net's own via anti-pads, which RET-003 judges) [a controller's CAN transmit or receive pin]
+PASS  return path under IOCB_LED_A (LOW_SPEED_OR_DC): a reference exists under 26.3 of 32.9 mm [an indicator LED anode or cathode]
+PASS  return path under IOCB_LED_K (LOW_SPEED_OR_DC): a reference exists under 3.4 of 9.2 mm [an indicator LED anode or cathode]
+PASS  return path under IOCB_RST_n (Default, CLOCKED_DIGITAL): 4.6 of 62.5 mm without a plane on a neighbouring layer (limit 30.0; 4.2 mm more is this net's own via anti-pads, which RET-003 judges; 1.3 mm more is another conductor's via anti-pad, a hole the return goes around) [a reset line: a logic edge whose timing is a specified property of the]
+PASS  return path under IOCB_SWCLK (Default, CLOCKED_DIGITAL): 0.8 of 18.1 mm without a plane on a neighbouring layer (limit 30.0; 1.3 mm more is this net's own via anti-pads, which RET-003 judges) [a debug clock, a few megahertz and used only with a probe attached]
+PASS  return path under IOCB_SWDIO (Default, CLOCKED_DIGITAL): 2.8 of 8.4 mm without a plane on a neighbouring layer (limit 30.0) [the data half of the same debug port]
+PASS  return path under IOCB_VCAP (LOW_SPEED_OR_DC): a reference exists under 40.1 of 41.4 mm [an internal-supply decoupling node, a local rail]
+PASS  return path under IOCB_XI (Default, HIGH_SPEED_DIGITAL): 3.6 of 73.1 mm without a plane on a neighbouring layer (limit 10.0) [a crystal drive node, a continuous periodic source]
+PASS  return path under IOCB_XO (Default, HIGH_SPEED_DIGITAL): 0.9 of 57.3 mm without a plane on a neighbouring layer (limit 10.0; 4.3 mm more is this net's own via anti-pads, which RET-003 judges) [the other half of the same crystal loop]
+PASS  return path under IOCC_BOOT0 (LOW_SPEED_OR_DC): a reference exists under 61.4 of 68.3 mm [a controller's boot-select strap, read once at reset]
+PASS  return path under IOCC_CAN1_RX (Default, CLOCKED_DIGITAL): 7.5 of 33.4 mm without a plane on a neighbouring layer (limit 30.0; 3.3 mm more is this net's own via anti-pads, which RET-003 judges) [a controller's CAN transmit or receive pin]
+PASS  return path under IOCC_CAN1_TX (Default, CLOCKED_DIGITAL): 1.8 of 17.2 mm without a plane on a neighbouring layer (limit 30.0; 2.7 mm more is this net's own via anti-pads, which RET-003 judges) [a controller's CAN transmit or receive pin]
+PASS  return path under IOCC_CAN2_RX (Default, CLOCKED_DIGITAL): 2.7 of 29.4 mm without a plane on a neighbouring layer (limit 30.0; 1.3 mm more is this net's own via anti-pads, which RET-003 judges) [a controller's CAN transmit or receive pin]
+PASS  return path under IOCC_LED_A (LOW_SPEED_OR_DC): a reference exists under 52.8 of 56.9 mm [an indicator LED anode or cathode]
+PASS  return path under IOCC_LED_K (LOW_SPEED_OR_DC): a reference exists under 9.5 of 9.5 mm [an indicator LED anode or cathode]
+PASS  return path under IOCC_RST_n (Default, CLOCKED_DIGITAL): 1.7 of 75.3 mm without a plane on a neighbouring layer (limit 30.0; 7.0 mm more is this net's own via anti-pads, which RET-003 judges) [a reset line: a logic edge whose timing is a specified property of the]
+PASS  return path under IOCC_SWCLK (Default, CLOCKED_DIGITAL): 1.2 of 19.3 mm without a plane on a neighbouring layer (limit 30.0; 1.6 mm more is this net's own via anti-pads, which RET-003 judges) [a debug clock, a few megahertz and used only with a probe attached]
+PASS  return path under IOCC_SWDIO (Default, CLOCKED_DIGITAL): 3.4 of 11.5 mm without a plane on a neighbouring layer (limit 30.0) [the data half of the same debug port]
+PASS  return path under IOCC_VCAP (LOW_SPEED_OR_DC): a reference exists under 41.5 of 45.9 mm [an internal-supply decoupling node, a local rail]
+PASS  return path under IOCC_XI (Default, HIGH_SPEED_DIGITAL): 0.0 of 87.0 mm without a plane on a neighbouring layer (limit 10.0; 9.4 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [a crystal drive node, a continuous periodic source]
+PASS  return path under IOCC_XO (Default, HIGH_SPEED_DIGITAL): 1.9 of 103.4 mm without a plane on a neighbouring layer (limit 10.0; 3.5 mm more is another conductor's via anti-pad, a hole the return goes around) [the other half of the same crystal loop]
+PASS  return path under KSZC_BST (Default, HIGH_SPEED_DIGITAL): 0.0 of 30.3 mm without a plane on a neighbouring layer (limit 10.0; 2.1 mm more is this net's own via anti-pads, which RET-003 judges) [a bootstrap node riding on a switch node]
+PASS  return path under KSZC_FB (LOW_SPEED_OR_DC): a reference exists under 37.2 of 37.2 mm [a converter's feedback divider tap, a DC level inside the control loop]
+PASS  return path under KSZC_SS (LOW_SPEED_OR_DC): a reference exists under 27.1 of 27.1 mm [a soft-start capacitor node, a ramp of milliseconds]
+PASS  return path under KSZ_LED1 (LOW_SPEED_OR_DC): a reference exists under 109.5 of 111.5 mm [a switch port's link indicator]
+PASS  return path under KSZ_LED2 (LOW_SPEED_OR_DC): a reference exists under 151.7 of 156.3 mm [a switch port's link indicator]
+PASS  return path under KSZ_LED3 (LOW_SPEED_OR_DC): a reference exists under 118.4 of 121.4 mm [a switch port's link indicator]
+PASS  return path under KSZ_LED4 (LOW_SPEED_OR_DC): a reference exists under 128.2 of 134.0 mm [a switch port's link indicator]
+PASS  return path under KSZ_RST (Default, CLOCKED_DIGITAL): 0.0 of 93.5 mm without a plane on a neighbouring layer (limit 30.0; 2.4 mm more is this net's own via anti-pads, which RET-003 judges; 1.9 mm more is another conductor's via anti-pad, a hole the return goes around) [a reset line, as above]
+PASS  return path under KSZ_RST_n (Default, CLOCKED_DIGITAL): 4.9 of 136.7 mm without a plane on a neighbouring layer (limit 30.0; 5.9 mm more is this net's own via anti-pads, which RET-003 judges; 2.1 mm more is another conductor's via anti-pad, a hole the return goes around) [a reset line: a logic edge whose timing is a specified property of the]
+PASS  return path under KSZ_XI (Default, HIGH_SPEED_DIGITAL): 1.4 of 20.1 mm without a plane on a neighbouring layer (limit 10.0; 1.7 mm more is this net's own via anti-pads, which RET-003 judges) [a crystal drive node, a continuous periodic source]
+PASS  return path under KSZ_XO (Default, HIGH_SPEED_DIGITAL): 0.8 of 22.6 mm without a plane on a neighbouring layer (limit 10.0; 3.1 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the other half of the same crystal loop]
+PASS  return path under LED_5G_A (LOW_SPEED_OR_DC): a reference exists under 33.2 of 33.2 mm [an indicator LED drive, a static level or a slow blink]
+PASS  return path under LED_5V_A1 (LOW_SPEED_OR_DC): a reference exists under 75.6 of 75.6 mm [an indicator LED drive, a static level or a slow blink]
+PASS  return path under LED_5V_A3 (LOW_SPEED_OR_DC): a reference exists under 84.0 of 85.0 mm [an indicator LED drive, a static level or a slow blink]
+PASS  return path under LED_ACT_A1 (LOW_SPEED_OR_DC): a reference exists under 79.7 of 81.0 mm [an indicator LED drive, a static level or a slow blink]
+PASS  return path under LED_ACT_A2 (LOW_SPEED_OR_DC): a reference exists under 95.2 of 95.2 mm [an indicator LED drive, a static level or a slow blink]
+PASS  return path under LED_KSZ_A1 (LOW_SPEED_OR_DC): a reference exists under 17.5 of 17.5 mm [an indicator LED drive, a static level or a slow blink]
+PASS  return path under LED_KSZ_A2 (LOW_SPEED_OR_DC): a reference exists under 21.6 of 22.4 mm [an indicator LED drive, a static level or a slow blink]
+PASS  return path under LED_KSZ_A3 (LOW_SPEED_OR_DC): a reference exists under 16.3 of 17.1 mm [an indicator LED drive, a static level or a slow blink]
+PASS  return path under LED_KSZ_A4 (LOW_SPEED_OR_DC): a reference exists under 30.0 of 30.0 mm [an indicator LED drive, a static level or a slow blink]
+PASS  return path under LED_NV_A1 (LOW_SPEED_OR_DC): a reference exists under 9.3 of 9.3 mm [an indicator LED drive, a static level or a slow blink]
+PASS  return path under LED_NV_A2 (LOW_SPEED_OR_DC): a reference exists under 13.1 of 13.1 mm [an indicator LED drive, a static level or a slow blink]
+PASS  return path under LED_NV_A3 (LOW_SPEED_OR_DC): a reference exists under 9.9 of 9.9 mm [an indicator LED drive, a static level or a slow blink]
+PASS  return path under LED_PST0_A1 (LOW_SPEED_OR_DC): a reference exists under 54.3 of 54.3 mm [an indicator LED drive, a static level or a slow blink]
+PASS  return path under LED_PST0_A3 (LOW_SPEED_OR_DC): a reference exists under 67.7 of 67.7 mm [an indicator LED drive, a static level or a slow blink]
+PASS  return path under LED_PST1_A3 (LOW_SPEED_OR_DC): a reference exists under 54.4 of 56.6 mm [an indicator LED drive, a static level or a slow blink]
+PASS  return path under LED_PWR_A1 (LOW_SPEED_OR_DC): a reference exists under 71.5 of 71.5 mm [an indicator LED drive, a static level or a slow blink]
+PASS  return path under LED_PWR_A3 (LOW_SPEED_OR_DC): a reference exists under 81.8 of 81.8 mm [an indicator LED drive, a static level or a slow blink]
+PASS  return path under LED_WIFI2_A (LOW_SPEED_OR_DC): a reference exists under 6.2 of 6.2 mm [an indicator LED drive, a static level or a slow blink]
+PASS  return path under LED_ZBAG_A (LOW_SPEED_OR_DC): a reference exists under 218.4 of 223.3 mm [an indicator LED drive, a static level or a slow blink]
+PASS  return path under LED_ZBAR_A (LOW_SPEED_OR_DC): a reference exists under 208.9 of 214.1 mm [an indicator LED drive, a static level or a slow blink]
+PASS  return path under LED_ZBBG_A (LOW_SPEED_OR_DC): a reference exists under 173.6 of 178.5 mm [an indicator LED drive, a static level or a slow blink]
+PASS  return path under LED_ZBBR_A (LOW_SPEED_OR_DC): a reference exists under 187.0 of 189.0 mm [an indicator LED drive, a static level or a slow blink]
+PASS  return path under LED_nACT2 (LOW_SPEED_OR_DC): a reference exists under 119.3 of 119.3 mm [an indicator LED drive, a static level or a slow blink]
+PASS  return path under LED_nACT3 (LOW_SPEED_OR_DC): a reference exists under 185.8 of 185.8 mm [an indicator LED drive, a static level or a slow blink]
+PASS  return path under LED_nPWR1 (LOW_SPEED_OR_DC): a reference exists under 112.5 of 115.3 mm [an indicator LED drive, a static level or a slow blink]
+PASS  return path under LIME_DM (USB, CONTROLLED_IMPEDANCE): 0.9 of 81.2 mm without a plane on a neighbouring layer (limit 10.0; 4.3 mm more is this net's own via anti-pads, which RET-003 judges; 2.6 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under LIME_DP (USB, CONTROLLED_IMPEDANCE): 2.0 of 90.1 mm without a plane on a neighbouring layer (limit 10.0; 4.8 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under LIME_EN (LOW_SPEED_OR_DC): a reference exists under 237.2 of 241.2 mm [an enable, a static level with an RC on it]
+PASS  return path under LIME_EN_A (LOW_SPEED_OR_DC): a reference exists under 1.1 of 1.1 mm [the software-defined radio's enable indicator anode, a static level]
+PASS  return path under LIME_FLT (LOW_SPEED_OR_DC): a reference exists under 261.3 of 265.3 mm [a fault flag, an open-drain static level]
+PASS  return path under LIME_HW_EN (LOW_SPEED_OR_DC): a reference exists under 67.0 of 67.0 mm [an enable, a static level with an RC on it]
+PASS  return path under LIME_SSRX_N (USB, CONTROLLED_IMPEDANCE): 6.1 of 268.5 mm without a plane on a neighbouring layer (limit 13.4; 3.9 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under LIME_SSRX_P (USB, CONTROLLED_IMPEDANCE): 7.2 of 268.5 mm without a plane on a neighbouring layer (limit 13.4; 4.0 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under LIME_SSTX_N (USB, CONTROLLED_IMPEDANCE): 3.3 of 263.8 mm without a plane on a neighbouring layer (limit 13.2; 7.1 mm more is this net's own via anti-pads, which RET-003 judges; 2.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under LIME_SSTX_P (USB, CONTROLLED_IMPEDANCE): 2.0 of 263.8 mm without a plane on a neighbouring layer (limit 13.2; 6.3 mm more is this net's own via anti-pads, which RET-003 judges; 1.8 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under LIME_SW_EN (LOW_SPEED_OR_DC): a reference exists under 66.1 of 66.1 mm [an enable, a static level with an RC on it]
+PASS  return path under LORA_ANT (Default, HIGH_SPEED_DIGITAL): 1.0 of 63.4 mm without a plane on a neighbouring layer (limit 10.0) [an antenna feed, radio frequency by definition]
+PASS  return path under LORA_ON (LOW_SPEED_OR_DC): a reference exists under 62.8 of 64.5 mm [a radio module's power-on control, a static level]
+PASS  return path under LORA_RXEN (LOW_SPEED_OR_DC): a reference exists under 78.2 of 82.2 mm [a radio module's receive enable, a static level held for a whole packet]
+PASS  return path under LORA_TXEN (LOW_SPEED_OR_DC): a reference exists under 77.9 of 80.6 mm [a radio module's transmit enable, the same]
+PASS  return path under MCT3 (LOW_SPEED_OR_DC): a reference exists under 23.0 of 23.0 mm [a magnetics centre tap, a DC reference node]
+PASS  return path under MCT4 (LOW_SPEED_OR_DC): a reference exists under 23.4 of 23.4 mm [a magnetics centre tap, a DC reference node]
+PASS  return path under MUX1_A1N (USB, CONTROLLED_IMPEDANCE): 1.9 of 67.8 mm without a plane on a neighbouring layer (limit 10.0; 5.0 mm more is this net's own via anti-pads, which RET-003 judges; 4.2 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under MUX1_A1P (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.7 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under MUX2_A1N (USB, CONTROLLED_IMPEDANCE): 0.0 of 18.7 mm without a plane on a neighbouring layer (limit 10.0; 3.3 mm more is this net's own via anti-pads, which RET-003 judges; 2.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under MUX2_A1P (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.7 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under MUX3_A1N (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.9 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under MUX3_A1P (USB, CONTROLLED_IMPEDANCE): 2.9 of 71.7 mm without a plane on a neighbouring layer (limit 10.0; 5.5 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under NVME1_CLK_P (USB, CONTROLLED_IMPEDANCE): 2.1 of 107.9 mm without a plane on a neighbouring layer (limit 10.0; 5.4 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under NVME1_RX_N (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.0 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under NVME1_RX_P (USB, CONTROLLED_IMPEDANCE): 0.0 of 93.6 mm without a plane on a neighbouring layer (limit 10.0; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under NVME1_TX_N (USB, CONTROLLED_IMPEDANCE): 0.0 of 94.5 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under NVME1_TX_P (USB, CONTROLLED_IMPEDANCE): 0.0 of 93.9 mm without a plane on a neighbouring layer (limit 10.0; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under NVME1_nLED (LOW_SPEED_OR_DC): a reference exists under 129.3 of 132.3 mm [an active-low indicator LED drive]
+PASS  return path under NVME2_CLKREQ_n (LOW_SPEED_OR_DC): a reference exists under 62.3 of 62.3 mm [a PCIe clock request, an open-drain static level in this design]
+PASS  return path under NVME2_CLK_N (USB, CONTROLLED_IMPEDANCE): 6.2 of 105.7 mm without a plane on a neighbouring layer (limit 10.0; 0.9 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under NVME2_CLK_P (USB, CONTROLLED_IMPEDANCE): 2.4 of 83.3 mm without a plane on a neighbouring layer (limit 10.0; 0.9 mm more is this net's own via anti-pads, which RET-003 judges; 0.9 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under NVME2_DEVSLP (LOW_SPEED_OR_DC): a reference exists under 41.6 of 41.6 mm [an NVMe device-sleep pin, a static level]
+PASS  return path under NVME2_RX_N (USB, CONTROLLED_IMPEDANCE): 4.3 of 78.8 mm without a plane on a neighbouring layer (limit 10.0; 3.1 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under NVME2_RX_P (USB, CONTROLLED_IMPEDANCE): 2.5 of 78.8 mm without a plane on a neighbouring layer (limit 10.0; 8.6 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under NVME2_TX_N (USB, CONTROLLED_IMPEDANCE): 4.8 of 57.0 mm without a plane on a neighbouring layer (limit 10.0; 0.8 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under NVME2_TX_P (USB, CONTROLLED_IMPEDANCE): 3.1 of 56.7 mm without a plane on a neighbouring layer (limit 10.0; 0.8 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under NVME2_nLED (LOW_SPEED_OR_DC): a reference exists under 53.1 of 53.1 mm [an active-low indicator LED drive]
+PASS  return path under NVME3_CLKREQ_n (LOW_SPEED_OR_DC): a reference exists under 102.6 of 104.2 mm [a PCIe clock request, an open-drain static level in this design]
+PASS  return path under NVME3_CLK_N (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.8 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under NVME3_CLK_P (USB, CONTROLLED_IMPEDANCE): 3.4 of 65.1 mm without a plane on a neighbouring layer (limit 10.0; 1.5 mm more is this net's own via anti-pads, which RET-003 judges; 3.4 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under NVME3_DEVSLP (LOW_SPEED_OR_DC): a reference exists under 171.1 of 177.6 mm [an NVMe device-sleep pin, a static level]
+PASS  return path under NVME3_RX_N (USB, CONTROLLED_IMPEDANCE): 0.8 of 66.0 mm without a plane on a neighbouring layer (limit 10.0; 2.9 mm more is this net's own via anti-pads, which RET-003 judges; 1.1 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under NVME3_RX_P (USB, CONTROLLED_IMPEDANCE): 1.2 of 63.5 mm without a plane on a neighbouring layer (limit 10.0; 1.5 mm more is this net's own via anti-pads, which RET-003 judges; 2.7 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under NVME3_TX_N (USB, CONTROLLED_IMPEDANCE): 1.6 of 56.8 mm without a plane on a neighbouring layer (limit 10.0; 0.8 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under NVME3_TX_P (USB, CONTROLLED_IMPEDANCE): 0.7 of 56.8 mm without a plane on a neighbouring layer (limit 10.0; 1.3 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under NVME3_nLED (LOW_SPEED_OR_DC): a reference exists under 168.8 of 174.4 mm [an active-low indicator LED drive]
+PASS  return path under PCIE1_RCLK0_N (USB, CONTROLLED_IMPEDANCE): 0.0 of 12.8 mm without a plane on a neighbouring layer (limit 10.0; 2.6 mm more is this net's own via anti-pads, which RET-003 judges; 0.4 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE1_RCLK0_P (USB, CONTROLLED_IMPEDANCE): 2.2 of 12.8 mm without a plane on a neighbouring layer (limit 10.0; 0.9 mm more is this net's own via anti-pads, which RET-003 judges; 2.5 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE1_RXSW_N (USB, CONTROLLED_IMPEDANCE): 1.2 of 32.5 mm without a plane on a neighbouring layer (limit 10.0; 2.8 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE1_RXSW_P (USB, CONTROLLED_IMPEDANCE): 1.1 of 32.5 mm without a plane on a neighbouring layer (limit 10.0; 2.0 mm more is this net's own via anti-pads, which RET-003 judges; 1.2 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE1_RX_N (USB, CONTROLLED_IMPEDANCE): 0.0 of 128.1 mm without a plane on a neighbouring layer (limit 10.0; 1.5 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE1_RX_P (USB, CONTROLLED_IMPEDANCE): 0.0 of 128.1 mm without a plane on a neighbouring layer (limit 10.0; 1.5 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE1_nRST (USB, CONTROLLED_IMPEDANCE): 0.0 of 144.4 mm without a plane on a neighbouring layer (limit 10.0; 6.8 mm more is this net's own via anti-pads, which RET-003 judges; 0.7 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE1_nWAKE (USB, CONTROLLED_IMPEDANCE): 0.9 of 76.2 mm without a plane on a neighbouring layer (limit 10.0; 3.5 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE2_CLK_N (USB, CONTROLLED_IMPEDANCE): 0.0 of 2.7 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE2_CLK_P (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.8 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE2_RCLK0_N (USB, CONTROLLED_IMPEDANCE): 1.4 of 14.7 mm without a plane on a neighbouring layer (limit 10.0; 1.3 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE2_RCLK0_P (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.0 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE2_RST1_n (USB, CONTROLLED_IMPEDANCE): 5.3 of 68.7 mm without a plane on a neighbouring layer (limit 10.0; 1.2 mm more is this net's own via anti-pads, which RET-003 judges; 2.5 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE2_RST2_n (USB, CONTROLLED_IMPEDANCE): 0.0 of 2.6 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE2_RXSW_N (USB, CONTROLLED_IMPEDANCE): 1.0 of 31.9 mm without a plane on a neighbouring layer (limit 10.0; 2.9 mm more is this net's own via anti-pads, which RET-003 judges; 1.8 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE2_nRST (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.8 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE2_nWAKE (USB, CONTROLLED_IMPEDANCE): 1.9 of 44.5 mm without a plane on a neighbouring layer (limit 10.0; 2.8 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE3_CLK_N (USB, CONTROLLED_IMPEDANCE): 7.7 of 146.9 mm without a plane on a neighbouring layer (limit 10.0; 1.3 mm more is this net's own via anti-pads, which RET-003 judges; 1.5 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE3_CLK_P (USB, CONTROLLED_IMPEDANCE): 6.2 of 146.9 mm without a plane on a neighbouring layer (limit 10.0; 5.0 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE3_RCLK0_N (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.0 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE3_RCLK0_P (USB, CONTROLLED_IMPEDANCE): 0.0 of 10.4 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE3_RST1_n (USB, CONTROLLED_IMPEDANCE): 6.2 of 76.9 mm without a plane on a neighbouring layer (limit 10.0; 3.9 mm more is this net's own via anti-pads, which RET-003 judges; 6.2 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE3_RST2_n (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.0 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE3_RX_P (USB, CONTROLLED_IMPEDANCE): 0.0 of 148.3 mm without a plane on a neighbouring layer (limit 10.0; 4.8 mm more is this net's own via anti-pads, which RET-003 judges; 5.5 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE3_TX_N (USB, CONTROLLED_IMPEDANCE): 3.7 of 157.8 mm without a plane on a neighbouring layer (limit 10.0; 10.2 mm more is this net's own via anti-pads, which RET-003 judges; 3.4 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE3_nWAKE (USB, CONTROLLED_IMPEDANCE): 2.8 of 218.0 mm without a plane on a neighbouring layer (limit 10.9; 9.6 mm more is this net's own via anti-pads, which RET-003 judges; 2.8 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE_PWR_EN2 (USB, CONTROLLED_IMPEDANCE): 1.5 of 27.1 mm without a plane on a neighbouring layer (limit 10.0; 3.5 mm more is this net's own via anti-pads, which RET-003 judges; 3.1 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under PCIE_PWR_EN3 (USB, CONTROLLED_IMPEDANCE): 2.6 of 20.0 mm without a plane on a neighbouring layer (limit 10.0; 0.6 mm more is this net's own via anti-pads, which RET-003 judges; 2.7 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under PI_KILL (LOW_SPEED_OR_DC): a reference exists under 466.3 of 474.2 mm [a shutdown-request or kill line to a module, a static level]
+PASS  return path under PI_KILL_CM1 (LOW_SPEED_OR_DC): a reference exists under 236.4 of 238.4 mm [a shutdown-request or kill line to a module, a static level]
+PASS  return path under PI_KILL_CM2 (LOW_SPEED_OR_DC): a reference exists under 79.8 of 80.2 mm [a shutdown-request or kill line to a module, a static level]
+PASS  return path under PI_KILL_CM3 (LOW_SPEED_OR_DC): a reference exists under 252.6 of 254.0 mm [a shutdown-request or kill line to a module, a static level]
+PASS  return path under PI_SHDN_REQ (LOW_SPEED_OR_DC): a reference exists under 38.2 of 41.5 mm [a shutdown-request or kill line to a module, a static level]
+PASS  return path under PI_SHDN_REQ_CM1 (LOW_SPEED_OR_DC): a reference exists under 54.0 of 54.0 mm [a shutdown-request or kill line to a module, a static level]
+PASS  return path under PI_SHDN_REQ_CM3 (LOW_SPEED_OR_DC): a reference exists under 175.3 of 176.2 mm [a shutdown-request or kill line to a module, a static level]
+PASS  return path under Q1B (LOW_SPEED_OR_DC): a reference exists under 60.1 of 61.2 mm [a transistor node in a level shifter, a static level]
+PASS  return path under Q1C (LOW_SPEED_OR_DC): a reference exists under 60.5 of 61.5 mm [a transistor node in a level shifter, a static level]
+PASS  return path under Q3B (LOW_SPEED_OR_DC): a reference exists under 81.6 of 81.6 mm [a transistor node in a level shifter, a static level]
+PASS  return path under Q3C (LOW_SPEED_OR_DC): a reference exists under 76.9 of 77.8 mm [a transistor node in a level shifter, a static level]
+PASS  return path under QMX_DM (USB, CONTROLLED_IMPEDANCE): 0.0 of 3.0 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under QMX_DP (USB, CONTROLLED_IMPEDANCE): 4.9 of 176.5 mm without a plane on a neighbouring layer (limit 10.0; 9.5 mm more is this net's own via anti-pads, which RET-003 judges; 6.5 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under RB_3V3 (LOW_SPEED_OR_DC): a reference exists under 93.6 of 94.6 mm [a satellite modem supply node]
+PASS  return path under RB_CTRL (LOW_SPEED_OR_DC): a reference exists under 244.5 of 255.9 mm [a module control line, a static level]
+PASS  return path under RB_DM (USB, CONTROLLED_IMPEDANCE): 0.0 of 2.4 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under RB_DP (USB, CONTROLLED_IMPEDANCE): 0.0 of 3.2 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under RB_EN (LOW_SPEED_OR_DC): a reference exists under 190.1 of 199.7 mm [an enable, a static level with an RC on it]
+PASS  return path under RB_FLT (LOW_SPEED_OR_DC): a reference exists under 23.1 of 25.6 mm [a fault flag, an open-drain static level]
+PASS  return path under RB_RST (Default, CLOCKED_DIGITAL): 2.0 of 36.1 mm without a plane on a neighbouring layer (limit 30.0; 0.9 mm more is this net's own via anti-pads, which RET-003 judges) [a reset line, as above]
+PASS  return path under RB_RXD (Default, CLOCKED_DIGITAL): 2.3 of 106.2 mm without a plane on a neighbouring layer (limit 30.0; 1.3 mm more is this net's own via anti-pads, which RET-003 judges; 3.7 mm more is another conductor's via anti-pad, a hole the return goes around) [a UART receive line to a module]
+PASS  return path under RB_SW_EN (LOW_SPEED_OR_DC): a reference exists under 80.6 of 80.6 mm [an enable, a static level with an RC on it]
+PASS  return path under RB_TXD (Default, CLOCKED_DIGITAL): 0.7 of 110.8 mm without a plane on a neighbouring layer (limit 30.0; 1.5 mm more is this net's own via anti-pads, which RET-003 judges) [a UART transmit line to a module]
+PASS  return path under RB_XMTG (LOW_SPEED_OR_DC): a reference exists under 297.7 of 303.9 mm [a satellite modem's transmit-gate flag, a static level]
+PASS  return path under S1A_BOOT (Default, HIGH_SPEED_DIGITAL): 0.0 of 26.9 mm without a plane on a neighbouring layer (limit 10.0; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [a bootstrap node riding on a switch node]
+PASS  return path under S1A_COMP (LOW_SPEED_OR_DC): a reference exists under 3.8 of 3.8 mm [an error amplifier's compensation node]
+PASS  return path under S1A_COMPC (LOW_SPEED_OR_DC): a reference exists under 7.3 of 7.3 mm [the second element of the same compensation network]
+PASS  return path under S1A_FB (LOW_SPEED_OR_DC): a reference exists under 11.4 of 12.0 mm [a converter's feedback divider tap, a DC level inside the control loop]
+PASS  return path under S1A_RT (LOW_SPEED_OR_DC): a reference exists under 15.4 of 15.4 mm [a frequency-setting resistor node, a DC bias]
+PASS  return path under S1B_BOOT (Default, HIGH_SPEED_DIGITAL): 0.0 of 17.9 mm without a plane on a neighbouring layer (limit 10.0; 2.5 mm more is this net's own via anti-pads, which RET-003 judges) [a bootstrap node riding on a switch node]
+PASS  return path under S1B_COMP (LOW_SPEED_OR_DC): a reference exists under 46.9 of 48.9 mm [an error amplifier's compensation node]
+PASS  return path under S1B_COMPC (LOW_SPEED_OR_DC): a reference exists under 34.1 of 34.1 mm [the second element of the same compensation network]
+PASS  return path under S1B_FB (LOW_SPEED_OR_DC): a reference exists under 7.3 of 8.0 mm [a converter's feedback divider tap, a DC level inside the control loop]
+PASS  return path under S1B_RT (LOW_SPEED_OR_DC): a reference exists under 18.8 of 18.8 mm [a frequency-setting resistor node, a DC bias]
+PASS  return path under S1C_BST (Default, HIGH_SPEED_DIGITAL): 1.2 of 54.6 mm without a plane on a neighbouring layer (limit 10.0; 2.1 mm more is this net's own via anti-pads, which RET-003 judges) [a bootstrap node riding on a switch node]
+PASS  return path under S1C_FB (LOW_SPEED_OR_DC): a reference exists under 41.6 of 41.6 mm [a converter's feedback divider tap, a DC level inside the control loop]
+PASS  return path under S1C_SS (LOW_SPEED_OR_DC): a reference exists under 15.4 of 15.4 mm [a soft-start capacitor node, a ramp of milliseconds]
+PASS  return path under S1D_BST (Default, HIGH_SPEED_DIGITAL): 0.0 of 13.5 mm without a plane on a neighbouring layer (limit 10.0; 0.8 mm more is this net's own via anti-pads, which RET-003 judges) [a bootstrap node riding on a switch node]
+PASS  return path under S1D_FB (LOW_SPEED_OR_DC): a reference exists under 34.9 of 36.0 mm [a converter's feedback divider tap, a DC level inside the control loop]
+PASS  return path under S1D_SS (LOW_SPEED_OR_DC): a reference exists under 17.1 of 17.1 mm [a soft-start capacitor node, a ramp of milliseconds]
+PASS  return path under S1_EEPD (LOW_SPEED_OR_DC): a reference exists under 41.4 of 41.4 mm [an EEPROM-present strap, static]
+PASS  return path under S1_JTAGL (LOW_SPEED_OR_DC): a reference exists under 71.7 of 71.7 mm [an unused JTAG pin strapped low]
+PASS  return path under S1_PRSNT3 (LOW_SPEED_OR_DC): a reference exists under 42.4 of 43.4 mm [a presence-detect pin, a static level]
+PASS  return path under S1_PST0 (LOW_SPEED_OR_DC): a reference exists under 22.8 of 25.2 mm [a port-status output driving an indicator]
+PASS  return path under S1_PST1 (LOW_SPEED_OR_DC): a reference exists under 30.3 of 30.3 mm [a port-status output driving an indicator]
+PASS  return path under S1_PWRSAV (LOW_SPEED_OR_DC): a reference exists under 40.6 of 43.2 mm [a power-saving configuration strap, static]
+PASS  return path under S1_REXT (LOW_SPEED_OR_DC): a reference exists under 69.9 of 70.6 mm [an external-resistor bias node, DC]
+PASS  return path under S1_SLOTCLK (LOW_SPEED_OR_DC): a reference exists under 57.9 of 58.7 mm [a slot-clock configuration strap, static]
+PASS  return path under S1_SLOTIMP (LOW_SPEED_OR_DC): a reference exists under 30.9 of 30.9 mm [a slot-implemented configuration strap, static]
+PASS  return path under S1_SMBCLK (Default, CLOCKED_DIGITAL): 1.3 of 58.6 mm without a plane on a neighbouring layer (limit 30.0; 7.5 mm more is this net's own via anti-pads, which RET-003 judges) [an SMBus clock at 100 kHz]
+PASS  return path under S1_SMBDAT (Default, CLOCKED_DIGITAL): 0.0 of 72.4 mm without a plane on a neighbouring layer (limit 30.0; 6.5 mm more is this net's own via anti-pads, which RET-003 judges; 1.9 mm more is another conductor's via anti-pad, a hole the return goes around) [the data half of the same SMBus]
+PASS  return path under S1_TEST1 (LOW_SPEED_OR_DC): a reference exists under 72.2 of 72.2 mm [a test pin strapped to a static level]
+PASS  return path under S1_TESTL (LOW_SPEED_OR_DC): a reference exists under 53.9 of 60.3 mm [a test pin strapped to a static level]
+PASS  return path under S2A_BOOT (Default, HIGH_SPEED_DIGITAL): 0.0 of 49.1 mm without a plane on a neighbouring layer (limit 10.0; 3.2 mm more is this net's own via anti-pads, which RET-003 judges; 3.0 mm more is another conductor's via anti-pad, a hole the return goes around) [a bootstrap node riding on a switch node]
+PASS  return path under S2A_COMP (LOW_SPEED_OR_DC): a reference exists under 15.8 of 15.8 mm [an error amplifier's compensation node]
+PASS  return path under S2A_COMPC (LOW_SPEED_OR_DC): a reference exists under 17.6 of 17.6 mm [the second element of the same compensation network]
+PASS  return path under S2A_FB (LOW_SPEED_OR_DC): a reference exists under 29.3 of 29.3 mm [a converter's feedback divider tap, a DC level inside the control loop]
+PASS  return path under S2A_RT (LOW_SPEED_OR_DC): a reference exists under 12.8 of 12.8 mm [a frequency-setting resistor node, a DC bias]
+PASS  return path under S2B_BOOT (Default, HIGH_SPEED_DIGITAL): 0.0 of 45.8 mm without a plane on a neighbouring layer (limit 10.0; 4.3 mm more is this net's own via anti-pads, which RET-003 judges) [a bootstrap node riding on a switch node]
+PASS  return path under S2B_COMP (LOW_SPEED_OR_DC): a reference exists under 16.4 of 16.4 mm [an error amplifier's compensation node]
+PASS  return path under S2B_COMPC (LOW_SPEED_OR_DC): a reference exists under 42.2 of 42.2 mm [the second element of the same compensation network]
+PASS  return path under S2B_FB (LOW_SPEED_OR_DC): a reference exists under 11.1 of 11.1 mm [a converter's feedback divider tap, a DC level inside the control loop]
+PASS  return path under S2B_RT (LOW_SPEED_OR_DC): a reference exists under 26.7 of 26.7 mm [a frequency-setting resistor node, a DC bias]
+PASS  return path under S2C_BST (Default, HIGH_SPEED_DIGITAL): 0.0 of 1.6 mm without a plane on a neighbouring layer (limit 10.0) [a bootstrap node riding on a switch node]
+PASS  return path under S2C_FB (LOW_SPEED_OR_DC): a reference exists under 4.3 of 4.3 mm [a converter's feedback divider tap, a DC level inside the control loop]
+PASS  return path under S2C_SS (LOW_SPEED_OR_DC): a reference exists under 1.6 of 1.6 mm [a soft-start capacitor node, a ramp of milliseconds]
+PASS  return path under S2D_BST (Default, HIGH_SPEED_DIGITAL): 0.0 of 1.6 mm without a plane on a neighbouring layer (limit 10.0) [a bootstrap node riding on a switch node]
+PASS  return path under S2D_FB (LOW_SPEED_OR_DC): a reference exists under 1.7 of 1.7 mm [a converter's feedback divider tap, a DC level inside the control loop]
+PASS  return path under S2D_SS (LOW_SPEED_OR_DC): a reference exists under 1.6 of 1.6 mm [a soft-start capacitor node, a ramp of milliseconds]
+PASS  return path under S2_EEPD (LOW_SPEED_OR_DC): a reference exists under 27.0 of 27.7 mm [an EEPROM-present strap, static]
+PASS  return path under S2_IREF (LOW_SPEED_OR_DC): a reference exists under 61.5 of 63.4 mm [a reference-current resistor node, a DC bias]
+PASS  return path under S2_JTAGL (LOW_SPEED_OR_DC): a reference exists under 43.8 of 43.8 mm [an unused JTAG pin strapped low]
+PASS  return path under S2_PRSNT3 (LOW_SPEED_OR_DC): a reference exists under 21.4 of 23.1 mm [a presence-detect pin, a static level]
+PASS  return path under S2_PST0 (LOW_SPEED_OR_DC): a reference exists under 1.8 of 1.8 mm [a port-status output driving an indicator]
+PASS  return path under S2_PST1 (LOW_SPEED_OR_DC): a reference exists under 1.0 of 1.0 mm [a port-status output driving an indicator]
+PASS  return path under S2_PWRSAV (LOW_SPEED_OR_DC): a reference exists under 26.1 of 32.4 mm [a power-saving configuration strap, static]
+PASS  return path under S2_SLOTCLK (LOW_SPEED_OR_DC): a reference exists under 64.1 of 65.9 mm [a slot-clock configuration strap, static]
+PASS  return path under S2_SLOTIMP (LOW_SPEED_OR_DC): a reference exists under 66.7 of 66.7 mm [a slot-implemented configuration strap, static]
+PASS  return path under S2_SMBCLK (Default, CLOCKED_DIGITAL): 0.0 of 1.0 mm without a plane on a neighbouring layer (limit 30.0) [an SMBus clock at 100 kHz]
+PASS  return path under S2_SMBDAT (Default, CLOCKED_DIGITAL): 3.1 of 39.1 mm without a plane on a neighbouring layer (limit 30.0; 3.4 mm more is this net's own via anti-pads, which RET-003 judges) [the data half of the same SMBus]
+PASS  return path under S2_TEST1 (LOW_SPEED_OR_DC): a reference exists under 44.0 of 46.5 mm [a test pin strapped to a static level]
+PASS  return path under S2_TESTL (LOW_SPEED_OR_DC): a reference exists under 36.7 of 39.1 mm [a test pin strapped to a static level]
+PASS  return path under S3A_BOOT (Default, HIGH_SPEED_DIGITAL): 0.0 of 27.5 mm without a plane on a neighbouring layer (limit 10.0) [a bootstrap node riding on a switch node]
+PASS  return path under S3A_COMP (LOW_SPEED_OR_DC): a reference exists under 8.7 of 8.7 mm [an error amplifier's compensation node]
+PASS  return path under S3A_COMPC (LOW_SPEED_OR_DC): a reference exists under 10.9 of 10.9 mm [the second element of the same compensation network]
+PASS  return path under S3A_FB (LOW_SPEED_OR_DC): a reference exists under 16.5 of 16.5 mm [a converter's feedback divider tap, a DC level inside the control loop]
+PASS  return path under S3A_RT (LOW_SPEED_OR_DC): a reference exists under 6.3 of 6.3 mm [a frequency-setting resistor node, a DC bias]
+PASS  return path under S3B_BOOT (Default, HIGH_SPEED_DIGITAL): 0.0 of 18.5 mm without a plane on a neighbouring layer (limit 10.0; 3.3 mm more is this net's own via anti-pads, which RET-003 judges) [a bootstrap node riding on a switch node]
+PASS  return path under S3B_COMP (LOW_SPEED_OR_DC): a reference exists under 64.8 of 64.8 mm [an error amplifier's compensation node]
+PASS  return path under S3B_COMPC (LOW_SPEED_OR_DC): a reference exists under 35.4 of 35.4 mm [the second element of the same compensation network]
+PASS  return path under S3B_FB (LOW_SPEED_OR_DC): a reference exists under 13.1 of 13.1 mm [a converter's feedback divider tap, a DC level inside the control loop]
+PASS  return path under S3B_RT (LOW_SPEED_OR_DC): a reference exists under 16.7 of 18.0 mm [a frequency-setting resistor node, a DC bias]
+PASS  return path under S3C_BST (Default, HIGH_SPEED_DIGITAL): 0.0 of 53.7 mm without a plane on a neighbouring layer (limit 10.0; 2.3 mm more is this net's own via anti-pads, which RET-003 judges; 3.1 mm more is another conductor's via anti-pad, a hole the return goes around) [a bootstrap node riding on a switch node]
+PASS  return path under S3C_FB (LOW_SPEED_OR_DC): a reference exists under 34.4 of 35.4 mm [a converter's feedback divider tap, a DC level inside the control loop]
+PASS  return path under S3C_SS (LOW_SPEED_OR_DC): a reference exists under 15.4 of 15.4 mm [a soft-start capacitor node, a ramp of milliseconds]
+PASS  return path under S3D_BST (Default, HIGH_SPEED_DIGITAL): 1.0 of 12.2 mm without a plane on a neighbouring layer (limit 10.0; 0.5 mm more is this net's own via anti-pads, which RET-003 judges) [a bootstrap node riding on a switch node]
+PASS  return path under S3D_FB (LOW_SPEED_OR_DC): a reference exists under 36.0 of 36.0 mm [a converter's feedback divider tap, a DC level inside the control loop]
+PASS  return path under S3D_SS (LOW_SPEED_OR_DC): a reference exists under 17.5 of 18.5 mm [a soft-start capacitor node, a ramp of milliseconds]
+PASS  return path under S3_EEPD (LOW_SPEED_OR_DC): a reference exists under 49.9 of 51.1 mm [an EEPROM-present strap, static]
+PASS  return path under S3_JTAGL (LOW_SPEED_OR_DC): a reference exists under 71.2 of 72.0 mm [an unused JTAG pin strapped low]
+PASS  return path under S3_PRSNT3 (LOW_SPEED_OR_DC): a reference exists under 44.6 of 45.9 mm [a presence-detect pin, a static level]
+PASS  return path under S3_PST0 (LOW_SPEED_OR_DC): a reference exists under 27.2 of 28.4 mm [a port-status output driving an indicator]
+PASS  return path under S3_PST1 (LOW_SPEED_OR_DC): a reference exists under 30.6 of 32.5 mm [a port-status output driving an indicator]
+PASS  return path under S3_PWRSAV (LOW_SPEED_OR_DC): a reference exists under 54.0 of 54.9 mm [a power-saving configuration strap, static]
+PASS  return path under S3_REXT (LOW_SPEED_OR_DC): a reference exists under 73.5 of 73.5 mm [an external-resistor bias node, DC]
+PASS  return path under S3_SLOTCLK (LOW_SPEED_OR_DC): a reference exists under 65.7 of 68.6 mm [a slot-clock configuration strap, static]
+PASS  return path under S3_SLOTIMP (LOW_SPEED_OR_DC): a reference exists under 27.8 of 27.8 mm [a slot-implemented configuration strap, static]
+PASS  return path under S3_SMBCLK (Default, CLOCKED_DIGITAL): 4.8 of 68.7 mm without a plane on a neighbouring layer (limit 30.0; 5.1 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [an SMBus clock at 100 kHz]
+PASS  return path under S3_SMBDAT (Default, CLOCKED_DIGITAL): 2.6 of 68.0 mm without a plane on a neighbouring layer (limit 30.0; 3.3 mm more is this net's own via anti-pads, which RET-003 judges; 2.2 mm more is another conductor's via anti-pad, a hole the return goes around) [the data half of the same SMBus]
+PASS  return path under S3_TEST1 (LOW_SPEED_OR_DC): a reference exists under 58.3 of 58.3 mm [a test pin strapped to a static level]
+PASS  return path under S3_TESTL (LOW_SPEED_OR_DC): a reference exists under 57.0 of 64.0 mm [a test pin strapped to a static level]
+PASS  return path under SCL (Default, CLOCKED_DIGITAL): 9.7 of 444.0 mm without a plane on a neighbouring layer (limit 66.6; 20.1 mm more is this net's own via anti-pads, which RET-003 judges; 5.7 mm more is another conductor's via anti-pad, a hole the return goes around) [I2C at 100 or 400 kHz, open drain]
+PASS  return path under SCL_CM2 (Default, CLOCKED_DIGITAL): 2.5 of 64.1 mm without a plane on a neighbouring layer (limit 30.0) [I2C at 100 or 400 kHz, open drain]
+PASS  return path under SCL_CM3 (Default, CLOCKED_DIGITAL): 2.0 of 154.7 mm without a plane on a neighbouring layer (limit 30.0; 6.3 mm more is this net's own via anti-pads, which RET-003 judges; 0.8 mm more is another conductor's via anti-pad, a hole the return goes around) [I2C at 100 or 400 kHz, open drain]
+PASS  return path under SDA (Default, CLOCKED_DIGITAL): 17.7 of 680.5 mm without a plane on a neighbouring layer (limit 102.1; 25.8 mm more is this net's own via anti-pads, which RET-003 judges; 2.1 mm more is another conductor's via anti-pad, a hole the return goes around) [the data half of the same I2C bus]
+PASS  return path under SDA_CM2 (Default, CLOCKED_DIGITAL): 1.0 of 59.5 mm without a plane on a neighbouring layer (limit 30.0; 1.1 mm more is this net's own via anti-pads, which RET-003 judges) [the data half of the same I2C bus]
+PASS  return path under SDA_CM3 (Default, CLOCKED_DIGITAL): 1.7 of 179.8 mm without a plane on a neighbouring layer (limit 30.0; 3.5 mm more is this net's own via anti-pads, which RET-003 judges; 2.9 mm more is another conductor's via anti-pad, a hole the return goes around) [the data half of the same I2C bus]
+PASS  return path under SEL1_A (Default, CLOCKED_DIGITAL): 5.2 of 105.1 mm without a plane on a neighbouring layer (limit 30.0; 5.9 mm more is this net's own via anti-pads, which RET-003 judges; 2.3 mm more is another conductor's via anti-pad, a hole the return goes around) [a voted host-select line: it is break-before-make, so its edge order m]
+PASS  return path under SEL1_AB (Default, CLOCKED_DIGITAL): 0.0 of 59.2 mm without a plane on a neighbouring layer (limit 30.0; 3.6 mm more is this net's own via anti-pads, which RET-003 judges; 2.7 mm more is another conductor's via anti-pad, a hole the return goes around) [a voted host-select line: it is break-before-make, so its edge order m]
+PASS  return path under SEL1_B (Default, CLOCKED_DIGITAL): 3.2 of 270.6 mm without a plane on a neighbouring layer (limit 40.6; 10.7 mm more is this net's own via anti-pads, which RET-003 judges) [a voted host-select line: it is break-before-make, so its edge order m]
+PASS  return path under SEL1_BC (Default, CLOCKED_DIGITAL): 1.7 of 58.0 mm without a plane on a neighbouring layer (limit 30.0; 5.2 mm more is this net's own via anti-pads, which RET-003 judges) [a voted host-select line: it is break-before-make, so its edge order m]
+PASS  return path under SEL1_C (Default, CLOCKED_DIGITAL): 4.6 of 297.9 mm without a plane on a neighbouring layer (limit 44.7; 11.9 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [a voted host-select line: it is break-before-make, so its edge order m]
+PASS  return path under SEL1_CA (Default, CLOCKED_DIGITAL): 2.1 of 59.9 mm without a plane on a neighbouring layer (limit 30.0; 4.6 mm more is this net's own via anti-pads, which RET-003 judges) [a voted host-select line: it is break-before-make, so its edge order m]
+PASS  return path under SEL1_O1 (Default, CLOCKED_DIGITAL): 0.0 of 4.8 mm without a plane on a neighbouring layer (limit 30.0) [a voted host-select line: it is break-before-make, so its edge order m]
+PASS  return path under SEL2_A (Default, CLOCKED_DIGITAL): 0.9 of 107.6 mm without a plane on a neighbouring layer (limit 30.0; 7.2 mm more is this net's own via anti-pads, which RET-003 judges; 1.6 mm more is another conductor's via anti-pad, a hole the return goes around) [a voted host-select line: it is break-before-make, so its edge order m]
+PASS  return path under SEL2_AB (Default, CLOCKED_DIGITAL): 0.0 of 55.9 mm without a plane on a neighbouring layer (limit 30.0; 8.8 mm more is this net's own via anti-pads, which RET-003 judges; 1.5 mm more is another conductor's via anti-pad, a hole the return goes around) [a voted host-select line: it is break-before-make, so its edge order m]
+PASS  return path under SEL2_B (Default, CLOCKED_DIGITAL): 0.0 of 7.0 mm without a plane on a neighbouring layer (limit 30.0; 2.6 mm more is this net's own via anti-pads, which RET-003 judges) [a voted host-select line: it is break-before-make, so its edge order m]
+PASS  return path under SEL2_CA (Default, CLOCKED_DIGITAL): 1.2 of 68.0 mm without a plane on a neighbouring layer (limit 30.0; 7.4 mm more is this net's own via anti-pads, which RET-003 judges) [a voted host-select line: it is break-before-make, so its edge order m]
+PASS  return path under SEL2_O1 (Default, CLOCKED_DIGITAL): 0.0 of 8.7 mm without a plane on a neighbouring layer (limit 30.0; 2.5 mm more is this net's own via anti-pads, which RET-003 judges) [a voted host-select line: it is break-before-make, so its edge order m]
+PASS  return path under SEL3_A (Default, CLOCKED_DIGITAL): 8.4 of 128.8 mm without a plane on a neighbouring layer (limit 30.0; 5.4 mm more is this net's own via anti-pads, which RET-003 judges; 2.0 mm more is another conductor's via anti-pad, a hole the return goes around) [a voted host-select line: it is break-before-make, so its edge order m]
+PASS  return path under SEL3_AB (Default, CLOCKED_DIGITAL): 0.0 of 67.8 mm without a plane on a neighbouring layer (limit 30.0; 5.0 mm more is this net's own via anti-pads, which RET-003 judges) [a voted host-select line: it is break-before-make, so its edge order m]
+PASS  return path under SEL3_B (Default, CLOCKED_DIGITAL): 4.8 of 226.5 mm without a plane on a neighbouring layer (limit 34.0; 12.2 mm more is this net's own via anti-pads, which RET-003 judges; 2.9 mm more is another conductor's via anti-pad, a hole the return goes around) [a voted host-select line: it is break-before-make, so its edge order m]
+PASS  return path under SEL3_BC (Default, CLOCKED_DIGITAL): 0.0 of 65.5 mm without a plane on a neighbouring layer (limit 30.0; 8.4 mm more is this net's own via anti-pads, which RET-003 judges; 2.3 mm more is another conductor's via anti-pad, a hole the return goes around) [a voted host-select line: it is break-before-make, so its edge order m]
+PASS  return path under SEL3_C (Default, CLOCKED_DIGITAL): 2.8 of 112.9 mm without a plane on a neighbouring layer (limit 30.0; 6.3 mm more is this net's own via anti-pads, which RET-003 judges; 3.6 mm more is another conductor's via anti-pad, a hole the return goes around) [a voted host-select line: it is break-before-make, so its edge order m]
+PASS  return path under SEL3_CA (Default, CLOCKED_DIGITAL): 0.0 of 17.8 mm without a plane on a neighbouring layer (limit 30.0; 3.3 mm more is this net's own via anti-pads, which RET-003 judges; 0.8 mm more is another conductor's via anti-pad, a hole the return goes around) [a voted host-select line: it is break-before-make, so its edge order m]
+PASS  return path under SEL3_O1 (Default, CLOCKED_DIGITAL): 0.0 of 4.8 mm without a plane on a neighbouring layer (limit 30.0) [a voted host-select line: it is break-before-make, so its edge order m]
+PASS  return path under SHORE_INHIBIT (LOW_SPEED_OR_DC): a reference exists under 329.8 of 340.8 mm [the shore inhibit, a static level through an optocoupler]
+PASS  return path under SIM1_CLK (Default, CLOCKED_DIGITAL): 0.0 of 39.4 mm without a plane on a neighbouring layer (limit 30.0; 5.3 mm more is this net's own via anti-pads, which RET-003 judges) [a SIM card clock, a few megahertz]
+PASS  return path under SIM1_IO (Default, CLOCKED_DIGITAL): 3.6 of 138.8 mm without a plane on a neighbouring layer (limit 30.0; 4.8 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [a SIM card data line at the same rate]
+PASS  return path under SIM1_RST (Default, CLOCKED_DIGITAL): 0.0 of 35.0 mm without a plane on a neighbouring layer (limit 30.0; 2.5 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [a reset line, as above]
+PASS  return path under SIM1_VCC (LOW_SPEED_OR_DC): a reference exists under 127.9 of 128.5 mm [a SIM card supply]
+PASS  return path under SIM2_RST (Default, CLOCKED_DIGITAL): 0.0 of 42.2 mm without a plane on a neighbouring layer (limit 30.0; 6.0 mm more is this net's own via anti-pads, which RET-003 judges) [a reset line, as above]
+PASS  return path under SLOT_EN1 (LOW_SPEED_OR_DC): a reference exists under 311.5 of 322.0 mm [an enable of a numbered channel, a static level]
+PASS  return path under SLOT_EN2 (LOW_SPEED_OR_DC): a reference exists under 342.3 of 353.5 mm [an enable of a numbered channel, a static level]
+PASS  return path under SLOT_EN3 (LOW_SPEED_OR_DC): a reference exists under 296.9 of 308.3 mm [an enable of a numbered channel, a static level]
+PASS  return path under SPI3_CE0 (Default, CLOCKED_DIGITAL): 4.0 of 219.2 mm without a plane on a neighbouring layer (limit 32.9; 7.1 mm more is this net's own via anti-pads, which RET-003 judges; 1.8 mm more is another conductor's via anti-pad, a hole the return goes around) [an SPI bus to a radio module, a few megahertz]
+PASS  return path under SPI3_CE1 (Default, CLOCKED_DIGITAL): 3.0 of 261.6 mm without a plane on a neighbouring layer (limit 39.2; 4.7 mm more is this net's own via anti-pads, which RET-003 judges; 4.5 mm more is another conductor's via anti-pad, a hole the return goes around) [an SPI bus to a radio module, a few megahertz]
+PASS  return path under SPI3_IO23 (Default, CLOCKED_DIGITAL): 0.0 of 57.8 mm without a plane on a neighbouring layer (limit 30.0; 2.5 mm more is this net's own via anti-pads, which RET-003 judges; 3.9 mm more is another conductor's via anti-pad, a hole the return goes around) [an SPI bus to a radio module, a few megahertz]
+PASS  return path under SPI3_IO24 (Default, CLOCKED_DIGITAL): 1.4 of 245.8 mm without a plane on a neighbouring layer (limit 36.9; 4.0 mm more is this net's own via anti-pads, which RET-003 judges; 2.2 mm more is another conductor's via anti-pad, a hole the return goes around) [an SPI bus to a radio module, a few megahertz]
+PASS  return path under SPI3_IO26 (Default, CLOCKED_DIGITAL): 2.0 of 221.0 mm without a plane on a neighbouring layer (limit 33.2; 5.3 mm more is this net's own via anti-pads, which RET-003 judges; 1.1 mm more is another conductor's via anti-pad, a hole the return goes around) [an SPI bus to a radio module, a few megahertz]
+PASS  return path under SPI3_MISO (Default, CLOCKED_DIGITAL): 8.8 of 59.8 mm without a plane on a neighbouring layer (limit 30.0; 3.3 mm more is this net's own via anti-pads, which RET-003 judges) [an SPI bus to a radio module, a few megahertz]
+PASS  return path under SPI3_MOSI (Default, CLOCKED_DIGITAL): 6.3 of 225.6 mm without a plane on a neighbouring layer (limit 33.8; 5.6 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [an SPI bus to a radio module, a few megahertz]
+PASS  return path under SPI3_SCLK (Default, CLOCKED_DIGITAL): 9.9 of 219.6 mm without a plane on a neighbouring layer (limit 32.9; 5.5 mm more is this net's own via anti-pads, which RET-003 judges; 2.1 mm more is another conductor's via anti-pad, a hole the return goes around) [an SPI bus to a radio module, a few megahertz]
+PASS  return path under SWA_O1 (USB, CONTROLLED_IMPEDANCE): 0.0 of 16.6 mm without a plane on a neighbouring layer (limit 10.0; 2.3 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under SWA_O2 (USB, CONTROLLED_IMPEDANCE): 0.9 of 20.5 mm without a plane on a neighbouring layer (limit 10.0; 2.3 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under SWB_O1 (USB, CONTROLLED_IMPEDANCE): 0.0 of 18.2 mm without a plane on a neighbouring layer (limit 10.0; 2.5 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under SWB_O2 (USB, CONTROLLED_IMPEDANCE): 0.0 of 21.8 mm without a plane on a neighbouring layer (limit 10.0; 2.3 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under SWP1_A_N (DIFF100, CONTROLLED_IMPEDANCE): 0.0 of 142.3 mm without a plane on a neighbouring layer (limit 10.0; 1.4 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under SWP1_A_P (DIFF100, CONTROLLED_IMPEDANCE): 0.6 of 142.3 mm without a plane on a neighbouring layer (limit 10.0; 1.4 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under SWP1_B_N (DIFF100, CONTROLLED_IMPEDANCE): 1.7 of 141.6 mm without a plane on a neighbouring layer (limit 10.0; 0.8 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under SWP1_B_P (DIFF100, CONTROLLED_IMPEDANCE): 0.8 of 141.6 mm without a plane on a neighbouring layer (limit 10.0; 1.3 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under SWP2_A_N (DIFF100, CONTROLLED_IMPEDANCE): 4.0 of 230.3 mm without a plane on a neighbouring layer (limit 11.5; 10.5 mm more is this net's own via anti-pads, which RET-003 judges; 1.9 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under SWP2_B_N (DIFF100, CONTROLLED_IMPEDANCE): 3.7 of 208.6 mm without a plane on a neighbouring layer (limit 10.4; 2.8 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under SWP2_B_P (DIFF100, CONTROLLED_IMPEDANCE): 4.8 of 208.6 mm without a plane on a neighbouring layer (limit 10.4; 2.5 mm more is this net's own via anti-pads, which RET-003 judges; 1.8 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under SWP2_C_N (DIFF100, CONTROLLED_IMPEDANCE): 1.3 of 213.1 mm without a plane on a neighbouring layer (limit 10.7; 0.8 mm more is this net's own via anti-pads, which RET-003 judges; 2.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under SWP2_C_P (DIFF100, CONTROLLED_IMPEDANCE): 3.7 of 213.1 mm without a plane on a neighbouring layer (limit 10.7; 0.8 mm more is this net's own via anti-pads, which RET-003 judges; 1.9 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under SWP2_D_N (DIFF100, CONTROLLED_IMPEDANCE): 4.8 of 211.5 mm without a plane on a neighbouring layer (limit 10.6; 3.3 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under SWP2_D_P (DIFF100, CONTROLLED_IMPEDANCE): 3.9 of 211.5 mm without a plane on a neighbouring layer (limit 10.6; 5.0 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under SWP3_A_N (DIFF100, CONTROLLED_IMPEDANCE): 9.2 of 258.6 mm without a plane on a neighbouring layer (limit 12.9; 0.7 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under SWP3_A_P (DIFF100, CONTROLLED_IMPEDANCE): 8.6 of 258.6 mm without a plane on a neighbouring layer (limit 12.9; 2.1 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under SWP3_B_N (DIFF100, CONTROLLED_IMPEDANCE): 1.3 of 261.0 mm without a plane on a neighbouring layer (limit 13.1; 0.7 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under SWP3_B_P (DIFF100, CONTROLLED_IMPEDANCE): 2.3 of 261.0 mm without a plane on a neighbouring layer (limit 13.1; 0.7 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under SWP3_C_N (DIFF100, CONTROLLED_IMPEDANCE): 12.2 of 253.9 mm without a plane on a neighbouring layer (limit 12.7; 1.8 mm more is this net's own via anti-pads, which RET-003 judges; 1.8 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under SWP3_C_P (DIFF100, CONTROLLED_IMPEDANCE): 7.3 of 253.9 mm without a plane on a neighbouring layer (limit 12.7; 0.7 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under SWP4_A_N (DIFF100, CONTROLLED_IMPEDANCE): 0.0 of 46.1 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under SWP4_A_P (DIFF100, CONTROLLED_IMPEDANCE): 0.0 of 46.1 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under SWP4_B_P (DIFF100, CONTROLLED_IMPEDANCE): 2.0 of 66.9 mm without a plane on a neighbouring layer (limit 10.0; 4.0 mm more is this net's own via anti-pads, which RET-003 judges; 1.2 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under SWP4_C_N (DIFF100, CONTROLLED_IMPEDANCE): 1.9 of 122.4 mm without a plane on a neighbouring layer (limit 10.0; 3.6 mm more is this net's own via anti-pads, which RET-003 judges; 4.9 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under SWP4_C_P (DIFF100, CONTROLLED_IMPEDANCE): 0.5 of 122.4 mm without a plane on a neighbouring layer (limit 10.0; 4.4 mm more is this net's own via anti-pads, which RET-003 judges; 3.3 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under SWP4_D_N (DIFF100, CONTROLLED_IMPEDANCE): 2.5 of 69.4 mm without a plane on a neighbouring layer (limit 10.0; 1.3 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under SWP4_D_P (DIFF100, CONTROLLED_IMPEDANCE): 1.3 of 69.4 mm without a plane on a neighbouring layer (limit 10.0; 3.6 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]
+PASS  return path under TCT1 (LOW_SPEED_OR_DC): a reference exists under 22.1 of 22.1 mm [a magnetics centre tap on the chip side, a DC reference node]
+PASS  return path under TCT2 (LOW_SPEED_OR_DC): a reference exists under 22.0 of 22.0 mm [a magnetics centre tap on the chip side, a DC reference node]
+PASS  return path under TCT3 (LOW_SPEED_OR_DC): a reference exists under 25.4 of 25.4 mm [a magnetics centre tap on the chip side, a DC reference node]
+PASS  return path under TCT4 (LOW_SPEED_OR_DC): a reference exists under 24.4 of 24.4 mm [a magnetics centre tap on the chip side, a DC reference node]
+PASS  return path under TX_INHIBIT_n (LOW_SPEED_OR_DC): a reference exists under 333.3 of 344.5 mm [the hardware transmit inhibit from the panel toggle, a static level with a pull-]
+PASS  return path under U23_DVDT (LOW_SPEED_OR_DC): a reference exists under 16.5 of 16.5 mm [an eFuse slew-rate capacitor node, deliberately slow]
+PASS  return path under U23_ILM (LOW_SPEED_OR_DC): a reference exists under 12.1 of 12.1 mm [an eFuse current-limit resistor node, DC]
+PASS  return path under U23_OVLO (LOW_SPEED_OR_DC): a reference exists under 29.2 of 29.2 mm [an overvoltage-lockout divider tap, DC]
+PASS  return path under U24_DVDT (LOW_SPEED_OR_DC): a reference exists under 36.2 of 36.2 mm [an eFuse slew-rate capacitor node, deliberately slow]
+PASS  return path under U24_ILM (LOW_SPEED_OR_DC): a reference exists under 30.3 of 31.8 mm [an eFuse current-limit resistor node, DC]
+PASS  return path under U24_OVLO (LOW_SPEED_OR_DC): a reference exists under 22.3 of 22.3 mm [an overvoltage-lockout divider tap, DC]
+PASS  return path under UART0_RX1 (Default, CLOCKED_DIGITAL): 2.7 of 179.4 mm without a plane on a neighbouring layer (limit 30.0; 7.3 mm more is this net's own via anti-pads, which RET-003 judges; 2.9 mm more is another conductor's via anti-pad, a hole the return goes around) [a UART to a radio module, 115200 baud or less]
+PASS  return path under UART0_RX2 (Default, CLOCKED_DIGITAL): 0.9 of 64.5 mm without a plane on a neighbouring layer (limit 30.0; 1.3 mm more is this net's own via anti-pads, which RET-003 judges) [a UART to a radio module, 115200 baud or less]
+PASS  return path under UART0_RX3 (Default, CLOCKED_DIGITAL): 2.3 of 170.6 mm without a plane on a neighbouring layer (limit 30.0; 3.5 mm more is this net's own via anti-pads, which RET-003 judges; 2.2 mm more is another conductor's via anti-pad, a hole the return goes around) [a UART to a radio module, 115200 baud or less]
+PASS  return path under UART0_TX1 (Default, CLOCKED_DIGITAL): 7.4 of 284.1 mm without a plane on a neighbouring layer (limit 42.6; 4.4 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [a UART to a radio module, 115200 baud or less]
+PASS  return path under UART0_TX2 (Default, CLOCKED_DIGITAL): 0.9 of 66.2 mm without a plane on a neighbouring layer (limit 30.0; 1.0 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [a UART to a radio module, 115200 baud or less]
+PASS  return path under UART0_TX3 (Default, CLOCKED_DIGITAL): 1.5 of 162.5 mm without a plane on a neighbouring layer (limit 30.0; 5.0 mm more is this net's own via anti-pads, which RET-003 judges; 3.7 mm more is another conductor's via anti-pad, a hole the return goes around) [a UART to a radio module, 115200 baud or less]
+PASS  return path under USB_5G_N (USB, CONTROLLED_IMPEDANCE): 1.9 of 137.7 mm without a plane on a neighbouring layer (limit 10.0; 3.1 mm more is this net's own via anti-pads, which RET-003 judges; 2.9 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under USB_5G_P (USB, CONTROLLED_IMPEDANCE): 1.7 of 137.7 mm without a plane on a neighbouring layer (limit 10.0; 4.2 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under USB_D8_N (USB, CONTROLLED_IMPEDANCE): 0.9 of 81.7 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under USB_D8_P (USB, CONTROLLED_IMPEDANCE): 2.4 of 81.7 mm without a plane on a neighbouring layer (limit 10.0; 2.6 mm more is this net's own via anti-pads, which RET-003 judges; 0.8 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under USB_E6_N (USB, CONTROLLED_IMPEDANCE): 5.8 of 65.2 mm without a plane on a neighbouring layer (limit 10.0; 4.7 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under USB_E6_P (USB, CONTROLLED_IMPEDANCE): 5.3 of 65.2 mm without a plane on a neighbouring layer (limit 10.0; 0.8 mm more is this net's own via anti-pads, which RET-003 judges; 2.6 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under USB_OTG_N1 (USB, CONTROLLED_IMPEDANCE): 0.5 of 39.7 mm without a plane on a neighbouring layer (limit 10.0; 4.2 mm more is this net's own via anti-pads, which RET-003 judges; 2.7 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under USB_OTG_N2 (USB, CONTROLLED_IMPEDANCE): 0.3 of 58.1 mm without a plane on a neighbouring layer (limit 10.0; 4.4 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]
+PASS  return path under USB_OTG_N3 (USB, CONTROLLED_IMPEDANCE): 7.4 of 220.7 mm without a plane on a neighbouring layer (limit 11.0; 16.0 mm more is this net's own via anti-pads, which RET-003 judges; 11.6 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under USB_OTG_P1 (USB, CONTROLLED_IMPEDANCE): 0.0 of 32.5 mm without a plane on a neighbouring layer (limit 10.0; 6.1 mm more is this net's own via anti-pads, which RET-003 judges; 0.8 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under USB_OTG_P2 (USB, CONTROLLED_IMPEDANCE): 1.2 of 56.1 mm without a plane on a neighbouring layer (limit 10.0; 6.0 mm more is this net's own via anti-pads, which RET-003 judges; 5.3 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under USB_OTG_P3 (USB, CONTROLLED_IMPEDANCE): 2.6 of 213.5 mm without a plane on a neighbouring layer (limit 10.7; 8.2 mm more is this net's own via anti-pads, which RET-003 judges; 5.4 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under USB_PNL_N (USB, CONTROLLED_IMPEDANCE): 0.0 of 2.3 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under USB_PNL_P (USB, CONTROLLED_IMPEDANCE): 0.0 of 2.3 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under USB_WALL_N (USB, CONTROLLED_IMPEDANCE): 4.5 of 112.6 mm without a plane on a neighbouring layer (limit 10.0; 2.9 mm more is this net's own via anti-pads, which RET-003 judges; 2.4 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under USB_WALL_P (USB, CONTROLLED_IMPEDANCE): 0.0 of 3.0 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under W1A_CARD (USB, CONTROLLED_IMPEDANCE): 0.0 of 12.0 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under W1B_CARD (USB, CONTROLLED_IMPEDANCE): 0.0 of 16.1 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under W3A_CARD (USB, CONTROLLED_IMPEDANCE): 0.0 of 15.9 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under W3B_CARD (USB, CONTROLLED_IMPEDANCE): 0.0 of 17.6 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under WA_ANT (USB, CONTROLLED_IMPEDANCE): 0.0 of 21.0 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under WB_ANT (USB, CONTROLLED_IMPEDANCE): 0.0 of 28.3 mm without a plane on a neighbouring layer (limit 10.0; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]
+PASS  return path under WIFI2_W_DIS2_n (LOW_SPEED_OR_DC): a reference exists under 73.2 of 74.2 mm [a wireless-disable pin, a static level]
+PASS  return path under WIFI2_W_DIS_n (LOW_SPEED_OR_DC): a reference exists under 55.1 of 55.1 mm [a wireless-disable pin, a static level]
+PASS  return path under WIFI2_nLED (LOW_SPEED_OR_DC): a reference exists under 69.2 of 70.2 mm [an active-low indicator LED drive]
+PASS  return path under WIFI_PRI (LOW_SPEED_OR_DC): a reference exists under 19.8 of 22.3 mm [the primary radio select, a static level]
+PASS  return path under WIFI_SEC (LOW_SPEED_OR_DC): a reference exists under 530.0 of 542.2 mm [the secondary radio select, a static level]
+PASS  return path under WL_nDIS1 (LOW_SPEED_OR_DC): a reference exists under 89.2 of 91.9 mm [a module's wireless-disable pin, a static level]
+PASS  return path under WL_nDIS2 (LOW_SPEED_OR_DC): a reference exists under 47.3 of 51.9 mm [a module's wireless-disable pin, a static level]
+PASS  return path under WSEC_A (Default, CLOCKED_DIGITAL): 0.8 of 116.8 mm without a plane on a neighbouring layer (limit 30.0; 11.0 mm more is this net's own via anti-pads, which RET-003 judges; 0.9 mm more is another conductor's via anti-pad, a hole the return goes around) [the voted secondary-radio select, as above]
+PASS  return path under WSEC_AB (Default, CLOCKED_DIGITAL): 1.2 of 16.9 mm without a plane on a neighbouring layer (limit 30.0; 2.3 mm more is this net's own via anti-pads, which RET-003 judges) [the voted secondary-radio select, as above]
+PASS  return path under WSEC_B (Default, CLOCKED_DIGITAL): 0.0 of 322.0 mm without a plane on a neighbouring layer (limit 48.3; 17.4 mm more is this net's own via anti-pads, which RET-003 judges; 1.9 mm more is another conductor's via anti-pad, a hole the return goes around) [the voted secondary-radio select, as above]
+PASS  return path under WSEC_BC (Default, CLOCKED_DIGITAL): 0.0 of 13.8 mm without a plane on a neighbouring layer (limit 30.0; 2.7 mm more is this net's own via anti-pads, which RET-003 judges) [the voted secondary-radio select, as above]
+PASS  return path under WSEC_C (Default, CLOCKED_DIGITAL): 5.4 of 326.8 mm without a plane on a neighbouring layer (limit 49.0; 12.9 mm more is this net's own via anti-pads, which RET-003 judges; 2.8 mm more is another conductor's via anti-pad, a hole the return goes around) [the voted secondary-radio select, as above]
+PASS  return path under WSEC_CA (Default, CLOCKED_DIGITAL): 0.0 of 10.5 mm without a plane on a neighbouring layer (limit 30.0; 2.4 mm more is this net's own via anti-pads, which RET-003 judges) [the voted secondary-radio select, as above]
+PASS  return path under WSEC_O1 (Default, CLOCKED_DIGITAL): 0.0 of 4.8 mm without a plane on a neighbouring layer (limit 30.0) [the voted secondary-radio select, as above]
+PASS  return path under ZBA_3V3 (LOW_SPEED_OR_DC): a reference exists under 35.3 of 35.3 mm [a radio module supply node]
+PASS  return path under ZBA_BSL (LOW_SPEED_OR_DC): a reference exists under 88.4 of 89.1 mm [a radio module's bootstrap-loader strap, read once at reset]
+PASS  return path under ZBA_DM (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.7 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under ZBA_DP (USB, CONTROLLED_IMPEDANCE): 0.0 of 1.8 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under ZBA_LED_G (LOW_SPEED_OR_DC): a reference exists under 68.3 of 68.3 mm [an indicator LED anode or cathode]
+PASS  return path under ZBA_LED_R (LOW_SPEED_OR_DC): a reference exists under 61.1 of 64.0 mm [an indicator LED anode or cathode]
+PASS  return path under ZBA_RST (Default, CLOCKED_DIGITAL): 1.0 of 32.2 mm without a plane on a neighbouring layer (limit 30.0; 2.5 mm more is this net's own via anti-pads, which RET-003 judges; 1.8 mm more is another conductor's via anti-pad, a hole the return goes around) [a reset line, as above]
+PASS  return path under ZBA_RST_n (Default, CLOCKED_DIGITAL): 5.0 of 79.9 mm without a plane on a neighbouring layer (limit 30.0; 2.1 mm more is this net's own via anti-pads, which RET-003 judges; 1.9 mm more is another conductor's via anti-pad, a hole the return goes around) [a reset line: a logic edge whose timing is a specified property of the]
+PASS  return path under ZBA_RXD (Default, CLOCKED_DIGITAL): 0.0 of 71.0 mm without a plane on a neighbouring layer (limit 30.0; 3.1 mm more is this net's own via anti-pads, which RET-003 judges) [a UART receive line to a module]
+PASS  return path under ZBA_TCKC (Default, CLOCKED_DIGITAL): 0.9 of 30.9 mm without a plane on a neighbouring layer (limit 30.0; 2.0 mm more is this net's own via anti-pads, which RET-003 judges) [a radio module's programming clock, used at the bench]
+PASS  return path under ZBA_TMSC (Default, CLOCKED_DIGITAL): 1.7 of 22.0 mm without a plane on a neighbouring layer (limit 30.0; 1.9 mm more is this net's own via anti-pads, which RET-003 judges) [the data half of the same programming port]
+PASS  return path under ZBA_TXD (Default, CLOCKED_DIGITAL): 0.6 of 69.5 mm without a plane on a neighbouring layer (limit 30.0; 2.7 mm more is this net's own via anti-pads, which RET-003 judges) [a UART transmit line to a module]
+PASS  return path under ZBB_3V3 (LOW_SPEED_OR_DC): a reference exists under 34.7 of 34.7 mm [a radio module supply node]
+PASS  return path under ZBB_BSL (LOW_SPEED_OR_DC): a reference exists under 82.2 of 82.2 mm [a radio module's bootstrap-loader strap, read once at reset]
+PASS  return path under ZBB_DM (USB, CONTROLLED_IMPEDANCE): 0.0 of 3.2 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under ZBB_DP (USB, CONTROLLED_IMPEDANCE): 0.0 of 2.5 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]
+PASS  return path under ZBB_LED_G (LOW_SPEED_OR_DC): a reference exists under 48.5 of 48.5 mm [an indicator LED anode or cathode]
+PASS  return path under ZBB_LED_R (LOW_SPEED_OR_DC): a reference exists under 43.8 of 43.8 mm [an indicator LED anode or cathode]
+PASS  return path under ZBB_RST (Default, CLOCKED_DIGITAL): 0.0 of 30.7 mm without a plane on a neighbouring layer (limit 30.0; 2.8 mm more is this net's own via anti-pads, which RET-003 judges; 0.9 mm more is another conductor's via anti-pad, a hole the return goes around) [a reset line, as above]
+PASS  return path under ZBB_RST_n (Default, CLOCKED_DIGITAL): 5.5 of 92.8 mm without a plane on a neighbouring layer (limit 30.0; 4.9 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [a reset line: a logic edge whose timing is a specified property of the]
+PASS  return path under ZBB_RXD (Default, CLOCKED_DIGITAL): 0.0 of 75.1 mm without a plane on a neighbouring layer (limit 30.0; 2.7 mm more is this net's own via anti-pads, which RET-003 judges; 0.9 mm more is another conductor's via anti-pad, a hole the return goes around) [a UART receive line to a module]
+PASS  return path under ZBB_TCKC (Default, CLOCKED_DIGITAL): 0.9 of 21.7 mm without a plane on a neighbouring layer (limit 30.0; 1.8 mm more is this net's own via anti-pads, which RET-003 judges) [a radio module's programming clock, used at the bench]
+PASS  return path under ZBB_TMSC (Default, CLOCKED_DIGITAL): 1.4 of 19.2 mm without a plane on a neighbouring layer (limit 30.0; 1.4 mm more is this net's own via anti-pads, which RET-003 judges) [the data half of the same programming port]
+PASS  return path under ZBB_TXD (Default, CLOCKED_DIGITAL): 0.0 of 73.5 mm without a plane on a neighbouring layer (limit 30.0; 2.7 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [a UART transmit line to a module]
+PASS  return path under ZB_ON (LOW_SPEED_OR_DC): a reference exists under 72.8 of 74.4 mm [a radio module's power-on control, a static level]
+PASS  return path under ZEROIZE_HW (LOW_SPEED_OR_DC): a reference exists under 354.1 of 367.0 mm [the zeroize line, a static level]
+PASS  return path under nRPIBOOT1 (LOW_SPEED_OR_DC): a reference exists under 193.2 of 201.2 mm [a module's boot-mode strap, read once at reset]
+PASS  return path under nRPIBOOT2 (LOW_SPEED_OR_DC): a reference exists under 65.7 of 69.5 mm [a module's boot-mode strap, read once at reset]
+PASS  return path under nRPIBOOT3 (LOW_SPEED_OR_DC): a reference exists under 165.2 of 167.1 mm [a module's boot-mode strap, read once at reset]
+intent_checks: 679.0 mm of signal run across this board sits over ANOTHER conductor's via anti-pad (316 net(s)); a hole in the reference is not an absent reference and the return goes around it, so this screen does not judge it. How perforated a reference may be is RET-001's question and its criterion is owner decision 39
+intent_checks: return path judged on 658 signal nets (69 excluded as ground, rail, zone owner or power class), 1 over their limit, worst HDMIO_SDA at 24.6 mm; 2481.9 mm across the board is the nets' own via anti-pads and is RET-003's question, not this one
+PASS  every power-symbol net is a declared rail (35 of 35)
+FAIL  return via: 4 of 12 signal vias have a ground via within 1.5 mm (586 exempt in fine-pitch fans, 687 on one reference plane, 512 on a net whose declared class has no edge to return); without one: SEL2_O1 at (0.57, 144.25): nearest ground via 3.15 mm; SEL2_O1 at (1.40, 147.50): nearest ground via 3.99 mm; HUBRST2_AB at (3.72, 139.94): nearest ground via 2.60 mm; HUBRST2_A at (3.72, 141.24): nearest ground via 3.01 mm; SEL3_AB at (3.72, 148.15): nearest ground via 3.90 mm; SDA at (11.07, 27.54): nearest ground via 2.12 mm; HUBRST1_VOTE at (13.55, 146.20): nearest ground via 3.03 mm; WSEC_C at (28.02, 141.24): nearest ground via 2.12 mm
+PASS  bypass C112 (22u 10V X7R 1210) to U103.2: 32.19 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C113 (22u 10V X7R 1210) to U103.2: 26.56 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C119 (22u 10V X7R 1210) to U104.2: 13.23 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C120 (22u 10V X7R 1210) to U104.2: 9.23 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+FAIL  bypass C605 -> U105.3: pads found on the board
+PASS  bypass C125 (10u) to U105.3: 12.30 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+FAIL  bypass C606 -> U106.3: pads found on the board
+PASS  bypass C130 (10u) to U106.3: 13.37 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C135 (100n) to U101.1: 50.48 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C136 (100n) to U101.49: 37.68 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C137 (100n) to U101.96: 46.59 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C138 (100n) to U101.82: 44.42 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C139 (100n) to U101.15: 58.75 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C140 (100n) to U101.113: 44.25 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C141 (100n) to U101.3: 44.18 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C142 (100n) to U101.29: 36.37 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C143 (100n) to U101.55: 31.30 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C144 (100n) to U101.91: 42.25 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C145 (100n) to U101.13: 48.84 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C146 (100n) to U101.105: 50.44 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C147 (10u) to U101.64: 15.62 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C148 (10u) to U101.62: 15.13 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+FAIL  bypass C197 -> U112.5: pads found on the board
+FAIL  bypass C183 -> U113.5: pads found on the board
+FAIL  bypass C184 -> U114.5: pads found on the board
+FAIL  bypass C185 -> U115.5: pads found on the board
+PASS  bypass C166 (100n) to U102.5: 8.93 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C167 (100n) to U102.8: 6.26 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C168 (100n) to U102.13: 7.22 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C169 (100n) to U102.21: 9.52 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+FAIL  bypass C601 -> U102.28: pads found on the board
+FAIL  bypass C602 -> U102.31: pads found on the board
+FAIL  bypass C603 -> U102.51: pads found on the board
+FAIL  bypass C604 -> U102.57: pads found on the board
+PASS  bypass C170 (100n) to U102.16: 12.19 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C171 (100n) to U102.34: 9.10 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C172 (100n) to U102.52: 10.29 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C173 (100n) to U102.63: 19.99 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C174 (10u) to L104.2: 60.19 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C192 (100n) to U109.6: 53.54 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C193 (1u) to U109.6: 57.31 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C194 (100n) to U110.10: 20.84 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C212 (22u 10V X7R 1210) to U203.2: 16.91 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C213 (22u 10V X7R 1210) to U203.2: 22.76 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C219 (22u 10V X7R 1210) to U204.2: 12.81 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C220 (22u 10V X7R 1210) to U204.2: 8.97 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+FAIL  bypass C635 -> U205.3: pads found on the board
+PASS  bypass C225 (10u) to U205.3: 9.44 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+FAIL  bypass C636 -> U206.3: pads found on the board
+PASS  bypass C230 (10u) to U206.3: 15.16 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C235 (100n) to U201.1: 66.06 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C236 (100n) to U201.49: 57.60 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C237 (100n) to U201.96: 35.71 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C238 (100n) to U201.82: 28.89 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C239 (100n) to U201.15: 28.04 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C240 (100n) to U201.113: 34.18 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C241 (100n) to U201.3: 35.78 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C242 (100n) to U201.29: 29.89 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C243 (100n) to U201.55: 23.85 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C244 (100n) to U201.91: 33.50 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C245 (100n) to U201.13: 43.58 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C246 (100n) to U201.105: 43.45 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C247 (10u) to U201.64: 17.00 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C248 (10u) to U201.62: 13.02 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+FAIL  bypass C520 -> J_M2C2.2: pads found on the board
+FAIL  bypass C521 -> J_M2C2.70: pads found on the board
+FAIL  bypass C522 -> J_M2C2.2: pads found on the board
+FAIL  bypass C523 -> J_M2C2.2: pads found on the board
+FAIL  bypass C524 -> J_M2C2.2: pads found on the board
+FAIL  bypass C525 -> J_M2C2.70: pads found on the board
+FAIL  bypass C526 -> J_M2C2.70: pads found on the board
+FAIL  bypass C527 -> J_M2C2.70: pads found on the board
+FAIL  bypass C528 -> J_M2C2.70: pads found on the board
+FAIL  bypass C529 -> J_M2C2.70: pads found on the board
+FAIL  bypass C530 -> J_M2C2.70: pads found on the board
+FAIL  bypass C286 -> U222.5: pads found on the board
+FAIL  bypass C289 -> U223.5: pads found on the board
+FAIL  bypass C297 -> U212.5: pads found on the board
+FAIL  bypass C261 -> U213.5: pads found on the board
+FAIL  bypass C262 -> U214.5: pads found on the board
+FAIL  bypass C285 -> U215.5: pads found on the board
+FAIL  bypass C299 -> U220.5: pads found on the board
+FAIL  bypass C200 -> U221.6: pads found on the board
+PASS  bypass C266 (100n) to U202.5: 9.22 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C267 (100n) to U202.8: 6.97 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C268 (100n) to U202.13: 8.22 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C269 (100n) to U202.21: 10.53 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+FAIL  bypass C631 -> U202.28: pads found on the board
+FAIL  bypass C632 -> U202.31: pads found on the board
+FAIL  bypass C633 -> U202.51: pads found on the board
+FAIL  bypass C634 -> U202.57: pads found on the board
+PASS  bypass C270 (100n) to U202.16: 13.01 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C271 (100n) to U202.34: 10.06 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C272 (100n) to U202.52: 10.52 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C273 (100n) to U202.63: 20.17 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C274 (10u) to L204.2: 45.04 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C292 (100n) to U209.6: 11.56 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C293 (1u) to U209.6: 15.59 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C294 (100n) to U210.10: 60.13 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C312 (22u 10V X7R 1210) to U303.2: 32.19 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C313 (22u 10V X7R 1210) to U303.2: 26.56 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C319 (22u 10V X7R 1210) to U304.2: 13.23 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C320 (22u 10V X7R 1210) to U304.2: 9.23 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+FAIL  bypass C665 -> U305.3: pads found on the board
+PASS  bypass C325 (10u) to U305.3: 12.30 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+FAIL  bypass C666 -> U306.3: pads found on the board
+PASS  bypass C330 (10u) to U306.3: 13.37 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C335 (100n) to U301.1: 52.62 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C336 (100n) to U301.49: 40.19 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C337 (100n) to U301.96: 48.42 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C338 (100n) to U301.82: 46.64 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C339 (100n) to U301.15: 61.53 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C340 (100n) to U301.113: 44.55 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C341 (100n) to U301.3: 45.37 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C342 (100n) to U301.29: 38.18 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C343 (100n) to U301.55: 32.76 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C344 (100n) to U301.91: 43.28 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C345 (100n) to U301.13: 51.05 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C346 (100n) to U301.105: 52.16 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C347 (10u) to U301.64: 15.08 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C348 (10u) to U301.62: 15.80 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+FAIL  bypass C397 -> U312.5: pads found on the board
+FAIL  bypass C383 -> U313.5: pads found on the board
+FAIL  bypass C384 -> U314.5: pads found on the board
+FAIL  bypass C385 -> U315.5: pads found on the board
+PASS  bypass C366 (100n) to U302.5: 9.74 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C367 (100n) to U302.8: 6.87 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C368 (100n) to U302.13: 7.26 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C369 (100n) to U302.21: 9.41 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+FAIL  bypass C661 -> U302.28: pads found on the board
+FAIL  bypass C662 -> U302.31: pads found on the board
+FAIL  bypass C663 -> U302.51: pads found on the board
+FAIL  bypass C664 -> U302.57: pads found on the board
+PASS  bypass C370 (100n) to U302.16: 11.60 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C371 (100n) to U302.34: 8.76 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C372 (100n) to U302.52: 9.42 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C373 (100n) to U302.63: 19.12 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C374 (10u) to L304.2: 63.83 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C392 (100n) to U309.6: 52.77 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C393 (1u) to U309.6: 56.53 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C394 (100n) to U310.10: 51.56 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+FAIL  bypass C571 -> U26.3: pads found on the board
+PASS  bypass C7 (10u) to U26.3: 20.89 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C17 (100n) to U1.61: 7.64 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C20 (100n) to U1.77: 11.49 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C23 (100n) to U1.99: 27.33 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C26 (100n) to U1.61: 9.51 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C19 (100n) to U1.10: 21.06 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C22 (100n) to U1.22: 29.35 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C25 (100n) to U1.33: 7.33 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+FAIL  bypass C545 -> U1.44: pads found on the board
+FAIL  bypass C546 -> U1.111: pads found on the board
+FAIL  bypass C547 -> U1.122: pads found on the board
+FAIL  bypass C548 -> U1.128: pads found on the board
+PASS  bypass C18 (100n) to U1.11: 17.99 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C21 (100n) to U1.23: 25.28 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C24 (100n) to U1.45: 10.92 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+FAIL  bypass C531 -> U1.56: pads found on the board
+FAIL  bypass C532 -> U1.74: pads found on the board
+FAIL  bypass C533 -> U1.87: pads found on the board
+FAIL  bypass C534 -> U1.104: pads found on the board
+FAIL  bypass C535 -> U1.110: pads found on the board
+FAIL  bypass C536 -> U1.3: pads found on the board
+FAIL  bypass C537 -> U1.14: pads found on the board
+FAIL  bypass C538 -> U1.19: pads found on the board
+FAIL  bypass C539 -> U1.30: pads found on the board
+FAIL  bypass C540 -> U1.36: pads found on the board
+FAIL  bypass C541 -> U1.41: pads found on the board
+FAIL  bypass C542 -> U1.114: pads found on the board
+FAIL  bypass C543 -> U1.119: pads found on the board
+FAIL  bypass C544 -> U1.124: pads found on the board
+PASS  bypass C27 (10u) to U1.11: 26.33 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+FAIL  bypass C549 -> U1.3: pads found on the board
+PASS  bypass C28 (10u) to U1.10: 30.74 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+FAIL  bypass C550 -> U1.61: pads found on the board
+FAIL  bypass C564 -> U519.5: pads found on the board
+FAIL  bypass C565 -> U520.5: pads found on the board
+PASS  bypass C43 (4.7u) to U15.6: 14.72 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C44 (100n) to U15.6: 44.19 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+FAIL  bypass C551 -> U15.7: pads found on the board
+FAIL  bypass C552 -> U15.7: pads found on the board
+PASS  bypass C48 (4.7u) to U16.6: 12.76 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C49 (100n) to U16.6: 22.83 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+FAIL  bypass C553 -> U16.7: pads found on the board
+FAIL  bypass C554 -> U16.7: pads found on the board
+PASS  bypass C50 (4.7u) to U17.6: 13.79 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C51 (100n) to U17.6: 23.95 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+FAIL  bypass C555 -> U17.7: pads found on the board
+FAIL  bypass C556 -> U17.7: pads found on the board
+PASS  bypass C59 (4.7u) to U18.6: 41.36 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C60 (100n) to U18.6: 32.05 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+FAIL  bypass C557 -> U18.7: pads found on the board
+FAIL  bypass C558 -> U18.7: pads found on the board
+FAIL  bypass C65 -> U501.5: pads found on the board
+FAIL  bypass C66 -> U502.5: pads found on the board
+FAIL  bypass C508 -> U503.5: pads found on the board
+FAIL  bypass C509 -> U504.5: pads found on the board
+FAIL  bypass C510 -> U505.5: pads found on the board
+FAIL  bypass C511 -> U506.5: pads found on the board
+PASS  bypass C402 (100n) to U41.11: 43.27 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C403 (100n) to U41.27: 52.09 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C404 (100n) to U41.50: 49.99 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C405 (100n) to U41.75: 37.62 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C406 (100n) to U41.100: 45.88 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C401 (10u) to U41.50: 50.12 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C407 (2.2u) to U41.48: 54.64 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C408 (2.2u) to U41.73: 44.59 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+FAIL  bypass C412 -> U41.21: pads found on the board
+FAIL  bypass C413 -> U41.21: pads found on the board
+PASS  bypass C400 (1u) to U40.1: 28.98 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C422 (100n) to U51.11: 24.50 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C423 (100n) to U51.27: 31.86 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C424 (100n) to U51.50: 33.59 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C425 (100n) to U51.75: 20.00 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C426 (100n) to U51.100: 18.57 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C421 (10u) to U51.50: 28.89 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C427 (2.2u) to U51.48: 31.67 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C428 (2.2u) to U51.73: 19.29 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+FAIL  bypass C432 -> U51.21: pads found on the board
+FAIL  bypass C433 -> U51.21: pads found on the board
+PASS  bypass C420 (1u) to U50.1: 14.17 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C442 (100n) to U61.11: 24.50 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C443 (100n) to U61.27: 31.86 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C444 (100n) to U61.50: 33.59 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C445 (100n) to U61.75: 20.00 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C446 (100n) to U61.100: 18.57 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C441 (10u) to U61.50: 28.89 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C447 (2.2u) to U61.48: 31.67 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C448 (2.2u) to U61.73: 19.29 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+FAIL  bypass C452 -> U61.21: pads found on the board
+FAIL  bypass C453 -> U61.21: pads found on the board
+PASS  bypass C440 (1u) to U60.1: 14.17 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C480 (100n) to U80.14: 45.67 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+FAIL  bypass C566 -> U81.14: pads found on the board
+FAIL  bypass C567 -> U84.14: pads found on the board
+FAIL  bypass C572 -> U85.14: pads found on the board
+FAIL  bypass C585 -> U530.5: pads found on the board
+FAIL  bypass C588 -> U533.5: pads found on the board
+FAIL  bypass C586 -> U531.5: pads found on the board
+FAIL  bypass C589 -> U534.5: pads found on the board
+FAIL  bypass C587 -> U532.5: pads found on the board
+FAIL  bypass C590 -> U535.5: pads found on the board
+FAIL  bypass C576 -> U521.5: pads found on the board
+FAIL  bypass C579 -> U524.5: pads found on the board
+FAIL  bypass C582 -> U527.5: pads found on the board
+FAIL  bypass C512 -> U507.5: pads found on the board
+FAIL  bypass C515 -> U510.5: pads found on the board
+FAIL  bypass C518 -> U513.5: pads found on the board
+FAIL  bypass C561 -> U516.5: pads found on the board
+FAIL  bypass C577 -> U522.5: pads found on the board
+FAIL  bypass C580 -> U525.5: pads found on the board
+FAIL  bypass C583 -> U528.5: pads found on the board
+FAIL  bypass C513 -> U508.5: pads found on the board
+FAIL  bypass C516 -> U511.5: pads found on the board
+FAIL  bypass C519 -> U514.5: pads found on the board
+FAIL  bypass C562 -> U517.5: pads found on the board
+FAIL  bypass C578 -> U523.5: pads found on the board
+FAIL  bypass C581 -> U526.5: pads found on the board
+FAIL  bypass C584 -> U529.5: pads found on the board
+FAIL  bypass C514 -> U509.5: pads found on the board
+FAIL  bypass C517 -> U512.5: pads found on the board
+FAIL  bypass C560 -> U515.5: pads found on the board
+FAIL  bypass C563 -> U518.5: pads found on the board
+PASS  bypass C4 (10u) to U25.3: 16.77 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C5 (22u 6.3V) to L1.2: 20.39 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C6 (22u 6.3V) to L1.2: 17.69 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C12 (1u) to U27.5: 12.28 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C13 (1u) to U27.1: 13.83 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C36 (100n) to U5.1: 176.99 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C37 (100n) to U3.1: 16.52 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C38 (100n) to U4.1: 12.38 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C69 (100n) to U8.8: 27.69 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C70 (100n) to U9.2: 13.23 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  bypass C71 (100n) to U10.4: 42.69 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS  intent rail +5V_S1 is a net of the board
+PASS  intent rail +5V_S2 is a net of the board
+PASS  intent rail +5V_S3 is a net of the board
+PASS  intent rail +5V_DEV is a net of the board
+PASS  intent rail +3V3_DEV is a net of the board
+PASS  intent rail +3V3_S1A is a net of the board
+FAIL  intent rail +3V3_M2C1 is a net of the board
+PASS  intent rail +3V3_S1B is a net of the board
+PASS  intent rail +1V0_S1 is a net of the board
+PASS  intent rail +1V1_S1 is a net of the board
+PASS  intent rail +3V3_CM1 is a net of the board
+PASS  intent rail +1V8_CM1 is a net of the board
+PASS  intent rail +3V3_S2A is a net of the board
+FAIL  intent rail +3V3_M2C2 is a net of the board
+PASS  intent rail +3V3_S2B is a net of the board
+PASS  intent rail +1V0_S2 is a net of the board
+PASS  intent rail +1V1_S2 is a net of the board
+PASS  intent rail +3V3_CM2 is a net of the board
+PASS  intent rail +1V8_CM2 is a net of the board
+PASS  intent rail +3V3_S3A is a net of the board
+FAIL  intent rail +3V3_M2C3 is a net of the board
+PASS  intent rail +3V3_S3B is a net of the board
+PASS  intent rail +1V0_S3 is a net of the board
+PASS  intent rail +1V1_S3 is a net of the board
+PASS  intent rail +3V3_CM3 is a net of the board
+PASS  intent rail +1V8_CM3 is a net of the board
+PASS  intent rail +3V3_IOCA is a net of the board
+PASS  intent rail +3V3_IOCB is a net of the board
+PASS  intent rail +3V3_IOCC is a net of the board
+PASS  intent rail +1V2_KSZ is a net of the board
+PASS  intent rail +2V5_KSZ is a net of the board
+PASS  intent rail +3V3_ZB is a net of the board
+PASS  intent rail +5V_LORA is a net of the board
+PASS  intent rail +5V_LIME is a net of the board
+PASS  intent rail +5V_RB is a net of the board
+PASS  intent rail +5V_CAM is a net of the board
+PASS  intent rail +5V_HDMI is a net of the board
+PASS  intent rail +54V_POE is a net of the board
+PASS  intent rail GND is a net of the board
+PASS  intent rail VBUS_QMX is a net of the board
+PASS  intent rail PANEL_5V is a net of the board
+intent_checks: 156 of 274 bypass entries are past their limit and allowed by bypass-allow.txt
+intent_checks: return path on 658 nets, return via on 12 signal vias, 274 bypass entries, 41 rails checked
+RESULT: 123 FAIL
+PASS  netlist: intent rail +1V0_S1 names where its current goes: source L103 and 1 load(s)
+PASS  netlist: intent rail +1V0_S2 names where its current goes: source L203 and 1 load(s)
+PASS  netlist: intent rail +1V0_S3 names where its current goes: source L303 and 1 load(s)
+PASS  netlist: intent rail +1V1_S1 names where its current goes: source L104 and 1 load(s)
+PASS  netlist: intent rail +1V1_S2 names where its current goes: source L204 and 1 load(s)
+PASS  netlist: intent rail +1V1_S3 names where its current goes: source L304 and 1 load(s)
+PASS  netlist: intent rail +1V2_KSZ names where its current goes: source L2 and 1 load(s)
+PASS  netlist: intent rail +1V8_CM1 names where its current goes: source U30A and 1 load(s)
+PASS  netlist: intent rail +1V8_CM2 names where its current goes: source U31A and 1 load(s)
+PASS  netlist: intent rail +1V8_CM3 names where its current goes: source U32A and 1 load(s)
+PASS  netlist: intent rail +2V5_KSZ names where its current goes: source U27 and 1 load(s)
+PASS  netlist: intent rail +3V3_CM1 names where its current goes: source U30A and 1 load(s)
+PASS  netlist: intent rail +3V3_CM2 names where its current goes: source U31A and 1 load(s)
+PASS  netlist: intent rail +3V3_CM3 names where its current goes: source U32A and 1 load(s)
+PASS  netlist: intent rail +3V3_DEV names where its current goes: source L1 and 70 load(s)
+PASS  netlist: intent rail +3V3_IOCA names where its current goes: source U40 and 4 load(s)
+PASS  netlist: intent rail +3V3_IOCB names where its current goes: source U50 and 4 load(s)
+PASS  netlist: intent rail +3V3_IOCC names where its current goes: source U60 and 4 load(s)
+PASS  netlist: intent rail +3V3_M2C1 names where its current goes: source R165 and 1 load(s)
+PASS  netlist: intent rail +3V3_M2C2 names where its current goes: source R265 and 1 load(s)
+PASS  netlist: intent rail +3V3_M2C3 names where its current goes: source R365 and 1 load(s)
+PASS  netlist: intent rail +3V3_S1A names where its current goes: source L101 and 1 load(s)
+PASS  netlist: intent rail +3V3_S1B names where its current goes: source L102 and 2 load(s)
+PASS  netlist: intent rail +3V3_S2A names where its current goes: source L201 and 1 load(s)
+PASS  netlist: intent rail +3V3_S2B names where its current goes: source L202 and 2 load(s)
+PASS  netlist: intent rail +3V3_S3A names where its current goes: source L301 and 1 load(s)
+PASS  netlist: intent rail +3V3_S3B names where its current goes: source L302 and 2 load(s)
+PASS  netlist: intent rail +3V3_ZB names where its current goes: source U22 and 4 load(s)
+PASS  netlist: intent rail +54V_POE names where its current goes: source J_54V and 1 load(s)
+PASS  netlist: intent rail +5V_CAM names where its current goes: source U28 and 1 load(s)
+PASS  netlist: intent rail +5V_DEV names where its current goes: source J_5V_DEV and 19 load(s)
+PASS  netlist: intent rail +5V_HDMI names where its current goes: source F2 and 1 load(s)
+PASS  netlist: intent rail +5V_LIME names where its current goes: source U23 and 1 load(s)
+PASS  netlist: intent rail +5V_LORA names where its current goes: source U21 and 1 load(s)
+PASS  netlist: intent rail +5V_RB names where its current goes: source U24 and 1 load(s)
+PASS  netlist: intent rail +5V_S1 names where its current goes: source J_5V_S1 and 5 load(s)
+PASS  netlist: intent rail +5V_S2 names where its current goes: source J_5V_S2 and 5 load(s)
+PASS  netlist: intent rail +5V_S3 names where its current goes: source J_5V_S3 and 5 load(s)
+PASS  netlist: intent rail GND names where its current goes: source J_5V_S1, J_5V_S2, J_5V_S3, J_5V_DEV and 35 load(s)
+PASS  netlist: intent rail PANEL_5V names where its current goes: source F1 and 1 load(s)
+PASS  netlist: intent rail VBUS_QMX names where its current goes: source F3 and 1 load(s)
+FAIL  netlist: power net DEV_BST is a declared rail (it is not: supply pin by its held datasheet (U25.6 BST: v2/vendor/diodes/diodes-ap63200-series-buck.pdf))
+FAIL  netlist: power net GNSS_3V3 is a declared rail (it is not: supply pin by name (U15.6 VDD), and the intent's bypass list decouples it (C43:U15.6, C44:U15.6))
+FAIL  netlist: power net GNSS_VDD_RF is a declared rail (it is not: supply pin by its held datasheet (U11.9 VDD_RF: v2/vendor/quectel/lg290p03-hardware-design-v1.1.pdf))
+FAIL  netlist: power net IOCA_VCAP is a declared rail (it is not: supply pin by name (U41.48 VCAP, U41.73 VCAP), and the intent's bypass list decouples it (C407:U41.48, C408:U41.73))
+FAIL  netlist: power net IOCB_VCAP is a declared rail (it is not: supply pin by name (U51.48 VCAP, U51.73 VCAP), and the intent's bypass list decouples it (C427:U51.48, C428:U51.73))
+FAIL  netlist: power net IOCC_VCAP is a declared rail (it is not: supply pin by name (U61.48 VCAP, U61.73 VCAP), and the intent's bypass list decouples it (C447:U61.48, C448:U61.73))
+FAIL  netlist: power net KSZC_BST is a declared rail (it is not: supply pin by its held datasheet (U26.6 BST: v2/vendor/ti/ti-tps62933.pdf))
+FAIL  netlist: power net RB_3V3 is a declared rail (it is not: supply pin by name (U18.6 VDD), and the intent's bypass list decouples it (C59:U18.6, C60:U18.6))
+FAIL  netlist: power net S1A_BOOT is a declared rail (it is not: supply pin by its held datasheet (U103.1 BST: v2/vendor/diodes/diodes-ap64500.pdf))
+FAIL  netlist: power net S1B_BOOT is a declared rail (it is not: supply pin by its held datasheet (U104.1 BST: v2/vendor/diodes/diodes-ap64500.pdf))
+FAIL  netlist: power net S1C_BST is a declared rail (it is not: supply pin by its held datasheet (U105.6 BST: v2/vendor/ti/ti-tps62933.pdf))
+FAIL  netlist: power net S1D_BST is a declared rail (it is not: supply pin by its held datasheet (U106.6 BST: v2/vendor/ti/ti-tps62933.pdf))
+FAIL  netlist: power net S2A_BOOT is a declared rail (it is not: supply pin by its held datasheet (U203.1 BST: v2/vendor/diodes/diodes-ap64500.pdf))
+FAIL  netlist: power net S2B_BOOT is a declared rail (it is not: supply pin by its held datasheet (U204.1 BST: v2/vendor/diodes/diodes-ap64500.pdf))
+FAIL  netlist: power net S2C_BST is a declared rail (it is not: supply pin by its held datasheet (U205.6 BST: v2/vendor/ti/ti-tps62933.pdf))
+FAIL  netlist: power net S2D_BST is a declared rail (it is not: supply pin by its held datasheet (U206.6 BST: v2/vendor/ti/ti-tps62933.pdf))
+FAIL  netlist: power net S3A_BOOT is a declared rail (it is not: supply pin by its held datasheet (U303.1 BST: v2/vendor/diodes/diodes-ap64500.pdf))
+FAIL  netlist: power net S3B_BOOT is a declared rail (it is not: supply pin by its held datasheet (U304.1 BST: v2/vendor/diodes/diodes-ap64500.pdf))
+FAIL  netlist: power net S3C_BST is a declared rail (it is not: supply pin by its held datasheet (U305.6 BST: v2/vendor/ti/ti-tps62933.pdf))
+FAIL  netlist: power net S3D_BST is a declared rail (it is not: supply pin by its held datasheet (U306.6 BST: v2/vendor/ti/ti-tps62933.pdf))
+FAIL  netlist: power net SIM1_VCC is a declared rail (it is not: supply pin by type (J_SIM1.1); supply pin by name (J_SIM1.1 VCC, U222.5 SIM1_VCC), and the intent's bypass list decouples it (C286:U222.5))
+FAIL  netlist: power net SIMC2_VCC is a declared rail (it is not: supply pin by type (J_SIM2.1); supply pin by name (J_SIM2.1 VCC, U223.5 SIMC2_VCC), and the intent's bypass list decouples it (C289:U223.5))
+FAIL  netlist: power net VBAT is a declared rail (it is not: power class PWR in the netlist; supply pin by name (U30A.76 VBAT, U31A.76 VBAT, U32A.76 VBAT, U9.14 VBAT), and supply pins of 4 parts share it; supply pin by it)
+FAIL  netlist: power net VBUS_FLASH1 is a declared rail (it is not: power class PWR in the netlist; supply pin by name (J_FLASH1.A4 VBUS, J_FLASH1.A9 VBUS, J_FLASH1.B4 VBUS, J_FLAS), and supply pins of 2 parts share it)
+FAIL  netlist: power net VBUS_FLASH2 is a declared rail (it is not: power class PWR in the netlist; supply pin by name (J_FLASH2.A4 VBUS, J_FLASH2.A9 VBUS, J_FLASH2.B4 VBUS, J_FLAS), and supply pins of 2 parts share it)
+FAIL  netlist: power net VBUS_FLASH3 is a declared rail (it is not: power class PWR in the netlist; supply pin by name (J_FLASH3.A4 VBUS, J_FLASH3.A9 VBUS, J_FLASH3.B4 VBUS, J_FLAS), and supply pins of 2 parts share it)
+FAIL  netlist: power net ZBA_3V3 is a declared rail (it is not: supply pin by name (U16.6 VDD), and the intent's bypass list decouples it (C48:U16.6, C49:U16.6))
+FAIL  netlist: power net ZBB_3V3 is a declared rail (it is not: supply pin by name (U17.6 VDD), and the intent's bypass list decouples it (C50:U17.6, C51:U17.6))
+FAIL  netlist: the count of declared rails equals the count of power nets carrying more than 0.00 A: 41 declared (41 of them nets of the netlist), 69 power nets not declared as nodes (by kind, a net counted under each that applies: 38 power-symbol, 15 supply-pin by type, 57 power-class, 45 supply-pin by name, 49 supply-pin by its held datasheet, 14 reached by a rail's current, 41 declared rails), 14 declared as nodes; undeclared: DEV_BST, GNSS_3V3, GNSS_VDD_RF, IOCA_VCAP, IOCB_VCAP, IOCC_VCAP, KSZC_BST, RB_3V3, S1A_BOOT, S1B_BOOT, S1C_BST, S1D_BST, S2A_BOOT, S2B_BOOT
+verdict: intent_checks          FAIL         of 1045 {"fail": 152, "pass": 893, "unclaimed": 42} | the whole file; each rule also has its own verdict (intent_return_path, intent_return_via, intent_decoupling, intent_rails)
+intent_checks board exit 1

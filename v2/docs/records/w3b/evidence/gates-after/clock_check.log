@@ -1,0 +1,10 @@
+clock_check: 7 crystal(s) on board B
+  Y1 25 MHz 3225: nets KSZ_XI, KSZ_XO, load capacitors 18p -> presents 12.0 pF against the part's 12.0 (+0 percent, about +0 ppm)
+  Y101 24 MHz 3225: nets HUB1_XI, HUB1_XO, load capacitors 18p -> presents 12.0 pF against the part's 12.0 (+0 percent, about +0 ppm)
+  Y2 25 MHz 3225 (CAN-FD bit timing needs a crystal, not the HSI): nets IOCA_XI, IOCA_XO, load capacitors 18p -> presents 12.0 pF against the part's 12.0 (+0 percent, about +0 ppm)
+  Y201 24 MHz 3225: nets HUB2_XI, HUB2_XO, load capacitors 18p -> presents 12.0 pF against the part's 12.0 (+0 percent, about +0 ppm)
+  Y3 25 MHz 3225 (CAN-FD bit timing needs a crystal, not the HSI): nets IOCB_XI, IOCB_XO, load capacitors 18p -> presents 12.0 pF against the part's 12.0 (+0 percent, about +0 ppm)
+  Y301 24 MHz 3225: nets HUB3_XI, HUB3_XO, load capacitors 18p -> presents 12.0 pF against the part's 12.0 (+0 percent, about +0 ppm)
+  Y4 25 MHz 3225 (CAN-FD bit timing needs a crystal, not the HSI): nets IOCC_XI, IOCC_XO, load capacitors 18p -> presents 12.0 pF against the part's 12.0 (+0 percent, about +0 ppm)
+verdict: clock_check            PASS         of 7 {"bad": 0, "crystals": 7, "undeclared": 0} | every crystal has two matched load capacitors to ground, its own IC alone on its nets, and a network that presents what the part's own datasheet asks for within 20 percent
+exit 0

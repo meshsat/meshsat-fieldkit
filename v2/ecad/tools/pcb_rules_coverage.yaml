@@ -276,7 +276,11 @@ coverage:
      intent_other, which the finish still blocks on. Board A's `tools/boards/a.json` still describes VMON as \"a
      voltage monitor divider tap into an ADC\" (LOW_SPEED_OR_DC); it is the eFuse U21's output feeding the Xenarc
      monitor's supply lead (ILM 1.2 A), and PWR-001 refuses it until the intent declares it as a rail with U21 as its
-     source and J_MON as its load (board A's writer). SET 5, BOARD A (stream w3a, integrated in fnd/r8int5, 27 September
+     source and J_MON as its load (board A's writer). SET 5, BOARD B (stream w3b, integrated in fnd/r8int5, 27 September
+     2026): gen_sch_b.py declares every net named above for B (17 rails and 40 nodes, VBAT renamed VBAT_RTC by W3B-R1, and
+     GNSS_RF_IN, undecided once the antenna feed was declared); on B's regenerated netlist the stream read PASS of 59 in its
+     scratch, which the consolidated re-take takes in the tree; GNSS_ANT, GNSS_BIAS, GNSS_VDD_RF and the three SIM supplies
+     leave SI-001's signal set as declared rails (888 to 882 signal nets), which is no closure of SI-001. SET 5, BOARD A (stream w3a, integrated in fnd/r8int5, 27 September
      2026): gen_sch_a.py declares every net named above for A, each from its maker's sheet (VMON, PRECHG, +3V3_EMCON_EF
      and +3V3_EMCON as rails; B33_BST, HT_BST, S1_BOOT, S3_BOOT, PD_VTX, PD_VAUX, PD_DVDD, PD_CC1 and PD_CC2 as nodes),
      and a.json's VMON entry now names the eFuse output; on A's regenerated netlist the stream read PASS of 35 (34
