@@ -1,0 +1,4 @@
+comment lines removed 3, added 21
+records 144, all equal; baseline_reviews 5; changed: S-79 title, S-51 S-78 S-80 closing_evidence
+wrote v2/ecad/tools/pcb_requirements.yaml, sha256/16 a92f44f2b0608800
+ALL ASSERTIONS HOLD
