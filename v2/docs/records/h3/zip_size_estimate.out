@@ -1,0 +1,43 @@
+zip_size_estimate: commit HEAD (65413369), version name H3
+plan: 2263 included, 4684 excluded, 483 referenced (H2: 2224, 4682, 483)
+entries in the ZIP: 2269 files and root pages, and the 4 generated files (H2: 2234 entries)
+files whose blob is H2's: 2191, sizes taken from H2.zip; new or changed: 78, compressed here
+files of H2 that the commit's plan no longer includes: 0
+compressed file data: 51406394 bytes
+the 4 generated files, ESTIMATED from H2's by row counts: 369141 bytes (MANIFEST.tsv 179298, EXCLUDED.tsv 141110, REFERENCED-SOURCES.tsv 36333, SOURCE.txt 12399); commit ids the pages name: 151 (H2's timeline: 121)
+ZIP structure: 403750 bytes
+ESTIMATE: 52179285 bytes; H2 was 51894737; cap 52428800; margin 249515 bytes (UNDER the cap)
+the estimate's uncertain part is the 4 generated files; were they 25 percent larger than estimated the ZIP would be 52271570 bytes (under)
+
+the 30 files that add most to the ZIP since H2 (added bytes, compressed, compressed in H2, raw, path):
+     22393    22393        0     66857  v2/cad/render/scene.py
+     15793    15793        0    101246  v2/docs/records/defstab/moves.json
+     13342   100432    87090    295827  v2/docs/handover/LAYER-STATUS.md
+     13342   100432    87090    295827  LAYER-STATUS.md
+     10911    10911        0     24625  v2/docs/records/handover/H2-USABILITY-CHECK.md
+     10082    10082        0     26476  v2/docs/records/h2m/h2m_layer_tables.py
+      8223     8223        0     20475  v2/docs/handover/H2-RESPONSE.md
+      8075     8075        0     22689  v2/docs/handover/DEFINITION-STATUS.md
+      7624     7624        0     19325  v2/docs/reviews/DEFINITION-RESTRUCTURE-CHECK-2026-09-27.md
+      6276   229978   223702    861662  v2/ecad/tools/pcb_requirements.yaml
+      5902     5902        0     13919  v2/docs/reviews/2026-09-27-third-checkpoint-review.md
+      5733     5733        0     18514  v2/docs/records/l3rb/apply_baseline.py
+      5660     5660        0     13208  v2/docs/handover/RELEASE-H3.md
+      5379    22041    16662     62712  v2/docs/handover/REGENERATE.md
+      5379    22041    16662     62712  REGENERATE.md
+      5243     5243        0     13412  v2/docs/reviews/TARGETED-RECHECK-LAYER-3-2026-09-27.md
+      5096     5096        0     17327  v2/docs/records/h2m/box/retake-p.json
+      4905     4905        0     11160  v2/docs/reviews/2026-09-27-h2-independent-review.md
+      4816     4816        0     15263  v2/docs/records/l3rb/edit_docs.py
+      4665     4665        0     13764  v2/docs/records/h3/design_difference.py
+      4553     4553        0     12242  v2/docs/records/h3/apply_rebinds.py
+      4549     4549        0     12638  v2/docs/records/defstab/build.py
+      4444    21259    16815     58645  v2/docs/handover/START-HERE.md
+      4444    21259    16815     58645  START-HERE.md
+      4343     9227     4884     21883  v2/docs/handover/GLOSSARY.md
+      4343     9227     4884     21883  GLOSSARY.md
+      4172     4172        0     11525  v2/docs/records/h3/handover_counts.py
+      4029     4029        0     12921  v2/docs/records/defstab/heads.py
+      3736     3736        0     11903  v2/docs/records/defstab/cuts.py
+      3716    70485    66769    268418  v2/docs/records/README.md
+sum of what the new or changed files add: 272802 bytes

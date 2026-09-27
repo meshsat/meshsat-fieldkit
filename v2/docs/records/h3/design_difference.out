@@ -1,6 +1,6 @@
-design_difference: b89b50b4 (H2's source commit) to HEAD (6ec37197)
+design_difference: b89b50b4 (H2's source commit) to HEAD (65413369)
 
-[files that differ: 67]
+[files that differ: 80]
   handover snapshot (an earlier snapshot's own files):                                 3
       A v2/release/handover/H2.MANIFEST.tsv
       A v2/release/handover/H2.zip
@@ -28,7 +28,7 @@ design_difference: b89b50b4 (H2's source commit) to HEAD (6ec37197)
   DESIGN: CAD source or case release:                                                  0
   DESIGN: maker document or vendor record:                                             0
   DESIGN: diagram:                                                                     0
-  page, review or record under v2/docs:                                                51
+  page, review or record under v2/docs:                                                64
   overview:                                                                            2
       M README.md
       M v2/README.md
@@ -50,7 +50,7 @@ design_difference: b89b50b4 (H2's source commit) to HEAD (6ec37197)
   same    v2/ecad/pcb-p-pack-p2/pcb-p-pack.kicad_sch 47e0bc19e8e18cf0
   31 schematic, netlist, intent and provenance files (and E5's board file) compared, 31 the same
 
-[v2/ecad/tools/pcb_requirements.yaml: sha256/16 9a3aed63341c8eaa to 6eb35694e300abff]
+[v2/ecad/tools/pcb_requirements.yaml: b89b50b4 (H2's source commit, sha256/16 9a3aed63341c8eaa) to 65413369 (sha256/16 6eb35694e300abff)]
   top-level baseline_reviews: ['v2/docs/reviews/REVIEW-B-LAYER-3-2026-09-27.md@7a6c679f446b1baa', 'v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2026-09-27.md@1c3bc2d99f9efb51', 'v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2-2026-09-27.md@cf8c73fb288be2fb'] -> ['v2/docs/reviews/REVIEW-B-LAYER-3-2026-09-27.md@7a6c679f446b1baa', 'v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2026-09-27.md@1c3bc2d99f9efb51', 'v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2-2026-09-27.md@cf8c73fb288be2fb', 'v2/docs/reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md@ae70b1a7811ecea1', 'v2/docs/reviews/TARGETED-RECHECK-LAYER-3-2026-09-27.md@7831358b96b6f5ca']
   top-level baseline_state: 'READY_FOR_REVIEW_B' -> 'BASELINED at a54b793b'
   top-level needs_document_sha256: '4483209659dc391c9677ae8d5351ccad4805d44906f8b142fd3029e4192c96bc' -> '6ebe6760c4312bcadab789da80d103d6e40da0a7657dfe636315eef66930fa54'
@@ -65,7 +65,23 @@ design_difference: b89b50b4 (H2's source commit) to HEAD (6ec37197)
       CON-010: evidence
       CFL-016: evidence, evidence_bound_to
       CFL-014: evidence, evidence_bound_to
-  record fields outside the readings and notes that differ: none
+  record fields outside the readings and notes, and needs, rulings and choices, that differ: none
+
+[v2/ecad/tools/pcb_requirements.yaml: a54b793b (the commit its baseline_state names, sha256/16 c8fded5cb0a165d6) to 65413369 (sha256/16 6eb35694e300abff)]
+  top-level baseline_reviews: ['v2/docs/reviews/REVIEW-B-LAYER-3-2026-09-27.md@7a6c679f446b1baa', 'v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2026-09-27.md@1c3bc2d99f9efb51', 'v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2-2026-09-27.md@cf8c73fb288be2fb'] -> ['v2/docs/reviews/REVIEW-B-LAYER-3-2026-09-27.md@7a6c679f446b1baa', 'v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2026-09-27.md@1c3bc2d99f9efb51', 'v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2-2026-09-27.md@cf8c73fb288be2fb', 'v2/docs/reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md@ae70b1a7811ecea1', 'v2/docs/reviews/TARGETED-RECHECK-LAYER-3-2026-09-27.md@7831358b96b6f5ca']
+  top-level baseline_state: 'READY_FOR_REVIEW_B' -> 'BASELINED at a54b793b'
+  top-level needs_document_sha256: '4483209659dc391c9677ae8d5351ccad4805d44906f8b142fd3029e4192c96bc' -> '6ebe6760c4312bcadab789da80d103d6e40da0a7657dfe636315eef66930fa54'
+  needs: 19 to 19; added none; removed none; changed none
+  owner_rulings: 29 to 29; added none; removed none; changed none
+  session_choices: 63 to 63; added none; removed none; changed none
+  open_items: 61 to 58; added none; removed S-51 S-78 S-80; changed 1
+      S-79: title
+  closed_items: 50 to 53; added S-51 S-78 S-80; removed none; changed none
+  records: 144 to 144; added none; removed none; changed 3
+      REQ-005: evidence, evidence_bound_to
+      CFL-016: evidence, evidence_bound_to
+      CFL-014: evidence, evidence_bound_to
+  record fields outside the readings and notes, and needs, rulings and choices, that differ: none
 
 [v2/ecad/tools/pcb_interfaces.yaml: sha256/16 a30b5d408a3dab93 to ee6b6b840adddba2]
   differs at /board_to_board/read_at/commit
