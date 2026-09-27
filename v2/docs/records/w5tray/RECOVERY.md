@@ -90,4 +90,19 @@ same holds for `v2/vendor/adhesives/3m-scotch-weld-dp8005.pdf` (`90fdb06a6289827
 
 ## The faithful rebuild
 
-Written after the rebuild on the box; see the end of this file.
+Before anything was changed, the recovered scripts of commit `fb4a52eb` were built on the rented box (Ubuntu 24.04.5 LTS, Python 3.12.3,
+x86_64) under `/root/w5tray/`, in a fresh venv installed from `v2/cad/requirements-cad.lock` (`pip freeze` equals the lock line for line;
+build123d 0.13.0), from a sparse clone of this branch (a git bundle on the box's own repository). `v2/cad/build_lid_tray_r2.sh` ran twice
+(27 September 2026, 20:58:03 to 20:58:19 and 20:58:19 to 20:58:36 UTC, `CASE_BASE_COMMIT=c23c5e76`):
+
+| Output | sha256 (16), both runs | The first pass's digest | |
+|---|---|---|---|
+| `lid-tray-qmx-r2.stl` | `02d9a3d9177d8265` | `02d9a3d9177d8265` | identical |
+| `lid-tray-qmx-r2-keeper.stl` | `26bac195260fb986` | `26bac195260fb986` | identical |
+| `lid-tray-qmx-r2-check.out` (with `--solids`) | `1b0d7f6a930bf943` | `1b0d7f6a930bf943` | identical |
+| the three STEP files, the DXF, the PDF | differ between the two runs, and from the first pass | | as the first pass found: a STEP carries its time stamp, the DXF its dates, the PDF its creation date |
+
+Those are the three digests the checker reproduced on its own rebuild, so the recovered scripts are the ones the checker judged. The
+record is filed as `pass1/lid-tray-qmx-r2-check.out` with both runs' digests (`pass1/rebuild-a.sha256`, `pass1/rebuild-b.sha256`); the
+first pass's solids and sheets are not filed, because the checker found that design NOT mergeable (the unit cannot be fitted into it) and
+the released set of this branch is the answered design.
