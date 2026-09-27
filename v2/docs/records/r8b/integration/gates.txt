@@ -1,0 +1,66 @@
+  check_contracts            base: PASS den=96 boards_without_intent=0,fail=0,missing_boards=0,pass=96,rails_unsplit=0,undecided=0,unjudged=0
+                               tree: PASS den=96 boards_without_intent=0,fail=0,missing_boards=0,pass=96,rails_unsplit=0,undecided=0,unjudged=0
+  check_contracts_a          base: PASS den=32 fail=0,pass=32,undecided=0,unjudged=0
+                               tree: PASS den=32 fail=0,pass=32,undecided=0,unjudged=0
+  check_contracts_b          base: PASS den=60 fail=0,pass=60,undecided=0,unjudged=0
+                               tree: PASS den=60 fail=0,pass=60,undecided=0,unjudged=0
+  check_contracts_c          base: PASS den=7 fail=0,pass=7,undecided=0,unjudged=0
+                               tree: PASS den=7 fail=0,pass=7,undecided=0,unjudged=0
+  check_contracts_d          base: PASS den=11 fail=0,pass=11,undecided=0,unjudged=0
+                               tree: PASS den=11 fail=0,pass=11,undecided=0,unjudged=0
+  check_contracts_e          base: PASS den=12 fail=0,pass=12,undecided=0,unjudged=0
+                               tree: PASS den=12 fail=0,pass=12,undecided=0,unjudged=0
+  check_contracts_p          base: PASS den=9 fail=0,pass=9,undecided=0,unjudged=0
+                               tree: PASS den=9 fail=0,pass=9,undecided=0,unjudged=0
+  clock_check                base: PASS den=7 bad=0,crystals=7,undeclared=0
+                               tree: PASS den=7 bad=0,crystals=7,undeclared=0
+* derate                     base: PASS den=234 by_vendor_reference=0,judged=234,undeclared_nets=0,under_rated=0,unrated_parts=319
+                               tree: PASS den=240 by_vendor_reference=0,judged=240,undeclared_nets=0,under_rated=0,unrated_parts=422
+* edge_length                base: INCONCLUSIVE den=835 answered_nets=30,classes=147,contradicted_nets=0,decided_nets=30,layout_bound_nets=0,low_speed_nets=313,may_be_long_nets=30,signal_nets=835,undecided_nets=492
+                               tree: INCONCLUSIVE den=888 answered_nets=30,classes=155,contradicted_nets=0,decided_nets=30,layout_bound_nets=0,low_speed_nets=325,may_be_long_nets=30,signal_nets=888,undecided_nets=533
+  emc_sheet                  base: PASS den=20 boards=1,fail=0,paths=2,sources=15
+                               tree: PASS den=20 boards=1,fail=0,paths=2,sources=15
+  energy_chain               base: PASS den=98 checks=98,citations_unjudged=0,coordination_findings=1,fail=0,selection_findings=0,stages=12
+                               tree: PASS den=98 checks=98,citations_unjudged=0,coordination_findings=1,fail=0,selection_findings=0,stages=12
+  energy_chain_a             base: PASS den=4 fail=0,stages=4
+                               tree: PASS den=4 fail=0,stages=4
+  energy_chain_b             base: FAIL den=3 fail=1,stages=3
+                               tree: FAIL den=3 fail=1,stages=3
+  energy_chain_e             base: PASS den=3 fail=0,stages=3
+                               tree: PASS den=3 fail=0,stages=3
+  energy_chain_e5            base: PASS den=1 fail=0,stages=1
+                               tree: PASS den=1 fail=0,stages=1
+  energy_chain_p             base: PASS den=3 fail=0,stages=3
+                               tree: PASS den=3 fail=0,stages=3
+  ground_system              base: PASS den=1 crossings=0,fail=0,grounds=1,signals_crossing=0
+                               tree: PASS den=1 crossings=0,fail=0,grounds=1,signals_crossing=0
+* inhibit_chain_a            base: FAIL den=9 fail=1,pass=5,undecided=3,unjudged=0
+                               tree: INCONCLUSIVE den=9 fail=0,pass=5,undecided=4,unjudged=0
+* inhibit_chain_b            base: FAIL den=20 fail=15,pass=3,undecided=2,unjudged=0
+                               tree: FAIL den=20 fail=10,pass=3,undecided=7,unjudged=0
+* inhibit_chain_c            base: FAIL den=6 fail=1,pass=4,undecided=1,unjudged=0
+                               tree: INCONCLUSIVE den=6 fail=0,pass=4,undecided=2,unjudged=0
+  inhibit_chain_d            base: INCONCLUSIVE den=8 fail=0,pass=6,undecided=2,unjudged=0
+                               tree: INCONCLUSIVE den=8 fail=0,pass=6,undecided=2,unjudged=0
+  inhibit_chain_e            base: PASS den=1 fail=0,pass=1,undecided=0,unjudged=0
+                               tree: PASS den=1 fail=0,pass=1,undecided=0,unjudged=0
+  inhibit_chain_p            base: PASS den=1 fail=0,pass=1,undecided=0,unjudged=0
+                               tree: PASS den=1 fail=0,pass=1,undecided=0,unjudged=0
+* intent_rails               base: FAIL den=70 census_nets=1929,checks=70,declared_nodes=14,declared_not_in_netlist=0,declared_rails=41,fail=29,held_pin_roles=265,nodes_supplying_parts=0,power_nets=69,rails_without_destination=0,settled=53,switches_unresolved=0,undecided=26,undeclared=28,unmarked=662
+                               tree: FAIL den=70 census_nets=2002,checks=70,declared_nodes=14,declared_not_in_netlist=0,declared_rails=41,fail=29,held_pin_roles=260,nodes_supplying_parts=0,power_nets=69,rails_without_destination=0,settled=50,switches_unresolved=0,undecided=26,undeclared=28,unmarked=708
+* netlist_board              base: FAIL den=6924 agree=6610,aliased_pins=0,board_footprints=957,board_only_inert=0,fail=314,netlist_refs=1103
+                               tree: FAIL den=7055 agree=6525,aliased_pins=0,board_footprints=957,board_only_inert=0,fail=530,netlist_refs=1265
+* netlist_parts              base: FAIL den=1860 agree=1831,footprint_differs=3,lcsc_differs_reported=0,only_board=27,only_netlist=173,shared_refs=930,value_differs=26
+                               tree: FAIL den=1848 agree=1792,footprint_differs=5,lcsc_differs_reported=0,only_board=33,only_netlist=341,shared_refs=924,value_differs=51
+* pin_map_lands_b            base: PASS den=1103 failures=0,judged=1103,merged_pad_pins=0,unreadable=0
+                               tree: PASS den=1265 failures=0,judged=1265,merged_pad_pins=0,unreadable=0
+  port_protect               base: PASS den=17 answered_in_part=0,behind_an_active_part=0,clamps=6,clamps_one_way=6,clamps_reversed=0,clamps_symbol_mismatch=0,clamps_unjudged=0,declared=2,not_on_netlist=0,ports=2,unprotected=0
+                               tree: PASS den=17 answered_in_part=0,behind_an_active_part=0,clamps=6,clamps_one_way=6,clamps_reversed=0,clamps_symbol_mismatch=0,clamps_unjudged=0,declared=2,not_on_netlist=0,ports=2,unprotected=0
+  port_protect_b             base: PASS den=17 answered_in_part=0,behind_an_active_part=0,clamps=6,clamps_one_way=6,clamps_reversed=0,clamps_symbol_mismatch=0,clamps_unjudged=0,declared=2,not_on_netlist=0,ports=2,unprotected=0
+                               tree: PASS den=17 answered_in_part=0,behind_an_active_part=0,clamps=6,clamps_one_way=6,clamps_reversed=0,clamps_symbol_mismatch=0,clamps_unjudged=0,declared=2,not_on_netlist=0,ports=2,unprotected=0
+* power_path                 base: PASS den=None feeds=5,feeds_short=0,nodes=105,rails=41,segments=0,undeclared=0
+                               tree: PASS den=None feeds=5,feeds_short=0,nodes=114,rails=41,segments=0,undeclared=0
+  power_sequence             base: PASS den=41 always_on=22,deadlocks=0,rails=41,segments=5,unresolved=0
+                               tree: PASS den=41 always_on=22,deadlocks=0,rails=41,segments=5,unresolved=0
+  reliability                base: PASS den=47 boards=1,classes=6,covered=41,fail=0
+                               tree: PASS den=47 boards=1,classes=6,covered=41,fail=0

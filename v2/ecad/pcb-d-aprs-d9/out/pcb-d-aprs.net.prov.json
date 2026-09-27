@@ -2,7 +2,7 @@
  "what": "the generator that wrote this netlist, by content",
  "letter": "d",
  "netlist": "pcb-d-aprs.net",
- "generator_sha": "e89deef7899e203d",
+ "generator_sha": "a9df276ce618edec",
  "identity_since": "2026-09-26",
  "generator_files": [
   "boards/d.json#gen_env",
@@ -38,6 +38,7 @@
   "meshsat.pretty/LQFP-128_14x14mm_P0.4mm_EP6.0.kicad_mod",
   "meshsat.pretty/LeadLands_1x02.kicad_mod",
   "meshsat.pretty/M2_B-Key_Socket_3052.kicad_mod",
+  "meshsat.pretty/M2_B-Key_Socket_3052_TE2199119.kicad_mod",
   "meshsat.pretty/M2_E-Key_Socket_2230.kicad_mod",
   "meshsat.pretty/M2_M-Key_Socket_2242.kicad_mod",
   "meshsat.pretty/Mill-Max_0858_power_pin.kicad_mod",
@@ -77,7 +78,7 @@
  ],
  "generator_file_sha": {
   "boards/d.json#gen_env": "44136fa355b3678a",
-  "gen_footprints_b16.py": "1012311c0cc661b2",
+  "gen_footprints_b16.py": "e0ad5ba833f1d169",
   "gen_footprints_e.py": "1c1fab411acfa1d5",
   "gen_footprints_idc.py": "17716f42fc0824a5",
   "gen_footprints_panel.py": "8291174d7f0a2993",
@@ -109,6 +110,7 @@
   "meshsat.pretty/LQFP-128_14x14mm_P0.4mm_EP6.0.kicad_mod": "6a8b77e14185381b",
   "meshsat.pretty/LeadLands_1x02.kicad_mod": "1e3fa195a8f63a9c",
   "meshsat.pretty/M2_B-Key_Socket_3052.kicad_mod": "4982b4c8fa21070b",
+  "meshsat.pretty/M2_B-Key_Socket_3052_TE2199119.kicad_mod": "caba4f04104cd06d",
   "meshsat.pretty/M2_E-Key_Socket_2230.kicad_mod": "c8bc157e47cbdc73",
   "meshsat.pretty/M2_M-Key_Socket_2242.kicad_mod": "7a780b96b8af6b69",
   "meshsat.pretty/Mill-Max_0858_power_pin.kicad_mod": "aca8f7f50b3510b7",
@@ -147,5 +149,5 @@
   "schlayout.py": "a9eee3d6b0b38bae"
  },
  "schematic_sha256": "4adfe0c87e44db5e4fa3c6f16f2a8073",
- "taken": "2026-09-26T21:40:47+00:00"
+ "taken": "2026-09-27T04:56:47+00:00"
 }

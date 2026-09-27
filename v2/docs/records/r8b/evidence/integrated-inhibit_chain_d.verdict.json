@@ -1,0 +1,75 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "fail": 0,
+  "pass": 5,
+  "undecided": 0,
+  "unjudged": 0
+ },
+ "denominator": 5,
+ "evidence": [],
+ "inputs": {
+  "boards": "A,B,C,D,E,P",
+  "intent_a": {
+   "path": "pcb-a-power-a23/out/pcb-a-power-intent.json",
+   "sha256_16": "83ba5e43a6fbcccb"
+  },
+  "intent_b": {
+   "path": "pcb-b-compute-b19/out/pcb-b-compute-intent.json",
+   "sha256_16": "5af19ea259fba27b"
+  },
+  "intent_c": {
+   "path": "pcb-c-display-c8/out/pcb-c-display-intent.json",
+   "sha256_16": "5c8d991e3805016a"
+  },
+  "intent_d": {
+   "path": "pcb-d-aprs-d9/out/pcb-d-aprs-intent.json",
+   "sha256_16": "59591c54eb29ab64"
+  },
+  "netlist_a": {
+   "content16": "ffe040b5a915a63a",
+   "path": "pcb-a-power-a23/out/pcb-a-power.net",
+   "sha256_16": "7b08510106687b3d"
+  },
+  "netlist_b": {
+   "content16": "19469cab4ea23c88",
+   "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
+   "sha256_16": "3b30b3cc5e75a478"
+  },
+  "netlist_c": {
+   "content16": "89f0c572416af87a",
+   "path": "pcb-c-display-c8/out/pcb-c-display.net",
+   "sha256_16": "2834f0d8c4071d56"
+  },
+  "netlist_d": {
+   "content16": "c9ea1468d86c12e3",
+   "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
+   "sha256_16": "f13d8b70099ab03e"
+  }
+ },
+ "missing_input": null,
+ "note": "the transmit inhibit chain on this board: it is present, it reaches the gate it keys, the panel toggle is its only driver, its sense is a buffer and it is pulled down so a missing panel inhibits; RF-002's transmitter walk (tx_inhibit.py) is not in this tree, so no transmitter, fail-safe state or radio-named part was judged",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "RF-002": "b4c62839dd113ee3"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "RF-002"
+ ],
+ "tool": "inhibit_chain_d",
+ "tools": {
+  "git_head": "0e32ad359058",
+  "tools_tree_sha": "48615b3def726c9a"
+ },
+ "ts": "2026-09-27T00:27:34Z",
+ "verdict": "PASS",
+ "version": "0e32ad359058",
+ "writer": {
+  "file": "check_contracts.py",
+  "sha16": "304cad5fa2886a73"
+ }
+}

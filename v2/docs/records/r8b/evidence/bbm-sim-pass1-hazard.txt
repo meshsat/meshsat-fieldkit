@@ -1,0 +1,23 @@
+requirement: lead >= 1.000 us, hold >= 40.000 us
+netlist BOX/incoming/pass1.net: 34 gates, 6 Schmitt buffers, 6 RC nodes; hazard model ON
+  1 single vote change (corners)                   runs   162  select moves    162  min lead 40.524 us  min hold 0.002 us  violations 162
+      e.g. select BSEL1_S moved at 0.000050886 s with the enable off only 50.874 us before and 0.007 us after (required 1.0 and 40.0)
+      e.g. select BSEL1_S moved at 0.000086323 s with the enable off only 86.311 us before and 0.006 us after (required 1.0 and 40.0)
+      e.g. select BSEL1_S moved at 0.000081578 s with the enable off only 81.569 us before and 0.007 us after (required 1.0 and 40.0)
+  2 vote returns after r (checker's case)          runs 14373  select moves  46956  min lead 14.818 us  min hold 0.002 us  violations 47524
+      e.g. select BSEL1_S moved at 0.000052486 s with the enable off only 52.474 us before and 0.008 us after (required 1.0 and 40.0)
+      e.g. select BSEL1_S moved at 0.000050571 s with the enable off only 50.561 us before and 0.007 us after (required 1.0 and 40.0)
+      e.g. select BSEL1_S moved at 0.000048774 s with the enable off only 48.769 us before and 0.004 us after (required 1.0 and 40.0)
+  3 adversary aimed at the circuit's instants      runs   450  select moves   1424  min lead 0.005 us  min hold 0.003 us  violations 1464
+      e.g. select BSEL1_S moved at 0.000110004 s with the enable off only 109.996 us before and 0.004 us after (required 1.0 and 40.0)
+      e.g. select BSEL1_S moved at 0.000110004 s with the enable off only 109.996 us before and 0.004 us after (required 1.0 and 40.0)
+      e.g. select BSEL1_S moved at 0.000110004 s with the enable off only 109.996 us before and 0.004 us after (required 1.0 and 40.0)
+  4 random vote waveforms                          runs  3110  select moves  15896  min lead 0.007 us  min hold 0.002 us  violations 15910
+      e.g. select BSEL1_S moved at 0.000055407 s with the enable off only 2.616 us before and 0.009 us after (required 1.0 and 40.0)
+      e.g. select BSEL1_S moved at 0.000070862 s with the enable off only 70.796 us before and 0.003 us after (required 1.0 and 40.0)
+      e.g. select BSEL1_S moved at 0.000946394 s with the enable off only 47.039 us before and 0.008 us after (required 1.0 and 40.0)
+  4 random vote waveforms with power-good toggles  runs  1390  select moves   7344  min lead 0.268 us  min hold 0.002 us  violations 6120
+      e.g. select BSEL1_S moved at 0.000109025 s with the enable off only 108.998 us before and 0.005 us after (required 1.0 and 40.0)
+      e.g. select BSEL1_S moved at 0.000117843 s with the enable off only 114.101 us before and 0.003 us after (required 1.0 and 40.0)
+      e.g. select BSEL1_S moved at 0.000101293 s with the enable off only 101.280 us before and 0.009 us after (required 1.0 and 40.0)
+TOTAL runs 19485, select moves 71782, violations 71180

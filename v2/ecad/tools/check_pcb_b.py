@@ -205,14 +205,43 @@ if placed:
         _reach = sorted(set(_other) | {m for n in _other for m in _one_r(n)})
         _bad = [n for n in _reach if n.startswith(_SLOT_RAILS)]
         check(not _bad, "EMCON_HW: no other pad of %s reaches a slot rail directly or through one resistor (reaches %s)" % (_q, _bad or _reach))
-    check(_pads.get("Q11") == {"1": "EMCON_HW", "2": "GND", "3": "EMCON_ON"} and _one_r("EMCON_ON") == ["+3V3_DEV"],
-          "EMCON_ON: Q11 inverts EMCON_HW into it (gate EMCON_HW, source GND, drain EMCON_ON) with its pull-up to +3V3_DEV (Q11 %s, one resistor away %s)"
-          % (_gsd("Q11"), _one_r("EMCON_ON")))
+    #   4 (MESHSAT-1357 round 8, board B author, 26 September 2026; EMCON.md L1 to L3 and L7). Q11, R513, the board-wide
+    #      EMCON_ON and every 2N7002 on it are gone. Each slot makes its own EMCON_ON{s} in U{s}12, an SN74LVC1G04 run from
+    #      that module's own 3.3 V (L3: a lost +3V3_DEV no longer releases a module radio), and its open-drain stages are
+    #      SN74LVC2G06 outputs (L7: VOL stated at the drive): U{s}13 (EMCON on WL_nDisable and BT_nDisable), U{s}14 (the
+    #      panel's off requests on the same two pins), U{s}15 (EMCON on the card's W_DISABLE1#, 1Y, and on its buck's EN,
+    #      2Y). The supervisors' PC5 read EMCON_SUP, U506's buffered copy (L1). EMCON_HW's IC loads are exactly the eight
+    #      single-gate inputs below, each on its input pin.
+    _EMCON_IN = {"U112": "2", "U212": "2", "U312": "2", "U501": "1", "U503": "1", "U504": "1", "U505": "1", "U506": "2"}
+    _ics = sorted(r for r in bynet.get("EMCON_HW", set()) if r.startswith("U"))
+    _onp = {r: sorted(p for p, n in _pads.get(r, {}).items() if n == "EMCON_HW") for r in _ics}
+    check(_ics == sorted(_EMCON_IN) and all(_onp[r] == [_EMCON_IN[r]] for r in _ics),
+          "EMCON_HW: its only IC loads are the round-8 single gates, each on its input pin (%s)" % _onp)
+    check(sorted(p for p in bypad.get("EMCON_SUP", set()) if p[0].startswith("U")) == [("U41", "33"), ("U506", "4"), ("U51", "33"), ("U61", "33")],
+          "EMCON_SUP: U506's output reaches the three supervisors' PC5 and nothing else of theirs sits on EMCON_HW (L1) (got %s)" % sorted(bypad.get("EMCON_SUP", set())))
     for _sl, (_wd, _sk, _pin) in ((1, ("WIFI_W_DIS_n", "J_M2C1", "56")), (2, ("5G_W_DIS_n", "J_M2C2", "8")), (3, ("WIFI2_W_DIS_n", "J_M2C3", "56"))):
-        _q = "Q%d06" % _sl
-        check(_pads.get(_q) == {"1": "EMCON_ON", "2": "GND", "3": _wd} and (_sk, _pin) in bypad.get(_wd, set()) and _one_r(_wd) == ["+3V3_S%dA" % _sl],
-              "%s: W_DISABLE1# %s.%s is an open drain %s from EMCON_ON (gate EMCON_ON, source GND) with one pull-up to +3V3_S%dA (%s %s, one resistor away %s)"
-              % (_wd, _sk, _pin, _q, _sl, _q, _gsd(_q), _one_r(_wd)))
+        _eon, _cm = "EMCON_ON%d" % _sl, "+3V3_CM%d" % _sl
+        _u12, _u13, _u14, _u15 = ("U%d%02d" % (_sl, k) for k in (12, 13, 14, 15))
+        _p12 = {k: v for k, v in _pads.get(_u12, {}).items() if not (k == "1" and (v or "").startswith("unconnected-"))}
+        check(_p12 == {"2": "EMCON_HW", "3": "GND", "4": _eon, "5": _cm},
+              "%s: %s inverts EMCON_HW into it, run from %s, its pin 1 (NC) open (pads %s)" % (_eon, _u12, _cm, _pads.get(_u12)))
+        for _u in (_u13, _u14, _u15):
+            check(_pads.get(_u, {}).get("5") == _cm and _pads.get(_u, {}).get("2") == "GND",
+                  "%s: an SN74LVC2G06 run from %s (VCC %s, GND %s)" % (_u, _cm, _pads.get(_u, {}).get("5"), _pads.get(_u, {}).get("2")))
+        check(_pads.get(_u15, {}).get("1") == _eon and _pads.get(_u15, {}).get("6") == _wd and (_sk, _pin) in bypad.get(_wd, set())
+              and _one_r(_wd) == ["+3V3_S%dA" % _sl] and not [q for q in bynet.get(_wd, set()) if q.startswith("Q")],
+              "%s: W_DISABLE1# %s.%s is pulled low by %s 1Y from %s, with one pull-up to +3V3_S%dA and no transistor (one resistor away %s)"
+              % (_wd, _sk, _pin, _u15, _eon, _sl, _one_r(_wd)))
+        _en = "S%dA_EN" % _sl
+        check(_pads.get(_u15, {}).get("3") == _eon and _pads.get(_u15, {}).get("4") == _en and ("U%d03" % _sl, "3") in bypad.get(_en, set())
+              and _one_r(_en) == ["PCIE_PWR_EN%d" % _sl],
+              "%s: the card buck U%d03's EN comes from PCIE_PWR_EN%d through one resistor and %s 2Y pulls it low under EMCON (one resistor away %s)"
+              % (_en, _sl, _sl, _u15, _one_r(_en)))
+        for _nm, _cmp, _y in (("WL_nDIS%d" % _sl, "89", "6"), ("BT_nDIS%d" % _sl, "91", "4")):
+            _got = sorted(bypad.get(_nm, set()))
+            check(_got == sorted([("U3%dA" % (_sl - 1), _cmp), (_u13, _y), (_u14, _y)]) and _pads.get(_u13, {}).get({"6": "1", "4": "3"}[_y]) == _eon,
+                  "%s: the module pin %s is pulled only low, by %s (EMCON) and %s (the panel's request), open drains wired together (got %s)"
+                  % (_nm, _cmp, _u13, _u14, _got))
     # AN EMCON GATE'S ENABLE OUTPUT HOLDS ITS SWITCH OFF WITHOUT ITS DRIVER (MESHSAT-1357 round 4, R4T-F9, 26 September
     # 2026). U19 and U20 (SN74LVC08A, on +3V3_DEV) drive the EN pins of U23/U24 (TPS259631, input +5V_DEV), U21
     # (TPS22810, input +5V_DEV) and U22 (TPS22810, input +3V3_DEV). A gate without its supply, or with its pin 14 open,
@@ -221,6 +250,7 @@ if placed:
     # sheets: at most V / I, where V is the lower full-shutdown threshold (TPS22810 VSHUTF 0.5 V minimum; TPS259631 VSD
     # 0.53 V minimum) and I is 10 uA of output leakage (SCAS283W gives the LVC08A no Ioff, so the family's guaranteed
     # figure, SN74LVC1G08 SCES217AA Ioff 10 uA, stands in) plus 0.1 uA of EN leakage (both sheets): 49.5 kOhm. At least
+    # (round 8: the drivers ARE SN74LVC1G08 now, U502 to U505, so the 10 uA is their own figure.)
     # the load the gate can drive high: SCAS283W 5.7 VOH 2.4 V minimum at 12 mA (VCC 3 V), 200 Ohm. A test point may
     # share the net; any other pad or resistor fails it.
     import re as _re
@@ -228,8 +258,8 @@ if placed:
         m = _re.match(r"\s*(\d+(?:\.\d+)?)\s*([kKM]?)", v or "")
         return float(m.group(1)) * {"": 1.0, "k": 1e3, "K": 1e3, "M": 1e6}[m.group(2)] if m else None
     _R_MAX = 0.50 / (10e-6 + 0.1e-6); _R_MIN = 2.4 / 12e-3
-    for _en, _drv, _load in (("LIME_EN", ("U19", "6"), ("U23", "3")), ("RB_EN", ("U19", "8"), ("U24", "3")),
-                             ("E22_EN", ("U19", "11"), ("U21", "5")), ("E72_EN", ("U20", "3"), ("U22", "5"))):
+    for _en, _drv, _load in (("LIME_EN", ("U502", "4"), ("U23", "3")), ("RB_EN", ("U503", "4"), ("U24", "3")),
+                             ("E22_EN", ("U504", "4"), ("U21", "5")), ("E72_EN", ("U505", "4"), ("U22", "5"))):
         _rs = sorted(r for r in bynet.get(_en, set()) if r.startswith("R"))
         _down = [r for r in _rs if sorted(_pads.get(r, {}).values()) == sorted([_en, "GND"])]
         _ohm = [_ohms(byval.get(r)) for r in _down]
@@ -239,6 +269,112 @@ if placed:
               "%s: %s.%s holds %s.%s OFF with its driver unpowered: one pull-down to GND of %.0f Ohm to %.1f kOhm "
               "(pull-downs %s valued %s, resistors on the net %s, other pads %s)"
               % (_en, _drv[0], _drv[1], _load[0], _load[1], _R_MIN, _R_MAX / 1e3, _down, [byval.get(r) for r in _down], _rs, _other))
+    # FAB-01 (MESHSAT-1357 round 8; FAILOVER-FABRIC.md section 9): every strap of the three PI7C9X2G404SL against Diodes
+    # DS40068 Rev 5-2 sections 3.2 to 3.4. TEST1 (9) and TEST2 (16) each on their own 5.1 kOhm to the switch's 3.3 V; TEST3,
+    # TEST4, TEST5, TEST6 (17, 22, 25, 51) and VC1_EN (18) on 330 Ohm to ground; TMS (92) and TRST_L (94) on 330 Ohm to
+    # ground; TCK (89) and TDI (93) open ("should be left open (NC)" when JTAG is not implemented).
+    def _strap(net, far, ohm):
+        _rs = [r for r in bynet.get(net, set()) if r.startswith("R")]
+        return (len(_rs) == 1 and sorted(_pads.get(_rs[0], {}).values()) == sorted([net, far]) and _ohms(byval.get(_rs[0])) == ohm), _rs
+    for _sl in (1, 2, 3):
+        _sw, _b33 = "U%d01" % _sl, "+3V3_S%dB" % _sl
+        for _p, _nm in (("9", "TEST1"), ("16", "TEST2")):
+            _n = _pads.get(_sw, {}).get(_p)
+            _ok, _rs = _strap(_n, _b33, 5100.0) if _n else (False, [])
+            check(_ok and sorted(q for q in bypad.get(_n, set()) if not q[0].startswith(("R", "TP"))) == [(_sw, _p)],
+                  "%s %s (%s): alone on its net with one 5.1 kOhm to %s (net %s, resistors %s)" % (_sw, _nm, _p, _b33, _n, _rs))
+        for _p, _nm in (("17", "TEST3"), ("22", "TEST4"), ("25", "TEST5"), ("51", "TEST6"), ("18", "VC1_EN"), ("92", "TMS"), ("94", "TRST_L")):
+            _n = _pads.get(_sw, {}).get(_p)
+            _ok, _rs = _strap(_n, "GND", 330.0) if _n else (False, [])
+            check(_ok, "%s %s (%s): 330 Ohm to ground (net %s, resistors %s)" % (_sw, _nm, _p, _n, _rs))
+        for _p, _nm in (("89", "TCK"), ("93", "TDI")):
+            _n = _pads.get(_sw, {}).get(_p)
+            check(not _n or _n.startswith("unconnected-") or len(bypad.get(_n, set())) == 1,
+                  "%s %s (%s): open, no other pad on it (net %s)" % (_sw, _nm, _p, _n))
+    # FAB-04 (round 8): the 23 safe-low lines hold a guaranteed low at datasheet leakage. For bit j of the voted set and
+    # controller i, R(480 + 3j + i) exists, joins exactly <bit>_<controller> and GND, is the only resistor on the net, and its
+    # value times the loads' leakage is under VIL 0.8 V: 5 uA per SN74LVC08A input (SCAS283W 5.7, the voters U70 to U75)
+    # and 10.25 uA for the supervisor's pin (DS12110 Rev 10 Table 60 with note 4's 10 uA product term). R15 and R16 on
+    # HDMI_SEL1/2: 10 uA per TS3DV642 select (SCDS343F 6.5) and 1 uA per 74LVC1G157 select (Nexperia Rev. 12 Table 7),
+    # under VIL 0.5 V. Designators are enumerated from the rule, not discovered from the nets.
+    for _j, _bit in enumerate(("SEL1", "SEL2", "SEL3", "HUBRST1", "HUBRST2", "HUBRST3", "WSEC")):
+        for _i, _t in enumerate(("A", "B", "C")):
+            _r, _n = "R%d" % (480 + 3 * _j + _i), "%s_%s" % (_bit, _t)
+            _ld = sorted(bypad.get(_n, set()))
+            _ia = 5e-6 * sum(1 for q, _pp in _ld if q in ("U70", "U71", "U72", "U73", "U74", "U75"))
+            _im = 10.25e-6 * sum(1 for q, _pp in _ld if q in ("U41", "U51", "U61"))
+            _ohm = _ohms(byval.get(_r))
+            check(sorted(_pads.get(_r, {}).values()) == sorted([_n, "GND"]) and [q for q in bynet.get(_n, set()) if q.startswith("R")] == [_r]
+                  and _ohm is not None and _ohm * (_ia + _im) < 0.8,
+                  "%s: %s (%s) holds it under 0.8 V at %.2f uA of datasheet leakage: %.3f V" % (_n, _r, byval.get(_r), (_ia + _im) * 1e6, (_ohm or 0) * (_ia + _im)))
+    for _r, _n, _sel, _mux in (("R15", "HDMI_SEL1", "U3", "U519"), ("R16", "HDMI_SEL2", "U4", "U520")):
+        _ohm = _ohms(byval.get(_r)); _il = 10e-6 * ((_sel, "17") in bypad.get(_n, set())) + 1e-6 * ((_mux, "6") in bypad.get(_n, set()))
+        check(sorted(_pads.get(_r, {}).values()) == sorted([_n, "GND"]) and _ohm is not None and _il >= 11e-6 and _ohm * _il < 0.5,
+              "%s: %s (%s) holds the display select under 0.5 V at %.0f uA: %.3f V" % (_n, _r, byval.get(_r), _il * 1e6, (_ohm or 0) * _il))
+    # FAB-03 and FAB-02 (b) (MESHSAT-1357 round 8, second pass; FAILOVER-FABRIC.md section 9a). The break-before-make as a
+    # structure, read at the switches' own pins, so a rewiring that brings back the first pass's two defects (the enable
+    # released on a select edge, or a static-1 hazard of two XORs into one OR) or main's (the select straight from the vote)
+    # fails here; its timing is drafts/b/tools/bbm_sim_r8b.py's. Per bank b, f = b % 3 + 1:
+    #   the select at U{b}09.9 and U{b}10.9 is one net, a 74LVC1G17 output whose input is an RC node (one resistor, one
+    #   capacitor to GND, no other IC pad) driven by the lock: a 74LVC1G157 selected by BBM{b}_MOV (I1 the select itself)
+    #   whose I0 is a 74LVC1G157 selected by BBM{b}_ARM (I1 the vote BSEL{b}, I0 the select);
+    #   BBM{b}_REQ = BSEL{b} xor the select, BBM{b}_MOV = the select xor its RC-and-Schmitt copy BSEL{b}_D2, BBM{b}_ARM a
+    #   74LVC1G17 on an RC node driven by BBM{b}_REQ; BBM{b}_RA = REQ or ARM on one SN74LVC32A gate and BBM{b} = RA or MOV
+    #   on another, so ARM never shares a gate with MOV;
+    #   the enable at U{b}09.2 and U{b}10.6 is one net, a 74LVC1G157 output whose select is BBM{b} and whose I1 is +3V3_DEV,
+    #   its I0 the dark-host flag PGSEL{b}_n, a 74LVC1G157 selected by BSEL{b}_D2 between PG{b}_n (I0) and PG{f}_n (I1);
+    #   PG{s} (a slow node) reaches no IC pad but one 74LVC1G17 input, and PG{s}_n is an SN74LVC1G04 of that buffer's output.
+    _QG = {"3": ("1", "2"), "6": ("4", "5"), "8": ("9", "10"), "11": ("12", "13")}
+    def _drv_of(n, prefix, pad):
+        return sorted(r for r, p in bypad.get(n or "", set()) if p == pad and (byval.get(r) or "").startswith(prefix))
+    def _gate_in(n, prefix):
+        """The two input nets of the quad-gate section of `prefix` whose output is `n` (None if not exactly one)."""
+        hits = [(r, p) for r, p in bypad.get(n or "", set()) if p in _QG and (byval.get(r) or "").startswith(prefix)]
+        if len(hits) != 1: return None
+        r, p = hits[0]; return sorted(_pads.get(r, {}).get(q) for q in _QG[p])
+    def _rc_from(node):
+        """The net driving an RC node through its one resistor, when the node has one resistor, one capacitor to GND and
+        no IC pad but one 74LVC1G17 input; else None."""
+        rs = [r for r in bynet.get(node or "", set()) if r.startswith("R")]; cs = [c for c in bynet.get(node or "", set()) if c.startswith("C")]
+        ics = sorted((r, p) for r, p in bypad.get(node or "", set()) if r.startswith("U"))
+        if len(rs) != 1 or len(cs) != 1 or sorted(_pads.get(cs[0], {}).values()) != sorted([node, "GND"]): return None
+        if len(ics) != 1 or ics[0][1] != "2" or not (byval.get(ics[0][0]) or "").startswith("74LVC1G17"): return None
+        far = [v for v in _pads.get(rs[0], {}).values() if v != node]
+        return far[0] if len(far) == 1 else None
+    def _st_in(n):
+        """The input net of the one 74LVC1G17 driving `n`, or None."""
+        d = _drv_of(n, "74LVC1G17", "4"); return _pads.get(d[0], {}).get("2") if len(d) == 1 else None
+    def _mux(n):
+        d = _drv_of(n, "74LVC1G157", "4")
+        return {k: _pads.get(d[0], {}).get(k) for k in ("6", "3", "1")} if len(d) == 1 else None
+    for _b in (1, 2, 3):
+        _f = _b % 3 + 1; _vote, _s, _d2 = "BSEL%d" % _b, "BSEL%d_S" % _b, "BSEL%d_D2" % _b
+        _req, _arm, _mov, _ra, _bbm = ("BBM%d%s" % (_b, x) for x in ("_REQ", "_ARM", "_MOV", "_RA", ""))
+        _sel = (_pads.get("U%d09" % _b, {}).get("9"), _pads.get("U%d10" % _b, {}).get("9"))
+        _h = _rc_from(_st_in(_s)); _l2 = _mux(_h); _l1 = _mux(_l2["3"]) if _l2 else None
+        check(_sel == (_s, _s) and _h is not None and bool(_l2) and _l2.get("6") == _mov and _l2.get("1") == _s and _l1 == {"6": _arm, "3": _s, "1": _vote},
+              "bank %d select (FAB-03): %s at both switches (%s) is a Schmitt output of an RC driven by the lock, MOV ? select : (ARM ? vote : select) (drive %s, lock %s then %s)"
+              % (_b, _s, _sel, _h, _l2, _l1))
+        check(_gate_in(_req, "SN74LVC86A") == sorted([_vote, _s]) and _gate_in(_mov, "SN74LVC86A") == sorted([_s, _d2])
+              and _rc_from(_st_in(_d2)) == _s and _rc_from(_st_in(_arm)) == _req,
+              "bank %d terms (FAB-03): REQ = vote xor select %s, MOV = select xor its delayed copy %s, the copy an RC and Schmitt of the select, ARM an RC and Schmitt of REQ (%s)"
+              % (_b, _gate_in(_req, "SN74LVC86A"), _gate_in(_mov, "SN74LVC86A"), _rc_from(_st_in(_arm))))
+        check(_gate_in(_ra, "SN74LVC32A") == sorted([_req, _arm]) and _gate_in(_bbm, "SN74LVC32A") == sorted([_ra, _mov]),
+              "bank %d motion (FAB-03): BBM = (REQ or ARM) or MOV, ARM on its own gate with REQ and never with MOV (RA %s, BBM %s)"
+              % (_b, _gate_in(_ra, "SN74LVC32A"), _gate_in(_bbm, "SN74LVC32A")))
+        _oe = (_pads.get("U%d09" % _b, {}).get("2"), _pads.get("U%d10" % _b, {}).get("6"))
+        _e = _mux(_oe[0]); _pgm = _mux(_e["3"]) if _e else None
+        check(_oe == ("BOE%d_n" % _b,) * 2 and bool(_e) and _e.get("6") == _bbm and _e.get("1") == "+3V3_DEV"
+              and _pgm == {"6": _d2, "3": "PG%d_n" % _b, "1": "PG%d_n" % _f},
+              "bank %d enable (FAB-03, FAB-02 (b)): BOE%d_n at both switches (%s) = BBM ? 1 : the dark flag of the host the delayed select passes (%s, %s)"
+              % (_b, _b, _oe, _e, _pgm))
+    for _s in (1, 2, 3):
+        _ics = sorted((r, p) for r, p in bypad.get("PG%d" % _s, set()) if r.startswith("U"))
+        _inv = _drv_of("PG%d_n" % _s, "SN74LVC1G04", "4")
+        check(len(_ics) == 1 and _ics[0][1] == "2" and (byval.get(_ics[0][0]) or "").startswith("74LVC1G17")
+              and _pads.get(_ics[0][0], {}).get("4") == "PG%d_S" % _s and len(_inv) == 1 and _pads.get(_inv[0], {}).get("2") == "PG%d_S" % _s,
+              "PG%d (FAB-02): the slow power-good node reaches only a 74LVC1G17 input, and PG%d_n is an SN74LVC1G04 of its output (IC pads %s, inverter %s)"
+              % (_s, _s, _ics, _inv))
     import fnmatch as _fn, json as _json, os as _os
     pro = _os.path.splitext(sys.argv[1])[0] + ".kicad_pro"
     if _os.path.exists(pro):
@@ -362,9 +498,9 @@ for _s, _f in RING.items():
     check(len(home & over) == 0 and home and over,
           "bank %d has one home host and one failover host, and they are different modules (home %s, failover %s)"
           % (_s, sorted(home), sorted(over)))
-    for _sig in ("BSEL%d" % _s, "BOE%d_n" % _s):
+    for _sig in ("BSEL%d_S" % _s, "BOE%d_n" % _s):   # round 8 (FAB-03): the switches' select is the vote's delayed copy
         parts = PADS.get(_sig, set())
-        check(sum(1 for r in parts if r.startswith("U")) >= 2,
+        check({"U%d09" % _s, "U%d10" % _s} <= parts,
               "%s reaches both switches of its bank (%s)" % (_sig, sorted(parts)))
     # the safe state: each control carries a pull to the home host, so a dark control plane changes nothing
     check(any(r.startswith("R") for r in PADS.get("BSEL%d" % _s, set())),

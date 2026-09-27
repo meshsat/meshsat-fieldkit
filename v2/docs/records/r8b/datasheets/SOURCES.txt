@@ -1,0 +1,37 @@
+Maker documents fetched by MESHSAT-1357 round 8, board B author (stream b), for v2/vendor/ (the integrator files them and
+adds the SOURCES.yaml rows of drafts/b/sources-yaml-additions.patch). Fetched from the runner with curl on 26 September 2026
+between 21:17 and 21:30 UTC (23:17 to 23:30 CEST); sha256 in SHA256SUMS beside this file.
+
+ti-sn74lvc2g06.pdf  -> v2/vendor/ti/ti-sn74lvc2g06.pdf
+  TI SN74LVC2G06, SCES307J (August 2001, revised July 2015), 33 pages.
+  URL: https://www.ti.com/lit/ds/symlink/sn74lvc2g06.pdf
+  Read for: DBV pinout (5 Pin Configuration), VOL, II, Ioff (6.5), unused inputs (6.3 note 1). Parts U113 to U115, U213 to
+  U215, U220, U313 to U315 (JLCPCB C402162).
+
+nexperia-74lvc1g157.pdf  -> v2/vendor/nexperia/nexperia-74lvc1g157.pdf
+  Nexperia 74LVC1G157, Rev. 12, 15 August 2023, 15 pages.
+  URL: https://assets.nexperia.com/documents/data-sheet/74LVC1G157.pdf
+  (TI's SN74LVC1G157 answered 404 at https://www.ti.com/lit/ds/symlink/sn74lvc1g157.pdf on the same date.)
+  Read for: SOT363-2 pinout (Table 3), function (Table 4), static (Table 7) and dynamic (Table 8) characteristics.
+  Parts U513 to U520 (JLCPCB C135822, 74LVC1G157GW,125).
+
+ti-tpd4e001.pdf  -> v2/vendor/ti/ti-tpd4e001.pdf
+  TI TPD4E001, SLLS682P (July 2006, revised January 2025), 32 pages.
+  URL: https://www.ti.com/lit/ds/symlink/tpd4e001.pdf
+  Read for: DBV pin functions, CI/O 1.5 pF, VRWM 5.5 V, leakage, layout 8.1. Parts U222, U223 (JLCPCB C465736).
+
+ti-tps3808.pdf  -> v2/vendor/ti/ti-tps3808.pdf
+  TI TPS3808, SBVS050N (May 2004, revised August 2026), 39 pages.
+  URL: https://www.ti.com/lit/ds/symlink/tps3808.pdf
+  Read for: G30 threshold 2.79 V (Device Comparison), VIT accuracy, td with CT to VDD 180/300/420 ms (6.6), MR (7.3.3), pin
+  functions (Table 5-1). Part U221 (JLCPCB C189211, TPS3808G30DBVR).
+
+adi-ds3231-19-5170.pdf  -> v2/vendor/adi/adi-ds3231sn.pdf
+  Maxim Integrated / Analog Devices DS3231, 19-5170 Rev 10 (3/15), 20 pages. The tree's v2/vendor/adi/adi-ds3231.pdf is the
+  DS3231M (19-5312 Rev 7), the MEMS part, not the one bought.
+  URL: https://www.analog.com/media/en/technical-documentation/data-sheets/DS3231.pdf (the maker's server stalled from this
+  host; the copy was taken from the Internet Archive with the id_ flag,
+  https://web.archive.org/web/2025id_/https://www.analog.com/media/en/technical-documentation/data-sheets/DS3231.pdf, and
+  served gzip-compressed; the file here is the decompressed PDF).
+  Read for: Pin Description (p.8), Ordering Information (DS3231SN#, 16 SO), Package Information (W16#H2, land 90-0107).
+  Part U9 (JLCPCB C9866, DS3231SN#T&R).

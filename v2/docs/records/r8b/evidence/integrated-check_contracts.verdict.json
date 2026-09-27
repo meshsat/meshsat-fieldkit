@@ -1,0 +1,96 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "boards_without_intent": 0,
+  "fail": 0,
+  "missing_boards": 0,
+  "pass": 96,
+  "rails_unsplit": 0,
+  "undecided": 0,
+  "unjudged": 0
+ },
+ "denominator": 96,
+ "evidence": [],
+ "inputs": {
+  "boards": "A,B,C,D,E,P",
+  "intent_a": {
+   "path": "pcb-a-power-a23/out/pcb-a-power-intent.json",
+   "sha256_16": "83ba5e43a6fbcccb"
+  },
+  "intent_b": {
+   "path": "pcb-b-compute-b19/out/pcb-b-compute-intent.json",
+   "sha256_16": "5af19ea259fba27b"
+  },
+  "intent_c": {
+   "path": "pcb-c-display-c8/out/pcb-c-display-intent.json",
+   "sha256_16": "5c8d991e3805016a"
+  },
+  "intent_d": {
+   "path": "pcb-d-aprs-d9/out/pcb-d-aprs-intent.json",
+   "sha256_16": "59591c54eb29ab64"
+  },
+  "intent_e": {
+   "path": "pcb-e1-dock-e7/out/pcb-e1-dock-intent.json",
+   "sha256_16": "9ae33eb17d04670e"
+  },
+  "intent_p": {
+   "path": "pcb-p-pack-p2/out/pcb-p-pack-intent.json",
+   "sha256_16": "59d679f0859fc203"
+  },
+  "netlist_a": {
+   "content16": "ffe040b5a915a63a",
+   "path": "pcb-a-power-a23/out/pcb-a-power.net",
+   "sha256_16": "7b08510106687b3d"
+  },
+  "netlist_b": {
+   "content16": "19469cab4ea23c88",
+   "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
+   "sha256_16": "3b30b3cc5e75a478"
+  },
+  "netlist_c": {
+   "content16": "89f0c572416af87a",
+   "path": "pcb-c-display-c8/out/pcb-c-display.net",
+   "sha256_16": "2834f0d8c4071d56"
+  },
+  "netlist_d": {
+   "content16": "c9ea1468d86c12e3",
+   "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
+   "sha256_16": "f13d8b70099ab03e"
+  },
+  "netlist_e": {
+   "content16": "eff68e111475b599",
+   "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
+   "sha256_16": "d910e49c5f5f50b2"
+  },
+  "netlist_p": {
+   "content16": "c8a3d456e5d2936b",
+   "path": "pcb-p-pack-p2/out/pcb-p-pack.net",
+   "sha256_16": "4342c4cbe1b43dc4"
+  }
+ },
+ "missing_input": null,
+ "note": "",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "INT-001": "6c054dd67edd4099"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "INT-001"
+ ],
+ "tool": "check_contracts",
+ "tools": {
+  "git_head": "0e32ad359058",
+  "tools_tree_sha": "48615b3def726c9a"
+ },
+ "ts": "2026-09-27T00:27:34Z",
+ "verdict": "PASS",
+ "version": "0e32ad359058",
+ "writer": {
+  "file": "check_contracts.py",
+  "sha16": "304cad5fa2886a73"
+ }
+}

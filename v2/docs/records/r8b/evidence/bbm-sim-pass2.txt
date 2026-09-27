@@ -1,0 +1,8 @@
+requirement: lead >= 1.000 us, hold >= 40.000 us
+netlist BOX/out/t8/regen/pcb-b-compute.net: 46 gates, 12 Schmitt buffers, 9 RC nodes; hazard model off
+  1 single vote change (corners)                   runs   162  select moves    162  min lead 428.983 us  min hold 404.652 us  violations 0
+  2 vote returns after r (checker's case)          runs 14864  select moves  43596  min lead 247.682 us  min hold 198.246 us  violations 0
+  3 adversary aimed at the circuit's instants      runs   450  select moves   1104  min lead 64.279 us  min hold 294.040 us  violations 0
+  4 random vote waveforms                          runs  3163  select moves   8174  min lead 61.452 us  min hold 306.919 us  violations 0
+  4 random vote waveforms with power-good toggles  runs  1337  select moves   3306  min lead 93.931 us  min hold 323.880 us  violations 0
+TOTAL runs 19976, select moves 56342, violations 0

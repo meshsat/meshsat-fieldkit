@@ -602,15 +602,81 @@ pull-down" (`ARCH-PCB-B-IOHA.md:175` and `:178` at `1f614233`; the same text in 
 `scratchpad/wt/i3/v2/docs/ARCH-PCB-B-IOHA.md:175/:178` and `scratchpad/wt/i1/v2/docs/ARCH-PCB-B-IOHA.md:163/:166`),
 which predates `WIFI_SEC`: the netlists carry seven voters and 21 controller outputs (section 4.9).
 
+## 9a. Round 8 (27 September 2026, MESHSAT-1357, board B author): what the generator now carries
+
+Drawn in `gen_sch_b.py` and regenerated on the KiCad box with the same chain as `main` (ERC PASS with no new blocking
+error, every schematic-phase gate as before; the netlist compared record by record and node by node with `main`'s, every
+difference tied to a finding; the record is `v2/docs/records/r8b/r8-decisions.md`). A desk reading, not a bench result.
+
+- **FAB-01.** Pin 16 `TEST2` of U101, U201, U301 is on its own net `S{s}_TEST2` with R{s}90, 5.1 kOhm to `+3V3_S{s}B`
+  ([SW] 3.3); `TCK` (89) and `TDI` (93) are open ([SW] 3.4); the other straps are unchanged.
+- **FAB-02 (b) and (c).** `PG{s}` is each module's own 3.3 V through 1 kOhm with 100 kOhm to ground. It follows the
+  module's rail slowly, so logic reads it only through a Schmitt buffer, `U530` to `U532` (74LVC1G17, no input transition
+  limit, Diodes DS35124 Rev 8-2 p.3), as `PG{s}_S`, and its inverse `PG{s}_n` (`U533` to `U535`, SN74LVC1G04): the round's
+  first pass fed the slow node straight into 74LVC1G157 inputs, whose own sheet limits the input transition rate to
+  10 ns/V at 2.7 to 5.5 V whatever their Schmitt action (Nexperia 74LVC1G157 Rev. 12 Table 6). Per bank a 74LVC1G157
+  selects the dark flag of the host the DELAYED select passes (`PGSEL{b}_n`, so it never switches within a move), and the
+  enable mux forces `BOE{b}_n` high while that host is dark; `U519` and `U520` enable the two TS3DV642 only while the
+  displayed slot is powered (`PG{s}_S`), and R14 is gone. Residual: the qualifier opens while a module's rail falls
+  through 1.59 to 0.81 V (the buffer's VT- through 1 k / 100 k), the time its own rail takes.
+- **FAB-03, reworked in the round's second pass.** The first pass's cascade (enable off while the vote and the select, or
+  the select and its delayed copy, disagreed) was not a true break-before-make, as the independent check showed with a
+  logic simulation: a vote returning after the select moved but before the delayed copy followed moved the select back and
+  cleared both terms on that same edge, so the enable came on as the select moved; and on every normal change the two XOR
+  terms crossed on one select edge into one OR gate, a static-1 hazard of their skew. `v2/docs/records/r8b/tools/bbm_sim_r8b.py`,
+  which builds each bank from the netlist's own parts and pins, finds both on that netlist (36,272 of 69,018 select moves
+  with the enable off less than 40 us after, or less than 1 us before), and on `main`'s netlist the select moving while
+  the enable is still on (in all 33,912 moves of the swept vote-return family; it cannot model `main`'s RC into a plain
+  XOR input, the other half of FAB-03, so it reads `main` only up to the move). The circuit now, per bank: `BBM{b}_REQ` = vote xor select (U80); `BBM{b}_ARM` = REQ through 10 kOhm /
+  100 nF and a 74LVC1G17 (`U521` to `U523`); `BBM{b}_MOV` = select xor its delayed copy (10 kOhm / 100 nF and a 74LVC1G17,
+  U510 to U512); the select's own delay (R47x / C48x, 10 kOhm / 10 nF, and U507 to U509, `BSEL{b}_S` at both switches) is
+  driven by the vote only while ARM is high and MOV is low and by the select itself otherwise (two 74LVC1G157 per bank,
+  `U524` to `U529`: the LOCK); `BBM{b}` = (REQ or ARM) or MOV on two SN74LVC32A gates (U84, `U85`), ARM never sharing a
+  gate with MOV; `BOE{b}_n` is a 74LVC1G157 with `BBM{b}` on its select and +3V3_DEV on the input it selects then. So the
+  select can approach its threshold only while the enable has been off since ARM rose; every move starts with the
+  delayed copy equal to the select, so MOV holds the enable off for that copy's full traversal of its own buffer's
+  hysteresis; a vote that returns at any time only starts the sequence again; and at a move one input of each OR gate and
+  the enable mux's select are steady. Bounds for ANY vote waveform over the makers' ranges (`bbm_sim_r8b.py --bounds`: R 1
+  percent, X7R 10 percent and +-15 percent over temperature, DS35124's -40 to +125 C thresholds and 0.32 V minimum
+  hysteresis, input leakage and output levels): the enable is off at least 29 us before and 105 us after every select
+  move, 2,900 times [U2M] 5.8's 10 ns OE disable time, 29 times [MUX] 6.7's 1 us SEL-to-OFF and 21 times its 5 us SEL-to-ON
+  with a common-mode change. A single change from rest: the enable off within 22.1 ns of the vote (the gates' -40 to
+  +125 C maxima), ARM 0.37 to 2.15 ms later, the select 37 to 215 us after ARM, the enable back no sooner than the delayed
+  copy, 0.37 to 2.15 ms after the select. The simulation on the regenerated netlist: 19,976 runs (single changes at every
+  corner, the checker's vote return swept over 6 ms, an adversary aiming at the circuit's own instants, 4,500 random vote
+  and power-good waveforms) with 0 violations (least lead 61.5 us, least hold 198 us); 22,121 runs with a static-1
+  hazard modelled in every 74LVC1G157, 0 violations (least lead 46.5 us, least hold 194 us). Residuals, stated: (1) a vote returning within about 13 ns of the select
+  buffer's own threshold decision while a flapping vote has parked ARM's node within about 30 uV of its lower threshold
+  could let the enable pulse for under 13 ns at that move; no single change or single return reaches it, and no part
+  this tree holds removes an asynchronous threshold race. (2) At the END of a move (the second independent check,
+  27 September 2026): when `BSEL{b}_D2` flips with ARM and REQ low, `BBM{b}` falls through the XOR and OR (U80 or U81,
+  U85) at about the time `PGSEL{b}_n` settles through U513 to U515, so U516 to U518 can pass the previous host's dark flag
+  for a few nanoseconds while the select already names the new host. Break-before-make is unaffected (the select has been
+  steady for at least 105 us); the only effect is an enable pulse of a few ns into a new host that went dark during the
+  move. (3) [MUX] publishes no `OEn` time (TBD, A10), and the 74LVC1G157's behaviour on a select change is published
+  nowhere (Nexperia Rev. 12); the design does not rely on either. (4) A10's probe: the select the switches see is
+  `BSEL{b}_S`, which has no test pad (the round-5 pads TP504 to TP506 sit on the vote `BSEL{b}`); A10 can probe R519 to
+  R521 pad 1, and pads on `BSEL{b}_S` are layout work for the next placement. U80's value is the part ordered,
+  SN74LVC86APWR (C350562).
+- **FAB-04.** R480 to R500 and R15, R16 are 10 kOhm: 0.20 V and 0.11 V at datasheet leakage against VIL 0.8 V and 0.5 V.
+- **Checks.** Board B's round 8 change to `check_pcb_b.py` (merged at the round's integration, 27 September 2026) adds the strap table of [SW] 3.2 to 3.4, the 23-line
+  leakage bound and the break-before-make structure read at the switches' own pins (the lock, the two OR gates, the enable
+  mux's select, the power-good buffers) to `check_pcb_b.py`; run on the round-8 netlist through round 4's emulator it reads
+  261 checks and 0 FAIL (the first pass's netlist 15 FAIL, `main`'s 77), and each of thirteen mutations (R500 at 100k,
+  R498 renamed, R15 at 100k, TEST2 back on S1_TESTL, TCK strapped, a supervisor pin on `EMCON_HW`, slot 2's inverter on
+  `+3V3_DEV`, a card disable without its driver, ARM moved onto MOV's OR gate, the select's delay driven by the vote, the
+  lock's MOV half tied low, the enable mux selected by the power-good, a slow power-good node into a 74LVC1G157) adds its
+  FAIL.
+
 ## 10. The fabric's feasibility blockers, and the evidence that closes each
 
 | Id | Blocker | Closing evidence | Owner | State |
 |---|---|---|---|---|
 | FB-FAB-1 | The corrected fabric netlist (W3-F01, W3-F02, W3-F03, W5-F3, S-13 and round 6) is not on `main` | integration commit O-18 with regeneration parity on `main`, then this page's `fabmap.py` and `check_pcb_b.py` rerun on the committed netlist: 0 MISMATCH, 0 FAIL | integrator | OPEN; the evidence exists for the candidate (sections 4, 7) |
-| FB-FAB-2 | `TEST2` strap (FAB-01) | regenerated netlist with pin 16 on 5.1 kOhm to `+3V3_S{s}B` and 89/93 open; the strap assertion in `check_pcb_b.py` and its mutation | board B author | OPEN |
-| FB-FAB-3 | Back-power of unpowered modules (FAB-02) | the gate network of FAB-02 (b)/(c) in the netlist, and a power-state check over the netlist that finds no fabric net able to source current into a slot whose `+3V3_CM{s}` is absent; or Raspberry Pi's written tolerance for the currents of section 5.2 | board B author; owner's outreach session for the question | OPEN |
-| FB-FAB-4 | Break-before-make ordering and edge rate (FAB-03) | the two-delay Schmitt sequence in the netlist, a timing budget against [U2M] 5.8 and [MUX] 6.7, then A10 on the bench | board B author | OPEN |
-| FB-FAB-5 | Dark-plane and panel-absent safe states (FAB-04) | a regenerated netlist with 10 kOhm on all 23 safe-low lines, **R480 to R500** (the 21 controller outputs `SEL1..3_A/B/C`, `HUBRST1..3_A/B/C`, `WSEC_A/B/C`) and R15, R16 (`HDMI_SEL1/2`); the leakage-bound assertion in `check_pcb_b.py` that enumerates those 23 designators, with its mutations (R500 at 100 kOhm, R498 renamed) failing; then A6 and A12 on the bench | board B author | OPEN |
+| FB-FAB-2 | `TEST2` strap (FAB-01) | regenerated netlist with pin 16 on 5.1 kOhm to `+3V3_S{s}B` and 89/93 open; the strap assertion in `check_pcb_b.py` and its mutation | board B author | DRAWN at desk in round 8 (section 9a); the gate assertion is in `check_pcb_b.py` since the round's integration, and it judges the board file, so it reads at board B's next placement |
+| FB-FAB-3 | Back-power of unpowered modules (FAB-02) | the gate network of FAB-02 (b)/(c) in the netlist, and a power-state check over the netlist that finds no fabric net able to source current into a slot whose `+3V3_CM{s}` is absent; or Raspberry Pi's written tolerance for the currents of section 5.2 | board B author; owner's outreach session for the question | DRAWN at desk in round 8 (section 9a): no bank or display path conducts to a slot whose `+3V3_CM{s}` is down, the power-good read through Schmitt buffers; the transition residual stated; bench owed |
+| FB-FAB-4 | Break-before-make ordering and edge rate (FAB-03) | the two-delay Schmitt sequence in the netlist, a timing budget against [U2M] 5.8 and [MUX] 6.7, then A10 on the bench | board B author | DRAWN at desk in round 8, second pass (section 9a): a locked three-delay sequence with bounds for any vote waveform and a netlist-driven simulation; residuals stated (the sub-13 ns enable pulse window, the few-ns stale dark flag at a move's end, the TMUXHS4212's unpublished OEn time, no test pad on `BSEL{b}_S`); A10 on the bench owed |
+| FB-FAB-5 | Dark-plane and panel-absent safe states (FAB-04) | a regenerated netlist with 10 kOhm on all 23 safe-low lines, **R480 to R500** (the 21 controller outputs `SEL1..3_A/B/C`, `HUBRST1..3_A/B/C`, `WSEC_A/B/C`) and R15, R16 (`HDMI_SEL1/2`); the leakage-bound assertion in `check_pcb_b.py` that enumerates those 23 designators, with its mutations (R500 at 100 kOhm, R498 renamed) failing; then A6 and A12 on the bench | board B author | DRAWN at desk in round 8 (section 9a); the assertion in `check_pcb_b.py` since the round's integration; A6 and A12 on the bench owed |
 | FB-FAB-6 | Escape and placement: 54 new parts in three full pockets; PLC-001 FAIL; no complete route | Q-B-ESC-1's reading (EXPERIMENTAL), the paper floor-plan study of A4 with A2 and A7, a placement that seats every part with `region_room` read, and decision 43's whole-board run; none of these authorises layout | board B author; integrator for the run order | OPEN; nothing run |
 | FB-FAB-7 | Signal integrity at routed length: impedance, loss, the longest USB 3 edges (up to about 255 mm by the screen plus a mux), HDMI up to about 400 mm through two switches | a channel budget per link from a primary document (USB 3.x, PCIe CEM, HDMI, or the makers' layout guides), routed-length extraction from a placed and routed candidate, a field-solver impedance on the chosen stack, and the fabricator's impedance record; then IOHA A13 and link training on the bench | board B author; the qualified high-speed review the 26 September review asks to be named | OPEN |
 | FB-FAB-8 | Reference clock quality at the endpoints | Raspberry Pi's statement of the clock output (standard, swing, spread spectrum) and a bench measurement at each socket with the switch's buffer in the path; all six downstream links training at Gen 2 | bring-up; Raspberry Pi question drafted | OPEN |

@@ -4,6 +4,8 @@
 - M2_M-Key_Socket_2242 and M2_B-Key_Socket_3052: the M.2 socket land pattern of the B14 E-key socket (75 positions at 0.5 mm, two rows 7.55 mm apart,
   0.3 x 1.55 pads, two anchor pads) with the key notch of the M.2 specification (M: positions 59 to 66 absent, B: 12 to 19 absent) and the plated
   M2.5 standoff hole at the card length minus 1.75 mm (2242: 40.25, 3052: 50.25).
+- M2_B-Key_Socket_3052_TE2199119: the 3052 key-B land plus the two NPTH locating holes of TE C-2199119 rev F sheet 3 (board B's
+  J_M2C2, round 8 finding S-12).
 - Quectel_LG290P: 12.2 x 16.0 LGA, 24 edge pads 1.5 x 0.8 (left column pins 1 to 12 top to bottom, right column 24 to 13; rows 1.0 + 1.1 k for k 0..6 and
   10.6 + 1.1 k for k 0..4 from the top edge) and the 5 x 11 ground matrix of 1.0 mm pads at 1.4 mm (pins 25 to 79), from the hardware design figure 18
   (recommended footprint) and Table 6 (pins 10, 12, 13, 24 to 79 are GND; 1, 2, 5, 17 reserved).
@@ -60,6 +62,29 @@ def m2_socket(key, notch, card_w, card_len):
     write(name, body, n); return name
 m2_socket("M", (59, 66), 22, 42)
 m2_socket("B", (12, 19), 30, 52)
+
+# ---------------------------------------------------------------- M2_B-Key_Socket_3052_TE2199119 (board B's J_M2C2, S-12)
+# MESHSAT-1357 round 8 (board B author, 26 September 2026; folded into this generator at the round's integration on 27
+# September 2026, as the independent check asked, so a change to the base land above carries over): the B16 land plus the
+# two locating holes of TE customer drawing C-2199119 rev F, sheet 3 ("RECOMMENDED NGFF MINI CARD MOUNTING TYPE_SMT_PCB
+# OUTLINE", v2/vendor/m2/te-2199119-customer-drawing-revF.pdf): dia 1.1 +-0.05 (datum Y) 10 left of the centre line and
+# dia 1.6 +-0.05 (datum X) 10 right of it, on the line 4.5 below the inner edge of the odd row's pads, 6.05 below their
+# outer edge and 3.05 above the even row's outer edge. The base land's odd row sits at Y -5.275 (1.55 long: outer edge
+# -6.05, inner edge -4.5) and its even row at Y +2.275 (outer edge +3.05), so that line is Y 0. Both holes are non-plated
+# with no pad number: the connector's locating pegs, not pins. Written from the base land's own text, byte for byte the
+# file the round's author wrote with drafts/b/mk_m2b_te2199119.py (sha256 caba4f04104cd06d).
+def m2_b_te2199119(base="M2_B-Key_Socket_3052"):
+    name = base + "_TE2199119"
+    src = open(os.path.join(OUTDIR, base + ".kicad_mod")).read()
+    if not src.startswith('(footprint "%s"' % base) or not src.endswith(")\n"): raise SystemExit("%s: unexpected base land" % name)
+    out = src.replace('(footprint "%s"' % base, '(footprint "%s"' % name, 1)
+    out = out.replace('(descr "M.2 B-key socket', '(descr "TE 2199119-3 M.2 key B socket, 67 positions, 3.2 mm (TE C-2199119 rev F): the B16 land plus the two NPTH locating holes of sheet 3 (dia 1.1 at X -10, dia 1.6 at X +10). M.2 B-key socket', 1)
+    out = out.replace('(property "Value" "%s"' % base, '(property "Value" "%s"' % name, 1)
+    anchor = '\t(pad "M1" thru_hole circle'
+    if out.count(anchor) != 1 or out == src: raise SystemExit("%s: the base land's anchor pad is not where this expects it" % name)
+    out = out.replace(anchor, npth(-10.0, 0.0, 1.10) + npth(10.0, 0.0, 1.60) + anchor, 1)
+    write(name, out[:-2], WRITTEN[base] + 2)
+m2_b_te2199119()
 
 # ---------------------------------------------------------------- Quectel LG290P (top view, module centred, KiCad y down; pin 1 top left)
 def lg290p():

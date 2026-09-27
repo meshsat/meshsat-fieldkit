@@ -236,13 +236,13 @@ stages:
    protection:
      ref: F1
      kind: polyfuse
-     what: "Bourns MF-MSMF200, 2.0 A hold, 3.5 A trip, 1812"
-     rating_a: 2.0
+     what: "Bourns MF-MSMF110, 1.1 A hold, 2.2 A trip, 1812 (MF-MSMF110-2, JLCPCB C89647)"
+     rating_a: 1.1
      interrupting_a: null
      i2t_a2s: null
-     basis: "v2/vendor/power/bourns-mf-msmf-pptc.pdf: the plain MF-MSMF200 is not in the table, whose rows are /8X, /12X and /16X, all of them 2.00 A hold, 3.50 A trip and 100 A maximum fault, differing only in maximum voltage, the lowest of which (8 V) clears this 5 V rail. A PPTC LIMITS rather than interrupts, so it declares no breaking capacity"
+     basis: "v2/vendor/power/bourns-mf-msmf-pptc.pdf: the plain MF-MSMF110 is not a row of the table, whose MF-MSMF110 rows are /8X, /16X, /16, /24X and /33X, every one 1.10 A hold and 2.20 A trip, differing in maximum voltage (8 to 33 V, the lowest of which clears this 5 V rail), maximum fault current (100 A for /8X, /16X and /16, 20 A for /24X and /33X) and R1max (0.18 to 0.21 Ohm); '-2 = Tape and Reel' (How to Order). Thermal Derating Table: 0.85 A at 50 C, 0.77 A at 60 C and 0.71 A at 70 C (/8X, /16X), so board C's 0.6 A continuous holds inside the sealed case and its 1.0 A must stay a peak. A PPTC LIMITS rather than interrupts, so it declares no breaking capacity"
    protects: null
-   note: "the panel's 5 V, and the stage where the fuse is chosen for the lead rather than for the track: 2.0 A of hold against 1.23 A of copper at 10 K"
+   note: "the panel's 5 V. Since MESHSAT-1357 round 8 (board B author, 26 September 2026) the fuse is chosen for the track: 1.1 A of hold against 1.23 A of copper at 10 K, where the MF-MSMF200 held 2.0 A (PWR-003's finding of 17 September, closed on the part; the 0.8 mm PANEL class of gen_pcb_b3.py stays for the next cut)"
 
  - id: B_HDMI_5V
    fed_by: BOARD_A_CONVERTERS
@@ -302,12 +302,6 @@ stages:
 
 # THE FAILURES THIS CHAIN CARRIES, each with its sentence. A gate that fails is doing its job; a failure nobody
 # has written down is a different thing, so the suite accepts exactly the ones named here and refuses a new one.
-known_findings:
-  - stage: B_PANEL_5V
-    why: "board B's panel 5 V carries a 2.0 A hold, 3.5 A trip polyfuse on a 0.4 mm PWR-class track that
-      IPC-2221 rates at 1.23 A at 10 K and 1.67 at 20 K, feeding a 0.6 A rail with a 1.0 A peak: the copper is
-      the weaker element and a fault at the panel end would run at the fuse's trip current through it. Found on
-      17 September 2026, while board B was mid-route on B21, so the copper cannot change in this phase. The two
-      answers are a wider conductor (0.8 mm is 2.03 A at 10 K, which clears the hold) or a smaller part
-      (MF-MSMF110 holds 1.1 A and trips at 2.2, which clears the track and leaves ten percent over board C's
-      declared 1.0 A peak), and B22 is where either lands. Nothing here is waived: PWR-003 fails on board B."
+# MESHSAT-1357 round 8 (26 September 2026): B_PANEL_5V, the one finding this list carried since 17 September, is closed on
+# the part (F1 is an MF-MSMF110, 1.1 A hold, under the 1.23 A track); the list is empty until the gate finds another.
+known_findings: []

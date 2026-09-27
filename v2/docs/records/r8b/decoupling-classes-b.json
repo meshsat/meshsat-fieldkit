@@ -1,0 +1,2472 @@
+{
+ "what": "MESHSAT-1357 round 8, board B author: the decision-42 class of every decoupling declaration board B's generator writes (DECOUPLING.md G6, G10). intent.bypass() carries no class yet (DECOUPLING.md 8.1, the tools stream); this is the map to load when it does. Read from the round-8 intent file.",
+ "intent_sha256_16": "5af19ea259fba27b",
+ "entries": [
+  {
+   "cap": "C112",
+   "part": "U103",
+   "pin": "2",
+   "net": "+5V_S1",
+   "value": "22u 10V X7R 1210",
+   "class": "R",
+   "clause": "AP64500 input capacitor (DS41979 Layout p.23)"
+  },
+  {
+   "cap": "C113",
+   "part": "U103",
+   "pin": "2",
+   "net": "+5V_S1",
+   "value": "22u 10V X7R 1210",
+   "class": "R",
+   "clause": "AP64500 input capacitor (DS41979 Layout p.23)"
+  },
+  {
+   "cap": "C119",
+   "part": "U104",
+   "pin": "2",
+   "net": "+5V_S1",
+   "value": "22u 10V X7R 1210",
+   "class": "R",
+   "clause": "AP64500 input capacitor (DS41979 Layout p.23)"
+  },
+  {
+   "cap": "C120",
+   "part": "U104",
+   "pin": "2",
+   "net": "+5V_S1",
+   "value": "22u 10V X7R 1210",
+   "class": "R",
+   "clause": "AP64500 input capacitor (DS41979 Layout p.23)"
+  },
+  {
+   "cap": "C605",
+   "part": "U105",
+   "pin": "3",
+   "net": "+5V_S1",
+   "value": "100n",
+   "class": "R",
+   "clause": "TPS62933 input loop, 10 uF and 0.1 uF at VIN (SLUSEA4D 12.1, p.40)"
+  },
+  {
+   "cap": "C125",
+   "part": "U105",
+   "pin": "3",
+   "net": "+5V_S1",
+   "value": "10u",
+   "class": "R",
+   "clause": "TPS62933 input loop, 10 uF and 0.1 uF at VIN (SLUSEA4D 12.1, p.40)"
+  },
+  {
+   "cap": "C606",
+   "part": "U106",
+   "pin": "3",
+   "net": "+5V_DEV",
+   "value": "100n",
+   "class": "R",
+   "clause": "TPS62933 input loop, 10 uF and 0.1 uF at VIN (SLUSEA4D 12.1, p.40)"
+  },
+  {
+   "cap": "C130",
+   "part": "U106",
+   "pin": "3",
+   "net": "+5V_DEV",
+   "value": "10u",
+   "class": "R",
+   "clause": "TPS62933 input loop, 10 uF and 0.1 uF at VIN (SLUSEA4D 12.1, p.40)"
+  },
+  {
+   "cap": "C135",
+   "part": "U101",
+   "pin": "1",
+   "net": "+3V3_S1B",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C136",
+   "part": "U101",
+   "pin": "49",
+   "net": "+3V3_S1B",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C137",
+   "part": "U101",
+   "pin": "96",
+   "net": "+3V3_S1B",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C138",
+   "part": "U101",
+   "pin": "82",
+   "net": "+3V3_S1B",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C139",
+   "part": "U101",
+   "pin": "15",
+   "net": "+3V3_S1B",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C140",
+   "part": "U101",
+   "pin": "113",
+   "net": "+3V3_S1B",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C141",
+   "part": "U101",
+   "pin": "3",
+   "net": "+1V0_S1",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C142",
+   "part": "U101",
+   "pin": "29",
+   "net": "+1V0_S1",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C143",
+   "part": "U101",
+   "pin": "55",
+   "net": "+1V0_S1",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C144",
+   "part": "U101",
+   "pin": "91",
+   "net": "+1V0_S1",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C145",
+   "part": "U101",
+   "pin": "13",
+   "net": "+1V0_S1",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C146",
+   "part": "U101",
+   "pin": "105",
+   "net": "+1V0_S1",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C147",
+   "part": "U101",
+   "pin": "64",
+   "net": "+3V3_S1B",
+   "value": "10u",
+   "class": "B2",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5), bulk kept, no placement clause"
+  },
+  {
+   "cap": "C148",
+   "part": "U101",
+   "pin": "62",
+   "net": "+1V0_S1",
+   "value": "10u",
+   "class": "B2",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5), bulk kept, no placement clause"
+  },
+  {
+   "cap": "C197",
+   "part": "U112",
+   "pin": "5",
+   "net": "+3V3_CM1",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C183",
+   "part": "U113",
+   "pin": "5",
+   "net": "+3V3_CM1",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C184",
+   "part": "U114",
+   "pin": "5",
+   "net": "+3V3_CM1",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C185",
+   "part": "U115",
+   "pin": "5",
+   "net": "+3V3_CM1",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C166",
+   "part": "U102",
+   "pin": "5",
+   "net": "+1V1_S1",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C167",
+   "part": "U102",
+   "pin": "8",
+   "net": "+1V1_S1",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C168",
+   "part": "U102",
+   "pin": "13",
+   "net": "+1V1_S1",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C169",
+   "part": "U102",
+   "pin": "21",
+   "net": "+1V1_S1",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C601",
+   "part": "U102",
+   "pin": "28",
+   "net": "+1V1_S1",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C602",
+   "part": "U102",
+   "pin": "31",
+   "net": "+1V1_S1",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C603",
+   "part": "U102",
+   "pin": "51",
+   "net": "+1V1_S1",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C604",
+   "part": "U102",
+   "pin": "57",
+   "net": "+1V1_S1",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C170",
+   "part": "U102",
+   "pin": "16",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C171",
+   "part": "U102",
+   "pin": "34",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C172",
+   "part": "U102",
+   "pin": "52",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C173",
+   "part": "U102",
+   "pin": "63",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C174",
+   "part": "L104",
+   "pin": "2",
+   "net": "+1V1_S1",
+   "value": "10u",
+   "class": "B1",
+   "clause": "TUSB8041 rail bulk, 'can be placed anywhere on the power rail' (SLLSEE4E 10.1, 11.1.1 item 7), declared against the regulator's output"
+  },
+  {
+   "cap": "C192",
+   "part": "U109",
+   "pin": "6",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C193",
+   "part": "U109",
+   "pin": "6",
+   "net": "+3V3_DEV",
+   "value": "1u",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C194",
+   "part": "U110",
+   "pin": "10",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C212",
+   "part": "U203",
+   "pin": "2",
+   "net": "+5V_S2",
+   "value": "22u 10V X7R 1210",
+   "class": "R",
+   "clause": "AP64500 input capacitor (DS41979 Layout p.23)"
+  },
+  {
+   "cap": "C213",
+   "part": "U203",
+   "pin": "2",
+   "net": "+5V_S2",
+   "value": "22u 10V X7R 1210",
+   "class": "R",
+   "clause": "AP64500 input capacitor (DS41979 Layout p.23)"
+  },
+  {
+   "cap": "C219",
+   "part": "U204",
+   "pin": "2",
+   "net": "+5V_S2",
+   "value": "22u 10V X7R 1210",
+   "class": "R",
+   "clause": "AP64500 input capacitor (DS41979 Layout p.23)"
+  },
+  {
+   "cap": "C220",
+   "part": "U204",
+   "pin": "2",
+   "net": "+5V_S2",
+   "value": "22u 10V X7R 1210",
+   "class": "R",
+   "clause": "AP64500 input capacitor (DS41979 Layout p.23)"
+  },
+  {
+   "cap": "C635",
+   "part": "U205",
+   "pin": "3",
+   "net": "+5V_S2",
+   "value": "100n",
+   "class": "R",
+   "clause": "TPS62933 input loop, 10 uF and 0.1 uF at VIN (SLUSEA4D 12.1, p.40)"
+  },
+  {
+   "cap": "C225",
+   "part": "U205",
+   "pin": "3",
+   "net": "+5V_S2",
+   "value": "10u",
+   "class": "R",
+   "clause": "TPS62933 input loop, 10 uF and 0.1 uF at VIN (SLUSEA4D 12.1, p.40)"
+  },
+  {
+   "cap": "C636",
+   "part": "U206",
+   "pin": "3",
+   "net": "+5V_DEV",
+   "value": "100n",
+   "class": "R",
+   "clause": "TPS62933 input loop, 10 uF and 0.1 uF at VIN (SLUSEA4D 12.1, p.40)"
+  },
+  {
+   "cap": "C230",
+   "part": "U206",
+   "pin": "3",
+   "net": "+5V_DEV",
+   "value": "10u",
+   "class": "R",
+   "clause": "TPS62933 input loop, 10 uF and 0.1 uF at VIN (SLUSEA4D 12.1, p.40)"
+  },
+  {
+   "cap": "C235",
+   "part": "U201",
+   "pin": "1",
+   "net": "+3V3_S2B",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C236",
+   "part": "U201",
+   "pin": "49",
+   "net": "+3V3_S2B",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C237",
+   "part": "U201",
+   "pin": "96",
+   "net": "+3V3_S2B",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C238",
+   "part": "U201",
+   "pin": "82",
+   "net": "+3V3_S2B",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C239",
+   "part": "U201",
+   "pin": "15",
+   "net": "+3V3_S2B",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C240",
+   "part": "U201",
+   "pin": "113",
+   "net": "+3V3_S2B",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C241",
+   "part": "U201",
+   "pin": "3",
+   "net": "+1V0_S2",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C242",
+   "part": "U201",
+   "pin": "29",
+   "net": "+1V0_S2",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C243",
+   "part": "U201",
+   "pin": "55",
+   "net": "+1V0_S2",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C244",
+   "part": "U201",
+   "pin": "91",
+   "net": "+1V0_S2",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C245",
+   "part": "U201",
+   "pin": "13",
+   "net": "+1V0_S2",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C246",
+   "part": "U201",
+   "pin": "105",
+   "net": "+1V0_S2",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C247",
+   "part": "U201",
+   "pin": "64",
+   "net": "+3V3_S2B",
+   "value": "10u",
+   "class": "B2",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5), bulk kept, no placement clause"
+  },
+  {
+   "cap": "C248",
+   "part": "U201",
+   "pin": "62",
+   "net": "+1V0_S2",
+   "value": "10u",
+   "class": "B2",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5), bulk kept, no placement clause"
+  },
+  {
+   "cap": "C520",
+   "part": "J_M2C2",
+   "pin": "2",
+   "net": "+3V3_M2C2",
+   "value": "220u 6.3V KEMET T520B227M006ATE025 polymer tantalum 25 mOhm (RM520N HD 3.3.1 bulk)",
+   "class": "D",
+   "clause": "RM520N 220 uF bulk and MLCC array at the VCC pins (HD v1.1 3.3.1, Figure 6)"
+  },
+  {
+   "cap": "C521",
+   "part": "J_M2C2",
+   "pin": "70",
+   "net": "+3V3_M2C2",
+   "value": "220u 6.3V KEMET T520B227M006ATE025 polymer tantalum 25 mOhm (RM520N HD 3.3.1 bulk)",
+   "class": "D",
+   "clause": "RM520N 220 uF bulk and MLCC array at the VCC pins (HD v1.1 3.3.1, Figure 6)"
+  },
+  {
+   "cap": "C522",
+   "part": "J_M2C2",
+   "pin": "2",
+   "net": "+3V3_M2C2",
+   "value": "6.8n 50V X7R",
+   "class": "D",
+   "clause": "RM520N 220 uF bulk and MLCC array at the VCC pins (HD v1.1 3.3.1, Figure 6)"
+  },
+  {
+   "cap": "C523",
+   "part": "J_M2C2",
+   "pin": "2",
+   "net": "+3V3_M2C2",
+   "value": "220p 50V C0G",
+   "class": "D",
+   "clause": "RM520N 220 uF bulk and MLCC array at the VCC pins (HD v1.1 3.3.1, Figure 6)"
+  },
+  {
+   "cap": "C524",
+   "part": "J_M2C2",
+   "pin": "2",
+   "net": "+3V3_M2C2",
+   "value": "68p 50V C0G",
+   "class": "D",
+   "clause": "RM520N 220 uF bulk and MLCC array at the VCC pins (HD v1.1 3.3.1, Figure 6)"
+  },
+  {
+   "cap": "C525",
+   "part": "J_M2C2",
+   "pin": "70",
+   "net": "+3V3_M2C2",
+   "value": "100n",
+   "class": "D",
+   "clause": "RM520N 220 uF bulk and MLCC array at the VCC pins (HD v1.1 3.3.1, Figure 6)"
+  },
+  {
+   "cap": "C526",
+   "part": "J_M2C2",
+   "pin": "70",
+   "net": "+3V3_M2C2",
+   "value": "220p 50V C0G",
+   "class": "D",
+   "clause": "RM520N 220 uF bulk and MLCC array at the VCC pins (HD v1.1 3.3.1, Figure 6)"
+  },
+  {
+   "cap": "C527",
+   "part": "J_M2C2",
+   "pin": "70",
+   "net": "+3V3_M2C2",
+   "value": "68p 50V C0G",
+   "class": "D",
+   "clause": "RM520N 220 uF bulk and MLCC array at the VCC pins (HD v1.1 3.3.1, Figure 6)"
+  },
+  {
+   "cap": "C528",
+   "part": "J_M2C2",
+   "pin": "70",
+   "net": "+3V3_M2C2",
+   "value": "15p 50V C0G",
+   "class": "D",
+   "clause": "RM520N 220 uF bulk and MLCC array at the VCC pins (HD v1.1 3.3.1, Figure 6)"
+  },
+  {
+   "cap": "C529",
+   "part": "J_M2C2",
+   "pin": "70",
+   "net": "+3V3_M2C2",
+   "value": "9.1p 50V C0G",
+   "class": "D",
+   "clause": "RM520N 220 uF bulk and MLCC array at the VCC pins (HD v1.1 3.3.1, Figure 6)"
+  },
+  {
+   "cap": "C530",
+   "part": "J_M2C2",
+   "pin": "70",
+   "net": "+3V3_M2C2",
+   "value": "4.7p 50V C0G",
+   "class": "D",
+   "clause": "RM520N 220 uF bulk and MLCC array at the VCC pins (HD v1.1 3.3.1, Figure 6)"
+  },
+  {
+   "cap": "C286",
+   "part": "U222",
+   "pin": "5",
+   "net": "SIM1_VCC",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C289",
+   "part": "U223",
+   "pin": "5",
+   "net": "SIMC2_VCC",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C297",
+   "part": "U212",
+   "pin": "5",
+   "net": "+3V3_CM2",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C261",
+   "part": "U213",
+   "pin": "5",
+   "net": "+3V3_CM2",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C262",
+   "part": "U214",
+   "pin": "5",
+   "net": "+3V3_CM2",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C285",
+   "part": "U215",
+   "pin": "5",
+   "net": "+3V3_CM2",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C299",
+   "part": "U220",
+   "pin": "5",
+   "net": "+3V3_CM2",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C200",
+   "part": "U221",
+   "pin": "6",
+   "net": "+3V3_S2A",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C266",
+   "part": "U202",
+   "pin": "5",
+   "net": "+1V1_S2",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C267",
+   "part": "U202",
+   "pin": "8",
+   "net": "+1V1_S2",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C268",
+   "part": "U202",
+   "pin": "13",
+   "net": "+1V1_S2",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C269",
+   "part": "U202",
+   "pin": "21",
+   "net": "+1V1_S2",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C631",
+   "part": "U202",
+   "pin": "28",
+   "net": "+1V1_S2",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C632",
+   "part": "U202",
+   "pin": "31",
+   "net": "+1V1_S2",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C633",
+   "part": "U202",
+   "pin": "51",
+   "net": "+1V1_S2",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C634",
+   "part": "U202",
+   "pin": "57",
+   "net": "+1V1_S2",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C270",
+   "part": "U202",
+   "pin": "16",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C271",
+   "part": "U202",
+   "pin": "34",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C272",
+   "part": "U202",
+   "pin": "52",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C273",
+   "part": "U202",
+   "pin": "63",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C274",
+   "part": "L204",
+   "pin": "2",
+   "net": "+1V1_S2",
+   "value": "10u",
+   "class": "B1",
+   "clause": "TUSB8041 rail bulk, 'can be placed anywhere on the power rail' (SLLSEE4E 10.1, 11.1.1 item 7), declared against the regulator's output"
+  },
+  {
+   "cap": "C292",
+   "part": "U209",
+   "pin": "6",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C293",
+   "part": "U209",
+   "pin": "6",
+   "net": "+3V3_DEV",
+   "value": "1u",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C294",
+   "part": "U210",
+   "pin": "10",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C312",
+   "part": "U303",
+   "pin": "2",
+   "net": "+5V_S3",
+   "value": "22u 10V X7R 1210",
+   "class": "R",
+   "clause": "AP64500 input capacitor (DS41979 Layout p.23)"
+  },
+  {
+   "cap": "C313",
+   "part": "U303",
+   "pin": "2",
+   "net": "+5V_S3",
+   "value": "22u 10V X7R 1210",
+   "class": "R",
+   "clause": "AP64500 input capacitor (DS41979 Layout p.23)"
+  },
+  {
+   "cap": "C319",
+   "part": "U304",
+   "pin": "2",
+   "net": "+5V_S3",
+   "value": "22u 10V X7R 1210",
+   "class": "R",
+   "clause": "AP64500 input capacitor (DS41979 Layout p.23)"
+  },
+  {
+   "cap": "C320",
+   "part": "U304",
+   "pin": "2",
+   "net": "+5V_S3",
+   "value": "22u 10V X7R 1210",
+   "class": "R",
+   "clause": "AP64500 input capacitor (DS41979 Layout p.23)"
+  },
+  {
+   "cap": "C665",
+   "part": "U305",
+   "pin": "3",
+   "net": "+5V_S3",
+   "value": "100n",
+   "class": "R",
+   "clause": "TPS62933 input loop, 10 uF and 0.1 uF at VIN (SLUSEA4D 12.1, p.40)"
+  },
+  {
+   "cap": "C325",
+   "part": "U305",
+   "pin": "3",
+   "net": "+5V_S3",
+   "value": "10u",
+   "class": "R",
+   "clause": "TPS62933 input loop, 10 uF and 0.1 uF at VIN (SLUSEA4D 12.1, p.40)"
+  },
+  {
+   "cap": "C666",
+   "part": "U306",
+   "pin": "3",
+   "net": "+5V_DEV",
+   "value": "100n",
+   "class": "R",
+   "clause": "TPS62933 input loop, 10 uF and 0.1 uF at VIN (SLUSEA4D 12.1, p.40)"
+  },
+  {
+   "cap": "C330",
+   "part": "U306",
+   "pin": "3",
+   "net": "+5V_DEV",
+   "value": "10u",
+   "class": "R",
+   "clause": "TPS62933 input loop, 10 uF and 0.1 uF at VIN (SLUSEA4D 12.1, p.40)"
+  },
+  {
+   "cap": "C335",
+   "part": "U301",
+   "pin": "1",
+   "net": "+3V3_S3B",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C336",
+   "part": "U301",
+   "pin": "49",
+   "net": "+3V3_S3B",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C337",
+   "part": "U301",
+   "pin": "96",
+   "net": "+3V3_S3B",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C338",
+   "part": "U301",
+   "pin": "82",
+   "net": "+3V3_S3B",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C339",
+   "part": "U301",
+   "pin": "15",
+   "net": "+3V3_S3B",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C340",
+   "part": "U301",
+   "pin": "113",
+   "net": "+3V3_S3B",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C341",
+   "part": "U301",
+   "pin": "3",
+   "net": "+1V0_S3",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C342",
+   "part": "U301",
+   "pin": "29",
+   "net": "+1V0_S3",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C343",
+   "part": "U301",
+   "pin": "55",
+   "net": "+1V0_S3",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C344",
+   "part": "U301",
+   "pin": "91",
+   "net": "+1V0_S3",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C345",
+   "part": "U301",
+   "pin": "13",
+   "net": "+1V0_S3",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C346",
+   "part": "U301",
+   "pin": "105",
+   "net": "+1V0_S3",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C347",
+   "part": "U301",
+   "pin": "64",
+   "net": "+3V3_S3B",
+   "value": "10u",
+   "class": "B2",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5), bulk kept, no placement clause"
+  },
+  {
+   "cap": "C348",
+   "part": "U301",
+   "pin": "62",
+   "net": "+1V0_S3",
+   "value": "10u",
+   "class": "B2",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5), bulk kept, no placement clause"
+  },
+  {
+   "cap": "C397",
+   "part": "U312",
+   "pin": "5",
+   "net": "+3V3_CM3",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C383",
+   "part": "U313",
+   "pin": "5",
+   "net": "+3V3_CM3",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C384",
+   "part": "U314",
+   "pin": "5",
+   "net": "+3V3_CM3",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C385",
+   "part": "U315",
+   "pin": "5",
+   "net": "+3V3_CM3",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C366",
+   "part": "U302",
+   "pin": "5",
+   "net": "+1V1_S3",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C367",
+   "part": "U302",
+   "pin": "8",
+   "net": "+1V1_S3",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C368",
+   "part": "U302",
+   "pin": "13",
+   "net": "+1V1_S3",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C369",
+   "part": "U302",
+   "pin": "21",
+   "net": "+1V1_S3",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C661",
+   "part": "U302",
+   "pin": "28",
+   "net": "+1V1_S3",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C662",
+   "part": "U302",
+   "pin": "31",
+   "net": "+1V1_S3",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C663",
+   "part": "U302",
+   "pin": "51",
+   "net": "+1V1_S3",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C664",
+   "part": "U302",
+   "pin": "57",
+   "net": "+1V1_S3",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C370",
+   "part": "U302",
+   "pin": "16",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C371",
+   "part": "U302",
+   "pin": "34",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C372",
+   "part": "U302",
+   "pin": "52",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C373",
+   "part": "U302",
+   "pin": "63",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C374",
+   "part": "L304",
+   "pin": "2",
+   "net": "+1V1_S3",
+   "value": "10u",
+   "class": "B1",
+   "clause": "TUSB8041 rail bulk, 'can be placed anywhere on the power rail' (SLLSEE4E 10.1, 11.1.1 item 7), declared against the regulator's output"
+  },
+  {
+   "cap": "C392",
+   "part": "U309",
+   "pin": "6",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C393",
+   "part": "U309",
+   "pin": "6",
+   "net": "+3V3_DEV",
+   "value": "1u",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C394",
+   "part": "U310",
+   "pin": "10",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C571",
+   "part": "U26",
+   "pin": "3",
+   "net": "+5V_DEV",
+   "value": "100n",
+   "class": "R",
+   "clause": "TPS62933 input loop, 10 uF and 0.1 uF at VIN (SLUSEA4D 12.1, p.40)"
+  },
+  {
+   "cap": "C7",
+   "part": "U26",
+   "pin": "3",
+   "net": "+5V_DEV",
+   "value": "10u",
+   "class": "R",
+   "clause": "TPS62933 input loop, 10 uF and 0.1 uF at VIN (SLUSEA4D 12.1, p.40)"
+  },
+  {
+   "cap": "C17",
+   "part": "U1",
+   "pin": "61",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C20",
+   "part": "U1",
+   "pin": "77",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C23",
+   "part": "U1",
+   "pin": "99",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C26",
+   "part": "U1",
+   "pin": "61",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C19",
+   "part": "U1",
+   "pin": "10",
+   "net": "+2V5_KSZ",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C22",
+   "part": "U1",
+   "pin": "22",
+   "net": "+2V5_KSZ",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C25",
+   "part": "U1",
+   "pin": "33",
+   "net": "+2V5_KSZ",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C545",
+   "part": "U1",
+   "pin": "44",
+   "net": "+2V5_KSZ",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C546",
+   "part": "U1",
+   "pin": "111",
+   "net": "+2V5_KSZ",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C547",
+   "part": "U1",
+   "pin": "122",
+   "net": "+2V5_KSZ",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C548",
+   "part": "U1",
+   "pin": "128",
+   "net": "+2V5_KSZ",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C18",
+   "part": "U1",
+   "pin": "11",
+   "net": "+1V2_KSZ",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C21",
+   "part": "U1",
+   "pin": "23",
+   "net": "+1V2_KSZ",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C24",
+   "part": "U1",
+   "pin": "45",
+   "net": "+1V2_KSZ",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C531",
+   "part": "U1",
+   "pin": "56",
+   "net": "+1V2_KSZ",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C532",
+   "part": "U1",
+   "pin": "74",
+   "net": "+1V2_KSZ",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C533",
+   "part": "U1",
+   "pin": "87",
+   "net": "+1V2_KSZ",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C534",
+   "part": "U1",
+   "pin": "104",
+   "net": "+1V2_KSZ",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C535",
+   "part": "U1",
+   "pin": "110",
+   "net": "+1V2_KSZ",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C536",
+   "part": "U1",
+   "pin": "3",
+   "net": "+1V2_KSZ",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C537",
+   "part": "U1",
+   "pin": "14",
+   "net": "+1V2_KSZ",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C538",
+   "part": "U1",
+   "pin": "19",
+   "net": "+1V2_KSZ",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C539",
+   "part": "U1",
+   "pin": "30",
+   "net": "+1V2_KSZ",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C540",
+   "part": "U1",
+   "pin": "36",
+   "net": "+1V2_KSZ",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C541",
+   "part": "U1",
+   "pin": "41",
+   "net": "+1V2_KSZ",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C542",
+   "part": "U1",
+   "pin": "114",
+   "net": "+1V2_KSZ",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C543",
+   "part": "U1",
+   "pin": "119",
+   "net": "+1V2_KSZ",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C544",
+   "part": "U1",
+   "pin": "124",
+   "net": "+1V2_KSZ",
+   "value": "100n",
+   "class": "D",
+   "clause": "KSZ9897R one 0.1 uF per supply pin (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C27",
+   "part": "U1",
+   "pin": "11",
+   "net": "+1V2_KSZ",
+   "value": "22u 6.3V",
+   "class": "B2",
+   "clause": "KSZ9897R example figure's bulk, no placement clause (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C549",
+   "part": "U1",
+   "pin": "3",
+   "net": "+1V2_KSZ",
+   "value": "22u 6.3V",
+   "class": "B2",
+   "clause": "KSZ9897R example figure's bulk, no placement clause (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C28",
+   "part": "U1",
+   "pin": "10",
+   "net": "+2V5_KSZ",
+   "value": "22u 6.3V",
+   "class": "B2",
+   "clause": "KSZ9897R example figure's bulk, no placement clause (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C550",
+   "part": "U1",
+   "pin": "61",
+   "net": "+3V3_DEV",
+   "value": "10u",
+   "class": "B2",
+   "clause": "KSZ9897R example figure's bulk, no placement clause (DS00002330D Figure 4-8)"
+  },
+  {
+   "cap": "C564",
+   "part": "U519",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C565",
+   "part": "U520",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C43",
+   "part": "U15",
+   "pin": "6",
+   "net": "GNSS_3V3",
+   "value": "4.7u",
+   "class": "L",
+   "clause": "CP2102N VDD is the internal regulator's output (Rev 1.5 p.5)"
+  },
+  {
+   "cap": "C44",
+   "part": "U15",
+   "pin": "6",
+   "net": "GNSS_3V3",
+   "value": "100n",
+   "class": "D",
+   "clause": "CP2102N '4.7 uF and 0.1 uF bypass capacitors required for each power pin' (Rev 1.5 p.5)"
+  },
+  {
+   "cap": "C551",
+   "part": "U15",
+   "pin": "7",
+   "net": "+5V_DEV",
+   "value": "4.7u",
+   "class": "D",
+   "clause": "CP2102N '4.7 uF and 0.1 uF bypass capacitors required for each power pin' (Rev 1.5 p.5)"
+  },
+  {
+   "cap": "C552",
+   "part": "U15",
+   "pin": "7",
+   "net": "+5V_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "CP2102N '4.7 uF and 0.1 uF bypass capacitors required for each power pin' (Rev 1.5 p.5)"
+  },
+  {
+   "cap": "C48",
+   "part": "U16",
+   "pin": "6",
+   "net": "ZBA_3V3",
+   "value": "4.7u",
+   "class": "L",
+   "clause": "CP2102N VDD is the internal regulator's output (Rev 1.5 p.5)"
+  },
+  {
+   "cap": "C49",
+   "part": "U16",
+   "pin": "6",
+   "net": "ZBA_3V3",
+   "value": "100n",
+   "class": "D",
+   "clause": "CP2102N '4.7 uF and 0.1 uF bypass capacitors required for each power pin' (Rev 1.5 p.5)"
+  },
+  {
+   "cap": "C553",
+   "part": "U16",
+   "pin": "7",
+   "net": "+5V_DEV",
+   "value": "4.7u",
+   "class": "D",
+   "clause": "CP2102N '4.7 uF and 0.1 uF bypass capacitors required for each power pin' (Rev 1.5 p.5)"
+  },
+  {
+   "cap": "C554",
+   "part": "U16",
+   "pin": "7",
+   "net": "+5V_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "CP2102N '4.7 uF and 0.1 uF bypass capacitors required for each power pin' (Rev 1.5 p.5)"
+  },
+  {
+   "cap": "C50",
+   "part": "U17",
+   "pin": "6",
+   "net": "ZBB_3V3",
+   "value": "4.7u",
+   "class": "L",
+   "clause": "CP2102N VDD is the internal regulator's output (Rev 1.5 p.5)"
+  },
+  {
+   "cap": "C51",
+   "part": "U17",
+   "pin": "6",
+   "net": "ZBB_3V3",
+   "value": "100n",
+   "class": "D",
+   "clause": "CP2102N '4.7 uF and 0.1 uF bypass capacitors required for each power pin' (Rev 1.5 p.5)"
+  },
+  {
+   "cap": "C555",
+   "part": "U17",
+   "pin": "7",
+   "net": "+5V_DEV",
+   "value": "4.7u",
+   "class": "D",
+   "clause": "CP2102N '4.7 uF and 0.1 uF bypass capacitors required for each power pin' (Rev 1.5 p.5)"
+  },
+  {
+   "cap": "C556",
+   "part": "U17",
+   "pin": "7",
+   "net": "+5V_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "CP2102N '4.7 uF and 0.1 uF bypass capacitors required for each power pin' (Rev 1.5 p.5)"
+  },
+  {
+   "cap": "C59",
+   "part": "U18",
+   "pin": "6",
+   "net": "RB_3V3",
+   "value": "4.7u",
+   "class": "L",
+   "clause": "CP2102N VDD is the internal regulator's output (Rev 1.5 p.5)"
+  },
+  {
+   "cap": "C60",
+   "part": "U18",
+   "pin": "6",
+   "net": "RB_3V3",
+   "value": "100n",
+   "class": "D",
+   "clause": "CP2102N '4.7 uF and 0.1 uF bypass capacitors required for each power pin' (Rev 1.5 p.5)"
+  },
+  {
+   "cap": "C557",
+   "part": "U18",
+   "pin": "7",
+   "net": "+5V_DEV",
+   "value": "4.7u",
+   "class": "D",
+   "clause": "CP2102N '4.7 uF and 0.1 uF bypass capacitors required for each power pin' (Rev 1.5 p.5)"
+  },
+  {
+   "cap": "C558",
+   "part": "U18",
+   "pin": "7",
+   "net": "+5V_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "CP2102N '4.7 uF and 0.1 uF bypass capacitors required for each power pin' (Rev 1.5 p.5)"
+  },
+  {
+   "cap": "C65",
+   "part": "U501",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "PI7C9X2G404SL: no maker requirement (DS40068 3.5); the generator's own count stands (decision 42 D1)"
+  },
+  {
+   "cap": "C66",
+   "part": "U502",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "TUSB8041 0.1 uF per VDD and VDD33 pin (SLLSEE4E 11.1.1, p.38)"
+  },
+  {
+   "cap": "C508",
+   "part": "U503",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "R",
+   "clause": "AP64500 input capacitor (DS41979 Layout p.23)"
+  },
+  {
+   "cap": "C509",
+   "part": "U504",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "R",
+   "clause": "AP64500 input capacitor (DS41979 Layout p.23)"
+  },
+  {
+   "cap": "C510",
+   "part": "U505",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C511",
+   "part": "U506",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C402",
+   "part": "U41",
+   "pin": "11",
+   "net": "+3V3_IOCA",
+   "value": "100n",
+   "class": "D",
+   "clause": "AN4938 7.4 100 nF per VDD pin; 2.2 VDDA 100 nF + 1 uF (p.12)"
+  },
+  {
+   "cap": "C403",
+   "part": "U41",
+   "pin": "27",
+   "net": "+3V3_IOCA",
+   "value": "100n",
+   "class": "D",
+   "clause": "AN4938 7.4 100 nF per VDD pin; 2.2 VDDA 100 nF + 1 uF (p.12)"
+  },
+  {
+   "cap": "C404",
+   "part": "U41",
+   "pin": "50",
+   "net": "+3V3_IOCA",
+   "value": "100n",
+   "class": "D",
+   "clause": "AN4938 7.4 100 nF per VDD pin; 2.2 VDDA 100 nF + 1 uF (p.12)"
+  },
+  {
+   "cap": "C405",
+   "part": "U41",
+   "pin": "75",
+   "net": "+3V3_IOCA",
+   "value": "100n",
+   "class": "D",
+   "clause": "AN4938 7.4 100 nF per VDD pin; 2.2 VDDA 100 nF + 1 uF (p.12)"
+  },
+  {
+   "cap": "C406",
+   "part": "U41",
+   "pin": "100",
+   "net": "+3V3_IOCA",
+   "value": "100n",
+   "class": "D",
+   "clause": "AN4938 7.4 100 nF per VDD pin; 2.2 VDDA 100 nF + 1 uF (p.12)"
+  },
+  {
+   "cap": "C401",
+   "part": "U41",
+   "pin": "50",
+   "net": "+3V3_IOCA",
+   "value": "10u",
+   "class": "D",
+   "clause": "AN4938 7.4's 'min. 4.7 uF' per package, tied to the pins (p.32)"
+  },
+  {
+   "cap": "C407",
+   "part": "U41",
+   "pin": "48",
+   "net": "IOCA_VCAP",
+   "value": "2.2u",
+   "class": "L",
+   "clause": "STM32H743 VCAP 2.2 uF, ESR under 100 mOhm (AN4938 2.2, p.12)"
+  },
+  {
+   "cap": "C408",
+   "part": "U41",
+   "pin": "73",
+   "net": "IOCA_VCAP",
+   "value": "2.2u",
+   "class": "L",
+   "clause": "STM32H743 VCAP 2.2 uF, ESR under 100 mOhm (AN4938 2.2, p.12)"
+  },
+  {
+   "cap": "C412",
+   "part": "U41",
+   "pin": "21",
+   "net": "+3V3_IOCA",
+   "value": "100n",
+   "class": "D",
+   "clause": "AN4938 7.4 100 nF per VDD pin; 2.2 VDDA 100 nF + 1 uF (p.12)"
+  },
+  {
+   "cap": "C413",
+   "part": "U41",
+   "pin": "21",
+   "net": "+3V3_IOCA",
+   "value": "1u",
+   "class": "D",
+   "clause": "AN4938 7.4 100 nF per VDD pin; 2.2 VDDA 100 nF + 1 uF (p.12)"
+  },
+  {
+   "cap": "C400",
+   "part": "U40",
+   "pin": "1",
+   "net": "+5V_DEV",
+   "value": "1u",
+   "class": "D",
+   "clause": "an LDO's input capacitor (decision 42 class D)"
+  },
+  {
+   "cap": "C422",
+   "part": "U51",
+   "pin": "11",
+   "net": "+3V3_IOCB",
+   "value": "100n",
+   "class": "D",
+   "clause": "AN4938 7.4 100 nF per VDD pin; 2.2 VDDA 100 nF + 1 uF (p.12)"
+  },
+  {
+   "cap": "C423",
+   "part": "U51",
+   "pin": "27",
+   "net": "+3V3_IOCB",
+   "value": "100n",
+   "class": "D",
+   "clause": "AN4938 7.4 100 nF per VDD pin; 2.2 VDDA 100 nF + 1 uF (p.12)"
+  },
+  {
+   "cap": "C424",
+   "part": "U51",
+   "pin": "50",
+   "net": "+3V3_IOCB",
+   "value": "100n",
+   "class": "D",
+   "clause": "AN4938 7.4 100 nF per VDD pin; 2.2 VDDA 100 nF + 1 uF (p.12)"
+  },
+  {
+   "cap": "C425",
+   "part": "U51",
+   "pin": "75",
+   "net": "+3V3_IOCB",
+   "value": "100n",
+   "class": "D",
+   "clause": "AN4938 7.4 100 nF per VDD pin; 2.2 VDDA 100 nF + 1 uF (p.12)"
+  },
+  {
+   "cap": "C426",
+   "part": "U51",
+   "pin": "100",
+   "net": "+3V3_IOCB",
+   "value": "100n",
+   "class": "D",
+   "clause": "AN4938 7.4 100 nF per VDD pin; 2.2 VDDA 100 nF + 1 uF (p.12)"
+  },
+  {
+   "cap": "C421",
+   "part": "U51",
+   "pin": "50",
+   "net": "+3V3_IOCB",
+   "value": "10u",
+   "class": "D",
+   "clause": "AN4938 7.4's 'min. 4.7 uF' per package, tied to the pins (p.32)"
+  },
+  {
+   "cap": "C427",
+   "part": "U51",
+   "pin": "48",
+   "net": "IOCB_VCAP",
+   "value": "2.2u",
+   "class": "L",
+   "clause": "STM32H743 VCAP 2.2 uF, ESR under 100 mOhm (AN4938 2.2, p.12)"
+  },
+  {
+   "cap": "C428",
+   "part": "U51",
+   "pin": "73",
+   "net": "IOCB_VCAP",
+   "value": "2.2u",
+   "class": "L",
+   "clause": "STM32H743 VCAP 2.2 uF, ESR under 100 mOhm (AN4938 2.2, p.12)"
+  },
+  {
+   "cap": "C432",
+   "part": "U51",
+   "pin": "21",
+   "net": "+3V3_IOCB",
+   "value": "100n",
+   "class": "D",
+   "clause": "AN4938 7.4 100 nF per VDD pin; 2.2 VDDA 100 nF + 1 uF (p.12)"
+  },
+  {
+   "cap": "C433",
+   "part": "U51",
+   "pin": "21",
+   "net": "+3V3_IOCB",
+   "value": "1u",
+   "class": "D",
+   "clause": "AN4938 7.4 100 nF per VDD pin; 2.2 VDDA 100 nF + 1 uF (p.12)"
+  },
+  {
+   "cap": "C420",
+   "part": "U50",
+   "pin": "1",
+   "net": "+5V_DEV",
+   "value": "1u",
+   "class": "D",
+   "clause": "an LDO's input capacitor (decision 42 class D)"
+  },
+  {
+   "cap": "C442",
+   "part": "U61",
+   "pin": "11",
+   "net": "+3V3_IOCC",
+   "value": "100n",
+   "class": "D",
+   "clause": "AN4938 7.4 100 nF per VDD pin; 2.2 VDDA 100 nF + 1 uF (p.12)"
+  },
+  {
+   "cap": "C443",
+   "part": "U61",
+   "pin": "27",
+   "net": "+3V3_IOCC",
+   "value": "100n",
+   "class": "D",
+   "clause": "AN4938 7.4 100 nF per VDD pin; 2.2 VDDA 100 nF + 1 uF (p.12)"
+  },
+  {
+   "cap": "C444",
+   "part": "U61",
+   "pin": "50",
+   "net": "+3V3_IOCC",
+   "value": "100n",
+   "class": "D",
+   "clause": "AN4938 7.4 100 nF per VDD pin; 2.2 VDDA 100 nF + 1 uF (p.12)"
+  },
+  {
+   "cap": "C445",
+   "part": "U61",
+   "pin": "75",
+   "net": "+3V3_IOCC",
+   "value": "100n",
+   "class": "D",
+   "clause": "AN4938 7.4 100 nF per VDD pin; 2.2 VDDA 100 nF + 1 uF (p.12)"
+  },
+  {
+   "cap": "C446",
+   "part": "U61",
+   "pin": "100",
+   "net": "+3V3_IOCC",
+   "value": "100n",
+   "class": "D",
+   "clause": "AN4938 7.4 100 nF per VDD pin; 2.2 VDDA 100 nF + 1 uF (p.12)"
+  },
+  {
+   "cap": "C441",
+   "part": "U61",
+   "pin": "50",
+   "net": "+3V3_IOCC",
+   "value": "10u",
+   "class": "D",
+   "clause": "AN4938 7.4's 'min. 4.7 uF' per package, tied to the pins (p.32)"
+  },
+  {
+   "cap": "C447",
+   "part": "U61",
+   "pin": "48",
+   "net": "IOCC_VCAP",
+   "value": "2.2u",
+   "class": "L",
+   "clause": "STM32H743 VCAP 2.2 uF, ESR under 100 mOhm (AN4938 2.2, p.12)"
+  },
+  {
+   "cap": "C448",
+   "part": "U61",
+   "pin": "73",
+   "net": "IOCC_VCAP",
+   "value": "2.2u",
+   "class": "L",
+   "clause": "STM32H743 VCAP 2.2 uF, ESR under 100 mOhm (AN4938 2.2, p.12)"
+  },
+  {
+   "cap": "C452",
+   "part": "U61",
+   "pin": "21",
+   "net": "+3V3_IOCC",
+   "value": "100n",
+   "class": "D",
+   "clause": "AN4938 7.4 100 nF per VDD pin; 2.2 VDDA 100 nF + 1 uF (p.12)"
+  },
+  {
+   "cap": "C453",
+   "part": "U61",
+   "pin": "21",
+   "net": "+3V3_IOCC",
+   "value": "1u",
+   "class": "D",
+   "clause": "AN4938 7.4 100 nF per VDD pin; 2.2 VDDA 100 nF + 1 uF (p.12)"
+  },
+  {
+   "cap": "C440",
+   "part": "U60",
+   "pin": "1",
+   "net": "+5V_DEV",
+   "value": "1u",
+   "class": "D",
+   "clause": "an LDO's input capacitor (decision 42 class D)"
+  },
+  {
+   "cap": "C480",
+   "part": "U80",
+   "pin": "14",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C566",
+   "part": "U81",
+   "pin": "14",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C567",
+   "part": "U84",
+   "pin": "14",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C572",
+   "part": "U85",
+   "pin": "14",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C585",
+   "part": "U530",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C588",
+   "part": "U533",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C586",
+   "part": "U531",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C589",
+   "part": "U534",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C587",
+   "part": "U532",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C590",
+   "part": "U535",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C576",
+   "part": "U521",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C579",
+   "part": "U524",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C582",
+   "part": "U527",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C512",
+   "part": "U507",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C515",
+   "part": "U510",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C518",
+   "part": "U513",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C561",
+   "part": "U516",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C577",
+   "part": "U522",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C580",
+   "part": "U525",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C583",
+   "part": "U528",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C513",
+   "part": "U508",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C516",
+   "part": "U511",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C519",
+   "part": "U514",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C562",
+   "part": "U517",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C578",
+   "part": "U523",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C581",
+   "part": "U526",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C584",
+   "part": "U529",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C514",
+   "part": "U509",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C517",
+   "part": "U512",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C560",
+   "part": "U515",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C563",
+   "part": "U518",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C4",
+   "part": "U25",
+   "pin": "3",
+   "net": "+5V_DEV",
+   "value": "10u",
+   "class": "R",
+   "clause": "AP63203 input capacitor at VIN (DS41326 p.2, p.15)"
+  },
+  {
+   "cap": "C5",
+   "part": "L1",
+   "pin": "2",
+   "net": "+3V3_DEV",
+   "value": "22u 6.3V",
+   "class": "R",
+   "clause": "a converter's output capacitor, declared against the output loop (decision 42 R4; DS41326 p.2 pin 1 FB, SLUSEA4D 12.1)"
+  },
+  {
+   "cap": "C6",
+   "part": "L1",
+   "pin": "2",
+   "net": "+3V3_DEV",
+   "value": "22u 6.3V",
+   "class": "R",
+   "clause": "a converter's output capacitor, declared against the output loop (decision 42 R4; DS41326 p.2 pin 1 FB, SLUSEA4D 12.1)"
+  },
+  {
+   "cap": "C12",
+   "part": "U27",
+   "pin": "5",
+   "net": "+2V5_KSZ",
+   "value": "1u",
+   "class": "L",
+   "clause": "AP2112K output, 'Stable with 1.0uF' (DS39724 p.1)"
+  },
+  {
+   "cap": "C13",
+   "part": "U27",
+   "pin": "1",
+   "net": "+3V3_DEV",
+   "value": "1u",
+   "class": "D",
+   "clause": "AP2112K input"
+  },
+  {
+   "cap": "C36",
+   "part": "U5",
+   "pin": "1",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C37",
+   "part": "U3",
+   "pin": "1",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C38",
+   "part": "U4",
+   "pin": "1",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C69",
+   "part": "U8",
+   "pin": "8",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C70",
+   "part": "U9",
+   "pin": "2",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  },
+  {
+   "cap": "C71",
+   "part": "U10",
+   "pin": "4",
+   "net": "+3V3_DEV",
+   "value": "100n",
+   "class": "D",
+   "clause": "a capacitor a maker ties to a supply pin (decision 42 class D)"
+  }
+ ]
+}

@@ -625,6 +625,31 @@
    "basis": "the break-before-make timing node of the same logic"
   },
   {
+   "pattern": "BBM*",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a bank's break-before-make logic (round 8, FAB-03): the request, its armed copy and RC node, the motion term and their ORs; its edge order is the sequence"
+  },
+  {
+   "pattern": "PGSEL*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a bank's selected-host power-good (round 8, FAB-02): a level that changes when a module powers up or down, or T2 after the select moves"
+  },
+  {
+   "pattern": "PG?",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a slot's power-good node (round 8, FAB-02): the module's own 3.3 V through 1 k with 100 k to ground, a level"
+  },
+  {
+   "pattern": "PG?_S",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a slot's power-good after its Schmitt buffer (round 8, FAB-02), a level"
+  },
+  {
+   "pattern": "PG?_n",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a slot's dark flag, the inverse of its buffered power-good (round 8, FAB-02), a level"
+  },
+  {
    "pattern": "*_EN",
    "class": "LOW_SPEED_OR_DC",
    "basis": "an enable, a static level with an RC on it"
@@ -1015,6 +1040,11 @@
    "basis": "the emission-control line, a static level"
   },
   {
+   "pattern": "EMCON_SUP",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the supervisors' buffered copy of EMCON_HW (round 8, L1), a static level"
+  },
+  {
    "pattern": "ZEROIZE_HW",
    "class": "LOW_SPEED_OR_DC",
    "basis": "the zeroize line, a static level"
@@ -1144,7 +1174,7 @@
    "hazard": "the WiFi cards and the module radios are released",
    "safe_state": "low",
    "role": "listens",
-   "why": "the three W_DISABLE stages hang on it and R58 holds it down, so with the panel ribbon out every card reads disable"
+   "why": "since round 8 it is read by the single gates U501, U503, U504 and U505, by each slot's EMCON_ON inverter U112, U212 and U312 (run from that module's own 3.3 V) and by U506, the supervisors' buffer; R58 (4.7 k 1%) holds it down, so with the panel ribbon out every card, every module radio and every gated radio reads disable"
   },
   {
    "net": "TX_INHIBIT_n",
@@ -1214,5 +1244,6 @@
  "_decision_43_the_layer_option_has_no_fabricator_record_to_stand_on": "21 September 2026, 01:26 CEST. Decision 43 recommends measuring the LAYER option for board B before anything else. Read tonight from the fabricator's own impedance page (https://jlcpcb.com/impedance, fetched by the runner): it publishes impedance-controlled stackups for FOUR layers (18 JLC04161H variants) and SIX (16 JLC06161H variants) and none for eight. An eight-layer board B would therefore carry no controlled-impedance stackup record, so STK-001 and IMP-001 could not be judged on it (a rating whose basis file is not here is a claim), and the fabricator's capability page lists eight layers only as a size row (656 x 586 mm for 6+ layers) and a backdrill row. So the layer measurement decision 43 asks for is not a regeneration this session can run tonight: it needs the fabricator's eight-layer stackup asked for on the order, or a different fabricator's published one, which is a wait on the vendor and is recorded here rather than guessed. The measurement that CAN be run without a record is the ROUTING half alone (does B close at eight layers), which would answer decision 43's routability question and leave the impedance half owed; it is not launched tonight because a board that routes and cannot be judged on its pairs is the 10 September hold in another costume.",
  "conformal_coated": true,
  "_conformal_coated_why": "ASSEMBLY.md section 5: IPC-CC-830 acrylic (MG Chemicals 422B or equal), two thin coats, after the bench fit. It selects the column of ECSS-Q-ST-70-12C Table 13-3 that ISO-001 is judged against (decision 34, ruled 21 September 2026), and the masks matter: the same section masks every connector face and its keying, the spring-pin and pack targets, the SMP-MAX, SMA and U.FL bodies, the module and M.2 receptacles, the RockBLOCK bracket, the LimeSDR receptacle, the SA868 module and relay, the water electrodes and sensor headers, and the bench test points. A high-voltage pair measured AT one of those is on the bare column, which is why the verdict names its tightest pairs with their positions rather than only a count. Board B is named in that section as B16.",
- "_t1_magnetics_is_a_commercial_temperature_part_why": "21 September 2026, found while reading the Ethernet documents for decision 29 and worth more than that decision: T1, the Pulse H5007NL magnetics module on the RJ45 port, is rated 0 to +70 C by its own datasheet (v2/vendor/pulse/pulse-h5007nl.pdf, Electrical Specifications, 'Operating Temperature 0C to 70C'), and this kit's adopted envelope (decision 34, OPERATING-ENVELOPE.md section 4) is -20 to +40 C ambient in use. So the part is outside its own operating range over the coldest 20 K of the envelope, on a board that is not built. The same sheet names the remedy in its own note 1: 'HX: Extended temperature version -40C to +85C', and its Mechanicals page groups 'H5004, HX5004, H5007*' on one outline, so HX5004NL is the extended-temperature part in this part's own mechanical group; the asterisk on H5007 is unexplained in the text this tree can read, so PIN COMPATIBILITY IS NOT CLAIMED and is the first thing to check before a swap. THE WIDER FINDING, which is not board B's: no rule in this project compares a part's OPERATING TEMPERATURE RANGE with the envelope. CMP-001 is about absolute maximum ratings and derate.py reads voltage alone; the envelope was adopted only on 21 September, so this is the first day the comparison could be made at all. If decision 29 ever rules magnetics onto the three module links, it triples this part before it is settled."
+ "_t1_magnetics_is_a_commercial_temperature_part_why": "21 September 2026, found while reading the Ethernet documents for decision 29 and worth more than that decision: T1, the Pulse H5007NL magnetics module on the RJ45 port, is rated 0 to +70 C by its own datasheet (v2/vendor/pulse/pulse-h5007nl.pdf, Electrical Specifications, 'Operating Temperature 0C to 70C'), and this kit's adopted envelope (decision 34, OPERATING-ENVELOPE.md section 4) is -20 to +40 C ambient in use. So the part is outside its own operating range over the coldest 20 K of the envelope, on a board that is not built. The same sheet names the remedy in its own note 1: 'HX: Extended temperature version -40C to +85C', and its Mechanicals page groups 'H5004, HX5004, H5007*' on one outline, so HX5004NL is the extended-temperature part in this part's own mechanical group; the asterisk on H5007 is unexplained in the text this tree can read, so PIN COMPATIBILITY IS NOT CLAIMED and is the first thing to check before a swap. THE WIDER FINDING, which is not board B's: no rule in this project compares a part's OPERATING TEMPERATURE RANGE with the envelope. CMP-001 is about absolute maximum ratings and derate.py reads voltage alone; the envelope was adopted only on 21 September, so this is the first day the comparison could be made at all. If decision 29 ever rules magnetics onto the three module links, it triples this part before it is settled.",
+ "_panel_5v_fuse_r8_why": "ROUND 8 (26 September 2026, MESHSAT-1357, board B author): F1 IS AN MF-MSMF110 NOW (Bourns, 1.10 A hold, 2.20 A trip, JLCPCB C89647), taken by the session under the owner's standing rule of 26 September 2026 because it closes PWR-003 on the schematic against the conductor this tree holds (1.23 A), where the 0.8 mm PANEL class closes it only on a board that is re-cut. The class stays in gen_pcb_b3.py and the two together leave the fuse under the copper either way. Hot, the maker's derating table gives 0.77 A at 60 C, over board C's 0.6 A continuous; its 1.0 A must stay a peak. The paragraph above (_panel_5v_fuse_why) preferred the widening; that preference is superseded for the fuse, not the class."
 }

@@ -1,0 +1,65 @@
+r8b-sc: start 2026-09-26T22:05:10Z
+r8b-sc: b gen_sch exit 0
+r8b-sc: b build_sch exit 0
+r8b-sc: a gen_sch exit 0
+r8b-sc: a build_sch exit 0
+r8b-sc: a parity schematic: PARITY_AFTER_NOISE
+r8b-sc: a parity netlist: PARITY_AFTER_NOISE
+r8b-sc: a parity intent: PARITY_AFTER_NOISE
+r8b-sc: a sidecar diff lines 8
+r8b-sc: c gen_sch exit 0
+r8b-sc: c build_sch exit 0
+r8b-sc: c parity schematic: PARITY
+r8b-sc: c parity netlist: PARITY_AFTER_NOISE
+r8b-sc: c parity intent: PARITY_AFTER_NOISE
+r8b-sc: c sidecar diff lines 6
+r8b-sc: d gen_sch exit 0
+r8b-sc: d build_sch exit 0
+r8b-sc: d parity schematic: PARITY_AFTER_NOISE
+r8b-sc: d parity netlist: PARITY_AFTER_NOISE
+r8b-sc: d parity intent: PARITY_AFTER_NOISE
+r8b-sc: d sidecar diff lines 8
+r8b-sc: e gen_sch exit 0
+r8b-sc: e build_sch exit 0
+r8b-sc: e parity schematic: PARITY_AFTER_NOISE
+r8b-sc: e parity netlist: PARITY_AFTER_NOISE
+r8b-sc: e parity intent: PARITY_AFTER_NOISE
+r8b-sc: e sidecar diff lines 8
+r8b-sc: p gen_sch exit 0
+r8b-sc: p build_sch exit 0
+r8b-sc: p parity schematic: PARITY
+r8b-sc: p parity netlist: PARITY_AFTER_NOISE
+r8b-sc: p parity intent: PARITY_AFTER_NOISE
+r8b-sc: p sidecar diff lines 6
+r8b-sc: tree status:
+ M v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json
+ M v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
+ M v2/ecad/pcb-a-power-a23/out/pcb-a-power.net.prov.json
+ M v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_sch
+ M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json
+ M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net
+ M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net.prov.json
+ M v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_sch
+ M v2/ecad/pcb-c-display-c8/out/pcb-c-display-intent.json
+ M v2/ecad/pcb-c-display-c8/out/pcb-c-display.net
+ M v2/ecad/pcb-c-display-c8/out/pcb-c-display.net.prov.json
+ M v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs-intent.json
+ M v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net
+ M v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net.prov.json
+ M v2/ecad/pcb-d-aprs-d9/pcb-d-aprs.kicad_sch
+ M v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock-intent.json
+ M v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net
+ M v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net.prov.json
+ M v2/ecad/pcb-e1-dock-e7/pcb-e1-dock.kicad_sch
+ M v2/ecad/pcb-p-pack-p2/out/pcb-p-pack-intent.json
+ M v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net
+ M v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net.prov.json
+ M v2/ecad/tools/boards/b.json
+ M v2/ecad/tools/gen_sch_b.py
+?? v2/ecad/meshsat.pretty/M2_B-Key_Socket_3052_TE2199119.kicad_mod
+ v2/ecad/tools/boards/b.json                        |     5 +-
+ v2/ecad/tools/gen_sch_b.py                         |   522 +-
+ 24 files changed, 51261 insertions(+), 38150 deletions(-)
+r8b-sc: check_contracts exit 0  verdict: check_contracts        PASS         of 96 {"boards_without_intent": 0, "fail": 0, "missing_boards": 0, "pass": 96, "rails_unsplit": 0, "undecided": 0, "unjudged": 0}
+r8b-sc: energy_chain exit 0  verdict: energy_chain           PASS         of 98 {"checks": 98, "citations_unjudged": 0, "coordination_findings": 1, "fail": 0, "selection_findings": 0, "stages": 12} | THE CHAIN END TO END, which is BAT-002's question; a selection finding against ECSS 6.17 belongs to the stage that has it and is in energy_chain_<letter>, rule PWR-003. Every rating against its own source document, every protective element against the board's netlist, and the four coordination tests (the element is below what it protects, above the path's peak, able to interrupt what is available, and followed by the stage it protects)
+r8b-sc: done 2026-09-26T22:08:28Z
