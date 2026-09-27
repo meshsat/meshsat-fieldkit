@@ -1,0 +1,51 @@
+reviewed eb9f9030 sha256/16 fb819e939f2895da; cecfd0f1 sha256/16 f25e17d7d698ecf8
+top-level needs_document_sha256: '3ff59edc96a3f8f46951c57b65c7c1c1d89eaff30e21f82b7d9c383913119768' -> '4483209659dc391c9677ae8d5351ccad4805d44906f8b142fd3029e4192c96bc'
+needs: unchanged
+owner_rulings: 29 reviewed, 29 at cecfd0f1; added none; removed none
+session_choices: 56 reviewed, 63 at cecfd0f1; added ['SC-57', 'SC-58', 'SC-59', 'SC-60', 'SC-61', 'SC-62', 'SC-63']; removed none
+  reviewed SC-51 is SC-58 here: the same entry; the id SC-51 here is set 5's entry
+  reviewed SC-52 is SC-59 here: the same entry; the id SC-52 here is set 5's entry
+  reviewed SC-53 is SC-60 here: the same entry; the id SC-53 here is set 5's entry
+  reviewed SC-54 is SC-61 here: the same entry; the id SC-54 here is set 5's entry
+  reviewed SC-55 is SC-62 here: the same entry; the id SC-55 here is set 5's entry
+  reviewed SC-56 is SC-63 here: the same entry; the id SC-56 here is set 5's entry
+open_items: 44 reviewed, 60 at cecfd0f1; added ['S-64', 'S-65', 'S-66', 'S-67', 'S-68', 'S-69', 'S-70', 'S-71', 'S-72', 'S-73', 'S-74', 'S-75', 'S-76', 'S-77', 'S-78', 'S-79']; removed none
+  S-47: changed in title
+  S-59: renumbering only (SC-52)
+  S-61: renumbering only (SC-56)
+closed_items: 49 reviewed, 49 at cecfd0f1; added none; removed none
+records: 144 reviewed, 144 at cecfd0f1; added none; removed none
+  CHO-001: changed in evidence, evidence_bound_to
+  REQ-005: changed in evidence, evidence_bound_to
+  CON-003: changed in evidence, evidence_bound_to
+  CON-022: changed in evidence, evidence_bound_to
+  FEA-006: changed in evidence, evidence_bound_to
+  CON-017: changed in evidence, evidence_bound_to
+  CFL-001: changed in evidence, evidence_bound_to
+  REQ-012: changed in evidence, evidence_bound_to
+  REQ-072: changed in evidence, evidence_bound_to
+  CON-019: changed in evidence, evidence_bound_to
+  CON-018: changed in evidence, evidence_bound_to
+  CFL-002: changed in evidence, evidence_bound_to
+  REQ-030: changed in evidence, evidence_bound_to
+  REQ-071: changed in evidence, evidence_bound_to
+  CFL-004: changed in evidence, evidence_bound_to
+  REQ-032: changed in evidence, evidence_bound_to
+  CFL-005: changed in evidence, evidence_bound_to
+  CON-010: changed in evidence, evidence_bound_to, evidence_result, history
+  CON-021: changed in evidence, evidence_bound_to
+  FEA-002: changed in evidence, evidence_bound_to
+  REQ-036: changed in evidence, evidence_bound_to
+  REQ-044: changed in evidence, evidence_bound_to
+  REQ-077: changed in evidence, evidence_bound_to
+  CFL-006: changed in evidence, evidence_bound_to
+  CFL-016: changed in evidence, evidence_bound_to
+  CFL-017: renumbering only (EQ-25)
+  REQ-052: changed in evidence, evidence_bound_to
+  CON-025: changed in evidence, evidence_bound_to
+  CFL-013: changed in evidence, evidence_bound_to
+  CFL-014: changed in evidence, evidence_bound_to
+  CFL-015: changed in evidence, evidence_bound_to
+  CON-015: changed in evidence, evidence_bound_to
+  CON-016: changed in evidence, evidence_bound_to
+record fields outside the readings that differ: none
