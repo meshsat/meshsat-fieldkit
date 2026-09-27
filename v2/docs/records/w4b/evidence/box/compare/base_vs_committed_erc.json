@@ -1,0 +1,24 @@
+{
+ "kind": "erc",
+ "violations": [
+  2879,
+  2879
+ ],
+ "by_type": [
+  {
+   "error:pin_to_pin": 5,
+   "error:power_pin_not_driven": 2,
+   "warning:endpoint_off_grid": 599,
+   "warning:lib_symbol_issues": 1987,
+   "warning:unconnected_wire_endpoint": 286
+  },
+  {
+   "error:pin_to_pin": 5,
+   "error:power_pin_not_driven": 2,
+   "warning:endpoint_off_grid": 599,
+   "warning:lib_symbol_issues": 1987,
+   "warning:unconnected_wire_endpoint": 286
+  }
+ ],
+ "result": "PARITY_AFTER_NOISE"
+}

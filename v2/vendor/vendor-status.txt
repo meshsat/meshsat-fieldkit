@@ -260,3 +260,6 @@ nexperia/nexperia-74lvc1g157.pdf   current   # 74LVC1G157GW, board B's fabric qu
 ti/ti-tpd4e001.pdf   current   # TPD4E001DBVR, board B's SIM ESD arrays U222 and U223 (round 8, S-13)
 ti/ti-tps3808.pdf   current   # TPS3808G30DBVR, board B's 5G release hold U221 (round 8, SD-EMC-1r8)
 adi/adi-ds3231sn.pdf   current   # DS3231SN, board B's holdover clock U9, the part C9866 buys (round 8, parts re-take row 1)
+ti/ti-sn74lv1t08.pdf   current   # SN74LV1T08DBVR, board B's card-buck enable gates U116, U216, U316 (stream w4b, W4B-D3; SOURCES.yaml logic-and-lv1t08)
+rockblock/groundcontrol-docs-rockblock-9704-hardware-20260927.html   current   # the RockBLOCK 9704 hardware page: I_EN, P_EN, I_BTD and the startup and shutdown sequences (stream w4b, W4B-D1)
+rockblock/groundcontrol-docs-rockblock-9704-hardware-20260927.txt   current   # the plain-text rendering of the hardware page beside it

@@ -2023,6 +2023,77 @@ session_choices:
       capacity on board B, after which J_USB3 returns to spare.
     source: ["v2/docs/HW-FW-CONTRACT.md section 8", "v2/docs/records/hc5/usb-2-0-clauses-cited.md"]
 
+  - id: SC-64
+    authority: SESSION
+    under: standing-rule
+    taken_on: "2026-09-27"
+    question: >-
+      How does EMCON reach the RockBLOCK 9704's ENABLE (J3 pin 3, I_EN), which U6 held alone while the module runs on
+      its own supercapacitors after its supply gate opens (EMCON.md 4.4, 5a row 4)?
+    taken: >-
+      RB_IEN = EMCON_HW AND RB_SW_IEN in U536, an SN74LVC1G08 on +3V3_DEV (Ioff stated), with R527 10 k holding RB_IEN
+      low unpowered and R528 4.7 k holding U6's request low at power-on; the module's shutdown order (Ground Control's
+      I_EN/I_BTD warning) is met by an EMCON during boot the way the maker's own divider meets every loss of external
+      power, accepted as a stated residual; the panel firmware keeps the request low after an EMCON until RB_STATUS
+      reads low (PANEL.md correction (17), HW-FW-CONTRACT.md FW-B13; the stream wrote 'the bridge', corrected at
+      integration).
+    why: >-
+      W4B-D1 (stream w4b). Ground Control states I_EN initiates startup and shutdown and 'can be driven directly with
+      an MCU pin, or an open-drain output' (hardware page, 27 September 2026; schematic rev 2B page 3). A single gate
+      with Ioff is the part and the idiom board B's other enables already use (L2, L3). Options weighed: an open drain
+      from EMCON_ON (fails with the module's rail, and a pull-up to the module's pre-cap supply is the maker's own); a
+      gate on the supply rail (none is live under EMCON); the AND taken. Reversal: U6 pin 19 back on RB_IEN, U536,
+      C559, R527 and R528 out.
+    source:
+      - "v2/ecad/tools/gen_sch_b.py (U536, R527, R528; the comment block at the EMCON gates)"
+      - "v2/docs/feasibility/EMCON.md 4.4, 4c"
+
+  - id: SC-65
+    authority: SESSION
+    under: standing-rule
+    taken_on: "2026-09-27"
+    question: >-
+      How is L4 case (2) closed on U501 to U504, whose outputs are unspecified while +3V3_DEV is between 0 and 1.65 V
+      and whose switches' turn-off thresholds are 1.08 V (EMCON.md section 3 L4, 5a fault F6)?
+    taken: >-
+      Each switch's EN/UVLO on its own node at 0.6 of the gate's output: R529 to R531 10 k 1 percent in series, R514
+      to R516 15 k 1 percent to GND (LIME_UVLO, RB_UVLO, E22_UVLO), board A's SD-A8-3 values and codes; U505 needs
+      none (its switch's input is +3V3_DEV).
+    why: >-
+      W4B-D2 (stream w4b). At the gate's 1.65 V band edge the node is at most 0.998 V, under VUVLO(F) and VENF 1.08 V
+      minimum (SLVSET8A 7.5, SLVSDH0C 7.5); driven high it is at least 1.43 V (VOH 2.4 V, SCES217AA 5.5), over 1.22 V
+      and 1.30 V maximum; unpowered 0.15 V under VSD and VSHUTF. Options weighed: a supervisor on +3V3_DEV holding the
+      enables (another part and its own band), a gate supply that is either up or zero (a switch's discharge still
+      crosses the band); the divider taken, as on board A. Reversal: the enables back on the gate outputs, R514 to
+      R516 at 10 k, R529 to R531 out.
+    source:
+      - "v2/ecad/tools/gen_sch_b.py (R514 to R516, R529 to R531)"
+      - "v2/docs/feasibility/EMCON.md section 3 L4, 4c"
+
+  - id: SC-66
+    authority: SESSION
+    under: standing-rule
+    taken_on: "2026-09-27"
+    question: >-
+      What holds each card buck's enable (S{s}A_EN) off under EMCON when the module's own 3.3 V, which runs U{s}15, is
+      down and the slot's 5 V is up (EMCON.md 5a fault F2; found by RF-002's walk once it read the SN74LVC2G06)?
+    taken: >-
+      U{s}16, an SN74LV1T08 run from +5V_S{s}, the buck's own input, drives S{s}A_EN = EMCON_HW AND PCIE_PWR_EN{s}
+      push-pull; R{s}64 is removed and U{s}15's second channel freed (2A on GND, 2Y open).
+    why: >-
+      W4B-D3 (stream w4b). The AP64500's EN sources 1.5 uA and, once on, 4 uA more, 5.5 uA typical with no maximum
+      (DS41979), so 110 k could not be shown to turn a running buck off, and on slot 2 that is the RM520N-GL with its
+      own firmware. A gate powered from the buck's own input has no unpowered state that matters and leaves no
+      resistor for the EN current to lift (VOL 0.35 V at 8 mA, SCLS739F 6.5); the LV1T08 reads a 3.3 V signal from a 5
+      V supply (VIH 2.03 V, VIL 0.8 V) with 5.5 V tolerant inputs (II +-1 uA at VCC 0 to 5.5 V). Options weighed: a
+      stiffer pull-down (margin, not a stated bound); keeping U{s}15's 2Y beside the gate through R{s}64 (the resistor
+      brings the unbounded current back); the direct gate taken. What is given up: a second EMCON path onto the node
+      that failed in exactly this state. Reversal: R{s}64 from PCIE_PWR_EN{s} to S{s}A_EN, U{s}15's 2Y back, U{s}16
+      out.
+    source:
+      - "v2/ecad/tools/gen_sch_b.py (U116, U216, U316; the comment block at the card buck)"
+      - "v2/docs/feasibility/EMCON.md 4c"
+
 # What is still open. SESSION items are engineering the session decides and records with authority SESSION;
 # OWNER_ACTION is something the owner has ruled that he does or sets himself, or that only he can do because it reopens
 # his own ruling or accepts a residual risk (reported to him, never asked, under his standing rule of 26 September
@@ -2085,11 +2156,14 @@ open_items:
       EMCON reaches every transmitter (D-05), what is left after 458b2873 gated the compute modules' radios and the
       WiFi card supplies and the round 8 circuits of boards A to D drew the rest of this item (EMCON.md sections 4a, 4b
       and 7: the 5G module's supply removed by hardware at once on board B, SD-EMC-1r8, in place of SD-EMC-1's two
-      stages; L1 remedied on boards B and C, L2 on boards A and B, L3 and L7 on board B, L4 on boards A and D): L4 case
-      (2), the gate supplies of U501 to U505 below their specified range on board B (bench E-11), and the back-feed
+      stages; L1 remedied on boards B and C, L2 on boards A and B, L3 and L7 on board B, L4 on boards A and D, and on
+      board B's U501 to U504 by stream w4b's enable dividers, EMCON.md 4c): L4 case (2) on U536, the RockBLOCK's ENABLE
+      gate, below its specified range with +5V_RB off there (bench E-11), the Iridium 9704's response to its ENABLE (a
+      maker's document owed; the ENABLE itself is forced low by hardware since stream w4b), and the back-feed
       paths of SD-EMC-2 into the RockBLOCK, the E22 and both E72 (open) and both AW7915 cards (no maker floor to judge
       against). Restated 27 September 2026 at the release check of layer 2 (finding B4 (b)); the item's scope is
-      unchanged.
+      unchanged. Restated again by stream w4b (27 September 2026): the RockBLOCK's ENABLE and L4 case (2) on U501 to
+      U504 are drawn, and each slot's card supply enable is driven from its own 5 V (fault F2, EMCON.md 4c).
   - id: S-02
     class: SESSION
     status: OPEN
@@ -2613,6 +2687,19 @@ open_items:
       boards A, E and P enter layout, because the answer can move the pack pocket, board E's solar stage (D4, F2,
       J_SOLAR) and board A's front end. Until then REQ-072 stays FAIL, CONOPS M1 states that a night needs an overnight
       input on the 9 to 36 V entry, and nothing is lowered: neither REQ-016 nor REQ-072 is restated to fit.
+
+  - id: S-82
+    class: SESSION
+    status: OPEN
+    title: >-
+      RF-002's instrument after stream w4b (27 September 2026): the rows board B's circuit needs landed with it
+      (tools/tx_inhibit.py from v2/docs/records/w4b/tools/apply_tx_inhibit_w4b.py and apply_tx_inhibit_tests_w4b.py:
+      the SN74LVC2G06 and SN74LV1T08 rows, the AO3400A read as an N-channel FET, U221 and J_QMX in ACCESSORIES, a
+      VCC-band VIL field; without them the walk read board B FAIL 11, PASS 3, UNDECIDED 6 and boards A and C one
+      UNDECIDED more each), and with them the stream's re-take in scratch read board B FAIL 1 (TX_INHIBIT_n, W3T-F1),
+      PASS 15, UNDECIDED 4, the four UNDECIDED on three classes the walk does not read: a TPS3808 supervisor on the
+      rail it watches (U221), a USBLC6-2's VBUS beside a USB hub's pins (U33 on +5V_LIME), and declared bench headers
+      and CP2102N pulls on a gated rail (+3V3_ZB). The last two are also SD-EMC-2's back-feed (S-01).
 
 # Items that left the open list, and what closed each: an owner ruling, a session choice, or a commit whose effect
 # was read in the file `closing_evidence` names. A record never waits on a closed item; it cites what closed it.
@@ -3210,9 +3297,35 @@ records:
           W3B-F1's parts are dropped from it; VBAT_RTC carries every node VBAT carried plus C72 to C74 pin 1
           (v2/docs/records/w3b/tools/rename_check.py); no device changes, so this reading stands on the file at
           8b78c59754a6a0c7
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at stream w4b's merge of 27 September 2026 (MESHSAT-1357, board B: RF-002,
+          W4B-D1 to W4B-D3): three circuit changes and nothing else: W4B-D1, the RockBLOCK's I_EN (J_RB9704 pin 3) is
+          RB_IEN = EMCON_HW AND RB_SW_IEN in U536 (SN74LVC1G08), U6 pin 19 now drives the request RB_SW_IEN, R527 10 k
+          holds RB_IEN low and R528 4.7 k the request (line 1507); W4B-D2, the enables of U23, U24 and U21 sit at 0.6 of
+          their gates' outputs (R529 to R531 10 k 1 percent, R514 to R516 now 15 k 1 percent, nodes LIME_UVLO, RB_UVLO,
+          E22_UVLO), with the three rails' intent naming their switch and enable net; W4B-D3, each slot's card buck
+          enable S{s}A_EN is driven by U{s}16 (SN74LV1T08 on +5V_S{s}) = EMCON_HW AND PCIE_PWR_EN{s}, R{s}64 removed and
+          U{s}15's second channel freed (2A on GND, 2Y open); lines above each cited range moved; at integration its
+          comments' two maker-document paths point at v2/vendor/ and the RockBLOCK request's firmware duty names the
+          panel firmware (comments only): the device set is untouched (no device part added, removed or re-coded; the
+          new parts are logic gates and passives: U536 an SN74LVC1G08 on the code the set already buys, C7666, and U116,
+          U216, U316 an SN74LV1T08 on C2682144, which JLCPCB answered as 'SN74LV1T08DBVR, Texas Instruments, SOT-23-5',
+          stock 7,904, on 27 September 2026, v2/docs/records/w4b/evidence/jlc-query-sn74lv1t08.txt, not yet in the
+          certification table), J_M2C2 is still on the key-B land at line 797 and U9 is still the DS3231SN#, so the land
+          half stays closed at desk and the certification half stands, on the file at 25fa2401d71691b9
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w4b's merge of 27 September 2026
+          (MESHSAT-1357, board B: RF-002, W4B-D1 to W4B-D3) on the KiCad box with main's chain (main's own generator
+          reproduces main's committed schematic PARITY and netlist, intent, provenance and ERC PARITY_AFTER_NOISE, BOM
+          PARITY) and compared by the integration's own comparator (v2/docs/records/r8b/integration/indep_cmp.py) record
+          by record and net by net: 13 parts added (U536, C559, R527 to R531, U116, U216, U316, C607, C637, C667), 3
+          removed (R164, R264, R364), 6 changed (R514 to R516's value and code, U115, U215 and U315's value text), 7
+          nets added (RB_SW_IEN, LIME_UVLO, RB_UVLO, E22_UVLO and the three freed U{s}15 pin 4 nets) and 19 changed, 0
+          unexplained against v2/docs/records/w4b/expected_w4b.json and refused when any decision's entries are dropped;
+          no device changes, so this reading stands on the file at 028997a6c5e8810f
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@6957adda1bb5f23a"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
+      - "v2/ecad/tools/gen_sch_b.py@25fa2401d71691b9"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
       - "v2/docs/evidence/WRONG-MODEL-RECONCILIATION.md@97b1f63aa6ea11f1"
     release_effect: MUST_JUSTIFY
     source:
@@ -3714,9 +3827,21 @@ records:
           (v2/docs/records/w3b/tools/rename_check.py); R480 to R500, R15 and R16 are still 10 k on it and the lock,
           arm and motion parts sit where FAILOVER-FABRIC.md section 9a says; the stream touches no part or net of
           the fabric, so this reading stands on the file at 8b78c59754a6a0c7
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w4b's merge of 27 September 2026
+          (MESHSAT-1357, board B: RF-002, W4B-D1 to W4B-D3) on the KiCad box with main's chain (main's own generator
+          reproduces main's committed schematic PARITY and netlist, intent, provenance and ERC PARITY_AFTER_NOISE, BOM
+          PARITY) and compared by the integration's own comparator (v2/docs/records/r8b/integration/indep_cmp.py) record
+          by record and net by net: 13 parts added (U536, C559, R527 to R531, U116, U216, U316, C607, C637, C667), 3
+          removed (R164, R264, R364), 6 changed (R514 to R516's value and code, U115, U215 and U315's value text), 7
+          nets added (RB_SW_IEN, LIME_UVLO, RB_UVLO, E22_UVLO and the three freed U{s}15 pin 4 nets) and 19 changed, 0
+          unexplained against v2/docs/records/w4b/expected_w4b.json and refused when any decision's entries are dropped;
+          R480 to R500, R15 and R16 are still 10 k and the lock, arm and motion parts sit where FAILOVER-FABRIC.md
+          section 9a says; the stream touches no part or net of the fabric, so this reading stands on the file at
+          028997a6c5e8810f
     evidence_bound_to:
       - "v2/docs/feasibility/FAILOVER-FABRIC.md@a0ad3d7436cd126d"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
     release_effect: BLOCKER
     source:
       - "v2/docs/ARCH-PCB-B-IOHA.md:87-93"
@@ -3810,9 +3935,21 @@ records:
           (v2/docs/records/w3b/tools/rename_check.py); PG1 to PG3, their buffers and the qualifier muxes are on it
           unchanged; the stream touches no part or net of the fabric, so this reading stands on the file at
           8b78c59754a6a0c7
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w4b's merge of 27 September 2026
+          (MESHSAT-1357, board B: RF-002, W4B-D1 to W4B-D3) on the KiCad box with main's chain (main's own generator
+          reproduces main's committed schematic PARITY and netlist, intent, provenance and ERC PARITY_AFTER_NOISE, BOM
+          PARITY) and compared by the integration's own comparator (v2/docs/records/r8b/integration/indep_cmp.py) record
+          by record and net by net: 13 parts added (U536, C559, R527 to R531, U116, U216, U316, C607, C637, C667), 3
+          removed (R164, R264, R364), 6 changed (R514 to R516's value and code, U115, U215 and U315's value text), 7
+          nets added (RB_SW_IEN, LIME_UVLO, RB_UVLO, E22_UVLO and the three freed U{s}15 pin 4 nets) and 19 changed, 0
+          unexplained against v2/docs/records/w4b/expected_w4b.json and refused when any decision's entries are dropped;
+          PG1 to PG3, their buffers and the qualifier muxes are on it unchanged, and the one new reader of a module pin,
+          U{s}16 on PCIE_PWR_EN{s} (a module output), is an input (II +-1 uA at VCC 0 to 5.5 V, TI SCLS739F 6.5) that
+          drives nothing into the module, so this reading stands on the file at 028997a6c5e8810f
     evidence_bound_to:
       - "v2/docs/feasibility/FAILOVER-FABRIC.md@a0ad3d7436cd126d"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/FAILOVER-FABRIC.md section 5.2", "v2/docs/feasibility/FAILOVER-FABRIC.md section 10"]
     source_check: VERIFIED
@@ -4227,9 +4364,33 @@ records:
           W3B-F1's parts are dropped from it; VBAT_RTC carries every node VBAT carried plus C72 to C74 pin 1
           (v2/docs/records/w3b/tools/rename_check.py); U41, U51 and U61's pins are on the same nets, so this reading
           stands INCONCLUSIVE on the file at 8b78c59754a6a0c7
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at stream w4b's merge of 27 September 2026 (MESHSAT-1357, board B: RF-002,
+          W4B-D1 to W4B-D3): three circuit changes and nothing else: W4B-D1, the RockBLOCK's I_EN (J_RB9704 pin 3) is
+          RB_IEN = EMCON_HW AND RB_SW_IEN in U536 (SN74LVC1G08), U6 pin 19 now drives the request RB_SW_IEN, R527 10 k
+          holds RB_IEN low and R528 4.7 k the request (line 1507); W4B-D2, the enables of U23, U24 and U21 sit at 0.6 of
+          their gates' outputs (R529 to R531 10 k 1 percent, R514 to R516 now 15 k 1 percent, nodes LIME_UVLO, RB_UVLO,
+          E22_UVLO), with the three rails' intent naming their switch and enable net; W4B-D3, each slot's card buck
+          enable S{s}A_EN is driven by U{s}16 (SN74LV1T08 on +5V_S{s}) = EMCON_HW AND PCIE_PWR_EN{s}, R{s}64 removed and
+          U{s}15's second channel freed (2A on GND, 2Y open); lines above each cited range moved; at integration its
+          comments' two maker-document paths point at v2/vendor/ and the RockBLOCK request's firmware duty names the
+          panel firmware (comments only): U41, U51 and U61 are still STM32H743VIT6 (C114409) with the same pin table
+          (line 1694) and none of the stream's changes touches a supervisor pin or its supply, so this reading stands
+          INCONCLUSIVE on the file at 25fa2401d71691b9
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w4b's merge of 27 September 2026
+          (MESHSAT-1357, board B: RF-002, W4B-D1 to W4B-D3) on the KiCad box with main's chain (main's own generator
+          reproduces main's committed schematic PARITY and netlist, intent, provenance and ERC PARITY_AFTER_NOISE, BOM
+          PARITY) and compared by the integration's own comparator (v2/docs/records/r8b/integration/indep_cmp.py) record
+          by record and net by net: 13 parts added (U536, C559, R527 to R531, U116, U216, U316, C607, C637, C667), 3
+          removed (R164, R264, R364), 6 changed (R514 to R516's value and code, U115, U215 and U315's value text), 7
+          nets added (RB_SW_IEN, LIME_UVLO, RB_UVLO, E22_UVLO and the three freed U{s}15 pin 4 nets) and 19 changed, 0
+          unexplained against v2/docs/records/w4b/expected_w4b.json and refused when any decision's entries are dropped;
+          U41, U51 and U61's pins are on the same nets, so this reading stands INCONCLUSIVE on the file at
+          028997a6c5e8810f
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@6957adda1bb5f23a"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
+      - "v2/ecad/tools/gen_sch_b.py@25fa2401d71691b9"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
       - "v2/docs/parts/STM32H743-COMPATIBILITY.md@67335ea42747e22f"
       - "v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf@f6e620179006c8c4"
       - "v2/vendor/st/st-rm0433-rev8.pdf@9ba54135736a47a3"
@@ -4542,10 +4703,30 @@ records:
           net VBAT renamed VBAT_RTC (board A's pack node is VBAT, and the contracts key a rail by its name); lines
           above each cited range moved: the ring is still f = s % 3 + 1, now at line 988, and nothing of the bank
           fabric changed, so it stands PASS on the file at 6957adda1bb5f23a
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at stream w4b's merge of 27 September 2026 (MESHSAT-1357, board B: RF-002,
+          W4B-D1 to W4B-D3): three circuit changes and nothing else: W4B-D1, the RockBLOCK's I_EN (J_RB9704 pin 3) is
+          RB_IEN = EMCON_HW AND RB_SW_IEN in U536 (SN74LVC1G08), U6 pin 19 now drives the request RB_SW_IEN, R527 10 k
+          holds RB_IEN low and R528 4.7 k the request (line 1507); W4B-D2, the enables of U23, U24 and U21 sit at 0.6 of
+          their gates' outputs (R529 to R531 10 k 1 percent, R514 to R516 now 15 k 1 percent, nodes LIME_UVLO, RB_UVLO,
+          E22_UVLO), with the three rails' intent naming their switch and enable net; W4B-D3, each slot's card buck
+          enable S{s}A_EN is driven by U{s}16 (SN74LV1T08 on +5V_S{s}) = EMCON_HW AND PCIE_PWR_EN{s}, R{s}64 removed and
+          U{s}15's second channel freed (2A on GND, 2Y open); lines above each cited range moved; at integration its
+          comments' two maker-document paths point at v2/vendor/ and the RockBLOCK request's firmware duty names the
+          panel firmware (comments only): the ring is still f = s % 3 + 1, now at line 1028, and nothing of the bank
+          fabric changed, so it stands PASS on the file at 25fa2401d71691b9
+      - >-
+          v2/docs/PANEL.md re-read at stream w4b's merge of 27 September 2026 (MESHSAT-1357, board B: RF-002, W4B-D1 to
+          W4B-D3) with its page drafts applied (v2/docs/records/w4b/page_drafts_w4b.py): two places change, section 6's
+          EMCON_HW row (the three switch enables at 0.6 of their gates, U536 on the RockBLOCK's ENABLE, the card
+          supplies' enables driven by U116, U216 and U316 from each slot's 5 V, where it said U115, U215 and U315 pulled
+          them) and a new correction block (17) after (16); every other line is byte-identical; line 5 (bank 1's home
+          and failover hosts), section 1 and section 2's ribbon table with its pin 15 row, which this reading rests on,
+          are byte-identical, so it stands PASS on the file at 4702c0fae17efbe8
     evidence_bound_to:
       - "v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8"
-      - "v2/docs/PANEL.md@7bb905740ddaebb9"
-      - "v2/ecad/tools/gen_sch_b.py@6957adda1bb5f23a"
+      - "v2/docs/PANEL.md@4702c0fae17efbe8"
+      - "v2/ecad/tools/gen_sch_b.py@25fa2401d71691b9"
     release_effect: ADVISORY
     source:
       - "v2/docs/ARCH-PCB-B-IOHA.md section 4"
@@ -4825,8 +5006,19 @@ records:
           4b, 5, 5a, every other row of 6 and 7, the rest of 8, and 9 to 9d; section 0's TX-lamp sentence and bench
           E-02, on which this reading rests, are byte-identical and no part of the lamp's path moved, so it stands
           FAIL on the file at 1d4a491d9718e6d3.
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at stream w4b's merge of 27 September 2026 (MESHSAT-1357, board B:
+          RF-002, W4B-D1 to W4B-D3) with its page drafts applied (v2/docs/records/w4b/page_drafts_w4b.py): section 4c is
+          new (the RockBLOCK's ENABLE, L4 case (2) on U501 to U504, fault F2 on the card rails, L2 with the new readers
+          at 0.58 V, and RF-002's walk with and without the tool rows drafted for the tools author); section 0 gains one
+          bullet; section 0a's rows 4 to 7, 14, 15 and 16 and 17, section 7's L4 and RockBLOCK rows and section 8's
+          board B and tools hand-offs change, and section 6's bench row E-04 names the ENABLE request RB_SW_IEN where it
+          said U6 drove RB_IEN (the independent check's correction, applied at the r8int6 integration); sections 1 to
+          4b, 5 and 5a are byte-identical, and section 6 is but for row E-04; the TX lamp's rows (section 4.1's and
+          4.2's lamp text, section 6's E-02) are byte-identical, so this reading stands FAIL on the file at
+          c99c899bbd801d28
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3"
+      - "v2/docs/feasibility/EMCON.md@c99c899bbd801d28"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161"
     release_effect: MUST_JUSTIFY
     source: ["v2/docs/PANEL.md:135", "v2/docs/PANEL.md:189"]
@@ -6677,9 +6869,32 @@ records:
           (v2/docs/records/w3b/tools/rename_check.py); no EMCON or TX_INHIBIT_n net or part changed, and
           tools/tx_inhibit.py on it with main's A, C and D netlists reads board B's walk as before (inhibit_chain_b
           FAIL 10, PASS 3, UNDECIDED 7), so this reading stands on the file at 8b78c59754a6a0c7
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w4b's merge of 27 September 2026
+          (MESHSAT-1357, board B: RF-002, W4B-D1 to W4B-D3) on the KiCad box with main's chain (main's own generator
+          reproduces main's committed schematic PARITY and netlist, intent, provenance and ERC PARITY_AFTER_NOISE, BOM
+          PARITY) and compared by the integration's own comparator (v2/docs/records/r8b/integration/indep_cmp.py) record
+          by record and net by net: 13 parts added (U536, C559, R527 to R531, U116, U216, U316, C607, C637, C667), 3
+          removed (R164, R264, R364), 6 changed (R514 to R516's value and code, U115, U215 and U315's value text), 7
+          nets added (RB_SW_IEN, LIME_UVLO, RB_UVLO, E22_UVLO and the three freed U{s}15 pin 4 nets) and 19 changed, 0
+          unexplained against v2/docs/records/w4b/expected_w4b.json and refused when any decision's entries are dropped;
+          the RockBLOCK's ENABLE, the three switch enables and the card bucks' enables change (EMCON.md 4c), and
+          tools/tx_inhibit.py, with the rows that land in the same integration, read board B's walk FAIL 1, PASS 15,
+          UNDECIDED 4 in the stream's re-take in scratch (the FAIL TX_INHIBIT_n's W3T-F1; FAIL 11, PASS 3, UNDECIDED 6
+          without them), so this reading stands FAIL on the file at 028997a6c5e8810f
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at stream w4b's merge of 27 September 2026 (MESHSAT-1357, board B:
+          RF-002, W4B-D1 to W4B-D3) with its page drafts applied (v2/docs/records/w4b/page_drafts_w4b.py): section 4c is
+          new (the RockBLOCK's ENABLE, L4 case (2) on U501 to U504, fault F2 on the card rails, L2 with the new readers
+          at 0.58 V, and RF-002's walk with and without the tool rows drafted for the tools author); section 0 gains one
+          bullet; section 0a's rows 4 to 7, 14, 15 and 16 and 17, section 7's L4 and RockBLOCK rows and section 8's
+          board B and tools hand-offs change, and section 6's bench row E-04 names the ENABLE request RB_SW_IEN where it
+          said U6 drove RB_IEN (the independent check's correction, applied at the r8int6 integration); sections 1 to
+          4b, 5 and 5a are byte-identical, and section 6 is but for row E-04; the page still closes no row end to end
+          (section 0a), so this reading stands FAIL on the file at c99c899bbd801d28
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
+      - "v2/docs/feasibility/EMCON.md@c99c899bbd801d28"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
     release_effect: BLOCKER
     source:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2787 (item 3)"
@@ -6840,9 +7055,33 @@ records:
           W3B-F1's parts are dropped from it; VBAT_RTC carries every node VBAT carried plus C72 to C74 pin 1
           (v2/docs/records/w3b/tools/rename_check.py); RB_IEN still joins J_RB9704 pin 3 and U6 pin 19 only, so this
           reading stands on the file at 8b78c59754a6a0c7
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w4b's merge of 27 September 2026
+          (MESHSAT-1357, board B: RF-002, W4B-D1 to W4B-D3) on the KiCad box with main's chain (main's own generator
+          reproduces main's committed schematic PARITY and netlist, intent, provenance and ERC PARITY_AFTER_NOISE, BOM
+          PARITY) and compared by the integration's own comparator (v2/docs/records/r8b/integration/indep_cmp.py) record
+          by record and net by net: 13 parts added (U536, C559, R527 to R531, U116, U216, U316, C607, C637, C667), 3
+          removed (R164, R264, R364), 6 changed (R514 to R516's value and code, U115, U215 and U315's value text), 7
+          nets added (RB_SW_IEN, LIME_UVLO, RB_UVLO, E22_UVLO and the three freed U{s}15 pin 4 nets) and 19 changed, 0
+          unexplained against v2/docs/records/w4b/expected_w4b.json and refused when any decision's entries are dropped;
+          RB_IEN now joins J_RB9704 pin 3, U536's output and R527 (U6 pin 19 drives RB_SW_IEN), so row 4's ENABLE is
+          forced low by hardware, and each card buck's enable is driven from its slot's 5 V (fault F2); row 4's latency
+          waits on the Iridium 9704's unpublished response to ENABLE and every row on its bench test, so this reading
+          stands FAIL on the file at 028997a6c5e8810f
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at stream w4b's merge of 27 September 2026 (MESHSAT-1357, board B:
+          RF-002, W4B-D1 to W4B-D3) with its page drafts applied (v2/docs/records/w4b/page_drafts_w4b.py): section 4c is
+          new (the RockBLOCK's ENABLE, L4 case (2) on U501 to U504, fault F2 on the card rails, L2 with the new readers
+          at 0.58 V, and RF-002's walk with and without the tool rows drafted for the tools author); section 0 gains one
+          bullet; section 0a's rows 4 to 7, 14, 15 and 16 and 17, section 7's L4 and RockBLOCK rows and section 8's
+          board B and tools hand-offs change, and section 6's bench row E-04 names the ENABLE request RB_SW_IEN where it
+          said U6 drove RB_IEN (the independent check's correction, applied at the r8int6 integration); sections 1 to
+          4b, 5 and 5a are byte-identical, and section 6 is but for row E-04; row 4 is still open locally (the module's
+          response to ENABLE unpublished) and no row meets section 5a on the bench, so this reading stands FAIL on the
+          file at c99c899bbd801d28
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
+      - "v2/docs/feasibility/EMCON.md@c99c899bbd801d28"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
       - "v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568"
     release_effect: BLOCKER
     source:
@@ -6946,9 +7185,33 @@ records:
           W3B-F1's parts are dropped from it; VBAT_RTC carries every node VBAT carried plus C72 to C74 pin 1
           (v2/docs/records/w3b/tools/rename_check.py); WL_nDIS1..3 and BT_nDIS1..3 carry the same nodes, so this
           reading stands PASS on the file at 8b78c59754a6a0c7
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at stream w4b's merge of 27 September 2026 (MESHSAT-1357, board B: RF-002,
+          W4B-D1 to W4B-D3): three circuit changes and nothing else: W4B-D1, the RockBLOCK's I_EN (J_RB9704 pin 3) is
+          RB_IEN = EMCON_HW AND RB_SW_IEN in U536 (SN74LVC1G08), U6 pin 19 now drives the request RB_SW_IEN, R527 10 k
+          holds RB_IEN low and R528 4.7 k the request (line 1507); W4B-D2, the enables of U23, U24 and U21 sit at 0.6 of
+          their gates' outputs (R529 to R531 10 k 1 percent, R514 to R516 now 15 k 1 percent, nodes LIME_UVLO, RB_UVLO,
+          E22_UVLO), with the three rails' intent naming their switch and enable net; W4B-D3, each slot's card buck
+          enable S{s}A_EN is driven by U{s}16 (SN74LV1T08 on +5V_S{s}) = EMCON_HW AND PCIE_PWR_EN{s}, R{s}64 removed and
+          U{s}15's second channel freed (2A on GND, 2Y open); lines above each cited range moved; at integration its
+          comments' two maker-document paths point at v2/vendor/ and the RockBLOCK request's firmware duty names the
+          panel firmware (comments only): the block this reading cites is now at lines 910 to 958; its WL_nDIS and
+          BT_nDIS lines are byte-identical (pulled low only through U113 and U114 and their slot 2 and 3 copies, run
+          from +3V3_CM{s}; U6 drives only the requests), and within it only U{s}15's call changes (its second channel
+          freed, W4B-D3) and one comment line is added, so it stands PASS on the file at 25fa2401d71691b9
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w4b's merge of 27 September 2026
+          (MESHSAT-1357, board B: RF-002, W4B-D1 to W4B-D3) on the KiCad box with main's chain (main's own generator
+          reproduces main's committed schematic PARITY and netlist, intent, provenance and ERC PARITY_AFTER_NOISE, BOM
+          PARITY) and compared by the integration's own comparator (v2/docs/records/r8b/integration/indep_cmp.py) record
+          by record and net by net: 13 parts added (U536, C559, R527 to R531, U116, U216, U316, C607, C637, C667), 3
+          removed (R164, R264, R364), 6 changed (R514 to R516's value and code, U115, U215 and U315's value text), 7
+          nets added (RB_SW_IEN, LIME_UVLO, RB_UVLO, E22_UVLO and the three freed U{s}15 pin 4 nets) and 19 changed, 0
+          unexplained against v2/docs/records/w4b/expected_w4b.json and refused when any decision's entries are dropped;
+          WL_nDIS1..3 and BT_nDIS1..3 carry the same nodes, so this reading stands PASS on the file at 028997a6c5e8810f
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@6957adda1bb5f23a"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
+      - "v2/ecad/tools/gen_sch_b.py@25fa2401d71691b9"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
     release_effect: ADVISORY
     source:
       - "v2/ecad/tools/gen_sch_b.py:820-866"
@@ -7137,9 +7400,31 @@ records:
           (the SIM and GNSS antenna supplies gained declarations only), and tools/tx_inhibit.py reads board B's walk
           as before (inhibit_chain_b FAIL 10, PASS 3, UNDECIDED 7), so this reading stands on the file at
           8b78c59754a6a0c7
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w4b's merge of 27 September 2026
+          (MESHSAT-1357, board B: RF-002, W4B-D1 to W4B-D3) on the KiCad box with main's chain (main's own generator
+          reproduces main's committed schematic PARITY and netlist, intent, provenance and ERC PARITY_AFTER_NOISE, BOM
+          PARITY) and compared by the integration's own comparator (v2/docs/records/r8b/integration/indep_cmp.py) record
+          by record and net by net: 13 parts added (U536, C559, R527 to R531, U116, U216, U316, C607, C637, C667), 3
+          removed (R164, R264, R364), 6 changed (R514 to R516's value and code, U115, U215 and U315's value text), 7
+          nets added (RB_SW_IEN, LIME_UVLO, RB_UVLO, E22_UVLO and the three freed U{s}15 pin 4 nets) and 19 changed, 0
+          unexplained against v2/docs/records/w4b/expected_w4b.json and refused when any decision's entries are dropped;
+          every radio's hardware path is kept or strengthened (EMCON.md 4c) and the walk, with the rows that land in the
+          same integration, still read board B FAIL in the stream's re-take (TX_INHIBIT_n's W3T-F1), so this reading
+          stands FAIL on the file at 028997a6c5e8810f
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at stream w4b's merge of 27 September 2026 (MESHSAT-1357, board B:
+          RF-002, W4B-D1 to W4B-D3) with its page drafts applied (v2/docs/records/w4b/page_drafts_w4b.py): section 4c is
+          new (the RockBLOCK's ENABLE, L4 case (2) on U501 to U504, fault F2 on the card rails, L2 with the new readers
+          at 0.58 V, and RF-002's walk with and without the tool rows drafted for the tools author); section 0 gains one
+          bullet; section 0a's rows 4 to 7, 14, 15 and 16 and 17, section 7's L4 and RockBLOCK rows and section 8's
+          board B and tools hand-offs change, and section 6's bench row E-04 names the ENABLE request RB_SW_IEN where it
+          said U6 drove RB_IEN (the independent check's correction, applied at the r8int6 integration); sections 1 to
+          4b, 5 and 5a are byte-identical, and section 6 is but for row E-04; D-05's radios-dark rows keep their open
+          items (section 0a), so this reading stands FAIL on the file at c99c899bbd801d28
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
+      - "v2/docs/feasibility/EMCON.md@c99c899bbd801d28"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
     release_effect: BLOCKER
     source:
       - "v2/ecad/tools/gen_sch_b.py:813-880"
@@ -7291,8 +7576,15 @@ records:
           v2/docs/records/w3de/parity-r8int5/), it differs only in J_VR1 to J_VR4 (VIN_RAW) and J_VN1 to J_VN4 (GND)
           added and J_DOCK's value and pins 1 to 4 (VIN_RAW to GND); R102 (EMCON_HW to GND), R145 on TX_INHIBIT_n and
           the slot enable pull-downs are unchanged, so it stands PASS on the file at da05dc02bc1e612f
+      - >-
+          v2/docs/PANEL.md re-read at stream w4b's merge of 27 September 2026 (MESHSAT-1357, board B: RF-002, W4B-D1 to
+          W4B-D3) with its page drafts applied (v2/docs/records/w4b/page_drafts_w4b.py): two places change, section 6's
+          EMCON_HW row (the three switch enables at 0.6 of their gates, U536 on the RockBLOCK's ENABLE, the card
+          supplies' enables driven by U116, U216 and U316 from each slot's 5 V, where it said U115, U215 and U315 pulled
+          them) and a new correction block (17) after (16); every other line is byte-identical; section 7's panel-absent
+          paragraph, which this reading cites, is byte-identical, so it stands PASS on the file at 4702c0fae17efbe8
     evidence_bound_to:
-      - "v2/docs/PANEL.md@7bb905740ddaebb9"
+      - "v2/docs/PANEL.md@4702c0fae17efbe8"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
     release_effect: ADVISORY
     source:
@@ -7583,10 +7875,20 @@ records:
           class and cause read above, so this constraint's own reasons are unchanged and it stays FAIL on W3T-F1 (S-64,
           EQ-25), on the file at 7a834fe55aea6ccd (corrected at the re-baseline of layer 3 on 27 September 2026, S-80:
           this entry had ended 'it stays INCONCLUSIVE', against the consolidated re-take's FAIL above)
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at stream w4b's merge of 27 September 2026 (MESHSAT-1357, board B:
+          RF-002, W4B-D1 to W4B-D3) with its page drafts applied (v2/docs/records/w4b/page_drafts_w4b.py): section 4c is
+          new (the RockBLOCK's ENABLE, L4 case (2) on U501 to U504, fault F2 on the card rails, L2 with the new readers
+          at 0.58 V, and RF-002's walk with and without the tool rows drafted for the tools author); section 0 gains one
+          bullet; section 0a's rows 4 to 7, 14, 15 and 16 and 17, section 7's L4 and RockBLOCK rows and section 8's
+          board B and tools hand-offs change, and section 6's bench row E-04 names the ENABLE request RB_SW_IEN where it
+          said U6 drove RB_IEN (the independent check's correction, applied at the r8int6 integration); sections 1 to
+          4b, 5 and 5a are byte-identical, and section 6 is but for row E-04; sections 4.2 and 4a (the PA's VGG and D's
+          KEY gate), which this reading cites, are byte-identical, so it stands FAIL on the file at c99c899bbd801d28
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
-      - "v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3"
+      - "v2/docs/feasibility/EMCON.md@c99c899bbd801d28"
       - "v2/docs/CURRENT-EVIDENCE.md@7a834fe55aea6ccd"
     release_effect: BLOCKER
     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2825", "v2/docs/PANEL.md section 6", "v2/docs/feasibility/EMCON.md sections 4.1 and 4.2"]
@@ -7715,8 +8017,19 @@ records:
           4b, 5, 5a, every other row of 6 and 7, the rest of 8, and 9 to 9d; section 7's common-element row (board C's
           lamp D22, U14 and Q7, its plate light guide still owed), which this reading cites, is byte-identical, so it
           stands FAIL on the file at 1d4a491d9718e6d3.
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at stream w4b's merge of 27 September 2026 (MESHSAT-1357, board B:
+          RF-002, W4B-D1 to W4B-D3) with its page drafts applied (v2/docs/records/w4b/page_drafts_w4b.py): section 4c is
+          new (the RockBLOCK's ENABLE, L4 case (2) on U501 to U504, fault F2 on the card rails, L2 with the new readers
+          at 0.58 V, and RF-002's walk with and without the tool rows drafted for the tools author); section 0 gains one
+          bullet; section 0a's rows 4 to 7, 14, 15 and 16 and 17, section 7's L4 and RockBLOCK rows and section 8's
+          board B and tools hand-offs change, and section 6's bench row E-04 names the ENABLE request RB_SW_IEN where it
+          said U6 drove RB_IEN (the independent check's correction, applied at the r8int6 integration); sections 1 to
+          4b, 5 and 5a are byte-identical, and section 6 is but for row E-04; SD-EMC-6 and the lamp's rows (sections 0,
+          5 and 7) are unchanged but for section 7's L4 and RockBLOCK rows, which are not the lamp's, so this reading
+          stands FAIL on the file at c99c899bbd801d28
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3"
+      - "v2/docs/feasibility/EMCON.md@c99c899bbd801d28"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/EMCON.md section 7 (the common element)", "session choice SC-11"]
@@ -7920,10 +8233,32 @@ records:
           (v2/docs/records/w3b/tools/rename_check.py); no transmitter's inhibit chain changed, and
           tools/tx_inhibit.py reads board B's walk as before (inhibit_chain_b FAIL 10, PASS 3, UNDECIDED 7), so this
           reading stands on the file at 8b78c59754a6a0c7
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w4b's merge of 27 September 2026
+          (MESHSAT-1357, board B: RF-002, W4B-D1 to W4B-D3) on the KiCad box with main's chain (main's own generator
+          reproduces main's committed schematic PARITY and netlist, intent, provenance and ERC PARITY_AFTER_NOISE, BOM
+          PARITY) and compared by the integration's own comparator (v2/docs/records/r8b/integration/indep_cmp.py) record
+          by record and net by net: 13 parts added (U536, C559, R527 to R531, U116, U216, U316, C607, C637, C667), 3
+          removed (R164, R264, R364), 6 changed (R514 to R516's value and code, U115, U215 and U315's value text), 7
+          nets added (RB_SW_IEN, LIME_UVLO, RB_UVLO, E22_UVLO and the three freed U{s}15 pin 4 nets) and 19 changed, 0
+          unexplained against v2/docs/records/w4b/expected_w4b.json and refused when any decision's entries are dropped;
+          the RockBLOCK's ENABLE is forced low by hardware and the card rails hold in fault F2 (EMCON.md 4c); the
+          RockBLOCK row stays open on its module's unpublished response to ENABLE, so this reading stands INCONCLUSIVE
+          on the file at 028997a6c5e8810f
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at stream w4b's merge of 27 September 2026 (MESHSAT-1357, board B:
+          RF-002, W4B-D1 to W4B-D3) with its page drafts applied (v2/docs/records/w4b/page_drafts_w4b.py): section 4c is
+          new (the RockBLOCK's ENABLE, L4 case (2) on U501 to U504, fault F2 on the card rails, L2 with the new readers
+          at 0.58 V, and RF-002's walk with and without the tool rows drafted for the tools author); section 0 gains one
+          bullet; section 0a's rows 4 to 7, 14, 15 and 16 and 17, section 7's L4 and RockBLOCK rows and section 8's
+          board B and tools hand-offs change, and section 6's bench row E-04 names the ENABLE request RB_SW_IEN where it
+          said U6 drove RB_IEN (the independent check's correction, applied at the r8int6 integration); sections 1 to
+          4b, 5 and 5a are byte-identical, and section 6 is but for row E-04; the feasibility verdict's conditions stand
+          and the RockBLOCK row's remedy is drawn, so this reading stands INCONCLUSIVE on the file at c99c899bbd801d28
     evidence_bound_to:
       - "v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
-      - "v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
+      - "v2/docs/feasibility/EMCON.md@c99c899bbd801d28"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/EMCON.md section 7", "v2/docs/reviews/2026-09-26-foundation-progress-review.md section 3"]
     source_check: VERIFIED
@@ -10039,17 +10374,38 @@ records:
           rows, section 4a's PS-EMCON row, section 4b's key and table, section 4b.1's table, section 4f, section 5's
           hardware interlock sentence and M4's setting, sequence, must-hold and D-05 ruling) are unchanged word for word
           and it stands on the file at 6ebe6760c4312bca
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w4b's merge of 27 September 2026
+          (MESHSAT-1357, board B: RF-002, W4B-D1 to W4B-D3) on the KiCad box with main's chain (main's own generator
+          reproduces main's committed schematic PARITY and netlist, intent, provenance and ERC PARITY_AFTER_NOISE, BOM
+          PARITY) and compared by the integration's own comparator (v2/docs/records/r8b/integration/indep_cmp.py) record
+          by record and net by net: 13 parts added (U536, C559, R527 to R531, U116, U216, U316, C607, C637, C667), 3
+          removed (R164, R264, R364), 6 changed (R514 to R516's value and code, U115, U215 and U315's value text), 7
+          nets added (RB_SW_IEN, LIME_UVLO, RB_UVLO, E22_UVLO and the three freed U{s}15 pin 4 nets) and 19 changed, 0
+          unexplained against v2/docs/records/w4b/expected_w4b.json and refused when any decision's entries are dropped;
+          the documents this reading binds are re-read with the stream's page drafts: PANEL.md section 6's EMCON_HW row
+          now names U116, U216 and U316 for the card supplies' enables, U536 and the three dividers, which is the
+          circuit as generated, so this reading stands PASS on the file at 028997a6c5e8810f
+      - >-
+          v2/docs/PANEL.md re-read at stream w4b's merge of 27 September 2026 (MESHSAT-1357, board B: RF-002, W4B-D1 to
+          W4B-D3) with its page drafts applied (v2/docs/records/w4b/page_drafts_w4b.py): two places change, section 6's
+          EMCON_HW row (the three switch enables at 0.6 of their gates, U536 on the RockBLOCK's ENABLE, the card
+          supplies' enables driven by U116, U216 and U316 from each slot's 5 V, where it said U115, U215 and U315 pulled
+          them) and a new correction block (17) after (16); every other line is byte-identical; the changed row is
+          section 6's, which this record's acceptance asks to describe the circuit as generated, and it now describes
+          board B's w4b netlist, where it named U115, U215 and U315 for the card supplies' enables; section 1 is
+          byte-identical, so it stands PASS on the file at 4702c0fae17efbe8
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc"
-      - "v2/docs/PANEL.md@7bb905740ddaebb9"
+      - "v2/docs/PANEL.md@4702c0fae17efbe8"
       - "v2/docs/CONOPS.md@6ebe6760c4312bca"
       - "v2/docs/V2-SPEC.md@a92ea2ef3793a3c9"
       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
       - "v2/docs/TEST-PLAN.md@4f15bd02a6a8be46"
       - "v2/ecad/tools/pcb_decisions.yaml@b5f7162443d5ad91"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161"
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
     release_effect: BLOCKER
@@ -10422,7 +10778,20 @@ records:
           above each cited range moved: the hub ports, the bank ring (f = s % 3 + 1, now at line 988) and the LoRa
           module on S3's SPI (J_SPI3, U12) are unchanged; the stream moves no device between banks, so the reading
           stands FAIL on the file at 6957adda1bb5f23a
-    evidence_bound_to: ["v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8", "v2/ecad/tools/gen_sch_b.py@6957adda1bb5f23a"]
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at stream w4b's merge of 27 September 2026 (MESHSAT-1357, board B: RF-002,
+          W4B-D1 to W4B-D3): three circuit changes and nothing else: W4B-D1, the RockBLOCK's I_EN (J_RB9704 pin 3) is
+          RB_IEN = EMCON_HW AND RB_SW_IEN in U536 (SN74LVC1G08), U6 pin 19 now drives the request RB_SW_IEN, R527 10 k
+          holds RB_IEN low and R528 4.7 k the request (line 1507); W4B-D2, the enables of U23, U24 and U21 sit at 0.6 of
+          their gates' outputs (R529 to R531 10 k 1 percent, R514 to R516 now 15 k 1 percent, nodes LIME_UVLO, RB_UVLO,
+          E22_UVLO), with the three rails' intent naming their switch and enable net; W4B-D3, each slot's card buck
+          enable S{s}A_EN is driven by U{s}16 (SN74LV1T08 on +5V_S{s}) = EMCON_HW AND PCIE_PWR_EN{s}, R{s}64 removed and
+          U{s}15's second channel freed (2A on GND, 2Y open); lines above each cited range moved; at integration its
+          comments' two maker-document paths point at v2/vendor/ and the RockBLOCK request's firmware duty names the
+          panel firmware (comments only): the hub ports (PORTS, line 995), the bank ring (f = s % 3 + 1, line 1028) and
+          the LoRa module on S3's SPI (U12, line 1352) are unchanged; the stream moves no device between banks, so the
+          reading stands FAIL on the file at 25fa2401d71691b9
+    evidence_bound_to: ["v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8", "v2/ecad/tools/gen_sch_b.py@25fa2401d71691b9"]
     release_effect: MUST_JUSTIFY
     source:
       - "owner ruling D-02b"
@@ -10851,8 +11220,20 @@ records:
           Instruments, SOT-23-6, stock 17,211 against 5 needed, asked 27 September 2026
           (v2/docs/records/w3b/evidence/jlc-certify-w3b.txt), a catalogue reading and not a grade; so it stands PASS
           on the file at 6957adda1bb5f23a
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at stream w4b's merge of 27 September 2026 (MESHSAT-1357, board B: RF-002,
+          W4B-D1 to W4B-D3): three circuit changes and nothing else: W4B-D1, the RockBLOCK's I_EN (J_RB9704 pin 3) is
+          RB_IEN = EMCON_HW AND RB_SW_IEN in U536 (SN74LVC1G08), U6 pin 19 now drives the request RB_SW_IEN, R527 10 k
+          holds RB_IEN low and R528 4.7 k the request (line 1507); W4B-D2, the enables of U23, U24 and U21 sit at 0.6 of
+          their gates' outputs (R529 to R531 10 k 1 percent, R514 to R516 now 15 k 1 percent, nodes LIME_UVLO, RB_UVLO,
+          E22_UVLO), with the three rails' intent naming their switch and enable net; W4B-D3, each slot's card buck
+          enable S{s}A_EN is driven by U{s}16 (SN74LV1T08 on +5V_S{s}) = EMCON_HW AND PCIE_PWR_EN{s}, R{s}64 removed and
+          U{s}15's second channel freed (2A on GND, 2Y open); lines above each cited range moved; at integration its
+          comments' two maker-document paths point at v2/vendor/ and the RockBLOCK request's firmware duty names the
+          panel firmware (comments only): the SIM block is at lines 826 to 885 and byte-identical (the holders, the 0
+          Ohm links, U222 and U223), so the schematic half stands PASS on the file at 25fa2401d71691b9
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@6957adda1bb5f23a"
+      - "v2/ecad/tools/gen_sch_b.py@25fa2401d71691b9"
     release_effect: BLOCKER
     source:
       - "v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf section 4.1.7"
@@ -11857,8 +12238,15 @@ records:
           the head's rule paragraph to the end of the file, the needs table included, is byte-identical to the file at
           bbcab7c9876f7993, so section 4's Charging row and section 5's case S4, which this reading rests on, are
           unchanged word for word and it stands on the file at 6ebe6760c4312bca
+      - >-
+          v2/docs/PANEL.md re-read at stream w4b's merge of 27 September 2026 (MESHSAT-1357, board B: RF-002, W4B-D1 to
+          W4B-D3) with its page drafts applied (v2/docs/records/w4b/page_drafts_w4b.py): two places change, section 6's
+          EMCON_HW row (the three switch enables at 0.6 of their gates, U536 on the RockBLOCK's ENABLE, the card
+          supplies' enables driven by U116, U216 and U316 from each slot's 5 V, where it said U115, U215 and U315 pulled
+          them) and a new correction block (17) after (16); every other line is byte-identical; section 10, which this
+          reading cites, is byte-identical, so it stands PASS on the file at 4702c0fae17efbe8
     evidence_bound_to:
-      - "v2/docs/PANEL.md@7bb905740ddaebb9"
+      - "v2/docs/PANEL.md@4702c0fae17efbe8"
       - "v2/docs/CONOPS.md@6ebe6760c4312bca"
       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
       - "v2/ecad/tools/gen_sch_a.py@5af29bbcf27bb91a"
@@ -12047,11 +12435,18 @@ records:
           EQ-16 dock checks (board A's four VIN_RAW pins and four return pins, board E's P_VR and P_VN, no VIN_RAW on an
           813 contact); every line naming J_SMB is byte-identical (sha256/16 c78df21055972aa1 before and after); the
           J_SMB contract this reading cites is that text, so it stands PASS on the file at 5e14f456a0791c35
+      - >-
+          v2/docs/PANEL.md re-read at stream w4b's merge of 27 September 2026 (MESHSAT-1357, board B: RF-002, W4B-D1 to
+          W4B-D3) with its page drafts applied (v2/docs/records/w4b/page_drafts_w4b.py): two places change, section 6's
+          EMCON_HW row (the three switch enables at 0.6 of their gates, U536 on the RockBLOCK's ENABLE, the card
+          supplies' enables driven by U116, U216 and U316 from each slot's 5 V, where it said U115, U215 and U315 pulled
+          them) and a new correction block (17) after (16); every other line is byte-identical; section 10's SMBus
+          sentences, which this reading cites, are byte-identical, so it stands PASS on the file at 4702c0fae17efbe8
     evidence_bound_to:
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc"
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
       - "v2/docs/ASSEMBLY.md@b49f853f450d49ee"
-      - "v2/docs/PANEL.md@7bb905740ddaebb9"
+      - "v2/docs/PANEL.md@4702c0fae17efbe8"
       - "v2/ecad/tools/check_contracts.py@5e14f456a0791c35"
     release_effect: BLOCKER
     source: ["v2/ecad/tools/gen_sch_e.py:264", "v2/docs/ASSEMBLY.md section 4", "v2/docs/PANEL.md section 10"]
@@ -12225,9 +12620,31 @@ records:
           W3B-F1's parts are dropped from it; VBAT_RTC carries every node VBAT carried plus C72 to C74 pin 1
           (v2/docs/records/w3b/tools/rename_check.py); J_M2C2's nets are unchanged, so this reading stands on the
           file at 8b78c59754a6a0c7
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at stream w4b's merge of 27 September 2026 (MESHSAT-1357, board B: RF-002,
+          W4B-D1 to W4B-D3): three circuit changes and nothing else: W4B-D1, the RockBLOCK's I_EN (J_RB9704 pin 3) is
+          RB_IEN = EMCON_HW AND RB_SW_IEN in U536 (SN74LVC1G08), U6 pin 19 now drives the request RB_SW_IEN, R527 10 k
+          holds RB_IEN low and R528 4.7 k the request (line 1507); W4B-D2, the enables of U23, U24 and U21 sit at 0.6 of
+          their gates' outputs (R529 to R531 10 k 1 percent, R514 to R516 now 15 k 1 percent, nodes LIME_UVLO, RB_UVLO,
+          E22_UVLO), with the three rails' intent naming their switch and enable net; W4B-D3, each slot's card buck
+          enable S{s}A_EN is driven by U{s}16 (SN74LV1T08 on +5V_S{s}) = EMCON_HW AND PCIE_PWR_EN{s}, R{s}64 removed and
+          U{s}15's second channel freed (2A on GND, 2Y open); lines above each cited range moved; at integration its
+          comments' two maker-document paths point at v2/vendor/ and the RockBLOCK request's firmware duty names the
+          panel firmware (comments only): J_M2C2's socket, land and pin map are unchanged (line 797), so the land clause
+          holds at desk and D-07's third jack still waits, on the file at 25fa2401d71691b9
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w4b's merge of 27 September 2026
+          (MESHSAT-1357, board B: RF-002, W4B-D1 to W4B-D3) on the KiCad box with main's chain (main's own generator
+          reproduces main's committed schematic PARITY and netlist, intent, provenance and ERC PARITY_AFTER_NOISE, BOM
+          PARITY) and compared by the integration's own comparator (v2/docs/records/r8b/integration/indep_cmp.py) record
+          by record and net by net: 13 parts added (U536, C559, R527 to R531, U116, U216, U316, C607, C637, C667), 3
+          removed (R164, R264, R364), 6 changed (R514 to R516's value and code, U115, U215 and U315's value text), 7
+          nets added (RB_SW_IEN, LIME_UVLO, RB_UVLO, E22_UVLO and the three freed U{s}15 pin 4 nets) and 19 changed, 0
+          unexplained against v2/docs/records/w4b/expected_w4b.json and refused when any decision's entries are dropped;
+          J_M2C2's nets are unchanged, so this reading stands on the file at 028997a6c5e8810f
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@6957adda1bb5f23a"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
+      - "v2/ecad/tools/gen_sch_b.py@25fa2401d71691b9"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
     release_effect: BLOCKER
     source:
       - "v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf (key B p.15 and p.20; Table 32)"
@@ -12405,9 +12822,21 @@ records:
           v2/docs/records/w3de/parity-r8int5/), it differs only in J_VR1 to J_VR4 (VIN_RAW) and J_VN1 to J_VN4 (GND)
           added and J_DOCK's value and pins 1 to 4 (VIN_RAW to GND); board A's D1 to D4 are unchanged, so it stands FAIL
           on the file at da05dc02bc1e612f
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at stream w4b's merge of 27 September 2026
+          (MESHSAT-1357, board B: RF-002, W4B-D1 to W4B-D3) on the KiCad box with main's chain (main's own generator
+          reproduces main's committed schematic PARITY and netlist, intent, provenance and ERC PARITY_AFTER_NOISE, BOM
+          PARITY) and compared by the integration's own comparator (v2/docs/records/r8b/integration/indep_cmp.py) record
+          by record and net by net: 13 parts added (U536, C559, R527 to R531, U116, U216, U316, C607, C637, C667), 3
+          removed (R164, R264, R364), 6 changed (R514 to R516's value and code, U115, U215 and U315's value text), 7
+          nets added (RB_SW_IEN, LIME_UVLO, RB_UVLO, E22_UVLO and the three freed U{s}15 pin 4 nets) and 19 changed, 0
+          unexplained against v2/docs/records/w4b/expected_w4b.json and refused when any decision's entries are dropped;
+          board B's six one-way clamps (D1, D2, D101, D201, D301, D520) are unchanged, port_protect reads 0 reversed on
+          it and the stream adds no rectifier, so the record stays FAIL on the rectifier clause, on the file at
+          028997a6c5e8810f
     evidence_bound_to:
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161"
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc"

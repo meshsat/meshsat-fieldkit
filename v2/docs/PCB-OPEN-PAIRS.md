@@ -40,7 +40,7 @@ things to fix.
 
 ## Readings owed
 
-Of the 108 open pairs with a reading beside them, **103 are decided by a reading taken under a tool that has
+Of the 108 open pairs with a reading beside them, **107 are decided by a reading taken under a tool that has
 CHANGED since**. A tool change moves no rule-set fingerprint and no per-rule digest, so nothing else on these
 pages can say it. It is an upper bound, because a tool file moves for a comment as readily as for a
 criterion, and it decides nothing: it says the reading is owed. Re-take with retake_gate.sh or a sweep.
@@ -73,6 +73,7 @@ criterion, and it decides nothing: it says the reading is owed. Re-take with ret
 | `RET-003` | A, B, C, D, E |
 | `RET-004` | A, B, C, E |
 | `RF-001` | A, B |
+| `RF-002` | A, B, C, D |
 | `RTE-001` | B, P |
 | `RTE-002` | B |
 | `SCH-002` | A, B |

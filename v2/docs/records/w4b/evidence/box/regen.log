@@ -1,0 +1,21 @@
+w4b: regen start 2026-09-27T15:05:14Z
+9.0.9
+Python 3.12.3
+w4b: base footprint generators: meshsat.pretty status after them: []
+w4b: cand footprint generators: meshsat.pretty status after them: []
+base b phase B21 gen_sch exit 0 build_sch exit 0 15:07:45
+cand b phase B21 gen_sch exit 0 build_sch exit 0 15:07:46
+w4b: determinism pcb-b-compute.kicad_sch: IDENTICAL
+w4b: determinism pcb-b-compute.net: differs
+w4b: determinism pcb-b-compute-intent.json: differs
+w4b: base status after regen:
+     M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json
+     M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net
+     M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net.prov.json
+w4b: cand status after regen:
+     M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json
+     M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net
+     M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net.prov.json
+     M v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_sch
+overlay          80G   32G   49G  40% /
+w4b: regen done 2026-09-27T15:08:00Z

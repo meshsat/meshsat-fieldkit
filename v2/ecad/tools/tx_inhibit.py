@@ -498,6 +498,37 @@ LOGIC = [
          gates=[(("1",), "6", "BUF_OD"), (("3",), "4", "BUF_OD")],
          cite="TI SN74LVC2G07, SCES308L (May 2015), Pin Functions: 1A 1, GND 2, 2A 3, 2Y 4, VCC 5, 1Y 6",
          vcc=("5",), ii=5e-6, ioff=10e-6, vil_ceiling=1.65, leak_cite="SCES308L 6.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA"),
+    # BOARD B's U{s}13, U{s}14, U{s}15 AND U220 SINCE ITS ROUND 8 (EMCON.md L7, section 4b): the per-slot EMCON open drains on
+    # WL_nDisable, BT_nDisable, the cards' W_DISABLE1#, the card bucks' EN and the 5G module's FULL_CARD_POWER_OFF# are TI
+    # SN74LVC2G06DBVR. Row added by stream w4b (27 September 2026), from the filed sheet v2/vendor/ti/ti-sn74lvc2g06.pdf. The
+    # sheet's Pin Functions table marks 1Y "I" in its I/O column and "Open-drain output 1" in its description; the description,
+    # the DBV drawing and 2Y's "O" row agree that pin 6 is an output. vil_ceiling: VIL 0.3 x VCC at VCC 4.5 V to 5.5 V (6.3).
+    dict(name="74LVC2G06 dual open-drain inverter", value=r"74LVC2G06", fp=r"SOT-23-6|SC-70-6|SOT-363",
+         gates=[(("1",), "6", "INV_OD"), (("3",), "4", "INV_OD")],
+         cite="TI SN74LVC2G06, SCES307J (July 2015), Pin Functions (DBV, DCK): 1A 1, GND 2, 2A 3, 2Y 4, VCC 5, 1Y 6 "
+              "(v2/vendor/ti/ti-sn74lvc2g06.pdf)",
+         vcc=("5",), ii=5e-6, ioff=10e-6, vil_ceiling=1.65,
+         leak_cite="SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A inputs, VCC 0 to 5.5 V), Ioff +-10 uA (VCC 0, "
+                   "VI or VO 5.5 V); 6.3: VIL 0.8 V at VCC 3 V to 3.6 V, 0.3 x VCC at 4.5 V to 5.5 V"),
+    # BOARD B's U116, U216 AND U316 SINCE STREAM w4b (W4B-D3, 27 September 2026): each slot's card buck EN = EMCON_HW AND
+    # PCIE_PWR_EN{s}, an SN74LV1T08DBVR run from the buck's own input +5V_S{s}. Sheet fetched by stream w4b (TI SCLS739F,
+    # drafts/w4b/datasheets/ti-sn74lv1t08.pdf, for v2/vendor/ti/). The sheet states II +-1 uA at VCC 0 V as well as powered
+    # (VI 0 V or VCC), which bounds an unpowered input; it has no Ioff row for the output, whose power-off rating is 4.6 V
+    # (6.1), so `ioff` carries the input figure and the output is never read unpowered on a held net. vil_ceiling: the
+    # highest VIL any band states, 0.8 V at VCC 4.5 V to 5.5 V (-40 to +125 C). vih_gap: its VIH is 2.03 V at 4.5 V to 5.0 V
+    # and 2.11 V at 5.5 V, above VIH_HIGH, so a HIGH at it never passes.
+    dict(name="74LV1T08 AND", value=r"74LV1T08", fp=r"SOT-23-5|SC-70-5|SOT-353",
+         gates=[(("1", "2"), "4", "AND")],
+         cite="TI SN74LV1T08, SCLS739F (October 2025), Table 5-1 Pin Functions (DCK, DBV): A 1, B 2, GND 3, Y 4, VCC 5 "
+              "(v2/vendor/ti/ti-sn74lv1t08.pdf)",
+         vcc=("5",), ii=1e-6, ioff=1e-6, vil_ceiling=0.8,
+         leak_cite="SCLS739F 6.5, -40 to +125 C: II +-1 uA (A input, VI 0 V or VCC, VCC 0 V, 1.8 V, 2.5 V, 3.3 V and 5.5 V); "
+                   "VIL 0.8 V at VCC 4.5 V to 5.5 V, 0.65 V at 3 V to 3.6 V; no Ioff row for the output (6.1: 4.6 V in the "
+                   "power-off state)",
+         vih_gap="SCLS739F 6.5 states VIH 2.03 V maximum at VCC 4.5 V to 5.0 V and 2.11 V at 5.5 V, above VIH_HIGH's 2.0 V",
+         # the VCC bands in which the sheet's VIL is at least VIL_LOW (0.8 V): 4.5 V to 5.5 V only. At 3 V to 3.6 V it states
+         # 0.65 V (-40 to +125 C), so VCC_RANGE is NOT where this family reads 0.8 V as low (see _vcc_ok)
+         vil_ok_bands=[(4.5, 5.5)]),
     dict(name="74LVC07 hex open-drain buffer", value=r"74LVC07", fp=r"(TSSOP|SOIC|SSOP|SO)-14",
          gates=[(("1",), "2", "BUF_OD"), (("3",), "4", "BUF_OD"), (("5",), "6", "BUF_OD"), (("9",), "8", "BUF_OD"),
                 (("11",), "10", "BUF_OD"), (("13",), "12", "BUF_OD")],
@@ -542,6 +573,9 @@ _LOGIC_ROWS = {
                                                       "Outputs' and 'SN74LVC2G07 device is open drain'"),
     "74LVC07 hex open-drain buffer": dict(od_words="SCAS595W, page 1: 'SN74LVC07A Hex Buffer and Driver With Open-Drain "
                                                    "Outputs'"),
+    "74LVC2G06 dual open-drain inverter": dict(od_words="SCES307J, page 1: 'SN74LVC2G06 Dual Inverter Buffer and Driver With "
+                                                        "Open-Drain Outputs' and 'The output of the SN74LVC2G06 device is an "
+                                                        "open-drain which can be connected to other open-drain outputs'"),
 }
 for _fam in LOGIC:
     _fam.update(_LOGIC_ROWS.get(_fam["name"]) or {})
@@ -702,7 +736,7 @@ def fet_of(nl, ref):
     if not ref.startswith("Q"): return None
     txt = c.get("lib", "") + " " + c.get("value", "")
     kind = "P" if re.search(r"PMOS|BSS84|P-FET|P-channel|Q_PMOS", txt, re.I) else \
-           "N" if re.search(r"NMOS|2N7002|BSS138|N-FET|N-channel|Q_NMOS", txt, re.I) else None
+           "N" if re.search(r"NMOS|2N7002|BSS138|AO3400|N-FET|N-channel|Q_NMOS", txt, re.I) else None
     if not kind: return None
     m = {nl["func"].get((ref, p), ""): p for p in pins_of(nl, ref)}
     return (kind, {k: m[k] for k in ("G", "S", "D")}) if all(k in m for k in ("G", "S", "D")) else None
@@ -1431,6 +1465,9 @@ def _vcc_ok(nl, ref, rail_up=None, k=None):
     vs = [v for v in vs if v is not None]
     if not vs: return False, None
     v = max(vs)
+    # a family whose sheet states VIL_LOW in other VCC bands than VCC_RANGE says so (`vil_ok_bands`, stream w4b)
+    bands = (logic_of(nl, ref) or {}).get("vil_ok_bands")
+    if bands: return any(lo <= v <= hi for lo, hi in bands), v
     return VCC_RANGE[0] <= v <= VCC_RANGE[1], v
 # The FETs whose sheets are held, with what they state about the currents a held net meets. The JSCJ 2N7002 states
 # IGSS +-80 nA and IDSS 80 nA at Ta 25 C only, so neither bounds a pin over the envelope, and its channel's on
@@ -2441,6 +2478,14 @@ ACCESSORIES = [
     dict(board="D", ref="J_PAOUT", value=r"PA output", why="the PA's RF output coax; the PA's supply is board A's J_PA"),
     dict(board="D", ref="J_VGG", value=r"PA gate bias", why="the PA's gate-bias lead, switched on this board by "
          "PA_KEY; the PA's supply is board A's J_PA, which is the gate this table relies on"),
+    # stream w4b, 27 September 2026 (EMCON.md section 8's hand-off for board B's round 8):
+    dict(board="B", ref="U221", value=r"TPS3808", why="the TPS3808G30 supervisor on +3V3_S2A that holds the 5G module's "
+         "FULL_CARD_POWER_OFF# low for 180 to 420 ms after the rail (SD-EMC-1r8, Quectel's Tpr); its value names the RM520N, "
+         "and it is neither the radio nor its supply or keying point"),
+    dict(board="B", ref="J_QMX", value=r"QMX USB lead", why="the QMX's USB data lead: QRP Labs' schematics for PCB Rev 1, "
+         "Rev 2, Rev 3/4 and Rev 5 (v2/vendor/qrp-labs/qrplabs-qmx-schematics-rev1-a.pdf, -rev2.pdf, -rev3.pdf, -rev5.pdf, "
+         "page 2) draw the USB-C connector J201's VBUS pin with no connection, and Rev 5's page 1 makes the unit's supplies "
+         "from the DC jack J101 alone (EMCON.md 4.3); the QMX's hardware gate is board A's J_HF"),
 ]
 # A declaration that rests on an inference, not on a maker statement: the part is not unclassified, and it is not
 # proved either, so its board stays UNDECIDED until the statement is held (review fix-up of round 4, 26 September
@@ -2448,9 +2493,7 @@ ACCESSORIES = [
 # manual 1.04.004, v2/vendor/qrp-labs, page 8) and describes the USB-C connector only as a sound card and serial port
 # (page 9); it does not say that 5 V on USB cannot run the transmitter, and VBUS_QMX stays live under EMCON.
 OWED = [
-    dict(board="B", ref="J_QMX", value=r"QMX USB lead", why="the QMX's USB data lead",
-         owed="a QRP Labs statement that USB VBUS does not power the QMX's transmitter, or VBUS_QMX switched off by "
-              "EMCON on board B; until then the QMX's hardware gate (board A's J_HF) covers only its DC input"),
+    # J_QMX left this list for ACCESSORIES (stream w4b, 27 September 2026): QRP Labs' own schematics answer it (EMCON.md 4.3).
 ]
 RECEIVE_ONLY = [
     dict(board="B", ref="U11", value=r"LG290P", why="a GNSS receiver (Quectel LG290P); it has no transmitter"),

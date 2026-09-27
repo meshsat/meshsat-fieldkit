@@ -1,0 +1,5 @@
+parts 1270 -> 1280 (+13 -3 ~6); nets 2004 -> 2011 (+7 -0 ~19)
+unexplained: 3
+  UNEXPLAINED nets_changed /E22_EN ['R516', 'R531', 'U21']
+  UNEXPLAINED nets_changed /LIME_EN ['R514', 'R529', 'U23']
+  UNEXPLAINED nets_changed /RB_EN ['R515', 'R530', 'U24']
