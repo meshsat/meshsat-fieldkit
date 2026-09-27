@@ -222,24 +222,31 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 
 | board | CURRENT_CANDIDATE | VALID_HISTORICAL | PASS on either | AWAITING_REVALIDATION | DESK_REVIEW | PHYSICAL_TEST | NO_EVIDENCE | pairs |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| A | 0 | 0 | 0 | 48 | 3 | 0 | 4 | 55 |
-| B | 0 | 0 | 0 | 47 | 4 | 0 | 5 | 56 |
-| C | 0 | 0 | 0 | 42 | 3 | 0 | 3 | 48 |
-| D | 0 | 0 | 0 | 45 | 3 | 0 | 3 | 51 |
-| E | 0 | 0 | 0 | 49 | 3 | 0 | 3 | 55 |
-| P | 2 | 0 | 2 | 41 | 3 | 0 | 2 | 48 |
-| E5 | 3 | 1 | 4 | 18 | 2 | 0 | 1 | 25 |
-| **set** | **5** | **1** | **6** | **290** | **21** | **0** | **21** | **338** |
+| A | 1 | 0 | 1 | 47 | 3 | 0 | 4 | 55 |
+| B | 1 | 0 | 1 | 46 | 4 | 0 | 5 | 56 |
+| C | 1 | 0 | 1 | 41 | 3 | 0 | 3 | 48 |
+| D | 1 | 0 | 1 | 44 | 3 | 0 | 3 | 51 |
+| E | 1 | 0 | 1 | 48 | 3 | 0 | 3 | 55 |
+| P | 3 | 0 | 3 | 40 | 3 | 0 | 2 | 48 |
+| E5 | 4 | 1 | 5 | 17 | 2 | 0 | 1 | 25 |
+| **set** | **12** | **1** | **13** | **283** | **21** | **0** | **21** | **338** |
 
 ## Rules with a PASS on the current candidate
 
 | board | rule | phase | the reading and what binds it |
 |---|---|---|---|
+| A | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
+| B | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
+| C | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
+| D | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
+| E | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
 | P | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist content efe60479293f0004 is the current candidate's |
 | P | PWR-003 protection coordination | SCHEMATIC | energy_chain_p: netlist content efe60479293f0004 is the current candidate's |
+| P | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
 | E5 | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_e5: board 686b29a734c55b9a is the current design (no schematic) |
 | E5 | PWR-003 protection coordination | SCHEMATIC | energy_chain_e5: board 686b29a734c55b9a is the current design (no schematic) |
 | E5 | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_e5: board 686b29a734c55b9a is the current design (no schematic) |
+| E5 | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
 
 ## Reused under a recorded rationale
 
@@ -261,7 +268,7 @@ tool.
 | TOOL_CHANGED | the code that wrote it has changed since: its entry script or a local module it imports (exact by the reading's code bundle; for an older reading by its writer's hash and its imports' commit dates) | re-taken under the current tool (current only when the re-take also binds its artefact and configuration), or a compatibility entry proving the change is not semantic | 33 | 32 | 29 | 32 | 33 | 26 | 11 | 196 | 15 |
 | NOT_CURRENT_EVIDENCE | the reading itself is stale (epoch, rule digest, another board, or a tool meaning change) | re-taken | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 14 | 0 |
 | TEMP_INPUT | it judged files in a temporary directory, not this tree | re-taken in this tree | 0 | 0 | 1 | 0 | 0 | 1 | 1 | 3 | 0 |
-| CONFIG_CHANGED | a configuration input its writer reads (rules_status.CONFIG_INPUTS) changed after the reading | re-taken, or a `kind: config` compatibility entry showing the change does not reach what the tool reads | 1 | 1 | 1 | 1 | 1 | 8 | 2 | 15 | 14 |
+| CONFIG_CHANGED | a configuration input its writer reads (rules_status.CONFIG_INPUTS) changed after the reading | re-taken, or a `kind: config` compatibility entry showing the change does not reach what the tool reads | 0 | 0 | 0 | 0 | 0 | 7 | 1 | 8 | 7 |
 
 ## Writers whose configuration is not declared yet
 
