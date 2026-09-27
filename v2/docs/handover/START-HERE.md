@@ -153,10 +153,13 @@ and no certification claimed; no vehicle surge claim (D-16); no finished runtime
 - **Diagrams** (`v2/docs/diagrams/`) were drawn at `e3aedb25`, before round 8; their README says what that means.
 - **Known gaps of H1 and H1.1.** (1) The readings behind `CURRENT-EVIDENCE.md` and `PCB-RULE-STATUS-*.md` live in the
   gitignored `v2/ecad/out/` and each board's `out/` folder and are not in the snapshot; the rendered pages are, so a
-  recipient re-takes a reading rather than reading it back. REGENERATE.md section 9 states the re-take procedure in
-  words: on a KiCad 9.0.9 host, every writer of a schematic-phase rule per board with `VERDICT_DIR` set, then
-  `rules_status.py` and `rules_render.py`, which reproduces and updates the layout-entry status (A 17 ... E5 5). The
-  driver that runs it in one command arrives in the next snapshot (H2); it is not in H1.1, and was not run for it.
+  recipient re-takes a reading rather than reading it back. REGENERATE.md section 9 states the re-take procedure,
+  which H1.1 carries in words only. **Since the set 4 branch after H1.1 (`e5fde2ed`) the driver exists:**
+  `v2/ecad/tools/retake_schematic_phase.py` plans every schematic-phase writer per board from the registries
+  (`--plan`) and runs them on the committed netlists (`--run --in-place --routed` in a throwaway git clone outside
+  `/tmp` on a KiCad 9.0.9 host), then `rules_status.py` three times and `rules_render.py`; its trial on `a8652172`
+  took the layout-entry reasons from 95 to 37 with no board ready (REGENERATE.md section 9). It is in no snapshot
+  before H2.
   (2) The test suite needs a git checkout of the repository
   for `test_netlist_provenance` and for the registry's closed-by-commit checks; from the ZIP alone those fail
   (REGENERATE.md section 7). (3) The ZIP is deterministic per host: two builds of one commit on one host are byte for

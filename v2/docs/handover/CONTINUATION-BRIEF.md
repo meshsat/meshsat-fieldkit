@@ -46,8 +46,11 @@ later sections that section 0 supersedes also carry an inline **Superseded in H1
   `hc7.patch`, `r8b.patch`), each with its base, sha256 and last review's blocking findings in the folder's README.
 - **Known gaps of H1.** The readings behind `CURRENT-EVIDENCE.md` and `PCB-RULE-STATUS-*.md` live in the gitignored
   `v2/ecad/out/` and each board's `out/` folder and are not in the snapshot; the rendered pages are. REGENERATE.md
-  section 9 states the re-take procedure that reproduces and updates them, in words: its driver arrives in the next
-  snapshot (H2) and is not in H1.1. The test suite
+  section 9 states the re-take procedure that reproduces and updates them, in words in H1.1; **its driver,
+  `v2/ecad/tools/retake_schematic_phase.py`, landed after H1.1** (`e5fde2ed`, branch `fnd/r8int4`): `--plan` lists
+  every schematic-phase writer per board from the registries, `--run --in-place --routed` takes them on the committed
+  netlists in a throwaway git clone outside `/tmp` on a KiCad 9.0.9 host, then `rules_status.py` three times and
+  `rules_render.py` (REGENERATE.md section 9, with its trial on `a8652172`: 73 commands, reasons 95 to 37). The test suite
   needs a git checkout for `test_netlist_provenance` and for the registry's closed-by-commit checks (REGENERATE.md
   section 7). The ZIP's bytes are deterministic per host only: compare `MANIFEST.tsv`, not the ZIP's sha256, across
   hosts.
@@ -202,7 +205,7 @@ parallel with isolated owners.
 | 0 | Case geometry: C1 to C6 into `panel1450.py` and the CAD; the jumper plug and RJ45 picks; the Z stack drawn; pack hold-down and stack retention designed; the blind-mate tolerance stack (L7 actions 1 to 10) | nothing (board C regenerates only if the backer offsets change) | no |
 | 0 | Desk analyses: `impedance_2d` solves for board B's six-layer re-assignment and eight-layer stack; board A's pack-path copper at 18 A under decision 35; a lumped thermal model with sensitivities; channel budgets from primary documents; RF coexistence budget | nothing | no |
 | 1 | Round 8 circuit corrections merged board by board with parity (in H1 only board B's remains: `candidates/r8b.patch`, UNACCEPTED) (EMCON remedies, FAB-01 to FAB-04, SD-EMC-1, the SLOT_EN hold, the flange sensor, decoupling classes G1 to G14, VIN_RAW, SIM, U9, U.FL codes, GND-002, the monitor touch USB port, decided since as SC-HF-06 on board D's `J_USB3` with HF-F06 owed on D); the tools merges (PWR-001 and SI-001 on the netlist; mismatch persistence) | step 0 decisions that change circuits (reduced mode, SIM, touch USB) | no |
-| 2 | One consolidated re-take of every schematic-phase reading in a clean clone on a KiCad 9.0.9 host; CURRENT-EVIDENCE re-rendered (procedure: REGENERATE.md section 9) | step 1 | no |
+| 2 | One consolidated re-take of every schematic-phase reading in a clean clone on a KiCad 9.0.9 host with `retake_schematic_phase.py --run --in-place --routed`, its `routed/` copies committed; CURRENT-EVIDENCE re-rendered (procedure: REGENERATE.md section 9) | step 1 | no |
 | 3 | ARCHITECTURE.md and `pcb_interfaces.yaml` re-anchored; contracts for the uncovered interfaces; Review C (L4, L5); FEA-003 and FEA-004 restaged | step 2 | no |
 | 3 | Parts: certification re-take, per-board BOMs with identity, review packets for A and B (first), D, P, C, E; functional circuit review per board; decision 31 protection-topology review for A, D, E (L6, L8) | step 2 | no |
 | 4 | Stackup decision table per board; per-board layout constraint sheets; PWR-F12 in the registries; TEST-PLAN additions (L9) | steps 2 and 3 | prices per layer count (EQ-14) |

@@ -3,6 +3,11 @@
 MESHSAT-1357, exported 27 September 2026 at about 07:40 CEST by the H1.1 editor. Agents were still working in some of
 these worktrees when they were exported; each patch is its worktree's state at that moment, and a later state is not
 in this package. **Every patch here is an UNACCEPTED candidate, not design.**
+
+**Superseded after H1.1 (27 September 2026).** Board B's round 8 (`r8b.patch`) is merged on main at `b76c18cb`, and the
+set 4 branch `fnd/r8int4` merged hc2 and hc3 (`95e078a1`, `53292f81`), hc5 (`0da2778b`) and hc7 (`c351115d`) from
+their later worktree states, after the targeted fixers c23, c5 and c7. Those commits, not these patches, are the
+design from then on; `LAYER-STATUS.md`'s integrator lines say what landed. The patches stay here as the H1.1 record.
 None of them is merged into the repository, none has passed its last review without a blocking finding except r8b,
 and even r8b is a candidate until the integrator merges it with regeneration parity. Nothing in these patches changes
 what `LAYER-STATUS.md` says a layer's status is. They are here so a recipient of the snapshot holds the work the
