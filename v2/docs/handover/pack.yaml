@@ -84,7 +84,7 @@ rules:
   - {action: exclude, kind: stale-layout, glob: "v2/ecad/{phase}/{stem}.kicad_pcb",
      reason: "the phase's placed and routed layout, cut from an earlier netlist: v2/docs/CURRENT-EVIDENCE.md, table 'The candidate each board is judged against', reads SCH-002 (netlist against board) FAIL or INCONCLUSIVE, so the layout does not carry the committed netlist. Layout is layer 10 and restarts from the reviewed schematic; the placement generators gen_pcb_*.py are in the tools"}
   - {action: exclude, kind: stale-layout, glob: "v2/ecad/{phase}/routed/**",
-     reason: "verdicts, DRC reports and pre-route copies taken on that earlier layout; the current classification of every reading is v2/docs/CURRENT-EVIDENCE.md"}
+     reason: "verdicts, DRC reports and pre-route copies taken on that earlier layout, and (since 8ea7867e) beside them the tracked copies of the consolidated re-take's schematic-phase readings on the committed netlists, which are in the repository at the snapshot commit and are re-taken by REGENERATE.md section 9; the current classification of every reading is v2/docs/CURRENT-EVIDENCE.md"}
 
   # ---------------------------------------------------------------- board E5 has no schematic: its board file is its design
   - {action: include, group: L8, glob: ["v2/ecad/pcb-e5-block/pcb-e5-block.kicad_pcb", "v2/ecad/pcb-e5-block/pcb-e5-block.kicad_pro", "v2/ecad/pcb-e5-block/fp-lib-table"],

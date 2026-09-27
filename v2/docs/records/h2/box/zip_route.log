@@ -1,0 +1,297 @@
+
+=== section 2 (15:27:44)
+H2.zip: OK
+handover_pack: verify .: OK
+sch_prov: pcb-p-pack.net was written by this tree's own generator (ee62fdb195a9f217)
+
+=== section 3 (15:27:45)
+gen_footprints_idc: wrote IDC-Header_2x05_P2.54mm_Vertical_NarrowPad, 10 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)
+gen_footprints_idc: wrote IDC-Header_2x07_P2.54mm_Vertical_NarrowPad, 14 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)
+gen_footprints_idc: wrote IDC-Header_2x08_P2.54mm_Vertical_NarrowPad, 16 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)
+gen_footprints_idc: wrote IDC-Header_2x09_P2.54mm_Vertical_NarrowPad, 18 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)
+gen_footprints_idc: wrote IDC-Header_2x10_P2.54mm_Vertical_NarrowPad, 20 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)
+gen_footprints_idc: wrote IDC-Header_2x13_P2.54mm_Vertical_NarrowPad, 26 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)
+gen_footprints_idc: wrote IDC-Header_2x20_P2.54mm_Vertical_NarrowPad, 40 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)
+gen_footprints_idc: 7 footprint(s)
+lands: 21 footprint(s) judged, 0 pin(s) on a pad the land does not carry, 0 land(s) unreadable
+schlayout verify: 216 pins in 179 nets, every component one name
+layout: 2 A3 pages on a 2 x 1 sheet -> paper "User" 838.20 297.18
+wrote pcb-p-pack.kicad_sch parts: 95 lib symbols: 21
+nets: 51 single-pin nets (should be empty or intentional): []
+intent: /root/h2/zr/H2/v2/ecad/pcb-p-pack-p2/out/pcb-p-pack-intent.json (4 bypass, 5 rails, 2 nodes, 5 pair classes)
+ERC: violations (out/pcb-p-pack-erc.json, out/pcb-p-pack-erc.rpt; erc_gate.py decides)
+netlist: out/pcb-p-pack.net
+sch_prov: pcb-p-pack.net written by generator ee62fdb195a9f217 (boards/p.json#gen_env, gen_footprints_b16.py, gen_footprints_e.py, gen_footprints_idc.py, gen_footprints_panel.py, gen_sch_p.py, idc_pads.py, intent.py, kisch.py, schlayout.py, and 60 land(s) in meshsat.pretty)
+sheet pdf: out/pcb-p-pack-schematic-sheet.pdf
+sch_pages: 2 x 1 cells, 2 pages kept of 2 tiles
+pdf: out/pcb-p-pack-schematic.pdf
+bom: out/pcb-p-pack-bom.csv
+erc_gate: --run ERC taken on schematic a58d0eecc7ab with kicad-cli 9.0.9
+erc_gate: warning  lib_symbol_issues                        106
+erc_gate: warning  unconnected_wire_endpoint                17
+erc_gate: netlist tied: the report, the schematic and the netlist's own provenance agree on schematic a58d0eecc7ab
+erc_gate: no blocking error (123 violations, 0 error(s) allow-listed with a reason, warnings 123)
+verdict: erc_gate               PASS         of 123 {"allowed": 0, "blocking": 0, "violations": 123}
+{
+ "kind": "netlist",
+ "phase_labels": [
+  [
+   "P4"
+  ],
+  [
+   "P4"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  },
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  }
+ ],
+ "design_header": [
+  [
+   "/root/r8-p/tree/v2/ecad/pcb-p-pack-p2/pcb-p-pack.kicad_sch",
+   "2026-09-26T22:39:38+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ],
+  [
+   "/root/h2/zr/H2/v2/ecad/pcb-p-pack-p2/pcb-p-pack.kicad_sch",
+   "2026-09-27T15:27:50+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ]
+ ],
+ "content_hash": [
+  "efe60479293f0004",
+  "efe60479293f0004"
+ ],
+ "result": "PARITY_AFTER_NOISE"
+}
+{
+ "kind": "schematic",
+ "phase_labels": [
+  [
+   "P4"
+  ],
+  [
+   "P4"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N1_title_date": 1,
+   "N2_page_frame_date": 2,
+   "L1_comment1_phase": 1,
+   "L2_frame_phase": 2
+  },
+  {
+   "N1_title_date": 1,
+   "N2_page_frame_date": 2,
+   "L1_comment1_phase": 1,
+   "L2_frame_phase": 2
+  }
+ ],
+ "result": "PARITY_AFTER_NOISE"
+}
+{
+ "kind": "intent",
+ "keys_changed": [],
+ "result": "PARITY_AFTER_NOISE"
+}
+{
+ "kind": "provenance",
+ "keys_changed": [
+  "schematic_sha256"
+ ],
+ "result": "DIFFERENT"
+}
+a58d0eecc7abe7684e52cfa0a727186ea979ba792204ae2c5af1394b4135fd69  pcb-p-pack.kicad_sch
+47e0bc19e8e18cf02a09223e7a1e7159262b2f2eb5ba92e270ba7a774ab5e4d5  /root/h2/zr/H2/../committed-p/pcb-p-pack.kicad_sch
+out/pcb-p-pack.net.prov.json: "schematic_sha256": "a58d0eecc7abe7684e52cfa0a727186e",
+/root/h2/zr/H2/../committed-p/pcb-p-pack.net.prov.json: "schematic_sha256": "47e0bc19e8e18cf02a09223e7a1e7159",
+{
+ "kind": "bom",
+ "rows": [
+  38,
+  38
+ ],
+ "result": "PARITY"
+}
+{
+ "kind": "erc",
+ "violations": [
+  123,
+  123
+ ],
+ "by_type": [
+  {
+   "warning:lib_symbol_issues": 106,
+   "warning:unconnected_wire_endpoint": 17
+  },
+  {
+   "warning:lib_symbol_issues": 106,
+   "warning:unconnected_wire_endpoint": 17
+  }
+ ],
+ "result": "PARITY_AFTER_NOISE"
+}
+handover_pack: verify: v2/ecad/pcb-p-pack-p2/out/pcb-p-pack-intent.json: sha256 differs from the manifest
+handover_pack: verify: v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net: 92139 bytes, the manifest says 92140
+handover_pack: verify: v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net: sha256 differs from the manifest
+handover_pack: verify: v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net.prov.json: sha256 differs from the manifest
+handover_pack: verify: v2/ecad/pcb-p-pack-p2/pcb-p-pack.kicad_sch: sha256 differs from the manifest
+handover_pack: verify: v2/ecad/pcb-p-pack-p2/out/erc_gate.verdict.json: in the snapshot, not in the manifest
+handover_pack: verify: v2/ecad/pcb-p-pack-p2/out/pcb-p-pack-bom.csv: in the snapshot, not in the manifest
+handover_pack: verify: v2/ecad/pcb-p-pack-p2/out/pcb-p-pack-erc.json: in the snapshot, not in the manifest
+handover_pack: verify: v2/ecad/pcb-p-pack-p2/out/pcb-p-pack-erc.json.prov.json: in the snapshot, not in the manifest
+handover_pack: verify: v2/ecad/pcb-p-pack-p2/out/pcb-p-pack-erc.rpt: in the snapshot, not in the manifest
+handover_pack: verify: v2/ecad/pcb-p-pack-p2/out/pcb-p-pack-erc.status: in the snapshot, not in the manifest
+handover_pack: verify: v2/ecad/pcb-p-pack-p2/out/pcb-p-pack-schematic-sheet.pdf: in the snapshot, not in the manifest
+handover_pack: verify: v2/ecad/pcb-p-pack-p2/out/pcb-p-pack-schematic.pdf: in the snapshot, not in the manifest
+handover_pack: verify .: 13 problem(s)
+
+=== section 4 (15:27:54)
+handover_exports: regen a (pcb-a-power-a23, PHASE=A65): exits [0, 0, 0], {'schematic': 'PARITY', 'netlist': 'PARITY_AFTER_NOISE', 'intent': 'PARITY_AFTER_NOISE', 'bom': 'PARITY', 'erc': 'PARITY_AFTER_NOISE'}, lands moved 0: PARITY
+handover_exports: regen b (pcb-b-compute-b19, PHASE=B21): exits [0, 0, 0, 0], {'schematic': 'PARITY', 'netlist': 'PARITY_AFTER_NOISE', 'intent': 'PARITY_AFTER_NOISE', 'bom': 'PARITY', 'erc': 'PARITY_AFTER_NOISE'}, lands moved 0: PARITY
+handover_exports: regen c (pcb-c-display-c8, PHASE=C24): exits [0, 0], {'schematic': 'PARITY_AFTER_NOISE', 'netlist': 'PARITY_AFTER_NOISE', 'intent': 'PARITY_AFTER_NOISE', 'bom': 'PARITY', 'erc': 'PARITY_AFTER_NOISE'}, lands moved 0: PARITY
+handover_exports: regen d (pcb-d-aprs-d9, PHASE=D37P): exits [0, 0, 0, 0], {'schematic': 'PARITY', 'netlist': 'PARITY_AFTER_NOISE', 'intent': 'PARITY_AFTER_NOISE', 'bom': 'PARITY', 'erc': 'PARITY_AFTER_NOISE'}, lands moved 0: PARITY
+handover_exports: regen e (pcb-e1-dock-e7, PHASE=E42P): exits [0, 0, 0], {'schematic': 'PARITY', 'netlist': 'PARITY_AFTER_NOISE', 'intent': 'PARITY_AFTER_NOISE', 'bom': 'PARITY', 'erc': 'PARITY_AFTER_NOISE'}, lands moved 0: PARITY
+handover_exports: regen p (pcb-p-pack-p2, PHASE=P4): exits [0, 0, 0], {'schematic': 'PARITY_AFTER_NOISE', 'netlist': 'PARITY_AFTER_NOISE', 'intent': 'PARITY_AFTER_NOISE', 'bom': 'PARITY', 'erc': 'PARITY_AFTER_NOISE'}, lands moved 0: PARITY
+regen exit 0
+
+=== section 5 (15:31:39)
+handover_exports: a pcb-a-power-a23: exits [0, 0, 0, 0, 0, 0, 0], netlist parity PARITY_AFTER_NOISE, paged pdf 16 pages (1593 chars on page 1), 586 BOM rows, ERC {'warning': 1522}: OK
+handover_exports: b pcb-b-compute-b19: exits [0, 0, 0, 0, 0, 0, 0], netlist parity PARITY_AFTER_NOISE, paged pdf 43 pages (2724 chars on page 1), 1179 BOM rows, ERC {'error': 7, 'warning': 2872}: OK
+handover_exports: c pcb-c-display-c8: exits [0, 0, 0, 0, 0, 0, 0], netlist parity PARITY_AFTER_NOISE, paged pdf 5 pages (2782 chars on page 1), 167 BOM rows, ERC {'warning': 328}: OK
+handover_exports: d pcb-d-aprs-d9: exits [0, 0, 0, 0, 0, 0, 0], netlist parity PARITY_AFTER_NOISE, paged pdf 7 pages (2192 chars on page 1), 218 BOM rows, ERC {'warning': 445}: OK
+handover_exports: e pcb-e1-dock-e7: exits [0, 0, 0, 0, 0, 0, 0], netlist parity PARITY_AFTER_NOISE, paged pdf 4 pages (2104 chars on page 1), 174 BOM rows, ERC {'warning': 367}: OK
+handover_exports: p pcb-p-pack-p2: exits [0, 0, 0, 0, 0, 0, 0], netlist parity PARITY_AFTER_NOISE, paged pdf 2 pages (2243 chars on page 1), 69 BOM rows, ERC {'warning': 123}: OK
+exports exit 0
+same: pcb-a-power-a23/NOT_FOR_FAB-pcb-a-power-bom-per-reference.csv
+same: pcb-a-power-a23/NOT_FOR_FAB-pcb-a-power-bom.csv
+same: pcb-b-compute-b19/NOT_FOR_FAB-pcb-b-compute-bom-per-reference.csv
+same: pcb-b-compute-b19/NOT_FOR_FAB-pcb-b-compute-bom.csv
+same: pcb-c-display-c8/NOT_FOR_FAB-pcb-c-display-bom-per-reference.csv
+same: pcb-c-display-c8/NOT_FOR_FAB-pcb-c-display-bom.csv
+same: pcb-d-aprs-d9/NOT_FOR_FAB-pcb-d-aprs-bom-per-reference.csv
+same: pcb-d-aprs-d9/NOT_FOR_FAB-pcb-d-aprs-bom.csv
+same: pcb-e1-dock-e7/NOT_FOR_FAB-pcb-e1-dock-bom-per-reference.csv
+same: pcb-e1-dock-e7/NOT_FOR_FAB-pcb-e1-dock-bom.csv
+same: pcb-p-pack-p2/NOT_FOR_FAB-pcb-p-pack-bom-per-reference.csv
+same: pcb-p-pack-p2/NOT_FOR_FAB-pcb-p-pack-bom.csv
+
+=== section 6 (15:34:52)
+energy_chain: 12 stage(s), 98 check(s)
+  note PACK_CELLS: F1 carries 10.0 A of its 25.0 A rating (40 percent), inside the 65 percent ECSS-Q-ST-30-11C Rev.2 Table 6-17 sets for a fuse at or below 85 C
+  note PACK_CELLS: the source delivers at least 240 A against a 25.0 A fuse, which is 9.6 times its rating (ECSS 6.17.3c asks for three)
+  note PACK_CELLS: F1 melts in about 4.3 ms at 480 A (I2t 1000 A2s)
+  note PACK_LEAD: F1 melts in about 4.3 ms at 480 A (I2t 1000 A2s)
+  note DOCK_ENTRY: F3 carries 10.0 A of its 25.0 A rating (40 percent), inside the 65 percent ECSS-Q-ST-30-11C Rev.2 Table 6-17 sets for a fuse at or below 85 C
+  note DOCK_ENTRY: the source delivers at least 240 A against a 25.0 A fuse, which is 9.6 times its rating (ECSS 6.17.3c asks for three)
+  note DOCK_ENTRY: F3 melts in about 4.3 ms at 480 A (I2t 1000 A2s)
+  note DOCK_BLOCK: F3 melts in about 4.3 ms at 480 A (I2t 1000 A2s)
+  note BOARD_A_NODE: F1 carries 10.0 A of its 25.0 A rating (40 percent), inside the 65 percent ECSS-Q-ST-30-11C Rev.2 Table 6-17 sets for a fuse at or below 85 C
+  note BOARD_A_NODE: the source delivers at least 240 A against a 25.0 A fuse, which is 9.6 times its rating (ECSS 6.17.3c asks for three)
+  note BOARD_A_NODE: F1 melts in about 4.3 ms at 480 A (I2t 1000 A2s)
+  note BOARD_A_CONVERTERS: F1 melts in about 4.3 ms at 480 A (I2t 1000 A2s)
+  note SHORE_INPUT: F1 carries 6.2 A where atof287 allows 8.0 A at its 65 C column (the stage is judged at 56 C, datasheet revised 18 August 2022, page 3, Temperature Table: max. allo)
+  note SHORE_INPUT: the fault current available at F1 is not established, so ECSS 6.17.3c (the source delivers three times the fuse rating) cannot be judged here; it is part of the operating envelope, owner decision 34
+  note SHORE_INPUT: F1 melts in about 2.9 ms at 200 A (I2t 115 A2s)
+  FAIL DOCK_BLOCK: the conductor names v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf, which is not in this tree
+verdict: energy_chain           FAIL         of 98 {"checks": 98, "citations_unjudged": 0, "coordination_findings": 0, "fail": 1, "selection_findings": 0, "stages": 12} | THE CHAIN END TO END, which is BAT-002's question; a selection finding against ECSS 6.17 belongs to the stage that has it and is in energy_chain_<letter>, rule PWR-003. Every rating against its own source document, every protective element against the board's netlist, and the four coordination tests (the element is below what it protects, above the path's peak, able to interrupt what is available, and followed by the stage it protects)
+energy_chain exit 1
+energy_chain_a.verdict.json FAIL {'fail': 1, 'stages': 4}
+energy_chain_b.verdict.json PASS {'fail': 0, 'stages': 3}
+energy_chain_e.verdict.json PASS {'fail': 0, 'stages': 3}
+energy_chain_e5.verdict.json FAIL {'fail': 1, 'stages': 1}
+energy_chain_p.verdict.json PASS {'fail': 0, 'stages': 3}
+
+=== section 7, validator from the extraction (15:34:53)
+warn  closed item S-06: git cannot say here whether commit 4ec785d8 exists
+warn  closed item S-08: git cannot say here whether commit 458b2873 exists
+warn  closed item S-10: git cannot say here whether commit faf8c981 exists
+warn  closed item S-11: git cannot say here whether commit faf8c981 exists
+warn  closed item S-17: git cannot say here whether commit 68bc9e8f exists
+warn  closed item S-21: git cannot say here whether commit 458b2873 exists
+warn  closed item S-25: git cannot say here whether commit 4ec785d8 exists
+warn  closed item S-29: git cannot say here whether commit faf8c981 exists
+warn  closed item S-30: git cannot say here whether commit 458b2873 exists
+warn  closed item S-31: git cannot say here whether commit 458b2873 exists
+warn  closed item S-77: git cannot say here whether commit cecfd0f1 exists
+ERROR CON-017: evidence_bound_to names v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf, which is not in this tree
+ERROR CON-017: evidence_bound_to names v2/vendor/st/st-rm0433-rev8.pdf, which is not in this tree
+ERROR CON-017: evidence_bound_to names v2/vendor/st/st-es0392-rev15.pdf, which is not in this tree
+ERROR CON-017: source v2/vendor/st/st-es0392-rev15.pdf does not exist in this tree
+ERROR REQ-010: source v2/vendor/rockblock/rb9704-datasheet-RB9704-001-JUN26.pdf does not exist in this tree
+ERROR CON-026: source v2/vendor/ti/tps23861-datasheet.pdf does not exist in this tree
+ERROR CON-026: source v2/vendor/microchip/microchip-atecc608b-summary-DS40002239B.pdf does not exist in this tree
+ERROR CON-026: source v2/vendor/ti/ti-tca9517a-i2c-buffer.pdf does not exist in this tree
+ERROR REQ-041: source v2/vendor/sciosense/sciosense-as3935-factsheet.pdf does not exist in this tree
+ERROR REQ-042: source v2/vendor/sensirion/sgp41-datasheet.pdf does not exist in this tree
+ERROR REQ-042: source v2/vendor/battery/ti-sluuaq3a-bq4050-trm.pdf does not exist in this tree
+ERROR REQ-077: source v2/vendor/battery/ti-sluuaq3a-bq4050-trm.pdf does not exist in this tree
+ERROR REQ-058: source v2/vendor/limesdr/myriadrf-limesdr-mini-2-0-page-20260925.html does not exist in this tree
+rules_lib: 144 requirement record(s), 13 error(s), 17 warning(s)
+rules_render: REQUIREMENTS-TRACE.md REFUSED: pcb_requirements.yaml does not validate (13 error(s)), so no trace page is rendered: CON-017: evidence_bound_to names v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf, which is not in this tree; CON-017: evidence_bound_to names v2/vendor/st/st-rm0433-rev8.pdf, which is not in this tree; CON-017: evidence_bound_to names v2/vendor/st/st-es0392-rev15.pdf, which is not in this tree; CON-017: source v2/vendor/st/st-es0392-rev15.pdf does not exist in this tree; REQ-010: source v2/vendor/rockblock/rb9704-datasheet-RB9704-001-JUN26.pdf does not exist in this tree
+MISSING  v2/vendor/connectors/jst-ph-catalogue.pdf  (Documents cited)
+MISSING  v2/vendor/battery/murata-nxrt15xh103fa1b.pdf  (Documents cited)
+MISSING  v2/vendor/ti/ti-e2e-1316778-bq25731-chargecurrent-por.html  (Documents cited)
+MISSING  v2/vendor/battery/ti-e2e-1421182-bq77207-application.html  (Documents cited)
+RELEASE CHECK FAIL
+ALL CONTRACTS PASS
+RF-002's transmitter walk (section 15a, decides inhibit_chain_<letter> only): 12 FAIL, 5 UNDECIDED, 8 PASS
+verdict: check_contracts        PASS         of 99 {"boards_without_intent": 0, "fail": 0, "missing_boards": 0, "pass": 99, "rails_unsplit": 0, "undecided": 0, "unjudged": 0}
+/root/h2/zr/H2/../pwr_budget.out v2/docs/records/rv-pwr/pwr_budget.json differ: byte 1, line 1
+
+=== section 7, suite (15:35:02)
+suite exit 1
+tests: 1956 passed, 20 failed, 23 skipped; failed: test_block_contract.t_a_target_on_the_wrong_net_is_refused, test_block_contract.t_it_says_which_board_a_it_compared_against, test_block_contract.t_the_block_as_built_passes_against_the_board_a_this_tree_holds, test_case_geometry.t_a_makers_maximum_is_read_for_its_part, test_case_geometry.t_release_folder_is_immutable, test_doc_provenance.t_the_tree_today_is_reported_rather_than_assumed, test_emc_sheet.t_the_committed_sheet_passes_on_every_board, test_energy_chain.t_the_committed_chain_fails_only_where_this_tree_says_it_does, test_evidence_class.t_every_declared_writer_and_fixed_input_exists_in_this_tree, test_interfaces.t_every_interface_number_carries_the_document_it_came_from, test_layout_entry_stages.t_the_registry_refuses_a_stage_that_needs_what_only_a_later_stage_produces, test_netlist_provenance.t_every_committed_netlist_has_its_provenance_sidecar_committed_beside_it, test_order_readiness.t_every_order_note_in_this_tree_is_quarantined, test_rails_census.t_every_held_pin_role_is_read_from_the_words_of_its_own_document, test_rails_census.t_every_held_row_carries_every_pin_its_own_table_types_power_or_ground_or_describes_as_a_supply, test_rails_census.t_the_table_sweep_finds_the_tps2596_power_output_when_the_row_leaves_it_out, test_requirements.t_check_refuses_a_hand_edited_trace_page, test_requirements.t_the_page_does_not_change_with_the_decision_index_for_what_an_owner_ruling_names, test_requirements.t_the_real_registry_validates, test_requirements.t_the_trace_page_is_generated_not_hand_kept
+FAIL pair X has one leg routed and one not (P 0.00 mm, N 13.19 mm)
+FAIL pair X has one leg routed and one not (P 0.00 mm, N 13.19 mm)
+FAIL a mounting hole is not where the case says
+FAIL a mounting hole is not where the case says
+FAIL  A and B disagree
+FAIL  B: PCIE1_RX_P has exactly one series AC coupling capacitor<unknown>:51: SyntaxWarning: invalid escape sequence '\d'
+FAIL  C: something of C's own
+
+=== section 1a (15:42:30)
+OK v2/vendor/st/st-an4938-rev7.pdf
+OK v2/vendor/st/st-es0392-rev15.pdf
+OK v2/vendor/st/st-lis3mdl.pdf
+OK v2/vendor/st/st-rm0433-rev8.pdf
+OK v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf
+OK v2/vendor/st/st-stm32h743xi-datasheet.pdf
+OK v2/vendor/st/st-stm32h753xi-datasheet.pdf
+OK v2/vendor/st/st-usblc6-2-esd-protection.pdf
+OK v2/vendor/battery/samsung-35e-akkuzentrum.pdf
+OK v2/vendor/battery/semitec-at-p12-13.pdf
+OK v2/vendor/keystone/M65p42.pdf
+OK v2/vendor/keystone/littelfuse-297-ficcorp.pdf
+OK v2/vendor/nexperia/nexperia-pesd5v0s1ba.pdf
+OK v2/vendor/battery/ti-bq77207.pdf
+OK v2/vendor/battery/ti-sffs317a-bq77207-fusa.pdf
+OK v2/vendor/battery/ti-sluuaq3a-bq4050-trm.pdf
+OK v2/vendor/battery/eaton-scf9550-elx1135.pdf
+OK v2/vendor/battery/littelfuse-itv9550-30a.pdf
+OK v2/vendor/battery/murata-prf-series.pdf
+OK v2/vendor/battery/ti-sluubf9-bq4050evm.pdf
+OK v2/vendor/power/aos-ao3400a-n-mosfet.pdf
+OK v2/vendor/power/jscj-2n7002-c8545.pdf
+OK v2/vendor/connectors/jst-ph-catalogue.pdf
+OK v2/vendor/battery/murata-nxrt15xh103fa1b.pdf
+OK v2/vendor/ti/ti-e2e-1316778-bq25731-chargecurrent-por.html
+OK v2/vendor/battery/ti-e2e-1421182-bq77207-application.html
+OK v2/docs/handover/candidates/r8b.patch
+checked 139 rows of MANIFEST.md against /root/h2/zr/ra/H2
+RELEASE CHECK PASS
+ERROR REQ-042: source v2/vendor/sensirion/sgp41-datasheet.pdf does not exist in this tree
+ERROR REQ-058: source v2/vendor/limesdr/myriadrf-limesdr-mini-2-0-page-20260925.html does not exist in this tree
+rules_lib: 144 requirement record(s), 7 error(s), 17 warning(s)
+rules_render: REQUIREMENTS-TRACE.md REFUSED: pcb_requirements.yaml does not validate (7 error(s)), so no trace page is rendered: REQ-010: source v2/vendor/rockblock/rb9704-datasheet-RB9704-001-JUN26.pdf does not exist in this tree; CON-026: source v2/vendor/ti/tps23861-datasheet.pdf does not exist in this tree; CON-026: source v2/vendor/microchip/microchip-atecc608b-summary-DS40002239B.pdf does not exist in this tree; CON-026: source v2/vendor/ti/ti-tca9517a-i2c-buffer.pdf does not exist in this tree; REQ-041: source v2/vendor/sciosense/sciosense-as3935-factsheet.pdf does not exist in this tree
+
+=== done (15:42:39)

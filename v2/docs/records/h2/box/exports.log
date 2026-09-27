@@ -1,0 +1,5 @@
+handover_exports: a pcb-a-power-a23: exits [0, 0, 0, 0, 0, 0, 0], netlist parity PARITY_AFTER_NOISE, paged pdf 16 pages (1593 chars on page 1), 586 BOM rows, ERC {'warning': 1522}: OK
+handover_exports: b pcb-b-compute-b19: exits [0, 0, 0, 0, 0, 0, 0], netlist parity PARITY_AFTER_NOISE, paged pdf 43 pages (2724 chars on page 1), 1179 BOM rows, ERC {'error': 7, 'warning': 2872}: OK
+handover_exports: d pcb-d-aprs-d9: exits [0, 0, 0, 0, 0, 0, 0], netlist parity PARITY_AFTER_NOISE, paged pdf 7 pages (2192 chars on page 1), 218 BOM rows, ERC {'warning': 445}: OK
+handover_exports: e pcb-e1-dock-e7: exits [0, 0, 0, 0, 0, 0, 0], netlist parity PARITY_AFTER_NOISE, paged pdf 4 pages (2104 chars on page 1), 174 BOM rows, ERC {'warning': 367}: OK
+exports exit 0

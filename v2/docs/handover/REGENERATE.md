@@ -11,17 +11,25 @@ committed files are what their generators write; it says nothing about whether t
 passing fixture or a PASS from a checking tool is not a circuit review (the owner's prompt of 27 September 2026,
 section 2). The layer status is `LAYER-STATUS.md`'s statement, not this page's.
 
-**How it was verified.** Every command in a grey block of sections 2 to 7 (the ZIP route) was run exactly as written,
-as one script cut from this page, between 04:50 and 05:04 UTC on 27 September 2026, on a rented Ubuntu 24.04 host
-with 64 cores and KiCad 9.0.9, from a fresh extraction of a build of `H1` at commit `0778e1ab` of the handover branch.
-That build's design files, tools and exports are byte for byte those of the H1 source commit named in `SOURCE.txt`:
-the commits between them change only the four handover pages and this page. The exports and the six-board
-regeneration had also been run once before, on a clean `git archive` of `99cde56b` (the last design change), with
-the same results. A content hash or a count quoted below is what those runs printed; the RESULT classes (PARITY,
+**How it was verified (H2).** Every command in a grey block of sections 2 to 7 (the ZIP route) and of section 1a was
+run as written (with `REF` set as section 1a says), with the snapshot's name H2, between 15:27 and 15:45 UTC on 27 September 2026, on a rented
+Ubuntu 24.04 host with 64 cores and KiCad 9.0.9, from fresh extractions of a build of `H2` at commit `c5d09c78` of
+branch `fnd/h2`: sections 2 to 7 as one script, section 1a and section 6's second block each in its own extraction
+(the scripts and their logs are filed in `v2/docs/records/h2/box/`). That build's design files, tools and exports are byte for byte those of
+the H2 source commit named in `SOURCE.txt`: the commits between them change only the handover pages (this one
+among them), the wording of one exclusion reason in `pack.yaml` (the `routed/` rule) and the records they file
+(`v2/docs/records/h2/box/` and the rows of `v2/docs/records/README.md`). The exports of boards A, B,
+D and E and the six-board regeneration had also been run once before, each on a clean `git archive` of `763bccdf`,
+with the same results. A content hash or a count quoted below is what those runs printed; the RESULT classes (PARITY,
 PARITY_AFTER_NOISE, the causes of the failures) are what to expect on another day. Commands outside the ZIP route
-(section 7's repository route, sections 8 and 9) say how far they were re-run.
+(section 7's repository route, sections 8 and 9) say how far they were re-run. **H1's run** (04:50 to 05:04 UTC the
+same day, from a build of `H1` at `0778e1ab`) is the source of the figures this page marks as H1's.
 
-**Edition H1.1.** The commands below name `H1`; for H1.1 read `H1.1` wherever a command names the ZIP or its folder.
+**Edition H2.** The commands below name `H2`; for an earlier snapshot read its name (`H1`, `H1.1`) wherever a command
+names the ZIP or its folder, and that snapshot's own copy of this page for its expected values. H2 carries new exports
+of boards A, B, D and E, the re-take driver of section 9 and its first full run (`8ea7867e`), and references the five
+superseded candidate patches instead of bundling them. The repository holds it as `v2/release/handover/H2.zip` with
+`H2.zip.sha256` and `H2.MANIFEST.tsv` beside it. **Edition H1.1.**
 H1.1's design files, tools and exports are H1's; it adds the candidate patches, the glossary, four filed records,
 the case scripts' reference outputs and the packer's new `SOURCE.txt` lines. Section 1a is new in H1.1. Section 9
 stated the re-take in words only in H1.1; from the commit after H1.1 on it carries its driver,
@@ -36,7 +44,8 @@ packer's `--zip-only` mode), not as an unzipped folder; `unzip` creates the `H1.
 build commit on its `commit:` line and carries a commit timeline: every commit id the handover pages name, with its
 date and subject, whether it is in the snapshot's history and whether it was on the public repository when the
 snapshot was built. The H1 snapshot was filed by commit `a8652172` (its message, with the suite results of that day,
-is filed as `v2/docs/records/handover/a8652172-commit-message.txt`).
+is filed as `v2/docs/records/handover/a8652172-commit-message.txt`); H1.1 by `84d0a527`; H2 by the commit after its
+source commit on branch `fnd/h2`, whose message names the source commit, the ZIP's sha256 and the verification.
 
 | Tool | Version used | Needed for |
 |---|---|---|
@@ -57,11 +66,15 @@ under `versions`.
 ## 1a. Restore referenced maker documents (for the checks that need them)
 
 A snapshot bundles the maker documents only where a rule of `pack.yaml` says so; the rest are listed in
-`REFERENCED-SOURCES.tsv` with their git blob sha (column 2) and sha256. Three checks need some of them: the
-requirements validator and `rules_render.py --requirements --check` need `v2/vendor/st/`'s documents (CON-017), and
-the battery packet's `check_manifest.py` needs the 18 vendor documents its manifest cites. From the snapshot's root,
-with network access (`REF` is the build commit when the timeline in `SOURCE.txt` marks it public, else the newest
-public commit of the timeline; the blob check proves the bytes whichever commit served them):
+`REFERENCED-SOURCES.tsv` with their git blob sha (column 2) and sha256. Since H2 the five superseded candidate patches
+of H1.1 (`v2/docs/handover/candidates/*.patch`) are listed there too. Four checks need referenced files: the
+requirements validator and `rules_render.py --requirements --check` need the documents the registry cites that the
+snapshot does not bundle (in H2 eleven: `v2/vendor/st/`'s three for CON-017 and eight cited since H1, among them
+TI's BQ4050 technical reference manual for REQ-042 and REQ-077); the battery packet's `check_manifest.py` needs the
+vendor documents its manifest cites; and the energy chain of section 6 needs Mill-Max's catalogue page 28. From the
+snapshot's root, with network access (`REF` is the build commit when the timeline in `SOURCE.txt` marks it public,
+else the newest public commit of the timeline; the blob check proves the bytes whichever commit served them; the H2
+run used `REF=62f26a44`, the newest public commit its timeline listed):
 
 ```
 REF=$(sed -n 's/^commit: //p' SOURCE.txt)
@@ -73,38 +86,42 @@ fetch() { for p in "$@"; do
   got=$( (printf 'blob %s\0' "$(stat -c%s "$p")"; cat "$p") | sha1sum | cut -d' ' -f1)
   [ "$got" = "$b" ] && echo "OK $p" || echo "DIFFERS $p"
 done; }
-fetch $(awk -F'\t' 'NR>1 && $1 ~ /^v2\/vendor\/st\//{print $1}' REFERENCED-SOURCES.tsv)
+fetch $(cd v2/ecad && python3 tools/rules_lib.py requirements 2>&1 | awk '/^ERROR/' | grep -o 'v2/vendor/[^ ,]*' | sort -u)
 fetch $(python3 v2/docs/review-packets/battery/evidence/check_manifest.py | awk '$1=="MISSING"{print $2}')
+fetch v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf
 python3 v2/docs/review-packets/battery/evidence/check_manifest.py
 (cd v2/ecad && python3 tools/rules_lib.py requirements)
 python3 v2/ecad/tools/rules_render.py --requirements --check
 ```
 
-Every fetched line must read `OK`. Expected afterwards: `RELEASE CHECK PASS` from the packet check, `132 requirement
-record(s), 0 error(s)` (the 16 warnings stay: closed-by-commit checks and the gitignored readings, section 7) and
-`REQUIREMENTS-TRACE.md is current`. The usability check of H1 restored the three ST documents this way (each sha256
-matched) and read exactly that from the validator and the renderer; the packet route was not run as one script. The
-eight ST files are about 83 MB (RM0433 alone 40.7 MB); fetch only what a check needs. A restored file makes the
-snapshot folder differ from its manifest, so run `handover_pack.py verify` before restoring, or on a second copy.
+Every fetched line must read `OK`. Expected afterwards (the H2 run, 29 files fetched, every one `OK`): `checked 139
+rows of MANIFEST.md` and `RELEASE CHECK PASS` from the packet check, `144 requirement record(s), 0 error(s), 17
+warning(s)` from the validator (the warnings stay: closed-by-commit checks that need git history, section 7) and
+`v2/docs/REQUIREMENTS-TRACE.md is current`. A candidate patch is fetched the same way by its path, for example `fetch
+v2/docs/handover/candidates/r8b.patch`. The eight ST files are about 83 MB (RM0433 alone 40.7 MB); fetch only what a
+check needs. A restored file makes the snapshot folder differ from its manifest, so run `handover_pack.py verify`
+before restoring, or on a second copy.
 
 ## 2. Check the snapshot
 
-From the directory holding `H1.zip` and `H1.zip.sha256`:
+From the directory holding `H2.zip` and `H2.zip.sha256`:
 
 ```
 export PYTHONDONTWRITEBYTECODE=1
-sha256sum -c H1.zip.sha256
-unzip -q H1.zip
-cd H1
+sha256sum -c H2.zip.sha256
+unzip -q H2.zip
+cd H2
 HO="$PWD"
 python3 v2/ecad/tools/handover_pack.py verify .
 python3 v2/ecad/tools/sch_prov.py read v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net p
 ```
 
-Expected: `H1.zip: OK`; `handover_pack: verify .: OK` (every file's bytes and sha256 against `MANIFEST.tsv`,
+Expected: `H2.zip: OK`; `handover_pack: verify .: OK` (every file's bytes and sha256 against `MANIFEST.tsv`,
 and no file the manifest does not name); `sch_prov: pcb-p-pack.net was written by this tree's own generator
-(21640b801014107a)`, which says the netlist's recorded generator inputs (the generator, its imports, the board
-table's `gen_env` and 59 land files) are byte-identical to the ones in this snapshot. `PYTHONDONTWRITEBYTECODE=1`
+(ee62fdb195a9f217)`, which says the netlist's recorded generator inputs (the generator, its imports, the board
+table's `gen_env` and 60 land files) are byte-identical to the ones in this snapshot (H1 printed `21640b801014107a`
+over 59 land files: board B's round 8, `b76c18cb`, changed shared generator inputs, added a land to `meshsat.pretty`
+and re-stamped board P's sidecar with them). `PYTHONDONTWRITEBYTECODE=1`
 keeps Python's cache files out of the tree, so the second `verify` in section 3 lists only what regeneration wrote.
 
 ## 3. Regenerate board P and compare it with the committed design
@@ -139,7 +156,7 @@ Expected, line by line:
 - The generator prints `wrote pcb-p-pack.kicad_sch parts: 95 lib symbols: 21`, `lands: 21 footprint(s) judged, 0 pin(s)
   on a pad the land does not carry, 0 land(s) unreadable` and `layout: 2 A3 pages`.
 - `build_sch.sh` prints `ERC: violations (...; erc_gate.py decides)`, `netlist: out/pcb-p-pack.net`, the provenance line
-  `sch_prov: pcb-p-pack.net written by generator 21640b801014107a (...)`, `sch_pages: 2 x 1 cells, 2 pages kept of 2
+  `sch_prov: pcb-p-pack.net written by generator ee62fdb195a9f217 (...)`, `sch_pages: 2 x 1 cells, 2 pages kept of 2
   tiles` and `bom: out/pcb-p-pack-bom.csv`.
 - `erc_gate`: `no blocking error (123 violations, 0 error(s) allow-listed with a reason, warnings 123)`, 106 of them
   `lib_symbol_issues` and 17 `unconnected_wire_endpoint`, and `verdict: erc_gate PASS of 123`. It writes its verdict
@@ -176,20 +193,23 @@ schematic's label. It writes into the tree, so run it on a fresh extraction:
 ```
 cd "$HO/.."
 mkdir -p rg
-unzip -q H1.zip -d rg
-cd rg/H1
+unzip -q H2.zip -d rg
+cd rg/H2
 python3 v2/ecad/tools/handover_exports.py regen --out "$HO/../rg-out" --letters a,b,c,d,e,p
 ```
 
-Expected, per board (`rg-out/<letter>/regen.json` holds each command, its exit status and every comparison):
+Expected, per board (`rg-out/<letter>/regen.json` holds each command, its exit status and every comparison). In the
+H2 run all six printed `PARITY` (A, B, D and E, whose schematics were written on 27 September 2026, with the schematic
+at PARITY; C and P, written on 26 September, at PARITY_AFTER_NOISE); board D's netlist content hash is H1's because
+set 5 changed only its intent declarations and noise lines:
 
 | Board | Phase directory | PHASE used (the committed label) | Board table `phase` | Footprint generators | Netlist content hash | Result |
 |---|---|---|---|---|---|---|
-| A | `pcb-a-power-a23` | A65 | A32 | `gen_footprints_idc.py` | `66797255f4591a23` | schematic PARITY on the commit's day or PARITY_AFTER_NOISE later (the date), netlist, intent and ERC PARITY_AFTER_NOISE, BOM PARITY, no land changed: the driver prints `PARITY` |
-| B | `pcb-b-compute-b19` | B21 | B21 | `gen_footprints_b16.py`, `gen_footprints_idc.py` | `70be33b07a339d6e` | the same |
+| A | `pcb-a-power-a23` | A65 | A32 | `gen_footprints_idc.py` | `2c5c1d5a388cc95f` (H1: `66797255f4591a23`) | schematic PARITY on the commit's day or PARITY_AFTER_NOISE later (the date), netlist, intent and ERC PARITY_AFTER_NOISE, BOM PARITY, no land changed: the driver prints `PARITY` |
+| B | `pcb-b-compute-b19` | B21 | B21 | `gen_footprints_b16.py`, `gen_footprints_idc.py` | `39d83d25efcd75a6` (H1: `70be33b07a339d6e`) | the same |
 | C | `pcb-c-display-c8` | C24 | C24 | none | `96c2678f4a3303b8` | the same |
 | D | `pcb-d-aprs-d9` | D37P | D12 | `gen_footprints_b16.py`, `gen_footprints_idc.py` | `ecc07f382c735835` | the same |
-| E1 | `pcb-e1-dock-e7` | E42P | E17 | `gen_footprints_e.py` | `256cc3f96d41dcab` | the same |
+| E1 | `pcb-e1-dock-e7` | E42P | E17 | `gen_footprints_e.py` | `b8d237f0b8d759f5` (H1: `256cc3f96d41dcab`) | the same |
 | P | `pcb-p-pack-p2` | P4 | P4 | `gen_footprints_idc.py` | `efe60479293f0004` | the same |
 
 Two things a recipient should know. **The label**: for boards A, D and E1 the committed schematic carries a later
@@ -208,29 +228,34 @@ made by:
 ```
 cd "$HO/.."
 mkdir -p ex
-unzip -q H1.zip -d ex
-cd ex/H1
+unzip -q H2.zip -d ex
+cd ex/H2
 python3 v2/ecad/tools/handover_exports.py exports --out "$HO/../ex-out" --commit "$(sed -n 's/^commit: //p' SOURCE.txt)"
 for b in pcb-a-power-a23 pcb-b-compute-b19 pcb-c-display-c8 pcb-d-aprs-d9 pcb-e1-dock-e7 pcb-p-pack-p2; do for f in v2/release/handover/_generated/$b/NOT_FOR_FAB-*.csv; do cmp "$f" "$HO/../ex-out/$b/$(basename "$f")" && echo "same: $b/$(basename "$f")"; done; done
 ```
 
-Expected: one line per board ending `: OK`, netlist parity `PARITY_AFTER_NOISE` for all six, and these counts:
+Expected: one line per board ending `: OK`, netlist parity `PARITY_AFTER_NOISE` for all six, and these counts (H2's;
+H1's were A 14, 566, 1528; B 38, 1015, 5 errors and 2393 warnings; E1 4, 170, 365; C, D and P unchanged):
 
 | Board | Paged PDF pages | BOM rows (per reference) | ERC (kicad-cli, all severities) |
 |---|---|---|---|
-| A | 14 | 566 | 1528 warnings |
-| B | 38 | 1015 | 5 errors, 2393 warnings; the 5 errors are the three PWR_FLAG pin-to-pin reports and the two SIM VCC pins that `pcb-b-compute-b19/erc-allow.txt` explains line by line (`erc_gate.py` decides) |
+| A | 16 | 586 | 1522 warnings |
+| B | 43 | 1179 | 7 errors, 2872 warnings; the 7 errors are the three PWR_FLAG pin-to-pin reports, the two SIM VCC pins and the two QOD-to-VOUT ties of U21 and U22 (round 8, the maker's own configuration) that `pcb-b-compute-b19/erc-allow.txt` explains line by line (`erc_gate.py` decides) |
 | C | 5 | 167 | 328 warnings |
 | D | 7 | 218 | 445 warnings |
-| E1 | 4 | 170 | 365 warnings |
+| E1 | 4 | 174 | 367 warnings |
 | P | 2 | 69 | 123 warnings |
 
-The loop prints twelve `same:` lines: both BOMs of every board re-export byte for byte. A re-exported PDF differs from
+The committed exports of A, B, D and E were made at `763bccdf` (their schematics changed in board B's round 8 and
+set 5); C and P keep the exports made at `99cde56b`, whose `provenance.json` names the schematic sha256 this snapshot
+still holds (`v2/docs/records/h2/handover_counts.py` checks it).
+
+The loop prints twelve `same:` lines: both BOMs of every board re-export byte for byte (in the H1 and H2 runs alike). A re-exported PDF differs from
 the committed one in its creation date; its page count and page-1 text are in `provenance.json`. **Read the BOMs for what they are**: the generators write
 Reference, Value, Footprint, Description, Datasheet and, where one is chosen, an LCSC order code; they write no
-manufacturer part number field. Of the 2205 per-reference rows of the six boards, 1497 carry no LCSC code, 1322 of
-them resistors, capacitors and inductors named by value and land (at `e3aedb25` it was 1509 of 2157); `lcsc_fill.py` assigns codes to those at the JLC
-BOM stage. The part identities that are decided are in `v2/vendor/SOURCES.yaml`.
+manufacturer part number field. Of the 2393 per-reference rows of the six boards in H2, 1630 carry no LCSC code, 1446 of
+them resistors, capacitors and inductors named by value and land (H1: 1497 of 2205, 1322; at `e3aedb25`: 1509 of
+2157); `lcsc_fill.py` assigns codes to those at the JLC BOM stage. The part identities that are decided are in `v2/vendor/SOURCES.yaml`.
 
 ## 6. The representative calculation: the stored-energy chain
 
@@ -245,16 +270,35 @@ VERDICT_DIR="$HO/../verdicts" python3 energy_chain.py --ecad ..
 echo "energy_chain exit $?"
 ```
 
-Expected: `energy_chain: 12 stage(s), 98 check(s)`, fifteen `note` lines (for example `PACK_CELLS: F1 carries 10.0 A
-of its 25.0 A rating (40 percent), inside the 65 percent ECSS-Q-ST-30-11C Rev.2 Table 6-17 sets for a fuse at or below
-85 C`, `F1 melts in about 4.3 ms at 480 A (I2t 1000 A2s)`, and for `SHORE_INPUT` that the fault current available is
-not established, owner decision 34), one finding `FAIL (coordination, rule PWR-003) B_PANEL_5V: the protection is
-rated 2.0 A and the conductor only 1.2 A, so the conductor is the fuse`, and `verdict: energy_chain PASS of 98
-{"checks": 98, "citations_unjudged": 0, "coordination_findings": 1, "fail": 0, "selection_findings": 0, "stages": 12}`,
-exit 0. The chain end to end (BAT-002) passes; the coordination finding is board B's: `../verdicts/energy_chain_b.verdict.json`
-reads FAIL (PWR-003, 1 of 3 stages), and `energy_chain_a`, `_e`, `_e5` and `_p` read PASS. `citations_unjudged: 0`
-holds because this snapshot bundles the eight maker documents the chain cites (`pack.yaml`, layer 9 rule); without
-them the tool reports each citation as missing.
+Expected from the ZIP alone (H2): `energy_chain: 12 stage(s), 98 check(s)`, fifteen `note` lines (for example
+`PACK_CELLS: F1 carries 10.0 A of its 25.0 A rating (40 percent), inside the 65 percent ECSS-Q-ST-30-11C Rev.2 Table
+6-17 sets for a fuse at or below 85 C`, `F1 melts in about 4.3 ms at 480 A (I2t 1000 A2s)`, and for `SHORE_INPUT`
+that the fault current available is not established, owner decision 34), then one finding, `FAIL DOCK_BLOCK: the
+conductor names v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf, which is not in this tree`, and
+`verdict: energy_chain FAIL of 98 {"checks": 98, "citations_unjudged": 0, "coordination_findings": 0, "fail": 1, ...}`,
+exit 1; `../verdicts/energy_chain_a.verdict.json` and `energy_chain_e5` read FAIL on that citation, `_b`, `_e` and `_p`
+PASS. The cited page (Mill-Max's catalogue page 28, 3.8 MB) is the basis of the dock's VIN_RAW power pins since set 5
+(`b7f96784`, EQ-16) and is referenced, not bundled, because the ZIP has no room for it under `pack.yaml`'s cap; the
+eight documents `pack.yaml`'s layer 9 rule bundles are every other citation of the chain. Restore it with section
+1a's `fetch` function (defined there; `REF` a public commit of the timeline) and run the chain again:
+
+```
+cd "$HO"
+fetch v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf
+cd "$HO/v2/ecad/tools"
+VERDICT_DIR="$HO/../verdicts" python3 energy_chain.py --ecad ..
+echo "energy_chain exit $?"
+```
+
+Expected then: `OK v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf`, the same fifteen notes, no
+finding, and `verdict: energy_chain PASS of 98 {"checks": 98, "citations_unjudged": 0, "coordination_findings": 0,
+"fail": 0, "selection_findings": 0, "stages": 12}`, exit 0; `energy_chain_a`, `_b`, `_e`, `_e5` and `_p` all read
+PASS. Both runs were made in the H2 run (the second in its own extraction, the file fetched from `62f26a44`). H1's
+run read PASS of 98 from the ZIP alone with one coordination finding on board B, `B_PANEL_5V` (2.0 A protection on a
+1.2 A conductor); board B's round 8 (`b76c18cb`) closed it on the part (its F1 is an MF-MSMF110, 1.1 A hold, under
+the 1.23 A track: `pcb_energy_chain.yaml`, `known_findings`), and the chain end to end (BAT-002) passes. A restored
+file makes the extraction differ from its manifest, so run section 3's `verify` before restoring, or on a second
+extraction.
 
 ## 7. The test suite
 
@@ -264,36 +308,39 @@ board-file fixtures skip where `pcbnew` is not importable). From a fresh extract
 ```
 cd "$HO/.."
 mkdir -p suite
-unzip -q H1.zip -d suite
-cd suite/H1/v2/ecad/tools/tests
+unzip -q H2.zip -d suite
+cd suite/H2/v2/ecad/tools/tests
 python3 run.py > "$HO/../suite.log" 2>&1
 echo "suite exit $?"
 tail -n 1 "$HO/../suite.log"
 ```
 
-Expected, as run from the H1 extraction: `suite exit 1` and `tests: 1913 passed, 17 failed, 22 skipped` (a skip is
-not a pass: the 22 name what they could not run). **Every one of the 17 failures is caused by what the snapshot leaves
-out, none by a design finding**, and each names its missing input (the table below). **H1.1** adds two tests to
-`test_handover_pack`. Each builds its own scratch repository with the `git` binary, as eleven of H1's twelve packer
-tests do, so from an extraction they need `git` on the path and nothing else. The whole suite was not re-run
-for H1.1; the expectation is two more passes (`1915 passed, 17 failed, 22 skipped`) with the same 17 failures. The
-packer's own tests were run from a fresh extraction of the H1.1 ZIP (`python3 run.py test_handover_pack`): 13 passed
-and 1 skipped, the skip being the test that applies `pack.yaml` to a git checkout's HEAD, which an extraction is not.
+Expected, as run from the H2 extraction (15:35 to 15:42 UTC on the KiCad 9.0.9 host, where `pcbnew` imports):
+`suite exit 1` and `tests: 1956 passed, 20 failed, 23 skipped` (a skip is not a pass: the 23 name what they could not
+run, most of them the gitignored readings, the deliverable folders and the git checkout a snapshot does not carry).
+**Every one of the 20 failures is caused by what the snapshot leaves out, none by a design finding**, and each names
+its missing input (the table below). The packer's own tests, `python3 run.py test_handover_pack`, read 14 passed and
+1 skipped, the skip being the test that applies `pack.yaml` to a git checkout's HEAD, which an extraction is not; each
+of the others builds its own scratch repository with the `git` binary, so from an extraction they need `git` on the
+path and nothing else. H1's run read `1913 passed, 17 failed, 22 skipped`; H2 adds tests (the case geometry's, the
+re-take driver's, the validator's SC- id check among them) and the three failure causes marked new below.
 
 | Failures | Tests | The input the snapshot does not carry |
 |---|---|---|
-| 11 | `test_requirements` (4: the registry validates, the trace page is generated, `--check`, the decision index), `test_layout_entry_stages`, `test_interfaces`, `test_emc_sheet`, `test_rails_census` (3), `test_evidence_class` (every declared writer's fixed input exists) | maker documents cited and referenced, not bundled. The seven the requirements registry cited at `e3aedb25` are bundled (`pack.yaml`, layer 3 rule), but since the layer 6 closer's merge CON-017 also binds ST's `st/st-rm0433-rev8.pdf` (40.7 MB), `st/st-stm32h743xi-datasheet-rev11.pdf` and `st/st-es0392-rev15.pdf`, about 21 MB compressed together, which the 50 MB cap of `pack.yaml` leaves out; so the registry reports 4 errors, all on CON-017. `pcb_interfaces.yaml` cites `quectel/quectel-rm520n-gl-hardware-design-v1.0.pdf`; the EMC sheet cites `ti/lm5176-datasheet.pdf` and others; the rails census reads `ti/ti-tpa6132a2.pdf` and `power/tps2596.pdf`; `intent_checks.py` declares `battery/ti-bq77207.pdf`. A tree that holds part of `v2/vendor/` is judged as holding the library, so an absent citation is a failure there, not a skip |
+| 11 | `test_requirements` (4: the registry validates, the trace page is generated, `--check`, the decision index), `test_layout_entry_stages`, `test_interfaces`, `test_emc_sheet`, `test_rails_census` (3), `test_evidence_class` (every declared writer's fixed input exists) | maker documents cited and referenced, not bundled. The seven the requirements registry cited at `e3aedb25` are bundled (`pack.yaml`, layer 3 rule); CON-017 binds ST's `st/st-rm0433-rev8.pdf` (40.7 MB), `st/st-stm32h743xi-datasheet-rev11.pdf` and `st/st-es0392-rev15.pdf`, about 21 MB compressed together, and since H1 eight more documents are cited (section 1a), all left out under the cap of `pack.yaml`; so the registry reports 13 errors. `pcb_interfaces.yaml` cites `quectel/quectel-rm520n-gl-hardware-design-v1.0.pdf`; the EMC sheet cites `ti/lm5176-datasheet.pdf` and others; the rails census reads `ti/ti-tpa6132a2.pdf` and `power/tps2596.pdf`; `intent_checks.py` declares `battery/ti-bq77207.pdf`. A tree that holds part of `v2/vendor/` is judged as holding the library, so an absent citation is a failure there, not a skip |
+| 1 (new) | `test_energy_chain.t_the_committed_chain_fails_only_where_this_tree_says_it_does` | Mill-Max's catalogue page 28, which the chain's DOCK_BLOCK stage cites since set 5 (section 6) |
+| 1 (new) | `test_case_geometry.t_a_makers_maximum_is_read_for_its_part` | ST's STM32H753 data sheet (DS12117), whose LQFP100 table gives the height maxima of board B's supervisors U41 and U61 |
+| 1 (new) | `test_case_geometry.t_release_folder_is_immutable` | the case release's STL files, which `pack.yaml` leaves out as tessellations of the STEP beside them while the release's `MANIFEST.sha256` names them |
 | 3 | `test_block_contract` | board A's board file `pcb-a-power-a23/pcb-a-power.kicad_pcb`, excluded as a stale layout: board E5's pin map is compared with it, so from the snapshot its contract reads INCONCLUSIVE |
 | 2 | `test_doc_provenance.t_the_tree_today_is_reported_rather_than_assumed`, `test_order_readiness` | the historical order folders under `v2/release/revA/order/`, excluded (all but `JLC-CERTIFIED.tsv`, which is bundled and current) |
 | 1 | `test_netlist_provenance` | the git index: it lists committed netlists with git, and an extraction has no `.git` |
 
 The requirements validator on its own, from the extraction (`cd v2/ecad; python3 tools/rules_lib.py requirements`),
-reads `132 requirement record(s), 4 error(s), 16 warning(s)`: the four errors are CON-017's ST documents, fifteen
-warnings are closed items whose closing commits git cannot look up in an extraction, and one says `out/rule-audit` is
-not in the tree (the readings are gitignored). Copying `v2/vendor/` from the repository at the snapshot's commit into
-the extraction (every file's sha256 is in `REFERENCED-SOURCES.tsv`) supplies every cited document; that was run for
-the `e3aedb25` design (its seven such failures then passed) and not repeated for H1. The route below, from the
-repository itself, clears all but the git one.
+reads `144 requirement record(s), 13 error(s), 17 warning(s)`: every error names a maker document the snapshot
+references (CON-017's three ST documents in four errors, and eight documents cited since H1 in nine), and the warnings
+are closed items whose closing commits git cannot look up in an extraction, beside a note that `out/rule-audit` is
+not in the tree (the readings are gitignored). Section 1a fetches the eleven documents and the validator then reads 0
+errors. The route below, from the repository itself, clears every failure but the git one.
 
 **From the repository at the snapshot's commit** (where the maker documents, the earlier layouts and the order sets
 are present), on a machine holding the repository and then on the KiCad host, with `<commit>` the `commit:` line of
@@ -307,20 +354,21 @@ python3 run.py > suite.log 2>&1
 tail -n 1 suite.log
 ```
 
-Expected, as run on `e3aedb25` with the handover files unpacked over it (this route was not re-run for H1):
+Expected, as run on `e3aedb25` with the handover files unpacked over it (this route was not re-run for H1 or H2):
 `tests: 1666 passed, 1 failed, 17 skipped`, the one failure `test_netlist_provenance` (it lists committed netlists
-through the git index, and an archive extraction has none). H1 adds tests (the packer's among them), so its counts
-are higher; the result of the full suite in a git worktree of the repository at the H1 branch is recorded in the
-message of the commit that files the H1 snapshot, `a8652172` (1889 passed, 0 failed, 63 skipped, every skip a missing
-`pcbnew` or `kicad-cli`), filed as `v2/docs/records/handover/a8652172-commit-message.txt`.
+through the git index, and an archive extraction has none). H1 and H2 add tests, so their counts are higher. The
+result of the full suite in a git worktree of the repository at each snapshot's filing commit is recorded in that
+commit's message: H1's `a8652172` (1889 passed, 0 failed, 63 skipped, every skip a missing `pcbnew` or `kicad-cli`,
+filed as `v2/docs/records/handover/a8652172-commit-message.txt`); H2's is the commit that files `H2.zip`, run once on
+the runner, which has no KiCad.
 
 **In a git checkout two further conditions hold.**
 `test_netlist_provenance` reads the index; and `pcb_requirements.yaml` names, for each closed item, the commit that
 closed it, which the validator looks up in the repository's history. A scratch repository holding the same files as
 a single commit, with no history, read `1666 passed, 5 failed, 13 skipped`: the five are the registry refusing fifteen
 closed items whose commits (`458b2873`, `93138ac1`, `9a151c78`, `3a1f6576`, `4ec785d8`, `faf8c981`, `68bc9e8f`) it
-could not find (at `e3aedb25`; H1 adds S-43, closed on `dd39fb15`). All are ancestors of the H1 source commit, so a
-full clone has them; a shallow clone or
+could not find (at `e3aedb25`; H1 adds S-43, closed on `dd39fb15`, and H2 S-77, closed on `cecfd0f1`). All are
+ancestors of the snapshot's source commit, so a full clone has them; a shallow clone or
 a repository re-created from the files does not.
 
 ## 8. Build and check a snapshot
@@ -342,13 +390,16 @@ builds of one commit on one host write the same MANIFEST.tsv and the same ZIP by
 `tests/test_handover_pack.py`); on another host the ZIP's compressed bytes and `SOURCE.txt`'s host lines can differ, so
 compare `MANIFEST.tsv` rows other than `SOURCE.txt`'s, not the ZIP's sha256. `SOURCE.txt`'s commit timeline marks a
 commit public when it is an ancestor of the building clone's `refs/remotes/origin/main` (`pack.yaml` `public`), so it
-says what that clone knew when it built, and "unknown" in a clone with no such ref.
+says what that clone knew when it built, and "unknown" in a clone with no such ref. `build` exits 3 when the ZIP is
+over `pack.yaml`'s `max_zip_bytes` (52,428,800) and still writes it so it can be read: a trial build of `763bccdf` read
+54,938,457 bytes, so H2 moved the five superseded candidate patches from bundled to referenced (the rule and its
+reason are in `pack.yaml`), and a build at `c5d09c78` read 51,846,825 bytes.
 
 ## 9. Re-take the schematic-phase readings and re-render CURRENT-EVIDENCE
 
 `v2/docs/CURRENT-EVIDENCE.md` says, for every board, which schematic-phase rows a re-take alone would make current
 evidence (`rules_status.retake_projection`). `v2/ecad/tools/retake_schematic_phase.py` is the command that takes those
-re-takes. It was added after H1.1, so neither the H1 nor the H1.1 snapshot carries it (H1.1's section 9 stated the
+re-takes. It was added after H1.1, so neither the H1 nor the H1.1 snapshot carries it (H2 does) (H1.1's section 9 stated the
 procedure in words only); it is in the repository from the commit that adds this section on. It enumerates from the
 registries the pages already use, never from a hand list: every applicable rule verified at SCHEMATIC (`rules_lib.rules_for` and each rule's `verification_phase`) and every rule a
 hold names as a `rule_pass` layout-entry requirement; the coverage map `pcb_rules_coverage.yaml` for each rule's
@@ -398,10 +449,36 @@ section named `v2/ecad/out/`); `rules_status.py` reads both folders (`_project_d
 not for `rules_status.py`, which reads the tree only (and names a reading of a file under `/tmp` TEMP_INPUT). Three
 `rules_status.py` runs, because the first writes the audit's own reading `rules_complete`, which the next one reads.
 
-**How it was verified.** The figures below are the trial's, on `a8652172`. Main has moved since: board B's round 8
-netlist landed at `b76c18cb` and its netlist readings await this re-take (CURRENT-EVIDENCE at `cc3313f3`), so a
-re-take at a later commit gives other counts for B at least; the commit that re-takes this tree's evidence records its
-own. The commands above were run between 09:13 and 09:21 UTC on 27 September 2026 on the rented
+**The consolidated re-take (the evidence H2 carries).** Run as written above, in a clean clone of main at `391d8579`
+(set 5 integrated) on the rented KiCad 9.0.9 box, built from the box's own clone plus an incremental git bundle, HEAD
+checked and `git status` empty; committed as `8ea7867e` and installed on main at `5ca81eea`. `--plan`: 73 commands
+over 7 boards (A 12, B 12, C 9, D 10, E 12, E5 6, P 12), 76 rule-board pairs re-taken, 14 desk-review pairs listed, 83
+verdicts, 0 errors. `--run --in-place --routed --json` between 13:21:51 and 13:23:39 UTC on 27 September 2026: exit 0,
+108 s, no board refused, no step skipped, 83 readings written and 89 files copied to `routed/`. Then `rules_status.py`
+three times and `rules_render.py` twice; `rules_render.py --check` read 16 documents, 0 out of date. Results per board
+(a FAIL or an INCONCLUSIVE is the design's or its declarations' answer, on current evidence):
+
+| Board | Commands, rules re-taken, verdicts | Readings | Layout-entry reasons before, after | What holds layout entry after |
+|---|---|---|---|---|
+| A | 12, 13, 14 | 11 PASS; `inhibit_chain_a` FAIL (1 failed, 2 undecided of 9); `edge_length` INCONCLUSIVE (114 of 290 signal nets undecided); `clock_check` INCONCLUSIVE, read as not applicable (no crystal) | 18, 7 | SI-001 INCONCLUSIVE, RF-002 FAIL; decision 31's review; FEA-002, FEA-004, FEA-006, FEA-007 |
+| B | 12, 12, 13 | 11 PASS (`intent_rails` 59 checks, `energy_chain_b` 3 stages, `clock_check`); `inhibit_chain_b` FAIL (11 failed, 3 undecided of 20); `edge_length` INCONCLUSIVE (532 of 882) | 17, 7 | SI-001 INCONCLUSIVE, RF-002 FAIL; FEA-001, FEA-002, FEA-003, FEA-006, FEA-007 |
+| C | 9, 9, 10 | 7 PASS; `intent_rails` FAIL (5 of 7 checks; C_DVDD, EPD_VCC, LED_RAIL and LED_RAIL_SW declared by no rail; 11 nets undecided); `inhibit_chain_c` FAIL (1 of 6); `edge_length` INCONCLUSIVE (33 of 134) | 11, 5 | PWR-001 FAIL, SI-001 INCONCLUSIVE, RF-002 FAIL; FEA-002, FEA-006 |
+| D | 10, 10, 11 | 8 PASS; `intent_rails` INCONCLUSIVE (RLY_K undecided, 0 failed of 7); `inhibit_chain_d` FAIL (2 of 8); `edge_length` INCONCLUSIVE (27 of 135) | 16, 8 | PWR-001 and SI-001 INCONCLUSIVE, RF-002 FAIL; decision 31's review; FEA-002, FEA-004, FEA-006, FEA-007 |
+| E | 12, 13, 14 | 12 PASS (`inhibit_chain_e`, the first RF-002 verdict on E, among them); `intent_rails` INCONCLUSIVE (FAN1_SW and FAN2_SW undecided, 0 failed of 16); `edge_length` INCONCLUSIVE (37 of 82) | 17, 5 | PWR-001 and SI-001 INCONCLUSIVE; decision 31's review; FEA-006, FEA-007 |
+| P | 12, 13, 14 | 11 PASS (`inhibit_chain_p` among them); `intent_rails` FAIL (6 of 11; BAT_F, PBI, SEC_VDD, SW and VCC_F declared by no rail); `pack_protection` FAIL (1 of 45); `edge_length` INCONCLUSIVE (22 of 44) | 16, 6 | PWR-001 FAIL, SI-001 INCONCLUSIVE, BAT-001 FAIL; FEA-005, FEA-006, FEA-007 |
+| E5 | 6, 6, 7 | 7 PASS | 6, 2 | INT-001 PASS, still AWAITING_REVALIDATION (UNBOUND); FEA-007 |
+
+In total the layout-entry reasons went from 101 to 40 (the clean clone's "before" equalled the committed page's).
+After: 15 current readings that are not a PASS, 1 deciding verification (E5's INT-001), 3 decision 31's review on A, D
+and E (its TRN-001 requirement is met: TRN-001 PASS on current evidence on every board), 21 the layout-entry stages
+of FEA-001 to FEA-007. The row "a re-take alone" is empty. No board is ready for layout, before or after. The 278
+gitignored readings the run wrote are kept outside the tree as a tar with its sha256 and manifest; main's working
+checkout rendered the same layout-entry test, 81 current-candidate rows and 66 PASS on the current candidate
+(`5ca81eea`). The historical mixed-revision aggregate is not a readiness figure and is not repeated here.
+
+**The trial (how the driver was first verified).** The figures below are the trial's, on `a8652172`, before board B's
+round 8, set 4 and set 5, and before FEA-007 existed (it joined at `c351115d`); the consolidated re-take above is the
+current evidence. The commands above were run between 09:13 and 09:21 UTC on 27 September 2026 on the rented
 64-core Ubuntu 24.04 host with KiCad 9.0.9 and Python 3.12.3, in a clean clone of main at `a8652172` (the H1 commit;
 `git status` empty), built from that host's own clone of an earlier main plus an incremental git bundle, with the driver
 copied in as the only untracked file (its code as committed; the committed file differs only in its docstring, and it
@@ -427,7 +504,8 @@ declarations' answer, now on current evidence, not the driver's):
 
 In total the layout-entry reasons went from 95 to 37, and the page's row "a re-take alone" (63 at H1) is empty: 18
 reasons are current readings that are not a PASS (board streams), 3 are decision 31's review requirement on boards A,
-D and E, 15 are the layout-entry stages of feasibility blockers FEA-001 to FEA-006, and 1 is E5's INT-001. That is the
+D and E, 15 are the layout-entry stages of the feasibility blockers of that commit, FEA-001 to FEA-006 (FEA-007, the
+seventh, was added later; the re-take above counts FEA-001 to FEA-007), and 1 is E5's INT-001. That is the
 only schematic-phase reading of the set that a re-take leaves AWAITING_REVALIDATION: the coverage map reads
 `check_contracts`'s set verdict for it, which records every netlist it read and no board file of E5 (it has none to
 read), so it cannot bind; `block_contract.py` writes `check_contracts_e5` from E5's board file and board A's, and the
