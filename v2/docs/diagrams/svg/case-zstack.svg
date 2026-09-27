@@ -53,34 +53,34 @@ z
 " clip-path="url(#p700f39d33a)" style="fill: #ffe0b2"/>
    </g>
    <g id="patch_5">
-    <path d="M 298.679875 455.078543 
-L 861.019105 455.078543 
-L 861.019105 451.70872 
-L 298.679875 451.70872 
+    <path d="M 298.679875 457.395297 
+L 861.019105 457.395297 
+L 861.019105 454.025473 
+L 298.679875 454.025473 
 z
 " clip-path="url(#p700f39d33a)" style="fill: #a5d6a7; stroke: #263238; stroke-width: 0.8; stroke-linejoin: miter"/>
    </g>
    <g id="patch_6">
-    <path d="M 388.190801 442.441707 
-L 478.754797 442.441707 
-L 478.754797 439.071883 
-L 388.190801 439.071883 
+    <path d="M 388.190801 444.75846 
+L 478.754797 444.75846 
+L 478.754797 441.388637 
+L 388.190801 441.388637 
 z
 " clip-path="url(#p700f39d33a)" style="fill: #66bb6a; stroke: #263238; stroke-width: 0.8; stroke-linejoin: miter"/>
    </g>
    <g id="patch_7">
-    <path d="M 359.757919 423.486452 
-L 865.231384 423.486452 
-L 865.231384 420.116629 
-L 359.757919 420.116629 
+    <path d="M 359.757919 425.803205 
+L 865.231384 425.803205 
+L 865.231384 422.433382 
+L 359.757919 422.433382 
 z
 " clip-path="url(#p700f39d33a)" style="fill: #90caf9; stroke: #263238; stroke-width: 0.8; stroke-linejoin: miter"/>
    </g>
    <g id="patch_8">
-    <path d="M 612.494651 407.479792 
-L 823.108595 407.479792 
-L 823.108595 404.109969 
-L 612.494651 404.109969 
+    <path d="M 612.494651 409.796545 
+L 823.108595 409.796545 
+L 823.108595 406.426722 
+L 612.494651 406.426722 
 z
 " clip-path="url(#p700f39d33a)" style="fill: #ce93d8; stroke: #263238; stroke-width: 0.8; stroke-linejoin: miter"/>
    </g>
@@ -497,8 +497,8 @@ L -4 -0
     </g>
    </g>
    <g id="line2d_36">
-    <path d="M 215.276753 243.832758 
-L 1009.712549 243.832758 
+    <path d="M 215.276753 233.049324 
+L 1009.712549 233.049324 
 " clip-path="url(#p700f39d33a)" style="fill: none; stroke-dasharray: 1,1.65; stroke-dashoffset: 0; stroke: #9e9e9e"/>
    </g>
    <g id="line2d_37">
@@ -515,7 +515,7 @@ L 3 3
 " style="stroke: #9e9e9e"/>
     </defs>
     <g clip-path="url(#p700f39d33a)">
-     <use xlink:href="#mb7b35fa148" x="198.884578" y="272.055026" style="fill: #9e9e9e; stroke: #9e9e9e"/>
+     <use xlink:href="#mb7b35fa148" x="201.017481" y="333.13307" style="fill: #9e9e9e; stroke: #9e9e9e"/>
     </g>
    </g>
    <g id="line2d_39">
@@ -525,7 +525,7 @@ L 1068.20075 333.13307
    </g>
    <g id="line2d_40">
     <g clip-path="url(#p700f39d33a)">
-     <use xlink:href="#mb7b35fa148" x="1026.104725" y="272.055026" style="fill: #9e9e9e; stroke: #9e9e9e"/>
+     <use xlink:href="#mb7b35fa148" x="1023.971822" y="333.13307" style="fill: #9e9e9e; stroke: #9e9e9e"/>
     </g>
    </g>
    <g id="line2d_41">
@@ -579,16 +579,16 @@ L 1164.24 115.274006
     <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #e65100" x="1047.992342" y="134.192653" transform="rotate(-0 1047.992342 134.192653)">lid inside 154.44 (closed)</text>
    </g>
    <g id="text_21">
-    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="302.892154" y="450.023809" transform="rotate(-0 302.892154 450.023809)">E dock strip 1.1 to 2.7 (on VHB 1.1)</text>
+    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="302.892154" y="452.340562" transform="rotate(-0 302.892154 452.340562)">E dock strip 0.0 to 1.6 (on VHB 0.0)</text>
    </g>
    <g id="text_22">
-    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="392.40308" y="437.386972" transform="rotate(-0 392.40308 437.386972)">E5 7.1</text>
+    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="392.40308" y="439.703725" transform="rotate(-0 392.40308 439.703725)">E5 6.0</text>
    </g>
    <g id="text_23">
-    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="363.970198" y="418.431717" transform="rotate(-0 363.970198 418.431717)">A power 16.1 to 17.7 (blind-mate gap above E)</text>
+    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="363.970198" y="420.74847" transform="rotate(-0 363.970198 420.74847)">A power 15.0 to 16.6 (blind-mate gap above E)</text>
    </g>
    <g id="text_24">
-    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="616.70693" y="402.425057" transform="rotate(-0 616.70693 402.425057)">D 23.7</text>
+    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="616.70693" y="404.741811" transform="rotate(-0 616.70693 404.741811)">D 22.6</text>
    </g>
    <g id="text_25">
     <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="269.193923" y="349.139729" transform="rotate(-0 269.193923 349.139729)">B compute: underside 49.0, top 50.6</text>
@@ -636,14 +636,14 @@ L 736.863018 299.699579
     <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #b71c1c" x="743.075297" y="302.210996" transform="rotate(-0 743.075297 302.210996)">M1 6.26 nominal (floor 2.0; OPEN)</text>
    </g>
    <g id="text_35">
-    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; fill: #757575" transform="translate(1031.859314 241.703109)">panel1450.py face top 101.4</text>
-    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; fill: #757575" transform="translate(1031.859314 250.101468)">(as coded, superseded)</text>
+    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; fill: #757575" transform="translate(1031.859314 230.919675)">panel1450.py face top 106.5</text>
+    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; fill: #757575" transform="translate(1031.859314 239.318035)">(as coded, superseded)</text>
    </g>
    <g id="text_36">
     <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #1565c0" x="1072.413029" y="335.202601" transform="rotate(-0 1072.413029 335.202601)">C2 arrestor axis Z 59</text>
    </g>
    <g id="text_37">
-    <text style="font-size: 7px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #757575" x="1034.529283" y="266.789677" transform="rotate(-0 1034.529283 266.789677)">as coded Z 88</text>
+    <text style="font-size: 7px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #757575" x="1032.396379" y="327.867721" transform="rotate(-0 1032.396379 327.867721)">as coded Z 59</text>
    </g>
    <g id="text_38">
     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="617.76" y="109.274006" transform="rotate(-0 617.76 109.274006)">Case interior, Z stack (section along X, all Y projected): the chosen arrangement C1 on C6 (design drawing of an unbuilt prototype)</text>
@@ -1219,13 +1219,13 @@ L 360.275733 665.792203
    <text style="font-size: 8px; font-family: 'DejaVu Sans'" transform="translate(653.4 720.53925)">  above the ledge is not in frame_seat.py).</text>
   </g>
   <g id="text_73">
-   <text style="font-size: 7.5px; font-family: 'DejaVu Sans'" transform="translate(11.88 1008.017344)">Heights: boards E, E5, A and D from scene.py's render stack plus the 1.1 mm VHB 5952 lift (CASE-MARGINS.md C1 follow-on); board B, the pack top and the face from frame_seat.py, which CASE-MARGINS.md computes with.</text>
-   <text style="font-size: 7.5px; font-family: 'DejaVu Sans'" transform="translate(11.88 1016.624297)">Grey dotted and grey x: what panel1450.py still codes (face top 101.4, wall jacks at Z 88), superseded by C1, C6 and C2 until the CAD follows (S-27, ARCHITECTURE.md 7.1).</text>
+   <text style="font-size: 7.5px; font-family: 'DejaVu Sans'" transform="translate(11.88 1008.017344)">Heights: boards E, E5, A and D from scene.py's render stack plus the 0.0 mm VHB 5952 lift (CASE-MARGINS.md C1 follow-on); board B, the pack top and the face from frame_seat.py, which CASE-MARGINS.md computes with.</text>
+   <text style="font-size: 7.5px; font-family: 'DejaVu Sans'" transform="translate(11.88 1016.624297)">Grey dotted and grey x: what panel1450.py still codes (face top 106.5, wall jacks at Z 59), superseded by C1, C6 and C2 until the CAD follows (S-27, ARCHITECTURE.md 7.1).</text>
    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'" transform="translate(11.88 1025.022656)">M1 is CASE-MARGINS.md's tightest chain: its heatsink height, the Xenarc depth and the spacers have no maker source, so it is OPEN (+3.62 at the worst). The bar at X 140 is the face top's range on the legs.</text>
    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'" transform="translate(11.88 1033.421016)">NOT SHOWN: board parts other than the CM5 heatsinks and fans, the backer ring C, the e-paper, the PA module under the plate, cables, the RF entry plates' outline, the connector plate, the QMX tray in the lid, fasteners, tolerance stacks;</text>
    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'" transform="translate(11.88 1041.819375)">the frame's corner arcs, insert bores and gasket (the frame is drawn in section on the end walls' straight part, detail A), and the case's rim-zone step above the shoulder in the main view (drawn in detail A).</text>
    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'" transform="translate(11.88 1050.217734)">Board E5's height is the render's (Z 6.0 before the lift); gen_pcb_e5.py's docstring says its face is at 7.4 mm: the controlling figure is the blind-mate gap window 12.4 to 14.4 (ARCHITECTURE.md 7.1).</text>
-   <text style="font-size: 7.5px; font-family: 'DejaVu Sans'" transform="translate(11.88 1058.824687)">Sources by sha256/16: CASE-MARGINS.md 275a3083db30a7bf, frame_seat.py 93049a16bf89ed30, frame_seat.out 214e915b985518cb, panel1450.py df4959c6b4b81825, pcb_board_facts.yaml 4a0474ddac0b1404.</text>
+   <text style="font-size: 7.5px; font-family: 'DejaVu Sans'" transform="translate(11.88 1058.824687)">Sources by sha256/16: CASE-MARGINS.md 0fc449b72532ba7c, frame_seat.py 959b9326f614f72a, frame_seat.out a65c0792a7a08c08, panel1450.py 3bdb88df98260244, pcb_board_facts.yaml 07af4d0f2b166694.</text>
    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'" transform="translate(11.88 1067.431641)">Every other input is in v2/docs/diagrams/case-drawings.md. Generated by v2/docs/diagrams/tools/case_drawings.py. Design drawing of an unbuilt prototype: nothing has been built, fitted to a case or measured.</text>
   </g>
  </g>

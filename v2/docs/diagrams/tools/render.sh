@@ -16,6 +16,17 @@ if [ -n "${CHROME_BIN:-}" ]; then
 else
   printf '{"args":["--no-sandbox"]}\n' > "$TMP/puppeteer.json"
 fi
+# The PDF pass renders at the drawing's natural size: Mermaid's useMaxWidth (true by default) fits a diagram to the
+# 800 px page of mermaid-cli, which printed the wide diagrams at 1 to 2 pt text (review of 27 September 2026). The SVGs
+# keep useMaxWidth, so a browser scales them to its window; the layout is the same in both (useMaxWidth sets only the
+# SVG's width attribute).
+python3 - "$HERE/mermaid.json" "$TMP/mermaid-pdf.json" <<'PY'
+import json, sys
+c = json.load(open(sys.argv[1]))
+for k in ("flowchart", "state"):
+    c.setdefault(k, {})["useMaxWidth"] = False
+json.dump(c, open(sys.argv[2], "w"), indent=1)
+PY
 names=("$@")
 if [ ${#names[@]} -eq 0 ]; then for f in "$D"/src/*.mmd; do names+=("$(basename "$f" .mmd)"); done; fi
 mkdir -p "$D/svg" "$D/pdf"
@@ -23,7 +34,7 @@ for n in "${names[@]}"; do
   src="$D/src/$n.mmd"
   npx -y "@mermaid-js/mermaid-cli@$MMDC_VERSION" -q -p "$TMP/puppeteer.json" -c "$HERE/mermaid.json" -b white \
       -i "$src" -o "$D/svg/$n.svg"
-  npx -y "@mermaid-js/mermaid-cli@$MMDC_VERSION" -q -p "$TMP/puppeteer.json" -c "$HERE/mermaid.json" -b white -f \
+  npx -y "@mermaid-js/mermaid-cli@$MMDC_VERSION" -q -p "$TMP/puppeteer.json" -c "$TMP/mermaid-pdf.json" -b white -f \
       -i "$src" -o "$D/pdf/$n.pdf"
   echo "rendered $n"
 done
