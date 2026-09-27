@@ -70,6 +70,21 @@
 # CONOPS's status line, which records layer 2 BASELINED, and the three readings bound to CONOPS rebound on that header
 # change alone.
 #
+# THE TARGETED FIX OF LAYERS 1 AND 3 (27 September 2026, MESHSAT-1357, branch fnd/h2 from main 62f26a44; after two
+# attempts, a targeted fix and a narrow verification, the owner's execution prompt section 4). Layer 3's second release
+# check (v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2-2026-09-27.md) read this file at eb9f9030, sha256/16 fb819e939f2895da,
+# before that branch was rebased onto main 391d8579 and then 91894cd7. Set 5 had already taken SC-51 to SC-57 and EQ-25
+# on main, so the rebase renumbered the reviewed choices before they reached main: SC-51 to SC-56 of the reviewed
+# eb9f9030 are SC-58 to SC-63 here, in that order and with the same text (each records its draft name, SC-HF-01 to
+# SC-HF-06, under drafted_as), and its EQ-25 is ENGINEERING-QUESTIONS EQ-26; the review's records cite the old numbers,
+# as at eb9f9030, and no id main carried was renumbered. The rest of the difference from the reviewed file is set 5's
+# entries (SC-51 to SC-57, S-64 to S-76, S-47's title, the readings it re-read), the consolidated re-take's re-read
+# notes (8ea7867e to 91894cd7, CON-010 read FAIL there), the release finalizer's S-77 to S-79 with the needs pin
+# re-taken on CONOPS's status line and the three readings bound to CONOPS rebound on it (62f26a44), and this fix: the
+# three gen_sch_b.py pointers the review's minor n1 found wrong at the anchor (SC-58's :257 and :822, SC-63's :764-766)
+# now say they were read at e3aedb25, where they hold. No statement, acceptance, applicability, allocation, verification
+# or release effect of any record differs from the reviewed file. The commit after this one writes baseline_state.
+#
 # PART NAMES IN STATEMENTS. A part a statement names was ruled by the owner (the device set of 6 September 2026,
 # appendix 32.49 and 32.50; the LT8705A tracker, ruling F of 4 September 2026; the BQ4050 gauge and the second level,
 # D-15; the 4S3P Samsung INR18650-35E pack, D-06) unless the record's choices or notes name a session choice or a
@@ -1803,12 +1818,13 @@ session_choices:
       controller (GPIO10 to 12) and the three I/O supervisors (pins 30 to 32) only listen, and a slot is alive while its
       line toggles at 1 Hz (FW-B01, FW-B11, FW-C05).
     why: >-
-      The netlist settles it: HB_CM1 is the CM5's GPIO16 (gen_sch_b.py:257), joined through the level stage Q105
-      (gen_sch_b.py:822) to HB1, which the panel controller and every supervisor only read; ARCHITECTURE.md section 10.1
-      already says so, and PANEL.md section 3's supervisor-driven wording was corrected with the contract. Drafted as
-      SC-HF-01 in HW-FW-CONTRACT.md section 8 on 27 September 2026 by the layer 5 closer, and entered here by the second
-      release attempt of layers 1 to 3 the same day (layer 3's release check, R5), so that the registry is the one
-      record of it. Reverse by a generator change that moves the heartbeat's source.
+      The netlist settles it: HB_CM1 is the CM5's GPIO16 (gen_sch_b.py:257, as read at e3aedb25), joined through the
+      level stage Q105 (gen_sch_b.py:822, as read at e3aedb25) to HB1, which the panel controller and every supervisor
+      only read; ARCHITECTURE.md section 10.1 already says so, and PANEL.md section 3's supervisor-driven wording was
+      corrected with the contract. Drafted as SC-HF-01 in HW-FW-CONTRACT.md section 8 on 27 September 2026 by the layer
+      5 closer, and entered here by the second release attempt of layers 1 to 3 the same day (layer 3's release check,
+      R5), so that the registry is the one record of it. Reverse by a generator change that moves the heartbeat's
+      source.
     source: ["v2/docs/HW-FW-CONTRACT.md sections 2 and 8"]
   - id: SC-59
     authority: SESSION
@@ -1901,9 +1917,9 @@ session_choices:
       ARCHITECTURE.md section 12, ASSEMBLY.md section 4 and build step 9, and PANEL.md section 1. Its costs are finding
       HF-F06, owed on board D before its layout entry (S-61).
     why: >-
-      Every one of board B's twelve hub ports is allocated (gen_sch_b.py:764-766); J_USB3 exists for a lead made up at
-      build, needs no board B change (board B's floor plan is open under FB-FAB-6), matches the leads table's PH
-      housing, and a full-speed hub carries a HID touch (USB 2.0 section 7.1 Table 7-1,
+      Every one of board B's twelve hub ports is allocated (gen_sch_b.py:764-766, as read at e3aedb25); J_USB3 exists
+      for a lead made up at build, needs no board B change (board B's floor plan is open under FB-FAB-6), matches the
+      leads table's PH housing, and a full-speed hub carries a HID touch (USB 2.0 section 7.1 Table 7-1,
       v2/docs/records/hc5/usb-2-0-clauses-cited.md); appendix 32.52 makes the HAL's network share the kit's way to reach
       a device on another module. Drafted as SC-HF-06 in HW-FW-CONTRACT.md section 8 on 27 September 2026 by the layer 5
       closer, and entered here by the second release attempt of layers 1 to 3 the same day (layer 3's release check,
