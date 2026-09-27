@@ -1,0 +1,7 @@
+apply_rebinds: v2/ecad/tools/pcb_requirements.yaml sha256/16 6eb35694e300abff; 127 content binding(s) over 51 file(s)
+pages edited for H3 that the registry binds by content: none of the 12
+result: every binding is current and no rebind is needed; the registry is not touched
+self-test: a second run is REFUSED: REQ-900: already bound to v2/docs/PAGE.md@67ab4930318bba09: a second run is refused
+self-test: a cited section that changed is REFUSED: REQ-900: the cited section '## 1. Kept' CHANGED: the reading is re-read by its owner, not rebound
+self-test: an old sha the file does not have is REFUSED: REQ-900: v2/docs/PAGE.md at scratch is 31a84528516c5d05, not the 0000000000000000 the row names
+self-test: one rebind made on a scratch registry, its evidence entry starting with the path; three refusals

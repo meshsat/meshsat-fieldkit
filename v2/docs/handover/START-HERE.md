@@ -97,7 +97,7 @@ a qualified engineering review, and nothing has been built. `RELEASE-H3.md` give
 |---|---|---|
 | 1. Product definition | **COMPLETE** | `v2/docs/PRODUCT-BRIEF.md`, definition baselined at `6b2a9965`; re-stamped BASELINED at `a9f212c7` by an editorial restructure with no definition change (`v2/docs/reviews/DEFINITION-RESTRUCTURE-CHECK-2026-09-27.md`, CONTENT_PRESERVED) |
 | 2. Concept of operations | **COMPLETE** | `v2/docs/CONOPS.md`, definition baselined at `79963b3b`; re-stamped BASELINED at `a9f212c7` the same way |
-| 3. Requirements | **COMPLETE** since commit `24e7bf5a` | `v2/ecad/tools/pcb_requirements.yaml`, `baseline_state` BASELINED at `a54b793b`, written in `2c12be91`; the re-check `v2/docs/reviews/TARGETED-RECHECK-LAYER-3-2026-09-27.md` finds B-1 CLOSED at `2c12be91`, and S-51, S-78 and S-80 are closed. H3 is its versioned package (acceptance item 3.18, open item S-79) |
+| 3. Requirements | **COMPLETE** since commit `24e7bf5a` | `v2/ecad/tools/pcb_requirements.yaml`, `baseline_state` BASELINED at `a54b793b`, written in `2c12be91`; the re-check `v2/docs/reviews/TARGETED-RECHECK-LAYER-3-2026-09-27.md` finds B-1 CLOSED at `2c12be91`, and S-51, S-78 and S-80 are closed. H3 is its versioned package (acceptance item 3.18). The registry H3 carries still lists S-79, the item that waits for this package, as open: it is closed in the commit that files the snapshot, after the build |
 | 4 to 9 | IN_PROGRESS | as in H2: LAYER-STATUS, sections "Status at handover H3" and "Status at handover H2" |
 
 The three complete layers state what the kit is for, how it is used and what it must do. They do not claim that the
@@ -110,7 +110,7 @@ closed items, and the readings and notes of four records; no record's statement,
 or release effect), the interfaces registry (its `read_at` block) and INT-001's seven tracked readings, each PASS as
 before. `v2/docs/records/h3/design_difference.py` prints and asserts this, and needs a git checkout. The headline and
 the layout-entry reasons are H2's: 0 boards ready for layout, 40 reasons (`v2/docs/CURRENT-EVIDENCE.md`, the same file
-by sha256). The counts of H3 are printed by `v2/docs/records/h3/handover_counts.py`, which runs from the snapshot.
+by sha256). The counts of H3 are printed by `v2/docs/records/h3/handover_counts.py`, which reads only files the snapshot carries.
 
 **Three ways to use this handover.** They are separate, and only the first needs nothing but the ZIP.
 `REGENERATE.md` gives each route's prerequisites and expected results in full.
@@ -121,7 +121,8 @@ by sha256). The counts of H3 are printed by `v2/docs/records/h3/handover_counts.
 | B. Reproduce a calculation (the stored-energy chain) or a schematic (one board regenerated and compared) | Python 3 with PyYAML, and one maker document restored first (Mill-Max's catalogue page 28, fetched and checked by REGENERATE section 1a); for a schematic also KiCad 9.0.9 |
 | C. Run the test suite and re-take the readings | a git checkout with history, outside `/tmp`, and KiCad 9.0.9. **From the ZIP alone the suite is not expected to pass:** H2 read 1956 passed, 20 failed and 23 skipped from its ZIP, each failure caused by an input a snapshot leaves out |
 
-**Errata of H3: what it knowingly does not fix.** Each is a known defect of the pages, not of the design.
+**Errata of H3: what it knowingly does not fix.** Each is known and stated here; none changes the status of layers 1
+to 3.
 
 | # | What is not fixed | Effect on a reader | Where it will be fixed |
 |---|---|---|---|
@@ -130,7 +131,7 @@ by sha256). The counts of H3 are printed by `v2/docs/records/h3/handover_counts.
 | c | Re-taking one board in a repository built from the ZIP re-renders every other board's page as NO_EVIDENCE (REGENERATE section 9) | compare only the re-taken board's rows; the other boards' pages in that repository are not evidence | the readings bundled with a later snapshot, or a re-take of every board |
 | d | `ENGINEERING-QUESTIONS.md` was not re-read row by row for H3. Five rows found stale against later records were corrected in place, each marked **Corrected for H3**: EQ-01, EQ-04, EQ-10, EQ-16 and EQ-17 | another row's options or recommended action may predate its own attempts row; the attempts row is the newer, and the record it cites governs | the page's next edition |
 | e | The set 6 circuit candidate is not in H3 | H3 lists as open several items for which a drawn candidate exists outside it (next paragraph) | the snapshot after set 6 is promoted |
-| f | Board A's external-port declaration (`v2/ecad/tools/boards/a.json`) still names J_DOCK pins 1 and 2, which are ground since SC-55 moved VIN_RAW to J_VR1 to J_VR4 | TRN-001's PASS on board A does not judge VIN_RAW's entry (`v2/docs/layout-constraints/A.md` section 7); the clamp D2 is on VIN_RAW in the netlist | board A's stream: the declaration moved, TRN-001 re-taken |
+| f | Board A's external-port declaration (`v2/ecad/tools/boards/a.json`) still names J_DOCK pins 1 and 2, which are ground since SC-55 moved VIN_RAW to J_VR1 to J_VR4 | TRN-001's PASS on board A does not judge VIN_RAW's entry (read in `port_protect.py`'s code, not re-run; `v2/docs/layout-constraints/A.md` section 7); the clamp D2 is on VIN_RAW in the netlist | board A's stream: the declaration moved, TRN-001 re-taken |
 
 **What exists outside H3.** A circuit candidate called set 6 stands on branch `fnd/r8int6`, not promoted and not in
 this snapshot: remedies for EQ-25 on board C, HOT-R1 on boards A and E, the undeclared supplies and flyback diodes
@@ -138,7 +139,8 @@ behind PWR-001 on boards C, D, E and P, board P's protection table, the RockBLOC
 E5's INT-001. The integrating session reports its suite on the KiCad host at 2010 passed, 1 failed, 3 skipped, the
 failure a checker's false positive under repair; that record is not in H3. Five desk streams called wave 5a (branches
 `fnd/w5tray`, `fnd/w5stack`, `fnd/w5si`, `fnd/w5ident` and `fnd/w5i2c`: the lid tray, the stackups, the signal rules,
-the parts and the I2C work of layer 5) are being recovered from their transcripts as unchecked checkpoints. None of
+the parts and the I2C work of layer 5) are being recovered from their transcripts, as unchecked checkpoints on four
+of the five branches when this was written. None of
 this changes a statement of H3, and none of it is evidence until it is checked and promoted.
 
 ## 2. What is being built, and for whom

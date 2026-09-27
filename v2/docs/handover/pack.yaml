@@ -70,6 +70,13 @@ rules:
      role: "the candidates of H1.1 (SUPERSEDED since, each merged from a later state): base, sha256, layer and last review of each patch, and where each landed"}
   - {action: reference, glob: "v2/docs/handover/candidates/*.patch",
      reason: "a SUPERSEDED H1.1 candidate patch (UNACCEPTED work exported from an unpushed worktree, since merged from a later state: candidates/README.md names the commit); the lowest-value bundled file, moved out in H2 to keep the ZIP under max_zip_bytes; the repository holds it at the snapshot commit and its git blob sha here identifies it"}
+  # H3 (27 September 2026): no rule changes for H3. RELEASE-H3.md, RELEASE-H2.md, H2-RESPONSE.md and DEFINITION-STATUS.md
+  # travel under the rule below at their own paths, and v2/docs/records/h3/ under the records rule; the six root pages
+  # stay the six (START-HERE.md names the others). RELEASE-H3.md travels as the draft of the source commit: a snapshot
+  # cannot carry its own checksum, and the page's head says where to read the build's figures instead. The maker
+  # document the representative calculation needs (Mill-Max's catalogue page 28, 3.8 MB) stays referenced: H2 was
+  # 534,063 bytes under max_zip_bytes and v2/docs/records/h3/zip_size_estimate.py gives H3's margin before the build.
+  # Session choice under the owner's standing rule of 26 September 2026; reversed by a rule above this one.
   - {action: include, group: H0, glob: "v2/docs/handover/**",
      role: "handover page, pack specification or regeneration instructions"}
 
