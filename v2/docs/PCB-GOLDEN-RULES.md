@@ -504,57 +504,62 @@ ON THE BOARD declared, every rail a net OF THE BOARD) are SCH-002's question and
 the finish still blocks on. Board A's `tools/boards/a.json` still describes VMON as "a voltage monitor
 divider tap into an ADC" (LOW_SPEED_OR_DC); it is the eFuse U21's output feeding the Xenarc monitor's supply
 lead (ILM 1.2 A), and PWR-001 refuses it until the intent declares it as a rail with U21 as its source and
-J_MON as its load (board A's writer). SET 5, BOARD B (stream w3b, integrated in fnd/r8int5, 27 September
-2026): gen_sch_b.py declares every net named above for B (17 rails and 40 nodes, VBAT renamed VBAT_RTC by
-W3B-R1, and GNSS_RF_IN, undecided once the antenna feed was declared); on B's regenerated netlist the stream
-read PASS of 59 in its scratch, which the consolidated re-take takes in the tree; GNSS_ANT, GNSS_BIAS,
-GNSS_VDD_RF and the three SIM supplies leave SI-001's signal set as declared rails (888 to 882 signal nets),
-which is no closure of SI-001. SET 5, BOARD A (stream w3a, integrated in fnd/r8int5, 27 September 2026):
-gen_sch_a.py declares every net named above for A, each from its maker's sheet (VMON, PRECHG, +3V3_EMCON_EF
-and +3V3_EMCON as rails; B33_BST, HT_BST, S1_BOOT, S3_BOOT, PD_VTX, PD_VAUX, PD_DVDD, PD_CC1 and PD_CC2 as
-nodes), and a.json's VMON entry now names the eFuse output; on A's regenerated netlist the stream read PASS
-of 35 (34 declared rails, 0 undecided, 0 undeclared) in its scratch, which the consolidated re-take takes in
-the tree. WHAT THE FAIL-CLOSED READING DOES NOT SEE, by its own premises (intent_checks.py, pass (6)): a
-supply to a part that the design forgot to decouple and that no name, type, class, held role or rail current
-points at; a supply that runs from one connector pin to another with nothing between them; a supply through a
-resistor above 10 ohms to a part with no decoupling of its own on the net (a lamp's current-limited feed is
-such a path, and the rail's own load list states it); a supply that a part with NO held row delivers straight
-to a connector that also carries a line that is not ground (M5 marks a lead only when every other pin of the
-connector is on ground; a held row reads the output wherever it goes); the switched low side of a load that
-is itself a connector (left out so that an open-drain line into a module socket is not marked; a fan's
-switched return is marked where its flyback diode joins it to a power net, as on board E); a current path
-through a part of three or more pins that is neither a transistor nor a held part (a relay's contacts, a
-multi-pole switch). INSTANCES OF THESE STATED LIMITS ON THE COMMITTED NETLISTS, named by the fourth
-independent check and read again on this integration's netlists: board A's RF_GNSS (the
-connector-to-connector limit: J_RF4, the SMA, to J_BM4, the SMP-MAX blind-mate, carrying the active GNSS
-antenna's DC supply that board B's LG290P VDD_RF feeds through R23, L3 and J_GNSS1, gen_sch_b.py; board B's
-own reading holds GNSS_ANT undecided, board A's reads RF_GNSS unmarked); board A's PD_DSCG (the
-resistor-above-10-ohm limit: PD_VBUS through R139, 43R 1W 2512, into the TPS25740's DSCG open-drain pin,
-about 0.35 A at 15 V, unmarked); and board A's FE_BLEED, the analogous bleed path, which reads unmarked too
-once its node declaration is taken away. A PIN_ROLES row is trusted as written once the suite has held it
-against its document: every word it quotes is found in the document's text, each pin's number stands in its
-own words, and every table line that types a pin power or ground or describes a supply is claimed by a pin
-the row carries or exempted with a stated reason; a reviewer reads each role. A node declaration is taken as
-its author's statement: a current path declared as a node (the second check's example, board B's PoE port
-path POE_P and POE_DRAIN) is reported and not refused, and only a node that carries the supply pins of two
-parts is refused (TSN-D3; not changed). HOW IT IS SHOWN THAT NO SUPPLY OUTSIDE THE STATED LIMITS ESCAPES ON
-THE SIX COMMITTED NETLISTS (tests/test_rails_census.py): three INDEPENDENT sweeps read sources the tool does
-not read. (a) Each held document's own pin table, line by line: every row carries every power and ground pin
-of its table (the TPS2596 row with its Power Output taken out is caught, a fixture). (b) The generators'
-PWR_FLAG statements in the committed schematics: every flagged net is counted, declared or undecided; run on
-the reading of 26 September it names A's VMON and P's CELL1 to CELL3, the third check's finding, and on the
-fourth pass's none. (c) The value fields and the intent's rail sources: every part a value calls a power
-part, and every integrated circuit a rail names as its source, has a row. None of the three could see
-EPD_RESE (it holds no held pin and no power part, and no PWR_FLAG), which is why the fourth check found it by
-reading the drawing; the stated-limit instances above are named, not swept, so 'no supply escapes' is claimed
-only outside the stated limits. The older sweeps (every net with a capacitor to ground or a two-terminal
-supply link, every supply-named pin) are REGRESSION GUARDS: they re-read the tool's own marks and a name
-grammar, and they could not find VMON, which is why the third check held them to be no evidence. Replays:
-declaring exactly what the second pass named on D and E, or what the third pass named on A and P, does not
-pass and names AMP_HPVSS, TRK_LDO33, VMON and CELL1; declaring every net the reading names closes all six,
-and taking away any one named supply's or tap's declaration (PD_VTX, PD_VAUX, VMON, AMP_HPVSS, AMP_CPP,
-AMP_CPN, TRK_LDO33, CELL1 to CELL3) reopens exactly that net. The session decisions TSN-D1 to TSN-D29 are
-filed as v2/docs/records/ts-net/ts-net-decisions.md.
+J_MON as its load (board A's writer). SET 5, BOARDS D AND E (stream w3de, integrated in fnd/r8int5, 27
+September 2026, SC-57): gen_sch_d.py declares the PCM2912A's five regulator outputs, SAU_3V3 and the
+TPA6132A2's charge pump as nodes, gen_sch_e.py TRK_LDO33, E6_DVDD and E6_BST as nodes and SGP_VDD as a rail,
+and the nets the reading left undecided whose working voltage the circuit states are declared nodes;
+TRK_LSENSE is gone with S-47's bottom-leg sense (its successor TRK_CS is a node). In the stream's scratch
+PWR-001 read INCONCLUSIVE with 0 fails on both: RLY_K on D and FAN1_SW, FAN2_SW on E wait on their flyback
+diodes' sheets (S-76). SET 5, BOARD B (stream w3b, integrated in fnd/r8int5, 27 September 2026): gen_sch_b.py
+declares every net named above for B (17 rails and 40 nodes, VBAT renamed VBAT_RTC by W3B-R1, and GNSS_RF_IN,
+undecided once the antenna feed was declared); on B's regenerated netlist the stream read PASS of 59 in its
+scratch, which the consolidated re-take takes in the tree; GNSS_ANT, GNSS_BIAS, GNSS_VDD_RF and the three SIM
+supplies leave SI-001's signal set as declared rails (888 to 882 signal nets), which is no closure of SI-001.
+SET 5, BOARD A (stream w3a, integrated in fnd/r8int5, 27 September 2026): gen_sch_a.py declares every net
+named above for A, each from its maker's sheet (VMON, PRECHG, +3V3_EMCON_EF and +3V3_EMCON as rails; B33_BST,
+HT_BST, S1_BOOT, S3_BOOT, PD_VTX, PD_VAUX, PD_DVDD, PD_CC1 and PD_CC2 as nodes), and a.json's VMON entry now
+names the eFuse output; on A's regenerated netlist the stream read PASS of 35 (34 declared rails, 0
+undecided, 0 undeclared) in its scratch, which the consolidated re-take takes in the tree. WHAT THE
+FAIL-CLOSED READING DOES NOT SEE, by its own premises (intent_checks.py, pass (6)): a supply to a part that
+the design forgot to decouple and that no name, type, class, held role or rail current points at; a supply
+that runs from one connector pin to another with nothing between them; a supply through a resistor above 10
+ohms to a part with no decoupling of its own on the net (a lamp's current-limited feed is such a path, and
+the rail's own load list states it); a supply that a part with NO held row delivers straight to a connector
+that also carries a line that is not ground (M5 marks a lead only when every other pin of the connector is on
+ground; a held row reads the output wherever it goes); the switched low side of a load that is itself a
+connector (left out so that an open-drain line into a module socket is not marked; a fan's switched return is
+marked where its flyback diode joins it to a power net, as on board E); a current path through a part of
+three or more pins that is neither a transistor nor a held part (a relay's contacts, a multi-pole switch).
+INSTANCES OF THESE STATED LIMITS ON THE COMMITTED NETLISTS, named by the fourth independent check and read
+again on this integration's netlists: board A's RF_GNSS (the connector-to-connector limit: J_RF4, the SMA, to
+J_BM4, the SMP-MAX blind-mate, carrying the active GNSS antenna's DC supply that board B's LG290P VDD_RF
+feeds through R23, L3 and J_GNSS1, gen_sch_b.py; board B's own reading holds GNSS_ANT undecided, board A's
+reads RF_GNSS unmarked); board A's PD_DSCG (the resistor-above-10-ohm limit: PD_VBUS through R139, 43R 1W
+2512, into the TPS25740's DSCG open-drain pin, about 0.35 A at 15 V, unmarked); and board A's FE_BLEED, the
+analogous bleed path, which reads unmarked too once its node declaration is taken away. A PIN_ROLES row is
+trusted as written once the suite has held it against its document: every word it quotes is found in the
+document's text, each pin's number stands in its own words, and every table line that types a pin power or
+ground or describes a supply is claimed by a pin the row carries or exempted with a stated reason; a reviewer
+reads each role. A node declaration is taken as its author's statement: a current path declared as a node
+(the second check's example, board B's PoE port path POE_P and POE_DRAIN) is reported and not refused, and
+only a node that carries the supply pins of two parts is refused (TSN-D3; not changed). HOW IT IS SHOWN THAT
+NO SUPPLY OUTSIDE THE STATED LIMITS ESCAPES ON THE SIX COMMITTED NETLISTS (tests/test_rails_census.py): three
+INDEPENDENT sweeps read sources the tool does not read. (a) Each held document's own pin table, line by line:
+every row carries every power and ground pin of its table (the TPS2596 row with its Power Output taken out is
+caught, a fixture). (b) The generators' PWR_FLAG statements in the committed schematics: every flagged net is
+counted, declared or undecided; run on the reading of 26 September it names A's VMON and P's CELL1 to CELL3,
+the third check's finding, and on the fourth pass's none. (c) The value fields and the intent's rail sources:
+every part a value calls a power part, and every integrated circuit a rail names as its source, has a row.
+None of the three could see EPD_RESE (it holds no held pin and no power part, and no PWR_FLAG), which is why
+the fourth check found it by reading the drawing; the stated-limit instances above are named, not swept, so
+'no supply escapes' is claimed only outside the stated limits. The older sweeps (every net with a capacitor
+to ground or a two-terminal supply link, every supply-named pin) are REGRESSION GUARDS: they re-read the
+tool's own marks and a name grammar, and they could not find VMON, which is why the third check held them to
+be no evidence. Replays: declaring exactly what the second pass named on D and E, or what the third pass
+named on A and P, does not pass and names AMP_HPVSS, TRK_LDO33, VMON and CELL1; declaring every net the
+reading names closes all six, and taking away any one named supply's or tap's declaration (PD_VTX, PD_VAUX,
+VMON, AMP_HPVSS, AMP_CPP, AMP_CPN, TRK_LDO33, CELL1 to CELL3) reopens exactly that net. The session decisions
+TSN-D1 to TSN-D29 are filed as v2/docs/records/ts-net/ts-net-decisions.md.
 
 ### PWR-002  sequencing and inrush
 

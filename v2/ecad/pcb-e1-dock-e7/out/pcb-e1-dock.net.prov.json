@@ -2,7 +2,7 @@
  "what": "the generator that wrote this netlist, by content",
  "letter": "e",
  "netlist": "pcb-e1-dock.net",
- "generator_sha": "6d2fe1b4c56f75e8",
+ "generator_sha": "b43c5351edb2f98e",
  "identity_since": "2026-09-26",
  "generator_files": [
   "boards/e.json#gen_env",
@@ -81,7 +81,7 @@
   "gen_footprints_e.py": "1c1fab411acfa1d5",
   "gen_footprints_idc.py": "17716f42fc0824a5",
   "gen_footprints_panel.py": "8291174d7f0a2993",
-  "gen_sch_e.py": "f275102965fafa10",
+  "gen_sch_e.py": "59abd6365b94c2d6",
   "intent.py": "f1ac033e0f3c10f1",
   "kisch.py": "3e28374d15be25e0",
   "meshsat.pretty/BackerScrew_M3_GND.kicad_mod": "e0b8f321b6539d37",
@@ -146,6 +146,6 @@
   "meshsat.pretty/WireLands_2x6.kicad_mod": "83be0b1d2c58cd4e",
   "schlayout.py": "a9eee3d6b0b38bae"
  },
- "schematic_sha256": "e6137ea442932e4d55e6be3381881af6",
- "taken": "2026-09-27T04:56:47+00:00"
+ "schematic_sha256": "bd50de114865448bac269565d6deebc9",
+ "taken": "2026-09-27T10:43:18+00:00"
 }

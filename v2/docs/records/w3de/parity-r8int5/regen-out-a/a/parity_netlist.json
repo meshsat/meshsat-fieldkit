@@ -1,0 +1,249 @@
+{
+ "kind": "netlist",
+ "phase_labels": [
+  [
+   "A65"
+  ],
+  [
+   "A65"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  },
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  }
+ ],
+ "design_header": [
+  [
+   "/root/w3a/cand/v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_sch",
+   "2026-09-27T10:26:59+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ],
+  [
+   "/root/r8int5/xa/v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_sch",
+   "2026-09-27T12:33:53+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ]
+ ],
+ "content_hash": [
+  "40192e30cb11c749",
+  "2c5c1d5a388cc95f"
+ ],
+ "counts": {
+  "comps": [
+   603,
+   611
+  ],
+  "nets": [
+   356,
+   356
+  ]
+ },
+ "comps_only_committed": [],
+ "comps_only_other": [
+  "J_VN1",
+  "J_VN2",
+  "J_VN3",
+  "J_VN4",
+  "J_VR1",
+  "J_VR2",
+  "J_VR3",
+  "J_VR4"
+ ],
+ "comps_changed": [
+  [
+   "J_DOCK",
+   {
+    "value": [
+     "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-4 VIN_RAW (9 to 36 V from E6), 5-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare",
+     "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare (VIN_RAW crosses on J_VR1-4 since EQ-16)"
+    ]
+   }
+  ]
+ ],
+ "comps_uuid_shifted": 603,
+ "nets_only_committed": [],
+ "nets_only_other": [],
+ "nets_changed": [
+  [
+   "/VIN_RAW",
+   [
+    [
+     "J_DOCK",
+     "1",
+     "Pin_1",
+     "passive"
+    ],
+    [
+     "J_DOCK",
+     "2",
+     "Pin_2",
+     "passive"
+    ],
+    [
+     "J_DOCK",
+     "3",
+     "Pin_3",
+     "passive"
+    ],
+    [
+     "J_DOCK",
+     "4",
+     "Pin_4",
+     "passive"
+    ]
+   ],
+   [
+    [
+     "J_VR1",
+     "1",
+     "Pin_1",
+     "passive"
+    ],
+    [
+     "J_VR2",
+     "1",
+     "Pin_1",
+     "passive"
+    ],
+    [
+     "J_VR3",
+     "1",
+     "Pin_1",
+     "passive"
+    ],
+    [
+     "J_VR4",
+     "1",
+     "Pin_1",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "GND",
+   [],
+   [
+    [
+     "J_DOCK",
+     "1",
+     "Pin_1",
+     "passive"
+    ],
+    [
+     "J_DOCK",
+     "2",
+     "Pin_2",
+     "passive"
+    ],
+    [
+     "J_DOCK",
+     "3",
+     "Pin_3",
+     "passive"
+    ],
+    [
+     "J_DOCK",
+     "4",
+     "Pin_4",
+     "passive"
+    ],
+    [
+     "J_VN1",
+     "1",
+     "Pin_1",
+     "passive"
+    ],
+    [
+     "J_VN2",
+     "1",
+     "Pin_1",
+     "passive"
+    ],
+    [
+     "J_VN3",
+     "1",
+     "Pin_1",
+     "passive"
+    ],
+    [
+     "J_VN4",
+     "1",
+     "Pin_1",
+     "passive"
+    ]
+   ]
+  ]
+ ],
+ "changed_lines": 1336,
+ "changed_lines_sample": [
+  "-      (tstamps \"fbbb0833-dbbb-543b-ad2f-0b3ad43f24ab\"))",
+  "+      (tstamps \"4be352ae-877c-5e6f-8164-ad6366af9c95\"))",
+  "-      (tstamps \"418b7b3e-3929-5c97-89b0-2a5166409cd6\"))",
+  "+      (tstamps \"1a453837-4dd3-5cf2-9290-1cc863333a81\"))",
+  "-      (tstamps \"e16a05a2-d7f6-548c-9c80-96574530302b\"))",
+  "+      (tstamps \"e84a22ad-411a-596f-a42f-a4d1102ca84e\"))",
+  "-      (tstamps \"5ca19743-540a-5eaf-8032-81a5a1782e3e\"))",
+  "+      (tstamps \"f0b04a80-e217-5590-b678-e73e16e70944\"))",
+  "-      (tstamps \"9c43ae4e-448b-5236-a511-a624de144f5a\"))",
+  "+      (tstamps \"b6697a90-7524-53b0-a2ec-18d8ddfc5e92\"))",
+  "-      (tstamps \"e529932b-8606-561b-b67a-86cbd4bfe296\"))",
+  "+      (tstamps \"4776e9dc-78d5-5c87-becc-6b8652eb598c\"))",
+  "-      (tstamps \"576f9921-1c47-5603-918d-ca2f0935eefd\"))",
+  "+      (tstamps \"ad948cc4-481d-5db6-825e-058d4280a6da\"))",
+  "-      (tstamps \"83422697-77d4-5c7a-aaba-c2227bb6d7fd\"))",
+  "+      (tstamps \"118c6e05-6498-5534-8a5c-e98bbabcaf05\"))",
+  "-      (tstamps \"7d6ecbb8-ec33-5738-9898-115ee9f8efd5\"))",
+  "+      (tstamps \"5fe467db-fd55-5951-a542-0ab9eb4f7a17\"))",
+  "-      (tstamps \"3fffe6fc-ecfc-5299-aa80-d8af8d9197ef\"))",
+  "+      (tstamps \"c0de66b2-16c0-5aa4-be4c-74294c7a9f98\"))",
+  "-      (tstamps \"35213825-a70f-572f-841c-fba05cf18c10\"))",
+  "+      (tstamps \"00bc300a-6e42-5895-a0aa-34d6c3f9297d\"))",
+  "-      (tstamps \"163f4892-c19c-5b24-b08c-c61cc2759a9e\"))",
+  "+      (tstamps \"39638042-8d7e-573e-bf56-5414fa60bbb7\"))",
+  "-      (tstamps \"a2489f20-e420-5ac5-8738-25d69b486844\"))",
+  "+      (tstamps \"6035ebf4-ccb7-5c0b-985e-414984c71489\"))",
+  "-      (tstamps \"373a34e3-6c8b-5330-8c56-c907c33a07e3\"))",
+  "+      (tstamps \"929ef69a-0d7b-5426-a007-49ac78dfde63\"))",
+  "-      (tstamps \"eb6571bf-1f02-5bdd-9c32-c46078e0e5aa\"))",
+  "+      (tstamps \"d85c1612-b53b-5012-873e-976124e95679\"))",
+  "-      (tstamps \"6d2dbb79-3d4a-5717-941e-21667190422a\"))",
+  "+      (tstamps \"419ecd03-0bf3-5230-b184-9c4cdaee1d77\"))",
+  "-      (tstamps \"f6869ddb-20c9-585a-bfcf-ac4bd9a68f82\"))",
+  "+      (tstamps \"67916a75-3f87-529f-ac8b-56f3ea32772d\"))",
+  "-      (tstamps \"77e6feaa-a385-5aaa-ac84-092c0fa710d7\"))",
+  "+      (tstamps \"9d6302eb-1257-5e1f-bdc3-8f668f0cc5b1\"))",
+  "-      (tstamps \"c69f4e37-7a72-557f-9788-b73761342c8a\"))",
+  "+      (tstamps \"78ca2fd4-c41b-51f1-bd9d-9fdb41c931e6\"))",
+  "-      (tstamps \"e43c2589-a1a7-5471-aa89-b447c0ebb410\"))",
+  "+      (tstamps \"9d0135b9-284a-568f-9940-69c61b22d331\"))",
+  "-      (tstamps \"30b8fc13-8ca1-5fcc-b763-b4a6bdf80714\"))",
+  "+      (tstamps \"ccdcf782-c83b-57cd-bfc1-54b62546d380\"))",
+  "-      (tstamps \"b3b08366-adb1-5ec0-81fe-ef8fce4ec0b1\"))",
+  "+      (tstamps \"48898ffc-b79a-56d3-9216-2ef54f33703f\"))",
+  "-      (tstamps \"f0e71b97-b3c2-5a83-8289-3005c37566b2\"))",
+  "+      (tstamps \"30b8fc13-8ca1-5fcc-b763-b4a6bdf80714\"))",
+  "-      (tstamps \"01ed0718-b1b4-5624-8374-44f609307724\"))",
+  "+      (tstamps \"b3b08366-adb1-5ec0-81fe-ef8fce4ec0b1\"))",
+  "-      (tstamps \"5c36efac-9a54-54cd-bf82-a55d1a711090\"))",
+  "+      (tstamps \"c0966e08-2744-5454-8eef-9817451157e4\"))",
+  "-      (tstamps \"657a3339-7b4e-573b-8dd9-4c4438e7e4a5\"))",
+  "+      (tstamps \"b6c0402e-7c4f-5cb2-a18b-06bbd7d6c913\"))",
+  "-      (tstamps \"456a409f-7fcc-5c5e-a787-f18eb05e0c2c\"))",
+  "+      (tstamps \"3747f9c0-8682-54e0-8a1d-e5c648f1b65f\"))",
+  "-      (tstamps \"3a9c5cc3-3d4d-5948-b250-03a786d64dbb\"))",
+  "+      (tstamps \"72e8135d-535e-5a87-a7f3-5954f86b0011\"))",
+  "-      (tstamps \"f99a1e54-bd02-53cc-a3ee-69cbe2c94b97\"))",
+  "+      (tstamps \"639c7846-6404-5f50-bbc4-fbcf43f2fbd5\"))",
+  "-      (tstamps \"a1d90335-0fc7-5463-afac-b39744594dd8\"))",
+  "+      (tstamps \"e44c56ee-1213-518d-8228-1b9512c1ab19\"))"
+ ],
+ "result": "DIFFERENT"
+}

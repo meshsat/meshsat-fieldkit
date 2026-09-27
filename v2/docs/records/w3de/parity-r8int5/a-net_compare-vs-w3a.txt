@@ -1,0 +1,19 @@
+counts (committed, candidate): {'components': [603, 611], 'nets': [356, 356], 'pins': [1786, 1794]}
+components_added: ['J_VN1', 'J_VN2', 'J_VN3', 'J_VN4', 'J_VR1', 'J_VR2', 'J_VR3', 'J_VR4']
+components_removed: []
+nets_added: []
+nets_removed: []
+changed J_DOCK: {'value': ["spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-4 VIN_RAW (9 to 36 V from E6), 5-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare", "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare (VIN_RAW crosses on J_VR1-4 since EQ-16)"]}
+pin moved J_DOCK.1: VIN_RAW -> GND
+pin moved J_DOCK.2: VIN_RAW -> GND
+pin moved J_DOCK.3: VIN_RAW -> GND
+pin moved J_DOCK.4: VIN_RAW -> GND
+pin added J_VN1.1 on GND
+pin added J_VN2.1 on GND
+pin added J_VN3.1 on GND
+pin added J_VN4.1 on GND
+pin added J_VR1.1 on VIN_RAW
+pin added J_VR2.1 on VIN_RAW
+pin added J_VR3.1 on VIN_RAW
+pin added J_VR4.1 on VIN_RAW
+RESULT: ONLY THE EXPECTED CHANGES

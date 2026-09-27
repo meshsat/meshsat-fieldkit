@@ -1,6 +1,6 @@
 {
  "board": "pcb-d-aprs",
- "written": "2026-09-26 21:40",
+ "written": "2026-09-27 10:33",
  "bypass": [
   {
    "cap": "C51",
@@ -386,10 +386,105 @@
    "v_min": 0.0,
    "basis": "U21's EN/UVLO tap: +3V3_D8 x R91 / (R90 + R91), 0.16 mA through the divider and nothing else; at most 2.53 V with +3V3_D8 back-fed to 5.23 V at the resistors' low ratio (5.23 / 2.064), 1.57 V in service; the pin itself is rated to 20 V (TI SLVSDH0C 7.1)"
   },
+  "SAU_3V3": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "the CP2102N's own regulator output on its VDD pin (pin 6, 'Supply Power Input / 5V Regulator Output'), fed from VREGIN on +5V_D8: 3.1 / 3.3 / 3.6 V 'Output Voltage on VDD' (Silicon Labs CP2102N Rev. 1.5, Table 3.6); absolute maximum 4.2 V; it carries U3's own supply, C10, C11 and the RSTb pull-up R4"
+  },
+  "PCM_VDD": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "the PCM2912A's own digital regulator output (pin 5), generated from VBUS inside the part: 3.0 / 3.3 / 3.6 V 'Internally-generated power supply voltage' (TI SLES230A electrical characteristics, note 10), 9.5.1.6 and Table 6 (p.23); absolute maximum 4 V on the pin"
+  },
+  "PCM_VCCA": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "the PCM2912A's own analog regulator output (pin 15), generated from VBUS inside the part: 3.0 / 3.3 / 3.6 V 'Internally-generated power supply voltage' (TI SLES230A electrical characteristics, note 10), 9.5.1.6 and Table 6 (p.23); absolute maximum 4 V on the pin"
+  },
+  "PCM_VCCL": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "the PCM2912A's own L-channel headphone regulator output (pin 19), generated from VBUS inside the part: 3.0 / 3.3 / 3.6 V 'Internally-generated power supply voltage' (TI SLES230A electrical characteristics, note 10), 9.5.1.6 and Table 6 (p.23); absolute maximum 4 V on the pin"
+  },
+  "PCM_VCCR": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "the PCM2912A's own R-channel headphone regulator output (pin 21), generated from VBUS inside the part: 3.0 / 3.3 / 3.6 V 'Internally-generated power supply voltage' (TI SLES230A electrical characteristics, note 10), 9.5.1.6 and Table 6 (p.23); absolute maximum 4 V on the pin"
+  },
+  "PCM_VCCP": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "the PCM2912A's own PLL regulator output (pin 26), generated from VBUS inside the part: 3.0 / 3.3 / 3.6 V 'Internally-generated power supply voltage' (TI SLES230A electrical characteristics, note 10), 9.5.1.6 and Table 6 (p.23); absolute maximum 4 V on the pin"
+  },
   "AMP_HPVDD": {
    "v_max": 1.9,
    "v_min": 0.0,
    "basis": "the TPA6132A2's internal positive supply for its headphone amplifiers, generated inside the part and never driven from outside: 'Headphone amplifier supply voltage HPVDD (do not connect to external supply) -0.3 to 1.9 V' (TI SLOS597B 6.1, Absolute Maximum Ratings); the pin takes only its 2.2 uF (5, 9)"
+  },
+  "AMP_CPP": {
+   "v_max": 1.9,
+   "v_min": 0.0,
+   "basis": "the TPA6132A2's charge pump positive flying-capacitor node (TI SLOS597B pin table p.3, 8.1): it swings between ground and HPVDD, whose absolute maximum is 1.9 V (6.1)"
+  },
+  "AMP_CPN": {
+   "v_max": 0.0,
+   "v_min": -1.9,
+   "basis": "the TPA6132A2's charge pump negative flying-capacitor node (SLOS597B pin table p.3, 8.1): it swings between HPVSS and ground; C30 holds HPVDD (at most 1.9 V, 6.1) across CPP and CPN, so it rides on CPP",
+   "rides_on": "AMP_CPP",
+   "bias_v": 1.9
+  },
+  "AMP_HPVSS": {
+   "v_max": 0.0,
+   "v_min": -1.9,
+   "basis": "the TPA6132A2's charge pump output, the negative supply of its headphone amplifiers (SLOS597B pin table p.3: 'Charge pump output and negative power supply for output amplifiers'): the inversion of HPVDD (block diagram 7.2), so no lower than -1.9 V, HPVDD's absolute maximum (6.1); the sheet gives no HPVSS figure of its own"
+  },
+  "HS1_MIC": {
+   "v_max": 5.23,
+   "v_min": 0.0,
+   "basis": "headset 1's microphone line at the jack: with JP1 closed and no headset it sits at +5V_D8 through R43 (2.2k), 5.23 V at most (+5V_D8's v_work); an electret draws a few hundred microamps through it and no part takes its supply here",
+   "v_work": 5.23
+  },
+  "HS1_BIAS_R": {
+   "v_max": 5.23,
+   "v_min": 0.0,
+   "basis": "the electret bias resistor's jumper side (R43 2.2k from +5V_D8 to JP1): at most +5V_D8's 5.23 V v_work",
+   "v_work": 5.23
+  },
+  "PTT_HS1_n": {
+   "v_max": 3.333,
+   "v_min": 0.0,
+   "basis": "headset 1's push-to-talk line: it idles at +3V3_D8 through its level stage's 10k (R68), 3.333 V at most (U1, TLV75533 at +1 percent), and the headset's switch pulls it to ground; U9 and the level FET read it and take no supply from it",
+   "v_work": 3.333
+  },
+  "X_PTT_HS1_n": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "the push-to-talk level stage's far side (Q4's drain), U16's P-port input pulled to the harness +3V3 through R69 (10k): at most +3V3's declared 3.3 V; an input, no supply",
+   "v_work": 3.3
+  },
+  "HS2_MIC": {
+   "v_max": 5.23,
+   "v_min": 0.0,
+   "basis": "headset 2's microphone line at the jack: with JP2 closed and no headset it sits at +5V_D8 through R44 (2.2k), 5.23 V at most (+5V_D8's v_work); an electret draws a few hundred microamps through it and no part takes its supply here",
+   "v_work": 5.23
+  },
+  "HS2_BIAS_R": {
+   "v_max": 5.23,
+   "v_min": 0.0,
+   "basis": "the electret bias resistor's jumper side (R44 2.2k from +5V_D8 to JP2): at most +5V_D8's 5.23 V v_work",
+   "v_work": 5.23
+  },
+  "PTT_HS2_n": {
+   "v_max": 3.333,
+   "v_min": 0.0,
+   "basis": "headset 2's push-to-talk line: it idles at +3V3_D8 through its level stage's 10k (R70), 3.333 V at most (U1, TLV75533 at +1 percent), and the headset's switch pulls it to ground; U9 and the level FET read it and take no supply from it",
+   "v_work": 3.333
+  },
+  "X_PTT_HS2_n": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "the push-to-talk level stage's far side (Q5's drain), U16's P-port input pulled to the harness +3V3 through R71 (10k): at most +3V3's declared 3.3 V; an input, no supply",
+   "v_work": 3.3
   },
   "RF_PAOUT": {
    "v_max": 110.0,
@@ -411,6 +506,11 @@
    "v_min": 0.0,
    "basis": "the board's reference, so a part between a live net and ground is judged against the live net rather than reported as sitting on an undeclared one"
   },
+  "RF_ANT": {
+   "v_max": 110.0,
+   "v_min": 0.0,
+   "basis": "the antenna side of the T/R relay K1: in transmit it carries the 30 W output from RF_LPF_OUT through K1's contact, 54.8 V peak into a matched 50 ohm load and about 110 V peak at the voltage maximum of a standing wave if the antenna port is open or shorted (the declaration of RF_PAOUT, RF_LPF_M and RF_LPF_OUT)"
+  },
   "VGG_SW": {
    "v_max": 4.68,
    "v_min": 0.0,
@@ -420,6 +520,16 @@
    "v_max": 3.3,
    "v_min": 0.0,
    "basis": "the NTC divider's tap: at most the harness +3V3 (declared 3.3 V) with the flange lead open, and at most 1.1 mA through R92 into the NTC; read by U22's AIN0 through R93"
+  },
+  "FLANGE_AIN0": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "the NTC tap behind R93 (1k) and C73 into U22's AIN0: at most FLANGE_NTC's 3.3 V (the harness +3V3 with the flange lead open); an analog input, no supply"
+  },
+  "FLANGE_REF": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "the harness +3V3 behind R94 (1k) and C74 into U22's AIN1, the ratiometric reference reading: at most +3V3's declared 3.3 V; an analog input, no supply"
   }
  },
  "pair_classes": {

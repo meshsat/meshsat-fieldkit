@@ -243,7 +243,7 @@ holds each board's layout entry is section 14.2. Board B has never routed (B21: 
 flowchart TB
   P["P pack BMS: BQ4050, BQ7720700, FETs, 25 A blade, SCF9550 chemical fuse"] -->|"IF-PE-PACK: XT60 12 AWG; SMBus and PRES on JST-XH 1x4, both ends"| E
   E["E dock strip: pack entry, vehicle and solar inputs, sensor RP2040, float clamps"] --> E5["E5 dock block"]
-  E5 -->|"IF-AE-DOCK: 4 x VIN_RAW (12.31 A declared), 4 x CELL+, pre-charge, USB, SHORE_INHIBIT"| A
+  E5 -->|"IF-AE-DOCK: 4 x VIN_RAW 9 A pins (14.10 A declared, EQ-16), 4 x CELL+, pre-charge, USB, SHORE_INHIBIT"| A
   E -.->|"IF-AE-RF: 11 blind-mate joints as generated, 12 under D-07"| A
   A["A power and I/O: charger on VSYS, converters, eFuses, LTC2954, outlet interlock, RF row"] -->|"IF-AB-POWER: +5V_S1..3, +5V_DEV, 54 V"| B
   A <-->|"IF-AB-RIBBON: control lines, USB to D and E"| B
@@ -279,7 +279,7 @@ flowchart LR
     SOL["solar"] --> TRK["F2 10 A, LT8705A tracker (bench-fitted), 6.16 A, ORed"] --> VR
   end
   CF -->|"dock block, 4 x 9 A pins"| CELLP
-  VR -->|"dock pins 1 to 4, 12.31 A declared"| FE
+  VR -->|"4 x 9 A dock pins J_VR1 to J_VR4, 14.10 A declared"| FE
   subgraph AB["board A"]
     FE["U2 LM5176 front end, 20 V; U34 restart guard"] --> CHG["U3 BQ25731 charger, 4S, no BATFET"] --> VBAT
     CELLP["CELL+"] --> AF1["F1 25 A"] --> RSR["R17 5 mOhm charge shunt"] --> VBAT["VBAT = VSYS 10.0 to 16.8 V"]
@@ -325,7 +325,7 @@ The same tree drawn from the netlists and `pcb_energy_chain.yaml` as committed a
 | power board | A F1 25 A to CELL_FUSED, then R17 to VBAT (`gen_sch_a.py:213`, `:26-48`); D1 SMCJ18A (`:224`) | | | VERIFIED (re-read) |
 | vehicle and shore | J_DCIN 9 to 36 V, F1 10 A, LM74700, LM5069-2 (UVLO 9 V, OVLO 40 V), common-mode choke L2, D10 SMCJ40CA at the entry and D1 SMCJ40A behind the ideal diode | declared at the hot swap's maximum limit, 6.15 A (F-IN-02, `gen_sch_e.py:66-100`); **not qualified for vehicle surge** (D-16), not for 24 V military vehicle buses | `gen_sch_e.py:230-362` | VERIFIED (re-read); clamps corrected (`faf8c981`) |
 | solar | LT8705A tracker, bench-fitted, ORed into VIN_RAW | TRK_OUT 15.1 V, 6.16 A declared | `gen_sch_e.py` | VERIFIED (re-read declaration) |
-| VIN_RAW at the dock | the vehicle entry and the tracker together | **12.31 A declared** on board A (6.15 + 6.16 A), each of the four Preci-Dip 813 contacts at 3.08 A of its 3.5 A with even sharing (R4A-N13); board E's own VIN_RAW declares 14.10 A since round 8 (R4A-N12): both feeds, L2 and Q2, limited by board A's front end at its ISNS limit from a 9.0 V bus (5.7 A at 20.7 V over 0.93), the tracker's own TRK_OUT 10.33 A (the panel's 93 W at 9 V); above board A's 12.31 A, so the four contacts read 3.53 A each with even sharing (R8E-N01, open) | `gen_sch_a.py:49-66`; `gen_sch_e.py:93-138` | VERIFIED (re-read); the contact margin is IF-AE-DOCK's |
+| VIN_RAW at the dock | the vehicle entry and the tracker together | **14.10 A declared** at both ends since set 5 (`fnd/r8int5`, 27 September 2026; R8E-N01 answered by EQ-16): both feeds, L2 and Q2, limited by board A's front end at its ISNS limit from a 9.0 V bus (5.7 A at 20.7 V over 0.93), the tracker's own TRK_OUT 10.33 A (the panel's 93 W at 9 V) (R4A-N12). VIN_RAW crosses on four Mill-Max 0858-class power pins (A J_VR1 to J_VR4, with J_VN1 to J_VN4 for its return, to E's P_VR and P_VN), 3.53 A each with even sharing (39 percent of 9 A) and 4.70 A with one open; the four Preci-Dip 813 contacts that carried it (3.53 A each at 14.10 A, 101 percent of their 3.5 A; 3.08 A at the old 12.31 A) are ground since EQ-16 | `gen_sch_a.py:69-70` and `:235-237`; `gen_sch_e.py` (VIN_RAW's derivation, J_BLK, P_VR, P_VN) | VERIFIED (re-read); the contact margin and the ground return (W3DE-DOCK-R1) are IF-AE-DOCK's |
 | RTC backup | CR2032 on B: the three modules' RTCs, the LG290P backup, the DS3231 | | `gen_sch_b.py:844` | VERIFIED (re-read) |
 
 Three 25 A blades sit in series on the pack path (P F1, E F3, A F1) with equal ratings, and the chemical fuse F2 on board
@@ -1173,7 +1173,7 @@ and IF-AD-HARNESS carry: as one segment it cannot meet the 300 ns rise its BQ257
 | IF-AB-WALL | A J_AB2, B J_AB2 (2x5) | the wall USB pair, on A to the Glenair 233-370 behind U32 (D-12) | sections 7b and 10 | W4-F17 (the header under board D); the J_AB2 lead length (no row in `ASSEMBLY.md` section 4) |
 | IF-AB-POWER | A and B J_5V_S1..3, J_5V_DEV, J_54V (VH) | slot rails, device rail, 54 V | section 3 (net presence) | the two ends' current declarations disagree (I-03: +5V_S2 A 2.5 A against B 4.2 A typical, 5.63 A coincident; +5V_DEV A 3.2 A against B 3.8 A); the JST-VH rating document is not held |
 | IF-AD-HARNESS | A J_MEZZ1 and J_MEZZ_PWR1, D J_HARN1 and J_PWR1 | D's USB, inhibit, PA_EN, I2C, 3.3 V and 5 V | section 8 (not the 5 V lead) | W4-F17; EMCON L4 on D (closed at desk in board D's round 8 but for bench E-11); PWR-F15 drawn in round 8 as IF-D-FLANGE; HF-F01 |
-| IF-AE-DOCK | A J_DOCK and pack pins, E5, E J_BLK, P_CP, P_CN | VIN_RAW, CELL+, pre-charge, USB, SHORE_INHIBIT; lifted only by the D-14 procedure, with a cap over E5 | sections 4 and 5; `block_contract.py` needs pcbnew | the VIN_RAW contacts: 12.31 A declared on A gives 3.08 A of 3.5 A per contact with even sharing and no margin for one open (R4A-N13); board E's round 8 declares 14.10 A, 3.53 A each, over the rating at nominal (R8E-N01); A04-D2 on the A32 board; BAT-F06 (stated, section 4.4) |
+| IF-AE-DOCK | A J_DOCK, the pack pins and the VIN_RAW pins J_VR1-4, J_VN1-4, E5, E J_BLK, P_CP, P_CN, P_VR, P_VN | VIN_RAW, CELL+, pre-charge, USB, SHORE_INHIBIT; lifted only by the D-14 procedure, with a cap over E5 | sections 4, 5 and 5a (the EQ-16 dock checks); `block_contract.py` needs pcbnew | the VIN_RAW pins: 14.10 A declared at both ends since set 5 (EQ-16, R8E-N01 answered) on four Mill-Max 9 A pins, 3.53 A each with even sharing and 4.70 A with one open, the 813 contacts 1 to 4 ground; the ground current's share on the 813 ground contacts (W3DE-DOCK-R1, a bench measurement owed); E5's eight new targets and two 12 AWG holes are layer 7's; A04-D2 on the A32 board; BAT-F06 (stated, section 4.4) |
 | IF-PE-PACK | P W_P, W_N, J_SMB; E J_BATT, J_SMB | pack power, gauge SMBus and PRES on JST-XH 1x4 at both ends in P's pin order | section 15b (the power pair) and 15c (the SMBus lead, since `93138ac1`) | PRES's contract (P's R14 10 k stays; E's GPIO17 pad pull-down off before a read, FW-E02); PWR-F12 |
 | IF-AC-MAINSW | C J_MAINSW, A J_MAINSW | the MAIN button | none | none open in the circuit (`458b2873`) |
 | IF-AE-RF | A J_BM1..11, E float clamp bar, the end-wall arrestors | eleven RF paths as generated, twelve under D-07 | `check_pcb_e.py`, which reads board A's `RF_X` (and since round 8 D-07's X 46, the pitch, seats, holes and the bar outline) | the clamp bar drawn in round 8 (A09, R4E-07, `45f6d83f`), not placed, with board E's SENS region under it to re-seat at layout entry; ANT3's site on A (D-07); the jumpers to the arrestors (`CASE-MARGINS.md` 3.4) |

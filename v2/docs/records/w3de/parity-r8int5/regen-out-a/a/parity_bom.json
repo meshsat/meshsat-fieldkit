@@ -1,0 +1,40 @@
+{
+ "kind": "bom",
+ "rows": [
+  193,
+  195
+ ],
+ "rows_only_committed": [
+  [
+   "J_DOCK?",
+   "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-4 VIN_RAW (9 to 36 V from E6), 5-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare",
+   "meshsat:PogoPins_2x6",
+   "",
+   "1"
+  ]
+ ],
+ "rows_only_other": [
+  [
+   "J_DOCK?",
+   "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare (VIN_RAW crosses on J_VR1-4 since EQ-16)",
+   "meshsat:PogoPins_2x6",
+   "",
+   "1"
+  ],
+  [
+   "J_VN1-J_VN4",
+   "9 A spring pin, VIN_RAW return (Mill-Max 0858 class, dock block; EQ-16)",
+   "meshsat:Mill-Max_0858_power_pin",
+   "",
+   "4"
+  ],
+  [
+   "J_VR1-J_VR4",
+   "9 A spring pin, VIN_RAW (Mill-Max 0858 class, dock block; EQ-16)",
+   "meshsat:Mill-Max_0858_power_pin",
+   "",
+   "4"
+  ]
+ ],
+ "result": "DIFFERENT"
+}

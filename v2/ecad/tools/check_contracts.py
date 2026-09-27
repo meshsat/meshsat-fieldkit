@@ -308,6 +308,21 @@ check(pre.startswith("CELL") or "PRE" in pre, "A: the pre-charge pin lands on a 
 check(("P_CP", "1") in B["E"][1] and ("P_CN", "1") in B["E"][1], "E: the 12 AWG lands P_CP and P_CN exist",
       "%s / %s" % (B["E"][1].get(("P_CP", "1"), "absent"), B["E"][1].get(("P_CN", "1"), "absent")), boards={"E"})
 check(B["E"][1].get(("P_CN", "1"), "") == "GND", "E6: the pack return lands on GND (the 14.4 V node's return is the ground plane, 32.56)", B["E"][1].get(("P_CN", "1"), "absent"), boards={"E"})
+# 5a. EQ-16 / R8E-N01 (27 September 2026, drafted by board E's stream w3de): VIN_RAW CROSSES THE DOCK ON POWER PINS. At
+# board E's 14.10 A the four Preci-Dip 813 contacts carried 3.53 A each against their 3.5 A maximum, and their maker
+# publishes no current-temperature curve; the decision puts VIN_RAW on four Mill-Max 0858-class pins (9 A continuous at
+# a 10 C rise) with four more for its return, and the 813 contacts that carried it become ground.
+vr = [r for r, p in B["A"][0].get("VIN_RAW", set()) if r.startswith("J_VR")]
+vn = [r for r, p in B["A"][0].get("GND", set()) if r.startswith("J_VN")]
+check(len(vr) == 4 and len(vn) == 4, "A: four VIN_RAW power pins and four return pins on the dock block (EQ-16)",
+      "VIN_RAW %s, return %s" % (sorted(vr), sorted(vn)), boards={"A"})
+check(B["E"][1].get(("P_VR", "1"), "") == "VIN_RAW" and B["E"][1].get(("P_VN", "1"), "") == "GND",
+      "E: the 12 AWG lands P_VR on VIN_RAW and P_VN on GND to the block's VIN_RAW pins (EQ-16)",
+      "%s / %s" % (B["E"][1].get(("P_VR", "1"), "absent"), B["E"][1].get(("P_VN", "1"), "absent")), boards={"E"})
+_vr813 = sorted(["A J_DOCK.%d" % k for k in range(1, 13) if ma.get(k) == "VIN_RAW"] +
+                ["E J_BLK.%d" % k for k in range(1, 13) if me.get(k) == "VIN_RAW"])
+check(not _vr813, "no Preci-Dip 813 signal contact of the dock carries VIN_RAW (EQ-16)", ", ".join(_vr813) or "none",
+      boards={"A", "E"})
 
 # 6. shutdown pair on the A to B ribbon
 for net in ("PI_SHDN_REQ", "PI_KILL"):

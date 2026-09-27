@@ -1,0 +1,272 @@
+{
+ "kind": "erc",
+ "violations": [
+  1528,
+  1535
+ ],
+ "by_type": [
+  {
+   "warning:endpoint_off_grid": 487,
+   "warning:lib_symbol_issues": 912,
+   "warning:unconnected_wire_endpoint": 129
+  },
+  {
+   "warning:endpoint_off_grid": 486,
+   "warning:lib_symbol_issues": 920,
+   "warning:unconnected_wire_endpoint": 129
+  }
+ ],
+ "only_committed": [
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Horizontal Wire, length 0.0825 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Horizontal Wire, length 0.1016 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Horizontal Wire, length 0.2541 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Horizontal Wire, length 0.8763 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Vertical Wire, length 0.0254 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Vertical Wire, length 0.0254 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Vertical Wire, length 0.0254 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Vertical Wire, length 0.1270 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Vertical Wire, length 0.1524 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Vertical Wire, length 0.2032 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Vertical Wire, length 0.2159 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Vertical Wire, length 0.2667 mm"
+   ]
+  ]
+ ],
+ "only_other": [
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Horizontal Wire, length 0.1778 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Horizontal Wire, length 0.2032 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Horizontal Wire, length 0.2668 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Horizontal Wire, length 0.7238 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Horizontal Wire, length 1.7335 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Vertical Wire, length 0.1016 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Vertical Wire, length 0.1016 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Vertical Wire, length 0.1016 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Vertical Wire, length 0.2286 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Vertical Wire, length 0.2794 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Vertical Wire, length 0.8509 mm"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'Connector'",
+   [
+    "Symbol J_VN1 [Conn_01x01_Pin]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'Connector'",
+   [
+    "Symbol J_VN2 [Conn_01x01_Pin]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'Connector'",
+   [
+    "Symbol J_VN3 [Conn_01x01_Pin]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'Connector'",
+   [
+    "Symbol J_VN4 [Conn_01x01_Pin]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'Connector'",
+   [
+    "Symbol J_VR1 [Conn_01x01_Pin]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'Connector'",
+   [
+    "Symbol J_VR2 [Conn_01x01_Pin]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'Connector'",
+   [
+    "Symbol J_VR3 [Conn_01x01_Pin]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'Connector'",
+   [
+    "Symbol J_VR4 [Conn_01x01_Pin]"
+   ]
+  ]
+ ],
+ "result": "DIFFERENT"
+}

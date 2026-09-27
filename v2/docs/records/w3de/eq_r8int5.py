@@ -1,0 +1,14 @@
+"""r8int5, stream w3de: ENGINEERING-QUESTIONS.md EQ-16 and EQ-19 status, which the stream's report lists as owed to the
+page's writer after integration. argv: SCA SCB SCC SX SY SZ (the ids apply_registry_r8int5.py took). Run from the root."""
+import os, sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'common'))
+from edlib import once
+SCA, SCB, SCC, SX, SY, SZ = sys.argv[1:7]
+EQ = 'v2/docs/handover/ENGINEERING-QUESTIONS.md'
+once(EQ, "| **Attempts and results** | Recorded by round 8's board E stream; no remedy drawn. |",
+     "| **Attempts and results** | Recorded by round 8's board E stream; no remedy drawn. **Set 5 (board D and E stream w3de, integrated in `fnd/r8int5`):** a fourth option is taken as the session's (%s, with its alternatives, reversal and fallback): VIN_RAW crosses on four Mill-Max 0858-class power pins with four more for its return, as CELL+ does, and the four 813 contacts become ground. Both schematic halves are drawn and regenerated with parity in one integration (board A: J_VR1 to J_VR4, J_VN1 to J_VN4, J_DOCK 1 to 4 to GND, VIN_RAW declared at 14.10 A; board E: J_BLK 1 to 4 to GND, P_VR, P_VN), with IF-AE-DOCK and three dock checks in `check_contracts.py` (PASS 99 of 99). At 14.10 A each power pin carries 3.53 A (39 percent of 9 A), 4.70 A with one open. Still open: E5's eight targets and two 12 AWG holes, A's and E's placements and ASSEMBLY.md's rows (%s, the layer 7 question the decision rests on, with a 2x8 813 and a bench sharing measurement as the fallback), and the ground current's share on the 813 ground contacts (W3DE-DOCK-R1, %s, a bench measurement). Record: `v2/docs/records/w3de/EQ16-dock-vin-raw.md` and `dock_contacts.py`. **Status:** the interface's power capacity is answered at desk for the supply side; E5's fit and the ground return stay open. |" % (SCA, SX, SY),
+     marker="**Set 5 (board D and E stream w3de, integrated in `fnd/r8int5`):**")
+once(EQ, " D and E stay open. |",
+     " **Boards D and E (stream w3de):** every supply PWR-001 refused is declared by its maker's kind (%s): on D the PCM2912A's five regulator outputs, SAU_3V3 and the TPA6132A2's charge pump as nodes; on E TRK_LDO33, E6_DVDD and E6_BST as nodes and SGP_VDD as a rail; the nets the reading left undecided whose working voltage the circuit states are declared nodes. PWR-001 read INCONCLUSIVE with 0 fails on both in the stream's scratch: RLY_K on D and FAN1_SW, FAN2_SW on E wait on their flyback diodes' sheets (%s). Board E's tracker senses on its bottom leg since S-47's core (%s). **Status:** A and B read PASS and D and E INCONCLUSIVE in the streams' scratch; the consolidated re-take takes them in the tree. |" % (SCC, SZ, SCB),
+     marker="**Boards D and E (stream w3de):**")
+print("eq_r8int5 (w3de): applied")

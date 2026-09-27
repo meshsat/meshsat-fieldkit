@@ -1675,6 +1675,96 @@ session_choices:
       - "v2/vendor/diodes/diodes-ap64500.pdf (DS41979)"
       - "v2/vendor/ti/ti-tps25740.pdf (SLVSDG8B)"
 
+  - id: SC-55
+    authority: SESSION
+    under: standing-rule
+    taken_on: "2026-09-27"
+    question: >-
+      How does VIN_RAW cross the dock at board E's declared 14.10 A, when the four Preci-Dip 813 contacts that
+      carry it read 3.53 A each against their 3.5 A maximum and 4.70 A with one open (EQ-16, R8E-N01, R4A-N13)?
+    taken: >-
+      VIN_RAW crosses on four Mill-Max 0858-class power pins with four more for its return, as the pack's CELL+
+      does: board A's J_VR1 to J_VR4 (VIN_RAW) and J_VN1 to J_VN4 (GND) on E5 targets, E5's two 12 AWG holes to
+      board E's P_VR and P_VN; the four 813 contacts that carried VIN_RAW (J_DOCK and J_BLK pins 1 to 4) become
+      ground. Board E's half is in gen_sch_e.py; board A's, E5's, the IF-AE-DOCK contract's,
+      check_contracts.py's, ASSEMBLY.md's and board E's placement are drafted for their owners (S-74).
+    why: >-
+      At 14.10 A four 813 contacts run at 101 percent of their maximum and 134 percent with one open, and a
+      fifth (the spare pin 12) still reads 101 percent with one open; Preci-Dip publishes no current-temperature
+      curve for the 813, only its 85 C music-wire limit, so no count of them can be shown at the desk to hold
+      with one open at the envelope's 51 C inside air. Mill-Max states 9 A continuous at a 10 C rise, 20 mOhm
+      maximum and -55 to +125 C: four pins carry 3.53 A each (39 percent), 4.70 A with one open (52 percent) and
+      7.05 A at a 2:1 resistance spread with one open (78 percent), under 72 C at the +55 C margin. A hardware
+      input bound on board A would cut the front end's input power at a 9 V bus, a narrowed function, and one on
+      board E cannot act while the vehicle holds the bus; the input path allows 14.4 A, so no reduced maximum is
+      justified. The four return pins hold an 813 ground contact's share of the ground current to about 2.24 A
+      with one open (64 percent) at the conservative 32.1 A with even sharing, and to 2.44 to 2.58 A at a 2:1
+      spread among the eight (W3DE-DOCK-R1). Reverse by a Preci-Dip derating curve that carries 14.10 A on a
+      count of 813 contacts that fits the block with one open inside 85 C, or by a layer 7 finding that the
+      block cannot carry eight more power targets (then a 2x8 813 with eight VIN_RAW contacts and a bench
+      measurement of their sharing).
+    source:
+      - "v2/docs/records/w3de/EQ16-dock-vin-raw.md and v2/docs/records/w3de/dock_contacts.py"
+      - "v2/vendor/precidip/precidip-813-spring-loaded-connector-pages-31-34.pdf pp.31 and 34"
+      - "v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf page 28"
+      - "v2/ecad/tools/gen_sch_e.py (J_BLK, P_VR, P_VN; VIN_RAW's derivation R4A-N12)"
+      - "v2/docs/handover/ENGINEERING-QUESTIONS.md EQ-16"
+  - id: SC-56
+    authority: SESSION
+    under: standing-rule
+    taken_on: "2026-09-27"
+    question: >-
+      Board E's LT8705A tracker, once S-47 moves its current sense to the bottom switches' leg: how are MODE and
+      the controller's supply-pin bypasses set?
+    taken: >-
+      MODE (pin 37) is tied to TRK_LDO33 (discontinuous mode); GATEVCC (pin 15) gets its own 4.7 uF, C63, C19's
+      part and land; VIN (pin 34) a 100 nF 50 V X7R at the pin, C64 (C14663); C19, C20, C63 and C64 are declared
+      against pins 35, 4, 15 and 34 with classes L, L, D and D.
+    why: >-
+      The maker: MODE low is forced continuous mode, and with the input regulation loop board E runs 'current
+      being drawn from the output and forced into the input' can result (8705af p.29); the input is a panel;
+      'tie MODE to a voltage above 2.3V (i.e., LDO33)' gives discontinuous mode, in which M4 is held off on
+      reverse inductor current (p.18), and a tie keeps the pin driven where Burst Mode would float it. GATEVCC
+      'Locally bypass to GND' (p.11), at least ten times CB (p.28), and the maker's circuits fit a second 4.7 uF
+      there (p.1, p.41); VIN 'must be locally bypassed' (p.12). The classes follow decision 42's reading of the
+      LM5176 (v2/docs/layout-constraints/E.md section 5). Reverse MODE with a measured reason forced continuous
+      mode is wanted; the bypasses by a maker's circuit without them.
+    source:
+      - "v2/vendor/power/lt8705a.pdf pp.11, 12, 18, 28, 29, 36"
+      - "v2/docs/layout-constraints/E.md section 5 and 6.1 item 9"
+      - "v2/ecad/tools/gen_sch_e.py (U5 pin 37, C63, C64, the bypass entries)"
+  - id: SC-57
+    authority: SESSION
+    under: standing-rule
+    taken_on: "2026-09-27"
+    question: >-
+      Which kind does each supply PWR-001 refused on boards D and E take (EQ-19), and how are the nets it left
+      UNDECIDED settled?
+    taken: >-
+      Nodes for the parts' own regulator outputs, charge pumps and bootstraps: on D PCM_VDD, PCM_VCCA, PCM_VCCL,
+      PCM_VCCR, PCM_VCCP (3.6 V), SAU_3V3 (3.6 V), AMP_CPP, AMP_CPN and AMP_HPVSS (+-1.9 V, CPN riding on CPP);
+      on E TRK_LDO33 (3.35 V), E6_DVDD (1.34 V) and E6_BST (riding on E6_SW at 6.0 V). A rail for SGP_VDD,
+      another part's filtered supply branch, at the SGP41's whole 4.6 mA because the maker does not split VDD
+      from VDDH. TRK_LSENSE is gone with S-47, and its successor TRK_CS is a node as board A's LM5176 CS nodes
+      are. The undecided nets whose working voltage the circuit states are declared nodes at it (D: HS1_MIC,
+      HS2_MIC, HS1_BIAS_R, HS2_BIAS_R, PTT_HS1_n, PTT_HS2_n, X_PTT_HS1_n, X_PTT_HS2_n, RF_ANT, FLANGE_AIN0,
+      FLANGE_REF; E: WATER_SENSE). RLY_K, FAN1_SW and FAN2_SW stay UNDECIDED (S-76).
+    why: >-
+      The rule reports a node and refuses one that carries the supply pins of two or more parts: each net
+      declared a node carries one part's own pins and their capacitors, and each value is its maker's (TI
+      SLES230A 9.5.1.6, Table 6 and note 10; Silicon Labs CP2102N Rev. 1.5 Table 3.6; TI SLOS597B pin table, 6.1
+      and 7.2; LT8705A 8705af p.3; RP2040 2.10.3, Tables 192 and 634; Diodes DS41326 p.4), the charge pump's
+      -1.9 V read from HPVDD's rating and the block diagram because TI publishes no HPVSS figure. SGP_VDD is not
+      made inside a part, so it is a rail. The undecided nets are settled the way the rule's text says
+      (declaring a node), as FLANGE_NTC already was, at voltages this generator already derived; a node
+      declaration takes nothing out of the signal set RET-001 judges. The three left have a peak one flyback
+      diode drop above their rail, and no sheet for D2, D7 or D8 is held. Reverse any node by a load on it that
+      is another part's supply.
+    source:
+      - "v2/ecad/tools/gen_sch_d.py and v2/ecad/tools/gen_sch_e.py (the declarations and their comments)"
+      - "v2/ecad/tools/intent_checks.py (PWR-001 on the netlist)"
+      - "v2/docs/handover/ENGINEERING-QUESTIONS.md EQ-19"
+
 # What is still open. SESSION items are engineering the session decides and records with authority SESSION;
 # OWNER_ACTION is something the owner has ruled that he does or sets himself; LATER a money item he approves from a
 # quote; CONDITIONAL arises only if its condition does. A record that depends on one says so in `waits_on`.
@@ -1882,6 +1972,14 @@ open_items:
       boards/e.json: TRK_LSENSE goes away) and board E is regenerated with parity. The same reading's smaller items
       travel with it: GATEVCC's own 4.7 uF and the four supply-pin bypass declarations (E.md section 5), MODE tied to
       GND with the FBIN loop (E.md section 6.1 item 9) and the Schottky boost diodes (item 10).
+      Progress, 27 September 2026 (board D and E stream w3de): gen_sch_e.py carries the bottom-leg sense (the
+      node TRK_CS, R5 from it to GND, R6 and R7 from R5's two pads, L1 from TRK_SW1 to TRK_SW2), GATEVCC's C63,
+      the four supply-pin declarations and MODE on LDO33 (SC-56), regenerated with parity, and boards/e.json's
+      two TRK_LSENSE entries follow (the switching pre-lay group takes TRK_CS in TRK_LSENSE's place, a switching
+      conductor as board A's LM5176 CS nodes are under F-PR-04). Still open: the drafted knock-ons in
+      pcb_sensitive.yaml (board e's switch list, TRK_CS for TRK_LSENSE, and Kelvin rows) and gen_pcb_e3.py
+      (PATTERNS, the TRKS region, v2/docs/records/w3de/), and item 10, the boost diodes (a silicon part with its
+      sheet and order code, or the BAT54's own sheet read against 8705af p.29).
   - id: S-57
     class: SESSION
     status: OPEN
@@ -2154,6 +2252,49 @@ open_items:
       HD 4.1.7 asks USIM_VDD and ground traces of at least 0.5 mm, which the SIM rails' 50 mA declarations do not
       carry. None was introduced by w3b. Open until C34 is declared, the per-port parts are drawn or a deviation is
       written with its reason, and the constraints are written.
+
+  - id: S-74
+    class: SESSION
+    status: OPEN
+    title: >-
+      What is still in flight of EQ-16 (SC-55) after its two schematic halves landed in ONE integration: board
+      A's (J_VR1 to J_VR4, J_VN1 to J_VN4, J_DOCK pins 1 to 4 to GND, VIN_RAW's source and its declared 14.10 A
+      under R8E-N01; regenerated on the KiCad box with parity on board A's w3a generator at the set 5
+      integration) and board E's (gen_sch_e.py: J_BLK pins 1 to 4 to GND, P_VR, P_VN), with the IF-AE-DOCK
+      contract and check_contracts.py's three dock checks from their drafts (patch_interfaces_if_ae_dock.py,
+      patch_check_contracts_dock.py). They land together because board E's half alone reads the dock map
+      DIFFERENT on pins 1 to 4 (A VIN_RAW, E GND), which would commit board A's VIN_RAW joined to board E's GND
+      across four 813 contacts; with both check_contracts.py read PASS 99 of 99 in w3de's scratch tree. Still in
+      flight: E5 (eight Mill-Max targets, two 12 AWG holes, the pours and the block's outline, the layer 7
+      question the decision rests on), board A's placement of J_VR1 to J_VR4 and J_VN1 to J_VN4 over E5's
+      targets (gen_pcb_a3.py), board E's placement of P_VR and P_VN (patch_gen_pcb_e3.py leaves a marker that
+      stops it until they are chosen), ASSEMBLY.md's block lead rows and build step 2 (patch_assembly_dock.py,
+      with E5's holes); v2/docs/ARCHITECTURE.md's IF-AE-DOCK lines were brought to 14.10 A on the power pins in
+      the same integration.
+  - id: S-75
+    class: SESSION
+    status: OPEN
+    title: >-
+      Finding W3DE-DOCK-R1: the dock's ground current (VIN_RAW's return and the pack's) shares the Mill-Max
+      return pins and the Preci-Dip 813 ground contacts in the ratio of the two groups' resistances, which the
+      makers bound only from above. As drawn before EQ-16, with the Mill-Max pins at their 20 mOhm maximum, an
+      813 ground contact carries 3.06 A at 24.1 A of ground current and 4.08 A at 32.1 A (88 and 117 percent of
+      3.5 A); with EQ-16 1.57 and 2.09 A, 2.24 A with one open (v2/docs/records/w3de/dock_contacts.py). The
+      residual: at the +55 C margin with the 32.1 A peak and the Mill-Max pins at their maximum, an 813 ground
+      contact reaches 86 to 90 C on the assumed 60 K rise at 3.5 A, over its 85 C; with a 2:1 resistance spread
+      among the eight 813 ground contacts (the independent check) the lowest carries 2.44 A, 2.58 A with one
+      open, 80.3 and 83.6 C at the 51 C inside air and 94 to 98 C at the +55 C margin. Owed to TEST-PLAN.md:
+      each contact group's resistance and one 813 ground contact's temperature at the declared currents.
+  - id: S-76
+    class: SESSION
+    status: OPEN
+    title: >-
+      PWR-001 reads INCONCLUSIVE on board D (RLY_K, the T/R relay coil's switched return) and board E (FAN1_SW
+      and FAN2_SW, the mixer fans' switched returns) after SC-57: each net's peak is one flyback diode drop
+      above its rail (+5V_TX, CELL_F), and no maker's sheet for the diodes is held: D2 is a 1N4148W with no
+      order code in gen_sch_d.py or lcsc_fill.py, D7 and D8 are SS14 filled as C51897884 by lcsc_fill.py with no
+      sheet in v2/vendor. Open until the sheets are filed (and D2 has an order code, EQ-21's class) and the
+      three nets are declared nodes at the rail plus the maker's forward drop.
 
 # Items that left the open list, and what closed each: an owner ruling, a session choice, or a commit whose effect
 # was read in the file `closing_evidence` names. A record never waits on a closed item; it cites what closed it.
@@ -4541,8 +4682,15 @@ records:
           on main 53a98a71 with the layer-1 and layer-2 closers' files merged): round 8 changed PWR-F15's wording (board
           D's flange sensor) and added PWR-F16; the PS-IDLE-SPEC row this reading rests on (42.8 W PLAN, 33.1 to 82.8)
           is byte-identical to the file at bb9c861c9920c8d6, so it stands on the file at 465abd3bb9c97416
+      - >-
+          v2/ecad/tools/gen_sch_e.py re-read at the r8int5 integration of 27 September 2026 (stream w3de, boards D and
+          E, and board A's half of EQ-16): S-47's bottom-leg sense (TRK_CS, R5 to GND, R6 and R7 its Kelvin taps, L1
+          from TRK_SW1 to TRK_SW2), MODE on LDO33, C63 and C64 with four declared bypasses (SC-56), EQ-16's board E half
+          (J_BLK pins 1 to 4 to GND, P_VR, P_VN) and the PWR-001 declarations (SC-57); the solar stage this reading
+          rests on (J_SOLAR for a 100 W panel, F2 10 A, D4 SMCJ28A, the FBIN point of 17.6 V at 5.68 A) is unchanged;
+          the sense and MODE changes move no figure it uses, so it stands FAIL on the file at 59abd6365b94c2d6
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_e.py@f275102965fafa10"
+      - "v2/ecad/tools/gen_sch_e.py@59abd6365b94c2d6"
       - "v2/docs/feasibility/POWER-THERMAL.md@465abd3bb9c97416"
     release_effect: BLOCKER
     source:
@@ -4860,10 +5008,35 @@ records:
           output, TX_INHIBIT_n AND EMCON_HW AND the software hold, the hold now re-driven by U40. The lines this
           reading cites are now v2/ecad/tools/gen_sch_a.py:1291-1304 (S-14's comment), 1352-1353 (U26) and 1431 (U30);
           the reading stands on the file at 62c9f38417412c04 and the file at c57d119d21f45fe9.
+      - >-
+          v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net regenerated by stream w3de on 27 September 2026 and integrated in the
+          r8int5 integration of 27 September 2026 (stream w3de, boards D and E, and board A's half of EQ-16)
+          (gen_sch_d.py changed in its intent declarations and comments only): identical to the file at 0dad82b4b6a79290
+          in every component and every net's pins (v2/docs/records/w3de/net_compare.py; regen_compare.py pair netlist
+          PARITY_AFTER_NOISE); U14, U18, R48, TR_APRS, KEY and PA_EN on board D are among the unchanged, so it stands
+          PASS on the file at 76700a687eb6187f
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at the r8int5 integration of 27 September 2026 (stream
+          w3de, boards D and E, and board A's half of EQ-16) on the KiCad box with main's chain (handover_exports.py
+          regen, PHASE A65, on board A's w3a generator with the dock half): compared with the file at c57d119d21f45fe9
+          component by component and net by net by two independent readers (stream w3de's net_compare.py against
+          expected-a-netlist.json, 'ONLY THE EXPECTED CHANGES', and stream w3a's netcmp.py;
+          v2/docs/records/w3de/parity-r8int5/), it differs only in J_VR1 to J_VR4 (VIN_RAW) and J_VN1 to J_VN4 (GND)
+          added and J_DOCK's value and pins 1 to 4 (VIN_RAW to GND); on board A U30, U26, OUTLET_OK, POE_EN, PD_EN, U16,
+          U19 and PA_EN (U36's output) are unchanged, so it stands PASS on the file at da05dc02bc1e612f
+      - >-
+          v2/ecad/tools/gen_sch_a.py re-read at the r8int5 integration of 27 September 2026 (stream w3de, boards D and
+          E, and board A's half of EQ-16): stream w3de's patch_gen_sch_a_dock.py applied to board A's w3a file, with two
+          comment corrections from w3de's independent checks (the return pins' share of the ground current and the round
+          4 VIN_RAW paragraph marked as history): _VIN_RAW_A becomes board E's 14.10 A under R8E-N01, VIN_RAW's source
+          J_VR1 to J_VR4 and its note, J_VR1 to J_VR4 and J_VN1 to J_VN4 with their comment after R1, J_DOCK's value and
+          pins 1 to 4, and the section list; lines after 66 move down by 5 and lines after the pre-charge pin by 23; the
+          interlock's lines are unchanged in content (S-14's comment, U26 and U30 moved down by 23), so it stands PASS
+          on the file at 5af29bbcf27bb91a
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_a.py@62c9f38417412c04"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@c57d119d21f45fe9"
-      - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290"
+      - "v2/ecad/tools/gen_sch_a.py@5af29bbcf27bb91a"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
+      - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f"
     release_effect: BLOCKER
     source: ["owner ruling D-11", "v2/docs/MESHSAT-709-geometry-appendix.md:2932", "v2/ecad/tools/gen_sch_a.py:1177-1190, 1237-1245"]
     source_check: VERIFIED
@@ -5570,9 +5743,26 @@ records:
           the intent as nodes at 5.5 V (SLVSDG8B 7.3), which settles them for PWR-001; port_protect on the new netlist
           reads PASS of 26 with 0 answered in part; the reading stands on the file at 62c9f38417412c04 and the file at
           c57d119d21f45fe9.
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at the r8int5 integration of 27 September 2026 (stream
+          w3de, boards D and E, and board A's half of EQ-16) on the KiCad box with main's chain (handover_exports.py
+          regen, PHASE A65, on board A's w3a generator with the dock half): compared with the file at c57d119d21f45fe9
+          component by component and net by net by two independent readers (stream w3de's net_compare.py against
+          expected-a-netlist.json, 'ONLY THE EXPECTED CHANGES', and stream w3a's netcmp.py;
+          v2/docs/records/w3de/parity-r8int5/), it differs only in J_VR1 to J_VR4 (VIN_RAW) and J_VN1 to J_VN4 (GND)
+          added and J_DOCK's value and pins 1 to 4 (VIN_RAW to GND); U31 (TPD2E2U06QDBZRQ1) on PD_CC1 and PD_CC2 at
+          J_USBC_OUT, and C96 and C97, are unchanged, so it stands PASS on the file at da05dc02bc1e612f
+      - >-
+          v2/ecad/tools/gen_sch_a.py re-read at the r8int5 integration of 27 September 2026 (stream w3de, boards D and
+          E, and board A's half of EQ-16): stream w3de's patch_gen_sch_a_dock.py applied to board A's w3a file, with two
+          comment corrections from w3de's independent checks (the return pins' share of the ground current and the round
+          4 VIN_RAW paragraph marked as history): _VIN_RAW_A becomes board E's 14.10 A under R8E-N01, VIN_RAW's source
+          J_VR1 to J_VR4 and its note, J_VR1 to J_VR4 and J_VN1 to J_VN4 with their comment after R1, J_DOCK's value and
+          pins 1 to 4, and the section list; lines after 66 move down by 5 and lines after the pre-charge pin by 23;
+          U31's lines are unchanged in content (moved down by 23), so it stands PASS on the file at 5af29bbcf27bb91a
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_a.py@62c9f38417412c04"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@c57d119d21f45fe9"
+      - "v2/ecad/tools/gen_sch_a.py@5af29bbcf27bb91a"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
       - "v2/docs/TEST-PLAN.md@701c1020053e7903"
     release_effect: MUST_JUSTIFY
     source: ["owner ruling D-17", "v2/ecad/tools/gen_sch_a.py:1104-1114", "v2/ecad/tools/pcb_decisions.yaml:256-429 (decision 31)"]
@@ -5730,9 +5920,24 @@ records:
           text, J_SMB's order code (C594232 to C144395), R6 and R7's value (100 R to 10 R) and the title block's comment 2;
           U17, its supply network and SDA1/SCL1 are unchanged and U17's statement is unchanged in the generator, so this
           reading stands on the files at f275102965fafa10 and f3c1ad6153002976
+      - >-
+          v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net regenerated by stream w3de on 27 September 2026 and integrated in
+          the r8int5 integration of 27 September 2026 (stream w3de, boards D and E, and board A's half of EQ-16): it
+          differs from the file at f3c1ad6153002976 only in C63, C64, P_VR and P_VN added, J_BLK's value and its pins 1
+          to 4 (VIN_RAW to GND), the tracker's bottom-leg sense (Q4 and Q5 pins 1 to 3 GND to TRK_CS, R5
+          TRK_LSENSE/TRK_SW2 to TRK_CS/GND, R6 pin 1 to TRK_CS, R7 pin 1 to GND, L1 pin 2 to TRK_SW2, the net TRK_LSENSE
+          gone) and U5 pin 37 (GND to TRK_LDO33), every component and every net's pins compared
+          (v2/docs/records/w3de/net_compare.py against parity/expected-e-netlist.json); U17 (the SGP41), its supply
+          network (R57, C57, C58) and SDA1 and SCL1 are unchanged, so it stands PASS on the file at d6137f50059e5cbc
+      - >-
+          v2/ecad/tools/gen_sch_e.py re-read at the r8int5 integration of 27 September 2026 (stream w3de, boards D and
+          E, and board A's half of EQ-16): S-47's bottom-leg sense (TRK_CS, R5 to GND, R6 and R7 its Kelvin taps, L1
+          from TRK_SW1 to TRK_SW2), MODE on LDO33, C63 and C64 with four declared bypasses (SC-56), EQ-16's board E half
+          (J_BLK pins 1 to 4 to GND, P_VR, P_VN) and the PWR-001 declarations (SC-57); U17's statement is unchanged and
+          the intent now declares SGP_VDD a rail (SC-57), so it stands PASS on the file at 59abd6365b94c2d6
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_e.py@f275102965fafa10"
-      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976"
+      - "v2/ecad/tools/gen_sch_e.py@59abd6365b94c2d6"
+      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc"
     release_effect: ADVISORY
     source:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2896 (32.54)"
@@ -6546,9 +6751,18 @@ records:
           panel-absent paragraph (R102 and R58 on EMCON_HW, R145, R59 and R2 on TX_INHIBIT_n, R117, R118, the slot
           enables pulled low on A22), which this reading cites, is a separate paragraph from the bus table and is
           byte-identical, so it stands PASS on the file at 7bb905740ddaebb9.
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at the r8int5 integration of 27 September 2026 (stream
+          w3de, boards D and E, and board A's half of EQ-16) on the KiCad box with main's chain (handover_exports.py
+          regen, PHASE A65, on board A's w3a generator with the dock half): compared with the file at c57d119d21f45fe9
+          component by component and net by net by two independent readers (stream w3de's net_compare.py against
+          expected-a-netlist.json, 'ONLY THE EXPECTED CHANGES', and stream w3a's netcmp.py;
+          v2/docs/records/w3de/parity-r8int5/), it differs only in J_VR1 to J_VR4 (VIN_RAW) and J_VN1 to J_VN4 (GND)
+          added and J_DOCK's value and pins 1 to 4 (VIN_RAW to GND); R102 (EMCON_HW to GND), R145 on TX_INHIBIT_n and
+          the slot enable pull-downs are unchanged, so it stands PASS on the file at da05dc02bc1e612f
     evidence_bound_to:
       - "v2/docs/PANEL.md@7bb905740ddaebb9"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@c57d119d21f45fe9"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
     release_effect: ADVISORY
     source:
       - "v2/docs/PANEL.md section 7"
@@ -6778,9 +6992,25 @@ records:
           byte-identical, among them sections 0 and 0a (its rows and counts), 1 to 4 with 4.1 to 4.18, the rest of 4a,
           4b, 5, 5a, every other row of 6 and 7, the rest of 8, and 9 to 9d; sections 4.1 and 4.2, which this reading
           cites, are byte-identical, so it stands INCONCLUSIVE on the file at 1d4a491d9718e6d3.
+      - >-
+          v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net regenerated by stream w3de on 27 September 2026 and integrated in the
+          r8int5 integration of 27 September 2026 (stream w3de, boards D and E, and board A's half of EQ-16)
+          (gen_sch_d.py changed in its intent declarations and comments only): identical to the file at 0dad82b4b6a79290
+          in every component and every net's pins (v2/docs/records/w3de/net_compare.py; regen_compare.py pair netlist
+          PARITY_AFTER_NOISE); U12, U13, U14, U15 and their nets are among the unchanged, so it stands INCONCLUSIVE on
+          the file at 76700a687eb6187f
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at the r8int5 integration of 27 September 2026 (stream
+          w3de, boards D and E, and board A's half of EQ-16) on the KiCad box with main's chain (handover_exports.py
+          regen, PHASE A65, on board A's w3a generator with the dock half): compared with the file at c57d119d21f45fe9
+          component by component and net by net by two independent readers (stream w3de's net_compare.py against
+          expected-a-netlist.json, 'ONLY THE EXPECTED CHANGES', and stream w3a's netcmp.py;
+          v2/docs/records/w3de/parity-r8int5/), it differs only in J_VR1 to J_VR4 (VIN_RAW) and J_VN1 to J_VN4 (GND)
+          added and J_DOCK's value and pins 1 to 4 (VIN_RAW to GND); board A's PA_EN (U35, U36) and its gates are
+          unchanged, so it stands INCONCLUSIVE on the file at da05dc02bc1e612f
     evidence_bound_to:
-      - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@c57d119d21f45fe9"
+      - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
       - "v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3"
       - "v2/docs/CURRENT-EVIDENCE.md@ed8d4fbaefde46f7"
     release_effect: BLOCKER
@@ -7500,9 +7730,25 @@ records:
           text, J_SMB's order code (C594232 to C144395), R6 and R7's value (100 R to 10 R) and the title block's comment 2;
           J_TAMP, R52, R53, C52, TAMPER_LEAD, TAMPER_IO and U12's CELL_F pins are unchanged, and no board routes the lead to
           ZEROIZE_HW or the panel controller, so this reading stands on the files at f275102965fafa10 and f3c1ad6153002976
+      - >-
+          v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net regenerated by stream w3de on 27 September 2026 and integrated in
+          the r8int5 integration of 27 September 2026 (stream w3de, boards D and E, and board A's half of EQ-16): it
+          differs from the file at f3c1ad6153002976 only in C63, C64, P_VR and P_VN added, J_BLK's value and its pins 1
+          to 4 (VIN_RAW to GND), the tracker's bottom-leg sense (Q4 and Q5 pins 1 to 3 GND to TRK_CS, R5
+          TRK_LSENSE/TRK_SW2 to TRK_CS/GND, R6 pin 1 to TRK_CS, R7 pin 1 to GND, L1 pin 2 to TRK_SW2, the net TRK_LSENSE
+          gone) and U5 pin 37 (GND to TRK_LDO33), every component and every net's pins compared
+          (v2/docs/records/w3de/net_compare.py against parity/expected-e-netlist.json); J_TAMP, R52, R53, C52,
+          TAMPER_LEAD, TAMPER_IO and U12's CELL_F pins are unchanged, and no board routes the lead to ZEROIZE_HW or the
+          panel controller, so it stands PASS on the file at d6137f50059e5cbc
+      - >-
+          v2/ecad/tools/gen_sch_e.py re-read at the r8int5 integration of 27 September 2026 (stream w3de, boards D and
+          E, and board A's half of EQ-16): S-47's bottom-leg sense (TRK_CS, R5 to GND, R6 and R7 its Kelvin taps, L1
+          from TRK_SW1 to TRK_SW2), MODE on LDO33, C63 and C64 with four declared bypasses (SC-56), EQ-16's board E half
+          (J_BLK pins 1 to 4 to GND, P_VR, P_VN) and the PWR-001 declarations (SC-57); the tamper block's lines are
+          unchanged in content, so it stands PASS on the file at 59abd6365b94c2d6
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_e.py@f275102965fafa10"
-      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976"
+      - "v2/ecad/tools/gen_sch_e.py@59abd6365b94c2d6"
+      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc"
     release_effect: MUST_JUSTIFY
     source:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2790 (item 6)"
@@ -8342,8 +8588,15 @@ records:
           lands on the expander U27's pin 18 (line 1262), whose EXP_INT (pin 1, R110, line 1267) is the panel
           controller's interrupt (J_AB1 pin 13). FAIL on the file at f275102965fafa10 until HOT-R1 drives the contact
           (S-57).
+      - >-
+          v2/ecad/tools/gen_sch_e.py re-read at the r8int5 integration of 27 September 2026 (stream w3de, boards D and
+          E, and board A's half of EQ-16): S-47's bottom-leg sense (TRK_CS, R5 to GND, R6 and R7 its Kelvin taps, L1
+          from TRK_SW1 to TRK_SW2), MODE on LDO33, C63 and C64 with four declared bypasses (SC-56), EQ-16's board E half
+          (J_BLK pins 1 to 4 to GND, P_VR, P_VN) and the PWR-001 declarations (SC-57); J_BLK pin 12 is still BLK_SPARE
+          with TP7 its only other node and U10's GPIO19 (pin 30) is still not connected: HOT-R1 (S-57) is drawn on
+          neither board, so it stands FAIL on the file at 59abd6365b94c2d6
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_e.py@f275102965fafa10"
+      - "v2/ecad/tools/gen_sch_e.py@59abd6365b94c2d6"
     release_effect: BLOCKER
     source:
       - "v2/vendor/battery/samsung-35e-orbtronic.pdf"
@@ -8417,9 +8670,15 @@ records:
           (lines 2 to 6) that names D-06's one 4S3P block and S-27; the box below it still draws the wrapped 4S4P block
           (line 10 and CELLS, line 20), and no enclosure or hold-down for the 4S3P block exists, so the FAIL stands on
           the file at fab2cc216f7ba460
+      - >-
+          v2/ecad/tools/pcb_energy_chain.yaml re-read at the r8int5 integration of 27 September 2026 (stream w3de,
+          boards D and E, and board A's half of EQ-16) (stream w3de's patch_energy_chain.py): the SHORE_INPUT stage's
+          currents (6.15 A, F-IN-02) and note, and the DOCK_BLOCK stage's Mill-Max citation, change; the header and the
+          pack source are byte-identical; the pack's configuration this reading rests on is the same text, so it stands
+          FAIL on the file at a09ca0293afd1f7c
     evidence_bound_to:
       - "v2/ecad/tools/pcb_pack_protection.yaml@1cd670d6c7685645"
-      - "v2/ecad/tools/pcb_energy_chain.yaml@b566a7a041aeb165"
+      - "v2/ecad/tools/pcb_energy_chain.yaml@a09ca0293afd1f7c"
       - "v2/ecad/tools/pcb_board_facts.yaml@07af4d0f2b166694"
       - "v2/cad/pack_4s.py@fab2cc216f7ba460"
     release_effect: ADVISORY
@@ -9045,16 +9304,42 @@ records:
           (v2/docs/records/w3b/tools/rename_check.py); the documents this reading binds describe nothing the stream
           changed (their VBAT is board A's pack node; the TPS23861's sense wiring, the V_BCKP capacitors and the
           coin-cell net's name appear in none of them), so this reading stands on the file at 8b78c59754a6a0c7
+      - >-
+          v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net regenerated by stream w3de on 27 September 2026 and integrated in the
+          r8int5 integration of 27 September 2026 (stream w3de, boards D and E, and board A's half of EQ-16)
+          (gen_sch_d.py changed in its intent declarations and comments only): identical to the file at 0dad82b4b6a79290
+          in every component and every net's pins (v2/docs/records/w3de/net_compare.py; regen_compare.py pair netlist
+          PARITY_AFTER_NOISE); none of the parts or nets this record cites on board D is among the changes, so it stands
+          PASS on the file at 76700a687eb6187f
+      - >-
+          v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net regenerated by stream w3de on 27 September 2026 and integrated in
+          the r8int5 integration of 27 September 2026 (stream w3de, boards D and E, and board A's half of EQ-16): it
+          differs from the file at f3c1ad6153002976 only in C63, C64, P_VR and P_VN added, J_BLK's value and its pins 1
+          to 4 (VIN_RAW to GND), the tracker's bottom-leg sense (Q4 and Q5 pins 1 to 3 GND to TRK_CS, R5
+          TRK_LSENSE/TRK_SW2 to TRK_CS/GND, R6 pin 1 to TRK_CS, R7 pin 1 to GND, L1 pin 2 to TRK_SW2, the net TRK_LSENSE
+          gone) and U5 pin 37 (GND to TRK_LDO33), every component and every net's pins compared
+          (v2/docs/records/w3de/net_compare.py against parity/expected-e-netlist.json); none of the parts or nets this
+          record cites on board E is among the changes, so it stands PASS on the file at d6137f50059e5cbc
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at the r8int5 integration of 27 September 2026 (stream
+          w3de, boards D and E, and board A's half of EQ-16) on the KiCad box with main's chain (handover_exports.py
+          regen, PHASE A65, on board A's w3a generator with the dock half): compared with the file at c57d119d21f45fe9
+          component by component and net by net by two independent readers (stream w3de's net_compare.py against
+          expected-a-netlist.json, 'ONLY THE EXPECTED CHANGES', and stream w3a's netcmp.py;
+          v2/docs/records/w3de/parity-r8int5/), it differs only in J_VR1 to J_VR4 (VIN_RAW) and J_VN1 to J_VN4 (GND)
+          added and J_DOCK's value and pins 1 to 4 (VIN_RAW to GND); on board A the startup enables, the outlet
+          interlock U30 and U26 and the wall data path J_USBW are unchanged, so it stands PASS on the file at
+          da05dc02bc1e612f
     evidence_bound_to:
-      - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290"
-      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976"
+      - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f"
+      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc"
       - "v2/docs/PANEL.md@7bb905740ddaebb9"
       - "v2/docs/CONOPS.md@370aca33cb44da97"
       - "v2/docs/V2-SPEC.md@a92ea2ef3793a3c9"
       - "v2/docs/OPERATING-ENVELOPE.md@44a031caee47ff9a"
       - "v2/docs/TEST-PLAN.md@701c1020053e7903"
       - "v2/ecad/tools/pcb_decisions.yaml@b5f7162443d5ad91"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@c57d119d21f45fe9"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161"
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
@@ -10559,9 +10844,18 @@ records:
           runtime cross-reference), 24 and 76 (the hardware EMCON lamp drawn on board C, its light guide owed), 59 (a
           seventeenth LED) and correction 20's last sentence change and correction 30 is added; line 35 and correction
           8, which this reading rests on, are byte-identical, so it stands on the file at a92ea2ef3793a3c9
+      - >-
+          v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net regenerated by stream w3de on 27 September 2026 and integrated in
+          the r8int5 integration of 27 September 2026 (stream w3de, boards D and E, and board A's half of EQ-16): it
+          differs from the file at f3c1ad6153002976 only in C63, C64, P_VR and P_VN added, J_BLK's value and its pins 1
+          to 4 (VIN_RAW to GND), the tracker's bottom-leg sense (Q4 and Q5 pins 1 to 3 GND to TRK_CS, R5
+          TRK_LSENSE/TRK_SW2 to TRK_CS/GND, R6 pin 1 to TRK_CS, R7 pin 1 to GND, L1 pin 2 to TRK_SW2, the net TRK_LSENSE
+          gone) and U5 pin 37 (GND to TRK_LDO33), every component and every net's pins compared
+          (v2/docs/records/w3de/net_compare.py against parity/expected-e-netlist.json); DCF_PULSE still runs from J_DCF
+          pin 3 to U10 and nowhere else, so it stands PASS on the file at d6137f50059e5cbc
     evidence_bound_to:
       - "v2/docs/V2-SPEC.md@a92ea2ef3793a3c9"
-      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976"
+      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc"
     release_effect: ADVISORY
     source: ["v2/docs/V2-SPEC.md:35", "v2/ecad/tools/gen_sch_e.py:678"]
     source_check: VERIFIED
@@ -10763,12 +11057,31 @@ records:
           when U39 has cut that supply on a +3V3 overvoltage (U28 pin 15, IO1_2, which board A's w3a netlist moves
           from EXP2_SP3 to EMCON_EF_FLT with TP3); every other line of the file is byte-identical; section 10, which
           this reading cites, is byte-identical, so it stands PASS on the file at 7bb905740ddaebb9.
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at the r8int5 integration of 27 September 2026 (stream
+          w3de, boards D and E, and board A's half of EQ-16) on the KiCad box with main's chain (handover_exports.py
+          regen, PHASE A65, on board A's w3a generator with the dock half): compared with the file at c57d119d21f45fe9
+          component by component and net by net by two independent readers (stream w3de's net_compare.py against
+          expected-a-netlist.json, 'ONLY THE EXPECTED CHANGES', and stream w3a's netcmp.py;
+          v2/docs/records/w3de/parity-r8int5/), it differs only in J_VR1 to J_VR4 (VIN_RAW) and J_VN1 to J_VN4 (GND)
+          added and J_DOCK's value and pins 1 to 4 (VIN_RAW to GND); the strap R26 and R27 from CH_VDDA, R17 from VBAT
+          to CELL_FUSED and F1 from CELL_FUSED to CELL+ are unchanged; VIN_RAW is not a conductor of the charger or pack
+          path this record reads, so it stands PASS on the file at da05dc02bc1e612f
+      - >-
+          v2/ecad/tools/gen_sch_a.py re-read at the r8int5 integration of 27 September 2026 (stream w3de, boards D and
+          E, and board A's half of EQ-16): stream w3de's patch_gen_sch_a_dock.py applied to board A's w3a file, with two
+          comment corrections from w3de's independent checks (the return pins' share of the ground current and the round
+          4 VIN_RAW paragraph marked as history): _VIN_RAW_A becomes board E's 14.10 A under R8E-N01, VIN_RAW's source
+          J_VR1 to J_VR4 and its note, J_VR1 to J_VR4 and J_VN1 to J_VN4 with their comment after R1, J_DOCK's value and
+          pins 1 to 4, and the section list; lines after 66 move down by 5 and lines after the pre-charge pin by 23; the
+          generator's lines 18 to 48 and the strap's lines are unchanged in content, so it stands PASS on the file at
+          5af29bbcf27bb91a
     evidence_bound_to:
       - "v2/docs/PANEL.md@7bb905740ddaebb9"
       - "v2/docs/CONOPS.md@370aca33cb44da97"
       - "v2/docs/OPERATING-ENVELOPE.md@44a031caee47ff9a"
-      - "v2/ecad/tools/gen_sch_a.py@62c9f38417412c04"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@c57d119d21f45fe9"
+      - "v2/ecad/tools/gen_sch_a.py@5af29bbcf27bb91a"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
       - "v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md@44fdf9a022c49337"
     release_effect: BLOCKER
     source:
@@ -10938,12 +11251,27 @@ records:
           when U39 has cut that supply on a +3V3 overvoltage (U28 pin 15, IO1_2, which board A's w3a netlist moves
           from EXP2_SP3 to EMCON_EF_FLT with TP3); every other line of the file is byte-identical; section 10's SMBus
           sentences, which this reading cites, are byte-identical, so it stands PASS on the file at 7bb905740ddaebb9.
+      - >-
+          v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net regenerated by stream w3de on 27 September 2026 and integrated in
+          the r8int5 integration of 27 September 2026 (stream w3de, boards D and E, and board A's half of EQ-16): it
+          differs from the file at f3c1ad6153002976 only in C63, C64, P_VR and P_VN added, J_BLK's value and its pins 1
+          to 4 (VIN_RAW to GND), the tracker's bottom-leg sense (Q4 and Q5 pins 1 to 3 GND to TRK_CS, R5
+          TRK_LSENSE/TRK_SW2 to TRK_CS/GND, R6 pin 1 to TRK_CS, R7 pin 1 to GND, L1 pin 2 to TRK_SW2, the net TRK_LSENSE
+          gone) and U5 pin 37 (GND to TRK_LDO33), every component and every net's pins compared
+          (v2/docs/records/w3de/net_compare.py against parity/expected-e-netlist.json); J_SMB and its four nets are
+          unchanged, so it stands PASS on the file at d6137f50059e5cbc
+      - >-
+          v2/ecad/tools/check_contracts.py re-read at the r8int5 integration of 27 September 2026 (stream w3de, boards D
+          and E, and board A's half of EQ-16) (stream w3de's patch_check_contracts_dock.py): section 5a gains three
+          EQ-16 dock checks (board A's four VIN_RAW pins and four return pins, board E's P_VR and P_VN, no VIN_RAW on an
+          813 contact); every line naming J_SMB is byte-identical (sha256/16 c78df21055972aa1 before and after); the
+          J_SMB contract this reading cites is that text, so it stands PASS on the file at 5e14f456a0791c35
     evidence_bound_to:
-      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976"
+      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc"
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
       - "v2/docs/ASSEMBLY.md@b49f853f450d49ee"
       - "v2/docs/PANEL.md@7bb905740ddaebb9"
-      - "v2/ecad/tools/check_contracts.py@308fdefb90335da4"
+      - "v2/ecad/tools/check_contracts.py@5e14f456a0791c35"
     release_effect: BLOCKER
     source: ["v2/ecad/tools/gen_sch_e.py:264", "v2/docs/ASSEMBLY.md section 4", "v2/docs/PANEL.md section 10"]
     source_check: VERIFIED
@@ -11272,12 +11600,36 @@ records:
           (v2/docs/records/w3b/tools/rename_check.py); board B's six one-way clamps (D1, D2, D101, D201, D301, D520)
           are unchanged, port_protect reads 0 reversed on it and the stream adds no rectifier, so the record stays
           FAIL on the rectifier clause, so this reading stands on the file at 8b78c59754a6a0c7
+      - >-
+          v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net regenerated by stream w3de on 27 September 2026 and integrated in the
+          r8int5 integration of 27 September 2026 (stream w3de, boards D and E, and board A's half of EQ-16)
+          (gen_sch_d.py changed in its intent declarations and comments only): identical to the file at 0dad82b4b6a79290
+          in every component and every net's pins (v2/docs/records/w3de/net_compare.py; regen_compare.py pair netlist
+          PARITY_AFTER_NOISE); board D's D1 is unchanged, so it stands FAIL on the file at 76700a687eb6187f
+      - >-
+          v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net regenerated by stream w3de on 27 September 2026 and integrated in
+          the r8int5 integration of 27 September 2026 (stream w3de, boards D and E, and board A's half of EQ-16): it
+          differs from the file at f3c1ad6153002976 only in C63, C64, P_VR and P_VN added, J_BLK's value and its pins 1
+          to 4 (VIN_RAW to GND), the tracker's bottom-leg sense (Q4 and Q5 pins 1 to 3 GND to TRK_CS, R5
+          TRK_LSENSE/TRK_SW2 to TRK_CS/GND, R6 pin 1 to TRK_CS, R7 pin 1 to GND, L1 pin 2 to TRK_SW2, the net TRK_LSENSE
+          gone) and U5 pin 37 (GND to TRK_LDO33), every component and every net's pins compared
+          (v2/docs/records/w3de/net_compare.py against parity/expected-e-netlist.json); board E's D1 to D4 and D10 are
+          unchanged, so it stands FAIL on the file at d6137f50059e5cbc
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at the r8int5 integration of 27 September 2026 (stream
+          w3de, boards D and E, and board A's half of EQ-16) on the KiCad box with main's chain (handover_exports.py
+          regen, PHASE A65, on board A's w3a generator with the dock half): compared with the file at c57d119d21f45fe9
+          component by component and net by net by two independent readers (stream w3de's net_compare.py against
+          expected-a-netlist.json, 'ONLY THE EXPECTED CHANGES', and stream w3a's netcmp.py;
+          v2/docs/records/w3de/parity-r8int5/), it differs only in J_VR1 to J_VR4 (VIN_RAW) and J_VN1 to J_VN4 (GND)
+          added and J_DOCK's value and pins 1 to 4 (VIN_RAW to GND); board A's D1 to D4 are unchanged, so it stands FAIL
+          on the file at da05dc02bc1e612f
     evidence_bound_to:
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@c57d119d21f45fe9"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161"
-      - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290"
-      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976"
+      - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f"
+      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc"
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
     release_effect: BLOCKER
     source:

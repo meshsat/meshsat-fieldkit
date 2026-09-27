@@ -1,0 +1,72 @@
+{
+ "kind": "erc",
+ "violations": [
+  365,
+  367
+ ],
+ "by_type": [
+  {
+   "warning:endpoint_off_grid": 64,
+   "warning:lib_symbol_issues": 264,
+   "warning:unconnected_wire_endpoint": 37
+  },
+  {
+   "warning:endpoint_off_grid": 64,
+   "warning:lib_symbol_issues": 266,
+   "warning:unconnected_wire_endpoint": 37
+  }
+ ],
+ "only_committed": [
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR062 [GND]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR063 [GND]"
+   ]
+  ]
+ ],
+ "only_other": [
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'Connector'",
+   [
+    "Symbol P_VN [Conn_01x01_Pin]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'Connector'",
+   [
+    "Symbol P_VR [Conn_01x01_Pin]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'Device'",
+   [
+    "Symbol C63 [C]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'Device'",
+   [
+    "Symbol C64 [C]"
+   ]
+  ]
+ ],
+ "result": "DIFFERENT"
+}

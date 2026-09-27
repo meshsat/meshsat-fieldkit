@@ -1,0 +1,1 @@
+handover_exports: regen a (pcb-a-power-a23, PHASE=A65): exits [0, 0, 0], {'schematic': 'DIFFERENT', 'netlist': 'DIFFERENT', 'intent': 'DIFFERENT', 'bom': 'DIFFERENT', 'erc': 'DIFFERENT'}, lands moved 0: DIFFERENT_OR_INCOMPLETE

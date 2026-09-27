@@ -1,0 +1,24 @@
+{
+ "components_added": [],
+ "components_changed": {},
+ "components_removed": [],
+ "counts": {
+  "components": [
+   591,
+   591
+  ],
+  "nets": [
+   347,
+   347
+  ],
+  "pins": [
+   1751,
+   1751
+  ]
+ },
+ "nets_added": [],
+ "nets_removed": [],
+ "pins_added": {},
+ "pins_moved": {},
+ "pins_removed": {}
+}

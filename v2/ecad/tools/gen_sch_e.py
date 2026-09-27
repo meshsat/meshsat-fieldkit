@@ -115,7 +115,9 @@ _intent.rail("CELL+", 14.4, 10.0, 18.0, "J_BATT", loads={"F3": 10.0}, series_of=
 # figures); this board's 14.10 A replaces that basis and puts each of the four Preci-Dip 813 VIN_RAW contacts of the dock
 # at 3.53 A against their 3.5 A even with perfect sharing (the return also has the pack's ground pins in parallel): a
 # cross-board finding for board A and IF-AE-DOCK (R8E-N01), handed to the integrator with this round's drafts, not a
-# change made here.
+# change made here. ANSWERED 27 September 2026 (EQ-16, board E stream w3de): VIN_RAW crosses on four Mill-Max 0858-class
+# power pins with four more for its return, and the 813 contacts 1 to 4 become ground; this board's half is at J_BLK,
+# P_VR and P_VN below, and the reasons and the arithmetic are there.
 _VEH_T, _VEH_P = 6.15, 6.15
 _TRK_A = round(100.0 * 0.93 / 9.0, 2)                    # R4A-N12: 10.33 A, the panel's power at the 9 V bus floor
 _FE_A = round(5.7 * 20.7 / 0.93 / 9.0, 2)                # R4A-N12: 14.10 A, board A's front end at its ISNS limit, 9 V in
@@ -126,9 +128,12 @@ _intent.rail("VIN_RAW", 12.0, _VIN_T, _VIN_P, ["L2", "Q2"], switch="U6", enable_
              # up when the input passes 9 V and drops out above 40 V, which is the LM5069's own gate.
              # (The tracker's ideal diode U4/Q2 is the second feed; it has no switch of its own on this bus.)
 
-             loads={"J_BLK": _VIN_T}, budget=0.02, share=0.005,
+             # EQ-16 (w3de, 27 September 2026): the whole bus leaves on P_VR's 12 AWG wire to the dock's power pins
+             loads={"P_VR": _VIN_T}, budget=0.02, share=0.005,
              note="the raw bus to the dock block: the vehicle and shore entry after the filter choke (L2 pad 3, 10 A "
-                  "fuse) AND the panel tracker through its ideal diode (Q2's drain), ORed on the same copper to J_BLK. "
+                  "fuse) AND the panel tracker through its ideal diode (Q2's drain), ORed on the same copper to P_VR, "
+                  "the 12 AWG pad to the dock's four VIN_RAW power pins (EQ-16, 27 September 2026; until then J_BLK "
+                  "pins 1 to 4). "
                   "Declared at 14.10 A typical and peak (R4A-N12, 26 September 2026): board A's front end at its ISNS "
                   "limit (5.7 A at 20.7 V, 0.93) drawing from a 9.0 V bus, which the two feeds can supply together "
                   "(vehicle up to 6.15 A at U6's VCL max, tracker 10.33 A at the panel's 93 W). The vehicle path alone "
@@ -147,7 +152,11 @@ _intent.rail("+3V3_E6", 3.3, 0.35, 0.60, "U13", always_on=True, converted=True, 
              # U17 (S-10, 26 September 2026): the SGP41's hotplate supply VDDH sits on this rail, 3.4 mA maximum in
              # measurement at 3.3 V plus 20 percent for 5 ms after each command (SGP41 datasheet v1.0, Table 2)
              loads={"U10": 0.06, "U11": 0.05, "U14": 0.04, "U15": 0.04, "U17": 0.005,
-                    "J_DCF": 0.03, "J_LTG": 0.03, "J_POD": 0.10},
+                    "J_DCF": 0.03, "J_LTG": 0.03, "J_POD": 0.10,
+                    # PWR-001, 27 September 2026 (w3de): R57 carries the SGP41's VDD branch, declared as the rail SGP_VDD
+                    # at the part's whole 4.6 mA (Table 2 does not split VDD from VDDH, so U17's 5 mA above and this
+                    # overlap: the rail is over-declared by at most 4.6 mA, the safe direction)
+                    "R57": 0.0046},
              budget=0.03,
              note="the sensor controller's own 3.3 V from U13: the RP2040, the sensors and the three sealed "
                   "sensor headers. A logic rail at a third of an amp over long thin tracks is fine at 3 percent")
@@ -472,13 +481,54 @@ c("C13", "10u 50V", "PV_P", "GND", "C10u50"); c("C14", "10u 50V", "PV_P", "GND",
 part("U5", "Connector_Generic", "Conn_02x20_Odd_Even", "LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted", "QFN38", {
  "1": "TRK_SHDN", "2": "TRK_CSN", "3": "TRK_CSP", "4": "TRK_LDO33", "5": "TRK_FBIN", "6": "TRK_FBOUT", "7": "TRK_IMONO", "8": "TRK_VC", "9": "TRK_SS", "10": "NC", "11": "GND", "12": "TRK_RT", "13": "GND",
  "14": "TRK_BG1", "15": "TRK_INTVCC", "16": "TRK_BG2", "17": "TRK_BOOST2", "18": "TRK_TG2", "19": "TRK_SW2", "20": "NC", "21": "TRK_SW1", "22": "TRK_TG1", "23": "TRK_BOOST1", "24": "NC",
- "25": "NC", "26": "NC", "27": "NC", "28": "NC", "29": "TRK_OUT", "30": "TRK_OUT", "31": "TRK_OUT", "32": "PV_P", "33": "PV_P", "34": "PV_P", "35": "TRK_INTVCC", "36": "TRK_INTVCC", "37": "GND", "38": "TRK_IMONI", "39": "GND", "40": "NC"}, "C674164")
+ "25": "NC", "26": "NC", "27": "NC", "28": "NC", "29": "TRK_OUT", "30": "TRK_OUT", "31": "TRK_OUT", "32": "PV_P", "33": "PV_P", "34": "PV_P", "35": "TRK_INTVCC", "36": "TRK_INTVCC", "37": "TRK_LDO33", "38": "TRK_IMONI", "39": "GND", "40": "NC"}, "C674164")
+# S-47 SMALLER ITEM, MODE (board E stream w3de, 27 September 2026, MESHSAT-1357; v2/docs/layout-constraints/E.md 6.1
+# item 9): PIN 37, MODE, MOVES FROM GND TO TRK_LDO33. Tied low it selected forced continuous mode ("less than 0.4V",
+# 8705af p.12), and this stage runs the input regulation loop (FBIN at the panel's 17.6 V point, R8 and R9), of which the
+# maker says: "Note that using this function in forced continuous mode (MODE pin low) can result in current being drawn
+# from the output and forced into the input. If this behavior is not desired then use discontinuous or Burst Mode
+# operation" (p.29). The input is a photovoltaic panel, into which no current is wanted. Discontinuous mode is "tie MODE
+# to a voltage above 2.3V (i.e., LDO33)" (p.18), in which "synchronous switch M4 is held off whenever reverse current in
+# the inductor is detected" (p.18); a tie to LDO33 rather than Burst Mode's floating pin, so the pin is never undriven.
+# Session decision under the owner's standing rule of 26 September 2026; reverse by returning pin 37 to GND with a
+# measured reason forced continuous mode is wanted.
 part("Q3", "Transistor_FET", "IRF7404", "BSC028N06NS 60 V 2.8 mOhm N-FET, M1 buck top (TDSON-8: 1-3 S, 4 G, 5-8 D)", "TDSON8", {"1": "TRK_SW1", "2": "TRK_SW1", "3": "TRK_SW1", "4": "TRK_TG1", "5": "PV_P", "6": "PV_P", "7": "PV_P", "8": "PV_P"}, "C148250")
-part("Q4", "Transistor_FET", "IRF7404", "BSC039N06NS 60 V N-FET, M2 buck bottom", "TDSON8", {"1": "GND", "2": "GND", "3": "GND", "4": "TRK_BG1", "5": "TRK_SW1", "6": "TRK_SW1", "7": "TRK_SW1", "8": "TRK_SW1"}, "C534330")
-part("Q5", "Transistor_FET", "IRF7404", "BSC028N06NS 60 V N-FET, M3 boost bottom", "TDSON8", {"1": "GND", "2": "GND", "3": "GND", "4": "TRK_BG2", "5": "TRK_SW2", "6": "TRK_SW2", "7": "TRK_SW2", "8": "TRK_SW2"}, "C148250")
+part("Q4", "Transistor_FET", "IRF7404", "BSC039N06NS 60 V N-FET, M2 buck bottom", "TDSON8", {"1": "TRK_CS", "2": "TRK_CS", "3": "TRK_CS", "4": "TRK_BG1", "5": "TRK_SW1", "6": "TRK_SW1", "7": "TRK_SW1", "8": "TRK_SW1"}, "C534330")
+part("Q5", "Transistor_FET", "IRF7404", "BSC028N06NS 60 V N-FET, M3 boost bottom", "TDSON8", {"1": "TRK_CS", "2": "TRK_CS", "3": "TRK_CS", "4": "TRK_BG2", "5": "TRK_SW2", "6": "TRK_SW2", "7": "TRK_SW2", "8": "TRK_SW2"}, "C148250")
 part("Q6", "Transistor_FET", "IRF7404", "BSC039N06NS 60 V N-FET, M4 boost top", "TDSON8", {"1": "TRK_SW2", "2": "TRK_SW2", "3": "TRK_SW2", "4": "TRK_TG2", "5": "TRK_OUT", "6": "TRK_OUT", "7": "TRK_OUT", "8": "TRK_OUT"}, "C534330")
-part("L1", "Device", "L", "10uH Coilcraft XAL1510-103MED (Isat 26 A, 10.0 mm tall)", "L1510", {"1": "TRK_SW1", "2": "TRK_LSENSE"}, "C3911782")
-part("R5", "Device", "R", "5 mOhm 1% 3 W 2512 RSENSE (RALEC LR2512-23R005F4)", "RS2512", {"1": "TRK_LSENSE", "2": "TRK_SW2"}, "C154688")
+# S-47, FINDING HC9-E1 (board E stream w3de, 27 September 2026, MESHSAT-1357; v2/docs/layout-constraints/E.md 6.1 item
+# 1): THE CURRENT-SENSE RESISTOR MOVES FROM THE INDUCTOR'S LEG TO THE BOTTOM SWITCHES' LEG. R5 sat between L1 pin 2 (net
+# TRK_LSENSE) and TRK_SW2, with R6 and R7 taking CSP and CSN from its two ends, so both pins would sit at TRK_SW2, the
+# output in the buck region and ground-to-output in the boost region, up to about 15 V, where the LT8705A rates them
+# "SS, CLKOUT, CSP, CSN Voltage -0.3V to 3V" (8705af, Absolute Maximum Ratings, p.2). The maker puts RSENSE between the
+# joined sources of M2 and M3 and GND, CSP on the source side and CSN on the ground side: the block diagram (Figure 1,
+# p.13), both switch layouts (Figure 14a and 14b, p.35), the front-page circuit (p.1: M2 and M3 sources joined, 10 mOhm
+# to ground, 10 Ohm from the source node to CSP and 10 Ohm from the ground side to CSN) and the 12 V 15 A converter
+# (p.41); the checklist asks "Minimize inductance from the sources of M2 and M3 to RSENSE by making the trace short and
+# wide" and "Ensure accurate current sensing with Kelvin connections at the RSENSE resistors" (p.36). So: Q4 and Q5
+# pins 1 to 3 on the new node TRK_CS (the name board A gives each LM5176 stage's shunt top, <stage>_CS, which is the
+# same topology), R5 from TRK_CS to GND, R6 from R5's TRK_CS pad to TRK_CSP, R7 from R5's GND pad to TRK_CSN (the Kelvin
+# taps: in the netlist R7's pin is simply GND, and its landing at R5 pad 2 is the layout's, pcb_sensitive.yaml board e),
+# and L1 pin 2 straight to TRK_SW2. The net TRK_LSENSE goes away. R5 keeps its value and part: the maker's RSENSE sizing
+# (Applications Information, "RSENSE Selection and Maximum Current", pp.22 and 24) assumes this placement, and the 13.8 A buck valley figure at VIN_RAW stands.
+# Its dissipation falls: it now carries the bottom switch's current (the inductor current for 1 - D of each cycle in the
+# buck region), about 10.33 A x 10.33 A x 0.49 x 5 mOhm = 0.26 W at the 9 V bus corner, against 0.53 W in the inductor's
+# leg, of its 3 W. Session decision under the owner's standing rule of 26 September 2026 (the maker's own topology, no
+# option left standing); reverse only with a maker's circuit that senses in the inductor's leg on this part, which the
+# CSP/CSN rating rules out.
+part("L1", "Device", "L", "10uH Coilcraft XAL1510-103MED (Isat 26 A, 10.0 mm tall)", "L1510", {"1": "TRK_SW1", "2": "TRK_SW2"}, "C3911782")
+part("R5", "Device", "R", "5 mOhm 1% 3 W 2512 RSENSE (RALEC LR2512-23R005F4)", "RS2512", {"1": "TRK_CS", "2": "GND"}, "C154688")
+# PWR-001: TRK_CS carries the bottom switches' chopped current to R5, and is declared a NODE as board A declares each
+# LM5176 stage's CS node (gen_sch_a.py, lm5176): a switched current path at the shunt's drop above or below ground. In
+# the buck region the valley is sensed while M2 conducts from ground through R5, so the node sits BELOW ground; in the
+# boost region M3 conducts through R5 to ground and it sits above. The controller's own limits bound it: "the maximum
+# inductor valley current in the buck region is 86mV increasing to ~130mV at higher duty cycles" and the boost peak 78 to
+# 117 mV (Applications Information, p.22), about 0.13 V over the 5 mOhm, so the declared +-1.0 V (board A's figure for the
+# same node) is a bound with margin, not an operating point.
+_intent.node("TRK_CS", 1.0, "the LT8705A's current-sense node, the joined sources of M2 (Q4) and M3 (Q5) above the 5 mOhm "
+             "RSENSE R5 to ground (8705af Figure 1 p.13, p.1 and p.41 circuits): the shunt's drop, about 0.13 V at the "
+             "controller's highest sense threshold (p.22), negative while M2 conducts in the buck region; declared +-1.0 V "
+             "as board A declares its LM5176 CS nodes", v_min=-1.0)
 # R8E-F03, FOUND IN ROUND 8 while G14 read the maker's clause for C16, 26 September 2026 (MESHSAT-1357): THE SENSE FILTER
 # CARRIED TEN TIMES THE MAKER'S RESISTANCE. R6 and R7 were 100 R with C16 1 nF across the pair. LT8705A datasheet 8705af,
 # "Inductor Current Sense Filtering" (p.34): "The CSP/CSN sense signals can be filtered by adding one of the RC networks
@@ -489,7 +539,7 @@ part("R5", "Device", "R", "5 mOhm 1% 3 W 2512 RSENSE (RALEC LR2512-23R005F4)", "
 # CSP and CSN pins" set with RSENSE (p.11). So R6 and R7 are 10 R (UNI-ROYAL 0603WAF100JT5E, LCSC C22859, 10 Ohm 1
 # percent 0603, record read 2026-09-26T21:18Z; the code lcsc_fill.py already maps to "10R" on an 0603): 10 ns, Figure
 # 13a's own network. Nets, lands and C16 are unchanged.
-r("R6", "10R", "TRK_LSENSE", "TRK_CSP", "R", "C22859"); r("R7", "10R", "TRK_SW2", "TRK_CSN", "R", "C22859"); c("C16", "1n", "TRK_CSP", "TRK_CSN", bypass=("U5", "3"))
+r("R6", "10R", "TRK_CS", "TRK_CSP", "R", "C22859"); r("R7", "10R", "GND", "TRK_CSN", "R", "C22859"); c("C16", "1n", "TRK_CSP", "TRK_CSN", bypass=("U5", "3"))   # S-47: R6 from R5's TRK_CS pad, R7 from R5's ground pad (Kelvin, p.36)
 # THE FILTER CAPACITOR BELONGS AT THE PINS AND THE TWO RESISTORS AT THE SHUNT (18 September 2026, rule ANA-001).
 # R6 and R7 are the Kelvin series resistors of the tracker's current sense and C16 is the pair's filter; on E17 they
 # sit 15 to 20 mm from the shunt R5 and 11 to 15 mm from U5, so the filtered pair itself runs beside the switching
@@ -501,6 +551,27 @@ r("R6", "10R", "TRK_LSENSE", "TRK_CSP", "R", "C22859"); r("R7", "10R", "TRK_SW2"
 c("C17", "470n 25V", "TRK_BOOST1", "TRK_SW1"); c("C18", "470n 25V", "TRK_BOOST2", "TRK_SW2")
 part("D5", "Device", "D_Schottky", "BAT54 boost diode INTVCC -> BOOST1", "SOD123", {"1": "TRK_BOOST1", "2": "TRK_INTVCC"}); part("D6", "Device", "D_Schottky", "BAT54 boost diode INTVCC -> BOOST2", "SOD123", {"1": "TRK_BOOST2", "2": "TRK_INTVCC"})
 c("C19", "4.7u 25V", "TRK_INTVCC", "GND", "C10u50"); c("C20", "1u", "TRK_LDO33", "GND")
+# S-47 SMALLER ITEM, THE CONTROLLER'S OWN SUPPLY PINS (board E stream w3de, 27 September 2026, MESHSAT-1357;
+# v2/docs/layout-constraints/E.md section 5): GATEVCC GETS ITS OWN 4.7 uF AND THE FOUR SUPPLY PINS ARE DECLARED. GATEVCC,
+# pin 15: "Must be connected to the INTVCC pin ... Locally bypass to GND" (8705af p.11), and "The bypass capacitance from
+# GATEVCC to GND should be at least ten times the CB1 or CB2 capacitance" (p.28): C17 and C18 are 470 nF, so 4.7 uF. It
+# shared TRK_INTVCC with pin 35 on the package's opposite edge (Pin Configuration, p.2), so C19 could not sit at both;
+# the maker's own circuits fit 4.7 uF at INTVCC and a second 4.7 uF at GATEVCC (p.1, p.41). C63 is that second part, the
+# same part and land as C19. VIN, pin 34: "Main Input Supply Pin. It must be locally bypassed to ground" (p.12); C64 is a
+# 100 nF 50 V X7R at the pin (the C14663 this board already buys for the RP2040's DVDD), beside the power stage's own
+# input ceramics C13 to C15 on the same net (the front-page circuit fits 1 uF there; the pin's local bypass is the
+# clause, and the bulk is C13 to C15's). C19 is declared at INTVCC (pin 35: "Bypass this pin to ground with a minimum
+# 4.7uF ceramic capacitor", p.12) and C20 at LDO33 (pin 4: "Bypass this pin to ground with a minimum 0.1uF ceramic
+# capacitor", p.11), so DEC-001 measures all four seats. Session decision under the owner's standing rule of 26 September
+# 2026 (the classes follow decision 42's LM5176 reading, E.md section 5); reverse by a maker's circuit without them.
+c("C63", "4.7u 25V", "TRK_INTVCC", "GND", "C10u50", bypass=("U5", "15")); c("C64", "100n", "PV_P", "GND", "C", "C14663", bypass=("U5", "34"))
+_intent.bypass("C19", "U5", "35", "TRK_INTVCC"); _intent.bypass("C20", "U5", "4", "TRK_LDO33")
+# PWR-001 (EQ-19): TRK_LDO33 is the LT8705A's own 3.3 V regulator output: "LDO33 (Pin 4/Pin 7): 3.3V Regulator Output"
+# (p.11), "LDO33 Pin Voltage" 3.23 / 3.295 / 3.35 V at 5 mA (Electrical Characteristics, p.3), current limit 12 to 22 mA,
+# absolute maximum 5 V (p.2). On this board it carries U5's own LDO33 and, since the MODE change above, U5's own MODE
+# input, and C20: one part's pins, so a NODE (a part's own internal regulator output), at the characterised 3.35 V.
+_intent.node("TRK_LDO33", 3.35, "the LT8705A's own 3.3 V regulator output (pin 4): 3.23 / 3.295 / 3.35 V at 5 mA (8705af "
+             "Electrical Characteristics, p.3), absolute maximum 5 V (p.2); it carries U5's LDO33 and MODE pins and C20")
 r("R8", "102k 1% (RFBIN1: panel point 17.6 V)", "PV_P", "TRK_FBIN"); r("R9", "7.50k 1% (RFBIN2)", "TRK_FBIN", "GND")
 r("R10", "115k 1% (RFBOUT1: 15.1 V)", "TRK_OUT", "TRK_FBOUT"); r("R11", "10.0k 1% (RFBOUT2)", "TRK_FBOUT", "GND")
 # THE TRACKER'S OWN NETS. An LT8705A is a four-switch buck-boost like the LM5176 stages on board A, and the
@@ -558,9 +629,38 @@ r("R16", "10k", "TRK_IMONI", "GND"); r("R17", "10k", "TRK_IMONO", "GND")
 for k in range(1, 3): part("C%d" % (23 + k), "Device", "C_Polarized", "39u 35V Panasonic 35SVPF39M polymer (6.9 mm)", "CPOL8", {"1": "TRK_OUT", "2": "GND"}, "C189474")
 c("C26", "10u 25V", "TRK_OUT", "GND", "C10u50"); c("C27", "10u 25V", "TRK_OUT", "GND", "C10u50")
 ideal_diode("U4", "Q2", "C28", "R18", "TRK_OUT", "VIN_RAW", "GND")   # tracker output ORed into the raw bus that A22's front end regulates
-# --- the block lands (mirror of A22's J_DOCK, 32.57): 1-4 VIN_RAW, 5-7 GND, 8 SHORE_INHIBIT (from A22, into the hot-swap UVLO), 9-10 the controller's USB, 11 GND, 12 spare
-part("J_BLK", "Connector_Generic", "Conn_01x12", "solder lands for the 12 signal wires to the block board underside (mirror of A22 J_DOCK): 1-4 VIN_RAW, 5-7 GND, 8 SHORE_INHIBIT, 9 USB D+, 10 USB D-, 11 GND, 12 spare", "POGO_T6",
-     {"1": "VIN_RAW", "2": "VIN_RAW", "3": "VIN_RAW", "4": "VIN_RAW", "5": "GND", "6": "GND", "7": "GND", "8": "SHORE_INHIBIT", "9": "USB_E6_P", "10": "USB_E6_N", "11": "GND", "12": "BLK_SPARE"})
+# --- the block lands (mirror of A22's J_DOCK, 32.57): 1-7 GND (1-4 since EQ-16, below), 8 SHORE_INHIBIT (from A22, into the hot-swap UVLO), 9-10 the controller's USB, 11 GND, 12 spare
+# EQ-16 / R8E-N01 (board E stream w3de, 27 September 2026, MESHSAT-1357): VIN_RAW LEAVES THE PRECI-DIP 813 SIGNAL BLOCK
+# AND CROSSES THE DOCK ON THE DOCK'S POWER-PIN CLASS, WITH ITS OWN RETURN, AS THE PACK DOES. At the 14.10 A this board
+# declares on VIN_RAW (derived at the rail above) the four 813 contacts carried 3.53 A each with even sharing against the
+# maker's "OPERATING CURRENT Max. 3.5 A" (v2/vendor/precidip/precidip-813-spring-loaded-connector-pages-31-34.pdf, p.34),
+# and 4.70 A with one of them open. The maker publishes no current-temperature curve and no rise at 3.5 A, only "-55 ...
+# +85 C with music wire spring" (p.31) and a 10 mOhm static contact resistance (p.34), so no count of 813 contacts can be
+# shown at the desk to stay under 85 C at the envelope's 51 C inside air with one open, and every such count rests on a
+# sharing its maker does not bound. The dock already carries the pack on Mill-Max 0858-class power pins, whose maker
+# states "Rated Current (Free air): Continuous 9 amps @ 10 C temperature rise", "Contact Resistance: 20 mOhm max" and
+# "Operating temperature range: -55/+125 C" (v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf, page 28).
+# THE DECISION: board A carries four such pins on VIN_RAW (J_VR1 to J_VR4) and four on its return (J_VN1 to J_VN4)
+# beside the pack's nine; E5 carries their eight targets and two 12 AWG wire holes; this board carries the two 12 AWG
+# solder pads P_VR (VIN_RAW) and P_VN (GND), the pack pads' own land; and the four 813 contacts that carried VIN_RAW
+# (J_DOCK and J_BLK pins 1 to 4) become ground, returns for the USB pair and the control line beside the four already
+# there. With four supply pins: 3.53 A each (39 percent of 9 A), 4.70 A with one open (52 percent), about 1.5 and 2.7 K
+# of rise by the maker's own 10 K at 9 A scaled as I2R, so under 72 C at the +55 C qualification margin's 65 C inside
+# air against 125 C even at the spread below; with a 2:1 resistance spread among the four (the maker states only a maximum), 5.64 A on the lowest
+# and 7.05 A with one open, 63 and 78 percent. The return shares the four VN pins, the pack's four CN pins and the eight
+# 813 ground contacts: at the conservative 32.1 A (this rail's 14.10 A and the pack's 18.0 A peak returning at once) with
+# every Mill-Max pin at its 20 mOhm maximum, an 813 ground contact carries about 2.1 A, 2.24 A with one open (64 percent).
+# The arithmetic, the alternatives and why each was not taken are drafts/w3de/EQ16-dock-vin-raw.md and dock_contacts.py.
+# Session decision (the EQ-16 row of pcb_requirements.yaml session_choices) under the owner's standing rule of 26
+# September 2026: reverse by a Preci-Dip current and temperature derating curve that carries 14.10 A on a count of 813
+# contacts the block can hold with one open inside 85 C, which the maker does not publish. THIS BOARD'S HALF ONLY: board A's half (gen_sch_a.py J_DOCK, J_VR1-4, J_VN1-4 and its VIN_RAW declaration), the
+# IF-AE-DOCK contract, check_contracts.py's dock checks, E5's targets (gen_pcb_e5.py) and this board's placement of the
+# two pads (gen_pcb_e3.py FIXED) are drafted for their owners; until board A's half lands, check_contracts reads the dock
+# map DIFFERENT on pins 1 to 4 (A VIN_RAW, E GND), which is the change in flight and not a defect of either board.
+part("J_BLK", "Connector_Generic", "Conn_01x12", "solder lands for the 12 signal wires to the block board underside (mirror of A22 J_DOCK): 1-7 GND, 8 SHORE_INHIBIT, 9 USB D+, 10 USB D-, 11 GND, 12 spare (VIN_RAW crosses on P_VR since EQ-16)", "POGO_T6",
+     {"1": "GND", "2": "GND", "3": "GND", "4": "GND", "5": "GND", "6": "GND", "7": "GND", "8": "SHORE_INHIBIT", "9": "USB_E6_P", "10": "USB_E6_N", "11": "GND", "12": "BLK_SPARE"})
+part("P_VR", "Connector", "Conn_01x01_Pin", "solder pad, 12 AWG wire to the block board VIN_RAW targets (board A's four 9 A power pins J_VR1-4, EQ-16)", "PAD86", {"1": "VIN_RAW"})
+part("P_VN", "Connector", "Conn_01x01_Pin", "solder pad, 12 AWG wire to the block board VIN_RAW return targets (board A's four 9 A power pins J_VN1-4, EQ-16)", "PAD86", {"1": "GND"})
 # --- controller power: AP63205 5 V 2 A buck from the pack node (diodes/diodes-ap63205.pdf, TSOT-26: 1 FB 2 EN 3 VIN 4 GND 5 SW 6 BST; fixed 5 V, FB is the output sense), TLV75533 3.3 V LDO (SOT-23-5: 1 IN 2 GND 3 EN 4 NC 5 OUT)
 ic("U12", 6, "AP63205WU-7 5 V 2 A buck for the controller, the Geiger module and the fans' logic", "TSOT6", {"1": "+5V_E6", "2": "CELL_F", "3": "CELL_F", "4": "GND", "5": "E6_SW", "6": "E6_BST"}, "C2071056")
 # E6_SW IS A SWITCHING NODE AND IT SAID NOTHING (20 September 2026, the same sweep). A node is not a rail and
@@ -569,6 +669,18 @@ ic("U12", 6, "AP63205WU-7 5 V 2 A buck for the controller, the Geiger module and
 # the AP63205. Board A's five LM5176 stages have declared theirs since 16 September; this board declared none.
 _intent.node("E6_SW", 16.8, "the AP63205's switching node: it swings to CELL_F, which is the pack at its 4S "
              "termination of 16.8 V, and a diode drop below ground on the other half of the cycle", v_min=-1.0)
+# PWR-001 (EQ-19, board E stream w3de, 27 September 2026, MESHSAT-1357): E6_BST, THE AP63205'S BOOTSTRAP, IS A NODE THAT
+# RIDES ON E6_SW. PWR-001 refused it as an undeclared power net (a supply pin by its held row, U12 pin 6 BST). Diodes
+# DS41326 Rev. 3-2 (held at v2/vendor/diodes/diodes-ap63200-series-buck.pdf): pin 6 BST "High-Side Gate Drive Boost
+# Input. BST supplies the drive for the high-side N-Channel MOSFET. A 100nF capacitor is recommended from SW to BST"
+# (p.2); Absolute Maximum Ratings "VBST Bootstrap Voltage VSW - 0.3 to VSW + 6.0 V" (p.4); section 13 Bootstrap
+# Capacitor (p.14). The net carries U12's BST pin and C30 only, so the kind is a NODE (a bootstrap, which the rule names
+# as a node) riding on E6_SW at the 6.0 V the maker bounds it to: its peak is E6_SW's 16.8 V plus 6.0 V. C30 is judged
+# against the 6.0 V between its two nets. Session decision under the owner's standing rule of 26 September 2026 (as
+# board A declares its LM5176 bootstraps, riding on their switch nodes).
+_intent.node("E6_BST", 16.8 + 6.0, "the AP63205's bootstrap (pin 6 BST): it rides on E6_SW, 'VBST Bootstrap Voltage VSW - "
+             "0.3 to VSW + 6.0 V' (Diodes DS41326 Rev. 3-2, Absolute Maximum Ratings, p.4), so at most E6_SW's 16.8 V plus "
+             "6.0 V; C30 (100 nF, p.2) holds it", v_min=-1.3, rides_on="E6_SW", bias_v=6.0)
 part("L3", "Device", "L", "4.7uH XAL4030-472ME", "L4020", {"1": "E6_SW", "2": "+5V_E6"}); c("C30", "100n", "E6_BST", "E6_SW"); c("C31", "10u 25V 1210", "CELL_F", "GND", "C1210"); c("C32", "22u 10V X7R 1210", "+5V_E6", "GND", "C1210"); c("C33", "22u 10V X7R 1210", "+5V_E6", "GND", "C1210")
 ic("U13", 5, "TLV75533PDBVR 3.3 V LDO", "SOT235", {"1": "+5V_E6", "2": "GND", "3": "+5V_E6", "4": "NC", "5": "+3V3_E6"}, "C404027"); c("C34", "1u", "+5V_E6", "GND"); c("C35", "1u", "+3V3_E6", "GND")
 # --- RP2040 (rp2040/rpi-rp2040-datasheet.pdf, QFN-56; the minimal design of the hardware design guide: 12 MHz crystal with 15 pF loads and a 1k series on XOUT, W25Q16 QSPI flash, 27 Ohm USB series,
@@ -600,6 +712,21 @@ for k in range(38, 45): c("C%d" % k, "100n", "+3V3_E6", "GND")
 # fits (YAGEO CC0603KRX7R9BB104, LCSC C14663, 100 nF 50 V X7R 0603, record read 2026-09-26T21:18Z).
 c("C45", "1u", "E6_DVDD", "GND"); c("C46", "100n", "E6_DVDD", "GND", "C", "C14663"); c("C47", "1u", "+3V3_E6", "GND")
 c("C59", "100n", "E6_DVDD", "GND", "C", "C14663")   # G13: the second DVDD pin's own 100 nF (pin 23; C46 serves pin 50)
+# PWR-001 (EQ-19, board E stream w3de, 27 September 2026, MESHSAT-1357): E6_DVDD IS THE RP2040'S OWN CORE REGULATOR OUTPUT
+# ON ITS OWN CORE PINS, A NODE. PWR-001 refused it as an undeclared power net. RP2040 datasheet (held at
+# v2/vendor/rp2040/rpi-rp2040-datasheet.pdf): VREG_VOUT "Power output for the internal core voltage regulator, nominal
+# voltage 1.1V, 100mA max current" and DVDD "Digital core power supply, nominal voltage 1.1V. Can be connected to
+# VREG_VOUT" (1.4 Pinout Reference, pin descriptions); 2.9.2 "The connection between the output pin of the on-chip regulator (VREG_VOUT)
+# and the DVDD supply pins is made off-chip"; 2.10.3 "The voltage regulator's output voltage can be set in the range 0.80V
+# to 1.30V in 50mV intervals. The regulator output voltage is set to 1.1V at initial power-on or following a reset event";
+# Table 192 output voltage variation -3 to +3 percent of the selected voltage; Table 634 DVDD 1.05 / 1.1 / 1.16 V. The net
+# carries U10's pins 23, 45 and 50 and their capacitors C45, C46 and C59: one part's own regulator feeding its own core,
+# so the kind is a NODE. v_max is the regulator's highest setting at its tolerance, 1.30 V x 1.03 = 1.34 V (firmware
+# can select it); v_work is the reset default at its tolerance, 1.10 V x 1.03 = 1.13 V. Session decision under the
+# owner's standing rule of 26 September 2026; reverse by an external core supply, which would make it a rail.
+_intent.node("E6_DVDD", 1.34, "the RP2040's own core regulator output VREG_VOUT (pin 45) joined off-chip to its DVDD pins (23, "
+             "50): 1.1 V at reset, settable 0.80 to 1.30 V by VSEL (RP2040 datasheet 2.10.3, VREG register), +-3 percent "
+             "(Table 192), DVDD operating 1.05 to 1.16 V (Table 634); v_max is the highest setting at +3 percent", v_work=1.13)
 # R8E-F01, FOUND IN ROUND 8 while G14 read the RP2040's own clauses, 26 September 2026: TWO SUPPLY PINS HAD NO CAPACITOR
 # OF THEIR OWN. ADC_AVDD (pin 43) and USB_VDD (pin 48) are on +3V3_E6 and no capacitor was declared at either; the six
 # 100 nF above serve the IOVDD pins. RP2040 datasheet 2.9.4 (printed p.151): "USB_VDD should be decoupled with a 100nF
@@ -660,9 +787,36 @@ ic("U15", 14, "BMI270 six-axis IMU (I2C 0x68): shock and tilt log, motion wake",
 ic("U17", 7, "SGP41-D-R4 VOC and NOx gas sensor, battery-bay air (I2C 0x59; DFN-6: 1 VDD 2 VSS 3 SDA 4 n/a to GND 5 VDDH 6 SCL, 7 die pad GND)", "DFN6S",
    {"1": "SGP_VDD", "2": "GND", "3": "SDA1", "4": "GND", "5": "+3V3_E6", "6": "SCL1", "7": "GND"}, "C3659325")
 r("R57", "4.7R", "+3V3_E6", "SGP_VDD", "R", "C23164"); c("C57", "1u", "SGP_VDD", "GND", "C", "C15849"); c("C58", "1u", "+3V3_E6", "GND", "C", "C15849")
+# PWR-001 (EQ-19, board E stream w3de, 27 September 2026, MESHSAT-1357): SGP_VDD IS A RAIL, THE SENSOR'S FILTERED SUPPLY
+# BRANCH. PWR-001 refused it as an undeclared power net. Unlike the regulator outputs declared as nodes on this board, it
+# is not made inside a part: it is +3V3_E6 through the RC element the maker asks for, and it feeds a part's supply pin.
+# Sensirion SGP41 datasheet version 1.0 (held at v2/vendor/sensirion/sgp41-datasheet.pdf): pin 1 VDD "Supply voltage"
+# (Table 6, p.7); "The VDD pin must be decoupled with an RC element" (2.5, p.7), Figure 6 (p.8); Table 2 (p.5): supply
+# 1.7 / 3.3 / 3.6 V, and the supply current of VDD and VDDH TOGETHER, 4.2 typical and 4.6 mA maximum in conditioning,
+# 3.0 and 3.4 mA in VOC and NOx measurement, at 3.3 V ("A 20 % higher current is drawn during 5 ms on VDDH", note 10).
+# The sheet does not split the two pins, so this branch is declared at the part's whole 4.6 mA maximum, a bound on the
+# VDD pin's own share and not a figure for it. R57 is its source (the resistor's pad on the net), U17 its load, and the
+# branch is always on because +3V3_E6 is (its own declaration) and R57 is not a switch. Session decision under the
+# owner's standing rule of 26 September 2026 (a rail, not a node: the rule's node kinds are a part's own regulator
+# outputs, switch nodes and charge pumps, and this is another part's supply); reverse by a Sensirion split of the
+# VDD and VDDH currents, which would only lower the figure.
+_intent.rail("SGP_VDD", 3.3, 0.0046, 0.0046, "R57", loads={"U17": 0.0046}, fed_from="+3V3_E6", converted=False,
+             always_on=True, always_on_why="the SGP41's VDD branch behind the 4.7 Ohm filter resistor R57 from +3V3_E6, "
+             "which is always on by its own declaration; a resistor is not a switch",
+             note="the SGP41's VDD behind its RC element (R57 4.7 Ohm, C57 1 uF; Sensirion SGP41 v1.0 2.5 and Figure 6), "
+                  "declared at the whole part's 4.6 mA maximum (Table 2, VDD and VDDH together at 3.3 V), which bounds "
+                  "this pin's share; R57 drops at most 22 mV at it")
 # --- water electrodes (two exposed pads on the strip's underside edge, 1 mm above the floor on the VHB pads), fans, headers
 part("PAD_W1", "Connector", "Conn_01x01_Pin", "water electrode A (bare copper, +3.3 V through 1 M)", "PAD86", {"1": "WATER_A"}); r("R38", "1M", "+3V3_E6", "WATER_A")
 part("PAD_W2", "Connector", "Conn_01x01_Pin", "water electrode B (bare copper, to ADC0)", "PAD86", {"1": "WATER_SENSE"}); r("R39", "1M", "WATER_SENSE", "GND"); c("C51", "100n", "WATER_SENSE", "GND")
+# PWR-001 (board E stream w3de, 27 September 2026, MESHSAT-1357): WATER_SENSE was left UNDECIDED (C51 to ground and the
+# SENSE class, and the electrode pad is not read). It is the ADC input the electrodes bridge: electrode A sits at
+# +3V3_E6 through R38 (1M), water between the pads pulls electrode B up against R39 (1M) to ground, and U10's GPIO26 reads
+# it; it supplies nothing. Declared a node at +3V3_E6's 3.3 V, as board D's FLANGE_NTC is. Session decision under the
+# owner's standing rule of 26 September 2026.
+_intent.node("WATER_SENSE", 3.3, "the water electrodes' ADC input (U10 GPIO26/ADC0): electrode A is +3V3_E6 through R38 (1M), "
+             "and water between the pads lifts electrode B against R39 (1M) to ground, so at most +3V3_E6's 3.3 V; a sense "
+             "input, no supply")
 r("R40", "100k 1%", "VIN_RAW", "VIN_MON"); r("R41", "10k 1% (ADC1: 0.091 x bus)", "VIN_MON", "GND"); r("R42", "100k 1%", "CELL_F", "CELL_MON"); r("R43", "22k 1% (ADC2: 0.18 x pack)", "CELL_MON", "GND")
 for n in ("1", "2"):
     ph("J_FAN%s" % n, 3, "mixer fan %s under the plate (12 V class fan on the pack node, low-side PWM, tachometer)" % n, {"1": "CELL_F", "2": "FAN%s_SW" % n, "3": "FAN%s_TACH" % n})
@@ -705,8 +859,8 @@ kisch.configure(power=POWER, stub=STUB, root=ROOT, project=PROJECT, seed=PROJECT
 # G13, R8E-F01 and R8E-F02 (26 September 2026): C59 to C61 join the sensor controller's section and C62 the sensors'.
 SECTIONS = [("PACK ENTRY: PACK CABLE ON XT60, 25 A BLADE, PADS TO THE BLOCK, PACK SMBUS LEAD (JST-XH 1x4)", ["J_BATT", "F3", "P_CP", "P_CN", "J_SMB", "C1", "D3"]),
             ("VEHICLE AND SHORE ENTRY 9-36 V: F1, LM74700 IDEAL DIODE, LM5069 HOT-SWAP, SRF1260 FILTER, CLAMPS", ["J_DCIN", "F1", "U3", "Q1", "C4", "R1", "D1", "C2", "U6", "R19", "Q7", "R20", "R21", "R22", "R23", "C5", "R24", "R25", "Q8", "R26", "L2", "D10", "C6", "C7", "C8", "D2", "R27", "LED1"]),
-            ("PANEL TRACKER: J_SOLAR, F2, LT8705A BUCK-BOOST (FBIN 17.6 V, FBOUT 15.1 V, 202 kHz), ORed INTO THE RAW BUS", ["J_SOLAR", "F2", "D4", "C11", "C12", "C13", "C14", "C15", "U5", "Q3", "Q4", "Q5", "Q6", "L1", "R5", "R6", "R7", "C16", "C17", "C18", "D5", "D6", "C19", "C20", "R8", "R9", "R10", "R11", "R12", "R13", "C21", "C22", "C23", "R14", "R15", "R16", "R17", "C24", "C25", "C26", "C27", "U4", "Q2", "C28", "R18"]),
-            ("BLOCK LANDS (MIRROR OF A22 J_DOCK)", ["J_BLK"]),
+            ("PANEL TRACKER: J_SOLAR, F2, LT8705A BUCK-BOOST (FBIN 17.6 V, FBOUT 15.1 V, 202 kHz), ORed INTO THE RAW BUS", ["J_SOLAR", "F2", "D4", "C11", "C12", "C13", "C14", "C15", "U5", "Q3", "Q4", "Q5", "Q6", "L1", "R5", "R6", "R7", "C16", "C17", "C18", "D5", "D6", "C19", "C20", "C63", "C64", "R8", "R9", "R10", "R11", "R12", "R13", "C21", "C22", "C23", "R14", "R15", "R16", "R17", "C24", "C25", "C26", "C27", "U4", "Q2", "C28", "R18"]),
+            ("BLOCK LANDS (MIRROR OF A22 J_DOCK) AND THE VIN_RAW POWER PADS (EQ-16)", ["J_BLK", "P_VR", "P_VN"]),
             ("SENSOR CONTROLLER: 5 V BUCK, 3.3 V LDO, RP2040, QSPI FLASH, CRYSTAL, USB, BOOTSEL, PULL-UPS", ["U12", "L3", "C30", "C31", "C32", "C33", "U13", "C34", "C35", "U10", "U11", "Y1", "C36", "C37", "R28", "R29", "R30", "R31", "R32", "JP1"] + ["C%d" % k for k in range(38, 48)] + ["C59", "C60", "C61"] + ["TP10", "TP11", "TP12", "R33", "LED2", "R34", "R35", "R36", "R37", "R54", "R55"]),
             ("SENSORS, WATER ELECTRODES, MONITORS, FANS, HEADERS, LID SWITCH, GEIGER SUPPLY", ["U14", "C48", "C62", "U15", "R51", "C49", "C50", "U17", "R57", "C57", "C58", "J_TAMP", "R52", "R53", "C52", "PAD_W1", "R38", "PAD_W2", "R39", "C51", "R40", "R41", "R42", "R43", "D9", "J_FAN1", "Q9", "R44", "R46", "D7", "J_FAN2", "Q10", "R45", "R47", "D8", "U16", "R56", "C53", "C54", "C55", "C56", "J_GEIGER", "J_DCF", "J_LTG", "J_POD", "R48", "TP13", "R49", "R50"]),
             ("TEST POINTS, FLAGS", ["TP%d" % k for k in range(1, 10)] + ["#FLG%02d" % k for k in range(1, 18)])]
@@ -800,6 +954,18 @@ _DEC_CLASS = {
                  "seat, A1 and A2) states that seat, where D's 3.0 mm screen answers a supply question it does not ask and "
                  "dropping the declaration (R4) would lose the seat ANA-001 needs. Taken by the session under the owner's "
                  "standing rule of 26 September 2026"),
+    # S-47's smaller item (board E stream w3de, 27 September 2026): the LT8705A controller's four supply pins, with the
+    # classes decision 42 gave the LM5176, the same kind of controller (DECOUPLING.md section 6, R4; E.md section 5):
+    # VIN and GATEVCC class D, INTVCC and LDO33 class L with the maker's value floors.
+    "C64": ("D", "LT8705A datasheet 8705af (v2/vendor/power/lt8705a.pdf): VIN (Pin 34) \"Main Input Supply Pin. It must be "
+                 "locally bypassed to ground\" (p.12); the front-page circuit fits 1 uF there (p.1)"),
+    "C63": ("D", "8705af: GATEVCC (Pin 15) \"Must be connected to the INTVCC pin ... Locally bypass to GND\" (p.11); \"The "
+                 "bypass capacitance from GATEVCC to GND should be at least ten times the CB1 or CB2 capacitance\" (p.28), "
+                 "C17 and C18 being 470 nF; \"Connect the INTVCC and GATEVCC bypass capacitors close to the IC\" (p.36)"),
+    "C19": ("L", "8705af: INTVCC (Pin 35) \"Internal 6.35V Regulator Output ... Bypass this pin to ground with a minimum 4.7uF "
+                 "ceramic capacitor\" (p.12); p.36 as C63", {"value_floor": "4.7u", "esr_max": "not stated by the maker (TBD)"}),
+    "C20": ("L", "8705af: LDO33 (Pin 4) \"3.3V Regulator Output. Bypass this pin to ground with a minimum 0.1uF ceramic "
+                 "capacitor\" (p.11)", {"value_floor": "0.1u", "esr_max": "not stated by the maker (TBD)"}),
 }
 _DEC_RULED = ("R", "D", "L", "A", "B1", "B2")   # G14: the six classes decision 42 rules (DECOUPLING.md section 6)
 _seen = set()   # G14: the entries given a class

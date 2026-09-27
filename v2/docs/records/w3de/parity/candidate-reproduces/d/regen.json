@@ -1,0 +1,120 @@
+{
+ "board": "d",
+ "board_table_phase": "D12",
+ "commands": [
+  {
+   "argv": [
+    "kicad-cli",
+    "sch",
+    "export",
+    "bom",
+    "--fields",
+    "Reference,Value,Footprint,LCSC,${QUANTITY}",
+    "--group-by",
+    "Value,Footprint",
+    "--sort-field",
+    "Reference",
+    "-o",
+    "/root/w3de/final2-regen/d/committed/pcb-d-aprs-bom.csv",
+    "pcb-d-aprs.kicad_sch"
+   ],
+   "cwd": "v2/ecad/pcb-d-aprs-d9",
+   "exit": 0,
+   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\nWrote bill of materials to '/root/w3de/final2-regen/d/committed/pcb-d-aprs-bom.csv'.\n",
+   "started_utc": "2026-09-27T10:42:58Z"
+  },
+  {
+   "argv": [
+    "kicad-cli",
+    "sch",
+    "erc",
+    "--severity-all",
+    "--format",
+    "json",
+    "-o",
+    "/root/w3de/final2-regen/d/committed/pcb-d-aprs-erc.json",
+    "pcb-d-aprs.kicad_sch"
+   ],
+   "cwd": "v2/ecad/pcb-d-aprs-d9",
+   "exit": 0,
+   "output_tail": "Found 445 violations\nSaved ERC Report to /root/w3de/final2-regen/d/committed/pcb-d-aprs-erc.json\n",
+   "started_utc": "2026-09-27T10:42:58Z"
+  },
+  {
+   "argv": [
+    "/usr/bin/python3",
+    "../tools/gen_footprints_b16.py",
+    "../meshsat.pretty"
+   ],
+   "cwd": "v2/ecad/pcb-d-aprs-d9",
+   "exit": 0,
+   "output_tail": "gen_footprints_b16: 12 footprints written and loaded: Ebyte_E22-900M30S, LQFP-128_14x14mm_P0.4mm_EP6.0, M2_B-Key_Socket_3052, M2_B-Key_Socket_3052_TE2199119, M2_M-Key_Socket_2242, NiceRF_SA868, Pulse_H5007NL, Quectel_LG290P, Skyworks_SKY13351_MLPD-6_1x1mm, TQFP-128_14x14mm_P0.4mm_EP10.0, Texas_RKS0020A_VQFN-20_2.5x4.5mm, Texas_RSE0010A_UQFN-10_1.5x2mm\n",
+   "started_utc": "2026-09-27T10:42:59Z"
+  },
+  {
+   "argv": [
+    "/usr/bin/python3",
+    "../tools/gen_footprints_idc.py",
+    "../meshsat.pretty"
+   ],
+   "cwd": "v2/ecad/pcb-d-aprs-d9",
+   "exit": 0,
+   "output_tail": "gen_footprints_idc: wrote IDC-Header_2x05_P2.54mm_Vertical_NarrowPad, 10 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)\ngen_footprints_idc: wrote IDC-Header_2x07_P2.54mm_Vertical_NarrowPad, 14 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)\ngen_footprints_idc: wrote IDC-Header_2x08_P2.54mm_Vertical_NarrowPad, 16 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)\ngen_footprints_idc: wrote IDC-Header_2x09_P2.54mm_Vertical_NarrowPad, 18 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)\ngen_footprints_idc: wrote IDC-Header_2x10_P2.54mm_Vertical_NarrowPad, 20 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)\ngen_footprints_idc: wrote IDC-Header_2x13_P2.54mm_Vertical_NarrowPad, 26 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)\ngen_footprints_idc: wrote IDC-Header_2x20_P2.54mm_Vertical_NarrowPad, 40 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)\ngen_footprints_idc: 7 footprint(s)\n",
+   "started_utc": "2026-09-27T10:42:59Z"
+  },
+  {
+   "argv": [
+    "/usr/bin/python3",
+    "../tools/gen_sch_d.py",
+    "pcb-d-aprs.kicad_sch",
+    "pcb-d-aprs"
+   ],
+   "cwd": "v2/ecad/pcb-d-aprs-d9",
+   "exit": 0,
+   "output_tail": "lands: 36 footprint(s) judged, 0 pin(s) on a pad the land does not carry, 0 land(s) unreadable\nschlayout verify: 664 pins in 542 nets, every component one name\nlayout: 7 A3 pages on a 3 x 3 sheet -> paper \"User\" 1257.30 891.54\nwrote pcb-d-aprs.kicad_sch parts: 253 lib symbols: 45\nnets: 145 single-pin nets (should be empty or intentional): []\nintent: /root/w3de/final/v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs-intent.json (31 bypass, 6 rails, 28 nodes, 5 pair classes)\n",
+   "started_utc": "2026-09-27T10:42:59Z"
+  },
+  {
+   "argv": [
+    "bash",
+    "../tools/build_sch.sh",
+    ".",
+    "pcb-d-aprs"
+   ],
+   "cwd": "v2/ecad/pcb-d-aprs-d9",
+   "exit": 0,
+   "output_tail": "ERC: violations (out/pcb-d-aprs-erc.json, out/pcb-d-aprs-erc.rpt; erc_gate.py decides)\nnetlist: out/pcb-d-aprs.net\nsch_prov: pcb-d-aprs.net written by generator 394244608d236f10 (boards/d.json#gen_env, gen_footprints_b16.py, gen_footprints_e.py, gen_footprints_idc.py, gen_footprints_panel.py, gen_sch_d.py, idc_pads.py, intent.py, kisch.py, schlayout.py, and 60 land(s) in meshsat.pretty)\nsheet pdf: out/pcb-d-aprs-schematic-sheet.pdf\nsch_pages: 3 x 3 cells, 7 pages kept of 9 tiles\npdf: out/pcb-d-aprs-schematic.pdf\nbom: out/pcb-d-aprs-bom.csv\n",
+   "started_utc": "2026-09-27T10:43:03Z"
+  }
+ ],
+ "comparisons": {
+  "bom": "PARITY",
+  "erc": "PARITY_AFTER_NOISE",
+  "intent": "PARITY_AFTER_NOISE",
+  "netlist": "PARITY_AFTER_NOISE",
+  "schematic": "PARITY"
+ },
+ "gen_env": null,
+ "lands_changed_by_the_footprint_generators": [],
+ "phase_directory": "pcb-d-aprs-d9",
+ "phase_label_used": "D37P",
+ "result": "PARITY",
+ "stem": "pcb-d-aprs",
+ "taken_utc": "2026-09-27T10:43:10Z",
+ "versions": {
+  "kicad_cli": "9.0.9",
+  "mutool": "mutool version 1.23.10",
+  "packages": {
+   "kicad": "9.0.9~ubuntu24.04.1",
+   "kicad-footprints": "9.0.9~ubuntu24.04.1",
+   "kicad-symbols": "9.0.9~ubuntu24.04.1",
+   "mupdf-tools": "1.23.10+ds1-1build3",
+   "poppler-utils": "24.02.0-1ubuntu9.9"
+  },
+  "pdfinfo": "pdfinfo version 24.02.0",
+  "platform": "Linux-6.8.0-134-generic-x86_64-with-glibc2.39",
+  "py_PIL": "10.2.0",
+  "py_yaml": "6.0.1",
+  "python": "3.12.3"
+ }
+}

@@ -1,0 +1,123 @@
+{
+ "kind": "schematic",
+ "phase_labels": [
+  [
+   "A65"
+  ],
+  [
+   "A65"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N1_title_date": 1,
+   "N2_page_frame_date": 15,
+   "L1_comment1_phase": 1,
+   "L2_frame_phase": 15
+  },
+  {
+   "N1_title_date": 1,
+   "N2_page_frame_date": 16,
+   "L1_comment1_phase": 1,
+   "L2_frame_phase": 16
+  }
+ ],
+ "result": "DIFFERENT",
+ "parts_only_committed": [],
+ "parts_only_other": [
+  "J_VN1",
+  "J_VN2",
+  "J_VN3",
+  "J_VN4",
+  "J_VR1",
+  "J_VR2",
+  "J_VR3",
+  "J_VR4"
+ ],
+ "parts_changed": [
+  [
+   "J_DOCK",
+   [
+    "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-4 VIN_RAW (9 to 36 V from E6), 5-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare",
+    "PogoPins_2x6",
+    ""
+   ],
+   [
+    "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare (VIN_RAW crosses on J_VR1-4 since EQ-16)",
+    "PogoPins_2x6",
+    ""
+   ]
+  ]
+ ],
+ "lib_symbols_only_committed": [],
+ "lib_symbols_only_other": [],
+ "lib_symbols_changed": [],
+ "line_counts": [
+  41361,
+  41481
+ ],
+ "changed_lines": 26780,
+ "changed_lines_sample": [
+  "-\t(text \"PACK NODE OVER THE DOCK BLOCK (32.56)  |  MAIN POWER CONTROL LTC2954  |  FRONT END\" (exclude_from_sim no) (at 5.08 12.06 0) (effects (font (size 1.50 1.50)) (justify left bottom)) (uuid \"a74e3467-eaa0-5de6-8db6-58e0b33dd668\"))",
+  "+\t(text \"PACK NODE OVER THE DOCK BLOCK (32.56)  |  MAIN POWER CONTROL LTC2954\" (exclude_from_sim no) (at 5.08 12.06 0) (effects (font (size 1.50 1.50)) (justify left bottom)) (uuid \"a74e3467-eaa0-5de6-8db6-58e0b33dd668\"))",
+  "-\t(text \"MAIN POWER CONTROL LTC2954\" (exclude_from_sim no) (at 10.16 85.09 0) (effects (font (size 1.80 1.80) bold) (justify left bottom)) (uuid \"08fd93d5-0732-5e36-837a-304fbff93e07\"))",
+  "-\t(text \"FRONT END: LM5176 FROM THE 9 TO 36 V INPUT TO THE 20 V CHARGE BUS\" (exclude_from_sim no) (at 10.16 161.29 0) (effects (font (size 1.80 1.80) bold) (justify left bottom)) (uuid \"f8d52246-8e7b-59ce-925c-5ad8370c3afe\"))",
+  "-\t(text \"page 1 of 15   MeshSat field kit V2, CERN-OHL-S-2.0   PROTOTYPE, nothing built   NOISE\" (exclude_from_sim no) (at 257.05 7.62 0) (effects (font (size 1.50 1.50)) (justify left bottom)) (uuid \"e0e9de28-9d73-587b-a877-9c4e27723b0d\"))",
+  "-\t(symbol (lib_id \"Connector_Generic:Conn_01x12\") (at 38.10 43.18 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid \"ddbd6428-9a51-5741-bbaa-97fda6c0dab2\")",
+  "+\t(text \"MAIN POWER CONTROL LTC2954\" (exclude_from_sim no) (at 10.16 97.79 0) (effects (font (size 1.80 1.80) bold) (justify left bottom)) (uuid \"08fd93d5-0732-5e36-837a-304fbff93e07\"))",
+  "+\t(text \"page 1 of 16   MeshSat field kit V2, CERN-OHL-S-2.0   PROTOTYPE, nothing built   NOISE\" (exclude_from_sim no) (at 257.05 7.62 0) (effects (font (size 1.50 1.50)) (justify left bottom)) (uuid \"f8d52246-8e7b-59ce-925c-5ad8370c3afe\"))",
+  "+\t(symbol (lib_id \"Connector_Generic:Conn_01x12\") (at 38.10 43.18 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid \"e0e9de28-9d73-587b-a877-9c4e27723b0d\")",
+  "-\t\t(property \"Value\" \"spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-4 VIN_RAW (9 to 36 V from E6), 5-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare\" (at 40.64 27.94 0) (effec",
+  "+\t\t(property \"Value\" \"spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare (VIN_RAW crosses on J_VR1-4 since EQ-16)\" (at 40.64 27.94 0",
+  "-\t\t(pin \"1\" (uuid \"b17326c6-9b91-5304-a1e9-0b5e6b537644\"))",
+  "-\t\t(pin \"2\" (uuid \"3ed59f97-f167-571e-b8bf-5fcd49137e17\"))",
+  "-\t\t(pin \"3\" (uuid \"6b881f2e-1ebd-5103-be21-583b8fba165c\"))",
+  "-\t\t(pin \"4\" (uuid \"7a8aecd8-1ab5-5f6e-a65c-95ae7d102ab7\"))",
+  "-\t\t(pin \"5\" (uuid \"e7bebaa0-f6ba-5b10-a2a8-5aa65e79b2a2\"))",
+  "-\t\t(pin \"6\" (uuid \"d6d51a6b-36cb-579c-b451-ee6e60924583\"))",
+  "-\t\t(pin \"7\" (uuid \"e63d63db-f90c-521f-8e3e-7093b3dd0495\"))",
+  "-\t\t(pin \"8\" (uuid \"03b29a2c-acca-57e2-8949-437eeddb5287\"))",
+  "-\t\t(pin \"9\" (uuid \"06ecbf04-19e5-5e02-8af4-292497f341a7\"))",
+  "-\t\t(pin \"10\" (uuid \"127506df-5dec-5d52-b055-775d11aaccec\"))",
+  "-\t\t(pin \"11\" (uuid \"db21bffb-7233-598c-8be4-822b74ea5d1d\"))",
+  "-\t\t(pin \"12\" (uuid \"15e29848-6d0c-5a13-952d-878d0f511e4f\"))",
+  "+\t\t(pin \"1\" (uuid \"ddbd6428-9a51-5741-bbaa-97fda6c0dab2\"))",
+  "+\t\t(pin \"2\" (uuid \"b17326c6-9b91-5304-a1e9-0b5e6b537644\"))",
+  "+\t\t(pin \"3\" (uuid \"3ed59f97-f167-571e-b8bf-5fcd49137e17\"))",
+  "+\t\t(pin \"4\" (uuid \"6b881f2e-1ebd-5103-be21-583b8fba165c\"))",
+  "+\t\t(pin \"5\" (uuid \"7a8aecd8-1ab5-5f6e-a65c-95ae7d102ab7\"))",
+  "+\t\t(pin \"6\" (uuid \"e7bebaa0-f6ba-5b10-a2a8-5aa65e79b2a2\"))",
+  "+\t\t(pin \"7\" (uuid \"d6d51a6b-36cb-579c-b451-ee6e60924583\"))",
+  "+\t\t(pin \"8\" (uuid \"e63d63db-f90c-521f-8e3e-7093b3dd0495\"))",
+  "+\t\t(pin \"9\" (uuid \"03b29a2c-acca-57e2-8949-437eeddb5287\"))",
+  "+\t\t(pin \"10\" (uuid \"06ecbf04-19e5-5e02-8af4-292497f341a7\"))",
+  "+\t\t(pin \"11\" (uuid \"127506df-5dec-5d52-b055-775d11aaccec\"))",
+  "+\t\t(pin \"12\" (uuid \"db21bffb-7233-598c-8be4-822b74ea5d1d\"))",
+  "-\t(text \"spring pins to the dock block\" (exclude_from_sim no) (at 40.64 27.94 0) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"d756f5a0-c610-521c-be4a-f37a5434bb55\"))",
+  "-\t(label \"VIN_RAW\" (at 30.48 30.48 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"5b318e22-1433-5490-b0d4-978bcb0c7a64\"))",
+  "-\t(label \"VIN_RAW\" (at 30.48 33.02 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"83cf0ef5-76db-5ebf-b813-5ff183aa999f\"))",
+  "-\t(label \"VIN_RAW\" (at 30.48 35.56 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"3c0dcd04-255d-5820-90a3-96e6ed0bb496\"))",
+  "-\t(label \"VIN_RAW\" (at 30.48 38.10 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"d4449e8c-51ac-5c26-837d-cbe6d0e61730\"))",
+  "-\t(global_label \"GND\" (shape input) (at 30.48 40.64 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right)) (uuid \"1746ea51-386f-529e-ad9c-baa0fe2ea95e\")",
+  "+\t(text \"spring pins to the dock block\" (exclude_from_sim no) (at 40.64 27.94 0) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"15e29848-6d0c-5a13-952d-878d0f511e4f\"))",
+  "+\t(global_label \"GND\" (shape input) (at 30.48 30.48 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right)) (uuid \"d756f5a0-c610-521c-be4a-f37a5434bb55\")",
+  "+\t\t(property \"Intersheetrefs\" \"${INTERSHEET_REFS}\" (at 30.48 30.48 0) (effects (font (size 1.27 1.27)) (hide yes)))",
+  "+\t)",
+  "+\t(global_label \"GND\" (shape input) (at 30.48 33.02 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right)) (uuid \"5b318e22-1433-5490-b0d4-978bcb0c7a64\")",
+  "+\t\t(property \"Intersheetrefs\" \"${INTERSHEET_REFS}\" (at 30.48 33.02 0) (effects (font (size 1.27 1.27)) (hide yes)))",
+  "+\t)",
+  "+\t(global_label \"GND\" (shape input) (at 30.48 35.56 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right)) (uuid \"83cf0ef5-76db-5ebf-b813-5ff183aa999f\")",
+  "+\t\t(property \"Intersheetrefs\" \"${INTERSHEET_REFS}\" (at 30.48 35.56 0) (effects (font (size 1.27 1.27)) (hide yes)))",
+  "+\t)",
+  "+\t(global_label \"GND\" (shape input) (at 30.48 38.10 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right)) (uuid \"3c0dcd04-255d-5820-90a3-96e6ed0bb496\")",
+  "+\t\t(property \"Intersheetrefs\" \"${INTERSHEET_REFS}\" (at 30.48 38.10 0) (effects (font (size 1.27 1.27)) (hide yes)))",
+  "+\t)",
+  "+\t(global_label \"GND\" (shape input) (at 30.48 40.64 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right)) (uuid \"d4449e8c-51ac-5c26-837d-cbe6d0e61730\")",
+  "-\t(global_label \"GND\" (shape input) (at 30.48 43.18 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right)) (uuid \"ab06a09c-7c8a-5893-a870-4eef8ac769e6\")",
+  "+\t(global_label \"GND\" (shape input) (at 30.48 43.18 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right)) (uuid \"1746ea51-386f-529e-ad9c-baa0fe2ea95e\")",
+  "-\t(global_label \"GND\" (shape input) (at 30.48 45.72 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right)) (uuid \"40b81125-1810-54d4-8f1a-b38d0d564a1f\")",
+  "+\t(global_label \"GND\" (shape input) (at 30.48 45.72 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right)) (uuid \"ab06a09c-7c8a-5893-a870-4eef8ac769e6\")",
+  "-\t(label \"SHORE_INHIBIT\" (at 30.48 48.26 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"ceb22090-c597-5937-b262-62a6976d2ec5\"))"
+ ],
+ "bucket_hint": "PARTS"
+}

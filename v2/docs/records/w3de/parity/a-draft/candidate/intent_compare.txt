@@ -1,0 +1,1 @@
+rails changed: VIN_RAW ['amps_peak', 'amps_typ', 'loads', 'note', 'source']
