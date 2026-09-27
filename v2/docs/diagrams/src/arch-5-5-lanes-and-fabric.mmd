@@ -1,0 +1,32 @@
+---
+title: "ARCHITECTURE.md, 5.5 Ethernet, display, the kit I2C bus and the supervisor fabric (lines 601 to 629 of the document with sha256/16 4ad3ba63938e8d85): design diagram of an unbuilt prototype"
+---
+flowchart LR
+  subgraph S1["slot 1"]
+    C1["CM5 1"] -->|"PCIe Gen2 x1"| W1["switch U101"]
+    W1 --> N1["NVMe"]
+    W1 --> K1["WiFi card 1"]
+  end
+  subgraph S2["slot 2"]
+    C2["CM5 2"] -->|"PCIe Gen2 x1"| W2["switch U201"]
+    W2 --> N2["NVMe"]
+    W2 --> G5["5G RM520N-GL"]
+  end
+  subgraph S3["slot 3"]
+    C3["CM5 3"] -->|"PCIe Gen2 x1"| W3["switch U301"]
+    W3 --> N3["NVMe"]
+    W3 --> K2["WiFi card 2, standby"]
+    C3 -->|"SPI"| LORA["E22 LoRa"]
+  end
+  C1 -->|"USB3-0 home"| B1["bank 1 hub: LimeSDR, panel, camera, RockBLOCK"]
+  C2 -->|"USB3-1 failover"| B1
+  C2 -->|"USB3-0 home"| B2["bank 2 hub: GNSS, E72 x2, QMX"]
+  C3 -->|"USB3-1 failover"| B2
+  C3 -->|"USB3-0 home"| B3["bank 3 hub: board D, board E, Glenair wall port, 5G management"]
+  C1 -->|"USB3-1 failover"| B3
+  C1 --> KSZ["KSZ9897R: 3 module ports, wall RJ45 with PoE"]
+  C2 --> KSZ
+  C3 --> KSZ
+  C1 --> HD["TS3DV642 x 2 to the face monitor"]
+  C2 --> HD
+  C3 --> HD

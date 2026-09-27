@@ -174,6 +174,8 @@ flowchart LR
   GNSS["GNSS and time"] --> KIT
 ```
 
+Rendered for readers without a Mermaid viewer: [`diagrams/svg/arch-2-context.svg`](diagrams/svg/arch-2-context.svg) (PDF in `diagrams/pdf/`; a design diagram of an unbuilt prototype, drawn at `e3aedb25` before round 8, made and checked as `diagrams/README.md` describes).
+
 **The prototype 1 acceptance core (owner ruling D-01) against the design as generated at `eadbe571`.** A core
 function is accepted only when its tests pass; this table says what stands in the way today. The core functions whose
 feasibility is not yet shown are section 14's blockers; this table names them by ID. SOS is in the core as D-10
@@ -255,6 +257,8 @@ flowchart TB
   B -->|"USB"| QMX
 ```
 
+Rendered for readers without a Mermaid viewer: [`diagrams/svg/arch-3-2-board-interconnect.svg`](diagrams/svg/arch-3-2-board-interconnect.svg) (PDF in `diagrams/pdf/`; a design diagram of an unbuilt prototype, drawn at `e3aedb25` before round 8, made and checked as `diagrams/README.md` describes).
+
 ## 4. Power
 
 ### 4.1 The power tree as generated
@@ -298,12 +302,16 @@ flowchart LR
   POE --> BPOE["B: PoE out"]
 ```
 
+Rendered for readers without a Mermaid viewer: [`diagrams/svg/arch-4-1-power-tree.svg`](diagrams/svg/arch-4-1-power-tree.svg) (PDF in `diagrams/pdf/`; a design diagram of an unbuilt prototype, drawn at `e3aedb25` before round 8, made and checked as `diagrams/README.md` describes).
+
 Three properties of the corrected tree (VERIFIED re-read, `458b2873`): the kit's loads sit on the charger's VSYS side
 of the charge shunt R17, TI's own topology, so shore carries the loads up to the input limit without software and the
 charger's current loop measures the pack alone (S-04, `gen_sch_a.py:26-48`); slot 2 and the device rail are LM5176
 stages whose average current loop limits at 7.2 to 9.5 A (F-PR-04, `:110-115`, `:855-886`); the monitor and heater
 eFuses no longer lock out inside the 4S range (OVLO 143 k, F-SQ-06, `:1036-1046`) and the heater mat runs from a
 regulated 12.0 V buck (F-PR-06, `:1049-1074`).
+
+The same tree drawn from the netlists and `pcb_energy_chain.yaml` as committed at `e3aedb25` (before round 8; `diagrams/README.md` says what changed since): [`diagrams/svg/power-tree.svg`](diagrams/svg/power-tree.svg). Which parts make each stage is typed in the tool that draws it and checked against the netlist on every build (the path runs only through those parts, the FETs their controllers drive and the inductors on those switching nodes, and each named part is needed); the check covers the drawn stages' connectivity and labels, not whether a stage works, and its attribution check is not complete: the listed negative-control classes are refused, but a part that bridges the stage's two nets (a monitor, a feedback resistor, a load's supply pins) is accepted, and so is a passive on a FET gate named as the controller (the second AI review of 27 September 2026 tried 3822 substitutions and 18 distinct wrong attributions were accepted), so the attributions drawn at `e3aedb25` were also checked by hand; the stages, the leads and five disagreements between the energy chain and the netlists (F2 not a chain stage, the pre-D-06 pack, the U7 fault-current basis, the SMCJ33A note, board B's own VBAT net) are in `diagrams/power-tree.md`. Design diagram of an unbuilt prototype.
 
 ### 4.2 Sources and the stored-energy chain
 
@@ -342,6 +350,8 @@ flowchart TB
   S0 --> S1 --> S2 --> S3 --> S4 --> S5
   S3 -->|"no panel firmware: blank, crashed or BOOTSEL"| STOP["kit stops at S3: no module runs, by D-03's boot order"]
 ```
+
+Rendered for readers without a Mermaid viewer: [`diagrams/svg/arch-4-3-power-up.svg`](diagrams/svg/arch-4-3-power-up.svg) (PDF in `diagrams/pdf/`; a design diagram of an unbuilt prototype, drawn at `e3aedb25` before round 8, made and checked as `diagrams/README.md` describes).
 
 Line states until the panel firmware writes the expanders (VERIFIED re-read at `eadbe571`; A01's thresholds):
 
@@ -620,6 +630,8 @@ flowchart LR
   C3 --> HD
 ```
 
+Rendered for readers without a Mermaid viewer: [`diagrams/svg/arch-5-5-lanes-and-fabric.svg`](diagrams/svg/arch-5-5-lanes-and-fabric.svg) (PDF in `diagrams/pdf/`; a design diagram of an unbuilt prototype, drawn at `e3aedb25` before round 8, made and checked as `diagrams/README.md` describes).
+
 ## 6. Control, reset, clocks and grounding
 
 ### 6.1 Controllers
@@ -649,6 +661,8 @@ Source: W5 round 2 contract with A01, A02, A07 and A11 applied, re-read against 
 | SHORE_INHIBIT | C | E's hot-swap UVLO through Q8 | LOW: inputs run | R118 (A), R26 (E, `gen_sch_e.py:309`) |
 
 All VERIFIED (re-read) at `eadbe571`. With the ribbon cut every gated transmitter is inhibited and no module runs.
+
+Drawn from the netlists as committed at `e3aedb25`, before round 8 (each board's box names its netlist by sha256/16) across boards C, B, A, D and E, with the parts each line reaches, the pulls and the connector pins checked at both ends against `pcb_interfaces.yaml`: [`diagrams/svg/control-lines.svg`](diagrams/svg/control-lines.svg); every node is listed in `diagrams/control-lines.md`. Design diagram of an unbuilt prototype; it shows what the netlists carry, so the SLOT_EN hold and the EMCON remedies L1 to L4 and L7 are absent from it because they are in no generator.
 
 ### 6.3 EMCON, transmitter by transmitter
 
@@ -745,6 +759,8 @@ release. Nothing is asked of the owner; buying the case and the mock-up's parts 
 | CM5 heatsink top | B's top copper + 21.0 | `panel1450.py`; height from the render scene, not a Raspberry Pi drawing | TBD source (`CASE-MARGINS.md` section 6) |
 | face plate | as coded 98.4 to 101.4 on "base 109.4, lip 8", a datum no Peli file supports; **chosen: the plate on the frame, the frame on four setting legs, face top 106.52 (104.77 to 108.27)** | `CASE-MARGINS.md` C1 and C6, finding 2 | the base is 108.97 (STEP and drawing), the frame's ring 9.39; `panel1450.py` still codes 101.4 until the CAD follows |
 | antenna bulkheads | as coded Z 88 at a 24 mm pitch; **chosen: the ruled arrestors as the bulkheads at Z 59, 31 mm pitch** | `panel1450.py:115-118`; `CASE-MARGINS.md` C2 | section 9 |
+
+Plan and Z stack of the case interior, drawn from `v2/vendor/peli/frame_seat.py` (the calculator behind `CASE-MARGINS.md`), `panel1450.py` and the board generators, with the as-coded and the chosen figures both shown where they differ: [`diagrams/svg/case-plan.svg`](diagrams/svg/case-plan.svg) and [`diagrams/svg/case-zstack.svg`](diagrams/svg/case-zstack.svg); every number and its source is in `diagrams/case-drawings.md`. Design drawings of an unbuilt prototype: nominal geometry, no fit, alignment or seal established.
 
 ### 7.2 The face Z budget
 

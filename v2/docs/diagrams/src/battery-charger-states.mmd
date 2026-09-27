@@ -1,0 +1,18 @@
+---
+title: "review-packets/battery/CHARGER-STATE-SEQUENCE.md, 7. Items this produces (owners named; none written by this stream) (lines 137 to 151 of the document with sha256/16 df84d98b9e47160c): design diagram of an unbuilt prototype"
+---
+stateDiagram-v2
+    [*] --> S0_PackOnly
+    S0_PackOnly --> S1_PORDefaults: shore or vehicle arrives
+    S1_PORDefaults --> S2_Configured: host writes RSNS_RAC, IIN_HOST, ChargeVoltage, ChargeCurrent
+    S2_Configured --> S3_CC
+    S3_CC --> S4_CV: 16.8 V reached
+    S4_CV --> S5_Terminated: gauge TC with CHGFET=1, or host
+    S5_Terminated --> S6_Maintenance: TC clears or host
+    S6_Maintenance --> S3_CC
+    S3_CC --> S7_TempHold: gauge UTC, or OTC with OTFET=1
+    S7_TempHold --> S3_CC: back in window
+    S2_Configured --> S8_Watchdog256: host silent 175 s
+    S3_CC --> S8_Watchdog256: host silent 175 s
+    S8_Watchdog256 --> S2_Configured: host returns and rewrites
+    S1_PORDefaults --> S1_PORDefaults: host never returns (256 mA, about 31 W input)

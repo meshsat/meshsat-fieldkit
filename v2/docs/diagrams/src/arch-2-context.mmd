@@ -1,0 +1,14 @@
+---
+title: "ARCHITECTURE.md, 2. Purpose and the prototype 1 core (lines 164 to 174 of the document with sha256/16 4ad3ba63938e8d85): design diagram of an unbuilt prototype"
+---
+flowchart LR
+  OP["Operator at the face plate"] --> KIT
+  LOCAL["Local networks: Meshtastic LoRa, Zigbee, Thread, WiFi clients, tablet"] <--> KIT
+  KIT["V2 field kit: sealed Peli 1450, seven carrier boards, 4S3P pack"]
+  KIT <--> IRI["Iridium (RockBLOCK 9704)"]
+  KIT <--> CELL["5G cellular (RM520N-GL)"]
+  KIT <--> APRS["VHF APRS and voice (SA868 plus 30 W PA)"]
+  KIT <--> HF["HF (QMX in the lid)"]
+  KIT <--> K2K["kit-to-kit WiFi (AW7915-AED)"]
+  SHORE["Shore, vehicle 9 to 36 V, solar"] --> KIT
+  GNSS["GNSS and time"] --> KIT
