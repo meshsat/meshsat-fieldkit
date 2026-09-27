@@ -6196,11 +6196,18 @@ records:
           took the layer 3 closer's CFL-003 correction), with the counts that follow it; board D's RF-002 and SCH-004
           keep the class and cause read above, so this constraint's own reasons are unchanged and it stays INCONCLUSIVE,
           so it stands on the file at 23ec56778cee856e
+      - >-
+          v2/docs/CURRENT-EVIDENCE.md re-read at the release check of layers 1 to 3 of 27 September 2026: rendered after
+          rules_status ran three times on the committed tree (116c432e), only the class-change note's count (161 to 154
+          rows whose first failing cause moved) and the cause table change, ENV-002's reading on each of the seven
+          boards moving from TOOL_CHANGED to UNBOUND (claims_check re-taken under its current tool after f2b7fa66);
+          board D's RF-002 and SCH-004 keep the class and cause read above, so this constraint's own reasons are
+          unchanged and it stays INCONCLUSIVE, so it stands on the file at ed8d4fbaefde46f7
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63"
       - "v2/docs/feasibility/EMCON.md@421a291f7ce4cda2"
-      - "v2/docs/CURRENT-EVIDENCE.md@23ec56778cee856e"
+      - "v2/docs/CURRENT-EVIDENCE.md@ed8d4fbaefde46f7"
     release_effect: BLOCKER
     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2825", "v2/docs/PANEL.md section 6", "v2/docs/feasibility/EMCON.md sections 4.1 and 4.2"]
     source_check: VERIFIED
@@ -7377,10 +7384,17 @@ records:
           CURRENT_CANDIDATE to AWAITING_REVALIDATION (CONFIG_CHANGED: pcb_board_facts.yaml, an input of edge_length.py,
           took the layer 3 closer's CFL-003 correction), with the counts that follow it; board P's row, its netlist
           085f833362fbbda8 and every reason given above are unchanged, so it stands on the file at 23ec56778cee856e
+      - >-
+          v2/docs/CURRENT-EVIDENCE.md re-read at the release check of layers 1 to 3 of 27 September 2026: rendered after
+          rules_status ran three times on the committed tree (116c432e), only the class-change note's count (161 to 154
+          rows whose first failing cause moved) and the cause table change, ENV-002's reading on each of the seven
+          boards moving from TOOL_CHANGED to UNBOUND (claims_check re-taken under its current tool after f2b7fa66);
+          board P's row, its netlist 085f833362fbbda8 and every reason given above are unchanged, so it stands on the
+          file at ed8d4fbaefde46f7
     evidence_bound_to:
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
       - "v2/ecad/tools/gen_sch_p.py@91ccbb922c427d43"
-      - "v2/docs/CURRENT-EVIDENCE.md@23ec56778cee856e"
+      - "v2/docs/CURRENT-EVIDENCE.md@ed8d4fbaefde46f7"
       - "v2/docs/review-packets/battery/REVIEW-REQUEST.md@91a257430cbeb53a"
     release_effect: BLOCKER
     source:

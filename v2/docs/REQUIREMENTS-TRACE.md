@@ -3,11 +3,11 @@
 
 # Requirements trace
 
-Generated from the requirements registry `v2/ecad/tools/pcb_requirements.yaml`. Prototype design: nothing described here has been built, powered or field deployed, and every statement below is a requirement, what the design is intended to do, never a report of what hardware has done. A record that needs hardware reads NOT_YET_TESTED, and a record reads PASS or FAIL only where its evidence names the file it was read from. The needs are quoted from `v2/docs/CONOPS.md` section 2 (pinned by sha256 `4887ada07f50d808`); every record traces to one need; the rules of the PCB rule registry and the owner decisions of `pcb_decisions.yaml` judge or settle parts of the records; and every record says how and at which phase it is intended to be verified.
+Generated from the requirements registry `v2/ecad/tools/pcb_requirements.yaml`. Prototype design: nothing described here has been built, powered or field deployed, and every statement below is a requirement, what the design is intended to do, never a report of what hardware has done. A record that needs hardware reads NOT_YET_TESTED, and a record reads PASS or FAIL only where its evidence names the file it was read from. The needs are quoted from `v2/docs/CONOPS.md` section 2 (pinned by sha256 `370aca33cb44da97`); every record traces to one need; the rules of the PCB rule registry and the owner decisions of `pcb_decisions.yaml` judge or settle parts of the records; and every record says how and at which phase it is intended to be verified.
 
 Every reading carries its evidence class, in the six classes of `v2/docs/CURRENT-EVIDENCE.md`: a record reads PASS only on a class that counts, never on evidence awaiting revalidation, and a desk review (the session's own reading of named files, each bound by its sha256) is never a physical test. The prototype-core functions whose feasibility is not closed are listed first, as explicit architecture feasibility blockers (review of 26 September 2026, section 3 and checkpoint item 1): a merged document is configuration control, not proof that the architecture is feasible.
 
-Registry state **READY_FOR_REVIEW_B**. Sources read at commit `95e078a1` unless an entry says otherwise. 144 records trace to 19 needs; 29 owner rulings are applied, 50 choices were taken by the session under the owner's standing rule of 26 September 2026, 43 items are open and 49 are closed.
+Registry state **READY_FOR_REVIEW_B**. Sources read at commit `08f3665a` unless an entry says otherwise. 144 records trace to 19 needs; 29 owner rulings are applied, 50 choices were taken by the session under the owner's standing rule of 26 September 2026, 43 items are open and 49 are closed.
 
 ## Summary
 
@@ -610,7 +610,11 @@ Prototype 1: in the core D-01 names. 19 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/V2-SPEC.md re-read at the r8int4 integration of 27 September 2026 after the layer 7 closer's case timing (fnd/hc7, c7) and the integrator's edits for verify c7: only correction 18 changes, gaining the mock-up's timing since 27 September 2026 (FEA-007); the lines and corrections this reading rests on are byte-identical to the file at a02ea1b6801f8916, so it stands on the file at 73a797e44d42fa6d
 
-*Bound to:* `v2/docs/CONOPS.md@4887ada07f50d808`, `v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8`, `v2/docs/V2-SPEC.md@73a797e44d42fa6d`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/CONOPS.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and REVIEW-LAYER-2-RELEASE-2026-09-27.md): the status header (the filed Review A records and the release review), section 3's M4 (the 5G row's 20 s as REQ-071's with board B's round 8 supply removal), section 4's Reduced row (FW-C09 and ARCHITECTURE's PS-RED row named as hand-offs), section 4a's A06 sentence (its records filed), section 4b.1 (the 5G row, the lamp D22 drawn, the operator's lead as REQ-071's bound, the state at 15 of 17 local), section 4c's opening (the hand-offs) and section 4f's 5G EMCON cell change; section 2a, which this reading rests on, is byte-identical to the file at 4887ada07f50d808, so it stands on the file at 370aca33cb44da97
+
+*Evidence (PASS, DESK_REVIEW):* v2/docs/V2-SPEC.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and REVIEW-LAYER-2-RELEASE-2026-09-27.md): lines 10 (the case generators carry C2 since c351115d), 23 (the CONOPS runtime cross-reference), 24 and 76 (the hardware EMCON lamp drawn on board C, its light guide owed), 59 (a seventeenth LED) and correction 20's last sentence change and correction 30 is added; line 32 and correction 6, which this reading rests on, are byte-identical to the file at 73a797e44d42fa6d, so it stands on the file at a92ea2ef3793a3c9
+
+*Bound to:* `v2/docs/CONOPS.md@370aca33cb44da97`, `v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8`, `v2/docs/V2-SPEC.md@a92ea2ef3793a3c9`
 
 *Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md:17`; `v2/docs/ARCH-PCB-B-IOHA.md section 15a`; `session choice SC-02`; `v2/docs/CONOPS.md section 2a`
 
@@ -854,7 +858,9 @@ Prototype 1: in the core D-01 names. 19 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/ARCH-PCB-B-IOHA.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed sections 6 and 10a only (after section 6's corrected PB1/PB2 heading, the FW-B08 pointer and the segment choice SC-HF-02; 10a's per-controller part; the address block and the supervisors' part were board B's round 8 text already and are unchanged, r8int4); sections 4, 15 and 15a and line 17, which this reading cites, are unchanged, so this reading stands on the file at 55620cf51446bfc8
 
-*Bound to:* `v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8`, `v2/docs/PANEL.md@4bcbf31f44560ee1`, `v2/ecad/tools/gen_sch_b.py@af6e5821e21b70ef`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and REVIEW-LAYER-2-RELEASE-2026-09-27.md): section 1's Indicators row (D22 counted as the face's seventeenth LED, its light guide owed) and section 9's lamp-test sentence (D22 not among the seventeen controller-lit indicators; the lamp test cannot light it) change; line 5 (bank 1's home and failover hosts) and section 2's ribbon table with its pin 15 row, which this reading rests on, are byte-identical, and section 1 changes only in its Indicators row, which this reading does not cite, so it stands on the file at 8bac3c8104424c6c
+
+*Bound to:* `v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8`, `v2/docs/PANEL.md@8bac3c8104424c6c`, `v2/ecad/tools/gen_sch_b.py@af6e5821e21b70ef`
 
 *Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md section 4`; `v2/docs/ARCH-PCB-B-IOHA.md section 15`; `v2/ecad/tools/gen_sch_b.py:936`
 
@@ -978,7 +984,7 @@ Prototype 1: not in the core. 7 record(s).
 
 *Bound to:* `v2/docs/feasibility/EMCON.md@421a291f7ce4cda2`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161`
 
-*Source (verified):* `v2/docs/PANEL.md:135`; `v2/docs/PANEL.md:187`
+*Source (verified):* `v2/docs/PANEL.md:135`; `v2/docs/PANEL.md:189`
 
 **REQ-013** (requirement). A flasher that fails fails to steady on: the panel controller holds the last written indicator state when the USB link drops.
 
@@ -986,7 +992,7 @@ Prototype 1: not in the core. 7 record(s).
 
 *allocated to fw_panel.*
 
-*Source (verified):* `v2/docs/PANEL.md:191`
+*Source (verified):* `v2/docs/PANEL.md:193`
 
 ### NEED-05
 
@@ -1132,7 +1138,7 @@ Prototype 1: in the core D-01 names. 15 record(s).
 
 *Bound to:* `v2/docs/CASE-MARGINS.md@0fc449b72532ba7c`
 
-*Source (inferred):* `v2/docs/MESHSAT-709-geometry-appendix.md:3060-3062`; `v2/docs/ASSEMBLY.md:81`; `v2/docs/CASE-MARGINS.md section 3.2 (M4a to M6)`; `owner ruling D-06`
+*Source (inferred):* `v2/docs/MESHSAT-709-geometry-appendix.md:3060-3062`; `v2/docs/ASSEMBLY.md:102`; `v2/docs/CASE-MARGINS.md section 3.2 (M4a to M6)`; `owner ruling D-06`
 
 *Notes:* Adjudication A06 (box reading of B21's underside): the 4S3P 18650 block fits east, shrink-wrapped; no 4S4P fits either pocket with board P beside the cells; pack_4s.py's walled box does not fit (S-27); nothing fits the west pocket.
 
@@ -1234,7 +1240,13 @@ Prototype 1: in the core D-01 names. 15 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/OPERATING-ENVELOPE.md re-read at the r8int4 integration of 27 September 2026 after the layer 7 closer's case timing (fnd/hc7, c7) and the integrator's edits for verify c7: only section 4's pack row changes (M4a and M5 open until the targeted mock-up before boards A and P enter layout, in place of 'a mock-up at the build'); section 2's protection-board row, section 3 and section 4's EMCON paragraph are byte-identical to the file at 9f16f5b7d634764a, so it stands on the file at 6e4bbde9dbf7e136
 
-*Bound to:* `v2/docs/PANEL.md@4bcbf31f44560ee1`, `v2/docs/CONOPS.md@4887ada07f50d808`, `v2/docs/OPERATING-ENVELOPE.md@6e4bbde9dbf7e136`, `v2/ecad/tools/gen_sch_a.py@5a97fed72c42b79d`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md@44fdf9a022c49337`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and REVIEW-LAYER-2-RELEASE-2026-09-27.md): section 1's Indicators row (D22 counted as the face's seventeenth LED, its light guide owed) and section 9's lamp-test sentence (D22 not among the seventeen controller-lit indicators; the lamp test cannot light it) change; section 10, which this reading cites, is byte-identical, so it stands on the file at 8bac3c8104424c6c
+
+*Evidence (PASS, DESK_REVIEW):* v2/docs/CONOPS.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and REVIEW-LAYER-2-RELEASE-2026-09-27.md): the status header (the filed Review A records and the release review), section 3's M4 (the 5G row's 20 s as REQ-071's with board B's round 8 supply removal), section 4's Reduced row (FW-C09 and ARCHITECTURE's PS-RED row named as hand-offs), section 4a's A06 sentence (its records filed), section 4b.1 (the 5G row, the lamp D22 drawn, the operator's lead as REQ-071's bound, the state at 15 of 17 local), section 4c's opening (the hand-offs) and section 4f's 5G EMCON cell change; section 4's Charging row and section 5's case S4, which this reading rests on, are byte-identical, so it stands on the file at 370aca33cb44da97
+
+*Evidence (PASS, DESK_REVIEW):* v2/docs/OPERATING-ENVELOPE.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and REVIEW-LAYER-2-RELEASE-2026-09-27.md): only section 4 changes: the pack row names the filed A06 records (v2/docs/records/adj/A06-pack-geometry/), and the operating-modes paragraph states board B's round 8 removal of the 5G module's supply and names what EMCON work remains; no number changed; section 3's paragraph beginning '**Corrected 26 September 2026.** This pa', which this reading rests on, is byte-identical, so it stands on the file at 44a031caee47ff9a
+
+*Bound to:* `v2/docs/PANEL.md@8bac3c8104424c6c`, `v2/docs/CONOPS.md@370aca33cb44da97`, `v2/docs/OPERATING-ENVELOPE.md@44a031caee47ff9a`, `v2/ecad/tools/gen_sch_a.py@5a97fed72c42b79d`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md@44fdf9a022c49337`
 
 *Source (verified):* `v2/docs/PANEL.md section 10`; `v2/docs/CONOPS.md section 4 (Charging row)`; `v2/docs/OPERATING-ENVELOPE.md section 3`; `v2/ecad/tools/gen_sch_a.py:839-845`; `v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md`; `v2/vendor/ti/bq25731-datasheet.pdf (SLUSE66A)`
 
@@ -1766,7 +1778,9 @@ Prototype 1: in the core D-01 names. 9 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed section 1's Pass-throughs row (the monitor's touch lead to D8 J_USB3, SC-HF-06), section 3's GPIO10 to 12 row (the heartbeat source) and section 7's new paragraph on speed, pull-ups and the budget (its supervisors' row at 0x34 to 0x36, its 0x68 row and the S-07 finding closed as I3-F01 were already board B's round 8 text, b76c18cb, and are unchanged here); section 7's panel-absent paragraph, which this reading cites, is unchanged, so this reading stands on the file at 4bcbf31f44560ee1
 
-*Bound to:* `v2/docs/PANEL.md@4bcbf31f44560ee1`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and REVIEW-LAYER-2-RELEASE-2026-09-27.md): section 1's Indicators row (D22 counted as the face's seventeenth LED, its light guide owed) and section 9's lamp-test sentence (D22 not among the seventeen controller-lit indicators; the lamp test cannot light it) change; section 7's panel-absent paragraph, which this reading cites, is byte-identical, so it stands on the file at 8bac3c8104424c6c
+
+*Bound to:* `v2/docs/PANEL.md@8bac3c8104424c6c`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`
 
 *Source (verified):* `v2/docs/PANEL.md section 7`; `v2/ecad/tools/gen_sch_a.py:1253`; `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net (R102 pin 2 on GND)`
 
@@ -1816,7 +1830,9 @@ Prototype 1: in the core D-01 names. 9 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CURRENT-EVIDENCE.md re-read at the r8int4 integration of 27 September 2026: rendered after rules_status ran three times on the committed integration, only SI-001 on boards A, D and E moves from CURRENT_CANDIDATE to AWAITING_REVALIDATION (CONFIG_CHANGED: pcb_board_facts.yaml, an input of edge_length.py, took the layer 3 closer's CFL-003 correction), with the counts that follow it; board D's RF-002 and SCH-004 keep the class and cause read above, so this constraint's own reasons are unchanged and it stays INCONCLUSIVE, so it stands on the file at 23ec56778cee856e
 
-*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/docs/feasibility/EMCON.md@421a291f7ce4cda2`, `v2/docs/CURRENT-EVIDENCE.md@23ec56778cee856e`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CURRENT-EVIDENCE.md re-read at the release check of layers 1 to 3 of 27 September 2026: rendered after rules_status ran three times on the committed tree (116c432e), only the class-change note's count (161 to 154 rows whose first failing cause moved) and the cause table change, ENV-002's reading on each of the seven boards moving from TOOL_CHANGED to UNBOUND (claims_check re-taken under its current tool after f2b7fa66); board D's RF-002 and SCH-004 keep the class and cause read above, so this constraint's own reasons are unchanged and it stays INCONCLUSIVE, so it stands on the file at ed8d4fbaefde46f7
+
+*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/docs/feasibility/EMCON.md@421a291f7ce4cda2`, `v2/docs/CURRENT-EVIDENCE.md@ed8d4fbaefde46f7`
 
 *Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2825`; `v2/docs/PANEL.md section 6`; `v2/docs/feasibility/EMCON.md sections 4.1 and 4.2`
 
@@ -1897,7 +1913,7 @@ Prototype 1: not in the core. 2 record(s).
 
 *allocated to c, fw_panel, sw, a; session choices SC-45.*
 
-*Source (verified):* `v2/docs/PANEL.md:185`; `v2/docs/PANEL.md:187`; `v2/docs/MESHSAT-709-geometry-appendix.md:2866`; `v2/docs/MESHSAT-709-geometry-appendix.md:2926`
+*Source (verified):* `v2/docs/PANEL.md:187`; `v2/docs/PANEL.md:189`; `v2/docs/MESHSAT-709-geometry-appendix.md:2866`; `v2/docs/MESHSAT-709-geometry-appendix.md:2926`
 
 **REQ-034** (requirement). NVG mode sets the panel to its lowest PWM step (2 %), the backlight to 5 % and shows red and amber indicators only.
 
@@ -1905,7 +1921,7 @@ Prototype 1: not in the core. 2 record(s).
 
 *allocated to c, fw_panel, sw; session choices SC-45, SC-48; prototype 1 deferred, named by an owner ruling: D-01 names the NVG claim among the deferred functions..*
 
-*Source (verified):* `v2/docs/PANEL.md:184`; `v2/docs/MESHSAT-709-geometry-appendix.md:2802 (16c)`; `v2/vendor/standards/mil-std-3009-nvis-2001-02-02.md`
+*Source (verified):* `v2/docs/PANEL.md:186`; `v2/docs/MESHSAT-709-geometry-appendix.md:2802 (16c)`; `v2/vendor/standards/mil-std-3009-nvis-2001-02-02.md`
 
 *Notes:* The compatibility target is restored on 27 September 2026 (second pass, Review B finding B3): the first pass's 'no claim' removed the only statement that the panel is to be compatible, which D-01 does not do (it defers the claim; every ruled function stays designed and fitted). Whether red and amber indicators at the 2 % step and the monitor at 5 % pass the examination is not assessed: board C's LEDs and light guide filters and the monitor are judged against it when their parts are reviewed (layer 6), and a design change it forces is recorded there.
 
@@ -2101,7 +2117,9 @@ Prototype 1: not in the core. 3 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/V2-SPEC.md re-read at the r8int4 integration of 27 September 2026 after the layer 7 closer's case timing (fnd/hc7, c7) and the integrator's edits for verify c7: only correction 18 changes, gaining the mock-up's timing since 27 September 2026 (FEA-007); the lines and corrections this reading rests on are byte-identical to the file at a02ea1b6801f8916, so it stands on the file at 73a797e44d42fa6d
 
-*Bound to:* `v2/docs/V2-SPEC.md@73a797e44d42fa6d`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/V2-SPEC.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and REVIEW-LAYER-2-RELEASE-2026-09-27.md): lines 10 (the case generators carry C2 since c351115d), 23 (the CONOPS runtime cross-reference), 24 and 76 (the hardware EMCON lamp drawn on board C, its light guide owed), 59 (a seventeenth LED) and correction 20's last sentence change and correction 30 is added; line 35 and correction 8, which this reading rests on, are byte-identical, so it stands on the file at a92ea2ef3793a3c9
+
+*Bound to:* `v2/docs/V2-SPEC.md@a92ea2ef3793a3c9`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`
 
 *Source (verified):* `v2/docs/V2-SPEC.md:35`; `v2/ecad/tools/gen_sch_e.py:678`
 
@@ -2247,7 +2265,9 @@ Prototype 1: in the core D-01 names. 12 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CURRENT-EVIDENCE.md re-read at the r8int4 integration of 27 September 2026: rendered after rules_status ran three times on the committed integration, only SI-001 on boards A, D and E moves from CURRENT_CANDIDATE to AWAITING_REVALIDATION (CONFIG_CHANGED: pcb_board_facts.yaml, an input of edge_length.py, took the layer 3 closer's CFL-003 correction), with the counts that follow it; board P's row, its netlist 085f833362fbbda8 and every reason given above are unchanged, so it stands on the file at 23ec56778cee856e
 
-*Bound to:* `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`, `v2/ecad/tools/gen_sch_p.py@91ccbb922c427d43`, `v2/docs/CURRENT-EVIDENCE.md@23ec56778cee856e`, `v2/docs/review-packets/battery/REVIEW-REQUEST.md@91a257430cbeb53a`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CURRENT-EVIDENCE.md re-read at the release check of layers 1 to 3 of 27 September 2026: rendered after rules_status ran three times on the committed tree (116c432e), only the class-change note's count (161 to 154 rows whose first failing cause moved) and the cause table change, ENV-002's reading on each of the seven boards moving from TOOL_CHANGED to UNBOUND (claims_check re-taken under its current tool after f2b7fa66); board P's row, its netlist 085f833362fbbda8 and every reason given above are unchanged, so it stands on the file at ed8d4fbaefde46f7
+
+*Bound to:* `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`, `v2/ecad/tools/gen_sch_p.py@91ccbb922c427d43`, `v2/docs/CURRENT-EVIDENCE.md@ed8d4fbaefde46f7`, `v2/docs/review-packets/battery/REVIEW-REQUEST.md@91a257430cbeb53a`
 
 *Source (verified):* `v2/docs/TEST-PLAN.md:58-94`; `v2/ecad/tools/pcb_pack_protection.yaml:17-40`; `owner ruling D-15`; `v2/docs/review-packets/battery/PROTECTION-ARCHITECTURE.md`; `v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md`; `v2/ecad/tools/gen_sch_p.py:355-430`
 
@@ -2395,7 +2415,9 @@ Prototype 1: in the core D-01 names. 12 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/ASSEMBLY.md re-read at the r8int4 integration of 27 September 2026 after the layer 7 closer's case timing (fnd/hc7, c7) and the integrator's edits for verify c7: the case set C1 to C6 rows, step 0, the jumpers, the plate, the lid space, the pocket, the QMX tray row and notes (11) and (13) change, and build step 9 keeps the layer 5 closer's touch-lead clause beside the case set's; section 4's Pack SMBus row and build step 7, which this reading cites, are byte-identical to the file at 3a8897ef6d717a30, so it stands on the file at b49f853f450d49ee
 
-*Bound to:* `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`, `v2/docs/ASSEMBLY.md@b49f853f450d49ee`, `v2/docs/PANEL.md@4bcbf31f44560ee1`, `v2/ecad/tools/check_contracts.py@308fdefb90335da4`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and REVIEW-LAYER-2-RELEASE-2026-09-27.md): section 1's Indicators row (D22 counted as the face's seventeenth LED, its light guide owed) and section 9's lamp-test sentence (D22 not among the seventeen controller-lit indicators; the lamp test cannot light it) change; section 10's SMBus sentences, which this reading cites, are byte-identical, so it stands on the file at 8bac3c8104424c6c
+
+*Bound to:* `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`, `v2/docs/ASSEMBLY.md@b49f853f450d49ee`, `v2/docs/PANEL.md@8bac3c8104424c6c`, `v2/ecad/tools/check_contracts.py@308fdefb90335da4`
 
 *Source (verified):* `v2/ecad/tools/gen_sch_e.py:264`; `v2/docs/ASSEMBLY.md section 4`; `v2/docs/PANEL.md section 10`
 
@@ -2490,7 +2512,7 @@ Prototype 1: in the core D-01 names. 4 record(s).
 
 *allocated to procedure, e, e5, a; rulings D-14; waits on S-22.*
 
-*Source (verified):* `v2/docs/ASSEMBLY.md:159`; `v2/docs/ASSEMBLY.md:173`; `owner ruling D-14`
+*Source (verified):* `v2/docs/ASSEMBLY.md:180`; `v2/docs/ASSEMBLY.md:194`; `owner ruling D-14`
 
 ### NEED-15
 
@@ -2519,7 +2541,9 @@ Prototype 1: not in the core. 8 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/TEST-PLAN.md read at integration by the layer-3 closer's apply script (27 September 2026; the layer-2 closer's pass-2 revision, read by hand at a87e66cf431d938d, and again at pass 3 with the hot stop's row E3-H added and E3-A and E3-L unchanged, 652353b9cb624cf3, read by hand by the targeted fixer c23): every table carries a Purpose and a Verifies column, each filled on every row (46 rows; E10 is marked out of scope and verifies nothing), and section 4 states its purpose and the requirements it verifies; acceptance, qualification margin, deviation, characterisation and protection are told apart in the Purpose column; so it stands on the file at a0de0b12ff06ba4e
 
-*Bound to:* `v2/docs/TEST-PLAN.md@a0de0b12ff06ba4e`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/TEST-PLAN.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and REVIEW-LAYER-2-RELEASE-2026-09-27.md): only section 4's trace line changes (the EMCON lamp named D22, REQ-071 added to what the functional check verifies); every table still carries its Purpose and Verifies columns, each filled on every row (46 rows, E10 out of scope), section 4 still states its purpose and the requirements it verifies, now naming REQ-071, a live record, beside REQ-030 to REQ-032, and no row's purpose changed, so it stands on the file at 701c1020053e7903
+
+*Bound to:* `v2/docs/TEST-PLAN.md@701c1020053e7903`
 
 *Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2804 (16e)`; `v2/docs/TEST-PLAN.md:1-3`
 
@@ -2607,7 +2631,17 @@ Prototype 1: not in the core. 8 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/OPERATING-ENVELOPE.md re-read at the r8int4 integration of 27 September 2026 after the layer 7 closer's case timing (fnd/hc7, c7) and the integrator's edits for verify c7: only section 4's pack row changes (M4a and M5 open until the targeted mock-up before boards A and P enter layout, in place of 'a mock-up at the build'); section 2's protection-board row, section 3 and section 4's EMCON paragraph are byte-identical to the file at 9f16f5b7d634764a, so it stands on the file at 6e4bbde9dbf7e136
 
-*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`, `v2/docs/PANEL.md@4bcbf31f44560ee1`, `v2/docs/CONOPS.md@4887ada07f50d808`, `v2/docs/V2-SPEC.md@73a797e44d42fa6d`, `v2/docs/OPERATING-ENVELOPE.md@6e4bbde9dbf7e136`, `v2/docs/TEST-PLAN.md@a0de0b12ff06ba4e`, `v2/ecad/tools/pcb_decisions.yaml@b5f7162443d5ad91`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and REVIEW-LAYER-2-RELEASE-2026-09-27.md): section 1's Indicators row (D22 counted as the face's seventeenth LED, its light guide owed) and section 9's lamp-test sentence (D22 not among the seventeen controller-lit indicators; the lamp test cannot light it) change; section 1's Indicators row describes board C's round 8 lamp D22 through U14 and Q7 as the committed netlist v2/ecad/pcb-c-display-c8/out/pcb-c-display.net at 11eabc2dddca5161 carries it, which is this record's acceptance, and sections 6 and 7 are byte-identical, so it stands on the file at 8bac3c8104424c6c
+
+*Evidence (PASS, DESK_REVIEW):* v2/docs/CONOPS.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and REVIEW-LAYER-2-RELEASE-2026-09-27.md): the status header (the filed Review A records and the release review), section 3's M4 (the 5G row's 20 s as REQ-071's with board B's round 8 supply removal), section 4's Reduced row (FW-C09 and ARCHITECTURE's PS-RED row named as hand-offs), section 4a's A06 sentence (its records filed), section 4b.1 (the 5G row, the lamp D22 drawn, the operator's lead as REQ-071's bound, the state at 15 of 17 local), section 4c's opening (the hand-offs) and section 4f's 5G EMCON cell change; M4, section 4b.1 and section 4f's 5G cell now state the 5G module's supply removed by hardware at once (U215, U220, Q212 and R295 on the committed netlist v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net at adcc3c6736c90e9f) and the lamp D22 drawn on board C, which is this record's acceptance, the Reduced row changes only in naming the hand-offs, and section 4's other rows, section 4a's PS-EMCON row, section 4b and section 5 are byte-identical, so it stands on the file at 370aca33cb44da97
+
+*Evidence (PASS, DESK_REVIEW):* v2/docs/V2-SPEC.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and REVIEW-LAYER-2-RELEASE-2026-09-27.md): lines 10 (the case generators carry C2 since c351115d), 23 (the CONOPS runtime cross-reference), 24 and 76 (the hardware EMCON lamp drawn on board C, its light guide owed), 59 (a seventeenth LED) and correction 20's last sentence change and correction 30 is added; line 24 keeps its description of the circuit as generated and changed only in saying the lamp is drawn (D22 on the committed board C netlist at 11eabc2dddca5161), line 76 now names the lamp's light guide as the owed item, and lines 34, 41 and 43 and corrections 2, 4, 7, 9, 12, 13, 19, 26, 27 and 28 are byte-identical, so it stands on the file at a92ea2ef3793a3c9
+
+*Evidence (PASS, DESK_REVIEW):* v2/docs/OPERATING-ENVELOPE.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and REVIEW-LAYER-2-RELEASE-2026-09-27.md): only section 4 changes: the pack row names the filed A06 records (v2/docs/records/adj/A06-pack-geometry/), and the operating-modes paragraph states board B's round 8 removal of the 5G module's supply and names what EMCON work remains; no number changed; section 4's EMCON paragraph now also states the 5G module's supply removed by hardware at once (board B's round 8, as generated), which is this record's acceptance, and section 2's protection-board row and section 3 are byte-identical, so it stands on the file at 44a031caee47ff9a
+
+*Evidence (PASS, DESK_REVIEW):* v2/docs/TEST-PLAN.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and REVIEW-LAYER-2-RELEASE-2026-09-27.md): only section 4's trace line changes (the EMCON lamp named D22, REQ-071 added to what the functional check verifies); the EMCON sentence of section 4's functional check (measured with a receiver outside the kit, never the kit's own SDR), which this reading rests on, is byte-identical, so it stands on the file at 701c1020053e7903
+
+*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`, `v2/docs/PANEL.md@8bac3c8104424c6c`, `v2/docs/CONOPS.md@370aca33cb44da97`, `v2/docs/V2-SPEC.md@a92ea2ef3793a3c9`, `v2/docs/OPERATING-ENVELOPE.md@44a031caee47ff9a`, `v2/docs/TEST-PLAN.md@701c1020053e7903`, `v2/ecad/tools/pcb_decisions.yaml@b5f7162443d5ad91`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`
 
 *Source (verified):* `v2/docs/PANEL.md section 6`; `v2/docs/CONOPS.md section 4b`; `v2/docs/V2-SPEC.md:76 (as read at eadbe571)`; `v2/docs/OPERATING-ENVELOPE.md section 4`; `v2/docs/TEST-PLAN.md:46 (as read at eadbe571)`; `v2/ecad/tools/pcb_decisions.yaml:863-915 (as read at eadbe571)`
 
@@ -2625,7 +2659,9 @@ Prototype 1: not in the core. 8 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/TEST-PLAN.md read at integration by the layer-3 closer's apply script (27 September 2026; the layer-2 closer's pass-2 revision, read by hand at a87e66cf431d938d, and again at pass 3 with the hot stop's row E3-H added and E3-A and E3-L unchanged, 652353b9cb624cf3, read by hand by the targeted fixer c23): every test row states its purpose (acceptance, qualification margin, characterisation or protection) and the requirements it verifies (46 rows), which is this record's acceptance; the file at a0de0b12ff06ba4e
 
-*Bound to:* `v2/docs/TEST-PLAN.md@a0de0b12ff06ba4e`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/TEST-PLAN.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and REVIEW-LAYER-2-RELEASE-2026-09-27.md): only section 4's trace line changes (the EMCON lamp named D22, REQ-071 added to what the functional check verifies); every test row's purpose and the requirements it verifies (46 rows), which this reading rests on, byte-identical to the file at a0de0b12ff06ba4e, so it stands on the file at 701c1020053e7903
+
+*Bound to:* `v2/docs/TEST-PLAN.md@701c1020053e7903`
 
 *Source (verified):* `v2/docs/TEST-PLAN.md:18-19 (as read at eadbe571)`; `v2/docs/OPERATING-ENVELOPE.md:205`; `v2/docs/OPERATING-ENVELOPE.md:249`
 
@@ -2653,7 +2689,9 @@ Prototype 1: not in the core. 8 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/TEST-PLAN.md read at integration by the layer-3 closer's apply script (27 September 2026; the layer-2 closer's pass-2 revision, read by hand at a87e66cf431d938d, and again at pass 3 with the hot stop's row E3-H added and E3-A and E3-L unchanged, 652353b9cb624cf3, read by hand by the targeted fixer c23): E5 describes the sealed kit and E8 names Peli's pressure valve, which is this record's acceptance; the file at a0de0b12ff06ba4e
 
-*Bound to:* `v2/docs/TEST-PLAN.md@a0de0b12ff06ba4e`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/TEST-PLAN.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and REVIEW-LAYER-2-RELEASE-2026-09-27.md): only section 4's trace line changes (the EMCON lamp named D22, REQ-071 added to what the functional check verifies); rows E5 (the sealed kit) and E8 (Peli's pressure valve), which this reading rests on, byte-identical to the file at a0de0b12ff06ba4e, so it stands on the file at 701c1020053e7903
+
+*Bound to:* `v2/docs/TEST-PLAN.md@701c1020053e7903`
 
 *Source (verified):* `v2/docs/TEST-PLAN.md:20 (as read at eadbe571)`; `v2/docs/TEST-PLAN.md:23 (as read at eadbe571)`; `v2/docs/MESHSAT-709-geometry-appendix.md:2864`
 
@@ -2671,7 +2709,9 @@ Prototype 1: not in the core. 8 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/TEST-PLAN.md read at integration by the layer-3 closer's apply script (27 September 2026; the layer-2 closer's pass-2 revision, read by hand at a87e66cf431d938d, and again at pass 3 with the hot stop's row E3-H added and E3-A and E3-L unchanged, 652353b9cb624cf3, read by hand by the targeted fixer c23): section 1 has the deployed closed-lid state and section 6 its closed-lid thermal test E3-L, which is this record's acceptance; the file at a0de0b12ff06ba4e
 
-*Bound to:* `v2/docs/TEST-PLAN.md@a0de0b12ff06ba4e`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/TEST-PLAN.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and REVIEW-LAYER-2-RELEASE-2026-09-27.md): only section 4's trace line changes (the EMCON lamp named D22, REQ-071 added to what the functional check verifies); section 1's deployed closed-lid state and section 6's closed-lid thermal test E3-L, which this reading rests on, byte-identical to the file at a0de0b12ff06ba4e, so it stands on the file at 701c1020053e7903
+
+*Bound to:* `v2/docs/TEST-PLAN.md@701c1020053e7903`
 
 *Source (verified):* `v2/docs/TEST-PLAN.md:8 (as read at eadbe571)`; `v2/docs/MESHSAT-709-geometry-appendix.md:2860`; `v2/docs/OPERATING-ENVELOPE.md:171 (as read at eadbe571)`
 
@@ -2786,7 +2826,9 @@ Prototype 1: not in the core. 8 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/V2-SPEC.md re-read at the r8int4 integration of 27 September 2026 after the layer 7 closer's case timing (fnd/hc7, c7) and the integrator's edits for verify c7: only correction 18 changes, gaining the mock-up's timing since 27 September 2026 (FEA-007); the lines and corrections this reading rests on are byte-identical to the file at a02ea1b6801f8916, so it stands on the file at 73a797e44d42fa6d
 
-*Bound to:* `v2/docs/V2-SPEC.md@73a797e44d42fa6d`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/V2-SPEC.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and REVIEW-LAYER-2-RELEASE-2026-09-27.md): lines 10 (the case generators carry C2 since c351115d), 23 (the CONOPS runtime cross-reference), 24 and 76 (the hardware EMCON lamp drawn on board C, its light guide owed), 59 (a seventeenth LED) and correction 20's last sentence change and correction 30 is added; line 41 (the one dual-SIM description, SC-13), which this reading rests on, is byte-identical to the file at 73a797e44d42fa6d, so it stands on the file at a92ea2ef3793a3c9
+
+*Bound to:* `v2/docs/V2-SPEC.md@a92ea2ef3793a3c9`
 
 *Source (verified):* `v2/docs/V2-SPEC.md:41 (as read at eadbe571)`; `v2/docs/MESHSAT-709-geometry-appendix.md:2796`; `v2/ecad/tools/gen_sch_b.py:672-697 (as read at eadbe571)`
 
@@ -2869,7 +2911,9 @@ Prototype 1: not in the core. 6 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/TEST-PLAN.md re-read at integration by the layer-3 closer's apply script (27 September 2026): the text '| M7 | Electrostatic discharge to every touchable ', which this reading rests on, byte-identical to the revision it was bound to (86742b72d44adce6), so it stands on the file at a0de0b12ff06ba4e
 
-*Bound to:* `v2/ecad/tools/gen_sch_a.py@5a97fed72c42b79d`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/docs/TEST-PLAN.md@a0de0b12ff06ba4e`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/TEST-PLAN.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and REVIEW-LAYER-2-RELEASE-2026-09-27.md): only section 4's trace line changes (the EMCON lamp named D22, REQ-071 added to what the functional check verifies); the M7 row, which this reading rests on, is byte-identical to the file at a0de0b12ff06ba4e, so it stands on the file at 701c1020053e7903
+
+*Bound to:* `v2/ecad/tools/gen_sch_a.py@5a97fed72c42b79d`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/docs/TEST-PLAN.md@701c1020053e7903`
 
 *Source (verified):* `owner ruling D-17`; `v2/ecad/tools/gen_sch_a.py:1104-1114`; `v2/ecad/tools/pcb_decisions.yaml:256-429 (decision 31)`
 
@@ -2951,7 +2995,7 @@ Prototype 1: in the core by SC-01, taken by the session under the owner's standi
 
 *allocated to c, fw_panel, sw; rulings D-10; session choices SC-01; waits on S-32.*
 
-*Source (verified):* `v2/docs/PANEL.md:52`; `v2/docs/PANEL.md:100`; `v2/docs/PANEL.md:191`; `v2/docs/PANEL.md section 9`; `v2/docs/PANEL.md:197`; `v2/docs/V2-SPEC.md:58`; `owner ruling D-10`
+*Source (verified):* `v2/docs/PANEL.md:52`; `v2/docs/PANEL.md:100`; `v2/docs/PANEL.md:193`; `v2/docs/PANEL.md section 9`; `v2/docs/PANEL.md:199`; `v2/docs/V2-SPEC.md:58`; `owner ruling D-10`
 
 ## Rules to requirements
 
@@ -3239,7 +3283,7 @@ SESSION items are engineering the session decides and records with authority SES
 | L-05 | LATER | Review route R-HSD, a qualified review of board B's PCIe and USB 3 fabric: not approved by D-09; it needs the owner's spending approval before a board B layout is committed or any board B order. | FEA-003 |
 | L-06 | LATER | The bench parts for ZEROIZE experiments Z-EXP-A and Z-EXP-B (ZEROIZE.md section 5: a development board, a SOIC adapter, ten ATECC608B-SSHDA-T, a Raspberry Pi Pico, a load switch): nothing is spent beyond the voucher without a quote and the owner's approval (D-09). | ASM-005, FEA-001 |
 | L-07 | LATER | The targeted case mock-up of CASE-MARGINS.md sections 5 and 7 (READY-TO-ACT.md section 6): a new Peli 1450 of the current moulding with its 1450PF frame (shared with the empty-case heat-balance test), the made parts of v2/release/case-2026-09-27/, one PolyPhaser GTH-SFF-AL, the picked jumper plugs on RG-316, the Xenarc 709GNK and a CM5 heatsink, and stand-ins for the boards and the pack: not approved by D-09; it needs the owner's spending approval before boards A, B, E and P enter layout, because a failing check of their YES rows moves board A's east edge, board B's edges, east-end parts and stack, board E's south edge and clamp lanes, or board P's place (CASE-FIT-UNCERTAINTIES.md sections 2 and 7; FEA-007). | CON-006, FEA-007 |
-| S-01 | SESSION | EMCON reaches every transmitter (D-05), what is left after 458b2873 gated the compute modules' radios and the WiFi card supplies: SD-EMC-1's two stages for the 5G module drawn on board B; the shared-line items L1 to L4 and L7 of EMCON.md section 7 remedied (firmware pins on EMCON_HW, the line's hold with its source gone, the +3V3_DEV loss that releases nine radios, gate supplies outside their range, the 2N7002 drive); the back-feed paths of SD-EMC-2. | REQ-030, REQ-071, REQ-032, FEA-002 |
+| S-01 | SESSION | EMCON reaches every transmitter (D-05), what is left after 458b2873 gated the compute modules' radios and the WiFi card supplies and the round 8 circuits of boards A to D drew the rest of this item (EMCON.md sections 4a, 4b and 7: the 5G module's supply removed by hardware at once on board B, SD-EMC-1r8, in place of SD-EMC-1's two stages; L1 remedied on boards B and C, L2 on boards A and B, L3 and L7 on board B, L4 on boards A and D): L4 case (2), the gate supplies of U501 to U505 below their specified range on board B (bench E-11), and the back-feed paths of SD-EMC-2 into the RockBLOCK, the E22 and both E72 (open) and both AW7915 cards (no maker floor to judge against). Restated 27 September 2026 at the release check of layer 2 (finding B4 (b)); the item's scope is unchanged. | REQ-030, REQ-071, REQ-032, FEA-002 |
 | S-02 | SESSION | RF-002 enumerates every transmitter from the netlists and fails any without a hardware gate. | REQ-030, REQ-071, FEA-002 |
 | S-12 | SESSION | The key-B socket's land carries TE's two locating holes (drawing C-2199119 rev F, sheet 3; gen_footprints_b16.py draws neither), and D-07's third jack is confirmed by the board E clamp fit (its case half is laid out, CASE-MARGINS.md section 3.4). The key-B part is fitted since 458b2873. | CHO-001, CON-015 |
 | S-13 | SESSION | The order code of an eSIM-fitted RM520N-GL, named before an eSIM build is bought (the components layer's list). The description is settled by session choice SC-13 (V2-SPEC line 41 and its correction on dual SIM: the compatible design of HD Figure 19, two nano-SIM holders with an eSIM build option), and the SIM TVS array the HD asks for (at most 10 pF, Quectel HD v1.1 section 4.1.7) is board B's constraint CON-025 since 27 September 2026 (Review B, finding B6). SIM 2 is on the module's own pins since 458b2873. | none |
@@ -3255,7 +3299,7 @@ SESSION items are engineering the session decides and records with authority SES
 | S-40 | SESSION | Software-verified boot on the STM32H743 supervisors, and on the compute modules if Raspberry Pi documents it (D-13's prototype floor). | CON-020, REQ-065 |
 | S-41 | SESSION | The supervisor firmware built for the STM32H743 (CON-017 clause 4, the firmware stage) with the obligations v2/docs/parts/STM32H743-COMPATIBILITY.md sections 5, 6 and 9 name: FDCAN at or below 1 Mbps with edge filtering off, I2C1 a target only at 0x34 to 0x36 (ARCHITECTURE.md 5.5, I3-F01) with the kernel clock at 10 MHz or more and the first byte preloaded (ES0392 2.19.3, 2.19.9), the IWDG started by option byte, BOR level 3, PC5 an input, and a REV_ID read at boot. The matrix itself was delivered on 27 September 2026 (layer 6 closer hc6). | CON-017 |
 | S-42 | SESSION | Board B's fabric findings FAB-01 to FAB-04 fixed in the generator, each with check_pcb_b.py's assertion and its mutation: the TEST2 strap, the back-power gating of FAB-02 (b) and (c), a true break-before-make sequence, and 10 kohm on the 23 safe-low lines (FAILOVER-FABRIC.md sections 9 and 10). | CON-003, CON-022, FEA-003 |
-| S-44 | SESSION | The hardware EMCON lamp on board C, driven from the line state with no processor in its path, and its light-guide hole in the face plate (SD-EMC-6, EMCON.md section 7). | CON-021, FEA-002 |
+| S-44 | SESSION | The hardware EMCON lamp's light-guide hole in the face plate beside SW_EMCON (SD-EMC-6, EMCON.md section 7). The lamp itself, driven from the line state with no processor in its path, is drawn on board C since its round 8 (D22 through U14 and Q7). Restated 27 September 2026 at the release check of layer 2 (finding B4 (b)). | CON-021, FEA-002 |
 | S-45 | SESSION | BAT-001's instrument brought to board P as generated: pack_protection still reads FAIL on the regenerated board P ("no second protector and no chemical fuse", battery packet evidence gates-new/pack_protection.log), because its inputs describe the old pack. | REQ-044, FEA-005 |
 | S-46 | SESSION | Finding BAT-F20 (round 8, the battery stream's second independent check, 27 September 2026): with FET Options CHGIN = 1 the charge inhibit above T3 and the T1 range below it hold board P's charge FET Q1 off whenever the pack is not charging, discharge included (SLUUAQ3A 4.12, 4.13, 14.2.1.1), so the kit's discharge current runs through Q1's body diode, about 2 to 3 W at the reduced load and about 7 W at 10 A on board P. Open until one option is taken and carried into the ladder, the mode table, F2's analysis and the E3-A, E4-O and P12 pass lines: (a) a FET Options setting that keeps discharge on, with the charge-start protection kept another way; (b) a separate charge-path FET; (c) a thermal budget for the diode. Asked of the qualified reviewer (REVIEW-REQUEST.md Q-P18) and of TI (Q-TI-10). | FEA-005 |
 | S-47 | SESSION | Finding HC9-E1 (handover layer 9, 27 September 2026; v2/docs/layout-constraints/E.md section 6.1 item 1): board E's LT8705A solar tracker has its current-sense resistor R5 in series with the inductor (L1 pin 2 to TRK_SW2, gen_sch_e.py line 481 at 53a98a71) and the sources of Q4 and Q5 on GND, so the controller's CSP and CSN pins, rated -0.3 V to 3 V (v2/vendor/power/lt8705a.pdf p.2), would sit at up to the 15.1 V output. The maker puts RSENSE between the joined sources of M2 and M3 and GND (Figure 1 p.13, Figure 14 p.35, the circuits on p.1 and p.41, the layout checklist p.36). It blocks board E's next placement and is open until gen_sch_e.py carries the bottom-leg sense with Kelvin taps, its knock-ons are made (pcb_sensitive.yaml board e, gen_pcb_e3.py PATTERNS, boards/e.json: TRK_LSENSE goes away) and board E is regenerated with parity. The same reading's smaller items travel with it: GATEVCC's own 4.7 uF and the four supply-pin bypass declarations (E.md section 5), MODE tied to GND with the FBIN loop (E.md section 6.1 item 9) and the Schottky boost diodes (item 10). | none |
