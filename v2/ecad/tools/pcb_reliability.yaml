@@ -1,171 +1,970 @@
-# WHAT CARRIES LOAD AND WHAT SEES CYCLING (rule REL-001, MESHSAT-862, 16 September 2026).
+# WHAT CARRIES LOAD AND WHAT SEES CYCLING (rule REL-001, MESHSAT-862, 16 September 2026; rewritten 28 September
+# 2026, MESHSAT-1357, for the inventory of `wear_inventory.py` and the input rules of `reliability.py`).
 #
 # The rule asks for a per-board list of the parts and joints that carry mechanical load or see cycling, the
-# expected cycles or level, and the measure taken. It read "no verification" on seven boards.
+# expected cycles or level, and the measure taken. This kit is CARRIED: every connector that is mated in the
+# field is a wear item and every board-mounted jack is a lever with the case as its fulcrum.
 #
-# This kit is CARRIED. Every connector that is mated in the field is a wear item, every board-mounted jack is a
-# lever with the case as its fulcrum, and every solder joint under a heavy part sees vibration in transport.
-# The classes below are the honest grouping: a class covers every part of its kind on that board, with the
-# rating from the part's own datasheet where this tree holds one, and the measure that makes it good enough.
+# WHAT THIS FILE DECLARES
+#   inventory    which parts of a board are CANDIDATES: every reference class the artefacts use, classed
+#                mechanical or electrical, and the lands that are mechanical or soldered. A reference class or a
+#                land that is declared nowhere makes its part a candidate, and an undeclared class is refused.
+#   open_items   what is owed, each with the next action. A class whose figure is OWED names one of them, and
+#                its board reads INCONCLUSIVE until the item is closed.
+#   boards       per board, the CLASSES (each with the lands it speaks of, its cycle figure or the reason it has
+#                none, its load and its measure) and the EXCLUSIONS (each with its reason and its lands).
+#                Every candidate falls in exactly one class or under exactly one exclusion, or the gate refuses.
 #
-# WHERE A NUMBER IS NOT KNOWN IT SAYS SO. Several of these parts have no published mating-cycle figure in the
-# documents this repository holds, and no number is invented for them; the entry carries `cycles: null` with
-# the reason, and `reliability.py` accepts that only when a measure is declared that does not depend on the
-# number. Nothing here has been tested: no board exists, and REL-001's own verification phase is PROTOTYPE.
+# THE FIGURES ARE THE MAKERS' RATINGS OF THE PARTS, each cited to the document held under v2/vendor/ by its
+# sha256, its page and its words. They are not a claim about the kit: no service life, duty cycle or mating-cycle
+# count is stated or claimed for prototype 1 (REQ-028), and the expected number of mates over a service life is
+# not defined anywhere, so no figure here is compared with one (open item REL-O-07).
+#   cycles: N + source        the maker's document states it. Where the document gives a range or several
+#                             figures, the LOWEST is carried and the words say so: a bound is named a bound.
+#   no_figure none_published  the maker's documents named in `looked_in` were read and state no figure.
+#   no_figure not_mated       nothing is mated: a solder land, a screw joint. What it has is a load and a measure.
+#   no_figure owed            the part or its document is not identified. No number is invented for it.
+#
+# WHAT WAS CORRECTED ON 28 SEPTEMBER 2026 against the list of 16 September, each read on the set 6 netlists and
+# the held documents (the record is v2/docs/records/d6rel/):
+#   * board B's module receptacles carried 60 cycles; Amphenol's product sheet of the 10164227 gives 30;
+#   * board A's class "blind-mate dock contacts" named Mill-Max spring pins and covered the eleven Radiall SMP-MAX
+#     receptacles, while the seventeen Mill-Max pins and the Preci-Dip dock connector were in no class;
+#   * board D's class "the radio module's sockets" covered the two JST-PH headset headers, and its 500 cycle class
+#     of the SMA standard covered a U.FL socket (30 cycles) and a JST-PH header;
+#   * board E5's classes named references (TP*, P_*, W_*) that its board file does not carry;
+#   * the JST classes carried 30 cycles from "the series specification"; the held JST catalogues and JST's
+#     handling precautions state no mating-cycle figure;
+#   * board B's class for three soldered PCIe switches is gone: they are not candidates (their land is a
+#     soldered package), which supersedes v2/docs/records/r8int6/fix/apply_drop_pcie_switch_class.py.
+#
+# Nothing here has been tested: no board exists, and REL-001's own verification phase is PROTOTYPE. This list is
+# the desk half and replaces no physical verification.
 
-schema_version: "1.0.0"
+schema_version: "2.0.0"
 generated: "2026-09-16"
+revised: "2026-09-28"
+
+inventory:
+  # EVERY REFERENCE CLASS THE SIX NETLISTS AND BOARD E5's BOARD FILE USE (enumerated on the set 6 candidate,
+  # 73ae2f21), and the ones a later board may bring (X, MP). `mechanical`: a part of this class is always a
+  # candidate. `electrical`: its land decides (see `footprint`).
+  reference_classes:
+    J:   {kind: mechanical, what: "a connector, jack, socket, header or lead land"}
+    P:   {kind: mechanical, what: "a plug, or a pad drawn as a connector"}
+    X:   {kind: mechanical, what: "a socket or holder drawn as X (none on the set 6 boards)"}
+    BT:  {kind: mechanical, what: "a battery holder or retainer"}
+    H:   {kind: mechanical, what: "a mounting hole, a standoff or a screw joint"}
+    MP:  {kind: mechanical, what: "a mechanical part (none on the set 6 boards)"}
+    SW:  {kind: mechanical, what: "a switch"}
+    W:   {kind: mechanical, what: "a wire land"}
+    WH:  {kind: mechanical, what: "a wire hole (board E5)"}
+    F:   {kind: mechanical, what: "a fuse: in a holder it is a mated part, soldered it is excluded by name"}
+    JP:  {kind: mechanical, what: "a jumper: a header with a shunt is a mated part, a solder jumper is copper"}
+    K:   {kind: mechanical, what: "a relay: moving contacts with an operations life"}
+    BZ:  {kind: mechanical, what: "a sounder mounted in the panel"}
+    CAM: {kind: mechanical, what: "the camera module's mounting holes"}
+    PAD: {kind: mechanical, what: "a pad a lead is soldered to"}
+    TP:  {kind: mechanical, what: "a test point"}
+    C:   {kind: electrical, what: "a capacitor"}
+    R:   {kind: electrical, what: "a resistor"}
+    L:   {kind: electrical, what: "an inductor (board E5 draws its wire lands as L_SIG: found by the land)"}
+    D:   {kind: electrical, what: "a diode or a light-emitting diode"}
+    Q:   {kind: electrical, what: "a transistor"}
+    FB:  {kind: electrical, what: "a ferrite bead"}
+    LED: {kind: electrical, what: "a light-emitting diode"}
+    Y:   {kind: electrical, what: "a crystal or an oscillator"}
+    RT:  {kind: electrical, what: "a thermistor"}
+    T:   {kind: electrical, what: "a transformer or magnetics (board E5 draws its contact targets as T_*: found by the land)"}
+    U:   {kind: electrical, what: "an integrated circuit or a soldered module; a module receptacle drawn as U is found by its land"}
+  footprint:
+    # A land of an ELECTRICAL reference class. Mechanical is asked first. A land in neither list is a candidate.
+    mechanical_libraries: ["Connector*", "Battery*", "MountingHole*", "TestPoint*", "Button_Switch*", "Jumper*"]
+    mechanical_names: ["*Conn*", "*Socket*", "*Header*", "*Holder*", "*holder*", "*Jack*", "*Switch*", "*Toggle*",
+                       "*MountingHole*", "*Standoff*", "*Screw*", "*Pogo*", "*Mill-Max*", "*Target*", "*target*",
+                       "*WireLands*", "*WireHole*", "*LeadLands*", "*SolderPad*", "*SolderWire*", "*Sounder*"]
+    soldered_libraries: ["Package_*", "Capacitor_*", "Resistor_*", "Inductor_*", "Diode_*", "LED_*", "Crystal*",
+                         "Oscillator*"]
+    # The project's own library, each land read on the set 6 netlists: leaded and leadless packages, and the
+    # five modules that are soldered to the board (castellated or land grid). A soldered module is not mated;
+    # the joints under it are outside this inventory, which sees no mass (open item REL-O-08).
+    soldered_names: ["LQFP-*", "TQFP-*", "Texas_R??00???_?QFN-*", "Sensirion_DFN-*", "Skyworks_SKY13351_MLPD-*",
+                     "Vishay_VEML7700", "Ebyte_E22-900M30S", "Ebyte_E72-2G4M20S1E", "NiceRF_SA868",
+                     "Quectel_LG290P", "Pulse_H5007NL"]
+
+open_items:
+  REL-O-01:
+    what: "board A's pre-charge pin J_PRE1, the longer Mill-Max pin that mates first, has no order code (the part
+      identities table of stream w5ident reads it UNRESOLVED), so no maker's figure can be cited for it"
+    next_action: "pick the pin (the length that gives the pre-charge lead time), file its Mill-Max page and carry
+      its durability figure"
+  REL-O-02:
+    what: "the 2.54 mm pin header lands that are mated in service carry no named part: whether a header is
+      fitted or the lead is soldered into the holes is a build choice not made (the part identities table of
+      stream w5ident reads them UNRESOLVED). ASSEMBLY.md section 4 names JST PH housings for J_CAM, J_QMX, J_POD
+      and the three sensor modules and SH housings for board E's two mixer fans, and the netlists draw 2.54 mm
+      pin header lands for all of them"
+    next_action: "decide per lead between a named header with its mating housing and a soldered lead, bring the
+      netlist's land and ASSEMBLY.md section 4 to the same answer, then carry the maker's figure or move the
+      land to the soldered lead lands"
+  REL-O-03:
+    what: "board B's three NVMe sockets are Amphenol MDT420M02001. The held drawing of that part states no
+      durability, and Amphenol's series sheet (SSIOPCIEM20519EA4) gives 25 to 60 mating cycles for a normal M.2
+      by plating option and does not list this part number in its table"
+    next_action: "obtain Amphenol's product specification GS-12-1142 or the part's own sheet and carry the figure
+      of the plating option fitted"
+  REL-O-04:
+    what: "board C's panel ribbon header is XFCN BH254VS-26P (the part identities table of stream w5ident), and
+      no document of its maker is held"
+    next_action: "file the maker's sheet of the BH254VS-26P and carry its durability figure, or name a header
+      whose document is held"
+  REL-O-05:
+    what: "board C's two headset jacks are a U-174/U class panel jack with no maker's part picked and its drawing
+      owed (the value says so; ASSEMBLY.md section 1)"
+    next_action: "pick the jack, file its drawing and its specification, and carry its mating-cycle figure"
+  REL-O-06:
+    what: "board E5's contact targets are the board's own plated copper under board A's spring pins. No maker
+      rates them, and how the plating wears under the pins' wipe is not known at the desk"
+    next_action: "the prototype's mate-cycle test (ASSEMBLY.md section 8 step 11 lifts the stack three times and
+      inspects the block; a cycle count for the test is not yet set in TEST-PLAN.md)"
+  REL-O-07:
+    what: "the expected number of mates of each connector over a service life is stated nowhere (REQ-028: no
+      life requirement for prototype 1), so this list carries ratings and compares them with nothing"
+    next_action: "when a service life is ruled, state the expected mates per connector from CONOPS section 5 and
+      compare each class's figure with it"
+  REL-O-08:
+    what: "the joints under heavy soldered parts (the soldered radio modules, the magnetics, the large
+      inductors) are joints that carry load in transport, and this inventory cannot find them: a netlist
+      carries no mass"
+    next_action: "list the parts above a mass limit from the makers' documents and add them as a class per
+      board with the staking or support each needs"
+  REL-O-09:
+    what: "board B's coin cell retainer is surface mounted (Keystone 3034), and no measure is recorded against
+      the lever of changing the cell on its two solder tails; the list of 16 September called it through-hole"
+    next_action: "at board B's layout, state how the cell is removed and what the retainer's solder joints see,
+      or name a through-hole holder"
+  REL-O-10:
+    what: "board D's relay K1 changes over at every key-down and carries the 30 W output in transmit; whether
+      it changes over under RF power, and how many key-downs a service life holds, is stated nowhere"
+    next_action: "state the transmit sequence from board D's design (the relay settles before the exciter is
+      keyed, or not) and compare the expected key-downs with the maker's 100,000 operations"
+  REL-O-11:
+    what: "how the pack and its 12 AWG lead are held is not designed (the pack's hold-down, S-27), so nothing
+      keeps a pull on the lead from board P's solder lands"
+    next_action: "design the hold-down and the lead's tie points with S-27 and state the strain relief of the
+      four lands"
 
 boards:
 
  a:
    classes:
-    - {name: "SMA bulkhead jacks", refs: ["J_RF*"], count_expected: 11, cycles: 500,
-       basis: "the SMA standard's own 500-cycle figure, which every jack in v2/vendor/rf/ quotes",
-       load: "the jack is mounted in the case wall and the board carries only the blind-mate half",
-       measure: "the board-side half is a Radiall SMP-MAX blind-mate that mates by pushing the board home, so
-         the board's joint sees an axial push and never a wrench; the wrench torque lands on the case wall"}
-    - {name: "blind-mate dock contacts", refs: ["J_BM*"], count_expected: 11, cycles: null,
-       basis: "no mating-cycle figure is published for the Mill-Max spring pins in the documents held here",
-       load: "the whole kit's weight is taken by the rods, not by these pins; the pins see spring force only",
-       measure: "the dock block is located by two rods before the pins touch, so the pins never take a side
-         load; the spring travel is 0.6 mm against a 1.0 mm nominal compression"}
-    - {name: "JST-VH power headers", refs: ["J_5V_*", "J_54V", "J_PA", "J_HF", "J_MON", "J_HEAT", "J_MEZZ_PWR1"], cycles: 30,
-       basis: "JST's own VH series specification gives 30 mating cycles",
-       load: "a lead pulled during service",
-       measure: "every VH lead is dressed to a tie point within 40 mm of its header so the joint does not take
-         the pull, and the headers are through-hole"}
-    - {name: "IDC ribbon headers", refs: ["J_AB1", "J_AB2", "J_MEZZ1"], cycles: 25,
-       basis: "the IDC land is this project's own (idc_pads.py) and the mating cycles are the ribbon
-         connector's, 25 in its own specification",
-       load: "the ribbon is mated once at build and again only at service",
-       measure: "through-hole, and the ribbon is captive between the boards it joins"}
-    - {name: "the main switch and USB-C wall leads", refs: ["J_MAINSW", "J_USBW", "J_USBC_OUT"], cycles: null,
-       basis: "the panel switch and the wall receptacle are mounted in the case, not on this board",
-       load: "the board sees the lead, not the connector",
-       measure: "solder lands with a strain relief hole beside each, and the lead is tied to the board's own
-         standoff before it leaves"}
-    - {name: "the blade fuse holder", refs: ["F1"], cycles: null,
-       basis: "Keystone 3568 publishes no cycle figure; a fuse is changed rarely",
-       load: "the pull of extracting a blade fuse, straight up",
-       measure: "through-hole holder with its own pins soldered on both sides of the board"}
+    - name: "SMA jacks for the device pigtails"
+      refs: ["J_RF*"]
+      footprints: ["Connector_Coaxial:SMA_Amphenol_132134-11_Vertical"]
+      count_expected: 11
+      part: "Amphenol RF 132134-11"
+      cycles: 500
+      source: {document: "v2/vendor/rf/amphenol-rf-132134-11-part-page-wayback-20260217.html", sha256_16: "08292fb855ce95e8",
+               page: "the part page's specification table", words: "Mating Cycles (Min) 500"}
+      load: "a coax pigtail from each device screwed onto the jack at build and again at service (ASSEMBLY.md
+        section 4); a pull on the pigtail levers the jack against its solder joints"
+      measure: "a through-hole jack with extended legs, soldered through the board; the pigtail is tied at both
+        ends (ASSEMBLY.md section 4, the closing sentence) and is finger tight at the device side"
+    - name: "blind-mate RF receptacles under the board"
+      refs: ["J_BM*"]
+      footprints: ["meshsat:Radiall_SMPMAX_R222M00720"]
+      count_expected: 11
+      part: "Radiall R222M00720 (SMP-MAX)"
+      cycles: 100
+      source: {document: "v2/vendor/rf/radiall-R222M00720-tds.pdf", sha256_16: "849a5fd1a4084b6b",
+               page: "2", words: "Mating life 100 Cycles mini"}
+      load: "mated and parted every time the stack is lifted off the dock: each receptacle slides onto the plug
+        held in the float clamp bar on the dock strip (ASSEMBLY.md section 7). It is the lowest-rated joint that
+        parts at every lift"
+      measure: "the four rods align the stack before the joints meet and the float clamp bar lets each plug move
+        (ASSEMBLY.md section 2 step 8); the dock and blind-mate tolerance stack is still owed
+        (CASE-FIT-UNCERTAINTIES.md section 3, row DOCK)"
+    - name: "dock power spring pins"
+      refs: ["J_CN?", "J_CP?", "J_VN?", "J_VR?"]
+      footprints: ["meshsat:Mill-Max_0858_power_pin"]
+      count_expected: 16
+      part: "Mill-Max 0858-0-15-20-82-14-11-0"
+      cycles: 100000
+      source: {document: "v2/vendor/connectors/millmax-0858-product-page-20260927.html", sha256_16: "7a11ec390b01e69f",
+               page: "the product page's Tech Specs block",
+               words: "Mechanical life (Durability): 100,000 to 1,000,000 Cycles @ Mid-Stroke (the lower figure is carried)"}
+      load: "spring force at every lift of the stack; the pins carry the pack node, its return and VIN_RAW with
+        its return, four pins each (EQ-16)"
+      measure: "the rods locate the stack before a pin touches and the gap spacers set the compression to about
+        1 mm (ASSEMBLY.md section 2 step 3); the stack is never lifted live (ASSEMBLY.md section 7, D-14)"
+    - name: "the pre-charge pin"
+      refs: ["J_PRE1"]
+      footprints: ["meshsat:Mill-Max_0858_power_pin"]
+      count_expected: 1
+      cycles: null
+      no_figure: {kind: owed, open_item: REL-O-01,
+                  statement: "the longer pin has no order code, so there is no maker's document to cite"}
+      load: "spring force at every lift of the stack; it mates first and carries the pre-charge current through
+        10 ohm"
+      measure: "as the dock power spring pins: located by the rods, never lifted live"
+    - name: "dock signal spring connector"
+      refs: ["J_DOCK"]
+      footprints: ["meshsat:PogoPins_2x6"]
+      count_expected: 1
+      part: "Preci-Dip 813-S1-012-10-016101"
+      cycles: 50000
+      source: {document: "v2/vendor/precidip/precidip-813-spring-loaded-connector-pages-31-34.pdf", sha256_16: "d630c8a92e7f65fc",
+               page: "2 (the catalogue's page 34, series 813)", words: "MECHANICAL LIFE 50'000 cycles"}
+      load: "spring force at every lift of the stack: twelve contacts landing on the dock block's targets"
+      measure: "located by the rods before the contacts touch; through-hole solder tails"
+    - name: "JST VH power headers"
+      refs: ["J_54V", "J_5V_DEV", "J_5V_S?", "J_HF", "J_MEZZ_PWR1", "J_MON", "J_PA"]
+      footprints: ["Connector_JST:JST_VH_B2P-VH_*"]
+      count_expected: 9
+      part: "JST B2P-VH"
+      cycles: null
+      no_figure:
+        kind: none_published
+        statement: "JST's VH catalogue gives current, voltage, temperature, contact and insulation resistance
+          and the wire range and no mating-cycle figure, and the handling precautions it refers to give none"
+        looked_in:
+          - {document: "v2/vendor/connectors/jst-vh-catalogue.pdf", sha256_16: "d51e669c597988b2"}
+          - {document: "v2/vendor/connectors/jst-handling-precautions-2020.pdf", sha256_16: "c0f1b065990fe550"}
+      load: "a lead pulled during service; the rail leads to board B, the PA, the HF unit and the monitor"
+      measure: "through-hole headers with the VH lock; every lead is tied at both ends (ASSEMBLY.md section 4)"
+    - name: "JST XH lead headers"
+      refs: ["J_HEAT", "J_MAINSW"]
+      footprints: ["Connector_JST:JST_XH_B2B-XH-A_*"]
+      count_expected: 2
+      part: "JST B2B-XH-A"
+      cycles: null
+      no_figure:
+        kind: none_published
+        statement: "JST's XH catalogue states no mating-cycle figure, and the handling precautions it refers to
+          give none"
+        looked_in:
+          - {document: "v2/vendor/connectors/jst-xh-catalogue.pdf", sha256_16: "9426b136902f1190"}
+          - {document: "v2/vendor/connectors/jst-handling-precautions-2020.pdf", sha256_16: "c0f1b065990fe550"}
+      load: "the heater mat's lead and the MAIN button's lead, unplugged when the face plate or the pack comes out"
+      measure: "through-hole headers; the leads are tied at both ends (ASSEMBLY.md section 4)"
+    - name: "JST PH lead header"
+      refs: ["J_USBW"]
+      footprints: ["Connector_JST:JST_PH_B4B-PH-K_*"]
+      count_expected: 1
+      part: "JST B4B-PH-K"
+      cycles: null
+      no_figure:
+        kind: none_published
+        statement: "JST's PH catalogue states no mating-cycle figure, and the handling precautions it refers to
+          give none"
+        looked_in:
+          - {document: "v2/vendor/connectors/jst-ph-catalogue.pdf", sha256_16: "447624f4f2f7d37c"}
+          - {document: "v2/vendor/connectors/jst-handling-precautions-2020.pdf", sha256_16: "c0f1b065990fe550"}
+      load: "the lead to the wall USB feed-through, mated at build and at service"
+      measure: "a through-hole header; the lead is tied at both ends (ASSEMBLY.md section 4)"
+    - name: "ribbon box headers"
+      refs: ["J_AB1", "J_AB2", "J_MEZZ1"]
+      footprints: ["meshsat:IDC-Header_2x??_P2.54mm_Vertical_NarrowPad"]
+      count_expected: 3
+      part: "Wurth WR-BHD 61202621621 (2x13), 61201021621 (2x5), 61201621621 (2x8)"
+      cycles: 30
+      source:
+        - {document: "v2/vendor/connectors/wurth-wr-bhd-box-header-61202621621.pdf", sha256_16: "38509e478ba394d0",
+           page: "2", words: "Durability 30 Mating cycles"}
+        - {document: "v2/vendor/connectors/wurth-wr-bhd-box-header-61201021621.pdf", sha256_16: "dbaa4765e57457ac",
+           page: "2", words: "Durability 30 Mating cycles"}
+        - {document: "v2/vendor/connectors/wurth-wr-bhd-box-header-61201621621.pdf", sha256_16: "0df87add7e40d43c",
+           page: "2", words: "Durability 30 Mating cycles"}
+      load: "the ribbons to board B and to the mezzanine, mated at build and at every service that parts the
+        boards"
+      measure: "through-hole box headers; each ribbon is captive between the two boards it joins"
+    - name: "the USB-C outlet's pigtail header"
+      refs: ["J_USBC_OUT"]
+      footprints: ["Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical"]
+      count_expected: 1
+      cycles: null
+      no_figure: {kind: owed, open_item: REL-O-02,
+                  statement: "no part is named for the land, so there is no maker's document to cite"}
+      load: "the pigtail to the sealed USB-C receptacle on the connector plate (18 AWG and 26 AWG)"
+      measure: "the lead is tied at both ends (ASSEMBLY.md section 4); the land is through-hole"
+    - name: "the blade fuse holder"
+      refs: ["F1"]
+      footprints: ["Fuse:Fuseholder_Blade_Mini_Keystone_3568"]
+      count_expected: 1
+      part: "Keystone 3568"
+      cycles: null
+      no_figure:
+        kind: none_published
+        statement: "Keystone's catalogue page of the 3568 gives its material, its ratings and its dimensions and
+          no insertion-cycle figure"
+        looked_in:
+          - {document: "v2/vendor/keystone/M65p42.pdf", sha256_16: "caa141ea51ac68cf"}
+      load: "the pull of extracting a blade fuse, straight up; a fuse is changed rarely"
+      measure: "a through-hole holder; the blade is seated flush and its seating is checked after any transport
+        (ASSEMBLY.md section 1, Blade fuses)"
+   exclusions:
+    - refs: ["TP*"]
+      footprints: ["TestPoint:*"]
+      count_expected: 25
+      reason: "a test point: a bare pad touched by a probe at the bench, nothing is mated and nothing hangs on it"
 
  b:
    classes:
-    - {name: "CM5 module receptacles", refs: ["U30A", "U30B", "U31A", "U31B", "U32A", "U32B"], cycles: 60,
-       basis: "Amphenol's 10164227 series specification gives 60 mating cycles for this receptacle",
-       load: "the module is pushed home and held by four standoffs; the receptacle takes the insertion force",
-       measure: "four M2.5 standoffs per slot take the module's weight and the vibration, so the receptacle
-         carries signal contact force only"}
-    - {name: "M.2 sockets", refs: ["J_M2*"], count_expected: 6, cycles: 60,
-       basis: "the M.2 socket's own specification, 60 cycles",
-       load: "a card pivoted down and screwed at its far end",
-       measure: "each card is screwed to a standoff at the far end, which is what the socket's own drawing
-         requires and is where the cycling load goes"}
-    - {name: "U.FL antenna sockets", refs: ["J_GNSS1", "J_LORA1", "J_W*A", "J_W*B", "J_WOA", "J_WOB"], cycles: 30,
-       basis: "Hirose's U.FL specification is explicit: 30 mating cycles, and it is the lowest figure on this
-         board (v2/vendor/hirose/)",
-       load: "a coax pigtail pulled sideways during service, which is exactly what U.FL does not tolerate",
-       measure: "every pigtail is dressed and tied within 30 mm of its socket so the pull is taken by the tie,
-         and the assembly note says to lift a U.FL with the tool rather than the cable"}
-    - {name: "the coin cell holder", refs: ["BT1"], cycles: null,
-       basis: "Keystone 3034 publishes no cycle figure",
-       load: "a cell pushed in and levered out",
-       measure: "the holder is through-hole and its retention tab is oriented away from the nearest part"}
-    - {name: "fan and flash headers, the panel ribbon, the HDMI and USB receptacles",
-       refs: ["J_FAN*", "J_FLASH*", "J_PANEL", "J_HDMI", "J_LIME", "J_RB9704", "J_AB1", "J_AB2",
-              "J_5V_*", "J_54V"], cycles: 30,
-       basis: "the JST and box-header families on this board all publish 30 cycles or more",
-       load: "service access",
-       measure: "through-hole where the lead is pulled, and every internal lead is tied to a standoff"}
-    - {name: "the PCIe switches' own sockets on the carrier", refs: ["U101", "U201", "U301"], cycles: null,
-       basis: "these are soldered ICs and not connectors: they appear in this list because the search finds
-         their package names, and they carry no mating load at all",
-       load: "none: a soldered QFN",
-       measure: "none needed; recorded so the list is complete rather than filtered"}
+    - name: "CM5 module receptacles"
+      refs: ["U30A", "U30B", "U31A", "U31B", "U32A", "U32B"]
+      footprints: ["meshsat:CM5_Conn_?_10164227"]
+      count_expected: 6
+      part: "Amphenol 10164227-1004A1RLF"
+      cycles: 30
+      source: {document: "v2/vendor/cm5/amphenol-10164227-bergstak-0.40mm-product-sheet.pdf", sha256_16: "825f39e43efc199f",
+               page: "2", words: "Durability: 30 cycles"}
+      load: "the module is pressed onto its receptacle pair; the receptacles take the insertion force"
+      measure: "four M2.5 standoffs per module take its weight and the vibration (ASSEMBLY.md section 1, Compute
+        Modules on B16), so the receptacles carry contact force only"
+    - name: "M.2 card sockets (TE)"
+      refs: ["J_M2C1", "J_M2C2", "J_M2C3"]
+      footprints: ["meshsat:M2_E-Key_Socket_2230", "meshsat:M2_B-Key_Socket_3052_TE2199119"]
+      count_expected: 3
+      part: "TE 2199230-4 (E key), TE 2199119-3 (B key)"
+      cycles: 60
+      source: {document: "v2/vendor/m2/te-2199119-m2-b-key.pdf", sha256_16: "d8f58c5892aec2ef",
+               page: "6 (the guide's page 5 lists PN 2199230-X and PN 2199119-X)", words: "Durability 60 Cycles"}
+      load: "a card pivoted down into the socket and screwed at its far end"
+      measure: "each card is screwed to an M2.5 standoff at its far end (ASSEMBLY.md section 1, M.2 cards on B16)"
+    - name: "M.2 NVMe sockets (Amphenol)"
+      refs: ["J_M2N1", "J_M2N2", "J_M2N3"]
+      footprints: ["meshsat:M2_M-Key_Socket_2242"]
+      count_expected: 3
+      part: "Amphenol MDT420M02001"
+      cycles: null
+      no_figure:
+        kind: owed
+        open_item: REL-O-03
+        statement: "the held drawing (v2/vendor/m2/amphenol-mdt420m02001-m2-m-key.pdf) states no durability; the
+          series sheet (v2/vendor/m2/amphenol-mdt420b01001-m2-b-key.pdf, page 2) reads Normal M.2: 25-60 mating
+          cycles and its table does not list this part number, so neither figure is carried"
+      load: "a drive pivoted down into the socket and screwed at its far end"
+      measure: "each drive is screwed to an M2.5 standoff at its far end (ASSEMBLY.md section 1, M.2 cards on B16)"
+    - name: "U.FL antenna sockets"
+      refs: ["J_GNSS1", "J_LORA1", "J_W1A", "J_W1B", "J_W3A", "J_W3B", "J_WOA", "J_WOB"]
+      footprints: ["Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical"]
+      count_expected: 8
+      part: "Hirose U.FL-R-SMT-1(10)"
+      cycles: 30
+      source: {document: "v2/vendor/hirose/hirose-ufl-series-catalogue-2009-02-digikey-copy.pdf", sha256_16: "6949727d3bc42a67",
+               page: "2", words: "5. Durability (mating / un-mating) ... 30 cycles"}
+      load: "a coax pigtail pulled sideways during service, which is what a U.FL tolerates least"
+      measure: "every pigtail is tied at both ends (ASSEMBLY.md section 4); a U.FL is lifted with the tool, never
+        by the cable"
+    - name: "the coin cell retainer"
+      refs: ["BT1"]
+      footprints: ["Battery:BatteryHolder_Keystone_3034_1x20mm"]
+      count_expected: 1
+      part: "Keystone 3034"
+      cycles: null
+      no_figure:
+        kind: none_published
+        statement: "Keystone's catalogue page of the 3034 gives its material and its dimensions and no
+          insertion-cycle figure"
+        looked_in:
+          - {document: "v2/vendor/keystone/M65p9.pdf", sha256_16: "58aa74ce778e2b33"}
+      load: "a cell pushed under the retainer and levered out; the retainer is surface mounted, so the lever
+        acts on its two solder tails"
+      measure: "none is recorded beyond the retainer's own solder tails"
+      measure_owed: REL-O-09
+    - name: "JST VH power headers"
+      refs: ["J_54V", "J_5V_DEV", "J_5V_S?"]
+      footprints: ["Connector_JST:JST_VH_B2P-VH_*"]
+      count_expected: 5
+      part: "JST B2P-VH"
+      cycles: null
+      no_figure:
+        kind: none_published
+        statement: "JST's VH catalogue states no mating-cycle figure, and the handling precautions it refers to
+          give none"
+        looked_in:
+          - {document: "v2/vendor/connectors/jst-vh-catalogue.pdf", sha256_16: "d51e669c597988b2"}
+          - {document: "v2/vendor/connectors/jst-handling-precautions-2020.pdf", sha256_16: "c0f1b065990fe550"}
+      load: "the rail leads from board A, unplugged when the stack is taken apart"
+      measure: "through-hole headers with the VH lock; every lead is tied at both ends (ASSEMBLY.md section 4)"
+    - name: "JST SH fan headers"
+      refs: ["J_FAN?"]
+      footprints: ["Connector_JST:JST_SH_BM04B-SRSS-TB_*"]
+      count_expected: 3
+      part: "JST BM04B-SRSS-TB"
+      cycles: null
+      no_figure:
+        kind: none_published
+        statement: "JST's SH catalogue states no mating-cycle figure, and the handling precautions it refers to
+          give none"
+        looked_in:
+          - {document: "v2/vendor/connectors/jst-sh-catalogue.pdf", sha256_16: "ea3071ca5ee5a606"}
+          - {document: "v2/vendor/connectors/jst-handling-precautions-2020.pdf", sha256_16: "c0f1b065990fe550"}
+      load: "the coolers' own fan leads, unplugged when a module or its cooler is changed"
+      measure: "a surface-mount header with two mounting pads; the cooler is clipped to its module, so the lead
+        is short and carries no weight"
+    - name: "ribbon box headers"
+      refs: ["J_AB1", "J_AB2", "J_PANEL", "J_RB9704"]
+      footprints: ["meshsat:IDC-Header_2x??_P2.54mm_Vertical_NarrowPad"]
+      count_expected: 4
+      part: "Wurth WR-BHD 61202621621 (2x13), 61201021621 (2x5), 61201621621 (2x8)"
+      cycles: 30
+      source:
+        - {document: "v2/vendor/connectors/wurth-wr-bhd-box-header-61202621621.pdf", sha256_16: "38509e478ba394d0",
+           page: "2", words: "Durability 30 Mating cycles"}
+        - {document: "v2/vendor/connectors/wurth-wr-bhd-box-header-61201021621.pdf", sha256_16: "dbaa4765e57457ac",
+           page: "2", words: "Durability 30 Mating cycles"}
+        - {document: "v2/vendor/connectors/wurth-wr-bhd-box-header-61201621621.pdf", sha256_16: "0df87add7e40d43c",
+           page: "2", words: "Durability 30 Mating cycles"}
+      load: "the ribbons to board A and to the panel and the RockBLOCK's lead; the panel ribbon is unplugged
+        every time the face plate comes off (ASSEMBLY.md section 7)"
+      measure: "through-hole box headers; every lead is tied at both ends (ASSEMBLY.md section 4)"
+    - name: "the Ethernet jack"
+      refs: ["J_ETH"]
+      footprints: ["Connector_RJ:RJ45_Amphenol_RJHSE5380"]
+      count_expected: 1
+      part: "Amphenol RJHSE5380"
+      cycles: 750
+      source: {document: "v2/vendor/connectors/amphenol-rjhse5380-rj45-jack.pdf", sha256_16: "d6d6b918dec76c7b",
+               page: "2", words: "Durability: 750 mating and unmating cycles"}
+      load: "the patch lead to the sealed wall RJ45, unplugged when the stack comes out; the plug's latch is a
+        lever on the jack"
+      measure: "a through-hole shielded jack; the patch lead is tied at both ends (ASSEMBLY.md section 4)"
+    - name: "USB-C flash receptacles"
+      refs: ["J_FLASH?"]
+      footprints: ["Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12"]
+      count_expected: 3
+      part: "HRO TYPE-C-31-M-12"
+      cycles: 10000
+      source: {document: "v2/vendor/connectors/hro-type-c-31-m-12.pdf", sha256_16: "6ae33d50ac478201",
+               page: "1 (the drawing's note 3-3)", words: "DURABILITY: 10000 CYCLES"}
+      load: "a USB-C lead plugged in to flash a module's eMMC, at the bench with the case open"
+      measure: "the receptacle's four shell legs are soldered through the board"
+    - name: "the HDMI receptacle"
+      refs: ["J_HDMI"]
+      footprints: ["Connector_Video:HDMI_A_Molex_208658-1001_Horizontal"]
+      count_expected: 1
+      part: "Molex 2086581001"
+      cycles: 10000
+      source: {document: "v2/vendor/connectors/molex-2086581001-part-page-wayback-20251116.html", sha256_16: "2144edad4eb08bb3",
+               page: "the part page's specification list", words: "Durability Mating Cycles Max 10000"}
+      load: "the monitor's own HDMI cable, unplugged every time the face plate comes off; an HDMI plug has no
+        latch and a stiff cable"
+      measure: "the cable is tied at both ends (ASSEMBLY.md section 4)"
+    - name: "the USB 3 receptacle of the SDR bay"
+      refs: ["J_LIME"]
+      footprints: ["Connector_USB:USB3_A_Receptacle_Wuerth_692122030100"]
+      count_expected: 1
+      part: "Wurth 692122030100"
+      cycles: 5000
+      source: {document: "v2/vendor/connectors/wurth-wr-com-usb3-a-692122030100.pdf", sha256_16: "df28a01bf0fb46ac",
+               page: "2", words: "Durability 5 000 Mating cycles"}
+      load: "the LimeSDR Mini plugs straight into the receptacle and hangs on it: the board is a lever on the
+        receptacle in transport"
+      measure: "a cable tie base beside the bay and one tie over the board keep it seated (ASSEMBLY.md section
+        1, LimeSDR Mini in its bay)"
+    - name: "nano-SIM sockets"
+      refs: ["J_SIM1", "J_SIM2"]
+      footprints: ["Connector_Card:nanoSIM_GCT_SIM8060-6-0-14-00"]
+      count_expected: 2
+      part: "GCT SIM8060-6-0-14-00-A"
+      cycles: 5000
+      source: {document: "v2/vendor/connectors/gct-sim8060-nano-sim-socket.pdf", sha256_16: "6f2c1c6cccd7b02c",
+               page: "1", words: "Durability : 5,000 cycles"}
+      load: "a SIM pushed in and pushed again to release, with the stack out of the case"
+      measure: "a push-push socket: the card is released by the socket's own spring and never levered"
+    - name: "lead headers on 2.54 mm lands, mated in service"
+      refs: ["J_CAM", "J_QMX", "J_RPIBOOT?"]
+      footprints: ["Connector_PinHeader_2.54mm:PinHeader_1x0?_P2.54mm_Vertical"]
+      count_expected: 5
+      cycles: null
+      no_figure: {kind: owed, open_item: REL-O-02,
+                  statement: "no part is named for these lands, so there is no maker's document to cite"}
+      load: "the camera's and the QMX's USB leads, unplugged when the face plate or the lid comes off, and the
+        three boot jumpers fitted to flash a module"
+      measure: "the leads are tied at both ends (ASSEMBLY.md section 4); the lands are through-hole"
+   exclusions:
+    - refs: ["TP*"]
+      footprints: ["TestPoint:*"]
+      count_expected: 91
+      reason: "a test point: a bare pad touched by a probe at the bench, nothing is mated and nothing hangs on it"
+    - refs: ["F1", "F2", "F3"]
+      footprints: ["Fuse:Fuse_1812_4532Metric"]
+      count_expected: 3
+      reason: "a resettable fuse soldered to the board in an 1812 package: there is no holder and nothing is
+        mated"
+    - refs: ["U42", "U52", "U62"]
+      footprints: ["Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical_SMD_Pin1Left"]
+      count_expected: 3
+      reason: "the programming pads of the three I/O controllers: bare surface lands for a probe clip at the
+        bench, no part is fitted on them (the part identities table of stream w5ident reads them NOT_A_PART)"
+    - refs: ["J_DBG?", "J_GNSS2", "J_ZBDBG?", "J_IOCOFF_?", "J_SPI3"]
+      footprints: ["Connector_PinHeader_2.54mm:PinHeader_?x0?_P2.54mm_Vertical*"]
+      count_expected: 10
+      reason: "bench and commissioning access only (a console, a debug port, a breakout, a jumper the value
+        calls not fitted in service): not mated in the field, and whether a header is fitted at all is a build
+        choice not made. Taken by the session (authority SESSION, 28 September 2026); to reverse, move them to
+        the class of lead headers mated in service"
 
  c:
    classes:
-    - {name: "the panel ribbon header", refs: ["J_PANEL"], cycles: 30,
-       basis: "the box header's own specification",
-       load: "the ribbon to board B, mated at build",
-       measure: "through-hole, and the ribbon is captive inside the case"}
-    - {name: "the face plate's mounting holes", refs: ["H*"], count_expected: 8, cycles: null,
-       basis: "a screw hole has no mating cycle; what it has is a torque and a thread",
-       load: "the face plate carries the display, the e-paper and sixteen light guides, and the whole assembly
-         is screwed to the case's own frame",
-       measure: "the holes are plated and the plate is screwed to standoffs rather than to the board, so the
-         board is not a structural member"}
+    - name: "the panel ribbon header"
+      refs: ["J_PANEL"]
+      footprints: ["Connector_IDC:IDC-Header_2x13_P2.54mm_Vertical_SMD"]
+      count_expected: 1
+      part: "XFCN BH254VS-26P"
+      cycles: null
+      no_figure: {kind: owed, open_item: REL-O-04,
+                  statement: "no document of the maker is held, so no figure can be cited"}
+      load: "the ribbon to board B, unplugged at board B's end when the face plate comes off (ASSEMBLY.md
+        section 7); the header is surface mounted, so a pull on the ribbon acts on its solder joints"
+      measure: "the ribbon is tied at both ends (ASSEMBLY.md section 4) and the header is masked from the
+        coating (ASSEMBLY.md section 5)"
+    - name: "the e-paper flex connector"
+      refs: ["J_EPD"]
+      footprints: ["meshsat:Hirose_FH34SRJ-24S"]
+      count_expected: 1
+      part: "Hirose FH34SRJ-24S-0.5SH(50)"
+      cycles: 20
+      source: {document: "v2/vendor/hirose/hirose-fh34-series-ffc-connectors.pdf", sha256_16: "bcd77fb04a18033d",
+               page: "4", words: "Mating Durability ... 20 times"}
+      load: "the display's 24-way flex, inserted at build and again only if the display or the backer is
+        changed. It is the lowest figure in the kit"
+      measure: "a back-flip actuator holds the flex; the display is taped under the plate, so the flex carries
+        no weight (ASSEMBLY.md section 1, E-paper under the plate)"
+    - name: "headset jacks in the plate"
+      refs: ["J_HSJ1", "J_HSJ2"]
+      footprints: ["meshsat:PanelJack_17mm"]
+      count_expected: 2
+      cycles: null
+      no_figure: {kind: owed, open_item: REL-O-05,
+                  statement: "a U-174/U class jack with no maker's part picked and its drawing owed"}
+      load: "a headset plug mated in the field at every use: the most handled connector on the face"
+      measure: "the jack sits in the face plate with its bushing nut below the backer's 17 mm hole, so the plate
+        takes the plug's force; the board carries no pin of it, its five leads run to board D (ASSEMBLY.md
+        section 1, Headset jacks)"
+    - name: "the MAIN pushbutton"
+      refs: ["SW_MAIN"]
+      footprints: ["meshsat:PanelSwitch_19mm"]
+      count_expected: 1
+      part: "C&K ATP19-SL1-603-B0SA-03G"
+      cycles: 50000
+      source: {document: "v2/vendor/switches/ck-atp19-series-datasheet.pdf", sha256_16: "ebf7ad2c6da083b2",
+               page: "1", words: "Operating Life 50,000 make-and-break cycles at full load (the lower figure is
+                 carried; Mechanical Life Momentary 1,000,000 cycles)"}
+      load: "pressed at every power-on and power-off"
+      measure: "the switch is mounted in the face plate by its own nut on a silicone washer, its body through
+        the backer's hole; only its flying leads reach the board, soldered and beaded (ASSEMBLY.md section 1,
+        Panel switches)"
+    - name: "the PI and TEST pushbuttons"
+      refs: ["SW_PI", "SW_TEST"]
+      footprints: ["meshsat:PanelSwitch_16mm"]
+      count_expected: 2
+      part: "C&K ATP16-SL1-403-M0SA-04G and ATP16-SL1-203-M0SA-04G"
+      cycles: 200000
+      source: {document: "v2/vendor/switches/ck-atp16-series-datasheet.pdf", sha256_16: "fce6061e05364e61",
+               page: "1", words: "OPERATING LIFE: Make-and-break cycles at full load 200,000 (Momentary) (the
+                 lower figure is carried; mechanical OPERATING LIFE: Momentary 1,000,000 cycles)"}
+      load: "pressed by the operator in use"
+      measure: "mounted in the face plate by their own nuts on silicone washers; only their flying leads reach
+        the board, soldered and beaded (ASSEMBLY.md section 1, Panel switches)"
+    - name: "the locking toggles"
+      refs: ["SW_SOS", "SW_EMCON", "SW_ZERO"]
+      footprints: ["meshsat:ToggleBody_SPDT"]
+      count_expected: 3
+      part: "APEM 5636ADKB-2V"
+      cycles: 50000
+      source: {document: "v2/vendor/seals/apem-5000-series-datasheet-rs-copy.pdf", sha256_16: "87fc25f583563940",
+               page: "2", words: "Electrical life at full load: 50,000 cycles for single and double pole (the
+                 lower figure is carried; Low level or mechanical life: 100,000 cycles)"}
+      load: "thrown by the operator; the lever is a lever on the bushing"
+      measure: "mounted in the face plate by their bushing nuts with the K seal; only their flying leads reach
+        the board, soldered and beaded (ASSEMBLY.md section 1, Panel switches)"
+    - name: "the lighting toggle"
+      refs: ["SW_LIGHT"]
+      footprints: ["meshsat:ToggleBody_DPDT"]
+      count_expected: 1
+      part: "NKK M2044SD3A01"
+      cycles: 25000
+      source: {document: "v2/vendor/switches/nkk-m-series-toggles-datasheet.pdf", sha256_16: "b9908fb47456b32d",
+               page: "1", words: "Electrical Life: 25,000 operations minimum for silver; 50,000 operations minimum
+                 for gold (the lowest figure is carried; Mechanical Life: 50,000 operations minimum for flat,
+                 locking & splashproof devices)"}
+      load: "thrown by the operator between day, night and blackout"
+      measure: "mounted in the face plate on its splashproof bushing with its O-ring and boot; only its flying
+        leads reach the board, soldered and beaded (ASSEMBLY.md section 1, Panel switches)"
+    - name: "the sounder in the plate"
+      refs: ["BZ1"]
+      footprints: ["meshsat:PanelSounder"]
+      count_expected: 1
+      part: "Floyd Bell MC-09-530-Q class (the maker's order code is owed)"
+      cycles: null
+      no_figure: {kind: not_mated,
+                  statement: "the sounder is held in the face plate by its own nut and its two leads are soldered
+                    to the board's lands: nothing is mated"}
+      load: "the sounder's weight is on the plate; the board carries its two leads"
+      measure: "the leads are soldered to the lands and beaded with DOWSIL 3145 (ASSEMBLY.md section 2 step 9)"
+    - name: "soldered lead lands"
+      refs: ["J_MAINSW", "J_PIJ2"]
+      footprints: ["meshsat:LeadLands_1x02"]
+      count_expected: 2
+      cycles: null
+      no_figure: {kind: not_mated,
+                  statement: "two solder lands each, the lead soldered once: nothing is mated on this board (the
+                    MAIN lead unplugs at board A's end)"}
+      load: "the pull of a 24 AWG lead when the face plate is lifted"
+      measure: "soldered and beaded with DOWSIL 3145 (ASSEMBLY.md section 2 step 9); the leads are tied at both
+        ends (ASSEMBLY.md section 4)"
+    - name: "the backer's screw joints to the plate"
+      refs: ["H?"]
+      footprints: ["meshsat:BackerScrew_M3_GND"]
+      count_expected: 8
+      cycles: null
+      no_figure: {kind: not_mated,
+                  statement: "a screw joint: M3 x 6 into the plate's self-clinching standoff. It has a torque and
+                    a thread, and no mating cycle"}
+      load: "the backer hangs under the face plate on these eight screws, and they are its ground bond to the
+        plate"
+      measure: "0.4 N m with Loctite 243 (ASSEMBLY.md section 1, Backer C7 to the plate); the switches, the
+        jacks, the sounder and the camera mount in the plate, so the screws carry the backer alone"
+    - name: "the camera module's screw joints"
+      refs: ["CAM_H1", "CAM_H2"]
+      footprints: ["MountingHole:MountingHole_2.2mm_M2"]
+      count_expected: 2
+      cycles: null
+      no_figure: {kind: not_mated,
+                  statement: "a screw joint: an M2 screw into a standoff. It has a torque and no mating cycle"}
+      load: "the USB camera module (about 25 x 25 mm, its part is owed) on two M2 standoffs"
+      measure: "0.15 N m (ASSEMBLY.md section 1, Camera module)"
+   exclusions:
+    - refs: ["TP*"]
+      footprints: ["TestPoint:*"]
+      count_expected: 48
+      reason: "a test point: a bare pad touched by a probe at the bench, nothing is mated and nothing hangs on it"
+    - refs: ["JP1", "JP2"]
+      footprints: ["Jumper:SolderJumper-2_*"]
+      count_expected: 2
+      reason: "a solder jumper: two copper pads bridged with solder or left open, no part is fitted and nothing
+        is mated"
 
  d:
    classes:
-    - {name: "the radio module's sockets", refs: ["J_HS1", "J_HS2"], cycles: 30,
-       basis: "the 1x12 socket strip's own specification",
-       load: "the SA868 module is pushed into two socket strips and held by M2.5 standoffs",
-       measure: "two standoffs take the module's weight; the sockets take contact force only"}
-    - {name: "the antenna jack and the PA ports", refs: ["J_ANT", "J_PAIN", "J_PAOUT", "J_VGG"], cycles: 500,
-       basis: "the SMA standard's 500 cycles",
-       load: "a coax mated at build; the bulkhead is in the case wall",
-       measure: "the board-side connector is an edge-launch SMA whose body is soldered on both sides"}
-    - {name: "the power and harness headers", refs: ["J_PWR1", "J_HARN1", "J_USB3"], cycles: 30,
-       basis: "the JST-VH and IDC families' own figures",
-       load: "service access",
-       measure: "through-hole with the leads tied"}
-    - {name: "the power amplifier's flange NTC lead", refs: ["J_FLANGE"], cycles: null,
-       basis: "the held JST XH catalogue (v2/vendor/connectors/jst-xh-catalogue.pdf, read 26 September 2026) gives the
-         series' current rating and its -25 to +85 C range and publishes no mating-cycle figure, so there is none to
-         carry",
-       load: "a two-wire lead from the Semitec 103AT-2 bonded to the PA's flange on the face plate (round 8, PWR-F15),
-         mated at build and at service when the plate comes off",
-       measure: "through-hole B2B-XH-A with the XH friction lock; the lead is tied to the plate beside the PA's VGG lead
-         so a pull on the plate does not reach the joint"}
+    - name: "SMA jacks"
+      refs: ["J_ANT", "J_PAOUT"]
+      footprints: ["Connector_Coaxial:SMA_Amphenol_132134_Vertical"]
+      count_expected: 2
+      part: "Amphenol RF 132134"
+      cycles: 500
+      source: {document: "v2/vendor/rf/amphenol-rf-132134-part-page-wayback-20260213.html", sha256_16: "8abb34d101dcbe57",
+               page: "the part page's specification table", words: "Mating Cycles (Min) 500"}
+      load: "the antenna pigtail to board A and the PA's output coax, screwed on at build and at service"
+      measure: "through-hole jacks; the coax is tied at both ends (ASSEMBLY.md section 4)"
+    - name: "the PA drive socket"
+      refs: ["J_PAIN"]
+      footprints: ["Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical"]
+      count_expected: 1
+      part: "Hirose U.FL-R-SMT-1(10)"
+      cycles: 30
+      source: {document: "v2/vendor/hirose/hirose-ufl-series-catalogue-2009-02-digikey-copy.pdf", sha256_16: "6949727d3bc42a67",
+               page: "2", words: "5. Durability (mating / un-mating) ... 30 cycles"}
+      load: "the PA drive coax, unplugged when the face plate comes off"
+      measure: "the coax is tied at both ends (ASSEMBLY.md section 4); a U.FL is lifted with the tool, never by
+        the cable"
+    - name: "the JST VH power header"
+      refs: ["J_PWR1"]
+      footprints: ["Connector_JST:JST_VH_B2P-VH_*"]
+      count_expected: 1
+      part: "JST B2P-VH"
+      cycles: null
+      no_figure:
+        kind: none_published
+        statement: "JST's VH catalogue states no mating-cycle figure, and the handling precautions it refers to
+          give none"
+        looked_in:
+          - {document: "v2/vendor/connectors/jst-vh-catalogue.pdf", sha256_16: "d51e669c597988b2"}
+          - {document: "v2/vendor/connectors/jst-handling-precautions-2020.pdf", sha256_16: "c0f1b065990fe550"}
+      load: "the 5 V lead from board A"
+      measure: "a through-hole header with the VH lock; the lead is tied at both ends (ASSEMBLY.md section 4)"
+    - name: "JST PH lead headers"
+      refs: ["J_HS1", "J_HS2", "J_USB3", "J_VGG"]
+      footprints: ["Connector_JST:JST_PH_B?B-PH-K_*"]
+      count_expected: 4
+      part: "JST B5B-PH-K, B4B-PH-K, B2B-PH-K"
+      cycles: null
+      no_figure:
+        kind: none_published
+        statement: "JST's PH catalogue states no mating-cycle figure, and the handling precautions it refers to
+          give none"
+        looked_in:
+          - {document: "v2/vendor/connectors/jst-ph-catalogue.pdf", sha256_16: "447624f4f2f7d37c"}
+          - {document: "v2/vendor/connectors/jst-handling-precautions-2020.pdf", sha256_16: "c0f1b065990fe550"}
+      load: "the two headset pigtails, the monitor's touch lead and the PA's gate bias lead, unplugged when the
+        face plate comes off (ASSEMBLY.md section 7)"
+      measure: "through-hole headers; every lead is tied at both ends (ASSEMBLY.md section 4)"
+    - name: "the flange thermistor's header"
+      refs: ["J_FLANGE"]
+      footprints: ["Connector_JST:JST_XH_B2B-XH-A_*"]
+      count_expected: 1
+      part: "JST B2B-XH-A"
+      cycles: null
+      no_figure:
+        kind: none_published
+        statement: "JST's XH catalogue states no mating-cycle figure, and the handling precautions it refers to
+          give none"
+        looked_in:
+          - {document: "v2/vendor/connectors/jst-xh-catalogue.pdf", sha256_16: "9426b136902f1190"}
+          - {document: "v2/vendor/connectors/jst-handling-precautions-2020.pdf", sha256_16: "c0f1b065990fe550"}
+      load: "a two-wire lead from the thermistor bonded to the PA's flange on the face plate, unplugged when the
+        plate comes off"
+      measure: "a through-hole header with the XH friction lock; the lead is tied to the plate beside the PA's
+        bias lead, so a pull on the plate does not reach the joint"
+    - name: "the harness box header"
+      refs: ["J_HARN1"]
+      footprints: ["meshsat:IDC-Header_2x08_P2.54mm_Vertical_NarrowPad"]
+      count_expected: 1
+      part: "Wurth WR-BHD 61201621621"
+      cycles: 30
+      source: {document: "v2/vendor/connectors/wurth-wr-bhd-box-header-61201621621.pdf", sha256_16: "0df87add7e40d43c",
+               page: "2", words: "Durability 30 Mating cycles"}
+      load: "the 16-way ribbon to board A, mated at build and at service"
+      measure: "a through-hole box header; the ribbon is 60 mm long and captive between the two boards"
+    - name: "the transmit and receive relay"
+      refs: ["K1"]
+      footprints: ["Relay_SMD:Relay_DPDT_Omron_G6K-2F-Y"]
+      count_expected: 1
+      part: "Omron G6K-2F-Y 5 VDC"
+      cycles: 100000
+      source: {document: "v2/vendor/omron/omron-g6k-signal-relay.pdf", sha256_16: "25d2046127b3ffa7",
+               page: "3", words: "Durability Electrical 100,000 operations min. (with a rated load at 1,800
+                 operations/hour) (the lower figure is carried; Mechanical 50,000,000 operations min.)"}
+      load: "it changes over at every key-down and key-up of the VHF transmitter; nothing is mated, its contacts
+        cycle"
+      measure: "none is recorded: the relay is soldered and its contacts are inside it"
+      measure_owed: REL-O-10
+   exclusions:
+    - refs: ["TP*"]
+      footprints: ["TestPoint:*"]
+      count_expected: 27
+      reason: "a test point: a bare pad touched by a probe at the bench, nothing is mated and nothing hangs on it"
+    - refs: ["JP1", "JP2"]
+      footprints: ["Jumper:SolderJumper-2_*"]
+      count_expected: 2
+      reason: "a solder jumper: two copper pads bridged with solder or left open, no part is fitted and nothing
+        is mated"
 
  e:
    classes:
-    - {name: "the pack lead connector", refs: ["J_BATT"], cycles: 1000,
-       basis: "v2/vendor/battery/amass-xt60-spec-tme.pdf: the XT60 is specified for 1000 mating cycles",
-       load: "the pack is unplugged whenever it is swapped, which is the most-cycled connector in the kit",
-       measure: "the XT60 is through-hole with 12 AWG leads, and the strip is screwed to the case floor so the
-         pull goes into the case rather than into the joint"}
-    - {name: "the blade fuse holders", refs: ["F1", "F2", "F3"], cycles: null,
-       basis: "Keystone 3568 publishes no cycle figure",
-       load: "extraction force, straight up",
-       measure: "through-hole holders"}
-    - {name: "the DC inlet, the solar input, the SMBus header and the lid sensor lead",
-       refs: ["J_DCIN", "J_SOLAR", "J_SMB", "J_TAMP"], cycles: 30,
-       basis: "the JST families' own figures; the wall receptacle itself is in the case",
-       load: "the leads from the wall receptacle, from the pack and from the lid reed sensor under the frame",
-       measure: "each lead is tied within 40 mm of its header"}
+    - name: "the pack lead connector"
+      refs: ["J_BATT"]
+      footprints: ["Connector_AMASS:AMASS_XT60-M_*"]
+      count_expected: 1
+      part: "Amass XT60-M"
+      cycles: 1000
+      source: {document: "v2/vendor/battery/amass-xt60-spec-tme.pdf", sha256_16: "c2cbb5962c1f37da",
+               page: "2 (the XT60-M sheet)", words: "USE TIMES 1000 TIMES"}
+      load: "the pack is unplugged before every lift of the stack and whenever it is swapped (ASSEMBLY.md section
+        7): the most cycled connector inside the case, on 12 AWG leads"
+      measure: "a through-hole connector; the dock strip is held to the floor by four VHB pads, so a pull on the
+        lead goes into the strip and the floor. Whether a hand reaches it with the stack in place is not checked
+        (ASSEMBLY.md section 7)"
+    - name: "the blade fuse holders"
+      refs: ["F1", "F2", "F3"]
+      footprints: ["Fuse:Fuseholder_Blade_Mini_Keystone_3568"]
+      count_expected: 3
+      part: "Keystone 3568"
+      cycles: null
+      no_figure:
+        kind: none_published
+        statement: "Keystone's catalogue page of the 3568 gives its material, its ratings and its dimensions and
+          no insertion-cycle figure"
+        looked_in:
+          - {document: "v2/vendor/keystone/M65p42.pdf", sha256_16: "caa141ea51ac68cf"}
+      load: "the pull of extracting a blade fuse, straight up"
+      measure: "through-hole holders; the blades are seated flush and their seating is checked after any
+        transport (ASSEMBLY.md section 1, Blade fuses)"
+    - name: "JST VH input headers"
+      refs: ["J_DCIN", "J_SOLAR"]
+      footprints: ["Connector_JST:JST_VH_B2P-VH_*"]
+      count_expected: 2
+      part: "JST B2P-VH"
+      cycles: null
+      no_figure:
+        kind: none_published
+        statement: "JST's VH catalogue states no mating-cycle figure, and the handling precautions it refers to
+          give none"
+        looked_in:
+          - {document: "v2/vendor/connectors/jst-vh-catalogue.pdf", sha256_16: "d51e669c597988b2"}
+          - {document: "v2/vendor/connectors/jst-handling-precautions-2020.pdf", sha256_16: "c0f1b065990fe550"}
+      load: "the vehicle and shore lead and the solar lead from the wall receptacle"
+      measure: "through-hole headers with the VH lock; the leads are tied along the walls (ASSEMBLY.md section 4)"
+    - name: "JST XH lead headers"
+      refs: ["J_SMB", "J_TAMP"]
+      footprints: ["Connector_JST:JST_XH_B?B-XH-A_*"]
+      count_expected: 2
+      part: "JST B4B-XH-A, B2B-XH-A"
+      cycles: null
+      no_figure:
+        kind: none_published
+        statement: "JST's XH catalogue states no mating-cycle figure, and the handling precautions it refers to
+          give none"
+        looked_in:
+          - {document: "v2/vendor/connectors/jst-xh-catalogue.pdf", sha256_16: "9426b136902f1190"}
+          - {document: "v2/vendor/connectors/jst-handling-precautions-2020.pdf", sha256_16: "c0f1b065990fe550"}
+      load: "the pack's SMBus lead, unplugged with the pack, and the lid reed sensor's lead"
+      measure: "through-hole headers; the leads are tied at both ends (ASSEMBLY.md section 4)"
+    - name: "lead headers on 2.54 mm lands, mated in service"
+      refs: ["J_DCF", "J_FAN1", "J_FAN2", "J_GEIGER", "J_LTG", "J_POD"]
+      footprints: ["Connector_PinHeader_2.54mm:PinHeader_1x0?_P2.54mm_Vertical"]
+      count_expected: 6
+      cycles: null
+      no_figure: {kind: owed, open_item: REL-O-02,
+                  statement: "no part is named for these lands, so there is no maker's document to cite"}
+      load: "the leads of the three sensor modules, the two mixer fans and the outside sensor pod"
+      measure: "the leads are tied at both ends (ASSEMBLY.md section 4); the lands are through-hole"
+    - name: "soldered lead lands"
+      refs: ["J_BLK", "P_CN", "P_CP", "P_VN", "P_VR", "PAD_W1", "PAD_W2"]
+      footprints: ["meshsat:PogoTargets_2x6", "meshsat:SolderPad_8x6"]
+      count_expected: 7
+      cycles: null
+      no_figure: {kind: not_mated,
+                  statement: "lands a wire is soldered to once: the twelve signal wires and the 12 AWG wires up to
+                    the dock block, and the two water electrode leads. Nothing is mated"}
+      load: "the pull and the vibration of the wires; the 12 AWG wires to the block are stiff and 60 mm long"
+      measure: "the wires to the block are soldered at both ends between two boards that are fixed to each
+        other, the block standing on four standoffs on the strip (ASSEMBLY.md section 2 step 2 and section 4);
+        the water electrode leads are tied at both ends"
+   exclusions:
+    - refs: ["TP*"]
+      footprints: ["TestPoint:*"]
+      count_expected: 13
+      reason: "a test point: a bare pad touched by a probe at the bench, nothing is mated and nothing hangs on it"
+    - refs: ["JP1"]
+      footprints: ["Jumper:SolderJumper-2_*"]
+      count_expected: 1
+      reason: "a solder jumper: two copper pads bridged with solder or left open, no part is fitted and nothing
+        is mated"
 
  p:
    classes:
-    - {name: "the pack terminals", refs: ["W_P", "W_N"], cycles: null,
-       basis: "solder lands rather than connectors: the 12 AWG leads are soldered and there is no mating cycle",
-       load: "the whole pack current and the pull of the lead when the pack is handled",
-       measure: "2.5 mm2 lands with a strain relief hole beside each, and the lead is tied to the pack's own
-         enclosure before it leaves the board"}
-    - {name: "the cell tap and thermistor headers", refs: ["J_CELL", "J_TS", "J_TS2", "J_SMB"], cycles: 30,
-       basis: "the JST-XH and PH families' own figures",
-       load: "mated once at pack build",
-       measure: "through-hole; the tap harness is dressed inside the pack enclosure"}
-    - {name: "the pack fuse holder", refs: ["F1"], cycles: null,
-       basis: "Keystone 3568 publishes no cycle figure",
-       load: "extraction force",
-       measure: "through-hole holder inside the pack enclosure, reached only when the pack is open"}
+    - name: "the pack fuse holder"
+      refs: ["F1"]
+      footprints: ["Fuse:Fuseholder_Blade_Mini_Keystone_3568"]
+      count_expected: 1
+      part: "Keystone 3568"
+      cycles: null
+      no_figure:
+        kind: none_published
+        statement: "Keystone's catalogue page of the 3568 gives its material, its ratings and its dimensions and
+          no insertion-cycle figure"
+        looked_in:
+          - {document: "v2/vendor/keystone/M65p42.pdf", sha256_16: "caa141ea51ac68cf"}
+      load: "the pull of extracting a blade fuse"
+      measure: "a through-hole holder inside the pack, reached only when the pack is open"
+    - name: "JST XH lead headers"
+      refs: ["J_CELL", "J_SMB"]
+      footprints: ["Connector_JST:JST_XH_B?B-XH-A_*"]
+      count_expected: 2
+      part: "JST B5B-XH-A, B4B-XH-A"
+      cycles: null
+      no_figure:
+        kind: none_published
+        statement: "JST's XH catalogue states no mating-cycle figure, and the handling precautions it refers to
+          give none"
+        looked_in:
+          - {document: "v2/vendor/connectors/jst-xh-catalogue.pdf", sha256_16: "9426b136902f1190"}
+          - {document: "v2/vendor/connectors/jst-handling-precautions-2020.pdf", sha256_16: "c0f1b065990fe550"}
+      load: "the cell tap wires, mated once at pack build, and the SMBus lead to the dock strip"
+      measure: "through-hole headers; the tap harness is dressed inside the pack's wrap"
+    - name: "JST PH thermistor headers"
+      refs: ["J_TS", "J_TS2"]
+      footprints: ["Connector_JST:JST_PH_B?B-PH-K_*"]
+      count_expected: 2
+      part: "JST B5B-PH-K, B2B-PH-K"
+      cycles: null
+      no_figure:
+        kind: none_published
+        statement: "JST's PH catalogue states no mating-cycle figure, and the handling precautions it refers to
+          give none"
+        looked_in:
+          - {document: "v2/vendor/connectors/jst-ph-catalogue.pdf", sha256_16: "447624f4f2f7d37c"}
+          - {document: "v2/vendor/connectors/jst-handling-precautions-2020.pdf", sha256_16: "c0f1b065990fe550"}
+      load: "the cell thermistors' leads, mated once at pack build"
+      measure: "through-hole headers inside the pack's wrap"
+    - name: "the pack's wire lands"
+      refs: ["W_P", "W_N", "W_BP", "W_BN"]
+      footprints: ["Connector_Wire:SolderWire-2.5sqmm_1x01_*"]
+      count_expected: 4
+      cycles: null
+      no_figure: {kind: not_mated,
+                  statement: "solder lands for the pack's two 12 AWG leads and the cell block's two straps: the
+                    wires are soldered once and nothing is mated"}
+      load: "the whole pack current, and the pull of the pack lead whenever the pack is handled or its XT60 is
+        unplugged"
+      measure: "2.5 mm2 plated lands; no strain relief is recorded for the pack lead"
+      measure_owed: REL-O-11
+   exclusions:
+    - refs: ["TP*"]
+      footprints: ["TestPoint:*"]
+      count_expected: 15
+      reason: "a test point: a bare pad touched by a probe at the bench, nothing is mated and nothing hangs on it"
+    - refs: ["JP1"]
+      footprints: ["Jumper:SolderJumper-2_*"]
+      count_expected: 1
+      reason: "the fuse arming jumper, a solder jumper: two copper pads closed with solder at commissioning, no
+        part is fitted and nothing is mated"
+    - refs: ["F2"]
+      footprints: ["meshsat:Eaton_SCF9550_*"]
+      count_expected: 1
+      reason: "the self-control fuse is soldered to the board (Eaton SCF9550, surface mount): there is no holder
+        and nothing is mated"
 
+ # BOARD E5 HAS NO SCHEMATIC AND NO NETLIST (the manifest's no_chain): its board file is its design, and the
+ # inventory is read from the board file's footprints. It is the board every dock mate lands on.
  e5:
    classes:
-    - {name: "the dock block's contact targets", refs: ["TP*", "P_*"], cycles: null,
-       basis: "the targets are gold-plated pads rather than parts, and what has a cycle rating is the SPRING
-         PIN on board A that lands on them; no wear figure for the pad is published anywhere held here",
-       load: "every mate of the kit: the block is what board A's eleven spring pins land on, so this board
-         takes the whole insertion force of the stack and the wiping action of every pin",
-       measure: "ENIG on 2 oz copper, a target 1.8 mm across against a 0.5 mm pin tip so the wipe stays inside
-         the plating, and the two location rods take the alignment before any pin touches. The pad's wear is
-         the open item that the prototype's mate-cycle test is for, and REL-001 is verified at the prototype
-         for exactly this kind of thing"}
-    - {name: "the 12 AWG pack wire lands", refs: ["W_*"], cycles: null,
-       basis: "solder lands, no mating cycle",
-       load: "the pack lead's pull when the block is handled",
-       measure: "plated through-holes sized for 12 AWG with the lead tied to the strip beside them"}
-
+    - name: "power pin targets"
+      refs: ["T_CN?", "T_CP?", "T_PRE"]
+      footprints: ["Mill-Max_0858_target"]
+      count_expected: 9
+      cycles: null
+      no_figure: {kind: owed, open_item: REL-O-06,
+                  statement: "the targets are the board's own plated pads: what has a maker's rating is the
+                    spring pin on board A that lands on them, and no figure exists for the pad"}
+      load: "every mate of the kit: board A's power pins land on these targets and wipe them, and the block
+        takes their spring force"
+      measure: "the rods locate the stack before a pin touches; the block's finish and the target's size against
+        the pin's tip are layout and fabrication items of this board, and the pad's wear is what the prototype's
+        mate-cycle test is for"
+    - name: "signal contact targets"
+      refs: ["T_SIG"]
+      footprints: ["PogoTargets_2x6"]
+      count_expected: 1
+      cycles: null
+      no_figure: {kind: owed, open_item: REL-O-06,
+                  statement: "the targets are the board's own plated pads under board A's twelve Preci-Dip
+                    contacts, and no figure exists for the pad"}
+      load: "every mate of the kit: twelve spring contacts land on these targets"
+      measure: "the rods locate the stack before a contact touches; the pad's wear is what the prototype's
+        mate-cycle test is for"
+    - name: "soldered wire lands"
+      refs: ["L_SIG", "WH_CN", "WH_CP"]
+      footprints: ["WireLands_2x6", "WireHole_2mm"]
+      count_expected: 3
+      cycles: null
+      no_figure: {kind: not_mated,
+                  statement: "plated lands and holes the wires from the dock strip are soldered into from below,
+                    once: nothing is mated"}
+      load: "the twelve signal wires and the 12 AWG pair from the dock strip; the 12 AWG wires are stiff"
+      measure: "soldered before the stack is fitted and checked end to end (ASSEMBLY.md section 2 step 2); the
+        block stands on its own standoffs, so the wires carry no weight"
+    - name: "standoff screw joints"
+      refs: ["H?"]
+      footprints: ["MountingHole_3.2mm_M3"]
+      count_expected: 4
+      cycles: null
+      no_figure: {kind: not_mated,
+                  statement: "a screw joint: M3 x 6 on a standoff above the dock strip. It has a torque and a
+                    thread, and no mating cycle"}
+      load: "the block takes the spring force of every pin of board A's dock set at each mate, and passes it
+        to the strip through these four standoffs"
+      measure: "0.4 N m with Loctite 243 (ASSEMBLY.md section 1, Dock block E5)"
