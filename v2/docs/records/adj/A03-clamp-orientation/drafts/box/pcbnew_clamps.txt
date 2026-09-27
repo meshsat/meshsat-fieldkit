@@ -1,0 +1,48 @@
+== pcb-a-power-a23/pcb-a-power.kicad_pcb 58e26c67987b1daa
+  D1 D_SMC F 0.0 {'1': '/VBAT', '2': 'GND'} fab-apex->pad ['1'] silk->pad 1
+  D2 D_SMC F 0.0 {'1': '/VIN_RAW', '2': 'GND'} fab-apex->pad ['1'] silk->pad 1
+  D3 D_SMB F 0.0 {'1': '+3V3', '2': 'GND'} fab-apex->pad ['1'] silk->pad 1
+  D4 D_SMB F 0.0 {'1': '/PD_VBUS', '2': 'GND'} fab-apex->pad ['1'] silk->pad 1
+  U29 SOT-23-6 F 90.0 {'1': '/USB_WALL_P', '2': 'GND', '3': '/USB_WALL_N', '4': '/USB_WALL_N', '5': '/+5V_DEV', '6': '/USB_WALL_P'} fab-apex->pad [] silk->pad 5
+== pcb-b-compute-b19/pcb-b-compute.kicad_pcb 2e64b5bf2d9cd3bc
+  D1 D_SMB F 0.0 {'1': '/+5V_DEV', '2': 'GND'} fab-apex->pad ['1'] silk->pad 1
+  D101 D_SMB F 0.0 {'1': '/+5V_S1', '2': 'GND'} fab-apex->pad ['1'] silk->pad 1
+  D2 D_SMB F 0.0 {'1': '/+54V_POE', '2': 'GND'} fab-apex->pad ['1'] silk->pad 1
+  D201 D_SMB F 0.0 {'1': '/+5V_S2', '2': 'GND'} fab-apex->pad ['1'] silk->pad 1
+  D301 D_SMB F 0.0 {'1': '/+5V_S3', '2': 'GND'} fab-apex->pad ['1'] silk->pad 1
+  U107 SOT-23-6 F 0.0 {'1': '/USB_OTG_P1', '2': 'GND', '3': '/USB_OTG_N1', '4': '/USB_OTG_N1', '5': '/VBUS_FLASH1', '6': '/USB_OTG_P1'} fab-apex->pad [] silk->pad 5
+  U19 TSSOP-14_4.4x5mm_P0.65mm F 0.0 {'1': '/EMCON_HW', '10': '/RB_SW_EN', '11': '/E22_EN', '12': '/EMCON_HW', '13': '/LORA_ON', '14': '/+3V3_DEV', '2': '/LIME_HW_EN', '3': '/LIME_EN_A', '4': '/LIME_EN_A', '5': '/LIME_SW_EN', '6': '/LIME_EN', '7': 'GND', '8': '/RB_EN', '9': '/EMCON_HW'} fab-apex->pad [] silk->pad 4
+  U207 SOT-23-6 F 0.0 {'1': '/USB_OTG_P2', '2': 'GND', '3': '/USB_OTG_N2', '4': '/USB_OTG_N2', '5': '/VBUS_FLASH2', '6': '/USB_OTG_P2'} fab-apex->pad [] silk->pad 5
+  U29 SOT-23-6 F 0.0 {'1': '/USB_WALL_P', '2': 'GND', '3': '/USB_WALL_N', '4': '/USB_WALL_N', '5': '/+3V3_DEV', '6': '/USB_WALL_P'} fab-apex->pad [] silk->pad 5
+  U307 SOT-23-6 F 0.0 {'1': '/USB_OTG_P3', '2': 'GND', '3': '/USB_OTG_N3', '4': '/USB_OTG_N3', '5': '/VBUS_FLASH3', '6': '/USB_OTG_P3'} fab-apex->pad [] silk->pad 5
+  U33 SOT-23-6 F 0.0 {'1': '/LIME_DP', '2': 'GND', '3': '/LIME_DM', '4': '/LIME_DM', '5': '/+5V_LIME', '6': '/LIME_DP'} fab-apex->pad [] silk->pad 5
+  U34 SOT-23-6 F 0.0 {'1': '/CAM_DP', '2': 'GND', '3': '/CAM_DM', '4': '/CAM_DM', '5': '/+5V_CAM', '6': '/CAM_DP'} fab-apex->pad [] silk->pad 2
+  U35 SOT-23-6 F 0.0 {'1': '/QMX_DP', '2': 'GND', '3': '/QMX_DM', '4': '/QMX_DM', '5': '/VBUS_QMX', '6': '/QMX_DP'} fab-apex->pad [] silk->pad 5
+  U37 SOT-23-6 F 0.0 {'1': '/USB_PNL_P', '2': 'GND', '3': '/USB_PNL_N', '4': '/USB_PNL_N', '5': '/+3V3_DEV', '6': '/USB_PNL_P'} fab-apex->pad [] silk->pad 5
+== pcb-c-display-c8/pcb-c-display.kicad_pcb 2a273803757c68fb
+  D17 D_SOD-123 B 0.0 {'1': '/TX_LAMPTEST', '2': '/TX_K'} fab-apex->pad ['1'] silk->pad 1
+  D19 D_SOD-123F F 0.0 {'1': '/EPD_SW', '2': '/EPD_VGH'} fab-apex->pad ['1'] silk->pad 1
+  D20 D_SOD-123F F 0.0 {'1': '/EPD_PUMP', '2': 'GND'} fab-apex->pad ['1'] silk->pad 1
+  D21 D_SOD-123F F 0.0 {'1': '/EPD_VGL', '2': '/EPD_PUMP'} fab-apex->pad ['1'] silk->pad 1
+  U10 SOT-23-6 B 0.0 {'1': '/MAINSW_A2', '2': 'GND', '3': '/MAINSW_B2', '4': '/MAINSW_B2', '5': '/+3V3', '6': '/MAINSW_A2'} fab-apex->pad [] silk->pad 2
+  U11 SOT-23-6 B 0.0 {'1': '/PIJ2_A2', '2': 'GND', '3': '/PIJ2_B2', '4': '/PIJ2_B2', '5': '/+3V3', '6': '/PIJ2_A2'} fab-apex->pad [] silk->pad 2
+  U6 SOT-23-6 B 0.0 {'1': '/USB_PNL_P', '2': 'GND', '3': '/USB_PNL_N', '4': '/USB_PNL_N', '5': '/+3V3', '6': '/USB_PNL_P'} fab-apex->pad [] silk->pad 5
+  U7 SOT-23-6 B 0.0 {'1': '/SDA', '2': 'GND', '3': '/SCL', '4': '/SCL', '5': '/+3V3', '6': '/SDA'} fab-apex->pad [] silk->pad 5
+  U8 SOT-23-6 B 0.0 {'1': '/TR_APRS', '2': 'GND', '3': '/EXP_INT', '4': '/EXP_INT', '5': '/+3V3', '6': '/TR_APRS'} fab-apex->pad [] silk->pad 2
+== pcb-d-aprs-d9/pcb-d-aprs.kicad_pcb 929bf82d2bf6eed4
+  D1 D_SMB F 0.0 {'1': 'GND', '2': '/+5V_D8'} fab-apex->pad ['1'] silk->pad 1
+  D2 D_SOD-123 B 0.0 {'1': '/+5V_D8', '2': '/RLY_K'} fab-apex->pad ['1'] silk->pad 1
+  U5 SOT-23-6 F 0.0 {'1': '/USB_D8_P', '2': 'GND', '3': '/USB_D8_N', '4': '/USB_D8_N', '5': '/+5V_D8', '6': '/USB_D8_P'} fab-apex->pad [] silk->pad 5
+== pcb-e1-dock-e7/pcb-e1-dock.kicad_pcb a462ac2620b9b8d3
+  D1 D_SMC F 0.0 {'1': '/GND_V', '2': '/DC_P'} fab-apex->pad ['1'] silk->pad 1
+  D2 D_SMC F 0.0 {'1': 'GND', '2': '/VIN_RAW'} fab-apex->pad ['1'] silk->pad 1
+  D3 D_SMC F 0.0 {'1': 'GND', '2': '/CELL_F'} fab-apex->pad ['1'] silk->pad 1
+  D4 D_SMC F 0.0 {'1': 'GND', '2': '/PV_P'} fab-apex->pad ['1'] silk->pad 1
+  D5 D_SOD-123 F 0.0 {'1': '/TRK_BOOST1', '2': '/TRK_INTVCC'} fab-apex->pad ['1'] silk->pad 1
+  D6 D_SOD-123 F 0.0 {'1': '/TRK_BOOST2', '2': '/TRK_INTVCC'} fab-apex->pad ['1'] silk->pad 1
+  D7 D_SMB F 0.0 {'1': '/CELL_F', '2': '/FAN1_SW'} fab-apex->pad ['1'] silk->pad 1
+  D8 D_SMB F 0.0 {'1': '/CELL_F', '2': '/FAN2_SW'} fab-apex->pad ['1'] silk->pad 1
+== pcb-e5-block/pcb-e5-block.kicad_pcb 686b29a734c55b9a
+== pcb-p-pack-p2/pcb-p-pack.kicad_pcb d79865e7b1aceb95
+  D1 D_SMB F 0.0 {'1': '/PACK_N', '2': '/PACK_P'} fab-apex->pad ['1'] silk->pad 1
+  D2 SOT-23-6 F 0.0 {'1': '/SMBC', '2': 'GND', '3': '/SMBD', '4': '/SMBD', '5': '/VCC_F', '6': '/SMBC'} fab-apex->pad [] silk->pad 5

@@ -1,0 +1,60 @@
+A04 part-for-part comparison, board A, commit 82dd1e4dc44efabeee1164a995cda4e866610f3d, pcbnew 9.0.9
+  netlist     v2/ecad/pcb-a-power-a23/out/pcb-a-power.net sha256 aa1372ba3932610f (worktree aa1372ba3932610f) last 0d1e2ef6 2026-09-20T14:23:13+02:00
+  board       v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb sha256 58e26c67987b1daa (worktree 58e26c67987b1daa) last b7e0d28f 2026-09-15T07:50:52+02:00
+  intent      v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json sha256 abeb227d673b3af3 (worktree abeb227d673b3af3) last 0d1e2ef6 2026-09-20T14:23:13+02:00
+  board_table v2/ecad/tools/boards/a.json sha256 0fd6672749bc8875 (worktree 0fd6672749bc8875) last 1bf7fca1 2026-09-21T23:45:42+02:00
+  board phase texts: ['MESHSAT FIELD KIT  -  PCB-A POWER + I/O  -  REV A (A32)'] ; boards/a.json phase A32
+conductors: J_DOCK.1=VIN_RAW, J_DOCK.2=VIN_RAW, J_DOCK.3=VIN_RAW(same net, undeclared pin), J_DOCK.4=VIN_RAW(same net, undeclared pin), J_USBW.1=USB_WALL_P, J_USBW.2=USB_WALL_N, J_USBC_OUT.1=PD_VBUS, J_USBC_OUT.2=PD_CC1, J_USBC_OUT.3=PD_CC2
+
+ref         verdict    role      | netlist value || board value | footprint nl / board | land | pad nets
+C11         DIFFERENT  on the conductor           | 10u 100V X7R 1210 || 10u 50V X7R 1210 | Capacitor_SMD:C_1210_3225Metric / C_1210_3225Metric | IDENTICAL to Capacitor_SMD:C_1210_3225Me | all 2 equal
+            lcsc netlist None board None; board F.Cu at (35.0, 45.5) rot 90.0
+C12         DIFFERENT  on the conductor           | 10u 100V X7R 1210 || 10u 50V X7R 1210 | Capacitor_SMD:C_1210_3225Metric / C_1210_3225Metric | IDENTICAL to Capacitor_SMD:C_1210_3225Me | all 2 equal
+            lcsc netlist None board None; board F.Cu at (35.0, 51.0) rot 90.0
+C120        SAME       on the conductor           | 10u 25V 1210 || 10u 25V 1210 | Capacitor_SMD:C_1210_3225Metric / C_1210_3225Metric | IDENTICAL to Capacitor_SMD:C_1210_3225Me | all 2 equal
+            lcsc netlist None board None; board F.Cu at (161.835, 56.975) rot 0.0
+C96         SAME       on the conductor           | 330p || 330p | Capacitor_SMD:C_0603_1608Metric / C_0603_1608Metric | IDENTICAL to Capacitor_SMD:C_0603_1608Me | all 2 equal
+            lcsc netlist None board None; board F.Cu at (152.105, 61.215) rot 0.0
+C97         SAME       on the conductor           | 330p || 330p | Capacitor_SMD:C_0603_1608Metric / C_0603_1608Metric | IDENTICAL to Capacitor_SMD:C_0603_1608Me | all 2 equal
+            lcsc netlist None board None; board F.Cu at (156.315, 61.215) rot 0.0
+D2          DIFFERENT  PROTECTION                 | SMCJ40A (VIN_RAW clamp behind E6's filter: 40 V standoff on a line spe || SMCJ33A (VIN_RAW clamp behind E6's filter) | Diode_SMD:D_SMC / D_SMC | IDENTICAL to Diode_SMD:D_SMC | all 2 equal
+            polarity: {"perpendicular_silk_offsets_toward_pad1_mm": [4.91], "cathode_mark_beside": "pad 1", "netlist_pad1": "VIN_RAW", "netlist_pad2": "GND", "board_pad1": ["VIN_RAW"], "board_pad2": ["GND"], "library_cathode_mark_beside": "pad 1"}
+            lcsc netlist C224052 board None; board F.Cu at (37.57, 69.475) rot 0.0
+D4          SAME       PROTECTION                 | SMBJ18A (VBUS clamp at the outlet) || SMBJ18A (VBUS clamp at the outlet) | Diode_SMD:D_SMB / D_SMB | IDENTICAL to Diode_SMD:D_SMB | all 2 equal
+            polarity: {"perpendicular_silk_offsets_toward_pad1_mm": [3.66], "cathode_mark_beside": "pad 1", "netlist_pad1": "PD_VBUS", "netlist_pad2": "GND", "board_pad1": ["PD_VBUS"], "board_pad2": ["GND"], "library_cathode_mark_beside": "pad 1"}
+            lcsc netlist None board None; board F.Cu at (163.06, 50.875) rot 0.0
+J_AB2       SAME       on the conductor           | A-B wall-port ribbon (IDC 2x5): the wall USB pair on the END row with  || A-B wall-port ribbon (IDC 2x5): the wall USB pair on the END row with  | meshsat:IDC-Header_2x05_P2.54mm_Vertical_NarrowPad / IDC-Header_2x05_P2.54mm_Vertical_NarrowPad | IDENTICAL to meshsat:IDC-Header_2x05_P2. | all 10 equal
+            lcsc netlist None board None; board F.Cu at (245.752, 126.08) rot 180.0
+J_DOCK      SAME       port connector             | spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, un || spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, un | meshsat:PogoPins_2x6 / PogoPins_2x6 | IDENTICAL to meshsat:PogoPins_2x6 | all 12 equal
+            lcsc netlist None board None; board B.Cu at (74.0, 180.0) rot 0.0
+J_USBC_OUT  SAME       port connector             | wall USB-C outlet, power side (pigtail header): VBUS CC1 CC2 GND GND || wall USB-C outlet, power side (pigtail header): VBUS CC1 CC2 GND GND | Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical / PinHeader_1x05_P2.54mm_Vertical | IDENTICAL to Connector_PinHeader_2.54mm: | all 5 equal
+            lcsc netlist None board None; board F.Cu at (254.92, 84.0) rot 90.0
+J_USBW      SAME       port connector             | JST-PH 1x4 socket: the wall USB-C data pair to B16 passes here on the  || JST-PH 1x4 socket: the wall USB-C data pair to B16 passes here on the  | Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical / JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical | IDENTICAL to Connector_JST:JST_PH_B4B-PH | all 4 equal
+            lcsc netlist C131334 board None; board F.Cu at (259.45, 125.0) rot 90.0
+Q2          SAME       on the conductor           | CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x || CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x | Package_SO:PowerPAK_SO-8_Single / PowerPAK_SO-8_Single | IDENTICAL to Package_SO:PowerPAK_SO-8_Si | all 5 equal
+            lcsc netlist C473333 board None; board F.Cu at (42.195, 45.5) rot 0.0
+R138        SAME       on the conductor           | 10mOhm 1% 2512 (ISNS) || 10mOhm 1% 2512 (ISNS) | Resistor_SMD:R_2512_6332Metric / R_2512_6332Metric | IDENTICAL to Resistor_SMD:R_2512_6332Met | all 2 equal
+            lcsc netlist None board None; board F.Cu at (171.79, 50.555) rot 0.0
+R139        SAME       on the conductor           | 43R 1W 2512 (DSCG) || 43R 1W 2512 (DSCG) | Resistor_SMD:R_2512_6332Metric / R_2512_6332Metric | IDENTICAL to Resistor_SMD:R_2512_6332Met | all 2 equal
+            lcsc netlist None board None; board F.Cu at (154.455, 57.305) rot 0.0
+R14         SAME       on the conductor           | 62k 1% || 62k 1% | Resistor_SMD:R_0603_1608Metric / R_0603_1608Metric | IDENTICAL to Resistor_SMD:R_0603_1608Met | all 2 equal
+            lcsc netlist None board None; board F.Cu at (38.315, 78.555) rot 0.0
+TP13        SAME       on the conductor           | VIN_RAW || VIN_RAW | TestPoint:TestPoint_Pad_D1.5mm / TestPoint_Pad_D1.5mm | IDENTICAL to TestPoint:TestPoint_Pad_D1. | all 1 equal
+            lcsc netlist None board None; board F.Cu at (37.625, 75.325) rot 0.0
+U18         SAME       protection inside part (decision 31 declaration) | TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 || TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 | Package_DFN_QFN:QFN-24-1EP_4x4mm_P0.5mm_EP2.5x2.5mm / QFN-24-1EP_4x4mm_P0.5mm_EP2.5x2.5mm | IDENTICAL to Package_DFN_QFN:QFN-24-1EP_ | all 25 equal
+            lcsc netlist C544309 board None; board F.Cu at (160.188, 45.0) rot 0.0
+U2          DIFFERENT  on the conductor           | LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW || LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW | Package_SO:HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP2.85x5.4mm / HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP2.85x5.4mm | IDENTICAL to Package_SO:HTSSOP-28-1EP_4. | pin 13: netlist FE_ISNS_N, board ['VBUS20']; pin 14: netlist FE_ISNS_P, board ['FE_OUT']; pin 15: netlist FE_CSGF, board ['GND']; pin 16: netlist FE_CSF, board ['FE_CS']
+            lcsc netlist C442493 board None; board F.Cu at (56.0, 54.047) rot 0.0
+U29         SAME       PROTECTION                 | USBLC6-2SC6 || USBLC6-2SC6 | Package_TO_SOT_SMD:SOT-23-6 / SOT-23-6 | IDENTICAL to Package_TO_SOT_SMD:SOT-23-6 | all 6 equal
+            lcsc netlist C7519 board None; board F.Cu at (253.088, 125.0) rot 90.0
+
+net PD_CC1      equal=True netlist_only=[] board_only=[] nodes=['C96.1', 'J_USBC_OUT.2', 'U18.2']
+net PD_CC2      equal=True netlist_only=[] board_only=[] nodes=['C97.1', 'J_USBC_OUT.3', 'U18.3']
+net PD_VBUS     equal=True netlist_only=[] board_only=[] nodes=['C120.1', 'D4.1', 'J_USBC_OUT.1', 'R138.2', 'R139.2', 'U18.21']
+net USB_WALL_N  equal=True netlist_only=[] board_only=[] nodes=['J_AB2.2', 'J_USBW.2', 'U29.3', 'U29.4']
+net USB_WALL_P  equal=True netlist_only=[] board_only=[] nodes=['J_AB2.1', 'J_USBW.1', 'U29.1', 'U29.6']
+net VIN_RAW     equal=True netlist_only=[] board_only=[] nodes=['C11.1', 'C12.1', 'D2.1', 'J_DOCK.1', 'J_DOCK.2', 'J_DOCK.3', 'J_DOCK.4', 'Q2.5', 'R14.1', 'TP13.1', 'U2.2', 'U2.3']
+
+TRN-001 walk on committed netlist: fail=[] in_part=2
+TRN-001 walk on the BOARD's own connectivity and values: fail=[] in_part=2
+values swapped into board-values netlist: 3, e.g. ['C11', 'C12', 'D2']

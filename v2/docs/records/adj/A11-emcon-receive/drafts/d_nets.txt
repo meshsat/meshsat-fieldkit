@@ -1,0 +1,73 @@
+TX_INHIBIT_n (4 nodes):
+   J_HARN1.8 (Pin_8) | A22 mezzanine harness J_MEZZ1 (IDC 2x8): USB pair, PTT mirror, inhibit, PA rail state, I2C, 3.3 V
+   R2.1  | 100k
+   TP15.1 (1) | TX_INHIBIT_n
+   U12.2 (TX_INHIBIT_n) | 74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)
+KEY (8 nodes):
+   Q6.2 (S) | 2N7002
+   R48.1  | 100
+   R49.1  | 1k
+   R72.1  | 10k
+   TP3.1 (1) | KEY
+   U12.4 (KEY) | 74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)
+   U13.2 (KEY) | 74LVC1G04 inverter: KEY -> SA868 PTT (low = transmit)
+   U14.1 (KEY) | 74LVC1G08 AND: PA_KEY = KEY AND PA_EN (A22's PA rail state)
+SA_PTT_n (2 nodes):
+   U13.4 (SA_PTT_n) | 74LVC1G04 inverter: KEY -> SA868 PTT (low = transmit)
+   U2.5 (PTT_n) | NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A)
+PA_EN (5 nodes):
+   J_HARN1.9 (Pin_9) | A22 mezzanine harness J_MEZZ1 (IDC 2x8): USB pair, PTT mirror, inhibit, PA rail state, I2C, 3.3 V
+   Q1.1 (G) | 2N7002 PA_EN -> H/L low (never tie H/L high)
+   R3.1  | 100k
+   TP16.1 (1) | PA_EN
+   U14.2 (PA_EN) | 74LVC1G08 AND: PA_KEY = KEY AND PA_EN (A22's PA rail state)
+PA_KEY (7 nodes):
+   Q7.2 (S) | 2N7002
+   R50.1  | 1k
+   R52.1  | 1k
+   R74.1  | 10k
+   TP4.1 (1) | PA_KEY
+   U14.4 (PA_KEY) | 74LVC1G08 AND: PA_KEY = KEY AND PA_EN (A22's PA rail state)
+   U15.5 (EN/UVLO) | TPS22810DRV
+RLY_DRV (3 nodes):
+   Q2.1 (G) | 2N7002 relay coil
+   R52.2  | 1k
+   R53.1  | 100k
+RLY_K (3 nodes):
+   D2.2 (A) | 1N4148W coil flyback
+   K1.8  | Omron G6K-2F-Y 5 VDC DPDT signal relay, T/R
+   Q2.3 (D) | 2N7002 relay coil
+VGG_SW (4 nodes):
+   C62.1  | 100n
+   J_VGG.1 (Pin_1) | JST-PH 1x2 socket: PA gate bias, VGG GND (the lead runs to the RA30H1317M1 VGG pin)
+   TP7.1 (1) | VGG_SW
+   U15.1 (VOUT) | TPS22810DRV
+SA_PD (4 nodes):
+   Q8.2 (S) | 2N7002
+   R76.1  | 10k
+   TP14.1 (1) | SA_PD
+   U2.6 (PD) | NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A)
++5V_SA (4 nodes):
+   C5.1  | 47u 6.3V X5R 1210
+   C6.1  | 100n
+   FB1.2  | 600R 2A ferrite (the exciter's 1 A transmit pulses)
+   U2.8 (VBAT) | NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A)
+RF_SA (2 nodes):
+   K1.3  | Omron G6K-2F-Y 5 VDC DPDT signal relay, T/R
+   U2.12 (ANT) | NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A)
+RF_RX (2 nodes):
+   K1.2  | Omron G6K-2F-Y 5 VDC DPDT signal relay, T/R
+   K1.7  | Omron G6K-2F-Y 5 VDC DPDT signal relay, T/R
+RF_ANT (2 nodes):
+   J_ANT.1 (In) | SMA jack: antenna pigtail to A22's VHF jack J_RF1
+   K1.6  | Omron G6K-2F-Y 5 VDC DPDT signal relay, T/R
+RF_PAD_IN (2 nodes):
+   K1.4  | Omron G6K-2F-Y 5 VDC DPDT signal relay, T/R
+   R54.1  | 27 1% 2010
+RF_LPF_OUT (3 nodes):
+   C60.1  | 22p 500V NP0 1206
+   K1.5  | Omron G6K-2F-Y 5 VDC DPDT signal relay, T/R
+   L2.2 (2) | 68nH 0805 (LPF)
+SA_HL (2 nodes):
+   Q1.3 (D) | 2N7002 PA_EN -> H/L low (never tie H/L high)
+   U2.7 (H/L) | NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A)

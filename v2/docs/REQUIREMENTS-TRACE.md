@@ -7,7 +7,7 @@ Generated from the requirements registry `v2/ecad/tools/pcb_requirements.yaml`. 
 
 Every reading carries its evidence class, in the six classes of `v2/docs/CURRENT-EVIDENCE.md`: a record reads PASS only on a class that counts, never on evidence awaiting revalidation, and a desk review (the session's own reading of named files, each bound by its sha256) is never a physical test. The prototype-core functions whose feasibility is not closed are listed first, as explicit architecture feasibility blockers (review of 26 September 2026, section 3 and checkpoint item 1): a merged document is configuration control, not proof that the architecture is feasible.
 
-Registry state **DRAFT_FOR_REVIEW_C**. Sources read at commit `eadbe571` unless an entry says otherwise. 132 records trace to 19 needs; 28 owner rulings are applied, 12 choices were taken by the session under the owner's standing rule of 26 September 2026, 36 items are open and 39 are closed.
+Registry state **DRAFT_FOR_REVIEW_C**. Sources read at commit `eadbe571` unless an entry says otherwise. 132 records trace to 19 needs; 29 owner rulings are applied, 16 choices were taken by the session under the owner's standing rule of 26 September 2026, 36 items are open and 39 are closed.
 
 ## Summary
 
@@ -24,8 +24,8 @@ Registry state **DRAFT_FOR_REVIEW_C**. Sources read at commit `eadbe571` unless 
 
 | status | records |
 |---|---:|
-| DEFINED | 76 |
-| TBD | 27 |
+| DEFINED | 77 |
+| TBD | 26 |
 | SUPERSEDED | 6 |
 | CONFLICT_OPEN | 4 |
 | CONFLICT_RESOLVED | 13 |
@@ -163,6 +163,7 @@ A development-board test may gate an architecture decision; a test that needs th
 | **decision-28** | 2026-09-25 | board P layer count | decision 28 | none |
 | **decision-41** | 2026-09-25 | order set rebuilt and quarantined | decision 41 | none |
 | **decision-43** | 2026-09-25 | board B eight-layer measurement first | decision 43 | none |
+| **public-docs** | 2026-09-25 | the foundation documents are published directly | - | none |
 | **standing-rule** | 2026-09-26 | the owner is not asked again | - | every session choice |
 
 **D-01**, 2026-09-25, owner. FULL DESIGN, STAGED ACCEPTANCE. Every ruled function stays designed and fitted where copper exists; prototype 1 is accepted on a named core: messaging over Iridium, 5G, LoRa and APRS (NEED-01, NEED-02); the three-slot failover fabric (NEED-03, ARCH-PCB-B-IOHA tests A1 to A14); pack, vehicle and solar charging (NEED-05); hardware EMCON (NEED-08); ZEROIZE of the secure element (NEED-10); pack safety (NEED-13); service and programming access (NEED-14). Everything else is built where possible and reported NOT_YET_TESTED.
@@ -219,6 +220,8 @@ A development-board test may gate an architecture decision; a test that needs th
 
 **decision-43**, 2026-09-25, owner. Measure the layer option first: board B is regenerated and routed once on eight layers on a rented box; its whole-board run is EXPERIMENTAL (standing condition 7): never adopted as a phase, promoted or counted as a layout candidate. The eight-layer price goes to the owner before any order.
 
+**public-docs**, 2026-09-25, owner. The new foundation documents (the product brief, the concept of operations, the requirements and the decision table) go directly into the public repository's v2/docs/, not into a private draft area first. Ruled on the evening of 25 September 2026 and written down that day only in the session's own notes; recorded here on 27 September 2026 by the layer 1 closer (MESHSAT-1357).
+
 **standing-rule**, 2026-09-26, owner. The owner is not asked further questions. Where a choice is left, the session takes the option the evidence recommends (the W1 decision table's recommendation where one exists) and records it as taken by the session under this rule, with its reason, so that it can be reversed.
 
 ## Choices taken by the session under the owner's standing rule
@@ -239,6 +242,10 @@ The owner ruled on 26 September 2026 that he is not asked further questions: whe
 | **SC-10** | D-11's declared key-down time and state-of-charge floor. | PROVISIONAL thresholds, not pass lines: every transmitter at once only above a pack rest voltage of 15.5 V (3.88 V per cell), the PA keyed alone only above 12.4 V; every PA key-down at most 60 s, s... | - | - | FEA-004, REQ-018 |
 | **SC-11** | How EMCON (D-05) reaches the 5G module, and what the element every row shares costs. | SD-EMC-1: the 5G module's firmware-independent inhibit is removal of its supply, staged in the maker's order (W_DISABLE1# at once, the host's AT+CFUN=0 handshake, FULL_CARD_POWER_OFF# after T_off,... | - | - | REQ-030, REQ-032, CON-021, FEA-002 |
 | **SC-12** | How the pack's temperature protection is coordinated, and how D-02a's qualification margins meet a pack whose cells are rated to +60 C, reconciled with the product requirement (second checkpoint review, finding B). | The BQ7720700's over-temperature stays active on its own 103AT-2 (J_TS2, R34 270 ohm, R33 18 kohm), an emergency backstop at 62.7 to 77.5 C. The gauge's thresholds sit inside the cells' limits by t... | - | - | REQ-026, REQ-044, FEA-005, REQ-051, CFL-017 |
+| **SC-13** | One description of the dual SIM (S-13, CFL-010): eSIM plus nano-SIM, or the generator's two nano-SIM holders? | Quectel's compatible design for USIM2 (RM520N series hardware design v1.1 section 4.1.6, Figure 19), which gen_sch_b.py already carries: SIM 1 a nano-SIM holder on (U)SIM1, SIM 2 a nano-SIM holder... | - | - | CFL-010 |
+| **SC-14** | REQ-023: which carried-mass limit does the kit design to? | The kit, closed and latched with the pack and the lid's carried items fitted, is designed to weigh under 45.4 kg (100 lb) with its largest dimension under 91 cm (36 in): the man-packed or man-porta... | - | - | REQ-023 |
+| **SC-15** | How the public pages present the 7 September deliverables and the V2 build guide. | v2/BUILD.md stays as the 7 September generation's guide, headed as history and not for ordering (decision 41; 0 boards ready for layout), with the lines that contradicted the baseline corrected in... | - | - | none |
+| **SC-16** | Who holds Review A for layer 1, against what, and where is it recorded? | One fresh reviewer, a session or person that wrote none of the pages, holds an AI review, labelled as one and never a qualified review, of PRODUCT-BRIEF.md, README.md, v2/README.md, v2/BUILD.md and... | - | - | none |
 
 **SC-01**, taken by the session on 2026-09-26 under the owner's ruling `standing-rule`. Yes: NEED-19 is added to the core D-01 names, with SOS as D-10 defines it. Why: D-10 defines SOS's action (firmware only), and W1's decision table recommended NEED-19 for the core; D-01 as ruled did not name it. CONOPS section 2a publishes the same choice.
 
@@ -263,6 +270,14 @@ The owner ruled on 26 September 2026 that he is not asked further questions: whe
 **SC-11**, taken by the session on 2026-09-26 under the owner's ruling `standing-rule`. SD-EMC-1: the 5G module's firmware-independent inhibit is removal of its supply, staged in the maker's order (W_DISABLE1# at once, the host's AT+CFUN=0 handshake, FULL_CARD_POWER_OFF# after T_off, the supply after T_cut), both stages at once and latched when EMCON meets a module never turned on, with a named fallback if bench test E-05 shows the fitted firmware misses the pin while booting. SD-EMC-6: the one element every row shares (the SW_EMCON toggle and the TX_INHIBIT_n conductor) is accepted on condition of a hardware EMCON lamp on board C driven from the line state with no processor in its path (CON-021). Why: Quectel documents W_DISABLE1# as a firmware-mediated airplane mode, untimed and possibly host-configurable, and removal of the supply is the only inhibit its documents give that does not depend on the module's firmware; the costs in the fault and booting cases (emission for up to T_off + T_cut, at least 15.9 s, and the module's flash) are bounded and accepted there (EMCON.md sections 0, 4.5, 5 and 7).
 
 **SC-12**, taken by the session on 2026-09-26 under the owner's ruling `standing-rule`. The BQ7720700's over-temperature stays active on its own 103AT-2 (J_TS2, R34 270 ohm, R33 18 kohm), an emergency backstop at 62.7 to 77.5 C. The gauge's thresholds sit inside the cells' limits by the gauge's own published error budget: OTC 44.0 C, OTD 57.5 C, UTC 1.0 C, UTD -9.0 C, the charge ranges T1 1 C, T3 42 C (no charge starts above it, the charge inhibit) and T4 43 C, SOT 65.0 C, the die as the FET temperature (PROVISIONAL until the bench measures the gradient to the hottest cell and the cells are weighed). Each qualification margin runs in the configuration of the state it represents: +71 C and -33 C storage with the pack out (the stored state as CONOPS section 4 and TEST-PLAN section 1 define it; the session's reading where OPERATING-ENVELOPE section 4 reads as a kit stored with its pack), and the pack-fitted exposures (transport soaks, hot use at +40 C and +25 C, closed lid, humid use up to +40 C, the pack's own soaks) at the cells' own limits. The +55 C operation and E5's +60 C humidity dwell, which the kit cannot take with its pack fitted, run as stated test deviations with the pack outside the chamber on an extension of its leads, and their product-level result is recorded as a conflict (CFL-017, finding BAT-F19), not closed by them. A kit with its pack fitted is never left where the temperature may exceed +60 C. Why: The state definitions are session text: the owner approved on 6 September 2026 that a whole-kit test plan be written (appendix 32.50 item 16e), the session wrote its states on 7 September (2e33773b, whose deployed state said nothing about the pack) and the ConOps took them on 25 September; they put the pack out in storage and fitted in transport and use. The cell maker rates storage and discharge to +60 C at most and forbids leaving the cells "in a car or similar place where inside of temperature may be over 60°C" (Samsung INR18650-35E Ver. 1.1), and OPERATING-ENVELOPE section 8's own arithmetic, beside the owner's D-02a table, puts the inside air at +65 to +71 C at the +55 C margin. The choice would be the same with any board P or none, and where the pack is kept out only because its cells cannot take a level the test is written as a deviation and its product-level result recorded, so no qualification condition is chosen by what the circuit can pass (v2/docs/review-packets/battery/THERMAL-COORDINATION.md sections 3, 4, 5, 9 and 9a).
+
+**SC-13**, taken by the session on 2026-09-27 under the owner's ruling `standing-rule`. Quectel's compatible design for USIM2 (RM520N series hardware design v1.1 section 4.1.6, Figure 19), which gen_sch_b.py already carries: SIM 1 a nano-SIM holder on (U)SIM1, SIM 2 a nano-SIM holder on USIM2 behind four 0 ohm links at the module, so the same board also builds appendix 32.50 item 12's eSIM-plus-nano-SIM configuration with an eSIM-fitted module variant and the links left off. Prototype 1 is built with two nano-SIMs, a session default that departs from the configuration the owner approved (eSIM plus nano-SIM, appendix 32.50 item 12) until the eSIM variant's order code is named; that code stays on the components layer's list. Why: It keeps both configurations on one board with no board change and drops nothing the owner approved, where an eSIM default would wait on an order code no held document names (v2/vendor/SOURCES.yaml, the RM520N-GL entry). The SIM TVS array of at most 10 pF (section 4.1.7) and the eSIM variant's code stay owed under S-13, so CFL-010 stays open. Reverse by making the eSIM configuration the default build once that code is named; no board change either way.
+
+**SC-14**, taken by the session on 2026-09-27 under the owner's ruling `standing-rule`. The kit, closed and latched with the pack and the lid's carried items fitted, is designed to weigh under 45.4 kg (100 lb) with its largest dimension under 91 cm (36 in): the man-packed or man-portable row of MIL-STD-810H Method 516.8 Table 516.8-IX, whose 122 cm and 26 drops the owner ruled as TEST-PLAN E1 (D-02c). Why: The ruled E1 severity presumes that category, so it is the one limit the sources already imply; a tighter one-person carry limit would need an ergonomics source this tree does not hold, and none is claimed. At desk the sourced floor is about 7.0 kg (ARCHITECTURE.md section 11), and the case's exterior is 417.6 x 330.2 x 173.2 mm on Peli's product page, about 478 mm long over the arrestor rows (CASE-MARGINS.md sections 2.2 and 3.4), the table classifying by the outside of the item and its case. Reverse by stating another limit: a lighter one tightens the design; a heavier one moves E1 into another row (eight corner drops from 76 cm), which changes D-02c and so goes to the owner.
+
+**SC-15**, taken by the session on 2026-09-27 under the owner's ruling `standing-rule`. v2/BUILD.md stays as the 7 September generation's guide, headed as history and not for ordering (decision 41; 0 boards ready for layout), with the lines that contradicted the baseline corrected in place and marked; both READMEs give each board's newest deliverable folder beside its declared phase and say that every folder predates the circuit corrections of 26 September 2026. Why: BUILD.md is the only end-to-end assembly narrative in the tree and most of its parts and steps still stand, so withdrawing it would lose that, while its head removes the risk that a reader orders boards whose layouts do not carry the corrected netlists. Publishing engineering status is what the owner's handover prompt of 27 September 2026 asks for, and nothing is advertised to the envelope. Reverse by withdrawing the page or its section 1.
+
+**SC-16**, taken by the session on 2026-09-27 under the owner's ruling `standing-rule`. One fresh reviewer, a session or person that wrote none of the pages, holds an AI review, labelled as one and never a qualified review, of PRODUCT-BRIEF.md, README.md, v2/README.md, v2/BUILD.md and V2-SPEC.md at one pinned commit, against the layer 1 row of section 3 and the tests of section 2 of the owner's handover prompt; the record is v2/docs/reviews/REVIEW-A-LAYER-1-<date>.md, headed "AI review (not a qualified engineering review)"; the first pass is REVIEW-A-LAYER-1-2026-09-27.md; blocking findings are fixed and re-checked once, and after two unsuccessful passes the method changes; the brief is BASELINED at the commit that files a record with no open blocking finding. Layer 2's part of Review A is held the same way by its own fresh reviewer. Why: EXECUTION-PLAN.md names Review A's content and what it gates but no reviewer, criteria or record, so nobody could pass it (handover audit of 27 September 2026); no record in this tree requires an engineer's review of layer 1, and the owner's handover prompt allows an AI review labelled as one where none is mandated. Reverse by requiring an engineer's review of layer 1, which this AI review would not stand in for.
 
 ## Needs, requirements, rules and verification
 
@@ -448,7 +463,9 @@ Prototype 1: in the core D-01 names. 18 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/CONOPS.md re-read at round 8 of 26 September 2026 (stream r8bat, integrated on 27 September 2026 onto board A's round 8 CONOPS.md at 49119f89f2d98920, whose section 4b rows it leaves alone): only section 4's Transport and Storage rows changed, each in place (the restriction of SC-12: a kit with its pack fitted never left where the temperature may exceed +60 C, and the pack stored apart inside its cells' rating); the needs table is byte-identical and no row or section this reading cites is among the two, so it stands on the file at 122c921af6e3de40
 
-*Bound to:* `v2/docs/CONOPS.md@122c921af6e3de40`, `v2/docs/ARCH-PCB-B-IOHA.md@6c3c93b7f32f953a`, `v2/docs/V2-SPEC.md@df8ac22603440bc5`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/V2-SPEC.md re-read at the layer 1 closing of 27 September 2026 (worktree fnd/hc1, from e3aedb25): it changed lines 3, 9, 10, 11, 13, 23, 24, 34, 41, 42, 51, 70, 73, 76 and 90 and added corrections 20 to 27; line 32 and correction 6, which this reading cites, are byte-identical, so it stands on the file at dd9a92946a8d186f
+
+*Bound to:* `v2/docs/CONOPS.md@122c921af6e3de40`, `v2/docs/ARCH-PCB-B-IOHA.md@6c3c93b7f32f953a`, `v2/docs/V2-SPEC.md@dd9a92946a8d186f`
 
 *Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md:17`; `v2/docs/ARCH-PCB-B-IOHA.md section 15a`; `session choice SC-02`; `v2/docs/CONOPS.md section 2a`
 
@@ -1020,7 +1037,7 @@ Prototype 1: not in the core. 7 record(s).
 | CON-008 | constraint | core | DEFINED | SCRIPT | RELEASE_PACKAGE | ENV-002 | - | NOT_JUDGED | BLOCKER |
 | REQ-021 | requirement | deferred | DEFINED | MANUAL_REVIEW, PROTOTYPE_MEASUREMENT | RELEASE_PACKAGE, PROTOTYPE | ENV-002 | - | NOT_JUDGED | MUST_JUSTIFY |
 | REQ-022 | requirement | deferred | DEFINED | MANUAL_REVIEW, PROTOTYPE_MEASUREMENT | PROTOTYPE | REL-001 | - | NOT_YET_TESTED | MUST_JUSTIFY |
-| REQ-023 | requirement | deferred | TBD | CALCULATION, PROTOTYPE_MEASUREMENT | PLACED_BOARD, ASSEMBLY | none | - | NOT_JUDGED | MUST_JUSTIFY |
+| REQ-023 | requirement | deferred | DEFINED | CALCULATION, PROTOTYPE_MEASUREMENT | PLACED_BOARD, ASSEMBLY | none | - | NOT_JUDGED | MUST_JUSTIFY |
 | REQ-064 | requirement | deferred | DEFINED | PROTOTYPE_MEASUREMENT | PROTOTYPE | REL-001, ENV-002 | - | NOT_YET_TESTED | MUST_JUSTIFY |
 
 **REQ-019** (requirement). The case is the Peli 1450 of the current moulding (Peli 1451-931, 15 January 2025, D-08a) with the 1450PF panel frame, and it never changes; the design is held against the worst of Peli's own figures (D-08-reversal).
@@ -1079,15 +1096,15 @@ Prototype 1: not in the core. 7 record(s).
 
 *Notes:* D-02c sets the severities decision 34 left open. OPERATING-ENVELOPE.md (sections 4 and 8) and pcb_envelope.yaml (owner_rulings.severities) record them by name since 4ec785d8, read at eadbe571.
 
-**REQ-023** (requirement). The kit's carried mass is limited to a stated value.
+**REQ-023** (requirement). The kit, closed and latched with the pack and the lid's carried items fitted, weighs under 45.4 kg (100 lb) and its largest dimension is under 91 cm (36 in): the man-packed or man-portable category of MIL-STD-810H Method 516.8 Table 516.8-IX, which the ruled transit drop E1 (26 drops from 1.22 m, owner ruling D-02c) presumes.
 
-*Accept when:* TBD: no mass requirement exists anywhere in the sources.
+*Accept when:* At desk, the mass budget of ARCHITECTURE.md section 11 and the case outline stay inside both limits; at assembly, the kit as the statement defines it is weighed under 45.4 kg and its largest outside dimension measured under 91 cm.
 
-*Effect of the TBD:* Pack size (4S4P or a second pack), the monitor (1.2 kg), the aluminium plate and the case cannot be traded against a limit; the transit drop severity also depends on mass.
+*What an earlier reading said:* Read TBD until 27 September 2026 ("no mass requirement exists anywhere in the sources"); the layer 1 closer set the limit from the category the ruled E1 severity presumes (session choice SC-14; V2-SPEC.md correction 25).
 
-*allocated to kit.*
+*allocated to kit; session choices SC-14.*
 
-*Source (verified):* `none (gap): no mass figure in V2-SPEC.md, OPERATING-ENVELOPE.md or 32.49 to 32.62 beyond single parts`
+*Source (verified):* `session choice SC-14`; `v2/vendor/standards/mil-std-810h-method-516-8.md (Table 516.8-IX)`; `owner ruling D-02c`
 
 **REQ-064** (requirement). Deployed, the kit is designed to keep dust out through 6 hours of blowing dust, with its latches, pressure valve and connectors operating afterwards.
 
@@ -1767,7 +1784,9 @@ Prototype 1: not in the core. 3 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net re-read at the round 8 board E regeneration of 26 September 2026: compared component by component and net by net (pin, pinfunction, pintype) against the file at d910e49c5f5f50b2 by the board E author's independent comparison, it differs only in C46's value (1 uF to 100 nF), four new 100 nF capacitors C59 to C62 (on E6_DVDD and +3V3_E6, to GND), J_BATT's value text, J_SMB's order code (C594232 to C144395), R6 and R7's value (100 R to 10 R) and the title block's comment 2; DCF_PULSE still runs from J_DCF pin 3 to the sensor controller U10 and nowhere else, so this reading stands on the file at f3c1ad6153002976
 
-*Bound to:* `v2/docs/V2-SPEC.md@df8ac22603440bc5`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/V2-SPEC.md re-read at the layer 1 closing of 27 September 2026 (worktree fnd/hc1, from e3aedb25): it changed lines 3, 9, 10, 11, 13, 23, 24, 34, 41, 42, 51, 70, 73, 76 and 90 and added corrections 20 to 27; line 35 and correction 8 are byte-identical, so this reading stands on the file at dd9a92946a8d186f
+
+*Bound to:* `v2/docs/V2-SPEC.md@dd9a92946a8d186f`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`
 
 *Source (verified):* `v2/docs/V2-SPEC.md:35`; `v2/ecad/tools/gen_sch_e.py:581`
 
@@ -2170,7 +2189,9 @@ Prototype 1: not in the core. 7 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net regenerated at board P's round 8 (integrated 27 September 2026): compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent comparison (v2/docs/records/r8p/box/par.txt), the netlist differs only in J_SMB's order code (none to C144395, R8P-02) and J_TS2's (C5251182 to C131337, R8P-03): no net, node, pin, value, footprint or part is added, removed or moved; the D-15 floor this reading cites (gen_sch_p.py:243, :288, :414-502) is the same circuit (line 419 carries J_TS2's new order code only) and no document this record names states either code, so it stands on the file at 085f833362fbbda8
 
-*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`, `v2/docs/PANEL.md@8eeb152e4d82080c`, `v2/docs/CONOPS.md@122c921af6e3de40`, `v2/docs/V2-SPEC.md@df8ac22603440bc5`, `v2/docs/OPERATING-ENVELOPE.md@89de81a11c52f34a`, `v2/docs/TEST-PLAN.md@86742b72d44adce6`, `v2/ecad/tools/pcb_decisions.yaml@b5f7162443d5ad91`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/V2-SPEC.md re-read at the layer 1 closing of 27 September 2026 (worktree fnd/hc1, from e3aedb25): it changed lines 3, 9, 10, 11, 13, 23, 24, 34, 41, 42, 51, 70, 73, 76 and 90 and added corrections 20 to 27; line 43 and corrections 2, 4, 7, 9, 12, 13 and 19 are byte-identical; line 34 changed only in naming the wrapping keys as two key-encryption keys, both destroyed, as its own parenthetical and feasibility/ZEROIZE.md section 3 already said (correction 27, finding N1 of the second pass of Review A, layer 1), with its trigger, wipe order and circuit unchanged; line 24 keeps its description of the circuit as generated at 45bde541 byte for byte and changed only in what it says EMCON still owes, which now follows v2/docs/feasibility/EMCON.md section 0a (sixth revision: the radio's own chain closed at desk for 14 of 17 transmitters, open for the SA868, the RockBLOCK 9704 and the RM520N-GL; 0 of 17 end to end; correction 26, after finding B1 of the first pass of Review A, layer 1); line 41 changed only in its dual-SIM clause (session choice SC-13, correction 22); line 76 only in its owed list (the SIM TVS array, and the EMCON items of correction 26); none of these describes a circuit that faf8c981, 458b2873 or d90f30e4 replaced, so the reading stands on the file at dd9a92946a8d186f
+
+*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`, `v2/docs/PANEL.md@8eeb152e4d82080c`, `v2/docs/CONOPS.md@122c921af6e3de40`, `v2/docs/V2-SPEC.md@dd9a92946a8d186f`, `v2/docs/OPERATING-ENVELOPE.md@89de81a11c52f34a`, `v2/docs/TEST-PLAN.md@86742b72d44adce6`, `v2/ecad/tools/pcb_decisions.yaml@b5f7162443d5ad91`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`
 
 *Source (verified):* `v2/docs/PANEL.md section 6`; `v2/docs/CONOPS.md section 4b`; `v2/docs/V2-SPEC.md:76`; `v2/docs/OPERATING-ENVELOPE.md section 4`; `v2/docs/TEST-PLAN.md:46`; `v2/ecad/tools/pcb_decisions.yaml:863-915`
 
@@ -2317,7 +2338,7 @@ Prototype 1: not in the core. 8 record(s).
 
 *What an earlier reading said:* SIM 2 on the wrong module pins (adjudication A08) is corrected in 458b2873; the description conflict remains.
 
-*allocated to b; waits on S-13; prototype 1 core, taken by the session under the owner's standing rule (SC-04): The SIM wiring belongs to the 5G module, a core bearer..*
+*allocated to b; session choices SC-13; waits on S-13; prototype 1 core, taken by the session under the owner's standing rule (SC-04): The SIM wiring belongs to the 5G module, a core bearer..*
 
 *Evidence (FAIL, DESK_REVIEW):* v2/docs/V2-SPEC.md:41 read at eadbe571 says "dual SIM (eSIM plus nano-SIM)" and still that SIM 2 is on the wrong pins, while v2/ecad/tools/gen_sch_b.py:672-697 fits two GCT SIM8060 nano-SIM holders, SIM 2 on the module's own USIM2 pins (458b2873) behind four 0 ohm links an eSIM build leaves off, and records the TVS array as an open item
 
@@ -2325,7 +2346,9 @@ Prototype 1: not in the core. 8 record(s).
 
 *Evidence (FAIL, DESK_REVIEW):* v2/ecad/tools/gen_sch_b.py re-read at the clamp-symbol merge of 26 September 2026 (stream ts-tvs): it changed only at lines 441, 671, 832 and 876 (board B's one-way clamps D1, D2, D101, D201, D301 and D520 now drawn through kisch.tvs()); every line number is kept and this reading cites none of those lines, so it stands on the file at dedaf34ce285e5ff
 
-*Bound to:* `v2/docs/V2-SPEC.md@df8ac22603440bc5`, `v2/ecad/tools/gen_sch_b.py@dedaf34ce285e5ff`
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/V2-SPEC.md:41 and :76 re-read at the layer 1 closing of 27 September 2026 (worktree fnd/hc1, from e3aedb25): line 41 now gives one description, Quectel's compatible design of HD v1.1 section 4.1.6 (Figure 19) with two nano-SIM holders and an eSIM build option, prototype 1 built with two nano-SIMs (session choice SC-13, correction 22), which is what v2/ecad/tools/gen_sch_b.py:672-697 carries; the conflict stays open on the rest of its acceptance: the SIM TVS array of at most 10 pF (HD section 4.1.7) is not in the generator (S-13), and the order code of an eSIM-fitted variant is not named (v2/vendor/SOURCES.yaml, the RM520N-GL entry)
+
+*Bound to:* `v2/docs/V2-SPEC.md@dd9a92946a8d186f`, `v2/ecad/tools/gen_sch_b.py@dedaf34ce285e5ff`
 
 *Source (verified):* `v2/docs/V2-SPEC.md:41`; `v2/docs/MESHSAT-709-geometry-appendix.md:2796`; `v2/ecad/tools/gen_sch_b.py:672-697`
 
@@ -2651,7 +2674,7 @@ Each of these stops prototype 1's acceptance while it is unmet. The scope column
 
 ## TBD list
 
-27 records carry a TBD in their pass line. None is filled with a convenient number: each says what not knowing it blocks, and where an open item will answer it, which one.
+26 records carry a TBD in their pass line. None is filled with a convenient number: each says what not knowing it blocks, and where an open item will answer it, which one.
 
 | record | prototype 1 | effect | what is TBD (the pass line) | waits on |
 |---|---|---|---|---|
@@ -2664,7 +2687,6 @@ Each of these stops prototype 1's acceptance while it is unmet. The scope column
 | REQ-016 | core | BLOCKER | Charges from a panel inside the tracker's input window; the window and the panel class are TBD. **Effect:** Mission M1's day and night balance cannot be computed and no panel can be specified for the kit until the owner sets the mission duration (L-02). | L-02 |
 | REQ-018 | core | BLOCKER | The PS-ALLTX state (every transmitter keyed, the outlets at their minimum) is supplied with every rail in regulation for the declared key-down time down to the declared state of charge; both are TBD as pass lines until the PROVISIONAL thresholds of SC-10 ar... **Effect:** The pack's thresholds and the gauge's discharge limits cannot be configured as released values, and the all-transmit test has neither a duration nor a charge floor that gates anything. | S-14 |
 | REQ-069 | core | BLOCKER | CONOPS and the operating instructions state the pack's classification and the conditions or exception it travels under, with its source, for each route claimed; until then no document claims any route acceptable. The classification is TBD. **Effect:** No transport route can be stated: the kit with its pack cannot be offered for road, air or parcel carriage, and the operating instructions carry no transport section until the classification is established. | no open item names it yet |
-| REQ-023 | deferred | MUST_JUSTIFY | TBD: no mass requirement exists anywhere in the sources. **Effect:** Pack size (4S4P or a second pack), the monitor (1.2 kg), the aluminium plate and the case cannot be traded against a limit; the transit drop severity also depends on mass. | no open item names it yet |
 | REQ-025 | deferred | MUST_JUSTIFY | Storage state of charge TBD: the envelope's 'ex-factory 30 percent' belongs to a bought pack, and this pack is to be built for the kit. **Effect:** The storage procedure and the gauge's shipping mode setting cannot be written. | no open item names it yet |
 | REQ-028 | deferred | MUST_JUSTIFY | TBD for prototype 1 (owner ruling D-02c). **Effect:** REL-001 cannot close; connector mating cycles, fan life and pack cycle life have no target. | no open item names it yet |
 | REQ-030 | core | BLOCKER | (1) Netlist: every transmitter in the CONOPS section 4b table has a supply, enable or disable pin driven by EMCON_HW or TX_INHIBIT_n, and the rule instrument enumerates them (RF-002 fails on any radio without one). (2) Bench: with EMCON closed and every pro... **Effect:** The bench pass line has no number (EMCON.md section 6 writes each row as "no emission above the instrument's noise floor" at a resolution bandwidth the TEST-PLAN owner fixes); RF-002 cannot be trusted to enumerate every transmitter until its instrument gaps... | S-01, S-02 |
@@ -2721,7 +2743,7 @@ SESSION items are engineering the session decides and records with authority SES
 | S-01 | SESSION | EMCON reaches every transmitter (D-05), what is left after 458b2873 gated the compute modules' radios and the WiFi card supplies: SD-EMC-1's two stages for the 5G module drawn on board B; the shared-line items L1 to L4 and L7 of EMCON.md section 7 remedied (firmware pins on EMCON_HW, the line's hold with its source gone, the +3V3_DEV loss that releases nine radios, gate supplies outside their range, the 2N7002 drive); the back-feed paths of SD-EMC-2. | REQ-030, REQ-071, REQ-032, FEA-002 |
 | S-02 | SESSION | RF-002 enumerates every transmitter from the netlists and fails any without a hardware gate. | REQ-030, REQ-071, FEA-002 |
 | S-12 | SESSION | The key-B socket's land carries TE's two locating holes (drawing C-2199119 rev F, sheet 3; gen_footprints_b16.py draws neither), and D-07's third jack is confirmed by the board E clamp fit (its case half is laid out, CASE-MARGINS.md section 3.4). The key-B part is fitted since 458b2873. | CHO-001, CON-015 |
-| S-13 | SESSION | One SIM description: V2-SPEC line 41 says eSIM plus nano-SIM, the generator fits two nano-SIM holders with an eSIM build option (the 0 ohm links of Quectel HD v1.1 Figure 19); and the SIM TVS array the HD asks for (at most 10 pF) fitted. SIM 2 is on the module's own pins since 458b2873. | CFL-010 |
+| S-13 | SESSION | The SIM TVS array the HD asks for (at most 10 pF, Quectel HD v1.1 section 4.1.7) fitted on board B, and the order code of an eSIM-fitted RM520N-GL named before an eSIM build is bought. The description is settled by session choice SC-13 (V2-SPEC line 41, correction 22: the compatible design of HD Figure 19, two nano-SIM holders with an eSIM build option). SIM 2 is on the module's own pins since 458b2873. | CFL-010 |
 | S-14 | SESSION | D-11's thresholds taken from PROVISIONAL to pass lines (SC-10): POWER-THERMAL.md section 7.2's floors and key-down rules once PWR-F12 and PWR-F15 close. The outlet interlock is in hardware since 458b2873. | FEA-004, REQ-017, REQ-018 |
 | S-16 | SESSION | CM5 antennas: which slot's radio feeds the WIFI 2.4 jack, what the other two do, and the certification position. | CON-011 |
 | S-18 | SESSION | MIL-STD-461 edition and curves picked for the characterisation runs (D-04: no EMC claim for the prototype). | REQ-063 |

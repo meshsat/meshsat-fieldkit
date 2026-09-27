@@ -1,0 +1,29 @@
+{"missing_on_board": 36, "board_only_live": 0, "pad_net": 24, "value": 3, "footprint": 0} sch002-equivalent 60
+PADNET {'ref': 'U13', 'pin': '13', 'netlist': 'PA_ISNS_N', 'board': '+13V8_PA', 'touches_external': False}
+PADNET {'ref': 'U13', 'pin': '14', 'netlist': 'PA_ISNS_P', 'board': 'PA_OUT', 'touches_external': False}
+PADNET {'ref': 'U13', 'pin': '15', 'netlist': 'PA_CSGF', 'board': 'GND', 'touches_external': False}
+PADNET {'ref': 'U13', 'pin': '16', 'netlist': 'PA_CSF', 'board': 'PA_CS', 'touches_external': False}
+PADNET {'ref': 'U15', 'pin': '13', 'netlist': 'HF_ISNS_N', 'board': '+12V_HF', 'touches_external': False}
+PADNET {'ref': 'U15', 'pin': '14', 'netlist': 'HF_ISNS_P', 'board': 'HF_OUT', 'touches_external': False}
+PADNET {'ref': 'U15', 'pin': '15', 'netlist': 'HF_CSGF', 'board': 'GND', 'touches_external': False}
+PADNET {'ref': 'U15', 'pin': '16', 'netlist': 'HF_CSF', 'board': 'HF_CS', 'touches_external': False}
+PADNET {'ref': 'U16', 'pin': '13', 'netlist': 'POE_ISNS_N', 'board': '+54V_POE', 'touches_external': False}
+PADNET {'ref': 'U16', 'pin': '14', 'netlist': 'POE_ISNS_P', 'board': 'POE_OUT', 'touches_external': False}
+PADNET {'ref': 'U16', 'pin': '15', 'netlist': 'POE_CSGF', 'board': 'GND', 'touches_external': False}
+PADNET {'ref': 'U16', 'pin': '16', 'netlist': 'POE_CSF', 'board': 'POE_CS', 'touches_external': False}
+PADNET {'ref': 'U19', 'pin': '13', 'netlist': 'PD_ISNS_N', 'board': 'PD_VPWR', 'touches_external': False}
+PADNET {'ref': 'U19', 'pin': '14', 'netlist': 'PD_ISNS_P', 'board': 'PD_OUT', 'touches_external': False}
+PADNET {'ref': 'U19', 'pin': '15', 'netlist': 'PD_CSGF', 'board': 'GND', 'touches_external': False}
+PADNET {'ref': 'U19', 'pin': '16', 'netlist': 'PD_CSF', 'board': 'PD_CS', 'touches_external': False}
+PADNET {'ref': 'U2', 'pin': '13', 'netlist': 'FE_ISNS_N', 'board': 'VBUS20', 'touches_external': False}
+PADNET {'ref': 'U2', 'pin': '14', 'netlist': 'FE_ISNS_P', 'board': 'FE_OUT', 'touches_external': False}
+PADNET {'ref': 'U2', 'pin': '15', 'netlist': 'FE_CSGF', 'board': 'GND', 'touches_external': False}
+PADNET {'ref': 'U2', 'pin': '16', 'netlist': 'FE_CSF', 'board': 'FE_CS', 'touches_external': False}
+PADNET {'ref': 'U3', 'pin': '19', 'netlist': 'CH_SRN_F', 'board': 'CELL+', 'touches_external': False}
+PADNET {'ref': 'U3', 'pin': '2', 'netlist': 'CH_ACN_F', 'board': 'CH_ACN', 'touches_external': False}
+PADNET {'ref': 'U3', 'pin': '20', 'netlist': 'CH_SRP_F', 'board': 'CH_SRP', 'touches_external': False}
+PADNET {'ref': 'U3', 'pin': '3', 'netlist': 'CH_ACP_F', 'board': 'VBUS20', 'touches_external': False}
+VALUE {'ref': 'C11', 'netlist': '10u 100V X7R 1210', 'board': '10u 50V X7R 1210', 'touches_external': True}
+VALUE {'ref': 'C12', 'netlist': '10u 100V X7R 1210', 'board': '10u 50V X7R 1210', 'touches_external': True}
+VALUE {'ref': 'D2', 'netlist': "SMCJ40A (VIN_RAW clamp behind E6's filter: 40 V standoff on a line specified to 36)", 'board': "SMCJ33A (VIN_RAW clamp behind E6's filter)", 'touches_external': True}
+TOUCHES EXTERNAL: [{'ref': 'C11', 'netlist': '10u 100V X7R 1210', 'board': '10u 50V X7R 1210', 'touches_external': True}, {'ref': 'C12', 'netlist': '10u 100V X7R 1210', 'board': '10u 50V X7R 1210', 'touches_external': True}, {'ref': 'D2', 'netlist': "SMCJ40A (VIN_RAW clamp behind E6's filter: 40 V standoff on a line specified to 36)", 'board': "SMCJ33A (VIN_RAW clamp behind E6's filter)", 'touches_external': True}]

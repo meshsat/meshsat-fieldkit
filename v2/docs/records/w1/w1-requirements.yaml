@@ -1,0 +1,1780 @@
+# W1 candidate requirement records, MESHSAT-1357 foundation baseline (draft, never pushed as is).
+#
+# Written 25 September 2026 by workstream W1. Extracted ONCE from: v2/docs/V2-SPEC.md, OPERATING-ENVELOPE.md,
+# PANEL.md, ARCH-PCB-B-IOHA.md, TEST-PLAN.md, v2/ecad/tools/pcb_board_facts.yaml (_product), appendix sections
+# 32.49, 32.50, 32.52, 32.53, 32.55, 32.62 (plus 32.51 and 32.57 where a device number lives), and read back
+# against the generators where a claim is about what the design carries. The integrator assigns REQ ids;
+# CAND ids are provisional and local to this file.
+#
+# Field meanings:
+#   class               requirement | derived_constraint | implementation_choice | assumption | superseded | conflict
+#   parent              a NEED id of v2/docs/CONOPS.md section 2
+#   acceptance          the pass criterion with units and conditions, or TBD
+#   tbd_effect          present when acceptance (or part of it) is TBD: what not knowing it blocks
+#   allocated_to        boards (a b c d e e5 p), kit (whole kit), case, sw (compute module software),
+#                       fw_panel / fw_sensor / fw_ioctrl (controller firmware), procedure, owner
+#   verification_method subset of rules_lib.METHODS
+#   verification_phase  the EARLIEST phase of rules_lib.PHASES at which the record can be judged
+#   final_phase         where a later measurement is also owed (omitted when equal)
+#   rules               existing pcb_rules.yaml ids that would (partly) satisfy it
+#   rule_coverage       FULL | PARTIAL | NONE (NONE = no board rule judges it today: a kit-level gap)
+#   source              file:line (or key), the place the statement is read from
+#   source_check        VERIFIED (the cited artefact was read for this record) | INFERRED (derived, see note)
+#   conflict_ref        id in drafts/w1-conflicts.md
+#
+# Counts are checked by the validator at the end of the W1 session (see the StructuredOutput summary).
+# Round 2 (25 Sep 2026): records revised after the challenge and adjudications A01 to A11; CAND-095 to CAND-107 added.
+
+schema: w1-candidates-1
+written: "2026-09-25"
+methods: [ERC, DRC, SCRIPT, CALCULATION, SIMULATION, MANUAL_REVIEW, VENDOR_CONFIRMATION, PROTOTYPE_MEASUREMENT]
+phases: [SCHEMATIC, PLACED_BOARD, ROUTED_BOARD, RELEASE_PACKAGE, ASSEMBLY, PROTOTYPE]
+needs_document: v2/docs/CONOPS.md
+
+candidates:
+
+# ---------------------------------------------------------------- NEED-01 relay, NEED-02 bearer diversity
+- id: CAND-001
+  class: requirement
+  parent: NEED-02
+  statement: "The kit carries at least four independent long-range bearer classes (satellite, cellular, HF, VHF packet and voice) and a kit-to-kit link that needs no access point."
+  acceptance: "Each bearer class passes traffic in the functional check of TEST-PLAN section 4 on the built prototype (Iridium message, 5G data, HF CAT and audio, APRS beacon heard by a receiver, WiFi link to a second kit)."
+  allocated_to: [kit, b, d, a]
+  verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/V2-SPEC.md:37-51", "v2/docs/TEST-PLAN.md:46"]
+  source_check: VERIFIED
+
+- id: CAND-002
+  class: implementation_choice
+  parent: NEED-02
+  statement: 'The device set is the owner''s ruling of 6 September 2026: CM5 8 GB / 64 GB wireless; RockBLOCK 9704 SMA with the Maxtena helical; 5G on M.2
+    B-key (RM520N-GL); E22-900M30S LoRa; two E72 CC2652P; AW7915-AED WiFi link cards; SA868 with a RA30H1317M1 30 W stage; LimeSDR Mini 2.4; Xenarc 709GNK;
+    PDi E2370KS0C1; LG290P GNSS; QMX HF; BME688 inside and in the outside pod, SGP41 in the battery bay (32.54).'
+  acceptance: Every listed device appears in the generated schematic of its board with the ordered part number (checked against the BOM), or as a named
+    receptacle device where it is not soldered; every socket or land matches the device's own key and drawing.
+  allocated_to: [b, c, d, a, e, kit]
+  verification_method: [SCRIPT, MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: [CMP-002, SUP-001]
+  rule_coverage: PARTIAL
+  source:
+  - v2/docs/MESHSAT-709-geometry-appendix.md:2756-2771
+  - v2/docs/MESHSAT-709-geometry-appendix.md:2813-2816
+  - v2/docs/MESHSAT-709-geometry-appendix.md:2896 (32.54 sensor picks)
+  - v2/docs/V2-SPEC.md:37-51
+  source_check: VERIFIED
+  notes: 'Owner rulings bind the picks; changing one is an owner decision. Round 2: two picks are not what the generators carry: the SGP41 is in no generator
+    (C-05), and the 5G socket bought (TE 1-2199119-5, LCSC C574849) is key M while the RM520N-GL is key B (C-19, adjudication A08).'
+
+- id: CAND-003
+  class: requirement
+  parent: NEED-01
+  statement: "A message from a handheld on the kit's LoRa mesh reaches a remote correspondent over each long-range bearer in turn, and a message in the other direction reaches the handheld."
+  acceptance: "Delivery in both directions over each bearer in the functional check; end-to-end latency per bearer TBD."
+  tbd_effect: "No hardware effect; the software acceptance of the bridge on the kit cannot be written until a latency or delivery-ratio target exists."
+  allocated_to: [kit, sw]
+  verification_method: [PROTOTYPE_MEASUREMENT]
+  verification_phase: PROTOTYPE
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/TEST-PLAN.md:46", "v2/docs/PRODUCT-BRIEF.md (problem statement)"]
+  source_check: VERIFIED
+
+- id: CAND-004
+  class: derived_constraint
+  parent: NEED-02
+  statement: "No I/O bank holds two long-range bearers, where long-range means Iridium, HF and APRS (the 5G data path is on slot 2's PCIe lane, not on a bank)."
+  acceptance: "check_pcb_b.py invariant 'bank s holds at most one long-range bearer' passes on the generated B netlist."
+  allocated_to: [b]
+  verification_method: [SCRIPT]
+  verification_phase: SCHEMATIC
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/ARCH-PCB-B-IOHA.md:129", "v2/ecad/tools/check_pcb_b.py:313-320"]
+  source_check: VERIFIED
+  notes: "Judged by the board B gate, not by a registry rule; the registry has no rule for bearer distribution."
+
+- id: CAND-005
+  class: assumption
+  parent: NEED-02
+  statement: "Two bearers have no failover path and are lost with one module: the LoRa module (slot 3 SPI) and cellular data (slot 2 PCIe). A second LoRa module on another slot, and moving 5G to USB 3 (open ruling 4), are the recorded remedies, neither taken."
+  acceptance: "TBD: whether LoRa and cellular data are 'critical peripherals' under NEED-03 (CAND-007)."
+  tbd_effect: "If either is critical, board B needs a second LoRa site or the 5G move to USB 3; both change B's floor plan, which is already the unrouted board."
+  allocated_to: [b, owner]
+  verification_method: [MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/ARCH-PCB-B-IOHA.md:198", "v2/docs/ARCH-PCB-B-IOHA.md:304", "v2/docs/ARCH-PCB-B-IOHA.md:308", "v2/docs/MESHSAT-709-geometry-appendix.md:2854"]
+  source_check: VERIFIED
+  notes: "The RM520N series hardware design v1.1 is now held (v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf), so open ruling 4 is no longer gated on a missing document."
+
+# ---------------------------------------------------------------- NEED-03 no single compute point of failure
+- id: CAND-006
+  class: requirement
+  parent: NEED-03
+  statement: "The loss of any one CM5, or of any one I/O supervisor, does not make a critical peripheral permanently unreachable; ownership moves to a surviving module without a fourth central arbiter; hardware, not firmware, prevents two hosts owning one peripheral."
+  acceptance: "ARCH-PCB-B-IOHA acceptance tests A1 to A6 and A12 pass on the prototype; every device of the moved bank enumerates within its per-device timeout (TBD, measured on hardware)."
+  tbd_effect: "Without per-device timeouts the failover has no numeric pass line; the HAL's adoption timers cannot be set."
+  allocated_to: [b, fw_ioctrl, sw]
+  verification_method: [SCRIPT, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/ARCH-PCB-B-IOHA.md:17", "v2/docs/ARCH-PCB-B-IOHA.md:125", "v2/docs/ARCH-PCB-B-IOHA.md:238-249", "v2/docs/MESHSAT-709-geometry-appendix.md:2829"]
+  source_check: VERIFIED
+
+- id: CAND-007
+  class: requirement
+  parent: NEED-03
+  statement: "The set of critical peripherals that NEED-03 protects is named."
+  acceptance: "TBD (owner, prototype scope)."
+  tbd_effect: "CAND-005 and CAND-006 cannot be judged: ARCH-PCB-B-IOHA says 'critical peripheral' without a list, and section 15 shows two bearers with no second path."
+  allocated_to: [owner]
+  verification_method: [MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/ARCH-PCB-B-IOHA.md:17", "v2/docs/ARCH-PCB-B-IOHA.md:314-316"]
+  source_check: VERIFIED
+
+- id: CAND-008
+  class: requirement
+  parent: NEED-03
+  statement: "The board is agnostic to how many compute modules are fitted (one, two or three) and in which slots."
+  acceptance: "The kit boots, brings up every bank it can host and serves its bearers with each of the seven non-empty slot combinations on the prototype."
+  allocated_to: [b, c, fw_panel, sw]
+  verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2829", "v2/docs/V2-SPEC.md:29"]
+  source_check: VERIFIED
+
+- id: CAND-009
+  class: derived_constraint
+  parent: NEED-03
+  statement: "Each bank's hub, hub core supply, host selects and USB-serial bridges are powered from the shared device rails (+5V_DEV, +3V3_DEV), never from a slot rail."
+  acceptance: "check_pcb_b.py rail-independence check passes on the netlist; ARCH-PCB-B-IOHA A9 passes on the prototype."
+  allocated_to: [b, a]
+  verification_method: [SCRIPT, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [PWR-001]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/ARCH-PCB-B-IOHA.md:81", "v2/docs/ARCH-PCB-B-IOHA.md:219", "v2/docs/ARCH-PCB-B-IOHA.md:246"]
+  source_check: VERIFIED
+
+- id: CAND-010
+  class: derived_constraint
+  parent: NEED-03
+  statement: "The voted fabric is fail-safe: every voted select rests on the home module and every OE on disconnected when the control plane is dark; break before make is a hardware delay; every controller output has a pull-down; hub reset is driven through a FET so a dark plane leaves hubs out of reset."
+  acceptance: "Netlist read-back per ARCH-PCB-B-IOHA section 10a; A10 (no OE and SEL overlap on a scope) and A12 (dark plane: every bank on its home module) pass."
+  allocated_to: [b]
+  verification_method: [SCRIPT, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [SCH-004]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/ARCH-PCB-B-IOHA.md:87-89", "v2/docs/ARCH-PCB-B-IOHA.md:166-177", "v2/docs/ARCH-PCB-B-IOHA.md:247", "v2/docs/ARCH-PCB-B-IOHA.md:249"]
+  source_check: VERIFIED
+
+- id: CAND-011
+  class: derived_constraint
+  parent: NEED-03
+  statement: "Each I/O supervisor has its own regulator branch, reset supervisor, watchdog, crystal and SWD pads, and the three talk over two independent CAN-FD fabrics with separate transceivers and termination."
+  acceptance: "Netlist shows three independent supply branches and two fabrics; A7 (either fabric cut, quorum survives) passes."
+  allocated_to: [b, fw_ioctrl]
+  verification_method: [SCRIPT, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [CLK-001]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/ARCH-PCB-B-IOHA.md:96", "v2/docs/ARCH-PCB-B-IOHA.md:106", "v2/docs/ARCH-PCB-B-IOHA.md:157-161", "v2/docs/ARCH-PCB-B-IOHA.md:244"]
+  source_check: VERIFIED
+  notes: "The supervisor part itself is an open component mismatch (schematic STM32H753VI against the bought STM32H743VIT6, plan condition 1, W6); this record does not accept either."
+
+- id: CAND-012
+  class: derived_constraint
+  parent: NEED-03
+  statement: "The OS image, the bridge and any switch configuration never force a fixed speed or duplex on KSZ9897R ports 1 to 3 (the transformer-less module links); auto-negotiation stays enabled."
+  acceptance: "Configuration review of the OS image and bridge; the three module links come up at 1000 Mbit/s at bring-up."
+  allocated_to: [b, sw]
+  verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [INT-002]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/ARCH-PCB-B-IOHA.md:39", "v2/ecad/tools/pcb_decisions.yaml:93 (decision 29)"]
+  source_check: VERIFIED
+
+- id: CAND-013
+  class: implementation_choice
+  parent: NEED-03
+  statement: "The WiFi link card is duplicated (slot 1 primary, slot 3 standby) and the two cards share the existing P2P antenna pair through a voted RF changeover that rests on the primary; only one radio is live at a time."
+  acceptance: "ARCH-PCB-B-IOHA A11: with the primary disabled the second card links to the peer kit with a measured link margin within 1 dB of the primary path."
+  allocated_to: [b, fw_ioctrl]
+  verification_method: [SCRIPT, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [RF-001]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/ARCH-PCB-B-IOHA.md:197", "v2/docs/ARCH-PCB-B-IOHA.md:248", "v2/docs/V2-SPEC.md:42"]
+  source_check: VERIFIED
+
+- id: CAND-014
+  class: assumption
+  parent: NEED-03
+  statement: "Four common modes are knowingly unmitigated: +5V_DEV and +3V3_DEV (one converter each on A), the J_PANEL ribbon, the KSZ9897R switch, and the kit I2C bus with its one master."
+  acceptance: "TBD: explicit risk acceptance at Review C, or a mitigation."
+  tbd_effect: "A reviewer reading 'no single point of failure' in V2-SPEC line 29 would not see these; the requirement text must carry the exceptions or the design must remove them."
+  allocated_to: [a, b, c, owner]
+  verification_method: [MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/ARCH-PCB-B-IOHA.md:139-146", "v2/docs/ARCH-PCB-B-IOHA.md:220-222"]
+  source_check: VERIFIED
+
+- id: CAND-015
+  class: superseded
+  parent: NEED-03
+  statement: "'The physical owner is a cabling choice written in the HAL configuration, not a board rule', with the slot distribution of 32.52 item 2 (slot 1 WiFi, GNSS, wall USB, camera; slot 2 5G, RockBLOCK, Zigbee, panel; slot 3 the rest)."
+  acceptance: "n/a"
+  allocated_to: [b]
+  verification_method: [MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2837", "v2/docs/MESHSAT-709-geometry-appendix.md:2844"]
+  superseded_by: "ARCH-PCB-B-IOHA.md sections 4 and 15 and V2-SPEC.md line 32 (hardware fabric, owner ruling 9 Sep 2026); the bank membership of section 15 is the one read off the netlist."
+  source_check: VERIFIED
+
+- id: CAND-016
+  class: conflict
+  parent: NEED-03
+  statement: "Which neighbour adopts each bank: ARCH-PCB-B-IOHA section 4 (bank 1 to slot 2, 2 to 3, 3 to 1) against section 15 (bank 1 to slot 3, 2 to 1, 3 to 2)."
+  acceptance: "One mapping in every document, equal to the generator's f = s % 3 + 1."
+  allocated_to: [b]
+  verification_method: [MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: [DOC-002]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/ARCH-PCB-B-IOHA.md:70-72", "v2/docs/ARCH-PCB-B-IOHA.md:292-303", "v2/ecad/tools/gen_sch_b.py:543"]
+  source_check: VERIFIED
+  conflict_ref: C-02
+
+# ---------------------------------------------------------------- NEED-04 human interface
+- id: CAND-017
+  class: requirement
+  parent: NEED-04
+  statement: "The face plate carries the operator controls and indicators of PANEL.md: MAIN, PI and TEST buttons, locking SOS, EMCON and ZEROIZE toggles (covers on SOS and ZEROIZE), the LIGHTING toggle, sixteen indicators, a sounder, the e-paper and an ambient light sensor, with the semantics of PANEL.md sections 5, 8 and 9."
+  acceptance: "Every control and indicator behaves as PANEL.md sections 5, 8 and 9 state in the functional check; lamp test lights all 17 LEDs."
+  allocated_to: [c, fw_panel, sw]
+  verification_method: [SCRIPT, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [SCH-003]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/PANEL.md:7-19", "v2/docs/PANEL.md:98-151", "v2/docs/V2-SPEC.md:53-62"]
+  source_check: VERIFIED
+  notes: "The SOS and ZEROIZE cover part is still owed (V2-SPEC.md line 58)."
+
+- id: CAND-018
+  class: requirement
+  parent: NEED-04
+  statement: "The e-paper shows identity, battery and shore state, GPS fix, UTC, last message, bearer and slot health, and holds them with the power off; it refreshes at most once a minute; the enrolment QR is shown only while TEST is held after a UI request and never carries key material."
+  acceptance: "Inspection of the page with the kit unpowered; firmware review of the refresh limit and the QR payload."
+  allocated_to: [c, fw_panel]
+  verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/PANEL.md:147", "v2/docs/PANEL.md:149", "v2/docs/V2-SPEC.md:57"]
+  source_check: VERIFIED
+
+- id: CAND-019
+  class: requirement
+  parent: NEED-04
+  statement: "Two sealed headset jacks, each with its own push-to-talk on its own codec channel, and net audio recording to the drives."
+  acceptance: "Both jacks key the VHF path and carry receive audio in the functional check; a recording of net audio exists on a drive afterwards."
+  allocated_to: [d, c, sw]
+  verification_method: [SCRIPT, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [SCH-003]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2802 (16g)", "v2/docs/V2-SPEC.md:60"]
+  source_check: VERIFIED
+
+- id: CAND-020
+  class: requirement
+  parent: NEED-04
+  statement: "A camera (sealed on the face, or USB on the wall port) captures images for image messages over Iridium and the mesh."
+  acceptance: "An image is captured and sent in the functional check; image size per bearer TBD."
+  tbd_effect: "Software only; no hardware effect."
+  allocated_to: [b, c, sw]
+  verification_method: [PROTOTYPE_MEASUREMENT]
+  verification_phase: PROTOTYPE
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2794 (item 10)", "v2/docs/V2-SPEC.md:61"]
+  source_check: VERIFIED
+
+- id: CAND-021
+  class: requirement
+  parent: NEED-04
+  statement: "A bracket in the lid holds an 8 to 10 inch rugged tablet, fed by the USB-C outlet and the kit's WiFi."
+  acceptance: "Bracket drawn and fitted; the tablet charges from the outlet and joins the kit's WiFi. Tablet model TBD."
+  tbd_effect: "The bracket geometry cannot be drawn and the lid clearance over the Xenarc (18 mm) cannot be checked without a tablet model."
+  allocated_to: [case, a]
+  verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+  verification_phase: RELEASE_PACKAGE
+  final_phase: PROTOTYPE
+  rules: [MEC-001]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2802 (16d)", "v2/docs/V2-SPEC.md:12"]
+  source_check: VERIFIED
+  notes: "V2-SPEC line 12 says the bracket is not drawn."
+
+- id: CAND-022
+  class: requirement
+  parent: NEED-04
+  statement: "The TX lamp follows the VHF path's real KEY line in hardware, is never dimmed below 10 % duty except in blackout, and a lamp test lights it through its own tie."
+  acceptance: "Netlist trace from D's KEY line to the lamp driver with no processor in the path; bench check with the panel controller in reset."
+  allocated_to: [c, d]
+  verification_method: [SCRIPT, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [SCH-003]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/PANEL.md:96", "v2/docs/PANEL.md:141"]
+  source_check: VERIFIED
+
+- id: CAND-023
+  class: requirement
+  parent: NEED-04
+  statement: "A flasher that fails fails to steady on: the panel controller holds the last written indicator state when the USB link drops."
+  acceptance: "Unplug the panel's USB host path (fail its bank) while MASTER WARN flashes: the lamp goes steady, not dark."
+  allocated_to: [fw_panel]
+  verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/PANEL.md:145"]
+  source_check: VERIFIED
+
+# ---------------------------------------------------------------- NEED-05 power
+- id: CAND-024
+  class: requirement
+  parent: NEED-05
+  statement: The kit runs from its internal 4S pack for a stated minimum time in stated power states at a stated temperature and pack age.
+  acceptance: 'TBD (owner, D-06). PROVISIONAL figures for the 4S3P 18650 pack that is expected to fit (CONOPS section 4a): PS-IDLE-SPEC 4.2 h new and 3.4
+    h aged; PS-TYP 2.2 h new and 1.8 h aged, at +20 C. None is a requirement.'
+  tbd_effect: Pack configuration, mass, the M1 energy balance with solar and the charge time wait on the target; the 4S4P columns describe a configuration
+    not shown to fit (A06).
+  allocated_to: [p, a, e, kit, owner]
+  verification_method: [CALCULATION, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: []
+  rule_coverage: NONE
+  source:
+  - 'v2/docs/MESHSAT-709-geometry-appendix.md:3056 (research gate: 4S, about 100 to 150 Wh)'
+  - v2/docs/MESHSAT-709-geometry-appendix.md:3062
+  - v2/docs/MESHSAT-709-geometry-appendix.md:2846
+  - v2/docs/CONOPS.md section 4a
+  source_check: INFERRED
+  notes: 'Round 2: the round-1 ''200 Wh / 50 W = about 4 h'' is withdrawn. The per-state figures are the foundation power budget (adjudication A05), arithmetic
+    over datasheet figures, generator declarations and placeholders; 12.2 of PS-IDLE''s 29.4 W and 29.7 of PS-TYP''s 60.1 W are TBD.'
+
+- id: CAND-025
+  class: requirement
+  parent: NEED-05
+  statement: "A 9 to 36 V vehicle and shore input runs the kit and charges the pack, with reverse-polarity protection, under- and over-voltage limits, a MIL-STD-461 class line filter, a NATO 2-pin plug cable and the MIL-DTL-38999 receptacle."
+  acceptance: "Operates and charges across 9 to 36 V; survives a reversed input and an over-voltage to the front end's limit (40 V, 32.55) without damage; CE102 under its limit line (TEST-PLAN M1)."
+  allocated_to: [e, a, case]
+  verification_method: [SCRIPT, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [PWR-003, TRN-001, EMC-001]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/V2-SPEC.md:21", "v2/docs/OPERATING-ENVELOPE.md:125", "v2/docs/MESHSAT-709-geometry-appendix.md:2915", "v2/docs/MESHSAT-709-geometry-appendix.md:2802 (16b)", "v2/docs/TEST-PLAN.md:31"]
+  source_check: VERIFIED
+  notes: "32.55 places the front end on A22; V2-SPEC and 32.57 fold it into the dock strip E; allocation follows the later record."
+
+- id: CAND-026
+  class: requirement
+  parent: NEED-05
+  statement: "A solar input charges the pack through the LT8705A tracker."
+  acceptance: "Charges from a panel inside the tracker's input window; the window and the panel class are TBD."
+  tbd_effect: "Mission M1's day and night balance cannot be computed and no panel can be specified for the kit."
+  allocated_to: [e]
+  verification_method: [CALCULATION, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [PWR-001]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/V2-SPEC.md:21", "v2/docs/OPERATING-ENVELOPE.md:126"]
+  source_check: VERIFIED
+
+- id: CAND-027
+  class: requirement
+  parent: NEED-05
+  statement: "The kit powers accessories: PoE out on the sealed Gigabit Ethernet port (54 V rail, 0.6 A) and a USB-C PD outlet (5, 9 and 15 V, 45 W), both reduced to their minimum contract while the PA keys."
+  acceptance: "Each outlet delivers its rated contract into a load in the functional check; with the PA keyed, the outlets are at their minimum."
+  allocated_to: [a, b, case]
+  verification_method: [SCRIPT, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [PWR-001, ISO-001, TRN-001]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2927-2928", "v2/docs/MESHSAT-709-geometry-appendix.md:2932", "v2/docs/MESHSAT-709-geometry-appendix.md:2980", "v2/docs/MESHSAT-709-geometry-appendix.md:2785 (item 1)"]
+  source_check: VERIFIED
+
+- id: CAND-028
+  class: superseded
+  parent: NEED-05
+  statement: "USB-C PD outlet at 65 W (32.50 item 2; TPS25750 with a TPS55288)."
+  acceptance: "n/a"
+  allocated_to: [a]
+  verification_method: [MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2786", "v2/docs/MESHSAT-709-geometry-appendix.md:2980"]
+  superseded_by: "32.57: TPS25740A with an LM5176 stage, 45 W; returns to 65 W when the TPS25740B is buyable."
+  source_check: VERIFIED
+
+- id: CAND-029
+  class: superseded
+  parent: NEED-05
+  statement: "One BB-2590/U pack at the west wall, and the runtime computed from it (8 to 9.5 h typical at 29 W, 5 to 6 h with the cluster busy, 11 to 13.5 h dimmed, peak about 150 W)."
+  acceptance: "n/a"
+  allocated_to: [p, a]
+  verification_method: [MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2771", "v2/docs/MESHSAT-709-geometry-appendix.md:2775", "v2/docs/V2-SPEC.md:23"]
+  superseded_by: "32.62 (owner ruling 7 Sep 2026 13:10): the pack is a built 4S smart pack in the east pocket; V2-SPEC line 23 still carries the withdrawn runtime (conflict C-01)."
+  source_check: VERIFIED
+
+- id: CAND-030
+  class: derived_constraint
+  parent: NEED-05
+  statement: The pack, its board P, the heater mat and their mounting fit the east pocket, about 58 x 240 x 48 mm (X +120 to +178, Y -120 to +120), under
+    board B's underside at Z 47.9.
+  acceptance: A named pack build (cells, wrap, board P position, mat, pads) fits with a stated clearance in every axis against the committed board B underside
+    and the case CAD, and against the measured case (D-08).
+  allocated_to: [p, case, b]
+  verification_method: [CALCULATION, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+  verification_phase: PLACED_BOARD
+  final_phase: ASSEMBLY
+  rules: [MEC-001]
+  rule_coverage: PARTIAL
+  source: ['v2/docs/MESHSAT-709-geometry-appendix.md:3060-3062', v2/docs/ASSEMBLY.md section 3]
+  source_check: INFERRED
+  conflict_ref: C-11
+  notes: 'Adjudication A06 (box reading of B21''s underside): 4S3P 18650 fits east, shrink-wrapped, with 1.35 mm spare across the pocket (less than the
+    case wall uncertainty); 4S2P 21700 is marginal; no 4S4P fits either pocket with board P beside the cells; pack_4s.py''s walled box does not fit; nothing
+    fits the west pocket, so 32.62''s second pack there is not available as drawn.'
+
+- id: CAND-031
+  class: requirement
+  parent: NEED-05
+  statement: 'Every transmitter may key at the same time: no transmit serialisation is required of the hardware (the bridge may keep one as a receiver-protection
+    preference).'
+  acceptance: PS-ALLTX (about 227 W at the battery with the outlets off, PROVISIONAL) is supplied with every rail in regulation for a stated duration down
+    to a stated state of charge; the duration and the charge floor are TBD (owner, D-11).
+  tbd_effect: At 2.5 V per cell the node is 10 V and 227 W needs about 23 A at the pack, above the 18 A declared peak and the gauge's 20 A (2 s) trip; with
+    the ~145 Wh pack that fits (A06) the headroom at low charge is smaller than W2's 4S4P case assumed. Either the duration, the charge floor, the thresholds
+    or a load-shed rule moves.
+  allocated_to: [a, p, e, e5, owner]
+  verification_method: [CALCULATION, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [PWR-001, PI-002, BAT-002]
+  rule_coverage: PARTIAL
+  source:
+  - v2/docs/MESHSAT-709-geometry-appendix.md:2337
+  - v2/docs/MESHSAT-709-geometry-appendix.md:2465
+  - v2/docs/MESHSAT-709-geometry-appendix.md:2846
+  - v2/ecad/tools/pcb_energy_chain.yaml:48-49
+  - v2/docs/TEST-PLAN.md:64-66
+  source_check: INFERRED
+  conflict_ref: C-21
+  notes: The ruling was made for the 1S node of 4 September and has not been re-stated for the 4S node, so it stands until the owner says otherwise (D-11).
+    The outlet interlock is the session's (S-14).
+
+- id: CAND-032
+  class: assumption
+  parent: NEED-05
+  statement: 'The power budget of 32.52 item 3 is a battery-side design estimate: its listed loads sum to 45.0 W typical and 178 W peak, and with the 12
+    % allowance give 50.4 W and 199 W, the record''s ''about 50 W'' and ''about 200 W''; the ''up to 290 W'' adds 90 W of outlets without the allowance.
+    No figure is measured.'
+  acceptance: Superseded for design use by the per-state budget of CONOPS section 4a (PROVISIONAL), then by prototype measurement.
+  allocated_to: [a, kit]
+  verification_method: [CALCULATION, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [PWR-001]
+  rule_coverage: PARTIAL
+  source:
+  - v2/docs/MESHSAT-709-geometry-appendix.md:2846
+  - v2/docs/MESHSAT-709-geometry-appendix.md:2932
+  source_check: VERIFIED
+  notes: 'Round 2 (challenger, adjudication A05): round 1 said the reference point was not stated; the arithmetic answers it. One line item is above its
+    datasheet: RockBLOCK 0.5 / 5 W against 60 mW idle, 1.4 W max (rb9704-datasheet-RB9704-001-JUN26.pdf).'
+
+- id: CAND-033
+  class: derived_constraint
+  parent: NEED-05
+  statement: "The HF rail is regulated 12.0 V and never 13.8 V (the QMX manual warns that 13.8 V stresses its PA)."
+  acceptance: "The HF rail's set point and its worst-case tolerance stay under the QMX's own limit, by calculation from the regulator's feedback network."
+  allocated_to: [a]
+  verification_method: [CALCULATION, SCRIPT]
+  verification_phase: SCHEMATIC
+  rules: [CMP-001, PWR-001]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2816", "v2/docs/MESHSAT-709-geometry-appendix.md:2925", "v2/docs/MESHSAT-709-geometry-appendix.md:2979"]
+  source_check: VERIFIED
+
+# ---------------------------------------------------------------- NEED-06 carriage, sealing
+- id: CAND-034
+  class: requirement
+  parent: NEED-06
+  statement: "The case is the Peli 1450 with the 1450PF panel frame, and it never changes."
+  acceptance: "Every board outline, the plate and the pack fit the 1451-931 drawing and the physical case (W4 measurement request)."
+  allocated_to: [case, kit]
+  verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+  verification_phase: PLACED_BOARD
+  final_phase: ASSEMBLY
+  rules: [MEC-001]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:3054-3056", "v2/docs/V2-SPEC.md:8"]
+  source_check: VERIFIED
+  notes: "Owner constraint. The 1450PF frame is recorded as not yet bought (plan section 1)."
+
+- id: CAND-035
+  class: requirement
+  parent: NEED-06
+  statement: "There is no vent opening anywhere in the case skin, the plate or the connector plate; Peli's own pressure equalisation valve stays; sealed connectors are not vents."
+  acceptance: "Inspection of the case template and the built kit: every penetration is a sealed connector, a sealed switch or the Peli valve."
+  allocated_to: [case, c]
+  verification_method: [MANUAL_REVIEW]
+  verification_phase: RELEASE_PACKAGE
+  final_phase: ASSEMBLY
+  rules: [MEC-001]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2864", "v2/docs/V2-SPEC.md:73"]
+  source_check: VERIFIED
+
+- id: CAND-036
+  class: requirement
+  parent: NEED-06
+  statement: "The face is built to an IP67-class construction; the kit is never labelled IP68, and no ingress rating is claimed in any public or shipped document until the seal procedure of appendix 32.34 and TEST-PLAN E6 and E7 have run."
+  acceptance: "E6 (closed, 1 m, 30 min: no water inside), E7 (deployed, 15 min driven rain at 40 mm/h on every face: no water inside) and the seal check pass; document scan finds no unearned rating."
+  allocated_to: [case, c, kit]
+  verification_method: [SCRIPT, PROTOTYPE_MEASUREMENT]
+  verification_phase: RELEASE_PACKAGE
+  final_phase: PROTOTYPE
+  rules: [ENV-002]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/OPERATING-ENVELOPE.md:106-109", "v2/docs/TEST-PLAN.md:21-22", "v2/docs/V2-SPEC.md:8"]
+  source_check: VERIFIED
+
+- id: CAND-037
+  class: requirement
+  parent: NEED-06
+  statement: "The closed, latched kit with its pack fitted survives transit drops and vehicle vibration."
+  acceptance: "TEST-PLAN E1 (26 drops from 1.22 m onto plywood over concrete) and E2 (composite wheeled vehicle profile, 1 h per axis), declared by the session as the prototype's severities (S-15: mapping a test profile to a severity is engineering under the 21 Sep ruling); decision 34 left the severities open, so the declaration is recorded against it."
+  tbd_effect: "REL-001 cannot close; connector retention, standoffs and the blind-mate float cannot be judged against a number."
+  allocated_to: [kit, case]
+  verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+  verification_phase: PROTOTYPE
+  rules: [REL-001]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/TEST-PLAN.md:16-17", "v2/docs/OPERATING-ENVELOPE.md:116-119", "v2/ecad/tools/pcb_envelope.yaml:47-50"]
+  source_check: VERIFIED
+  conflict_ref: C-07
+
+- id: CAND-038
+  class: requirement
+  parent: NEED-06
+  statement: "The kit's carried mass is limited to a stated value."
+  acceptance: "TBD: no mass requirement exists anywhere in the sources."
+  tbd_effect: "Pack size (4S4P or a second pack), the monitor (1.2 kg), the aluminium plate and the case cannot be traded against a limit; the transit drop severity also depends on mass."
+  allocated_to: [kit, owner]
+  verification_method: [CALCULATION, PROTOTYPE_MEASUREMENT]
+  verification_phase: PLACED_BOARD
+  final_phase: ASSEMBLY
+  rules: []
+  rule_coverage: NONE
+  source: ["none (gap): no mass figure in V2-SPEC.md, OPERATING-ENVELOPE.md or 32.49 to 32.62 beyond single parts"]
+  source_check: VERIFIED
+
+# ---------------------------------------------------------------- NEED-07 envelope
+- id: CAND-039
+  class: requirement
+  parent: NEED-07
+  statement: "The kit operates at -20 to +40 C ambient, with three declared carve-outs: below -10 C the pack is warmed before charge; below -15 C the e-paper is degraded; above +35 C the kit runs the reduced mode."
+  acceptance: "TEST-PLAN E3 and E4 functional checks at the envelope's limits; THM-001 junction estimates at +40 C ambient with the inside-air rise; part_temps.py finds no part outside its range."
+  allocated_to: [kit, a, b, c, d, e, p]
+  verification_method: [CALCULATION, SCRIPT, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [ENV-001, CMP-001, THM-001, REL-001]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/OPERATING-ENVELOPE.md:94-101", "v2/ecad/tools/pcb_envelope.yaml:23-30", "v2/ecad/tools/pcb_decisions.yaml:470-538 (decision 34)"]
+  source_check: VERIFIED
+  conflict_ref: C-05
+
+- id: CAND-040
+  class: requirement
+  parent: NEED-07
+  statement: "The kit, pack fitted, is stored at -20 to +45 C for up to three months and at -20 to +25 C for up to a year."
+  acceptance: "Storage state of charge TBD (the envelope's 'ex-factory 30 percent' belongs to a bought pack, and this pack is built)."
+  tbd_effect: "The storage procedure and the gauge's shipping mode setting cannot be written."
+  allocated_to: [p, procedure]
+  verification_method: [MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: [ENV-001]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/OPERATING-ENVELOPE.md:103-104", "v2/docs/MESHSAT-709-geometry-appendix.md:3058"]
+  source_check: VERIFIED
+  conflict_ref: C-13
+
+- id: CAND-041
+  class: requirement
+  parent: NEED-07
+  statement: "Humidity: non-condensing in use."
+  acceptance: "TEST-PLAN E5 (10 cycles of 24 h at 95 % RH, 30 to 60 C) is a qualification test above this; its purpose (margin or error) is not recorded."
+  allocated_to: [kit]
+  verification_method: [PROTOTYPE_MEASUREMENT]
+  verification_phase: PROTOTYPE
+  rules: [ENV-001, REL-001]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/OPERATING-ENVELOPE.md:106", "v2/docs/TEST-PLAN.md:20"]
+  source_check: VERIFIED
+  conflict_ref: C-06
+
+- id: CAND-042
+  class: assumption
+  parent: NEED-07
+  statement: "The inside air rises about 10 K over ambient with one module and about 16 K with three loaded modules, lid open, fans on; lid closed the walls and lid shed about 1.5 to 2 W/K."
+  acceptance: "Replaced by the TEST-PLAN E3 measurement before any hot-end number is asserted."
+  allocated_to: [kit]
+  verification_method: [CALCULATION, PROTOTYPE_MEASUREMENT]
+  verification_phase: PLACED_BOARD
+  final_phase: PROTOTYPE
+  rules: [THM-001]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2860", "v2/docs/OPERATING-ENVELOPE.md:71-76", "v2/ecad/tools/pcb_envelope.yaml:32-37"]
+  source_check: VERIFIED
+
+- id: CAND-043
+  class: requirement
+  parent: NEED-07
+  statement: "Altitude in use and in transport."
+  acceptance: "TBD: 0 to 3000 m in use and 0 to 4500 m in transport are PROPOSED in OPERATING-ENVELOPE section 4 and left OPEN by decision 34; the owner answers one fact, whether the kit will be carried in an unpressurised aircraft hold (D-02c), and the values follow (session)."
+  tbd_effect: "TEST-PLAN E9 is written against the proposal; whether the kit may fly in an unpressurised hold is the owner's to say. ISO-001 no longer waits on it (decision 34 judges it on ECSS-Q-ST-70-12C Table 13-3)."
+  allocated_to: [kit, owner]
+  verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [ENV-001]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/OPERATING-ENVELOPE.md:111-114", "v2/docs/OPERATING-ENVELOPE.md:194-197", "v2/ecad/tools/pcb_envelope.yaml:47-50", "v2/docs/TEST-PLAN.md:24"]
+  source_check: VERIFIED
+  conflict_ref: C-08
+
+- id: CAND-044
+  class: requirement
+  parent: NEED-07
+  statement: "Expected service life and duty cycle of the kit."
+  acceptance: "TBD (open in decision 34)."
+  tbd_effect: "REL-001 cannot close; connector mating cycles, fan life and pack cycle life have no target."
+  allocated_to: [kit, owner]
+  verification_method: [MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: [REL-001]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/OPERATING-ENVELOPE.md:144-147", "v2/ecad/tools/pcb_envelope.yaml:50"]
+  source_check: VERIFIED
+
+- id: CAND-045
+  class: requirement
+  parent: NEED-07
+  statement: "Every surface and conductor a person can touch withstands IEC 61000-4-2 level 4 (8 kV contact, 15 kV air) with no upset, reset, lost bearer, lost secure-element key or damage."
+  acceptance: "TEST-PLAN M7 on the powered kit, every bearer up, at the plate, toggles, display bezel, every bulkhead shell, both headset jacks, USB-C, Ethernet and the pod lead."
+  allocated_to: [a, b, c, d, e, p, case]
+  verification_method: [MANUAL_REVIEW, SCRIPT, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [TRN-001, GND-002]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/OPERATING-ENVELOPE.md:163", "v2/docs/OPERATING-ENVELOPE.md:171-174", "v2/docs/TEST-PLAN.md:36", "v2/ecad/tools/pcb_envelope.yaml:40-41"]
+  source_check: VERIFIED
+
+- id: CAND-046
+  class: implementation_choice
+  parent: NEED-07
+  statement: "Surge on long-lead conductors is described by the fitted part (SMCJ40A, 1500 W at 10/1000 us), not constrained to an IEC 61000-4-5 level."
+  acceptance: "n/a (describes the design); an installation level would be an owner ruling."
+  allocated_to: [e]
+  verification_method: [MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: [TRN-001, PWR-003]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/OPERATING-ENVELOPE.md:164", "v2/ecad/tools/pcb_envelope.yaml:42-43"]
+  source_check: VERIFIED
+
+- id: CAND-047
+  class: superseded
+  parent: NEED-07
+  statement: "Electrical fast transient 2 kV on the power leads."
+  acceptance: "n/a"
+  allocated_to: [e, a]
+  verification_method: [MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/OPERATING-ENVELOPE.md:165", "v2/ecad/tools/pcb_envelope.yaml:44-45"]
+  superseded_by: "Decision 34 records it as NOT A REQUIREMENT: no source in the tree. Re-opens only with a market scope that names a standard (owner decision D-04)."
+  source_check: VERIFIED
+
+- id: CAND-048
+  class: derived_constraint
+  parent: NEED-07
+  statement: "Every part's published operating range covers the envelope at its location: the ambient floor of -20 C, and inside air up to 51 C (the larger of 40 + 10 and 35 + 16)."
+  acceptance: "part_temps.py reports no part outside its range; today one is (board B's T1, Pulse H5007NL, 0 to +70 C) and 1,955 of 1,985 part instances have no published range in the tree."
+  allocated_to: [a, b, c, d, e, p]
+  verification_method: [SCRIPT, VENDOR_CONFIRMATION]
+  verification_phase: SCHEMATIC
+  rules: [CMP-001, ENV-001]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:18527-18540 (32.360)", "v2/ecad/tools/pcb_part_temps.yaml"]
+  source_check: VERIFIED
+
+- id: CAND-049
+  class: conflict
+  parent: NEED-07
+  statement: The envelope's hot end is set by the Sensirion SGP41 battery-bay sensor (-20 to +55 C), which appendix 32.54 picked for the battery bay beside
+    the BME688 inside and in the pod; no generator fits the SGP41.
+  acceptance: The SGP41 is fitted where the battery bay's air is sampled, or an owner ruling drops it; the envelope's hot end is not recomputed until one
+    of the two happens.
+  allocated_to: [e, p, kit]
+  verification_method: [SCRIPT, MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: [ENV-001, CMP-001, CMP-002]
+  rule_coverage: PARTIAL
+  source:
+  - v2/docs/MESHSAT-709-geometry-appendix.md:2896 (32.54)
+  - v2/docs/OPERATING-ENVELOPE.md:42
+  - v2/docs/OPERATING-ENVELOPE.md:82-83
+  - v2/ecad/tools/gen_sch_e.py:367-369
+  - v2/docs/V2-SPEC.md:86
+  source_check: VERIFIED
+  conflict_ref: C-05
+  notes: 'Round 2 (challenger): round 1 treated the omission as the design and proposed recomputing the hot end from the BME688; withdrawn.'
+
+- id: CAND-050
+  class: conflict
+  parent: NEED-07
+  statement: "pcb_board_facts.yaml _product says 'no temperature range ruled yet' and lists five operating modes; decision 34 adopted the envelope on 21 September 2026 and the envelope and CONOPS name more modes."
+  acceptance: "_product cites the envelope document and its sha, and the CONOPS mode list."
+  allocated_to: [kit]
+  verification_method: [SCRIPT]
+  verification_phase: SCHEMATIC
+  rules: [DOC-002, ENV-001]
+  rule_coverage: PARTIAL
+  source: ["v2/ecad/tools/pcb_board_facts.yaml:281-282", "v2/ecad/tools/pcb_envelope.yaml:14-17"]
+  source_check: VERIFIED
+  conflict_ref: C-12
+
+# ---------------------------------------------------------------- NEED-08 EMCON
+- id: CAND-051
+  class: requirement
+  parent: NEED-08
+  statement: One operator action (the EMCON locking toggle) silences every transmitter in the kit through a hardware line that needs no processor, and the
+    line reads 'inhibited' when the panel ribbon is disconnected or a board is unpowered.
+  acceptance: '(1) Netlist: every transmitter in the CONOPS section 4b table has a supply, enable or disable pin driven by EMCON_HW or TX_INHIBIT_n, and
+    the rule instrument enumerates them (RF-002 fails on any radio without one). (2) Bench: with EMCON closed and every processor held in reset, no emission
+    at any antenna port above a threshold TBD, measured per TEST-PLAN; the same with the ribbon unplugged; the two WiFi link cards shown RF-silent with
+    W_DISABLE1# low, or their supplies gated.'
+  tbd_effect: The bench pass line has no number; RF-002 reads PASS today while three CM5 radios and possibly two WiFi cards are not silenced (C-03, C-28).
+  allocated_to: [a, b, c, d, kit]
+  verification_method: [SCRIPT, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [RF-002, SCH-004, SCH-003]
+  rule_coverage: PARTIAL
+  source:
+  - v2/docs/MESHSAT-709-geometry-appendix.md:2787 (item 3)
+  - v2/docs/PANEL.md:110-111
+  - v2/docs/TEST-PLAN.md:46
+  - v2/docs/PCB-RULE-STATUS-B.md:53
+  - v2/ecad/tools/pcb_rules_coverage.yaml:607-615
+  source_check: VERIFIED
+  conflict_ref: C-03
+
+- id: CAND-052
+  class: conflict
+  parent: NEED-08
+  statement: The three CM5 modules' own WiFi and Bluetooth radios are disabled only through the PCA9555 expander U6 on the kit I2C bus (software), not by
+    EMCON_HW; and U6 drives pins the CM5 datasheet allows only to be driven low, from an always-on rail, so it can back-feed an unpowered module.
+  acceptance: 'No driver sources current into WL_nDIS1..3 or BT_nDIS1..3: each is pulled low through open-drain elements released only when both the software
+    control and EMCON_HW are high; U6''s output and its internal pull-up never reach the CM5 pin.'
+  allocated_to: [b]
+  verification_method: [SCRIPT, MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: [RF-002, PWR-002]
+  rule_coverage: PARTIAL
+  source:
+  - v2/ecad/tools/gen_sch_b.py:378
+  - v2/ecad/tools/gen_sch_b.py:740-743
+  - v2/vendor/cm5/cm5-datasheet.pdf (release 3, sections 2.1.1, 2.1.2 and 3.1)
+  - 'v2/vendor/ti/ti-pca9555.pdf (SCPS131J section 8.1, Fig 8-2: internal pull-up on every I/O)'
+  source_check: VERIFIED
+  conflict_ref: C-03
+  notes: 'Round 2 (challenger): round 1 kept U6 push-pull ''for normal control''; withdrawn.'
+
+- id: CAND-053
+  class: requirement
+  parent: NEED-08
+  statement: "Under EMCON the software also holds and queues every send, shows EMCON on the e-paper and keeps MASTER CAUT steady; EMCON holds through a bank failover."
+  acceptance: "Functional check; ARCH-PCB-B-IOHA A14 (EMCON asserted while a bank is failed over silences that bank's transmitters)."
+  allocated_to: [sw, fw_panel, b]
+  verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [RF-002]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/PANEL.md:147", "v2/docs/ARCH-PCB-B-IOHA.md:251"]
+  source_check: VERIFIED
+
+- id: CAND-054
+  class: requirement
+  parent: NEED-08
+  statement: 'What the kit does while EMCON is closed: keep receivers listening where that can be done without any emission, or put every radio dark.'
+  acceptance: 'TBD (owner, D-05). As generated (adjudication A11): power is removed from the LimeSDR, RockBLOCK, E22, both E72 and the QMX; the 5G module
+    is in airplane mode (receive stops); the two WiFi cards get W_DISABLE1# with an unproven effect; only VHF keeps receiving; the CM5 radios are not gated.'
+  tbd_effect: Mission M4 (listen under EMCON) is possible today only on VHF; a listening option needs design changes on boards A and B and a proof that
+    each remaining transmit gate emits nothing.
+  allocated_to: [owner, a, b]
+  verification_method: [MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: [RF-002]
+  rule_coverage: PARTIAL
+  source:
+  - v2/ecad/tools/gen_sch_b.py:724-728
+  - v2/ecad/tools/gen_sch_a.py:535-537
+  - v2/ecad/tools/gen_sch_d.py:270-287
+  - v2/docs/MESHSAT-709-geometry-appendix.md:2930
+  - v2/docs/PANEL.md:111
+  source_check: VERIFIED
+  conflict_ref: C-20
+
+- id: CAND-055
+  class: conflict
+  parent: NEED-08
+  statement: PANEL.md section 7 says A22 pulls EMCON_HW HIGH through R102 and that a panel-less kit 'charges and computes'; the netlists pull EMCON_HW LOW
+    (inhibited) and SLOT_EN1..3 LOW (no slot powers), and the charger does not charge a 4S pack without its host.
+  acceptance: PANEL.md section 7 matches the netlists and the charger's behaviour after the session fixes S-03, S-04 and S-08.
+  allocated_to: [a, c]
+  verification_method: [SCRIPT, MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: [DOC-002, SCH-004]
+  rule_coverage: PARTIAL
+  source:
+  - v2/docs/PANEL.md:130
+  - v2/docs/PANEL.md:110
+  - v2/ecad/tools/gen_sch_a.py:537
+  - v2/ecad/pcb-a-power-a23/out/pcb-a-power.net (R102 pin 2 on GND; SLOT_EN pull-downs R30, R34, R38)
+  source_check: VERIFIED
+  conflict_ref: C-04
+
+- id: CAND-056
+  class: derived_constraint
+  parent: NEED-08
+  statement: "The PA's VGG is the EMCON gate of the APRS transmitter; D's KEY = PTT_ANY AND TX_INHIBIT_n."
+  acceptance: "Netlist trace on board D."
+  allocated_to: [d, a]
+  verification_method: [SCRIPT]
+  verification_phase: SCHEMATIC
+  rules: [RF-002, SCH-004]
+  rule_coverage: FULL
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2825", "v2/docs/PANEL.md:110"]
+  source_check: VERIFIED
+
+# ---------------------------------------------------------------- NEED-09 blackout, NVG
+- id: CAND-057
+  class: requirement
+  parent: NEED-09
+  statement: "Blackout darkens and silences the kit: the LED rail is opened in hardware, the monitor backlight and touch UI go dark, the monitor speaker and the sounder are muted, the TX lamp is dark."
+  acceptance: "In a dark room with LIGHTING at BLACKOUT no light is visible from the kit and no sound is produced during a bearer event; luminance threshold TBD."
+  tbd_effect: "The test has no numeric pass line; functionally judgeable."
+  allocated_to: [c, fw_panel, sw, a]
+  verification_method: [SCRIPT, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/PANEL.md:139", "v2/docs/PANEL.md:141", "v2/docs/MESHSAT-709-geometry-appendix.md:2866", "v2/docs/MESHSAT-709-geometry-appendix.md:2926"]
+  source_check: VERIFIED
+
+- id: CAND-058
+  class: requirement
+  parent: NEED-09
+  statement: "NVG mode sets the panel to its lowest PWM step (2 %), the backlight to 5 % and shows red and amber indicators only."
+  acceptance: "Functional check; night-vision compatibility of the light guides, LEDs and monitor is TBD (no NVG standard is in the tree)."
+  tbd_effect: "Whether NVG mode is compatible with night-vision devices cannot be claimed."
+  allocated_to: [c, fw_panel, sw]
+  verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/PANEL.md:138", "v2/docs/MESHSAT-709-geometry-appendix.md:2802 (16c)"]
+  source_check: VERIFIED
+
+# ---------------------------------------------------------------- NEED-10 keys, ZEROIZE, tamper
+- id: CAND-059
+  class: requirement
+  parent: NEED-10
+  statement: "ZEROIZE erases the kit's stored keys (the secure element) and makes the encrypted drives unreadable, quickly, on a deliberate operator action."
+  acceptance: "TBD in scope, trigger and time (owner decision). Current text: after ZEROIZE a key operation on the secure element fails (TEST-PLAN section 4); '32.50 item 5: keys wiped in milliseconds'."
+  tbd_effect: "Decision 30 (which device wipes, on which edge) cannot be closed, the panel firmware and HAL cannot be written, and SCH-004 stays blocked on every board."
+  allocated_to: [owner, c, b, fw_panel, sw]
+  verification_method: [MANUAL_REVIEW, SCRIPT, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [SCH-004]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2789 (item 5)", "v2/docs/V2-SPEC.md:33-34", "v2/docs/PANEL.md:112", "v2/docs/PANEL.md:147", "v2/ecad/tools/pcb_decisions.yaml:207-233 (decision 30)", "v2/docs/TEST-PLAN.md:46"]
+  source_check: VERIFIED
+  conflict_ref: C-09
+
+- id: CAND-060
+  class: requirement
+  parent: NEED-10
+  statement: A sealed case-open (tamper) switch under the frame logs lid events, senses the lid for the reduced mode, and feeds the ZEROIZE logic in the
+    role the owner rules.
+  acceptance: The switch appears in a board netlist on an always-powered input (the approved floor plan sites it on E6), and the log records a lid event
+    in the functional check, with the kit on and off; whether it triggers ZEROIZE or only logs is TBD (owner, D-03).
+  tbd_effect: No generator carries the switch today, so the functional check line 'the tamper switch logs the lid' cannot pass and the reduced mode has
+    no lid sensor.
+  allocated_to: [e, case, fw_sensor]
+  verification_method: [SCRIPT, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [SCH-004]
+  rule_coverage: PARTIAL
+  source:
+  - v2/docs/MESHSAT-709-geometry-appendix.md:2790 (item 6)
+  - 'v2/docs/MESHSAT-709-geometry-appendix.md:2848 (E6: the tamper switch input)'
+  - v2/docs/V2-SPEC.md:34
+  - v2/docs/TEST-PLAN.md:46
+  source_check: VERIFIED
+  conflict_ref: C-10
+  notes: grep of v2/ecad/tools/gen_sch_*.py for tamper, case-open, lid and reed returns nothing. Implementation is the session's (S-11); round 1 wrongly
+    listed the function as an owner question.
+
+- id: CAND-061
+  class: requirement
+  parent: NEED-10
+  statement: "Key fill is a signed procedure over the console on the secure element, with scheduled rotation and an audit log; there is no fill port."
+  acceptance: "Procedure document reviewed; a fill and a rotation run on the prototype and appear in the audit log."
+  allocated_to: [procedure, sw, b]
+  verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2802 (16f)", "v2/docs/V2-SPEC.md:34"]
+  source_check: VERIFIED
+
+- id: CAND-062
+  class: requirement
+  parent: NEED-10
+  statement: "Every data drive is encrypted, with its key behind ZEROIZE."
+  acceptance: "Drive encryption configured on every NVMe and on whatever eMMC data is in scope (TBD); after ZEROIZE the drives do not mount."
+  tbd_effect: "Whether the 64 GB eMMC of each module is in scope is unstated."
+  allocated_to: [sw, b]
+  verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2789 (item 5)", "v2/docs/V2-SPEC.md:34"]
+  source_check: VERIFIED
+
+# ---------------------------------------------------------------- NEED-11 position and time
+- id: CAND-063
+  class: requirement
+  parent: NEED-11
+  statement: "Multi-constellation GNSS (LG290P, L1/L2/L5/E6) gives position and a time pulse fanned out to every slot; chrony runs on each module."
+  acceptance: "Fix and time pulse at every slot in the functional check; during self-compatibility (M6) GNSS keeps its fix or recovers within 10 s."
+  allocated_to: [b, sw]
+  verification_method: [SCRIPT, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [SCH-003, RF-001]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/V2-SPEC.md:35", "v2/docs/V2-SPEC.md:50", "v2/docs/MESHSAT-709-geometry-appendix.md:2839", "v2/docs/TEST-PLAN.md:37"]
+  source_check: VERIFIED
+
+- id: CAND-064
+  class: requirement
+  parent: NEED-11
+  statement: A second time source (DCF77, 77.5 kHz) and a holdover clock keep time when GNSS is lost.
+  acceptance: 'Holdover drift per day TBD; the DCF77 time reaches every running module (as a pulse, per V2-SPEC, or through the sensor controller, per the
+    generator: C-26).'
+  tbd_effect: No holdover accuracy target, so the RTC choice (DS3231M on the kit I2C bus) cannot be judged against 32.50 item 11's 'TCXO-disciplined RTC
+    fed by the LG290P pulse'; DCF77 is receivable only within its transmitter's range (inferred), which is a market question.
+  allocated_to: [b, e, sw]
+  verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [CLK-001]
+  rule_coverage: PARTIAL
+  source:
+  - v2/docs/MESHSAT-709-geometry-appendix.md:2795-2797 (items 11 and 13)
+  - v2/docs/PANEL.md:127
+  - v2/docs/V2-SPEC.md:35
+  - v2/ecad/tools/gen_sch_e.py:349
+  - v2/ecad/tools/gen_sch_e.py:381
+  source_check: VERIFIED
+  conflict_ref: C-26
+  notes: 'Round 2 (challenger): round 1 adopted the generator''s routing silently; the conflict is now recorded.'
+
+# ---------------------------------------------------------------- NEED-12 sensing
+- id: CAND-065
+  class: requirement
+  parent: NEED-12
+  statement: "The kit senses inside temperature, humidity and pressure (with the outside pressure as a seal check), floor water, battery-bay gas, shock, tilt and heading, ambient light, lightning, gamma dose rate, and outside temperature, humidity, pressure and UV in a sealed pod."
+  acceptance: "Each sensor reports in the functional check; accuracy targets TBD."
+  tbd_effect: "No accuracy or alarm threshold is recorded for any sensor."
+  allocated_to: [e, c, fw_sensor, sw]
+  verification_method: [SCRIPT, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [SCH-003]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2798 (item 14)", "v2/docs/MESHSAT-709-geometry-appendix.md:2802 (sensor walk-through)", "v2/docs/MESHSAT-709-geometry-appendix.md:2867", "v2/docs/V2-SPEC.md:65"]
+  source_check: VERIFIED
+
+- id: CAND-066
+  class: requirement
+  parent: NEED-12
+  statement: Water on the case floor, and hydrogen or VOC in the battery bay, raise an alarm and shut the pack down.
+  acceptance: Thresholds TBD; the sensor for the battery bay is the SGP41 picked in 32.54 (whether it answers to hydrogen at the relevant levels is TBD);
+    the path from the sensor to the device that opens the pack (the gauge's discharge FET, or another) TBD.
+  tbd_effect: No hardware path from the sensor controller to pack shutdown is recorded; if it goes through the gauge's SMBus it is firmware-only, which
+    bears on decision 40; if the SGP41 does not sense hydrogen, the approved hydrogen sensing has no part.
+  allocated_to: [e, p, fw_sensor]
+  verification_method: [SCRIPT, VENDOR_CONFIRMATION, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [BAT-001, SCH-004]
+  rule_coverage: PARTIAL
+  source:
+  - v2/docs/MESHSAT-709-geometry-appendix.md:2802 (sensors 2 and 4)
+  - v2/docs/MESHSAT-709-geometry-appendix.md:2896 (32.54)
+  - v2/docs/V2-SPEC.md:65
+  - v2/docs/OPERATING-ENVELOPE.md:141
+  source_check: VERIFIED
+  conflict_ref: C-05
+
+- id: CAND-067
+  class: superseded
+  parent: NEED-12
+  statement: "Outside climate and UV sensors behind a membrane vent in an end wall."
+  acceptance: "n/a"
+  allocated_to: [case, e]
+  verification_method: [MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2802 (sensor 8)", "v2/docs/MESHSAT-709-geometry-appendix.md:2850 (vent at west wall)"]
+  superseded_by: "32.53 item 4: a sealed pod on the connector plate over an M8 receptacle with a UV-transparent window."
+  source_check: VERIFIED
+
+- id: CAND-068
+  class: requirement
+  parent: NEED-12
+  statement: "Five IP68-rated internal fans (one per CM5 cooler, two mixer fans) couple the inside air to the skin, speed from the inside climate reading."
+  acceptance: "Fan part picked with a published operating range covering the inside air (TBD, the sheet is owed); fans run in the functional check."
+  tbd_effect: "The fans' temperature range is one of the documents the envelope names as owed."
+  allocated_to: [b, e, fw_sensor]
+  verification_method: [VENDOR_CONFIRMATION, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [THM-001, CMP-001]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2865", "v2/docs/OPERATING-ENVELOPE.md:62-66"]
+  source_check: VERIFIED
+
+# ---------------------------------------------------------------- NEED-13 energy store
+- id: CAND-069
+  class: requirement
+  parent: NEED-13
+  statement: "The cell block has over-voltage, under-voltage, over-current, short-circuit and over-temperature protection in hardware independent of any software, with trip points from the cell maker's own limits."
+  acceptance: "TEST-PLAN section 5 rows 1 to 9 on a replaceable block; the independence clause is decision 40 (open): today every cell-level function is the BQ4050's data-flash configuration and the only firmware-free element is the 25 A blade."
+  allocated_to: [p]
+  verification_method: [SCRIPT, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT, VENDOR_CONFIRMATION]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [BAT-001]
+  rule_coverage: FULL
+  source: ["v2/docs/TEST-PLAN.md:48-77", "v2/ecad/tools/pcb_pack_protection.yaml:17-40"]
+  source_check: VERIFIED
+
+- id: CAND-070
+  class: requirement
+  parent: NEED-13
+  statement: "From the cells to every load, the maximum fault current is bounded at each stage by a protective element sized for that stage's conductors and connectors, coordinated with what it protects."
+  acceptance: "energy_chain.py passes with every stage's prospective fault current, protection and conductor rating sourced; no coordination study exists yet (OPERATING-ENVELOPE section 4)."
+  allocated_to: [p, e, e5, a]
+  verification_method: [CALCULATION, MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: [BAT-002, PWR-003]
+  rule_coverage: FULL
+  source: ["v2/ecad/tools/pcb_energy_chain.yaml:13-22", "v2/docs/OPERATING-ENVELOPE.md:136-142"]
+  source_check: VERIFIED
+
+- id: CAND-071
+  class: requirement
+  parent: NEED-13
+  statement: The cells are charged only between 0 and +45 C and discharged only between -10 and +60 C at the cell surface; below 0 C the pack is warmed
+    by its heater mat before charge.
+  acceptance: 'TEST-PLAN section 5 rows 7 and 8 (chamber at -5 and +50 C with the charger live; -15 and +65 C under a 2 A load): the pack gauge''s charge
+    and discharge FETs follow the windows of pcb_pack_protection.yaml; the bridge''s own hold clears above 3 C (PANEL.md section 10).'
+  allocated_to: [p, a, e, fw_panel]
+  verification_method: [SCRIPT, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [BAT-001, ENV-001]
+  rule_coverage: PARTIAL
+  source:
+  - v2/docs/OPERATING-ENVELOPE.md:43-44
+  - v2/docs/TEST-PLAN.md:69-70
+  - v2/docs/PANEL.md:155
+  - v2/ecad/tools/pcb_pack_protection.yaml:142-157 (CHARGE_ and DISCHARGE_TEMPERATURE_WINDOW)
+  source_check: VERIFIED
+  notes: 'Round 2: the charger BQ25731 has no thermistor input (SLUSE66A pin table, adjudication A02), so the charge window is the gauge''s alone. The cold-soak
+    start-up case (round 1 C-14) is owner question D-02d; C-14 is withdrawn as a conflict.'
+
+- id: CAND-072
+  class: conflict
+  parent: NEED-13
+  statement: The pack headers say 'about 200 Wh' without naming the cell ('4S3P or 4S4P'; '4S4P 18650 or 4S3P 21700'); no 21700 cell sheet is held; and
+    at most about 145 Wh is expected to fit (A06).
+  acceptance: One named cell and one parallel count, with the cell's own sheet in v2/vendor/battery/, used by the energy chain, the protection table, the
+    runtime and the enclosure.
+  allocated_to: [p, owner]
+  verification_method: [CALCULATION, VENDOR_CONFIRMATION]
+  verification_phase: SCHEMATIC
+  rules: [BAT-001, BAT-002]
+  rule_coverage: PARTIAL
+  source:
+  - v2/docs/V2-SPEC.md:20
+  - v2/docs/MESHSAT-709-geometry-appendix.md:3062
+  - v2/ecad/tools/pcb_pack_protection.yaml:17-27
+  - v2/ecad/tools/pcb_energy_chain.yaml:46
+  - v2/ecad/tools/gen_sch_p.py:7
+  source_check: INFERRED
+  conflict_ref: C-15
+  notes: 'Round 2 (challenger): 3P is the protection table''s declared worst case (pcb_pack_protection.yaml:17-18), not ''a configuration nobody proposed''.'
+
+# ---------------------------------------------------------------- NEED-14 service
+- id: CAND-073
+  class: requirement
+  parent: NEED-14
+  statement: "The face plate comes off (ten M3), the rod stack lifts straight up off the blind-mate joint without unscrewing a cable, and the pack comes out of its cradle."
+  acceptance: "Demonstrated on the assembled prototype; the blind-mate float tolerance stack closes in the W4 budget."
+  allocated_to: [case, a, e, e5, kit]
+  verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+  verification_phase: PLACED_BOARD
+  final_phase: ASSEMBLY
+  rules: [MEC-001]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/V2-SPEC.md:13"]
+  source_check: VERIFIED
+
+- id: CAND-074
+  class: requirement
+  parent: NEED-14
+  statement: "Every rail can be brought up current-limited and measured before its loads are enabled, every programmable device (three CM5 over rpiboot, two RP2040, three I/O supervisors, the pack gauge) can be programmed in circuit, and the signals a bring-up needs are reachable."
+  acceptance: "A per-board test access list (W5) checked against the placed boards before layout entry."
+  allocated_to: [a, b, c, d, e, p]
+  verification_method: [MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: [TST-001]
+  rule_coverage: FULL
+  source: ["v2/ecad/tools/pcb_rules.yaml (TST-001)", "v2/docs/ARCH-PCB-B-IOHA.md:31", "v2/docs/PANEL.md:11", "v2/docs/MESHSAT-709-geometry-appendix.md:3064 (gauge golden image over SMBus)"]
+  source_check: VERIFIED
+
+- id: CAND-075
+  class: requirement
+  parent: NEED-14
+  statement: "The sealed USB-C outlet doubles as the maintenance console."
+  acceptance: "A console session over the outlet port on the prototype; which module or controller the console reaches, and after a failover, TBD. Round 2 (W3): both external USB ports are host ports as drawn and the Glenair 233-370 feed-through has no data path, so which external data port the kit has is owner question D-12."
+  tbd_effect: "The console's host path is not in the record; it bears on key fill (CAND-061)."
+  allocated_to: [a, b, sw]
+  verification_method: [SCRIPT, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [SCH-003]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2786 (item 2)"]
+  source_check: VERIFIED
+
+# ---------------------------------------------------------------- NEED-15 verification
+- id: CAND-076
+  class: requirement
+  parent: NEED-15
+  statement: "A whole-kit test plan to MIL-STD-810 and MIL-STD-461 methods is written before the build and run on the built prototype, in-house where possible and at a laboratory where not, with pass criteria per test and fixes fed back into the record; no rating is claimed before it runs."
+  acceptance: "TEST-PLAN.md traces every test to a requirement, states each test's purpose (acceptance, qualification margin or characterisation) and keeps operating, storage and qualification limits distinct (W5)."
+  allocated_to: [kit, procedure]
+  verification_method: [MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [ENV-002, SGN-002]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2804 (16e)", "v2/docs/TEST-PLAN.md:1-3"]
+  source_check: VERIFIED
+
+- id: CAND-077
+  class: conflict
+  parent: NEED-15
+  statement: "TEST-PLAN limits sit outside the adopted envelope: E3 stores at +71 C and operates at +55 C against +45 C storage and +40 C use; E4 stores at -33 C against -20 C. Each may be a deliberate qualification margin; no purpose is recorded."
+  acceptance: "Each test states its purpose and which limit it verifies; no limit is lowered to the envelope without a recorded purpose (plan condition 3)."
+  allocated_to: [procedure, owner]
+  verification_method: [MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: [ENV-001]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/TEST-PLAN.md:18-19", "v2/docs/OPERATING-ENVELOPE.md:94", "v2/docs/OPERATING-ENVELOPE.md:103"]
+  source_check: VERIFIED
+  conflict_ref: C-06
+
+- id: CAND-078
+  class: conflict
+  parent: NEED-15
+  statement: "TEST-PLAN E5 runs 'deployed with the vent open', against the owner's ruling of 7 September 2026 that there is no vent opening anywhere. E8's 'vent ... operate' is ambiguous rather than stale: it plausibly means Peli's pressure valve, which 32.53 keeps (round-2 challenger)."
+  acceptance: "E5 describes the sealed kit; E8 names the Peli pressure valve if that is what is meant (W5)."
+  allocated_to: [procedure]
+  verification_method: [MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/TEST-PLAN.md:20", "v2/docs/TEST-PLAN.md:23", "v2/docs/MESHSAT-709-geometry-appendix.md:2864"]
+  source_check: VERIFIED
+  conflict_ref: C-06
+
+- id: CAND-079
+  class: conflict
+  parent: NEED-15
+  statement: "TEST-PLAN has three article states (transit, deployed, stored); the reduced mode is defined as closed-lid operation, but no closed-lid operating state (antennas on, cables in, lid closed) is tested."
+  acceptance: "A closed-lid operating state is added to TEST-PLAN section 1 with its own thermal test, or closed-lid operation is ruled out."
+  allocated_to: [procedure, owner]
+  verification_method: [MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/TEST-PLAN.md:8", "v2/docs/MESHSAT-709-geometry-appendix.md:2860", "v2/docs/OPERATING-ENVELOPE.md:131"]
+  source_check: VERIFIED
+  conflict_ref: C-16
+
+# ---------------------------------------------------------------- NEED-16 spectrum, licence, markets
+- id: CAND-080
+  class: requirement
+  parent: NEED-16
+  statement: "The markets the prototype is operated or shown in, who operates it, and whether it is ever placed on the market are stated, and the obligations that follow (radio equipment conformity, EMC, battery transport, antenna certification) are listed."
+  acceptance: "TBD (owner). None of the Radio Equipment Directive, UN 38.3, IEC 62368-1 or FCC appears in the design documents (grep, 25 Sep 2026)."
+  tbd_effect: "The EMC test set (MIL-STD-461 only today), the pack's transport route and the choice of antennas cannot be finalised; EFT (CAND-047) stays unrequired."
+  allocated_to: [owner]
+  verification_method: [MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2804 ('certification and support, not price, decide a sale')"]
+  source_check: VERIFIED
+
+- id: CAND-081
+  class: requirement
+  parent: NEED-16
+  statement: "The LoRa transmitter is capped in software to the EU limits: 14 dBm ERP generally, 27 dBm ERP on 869.4 to 869.65 MHz at 10 % duty."
+  acceptance: "Conducted output and duty cycle measured at each configured channel with the antenna gain applied; configuration review of meshtasticd."
+  allocated_to: [b, sw]
+  verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2761 (item 4)"]
+  source_check: VERIFIED
+  notes: "The module can transmit 30 dBm (32.51 line 2814); the cap is software only."
+
+- id: CAND-082
+  class: requirement
+  parent: NEED-16
+  statement: "The VHF and HF transmitters operate only on bands the operator is licensed for; the SA868 can transmit 134 to 174 MHz and the PA covers 135 to 175 MHz, so a band restriction is needed."
+  acceptance: "TBD: the permitted bands per market and the mechanism that enforces them (firmware lock, configuration)."
+  tbd_effect: "The APRS and voice configuration cannot be released; a frequency error puts 30 W outside the amateur band."
+  allocated_to: [d, sw, owner]
+  verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf (frequency range 134 to 174 MHz)", "v2/docs/MESHSAT-709-geometry-appendix.md:2813", "v2/docs/MESHSAT-709-geometry-appendix.md:2802 (16a: amateur bands under the licence)"]
+  source_check: VERIFIED
+
+- id: CAND-083
+  class: requirement
+  parent: NEED-16
+  statement: "The SDR's transmit path is used only where the operator is permitted."
+  acceptance: "TBD (the LimeSDR Mini 2.4 transmits 10 MHz to 3.5 GHz per V2-SPEC)."
+  tbd_effect: "Whether the SDR transmit path is enabled at all is a scope and licence question."
+  allocated_to: [sw, owner]
+  verification_method: [MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/V2-SPEC.md:49"]
+  source_check: VERIFIED
+
+- id: CAND-084
+  class: derived_constraint
+  parent: NEED-16
+  statement: The CM5's radio certification holds with Raspberry Pi's approved antenna kit; the kit carries that antenna through a blind-mate and a bulkhead
+    (J_BM3, WIFI 2.4), and three wireless modules share one wall jack.
+  acceptance: 'TBD: which slot''s radio feeds the wall jack, what the other two use (internal PCB antenna inside the sealed case, or disabled), and whether
+    the cable path keeps the certification.'
+  tbd_effect: Three transmitters have no stated antenna and no certification position.
+  allocated_to: [b, a, case, owner]
+  verification_method: [MANUAL_REVIEW, VENDOR_CONFIRMATION]
+  verification_phase: SCHEMATIC
+  rules: [RF-001]
+  rule_coverage: PARTIAL
+  source:
+  - 'v2/vendor/cm5/cm5-datasheet.pdf (release 3: ''If you use a third-party antenna, you must obtain your own separate certification'')'
+  - v2/docs/MESHSAT-709-geometry-appendix.md:2718
+  - v2/docs/MESHSAT-709-geometry-appendix.md:2948
+  - v2/docs/MESHSAT-709-geometry-appendix.md:2764 (item 7)
+  source_check: INFERRED
+  conflict_ref: C-17
+  notes: 'Round 2 (challenger): whether the intermediate path voids the certification is an inference; the datasheet does not say.'
+
+- id: CAND-085
+  class: superseded
+  parent: NEED-16
+  statement: "'The 5G module's hardware design and its jack count are owed' (Quectel's design guide not on file)."
+  acceptance: "n/a"
+  allocated_to: [b, case]
+  verification_method: [MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/V2-SPEC.md:41", "v2/docs/V2-SPEC.md:76", "v2/docs/ARCH-PCB-B-IOHA.md:198", "v2/docs/MESHSAT-709-geometry-appendix.md:2818"]
+  superseded_by: "The RM520N series hardware design v1.1 (2023-03-16) is held in v2/vendor/quectel/: four antenna ports ANT0 to ANT3 and an optional internal eSIM on the SIM2 interface. The jack count is now a choice, not a missing document (owner decision D-07)."
+  source_check: VERIFIED
+  conflict_ref: C-19
+
+- id: CAND-086
+  class: conflict
+  parent: NEED-16
+  statement: "Dual SIM is 'eSIM plus nano-SIM' in V2-SPEC and 32.50 item 12; the B generator fits two nano-SIM holders."
+  acceptance: "One description; if eSIM is kept, the module variant with the internal eSIM is named."
+  allocated_to: [b]
+  verification_method: [SCRIPT, VENDOR_CONFIRMATION]
+  verification_phase: SCHEMATIC
+  rules: [DOC-002]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/V2-SPEC.md:41", "v2/docs/MESHSAT-709-geometry-appendix.md:2796", "v2/ecad/tools/gen_sch_b.py:474-485"]
+  source_check: VERIFIED
+  conflict_ref: C-18
+
+# ---------------------------------------------------------------- NEED-17 self-compatibility
+- id: CAND-087
+  class: requirement
+  parent: NEED-17
+  statement: "Every transmitter keyed in turn at full power with every receiver listening damages no receiver, falsely triggers no EMCON, ZEROIZE or sensor, and leaves GNSS with its fix or recovering it within 10 s."
+  acceptance: "TEST-PLAN M6 on the prototype."
+  allocated_to: [kit, b, d]
+  verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+  verification_phase: ROUTED_BOARD
+  final_phase: PROTOTYPE
+  rules: [EMC-001, RF-001]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/TEST-PLAN.md:37"]
+  source_check: VERIFIED
+
+- id: CAND-088
+  class: requirement
+  parent: NEED-17
+  statement: "RF protection: gas-discharge arrestors at the antenna bulkheads, a receive limiter or relay on the SDR path during PA key-down, and a shielded compartment for the PA."
+  acceptance: "Each element present in the design; the SDR input stays under its damage level during key-down (level TBD, the LimeSDR sheet is not held)."
+  tbd_effect: "The SDR's input damage level is not in the tree, so the limiter cannot be sized to a number."
+  allocated_to: [case, b, d]
+  verification_method: [SCRIPT, VENDOR_CONFIRMATION, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [EMC-001, TRN-001]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2788 (item 4)", "v2/docs/V2-SPEC.md:51", "v2/docs/OPERATING-ENVELOPE.md:62-64"]
+  source_check: VERIFIED
+
+# ---------------------------------------------------------------- thermal and modes, cross-cutting
+- id: CAND-089
+  class: requirement
+  parent: NEED-07
+  statement: "The 30 W PA's heat (about 45 W at key-down) goes through a stated path to the face plate, and the PA junction stays inside its rating for the APRS duty at +40 C ambient."
+  acceptance: "THM-001 estimate for the PA at the envelope's maximum with the key-down duty (TBD); E3 measurement."
+  tbd_effect: "Without a key-down duty the PA's thermal case is unbounded."
+  allocated_to: [d, c, case]
+  verification_method: [CALCULATION, PROTOTYPE_MEASUREMENT]
+  verification_phase: PLACED_BOARD
+  final_phase: PROTOTYPE
+  rules: [THM-001]
+  rule_coverage: FULL
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2792 (item 8)", "v2/docs/MESHSAT-709-geometry-appendix.md:2813", "v2/docs/MESHSAT-709-geometry-appendix.md:2852", "v2/docs/V2-SPEC.md:73"]
+  source_check: VERIFIED
+
+- id: CAND-090
+  class: conflict
+  parent: NEED-07
+  statement: The reduced mode is 'one module' in the envelope (PS-RED, 19.7 W) and 'monitor off, cluster idle' in 32.53 (PS-RED-b, 25.4 W, both PROVISIONAL);
+    its trigger is 'lid closed or above +35 C' but nothing in the generators senses the lid.
+  acceptance: One definition (which modules, which bearers, monitor state) and a named trigger source.
+  allocated_to: [owner, sw, fw_panel, e]
+  verification_method: [MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: [ENV-001]
+  rule_coverage: PARTIAL
+  source:
+  - v2/docs/OPERATING-ENVELOPE.md:100-101
+  - v2/docs/OPERATING-ENVELOPE.md:131-132
+  - v2/ecad/tools/pcb_envelope.yaml:30
+  - v2/docs/MESHSAT-709-geometry-appendix.md:2860
+  source_check: VERIFIED
+  conflict_ref: C-16
+
+- id: CAND-091
+  class: assumption
+  parent: NEED-07
+  statement: "In direct sun the plate is shaded (a black plate absorbs about 60 W, more than the electronics)."
+  acceptance: "Operating instruction; TBD whether a shade is part of the kit."
+  tbd_effect: "Without a shade the envelope's hot end does not hold in sun."
+  allocated_to: [procedure, owner]
+  verification_method: [MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: [THM-001]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2860", "v2/docs/V2-SPEC.md:73"]
+  source_check: VERIFIED
+
+- id: CAND-092
+  class: derived_constraint
+  parent: NEED-03
+  statement: "Above +35 C ambient the kit runs one module, so compute redundancy (NEED-03) is not available in hot conditions."
+  acceptance: "Stated in the CONOPS and accepted, or the hot-end design changed."
+  allocated_to: [owner]
+  verification_method: [MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: []
+  rule_coverage: NONE
+  source: ["v2/docs/OPERATING-ENVELOPE.md:100", "v2/docs/MESHSAT-709-geometry-appendix.md:2829"]
+  source_check: INFERRED
+  notes: "Consequence of two recorded statements taken together."
+
+- id: CAND-093
+  class: derived_constraint
+  parent: NEED-05
+  statement: "With three loaded modules and the lid open, charging holds off above about +25 C ambient (cells at +45 C), so a hot-weather mission charges only in the reduced mode."
+  acceptance: "Declared behaviour; confirmed by E3 and TEST-PLAN section 5 row 7."
+  allocated_to: [p, a, kit]
+  verification_method: [CALCULATION, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [BAT-001, THM-001]
+  rule_coverage: PARTIAL
+  source: ["v2/docs/OPERATING-ENVELOPE.md:84-90"]
+  source_check: VERIFIED
+
+- id: CAND-094
+  class: conflict
+  parent: NEED-05
+  statement: Peak draw 'about 150 W with everything transmitting' (V2-SPEC, the one-module set of 32.49) against 'about 200 W peak without the outlets,
+    up to 290 W with them' (32.52 item 3, battery-side) and the re-derived PS-ALLTX 227.0 W and PS-ALLTX-OUT 316.4 W (PROVISIONAL).
+  acceptance: V2-SPEC line 23 carries the current per-state figures, marked PROVISIONAL, once the owner has set the runtime target (D-06).
+  allocated_to: [kit]
+  verification_method: [CALCULATION]
+  verification_phase: SCHEMATIC
+  rules: [PWR-001]
+  rule_coverage: PARTIAL
+  source:
+  - v2/docs/V2-SPEC.md:23
+  - v2/docs/MESHSAT-709-geometry-appendix.md:2775
+  - v2/docs/MESHSAT-709-geometry-appendix.md:2846
+  source_check: VERIFIED
+  conflict_ref: C-01
+
+# ---------------------------------------------------------------- round 2 additions (25 Sep 2026)
+- id: CAND-095
+  class: requirement
+  parent: NEED-19
+  statement: One deliberate, covered action (SOS closed 2 s) raises a distress or assistance alert; what it sends, over which bearers, to whom, and whether
+    it may transmit while EMCON is closed are stated.
+  acceptance: 'TBD (owner, D-10). Once ruled: in the functional check, SOS closed 2 s produces the stated message on the stated bearers, MASTER WARN and
+    the sounder pattern, and flipping back cancels, with the e-paper confirming both.'
+  tbd_effect: The panel has the switch, the lamp and the sounder pattern but no defined action; if SOS may override EMCON, a hardware path through the EMCON
+    gates is needed, which none of the boards has.
+  allocated_to: [c, fw_panel, sw, owner]
+  verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: []
+  rule_coverage: NONE
+  source:
+  - v2/docs/PANEL.md:14
+  - v2/docs/PANEL.md:61
+  - v2/docs/PANEL.md:145
+  - v2/docs/PANEL.md:147
+  - v2/docs/PANEL.md:151
+  - v2/docs/V2-SPEC.md:58
+  source_check: VERIFIED
+  conflict_ref: C-31
+
+- id: CAND-096
+  class: requirement
+  parent: NEED-18
+  statement: A ground stud on the case wall gives the kit one bonding point, and the RF arrestors and cable shields bond to it by a stated conductor.
+  acceptance: The stud appears in the case CAD and the connector plate; the bonding conductor from the arrestors and shields to the stud is named; which
+    board net, if any, meets it is decided once (GND-002). TBD until GND-002 is decided.
+  tbd_effect: No board declares a chassis, shield or earth net (session memory, grounding census of 21 Sep 2026), so the arrestors have no earth path and
+    the stud of 32.50 item 12 has no conductor.
+  allocated_to: [case, a, e]
+  verification_method: [MANUAL_REVIEW, SCRIPT]
+  verification_phase: SCHEMATIC
+  final_phase: ASSEMBLY
+  rules: [GND-002]
+  rule_coverage: PARTIAL
+  source: ['v2/docs/MESHSAT-709-geometry-appendix.md:2796 (32.50 item 12)']
+  source_check: VERIFIED
+
+- id: CAND-097
+  class: requirement
+  parent: NEED-03
+  statement: 'The panel controller supervises each slot: a slot whose heartbeat stays flat for 60 s after its rail came up is shown as a slot fault, power-cycled
+    once (rail off 5 s), then left off until the operator acts.'
+  acceptance: In the functional check, a slot with its heartbeat forced flat is flagged (MASTER CAUT, the e-paper names the slot), cycled once and left
+    off; the other slots keep running.
+  allocated_to: [fw_panel, a, b, c]
+  verification_method: [PROTOTYPE_MEASUREMENT]
+  verification_phase: PROTOTYPE
+  rules: []
+  rule_coverage: NONE
+  source: ['v2/docs/PANEL.md:102']
+  source_check: VERIFIED
+
+- id: CAND-098
+  class: requirement
+  parent: NEED-18
+  statement: Conducted emissions and susceptibility on the power leads, bulk cable injection, radiated emissions and radiated susceptibility are tested
+    to MIL-STD-461 methods (TEST-PLAN M1 to M5) against the limit curves of a stated edition and platform.
+  acceptance: 'TBD: the edition and platform curve (session, after the markets decision D-04 says whether any EMC claim is wanted). Until then every run
+    is characterisation and supports no claim (ENV-002).'
+  tbd_effect: Without a limit curve no M1 to M5 result can PASS or FAIL; no MIL-STD-461 edition is held in the tree.
+  allocated_to: [kit]
+  verification_method: [PROTOTYPE_MEASUREMENT]
+  verification_phase: PROTOTYPE
+  rules: [ENV-002, EMC-001]
+  rule_coverage: PARTIAL
+  source:
+  - v2/docs/MESHSAT-709-geometry-appendix.md:2804 (32.50 item 16e)
+  - v2/docs/TEST-PLAN.md section 3 (M1 to M5)
+  source_check: VERIFIED
+
+- id: CAND-099
+  class: requirement
+  parent: NEED-06
+  statement: Deployed, the kit survives 6 hours of blowing dust with no dust inside, and its latches, pressure valve and connectors still operate.
+  acceptance: TEST-PLAN E8 (MIL-STD-810 method 510) at a laboratory; the functional check and the seal check pass afterwards.
+  allocated_to: [case, kit]
+  verification_method: [PROTOTYPE_MEASUREMENT]
+  verification_phase: PROTOTYPE
+  rules: [REL-001, ENV-002]
+  rule_coverage: PARTIAL
+  source: ['v2/docs/TEST-PLAN.md:23']
+  source_check: VERIFIED
+  notes: E8's 'vent' is read as Peli's pressure valve, which 32.53 keeps (challenger); W5 settles the wording.
+
+- id: CAND-100
+  class: assumption
+  parent: NEED-13
+  statement: The owner's 'MIL-STD if possible' for the pack (32.62) is met by qualifying the built pack with the kit under TEST-PLAN; no MIL-STD battery
+    specification is claimed for the pack itself.
+  acceptance: The pack is fitted in the kit for every TEST-PLAN environmental test that the kit runs with its pack.
+  allocated_to: [p, kit]
+  verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [ENV-002]
+  rule_coverage: PARTIAL
+  source:
+  - v2/docs/MESHSAT-709-geometry-appendix.md:3056
+  - v2/docs/MESHSAT-709-geometry-appendix.md:3058
+  - v2/docs/V2-SPEC.md:20
+  source_check: VERIFIED
+
+- id: CAND-101
+  class: requirement
+  parent: NEED-10
+  statement: 'Firmware integrity: what may run on the compute modules and on the controllers (the three I/O supervisors, the panel and sensor controllers)
+    is protected against reflashing by an attacker with the kit in hand, to a stated level.'
+  acceptance: 'TBD (owner, D-13: the level for the prototype, and whether a hardware-isolated root of trust is required, which decides the H753 against
+    H743 mismatch).'
+  tbd_effect: Encrypted drives without verified boot protect data at rest from a stolen kit, not from an attacker who reflashes a module; the H753/H743
+    part question stays open until the level is set (plan condition 1).
+  allocated_to: [b, sw, fw_ioctrl, fw_panel, fw_sensor, owner]
+  verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: []
+  rule_coverage: NONE
+  source:
+  - v2/docs/RED-TEAM-2026-09-09.md:363 (S2)
+  - v2/ecad/tools/gen_sch_b.py:567-571 (J_FLASH, J_RPIBOOT, J_DBG per slot)
+  source_check: VERIFIED
+
+- id: CAND-102
+  class: conflict
+  parent: NEED-11
+  statement: V2-SPEC says the DCF77 pulse is fanned out to every slot; the generator takes it only to the sensor controller RP2040 (GPIO6).
+  acceptance: The pulse reaches every slot, or V2-SPEC says the sensor controller serves DCF77 time over USB.
+  allocated_to: [b, e]
+  verification_method: [SCRIPT, MANUAL_REVIEW]
+  verification_phase: SCHEMATIC
+  rules: [SCH-003]
+  rule_coverage: PARTIAL
+  source:
+  - v2/docs/V2-SPEC.md:35
+  - v2/ecad/tools/gen_sch_e.py:349
+  - v2/ecad/tools/gen_sch_e.py:353
+  - v2/ecad/tools/gen_sch_e.py:381
+  source_check: VERIFIED
+  conflict_ref: C-26
+
+- id: CAND-103
+  class: conflict
+  parent: NEED-05
+  statement: 'Four documents credit the charger with hardware behaviour it does not have: charging with a crashed panel, a thermistor or JEITA input, and
+    reading the pack gauge; as generated its cell-count strap selects 2S and the kit''s loads sit behind its sense resistor.'
+  acceptance: PANEL.md, OPERATING-ENVELOPE.md (with its pin re-set), the appendix entry that corrects 32.62, and CONOPS describe the charger as generated
+    after the session fixes S-03 and S-04; a hostless kit's charge behaviour is stated and bench-confirmed.
+  allocated_to: [a, fw_panel]
+  verification_method: [SCRIPT, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: PROTOTYPE
+  rules: [DOC-002, PWR-001]
+  rule_coverage: PARTIAL
+  source:
+  - v2/docs/PANEL.md:128
+  - v2/docs/PANEL.md:155
+  - v2/docs/OPERATING-ENVELOPE.md:88-89
+  - v2/docs/MESHSAT-709-geometry-appendix.md:3062
+  - v2/ecad/tools/gen_sch_a.py:350
+  - v2/vendor/ti/bq25731-datasheet.pdf (SLUSE66A)
+  source_check: VERIFIED
+  conflict_ref: C-27
+  notes: 'Adjudication A02: the 256 mA hostless default rests on TI E2E 1316778 (23 Jan 2024), INFERRED with bench confirmation owed.'
+
+- id: CAND-104
+  class: conflict
+  parent: NEED-13
+  statement: 'The pack SMBus lead has no single connector: board P is JST-XH 1x4 (SMBC, SMBD, GND, PRES), board E is a 2.54 mm 1x6 pin header (two SMBus
+    sections, no PRES), and ASSEMBLY.md names ''XH2.5 x 6''.'
+  acceptance: Both ends are the same family, pitch and pin count, pin n meets pin n with clock, data and ground aligned, P's ground pin is on the pack side
+    of the shunt, and check_contracts.py carries a J_SMB contract.
+  allocated_to: [e, p]
+  verification_method: [SCRIPT]
+  verification_phase: SCHEMATIC
+  rules: [SCH-003, INT-001]
+  rule_coverage: PARTIAL
+  source: ['v2/ecad/tools/gen_sch_p.py:172', 'v2/ecad/tools/gen_sch_e.py:136', 'v2/docs/ASSEMBLY.md:60']
+  source_check: VERIFIED
+  conflict_ref: C-29
+  notes: Adjudication A07. A straight lead would swap clock and data, hold the sensor bus data line at 0 V and carry no ground.
+
+- id: CAND-105
+  class: derived_constraint
+  parent: NEED-03
+  statement: Every enable line has a defined state from power-up until firmware writes it, set by external resistors that dominate any device's internal
+    pull-up; the shared device rail comes up by design, not by an unspecified expander parameter.
+  acceptance: For every PCA9555-driven enable, the node voltage at power-up with the expander's pull-up at its weakest and strongest is below the load's
+    OFF threshold or above its ON threshold, computed from datasheet limits; DEV_EN is driven high by a resistor to board A's 3.3 V.
+  allocated_to: [a, b, fw_panel]
+  verification_method: [CALCULATION, SCRIPT]
+  verification_phase: SCHEMATIC
+  rules: [PWR-002, SCH-004]
+  rule_coverage: PARTIAL
+  source:
+  - v2/ecad/tools/gen_sch_a.py:407
+  - v2/ecad/tools/gen_sch_a.py:429
+  - v2/vendor/ti/ti-pca9555.pdf (SCPS131J 6.5 and 8.1)
+  - v2/vendor/diodes/diodes-ap64500.pdf (DS41979)
+  source_check: INFERRED
+  conflict_ref: C-32
+  notes: 'Adjudication A01: DEV_EN sits at about 1.71 V nominally against a 1.25 V turn-on maximum and fails only above about 181 k of internal pull-up;
+    PA_SW_EN, HF_SW_EN and CHG_INHIBIT sit in undefined bands; POE_EN and PD_EN are OFF (guaranteed).'
+
+- id: CAND-106
+  class: requirement
+  parent: NEED-14
+  statement: Lifting the stack for service does not leave a person touching live input or pack conductors, by a stated combination of procedure, covers
+    and interlock.
+  acceptance: 'TBD (owner, D-14: whether the operator-dependent residual risk of a procedure-only answer is accepted). The session''s floor, whatever the
+    answer: ASSEMBLY section 7 says what is disconnected first, and an insulating cap covers the dock block while the stack is out.'
+  tbd_effect: The stack lifts off spring contacts whose targets carry VIN_RAW and the pack current (ASSEMBLY.md:117, :131); a hardware interlock would touch
+    boards A, E and possibly P and decision 40.
+  allocated_to: [procedure, e, e5, a, owner]
+  verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+  verification_phase: SCHEMATIC
+  final_phase: ASSEMBLY
+  rules: []
+  rule_coverage: NONE
+  source: ['v2/docs/ASSEMBLY.md:117', 'v2/docs/ASSEMBLY.md:131']
+  source_check: VERIFIED
+
+- id: CAND-107
+  class: derived_constraint
+  parent: NEED-02
+  statement: 'The 5G module sits in a key-B M.2 3052 socket, and if the kit has two 5G jacks they carry the module''s ANT0 and ANT2 (three jacks: ANT0,
+    ANT2, ANT3).'
+  acceptance: The socket's part number is key B on the maker's drawing and its land matches that drawing; the pigtail and jack map names each ANTx port.
+  allocated_to: [b, a, e, case]
+  verification_method: [MANUAL_REVIEW, SCRIPT]
+  verification_phase: SCHEMATIC
+  rules: [CMP-002, RF-001]
+  rule_coverage: PARTIAL
+  source:
+  - v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf (key B p.15 and p.20; Table 32)
+  - v2/ecad/tools/gen_sch_b.py:479
+  - v2/docs/ASSEMBLY.md:99
+  source_check: VERIFIED
+  conflict_ref: C-19
+  notes: 'Adjudication A08: TE 1-2199119-5 is key M (TE drawing C-2199119 rev F); ANT0+ANT2 keeps both n77/n78 transmit paths, ANT0+ANT1 leaves n78''s primary
+    path unconnected. The pairing is engineering; the count is the owner''s (D-07).'
+

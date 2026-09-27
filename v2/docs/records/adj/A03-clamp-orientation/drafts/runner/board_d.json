@@ -1,0 +1,148 @@
+{
+ "board": "pcb-d-aprs-d9/pcb-d-aprs.kicad_pcb",
+ "sha256_16": "929bf82d2bf6eed4",
+ "parts": {
+  "U5": {
+   "lib": "SOT-23-6",
+   "layer": "F.Cu",
+   "at": [
+    109.0,
+    83.8875
+   ],
+   "ref": "U5",
+   "value": "USBLC6-2SC6",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -1.1375,
+     "y": -0.95,
+     "net": "/USB_D8_P"
+    },
+    "2": {
+     "x": -1.1375,
+     "y": 0.0,
+     "net": "GND"
+    },
+    "3": {
+     "x": -1.1375,
+     "y": 0.95,
+     "net": "/USB_D8_N"
+    },
+    "4": {
+     "x": 1.1375,
+     "y": 0.95,
+     "net": "/USB_D8_N"
+    },
+    "5": {
+     "x": 1.1375,
+     "y": 0.0,
+     "net": "/+5V_D8"
+    },
+    "6": {
+     "x": 1.1375,
+     "y": -0.95,
+     "net": "/USB_D8_P"
+    }
+   },
+   "vertical_marks": {
+    "F.Fab": [
+     0.8,
+     -0.8
+    ]
+   },
+   "line": 1589
+  },
+  "D1": {
+   "lib": "D_SMB",
+   "layer": "F.Cu",
+   "at": [
+    67.32,
+    68.875
+   ],
+   "ref": "D1",
+   "value": "SMBJ5.0A",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -2.15,
+     "y": 0.0,
+     "net": "GND"
+    },
+    "2": {
+     "x": 2.15,
+     "y": 0.0,
+     "net": "/+5V_D8"
+    }
+   },
+   "vertical_marks": {
+    "F.SilkS": [
+     -3.66
+    ],
+    "F.Fab": [
+     -2.3,
+     -0.649,
+     0.501,
+     2.3
+    ]
+   },
+   "silk_vertical_on_pad1_side": [
+    -3.66
+   ],
+   "silk_vertical_on_pad2_side": [],
+   "fab_vertical": [
+    -2.3,
+    -0.649,
+    0.501,
+    2.3
+   ],
+   "line": 3062
+  },
+  "D2": {
+   "lib": "D_SOD-123",
+   "layer": "B.Cu",
+   "at": [
+    79.02,
+    106.275
+   ],
+   "ref": "D2",
+   "value": "1N4148W coil flyback",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -1.65,
+     "y": 0.0,
+     "net": "/+5V_D8"
+    },
+    "2": {
+     "x": 1.65,
+     "y": 0.0,
+     "net": "/RLY_K"
+    }
+   },
+   "vertical_marks": {
+    "B.SilkS": [
+     -2.36
+    ],
+    "B.Fab": [
+     -1.4,
+     -0.35,
+     -0.35,
+     0.25,
+     1.4
+    ]
+   },
+   "silk_vertical_on_pad1_side": [
+    -2.36
+   ],
+   "silk_vertical_on_pad2_side": [],
+   "fab_vertical": [
+    -1.4,
+    -0.35,
+    -0.35,
+    0.25,
+    1.4
+   ],
+   "line": 30097
+  }
+ }
+}

@@ -1,0 +1,237 @@
+{
+ "board": "pcb-a-power-a23/pcb-a-power.kicad_pcb",
+ "sha256_16": "58e26c67987b1daa",
+ "parts": {
+  "D4": {
+   "lib": "D_SMB",
+   "layer": "F.Cu",
+   "at": [
+    163.06,
+    50.875
+   ],
+   "ref": "D4",
+   "value": "SMBJ18A (VBUS clamp at the outlet)",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -2.15,
+     "y": 0.0,
+     "net": "/PD_VBUS"
+    },
+    "2": {
+     "x": 2.15,
+     "y": 0.0,
+     "net": "GND"
+    }
+   },
+   "vertical_marks": {
+    "F.SilkS": [
+     -3.66
+    ],
+    "F.Fab": [
+     -2.3,
+     -0.649,
+     0.501,
+     2.3
+    ]
+   },
+   "silk_vertical_on_pad1_side": [
+    -3.66
+   ],
+   "silk_vertical_on_pad2_side": [],
+   "fab_vertical": [
+    -2.3,
+    -0.649,
+    0.501,
+    2.3
+   ],
+   "line": 4309
+  },
+  "D1": {
+   "lib": "D_SMC",
+   "layer": "F.Cu",
+   "at": [
+    37.57,
+    157.975
+   ],
+   "ref": "D1",
+   "value": "SMCJ18A (VBAT clamp)",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -3.4,
+     "y": 0.0,
+     "net": "/VBAT"
+    },
+    "2": {
+     "x": 3.4,
+     "y": 0.0,
+     "net": "GND"
+    }
+   },
+   "vertical_marks": {
+    "F.SilkS": [
+     -4.91
+    ],
+    "F.Fab": [
+     -3.55,
+     -0.649,
+     0.501,
+     3.55
+    ]
+   },
+   "silk_vertical_on_pad1_side": [
+    -4.91
+   ],
+   "silk_vertical_on_pad2_side": [],
+   "fab_vertical": [
+    -3.55,
+    -0.649,
+    0.501,
+    3.55
+   ],
+   "line": 17051
+  },
+  "D2": {
+   "lib": "D_SMC",
+   "layer": "F.Cu",
+   "at": [
+    37.57,
+    69.475
+   ],
+   "ref": "D2",
+   "value": "SMCJ33A (VIN_RAW clamp behind E6's filter)",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -3.4,
+     "y": 0.0,
+     "net": "/VIN_RAW"
+    },
+    "2": {
+     "x": 3.4,
+     "y": 0.0,
+     "net": "GND"
+    }
+   },
+   "vertical_marks": {
+    "F.SilkS": [
+     -4.91
+    ],
+    "F.Fab": [
+     -3.55,
+     -0.649,
+     0.501,
+     3.55
+    ]
+   },
+   "silk_vertical_on_pad1_side": [
+    -4.91
+   ],
+   "silk_vertical_on_pad2_side": [],
+   "fab_vertical": [
+    -3.55,
+    -0.649,
+    0.501,
+    3.55
+   ],
+   "line": 24926
+  },
+  "U29": {
+   "lib": "SOT-23-6",
+   "layer": "F.Cu",
+   "at": [
+    253.0875,
+    125.0,
+    90.0
+   ],
+   "ref": "U29",
+   "value": "USBLC6-2SC6",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -1.1375,
+     "y": -0.95,
+     "net": "/USB_WALL_P"
+    },
+    "2": {
+     "x": -1.1375,
+     "y": 0.0,
+     "net": "GND"
+    },
+    "3": {
+     "x": -1.1375,
+     "y": 0.95,
+     "net": "/USB_WALL_N"
+    },
+    "4": {
+     "x": 1.1375,
+     "y": 0.95,
+     "net": "/USB_WALL_N"
+    },
+    "5": {
+     "x": 1.1375,
+     "y": 0.0,
+     "net": "/+5V_DEV"
+    },
+    "6": {
+     "x": 1.1375,
+     "y": -0.95,
+     "net": "/USB_WALL_P"
+    }
+   },
+   "vertical_marks": {
+    "F.Fab": [
+     0.8,
+     -0.8
+    ]
+   },
+   "line": 37386
+  },
+  "D3": {
+   "lib": "D_SMB",
+   "layer": "F.Cu",
+   "at": [
+    108.32,
+    121.625
+   ],
+   "ref": "D3",
+   "value": "SMBJ5.0A",
+   "lcsc": null,
+   "pads": {
+    "1": {
+     "x": -2.15,
+     "y": 0.0,
+     "net": "+3V3"
+    },
+    "2": {
+     "x": 2.15,
+     "y": 0.0,
+     "net": "GND"
+    }
+   },
+   "vertical_marks": {
+    "F.SilkS": [
+     -3.66
+    ],
+    "F.Fab": [
+     -2.3,
+     -0.649,
+     0.501,
+     2.3
+    ]
+   },
+   "silk_vertical_on_pad1_side": [
+    -3.66
+   ],
+   "silk_vertical_on_pad2_side": [],
+   "fab_vertical": [
+    -2.3,
+    -0.649,
+    0.501,
+    2.3
+   ],
+   "line": 52711
+  }
+ }
+}

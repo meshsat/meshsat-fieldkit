@@ -1,0 +1,9 @@
+contacts 0 mohm: main 3.82 mohm, bypass 46.9 mohm, share around the shunt 7.5 %, at 18 A 1.36 A in the 26 AWG GND wire
+contacts 10 mohm: main 3.82 mohm, bypass 56.9 mohm, share around the shunt 6.3 %, at 18 A 1.13 A in the 26 AWG GND wire
+contacts 20 mohm: main 3.82 mohm, bypass 66.9 mohm, share around the shunt 5.4 %, at 18 A 0.97 A in the 26 AWG GND wire
+PACK_P 12.0 V, clamp 6.0 V: 6.0 mA, R7 36 mW (0603), D2 36 mW, drain 72 mW
+PACK_P 12.0 V, clamp 7.0 V: 5.0 mA, R7 25 mW (0603), D2 35 mW, drain 60 mW
+PACK_P 14.4 V, clamp 6.0 V: 8.4 mA, R7 71 mW (0603), D2 50 mW, drain 121 mW
+PACK_P 14.4 V, clamp 7.0 V: 7.4 mA, R7 55 mW (0603), D2 52 mW, drain 107 mW
+PACK_P 16.8 V, clamp 6.0 V: 10.8 mA, R7 117 mW (0603), D2 65 mW, drain 181 mW
+PACK_P 16.8 V, clamp 7.0 V: 9.8 mA, R7 96 mW (0603), D2 69 mW, drain 165 mW

@@ -1,0 +1,5 @@
+as generated R26 60.4k / R27 40.2k       nominal 39.96 %  1% extremes 39.48..40.44 %  -> ['2S'] / ['2S']
+values swapped R26 40.2k / R27 60.4k     nominal 60.04 %  1% extremes 59.56..60.52 %  -> ['3S'] / ['3S']
+W2 proposal 13.3k over 40.2k             nominal 75.14 %  1% extremes 74.76..75.51 %  -> ['4S'] / ['4S']
+256 mA at pack 12.0 / 14.4 / 16.8 V = 3.07 / 3.69 / 4.30 W
+2S BATOVP rising 104 % of 8.400 V = 8.736 V (min 102.3 % = 8.593 V)
