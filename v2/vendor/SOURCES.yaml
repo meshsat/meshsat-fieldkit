@@ -409,6 +409,143 @@ documents_filed_fc144600:
     status: INFERRED
     matches_fitted: "partial: the 59140 series; the -1-S-05-A variant row was not re-read here"
 
+# ADDED 27 SEPTEMBER 2026 (MESHSAT-1357, round 8 integration): the RF-002 walk's documents; see its note.
+rf002_walk_documents:
+  note: 'ADDED 27 September 2026 (MESHSAT-1357, round 8 integration): the RF-002 walk, tools/tx_inhibit.py, landed with this block. The five TI logic sheets below are cited by its LOGIC table; no board fits them yet, and the walk refuses to cross a part whose sheet is not held, so each is filed before a board fits it. They sit outside parts: on purpose (as battery_review_documents and documents_filed_fc144600 do), so they join no BOM line. relied_on_added carries the r4t author''s rows for documents already filed: the sentences of each that the walk quotes, to be read with that document''s own entry. Source: fnd/r4t drafts/vendor-rows-r4t.yaml (rounds 4 to 6), filed by the session under the owner''s standing rule of 26 September 2026.'
+  filed:
+  - path: v2/vendor/ti/ti-sn74lvc1g34.pdf
+    doc_id: TI SN74LVC1G34
+    revision: SCES519O, October 2025
+    url: https://www.ti.com/lit/ds/symlink/sn74lvc1g34.pdf
+    fetched: 2026-09-26, by the r4t author from ti.com; filed byte for byte on 27 September 2026
+    sha256: 04384d3a3cf65b2b3f83cc2d04c19b660c3d6a423af6a863e8de3ddf45ccecb3
+    status: VERIFIED
+    relied_on: 'Table 4-1, DBV/DCK: NC 1, A 2, GND 3, Y 4, VCC 5; VOL at most 0.4 V at 16 mA with VCC 3 V (the worked tap example in r4-helper-api.md). Board C''s U9 was this family before round 4; it is a Diodes 74LVC1G17 since main faf8c981'
+    matches_fitted: 'no part fitted from it: a LOGIC row of tools/tx_inhibit.py'
+  - path: v2/vendor/ti/ti-sn74lvc00a.pdf
+    doc_id: TI SN74LVC00A
+    revision: SCAS279U, July 2024
+    url: https://www.ti.com/lit/ds/symlink/sn74lvc00a.pdf
+    fetched: 2026-09-26, by the r4t author from ti.com; filed byte for byte on 27 September 2026
+    sha256: e2f3429c2a9f58341a9e0263ff8eb9a55bb71c170d50365b6d38687f22585342
+    status: VERIFIED
+    relied_on: 'Table 4-1 (D, DB, NS, PW): 1A 1, 1B 2, 1Y 3, 2A 4, 2B 5, 2Y 6, 3Y 8, 3A 9, 3B 10, 4Y 11, 4A 12, 4B 13; 7.3.3 Clamp Diodes (page 9): ''The inputs and outputs to this device have negative clamping diodes'' (round 6 twelfth pass, R4T-D71: its inputs held up are no path into VCC)'
+    matches_fitted: 'no part fitted from it: a LOGIC row of tools/tx_inhibit.py'
+  - path: v2/vendor/ti/ti-sn74lvc1g07.pdf
+    doc_id: TI SN74LVC1G07
+    revision: SCES296AG, October 2025
+    url: https://www.ti.com/lit/ds/symlink/sn74lvc1g07.pdf
+    fetched: 2026-09-26, by the r4t author from ti.com; filed byte for byte on 27 September 2026
+    sha256: 5c68b82a5110b337457ca918b149432c6b9c605be7849e76116f108ddbd7abee
+    status: VERIFIED
+    relied_on: 'Pin Functions, DBV/DCK: NC 1, A 2, GND 3, Y 4, VCC 5; open-drain output; page 1: ''SN74LVC1G07 Single Buffer/Driver With Open-Drain Output'' and ''The output of the SN74LVC1G07 device is open drain'' (round 6 twelfth pass, R4T-D71: the output clears on a gated rail)'
+    matches_fitted: 'no part fitted from it: a LOGIC row of tools/tx_inhibit.py'
+  - path: v2/vendor/ti/ti-sn74lvc2g07.pdf
+    doc_id: TI SN74LVC2G07
+    revision: SCES308L, May 2015
+    url: https://www.ti.com/lit/ds/symlink/sn74lvc2g07.pdf
+    fetched: 2026-09-26, by the r4t author from ti.com; filed byte for byte on 27 September 2026
+    sha256: 71bbb2fc452e2949b332c030b004b094ba679ac8cce27123f806a0a6b1fde660
+    status: VERIFIED
+    relied_on: 'Pin Functions: 1A 1, GND 2, 2A 3, 2Y 4, VCC 5, 1Y 6; page 1: ''SN74LVC2G07 Dual Buffer and Driver With Open-Drain Outputs'' and ''SN74LVC2G07 device is open drain'' (round 6 twelfth pass, R4T-D71)'
+    matches_fitted: 'no part fitted from it: a LOGIC row of tools/tx_inhibit.py'
+  - path: v2/vendor/ti/ti-sn74lvc07a.pdf
+    doc_id: TI SN74LVC07A
+    revision: SCAS595W, October 2016
+    url: https://www.ti.com/lit/ds/symlink/sn74lvc07a.pdf
+    fetched: 2026-09-26, by the r4t author from ti.com; filed byte for byte on 27 September 2026
+    sha256: 52e8588a17302bc7b299b08002bf80f9c06035f34374b75fdc33afa0a4e3dd9f
+    status: VERIFIED
+    relied_on: 'Pin Functions (D, DB, DGV, NS, PW): 1A 1, 1Y 2, 2A 3, 2Y 4, 3A 5, 3Y 6, 4Y 8, 4A 9, 5Y 10, 5A 11, 6Y 12, 6A 13; page 1: ''SN74LVC07A Hex Buffer and Driver With Open-Drain Outputs'' (round 6 twelfth pass, R4T-D71)'
+    matches_fitted: 'no part fitted from it: a LOGIC row of tools/tx_inhibit.py'
+  relied_on_added:
+  - doc: TI SN74LVC1G08 (v2/vendor/ti/ti-sn74lvc1g08.pdf)
+    add: 'Pin Functions, DBV/DCK: A 1, B 2, GND 3, Y 4, VCC 5'
+  - doc: TI SN74LVC1G04 (v2/vendor/ti/ti-sn74lvc1g04.pdf)
+    add: 'Pin Functions, DBV/DCK: NC 1, A 2, GND 3, Y 4, VCC 5'
+  - doc: TI SN74LVC1G00 (v2/vendor/ti/ti-sn74lvc1g00.pdf)
+    add: 'Pin Functions, DBV/DCK: A 1, B 2, GND 3, Y 4, VCC 5'
+  - doc: TI SN74LVC1G06 (v2/vendor/ti/ti-sn74lvc1g06.pdf)
+    add: 'Table 4-1, DBV/DCK: NC 1, A 2, GND 3, Y 4, VCC 5; open-drain inverter'
+  - doc: TI SN74LVC08A SCAS283W (v2/vendor/ti/ti-sn74lvc08a-quad-and.pdf)
+    add: '5.7, -40 to +85 C: II +-5 uA at VCC 3.6 V; no Ioff row; 7.3.3 output clamp diodes to VCC and GND (so tx_inhibit takes an unpowered SN74LVC08A pin as unbounded)'
+  - doc: TI SN74LVC1G08 SCES217AA
+    add: '5.5: II +-5 uA, Ioff +-10 uA; VIL 0.8 V and VIH 2 V at VCC 3 V to 3.6 V'
+  - doc: TI SN74LVC1G04 SCES214AF
+    add: '5.5: II +-5 uA, Ioff +-10 uA'
+  - doc: TI SN74LVC1G34 SCES519O
+    add: '5.5, -40 to +85 C: II +-1 uA, Ioff +-10 uA'
+  - doc: TI SN74LVC1G07 SCES296AG
+    add: '5.5: II +-5 uA, Ioff +-10 uA (no off-state output current row)'
+  - doc: TI SN74LVC1G00 SCES212AC
+    add: II +-5 uA, Ioff +-10 uA
+  - doc: TI SN74LVC1G06 SCES295AB
+    add: '5.5: II +-1 uA, Ioff +-10 uA'
+  - doc: TI SN74LVC2G07 SCES308L
+    add: '6.5: II +-5 uA, Ioff +-10 uA'
+  - doc: TI SN74LVC07A SCAS595W
+    add: '6.5 (-40 to +125 C): II +-5 uA, Ioff +-10 uA'
+  - doc: TI SN74LVC00A SCAS279U
+    add: '5.7, -40 to +85 C: II +-5 uA; no Ioff row'
+  - doc: TI TPS22810 SLVSDH0C (v2/vendor/ti/ti-tps22810-load-switch.pdf)
+    add: 'Pin Functions VIN (WSON 6, SOT23 1); 7.5: VENF 1.08 V minimum, IEN/UVLO 0.1 uA maximum (-40 to +105 C); 9.3.1 ''This pin cannot be left floating'''
+  - doc: TI TPS2596x SLVSET8A (v2/vendor/power/tps2596.pdf)
+    add: 'Pin Functions IN 4, ''Do not leave floating'' (EN/UVLO); 7.5: VUVLO(F) 1.08 V minimum, IENLKG +-0.1 uA'
+  - doc: TI LM5176 SNVSAI1D (v2/vendor/ti/lm5176-datasheet.pdf)
+    add: 'Pin Functions VIN 2; 6.5: VEN(OP) 1.17 V minimum, IEN(STBY) 3 uA maximum sourced at VEN/UVLO 1.1 V; 7.3.3 below VEN(OP) the PWM controller is disabled'
+  - doc: Diodes AP64500 DS41979 Rev. 5-2 (v2/vendor/diodes/diodes-ap64500.pdf)
+    add: 'Pin Descriptions VIN 2, EN ''leave floating for automatic startup''; Electrical Characteristics: VEN_L 1.03 V minimum, IEN 2 uA maximum at VEN 1 V'
+  - doc: JSCJ 2N7002 (drafts/datasheets/lcsc_C8545_JSCJ_2N7002.pdf, row above)
+    add: 'page 2: IGSS +-80 nA and IDSS 80 nA at Ta 25 C only (tx_inhibit takes both as unbounded over the envelope); RDS(on) at VGS 5 V and 10 V only'
+  - doc: ST DS12110 Rev 10 (v2/vendor/st/st-stm32h743xi-datasheet.pdf)
+    add: page 1 'VBAT battery operating mode with charging capability'; 3.19 VBAT operation; Figure 15 Power supply scheme ('VBAT charging' from VDD); 6.3.24 Table 95 VBAT charging characteristics, RBC 5 kOhm (VBRS = 0) and 1.5 kOhm (VBRS = 1) in PWR_CR3 (tx_inhibit.py, R4T-D51)
+  - doc: ST DS12117 Rev 9 (v2/vendor/st/st-stm32h753xi-datasheet.pdf)
+    add: 'the same rows: 3.5.1, 3.19, Figure 14, Table 90 (VREFBUF), Table 94 (VBAT charging) (tx_inhibit.py, R4T-D51)'
+  - doc: Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf)
+    add: '5.1.2.6 LED Override Register and 5.1.2.7 LED Output Register: each LEDx_y pin can be a General Purpose Output set by register (tx_inhibit.software_io, R4T-D52)'
+  - doc: Diodes PI7C9X2G404SL datasheet revision 5, July 2025 (v2/vendor/diodes/diodes-pi7c9x2g404sl.pdf)
+    add: 'pin description GPIO[7:0]: ''programmed as either input-only or bi-directional pins by writing the GPIO output enable control register'' (tx_inhibit.software_io, R4T-D52)'
+  - doc: TI TUSB8041 SLLSEE4E (v2/vendor/ti/ti-tusb8041.pdf)
+    add: PWRCTL1 to PWRCTL4, 'USB Port n Power On Control for Downstream Power'; 'An individually port power controlled hub switches power on or off to each downstream port as requested by the USB host' (tx_inhibit.software_io, R4T-D52)
+  - doc: ST DS12110 Rev 10 (v2/vendor/st/st-stm32h743xi-datasheet.pdf)
+    add: '3.5.1 Power supply scheme and Figure 3 (pages 27 and 28): the supplies, ''When VDD is below 1 V, other power supplies (VDDA, VDD33USB, VDD50USB) must remain below VDD + 300 mV'', ''When VDD is above 1 V, all power supplies are independent'', ''Invalid supply area''; Table 9 note 8 (page 87): VDDLDO ''internally tied to VDD'' where a package has no such pin; 6.2 Table 21 (page 104): input voltage on FT_xxx pins at most Min(VDD, VDDA, VDD33USB, VBAT) + 4.0 V, and its note 4 (page 105) on the internal pull-ups; Table 22 note 3 (page 105): positive injection; 6.3.1 Table 24 (page 106): ''VDDLDO <= VDD''; 6.3.20 Table 87 (page 168) and 6.3.21 Table 89 (page 173): VREF+ at most VDDA (tx_inhibit.py, R4T-D57, R4T-D60, R4T-D62, R4T-D67, R4T-D68)'
+  - doc: ST DS12117 Rev 9 (v2/vendor/st/st-stm32h753xi-datasheet.pdf)
+    add: 'the same rows: 3.5.1 and Figure 2 (pages 27 and 28), Table 8 note 8 (page 87), Tables 21 and 22, 6.3.1 Table 23 (page 106), Tables 86 and 88 (pages 168 and 173) (tx_inhibit.py, R4T-D57, R4T-D60, R4T-D62, R4T-D68)'
+  - doc: Raspberry Pi Compute Module 5 datasheet, release 3 (v2/vendor/cm5/cm5-datasheet.pdf)
+    add: '2.9 (page 11): ''GPIO_VREF must be connected to either CM5_3.3v or CM5_1.8v ... This external supply must only be active while CM5_1.8v is on''; 2.12.2 Table 3 (page 14): VBAT keeps the RTC ''even when the board is off''; 3.1 Power-up sequencing (page 15): ''No pins should be powered before the 5 V rail is active''; 3.4 Regulator outputs; 4.2.1 (page 23): ''Reverse voltage ... when CM5 is powered-down or off, there must be no external voltage applied to any pin''; 4.3.3 (page 27): IVBAT 6 uA typical at Vin = 0 V (tx_inhibit.py, R4T-D50, R4T-D61, R4T-D62, R4T-D68)'
+  - doc: Silicon Labs CP2102N Data Sheet Rev. 1.5 (v2/vendor/silabs/silabs-cp2102n.pdf)
+    add: '2.3 USB (page 8): VBUS leakage ''while the device is not powered''; Table 3.1 (page 10): VIO 1.71 V to VDD and ''On devices without a VIO pin, VIO = VDD''; Table 3.6 and note 1 (page 12): VREGOUT on VDD; Table 3.10 Absolute Maximum Ratings (page 15): ''Voltage on UART pins, GPIO, VBUS, RSTb, or any other non-power, non-USB pin'' at most VIO + 2.5 V where VIO is below 3.3 V, D+ and D- at most VDD + 0.3 V (tx_inhibit.py, R4T-D50, R4T-D62, R4T-D68)'
+  - doc: Raspberry Pi RP2040 Datasheet (v2/vendor/rp2040/rpi-rp2040-datasheet.pdf)
+    add: '1.4.2 Table 1 (supply pins); 2.9.5 (page 152): ADC inputs above IOVDD leak through the ESD diodes, ''It is safe to supply ADC_AVDD at a higher or lower voltage than IOVDD''; 2.9.6 (page 152): ''may be powered up or down in any order''; 2.9.7.1 (page 152): VREG_VOUT ''must be connected to the chip''s DVDD pins off-chip''; 2.9.7.2 (page 153): ''If an external core supply is used, the output of on-chip voltage regulator (VREG_VOUT) should be left unconnected''; 2.10.2.2 (page 156): ''with only one regulator supplying the load at a time''; 5.5.2 Table 614 (page 612): the fault-tolerant pins, ''very little current flows into the pin whilst it is below 3.63V and IOVDD is 0V''; Tables 615, 616, 618 and 619 (pages 612 and 613): which pins are fault-tolerant; 5.5.3.1 Table 622 (page 614): ''Voltage at IO'' at most IOVDD + 0.5 V (tx_inhibit.py, R4T-D58, R4T-D62, R4T-D67, R4T-D68)'
+  - doc: TI PCA9555 SCPS131J (v2/vendor/ti/ti-pca9555.pdf)
+    add: 'Table 5-1 Pin Functions (page 4): SCL ''Serial clock bus'', SDA ''Serial data bus'', INT ''Interrupt output'', A0 to A2 ''Address input''; 6.1 Absolute Maximum Ratings (page 5): VI and VO -0.5 V to 6 V, IIK only for VI < 0, IOK only for VO < 0, IIOK ''Input/output clamp current'' for VO < 0 or VO > VCC; 6.5 IIL -100 uA at VI = GND (page 7); Figure 8-2 Simplified Schematic Of P-Port I/Os (page 15): the 100 kOhm pull-up to VCC (tx_inhibit.py, R4T-D58, R4T-D68)'
+  - doc: TI SN74LVC08A SCAS283W (v2/vendor/ti/ti-sn74lvc08a-quad-and.pdf)
+    add: '5.1 Absolute Maximum Ratings (page 5): ''Output voltage'' at most VCC + 0.5 V; 7.3.3 Clamp Diodes (page 11): ''The outputs to this device have both positive and negative clamping diodes'' (tx_inhibit.py, R4T-D65)'
+  - doc: TI SN74LVC32A SCAS286U (v2/vendor/ti/ti-sn74lvc32a-quad-or.pdf)
+    add: '5.1 Absolute Maximum Ratings (page 4): ''Output voltage'' at most VCC + 0.5 V, IIK and IOK only below 0 V, no power-off rating; 5.7: no Ioff row; its Application Information''s ''5.5-V tolerant'' outputs are, in its own note, ''not part of the TI component specification'' (tx_inhibit.py, R4T-D65). This sheet has no clamp-diode section'
+  - doc: TI SN74LVC00A SCAS279U (to file, row above)
+    add: '5.1 Absolute Maximum Ratings (page 4): ''Output voltage'' at most VCC + 0.5 V; 7.3.3 Clamp Diodes (page 9): ''The inputs and outputs to this device have negative clamping diodes'' (tx_inhibit.py, R4T-D65)'
+  - doc: TI TPS22810 SLVSDH0C (v2/vendor/ti/ti-tps22810-load-switch.pdf)
+    add: '10.4 Output Capacitor (page 18): ''Due to the integrated body diode in the NMOS switch ... This can result in current flow through the body diode from VOUT to VIN'' (tx_inhibit.py, R4T-D65)'
+  - doc: TI TPS2596 SLVSET8A (v2/vendor/power/tps2596.pdf)
+    add: '7.1 Absolute Maximum Ratings (page 5): VOUT at most min (21, VIN + 0.3) V (tx_inhibit.py, R4T-D65)'
+  - doc: Diodes AP64500 DS41979 Rev. 5-2 (v2/vendor/diodes/diodes-ap64500.pdf)
+    add: 'Absolute Maximum Ratings (page 5 of 26): VSW at most VIN + 0.3 V (DC) (tx_inhibit.py, R4T-D65)'
+  - doc: TI LM5176 SNVSAI1D (v2/vendor/ti/lm5176-datasheet.pdf)
+    add: '6.1 Absolute Maximum Ratings (page 5): VIN, EN/UVLO, VISNS, VOSNS, ISNS(+) and ISNS(-) each -0.3 V to 60 V (tx_inhibit.py, R4T-D65: no output bound by VIN, so no `reverse` row)'
+  - doc: JSCJ 2N7002 (v2/vendor/power/jscj-2n7002-c8545.pdf, on main since ccf5808e)
+    add: page 1 pins and the Equivalent Circuit (body diode, anode S, cathode D); page 2 Vth(GS) 1.0 to 2.5 V, IGSS and IDSS at Ta 25 C only, VSD, RDS(on) at VGS 5 V and 10 V (tx_inhibit.py since round 4's second fix-up; the `fets` row above, whose staged path is superseded)
+  - doc: entry tvs-surge-clamps, row E D3, SMCJ18A, maker TBD
+    add: 'its one-way reading (kisch.tvs_direction: no C in the suffix) rests on the SMBJ/SMCJ family numbering, which every maker''s sheet held for the set''s codes follows (Littelfuse, Diodes Inc DS19002, MDD Rev:2025A7, Vishay), and not on its own maker''s sheet, because no code and no maker are fixed for it yet'
+  - doc: JSCJ 2N7002 (v2/vendor/power/jscj-2n7002-c8545.pdf, on main since ccf5808e)
+    add: 'page 1, pins 1 GATE, 2 SOURCE, 3 DRAIN, and the Equivalent Circuit: the body diode with its anode on S and its cathode on D; page 2, Vth(GS) 1 V min, 1.6 V typ, 2.5 V max at VDS = VGS, ID = 250 uA; Diode Forward Voltage VSD 0.55 V min, 1.2 V max at IS = 115 mA, VGS = 0 V; RDS(on) 7 Ohm max at VGS = 5 V, ID = 50 mA'
+  - doc: Diodes Incorporated 74LVC1G17, single Schmitt-trigger buffer (v2/vendor/diodes/diodes-74lvc1g17.pdf, on main)
+    add: 'Pin Assignments and Pin Descriptions, SOT25/SOT353: NC 1, A 2, GND 3, Y 4, VCC 5; Electrical Characteristics, -40 to +85 C: II +-5 uA, IOFF +-10 uA (VCC 0), VT- 0.80 V minimum and VT+ 2.00 V maximum at VCC 3 V'
+  - doc: Nexperia PESD12VL1BA, low capacitance bidirectional ESD protection diode, product data sheet (v2/vendor/nexperia/nexperia-pesd12vl1ba.pdf, on main)
+    add: 'title and section 2: ''Low capacitance bidirectional ESD protection diode'', ''Bidirectional ESD protection of one line''; pins K1 and K2 (kisch._HELD_DIRECTION)'
+  - doc: Diodes Incorporated BZT52C2V0 - BZT52C51, surface mount zener diode (v2/vendor/diodes/diodes-bzt52c.pdf, on main)
+    add: 'title ''SURFACE MOUNT ZENER DIODE'', Mechanical Data ''Polarity: Cathode Band'', the BZT52C12 row (11.4 V to 12.7 V at IZT 5 mA), Ordering Information ''(Type Number)-7-F'' (kisch._HELD_DIRECTION, R4T-D48)'
+
 parts:
 
   - id: cm5-receptacle
@@ -441,6 +578,42 @@ parts:
         url: "https://datasheets.raspberrypi.com/cm5/cm5-datasheet.pdf (INFERRED from the folder record, sources.txt line 21)"
         sha256: "80070fefd8db6e8abc6e146c8b7b5fb318ba129cc1e28826936d547fde79c863"
         matches_fitted: "yes for the module side: pinout, routing impedances (p.9), USB3 TX AC coupling on the module (p.22); its part-number table (section 6.2) lists CM5108064 = wireless, 8 GB, 64 GB eMMC, the module the generator names at gen_sch_b.py:388"
+      - path: "v2/vendor/cm5/doc-rtc.adoc"
+        doc_id: "Raspberry Pi documentation, computers/raspberry-pi/rtc.adoc, 'Real Time Clock (RTC)'"
+        revision: "raspberrypi/documentation master, last commit to the file 8136a09a234f3405574e2fb7154408101ebda9a3 (2026-08-11)"
+        url: "https://raw.githubusercontent.com/raspberrypi/documentation/master/documentation/asciidoc/computers/raspberry-pi/rtc.adoc"
+        fetched: "2026-09-26, curl from the runner, 3,170 bytes"
+        sha256: "821fcbf7551eb9a78b86d2312bccc5cbbf56e5cc1b555130be6a9b128b651b2b"
+        relied_on: "'Enable battery charging': 'The RTC is equipped with a constant-current (3 mA) constant-voltage charger. Charging of the battery is disabled by default'; charging_voltage_max 4400000, charging_voltage_min 1300000; 'dtparam=rtc_bbat_vchg=3000000' in config.txt"
+        matches_fitted: "partial: the page is written for the Raspberry Pi 5; that the Compute Module 5 has the same charger rests on the overlay README ('2712 only') and on the module's own device tree (the two .dtsi rows below)"
+        filed: "27 September 2026, round 8 integration (MESHSAT-1357), byte for byte from fnd/r4t drafts/datasheets/cm5/; cited by tools/tx_inhibit.py FW_PIN_TABLES, Compute Module 5 (R4T-D51)"
+      - path: "v2/vendor/cm5/rpi-firmware-overlays-README.txt"
+        doc_id: "raspberrypi/firmware boot/overlays/README (device tree overlay and parameter reference)"
+        revision: "raspberrypi/firmware master, last commit to the file f72c4f4291502627265132b98db5657608594d34 (2026-09-11)"
+        url: "https://raw.githubusercontent.com/raspberrypi/firmware/master/boot/overlays/README"
+        fetched: "2026-09-26, curl from the runner, 304,661 bytes"
+        sha256: "48a13f1f5fa1de9f60d81447ca9166e1b355fd7449ccb6bb5d5e3bb94794f595"
+        relied_on: "lines 404 to 407: 'rtc_bbat_vchg Set the RTC backup battery charging voltage in microvolts. If set to 0 or not specified, the trickle charger is disabled. (2712 only, default \"0\")'"
+        matches_fitted: "yes for the BCM2712, the Compute Module 5's SoC"
+        filed: "27 September 2026, round 8 integration (MESHSAT-1357), byte for byte from fnd/r4t drafts/datasheets/cm5/; cited by tools/tx_inhibit.py FW_PIN_TABLES, Compute Module 5 (R4T-D51)"
+      - path: "v2/vendor/cm5/linux-bcm2712-rpi.dtsi"
+        doc_id: "raspberrypi/linux arch/arm64/boot/dts/broadcom/bcm2712-rpi.dtsi"
+        revision: "raspberrypi/linux rpi-6.18.y (the default branch on 2026-09-26), last commit to the file 00365ac08afc2ede1d67f22c7a4cb79520b7905a (2026-09-03)"
+        url: "https://raw.githubusercontent.com/raspberrypi/linux/rpi-6.18.y/arch/arm64/boot/dts/broadcom/bcm2712-rpi.dtsi"
+        fetched: "2026-09-26, curl from the runner, 12,567 bytes"
+        sha256: "6d09493a2912d8e616d2dbefe49892591023fb7d47ab08c61cb741da4fc681f0"
+        relied_on: "lines 42 to 46: 'rpi_rtc: rpi_rtc { compatible = \"raspberrypi,rpi-rtc\"; ... trickle-charge-microvolt = <0>; }'; line 243: 'rtc_bbat_vchg = <&rpi_rtc>, \"trickle-charge-microvolt:0\";'"
+        matches_fitted: "yes: included by the Compute Module 5's own tree (next row)"
+        filed: "27 September 2026, round 8 integration (MESHSAT-1357), byte for byte from fnd/r4t drafts/datasheets/cm5/; cited by tools/tx_inhibit.py FW_PIN_TABLES, Compute Module 5 (R4T-D51)"
+      - path: "v2/vendor/cm5/linux-bcm2712-rpi-cm5.dtsi"
+        doc_id: "raspberrypi/linux arch/arm64/boot/dts/broadcom/bcm2712-rpi-cm5.dtsi"
+        revision: "raspberrypi/linux rpi-6.18.y, last commit to the file 6855d494d269941d37ab4bce6d75e92bc101d657 (2026-04-20)"
+        url: "https://raw.githubusercontent.com/raspberrypi/linux/rpi-6.18.y/arch/arm64/boot/dts/broadcom/bcm2712-rpi-cm5.dtsi"
+        fetched: "2026-09-26, curl from the runner, 14,879 bytes"
+        sha256: "bd97a9e44686112354dfc17e7af54cec6eba67a2afdd06ce7110c838642ec87b"
+        relied_on: "line 13: 'compatible = \"raspberrypi,5-compute-module\", \"brcm,bcm2712\";'; line 196: '#include \"bcm2712-rpi.dtsi\"'"
+        matches_fitted: "yes: the Compute Module 5's own device tree"
+        filed: "27 September 2026, round 8 integration (MESHSAT-1357), byte for byte from fnd/r4t drafts/datasheets/cm5/; cited by tools/tx_inhibit.py FW_PIN_TABLES, Compute Module 5 (R4T-D51)"
 
   - id: pcie-switch
     function: "PCIe 2.0 packet switch per slot (upstream CM5 lane, NVMe, card socket)"

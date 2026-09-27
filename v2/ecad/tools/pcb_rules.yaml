@@ -1474,9 +1474,31 @@ rules:
 
  - id: RF-002
    false_positive_analysis: >
-     A false refusal is a board whose sibling netlist is missing, since the contract compares two boards; that is
-     INCONCLUSIVE. A real refusal names the device that drives the line, and the rule is that no device may: the
-     panel toggle is the only source.
+     A board whose sibling netlist is missing is UNJUDGED, not refused, since the lines cross three boards. A result is
+     UNDECIDED, never a pass, where the refusal would rest on something no held document states: a pin no maker document
+     shows to be an input (an undocumented M.2 W_DISABLE1#), a leakage no sheet bounds (an unpowered part with no Ioff row,
+     a FET's IGSS stated at 25 C only), a threshold a maker does not state (the SA868's PTT), a diode whose orientation is
+     not drawn, a supply input beside another supply pin of its part held up elsewhere that its maker does not let fall in
+     that order (an STM32H7's VDD beside a live VBAT, VDDA, VDD33USB, VDD50USB or VDDLDO, its VDDA beside an external
+     VREF+, a CP2102N's VREGIN beside a VDD fed from elsewhere or its VIO, a Compute Module 5's 5V beside an external
+     GPIO_VREF), a part's own supply output held up from outside (an STM32H7's VCAP, an RP2040's VREG_VOUT), an I/O held up
+     beside the supply its maker joins or bounds it by (a PCA9555's P-port, an RP2040's ADC input or other
+     non-fault-tolerant pin, an STM32H7's I/O, a CP2102N's VBUS or UART pin, a Compute Module's GPIO, a PCA9555's SDA), a
+     logic part's or a switch's output held up where its maker states a path back or rates the output by its supply (an
+     SN74LVC08A, 32A or 00A; a TPS22810, TPS2596 or AP64500), a part that only mentions a firmware family (read as none of
+     it), a gate on a land its pin map is not for, a pin on a gated rail that no row of its maker's clears (a part in no
+     class, board A's INA226 across R55 and board B's E72 modules on +3V3_ZB among them; board B's USBLC6 on +5V_LIME,
+     whose I/O the hub and the connector hold; a declared bench header; a transistor whose type is not read), or an enable
+     whose maker states a current sourced out of it (an AP64500's, an LM5176's). Such an UNDECIDED can be false: a part in
+     no class that is in fact a plain load, a bench header nothing is plugged into, a part that mentions a family for
+     another reason, a library whose nickname names one, a P-port on a net that holds it low, an STM32H7 I/O that is
+     five-volt tolerant, a supply pin on a live net nothing holds up, and on a net fed only by a part's own outputs a level
+     shifter whose gate sits on that net, a connector or a converter's enable behind a pull from it (board B's slot nets,
+     were a slot rail ever gated), or two supplies a part tolerates in either order where no held page says so. The
+     fail-safe network takes every one-way element as ideal, every pin at its sheet's maximum current in the -40 to +85 C
+     column, every part other than the reader at the worse of its powered and unpowered states, and every pull and rail at
+     the adverse end of its tolerance (5 percent where none is stated), which can refuse a board that would work; a real
+     refusal names the part, the state and the voltage.
    domain: RF
    short_name: transmit inhibit is hardware
    requirement: >
@@ -1484,22 +1506,46 @@ rules:
      is asserted by the unpowered and disconnected states.
    classification: PROJECT_DECISION
    applicability: CONDITIONAL
-   condition: {fact: rf_transmit, op: truthy}
+   condition: {fact: has_schematic, op: truthy}
    risk_class: [SAFETY, ELECTRICAL_FUNCTION]
    release_effect: BLOCKER
    source_status: NOT_REQUIRED_FOR_PROJECT_DECISION
    sources: []
    acceptance_criteria: >
-     The inhibit chain is traced on the netlists from the panel switch to the keying gate, its driver count is
-     one, its sense is verified, and the behaviour with each board absent is stated.
+     Every transmitter of CONOPS section 4b, and every part on every netlist that names a radio, is a listed transmitter,
+     an accessory or a receiver, and each transmitter is reached from an asserted line (EMCON_HW, TX_INHIBIT_n) through
+     parts whose held pin maps say how they pass it, to its supply switch's enable, its keying pin, or a disable pin whose
+     maker states its effect (driven only as that maker allows). Every net of each path has one driver on any board. A
+     gated supply rail has no second feed: no resistor, transistor channel, diode, second switch output, logic output or
+     pin of a part firmware sets can hold it up, and a pin on it, behind a resistor from it or on a net that falls with it
+     is a load only where a row of its maker's held document states that it sources no current into the net (a logic input
+     by its input leakage, an open-drain output, a logic supply by its Ioff or with nothing holding its outputs up, a
+     switch enable its maker states only leaks, a switch input with nothing holding its other pins up, a protection part's
+     VBUS with nothing holding its I/O up, a firmware part's supply input by its maker's table), and the result quotes that
+     row; any other pin (of a part in no class, of a connector, of a transistor whose type is not read) leaves the result
+     UNDECIDED, and a logic part's or a switch's ground with the part's supply up fails it. Every part that carries one
+     module is read as that module. A part that runs from it does so only by a pin its maker's table gives as a supply
+     input, with every other supply pin of that part (the same supply's other pins, a tied battery or reference pin, every
+     other supply input or output) on the rail, holding nothing up, on a net fed only by the part's own outputs made from
+     the rail, or free by a stated sentence of its maker's to stay up while the rail falls (never the part's own output
+     held up from outside), and with every I/O of that supply's domain and every pin its maker joins to that input (a
+     pull-up, a clamp, a sense input's leakage) on the rail or held up by nothing, unless its maker states that the pin
+     passes no current with the supply off; a logic part or a switch that runs from it has no output held up where its
+     maker states a path from that output back into its supply or rates that output by its supply. A net fed by a part's
+     own supply outputs made from the rail, and every net behind a pull from it, meets the same test. Each asserted line
+     stays under its gates' VIL on its own pull-downs with its source unpowered and with every subset of its ribbons
+     unplugged, against every pin's datasheet current with every other part powered or not, whichever is worse, and
+     resistors and rails at the adverse end of their tolerance; and every enable or keying pin on a path keeps its
+     inhibited level when the gate that drives it loses its own supply, and when an open-drain element on the path is
+     released.
    rationale: "EMCON is a hardware line by owner ruling; a software-only inhibit is not an inhibit."
    failure_mode: "A transmitter keys when the operator has commanded silence."
    verification_method: [SCRIPT]
    verification_phase: SCHEMATIC
    automation_feasibility: AUTOMATABLE
-   boards_affected: [a, b, c, d]
+   boards_affected: [a, b, c, d, e, p]
    interfaces_affected: [RF_TX, IDC_RIBBON]
-   implementation_location: NONE_YET
+   implementation_location: "tx_inhibit.py (run by check_contracts.py, section 15a); the EMCON gates in gen_sch_a.py, gen_sch_b.py, gen_sch_c.py and gen_sch_d.py"
    evidence_scope: [schematic_sha256, manifest_version]
    owner: OWNER
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}

@@ -288,3 +288,15 @@ ti/ti-ads1115-sbas444e.pdf   # https://www.ti.com/lit/ds/symlink/ads1115.pdf (ro
 kento/kento-kt-0603y-citayl-0603.pdf   # https://datasheet.lcsc.com/datasheet/pdf/ba7b73648918210433b88ee1f2fd7ebf.pdf?productCode=C2287 (LCSC's copy of KENTO's sheet; round 8, stream d)
 yageo/yageo-cc-general-purpose-np0-16v-250v.pdf   # https://datasheet.lcsc.com/datasheet/pdf/4eca2bb4b507f1633db47e922d632b95.pdf?productCode=C113780 (LCSC's copy of YAGEO's V.21; round 8, stream d)
 samsung/samsung-cl05a225ko5nqn-spec.html   # https://weblib.samsungsem.com/mlcc/mlcc-ec-data-sheet.do?partNumber=CL05A225KO5NQN (Samsung's own page, stamped 2026/09/27 06:20 KST; round 8, stream d)
+# --- added 27 September 2026 (MESHSAT-1357, round 8 integration, the RF-002 walk tools/tx_inhibit.py): documents its tables
+# cite that main did not hold, filed byte for byte from the r4t author's copies (fnd/r4t drafts/datasheets/), each at the
+# sha256 its SHA256SUMS and v2/vendor/SOURCES.yaml (rf002_walk_documents, cm5-receptacle) record
+ti/ti-sn74lvc00a.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc00a.pdf (fetched by r4t on 2026-09-26)
+ti/ti-sn74lvc07a.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc07a.pdf (fetched by r4t on 2026-09-26)
+ti/ti-sn74lvc1g07.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc1g07.pdf (fetched by r4t on 2026-09-26)
+ti/ti-sn74lvc1g34.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc1g34.pdf (fetched by r4t on 2026-09-26)
+ti/ti-sn74lvc2g07.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc2g07.pdf (fetched by r4t on 2026-09-26)
+cm5/doc-rtc.adoc   # https://raw.githubusercontent.com/raspberrypi/documentation/master/documentation/asciidoc/computers/raspberry-pi/rtc.adoc (last commit to the file 8136a09a, 2026-08-11; curl from the runner, 2026-09-26)
+cm5/rpi-firmware-overlays-README.txt   # https://raw.githubusercontent.com/raspberrypi/firmware/master/boot/overlays/README (last commit to the file f72c4f42, 2026-09-11; curl from the runner, 2026-09-26)
+cm5/linux-bcm2712-rpi.dtsi   # https://raw.githubusercontent.com/raspberrypi/linux/rpi-6.18.y/arch/arm64/boot/dts/broadcom/bcm2712-rpi.dtsi (last commit to the file 00365ac0, 2026-09-03; curl from the runner, 2026-09-26)
+cm5/linux-bcm2712-rpi-cm5.dtsi   # https://raw.githubusercontent.com/raspberrypi/linux/rpi-6.18.y/arch/arm64/boot/dts/broadcom/bcm2712-rpi-cm5.dtsi (last commit to the file 6855d494, 2026-04-20; curl from the runner, 2026-09-26)
