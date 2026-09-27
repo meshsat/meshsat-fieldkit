@@ -13,7 +13,7 @@ the Defense Logistics Agency; this folder transcribes standards rather than copy
 | source | the file read is a copy of the ASSIST download published at `https://cvgstrategy.com/wp-content/uploads/2019/08/MIL-STD-810H-Method-514.8-Vibration.pdf`, the same publisher's copy as `mil-std-810h-method-516-8.md` |
 | fetched | 27 September 2026 21:13 UTC, curl from the runner, HTTP 200, 3,564,432 bytes |
 | sha256 of the file read | `cc8ec677d3b06eaab5c24244f10ee8acf52dba950ab25c645deeb99c9b177650` |
-| clauses transcribed | Annex C, paragraph 2.1.3 b (2), composite wheeled vehicle: its first three sentences, "Test Time", "Recommended Control Scheme", and the RMS acceleration lines with their notes 1 and 3 (pages 514.8C-11 to 514.8C-13) |
+| clauses transcribed | Annex C, paragraph 2.1.3 b (2), composite wheeled vehicle: its first two sentences, "Test Schedule", "Test Time", "Recommended Control Scheme", and the RMS acceleration lines with their notes 1 and 3 (pages 514.8C-11 to 514.8C-13) |
 
 ## Annex C, the composite wheeled vehicle (pages 514.8C-11 to 514.8C-13)
 
