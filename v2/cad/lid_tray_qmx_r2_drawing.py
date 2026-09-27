@@ -262,8 +262,8 @@ def page1(pdf):
     # ---- the rows that decide, and the tolerances
     keep = [l.rstrip() for l in section_of(REPORT, "B. FACE ROOM") if l.strip().startswith(("row and part", "M3r2.XENARC", "M3r2.XFRAME_2", "M3r2.SW_", "M3r2.D1 ", "M3r2.D10", "M3r2.FACE", "M19 (east"))]
     text_block(fig, [0.015, 0.098, 0.97, 0.18], [l[3:] for l in keep] + [
-        "every row of section B (the %d face parts under the set) is on sheet 14r2-3; frame_seat.out's own M3 (%+.2f, worst %+.2f) is the r1 tray's and stays until frame_seat.py reads r2 (a draft)" % (
-            len(rows) - 1, R["M3"]["nom"], R["M3"]["worst"])], fs=FS_TAB, mono=True,
+        "every row of section B (the %d face parts under the set) is on sheet 14r2-3; frame_seat.out's own M3 subtracts one tray depth from the room and is not a row of this set" % (
+            len(rows) - 1)], fs=FS_TAB, mono=True,
         title="FACE ROOM, the rows that decide (lid_tray_qmx_r2_check.py, section B): nominal, worst, worst with unstated allowances twice")
     fig.savefig(os.path.join(OUT, "lid-tray-qmx-r2-drawing-1.png"), dpi=110); pdf.savefig(fig); plt.close(fig)
 
