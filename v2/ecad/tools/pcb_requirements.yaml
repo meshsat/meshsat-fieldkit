@@ -55,6 +55,12 @@
 # findings B1 to B6) added the hot stop, restored the mast-down alarm and the NVG target, set the solar window to the
 # generator's 25 V, withdrew a season from M1's reference day, and resolved CFL-010 on its settled description.
 #
+# THE SECOND RELEASE ATTEMPT OF LAYERS 1 TO 3 (27 September 2026, MESHSAT-1357, after the release checks at f2b7fa66,
+# v2/docs/reviews/REVIEW-LAYER-{1,2,3}-RELEASE-2026-09-27.md). By record id through
+# v2/docs/records/rel2/apply_registry.py: M1's duration governed by SC-21 (layer 3, R2) with the owner's part of its
+# failing balance as M-02; REQ-077's forced trigger at room temperature (layer 2 B2, layer 3 R4); SC-HF-01 to SC-HF-06
+# entered as SC-58 to SC-63 with their draft names, and the validator refusing an SC- id no entry defines (layer 3, R5).
+#
 # PART NAMES IN STATEMENTS. A part a statement names was ruled by the owner (the device set of 6 September 2026,
 # appendix 32.49 and 32.50; the LT8705A tracker, ruling F of 4 September 2026; the BQ4050 gauge and the second level,
 # D-15; the 4S3P Samsung INR18650-35E pack, D-06) unless the record's choices or notes name a session choice or a
@@ -64,7 +70,12 @@
 # statement, CFL conflict between sources, FEA architecture feasibility blocker. An id is never reused or renumbered.
 # No prefix may equal a rule-id prefix of pcb_rules.yaml. Owner rulings are D-nn (and decision-NN for the board-level
 # decisions), session choices SC-nn, open items S-nn (session), M-nn (an owner action), L-nn (later, money) and D-18
-# (conditional). L-02 keeps its id: its class was corrected to OWNER_ACTION (D-06 leaves the value to the owner).
+# (conditional). A closer's draft name for a session choice (SC-HF-02 of HW-FW-CONTRACT.md section 8) is recorded as
+# that choice's `drafted_as`, and the validator refuses any SC- id the registry or a page of v2/docs/ or
+# v2/docs/handover/ cites that no entry defines. L-02 keeps its id: D-06 left M1's mission duration for the owner to set
+# later (its class was corrected from LATER to OWNER_ACTION), and under the owner's standing rule of 26 September 2026
+# the session's SC-21 (72 hours) governs it and closes it, recorded as the session's and replaced by the owner's own
+# setting whenever he gives one; what only the owner can decide about M1's failing energy balance is M-02.
 #
 # FIELDS
 #   parent              the NEED of CONOPS section 2 the record serves (quoted under `needs`, pinned by sha256)
@@ -137,7 +148,7 @@ written: "2026-09-26"
 baseline_state: READY_FOR_REVIEW_B
 sources_read_at: 08f3665a
 needs_document: "v2/docs/CONOPS.md"
-needs_document_sha256: 370aca33cb44da97b5488653ebe10fa13e7371e5321f8feebd6fe9cc98d092db
+needs_document_sha256: 3ff59edc96a3f8f46951c57b65c7c1c1d89eaff30e21f82b7d9c383913119768
 companion_documents: []
 
 # The needs of CONOPS section 2, quoted. The validator compares each statement with the needs table of the
@@ -784,8 +795,10 @@ session_choices:
     why: >-
       It keeps both configurations on one board with no board change and drops nothing the owner approved, where an
       eSIM default would wait on an order code no held document names (v2/vendor/SOURCES.yaml, the RM520N-GL entry).
-      The SIM TVS array of at most 10 pF (section 4.1.7) and the eSIM variant's code stay owed under S-13, so CFL-010
-      stays open. Reverse by making the eSIM configuration the default build once that code is named; no board change
+      When it was taken the SIM TVS array of at most 10 pF (section 4.1.7) and the eSIM variant's code were owed under
+      S-13, and CFL-010 was open; board B's round 8 draws the arrays (U222 and U223, CON-025) and CFL-010 is resolved on
+      this description, so S-13 holds only the eSIM variant's order code (restated 27 September 2026, layer 1's release
+      check, m1). Reverse by making the eSIM configuration the default build once that code is named; no board change
       either way.
     source:
       - "v2/docs/V2-SPEC.md:41 and correction 22"
@@ -1372,7 +1385,12 @@ session_choices:
       front end of about 100 W, 10 to 11 full-rating hours) is the second. Routes, none taken: an overnight input on the
       9 to 36 V entry, D-01's deferred second pack, a larger pack (D-06). Reported to the owner as a consequence of D-06
       with the session's 72 hours, not asked; the mission is not shortened. Reverse: the owner's own setting replaces
-      it.
+      it. Stated once on 27 September 2026 (the second release attempt of layers 1 to 3; layer 3's release check,
+      finding R2): this choice GOVERNS M1's duration. D-06 left the value for the owner to set later, and his standing
+      rule of 26 September 2026 has the session take the recommended option where a value is left and record it as its
+      own; it is recorded so, it closes L-02, and the owner's own setting replaces it whenever he gives one. It decides
+      nothing about the routes that would carry the failing balance by reopening an owner ruling or by accepting a
+      residual, which are the owner's (M-02); the session's part is S-53. ENGINEERING-QUESTIONS EQ-13 states the same.
     closes: [L-02]
     source: ["v2/docs/CONOPS.md section 3", "owner ruling D-06"]
   - id: SC-22
@@ -1764,10 +1782,131 @@ session_choices:
       - "v2/ecad/tools/gen_sch_d.py and v2/ecad/tools/gen_sch_e.py (the declarations and their comments)"
       - "v2/ecad/tools/intent_checks.py (PWR-001 on the netlist)"
       - "v2/docs/handover/ENGINEERING-QUESTIONS.md EQ-19"
+  - id: SC-58
+    authority: SESSION
+    under: standing-rule
+    taken_on: "2026-09-27"
+    drafted_as: SC-HF-01
+    question: >-
+      Which heartbeat source the hardware-firmware contract takes (HW-FW-CONTRACT.md section 2).
+    taken: >-
+      The compute module's GPIO16 under the bridge software drives its slot's heartbeat line (HB1 to HB3); the panel
+      controller (GPIO10 to 12) and the three I/O supervisors (pins 30 to 32) only listen, and a slot is alive while its
+      line toggles at 1 Hz (FW-B01, FW-B11, FW-C05).
+    why: >-
+      The netlist settles it: HB_CM1 is the CM5's GPIO16 (gen_sch_b.py:257), joined through the level stage Q105
+      (gen_sch_b.py:822) to HB1, which the panel controller and every supervisor only read; ARCHITECTURE.md section 10.1
+      already says so, and PANEL.md section 3's supervisor-driven wording was corrected with the contract. Drafted as
+      SC-HF-01 in HW-FW-CONTRACT.md section 8 on 27 September 2026 by the layer 5 closer, and entered here by the second
+      release attempt of layers 1 to 3 the same day (layer 3's release check, R5), so that the registry is the one
+      record of it. Reverse by a generator change that moves the heartbeat's source.
+    source: ["v2/docs/HW-FW-CONTRACT.md sections 2 and 8"]
+  - id: SC-59
+    authority: SESSION
+    under: standing-rule
+    taken_on: "2026-09-27"
+    drafted_as: SC-HF-02
+    question: >-
+      How the kit I2C bus meets its targets' 300 ns rise time (HW-FW-CONTRACT.md sections 6.3 to 6.7; finding HF-F01).
+    taken: >-
+      Three segments behind two TI TCA9517A: the TRUNK (the master, board C, and on board B the expanders U6 and U7, the
+      ATECC608B, the DS3231 and the TMP117); SEG-A (board A's targets and board D's) behind a TCA9517A on board A, its A
+      side local, EN tied high, 1.2 k pull-ups to board A's +3V3; SEG-S (board B's three supervisors, the TPS23861 and
+      the KSZ9897R) behind a TCA9517A on board B, its B side theirs, EN from U7 IO1_7 through a delay and isolated by
+      default, 1.5 k pull-ups to +3V3_DEV; the copper allowances of section 6.6 handed to layout. Owed on boards A and B
+      (S-59).
+    why: >-
+      As one segment the bus cannot meet the 300 ns rise of its BQ25731, TPS23861 and ATECC608B (section 6.3,
+      v2/docs/records/hc5/kit_i2c_budget.out.txt) and its pull-ups are at the 3 mA floor; the held TCA9517A
+      (v2/vendor/ti/ti-tca9517a-i2c-buffer.pdf, SCPS245E) takes 400 pF a side, and SEG-S also isolates the supervisors
+      from the secure element outside the panel's status windows, which narrows ZEROIZE's R7. Drafted as SC-HF-02 in
+      HW-FW-CONTRACT.md section 8 on 27 September 2026 by the layer 5 closer, and entered here by the second release
+      attempt of layers 1 to 3 the same day (layer 3's release check, R5), so that the registry is the one record of it.
+      Reverse by a part with no static offset on either side, or a rise-time accelerator on one segment, either taken
+      only on a maker's document showing it meets the 300 ns targets at the bound (section 6.5).
+    source: ["v2/docs/HW-FW-CONTRACT.md sections 6.3 to 6.7 and 8", "v2/docs/records/hc5/kit_i2c_budget.out.txt"]
+  - id: SC-60
+    authority: SESSION
+    under: standing-rule
+    taken_on: "2026-09-27"
+    drafted_as: SC-HF-03
+    question: >-
+      The kit I2C bus clock (HW-FW-CONTRACT.md section 6.4).
+    taken: >-
+      Standard-mode: 100 kHz programmed, at least 90 kHz achieved on every segment (FW-K01, V-K01).
+    why: >-
+      Nothing on the bus needs more than the ZEROIZE budget's clock, and that budget, re-run at 90 kHz
+      (v2/docs/records/hc5/zer/zer_budget.py and its outputs), holds every pass line (nominal sequence 0.521 s, longest
+      transfer 6.72 ms against the 10 ms HAL timeout). Drafted as SC-HF-03 in HW-FW-CONTRACT.md section 8 on 27
+      September 2026 by the layer 5 closer, and entered here by the second release attempt of layers 1 to 3 the same day
+      (layer 3's release check, R5), so that the registry is the one record of it. Reverse by a measured rise time that
+      allows Fast-mode on every segment, together with a need for it.
+    source: ["v2/docs/HW-FW-CONTRACT.md sections 6.4 and 8", "v2/docs/records/hc5/zer/zer_budget.py"]
+  - id: SC-61
+    authority: SESSION
+    under: standing-rule
+    taken_on: "2026-09-27"
+    drafted_as: SC-HF-04
+    question: >-
+      The hot-plug rules pcb_interfaces.yaml marked '(proposed)' (HW-FW-CONTRACT.md section 8).
+    taken: >-
+      Adopted as written: IF-BC-PANEL, IF-AB-RIBBON, IF-AB-POWER, IF-A-PA and IF-LID-HF are mated and unmated with the
+      kit off.
+    why: >-
+      A partly seated ribbon can assert PI_KILL or drop SLOT_EN, and the VH leads carry up to 6 A; ARCHITECTURE.md
+      section 12 marks the rules as the session's since the same day. Drafted as SC-HF-04 in HW-FW-CONTRACT.md section 8
+      on 27 September 2026 by the layer 5 closer, and entered here by the second release attempt of layers 1 to 3 the
+      same day (layer 3's release check, R5), so that the registry is the one record of it. Reverse by an interlock that
+      makes live mating safe.
+    source: ["v2/docs/HW-FW-CONTRACT.md section 8", "v2/ecad/tools/pcb_interfaces.yaml"]
+  - id: SC-62
+    authority: SESSION
+    under: standing-rule
+    taken_on: "2026-09-27"
+    drafted_as: SC-HF-05
+    question: >-
+      The I/O supervisors' clock stretch on the kit bus and the master's SCL hold (HW-FW-CONTRACT.md sections 3.7 and
+      8).
+    taken: >-
+      Each supervisor stretches SCL for at most 1 ms (FW-B08, V-B08); the master never holds SCL low for more than 10
+      ms, and recovers a stuck bus with nine SCL pulses and a STOP (FW-K04, V-K02).
+    why: >-
+      The BQ25731, the INA226 and the ATECC608B reset their bus interface after 25 to 35 ms of SCL low (their SMBus
+      timeouts: TI SLUSE66A 8.6, TI SBOS547, Microchip DS40002239B), so a hold under 10 ms keeps them attached. Drafted
+      as SC-HF-05 in HW-FW-CONTRACT.md section 8 on 27 September 2026 by the layer 5 closer, and entered here by the
+      second release attempt of layers 1 to 3 the same day (layer 3's release check, R5), so that the registry is the
+      one record of it. Reverse by a target with a shorter bus timeout, which would lower both bounds (the contract's
+      draft says none is needed).
+    source: ["v2/docs/HW-FW-CONTRACT.md sections 3.7 and 8"]
+  - id: SC-63
+    authority: SESSION
+    under: standing-rule
+    taken_on: "2026-09-27"
+    drafted_as: SC-HF-06
+    question: >-
+      Where the Xenarc 709GNK monitor's touch USB connects, and how it follows the display owner (HW-FW-CONTRACT.md
+      section 8; the audit's unresolved decision, ASSEMBLY.md having named 'a B16 slot hub header' with no designator).
+    taken: >-
+      Board D's spare hub port J_USB3 (PH 1x4), through a USB A receptacle to PH adapter lead made up at build; the
+      touch follows the display owner by the HAL's network share (FW-B19); carried in pcb_interfaces.yaml IF-MON,
+      ARCHITECTURE.md section 12, ASSEMBLY.md section 4 and build step 9, and PANEL.md section 1. Its costs are finding
+      HF-F06, owed on board D before its layout entry (S-61).
+    why: >-
+      Every one of board B's twelve hub ports is allocated (gen_sch_b.py:764-766); J_USB3 exists for a lead made up at
+      build, needs no board B change (board B's floor plan is open under FB-FAB-6), matches the leads table's PH
+      housing, and a full-speed hub carries a HID touch (USB 2.0 section 7.1 Table 7-1,
+      v2/docs/records/hc5/usb-2-0-clauses-cited.md); appendix 32.52 makes the HAL's network share the kit's way to reach
+      a device on another module. Drafted as SC-HF-06 in HW-FW-CONTRACT.md section 8 on 27 September 2026 by the layer 5
+      closer, and entered here by the second release attempt of layers 1 to 3 the same day (layer 3's release check,
+      R5), so that the registry is the one record of it. Reverse by a board B port reallocation or added downstream
+      capacity on board B, after which J_USB3 returns to spare.
+    source: ["v2/docs/HW-FW-CONTRACT.md section 8", "v2/docs/records/hc5/usb-2-0-clauses-cited.md"]
 
 # What is still open. SESSION items are engineering the session decides and records with authority SESSION;
-# OWNER_ACTION is something the owner has ruled that he does or sets himself; LATER a money item he approves from a
-# quote; CONDITIONAL arises only if its condition does. A record that depends on one says so in `waits_on`.
+# OWNER_ACTION is something the owner has ruled that he does or sets himself, or that only he can do because it reopens
+# his own ruling or accepts a residual risk (reported to him, never asked, under his standing rule of 26 September
+# 2026); LATER a money item he approves from a quote; CONDITIONAL arises only if its condition does. A record that
+# depends on one says so in `waits_on`.
 open_items:
   - id: D-18
     class: CONDITIONAL
@@ -2052,15 +2191,18 @@ open_items:
     class: SESSION
     status: OPEN
     title: >-
-      M1's energy judged at layer 4 (REQ-072; the layer-2 closer's finding, SC-21). Binding: the aged
-      pack's about 108 Wh bridges 2.5 to 5.0 h of darkness against nights of about 7 to 16 h at 52 N, so on pack and
-      solar alone M1 stops every night whatever the solar rating (D-06's one pack; D-01's deferred second pack). Second:
-      the solar path's rating, board A's front end and board E's LT8705A stage taking 100 W where M1's 72 hours in
-      PS-IDLE-SPEC on the reference day need a panel of about 270 W. Routes, none taken: an overnight input on the 9 to
-      36 V entry, D-01's deferred second pack, a larger pack (D-06), a re-rated input path; or record that prototype 1
-      does not meet M1, a residual only the owner can accept. A shorter mission is not the remedy (CONOPS section 3,
-      M1). The reference day is the design month's (September, SC-37); a month with less sun asks more of the
-      panel, and the judgement records that beside it. Reported to the owner at the next checkpoint, not asked.
+      M1's energy judged at layer 4, the session's part (REQ-072; the layer-2 closer's finding, SC-21). Binding: the
+      aged pack's about 108 Wh bridges 2.5 to 5.0 h of darkness against nights of about 7 to 16 h at 52 N, so on pack
+      and solar alone M1 stops every night whatever the solar rating (D-06's one pack; D-01's deferred second pack).
+      Second: the solar path's rating, board A's front end and board E's LT8705A stage taking 100 W where M1's 72 hours
+      in PS-IDLE-SPEC on the reference day need a panel of about 270 W. The session's route is the re-rated input path,
+      judged before boards A and E enter layout (it carries the day, not the night); an overnight input on the 9 to 36 V
+      entry needs no board change but changes M1's setting, so it is stated in CONOPS M1 and not taken. The routes that
+      reopen an owner ruling (D-01's deferred second pack, a larger pack under D-06) and recording that prototype 1 does
+      not meet M1, a residual only the owner can accept, are the owner action M-02 (split out on 27 September 2026,
+      layer 3's release check, R2). A shorter mission is not the remedy (CONOPS section 3, M1). The reference day is the
+      design month's (September, SC-37); a month with less sun asks more of the panel, and the judgement records that
+      beside it. Reported to the owner at the next checkpoint, not asked.
   - id: S-54
     class: SESSION
     status: OPEN
@@ -2091,7 +2233,7 @@ open_items:
     class: SESSION
     status: OPEN
     title: >-
-      (hc5-layer5: SC-HF-02) The kit I2C bus drawn as the session's three segments of v2/docs/HW-FW-CONTRACT.md section 6.5:
+      (hc5-layer5: SC-59, drafted as SC-HF-02) The kit I2C bus drawn as the session's three segments of v2/docs/HW-FW-CONTRACT.md section 6.5:
       board A's targets and board D behind a TCA9517A on A (its A side local, 1.2 k pull-ups to A's +3V3, EN high);
       board B's three supervisors, TPS23861 and KSZ9897R behind a TCA9517A on B (its B side theirs, 1.5 k pull-ups, EN
       from U7 IO1_7 with a 10 k pull-down); the copper allowances of section 6.6 handed to layout. Until drawn, finding
@@ -2108,8 +2250,9 @@ open_items:
     class: SESSION
     status: OPEN
     title: >-
-      (hc5-layer5: SC-HF-06, HF-F06) The monitor's touch USB takes board D's spare hub port J_USB3 (the session's choice
-      SC-HF-06 of v2/docs/HW-FW-CONTRACT.md section 8; no board B change; the HAL shares it to the display owner, FW-B19).
+      (hc5-layer5: SC-63, drafted as SC-HF-06; HF-F06) The monitor's touch USB takes board D's spare hub port J_USB3 (the
+      session's choice SC-63, drafted as SC-HF-06 in v2/docs/HW-FW-CONTRACT.md section 8; no board B change; the HAL shares it
+      to the display owner, FW-B19).
       Owed on board D: a current limit on J_USB3's VBUS, which is +5V_D8 with no port switch, so a fault on the touch
       lead trips board A's U23 and takes board D down; and the J_USB3 budget line (0.05 A) set from the touch
       controller's measured draw, which USB 2.0 section 7.2.1 bounds at 100 mA unconfigured and 500 mA configured (V-B19).
@@ -2296,6 +2439,20 @@ open_items:
       order code in gen_sch_d.py or lcsc_fill.py, D7 and D8 are SS14 filled as C51897884 by lcsc_fill.py with no
       sheet in v2/vendor. Open until the sheets are filed (and D2 has an order code, EQ-21's class) and the
       three nets are declared nodes at the rail plus the maker's forward drop.
+  - id: M-02
+    class: OWNER_ACTION
+    status: OPEN
+    title: >-
+      M1's failing energy balance, the owner's part (27 September 2026, the second release attempt of layers 1 to 3;
+      layer 3's release check, R2; reported to the owner, not asked, under his standing rule of 26 September 2026). On
+      D-06's one 4S3P pack the kit does not run M1 through a single night on pack and solar alone, whatever the panel's
+      rating, and REQ-072 reads FAIL at desk (S-53 is the session's part: the input path's rating). Only the owner can
+      take the routes that carry the night by reopening his own rulings, a larger pack (D-06) or the second pack D-01
+      defers, which has no location found; or accept, as a residual risk, that prototype 1 does not meet M1 on pack and
+      solar alone. The session's recommendation and the arithmetic are ENGINEERING-QUESTIONS EQ-13. Decided before
+      boards A, E and P enter layout, because the answer can move the pack pocket, board E's solar stage (D4, F2,
+      J_SOLAR) and board A's front end. Until then REQ-072 stays FAIL, CONOPS M1 states that a night needs an overnight
+      input on the 9 to 36 V entry, and nothing is lowered: neither REQ-016 nor REQ-072 is restated to fit.
 
 # Items that left the open list, and what closed each: an owner ruling, a session choice, or a commit whose effect
 # was read in the file `closing_evidence` names. A record never waits on a closed item; it cites what closed it.
@@ -2581,8 +2738,10 @@ closed_items:
     closed_by: SC-21
     title: >-
       The mission duration for M1's pack-plus-solar energy balance, which D-06 leaves for the owner to set later (the id
-      is kept; its class was LATER, which is for money). The session set a planning value under the owner's standing
-      rule; the owner's own setting replaces it.
+      is kept; its class was LATER, which is for money, then OWNER_ACTION). SC-21 governs it: under the owner's
+      standing rule of 26 September 2026 the session set 72 hours, recorded as the session's, and the owner's own
+      setting replaces it whenever he gives one (stated once on 27 September 2026, layer 3's release check, R2). What
+      only the owner can decide about M1's failing balance is M-02.
 
 records:
   - id: REQ-001
@@ -3068,8 +3227,16 @@ records:
           seventeenth LED) and correction 20's last sentence change and correction 30 is added; line 32 and correction
           6, which this reading rests on, are byte-identical to the file at 73a797e44d42fa6d, so it stands on the file
           at a92ea2ef3793a3c9
+      - >-
+          v2/docs/CONOPS.md re-read at the second release attempt of layers 1 to 3 of 27 September 2026 (fnd/rel2 from
+          953f5658, after the release reviews at f2b7fa66): the status header (lines 20 and 48: the first Review A pass
+          cited by its filed name, and the release check's second step), M1's routes (the owner action and EQ-13 named),
+          section 4's Reduced row (the three documents now follow it) and Hot stop row (the forced trigger named),
+          section 4c's opening hand-off sentence and section 7a's opening and L-02 row change, and no number changed;
+          section 2a, which this reading rests on, is byte-identical to the file at 370aca33cb44da97, so it stands on
+          the file at 3ff59edc96a3f8f4
     evidence_bound_to:
-      - "v2/docs/CONOPS.md@370aca33cb44da97"
+      - "v2/docs/CONOPS.md@3ff59edc96a3f8f4"
       - "v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8"
       - "v2/docs/V2-SPEC.md@a92ea2ef3793a3c9"
     release_effect: BLOCKER
@@ -4514,8 +4681,16 @@ records:
           firmware), the PWR-F15 row of section 10, and adds finding PWR-F16 (a hung controller with a PTT held is bounded
           by nothing; its PA_EN formula brought to board A's round 8 at integration); section 11, which this reading cites,
           is byte-identical, and section 0's runtime and hot-end statements are unchanged, so the record stays INCONCLUSIVE
+      - >-
+          v2/docs/feasibility/POWER-THERMAL.md re-read at the second release attempt of layers 1 to 3 of 27 September
+          2026 (fnd/rel2 from 953f5658, after the release reviews at f2b7fa66): sections 1 (the reduced mode is slots 2
+          and 3 and the heat stage one module), 9.1, 9.2 and 9.3 (C1 and C3 shed to the reduced mode and then the heat
+          stage; PS-RED named the one-module stage) and one hand-off line of section 11 change, with the line count and
+          every figure unchanged; section 0's runtime and hot-end statements are byte-identical, and section 11 changes
+          only in item 3's quoted hand-off (the one-module stage named), not in what this reading cites, so the record
+          stays INCONCLUSIVE on the file at ad3ba27cef9e0f68
     evidence_bound_to:
-      - "v2/docs/feasibility/POWER-THERMAL.md@465abd3bb9c97416"
+      - "v2/docs/feasibility/POWER-THERMAL.md@ad3ba27cef9e0f68"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/POWER-THERMAL.md section 11", "v2/docs/reviews/2026-09-26-foundation-progress-review.md section 4", "v2/docs/layout-constraints/A.md section 2", "v2/docs/STACKUP-DECISIONS.md section 3.1"]
     source_check: VERIFIED
@@ -4628,7 +4803,12 @@ records:
       where the window takes 100 W, so layer 4 judges the input path against it (S-53) and a re-rating would
       restate this record. Since the second pass of the same day (Review B, finding B4) the window's voltage is the 25 V
       the generator declares for the panel entry (gen_sch_e.py, the PV_P and PV_IN rails), not the clamp's 28 V
-      standoff.
+      standoff. Recorded on 27 September 2026 (the second release attempt of layers 1 to 3; layer 3's release check,
+      R2): on D-06's architecture (one 4S3P pack and this 100 W window) this record as stated and REQ-072 cannot both
+      hold. REQ-072 fails the night whatever the panel, and its day asks about 266 W of panel where this window takes
+      100 W. Which one gives way is decided by the input path's judgement (S-53, the session's, layer 4) and the
+      owner's part (M-02: a larger or second pack, or the residual), before boards A, E and P enter layout; until then
+      neither record is restated and nothing is lowered.
 
   - id: REQ-072
     kind: requirement
@@ -4654,7 +4834,7 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-06]
     choices: [SC-36, SC-21, SC-37]
-    waits_on: [S-53]
+    waits_on: [S-53, M-02]
     status: DEFINED
     evidence_result: FAIL
     evidence_phase: SCHEMATIC
@@ -4690,9 +4870,16 @@ records:
           (J_BLK pins 1 to 4 to GND, P_VR, P_VN) and the PWR-001 declarations (SC-57); the solar stage this reading
           rests on (J_SOLAR for a 100 W panel, F2 10 A, D4 SMCJ28A, the FBIN point of 17.6 V at 5.68 A) is unchanged;
           the sense and MODE changes move no figure it uses, so it stands FAIL on the file at 59abd6365b94c2d6
+      - >-
+          v2/docs/feasibility/POWER-THERMAL.md re-read at the second release attempt of layers 1 to 3 of 27 September
+          2026 (fnd/rel2 from 953f5658, after the release reviews at f2b7fa66): sections 1 (the reduced mode is slots 2
+          and 3 and the heat stage one module), 9.1, 9.2 and 9.3 (C1 and C3 shed to the reduced mode and then the heat
+          stage; PS-RED named the one-module stage) and one hand-off line of section 11 change, with the line count and
+          every figure unchanged; section 4's PS-IDLE-SPEC row (42.8 W PLAN, 33.1 to 82.8), which this reading rests on,
+          is byte-identical to the file at 465abd3bb9c97416, so the FAIL stands on the file at ad3ba27cef9e0f68
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_e.py@59abd6365b94c2d6"
-      - "v2/docs/feasibility/POWER-THERMAL.md@465abd3bb9c97416"
+      - "v2/docs/feasibility/POWER-THERMAL.md@ad3ba27cef9e0f68"
     release_effect: BLOCKER
     source:
       - "owner ruling D-06"
@@ -4705,7 +4892,10 @@ records:
       to set (D-06); the layer-2 closer set 72 hours under the standing rule (SC-21), which the owner's own setting
       replaces. The failing balance is a layer-4 finding (S-53) held open, not a shorter mission. The reference day
       is the design month's (September); M1 carries no season, and a month with less sun asks more of the input path,
-      which layer 4 records beside it (SC-37, second pass after Review B finding B5).
+      which layer 4 records beside it (SC-37, second pass after Review B finding B5). Since 27 September 2026 (the
+      second release attempt of layers 1 to 3; layer 3's release check, R2): SC-21 governs the duration, the record
+      waits on the session's input-path judgement (S-53) and on the owner's part (M-02), and on D-06's architecture it
+      and REQ-016 as stated cannot both hold (REQ-016's notes). The FAIL at desk is carried as it stands.
 
   - id: REQ-017
     kind: requirement
@@ -5761,10 +5951,17 @@ records:
           J_VR1 to J_VR4 and its note, J_VR1 to J_VR4 and J_VN1 to J_VN4 with their comment after R1, J_DOCK's value and
           pins 1 to 4, and the section list; lines after 66 move down by 5 and lines after the pre-charge pin by 23;
           U31's lines are unchanged in content (moved down by 23), so it stands PASS on the file at 5af29bbcf27bb91a
+      - >-
+          v2/docs/TEST-PLAN.md re-read at the second release attempt of layers 1 to 3 of 27 September 2026 (fnd/rel2
+          from 953f5658, after the release reviews at f2b7fa66): line 3 (the first Review A pass cited by its filed
+          name, and the second release attempt's note), section 6's opening, row E3-H (its stepped run beyond the
+          envelope and the NOT_VERIFIED rule) and section 7's opening change, and section 7 gains row P15 (the hot stop
+          forced at room temperature); E3-L is unchanged; the M7 row, which this reading rests on, is byte-identical to
+          the file at 701c1020053e7903, so it stands on the file at 4f15bd02a6a8be46
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_a.py@5af29bbcf27bb91a"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
-      - "v2/docs/TEST-PLAN.md@701c1020053e7903"
+      - "v2/docs/TEST-PLAN.md@4f15bd02a6a8be46"
     release_effect: MUST_JUSTIFY
     source: ["owner ruling D-17", "v2/ecad/tools/gen_sch_a.py:1104-1114", "v2/ecad/tools/pcb_decisions.yaml:256-429 (decision 31)"]
     source_check: VERIFIED
@@ -5874,8 +6071,15 @@ records:
           cells and wall parts: OUTSIDE 2, CARVE_OUT 1, AT_LIMIT 3, TBD 5, INSIDE 8; lines no row covers: 0. OUTSIDE: board B's T1 (Pulse H5007NL, 0 to +70 C), the
           LimeSDR Mini v2.4 and the AW7915-AED cards, the three parts this record already names, so it stays FAIL.
           A desk record beside the rule, not the rule's input: pcb_part_temps.yaml still carries the rule's rows
+      - >-
+          v2/docs/feasibility/POWER-THERMAL.md re-read at the second release attempt of layers 1 to 3 of 27 September
+          2026 (fnd/rel2 from 953f5658, after the release reviews at f2b7fa66): sections 1 (the reduced mode is slots 2
+          and 3 and the heat stage one module), 9.1, 9.2 and 9.3 (C1 and C3 shed to the reduced mode and then the heat
+          stage; PS-RED named the one-module stage) and one hand-off line of section 11 change, with the line count and
+          every figure unchanged; section 9.4, which this reading cites, is byte-identical to the file at
+          465abd3bb9c97416, so the record stays FAIL on the file at ad3ba27cef9e0f68
     evidence_bound_to:
-      - "v2/docs/feasibility/POWER-THERMAL.md@465abd3bb9c97416"
+      - "v2/docs/feasibility/POWER-THERMAL.md@ad3ba27cef9e0f68"
       - "v2/docs/parts/GRADE-CHECK.md@e68bd0bbd89272aa"
       - "v2/docs/parts/grade-sources.yaml@436f6616df519760"
     release_effect: MUST_JUSTIFY
@@ -8603,17 +8807,31 @@ records:
       once the cells have cooled (the hot stop, SC-49).
     acceptance: >-
       Desk (schematic): the committed netlists carry a path from the pack gauge's cell temperatures to the control that
-      removes the kit's load which needs no compute module (HOT-R1, SC-50: board E's sensor controller to board
-      A's expander input on the dock's spare contact, and on to the panel controller that owns the slot enables, the
+      removes the kit's load which needs no compute module (HOT-R1, SC-50: board E's sensor controller to board A's
+      expander input on the dock's spare contact, and on to the panel controller that owns the slot enables, the
       switched loads and PI_KILL), and the two thresholds sit, in the gauge's own reading, under its discharge
       over-temperature of 57.5 C and inside +60 C by the published terms of the battery packet's error budget
       (THERMAL-COORDINATION.md section 3; CONOPS section 4c); a configuration in which the cells' temperature reaches no
-      controller that can remove load reads FAIL. Prototype: TEST-PLAN E3-H, during E3-A and E3-L at +40 C, first on the
-      pack and then on shore: where the hottest cell as the gauge reads it reaches the first threshold the kit sheds to
-      its minimum load within 60 s, and where it reaches the second the kit shuts itself down, both before any cell
-      surface reaches +59 C on the reference thermocouples and with no permanent protection action (the second level's
-      over-temperature, the gauge's SOT, the chemical fuse F2); a run in which a cell surface reaches +59 C is ended at
-      once and reads FAIL.
+      controller that can remove load reads FAIL. Prototype, on the pack and then on shore, in two parts. (1) Whatever a
+      chamber reaches, the forced trigger at room temperature (TEST-PLAN P15): the gauge's hottest cell reading is
+      driven past +56.5 C and then +57.0 C, and never to its discharge over-temperature of +57.5 C, by substituting one
+      cell thermistor input, each setting read back in the gauge's DAStatus2(); at the second reading at or above +56.5
+      C the kit sheds to its minimum load within 60 s (every running module shut down on PI_SHDN_REQ and SLOT_EN1 to
+      SLOT_EN3 dropped, the switched loads off, the charge held by the charger's CHRG_INHIBIT with the charger still
+      carrying the kit on shore) with MASTER WARN and the e-paper naming the step and the reading, and the heat stage's
+      module returns only once the reading is at or below +46.5 C and 30 minutes have passed since the stop; at the
+      second reading at or above +57.0 C with H1 acting the kit shuts itself down through PI_KILL and stays off, on
+      shore as well, until MAIN is pressed, and then raises no slot while the reading is above +46.5 C; HOT-R1 carries
+      its four states (1 Hz below H1, 5 Hz in H1, held low in H2, held high with the sensor controller held in reset), a
+      line held low stops the kit, and with the line held high the same two steps act on board B's TMP117 at +55.0 C and
+      +56.0 C, released at +45.0 C; after each run the gauge's SafetyStatus() and PFStatus() show no discharge
+      over-temperature and no permanent failure. (2) TEST-PLAN E3-H, during E3-A and E3-L at +40 C and in its stepped
+      run beyond the envelope to at most +55 C: where the hottest cell as the gauge reads it reaches the first threshold
+      the kit sheds to its minimum load within 60 s, and where it reaches the second the kit shuts itself down, both
+      before any cell surface reaches +59 C on the reference thermocouples and with no permanent protection action (the
+      second level's over-temperature, the gauge's SOT, the chemical fuse F2); a run in which a cell surface reaches +59
+      C is ended at once and reads FAIL. A step that acted in neither part reads NOT_VERIFIED, never PASS; a thermal run
+      in which no threshold was reached is recorded with its peak readings and does not stand in for (1).
     provisional: >-
       The thresholds (SC-49): the hottest cell reading at +56.5 C (shed to the minimum load) and +57.0 C
       (controlled shutdown), each in two readings in a row, released at +46.5 C; with the sensor controller lost, board
@@ -8668,6 +8886,8 @@ records:
       - "v2/docs/review-packets/battery/THERMAL-COORDINATION.md sections 3, 4 and 8"
       - "v2/ecad/tools/pcb_pack_protection.yaml (DISCHARGE_TEMPERATURE_WINDOW)"
       - "v2/docs/CONOPS.md section 4c"
+      - "v2/docs/TEST-PLAN.md sections 6 (E3-H) and 7 (P15)"
+      - "v2/vendor/battery/ti-sluuaq3a-bq4050-trm.pdf sections 2.7, 3.20, 11.2.1.4 and 13.1.48"
       - "session choice SC-49"
       - "session choice SC-50"
     source_check: VERIFIED
@@ -8681,7 +8901,13 @@ records:
       S-58. Whether the stop acts inside the envelope is FEA-004's, OPEN until the heat-balance test: at the
       independent bound's worst corner it acts from +33.2 C lid closed, on appendix 32.53's conductance not below +40.3
       C (CONOPS section 4c); where it acts at +40 C, REQ-052's stage criteria and REQ-024's use at +40 C are not met
-      there, recorded and not waived, while this record's own line (the cells inside +60 C) still holds.
+      there, recorded and not waived, while this record's own line (the cells inside +60 C) still holds. Since 27
+      September 2026 (the second release attempt of layers 1 to 3; layer 2's release check, B2, and layer 3's, R4) the
+      prototype acceptance has the forced trigger P15, so the stop is verifiable whatever a chamber reaches: the gauge's
+      own External 1 to 4 Temp Offset (TI SLUUAQ3A section 11.2.1.4, at most 12.7 K) cannot reach the thresholds from
+      room temperature, so one thermistor input is substituted and never left open, because an open thermistor is a
+      permanent failure of the gauge (section 3.20); E3-H gains a stepped run beyond the envelope, and E3-L's pass line
+      is unchanged.
 
   - id: CFL-006
     kind: conflict
@@ -8931,8 +9157,18 @@ records:
           filled on every row (46 rows, E10 out of scope), section 4 still states its purpose and the requirements it
           verifies, now naming REQ-071, a live record, beside REQ-030 to REQ-032, and no row's purpose changed, so it
           stands on the file at 701c1020053e7903
+      - >-
+          v2/docs/TEST-PLAN.md re-read at the second release attempt of layers 1 to 3 of 27 September 2026 (fnd/rel2
+          from 953f5658, after the release reviews at f2b7fa66): line 3 (the first Review A pass cited by its filed
+          name, and the second release attempt's note), section 6's opening, row E3-H (its stepped run beyond the
+          envelope and the NOT_VERIFIED rule) and section 7's opening change, and section 7 gains row P15 (the hot stop
+          forced at room temperature); E3-L is unchanged; every table still carries its Purpose and Verifies columns,
+          each filled on every row (47 rows now, P15 added with its purpose, acceptance, and REQ-077, a live record; E10
+          out of scope), E3-H's purpose and trace gain its stepped run and P15 and no other row's purpose or trace
+          changed, and section 4 still states its purpose and the requirements it verifies, so it stands on the file at
+          4f15bd02a6a8be46
     evidence_bound_to:
-      - "v2/docs/TEST-PLAN.md@701c1020053e7903"
+      - "v2/docs/TEST-PLAN.md@4f15bd02a6a8be46"
     release_effect: BLOCKER
     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2804 (16e)", "v2/docs/TEST-PLAN.md:1-3"]
     source_check: VERIFIED
@@ -9395,14 +9631,35 @@ records:
           added and J_DOCK's value and pins 1 to 4 (VIN_RAW to GND); on board A the startup enables, the outlet
           interlock U30 and U26 and the wall data path J_USBW are unchanged, so it stands PASS on the file at
           da05dc02bc1e612f
+      - >-
+          v2/docs/CONOPS.md re-read at the second release attempt of layers 1 to 3 of 27 September 2026 (fnd/rel2 from
+          953f5658, after the release reviews at f2b7fa66): the status header (lines 20 and 48: the first Review A pass
+          cited by its filed name, and the release check's second step), M1's routes (the owner action and EQ-13 named),
+          section 4's Reduced row (the three documents now follow it) and Hot stop row (the forced trigger named),
+          section 4c's opening hand-off sentence and section 7a's opening and L-02 row change, and no number changed;
+          M4, section 4's EMCON row, sections 4a, 4b, 4b.1 and 4f and section 5, which this reading rests on, are
+          byte-identical to the file at 370aca33cb44da97, so it stands on the file at 3ff59edc96a3f8f4
+      - >-
+          v2/docs/TEST-PLAN.md re-read at the second release attempt of layers 1 to 3 of 27 September 2026 (fnd/rel2
+          from 953f5658, after the release reviews at f2b7fa66): line 3 (the first Review A pass cited by its filed
+          name, and the second release attempt's note), section 6's opening, row E3-H (its stepped run beyond the
+          envelope and the NOT_VERIFIED rule) and section 7's opening change, and section 7 gains row P15 (the hot stop
+          forced at room temperature); E3-L is unchanged; section 4 and its EMCON sentence (measured with a receiver
+          outside the kit, never the kit's own SDR), which this reading rests on, are byte-identical, so it stands on
+          the file at 4f15bd02a6a8be46
+      - >-
+          v2/docs/OPERATING-ENVELOPE.md re-read at the second release attempt of layers 1 to 3 of 27 September 2026
+          (fnd/rel2 from 953f5658, after the release reviews at f2b7fa66): only line 36 changes (the first Review A pass
+          cited by its filed name); no number changed; sections 2, 3 and 4, which this reading rests on, are
+          byte-identical to the file at 44a031caee47ff9a, so it stands on the file at 43361b02743cf3af
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc"
       - "v2/docs/PANEL.md@7bb905740ddaebb9"
-      - "v2/docs/CONOPS.md@370aca33cb44da97"
+      - "v2/docs/CONOPS.md@3ff59edc96a3f8f4"
       - "v2/docs/V2-SPEC.md@a92ea2ef3793a3c9"
-      - "v2/docs/OPERATING-ENVELOPE.md@44a031caee47ff9a"
-      - "v2/docs/TEST-PLAN.md@701c1020053e7903"
+      - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
+      - "v2/docs/TEST-PLAN.md@4f15bd02a6a8be46"
       - "v2/ecad/tools/pcb_decisions.yaml@b5f7162443d5ad91"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@8b78c59754a6a0c7"
@@ -9474,8 +9731,16 @@ records:
           added to what the functional check verifies); every test row's purpose and the requirements it verifies (46
           rows), which this reading rests on, byte-identical to the file at a0de0b12ff06ba4e, so it stands on the file
           at 701c1020053e7903
+      - >-
+          v2/docs/TEST-PLAN.md re-read at the second release attempt of layers 1 to 3 of 27 September 2026 (fnd/rel2
+          from 953f5658, after the release reviews at f2b7fa66): line 3 (the first Review A pass cited by its filed
+          name, and the second release attempt's note), section 6's opening, row E3-H (its stepped run beyond the
+          envelope and the NOT_VERIFIED rule) and section 7's opening change, and section 7 gains row P15 (the hot stop
+          forced at room temperature); E3-L is unchanged; every test row still states its purpose and the requirements
+          it verifies (47 rows now, P15 added; E3-H's purpose and trace gain its stepped run and P15), which is this
+          record's acceptance, so it stands on the file at 4f15bd02a6a8be46
     evidence_bound_to:
-      - "v2/docs/TEST-PLAN.md@701c1020053e7903"
+      - "v2/docs/TEST-PLAN.md@4f15bd02a6a8be46"
     release_effect: ADVISORY
     source: ["v2/docs/TEST-PLAN.md:18-19 (as read at eadbe571)", "v2/docs/OPERATING-ENVELOPE.md:205", "v2/docs/OPERATING-ENVELOPE.md:249"]
     source_check: VERIFIED
@@ -9572,7 +9837,9 @@ records:
       with this record open (Review B, finding m12): it is a qualification finding, and a qualification margin is not an
       error (the owner's condition of 25 September 2026); its effect is REQ-051's text and TEST-PLAN's deviations, not a
       board or an interface; and none of its three exits is the session's at desk: a measured pack arrangement needs
-      hardware, cells rated beyond +60 C reopen D-06, and D-02a's scope is the owner's to read.
+      hardware, cells rated beyond +60 C reopen D-06, and D-02a's scope is the owner's to read. Its three routes, the
+      session's recommendation and their cost are ENGINEERING-QUESTIONS EQ-26 (27 September 2026, the second release
+      attempt of layers 1 to 3; layer 2's release check, B4 (e)).
 
   - id: CFL-008
     kind: conflict
@@ -9617,8 +9884,16 @@ records:
           added to what the functional check verifies); rows E5 (the sealed kit) and E8 (Peli's pressure valve), which
           this reading rests on, byte-identical to the file at a0de0b12ff06ba4e, so it stands on the file at
           701c1020053e7903
+      - >-
+          v2/docs/TEST-PLAN.md re-read at the second release attempt of layers 1 to 3 of 27 September 2026 (fnd/rel2
+          from 953f5658, after the release reviews at f2b7fa66): line 3 (the first Review A pass cited by its filed
+          name, and the second release attempt's note), section 6's opening, row E3-H (its stepped run beyond the
+          envelope and the NOT_VERIFIED rule) and section 7's opening change, and section 7 gains row P15 (the hot stop
+          forced at room temperature); E3-L is unchanged; rows E5 (the sealed kit) and E8 (Peli's pressure valve), which
+          this reading rests on, are byte-identical to the file at 701c1020053e7903, so it stands on the file at
+          4f15bd02a6a8be46
     evidence_bound_to:
-      - "v2/docs/TEST-PLAN.md@701c1020053e7903"
+      - "v2/docs/TEST-PLAN.md@4f15bd02a6a8be46"
     release_effect: ADVISORY
     source: ["v2/docs/TEST-PLAN.md:20 (as read at eadbe571)", "v2/docs/TEST-PLAN.md:23 (as read at eadbe571)", "v2/docs/MESHSAT-709-geometry-appendix.md:2864"]
     source_check: VERIFIED
@@ -9673,8 +9948,16 @@ records:
           added to what the functional check verifies); section 1's deployed closed-lid state and section 6's closed-lid
           thermal test E3-L, which this reading rests on, byte-identical to the file at a0de0b12ff06ba4e, so it stands
           on the file at 701c1020053e7903
+      - >-
+          v2/docs/TEST-PLAN.md re-read at the second release attempt of layers 1 to 3 of 27 September 2026 (fnd/rel2
+          from 953f5658, after the release reviews at f2b7fa66): line 3 (the first Review A pass cited by its filed
+          name, and the second release attempt's note), section 6's opening, row E3-H (its stepped run beyond the
+          envelope and the NOT_VERIFIED rule) and section 7's opening change, and section 7 gains row P15 (the hot stop
+          forced at room temperature); E3-L is unchanged; section 1's deployed closed-lid state and section 6's
+          closed-lid thermal test E3-L, which this reading rests on, are byte-identical to the file at 701c1020053e7903,
+          so it stands on the file at 4f15bd02a6a8be46
     evidence_bound_to:
-      - "v2/docs/TEST-PLAN.md@701c1020053e7903"
+      - "v2/docs/TEST-PLAN.md@4f15bd02a6a8be46"
     release_effect: ADVISORY
     source:
       - "v2/docs/TEST-PLAN.md:8 (as read at eadbe571)"
@@ -11141,10 +11424,23 @@ records:
           pins 1 to 4, and the section list; lines after 66 move down by 5 and lines after the pre-charge pin by 23; the
           generator's lines 18 to 48 and the strap's lines are unchanged in content, so it stands PASS on the file at
           5af29bbcf27bb91a
+      - >-
+          v2/docs/CONOPS.md re-read at the second release attempt of layers 1 to 3 of 27 September 2026 (fnd/rel2 from
+          953f5658, after the release reviews at f2b7fa66): the status header (lines 20 and 48: the first Review A pass
+          cited by its filed name, and the release check's second step), M1's routes (the owner action and EQ-13 named),
+          section 4's Reduced row (the three documents now follow it) and Hot stop row (the forced trigger named),
+          section 4c's opening hand-off sentence and section 7a's opening and L-02 row change, and no number changed;
+          section 4's Charging row and section 5's case S4, which this reading rests on, are byte-identical to the file
+          at 370aca33cb44da97, so it stands on the file at 3ff59edc96a3f8f4
+      - >-
+          v2/docs/OPERATING-ENVELOPE.md re-read at the second release attempt of layers 1 to 3 of 27 September 2026
+          (fnd/rel2 from 953f5658, after the release reviews at f2b7fa66): only line 36 changes (the first Review A pass
+          cited by its filed name); no number changed; section 3's paragraph beginning '**Corrected 26 September 2026.**
+          This pa', which this reading rests on, is byte-identical, so it stands on the file at 43361b02743cf3af
     evidence_bound_to:
       - "v2/docs/PANEL.md@7bb905740ddaebb9"
-      - "v2/docs/CONOPS.md@370aca33cb44da97"
-      - "v2/docs/OPERATING-ENVELOPE.md@44a031caee47ff9a"
+      - "v2/docs/CONOPS.md@3ff59edc96a3f8f4"
+      - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
       - "v2/ecad/tools/gen_sch_a.py@5af29bbcf27bb91a"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
       - "v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md@44fdf9a022c49337"
