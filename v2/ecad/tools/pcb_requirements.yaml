@@ -137,7 +137,7 @@ written: "2026-09-26"
 baseline_state: READY_FOR_REVIEW_B
 sources_read_at: 95e078a1
 needs_document: "v2/docs/CONOPS.md"
-needs_document_sha256: 4887ada07f50d808c019129322fc3fde642b83e8de627033c7180eb1c94e8238
+needs_document_sha256: 370aca33cb44da97b5488653ebe10fa13e7371e5321f8feebd6fe9cc98d092db
 companion_documents: []
 
 # The needs of CONOPS section 2, quoted. The validator compares each statement with the needs table of the
@@ -1644,10 +1644,13 @@ open_items:
     status: OPEN
     title: >-
       EMCON reaches every transmitter (D-05), what is left after 458b2873 gated the compute modules' radios and the
-      WiFi card supplies: SD-EMC-1's two stages for the 5G module drawn on board B; the shared-line items L1 to L4 and
-      L7 of EMCON.md section 7 remedied (firmware pins on EMCON_HW, the line's hold with its source gone, the +3V3_DEV
-      loss that releases nine radios, gate supplies outside their range, the 2N7002 drive); the back-feed paths of
-      SD-EMC-2.
+      WiFi card supplies and the round 8 circuits of boards A to D drew the rest of this item (EMCON.md sections 4a, 4b
+      and 7: the 5G module's supply removed by hardware at once on board B, SD-EMC-1r8, in place of SD-EMC-1's two
+      stages; L1 remedied on boards B and C, L2 on boards A and B, L3 and L7 on board B, L4 on boards A and D): L4 case
+      (2), the gate supplies of U501 to U505 below their specified range on board B (bench E-11), and the back-feed
+      paths of SD-EMC-2 into the RockBLOCK, the E22 and both E72 (open) and both AW7915 cards (no maker floor to judge
+      against). Restated 27 September 2026 at the release check of layer 2 (finding B4 (b)); the item's scope is
+      unchanged.
   - id: S-02
     class: SESSION
     status: OPEN
@@ -1754,8 +1757,9 @@ open_items:
     class: SESSION
     status: OPEN
     title: >-
-      The hardware EMCON lamp on board C, driven from the line state with no processor in its path, and its light-guide
-      hole in the face plate (SD-EMC-6, EMCON.md section 7).
+      The hardware EMCON lamp's light-guide hole in the face plate beside SW_EMCON (SD-EMC-6, EMCON.md section 7). The
+      lamp itself, driven from the line state with no processor in its path, is drawn on board C since its round 8 (D22
+      through U14 and Q7). Restated 27 September 2026 at the release check of layer 2 (finding B4 (b)).
   - id: S-45
     class: SESSION
     status: OPEN
@@ -2671,10 +2675,28 @@ records:
           timing (fnd/hc7, c7) and the integrator's edits for verify c7: only correction 18 changes, gaining the
           mock-up's timing since 27 September 2026 (FEA-007); the lines and corrections this reading rests on are
           byte-identical to the file at a02ea1b6801f8916, so it stands on the file at 73a797e44d42fa6d
+      - >-
+          v2/docs/CONOPS.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the
+          release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and
+          REVIEW-LAYER-2-RELEASE-2026-09-27.md): the status header (the filed Review A records and the release review),
+          section 3's M4 (the 5G row's 20 s as REQ-071's with board B's round 8 supply removal), section 4's Reduced row
+          (FW-C09 and ARCHITECTURE's PS-RED row named as hand-offs), section 4a's A06 sentence (its records filed),
+          section 4b.1 (the 5G row, the lamp D22 drawn, the operator's lead as REQ-071's bound, the state at 15 of 17
+          local), section 4c's opening (the hand-offs) and section 4f's 5G EMCON cell change; section 2a, which this
+          reading rests on, is byte-identical to the file at 4887ada07f50d808, so it stands on the file at
+          370aca33cb44da97
+      - >-
+          v2/docs/V2-SPEC.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the
+          release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and
+          REVIEW-LAYER-2-RELEASE-2026-09-27.md): lines 10 (the case generators carry C2 since c351115d), 23 (the CONOPS
+          runtime cross-reference), 24 and 76 (the hardware EMCON lamp drawn on board C, its light guide owed), 59 (a
+          seventeenth LED) and correction 20's last sentence change and correction 30 is added; line 32 and correction
+          6, which this reading rests on, are byte-identical to the file at 73a797e44d42fa6d, so it stands on the file
+          at a92ea2ef3793a3c9
     evidence_bound_to:
-      - "v2/docs/CONOPS.md@4887ada07f50d808"
+      - "v2/docs/CONOPS.md@370aca33cb44da97"
       - "v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8"
-      - "v2/docs/V2-SPEC.md@73a797e44d42fa6d"
+      - "v2/docs/V2-SPEC.md@a92ea2ef3793a3c9"
     release_effect: BLOCKER
     source:
       - "v2/docs/ARCH-PCB-B-IOHA.md:17"
@@ -3564,9 +3586,17 @@ records:
           v2/docs/PANEL.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed section 1's Pass-throughs row (the monitor's touch lead to D8 J_USB3, SC-HF-06), section 3's GPIO10 to 12 row (the heartbeat source) and section 7's new paragraph on speed, pull-ups and the budget (its supervisors' row at 0x34 to 0x36, its 0x68 row and the S-07 finding closed as I3-F01 were already board B's round 8 text, b76c18cb, and are unchanged here); line 5 (bank 1's home and failover hosts) and section 2's ribbon table with its pin 15 row, which this reading rests on, are unchanged, and section 1 changes only in its Pass-throughs row (the monitor's leads), which this reading does not cite, so this reading stands on the file at 4bcbf31f44560ee1
       - >-
           v2/docs/ARCH-PCB-B-IOHA.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed sections 6 and 10a only (after section 6's corrected PB1/PB2 heading, the FW-B08 pointer and the segment choice SC-HF-02; 10a's per-controller part; the address block and the supervisors' part were board B's round 8 text already and are unchanged, r8int4); sections 4, 15 and 15a and line 17, which this reading cites, are unchanged, so this reading stands on the file at 55620cf51446bfc8
+      - >-
+          v2/docs/PANEL.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the
+          release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and
+          REVIEW-LAYER-2-RELEASE-2026-09-27.md): section 1's Indicators row (D22 counted as the face's seventeenth LED,
+          its light guide owed) and section 9's lamp-test sentence (D22 not among the seventeen controller-lit
+          indicators; the lamp test cannot light it) change; line 5 (bank 1's home and failover hosts) and section 2's
+          ribbon table with its pin 15 row, which this reading rests on, are byte-identical, and section 1 changes only
+          in its Indicators row, which this reading does not cite, so it stands on the file at 8bac3c8104424c6c
     evidence_bound_to:
       - "v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8"
-      - "v2/docs/PANEL.md@4bcbf31f44560ee1"
+      - "v2/docs/PANEL.md@8bac3c8104424c6c"
       - "v2/ecad/tools/gen_sch_b.py@af6e5821e21b70ef"
     release_effect: ADVISORY
     source:
@@ -5157,10 +5187,16 @@ records:
           v2/docs/TEST-PLAN.md re-read at integration by the layer-3 closer's apply script (27 September 2026): the text
           '| M7 | Electrostatic discharge to every touchable ', which this reading rests on, byte-identical to the
           revision it was bound to (86742b72d44adce6), so it stands on the file at a0de0b12ff06ba4e
+      - >-
+          v2/docs/TEST-PLAN.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the
+          release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and
+          REVIEW-LAYER-2-RELEASE-2026-09-27.md): only section 4's trace line changes (the EMCON lamp named D22, REQ-071
+          added to what the functional check verifies); the M7 row, which this reading rests on, is byte-identical to
+          the file at a0de0b12ff06ba4e, so it stands on the file at 701c1020053e7903
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_a.py@5a97fed72c42b79d"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63"
-      - "v2/docs/TEST-PLAN.md@a0de0b12ff06ba4e"
+      - "v2/docs/TEST-PLAN.md@701c1020053e7903"
     release_effect: MUST_JUSTIFY
     source: ["owner ruling D-17", "v2/ecad/tools/gen_sch_a.py:1104-1114", "v2/ecad/tools/pcb_decisions.yaml:256-429 (decision 31)"]
     source_check: VERIFIED
@@ -5972,8 +6008,15 @@ records:
           on the file at 4b03b1c89cf68cef
       - >-
           v2/docs/PANEL.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed section 1's Pass-throughs row (the monitor's touch lead to D8 J_USB3, SC-HF-06), section 3's GPIO10 to 12 row (the heartbeat source) and section 7's new paragraph on speed, pull-ups and the budget (its supervisors' row at 0x34 to 0x36, its 0x68 row and the S-07 finding closed as I3-F01 were already board B's round 8 text, b76c18cb, and are unchanged here); section 7's panel-absent paragraph, which this reading cites, is unchanged, so this reading stands on the file at 4bcbf31f44560ee1
+      - >-
+          v2/docs/PANEL.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the
+          release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and
+          REVIEW-LAYER-2-RELEASE-2026-09-27.md): section 1's Indicators row (D22 counted as the face's seventeenth LED,
+          its light guide owed) and section 9's lamp-test sentence (D22 not among the seventeen controller-lit
+          indicators; the lamp test cannot light it) change; section 7's panel-absent paragraph, which this reading
+          cites, is byte-identical, so it stands on the file at 8bac3c8104424c6c
     evidence_bound_to:
-      - "v2/docs/PANEL.md@4bcbf31f44560ee1"
+      - "v2/docs/PANEL.md@8bac3c8104424c6c"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63"
     release_effect: ADVISORY
     source:
@@ -7908,8 +7951,16 @@ records:
           verifies nothing), and section 4 states its purpose and the requirements it verifies; acceptance,
           qualification margin, deviation, characterisation and protection are told apart in the Purpose column; so it
           stands on the file at a0de0b12ff06ba4e
+      - >-
+          v2/docs/TEST-PLAN.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the
+          release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and
+          REVIEW-LAYER-2-RELEASE-2026-09-27.md): only section 4's trace line changes (the EMCON lamp named D22, REQ-071
+          added to what the functional check verifies); every table still carries its Purpose and Verifies columns, each
+          filled on every row (46 rows, E10 out of scope), section 4 still states its purpose and the requirements it
+          verifies, now naming REQ-071, a live record, beside REQ-030 to REQ-032, and no row's purpose changed, so it
+          stands on the file at 701c1020053e7903
     evidence_bound_to:
-      - "v2/docs/TEST-PLAN.md@a0de0b12ff06ba4e"
+      - "v2/docs/TEST-PLAN.md@701c1020053e7903"
     release_effect: BLOCKER
     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2804 (16e)", "v2/docs/TEST-PLAN.md:1-3"]
     source_check: VERIFIED
@@ -8256,14 +8307,62 @@ records:
           (M4a and M5 open until the targeted mock-up before boards A and P enter layout, in place of 'a mock-up at the
           build'); section 2's protection-board row, section 3 and section 4's EMCON paragraph are byte-identical to the
           file at 9f16f5b7d634764a, so it stands on the file at 6e4bbde9dbf7e136
+      - >-
+          v2/docs/PANEL.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the
+          release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and
+          REVIEW-LAYER-2-RELEASE-2026-09-27.md): section 1's Indicators row (D22 counted as the face's seventeenth LED,
+          its light guide owed) and section 9's lamp-test sentence (D22 not among the seventeen controller-lit
+          indicators; the lamp test cannot light it) change; section 1's Indicators row describes board C's round 8 lamp
+          D22 through U14 and Q7 as the committed netlist v2/ecad/pcb-c-display-c8/out/pcb-c-display.net at
+          11eabc2dddca5161 carries it, which is this record's acceptance, and sections 6 and 7 are byte-identical, so it
+          stands on the file at 8bac3c8104424c6c
+      - >-
+          v2/docs/CONOPS.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the
+          release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and
+          REVIEW-LAYER-2-RELEASE-2026-09-27.md): the status header (the filed Review A records and the release review),
+          section 3's M4 (the 5G row's 20 s as REQ-071's with board B's round 8 supply removal), section 4's Reduced row
+          (FW-C09 and ARCHITECTURE's PS-RED row named as hand-offs), section 4a's A06 sentence (its records filed),
+          section 4b.1 (the 5G row, the lamp D22 drawn, the operator's lead as REQ-071's bound, the state at 15 of 17
+          local), section 4c's opening (the hand-offs) and section 4f's 5G EMCON cell change; M4, section 4b.1 and
+          section 4f's 5G cell now state the 5G module's supply removed by hardware at once (U215, U220, Q212 and R295
+          on the committed netlist v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net at adcc3c6736c90e9f) and the lamp D22
+          drawn on board C, which is this record's acceptance, the Reduced row changes only in naming the hand-offs, and
+          section 4's other rows, section 4a's PS-EMCON row, section 4b and section 5 are byte-identical, so it stands
+          on the file at 370aca33cb44da97
+      - >-
+          v2/docs/V2-SPEC.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the
+          release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and
+          REVIEW-LAYER-2-RELEASE-2026-09-27.md): lines 10 (the case generators carry C2 since c351115d), 23 (the CONOPS
+          runtime cross-reference), 24 and 76 (the hardware EMCON lamp drawn on board C, its light guide owed), 59 (a
+          seventeenth LED) and correction 20's last sentence change and correction 30 is added; line 24 keeps its
+          description of the circuit as generated and changed only in saying the lamp is drawn (D22 on the committed
+          board C netlist at 11eabc2dddca5161), line 76 now names the lamp's light guide as the owed item, and lines 34,
+          41 and 43 and corrections 2, 4, 7, 9, 12, 13, 19, 26, 27 and 28 are byte-identical, so it stands on the file
+          at a92ea2ef3793a3c9
+      - >-
+          v2/docs/OPERATING-ENVELOPE.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4,
+          after the release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and
+          REVIEW-LAYER-2-RELEASE-2026-09-27.md): only section 4 changes: the pack row names the filed A06 records
+          (v2/docs/records/adj/A06-pack-geometry/), and the operating-modes paragraph states board B's round 8 removal
+          of the 5G module's supply and names what EMCON work remains; no number changed; section 4's EMCON paragraph
+          now also states the 5G module's supply removed by hardware at once (board B's round 8, as generated), which is
+          this record's acceptance, and section 2's protection-board row and section 3 are byte-identical, so it stands
+          on the file at 44a031caee47ff9a
+      - >-
+          v2/docs/TEST-PLAN.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the
+          release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and
+          REVIEW-LAYER-2-RELEASE-2026-09-27.md): only section 4's trace line changes (the EMCON lamp named D22, REQ-071
+          added to what the functional check verifies); the EMCON sentence of section 4's functional check (measured
+          with a receiver outside the kit, never the kit's own SDR), which this reading rests on, is byte-identical, so
+          it stands on the file at 701c1020053e7903
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976"
-      - "v2/docs/PANEL.md@4bcbf31f44560ee1"
-      - "v2/docs/CONOPS.md@4887ada07f50d808"
-      - "v2/docs/V2-SPEC.md@73a797e44d42fa6d"
-      - "v2/docs/OPERATING-ENVELOPE.md@6e4bbde9dbf7e136"
-      - "v2/docs/TEST-PLAN.md@a0de0b12ff06ba4e"
+      - "v2/docs/PANEL.md@8bac3c8104424c6c"
+      - "v2/docs/CONOPS.md@370aca33cb44da97"
+      - "v2/docs/V2-SPEC.md@a92ea2ef3793a3c9"
+      - "v2/docs/OPERATING-ENVELOPE.md@44a031caee47ff9a"
+      - "v2/docs/TEST-PLAN.md@701c1020053e7903"
       - "v2/ecad/tools/pcb_decisions.yaml@b5f7162443d5ad91"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
@@ -8328,8 +8427,15 @@ records:
           added and E3-A and E3-L unchanged, 652353b9cb624cf3, read by hand by the targeted fixer c23): every test row
           states its purpose (acceptance, qualification margin, characterisation or protection) and the requirements it
           verifies (46 rows), which is this record's acceptance; the file at a0de0b12ff06ba4e
+      - >-
+          v2/docs/TEST-PLAN.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the
+          release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and
+          REVIEW-LAYER-2-RELEASE-2026-09-27.md): only section 4's trace line changes (the EMCON lamp named D22, REQ-071
+          added to what the functional check verifies); every test row's purpose and the requirements it verifies (46
+          rows), which this reading rests on, byte-identical to the file at a0de0b12ff06ba4e, so it stands on the file
+          at 701c1020053e7903
     evidence_bound_to:
-      - "v2/docs/TEST-PLAN.md@a0de0b12ff06ba4e"
+      - "v2/docs/TEST-PLAN.md@701c1020053e7903"
     release_effect: ADVISORY
     source: ["v2/docs/TEST-PLAN.md:18-19 (as read at eadbe571)", "v2/docs/OPERATING-ENVELOPE.md:205", "v2/docs/OPERATING-ENVELOPE.md:249"]
     source_check: VERIFIED
@@ -8464,8 +8570,15 @@ records:
           closer's pass-2 revision, read by hand at a87e66cf431d938d, and again at pass 3 with the hot stop's row E3-H
           added and E3-A and E3-L unchanged, 652353b9cb624cf3, read by hand by the targeted fixer c23): E5 describes the
           sealed kit and E8 names Peli's pressure valve, which is this record's acceptance; the file at a0de0b12ff06ba4e
+      - >-
+          v2/docs/TEST-PLAN.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the
+          release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and
+          REVIEW-LAYER-2-RELEASE-2026-09-27.md): only section 4's trace line changes (the EMCON lamp named D22, REQ-071
+          added to what the functional check verifies); rows E5 (the sealed kit) and E8 (Peli's pressure valve), which
+          this reading rests on, byte-identical to the file at a0de0b12ff06ba4e, so it stands on the file at
+          701c1020053e7903
     evidence_bound_to:
-      - "v2/docs/TEST-PLAN.md@a0de0b12ff06ba4e"
+      - "v2/docs/TEST-PLAN.md@701c1020053e7903"
     release_effect: ADVISORY
     source: ["v2/docs/TEST-PLAN.md:20 (as read at eadbe571)", "v2/docs/TEST-PLAN.md:23 (as read at eadbe571)", "v2/docs/MESHSAT-709-geometry-appendix.md:2864"]
     source_check: VERIFIED
@@ -8513,8 +8626,15 @@ records:
           added and E3-A and E3-L unchanged, 652353b9cb624cf3, read by hand by the targeted fixer c23): section 1 has
           the deployed closed-lid state and section 6 its closed-lid thermal test E3-L, which is this record's
           acceptance; the file at a0de0b12ff06ba4e
+      - >-
+          v2/docs/TEST-PLAN.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the
+          release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and
+          REVIEW-LAYER-2-RELEASE-2026-09-27.md): only section 4's trace line changes (the EMCON lamp named D22, REQ-071
+          added to what the functional check verifies); section 1's deployed closed-lid state and section 6's closed-lid
+          thermal test E3-L, which this reading rests on, byte-identical to the file at a0de0b12ff06ba4e, so it stands
+          on the file at 701c1020053e7903
     evidence_bound_to:
-      - "v2/docs/TEST-PLAN.md@a0de0b12ff06ba4e"
+      - "v2/docs/TEST-PLAN.md@701c1020053e7903"
     release_effect: ADVISORY
     source:
       - "v2/docs/TEST-PLAN.md:8 (as read at eadbe571)"
@@ -8923,8 +9043,16 @@ records:
           timing (fnd/hc7, c7) and the integrator's edits for verify c7: only correction 18 changes, gaining the
           mock-up's timing since 27 September 2026 (FEA-007); the lines and corrections this reading rests on are
           byte-identical to the file at a02ea1b6801f8916, so it stands on the file at 73a797e44d42fa6d
+      - >-
+          v2/docs/V2-SPEC.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the
+          release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and
+          REVIEW-LAYER-2-RELEASE-2026-09-27.md): lines 10 (the case generators carry C2 since c351115d), 23 (the CONOPS
+          runtime cross-reference), 24 and 76 (the hardware EMCON lamp drawn on board C, its light guide owed), 59 (a
+          seventeenth LED) and correction 20's last sentence change and correction 30 is added; line 41 (the one
+          dual-SIM description, SC-13), which this reading rests on, is byte-identical to the file at 73a797e44d42fa6d,
+          so it stands on the file at a92ea2ef3793a3c9
     evidence_bound_to:
-      - "v2/docs/V2-SPEC.md@73a797e44d42fa6d"
+      - "v2/docs/V2-SPEC.md@a92ea2ef3793a3c9"
     release_effect: ADVISORY
     source:
       - "v2/docs/V2-SPEC.md:41 (as read at eadbe571)"
@@ -9704,8 +9832,15 @@ records:
           timing (fnd/hc7, c7) and the integrator's edits for verify c7: only correction 18 changes, gaining the
           mock-up's timing since 27 September 2026 (FEA-007); the lines and corrections this reading rests on are
           byte-identical to the file at a02ea1b6801f8916, so it stands on the file at 73a797e44d42fa6d
+      - >-
+          v2/docs/V2-SPEC.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the
+          release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and
+          REVIEW-LAYER-2-RELEASE-2026-09-27.md): lines 10 (the case generators carry C2 since c351115d), 23 (the CONOPS
+          runtime cross-reference), 24 and 76 (the hardware EMCON lamp drawn on board C, its light guide owed), 59 (a
+          seventeenth LED) and correction 20's last sentence change and correction 30 is added; line 35 and correction
+          8, which this reading rests on, are byte-identical, so it stands on the file at a92ea2ef3793a3c9
     evidence_bound_to:
-      - "v2/docs/V2-SPEC.md@73a797e44d42fa6d"
+      - "v2/docs/V2-SPEC.md@a92ea2ef3793a3c9"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976"
     release_effect: ADVISORY
     source: ["v2/docs/V2-SPEC.md:35", "v2/ecad/tools/gen_sch_e.py:678"]
@@ -9857,10 +9992,35 @@ records:
           (M4a and M5 open until the targeted mock-up before boards A and P enter layout, in place of 'a mock-up at the
           build'); section 2's protection-board row, section 3 and section 4's EMCON paragraph are byte-identical to the
           file at 9f16f5b7d634764a, so it stands on the file at 6e4bbde9dbf7e136
+      - >-
+          v2/docs/PANEL.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the
+          release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and
+          REVIEW-LAYER-2-RELEASE-2026-09-27.md): section 1's Indicators row (D22 counted as the face's seventeenth LED,
+          its light guide owed) and section 9's lamp-test sentence (D22 not among the seventeen controller-lit
+          indicators; the lamp test cannot light it) change; section 10, which this reading cites, is byte-identical, so
+          it stands on the file at 8bac3c8104424c6c
+      - >-
+          v2/docs/CONOPS.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the
+          release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and
+          REVIEW-LAYER-2-RELEASE-2026-09-27.md): the status header (the filed Review A records and the release review),
+          section 3's M4 (the 5G row's 20 s as REQ-071's with board B's round 8 supply removal), section 4's Reduced row
+          (FW-C09 and ARCHITECTURE's PS-RED row named as hand-offs), section 4a's A06 sentence (its records filed),
+          section 4b.1 (the 5G row, the lamp D22 drawn, the operator's lead as REQ-071's bound, the state at 15 of 17
+          local), section 4c's opening (the hand-offs) and section 4f's 5G EMCON cell change; section 4's Charging row
+          and section 5's case S4, which this reading rests on, are byte-identical, so it stands on the file at
+          370aca33cb44da97
+      - >-
+          v2/docs/OPERATING-ENVELOPE.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4,
+          after the release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and
+          REVIEW-LAYER-2-RELEASE-2026-09-27.md): only section 4 changes: the pack row names the filed A06 records
+          (v2/docs/records/adj/A06-pack-geometry/), and the operating-modes paragraph states board B's round 8 removal
+          of the 5G module's supply and names what EMCON work remains; no number changed; section 3's paragraph
+          beginning '**Corrected 26 September 2026.** This pa', which this reading rests on, is byte-identical, so it
+          stands on the file at 44a031caee47ff9a
     evidence_bound_to:
-      - "v2/docs/PANEL.md@4bcbf31f44560ee1"
-      - "v2/docs/CONOPS.md@4887ada07f50d808"
-      - "v2/docs/OPERATING-ENVELOPE.md@6e4bbde9dbf7e136"
+      - "v2/docs/PANEL.md@8bac3c8104424c6c"
+      - "v2/docs/CONOPS.md@370aca33cb44da97"
+      - "v2/docs/OPERATING-ENVELOPE.md@44a031caee47ff9a"
       - "v2/ecad/tools/gen_sch_a.py@5a97fed72c42b79d"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63"
       - "v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md@44fdf9a022c49337"
@@ -10018,11 +10178,18 @@ records:
           9 keeps the layer 5 closer's touch-lead clause beside the case set's; section 4's Pack SMBus row and build
           step 7, which this reading cites, are byte-identical to the file at 3a8897ef6d717a30, so it stands on the file
           at b49f853f450d49ee
+      - >-
+          v2/docs/PANEL.md re-read at the release check of layers 1 to 3 of 27 September 2026 (fnd/r8int4, after the
+          release reviews at f2b7fa66, v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md and
+          REVIEW-LAYER-2-RELEASE-2026-09-27.md): section 1's Indicators row (D22 counted as the face's seventeenth LED,
+          its light guide owed) and section 9's lamp-test sentence (D22 not among the seventeen controller-lit
+          indicators; the lamp test cannot light it) change; section 10's SMBus sentences, which this reading cites, are
+          byte-identical, so it stands on the file at 8bac3c8104424c6c
     evidence_bound_to:
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976"
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
       - "v2/docs/ASSEMBLY.md@b49f853f450d49ee"
-      - "v2/docs/PANEL.md@4bcbf31f44560ee1"
+      - "v2/docs/PANEL.md@8bac3c8104424c6c"
       - "v2/ecad/tools/check_contracts.py@308fdefb90335da4"
     release_effect: BLOCKER
     source: ["v2/ecad/tools/gen_sch_e.py:264", "v2/docs/ASSEMBLY.md section 4", "v2/docs/PANEL.md section 10"]
