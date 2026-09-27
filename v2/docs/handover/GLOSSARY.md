@@ -18,7 +18,12 @@ nothing named here has been built or measured.
 | blocking, minor | a finding that stops acceptance of the reviewed work, and one that does not |
 | candidate | work in a branch or patch that is not merged: not design until the integrator merges it with its evidence (`candidates/README.md`) |
 | worktree, `fnd/<name>` | a git worktree of the session and its branch; never pushed, so the handover carries them as patches under `v2/docs/handover/candidates/` |
-| round 4, 5, 6, 7, 8 | the numbered rounds of circuit and tool corrections of 25 to 27 September 2026, in order; round 8 is the latest, merged for boards A, C, D, E and P, a candidate for board B |
+| round 4, 5, 6, 7, 8 | the numbered rounds of circuit and tool corrections of 25 to 27 September 2026, in order; round 8 is the latest, merged for all six boards with a schematic (board B at `b76c18cb`, after H1.1) |
+| set 1 to set 5, wave 3 | the integration batches of 26 and 27 September 2026: sets 1 and 2 round 8 on A, C, D, E and P (H1); set 3 board B's round 8; set 4 the layer 2, 3, 5 and 7 closers, the re-take driver and the case release (`f2b7fa66`); set 5, called wave 3, the streams w3a, w3b, w3de, w3t and w3g on boards A, B, D and E, the RF-002 tool row and the diagrams (`a7b5872e`) |
+| consolidated re-take | one run of `retake_schematic_phase.py` that re-took every schematic-phase reading on the committed netlists (`8ea7867e`, 27 September 2026; REGENERATE.md section 9) |
+| release check, targeted fix, narrow verification | a fresh reviewer's judgement of a layer against the owner's COMPLETE test; after two attempts on the same cause, one fix limited to named items and a check limited to those items by a session that wrote none of them (the owner's execution prompt, section 4) |
+| c23, c5, c7 | the targeted fixers that answered the closers' second-review findings on layers 2 and 3, 5, and 7 before their merge |
+| H1, H1.1, H2 | the handover snapshots of 27 September 2026 under `v2/release/handover/`, in order; each is an immutable copy of one commit (`SOURCE.txt`) |
 | streams r8a, r8b, r8c, r8d, r8e, r8p | round 8's author per board (letter = board) |
 | r8bat, r8cert, ts-net, ts-rec, ts-tvs | the battery stream; the certification tool stream; the tools streams (ts-net: PWR-001 and SI-001 on the netlist; ts-rec: recording readings by sha; ts-tvs: clamp symbols) |
 | W1 to W7 | the foundation workstreams of 25 September 2026 (W1 systems and requirements, W2 power and electronics, W3 interfaces and board B, W4 mechanical, thermal and RF, W5 firmware and testability, W6 independent verification and manufacturing, W7 regeneration and evidence integrity; `v2/docs/EXECUTION-PLAN.md`, the workstream table) |
@@ -36,9 +41,9 @@ nothing named here has been built or measured.
 | REQ, CON, ASM, CHO, SPD, CFL, FEA-nnn | requirement, constraint, assumption, choice, specification detail, conflict and feasibility records of `pcb_requirements.yaml` (view: `v2/docs/REQUIREMENTS-TRACE.md`) |
 | D-nn (D-01 to D-18, D-02a to D-02e) | an owner ruling of 25 and 26 September 2026 (`pcb_requirements.yaml` `owner_rulings`, `CONOPS.md` section 7) |
 | SC-nn | a session choice under the owner's standing rule (`pcb_requirements.yaml` `session_choices`); SC-L2-nn, SC-HF-nn are a closer's own drafts of such choices, and a draft a page still cites is entered in the registry under its own SC-nn with the draft's name as `drafted_as` (SC-HF-01 to SC-HF-06 are SC-58 to SC-63 since 27 September 2026); `rules_lib.py requirements` refuses an SC- id cited in the registry or a page of `v2/docs/` or `v2/docs/handover/` that no entry defines |
-| S-nn, L-nn | open items of the registry (`open_items`); closed ones move to `closed_items` |
+| S-nn, L-nn, M-nn | open items of the registry (`open_items`; an M-nn is an owner action, such as M-02); closed ones move to `closed_items` |
 | decision nn | an entry of `v2/ecad/tools/pcb_decisions.yaml` (page: `v2/docs/OWNER-DECISIONS-OPEN.md`) |
-| EQ-nn | a blocked engineering question of `ENGINEERING-QUESTIONS.md` (EQ-01 to EQ-21) |
+| EQ-nn | a blocked engineering question of `ENGINEERING-QUESTIONS.md` (EQ-01 to EQ-30 in H2) |
 | rule ids (PWR-001, SI-001, RF-002, TRN-001, SCH-002, STK-001, ...) | a rule of `v2/ecad/tools/pcb_rules.yaml`; its status per board is `v2/docs/PCB-RULE-STATUS-<x>.md` |
 | INT-001, INT-002 | the interface rule of the registry, and the pre-layout assessment of board B's 48 critical nets (`v2/docs/reviews/INT-002-PRE-LAYOUT-ASSESSMENT.md`) |
 | R-BAT, R-PWR, R-HSD, R-SEC, R-EMC | the qualified human reviews the records require (battery, power, high-speed digital, security, EMC; `v2/docs/reviews/REVIEW-ROUTES.md`); none engaged |

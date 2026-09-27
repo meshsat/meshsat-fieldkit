@@ -6,14 +6,56 @@ line at `e3aedb25`, which the public repository serves at
 `https://raw.githubusercontent.com/meshsat/meshsat-fieldkit/e3aedb25/<path>`. Internal names are defined in
 `v2/docs/handover/GLOSSARY.md`. Read `v2/docs/handover/START-HERE.md` first; the per-layer detail behind
 every line below is in `v2/docs/handover/LAYER-STATUS.md`, and each blocked question is written out in
-`v2/docs/handover/ENGINEERING-QUESTIONS.md` (EQ-01 to EQ-21).
+`v2/docs/handover/ENGINEERING-QUESTIONS.md` (EQ-01 to EQ-30 in H2).
 
-**Handover H1.** The snapshot carries this brief as written at `e3aedb25` plus section 0 below, which states what
-changed up to the H1 source commit (main `84e52461`, circuit round 8 sets 1 and 2, and the handover branch, last design
-change `99cde56b`). Where section 0 and a later section disagree, section 0 is the newer; since H1.1 the sentences of
-later sections that section 0 supersedes also carry an inline **Superseded in H1** mark.
+**Handover H2.** The snapshot carries this brief as written at `e3aedb25` plus section 0 (what changed from H1.1 to
+H2, the newest) and section 0a (what changed from `e3aedb25` to H1: main `84e52461`, circuit round 8 sets 1 and 2, and
+the handover branch, last design change `99cde56b`). Where section 0 or 0a and a later section disagree, section 0 is
+the newest; the sentences of later sections they supersede carry an inline **Superseded in H1** or **Superseded in
+H2** mark.
 
-## 0. What changed between `e3aedb25` and H1
+## 0. What changed between H1.1 and H2
+
+The newest section of this brief; section 0a below is the step from `e3aedb25` to H1. The counts of the design's state
+here are printed by `v2/docs/records/h2/handover_counts.py` from the snapshot's files, and the others name their
+commit; `LAYER-STATUS.md`, section "Status at handover H2", gives each layer's evidence and remaining items.
+
+- **Layers 1 and 2 are COMPLETE** for their own engineering purpose, each with its review records (AI reviews, none a
+  qualified review): the product brief BASELINED in `6b2a9965` after the narrow verification
+  (`v2/docs/reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md`), CONOPS BASELINED at `79963b3b` after the second
+  release check (`v2/docs/reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md`). H2 is their versioned package. What they
+  carry without being held by it (M-02 and S-53, BAT-F19, HOT-R1, S-58, FEA-004, BANK-R1, S-55, the minors) is listed
+  in LAYER-STATUS.
+- **Layer 3 is IN_PROGRESS**: the registry validates (144 records, 0 errors) but its baseline was reversed by the
+  narrow verification on one unstated registry difference (S-80, EQ-30), a wording fix and a re-check away from the
+  re-baseline; a snapshot cut from the pushed commit that carries it closes S-79. Layers 4 to 9 are IN_PROGRESS.
+- **Circuits.** Board B's round 8 is merged (`b76c18cb`): the fabric's locked break-before-make, per-slot EMCON and
+  the 5G supply removed in hardware; its residual is EQ-20. Set 5 (wave 3) regenerated A (the EMCON gates behind their
+  own eFuse, EQ-17 closed at desk with a bound; PoE and USB-C enable nodes), B (every supply declared, W3B-F1 and
+  W3B-F2), D and E (supplies declared; board E's tracker senses on its bottom leg, S-47's core; VIN_RAW across the
+  dock on four 9 A power pins with board A's half, EQ-16). Section 0a's "board B's round 8 is not merged" is
+  superseded.
+- **Readings.** The consolidated re-take (`8ea7867e`, REGENERATE.md section 9) re-took every schematic-phase reading on
+  the committed netlists: 83 readings on seven boards, layout-entry reasons 101 to 40, no board ready for layout. Per
+  board: A 7, B 7, C 5, D 8, E 5, P 6, E5 2 (LAYER-STATUS gives each reason). The only schematic-phase reading still
+  AWAITING_REVALIDATION is E5's INT-001.
+- **New findings since H1.1:** W3T-F1 (EQ-25: TX_INHIBIT_n's fail-safe level with board C unpowered, the RF-002 FAIL
+  on boards A to D; one resistor changed and one added on board C is the recommended remedy); PWR-001 FAIL on C and P
+  (power nets no rail declares, EQ-19); S-64 to S-76 in the registry; the hot stop past the heat stage (REQ-077) with
+  HOT-R1 owed on A and E (EQ-22); FEA-007, the kit's fit in the Peli 1450, holding six boards' layout entry on the
+  mock-up (EQ-08).
+- **Delivered since H1.1:** the hardware and firmware contract (`v2/docs/HW-FW-CONTRACT.md`) with 30 interface
+  contracts; the case release for C1 to C6 (`v2/release/case-2026-09-27/`, `v2/docs/CASE-FIT-UNCERTAINTIES.md`); the
+  re-take driver (`v2/ecad/tools/retake_schematic_phase.py`); the diagrams on set 5's netlists; the H2 exports of A,
+  B, D and E with regeneration PARITY on all six (`v2/release/handover/_generated/`).
+- **The candidate patches of H1.1 are superseded** (every one merged from a later state; `candidates/README.md` names
+  each commit) and are referenced rather than bundled in H2, to keep the ZIP under its cap.
+- **Known gaps of H2** (START-HERE section 3): the readings the pages render are outside the snapshot; the suite needs
+  a git checkout; the ZIP is deterministic per host; maker documents and the superseded patches are referenced; SI-001's
+  edge-rate declarations are owed on every board; the diagrams' manifest reads 6 of 11 current by file hash; Q-B-ESC-1's
+  final boards are not in the package.
+
+## 0a. What changed between `e3aedb25` and H1
 
 - **Circuits (round 8).** Boards A, C, D, E and P were regenerated with parity: A gates its PA and HF rails on both
   EMCON lines; C reads EMCON one way and has a hardware EMCON lamp; D powers its transmit chain only while its EMCON
@@ -21,7 +63,7 @@ later sections that section 0 supersedes also carry an inline **Superseded in H1
   decoupling its makers ask for; P orders the JST headers the catalogues list. **Board B's round 8 is not merged**
   (worktree `fnd/r8b`, EQ-20; bundled since H1.1 as the UNACCEPTED candidate patch
   `v2/docs/handover/candidates/r8b.patch` on base `fc144600`): H1's board B is still B21's pre-round-8 netlist. Step
-  3 of section 1 therefore remains for board B only.
+  3 of section 1 therefore remains for board B only. **Superseded in H2:** merged at `b76c18cb` (section 0).
 - **SIM.** Session choice SC-13 (27 September 2026, `pcb_requirements.yaml`) takes Quectel's compatible design for
   USIM2, which `gen_sch_b.py` already carries: two nano-SIM holders, the second behind four 0 ohm links, so one board
   also builds the eSIM-plus-nano-SIM configuration the owner approved. CFL-010 stays open only for the SIM TVS array
@@ -40,7 +82,8 @@ later sections that section 0 supersedes also carry an inline **Superseded in H1
   decisions they record still carry the cost half owed (EQ-14).
 - **Exports.** Paged schematic PDFs, NOT_FOR_FAB BOMs, ERC and netlist parity of every board at `99cde56b`, with
   regeneration PARITY on all six (`v2/release/handover/_generated/`, REGENERATE.md).
-- **Not in H1's design:** the layer 2, 3, 5 and 7 closers' work (candidates in worktrees, LAYER-STATUS "Candidates
+- **Not in H1's design** (**superseded in H2** for the closers' work and board B's round 8, merged since, section 0;
+  hc9's and hc6's drafts for other owners remain outside the design): the layer 2, 3, 5 and 7 closers' work (candidates in worktrees, LAYER-STATUS "Candidates
   left in worktrees"), board B's round 8, and hc9's and hc6's drafts for other owners. Since H1.1 the first two are
   bundled as UNACCEPTED candidate patches (`v2/docs/handover/candidates/`: `hc2.patch`, `hc3.patch`, `hc5.patch`,
   `hc7.patch`, `r8b.patch`), each with its base, sha256 and last review's blocking findings in the folder's README.
@@ -67,12 +110,15 @@ If you are taking over the design, in this order:
    section 2 (what must be preserved) and section 8 (which records disagree and which one to follow).
 2. Close layers 1 to 3 at desk: they need no purchase, no bench and no outside contact (LAYER-STATUS, layers 1 to 3).
    The earliest open decisions with hardware consequences are the reduced-mode host set, the SIM description, the
-   storage and transport configuration of the pack, and the core requirement limits.
+   storage and transport configuration of the pack, and the core requirement limits. **Superseded in H2:** layers 1
+   and 2 are COMPLETE; layer 3 needs S-80's wording fix, its re-check and the re-baseline (EQ-30, EQ-28).
 3. Integrate the circuit corrections that were in flight at `e3aedb25` (round 8, on every board), one board at a time,
    with regeneration parity, then take one consolidated re-take of every schematic-phase reading on a KiCad 9.0.9 host
    (layer 8 actions 1 to 3; the procedure is REGENERATE.md section 9). **Superseded in H1:** round 8 is merged for A,
    C, D, E and P; for board B, apply `v2/docs/handover/candidates/r8b.patch` to `fc144600`, re-derive its drafted
-   page patches on the current text, and merge it with parity.
+   page patches on the current text, and merge it with parity. **Superseded in H2:** board B's round 8 is merged
+   (`b76c18cb`), set 5 regenerated A, B, D and E with parity, and the consolidated re-take is done (`8ea7867e`); the
+   next circuit step is each board's remaining layout-entry reasons (LAYER-STATUS, section "Status at handover H2").
 4. Decide the stackups per board with a written measurement and cost (P0 rule), and write one layout constraint sheet
    per board (layer 9 actions 6 and 8). **Superseded in H1:** the sheets and the stackup record exist
    (`v2/docs/layout-constraints/`, `v2/docs/STACKUP-DECISIONS.md`); the cost half of each stackup decision is owed
@@ -213,6 +259,17 @@ parallel with isolated owners.
 | parallel | Heat-balance test; ZEROIZE bench Z-EXP-A and B; case mock-up T1 to T11; F2 coupon test or Eaton's answer; R-BAT engagement; R-PWR and R-HSD decisions; maker questions | the drawings (mock-up); round 8 packets (reviews) | yes |
 | 5 | Layout entry per board, as each board's computed test and hand checks close. The second review asks that C, E and E5 be assessed individually and not held by board B's problems; C is closest | steps 2 to 4 and the board's own external items | per board |
 
+**At H2 (superseding parts of the table above):** step 1 is done (round 8 on all six boards, board B at `b76c18cb`,
+and set 5 on A, B, D and E, each with parity) and step 2 is done (`8ea7867e`, reasons 101 to 40). In step 0, layers 1
+and 2 are COMPLETE and layer 3 waits on S-80 (EQ-30); the case geometry's C1 to C6 are in the generators and the case
+release (`c351115d`), the jumper plug, the RJ45 and the pack hold-down still open. In step 3 the contracts for the
+uncovered interfaces exist (`0da2778b`, 30 contracts and `HW-FW-CONTRACT.md`); Review C is not held. The next work
+per board is its layout-entry reasons (LAYER-STATUS, section "Status at handover H2"): first the desk items that need
+no purchase (EQ-25's two resistors on board C; the PWR-001 declarations on C and P and S-76's diode sheets on D and E;
+HOT-R1 on A and E; the pack-protection table on P; the SI-001 edge-rate declarations), then decision 31's reviews on
+A, D and E and the feasibility blockers' layout-entry stages, several of which need the owner's authorisation
+(`v2/docs/reviews/READY-TO-ACT.md` section 0).
+
 ## 5. Constraints for the PCB engineer known today
 
 ### 5.1 Stage gates (`v2/docs/EXECUTION-PLAN.md`, section "Stage gates: layout entry, fabrication release, prototype verification")
@@ -242,8 +299,10 @@ desk with its placement constraints, the charger state sequence), FEA-006. E5: i
 - R-PWR's timing disagrees between records (before A's layout entry in REVIEW-ROUTES section "Summary", L-04 and ARCHITECTURE
   14.2; not gated in EXECUTION-PLAN or FEA-004). Until reconciled, treat it as required before A's layout is committed.
 - PWR-001 and SI-001 read only board files at `e3aedb25`; their readings become current only once the netlist tools
-  merge. **Superseded in H1:** both are judged on the committed netlists since round 8 (section 0; LAYER-STATUS layer 9
-  integrator line); their readings still await the consolidated re-take.
+  merge. **Superseded in H1:** both are judged on the committed netlists since round 8 (section 0a; LAYER-STATUS layer 9
+  integrator line); their readings still await the consolidated re-take. **Superseded in H2:** the re-take made them
+  current on every board (`8ea7867e`): PWR-001 PASS on A and B, INCONCLUSIVE on D and E, FAIL on C and P; SI-001
+  INCONCLUSIVE on all six, its edge-rate declarations owed.
 
 ### 5.2 Stackups, decided and undecided (all 1.6 mm)
 

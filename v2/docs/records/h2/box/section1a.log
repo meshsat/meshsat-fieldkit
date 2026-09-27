@@ -1,0 +1,37 @@
+started 15:44:25
+OK v2/vendor/battery/ti-sluuaq3a-bq4050-trm.pdf
+OK v2/vendor/limesdr/myriadrf-limesdr-mini-2-0-page-20260925.html
+OK v2/vendor/microchip/microchip-atecc608b-summary-DS40002239B.pdf
+OK v2/vendor/rockblock/rb9704-datasheet-RB9704-001-JUN26.pdf
+OK v2/vendor/sciosense/sciosense-as3935-factsheet.pdf
+OK v2/vendor/sensirion/sgp41-datasheet.pdf
+OK v2/vendor/st/st-es0392-rev15.pdf
+OK v2/vendor/st/st-rm0433-rev8.pdf
+OK v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf
+OK v2/vendor/ti/ti-tca9517a-i2c-buffer.pdf
+OK v2/vendor/ti/tps23861-datasheet.pdf
+OK v2/vendor/battery/samsung-35e-akkuzentrum.pdf
+OK v2/vendor/battery/semitec-at-p12-13.pdf
+OK v2/vendor/keystone/M65p42.pdf
+OK v2/vendor/keystone/littelfuse-297-ficcorp.pdf
+OK v2/vendor/nexperia/nexperia-pesd5v0s1ba.pdf
+OK v2/vendor/battery/ti-bq77207.pdf
+OK v2/vendor/battery/ti-sffs317a-bq77207-fusa.pdf
+OK v2/vendor/battery/eaton-scf9550-elx1135.pdf
+OK v2/vendor/battery/littelfuse-itv9550-30a.pdf
+OK v2/vendor/battery/murata-prf-series.pdf
+OK v2/vendor/battery/ti-sluubf9-bq4050evm.pdf
+OK v2/vendor/power/aos-ao3400a-n-mosfet.pdf
+OK v2/vendor/power/jscj-2n7002-c8545.pdf
+OK v2/vendor/connectors/jst-ph-catalogue.pdf
+OK v2/vendor/battery/murata-nxrt15xh103fa1b.pdf
+OK v2/vendor/ti/ti-e2e-1316778-bq25731-chargecurrent-por.html
+OK v2/vendor/battery/ti-e2e-1421182-bq77207-application.html
+OK v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf
+--- after
+checked 139 rows of MANIFEST.md against /root/h2/ra2/H2
+RELEASE CHECK PASS
+rules_lib: 144 requirement record(s), 0 error(s), 17 warning(s)
+rules_render: v2/docs/REQUIREMENTS-TRACE.md is current
+99M	v2/vendor
+ended 15:44:34
