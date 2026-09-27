@@ -7,7 +7,7 @@ Every applicable rule this project does not yet verify, by the category of the g
 needs, who decides and the effort estimate. A gap is not a failure of the board: it is a question nobody has
 answered yet, made visible so it cannot be forgotten.
 
-**17 of 59 rules carry a gap.**
+**18 of 59 rules carry a gap.**
 
 ## absent (1)
 
@@ -136,7 +136,29 @@ lambda/6' at F2 = 1/(pi tr). Those two statements are the same length, because l
 of v*tr, so the handbook's own radiator sits at k = 6/pi, which is 1.9. This project's k = 6 is 3.1 times
 stricter than the length that failed, by the handbook's own arithmetic rather than by a second opinion about
 it. The criterion is still ours and still without a standard that states one; what it now has is a published
-failure it is a stated distance away from.  
+failure it is a stated distance away from. 26 September 2026 (ts-net, MESHSAT-1357): THE TABLE AT THE
+SCHEMATIC PHASE. `edge_length.py --netlist <net>` writes the edge_length verdict from the committed netlist,
+the board table's signal-class declarations, the held documents and the declared stack, and the table beside
+it (edge_length.table.json): per class entry the edge rate and the document that states it
+(edge_length.EDGE_SOURCES: a quote that must be found in the held file and a number that must equal the
+declared one; a contradiction FAILS, anything no held document states is UNDECIDED and the reading
+INCONCLUSIVE with the ICs on the nets named), the critical length on the slowest layer of the declared stack
+and of every stack a layer decision rules for the board (C six layers by 27, P four at 2 oz by 28, B's
+eight-layer measurement by 43), and whether the netlist carries an impedance target, a series termination or
+a declaration where a net may be electrically long (critical length under the outline's width plus height). A
+net with none of them is LAYOUT_BOUND: its critical length is what the layout gate holds it to. The routed
+comparison is the board run's and writes edge_length_routed, which no rule names yet. Since the third pass
+(TSN-D18) such a LAYOUT_BOUND net holds the reading at INCONCLUSIVE, named with its critical length, until
+the schematic answers it (a target, a termination or an edge_allow declaration): edge_length_routed decides
+no rule, so a PASS standing over it would never be checked. A board with no outline_mm is read as having
+every decided net possibly long. Readings of 27 September on this integration's committed netlists (A, D and
+E as round 8 regenerated them), all INCONCLUSIVE, as before: A 6 decided of 283 signal nets (118 undecided),
+B 30 of 835 (492), C 4 of 128 (29), D 20 of 135 (27, and 2 LAYOUT_BOUND), E 4 of 82 (36), P 0 of 44 (22). The
+decided nets are the USB 2.0 lines (0.5 ns high speed, 4 ns full speed, both from the held USB 2.0
+transcription). Every one is answered in the netlist except board D's HUB_DM4 and HUB_DP4, which carry no
+impedance target (board D's USB class has none) and no series resistor, so a layout must hold them under
+their critical length or the schematic gives them one. No reading moved class: all six were INCONCLUSIVE
+already.  
 *Close it by* decision 39 rules the criterion k as a declared calibration (21 September 2026), so the whole of what is left is an edge rate for the classes whose drivers publish none (checked: RP2040, 74LVC from two vendors, SCAA082A: the datasheets carry a slew-rate control bit, an input transition rate and a propagation delay, and no edge). That is an oscilloscope at bring-up, which is why the owner is LAB and the execution HARDWARE rather than a standards wait: the vendors' documents were the wait and they have been read. A direct question to a vendor is the only shortcut and nobody has asked one. Owner **LAB**. Effort P50 8h, P80 24h.
 
 ## prose only (1)
@@ -209,7 +231,7 @@ defect of this morning one level down, and it means no board in this set current
 outside its declared exceptions.  
 *Close it by* derive the distance per device class from the current's spectral content; keep the 3 mm as a screen. Owner **SESSION**, after SI-001. Effort P50 6h, P80 16h.
 
-## source or applicability unresolved (6)
+## source or applicability unresolved (7)
 
 **IMP-001 an impedance target is feasible and asked for** (BLOCKER, SOURCE_UNVERIFIED)  
 closed forms from a standard not in the tree; no fabricator confirmation and no coupon. 19 SEPTEMBER 2026,
@@ -240,6 +262,105 @@ board's assignment, and both board gates that print a pair's mismatch print what
 for and the clause it was read from. Which of the two DECIDES is owner decision 36, which now carries the USB
 2.0 specification's own 100 ps of allowed cable skew as the scale: this project's 1.00 mm is about 5.5 ps  
 *Close it by* The CITATION is done (17 September 2026); the JUDGING is owner decision 36, which now has the numbers on both sides. Owner **SESSION**, after INT-001. Effort P50 1h, P80 3h.
+
+**RF-002 transmit inhibit is hardware** (BLOCKER, ENFORCED)  
+WHAT THE WALK DOES NOT READ (tx_inhibit.py's header holds the same list; since the twelfth pass no pin on a
+gated rail is a load without a word, and each item is a clearance that rests on something other than a
+maker's row, named so that none is silent, a size or a state the walk does not judge, or a false UNDECIDED,
+seen): (1) clearances by what a part is, not by a maker's row: a capacitor, a test point or a power flag, a
+MOSFET's gate (an N- or P-channel MOSFET by its symbol or part number), a resistor, a discharge FET or a
+diode to ground or to nothing, a diode whose anode is on the net, and the parts that carry the switch's
+output to the rail; a capacitor fitted reversed, its leakage and a diode's reverse leakage are not judged;
+the transmitter's own anchor part is not read on its own rail, so its own I/O lines (an E22's or an E72's
+UART held up by its host while its rail is off) are not read there. (2) The rows clear by a stated leakage or
+rating whose size is not judged: a logic input by II, a logic VCC by Ioff, a switch's enable by IEN or
+IENLKG; II is stated with VCC in its range, and an input of a part with no Ioff row whose VCC is down is read
+on it too; a switch's input is cleared only with nothing holding up a pin of it no row clears (the LM5176's
+input only with every other pin of it held by nothing); the I/O of an STM32H7 with VDDA or VDD33USB on the
+rail and VDD up are read with VDD, its analogue and USB pins not told apart; a logic part's or a switch's
+ground is found by its pin's name, and a ground pin named otherwise is UNDECIDED. (3) The own-output net and
+the nets behind its pulls are read in the second-feed check's words, which count as a source what the reading
+cannot show unable to feed them; false UNDECIDEDs follow: an N-channel level shifter whose gate is on that
+net, a fan connector's PWM pin and a converter with no row behind a pull, so board B's Q102 to Q105, J_FAN1
+and U105 behind R154 to R157, R151 and R111 would make its modules' 5V UNDECIDED if a slot rail were ever
+gated (none is); behind R111 also sits U104's enable, the AP64500's stated current source, a source now and
+not a false one; the reading stops after four steps and counts what lies beyond as a source; and a sentence
+that lets two supplies fall in any order (the STM32H7's 3.5.1 with VDD up, the RP2040's 2.9.6, the module's
+2.12.2 for its RTC cell) is still read as saying nothing flows between them then, a statement about sequence
+taken as one about current, which each PASS that rests on one quotes, on the own-output path too since the
+twelfth pass. (4) The RP2040's ADC_AVDD transient when it outlives DVDD (RP2040 Datasheet 2.9.6). (5) A part
+that mentions a firmware family for another reason, sits in a library whose nickname names one, or carries
+'CM5' with three digits inside a longer word ('SCM5100') is UNDECIDED on a rail where it may be a plain load;
+a firmware family the walk does not know (an RP2350, a value that names none) is a part in no class,
+UNDECIDED on a gated rail, and not named as firmware. (6) The rows of the RP2040, STM32H7, PCA9555 and
+CP2102N go by the symbol's pin names, the RP2040's fault-tolerant pins by name, and a Compute Module
+receptacle's declared pin range is not checked against its numbering; the parts that carry one module are
+joined in one form only (a family its maker numbers, the Compute Module 5 alone; a reference ending in one
+letter A to H right after a digit; a sibling whose own value or symbol names the same family: board B's U30A
+plus U30B, U31 and U32 likewise), and every other drawing of a split symbol is read part by part, see (8); a
+supply pin whose name carries none of the supply words ('PWR') is outside the class; a supply pin on any live
+net off the rail is read whether or not anything holds that net up. (7) A charger's current and a feed's size
+(an Ioff, an II, an enable's leakage, an off-state leakage, a clamp current) are not judged; a tied pin is
+judged by where its partner is drawn, not by whether that net is live while the rail is off; a firmware pin
+behind a resistor is UNDECIDED whatever its row; the second-feed check follows resistors, not FET channels or
+diodes, past the first part; a gate on a land its map is not for is UNDECIDED by any pin; the census takes a
+'+' rail as always up; the second-feed check reads the walk's own ACCESSORIES, not a caller's list (every
+accessory on a gated rail reads UNDECIDED either way). NAMED AT INTEGRATION (27 September 2026, the final
+independent check of the twelfth pass, its blocking item and four minors named rather than closed by the
+session's decision under the owner's standing rule of 26 September 2026; no board on the six committed
+netlists is read through any of them): (8) a split symbol in any form but (6)'s reads PASS, mostly with no
+word: the Compute Module 5 as U30 plus U30B or U30-A plus U30-B, U30A plus a U30B on a generic connector
+symbol that names no family, and an STM32H7, an RP2040, a PCA9555 or a 74LVC32A with its power unit drawn as
+its own reference each read the part carrying the supply alone, so a pin held up on the other part is not
+read (the 74LVC32A case even quotes 'no output of it is held up', which is false); the only split references
+on the six committed netlists are board B's U30A/B, U31A/B and U32A/B, all of the joined form, and
+tests/test_tx_inhibit_split_guard.py fails on the real design if any board carries another reference that
+looks like a unit of a split symbol. (9) A part's kind is read from its designator prefix in the second-feed
+check: a two-pin part whose reference begins D, LED, L, FB or F is cleared as a clamp to ground when its far
+pin is on ground or dead, and a reference beginning #, TP or C and a digit is skipped, whatever the part is,
+so a fan (FAN1), a supercapacitor module (DC1), a cell (LB1) or a supervisor designated TPS1 on a gated rail
+reads PASS with no word; no part on the six netlists is misread this way. (10) A firmware part's supply input
+cleared by its FW_PIN_TABLES row alone (a PCA9555's VDD alone on the rail; a CP2102N with VDD, VREGIN and
+VBUS on it; an STM32H753's VDD alone) passes without quoting that row: a traceability gap, not a silent load.
+(11) A net that is itself a supply is not counted as a source by the second-feed check, only the parts drawn
+on it and a resistor from a supply: a switch pin on a '+12V' net holding nothing else reads as held up by
+nothing; on the committed netlists the supply's regulator or connector is always on the net. (12) A switch
+with no enable row reads its enable held up beside its input UNDECIDED, named, as _class_pin reads it (it
+raised KeyError before the integration); all five SWITCHES rows carry one. Also since the integration, from
+board A's round 8 draft applied by hand: the SN74AUP1G08's pin map (TI SCES502Q Table 4-1; II 0.5 uA, Ioff
+0.6 uA, VIL 0.9 V at 3 V to 3.6 V) and the walk from each asserted line alone, whose best answer an option
+takes, because a gate both lines force (board A's U35 and U37: TX_INHIBIT_n AND EMCON_HW) kept only the path
+of the line the queue took first. WHAT THE BOARDS MUST SHOW for the walk to pass them, as it reads main
+a6f87e9d: buffers for the STM32 and RP2040 pins on EMCON_HW, one-way open-drain buffers instead of the level
+shifters Q106, Q206 and Q306, gates that state Ioff on EMCON_HW, open-drain drive for the six Compute Module
+disable pins, a one-way readback of KEY on D, the QMX's USB power gated or stated, every firmware part's
+value beginning with its part number, every pin on a gated rail cleared by a row of its maker's (board B's
+USBLC6 U33 on +5V_LIME, whose I/O the hub U102 and J_LIME hold, the other E72 module and the bench headers
+J_ZBDBG1 and J_ZBDBG2 on the shared +3V3_ZB, and board A's INA226 U14 across R55 each read UNDECIDED today,
+behind the FAILs and UNDECIDEDs that decide those options first), and, where a firmware part runs from a
+gated rail, every other supply pin of it on that rail or on its own outputs, with nothing on that net, or
+behind a pull from it, that the reading cannot show unable to feed it (board B's +3V3_CM1 to +3V3_CM3 carry
+level shifters, fan connectors, converter enables and an AP64500 enable behind their pulls, so its modules
+would not pass there if a slot rail were gated), every I/O of that supply's domain, on both parts that carry
+a module, held up by nothing, and no logic part or switch (but one with Ioff and a power-off rating) running
+from a gated rail with an output held up. READING ON THIS INTEGRATION's six committed netlists (27 September
+2026: A 3a786cf3, D 0dad82b4 and E f3c1ad61 as round 8 regenerated them, B 669d02d0, C 2834f0d8 and P
+4342c4cb as at fc144600), with this file: check_contracts PASS of 96; inhibit_chain A FAIL (1 fail, 6 pass, 2
+undecided: the EMCON_HW line, which the STM32 and RP2040 pins on it fail; the 30 W VHF PA's and the QMX HF's
+supply gates UNDECIDED, walked from TX_INHIBIT_n alone through the SN74AUP1G08s U35 to U38, on board A's
+INA226 U14 and the LM5176s' boost-leg FETs Q14 and Q24, whose drive no held table states off with the
+enable), B FAIL (15 fail, 4 pass, 1 undecided: the EMCON_HW line and all fourteen transmitters, the LimeSDR,
+the RockBLOCK 9704, the E22, both E72s, the RM520N-GL, both AW7915 cards and the six on-module Compute Module
+radios; the classification undecided, since J_QMX's declaration as a data lead rests on a QRP Labs statement
+not yet held), C FAIL (1 fail, 5 pass: the EMCON_HW line), D INCONCLUSIVE (7 pass, 1 undecided: the SA868
+exciter's keying), E PASS, P PASS. Board A's two supply gates move from FAIL (they inherited the EMCON_HW
+line's FAIL, the path of the line the queue took first) to UNDECIDED on round 8's netlist; nothing else moved
+against a6f87e9d's readings, and the verdicts per board are the same. Board C's and board P's round 8
+netlists, committed after this, are read at the consolidated re-take. The instrument's declared tables
+(TRANSMITTERS, MATES, PIN_READERS, READER_TAPS, ACCESSORIES, RECEIVE_ONLY, OWED, FW_PIN_TABLES, LOGIC,
+SWITCHES and PROTECTION_ROWS with their stated paths and rows) each carry their basis and are held to it by
+tests/test_tx_inhibit.py  
+*Close it by* each UNDECIDED the inverted default names closes where a held maker document gives the part a row (a statement for board B's E72 modules on +3V3_ZB, board A's INA226 across R55, a bench header's far end) or where the boards keep the part off every gated rail and every module's own output (board B's USBLC6 U33 on +5V_LIME with its I/O held by the hub); each limit of the note closes where a held maker document decides it; no limit and no named UNDECIDED decides a board's reading on main a6f87e9d's six netlists today; limits (8) to (11) close where the walk reads every split form by the part's own family (or a board draws none, which test_tx_inhibit_split_guard.py holds), reads a part's kind from its symbol rather than its designator, quotes a FW_PIN_TABLES row in the PASS it gives, and counts a supply net itself as a source. Owner **SESSION**. Effort P50 4h, P80 12h.
 
 **STK-002 a layer count is decided and costed** (BLOCKER, OWNER_DECISION_REQUIRED)  
 layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for
@@ -297,11 +418,11 @@ stated for 1 oz only, and they stay INCONCLUSIVE rather than being judged agains
 process  
 *Close it by* ask the fabricator for the annular ring rows AT 2 oz, which its published page does not state, so boards E5 and P can be judged rather than left inconclusive. Owner **VENDOR**. Effort P50 2h, P80 48h.
 
-## covered (42)
+## covered (41)
 
 These rules have an executable gate, a machine-readable verdict and behavioural fixtures: BAT-001, BAT-002,
 CLK-001, CMP-001, CMP-002, DFM-001, DOC-001, DOC-002, ENV-001, ENV-002, GND-001, IMP-002, INT-001, INT-002,
 ISO-001, MEC-001, PI-001, PI-002, PI-003, PLC-001, PLC-002, PLN-001, PWR-001, PWR-002, PWR-003, RET-002,
-RET-004, RF-002, RTE-001, RTE-002, SCH-001, SCH-002, SCH-003, SCH-004, SCH-005, SGN-001, SGN-002, STK-001,
-SUP-001, TRN-001, TST-001, VIA-001
+RET-004, RTE-001, RTE-002, SCH-001, SCH-002, SCH-003, SCH-004, SCH-005, SGN-001, SGN-002, STK-001, SUP-001,
+TRN-001, TST-001, VIA-001
 

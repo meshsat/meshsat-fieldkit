@@ -40,7 +40,7 @@ appears in the gap register.
 | PLC-001 | PLACEMENT | BLOCKER | gen_pcb_*3.py, regionfit.py | hardset.py, place_audit.py, carry_placed.py -> hardset-placed, place_audit | tests/test_region_fit.py, tests/test_board_gates.py, tests/test_carry_placed.py | **ENFORCED** |
 | PLC-002 | PLACEMENT | MUST_JUSTIFY | closers declared in pcb_closers.yaml; the pour-island half predicted by place_audit.py | closer_audit.py -> closer_audit | tests/test_closer_audit.py | **ENFORCED** |
 | PLN-001 | PLANES_POURS | BLOCKER | pour_stitch.py, zone_pad_via.py, stitch_prune.py | check_zone_nets.py -> check_zone_nets | tests/test_gate_fixtures.py | **ENFORCED** |
-| PWR-001 | POWER_TREE | BLOCKER | gen_sch_*.py via intent.rail() | intent_checks.py -> intent_rails | tests/test_rail_loads.py | **ENFORCED** |
+| PWR-001 | POWER_TREE | BLOCKER | gen_sch_*.py via intent.rail() | intent_checks.py -> intent_rails | tests/test_rail_loads.py, tests/test_rails_netlist.py, tests/test_rails_census.py | **ENFORCED** |
 | PWR-002 | POWER_TREE | MUST_JUSTIFY | the switch and always_on declarations in each gen_sch_*.py rail | power_sequence.py -> power_sequence | tests/test_power_sequence.py, tests/test_artefact_recording.py | **ENFORCED** |
 | PWR-003 | POWER_TREE | BLOCKER | pcb_energy_chain.yaml, the chain as data | energy_chain.py, pcb_fuse_derating.yaml -> energy_chain_<letter> | tests/test_energy_chain.py, tests/test_artefact_recording.py | **ENFORCED** |
 | REL-001 | RELIABILITY | MUST_JUSTIFY | NONE_YET | reliability.py -> reliability | tests/test_reliability.py | **ENFORCED** |
@@ -49,7 +49,7 @@ appears in the gap register.
 | RET-003 | RETURN_PATH | BLOCKER | gen_pcb_a3.py In2 pours | ref_change.py -> return_stitch | tests/test_ref_change.py | **ENFORCED** |
 | RET-004 | RETURN_PATH | MUST_JUSTIFY | gnd_grid.py, return_via.py fixer | return_via.py -> return_via | tests/test_board_gates.py, tests/test_signal_class.py | **ENFORCED** |
 | RF-001 | RF | BLOCKER | gen_pcb_d3.py, gen_pcb_b3.py keep-outs | rf_line.py, check_pcb_d.py -> rf_line | tests/test_rf_line.py | **ENFORCED** |
-| RF-002 | RF | BLOCKER | gen_sch_c.py, gen_sch_d.py, gen_sch_a.py | check_contracts.py -> inhibit_chain_<letter> | tests/test_gate_fixtures.py, tests/test_artefact_recording.py | **ENFORCED** |
+| RF-002 | RF | BLOCKER | gen_sch_c.py, gen_sch_d.py, gen_sch_a.py, gen_sch_b.py (the EMCON gates), tx_inhibit.py (the transmitter table: CONOPS section 4b) | check_contracts.py -> inhibit_chain_<letter> | tests/test_gate_fixtures.py, tests/test_artefact_recording.py, tests/test_tx_inhibit.py, tests/test_tx_inhibit_split_guard.py | **ENFORCED** |
 | RTE-001 | ROUTING | BLOCKER | gen_pcb_*.py design rules | drc.sh, fab_limits.py -> fab_limits | tests/test_fab_limits.py, tests/test_rule_gate_mapping.py | **ENFORCED** |
 | RTE-002 | ROUTING | BLOCKER | routeflow.py, finish.sh | hardset.py -> hardset-routed-board-gate, pruned_gate | tests/test_hardset.py, tests/test_gate_fixtures.py | **ENFORCED** |
 | SCH-001 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_*.py | erc_gate.py -> erc_gate | tests/test_erc_gate.py, tests/test_artefact_recording.py | **ENFORCED** |
