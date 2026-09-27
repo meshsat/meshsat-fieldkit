@@ -260,3 +260,8 @@ nexperia/nexperia-74lvc1g157.pdf   current   # 74LVC1G157GW, board B's fabric qu
 ti/ti-tpd4e001.pdf   current   # TPD4E001DBVR, board B's SIM ESD arrays U222 and U223 (round 8, S-13)
 ti/ti-tps3808.pdf   current   # TPS3808G30DBVR, board B's 5G release hold U221 (round 8, SD-EMC-1r8)
 adi/adi-ds3231sn.pdf   current   # DS3231SN, board B's holdover clock U9, the part C9866 buys (round 8, parts re-take row 1)
+materials    current   # the printed parts' materials: Prusament PC Blend (the QMX lid tray r2, MESHSAT-1357, S-63)
+materials/prusament-petg-tds-v1.1-2022-02-16.pdf   retired   # the r1 QMX lid tray's PETG (heat deflection 68 C at 0.45 MPa), kept as the reason the r2 tray is PC Blend
+qrp-labs/measure_qmx_figures.py   tooling   # scales the maker's QMX figures for the lid tray r2 (qmx-figures.out)
+qrp-labs/qmx-assembly-1_04r-pages-1-3-20-21-75-78.pdf   current   # the QMX's enclosure, parts list and fitting (pages 3, 20, 21, 75 to 78), read for the lid tray r2
+qrp-labs/qmx-product-page-2026-09-27.txt   current   # the maker's 95 x 63 x 25 mm and 220 g, read for the lid tray r2
