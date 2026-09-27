@@ -38,8 +38,8 @@ def nets(b, names):
     return {n: b.FindNet(n).GetNetCode() for n in names}
 
 
-def part(b, ref, x, y, pads, code, value="", back=False, size=0.3, fpid=None, tht=False):
-    """pads: [(number, dx, dy, net or None)]"""
+def part(b, ref, x, y, pads, code, value="", back=False, size=0.3, fpid=None, tht=False, size_xy=None):
+    """pads: [(number, dx, dy, net or None)]; `size_xy` gives a pad its long axis, which is the way it escapes"""
     fp = pcbnew.FOOTPRINT(b); fp.SetReference(ref); fp.SetValue(value)
     if fpid: fp.SetFPIDAsString(fpid)
     fp.SetPosition(pcbnew.VECTOR2I(MM(x), MM(y)))
@@ -52,7 +52,8 @@ def part(b, ref, x, y, pads, code, value="", back=False, size=0.3, fpid=None, th
             p.SetLayerSet(pcbnew.PAD.PTHMask())
         else:
             p.SetAttribute(pcbnew.PAD_ATTRIB_SMD); p.SetShape(pcbnew.PAD_SHAPE_RECT)
-            p.SetSize(pcbnew.VECTOR2I(MM(size), MM(size))); p.SetLayerSet(pcbnew.PAD.SMDMask())
+            p.SetSize(pcbnew.VECTOR2I(MM(size_xy[0] if size_xy else size), MM(size_xy[1] if size_xy else size)))
+            p.SetLayerSet(pcbnew.PAD.SMDMask())
         p.SetPosition(pcbnew.VECTOR2I(MM(x + dx), MM(y + dy)))
         fp.Add(p); made.append((p, net))
     b.Add(fp)
@@ -99,6 +100,7 @@ def build(scenario, d):
         val = {"g_value_bulk": "10u", "g_value_pin": "10u 25V 1210"}.get(s, "100n")
         # the rail pad (pad 1, at -0.5 of the centre) sits `dist` east of the pin
         part(b, "C1", pin[0] + dist + 0.5, pin[1], CAP("+3V3"), code, val, size=0.6)
+        via(b, pin[0] + dist + 1.0, pin[1] + 0.7, "GND", code)       # the ground pad's own via
         cls = {"g_unclassed": None, "g_maker_cap": "L", "g_value_bulk": "B2", "g_recorded": "A"}.get(s, "D")
         kw = {"value_floor": "2.2u", "esr_max": "not stated by the maker", "maker_mm": 5.0} if s == "g_maker_cap" else {}
         ents = [entry(cls, **kw)]
@@ -117,6 +119,7 @@ def build(scenario, d):
         ip = {"g_farside_past": 2.0}.get(s, 0.3)
         # flipped about its own centre, pad 1 lands at +0.5 of the centre (x mirrors)
         part(b, "C1", pin[0] + ip - 0.5, pin[1], CAP("+3V3"), code, "100n", back=True, size=0.6)
+        via(b, pin[0] + ip - 1.0, pin[1] + 0.7, "GND", code)         # the ground pad's own via (pad 2 is at -0.5 once flipped)
         ents = [entry("D", **({"same_side": True} if s == "g_farside_same_side" else {}))]
         if s == "g_farside_fan": allow = "C1: there is no other seat, and this line must not be able to allow it\n"
     elif s in ("g_shared_via", "g_own_via", "g_no_via"):
@@ -126,7 +129,7 @@ def build(scenario, d):
         gx, gy = pin[0] + 2.5, pin[1]
         if s == "g_shared_via":
             via(b, gx, gy + 0.7, "GND", code)
-            part(b, "C2", gx + 0.5, gy + 1.4, CAP("GND", "N3"), code, "100n", size=0.6)       # its pad 1 lands on that via
+            part(b, "C2", gx + 0.5, gy + 1.2, CAP("GND", "N3"), code, "100n", size=0.6)       # its pad 1 lands on that via
         elif s == "g_own_via":
             via(b, gx, gy + 0.7, "GND", code)
         ents = [entry("D")]
@@ -146,22 +149,21 @@ def build(scenario, d):
     elif s in ("p_farside", "p_farside_onesided"):
         part(b, "U1", 20.0, 20.0, with_nets(SMALL, {3: "+3V3", 2: "GND"}), code, "a small part")
         pin = (20.95, 21.1)
-        # the own side is full: parts all round the pin, out past the screen
-        k = 0
-        for bx in (16.0, 18.5, 21.0, 23.5, 26.0):
-            for by in (15.0, 17.2, 22.9, 25.1, 27.3):
-                k += 1
-                part(b, "R%d" % k, bx, by, [(1, -0.9, 0.0, None), (2, 0.9, 0.0, None)], code, "10k", size=1.6)
-        for bx, by in ((16.0, 20.0), (23.9, 20.0), (26.4, 20.0)):
-            k += 1; part(b, "R%d" % k, bx, by, [(1, -0.9, 0.0, None), (2, 0.9, 0.0, None)], code, "10k", size=1.6)
+        # the own side is full: four blocks frame the part, out past the screen, and leave no gap a capacitor fits
+        blk = lambda ref, x0, y0, x1, y1: part(b, ref, (x0 + x1) / 2.0, (y0 + y1) / 2.0,
+                                               [(1, -(x1 - x0) / 2.0 + 0.15, -(y1 - y0) / 2.0 + 0.15, None),
+                                                (2, (x1 - x0) / 2.0 - 0.15, (y1 - y0) / 2.0 - 0.15, None)], code, "a block")
+        blk("R1", 10.0, 12.0, 30.0, 18.55); blk("R2", 10.0, 21.45, 30.0, 28.0)
+        blk("R3", 10.0, 18.6, 18.65, 21.4); blk("R4", 21.35, 18.6, 30.0, 21.4)
         if s == "p_farside":
             part(b, "R99", 50.0, 35.0, CAP("N1", "N2"), code, "10k", back=True, size=0.6)
         part(b, "C1", 45.0, 8.0, CAP("+3V3"), code, "100n", size=0.6)
         ents = [entry("D")]
     elif s in ("e_window", "e_undeclared"):
         # a fanned part whose pins 1 to 10 each carry a net, and a capacitor right in front of pin 3, in its window
-        part(b, "U1", 20.0, 20.0, with_nets(FINE, {3: "+3V3"}), code, "a fine-pitch part", fpid="Package_DFN_QFN:fixture-20")
-        part(b, "C1", 18.75, 20.0 - 1.15 - 0.45, CAP("+3V3"), code, "100n", size=0.6)
+        part(b, "U1", 20.0, 20.0, with_nets(FINE, {3: "+3V3"}), code, "a fine-pitch part", fpid="Package_DFN_QFN:fixture-20",
+             size_xy=(0.25, 0.8))
+        part(b, "C1", 18.75, 20.0 - 1.4 - 0.35, CAP("+3V3"), code, "100n", size=0.6)
         ents = [entry("D")] if s == "e_window" else []
     else:
         raise SystemExit("decoupling_fixture: no scenario %r" % s)
