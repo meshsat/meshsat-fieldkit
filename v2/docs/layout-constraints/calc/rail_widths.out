@@ -1,162 +1,249 @@
 ### Board A
 
-Netlist `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net` sha256/16 da05dc02bc1e612f; intent `v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json` sha256/16 92dd3b1cda9046b8 (written 2026-09-27 12:33); stack JLC06161H-3313, outer 0.0350 mm, inner 0.0152 mm (six layers, measured (LAYER-DECISIONS-2026-09-11.md, A arm 345 open at four); copper weight OPEN).
+```bound
+board      a
+netlist    v2/ecad/pcb-a-power-a23/out/pcb-a-power.net sha256/16 0a2b59087bcc2678
+intent     v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json sha256/16 3422910a15c4d145
+model      track_current.width_for_current decision 35 rise 10 K plating 18 um
+stack      JLC06161H-3313 outer 0.0350 mm inner 0.0152 mm
+```
+
+Intent written 2026-09-27 14:51. Stack: six layers, measured (LAYER-DECISIONS-2026-09-11.md, A arm 345 open at four); copper weight OPEN. Pack path, judged at 18 A (PWR-F12): CELL+, CELL_FUSED, VBAT.
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
 |---|---|---|---|---:|---:|---:|---|
-| CELL+ | 14.4 (16.8) | 10.00 / 18.00 | 18.0, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 |
-| CELL_FUSED | 14.4 (16.8) | 10.00 / 18.00 | 18.0, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 |
-| VBAT | 14.4 (16.8) | 10.00 / 18.00 | 18.0, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 |
-| VIN_RAW | 12.0 (36.0) | 14.10 / 14.10 | 14.1, typical (PI-001) | 15.29 | 4.43 | 125.22 (over 40 mm) | 20 / 16 / 14 |
-| VBUS20 | 20.00 | 6.00 / 8.00 | 6.0, typical (PI-001) | 3.55 | 1.37 | 26.20 | 11 / 9 / 8 |
-| +5V_S1 | 5.10 | 2.50 / 5.00 | 2.5, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
-| +5V_S2 | 5.10 | 2.50 / 5.00 | 2.5, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
-| +5V_S3 | 5.10 | 2.50 / 5.00 | 2.5, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
-| +5V_DEV | 5.00 | 4.00 / 6.90 | 4.0, typical (PI-001) | 2.03 | 0.78 | 12.47 | 10 / 8 / 7 |
-| +3V3 | 3.30 | 0.30 / 0.60 | 0.3, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
-| +13V8_PA | 13.80 | 5.00 / 6.00 | 5.0, typical (PI-001) | 2.76 | 1.06 | 18.77 | 9 / 7 / 6 |
-| +12V_HF | 12.00 | 1.00 / 2.00 | 1.0, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |
-| +54V_POE | 54.00 | 0.30 / 0.60 | 0.3, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
-| +5V_D8 | 5.00 | 1.00 / 2.00 | 1.0, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |
-| PRECHG | 14.4 (16.8) | 0.00 / 1.68 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.00 | 3 / 2 / 2 |
-| FE_OUT | 20.0 (20.0) | 6.00 / 8.00 | 6.0, typical (PI-001) | 3.55 | 1.37 | 26.20 | 11 / 9 / 8 |
-| CH_ACN | 20.0 (20.0) | 6.00 / 8.00 | 6.0, typical (PI-001) | 3.55 | 1.37 | 26.20 | 11 / 9 / 8 |
-| S1_OUT | 5.1 (5.1) | 2.50 / 5.00 | 2.5, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
-| S3_OUT | 5.1 (5.1) | 2.50 / 5.00 | 2.5, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
-| S2_OUT | 5.1 (5.1) | 2.50 / 5.00 | 2.5, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
-| SD_OUT | 5.0 (5.0) | 4.00 / 6.90 | 4.0, typical (PI-001) | 2.03 | 0.78 | 12.47 | 10 / 8 / 7 |
-| PA_OUT | 13.8 (13.8) | 5.00 / 6.00 | 5.0, typical (PI-001) | 2.76 | 1.06 | 18.77 | 9 / 7 / 6 |
-| HF_OUT | 12.0 (12.0) | 1.00 / 2.00 | 1.0, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |
-| POE_OUT | 54.0 (54.0) | 0.30 / 0.60 | 0.3, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
-| PD_VPWR | 15.0 (15.0) | 3.00 / 3.00 | 3.0, typical (PI-001) | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 |
-| PD_SW | 15.0 (15.0) | 3.00 / 3.00 | 3.0, typical (PI-001) | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 |
-| PD_VBUS | 15.0 (15.0) | 3.00 / 3.00 | 3.0, typical (PI-001) | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 |
-| PD_OUT | 15.0 (15.0) | 3.00 / 3.00 | 3.0, typical (PI-001) | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 |
-| VMON | 14.4 (16.8) | 0.69 / 1.00 | 0.7, typical (PI-001) | 0.18 | 0.07 | 1.08 | 2 / 2 / 1 |
-| VHEAT_IN | 14.4 (16.8) | 0.58 / 0.90 | 0.6, typical (PI-001) | 0.14 | 0.05 | 0.85 | 2 / 2 / 1 |
-| VHEAT | 12.00 | 0.63 / 0.63 | 0.6, typical (PI-001) | 0.16 | 0.06 | 0.95 | 1 / 1 / 1 |
-| +3V3_EMCON_EF | 3.30 | 0.00 / 0.00 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
-| +3V3_EMCON | 3.30 | 0.00 / 0.00 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
-| VBUS_WALL | 5.00 | 0.50 / 0.90 | 0.5, typical (PI-001) | 0.12 | 0.04 | 0.69 | 2 / 2 / 1 |
+| CELL+ | 14.4 (16.8) | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 |
+| CELL_FUSED | 14.4 (16.8) | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 |
+| VBAT | 14.4 (16.8) | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 |
+| VIN_RAW | 12.0 (36.0) | 14.10 / 14.10 | 14.10, typical (PI-001) | 15.29 | 4.43 | 125.22 (over 40 mm) | 20 / 16 / 14 |
+| VBUS20 | 20.00 | 6.00 / 8.00 | 6.00, typical (PI-001) | 3.55 | 1.37 | 26.20 | 11 / 9 / 8 |
+| +5V_S1 | 5.10 | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
+| +5V_S2 | 5.10 | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
+| +5V_S3 | 5.10 | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
+| +5V_DEV | 5.00 | 4.00 / 6.90 | 4.00, typical (PI-001) | 2.03 | 0.78 | 12.47 | 10 / 8 / 7 |
+| +3V3 | 3.30 | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
+| +13V8_PA | 13.80 | 5.00 / 6.00 | 5.00, typical (PI-001) | 2.76 | 1.06 | 18.77 | 9 / 7 / 6 |
+| +12V_HF | 12.00 | 1.00 / 2.00 | 1.00, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |
+| +54V_POE | 54.00 | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
+| +5V_D8 | 5.00 | 1.00 / 2.00 | 1.00, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |
+| PRECHG | 14.4 (16.8) | 0.00 / 1.68 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 3 / 2 / 2 |
+| FE_OUT | 20.0 (20.0) | 6.00 / 8.00 | 6.00, typical (PI-001) | 3.55 | 1.37 | 26.20 | 11 / 9 / 8 |
+| CH_ACN | 20.0 (20.0) | 6.00 / 8.00 | 6.00, typical (PI-001) | 3.55 | 1.37 | 26.20 | 11 / 9 / 8 |
+| S1_OUT | 5.1 (5.1) | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
+| S3_OUT | 5.1 (5.1) | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
+| S2_OUT | 5.1 (5.1) | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
+| SD_OUT | 5.0 (5.0) | 4.00 / 6.90 | 4.00, typical (PI-001) | 2.03 | 0.78 | 12.47 | 10 / 8 / 7 |
+| PA_OUT | 13.8 (13.8) | 5.00 / 6.00 | 5.00, typical (PI-001) | 2.76 | 1.06 | 18.77 | 9 / 7 / 6 |
+| HF_OUT | 12.0 (12.0) | 1.00 / 2.00 | 1.00, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |
+| POE_OUT | 54.0 (54.0) | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
+| PD_VPWR | 15.0 (15.0) | 3.00 / 3.00 | 3.00, typical (PI-001) | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 |
+| PD_SW | 15.0 (15.0) | 3.00 / 3.00 | 3.00, typical (PI-001) | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 |
+| PD_VBUS | 15.0 (15.0) | 3.00 / 3.00 | 3.00, typical (PI-001) | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 |
+| PD_OUT | 15.0 (15.0) | 3.00 / 3.00 | 3.00, typical (PI-001) | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 |
+| VMON | 14.4 (16.8) | 0.69 / 1.00 | 0.69, typical (PI-001) | 0.18 | 0.07 | 1.08 | 2 / 2 / 1 |
+| VHEAT_IN | 14.4 (16.8) | 0.58 / 0.90 | 0.58, typical (PI-001) | 0.14 | 0.05 | 0.85 | 2 / 2 / 1 |
+| VHEAT | 12.00 | 0.63 / 0.63 | 0.63, typical (PI-001) | 0.16 | 0.06 | 0.95 | 1 / 1 / 1 |
+| +3V3_EMCON_EF | 3.30 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
+| +3V3_EMCON | 3.30 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
+| VBUS_WALL | 5.00 | 0.50 / 0.90 | 0.50, typical (PI-001) | 0.12 | 0.04 | 0.69 | 2 / 2 / 1 |
 
 ### Board B
 
-Netlist `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net` sha256/16 8b78c59754a6a0c7; intent `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json` sha256/16 162fcb9b95f680a7 (written 2026-09-27 10:30); stack JLC06161H-3313, outer 0.0350 mm, inner 0.0152 mm (six layers as built; eight (JLC08161H-2116, the same copper) under decision 43's measurement).
+```bound
+board      b
+netlist    v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net sha256/16 028997a6c5e8810f
+intent     v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json sha256/16 96ee391b3e3f638d
+model      track_current.width_for_current decision 35 rise 10 K plating 18 um
+stack      JLC06161H-3313 outer 0.0350 mm inner 0.0152 mm
+```
+
+Intent written 2026-09-27 15:05. Stack: six layers as built; eight (JLC08161H-2116, the same copper) under decision 43's measurement.
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
 |---|---|---|---|---:|---:|---:|---|
-| +5V_S1 | 5.10 | 2.50 / 5.00 | 2.5, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
-| +5V_S2 | 5.10 | 4.20 / 5.00 | 4.2, typical (PI-001) | 2.17 | 0.84 | 13.64 | 7 / 6 / 5 |
-| +5V_S3 | 5.10 | 2.50 / 5.00 | 2.5, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
-| +5V_DEV | 5.00 | 3.80 / 6.00 | 3.8, typical (PI-001) | 1.89 | 0.73 | 11.36 | 9 / 7 / 6 |
-| +3V3_DEV | 3.30 | 1.20 / 2.00 | 1.2, typical (PI-001) | 0.39 | 0.15 | 2.31 | 3 / 3 / 2 |
-| +3V3_S1A | 3.30 | 0.50 / 1.50 | 0.5, typical (PI-001) | 0.12 | 0.04 | 0.69 | 3 / 2 / 2 |
-| +3V3_M2C1 | 3.30 | 0.50 / 1.50 | 0.5, typical (PI-001) | 0.12 | 0.04 | 0.69 | 3 / 2 / 2 |
-| +3V3_S1B | 3.30 | 0.90 / 1.80 | 0.9, typical (PI-001) | 0.26 | 0.10 | 1.56 | 3 / 3 / 2 |
-| +1V0_S1 | 1.00 | 0.80 / 1.20 | 0.8, typical (PI-001) | 0.22 | 0.08 | 1.32 | 2 / 2 / 2 |
-| +1V1_S1 | 1.10 | 0.40 / 0.70 | 0.4, typical (PI-001) | 0.08 | 0.03 | 0.51 | 1 / 1 / 1 |
-| +3V3_CM1 | 3.30 | 0.10 / 0.20 | 0.1, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |
-| +1V8_CM1 | 1.80 | 0.02 / 0.05 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 |
-| +3V3_S2A | 3.46 | 3.00 / 4.00 | 3.0, typical (PI-001) | 1.37 | 0.53 | 8.18 | 6 / 5 / 4 |
-| +3V3_M2C2 | 3.46 | 3.00 / 4.00 | 3.0, typical (PI-001) | 1.37 | 0.53 | 8.18 | 6 / 5 / 4 |
-| +3V3_S2B | 3.30 | 0.90 / 1.80 | 0.9, typical (PI-001) | 0.26 | 0.10 | 1.56 | 3 / 3 / 2 |
-| +1V0_S2 | 1.00 | 0.80 / 1.20 | 0.8, typical (PI-001) | 0.22 | 0.08 | 1.32 | 2 / 2 / 2 |
-| +1V1_S2 | 1.10 | 0.40 / 0.70 | 0.4, typical (PI-001) | 0.08 | 0.03 | 0.51 | 1 / 1 / 1 |
-| +3V3_CM2 | 3.30 | 0.10 / 0.20 | 0.1, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |
-| +1V8_CM2 | 1.80 | 0.02 / 0.05 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 |
-| +3V3_S3A | 3.30 | 0.50 / 1.50 | 0.5, typical (PI-001) | 0.12 | 0.04 | 0.69 | 3 / 2 / 2 |
-| +3V3_M2C3 | 3.30 | 0.50 / 1.50 | 0.5, typical (PI-001) | 0.12 | 0.04 | 0.69 | 3 / 2 / 2 |
-| +3V3_S3B | 3.30 | 0.90 / 1.80 | 0.9, typical (PI-001) | 0.26 | 0.10 | 1.56 | 3 / 3 / 2 |
-| +1V0_S3 | 1.00 | 0.80 / 1.20 | 0.8, typical (PI-001) | 0.22 | 0.08 | 1.32 | 2 / 2 / 2 |
-| +1V1_S3 | 1.10 | 0.40 / 0.70 | 0.4, typical (PI-001) | 0.08 | 0.03 | 0.51 | 1 / 1 / 1 |
-| +3V3_CM3 | 3.30 | 0.10 / 0.20 | 0.1, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |
-| +1V8_CM3 | 1.80 | 0.02 / 0.05 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 |
-| +3V3_IOCA | 3.30 | 0.12 / 0.25 | 0.1, typical (PI-001) | 0.02 | 0.01 | 0.10 | 1 / 1 / 1 |
-| +3V3_IOCB | 3.30 | 0.12 / 0.25 | 0.1, typical (PI-001) | 0.02 | 0.01 | 0.10 | 1 / 1 / 1 |
-| +3V3_IOCC | 3.30 | 0.12 / 0.25 | 0.1, typical (PI-001) | 0.02 | 0.01 | 0.10 | 1 / 1 / 1 |
-| +1V2_KSZ | 1.20 | 0.50 / 0.80 | 0.5, typical (PI-001) | 0.12 | 0.04 | 0.69 | 2 / 1 / 1 |
-| +2V5_KSZ | 2.50 | 0.15 / 0.25 | 0.1, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 |
-| +3V3_ZB | 3.30 | 0.10 / 0.30 | 0.1, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |
-| +5V_LORA | 5.00 | 0.15 / 0.70 | 0.1, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 |
-| +5V_LIME | 5.00 | 1.20 / 3.00 | 1.2, typical (PI-001) | 0.39 | 0.15 | 2.31 | 5 / 4 / 3 |
-| +5V_RB | 5.00 | 0.15 / 2.00 | 0.1, typical (PI-001) | 0.02 | 0.01 | 0.13 | 3 / 3 / 2 |
-| +5V_CAM | 5.00 | 0.25 / 0.50 | 0.2, typical (PI-001) | 0.04 | 0.02 | 0.27 | 1 / 1 / 1 |
-| +5V_HDMI | 5.00 | 0.10 / 0.50 | 0.1, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |
-| +54V_POE | 54.00 | 0.30 / 0.60 | 0.3, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
-| GND | 0.00 | 10.00 / 21.00 | 10.0, typical (PI-001) | 8.15 | 2.76 | 66.76 (over 40 mm) | 29 / 24 / 20 |
-| VBUS_FLASH1 | 5.00 | 0.00 / 0.00 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
-| SIM1_VCC | 3.00 | 0.01 / 0.05 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
-| SIM2_VCC | 3.00 | 0.01 / 0.05 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
-| SIMC2_VCC | 3.00 | 0.01 / 0.05 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
-| VBUS_FLASH2 | 5.00 | 0.00 / 0.00 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
-| VBUS_FLASH3 | 5.00 | 0.00 / 0.00 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
-| VBAT_RTC | 3.00 | 0.00 / 0.00 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
-| POE_P | 54.00 | 0.30 / 0.60 | 0.3, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
-| MDI_A_P | 54.00 | 0.15 / 0.30 | 0.1, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 |
-| MDI_A_N | 54.00 | 0.15 / 0.30 | 0.1, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 |
-| MDI_B_P (return of +54V_POE) | 0.15 | 0.15 / 0.30 | 0.1, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 |
-| MDI_B_N (return of +54V_POE) | 0.15 | 0.15 / 0.30 | 0.1, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 |
-| POE_DRAIN (return of +54V_POE) | 0.15 | 0.30 / 0.60 | 0.3, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
-| POE_SEN (return of +54V_POE) | 0.15 | 0.30 / 0.60 | 0.3, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
-| GNSS_VDD_RF | 3.30 | 0.02 / 0.03 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 |
-| GNSS_BIAS | 3.30 | 0.02 / 0.03 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 |
-| GNSS_ANT | 3.30 | 0.02 / 0.03 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 |
-| VBUS_QMX | 5.00 | 0.30 / 0.30 | 0.3, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
-| PANEL_5V | 5.00 | 0.60 / 0.60 | 0.6, typical (PI-001) | 0.15 | 0.06 | 0.89 | 1 / 1 / 1 |
+| +5V_S1 | 5.10 | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
+| +5V_S2 | 5.10 | 4.20 / 5.00 | 4.20, typical (PI-001) | 2.17 | 0.84 | 13.64 | 7 / 6 / 5 |
+| +5V_S3 | 5.10 | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
+| +5V_DEV | 5.00 | 3.80 / 6.00 | 3.80, typical (PI-001) | 1.89 | 0.73 | 11.36 | 9 / 7 / 6 |
+| +3V3_DEV | 3.30 | 1.20 / 2.00 | 1.20, typical (PI-001) | 0.39 | 0.15 | 2.31 | 3 / 3 / 2 |
+| +3V3_S1A | 3.30 | 0.50 / 1.50 | 0.50, typical (PI-001) | 0.12 | 0.04 | 0.69 | 3 / 2 / 2 |
+| +3V3_M2C1 | 3.30 | 0.50 / 1.50 | 0.50, typical (PI-001) | 0.12 | 0.04 | 0.69 | 3 / 2 / 2 |
+| +3V3_S1B | 3.30 | 0.90 / 1.80 | 0.90, typical (PI-001) | 0.26 | 0.10 | 1.56 | 3 / 3 / 2 |
+| +1V0_S1 | 1.00 | 0.80 / 1.20 | 0.80, typical (PI-001) | 0.22 | 0.08 | 1.32 | 2 / 2 / 2 |
+| +1V1_S1 | 1.10 | 0.40 / 0.70 | 0.40, typical (PI-001) | 0.08 | 0.03 | 0.51 | 1 / 1 / 1 |
+| +3V3_CM1 | 3.30 | 0.10 / 0.20 | 0.10, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |
+| +1V8_CM1 | 1.80 | 0.02 / 0.05 | 0.02, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 |
+| +3V3_S2A | 3.46 | 3.00 / 4.00 | 3.00, typical (PI-001) | 1.37 | 0.53 | 8.18 | 6 / 5 / 4 |
+| +3V3_M2C2 | 3.46 | 3.00 / 4.00 | 3.00, typical (PI-001) | 1.37 | 0.53 | 8.18 | 6 / 5 / 4 |
+| +3V3_S2B | 3.30 | 0.90 / 1.80 | 0.90, typical (PI-001) | 0.26 | 0.10 | 1.56 | 3 / 3 / 2 |
+| +1V0_S2 | 1.00 | 0.80 / 1.20 | 0.80, typical (PI-001) | 0.22 | 0.08 | 1.32 | 2 / 2 / 2 |
+| +1V1_S2 | 1.10 | 0.40 / 0.70 | 0.40, typical (PI-001) | 0.08 | 0.03 | 0.51 | 1 / 1 / 1 |
+| +3V3_CM2 | 3.30 | 0.10 / 0.20 | 0.10, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |
+| +1V8_CM2 | 1.80 | 0.02 / 0.05 | 0.02, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 |
+| +3V3_S3A | 3.30 | 0.50 / 1.50 | 0.50, typical (PI-001) | 0.12 | 0.04 | 0.69 | 3 / 2 / 2 |
+| +3V3_M2C3 | 3.30 | 0.50 / 1.50 | 0.50, typical (PI-001) | 0.12 | 0.04 | 0.69 | 3 / 2 / 2 |
+| +3V3_S3B | 3.30 | 0.90 / 1.80 | 0.90, typical (PI-001) | 0.26 | 0.10 | 1.56 | 3 / 3 / 2 |
+| +1V0_S3 | 1.00 | 0.80 / 1.20 | 0.80, typical (PI-001) | 0.22 | 0.08 | 1.32 | 2 / 2 / 2 |
+| +1V1_S3 | 1.10 | 0.40 / 0.70 | 0.40, typical (PI-001) | 0.08 | 0.03 | 0.51 | 1 / 1 / 1 |
+| +3V3_CM3 | 3.30 | 0.10 / 0.20 | 0.10, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |
+| +1V8_CM3 | 1.80 | 0.02 / 0.05 | 0.02, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 |
+| +3V3_IOCA | 3.30 | 0.12 / 0.25 | 0.12, typical (PI-001) | 0.02 | 0.01 | 0.10 | 1 / 1 / 1 |
+| +3V3_IOCB | 3.30 | 0.12 / 0.25 | 0.12, typical (PI-001) | 0.02 | 0.01 | 0.10 | 1 / 1 / 1 |
+| +3V3_IOCC | 3.30 | 0.12 / 0.25 | 0.12, typical (PI-001) | 0.02 | 0.01 | 0.10 | 1 / 1 / 1 |
+| +1V2_KSZ | 1.20 | 0.50 / 0.80 | 0.50, typical (PI-001) | 0.12 | 0.04 | 0.69 | 2 / 1 / 1 |
+| +2V5_KSZ | 2.50 | 0.15 / 0.25 | 0.15, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 |
+| +3V3_ZB | 3.30 | 0.10 / 0.30 | 0.10, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |
+| +5V_LORA | 5.00 | 0.15 / 0.70 | 0.15, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 |
+| +5V_LIME | 5.00 | 1.20 / 3.00 | 1.20, typical (PI-001) | 0.39 | 0.15 | 2.31 | 5 / 4 / 3 |
+| +5V_RB | 5.00 | 0.15 / 2.00 | 0.15, typical (PI-001) | 0.02 | 0.01 | 0.13 | 3 / 3 / 2 |
+| +5V_CAM | 5.00 | 0.25 / 0.50 | 0.25, typical (PI-001) | 0.04 | 0.02 | 0.27 | 1 / 1 / 1 |
+| +5V_HDMI | 5.00 | 0.10 / 0.50 | 0.10, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |
+| +54V_POE | 54.00 | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
+| GND | 0.00 | 10.00 / 21.00 | 10.00, typical (PI-001) | 8.15 | 2.76 | 66.76 (over 40 mm) | 29 / 24 / 20 |
+| VBUS_FLASH1 | 5.00 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
+| SIM1_VCC | 3.00 | 0.01 / 0.05 | 0.01, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
+| SIM2_VCC | 3.00 | 0.01 / 0.05 | 0.01, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
+| SIMC2_VCC | 3.00 | 0.01 / 0.05 | 0.01, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
+| VBUS_FLASH2 | 5.00 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
+| VBUS_FLASH3 | 5.00 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
+| VBAT_RTC | 3.00 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
+| POE_P | 54.00 | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
+| MDI_A_P | 54.00 | 0.15 / 0.30 | 0.15, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 |
+| MDI_A_N | 54.00 | 0.15 / 0.30 | 0.15, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 |
+| MDI_B_P (return of +54V_POE) | 0.15 | 0.15 / 0.30 | 0.15, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 |
+| MDI_B_N (return of +54V_POE) | 0.15 | 0.15 / 0.30 | 0.15, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 |
+| POE_DRAIN (return of +54V_POE) | 0.15 | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
+| POE_SEN (return of +54V_POE) | 0.15 | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
+| GNSS_VDD_RF | 3.30 | 0.02 / 0.03 | 0.02, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 |
+| GNSS_BIAS | 3.30 | 0.02 / 0.03 | 0.02, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 |
+| GNSS_ANT | 3.30 | 0.02 / 0.03 | 0.02, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 |
+| VBUS_QMX | 5.00 | 0.30 / 0.30 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
+| PANEL_5V | 5.00 | 0.60 / 0.60 | 0.60, typical (PI-001) | 0.15 | 0.06 | 0.89 | 1 / 1 / 1 |
+
+Sized at a maker's figure above the declaration (SIZED_TO; POWER-THERMAL.md section 10):
+
+| rail | declared typ / peak A | sized at, A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of the declared peak and the sized current, 0.3 / 0.4 / 0.5 mm drill | the maker's figure and its finding |
+|---|---|---|---:|---:|---:|---|---|
+| +3V3_S1A | 0.50 / 1.50 | 3.000 | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 | PWR-F01: AsiaRF asks a 3.3 V supply of 3 A (2.5 A minimum) for the AW7915-AED |
+| +3V3_M2C1 | 0.50 / 1.50 | 3.000 | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 | PWR-F01, the same conductor past its Kelvin shunt |
+| +3V3_S3A | 0.50 / 1.50 | 3.000 | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 | PWR-F01 |
+| +3V3_M2C3 | 0.50 / 1.50 | 3.000 | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 | PWR-F01, the same conductor past its Kelvin shunt |
+| +1V2_KSZ | 0.50 / 0.80 | 1.210 | 0.39 | 0.15 | 2.34 | 2 / 2 / 2 | PWR-F03: KSZ9897R at 1000 Mb/s draws 1.21 A typical on its 1.2 V rails |
+| +2V5_KSZ | 0.15 / 0.25 | 0.330 | 0.07 | 0.03 | 0.39 | 1 / 1 / 1 | PWR-F03: 330 mA on AVDDH |
+| +1V1_S1 | 0.40 / 0.70 | 0.778 | 0.21 | 0.08 | 1.27 | 2 / 1 / 1 | PWR-F05: TUSB8041's four-SS-devices row, 778 mA on VDD; the kit's mix uses the 395 mA row |
+| +1V1_S2 | 0.40 / 0.70 | 0.778 | 0.21 | 0.08 | 1.27 | 2 / 1 / 1 | PWR-F05 |
+| +1V1_S3 | 0.40 / 0.70 | 0.778 | 0.21 | 0.08 | 1.27 | 2 / 1 / 1 | PWR-F05 |
 
 ### Board C
 
-Netlist `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net` sha256/16 11eabc2dddca5161; intent `v2/ecad/pcb-c-display-c8/out/pcb-c-display-intent.json` sha256/16 854436c729322993 (written 2026-09-26 23:18); stack JLC06161H-3313, outer 0.0350 mm, inner 0.0152 mm (six layers, owner decision 27 (board file still four, JLC04161H-7628, the same copper)).
+```bound
+board      c
+netlist    v2/ecad/pcb-c-display-c8/out/pcb-c-display.net sha256/16 3fddbb3edcd4248a
+intent     v2/ecad/pcb-c-display-c8/out/pcb-c-display-intent.json sha256/16 270ebb4ccf1d0e8e
+model      track_current.width_for_current decision 35 rise 10 K plating 18 um
+stack      JLC06161H-3313 outer 0.0350 mm inner 0.0152 mm
+```
+
+Intent written 2026-09-27 15:35. Stack: six layers, owner decision 27 (board file still four, JLC04161H-7628, the same copper).
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
 |---|---|---|---|---:|---:|---:|---|
-| +5V | 5.00 | 0.60 / 1.00 | 0.6, typical (PI-001) | 0.15 | 0.06 | 0.89 | 2 / 2 / 1 |
-| +3V3 | 3.30 | 0.12 / 0.20 | 0.1, typical (PI-001) | 0.02 | 0.01 | 0.10 | 1 / 1 / 1 |
+| +5V | 5.00 | 0.60 / 1.00 | 0.60, typical (PI-001) | 0.15 | 0.06 | 0.89 | 2 / 2 / 1 |
+| +3V3 | 3.30 | 0.15 / 0.72 | 0.15, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 |
+| EPD_VCC | 3.30 | 0.03 / 0.52 | 0.03, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 |
+| LED_RAIL_SW | 5.00 | 0.16 / 0.46 | 0.16, typical (PI-001) | 0.02 | 0.01 | 0.14 | 1 / 1 / 1 |
+| LED_RAIL | 5.00 | 0.14 / 0.44 | 0.14, typical (PI-001) | 0.02 | 0.01 | 0.12 | 1 / 1 / 1 |
 
 ### Board D
 
-Netlist `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net` sha256/16 76700a687eb6187f; intent `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs-intent.json` sha256/16 443fd745879d3022 (written 2026-09-27 10:33); stack JLC04161H-7628, outer 0.0350 mm, inner 0.0152 mm (four layers, the RF ground-plane reason (LAYER-DECISIONS-2026-09-11.md)).
+```bound
+board      d
+netlist    v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net sha256/16 7a2c0ac2190b141a
+intent     v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs-intent.json sha256/16 8d9f3b2256521b0d
+model      track_current.width_for_current decision 35 rise 10 K plating 18 um
+stack      JLC04161H-7628 outer 0.0350 mm inner 0.0152 mm
+```
+
+Intent written 2026-09-27 14:28. Stack: four layers, the RF ground-plane reason (LAYER-DECISIONS-2026-09-11.md).
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
 |---|---|---|---|---:|---:|---:|---|
-| +5V_D8 | 5.0 (5.2) | 1.00 / 2.00 | 1.0, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |
-| +3V3_D8 | 3.30 | 0.04 / 0.17 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.02 | 1 / 1 / 1 |
-| +3V4_HUB | 3.4 (3.5) | 0.04 / 0.04 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.02 | 1 / 1 / 1 |
-| +5V_TX | 5.0 (5.2) | 0.37 / 1.15 | 0.4, typical (PI-001) | 0.08 | 0.03 | 0.46 | 2 / 2 / 2 |
-| +5V_SA | 5.00 | 0.35 / 1.10 | 0.3, typical (PI-001) | 0.07 | 0.03 | 0.42 | 2 / 2 / 2 |
-| +3V3 | 3.30 | 0.06 / 0.10 | 0.1, typical (PI-001) | 0.01 | 0.00 | 0.04 | 1 / 1 / 1 |
+| +5V_D8 | 5.0 (5.2) | 1.00 / 2.00 | 1.00, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |
+| +3V3_D8 | 3.30 | 0.04 / 0.17 | 0.04, typical (PI-001) | 0.00 | 0.00 | 0.02 | 1 / 1 / 1 |
+| +3V4_HUB | 3.4 (3.5) | 0.04 / 0.04 | 0.04, typical (PI-001) | 0.00 | 0.00 | 0.02 | 1 / 1 / 1 |
+| +5V_TX | 5.0 (5.2) | 0.37 / 1.15 | 0.37, typical (PI-001) | 0.08 | 0.03 | 0.46 | 2 / 2 / 2 |
+| +5V_SA | 5.00 | 0.35 / 1.10 | 0.35, typical (PI-001) | 0.07 | 0.03 | 0.42 | 2 / 2 / 2 |
+| +3V3 | 3.30 | 0.06 / 0.10 | 0.06, typical (PI-001) | 0.01 | 0.00 | 0.04 | 1 / 1 / 1 |
 
 ### Board E
 
-Netlist `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net` sha256/16 d6137f50059e5cbc; intent `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock-intent.json` sha256/16 5913e38b20333d35 (written 2026-09-27 10:43); stack JLC04161H-7628, outer 0.0350 mm, inner 0.0152 mm (four layers, the routing half and In1 (LAYER-DECISIONS-2026-09-11.md)).
+```bound
+board      e
+netlist    v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net sha256/16 56adc9746d61c4e0
+intent     v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock-intent.json sha256/16 dad1163afd720b5e
+model      track_current.width_for_current decision 35 rise 10 K plating 18 um
+stack      JLC04161H-7628 outer 0.0350 mm inner 0.0152 mm
+```
+
+Intent written 2026-09-27 14:51. Stack: four layers, the routing half and In1 (LAYER-DECISIONS-2026-09-11.md). Pack path, judged at 18 A (PWR-F12): CELL_F, CELL+.
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
 |---|---|---|---|---:|---:|---:|---|
-| CELL_F | 14.4 (16.8) | 10.00 / 18.00 | 18.0, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 |
-| CELL+ | 14.4 (16.8) | 10.00 / 18.00 | 18.0, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 |
-| VIN_RAW | 12.0 (36.0) | 14.10 / 14.10 | 14.1, typical (PI-001) | 15.29 | 4.43 | 125.22 (over 40 mm) | 20 / 16 / 14 |
-| +3V3_E6 | 3.30 | 0.35 / 0.60 | 0.3, typical (PI-001) | 0.07 | 0.03 | 0.42 | 1 / 1 / 1 |
-| +5V_E6 | 5.00 | 0.30 / 0.50 | 0.3, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
-| +5V_GEIGER | 5.00 | 0.10 / 0.10 | 0.1, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |
-| DC_IN | 12.0 (36.0) | 6.15 / 6.15 | 6.2, typical (PI-001) | 3.67 | 1.41 | 27.42 | 9 / 7 / 6 |
-| DC_F | 12.0 (36.0) | 6.15 / 6.15 | 6.2, typical (PI-001) | 3.67 | 1.41 | 27.42 | 9 / 7 / 6 |
-| DC_P | 12.0 (36.0) | 6.15 / 6.15 | 6.2, typical (PI-001) | 3.67 | 1.41 | 27.42 | 9 / 7 / 6 |
-| HS_S | 12.0 (36.0) | 6.15 / 6.15 | 6.2, typical (PI-001) | 3.67 | 1.41 | 27.42 | 9 / 7 / 6 |
-| DC_HS | 12.0 (36.0) | 6.15 / 6.15 | 6.2, typical (PI-001) | 3.67 | 1.41 | 27.42 | 9 / 7 / 6 |
-| PV_P | 17.6 (25.0) | 5.68 / 6.25 | 5.7, typical (PI-001) | 3.29 | 1.27 | 23.70 | 9 / 7 / 6 |
-| PV_IN | 17.6 (25.0) | 5.68 / 6.25 | 5.7, typical (PI-001) | 3.29 | 1.27 | 23.70 | 9 / 7 / 6 |
-| TRK_OUT | 15.10 | 10.33 / 10.33 | 10.3, typical (PI-001) | 8.65 | 2.89 | 70.84 (over 40 mm) | 14 / 12 / 10 |
-| SGP_VDD | 3.30 | 0.00 / 0.00 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
+| CELL_F | 14.4 (16.8) | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 |
+| CELL+ | 14.4 (16.8) | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 |
+| VIN_RAW | 12.0 (36.0) | 14.10 / 14.10 | 14.10, typical (PI-001) | 15.29 | 4.43 | 125.22 (over 40 mm) | 20 / 16 / 14 |
+| +3V3_E6 | 3.30 | 0.35 / 0.60 | 0.35, typical (PI-001) | 0.07 | 0.03 | 0.42 | 1 / 1 / 1 |
+| +5V_E6 | 5.00 | 0.30 / 0.50 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
+| +5V_GEIGER | 5.00 | 0.10 / 0.10 | 0.10, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |
+| DC_IN | 12.0 (36.0) | 6.15 / 6.15 | 6.15, typical (PI-001) | 3.67 | 1.41 | 27.42 | 9 / 7 / 6 |
+| DC_F | 12.0 (36.0) | 6.15 / 6.15 | 6.15, typical (PI-001) | 3.67 | 1.41 | 27.42 | 9 / 7 / 6 |
+| DC_P | 12.0 (36.0) | 6.15 / 6.15 | 6.15, typical (PI-001) | 3.67 | 1.41 | 27.42 | 9 / 7 / 6 |
+| HS_S | 12.0 (36.0) | 6.15 / 6.15 | 6.15, typical (PI-001) | 3.67 | 1.41 | 27.42 | 9 / 7 / 6 |
+| DC_HS | 12.0 (36.0) | 6.15 / 6.15 | 6.15, typical (PI-001) | 3.67 | 1.41 | 27.42 | 9 / 7 / 6 |
+| PV_P | 17.6 (25.0) | 5.68 / 6.25 | 5.68, typical (PI-001) | 3.29 | 1.27 | 23.70 | 9 / 7 / 6 |
+| PV_IN | 17.6 (25.0) | 5.68 / 6.25 | 5.68, typical (PI-001) | 3.29 | 1.27 | 23.70 | 9 / 7 / 6 |
+| TRK_OUT | 15.10 | 10.33 / 10.33 | 10.33, typical (PI-001) | 8.65 | 2.89 | 70.84 (over 40 mm) | 14 / 12 / 10 |
+| SGP_VDD | 3.30 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
+
+### Board E5
+
+```bound
+board      e5
+board_file v2/ecad/pcb-e5-block/pcb-e5-block.kicad_pcb sha256/16 686b29a734c55b9a
+chain      v2/ecad/tools/pcb_energy_chain.yaml sha256/16 a09ca0293afd1f7c
+model      track_current.width_for_current decision 35 rise 10 K plating 18 um
+stack      2L-2oz outer 0.0700 mm inner none
+```
+
+Currents: the chain's stage DOCK_BLOCK. Stack: two layers at 2 oz, owner ruling 7 of 12 September 2026 (STACKUP-DECISIONS.md section 3.7). Pack path, judged at 18 A (PWR-F12): CELL+, CELL_N.
+
+| rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
+|---|---|---|---|---:|---:|---:|---|
+| CELL+ | not declared by the chain | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s, chain stage DOCK_BLOCK | 11.95 | 3.36 | no inner layer | 25 / 21 / 18 |
+| CELL_N (return of CELL+) | not declared by the chain | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s, chain stage DOCK_BLOCK | 11.95 | 3.36 | no inner layer | 25 / 21 / 18 |
 
 ### Board P
 
-Netlist `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net` sha256/16 085f833362fbbda8; intent `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack-intent.json` sha256/16 6ff1b8129a5c5aff (written 2026-09-26 22:39); stack JLC04162H-7628, outer 0.0700 mm, inner 0.0152 mm (four layers 2 oz outer, owner decision 28; inner weight OPEN (0.5 oz default shown)).
+```bound
+board      p
+netlist    v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net sha256/16 760ac6f74d62d194
+intent     v2/ecad/pcb-p-pack-p2/out/pcb-p-pack-intent.json sha256/16 12f92bd3ce7a8264
+model      track_current.width_for_current decision 35 rise 10 K plating 18 um
+stack      JLC04162H-7628 outer 0.0700 mm inner 0.0152 mm
+```
+
+Intent written 2026-09-27 15:23. Stack: four layers 2 oz outer, owner decision 28; inner weight OPEN (0.5 oz default shown). Pack path, judged at 18 A (PWR-F12): PACK_P, CELL4, FUSED, SCP_OUT, PACK_N, SW.
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
 |---|---|---|---|---:|---:|---:|---|
-| PACK_P | 14.4 (16.8) | 10.00 / 18.00 | 18.0, PWR-F12 18 A / 60 s | 11.95 | 3.36 | 195.80 (over 40 mm) | 25 / 21 / 18 |
-| CELL4 | 14.40 | 10.00 / 18.00 | 18.0, PWR-F12 18 A / 60 s | 11.95 | 3.36 | 195.80 (over 40 mm) | 25 / 21 / 18 |
-| FUSED | 14.40 | 10.00 / 18.00 | 18.0, PWR-F12 18 A / 60 s | 11.95 | 3.36 | 195.80 (over 40 mm) | 25 / 21 / 18 |
-| SCP_OUT | 14.40 | 10.00 / 18.00 | 18.0, PWR-F12 18 A / 60 s | 11.95 | 3.36 | 195.80 (over 40 mm) | 25 / 21 / 18 |
-| PACK_N (return of PACK_P) | 0.1 (0.1) | 10.00 / 18.00 | 18.0, PWR-F12 18 A / 60 s | 11.95 | 3.36 | 195.80 (over 40 mm) | 25 / 21 / 18 |
+| PACK_P | 14.4 (16.8) | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s | 11.95 | 3.36 | 195.80 (over 40 mm) | 25 / 21 / 18 |
+| CELL4 | 14.40 | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s | 11.95 | 3.36 | 195.80 (over 40 mm) | 25 / 21 / 18 |
+| FUSED | 14.40 | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s | 11.95 | 3.36 | 195.80 (over 40 mm) | 25 / 21 / 18 |
+| SCP_OUT | 14.40 | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s | 11.95 | 3.36 | 195.80 (over 40 mm) | 25 / 21 / 18 |
+| PACK_N (return of PACK_P) | 0.1 (0.1) | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s | 11.95 | 3.36 | 195.80 (over 40 mm) | 25 / 21 / 18 |
+| BAT_F | 14.4 (16.8) | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
+| VCC_F | 14.4 (16.8) | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
+| SEC_VDD | 14.4 (16.8) | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
+| SW | 14.4 (16.8) | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s, series of SCP_OUT | 11.95 | 3.36 | 195.80 (over 40 mm) | 25 / 21 / 18 |
+| SCP_HTR | 14.4 (16.8) | 3.50 / 3.50 | 3.50, typical (PI-001) | 0.84 | 0.32 | 10.11 | 5 / 4 / 4 |
 
