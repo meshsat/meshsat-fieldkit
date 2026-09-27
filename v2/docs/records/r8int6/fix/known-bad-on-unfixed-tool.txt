@@ -1,0 +1,48 @@
+THE NEW TESTS ON THE UNFIXED TOOL, AND ON THE FIXED ONE
+Worker set6fix, MESHSAT-1357, 27 September 2026, branch fnd/r8int6 above a76a246e.
+
+HOW IT WAS RUN (from the worktree root; nothing is written under v2/ecad, the tests build their own temporary trees)
+  git show a76a246e:v2/ecad/tools/reliability.py > <dir outside the tree>/reliability.py
+  PYTHONDONTWRITEBYTECODE=1 python3 v2/docs/records/r8int6/fix/tests_against_old_tool.py v2/ecad/tools <that dir>
+  cd v2/ecad/tools && PYTHONDONTWRITEBYTECODE=1 python3 tests/run.py reliability
+
+WHAT TO READ IN IT
+  t_a_logic_gate_that_enables_a_sockets_supply_is_no_wear_part   KNOWN BAD. FAILS on the unfixed tool with the
+      refusal the box suite printed, on an isolated fixture carrying board B's own value text.
+  t_the_committed_list_covers_every_wear_part_of_every_board     FAILS on the unfixed tool: the box suite's failure,
+      reproduced on this host from the committed netlists.
+  t_a_real_socket_with_a_description_after_the_colon_is_still_a_wear_part   KNOWN GOOD, passes on both.
+  t_a_module_receptacle_is_a_wear_part_though_its_reference_is_a_u          KNOWN GOOD, passes on both.
+  t_a_colon_inside_a_bracket_does_not_end_the_identity   its first assertion (the connector is refused) holds on
+      both tools; it then asks reliability.identity for its answer on eight values, and the unfixed tool has no
+      such function, which is the AttributeError below and not a judgement of any part.
+
+== ON THE UNFIXED TOOL (sha16 149a48e5f2419955)
+tool under test: <outside the tree>/reliability.py sha16 149a48e5f2419955, carries identity(): False
+PASS t_a_class_with_no_cycle_figure_must_say_why
+PASS t_a_class_without_a_load_or_a_measure_is_refused
+FAIL t_a_colon_inside_a_bracket_does_not_end_the_identity
+     AttributeError: module 'reliability' has no attribute 'identity'
+PASS t_a_declared_count_that_does_not_match_the_board_is_refused
+FAIL t_a_logic_gate_that_enables_a_sockets_supply_is_no_wear_part
+     AssertionError: ['X: U116 (SN74LV1T08DBVR AND, 5 V supply, TTL-level inp) carries load or sees cycling and is in no declared class']
+PASS t_a_module_receptacle_is_a_wear_part_though_its_reference_is_a_u
+PASS t_a_real_socket_with_a_description_after_the_colon_is_still_a_wear_part
+PASS t_a_wear_part_in_no_class_is_refused
+FAIL t_the_committed_list_covers_every_wear_part_of_every_board
+     AssertionError: ['B: U116 (SN74LV1T08DBVR AND, 5 V supply, TTL-level inp) carries load or sees cycling and is in no declared class', 'B: U216 (SN74LV1T08DBVR AND, 5 V supply, TTL-level inp) carries load or sees cycling and is in no declared class', 'B: U316 (SN74LV1T08DBVR AND, 5 V supply, TTL-level inp) carries load or sees cycling and is in no declared class']
+PASS t_the_same_board_with_every_class_declared_passes
+on the unfixed tool: 7 passed, 3 failed
+
+== ON THE FIXED TOOL (sha16 71d0872195905c9d)
+tests: test_reliability.t_a_class_with_no_cycle_figure_must_say_why PASS
+tests: test_reliability.t_a_class_without_a_load_or_a_measure_is_refused PASS
+tests: test_reliability.t_a_colon_inside_a_bracket_does_not_end_the_identity PASS
+tests: test_reliability.t_a_declared_count_that_does_not_match_the_board_is_refused PASS
+tests: test_reliability.t_a_logic_gate_that_enables_a_sockets_supply_is_no_wear_part PASS
+tests: test_reliability.t_a_module_receptacle_is_a_wear_part_though_its_reference_is_a_u PASS
+tests: test_reliability.t_a_real_socket_with_a_description_after_the_colon_is_still_a_wear_part PASS
+tests: test_reliability.t_a_wear_part_in_no_class_is_refused    PASS
+tests: test_reliability.t_the_committed_list_covers_every_wear_part_of_every_board PASS
+tests: test_reliability.t_the_same_board_with_every_class_declared_passes PASS
+tests: 10 passed, 0 failed, 0 skipped

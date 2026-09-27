@@ -29,8 +29,8 @@ import verdict as _v
 ECAD = os.path.dirname(HERE)
 VENDOR = os.path.normpath(os.path.join(ECAD, "..", "vendor"))
 REL = os.path.join(HERE, "pcb_reliability.yaml")
-# What counts as load-bearing or cycling, by the words a part's own value carries. A part here is asked for;
-# a part not here is not, which is why the list is in one place and tested against the boards.
+# What counts as load-bearing or cycling, by the words a part's IDENTITY carries (`identity`, below `judge`).
+# A part here is asked for; a part not here is not, so the list is in one place and tested against the boards.
 WEAR = re.compile(r"socket|receptacle|holder|SMA|XT60|JST|IDC|header|standoff|U\.FL|M\.2|blade", re.I)
 # ...AND THE WORD HAS TO BE ABOUT A MECHANICAL PART (16 September 2026). A transient suppressor's value says
 # what it STANDS OFF, which is a voltage: "SMCJ40A (40 V standoff on a line specified to 36 V)" matched
@@ -62,12 +62,17 @@ def judge(rel=None, ecad=None, only=None, vendor=None):
         net = netlist_for(stem, ecad) if stem else None
         fails, notes = [], []
         classes = b.get("classes") or []
-        covered, double = set(), []
+        covered, double, prose = set(), [], []
         if net:
             txt = open(net, encoding="utf-8", errors="replace").read()
             parts = {r: v for r, v in re.findall(r'\(comp \(ref "([^"]+)"\)\s*\(value "([^"]*)"\)', txt)}
-            wear = {r for r, v in parts.items()
-                    if WEAR.search(v or "") and R.ref_prefix(r) not in NOT_WEAR_PREFIX}
+            wordy = {r for r, v in parts.items()
+                     if WEAR.search(v or "") and R.ref_prefix(r) not in NOT_WEAR_PREFIX}
+            wear = {r for r in wordy if WEAR.search(identity(parts[r]))}
+            prose = sorted(wordy - wear)
+            if prose:
+                notes.append("%s: %d part(s) carry a wear word only in the description of what they do and are "
+                             "not asked for: %s" % (letter.upper(), len(prose), ", ".join(prose)))
             for r in sorted(wear):
                 hit = [c for c in classes if any(fnmatch.fnmatchcase(r, p) for p in (c.get("refs") or []))]
                 if not hit:
@@ -101,8 +106,37 @@ def judge(rel=None, ecad=None, only=None, vendor=None):
                     if not os.path.exists(os.path.join(vdir, name[len("v2/vendor/"):])):
                         fails.append("%s: class %s cites %s, which is not in this tree" % (letter.upper(), c.get("name"), name))
         fails += double
-        out[letter] = dict(classes=len(classes), covered=len(covered), fails=fails, notes=notes, netlist=bool(net))
+        out[letter] = dict(classes=len(classes), covered=len(covered), fails=fails, notes=notes, netlist=bool(net),
+                           prose_only=prose)
     return out
+
+
+def identity(value):
+    """What the part IS, without the description of what it does in this circuit (27 September 2026).
+
+    A value in these netlists is written `<the part and its properties>: <what it does here>`, and `WEAR` was
+    searched in all of it. Board B's `U116`, `U216` and `U316` are SN74LV1T08 AND gates in SOT-23-5 whose
+    description reads "slot 1's card-socket supply enable = EMCON AND PCIE_PWR_EN1": the word `socket` says what
+    the gate SWITCHES, and three logic gates were refused as load-bearing parts in no declared class. The
+    same reading had already put three soldered LQFP-128 PCIe switches (`U101`, `U201`, `U301`, "port 2 card
+    socket") in the list, where a class was declared for them that says they are not connectors. A prefix cannot
+    decide this one, because a module receptacle is a `U` too.
+
+    THE SEPARATOR is the first colon followed by white space that stands OUTSIDE every bracket. 89 of the 2630
+    values of the six netlists carry their first colon inside a bracket ("SMCJ40A (bus clamp: 40 V standoff"),
+    which is a remark on the part and not the end of its identity, so a plain split would cut an identity
+    short and could drop a connector named in the remark. A value with no such colon, or with a bracket that
+    never closes, is ALL identity: when the form cannot be read the part is asked for rather than dropped.
+
+    It stands below `judge` so that the lines `rules_status.py` cites in this file keep their numbers.
+    """
+    v = value or ""
+    depth = 0
+    for i, ch in enumerate(v):
+        if ch in "([{": depth += 1
+        elif ch in ")]}": depth = max(0, depth - 1)
+        elif ch == ":" and depth == 0 and v[i + 1:i + 2].isspace(): return v[:i]
+    return v
 
 
 def main(argv):
