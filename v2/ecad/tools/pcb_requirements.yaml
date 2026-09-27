@@ -3015,6 +3015,18 @@ open_items:
       (stages PACK_CELLS, PACK_LEAD, DOCK_ENTRY and board A's fuse) still gives F1 the Littelfuse 287 ATOF
       figures (I2t 1000 A2s) where the Keystone 3568 holds the 297 MINI (625 A2s typical). For the packet's
       owner and the energy chain's owner.
+  - id: S-87
+    class: SESSION
+    status: OPEN
+    title: >-
+      FEA-002's statement describes the RockBLOCK 9704's ENABLE as it was before stream w4b ('with its ENABLE held by
+      firmware'); since stream w4b (27 September 2026, SC-64) the ENABLE is EMCON_HW AND the panel's request in U536,
+      held low by R527 with the gate unpowered (feasibility/EMCON.md section 4c). Found at the r8int6 integration. The
+      statement is part of the requirements baseline (a54b793b), whose statements change only under their own review
+      (the registry header), so the integration leaves it and its readings say the remedy is drawn. No count changes
+      (EMCON local 15 of 17 at desk, end to end 0 of 17; the RockBLOCK row stays open on the Iridium module's
+      unpublished response to ENABLE). Closed when FEA-002's statement is changed under a review of the baseline by a
+      reviewer who wrote none of the changed lines.
 
 # Items that left the open list, and what closed each: an owner ruling, a session choice, or a commit whose effect
 # was read in the file `closing_evidence` names. A record never waits on a closed item; it cites what closed it.
@@ -4045,10 +4057,17 @@ records:
           the head's rule paragraph to the end of the file, the needs table included, is byte-identical to the file at
           bbcab7c9876f7993, so section 2a's paragraph 'Which peripherals NEED-03 protects', which this reading rests on,
           is unchanged word for word and it stands on the file at 6ebe6760c4312bca
+      - >-
+          v2/docs/V2-SPEC.md re-read at the r8int6 integration of 27 September 2026 (set 6's re-read of the four public
+          pages, the layer 1 integrator line's rule): two places change, line 24's RockBLOCK clause (its ENABLE held low
+          by the EMCON hardware since board B's stream w4b, SC-64, where it said a firmware-driven expander held it and
+          the hardware ENABLE was owed) and correction 31 added at the end; every other line is byte-identical to the
+          file at a92ea2ef3793a3c9; line 32 and correction 6, which this reading cites, are byte-identical, so it stands
+          PASS on the file at e1fdcebe8638e471
     evidence_bound_to:
       - "v2/docs/CONOPS.md@6ebe6760c4312bca"
       - "v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8"
-      - "v2/docs/V2-SPEC.md@a92ea2ef3793a3c9"
+      - "v2/docs/V2-SPEC.md@e1fdcebe8638e471"
     release_effect: BLOCKER
     source:
       - "v2/docs/ARCH-PCB-B-IOHA.md:17"
@@ -11160,12 +11179,20 @@ records:
           unchanged; none of the parts, nets or test-plan lines this record cites on boards D and P is among
           the changes, so this reading stands on v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@7a2c0ac2190b141a,
           v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@760ac6f74d62d194, v2/docs/TEST-PLAN.md@ae57da0b57e214f7
+      - >-
+          v2/docs/V2-SPEC.md re-read at the r8int6 integration of 27 September 2026 (set 6's re-read of the four public
+          pages, the layer 1 integrator line's rule): two places change, line 24's RockBLOCK clause (its ENABLE held low
+          by the EMCON hardware since board B's stream w4b, SC-64, where it said a firmware-driven expander held it and
+          the hardware ENABLE was owed) and correction 31 added at the end; every other line is byte-identical to the
+          file at a92ea2ef3793a3c9; line 24 now describes board B's RockBLOCK ENABLE as generated, which is what this
+          record's acceptance asks of the published documents, and lines 34, 41, 43 and 76 and the corrections it cites
+          are byte-identical, so it stands PASS on the file at e1fdcebe8638e471
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@7a2c0ac2190b141a"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@56adc9746d61c4e0"
       - "v2/docs/PANEL.md@4647782f5aca7c13"
       - "v2/docs/CONOPS.md@6ebe6760c4312bca"
-      - "v2/docs/V2-SPEC.md@a92ea2ef3793a3c9"
+      - "v2/docs/V2-SPEC.md@e1fdcebe8638e471"
       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
       - "v2/docs/TEST-PLAN.md@ae57da0b57e214f7"
       - "v2/ecad/tools/pcb_decisions.yaml@b5f7162443d5ad91"
@@ -11934,8 +11961,15 @@ records:
           seventeenth LED) and correction 20's last sentence change and correction 30 is added; line 41 (the one
           dual-SIM description, SC-13), which this reading rests on, is byte-identical to the file at 73a797e44d42fa6d,
           so it stands on the file at a92ea2ef3793a3c9
+      - >-
+          v2/docs/V2-SPEC.md re-read at the r8int6 integration of 27 September 2026 (set 6's re-read of the four public
+          pages, the layer 1 integrator line's rule): two places change, line 24's RockBLOCK clause (its ENABLE held low
+          by the EMCON hardware since board B's stream w4b, SC-64, where it said a firmware-driven expander held it and
+          the hardware ENABLE was owed) and correction 31 added at the end; every other line is byte-identical to the
+          file at a92ea2ef3793a3c9; line 41 and the corrections it cites are byte-identical, so it stands PASS on the
+          file at e1fdcebe8638e471
     evidence_bound_to:
-      - "v2/docs/V2-SPEC.md@a92ea2ef3793a3c9"
+      - "v2/docs/V2-SPEC.md@e1fdcebe8638e471"
     release_effect: ADVISORY
     source:
       - "v2/docs/V2-SPEC.md:41 (as read at eadbe571)"
@@ -12769,8 +12803,15 @@ records:
           EXPECTED CHANGES'), it differs only in Q11 and R58 added, U10 pin 30 moved from no connection to the new net
           HOT_R1_G, D7 and D8 carrying their order code C51897884, and J_BLK's value; DCF_PULSE still runs from J_DCF
           pin 3 to U10 and nowhere else, so it stands PASS on the file at 56adc9746d61c4e0
+      - >-
+          v2/docs/V2-SPEC.md re-read at the r8int6 integration of 27 September 2026 (set 6's re-read of the four public
+          pages, the layer 1 integrator line's rule): two places change, line 24's RockBLOCK clause (its ENABLE held low
+          by the EMCON hardware since board B's stream w4b, SC-64, where it said a firmware-driven expander held it and
+          the hardware ENABLE was owed) and correction 31 added at the end; every other line is byte-identical to the
+          file at a92ea2ef3793a3c9; line 35 and correction 8, which this reading rests on, are byte-identical, so it
+          stands PASS on the file at e1fdcebe8638e471
     evidence_bound_to:
-      - "v2/docs/V2-SPEC.md@a92ea2ef3793a3c9"
+      - "v2/docs/V2-SPEC.md@e1fdcebe8638e471"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@56adc9746d61c4e0"
     release_effect: ADVISORY
     source: ["v2/docs/V2-SPEC.md:35", "v2/ecad/tools/gen_sch_e.py:678"]

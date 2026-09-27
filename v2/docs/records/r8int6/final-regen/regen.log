@@ -1,0 +1,7 @@
+handover_exports: regen a (pcb-a-power-a23, PHASE=A65): exits [0, 0, 0], {'schematic': 'PARITY', 'netlist': 'PARITY_AFTER_NOISE', 'intent': 'PARITY_AFTER_NOISE', 'bom': 'PARITY', 'erc': 'PARITY_AFTER_NOISE'}, lands moved 0: PARITY
+handover_exports: regen b (pcb-b-compute-b19, PHASE=B21): exits [0, 0, 0, 0], {'schematic': 'PARITY', 'netlist': 'PARITY_AFTER_NOISE', 'intent': 'PARITY_AFTER_NOISE', 'bom': 'PARITY', 'erc': 'PARITY_AFTER_NOISE'}, lands moved 0: PARITY
+handover_exports: regen c (pcb-c-display-c8, PHASE=C24): exits [0, 0], {'schematic': 'PARITY', 'netlist': 'PARITY_AFTER_NOISE', 'intent': 'PARITY_AFTER_NOISE', 'bom': 'PARITY', 'erc': 'PARITY_AFTER_NOISE'}, lands moved 0: PARITY
+handover_exports: regen d (pcb-d-aprs-d9, PHASE=D37P): exits [0, 0, 0, 0], {'schematic': 'PARITY', 'netlist': 'PARITY_AFTER_NOISE', 'intent': 'PARITY_AFTER_NOISE', 'bom': 'PARITY', 'erc': 'PARITY_AFTER_NOISE'}, lands moved 0: PARITY
+handover_exports: regen e (pcb-e1-dock-e7, PHASE=E42P): exits [0, 0, 0], {'schematic': 'PARITY', 'netlist': 'PARITY_AFTER_NOISE', 'intent': 'PARITY_AFTER_NOISE', 'bom': 'PARITY', 'erc': 'PARITY_AFTER_NOISE'}, lands moved 0: PARITY
+handover_exports: regen p (pcb-p-pack-p2, PHASE=P4): exits [0, 0, 0], {'schematic': 'PARITY', 'netlist': 'PARITY_AFTER_NOISE', 'intent': 'PARITY_AFTER_NOISE', 'bom': 'PARITY', 'erc': 'PARITY_AFTER_NOISE'}, lands moved 0: PARITY
+regen exit 0

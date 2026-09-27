@@ -1,0 +1,9 @@
+counts (committed, candidate): {'components': [611, 612], 'nets': [356, 356], 'pins': [1794, 1796]}
+components_added: ['R216']
+components_removed: []
+nets_added: []
+nets_removed: []
+changed J_DOCK: {'value': ["spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare (VIN_RAW crosses on J_VR1-4 since EQ-16)", "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 HOT-R1 hot stop line from E's open drain, pulled up by R216 (SC-50; VIN_RAW crosses on J_VR1-4 since EQ-16)"]}
+pin added R216.1 on DOCK_SPARE
+pin added R216.2 on +3V3
+RESULT: ONLY THE EXPECTED CHANGES

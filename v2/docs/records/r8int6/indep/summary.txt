@@ -1,0 +1,23 @@
+board a: exit 0; python3 v2/docs/records/w3de/net_compare.py $SP/r8int6/indep/base-a.net v2/ecad/pcb-a-power-a23/out/pcb-a-power.net --expect v2/docs/records/w4ae/parity/expected-a-netlist.json 
+    pin added R216.1 on DOCK_SPARE
+    pin added R216.2 on +3V3
+    RESULT: ONLY THE EXPECTED CHANGES
+board b: exit 0; python3 v2/docs/records/r8b/integration/indep_cmp.py $SP/r8int6/indep/base-b.net v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net --expect v2/docs/records/w4b/expected_w4b.json 
+    parts 1270 -> 1280 (+13 -3 ~6); nets 2004 -> 2011 (+7 -0 ~19)
+    unexplained: 0
+board c: exit 0; python3 v2/docs/records/w4c/parity/netcmp_w4c.py $SP/r8int6/indep/base-c.net v2/ecad/pcb-c-display-c8/out/pcb-c-display.net v2/docs/records/w4c/parity/expected-c-netlist.json 
+      }
+     }
+    }
+board d: exit 0; python3 v2/docs/records/w3de/net_compare.py $SP/r8int6/indep/base-d.net v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net --expect v2/docs/records/w4dp/parity/expected-d-netlist.json 
+    nets_removed: []
+    changed D2: {'field:LCSC': [None, 'C81598'], 'property:LCSC': [None, 'C81598']}
+    RESULT: ONLY THE EXPECTED CHANGES
+board e: exit 0; python3 v2/docs/records/w3de/net_compare.py $SP/r8int6/indep/base-e.net v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net --expect v2/docs/records/w4ae/parity/expected-e-netlist.json 
+    pin added R58.1 on HOT_R1_G
+    pin added R58.2 on GND
+    RESULT: ONLY THE EXPECTED CHANGES
+board p: exit 0; python3 v2/docs/records/w3de/net_compare.py $SP/r8int6/indep/base-p.net v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net --expect v2/docs/records/w4dp/parity/expected-p-netlist.json 
+    nets_added: []
+    nets_removed: []
+    RESULT: ONLY THE EXPECTED CHANGES

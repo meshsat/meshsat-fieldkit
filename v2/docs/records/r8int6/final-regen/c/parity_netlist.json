@@ -1,0 +1,40 @@
+{
+ "kind": "netlist",
+ "phase_labels": [
+  [
+   "C24"
+  ],
+  [
+   "C24"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  },
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  }
+ ],
+ "design_header": [
+  [
+   "/root/w4c/cand/v2/ecad/pcb-c-display-c8/pcb-c-display.kicad_sch",
+   "2026-09-27T15:35:32+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ],
+  [
+   "/root/r8int6/rg-932cf9d755d91c60d98b90911c9da52af1127037/v2/ecad/pcb-c-display-c8/pcb-c-display.kicad_sch",
+   "2026-09-27T18:04:19+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ]
+ ],
+ "content_hash": [
+  "ebde053efc0a3906",
+  "ebde053efc0a3906"
+ ],
+ "result": "PARITY_AFTER_NOISE"
+}
