@@ -75,6 +75,7 @@ def _balanced(text, want_root):
         elif head is None:
             head = t
         first = False
+    if head is None and depth == 0 and not closed: raise Unreadable("it is empty")
     if head != want_root: raise Unreadable("the file is not a (%s ...) expression (it begins %r)" % (want_root, head))
     if depth != 0: raise Unreadable("%d bracket(s) never close: the file is cut short" % depth)
 
