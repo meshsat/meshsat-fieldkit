@@ -13,7 +13,7 @@ section 2). The layer status is `LAYER-STATUS.md`'s statement, not this page's.
 
 **How it was verified.** Every command in a grey block below was run exactly as written, the blocks of sections 2 to
 7 as one script cut from this page, between 23:30 UTC on 26 September and 01:00 UTC on 27 September 2026, on a rented
-Ubuntu 24.04.5 host with 64 cores, from a fresh extraction of the trial snapshot `H1-trial`; the page was then
+Ubuntu 24.04.5 host with 64 cores, from a fresh extraction of the trial snapshot `H1`; the page was then
 rebuilt into the snapshot and the script run once more on it. Runs on both sides of midnight UTC are why section 3
 gives two expected readings where the date matters. That trial was built from a scratch commit whose design files are those of main `e3aedb25` (the
 handover files were not yet committed), so the outputs quoted here are those of the `e3aedb25` design. When the
@@ -41,19 +41,19 @@ under `versions`.
 
 ## 2. Check the snapshot
 
-From the directory holding `H1-trial.zip` and `H1-trial.zip.sha256`:
+From the directory holding `H1.zip` and `H1.zip.sha256`:
 
 ```
 export PYTHONDONTWRITEBYTECODE=1
-sha256sum -c H1-trial.zip.sha256
-unzip -q H1-trial.zip
-cd H1-trial
+sha256sum -c H1.zip.sha256
+unzip -q H1.zip
+cd H1
 HO="$PWD"
 python3 v2/ecad/tools/handover_pack.py verify .
 python3 v2/ecad/tools/sch_prov.py read v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net p
 ```
 
-Expected: `H1-trial.zip: OK`; `handover_pack: verify .: OK` (every file's bytes and sha256 against `MANIFEST.tsv`,
+Expected: `H1.zip: OK`; `handover_pack: verify .: OK` (every file's bytes and sha256 against `MANIFEST.tsv`,
 and no file the manifest does not name); `sch_prov: pcb-p-pack.net was written by this tree's own generator
 (8cd200a5e8c4b82a)`, which says the netlist's recorded generator inputs (the generator, its imports, the board
 table's `gen_env` and 59 land files) are byte-identical to the ones in this snapshot. `PYTHONDONTWRITEBYTECODE=1`
@@ -128,8 +128,8 @@ schematic's label. It writes into the tree, so run it on a fresh extraction:
 ```
 cd "$HO/.."
 mkdir -p rg
-unzip -q H1-trial.zip -d rg
-cd rg/H1-trial
+unzip -q H1.zip -d rg
+cd rg/H1
 python3 v2/ecad/tools/handover_exports.py regen --out "$HO/../rg-out" --letters a,b,c,d,e,p
 ```
 
@@ -137,12 +137,12 @@ Expected, per board (`rg-out/<letter>/regen.json` holds each command, its exit s
 
 | Board | Phase directory | PHASE used (the committed label) | Board table `phase` | Footprint generators | Netlist content hash | Result |
 |---|---|---|---|---|---|---|
-| A | `pcb-a-power-a23` | A65 | A32 | `gen_footprints_idc.py` | `ffe040b5a915a63a` | schematic PARITY on the commit's day or PARITY_AFTER_NOISE later (the date), netlist, intent and ERC PARITY_AFTER_NOISE, BOM PARITY, no land changed: the driver prints `PARITY` |
+| A | `pcb-a-power-a23` | A65 | A32 | `gen_footprints_idc.py` | `66797255f4591a23` | schematic PARITY on the commit's day or PARITY_AFTER_NOISE later (the date), netlist, intent and ERC PARITY_AFTER_NOISE, BOM PARITY, no land changed: the driver prints `PARITY` |
 | B | `pcb-b-compute-b19` | B21 | B21 | `gen_footprints_b16.py`, `gen_footprints_idc.py` | `70be33b07a339d6e` | the same |
-| C | `pcb-c-display-c8` | C24 | C24 | none | `89f0c572416af87a` | the same |
-| D | `pcb-d-aprs-d9` | D37P | D12 | `gen_footprints_b16.py`, `gen_footprints_idc.py` | `c9ea1468d86c12e3` | the same |
-| E1 | `pcb-e1-dock-e7` | E42P | E17 | `gen_footprints_e.py` | `eff68e111475b599` | the same |
-| P | `pcb-p-pack-p2` | P4 | P4 | `gen_footprints_idc.py` | `c8a3d456e5d2936b` | the same |
+| C | `pcb-c-display-c8` | C24 | C24 | none | `96c2678f4a3303b8` | the same |
+| D | `pcb-d-aprs-d9` | D37P | D12 | `gen_footprints_b16.py`, `gen_footprints_idc.py` | `ecc07f382c735835` | the same |
+| E1 | `pcb-e1-dock-e7` | E42P | E17 | `gen_footprints_e.py` | `256cc3f96d41dcab` | the same |
+| P | `pcb-p-pack-p2` | P4 | P4 | `gen_footprints_idc.py` | `efe60479293f0004` | the same |
 
 Two things a recipient should know. **The label**: for boards A, D and E1 the committed schematic carries a later
 label than the board table's `phase` field; `full.sh` would use the table's value, and `regen_compare.py` would then
@@ -160,8 +160,8 @@ made by:
 ```
 cd "$HO/.."
 mkdir -p ex
-unzip -q H1-trial.zip -d ex
-cd ex/H1-trial
+unzip -q H1.zip -d ex
+cd ex/H1
 python3 v2/ecad/tools/handover_exports.py exports --out "$HO/../ex-out" --commit "$(sed -n 's/^commit: //p' SOURCE.txt)"
 for b in pcb-a-power-a23 pcb-b-compute-b19 pcb-c-display-c8 pcb-d-aprs-d9 pcb-e1-dock-e7 pcb-p-pack-p2; do for f in v2/release/handover/_generated/$b/NOT_FOR_FAB-*.csv; do cmp "$f" "$HO/../ex-out/$b/$(basename "$f")" && echo "same: $b/$(basename "$f")"; done; done
 ```
@@ -170,18 +170,18 @@ Expected: one line per board ending `: OK`, netlist parity `PARITY_AFTER_NOISE` 
 
 | Board | Paged PDF pages | BOM rows (per reference) | ERC (kicad-cli, all severities) |
 |---|---|---|---|
-| A | 14 | 551 | 1450 warnings |
+| A | 14 | 566 | 1528 warnings |
 | B | 38 | 1015 | 5 errors, 2393 warnings; the 5 errors are the three PWR_FLAG pin-to-pin reports and the two SIM VCC pins that `pcb-b-compute-b19/erc-allow.txt` explains line by line (`erc_gate.py` decides) |
-| C | 5 | 154 | 300 warnings |
-| D | 6 | 202 | 413 warnings |
-| E1 | 4 | 166 | 355 warnings |
+| C | 5 | 167 | 328 warnings |
+| D | 7 | 218 | 445 warnings |
+| E1 | 4 | 170 | 365 warnings |
 | P | 2 | 69 | 123 warnings |
 
 The loop prints twelve `same:` lines: both BOMs of every board re-export byte for byte. A re-exported PDF differs from
 the committed one in its creation date; its page count and page-1 text are in `provenance.json`. **Read the BOMs for what they are**: the generators write
 Reference, Value, Footprint, Description, Datasheet and, where one is chosen, an LCSC order code; they write no
-manufacturer part number field. Of the 2157 per-reference rows of the six boards, 1509 carry no LCSC code, 1334 of
-them resistors, capacitors and inductors named by value and land; `lcsc_fill.py` assigns codes to those at the JLC
+manufacturer part number field. Of the 2205 per-reference rows of the six boards, 1497 carry no LCSC code, 1322 of
+them resistors, capacitors and inductors named by value and land (at `e3aedb25` it was 1509 of 2157); `lcsc_fill.py` assigns codes to those at the JLC
 BOM stage. The part identities that are decided are in `v2/vendor/SOURCES.yaml`.
 
 ## 6. The representative calculation: the stored-energy chain
@@ -216,8 +216,8 @@ board-file fixtures skip where `pcbnew` is not importable). From a fresh extract
 ```
 cd "$HO/.."
 mkdir -p suite
-unzip -q H1-trial.zip -d suite
-cd suite/H1-trial/v2/ecad/tools/tests
+unzip -q H1.zip -d suite
+cd suite/H1/v2/ecad/tools/tests
 python3 run.py > "$HO/../suite.log" 2>&1
 echo "suite exit $?"
 tail -n 1 "$HO/../suite.log"
