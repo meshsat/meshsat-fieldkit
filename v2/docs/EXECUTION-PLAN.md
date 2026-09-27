@@ -195,3 +195,22 @@ Credit at the start: 127.99 USD. A box is destroyed when its last result is fetc
 | Blockers open, bounded | as at 18:24, plus: TRN-001 reads FAIL on A and B on the clamp symbol (0 reversed); the RF-002 transmitter walk is in its review loop and not merged |
 | Running | tools stream (seven writers record the artefact they judge; PWR-001 and SI-001 on the netlist; A's and B's clamps on the one-way symbol with every board regenerated); published contracts rewritten against the circuits (S-07); parts (certification re-take, owed source entries); records filing (every drafts/ record a committed page cites, filed in the tree); the RF-002 walk's review loop |
 | Next verifiable result | the tools stream merged, then one re-take of every schematic-phase reading on the committed netlists in a clean clone on the box, which is the step that can move boards to layout entry |
+
+### Checkpoint, 27 September 2026 18:30 CEST (the handover prompt's section 8 terms)
+
+**Headline** (v2/docs/CURRENT-EVIDENCE.md): 0 boards ready for layout; 0 physically verified. **Layers 1 (product
+definition) and 2 (concept of operations) are COMPLETE**, each on its AI review records (not a qualified review);
+layers 3 to 9 are IN_PROGRESS with their remaining items in `v2/docs/handover/LAYER-STATUS.md`.
+
+| Item | State |
+|---|---|
+| Handover snapshots | H1 (`a8652172`), H1.1 (`84d0a527`, zip-only) and H2 (`174d8466`, built from `b89b50b4`, H2.zip sha256 `20072be7...`). H1 and H2 were each tested by one fresh checker from the ZIP and its stated dependencies: H1 a usable partial handover with 2 blocking and 13 minor defects (H1.1 answered 13 fully and 2 in part); H2 a usable partial handover with no blocking defect and 14 minor ones, layers 1 and 2 reading as complete. H1.1 was not independently checked. |
+| Layers newly COMPLETE, with evidence | layer 2 at `79963b3b`: `v2/docs/reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md` (no blocking finding), CONOPS BASELINED; layer 1 at `6b2a9965`: the second release check's one blocking item fixed in `cecfd0f1` and closed by `v2/docs/reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md`, the brief BASELINED. Layer 3's baseline was reversed by the same targeted check (S-80, EQ-30). |
+| Work completed since 20:45 on 26 September | round 8 on all six boards and wave 3 on A, B, D and E, each regenerated with parity on the KiCad host; the RF-002 walk (UNDECIDED unless a held maker document clears a pin); the re-take driver `tools/retake_schematic_phase.py` and the consolidated re-take (`8ea7867e`, installed `5ca81eea`: layout-entry reasons 101 to 40, CURRENT_CANDIDATE rows 8 to 81); the handover pages, snapshot tool, layout constraint sheets, stackup record, HW-FW contract with 30 interface contracts, case release `v2/release/case-2026-09-27/`, diagrams rebuilt on set 5; the hot stop REQ-077 as a session decision |
+| Blockers, design work | per board in CURRENT-EVIDENCE: RF-002 FAIL on A to D (W3T-F1 desk bound, EQ-25; board B's nine transmitter kills the walk does not see reached), PWR-001 open on C, D, E and P, SI-001 on all six boards with a schematic, BAT-001 on P from a stale table, E5's unbound INT-001; HOT-R1 (EQ-22); the QMX tray (EQ-24); decision 31's reviews on A, D and E; wave 4 is working these |
+| Blockers, physical evidence | EQ-05 to EQ-09 |
+| Blockers, external authorisation | EQ-10 to EQ-14, EQ-23, EQ-26 (qualified reviews, M1's duration, prices, the hot stop's hardware backstop, the pack's margins); costed in `v2/docs/reviews/READY-TO-ACT.md` |
+| Changed requirements or reopened decisions | REQ-077 added (the hot stop, SC-49) with HOT-R1 owed; REQ-072 reads FAIL at desk (a night on pack and solar alone), M-02 the owner's part; CON-010 moved to FAIL (the session's, reversible); SC-21 governs M1's duration (the owner may replace it); FEA-007 (the case fit) holds six boards' layout entry, the mock-up purchase four of them |
+| Lost time | a usage limit stopped every agent from about 07:51 to 11:00; the 09:35 checkpoint was missed and posted to MESHSAT-1357 at 11:20 |
+| Host-hours and spend | one KiCad build host, about 43.5 h in total, about 6.5 USD (credit 127.99 to about 121.46 USD) |
+| Next verifiable result | layer 3 re-baselined after the S-80 wording fix; wave 4 merged with a second re-take; H2's minor usability findings answered; snapshot H3 |
