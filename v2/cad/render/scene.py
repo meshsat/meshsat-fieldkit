@@ -275,7 +275,9 @@ import_board("pcb_a22", "pcb-a-power.glb", 15.0)
 import_board("pcb_d8", "pcb-d-aprs.glb", 22.6, Matrix.Translation((50.0, 0.0, 0.0)))
 for (x, y) in ((5, -35), (95, -35), (5, 35), (95, 35)): cyl("standoff_d_%d_%d" % (x, y), 5.0, 6.0, (x, y, 19.6), M["steel"])
 box("sa868", (35.6, 19.0, 3.2), (35.0, 8.0, 24.2 + 1.6), M["tin"])   # the exciter on its castellated land (D8 local (-15, 8))
-SMA_X = (-52, -38, -24, -10, 4, 18, 32, 60, 74, 88, 102); SMA_JACKS = tuple((x, -56) for x in SMA_X)   # 32.56: eleven J_RF on top at Y -56, the SMP-MAX receptacles under them at Y -66
+# A09, 26 September 2026 (MESHSAT-1357 round 8): LORA at X 100, where board A's J_BM11 and J_RF11 are since 32.58 (gen_pcb_a.py RF_X);
+# this render still had 102. D-07's third 5G site (X 46) joins when board A's generators carry it.
+SMA_X = (-52, -38, -24, -10, 4, 18, 32, 60, 74, 88, 100); SMA_JACKS = tuple((x, -56) for x in SMA_X)   # 32.56: eleven J_RF on top at Y -56, the SMP-MAX receptacles under them at Y -66
 for k, (x, y) in enumerate(SMA_JACKS):
     cyl("sma_jack_%d" % k, 6.5, 9.0, (x, y, 21.1), M["gold"]); cyl("sma_nut_%d" % k, 8.0, 2.0, (x, y, 17.6), M["steel"], verts=6)
 for k, x in enumerate((-64, -52, -40, -28)):     # the four rail leads A22 to B16 (J_5V_S1..3, J_5V_DEV at Y 75)

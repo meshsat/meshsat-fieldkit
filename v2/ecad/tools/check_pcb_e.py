@@ -8,6 +8,7 @@ import boardtable as _bt   # the copper layer count is a DECLARATION in boards/<
                            # gate, and two experiments came back with their only failure being the gate
                            # describing the previous decision (board A, 12 September; board C, today)
 OX, OY = 150.0, 110.0
+STANDOFF_KEEPOUT_R = 4.5   # gen_pcb_e.py STANDOFF_KEEPOUT_D / 2: the rule area around the rod pass-throughs H1 and H2
 def case(v): return (round(v.x / 1e6 - OX, 3), round(OY - v.y / 1e6, 3))
 b = pcbnew.LoadBoard(sys.argv[1]); fails = []; checked = []; _intent_reported = []
 def check(c, m):
@@ -72,12 +73,44 @@ def _a_const(fname, name):
                         except Exception: return None
     return None
 _RF_A = _a_const("gen_pcb_a.py", "RF_X"); _RF_A3 = _a_const("gen_pcb_a3.py", "RF_X"); _RF_Y = _a_const("gen_pcb_a.py", "RF_Y")
-check(isinstance(_RF_A, list) and len(_RF_A) == 11 and _RF_A == _RF_A3 and isinstance(_RF_Y, (int, float)),
+# D-07, 26 September 2026 (MESHSAT-1357 round 8): THE THIRD 5G JACK'S CLAMP IS REQUIRED HERE WHETHER OR NOT BOARD A CARRIES
+# ITS SITE YET. Owner ruling D-07 (26 September 2026) takes a third 5G jack at X +46 on condition that board E's clamp fits
+# there (ARCHITECTURE.md section 9.2), so board E carries the cavity now and board A's writer adds the site to its RF_X.
+# The required set is board A's sites together with D-07's, so the check keeps holding when board A adds 46 (a rule stated
+# on the property, not on today's gap). If D-07 falls back to two jacks, this line and gen_pcb_e.py's RF_SITES lose 46.
+_D07_X = 46.0
+check(isinstance(_RF_A, list) and len(_RF_A) in (11, 12) and _RF_A == _RF_A3 and isinstance(_RF_Y, (int, float))
+      and (len(_RF_A) == 11 or _D07_X in [float(x) for x in _RF_A]),
       "board A's blind-mate sites read from its generators: gen_pcb_a.py RF_X %s, gen_pcb_a3.py RF_X %s, RF_Y %s" % (_RF_A, _RF_A3, _RF_Y))
-for x in (_RF_A if isinstance(_RF_A, list) else []):
-    cy = float(_RF_Y) if isinstance(_RF_Y, (int, float)) else -66.0
-    check(find((float(x), cy - 10.0), 3.2) is not None and find((float(x), cy + 10.0), 3.2) is not None,
-          "float clamp holes at X %.0f, on board A's receptacle (Y %.0f +- 10)" % (x, cy))
+_SITES = sorted(set(float(x) for x in (_RF_A if isinstance(_RF_A, list) else [])) | {_D07_X})
+_CY = float(_RF_Y) if isinstance(_RF_Y, (int, float)) else -66.0
+# A09 / R4E-07 (round 8): ONE CLAMP BAR, NOT A NEST PER SITE. The nests were 16 mm along X at a 12 to 14 mm pitch, so they
+# overlapped, the LORA nest crossed the H2 keep-out, and the clamp holes sat on the cable paths. What the bar needs of the
+# board, checked on the board: an 8.5 mm cavity leaves at least 3.5 mm of material to its neighbour (the pitch is 12 mm
+# or more); a plug seat (the F.Cu keep-out circle) at every site; an M3 hole at RF_Y +- 10 at every mid-pitch point; and
+# the bar's outline, a footprint keep-out on the top face, spanning every cavity plus its 1.5 mm end wall and clear of
+# the standoff keep-out at H2 (X 106.0 on its west side).
+_pitch = [b2 - a2 for a2, b2 in zip(_SITES, _SITES[1:])]
+check(bool(_pitch) and min(_pitch) >= 12.0 - 1e-6,
+      "clamp cavities 8.5 mm leave 3.5 mm or more between neighbours: least pitch %.1f mm over %d sites" % (min(_pitch) if _pitch else 0, len(_SITES)))
+def _zones(sub):
+    return [z for z in b.Zones() if z.GetIsRuleArea() and sub in z.GetZoneName()]
+for x in _SITES:
+    _hit = [z for z in _zones("no copper under the float clamp") if z.IsOnLayer(pcbnew.F_Cu)
+            and abs((z.GetBoundingBox().GetCenter().x / 1e6 - OX) - x) < 0.05 and abs((OY - z.GetBoundingBox().GetCenter().y / 1e6) - _CY) < 0.05]
+    check(bool(_hit), "plug seat at X %.0f: an F.Cu keep-out under the clamp cavity, on board A's receptacle axis (Y %.0f)" % (x, _CY))
+for x0, x1 in zip(_SITES, _SITES[1:]):
+    xm = (x0 + x1) / 2.0
+    check(find((xm, _CY - 10.0), 3.2) is not None and find((xm, _CY + 10.0), 3.2) is not None,
+          "clamp bar M3 holes at mid-pitch X %.1f (between %.0f and %.0f), Y %.0f +- 10" % (xm, x0, x1, _CY))
+_bar = _zones("clamp bar")
+if _bar:
+    _bb = _bar[0].GetBoundingBox(); _bx0, _bx1 = _bb.GetLeft() / 1e6 - OX, _bb.GetRight() / 1e6 - OX
+    _by0, _by1 = OY - _bb.GetBottom() / 1e6, OY - _bb.GetTop() / 1e6
+check(bool(_bar) and _bar[0].GetDoNotAllowFootprints() and _bx0 <= _SITES[0] - 5.75 + 0.05 and _bx1 >= _SITES[-1] + 5.75 - 0.05
+      and _by0 <= _CY - 12.0 + 0.05 and _by1 >= _CY + 12.0 - 0.05 and _bx1 <= 110.5 - STANDOFF_KEEPOUT_R - 0.2,
+      "clamp bar outline (a footprint keep-out on the top face) spans every cavity with its 1.5 mm end walls and stays "
+      "0.2 mm or more clear of the H2 standoff keep-out: %s" % (("X %.2f to %.2f, Y %.2f to %.2f" % (_bx0, _bx1, _by0, _by1)) if _bar else "no clamp bar rule area"))
 # 8 Sep 2026 (MESHSAT-862 Stage C): the intent gates (return path under the pair-class nets, decoupling loops, the rails of the intent file)
 if any(t.GetClass() == "PCB_TRACK" and not t.IsLocked() for t in b.GetTracks()):
     import os as _os3, sys as _sys3; _sys3.path.insert(0, _os3.path.dirname(_os3.path.abspath(__file__))); import intent_checks as _ic
