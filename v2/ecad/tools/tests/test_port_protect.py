@@ -25,15 +25,18 @@ def _net(d, comps, nets):
     return p
 
 
-def _with_ports(letter, ports, why=None):
+def _with_ports(letter, ports, why=None, internal=None):
     """Set a board's declaration for the length of one test. `why` None REMOVES the reason, because since
     16 September an empty list WITH a reason is an answer and an empty list without one is not, and a fixture
-    that leaves the board's own reason in place is testing the other case."""
+    that leaves the board's own reason in place is testing the other case. `internal` None REMOVES the board's
+    own internal_ports for the same reason (28 September 2026): the fixture's connectors are not the board's."""
     p = os.path.join(TOOLS, "boards", "%s.json" % letter)
     original = open(p, encoding="utf-8").read()
     d = json.loads(original); d["external_ports"] = ports
     if why is None: d.pop("_external_ports_why", None)
     else: d["_external_ports_why"] = why
+    if internal is None: d.pop("internal_ports", None)
+    else: d["internal_ports"] = internal
     json.dump(d, open(p, "w", encoding="utf-8"), indent=1, ensure_ascii=False)
     return lambda: open(p, "w", encoding="utf-8").write(original)
 
@@ -777,3 +780,124 @@ def t_a_suppressor_whose_reference_is_not_a_d_is_still_judged():
                    "GND": [("Z1", "1", "K"), ("CR1", "2", "A"), ("R9", "2", "")]})
     rows = {c["ref"]: c for c in port_protect.clamp_rows(p)}
     assert rows["Z1"]["orientation"] == "REVERSED" and rows["CR1"]["orientation"] == "OK" and "R9" not in rows, rows
+
+
+# ---------------------------------------------------------------------------------------------------------
+# THE DECLARATION IS JUDGED TOO (28 September 2026, MESHSAT-1357, the review of decision 31). Board A declared J_DOCK
+# pins 1 and 2 as the shore and vehicle input; session choice SC-55 (EQ-16) moved VIN_RAW to J_VR1 to J_VR4 and left
+# those two pins ground. The tool skips a ground pin, so the entry judged nothing, TRN-001 read PASS, and the conductor
+# the entry was written for stood on four pins no entry named.
+
+def _verdict_of(d, letter="d"):
+    return json.load(open(os.path.join(d, "out", "port_protect_%s.verdict.json" % letter)))
+
+
+def t_a_declared_port_on_a_ground_pin_is_refused_and_the_real_supply_pin_is_reported():
+    """DEFECTIVE, board A's shape: the declared pins are ground since the supply moved, and the supply's own pin,
+    which reaches a controller with nothing between, is in no entry. It read PASS."""
+    restore = _with_ports("d", [{"ref": "J_DOCK", "pins": ["1", "2"],
+                                 "why": "shore and vehicle DC arriving over the dock from the wall receptacle"}])
+    try:
+        d = tempfile.mkdtemp(prefix="port-ground-pin-")
+        p = _net(d, {"J_DOCK": "spring pins to the dock", "J_VR1": "9 A spring pin, VIN_RAW", "U2": "buck-boost controller"},
+                 {"GND": [("J_DOCK", "1"), ("J_DOCK", "2"), ("U2", "9")], "VIN_RAW": [("J_VR1", "1"), ("U2", "2")]})
+        rc, out = _run(p, d)
+        assert rc == 1, "a port declared on two ground pins passed while the supply pin was in no entry:\n%s" % out[-900:]
+        assert "J_DOCK.1 is on GND" in out and "J_DOCK.2 is on GND" in out and "names no conductor" in out, out[-900:]
+        assert "UNCOVERED J_VR1.1 on VIN_RAW" in out, "the supply pin no entry covers was not reported:\n%s" % out[-900:]
+        v = _verdict_of(d)
+        assert v["verdict"] == "FAIL" and v["counts"]["declarations_refused"] == 2 and v["counts"]["uncovered_pins"] == 1, v["counts"]
+    finally:
+        restore()
+
+
+def t_the_same_board_with_its_supply_pin_declared_is_judged_on_that_pin():
+    """The corrected declaration, both ways: with a clamp on the supply it PASSES, and without one the conductor is
+    judged and FAILS as bare, which is what the ground-pin entry had hidden."""
+    ports = [{"ref": "J_VR1", "why": "shore and vehicle DC arriving over the dock from the wall receptacle"}]
+    internal = [{"ref": "J_DOCK", "why": "signal pins between two boards inside the case, through the dock block"}]
+    for clamp, want in ((True, 0), (False, 1)):
+        restore = _with_ports("d", ports, internal=internal)
+        try:
+            d = tempfile.mkdtemp(prefix="port-supply-pin-")
+            comps = {"J_DOCK": "spring pins to the dock", "J_VR1": "9 A spring pin, VIN_RAW", "U2": "buck-boost controller"}
+            nets = {"GND": [("J_DOCK", "1"), ("J_DOCK", "2"), ("U2", "9")], "VIN_RAW": [("J_VR1", "1"), ("U2", "2")],
+                    "SIG": [("J_DOCK", "8"), ("U2", "5")]}
+            if clamp:
+                comps["D2"] = "SMCJ40CA"; nets["VIN_RAW"].append(("D2", "1")); nets["GND"].append(("D2", "2"))
+            p = _net(d, comps, nets)
+            rc, out = _run(p, d)
+            assert rc == want, (clamp, out[-900:])
+            if not clamp: assert "nothing between" in out and "J_VR1.1 on VIN_RAW" in out, out[-900:]
+            else: assert _verdict_of(d)["counts"]["internal_pins"] == 1, _verdict_of(d)["counts"]
+        finally:
+            restore()
+
+
+def t_an_entry_none_of_whose_pins_carries_a_conductor_is_refused():
+    """DEFECTIVE: a return pin declared as a port. Every pin is skipped, so the entry judges nothing."""
+    restore = _with_ports("d", [{"ref": "J_VN1", "why": "the return of the shore and vehicle input over the dock"}])
+    try:
+        d = tempfile.mkdtemp(prefix="port-return-")
+        p = _net(d, {"J_VN1": "9 A spring pin, return", "U1": "load"}, {"GND": [("J_VN1", "1"), ("U1", "2")]})
+        rc, out = _run(p, d)
+        assert rc == 1 and "no pin of this external entry carries a supply or a signal" in out, out[-700:]
+    finally:
+        restore()
+
+
+def t_a_listed_pin_the_connector_does_not_have_is_refused():
+    restore = _with_ports("d", [{"ref": "J_X", "pins": ["1", "7"], "why": "a jack on the face that a person plugs a lead into"}])
+    try:
+        d = tempfile.mkdtemp(prefix="port-nopin-")
+        p = _net(d, {"J_X": "jack", "D9": "PESD5V0S1BA", "U1": "codec"},
+                 {"SIG": [("J_X", "1"), ("D9", "2"), ("U1", "3")], "GND": [("J_X", "2"), ("D9", "1")]})
+        rc, out = _run(p, d)
+        assert rc == 1 and "lists pin 7 and J_X has no such pin" in out, out[-700:]
+    finally:
+        restore()
+
+
+def t_a_connector_pin_no_entry_covers_is_a_question_and_an_internal_entry_answers_it():
+    """The declared port is clamped and the rule used to stop there. A second connector reaches a chip and is in no
+    entry: INCONCLUSIVE, named. With an internal entry and its reason: PASS. With an entry and no reason: FAIL."""
+    ports = [{"ref": "J_X", "why": "a jack on the face that a person plugs a lead into"}]
+    comps = {"J_X": "jack", "D9": "PESD5V0S1BA", "U1": "codec", "J_Y": "lead", "U2": "hub", "JP1": "solder jumper", "TP1": "probe"}
+    nets = {"SIG": [("J_X", "1"), ("D9", "2"), ("U1", "3")], "GND": [("J_X", "2"), ("D9", "1"), ("J_Y", "4")],
+            "USB_P": [("J_Y", "3"), ("U2", "20"), ("TP1", "1")], "BIAS": [("JP1", "1"), ("U1", "5")]}
+    for internal, want, word in ((None, 3, "UNCOVERED J_Y.3 on USB_P"),
+                                 ([{"ref": "J_Y", "why": "the touch lead of the monitor, which stays inside the case"}], 0, "1 connector pin(s) declared internal"),
+                                 ([{"ref": "J_Y", "why": "inside"}], 1, "declared internal with no reason")):
+        restore = _with_ports("d", ports, internal=internal)
+        try:
+            d = tempfile.mkdtemp(prefix="port-cover-")
+            rc, out = _run(_net(d, comps, nets), d)
+            assert rc == want and word in out, (internal, rc, out[-900:])
+            # a solder jumper and a test point are not connectors, and a ground pin is not a conductor
+            assert "UNCOVERED JP1" not in out and "UNCOVERED TP1" not in out and "UNCOVERED J_Y.4" not in out, out[-900:]
+            assert "SKIPPED J_X.2 on GND" in out, "the skipped ground pin of a declared port is not named:\n%s" % out[-900:]
+        finally:
+            restore()
+
+
+def t_a_pin_declared_external_and_internal_is_refused():
+    restore = _with_ports("d", [{"ref": "J_X", "why": "a jack on the face that a person plugs a lead into"}],
+                          internal=[{"ref": "J_X", "why": "the same jack, said to stay inside the case"}])
+    try:
+        d = tempfile.mkdtemp(prefix="port-both-")
+        p = _net(d, {"J_X": "jack", "D9": "PESD5V0S1BA", "U1": "codec"},
+                 {"SIG": [("J_X", "1"), ("D9", "2"), ("U1", "3")], "GND": [("J_X", "2"), ("D9", "1")]})
+        rc, out = _run(p, d)
+        assert rc == 1 and "declared both external and internal" in out, out[-700:]
+    finally:
+        restore()
+
+
+def t_a_connector_is_read_by_its_reference_and_never_by_its_library():
+    """These generators draw several integrated circuits and a choke with Connector_Generic symbols (board E's U3 and
+    L2), so the library cannot say what a connector is. The reference can: J, P, PAD and W; never JP, TP, U or L."""
+    for ref, want in (("J1", True), ("J_DOCK", True), ("P_VR", True), ("PAD_W1", True), ("W_P", True), ("P3", True),
+                      ("JP1", False), ("TP13", False), ("U3", False), ("L2", False), ("PS1", False), ("Q1", False)):
+        assert bool(port_protect.CONNECTOR.match(ref)) == want, ref
+    assert not port_protect.carries_conductor("GND_V") and not port_protect.carries_conductor("unconnected-(J1-Pad3)")
+    assert port_protect.carries_conductor("VIN_RAW") and port_protect.carries_conductor("+3V3_E6")
