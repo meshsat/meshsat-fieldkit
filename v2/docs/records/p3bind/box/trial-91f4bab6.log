@@ -1,0 +1,307 @@
+== HEAD
+91f4bab6 chore(rules): checkpoint, the registration's text brought to the check as it stands and its
+== apply
+apply_rule_and_coverage: gate_sweep.sh                +3 line(s)
+apply_rule_and_coverage: pcb_rules.yaml               +72 line(s)
+apply_rule_and_coverage: pcb_rules_coverage.yaml      +22 line(s)
+apply_rule_and_coverage: retake_schematic_phase.py    +4 line(s)
+apply_rule_and_coverage: rules_status.py              +13 line(s)
+apply_rule_and_coverage: rule set fingerprint 635ff031f210f48c -> bfe3e317f6891b83
+apply_rule_and_coverage: rules_lib.py validate, exit 0: rules_lib: 60 rule(s), 0 error(s), 0 warning(s), fingerprint bfe3e317f6891b83
+apply_rule_and_coverage: applied. Next, the integrator's: the re-take on the box, rules_render.py, LAYER-STATUS 9.8
+exit 0
+== apply, a second time
+apply_rule_and_coverage: REFUSED, nothing written: pcb_rules.yaml already carries ' - id: DOC-003\n': this script has run on it
+exit 1
+== validate
+rules_lib: 60 rule(s), 0 error(s), 0 warning(s), fingerprint bfe3e317f6891b83
+== the re-take's plan
+  DOC-003  BLOCKER      constraints_bound_a                      re-take
+    $ python3 $T/constraints_bound.py --board a   # DOC-003
+  DOC-003  BLOCKER      constraints_bound_b                      re-take
+    $ python3 $T/constraints_bound.py --board b   # DOC-003
+  DOC-003  BLOCKER      constraints_bound_c                      re-take
+    $ python3 $T/constraints_bound.py --board c   # DOC-003
+  DOC-003  BLOCKER      constraints_bound_d                      re-take
+    $ python3 $T/constraints_bound.py --board d   # DOC-003
+  DOC-003  BLOCKER      constraints_bound_e                      re-take
+    $ python3 $T/constraints_bound.py --board e   # DOC-003
+  DOC-003  BLOCKER      constraints_bound_e5                     re-take
+    $ python3 $T/constraints_bound.py --board e5   # DOC-003
+  DOC-003  BLOCKER      constraints_bound_p                      re-take
+    $ python3 $T/constraints_bound.py --board p   # DOC-003
+plan: 80 command(s) over 7 board(s): A 13, B 13, C 10, D 11, E 13, E5 7, P 13; 0 error(s)
+== the re-take in place, every board
+retake_schematic_phase: IN PLACE (each board's phase directory out/); verdicts to <phase>/out
+board A  pcb-a-power-a23  declared phase A32  netlist pcb-a-power-a23/out/pcb-a-power.net
+board B  pcb-b-compute-b19  declared phase B21  netlist pcb-b-compute-b19/out/pcb-b-compute.net
+board C  pcb-c-display-c8  declared phase C24  netlist pcb-c-display-c8/out/pcb-c-display.net
+board D  pcb-d-aprs-d9  declared phase D12  netlist pcb-d-aprs-d9/out/pcb-d-aprs.net
+board E  pcb-e1-dock-e7  declared phase E17  netlist pcb-e1-dock-e7/out/pcb-e1-dock.net
+board E5  pcb-e5-block  declared phase E5  netlist none (no schematic)
+board P  pcb-p-pack-p2  declared phase P4  netlist pcb-p-pack-p2/out/pcb-p-pack.net
+board A   pcb-a-power-a23 15 reading(s) in 19.1s: check_contracts PASS, clock_check INCONCLUSIVE, constraints_bound_a PASS, derate PASS, edge_length INCONCLUSIVE, energy_chain PASS, energy_chain_a PASS, erc_gate PASS, inhibit_chain_a INCONCLUSIVE, intent_rails PASS, interfaces_a PASS, pin_map_lands_a PASS, port_protect_a PASS, power_sequence PASS, safe_lines_a PASS; 16 file(s) copied to routed/
+board B   pcb-b-compute-b19 14 reading(s) in 23.6s: check_contracts PASS, clock_check PASS, constraints_bound_b PASS, derate PASS, edge_length INCONCLUSIVE, energy_chain_b PASS, erc_gate PASS, inhibit_chain_b INCONCLUSIVE, intent_rails PASS, interfaces_b PASS, pin_map_lands_b PASS, port_protect_b PASS, power_sequence PASS, safe_lines_b PASS; 15 file(s) copied to routed/
+board C   pcb-c-display-c8 11 reading(s) in 15.2s: check_contracts PASS, clock_check PASS, constraints_bound_c PASS, derate PASS, edge_length INCONCLUSIVE, erc_gate PASS, inhibit_chain_c PASS, intent_rails PASS, interfaces_c PASS, pin_map_lands_c PASS, port_protect_c PASS; 12 file(s) copied to routed/
+board D   pcb-d-aprs-d9 12 reading(s) in 16.1s: check_contracts PASS, clock_check PASS, constraints_bound_d PASS, derate PASS, edge_length INCONCLUSIVE, erc_gate PASS, inhibit_chain_d INCONCLUSIVE, intent_rails PASS, interfaces_d PASS, pin_map_lands_d PASS, port_protect_d PASS, safe_lines_d PASS; 13 file(s) copied to routed/
+board E   pcb-e1-dock-e7 15 reading(s) in 17.9s: check_contracts PASS, clock_check PASS, constraints_bound_e PASS, derate PASS, edge_length INCONCLUSIVE, energy_chain PASS, energy_chain_e PASS, erc_gate PASS, inhibit_chain_e PASS, intent_rails PASS, interfaces_e PASS, pin_map_lands_e PASS, port_protect_e PASS, power_sequence PASS, safe_lines_e PASS; 16 file(s) copied to routed/
+board E5  pcb-e5-block 8 reading(s) in 8.0s: check_contracts_e5 FAIL, constraints_bound_e5 PASS, derate PASS, energy_chain PASS, energy_chain_e5 PASS, interfaces_e5 PASS, port_protect_e5 PASS, safe_lines_e5 PASS; 8 file(s) copied to routed/
+board P   pcb-p-pack-p2 15 reading(s) in 17.7s: check_contracts PASS, constraints_bound_p PASS, derate PASS, edge_length INCONCLUSIVE, energy_chain PASS, energy_chain_p PASS, erc_gate PASS, inhibit_chain_p PASS, intent_rails PASS, interfaces_p PASS, pack_protection FAIL, pin_map_lands_p PASS, port_protect_p PASS, power_sequence PASS, safe_lines_p PASS; 16 file(s) copied to routed/
+retake_schematic_phase: done in 118.8s
+== render
+rules_render: wrote ../../docs/PCB-RULE-STATUS-P.md (72 lines)
+rules_render: 16 document(s), 0 out of date
+== rule DOC-003 on every board, as rules_status reads it
+a   PASS CURRENT_CANDIDATE BOUND | constraints_bound_a PASS of 330 | constraints_bound_a: netlist 0a2b59087bcc2678 is the current candidate's
+b   PASS CURRENT_CANDIDATE BOUND | constraints_bound_b PASS of 610 | constraints_bound_b: netlist 028997a6c5e8810f is the current candidate's
+c   PASS CURRENT_CANDIDATE BOUND | constraints_bound_c PASS of 98 | constraints_bound_c: netlist 3fddbb3edcd4248a is the current candidate's
+d   PASS CURRENT_CANDIDATE BOUND | constraints_bound_d PASS of 106 | constraints_bound_d: netlist 7a2c0ac2190b141a is the current candidate's
+e   PASS CURRENT_CANDIDATE BOUND | constraints_bound_e PASS of 178 | constraints_bound_e: netlist 56adc9746d61c4e0 is the current candidate's
+e5  PASS CURRENT_CANDIDATE BOUND | constraints_bound_e5 PASS of 67 | constraints_bound_e5: board 686b29a734c55b9a is the current design (no schematic)
+p   PASS CURRENT_CANDIDATE BOUND | constraints_bound_p PASS of 138 | constraints_bound_p: netlist 760ac6f74d62d194 is the current candidate's
+== the pages and files that differ from the commit
+ M v2/docs/CURRENT-EVIDENCE.md
+ M v2/docs/PCB-GAP-REGISTER.md
+ M v2/docs/PCB-GOLDEN-RULES.md
+ M v2/docs/PCB-OPEN-PAIRS.md
+ M v2/docs/PCB-PROTOTYPE-UNKNOWNS.md
+ M v2/docs/PCB-RULE-COVERAGE.md
+ M v2/docs/PCB-RULE-STATUS-A.md
+ M v2/docs/PCB-RULE-STATUS-B.md
+ M v2/docs/PCB-RULE-STATUS-C.md
+ M v2/docs/PCB-RULE-STATUS-D.md
+ M v2/docs/PCB-RULE-STATUS-E.md
+ M v2/docs/PCB-RULE-STATUS-E5.md
+ M v2/docs/PCB-RULE-STATUS-P.md
+ M v2/docs/REQUIREMENTS-TRACE.md
+ M v2/ecad/pcb-a-power-a23/routed/check_contracts.verdict.json
+ M v2/ecad/pcb-a-power-a23/routed/clock_check.verdict.json
+ M v2/ecad/pcb-a-power-a23/routed/derate.verdict.json
+ M v2/ecad/pcb-a-power-a23/routed/edge_length.table.json
+ M v2/ecad/pcb-a-power-a23/routed/edge_length.verdict.json
+ M v2/ecad/pcb-a-power-a23/routed/energy_chain.verdict.json
+ M v2/ecad/pcb-a-power-a23/routed/energy_chain_a.verdict.json
+ M v2/ecad/pcb-a-power-a23/routed/erc_gate.verdict.json
+ M v2/ecad/pcb-a-power-a23/routed/inhibit_chain_a.verdict.json
+ M v2/ecad/pcb-a-power-a23/routed/intent_rails.verdict.json
+ M v2/ecad/pcb-a-power-a23/routed/interfaces_a.verdict.json
+ M v2/ecad/pcb-a-power-a23/routed/pin_map_lands_a.verdict.json
+ M v2/ecad/pcb-a-power-a23/routed/port_protect_a.verdict.json
+ M v2/ecad/pcb-a-power-a23/routed/power_sequence.verdict.json
+ M v2/ecad/pcb-a-power-a23/routed/safe_lines_a.verdict.json
+ M v2/ecad/pcb-b-compute-b19/routed/check_contracts.verdict.json
+ M v2/ecad/pcb-b-compute-b19/routed/clock_check.verdict.json
+ M v2/ecad/pcb-b-compute-b19/routed/derate.verdict.json
+ M v2/ecad/pcb-b-compute-b19/routed/edge_length.table.json
+ M v2/ecad/pcb-b-compute-b19/routed/edge_length.verdict.json
+ M v2/ecad/pcb-b-compute-b19/routed/energy_chain_b.verdict.json
+ M v2/ecad/pcb-b-compute-b19/routed/erc_gate.verdict.json
+ M v2/ecad/pcb-b-compute-b19/routed/inhibit_chain_b.verdict.json
+ M v2/ecad/pcb-b-compute-b19/routed/intent_rails.verdict.json
+ M v2/ecad/pcb-b-compute-b19/routed/interfaces_b.verdict.json
+ M v2/ecad/pcb-b-compute-b19/routed/pin_map_lands_b.verdict.json
+ M v2/ecad/pcb-b-compute-b19/routed/port_protect_b.verdict.json
+ M v2/ecad/pcb-b-compute-b19/routed/power_sequence.verdict.json
+ M v2/ecad/pcb-b-compute-b19/routed/safe_lines_b.verdict.json
+ M v2/ecad/pcb-c-display-c8/routed/check_contracts.verdict.json
+ M v2/ecad/pcb-c-display-c8/routed/clock_check.verdict.json
+ M v2/ecad/pcb-c-display-c8/routed/derate.verdict.json
+ M v2/ecad/pcb-c-display-c8/routed/edge_length.table.json
+ M v2/ecad/pcb-c-display-c8/routed/edge_length.verdict.json
+ M v2/ecad/pcb-c-display-c8/routed/erc_gate.verdict.json
+ M v2/ecad/pcb-c-display-c8/routed/inhibit_chain_c.verdict.json
+ M v2/ecad/pcb-c-display-c8/routed/intent_rails.verdict.json
+ M v2/ecad/pcb-c-display-c8/routed/interfaces_c.verdict.json
+ M v2/ecad/pcb-c-display-c8/routed/pin_map_lands_c.verdict.json
+ M v2/ecad/pcb-c-display-c8/routed/port_protect_c.verdict.json
+ M v2/ecad/pcb-d-aprs-d9/routed/check_contracts.verdict.json
+ M v2/ecad/pcb-d-aprs-d9/routed/clock_check.verdict.json
+ M v2/ecad/pcb-d-aprs-d9/routed/derate.verdict.json
+ M v2/ecad/pcb-d-aprs-d9/routed/edge_length.table.json
+ M v2/ecad/pcb-d-aprs-d9/routed/edge_length.verdict.json
+ M v2/ecad/pcb-d-aprs-d9/routed/erc_gate.verdict.json
+ M v2/ecad/pcb-d-aprs-d9/routed/inhibit_chain_d.verdict.json
+ M v2/ecad/pcb-d-aprs-d9/routed/intent_rails.verdict.json
+ M v2/ecad/pcb-d-aprs-d9/routed/interfaces_d.verdict.json
+ M v2/ecad/pcb-d-aprs-d9/routed/pin_map_lands_d.verdict.json
+ M v2/ecad/pcb-d-aprs-d9/routed/port_protect_d.verdict.json
+ M v2/ecad/pcb-d-aprs-d9/routed/safe_lines_d.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/check_contracts.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/clock_check.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/derate.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/edge_length.table.json
+ M v2/ecad/pcb-e1-dock-e7/routed/edge_length.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/energy_chain.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/energy_chain_e.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/erc_gate.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/inhibit_chain_e.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/intent_rails.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/interfaces_e.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/pin_map_lands_e.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/port_protect_e.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/power_sequence.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/safe_lines_e.verdict.json
+ M v2/ecad/pcb-e5-block/routed/check_contracts_e5.verdict.json
+ M v2/ecad/pcb-e5-block/routed/derate.verdict.json
+ M v2/ecad/pcb-e5-block/routed/energy_chain.verdict.json
+ M v2/ecad/pcb-e5-block/routed/energy_chain_e5.verdict.json
+ M v2/ecad/pcb-e5-block/routed/interfaces_e5.verdict.json
+ M v2/ecad/pcb-e5-block/routed/port_protect_e5.verdict.json
+ M v2/ecad/pcb-e5-block/routed/safe_lines_e5.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/check_contracts.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/derate.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/edge_length.table.json
+ M v2/ecad/pcb-p-pack-p2/routed/edge_length.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/energy_chain.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/energy_chain_p.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/erc_gate.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/inhibit_chain_p.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/intent_rails.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/interfaces_p.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/pack_protection.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/pin_map_lands_p.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/port_protect_p.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/power_sequence.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/safe_lines_p.verdict.json
+ M v2/ecad/tools/gate_sweep.sh
+ M v2/ecad/tools/pcb_rules.yaml
+ M v2/ecad/tools/pcb_rules_coverage.yaml
+ M v2/ecad/tools/retake_schematic_phase.py
+ M v2/ecad/tools/rules_status.py
+?? v2/ecad/pcb-a-power-a23/routed/constraints_bound_a.verdict.json
+?? v2/ecad/pcb-b-compute-b19/routed/constraints_bound_b.verdict.json
+?? v2/ecad/pcb-c-display-c8/routed/constraints_bound_c.verdict.json
+?? v2/ecad/pcb-d-aprs-d9/routed/constraints_bound_d.verdict.json
+?? v2/ecad/pcb-e1-dock-e7/routed/constraints_bound_e.verdict.json
+?? v2/ecad/pcb-e5-block/routed/constraints_bound_e5.verdict.json
+?? v2/ecad/pcb-p-pack-p2/routed/constraints_bound_p.verdict.json
+== the full suite in this state
+EXIT 1
+tests: test_barrel_sites.t_room_is_measured_to_the_pads_edge_and_says_it_is_a_model PASS21:36:50: Debug: Adding duplicate image handler for 'PNG file'
+tests: test_constraints_bound.t_a_table_of_widths_made_by_hand_in_section_2_fails PASS<unknown>:51: SyntaxWarning: invalid escape sequence '\d'
+tests: test_decision_register.t_the_page_is_generated_and_not_hand_maintained FAIL decisions_render: ../docs/OWNER-DECISIONS-OPEN.md differs from what the register renders
+tests: test_driver_hygiene.t_a_block_that_stops_a_chain_carries_its_own_cause PASSrouteflow: signal 15, the running stage was stopped with it
+tests: test_finish_order.t_routeflow_validate_agrees_with_these_rules SKIP the profiles pin /root/gitlab/products/meshsat/meshsat-fieldkit, which exists here and is not this tree, so validate's one-tree property is about the host rather than the profile
+tests: test_handoff_phase.t_a_newer_deliverable_with_stale_notes_is_refused PASS<unknown>:51: SyntaxWarning: invalid escape sequence '\d'
+tests: test_pairsearch.t_the_three_implementations_agree        SKIP no numba on this host: the heapq original and the array kernel agree, the compiled one was not run
+tests: test_per_board_contract_verdict.t_without_pcbnew_the_tool_writes_its_own_verdict_declaring_the_absence SKIP pcbnew is importable here: the absence cannot be shown
+tests: test_port_protect.t_a_board_that_declares_no_port_still_fails_a_reversed_clamp PASS/root/p3bind/apply-91f4bab6/v2/ecad/tools/power_path.py:51: SyntaxWarning: invalid escape sequence '\d'
+tests: test_rules_status.t_a_later_phase_rule_is_not_applicable_to_an_earlier_phase_report PASS21:45:44: Debug: Adding duplicate image handler for 'PNG file'
+tests: test_tx_inhibit.t_an_expander_behind_a_pass_fet_on_an_intermediate_net_fails PASS<unknown>:51: SyntaxWarning: invalid escape sequence '\d'
+tests: 2049 passed, 1 failed, 3 skipped; failed: test_decision_register.t_the_page_is_generated_and_not_hand_maintained
+== status after the suite
+ M v2/docs/CURRENT-EVIDENCE.md
+ M v2/docs/PCB-GAP-REGISTER.md
+ M v2/docs/PCB-GOLDEN-RULES.md
+ M v2/docs/PCB-OPEN-PAIRS.md
+ M v2/docs/PCB-PROTOTYPE-UNKNOWNS.md
+ M v2/docs/PCB-RULE-COVERAGE.md
+ M v2/docs/PCB-RULE-STATUS-A.md
+ M v2/docs/PCB-RULE-STATUS-B.md
+ M v2/docs/PCB-RULE-STATUS-C.md
+ M v2/docs/PCB-RULE-STATUS-D.md
+ M v2/docs/PCB-RULE-STATUS-E.md
+ M v2/docs/PCB-RULE-STATUS-E5.md
+ M v2/docs/PCB-RULE-STATUS-P.md
+ M v2/docs/REQUIREMENTS-TRACE.md
+ M v2/ecad/pcb-a-power-a23/routed/check_contracts.verdict.json
+ M v2/ecad/pcb-a-power-a23/routed/clock_check.verdict.json
+ M v2/ecad/pcb-a-power-a23/routed/derate.verdict.json
+ M v2/ecad/pcb-a-power-a23/routed/edge_length.table.json
+ M v2/ecad/pcb-a-power-a23/routed/edge_length.verdict.json
+ M v2/ecad/pcb-a-power-a23/routed/energy_chain.verdict.json
+ M v2/ecad/pcb-a-power-a23/routed/energy_chain_a.verdict.json
+ M v2/ecad/pcb-a-power-a23/routed/erc_gate.verdict.json
+ M v2/ecad/pcb-a-power-a23/routed/inhibit_chain_a.verdict.json
+ M v2/ecad/pcb-a-power-a23/routed/intent_rails.verdict.json
+ M v2/ecad/pcb-a-power-a23/routed/interfaces_a.verdict.json
+ M v2/ecad/pcb-a-power-a23/routed/pin_map_lands_a.verdict.json
+ M v2/ecad/pcb-a-power-a23/routed/port_protect_a.verdict.json
+ M v2/ecad/pcb-a-power-a23/routed/power_sequence.verdict.json
+ M v2/ecad/pcb-a-power-a23/routed/safe_lines_a.verdict.json
+ M v2/ecad/pcb-b-compute-b19/routed/check_contracts.verdict.json
+ M v2/ecad/pcb-b-compute-b19/routed/clock_check.verdict.json
+ M v2/ecad/pcb-b-compute-b19/routed/derate.verdict.json
+ M v2/ecad/pcb-b-compute-b19/routed/edge_length.table.json
+ M v2/ecad/pcb-b-compute-b19/routed/edge_length.verdict.json
+ M v2/ecad/pcb-b-compute-b19/routed/energy_chain_b.verdict.json
+ M v2/ecad/pcb-b-compute-b19/routed/erc_gate.verdict.json
+ M v2/ecad/pcb-b-compute-b19/routed/inhibit_chain_b.verdict.json
+ M v2/ecad/pcb-b-compute-b19/routed/intent_rails.verdict.json
+ M v2/ecad/pcb-b-compute-b19/routed/interfaces_b.verdict.json
+ M v2/ecad/pcb-b-compute-b19/routed/pin_map_lands_b.verdict.json
+ M v2/ecad/pcb-b-compute-b19/routed/port_protect_b.verdict.json
+ M v2/ecad/pcb-b-compute-b19/routed/power_sequence.verdict.json
+ M v2/ecad/pcb-b-compute-b19/routed/safe_lines_b.verdict.json
+ M v2/ecad/pcb-c-display-c8/routed/check_contracts.verdict.json
+ M v2/ecad/pcb-c-display-c8/routed/clock_check.verdict.json
+ M v2/ecad/pcb-c-display-c8/routed/derate.verdict.json
+ M v2/ecad/pcb-c-display-c8/routed/edge_length.table.json
+ M v2/ecad/pcb-c-display-c8/routed/edge_length.verdict.json
+ M v2/ecad/pcb-c-display-c8/routed/erc_gate.verdict.json
+ M v2/ecad/pcb-c-display-c8/routed/inhibit_chain_c.verdict.json
+ M v2/ecad/pcb-c-display-c8/routed/intent_rails.verdict.json
+ M v2/ecad/pcb-c-display-c8/routed/interfaces_c.verdict.json
+ M v2/ecad/pcb-c-display-c8/routed/pin_map_lands_c.verdict.json
+ M v2/ecad/pcb-c-display-c8/routed/port_protect_c.verdict.json
+ M v2/ecad/pcb-d-aprs-d9/routed/check_contracts.verdict.json
+ M v2/ecad/pcb-d-aprs-d9/routed/clock_check.verdict.json
+ M v2/ecad/pcb-d-aprs-d9/routed/derate.verdict.json
+ M v2/ecad/pcb-d-aprs-d9/routed/edge_length.table.json
+ M v2/ecad/pcb-d-aprs-d9/routed/edge_length.verdict.json
+ M v2/ecad/pcb-d-aprs-d9/routed/erc_gate.verdict.json
+ M v2/ecad/pcb-d-aprs-d9/routed/inhibit_chain_d.verdict.json
+ M v2/ecad/pcb-d-aprs-d9/routed/intent_rails.verdict.json
+ M v2/ecad/pcb-d-aprs-d9/routed/interfaces_d.verdict.json
+ M v2/ecad/pcb-d-aprs-d9/routed/pin_map_lands_d.verdict.json
+ M v2/ecad/pcb-d-aprs-d9/routed/port_protect_d.verdict.json
+ M v2/ecad/pcb-d-aprs-d9/routed/safe_lines_d.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/check_contracts.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/clock_check.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/derate.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/edge_length.table.json
+ M v2/ecad/pcb-e1-dock-e7/routed/edge_length.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/energy_chain.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/energy_chain_e.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/erc_gate.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/inhibit_chain_e.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/intent_rails.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/interfaces_e.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/pin_map_lands_e.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/port_protect_e.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/power_sequence.verdict.json
+ M v2/ecad/pcb-e1-dock-e7/routed/safe_lines_e.verdict.json
+ M v2/ecad/pcb-e5-block/routed/check_contracts_e5.verdict.json
+ M v2/ecad/pcb-e5-block/routed/derate.verdict.json
+ M v2/ecad/pcb-e5-block/routed/energy_chain.verdict.json
+ M v2/ecad/pcb-e5-block/routed/energy_chain_e5.verdict.json
+ M v2/ecad/pcb-e5-block/routed/interfaces_e5.verdict.json
+ M v2/ecad/pcb-e5-block/routed/port_protect_e5.verdict.json
+ M v2/ecad/pcb-e5-block/routed/safe_lines_e5.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/check_contracts.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/derate.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/edge_length.table.json
+ M v2/ecad/pcb-p-pack-p2/routed/edge_length.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/energy_chain.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/energy_chain_p.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/erc_gate.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/inhibit_chain_p.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/intent_rails.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/interfaces_p.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/pack_protection.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/pin_map_lands_p.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/port_protect_p.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/power_sequence.verdict.json
+ M v2/ecad/pcb-p-pack-p2/routed/safe_lines_p.verdict.json
+ M v2/ecad/tools/gate_sweep.sh
+ M v2/ecad/tools/pcb_rules.yaml
+ M v2/ecad/tools/pcb_rules_coverage.yaml
+ M v2/ecad/tools/retake_schematic_phase.py
+ M v2/ecad/tools/rules_status.py
+?? v2/ecad/pcb-a-power-a23/routed/constraints_bound_a.verdict.json
+?? v2/ecad/pcb-b-compute-b19/routed/constraints_bound_b.verdict.json
+?? v2/ecad/pcb-c-display-c8/routed/constraints_bound_c.verdict.json
+?? v2/ecad/pcb-d-aprs-d9/routed/constraints_bound_d.verdict.json
+?? v2/ecad/pcb-e1-dock-e7/routed/constraints_bound_e.verdict.json
+?? v2/ecad/pcb-e5-block/routed/constraints_bound_e5.verdict.json
+?? v2/ecad/pcb-p-pack-p2/routed/constraints_bound_p.verdict.json

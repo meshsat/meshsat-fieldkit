@@ -30,7 +30,7 @@ or re-bound the sheets. The task: a check that fails when a sheet and its inputs
 | `rail_commits.py`, `rail-commits.md` | for every rail whose declared currents differ from `e3aedb25`'s, the first commit whose intent file carries today's pair, with the rail's own note. It is where a note's commit comes from |
 | `rebind_sheets.py` | the re-binding itself: the sheets as they stood at `760d7f41`, the tool's tables, and the notes, each quotation asserted to be a substring of the intent file's own note for its rail. It refuses a sheet edited since; running it again writes nothing |
 | `apply_rule_and_coverage.py` | rule DOC-003 with its full text, its coverage entry, `rules_status.CONFIG_INPUTS`, the re-take's `WRITERS` and the sweep. Applied and tried in a scratch clone on the box; never in this tree |
-| `box/` | the box's logs of the full suite and of the registration's trial |
+| `box/` | the rented box's logs: the full suite's summary at each commit it ran on (`suite-<commit>.summary.txt`: every line that is not a PASS, the count, the exit code, git status before and after), the registration's trial (`trial.sh`, `trial-91f4bab6.log`, `trial-91f4bab6-decisions-render.txt`) and the first trial at `8099222e` (`apply-tests.log`, `apply2.log`) |
 
 ## What set 6 changed, measured
 
@@ -48,6 +48,40 @@ From `rail-moves.md` (the same calculation on each candidate's inputs, so a diff
 
 So the sheets were stale in their HASHES on six boards and in their NUMBERS on two. Nothing told the two kinds apart
 until the calculation was run, which is the argument for the check failing on a hash.
+
+## What was run on the box, and what it read
+
+Every run is of `tests/run.py` whole, by `_bin/box_suite.sh`, in a clone of its own under `/root/p3bind/` with the
+evidence of `/root/r8int6/evidence-head.tar`. The set 6 baseline the branch starts from, `760d7f41`, reads 2015
+passed, 0 failed, 3 skipped there (`/root/r8int6/suite-box.log`).
+
+| Commit | Result | Skipped | git status after the run |
+|---|---|---|---|
+| `0db41248` | 2047 passed, 0 failed, 3 skipped, EXIT 0 | the three below | ` M v2/docs/CURRENT-EVIDENCE.md` |
+| `91f4bab6` | 2050 passed, 0 failed, 3 skipped, EXIT 0 | the three below | ` M v2/docs/CURRENT-EVIDENCE.md` |
+| `74cc831c`, the last commit that changes a tool, a test, a sheet or the calculation | **2051 passed, 0 failed, 3 skipped, EXIT 0** | the three below | ` M v2/docs/CURRENT-EVIDENCE.md` |
+
+The branch's last commit adds this folder's record of those runs and nothing else (`git diff --stat 74cc831c..` names
+files of `v2/docs/records/p3bind/` alone), so its own suite run cannot be filed in it; its result is in the stream's
+final message to the integrator and its log is on the box under `/root/p3bind/`.
+
+- **The three skips, the baseline's own:** `test_finish_order.t_routeflow_validate_agrees_with_these_rules` (the
+  profiles pin `/root/gitlab/...`, which exists on the box and is not the tree under test),
+  `test_pairsearch.t_the_three_implementations_agree` (no numba on the box's interpreter) and
+  `test_per_board_contract_verdict.t_without_pcbnew_the_tool_writes_its_own_verdict_declaring_the_absence` (pcbnew IS
+  importable there, so its absence cannot be shown). None is this stream's.
+- **CURRENT-EVIDENCE.md is modified by the run, and by the baseline's run in the same line**: "127 more changed only
+  their first failing cause" becomes "120 more" (`git diff` in `/root/r8int6/suite` at `760d7f41` is the same one
+  line). A test renders the page in the clone; it is not this stream's change and this stream did not touch the page.
+
+**The registration's trial** (`box/trial.sh` at `91f4bab6`, a throwaway clone): `apply_rule_and_coverage.py` applied,
+exit 0, and refused a second run, exit 1; `rules_lib.py validate` 60 rules, 0 errors; the re-take's plan 80 commands
+over seven boards, 0 errors, with `constraints_bound.py --board <letter>` on each; the re-take in place wrote
+`constraints_bound_<letter>` PASS on A, B, C, D, E, E5 and P; after `rules_render.py` (16 documents, 0 out of date)
+**DOC-003 read PASS, CURRENT_CANDIDATE, BOUND on all seven boards**; the full suite in that state read 2049 passed,
+1 failed, 3 skipped, the one failure being the decisions page's count of pairs, which `decisions_render.py` renders
+(338 to 345), after which its test file read 5 passed, 0 failed. The suite was not run a second time whole after
+that render.
 
 ## Decisions taken by this stream
 
@@ -79,4 +113,11 @@ no question asked): `authority: SESSION`, `ruled_by: p3bind under the owner's st
 | O5 | **Board C's +3V3 is declared at a 0.72 A peak on an LDO rated 500 mA** (U5, TLV75533). The intent file says so itself and gives its reason; the row's note quotes it | board C's owner: "U5's average through a refresh is an open item read at bring-up" (the intent file's words). Named here because the sheet is where a layout engineer meets it |
 | O6 | **The handover pages still say the sheets are bound to the H2 line**: `v2/docs/handover/LAYER-STATUS.md` row 9.8 and the layer 9 integrator line, `START-HERE.md` known gap 8, `CONTINUATION-BRIEF.md` line 62, `H2-RESPONSE.md` M4. `v2/docs/STACKUP-DECISIONS.md` line 322 calls the calculation "stdlib plus" the two modules; board E5's table needs PyYAML now | the integrator and the handover pages' worker: "bound to the set 6 candidate (`760d7f41`) with a check, `constraints_bound.py`; section 2 re-read, the other sections at `e3aedb25` with the H2 line's marks" |
 | O7 | **The copies of the sheets under `v2/release/handover/H1/` are H1's** and are not this tree's sheets | none: a snapshot is what it was. The check reads `v2/docs/layout-constraints/` alone |
-| O8 | **The registration is not applied.** Until it is, `constraints_bound.py` decides no rule and no page reads it; the test of the real tree in the suite is what holds the sheets meanwhile | the integrator runs `apply_rule_and_coverage.py`, the re-take on the box and `rules_render.py` (the script's header lists the steps and what the pages will show) |
+| O9 | **`v2/ecad/tools/power_path.py` carries an invalid escape sequence**: `parse_netlist`'s docstring quotes a pattern, `(code \d+)`, in a string that is not raw (the compiler reports the statement's line, 51; the text stands on line 55). Python 3.12 on the box prints a SyntaxWarning each time the file is compiled or parsed, in the suite's log beside whichever test was running; Python 3.11 on the runner says DeprecationWarning. Found reading the suite's log; not this stream's file and not changed here | the tools' owner: make the docstring raw. A warning today, an error in a later Python |
+| O8 | **The registration is not applied.** Until it is, `constraints_bound.py` decides no rule and no page reads it; the test of the real tree in the suite is what holds the sheets meanwhile | the integrator runs `apply_rule_and_coverage.py`, the re-take on the box, `rules_render.py` and `decisions_render.py` (the script's header lists the steps, in the order the trial ran them, and what the pages will show) |
+
+## For the index of `v2/docs/records/README.md` (the integrator's file)
+
+| folder | whose records |
+|---|---|
+| `p3bind/` | the layout constraint sheets bound to their inputs (27 September 2026, branch `fnd/p3bind` from `760d7f41`): the comparison of the power tables over three candidates and the commit of every moved rail, the script that re-bound the seven sheets from their text at `760d7f41`, the registration of `constraints_bound.py` as rule DOC-003 for the integrator to run, and the box's logs of the suite and of the registration's trial |
