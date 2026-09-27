@@ -135,7 +135,7 @@ registry: "MeshSat field kit V2 requirements"
 issue: MESHSAT-1357
 written: "2026-09-26"
 baseline_state: READY_FOR_REVIEW_B
-sources_read_at: eadbe571
+sources_read_at: 95e078a1
 needs_document: "v2/docs/CONOPS.md"
 needs_document_sha256: eb0eda7cacfe71566135b12d1ca0d5bab5e1b0a63517b0e84af970d62853a20c
 companion_documents: []
@@ -245,7 +245,7 @@ owner_rulings:
       TEST-PLAN's +55 C operating, +71 C storage and -33 C storage are QUALIFICATION MARGINS over the -20 to +40 C use
       and -20 to +45 C storage envelope, with two pass lines: operate to specification inside the envelope; survive
       and recover at the margin.
-    source: ["owner ruling D-02a", "v2/docs/TEST-PLAN.md:18-19", "v2/docs/OPERATING-ENVELOPE.md section 8"]
+    source: ["owner ruling D-02a", "v2/docs/TEST-PLAN.md:26-27", "v2/docs/OPERATING-ENVELOPE.md section 8"]
   - id: D-02b
     authority: OWNER
     ruled_on: "2026-09-25"
@@ -266,7 +266,7 @@ owner_rulings:
     ruling: >-
       Severities are TEST-PLAN E1 (26 drops, 1.22 m) and E2 (composite wheeled vehicle, 1 h per axis); altitude 0 to
       3000 m in use and 0 to 4500 m in transport; service life TBD for prototype 1.
-    source: ["owner ruling D-02c", "v2/docs/TEST-PLAN.md:16-17", "v2/docs/OPERATING-ENVELOPE.md section 4"]
+    source: ["owner ruling D-02c", "v2/docs/TEST-PLAN.md:24-25", "v2/docs/OPERATING-ENVELOPE.md section 4"]
   - id: D-02d
     authority: OWNER
     ruled_on: "2026-09-26"
@@ -444,7 +444,7 @@ owner_rulings:
       over-voltage-only part; otherwise cell under-voltage stays in the gauge's firmware with a data-flash
       verification at commissioning, an accepted residual. The session floor either way: the over-voltage secondary
       protector, a chemical fuse, the BQ4050's FUSE output and its PTC input.
-    source: ["owner ruling D-15", "v2/docs/CONOPS.md section 7", "v2/ecad/tools/pcb_decisions.yaml:863-915 (decision 40)"]
+    source: ["owner ruling D-15", "v2/docs/CONOPS.md section 7", "v2/ecad/tools/pcb_decisions.yaml:896-957 (decision 40)"]
   - id: D-16
     authority: OWNER
     ruled_on: "2026-09-26"
@@ -493,7 +493,7 @@ owner_rulings:
     ruling: >-
       Rebuild v2/release/revA/order/ from the deliverable folders and quarantine it in the same commit, every
       ORDER-NOTES.txt carrying its board's readiness block; nothing is ordered.
-    source: ["v2/ecad/tools/pcb_decisions.yaml:916-958", "v2/docs/MESHSAT-709-geometry-appendix.md:18725"]
+    source: ["v2/ecad/tools/pcb_decisions.yaml:958-1000", "v2/docs/MESHSAT-709-geometry-appendix.md:18725"]
   - id: decision-43
     authority: OWNER
     ruled_on: "2026-09-25"
@@ -504,9 +504,9 @@ owner_rulings:
       whole-board run is EXPERIMENTAL (standing condition 7): never adopted as a phase, promoted or counted as a
       layout candidate. The eight-layer price goes to the owner before any order.
     source:
-      - "v2/ecad/tools/pcb_decisions.yaml:1077-1129"
+      - "v2/ecad/tools/pcb_decisions.yaml:1119-1171"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:18725"
-      - "v2/docs/EXECUTION-PLAN.md:71"
+      - "v2/docs/EXECUTION-PLAN.md:116"
   - id: public-docs
     authority: OWNER
     ruled_on: "2026-09-25"
@@ -584,7 +584,7 @@ session_choices:
       temperature levels of E3 and E4 only. E5's 60 C top is above the +40 C in-use limit, so reading it as an
       acceptance test would claim a wider envelope than the part table supports.
     closes: [D-02a-R1]
-    source: ["owner ruling D-02a", "v2/docs/TEST-PLAN.md:20"]
+    source: ["owner ruling D-02a", "v2/docs/TEST-PLAN.md:28"]
   - id: SC-04
     authority: SESSION
     under: standing-rule
@@ -2201,7 +2201,7 @@ records:
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: BLOCKER
-    source: ["v2/docs/V2-SPEC.md:37-51", "v2/docs/TEST-PLAN.md:46", "owner ruling D-01"]
+    source: ["v2/docs/V2-SPEC.md:37-51", "v2/docs/TEST-PLAN.md:54", "owner ruling D-01"]
     source_check: VERIFIED
     history: >-
       Read FAIL at d468613e: board D's +5V_D8 clamp D1 put its cathode on GND and would have shorted the APRS exciter's
@@ -2243,7 +2243,7 @@ records:
     release_effect: MUST_JUSTIFY
     source:
       - "v2/docs/V2-SPEC.md:37-51"
-      - "v2/docs/TEST-PLAN.md:46"
+      - "v2/docs/TEST-PLAN.md:54"
       - "owner ruling D-01"
       - "v2/docs/CONOPS.md section 2a"
     source_check: VERIFIED
@@ -2366,7 +2366,7 @@ records:
     status: DEFINED
     evidence_result: NOT_YET_TESTED
     release_effect: BLOCKER
-    source: ["v2/docs/TEST-PLAN.md:46", "v2/docs/PRODUCT-BRIEF.md (problem statement)", "session choice SC-25"]
+    source: ["v2/docs/TEST-PLAN.md:54", "v2/docs/PRODUCT-BRIEF.md (problem statement)", "session choice SC-25"]
     source_check: VERIFIED
 
   - id: REQ-076
@@ -2424,7 +2424,7 @@ records:
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: BLOCKER
-    source: ["v2/docs/ARCH-PCB-B-IOHA.md:131", "v2/ecad/tools/check_pcb_b.py:424-431"]
+    source: ["v2/docs/ARCH-PCB-B-IOHA.md:140", "v2/ecad/tools/check_pcb_b.py:560-567"]
     source_check: VERIFIED
     notes: "Judged by the board B gate, not by a registry rule; the registry has no rule for bearer distribution."
 
@@ -2501,8 +2501,8 @@ records:
     release_effect: BLOCKER
     source:
       - "v2/docs/ARCH-PCB-B-IOHA.md:17"
-      - "v2/docs/ARCH-PCB-B-IOHA.md:127"
-      - "v2/docs/ARCH-PCB-B-IOHA.md:250-261"
+      - "v2/docs/ARCH-PCB-B-IOHA.md:136"
+      - "v2/docs/ARCH-PCB-B-IOHA.md:266-277"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2829"
       - "v2/docs/feasibility/FAILOVER-FABRIC.md section 7"
       - "session choice SC-25"
@@ -2662,7 +2662,7 @@ records:
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: BLOCKER
-    source: ["v2/docs/ARCH-PCB-B-IOHA.md:81", "v2/docs/ARCH-PCB-B-IOHA.md:231", "v2/docs/ARCH-PCB-B-IOHA.md:258"]
+    source: ["v2/docs/ARCH-PCB-B-IOHA.md:81", "v2/docs/ARCH-PCB-B-IOHA.md:247", "v2/docs/ARCH-PCB-B-IOHA.md:274"]
     source_check: VERIFIED
 
   - id: CON-003
@@ -2746,8 +2746,8 @@ records:
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
     release_effect: BLOCKER
     source:
-      - "v2/docs/ARCH-PCB-B-IOHA.md:87-89"
-      - "v2/docs/ARCH-PCB-B-IOHA.md:178-189"
+      - "v2/docs/ARCH-PCB-B-IOHA.md:87-93"
+      - "v2/docs/ARCH-PCB-B-IOHA.md:185-205"
       - "v2/docs/ARCH-PCB-B-IOHA.md section 13 (A10, A12)"
       - "v2/docs/feasibility/FAILOVER-FABRIC.md section 9"
     source_check: VERIFIED
@@ -3078,7 +3078,7 @@ records:
     evidence_bound_to:
       - "v2/docs/feasibility/DECOUPLING.md@c918952e6de4eff4"
     release_effect: BLOCKER
-    source: ["v2/docs/feasibility/DECOUPLING.md section 10", "v2/ecad/tools/pcb_decisions.yaml:959-1076 (decision 42)"]
+    source: ["v2/docs/feasibility/DECOUPLING.md section 10", "v2/ecad/tools/pcb_decisions.yaml:1001-1118 (decision 42)"]
     source_check: VERIFIED
     notes: >-
       Decision 42 was ruled by the session on 26 September 2026 under the owner's standing rule (pcb_decisions.yaml,
@@ -3111,10 +3111,10 @@ records:
     evidence_result: NOT_JUDGED
     release_effect: BLOCKER
     source:
-      - "v2/docs/ARCH-PCB-B-IOHA.md:96"
-      - "v2/docs/ARCH-PCB-B-IOHA.md:108"
-      - "v2/docs/ARCH-PCB-B-IOHA.md:160-164"
-      - "v2/docs/ARCH-PCB-B-IOHA.md:256"
+      - "v2/docs/ARCH-PCB-B-IOHA.md:102"
+      - "v2/docs/ARCH-PCB-B-IOHA.md:117"
+      - "v2/docs/ARCH-PCB-B-IOHA.md:169-173"
+      - "v2/docs/ARCH-PCB-B-IOHA.md:272"
     source_check: VERIFIED
     notes: >-
       The supervisor part is CON-017's: D-13 accepts the STM32H743, the schematic text, value and order line name it
@@ -3214,7 +3214,7 @@ records:
       - "v2/vendor/st/st-rm0433-rev8.pdf@9ba54135736a47a3"
       - "v2/vendor/st/st-es0392-rev15.pdf@effe23b2b79ec4ee"
     release_effect: BLOCKER
-    source: ["owner ruling D-13", "v2/ecad/tools/gen_sch_b.py:1145-1146", "v2/docs/reviews/2026-09-26-foundation-progress-review.md", "v2/docs/parts/STM32H743-COMPATIBILITY.md", "v2/vendor/st/st-es0392-rev15.pdf section 2.24.2"]
+    source: ["owner ruling D-13", "v2/ecad/tools/gen_sch_b.py:1392-1393", "v2/docs/reviews/2026-09-26-foundation-progress-review.md", "v2/docs/parts/STM32H743-COMPATIBILITY.md", "v2/vendor/st/st-es0392-rev15.pdf section 2.24.2"]
     source_check: VERIFIED
     history: >-
       Read FAIL at d468613e (the symbol read STM32H753VI); the text, value and order line are aligned in 458b2873 (S-30,
@@ -3276,7 +3276,7 @@ records:
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
-    source: ["v2/docs/ARCH-PCB-B-IOHA.md:209", "v2/docs/ARCH-PCB-B-IOHA.md:260", "v2/docs/V2-SPEC.md:42"]
+    source: ["v2/docs/ARCH-PCB-B-IOHA.md:225", "v2/docs/ARCH-PCB-B-IOHA.md:276", "v2/docs/V2-SPEC.md:42"]
     source_check: VERIFIED
 
   - id: ASM-002
@@ -3536,7 +3536,7 @@ records:
       - "v2/docs/PANEL.md section 1"
       - "v2/docs/PANEL.md sections 5 to 9"
       - "v2/docs/V2-SPEC.md:53-62"
-      - "v2/ecad/tools/gen_sch_c.py:190-197"
+      - "v2/ecad/tools/gen_sch_c.py:225-232"
     source_check: VERIFIED
     notes: >-
       The SOS and ZEROIZE cover part is still owed (V2-SPEC.md line 58). The EMCON and ZEROIZE toggles are accepted in
@@ -3756,7 +3756,7 @@ records:
       - "v2/docs/feasibility/EMCON.md@421a291f7ce4cda2"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161"
     release_effect: MUST_JUSTIFY
-    source: ["v2/docs/PANEL.md:113", "v2/docs/PANEL.md:158"]
+    source: ["v2/docs/PANEL.md:135", "v2/docs/PANEL.md:187"]
     source_check: VERIFIED
 
   - id: REQ-013
@@ -3781,7 +3781,7 @@ records:
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: ADVISORY
-    source: ["v2/docs/PANEL.md:162"]
+    source: ["v2/docs/PANEL.md:191"]
     source_check: VERIFIED
 
   - id: REQ-014
@@ -3989,7 +3989,7 @@ records:
       - "v2/docs/OPERATING-ENVELOPE.md section 4 (input voltage ranges)"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2915"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2802 (16b)"
-      - "v2/docs/TEST-PLAN.md:31"
+      - "v2/docs/TEST-PLAN.md:39"
     source_check: VERIFIED
     history: >-
       Read FAIL at d468613e: the vehicle input, bus and shore inlet clamps D1, D2 and D10 put their cathode pads on the
@@ -4206,7 +4206,7 @@ records:
     source:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2771"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2775"
-      - "v2/docs/V2-SPEC.md:23"
+      - "v2/docs/V2-SPEC.md:23 (as read at eadbe571)"
     source_check: VERIFIED
 
   - id: CON-006
@@ -4256,7 +4256,7 @@ records:
     release_effect: BLOCKER
     source:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:3060-3062"
-      - "v2/docs/ASSEMBLY.md:72"
+      - "v2/docs/ASSEMBLY.md:81"
       - "v2/docs/CASE-MARGINS.md section 3.2 (M4a to M6)"
       - "owner ruling D-06"
     source_check: INFERRED
@@ -4313,7 +4313,7 @@ records:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2465"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2846"
       - "v2/ecad/tools/pcb_energy_chain.yaml:48-49"
-      - "v2/docs/TEST-PLAN.md:64-66"
+      - "v2/docs/TEST-PLAN.md:74-76"
       - "v2/docs/feasibility/POWER-THERMAL.md section 7.2"
       - "owner ruling D-11"
       - "session choice SC-35"
@@ -4628,7 +4628,7 @@ records:
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: BLOCKER
-    source: ["v2/docs/OPERATING-ENVELOPE.md:144-147", "v2/docs/V2-SPEC.md:8", "v2/ecad/tools/claims_check.py:1-14"]
+    source: ["v2/docs/OPERATING-ENVELOPE.md:258-261", "v2/docs/V2-SPEC.md:8", "v2/ecad/tools/claims_check.py:1-14"]
     source_check: VERIFIED
     notes: "Split from W1's CAND-036: the claims half here, the construction half in the next record."
 
@@ -4653,7 +4653,7 @@ records:
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
-    source: ["v2/docs/OPERATING-ENVELOPE.md:144-147", "v2/docs/TEST-PLAN.md:21-22", "v2/docs/V2-SPEC.md:8"]
+    source: ["v2/docs/OPERATING-ENVELOPE.md:258-261", "v2/docs/TEST-PLAN.md:29-30", "v2/docs/V2-SPEC.md:8"]
     source_check: VERIFIED
     notes: "Split from W1's CAND-036."
 
@@ -4682,9 +4682,9 @@ records:
     evidence_result: NOT_YET_TESTED
     release_effect: MUST_JUSTIFY
     source:
-      - "v2/docs/TEST-PLAN.md:16-17"
-      - "v2/docs/OPERATING-ENVELOPE.md:154"
-      - "v2/ecad/tools/pcb_envelope.yaml:80-85"
+      - "v2/docs/TEST-PLAN.md:24-25"
+      - "v2/docs/OPERATING-ENVELOPE.md:268"
+      - "v2/ecad/tools/pcb_envelope.yaml:134-139"
       - "owner ruling D-02c"
     source_check: VERIFIED
     conflict_ref: C-07
@@ -4763,9 +4763,9 @@ records:
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
     source:
-      - "v2/docs/OPERATING-ENVELOPE.md:128-139"
-      - "v2/ecad/tools/pcb_envelope.yaml:27-34"
-      - "v2/ecad/tools/pcb_decisions.yaml:492-560 (decision 34)"
+      - "v2/docs/OPERATING-ENVELOPE.md:205-247"
+      - "v2/ecad/tools/pcb_envelope.yaml:27-35"
+      - "v2/ecad/tools/pcb_decisions.yaml:525-593 (decision 34)"
       - "v2/docs/CONOPS.md section 4c"
     source_check: VERIFIED
     conflict_ref: C-05
@@ -4802,7 +4802,7 @@ records:
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
     source:
-      - "v2/docs/OPERATING-ENVELOPE.md:141-142"
+      - "v2/docs/OPERATING-ENVELOPE.md:249-256"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:3058"
       - "v2/docs/CONOPS.md section 4"
       - "v2/vendor/battery/samsung-35e-orbtronic.pdf"
@@ -4877,7 +4877,7 @@ records:
     status: DEFINED
     evidence_result: NOT_YET_TESTED
     release_effect: MUST_JUSTIFY
-    source: ["v2/docs/OPERATING-ENVELOPE.md:144", "v2/docs/TEST-PLAN.md:20", "v2/docs/TEST-PLAN.md section 6"]
+    source: ["v2/docs/OPERATING-ENVELOPE.md:258", "v2/docs/TEST-PLAN.md:28", "v2/docs/TEST-PLAN.md section 6"]
     source_check: VERIFIED
     conflict_ref: C-06
 
@@ -4904,8 +4904,8 @@ records:
     release_effect: MUST_JUSTIFY
     source:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2860"
-      - "v2/docs/OPERATING-ENVELOPE.md:90-95"
-      - "v2/ecad/tools/pcb_envelope.yaml:36-41"
+      - "v2/docs/OPERATING-ENVELOPE.md:122-124"
+      - "v2/ecad/tools/pcb_envelope.yaml:37-95"
     source_check: VERIFIED
     notes: >-
       Superseded in substance on 27 September 2026: the inside-air rise per state is bounded, not measured
@@ -4934,10 +4934,10 @@ records:
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
     source:
-      - "v2/docs/OPERATING-ENVELOPE.md:149-150"
-      - "v2/docs/OPERATING-ENVELOPE.md:258-261"
-      - "v2/ecad/tools/pcb_envelope.yaml:86-90"
-      - "v2/docs/TEST-PLAN.md:24"
+      - "v2/docs/OPERATING-ENVELOPE.md:263-264"
+      - "v2/docs/OPERATING-ENVELOPE.md:382-385"
+      - "v2/ecad/tools/pcb_envelope.yaml:140-144"
+      - "v2/docs/TEST-PLAN.md:32"
       - "owner ruling D-02c"
     source_check: VERIFIED
     conflict_ref: C-08
@@ -4970,7 +4970,7 @@ records:
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
-    source: ["v2/docs/OPERATING-ENVELOPE.md:197-201", "v2/ecad/tools/pcb_envelope.yaml:126", "owner ruling D-02c"]
+    source: ["v2/docs/OPERATING-ENVELOPE.md:315-325", "v2/ecad/tools/pcb_envelope.yaml:197", "owner ruling D-02c"]
     source_check: VERIFIED
 
   - id: REQ-029
@@ -4997,10 +4997,10 @@ records:
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
     source:
-      - "v2/docs/OPERATING-ENVELOPE.md:217"
-      - "v2/docs/OPERATING-ENVELOPE.md:230-233"
-      - "v2/docs/TEST-PLAN.md:36"
-      - "v2/ecad/tools/pcb_envelope.yaml:44-45"
+      - "v2/docs/OPERATING-ENVELOPE.md:341"
+      - "v2/docs/OPERATING-ENVELOPE.md:354-357"
+      - "v2/docs/TEST-PLAN.md:44"
+      - "v2/ecad/tools/pcb_envelope.yaml:98-99"
     source_check: VERIFIED
     notes: "Board A's USB-C CC pins get an external array under D-17 (CON-018)."
 
@@ -5110,7 +5110,7 @@ records:
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
-    source: ["v2/docs/OPERATING-ENVELOPE.md:218", "v2/ecad/tools/pcb_envelope.yaml:46-47"]
+    source: ["v2/docs/OPERATING-ENVELOPE.md:342", "v2/ecad/tools/pcb_envelope.yaml:100-101"]
     source_check: VERIFIED
 
   - id: SPD-004
@@ -5132,7 +5132,7 @@ records:
       the prototype, so it stays unrequired until a market names a standard.
     evidence_result: NOT_APPLICABLE
     release_effect: NONE
-    source: ["v2/docs/OPERATING-ENVELOPE.md:219", "v2/ecad/tools/pcb_envelope.yaml:48-49"]
+    source: ["v2/docs/OPERATING-ENVELOPE.md:343", "v2/ecad/tools/pcb_envelope.yaml:102-103"]
     source_check: VERIFIED
 
   - id: CON-009
@@ -5241,7 +5241,7 @@ records:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2896 (32.54)"
       - "v2/docs/OPERATING-ENVELOPE.md section 2"
       - "v2/docs/OPERATING-ENVELOPE.md section 3"
-      - "v2/ecad/tools/gen_sch_e.py:563"
+      - "v2/ecad/tools/gen_sch_e.py:660"
       - "v2/docs/V2-SPEC.md:86"
     source_check: VERIFIED
     conflict_ref: C-05
@@ -5285,7 +5285,7 @@ records:
           (rules_lib.condition_facts over pcb_rules.yaml names neither) and no tool does.
     evidence_bound_to: ["v2/ecad/tools/pcb_board_facts.yaml@07af4d0f2b166694"]
     release_effect: ADVISORY
-    source: ["v2/ecad/tools/pcb_board_facts.yaml:281-282", "v2/ecad/tools/pcb_envelope.yaml:15-19"]
+    source: ["v2/ecad/tools/pcb_board_facts.yaml:281-282 (as read at eadbe571)", "v2/ecad/tools/pcb_envelope.yaml:15-19 (as read at eadbe571)"]
     source_check: VERIFIED
     conflict_ref: C-12
 
@@ -5416,9 +5416,9 @@ records:
     source:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2787 (item 3)"
       - "v2/docs/PANEL.md section 6"
-      - "v2/docs/TEST-PLAN.md:46"
+      - "v2/docs/TEST-PLAN.md:54"
       - "v2/docs/feasibility/EMCON.md"
-      - "v2/ecad/tools/pcb_rules_coverage.yaml:636-644"
+      - "v2/ecad/tools/pcb_rules_coverage.yaml:776-952"
     source_check: VERIFIED
     conflict_ref: C-03
     history: >-
@@ -5660,7 +5660,7 @@ records:
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: BLOCKER
-    source: ["v2/docs/PANEL.md section 9", "v2/docs/ARCH-PCB-B-IOHA.md:263", "v2/docs/TEST-PLAN.md:46"]
+    source: ["v2/docs/PANEL.md section 9", "v2/docs/ARCH-PCB-B-IOHA.md:279", "v2/docs/TEST-PLAN.md:54"]
     source_check: VERIFIED
     notes: >-
       ARCH-PCB-B-IOHA A14 names an external receiver or spectrum analyser since 4ec785d8 (line 263 at eadbe571),
@@ -5783,8 +5783,8 @@ records:
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
     release_effect: BLOCKER
     source:
-      - "v2/ecad/tools/gen_sch_b.py:716-741"
-      - "v2/ecad/tools/gen_sch_b.py:449-456"
+      - "v2/ecad/tools/gen_sch_b.py:813-880"
+      - "v2/ecad/tools/gen_sch_b.py:511-531"
       - "v2/docs/feasibility/EMCON.md section 4"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2930"
       - "owner ruling D-05"
@@ -6368,8 +6368,8 @@ records:
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
     source:
-      - "v2/docs/PANEL.md:156"
-      - "v2/docs/PANEL.md:158"
+      - "v2/docs/PANEL.md:185"
+      - "v2/docs/PANEL.md:187"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2866"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2926"
     source_check: VERIFIED
@@ -6406,7 +6406,7 @@ records:
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
     source:
-      - "v2/docs/PANEL.md:155"
+      - "v2/docs/PANEL.md:184"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2802 (16c)"
       - "v2/vendor/standards/mil-std-3009-nvis-2001-02-02.md"
     source_check: VERIFIED
@@ -6467,10 +6467,10 @@ records:
       - "v2/docs/PANEL.md section 6"
       - "v2/docs/PANEL.md section 9"
       - "v2/ecad/tools/pcb_decisions.yaml:207-255 (decision 30)"
-      - "v2/docs/TEST-PLAN.md:46"
+      - "v2/docs/TEST-PLAN.md:54"
       - "v2/docs/feasibility/ZEROIZE.md section 3.4"
       - "owner ruling D-03"
-      - "v2/ecad/tools/gen_sch_b.py:1046"
+      - "v2/ecad/tools/gen_sch_b.py:1264"
     source_check: VERIFIED
     conflict_ref: C-09
     history: >-
@@ -6547,7 +6547,7 @@ records:
       - >-
           v2/vendor/microchip/microchip-atecc608b-datasheet.pdf (summary sheet: 'A complete document is available
           under NDA')
-      - "v2/ecad/tools/gen_sch_b.py:1046"
+      - "v2/ecad/tools/gen_sch_b.py:1264"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2789"
     source_check: VERIFIED
     history: >-
@@ -6594,8 +6594,8 @@ records:
     source:
       - "v2/docs/feasibility/ZEROIZE.md section 8 (R7)"
       - "v2/docs/feasibility/ZEROIZE.md section 9 (item 8)"
-      - "v2/ecad/tools/gen_sch_b.py:1140"
-      - "v2/docs/ARCH-PCB-B-IOHA.md:96"
+      - "v2/ecad/tools/gen_sch_b.py:1381"
+      - "v2/docs/ARCH-PCB-B-IOHA.md:102"
     source_check: VERIFIED
     notes: >-
       Created from ZEROIZE.md's firmware rule Z-C3 (26 September 2026). The supervisors sit on I2C1 (PB6 and PB7, pins
@@ -6659,7 +6659,7 @@ records:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2790 (item 6)"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2848 (E6: the tamper switch input)"
       - "v2/docs/V2-SPEC.md:34"
-      - "v2/docs/TEST-PLAN.md:46"
+      - "v2/docs/TEST-PLAN.md:54"
       - "owner ruling D-03"
       - "owner ruling D-02b"
     source_check: VERIFIED
@@ -6860,7 +6860,7 @@ records:
       - "v2/docs/V2-SPEC.md:35"
       - "v2/docs/V2-SPEC.md:50"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2839"
-      - "v2/docs/TEST-PLAN.md:37"
+      - "v2/docs/TEST-PLAN.md:45"
     source_check: VERIFIED
 
   - id: REQ-040
@@ -6889,9 +6889,9 @@ records:
     release_effect: MUST_JUSTIFY
     source:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2795-2797 (items 11 and 13)"
-      - "v2/docs/PANEL.md:144"
+      - "v2/docs/PANEL.md:170"
       - "v2/docs/V2-SPEC.md:35"
-      - "v2/ecad/tools/gen_sch_e.py:581"
+      - "v2/ecad/tools/gen_sch_e.py:678"
     source_check: VERIFIED
     conflict_ref: C-26
     notes: >-
@@ -7044,7 +7044,7 @@ records:
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
-    source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2865", "v2/docs/OPERATING-ENVELOPE.md:81-86"]
+    source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2865", "v2/docs/OPERATING-ENVELOPE.md:110-115"]
     source_check: VERIFIED
 
   - id: REQ-044
@@ -7162,7 +7162,7 @@ records:
       - "v2/docs/review-packets/battery/REVIEW-REQUEST.md@91a257430cbeb53a"
     release_effect: BLOCKER
     source:
-      - "v2/docs/TEST-PLAN.md:48-77"
+      - "v2/docs/TEST-PLAN.md:58-94"
       - "v2/ecad/tools/pcb_pack_protection.yaml:17-40"
       - "owner ruling D-15"
       - "v2/docs/review-packets/battery/PROTECTION-ARCHITECTURE.md"
@@ -7365,8 +7365,8 @@ records:
     evidence_result: NOT_JUDGED
     release_effect: BLOCKER
     source:
-      - "v2/docs/OPERATING-ENVELOPE.md:55-56"
-      - "v2/docs/TEST-PLAN.md:69-70"
+      - "v2/docs/OPERATING-ENVELOPE.md:74-75"
+      - "v2/docs/TEST-PLAN.md:79-80"
       - "v2/docs/PANEL.md section 10"
       - "v2/ecad/tools/pcb_pack_protection.yaml:142-157 (CHARGE_ and DISCHARGE_TEMPERATURE_WINDOW)"
       - "v2/docs/review-packets/battery/THERMAL-COORDINATION.md section 4 (the ladder)"
@@ -7550,8 +7550,8 @@ records:
     source:
       - "v2/docs/V2-SPEC.md:20"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:3062"
-      - "v2/ecad/tools/pcb_pack_protection.yaml:17-27"
-      - "v2/ecad/tools/pcb_energy_chain.yaml:46"
+      - "v2/ecad/tools/pcb_pack_protection.yaml:17-27 (as read at eadbe571)"
+      - "v2/ecad/tools/pcb_energy_chain.yaml:46 (as read at eadbe571)"
       - "v2/ecad/tools/gen_sch_p.py:6"
     source_check: VERIFIED
     conflict_ref: C-15
@@ -7622,7 +7622,7 @@ records:
     source:
       - "v2/ecad/tools/pcb_rules.yaml (TST-001)"
       - "v2/docs/ARCH-PCB-B-IOHA.md:31"
-      - "v2/docs/PANEL.md:27"
+      - "v2/docs/PANEL.md:49"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:3064 (gauge golden image over SMBus)"
     source_check: VERIFIED
     history: >-
@@ -8066,10 +8066,10 @@ records:
     source:
       - "v2/docs/PANEL.md section 6"
       - "v2/docs/CONOPS.md section 4b"
-      - "v2/docs/V2-SPEC.md:76"
+      - "v2/docs/V2-SPEC.md:76 (as read at eadbe571)"
       - "v2/docs/OPERATING-ENVELOPE.md section 4"
-      - "v2/docs/TEST-PLAN.md:46"
-      - "v2/ecad/tools/pcb_decisions.yaml:863-915"
+      - "v2/docs/TEST-PLAN.md:46 (as read at eadbe571)"
+      - "v2/ecad/tools/pcb_decisions.yaml:863-915 (as read at eadbe571)"
     source_check: VERIFIED
     notes: >-
       Created on 26 September 2026 when the registry was re-read at main: the documents were corrected in 4ec785d8 and
@@ -8124,7 +8124,7 @@ records:
     evidence_bound_to:
       - "v2/docs/TEST-PLAN.md@a0de0b12ff06ba4e"
     release_effect: ADVISORY
-    source: ["v2/docs/TEST-PLAN.md:18-19", "v2/docs/OPERATING-ENVELOPE.md:128", "v2/docs/OPERATING-ENVELOPE.md:141"]
+    source: ["v2/docs/TEST-PLAN.md:18-19 (as read at eadbe571)", "v2/docs/OPERATING-ENVELOPE.md:205", "v2/docs/OPERATING-ENVELOPE.md:249"]
     source_check: VERIFIED
     conflict_ref: C-06
     notes: "Resolved for E3 and E4 by D-02a (REQ-051), and for E5 by SC-03 (REQ-026)."
@@ -8165,7 +8165,7 @@ records:
     release_effect: MUST_JUSTIFY
     source:
       - "owner ruling D-02a"
-      - "v2/docs/TEST-PLAN.md:18-19"
+      - "v2/docs/TEST-PLAN.md:26-27"
       - "v2/docs/OPERATING-ENVELOPE.md section 8"
       - "v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 5"
       - "v2/docs/review-packets/battery/THERMAL-COORDINATION.md sections 9 and 9a"
@@ -8206,7 +8206,7 @@ records:
     evidence_phase: SCHEMATIC
     release_effect: ADVISORY
     source:
-      - "v2/docs/TEST-PLAN.md:18-19"
+      - "v2/docs/TEST-PLAN.md:18-19 (as read at eadbe571)"
       - "v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 2"
       - "v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 5"
       - "v2/docs/review-packets/battery/THERMAL-COORDINATION.md sections 9 and 9a"
@@ -8260,7 +8260,7 @@ records:
     evidence_bound_to:
       - "v2/docs/TEST-PLAN.md@a0de0b12ff06ba4e"
     release_effect: ADVISORY
-    source: ["v2/docs/TEST-PLAN.md:20", "v2/docs/TEST-PLAN.md:23", "v2/docs/MESHSAT-709-geometry-appendix.md:2864"]
+    source: ["v2/docs/TEST-PLAN.md:20 (as read at eadbe571)", "v2/docs/TEST-PLAN.md:23 (as read at eadbe571)", "v2/docs/MESHSAT-709-geometry-appendix.md:2864"]
     source_check: VERIFIED
     conflict_ref: C-06
     notes: >-
@@ -8310,9 +8310,9 @@ records:
       - "v2/docs/TEST-PLAN.md@a0de0b12ff06ba4e"
     release_effect: ADVISORY
     source:
-      - "v2/docs/TEST-PLAN.md:8"
+      - "v2/docs/TEST-PLAN.md:8 (as read at eadbe571)"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2860"
-      - "v2/docs/OPERATING-ENVELOPE.md:171"
+      - "v2/docs/OPERATING-ENVELOPE.md:171 (as read at eadbe571)"
     source_check: VERIFIED
     conflict_ref: C-16
     notes: "D-02b adds a closed-lid state and thermal test to TEST-PLAN; the requirement follows this record."
@@ -8373,7 +8373,7 @@ records:
     source:
       - "owner ruling D-02b"
       - "v2/docs/OPERATING-ENVELOPE.md section 8 (D-02b)"
-      - "v2/docs/OPERATING-ENVELOPE.md:171-172"
+      - "v2/docs/OPERATING-ENVELOPE.md:285-287"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2860"
       - "v2/docs/CONOPS.md section 4c"
     source_check: VERIFIED
@@ -8615,9 +8615,9 @@ records:
     evidence_result: NOT_APPLICABLE
     release_effect: NONE
     source:
-      - "v2/docs/V2-SPEC.md:41"
-      - "v2/docs/V2-SPEC.md:76"
-      - "v2/docs/ARCH-PCB-B-IOHA.md:210"
+      - "v2/docs/V2-SPEC.md:41 (as read at eadbe571)"
+      - "v2/docs/V2-SPEC.md:76 (as read at eadbe571)"
+      - "v2/docs/ARCH-PCB-B-IOHA.md:226"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2818"
     source_check: VERIFIED
     conflict_ref: C-19
@@ -8710,9 +8710,9 @@ records:
       - "v2/docs/V2-SPEC.md@a02ea1b6801f8916"
     release_effect: ADVISORY
     source:
-      - "v2/docs/V2-SPEC.md:41"
+      - "v2/docs/V2-SPEC.md:41 (as read at eadbe571)"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2796"
-      - "v2/ecad/tools/gen_sch_b.py:672-697"
+      - "v2/ecad/tools/gen_sch_b.py:672-697 (as read at eadbe571)"
     source_check: VERIFIED
     notes: >-
       Restated on 27 September 2026 (the registry writer's second pass, Review B finding B6): the record is the conflict
@@ -8806,7 +8806,7 @@ records:
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: BLOCKER
-    source: ["v2/docs/TEST-PLAN.md:37"]
+    source: ["v2/docs/TEST-PLAN.md:45"]
     source_check: VERIFIED
     notes: "Split in the round-3 fix-up: the transmitters D-01 leaves outside the core are REQ-068."
 
@@ -8836,7 +8836,7 @@ records:
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
-    source: ["v2/docs/TEST-PLAN.md:37"]
+    source: ["v2/docs/TEST-PLAN.md:45"]
     source_check: VERIFIED
     notes: "Split from REQ-057 in the round-3 fix-up."
 
@@ -8869,7 +8869,7 @@ records:
     source:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2788 (item 4)"
       - "v2/docs/V2-SPEC.md:51"
-      - "v2/docs/OPERATING-ENVELOPE.md:81-83"
+      - "v2/docs/OPERATING-ENVELOPE.md:87-87"
       - "v2/vendor/limesdr/myriadrf-limesdr-mini-2-0-page-20260925.html"
     source_check: VERIFIED
 
@@ -8934,8 +8934,8 @@ records:
     release_effect: ADVISORY
     source:
       - "v2/docs/OPERATING-ENVELOPE.md section 8 (D-02b)"
-      - "v2/docs/OPERATING-ENVELOPE.md:171-172"
-      - "v2/ecad/tools/pcb_envelope.yaml:34"
+      - "v2/docs/OPERATING-ENVELOPE.md:171-172 (as read at eadbe571)"
+      - "v2/ecad/tools/pcb_envelope.yaml:34 (as read at eadbe571)"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2860"
     source_check: VERIFIED
     conflict_ref: C-16
@@ -9108,7 +9108,7 @@ records:
     evidence_result: NOT_JUDGED
     release_effect: ADVISORY
     source:
-      - "v2/docs/V2-SPEC.md:23"
+      - "v2/docs/V2-SPEC.md:23 (as read at eadbe571)"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2775"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2846"
     source_check: VERIFIED
@@ -9146,11 +9146,11 @@ records:
     evidence_result: NOT_JUDGED
     release_effect: BLOCKER
     source:
-      - "v2/docs/PANEL.md:30"
-      - "v2/docs/PANEL.md:78"
-      - "v2/docs/PANEL.md:162"
+      - "v2/docs/PANEL.md:52"
+      - "v2/docs/PANEL.md:100"
+      - "v2/docs/PANEL.md:191"
       - "v2/docs/PANEL.md section 9"
-      - "v2/docs/PANEL.md:168"
+      - "v2/docs/PANEL.md:197"
       - "v2/docs/V2-SPEC.md:58"
       - "owner ruling D-10"
     source_check: VERIFIED
@@ -9353,7 +9353,7 @@ records:
     status: DEFINED
     evidence_result: NOT_YET_TESTED
     release_effect: MUST_JUSTIFY
-    source: ["v2/docs/TEST-PLAN.md:23"]
+    source: ["v2/docs/TEST-PLAN.md:31"]
     source_check: VERIFIED
     notes: "E8's 'vent' is read as Peli's pressure valve, which 32.53 keeps (challenger); W5 settles the wording."
 
@@ -9422,7 +9422,7 @@ records:
     release_effect: MUST_JUSTIFY
     source:
       - "v2/docs/RED-TEAM-2026-09-09.md:363 (S2)"
-      - "v2/ecad/tools/gen_sch_b.py:812-816 (J_FLASH, J_RPIBOOT, J_DBG per slot)"
+      - "v2/ecad/tools/gen_sch_b.py:968-972 (J_FLASH, J_RPIBOOT, J_DBG per slot)"
       - "owner ruling D-13"
     source_check: VERIFIED
     notes: >-
@@ -9486,7 +9486,7 @@ records:
       - "v2/docs/V2-SPEC.md@a02ea1b6801f8916"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976"
     release_effect: ADVISORY
-    source: ["v2/docs/V2-SPEC.md:35", "v2/ecad/tools/gen_sch_e.py:581"]
+    source: ["v2/docs/V2-SPEC.md:35", "v2/ecad/tools/gen_sch_e.py:678"]
     source_check: VERIFIED
     conflict_ref: C-26
 
@@ -9778,7 +9778,7 @@ records:
       - "v2/docs/PANEL.md@4b03b1c89cf68cef"
       - "v2/ecad/tools/check_contracts.py@308fdefb90335da4"
     release_effect: BLOCKER
-    source: ["v2/ecad/tools/gen_sch_e.py:218", "v2/docs/ASSEMBLY.md section 4", "v2/docs/PANEL.md section 10"]
+    source: ["v2/ecad/tools/gen_sch_e.py:264", "v2/docs/ASSEMBLY.md section 4", "v2/docs/PANEL.md section 10"]
     source_check: VERIFIED
     conflict_ref: C-29
     history: >-
@@ -9859,7 +9859,7 @@ records:
       what: >-
         Lifting the stack live, against the procedure, leaves a person able to touch the spring-contact targets that
         carry VIN_RAW and the pack current (ASSEMBLY.md:117, :171).
-    source: ["v2/docs/ASSEMBLY.md:148", "v2/docs/ASSEMBLY.md:162", "owner ruling D-14"]
+    source: ["v2/docs/ASSEMBLY.md:159", "v2/docs/ASSEMBLY.md:173", "owner ruling D-14"]
     source_check: VERIFIED
 
   - id: CON-015
@@ -9932,7 +9932,7 @@ records:
     release_effect: BLOCKER
     source:
       - "v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf (key B p.15 and p.20; Table 32)"
-      - "v2/ecad/tools/gen_sch_b.py:635-643"
+      - "v2/ecad/tools/gen_sch_b.py:722-730"
       - "v2/docs/CASE-MARGINS.md section 3.4"
       - "owner ruling D-07"
     source_check: VERIFIED
@@ -10060,10 +10060,10 @@ records:
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
     release_effect: BLOCKER
     source:
-      - "v2/ecad/tools/gen_sch_e.py:303"
+      - "v2/ecad/tools/gen_sch_e.py:351"
       - "v2/ecad/tools/gen_sch_p.py:344"
-      - "v2/ecad/tools/gen_sch_d.py:261-263"
-      - "v2/ecad/tools/gen_sch_c.py:258-264"
+      - "v2/ecad/tools/gen_sch_d.py:300-302"
+      - "v2/ecad/tools/gen_sch_c.py:325-331"
     source_check: VERIFIED
     history: >-
       Read FAIL at d468613e on sixteen reversed or ambiguous clamps and rectifiers across C, D, E and P; every

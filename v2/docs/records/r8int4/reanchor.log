@@ -1,0 +1,21 @@
+applied  reanchor               REQ-043 OPERATING-ENVELOPE.md anchored at 110-115
+applied  reanchor               REQ-050 TEST-PLAN.md anchored at 1-3
+applied  reanchor               REQ-058 OPERATING-ENVELOPE.md anchored at 87-87
+applied  reanchor               67 re-read     carried citations the layer-3 closer re-read by hand on these very files
+left     reanchor               session_choices SC-13 v2/docs/V2-SPEC.md:41 (added after ead 
+left     reanchor               session_choices SC-13 v2/ecad/tools/gen_sch_b.py:672-697 (ad 
+left     reanchor               session_choices SC-16 v2/docs/EXECUTION-PLAN.md:60 (added af 
+left     reanchor               session_choices SC-41 v2/docs/MESHSAT-709-geometry-appendix. 
+left     reanchor               session_choices SC-44 v2/docs/MESHSAT-709-geometry-appendix. 
+left     reanchor               records CFL-001 v2/ecad/tools/gen_sch_b.py:936 (added after  
+left     reanchor               records CON-019 v2/ecad/tools/gen_sch_a.py:1177-1190 (added  
+left     reanchor               records CON-018 v2/ecad/tools/gen_sch_a.py:1104-1114 (added  
+left     reanchor               records CON-018 v2/ecad/tools/pcb_decisions.yaml:256-429 (ad 
+left     reanchor               records CFL-004 v2/ecad/tools/gen_sch_b.py:820-866 (added af 
+left     reanchor               records CFL-005 v2/ecad/tools/gen_sch_a.py:1253 (added after 
+left     reanchor               records REQ-049 v2/ecad/tools/gen_sch_a.py:1293-1309 (added  
+left     reanchor               records CFL-014 v2/ecad/tools/gen_sch_a.py:839-845 (added af 
+left     reanchor               records CON-014 v2/ecad/tools/gen_sch_a.py:965 (added after  
+left     reanchor               records CON-014 v2/ecad/tools/gen_sch_a.py:1253 (added after 
+applied  reanchor               eadbe571 -> 95e078a1 87 rewritten in place, 15 left
+reanchor_only: written
