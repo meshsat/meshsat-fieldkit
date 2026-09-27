@@ -1,0 +1,234 @@
+# MeshSat field kit V2: engineering questions for the blocked items
+
+Written 27 September 2026 (MESHSAT-1357) from the layer-by-layer audit of the repository at commit `e3aedb25`. Paths
+are repository paths; file:line citations are lines at `e3aedb25`. Every blocked question the audit found in the nine
+pre-PCB layers is here once, deduplicated across layers, in the form the owner asked for
+(`v2/docs/reviews/2026-09-27-handover-execution-prompt.md` section 6): the exact issue, what it affects, the evidence,
+what was tried, the viable options, the recommended next action, the expertise or equipment needed, and cost and lead
+time where known.
+
+**Prototype framing.** Nothing of the V2 kit has been built, ordered, powered or measured. Prices and stock figures
+marked VERIFIED were read from public pages at the times recorded in `v2/docs/reviews/READY-TO-ACT.md` section 10;
+they are dated readings, not quotes. Nobody has been contacted and nothing has been bought.
+
+**Recommendations are the session's, not the owner's.** Where an option is a desk engineering choice, the closer who
+takes it records it in `v2/ecad/tools/pcb_requirements.yaml` `session_choices` (SC-nn: question, taken, why, "Reverse
+by ...") under the owner's standing rule of 26 September 2026. Money, outside contact, publication and promotion stay
+with the owner; `v2/docs/reviews/READY-TO-ACT.md` section 0 lists the authorisations still missing, and its section 9
+holds the prepared request texts (not sent).
+
+## Index
+
+| Id | Question | Group | Layers | Boards | What it holds today |
+|---|---|---|---|---|---|
+| EQ-01 | Can board B route at all, on which stack and escape method, inside its outline? | A. design work | 4, 5, 7, 8, 9 | B (case layout) | B's layout entry (FEA-003); B's outline and connector places |
+| EQ-02 | Does the RockBLOCK 9704 stop transmitting within 1 s under EMCON? | A. design work | 4, 8 | B | FEA-002's RockBLOCK row |
+| EQ-03 | How may the kit travel with its 145 Wh built-for-the-kit pack? | A. design work | 2, 3 | none | a transport claim only |
+| EQ-04 | Does a CM5 radio keep its certification through a blind-mate and a bulkhead? | A. design work | 3 | B, case | nothing if the recommended route is taken |
+| EQ-05 | What is the sealed case's thermal conductance, and is the hot end feasible? | B. physical evidence | 2, 4, 7, 9 | A, B, D, P | freezing hot-part placement and the pack location; the +35 and +25 C figures |
+| EQ-06 | Can the fitted ATECC608B's keys be destroyed after lock, safely under power loss? | B. physical evidence | 4, 6, 8 | B | B's layout entry for the U8 site |
+| EQ-07 | Does the chemical fuse F2 hold 18 A for 60 s from a +55 C block? | B. physical evidence | 4, 9 | P (A) | P's fabrication release; P's F2 part identity |
+| EQ-08 | Do the case margins that rest on unpublished tolerances hold? | B. physical evidence | 7 | A, B, C, E, P | final outlines and connector places |
+| EQ-09 | Does the CM5's PHY accept a capacitively coupled link? | B. physical evidence | 8, 9 | B | nothing before layout if a magnetics footprint is provided; INT-003 at prototype |
+| EQ-10 | Qualified battery review R-BAT and the protection coordination | C. external authorisation | 4, 8 | P (A) | P's fabrication release and the pack build; the battery part of layer 4 |
+| EQ-11 | Qualified power review R-PWR | C. external authorisation | 6, 8, 9 | A (E, B) | A's layout commitment (as the records time it); layer 8 COMPLETE for A |
+| EQ-12 | Qualified high-speed review R-HSD | C. external authorisation | 5, 8, 9 | B | B's layout commitment; layer 8 COMPLETE for B |
+| EQ-13 | The M1 mission duration (L-02), reserved to the owner | C. external authorisation | 2, 3 | none once REQ-016 is split | nothing, once REQ-016 is split |
+| EQ-14 | Fabricator prices per board at each layer count and copper weight | C. external authorisation | 9 | all | the cost half of every stackup decision (STK-002) |
+
+Group A items can be answered under existing authority; group B needs hardware and so a purchase; group C needs the
+owner's money, outside contact or a value only he can set.
+
+---
+
+## A. Design work
+
+### EQ-01. Board B's routability, stackup, escape method and outline
+
+| | |
+|---|---|
+| **Exact issue** | Board B (three Compute Module 5 on 0.4 mm receptacles, three PCIe switches, three USB 3 hubs, the failover muxes, HDMI switching and three voting supervisors on a 330 x 200 mm outline) has never routed. Its feasibility on any stackup is not shown, and its stackup (six or eight layers), escape method and whether the outline holds are undecided. |
+| **Affected** | FEA-003 (FB-FAB-6, FB-FAB-7); decision 43; B's stack, outline, connector places and possible partitioning; NEED-03; R-HSD (EQ-12); the case layout; layers 4, 5, 7, 8, 9 for board B. |
+| **Evidence** | `v2/docs/B-FEASIBILITY.md` sections 1, 3.1, 3.2, 7.8, 7.9; `v2/docs/feasibility/FAILOVER-FABRIC.md` sections 7 and 8.3; `v2/docs/CURRENT-EVIDENCE.md` (B21: 416 open). On six layers as used, inner pairs solve to 140.5 ohm against 100 (B-FEASIBILITY 3.2). |
+| **Attempts and results** | B21 routed about 40 h and stopped at 416 open; B22 and B23 tried further levers (RECORDED in `v2/ecad/tools/boards/b.json`); the placement predictor read about ten escape collisions of 75 fine-pitch parts under every lever. Q-B-ESC-1 (26 September, EXPERIMENTAL, on the uncorrected B21): the six-layer arm was cut at 33 open while still falling; the eight-layer-signal arm plateaued at 16 to 18, with the in-region residue at the bare north-row pads of the switch U301 and hub U302, a band bounded by placement (INFERRED). Result INCONCLUSIVE. |
+| **Viable options** | A1 eight layers (decision 43's measurement); A2 six layers re-assigned (In3 as GND); A3 via-in-pad, only where the fabricator's process covers the pad; A4 a floor-plan change; A6 a larger outline within the 1450 window; A7 pin swaps. A8, feature cuts, is excluded by D-01. |
+| **Recommended next action** | After round 8's board B netlist merges: run the `impedance_2d` solves for A2 and JLC08161H-2116 at desk; run Q-B-ESC-2 as specified (B-FEASIBILITY 7.9, cap 5 USD); then decision 43's whole-board eight-layer run with a cap recorded before it starts, EXPERIMENTAL; derive the channel budgets from primary documents; put the resulting candidate to R-HSD. Choose between A2, A1, A3 and A4 by the residue's causes, and record the choice as a session decision with its measurement and cost (P0 rule). |
+| **Expertise or equipment** | A KiCad 9.0.9 host with the Freerouting 1.9.0 per-pass build; a high-speed digital reviewer (EQ-12); a 2D field solver (`v2/ecad/tools/impedance_2d.py`); the fabricator's via-in-pad and impedance answers. |
+| **Cost and lead time** | Box runs of at most 5 USD each within existing authority (about 3 box-hours per run, about 0.43 USD at the recorded rate). R-HSD and the eight-layer fabrication price TBD by quote (L-05, L-01). When read on 21 September, JLCPCB published controlled-impedance stacks for four and six layers only (`boards/b.json`), so an eight-layer result needs the fabricator's stack answer before impedance can be judged. |
+
+### EQ-02. The RockBLOCK 9704 under EMCON
+
+| | |
+|---|---|
+| **Exact issue** | After its supply eFuse opens, the RockBLOCK 9704 keeps running on its two 10 F supercapacitors (about 16 J), and its ENABLE is held only by firmware on expander U6. No held document says what the 9704 does when ENABLE falls, so REQ-071's 1 s latency cannot be shown for this transmitter. |
+| **Affected** | FEA-002 row 4 (`v2/docs/feasibility/EMCON.md` section 4.4); board B's RockBLOCK control path; REQ-030, REQ-071; D-05. |
+| **Evidence** | EMCON.md sections 0a and 4.4; `v2/vendor/rockblock/rb9704-sch-2B1.pdf` pages 2 to 5. |
+| **Attempts and results** | The sixth revision of EMCON.md reopened the row; no maker statement is held. |
+| **Viable options** | (a) Force ENABLE low with the EMCON hardware line, and obtain Ground Control's or Iridium's statement of the module's response. (b) Bench-test ENABLE on a 9704. (c) A module-independent remedy: an EMCON-gated discharge of the supercapacitors, or an RF path gate (its L-band insertion loss budgeted). |
+| **Recommended next action** | Draw (a) in round 8 now. If no maker statement arrives before board B's layout entry, add (c)'s supercapacitor discharge. Keep (b) as a prototype verification row. Record the choice as a session choice. |
+| **Expertise or equipment** | For (b), an RF and embedded bench with an external receiver. |
+| **Cost and lead time** | The circuit parts are minor. The maker's lead time is unknown; outside contact is the owner's (the question is among those prepared, READY-TO-ACT section 9). |
+
+### EQ-03. Transport classification of the pack
+
+| | |
+|---|---|
+| **Exact issue** | Road, air or parcel carriage of the kit with its 145 Wh 4S3P pack, built for the kit and without a UN 38.3 test summary, has no established classification (REQ-069). It blocks only a transport claim; REQ-069's statement ("no route claimed until established") is settled. |
+| **Affected** | REQ-069; the CONOPS Transport row, mission M2 and section 7a; operating instructions; no board. |
+| **Evidence** | `pcb_requirements.yaml` line 2831; SC-06, withdrawn on 26 September after the owner's review (`v2/docs/reviews/2026-09-26-foundation-progress-review.md` section 5 and reference R5); the pack is 144.7 Wh at the cells' minimum capacity (V2-SPEC, battery row). |
+| **Attempts and results** | SC-06 (road carriage as the operator's own equipment) was taken and withdrawn the same day: an unknown UN 38.3 status does not leave road carriage open, because road carriage has its own dangerous-goods rules. |
+| **Viable options** | (a) A desk classification from the ADR text: UN 3480 or 3481, class 9, special provision 188 not applicable above 100 Wh, and the prototype and low-production provisions with their packing instruction. (b) UN 38.3 tests on the built pack design. (c) A dangerous-goods safety adviser's written opinion. |
+| **Recommended next action** | (a) now, filing the ADR clauses under `v2/vendor/` with `SOURCES.yaml` entries; (c) only if (a) leaves the route open; no carriage claimed meanwhile. |
+| **Expertise or equipment** | A dangerous-goods safety adviser (ADR) if needed; a UN 38.3 laboratory only for (b). |
+| **Cost and lead time** | Desk: hours. An adviser's opinion: short and paid, cost not known in the tree. UN 38.3: a laboratory quote, weeks, and built packs. |
+
+### EQ-04. CM5 radio certification through a blind-mate and a bulkhead
+
+| | |
+|---|---|
+| **Exact issue** | Whether a Compute Module 5's radio keeps its certification when Raspberry Pi's approved antenna is reached through a blind-mate joint and a wall bulkhead (CON-011); the datasheet does not say. Which slot feeds the WIFI 2.4 jack, and what the other two modules use, is also open (S-16). |
+| **Affected** | CON-011, S-16, NEED-16; board B's J_BM3 blind-mate path; the case's WIFI 2.4 jack; the EMCON rows of the three CM5 radios. |
+| **Evidence** | `pcb_requirements.yaml` line 5807 (notes: "whether the intermediate path voids the certification is an inference; the datasheet does not say"); `v2/vendor/cm5/cm5-datasheet.pdf`. |
+| **Attempts and results** | Datasheet read; no maker statement held. |
+| **Viable options** | (a) The certified antenna kit fixed inside the plastic case wall, with no bulkhead in the RF path and one jack fewer. (b) Keep the bulkhead and ask Raspberry Pi (outside contact, text prepared by the session, sent by the owner). (c) Disable the CM5 radios and let the AW7915-AED cards carry local WiFi. |
+| **Recommended next action** | (a), recorded as a session choice with the slot assignment for the other two modules. It changes CASE-MARGINS C2's jack list and board B's J_BM3 path, so it is taken before those are regenerated. |
+| **Expertise or equipment** | None for (a); Raspberry Pi's compliance contact for (b). |
+| **Cost and lead time** | (a): none beyond the antenna kit already in the device set. (b): unknown lead time. |
+
+---
+
+## B. Physical evidence
+
+### EQ-05. The sealed case's thermal conductance and the hot end
+
+| | |
+|---|---|
+| **Exact issue** | The inside-air-to-ambient conductance of the sealed Peli 1450 with its aluminium face plate and fans is known only as a bound: 1.22 to 2.85 W/K lid open with fans on (1.06 to 2.49 lid closed) on the independent W4 model, against 3.0 to 3.3 W/K in appendix 32.53, a spread of about 2.3 times. On the low end, three typical modules at +20 C put the cells at up to 81 C against their 60 C discharge limit, the charge hold-off could fall anywhere from -18 to +19 C, and the PA's flange patch reaches 95 to 118 C in a 60 s key-down against the maker's 90 C reliability and +100 C case figures. The bound includes failure and nothing has been measured. |
+| **Affected** | FEA-004; D-02b's reduced mode (S-24) and its accepted consequences; the +35 C and +25 C controls; CON-013, REQ-014, REQ-052, REQ-059; THM-001 on every board; hot-part placement on A, B, D and P; the pack location; fans (D-18); board D's flange sensor (PWR-F15); NEED-03 availability across the envelope; possibly the thermal architecture. |
+| **Evidence** | `v2/docs/feasibility/POWER-THERMAL.md` section 0 items 5 and 7, sections 9.1 to 9.3 and 10 (lines 745 to 770, 794 to 806, 851 to 863, 1043 to 1056); `v2/docs/ARCHITECTURE.md` sections 8.2 and 8.4; `v2/docs/records/w4/w4-scratch-thermal.py`; appendix 32.53 (line 2860) and 32.56 (line 2940); the owner's second review, finding B. |
+| **Attempts and results** | Two independent desk models and five checker cycles on POWER-THERMAL narrowed the loads but cannot narrow the conductance. The session made the behaviour control-driven (C1 to C4, key-down rules K1 to K5, PROVISIONAL) so it no longer bets on either end. |
+| **Viable options** | (a) The empty-case heat-balance test now, on the prototype's own case: a plate blank, 20, 40 and 60 W of resistive heat on a dummy stack, fans on and off, lid open and closed, plus a 45 to 83 W block at the PA flange site run for 20, 30 and 60 s. (b) A desk lumped or CFD model to narrow the bound; it does not replace the test. (c) Wait for TEST-PLAN E3 on the built kit, accepting that placement and the three-module claim may change after fabrication. (d) Design to the pessimistic bound (shedding to one module from low ambients), which narrows a core function and needs the owner. Lowering the hot end of the envelope is not an option: it lowers a requirement. |
+| **Recommended next action** | Now: (b), define the reduced mode S-24 against the pessimistic bound, and state behaviour on measured internal thresholds so layer 2 can close. Before hot-part placement of A, B, D and P and the pack location are frozen: (a). The case and frame are prototype parts bought early, so the decision is when to buy them, not whether; run the heat test first while the case is undrilled, then the mock-up (EQ-08) in the same case (READY-TO-ACT section 11, S-1). Restage FEA-004 so the test gates hot-part placement and holds board B too. |
+| **Expertise or equipment** | A current-moulding Peli 1450 with the 1450PF frame; a 3 mm aluminium plate blank (the C1 outline); three 50 W-class wirewound resistors (6.8 ohm at 12 V gives about 21 W each); a 100 W-class 2.2 ohm block for the PA site; two mixer fans and cooler-class fans; a PicoLog TC-08 with ten type K thermocouples; a supply of at least 15 V and 7 A; a person to run several multi-hour soaks and a way for the data to reach the design. |
+| **Cost and lead time** | VERIFIED: case EUR 168.90 and frame EUR 29.66 excl. VAT (in stock), logger GBP 349 (in stock). Plate blank by quote, from 2 days at JLCCNC; heaters, fans, thermocouples and supply TBD (READY-TO-ACT sections 5.2 and 5.3). Authorisation missing: the purchase, who runs it, and where. |
+
+### EQ-06. ZEROIZE on the fitted ATECC608B, and board B's U8
+
+| | |
+|---|---|
+| **Exact issue** | ZEROIZE (D-03) destroys two key-encryption keys in the secure element with GenKey mode 0x04 after the zones are locked. Public Microchip documents support the mechanism at desk level, but two properties are unpublished: what GenKey does when power fails part-way through its write (U1), and the fitted ATECC608B-SSHDA-T's factory configuration, including its default address (U4). They decide whether U8 stays the ATECC608B or switches to the Infineon SLB 9673 TPM 2.0 (or NXP SE050E2HQ1). |
+| **Affected** | FEA-001; board B's U8 part and land (SOIC-8, or UQFN-32 for the TPM); the panel firmware; REQ-035, REQ-038, ASM-005; D-03; decision 30; NEED-10 (core); the R-SEC review's scope. |
+| **Evidence** | `v2/docs/feasibility/ZEROIZE.md` sections 1, 5 and 7; `v2/docs/records/rv-zer/zeroize/zer_config.py` and `zer_budget.py`; `v2/vendor/SOURCES.yaml` owed list (the full datasheet is under NDA); CURRENT-EVIDENCE line 97. |
+| **Attempts and results** | Desk study from DS40002250B, DS40002249B and the CryptoAuthLib v3.8.0 tests: mechanism supported at desk, part OPEN. Nine software fixtures pass; the owner's second review notes that fixtures do not prove silicon permissions, interrupted-power behaviour or worst-case timing. |
+| **Viable options** | (a) Z-EXP-A (function on the fitted MPN, about 2 h, three parts) and Z-EXP-B (power cut during GenKey 1,000 times on each of two parts) on a development rig. (b) The SLB 9673 fallback under ZEROIZE.md's switch conditions, after checking its documents, interfaces and availability (JLCPCB showed no stock of any variant on 26 September). (c) The SE050E2HQ1 with its own bench run. (d) Microchip's NDA datasheet, through the owner. |
+| **Recommended next action** | Authorise the bench parts and run (a) before board B's layout entry. Draw (b)'s alternate footprint only if the bench fails. Do not switch parts merely to escape the uncertainty. |
+| **Expertise or equipment** | An embedded engineer; Microchip DM320118 or a SOIC socket board (the MikroE Secure SOIC click), a Raspberry Pi Pico, a load switch; a lab host the session can reach. |
+| **Cost and lead time** | VERIFIED: USD 8.09 (ten ATECC608B), USD 2.95 (breakouts), GBP 3.80 (Pico); USD 58.00 more for the MikroE board if still obtainable. DM320118 and instruments TBD; lead time TBD (READY-TO-ACT sections 3.3 and 3.4). Authorisation missing: L-06 (D-09: nothing beyond the voucher without a quote and the owner's approval). |
+
+### EQ-07. The chemical fuse F2 at 18 A for 60 s
+
+| | |
+|---|---|
+| **Exact issue** | F2 (Eaton SCF9550-30-05, rated -20 to +60 C, no current derating published) dissipates 0.32 to 0.81 W at 18 A and sits at the cell block's temperature. Every PA key-down makes up to 18 A a 60 s service current (PWR-F12), and F2's margin during a key-down from a +55 C block is unknown; its opening ends the pack. |
+| **Affected** | FEA-004 (P's fabrication release; P's layout entry once restaged); REQ-018's key-down time; K1, K2 and SC-10; the pack protection test; P's F2 part and land (the evaluated alternative, Littelfuse ITV9550L1430, publishes 25 A at 60 C). F2 also read stock 0 at JLCPCB on 25 and 26 September (SOURCES.yaml). |
+| **Evidence** | POWER-THERMAL.md lines 971 and 1136 and section 0 item 8; `gen_sch_p.py` lines 247 to 289; `v2/vendor/battery/eaton-scf9550-elx1135.pdf`; `v2/docs/review-packets/battery/FUSE-INTERPRETATION.md` lines 49 to 101 and 185 to 193. |
+| **Attempts and results** | The maker's document read; a desk bound only. Eaton questions Q-E1 to Q-E5 are prepared (FUSE-INTERPRETATION section 7), not sent. |
+| **Viable options** | (a) Eaton's written answer on behaviour above +60 C at 18 A. (b) A coupon test of the part alone at 18 A for 60 s from +55 C with a thermocouple on its body. (c) Lower K2's +55 C start gate by F2's measured rise, shortening key-downs at the hot end. (d) Change F2 to the ITV9550L1430, with its own land and qualification. |
+| **Recommended next action** | (b), with (a) sent in parallel. Until then keep K2 at +55 C and state the unknown; hold P's layout entry on F2's identity. |
+| **Expertise or equipment** | A bench supply or electronic load of at least 20 A, a temperature-controlled block, a thermocouple and a logger; or the owner's contact with Eaton. |
+| **Cost and lead time** | Part cost TBD by quote; Eaton's lead time TBD. |
+
+### EQ-08. Case margins that rest on unpublished tolerances
+
+| | |
+|---|---|
+| **Exact issue** | 30 of the 70 case margins, the frame seat M20 and the arrestor thread M13 rest on allowances no source states: Peli's unpublished moulding tolerance, the frame ring and skirt, hand marking, the legs' locator, gasket compression and bundle ties. The jumper rows need the real plug and cable (M17g at -2.43 mm and M17x at -0.38 mm fail with the geometry as assumed). Only hardware in a current-moulding 1450 settles them. |
+| **Affected** | Board A (east edge at X 120, RF sites, wall-port leads), board B (east edge at X 165 and east-end tall parts, stack height under the monitor), board C (the backer under the face), board E (clamps, south edge, corner pads), board P (pocket place); REQ-019, CON-006, REQ-047; D-07's ANT3; the drilling of the connector and entry plates. |
+| **Evidence** | `v2/docs/CASE-MARGINS.md` section 3.2 (35 MET as sensitivity readings, 35 OPEN), section 5 (checks T1 to T11), section 7 (the board each check decides); `v2/vendor/peli/1450/frame_seat.out`, reproduced byte-identical. |
+| **Attempts and results** | Seven revisions of CASE-MARGINS on 26 September with agent (AI) checks. The owner's own measurement (D-08) was withdrawn by the owner. The design is held against the worst of Peli's figures with every unstated allowance doubled as a sensitivity test, which bounds nothing that rests on an unstated tolerance. |
+| **Viable options** | (a) Authorise the case and frame now, machine the made parts, and run the targeted checks before layout entry of A, B, C, E and P. (b) Enter layout on the design basis and carry the rows to fabrication release, accepting a layout change if a check moves an outline or a connector (CASE-MARGINS section 7 option c). (c) A partial mock-up: case, frame, legs, one arrestor on a spot-faced coupon, the picked jumper plugs with RG-316, and stand-in blocks (T1, T2, T5, T6, T10, T11), buying the monitor only if M1 stays under 2.0 mm after its lookups. |
+| **Recommended next action** | Close the desk items first (the jumper plug pick, the sealed RJ45 re-pick, the drawings of the made parts), then (c) in the same case as the heat test (EQ-05), before board B's layout entry. |
+| **Expertise or equipment** | A mechanical assembler with a height gauge, calipers, feeler gauges, hole saws of 27, 29, 22 and 18 mm and a drill; a CNC shop for the plates and legs; an SMA crimp tool for RG-316. |
+| **Cost and lead time** | VERIFIED: case EUR 168.90 and frame EUR 29.66 excl. VAT (in stock); one arrestor USD 78.99 (twelve at USD 947.88); monitor USD 569.00; CM5 passive cooler GBP 4.80. Machining by quote once drawn (JLCCNC from 3 business days); jumper plugs and cable TBD (READY-TO-ACT section 6). |
+
+### EQ-09. The CM5's Ethernet PHY on a capacitively coupled link
+
+| | |
+|---|---|
+| **Exact issue** | The Compute Module 5's Broadcom BCM54210PE termination and common-mode requirements for a capacitively coupled PHY-to-PHY gigabit link are unpublished. Board B's three transformerless module links to the KSZ9897 (decision 29) are "defensible to lay out; not shown to work". |
+| **Affected** | Decision 29; INT-003; board B's parts (24 coupling capacitors against three magnetics) and the Ethernet region's area; a respin if INT-003 fails with no footprint provision. |
+| **Evidence** | `v2/docs/reviews/INT-002-PRE-LAYOUT-ASSESSMENT.md` sections 4, 5 and 7; `v2/ecad/tools/pcb_rules.yaml` lines 1540 to 1648; Microchip DS00004151A section 6.6. |
+| **Attempts and results** | A desk assessment (AI, labelled): the switch vendor's clause matched item by item; the CM5 IO board's reference design read (centre taps on a capacitor to ground, INFERRED voltage mode). |
+| **Viable options** | (a) A written answer from Raspberry Pi or Broadcom. (b) Keep the capacitive links and add a do-not-fit magnetics footprint so the fallback is not a respin. (c) A development-hardware link test before layout (a CM5 IO board, a KSZ9897 evaluation board, a traffic generator). (d) Fit extended-temperature magnetics now. INT-003 on the built board stays the acceptance test in every case. |
+| **Recommended next action** | (b) now as a session choice, stating the coupling capacitors' voltage and dielectric in the netlist; (a) in parallel (text prepared by the session, sent by the owner); (c) if it is cheap. |
+| **Expertise or equipment** | An Ethernet PHY engineer, or a bench with the boards above. |
+| **Cost and lead time** | The question: no cost, lead time unknown. The footprint provision: board area only. The development test: not priced. |
+
+---
+
+## C. External authorisation
+
+### EQ-10. Qualified battery review R-BAT and the pack protection coordination
+
+| | |
+|---|---|
+| **Exact issue** | Board P's protection (BQ4050 primary, BQ7720700 second-level protector, SCF9550 chemical fuse) has only AI review, and owner ruling D-09 requires a qualified battery and protection review before the pack is built. Open within it: the second level's over-temperature window of 62.7 to 77.5 C is not coordinated with the cells' 60 C limit (thresholds, tolerance, sensor placement and lag, behaviour with the primary failed); F1 opening before F2 on a hard short (Q-E4) is unproven; FET safe operating area (BAT-F07), BAT-F12 and BAT-F14 are open; F2's rating is EQ-07. |
+| **Affected** | FEA-005 and FEA-004 (PWR-F12); board P's circuit (U2 option, thermistor network, F2) and possibly its protection strategy after layout; board A's charger interaction; REQ-044; decision 40; D-09; the pack build; the storage configuration decision (CFL-017) interacts with it. |
+| **Evidence** | `v2/docs/review-packets/battery/REVIEW-REQUEST.md`; `SECONDARY-OT-DECISION.md` lines 110 to 165; `FUSE-INTERPRETATION.md` lines 49 to 101 and 185 to 193; POWER-THERMAL section 0 item 8; the owner's second review, finding B. |
+| **Attempts and results** | Agent-only reviews, stated as such. The secondary over-temperature was restored on its own thermistor (`d90f30e4`). `evidence/check_manifest.py` reads RELEASE CHECK PASS (132 rows) on an export of `e3aedb25`. The packet's charger reading is board A at `1f614233` plus an uncommitted candidate, and its manifest does not bind `gen_sch_a.py`. A coordination draft exists in an unmerged branch. |
+| **Viable options** | (a) The owner sends the prepared request to the three shortlisted firms and approves a quote. No other option satisfies D-09. |
+| **Recommended next action** | Finish the secondary over-temperature coordination at desk; bind the charger reading to main's board A (add `gen_sch_a.py` to the manifest's cited documents); confirm `check_manifest.py` passes at the commit whose link is sent; then the owner sends the request (READY-TO-ACT section 2.1) and the Eaton questions. |
+| **Expertise or equipment** | A qualified Li-ion pack protection engineer outside the authoring agents (gauges, second-level protectors, chemical fuses; IEC 62133-2 and UN 38.3 familiarity). The packet's shortlist, read from public pages and not contacted: Accutronics Ltd (UK), Engineering Spirit B.V. (the Netherlands), Jauch Quartz GmbH battery technology (Germany); TI's partner directory as a fourth source. |
+| **Cost and lead time** | TBD by quote; no candidate publishes a price. Approved in principle by D-09 (open item L-03: the quote and the owner's approval). |
+
+### EQ-11. Qualified power review R-PWR
+
+| | |
+|---|---|
+| **Exact issue** | Board A's corrected power design (the LM5176 four-switch buck-boost stages, the BQ25731 charger, the TPS25740A USB-C PD stage, the TPS259631 eFuses, the LTC2954 push-button controller, the pack node at 18 A), board E's input stage and board B's TPS23861 PoE PSE have only AI review. `v2/docs/reviews/REVIEW-ROUTES.md` line 22 and open item L-04 time a qualified power review before board A enters layout; D-09 did not approve it. The records disagree on its staging (EXECUTION-PLAN lines 118 to 126 and FEA-004 do not gate on it). |
+| **Affected** | Board A's layout commitment and layer 8 completion for A; board E's input stage; board B's PSE; FEA-004; CMP-001 on A; REQ-014, REQ-018. |
+| **Evidence** | REVIEW-ROUTES.md, R-PWR questions 1 to 8; ARCHITECTURE.md section 14.2, row A; READY-TO-ACT section 2.3; `v2/docs/records/r4a/r4-decisions.md` and `r4-open-items.md`. |
+| **Attempts and results** | Rounds 4 to 6 AI author and refuter reviews and board A's calculation record. The scripts behind the record (`loop_design.py`, `bulk_ripple.py`, `ripple_dense.py`, `softstart.py`, `restart.py`, `comp9_corners.py` and their runs) are not in the tree, so a reviewer can check each figure by hand but cannot re-run the searches. No board A review packet exists at any revision. |
+| **Viable options** | (a) Commission R-PWR as written, possibly with the R-BAT engineer, since the charger sits in both scopes. (b) A narrower review of the PoE and USB-C PD stages and the eFuses only. (c) Restage R-PWR to fabrication release, with the owner accepting in writing the risk of layout rework. (d) Proceed on AI review only, which the records do not accept for board A. |
+| **Recommended next action** | File board A's converter scripts into `v2/docs/records/r4a/`; build board A's packet at the round 8 merge; reconcile R-PWR's staging in one place; then commission (a), combined with R-BAT where one engineer covers both. |
+| **Expertise or equipment** | A power-electronics design engineer (four-switch buck-boost, NVDC chargers, eFuses, PoE PSE, USB-C PD). Provider options read from public pages, not contacted: Elteknik P.C. (Greece), VDL Sintecs (the Netherlands; power integrity side only), the How2Power consultants directory, TI's partner directory. |
+| **Cost and lead time** | TBD by quote; not covered by D-09 (open item L-04: the decision to commission, a spend ceiling or an approved quote). |
+
+### EQ-12. Qualified high-speed digital review R-HSD
+
+| | |
+|---|---|
+| **Exact issue** | Board B's PCIe, USB 3 and HDMI fabric (switch lanes, AC coupling, reference clocks, HCSL terminations, the three transformerless module Ethernet links, the stackup) has only AI review. REVIEW-ROUTES line 23 and open item L-05 time R-HSD before a board B layout is committed, its findings can change the schematic, and it is not commissioned. |
+| **Affected** | Board B's schematic and layout; FEA-003 (fabrication stage); INT-003; decisions 29 and 43; layer 8 completion for B. |
+| **Evidence** | REVIEW-ROUTES.md, section R-HSD; ARCHITECTURE.md section 14.2, row B; READY-TO-ACT section 2.4 and text T2 (the statement of work); CURRENT-EVIDENCE line 187. |
+| **Attempts and results** | AI desk reviews: the fabric map (202 of 202 rows OK on the netlist), the INT-002 assessment (desk PASS); Q-B-ESC-1 INCONCLUSIVE. The AI reviews did find and fix real defects (PCIe pairs wired transmitter to transmitter; FAB-01 to FAB-04 drafted in round 8). |
+| **Viable options** | (a) Commission R-HSD as written, with T2. (b) A narrower pre-layout SI review of the failover USB 3 and HDMI channels only. (c) The fabricator's stackup engineering for the impedance question alone. (d) Proceed to EXPERIMENTAL layout only and hold the committed layout on R-HSD. (e) Proceed on AI review, which the records do not accept for board B's layout commitment. |
+| **Recommended next action** | (a), once round 8's board B merges, Q-B-ESC-2 has reported and board B's packet is built with `review_packet.py`; meanwhile only experimental layout on board B (standing condition 7). |
+| **Expertise or equipment** | A high-speed digital or signal-integrity engineer with PCIe Gen 2 and USB 3 board experience, ideally with 2.5D or 3D field tools. Provider options read from public pages, not contacted: VDL Sintecs (a published pre-layout SI service that asks for a statement of work and schematic PDFs); for the stack question alone, JLCPCB's impedance calculator. |
+| **Cost and lead time** | TBD by quote; not covered by D-09 (open item L-05). The eight-layer fabrication price is also a quote (L-01). |
+
+### EQ-13. The M1 mission duration (L-02)
+
+| | |
+|---|---|
+| **Exact issue** | Owner ruling D-06 leaves the mission duration for M1's pack-plus-solar energy balance for the owner to set later (open item L-02, class OWNER_ACTION), while his standing rule says he is not asked further questions. REQ-016 carries the solar requirement TBD because of it. |
+| **Affected** | REQ-016's energy-balance half only, once split; CONOPS mission M1; no board once the solar input window is set. |
+| **Evidence** | `pcb_requirements.yaml` line 713 (L-02) and line 2541 (REQ-016); the text of D-06. |
+| **Attempts and results** | None: the value is reserved by D-06 and the standing rule forbids asking. |
+| **Viable options** | (a) Split REQ-016: settle the hardware window now (open-circuit maximum, tracking range and maximum input power of board E's LT8705A stage) as a core requirement, and let the energy balance wait for L-02 as an advisory record. (b) Keep REQ-016 TBD and layer 3 open. (c) Have the session set the duration from the use case under the standing rule and record it reversibly. |
+| **Recommended next action** | (a). The owner may set L-02 whenever he chooses, and no hardware waits on it. Option (c) is not recommended because D-06 reserves the value to the owner; the standing rule stops questions, it does not transfer a value the owner kept. |
+| **Expertise or equipment** | None. |
+| **Cost and lead time** | None. |
+
+### EQ-14. Fabricator prices per layer count and copper weight
+
+| | |
+|---|---|
+| **Exact issue** | No fabricator price exists for any board at its alternative layer counts (4, 6, 8) or copper weights, so rule STK-002 cannot close, decision 27's "six if the price is close" for board C is unpriced, decision 43's eight-layer board B is unpriced, and board A's 2 oz option for the 18 A pack path is unpriced. |
+| **Affected** | STK-002 on all seven boards; board B (eight layers, L-01); board C (six); board A (2 oz outer); board P (the inner copper weight); the cost half of every written layer decision under the P0 rule. |
+| **Evidence** | `v2/docs/LAYER-DECISIONS-2026-09-11.md`, "What is still missing"; decisions 27 and 43 in `v2/ecad/tools/pcb_decisions.yaml`; open item L-01. |
+| **Attempts and results** | JLCPCB's public API has no PCB price endpoint (the paths its parts API suggests return 404 without a session); by the project's rule the session never logs into a fabricator account. |
+| **Viable options** | (a) The owner's ordering session takes one quote per board at its real outline and quantity five, at each candidate layer count and copper weight, nothing else changed. (b) Proceed at the ruled counts and accept a possible reversal before any order, with the reversal cost stated per board. |
+| **Recommended next action** | (a) once round 8 has fixed the outlines; (b) meanwhile. |
+| **Expertise or equipment** | The owner's fabricator account. |
+| **Cost and lead time** | No cost; minutes per board. |
