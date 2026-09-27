@@ -1,0 +1,4401 @@
+{
+ "board": "b",
+ "counts": {
+  "answered_nets": 30,
+  "classes": 147,
+  "contradicted_nets": 0,
+  "decided_nets": 30,
+  "layout_bound_nets": 0,
+  "low_speed_nets": 313,
+  "may_be_long_nets": 30,
+  "signal_nets": 835,
+  "undecided_nets": 492
+ },
+ "inputs": {
+  "board": "b",
+  "board_facts": {
+   "path": "tools/pcb_board_facts.yaml",
+   "sha256_16": "4a0474ddac0b1404"
+  },
+  "board_table": {
+   "path": "tools/boards/b.json",
+   "sha256_16": "1a4c6b0ce47d5d42"
+  },
+  "critical_k": 6,
+  "document_1": {
+   "path": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
+   "sha256_16": "2ecb40606d4b84fe"
+  },
+  "extent_mm": 530.0,
+  "intent": {
+   "path": "pcb-b-compute-b19/out/pcb-b-compute-intent.json",
+   "sha256_16": "cf461c0b75ce368b"
+  },
+  "netlist": {
+   "content16": "70be33b07a339d6e",
+   "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
+   "sha256_16": "669d02d07aeaae4b"
+  },
+  "project": {
+   "path": "pcb-b-compute-b19/pcb-b-compute.kicad_pro",
+   "sha256_16": "c2c6e771722d9f53"
+  },
+  "slowest_layer": "JLC06161H-3313 In2.Cu",
+  "stack_table": {
+   "path": "tools/stackup_write.py",
+   "sha256_16": "b55a3c0f58c805c2"
+  },
+  "stacks": [
+   "JLC06161H-3313",
+   "JLC08161H-2116"
+  ],
+  "t_pd_ps_per_mm": 7.154
+ },
+ "notes": [],
+ "rows": [
+  {
+   "basis": "an antenna feed, radio frequency by definition",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1: TXEN GPIO4, RXEN GPIO5, DIO1 GPIO24, BUSY GPIO23, NRST GPIO26; EU power cap in meshtasticd": [
+     "U12"
+    ]
+   },
+   "nets": [
+    "GNSS_ANT",
+    "LORA_ANT",
+    "WA_ANT",
+    "WB_ANT"
+   ],
+   "pattern": "*_ANT",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "an antenna bias feed, DC through a choke",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "GNSS_BIAS"
+   ],
+   "pattern": "*_BIAS",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a bootstrap node riding on a switch node",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S1A": [
+     "U103"
+    ],
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S1B": [
+     "U104"
+    ],
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S2A": [
+     "U203"
+    ],
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S2B": [
+     "U204"
+    ],
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S3A": [
+     "U303"
+    ],
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S3B": [
+     "U304"
+    ]
+   },
+   "nets": [
+    "S1A_BOOT",
+    "S1B_BOOT",
+    "S2A_BOOT",
+    "S2B_BOOT",
+    "S3A_BOOT",
+    "S3B_BOOT"
+   ],
+   "pattern": "*_BOOT",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a controller's boot-select strap, read once at reset",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U41"
+    ],
+    "STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U51"
+    ],
+    "STM32H743VIT6 I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U61"
+    ]
+   },
+   "nets": [
+    "IOCA_BOOT0",
+    "IOCB_BOOT0",
+    "IOCC_BOOT0"
+   ],
+   "pattern": "*_BOOT?",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a radio module's bootstrap-loader strap, read once at reset",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "CP2102N-A02-GQFN28 USB-UART bridge (ZBA)": [
+     "U16"
+    ],
+    "CP2102N-A02-GQFN28 USB-UART bridge (ZBB)": [
+     "U17"
+    ],
+    "Ebyte E72-2G4M20S1E CC2652P (OpenThread RCP for Matter): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge": [
+     "U14"
+    ],
+    "Ebyte E72-2G4M20S1E CC2652P (Zigbee coordinator): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge": [
+     "U13"
+    ]
+   },
+   "nets": [
+    "ZBA_BSL",
+    "ZBB_BSL"
+   ],
+   "pattern": "*_BSL",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a bootstrap node riding on a switch node",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "AP63203WU-7 3.3 V 2 A buck: the shared logic (+3V3_DEV)": [
+     "U25"
+    ],
+    "TPS62933DRLR buck 1.0 V PCIe switch core S1": [
+     "U105"
+    ],
+    "TPS62933DRLR buck 1.0 V PCIe switch core S2": [
+     "U205"
+    ],
+    "TPS62933DRLR buck 1.0 V PCIe switch core S3": [
+     "U305"
+    ],
+    "TPS62933DRLR buck 1.1 V hub core S1 (on the device rail and always on: the bank outlives its module)": [
+     "U106"
+    ],
+    "TPS62933DRLR buck 1.1 V hub core S2 (on the device rail and always on: the bank outlives its module)": [
+     "U206"
+    ],
+    "TPS62933DRLR buck 1.1 V hub core S3 (on the device rail and always on: the bank outlives its module)": [
+     "U306"
+    ],
+    "TPS62933DRLR buck 1.2 V Ethernet switch core": [
+     "U26"
+    ]
+   },
+   "nets": [
+    "DEV_BST",
+    "KSZC_BST",
+    "S1C_BST",
+    "S1D_BST",
+    "S2C_BST",
+    "S2D_BST",
+    "S3C_BST",
+    "S3D_BST"
+   ],
+   "pattern": "*_BST",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the HDMI consumer-electronics control line, a single wire at about 400 bit/s",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side)": [
+     "U30B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side)": [
+     "U31B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side)": [
+     "U32B"
+    ],
+    "TI TS3DV642A0RUAR HDMI 2:1 switch (HDMI1 / HDMI2 -> HDMIM)": [
+     "U3"
+    ],
+    "TI TS3DV642A0RUAR HDMI 2:1 switch (HDMIM / HDMI3 -> HDMIO)": [
+     "U4"
+    ]
+   },
+   "nets": [
+    "HDMI1_CEC",
+    "HDMI2_CEC",
+    "HDMI3_CEC",
+    "HDMIM_CEC",
+    "HDMIO_CEC"
+   ],
+   "pattern": "*_CEC",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a PCIe clock request, an open-drain static level in this design",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side)": [
+     "U30B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side)": [
+     "U31B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side)": [
+     "U32B"
+    ]
+   },
+   "nets": [
+    "CARD1_CLKREQ_n",
+    "CARD2_CLKREQ_n",
+    "CARD3_CLKREQ_n",
+    "NVME1_CLKREQ_n",
+    "NVME2_CLKREQ_n",
+    "NVME3_CLKREQ_n",
+    "PCIE1_CLKREQ_n",
+    "PCIE2_CLKREQ_n",
+    "PCIE3_CLKREQ_n"
+   ],
+   "pattern": "*_CLKREQ_n",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "an error amplifier's compensation node",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S1A": [
+     "U103"
+    ],
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S1B": [
+     "U104"
+    ],
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S2A": [
+     "U203"
+    ],
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S2B": [
+     "U204"
+    ],
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S3A": [
+     "U303"
+    ],
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S3B": [
+     "U304"
+    ]
+   },
+   "nets": [
+    "S1A_COMP",
+    "S1B_COMP",
+    "S2A_COMP",
+    "S2B_COMP",
+    "S3A_COMP",
+    "S3B_COMP"
+   ],
+   "pattern": "*_COMP",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the second element of the same compensation network",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "S1A_COMPC",
+    "S1B_COMPC",
+    "S2A_COMPC",
+    "S2B_COMPC",
+    "S3A_COMPC",
+    "S3B_COMPC"
+   ],
+   "pattern": "*_COMPC",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a module control line, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)": [
+     "U6"
+    ]
+   },
+   "nets": [
+    "RB_CTRL"
+   ],
+   "pattern": "*_CTRL",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "an NVMe device-sleep pin, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "NVME1_DEVSLP",
+    "NVME2_DEVSLP",
+    "NVME3_DEVSLP"
+   ],
+   "pattern": "*_DEVSLP",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "answered": {
+    "CAM_DM": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)",
+    "GNSS_DM": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)",
+    "LIME_DM": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)",
+    "QMX_DM": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)",
+    "RB_DM": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)",
+    "ZBA_DM": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)",
+    "ZBB_DM": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)"
+   },
+   "basis": "a USB 2.0 D minus line to a device (radio, camera, modem)",
+   "class": "HIGH_SPEED_DIGITAL",
+   "critical_mm": 11.6,
+   "document": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
+   "drivers": {
+    "CP2102N-A02-GQFN28 USB-UART bridge (GNSS)": [
+     "U15"
+    ],
+    "CP2102N-A02-GQFN28 USB-UART bridge (RB)": [
+     "U18"
+    ],
+    "CP2102N-A02-GQFN28 USB-UART bridge (ZBA)": [
+     "U16"
+    ],
+    "CP2102N-A02-GQFN28 USB-UART bridge (ZBB)": [
+     "U17"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port)": [
+     "U102"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S2 (upstream the CM5 USB3-0 port)": [
+     "U202"
+    ],
+    "USBLC6-2SC6": [
+     "U33",
+     "U34",
+     "U35"
+    ]
+   },
+   "layout_bound": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 11.6 mm",
+   "nets": [
+    "CAM_DM",
+    "GNSS_DM",
+    "LIME_DM",
+    "QMX_DM",
+    "RB_DM",
+    "ZBA_DM",
+    "ZBB_DM"
+   ],
+   "pattern": "*_DM",
+   "rise_ns": 0.5,
+   "source": "USB2-HS",
+   "status": "DECIDED",
+   "why": "USB 2.0 section 7.1.2.2, THSR and THSF, 10 to 90 percent, a minimum: v2/vendor/standards/usb-2-0-specification-2024-09-27.md"
+  },
+  {
+   "answered": {
+    "CAM_DP": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)",
+    "GNSS_DP": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)",
+    "LIME_DP": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)",
+    "QMX_DP": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)",
+    "RB_DP": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)",
+    "ZBA_DP": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)",
+    "ZBB_DP": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)"
+   },
+   "basis": "a USB 2.0 D plus line, the other half of the same pair",
+   "class": "HIGH_SPEED_DIGITAL",
+   "critical_mm": 11.6,
+   "document": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
+   "drivers": {
+    "CP2102N-A02-GQFN28 USB-UART bridge (GNSS)": [
+     "U15"
+    ],
+    "CP2102N-A02-GQFN28 USB-UART bridge (RB)": [
+     "U18"
+    ],
+    "CP2102N-A02-GQFN28 USB-UART bridge (ZBA)": [
+     "U16"
+    ],
+    "CP2102N-A02-GQFN28 USB-UART bridge (ZBB)": [
+     "U17"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port)": [
+     "U102"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S2 (upstream the CM5 USB3-0 port)": [
+     "U202"
+    ],
+    "USBLC6-2SC6": [
+     "U33",
+     "U34",
+     "U35"
+    ]
+   },
+   "layout_bound": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 11.6 mm",
+   "nets": [
+    "CAM_DP",
+    "GNSS_DP",
+    "LIME_DP",
+    "QMX_DP",
+    "RB_DP",
+    "ZBA_DP",
+    "ZBB_DP"
+   ],
+   "pattern": "*_DP",
+   "rise_ns": 0.5,
+   "source": "USB2-HS",
+   "status": "DECIDED",
+   "why": "USB 2.0 section 7.1.2.2, THSR and THSF, 10 to 90 percent, a minimum: v2/vendor/standards/usb-2-0-specification-2024-09-27.md"
+  },
+  {
+   "basis": "an eFuse slew-rate capacitor node, deliberately slow",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TPS259631DDAR eFuse +5V_DEV -> +5V_LIME (301R 1% (ILM: 3.0 A))": [
+     "U23"
+    ],
+    "TPS259631DDAR eFuse +5V_DEV -> +5V_RB (301R 1% (ILM: 3.0 A))": [
+     "U24"
+    ]
+   },
+   "nets": [
+    "U23_DVDT",
+    "U24_DVDT"
+   ],
+   "pattern": "*_DVDT",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "an EEPROM-present strap, static",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U101"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U201"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U301"
+    ]
+   },
+   "nets": [
+    "S1_EEPD",
+    "S2_EEPD",
+    "S3_EEPD"
+   ],
+   "pattern": "*_EEPD",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "an enable, a static level with an RC on it",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "AP2112K-3.3 LDO: the private 3.3 V of controller A, its own branch off the device rail": [
+     "U40"
+    ],
+    "AP2112K-3.3 LDO: the private 3.3 V of controller B, its own branch off the device rail": [
+     "U50"
+    ],
+    "AP2112K-3.3 LDO: the private 3.3 V of controller C, its own branch off the device rail": [
+     "U60"
+    ],
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S1A": [
+     "U103"
+    ],
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S3A": [
+     "U303"
+    ],
+    "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)": [
+     "U6"
+    ],
+    "SN74LVC08APWR quad AND: E72 radios (EMCON AND software); spare gates grounded": [
+     "U20"
+    ],
+    "SN74LVC08APWR quad AND: LimeSDR (hub port power AND EMCON AND software), RockBLOCK (EMCON AND software), LoRa (EMCON AND software)": [
+     "U19"
+    ],
+    "TI TS3DV642A0RUAR HDMI 2:1 switch (HDMI1 / HDMI2 -> HDMIM)": [
+     "U3"
+    ],
+    "TI TS3DV642A0RUAR HDMI 2:1 switch (HDMIM / HDMI3 -> HDMIO)": [
+     "U4"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port)": [
+     "U102"
+    ],
+    "TPS2065CDBV": [
+     "U28"
+    ],
+    "TPS22810DRV": [
+     "U21",
+     "U22"
+    ],
+    "TPS259631DDAR eFuse +5V_DEV -> +5V_LIME (301R 1% (ILM: 3.0 A))": [
+     "U23"
+    ],
+    "TPS259631DDAR eFuse +5V_DEV -> +5V_RB (301R 1% (ILM: 3.0 A))": [
+     "U24"
+    ]
+   },
+   "nets": [
+    "CAM_EN",
+    "E22_EN",
+    "E72_EN",
+    "HDMI_SW_EN",
+    "IOCA_LDO_EN",
+    "IOCB_LDO_EN",
+    "IOCC_LDO_EN",
+    "LIME_EN",
+    "LIME_HW_EN",
+    "LIME_SW_EN",
+    "RB_EN",
+    "RB_SW_EN",
+    "S1A_EN",
+    "S3A_EN"
+   ],
+   "pattern": "*_EN",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "an enable of a numbered channel, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S2A": [
+     "U203"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side)": [
+     "U30B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side)": [
+     "U31B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side)": [
+     "U32B"
+    ]
+   },
+   "nets": [
+    "PCIE_PWR_EN1",
+    "PCIE_PWR_EN2",
+    "PCIE_PWR_EN3",
+    "SLOT_EN1",
+    "SLOT_EN2",
+    "SLOT_EN3"
+   ],
+   "pattern": "*_EN?",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a converter's feedback divider tap, a DC level inside the control loop",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S1A": [
+     "U103"
+    ],
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S1B": [
+     "U104"
+    ],
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S2A": [
+     "U203"
+    ],
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S2B": [
+     "U204"
+    ],
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S3A": [
+     "U303"
+    ],
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S3B": [
+     "U304"
+    ],
+    "TPS62933DRLR buck 1.0 V PCIe switch core S1": [
+     "U105"
+    ],
+    "TPS62933DRLR buck 1.0 V PCIe switch core S2": [
+     "U205"
+    ],
+    "TPS62933DRLR buck 1.0 V PCIe switch core S3": [
+     "U305"
+    ],
+    "TPS62933DRLR buck 1.1 V hub core S1 (on the device rail and always on: the bank outlives its module)": [
+     "U106"
+    ],
+    "TPS62933DRLR buck 1.1 V hub core S2 (on the device rail and always on: the bank outlives its module)": [
+     "U206"
+    ],
+    "TPS62933DRLR buck 1.1 V hub core S3 (on the device rail and always on: the bank outlives its module)": [
+     "U306"
+    ],
+    "TPS62933DRLR buck 1.2 V Ethernet switch core": [
+     "U26"
+    ]
+   },
+   "nets": [
+    "KSZC_FB",
+    "S1A_FB",
+    "S1B_FB",
+    "S1C_FB",
+    "S1D_FB",
+    "S2A_FB",
+    "S2B_FB",
+    "S2C_FB",
+    "S2D_FB",
+    "S3A_FB",
+    "S3B_FB",
+    "S3C_FB",
+    "S3D_FB"
+   ],
+   "pattern": "*_FB",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a fault flag, an open-drain static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "PCA9555PW 0x25: inputs (faults, RockBLOCK status) and spares": [
+     "U7"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port)": [
+     "U102"
+    ],
+    "TPS2065CDBV": [
+     "U28"
+    ],
+    "TPS259631DDAR eFuse +5V_DEV -> +5V_LIME (301R 1% (ILM: 3.0 A))": [
+     "U23"
+    ],
+    "TPS259631DDAR eFuse +5V_DEV -> +5V_RB (301R 1% (ILM: 3.0 A))": [
+     "U24"
+    ]
+   },
+   "nets": [
+    "CAM_FLT",
+    "LIME_FLT",
+    "RB_FLT"
+   ],
+   "pattern": "*_FLT",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "an HDMI hot-plug detect, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side)": [
+     "U30B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side)": [
+     "U31B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side)": [
+     "U32B"
+    ],
+    "TI TS3DV642A0RUAR HDMI 2:1 switch (HDMI1 / HDMI2 -> HDMIM)": [
+     "U3"
+    ],
+    "TI TS3DV642A0RUAR HDMI 2:1 switch (HDMIM / HDMI3 -> HDMIO)": [
+     "U4"
+    ]
+   },
+   "nets": [
+    "HDMI1_HPD",
+    "HDMI2_HPD",
+    "HDMI3_HPD",
+    "HDMIM_HPD",
+    "HDMIO_HPD"
+   ],
+   "pattern": "*_HPD",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the input side of the same hot-plug detect",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "HDMIO_HPD_IN"
+   ],
+   "pattern": "*_HPD_IN",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a module interface-enable strap, static",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)": [
+     "U6"
+    ]
+   },
+   "nets": [
+    "RB_IEN"
+   ],
+   "pattern": "*_IEN",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "an eFuse current-limit resistor node, DC",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TPS259631DDAR eFuse +5V_DEV -> +5V_LIME (301R 1% (ILM: 3.0 A))": [
+     "U23"
+    ],
+    "TPS259631DDAR eFuse +5V_DEV -> +5V_RB (301R 1% (ILM: 3.0 A))": [
+     "U24"
+    ]
+   },
+   "nets": [
+    "U23_ILM",
+    "U24_ILM"
+   ],
+   "pattern": "*_ILM",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a reference-current resistor node, a DC bias",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U101"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U201"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U301"
+    ]
+   },
+   "nets": [
+    "S1_IREF",
+    "S2_IREF",
+    "S3_IREF"
+   ],
+   "pattern": "*_IREF",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a current-set resistor node, DC",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 the CM5 slots (PHY to PHY), port 4 the wall RJ45; I2C management on the kit bus": [
+     "U1"
+    ]
+   },
+   "nets": [
+    "KSZ_ISET"
+   ],
+   "pattern": "*_ISET",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "an unused JTAG pin strapped low",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U101"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U201"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U301"
+    ]
+   },
+   "nets": [
+    "S1_JTAGL",
+    "S2_JTAGL",
+    "S3_JTAGL"
+   ],
+   "pattern": "*_JTAGL",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "an indicator LED anode or cathode",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Ebyte E72-2G4M20S1E CC2652P (OpenThread RCP for Matter): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge": [
+     "U14"
+    ],
+    "Ebyte E72-2G4M20S1E CC2652P (Zigbee coordinator): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge": [
+     "U13"
+    ],
+    "STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U41"
+    ],
+    "STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U51"
+    ],
+    "STM32H743VIT6 I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U61"
+    ]
+   },
+   "nets": [
+    "IOCA_LED_A",
+    "IOCA_LED_K",
+    "IOCB_LED_A",
+    "IOCB_LED_K",
+    "IOCC_LED_A",
+    "IOCC_LED_K",
+    "ZBA_LED_G",
+    "ZBA_LED_R",
+    "ZBB_LED_G",
+    "ZBB_LED_R"
+   ],
+   "pattern": "*_LED_?",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a module power-off request, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)": [
+     "U6"
+    ]
+   },
+   "nets": [
+    "5G_OFF"
+   ],
+   "pattern": "*_OFF",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a radio module's power-on control, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)": [
+     "U6"
+    ],
+    "SN74LVC08APWR quad AND: E72 radios (EMCON AND software); spare gates grounded": [
+     "U20"
+    ],
+    "SN74LVC08APWR quad AND: LimeSDR (hub port power AND EMCON AND software), RockBLOCK (EMCON AND software), LoRa (EMCON AND software)": [
+     "U19"
+    ],
+    "SN74LVC32APWR quad OR, slot S1: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare": [
+     "U111"
+    ],
+    "SN74LVC32APWR quad OR, slot S2: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare": [
+     "U211"
+    ],
+    "SN74LVC32APWR quad OR, slot S3: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare": [
+     "U311"
+    ]
+   },
+   "nets": [
+    "EMCON_ON",
+    "LORA_ON",
+    "ZB_ON"
+   ],
+   "pattern": "*_ON",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "an overvoltage-lockout divider tap, DC",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TPS259631DDAR eFuse +5V_DEV -> +5V_LIME (301R 1% (ILM: 3.0 A))": [
+     "U23"
+    ],
+    "TPS259631DDAR eFuse +5V_DEV -> +5V_RB (301R 1% (ILM: 3.0 A))": [
+     "U24"
+    ]
+   },
+   "nets": [
+    "U23_OVLO",
+    "U24_OVLO"
+   ],
+   "pattern": "*_OVLO",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a presence-detect pin, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U101"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U201"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U301"
+    ]
+   },
+   "nets": [
+    "S1_PRSNT3",
+    "S2_PRSNT3",
+    "S3_PRSNT3"
+   ],
+   "pattern": "*_PRSNT*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a port-status output driving an indicator",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U101"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U201"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U301"
+    ]
+   },
+   "nets": [
+    "S1_PST0",
+    "S1_PST1",
+    "S2_PST0",
+    "S2_PST1",
+    "S3_PST0",
+    "S3_PST1"
+   ],
+   "pattern": "*_PST?",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a module power-off line, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "5G_PWROFF_n"
+   ],
+   "pattern": "*_PWROFF_n",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a hub's power-polarity strap, static",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port)": [
+     "U102"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S2 (upstream the CM5 USB3-0 port)": [
+     "U202"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S3 (upstream the CM5 USB3-0 port)": [
+     "U302"
+    ]
+   },
+   "nets": [
+    "HUB1_PWRPOL",
+    "HUB2_PWRPOL",
+    "HUB3_PWRPOL"
+   ],
+   "pattern": "*_PWRPOL",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a power-saving configuration strap, static",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U101"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U201"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U301"
+    ]
+   },
+   "nets": [
+    "S1_PWRSAV",
+    "S2_PWRSAV",
+    "S3_PWRSAV"
+   ],
+   "pattern": "*_PWRSAV",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a hub's reference-resistor node, DC",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Quectel LG290P03AAMD GNSS RTK module: UART1 to the bridge, 1PPS to every slot, active antenna on the west-wall GNSS jack": [
+     "U11"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port)": [
+     "U102"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S2 (upstream the CM5 USB3-0 port)": [
+     "U202"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S3 (upstream the CM5 USB3-0 port)": [
+     "U302"
+    ]
+   },
+   "nets": [
+    "GNSS_VDD_RF",
+    "HUB1_R1",
+    "HUB2_R1",
+    "HUB3_R1"
+   ],
+   "pattern": "*_R?",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a module reset held for milliseconds by an RC",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)": [
+     "U6"
+    ]
+   },
+   "nets": [
+    "5G_RESET"
+   ],
+   "pattern": "*_RESET",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "an external-resistor bias node, DC",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U101"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U201"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U301"
+    ]
+   },
+   "nets": [
+    "S1_REXT",
+    "S2_REXT",
+    "S3_REXT"
+   ],
+   "pattern": "*_REXT",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a receiver's radio-frequency input",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Quectel LG290P03AAMD GNSS RTK module: UART1 to the bridge, 1PPS to every slot, active antenna on the west-wall GNSS jack": [
+     "U11"
+    ]
+   },
+   "nets": [
+    "GNSS_RF_IN"
+   ],
+   "pattern": "*_RF_IN",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a reset line, as above",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "CP2102N-A02-GQFN28 USB-UART bridge (GNSS)": [
+     "U15"
+    ],
+    "CP2102N-A02-GQFN28 USB-UART bridge (RB)": [
+     "U18"
+    ],
+    "CP2102N-A02-GQFN28 USB-UART bridge (ZBA)": [
+     "U16"
+    ],
+    "CP2102N-A02-GQFN28 USB-UART bridge (ZBB)": [
+     "U17"
+    ],
+    "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)": [
+     "U6"
+    ]
+   },
+   "nets": [
+    "GNSS_RST",
+    "KSZ_RST",
+    "RB_RST",
+    "SIM1_RST",
+    "SIM2_RST",
+    "SIMC1_RST",
+    "SIMC2_RST",
+    "SIMR2_RST",
+    "ZBA_RST",
+    "ZBB_RST"
+   ],
+   "pattern": "*_RST",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a downstream PCIe reset, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U101"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U201"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U301"
+    ]
+   },
+   "nets": [
+    "PCIE1_RST1_n",
+    "PCIE1_RST2_n",
+    "PCIE2_RST1_n",
+    "PCIE2_RST2_n",
+    "PCIE3_RST1_n",
+    "PCIE3_RST2_n"
+   ],
+   "pattern": "*_RST?_n",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a reset line: a logic edge whose timing is a specified property of the device",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "CP2102N-A02-GQFN28 USB-UART bridge (ZBA)": [
+     "U16"
+    ],
+    "CP2102N-A02-GQFN28 USB-UART bridge (ZBB)": [
+     "U17"
+    ],
+    "Ebyte E72-2G4M20S1E CC2652P (OpenThread RCP for Matter): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge": [
+     "U14"
+    ],
+    "Ebyte E72-2G4M20S1E CC2652P (Zigbee coordinator): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge": [
+     "U13"
+    ],
+    "Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 the CM5 slots (PHY to PHY), port 4 the wall RJ45; I2C management on the kit bus": [
+     "U1"
+    ],
+    "Quectel LG290P03AAMD GNSS RTK module: UART1 to the bridge, 1PPS to every slot, active antenna on the west-wall GNSS jack": [
+     "U11"
+    ],
+    "STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U41"
+    ],
+    "STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U51"
+    ],
+    "STM32H743VIT6 I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U61"
+    ],
+    "SWD pads, controller A: 3V3 SWDIO SWCLK NRST GND": [
+     "U42"
+    ],
+    "SWD pads, controller B: 3V3 SWDIO SWCLK NRST GND": [
+     "U52"
+    ],
+    "SWD pads, controller C: 3V3 SWDIO SWCLK NRST GND": [
+     "U62"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port)": [
+     "U102"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S2 (upstream the CM5 USB3-0 port)": [
+     "U202"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S3 (upstream the CM5 USB3-0 port)": [
+     "U302"
+    ]
+   },
+   "nets": [
+    "5G_RST_n",
+    "GNSS_RST_n",
+    "HUB1_RST_n",
+    "HUB2_RST_n",
+    "HUB3_RST_n",
+    "IOCA_RST_n",
+    "IOCB_RST_n",
+    "IOCC_RST_n",
+    "KSZ_RST_n",
+    "ZBA_RST_n",
+    "ZBB_RST_n"
+   ],
+   "pattern": "*_RST_n",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a frequency-setting resistor node, a DC bias",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S1A": [
+     "U103"
+    ],
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S1B": [
+     "U104"
+    ],
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S2A": [
+     "U203"
+    ],
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S2B": [
+     "U204"
+    ],
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S3A": [
+     "U303"
+    ],
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S3B": [
+     "U304"
+    ]
+   },
+   "nets": [
+    "S1A_RT",
+    "S1B_RT",
+    "S2A_RT",
+    "S2B_RT",
+    "S3A_RT",
+    "S3B_RT"
+   ],
+   "pattern": "*_RT",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a UART receive line to a module",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "CP2102N-A02-GQFN28 USB-UART bridge (GNSS)": [
+     "U15"
+    ],
+    "CP2102N-A02-GQFN28 USB-UART bridge (RB)": [
+     "U18"
+    ],
+    "CP2102N-A02-GQFN28 USB-UART bridge (ZBA)": [
+     "U16"
+    ],
+    "CP2102N-A02-GQFN28 USB-UART bridge (ZBB)": [
+     "U17"
+    ],
+    "Ebyte E72-2G4M20S1E CC2652P (OpenThread RCP for Matter): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge": [
+     "U14"
+    ],
+    "Ebyte E72-2G4M20S1E CC2652P (Zigbee coordinator): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge": [
+     "U13"
+    ],
+    "Quectel LG290P03AAMD GNSS RTK module: UART1 to the bridge, 1PPS to every slot, active antenna on the west-wall GNSS jack": [
+     "U11"
+    ]
+   },
+   "nets": [
+    "GNSS_RXD",
+    "RB_RXD",
+    "ZBA_RXD",
+    "ZBB_RXD"
+   ],
+   "pattern": "*_RXD",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a second UART receive line of the same module",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Quectel LG290P03AAMD GNSS RTK module: UART1 to the bridge, 1PPS to every slot, active antenna on the west-wall GNSS jack": [
+     "U11"
+    ]
+   },
+   "nets": [
+    "GNSS_RXD2"
+   ],
+   "pattern": "*_RXD?",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a radio module's receive enable, a static level held for a whole packet",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U32A"
+    ],
+    "Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1: TXEN GPIO4, RXEN GPIO5, DIO1 GPIO24, BUSY GPIO23, NRST GPIO26; EU power cap in meshtasticd": [
+     "U12"
+    ]
+   },
+   "nets": [
+    "LORA_RXEN"
+   ],
+   "pattern": "*_RXEN",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a slot-clock configuration strap, static",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U101"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U201"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U301"
+    ]
+   },
+   "nets": [
+    "S1_SLOTCLK",
+    "S2_SLOTCLK",
+    "S3_SLOTCLK"
+   ],
+   "pattern": "*_SLOTCLK",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a slot-implemented configuration strap, static",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U101"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U201"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U301"
+    ]
+   },
+   "nets": [
+    "S1_SLOTIMP",
+    "S2_SLOTIMP",
+    "S3_SLOTIMP"
+   ],
+   "pattern": "*_SLOTIMP",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "an SMBus clock at 100 kHz",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U101"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U201"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U301"
+    ]
+   },
+   "nets": [
+    "S1_SMBCLK",
+    "S2_SMBCLK",
+    "S3_SMBCLK"
+   ],
+   "pattern": "*_SMBCLK",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the data half of the same SMBus",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U101"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U201"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U301"
+    ]
+   },
+   "nets": [
+    "S1_SMBDAT",
+    "S2_SMBDAT",
+    "S3_SMBDAT"
+   ],
+   "pattern": "*_SMBDAT",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a hub's SMBus-mode strap, static",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port)": [
+     "U102"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S2 (upstream the CM5 USB3-0 port)": [
+     "U202"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S3 (upstream the CM5 USB3-0 port)": [
+     "U302"
+    ]
+   },
+   "nets": [
+    "HUB1_SMBUS_n",
+    "HUB2_SMBUS_n",
+    "HUB3_SMBUS_n"
+   ],
+   "pattern": "*_SMBUS_n",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a soft-start capacitor node, a ramp of milliseconds",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TPS62933DRLR buck 1.0 V PCIe switch core S1": [
+     "U105"
+    ],
+    "TPS62933DRLR buck 1.0 V PCIe switch core S2": [
+     "U205"
+    ],
+    "TPS62933DRLR buck 1.0 V PCIe switch core S3": [
+     "U305"
+    ],
+    "TPS62933DRLR buck 1.1 V hub core S1 (on the device rail and always on: the bank outlives its module)": [
+     "U106"
+    ],
+    "TPS62933DRLR buck 1.1 V hub core S2 (on the device rail and always on: the bank outlives its module)": [
+     "U206"
+    ],
+    "TPS62933DRLR buck 1.1 V hub core S3 (on the device rail and always on: the bank outlives its module)": [
+     "U306"
+    ],
+    "TPS62933DRLR buck 1.2 V Ethernet switch core": [
+     "U26"
+    ]
+   },
+   "nets": [
+    "KSZC_SS",
+    "S1C_SS",
+    "S1D_SS",
+    "S2C_SS",
+    "S2D_SS",
+    "S3C_SS",
+    "S3D_SS"
+   ],
+   "pattern": "*_SS",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a module status output, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "PCA9555PW 0x25: inputs (faults, RockBLOCK status) and spares": [
+     "U7"
+    ]
+   },
+   "nets": [
+    "RB_STATUS"
+   ],
+   "pattern": "*_STATUS",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a configuration strap, read once at reset",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 the CM5 slots (PHY to PHY), port 4 the wall RJ45; I2C management on the kit bus": [
+     "U1"
+    ]
+   },
+   "nets": [
+    "KSZ_STRAP_I2C"
+   ],
+   "pattern": "*_STRAP*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a debug clock, a few megahertz and used only with a probe attached",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U41"
+    ],
+    "STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U51"
+    ],
+    "STM32H743VIT6 I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U61"
+    ],
+    "SWD pads, controller A: 3V3 SWDIO SWCLK NRST GND": [
+     "U42"
+    ],
+    "SWD pads, controller B: 3V3 SWDIO SWCLK NRST GND": [
+     "U52"
+    ],
+    "SWD pads, controller C: 3V3 SWDIO SWCLK NRST GND": [
+     "U62"
+    ]
+   },
+   "nets": [
+    "IOCA_SWCLK",
+    "IOCB_SWCLK",
+    "IOCC_SWCLK"
+   ],
+   "pattern": "*_SWCLK",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the data half of the same debug port",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U41"
+    ],
+    "STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U51"
+    ],
+    "STM32H743VIT6 I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U61"
+    ],
+    "SWD pads, controller A: 3V3 SWDIO SWCLK NRST GND": [
+     "U42"
+    ],
+    "SWD pads, controller B: 3V3 SWDIO SWCLK NRST GND": [
+     "U52"
+    ],
+    "SWD pads, controller C: 3V3 SWDIO SWCLK NRST GND": [
+     "U62"
+    ]
+   },
+   "nets": [
+    "IOCA_SWDIO",
+    "IOCB_SWDIO",
+    "IOCC_SWDIO"
+   ],
+   "pattern": "*_SWDIO",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a radio module's programming clock, used at the bench",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Ebyte E72-2G4M20S1E CC2652P (OpenThread RCP for Matter): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge": [
+     "U14"
+    ],
+    "Ebyte E72-2G4M20S1E CC2652P (Zigbee coordinator): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge": [
+     "U13"
+    ]
+   },
+   "nets": [
+    "ZBA_TCKC",
+    "ZBB_TCKC"
+   ],
+   "pattern": "*_TCKC",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a test pin strapped to a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U101"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U201"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U301"
+    ]
+   },
+   "nets": [
+    "S1_TEST1",
+    "S1_TESTL",
+    "S2_TEST1",
+    "S2_TESTL",
+    "S3_TEST1",
+    "S3_TESTL"
+   ],
+   "pattern": "*_TEST*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the data half of the same programming port",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Ebyte E72-2G4M20S1E CC2652P (OpenThread RCP for Matter): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge": [
+     "U14"
+    ],
+    "Ebyte E72-2G4M20S1E CC2652P (Zigbee coordinator): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge": [
+     "U13"
+    ]
+   },
+   "nets": [
+    "ZBA_TMSC",
+    "ZBB_TMSC"
+   ],
+   "pattern": "*_TMSC",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a UART transmit line to a module",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "CP2102N-A02-GQFN28 USB-UART bridge (GNSS)": [
+     "U15"
+    ],
+    "CP2102N-A02-GQFN28 USB-UART bridge (RB)": [
+     "U18"
+    ],
+    "CP2102N-A02-GQFN28 USB-UART bridge (ZBA)": [
+     "U16"
+    ],
+    "CP2102N-A02-GQFN28 USB-UART bridge (ZBB)": [
+     "U17"
+    ],
+    "Ebyte E72-2G4M20S1E CC2652P (OpenThread RCP for Matter): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge": [
+     "U14"
+    ],
+    "Ebyte E72-2G4M20S1E CC2652P (Zigbee coordinator): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge": [
+     "U13"
+    ],
+    "Quectel LG290P03AAMD GNSS RTK module: UART1 to the bridge, 1PPS to every slot, active antenna on the west-wall GNSS jack": [
+     "U11"
+    ]
+   },
+   "nets": [
+    "GNSS_TXD",
+    "RB_TXD",
+    "ZBA_TXD",
+    "ZBB_TXD"
+   ],
+   "pattern": "*_TXD",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a second UART transmit line of the same module",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Quectel LG290P03AAMD GNSS RTK module: UART1 to the bridge, 1PPS to every slot, active antenna on the west-wall GNSS jack": [
+     "U11"
+    ]
+   },
+   "nets": [
+    "GNSS_TXD2"
+   ],
+   "pattern": "*_TXD?",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a radio module's transmit enable, the same",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U32A"
+    ],
+    "Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1: TXEN GPIO4, RXEN GPIO5, DIO1 GPIO24, BUSY GPIO23, NRST GPIO26; EU power cap in meshtasticd": [
+     "U12"
+    ]
+   },
+   "nets": [
+    "LORA_TXEN"
+   ],
+   "pattern": "*_TXEN",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a USB bus supply node, a DC rail",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port)": [
+     "U102"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S2 (upstream the CM5 USB3-0 port)": [
+     "U202"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S3 (upstream the CM5 USB3-0 port)": [
+     "U302"
+    ]
+   },
+   "nets": [
+    "HUB1_VBUS",
+    "HUB2_VBUS",
+    "HUB3_VBUS"
+   ],
+   "pattern": "*_VBUS",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "an internal-supply decoupling node, a local rail",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U41"
+    ],
+    "STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U51"
+    ],
+    "STM32H743VIT6 I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U61"
+    ]
+   },
+   "nets": [
+    "IOCA_VCAP",
+    "IOCB_VCAP",
+    "IOCC_VCAP"
+   ],
+   "pattern": "*_VCAP",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a wireless-disable pin, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "5G_W_DIS_n",
+    "WIFI2_W_DIS2_n",
+    "WIFI2_W_DIS_n",
+    "WIFI_W_DIS2_n",
+    "WIFI_W_DIS_n"
+   ],
+   "pattern": "*_W_DIS*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a crystal drive node, a continuous periodic source",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 the CM5 slots (PHY to PHY), port 4 the wall RJ45; I2C management on the kit bus": [
+     "U1"
+    ],
+    "STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U41"
+    ],
+    "STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U51"
+    ],
+    "STM32H743VIT6 I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U61"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port)": [
+     "U102"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S2 (upstream the CM5 USB3-0 port)": [
+     "U202"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S3 (upstream the CM5 USB3-0 port)": [
+     "U302"
+    ]
+   },
+   "nets": [
+    "HUB1_XI",
+    "HUB2_XI",
+    "HUB3_XI",
+    "IOCA_XI",
+    "IOCB_XI",
+    "IOCC_XI",
+    "KSZ_XI"
+   ],
+   "pattern": "*_XI",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a satellite modem's transmit-gate flag, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "PCA9555PW 0x25: inputs (faults, RockBLOCK status) and spares": [
+     "U7"
+    ]
+   },
+   "nets": [
+    "RB_XMTG"
+   ],
+   "pattern": "*_XMTG",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the other half of the same crystal loop",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 the CM5 slots (PHY to PHY), port 4 the wall RJ45; I2C management on the kit bus": [
+     "U1"
+    ],
+    "STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U41"
+    ],
+    "STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U51"
+    ],
+    "STM32H743VIT6 I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U61"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port)": [
+     "U102"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S2 (upstream the CM5 USB3-0 port)": [
+     "U202"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S3 (upstream the CM5 USB3-0 port)": [
+     "U302"
+    ]
+   },
+   "nets": [
+    "HUB1_XO",
+    "HUB2_XO",
+    "HUB3_XO",
+    "IOCA_XO",
+    "IOCB_XO",
+    "IOCC_XO",
+    "KSZ_XO"
+   ],
+   "pattern": "*_XO",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "an active-low indicator LED drive",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "5G_nLED",
+    "NVME1_nLED",
+    "NVME2_nLED",
+    "NVME3_nLED",
+    "WIFI2_nLED",
+    "WIFI_nLED"
+   ],
+   "pattern": "*_nLED",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a PCIe reset, a static level held through boot",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side)": [
+     "U30B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side)": [
+     "U31B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side)": [
+     "U32B"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U101"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U201"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U301"
+    ]
+   },
+   "nets": [
+    "PCIE1_nRST",
+    "PCIE2_nRST",
+    "PCIE3_nRST"
+   ],
+   "pattern": "*_nRST",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a PCIe wake line, an open-drain static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side)": [
+     "U30B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side)": [
+     "U31B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side)": [
+     "U32B"
+    ]
+   },
+   "nets": [
+    "PCIE1_nWAKE",
+    "PCIE2_nWAKE",
+    "PCIE3_nWAKE"
+   ],
+   "pattern": "*_nWAKE",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a bank's upstream USB 3 and USB 2 pairs into the host-select mux",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "TI TMUXHS4212 SuperSpeed 2:1 host select, bank 1: B = slot 1 USB3-0 (home), C = slot 2 USB3-1 (failover)": [
+     "U109"
+    ],
+    "TI TMUXHS4212 SuperSpeed 2:1 host select, bank 2: B = slot 2 USB3-0 (home), C = slot 3 USB3-1 (failover)": [
+     "U209"
+    ],
+    "TI TMUXHS4212 SuperSpeed 2:1 host select, bank 3: B = slot 3 USB3-0 (home), C = slot 1 USB3-1 (failover)": [
+     "U309"
+    ],
+    "TI TS3USB221A USB2 2:1 host select, bank 1: port 1 = slot 1 (home), port 2 = slot 2 (failover)": [
+     "U110"
+    ],
+    "TI TS3USB221A USB2 2:1 host select, bank 2: port 1 = slot 2 (home), port 2 = slot 3 (failover)": [
+     "U210"
+    ],
+    "TI TS3USB221A USB2 2:1 host select, bank 3: port 1 = slot 3 (home), port 2 = slot 1 (failover)": [
+     "U310"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port)": [
+     "U102"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S2 (upstream the CM5 USB3-0 port)": [
+     "U202"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S3 (upstream the CM5 USB3-0 port)": [
+     "U302"
+    ]
+   },
+   "nets": [
+    "BANK1_UPD_N",
+    "BANK1_UPD_P",
+    "BANK1_UPRX_N",
+    "BANK1_UPRX_P",
+    "BANK1_UPTX_N",
+    "BANK1_UPTX_P",
+    "BANK2_UPD_N",
+    "BANK2_UPD_P",
+    "BANK2_UPRX_N",
+    "BANK2_UPRX_P",
+    "BANK2_UPTX_N",
+    "BANK2_UPTX_P",
+    "BANK3_UPD_N",
+    "BANK3_UPD_P",
+    "BANK3_UPRX_N",
+    "BANK3_UPRX_P",
+    "BANK3_UPTX_N",
+    "BANK3_UPTX_P"
+   ],
+   "pattern": "BANK*_UP*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the break-before-make timing node of the same logic",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {},
+   "nets": [
+    "BOB"
+   ],
+   "pattern": "BOB",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a mux output enable, a logic edge in the break-before-make sequence",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "74LVC86APW quad exclusive-or: break-before-make on each bank's select": [
+     "U80"
+    ],
+    "TI TMUXHS4212 SuperSpeed 2:1 host select, bank 1: B = slot 1 USB3-0 (home), C = slot 2 USB3-1 (failover)": [
+     "U109"
+    ],
+    "TI TMUXHS4212 SuperSpeed 2:1 host select, bank 2: B = slot 2 USB3-0 (home), C = slot 3 USB3-1 (failover)": [
+     "U209"
+    ],
+    "TI TMUXHS4212 SuperSpeed 2:1 host select, bank 3: B = slot 3 USB3-0 (home), C = slot 1 USB3-1 (failover)": [
+     "U309"
+    ],
+    "TI TS3USB221A USB2 2:1 host select, bank 1: port 1 = slot 1 (home), port 2 = slot 2 (failover)": [
+     "U110"
+    ],
+    "TI TS3USB221A USB2 2:1 host select, bank 2: port 1 = slot 2 (home), port 2 = slot 3 (failover)": [
+     "U210"
+    ],
+    "TI TS3USB221A USB2 2:1 host select, bank 3: port 1 = slot 3 (home), port 2 = slot 1 (failover)": [
+     "U310"
+    ]
+   },
+   "nets": [
+    "BOE1_n",
+    "BOE2_n",
+    "BOE3_n"
+   ],
+   "pattern": "BOE*_n",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a bank-select line into the mux logic",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "74LVC86APW quad exclusive-or: break-before-make on each bank's select": [
+     "U80"
+    ],
+    "SN74LVC32APWR quad 2-input OR: the 2-of-3 majority voters of the I/O control plane": [
+     "U76",
+     "U77"
+    ],
+    "STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U41"
+    ],
+    "STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U51"
+    ],
+    "STM32H743VIT6 I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U61"
+    ],
+    "TI TMUXHS4212 SuperSpeed 2:1 host select, bank 1: B = slot 1 USB3-0 (home), C = slot 2 USB3-1 (failover)": [
+     "U109"
+    ],
+    "TI TMUXHS4212 SuperSpeed 2:1 host select, bank 2: B = slot 2 USB3-0 (home), C = slot 3 USB3-1 (failover)": [
+     "U209"
+    ],
+    "TI TMUXHS4212 SuperSpeed 2:1 host select, bank 3: B = slot 3 USB3-0 (home), C = slot 1 USB3-1 (failover)": [
+     "U309"
+    ],
+    "TI TS3USB221A USB2 2:1 host select, bank 1: port 1 = slot 1 (home), port 2 = slot 2 (failover)": [
+     "U110"
+    ],
+    "TI TS3USB221A USB2 2:1 host select, bank 2: port 1 = slot 2 (home), port 2 = slot 3 (failover)": [
+     "U210"
+    ],
+    "TI TS3USB221A USB2 2:1 host select, bank 3: port 1 = slot 3 (home), port 2 = slot 1 (failover)": [
+     "U310"
+    ]
+   },
+   "nets": [
+    "BSEL1",
+    "BSEL1_D",
+    "BSEL2",
+    "BSEL2_D",
+    "BSEL3",
+    "BSEL3_D"
+   ],
+   "pattern": "BSEL*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a module's Bluetooth-disable pin, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U30A"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U31A"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U32A"
+    ],
+    "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)": [
+     "U6"
+    ],
+    "SN74LVC32APWR quad OR, slot S1: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare": [
+     "U111"
+    ],
+    "SN74LVC32APWR quad OR, slot S2: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare": [
+     "U211"
+    ],
+    "SN74LVC32APWR quad OR, slot S3: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare": [
+     "U311"
+    ]
+   },
+   "nets": [
+    "BT_nDIS1",
+    "BT_nDIS1_KILL",
+    "BT_nDIS1_OFF",
+    "BT_nDIS2",
+    "BT_nDIS2_KILL",
+    "BT_nDIS2_OFF",
+    "BT_nDIS3",
+    "BT_nDIS3_KILL",
+    "BT_nDIS3_OFF"
+   ],
+   "pattern": "BT_nDIS*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a CAN-FD fabric between the three controllers, up to 5 Mbit/s on a terminated bus",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "TCAN334D CAN-FD transceiver, controller A on heartbeat fabric A": [
+     "U43"
+    ],
+    "TCAN334D CAN-FD transceiver, controller A on heartbeat fabric B": [
+     "U44"
+    ],
+    "TCAN334D CAN-FD transceiver, controller B on heartbeat fabric A": [
+     "U53"
+    ],
+    "TCAN334D CAN-FD transceiver, controller B on heartbeat fabric B": [
+     "U54"
+    ],
+    "TCAN334D CAN-FD transceiver, controller C on heartbeat fabric A": [
+     "U63"
+    ],
+    "TCAN334D CAN-FD transceiver, controller C on heartbeat fabric B": [
+     "U64"
+    ]
+   },
+   "nets": [
+    "CANH_A",
+    "CANH_A1",
+    "CANH_B",
+    "CANH_B1",
+    "CANL_A",
+    "CANL_A1",
+    "CANL_B",
+    "CANL_B1",
+    "CANT_A",
+    "CANT_B"
+   ],
+   "pattern": "CAN?_*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a CAN bus termination node",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {},
+   "nets": [
+    "CANT2_A",
+    "CANT2_B"
+   ],
+   "pattern": "CANT*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the 100 MHz reference clock to the card socket",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U101"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U201"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U301"
+    ]
+   },
+   "nets": [
+    "CARD1_CLK_N",
+    "CARD1_CLK_P",
+    "CARD1_CLK_SRC_N",
+    "CARD1_CLK_SRC_P",
+    "CARD2_CLK_N",
+    "CARD2_CLK_P",
+    "CARD2_CLK_SRC_N",
+    "CARD2_CLK_SRC_P",
+    "CARD3_CLK_N",
+    "CARD3_CLK_P",
+    "CARD3_CLK_SRC_N",
+    "CARD3_CLK_SRC_P"
+   ],
+   "pattern": "CARD*_CLK_*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "PCIe Gen 2 to the card socket",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U101"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U201"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U301"
+    ]
+   },
+   "nets": [
+    "CARD1_RX_N",
+    "CARD1_RX_P",
+    "CARD1_RX_SW_N",
+    "CARD1_RX_SW_P",
+    "CARD2_RX_N",
+    "CARD2_RX_P",
+    "CARD2_RX_SW_N",
+    "CARD2_RX_SW_P",
+    "CARD3_RX_N",
+    "CARD3_RX_P",
+    "CARD3_RX_SW_N",
+    "CARD3_RX_SW_P"
+   ],
+   "pattern": "CARD*_RX_*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the other direction of the same lane",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U101"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U201"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U301"
+    ]
+   },
+   "nets": [
+    "CARD1_TX_N",
+    "CARD1_TX_P",
+    "CARD2_TX_N",
+    "CARD2_TX_P",
+    "CARD3_TX_N",
+    "CARD3_TX_P"
+   ],
+   "pattern": "CARD*_TX_*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a USB configuration-channel node after its filter",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "CC1_F1",
+    "CC1_F2",
+    "CC1_F3",
+    "CC2_F1",
+    "CC2_F2",
+    "CC2_F3"
+   ],
+   "pattern": "CC?_F?",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a radio module's antenna-switch control line, a static level held for a whole packet",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TPS22810DRV": [
+     "U21",
+     "U22"
+    ]
+   },
+   "nets": [
+    "E22_CT",
+    "E72_CT"
+   ],
+   "pattern": "E*_CT",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the emission-control line, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "SN74LVC08APWR quad AND: E72 radios (EMCON AND software); spare gates grounded": [
+     "U20"
+    ],
+    "SN74LVC08APWR quad AND: LimeSDR (hub port power AND EMCON AND software), RockBLOCK (EMCON AND software), LoRa (EMCON AND software)": [
+     "U19"
+    ],
+    "STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U41"
+    ],
+    "STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U51"
+    ],
+    "STM32H743VIT6 I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U61"
+    ]
+   },
+   "nets": [
+    "EMCON_HW"
+   ],
+   "pattern": "EMCON_HW",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a per-slot 3.3 V rail enable, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S1B": [
+     "U104"
+    ],
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S2B": [
+     "U204"
+    ],
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S3B": [
+     "U304"
+    ],
+    "TPS62933DRLR buck 1.0 V PCIe switch core S1": [
+     "U105"
+    ],
+    "TPS62933DRLR buck 1.0 V PCIe switch core S2": [
+     "U205"
+    ],
+    "TPS62933DRLR buck 1.0 V PCIe switch core S3": [
+     "U305"
+    ]
+   },
+   "nets": [
+    "EN33_S1",
+    "EN33_S2",
+    "EN33_S3"
+   ],
+   "pattern": "EN33_S*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a module's own gigabit Ethernet pair",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U30A"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U31A"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U32A"
+    ]
+   },
+   "nets": [
+    "ETH1_P0_N",
+    "ETH1_P0_P",
+    "ETH1_P1_N",
+    "ETH1_P1_P",
+    "ETH1_P2_N",
+    "ETH1_P2_P",
+    "ETH1_P3_N",
+    "ETH1_P3_P",
+    "ETH2_P0_N",
+    "ETH2_P0_P",
+    "ETH2_P1_N",
+    "ETH2_P1_P",
+    "ETH2_P2_N",
+    "ETH2_P2_P",
+    "ETH2_P3_N",
+    "ETH2_P3_P",
+    "ETH3_P0_N",
+    "ETH3_P0_P",
+    "ETH3_P1_N",
+    "ETH3_P1_P",
+    "ETH3_P2_N",
+    "ETH3_P2_P",
+    "ETH3_P3_N",
+    "ETH3_P3_P"
+   ],
+   "pattern": "ETH*_P*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "an expander interrupt, an edge into a GPIO",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "DS3231MZ+ holdover clock (I2C 0x68), CR2032 backed": [
+     "U9"
+    ],
+    "Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 the CM5 slots (PHY to PHY), port 4 the wall RJ45; I2C management on the kit bus": [
+     "U1"
+    ],
+    "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)": [
+     "U6"
+    ],
+    "PCA9555PW 0x25: inputs (faults, RockBLOCK status) and spares": [
+     "U7"
+    ],
+    "TI TPS23861PWR PoE PSE controller, port 1 to the wall RJ45 (802.3at), I2C on the kit bus": [
+     "U5"
+    ],
+    "TMP117AIDRVR board temperature under the coolers (I2C 0x49; WSON-6: 1 SCL 2 GND 3 ALERT 4 V+ 5 ADD0 6 SDA 7 thermal pad)": [
+     "U10"
+    ]
+   },
+   "nets": [
+    "EXP_INT"
+   ],
+   "pattern": "EXP_INT",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "an unused expander pin, driven by nothing",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "PCA9555PW 0x25: inputs (faults, RockBLOCK status) and spares": [
+     "U7"
+    ]
+   },
+   "nets": [
+    "EXP_SPARE1",
+    "EXP_SPARE10",
+    "EXP_SPARE11",
+    "EXP_SPARE2",
+    "EXP_SPARE3",
+    "EXP_SPARE4",
+    "EXP_SPARE5",
+    "EXP_SPARE6",
+    "EXP_SPARE7",
+    "EXP_SPARE8",
+    "EXP_SPARE9"
+   ],
+   "pattern": "EXP_SPARE*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a fan PWM at 25 kHz into a gate",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U30A"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U31A"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U32A"
+    ]
+   },
+   "nets": [
+    "FAN_PWM1",
+    "FAN_PWM2",
+    "FAN_PWM3"
+   ],
+   "pattern": "FAN_PWM*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a fan tachometer, two pulses a revolution through a pull-up",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U30A"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U31A"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U32A"
+    ]
+   },
+   "nets": [
+    "FAN_TACHO1",
+    "FAN_TACHO2",
+    "FAN_TACHO3"
+   ],
+   "pattern": "FAN_TACHO*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a GNSS module supply node",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "CP2102N-A02-GQFN28 USB-UART bridge (GNSS)": [
+     "U15"
+    ]
+   },
+   "nets": [
+    "GNSS_3V3"
+   ],
+   "pattern": "GNSS_?V?",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the GNSS pulse per second: one edge a second, and the EDGE is the whole point of it",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U30A"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U31A"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U32A"
+    ],
+    "Quectel LG290P03AAMD GNSS RTK module: UART1 to the bridge, 1PPS to every slot, active antenna on the west-wall GNSS jack": [
+     "U11"
+    ]
+   },
+   "nets": [
+    "GNSS_PPS",
+    "GNSS_PPS_CM1",
+    "GNSS_PPS_CM2",
+    "GNSS_PPS_CM3"
+   ],
+   "pattern": "GNSS_PPS*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a heartbeat between a controller and a module, a slow square wave that must keep its edge",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U30A"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U31A"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U32A"
+    ],
+    "STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U41"
+    ],
+    "STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U51"
+    ],
+    "STM32H743VIT6 I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U61"
+    ]
+   },
+   "nets": [
+    "HB1",
+    "HB2",
+    "HB3",
+    "HB_CM1",
+    "HB_CM2",
+    "HB_CM3"
+   ],
+   "pattern": "HB*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "an HDMI clock pair, up to 340 MHz at 4K",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side)": [
+     "U30B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side)": [
+     "U31B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side)": [
+     "U32B"
+    ],
+    "TI TS3DV642A0RUAR HDMI 2:1 switch (HDMI1 / HDMI2 -> HDMIM)": [
+     "U3"
+    ],
+    "TI TS3DV642A0RUAR HDMI 2:1 switch (HDMIM / HDMI3 -> HDMIO)": [
+     "U4"
+    ]
+   },
+   "nets": [
+    "HDMI1_CK_N",
+    "HDMI1_CK_P",
+    "HDMI2_CK_N",
+    "HDMI2_CK_P",
+    "HDMI3_CK_N",
+    "HDMI3_CK_P",
+    "HDMIM_CK_N",
+    "HDMIM_CK_P",
+    "HDMIO_CK_N",
+    "HDMIO_CK_P"
+   ],
+   "pattern": "HDMI*_CK_*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "an HDMI data lane, up to 3.4 Gbit/s",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side)": [
+     "U30B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side)": [
+     "U31B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side)": [
+     "U32B"
+    ],
+    "TI TS3DV642A0RUAR HDMI 2:1 switch (HDMI1 / HDMI2 -> HDMIM)": [
+     "U3"
+    ],
+    "TI TS3DV642A0RUAR HDMI 2:1 switch (HDMIM / HDMI3 -> HDMIO)": [
+     "U4"
+    ]
+   },
+   "nets": [
+    "HDMI1_D0_N",
+    "HDMI1_D0_P",
+    "HDMI1_D1_N",
+    "HDMI1_D1_P",
+    "HDMI1_D2_N",
+    "HDMI1_D2_P",
+    "HDMI2_D0_N",
+    "HDMI2_D0_P",
+    "HDMI2_D1_N",
+    "HDMI2_D1_P",
+    "HDMI2_D2_N",
+    "HDMI2_D2_P",
+    "HDMI3_D0_N",
+    "HDMI3_D0_P",
+    "HDMI3_D1_N",
+    "HDMI3_D1_P",
+    "HDMI3_D2_N",
+    "HDMI3_D2_P",
+    "HDMIM_D0_N",
+    "HDMIM_D0_P",
+    "HDMIM_D1_N",
+    "HDMIM_D1_P",
+    "HDMIM_D2_N",
+    "HDMIM_D2_P",
+    "HDMIO_D0_N",
+    "HDMIO_D0_P",
+    "HDMIO_D1_N",
+    "HDMIO_D1_P",
+    "HDMIO_D2_N",
+    "HDMIO_D2_P"
+   ],
+   "pattern": "HDMI*_D*_*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "an HDMI display data channel clock, I2C rates",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side)": [
+     "U30B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side)": [
+     "U31B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side)": [
+     "U32B"
+    ],
+    "TI TS3DV642A0RUAR HDMI 2:1 switch (HDMI1 / HDMI2 -> HDMIM)": [
+     "U3"
+    ],
+    "TI TS3DV642A0RUAR HDMI 2:1 switch (HDMIM / HDMI3 -> HDMIO)": [
+     "U4"
+    ]
+   },
+   "nets": [
+    "HDMI1_SCL",
+    "HDMI2_SCL",
+    "HDMI3_SCL",
+    "HDMIM_SCL",
+    "HDMIO_SCL"
+   ],
+   "pattern": "HDMI*_SCL",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the data half of the same channel",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side)": [
+     "U30B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side)": [
+     "U31B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side)": [
+     "U32B"
+    ],
+    "TI TS3DV642A0RUAR HDMI 2:1 switch (HDMI1 / HDMI2 -> HDMIM)": [
+     "U3"
+    ],
+    "TI TS3DV642A0RUAR HDMI 2:1 switch (HDMIM / HDMI3 -> HDMIO)": [
+     "U4"
+    ]
+   },
+   "nets": [
+    "HDMI1_SDA",
+    "HDMI2_SDA",
+    "HDMI3_SDA",
+    "HDMIM_SDA",
+    "HDMIO_SDA"
+   ],
+   "pattern": "HDMI*_SDA",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the display switch's select lines, static levels changed by a person or by the panel",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TI TS3DV642A0RUAR HDMI 2:1 switch (HDMI1 / HDMI2 -> HDMIM)": [
+     "U3"
+    ],
+    "TI TS3DV642A0RUAR HDMI 2:1 switch (HDMIM / HDMI3 -> HDMIO)": [
+     "U4"
+    ]
+   },
+   "nets": [
+    "HDMI_SEL1",
+    "HDMI_SEL2"
+   ],
+   "pattern": "HDMI_SEL*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a USB 3 SuperSpeed or USB 2 host lane between a module and its bank mux, 5 Gbit/s and 480 Mbit/s",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side)": [
+     "U30B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side)": [
+     "U31B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side)": [
+     "U32B"
+    ],
+    "TI TMUXHS4212 SuperSpeed 2:1 host select, bank 1: B = slot 1 USB3-0 (home), C = slot 2 USB3-1 (failover)": [
+     "U109"
+    ],
+    "TI TMUXHS4212 SuperSpeed 2:1 host select, bank 2: B = slot 2 USB3-0 (home), C = slot 3 USB3-1 (failover)": [
+     "U209"
+    ],
+    "TI TMUXHS4212 SuperSpeed 2:1 host select, bank 3: B = slot 3 USB3-0 (home), C = slot 1 USB3-1 (failover)": [
+     "U309"
+    ],
+    "TI TS3USB221A USB2 2:1 host select, bank 1: port 1 = slot 1 (home), port 2 = slot 2 (failover)": [
+     "U110"
+    ],
+    "TI TS3USB221A USB2 2:1 host select, bank 2: port 1 = slot 2 (home), port 2 = slot 3 (failover)": [
+     "U210"
+    ],
+    "TI TS3USB221A USB2 2:1 host select, bank 3: port 1 = slot 3 (home), port 2 = slot 1 (failover)": [
+     "U310"
+    ]
+   },
+   "nets": [
+    "HOST1_0D_N",
+    "HOST1_0D_P",
+    "HOST1_0RX_N",
+    "HOST1_0RX_P",
+    "HOST1_0TX_N",
+    "HOST1_0TX_P",
+    "HOST1_1D_N",
+    "HOST1_1D_P",
+    "HOST1_1RX_N",
+    "HOST1_1RX_P",
+    "HOST1_1TX_N",
+    "HOST1_1TX_P",
+    "HOST2_0D_N",
+    "HOST2_0D_P",
+    "HOST2_0RX_N",
+    "HOST2_0RX_P",
+    "HOST2_0TX_N",
+    "HOST2_0TX_P",
+    "HOST2_1D_N",
+    "HOST2_1D_P",
+    "HOST2_1RX_N",
+    "HOST2_1RX_P",
+    "HOST2_1TX_N",
+    "HOST2_1TX_P",
+    "HOST3_0D_N",
+    "HOST3_0D_P",
+    "HOST3_0RX_N",
+    "HOST3_0RX_P",
+    "HOST3_0TX_N",
+    "HOST3_0TX_P",
+    "HOST3_1D_N",
+    "HOST3_1D_P",
+    "HOST3_1RX_N",
+    "HOST3_1RX_P",
+    "HOST3_1TX_N",
+    "HOST3_1TX_P"
+   ],
+   "pattern": "HOST*_*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a hub's downstream SuperSpeed transmit pair",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port)": [
+     "U102"
+    ]
+   },
+   "nets": [
+    "HUB1_D1TX_N",
+    "HUB1_D1TX_P"
+   ],
+   "pattern": "HUB*_D*TX_*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a voted hub reset line, a logic edge through the 2-of-3 gates",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "SN74LVC08APWR quad 2-input AND: the 2-of-3 majority voters of the I/O control plane": [
+     "U72",
+     "U73",
+     "U74"
+    ],
+    "SN74LVC32APWR quad 2-input OR: the 2-of-3 majority voters of the I/O control plane": [
+     "U77",
+     "U78"
+    ],
+    "STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U41"
+    ],
+    "STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U51"
+    ],
+    "STM32H743VIT6 I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U61"
+    ]
+   },
+   "nets": [
+    "HUBRST1_A",
+    "HUBRST1_AB",
+    "HUBRST1_B",
+    "HUBRST1_BC",
+    "HUBRST1_C",
+    "HUBRST1_CA",
+    "HUBRST1_VOTE",
+    "HUBRST2_A",
+    "HUBRST2_AB",
+    "HUBRST2_B",
+    "HUBRST2_BC",
+    "HUBRST2_C",
+    "HUBRST2_CA",
+    "HUBRST2_VOTE",
+    "HUBRST3_A",
+    "HUBRST3_AB",
+    "HUBRST3_B",
+    "HUBRST3_BC",
+    "HUBRST3_C",
+    "HUBRST3_CA",
+    "HUBRST3_VOTE"
+   ],
+   "pattern": "HUBRST*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a controller's CAN transmit or receive pin",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U41"
+    ],
+    "STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U51"
+    ],
+    "STM32H743VIT6 I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U61"
+    ],
+    "TCAN334D CAN-FD transceiver, controller A on heartbeat fabric A": [
+     "U43"
+    ],
+    "TCAN334D CAN-FD transceiver, controller A on heartbeat fabric B": [
+     "U44"
+    ],
+    "TCAN334D CAN-FD transceiver, controller B on heartbeat fabric A": [
+     "U53"
+    ],
+    "TCAN334D CAN-FD transceiver, controller B on heartbeat fabric B": [
+     "U54"
+    ],
+    "TCAN334D CAN-FD transceiver, controller C on heartbeat fabric A": [
+     "U63"
+    ],
+    "TCAN334D CAN-FD transceiver, controller C on heartbeat fabric B": [
+     "U64"
+    ]
+   },
+   "nets": [
+    "IOCA_CAN1_RX",
+    "IOCA_CAN1_TX",
+    "IOCA_CAN2_RX",
+    "IOCA_CAN2_TX",
+    "IOCB_CAN1_RX",
+    "IOCB_CAN1_TX",
+    "IOCB_CAN2_RX",
+    "IOCB_CAN2_TX",
+    "IOCC_CAN1_RX",
+    "IOCC_CAN1_TX",
+    "IOCC_CAN2_RX",
+    "IOCC_CAN2_TX"
+   ],
+   "pattern": "IOC?_CAN*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a switch port's link indicator",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 the CM5 slots (PHY to PHY), port 4 the wall RJ45; I2C management on the kit bus": [
+     "U1"
+    ]
+   },
+   "nets": [
+    "KSZ_LED1",
+    "KSZ_LED2",
+    "KSZ_LED3",
+    "KSZ_LED4"
+   ],
+   "pattern": "KSZ_LED*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "an indicator LED drive, a static level or a slow blink",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U30A"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U31A"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U32A"
+    ]
+   },
+   "nets": [
+    "LED_5G_A",
+    "LED_5V_A1",
+    "LED_5V_A2",
+    "LED_5V_A3",
+    "LED_ACT_A1",
+    "LED_ACT_A2",
+    "LED_ACT_A3",
+    "LED_KSZ_A1",
+    "LED_KSZ_A2",
+    "LED_KSZ_A3",
+    "LED_KSZ_A4",
+    "LED_NV_A1",
+    "LED_NV_A2",
+    "LED_NV_A3",
+    "LED_PST0_A1",
+    "LED_PST0_A2",
+    "LED_PST0_A3",
+    "LED_PST1_A1",
+    "LED_PST1_A2",
+    "LED_PST1_A3",
+    "LED_PWR_A1",
+    "LED_PWR_A2",
+    "LED_PWR_A3",
+    "LED_WIFI2_A",
+    "LED_WIFI_A",
+    "LED_ZBAG_A",
+    "LED_ZBAR_A",
+    "LED_ZBBG_A",
+    "LED_ZBBR_A",
+    "LED_nACT1",
+    "LED_nACT2",
+    "LED_nACT3",
+    "LED_nPWR1",
+    "LED_nPWR2",
+    "LED_nPWR3"
+   ],
+   "pattern": "LED_*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the software-defined radio's USB 3 SuperSpeed pairs, 5 Gbit/s",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port)": [
+     "U102"
+    ]
+   },
+   "nets": [
+    "LIME_SSRX_N",
+    "LIME_SSRX_P",
+    "LIME_SSTX_N",
+    "LIME_SSTX_P"
+   ],
+   "pattern": "LIME_SS*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a magnetics centre tap, a DC reference node",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "MCT3",
+    "MCT4"
+   ],
+   "pattern": "MCT*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a SuperSpeed mux's switched pair",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "TI TMUXHS4212 SuperSpeed 2:1 host select, bank 1: B = slot 1 USB3-0 (home), C = slot 2 USB3-1 (failover)": [
+     "U109"
+    ],
+    "TI TMUXHS4212 SuperSpeed 2:1 host select, bank 2: B = slot 2 USB3-0 (home), C = slot 3 USB3-1 (failover)": [
+     "U209"
+    ],
+    "TI TMUXHS4212 SuperSpeed 2:1 host select, bank 3: B = slot 3 USB3-0 (home), C = slot 1 USB3-1 (failover)": [
+     "U309"
+    ]
+   },
+   "nets": [
+    "MUX1_A1N",
+    "MUX1_A1P",
+    "MUX2_A1N",
+    "MUX2_A1P",
+    "MUX3_A1N",
+    "MUX3_A1P"
+   ],
+   "pattern": "MUX*_A*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the 100 MHz reference clock to the NVMe socket",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U101"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U201"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U301"
+    ]
+   },
+   "nets": [
+    "NVME1_CLK_N",
+    "NVME1_CLK_P",
+    "NVME1_CLK_SRC_N",
+    "NVME1_CLK_SRC_P",
+    "NVME2_CLK_N",
+    "NVME2_CLK_P",
+    "NVME2_CLK_SRC_N",
+    "NVME2_CLK_SRC_P",
+    "NVME3_CLK_N",
+    "NVME3_CLK_P",
+    "NVME3_CLK_SRC_N",
+    "NVME3_CLK_SRC_P"
+   ],
+   "pattern": "NVME*_CLK_*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "PCIe Gen 2 to the NVMe socket",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U101"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U201"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U301"
+    ]
+   },
+   "nets": [
+    "NVME1_RX_N",
+    "NVME1_RX_P",
+    "NVME1_RX_SW_N",
+    "NVME1_RX_SW_P",
+    "NVME2_RX_N",
+    "NVME2_RX_P",
+    "NVME2_RX_SW_N",
+    "NVME2_RX_SW_P",
+    "NVME3_RX_N",
+    "NVME3_RX_P",
+    "NVME3_RX_SW_N",
+    "NVME3_RX_SW_P"
+   ],
+   "pattern": "NVME*_RX_*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the other direction of the same lane",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U101"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U201"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U301"
+    ]
+   },
+   "nets": [
+    "NVME1_TX_N",
+    "NVME1_TX_P",
+    "NVME2_TX_N",
+    "NVME2_TX_P",
+    "NVME3_TX_N",
+    "NVME3_TX_P"
+   ],
+   "pattern": "NVME*_TX_*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the 100 MHz PCIe reference clock, a continuous differential source",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side)": [
+     "U30B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side)": [
+     "U31B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side)": [
+     "U32B"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U101"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U201"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U301"
+    ]
+   },
+   "nets": [
+    "PCIE1_CLK_N",
+    "PCIE1_CLK_P",
+    "PCIE2_CLK_N",
+    "PCIE2_CLK_P",
+    "PCIE3_CLK_N",
+    "PCIE3_CLK_P"
+   ],
+   "pattern": "PCIE*_CLK_*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a PCIe reference clock output of the switch, same rate",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U101"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U201"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U301"
+    ]
+   },
+   "nets": [
+    "PCIE1_RCLK0_N",
+    "PCIE1_RCLK0_P",
+    "PCIE1_RCLK0_SRC_N",
+    "PCIE1_RCLK0_SRC_P",
+    "PCIE1_RCLKIN_N",
+    "PCIE1_RCLKIN_P",
+    "PCIE2_RCLK0_N",
+    "PCIE2_RCLK0_P",
+    "PCIE2_RCLK0_SRC_N",
+    "PCIE2_RCLK0_SRC_P",
+    "PCIE2_RCLKIN_N",
+    "PCIE2_RCLKIN_P",
+    "PCIE3_RCLK0_N",
+    "PCIE3_RCLK0_P",
+    "PCIE3_RCLK0_SRC_N",
+    "PCIE3_RCLK0_SRC_P",
+    "PCIE3_RCLKIN_N",
+    "PCIE3_RCLKIN_P"
+   ],
+   "pattern": "PCIE*_RCLK*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the switch side of the module's receive pair, before its AC coupling capacitor",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U101"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U201"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U301"
+    ]
+   },
+   "nets": [
+    "PCIE1_RXSW_N",
+    "PCIE1_RXSW_P",
+    "PCIE2_RXSW_N",
+    "PCIE2_RXSW_P",
+    "PCIE3_RXSW_N",
+    "PCIE3_RXSW_P"
+   ],
+   "pattern": "PCIE*_RXSW_*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "PCIe Gen 2 at 5 GT/s into the compute module, routed as a 90 ohm pair on the module vendor's own guidance",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side)": [
+     "U30B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side)": [
+     "U31B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side)": [
+     "U32B"
+    ]
+   },
+   "nets": [
+    "PCIE1_RX_N",
+    "PCIE1_RX_P",
+    "PCIE2_RX_N",
+    "PCIE2_RX_P",
+    "PCIE3_RX_N",
+    "PCIE3_RX_P"
+   ],
+   "pattern": "PCIE*_RX_*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the other direction of the same PCIe lane",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side)": [
+     "U30B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side)": [
+     "U31B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side)": [
+     "U32B"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U101"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U201"
+    ],
+    "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket": [
+     "U301"
+    ]
+   },
+   "nets": [
+    "PCIE1_TX_N",
+    "PCIE1_TX_P",
+    "PCIE2_TX_N",
+    "PCIE2_TX_P",
+    "PCIE3_TX_N",
+    "PCIE3_TX_P"
+   ],
+   "pattern": "PCIE*_TX_*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a shutdown-request or kill line to a module, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U30A"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U31A"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U32A"
+    ]
+   },
+   "nets": [
+    "PI_KILL",
+    "PI_KILL_CM1",
+    "PI_KILL_CM2",
+    "PI_KILL_CM3",
+    "PI_SHDN_REQ",
+    "PI_SHDN_REQ_CM1",
+    "PI_SHDN_REQ_CM2",
+    "PI_SHDN_REQ_CM3"
+   ],
+   "pattern": "PI_*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a transistor node in a level shifter, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "Q1B",
+    "Q2B",
+    "Q3B"
+   ],
+   "pattern": "Q?B",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a transistor node in a level shifter, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "Q1C",
+    "Q2C",
+    "Q3C"
+   ],
+   "pattern": "Q?C",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a satellite modem supply node",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "CP2102N-A02-GQFN28 USB-UART bridge (RB)": [
+     "U18"
+    ]
+   },
+   "nets": [
+    "RB_3V3"
+   ],
+   "pattern": "RB_?V?",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "I2C at 100 or 400 kHz, open drain",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "ATECC608B-SSHDA-T secure element (I2C 0x60): keys behind ZEROIZE": [
+     "U8"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U30A"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U31A"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U32A"
+    ],
+    "DS3231MZ+ holdover clock (I2C 0x68), CR2032 backed": [
+     "U9"
+    ],
+    "Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 the CM5 slots (PHY to PHY), port 4 the wall RJ45; I2C management on the kit bus": [
+     "U1"
+    ],
+    "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)": [
+     "U6"
+    ],
+    "PCA9555PW 0x25: inputs (faults, RockBLOCK status) and spares": [
+     "U7"
+    ],
+    "STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U41"
+    ],
+    "STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U51"
+    ],
+    "STM32H743VIT6 I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U61"
+    ],
+    "TI TPS23861PWR PoE PSE controller, port 1 to the wall RJ45 (802.3at), I2C on the kit bus": [
+     "U5"
+    ],
+    "TMP117AIDRVR board temperature under the coolers (I2C 0x49; WSON-6: 1 SCL 2 GND 3 ALERT 4 V+ 5 ADD0 6 SDA 7 thermal pad)": [
+     "U10"
+    ]
+   },
+   "nets": [
+    "SCL",
+    "SCL_CM1",
+    "SCL_CM2",
+    "SCL_CM3"
+   ],
+   "pattern": "SCL*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the data half of the same I2C bus",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "ATECC608B-SSHDA-T secure element (I2C 0x60): keys behind ZEROIZE": [
+     "U8"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U30A"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U31A"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U32A"
+    ],
+    "DS3231MZ+ holdover clock (I2C 0x68), CR2032 backed": [
+     "U9"
+    ],
+    "Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 the CM5 slots (PHY to PHY), port 4 the wall RJ45; I2C management on the kit bus": [
+     "U1"
+    ],
+    "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)": [
+     "U6"
+    ],
+    "PCA9555PW 0x25: inputs (faults, RockBLOCK status) and spares": [
+     "U7"
+    ],
+    "STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U41"
+    ],
+    "STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U51"
+    ],
+    "STM32H743VIT6 I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U61"
+    ],
+    "TI TPS23861PWR PoE PSE controller, port 1 to the wall RJ45 (802.3at), I2C on the kit bus": [
+     "U5"
+    ],
+    "TMP117AIDRVR board temperature under the coolers (I2C 0x49; WSON-6: 1 SCL 2 GND 3 ALERT 4 V+ 5 ADD0 6 SDA 7 thermal pad)": [
+     "U10"
+    ]
+   },
+   "nets": [
+    "SDA",
+    "SDA_CM1",
+    "SDA_CM2",
+    "SDA_CM3"
+   ],
+   "pattern": "SDA*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a voted host-select line: it is break-before-make, so its edge order matters",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "SN74LVC08APWR quad 2-input AND: the 2-of-3 majority voters of the I/O control plane": [
+     "U70",
+     "U71",
+     "U72"
+    ],
+    "SN74LVC32APWR quad 2-input OR: the 2-of-3 majority voters of the I/O control plane": [
+     "U76",
+     "U77"
+    ],
+    "STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U41"
+    ],
+    "STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U51"
+    ],
+    "STM32H743VIT6 I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U61"
+    ]
+   },
+   "nets": [
+    "SEL1_A",
+    "SEL1_AB",
+    "SEL1_B",
+    "SEL1_BC",
+    "SEL1_C",
+    "SEL1_CA",
+    "SEL2_A",
+    "SEL2_AB",
+    "SEL2_B",
+    "SEL2_BC",
+    "SEL2_C",
+    "SEL2_CA",
+    "SEL3_A",
+    "SEL3_AB",
+    "SEL3_B",
+    "SEL3_BC",
+    "SEL3_C",
+    "SEL3_CA"
+   ],
+   "pattern": "SEL*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the shore inhibit, a static level through an optocoupler",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "SHORE_INHIBIT"
+   ],
+   "pattern": "SHORE_INHIBIT",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a SIM card clock, a few megahertz",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {},
+   "nets": [
+    "SIM1_CLK",
+    "SIM2_CLK",
+    "SIMC1_CLK",
+    "SIMC2_CLK",
+    "SIMR2_CLK"
+   ],
+   "pattern": "SIM*_CLK",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a SIM card data line at the same rate",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {},
+   "nets": [
+    "SIM1_IO",
+    "SIM2_IO",
+    "SIMC1_IO",
+    "SIMC2_IO",
+    "SIMR2_IO"
+   ],
+   "pattern": "SIM*_IO",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a SIM card supply",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "SIM1_VCC",
+    "SIM2_VCC",
+    "SIMC2_VCC"
+   ],
+   "pattern": "SIM*_VCC",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "an SPI bus to a radio module, a few megahertz",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U32A"
+    ],
+    "Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1: TXEN GPIO4, RXEN GPIO5, DIO1 GPIO24, BUSY GPIO23, NRST GPIO26; EU power cap in meshtasticd": [
+     "U12"
+    ]
+   },
+   "nets": [
+    "SPI3_CE0",
+    "SPI3_CE1",
+    "SPI3_IO23",
+    "SPI3_IO24",
+    "SPI3_IO26",
+    "SPI3_MISO",
+    "SPI3_MOSI",
+    "SPI3_SCLK"
+   ],
+   "pattern": "SPI*_*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a voter input",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "SKY13351-378LF SPDT antenna changeover, chain A: OUTPUT1 the slot 1 card, OUTPUT2 the slot 3 card": [
+     "U82"
+    ],
+    "SKY13351-378LF SPDT antenna changeover, chain B: OUTPUT1 the slot 1 card, OUTPUT2 the slot 3 card": [
+     "U83"
+    ]
+   },
+   "nets": [
+    "SWA_IN",
+    "SWB_IN"
+   ],
+   "pattern": "SW?_IN",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a voter output",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "SKY13351-378LF SPDT antenna changeover, chain A: OUTPUT1 the slot 1 card, OUTPUT2 the slot 3 card": [
+     "U82"
+    ],
+    "SKY13351-378LF SPDT antenna changeover, chain B: OUTPUT1 the slot 1 card, OUTPUT2 the slot 3 card": [
+     "U83"
+    ]
+   },
+   "nets": [
+    "SWA_O1",
+    "SWA_O2",
+    "SWB_O1",
+    "SWB_O2"
+   ],
+   "pattern": "SW?_O?",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a gigabit Ethernet pair between the switch and a module's PHY, 125 MBd per pair with a wide spectrum",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 the CM5 slots (PHY to PHY), port 4 the wall RJ45; I2C management on the kit bus": [
+     "U1"
+    ]
+   },
+   "nets": [
+    "SWP1_A_N",
+    "SWP1_A_P",
+    "SWP1_B_N",
+    "SWP1_B_P",
+    "SWP1_C_N",
+    "SWP1_C_P",
+    "SWP1_D_N",
+    "SWP1_D_P",
+    "SWP2_A_N",
+    "SWP2_A_P",
+    "SWP2_B_N",
+    "SWP2_B_P",
+    "SWP2_C_N",
+    "SWP2_C_P",
+    "SWP2_D_N",
+    "SWP2_D_P",
+    "SWP3_A_N",
+    "SWP3_A_P",
+    "SWP3_B_N",
+    "SWP3_B_P",
+    "SWP3_C_N",
+    "SWP3_C_P",
+    "SWP3_D_N",
+    "SWP3_D_P",
+    "SWP4_A_N",
+    "SWP4_A_P",
+    "SWP4_B_N",
+    "SWP4_B_P",
+    "SWP4_C_N",
+    "SWP4_C_P",
+    "SWP4_D_N",
+    "SWP4_D_P"
+   ],
+   "pattern": "SWP*_*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a magnetics centre tap on the chip side, a DC reference node",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "TCT1",
+    "TCT2",
+    "TCT3",
+    "TCT4"
+   ],
+   "pattern": "TCT*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the transmit indication from the APRS board, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "TR_APRS"
+   ],
+   "pattern": "TR_APRS",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the hardware transmit inhibit from the panel toggle, a static level with a pull-down",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "TX_INHIBIT_n"
+   ],
+   "pattern": "TX_INHIBIT_n",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a UART to a radio module, 115200 baud or less",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U30A"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U31A"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U32A"
+    ]
+   },
+   "nets": [
+    "UART0_RX1",
+    "UART0_RX2",
+    "UART0_RX3",
+    "UART0_TX1",
+    "UART0_TX2",
+    "UART0_TX3"
+   ],
+   "pattern": "UART*_*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "answered": {
+    "USB_5G_N": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)",
+    "USB_D8_N": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)",
+    "USB_E6_N": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)",
+    "USB_PNL_N": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)",
+    "USB_WALL_N": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)"
+   },
+   "basis": "a USB 2.0 data line at 480 Mbit/s",
+   "class": "HIGH_SPEED_DIGITAL",
+   "critical_mm": 11.6,
+   "document": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
+   "drivers": {
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port)": [
+     "U102"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S3 (upstream the CM5 USB3-0 port)": [
+     "U302"
+    ],
+    "USBLC6-2SC6": [
+     "U29",
+     "U37"
+    ]
+   },
+   "layout_bound": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 11.6 mm",
+   "nets": [
+    "USB_5G_N",
+    "USB_D8_N",
+    "USB_E6_N",
+    "USB_PNL_N",
+    "USB_WALL_N"
+   ],
+   "pattern": "USB_*_N",
+   "rise_ns": 0.5,
+   "source": "USB2-HS",
+   "status": "DECIDED",
+   "why": "USB 2.0 section 7.1.2.2, THSR and THSF, 10 to 90 percent, a minimum: v2/vendor/standards/usb-2-0-specification-2024-09-27.md"
+  },
+  {
+   "answered": {
+    "USB_5G_P": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)",
+    "USB_D8_P": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)",
+    "USB_E6_P": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)",
+    "USB_PNL_P": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)",
+    "USB_WALL_P": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)"
+   },
+   "basis": "the other half of the same USB 2.0 pair",
+   "class": "HIGH_SPEED_DIGITAL",
+   "critical_mm": 11.6,
+   "document": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
+   "drivers": {
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port)": [
+     "U102"
+    ],
+    "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S3 (upstream the CM5 USB3-0 port)": [
+     "U302"
+    ],
+    "USBLC6-2SC6": [
+     "U29",
+     "U37"
+    ]
+   },
+   "layout_bound": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 11.6 mm",
+   "nets": [
+    "USB_5G_P",
+    "USB_D8_P",
+    "USB_E6_P",
+    "USB_PNL_P",
+    "USB_WALL_P"
+   ],
+   "pattern": "USB_*_P",
+   "rise_ns": 0.5,
+   "source": "USB2-HS",
+   "status": "DECIDED",
+   "why": "USB 2.0 section 7.1.2.2, THSR and THSF, 10 to 90 percent, a minimum: v2/vendor/standards/usb-2-0-specification-2024-09-27.md"
+  },
+  {
+   "answered": {
+    "USB_OTG_N1": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)",
+    "USB_OTG_N2": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)",
+    "USB_OTG_N3": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)",
+    "USB_OTG_P1": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)",
+    "USB_OTG_P2": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)",
+    "USB_OTG_P3": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the netlist)"
+   },
+   "basis": "a USB 2.0 on-the-go pair",
+   "class": "HIGH_SPEED_DIGITAL",
+   "critical_mm": 11.6,
+   "document": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side)": [
+     "U30B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side)": [
+     "U31B"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side)": [
+     "U32B"
+    ],
+    "USBLC6-2SC6": [
+     "U107",
+     "U207",
+     "U307"
+    ]
+   },
+   "layout_bound": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 11.6 mm",
+   "nets": [
+    "USB_OTG_N1",
+    "USB_OTG_N2",
+    "USB_OTG_N3",
+    "USB_OTG_P1",
+    "USB_OTG_P2",
+    "USB_OTG_P3"
+   ],
+   "pattern": "USB_OTG_*",
+   "rise_ns": 0.5,
+   "source": "USB2-HS",
+   "status": "DECIDED",
+   "why": "USB 2.0 section 7.1.2.2, THSR and THSF, 10 to 90 percent, a minimum: v2/vendor/standards/usb-2-0-specification-2024-09-27.md"
+  },
+  {
+   "basis": "a radio-frequency path between a card and its antenna switch",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {},
+   "nets": [
+    "W1A_CARD",
+    "W3A_CARD"
+   ],
+   "pattern": "W?A_CARD",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the same, second branch",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {},
+   "nets": [
+    "W1B_CARD",
+    "W3B_CARD"
+   ],
+   "pattern": "W?B_CARD",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the primary radio select, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "SKY13351-378LF SPDT antenna changeover, chain A: OUTPUT1 the slot 1 card, OUTPUT2 the slot 3 card": [
+     "U82"
+    ],
+    "SKY13351-378LF SPDT antenna changeover, chain B: OUTPUT1 the slot 1 card, OUTPUT2 the slot 3 card": [
+     "U83"
+    ]
+   },
+   "nets": [
+    "WIFI_PRI"
+   ],
+   "pattern": "WIFI_PRI",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the secondary radio select, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "SKY13351-378LF SPDT antenna changeover, chain A: OUTPUT1 the slot 1 card, OUTPUT2 the slot 3 card": [
+     "U82"
+    ],
+    "SKY13351-378LF SPDT antenna changeover, chain B: OUTPUT1 the slot 1 card, OUTPUT2 the slot 3 card": [
+     "U83"
+    ],
+    "SN74LVC32APWR quad 2-input OR: the 2-of-3 majority voters of the I/O control plane": [
+     "U79"
+    ],
+    "STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U41"
+    ],
+    "STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U51"
+    ],
+    "STM32H743VIT6 I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U61"
+    ]
+   },
+   "nets": [
+    "WIFI_SEC"
+   ],
+   "pattern": "WIFI_SEC",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a module's wireless-disable pin, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U30A"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U31A"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U32A"
+    ],
+    "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)": [
+     "U6"
+    ],
+    "SN74LVC32APWR quad OR, slot S1: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare": [
+     "U111"
+    ],
+    "SN74LVC32APWR quad OR, slot S2: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare": [
+     "U211"
+    ],
+    "SN74LVC32APWR quad OR, slot S3: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare": [
+     "U311"
+    ]
+   },
+   "nets": [
+    "WL_nDIS1",
+    "WL_nDIS1_KILL",
+    "WL_nDIS1_OFF",
+    "WL_nDIS2",
+    "WL_nDIS2_KILL",
+    "WL_nDIS2_OFF",
+    "WL_nDIS3",
+    "WL_nDIS3_KILL",
+    "WL_nDIS3_OFF"
+   ],
+   "pattern": "WL_nDIS*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the voted secondary-radio select, as above",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "SN74LVC08APWR quad 2-input AND: the 2-of-3 majority voters of the I/O control plane": [
+     "U74",
+     "U75"
+    ],
+    "SN74LVC32APWR quad 2-input OR: the 2-of-3 majority voters of the I/O control plane": [
+     "U79"
+    ],
+    "STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U41"
+    ],
+    "STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U51"
+    ],
+    "STM32H743VIT6 I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
+     "U61"
+    ]
+   },
+   "nets": [
+    "WSEC_A",
+    "WSEC_AB",
+    "WSEC_B",
+    "WSEC_BC",
+    "WSEC_C",
+    "WSEC_CA"
+   ],
+   "pattern": "WSEC_*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a radio module supply node",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "CP2102N-A02-GQFN28 USB-UART bridge (ZBA)": [
+     "U16"
+    ],
+    "CP2102N-A02-GQFN28 USB-UART bridge (ZBB)": [
+     "U17"
+    ]
+   },
+   "nets": [
+    "ZBA_3V3",
+    "ZBB_3V3"
+   ],
+   "pattern": "ZB?_?V?",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the zeroize line, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "ZEROIZE_HW"
+   ],
+   "pattern": "ZEROIZE_HW",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a module's boot-mode strap, read once at reset",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U30A"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U31A"
+    ],
+    "Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
+     "U32A"
+    ]
+   },
+   "nets": [
+    "nRPIBOOT1",
+    "nRPIBOOT2",
+    "nRPIBOOT3"
+   ],
+   "pattern": "nRPIBOOT*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  }
+ ],
+ "rule": "SI-001"
+}

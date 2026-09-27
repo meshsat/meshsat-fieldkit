@@ -36,7 +36,13 @@ GND = re.compile(r"(^|_)GND[0-9]*$|^GND", re.I)
 def netlist(path):
     txt = open(path, encoding="utf-8", errors="replace").read()
     nets = {}
-    for m in re.finditer(r'\(net \(code "?\d+"?\) \(name "([^"]*)"\)(.*?)(?=\n    \(net |\n  \)\n)', txt, re.S):
+    # THE LAST NET IS READ TOO (R4T-F1, 26 September 2026, MESHSAT-1357). KiCad 9.0.9 closes the nets section on the
+    # last net's own line (`...)))))`), so the old look-ahead, a newline and the section's closing bracket, never
+    # matched after it and the last net of every committed netlist was dropped (at main 45bde541: A 340 of 341 nets read,
+    # B 1928 of 1929, C 145 of 146, D 179 of 180, E 123 of 124, P 54 of 55; each dropped net was an unconnected pin's
+    # placeholder there, which is luck and not a property). The next net or the end of the file ends a net now, as in
+    # port_protect.netlist() and check_contracts.load().
+    for m in re.finditer(r'\(net \(code "?\d+"?\) \(name "([^"]*)"\)(.*?)(?=\(net \(code|\Z)', txt, re.S):
         nets[m.group(1).lstrip("/")] = {(n.group(1), n.group(2))
                                         for n in re.finditer(r'\(node \(ref "([^"]+)"\) \(pin "([^"]+)"\)', m.group(2))}
     values = dict(re.findall(r'\(comp \(ref "([^"]+)"\)\s*\(value "([^"]*)"\)', txt))

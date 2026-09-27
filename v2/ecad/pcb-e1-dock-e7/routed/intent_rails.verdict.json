@@ -1,40 +1,150 @@
 {
  "advisory": false,
  "applicable": true,
- "counts": {
-  "fail": 0,
-  "pass": 14
+ "code_bundle": {
+  "entry": "intent_checks.py",
+  "files": {
+   "boardorder.py": "298e46edcc028954",
+   "boardtable.py": "41bd92e61f12c374",
+   "hardset.py": "be29a44c4a592876",
+   "intent.py": "f1ac033e0f3c10f1",
+   "intent_checks.py": "1ad7af0c718ba940",
+   "kicad_compat.py": "6b8f77490466e939",
+   "netclass.py": "4cc1adf0ddae0390",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "return_via.py": "b61d138e54955dd4",
+   "rules_lib.py": "c0458c53923d7925",
+   "signal_class.py": "60b8647301428da4",
+   "signalnets.py": "688be12d8e42e7a4",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "5aa3d5157698ae2a",
+  "unresolved": []
  },
- "denominator": 14,
- "evidence": [],
+ "counts": {
+  "census_nets": 124,
+  "checks": 20,
+  "declared_nodes": 8,
+  "declared_not_in_netlist": 0,
+  "declared_rails": 14,
+  "fail": 6,
+  "held_pin_roles": 71,
+  "nodes_supplying_parts": 0,
+  "power_nets": 19,
+  "rails_without_destination": 0,
+  "settled": 11,
+  "switches_unresolved": 0,
+  "undecided": 3,
+  "undeclared": 5,
+  "unmarked": 59
+ },
+ "denominator": 20,
+ "evidence": [
+  "census of the 124 nets: 19 counted, 8 declared node, 2 ground, 11 settled, 22 unconnected, 3 undecided, 59 unmarked",
+  "undecided, named and not counted (3): FAN1_SW, FAN2_SW, WATER_SENSE",
+  "settled, they supply nothing (11): GEIGER_CT, HS_TIMER, TAMPER_IO, TRK_CSN, TRK_CSP, TRK_SS, TRK_VC, TRK_VCC1, VIN_MON, XIN, XOUT",
+  "power net E6_BST is a declared rail (it is not: supply pin by its held datasheet (U12.6 BST: v2/vendor/diodes/diodes-ap63200-series-buck.pdf))",
+  "power net E6_DVDD is a declared rail (it is not: supply pin by name (U10.23 E6_DVDD, U10.45 E6_DVDD, U10.50 E6_DVDD), and the intent's bypass list decouples it (C45:U10.45, C46:U10.50); supply pin by its held )",
+  "power net SGP_VDD is a declared rail (it is not: supply pin by name (U17.1 SGP_VDD), and the intent's bypass list decouples it (C57:U17.1))",
+  "power net TRK_LDO33 is a declared rail (it is not: supply pin by its held datasheet (U5.4 LDO33: v2/vendor/power/lt8705a.pdf))",
+  "power net TRK_LSENSE is a declared rail (it is not: power class PWR in the netlist)",
+  "the count of declared rails equals the count of power nets carrying more than 0.00 A: 14 declared (14 of them nets of the netlist), 19 power nets not declared as nodes (by kind, a net counted under each that applies: 3 power-symbol, 2 supply-pin by type, 16 power-class, 5 supply-pin by name, 19 supply-pin by its held datasheet, 2 reached by a rail's current, 14 declared rails), 8 declared as nodes; undeclared: E6_BST, E6_DVDD, SGP_VDD, TRK_LDO33, TRK_LSENSE",
+  "undecided, named and not counted: FAN1_SW: it carries the mark of a supply (M3 D7 joins it to the power net CELL_F; M4 the switched return of D7: the channel of Q9 sinks it to ground) and nothing read settles it: D7.2, J_FAN1.2, Q9.3",
+  "undecided, named and not counted: FAN2_SW: it carries the mark of a supply (M3 D8 joins it to the power net CELL_F; M4 the switched return of D8: the channel of Q10 sinks it to ground) and nothing read settles it: D8.2, J_FAN2.2, Q10.3",
+  "undecided, named and not counted: WATER_SENSE: it carries the mark of a supply (M1 capacitor C51 to ground; M6 class SENSE in the netlist: the conductor senses a supply) and nothing read settles it: PAD_W2.1, U10.38",
+  "declared as a node, not a rail: E6_SW (power class SW in the netlist; supply pin by its held datasheet (U12.5 SW: v2/vendor/diodes/diodes-ap63200-series-buck.p)",
+  "declared as a node, not a rail: TRK_BOOST1 (supply pin by its held datasheet (U5.23 BOOST1: v2/vendor/power/lt8705a.pdf))",
+  "declared as a node, not a rail: TRK_BOOST2 (supply pin by its held datasheet (U5.17 BOOST2: v2/vendor/power/lt8705a.pdf))",
+  "declared as a node, not a rail: TRK_INTVCC (supply pin by its held datasheet (U5.15 GATEVCC, U5.35 INTVCC: v2/vendor/power/lt8705a.pdf))",
+  "declared as a node, not a rail: TRK_SW1 (power class SW in the netlist; supply pin by its held datasheet (U5.21 SW1: v2/vendor/power/lt8705a.pdf))",
+  "declared as a node, not a rail: TRK_SW2 (power class SW in the netlist; supply pin by its held datasheet (U5.19 SW2: v2/vendor/power/lt8705a.pdf); switch output:)",
+  "declared as a node, not a rail: U3_VCAP (supply pin by its held datasheet (U3.1 VCAP: v2/vendor/ti/ti-lm74700-q1.pdf))",
+  "declared as a node, not a rail: U4_VCAP (supply pin by its held datasheet (U4.1 VCAP: v2/vendor/ti/ti-lm74700-q1.pdf))",
+  "settled, it supplies nothing: GEIGER_CT: nothing on it supplies: U16.3 CT (timing, ti-tps22810-load-switch.pdf)",
+  "settled, it supplies nothing: HS_TIMER: nothing on it supplies: U6.6 TIMER (timing, ti-lm5069.pdf)",
+  "settled, it supplies nothing: TAMPER_IO: nothing on it supplies: U10.27 GPIO16 (signal, rpi-rp2040-datasheet.pdf)",
+  "settled, it supplies nothing: TRK_CSN: nothing on it supplies: U5.2 CSN (sense, lt8705a.pdf)",
+  "settled, it supplies nothing: TRK_CSP: nothing on it supplies: U5.3 CSP (sense, lt8705a.pdf)",
+  "settled, it supplies nothing: TRK_SS: nothing on it supplies: U5.9 SS (timing, lt8705a.pdf)",
+  "settled, it supplies nothing: TRK_VC: nothing on it supplies: U5.8 VC (compensation, lt8705a.pdf)",
+  "settled, it supplies nothing: TRK_VCC1: only resistors, capacitors and test points",
+  "settled, it supplies nothing: VIN_MON: nothing on it supplies: U10.39 GPIO27 / ADC1 (signal, rpi-rp2040-datasheet.pdf)",
+  "settled, it supplies nothing: XIN: an oscillator net: Y1 is a crystal or resonator",
+  "settled, it supplies nothing: XOUT: an oscillator net: Y1 is a crystal or resonator"
+ ],
  "inputs": {
-  "board": {
-   "path": "pcb-e1-dock.kicad_pcb",
-   "sha256_16": "a462ac2620b9b8d3"
-  }
+  "board": "e",
+  "document_1": {
+   "path": "v2/vendor/diodes/diodes-ap63200-series-buck.pdf",
+   "sha256_16": "ef99daa3789d835b"
+  },
+  "document_2": {
+   "path": "v2/vendor/power/lt8705a.pdf",
+   "sha256_16": "8f552a0b57677bfa"
+  },
+  "document_3": {
+   "path": "v2/vendor/power/ti-csd19532q5b-n-fet.pdf",
+   "sha256_16": "353ce937cff0b719"
+  },
+  "document_4": {
+   "path": "v2/vendor/power/ti-tlv755p-ldo.pdf",
+   "sha256_16": "7eb7bc6935bf6c1d"
+  },
+  "document_5": {
+   "path": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+   "sha256_16": "be56fbb75ba0ae9e"
+  },
+  "document_6": {
+   "path": "v2/vendor/ti/ti-lm5069.pdf",
+   "sha256_16": "d60d8106a6e81139"
+  },
+  "document_7": {
+   "path": "v2/vendor/ti/ti-lm74700-q1.pdf",
+   "sha256_16": "e16b3a8c0023201f"
+  },
+  "document_8": {
+   "path": "v2/vendor/ti/ti-tps22810-load-switch.pdf",
+   "sha256_16": "10450eedecbc4542"
+  },
+  "intent": {
+   "path": "pcb-e1-dock-e7/out/pcb-e1-dock-intent.json",
+   "sha256_16": "b4c90bb84593638b"
+  },
+  "netlist": {
+   "content16": "256cc3f96d41dcab",
+   "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
+   "sha256_16": "f3c1ad6153002976"
+  },
+  "threshold_a": 0.0
  },
  "missing_input": null,
- "note": "every power-symbol net declared with its loads",
+ "note": "PWR-001 on the committed netlist and the intent file beside it: every power net is a declared rail, and every declared rail is a net of the netlist whose source and loads are on it. A power net is a power-symbol net, a net carrying a pin typed power_in or power_out, a net of a power class in the netlist, a net carrying a supply-named pin that a bypass entry, a capacitor to ground or a second supply pin corroborates, a net carrying a pin its held datasheet makes a supply, or a ground off a ground net (intent_checks.PIN_ROLES, each row carrying every power and ground pin of its table, each document recorded by sha), or a net a declared rail's current reaches through a two-terminal part or a transistor's channel, at a threshold of 0.00 A. FAIL CLOSED: every other net carrying the mark of a supply (a capacitor to ground, a capacitor to a power net or across one part's pins, a fuse, inductor, ferrite, diode, jumper, switch or link resistor to a power net, a transistor channel shared with one, the switched low side of a load, a lead whose other pins are all ground, a sense class) is settled only by what is read (a crystal, a held non-supply pin role, a gate, a sink to ground, a declared clamp, a switch to ground; on a lead or a sense net the connector carries what the read pins carry) and is otherwise undecided; an undecided net holds the reading at INCONCLUSIVE when nothing fails, and the census names every net's disposition. A power net declared as a node is reported, and refused when it carries the supply pins of two or more parts. Session decisions of 26 September 2026 under the owner's standing rule: the kinds of power net, the fail-closed marks and the undecided class, the 0 A threshold, the node rule",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
    "PWR-001": "6e91133d2ef9dee3"
   },
-  "rule_set_fingerprint": "ff8151db3576437b"
+  "rule_set_fingerprint": "950539a66227908b"
  },
  "rules": [
   "PWR-001"
  ],
+ "runtime": {
+  "python": "3.11.2"
+ },
  "tool": "intent_rails",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "git_head": "53a98a71b53c",
+  "tools_tree_sha": "6f6b28e777c8262b"
  },
- "ts": "2026-09-21T12:51:51Z",
- "verdict": "PASS",
- "version": "unknown",
+ "ts": "2026-09-27T00:26:20Z",
+ "verdict": "FAIL",
+ "version": "53a98a71b53c+dirty",
  "writer": {
   "file": "intent_checks.py",
-  "sha16": "41cd5935c5f46f0b"
+  "sha16": "1ad7af0c718ba940"
  }
 }

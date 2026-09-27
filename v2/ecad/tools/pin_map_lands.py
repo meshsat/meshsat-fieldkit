@@ -24,7 +24,11 @@ def read_footprints(path):
     """{ref: footprint id} from the components section."""
     txt = open(path, encoding="utf-8", errors="replace").read()
     out = {}
-    for m in re.finditer(r'\(comp \(ref "([^"]+)"\)(.*?)(?=\n    \(comp |\n  \)\n)', txt, re.S):
+    # THE LAST COMPONENT IS READ TOO (the R4T-F1 class, found by the ts-net stream on 26 September 2026): KiCad 9.0.9
+    # closes the components section on the last component's own line, so the old look-ahead never matched after it
+    # and the last part of every committed netlist had no land judged (A U34, B Y301, C Y1, D Y2, E Y1, P W_P). A
+    # component ends at the next one, at the libparts section or at the end of the file.
+    for m in re.finditer(r'\(comp \(ref "([^"]+)"\)(.*?)(?=\(comp \(ref |\n  \(libparts|\n  \(libraries|\n  \(nets|\Z)', txt, re.S):
         f = re.search(r'\(footprint "([^"]*)"\)', m.group(2))
         if f: out[m.group(1)] = f.group(1)
     return out

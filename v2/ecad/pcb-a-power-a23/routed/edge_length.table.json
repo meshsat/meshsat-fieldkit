@@ -1,0 +1,1776 @@
+{
+ "board": "a",
+ "counts": {
+  "answered_nets": 6,
+  "classes": 60,
+  "contradicted_nets": 0,
+  "decided_nets": 6,
+  "layout_bound_nets": 0,
+  "low_speed_nets": 159,
+  "may_be_long_nets": 6,
+  "signal_nets": 283,
+  "undecided_nets": 118
+ },
+ "inputs": {
+  "board": "a",
+  "board_facts": {
+   "path": "tools/pcb_board_facts.yaml",
+   "sha256_16": "4a0474ddac0b1404"
+  },
+  "board_table": {
+   "path": "tools/boards/a.json",
+   "sha256_16": "4e680bed9e8fd268"
+  },
+  "critical_k": 6,
+  "document_1": {
+   "path": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
+   "sha256_16": "2ecb40606d4b84fe"
+  },
+  "extent_mm": 400.0,
+  "intent": {
+   "path": "pcb-a-power-a23/out/pcb-a-power-intent.json",
+   "sha256_16": "98f0100b1023700e"
+  },
+  "netlist": {
+   "content16": "66797255f4591a23",
+   "path": "pcb-a-power-a23/out/pcb-a-power.net",
+   "sha256_16": "3a786cf31614fe63"
+  },
+  "project": {
+   "path": "pcb-a-power-a23/pcb-a-power.kicad_pro",
+   "sha256_16": "a5f669ecb899545f"
+  },
+  "slowest_layer": "JLC06161H-3313 In2.Cu",
+  "stack_table": {
+   "path": "tools/stackup_write.py",
+   "sha256_16": "b55a3c0f58c805c2"
+  },
+  "stacks": [
+   "JLC06161H-3313"
+  ],
+  "t_pd_ps_per_mm": 7.154
+ },
+ "notes": [
+  "67 net(s) whose netlist class differs from the project file's assignment: +12V_HF (netlist Default, project RAIL), +13V8_PA (netlist Default, project RAIL), +54V_POE (netlist Default, project HV), +5V_D8 (netlist Default, project RAIL), +5V_DEV (netlist Default, project RAIL), +5V_S1 (netlist Default, project RAIL), +5V_S2 (netlist Default, project RAIL), +5V_S3 (netlist Default, project RAIL) ..."
+ ],
+ "rows": [
+  {
+   "basis": "",
+   "class": "UNKNOWN",
+   "drivers": {
+    "LM5176PWPR buck-boost controller, +12V_HF from VBAT": [
+     "U15"
+    ],
+    "LM5176PWPR buck-boost controller, +13V8_PA from VBAT": [
+     "U13"
+    ],
+    "LM5176PWPR buck-boost controller, +54V_POE from VBAT": [
+     "U16"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_DEV from VBAT": [
+     "U7"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_S2 from VBAT": [
+     "U5"
+    ],
+    "LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW": [
+     "U2"
+    ],
+    "LTC2954ITS8-1 push-button on/off controller, -40 to 85 C": [
+     "U1"
+    ],
+    "SN74AUP1G08DBVR AND: HF_EN = HF_TXOK AND HF_SW_EN (the software hold)": [
+     "U38"
+    ],
+    "SN74AUP1G08DBVR AND: HF_TXOK = TX_INHIBIT_n AND EMCON_HW (the HF rail's EMCON gate)": [
+     "U37"
+    ],
+    "SN74AUP1G08DBVR AND: PA_EN = PA_TXOK AND PA_SW_EN (the software hold)": [
+     "U36"
+    ],
+    "SN74AUP1G08DBVR AND: PA_TXOK = TX_INHIBIT_n AND EMCON_HW (the PA rail's EMCON gate)": [
+     "U35"
+    ],
+    "SN74LVC08APWR quad AND: the outlet interlock for PoE and USB-C (sections 3 and 4; 1 and 2 unused)": [
+     "U26"
+    ],
+    "SN74LVC1G00DBVR NAND: OUTLET_OK = NOT (TR_APRS AND PA_EN), the outlet interlock": [
+     "U30"
+    ],
+    "TPS37A010122DSKR 65 V OV/UV supervisor: the FE's enable and its restart latch": [
+     "U34"
+    ]
+   },
+   "nets": [
+    "FE_BLEED",
+    "FE_BLEED_G",
+    "FE_CSF",
+    "FE_CSGF",
+    "FE_CTR2",
+    "FE_GVDD",
+    "FE_ISNS_N",
+    "FE_ISNS_P",
+    "FE_LATCH",
+    "FE_RUN",
+    "FE_UVS",
+    "FE_VINP",
+    "FE_VISNS",
+    "FE_VZ",
+    "HF_CSF",
+    "HF_CSGF",
+    "HF_ISNS_N",
+    "HF_ISNS_P",
+    "HF_TXOK",
+    "HF_UVLO",
+    "HF_VINP",
+    "MAIN_PDT",
+    "OUTLET_OK",
+    "PA_CSF",
+    "PA_CSGF",
+    "PA_ISNS_N",
+    "PA_ISNS_P",
+    "PA_TXOK",
+    "PA_UVLO",
+    "PA_VINP",
+    "POE_CSF",
+    "POE_CSGF",
+    "POE_ISNS_N",
+    "POE_ISNS_P",
+    "S2_CSF",
+    "S2_CSGF",
+    "S2_ISNS_N",
+    "S2_ISNS_P",
+    "SD_CSF",
+    "SD_CSGF",
+    "SD_ISNS_N",
+    "SD_ISNS_P"
+   ],
+   "pattern": "(no declaration)",
+   "rise_ns": null,
+   "status": "UNDECIDED",
+   "why": "no signal-class declaration names these nets, so neither their class nor their edge is known"
+  },
+  {
+   "basis": "the bootstrap node of a single-switch buck, riding on its switch node and carrying the same edges",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "AP64500SP-13 5 A buck, 5.1 V rail +5V_S1": [
+     "U4"
+    ],
+    "AP64500SP-13 5 A buck, 5.1 V rail +5V_S3": [
+     "U6"
+    ]
+   },
+   "nets": [
+    "S1_BOOT",
+    "S3_BOOT"
+   ],
+   "pattern": "*_BOOT",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a bootstrap node riding on a switch node",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "LM5176PWPR buck-boost controller, +12V_HF from VBAT": [
+     "U15"
+    ],
+    "LM5176PWPR buck-boost controller, +13V8_PA from VBAT": [
+     "U13"
+    ],
+    "LM5176PWPR buck-boost controller, +54V_POE from VBAT": [
+     "U16"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_DEV from VBAT": [
+     "U7"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_S2 from VBAT": [
+     "U5"
+    ],
+    "LM5176PWPR buck-boost controller, PD_VPWR from VBAT": [
+     "U19"
+    ],
+    "LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW": [
+     "U2"
+    ]
+   },
+   "nets": [
+    "FE_BOOT1",
+    "HF_BOOT1",
+    "PA_BOOT1",
+    "PD_BOOT1",
+    "POE_BOOT1",
+    "S2_BOOT1",
+    "SD_BOOT1"
+   ],
+   "pattern": "*_BOOT1",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the second bootstrap node of the same converter",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "LM5176PWPR buck-boost controller, +12V_HF from VBAT": [
+     "U15"
+    ],
+    "LM5176PWPR buck-boost controller, +13V8_PA from VBAT": [
+     "U13"
+    ],
+    "LM5176PWPR buck-boost controller, +54V_POE from VBAT": [
+     "U16"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_DEV from VBAT": [
+     "U7"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_S2 from VBAT": [
+     "U5"
+    ],
+    "LM5176PWPR buck-boost controller, PD_VPWR from VBAT": [
+     "U19"
+    ],
+    "LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW": [
+     "U2"
+    ]
+   },
+   "nets": [
+    "FE_BOOT2",
+    "HF_BOOT2",
+    "PA_BOOT2",
+    "PD_BOOT2",
+    "POE_BOOT2",
+    "S2_BOOT2",
+    "SD_BOOT2"
+   ],
+   "pattern": "*_BOOT2",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a bootstrap node riding on a switch node",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "TPS62933DRLR 3 A buck, 12.0 V heater rail": [
+     "U33"
+    ],
+    "TPS62933DRLR 3 A buck, 3.3 V logic": [
+     "U12"
+    ]
+   },
+   "nets": [
+    "B33_BST",
+    "HT_BST"
+   ],
+   "pattern": "*_BST",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a charger's bootstrap node, as above",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "CH_BTST1",
+    "CH_BTST2"
+   ],
+   "pattern": "*_BTST?",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "an error amplifier's compensation node, a capacitor and a resistor to ground",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "AP64500SP-13 5 A buck, 5.1 V rail +5V_S1": [
+     "U4"
+    ],
+    "AP64500SP-13 5 A buck, 5.1 V rail +5V_S3": [
+     "U6"
+    ],
+    "LM5176PWPR buck-boost controller, +12V_HF from VBAT": [
+     "U15"
+    ],
+    "LM5176PWPR buck-boost controller, +13V8_PA from VBAT": [
+     "U13"
+    ],
+    "LM5176PWPR buck-boost controller, +54V_POE from VBAT": [
+     "U16"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_DEV from VBAT": [
+     "U7"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_S2 from VBAT": [
+     "U5"
+    ],
+    "LM5176PWPR buck-boost controller, PD_VPWR from VBAT": [
+     "U19"
+    ],
+    "LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW": [
+     "U2"
+    ]
+   },
+   "nets": [
+    "FE_COMP",
+    "HF_COMP",
+    "PA_COMP",
+    "PD_COMP",
+    "POE_COMP",
+    "S1_COMP",
+    "S2_COMP",
+    "S3_COMP",
+    "SD_COMP"
+   ],
+   "pattern": "*_COMP",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the second element of the same compensation network",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "FE_COMPC",
+    "HF_COMPC",
+    "PA_COMPC",
+    "PD_COMPC",
+    "POE_COMPC",
+    "S1_COMPC",
+    "S2_COMPC",
+    "S3_COMPC",
+    "SD_COMPC"
+   ],
+   "pattern": "*_COMPC",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a current-sense input across a shunt, millivolts of DC with a filter",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "HF_CS",
+    "PD_CS",
+    "S2_CS",
+    "SD_CS"
+   ],
+   "pattern": "*_CS",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a digital supply pin with its decoupling",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)": [
+     "U18"
+    ]
+   },
+   "nets": [
+    "PD_DVDD"
+   ],
+   "pattern": "*_DVDD",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "an eFuse slew-rate capacitor node, deliberately slow",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (453R 1% (ILM: 2.0 A))": [
+     "U23"
+    ],
+    "TPS259631DDAR eFuse +5V_DEV -> VBUS_WALL (1k 1% (ILM: 0.89 A))": [
+     "U32"
+    ],
+    "TPS259631DDAR eFuse VBAT -> VHEAT_IN (909R 1% (ILM: 1.0 A))": [
+     "U22"
+    ],
+    "TPS259631DDAR eFuse VBAT -> VMON (750R 1% (ILM: 1.2 A))": [
+     "U21"
+    ]
+   },
+   "nets": [
+    "U21_DVDT",
+    "U22_DVDT",
+    "U23_DVDT",
+    "U32_DVDT"
+   ],
+   "pattern": "*_DVDT",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "an enable, a static level with an RC on it",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "LM5176PWPR buck-boost controller, +54V_POE from VBAT": [
+     "U16"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_DEV from VBAT": [
+     "U7"
+    ],
+    "LM5176PWPR buck-boost controller, PD_VPWR from VBAT": [
+     "U19"
+    ],
+    "LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW": [
+     "U2"
+    ],
+    "LTC2954ITS8-1 push-button on/off controller, -40 to 85 C": [
+     "U1"
+    ],
+    "PCA9555PW (0x21): enables and status": [
+     "U27"
+    ],
+    "PCA9555PW (0x24): power-good lines, spares": [
+     "U28"
+    ],
+    "SN74AUP1G08DBVR AND: HF_EN = HF_TXOK AND HF_SW_EN (the software hold)": [
+     "U38"
+    ],
+    "SN74AUP1G08DBVR AND: PA_EN = PA_TXOK AND PA_SW_EN (the software hold)": [
+     "U36"
+    ],
+    "SN74LVC08APWR quad AND: the outlet interlock for PoE and USB-C (sections 3 and 4; 1 and 2 unused)": [
+     "U26"
+    ],
+    "SN74LVC1G00DBVR NAND: OUTLET_OK = NOT (TR_APRS AND PA_EN), the outlet interlock": [
+     "U30"
+    ],
+    "TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (453R 1% (ILM: 2.0 A))": [
+     "U23"
+    ],
+    "TPS259631DDAR eFuse +5V_DEV -> VBUS_WALL (1k 1% (ILM: 0.89 A))": [
+     "U32"
+    ],
+    "TPS259631DDAR eFuse VBAT -> VHEAT_IN (909R 1% (ILM: 1.0 A))": [
+     "U22"
+    ],
+    "TPS259631DDAR eFuse VBAT -> VMON (750R 1% (ILM: 1.2 A))": [
+     "U21"
+    ],
+    "TPS62933DRLR 3 A buck, 12.0 V heater rail": [
+     "U33"
+    ],
+    "TPS62933DRLR 3 A buck, 3.3 V logic": [
+     "U12"
+    ]
+   },
+   "nets": [
+    "D8_EN",
+    "DEV_EN",
+    "FE_EN",
+    "HEAT_EN",
+    "HF_EN",
+    "HT_EN",
+    "MON_EN",
+    "PA_EN",
+    "PD_EN",
+    "PD_SW_EN",
+    "POE_EN",
+    "POE_SW_EN",
+    "RAIL_EN",
+    "USBX_EN"
+   ],
+   "pattern": "*_EN",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a converter's feedback divider tap: a DC level inside the control loop",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "AP64500SP-13 5 A buck, 5.1 V rail +5V_S1": [
+     "U4"
+    ],
+    "AP64500SP-13 5 A buck, 5.1 V rail +5V_S3": [
+     "U6"
+    ],
+    "LM5176PWPR buck-boost controller, +12V_HF from VBAT": [
+     "U15"
+    ],
+    "LM5176PWPR buck-boost controller, +13V8_PA from VBAT": [
+     "U13"
+    ],
+    "LM5176PWPR buck-boost controller, +54V_POE from VBAT": [
+     "U16"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_DEV from VBAT": [
+     "U7"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_S2 from VBAT": [
+     "U5"
+    ],
+    "LM5176PWPR buck-boost controller, PD_VPWR from VBAT": [
+     "U19"
+    ],
+    "LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW": [
+     "U2"
+    ],
+    "TPS62933DRLR 3 A buck, 12.0 V heater rail": [
+     "U33"
+    ],
+    "TPS62933DRLR 3 A buck, 3.3 V logic": [
+     "U12"
+    ]
+   },
+   "nets": [
+    "B33_FB",
+    "FE_FB",
+    "HF_FB",
+    "HT_FB",
+    "PA_FB",
+    "PD_FB",
+    "POE_FB",
+    "S1_FB",
+    "S2_FB",
+    "S3_FB",
+    "SD_FB"
+   ],
+   "pattern": "*_FB",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a fault flag, an open-drain static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "PCA9555PW (0x21): enables and status": [
+     "U27"
+    ],
+    "PCA9555PW (0x24): power-good lines, spares": [
+     "U28"
+    ],
+    "TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (453R 1% (ILM: 2.0 A))": [
+     "U23"
+    ],
+    "TPS259631DDAR eFuse +5V_DEV -> VBUS_WALL (1k 1% (ILM: 0.89 A))": [
+     "U32"
+    ],
+    "TPS259631DDAR eFuse VBAT -> VHEAT_IN (909R 1% (ILM: 1.0 A))": [
+     "U22"
+    ],
+    "TPS259631DDAR eFuse VBAT -> VMON (750R 1% (ILM: 1.2 A))": [
+     "U21"
+    ]
+   },
+   "nets": [
+    "D8_FLT",
+    "HEAT_FLT",
+    "MON_FLT",
+    "USBX_FLT"
+   ],
+   "pattern": "*_FLT",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a high-side gate drive: amperes into a FET gate in nanoseconds",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "LM5176PWPR buck-boost controller, +12V_HF from VBAT": [
+     "U15"
+    ],
+    "LM5176PWPR buck-boost controller, +13V8_PA from VBAT": [
+     "U13"
+    ],
+    "LM5176PWPR buck-boost controller, +54V_POE from VBAT": [
+     "U16"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_DEV from VBAT": [
+     "U7"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_S2 from VBAT": [
+     "U5"
+    ],
+    "LM5176PWPR buck-boost controller, PD_VPWR from VBAT": [
+     "U19"
+    ],
+    "LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW": [
+     "U2"
+    ]
+   },
+   "nets": [
+    "FE_HDRV1",
+    "FE_HDRV2",
+    "HF_HDRV1",
+    "HF_HDRV2",
+    "PA_HDRV1",
+    "PA_HDRV2",
+    "PD_HDRV1",
+    "PD_HDRV2",
+    "POE_HDRV1",
+    "POE_HDRV2",
+    "S2_HDRV1",
+    "S2_HDRV2",
+    "SD_HDRV1",
+    "SD_HDRV2"
+   ],
+   "pattern": "*_HDRV?",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a charger's high-side gate drive",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "CH_HIDRV1",
+    "CH_HIDRV2"
+   ],
+   "pattern": "*_HIDRV?",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "an eFuse current-limit resistor node, a DC bias",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (453R 1% (ILM: 2.0 A))": [
+     "U23"
+    ],
+    "TPS259631DDAR eFuse +5V_DEV -> VBUS_WALL (1k 1% (ILM: 0.89 A))": [
+     "U32"
+    ],
+    "TPS259631DDAR eFuse VBAT -> VHEAT_IN (909R 1% (ILM: 1.0 A))": [
+     "U22"
+    ],
+    "TPS259631DDAR eFuse VBAT -> VMON (750R 1% (ILM: 1.2 A))": [
+     "U21"
+    ]
+   },
+   "nets": [
+    "U21_ILM",
+    "U22_ILM",
+    "U23_ILM",
+    "U32_ILM"
+   ],
+   "pattern": "*_ILM",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a low-side gate drive, as above",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "LM5176PWPR buck-boost controller, +12V_HF from VBAT": [
+     "U15"
+    ],
+    "LM5176PWPR buck-boost controller, +13V8_PA from VBAT": [
+     "U13"
+    ],
+    "LM5176PWPR buck-boost controller, +54V_POE from VBAT": [
+     "U16"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_DEV from VBAT": [
+     "U7"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_S2 from VBAT": [
+     "U5"
+    ],
+    "LM5176PWPR buck-boost controller, PD_VPWR from VBAT": [
+     "U19"
+    ],
+    "LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW": [
+     "U2"
+    ]
+   },
+   "nets": [
+    "FE_LDRV1",
+    "FE_LDRV2",
+    "HF_LDRV1",
+    "HF_LDRV2",
+    "PA_LDRV1",
+    "PA_LDRV2",
+    "PD_LDRV1",
+    "PD_LDRV2",
+    "POE_LDRV1",
+    "POE_LDRV2",
+    "S2_LDRV1",
+    "S2_LDRV2",
+    "SD_LDRV1",
+    "SD_LDRV2"
+   ],
+   "pattern": "*_LDRV?",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a charger's low-side gate drive",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "CH_LODRV1",
+    "CH_LODRV2"
+   ],
+   "pattern": "*_LODRV?",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a mode-select pin, strapped to a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "LM5176PWPR buck-boost controller, +12V_HF from VBAT": [
+     "U15"
+    ],
+    "LM5176PWPR buck-boost controller, +13V8_PA from VBAT": [
+     "U13"
+    ],
+    "LM5176PWPR buck-boost controller, +54V_POE from VBAT": [
+     "U16"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_DEV from VBAT": [
+     "U7"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_S2 from VBAT": [
+     "U5"
+    ],
+    "LM5176PWPR buck-boost controller, PD_VPWR from VBAT": [
+     "U19"
+    ],
+    "LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW": [
+     "U2"
+    ]
+   },
+   "nets": [
+    "FE_MODE",
+    "HF_MODE",
+    "PA_MODE",
+    "PD_MODE",
+    "POE_MODE",
+    "S2_MODE",
+    "SD_MODE"
+   ],
+   "pattern": "*_MODE",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "an overvoltage-lockout divider tap, a DC level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (453R 1% (ILM: 2.0 A))": [
+     "U23"
+    ],
+    "TPS259631DDAR eFuse +5V_DEV -> VBUS_WALL (1k 1% (ILM: 0.89 A))": [
+     "U32"
+    ],
+    "TPS259631DDAR eFuse VBAT -> VHEAT_IN (909R 1% (ILM: 1.0 A))": [
+     "U22"
+    ],
+    "TPS259631DDAR eFuse VBAT -> VMON (750R 1% (ILM: 1.2 A))": [
+     "U21"
+    ]
+   },
+   "nets": [
+    "U21_OVLO",
+    "U22_OVLO",
+    "U23_OVLO",
+    "U32_OVLO"
+   ],
+   "pattern": "*_OVLO",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a power-good flag, an open-drain static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "LM5176PWPR buck-boost controller, +12V_HF from VBAT": [
+     "U15"
+    ],
+    "LM5176PWPR buck-boost controller, +13V8_PA from VBAT": [
+     "U13"
+    ],
+    "LM5176PWPR buck-boost controller, +54V_POE from VBAT": [
+     "U16"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_DEV from VBAT": [
+     "U7"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_S2 from VBAT": [
+     "U5"
+    ],
+    "LM5176PWPR buck-boost controller, PD_VPWR from VBAT": [
+     "U19"
+    ],
+    "LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW": [
+     "U2"
+    ],
+    "PCA9555PW (0x21): enables and status": [
+     "U27"
+    ],
+    "PCA9555PW (0x24): power-good lines, spares": [
+     "U28"
+    ]
+   },
+   "nets": [
+    "FE_PGOOD",
+    "HF_PGOOD",
+    "PA_PGOOD",
+    "PD_PGOOD",
+    "POE_PGOOD",
+    "S2_PGOOD",
+    "SD_PGOOD"
+   ],
+   "pattern": "*_PGOOD",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a frequency-setting resistor node, a DC bias",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "AP64500SP-13 5 A buck, 5.1 V rail +5V_S1": [
+     "U4"
+    ],
+    "AP64500SP-13 5 A buck, 5.1 V rail +5V_S3": [
+     "U6"
+    ],
+    "LM5176PWPR buck-boost controller, +12V_HF from VBAT": [
+     "U15"
+    ],
+    "LM5176PWPR buck-boost controller, +13V8_PA from VBAT": [
+     "U13"
+    ],
+    "LM5176PWPR buck-boost controller, +54V_POE from VBAT": [
+     "U16"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_DEV from VBAT": [
+     "U7"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_S2 from VBAT": [
+     "U5"
+    ],
+    "LM5176PWPR buck-boost controller, PD_VPWR from VBAT": [
+     "U19"
+    ],
+    "LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW": [
+     "U2"
+    ]
+   },
+   "nets": [
+    "FE_RT",
+    "HF_RT",
+    "PA_RT",
+    "PD_RT",
+    "POE_RT",
+    "S1_RT",
+    "S2_RT",
+    "S3_RT",
+    "SD_RT"
+   ],
+   "pattern": "*_RT",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a slope-compensation node, a DC bias",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "LM5176PWPR buck-boost controller, +12V_HF from VBAT": [
+     "U15"
+    ],
+    "LM5176PWPR buck-boost controller, +13V8_PA from VBAT": [
+     "U13"
+    ],
+    "LM5176PWPR buck-boost controller, +54V_POE from VBAT": [
+     "U16"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_DEV from VBAT": [
+     "U7"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_S2 from VBAT": [
+     "U5"
+    ],
+    "LM5176PWPR buck-boost controller, PD_VPWR from VBAT": [
+     "U19"
+    ],
+    "LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW": [
+     "U2"
+    ]
+   },
+   "nets": [
+    "FE_SLOPE",
+    "HF_SLOPE",
+    "PA_SLOPE",
+    "PD_SLOPE",
+    "POE_SLOPE",
+    "S2_SLOPE",
+    "SD_SLOPE"
+   ],
+   "pattern": "*_SLOPE",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a spare conductor with no driver, landing on a test point",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "PCA9555PW (0x21): enables and status": [
+     "U27"
+    ]
+   },
+   "nets": [
+    "AB_SPARE",
+    "DOCK_SPARE"
+   ],
+   "pattern": "*_SPARE",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a soft-start capacitor node, a ramp of milliseconds",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "LM5176PWPR buck-boost controller, +12V_HF from VBAT": [
+     "U15"
+    ],
+    "LM5176PWPR buck-boost controller, +13V8_PA from VBAT": [
+     "U13"
+    ],
+    "LM5176PWPR buck-boost controller, +54V_POE from VBAT": [
+     "U16"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_DEV from VBAT": [
+     "U7"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_S2 from VBAT": [
+     "U5"
+    ],
+    "LM5176PWPR buck-boost controller, PD_VPWR from VBAT": [
+     "U19"
+    ],
+    "LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW": [
+     "U2"
+    ],
+    "TPS62933DRLR 3 A buck, 12.0 V heater rail": [
+     "U33"
+    ],
+    "TPS62933DRLR 3 A buck, 3.3 V logic": [
+     "U12"
+    ]
+   },
+   "nets": [
+    "B33_SS",
+    "FE_SS",
+    "HF_SS",
+    "HT_SS",
+    "PA_SS",
+    "PD_SS",
+    "POE_SS",
+    "S2_SS",
+    "SD_SS"
+   ],
+   "pattern": "*_SS",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a converter switch node: the fastest edges on this board and its primary radiated source",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "TPS62933DRLR 3 A buck, 12.0 V heater rail": [
+     "U33"
+    ]
+   },
+   "nets": [
+    "HT_SW"
+   ],
+   "pattern": "*_SW",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a four-switch buck-boost's first switch node",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "LM5176PWPR buck-boost controller, +5V_DEV from VBAT": [
+     "U7"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_S2 from VBAT": [
+     "U5"
+    ]
+   },
+   "nets": [
+    "S2_SW1",
+    "SD_SW1"
+   ],
+   "pattern": "*_SW1",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the same converter's second switch node",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "LM5176PWPR buck-boost controller, +5V_DEV from VBAT": [
+     "U7"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_S2 from VBAT": [
+     "U5"
+    ]
+   },
+   "nets": [
+    "S2_SW2",
+    "SD_SW2"
+   ],
+   "pattern": "*_SW2",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "an auxiliary supply node, decoupled locally",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)": [
+     "U18"
+    ]
+   },
+   "nets": [
+    "PD_VAUX"
+   ],
+   "pattern": "*_VAUX",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a controller's own supply pin with its decoupling, a local rail",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "LM5176PWPR buck-boost controller, +12V_HF from VBAT": [
+     "U15"
+    ],
+    "LM5176PWPR buck-boost controller, +13V8_PA from VBAT": [
+     "U13"
+    ],
+    "LM5176PWPR buck-boost controller, +54V_POE from VBAT": [
+     "U16"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_DEV from VBAT": [
+     "U7"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_S2 from VBAT": [
+     "U5"
+    ],
+    "LM5176PWPR buck-boost controller, PD_VPWR from VBAT": [
+     "U19"
+    ],
+    "LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW": [
+     "U2"
+    ]
+   },
+   "nets": [
+    "FE_VCC",
+    "HF_VCC",
+    "PA_VCC",
+    "PD_VCC",
+    "POE_VCC",
+    "S2_VCC",
+    "SD_VCC"
+   ],
+   "pattern": "*_VCC",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "an analogue supply pin with its decoupling",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "CH_VDDA"
+   ],
+   "pattern": "*_VDDA",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a charger current-limit or inhibit node, a DC bias or a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B": [
+     "U3"
+    ],
+    "PCA9555PW (0x21): enables and status": [
+     "U27"
+    ]
+   },
+   "nets": [
+    "CHG_ILIM",
+    "CHG_INHIBIT"
+   ],
+   "pattern": "CHG_*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the charger's status flag, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B": [
+     "U3"
+    ],
+    "PCA9555PW (0x21): enables and status": [
+     "U27"
+    ]
+   },
+   "nets": [
+    "CHRG_OK"
+   ],
+   "pattern": "CHRG_OK",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a charger control or sense node: comparator inputs, divider taps and local supplies",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "CH_ACN_F",
+    "CH_ACP_F",
+    "CH_CELL",
+    "CH_COMP1",
+    "CH_COMP1C",
+    "CH_COMP2",
+    "CH_SRN_F",
+    "CH_SRP_F"
+   ],
+   "pattern": "CH_*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the emission-control line, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "SN74AUP1G08DBVR AND: HF_TXOK = TX_INHIBIT_n AND EMCON_HW (the HF rail's EMCON gate)": [
+     "U37"
+    ],
+    "SN74AUP1G08DBVR AND: PA_TXOK = TX_INHIBIT_n AND EMCON_HW (the PA rail's EMCON gate)": [
+     "U35"
+    ]
+   },
+   "nets": [
+    "EMCON_HW"
+   ],
+   "pattern": "EMCON_HW",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "an unused expander pin, driven by nothing",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "PCA9555PW (0x24): power-good lines, spares": [
+     "U28"
+    ]
+   },
+   "nets": [
+    "EXP2_SP3",
+    "EXP2_SP4",
+    "EXP2_SP5",
+    "EXP2_SP6",
+    "EXP2_SP7",
+    "EXP2_SP8",
+    "EXP2_SPC",
+    "EXP2_SPD"
+   ],
+   "pattern": "EXP2_SP*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the expander's interrupt, an edge into a GPIO",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "PCA9555PW (0x21): enables and status": [
+     "U27"
+    ],
+    "PCA9555PW (0x24): power-good lines, spares": [
+     "U28"
+    ]
+   },
+   "nets": [
+    "EXP_INT"
+   ],
+   "pattern": "EXP_INT",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the adapter current monitor output, a DC level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "IADPT"
+   ],
+   "pattern": "IADPT",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the battery current monitor output, a DC level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "IBAT"
+   ],
+   "pattern": "IBAT",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a current monitor's alert, an open-drain edge",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "INA226 PA rail monitor (0x46)": [
+     "U14"
+    ],
+    "INA226 PoE rail monitor (0x47)": [
+     "U17"
+    ],
+    "INA226 rail monitor +5V_DEV": [
+     "U11"
+    ],
+    "INA226 rail monitor +5V_S1": [
+     "U8"
+    ],
+    "INA226 rail monitor +5V_S2": [
+     "U9"
+    ],
+    "INA226 rail monitor +5V_S3": [
+     "U10"
+    ],
+    "PCA9555PW (0x21): enables and status": [
+     "U27"
+    ]
+   },
+   "nets": [
+    "INA_ALERT"
+   ],
+   "pattern": "INA_ALERT",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the main power controller's kill input, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "LTC2954ITS8-1 push-button on/off controller, -40 to 85 C": [
+     "U1"
+    ]
+   },
+   "nets": [
+    "KILL"
+   ],
+   "pattern": "KILL",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the main push-button input, pressed by a person",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "LTC2954ITS8-1 push-button on/off controller, -40 to 85 C": [
+     "U1"
+    ]
+   },
+   "nets": [
+    "MAIN_PB"
+   ],
+   "pattern": "MAIN_PB",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a Power Delivery control, gate or supply node other than the configuration channel above",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "LM5176PWPR buck-boost controller, PD_VPWR from VBAT": [
+     "U19"
+    ],
+    "PCA9555PW (0x24): power-good lines, spares": [
+     "U28"
+    ],
+    "TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)": [
+     "U18"
+    ]
+   },
+   "nets": [
+    "PD_CSF",
+    "PD_CSGF",
+    "PD_CTL1",
+    "PD_CTL2",
+    "PD_DSCG",
+    "PD_GD",
+    "PD_GDNG",
+    "PD_ISNS_N",
+    "PD_ISNS_P",
+    "PD_UFP"
+   ],
+   "pattern": "PD_*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "USB Power Delivery's configuration channel, BMC at 300 kHz",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "TPD2E2U06QDBZRQ1 low-capacitance ESD array, USB-C CC1 and CC2 at the connector": [
+     "U31"
+    ],
+    "TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)": [
+     "U18"
+    ]
+   },
+   "nets": [
+    "PD_CC1",
+    "PD_CC2"
+   ],
+   "pattern": "PD_CC?",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the PD controller's transmit node into the same channel",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)": [
+     "U18"
+    ]
+   },
+   "nets": [
+    "PD_VTX"
+   ],
+   "pattern": "PD_VTX",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the shutdown-request and kill lines, static levels",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "LTC2954ITS8-1 push-button on/off controller, -40 to 85 C": [
+     "U1"
+    ]
+   },
+   "nets": [
+    "PI_KILL",
+    "PI_SHDN_REQ"
+   ],
+   "pattern": "PI_*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the charger's processor-hot flag, an open-drain edge that must be seen quickly",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B": [
+     "U3"
+    ],
+    "PCA9555PW (0x21): enables and status": [
+     "U27"
+    ]
+   },
+   "nets": [
+    "PROCHOT"
+   ],
+   "pattern": "PROCHOT",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the system power monitor output, a DC level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "PSYS"
+   ],
+   "pattern": "PSYS",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the charger's internal regulator output, a local supply with its own capacitor",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "REGN"
+   ],
+   "pattern": "REGN",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a radio-frequency path to an SMA jack or a blind-mate receptacle, from 144 MHz to 6 GHz",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {},
+   "nets": [
+    "RF_5G1",
+    "RF_5G2",
+    "RF_GNSS",
+    "RF_HF",
+    "RF_IRIDIUM",
+    "RF_LORA",
+    "RF_P2PA",
+    "RF_P2PB",
+    "RF_SDR",
+    "RF_VHF",
+    "RF_WIFI24"
+   ],
+   "pattern": "RF_*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "I2C at 100 or 400 kHz, open drain",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B": [
+     "U3"
+    ],
+    "INA226 PA rail monitor (0x46)": [
+     "U14"
+    ],
+    "INA226 PoE rail monitor (0x47)": [
+     "U17"
+    ],
+    "INA226 rail monitor +5V_DEV": [
+     "U11"
+    ],
+    "INA226 rail monitor +5V_S1": [
+     "U8"
+    ],
+    "INA226 rail monitor +5V_S2": [
+     "U9"
+    ],
+    "INA226 rail monitor +5V_S3": [
+     "U10"
+    ],
+    "PCA9555PW (0x21): enables and status": [
+     "U27"
+    ],
+    "PCA9555PW (0x24): power-good lines, spares": [
+     "U28"
+    ]
+   },
+   "nets": [
+    "SCL"
+   ],
+   "pattern": "SCL",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the data half of the same I2C bus",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B": [
+     "U3"
+    ],
+    "INA226 PA rail monitor (0x46)": [
+     "U14"
+    ],
+    "INA226 PoE rail monitor (0x47)": [
+     "U17"
+    ],
+    "INA226 rail monitor +5V_DEV": [
+     "U11"
+    ],
+    "INA226 rail monitor +5V_S1": [
+     "U8"
+    ],
+    "INA226 rail monitor +5V_S2": [
+     "U9"
+    ],
+    "INA226 rail monitor +5V_S3": [
+     "U10"
+    ],
+    "PCA9555PW (0x21): enables and status": [
+     "U27"
+    ],
+    "PCA9555PW (0x24): power-good lines, spares": [
+     "U28"
+    ]
+   },
+   "nets": [
+    "SDA"
+   ],
+   "pattern": "SDA",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the shore and cold-charge inhibit, a static level through an optocoupler",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "SHORE_INHIBIT"
+   ],
+   "pattern": "SHORE_INHIBIT",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a slot enable, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "AP64500SP-13 5 A buck, 5.1 V rail +5V_S1": [
+     "U4"
+    ],
+    "AP64500SP-13 5 A buck, 5.1 V rail +5V_S3": [
+     "U6"
+    ],
+    "LM5176PWPR buck-boost controller, +5V_S2 from VBAT": [
+     "U5"
+    ]
+   },
+   "nets": [
+    "SLOT_EN1",
+    "SLOT_EN2",
+    "SLOT_EN3"
+   ],
+   "pattern": "SLOT_EN?",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the transmit indication from the APRS board, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "SN74LVC1G00DBVR NAND: OUTLET_OK = NOT (TR_APRS AND PA_EN), the outlet interlock": [
+     "U30"
+    ]
+   },
+   "nets": [
+    "TR_APRS"
+   ],
+   "pattern": "TR_APRS",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the hardware transmit inhibit from the panel toggle, a static level with a pull-down",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "SN74AUP1G08DBVR AND: HF_TXOK = TX_INHIBIT_n AND EMCON_HW (the HF rail's EMCON gate)": [
+     "U37"
+    ],
+    "SN74AUP1G08DBVR AND: PA_TXOK = TX_INHIBIT_n AND EMCON_HW (the PA rail's EMCON gate)": [
+     "U35"
+    ]
+   },
+   "nets": [
+    "TX_INHIBIT_n"
+   ],
+   "pattern": "TX_INHIBIT_n",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "answered": {
+    "USB_D8_N": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the project file)",
+    "USB_E6_N": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the project file)",
+    "USB_WALL_N": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the project file)"
+   },
+   "basis": "the other half of the same USB pair",
+   "class": "HIGH_SPEED_DIGITAL",
+   "critical_mm": 11.6,
+   "document": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
+   "drivers": {
+    "USBLC6-2SC6": [
+     "U29"
+    ]
+   },
+   "layout_bound": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 11.6 mm",
+   "nets": [
+    "USB_D8_N",
+    "USB_E6_N",
+    "USB_WALL_N"
+   ],
+   "pattern": "USB_*_N",
+   "rise_ns": 0.5,
+   "source": "USB2-HS",
+   "status": "DECIDED",
+   "why": "USB 2.0 section 7.1.2.2, THSR and THSF, 10 to 90 percent, a minimum: v2/vendor/standards/usb-2-0-specification-2024-09-27.md"
+  },
+  {
+   "answered": {
+    "USB_D8_P": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the project file)",
+    "USB_E6_P": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the project file)",
+    "USB_WALL_P": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the project file)"
+   },
+   "basis": "a USB 2.0 data line: 480 Mbit/s with sub-nanosecond edges",
+   "class": "HIGH_SPEED_DIGITAL",
+   "critical_mm": 11.6,
+   "document": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
+   "drivers": {
+    "USBLC6-2SC6": [
+     "U29"
+    ]
+   },
+   "layout_bound": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 11.6 mm",
+   "nets": [
+    "USB_D8_P",
+    "USB_E6_P",
+    "USB_WALL_P"
+   ],
+   "pattern": "USB_*_P",
+   "rise_ns": 0.5,
+   "source": "USB2-HS",
+   "status": "DECIDED",
+   "why": "USB 2.0 section 7.1.2.2, THSR and THSF, 10 to 90 percent, a minimum: v2/vendor/standards/usb-2-0-specification-2024-09-27.md"
+  },
+  {
+   "basis": "the zeroize line, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "ZEROIZE_HW"
+   ],
+   "pattern": "ZEROIZE_HW",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  }
+ ],
+ "rule": "SI-001"
+}

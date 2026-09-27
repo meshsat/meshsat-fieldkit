@@ -1,40 +1,126 @@
 {
  "advisory": false,
  "applicable": true,
- "counts": {
-  "fail": 0,
-  "pass": 5
+ "code_bundle": {
+  "entry": "intent_checks.py",
+  "files": {
+   "boardorder.py": "298e46edcc028954",
+   "boardtable.py": "41bd92e61f12c374",
+   "hardset.py": "be29a44c4a592876",
+   "intent.py": "f1ac033e0f3c10f1",
+   "intent_checks.py": "1ad7af0c718ba940",
+   "kicad_compat.py": "6b8f77490466e939",
+   "netclass.py": "4cc1adf0ddae0390",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "return_via.py": "b61d138e54955dd4",
+   "rules_lib.py": "c0458c53923d7925",
+   "signal_class.py": "60b8647301428da4",
+   "signalnets.py": "688be12d8e42e7a4",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "5aa3d5157698ae2a",
+  "unresolved": []
  },
- "denominator": 5,
- "evidence": [],
+ "counts": {
+  "census_nets": 55,
+  "checks": 11,
+  "declared_nodes": 0,
+  "declared_not_in_netlist": 0,
+  "declared_rails": 5,
+  "fail": 6,
+  "held_pin_roles": 41,
+  "nodes_supplying_parts": 0,
+  "power_nets": 10,
+  "rails_without_destination": 0,
+  "settled": 12,
+  "switches_unresolved": 0,
+  "undecided": 6,
+  "undeclared": 5,
+  "unmarked": 21
+ },
+ "denominator": 11,
+ "evidence": [
+  "census of the 55 nets: 10 counted, 1 declared node, 1 ground, 12 settled, 4 unconnected, 6 undecided, 21 unmarked",
+  "undecided, named and not counted (6): CELL1, CELL2, CELL3, FUSE_G, FUSE_GQ, SCP_HTR",
+  "settled, they supply nothing (12): PACK_F, PTC, SEC_V1, SEC_V2, SEC_V3, SEC_V4, SRN_F, SRP_F, VC1_F, VC2_F, VC3_F, VC4_F",
+  "power net BAT_F is a declared rail (it is not: supply pin by name (U1.32 BAT), and the intent's bypass list decouples it (C6:U1.32); supply pin by its held datasheet (U1.32 BAT: v2/vendor/battery/ti-bq4050.p)",
+  "power net PBI is a declared rail (it is not: supply pin by its held datasheet (U1.1 PBI: v2/vendor/battery/ti-bq4050.pdf))",
+  "power net SEC_VDD is a declared rail (it is not: supply pin by name (U2.1 VDD), and the intent's bypass list decouples it (C14:U2.1); supply pin by its held datasheet (U2.1 VDD: v2/vendor/battery/ti-bq77207.pd)",
+  "power net SW is a declared rail (it is not: power class PWR in the netlist; switch output: the load Q2 of rail PACK_P at 10.00 A; switch output: the load Q1 of rail SCP_OUT at 10.00 A)",
+  "power net VCC_F is a declared rail (it is not: supply pin by name (U1.26 VCC), and the intent's bypass list decouples it (C8:U1.26); supply pin by its held datasheet (U1.26 VCC: v2/vendor/battery/ti-bq4050.p)",
+  "the count of declared rails equals the count of power nets carrying more than 0.00 A: 5 declared (5 of them nets of the netlist), 10 power nets not declared as nodes (by kind, a net counted under each that applies: 0 power-symbol, 0 supply-pin by type, 5 power-class, 3 supply-pin by name, 4 supply-pin by its held datasheet, 1 reached by a rail's current, 5 declared rails), 0 declared as nodes; undeclared: BAT_F, PBI, SEC_VDD, SW, VCC_F",
+  "undecided, named and not counted: CELL1: it carries the mark of a supply (M6 class SENSE in the netlist: the conductor senses a supply) and nothing read settles it: J_CELL.2",
+  "undecided, named and not counted: CELL2: it carries the mark of a supply (M6 class SENSE in the netlist: the conductor senses a supply) and nothing read settles it: J_CELL.3",
+  "undecided, named and not counted: CELL3: it carries the mark of a supply (M6 class SENSE in the netlist: the conductor senses a supply) and nothing read settles it: J_CELL.4",
+  "undecided, named and not counted: FUSE_G: it carries the mark of a supply (M1 capacitor C19 to ground) and nothing read settles it: JP1.1",
+  "undecided, named and not counted: FUSE_GQ: it carries the mark of a supply (M3 JP1 joins it to the undecided net FUSE_G) and nothing read settles it: JP1.2, Q3.1",
+  "undecided, named and not counted: SCP_HTR: it carries the mark of a supply (M4 the switched return of F2: the channel of Q3 sinks it to ground) and nothing read settles it: F2.3, Q3.3",
+  "settled, it supplies nothing: PACK_F: nothing on it supplies: U1.27 PACK (sense, ti-bq4050.pdf)",
+  "settled, it supplies nothing: PTC: nothing on it supplies: U1.23 PTC (sense, ti-bq4050.pdf)",
+  "settled, it supplies nothing: SEC_V1: nothing on it supplies: U2.8 V1 (sense, ti-bq77207.pdf)",
+  "settled, it supplies nothing: SEC_V2: nothing on it supplies: U2.7 V2 (sense, ti-bq77207.pdf)",
+  "settled, it supplies nothing: SEC_V3: nothing on it supplies: U2.6 V3 (sense, ti-bq77207.pdf)",
+  "settled, it supplies nothing: SEC_V4: nothing on it supplies: U2.2 V7 (sense, ti-bq77207.pdf); U2.3 V6 (sense, ti-bq77207.pdf); U2.4 V5 (sense, ti-bq77207.pdf); U2.5 V4 (sense, ti-bq77207.pdf)",
+  "settled, it supplies nothing: SRN_F: nothing on it supplies: U1.6 SRN (sense, ti-bq4050.pdf)",
+  "settled, it supplies nothing: SRP_F: nothing on it supplies: U1.8 SRP (sense, ti-bq4050.pdf)",
+  "settled, it supplies nothing: VC1_F: nothing on it supplies: U1.5 VC1 (sense, ti-bq4050.pdf)",
+  "settled, it supplies nothing: VC2_F: nothing on it supplies: U1.4 VC2 (sense, ti-bq4050.pdf)",
+  "settled, it supplies nothing: VC3_F: nothing on it supplies: U1.3 VC3 (sense, ti-bq4050.pdf)",
+  "settled, it supplies nothing: VC4_F: nothing on it supplies: U1.2 VC4 (sense, ti-bq4050.pdf)"
+ ],
  "inputs": {
-  "board": {
-   "path": "pcb-p-pack.kicad_pcb",
-   "sha256_16": "d79865e7b1aceb95"
-  }
+  "board": "p",
+  "document_1": {
+   "path": "v2/vendor/battery/ti-bq4050.pdf",
+   "sha256_16": "2664e33fe6d6ebed"
+  },
+  "document_2": {
+   "path": "v2/vendor/battery/ti-bq77207.pdf",
+   "sha256_16": "45c1c99e2d303be8"
+  },
+  "document_3": {
+   "path": "v2/vendor/battery/ti-csd17570q5b.pdf",
+   "sha256_16": "596555c33dce1fca"
+  },
+  "intent": {
+   "path": "pcb-p-pack-p2/out/pcb-p-pack-intent.json",
+   "sha256_16": "59d679f0859fc203"
+  },
+  "netlist": {
+   "content16": "c8a3d456e5d2936b",
+   "path": "pcb-p-pack-p2/out/pcb-p-pack.net",
+   "sha256_16": "4342c4cbe1b43dc4"
+  },
+  "threshold_a": 0.0
  },
  "missing_input": null,
- "note": "every power-symbol net declared with its loads",
+ "note": "PWR-001 on the committed netlist and the intent file beside it: every power net is a declared rail, and every declared rail is a net of the netlist whose source and loads are on it. A power net is a power-symbol net, a net carrying a pin typed power_in or power_out, a net of a power class in the netlist, a net carrying a supply-named pin that a bypass entry, a capacitor to ground or a second supply pin corroborates, a net carrying a pin its held datasheet makes a supply, or a ground off a ground net (intent_checks.PIN_ROLES, each row carrying every power and ground pin of its table, each document recorded by sha), or a net a declared rail's current reaches through a two-terminal part or a transistor's channel, at a threshold of 0.00 A. FAIL CLOSED: every other net carrying the mark of a supply (a capacitor to ground, a capacitor to a power net or across one part's pins, a fuse, inductor, ferrite, diode, jumper, switch or link resistor to a power net, a transistor channel shared with one, the switched low side of a load, a lead whose other pins are all ground, a sense class) is settled only by what is read (a crystal, a held non-supply pin role, a gate, a sink to ground, a declared clamp, a switch to ground; on a lead or a sense net the connector carries what the read pins carry) and is otherwise undecided; an undecided net holds the reading at INCONCLUSIVE when nothing fails, and the census names every net's disposition. A power net declared as a node is reported, and refused when it carries the supply pins of two or more parts. Session decisions of 26 September 2026 under the owner's standing rule: the kinds of power net, the fail-closed marks and the undecided class, the 0 A threshold, the node rule",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
    "PWR-001": "6e91133d2ef9dee3"
   },
-  "rule_set_fingerprint": "ff8151db3576437b"
+  "rule_set_fingerprint": "950539a66227908b"
  },
  "rules": [
   "PWR-001"
  ],
+ "runtime": {
+  "python": "3.11.2"
+ },
  "tool": "intent_rails",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "git_head": "53a98a71b53c",
+  "tools_tree_sha": "6f6b28e777c8262b"
  },
- "ts": "2026-09-21T12:52:31Z",
- "verdict": "PASS",
- "version": "unknown",
+ "ts": "2026-09-27T00:26:21Z",
+ "verdict": "FAIL",
+ "version": "53a98a71b53c+dirty",
  "writer": {
   "file": "intent_checks.py",
-  "sha16": "41cd5935c5f46f0b"
+  "sha16": "1ad7af0c718ba940"
  }
 }

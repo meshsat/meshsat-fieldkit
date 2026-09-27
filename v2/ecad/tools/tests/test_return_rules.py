@@ -183,7 +183,9 @@ def t_a_check_belongs_to_exactly_one_rule_and_a_quotation_cannot_move_it():
     import os
     src = open(os.path.join(TOOLS, "intent_checks.py"), encoding="utf-8").read()
     i = src.index("BUCKETS = (")
-    w = src[i:i + 2200]
+    # the rest of the main block, never a fixed slice: a slice is a rule about how much prose sits between two
+    # lines (harness.block), and the PWR-001 netlist hand-off of 26 September 2026 pushed the loop past 2,200
+    w = rest(src, i)
     assert 'head = lambda t: t.split("[")[0]' in w, "the bucket keys are matched against the quoted evidence"
     assert "k in head(t)" in w, "the whole message is still searched"
     assert "BELONGS TO %d RULES" in src, "a check claimed by two buckets is silently counted in both"

@@ -1,0 +1,914 @@
+{
+ "board": "c",
+ "counts": {
+  "answered_nets": 4,
+  "classes": 43,
+  "contradicted_nets": 0,
+  "decided_nets": 4,
+  "layout_bound_nets": 0,
+  "low_speed_nets": 95,
+  "may_be_long_nets": 4,
+  "signal_nets": 128,
+  "undecided_nets": 29
+ },
+ "inputs": {
+  "board": "c",
+  "board_facts": {
+   "path": "tools/pcb_board_facts.yaml",
+   "sha256_16": "4a0474ddac0b1404"
+  },
+  "board_table": {
+   "path": "tools/boards/c.json",
+   "sha256_16": "f0d20727dd563eac"
+  },
+  "critical_k": 6,
+  "document_1": {
+   "path": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
+   "sha256_16": "2ecb40606d4b84fe"
+  },
+  "extent_mm": 572.0,
+  "intent": {
+   "path": "pcb-c-display-c8/out/pcb-c-display-intent.json",
+   "sha256_16": "5c8d991e3805016a"
+  },
+  "netlist": {
+   "content16": "89f0c572416af87a",
+   "path": "pcb-c-display-c8/out/pcb-c-display.net",
+   "sha256_16": "2834f0d8c4071d56"
+  },
+  "project": {
+   "path": "pcb-c-display-c8/pcb-c-display.kicad_pro",
+   "sha256_16": "36ff707561384db0"
+  },
+  "slowest_layer": "JLC04161H-7628 In2.Cu",
+  "stack_table": {
+   "path": "tools/stackup_write.py",
+   "sha256_16": "b55a3c0f58c805c2"
+  },
+  "stacks": [
+   "JLC04161H-7628",
+   "JLC06161H-3313"
+  ],
+  "t_pd_ps_per_mm": 7.154
+ },
+ "notes": [],
+ "rows": [
+  {
+   "basis": "an indicator LED anode: a static level or a blink of a few hertz",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "BAT1_A",
+    "BAT2_A",
+    "BAT3_A",
+    "BAT4_A",
+    "BAT5_A",
+    "CHG_A",
+    "GPS_A",
+    "LED_STAT_A",
+    "LTE_A",
+    "MAINRING_A",
+    "MAINSW_A",
+    "MCAUT_A",
+    "MESH_A",
+    "MSG_A",
+    "MWARN_A",
+    "PIJ2_A",
+    "PIRING_A",
+    "SAT_A",
+    "SHORE_A",
+    "SOSACT_A",
+    "TESTRING_A",
+    "TX_A"
+   ],
+   "pattern": "*_A",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the second anode of a two-colour indicator",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "USBLC6-2SC6": [
+     "U10",
+     "U11"
+    ]
+   },
+   "nets": [
+    "MAINSW_A2",
+    "PIJ2_A2"
+   ],
+   "pattern": "*_A2",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a switch pole's second contact, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "MAINSW_B",
+    "PIJ2_B"
+   ],
+   "pattern": "*_B",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a switch pole's second contact, second deck",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "USBLC6-2SC6": [
+     "U10",
+     "U11"
+    ]
+   },
+   "nets": [
+    "MAINSW_B2",
+    "PIJ2_B2"
+   ],
+   "pattern": "*_B2",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "an indicator LED cathode, the return of the same",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "PCA9555PW 0x22: LED sinks, light mode inputs": [
+     "U1"
+    ],
+    "PCA9555PW 0x23: LED sinks, the battery bar, lamp test": [
+     "U2"
+    ]
+   },
+   "nets": [
+    "BAT1_K",
+    "BAT2_K",
+    "BAT3_K",
+    "BAT4_K",
+    "BAT5_K",
+    "BZ_K",
+    "CHG_K",
+    "GPS_K",
+    "LTE_K",
+    "MCAUT_K",
+    "MESH_K",
+    "MSG_K",
+    "MWARN_K",
+    "PIRING_K",
+    "SAT_K",
+    "SHORE_K",
+    "SOSACT_K",
+    "TX_K"
+   ],
+   "pattern": "*_K",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a divider tap into an ADC, filtered",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "RAIL_SENSE"
+   ],
+   "pattern": "*_SENSE",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a panel switch contact, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): ZEROIZE_HW follows the local ZEROIZE_SW (owner D-03)": [
+     "U12"
+    ],
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "SOS_SW",
+    "TEST_SW",
+    "ZEROIZE_SW"
+   ],
+   "pattern": "*_SW",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the RP2040 boot-select jumper, read once at reset",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "BOOT_J"
+   ],
+   "pattern": "BOOT_J",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the RP2040's internal digital supply node with its decoupling",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "C_DVDD"
+   ],
+   "pattern": "C_DVDD",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the RP2040's run input, a static level with an RC",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "C_RUN"
+   ],
+   "pattern": "C_RUN",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the emission-control line, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3)": [
+     "U9"
+    ],
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "EMCON_HW"
+   ],
+   "pattern": "EMCON_HW",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the e-paper's generated supply rails, pump nodes and busy flag: local supplies and a static flag",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "EPD_BUSY",
+    "EPD_GDR",
+    "EPD_PUMP",
+    "EPD_PWR_n",
+    "EPD_RESE",
+    "EPD_RST",
+    "EPD_VCOM",
+    "EPD_VDDD",
+    "EPD_VDH",
+    "EPD_VDHR",
+    "EPD_VDL",
+    "EPD_VGH",
+    "EPD_VGL"
+   ],
+   "pattern": "EPD_*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the e-paper's chip select, an edge per transfer",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "EPD_CS"
+   ],
+   "pattern": "EPD_CS",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the e-paper's data and command select, an edge per transfer",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "EPD_DC"
+   ],
+   "pattern": "EPD_DC",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the e-paper's SPI clock, a few megahertz at most",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "EPD_SCL"
+   ],
+   "pattern": "EPD_SCL",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the e-paper's SPI data, same rate",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "EPD_SDA"
+   ],
+   "pattern": "EPD_SDA",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the e-paper's boost converter switching node",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {},
+   "nets": [
+    "EPD_SW"
+   ],
+   "pattern": "EPD_SW",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the expander's interrupt, an edge into a GPIO",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "PCA9555PW 0x22: LED sinks, light mode inputs": [
+     "U1"
+    ],
+    "PCA9555PW 0x23: LED sinks, the battery bar, lamp test": [
+     "U2"
+    ],
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ],
+    "USBLC6-2SC6": [
+     "U8"
+    ]
+   },
+   "nets": [
+    "EXP_INT"
+   ],
+   "pattern": "EXP_INT",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a heartbeat line from a compute module, a slow square wave that must keep its edge",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "HB1",
+    "HB2",
+    "HB3"
+   ],
+   "pattern": "HB?",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the display switch's select lines, static levels changed by a person",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "HDMI_SEL1",
+    "HDMI_SEL2"
+   ],
+   "pattern": "HDMI_SEL?",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the status LED's drive, a static level or a slow blink",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "LED_STAT"
+   ],
+   "pattern": "LED_STAT*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the day and night lighting mode inputs, static levels from a toggle",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "PCA9555PW 0x22: LED sinks, light mode inputs": [
+     "U1"
+    ]
+   },
+   "nets": [
+    "LIGHT_DAY_n",
+    "LIGHT_NIGHT_n"
+   ],
+   "pattern": "LIGHT_*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the panel identification divider, a DC level read once",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "PCA9555PW 0x22: LED sinks, light mode inputs": [
+     "U1"
+    ]
+   },
+   "nets": [
+    "PANEL_ID"
+   ],
+   "pattern": "PANEL_ID",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the panel backlight PWM, tens of kilohertz into a gate",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "PANEL_PWM"
+   ],
+   "pattern": "PANEL_PWM",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the shutdown-request and kill lines to the modules, static levels",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "PI_KILL",
+    "PI_SHDN_REQ"
+   ],
+   "pattern": "PI_*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the sounder drive PWM, an audio-rate square wave into a gate",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "PWM1"
+   ],
+   "pattern": "PWM1",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a switched FET drain",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {},
+   "nets": [
+    "Q2_D"
+   ],
+   "pattern": "Q?_D",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a FET gate drive",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {},
+   "nets": [
+    "Q1_G",
+    "Q2_G",
+    "Q3_G",
+    "Q4_G"
+   ],
+   "pattern": "Q?_G",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM bootloader",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ],
+    "W25Q16JVUXIQ 16 Mbit QSPI flash (USON-8: 1 CS 2 DO/IO1 3 WP/IO2 4 GND 5 DI/IO0 6 CLK 7 HOLD/IO3 8 VCC, pad)": [
+     "U4"
+    ]
+   },
+   "nets": [
+    "QSPI_D0",
+    "QSPI_D1",
+    "QSPI_D2",
+    "QSPI_D3",
+    "QSPI_SCLK",
+    "QSPI_SS"
+   ],
+   "pattern": "QSPI_*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "I2C at 100 or 400 kHz, open drain",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "PCA9555PW 0x22: LED sinks, light mode inputs": [
+     "U1"
+    ],
+    "PCA9555PW 0x23: LED sinks, the battery bar, lamp test": [
+     "U2"
+    ],
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ],
+    "USBLC6-2SC6": [
+     "U7"
+    ],
+    "Vishay VEML7700 ambient light sensor (1 SCL 2 VDD 3 GND 4 SDA), I2C 0x10": [
+     "U_LIGHT"
+    ]
+   },
+   "nets": [
+    "SCL"
+   ],
+   "pattern": "SCL",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the data half of the same I2C bus",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "PCA9555PW 0x22: LED sinks, light mode inputs": [
+     "U1"
+    ],
+    "PCA9555PW 0x23: LED sinks, the battery bar, lamp test": [
+     "U2"
+    ],
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ],
+    "USBLC6-2SC6": [
+     "U7"
+    ],
+    "Vishay VEML7700 ambient light sensor (1 SCL 2 VDD 3 GND 4 SDA), I2C 0x10": [
+     "U_LIGHT"
+    ]
+   },
+   "nets": [
+    "SDA"
+   ],
+   "pattern": "SDA",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the shore inhibit, a static level through an optocoupler",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "SHORE_INHIBIT"
+   ],
+   "pattern": "SHORE_INHIBIT",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a slot enable, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "SLOT_EN1",
+    "SLOT_EN2",
+    "SLOT_EN3"
+   ],
+   "pattern": "SLOT_EN?",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "an unused expander pin, driven by nothing",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "PCA9555PW 0x22: LED sinks, light mode inputs": [
+     "U1"
+    ],
+    "PCA9555PW 0x23: LED sinks, the battery bar, lamp test": [
+     "U2"
+    ]
+   },
+   "nets": [
+    "SPARE1",
+    "SPARE10",
+    "SPARE11",
+    "SPARE12",
+    "SPARE2",
+    "SPARE3",
+    "SPARE4",
+    "SPARE5",
+    "SPARE6",
+    "SPARE7",
+    "SPARE8",
+    "SPARE9"
+   ],
+   "pattern": "SPARE*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the SWD debug port, a few megahertz and used only with a probe attached",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "SWCLK",
+    "SWDIO"
+   ],
+   "pattern": "SW*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the transmit indication from the APRS board, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ],
+    "USBLC6-2SC6": [
+     "U8"
+    ]
+   },
+   "nets": [
+    "TR_APRS"
+   ],
+   "pattern": "TR_APRS",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the hardware transmit inhibit from the panel toggle, a static level with a pull-down",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3)": [
+     "U9"
+    ]
+   },
+   "nets": [
+    "TX_INHIBIT_n"
+   ],
+   "pattern": "TX_INHIBIT_n",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the lamp-test line, a static level held by a person",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "PCA9555PW 0x23: LED sinks, the battery bar, lamp test": [
+     "U2"
+    ]
+   },
+   "nets": [
+    "TX_LAMPTEST"
+   ],
+   "pattern": "TX_LAMPTEST",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "answered": {
+    "USB_DM_R": "series resistor R3 27R to USB_PNL_N (a screen)",
+    "USB_DP_R": "series resistor R2 27R to USB_PNL_P (a screen)"
+   },
+   "basis": "the same USB pair after its series resistors",
+   "class": "HIGH_SPEED_DIGITAL",
+   "critical_mm": 93.2,
+   "document": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
+   "drivers": {
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ]
+   },
+   "layout_bound": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 93.2 mm",
+   "nets": [
+    "USB_DM_R",
+    "USB_DP_R"
+   ],
+   "pattern": "USB_D*_R",
+   "rise_ns": 4.0,
+   "source": "USB2-FS",
+   "status": "DECIDED",
+   "why": "USB 2.0 Table 7-9, TFR and TFF, 10 to 90 percent, a minimum: v2/vendor/standards/usb-2-0-specification-2024-09-27.md"
+  },
+  {
+   "answered": {
+    "USB_PNL_N": "series resistor R3 27R to USB_DM_R (a screen)",
+    "USB_PNL_P": "series resistor R2 27R to USB_DP_R (a screen)"
+   },
+   "basis": "the panel's USB port: full speed at 12 Mbit/s, and the EDGES are nanoseconds",
+   "class": "HIGH_SPEED_DIGITAL",
+   "critical_mm": 93.2,
+   "document": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
+   "drivers": {
+    "USBLC6-2SC6": [
+     "U6"
+    ]
+   },
+   "layout_bound": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 93.2 mm",
+   "nets": [
+    "USB_PNL_N",
+    "USB_PNL_P"
+   ],
+   "pattern": "USB_PNL_*",
+   "rise_ns": 4.0,
+   "source": "USB2-FS",
+   "status": "DECIDED",
+   "why": "USB 2.0 Table 7-9, TFR and TFF, 10 to 90 percent, a minimum: v2/vendor/standards/usb-2-0-specification-2024-09-27.md"
+  },
+  {
+   "basis": "the 12 MHz crystal drive node",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "XIN"
+   ],
+   "pattern": "XIN",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the other half of the same crystal loop",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "XOUT",
+    "XOUT_R"
+   ],
+   "pattern": "XOUT*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the zeroize line, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): ZEROIZE_HW follows the local ZEROIZE_SW (owner D-03)": [
+     "U12"
+    ]
+   },
+   "nets": [
+    "ZEROIZE_HW"
+   ],
+   "pattern": "ZEROIZE_HW",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  }
+ ],
+ "rule": "SI-001"
+}
