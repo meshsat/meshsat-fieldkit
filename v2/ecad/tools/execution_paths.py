@@ -61,6 +61,11 @@ READERS = {
                              "release/<rev>/order/, no gerber, no CPL and no JLC BOM, and every packet says QUARANTINED, "
                              "NOT_FOR_FAB on its front page and in its manifest",
     "final_gate.py":         "re-reads every deliverable folder through verify_deliverable and prints one table; writes no artefact in any of them",
+    "handover_exports.py":   "exports the COMMITTED schematic of each board for the engineering handover under "
+                             "release/handover/_generated/: a paged PDF, the ERC report and two schematic BOMs through "
+                             "kicad-cli sch export bom (the command build_sch.sh runs), both named NOT_FOR_FAB-*; its "
+                             "regen mode reruns build_sch.sh in a throwaway extraction. It writes nothing under "
+                             "release/<rev>/order/, no gerber, no CPL and no JLC BOM",
     "gate_sweep.sh":         "re-judges a board under the current rule set and writes only VERDICTS and its own "
                              "evidence manifest, which are records ABOUT a board; the board's sha256 is compared "
                              "before and after and the sweep writes nothing at all if it changed. It reads a BOM "
