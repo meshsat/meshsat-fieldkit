@@ -1,14 +1,22 @@
 #!/usr/bin/env python3
-"""The aluminium face plate of the MeshSat field kit in the Peli 1450 (owner ruling 5 Sep 2026, appendix 32.40 item 5, 32.42).
+"""The aluminium face plate of the MeshSat field kit in the Peli 1450, as chosen on 26 and 27 Sep 2026 (C1 of v2/docs/CASE-MARGINS.md,
+the session's choice SC-07 under the owner's standing rule of 26 Sep 2026; earlier construction: appendix 32.40 item 5, 32.42).
 
-365.5 x 249.5 x 3.0 mm 5754 or 6061, black anodised, clamped under the 1450PF frame ring inside its skirt with the PORON gasket ring on its 8 mm band
-(the construction of 32.34, the plate replacing the PCB as the weather face). Cut-outs, all from v2/ecad/tools/panel1450.py: the ten M3 holes at the
-frame's inserts, the Xenarc monitor's full-body window (205.75 x 140.09 R15: the monitor sits IN the plate with its glass level with this face, owner ruling
-9 Sep 2026, appendix 32.85) with four M4 holes for its rear retaining frame, the e-paper window inside a pocket for its 1 mm lens, three round holes for the C&K buttons, three 6.5 mm holes with the APEM K keyway, the NKK D hole, the sounder hole, two 16 mm
-headset jack holes, the 8 mm camera window, seventeen 2.6 mm H7 holes for the press-fit Mentor 1282.5004 IP68 light guides (sixteen LEDs and the light sensor), eight self-clinching
-M3 standoff holes for the C7 backer ring and two for the PA flange's PEM nuts. Legends and the logo are laser marked from the SVG this script also writes.
-Usage: face_plate.py <out dir>   (build123d in ~/.venv-cad on the VM). Writes face-plate.step, face-plate.stl, face-plate.dxf (the outline and every
-through cut, for DataPro or JLC CNC) and face-plate-marking.svg; prints the sizes. Plate frame = case frame (X, Y from the case centre), Z up."""
+377.2 x 263.0 x 3.0 mm 5754 or 6061, R16 corners, black anodised. It lies ON the 1450PF frame's top face and covers Peli's o-ring in the channel
+between the frame and the case wall (Peli's mounting instructions, steps 2 to 4), held by ten 6-32 UNC x 1/2 in A2 pan heads from above into
+Peli's brass inserts through 4.6 mm holes at the inserts' STEP positions (panel1450.FRAME_BOSSES). The band outside the full-thickness face
+(panel1450.REB_IN, 368.0 x 253.0 R16) is rebated 2.0 from the top, leaving it 1.0 thick with the underside unchanged. The underside carries a
+0.8 mm relief pocket over the frame's raised "1450 FRONT" lettering (panel1450.RELIEF_POCKET). Every other cut-out comes from
+v2/ecad/tools/panel1450.py: the Xenarc monitor's full-body window (205.75 x 140.09 R15: the monitor sits IN the plate with its glass level with
+this face, owner ruling 9 Sep 2026, appendix 32.85) with four M4 holes for its rear retaining frame, the e-paper window inside a pocket for its
+1 mm lens, three round holes for the C&K buttons, three 6.5 mm holes with the APEM K keyway, the NKK D hole, the sounder hole, two 16 mm headset
+jack holes, the 8 mm camera window, seventeen 2.6 mm H7 holes for the press-fit Mentor 1282.5004 IP68 light guides (sixteen LEDs and the light
+sensor), eight self-clinching M3 standoff holes for the C7 backer ring and two for the PA flange's PEM nuts. Legends and the logo are laser
+marked from the SVG this script also writes.
+Usage: face_plate.py <out dir>   (build123d, ezdxf: the pinned set in v2/cad/requirements-cad.txt). Writes face-plate.step, face-plate.stl,
+face-plate.dxf (the outline, every through cut and the three partial-depth features on their own layers, for a CNC service) and
+face-plate-marking.svg; prints the sizes. Plate frame = case frame (X, Y from the case centre), Z up from the plate's underside.
+The geometry is the design basis; it establishes no fit or seal (CASE-MARGINS.md section 1, Verdicts). Nothing has been made."""
 import sys, os, math
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "ecad", "tools"))
 import panel1450 as L
@@ -42,8 +50,14 @@ def keyed_hole(cx, cy, d, key_w, key_d, key_dir, z0, depth):
 from build123d import Locations
 plate = rrect(0, 0, W, H, L.PLATE_R, 0, T)
 cuts = []
-# frame screws, from below into the frame's inserts: M3 clearance 3.4
-for (x, y) in L.FRAME_BOSSES: cuts.append(cyl(x, y, 3.4, -1, T + 2))
+# C1 (27 Sep 2026): the band outside the full-thickness face rebated from the top, leaving it T - REBATE thick; the underside is untouched
+band = rrect(0, 0, W + 10.0, H + 10.0, L.PLATE_R, T - L.REBATE, L.REBATE + 1.0) - rrect(0, 0, L.REB_IN[0], L.REB_IN[1], L.REBATE_R, T - L.REBATE - 1.0, L.REBATE + 3.0)
+cuts.append(band)
+# the relief pocket in the underside over the frame's raised lettering
+rx0, ry0, rx1, ry1, rdep = L.RELIEF_POCKET
+cuts.append(Box(rx1 - rx0, ry1 - ry0, rdep + 1.0).moved(Location(Vector((rx0 + rx1) / 2, (ry0 + ry1) / 2, (rdep - 1.0) / 2))))
+# the ten 6-32 screws from above into Peli's brass inserts: 4.6 holes at the inserts' STEP positions (C1; M8f)
+for (x, y) in L.FRAME_BOSSES: cuts.append(cyl(x, y, L.FACE_HOLE, -1, T + 2))
 # 9 September 2026 (owner ruling, appendix 32.85): the monitor sits IN the plate, its glass level with this face. Until today it lay ON
 # the plate and stood 28.66 mm proud, which breaks the ruling of 14.6 that every display surface is level with the top shelf. The 709GNK's
 # front bezel is a 10.66 mm flange and a 3 mm plate cannot pocket it, so the plate carries a full-body WINDOW: the monitor fills the 3 mm
@@ -93,9 +107,12 @@ def dxf_and_svg():
             for k in range(0, 91, 10): pts.append((ax + r * math.cos(math.radians(a0 + k)), ay + r * math.sin(math.radians(a0 + k))))
         msp.add_lwpolyline(pts, close=True, dxfattribs={"layer": layer})
     def circle(cx, cy, d, layer): msp.add_circle((cx, cy), d / 2, dxfattribs={"layer": layer})
-    for name in ("OUTLINE", "THROUGH", "POCKET_1MM", "STANDOFF_M3", "MARKING"): doc.layers.add(name)
+    for name in ("OUTLINE", "THROUGH", "POCKET_1MM", "REBATE_2MM_TOP", "RELIEF_0.8MM_UNDERSIDE", "STANDOFF_M3", "MARKING"): doc.layers.add(name)
     poly_rrect(0, 0, W, H, L.PLATE_R, "OUTLINE")
-    for (x, y) in L.FRAME_BOSSES: circle(x, y, 3.4, "THROUGH")
+    poly_rrect(0, 0, L.REB_IN[0], L.REB_IN[1], L.REBATE_R, "REBATE_2MM_TOP")      # the full-thickness face's edge: everything outside it is 2.0 lower from the top
+    rx0, ry0, rx1, ry1, rdep = L.RELIEF_POCKET
+    msp.add_lwpolyline([(rx0, ry0), (rx1, ry0), (rx1, ry1), (rx0, ry1)], close=True, dxfattribs={"layer": "RELIEF_0.8MM_UNDERSIDE"})
+    for (x, y) in L.FRAME_BOSSES: circle(x, y, L.FACE_HOLE, "THROUGH")
     poly_rrect(gx, gy, ww_, wh_, L.XENARC["window_r"], "THROUGH")
     for (fx, fy) in L.XENARC["frame_holes"]: circle(fx, fy, 4.5, "THROUGH")
     for ref, (x, y) in L.HEADSETS: circle(x, y, L.HEADSET_HOLE, "THROUGH")

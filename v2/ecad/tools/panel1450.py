@@ -9,36 +9,162 @@ the ambient light guide join the face, a USB camera looks through a sealed windo
 underside inside the backer's void, and the backer becomes a ring (a fourth strip along the top carries the e-paper flex socket, its boost circuit,
 the camera and the ribbon from B16's J_PANEL right below it). B16 is 330 x 200 (X +-165, Y +-100), so the strips sit over its edge bands: the
 gate keeps the deep face parts clear of B16's tall parts (B16_TALL). The QMX HF unit left B16 for a lid bracket (32.60) because no 63 x 95 x 25 mm
-bay on B16 clears the toggle bodies under the left strip."""
+bay on B16 clears the toggle bodies under the left strip.
+
+C1 to C6 (27 Sep 2026, MESHSAT-1357; v2/docs/CASE-MARGINS.md section 4, the session's choices SC-07 under the owner's standing rule of
+26 Sep 2026): the face plate lies ON the 1450PF frame and covers Peli's o-ring (C1), the frame stands on four setting legs referenced to
+the case floor (C6), so FACE_TOP_Z is derived here from the legs' pad, the frame's ring and the plate instead of the "base 109.4, lip 8"
+datum no Peli file supports; the ruled arrestors are the twelve antenna bulkheads at Z 59 (C2) on one RF entry plate per end wall (C4);
+one connector plate between the hinge fairings carries the six ruled back-wall items (C3); the QMX tray moves 1.5 mm west (C5). Every
+number of this block is also a row input of v2/vendor/peli/frame_seat.py, which computes the margins; the geometry here is the design
+basis only and establishes no fit, seal or alignment (CASE-MARGINS.md section 1, Verdicts)."""
+
+# --- Peli's own figures the arrangement derives from (CASE-MARGINS.md sections 2.2 to 2.4, entity ids there; STEP unit inch x 25.4)
+PELI = dict(rim_z=108.97,            # base: floor #1321 to the rim face #1637 (drawing _D_7 108.97)
+            shoulder_z=101.04,       # up-facing ledge 0.51 wide at the top of the cavity (#776)
+            ring_t=9.39,             # 1450PF ring: top face z 8.76 to the flat underside #1703 at z -0.63
+            frame_h=17.52,           # 1450PF #1 .. #5527 (sheet 1453-314-000 rev A: 17.5)
+            skirt_below_ring=8.13,   # the skirt below the ring's underside
+            lid_z=45.47,             # lid: parting line to the inner ceiling (#712 to #736; drawing _D_6)
+            flat_floor=(171.64, 114.49),   # the flat floor's half extents, bounded by the R 15.88 fillet tangents (#1321)
+            fillet_r=15.88)          # floor fillet R 0.625 in on all four floor edges (#355 ...)
+# the allowances FACE_TOP_Z and the legs' pad are derived with (CASE-MARGINS.md section 1, tolerance model): sheet = Peli's frame sheet
+# 1453-314-000 rev A, one-decimal mm (VERIFIED); case_z and floor = that class applied to Peli's case, which publishes none (INFERRED,
+# UNSTATED); leg and plate = the kit's own drawing tolerances (the plate's 3.0 by the EN 485-4 class, standard not held, INFERRED)
+TOL = dict(sheet=0.76, case_z=0.76, floor=0.76, leg=0.10, plate=0.13, outline=0.10, rebate=0.10, machined=0.10, centring=0.20, locator=0.30)
 
 # --- frame 1450PF (measured on Peli's STEP, 32.41 and 32.42)
 WINDOW = (349.65, 233.83)                 # the opening; everything visible lies inside it, 3 mm in
-PLATE = (365.5, 249.5, 3.0)               # the aluminium face, clamped under the frame ring inside its skirt (366.7 x 250.8)
-PLATE_R = 12.0
-FRAME_BOSSES = [(-139.4, -121.2), (139.4, -121.2), (0.0, -121.2), (-139.4, 121.2), (139.4, 121.2), (0.0, 121.2), (-179.1, -75.9), (179.1, -75.9), (-179.1, 75.9), (179.1, 75.9)]   # M3 into the frame's inserts, from below
-BAND = 8.0                                # the plate's band under the frame ring: the PORON gasket ring lives here, nothing else
+# C1: the plate lies on the frame's top face, covers Peli's o-ring in the channel between the frame and the case wall, and takes ten 6-32 UNC
+# x 1/2 in A2 pan heads from above into Peli's brass inserts (Peli's mounting instructions, steps 2 to 4). 377.2 x 263.0 so that the plate
+# edge keeps 1.0 to the rim zone at the worst with the plate floating 0.63 on the smallest 6-32 (M8); the band outside REB_IN is rebated
+# REBATE from the top (1.0 left) so the edge under the lid's wall sits lower (M2); the underside is flat but for the relief pocket over the
+# frame's raised "1450 FRONT" lettering. The PORON ring of the superseded construction is dropped: Peli's o-ring is the intended seal.
+PLATE = (377.2, 263.0, 3.0)
+PLATE_R = 16.0
+REBATE = 2.0                              # depth of the rebated band, from the top face
+REB_IN = (368.0, 253.0)                   # the full-thickness face; outside it the plate is 1.0 thick
+REBATE_R = 16.0                           # corner radius of the full-thickness face: not below Peli's R 15.88 corners, so each corner keeps at least the side gaps of M2b (INFERRED)
+FACE_HOLE = 4.6                           # the ten screw holes (a 4.6 drill): the largest 6-32 (3.505) passes with Peli's insert pattern at +-0.38 per side (M8f)
+FACE_SCREW = "6-32 UNC x 1/2 in, A2 pan head (ASME B18.6.3 class, 6.86 across the head at most)"
+RELIEF_POCKET = (-110.9, -125.4, -66.9, -116.4, 0.8)   # x0, y0, x1, y1, depth: in the underside over the lettering (X -108.99..-68.80, Y -123.64..-118.32)
+# Peli's insert bores through the ring, at the STEP's figures (the sheet's pattern is 358.1 x 242.3, +-0.38 per side); the ten screws of C1
+FRAME_BOSSES = [(-139.45, -121.16), (139.45, -121.16), (0.0, -121.16), (-139.45, 121.16), (139.45, 121.16), (0.0, 121.16),
+                (-179.07, -75.95), (179.07, -75.95), (-179.07, 75.95), (179.07, 75.95)]
+
+# C6: four setting legs, 6061-T6 profiles cut from 6.0 plate lying in the X-Z plane, bonded under the frame's ring near its corners (placed by a
+# printed locator in each window corner) and standing on Peli's flat floor; the frame is lowered on them, centred by two pairs of printed
+# wedges and fixed by Peli's four self-tapping screws. The pad top is the lowest that keeps the plate's underside 0.10 above the highest the
+# shoulder can stand, so the rebated band faces the rim zone at every seat (M8z).
+LEG = dict(t=6.0, y=(106.4, 112.4),       # the profile's plane: |Y| 106.4 .. 112.4
+           col_x=(175.40, 180.17),        # the column under the ring (the ring spans |X| 174.83 .. 182.75 over the leg's Y)
+           foot_x=(156.0, 169.0),         # the foot's bearing face on the flat floor (2.64 inside the fillet tangent)
+           relief=2.5,                    # the underside beyond the foot follows Peli's R 15.88 fillet at this normal offset
+           foot_h=8.0, gusset_z=30.0,     # the foot's height and the gusset joining it to the column below Z 30 (INFERRED shape)
+           vhb_pocket=0.9,                # the pad top carries a VHB 5952 pad in a 0.9 pocket, so the aluminium rim meets the ring
+           wedge=(0.0, 2.0, 40.0),        # centring wedges: 0 to 2.0 mm over 40 mm, printed, two pairs
+           locator_fit=0.30)              # the printed locator places a leg within 0.30 of the window's edges (INFERRED)
+LEG_TOP_Z = round(PELI["shoulder_z"] + TOL["case_z"] + 0.10 - PELI["ring_t"] + (TOL["floor"] + TOL["leg"] + TOL["sheet"]), 2)   # 94.13
+FRAME_BOTTOM_Z = round(LEG_TOP_Z - PELI["skirt_below_ring"], 2)                                                                   # 86.00
 
 # --- the stack under the face: B16's outline is X +-165, Y +-100 (32.58); the strips lie over its edge bands, so B16_TALL gates the deep parts
 B_OUTLINE = (-165.0, -100.0, 165.0, 100.0)
-B_TOP_Z = 49.5                            # B16's top copper above the case floor (32.56; 56.0 until 9 Sep 2026, appendix 32.85: the recessed
-                                          # monitor's body bottom is Z 72.74 and the CM5 heatsinks topped at 77.0, so the board drops 6.5 mm.
-                                          # The room is there: the tallest thing under B16 is D8's SA868 at Z 27.4 and B16's underside was 54.6.
-FACE_TOP_Z = 101.4                        # above the case floor (base 109.4, lip 8)
+A_OUTLINE = (-120.0, -80.0, 120.0, 80.0)  # gen_pcb_a.py:16-17 (240 x 160, centred)
+E_OUTLINE = (-149.0, -113.0, 118.0, -45.0)   # gen_pcb_e.py:15 (267 x 68 along the front wall)
+D_OFFSET = (50.0, 0.0)                    # D8's local origin in the case frame: A's MEZZ_RECT (0, -40, 100, 40), gen_pcb_a.py:51
+D_STANDOFF = 6.0                          # D8's underside above A's top copper (ASSEMBLY.md section 1; appendix 32.85)
+# the rod stack from the floor (C1 follow-on (a): the dock strip's VHB 5952 pads lift the whole stack, ASSEMBLY.md section 1). Each board's
+# thickness is its board file's (general (thickness)), which test_case_geometry.py holds this list to; the two spacers are unnamed parts
+# (CASE-MARGINS.md section 6, TBD) at the figures of appendix 32.21/32.30 (gap) and ASSEMBLY.md correction 3 (bay)
+STACK = [("VHB 5952 pads under the dock strip", 1.1), ("board E dock strip", 1.6), ("blind-mate gap spacer", 13.4),
+         ("board A", 1.6), ("A-to-B bay spacer", 31.3), ("board B", 1.6)]
+STACK_TOL = dict(vhb=0.11, laminate=0.16, bow=0.30)   # 3M VHB 5952 1.1 +-10 %, JLC 1.6 +-10 % (VERIFIED); B bow over 40 mm (IPC-6012 class, INFERRED)
+B_TOP_Z = round(sum(t for _, t in STACK), 2)   # 50.6: B16's top copper above the case floor. It was 49.5 until 27 Sep 2026, without the VHB
+                                          # pads (32.56; 56.0 until 9 Sep 2026, appendix 32.85, when the recessed monitor dropped the board 6.5 mm)
+B_UNDER_Z = round(B_TOP_Z - STACK[-1][1], 2)
+A_TOP_Z = round(sum(t for _, t in STACK[:4]), 2)
+FACE_TOP_Z = round(LEG_TOP_Z + PELI["ring_t"] + PLATE[2], 2)   # 106.52 above the case floor (C1 on C6); 101.4 until 27 Sep 2026 on "base 109.4, lip 8"
+FACE_TOP_TOLS = [("floor under the leg", TOL["floor"]), ("leg height", TOL["leg"]), ("ring 9.39", TOL["sheet"]), ("plate 3.0", TOL["plate"])]
 PLATE_UNDER_Z = FACE_TOP_Z - PLATE[2]
 BACKER_GAP = 10.0                         # standoff height between the plate's underside and the backer's top
 BACKER_T = 1.6
 BACKER_UNDER_Z = PLATE_UNDER_Z - BACKER_GAP - BACKER_T
-# B16's tall parts (case mm rect, height above B16's top copper), from gen_pcb_b.py's floor plan (32.58, 32.59): the deep face parts must clear them
+# B16's tall parts (case mm rect, height above B16's top copper): what the face gates (check_pcb_c.py, z_budget.py) hold the deep face parts to.
+# Since 27 Sep 2026 (MESHSAT-1357) the list is READ, not typed: v2/cad/zstack.py reads the committed board B file (its routeflow profile's
+# board, sha256 recorded) and every part 3.0 mm or taller by its library model or its declared class, adds the M.2 cards over the committed
+# sockets, and writes them with the module envelopes below into v2/cad/zstack.json, which this file loads. The hand list of 9 Sep 2026 it
+# replaces (kept in zstack.py as LEGACY_B16_TALL) had drifted from B21: J_ETH was 14.0 where the RJ45's model stands 15.5, nine 2.54 mm pin
+# headers of 8.54 and six XAL6060 inductors of 6.10 sat under 6.0 envelopes, and the E22/E72/LG290P modules, slot 1's M.2 cards, the fan
+# headers, J_RB9704 and BT1 lay under no envelope at all. test_case_geometry.py holds zstack.json to the committed board's sha256.
+# The modules are not parts of any board file, so their envelopes stay here, each with its source; zstack.py reports whether each one's anchor
+# (its connectors or bracket holes on the committed board) lies inside it.
 # 9 Sep 2026 (appendix 32.85): each CM5 site was ONE 30 mm envelope covering cooler and fan, which is why the recessed monitor read as a
 # 13.3 mm collision against all three. The heatsink is 21.0 mm (module 4.62 + 1.24, base 4.0, fins 8.7 from scene.py:288-290) over the whole
 # 56 mm site; the fan is the 30 mm part and it only needs to sit NORTH of the monitor's edge at Y +45.745, so it moves from cy 60 to cy 63
 # (Y 48 .. 78, clear by 2.255 mm). The no-vent ruling of 7 Sep keeps its fan per cooler; only its position changes.
-B16_TALL = [((-93.0, 32.0, -52.0, 88.0), 21.0, "CM5 slot 1 heatsink"), ((-23.0, 32.0, 18.0, 88.0), 21.0, "CM5 slot 2 heatsink"), ((47.0, 32.0, 88.0, 88.0), 21.0, "CM5 slot 3 heatsink"),
-            ((-87.5, 48.0, -57.5, 78.0), 30.0, "CM5 slot 1 fan"), ((-17.5, 48.0, 12.5, 78.0), 30.0, "CM5 slot 2 fan"), ((52.5, 48.0, 82.5, 78.0), 30.0, "CM5 slot 3 fan"),
-            ((-162.0, 81.0, -142.0, 98.0), 14.0, "J_ETH RJ45"), ((-161.5, 58.5, -142.5, 77.5), 7.0, "T1 magnetics"), ((-137.0, 86.0, -95.0, 98.0), 9.5, "J_PANEL 2x13"),
-            ((130.0, -43.0, 161.0, 45.0), 12.0, "LimeSDR Mini in J_LIME"), ((113.0, -99.0, 165.0, -43.0), 21.0, "RockBLOCK 9704 on its bracket"), ((96.0, -100.0, 113.0, -86.0), 7.0, "J_HDMI"),
-            ((-152.0, -97.0, -116.0, -69.0), 10.0, "west headers J_54V, J_QMX, F3"), ((144.0, 55.0, 148.0, 67.0), 9.5, "J_CAM header"), ((125.5, 45.5, 162.0, 67.0), 5.0, "radio modules"),
-            ((-98.0, -97.0, 94.0, -21.0), 6.0, "slot columns: switches, hubs, rails, M.2 sockets"), ((-35.0, -30.0, 91.0, 31.0), 4.5, "M.2 cards")]
+B16_MODULES = [
+    ((-93.0, 32.0, -52.0, 88.0), 21.0, "CM5 slot 1 heatsink", "CM5 on U30A/U30B with its cooler: 21.0 from the render scene, TBD a Raspberry Pi drawing (CASE-MARGINS.md section 6)"),
+    ((-23.0, 32.0, 18.0, 88.0), 21.0, "CM5 slot 2 heatsink", "CM5 on U31A/U31B with its cooler: as slot 1"),
+    ((47.0, 32.0, 88.0, 88.0), 21.0, "CM5 slot 3 heatsink", "CM5 on U32A/U32B with its cooler: as slot 1"),
+    ((-87.5, 48.0, -57.5, 78.0), 30.0, "CM5 slot 1 fan", "30 mm class fan on the cooler (appendix 32.85; the fan part is open, W4-F9)"),
+    ((-17.5, 48.0, 12.5, 78.0), 30.0, "CM5 slot 2 fan", "as slot 1"),
+    ((52.5, 48.0, 82.5, 78.0), 30.0, "CM5 slot 3 fan", "as slot 1"),
+    ((130.0, -43.0, 161.0, 45.0), 12.0, "LimeSDR Mini in J_LIME", "LimeSDR Mini 2.x in J_LIME (appendix 32.58, 32.59; maker drawing v2/vendor/limesdr/ to read)"),
+    ((113.0, -99.0, 165.0, -43.0), 21.0, "RockBLOCK 9704 on its bracket", "RockBLOCK 9704 on the bracket over H17..H20 (appendix 32.58; v2/vendor/rockblock/)")]
+# THE BOARD READING IS REQUIRED, NEVER REPLACED (27 Sep 2026, MESHSAT-1357 layer 7, the second review of the case release). The first
+# version of this loader fell back to B16_MODULES alone, with one line on stderr, when v2/cad/zstack.json was absent: 8 envelopes where the
+# reading has 59, so J_ETH, T1, J_PANEL, the west headers, J_CAM, the radio modules and the M.2 cards dropped out and board C's gate
+# (check_pcb_c.py, MEC-001) still printed PASS under the same code bundle. A missing file is a realistic case (a chain tree staged without
+# v2/cad/), so the reading is now loaded on first use and a missing, unreadable or malformed file raises ZstackMissing: the gates that need
+# B16_TALL crash, and their crash hook writes INCONCLUSIVE, never a PASS on a weaker list. Everything else here (the plate, the legs, the
+# stack, the walls) needs no board reading, so the generators and the CAD that import this file are unaffected, and v2/cad/zstack.py, which
+# writes the reading and imports this file, can always run. B16_FROM_BOARD names what was read: the board B file and its sha256, and the
+# reading's own path and sha256 (first 16), which check_pcb_c.py records in its verdict's inputs (drafts/hc7/check_pcb_c.py.patch).
+import os as _os
+ZSTACK_JSON = _os.path.normpath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "cad", "zstack.json"))
+
+
+class ZstackMissing(RuntimeError):
+    """v2/cad/zstack.json is absent, unreadable or not a board reading: B16_TALL cannot be given, and no weaker list stands in for it."""
+
+
+_B16_CACHE = {}
+
+
+def _b16_from_board():
+    """(B16_TALL, B16_FROM_BOARD) from the reading v2/cad/zstack.py wrote from the committed board B; raises ZstackMissing otherwise."""
+    if "tall" in _B16_CACHE: return _B16_CACHE["tall"], _B16_CACHE["from"]
+    import json as _json, hashlib as _hl
+    f = ZSTACK_JSON
+    try:
+        raw = open(f, "rb").read()
+    except OSError as e:
+        raise ZstackMissing("%s cannot be read (%s): B16_TALL is the committed board B's reading and nothing stands in for it; run "
+                            "python3 v2/cad/zstack.py --json v2/cad/zstack.json in a full checkout" % (f, e.__class__.__name__))
+    try:
+        z = _json.loads(raw.decode("utf-8"))
+        b = z["boards"]["b"]
+        tall = [(tuple(float(v) for v in e["rect"]), float(e["h"]), str(e["name"])) for e in z["b16_envelopes"]]
+        frm = dict(file=str(b["file"]), sha256=str(b["sha256"]), zstack=f, zstack_sha256_16=_hl.sha256(raw).hexdigest()[:16])
+    except (ValueError, KeyError, TypeError, UnicodeDecodeError) as e:
+        raise ZstackMissing("%s is not a board reading (%s: %s)" % (f, e.__class__.__name__, e))
+    mods = {n for _, _, n, _ in B16_MODULES}
+    if not tall or not mods <= {n for _, _, n in tall} or len(tall) <= len(mods):
+        raise ZstackMissing("%s carries %d envelopes, not the modules plus board B's parts: a reading of nothing is not a reading" % (f, len(tall)))
+    _B16_CACHE.update(tall=tall, **{"from": frm})
+    return tall, frm
+
+
+def b16_tall():
+    """B16's tall parts (case mm rect, height above B16's top copper, name): the board reading. Raises ZstackMissing without it."""
+    return _b16_from_board()[0]
+
+
+def __getattr__(name):
+    # PEP 562: panel1450.B16_TALL and panel1450.B16_FROM_BOARD are read on first use, so importing this module never needs the board reading
+    if name == "B16_TALL": return _b16_from_board()[0]
+    if name == "B16_FROM_BOARD": return _b16_from_board()[1]
+    raise AttributeError("module 'panel1450' has no attribute %r" % name)
 
 # --- the face elements (centre X, centre Y in the case frame)
 XENARC = dict(c=(0.0, -24.0), body=(205.15, 139.49), height=28.66, bezel=16.0, active=(153.6, 90.0), vesa=50.0, vesa_hole=4.5,
@@ -112,10 +238,62 @@ BUTTON_BODY = {"SW_MAIN": 19.2, "SW_PI": 16.2, "SW_TEST": 16.2}   # the C&K bodi
 HEADSET_BODY = 17.0                        # hole through the backer for the jack's threaded bushing
 CUTOUT_KEEPOUT = 0.6                       # router keep-out around every cut-out (Freerouting ignores the edge clearance of inner cut-outs)
 
-# --- wall jack lists (32.56 and 32.58): the single source for scene.py, case_wall_cutouts.py and the documents; SMA bulkheads at Z 88
-SMA_Z = 88.0
-WALL_WEST = [("VHF", -72.0), ("HF", -48.0), ("WIFI 2.4", -24.0), ("GNSS", 24.0), ("SDR", 72.0)]
-WALL_EAST = [("5G MAIN", -96.0), ("5G DIV", -72.0), ("IRIDIUM", -48.0), ("LORA", -24.0), ("WIFI P2P A", 48.0), ("WIFI P2P B", 96.0)]
+# --- wall jack lists: the single source for scene.py, case_wall_cutouts.py, the case CAD (v2/cad/) and the documents.
+# C2 (27 Sep 2026, CASE-MARGINS.md C2 and 3.4): the twelve bulkheads ARE the ruled PolyPhaser GTH-SFF-AL arrestors, bodies outside, axis at
+# Z 59, a 31 mm pitch, five on the east wall (the three 5G jacks of D-07, IRIDIUM, LORA) and seven on the west (the WIFI P2P pair moved there
+# so that every jumper has a planned route past the pack and the legs). Until 27 Sep 2026: eleven Amphenol 132170 couplers at Z 88.
+SMA_Z = 59.0
+WALL_WEST = [("VHF", -93.0), ("HF", -62.0), ("WIFI 2.4", -31.0), ("GNSS", 0.0), ("SDR", 31.0), ("WIFI P2P A", 62.0), ("WIFI P2P B", 93.0)]
+WALL_EAST = [("5G MAIN", -62.0), ("5G DIV", -31.0), ("5G ANT3", 0.0), ("IRIDIUM", 31.0), ("LORA", 62.0)]
+ARRESTOR = dict(part="PolyPhaser GTH-SFF-AL", thread="5/8-24 UNEF-2A", thread_len=0.47 * 25.4, body=(55.0, 23.0, 31.0),
+                o_ring_free=0.63, nut_class=(24.0, 5.0))   # sheet and drawing rev B (v2/vendor/polyphaser/, every dimension "for reference only")
+
+# C4: one RF entry plate per end wall, outside, on a 2.0 closed-cell gasket of the same outline; the same outline and screw pattern on both
+# walls, five arrestor holes on the east plate and seven on the west. Each arrestor hole 16.3 through, spot-faced SPOT on the plate's BACK so the
+# nut and lock washer sit 1.5 lower on the thread (M13); the wall takes a 27 mm hole-saw hole at each site and 5.0 holes at the eight screws.
+RF_PLATE = dict(y=110.1, z0=34.55, z1=83.45, t=6.0, gasket=2.0, hole=16.3, spot=(26.0, 1.5), wall_hole=27.0, wall_screw_hole=5.0,
+                material="6061-T6 or 5052-H32 aluminium, 6.0 (EN 485 class)", corner_r=3.0,
+                screws=[(y, z) for y in (-100.0, -45.0, 45.0, 100.0) for z in (40.65, 77.35)],   # tapped M4 through the plate
+                screw="M4 x 12 A2 ISO 7380 button head from inside, on a rubber-faced sealing washer 10 x 1.5 (face 8.0 or more across)")
+
+# C3: one connector plate outside the back wall between the hinge fairings (bases from |X| 58.93), centred at X 0, on a 2.0 closed-cell gasket
+# of the same outline; it carries the six ruled items. Centres are case X and Z; each item is laid out as the class its pick must meet
+# (CASE-MARGINS.md 3.3 and section 6): 'sq' = a square flange of that side, 'c' = a round body of that diameter.
+CONN_PLATE = dict(x0=-57.0, x1=57.0, z0=18.3, z1=86.6, t=5.0, gasket=2.0, corner_r=3.0,
+                  material="5052-H32 or 6061-T6 aluminium, 5.0",
+                  screws=[(-51.1, 24.2), (-51.1, 50.1), (-51.1, 76.0), (51.1, 24.2), (51.1, 50.1), (51.1, 76.0)],
+                  screw_hole=4.5, screw="M4 x 25 A2, a bonded sealing washer 10 across under the head, a plain washer 9.0 and a Nyloc inside")
+# Each item: its centre (case X, Z); its flange or body on the plate's face ('sq', side) or ('c', diameter); its mated plug's envelope; the plate
+# cut-out; the wall hole; the flange screw pattern (square, hole) on M3 tapped in the plate, or None; how far its inside part stands above
+# its centre (the row input of M14a) with what sets it; whether the part is picked. `label` is v2/vendor/peli/frame_seat.py's row label.
+CONN_ITEMS = [
+    dict(key="A", label="A sealed RJ45 (38999 shell 15 class)", what="sealed RJ45, PoE out: MIL-DTL-38999 shell 15 wall-mount class, 54 V or more (PICK OPEN: the PX0833 fails both)",
+         c=(-28.5, 36.6), flange=("sq", 31.29), mated=("c", 32.51), cutout=23.01, wall_hole=29.0, screws=(24.61, 3.35), inside_top=8.0,
+         inside_note="patch plug body +-8 (INFERRED)", status="OPEN"),
+    dict(key="C", label="C shore DC D38999/20 sh 13", what="shore DC: Glenair D38999/20 shell 13 wall mount, round holes (D0)",
+         c=(4.2, 34.0), flange=("sq", 28.9), mated=("c", 29.4), cutout=19.05, wall_hole=22.0, screws=(23.01, 3.45), inside_top=5.0,
+         inside_note="cores within the insert +-5 (INFERRED)", status="picked"),
+    dict(key="B", label="B sealed USB-C (4000 series class)", what="sealed USB-C 45 W outlet, power only: Bulgin 4000 series rear-panel class (PXP4043/C panel drawing OPEN)",
+         c=(33.7, 36.6), flange=("c", 25.67), mated=("c", 26.0), cutout=19.2, wall_hole=29.0, screws=None, inside_top=3.5,
+         inside_note="lead 7.0 (INFERRED)", status="OPEN"),
+    dict(key="E", label="E pod over the M8 receptacle", what="outside sensor pod on its M8 receptacle (binder 86 6618 1121 00004 recommended, sheet not held)",
+         c=(-30.0, 70.0), flange=("sq", 28.0), mated=("sq", 28.0), cutout=10.5, wall_hole=18.0, screws=None, inside_top=5.0,
+         inside_note="M8 rear body 10 (INFERRED)", status="OPEN"),
+    dict(key="D", label="D USB 233-370 sh 15", what="USB host (console, key fill): Glenair 233-370 shell 15 (D0)",
+         c=(4.6, 67.0), flange=("sq", 31.29), mated=("c", 32.51), cutout=23.01, wall_hole=29.0, screws=(24.61, 3.35), inside_top=14.5,
+         inside_note="rear body within the 29 hole", status="picked"),
+    dict(key="F", label="F ground stud M6", what="ground stud, M6 class: the external earth lead and both RF entry plates' leads outside, the one bonding strap inside",
+         c=(34.6, 64.5), flange=("c", 24.0), mated=("c", 24.0), cutout=6.4, wall_hole=8.0, screws=None, inside_top=6.0,
+         inside_note="nut and washer 12 (INFERRED)", status="OPEN")]
+CONN_B_FLAT = 9.05                        # the 4000 series cut-out: round 18.9/19.2 with one flat 9.0/9.1 from the centre (PXP4043 sheet), the flat toward -Z (INFERRED)
+
+# C5: the QMX tray under the lid's flat ceiling (v2/cad/lid_bracket_qmx.py is the part), 1.5 mm west of its 9 Sep place
+QMX_TRAY_X = (102.0, 171.0)
+
+# --- floor items (adjudication A06, CASE-MARGINS.md 3.2 rows M4a to M6): the 4S3P 18650 block, shrink-wrapped, in the east pocket
+PACK_BLOCK = (56.65, 133.5, 38.1)         # wrapped, X across the pocket, Y along it, Z up
+PACK_WEST_X = 122.0                       # 2.0 from board A's east edge (X 120)
+PACK_GROUP_LEN = 205.5                    # block + board P (70) + 2.0, centred in Y between the east legs (M5)
 
 def deep_parts():
     """(ref, centre, depth below the face) for the parts whose bodies hang below the backer's level; check_pcb_c.py gates each against B16_TALL."""
@@ -192,7 +370,7 @@ def clearance_report():
     out = []
     for ref, c, d in deep_parts():
         bottom_z = FACE_TOP_Z - d; r = deep_part_rect(ref, c, d)
-        for (x0, y0, x1, y1), h, name in B16_TALL:
+        for (x0, y0, x1, y1), h, name in b16_tall():
             if r[2] <= x0 or r[0] >= x1 or r[3] <= y0 or r[1] >= y1: continue
             out.append((ref, name, round(bottom_z - (B_TOP_Z + h), 1)))
     return out

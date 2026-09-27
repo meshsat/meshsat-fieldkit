@@ -132,10 +132,11 @@ the default on six layers and up. The class table in each project file is on the
 
 ### Case and mechanics (MEC-001)
 
-`v2/docs/CASE-MARGINS.md` is the case's record against Peli's own figures. Its finding 28: the targeted mock-up
-checks T1, T2, T4, T5, T6, T10 and T11 are recommended **before the outlines and connector placements of boards A, B,
-C, E and P are frozen for routing**. If the case and the mock-up parts are not bought by then, those boards enter
-layout on the nominal geometry with the OPEN rows named. The sheets name the rows that bear on each board.
+`v2/docs/CASE-MARGINS.md` is the case's record against Peli's own figures. Since 27 September 2026 the targeted
+mock-up's checks of the rows that can move a board are **required before the layout entry of boards A, B, E and P**,
+and that layout entry is **BLOCKED** on the purchase (FEA-007; `CASE-FIT-UNCERTAINTIES.md` sections 1, 2 and 7;
+`CASE-MARGINS.md` section 7 and finding 28). No board of the four enters layout on the nominal geometry in their
+place; boards C, D and E5 are not held by it. The sheets name the rows that bear on each board.
 
 ### Test access (REQ-048, TST-001)
 

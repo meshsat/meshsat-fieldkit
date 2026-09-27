@@ -1,0 +1,10 @@
+apply_registry: REQ-047: statement: the plate's ten screws are the 6-32 of C1
+apply_registry: REQ-047: acceptance: the blind-mate stack is its own owed analysis
+apply_registry: CON-006: statement: the pocket's bounds are Peli's surfaces and B's underside is Z 49.0
+apply_registry: L-07: added, the mock-up purchase (not approved by D-09)
+apply_registry: FEA-007: added (bound to v2/docs/CASE-FIT-UNCERTAINTIES.md@efc66afe9140e022)
+apply_registry: CON-006: acceptance: the mock-up before boards A and P enter layout, not at their fabrication release
+apply_registry: CON-006: waits on L-07, the mock-up purchase
+apply_registry: CON-006: rebound to CASE-MARGINS.md@0fc449b72532ba7c
+apply_registry: REQ-019: rebound to CASE-MARGINS.md@0fc449b72532ba7c
+apply_registry: wrote v2/ecad/tools/pcb_requirements.yaml; run python3 v2/ecad/tools/rules_lib.py requirements

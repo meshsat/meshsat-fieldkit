@@ -193,6 +193,7 @@ battery/ti-sluubf9-bq4050evm.pdf   # https://www.ti.com/lit/ug/sluubf9/sluubf9.p
 battery/ti-sluuav7c-bq40z50evm.pdf   # https://www.ti.com/lit/ug/sluuav7c/sluuav7c.pdf
 connectors/jst-ph-catalogue.pdf   # https://www.jst-mfg.com/product/pdf/eng/ePH.pdf
 connectors/jst-xh-catalogue.pdf   # https://www.jst-mfg.com/product/pdf/eng/eXH.pdf
+connectors/hro-type-c-31-m-12.pdf   # https://datasheet.lcsc.com/lcsc/1811131825_Korean-Hroparts-Elec-TYPE-C-31-M-12_C165948.pdf through the Wayback Machine's capture http://web.archive.org/web/20260225192317id_/ (LCSC's mirror of the maker's drawing, rev A; filed 27 September 2026 by the layer 7 closer for the receptacle's 3.26 above the board; re-fetched 2026-09-27T03:58Z, byte-identical, sha256 6ae33d50ac478201)
 diodes/diodes-74lvc1g17.pdf   # https://www.diodes.com/assets/Datasheets/74LVC1G17.pdf
 diodes/diodes-74lvc1g34.pdf   # https://www.diodes.com/assets/Datasheets/74LVC1G34.pdf
 diodes/diodes-bat46w.pdf   # https://www.diodes.com/assets/Datasheets/BAT46W.pdf

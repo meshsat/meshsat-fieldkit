@@ -1,0 +1,109 @@
+Layer 7 closer (fnd/hc7, MESHSAT-1357, 27 September 2026), pass 2 after the second review of the case release, and the targeted fix c7
+of the same day (drafts/c7-response.md): how the drafts land. The drafts were made against main 84e52461; after c7 every one applies to
+main a8652172 (the H1 handover) with git apply, and all of them were tested together on an archive of a8652172 with this branch overlaid
+(scratch tree, no git; counts in step 7). Each is outside this branch's ownership; the reason is on each.
+
+1. Commit the branch's own files first: v2/ecad/tools/panel1450.py (C1 to C6; the board reading is now REQUIRED: panel1450.B16_TALL,
+   B16_FROM_BOARD and clearance_report() raise panel1450.ZstackMissing without v2/cad/zstack.json, importing the module still works),
+   v2/ecad/tools/z_budget.py, v2/ecad/tools/case_wall_cutouts.py, v2/cad/ (zstack.py with MAKER_MAX, zstack.json regenerated with U51's
+   height_max 1.60 from ST DS12117 Rev 9 Table 217, case_geometry_check.py with maker_maxima and worst_case_reads, the CAD sources,
+   README, requirements), v2/release/case-2026-09-27/ (rebuilt about 07:10 CEST on 84e52461 + this branch; MANIFEST written last),
+   the HISTORICAL banner of v2/release/revA/case/README.md, v2/docs/CASE-FIT-UNCERTAINTIES.md (revised: YES rows before layout entry,
+   BLOCKED on the purchase, section 7 the compact question; c7: the QMX tray's open fit item in section 3), v2/ecad/tools/tests/
+   test_case_geometry.py (14 rules with the frame_seat test below), the two maker PDFs in v2/vendor/connectors/.
+   c7 (27 September 2026): the case release was rebuilt a third time on the CAD box, 11:26:47 to 11:27:36 CEST, on a8652172 + this branch
+   (CASE_BASE_COMMIT=a8652172, a fresh venv whose pip freeze equals requirements-cad.lock), adding the QMX lid tray: lid-tray-qmx/
+   lid-bracket-qmx.step and .stl from v2/cad/lid_bracket_qmx.py (made importable without building; the STL is byte-identical to the
+   unrefactored generator's and the same solid as revA's: 3260 facets, 123.0 x 69.0 x 28.0, 24863.5 mm3) and sheet 14 (lid-tray-qmx-
+   drawing.pdf, drawn by case_drawings.py from the part's constants and the solid, placed at panel1450.QMX_TRAY_X and
+   lid_bracket_qmx.PLACE_Y); build_case_release.sh builds the tray; the sheets read "of 14" and the combined file is
+   case-drawings-2-to-14.pdf. Every other file carries the second build's geometry (STL bytes equal, STEP differs only in FILE_NAME,
+   DXF in dates, GUIDs and table order, every sheet pixel-identical outside its title block). README and MANIFEST rewritten last.
+   Tests: python3 v2/ecad/tools/tests/run.py case_geometry  (11 pass on the branch alone).
+
+2. The board reading in the evidence identity (owner: the tools stream; reason: v2/cad/zstack.json is configuration board C's gate reads
+   at run time, which its code bundle does not see; the second review asked for exactly this), in the same integration as step 1:
+     drafts/hc7/check_pcb_c.py.patch            the gate reads panel1450.B16_FROM_BOARD right after the import (ZstackMissing there crashes
+                                                to INCONCLUSIVE before any check prints) and records the reading by sha in its verdict inputs
+     drafts/hc7/rules_status.CONFIG_INPUTS.patch  CONFIG_INPUTS['check_pcb_c.py'] = board C's table, ../cad/zstack.json and intent_checks.py's
+                                                inputs (taken whole: the gate runs intent_checks.run on a routed board); the writer was
+                                                undeclared before, so its readings read CONFIG_UNDECLARED
+     drafts/hc7/stage_chain.sh.patch            a chain tree carries v2/cad/zstack.json (about 0.8 MB)
+   Tests: python3 v2/ecad/tools/tests/run.py t_every_declared_writer test_gate_crash_guard test_verdict_channel test_case_geometry
+          test_frame_seat_inputs   (66 pass on the scratch tree).
+   Scratch readings (the box, 06:54 CEST, committed C24 file): PASS 48 of 48 with the reading recorded (zstack sha b4fb79d90d2f3ee1, which
+   rules_status._recorded_sha binds); INCONCLUSIVE, ZstackMissing, exit 3 with the file removed.
+
+3. drafts/hc7/CASE-MARGINS.md.patch (the CAD note, agent checks labelled AI review, the dock-stack pointer, and section 5, section 7 and
+   finding 28 revised, and since c7 the opening summary, the "Why this document exists" paragraph and finding 23 brought to the same
+   timing: the targeted checks of the rows that can move a board are required before that board's layout entry, BLOCKED on the
+   purchase; the option c deferral is replaced, with the owner's execution prompt sections 2 and 5 as the reason). The patch of step 4 is
+   made on top of it.
+
+4. frame_seat.py (owner: the case margins' writer; asked for as a draft): in ONE commit
+     drafts/hc7/frame_seat.py                 -> v2/vendor/peli/frame_seat.py
+     drafts/hc7/frame_seat.out                -> v2/vendor/peli/1450/frame_seat.out
+     drafts/hc7/test_frame_seat_inputs.py     -> v2/ecad/tools/tests/test_frame_seat_inputs.py
+     drafts/hc7/CASE-MARGINS.frame_seat-draft.patch   (M18's part list read from the board; U51's 1.60 sourced to ST's maximum)
+   Reason: the committed frame_seat.py types U51's height (1.6 from the LQFP class) and a six-part hand list of B16's east-end parts. The
+   draft reads the design numbers from panel1450.py, the east-end parts from zstack.json and U51 at its MAKER'S MAXIMUM (zstack.json
+   height_max 1.60; the library model's 1.50 is ST's typical), because M14e and M14g are worst-case chains. The first draft of this pass
+   read the model's 1.50 there; the second review found that it weakened a worst-case input, and case_geometry_check.worst_case_reads now
+   refuses it. With the draft, frame_seat.out changes only in M18's printed part list (the E72 module U14 at 7.76 joins it); NO figure and NO
+   verdict moves, so M14e and M14g are unchanged (+2.80 / +1.73 / +2.22 / +1.43 and +7.30 / +6.17 / +6.69 / +5.87).
+   Tests: python3 v2/ecad/tools/tests/run.py case_geometry frame_seat_inputs   (13 pass on the scratch tree with steps 1 to 4).
+   The release folder keeps the a6f87e9d record it was labelled with; do not edit it.
+
+5. drafts/hc7/ASSEMBLY.md.patch (c7: regenerated against a8652172, whose ASSEMBLY.md equals 84e52461's; item (11)'s timing marked as
+   replaced, note (13) and section 3's pack paragraph state the mock-up before the layout entry of A, B, E and P, BLOCKED on D-09, and
+   the QMX tray row points at v2/release/case-2026-09-27/lid-tray-qmx/ and sheet 14 with its fit OPEN), first REBASED onto 84e52461 (main's round 8 edits of the light-guide row, step 8, the SMBus row and the E6 list
+   are kept; the two overlaps were resolved by keeping main's seventeen-guide row and main's clamp-bar step 8 with this branch's correction
+   appended). C1 to C6 rows, step 0, the jumpers, the plate, the lid space, the pocket, the legends, the bench list.
+
+6. drafts/hc7/READY-TO-ACT.mockup-timing.patch (owner: the integrator; 6.1 said "Layout entry does not wait on it", which the revised
+   allocation replaces; c7 extends it to every passage that carried the old timing or the missing drawings: section 0 item 9, section 1,
+   6.1's first sentence and its Proceeds line, 6.2's drawings bullet, 6.4, S-8 rewritten with its reason and reversal, and section 12). drafts/hc7/CONOPS.mockup-timing.patch (owner: the layer 1 to 3 closers; section 4a's pack paragraph and section
+   7's D-06 row said "a mock-up at the build"): apply it with their CONOPS edits, before their re-pin of needs_document_sha256 and of the
+   CONOPS-bound readings REQ-005, CFL-014 and CFL-016. It touches neither the needs table nor the sections those readings cite (2a; 3, 4,
+   4a's PS-EMCON row, 4b and 5; 4's Charging row): applied alone, rules_lib reports those four pins and they re-pin with that note.
+
+7. drafts/hc7/apply_registry.py --rebind   (after 1, 3, 4 and 5): REQ-047 (6-32, the dock stack), CON-006 (the pocket's bounds, Z 49.0, the
+   mock-up before A and P enter layout, waits on the new item), a new LATER open item (L-07 on 84e52461: the mock-up purchase, not approved
+   by D-09, like L-04 and L-05), new FEA-007 (the case fit: LAYOUT_ENTRY holds a, b, d, e, e5, p and needs DESK and BENCH_MOCKUP, waits on
+   S-27 and L-07; FABRICATION_RELEASE holds a, b, c, e, p and the case; PROTOTYPE_VERIFICATION T3, T7, T8, T9), and the rebinding of
+   CON-006 and REQ-019 (CASE-MARGINS.md) and CFL-015 (ASSEMBLY.md at 30db27eee509212c; its cited rows are byte-identical after step 5).
+   Tested on the scratch tree: a second run changes nothing; rules_lib.py requirements reads 133 records, 0 errors, 16 warnings (main's 16,
+   all "git cannot say" or out/rule-audit in a tree without git); after rules_render.py --requirements, the tests that read this
+   branch's files and the drafts (run.py case_geometry frame_seat_inputs t_every_declared_writer test_gate_crash_guard
+   test_verdict_channel test_layout_entry_stages test_requirements) read 135 passed, 0 failed, 2 skipped (both need git), on a fresh
+   archive of 84e52461 with steps 1 to 9 applied (CONOPS.mockup-timing.patch left out, see step 6). Then the usual re-render of
+   REQUIREMENTS-TRACE.md and CURRENT-EVIDENCE.md. If another closer's registry script has taken L-07 first, this one takes the next free L-number and prints it.
+
+8. drafts/hc7/gen_pcb_c.py.patch: board C's Dwgs_User plate caption reads the plate from panel1450 (it typed 365.5 x 249.5). Drawing layer
+   only; takes effect at board C's next regeneration. drafts/hc7/sources.txt.patch: provenance lines for the two maker PDFs this branch files.
+
+9. drafts/hc7/records/ -> v2/docs/records/hc7/ (CASE-FIT-UNCERTAINTIES.md section 4 cites that path):
+     check_pcb_c.hc7p2.verdict.json, check_pcb_c.hc7p2.txt                    CURRENT scratch reading (patched gate, reading recorded)
+     check_pcb_c.hc7p2-nozstack.verdict.json, check_pcb_c.hc7p2-nozstack.txt  the refusal (INCONCLUSIVE without zstack.json)
+     check_pcb_c-retake-pass2.txt                                             how both were taken
+     check_pcb_c.hc7.verdict.json, check_pcb_c.hc7.txt                        SUPERSEDED pass-1 reading (the fallback loader, no zstack input)
+     check_pcb_c.e3aedb25.verdict.json, check_pcb_c-retake.txt                the comparison on e3aedb25's geometry (same PASS of 48)
+
+Not done here, for their owners: v2/images/face-section.png is drawn by v2/ecad/tools/face_section.py from panel1450.py and still shows the
+superseded face (101.4); running that tool rewrites the tracked image, so it was not run in this branch. v2/cad/render/scene.py and its GLBs
+still draw the superseded face (v2/cad/README.md marks them superseded for measurement).
+
+c7 validation (27 September 2026, 11:31 to 11:36 CEST): on an archive of main a8652172 with this branch overlaid and steps 2 to 9 applied in
+this order (CONOPS.mockup-timing.patch left out, as in step 6): apply_registry.py --rebind added L-07 and FEA-007 (bound to
+CASE-FIT-UNCERTAINTIES.md@efc66afe9140e022) and rebound CON-006 and REQ-019 to CASE-MARGINS.md@0fc449b72532ba7c and CFL-015 to
+ASSEMBLY.md@cfe1942aa6fc8313 (the Pack SMBus row and build step 7 byte-identical); a second run changes nothing. rules_lib.py requirements:
+133 records, 0 errors, 16 warnings (main's, all "git cannot say" or out/rule-audit). rules_render.py --requirements --check refuses the
+old REQUIREMENTS-TRACE.md, as it must after a registry change, and passes after rules_render.py --requirements. run.py case_geometry
+frame_seat_inputs t_every_declared_writer test_gate_crash_guard test_verdict_channel test_layout_entry_stages test_requirements
+test_spacing: 148 passed, 0 failed, 2 skipped (both need git).
+Main moved to 38dcd764 during c7 (the H1.1 line: board B's round 8 schematic and netlist, the registry, CONOPS.md and sources.txt; no
+board file, no case input, and none of ASSEMBLY.md, CASE-MARGINS.md or READY-TO-ACT.md changed). The same run on an archive of 38dcd764:
+every patch of steps 2 to 8 applies with git apply, apply_registry.py --rebind adds L-07 and FEA-007 and makes the same three rebinds (a
+second run changes nothing), rules_lib.py requirements reads 133 records, 0 errors, 16 warnings, rules_render.py --requirements --check
+passes after the render, and the same tests read 148 passed, 0 failed, 2 skipped. CONOPS.mockup-timing.patch still passes
+git apply --check there (CONOPS.md changed at 38dcd764 outside its hunks); landing it stays with the layer 1 to 3 closers (step 6).

@@ -13,6 +13,13 @@ import boardtable as _bt   # the copper layer count is a DECLARATION in boards/<
                            # describing the previous decision (board A, 12 September; board C, today)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import panel1450 as L
+# THE BOARD READING THE FACE IS JUDGED AGAINST (27 September 2026, MESHSAT-1357 layer 7, the second review of the case release). B16's tall
+# parts (panel1450.B16_TALL, the height rule of section 5 below) are read from v2/cad/zstack.json, which v2/cad/zstack.py writes from the
+# committed board B. Without that file, or with one that is not a board reading, panel1450 raises ZstackMissing HERE, before any check
+# prints, and the crash hook above writes INCONCLUSIVE: never a PASS on a weaker list (the first loader fell back to 8 module envelopes of
+# 59). The reading is recorded by sha in this verdict's inputs, and rules_status.CONFIG_INPUTS declares it for this writer, so a
+# regenerated reading (board B changed) stales a reading of this gate.
+_ZSTACK = L.B16_FROM_BOARD
 OX, OY = 297.0, 210.0
 def case(v): return (round(v.x / 1e6 - OX, 3), round(OY - v.y / 1e6, 3))
 b = pcbnew.LoadBoard(sys.argv[1]); fails = []; checked = []; _intent_reported = []
@@ -168,5 +175,8 @@ _sysv.exit(_v.write("check_pcb_c",
                             "intent_items_reported": len(_intent_reported)},
                     denominator=len(checked),
                     evidence=fails,
-                    inputs={"board": sys.argv[1]},
+                    inputs={"board": sys.argv[1],
+                            "zstack": {"path": _osv.path.relpath(_ZSTACK["zstack"], _osv.path.dirname(_osv.path.dirname(_osv.path.abspath(__file__)))),
+                                       "sha256_16": _ZSTACK["zstack_sha256_16"], "board_b": _ZSTACK["file"],
+                                       "board_b_sha256_16": _ZSTACK["sha256"][:16]}},
                     note="" if _nfp else "the board loaded with no footprints, so nothing here is a judgement of a board"))

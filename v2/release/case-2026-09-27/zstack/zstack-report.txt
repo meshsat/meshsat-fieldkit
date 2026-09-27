@@ -1,0 +1,94 @@
+Z STACK FROM THE COMMITTED BOARDS (case frame, mm above the cavity floor)
+  E  v2/ecad/pcb-e1-dock-e7/pcb-e1-dock.kicad_pcb sha a462ac2620b9  outline X -149.0..118.0 Y -113.0..-45.0  t 1.60  Z 1.10..2.70
+      tallest top J_SOLAR 16.50 (JST_VH_B2P-VH_1x02_P3.96mm_Vertical), tallest bottom none; 189 parts, 0 TBD heights, 28 holes
+  E5 v2/ecad/pcb-e5-block/pcb-e5-block.kicad_pcb sha 686b29a734c5  outline X -106.5..-63.5 Y -85.0..-59.0  t 1.60  Z 8.50..10.10
+      tallest top H4 0.00 (MountingHole_3.2mm_M3), tallest bottom none; 17 parts, 0 TBD heights, 4 holes
+  A  v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb sha 58e26c67987b  outline X -120.0..120.0 Y -80.0..80.0  t 1.60  Z 16.10..17.70
+      tallest top J_HF 16.50 (JST_VH_B2P-VH_1x02_P3.96mm_Vertical), tallest bottom none; 400 parts, 0 TBD heights, 8 holes
+  D  v2/ecad/pcb-d-aprs-d9/pcb-d-aprs.kicad_pcb sha 929bf82d2bf6  outline X 0.0..100.0 Y -40.0..40.0  t 1.60  Z 23.70..25.30
+      tallest top J_PWR1 16.50 (JST_VH_B2P-VH_1x02_P3.96mm_Vertical), tallest bottom D2 1.26 (D_SOD-123); 211 parts, 0 TBD heights, 4 holes
+  B  v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_pcb sha 2e64b5bf2d9c  outline X -165.0..165.0 Y -100.0..100.0  t 1.60  Z 49.00..50.60
+      tallest top J_5V_DEV 16.50 (JST_VH_B2P-VH_1x02_P3.96mm_Vertical), tallest bottom J_AB2 9.10 (IDC-Header_2x05_P2.54mm_Vertical_NarrowPad); 957 parts, 0 TBD heights, 40 holes
+  C  v2/ecad/pcb-c-display-c8/pcb-c-display.kicad_pcb sha 2a273803757c  outline X -172.0..172.0 Y -114.0..114.0  t 1.60  Z 91.92..93.52
+      tallest top D16 8.30 (LED_D3.0mm), tallest bottom J_PANEL 9.64 (IDC-Header_2x13_P2.54mm_Vertical_SMD); 194 parts, 0 TBD heights, 12 holes
+  P  v2/ecad/pcb-p-pack-p2/pcb-p-pack.kicad_pcb sha d79865e7b1ac  outline X 128.3..172.3 Y -102.8..-32.8  t 1.60  Z TBD..TBD
+      tallest top F1 7.37 (Fuseholder_Blade_Mini_Keystone_3568), tallest bottom none; 60 parts, 0 TBD heights, 4 holes
+
+BAYS (clearance = gap - lower part - upper part, where their plan rectangles overlap)
+  floor under E (E's underside parts on the VHB pads): gap 1.10 (E's bottom parts against the case floor)
+  E to A (blind-mate gap): gap 13.40 (13.4 gap; the SMP-MAX plugs and the E5 block mate across it)
+     single: Q10        lower top    h   1.20  leaves  +12.20
+     single: C48        lower top    h   0.80  leaves  +12.60
+  E5 to A (dock contacts): gap 6.00 (the block's targets under A's J_DOCK spring pins (mate))
+     single: H1         lower top    h   0.00  leaves   +6.00
+     single: H2         lower top    h   0.00  leaves   +6.00
+  A to D (mezzanine standoffs): gap 6.00 (6.0 standoffs; J_AB2 is W4-F17)
+     J_AB2        9.10  under C18          0.80  clearance   -3.90
+     J_AB2        9.10  under C45          0.50  clearance   -3.60
+     J_AB2        9.10  under R39          0.45  clearance   -3.55
+     single: J_AB2      lower top    h   9.10  leaves   -3.10
+     single: C65        lower top    h   2.50  leaves   +3.50
+  A to B outside D (bay): gap 31.30 (31.3 bay (parts under D's outline are the next two rows))
+     J_AB1        9.10  under J_AB1        9.10  clearance  +13.10
+     J_5V_S2     16.50  under U51          1.50  clearance  +13.30
+     J_5V_S1     16.50  under U51          1.50  clearance  +13.30
+     L9          10.00  under C209         1.25  clearance  +20.05
+     single: J_54V      lower top    h  16.50  leaves  +14.80
+     single: J_5V_DEV   lower top    h  16.50  leaves  +14.80
+  D to B: gap 23.70 (above the mezzanine)
+     J_ANT        9.55  under C286         0.80  clearance  +13.35
+     J_ANT        9.55  under C289         0.80  clearance  +13.35
+     J_ANT        9.55  under C293         0.80  clearance  +13.35
+     J_ANT        9.55  under C294         0.80  clearance  +13.35
+     single: J_PWR1     lower top    h  16.50  leaves   +7.20
+     single: J_ANT      lower top    h   9.55  leaves  +14.15
+  B to C backer ring: gap 41.32 (check_pcb_c.py gates this with B16_TALL)
+     J_PANEL      9.10  under J_PANEL      9.64  clearance  +22.58
+     U14          5.00  under TP3          0.00  clearance  +36.32
+     U14          5.00  under TP9          0.00  clearance  +36.32
+     U14          5.00  under TP7          0.00  clearance  +36.32
+     single: J_54V      lower top    h  16.50  leaves  +24.82
+     single: J_5V_DEV   lower top    h  16.50  leaves  +24.82
+
+B's top parts in the monitor's footprint against its body bottom Z 77.86: J_5V_S1 h 16.50 +10.76, J_5V_S2 h 16.50 +10.76, J_5V_S3 h 16.50 +10.76, J_RB9704 h 9.10 +18.16, J_DBG1 h 8.54 +18.72, J_DBG2 h 8.54 +18.72
+B's underside over the east pack pocket: tallest J_AB2 9.10, lowest Z 39.90
+
+B16_TALL (the face gates' list) against B's own parts: 59 envelopes (8 modules, 6 M.2 cards, 45 board parts 3.0 mm or taller)
+  every part 3.0 mm or taller is enveloped, every TBD part lies inside an envelope
+  module anchors: 14 of 14 inside their envelopes
+
+The hand list of 9 Sep 2026 (LEGACY_B16_TALL) against the same board, for the record:
+  J_5V_DEV   JST_VH_B2P-VH_1x02_P3.96mm_Vertical          h 16.50  NO envelope covers it
+  L201       L_Coilcraft_XAL6060-XXX                      h 6.10  TALLER than every envelope over it
+  J_RB9704   IDC-Header_2x08_P2.54mm_Vertical_NarrowPad   h 9.10  NO envelope covers it
+  L301       L_Coilcraft_XAL6060-XXX                      h 6.10  TALLER than every envelope over it
+  U12        Ebyte_E22-900M30S                            h 5.00  NO envelope covers it
+  J_5V_S1    JST_VH_B2P-VH_1x02_P3.96mm_Vertical          h 16.50  TALLER than every envelope over it
+  L101       L_Coilcraft_XAL6060-XXX                      h 6.10  TALLER than every envelope over it
+  J_FAN2     JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertic h 4.32  NO envelope covers it
+  J_RPIBOOT1 PinHeader_1x02_P2.54mm_Vertical              h 8.54  TALLER than every envelope over it
+  L102       L_Coilcraft_XAL6060-XXX                      h 6.10  TALLER than every envelope over it
+  J_ETH      RJ45_Amphenol_RJHSE5380                      h 15.50  TALLER than every envelope over it
+  J_ZBDBG1   PinHeader_1x05_P2.54mm_Vertical              h 8.54  TALLER than every envelope over it
+  J_DBG1     PinHeader_1x05_P2.54mm_Vertical              h 8.54  TALLER than every envelope over it
+  J_54V      JST_VH_B2P-VH_1x02_P3.96mm_Vertical          h 16.50  TALLER than every envelope over it
+  U13        Ebyte_E72-2G4M20S1E                          h 5.00  NO envelope covers it
+  J_5V_S3    JST_VH_B2P-VH_1x02_P3.96mm_Vertical          h 16.50  TALLER than every envelope over it
+  BT1        BatteryHolder_Keystone_3034_1x20mm           h 4.00  NO envelope covers it
+  J_M2N1     M2_M-Key_Socket_2242                         h 4.50  NO envelope covers it
+  J_RPIBOOT2 PinHeader_1x02_P2.54mm_Vertical              h 8.54  TALLER than every envelope over it
+  J_RPIBOOT3 PinHeader_1x02_P2.54mm_Vertical              h 8.54  TALLER than every envelope over it
+  U14        Ebyte_E72-2G4M20S1E                          h 5.00  NO envelope covers it
+  J_5V_S2    JST_VH_B2P-VH_1x02_P3.96mm_Vertical          h 16.50  TALLER than every envelope over it
+  L202       L_Coilcraft_XAL6060-XXX                      h 6.10  TALLER than every envelope over it
+  U11        Quectel_LG290P                               h 5.00  NO envelope covers it
+  L302       L_Coilcraft_XAL6060-XXX                      h 6.10  TALLER than every envelope over it
+  J_FAN3     JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertic h 4.32  NO envelope covers it
+  J_DBG3     PinHeader_1x05_P2.54mm_Vertical              h 8.54  TALLER than every envelope over it
+  J_DBG2     PinHeader_1x05_P2.54mm_Vertical              h 8.54  TALLER than every envelope over it
+  J_FAN1     JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertic h 4.32  NO envelope covers it
+  J_GNSS2    PinHeader_1x03_P2.54mm_Vertical              h 8.54  TALLER than every envelope over it
+  J_SPI3     PinHeader_2x05_P2.54mm_Vertical              h 8.54  TALLER than every envelope over it
+  J_M2C1     M2_E-Key_Socket_2230                         h 4.50  NO envelope covers it
+
+TBD heights (no model, no class) per board:

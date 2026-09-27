@@ -882,6 +882,16 @@ CONFIG_INPUTS = {
     # so a netlist it records would not bind it either, and it is no layout-entry blocker).
     "ground_system.py": ("tools/boards/{letter}.json",),
 }
+# check_pcb_c.py (27 September 2026, MESHSAT-1357 layer 7; the second review of the case release). Board C's gate was not declared, so
+# every reading of it read CONFIG_UNDECLARED, and the case release made it read a file at run time that its code bundle does not see.
+# Beyond its board it reads: :10 and :133 boardtable.value("c", "copper_layers"), board C's table; :15 and :22 panel1450, whose B16_TALL
+# (:110 through clearance_report, and :125) is loaded at run time from v2/cad/zstack.json, v2/cad/zstack.py's reading of the committed
+# board B: panel1450 raises ZstackMissing without it, so the gate crashes to INCONCLUSIVE, and the verdict records the file by sha
+# (:178-181), which binds here by the recorded sha; and, when the board carries unlocked tracks, :148-160 intent_checks.run, which reads
+# what intent_checks.py is declared to read (taken whole, conservative: those items are reported by this gate and decided by
+# intent_checks' own verdicts, but their count is in this reading). copper_checks (:163) opens no file. A board B change makes
+# test_case_geometry.py fail until zstack.json is regenerated, and the regenerated file then stales this gate's readings.
+CONFIG_INPUTS["check_pcb_c.py"] = ("tools/boards/c.json", "../cad/zstack.json") + CONFIG_INPUTS["intent_checks.py"]
 V2 = os.path.normpath(os.path.join(ECAD, ".."))
 _GIT_DIRTY = {}
 _CFG_WHEN = {}

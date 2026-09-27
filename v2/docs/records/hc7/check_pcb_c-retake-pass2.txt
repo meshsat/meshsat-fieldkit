@@ -1,0 +1,23 @@
+MESHSAT-1357, layer 7 closer (fnd/hc7), pass 2, 27 Sep 2026 about 06:54 CEST (04:54:32Z): board C's gate re-taken with the board reading
+recorded, and without it. A scratch reading for the integrator's consolidated re-take, NOT recorded evidence: written to scratch VERDICT_DIRs
+on the rented CAD box (vast.ai 52646493, KiCad 9.0.9, Python 3.12.3) in a copy of the tools under /root/hc7/g/, never in v2/ecad/*/out/.
+
+Tree:       v2/ecad/tools of main 84e52461 with this branch's panel1450.py (sha256 3bdb88df98260244...) and drafts/hc7/check_pcb_c.py.patch
+            applied (check_pcb_c.py sha16 d200b99c384fb763); v2/cad/zstack.json sha16 b4fb79d90d2f3ee1 (59 envelopes read from B21)
+Board:      v2/ecad/pcb-c-display-c8/pcb-c-display.kicad_pcb (C24), sha256 first 16 2a273803757c68fb (unchanged at 84e52461)
+Command:    cd v2/ecad/pcb-c-display-c8 && VERDICT_DIR=<scratch> python3 ../tools/check_pcb_c.py pcb-c-display.kicad_pcb
+
+Run A (zstack.json present):  exit 0, RESULT ALL PASS; verdict PASS, 48 of 48, footprints 194, intent items reported 156 (not counted);
+            inputs = {"board": {..., "sha256_16": "2a273803757c68fb"},
+                      "zstack": {"path": "../cad/zstack.json", "sha256_16": "b4fb79d90d2f3ee1",
+                                 "board_b": "v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_pcb", "board_b_sha256_16": "2e64b5bf2d9cd3bc"}}
+            -> check_pcb_c.hc7p2.verdict.json, check_pcb_c.hc7p2.txt
+            rules_status._recorded_sha(verdict, v2/cad/zstack.json) returns b4fb79d90d2f3ee1 on the scratch tree, the file's own: it binds.
+Run B (zstack.json moved aside for the run, then restored):  exit 3; verdict INCONCLUSIVE of 0, note "the gate raised before it decided:
+            ZstackMissing (panel1450.ZstackMissing: .../v2/cad/zstack.json cannot be read (FileNotFoundError) ...)"; no check line printed
+            -> check_pcb_c.hc7p2-nozstack.verdict.json, check_pcb_c.hc7p2-nozstack.txt
+
+Against the pass-1 reading of 06:04 (check_pcb_c.hc7.*, the fallback loader, no zstack input): MEC-001's 48 lines are the same; the
+intent screens it reports differ because board C's round 8 intent file at 84e52461 declares 24 bypass entries where 19 were (five new
+C40 to C44 entries report "pads found on the board" against the committed C24 layout). Those are decided by intent_checks' own verdicts
+and are not counted in this gate's 48.

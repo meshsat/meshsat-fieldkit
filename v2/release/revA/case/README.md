@@ -1,5 +1,17 @@
 # Case machining, Rev A (Peli 1450, MESHSAT-830 generation)
 
+> **HISTORICAL, SUPERSEDED on 27 September 2026 (MESHSAT-1357). Do not make, cut, drill or order anything from this folder.** The current
+> case set is `v2/release/case-2026-09-27/` (CAD, dimensioned drawings, 1:1 templates, the margins it is labelled with), generated from
+> `v2/ecad/tools/panel1450.py` under the session's choices C1 to C6 (`v2/docs/CASE-MARGINS.md` section 4, SC-07). What this folder shows
+> and the current set replaces: the face plate 365.5 x 249.5 under the frame's ring on ten M3 from below with a PORON ring (now 377.2 x 263.0
+> on the frame over Peli's o-ring, ten 6-32 UNC from above into Peli's inserts, a rebated band); the face top on a "base 109.4, lip 8" datum
+> no Peli file supports (now 106.52 on four setting legs from the floor); the 54 x 82 x 3 connector plate between ribs at X -95 and -18 that
+> Peli's files do not show (now 114.0 x 68.3 x 5.0 between the hinge fairings with six items); eleven Amphenol 132170 couplers at Z 88 (now
+> twelve PolyPhaser GTH-SFF-AL arrestors at Z 59 on one RF entry plate per end wall); the rigid `pack-4s` box, which fits no pocket
+> (adjudication A06; the ruled pack is a shrink-wrapped 4S3P block whose hold-down is not designed yet); the QMX tray at X 103.5 (now 102.0).
+> **Its face-plate files are older than its own text:** `face-plate/` holds the files of 7 September 2026 (1f46cf83), which do not contain
+> the 205.75 x 140.09 recessed-monitor window this README describes (9 September). The folder is kept unchanged below as the record.
+
 **State 7 Sep 2026 (appendix 32.56, 32.60):** the kit is the Peli 1450 with the 1450PF panel frame; the texts below that name the 1520 are the earlier state and stay for the record. Everything here is a prototype template; nothing has been cut or printed.
 
 - `wall-receptacles-1to1.pdf` (regenerated for the 1450 by `v2/ecad/tools/case_wall_cutouts.py` from the lists in `v2/ecad/tools/panel1450.py`): the connector plate stands **upright, 54 wide x 82 tall x 3 mm**, on the back long wall (hinge side) between the inner ribs at X -95 and -18 so no rib is cut, its centre at X -56 and 54 mm above the floor, the DC receptacle (D38999/20 shell 13, vehicle and shore 9 to 36 V plus the solar pair) below at Z 34 and the USB host receptacle (Glenair 233-370 shell 15) above at Z 74; the sealed Gigabit RJ45 with PoE, the sealed USB-C outlet, the sensor pod's M8 receptacle and the ground stud of appendix 32.50 join the plate when their parts are picked (the plate grows toward the rib at X -18; regenerate the sheet then). The **eleven SMA bulkheads** (Amphenol Connex 132170 with an NBR O-ring 6.5 x 1.0 under the outside hex) all at **Z 88** on the end walls: west VHF, HF, WIFI 2.4, GNSS, SDR at Y -72, -48, -24, +24, +72; east 5G MAIN, 5G DIV, IRIDIUM, LORA, WIFI P2P A, WIFI P2P B at Y -96, -72, -48, -24, +48, +96 (clear of the 1450's end-wall nubs at Y 0 and +-83.5). The built 4S smart pack of appendix 32.62 lies in the east pocket beside A22 under B16's overhang (the BB-2590/U did not fit; the case stays the 1450); its enclosure is `pack-4s/` here (`v2/cad/pack_4s.py`: box 56 x 236 x 44 plus a 2 mm lid, the cell block pocket, the P1 board bay on four M3 bosses, a cable notch, two strap slots, about 94 g of PETG).

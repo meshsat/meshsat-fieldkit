@@ -84,12 +84,20 @@
   inside: the inner jack ends 6.40 past the wall's inner face; the plug reaches X 172.63 at Z 59.0 (the axis rises 0.57 over that reach with the wall's 2 degree normal)
   on the thread's .47 (11.94): the O-ring 0.32 +-0.32, the 4.5 web under the spot-face, then washer and nut 5.0; without the spot-face the 6.0 plate leaves 0.62 nominal and -0.40 at the worst
   the spot-faces keep 4.10 of the plate's back to its Y edge at the outermost sites (3.90 at the worst of the machined place and the outline), the gasket's land on the plate; its land on the wall is M11c's
-  plug end X 172.63 against RockBLOCK (edge |X| 165.0, Z 50.6..71.6) at Y -62: the plug's Z 54.0..64.6 overlaps it, X gap 7.63
-  plug end X 172.63 against J_ETH (edge |X| 162.0, Z 50.6..64.6) at Y +93: the plug's Z 54.0..64.6 overlaps it, X gap 10.63
-  plug end X 172.63 against radio modules (edge |X| 162.0, Z 50.6..55.6) at Y +62: the plug's Z 54.0..64.6 overlaps it, X gap 10.63
-  plug end X 172.63 against T1 magnetics (edge |X| 161.5, Z 50.6..57.6) at Y +62: the plug's Z 54.0..64.6 overlaps it, X gap 11.13
-  plug end X 172.63 against LimeSDR (edge |X| 161.0, Z 50.6..62.6) at Y -31, +0, +31: the plug's Z 54.0..64.6 overlaps it, X gap 11.63
-  plug end X 172.63 against west headers (edge |X| 152.0, Z 50.6..60.6) at Y -93: the plug's Z 54.0..64.6 overlaps it, X gap 20.63
+  plug end X 172.63 against RockBLOCK 9704 on its bracket (edge |X| 165.0, Z 50.6..71.6) at Y -62: the plug's Z 54.0..64.6 overlaps it, X gap 7.63
+  plug end X 172.63 against U14 Ebyte_E72-2G4M20S1E (edge |X| 164.9, Z 50.6..55.6) at Y +62: the plug's Z 54.0..64.6 overlaps it, X gap 7.76
+  plug end X 172.63 against J_ETH RJ45_Amphenol_RJHSE5380 (edge |X| 161.8, Z 50.6..66.1) at Y +93: the plug's Z 54.0..64.6 overlaps it, X gap 10.85
+  plug end X 172.63 against T1 Pulse_H5007NL (edge |X| 161.3, Z 50.6..57.6) at Y +62: the plug's Z 54.0..64.6 overlaps it, X gap 11.33
+  plug end X 172.63 against LimeSDR Mini in J_LIME (edge |X| 161.0, Z 50.6..62.6) at Y -31, +0, +31: the plug's Z 54.0..64.6 overlaps it, X gap 11.63
+  plug end X 172.63 against J_QMX PinHeader_1x04_P2.54mm_Vertical (edge |X| 155.4, Z 50.6..59.1) at Y -93: the plug's Z 54.0..64.6 overlaps it, X gap 17.25
+  plug end X 172.63 against J_CAM PinHeader_1x04_P2.54mm_Vertical (edge |X| 149.9, Z 50.6..59.1) at Y +62: the plug's Z 54.0..64.6 overlaps it, X gap 22.69
+  plug end X 172.63 against J_ZBDBG2 PinHeader_1x05_P2.54mm_Vertical (edge |X| 145.2, Z 50.6..59.1) at Y +62: the plug's Z 54.0..64.6 overlaps it, X gap 27.48
+  plug end X 172.63 against U13 Ebyte_E72-2G4M20S1E (edge |X| 143.9, Z 50.6..55.6) at Y +62: the plug's Z 54.0..64.6 overlaps it, X gap 28.76
+  plug end X 172.63 against J_ZBDBG1 PinHeader_1x05_P2.54mm_Vertical (edge |X| 140.4, Z 50.6..59.1) at Y +62: the plug's Z 54.0..64.6 overlaps it, X gap 32.27
+  plug end X 172.63 against J_PANEL IDC-Header_2x13_P2.54mm_Vertical_NarrowPad (edge |X| 136.8, Z 50.6..59.7) at Y +93: the plug's Z 54.0..64.6 overlaps it, X gap 35.79
+  plug end X 172.63 against BT1 BatteryHolder_Keystone_3034_1x20mm (edge |X| 133.4, Z 50.6..54.6) at Y -62: the plug's Z 54.0..64.6 overlaps it, X gap 39.25
+  plug end X 172.63 against J_54V JST_VH_B2P-VH_1x02_P3.96mm_Vertical (edge |X| 130.5, Z 50.6..67.1) at Y -93: the plug's Z 54.0..64.6 overlaps it, X gap 42.12
+  plug end X 172.63 against U12 Ebyte_E22-900M30S (edge |X| 125.2, Z 50.6..55.6) at Y +31, +62: the plug's Z 54.0..64.6 overlaps it, X gap 47.43
   entry-plate screw heads to the end-wall ribs at Y 0 and +-76.2 (half-width 0.91): 17.89; the arrestor holes cut ribs where they cross them, nothing bears there
   27 mm holes to the nearest rib's base (half-width 0.91), per |Y|: 0: -14.41, 31: +16.59, 62: -0.21, 93: +2.39 (negative: the hole cuts into the rib's base; the hole at Y 0 crosses its rib)
   outside: the bodies reach X +-238.8 (the rim flange +-205.74, the drawing's exterior 411): the case is about 67 mm longer over the arrestor rows
@@ -167,7 +175,7 @@
   M13b  nut and washer (5.0, from the spot-face floor) inside the wall hole's depth (plate, gasket, wall)          0.00    +3.34    +1.78    +2.40     +0.52  MET  (a condition)
   M13c  nut and washer (24.0) inside the 27 wall hole, radial                                                      0.00    +1.50    +0.48    +0.96     -0.12  OPEN  (a condition)
   M13d  nut and washer (24.0) inside the 26.0 spot-face, radial                                                    0.00    +1.00    +0.58    +0.67     +0.58  MET  (a condition)
-  M18   jumper plug's inner end to B16's tall parts in X (tightest: RockBLOCK, which it overlaps in Y and Z)       1.00    +7.63    +3.36    +5.85     -0.61  OPEN
+  M18   jumper plug's inner end to B16's tall parts in X (tightest: RockBLOCK 9704 on its bracket)                 1.00    +7.63    +3.36    +5.85     -0.61  OPEN
   M18b  neighbouring arrestor bodies outside (22.86 across at the 31 pitch)                                        1.00    +8.14    +7.30    +7.47     +7.30  MET
   M18c  outermost plug (west wall) to the setting legs' inner face in Y (the plug's X range covers the column's)   1.00    +8.40    +6.80    +7.41     +6.00  MET
   M4c   pack block's east face (X 178.65) to the entry plate's bottom screw heads (inner face X 184.51)            1.00    +5.86    +3.18    +4.18     +1.80  MET

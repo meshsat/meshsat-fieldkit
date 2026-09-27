@@ -772,7 +772,8 @@ to C4, rows M14 and M17); layer 8 netlists.
   evidence exists at schematic; INT-001 at SCHEMATIC reads the same check, so the pin-map half is not deferred.
 - Sequencing, not a cycle: E5's INT-001 can bind only while A's layout carries A's netlist, so E5 enters layout after
   A's placement (E5 is generated from A's board file).
-- The case mock-up is recommended before outlines freeze and carried to fabrication release if not run; M17g and M17x
+- The case mock-up was recommended before outlines freeze and carried to fabrication release if not run; since the
+  layer 7 merge its board-moving checks are required before the layout entry of boards A, B, E and P, which is BLOCKED on the purchase since 27 September 2026 (FEA-007, L-07; `v2/docs/CASE-FIT-UNCERTAINTIES.md` sections 1, 2 and 7). M17g and M17x
   fail as assumed, so the jumper plug must be picked at desk before A and E layout entry.
 
 **Next closing actions**
@@ -1042,7 +1043,8 @@ placements from `gen_pcb_{a,b,c,d,e,e5,p}.py` and `gen_pcb_{a,b}3.py`.
 - CASE-MARGINS section 7 option (c) carries the mock-up rows to fabrication release when the case is not bought; the
   recorded reason is gate authority, not decision independence, and for M17x and M18 (B's east edge), M1 (B's stack,
   C) and M4a and M5 (P, A's east edge) the layout decision does depend on them. Remedy: close what a desk pick can
-  close before layout entry and keep the carry-over explicit per board.
+  close before layout entry and keep the carry-over explicit per board. (Done at the layer 7 merge: option (c) is
+  withdrawn and FEA-007 holds the layout entry of boards A, B, E and P on the mock-up.)
 - FEA-004 places the heat test at FABRICATION_RELEASE, against the second review ("before freezing affected placement
   and pack design") and POWER-THERMAL section 10 ("before more layout"); the bound includes failure, so a PROVISIONAL
   label cannot defer it. Remedy: as layer 4's FEA-004 restaging.
