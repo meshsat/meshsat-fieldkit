@@ -54,6 +54,7 @@ Worktrees:
 | `w6/` | foundation workstream 6 (findings review), 25 September |
 | `hc5/` | the layer 5 closer (27 September): the kit I2C bus budget, its script and two outputs, the interface contracts' field check with its output, and the USB 2.0 clauses it cites; authored in the tree, not filed from drafts |
 | `w5/` | foundation workstream 5 (the hardware and firmware contract, round 2), 26 September |
+| `defstab/` | the definition-baseline restructure of `PRODUCT-BRIEF.md` and `CONOPS.md` (27 September 2026, branch `fnd/defstab` from `31cd29b9`, commit `fa89c7c6`; the independent review of handover H2, section 4): the map of every move and the scripts that wrote, asserted and re-derived it, and the registry's apply script (section *Filed 27 September 2026: the definition restructure's map*) |
 
 ## Filed files
 
@@ -996,6 +997,27 @@ After two attempts on layers 1 and 3 the method changed to a targeted fix and a 
 | file | sha256 | bytes | verdict | cited by |
 |---|---|---:|---|---|
 | `v2/docs/reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md` | `ae70b1a7811ecea172029b55c070dfd86f7f668640109635362e785bf230b8aa` | 15086 | layer 1: R2-B1 and R2-m1 CLOSED; layer 3: B-1 NOT_CLOSED (one registry difference the header does not state) | `v2/docs/PRODUCT-BRIEF.md` (status); `v2/docs/handover/LAYER-STATUS.md` (layers 1 and 3); registry header, S-51, S-77, S-78, S-79 and S-80; ENGINEERING-QUESTIONS EQ-27, EQ-28, EQ-29 and EQ-30 |
+
+## Filed 27 September 2026: the definition restructure's map
+
+The definition-baseline restructure of `v2/docs/PRODUCT-BRIEF.md` (layer 1) and `v2/docs/CONOPS.md` (layer 2) (branch `fnd/defstab` from `31cd29b9`, commit `fa89c7c6`) wrote its map and scripts in the worktree's untracked `drafts/defstab/`. `v2/docs/handover/DEFINITION-STATUS.md` and the three registry entries of `fa89c7c6` cite them, and the check of the restructure (below) found that the committed tree could not open them (its finding m5). They are filed here byte for byte (sha256 taken of the worktree file and of the filed file, equal), `drafts/defstab/X` at `defstab/X`. The map describes the two files at `fa89c7c6`; a later edit of either file's status line is not in it.
+
+| file | sha256 | bytes | source worktree and path | cited by |
+|---|---|---:|---|---|
+| `defstab/moves.json` | `bb3dfeab9941b12432f1abaf012fca76080e27ece231e1ac0c3c489a382aa72b` | 101246 | `fnd/defstab` `drafts/defstab/moves.json`: the map: every moved block's old line range at `31cd29b9`, new location and sha256; every definition block's sha256 before and after, with the moves that closed it up | `v2/docs/handover/DEFINITION-STATUS.md` (the restructure); registry REQ-005, CFL-014 and CFL-016 (as `drafts/defstab/moves.json`) |
+| `defstab/build.py` | `39e19cfabf0c565f2619f492ed8f06dee15abc359d9308da29d2b6ac2eeaf205` | 12638 | `fnd/defstab` `drafts/defstab/build.py`: writes the two restructured files and the status page from the map and asserts it | as for the map |
+| `defstab/cuts.py` | `6d21abf795294cd46bdfda41dc8edfe24b62a7d6d71693c2b2527e0208dcf88b` | 11903 | `fnd/defstab` `drafts/defstab/cuts.py`: the moved blocks, by old line range, for `build.py` | as for the map |
+| `defstab/heads.py` | `4ebcb7b7fcf72726fd84885afc2e28b8a10a13e1a5745f1b6ece8e36209a3c10` | 12921 | `fnd/defstab` `drafts/defstab/heads.py`: the two new heads, for `build.py` | as for the map |
+| `defstab/verify.py` | `9a4eac574c1abe459b9de1a047b4ce2598cecf822a704100206e2792dfffe24a` | 5174 | `fnd/defstab` `drafts/defstab/verify.py`: the independent re-derivation of the map (conservation, block hashes, the needs table): ALL PASS at `fa89c7c6` and again when filed | `v2/docs/handover/DEFINITION-STATUS.md` (the restructure) |
+| `defstab/apply_registry.py` | `fce23574d113be5f6de2ee482e826f4c5ce38dbea883656f774c67d3a35250b0` | 5838 | `fnd/defstab` `drafts/defstab/apply_registry.py`: re-pins `needs_document_sha256` and rebinds REQ-005, CFL-016 and CFL-014 to `CONOPS.md@bbcab7c9876f7993` | `fa89c7c6`'s commit message |
+
+## Filed in `v2/docs/reviews/`: the check of the definition restructure
+
+A session that wrote none of the restructure, its heads, its status page, its map or its registry entries checked the carry-over of content at `fa89c7c6` against `31cd29b9`, wrote its record untracked in the worktree `fnd/defstab`, and the re-stamping session filed it byte for byte (sha256 below, taken before and after filing). It is an AI check of named items, not a full layer review and not a qualified review.
+
+| file | sha256 | bytes | verdict | cited by |
+|---|---|---:|---|---|
+| `v2/docs/reviews/DEFINITION-RESTRUCTURE-CHECK-2026-09-27.md` | `4c09af64cb214448681a4424719bb88fe4e8bcca75a84821db088ea8cc164e33` | 19325 | CONTENT_PRESERVED; minor findings m1 to m6, none blocking; m1 and m5 answered on `v2/docs/handover/DEFINITION-STATUS.md` | `v2/docs/handover/DEFINITION-STATUS.md` (the check of the map) |
 
 ## Maker documents: where each is filed in `v2/vendor/`
 

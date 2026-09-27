@@ -7,10 +7,12 @@ ordered or powered, and no kit has been field deployed; nothing on this page is 
 
 ## The rule
 
-A definition baseline is reopened only when a requirement, the scope, the operating concept or a product decision
-changes. A changed count or a circuit correction updates this page and the records it names, not the baseline. When a
-change does reopen a baseline, the affected document is issued again through its layer's review, and the change is
-stated in it; nothing is narrowed silently.
+A definition baseline is reopened only when a requirement, the scope, the operating concept or another relevant
+decision changes. A changed count or a circuit correction updates this page and the records it names, not the
+baseline. When a change does reopen a baseline, the affected document is issued again through its layer's review, and
+the change is stated in it; nothing is narrowed silently. The review's own words are "a requirement, scope, operating
+concept or other relevant decision"; the heads of the two documents say "a product decision", which is narrower, and
+where the two differ the review's words govern (finding m6 of the check of the restructure, below).
 
 ## The two baselines
 
@@ -34,9 +36,11 @@ counts, reading results, commit-by-commit status) moved to this page, word for w
 reworded: a sentence that carries definition content and a result together stayed where it was, and so did every
 table row but its revision notes; each document's head says that such a figure or remark is its value at the baseline.
 
-The map of every move is `drafts/defstab/moves.json` in the branch's worktree, written with the build script that
-asserts it (`drafts/defstab/build.py`, `cuts.py` and `heads.py`), to be filed under `v2/docs/records/defstab/` when the
-branch is integrated. For every moved block it gives the old line range at `31cd29b9`, the new location and the
+The map of every move is `v2/docs/records/defstab/moves.json`, written with the build script that asserts it
+(`build.py`, `cuts.py` and `heads.py` beside it) and re-derived independently by `verify.py`. They were written in the
+branch's worktree as `drafts/defstab/`, the path the three registry entries of `fa89c7c6` name, and are filed byte for
+byte with `apply_registry.py` in the commit that files the check below (`v2/docs/records/README.md`, section "Filed 27
+September 2026: the definition restructure's map"); the map describes the two files at `fa89c7c6`. For every moved block it gives the old line range at `31cd29b9`, the new location and the
 sha256; for every block of each definition it gives the sha256 before and after, and which moves closed it up. The
 script checks that each kept block equals its original with the moved text removed, that every sentence of a kept
 block is a sentence of the original, and that every moved text stands byte for byte at its new place. CONOPS's needs
@@ -44,9 +48,34 @@ table is byte-identical; the requirements registry's pin on the whole file (`nee
 the three readings bound to CONOPS (REQ-005, CFL-014 and CFL-016) are rebound, each with an entry naming what moved and
 stating that the statements it rests on are unchanged. No reading is bound to the brief.
 
-**Not re-stamped.** The restructure does not take either baseline again: each stands at its commit in the table above.
-Whether the restructured text carries its baseline unchanged is for a check of the map by a session or person that
-wrote none of the restructure. State: OWED.
+**The check of the map: HELD, CONTENT_PRESERVED.** The restructure did not take either baseline again; whether the
+restructured text carries its baseline unchanged was left to a check of the map by a session or person that wrote
+none of the restructure. A session that wrote none of it, and used neither the map nor its scripts to reach a result,
+checked the carry-over of content at `fa89c7c6` against `31cd29b9`:
+`v2/docs/reviews/DEFINITION-RESTRUCTURE-CHECK-2026-09-27.md` (headed "AI check (not a qualified engineering review)",
+sha256/16 `4c09af64cb214448`, filed byte for byte in the commit that carries this paragraph). Its verdict is
+**CONTENT_PRESERVED**: both definitions are present word for word, with no word added or reworded below either head;
+every moved block is status or history, save the two partly definition moves m1 and m2, whose definition content the
+kept CONOPS text the brief cites still states; the pointers resolve, save the map (m5); the needs table, the
+registry's 19 quoted needs and the pin agree; and the three rebinding notes are true. None of its findings is blocking,
+and it supports re-stamping once m1 and m5 are answered. The answers, taken by the session under the owner's standing
+rule of 26 September 2026:
+
+- **m1, the brief's entry B-S8 (the count of open feasibility blockers, with SC-04's application of the fit in the
+  Peli 1450 as a core condition): the move is accepted, not reversed.** The count is a result, which the H2 review
+  names as the coupling that caused a release failure, and restoring the sentence word for word would put it back in
+  the definition. The fit's standing as a core condition stays stated where the brief's definition already sends its
+  reader: CONOPS section 2a's kept attribute paragraph (NEED-06, SC-04's reading), which the brief's scope section
+  cites, and FEA-007 in the requirements registry, which the brief's head names for every feasibility blocker on the
+  core. The sentence stands word for word as entry B-S8 below.
+- **m5, the map not resolvable in the committed tree: answered** by filing it, above.
+- **m2, m3, m4 and m6: carried** to each document's next issue; none changes a definition statement. m2: the brief no
+  longer describes the hardware EMCON lamp, which `PANEL.md` sections 1 and 4 define and CONOPS section 4b.1 keeps in
+  the operator's use. m3: CONOPS appendix entries A12 (its last sentence, why section 4a's PS-EMCON figure is lower
+  than `feasibility/POWER-THERMAL.md`'s 53.1 W) and A14 (the three documents that follow section 4c) state current
+  cross-document states in the unmaintained appendix; the current state is in those documents. m4: the brief's "None
+  of these is a claim." now follows the TBD runtime values rather than the model figures of entry B-S7; it still
+  claims nothing. m6: answered for this page in "The rule", above.
 
 ## Where the current state lives
 
