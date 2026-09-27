@@ -1788,7 +1788,7 @@ parts:
         matches_fitted: "yes: packaging information p.26 lists TLV75801PDBVR, SOT-23 (DBV) 5, and TLV75801PDRVR, WSON (DRV) 6, both Active, -40 to 125 C"
 
   - id: panel-schmitt-buffers
-    function: "board C's EMCON buffer U9 (TX_INHIBIT_n to EMCON_HW) and ZEROIZE buffer U12 (ZEROIZE_SW to ZEROIZE_HW)"
+    function: "board C's EMCON buffer U9 (TX_INHIBIT_n to EMCON_HW) and ZEROIZE buffer U12 (ZEROIZE_SW to ZEROIZE_HW); since board C's round 8 also U13, the panel controller's one-way copy of EMCON_HW (EMCON.md L1)"
     boards: [C]
     on_main: true
     adopted_in: "faf8c981 (round 4, board C; D-03 for U12)"
@@ -1811,7 +1811,7 @@ parts:
         matches_fitted: "yes: ordering information lists 74LVC1G17W5-7, SOT25, 3,000 per reel"
 
   - id: epd-boost-fet
-    function: "the e-paper boost switch Q6 on board C"
+    function: "the e-paper boost switch Q6 on board C; since board C's round 8 also Q7, the hardware EMCON lamp's sink (SD-EMC-6), chosen because its sheet states RDS(on) at VGS 2.5 V; EMCON.md L7's rule asks for RDS(on) stated at 2.5 V or less over -40 to +85 C, and U14's VOH bounds the gate drive only at 2.4 V (its 16 mA row) and every Si2300DS limit is stated at 25 C, so the rule is met by inference that bench E-02 must confirm (the round's second check, integration of 27 September 2026)"
     boards: [C]
     on_main: true
     adopted_in: "faf8c981 (round 4, board C)"
@@ -1831,6 +1831,31 @@ parts:
         sha256: "cffcc3972eeb825d822def9e5d649e76ae74f94de08dab8021ff194b9175f231"
         currency: "byte-identical to vishay.com on 2026-09-26"
         matches_fitted: "yes: the ordering line names Si2300DS-T1-GE3 (lead (Pb)-free and halogen-free), p.1"
+
+  - id: panel-emcon-lamp-gate
+    function: "board C's hardware EMCON lamp gate U14 (round 8 of MESHSAT-1357, SD-EMC-6): a configurable gate wired as a 2-input NOR on TX_INHIBIT_n and EMCON_HW, driving the lamp sink Q7; it has no processor in its path"
+    boards: [C]
+    on_main: false
+    adopted_in: "board C round 8 (fnd/r8c on fc144600), pending merge"
+    schematic_name: {text: "SN74LVC1G57DBVR configurable gate wired as a 2-input NOR", where: "v2/ecad/tools/gen_sch_c.py:261 (U14)"}
+    where_rev: "fnd/r8c, uncommitted on fc144600 when written; the integrator's merge commit"
+    fitted_mpn: "SN74LVC1G57DBVR"
+    package: "SOT-23-6 (DBV): 1 In1, 2 GND, 3 In0, 4 Y, 5 VCC, 6 In2"
+    lcsc: "C485080"
+    lcsc_reading: {model: "SN74LVC1G57DBVR", pkg: "SOT-23-6", stock: 1832, read: "2026-09-26", source: "JLCPCB API (selectSmtComponentList), extended library"}
+    identity: MATCH
+    grade_vs_envelope: INSIDE
+    grade_note: "TA -40 to +125 C for the SOT package (SCES414P 6.3, page 4)"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/ti-sn74lvc1g57.pdf"
+        doc_id: "Texas Instruments SCES414P"
+        revision: "SCES414P, November 2002, revised November 2016"
+        url: "https://www.ti.com/lit/ds/symlink/sn74lvc1g57.pdf"
+        fetched: "2026-09-26T21:10Z, HTTP 200 application/pdf"
+        sha256: "078364de617898af0dd4cee99931ab1d36b622824a06e8f9b7fa95087644af24"
+        currency: "byte-identical to ti.com on 2026-09-26"
+        matches_fitted: "yes: the device information table names SN74LVC1G57DBV, SOT-23 (6) (page 1); the function table (Table 1, page 8) with In1 low gives Y = NOR(In0, In2), the configuration of Figure 7; Schmitt inputs (8.3.1), Ioff +-10 uA at VCC 0 and II +-1 uA (6.5, page 5)"
 
   - id: epd-rectifiers
     function: "the three Schottky rectifiers of the e-paper boost on board C (D19, D20, D21), polarity corrected in round 4 (S-09, A03, F-IN-01)"

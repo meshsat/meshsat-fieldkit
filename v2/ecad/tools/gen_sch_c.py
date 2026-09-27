@@ -7,7 +7,9 @@ role by an RP2040 panel controller (32.52: a USB device of B16's slot-1 hub, POR
 heartbeats, slot enables, HDMI input select and the power-control lines to B16 over the 2x13 ribbon J_PANEL; the two PCA9555 stay as the LED sinks
 and mode inputs on the same bus). The hardware lines stay hardware: the EMCON toggle drives TX_INHIBIT_n directly and EMCON_HW through a
 Schmitt-trigger buffer (U9), the ZEROIZE toggle drives the local sense ZEROIZE_SW that the controller reads and U12 buffers onto ZEROIZE_HW (26 September
-2026, D-03), the TX lamp follows TR_APRS. The e-paper is the bare Pervasive Displays E2370KS0C1 on a 24-way ZIF with the
+2026, D-03), the TX lamp follows TR_APRS. Since round 8 of MESHSAT-1357 (26 September 2026) the controller reads EMCON_HW only through a
+one-way buffer (U13, EMCON.md L1), and a hardware EMCON lamp (D22, lit through U14 and Q7 while both EMCON lines read low, no processor in
+its path, SD-EMC-6) sits beside the EMCON toggle. The e-paper is the bare Pervasive Displays E2370KS0C1 on a 24-way ZIF with the
 maker's boost circuit (rev 02 note: MOSFET, 10 uH, three SS2040FL, 0.47 ohm, 1 uF/25 V caps and one 4.7 uF/25 V pump cap) behind a P-FET power switch. New on the face: the Xenarc
 monitor (no electronics here; its cables go to B16 and A22), two U-174/U headset jacks wired to D8, a VEML7700 ambient light sensor under a light guide,
 and a USB camera module behind a sealed window (its lead to B16's J_CAM). Eight standoff screws bond the board to the plate."""
@@ -39,9 +41,10 @@ _intent.rail("+3V3", 3.3, 0.12, 0.20, "U5", budget=0.03, share=0.0075, always_on
              always_on_why="U5 is a TLV75533 whose EN pin is tied to its own input, so this rail follows the 5 V that arrives on the ribbon and has no switch of its own",
              source_ic="U5 is a TLV75533 LDO in SOT-23-5: pin 5 IS its output power pin",
              loads={"U1": 0.040, "U2": 0.010, "U3": 0.010, "U4": 0.015, "U6": 0.005, "U7": 0.005,
-                    "U8": 0.005, "U10": 0.005, "U11": 0.005, "U9": 0.002, "U12": 0.002, "U_LIGHT": 0.020, "Q5": 0.001},   # U12: the ZEROIZE buffer (D-03, 26 September 2026)
+                    "U8": 0.005, "U10": 0.005, "U11": 0.005, "U9": 0.002, "U12": 0.002, "U_LIGHT": 0.020, "Q5": 0.001,   # U12: the ZEROIZE buffer (D-03, 26 September 2026)
+                    "U13": 0.002, "U14": 0.002},   # round 8: the controller's one-way EMCON copy and the EMCON lamp's gate, at the 2 mA allowance U9 and U12 carry (ICC 10 uA max each, DS35124 p.4, SCES414P p.5)
              note="the panel's logic 3.3 V from the LDO U5: the RP2040 controller, its QSPI flash, the two "
-                  "expanders, the buffers, the light sensor and the e-paper's supply switch. Budget 3 percent, "
+                  "expanders, the buffers, the EMCON lamp's gate, the light sensor and the e-paper's supply switch. Budget 3 percent, "
                   "because every load is a logic part with a wide supply range")
 SYMDIR = "/usr/share/kicad/symbols/"
 
@@ -106,7 +109,7 @@ esd("U6", "USB_PNL_P", "USB_PNL_N", "+3V3"); esd("U7", "SDA", "SCL", "+3V3"); es
 for i in range(1, 6): part("#FLG%02d" % i, "power", "PWR_FLAG", "PWR_FLAG", "", {"1": ["+5V", "+3V3", "GND", "LED_RAIL_SW", "LED_RAIL"][i - 1]})
 # --- the RP2040 panel controller (rp2040/rpi-rp2040-datasheet.pdf; the minimal design of the hardware design guide: 12 MHz crystal with 15 pF loads and a 1k on XOUT, W25Q16 QSPI flash,
 #     27 ohm USB series, RUN pull-up, BOOTSEL by a solder jumper on QSPI_SS). GPIO: 0 SDA 1 SCL (the kit I2C bus, this board its master), 2 EPD SCL, 3 EPD SDA, 4 EPD DC, 5 EPD CS, 6 EPD RST,
-#     7 EPD BUSY, 8 LED rail PWM, 9 sounder PWM, 10 to 12 heartbeats HB1..3 (in), 13 to 15 SLOT_EN1..3, 16 and 17 HDMI_SEL1/2, 18 PI_SHDN_REQ, 19 PI_KILL, 20 SHORE_INHIBIT, 21 EMCON_HW (read),
+#     7 EPD BUSY, 8 LED rail PWM, 9 sounder PWM, 10 to 12 heartbeats HB1..3 (in), 13 to 15 SLOT_EN1..3, 16 and 17 HDMI_SEL1/2, 18 PI_SHDN_REQ, 19 PI_KILL, 20 SHORE_INHIBIT, 21 EMCON_RD_R (EMCON_HW read one way through U13 and R46, round 8),
 #     22 ZEROIZE_SW (read, the toggle's local sense), 23 TR_APRS (read), 24 EXP_INT (read), 25 status LED, 26 LED rail sense (ADC0), 27 TEST_SW, 28 SOS_SW, 29 EPD_PWR_n (the boost's power switch)
 # ZEROIZE AT BOOT, WHAT THE HARDWARE GIVES THE FIRMWARE (26 September 2026, owner ruling D-03.3: level-sensitive, read before any slot powers).
 #   The pin: GPIO22 (pin 34) on ZEROIZE_SW. RP2040 datasheet (build 3184e62) PADS_BANK0 resets IE=1, OD=0, PDE=1, PUE=0, SCHMITT=1, and section
@@ -124,7 +127,7 @@ for i in range(1, 6): part("#FLG%02d" % i, "power", "PWR_FLAG", "PWR_FLAG", "", 
 synth("U3", "RP2040", "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)", "QFN56", {
  1: "+3V3", 10: "+3V3", 22: "+3V3", 33: "+3V3", 42: "+3V3", 49: "+3V3", 43: "+3V3", 44: "+3V3", 48: "+3V3", 23: "C_DVDD", 50: "C_DVDD", 45: "C_DVDD", 57: "GND", 19: "GND",
  2: "SDA", 3: "SCL", 4: "EPD_SCL", 5: "EPD_SDA", 6: "EPD_DC", 7: "EPD_CS", 8: "EPD_RST", 9: "EPD_BUSY", 11: "PANEL_PWM", 12: "PWM1", 13: "HB1", 14: "HB2", 15: "HB3", 16: "SLOT_EN1", 17: "SLOT_EN2", 18: "SLOT_EN3",
- 20: "XIN", 21: "XOUT_R", 24: "SWCLK", 25: "SWDIO", 26: "C_RUN", 27: "HDMI_SEL1", 28: "HDMI_SEL2", 29: "PI_SHDN_REQ", 30: "PI_KILL", 31: "SHORE_INHIBIT", 32: "EMCON_HW", 34: "ZEROIZE_SW", 35: "TR_APRS", 36: "EXP_INT",
+ 20: "XIN", 21: "XOUT_R", 24: "SWCLK", 25: "SWDIO", 26: "C_RUN", 27: "HDMI_SEL1", 28: "HDMI_SEL2", 29: "PI_SHDN_REQ", 30: "PI_KILL", 31: "SHORE_INHIBIT", 32: "EMCON_RD_R", 34: "ZEROIZE_SW", 35: "TR_APRS", 36: "EXP_INT",
  37: "LED_STAT", 38: "RAIL_SENSE", 39: "TEST_SW", 40: "SOS_SW", 41: "EPD_PWR_n", 46: "USB_DM_R", 47: "USB_DP_R", 51: "QSPI_D3", 52: "QSPI_SCLK", 53: "QSPI_D0", 54: "QSPI_D2", 55: "QSPI_D1", 56: "QSPI_SS"}, "C2040")
 ic("U4", 9, "W25Q16JVUXIQ 16 Mbit QSPI flash (USON-8: 1 CS 2 DO/IO1 3 WP/IO2 4 GND 5 DI/IO0 6 CLK 7 HOLD/IO3 8 VCC, pad)", "USON8", {"1": "QSPI_SS", "2": "QSPI_D1", "3": "QSPI_D2", "4": "GND", "5": "QSPI_D0", "6": "QSPI_SCLK", "7": "QSPI_D3", "8": "+3V3", "9": "GND"}, "C2843335")
 part("Y1", "Device", "Crystal_GND24", "12 MHz ABM8-272-T3 (3225): 1 XIN, 3 XOUT, 2 and 4 GND", "XTAL", {"1": "XIN", "2": "GND", "3": "XOUT", "4": "GND"}, "C20625731")
@@ -132,7 +135,21 @@ c("C5", "15p NP0", "XIN", "GND", "C0402"); c("C6", "15p NP0", "XOUT", "GND", "C0
 r("R2", "27R", "USB_DP_R", "USB_PNL_P"); r("R3", "27R", "USB_DM_R", "USB_PNL_N"); r("R4", "10k", "C_RUN", "+3V3"); r("R5", "1k (BOOTSEL)", "QSPI_SS", "BOOT_J")
 part("JP1", "Jumper", "SolderJumper_2_Open", "BOOTSEL: short while powering to enter the USB bootloader", "JP2", {"1": "BOOT_J", "2": "GND"})
 for k in range(7, 14): c("C%d" % k, "100n", "+3V3", "GND")
-c("C14", "1u", "C_DVDD", "GND"); c("C15", "1u", "C_DVDD", "GND"); c("C16", "1u", "+3V3", "GND")
+# EVERY RP2040 SUPPLY PIN HAS ITS OWN CAPACITOR (MESHSAT-1357 round 8, DECOUPLING.md 8.3 items G9 and G13; decision 42). The maker, RP2040
+# Datasheet (v2/vendor/rp2040/rpi-rp2040-datasheet.pdf, build-version 3184e62-clean) section 2.9: "IOVDD should be decoupled with a 100nF
+# capacitor close to each of the chip's IOVDD pins" (2.9.1), "DVDD should be decoupled with a 100nF capacitor close to each of the chip's
+# DVDD pins" (2.9.2), "A 1uF capacitor should be connected between VREG_VIN and ground" (2.9.3), "USB_VDD should be decoupled with a 100nF
+# capacitor close to the chip's USB_VDD pin" (2.9.4), all printed page 151, and "ADC_AVDD should be decoupled with a 100nF capacitor close
+# to the chip's ADC_AVDD pin" (2.9.5, printed page 152); section 2.10.1 (printed page 156): "The regulator must have 1uF capacitors placed
+# close to its input (VREG_VIN) and output (VREG_VOUT) pins". Until round 8 ADC_AVDD (pin 43) and USB_VDD (pin 48) shared the IOVDD
+# capacitors (round 4 open item O-C1, G9), and the regulator's output net carried two 1 uF declared at the DVDD pins 23 and 50 (G13).
+# Now: C42 and C43, 100 nF at pins 43 and 48; C14 stays the 1 uF, declared at VREG_VOUT (pin 45); C15 becomes 100 nF at DVDD pin 50 and
+# C44 is added, 100 nF at DVDD pin 23, so C_DVDD holds 1 uF + 2 x 100 nF. ADC_AVDD stays on +3V3 with no series filter: the maker's
+# single-supply scheme powers it "directly from the 3.3V supply" (2.9.7.1, printed page 152) and asks only the 100 nF, and the one ADC
+# input on this board (RAIL_SENSE, GPIO26) reads whether the LED rail is present, not a precision level. The filter the note at the foot
+# of this file used to offer is not fitted (taken by the session under the owner's standing rule of 26 September 2026).
+c("C14", "1u", "C_DVDD", "GND"); c("C15", "100n", "C_DVDD", "GND"); c("C16", "1u", "+3V3", "GND")
+c("C42", "100n", "+3V3", "GND", "C", "C14663"); c("C43", "100n", "+3V3", "GND", "C", "C14663"); c("C44", "100n", "C_DVDD", "GND", "C", "C14663")
 tp("TP1", "SWCLK"); tp("TP2", "SWDIO"); tp("TP3", "C_RUN"); r("R6", "1k", "LED_STAT", "LED_STAT_A"); part("D18", "Device", "LED", "status (GPIO25)", "LED", {"2": "LED_STAT_A", "1": "GND"})
 r("R7", "2.2k", "SDA", "+3V3"); r("R8", "2.2k", "SCL", "+3V3")   # the kit bus pull-ups live with the master
 # --- I2C expanders on the kit bus: U1 0x22 (A1 high), U2 0x23 (A1 + A0 high). Port 0 = LED sinks (open-drain by configuration), port 1 = mode inputs and spares
@@ -165,6 +182,24 @@ r("R14", "10k", "TX_INHIBIT_n", "+3V3", "R", "C25804"); c("C24", "10n", "TX_INHI
 # the 2.54 V this line rests at). Diodes 74LVC1G17W5-7, LCSC C151394.
 ic("U9", 5, "74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3)", "SOT235", {"1": "NC", "2": "TX_INHIBIT_n", "3": "GND", "4": "EMCON_HW", "5": "+3V3"}, "C151394")
 c("C25", "100n", "+3V3", "GND")
+# NO FIRMWARE PIN SITS ON EMCON_HW (MESHSAT-1357 round 8, EMCON.md section 3 item L1; the second checkpoint review of 26 September 2026,
+# finding C). Until round 8 the controller's GPIO21 (U3 pin 32) was a node of EMCON_HW itself. The RP2040 resets that pad as an input with
+# its pull-down and no function selected (datasheet 2.19.6.1 Table 285, FUNCSEL reset 0x1f "NULL"; 2.19.6.3 Table 341, IE 1, PDE 1), so it
+# is benign in reset; a running image that sets it as an output would fight U9 while EMCON is asserted, and with this board unpowered its
+# pad passes a current no held sheet bounds, which left the line's fail-safe hold UNDECIDED on every board that reads it (R4T-D40). Now
+# the pin reads a one-way copy: U13 takes EMCON_HW on its input only and drives the local net EMCON_RD, and R46 (1 k) joins that net to the
+# pin. A CMOS buffer's output cannot drive its own input, so nothing the firmware does reaches the line. U13 is the part U9 and U12 already
+# are (Diodes 74LVC1G17W5-7, DS35124 Rev. 8-2, v2/vendor/diodes/diodes-74lvc1g17.pdf: SOT25 pins 1 NC, 2 A, 3 GND, 4 Y, 5 VCC, page 1;
+# II +-5 uA at VCC 0 to 5.5 V and IOFF +-10 uA at VCC 0, page 4). EMCON.md's hand-off named a 74LVC1G34; the 74LVC1G17 is taken instead
+# because it is the same function on the same land with a Schmitt input, so no input-slew bound applies to it (DS36108 states 10 ns/V for
+# the 1G34), it states IOFF as the 1G34 does, and it is a reel this board already carries (taken by the session under the owner's
+# standing rule of 26 September 2026). R46 bounds a contention with a pad the firmware has set as an output to about 3.4 mA, inside the
+# pad's 4 mA reset drive setting (2.19.6.3 Table 341, DRIVE reset 0x1 = 4MA) and far inside U13's 24 mA; read through it, U13's high
+# (VCC - 0.1 V at 100 uA, DS35124 page 4) against the pad's 50 to 80 k pull-down (Table 625 RPD) is at least VCC - 0.17 V, 3.13 V at
+# a 3.3 V rail, over VIH 2.0 V (the 64 uA the 50 k draws at 3.2 V drops 0.064 V across R46).
+# What the line sees from this board is now three parts that state IOFF: U9's output, U13's input and U14's input below.
+ic("U13", 5, "74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): the panel controller's one-way copy of EMCON_HW (EMCON_RD, to GPIO21 through R46)", "SOT235", {"1": "NC", "2": "EMCON_HW", "3": "GND", "4": "EMCON_RD", "5": "+3V3"}, "C151394")
+c("C40", "100n", "+3V3", "GND", "C", "C14663"); r("R46", "1k", "EMCON_RD", "EMCON_RD_R", "R", "C21190")
 # ZEROIZE IS SENSED ON THIS BOARD ONLY, AND EXPORTED THROUGH A BUFFER (26 September 2026, owner rulings D-03.2 and D-03.3, MESHSAT-1357
 # round 4). As generated at 82dd1e4d the toggle, R10, C20 and GPIO22 sat on ZEROIZE_HW itself, which leaves this board on J_PANEL pin 10,
 # crosses board B to J_AB1 pin 20, board A (a second 10k pull-up R117 to A's +3V3) and the mezzanine to board D, and is read by nothing
@@ -197,6 +232,38 @@ for ref, name, colour, val in LEDS:
 r("R%d" % rn, "300R", "LED_RAIL", "TX_A", "R", "C23025"); rn += 1; led3("D3", "TX red (RF hazard)", "TX_A", "TX_K")
 nfet("Q3", "Q3_G", "GND", "TX_K"); r("R%d" % rn, "1k", "TR_APRS", "Q3_G", "R", "C21190"); rn += 1; r("R%d" % rn, "100k", "Q3_G", "GND", "R", "C25803"); rn += 1
 part("D17", "Device", "D_Schottky", "BAT54 lamp-test tie", "SOD123", {"2": "TX_K", "1": "TX_LAMPTEST"}, "C7502705")
+# THE HARDWARE EMCON LAMP (MESHSAT-1357 round 8; EMCON.md section 5, SD-EMC-6, the condition on which the one element every transmitter's
+# inhibit shares, the SW_EMCON toggle and the TX_INHIBIT_n conductor, is accepted; requirement CON-021, open item S-44). Until round 8 no
+# indication of the EMCON lines was independent of firmware: the TX lamp's anode is LED_RAIL, which exists only while the controller
+# drives PANEL_PWM, and the e-paper's EMCON page needs the controller and the display-owning bridge. D22 lights only while BOTH lines read
+# LOW here, so it also exposes U9's output stuck high (every row on EMCON_HW released while board D's KEY gate stays inhibited) and a
+# toggle at EMCON whose contact leaves TX_INHIBIT_n high. The gate is one TI SN74LVC1G57 (SCES414P, November 2016; filed for v2/vendor
+# from drafts/c/datasheets): pins 1 In1, 2 GND, 3 In0, 4 Y, 5 VCC, 6 In2 (DBV, page 3); Table 1 (page 8) gives Y = H for In2 L, In1 L,
+# In0 L and Y = L in the other three rows with In1 L, so In1 on GND makes Y = NOR(In0, In2), the configuration of its Figure 7. Its inputs
+# are Schmitt triggers ("allows for noisy or slow inputs", 8.3.1, page 8), which TX_INHIBIT_n needs: it rises through R14 and C24 with a
+# 77 us time constant, the reason U9 is a 74LVC1G17. VT+ is 1.5 to 1.87 V at VCC 3 V and 2.16 to 2.74 V at 4.5 V, VT- 0.84 to 1.19 V at
+# 3 V (6.5, page 5); the sheet has no 3.3 V row, and interpolating linearly, as R14's note does for U9, puts VT+ at about 2.04 V at
+# most, against the 2.54 V TX_INHIBIT_n rests at and U9's rail-to-rail EMCON_HW. II +-1 uA, Ioff +-10 uA at VCC 0 ("Ioff supports partial-
+# power-down mode", page 1; 6.5, page 5), so what it adds to each line with this board unpowered is a bounded current for R4T-D37's sums.
+# Its output drives Q7 through R48 (100R, as Q2 and Q4 are driven), and R49 (10k) holds the gate low while U14 is unpowered: 10 uA of Ioff
+# into 10k is 0.10 V against the FET's VGS(th) minimum of 0.6 V. Q7 is the Vishay Si2300DS-T1-GE3 already fitted as Q6 (document 65701,
+# S10-0111-Rev. A, v2/vendor/vishay/vishay-si2300ds.pdf, page 2, TJ 25 C): RDS(on) 85 mOhm max at VGS 2.5 V and 2.6 A, VGS(th) 0.6 to 1.5 V,
+# IGSS +-100 nA. Lit, U14 sources the 0.32 mA R49 draws; the row that bounds VOH at that load is the 16 mA one, at least 2.4 V at VCC 3 V
+# (6.5, page 5; the VCC - 0.1 V row is for 100 uA). That is 0.9 V over Q7's maximum threshold and 0.1 V under the 2.5 V its on-resistance
+# is stated at, for a 6.4 mA lamp against the 2.6 A that figure is stated at: the channel is not the lamp's limit, an inference from
+# stated figures and recorded as one (bench E-02 lights the lamp). The 2N7002 on this board states RDS(on) only at 5 V and 10 V, which is
+# why it is not used here (L7). The lamp is fed from LED_RAIL_SW through R47 (470R, the MAIN ring's
+# value), ahead of Q1, so it lights with the controller dead, in reset or unflashed, and is dark in BLACKOUT (the LIGHTING toggle's pole
+# 1 is open), as every emissive indicator is. About (5.0 - 2.0) / 470 = 6.4 mA with an amber lamp's 2 V; its level against the NVG mode
+# is the PANEL.md writer's to set (EMCON.md section 8), and only R47 moves. Amber, because NVG mode shows "red and amber indicators only"
+# (PANEL.md section 8) and red is the TX lamp's RF-hazard colour beside it (taken by the session under the owner's standing rule of 26
+# September 2026). It needs one light-guide hole beside SW_EMCON in the face plate, which is the plate owner's (panel1450.py).
+ic("U14", 6, "SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 1 In1 on GND, 2 GND, 3 In0 TX_INHIBIT_n, 4 Y, 5 VCC, 6 In2 EMCON_HW): the EMCON lamp's gate, high only while both EMCON lines read low", "SOT236",
+   {"1": "GND", "2": "GND", "3": "TX_INHIBIT_n", "4": "EMCLAMP_Y", "5": "+3V3", "6": "EMCON_HW"}, "C485080")
+c("C41", "100n", "+3V3", "GND", "C", "C14663")
+r("R48", "100R", "EMCLAMP_Y", "EMCLAMP_G", "R", "C22775"); r("R49", "10k", "EMCLAMP_G", "GND", "R", "C25804")
+part("Q7", "Transistor_FET", "2N7002", "Si2300DS-T1-GE3 N-FET (Vishay, SOT-23, G S D like the 2N7002 symbol; RDS(on) 85 mOhm max at VGS 2.5 V, VGS(th) 0.6 to 1.5 V): the EMCON lamp's sink", "SOT23", {"1": "EMCLAMP_G", "2": "GND", "3": "EMCLAMP_K"}, "C72271")
+r("R47", "470R", "LED_RAIL_SW", "EMCLAMP_A", "R", "C23179"); led3("D22", "EMCON amber (hardware, no processor)", "EMCLAMP_A", "EMCLAMP_K")
 # --- switches (bench parts on flying leads; footprints = panel hole + lead pads)
 part("SW_MAIN", "Connector_Generic", "Conn_01x04", "MAIN PWR 19 mm momentary, green ring (to A22 J_MAINSW); C&K ATP19-SL1-603-B0SA-03G; silicone gasket washer under the bezel", "SW19", {"1": "MAINSW_A", "2": "MAINSW_B", "3": "MAINRING_A", "4": "GND"})
 r("R%d" % rn, "470R", "LED_RAIL_SW", "MAINRING_A", "R", "C23179"); rn += 1
@@ -318,9 +385,9 @@ byref = {p["ref"]: p for p in P}
 
 def refs_matching(pred): return [p["ref"] for p in P if pred(p["ref"])]
 SECTIONS = [("RIBBON FROM B16, 5 V, 3.3 V LDO, USB AND BUS ESD, FLAGS", ["J_PANEL", "C1", "C2", "U5", "C3", "C4", "U6", "U7", "U8", "#FLG01", "#FLG02", "#FLG03", "#FLG04", "#FLG05"]),
-            ("RP2040 PANEL CONTROLLER, FLASH, CRYSTAL, BOOTSEL, BUS PULL-UPS", ["U3", "U4", "Y1", "C5", "C6", "R1", "R2", "R3", "R4", "R5", "JP1"] + ["C%d" % k for k in range(7, 17)] + ["TP1", "TP2", "TP3", "R6", "D18", "R7", "R8"]),
-            ("EXPANDERS 0x22 / 0x23, MODE INPUTS, EMCON AND ZEROIZE BUFFERS, STRAPS", ["U1", "U2", "C17", "C18"] + ["R%d" % k for k in range(9, 17)] + ["C%d" % k for k in range(19, 26)] + ["U9", "U12", "C39", "JP2"]),   # U9 is a buffer since 9 Sep 2026, "INVERTER" was stale; U12 and C39 added 26 Sep 2026
-            ("LED RAIL, INDICATORS, TX LAMP, SWITCHES AND LEADS", ["SW_LIGHT", "Q1", "R17", "R18", "Q2", "R19", "R20", "TP4", "TP5"] + [p["ref"] for p in P if p["ref"].startswith("D") and p["ref"][1:].isdigit() and int(p["ref"][1:]) <= 17] + ["R%d" % k for k in range(21, 43)] + ["Q3", "SW_MAIN", "SW_PI", "SW_TEST", "SW_SOS", "SW_EMCON", "SW_ZERO", "FB1", "FB2", "C26", "U10", "J_MAINSW", "FB3", "FB4", "C27", "U11", "J_PIJ2"]),
+            ("RP2040 PANEL CONTROLLER, FLASH, CRYSTAL, BOOTSEL, BUS PULL-UPS", ["U3", "U4", "Y1", "C5", "C6", "R1", "R2", "R3", "R4", "R5", "JP1"] + ["C%d" % k for k in range(7, 17)] + ["C42", "C43", "C44"] + ["TP1", "TP2", "TP3", "R6", "D18", "R7", "R8"]),
+            ("EXPANDERS 0x22 / 0x23, MODE INPUTS, EMCON AND ZEROIZE BUFFERS, STRAPS", ["U1", "U2", "C17", "C18"] + ["R%d" % k for k in range(9, 17)] + ["C%d" % k for k in range(19, 26)] + ["U9", "U12", "C39", "U13", "C40", "R46", "JP2"]),   # U9 is a buffer since 9 Sep 2026, "INVERTER" was stale; U12 and C39 added 26 Sep 2026; U13, C40 and R46 in round 8
+            ("LED RAIL, INDICATORS, TX LAMP, SWITCHES AND LEADS", ["SW_LIGHT", "Q1", "R17", "R18", "Q2", "R19", "R20", "TP4", "TP5"] + [p["ref"] for p in P if p["ref"].startswith("D") and p["ref"][1:].isdigit() and int(p["ref"][1:]) <= 17] + ["R%d" % k for k in range(21, 43)] + ["Q3", "U14", "C41", "R48", "R49", "Q7", "R47", "D22", "SW_MAIN", "SW_PI", "SW_TEST", "SW_SOS", "SW_EMCON", "SW_ZERO", "FB1", "FB2", "C26", "U10", "J_MAINSW", "FB3", "FB4", "C27", "U11", "J_PIJ2"]),
             ("E-PAPER ZIF AND THE PDi BOOST, SOUNDER, LIGHT SENSOR, CAMERA MOUNT", ["J_EPD", "Q5", "C28", "C29", "L1", "Q6", "D19", "C30", "C31", "D20", "D21", "C32", "C33", "C34", "C35", "C36", "C37", "BZ1", "Q4", "U_LIGHT", "C38", "CAM_H1", "CAM_H2", "J_HSJ1", "J_HSJ2"])]
 placed_refs = {r_ for _, rs in SECTIONS for r_ in rs}
 SECTIONS.append(("STANDOFF SCREWS (GND BOND), TEST POINTS, THE REST", [p["ref"] for p in P if p["ref"] not in placed_refs]))
@@ -344,16 +411,54 @@ def layout(page_h):
     missing = [p["ref"] for p in P if p["ref"] not in placed]
     if missing: raise SystemExit("unplaced parts: %s" % missing)
     return x + COLW
-for _i, _pin in enumerate((1, 10, 22, 33, 42, 49)): _intent.bypass("C%d" % (7 + _i), "U3", _pin, "+3V3")   # the RP2040's six IOVDD pins
-_intent.bypass("C13", "U4", "8", "+3V3")        # the QSPI flash's VCC
-_intent.bypass("C14", "U3", "23", "C_DVDD"); _intent.bypass("C15", "U3", "50", "C_DVDD")   # the two DVDD pins off the internal regulator
-_intent.bypass("C16", "U3", "44", "+3V3")       # VREG_VIN
-_intent.bypass("C3", "U5", "1", "+5V"); _intent.bypass("C4", "U5", "5", "+3V3")            # the LDO's input and output capacitors
-_intent.bypass("C17", "U1", "24", "+3V3"); _intent.bypass("C18", "U2", "24", "+3V3")       # the two expanders
-_intent.bypass("C25", "U9", "5", "+3V3")        # the EMCON buffer
-_intent.bypass("C39", "U12", "5", "+3V3")       # the ZEROIZE buffer (26 September 2026)
-_intent.bypass("C38", "U_LIGHT", "2", "+3V3")   # the light sensor
-_intent.bypass("C29", "J_EPD", "15", "EPD_VCC"); _intent.bypass("C28", "J_EPD", "16", "EPD_VCC")
+# EVERY DECLARATION CARRIES ITS CLASS AND ITS MAKER'S CLAUSE (MESHSAT-1357 round 8, DECOUPLING.md 8.3 item G14; decision 42, ruled by the
+# session under the owner's standing rule of 26 September 2026). A capacitor's class is its ROLE as its maker describes it, never its value
+# string: D, a capacitor a maker ties to a supply pin; L, a regulator's output capacitor, with the maker's value floor and ESR bound; B2, bulk
+# no maker places (DECOUPLING.md section 6). Where the maker states no capacitor, the generator's own count stands and the basis says so
+# (rule D1). `intent.bypass` takes no class yet (T5 of DECOUPLING.md 8.1 is the integrator's tools item), so the class and the basis are
+# written onto the entry here and the intent file carries them; this board refuses its own entry without one, as T5 will.
+_RP_DS = "RP2040 Datasheet, v2/vendor/rp2040/rpi-rp2040-datasheet.pdf, build-version 3184e62-clean"
+_RP_HD = "Hardware design with RP2040, v2/vendor/rp2040/rpi-rp2040-hardware-design.pdf, build date 20/08/2026"
+_D1 = "states no supply capacitor in its text; the generator's own 100 nF stands (DECOUPLING.md rule D1)"
+def byp(cap, part_ref, pin, net, cls, basis, floor=None, esr=None):
+    _intent.bypass(cap, part_ref, pin, net)
+    _e = _intent._I["bypass"][-1]; _e["class"] = cls; _e["basis"] = basis
+    if cls == "L": _e["floor"] = floor; _e["esr"] = esr
+for _i, _pin in enumerate((1, 10, 22, 33, 42, 49)):   # the RP2040's six IOVDD pins
+    byp("C%d" % (7 + _i), "U3", _pin, "+3V3", "D", _RP_DS + ", 2.9.1 (printed page 151): 'IOVDD should be decoupled with a 100nF capacitor close to each of the chip's IOVDD pins'")
+byp("C13", "U4", "8", "+3V3", "D", "Winbond W25Q16JV, v2/vendor/winbond/winbond-w25q16jv-serial-flash.pdf, Revision H, " + _D1)   # the QSPI flash's VCC
+byp("C14", "U3", "45", "C_DVDD", "L", _RP_DS + ", 2.10.1 (printed page 156): 'The regulator must have 1uF capacitors placed close to its input (VREG_VIN) and output (VREG_VOUT) pins'; " + _RP_HD + ", 2.1.3 (printed page 8)",
+    floor="1u", esr="no number: the design guide 2.1.3 says physically small ceramic chip capacitors 'will almost certainly' meet the regulator's ESR restriction")   # VREG_VOUT (G13)
+byp("C15", "U3", "50", "C_DVDD", "D", _RP_DS + ", 2.9.2 (printed page 151): 'DVDD should be decoupled with a 100nF capacitor close to each of the chip's DVDD pins'")
+byp("C16", "U3", "44", "+3V3", "D", _RP_DS + ", 2.9.3 (printed page 151): 'A 1uF capacitor should be connected between VREG_VIN and ground close to the chip's VREG_VIN pin'; 2.10.1 (printed page 156)")
+byp("C3", "U5", "1", "+5V", "D", "TI TLV755P, SBVS320D, v2/vendor/power/ti-tlv755p-ldo.pdf, Table 4-1 (page 3): IN, 'A capacitor with a value of 1uF or larger is required from this pin to ground'; 7.1.1 (page 15)")
+byp("C4", "U5", "5", "+3V3", "L", "TI TLV755P, SBVS320D, Table 4-1 (page 3): OUT, 'A capacitor with a value of 1uF or larger is required'; 7.1.1 (page 15): 'requires an output capacitance of 0.47uF or larger for stability'",
+    floor="1u nominal, 0.47u effective (Table 4-1 note 1)", esr="no number: 7.1.1 names X5R and X7R ceramics")
+# The two expanders (round 8 pass 2): the maker does speak of VCC capacitors, in 11.1, and draws one in Figure 11-1; it gives no value.
+_PCA = ("TI PCA9555, SCPS131J, v2/vendor/ti/ti-pca9555.pdf, 11.1 (printed page 29): 'By-pass and de-coupling capacitors are commonly used to "
+        "control the voltage on the VCC pin, using a larger capacitor to provide additional power in the event of a short power supply glitch "
+        "and a smaller capacitor to filter out high-frequency ripple. These capacitors must be placed as close to the PCA9555 as possible. "
+        "These best practices are shown in the Section 11.2'; Figure 11-1 (printed page 29), that section's example layout, draws one "
+        "'0603 Cap' on VCC and no second capacitor, and the sheet gives no value for either (Figure 9-1, printed page 24, draws none). "
+        "One 100 nF per expander stands, its value by DECOUPLING.md rule D1 and its count by Figure 11-1: the session's choice under the "
+        "owner's standing rule of 26 September 2026, over adding a larger part the maker neither sizes nor draws. Section 10 bounds the "
+        "supply glitch the device rides through without naming a capacitor (Table 10-1, printed page 27: VCC_GH 1.2 V at VCC_GW 1 us), "
+        "so the choice is reopened if the prototype's +3V3 is measured outside that bound")
+byp("C17", "U1", "24", "+3V3", "D", _PCA)   # the two expanders
+byp("C18", "U2", "24", "+3V3", "D", _PCA)
+byp("C25", "U9", "5", "+3V3", "D", "Diodes 74LVC1G17, DS35124 Rev. 8-2, v2/vendor/diodes/diodes-74lvc1g17.pdf, " + _D1)    # the EMCON buffer
+byp("C39", "U12", "5", "+3V3", "D", "Diodes 74LVC1G17, DS35124 Rev. 8-2, v2/vendor/diodes/diodes-74lvc1g17.pdf, " + _D1)   # the ZEROIZE buffer (26 September 2026)
+byp("C38", "U_LIGHT", "2", "+3V3", "D", "Vishay VEML7700, document 84286 Rev. 1.8, v2/vendor/vishay/veml7700-datasheet.pdf, Application Circuit (page 6): C2 100 nF at VDD (C1 and R3 optional)")   # the light sensor
+byp("C29", "J_EPD", "15", "EPD_VCC", "D", "Pervasive Displays EPD driving circuit note Rev. 02, v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf, page 4: the 0.1 uF beside C1 on the switched supply that feeds VDDIO and VDD (DECOUPLING.md section 6, B2)")
+byp("C28", "J_EPD", "16", "EPD_VCC", "B2", "Pervasive Displays EPD driving circuit note Rev. 02, pages 3 and 4: C1, 4.7 uF / 6.3 V for group G2, with no placement or distance given (DECOUPLING.md sections 6 and 6a)")
+# round 8: the two RP2040 pins that had none (G9), the second DVDD pin (G13), and the two new logic parts' supplies
+byp("C42", "U3", "43", "+3V3", "D", _RP_DS + ", 2.9.5 (printed page 152): 'ADC_AVDD should be decoupled with a 100nF capacitor close to the chip's ADC_AVDD pin'")
+byp("C43", "U3", "48", "+3V3", "D", _RP_DS + ", 2.9.4 (printed page 151): 'USB_VDD should be decoupled with a 100nF capacitor close to the chip's USB_VDD pin'")
+byp("C44", "U3", "23", "C_DVDD", "D", _RP_DS + ", 2.9.2 (printed page 151): 'DVDD should be decoupled with a 100nF capacitor close to each of the chip's DVDD pins'")
+byp("C40", "U13", "5", "+3V3", "D", "Diodes 74LVC1G17, DS35124 Rev. 8-2, v2/vendor/diodes/diodes-74lvc1g17.pdf, " + _D1)   # the controller's one-way EMCON copy
+byp("C41", "U14", "5", "+3V3", "D", "TI SN74LVC1G57, SCES414P, section 10 (page 12): 'For devices with a single supply, a 0.1-uF bypass capacitor is recommended', 'installed as close to the power terminal as possible'")   # the EMCON lamp's gate
+_unclassed = [e["cap"] for e in _intent._I["bypass"] if not e.get("class") or not e.get("basis")]
+if _unclassed: raise SystemExit("gen_sch_c: decoupling entries without a class and a maker's basis: %s" % _unclassed)
 import schlayout, time as _time
 PAPER, NPAGES, NCOLS, NROWS = schlayout.run(P, SECTIONS, POWER, _intent._I["bypass"], {"date": _time.strftime("%Y-%m-%d")}, os.environ.get("PHASE", ""), 'PCB-C CONTROL PANEL BACKER')   # 15 Sep 2026: one A3 page per block, real wiring (32.196)
 out = kisch.out
@@ -374,9 +479,9 @@ print("nets:", len(nets), "single-pin nets (should be empty or intentional):", s
 # pad-to-pin distance instead of counting parts. Only supply pins: the crystal loads, the RC debounce networks, the e-paper charge pump's
 # reservoirs (C30 to C37) and the LED rail bulk are not decoupling and are not listed. `intent.write` refuses an entry whose capacitor is
 # not on that pin's net, so a wrong line here stops the generator.
-# OPEN, needs a part and therefore a regeneration, not fixed here: the RP2040's ADC_AVDD (pin 43) and USB_VDD (pin 48) share the seven
-# 100 nF above with the six IOVDD pins and the flash, so two supply pins have no capacitor of their own; RAIL_SENSE is an ADC input, so
-# pin 43 wants its own 100 nF behind a ferrite or a 10 ohm. Carried with the decoupling placement decision for the next C phase.
+# CLOSED in round 8 of MESHSAT-1357 (26 September 2026): ADC_AVDD (pin 43) and USB_VDD (pin 48) have their own 100 nF, C42 and C43 (G9),
+# and the regulator's output carries 1 uF at VREG_VOUT plus 100 nF at each DVDD pin (G13); see the note at the RP2040's capacitors. The
+# ferrite or 10 ohm this note once proposed for pin 43 is not fitted, for the reason given there.
 # The panel board's only differential pair is the RP2040's own USB device port, and the RP2040's controller is USB 1.1 FULL SPEED (12 Mbps).
 # The 90 ohm differential target of the shared USB class belongs to USB 2.0 high speed; requiring it here is a wrong requirement, not a strict
 # one, so this board declares the class with no impedance target and `impedance_check.py` skips it (8 Sep 2026 23:05, appendix 32.76). The
