@@ -1,0 +1,22 @@
+MESHSAT-1357, layer 7 closer (fnd/hc7), 27 Sep 2026 about 06:04 CEST (04:04Z): board C's gate re-taken on the C1 to C6 geometry.
+A scratch reading for the integrator's consolidated re-take, NOT recorded evidence: it was written to a scratch VERDICT_DIR on the rented
+CAD box (vast.ai 52646493, KiCad 9.0.9, Python 3.12.3), in a copy of the tree under /root/hc7/, never in v2/ecad/*/out/.
+
+Board:      v2/ecad/pcb-c-display-c8/pcb-c-display.kicad_pcb (C24), sha256 2a273803757c68fb99f5b22bfdf32f6ab863f4340c37e229d140afb5e93bd7f9
+Gate:       v2/ecad/tools/check_pcb_c.py, sha16 b02c4f5d5e2ae006 (unchanged by this branch); rule MEC-001, fingerprint b6c4a6962ac81e88
+
+Run 1 (hc7):      panel1450.py sha256 db656c86359ffbded009d7d3dc6671fb87541caf07c18c3f6bef0806dafc2b57 (C1 to C6, FACE_TOP_Z 106.52, B_TOP_Z 50.6)
+                  with v2/cad/zstack.json 5207237cd1221013 (B16_TALL read from board B21: 59 envelopes)
+                  -> check_pcb_c.hc7.verdict.json: PASS, 48 of 48 (intent items reported 151, not counted); output check_pcb_c.hc7.txt
+Run 2 (e3aedb25): panel1450.py at e3aedb25 (FACE_TOP_Z 101.4, B_TOP_Z 49.5, the typed 17-entry B16_TALL of 9 Sep 2026)
+                  -> check_pcb_c.e3aedb25.verdict.json: PASS, 48 of 48; its printed output is byte-identical to run 1's
+
+The seventeen FAIL lines in the output are the intent screens (return path, return via, a bypass entry: RET-002/RET-003/decoupling
+questions board C's status page already carries), printed by the same tool and not counted in MEC-001's 48. They are the same in both runs.
+
+What the geometry change moved (panel1450.clearance_report() and the tall-under-strips list, computed on the runner from the two files):
+  face gate, deep face part over B16's tall parts: pairs judged 19 -> 55; minimum clearance 2.2 -> 6.3 mm (the Xenarc body over the
+  CM5 heatsinks; the rule is 2.0); next the Xenarc over the JST VH headers J_5V_S1/S3 at 10.8; the PA flange over the CM5 fans 9.0 -> 13.0
+  backer strips over B16's tall parts: minimum 12.8 (RockBLOCK) -> 16.32 mm (J_ETH, 15.5 by its model) against the 3.0 rule
+Reading: MEC-001 on board C holds on the chosen arrangement. The margins of the face against Peli's allowances are CASE-MARGINS.md's
+(M1 OPEN on its TBD contributors), not this gate's: the gate judges nominal geometry.

@@ -1,0 +1,2 @@
+verdict: check_pcb_c            INCONCLUSIVE of 0 | the gate raised before it decided: ZstackMissing (panel1450.ZstackMissing: /root/hc7/g/v2/cad/zstack.json cannot be read (FileNotFoundError): B16_TALL is the committed board B's reading and nothing stands in for it; run python3 v2/cad/zstack.py --jso)
+check_pcb_c: CRASHED before deciding: panel1450.ZstackMissing: /root/hc7/g/v2/cad/zstack.json cannot be read (FileNotFoundError): B16_TALL is the committed board B's reading and nothing stands in for it; run python3 v2/cad/zstack.py --jso

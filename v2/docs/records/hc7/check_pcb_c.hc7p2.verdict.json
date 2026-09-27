@@ -1,0 +1,78 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "check_pcb_c.py",
+  "files": {
+   "boardorder.py": "298e46edcc028954",
+   "boardtable.py": "41bd92e61f12c374",
+   "check_pcb_c.py": "d200b99c384fb763",
+   "copper_checks.py": "590a0b7904c3ea48",
+   "hardset.py": "be29a44c4a592876",
+   "intent.py": "f1ac033e0f3c10f1",
+   "intent_checks.py": "1ad7af0c718ba940",
+   "kicad_compat.py": "6b8f77490466e939",
+   "netclass.py": "4cc1adf0ddae0390",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "panel1450.py": "3bdb88df98260244",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "return_via.py": "b61d138e54955dd4",
+   "rules_lib.py": "c0458c53923d7925",
+   "signal_class.py": "60b8647301428da4",
+   "signalnets.py": "688be12d8e42e7a4",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "9c62fa3e1b69f352",
+  "unresolved": []
+ },
+ "counts": {
+  "fail": 0,
+  "footprints": 194,
+  "intent_items_reported": 156,
+  "pass": 48
+ },
+ "denominator": 48,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-c-display.kicad_pcb",
+   "sha256_16": "2a273803757c68fb"
+  },
+  "zstack": {
+   "board_b": "v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_pcb",
+   "board_b_sha256_16": "2e64b5bf2d9cd3bc",
+   "path": "../cad/zstack.json",
+   "sha256_16": "b4fb79d90d2f3ee1"
+  }
+ },
+ "missing_input": null,
+ "note": "",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "MEC-001": "b6c4a6962ac81e88"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "MEC-001"
+ ],
+ "runtime": {
+  "kicad": "9.0.9-9.0.9~ubuntu24.04.1",
+  "python": "3.12.3"
+ },
+ "tool": "check_pcb_c",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "d4712b4344ea303a"
+ },
+ "ts": "2026-09-27T04:54:44Z",
+ "verdict": "PASS",
+ "version": "unknown",
+ "writer": {
+  "file": "check_pcb_c.py",
+  "sha16": "d200b99c384fb763"
+ }
+}

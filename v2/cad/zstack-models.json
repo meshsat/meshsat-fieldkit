@@ -1,0 +1,1244 @@
+{
+ "library": "kicad-packages3D",
+ "models": {
+  "Battery.3dshapes/BatteryHolder_Keystone_3034_1x20mm.step": {
+   "bytes": 213965,
+   "max": [
+    11.62,
+    7.7618,
+    4.0
+   ],
+   "min": [
+    -11.62,
+    -8.6518,
+    -0.0
+   ],
+   "sha256": "93bea30816b66fbb8227eb1c8431b5c56d093d424705c522eeed8c51b0738a94"
+  },
+  "Capacitor_SMD.3dshapes/CP_Elec_6.3x7.7.step": {
+   "bytes": 81917,
+   "max": [
+    3.9,
+    3.3,
+    7.7
+   ],
+   "min": [
+    -3.9,
+    -3.3,
+    0.0
+   ],
+   "sha256": "c2a2efc3a0562b25c21f2b732dd2d6f0c3ff67148e12d40edff0e8fbdf71989b"
+  },
+  "Capacitor_SMD.3dshapes/CP_Elec_8x6.7.step": {
+   "bytes": 82475,
+   "max": [
+    4.75,
+    4.15,
+    6.7
+   ],
+   "min": [
+    -4.75,
+    -4.15,
+    0.0
+   ],
+   "sha256": "1a2107eecea604a67d3dd827bcb1d9eb72e5ef7b62497aa31940fef7e19ecbe7"
+  },
+  "Capacitor_SMD.3dshapes/C_0402_1005Metric.step": {
+   "bytes": 43502,
+   "max": [
+    0.5,
+    0.25,
+    0.5
+   ],
+   "min": [
+    -0.5,
+    -0.25,
+    0.0
+   ],
+   "sha256": "03e44c4b2b727b8d4b6b1fd598cbd12dd5e614f1dfeefa96a92a07e3a3b312a2"
+  },
+  "Capacitor_SMD.3dshapes/C_0603_1608Metric.step": {
+   "bytes": 43450,
+   "max": [
+    0.8,
+    0.4,
+    0.8
+   ],
+   "min": [
+    -0.8,
+    -0.4,
+    0.0
+   ],
+   "sha256": "4857b3dc717675bf1fb22edda622ac3b3ae03cf44d81eefaf3fa3ba3a86d84c1"
+  },
+  "Capacitor_SMD.3dshapes/C_0805_2012Metric.step": {
+   "bytes": 43618,
+   "max": [
+    1.0,
+    0.625,
+    1.25
+   ],
+   "min": [
+    -1.0,
+    -0.625,
+    0.0
+   ],
+   "sha256": "9a669c1a2f1ea25b88b401acef6efeaa80a067bd7da9db6993de719a7fbe155c"
+  },
+  "Capacitor_SMD.3dshapes/C_1206_3216Metric.step": {
+   "bytes": 43450,
+   "max": [
+    1.6,
+    0.8,
+    1.6
+   ],
+   "min": [
+    -1.6,
+    -0.8,
+    0.0
+   ],
+   "sha256": "11e948c72c90e2b6322436b72745f40ff4e8ba0da64fb2a0df943dfa61e89c1a"
+  },
+  "Capacitor_SMD.3dshapes/C_1210_3225Metric.step": {
+   "bytes": 43502,
+   "max": [
+    1.6,
+    1.25,
+    2.5
+   ],
+   "min": [
+    -1.6,
+    -1.25,
+    0.0
+   ],
+   "sha256": "f8510481c5044113cf49b0fa6dd54ddab9224508bd6808e1afab8ef0cefdefc9"
+  },
+  "Capacitor_SMD.3dshapes/C_1812_4532Metric.step": {
+   "bytes": 43526,
+   "max": [
+    2.25,
+    1.6,
+    2.5
+   ],
+   "min": [
+    -2.25,
+    -1.6,
+    0.0
+   ],
+   "sha256": "be9e130425233dd580e42f23cf98ed84335b8e1671ef374a8d185999ab4c2d93"
+  },
+  "Connector_AMASS.3dshapes/AMASS_XT60-M_1x02_P7.2mm_Vertical.step": {
+   "bytes": 182078,
+   "max": [
+    11.55,
+    4.05,
+    16.0
+   ],
+   "min": [
+    -4.35,
+    -4.05,
+    -4.5
+   ],
+   "sha256": "79c46051de822e2939ebbdbe2d708897adffa66bdc61a011b7f559c4a8565679"
+  },
+  "Connector_Card.3dshapes/nanoSIM_GCT_SIM8060-6-0-14-00.step": {
+   "error": "not in the library at tag 9.0.9: <HTTPError 404: 'Not Found'>"
+  },
+  "Connector_Coaxial.3dshapes/SMA_Amphenol_132134-11_Vertical.step": {
+   "bytes": 231048,
+   "max": [
+    3.175,
+    3.175,
+    9.55
+   ],
+   "min": [
+    -3.175,
+    -3.175,
+    -2.8
+   ],
+   "sha256": "5d9ce5328a956133001e2e8de8a7ba9fcd91d977a5810c3af78605c0a81c0d9e"
+  },
+  "Connector_Coaxial.3dshapes/SMA_Amphenol_132134_Vertical.step": {
+   "bytes": 231048,
+   "max": [
+    3.175,
+    3.175,
+    9.55
+   ],
+   "min": [
+    -3.175,
+    -3.175,
+    -2.8
+   ],
+   "note": "the footprint names a model file the library does not carry at this tag; the same package body's model stands in",
+   "sha256": "5d9ce5328a956133001e2e8de8a7ba9fcd91d977a5810c3af78605c0a81c0d9e",
+   "substitute": "Connector_Coaxial.3dshapes/SMA_Amphenol_132134-11_Vertical.step"
+  },
+  "Connector_Coaxial.3dshapes/U.FL_Hirose_U.FL-R-SMT-1_Vertical.step": {
+   "bytes": 70713,
+   "max": [
+    1.55,
+    1.5,
+    1.25
+   ],
+   "min": [
+    -1.55,
+    -1.5,
+    0.0
+   ],
+   "sha256": "bb861ac13b1fa3709690e81d82a64544b02d4420ea410f7334fc7a4b57f8e71a"
+  },
+  "Connector_IDC.3dshapes/IDC-Header_2x05_P2.54mm_Vertical_NarrowPad.step": {
+   "bytes": 320579,
+   "max": [
+    5.945,
+    5.1,
+    9.1
+   ],
+   "min": [
+    -3.155,
+    -15.26,
+    -3.0
+   ],
+   "note": "the footprint names a model file the library does not carry at this tag; the same package body's model stands in",
+   "sha256": "4ac293d6a2a02e11fb656cd94214ca3eee4fdb4219ec44112b35866a7c7bb127",
+   "substitute": "Connector_IDC.3dshapes/IDC-Header_2x05_P2.54mm_Vertical.step"
+  },
+  "Connector_IDC.3dshapes/IDC-Header_2x08_P2.54mm_Vertical_NarrowPad.step": {
+   "bytes": 474937,
+   "max": [
+    5.945,
+    5.1,
+    9.1
+   ],
+   "min": [
+    -3.155,
+    -22.88,
+    -3.0
+   ],
+   "note": "the footprint names a model file the library does not carry at this tag; the same package body's model stands in",
+   "sha256": "b5cb8ba55564999d7db361023fe8e370448ccb21865df04947edc053d5dded9e",
+   "substitute": "Connector_IDC.3dshapes/IDC-Header_2x08_P2.54mm_Vertical.step"
+  },
+  "Connector_IDC.3dshapes/IDC-Header_2x13_P2.54mm_Vertical_NarrowPad.step": {
+   "bytes": 740575,
+   "max": [
+    5.945,
+    5.1,
+    9.1
+   ],
+   "min": [
+    -3.155,
+    -35.58,
+    -3.0
+   ],
+   "note": "the footprint names a model file the library does not carry at this tag; the same package body's model stands in",
+   "sha256": "e0db5c273f8e46abd8457c6aaf0ec2f2742360931e43a3693ecad9d1a72c7564",
+   "substitute": "Connector_IDC.3dshapes/IDC-Header_2x13_P2.54mm_Vertical.step"
+  },
+  "Connector_IDC.3dshapes/IDC-Header_2x13_P2.54mm_Vertical_SMD.step": {
+   "bytes": 782033,
+   "max": [
+    5.8,
+    20.32,
+    9.64
+   ],
+   "min": [
+    -5.8,
+    -20.32,
+    -0.0
+   ],
+   "sha256": "93648cfe917042449de6ab1cbe98f4d9f8ccd126eacd6ba97bc25a425208e77e"
+  },
+  "Connector_JST.3dshapes/JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical.step": {
+   "bytes": 151559,
+   "max": [
+    3.95,
+    1.75,
+    6.0
+   ],
+   "min": [
+    -1.95,
+    -2.8,
+    -3.4
+   ],
+   "sha256": "cab512a9b16c7568ed6e0047c17de04c4dd11893cdee71cb33fb51768543f927"
+  },
+  "Connector_JST.3dshapes/JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical.step": {
+   "bytes": 236448,
+   "max": [
+    7.95,
+    1.75,
+    6.0
+   ],
+   "min": [
+    -1.95,
+    -2.8,
+    -3.4
+   ],
+   "sha256": "0703774983dd0bf32b5175315a63ebb9c9439b35cb491768770aaa13ded27934"
+  },
+  "Connector_JST.3dshapes/JST_PH_B5B-PH-K_1x05_P2.00mm_Vertical.step": {
+   "bytes": 278661,
+   "max": [
+    9.95,
+    1.75,
+    6.0
+   ],
+   "min": [
+    -1.95,
+    -2.8,
+    -3.4
+   ],
+   "sha256": "24345d6c358cf3289b1aa2ce6df88d05df811a003aca35a75b154259bf6d4fa4"
+  },
+  "Connector_JST.3dshapes/JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical.step": {
+   "bytes": 73615,
+   "max": [
+    3.0,
+    1.8,
+    4.32
+   ],
+   "min": [
+    -3.0,
+    -1.8,
+    0.0
+   ],
+   "sha256": "8980de73cbad53eb5e794fa02d776853bd9e12958c401f80c4b4c723ec196b98"
+  },
+  "Connector_JST.3dshapes/JST_VH_B2P-VH_1x02_P3.96mm_Vertical.step": {
+   "error": "not in the library at tag 9.0.9: <HTTPError 404: 'Not Found'>"
+  },
+  "Connector_JST.3dshapes/JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical.step": {
+   "bytes": 144517,
+   "max": [
+    4.95,
+    2.35,
+    7.0
+   ],
+   "min": [
+    -2.45,
+    -3.4,
+    -3.4
+   ],
+   "sha256": "7287616fdad677e9b54cf5494f17efc4b3fb77be002659d73e215772393f20c6"
+  },
+  "Connector_JST.3dshapes/JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical.step": {
+   "bytes": 222777,
+   "max": [
+    9.95,
+    2.35,
+    7.0
+   ],
+   "min": [
+    -2.45,
+    -3.4,
+    -3.4
+   ],
+   "sha256": "7eb17ded8ec4a3216753a234254e22a2d8e07826f0816045bfb803a19cac75ea"
+  },
+  "Connector_JST.3dshapes/JST_XH_B5B-XH-A_1x05_P2.50mm_Vertical.step": {
+   "bytes": 259033,
+   "max": [
+    12.45,
+    2.35,
+    7.0
+   ],
+   "min": [
+    -2.45,
+    -3.4,
+    -3.4
+   ],
+   "sha256": "8af7ded5ecaefc019081b2092b15a5a7a5b727e110fed3328bc806903f5d1a63"
+  },
+  "Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x02_P2.54mm_Vertical.step": {
+   "bytes": 75616,
+   "max": [
+    1.27,
+    1.27,
+    8.54
+   ],
+   "min": [
+    -1.27,
+    -3.81,
+    -3.0
+   ],
+   "sha256": "ea4d0799007ebdd3945072bf255d673d2fe87eb05fda85fd8d7993ad9397da41"
+  },
+  "Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x03_P2.54mm_Vertical.step": {
+   "bytes": 110633,
+   "max": [
+    1.27,
+    1.27,
+    8.54
+   ],
+   "min": [
+    -1.27,
+    -6.35,
+    -3.0
+   ],
+   "sha256": "b91b4ac5acf1a0d28a676703db972d17b8f11ef26a85b58d60786a69246b921b"
+  },
+  "Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x04_P2.54mm_Vertical.step": {
+   "bytes": 145684,
+   "max": [
+    1.27,
+    1.27,
+    8.54
+   ],
+   "min": [
+    -1.27,
+    -8.89,
+    -3.0
+   ],
+   "sha256": "a74079b8d06bda78847623b39ee1855ffd1d9a8c1e896b349e4f1dc2056d44d9"
+  },
+  "Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x05_P2.54mm_Vertical.step": {
+   "bytes": 180757,
+   "max": [
+    1.27,
+    1.27,
+    8.54
+   ],
+   "min": [
+    -1.27,
+    -11.43,
+    -3.0
+   ],
+   "sha256": "f03b716e453f6d4f2a111a227c671d96f92708e72a5a663cd4889296d021f4c3"
+  },
+  "Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x06_P2.54mm_Vertical.step": {
+   "bytes": 215953,
+   "max": [
+    1.27,
+    1.27,
+    8.54
+   ],
+   "min": [
+    -1.27,
+    -13.97,
+    -3.0
+   ],
+   "sha256": "d6113af109a14a67c50dcefd1cfc7b43b59b59afa85d808b2319e2452da91318"
+  },
+  "Connector_PinHeader_2.54mm.3dshapes/PinHeader_2x05_P2.54mm_Vertical.step": {
+   "bytes": 305690,
+   "max": [
+    3.81,
+    1.27,
+    8.54
+   ],
+   "min": [
+    -1.27,
+    -11.43,
+    -3.0
+   ],
+   "sha256": "cd99322b0ccc253157acbe9c5c672ce9b37dbcd4d59fb001240a93110052cdce"
+  },
+  "Connector_RJ.3dshapes/RJ45_Amphenol_RJHSE5380.step": {
+   "bytes": 267884,
+   "max": [
+    11.805,
+    8.3,
+    15.4977
+   ],
+   "min": [
+    -4.705,
+    -7.75,
+    -3.18
+   ],
+   "note": "the footprint names a model file the library does not carry at this tag; the same package body's model stands in",
+   "sha256": "b807a51b5cc87d84177694b44f15ae2a461e51ef2685dc6f74e9e15ee1cd356a",
+   "substitute": "Connector_RJ.3dshapes/RJ45_Amphenol_RJHSE538X.step"
+  },
+  "Connector_USB.3dshapes/USB3_A_Receptacle_Wuerth_692122030100.step": {
+   "error": "not in the library at tag 9.0.9: <HTTPError 404: 'Not Found'>"
+  },
+  "Connector_USB.3dshapes/USB_C_Receptacle_HRO_TYPE-C-31-M-12.step": {
+   "error": "not in the library at tag 9.0.9: <HTTPError 404: 'Not Found'>"
+  },
+  "Connector_Video.3dshapes/HDMI_A_Molex_208658-1001_Horizontal.step": {
+   "bytes": 712356,
+   "max": [
+    8.0,
+    7.5,
+    6.19
+   ],
+   "min": [
+    -4.15,
+    -7.5,
+    -2.2
+   ],
+   "sha256": "89afa59df748c438f18ce50636f818cf9e5efc61f80c172aa16b3c99f0f09225"
+  },
+  "Connector_Wire.3dshapes/SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm.step": {
+   "error": "not in the library at tag 9.0.9: <HTTPError 404: 'Not Found'>"
+  },
+  "Crystal.3dshapes/Crystal_SMD_3225-4Pin_3.2x2.5mm.step": {
+   "bytes": 44789,
+   "max": [
+    1.6011,
+    1.2495,
+    0.64
+   ],
+   "min": [
+    -1.5993,
+    -1.2513,
+    0.0
+   ],
+   "sha256": "d2a89df82ee5f0f56ef23ee59c8161b8d4e92af2b21959d72778316dde3f9f22"
+  },
+  "Diode_SMD.3dshapes/D_SMB.step": {
+   "bytes": 70508,
+   "max": [
+    2.65,
+    1.775,
+    2.15
+   ],
+   "min": [
+    -2.65,
+    -1.775,
+    -0.0
+   ],
+   "sha256": "029466277d91e9f5492556be93e46611049e07115c7913880c547afa96058ed4"
+  },
+  "Diode_SMD.3dshapes/D_SMC.step": {
+   "bytes": 70688,
+   "max": [
+    4.0,
+    2.95,
+    2.31
+   ],
+   "min": [
+    -4.0,
+    -2.95,
+    -0.0
+   ],
+   "sha256": "30dab4c2e22239b7e3694a4d45304e04255c6b70a79d28e9c34c6072ba647991"
+  },
+  "Diode_SMD.3dshapes/D_SOD-123.step": {
+   "bytes": 52836,
+   "max": [
+    1.9,
+    0.8,
+    1.26
+   ],
+   "min": [
+    -1.9,
+    -0.8,
+    -0.0
+   ],
+   "sha256": "b3dc4065573abc72e3d5b4cca0e908f72a24205a41b6284b1f75ccacbe99adf8"
+  },
+  "Diode_SMD.3dshapes/D_SOD-123F.step": {
+   "bytes": 42604,
+   "max": [
+    1.75,
+    0.8,
+    1.1
+   ],
+   "min": [
+    -1.75,
+    -0.8,
+    -0.0
+   ],
+   "sha256": "132323445e3d1f9231e81c083cd88a33cd204dd8b96063bb2ed1f3ab4470c7e7"
+  },
+  "Fuse.3dshapes/Fuse_1812_4532Metric.step": {
+   "error": "not in the library at tag 9.0.9: <HTTPError 404: 'Not Found'>"
+  },
+  "Fuse.3dshapes/Fuseholder_Blade_Mini_Keystone_3568.step": {
+   "bytes": 247684,
+   "max": [
+    12.96,
+    1.67,
+    7.37
+   ],
+   "min": [
+    -3.04,
+    -5.06,
+    -2.79
+   ],
+   "sha256": "66c17becb36ef719e1405e13451a402856396164745f07c43c94a6823390a019"
+  },
+  "Inductor_SMD.3dshapes/L_0402_1005Metric.step": {
+   "bytes": 43502,
+   "max": [
+    0.5,
+    0.25,
+    0.5
+   ],
+   "min": [
+    -0.5,
+    -0.25,
+    0.0
+   ],
+   "sha256": "8bf2ae2bbd9d8b716db21d8d7fb903fac5ba2696150c3ec2e35bcea17b208ff2"
+  },
+  "Inductor_SMD.3dshapes/L_0603_1608Metric.step": {
+   "bytes": 43450,
+   "max": [
+    0.8,
+    0.4,
+    0.8
+   ],
+   "min": [
+    -0.8,
+    -0.4,
+    0.0
+   ],
+   "sha256": "b0136ad7160588d2f5dac8c85da84a35646db656b5bc54bbb873b6b548eedbb3"
+  },
+  "Inductor_SMD.3dshapes/L_0805_2012Metric.step": {
+   "bytes": 43618,
+   "max": [
+    1.0,
+    0.625,
+    1.25
+   ],
+   "min": [
+    -1.0,
+    -0.625,
+    0.0
+   ],
+   "sha256": "751a8ae26d20698bfe8303aa2fc7ec986a8b9a7154699b94bf2a13d4ad401425"
+  },
+  "Inductor_SMD.3dshapes/L_APV_ANR4020.step": {
+   "bytes": 42450,
+   "max": [
+    2.01,
+    2.0,
+    2.0
+   ],
+   "min": [
+    -2.01,
+    -2.0,
+    0.0
+   ],
+   "sha256": "e7780ad6fd17db244cbcac01bed06047ad7248bc491ec75ca7e128fbe206c101"
+  },
+  "Inductor_SMD.3dshapes/L_Coilcraft_XAL1010-XXX.step": {
+   "bytes": 32176,
+   "max": [
+    5.25,
+    5.9,
+    10.0
+   ],
+   "min": [
+    -5.25,
+    -5.9,
+    0.0
+   ],
+   "sha256": "c14bbaa2f7fe868a67229ed0e40aebf74febefcb20812b0d83ed2d12f4a622f3"
+  },
+  "Inductor_SMD.3dshapes/L_Coilcraft_XAL1510-103.step": {
+   "bytes": 31992,
+   "max": [
+    7.7,
+    8.2,
+    10.0
+   ],
+   "min": [
+    -7.7,
+    -8.2,
+    0.0
+   ],
+   "sha256": "47c1f2dc855941c7f097defa6301ea5f9a76b2db7fd9a0e1bdab523ec9a040ae"
+  },
+  "Inductor_SMD.3dshapes/L_Coilcraft_XAL4020-XXX.step": {
+   "bytes": 32254,
+   "max": [
+    2.15,
+    2.15,
+    2.1
+   ],
+   "min": [
+    -2.15,
+    -2.15,
+    0.0
+   ],
+   "sha256": "ccccee60d1c700cb295b890024e8da4e4d7507b6b69039c751b6dcc3e91bd3ee"
+  },
+  "Inductor_SMD.3dshapes/L_Coilcraft_XAL4030-XXX.step": {
+   "bytes": 32292,
+   "max": [
+    2.15,
+    2.15,
+    3.1
+   ],
+   "min": [
+    -2.15,
+    -2.15,
+    0.0
+   ],
+   "sha256": "e2a12083ff5c38e2a5f32d4d1a2382f2146318cbfaadf8855746ec608408eaf4"
+  },
+  "Inductor_SMD.3dshapes/L_Coilcraft_XAL6060-XXX.step": {
+   "bytes": 32252,
+   "max": [
+    3.28,
+    3.38,
+    6.1
+   ],
+   "min": [
+    -3.28,
+    -3.38,
+    0.0
+   ],
+   "sha256": "a86f97288f3031497314d182f8d372d82c36129e82a0ad4d76371117e17f3801"
+  },
+  "Inductor_SMD.3dshapes/L_CommonModeChoke_Bourns_SRF1260.step": {
+   "bytes": 17196,
+   "max": [
+    6.25,
+    6.25,
+    6.2
+   ],
+   "min": [
+    -6.25,
+    -6.25,
+    0.0
+   ],
+   "sha256": "f0df0e0435710569a09af04663cb4dced266ab19572124c427135f50e615b20e"
+  },
+  "LED_SMD.3dshapes/LED_0603_1608Metric.step": {
+   "bytes": 77068,
+   "max": [
+    0.8,
+    0.4,
+    1.1
+   ],
+   "min": [
+    -0.8,
+    -0.4,
+    -0.0
+   ],
+   "sha256": "98343205ec260ec165026ba2d44329a23096779ac36c553ea84aa7b370242e6d"
+  },
+  "LED_THT.3dshapes/LED_D3.0mm.step": {
+   "bytes": 24358,
+   "max": [
+    3.17,
+    1.9,
+    8.3
+   ],
+   "min": [
+    -0.23,
+    -1.9,
+    -2.5
+   ],
+   "sha256": "e83c2186ad887c36d869f44e28c7b80646ea10cb388697b4380f5a2777268371"
+  },
+  "Package_DFN_QFN.3dshapes/QFN-16-1EP_3x3mm_P0.5mm_EP1.75x1.75mm.step": {
+   "bytes": 194606,
+   "max": [
+    1.5,
+    1.5,
+    0.785
+   ],
+   "min": [
+    -1.5,
+    -1.5,
+    0.0
+   ],
+   "note": "the footprint names a model file the library does not carry at this tag; the same package body's model stands in",
+   "sha256": "3eb81ffac423a66cdcfead8efe56401da171edaf1f2257049aad7b2d3900f6c8",
+   "substitute": "Package_DFN_QFN.3dshapes/QFN-16-1EP_3x3mm_P0.5mm_EP1.7x1.7mm.step"
+  },
+  "Package_DFN_QFN.3dshapes/QFN-24-1EP_4x4mm_P0.5mm_EP2.5x2.5mm.step": {
+   "bytes": 277628,
+   "max": [
+    2.0,
+    2.0,
+    0.77
+   ],
+   "min": [
+    -2.0,
+    -2.0,
+    0.0
+   ],
+   "note": "the footprint names a model file the library does not carry at this tag; the same package body's model stands in",
+   "sha256": "096fc110543e6d324c5120c2d38e3dca87a389da9b6fac234f1fe40856295ef4",
+   "substitute": "Package_DFN_QFN.3dshapes/QFN-24-1EP_4x4mm_P0.5mm_EP2.6x2.6mm.step"
+  },
+  "Package_DFN_QFN.3dshapes/QFN-28-1EP_5x5mm_P0.5mm_EP3.35x3.35mm.step": {
+   "bytes": 320760,
+   "max": [
+    2.5,
+    2.5,
+    0.92
+   ],
+   "min": [
+    -2.5,
+    -2.5,
+    0.0
+   ],
+   "sha256": "e9d6d740f505b03e5aa0ac826330f9e269344b84656d051f50eb07ac162749eb"
+  },
+  "Package_DFN_QFN.3dshapes/QFN-32-1EP_4x4mm_P0.4mm_EP2.65x2.65mm.step": {
+   "bytes": 360010,
+   "max": [
+    2.0,
+    2.0,
+    0.92
+   ],
+   "min": [
+    -2.0,
+    -2.0,
+    0.0
+   ],
+   "sha256": "036d57f4ca89806899156f4a3f615afd11af3273825e96ddd647df4605d590d1"
+  },
+  "Package_DFN_QFN.3dshapes/QFN-32-1EP_5x5mm_P0.5mm_EP3.1x3.1mm.step": {
+   "bytes": 353829,
+   "max": [
+    2.5,
+    2.5,
+    0.875
+   ],
+   "min": [
+    -2.5,
+    -2.5,
+    0.0
+   ],
+   "note": "the footprint names a model file the library does not carry at this tag; the same package body's model stands in",
+   "sha256": "5fa713ea46b36980895812ed853577889b7cb06d275041a39b99bc0be305dc79",
+   "substitute": "Package_DFN_QFN.3dshapes/QFN-32-1EP_5x5mm_P0.5mm_EP3.3x3.3mm.step"
+  },
+  "Package_DFN_QFN.3dshapes/QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm.step": {
+   "bytes": 310984,
+   "max": [
+    3.5,
+    3.5,
+    0.9
+   ],
+   "min": [
+    -3.5,
+    -3.5,
+    0.0
+   ],
+   "sha256": "010e8039ec6f28fb1c5f5c6d170757af464c82c200ecc655c8150398117e2283"
+  },
+  "Package_DFN_QFN.3dshapes/QFN-64-1EP_9x9mm_P0.5mm_EP4.7x4.7mm.step": {
+   "bytes": 723698,
+   "max": [
+    4.5,
+    4.5,
+    0.95
+   ],
+   "min": [
+    -4.5,
+    -4.5,
+    0.0
+   ],
+   "note": "the footprint names a model file the library does not carry at this tag; the same package body's model stands in",
+   "sha256": "36a0cdf868c1d1a2f6860869fcbb4a57ef0b8ee8212708f0dcc6d10b7970af9d",
+   "substitute": "Package_DFN_QFN.3dshapes/QFN-64-1EP_9x9mm_P0.5mm_EP4.1x4.1mm.step"
+  },
+  "Package_DFN_QFN.3dshapes/WQFN-38-1EP_5x7mm_P0.5mm_EP3.15x5.15mm.step": {
+   "bytes": 427484,
+   "max": [
+    2.5,
+    3.5,
+    0.77
+   ],
+   "min": [
+    -2.5,
+    -3.5,
+    0.0
+   ],
+   "sha256": "4cfad64b0075f5af37150209dfab04f5bd8c7c7d401f7d1b8ec0797e45faae44"
+  },
+  "Package_DFN_QFN.3dshapes/WQFN-42-1EP_3.5x9mm_P0.5mm_EP2.05x7.55mm.step": {
+   "error": "not in the library at tag 9.0.9: <HTTPError 404: 'Not Found'>"
+  },
+  "Package_LGA.3dshapes/Bosch_LGA-14_3x2.5mm_P0.5mm.step": {
+   "bytes": 120772,
+   "max": [
+    1.5,
+    1.25,
+    0.78
+   ],
+   "min": [
+    -1.5,
+    -1.25,
+    0.0
+   ],
+   "sha256": "a441fc384db400c96db6affec2f9c22a5d76b0729e0f2fc46c53746be60b76ca"
+  },
+  "Package_LGA.3dshapes/Bosch_LGA-8_3x3mm_P0.8mm_ClockwisePinNumbering.step": {
+   "bytes": 74172,
+   "max": [
+    1.5,
+    1.5,
+    0.78
+   ],
+   "min": [
+    -1.5,
+    -1.5,
+    0.0
+   ],
+   "sha256": "4f4d9f09cdb4546c9c860b528ebfd7be6e2d351d468ebd9765ccb8653a213b85"
+  },
+  "Package_QFP.3dshapes/LQFP-100_14x14mm_P0.5mm.step": {
+   "bytes": 1335919,
+   "max": [
+    8.0,
+    8.0,
+    1.5
+   ],
+   "min": [
+    -8.0,
+    -8.0,
+    0.0
+   ],
+   "sha256": "51720097260ffba41c3062f85f67623721102fa535901c47cb555a1f444feeb3"
+  },
+  "Package_QFP.3dshapes/LQFP-128_14x14mm_P0.4mm.step": {
+   "bytes": 1699671,
+   "max": [
+    8.0,
+    8.0,
+    1.5
+   ],
+   "min": [
+    -8.0,
+    -8.0,
+    0.0
+   ],
+   "sha256": "7c58a84c7972bfb65ec57c1a8618dfc37e54897d86a32015ddb0c453a7af1827"
+  },
+  "Package_QFP.3dshapes/LQFP-32_7x7mm_P0.8mm.step": {
+   "bytes": 422757,
+   "max": [
+    4.5,
+    4.5,
+    1.5
+   ],
+   "min": [
+    -4.5,
+    -4.5,
+    0.0
+   ],
+   "sha256": "be0e412f1c66fee70039b0e109e0cc7c823161dda97593718afa97569bc61ce3"
+  },
+  "Package_QFP.3dshapes/TQFP-128_14x14mm_P0.4mm.step": {
+   "bytes": 1704752,
+   "max": [
+    8.0,
+    8.0,
+    1.1
+   ],
+   "min": [
+    -8.0,
+    -8.0,
+    -0.0
+   ],
+   "sha256": "3b8d257b30f25cdf1e0f6a8c639d98f6174f71f83f9b50ea0ca10c4bbb58ee28"
+  },
+  "Package_QFP.3dshapes/TQFP-32_7x7mm_P0.8mm.step": {
+   "bytes": 453551,
+   "max": [
+    4.5,
+    4.5,
+    1.1
+   ],
+   "min": [
+    -4.5,
+    -4.5,
+    -0.0
+   ],
+   "sha256": "53431be61c684e9d923915676a90cb08050c23ee3f834d76a77a3b19b41422f1"
+  },
+  "Package_SO.3dshapes/HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP2.85x5.4mm.step": {
+   "bytes": 375471,
+   "max": [
+    3.2,
+    4.85,
+    1.2
+   ],
+   "min": [
+    -3.2,
+    -4.85,
+    -0.0
+   ],
+   "note": "the footprint names a model file the library does not carry at this tag; the same package body's model stands in",
+   "sha256": "b9e231ffd0dc17d13a174b875c5ed26e9f28ef12dd003623bb416f5f955fe0a6",
+   "substitute": "Package_SO.3dshapes/HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP3.4x9.5mm.step"
+  },
+  "Package_SO.3dshapes/PowerPAK_SO-8_Single.step": {
+   "error": "not in the library at tag 9.0.9: <HTTPError 404: 'Not Found'>"
+  },
+  "Package_SO.3dshapes/SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm.step": {
+   "bytes": 128409,
+   "max": [
+    3.0,
+    2.45,
+    1.55
+   ],
+   "min": [
+    -3.0,
+    -2.45,
+    -0.0
+   ],
+   "sha256": "2d6f7e774e8143e3320cbd59eb5be9f3b7864614644e3b072006e1eb05fb7fa6"
+  },
+  "Package_SO.3dshapes/SOIC-8_3.9x4.9mm_P1.27mm.step": {
+   "bytes": 125320,
+   "max": [
+    3.0,
+    2.45,
+    1.75
+   ],
+   "min": [
+    -3.0,
+    -2.45,
+    -0.0
+   ],
+   "sha256": "07f46cff378d30e6c27dfd5a03092c795323f86d91c71fc7e743f4f418dc553a"
+  },
+  "Package_SO.3dshapes/TSSOP-14_4.4x5mm_P0.65mm.step": {
+   "bytes": 198789,
+   "max": [
+    3.2,
+    2.5,
+    1.0
+   ],
+   "min": [
+    -3.2,
+    -2.5,
+    -0.0
+   ],
+   "sha256": "3ee5786aae56190997aa793ba3cfc003fd616782770e29719b4562f012982245"
+  },
+  "Package_SO.3dshapes/TSSOP-24_4.4x7.8mm_P0.65mm.step": {
+   "bytes": 322336,
+   "max": [
+    3.2,
+    3.9,
+    0.97
+   ],
+   "min": [
+    -3.2,
+    -3.9,
+    0.0
+   ],
+   "sha256": "706322f42d9793ebf28d5b80100a68bfa8769998a00b78acadf7af937fc1454f"
+  },
+  "Package_SO.3dshapes/TSSOP-28_4.4x9.7mm_P0.65mm.step": {
+   "bytes": 371523,
+   "max": [
+    3.2,
+    4.85,
+    1.1
+   ],
+   "min": [
+    -3.2,
+    -4.85,
+    -0.0
+   ],
+   "sha256": "0da3bcc5863b5b295ec337129525942b8ff4242bfc7462229dc96d0b183b0508"
+  },
+  "Package_SO.3dshapes/VSSOP-10_3x3mm_P0.5mm.step": {
+   "error": "not in the library at tag 9.0.9: <HTTPError 404: 'Not Found'>"
+  },
+  "Package_SO.3dshapes/VSSOP-8_3x3mm_P0.65mm.step": {
+   "bytes": 125544,
+   "max": [
+    2.45,
+    1.5,
+    1.35
+   ],
+   "min": [
+    -2.45,
+    -1.5,
+    -0.0
+   ],
+   "sha256": "0af17c38f7022ea10ff245f82773c9b00d4163a407490c6b2d91869a0861df56"
+  },
+  "Package_SON.3dshapes/WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm.step": {
+   "bytes": 79956,
+   "max": [
+    1.0,
+    0.99,
+    0.82
+   ],
+   "min": [
+    -1.0,
+    -0.99,
+    0.0
+   ],
+   "sha256": "a159a524ab16d3406353a16f8c20b59f5679eea26e2d41174628288b5b9da702"
+  },
+  "Package_SON.3dshapes/Winbond_USON-8-1EP_3x2mm_P0.5mm_EP0.2x1.6mm.step": {
+   "bytes": 108363,
+   "max": [
+    1.5,
+    0.99,
+    0.55
+   ],
+   "min": [
+    -1.5,
+    -0.99,
+    0.0
+   ],
+   "sha256": "a661d4f73911602c49ec0dbe79117eabfd4084bafc87c10d9a35acb96c4cf253"
+  },
+  "Package_TO_SOT_SMD.3dshapes/SOT-23-5.step": {
+   "bytes": 87532,
+   "max": [
+    1.4,
+    1.45,
+    1.55
+   ],
+   "min": [
+    -1.4,
+    -1.45,
+    0.0
+   ],
+   "sha256": "720a6eab0024069bbee68e7cb4c3ff1149468a34611225cdc852662c5d0ec2b7"
+  },
+  "Package_TO_SOT_SMD.3dshapes/SOT-23-6.step": {
+   "bytes": 99639,
+   "max": [
+    1.4,
+    1.45,
+    1.55
+   ],
+   "min": [
+    -1.4,
+    -1.45,
+    0.0
+   ],
+   "sha256": "c9fe686b4d1b56927a41fa84a9bc1efb61d8a45a123a3db43bcaa05c2891d635"
+  },
+  "Package_TO_SOT_SMD.3dshapes/SOT-23.step": {
+   "bytes": 60296,
+   "max": [
+    1.25,
+    1.5,
+    1.2
+   ],
+   "min": [
+    -1.25,
+    -1.5,
+    0.0
+   ],
+   "sha256": "dd5d1711204e1d8d26cd11490923bd84340820baa69538c385a4300ec2539bc0"
+  },
+  "Package_TO_SOT_SMD.3dshapes/SOT-583-8.step": {
+   "bytes": 54647,
+   "max": [
+    0.8,
+    1.05,
+    0.695
+   ],
+   "min": [
+    -0.8,
+    -1.05,
+    -0.0
+   ],
+   "sha256": "34d40dd5a4b023474c893715ba83608c48ba22a44d91723fb6791db21a0f63bb"
+  },
+  "Package_TO_SOT_SMD.3dshapes/TDSON-8-1.step": {
+   "bytes": 120487,
+   "max": [
+    3.075,
+    2.575,
+    1.03
+   ],
+   "min": [
+    -3.075,
+    -2.575,
+    -0.0
+   ],
+   "sha256": "5a963e380dc0ff0eec7e2ba3f7e348613ee7c8d464841726d7b5dfbac6af3411"
+  },
+  "Package_TO_SOT_SMD.3dshapes/TSOT-23-6.step": {
+   "bytes": 100519,
+   "max": [
+    1.4,
+    1.45,
+    0.95
+   ],
+   "min": [
+    -1.4,
+    -1.45,
+    0.0
+   ],
+   "sha256": "1007b8f67a3e81e2c5182bfd1fd27afe4d8d3710e0bfa1a14b8a91db8b595eb5"
+  },
+  "Package_TO_SOT_SMD.3dshapes/TSOT-23-8.step": {
+   "bytes": 124747,
+   "max": [
+    1.4,
+    1.45,
+    0.95
+   ],
+   "min": [
+    -1.4,
+    -1.45,
+    0.0
+   ],
+   "sha256": "dc644a91883054d8f75e38542e63c2050dc8f2e8b7f12e1c57dcd93245fbd473"
+  },
+  "Relay_SMD.3dshapes/Relay_DPDT_Omron_G6K-2F-Y.step": {
+   "bytes": 195355,
+   "max": [
+    3.9,
+    5.0,
+    5.58
+   ],
+   "min": [
+    -3.9,
+    -5.0,
+    -0.0
+   ],
+   "sha256": "e6013d7b130f050c3e022aa3e86285f360314927bc7c1db3e183f753810d17d4"
+  },
+  "Resistor_SMD.3dshapes/R_0603_1608Metric.step": {
+   "bytes": 40618,
+   "max": [
+    0.8,
+    0.4,
+    0.45
+   ],
+   "min": [
+    -0.8,
+    -0.4,
+    -0.0
+   ],
+   "sha256": "1875571c326d0d9e96f36b4efeb8094068ef7619f0a449c781caf0b49c2e5861"
+  },
+  "Resistor_SMD.3dshapes/R_2010_5025Metric.step": {
+   "bytes": 40345,
+   "max": [
+    2.5,
+    1.25,
+    0.6
+   ],
+   "min": [
+    -2.5,
+    -1.25,
+    0.0
+   ],
+   "sha256": "6f990878f55f2458c0263e55075c72360fd33db78dbf5aa5c5ba731c9bca560b"
+  },
+  "Resistor_SMD.3dshapes/R_2512_6332Metric.step": {
+   "bytes": 40272,
+   "max": [
+    3.15,
+    1.6,
+    0.6
+   ],
+   "min": [
+    -3.15,
+    -1.6,
+    0.0
+   ],
+   "sha256": "76b2052a3c120193de7cdc0af99157b6f375e9a4af7721e3e3d012968c877f27"
+  }
+ },
+ "source": "https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/9.0.9/",
+ "tag": "9.0.9"
+}

@@ -18,6 +18,10 @@ rsync -a --delete "$TOOLS"/ "$D/v2/ecad/tools/" || exit 9
 rsync -a "$SRC"/v2/ecad/meshsat.pretty/ "$D/v2/ecad/meshsat.pretty/" || exit 9
 rsync -a --exclude 'out/' ""$SRC"/v2/ecad/$PROJ/" "$D/v2/ecad/$PROJ/" || exit 9
 for f in fp-lib-table; do [ -f ""$SRC"/v2/ecad/$f" ] && cp ""$SRC"/v2/ecad/$f" "$D/v2/ecad/$f"; done
+# the case geometry's reading of the committed board B (27 September 2026, MESHSAT-1357 layer 7): panel1450.B16_TALL is loaded from
+# v2/cad/zstack.json, and without it board C's gate (check_pcb_c.py) crashes to INCONCLUSIVE by design (panel1450.ZstackMissing), so a
+# chain tree carries it; it is about 0.8 MB, and nothing else under v2/cad/ is read by a chain
+mkdir -p "$D/v2/cad"; [ -f "$SRC/v2/cad/zstack.json" ] && cp "$SRC/v2/cad/zstack.json" "$D/v2/cad/zstack.json"
 # the sibling netlists, sidecars and intent files the contract gate needs (17 September: an isolated tree has
 # one board in it and check_contracts needs six), which are kilobytes, not the boards
 for p in "$SRC"/v2/ecad/pcb-*/; do n=$(basename "$p"); mkdir -p "$D/v2/ecad/$n/out"

@@ -757,9 +757,11 @@ section 4). Of the 70 margins `CASE-MARGINS.md` computes for the session's chose
 OPEN and none NOT MET. MET there is a sensitivity reading (every unstated allowance taken twice), not a bound on a
 tolerance no source states, and two OPEN rows, M17g and M17x, fail with the geometry as currently assumed until the
 jumper plug is picked. Its section 7 names what closes each OPEN row, chiefly lookups of makers' drawings and a targeted
-unpowered mock-up in a new case of the current moulding, now recommended before the outlines and connector placements
-of boards A, B, C, E and P freeze for routing; if it has not run by then, those rows move to the boards' fabrication
-release. Nothing is asked of the owner; buying the case and the mock-up's parts stays his decision.
+unpowered mock-up in a new case of the current moulding. Since 27 September 2026 its checks of the rows that can move
+a board are required before the layout entry of boards A, B, E and P, and that layout entry is BLOCKED on the
+purchase (FEA-007; `CASE-FIT-UNCERTAINTIES.md` sections 1, 2 and 7; `CASE-MARGINS.md` section 7, whose earlier
+fallback to the boards' fabrication release is withdrawn); boards C, D and E5 are not held by it. Nothing is asked of
+the owner; buying the case and the mock-up's parts stays his decision.
 
 ### 7.1 The stack in Z (case frame, floor = 0)
 
@@ -829,7 +831,8 @@ frame is still a Z item no budget carries (W4-F18, minor; TBD in `CASE-MARGINS.m
 | A-to-D bay | A32's J_AB2 header body reaches about Z 25.7 inside board D's outline, 3.1 mm into D's underside | positions VERIFIED, height INFERRED (W4-F17, A09); a board item, outside `CASE-MARGINS.md` |
 
 What only hardware can show is `CASE-MARGINS.md` section 5, checks T1 to T11, run on the new case of the current
-moulding by the assembler, recommended first on the unpowered mock-up; a check that fails stops the build. No row of
+moulding by the assembler: the checks of the rows that can move a board on the unpowered mock-up before the layout
+entry of boards A, B, E and P (FEA-007), the rest first on the mock-up too; a check that fails stops the build. No row of
 that document stands in for any of them. The ban on asking the owner to measure a COTS part holds without exception
 (appendix 32.367).
 

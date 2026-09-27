@@ -74,8 +74,9 @@ If you are taking over the design, in this order:
    per board (layer 9 actions 6 and 8). **Superseded in H1:** the sheets and the stackup record exist
    (`v2/docs/layout-constraints/`, `v2/docs/STACKUP-DECISIONS.md`); the cost half of each stackup decision is owed
    (EQ-14). Run board B's bounded experiment Q-B-ESC-2 before any whole-board route.
-5. Ask the owner for the authorisations on the critical path: the empty-case heat test and the case mock-up (before
-   hot-part placement and outlines freeze), the ZEROIZE bench (before board B's layout entry), R-BAT (before board P's
+5. Ask the owner for the authorisations on the critical path: the empty-case heat test and the case mock-up (the
+   heat test before hot-part placement freezes; the mock-up before the layout entry of boards A, B, E and P, which is BLOCKED on the purchase since 27 September 2026
+   (FEA-007, L-07; `v2/docs/CASE-FIT-UNCERTAINTIES.md` sections 1, 2 and 7), after the heat test in the same case), the ZEROIZE bench (before board B's layout entry), R-BAT (before board P's
    release and the pack build), and the R-PWR and R-HSD decisions (ENGINEERING-QUESTIONS, groups B and C;
    `v2/docs/reviews/READY-TO-ACT.md` section 0).
 6. Enter layout per board only when its computed layout-entry test and the hand checks of section 5.1 are met. Do not
@@ -443,7 +444,7 @@ labelled as such, never as an automated PASS; apply each check at the stage wher
 | Layout-entry blocker count | CURRENT-EVIDENCE at `b9600c4a`: 92 lines | EXECUTION-PLAN checkpoint of 26 September 20:45: 74 (before the re-classing) | none; the generated page is current |
 | Board revisions | declared phases A32, B21, C24, D12, E17, E5, P4 (`boards/*.json`) | `README.md` and `v2/README.md` revision rows (A24, B19, D11, E9); title-block labels A65, D37P, E42P | edit owed; document the label key |
 | Pack-path width at 18 A | decision 35's model: 23.91 mm at 1 oz outer, 11.95 mm at 2 oz | POWER-THERMAL section "10. Findings, the proposed experiment and prepared questions" (16.18 and 8.09 mm from IPC-2221A) | edit owed |
-| Mock-up timing | before board outlines and connector places freeze (CASE-MARGINS section 7, seventh revision; the owner's second review, section 3) | CONOPS section "4a. Power states" and READY-TO-ACT 6.1 ("at the build") | edit owed |
+| Mock-up timing | before the layout entry of boards A, B, E and P, which is BLOCKED on the purchase since 27 September 2026 (FEA-007, L-07; `v2/docs/CASE-FIT-UNCERTAINTIES.md` sections 1, 2 and 7); boards C, D and E5 not held (CASE-MARGINS section 7 since the layer 7 merge; the seventh revision's "before outlines freeze" and its fabrication-release fallback are withdrawn) | none: CONOPS section "4a. Power states", READY-TO-ACT 6.1 and S-8, ARCHITECTURE section 7, the layout-constraint README, OPERATING-ENVELOPE's pack row and REQ-019 carry it since the layer 7 merge | done at the layer 7 merge |
 | E5 test with a vent | no vent anywhere (appendix 32.53, REQ-020) | TEST-PLAN section "2. MIL-STD-810 methods, as applied" (CFL-008) | edit owed |
 | Resolved conflicts that still fail | CFL-006, CFL-009, CFL-007 read CONFLICT_RESOLVED but their sources still contradict | | make the sources true (layer 3 action 6) |
 | Stackup records | decisions 27, 28, 43 | `v2/docs/LAYER-DECISIONS-2026-09-11.md`; `boards/a.json` and `boards/c.json` rationales; STK-002's "an owner decision is open" | edit owed |

@@ -104,7 +104,7 @@ for (ax0, ay0, ax1, ay1) in ((vx0 - K, vy0 - K, vx1 + K, vy0 + K), (vx0 - K, vy1
     rule_area([(ax0, ay0), (ax1, ay0), (ax1, ay1), (ax0, ay1)], "inner edge keep-out (router edge clearance)")
 # ---------------------------------------------------------------- reference graphics: the plate, the window, the display and e-paper modules above the void
 pw, ph, pt = L.PLATE
-rounded_rect(-pw / 2, -ph / 2, pw / 2, ph / 2, L.PLATE_R, pcbnew.Dwgs_User, 0.15); text("face plate 365.5 x 249.5 x 3 (v2/cad/face_plate.py), 10 mm above this board", 0, ph / 2 - 4.0, pcbnew.Dwgs_User, 2.0, 0.3)
+rounded_rect(-pw / 2, -ph / 2, pw / 2, ph / 2, L.PLATE_R, pcbnew.Dwgs_User, 0.15); text("face plate %.1f x %.1f x %.1f on the 1450PF frame (C1; v2/cad/face_plate.py), %.1f mm above this board" % (pw, ph, pt, L.BACKER_GAP), 0, ph / 2 - 4.0, pcbnew.Dwgs_User, 2.0, 0.3)
 rounded_rect(-L.WINDOW[0] / 2, -L.WINDOW[1] / 2, L.WINDOW[0] / 2, L.WINDOW[1] / 2, 5.85, pcbnew.Dwgs_User, 0.15); text("frame window 349.65 x 233.83", 0, L.WINDOW[1] / 2 - 9.0, pcbnew.Dwgs_User, 1.6, 0.25)
 gx, gy = L.XENARC["c"]; gw, gh = L.XENARC["body"]; rounded_rect(gx - gw / 2, gy - gh / 2, gx + gw / 2, gy + gh / 2, 15.0, pcbnew.Dwgs_User, 0.1); text("Xenarc 709GNK IN the plate (205 x 139 x 29), glass level with the face, rear frame on the VESA 50 pattern", gx, gy, pcbnew.Dwgs_User, 2.0, 0.3)
 bx_, by_, bw_, bh_ = L.XENARC["block"]; rounded_rect(bx_ - bw_ / 2, by_ - bh_ / 2, bx_ + bw_ / 2, by_ + bh_ / 2, 1.0, pcbnew.Dwgs_User, 0.1); text("connector block, part of the recessed body", bx_, by_, pcbnew.Dwgs_User, 1.4, 0.25)

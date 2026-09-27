@@ -1,0 +1,11 @@
+# The CAD toolchain of the MeshSat V2 case set (v2/cad/README.md), pinned 27 Sep 2026 (MESHSAT-1357) to the set every file of
+# v2/release/case-2026-09-27/ was generated with: Python 3.12.3 on Ubuntu 24.04.5 LTS, x86_64. The complete resolved set, with every
+# transitive package, is requirements-cad.lock beside this file; install from that one to reproduce the release byte for byte where the
+# libraries are deterministic (STEP and PDF files carry time stamps, so compare the geometry and the drawings, not the bytes).
+#   python3 -m venv .venv-cad && .venv-cad/bin/pip install -r v2/cad/requirements-cad.lock
+build123d==0.13.0
+cadquery-ocp-novtk==8.0.1.0.0
+ezdxf==1.4.4
+matplotlib==3.11.2
+numpy==2.5.3
+reportlab==5.0.1

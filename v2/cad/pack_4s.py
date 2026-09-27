@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""The built 4S pack's enclosure (appendix 32.62, 7 Sep 2026): a printed box for the east pocket of the Peli 1450 beside A22 (the pocket is about 58 x 240 x 48 mm
+"""SUPERSEDED 26 Sep 2026, kept for the record: do not make this box. Adjudication A06 found that this rigid box, and any rigid box of its wall,
+lid and boss construction, fits in no pocket under board B (W4-F1, W4-F3), and owner ruling D-06 made the pack one shrink-wrapped 4S3P 18650
+block (56.65 x 133.5 x 38.1, about 145 Wh) in the east pocket with board P mounted at its south end (panel1450.PACK_BLOCK, PACK_WEST_X,
+PACK_GROUP_LEN). The block's hold-down is not designed yet (session item S-27, requirement CON-006; CASE-MARGINS.md M4a and M5 wait on it);
+v2/docs/CASE-FIT-UNCERTAINTIES.md section 3 states what that design must meet.
+
+The built 4S pack's enclosure (appendix 32.62, 7 Sep 2026): a printed box for the east pocket of the Peli 1450 beside A22 (the pocket is about 58 x 240 x 48 mm
 under B16's overhang). Outer 56 x 236 x 46, 2 mm walls and floor, a fold-over lid on four M3 (PEM nuts bonded in the corners), the cell block pocket
 (3 x 2 x 3 18650 cells = 4S4P with two spare sites, 56 x 195 x 37 wrapped, or 2 x 2 x 3 21700 cells) at the west end, the BMS board bay (the P1 board
 70 x 44 x 1.6 standing on four M3 bosses, parts up) at the east end, a cable notch for the XT60 and SMBus leads, two strap slots in the floor for the pack's

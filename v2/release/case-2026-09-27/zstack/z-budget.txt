@@ -1,0 +1,91 @@
+FACE SIDE, from the case floor (C6 legs, C1 plate on the 1450PF frame)
+   setting leg pad top (LEG_TOP_Z)             94.13  (Peli's shoulder 101.04 + 0.76 + 0.10 - ring 9.39 + floor 0.76 + leg 0.10 + ring 0.76)
+   frame bottom (skirt edge)                   86.00
+   frame ring top face                        103.52  (+ ring 9.39)
+   plate top face (FACE_TOP_Z)                106.52  (+ plate 3.00; 104.77 .. 108.27 over floor under the leg 0.76, leg height 0.10, ring 9.39 0.76, plate 3.0 0.13)
+   plate underside                            103.52
+   plate edge top                             104.52  (the rebated band's top; Peli's rim 108.97)
+   backer C top                                93.52
+   backer C underside                          91.92
+
+BOARD SIDE, from the case floor (panel1450.STACK)
+   VHB 5952 pads under the dock strip           0.00 ..   1.10  (1.1)
+   board E dock strip                           1.10 ..   2.70  (1.6)
+   blind-mate gap spacer                        2.70 ..  16.10  (13.4)
+   board A                                     16.10 ..  17.70  (1.6)
+   A-to-B bay spacer                           17.70 ..  49.00  (31.3)
+   board B                                     49.00 ..  50.60  (1.6)
+   B16 top copper (B_TOP_Z)                    50.60
+   CM5 heatsink top                            71.60  (B_TOP_Z + 21.0)
+
+DISPLAY
+   glass surface                              106.52  (recessed, level with the plate)
+   body bottom                                 77.86  (front bezel flange 10.66 + rear shell 18.00)
+   depth needed below the face                 28.66
+
+INSIDE THE DISPLAY'S FOOTPRINT  X -102.575 .. 102.575, Y -93.745 .. 45.745 (nominal)
+   CM5 slot 1 heatsink                top   71.60   margin   +6.26 
+   CM5 slot 2 heatsink                top   71.60   margin   +6.26 
+   CM5 slot 3 heatsink                top   71.60   margin   +6.26 
+   M.2 card in J_M2N3 (2242)          top   55.10   margin  +22.76 
+   M.2 card in J_M2C2 (3052)          top   55.10   margin  +22.76 
+   M.2 card in J_M2N1 (2242)          top   55.10   margin  +22.76 
+   M.2 card in J_M2C3 (2230)          top   55.10   margin  +22.76 
+   M.2 card in J_M2N2 (2242)          top   55.10   margin  +22.76 
+   M.2 card in J_M2C1 (2230)          top   55.10   margin  +22.76 
+   J_M2N3 M2_M-Key_Socket_2242        top   55.10   margin  +22.76 
+   L201 L_Coilcraft_XAL6060-XXX       top   56.70   margin  +21.16 
+   J_RB9704 IDC-Header_2x08_P2.54mm_Vertical_NarrowPad top   59.70   margin  +18.16 
+   L301 L_Coilcraft_XAL6060-XXX       top   56.70   margin  +21.16 
+   J_FLASH1 USB_C_Receptacle_HRO_TYPE-C-31-M-12 top   53.86   margin  +24.00 
+   U12 Ebyte_E22-900M30S              top   55.60   margin  +22.26 
+   J_5V_S1 JST_VH_B2P-VH_1x02_P3.96mm_Vertical top   67.10   margin  +10.76 
+   L101 L_Coilcraft_XAL6060-XXX       top   56.70   margin  +21.16 
+   J_FAN2 JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical top   54.92   margin  +22.94 
+   J_RPIBOOT1 PinHeader_1x02_P2.54mm_Vertical top   59.14   margin  +18.72 
+   L102 L_Coilcraft_XAL6060-XXX       top   56.70   margin  +21.16 
+   J_M2C2 M2_B-Key_Socket_3052        top   55.10   margin  +22.76 
+   J_DBG1 PinHeader_1x05_P2.54mm_Vertical top   59.14   margin  +18.72 
+   J_FLASH2 USB_C_Receptacle_HRO_TYPE-C-31-M-12 top   53.86   margin  +24.00 
+   J_5V_S3 JST_VH_B2P-VH_1x02_P3.96mm_Vertical top   67.10   margin  +10.76 
+   J_M2N1 M2_M-Key_Socket_2242        top   55.10   margin  +22.76 
+   J_RPIBOOT2 PinHeader_1x02_P2.54mm_Vertical top   59.14   margin  +18.72 
+   J_RPIBOOT3 PinHeader_1x02_P2.54mm_Vertical top   59.14   margin  +18.72 
+   J_5V_S2 JST_VH_B2P-VH_1x02_P3.96mm_Vertical top   67.10   margin  +10.76 
+   J_HDMI HDMI_A_Molex_208658-1001_Horizontal top   56.79   margin  +21.07 
+   L202 L_Coilcraft_XAL6060-XXX       top   56.70   margin  +21.16 
+   J_M2C3 M2_E-Key_Socket_2230        top   55.10   margin  +22.76 
+   J_M2N2 M2_M-Key_Socket_2242        top   55.10   margin  +22.76 
+   L302 L_Coilcraft_XAL6060-XXX       top   56.70   margin  +21.16 
+   J_FAN3 JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical top   54.92   margin  +22.94 
+   J_DBG3 PinHeader_1x05_P2.54mm_Vertical top   59.14   margin  +18.72 
+   J_DBG2 PinHeader_1x05_P2.54mm_Vertical top   59.14   margin  +18.72 
+   J_FAN1 JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical top   54.92   margin  +22.94 
+   J_GNSS2 PinHeader_1x03_P2.54mm_Vertical top   59.14   margin  +18.72 
+   J_SPI3 PinHeader_2x05_P2.54mm_Vertical top   59.14   margin  +18.72 
+   J_FLASH3 USB_C_Receptacle_HRO_TYPE-C-31-M-12 top   53.86   margin  +24.00 
+   J_M2C1 M2_E-Key_Socket_2230        top   55.10   margin  +22.76 
+
+M1, THE MONITOR BODY OVER THE CM5 HEATSINKS (v2/docs/CASE-MARGINS.md 3.1)
+   tolerances in the chain: floor under the leg 0.76, leg height 0.10, ring 9.39 0.76, plate 3.0 0.13, VHB 5952 0.11, laminate E 0.16, laminate A 0.16, laminate B 0.16, B bow 0.30
+   nominal +6.26   worst +3.62   RSS low +5.09   worst, unstated x2 +1.80   (floor 2.0)
+   left out of every figure, TBD:
+     - the Xenarc 709GNK body's 28.66 (read from its drawing at 400 dpi, no tolerance) and its steel rear frame (a kit part to draw)
+     - the CM5 heatsink's 21.0 (from the render scene, not a Raspberry Pi drawing)
+     - the blind-mate gap spacer (13.4) and the A-to-B bay spacer (31.3): no parts named
+   verdict: OPEN (TBD contributors; the unstated allowances doubled fall below the floor)
+
+BACKER RING
+   void opening Y -88.0 .. 88.0, the body's south edge -93.745
+   notch (-104.0, -94.2, 104.0, -87.0): covers the body yes, reaches 0.455 mm past its south edge
+
+PROUD OF THE FACE (ruling 14.6, limit 0.8 mm)
+   monitor glass                                0.00
+   e-paper lens                                 0.05
+
+VERDICT
+   worst inside the footprint, nominal: CM5 slot 1 heatsink +6.26 mm
+   M1 at the worst case: +3.62 mm against 2.0
+   deep parts under 2.0 mm (nominal, clearance_report): none
+   display surfaces over 0.8 mm proud: none
+   BUDGET MET ON THE DESIGN BASIS (M1 stays OPEN on its TBD contributors)

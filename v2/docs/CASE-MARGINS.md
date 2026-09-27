@@ -1,12 +1,14 @@
 # Case margins: the V2 kit held against Peli's own figures (Peli 1450 with the 1450PF frame)
 
-MESHSAT-1357, written 26 September 2026 and revised six times the same day after independent checks, the fifth to
+MESHSAT-1357, written 26 September 2026 and revised six times the same day after independent checks (agent sessions: AI review, not a
+qualified engineer's; no qualified mechanical review route exists yet, `CASE-FIT-UNCERTAINTIES.md` section 5), the fifth to
 apply the review of that day (section 1, Verdicts) and the sixth to correct two chains the last check found short
 (finding 25). A seventh revision, late the same day (stream r8docs), applies section 3 of the second review of that
 day (`v2/docs/reviews/2026-09-26-second-checkpoint-review.md`): a MET row is a sensitivity reading, not a bound on a
 tolerance no source states; the two rows below their minimum fail with the geometry as currently assumed; and the
 targeted mock-up moves ahead of the point where the affected board outlines and connector placements freeze
-(findings 26 to 28; no computed figure changed). Prototype design: nothing in this kit has been built, fitted to a
+(findings 26 to 28; no computed figure changed); on 27 September 2026 its checks of the rows that can move a board became a
+requirement of the layout entry of boards A, B, E and P (the paragraph "When the mock-up runs" below, and section 7). Prototype design: nothing in this kit has been built, fitted to a
 case or field deployed, and no V2 board has been made. Every number
 here is read from a Peli file or page named in section 1, from a maker's sheet in `v2/vendor/`, from a file in this
 tree (file:line, at main `29f00554`), or derived from those by the arithmetic shown. A number that rests on an
@@ -21,11 +23,32 @@ therefore takes Peli's own figures and the tolerances a source states as its bas
 case-dependent margin against the worst of them, plus a stated minimum. Where a margin rests on a tolerance no source
 states, on a TBD or on a part still to be picked, it is OPEN, not met: nominal CAD establishes no physical fit, no
 blind-mate alignment and no seal (section 1, Verdicts). Section 7 lists what closes each OPEN item; most of it is a
-targeted, unpowered mock-up that the session recommends before the outlines and connector placements of boards A,
-B, C, E and P are frozen for routing, on the new case of the current moulding bought for the prototype, whose purchase
-stays the owner's decision (section 7). Nothing here asks the owner to measure or build anything. Every change below is **the
+targeted, unpowered mock-up on the new case of the current moulding bought for the prototype. Its checks of the rows
+that can move a board outline, a connector or a board part are **required before the layout entry of boards A, B, E
+and P**, and that layout entry is BLOCKED on the purchase, which stays the owner's decision (D-09; section 7 and
+`CASE-FIT-UNCERTAINTIES.md` sections 2 and 7, revised on 27 September 2026); boards C, D and E5 are not held by it,
+and the other checks run at the build. Nothing here asks the owner to measure or build anything. Every change below is **the
 session's choice under the owner's standing rule of 26 September 2026** (never ask the owner; take the recommended
 option; record it as taken and reversible).
+
+**Implemented in CAD on 27 September 2026 (MESHSAT-1357, pre-PCB layer 7).** C1 to C6 are carried by the single geometry source
+`v2/ecad/tools/panel1450.py` (the plate, its rebate, relief and 4.6 mm holes at the frame STEP's bores, the legs and the derived face top
+106.52, the stack, the connector plate and its six items, the RF entry plates, the twelve arrestor sites at Z 59, the QMX tray, the pack
+block's place), from which `v2/cad/` generates the case set `v2/release/case-2026-09-27/`: STEP, DXF, dimensioned drawings labelled with
+this document's rows and 1:1 templates. `v2/cad/zstack.py` reads the Z stack and the part heights from the committed KiCad boards. Every
+OPEN row, the physical check it waits on and whether a board outline or connector placement depends on it are allocated per board in
+`v2/docs/CASE-FIT-UNCERTAINTIES.md`. The CAD changes no figure or verdict here. Citations of other files in this document are by line at
+main `29f00554`; several have moved since (for example the QMX tray row of `ASSEMBLY.md`), so read them by the row's words.
+
+**When the mock-up runs, revised on 27 September 2026 (the layer 7 closer, after the second review of the case release; AI review).**
+Section 7 had recommended the targeted checks before layout entry and, if the case was not bought by then, carried the rows they close to
+the boards' fabrication release (option c). The only reason it gave was that a layout-entry hold would depend on a purchase. The owner's
+execution prompt of 27 September 2026 does not admit that reason: "a later physical test may remain planned only where it is not required
+to establish feasibility or make the current stage's design decision" (its section 2) and "Do not move a decisive uncertainty to a later
+phase merely to unblock a status" (its section 5). So the checks of the rows that can move a board outline, a connector or a board part
+(`CASE-FIT-UNCERTAINTIES.md` section 2, the YES rows) are now required before the layout entry of the boards they move (A, B, E and P), and
+that layout entry is BLOCKED on the owner's purchase decision (D-09) with its compact question in `CASE-FIT-UNCERTAINTIES.md` section 7.
+The other rows keep their checks at the build, each with its reason. No figure or verdict moves.
 
 **What reading Peli's files properly changed.** Peli publishes more than the tree had used: a 1450 panel frame
 instruction sheet with a tolerance block, and mounting instructions that say where the frame sits and which way a
@@ -78,12 +101,12 @@ until it is picked, the layout under the east plugs does not close (sections 3.2
 | 20 | The leg column's outer-back corner lies in the skirt's R 17.53 corner arc, and the locator places a leg in X and Y at once: at the previous issue's column the Euclidean worst was 0.95. | INFERRED from VERIFIED geometry | C6: the column 0.20 inboard (X 175.40 to 180.17): 1.14 at the worst (M21d, OPEN) |
 | 21 | The previous issue's jumper plug sent every east cable down from Z 54.0 onto the pack (top Z 44.58, X 122 to 178.65, under every east site), where RG-316 cannot turn at R 12.5; the C6 legs close the corridors at the pack group's ends (1.77 at the worst against a 2.49 cable); its M17 measured a clearance at Z 50, not a route. Round the pack's ends, a cable from an east site at \|Y\| 93 meets a leg's column before it can move inboard of it (22.32 short at nominal). | INFERRED from VERIFIED geometry | C2: each east plug's cable leaves along the wall, the plug turned 30 degrees down, into a bundle over the pack's outer strip under the plugs, inboard of the legs' columns and down beyond the legs; the two WIFI P2P bulkheads move to the west wall, whose cables fall straight to the floor; each jumper cut to its route, 232 to 412 mm. This is a planned route, not a closed one: every jumper row is OPEN, and how the east cables lie under the plugs turns on the plug still to be picked (M17g, M17x; finding 24) |
 | 22 | The RF entry plate's M4 screws in 4.5 wall holes, into threads tapped in the plate, floated 0.26 against 0.40 of hole marking and thread position, so not all eight were sure to start; the previous M11d left out the plate's own +-0.20 and the screw's length tolerance, and at the worst the tips stood outside, where an arrestor body lies over the screws at \|Y\| 100. | INFERRED from the stated allowances and classes | C4: 5.0 wall holes (0.11 to spare, M11e) under sealing washers whose rubber face covers them (M11f), the screw rows 0.25 further in (M11b, M11c), and a 6.0 plate on which an M4 x 12 stays inside (0.43, M11d) and engages 1.95 at the least (M11g). M11d, M11e and M11g are OPEN: they rest on the wall's thickness, the gasket's compression and the hole marking, which T5 and T6 measure |
-| 23 | The review of 26 September 2026 (`v2/docs/reviews/2026-09-26-foundation-progress-review.md:79`): Peli geometry and stated tolerances are the design basis; a margin whose tolerances or frame seating are not specified is unknown; nominal CAD establishes no physical fit, blind-mate alignment or sealing; a targeted unpowered mock-up can resolve expensive mechanical uncertainties earlier than a populated build. Peli states no tolerance for the case, and the kit's build allowances are assumptions. | VERIFIED (the review's text) | Every margin carries MET, NOT MET or OPEN (section 1, Verdicts). A row is MET only if it still meets its minimum with every unstated allowance taken twice, a sensitivity test and not a bound on those allowances (finding 26); 35 of the 70 computed rows are OPEN, and section 7 names what closes each, chiefly a targeted unpowered mock-up, now recommended before the affected outlines and connector placements freeze (finding 28) |
-| 24 | The last independent check found that the east bundle's layering under the plugs does not close as laid out. Under 5G MAIN, which three cables pass, MAIN's own cable at the class's 16.0 reach lands 1.21 into the passing cable below its place. With the plug's cable axis at its inner end, which the class allows, the bundle's inboard column comes to -0.38 from B16's edge at the worst. | INFERRED from the plug class | No simple change closes either on held evidence: both turn on the plug's reach, its ferrule's diameter and the offset of its cable axis, which no held sheet gives. Both are OPEN rows with their bounds (M17g, M17x) and named levers, and the claim that the bundle closes is withdrawn (section 3.4). As laid out, both fail (finding 27) |
-| 25 | The next independent check found two rows stated MET that fail at the worst. M13 left out the arrestor's O-ring, which the held drawing (page 3, rendered and read) shows on the thread's root, about 0.63 proud of the body's face, inside the .47 the chain counted as free thread; with it the thread on the full 6.0 plate leaves 0.62 nominal and -0.40 at the worst, and the drawing's note that every dimension on it is for reference only makes its +-0.51 an unstated allowance besides. M14j left out each part's float on its fixings, A's flange 0.24 on its M3 screws and a bonded washer 0.33 on its M4 (the term M14p carries), and counted one machined place for a pair: at the previous layout that pair came to 0.39 at the worst, A's and D's flanges to 0.83, and C's and B's mated plugs to 0.63 (M14k). The same float was missing wherever an arrestor's place enters a chain (each floats 0.32 in its 16.3 hole), and the floats that were carried had been taken at a screw's largest or nominal major, not at its smallest. | VERIFIED (the drawings and the classes); margins INFERRED | C4: each arrestor hole spot-faced 26.0 x 1.5 on the entry plate's back, so the nut sits 1.5 lower on its thread: M13 keeps 1.20 at the worst and 0.38 with the unstated allowances doubled, OPEN only on the O-ring's height; the nut and washer class narrowed to 24.0 x 5.0 from the drawing's 3/4 in hex (M13b to M13d). C3: A, C, B, D and F moved 0.8 to 1.7 mm east, so that every pair on the plate's face and every mated pair keeps 1.0 with each part at its float and at its machined place (M14j 1.13, M14k 1.11). C1: the face plate 0.2 narrower, 377.2 (M8x). Every row that carries the O-ring (M18, M17c, M17w, M17x) or a float (M2b, M8, M8h, M11f, M13c, M14e, M14g, M14n, M14p, M17a, M17b, M17g, M18b, M18c, M21h) now carries it at its worst; M17a falls to OPEN (1.90 with the unstated allowances doubled, against its 2.0) |
+| 23 | The review of 26 September 2026 (`v2/docs/reviews/2026-09-26-foundation-progress-review.md:79`): Peli geometry and stated tolerances are the design basis; a margin whose tolerances or frame seating are not specified is unknown; nominal CAD establishes no physical fit, blind-mate alignment or sealing; a targeted unpowered mock-up can resolve expensive mechanical uncertainties earlier than a populated build. Peli states no tolerance for the case, and the kit's build allowances are assumptions. | VERIFIED (the review's text) | Every margin carries MET, NOT MET or OPEN (section 1, Verdicts). A row is MET only if it still meets its minimum with every unstated allowance taken twice, a sensitivity test and not a bound on those allowances (finding 26); 35 of the 70 computed rows are OPEN, and section 7 names what closes each, chiefly a targeted unpowered mock-up, whose checks of the rows that can move a board are now required before the layout entry of boards A, B, E and P (finding 28, section 7) |
+| 24 | The last independent check (an agent check: AI review) found that the east bundle's layering under the plugs does not close as laid out. Under 5G MAIN, which three cables pass, MAIN's own cable at the class's 16.0 reach lands 1.21 into the passing cable below its place. With the plug's cable axis at its inner end, which the class allows, the bundle's inboard column comes to -0.38 from B16's edge at the worst. | INFERRED from the plug class | No simple change closes either on held evidence: both turn on the plug's reach, its ferrule's diameter and the offset of its cable axis, which no held sheet gives. Both are OPEN rows with their bounds (M17g, M17x) and named levers, and the claim that the bundle closes is withdrawn (section 3.4). As laid out, both fail (finding 27) |
+| 25 | The next independent check (an agent check: AI review) found two rows stated MET that fail at the worst. M13 left out the arrestor's O-ring, which the held drawing (page 3, rendered and read) shows on the thread's root, about 0.63 proud of the body's face, inside the .47 the chain counted as free thread; with it the thread on the full 6.0 plate leaves 0.62 nominal and -0.40 at the worst, and the drawing's note that every dimension on it is for reference only makes its +-0.51 an unstated allowance besides. M14j left out each part's float on its fixings, A's flange 0.24 on its M3 screws and a bonded washer 0.33 on its M4 (the term M14p carries), and counted one machined place for a pair: at the previous layout that pair came to 0.39 at the worst, A's and D's flanges to 0.83, and C's and B's mated plugs to 0.63 (M14k). The same float was missing wherever an arrestor's place enters a chain (each floats 0.32 in its 16.3 hole), and the floats that were carried had been taken at a screw's largest or nominal major, not at its smallest. | VERIFIED (the drawings and the classes); margins INFERRED | C4: each arrestor hole spot-faced 26.0 x 1.5 on the entry plate's back, so the nut sits 1.5 lower on its thread: M13 keeps 1.20 at the worst and 0.38 with the unstated allowances doubled, OPEN only on the O-ring's height; the nut and washer class narrowed to 24.0 x 5.0 from the drawing's 3/4 in hex (M13b to M13d). C3: A, C, B, D and F moved 0.8 to 1.7 mm east, so that every pair on the plate's face and every mated pair keeps 1.0 with each part at its float and at its machined place (M14j 1.13, M14k 1.11). C1: the face plate 0.2 narrower, 377.2 (M8x). Every row that carries the O-ring (M18, M17c, M17w, M17x) or a float (M2b, M8, M8h, M11f, M13c, M14e, M14g, M14n, M14p, M17a, M17b, M17g, M18b, M18c, M21h) now carries it at its worst; M17a falls to OPEN (1.90 with the unstated allowances doubled, against its 2.0) |
 | 26 | The second review of 26 September 2026 (`v2/docs/reviews/2026-09-26-second-checkpoint-review.md`, section 3): "doubling an assumed allowance is a sensitivity test, not proof that an unspecified manufacturing tolerance is bounded. Keep that qualification attached to the 35 MET rows." | VERIFIED (the review's text) | Section 1, Verdicts, says what MET establishes and what it does not; every count of MET rows in this document carries the qualification; `frame_seat.py` prints it under its table. No verdict moved: MET is still computed the same way, and it is still the design basis only |
 | 27 | The same review: "The two negative margins should explicitly say that the currently assumed geometry fails, with final plug selection pending." M17g is below its minimum at nominal (-1.21) and at the worst (-2.43); M17x at the worst (-0.38 against 1.0). | VERIFIED (the review's text; the figures are `frame_seat.py`'s) | Both rows now read **OPEN, FAILS AS ASSUMED** in section 3.2 and in `frame_seat.py`'s output: the geometry as laid out fails them, and they are held OPEN, not NOT MET, only because the jumper plug is still to be picked. Until it is, neither the layering under the east plugs nor the bundle's column beside B16's east edge (X 165) is a closed design; board B's east edge and its east-end tall parts are among the placements the mock-up of finding 28 must see before they freeze |
-| 28 | The same review: "Perform the targeted mock-up before affected PCB outlines and connector placements become expensive to change, rather than waiting until boards are ready for population." This document had placed it at the build stage, before population | VERIFIED (the review's text) | Section 7: the targeted checks (T1, T2, T4, T5, T6, T10, T11) are recommended before the outlines and connector placements of boards A, B, C, E and P are frozen for routing; the rest (T3, T7, T8, T9) stays at the build. If the case and the mock-up's parts are not bought by then, those boards enter layout on the design basis and every OPEN row the mock-up would close becomes an item of their fabrication release, not of their layout entry (the review's section 2A: a hold belongs to the stage whose evidence it needs). Buying the case and the parts stays the owner's decision; the session's choice under the owner's standing rule of 26 September 2026 |
+| 28 | The same review: "Perform the targeted mock-up before affected PCB outlines and connector placements become expensive to change, rather than waiting until boards are ready for population." This document had placed it at the build stage, before population | VERIFIED (the review's text) | Section 7: the targeted checks (T1, T2, T4, T5, T6, T10, T11) run on the mock-up; for every row that can move a board outline, a connector or a board part they are required before that board's layout entry (boards A, B, E and P; `CASE-FIT-UNCERTAINTIES.md` section 2), and the rest (T3, T7, T8, T9, and the targeted checks of the rows whose remedy is a made part or a cable route) may wait for the build. Until the owner decides the purchase (D-09), the layout entry of A, B, E and P is BLOCKED on it. Revised on 27 September 2026: the first choice (option c) carried the rows to fabrication release when the case was not bought, which the owner's execution prompt of that day does not admit (sections 2 and 5). The session's application under the owner's standing rule of 26 September 2026 |
 
 ## 1. Sources and method
 
@@ -479,7 +502,7 @@ allowances, and it says nothing of fit, seal or alignment.
 | M17e | East bundle going down beyond the leg: its inner face (\|Y\| 115.25) to the leg's outer face (\|Y\| 112.4) | 1.0 | n/a | n/a | +2.85 | +1.47 | +1.84 | +0.47 | OPEN: the locator, the ties; T10 |
 | M17f | East front bundle on the floor fillet beside the dock strip's south edge (\|Y\| 113) | 0 | n/a | n/a | +2.25 | +0.75 | +1.14 | -0.75 | OPEN: the strip's placement, the ties; T10 |
 | M17w | West cables, leaving downward within 4.0 of the plug's inner end, outboard of B16's edge (X 165) as they fall to the floor | 1.0 | n/a | n/a | +6.38 | +2.11 | +4.61 | -1.86 | OPEN: the wall, the gasket, the O-ring, the stack's placement; T5, T10, T11 |
-| M18 | Jumper plug's inner end to B16's tall parts it overlaps in Y and Z, in X (the tightest: the RockBLOCK's box at the 5G MAIN site; the LimeSDR's 11.63, the radio modules' and J_ETH's 10.63, T1's 11.13) | 1.0 | the ruled arrestors had no place | OPEN | +7.63 | +3.36 | +5.85 | -0.61 | OPEN: the wall, the gasket, the O-ring, the stack's placement; T4, T5, T11 |
+| M18 | Jumper plug's inner end to B16's tall parts it overlaps in Y and Z, in X (the tightest: the RockBLOCK's box at the 5G MAIN site; read from the committed board B, the E72 module U14's 7.76, J_ETH's 10.85, T1's 11.33, the LimeSDR's 11.63) | 1.0 | the ruled arrestors had no place | OPEN | +7.63 | +3.36 | +5.85 | -0.61 | OPEN: the wall, the gasket, the O-ring, the stack's placement; T4, T5, T11 |
 | M18b | Neighbouring arrestor bodies outside (22.86 across at the 31 pitch), each anywhere in its 0.32 float | 1.0 | at the tree's 24 mm pitch 1.14 (0.54 at the worst, two holes marked from the template); at the previous issue's 20 mm, -2.86 | NOT MET | +8.14 | +7.30 | +7.47 | +7.30 | MET |
 | M18c | Outermost jumper plug (the west wall's, \|Y\| 93 + 5.0) to the setting legs' inner face, where the plug's X range covers the column's, the arrestor anywhere in its float | 1.0 | n/a | n/a | +8.40 | +6.80 | +7.41 | +6.00 | MET |
 | M19 | QMX tray's east edge (X 172.5, `ASSEMBLY.md:46`) inside the lid's flat ceiling edge (X 173.08) | 1.0 | +0.58 / +0.20 | NOT MET | +2.08 (C5) | +1.70 | +1.70 | +1.32 | MET |
@@ -536,7 +559,9 @@ bases start at \|X\| 58.93 at the parting line, and although section A-A shows t
 therefore stays within \|X\| 57.0 (M14i). Below it the outer bottom radius ends at about Z 15.9 (M14b); above it the
 rim flange starts at Z 97.9 (M14o). Inside, every part must stay 1.0 under the frame skirt's lowest edge, Z 84.38
 (M14a); B16's edge runs the whole wall at Y +100 with its underside at Z 49.00 (48.57 at the worst) and U51 hanging
-1.6 below it at Y 68.3 to 85.8 (INFERRED, the LQFP class); A22 ends at Y 80 (`gen_pcb_a.py:16`); nothing may bear on
+1.60 below it at Y 68.3 to 85.8 (ST's maximum body height for its LQFP-100, DS12117 Rev 9 Table 217, page 322 of
+`v2/vendor/st/st-stm32h753xi-datasheet.pdf`; the library model's 1.50 is the typical, and `v2/cad/zstack.py` carries the
+maximum onto the board part for this worst-case chain; 1.6 INFERRED from the LQFP class until 27 September 2026); A22 ends at Y 80 (`gen_pcb_a.py:16`); nothing may bear on
 the X 0 rib if this wall carries it (M14n); the ribs at X +-76.2 are 19.7 mm beyond the nearest inside washer.
 
 **The class envelopes** (where the part is picked, its sheet; where not, the class the pick must meet):
@@ -1032,9 +1057,9 @@ reversal and D-08a in the other documents are listed for their writer; this docu
 ## 5. What only hardware can show (the checks)
 
 Each runs on the new case of the current moulding bought for the prototype (D-08a), done by the assembler as
-`ASSEMBLY.md` section 8 is. Section 7 recommends running the targeted ones (T1, T2, T4, T5, T6, T10 and T11) first on
-an unpowered mock-up, before the outlines and connector placements of boards A, B, C, E and P are frozen for routing,
-and the rest at the build. A check either confirms the OPEN rows it names, or sends them back to this document with a
+`ASSEMBLY.md` section 8 is. The targeted ones (T1, T2, T4, T5, T6, T10 and T11) run first on an unpowered mock-up:
+section 7 requires them before the layout entry of the boards a failing check would move (A, B, E and P;
+`CASE-FIT-UNCERTAINTIES.md` section 2), and the rest run at the build. A check either confirms the OPEN rows it names, or sends them back to this document with a
 measured number; a check that fails stops the build. No row of section 3 stands in for any of these checks.
 
 | # | Check | Why no drawing settles it | Pass |
@@ -1089,7 +1114,8 @@ measured number; a check that fails stops the build. No row of section 3 stands 
 
 This document covers the case geometry only. The A-to-D8 bay, A's J_AB2 header under D8, the LoRa blind-mate X
 on board E and the thermal and RF budgets are board and integration items recorded elsewhere. No row here judges the
-blind-mate between board A and the dock strip or its alignment: its 13.4 mm gap enters M1 only as a height.
+blind-mate between board A and the dock strip or its alignment: its 13.4 mm gap enters M1 only as a height. The dock and blind-mate
+tolerance stack is owed as its own analysis (`CASE-FIT-UNCERTAINTIES.md` section 3, row DOCK; REQ-047), with board E's clamp bar.
 
 ## 7. Closing the OPEN mechanical items
 
@@ -1098,38 +1124,45 @@ of evidence close them:
 - a maker's drawing or a pick, which the session looks up before the part is made or bought;
 - measurement on hardware: the checks T1 to T10 of section 5.
 
-For the second, the session recommends a **targeted, unpowered mock-up**, run **before the outlines and connector
-placements of boards A, B, C, E and P are frozen for routing** (their layout entry), not at the build stage as the
-previous issue had it. The review of 26 September 2026 notes that such a mock-up "can resolve expensive mechanical
+For the second, a **targeted, unpowered mock-up** runs **before the layout entry of the boards whose outline, connectors
+or parts a failing check would move** (A, B, E and P; `CASE-FIT-UNCERTAINTIES.md` section 2 marks each such row YES),
+not at the build stage as the first issue had it. Board C is in no such row: its Z hangs from the plate, and the face
+gate's tightest pair keeps 6.3 mm against the 2.0 rule, more than the seat's range. The review of 26 September 2026 notes that such a mock-up "can resolve expensive mechanical
 uncertainties earlier than a fully populated seven-board build" (`v2/docs/reviews/2026-09-26-foundation-progress-review.md:79`),
 and the second review of that day asks for it "before affected PCB outlines and connector placements become expensive
 to change, rather than waiting until boards are ready for population"
 (`v2/docs/reviews/2026-09-26-second-checkpoint-review.md`, section 3). A board outline or a connector moved before
 routing costs a regeneration; moved after routing it costs the route; moved after fabrication it costs a respin.
 
-**When each check runs (the session's choice under the owner's standing rule of 26 September 2026).** Options: (a)
-keep the whole mock-up at the build stage; (b) make the mock-up a hold on layout entry, which would put every
-affected board's layout behind a purchase only the owner can authorize; (c) recommend the targeted checks before
-layout entry and, if they have not run by then, carry the rows they close to the boards' fabrication release. Taken:
-(c), because it moves the evidence ahead of the expensive change without creating a hold that engineering cannot
-lift (the second review's section 2A: a hold belongs to the stage whose evidence it needs).
+**When each check runs (the session's application of the owner's execution prompt of 27 September 2026, under his
+standing rule of 26 September 2026).** Options: (a) keep the whole mock-up at the build stage; (b) make the checks of
+the rows that can move a board a hold on that board's layout entry; (c) recommend them before layout entry and, if
+they have not run by then, carry the rows to the boards' fabrication release. Taken on 26 September: (c). Taken on 27
+September, replacing it: (b), because such a row decides the board's outline or placement, which is the layout-entry
+decision, and its plausible bound includes failure; the prompt admits a deferred physical test only where it is not
+required for the current stage's decision (its section 2), and forbids moving a decisive uncertainty to a later phase
+merely to unblock a status (its section 5). The mock-up needs no board of this set, so the hold is not circular (the
+second review's section 2A). The purchase is the owner's (D-09), so the layout entry of A, B, E and P is BLOCKED on
+it (`CASE-FIT-UNCERTAINTIES.md` section 7, the compact question). Reversal: the mock-up's readings meeting the rows'
+minimums lift the hold; the owner alone can instead accept, as his residual risk, entering layout on the design basis.
 
-| Check | Before the affected outlines and placements freeze | Which board outline or placement it decides |
+| Check | Before the layout entry of the boards it can move | Which board outline or placement it decides |
 |---|---|---|
 | T1 | yes, at purchase | none directly: it confirms the moulding every row assumes (D-08a) |
-| T2 | yes | the face height (M1, M20, M21a to M21e): board C's backer under the plate and board B's stack height under the monitor |
-| T4 | yes, with the stand-ins below | M1 (board B's stack and spacers), M4a and M5 (board A's east edge at X 120 and board P's place in the pocket), M15b (board E's corner pads), M18 (board B's east-end tall parts: the RockBLOCK, the LimeSDR, the radio modules, J_ETH, T1) |
-| T5 | yes | the inner jacks' place on the end walls, which enters M17x, M18, M17c and M17w (board B's east edge and east-end parts) |
-| T6 | yes | the connector plate's and the RF entry plates' footprints, which fix where the wall connectors and the arrestors enter, and so board B's and board A's parts under them (M14c to M14h) |
-| T10 | yes, with the picked jumper plug | M17g and M17x (board B's east edge at X 165, the east plug layout), M17b to M17f (board E's south edge and the clamps' places, board A's RF sites) |
-| T11 | yes, one arrestor on a coupon | M13, and the inner jack's place that M18, M17c, M17w and M17x carry |
+| T2 | yes, for boards B (M1) and P (the legs' locator in M5) | the face height (M1, M20, M21a to M21e): board B's stack height under the monitor; board C's Z only (M20: its backer hangs from the plate), which moves no board C outline |
+| T4 | yes, with the stand-ins below, for boards A, B and P (and E until its pads move 2.0 inboard, M15b) | M1 (board B's stack and spacers), M4a and M5 (board A's east edge at X 120 and board P's place in the pocket), M15b (board E's corner pads), M18 (board B's east-end tall parts: the RockBLOCK, the LimeSDR, the radio modules, J_ETH, T1) |
+| T5 | yes, for board B | the inner jacks' place on the end walls, which enters M17x, M18, M17c and M17w (board B's east edge and east-end parts) |
+| T6 | with the mock-up (it checks the templates on the case); no board's layout entry waits on it | the connector plate's and the RF entry plates' footprints, made parts; the inside mates under board B and board A (M14c to M14h) are MET with the plates at their float and machined place, so no board moves on it |
+| T10 | yes, with the picked jumper plug, for boards B and E | M17g, M17x and M17d (board B's east edge at X 165, the east plug layout, the lane to the legs), M17w (board B's west edge through the stack's place), M17f (board E's south edge and front clamp lanes); M17a, M17b, M17c and M17e are cable routes and ties |
+| T11 | yes, one arrestor on a coupon, for board B | M13, and the inner jack's place that M18, M17c, M17w and M17x carry |
 | T3, T7, T8, T9 | no: at the build, as before | the face plate, the seals, the pads' bonds and the lid's closure; none moves a board outline or a connector placement |
 
-If the case and the parts are not bought before a board's layout entry, that board enters layout on the design basis
-of this document, and the OPEN rows the targeted checks would have closed for it are carried as items of its
-fabrication release. A result that later moves an outline or a connector is then a layout change on that board.
+Until the case and the parts are bought, boards A, B, E and P do not enter layout on the rows these checks close
+(`CASE-FIT-UNCERTAINTIES.md` section 2 names the rows per board; the registry carries the hold as FEA-007). Boards C,
+D and E5 are not held by the mock-up. The rows whose remedy is a made part or a cable route close at the mock-up if it
+runs first, else at the build.
 
-This is the session's recommendation, not a request. The owner withdrew the earlier request that he measure his old
+This is the session's allocation, not a request. The owner withdrew the earlier request that he measure his old
 case (D-08, reversed on 26 September 2026), and nothing in this document asks him to measure or build anything. Buying
 the new case, the frame and the mock-up's parts is spending, so it stays his decision; the session prepares the
 purchase list with its costs for the bench and external packet (the second review's section 5, item 5), and records

@@ -31,6 +31,12 @@ Stdlib only, runs in about a second, runner-safe; nothing is read from disk, eve
         lock washer 20.5 across and 1.3 thick.
   AMP   Amphenol Connex 132170 drawing rev D (v2/vendor/rf/): the coupler the tree carries at 29f00554, retired by the arrestors.
   TREE  v2/ecad/tools/panel1450.py, gen_pcb_*.py, v2/docs/ASSEMBLY.md, v2/vendor/open-picks.txt (line numbers at main 29f00554).
+  SOURCE (27 Sep 2026, MESHSAT-1357, the case release): every DESIGN number of the chosen arrangement (C1 to C6: the plate, its rebate and
+        holes, the legs, the stack, the connector plate and its items, the RF entry plates, the arrestor sites) is READ from
+        v2/ecad/tools/panel1450.py, the single geometry source the CAD (v2/cad/) is generated from, and the board inputs (B16's tall parts,
+        U51's maximum body height) from v2/cad/zstack.json, which v2/cad/zstack.py reads from the committed KiCad boards and, for a height a
+        worst-case chain takes, from the maker's sheet (zstack.py MAKER_MAX: a library model is a nominal body); the Peli readings and the
+        allowances stay here, where they are read. v2/ecad/tools/tests/test_case_geometry.py holds the two in agreement.
   STD   ISO 7380 (button head length js15), ISO 965 6g (M3 major 2.874 to 2.980, M4 3.838 to 3.978, M6 5.794 min, M10 x 0.75
         9.838 min), ASME B1.1 class 2A (the drawing's 5/8-24UNEF-2A: major 0.6167 in (15.66) min) and MIL-DTL-17 (RG-316
         0.098 in): classes used, standards not held (INFERRED). A screw's largest major decides whether it passes a hole, its
@@ -47,7 +53,12 @@ Two qualifications, added 26 Sep 2026 late (MESHSAT-1357 stream r8docs, the revi
   - An OPEN row that is already below its minimum at the worst case with the geometry as laid out prints
     "OPEN, FAILS AS ASSUMED": the part still to be picked could lift it, which is why it is not NOT MET, but the geometry the
     rows assume fails it. Only the row's label changes; every figure is computed as before."""
-import math
+import math, os, sys, json
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "ecad", "tools"))
+import panel1450 as P1450                  # not "L": part C and part G use L as a local name
+_Z = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "cad", "zstack.json"), encoding="utf-8"))
+def _part(board, ref):
+    return next(p for p in _Z["boards"][board]["parts"] if p["ref"] == ref)
 
 # ------------------------------------------------------------------ Peli base (STEP 1451-931-bottom)
 TW = 0.0349 / 0.9994                       # wall draft, normals of #1193/#1922/#172/#1851 (2.0 degrees)
@@ -98,7 +109,7 @@ T_OUTLINE = 0.10    # plate outline and machined hole positions, drawing toleran
 T_CENTRE = 0.20     # frame centred by wedge pairs at the build (C6), INFERRED
 SCREW_632 = 0.1380 * 25.4                  # 6-32 UNC major 0.1380 in (3.505), the basic size, which no class 2A or 3A screw exceeds
 SCREW_632_MIN = 0.1312 * 25.4              # 6-32 UNC-2A major 0.1312 in (3.332) at least (ASME B1.1 class, standard not held, INFERRED)
-FACE_HOLE = 4.6                            # C1: the face plate's holes for the 6-32 screws (a 4.6 drill)
+FACE_HOLE = P1450.FACE_HOLE                # C1: the face plate's holes for the 6-32 screws (a 4.6 drill)
 T_HOLE = (FACE_HOLE - SCREW_632) / 2       # the largest screw passes its hole with this to spare
 T_FLOAT = (FACE_HOLE - SCREW_632_MIN) / 2  # the plate floats this far on the smallest
 PAN_632 = 0.270 * 25.4 / 2                 # 6-32 pan head max diameter 0.270 in (ASME B18.6.3 class, standard not held, INFERRED)
@@ -114,23 +125,28 @@ BOARD_TOLS = [("laminate E", LAM), ("laminate A", LAM), ("laminate B", LAM), ("V
 LEG_IN_CASE = [("frame centring", T_CENTRE), ("window per side (SHEET)", T_SHEET / 2), ("leg locator on the window", T_JIG)]   # a leg against the case centre
 
 # ------------------------------------------------------------------ design numbers
-XEN_H, HEATSINK = 28.66, 21.0              # panel1450.py:44, :36
-B_UNDER = 47.9 + 1.1                       # panel1450.py:23 (top copper 49.5 less 1.6) plus the VHB pads lifting the stack (C1 follow-on (a), ASSEMBLY.md:47)
-B_TOP = 49.5 + 1.1
-B_OUT = (165.0, 100.0)                     # panel1450.py:22
-A_EDGE_Y = 80.0                            # gen_pcb_a.py:16 (BOARD_W 160, centred): A22 spans Y -80 .. 80
-U51_H = 1.6                                # U51 (LQFP-100, Y 68.3 .. 85.8) on B16's underside by the back edge (A06); body height INFERRED
-PLATE = (377.2, 263.0, 3.0)                # C1 (0.8 narrower in X than the first issue's 378.0, for the float the 4.6 holes give the smallest 6-32)
-REBATE = 2.0                               # C1: the band outside REB_IN is rebated 2.0 from the top
-REB_IN = (368.0, 253.0)                    # C1: the full-thickness face (the previous issue's was 367.0 x 251.0)
+XEN_H = P1450.XENARC["height"]                                          # panel1450.XENARC
+HEATSINK = max(h for r, h, n, src in P1450.B16_MODULES if "heatsink" in n)   # panel1450.B16_MODULES (TBD: a Raspberry Pi drawing)
+B_UNDER = P1450.B_UNDER_Z                  # panel1450.STACK: the VHB pads lift the stack (C1 follow-on (a)); 49.0
+B_TOP = P1450.B_TOP_Z                      # 50.6
+B_OUT = (P1450.B_OUTLINE[2], P1450.B_OUTLINE[3])
+A_EDGE_Y = P1450.A_OUTLINE[3]              # A spans Y -80 .. 80
+U51_H = _part("b", "U51")["height_max"]    # U51 (STM32H753VITx, LQFP-100) on B16's underside by the back edge, at the MAKER'S MAXIMUM body height:
+                                           # M14e and M14g are worst-case chains, so the part stands at ST DS12117 Rev 9 Table 217's A max 1.60, which
+                                           # zstack.py reads onto the board part (MAKER_MAX; the library model's 1.50 is the sheet's A typ). It was 1.6
+                                           # typed as an INFERRED class figure until 27 Sep 2026; the value is unchanged, its source is now the maker's.
+PLATE = P1450.PLATE                        # C1
+REBATE = P1450.REBATE
+REB_IN = P1450.REB_IN
 TRAY = 28.0                                # v2/cad/lid_bracket_qmx.py:13-16
-PACK_EAST = 178.65                         # the 4S3P block's east face (case_margins.out, M4; west face X 122.0, A06)
+PACK_EAST = round(P1450.PACK_WEST_X + P1450.PACK_BLOCK[0], 2)   # the 4S3P block's east face (west face X 122.0 and 56.65 wide, A06; panel1450)
 PACK_TOP = B_UNDER - (3.32 + 1.1)          # M6: the block's top under B16's underside
 MIN_FACE, MIN_MECH = 2.0, 1.0              # z_budget.py:16; the document's rigid-to-rigid minimum
 MIN_WEB, MIN_BAND = 2.0, 3.0                # wall web between two holes (twice the rigid minimum) and a hole's gasket band to the plate edge (1.5 x the 2.0 gasket): INFERRED
 # the setting legs (C6): the pad top is the lowest that keeps the plate's underside 0.10 above the highest the shoulder can stand
 LEG_TOP = round(SHOULDER + T_CASE_Z + 0.10 - RING_T + (T_FLOOR + T_LEG + T_SHEET), 2)
-LEG_Y = (106.4, 112.4); LEG_X = (175.4, 180.17); FOOT_X = (156.0, 169.0); RELIEF = 2.5   # column 0.20 inboard of the previous issue's (M21d)
+assert abs(LEG_TOP - P1450.LEG_TOP_Z) < 1e-9, "panel1450.LEG_TOP_Z %.2f is not the pad this file derives (%.2f)" % (P1450.LEG_TOP_Z, LEG_TOP)
+LEG_Y = P1450.LEG["y"]; LEG_X = P1450.LEG["col_x"]; FOOT_X = P1450.LEG["foot_x"]; RELIEF = P1450.LEG["relief"]   # C6
 
 # ------------------------------------------------------------------ helpers
 # The review of 26 Sep 2026 (v2/docs/reviews/2026-09-26-foundation-progress-review.md, section 4): Peli geometry and stated tolerances are
@@ -352,7 +368,7 @@ if __name__ == "__main__":
     print("\n== (E) C3: the connector plate on the back wall with the full ruled set (V2-SPEC.md:11, ASSEMBLY.md:118-125 and :135)")
     FAIR_X, RIMLINE_X, AA_X = 58.93, 57.15, 87.34     # DXF top view: fairing base #4992/#5107 (#4985/#5116); rim-flange line #5071 to 57.15; A-A #3130
     OUT_FLAT_Z, OUT_FLANGE_Z = 15.9, 97.91            # DXF A-A #7590 (outer back wall flat from about Z 15.9); rim flange from Z 97.9 (#7866)
-    P = dict(x0=-57.0, x1=57.0, z0=18.3, z1=86.6, t=5.0)
+    P = {k: P1450.CONN_PLATE[k] for k in ("x0", "x1", "z0", "z1", "t")}
     STACK_OUT = 0.76 + P["t"] + 2.0 + 5.34             # 930-001 class flange gasket 0.030 in, plate, closed-cell gasket 2.0, wall 5.34 (DXF A-A)
     print("  free zone on the outside: between the hinge fairings' bases at |X| %.2f (the rim-flange line ends at %.2f); section A-A at X %.2f shows the" % (FAIR_X, RIMLINE_X, AA_X))
     print("  back wall plain from the outer bottom radius (flat from Z %.1f) to Z 93.6 there; the end view carries back features to Z 15.9 .. 30.5 at X no view gives" % OUT_FLAT_Z)
@@ -361,15 +377,10 @@ if __name__ == "__main__":
     SHELL15_MATED = 32.51 / 2                          # GLN 233-340 G6 plug: 1.280 (32.51) max; AMPH p. 52 D38999/26 shell 15 Q max 1.280 (32.5)
     SHELL13_MATED = 29.4 / 2                           # AMPH p. 52 D38999/26 shell 13 Q max 1.157 (29.4); GLN M85049/38S13N E max 1.157 (29.4)
     # items: key, (x, z), footprint on the plate ('sq', side) or ('c', r), mated envelope r, wall hole d, inside top above the centre, what sets it
-    ITEMS = [
-        ("A sealed RJ45 (38999 shell 15 class)", (-28.5, 36.6), ("sq", 31.29), ("c", SHELL15_MATED), 29.0, 8.0, "patch plug body +-8 (INFERRED)"),
-        ("C shore DC D38999/20 sh 13", (4.2, 34.0), ("sq", 28.9), ("c", SHELL13_MATED), 22.0, 5.0, "cores within the insert +-5 (INFERRED)"),
-        ("B sealed USB-C (4000 series class)", (33.7, 36.6), ("c", 25.67 / 2), ("c", 13.0), 29.0, 3.5, "lead 7.0 (INFERRED)"),
-        ("E pod over the M8 receptacle", (-30.0, 70.0), ("sq", 28.0), ("sq", 28.0), 18.0, 5.0, "M8 rear body 10 (INFERRED)"),
-        ("D USB 233-370 sh 15", (4.6, 67.0), ("sq", 31.29), ("c", SHELL15_MATED), 29.0, 14.5, "rear body within the 29 hole"),
-        ("F ground stud M6", (34.6, 64.5), ("c", 12.0), ("c", 12.0), 8.0, 6.0, "nut and washer 12 (INFERRED)"),
-    ]   # the previous issue's X: A -29.3, C +3.0, B +32.0, D +3.5, F +33.5 (re-laid so that every pair keeps 1.0 with each part at its float)
-    SCREWS = [(-51.1, 24.2), (-51.1, 50.1), (-51.1, 76.0), (51.1, 24.2), (51.1, 50.1), (51.1, 76.0)]   # M4 x 25: bonded sealing washer under the head, plain washer 9.0 and Nyloc inside
+    ITEMS = [(it["label"], it["c"], (it["flange"][0], it["flange"][1] if it["flange"][0] == "sq" else it["flange"][1] / 2),
+              (it["mated"][0], it["mated"][1] if it["mated"][0] == "sq" else it["mated"][1] / 2), it["wall_hole"], it["inside_top"], it["inside_note"])
+             for it in P1450.CONN_ITEMS]   # panel1450.CONN_ITEMS: 'c' figures there are diameters, here radii
+    SCREWS = [tuple(s_) for s_ in P1450.CONN_PLATE["screws"]]   # M4 x 25: bonded sealing washer under the head, plain washer 9.0 and Nyloc inside
     SW_R, SW_IN_R, SH_R = 5.0, 4.5, 2.25      # bonded sealing washer 10 across (INFERRED class), plain washer 9.0 inside, 4.5 holes
     # each part's float on the plate: a part located by screws in clearance holes, or by its body in a hole, can sit anywhere the smallest
     # screw (or body) of its class lets it (STD); every machined place in the plate carries T_MACH besides
@@ -510,20 +521,20 @@ if __name__ == "__main__":
                                                                    # own if PolyPhaser's dimensions put them inside the class, else a 5/8-24 UNEF nut and lock washer inside it
     O_FREE = 0.63                                                  # the maker's O-ring on the thread's root, drawn 0.63 proud of the body's face, inside the .47 (POLY, scaled; not dimensioned)
     O_NOM, T_O = O_FREE / 2, O_FREE / 2                            # installed anywhere from fully seated to its drawn height (no gland is drawn and no torque stated): 0.32 +-0.32, unstated
-    RFP_T, T_RFP = 6.0, 0.2                                        # the RF entry plate, 6.0 aluminium (EN 485 class, standard not held, INFERRED); 6.0 so that an M4 x 12 both engages and stays inside (M11d, M11g)
+    RFP_T, T_RFP = P1450.RF_PLATE["t"], 0.2                                        # the RF entry plate, 6.0 aluminium (EN 485 class, standard not held, INFERRED); 6.0 so that an M4 x 12 both engages and stays inside (M11d, M11g)
     GASK, T_GASK = 1.5, 0.5                                        # 2.0 closed-cell gasket, 1.5 compressed, anywhere between 1.0 and 2.0 (INFERRED)
-    WALL_HOLE_R, PLATE_HOLE = 27.0 / 2, 16.3                       # wall hole saw 27 passes the nut and washer; plate hole 16.3 for the 5/8-24 thread (0.2 per side, INFERRED)
+    WALL_HOLE_R, PLATE_HOLE = P1450.RF_PLATE["wall_hole"] / 2, P1450.RF_PLATE["hole"]                       # wall hole saw 27 passes the nut and washer; plate hole 16.3 for the 5/8-24 thread (0.2 per side, INFERRED)
     F_THD = (PLATE_HOLE - 0.6167 * IN) / 2                         # the arrestor floats this far in its hole: 5/8-24UNEF-2A (POLY) major 0.6167 in min (ASME B1.1 class, INFERRED)
-    SPOT_D, SPOT_DEPTH, T_SPOT = 26.0, 1.5, 0.10                   # C4: each 16.3 hole spot-faced 26.0 on the plate's back, its floor 4.5 from the outer face +-0.10 (drawing)
+    (SPOT_D, SPOT_DEPTH), T_SPOT = P1450.RF_PLATE["spot"], 0.10                   # C4: each 16.3 hole spot-faced 26.0 on the plate's back, its floor 4.5 from the outer face +-0.10 (drawing)
     PLUG_L, PLUG_R, PLUG_CABLE = 10.0, 5.0, 4.0                    # the jumper's right-angle SMA male, mated: 10.0 beyond the jack's end, 5.0 about the axis, its cable's axis within 4.0 of that end (INFERRED class)
-    AX_Z = 59.0                                                    # the arrestors' axis, both end walls
+    AX_Z = P1450.SMA_Z                                                    # the arrestors' axis, both end walls
     # five on the east wall (the three 5G jacks together, then IRIDIUM and LORA) and seven on the west (the tree's five, then the two WIFI P2P):
     # at |Y| 93 an east jumper cannot get inboard of a setting leg's column before it reaches it (part G, M17c), and the west wall has no pack under it
-    SITES_E = [("5G MAIN", -62.0), ("5G DIV", -31.0), ("5G ANT3", 0.0), ("IRIDIUM", 31.0), ("LORA", 62.0)]
-    SITES_W = [("VHF", -93.0), ("HF", -62.0), ("WIFI 2.4", -31.0), ("GNSS", 0.0), ("SDR", 31.0), ("WIFI P2P A", 62.0), ("WIFI P2P B", 93.0)]
+    SITES_E = list(P1450.WALL_EAST)
+    SITES_W = list(P1450.WALL_WEST)
     SITES_ALL = SITES_E + SITES_W                                  # the two plates share one outline and one screw pattern
-    RFP = dict(y=110.1, z0=34.55, z1=83.45)                        # the plate: Y +-110.1, Z 34.55 .. 83.45, the same outline on both walls
-    RFP_SCREWS = [(y, z) for y in (-100.0, -45.0, 45.0, 100.0) for z in (40.65, 77.35)]   # M4 x 12 button heads from inside, threads tapped through the plate; rows 0.25 in from the previous issue's for the 5.0 holes' band (M11c)
+    RFP = {k: P1450.RF_PLATE[k] for k in ("y", "z0", "z1")}                        # the plate: Y +-110.1, Z 34.55 .. 83.45, the same outline on both walls
+    RFP_SCREWS = [tuple(s_) for s_ in P1450.RF_PLATE["screws"]]   # M4 x 12 button heads from inside, threads tapped through the plate; rows 0.25 in from the previous issue's for the 5.0 holes' band (M11c)
     HEAD_R, HEAD_IN, RFP_SH_R = 5.0, 1.5 + 2.2, 5.0 / 2           # sealing washer 10 across under an ISO 7380 M4 head 2.2 high (INFERRED class); 5.0 wall holes at the screws
     M4_MAJ = 3.98                                                  # M4 6g major diameter max (ISO 965 class, standard not held, INFERRED)
     SCREW_L, T_SCREW = 12.0, 0.35                                  # M4 x 12 ISO 7380, length js15 for 10 to 18 mm (standard not held, INFERRED)
@@ -581,8 +592,9 @@ if __name__ == "__main__":
     band_sf = min(RFP["y"] - abs(y) for _, y in SITES_ALL) - SPOT_D / 2
     print("  the spot-faces keep %.2f of the plate's back to its Y edge at the outermost sites (%.2f at the worst of the machined place and the outline), the"
           " gasket's land on the plate; its land on the wall is M11c's" % (band_sf, band_sf - T_MACH - T_OUTLINE))
-    tall = [((113.0, -99.0, 165.0, -43.0), 21.0, "RockBLOCK"), ((130.0, -43.0, 161.0, 45.0), 12.0, "LimeSDR"), ((125.5, 45.5, 162.0, 67.0), 5.0, "radio modules"),
-            ((-162.0, 81.0, -142.0, 98.0), 14.0, "J_ETH"), ((-161.5, 58.5, -142.5, 77.5), 7.0, "T1 magnetics"), ((-152.0, -97.0, -116.0, -69.0), 10.0, "west headers")]
+    # B16's tall parts near the end walls, as panel1450.B16_TALL carries them (the modules, and the committed board's parts read by zstack.py);
+    # until 27 Sep 2026 a hand list of six (RockBLOCK 21.0, LimeSDR 12.0, radio modules 5.0, J_ETH 14.0, T1 7.0, west headers 10.0)
+    tall = [(tuple(r), h, n) for r, h, n in P1450.B16_TALL if max(abs(r[0]), abs(r[2])) >= 120.0 and min(abs(r[0]), abs(r[2])) >= 90.0 and h >= 3.0]
     plug_lo = AX_Z - PLUG_R
     hits = []
     for (x0, y0, x1, y1), h, name in tall:
@@ -597,7 +609,7 @@ if __name__ == "__main__":
         print("  plug end X %.2f against %s (edge |X| %.1f, Z %.1f..%.1f) at Y %s: the plug's Z %.1f..%.1f overlaps it, X gap %.2f" % (
             x_end, name, x_end - gx, B_TOP, top, ", ".join("%+.0f" % y for y in ys), plug_lo, AX_Z + PLUG_R + TW * (in_jack + PLUG_L), gx))
     g_min = min(hits)
-    row("M18", "jumper plug's inner end to B16's tall parts in X (tightest: %s, which it overlaps in Y and Z)" % g_min[1], MIN_MECH, g_min[0],
+    row("M18", "jumper plug's inner end to B16's tall parts in X (tightest: %s)" % g_min[1], MIN_MECH, g_min[0],
         t_end + [("stack placement", T_STACK), ("B16 outline", 0.1)])
     row("M18b", "neighbouring arrestor bodies outside (%.2f across at the %.0f pitch)" % (A_W, pitch), MIN_MECH, pitch - A_W,
         [("plate hole positions, two", 2 * T_MACH), ("arrestors in their 16.3 holes, two", 2 * F_THD)])

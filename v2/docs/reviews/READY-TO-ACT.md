@@ -38,10 +38,15 @@ This is the request the review asks for: only what is genuinely missing. Everyth
 | 5 | R-EMC, pre-compliance of the built kit | nothing now; a booking and a quote once a prototype exists | spend at the build (approved in principle by D-09) | TBD | characterisation of MIL-STD-461 rows | provider list section 2.5 |
 | 6 | ZEROIZE bench Z-EXP-A to C | the purchase (list section 3.3); who wires the rig; which lab host the session may reach by ssh to run it | purchase and people | VERIFIED in part: USD 11.04 and GBP 3.80 (USD 69.04 with the MikroE socket board); the DM320118 and the instruments TBD (section 3.4) | FB-ZER-1 on the fitted part; board B's U8 site; the proposed REQ-035 pass lines | procedure `v2/docs/feasibility/ZEROIZE.md` section 5 |
 | 7 | EMCON development bench (E-01 row 5, E-05, E-12 parts) | the purchase (list section 4.3); the RM520N-GL and SA868 order codes pinned first (parts stream); an operator SIM; the licensed operator of D-04 for the SA868 keying | purchase and people | analyser VERIFIED (EUR 159.46 excl. VAT, or EUR 6,509 for a bench unit); the rest TBD | SD-EMC-1's fallback and its T_off and T_cut values on board B; board D's PTT divider | section 4 |
-| 8 | Empty-case heat-balance test | buying the prototype's own case and frame now instead of at the build, plus consumables; who runs it | purchase and people | case EUR 168.90 and frame EUR 29.66 excl. VAT, logger GBP 349, all VERIFIED; plate blank, heaters, fans TBD | FB-PWR's enclosure conductance and the PA patch (PWR-F15) | section 5 |
-| 9 | Case mock-up | machining quotes for the made parts once their drawings exist; buying prototype parts early (arrestors, monitor, connector-plate items); who assembles and measures | purchase and people | arrestors 12 x USD 78.99 and monitor USD 569.00 VERIFIED; machining and the connector-plate items TBD | the 35 OPEN case margins; board outlines and connector places of A, B and E before they are costly to change | section 6 |
+| 8 | Empty-case heat-balance test | buying the prototype's own case and frame now instead of at the build, plus consumables; who runs it | purchase and people | case EUR 168.90 and frame EUR 29.66 excl. VAT, logger GBP 349, all VERIFIED; plate blank, heaters, fans TBD | FB-PWR's enclosure conductance and the PA patch (PWR-F15); and, while one case serves items 8 and 9 (S-1), item 9 and with it the layout entry of boards A, B, E and P | section 5 |
+| 9 | Case mock-up | machining quotes for the made parts from their drawings (`v2/release/case-2026-09-27/`, 27 September 2026); buying prototype parts early (arrestors, monitor, connector-plate items); who assembles and measures | purchase and people | arrestors 12 x USD 78.99 and monitor USD 569.00 VERIFIED; machining and the connector-plate items TBD | the 35 OPEN case margins; the layout entry of boards A, B, E and P, which is BLOCKED on this item since 27 September 2026 (FEA-007, section 6.1) | section 6 |
 
-Items 8 and 9 use one case, in that order (section 11, S-1). The case, its frame, the arrestors, the monitor and the
+Items 8 and 9 use one case, in that order (section 11, S-1): the heat-balance test needs the sealed skin and runs
+first, and the mock-up then drills the same case. Because the layout entry of boards A, B, E and P waits on item 9
+(FEA-007, section 6.1), with one case it also waits on item 8: boards A and P wait on item 8 anyway (FEA-004, the
+placement freeze of the pack and the PA's flange site), boards B and E only through this order. A second case would
+let the two run side by side; buying it is the owner's purchase decision, recorded in S-1 as the alternative and not
+taken. The case, its frame, the arrestors, the monitor and the
 connector-plate items are parts the prototype needs anyway (`v2/docs/CASE-MARGINS.md` section 7, "each a part the
 prototype needs anyway"), so for them the decision is **when** to buy, not **whether**.
 
@@ -50,8 +55,10 @@ prototype needs anyway"), so for them the decision is **when** to buy, not **whe
 The review asks that unrelated engineering continue meanwhile. None of the following waits on an item of section 0:
 the round 8 circuit corrections on every board (EMCON remedies, failover fabric, address conflicts, board E,
 decoupling); regeneration and parity; the evidence re-take; board B's bounded escape experiment; the per-board path
-into layout; the golden image of the pack gauge (`v2/docs/review-packets/battery/PRIMARY-CONFIGURATION.md`); the panel
-firmware's wipe sequence (MESHSAT-837); the drawings the mock-up needs (section 6.2); and the review packets owed for
+into layout up to layout entry, and layout entry itself for boards C, D and E5 (**corrected 27 September 2026:** the
+layout entry of boards A, B, E and P waits on item 9, the case mock-up, FEA-007, section 6.1, and with one case for
+items 8 and 9 on item 8 before it, S-1; their desk items do not); the golden image of the pack gauge (`v2/docs/review-packets/battery/PRIMARY-CONFIGURATION.md`); the panel
+firmware's wipe sequence (MESHSAT-837); the drawings the mock-up needs (section 6.2, drawn on 27 September 2026); and the review packets owed for
 boards A, B, D and P at the round 8 merge (section 7).
 
 What does wait, item by item, is stated in each section below as "Waits on it".
@@ -397,9 +404,11 @@ It closes what `POWER-THERMAL.md` calls "W4 T9" (a workstream item there, not so
 flange thresholds and repeat rate need (`POWER-THERMAL.md` section 10), "weeks before a populated build". The second
 review asks for it before freezing affected placement and pack design (point B).
 
-- **Proceeds before it:** every circuit and layout draft; the thermal limits stay PROVISIONAL meanwhile.
+- **Proceeds before it:** every circuit and layout draft, and the layout entry of boards C, D and E5; the thermal
+  limits stay PROVISIONAL meanwhile.
 - **Waits on it:** freezing the placement of the pack and the PA's flange site; the +35 C and +25 C controls leaving
-  "proposed"; PWR-F15's thresholds.
+  "proposed"; PWR-F15's thresholds; and, while one case serves both tests (section 11, S-1), the case mock-up that
+  follows it in that case (section 6), so the layout entry of boards A, B, E and P.
 
 ### 5.2 Hardware list
 
@@ -432,26 +441,35 @@ session by a file the runner can read.
 A targeted, unpowered mock-up on the new case of the current moulding, running checks T1 to T11. It closes the OPEN
 margins that rest on Peli's unstated tolerances, the frame's seat, the jumper route and the arrestor's O-ring (35 of the
 70 computed rows are OPEN, none NOT MET; `CASE-MARGINS.md`, its opening summary and finding 23 of section 0).
-`CASE-MARGINS.md` section 7 recommends it for the build stage; the second review asks for it "before affected PCB
+`CASE-MARGINS.md` section 7 first placed it at the build stage, its seventh revision (26 September 2026) before the
+affected outlines freeze, and since 27 September 2026 it requires the board-moving checks before layout entry, as below;
+the second review asks for it "before affected PCB
 outlines and connector placements become expensive to change, rather than waiting until boards are ready for
-population" (its section 3). This page takes the review's
-timing (S-8): before the outlines and connector places of boards A (the RF jacks and the connector bay), B (the tall
-parts and the heatsink over which M1 is measured) and E (the float clamps the jumpers reach) are frozen. Layout entry
-does not wait on it: the mock-up needs a purchase the owner has not authorised, and the review's item 2 asks that no
-layout-entry gate depend on such a step.
+population" (its section 3). Since 27 September 2026 (the layer 7 closer, `v2/docs/CASE-FIT-UNCERTAINTIES.md`
+sections 1, 2 and 7) the checks of the rows a failing reading would remedy by moving a board are **required before the
+layout entry of boards A (the east edge, M4a), B (the east and west edges, the east-end tall parts, the stack under
+the monitor), E (the south edge and front clamp lanes) and P (its place)**, and that layout entry is BLOCKED on the
+purchase: the owner's execution prompt of 27 September 2026 admits a deferred physical test only where the current
+stage's decision does not depend on it (its section 2) and forbids moving a decisive uncertainty to a later phase to
+unblock a status (its section 5). The earlier line here, that layout entry does not wait because the mock-up needs a
+purchase, rested on a reading of the review's item 2 that its section 2A does not support: a test that needs the
+final PCB cannot gate designing it, and this one needs no board. Boards C, D and E5 are not held by it.
 
-- **Proceeds before it:** circuit work on every board; the made parts' drawings; the picks listed below.
+- **Proceeds before it:** circuit work on every board; the desk items of boards A, B, E and P and the layout entry of
+  boards C, D and E5; the made parts' drawings (done on 27 September 2026, section 6.2); the picks listed below.
 - **Waits on it:** the OPEN rows' verdicts; the connector plate and entry plates being drilled for the prototype; the
-  outlines and connector places of A, B and E being committed.
+  layout entry of boards A, B, E and P (FEA-007, BLOCKED on this purchase).
 
 ### 6.2 Owed before it can be quoted
 
-- **Drawings of the made parts.** The released face-plate drawing (`v2/release/revA/case/face-plate/`, from
-  `1f46cf83`, 7 September 2026) and its generators (`v2/cad/face_plate.py`, `v2/ecad/tools/panel1450.py`) predate C1
-  (377.2 x 263.0 x 3.0, 4.6 mm holes, the rebate, the relief pocket, face top 106.52). The four setting legs with their
-  locator and wedges (C6), the connector plate 114.0 x 68.3 x 5.0 (C3), the two 6.0 mm RF entry plates with twelve holes
-  spot-faced 26.0 x 1.5 (C4) and the lid tray (C5) have no drawing in the tree. Owner: the case writer, as a design task
-  that needs no money.
+- **Drawings of the made parts: drawn on 27 September 2026** (MESHSAT-1357, layer 7) in `v2/release/case-2026-09-27/`,
+  generated from `v2/ecad/tools/panel1450.py` and `v2/cad/`: the face plate 377.2 x 263.0 x 3.0 (C1, sheet 1 and the 1:1
+  A3 template), the four setting legs with their locator and wedges (C6, sheet 2), the connector plate 114.0 x 68.3 x 5.0
+  (C3, sheet 3), the two 6.0 mm RF entry plates with twelve holes spot-faced 26.0 x 1.5 (C4, sheet 4) and the lid tray (C5,
+  sheet 14), each with STEP and STL and, for the machined parts, DXF. The face-plate files of `v2/release/revA/case/`
+  (`1f46cf83`, 7 September 2026) predate C1 and are marked HISTORICAL there. The lid tray's fit to the unit is open (its
+  jacks are on both end panels, the tray is notched at one end): it is revised before it is printed, which does not hold
+  the quotes for the machined parts (`v2/docs/CASE-FIT-UNCERTAINTIES.md` section 3).
 - **Picks that decide rows** (`CASE-MARGINS.md` section 6): the jumpers' right-angle SMA plug for RG-316 (M17g, M17x);
   the sealed RJ45 in the MIL-DTL-38999 shell 15 class rated for the 54 V PoE feed (the recommended Bulgin PX0833 fails
   both on its own sheet); the sealed USB-C's 45 W PD rating (Bulgin PXP4043/C); the ground stud; the M8 receptacle's
@@ -490,8 +508,8 @@ Bought parts, each one the prototype needs anyway:
 ### 6.4 Cost, lead time, authorisation
 
 VERIFIED: USD 947.88 excl. duties for the arrestors and USD 569.00 for the monitor (prototype parts bought early);
-GBP 4.80 for the heatsink. TBD: every made part (by quote, once drawn), the connector-plate items, the jumpers and the
-stand-ins. **Authorisation missing:** approving the machining quotes once the drawings exist; buying the prototype's
+GBP 4.80 for the heatsink. TBD: every made part (by quote, from the drawings of 6.2), the connector-plate items, the jumpers and the
+stand-ins. **Authorisation missing:** approving the machining quotes (the drawings exist, 6.2); buying the prototype's
 bought parts early; who assembles and measures (the session cannot; the owner withdrew the earlier request that he
 measure his old case, D-08 reversed, and nothing here asks him to).
 
@@ -644,8 +662,13 @@ content and is not cited.
 None spends money or contacts anyone; each is reversible by the owner or by a later measurement.
 
 - **S-1.** One Peli 1450 serves the heat-balance test first (undrilled, sealed) and then the mock-up, which drills it;
-  it is the prototype's own case (D-08a). Why: the heat test needs the sealed skin, the mock-up needs the holes, and a
-  second case buys nothing the first cannot show.
+  it is the prototype's own case (D-08a). Why: the heat test needs the sealed skin and the mock-up needs the holes, so
+  one case serves both in that order. Consequence since 27 September 2026 (S-8): the layout entry of boards A, B, E
+  and P waits on the mock-up and so, with one case, on the heat test before it; boards A and P wait on the heat test
+  anyway (FEA-004), boards B and E only through this order. A second case (EUR 168.90 and EUR 29.66 excl. VAT for the
+  frame, VERIFIED, section 0 item 8) would let the two run side by side and free B's and E's layout entry from the heat
+  test; it is a purchase, so it is the owner's (D-09), and it is recorded here as the alternative, not taken.
+  Reversal: the owner buys a second case; the mock-up then runs as soon as its parts are in.
 - **S-2.** R-BAT's send condition: the release check passes and the packet's candidate netlist and schematic equal main's
   board P at the linked commit. Why: the reviewer must read the circuit that will be built.
 - **S-3.** R-SEC's scope is fitted to the voucher's half day (the four questions and R7). Why: a half day cannot cover
@@ -664,11 +687,19 @@ None spends money or contacts anyone; each is reversible by the owner or by a la
 - **S-7.** The development tier of analyser (tinySA Ultra+ ZS-407) for the early rows; the acceptance instrument for the
   built kit stays the TEST-PLAN owner's, and R-EMC's lab may supply it. Why: the early rows decide circuit values and a
   topology choice, not acceptance, and the instrument reaches 7.3 GHz for EUR 159.46 excl. VAT against EUR 6,509.
-- **S-8.** The mock-up runs before the outlines and connector places of boards A, B and E are frozen, not at the build
-  stage that `CASE-MARGINS.md` section 7 recommends, and it does not gate their layout entry. Why: the second review's
-  section 3 asks for it before those become expensive to change, and its item 2 asks that no layout-entry gate depend on
-  an unauthorised purchase. `CASE-MARGINS.md` is
-  not changed by this page; its writer carries the timing.
+- **S-8.** (Revised on 27 September 2026, applying the layer 7 closer's allocation; the text of 26 September is
+  replaced.) The mock-up's checks of the rows that can move a board outline, a connector or a board part run before the
+  layout entry of boards A, B, E and P, and that layout entry is BLOCKED on the purchase (FEA-007;
+  `v2/docs/CASE-FIT-UNCERTAINTIES.md` sections 1, 2 and 7; `CASE-MARGINS.md` section 7, which carries the same timing);
+  boards C, D and E5 are not held by it, and the other checks run at the build. Why: such a row decides the board's
+  outline or placement, which is the layout-entry decision itself, and its plausible bound includes failure; the owner's
+  execution prompt of 27 September 2026 admits a deferred physical test only where the current stage's decision does
+  not depend on it (its section 2) and forbids moving a decisive uncertainty to a later phase to unblock a status (its
+  section 5). The text of 26 September read the second review's item 2 as barring any layout-entry gate that depends on
+  an unauthorised purchase; its section 2A bars gates that need the final PCB, and the mock-up needs no board. Reversal:
+  the mock-up's readings meeting the rows' minimums lift the hold; only the owner can instead accept entering layout on
+  the design basis as his residual risk. With one case for the heat test and the mock-up (S-1) the mock-up runs after the
+  heat test, so this hold lifts no earlier than that test's end unless a second case is bought.
 
 ## 12. What this page does not settle, and hand-offs
 
@@ -677,7 +708,8 @@ None spends money or contacts anyone; each is reversible by the owner or by a la
 - The superseded labels on `D-D12-1f614233` and `P-P4-1f614233`, and the packets owed at the round 8 merge: the
   integrator, on the KiCad host (section 7).
 - The RM520N-GL and SA868 order codes, and the mock-up's open picks: the parts work (sections 4.2, 6.2).
-- The drawings of C1 to C6: the case writer (section 6.2).
+- The drawings of C1 to C6: drawn on 27 September 2026 (section 6.2); the lid tray's revision for the unit's jacks is the case
+  writer's (`v2/docs/CASE-FIT-UNCERTAINTIES.md` section 3).
 - `REVIEW-ROUTES.md` still says the battery packet and the ZEROIZE, POWER-THERMAL and DECOUPLING pages are "pending
   merge"; all are on main (`d90f30e4`, `9b0635d1`, `eadbe571`, `9d566e8b`, filed citations `428c697c`). Its R-PWR
   "Owed" line still lists the per-stage calculations (compensation, ripple current per bulk capacitor, inrush), which

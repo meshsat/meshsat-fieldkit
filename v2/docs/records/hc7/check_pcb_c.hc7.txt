@@ -1,0 +1,210 @@
+PASS ring outline 344 x 228 from (-172.0, -114.0, 172.0, 114.0) (got -172.0..172.0, -114.0..114.0)
+PASS the window (-120.0, -88.0, 120.0, 88.0): its top edge at Y 88 from X -120 to 120
+PASS the monitor body notch (-104.0, -94.2, 104.0, -87.0) cut into the bottom strip
+PASS eight standoff screws H1..H8 (got 8)
+PASS standoff screws on the plate's eight sites
+PASS every standoff screw is a 3.2 mm plated pad on GND (the plate's bond)
+PASS the seven switch holes, the sounder hole and the two jack holes sit exactly on the plate's sites (off: [], missing: [])
+PASS SW_SOS body slot 15 x 22 through the backer
+PASS SW_EMCON body slot 15 x 22 through the backer
+PASS SW_ZERO body slot 15 x 22 through the backer
+PASS SW_LIGHT body slot 15 x 12 through the backer
+PASS SW_MAIN passes its 19.2 mm hole
+PASS SW_PI passes its 16.2 mm hole
+PASS SW_TEST passes its 16.2 mm hole
+PASS BZ1 passes its 28.6 mm hole
+PASS J_HSJ1 passes its 17.0 mm hole
+PASS J_HSJ2 passes its 17.0 mm hole
+PASS every switch and sounder lead land is an SMD pad on the underside ([])
+PASS sixteen LEDs on the plate's light-guide sites, top face (off: [])
+PASS no plated component hole but the standoff screws and the LEDs ([])
+PASS seven panel switches (got 7)
+PASS switch centre pitch >= 25 mm (MIL-STD-1472 gloved use), min 42.0
+PASS every part inside the plate outline by 3 mm ([])
+PASS every part on the ring (left, bottom, right or top strip), nothing over the window ([])
+PASS nothing sits in the monitor block notch ([])
+PASS the e-paper ZIF J_EPD on the top strip's top side at (-72.0, 94.0)
+PASS the light sensor on the top side under its guide at (128.0, 63.0)
+PASS the ribbon J_PANEL on the underside at (-116.0, 96.0) (over B16's header)
+PASS the e-paper flex reaches the ZIF: 27.8 mm of 43.9 (8 mm of folds kept)
+PASS every deep face part clears B16's tall parts by 2 mm ([])
+PASS no two face parts overlap in plan on the plate ([])
+PASS every display surface is within 0.8 mm of the plate's face ([])
+PASS B16's tall parts under the strips stay 3 mm below the backer's underside parts (3.5 mm allowance, 9.5 under the top strip's ribbon header): []
+PASS 4 copper layers as board C declares them (In1 a ground plane; decision 27 is open on the count), 1.6 mm thick
+PASS In1 carries the GND plane zone
+PASS In1 plane keep-outs present (the clusters are the only windows)
+PASS every via drill >= 0.2 mm
+PASS no via inside a cut-out keep-out (0 found)
+PASS J_PANEL, J_MAINSW and J_PIJ2 are SMD parts on the underside
+PASS the underside cluster stays on the strips
+PASS return path under BAT1_A (LOW_SPEED_OR_DC): a reference exists under 145.2 of 149.7 mm [an indicator LED anode: a static level or a blink of a few hertz]
+PASS return path under BAT1_K (LOW_SPEED_OR_DC): a reference exists under 204.8 of 214.4 mm [an indicator LED cathode, the return of the same]
+PASS return path under BAT2_A (LOW_SPEED_OR_DC): a reference exists under 141.0 of 147.9 mm [an indicator LED anode: a static level or a blink of a few hertz]
+PASS return path under BAT2_K (LOW_SPEED_OR_DC): a reference exists under 202.9 of 217.1 mm [an indicator LED cathode, the return of the same]
+PASS return path under BAT3_A (LOW_SPEED_OR_DC): a reference exists under 142.8 of 150.3 mm [an indicator LED anode: a static level or a blink of a few hertz]
+PASS return path under BAT3_K (LOW_SPEED_OR_DC): a reference exists under 171.0 of 179.8 mm [an indicator LED cathode, the return of the same]
+PASS return path under BAT4_A (LOW_SPEED_OR_DC): a reference exists under 138.3 of 146.0 mm [an indicator LED anode: a static level or a blink of a few hertz]
+PASS return path under BAT4_K (LOW_SPEED_OR_DC): a reference exists under 197.5 of 211.5 mm [an indicator LED cathode, the return of the same]
+PASS return path under BAT5_A (LOW_SPEED_OR_DC): a reference exists under 138.6 of 145.4 mm [an indicator LED anode: a static level or a blink of a few hertz]
+PASS return path under BAT5_K (LOW_SPEED_OR_DC): a reference exists under 23.6 of 172.8 mm [an indicator LED cathode, the return of the same]
+PASS return path under BOOT_J (LOW_SPEED_OR_DC): a reference exists under 128.0 of 132.8 mm [the RP2040 boot-select jumper, read once at reset]
+PASS return path under BZ_K (LOW_SPEED_OR_DC): a reference exists under 49.4 of 49.4 mm [an indicator LED cathode, the return of the same]
+PASS return path under CHG_A (LOW_SPEED_OR_DC): a reference exists under 71.3 of 88.2 mm [an indicator LED anode: a static level or a blink of a few hertz]
+PASS return path under CHG_K (LOW_SPEED_OR_DC): a reference exists under 28.3 of 31.8 mm [an indicator LED cathode, the return of the same]
+PASS return path under C_DVDD (LOW_SPEED_OR_DC): a reference exists under 46.4 of 68.2 mm [the RP2040's internal digital supply node with its decoupling]
+PASS return path under C_RUN (LOW_SPEED_OR_DC): a reference exists under 219.9 of 227.3 mm [the RP2040's run input, a static level with an RC]
+PASS return path under EMCON_HW (LOW_SPEED_OR_DC): a reference exists under 349.8 of 466.1 mm [the emission-control line, a static level]
+PASS return path under EPD_BUSY (LOW_SPEED_OR_DC): a reference exists under 282.8 of 394.3 mm [the e-paper's generated supply rails, pump nodes and busy flag: local supplies a]
+FAIL return path under EPD_CS (Default, CLOCKED_DIGITAL): 66.1 of 390.3 mm without a plane on a neighbouring layer (limit 58.5; 6.6 mm more is this net's own via anti-pads, which RET-003 judges) [the e-paper's chip select, an edge per transfer]
+FAIL return path under EPD_DC (Default, CLOCKED_DIGITAL): 102.6 of 353.9 mm without a plane on a neighbouring layer (limit 53.1; 1.8 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the e-paper's data and command select, an edge per transfer]
+PASS return path under EPD_GDR (LOW_SPEED_OR_DC): a reference exists under 36.1 of 36.2 mm [the e-paper's generated supply rails, pump nodes and busy flag: local supplies a]
+PASS return path under EPD_PUMP (LOW_SPEED_OR_DC): a reference exists under 14.9 of 14.9 mm [the e-paper's generated supply rails, pump nodes and busy flag: local supplies a]
+PASS return path under EPD_PWR_n (LOW_SPEED_OR_DC): a reference exists under 385.2 of 440.1 mm [the e-paper's generated supply rails, pump nodes and busy flag: local supplies a]
+PASS return path under EPD_RESE (LOW_SPEED_OR_DC): a reference exists under 37.5 of 37.5 mm [the e-paper's generated supply rails, pump nodes and busy flag: local supplies a]
+PASS return path under EPD_RST (LOW_SPEED_OR_DC): a reference exists under 265.4 of 379.7 mm [the e-paper's generated supply rails, pump nodes and busy flag: local supplies a]
+PASS return path under EPD_SCL (Default, CLOCKED_DIGITAL): 4.9 of 387.9 mm without a plane on a neighbouring layer (limit 58.2; 4.5 mm more is this net's own via anti-pads, which RET-003 judges; 3.7 mm more is another conductor's via anti-pad, a hole the return goes around) [the e-paper's SPI clock, a few megahertz at most]
+FAIL return path under EPD_SDA (Default, CLOCKED_DIGITAL): 117.6 of 414.7 mm without a plane on a neighbouring layer (limit 62.2; 3.9 mm more is this net's own via anti-pads, which RET-003 judges) [the e-paper's SPI data, same rate]
+PASS return path under EPD_SW (Default, HIGH_SPEED_DIGITAL): 0.0 of 29.9 mm without a plane on a neighbouring layer (limit 10.0) [the e-paper's boost converter switching node]
+PASS return path under EPD_VCOM (LOW_SPEED_OR_DC): a reference exists under 25.9 of 38.0 mm [the e-paper's generated supply rails, pump nodes and busy flag: local supplies a]
+PASS return path under EPD_VDDD (LOW_SPEED_OR_DC): a reference exists under 34.8 of 46.4 mm [the e-paper's generated supply rails, pump nodes and busy flag: local supplies a]
+PASS return path under EPD_VDH (LOW_SPEED_OR_DC): a reference exists under 25.3 of 42.8 mm [the e-paper's generated supply rails, pump nodes and busy flag: local supplies a]
+PASS return path under EPD_VDHR (LOW_SPEED_OR_DC): a reference exists under 40.9 of 40.9 mm [the e-paper's generated supply rails, pump nodes and busy flag: local supplies a]
+PASS return path under EPD_VDL (LOW_SPEED_OR_DC): a reference exists under 33.0 of 39.8 mm [the e-paper's generated supply rails, pump nodes and busy flag: local supplies a]
+PASS return path under EPD_VGH (LOW_SPEED_OR_DC): a reference exists under 71.9 of 71.9 mm [the e-paper's generated supply rails, pump nodes and busy flag: local supplies a]
+PASS return path under EPD_VGL (LOW_SPEED_OR_DC): a reference exists under 85.3 of 85.3 mm [the e-paper's generated supply rails, pump nodes and busy flag: local supplies a]
+FAIL return path under EXP_INT (Default, CLOCKED_DIGITAL): 110.4 of 481.0 mm without a plane on a neighbouring layer (limit 72.2; 8.1 mm more is this net's own via anti-pads, which RET-003 judges) [the expander's interrupt, an edge into a GPIO]
+PASS return path under GPS_A (LOW_SPEED_OR_DC): a reference exists under 66.4 of 93.6 mm [an indicator LED anode: a static level or a blink of a few hertz]
+PASS return path under GPS_K (LOW_SPEED_OR_DC): a reference exists under 46.6 of 49.5 mm [an indicator LED cathode, the return of the same]
+PASS return path under HB1 (Default, CLOCKED_DIGITAL): 5.0 of 479.9 mm without a plane on a neighbouring layer (limit 72.0; 4.2 mm more is this net's own via anti-pads, which RET-003 judges; 4.1 mm more is another conductor's via anti-pad, a hole the return goes around) [a heartbeat line from a compute module, a slow square wave that must k]
+FAIL return path under HB2 (Default, CLOCKED_DIGITAL): 125.3 of 489.2 mm without a plane on a neighbouring layer (limit 73.4; 2.2 mm more is this net's own via anti-pads, which RET-003 judges; 3.1 mm more is another conductor's via anti-pad, a hole the return goes around) [a heartbeat line from a compute module, a slow square wave that must k]
+PASS return path under HB3 (Default, CLOCKED_DIGITAL): 29.6 of 464.8 mm without a plane on a neighbouring layer (limit 69.7; 4.4 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [a heartbeat line from a compute module, a slow square wave that must k]
+PASS return path under HDMI_SEL1 (LOW_SPEED_OR_DC): a reference exists under 342.6 of 472.3 mm [the display switch's select lines, static levels changed by a person]
+PASS return path under HDMI_SEL2 (LOW_SPEED_OR_DC): a reference exists under 346.3 of 445.2 mm [the display switch's select lines, static levels changed by a person]
+PASS return path under LED_STAT (LOW_SPEED_OR_DC): a reference exists under 26.1 of 28.6 mm [the status LED's drive, a static level or a slow blink]
+PASS return path under LED_STAT_A (LOW_SPEED_OR_DC): a reference exists under 35.1 of 64.6 mm [an indicator LED anode: a static level or a blink of a few hertz]
+PASS return path under LIGHT_DAY_n (LOW_SPEED_OR_DC): a reference exists under 670.9 of 719.6 mm [the day and night lighting mode inputs, static levels from a toggle]
+PASS return path under LIGHT_NIGHT_n (LOW_SPEED_OR_DC): a reference exists under 627.6 of 682.3 mm [the day and night lighting mode inputs, static levels from a toggle]
+PASS return path under LTE_A (LOW_SPEED_OR_DC): a reference exists under 98.3 of 105.1 mm [an indicator LED anode: a static level or a blink of a few hertz]
+PASS return path under LTE_K (LOW_SPEED_OR_DC): a reference exists under 54.5 of 59.5 mm [an indicator LED cathode, the return of the same]
+PASS return path under MAINRING_A (LOW_SPEED_OR_DC): a reference exists under 150.1 of 157.1 mm [an indicator LED anode: a static level or a blink of a few hertz]
+PASS return path under MAINSW_A (LOW_SPEED_OR_DC): a reference exists under 251.5 of 281.2 mm [an indicator LED anode: a static level or a blink of a few hertz]
+PASS return path under MAINSW_A2 (LOW_SPEED_OR_DC): a reference exists under 183.2 of 254.4 mm [the second anode of a two-colour indicator]
+PASS return path under MAINSW_B (LOW_SPEED_OR_DC): a reference exists under 282.0 of 292.4 mm [a switch pole's second contact, a static level]
+PASS return path under MAINSW_B2 (LOW_SPEED_OR_DC): a reference exists under 239.9 of 251.5 mm [a switch pole's second contact, second deck]
+PASS return path under MCAUT_A (LOW_SPEED_OR_DC): a reference exists under 129.0 of 137.5 mm [an indicator LED anode: a static level or a blink of a few hertz]
+PASS return path under MCAUT_K (LOW_SPEED_OR_DC): a reference exists under 95.0 of 111.6 mm [an indicator LED cathode, the return of the same]
+PASS return path under MESH_A (LOW_SPEED_OR_DC): a reference exists under 94.9 of 118.5 mm [an indicator LED anode: a static level or a blink of a few hertz]
+PASS return path under MESH_K (LOW_SPEED_OR_DC): a reference exists under 61.0 of 68.7 mm [an indicator LED cathode, the return of the same]
+PASS return path under MSG_A (LOW_SPEED_OR_DC): a reference exists under 90.6 of 131.3 mm [an indicator LED anode: a static level or a blink of a few hertz]
+PASS return path under MSG_K (LOW_SPEED_OR_DC): a reference exists under 35.5 of 47.8 mm [an indicator LED cathode, the return of the same]
+PASS return path under MWARN_A (LOW_SPEED_OR_DC): a reference exists under 142.1 of 144.0 mm [an indicator LED anode: a static level or a blink of a few hertz]
+PASS return path under MWARN_K (LOW_SPEED_OR_DC): a reference exists under 112.9 of 126.4 mm [an indicator LED cathode, the return of the same]
+PASS return path under PANEL_ID (LOW_SPEED_OR_DC): a reference exists under 144.9 of 167.5 mm [the panel identification divider, a DC level read once]
+PASS return path under PANEL_PWM (Default, CLOCKED_DIGITAL): 2.8 of 34.3 mm without a plane on a neighbouring layer (limit 30.0; 2.6 mm more is this net's own via anti-pads, which RET-003 judges) [the panel backlight PWM, tens of kilohertz into a gate]
+PASS return path under PIJ2_A (LOW_SPEED_OR_DC): a reference exists under 197.1 of 277.7 mm [an indicator LED anode: a static level or a blink of a few hertz]
+PASS return path under PIJ2_A2 (LOW_SPEED_OR_DC): a reference exists under 229.8 of 253.5 mm [the second anode of a two-colour indicator]
+PASS return path under PIJ2_B (LOW_SPEED_OR_DC): a reference exists under 195.1 of 222.4 mm [a switch pole's second contact, a static level]
+PASS return path under PIJ2_B2 (LOW_SPEED_OR_DC): a reference exists under 188.1 of 232.5 mm [a switch pole's second contact, second deck]
+PASS return path under PIRING_A (LOW_SPEED_OR_DC): a reference exists under 114.8 of 133.3 mm [an indicator LED anode: a static level or a blink of a few hertz]
+PASS return path under PIRING_K (LOW_SPEED_OR_DC): a reference exists under 51.8 of 68.3 mm [an indicator LED cathode, the return of the same]
+PASS return path under PI_KILL (LOW_SPEED_OR_DC): a reference exists under 362.5 of 527.5 mm [the shutdown-request and kill lines to the modules, static levels]
+PASS return path under PI_SHDN_REQ (LOW_SPEED_OR_DC): a reference exists under 242.1 of 476.0 mm [the shutdown-request and kill lines to the modules, static levels]
+PASS return path under PWM1 (Default, CLOCKED_DIGITAL): 2.6 of 597.4 mm without a plane on a neighbouring layer (limit 89.6; 1.9 mm more is this net's own via anti-pads, which RET-003 judges) [the sounder drive PWM, an audio-rate square wave into a gate]
+FAIL return path under Q1_G (Default, HIGH_SPEED_DIGITAL): 16.4 of 91.3 mm without a plane on a neighbouring layer (limit 10.0; 8.2 mm more is this net's own via anti-pads, which RET-003 judges; 1.0 mm more is another conductor's via anti-pad, a hole the return goes around) [a FET gate drive]
+PASS return path under Q2_D (Default, HIGH_SPEED_DIGITAL): 0.0 of 19.2 mm without a plane on a neighbouring layer (limit 10.0; 4.1 mm more is this net's own via anti-pads, which RET-003 judges; 0.9 mm more is another conductor's via anti-pad, a hole the return goes around) [a switched FET drain]
+PASS return path under Q2_G (Default, HIGH_SPEED_DIGITAL): 3.7 of 17.7 mm without a plane on a neighbouring layer (limit 10.0; 1.8 mm more is this net's own via anti-pads, which RET-003 judges) [a FET gate drive]
+PASS return path under Q3_G (Default, HIGH_SPEED_DIGITAL): 7.3 of 29.2 mm without a plane on a neighbouring layer (limit 10.0; 2.6 mm more is this net's own via anti-pads, which RET-003 judges) [a FET gate drive]
+PASS return path under Q4_G (Default, HIGH_SPEED_DIGITAL): 0.0 of 8.3 mm without a plane on a neighbouring layer (limit 10.0) [a FET gate drive]
+PASS return path under QSPI_D0 (Default, HIGH_SPEED_DIGITAL): 2.7 of 55.7 mm without a plane on a neighbouring layer (limit 10.0; 5.2 mm more is this net's own via anti-pads, which RET-003 judges) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]
+FAIL return path under QSPI_D1 (Default, HIGH_SPEED_DIGITAL): 25.0 of 67.9 mm without a plane on a neighbouring layer (limit 10.0; 6.8 mm more is this net's own via anti-pads, which RET-003 judges; 0.8 mm more is another conductor's via anti-pad, a hole the return goes around) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]
+FAIL return path under QSPI_D2 (Default, HIGH_SPEED_DIGITAL): 31.5 of 61.2 mm without a plane on a neighbouring layer (limit 10.0; 6.0 mm more is this net's own via anti-pads, which RET-003 judges; 1.9 mm more is another conductor's via anti-pad, a hole the return goes around) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]
+PASS return path under QSPI_D3 (Default, HIGH_SPEED_DIGITAL): 1.2 of 58.6 mm without a plane on a neighbouring layer (limit 10.0; 3.7 mm more is this net's own via anti-pads, which RET-003 judges) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]
+FAIL return path under QSPI_SCLK (Default, HIGH_SPEED_DIGITAL): 29.2 of 63.8 mm without a plane on a neighbouring layer (limit 10.0; 6.5 mm more is this net's own via anti-pads, which RET-003 judges; 1.2 mm more is another conductor's via anti-pad, a hole the return goes around) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]
+FAIL return path under QSPI_SS (Default, HIGH_SPEED_DIGITAL): 26.5 of 103.3 mm without a plane on a neighbouring layer (limit 10.0; 6.4 mm more is this net's own via anti-pads, which RET-003 judges; 0.9 mm more is another conductor's via anti-pad, a hole the return goes around) [the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM ]
+PASS return path under RAIL_SENSE (LOW_SPEED_OR_DC): a reference exists under 62.9 of 70.2 mm [a divider tap into an ADC, filtered]
+PASS return path under SAT_A (LOW_SPEED_OR_DC): a reference exists under 67.4 of 118.2 mm [an indicator LED anode: a static level or a blink of a few hertz]
+PASS return path under SAT_K (LOW_SPEED_OR_DC): a reference exists under 19.7 of 76.9 mm [an indicator LED cathode, the return of the same]
+FAIL return path under SCL (Default, CLOCKED_DIGITAL): 252.9 of 488.5 mm without a plane on a neighbouring layer (limit 73.3; 7.0 mm more is this net's own via anti-pads, which RET-003 judges) [I2C at 100 or 400 kHz, open drain]
+PASS return path under SDA (Default, CLOCKED_DIGITAL): 25.7 of 473.8 mm without a plane on a neighbouring layer (limit 71.1; 10.9 mm more is this net's own via anti-pads, which RET-003 judges; 1.1 mm more is another conductor's via anti-pad, a hole the return goes around) [the data half of the same I2C bus]
+PASS return path under SHORE_A (LOW_SPEED_OR_DC): a reference exists under 74.6 of 83.1 mm [an indicator LED anode: a static level or a blink of a few hertz]
+PASS return path under SHORE_INHIBIT (LOW_SPEED_OR_DC): a reference exists under 260.9 of 495.0 mm [the shore inhibit, a static level through an optocoupler]
+PASS return path under SHORE_K (LOW_SPEED_OR_DC): a reference exists under 42.5 of 47.4 mm [an indicator LED cathode, the return of the same]
+PASS return path under SLOT_EN1 (LOW_SPEED_OR_DC): a reference exists under 227.9 of 474.9 mm [a slot enable, a static level]
+PASS return path under SLOT_EN2 (LOW_SPEED_OR_DC): a reference exists under 360.0 of 484.5 mm [a slot enable, a static level]
+PASS return path under SLOT_EN3 (LOW_SPEED_OR_DC): a reference exists under 322.4 of 470.7 mm [a slot enable, a static level]
+PASS return path under SOSACT_A (LOW_SPEED_OR_DC): a reference exists under 65.5 of 119.9 mm [an indicator LED anode: a static level or a blink of a few hertz]
+PASS return path under SOSACT_K (LOW_SPEED_OR_DC): a reference exists under 20.3 of 88.2 mm [an indicator LED cathode, the return of the same]
+PASS return path under SOS_SW (LOW_SPEED_OR_DC): a reference exists under 310.5 of 551.0 mm [a panel switch contact, a static level]
+PASS return path under SPARE1 (LOW_SPEED_OR_DC): a reference exists under 122.7 of 135.5 mm [an unused expander pin, driven by nothing]
+PASS return path under SPARE10 (LOW_SPEED_OR_DC): a reference exists under 107.6 of 114.6 mm [an unused expander pin, driven by nothing]
+PASS return path under SPARE11 (LOW_SPEED_OR_DC): a reference exists under 108.1 of 109.8 mm [an unused expander pin, driven by nothing]
+PASS return path under SPARE12 (LOW_SPEED_OR_DC): a reference exists under 103.3 of 112.2 mm [an unused expander pin, driven by nothing]
+PASS return path under SPARE2 (LOW_SPEED_OR_DC): a reference exists under 147.3 of 150.5 mm [an unused expander pin, driven by nothing]
+PASS return path under SPARE3 (LOW_SPEED_OR_DC): a reference exists under 144.3 of 147.1 mm [an unused expander pin, driven by nothing]
+PASS return path under SPARE4 (LOW_SPEED_OR_DC): a reference exists under 111.8 of 136.8 mm [an unused expander pin, driven by nothing]
+PASS return path under SPARE5 (LOW_SPEED_OR_DC): a reference exists under 129.8 of 147.1 mm [an unused expander pin, driven by nothing]
+PASS return path under SPARE6 (LOW_SPEED_OR_DC): a reference exists under 42.6 of 120.9 mm [an unused expander pin, driven by nothing]
+PASS return path under SPARE7 (LOW_SPEED_OR_DC): a reference exists under 110.4 of 113.1 mm [an unused expander pin, driven by nothing]
+PASS return path under SPARE8 (LOW_SPEED_OR_DC): a reference exists under 111.6 of 117.7 mm [an unused expander pin, driven by nothing]
+PASS return path under SPARE9 (LOW_SPEED_OR_DC): a reference exists under 108.6 of 111.0 mm [an unused expander pin, driven by nothing]
+PASS return path under SWCLK (Default, CLOCKED_DIGITAL): 2.3 of 159.6 mm without a plane on a neighbouring layer (limit 30.0; 3.0 mm more is this net's own via anti-pads, which RET-003 judges; 3.3 mm more is another conductor's via anti-pad, a hole the return goes around) [the SWD debug port, a few megahertz and used only with a probe attache]
+PASS return path under SWDIO (Default, CLOCKED_DIGITAL): 1.4 of 167.6 mm without a plane on a neighbouring layer (limit 30.0; 3.9 mm more is this net's own via anti-pads, which RET-003 judges) [the SWD debug port, a few megahertz and used only with a probe attache]
+PASS return path under TESTRING_A (LOW_SPEED_OR_DC): a reference exists under 32.4 of 59.7 mm [an indicator LED anode: a static level or a blink of a few hertz]
+PASS return path under TEST_SW (LOW_SPEED_OR_DC): a reference exists under 75.8 of 106.6 mm [a panel switch contact, a static level]
+PASS return path under TR_APRS (LOW_SPEED_OR_DC): a reference exists under 410.2 of 456.5 mm [the transmit indication from the APRS board, a static level]
+PASS return path under TX_A (LOW_SPEED_OR_DC): a reference exists under 115.5 of 168.2 mm [an indicator LED anode: a static level or a blink of a few hertz]
+PASS return path under TX_INHIBIT_n (LOW_SPEED_OR_DC): a reference exists under 398.0 of 609.0 mm [the hardware transmit inhibit from the panel toggle, a static level with a pull-]
+PASS return path under TX_K (LOW_SPEED_OR_DC): a reference exists under 187.3 of 247.6 mm [an indicator LED cathode, the return of the same]
+PASS return path under TX_LAMPTEST (LOW_SPEED_OR_DC): a reference exists under 167.2 of 172.1 mm [the lamp-test line, a static level held by a person]
+PASS return path under USB_DM_R (USB, HIGH_SPEED_DIGITAL): 9.1 of 92.3 mm without a plane on a neighbouring layer (limit 10.0; 7.4 mm more is this net's own via anti-pads, which RET-003 judges) [the same USB pair after its series resistors]
+FAIL return path under USB_DP_R (USB, HIGH_SPEED_DIGITAL): 12.9 of 71.8 mm without a plane on a neighbouring layer (limit 10.0; 3.3 mm more is this net's own via anti-pads, which RET-003 judges; 0.5 mm more is another conductor's via anti-pad, a hole the return goes around) [the same USB pair after its series resistors]
+PASS return path under USB_PNL_N (USB, HIGH_SPEED_DIGITAL): 16.7 of 487.8 mm without a plane on a neighbouring layer (limit 24.4; 15.8 mm more is this net's own via anti-pads, which RET-003 judges; 0.9 mm more is another conductor's via anti-pad, a hole the return goes around) [the panel's USB port: full speed at 12 Mbit/s, and the EDGES are nanos]
+FAIL return path under USB_PNL_P (USB, HIGH_SPEED_DIGITAL): 122.4 of 456.5 mm without a plane on a neighbouring layer (limit 22.8; 8.5 mm more is this net's own via anti-pads, which RET-003 judges) [the panel's USB port: full speed at 12 Mbit/s, and the EDGES are nanos]
+FAIL return path under XIN (Default, HIGH_SPEED_DIGITAL): 34.7 of 167.6 mm without a plane on a neighbouring layer (limit 10.0; 8.6 mm more is this net's own via anti-pads, which RET-003 judges; 1.8 mm more is another conductor's via anti-pad, a hole the return goes around) [the 12 MHz crystal drive node]
+FAIL return path under XOUT (Default, HIGH_SPEED_DIGITAL): 20.7 of 112.1 mm without a plane on a neighbouring layer (limit 10.0; 7.1 mm more is this net's own via anti-pads, which RET-003 judges) [the other half of the same crystal loop]
+PASS return path under XOUT_R (Default, HIGH_SPEED_DIGITAL): 8.0 of 64.5 mm without a plane on a neighbouring layer (limit 10.0; 2.9 mm more is this net's own via anti-pads, which RET-003 judges; 4.0 mm more is another conductor's via anti-pad, a hole the return goes around) [the other half of the same crystal loop]
+PASS return path under ZEROIZE_HW (LOW_SPEED_OR_DC): a reference exists under 434.8 of 682.1 mm [the zeroize line, a static level]
+intent_checks: 151.0 mm of signal run across this board sits over ANOTHER conductor's via anti-pad (72 net(s)); a hole in the reference is not an absent reference and the return goes around it, so this screen does not judge it. How perforated a reference may be is RET-001's question and its criterion is owner decision 39
+intent_checks: return path judged on 127 signal nets (6 excluded as ground, rail, zone owner or power class), 15 over their limit, worst SCL at 252.9 mm; 497.6 mm across the board is the nets' own via anti-pads and is RET-003's question, not this one
+PASS every power-symbol net is a declared rail (2 of 2)
+FAIL return via: 53 of 85 signal vias have a ground via within 1.5 mm (61 exempt in fine-pitch fans, 35 on one reference plane, 278 on a net whose declared class has no edge to return); without one: USB_PNL_N at (190.53, 103.06): nearest ground via 2.95 mm; USB_PNL_P at (198.98, 105.43): nearest ground via 1.50 mm; EPD_SDA at (216.91, 112.15): nearest ground via 2.25 mm; EXP_INT at (274.91, 107.52): nearest ground via 1.50 mm; Q1_G at (419.11, 288.82): nearest ground via 1.75 mm; SCL at (419.39, 120.99): nearest ground via 2.25 mm; XOUT_R at (419.44, 277.21): nearest ground via 5.05 mm; XOUT_R at (420.41, 279.10): nearest ground via 3.18 mm ...
+PASS bypass C7 (100n) to U3.1: 41.45 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS bypass C8 (100n) to U3.10: 46.50 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS bypass C9 (100n) to U3.22: 22.28 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS bypass C10 (100n) to U3.33: 19.67 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS bypass C11 (100n) to U3.42: 15.39 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS bypass C12 (100n) to U3.49: 15.88 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS bypass C13 (100n) to U4.8: 35.86 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS bypass C14 (1u) to U3.23: 25.82 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS bypass C15 (1u) to U3.50: 24.28 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS bypass C16 (1u) to U3.44: 25.75 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS bypass C3 (1u) to U5.1: 12.52 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS bypass C4 (1u) to U5.5: 10.65 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS bypass C17 (100n) to U1.24: 19.78 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS bypass C18 (100n) to U2.24: 16.62 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS bypass C25 (100n) to U9.5: 15.42 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+FAIL bypass C39 -> U12.5: pads found on the board
+PASS bypass C38 (100n) to U_LIGHT.2: 2.55 mm pad to pin (limit 3.0)
+PASS bypass C38: rail and ground pads reach a via or pour within 1.5 mm
+PASS bypass C29 (100n) to J_EPD.15: 26.65 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS bypass C28 (4.7u) to J_EPD.16: 46.13 mm pad to pin, allowed by bypass-allow.txt [The sixteen declared capacitors sit 8.2 to 32.1 mm from ]
+PASS intent rail +5V is a net of the board
+PASS intent rail +3V3 is a net of the board
+intent_checks: 17 of 19 bypass entries are past their limit and allowed by bypass-allow.txt
+intent_checks: return path on 127 nets, return via on 85 signal vias, 19 bypass entries, 2 rails checked
+NOTE pour 'GND pour F.Cu' (GND, F.Cu): 31 piece(s) under 5.0 mm2 not counted (isolated slivers, the fill's own crumbs)
+PASS pour 'GND pour F.Cu' (GND, F.Cu): every piece anchored by a pad or via of its net (0 of 65 loose), fill 21697 of 34895 mm2 of its outline (at least 50%)
+NOTE pour 'GND pour B.Cu' (GND, B.Cu): 37 piece(s) under 5.0 mm2 not counted (isolated slivers, the fill's own crumbs)
+PASS pour 'GND pour B.Cu' (GND, B.Cu): every piece anchored by a pad or via of its net (0 of 83 loose), fill 19646 of 34895 mm2 of its outline (at least 50%)
+PASS pour 'GND plane In1' (GND, In1.Cu): every piece anchored by a pad or via of its net (0 of 1 loose), fill 30394 of 34895 mm2 of its outline (at least 50%)
+NOTE pour 'GND pour In2.Cu' (GND, In2.Cu): 21 piece(s) under 5.0 mm2 not counted (isolated slivers, the fill's own crumbs)
+PASS pour 'GND pour In2.Cu' (GND, In2.Cu): every piece anchored by a pad or via of its net (0 of 68 loose), fill 20185 of 34895 mm2 of its outline (at least 50%)
+PASS pour 'GND pour F.Cu' (GND, F.Cu) meets a same-net pour on another layer through a via or a through-hole pad
+PASS pour 'GND pour B.Cu' (GND, B.Cu) meets a same-net pour on another layer through a via or a through-hole pad
+PASS pour 'GND plane In1' (GND, In1.Cu) meets a same-net pour on another layer through a via or a through-hole pad
+PASS pour 'GND pour In2.Cu' (GND, In2.Cu) meets a same-net pour on another layer through a via or a through-hole pad
+copper_checks: 4 pours, 255 locked vias, 4 cross-layer links checked on 1 power nets
+
+RESULT: ALL PASS
+verdict: check_pcb_c            PASS         of 48 {"fail": 0, "footprints": 194, "intent_items_reported": 151, "pass": 48}

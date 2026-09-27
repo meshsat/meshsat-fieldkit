@@ -3,11 +3,11 @@
 
 # Requirements trace
 
-Generated from the requirements registry `v2/ecad/tools/pcb_requirements.yaml`. Prototype design: nothing described here has been built, powered or field deployed, and every statement below is a requirement, what the design is intended to do, never a report of what hardware has done. A record that needs hardware reads NOT_YET_TESTED, and a record reads PASS or FAIL only where its evidence names the file it was read from. The needs are quoted from `v2/docs/CONOPS.md` section 2 (pinned by sha256 `eb0eda7cacfe7156`); every record traces to one need; the rules of the PCB rule registry and the owner decisions of `pcb_decisions.yaml` judge or settle parts of the records; and every record says how and at which phase it is intended to be verified.
+Generated from the requirements registry `v2/ecad/tools/pcb_requirements.yaml`. Prototype design: nothing described here has been built, powered or field deployed, and every statement below is a requirement, what the design is intended to do, never a report of what hardware has done. A record that needs hardware reads NOT_YET_TESTED, and a record reads PASS or FAIL only where its evidence names the file it was read from. The needs are quoted from `v2/docs/CONOPS.md` section 2 (pinned by sha256 `4887ada07f50d808`); every record traces to one need; the rules of the PCB rule registry and the owner decisions of `pcb_decisions.yaml` judge or settle parts of the records; and every record says how and at which phase it is intended to be verified.
 
 Every reading carries its evidence class, in the six classes of `v2/docs/CURRENT-EVIDENCE.md`: a record reads PASS only on a class that counts, never on evidence awaiting revalidation, and a desk review (the session's own reading of named files, each bound by its sha256) is never a physical test. The prototype-core functions whose feasibility is not closed are listed first, as explicit architecture feasibility blockers (review of 26 September 2026, section 3 and checkpoint item 1): a merged document is configuration control, not proof that the architecture is feasible.
 
-Registry state **READY_FOR_REVIEW_B**. Sources read at commit `95e078a1` unless an entry says otherwise. 143 records trace to 19 needs; 29 owner rulings are applied, 50 choices were taken by the session under the owner's standing rule of 26 September 2026, 41 items are open and 49 are closed.
+Registry state **READY_FOR_REVIEW_B**. Sources read at commit `95e078a1` unless an entry says otherwise. 144 records trace to 19 needs; 29 owner rulings are applied, 50 choices were taken by the session under the owner's standing rule of 26 September 2026, 43 items are open and 49 are closed.
 
 ## Summary
 
@@ -19,8 +19,8 @@ Registry state **READY_FOR_REVIEW_B**. Sources read at commit `95e078a1` unless 
 | choice (CHO) | 3 | 2 | 1 |
 | superseded (SPD) | 6 | 0 | 0 |
 | conflict (CFL) | 18 | 9 | 9 |
-| feasibility (FEA) | 6 | 6 | 0 |
-| **all** | **143** | **79** | **58** |
+| feasibility (FEA) | 7 | 7 | 0 |
+| **all** | **144** | **80** | **58** |
 
 | status | records |
 |---|---:|
@@ -28,13 +28,13 @@ Registry state **READY_FOR_REVIEW_B**. Sources read at commit `95e078a1` unless 
 | SUPERSEDED | 6 |
 | CONFLICT_OPEN | 1 |
 | CONFLICT_RESOLVED | 17 |
-| FEASIBILITY_OPEN | 6 |
+| FEASIBILITY_OPEN | 7 |
 
 | evidence result | records | what it means |
 |---|---:|---|
 | PASS | 21 | the record's own reading passed, at the phase named, with the file it was read from |
 | FAIL | 14 | the record's own reading failed, at the phase named; an open conflict reads FAIL on its own sources |
-| INCONCLUSIVE | 14 | a reading was taken and cannot decide |
+| INCONCLUSIVE | 15 | a reading was taken and cannot decide |
 | NOT_JUDGED | 80 | judgeable before hardware and not yet read at requirement level (rule verdicts live in rules_status) |
 | NOT_YET_TESTED | 8 | needs the built prototype, which does not exist |
 | NOT_APPLICABLE | 6 | superseded; kept so nobody re-opens it |
@@ -44,13 +44,13 @@ Registry state **READY_FOR_REVIEW_B**. Sources read at commit `95e078a1` unless 
 | PASS | DESK_REVIEW | 21 |
 | FAIL | DESK_REVIEW | 13 |
 | FAIL | none: an open conflict read on its own cited sources | 1 |
-| INCONCLUSIVE | DESK_REVIEW | 14 |
+| INCONCLUSIVE | DESK_REVIEW | 15 |
 
 No record reads PASS on evidence awaiting revalidation (the validator refuses it). DESK_REVIEW: the session's own reading of named files, bound to each by content; not a qualified engineer's, and never a physical test.
 
 | release effect | records |
 |---|---:|
-| BLOCKER | 67 |
+| BLOCKER | 68 |
 | MUST_JUSTIFY | 54 |
 | ADVISORY | 16 |
 | NONE | 6 |
@@ -69,6 +69,7 @@ Each prototype-core function whose feasibility is not closed, with its feasibili
 | **FEA-004** | the power and thermal bounds | FEASIBILITY_OPEN | INCONCLUSIVE, DESK_REVIEW | `v2/docs/feasibility/POWER-THERMAL.md` (PWR-F12, PWR-F13, PWR-F15) | REQ-014, REQ-018, REQ-077, REQ-052; layout entry of A, D | The session (loads, duty cycles, 'aged'); the battery-protection stream (PWR-F12, the gauge's two over-current levels); board A's owner (the pack-node copper... |
 | **FEA-005** | battery protection, awaiting the qualified review | FEASIBILITY_OPEN | INCONCLUSIVE, DESK_REVIEW | `v2/docs/review-packets/battery/REVIEW-REQUEST.md` (BAT-F01, BAT-F14, BAT-F20, Q-TI-1, Q-TI-7, Q-TI-10) | REQ-044; layout entry of P | The owner engages the reviewer from a quote (D-09, L-03); the battery-protection stream prepares and answers; the reviewer, not yet engaged, is an electronic... |
 | **FEA-006** | decoupling placement per class | FEASIBILITY_OPEN | INCONCLUSIVE, DESK_REVIEW | `v2/docs/feasibility/DECOUPLING.md` (T1, T10, G1, G14) | layout entry of A, B, C, D, E, P | The integrating writer of v2/ecad/tools/ (T1 to T10); each board's writer (G1 to G14); the integrator for the placements; the session for the Diodes question. |
+| **FEA-007** | the kit's fit in the Peli 1450 on the chosen arrangement (C1 to C6) | FEASIBILITY_OPEN | INCONCLUSIVE, DESK_REVIEW | `v2/docs/CASE-FIT-UNCERTAINTIES.md` (M17g, M17x, M17d, M17f, M17w, M18, M13, M1, M4a, M5, M15b, W4-F17, DOCK, S-27) | REQ-019, CON-006, REQ-047; layout entry of A, B, D, E, E5, P | The session (the picks, the lookups, the hold-down, the dock stack, the frame_seat.py re-runs); board A's and board D's owners (W4-F17); board E's owner (the... |
 
 ### What each blocker gates, stage by stage
 
@@ -94,6 +95,9 @@ A development-board test may gate an architecture decision; a test that needs th
 | FEA-006 | LAYOUT_ENTRY | A, B, C, D, E, P | DESK | OPEN | The per-class requirement of DECOUPLING.md written from each maker's own words (capacitance, dielectric, count per pin or rail, loop and return geometry), with its source per class; T1 to T10 merged with DEC-001's registry text; G1 to G14 in each board's generator and the five circuit gaps closed (the STM32H743's VDDA capacitor among them, the TPA6132A2 at its maker's 2.2 uF), each read back on the board's committed netlist; the PI7C9X2G404SL question asked of Diodes, with the class's requirement taken until it answers. |
 | FEA-006 | FABRICATION_RELEASE | A, B, C, D, E, P | LAYOUT | OPEN | Each board's placement read under the class rules (the seats inside the own-pin window, far-side seats only on B21, C24 and D12 and outside every fan) with its escape cost measured, and DEC-001 CURRENT_CANDIDATE on each board's placed and routed candidate. |
 | FEA-006 | PROTOTYPE_VERIFICATION | nothing | BUILT_KIT | OPEN | Nothing of its own: the rail checks of PCB-BRING-UP.md on the built boards are the boards' own; this blocker closes at fabrication release. |
+| FEA-007 | LAYOUT_ENTRY | A, B, D, E, E5, P | DESK, BENCH_MOCKUP | OPEN | Per board, the desk items of CASE-FIT-UNCERTAINTIES.md section 2: board B, the jumper plug picked from a maker's drawing with M17g and M17x MET on the design basis, M13 bounded by PolyPhaser's O-ring dimension and the M1 lookups (Xenarc rear frame, CM5 Cooler drawing, named spacers); boards A and P, the pack hold-down (S-27) with M4a and M5; boards A and D, W4-F17 resolved; boards A, E and E5, the dock and blind-mate tolerance stack with board E's clamp bar (R4E-07) and an ANT3 clamp at X +46; board E, the clamp lanes (M17f) and the VHB pad places (M15b). Then, for boards A, B, E and P, the mock-up's checks of their YES rows on a new case of the current moulding (D-08a) with the made parts of v2/release/case-2026-09-27/, the picked jumper plugs on RG-316, one arrestor and stand-ins: A, T4 (M4a); B, T2 and T4 (M1, M18), T5 and T11 (M18, M17w, M17x through M13), T10 (M17d, M17g, M17w, M17x); E, T10 (M17f); P, T4 and T2 (M4a, M5); T1 at purchase. Each YES row read at or above its minimum, or the board's outline or placement changed before its layout entry. BLOCKED on the owner's purchase decision (L-07, D-09). Boards D and E5 need the desk items only. |
+| FEA-007 | FABRICATION_RELEASE | A, B, C, E, P, case | BENCH_MOCKUP, DESK | OPEN | Every board's committed layout re-read against the mock-up's readings (v2/vendor/peli/frame_seat.py re-run with the measured numbers, no row below its minimum), the made parts of v2/release/case-2026-09-27/ drawn to those numbers before they are cut for the prototype, and the rows whose remedy is a made part or a cable route (CASE-FIT-UNCERTAINTIES.md section 2, NO) confirmed on the mock-up or carried to the build with the reason stated there. |
+| FEA-007 | PROTOTYPE_VERIFICATION | case, kit | BUILT_KIT | OPEN | T3 (the plate dry-fit over Peli's o-ring), T7 (TEST-PLAN E6 and E7 with the twelve arrestors and both entry plates), T8 (the floor and the VHB bonds through E1 and E2) and T9 (the lid over the tray and the toggles) at the build, and REQ-047's lift-out demonstrated on the assembled prototype. |
 
 **FEA-001**. ZEROIZE as ruled (D-03) requires that the fitted ATECC608B-SSHDA-T, in the slot map of ZEROIZE.md section 3.1, lets the panel controller destroy both key-encryption keys after every zone is locked, verifiably, with no secret, resumably across a power loss, and never ending where a key survives and cannot be destroyed. The mechanism is supported at desk level by public Microchip documents; it is not yet shown on the part.
 
@@ -131,6 +135,12 @@ A development-board test may gate an architecture decision; a test that needs th
 
 *Stages:* Staged on 26 September 2026 (review of the 22:35 progress report, finding A) by the session under the owner's standing rule of that day: which part of the closing evidence gates layout entry, which fabrication release and which prototype verification; a stage never needs what only a later stage produces (rules_lib.STAGE_CANNOT_NEED).
 
+**FEA-007**. The case set is drawn and computed on the design basis only (v2/release/case-2026-09-27/, CASE-MARGINS.md): 35 of the 70 case margins are OPEN, two of them (M17g and M17x, the east jumpers under their plugs) fail with the jumper plug as laid out, and 30 rest on allowances no source states (Peli publishes no case tolerance); the pack's hold-down, the rod stack's retention and the dock and blind-mate tolerance stack are not designed, and board A's J_AB2 stands 3.10 into board D (W4-F17). Nominal CAD establishes no fit, seal or alignment, and the bounds of the open rows include failure: eleven of them (the YES rows of CASE-FIT-UNCERTAINTIES.md section 2) would be remedied, if their check failed, by moving a board outline, a connector or a board part of A, B, E or P.
+
+*Closing evidence:* The jumper plug's drawing with M17g and M17x re-computed MET on the design basis by v2/vendor/peli/frame_seat.py; PolyPhaser's O-ring dimension (M13); the Xenarc rear frame, the CM5 Cooler drawing and the named spacers (M1); the pack hold-down (S-27: M4a, M5); J_AB2 moved or board D's standoff re-derived (W4-F17); the dock and blind-mate stack written with board E's clamp bar and an ANT3 clamp (DOCK); board E's clamp lanes and pad places (M17f, M15b); then the mock-up's readings recorded against the rows of CASE-MARGINS.md section 7.
+
+*Stages:* Staged on 27 September 2026 by the layer 7 closer and revised the same morning after the second review of the case release (AI review), the session's application of the owner's execution prompt of 27 September 2026 under his standing rule of 26 September 2026. A row a failing check would remedy by moving a board (a YES row) decides that board's outline or placement, which is the layout-entry decision, so its check is required at LAYOUT_ENTRY: the prompt admits a deferred physical test only where the current stage's decision does not depend on it (section 2) and forbids moving a decisive uncertainty to a later phase merely to unblock a status (section 5). The mock-up needs no board of this set, so the stage does not need what only a later stage produces (rules_lib.STAGE_CANNOT_NEED; the second review of 26 September 2026, section 2A). Purchase authority is not a reason to defer it; the first draft's FABRICATION_RELEASE allocation, which gave only that reason, is replaced. Reversal: the mock-up's readings at or above the YES rows' minimums lift the hold; the owner alone may instead accept, as his residual risk (residual_risk_accepted by OWNER under a ruling), entering layout on the design basis, and BENCH_MOCKUP then moves to FABRICATION_RELEASE with the layout-change risk named per board.
+
 ## Owner rulings applied
 
 | ruling | ruled | what | decision index | records that cite it |
@@ -147,9 +157,9 @@ A development-board test may gate an architecture decision; a test that needs th
 | **D-06** | 2026-09-26 | pack size and runtime | - | REQ-014, FEA-004, REQ-072, CON-006, REQ-075, CFL-006, CFL-012, CFL-018 |
 | **D-07** | 2026-09-26 | 5G antenna jacks | - | CON-015 |
 | **D-08** | 2026-09-26 | case measurement and mock-up (REVERSED by D-08-reversal) | - | none |
-| **D-08a** | 2026-09-26 | the moulding the design targets | - | CON-006, REQ-019, REQ-047 |
-| **D-08-reversal** | 2026-09-26 | the case measurement withdrawn | - | CON-006, REQ-019, REQ-047, CON-015 |
-| **D-09** | 2026-09-26 | independent review and test route | - | REQ-037, FEA-001, REQ-044, FEA-005, REQ-070, REQ-063 |
+| **D-08a** | 2026-09-26 | the moulding the design targets | - | CON-006, REQ-019, REQ-047, FEA-007 |
+| **D-08-reversal** | 2026-09-26 | the case measurement withdrawn | - | CON-006, REQ-019, REQ-047, CON-015, FEA-007 |
+| **D-09** | 2026-09-26 | independent review and test route | - | REQ-037, FEA-001, REQ-044, FEA-005, REQ-070, REQ-063, FEA-007 |
 | **D-10** | 2026-09-26 | SOS | - | REQ-060 |
 | **D-11** | 2026-09-26 | peak simultaneity | - | FEA-004, REQ-017, REQ-018, CON-019, CFL-012 |
 | **D-12** | 2026-09-26 | external USB data port | - | REQ-017, REQ-037, REQ-049 |
@@ -232,10 +242,10 @@ The owner ruled on 26 September 2026 that he is not asked further questions: whe
 | **SC-01** | Does SOS (NEED-19) join prototype 1's core? | Yes: NEED-19 is added to the core D-01 names, with SOS as D-10 defines it. | D-01-R2 | NEED-19 | REQ-060 |
 | **SC-02** | Which peripherals are critical under NEED-03? | Every USB peripheral ARCH-PCB-B-IOHA section 15 traces is critical, each moving with its bank, and so is the kit-to-kit WiFi link, whose antennas move to the standby card (IOHA A11). The LoRa modul... | D-01-R1, S-38 | - | ASM-001, REQ-004, REQ-005 |
 | **SC-03** | Is TEST-PLAN E5's humidity cycle (30 to 60 C at 95 percent RH) a qualification margin or an acceptance test? | A qualification margin, judged like E3 and E4 under D-02a: survive and recover at the margin, and operate to specification inside the envelope. | D-02a-R1 | - | REQ-026, REQ-051 |
-| **SC-04** | How D-01's core applies record by record where the ruling names a need but not the function, or names the function but not the need. | A record under a core need is deferred when it serves a function D-01 leaves out (the accessory outlets under NEED-05, the HF rail, the case-open record and key fill under NEED-10). A record under... | - | - | REQ-002, REQ-017, CON-007, REQ-019, REQ-020, CON-008, REQ-036, REQ-037, REQ-050, CON-023, REQ-070, CFL-016, REQ-053, REQ-054, REQ-055, CFL-010, CON-025, REQ-057, REQ-068, CON-012, CON-013, CON-024, ASM-007, REQ-065 |
+| **SC-04** | How D-01's core applies record by record where the ruling names a need but not the function, or names the function but not the need. | A record under a core need is deferred when it serves a function D-01 leaves out (the accessory outlets under NEED-05, the HF rail, the case-open record and key fill under NEED-10). A record under... | - | - | REQ-002, REQ-017, CON-007, REQ-019, REQ-020, CON-008, REQ-036, REQ-037, REQ-050, CON-023, REQ-070, CFL-016, REQ-053, REQ-054, REQ-055, CFL-010, CON-025, REQ-057, REQ-068, CON-012, CON-013, CON-024, ASM-007, REQ-065, FEA-007 |
 | **SC-05** | Which two modes carry D-06's runtime statement? | PS-IDLE-SPEC (monitor on, radios idle, APRS beacons, as V2-SPEC line 23 words it) and PS-TYP (three modules at typical operation), each at +20 C for an aged pack. | - | - | REQ-014 |
 | **SC-06** | Which transport route does D-04's statement name for the pack? | WITHDRAWN 2026-09-26: By road, with the kit, as the operator's own equipment; carriage by air or by a parcel carrier waits on a UN 38.3 test summary for the pack. | - | - | none |
-| **SC-07** | How the kit sits in the 1450 once the owner reversed D-08: the face mounting, the frame's height, the antenna bulkheads, the connector plate, the RF entry plates and the QMX tray. | C1 the face plate on the 1450PF frame over Peli's o-ring, screwed from above into Peli's 6-32 inserts, as Peli documents; C2 the ruled gas-discharge arrestors as the twelve antenna bulkheads at Z 5... | - | - | CON-006, REQ-019, REQ-047, CON-015 |
+| **SC-07** | How the kit sits in the 1450 once the owner reversed D-08: the face mounting, the frame's height, the antenna bulkheads, the connector plate, the RF entry plates and the QMX tray. | C1 the face plate on the 1450PF frame over Peli's o-ring, screwed from above into Peli's 6-32 inserts, as Peli documents; C2 the ruled gas-discharge arrestors as the twelve antenna bulkheads at Z 5... | - | - | CON-006, REQ-019, REQ-047, CON-015, FEA-007 |
 | **SC-08** | How ZEROIZE (D-03) is met on the fitted ATECC608B, and what its timing pass lines are. | Keep the ATECC608B-SSHDA-T with two key-encryption keys (slots 0 and 1, SlotConfig 0x2084, KeyConfig 0x0013), both needed to unlock any drive and both destroyed by GenKey mode 0x04; enrol every dri... | - | - | REQ-035, ASM-005, CON-020, REQ-038, FEA-001 |
 | **SC-09** | How D-02a's qualification margins meet a pack whose cells are rated to +60 C, once board P's secondary over-temperature is restored. | WITHDRAWN 2026-09-26: The BQ7720700's over-temperature stays active on its own 103AT-2 thermistor (J_TS2, R34 270 ohm, R33 18 kohm). D-02a's margins stay for the kit and the pack's margins are its cells' limits: TEST-PL... | - | - | none |
 | **SC-10** | D-11's declared key-down time and state-of-charge floor. | PROVISIONAL thresholds, not pass lines: every transmitter at once only above a pack rest voltage of 15.5 V (3.88 V per cell), the PA keyed alone only above 12.4 V; every PA key-down at most 60 s, s... | - | - | FEA-004, REQ-018 |
@@ -596,7 +606,11 @@ Prototype 1: in the core D-01 names. 19 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/ARCH-PCB-B-IOHA.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed sections 6 and 10a only (after section 6's corrected PB1/PB2 heading, the FW-B08 pointer and the segment choice SC-HF-02; 10a's per-controller part; the address block and the supervisors' part were board B's round 8 text already and are unchanged, r8int4); sections 4, 15 and 15a and line 17, which this reading cites, are unchanged, so this reading stands on the file at 55620cf51446bfc8
 
-*Bound to:* `v2/docs/CONOPS.md@eb0eda7cacfe7156`, `v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8`, `v2/docs/V2-SPEC.md@a02ea1b6801f8916`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/CONOPS.md re-read at the r8int4 integration of 27 September 2026 after the layer 7 closer's case timing (fnd/hc7, c7) and the integrator's edits for verify c7: only section 4a's pack paragraph and section 7's D-06 row change (the targeted mock-up before boards A and P enter layout, in place of 'a mock-up at the build'); the needs table and sections 2a, 3, 4, 4a's PS-EMCON row, 4b and 5, which this reading rests on, are byte-identical to the file at eb0eda7cacfe7156, so it stands on the file at 4887ada07f50d808
+
+*Evidence (PASS, DESK_REVIEW):* v2/docs/V2-SPEC.md re-read at the r8int4 integration of 27 September 2026 after the layer 7 closer's case timing (fnd/hc7, c7) and the integrator's edits for verify c7: only correction 18 changes, gaining the mock-up's timing since 27 September 2026 (FEA-007); the lines and corrections this reading rests on are byte-identical to the file at a02ea1b6801f8916, so it stands on the file at 73a797e44d42fa6d
+
+*Bound to:* `v2/docs/CONOPS.md@4887ada07f50d808`, `v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8`, `v2/docs/V2-SPEC.md@73a797e44d42fa6d`
 
 *Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md:17`; `v2/docs/ARCH-PCB-B-IOHA.md section 15a`; `session choice SC-02`; `v2/docs/CONOPS.md section 2a`
 
@@ -1102,19 +1116,21 @@ Prototype 1: in the core D-01 names. 15 record(s).
 
 *Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2771`; `v2/docs/MESHSAT-709-geometry-appendix.md:2775`; `v2/docs/V2-SPEC.md:23 (as read at eadbe571)`
 
-**CON-006** (constraint). The pack of D-06 (one shrink-wrapped 4S3P 18650 block), its board P, the heater mat and their mounting fit the east pocket (X +120 to +178, Y -120 to +120) under board B's underside at Z 47.9.
+**CON-006** (constraint). The pack of D-06 (one shrink-wrapped 4S3P 18650 block), its board P, the heater mat and their mounting fit the east pocket, bounded by board A's east edge at X +120, by Peli's R 15.88 floor fillet and east wall and in Y by the frame's setting legs (CASE-MARGINS.md 2.6 and C6; the place is v2/ecad/tools/panel1450.py PACK_BLOCK, PACK_WEST_X and PACK_GROUP_LEN), under board B's underside at Z 49.0 (the dock strip's VHB pads lift the stack, C1 follow-on (a); 47.9 until 27 September 2026).
 
-*Accept when:* A named pack build (cells, wrap, board P position, mat, pads) is held with a stated minimum in every axis against the committed board B underside and the worst of Peli's own figures for the current moulding (D-08a), every margin MET, none OPEN or NOT MET, and the fit is shown on hardware in a new case of that moulding: on a targeted unpowered mock-up before board A's east edge and board P's place are frozen for routing or, if it has not run by then, at the affected boards' fabrication release, which carries the rows it would have closed (CASE-MARGINS.md section 7).
+*Accept when:* A named pack build (cells, wrap, board P position, mat, pads) is held with a stated minimum in every axis against the committed board B underside and the worst of Peli's own figures for the current moulding (D-08a), every margin MET, none OPEN or NOT MET, and the fit is shown on hardware in a new case of that moulding, on the targeted unpowered mock-up before boards A and P enter layout (FEA-007): M4a and M5 can move board A's east edge and board P's place, so their check is not deferred (the owner's execution prompt of 27 September 2026, sections 2 and 5; v2/docs/CASE-FIT-UNCERTAINTIES.md sections 1 and 2; CASE-MARGINS.md section 7).
 
 *What an earlier reading said:* Round 3 waited on the owner's measurement of his case (M-01, D-08). The owner reversed D-08 on 26 September 2026 and M-01 is closed by the reversal: the fit is held against Peli's figures (CASE-MARGINS.md) and shown on hardware in a new case of that moulding, which round 3 placed at the build and round 8 (CASE-MARGINS.md's seventh revision, section 7) moved to a targeted unpowered mock-up before board A's east edge and board P's place freeze for routing or, if it has not run by then, to the affected boards' fabrication release. The underside height is cited from ASSEMBLY.md:72 (Z 47.9, read on the committed B21 board).
 
-*allocated to p, case, b; rulings D-06, D-08-reversal, D-08a; session choices SC-07; waits on S-27.*
+*allocated to p, case, b; rulings D-06, D-08-reversal, D-08a; session choices SC-07; waits on S-27, L-07.*
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CASE-MARGINS.md section 3.2 read at eadbe571: of the pack's four margins, M4b (east face to the east wall) and M6 (pack top under B16's underside) are MET and M4a (the east corner to Peli's R 15.88 fillet) and M5 (the pack group in Y between the east legs) are OPEN until the pack's hold-down fixes its place (section 7)
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CASE-MARGINS.md re-read at its seventh revision (stream r8docs, MESHSAT-1357 round 8, late on 26 September 2026): no computed figure changed; every MET is now qualified as a sensitivity reading that bounds no unstated tolerance (section 1, Verdicts), and the targeted mock-up is recommended before the outlines and connector placements of boards A, B, C, E and P freeze (section 7). The pack's rows read as before (M4b and M6 MET on the design basis, M4a and M5 OPEN), so this reading stands on the file at 275a3083db30a7bf
 
-*Bound to:* `v2/docs/CASE-MARGINS.md@275a3083db30a7bf`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CASE-MARGINS.md re-read at 0fc449b72532ba7c (MESHSAT-1357 layer 7, 27 September 2026): the edit adds the note that C1 to C6 are implemented in CAD (v2/release/case-2026-09-27/), labels the agent checks behind its revisions as AI review, points the dock and blind-mate stack to CASE-FIT-UNCERTAINTIES.md and revises section 7's timing (the targeted mock-up before the layout entry of the boards a failing check would move, A, B, E and P, BLOCKED on the owner's purchase decision, where it had been carried to their fabrication release), and brings its opening summary, its paragraph on why the document exists and finding 23 to that timing; with the frame_seat.py draft, M18's part list read from the committed board B and U51's 1.60 sourced to ST's maximum (DS12117 Rev 9 Table 217); no figure or verdict of section 3 moved, so this reading stands on the file at 0fc449b72532ba7c
+
+*Bound to:* `v2/docs/CASE-MARGINS.md@0fc449b72532ba7c`
 
 *Source (inferred):* `v2/docs/MESHSAT-709-geometry-appendix.md:3060-3062`; `v2/docs/ASSEMBLY.md:81`; `v2/docs/CASE-MARGINS.md section 3.2 (M4a to M6)`; `owner ruling D-06`
 
@@ -1214,7 +1230,11 @@ Prototype 1: in the core D-01 names. 15 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed section 1's Pass-throughs row (the monitor's touch lead to D8 J_USB3, SC-HF-06), section 3's GPIO10 to 12 row (the heartbeat source) and section 7's new paragraph on speed, pull-ups and the budget (its supervisors' row at 0x34 to 0x36, its 0x68 row and the S-07 finding closed as I3-F01 were already board B's round 8 text, b76c18cb, and are unchanged here); section 10, which this reading cites, is unchanged, so this reading stands on the file at 4bcbf31f44560ee1
 
-*Bound to:* `v2/docs/PANEL.md@4bcbf31f44560ee1`, `v2/docs/CONOPS.md@eb0eda7cacfe7156`, `v2/docs/OPERATING-ENVELOPE.md@9f16f5b7d634764a`, `v2/ecad/tools/gen_sch_a.py@5a97fed72c42b79d`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md@44fdf9a022c49337`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/CONOPS.md re-read at the r8int4 integration of 27 September 2026 after the layer 7 closer's case timing (fnd/hc7, c7) and the integrator's edits for verify c7: only section 4a's pack paragraph and section 7's D-06 row change (the targeted mock-up before boards A and P enter layout, in place of 'a mock-up at the build'); the needs table and sections 2a, 3, 4, 4a's PS-EMCON row, 4b and 5, which this reading rests on, are byte-identical to the file at eb0eda7cacfe7156, so it stands on the file at 4887ada07f50d808
+
+*Evidence (PASS, DESK_REVIEW):* v2/docs/OPERATING-ENVELOPE.md re-read at the r8int4 integration of 27 September 2026 after the layer 7 closer's case timing (fnd/hc7, c7) and the integrator's edits for verify c7: only section 4's pack row changes (M4a and M5 open until the targeted mock-up before boards A and P enter layout, in place of 'a mock-up at the build'); section 2's protection-board row, section 3 and section 4's EMCON paragraph are byte-identical to the file at 9f16f5b7d634764a, so it stands on the file at 6e4bbde9dbf7e136
+
+*Bound to:* `v2/docs/PANEL.md@4bcbf31f44560ee1`, `v2/docs/CONOPS.md@4887ada07f50d808`, `v2/docs/OPERATING-ENVELOPE.md@6e4bbde9dbf7e136`, `v2/ecad/tools/gen_sch_a.py@5a97fed72c42b79d`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md@44fdf9a022c49337`
 
 *Source (verified):* `v2/docs/PANEL.md section 10`; `v2/docs/CONOPS.md section 4 (Charging row)`; `v2/docs/OPERATING-ENVELOPE.md section 3`; `v2/ecad/tools/gen_sch_a.py:839-845`; `v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md`; `v2/vendor/ti/bq25731-datasheet.pdf (SLUSE66A)`
 
@@ -1224,7 +1244,7 @@ Prototype 1: in the core D-01 names. 15 record(s).
 
 Survive carriage and field placement in a sealed case: transit drop, vehicle vibration, driven rain and blowing dust when deployed, immersion when closed, with no vent opening.
 
-Prototype 1: not in the core. 7 record(s).
+Prototype 1: not in the core. 8 record(s).
 
 | record | kind | prototype 1 | status | verified by | earliest, final phase | rules | decisions | result | effect |
 |---|---|---|---|---|---|---|---|---|---|
@@ -1235,10 +1255,11 @@ Prototype 1: not in the core. 7 record(s).
 | REQ-022 | requirement | deferred | DEFINED | MANUAL_REVIEW, PROTOTYPE_MEASUREMENT | PROTOTYPE | REL-001 | - | NOT_YET_TESTED | MUST_JUSTIFY |
 | REQ-023 | requirement | deferred | DEFINED | CALCULATION, PROTOTYPE_MEASUREMENT | PLACED_BOARD, ASSEMBLY | none | - | NOT_JUDGED | MUST_JUSTIFY |
 | REQ-064 | requirement | deferred | DEFINED | PROTOTYPE_MEASUREMENT | PROTOTYPE | REL-001, ENV-002 | - | NOT_YET_TESTED | MUST_JUSTIFY |
+| FEA-007 | feasibility | core | FEASIBILITY_OPEN | CALCULATION, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT | PLACED_BOARD, ASSEMBLY | MEC-001 | - | INCONCLUSIVE at PLACED_BOARD; ASSEMBLY not yet judged, DESK_REVIEW | BLOCKER |
 
 **REQ-019** (requirement). The case is the Peli 1450 of the current moulding (Peli 1451-931, 15 January 2025, D-08a) with the 1450PF panel frame, and it never changes; the design is held against the worst of Peli's own figures (D-08-reversal).
 
-*Accept when:* Every board outline, the plate and the pack are held against the worst of Peli's own figures for the current moulding with a stated minimum, every case-dependent margin MET and none OPEN or NOT MET in CASE-MARGINS.md, and the OPEN rows shown on hardware in a new case of that moulding: the targeted checks of CASE-MARGINS.md section 7 before the affected board outlines and connector placements freeze or, if they have not run by then, at the affected boards' fabrication release (CASE-MARGINS.md section 7), the rest at the build.
+*Accept when:* Every board outline, the plate and the pack are held against the worst of Peli's own figures for the current moulding with a stated minimum, every case-dependent margin MET and none OPEN or NOT MET in CASE-MARGINS.md, and the OPEN rows shown on hardware in a new case of that moulding: the targeted checks of CASE-MARGINS.md section 7 of the rows that can move a board before the layout entry of boards A, B, E and P, which is held on them (FEA-007, v2/docs/CASE-FIT-UNCERTAINTIES.md sections 1, 2 and 7), the rest at the build. Restated 27 September 2026 at the r8int4 integration (verify c7): the earlier clause carried the targeted checks to the affected boards' fabrication release if they had not run before the outlines froze; CASE-MARGINS.md section 7 withdrew that fallback, so it is withdrawn here too.
 
 *What an earlier reading said:* Round 3's pass line included the owner's measurement of his case (M-01, D-08); the owner reversed D-08 on 26 September 2026 and the design is held against Peli's own figures instead.
 
@@ -1248,7 +1269,9 @@ Prototype 1: not in the core. 7 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CASE-MARGINS.md re-read at its seventh revision (stream r8docs, MESHSAT-1357 round 8, late on 26 September 2026): of 70 computed margins 35 are MET on the design basis, each a sensitivity reading that bounds no unstated tolerance, and 35 OPEN, none NOT MET; two OPEN rows, M17g and M17x, fail with the geometry as currently assumed and wait on the jumper plug's selection (OPEN, FAILS AS ASSUMED); the targeted checks T1, T2, T4, T5, T6, T10 and T11 are recommended before the outlines and connector placements of boards A, B, C, E and P freeze, the rest at the build. The record stays INCONCLUSIVE on the file at 275a3083db30a7bf
 
-*Bound to:* `v2/docs/CASE-MARGINS.md@275a3083db30a7bf`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CASE-MARGINS.md re-read at 0fc449b72532ba7c (MESHSAT-1357 layer 7, 27 September 2026): the edit adds the note that C1 to C6 are implemented in CAD (v2/release/case-2026-09-27/), labels the agent checks behind its revisions as AI review, points the dock and blind-mate stack to CASE-FIT-UNCERTAINTIES.md and revises section 7's timing (the targeted mock-up before the layout entry of the boards a failing check would move, A, B, E and P, BLOCKED on the owner's purchase decision, where it had been carried to their fabrication release), and brings its opening summary, its paragraph on why the document exists and finding 23 to that timing; with the frame_seat.py draft, M18's part list read from the committed board B and U51's 1.60 sourced to ST's maximum (DS12117 Rev 9 Table 217); no figure or verdict of section 3 moved, so this reading stands on the file at 0fc449b72532ba7c
+
+*Bound to:* `v2/docs/CASE-MARGINS.md@0fc449b72532ba7c`
 
 *Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:3054-3056`; `v2/docs/V2-SPEC.md:8`; `v2/docs/CASE-MARGINS.md`; `owner ruling D-08a`
 
@@ -1311,6 +1334,22 @@ Prototype 1: not in the core. 7 record(s).
 *Source (verified):* `v2/docs/TEST-PLAN.md:31`
 
 *Notes:* E8's 'vent' is read as Peli's pressure valve, which 32.53 keeps (challenger); W5 settles the wording.
+
+**FEA-007** (feasibility). The case set is drawn and computed on the design basis only (v2/release/case-2026-09-27/, CASE-MARGINS.md): 35 of the 70 case margins are OPEN, two of them (M17g and M17x, the east jumpers under their plugs) fail with the jumper plug as laid out, and 30 rest on allowances no source states (Peli publishes no case tolerance); the pack's hold-down, the rod stack's retention and the dock and blind-mate tolerance stack are not designed, and board A's J_AB2 stands 3.10 into board D (W4-F17). Nominal CAD establishes no fit, seal or alignment, and the bounds of the open rows include failure: eleven of them (the YES rows of CASE-FIT-UNCERTAINTIES.md section 2) would be remedied, if their check failed, by moving a board outline, a connector or a board part of A, B, E or P.
+
+*Accept when:* Every desk item of CASE-FIT-UNCERTAINTIES.md section 2 closed before its board's layout entry; for boards A, B, E and P, the physical checks of their YES rows (A: T4; B: T2, T4, T5, T10, T11; E: T10; P: T2, T4; with T1 at purchase) run on a new case of the current moulding with the made parts and stand-ins, and each YES row read at or above its minimum, or the board's outline or placement changed, before that board's layout entry; every board's committed layout re-read against those readings before its fabrication release; T3, T7, T8 and T9 at the build.
+
+*allocated to case, a, b, c, d, e, e5, p; rulings D-08-reversal, D-08a, D-09; session choices SC-07; waits on S-27, L-07; prototype 1 core, taken by the session under the owner's standing rule (SC-04): Fitting the boards, the plate and the pack into the 1450 is a condition of every core function (CONOPS section 2a), as for REQ-019..*
+
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CASE-FIT-UNCERTAINTIES.md read at its landing (sha256 first 16 efc66afe9140e022): every OPEN row of frame_seat.out allocated to its physical check, each marked YES or NO by whether a failing check would move a board outline, connector or part; eleven YES rows hold the layout entry of boards A, B, E and P on the mock-up, which waits on the owner's purchase decision; M17g and M17x OPEN, FAILS AS ASSUMED (board B's east edge waits on the plug pick); the pack hold-down, W4-F17 and the dock stack undesigned. Board C's gate (MEC-001), with the board reading recorded by sha, reads PASS of 48 on the chosen arrangement and INCONCLUSIVE without the reading, a scratch reading the consolidated re-take records. Nothing here is measured, so the record is INCONCLUSIVE.
+
+*Bound to:* `v2/docs/CASE-FIT-UNCERTAINTIES.md@efc66afe9140e022`
+
+*Feasibility page:* `v2/docs/CASE-FIT-UNCERTAINTIES.md`, blocker ids M17g, M17x, M17d, M17f, M17w, M18, M13, M1, M4a, M5, M15b, W4-F17, DOCK, S-27; *owner:* The session (the picks, the lookups, the hold-down, the dock stack, the frame_seat.py re-runs); board A's and board D's owners (W4-F17); board E's owner (the clamp bar, the lanes, the pads); the owner for money (the case, the frame and the mock-up's parts, READY-TO-ACT.md section 6, D-09: L-07) and for any acceptance of the residual risk of entering layout on the design basis; an assembler with gauges for the checks.; *holds:* REQ-019, CON-006, REQ-047; layout entry of A, B, D, E, E5, P.
+
+*Source (verified):* `v2/docs/CASE-MARGINS.md`; `v2/docs/CASE-FIT-UNCERTAINTIES.md`; `v2/docs/reviews/2026-09-27-handover-execution-prompt.md`; `session choice SC-07`
+
+*Notes:* Created by the layer 7 closer (MESHSAT-1357, fnd/hc7) from the layer 7 audit of 27 September 2026: the computed layout-entry test had no case-geometry item, so a board could read ready for layout on geometry whose rows fail as assumed. The compact engineering question of the BLOCKED purchase is CASE-FIT-UNCERTAINTIES.md section 7. The review behind the case analysis is AI review; no qualified mechanical route exists yet (CASE-FIT-UNCERTAINTIES.md section 5).
 
 ### NEED-07
 
@@ -1773,7 +1812,9 @@ Prototype 1: in the core D-01 names. 9 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CURRENT-EVIDENCE.md re-read at the round 8 set 3 integration of 27 September 2026 (branch fnd/r8int3, rendered after board B's round 8): only board B's rows move (its netlist adcc3c6736c90e9f in the ready-for-layout table; PWR-001 and SI-001 on B now AWAITING_REVALIDATION, NETLIST_MISMATCH) with the counts that follow them; RF-002 and SCH-004 on board D keep their class and cause and decide nothing until the consolidated re-take, so the record's own reasons are unchanged and it stays INCONCLUSIVE on the file at 6e7936497971f484
 
-*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/docs/feasibility/EMCON.md@421a291f7ce4cda2`, `v2/docs/CURRENT-EVIDENCE.md@6e7936497971f484`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CURRENT-EVIDENCE.md re-read at the r8int4 integration of 27 September 2026: rendered after the layer 7 closer's registry change, FEA-007's layout-entry stage joins boards A, B, D, E, E5 and P (their reason counts rise by one) and board C's check_pcb_c.py becomes a declared writer (its CONFIG_INPUTS row); board D's row keeps RF-002 and SCH-004 in the class and cause read above, with FEA-007's desk items as its new reason, which this constraint does not rest on, so its own reasons are unchanged and it stays INCONCLUSIVE, so it stands on the file at f4681daa81312b95
+
+*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/docs/feasibility/EMCON.md@421a291f7ce4cda2`, `v2/docs/CURRENT-EVIDENCE.md@f4681daa81312b95`
 
 *Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2825`; `v2/docs/PANEL.md section 6`; `v2/docs/feasibility/EMCON.md sections 4.1 and 4.2`
 
@@ -2056,7 +2097,9 @@ Prototype 1: not in the core. 3 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/V2-SPEC.md re-read at integration by the layer-3 closer's apply script (27 September 2026): the line or row beginning '| Time |'; correction 8 whole, which this reading rests on, byte-identical to the revision it was bound to (41edfc2e2e3f1961), so it stands on the file at a02ea1b6801f8916
 
-*Bound to:* `v2/docs/V2-SPEC.md@a02ea1b6801f8916`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/V2-SPEC.md re-read at the r8int4 integration of 27 September 2026 after the layer 7 closer's case timing (fnd/hc7, c7) and the integrator's edits for verify c7: only correction 18 changes, gaining the mock-up's timing since 27 September 2026 (FEA-007); the lines and corrections this reading rests on are byte-identical to the file at a02ea1b6801f8916, so it stands on the file at 73a797e44d42fa6d
+
+*Bound to:* `v2/docs/V2-SPEC.md@73a797e44d42fa6d`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`
 
 *Source (verified):* `v2/docs/V2-SPEC.md:35`; `v2/ecad/tools/gen_sch_e.py:678`
 
@@ -2198,7 +2241,9 @@ Prototype 1: in the core D-01 names. 12 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CURRENT-EVIDENCE.md re-read at the round 8 set 3 integration of 27 September 2026 (branch fnd/r8int3): only board B's rows and the counts move; board P's row, its netlist 085f833362fbbda8 and every reason given above (PWR-001 FAIL and SI-001 INCONCLUSIVE awaiting the re-take on that netlist, RF-002 with no verdict yet, BAT-001 FAIL on AWAITING_REVALIDATION evidence) are unchanged, so this reading stands on the file at 6e7936497971f484
 
-*Bound to:* `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`, `v2/ecad/tools/gen_sch_p.py@91ccbb922c427d43`, `v2/docs/CURRENT-EVIDENCE.md@6e7936497971f484`, `v2/docs/review-packets/battery/REVIEW-REQUEST.md@91a257430cbeb53a`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CURRENT-EVIDENCE.md re-read at the r8int4 integration of 27 September 2026: rendered after the layer 7 closer's registry change, FEA-007's layout-entry stage joins boards A, B, D, E, E5 and P (their reason counts rise by one) and board C's check_pcb_c.py becomes a declared writer (its CONFIG_INPUTS row); board P's row, its netlist 085f833362fbbda8 and every reason given above are unchanged, FEA-007 (the pack's place under the mock-up) joining them, which this record does not rest on, so it stands on the file at f4681daa81312b95
+
+*Bound to:* `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`, `v2/ecad/tools/gen_sch_p.py@91ccbb922c427d43`, `v2/docs/CURRENT-EVIDENCE.md@f4681daa81312b95`, `v2/docs/review-packets/battery/REVIEW-REQUEST.md@91a257430cbeb53a`
 
 *Source (verified):* `v2/docs/TEST-PLAN.md:58-94`; `v2/ecad/tools/pcb_pack_protection.yaml:17-40`; `owner ruling D-15`; `v2/docs/review-packets/battery/PROTECTION-ARCHITECTURE.md`; `v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md`; `v2/ecad/tools/gen_sch_p.py:355-430`
 
@@ -2286,7 +2331,9 @@ Prototype 1: in the core D-01 names. 12 record(s).
 
 *Evidence (FAIL, DESK_REVIEW):* v2/ecad/tools/pcb_energy_chain.yaml re-read by hand at the r8int4 integration of 27 September 2026 (main 38dcd764 with the layer-3 closer's correction applied by its script): the header (line 19) and the pack source (line 46) name the one 4S3P block of Samsung INR18650-35E, about 145 Wh, as the reading says; board B's round 8 (b76c18cb) changed other chains of the file, not the pack's, so the reading stands on the file at b566a7a041aeb165
 
-*Bound to:* `v2/ecad/tools/pcb_pack_protection.yaml@1cd670d6c7685645`, `v2/ecad/tools/pcb_energy_chain.yaml@b566a7a041aeb165`, `v2/ecad/tools/pcb_board_facts.yaml@07af4d0f2b166694`, `v2/cad/pack_4s.py@cfa8fed3affab289`
+*Evidence (FAIL, DESK_REVIEW):* v2/cad/pack_4s.py re-read at the r8int4 integration of 27 September 2026 after the layer 7 closer's case timing (fnd/hc7, c7) and the integrator's edits for verify c7: the layer 7 closer added a SUPERSEDED banner (lines 2 to 6) that names D-06's one 4S3P block and S-27; the box below it still draws the wrapped 4S4P block (line 10 and CELLS, line 20), and no enclosure or hold-down for the 4S3P block exists, so the FAIL stands on the file at fab2cc216f7ba460
+
+*Bound to:* `v2/ecad/tools/pcb_pack_protection.yaml@1cd670d6c7685645`, `v2/ecad/tools/pcb_energy_chain.yaml@b566a7a041aeb165`, `v2/ecad/tools/pcb_board_facts.yaml@07af4d0f2b166694`, `v2/cad/pack_4s.py@fab2cc216f7ba460`
 
 *Source (verified):* `v2/docs/V2-SPEC.md:20`; `v2/docs/MESHSAT-709-geometry-appendix.md:3062`; `v2/ecad/tools/pcb_pack_protection.yaml:17-27 (as read at eadbe571)`; `v2/ecad/tools/pcb_energy_chain.yaml:46 (as read at eadbe571)`; `v2/ecad/tools/gen_sch_p.py:6`
 
@@ -2342,7 +2389,9 @@ Prototype 1: in the core D-01 names. 12 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/ASSEMBLY.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed section 4's Monitor touch USB row and build step 9's clause on the monitor's leads only (the touch lead's board end, D8 J_USB3, SC-HF-06); section 4's Pack SMBus row and build step 7, which this reading cites, are unchanged, so this reading stands on the file at 3a8897ef6d717a30
 
-*Bound to:* `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`, `v2/docs/ASSEMBLY.md@3a8897ef6d717a30`, `v2/docs/PANEL.md@4bcbf31f44560ee1`, `v2/ecad/tools/check_contracts.py@308fdefb90335da4`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/ASSEMBLY.md re-read at the r8int4 integration of 27 September 2026 after the layer 7 closer's case timing (fnd/hc7, c7) and the integrator's edits for verify c7: the case set C1 to C6 rows, step 0, the jumpers, the plate, the lid space, the pocket, the QMX tray row and notes (11) and (13) change, and build step 9 keeps the layer 5 closer's touch-lead clause beside the case set's; section 4's Pack SMBus row and build step 7, which this reading cites, are byte-identical to the file at 3a8897ef6d717a30, so it stands on the file at b49f853f450d49ee
+
+*Bound to:* `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`, `v2/docs/ASSEMBLY.md@b49f853f450d49ee`, `v2/docs/PANEL.md@4bcbf31f44560ee1`, `v2/ecad/tools/check_contracts.py@308fdefb90335da4`
 
 *Source (verified):* `v2/ecad/tools/gen_sch_e.py:264`; `v2/docs/ASSEMBLY.md section 4`; `v2/docs/PANEL.md section 10`
 
@@ -2395,9 +2444,9 @@ Prototype 1: in the core D-01 names. 4 record(s).
 | REQ-049 | requirement | core | DEFINED | SCRIPT, PROTOTYPE_MEASUREMENT | SCHEMATIC, PROTOTYPE | SCH-003 | - | NOT_JUDGED | BLOCKER |
 | REQ-066 | requirement | core | DEFINED | MANUAL_REVIEW, PROTOTYPE_MEASUREMENT | SCHEMATIC, ASSEMBLY | none | - | NOT_JUDGED | BLOCKER |
 
-**REQ-047** (requirement). The face plate comes off (ten M3), the rod stack lifts straight up off the blind-mate joint without unscrewing a cable, and the pack comes out of its cradle.
+**REQ-047** (requirement). The face plate comes off (ten 6-32 UNC screws from above into Peli's inserts, C1 of SC-07), the rod stack lifts straight up off the blind-mate joint without unscrewing a cable, and the pack comes out of its cradle.
 
-*Accept when:* Demonstrated on the assembled prototype; the blind-mate float tolerance stack closes on paper against Peli's own figures (CASE-MARGINS.md), with any OPEN margin shown on hardware at the build.
+*Accept when:* Demonstrated on the assembled prototype; the dock and blind-mate float tolerance stack (the SMP-MAX paths, the Preci-Dip 813 contacts and the Mill-Max power pins with the rods, spacers, VHB pads and laminates) closes on paper as its own analysis, which is owed (v2/docs/CASE-FIT-UNCERTAINTIES.md section 3, row DOCK; CASE-MARGINS.md judges no blind-mate row), and the case margins it rests on are held against Peli's own figures (CASE-MARGINS.md), with any OPEN margin shown on hardware at the build.
 
 *What an earlier reading said:* Round 3 waited on the owner's case measurement (M-01); the owner reversed D-08, and nominal CAD establishes no blind-mate alignment (review of 26 September 2026, section 4), so the stack-up is shown on hardware.
 
@@ -2548,7 +2597,13 @@ Prototype 1: not in the core. 8 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read at the layer 5 closer's edit of 27 September 2026 (hc5-layer5): it changed section 1's Pass-throughs row (the monitor's touch lead to D8 J_USB3, SC-HF-06), section 3's GPIO10 to 12 row (the heartbeat source) and section 7's new paragraph on speed, pull-ups and the budget (its supervisors' row at 0x34 to 0x36, its 0x68 row and the S-07 finding closed as I3-F01 were already board B's round 8 text, b76c18cb, and are unchanged here); section 1 changes only in its Pass-throughs row (the monitor's leads, which this reading does not cite; its ZEROIZE and EMCON logic rows are unchanged), section 6 is unchanged, and section 7's bus table still lists the supervisors, the Ethernet switch, the PoE controller and board A's expanders from the SDA and SCL nets, now with the supervisors at their corrected block, so the resolution stands, so this reading stands on the file at 4bcbf31f44560ee1
 
-*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`, `v2/docs/PANEL.md@4bcbf31f44560ee1`, `v2/docs/CONOPS.md@eb0eda7cacfe7156`, `v2/docs/V2-SPEC.md@a02ea1b6801f8916`, `v2/docs/OPERATING-ENVELOPE.md@9f16f5b7d634764a`, `v2/docs/TEST-PLAN.md@a0de0b12ff06ba4e`, `v2/ecad/tools/pcb_decisions.yaml@b5f7162443d5ad91`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/CONOPS.md re-read at the r8int4 integration of 27 September 2026 after the layer 7 closer's case timing (fnd/hc7, c7) and the integrator's edits for verify c7: only section 4a's pack paragraph and section 7's D-06 row change (the targeted mock-up before boards A and P enter layout, in place of 'a mock-up at the build'); the needs table and sections 2a, 3, 4, 4a's PS-EMCON row, 4b and 5, which this reading rests on, are byte-identical to the file at eb0eda7cacfe7156, so it stands on the file at 4887ada07f50d808
+
+*Evidence (PASS, DESK_REVIEW):* v2/docs/V2-SPEC.md re-read at the r8int4 integration of 27 September 2026 after the layer 7 closer's case timing (fnd/hc7, c7) and the integrator's edits for verify c7: only correction 18 changes, gaining the mock-up's timing since 27 September 2026 (FEA-007); the lines and corrections this reading rests on are byte-identical to the file at a02ea1b6801f8916, so it stands on the file at 73a797e44d42fa6d
+
+*Evidence (PASS, DESK_REVIEW):* v2/docs/OPERATING-ENVELOPE.md re-read at the r8int4 integration of 27 September 2026 after the layer 7 closer's case timing (fnd/hc7, c7) and the integrator's edits for verify c7: only section 4's pack row changes (M4a and M5 open until the targeted mock-up before boards A and P enter layout, in place of 'a mock-up at the build'); section 2's protection-board row, section 3 and section 4's EMCON paragraph are byte-identical to the file at 9f16f5b7d634764a, so it stands on the file at 6e4bbde9dbf7e136
+
+*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`, `v2/docs/PANEL.md@4bcbf31f44560ee1`, `v2/docs/CONOPS.md@4887ada07f50d808`, `v2/docs/V2-SPEC.md@73a797e44d42fa6d`, `v2/docs/OPERATING-ENVELOPE.md@6e4bbde9dbf7e136`, `v2/docs/TEST-PLAN.md@a0de0b12ff06ba4e`, `v2/ecad/tools/pcb_decisions.yaml@b5f7162443d5ad91`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`
 
 *Source (verified):* `v2/docs/PANEL.md section 6`; `v2/docs/CONOPS.md section 4b`; `v2/docs/V2-SPEC.md:76 (as read at eadbe571)`; `v2/docs/OPERATING-ENVELOPE.md section 4`; `v2/docs/TEST-PLAN.md:46 (as read at eadbe571)`; `v2/ecad/tools/pcb_decisions.yaml:863-915 (as read at eadbe571)`
 
@@ -2725,7 +2780,9 @@ Prototype 1: not in the core. 8 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/V2-SPEC.md read by hand by the layer-3 closer on 27 September 2026 on the layer-1 closer's revision (fnd/hc1, 7fef12e23792b3c0) and on main's integration of it (2ef6aa2a, dd9a92946a8d186f, the same line 41 with the choice's id filled), and written here by the apply script where the same sentences are present: line 41 gives one description of the dual SIM, two nano-SIM holders, SIM 1 on the module's (U)SIM1 pins and SIM 2 on its USIM2 pins behind four 0 ohm links, so that the same board builds the eSIM-plus-nano-SIM configuration of appendix 32.50 item 12 with an eSIM-fitted variant and the links left off (Quectel HD v1.1 section 4.1.6, Figure 19), prototype 1 built with two nano-SIMs (session choice SC-13, its correction on dual SIM); v2/ecad/tools/gen_sch_b.py's SIM section of slot 2 carries that fit. The description conflict is resolved on the file at a02ea1b6801f8916; the TVS array is CON-025 and the eSIM variant's order code S-13, neither a contradiction between sources.
 
-*Bound to:* `v2/docs/V2-SPEC.md@a02ea1b6801f8916`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/V2-SPEC.md re-read at the r8int4 integration of 27 September 2026 after the layer 7 closer's case timing (fnd/hc7, c7) and the integrator's edits for verify c7: only correction 18 changes, gaining the mock-up's timing since 27 September 2026 (FEA-007); the lines and corrections this reading rests on are byte-identical to the file at a02ea1b6801f8916, so it stands on the file at 73a797e44d42fa6d
+
+*Bound to:* `v2/docs/V2-SPEC.md@73a797e44d42fa6d`
 
 *Source (verified):* `v2/docs/V2-SPEC.md:41 (as read at eadbe571)`; `v2/docs/MESHSAT-709-geometry-appendix.md:2796`; `v2/ecad/tools/gen_sch_b.py:672-697 (as read at eadbe571)`
 
@@ -2945,7 +3002,7 @@ Every rule of the PCB rule registry a record names, and the records that name it
 | VIA-001 | every via is a via the process makes | BLOCKER | CON-023 |
 | PLN-001 | no orphan copper | BLOCKER | CON-023 |
 | EMC-001 | source, path, victim | MUST_JUSTIFY | REQ-015, REQ-057, REQ-068, REQ-058, REQ-063 |
-| MEC-001 | the board fits what it is fitted to | BLOCKER | REQ-011, CON-006, REQ-019, REQ-020, REQ-047 |
+| MEC-001 | the board fits what it is fitted to | BLOCKER | REQ-011, CON-006, REQ-019, REQ-020, REQ-047, FEA-007 |
 | DFM-001 | the fabrication set is complete and consistent | BLOCKER | CON-023 |
 | DFA-001 | the assembly set is buildable | BLOCKER | CON-023 |
 | TST-001 | the board can be brought up safely | MUST_JUSTIFY | REQ-048 |
@@ -2989,7 +3046,7 @@ D-01: full design, staged acceptance. Every ruled function stays designed and fi
 | NEED-03 | yes (D-01) | REQ-004, REQ-005, REQ-006, CON-002, CON-003, CON-022, FEA-003, FEA-006, CON-004, CON-017, CON-005, CHO-002, ASM-002, REQ-073, CFL-001, REQ-062, CON-014 | CON-012 |
 | NEED-04 | no | - | REQ-007, REQ-008, REQ-009, REQ-010, REQ-011, REQ-012, REQ-013 |
 | NEED-05 | yes (D-01) | REQ-014, FEA-004, REQ-015, REQ-016, REQ-072, CON-006, REQ-018, ASM-003, CFL-012, CFL-014 | REQ-017, CON-007, CON-013 |
-| NEED-06 | no | REQ-019, REQ-020, CON-008 | REQ-021, REQ-022, REQ-023, REQ-064 |
+| NEED-06 | no | REQ-019, REQ-020, CON-008, FEA-007 | REQ-021, REQ-022, REQ-023, REQ-064 |
 | NEED-07 | no | - | REQ-024, REQ-025, REQ-074, REQ-026, ASM-004, REQ-027, REQ-028, REQ-029, CHO-003, CON-009, CFL-002, CFL-003, REQ-051, REQ-052, REQ-059, CFL-011, ASM-006 |
 | NEED-08 | yes (D-01) | REQ-030, REQ-071, CFL-004, REQ-031, REQ-032, CFL-005, CON-010, CON-021, FEA-002 | - |
 | NEED-09 | no | - | REQ-033, REQ-034 |
@@ -3004,7 +3061,7 @@ D-01: full design, staged acceptance. Every ruled function stays designed and fi
 | NEED-18 | no | CON-025, CON-024 | CON-018, REQ-061, CFL-018, REQ-063 |
 | NEED-19 | yes (SC-01, taken by the session) | REQ-060 | - |
 
-### What prototype 1 is accepted on: every core BLOCKER (67)
+### What prototype 1 is accepted on: every core BLOCKER (68)
 
 Each of these stops prototype 1's acceptance while it is unmet. The scope column says whether the record is core because its need is (NEED_DEFAULT), because an owner ruling names it (NAMED), or because the session took it under the owner's standing rule (SESSION, with the choice).
 
@@ -3077,8 +3134,9 @@ Each of these stops prototype 1's acceptance while it is unmet. The scope column
 | REQ-066 | NEED-14 | requirement | NEED_DEFAULT | DEFINED | NOT_JUDGED |
 | CON-015 | NEED-02 | constraint | NEED_DEFAULT | DEFINED | INCONCLUSIVE at SCHEMATIC |
 | CON-016 | NEED-13 | constraint | NEED_DEFAULT | DEFINED | FAIL at SCHEMATIC |
+| FEA-007 | NEED-06 | feasibility | SESSION SC-04 | FEASIBILITY_OPEN | INCONCLUSIVE at PLACED_BOARD; ASSEMBLY not yet judged |
 
-### Taken by the session under the owner's standing rule (24)
+### Taken by the session under the owner's standing rule (25)
 
 | record | need | prototype 1 | choice | why |
 |---|---|---|---|---|
@@ -3106,6 +3164,7 @@ Each of these stops prototype 1's acceptance while it is unmet. The scope column
 | CON-024 | NEED-18 | core | SC-04 | A condition of the core bearers' links and of the failover fabric (return paths, impedance and pairs), as CON-023 is of every core function: SC-04 puts such a record in the core (Review B, finding m6). |
 | ASM-007 | NEED-13 | deferred | SC-04 | It concerns the pack's environmental qualification, which D-01 leaves outside the core; pack safety itself is core under NEED-13. |
 | REQ-065 | NEED-10 | deferred | SC-04 | D-01 names only ZEROIZE of the secure element under NEED-10; D-13 sets the design floor, which is built into prototype 1 and reported NOT_YET_TESTED until it runs. |
+| FEA-007 | NEED-06 | core | SC-04 | Fitting the boards, the plate and the pack into the 1450 is a condition of every core function (CONOPS section 2a), as for REQ-019. |
 
 ### Named by an owner ruling (21)
 
@@ -3175,13 +3234,14 @@ SESSION items are engineering the session decides and records with authority SES
 | L-04 | LATER | Review route R-PWR, a qualified review of the corrected complex power design (board A, board E's input stage, board B's PoE PSE): not approved by D-09; it needs the owner's spending approval before board A enters layout. | FEA-004 |
 | L-05 | LATER | Review route R-HSD, a qualified review of board B's PCIe and USB 3 fabric: not approved by D-09; it needs the owner's spending approval before a board B layout is committed or any board B order. | FEA-003 |
 | L-06 | LATER | The bench parts for ZEROIZE experiments Z-EXP-A and Z-EXP-B (ZEROIZE.md section 5: a development board, a SOIC adapter, ten ATECC608B-SSHDA-T, a Raspberry Pi Pico, a load switch): nothing is spent beyond the voucher without a quote and the owner's approval (D-09). | ASM-005, FEA-001 |
+| L-07 | LATER | The targeted case mock-up of CASE-MARGINS.md sections 5 and 7 (READY-TO-ACT.md section 6): a new Peli 1450 of the current moulding with its 1450PF frame (shared with the empty-case heat-balance test), the made parts of v2/release/case-2026-09-27/, one PolyPhaser GTH-SFF-AL, the picked jumper plugs on RG-316, the Xenarc 709GNK and a CM5 heatsink, and stand-ins for the boards and the pack: not approved by D-09; it needs the owner's spending approval before boards A, B, E and P enter layout, because a failing check of their YES rows moves board A's east edge, board B's edges, east-end parts and stack, board E's south edge and clamp lanes, or board P's place (CASE-FIT-UNCERTAINTIES.md sections 2 and 7; FEA-007). | CON-006, FEA-007 |
 | S-01 | SESSION | EMCON reaches every transmitter (D-05), what is left after 458b2873 gated the compute modules' radios and the WiFi card supplies: SD-EMC-1's two stages for the 5G module drawn on board B; the shared-line items L1 to L4 and L7 of EMCON.md section 7 remedied (firmware pins on EMCON_HW, the line's hold with its source gone, the +3V3_DEV loss that releases nine radios, gate supplies outside their range, the 2N7002 drive); the back-feed paths of SD-EMC-2. | REQ-030, REQ-071, REQ-032, FEA-002 |
 | S-02 | SESSION | RF-002 enumerates every transmitter from the netlists and fails any without a hardware gate. | REQ-030, REQ-071, FEA-002 |
 | S-12 | SESSION | The key-B socket's land carries TE's two locating holes (drawing C-2199119 rev F, sheet 3; gen_footprints_b16.py draws neither), and D-07's third jack is confirmed by the board E clamp fit (its case half is laid out, CASE-MARGINS.md section 3.4). The key-B part is fitted since 458b2873. | CHO-001, CON-015 |
 | S-13 | SESSION | The order code of an eSIM-fitted RM520N-GL, named before an eSIM build is bought (the components layer's list). The description is settled by session choice SC-13 (V2-SPEC line 41 and its correction on dual SIM: the compatible design of HD Figure 19, two nano-SIM holders with an eSIM build option), and the SIM TVS array the HD asks for (at most 10 pF, Quectel HD v1.1 section 4.1.7) is board B's constraint CON-025 since 27 September 2026 (Review B, finding B6). SIM 2 is on the module's own pins since 458b2873. | none |
 | S-22 | SESSION | Dock lift (D-14): the E5 insulating cap drawn or sourced and listed as a kit part (ASSEMBLY.md section 7 has the procedure since 4ec785d8 and says the cap is not yet drawn or sourced); a stack-present interlock studied at Review D. | REQ-066 |
 | S-23 | SESSION | Board A's decision-31 hold kept until criterion C-A31 passes. | none |
-| S-27 | SESSION | pack_4s.py redesigned around the shrink-wrapped 4S3P block with its hold-down (CASE-MARGINS.md M4a and M5 wait on it; the script still draws the wrapped 4S4P block, v2/cad/pack_4s.py). The pack documents pcb_pack_protection.yaml, pcb_energy_chain.yaml and pcb_board_facts.yaml name the one cell and parallel count of D-06 since the layer-3 closer's correction of 27 September 2026 (CFL-006). | CON-006, CFL-006 |
+| S-27 | SESSION | pack_4s.py redesigned around the shrink-wrapped 4S3P block with its hold-down (CASE-MARGINS.md M4a and M5 wait on it; the script still draws the wrapped 4S4P block, v2/cad/pack_4s.py). The pack documents pcb_pack_protection.yaml, pcb_energy_chain.yaml and pcb_board_facts.yaml name the one cell and parallel count of D-06 since the layer-3 closer's correction of 27 September 2026 (CFL-006). | CON-006, CFL-006, FEA-007 |
 | S-28 | SESSION | Every transmitter configured to the operator's licence and the EU limits, with a band lock on the VHF path and the HF and SDR transmit paths limited to the licensed bands (D-04). | REQ-054, REQ-055, REQ-067, REQ-056 |
 | S-32 | SESSION | SOS firmware (D-10): the configured recipient list, the message format with the position, and the bearer order with Iridium first when nothing else is up. The operator's indications and the EMCON queue are PANEL.md section 9's since 27 September 2026 (SC-30). | REQ-060 |
 | S-33 | SESSION | The shade accessory of D-02e (a lid sun shield or a tarp) specified and added to the kit list. | ASM-006 |
@@ -3210,6 +3270,7 @@ SESSION items are engineering the session decides and records with authority SES
 | S-60 | SESSION | (hc5-layer5: HF-F02) Board A's INA226 U17 senses the 54 V PoE rail with IN+ and IN- at the rail, over the part's 40 V absolute maximum and 36 V input range (TI SBOS547 5.1, 5.5 note 1); a damaged monitor can hold the kit bus. Open until board A's author moves the sense to the stage's VBAT side or the rail's return, or fits a part rated for the rail on its maker's document (v2/docs/HW-FW-CONTRACT.md section 7). | none |
 | S-61 | SESSION | (hc5-layer5: SC-HF-06, HF-F06) The monitor's touch USB takes board D's spare hub port J_USB3 (the session's choice SC-HF-06 of v2/docs/HW-FW-CONTRACT.md section 8; no board B change; the HAL shares it to the display owner, FW-B19). Owed on board D: a current limit on J_USB3's VBUS, which is +5V_D8 with no port switch, so a fault on the touch lead trips board A's U23 and takes board D down; and the J_USB3 budget line (0.05 A) set from the touch controller's measured draw, which USB 2.0 section 7.2.1 bounds at 100 mA unconfigured and 500 mA configured (V-B19). Carried before board D's layout entry (r8int4, after hc5's second review: a fault on the touch lead removes board D, whose APRS path is a prototype 1 core function under D-01, so HF-F06 is major). | none |
 | S-62 | SESSION | (hc5-layer5: HF-F07) Board E: the Geiger module's pulse reaches GPIO7 through 22 R only, and a 5 V class module can exceed the RP2040's IOVDD + 0.5 V absolute maximum (datasheet Table 622): pick the module, read its output stage, and add a divider or a clamp if needed; and give the fan switches Q9, Q10 discrete gate pull-downs instead of the RP2040's pad pull-down (v2/docs/HW-FW-CONTRACT.md section 7). | none |
+| S-63 | SESSION | (r8int4: the QMX lid tray) The QMX lid tray released in v2/release/case-2026-09-27/lid-tray-qmx/ (sheet 14) does not fit the unit's connector layout: the held QRP Labs QMX manual (1_04_004, pages 7 to 9) puts the DC jack on the left panel and the BNC and USB-C on the right panel, and the tray has notches in one end wall only; the unit's 95 x 63 x 25 and the notch heights are checked against no maker drawing. Revise the tray from the QMX enclosure drawing before it is printed (v2/docs/CASE-FIT-UNCERTAINTIES.md section 3; the layer 7 fixer c7). Desk work on a made part: no board moves (J_QMX, J_HF and J_RF2 stay) and nothing is bought. ENGINEERING-QUESTIONS EQ-24. | none |
 
 ## Closed items
 
@@ -3288,7 +3349,7 @@ Every item that has left the open list, and what closed it: an owner ruling, a s
 | REQ-052 | deferred | MUST_JUSTIFY | SCHEMATIC | DESK_REVIEW | v2/docs/ARCH-PCB-B-IOHA.md sections 4 and 15 and v2/ecad/tools/gen_sch_b.py (the bank ring f = s % 3 + 1 and the hub ports) read at e3aedb25 (27 September 2026, layer-3 closer): Iridium and the panel controller, which carries the SOS path, hang on bank 1, hosted by slot 1 or slot 2; GNSS on bank 2 (slot 2 or 3); the APRS board on bank 3 (slot 3 or 1); the LoRa module on slot 3's SPI. Slot 3 alo... |
 | CON-016 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | orientation holds on every committed netlist at eadbe571 (pad 1 the cathode, adjudication A03): board E's D1, D2, D3 and D4 and board P's D1 on their positive conductors and board E's D10 now bidirectional, board D's D1 on +5V_D8, board C's D19 to D21 toward VGH and from VGL, boards A's and B's clamps on their rails (v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net, v2/ecad/pcb-p-pack-p2/out/pcb-p-pa... |
 
-### INCONCLUSIVE (14)
+### INCONCLUSIVE (15)
 
 | record | prototype 1 | effect | at | class | evidence |
 |---|---|---|---|---|---|
@@ -3306,6 +3367,7 @@ Every item that has left the open list, and what closed it: an owner ruling, a s
 | REQ-044 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | the netlist clause holds on the committed netlist v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net at eadbe571 (v2/ecad/tools/gen_sch_p.py:243, :288 and :355-430): the BQ7720700 second level (cell OV 4.325 V and UV 2.25 V, open wire, OT on its own thermistor J_TS2) and the BQ4050's FUSE output both drive FUSE_G through R29 and R30, which closes Q3 on the Eaton SCF9550 F2's heater once the arming jumper... |
 | FEA-005 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/review-packets/battery/REVIEW-REQUEST.md read at eadbe571: "All reviews to date are by AI agent sessions; no qualified human engineer has reviewed this revision" and "Nothing in this file has been sent to anyone"; PROTECTION-ARCHITECTURE.md names what is not covered with the primary failed and its FETs held on (over-current between the cells' 24 A and F1's 25 A, charge over-current, cha... |
 | CON-015 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/ecad/tools/gen_sch_b.py:635-643 read at eadbe571: J_M2C2 is TE 2199119-3, key ID B on TE drawing C-2199119 rev F (458b2873), and its land lacks the drawing's two locating holes (1.1 and 1.6 mm), which the generator's footprint does not draw; v2/ecad/tools/gen_sch_b.py re-read at the clamp-symbol merge of 26 September 2026 (stream ts-tvs): it changed only at lines 441, 671, 832 and 876 (board... |
+| FEA-007 | core | BLOCKER | PLACED_BOARD | DESK_REVIEW | v2/docs/CASE-FIT-UNCERTAINTIES.md read at its landing (sha256 first 16 efc66afe9140e022): every OPEN row of frame_seat.out allocated to its physical check, each marked YES or NO by whether a failing check would move a board outline, connector or part; eleven YES rows hold the layout entry of boards A, B, E and P on the mock-up, which waits on the owner's purchase decision; M17g and M17x OPEN, F... |
 
 ### PASS (21)
 
