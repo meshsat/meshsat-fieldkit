@@ -1,0 +1,208 @@
+{
+ "kind": "schematic",
+ "phase_labels": [
+  [
+   "B21"
+  ],
+  [
+   "B21"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N1_title_date": 1,
+   "N2_page_frame_date": 43,
+   "L1_comment1_phase": 1,
+   "L2_frame_phase": 43
+  },
+  {
+   "N1_title_date": 1,
+   "N2_page_frame_date": 43,
+   "L1_comment1_phase": 1,
+   "L2_frame_phase": 43
+  }
+ ],
+ "result": "DIFFERENT",
+ "parts_only_committed": [
+  "R164",
+  "R264",
+  "R364"
+ ],
+ "parts_only_other": [
+  "C559",
+  "C607",
+  "C637",
+  "C667",
+  "R527",
+  "R528",
+  "R529",
+  "R530",
+  "R531",
+  "U116",
+  "U216",
+  "U316",
+  "U536"
+ ],
+ "parts_changed": [
+  [
+   "R514",
+   [
+    "10k",
+    "R_0603_1608Metric",
+    ""
+   ],
+   [
+    "15k 1%",
+    "R_0603_1608Metric",
+    "C22809"
+   ]
+  ],
+  [
+   "R515",
+   [
+    "10k",
+    "R_0603_1608Metric",
+    ""
+   ],
+   [
+    "15k 1%",
+    "R_0603_1608Metric",
+    "C22809"
+   ]
+  ],
+  [
+   "R516",
+   [
+    "10k",
+    "R_0603_1608Metric",
+    ""
+   ],
+   [
+    "15k 1%",
+    "R_0603_1608Metric",
+    "C22809"
+   ]
+  ],
+  [
+   "U115",
+   [
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's card W_DISABLE1# and the card supply's enable S1A_EN low (L7; SD-EMC-1 on slot 2)",
+    "SOT-23-6",
+    "C402162"
+   ],
+   [
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's card W_DISABLE1# low (L7); channel 2 spare since W4B-D3",
+    "SOT-23-6",
+    "C402162"
+   ]
+  ],
+  [
+   "U215",
+   [
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's card W_DISABLE1# and the card supply's enable S2A_EN low (L7; SD-EMC-1 on slot 2)",
+    "SOT-23-6",
+    "C402162"
+   ],
+   [
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's card W_DISABLE1# low (L7); channel 2 spare since W4B-D3",
+    "SOT-23-6",
+    "C402162"
+   ]
+  ],
+  [
+   "U315",
+   [
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's card W_DISABLE1# and the card supply's enable S3A_EN low (L7; SD-EMC-1 on slot 2)",
+    "SOT-23-6",
+    "C402162"
+   ],
+   [
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's card W_DISABLE1# low (L7); channel 2 spare since W4B-D3",
+    "SOT-23-6",
+    "C402162"
+   ]
+  ]
+ ],
+ "lib_symbols_only_committed": [],
+ "lib_symbols_only_other": [
+  "meshsat_ic:U116",
+  "meshsat_ic:U216",
+  "meshsat_ic:U316",
+  "meshsat_ic:U536"
+ ],
+ "lib_symbols_changed": [
+  "meshsat_ic:U115",
+  "meshsat_ic:U215",
+  "meshsat_ic:U23",
+  "meshsat_ic:U24",
+  "meshsat_ic:U315"
+ ],
+ "line_counts": [
+  90085,
+  90960
+ ],
+ "changed_lines": 60413,
+ "changed_lines_sample": [
+  "+\t\t(symbol \"Connector_Generic:Conn_01x05\"",
+  "+\t\t\t\t\t(pin_names",
+  "+\t\t\t\t\t\t(offset 1.016)",
+  "+\t\t\t\t\t\t(hide yes)",
+  "+\t\t\t\t\t)",
+  "+\t\t\t\t\t(exclude_from_sim no)",
+  "+\t\t\t\t\t(in_bom yes)",
+  "+\t\t\t\t\t(on_board yes)",
+  "+\t\t\t\t\t(property \"Reference\" \"J\"",
+  "+\t\t\t\t\t\t(at 0 7.62 0)",
+  "+\t\t\t\t\t\t(effects",
+  "+\t\t\t\t\t\t\t(font",
+  "+\t\t\t\t\t\t\t\t(size 1.27 1.27)",
+  "+\t\t\t\t\t\t\t)",
+  "+\t\t\t\t\t\t)",
+  "+\t\t\t\t\t)",
+  "+\t\t\t\t\t(property \"Value\" \"Conn_01x05\"",
+  "+\t\t\t\t\t\t(at 0 -7.62 0)",
+  "+\t\t\t\t\t\t(effects",
+  "+\t\t\t\t\t\t\t(font",
+  "+\t\t\t\t\t\t\t\t(size 1.27 1.27)",
+  "+\t\t\t\t\t\t\t)",
+  "+\t\t\t\t\t\t)",
+  "+\t\t\t\t\t)",
+  "+\t\t\t\t\t(property \"Footprint\" \"\"",
+  "+\t\t\t\t\t\t(at 0 0 0)",
+  "+\t\t\t\t\t\t(effects",
+  "+\t\t\t\t\t\t\t(font",
+  "+\t\t\t\t\t\t\t\t(size 1.27 1.27)",
+  "+\t\t\t\t\t\t\t)",
+  "+\t\t\t\t\t\t\t(hide yes)",
+  "+\t\t\t\t\t\t)",
+  "+\t\t\t\t\t)",
+  "+\t\t\t\t\t(property \"Datasheet\" \"~\"",
+  "+\t\t\t\t\t\t(at 0 0 0)",
+  "+\t\t\t\t\t\t(effects",
+  "+\t\t\t\t\t\t\t(font",
+  "+\t\t\t\t\t\t\t\t(size 1.27 1.27)",
+  "+\t\t\t\t\t\t\t)",
+  "+\t\t\t\t\t\t\t(hide yes)",
+  "+\t\t\t\t\t\t)",
+  "+\t\t\t\t\t)",
+  "+\t\t\t\t\t(property \"Description\" \"Generic connector, single row, 01x05, script generated (kicad-library-utils/schlib/autogen/connector/)\"",
+  "+\t\t\t\t\t\t(at 0 0 0)",
+  "+\t\t\t\t\t\t(effects",
+  "+\t\t\t\t\t\t\t(font",
+  "+\t\t\t\t\t\t\t\t(size 1.27 1.27)",
+  "+\t\t\t\t\t\t\t)",
+  "+\t\t\t\t\t\t\t(hide yes)",
+  "+\t\t\t\t\t\t)",
+  "+\t\t\t\t\t)",
+  "+\t\t\t\t\t(property \"ki_keywords\" \"connector\"",
+  "+\t\t\t\t\t\t(at 0 0 0)",
+  "+\t\t\t\t\t\t(effects",
+  "+\t\t\t\t\t\t\t(font",
+  "+\t\t\t\t\t\t\t\t(size 1.27 1.27)",
+  "+\t\t\t\t\t\t\t)",
+  "+\t\t\t\t\t\t\t(hide yes)",
+  "+\t\t\t\t\t\t)",
+  "+\t\t\t\t\t)"
+ ],
+ "bucket_hint": "PARTS"
+}

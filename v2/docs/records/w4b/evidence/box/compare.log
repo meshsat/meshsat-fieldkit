@@ -1,0 +1,39 @@
+w4b: compare start 2026-09-27T15:08:00Z
+w4b: == main's generator against main's committed board B files (base)
+base_vs_committed        schematic  exit 0  PARITY
+base_vs_committed        netlist    exit 0  PARITY_AFTER_NOISE
+base_vs_committed        intent     exit 0  PARITY_AFTER_NOISE
+base_vs_committed        provenance exit 0  PARITY_AFTER_NOISE
+base_vs_committed        bom        exit 0  PARITY
+base_vs_committed        erc        exit 0  PARITY_AFTER_NOISE
+w4b: == the candidate against main regenerated (cand vs base)
+cand_vs_base             schematic  exit 1  DIFFERENT
+cand_vs_base             netlist    exit 1  DIFFERENT
+cand_vs_base             intent     exit 1  DIFFERENT
+cand_vs_base             bom        exit 1  DIFFERENT
+cand_vs_base             erc        exit 1  DIFFERENT
+w4b: == independent netlist comparison (indep_cmp.py) with the w4b expected-change list
+w4b: committed main -> cand exit 0
+parts 1270 -> 1280 (+13 -3 ~6); nets 2004 -> 2011 (+7 -0 ~19)
+unexplained: 0
+w4b: main regenerated -> cand exit 0
+parts 1270 -> 1280 (+13 -3 ~6); nets 2004 -> 2011 (+7 -0 ~19)
+unexplained: 0
+w4b: committed main -> main regenerated (raw)
+parts 1270 -> 1270 (+0 -0 ~0); nets 2004 -> 2004 (+0 -0 ~0)
+{
+ "parts_added": [],
+w4b: with W4B-D1:parts_added dropped (must refuse) exit 1 unexplained 4
+w4b: with W4B-D2:nets_changed dropped (must refuse) exit 1 unexplained 3
+w4b: with W4B-D3:parts_removed dropped (must refuse) exit 1 unexplained 3
+w4b: with W4B-D3:nets_changed dropped (must refuse) exit 1 unexplained 14
+w4b: base status after compare:
+     M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json
+     M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net
+     M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net.prov.json
+w4b: cand status after compare:
+     M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json
+     M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net
+     M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net.prov.json
+     M v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_sch
+w4b: compare done 2026-09-27T15:08:15Z

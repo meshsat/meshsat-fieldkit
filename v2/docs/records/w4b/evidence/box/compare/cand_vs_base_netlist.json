@@ -1,0 +1,728 @@
+{
+ "kind": "netlist",
+ "phase_labels": [
+  [
+   "B21"
+  ],
+  [
+   "B21"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  },
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  }
+ ],
+ "design_header": [
+  [
+   "/root/w4b/base/v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_sch",
+   "2026-09-27T15:05:43+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ],
+  [
+   "/root/w4b/cand/v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_sch",
+   "2026-09-27T15:05:43+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ]
+ ],
+ "content_hash": [
+  "39d83d25efcd75a6",
+  "b9dbb9c4a430d108"
+ ],
+ "counts": {
+  "comps": [
+   1270,
+   1280
+  ],
+  "nets": [
+   2004,
+   2011
+  ]
+ },
+ "comps_only_committed": [
+  "R164",
+  "R264",
+  "R364"
+ ],
+ "comps_only_other": [
+  "C559",
+  "C607",
+  "C637",
+  "C667",
+  "R527",
+  "R528",
+  "R529",
+  "R530",
+  "R531",
+  "U116",
+  "U216",
+  "U316",
+  "U536"
+ ],
+ "comps_changed": [
+  [
+   "R514",
+   {
+    "value": [
+     "10k",
+     "15k 1%"
+    ],
+    "fields": [
+     {
+      "Footprint": "Resistor_SMD:R_0603_1608Metric"
+     },
+     {
+      "LCSC": "C22809",
+      "Footprint": "Resistor_SMD:R_0603_1608Metric"
+     }
+    ],
+    "properties": [
+     {
+      "Sheetname": "",
+      "Sheetfile": "pcb-b-compute.kicad_sch",
+      "ki_keywords": "R res resistor",
+      "ki_fp_filters": "R_*"
+     },
+     {
+      "LCSC": "C22809",
+      "Sheetname": "",
+      "Sheetfile": "pcb-b-compute.kicad_sch",
+      "ki_keywords": "R res resistor",
+      "ki_fp_filters": "R_*"
+     }
+    ]
+   }
+  ],
+  [
+   "R515",
+   {
+    "value": [
+     "10k",
+     "15k 1%"
+    ],
+    "fields": [
+     {
+      "Footprint": "Resistor_SMD:R_0603_1608Metric"
+     },
+     {
+      "LCSC": "C22809",
+      "Footprint": "Resistor_SMD:R_0603_1608Metric"
+     }
+    ],
+    "properties": [
+     {
+      "Sheetname": "",
+      "Sheetfile": "pcb-b-compute.kicad_sch",
+      "ki_keywords": "R res resistor",
+      "ki_fp_filters": "R_*"
+     },
+     {
+      "LCSC": "C22809",
+      "Sheetname": "",
+      "Sheetfile": "pcb-b-compute.kicad_sch",
+      "ki_keywords": "R res resistor",
+      "ki_fp_filters": "R_*"
+     }
+    ]
+   }
+  ],
+  [
+   "R516",
+   {
+    "value": [
+     "10k",
+     "15k 1%"
+    ],
+    "fields": [
+     {
+      "Footprint": "Resistor_SMD:R_0603_1608Metric"
+     },
+     {
+      "LCSC": "C22809",
+      "Footprint": "Resistor_SMD:R_0603_1608Metric"
+     }
+    ],
+    "properties": [
+     {
+      "Sheetname": "",
+      "Sheetfile": "pcb-b-compute.kicad_sch",
+      "ki_keywords": "R res resistor",
+      "ki_fp_filters": "R_*"
+     },
+     {
+      "LCSC": "C22809",
+      "Sheetname": "",
+      "Sheetfile": "pcb-b-compute.kicad_sch",
+      "ki_keywords": "R res resistor",
+      "ki_fp_filters": "R_*"
+     }
+    ]
+   }
+  ],
+  [
+   "U115",
+   {
+    "value": [
+     "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's card W_DISABLE1# and the card supply's enable S1A_EN low (L7; SD-EMC-1 on slot 2)",
+     "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's card W_DISABLE1# low (L7); channel 2 spare since W4B-D3"
+    ]
+   }
+  ],
+  [
+   "U215",
+   {
+    "value": [
+     "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's card W_DISABLE1# and the card supply's enable S2A_EN low (L7; SD-EMC-1 on slot 2)",
+     "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's card W_DISABLE1# low (L7); channel 2 spare since W4B-D3"
+    ]
+   }
+  ],
+  [
+   "U315",
+   {
+    "value": [
+     "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's card W_DISABLE1# and the card supply's enable S3A_EN low (L7; SD-EMC-1 on slot 2)",
+     "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's card W_DISABLE1# low (L7); channel 2 spare since W4B-D3"
+    ]
+   }
+  ]
+ ],
+ "comps_uuid_shifted": 1171,
+ "nets_only_committed": [],
+ "nets_only_other": [
+  "/E22_UVLO",
+  "/LIME_UVLO",
+  "/RB_SW_IEN",
+  "/RB_UVLO",
+  "unconnected-(U115-NC-Pad4)",
+  "unconnected-(U215-NC-Pad4)",
+  "unconnected-(U315-NC-Pad4)"
+ ],
+ "nets_changed": [
+  [
+   "/+3V3_DEV",
+   [],
+   [
+    [
+     "C559",
+     "1",
+     "",
+     "passive"
+    ],
+    [
+     "U536",
+     "5",
+     "+3V3_DEV",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "/+5V_S1",
+   [],
+   [
+    [
+     "C607",
+     "1",
+     "",
+     "passive"
+    ],
+    [
+     "U116",
+     "5",
+     "+5V_S1",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "/+5V_S2",
+   [],
+   [
+    [
+     "C637",
+     "1",
+     "",
+     "passive"
+    ],
+    [
+     "U216",
+     "5",
+     "+5V_S2",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "/+5V_S3",
+   [],
+   [
+    [
+     "C667",
+     "1",
+     "",
+     "passive"
+    ],
+    [
+     "U316",
+     "5",
+     "+5V_S3",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "/E22_EN",
+   [
+    [
+     "R516",
+     "1",
+     "",
+     "passive"
+    ],
+    [
+     "U21",
+     "5",
+     "EN/UVLO",
+     "input"
+    ]
+   ],
+   [
+    [
+     "R531",
+     "1",
+     "",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "/EMCON_HW",
+   [],
+   [
+    [
+     "U116",
+     "1",
+     "EMCON_HW",
+     "passive"
+    ],
+    [
+     "U216",
+     "1",
+     "EMCON_HW",
+     "passive"
+    ],
+    [
+     "U316",
+     "1",
+     "EMCON_HW",
+     "passive"
+    ],
+    [
+     "U536",
+     "1",
+     "EMCON_HW",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "/EMCON_ON1",
+   [
+    [
+     "U115",
+     "3",
+     "EMCON_ON1",
+     "passive"
+    ]
+   ],
+   []
+  ],
+  [
+   "/EMCON_ON2",
+   [
+    [
+     "U215",
+     "3",
+     "EMCON_ON2",
+     "passive"
+    ]
+   ],
+   []
+  ],
+  [
+   "/EMCON_ON3",
+   [
+    [
+     "U315",
+     "3",
+     "EMCON_ON3",
+     "passive"
+    ]
+   ],
+   []
+  ],
+  [
+   "/LIME_EN",
+   [
+    [
+     "R514",
+     "1",
+     "",
+     "passive"
+    ],
+    [
+     "U23",
+     "3",
+     "LIME_EN",
+     "passive"
+    ]
+   ],
+   [
+    [
+     "R529",
+     "1",
+     "",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "/PCIE_PWR_EN1",
+   [
+    [
+     "R164",
+     "1",
+     "",
+     "passive"
+    ]
+   ],
+   [
+    [
+     "U116",
+     "2",
+     "PCIE_PWR_EN1",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "/PCIE_PWR_EN2",
+   [
+    [
+     "R264",
+     "1",
+     "",
+     "passive"
+    ]
+   ],
+   [
+    [
+     "U216",
+     "2",
+     "PCIE_PWR_EN2",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "/PCIE_PWR_EN3",
+   [
+    [
+     "R364",
+     "1",
+     "",
+     "passive"
+    ]
+   ],
+   [
+    [
+     "U316",
+     "2",
+     "PCIE_PWR_EN3",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "/RB_EN",
+   [
+    [
+     "R515",
+     "1",
+     "",
+     "passive"
+    ],
+    [
+     "U24",
+     "3",
+     "RB_EN",
+     "passive"
+    ]
+   ],
+   [
+    [
+     "R530",
+     "1",
+     "",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "/RB_IEN",
+   [
+    [
+     "U6",
+     "19",
+     "IO1_6",
+     "bidirectional"
+    ]
+   ],
+   [
+    [
+     "R527",
+     "1",
+     "",
+     "passive"
+    ],
+    [
+     "U536",
+     "4",
+     "RB_IEN",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "/S1A_EN",
+   [
+    [
+     "R164",
+     "2",
+     "",
+     "passive"
+    ],
+    [
+     "U115",
+     "4",
+     "S1A_EN",
+     "passive"
+    ]
+   ],
+   [
+    [
+     "U116",
+     "4",
+     "S1A_EN",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "/S2A_EN",
+   [
+    [
+     "R264",
+     "2",
+     "",
+     "passive"
+    ],
+    [
+     "U215",
+     "4",
+     "S2A_EN",
+     "passive"
+    ]
+   ],
+   [
+    [
+     "U216",
+     "4",
+     "S2A_EN",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "/S3A_EN",
+   [
+    [
+     "R364",
+     "2",
+     "",
+     "passive"
+    ],
+    [
+     "U315",
+     "4",
+     "S3A_EN",
+     "passive"
+    ]
+   ],
+   [
+    [
+     "U316",
+     "4",
+     "S3A_EN",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "GND",
+   [],
+   [
+    [
+     "C559",
+     "2",
+     "",
+     "passive"
+    ],
+    [
+     "C607",
+     "2",
+     "",
+     "passive"
+    ],
+    [
+     "C637",
+     "2",
+     "",
+     "passive"
+    ],
+    [
+     "C667",
+     "2",
+     "",
+     "passive"
+    ],
+    [
+     "R527",
+     "2",
+     "",
+     "passive"
+    ],
+    [
+     "R528",
+     "2",
+     "",
+     "passive"
+    ],
+    [
+     "U115",
+     "3",
+     "GND",
+     "passive"
+    ],
+    [
+     "U116",
+     "3",
+     "GND",
+     "passive"
+    ],
+    [
+     "U215",
+     "3",
+     "GND",
+     "passive"
+    ],
+    [
+     "U216",
+     "3",
+     "GND",
+     "passive"
+    ],
+    [
+     "U315",
+     "3",
+     "GND",
+     "passive"
+    ],
+    [
+     "U316",
+     "3",
+     "GND",
+     "passive"
+    ],
+    [
+     "U536",
+     "3",
+     "GND",
+     "passive"
+    ]
+   ]
+  ]
+ ],
+ "changed_lines": 6465,
+ "changed_lines_sample": [
+  "-      (tstamps \"cc783c75-9c83-55bc-a136-8e5ed2039a0e\"))",
+  "+      (tstamps \"9ea9c3e4-842a-594a-b53e-09e48a6f2e1c\"))",
+  "-      (tstamps \"18b01887-1e29-54fd-acf9-56f57ed11c7a\"))",
+  "+      (tstamps \"f7f58b2b-60e5-5733-919e-d36307d739a0\"))",
+  "-      (tstamps \"e67f2f81-daf6-589e-8842-bb0770d2fd59\"))",
+  "+      (tstamps \"3c725f35-46cf-5fc5-8975-754ee57c54b3\"))",
+  "-      (tstamps \"324aa996-5079-5b95-8032-3f379774680e\"))",
+  "+      (tstamps \"7a475da8-76c9-54b3-92b7-2858518e0092\"))",
+  "-      (tstamps \"a911d9c3-a711-5c18-9163-ecfb533cff38\"))",
+  "+      (tstamps \"dc018762-c01b-594d-a560-7cc17e741e49\"))",
+  "-      (tstamps \"af2f8a84-6fe9-5cec-aecc-af9a2389cf97\"))",
+  "+      (tstamps \"bfab1e0f-3d9d-58b1-b044-57f394034507\"))",
+  "-      (tstamps \"bc333847-1bd5-5b75-bf0b-00c1451bdafc\"))",
+  "+      (tstamps \"44c995b0-a2cb-5794-9abf-fe4242d5557b\"))",
+  "-      (tstamps \"dc15f0a0-bada-5a66-a8bc-a995296ad8c5\"))",
+  "+      (tstamps \"32eb17b3-1d28-532d-b823-53f4e53dd3af\"))",
+  "-      (tstamps \"661f77b8-4bc3-54f3-90a1-76ae2f29ff9b\"))",
+  "+      (tstamps \"aadf2253-81be-51bf-9742-9563c18b5a78\"))",
+  "-      (tstamps \"0391e051-bc37-59ca-b43a-2ef32f200248\"))",
+  "+      (tstamps \"bea072fa-b5ca-5d6f-979d-043b587c15ba\"))",
+  "-      (tstamps \"37c3a447-a9f8-5f38-b605-ec0a73725e4e\"))",
+  "+      (tstamps \"69593162-549e-5343-be5b-bd92ed0f9f59\"))",
+  "-      (tstamps \"03740f25-36a0-5cdd-ab2f-b9252c4905b7\"))",
+  "+      (tstamps \"7269af94-2b18-5bdf-b27c-05a55bf95d4f\"))",
+  "-      (tstamps \"e8b8d6bb-ba49-5048-a3cb-55a7e8f99c4d\"))",
+  "+      (tstamps \"49945305-0705-5bc7-a7c5-c23c60467855\"))",
+  "-      (tstamps \"91583b18-aa6c-533d-841c-7c0dd196785f\"))",
+  "+      (tstamps \"244de2ec-0db0-5e6c-a4a2-ea22f6102030\"))",
+  "-      (tstamps \"8439ef0c-dff9-5e1e-bbb2-b76c41e2a1b3\"))",
+  "+      (tstamps \"5005c5cf-da45-5c8d-b180-8cb730f09565\"))",
+  "-      (tstamps \"e106116a-b862-5abe-84d6-92ef69bd65fd\"))",
+  "+      (tstamps \"e67fbdbb-408f-51f8-8f81-49b31bba466d\"))",
+  "-      (tstamps \"07de0d74-d9b6-55a9-936b-e46d4ba7f631\"))",
+  "+      (tstamps \"d213f0a9-a957-5362-8e71-470b96db8454\"))",
+  "-      (tstamps \"f38f7ced-e201-5be7-97a2-336f94a72cda\"))",
+  "+      (tstamps \"93ca58ad-4b21-54ab-882a-f309844d7d41\"))",
+  "-      (tstamps \"9d60eddb-854a-5aa3-84c0-0d5cbff57b67\"))",
+  "+      (tstamps \"45c42b80-7585-53d0-885b-6202b3131d53\"))",
+  "-      (tstamps \"be597c7a-2316-547a-bc96-69029d04f086\"))",
+  "+      (tstamps \"a17f5d1e-0da9-5df7-94c2-72a353b8cb03\"))",
+  "-      (tstamps \"dd4d81b3-4b57-51c5-b11c-6a42183595dc\"))",
+  "+      (tstamps \"df105461-06c3-54d2-8974-725800cc6e46\"))",
+  "-      (tstamps \"0df05ab5-91d5-5b09-941a-fb97485f388b\"))",
+  "+      (tstamps \"9db01362-41e5-55d9-9045-c25a9d71991a\"))",
+  "-      (tstamps \"b398fcfb-eedb-57e7-9d8c-56573387feb2\"))",
+  "+      (tstamps \"e2df3537-290c-552c-bf9b-fac15885d513\"))",
+  "-      (tstamps \"14f4dfff-85c7-5b7b-b23f-85443a8fe20b\"))",
+  "+      (tstamps \"acfd690f-aa3b-513f-9a4b-03ba0483fddb\"))",
+  "-      (tstamps \"a36b8168-0f9d-5d3b-83f4-cd729adf675f\"))",
+  "+      (tstamps \"602eb363-ae0f-5a83-824d-e0be834003a2\"))",
+  "-      (tstamps \"b506ac8e-56eb-5f05-9631-97b94f72becc\"))",
+  "+      (tstamps \"c5b4c18f-f489-53f7-ba11-2fc5823d1b65\"))",
+  "-      (tstamps \"5d7db56a-caea-55ca-8fe8-e573aa8a29ee\"))",
+  "+      (tstamps \"8cdc8e8e-ad1f-5d04-a2e3-c9bc5e265704\"))",
+  "-      (tstamps \"a52b3a2a-c607-5030-a51f-d3442fa76e5e\"))",
+  "+      (tstamps \"c532b5aa-8e83-560e-889b-da184ff6d989\"))",
+  "-      (tstamps \"babd8b80-9580-5cb5-ac12-4dc105c850fe\"))",
+  "+      (tstamps \"271715e6-73bd-55fe-beb3-fa73b274f7f6\"))",
+  "-      (tstamps \"bfc08159-6ae1-5ef6-8131-1ace4701f296\"))",
+  "+      (tstamps \"e6549ff4-1277-52dd-9ffb-ef8c2a0c4bae\"))"
+ ],
+ "result": "DIFFERENT"
+}

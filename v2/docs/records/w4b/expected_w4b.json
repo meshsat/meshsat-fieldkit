@@ -1,0 +1,344 @@
+{
+ "_what": "Stream w4b (MESHSAT-1357, 27 September 2026): every netlist difference board B's candidate may show against main 91894cd7's committed netlist, per decision; read by the independent comparator (v2/docs/records/r8b/integration/indep_cmp.py). W4B-D1 is the RockBLOCK's I_EN forced low by EMCON (U536 = EMCON_HW AND RB_SW_IEN, R527 holding RB_IEN low unpowered, R528 holding U6's request low at power-on); W4B-D2 is the L4 case (2) divider on the LimeSDR's, RockBLOCK's and E22's switch enables (R529 to R531 10 k 1 percent in series, R514 to R516 now 15 k 1 percent on the new EN/UVLO nodes). W4B-D3 is each slot's card buck enable S{s}A_EN driven by U{s}16 (SN74LV1T08 on +5V_S{s}) = EMCON_HW AND PCIE_PWR_EN{s}, with R164, R264, R364 removed and U115, U215, U315's second channel freed (2A on GND, 2Y open, value text updated). Nothing else may differ.",
+ "_findings": [
+  {
+   "finding": "W4B-D1",
+   "kind": "parts_added",
+   "patterns": [
+    "U536",
+    "C559",
+    "R527",
+    "R528"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "W4B-D1",
+   "kind": "nets_added",
+   "patterns": [
+    "/RB_SW_IEN"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "W4B-D1",
+   "kind": "nets_changed",
+   "patterns": [
+    "/RB_IEN"
+   ],
+   "allowed": [
+    "U6",
+    "U536",
+    "R527"
+   ]
+  },
+  {
+   "finding": "W4B-D1",
+   "kind": "nets_changed",
+   "patterns": [
+    "/EMCON_HW"
+   ],
+   "allowed": [
+    "U536"
+   ]
+  },
+  {
+   "finding": "W4B-D1",
+   "kind": "nets_changed",
+   "patterns": [
+    "/\\+3V3_DEV"
+   ],
+   "allowed": [
+    "U536",
+    "C559"
+   ]
+  },
+  {
+   "finding": "W4B-D1",
+   "kind": "nets_changed",
+   "patterns": [
+    "GND"
+   ],
+   "allowed": [
+    "U536",
+    "C559",
+    "R527",
+    "R528"
+   ]
+  },
+  {
+   "finding": "W4B-D2",
+   "kind": "parts_added",
+   "patterns": [
+    "R529",
+    "R530",
+    "R531"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "W4B-D2",
+   "kind": "parts_changed",
+   "patterns": [
+    "R514",
+    "R515",
+    "R516"
+   ],
+   "allowed": [
+    "value",
+    "field:LCSC"
+   ]
+  },
+  {
+   "finding": "W4B-D2",
+   "kind": "nets_added",
+   "patterns": [
+    "/LIME_UVLO",
+    "/RB_UVLO",
+    "/E22_UVLO"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "W4B-D2",
+   "kind": "nets_changed",
+   "patterns": [
+    "/LIME_EN"
+   ],
+   "allowed": [
+    "U23",
+    "R514",
+    "R529"
+   ]
+  },
+  {
+   "finding": "W4B-D2",
+   "kind": "nets_changed",
+   "patterns": [
+    "/RB_EN"
+   ],
+   "allowed": [
+    "U24",
+    "R515",
+    "R530"
+   ]
+  },
+  {
+   "finding": "W4B-D2",
+   "kind": "nets_changed",
+   "patterns": [
+    "/E22_EN"
+   ],
+   "allowed": [
+    "U21",
+    "R516",
+    "R531"
+   ]
+  },
+  {
+   "finding": "W4B-D3",
+   "kind": "parts_added",
+   "patterns": [
+    "U116",
+    "U216",
+    "U316",
+    "C607",
+    "C637",
+    "C667"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "W4B-D3",
+   "kind": "parts_removed",
+   "patterns": [
+    "R164",
+    "R264",
+    "R364"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "W4B-D3",
+   "kind": "parts_changed",
+   "patterns": [
+    "U115",
+    "U215",
+    "U315"
+   ],
+   "allowed": [
+    "value"
+   ]
+  },
+  {
+   "finding": "W4B-D3",
+   "kind": "nets_changed",
+   "patterns": [
+    "/S1A_EN"
+   ],
+   "allowed": [
+    "R164",
+    "U115",
+    "U116"
+   ]
+  },
+  {
+   "finding": "W4B-D3",
+   "kind": "nets_changed",
+   "patterns": [
+    "/S2A_EN"
+   ],
+   "allowed": [
+    "R264",
+    "U215",
+    "U216"
+   ]
+  },
+  {
+   "finding": "W4B-D3",
+   "kind": "nets_changed",
+   "patterns": [
+    "/S3A_EN"
+   ],
+   "allowed": [
+    "R364",
+    "U315",
+    "U316"
+   ]
+  },
+  {
+   "finding": "W4B-D3",
+   "kind": "nets_changed",
+   "patterns": [
+    "/PCIE_PWR_EN1"
+   ],
+   "allowed": [
+    "R164",
+    "U116"
+   ]
+  },
+  {
+   "finding": "W4B-D3",
+   "kind": "nets_changed",
+   "patterns": [
+    "/PCIE_PWR_EN2"
+   ],
+   "allowed": [
+    "R264",
+    "U216"
+   ]
+  },
+  {
+   "finding": "W4B-D3",
+   "kind": "nets_changed",
+   "patterns": [
+    "/PCIE_PWR_EN3"
+   ],
+   "allowed": [
+    "R364",
+    "U316"
+   ]
+  },
+  {
+   "finding": "W4B-D3",
+   "kind": "nets_changed",
+   "patterns": [
+    "/EMCON_ON1"
+   ],
+   "allowed": [
+    "U115"
+   ]
+  },
+  {
+   "finding": "W4B-D3",
+   "kind": "nets_changed",
+   "patterns": [
+    "/EMCON_ON2"
+   ],
+   "allowed": [
+    "U215"
+   ]
+  },
+  {
+   "finding": "W4B-D3",
+   "kind": "nets_changed",
+   "patterns": [
+    "/EMCON_ON3"
+   ],
+   "allowed": [
+    "U315"
+   ]
+  },
+  {
+   "finding": "W4B-D3",
+   "kind": "nets_changed",
+   "patterns": [
+    "/\\+5V_S1"
+   ],
+   "allowed": [
+    "U116",
+    "C607"
+   ]
+  },
+  {
+   "finding": "W4B-D3",
+   "kind": "nets_added",
+   "patterns": [
+    "unconnected-\\(U[123]15-NC-Pad4\\)"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "W4B-D3",
+   "kind": "nets_changed",
+   "patterns": [
+    "/\\+5V_S2"
+   ],
+   "allowed": [
+    "U216",
+    "C637"
+   ]
+  },
+  {
+   "finding": "W4B-D3",
+   "kind": "nets_changed",
+   "patterns": [
+    "/\\+5V_S3"
+   ],
+   "allowed": [
+    "U316",
+    "C667"
+   ]
+  },
+  {
+   "finding": "W4B-D3",
+   "kind": "nets_changed",
+   "patterns": [
+    "/EMCON_HW"
+   ],
+   "allowed": [
+    "U116",
+    "U216",
+    "U316"
+   ]
+  },
+  {
+   "finding": "W4B-D3",
+   "kind": "nets_changed",
+   "patterns": [
+    "GND"
+   ],
+   "allowed": [
+    "U116",
+    "U216",
+    "U316",
+    "C607",
+    "C637",
+    "C667",
+    "U115",
+    "U215",
+    "U315"
+   ]
+  }
+ ]
+}

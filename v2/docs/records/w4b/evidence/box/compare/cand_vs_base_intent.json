@@ -1,0 +1,8 @@
+{
+ "kind": "intent",
+ "keys_changed": [
+  "bypass",
+  "rails"
+ ],
+ "result": "DIFFERENT"
+}

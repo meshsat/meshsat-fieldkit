@@ -3417,6 +3417,44 @@ parts:
     open_items:
       - "F1 (independent check 2 of 27 September 2026, condition 1): C89647 is Bourns MF-MSMF110-2, which LCSC lists at 1.1 A, 6 V and 100 A; the held sheet's MF-MSMF110 rows are /8X, /16X, /16, /24X and /33X, not the plain part, so the 1.10 A hold and 2.20 A trip rest on the How-to-Order code and the Vmax, Imax and Thermal Derating rows (0.85, 0.77, 0.71 A at 50, 60, 70 C) are the siblings'. Closed by filing a Bourns sheet that lists the plain MF-MSMF110 or by ordering MF-MSMF110/8X-2. The siblings' table also gives 0.95 A of hold at 40 C, under board C's declared 1.0 A peak inside the sealed case, so the 'must stay a peak' contract of pcb_energy_chain.yaml B_PANEL_5V owes board C and PANEL.md a duration"
       - "Q212 (independent checks 1 and 2): the AO3400A sheet (Rev 3.1) states VGS(th) 0.65 to 1.45 V and RDS(on) 48 mOhm at VGS 2.5 V at TJ 25 C only; SD-EMC-1r8's discharge bound rests on Q212 conducting at about 3.1 V of gate drive into 15 Ohm, a large margin that no held row states over -40 to +85 C (EMCON.md section 4b, L7)"
+  - id: logic-and-lv1t08
+    function: "board B's card-buck enable gates U116, U216, U316 (stream w4b, W4B-D3): S{s}A_EN = EMCON_HW AND PCIE_PWR_EN{s}, run from the slot's own 5 V (+5V_S{s}), the AP64500 card buck's input, so the card rail is off under EMCON whether or not the Compute Module's 3.3 V is up"
+    boards: [B]
+    on_main: true
+    adopted_in: "board B, stream w4b (fnd/w4b), integrated 27 September 2026 (the r8int6 integration, set 6 of the handover)"
+    schematic_name: {text: "SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs", where: "v2/ecad/tools/gen_sch_b.py, helper lv1t08()"}
+    fitted_mpn: "SN74LV1T08DBVR (Texas Instruments)"
+    package: "SOT-23-5 (DBV)"
+    lcsc: "C2682144"
+    identity: MATCH
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/ti-sn74lv1t08.pdf"
+        doc_id: "TI SN74LV1T08"
+        revision: "SCLS739F, revised October 2025"
+        url: "https://www.ti.com/lit/ds/symlink/sn74lv1t08.pdf"
+        fetched: "2026-09-27T14:25Z, HTTP 200 application/pdf"
+        sha256: "cb0644caef3b0dedec65c793a2c19707208e377caf39a12098263fe237a49a94"
+        matches_fitted: "yes: DBV pinout 1 A 2 B 3 GND 4 Y 5 VCC (Table 5-1), VCC 1.6 to 5.5 V (6.3), VIH 2.03 V at 4.5 to 5.0 V and 2.11 V at 5.5 V, VIL 0.8 V, VOH 4.5 V at -8 mA (VCC 5 V), VOL 0.1 V at 20 uA and 0.35 V at 8 mA, II +-1 uA at VCC 0 V to 5.5 V (6.5), 0.1 uF bypass (9.1); JLCPCB C2682144 answered 'SN74LV1T08DBVR, Texas Instruments, SOT-23-5', stock 7,904 on 27 September 2026 (v2/docs/records/w4b/evidence/jlc-query-sn74lv1t08.txt)"
+  - id: rockblock-9704-hardware-page
+    function: "the RockBLOCK 9704's 16-pin interface as its maker documents it: I_EN (pin 3), P_EN (pin 6), I_BTD (pin 7), the startup and shutdown sequences; read by board B's W4B-D1 (the module's I_EN forced low by EMCON in U536) and by EMCON.md 4.4"
+    boards: [B]
+    on_main: true
+    adopted_in: "board B, stream w4b (fnd/w4b), integrated 27 September 2026 (the r8int6 integration, set 6 of the handover)"
+    schematic_name: {text: "RockBLOCK 9704 16-pin (IDC 2x8) on the Ground Control bracket", where: "v2/ecad/tools/gen_sch_b.py (J_RB9704)"}
+    fitted_mpn: "RockBLOCK 9704 (Ground Control), 16-pin interface"
+    package: "module on bracket, IDC 2x8"
+    lcsc: ""
+    identity: MATCH
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/rockblock/groundcontrol-docs-rockblock-9704-hardware-20260927.html"
+        doc_id: "Ground Control Knowledgebase, RockBLOCK 9704, Hardware"
+        revision: "web page as served 27 September 2026 (no revision printed)"
+        url: "https://docs.groundcontrol.com/iot/rockblock-9704/hardware"
+        fetched: "2026-09-27T14:05Z, HTTP 200 text/html"
+        sha256: "e02ea57445550ecb615f6e4fe6f5f172711184a74c07bdf10cc0e16d1a31b285"
+        matches_fitted: "yes: 3 - I_EN 'used to initiate startup and shutdown of the 9704 module ... weak voltage-divider (270KOhm/430KOhm) pull-up to the input voltage ... series 10KOhm resistor ... can be driven directly with an MCU pin, or an open-drain output', agreeing with schematic rev 2B page 3 (R33, R32, R6, U2 74AUP1G125); the 16-pin startup and shutdown sequences and the I_EN/I_BTD sequencing warning; a plain-text rendering is beside it (v2/vendor/rockblock/groundcontrol-docs-rockblock-9704-hardware-20260927.txt, sha256/16 d94f62eee7f2de2e)"
 
 owed:
   - "DONE 26 September 2026 (integration I6): sources.txt file lines for the six documents added on 25 and 26 September and for this file, a vendor-status.txt line for each, a vendor-noindex.txt line for the text-less TE drawing, and the correction of sources.txt's m2 folder line and the same sentence in README.md ('key to be read from the drawing': the drawing says key M)"

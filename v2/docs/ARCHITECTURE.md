@@ -704,13 +704,13 @@ continue.
 | 1 | SA868 VHF exciter (D) | PTT held at receive by TX_INHIBIT_n; supply kept | OPEN: the maker states no "receive" threshold (bench E-01) |
 | 2 | RA30H1317M1 30 W PA (plate) | (a) the drain rail off on A; (b) the gate bias off and the relay at rest on D | local: **CLOSED at desk** on (b); end to end: OPEN (`EMCON.md` 0a: the lamp of SD-EMC-6 is not drawn, and path (a)'s EMCON_HW line carries L1, L2 and L4); single-fault tolerant only downstream of `SW_EMCON` and TX_INHIBIT_n |
 | 3 | QMX HF (lid) | its DC input rail off | OPEN on the shared items L1, L2, L4 |
-| 4 | RockBLOCK 9704 (B) | eFuse off | OPEN locally since `EMCON.md`'s sixth revision: the module runs on two 10 F supercapacitors of its own after the eFuse opens, with its ENABLE held by U6 alone (`EMCON.md` 4.4); back-feed (SD-EMC-2) |
-| 5 | RM520N-GL 5G (B) | since board B's round 8 (27 September 2026): supply removed at once by hardware (S2A_EN, FULL_CARD_POWER_OFF# and W_DISABLE1# low, the socket rail discharged through 15 Ohm; SD-EMC-1r8) | local CLOSED at desk on its bound (1.16 ms plus 1.84 ms per mF of the module's unpublished input capacitance, bench E-12), Quectel's flash warning accepted; end to end OPEN (`EMCON.md` section 4b) |
-| 6, 7 | AW7915-AED cards, slots 1 and 3 (B) | card buck off (`458b2873`); W_DISABLE1# not counted | gate CLOSED at desk; back-feed OPEN |
+| 4 | RockBLOCK 9704 (B) | eFuse off, and since stream w4b (27 September 2026) its ENABLE held low by hardware (U536 = EMCON_HW AND the panel's request) | OPEN locally: the module runs on two 10 F supercapacitors of its own after the eFuse opens, and what it does when ENABLE falls is unpublished (`EMCON.md` 4.4, 4c); back-feed (SD-EMC-2) |
+| 5 | RM520N-GL 5G (B) | since board B's round 8 (27 September 2026): supply removed at once by hardware (S2A_EN, driven since stream w4b by U216 from the slot's own 5 V, FULL_CARD_POWER_OFF# and W_DISABLE1# low, the socket rail discharged through 15 Ohm; SD-EMC-1r8) | local CLOSED at desk on its bound (1.16 ms plus 1.84 ms per mF of the module's unpublished input capacitance, bench E-12), Quectel's flash warning accepted; end to end OPEN (`EMCON.md` section 4b) |
+| 6, 7 | AW7915-AED cards, slots 1 and 3 (B) | card buck off (`458b2873`; since stream w4b its enable is driven from the slot's own 5 V by U116, U316); W_DISABLE1# not counted | gate CLOSED at desk, fault F2 included (`EMCON.md` 4c); back-feed OPEN |
 | 8 to 13 | CM5 WiFi and Bluetooth, three slots (B) | WL_nDisable and BT_nDisable pulled low by open drains (`458b2873`; SN74LVC2G06 from each module's own 3.3 V since board B's round 8 (27 September 2026)) | gate CLOSED at desk; L1 to L3 and L7 closed at desk on B, L4 INFERRED (`EMCON.md` section 4b) |
-| 14 | E22-900M30S LoRa (B) | load switch off | OPEN: back-feed |
+| 14 | E22-900M30S LoRa (B) | load switch off (its enable at 0.6 of its gate since stream w4b, L4 case (2)) | OPEN: back-feed |
 | 15, 16 | E72 Zigbee and Thread (B) | load switch off | OPEN: back-feed |
-| 17 | LimeSDR Mini 2.4 (B) | eFuse on its USB VBUS off | OPEN on the shared items |
+| 17 | LimeSDR Mini 2.4 (B) | eFuse on its USB VBUS off (its enable at 0.6 of its gate since stream w4b, L4 case (2)) | OPEN on the shared items |
 
 The shared line items (`EMCON.md` section 3; board B's half drawn at desk in its round 8, section 4b, and board C's in its round 8): L1, four firmware-direction pins on EMCON_HW (buffers owed on B and C, drawn on both);
 L2, the line's hold with its source gone (R102 10 k 1% and R58 4.7 k 1% with single gates, owed on A and B; drawn on A in its round 8 candidate with SN74AUP1G08 readers, `EMCON.md` section 4a); L3, the loss
@@ -1209,7 +1209,7 @@ and IF-AD-HARNESS carry: as one segment it cannot meet the 300 ns rise its BQ257
 | IF-P-CELLS | P W_BP, W_BN, J_CELL, J_TS, J_TS2; the 4S3P block | the pack current, the cell taps, five thermistors | none (section 15b judges the outgoing leads) | the connection order at pack build; PWR-F12 |
 | IF-B-FANS | B J_FAN1..3 (SH 1x4); the three coolers | the slot rail, PWM and tachometer on each module's own pins | none | the fan part and current |
 | IF-B-LIME | B J_LIME (USB 3 A); the LimeSDR Mini 2.4 | USB 3.0 and +5V_LIME behind U23, removed under EMCON | INT-001 on LIME_SS*, LIME_D* | none |
-| IF-B-RB9704 | B J_RB9704 (IDC 2x8); the RockBLOCK 9704 | UART, control and status, +5V_RB behind U24, removed under EMCON | none | SD-EMC-2 back-feed through the control lines (U6's internal pull-ups hold RB_IEN and RB_CTRL high until U6 is configured); no `ASSEMBLY.md` row for the 16-way lead |
+| IF-B-RB9704 | B J_RB9704 (IDC 2x8); the RockBLOCK 9704 | UART, control and status, +5V_RB behind U24, removed under EMCON | none | SD-EMC-2 back-feed through the control lines (U6's internal pull-up holds RB_CTRL high until U6 is configured; since stream w4b RB_IEN is U536's output, EMCON_HW AND U6's request RB_SW_IEN, held low by R527 with U536 unpowered); no `ASSEMBLY.md` row for the 16-way lead |
 | IF-D-FLANGE | D J_FLANGE (XH 1x2, round 8); the flange NTC | the PA flange temperature for K2 and C4 | none | the NTC's bond; PWR-F16 |
 
 Not given a contract, deliberately: sockets that carry a module on its own board (the M.2 sockets, the SIM holders,
@@ -1295,7 +1295,10 @@ own findings (FAB, SD-EMC, L, PWR-F, BAT-F, DEC) are carried by section 14, not 
 |---|---|---|
 | F-DAT-08, W1-F07, W3-F24 | EMCON's gates on board B are power enables | RULED (D-05): radios dark, so power removal is intended |
 | W5-F8 | The AW7915-AED cards' W_DISABLE1# effect is unproven | NETLIST CORRECTED (`458b2873`: the card supply is removed by EMCON_ON; W_DISABLE1# not counted); back-feed OPEN (SD-EMC-2) |
-| SD-EMC-1 (`EMCON.md`) | The RM520N-GL's only inhibit as drawn is a firmware-mediated airplane mode | DRAWN at desk in board B's round 8 (27 September 2026) as SD-EMC-1r8 (the supply removed at once; `EMCON.md` section 4b); the bound's CINT term and the flash on bench E-12; RF-002's walk does not model the SN74LVC2G06 yet (tools) |
+| SD-EMC-1 (`EMCON.md`) | The RM520N-GL's only inhibit as drawn is a firmware-mediated airplane mode | DRAWN at desk in board B's round 8 (27 September 2026) as SD-EMC-1r8 (the supply removed at once; `EMCON.md` section 4b); the bound's CINT term and the flash on bench E-12; RF-002's walk modelled the SN74LVC2G06 only from stream w4b (tools; the row landed with it, `EMCON.md` 4c) |
+| W4B-D1 (`EMCON.md` 4c) | The RockBLOCK 9704's ENABLE was held by the expander alone, so under EMCON the module could run on its own supercapacitors | DRAWN at desk by stream w4b (27 September 2026): U536 = EMCON_HW AND the request, R527 holding it low unpowered; the 9704's response to ENABLE is a maker's document owed, bench E-04 |
+| W4B-D2 (`EMCON.md` 4c) | L4 case (2): U501 to U504 in their 0 to 1.65 V supply band could turn the LimeSDR's, the RockBLOCK's or the E22's switch on | CLOSED at desk by stream w4b: each enable at 0.6 of its gate (10 k over 15 k, 1 percent); bench E-11 |
+| W4B-D3 (`EMCON.md` 4c) | With a module's 3.3 V down and its slot's 5 V up, the card buck's enable was held only by 110 k against the AP64500's EN current, which has no stated maximum once on, so a card (slot 2's 5G module included) could stay powered beyond EMCON | CLOSED at desk by stream w4b: U116, U216, U316 (SN74LV1T08 on the slot's own 5 V) drive the enable |
 | W1-F11 | Three wireless CM5 share one WIFI 2.4 wall jack, fed by slot 1's antenna-kit lead | OPEN |
 | W4-F10 | The RM520N-GL has four live antenna ports and the design recorded no pairing | RULED (D-07): ANT0, ANT2, ANT3; the condition read on paper (section 9.2); board E's clamp cavity at X 46 drawn since `45f6d83f`; board A's site at X +46 and its wiring owed |
 | W4-F11 | The recommended arrestor barely fit the pitch, reached the frame skirt and needed an earth bond | SUPERSEDED by `CASE-MARGINS.md` C2 and C4 (section 9.3); M13 OPEN on the O-ring's height |

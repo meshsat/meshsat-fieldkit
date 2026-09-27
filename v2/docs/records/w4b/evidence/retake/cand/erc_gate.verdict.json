@@ -1,0 +1,83 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "erc_gate.py",
+  "files": {
+   "erc_gate.py": "bb4bf868c515f37a",
+   "intent.py": "f1ac033e0f3c10f1",
+   "kisch.py": "3e28374d15be25e0",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "sch_prov.py": "a98e5a71ac74ccee",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "0d2dedd042c32274",
+  "unresolved": []
+ },
+ "counts": {
+  "allowed": 7,
+  "blocking": 0,
+  "violations": 2945
+ },
+ "denominator": 2945,
+ "evidence": [],
+ "inputs": {
+  "allow_list": {
+   "path": "./erc-allow.txt",
+   "sha256_16": "99c78bb72fa358b5"
+  },
+  "board": "b",
+  "erc_report": {
+   "path": "./out/pcb-b-compute-erc.json",
+   "sha256_16": "1191cf7d38fed75b"
+  },
+  "netlist": {
+   "content16": "b9dbb9c4a430d108",
+   "path": "./out/pcb-b-compute.net",
+   "sha256_16": "028997a6c5e8810f"
+  },
+  "netlist_tie": {
+   "proved": true,
+   "why": "the report, the schematic and the netlist's own provenance agree on schematic 447dc56525eb"
+  },
+  "project": {
+   "path": ".",
+   "sha256_16": null
+  },
+  "schematic": {
+   "path": "./pcb-b-compute.kicad_sch",
+   "sha256_16": "447dc56525eb0ae2"
+  }
+ },
+ "missing_input": null,
+ "note": "7 error(s) allow-listed with a reason",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "SCH-001": "64784cfeedc67195"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "SCH-001"
+ ],
+ "runtime": {
+  "python": "3.12.3"
+ },
+ "tool": "erc_gate",
+ "tools": {
+  "git_head": "eebf4e5ad824",
+  "tools_tree_sha": "6b7ea73f89f97352"
+ },
+ "ts": "2026-09-27T15:08:20Z",
+ "verdict": "PASS",
+ "version": "eebf4e5ad824",
+ "writer": {
+  "file": "erc_gate.py",
+  "sha16": "bb4bf868c515f37a"
+ }
+}

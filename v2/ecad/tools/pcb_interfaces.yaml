@@ -1068,10 +1068,10 @@ board_to_board:
       harness: "n/a: the LimeSDR plugs straight into J_LIME in its bay, no lead"
       levels: "USB 3.0 SuperSpeed (LIME_SS*) and USB 2.0 (LIME_D*) from bank 1's TUSB8041 U102 port 1, ESD by U33; VBUS 5 V"
       current: "+5V_LIME from eFuse U23 (ILM 3.0 A, R36 301 R, gen_sch_b.py:946)"
-      power: "LIME_EN = EMCON AND the hub's port power AND LIME_SW_EN (U19, gen_sch_b.py:975)"
+      power: "LIME_EN = EMCON AND the hub's port power AND LIME_SW_EN (U501 and U502 since round 8); the eFuse's EN/UVLO at 0.6 of it (LIME_UVLO, R529 over R514, stream w4b)"
       sequencing: "LIME_SW_EN written by the panel through U6 after the expanders; the hub's port power follows enumeration;
         EMCON removes the supply"
-      default_state: "off until LIME_SW_EN (U6, R50 4.7 k pull-down) and the hub enable; off under EMCON (its only supply); R514 holds LIME_EN low"
+      default_state: "off until LIME_SW_EN (U6, R50 4.7 k pull-down) and the hub enable; off under EMCON (its only supply); R514 holds LIME_UVLO low (0.15 V with the gates unpowered, stream w4b)"
       mating: "USB 3.0 type A plug into the receptacle, friction held; the bay retains the LimeSDR (ASSEMBLY.md)"
       hot_plug: "no: seated at build"
       judged_by: "INT-001 judges LIME_SS* (USB3_CM5) and LIME_D* (USB2_CM5) through their assignment patterns on B"
@@ -1087,18 +1087,19 @@ board_to_board:
         - {device: "RockBLOCK 9704 (Ground Control), its main I/O header J3, 2x8 (rb9704-sch-2B1.pdf, sheet 'connector'); the maker's data sheet says '16-way header' on page 1 and '30-way header' in its interface table (rb9704-datasheet-RB9704-001-JUN26.pdf), and the tree follows the schematic's 16"}
       harness: "a 16-way ribbon, IDC both ends, by the two headers. TBD: ASSEMBLY.md section 4 has no row for this lead, effect: its
         length and routing are not written"
-      levels: "3.3 V logic on board B's side: RB_IEN and RB_CTRL from U6 (+3V3_DEV); RB_STATUS and RB_XMTG read on U7 with R41, R42
+      levels: "3.3 V logic on board B's side: RB_IEN from U536 (EMCON_HW AND U6's request RB_SW_IEN, stream w4b) and RB_CTRL from U6 (+3V3_DEV); RB_STATUS and RB_XMTG read on U7 with R41, R42
         10 k to +3V3_DEV; the UART on the CP2102N U18. The module's enable input switches at 2.0 V (U2 V_IN_H_MIN) and is pulled
         on the module to its own pre-regulator supply, and its I/O buffer is powered from its own 3V3_IRID (rb9704-sch-2B1.pdf,
         sheet 'supercaps' notes). Supply: 4.0 to 5.3 V (data sheet 'ELECTRICAL POWER')"
       current: "the module draws 1.4 W at most (0.28 A at 5 V) and 60 mW idle (data sheet); +5V_RB from eFuse U24 (ILM 3.0 A,
         R43 301 R, gen_sch_b.py:951)"
-      power: "+5V_RB from eFuse U24, RB_EN = EMCON AND RB_SW_EN (U19); removed under EMCON (EMCON.md section 4, E-04)"
-      back_power: "RB_IEN and RB_CTRL from U6 and the UART from its bridge can drive into an unpowered module (W5-F13, EMCON.md SD-EMC-2): the bridges hold their lines low under EMCON (FW-C07)"
+      power: "+5V_RB from eFuse U24, RB_EN = EMCON AND RB_SW_EN (U503 since round 8), its EN/UVLO at 0.6 of it (RB_UVLO, stream w4b); removed under EMCON, with the module's ENABLE held low by U536 (EMCON.md section 4c, E-04)"
+      back_power: "RB_CTRL from U6 and the UART from its bridge can drive into an unpowered module (RB_IEN is held low by U536 under EMCON and by R527 with U536 unpowered, stream w4b) (W5-F13, EMCON.md SD-EMC-2): the bridges hold their lines low under EMCON (FW-C07)"
       sequencing: "RB_SW_EN written by the panel through U6 with EMCON released gives +5V_RB; then RB_IEN enables the module and
         the bridge opens the UART; on EMCON the supply goes and the control lines are driven low first (FW-C07, SD-EMC-2)"
-      default_state: "+5V_RB off (RB_EN held low by R515; RB_SW_EN by R51 4.7 k). RB_IEN and RB_CTRL have no pull on board B:
-        until the panel configures U6 they are U6 inputs held HIGH by its internal 100 k pull-ups ('pulls the I/O to a default
+      default_state: "+5V_RB off (RB_UVLO held low by R515; RB_SW_EN by R51 4.7 k). RB_IEN is held low by U536's AND and by
+        R527 10 k with U536 unpowered, and U6's request RB_SW_IEN by R528 4.7 k (stream w4b). RB_CTRL has no pull on board B:
+        until the panel configures U6 it is a U6 input held HIGH by its internal 100 k pull-up ('pulls the I/O to a default
         high when configured as an input and undriven', TI SCPS131J section 8, ti-pca9555.pdf), which is the SD-EMC-2 back-feed
         path into an unpowered module; FW-A08 writes U6's outputs low before its configuration"
       mating: "IDC ribbon both ends; the module on the Ground Control bracket on four M4 standoffs (ASSEMBLY.md)"

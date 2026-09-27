@@ -50,6 +50,7 @@ _SLOT_LOADS = lambda s: {
     "U%d04" % s: 0.7,                # buck S%dB -> the NVMe socket and the PCIe switch's 3.3 V
     "U%d05" % s: 0.15,               # buck S%dC -> the PI7C9X2G404SL's 1.0 V core
     "J_FAN%d" % s: 0.1,              # the slot's IP68 cooler fan
+    "U%d16" % s: 0.001,              # stream w4b: the card buck's EN gate, an SN74LV1T08 (ICC 10 uA at most, SCLS739F 6.5)
 }
 for _n in (1, 2, 3):
 
@@ -112,6 +113,7 @@ _3V3_LOADS = {"U1": 0.25,            # KSZ9897R seven-port switch, its 3.3 V I/O
 # power-good buffers and 2:1 logic muxes (FAB-02, FAB-03). ICC is 10 uA per gate at most (SCES217AA, SCES214AF, DS36108,
 # DS35124, 74LVC1G157 Rev 12), so a few milliamps is a generous figure for all thirty-five.
 for _u in range(501, 536): _3V3_LOADS["U%d" % _u] = 0.002
+_3V3_LOADS["U536"] = 0.002   # stream w4b (27 September 2026): the RockBLOCK ENABLE gate, an SN74LVC1G08 (EMCON.md 4.4)
 for _n in (1, 2, 3):
     _3V3_LOADS["U%d02" % _n] = 0.10  # the TUSB8041 hub's VDD33: 99 mA on its sheet
     _3V3_LOADS["U%d09" % _n] = 0.05  # TMUXHS4212 SuperSpeed host select
@@ -226,16 +228,18 @@ _intent.rail("+3V3_ZB", 3.3, 0.10, 0.30, "U22", converted=False, fed_from="+3V3_
              loads={"U13": 0.04, "U14": 0.04, "J_ZBDBG1": 0.01, "J_ZBDBG2": 0.01},
              note="the two CC2652P radios behind their load switch, plus the two bench debug headers. 0.3 A "
                   "peak is both radios transmitting at once, which the fabric never asks for but the copper must carry")
-_intent.rail("+5V_LORA", 5.0, 0.15, 0.70, "U21", converted=False, fed_from="+5V_DEV",  # U21 pin 6 IN
+# Stream w4b (W4B-D2, 27 September 2026): the three switches' EN/UVLO pins sit on their own nodes behind 10 k over 15 k from
+# the EMCON gates, so each rail names its switch and enable net, as board A's PA_UVLO does (power_sequence reads EN by name).
+_intent.rail("+5V_LORA", 5.0, 0.15, 0.70, "U21", converted=False, fed_from="+5V_DEV", switch="U21", enable_net="E22_UVLO",  # U21 pin 6 IN
              source_ic="U21 is a TPS22810 load switch: its OUT pin IS the power path",
              loads={"U12": 0.70},
              note="the 1 W LoRa module behind its load switch: 0.7 A on a transmit burst at 30 dBm, milliamps between")
-_intent.rail("+5V_LIME", 5.0, 1.2, 3.0, "U23", converted=False, fed_from="+5V_DEV",  # U23 pin 4 IN
+_intent.rail("+5V_LIME", 5.0, 1.2, 3.0, "U23", converted=False, fed_from="+5V_DEV", switch="U23", enable_net="LIME_UVLO",  # U23 pin 4 IN
              source_ic="U23 is a TPS2596 eFuse: its OUT pin IS the power path, which is what an eFuse is",
              loads={"J_LIME": 3.0},
              note="the software-defined radio bay behind the eFuse U23 (ILM 301R, 3.0 A): a LimeSDR Mini 2.4 "
                   "on USB 3 draws about 1.2 A and peaks higher while its FPGA configures")
-_intent.rail("+5V_RB", 5.0, 0.15, 2.00, "U24", converted=False, fed_from="+5V_DEV",  # U24 pin 4 IN
+_intent.rail("+5V_RB", 5.0, 0.15, 2.00, "U24", converted=False, fed_from="+5V_DEV", switch="U24", enable_net="RB_UVLO",  # U24 pin 4 IN
              source_ic="U24 is a TPS2596 eFuse: its OUT pin IS the power path",
              loads={"J_RB9704": 2.00},
              note="the satellite modem behind the eFuse U24 (ILM 301R, 3.0 A): the RockBLOCK 9704's burst "
@@ -475,6 +479,13 @@ def lvc1g17(uref, a, y, vcc, cref, why):
     ic(uref, 5, "74LVC1G17 Schmitt-trigger buffer (Diodes 74LVC1G17W5-7, 2 A 4 Y): " + why, "SOT235", {"1": "NC", "2": a, "3": "GND", "4": y, "5": vcc}, "C151394"); _dec(uref, cref, vcc)
 def lvc1g34(uref, a, y, vcc, cref, why):
     ic(uref, 5, "74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): " + why, "SOT235", {"1": "NC", "2": a, "3": "GND", "4": y, "5": vcc}, "C526347"); _dec(uref, cref, vcc)
+#   SN74LV1T08DBVR (TI SCLS739F, October 2025, Table 5-1 Pin Functions, DBV): 1 A 2 B 3 GND 4 Y 5 VCC; VCC 1.6 to 5.5 V; at VCC
+#     4.5 to 5.5 V VIH 2.03 V (2.11 V at 5.5 V) and VIL 0.8 V, -40 to +125 C, so a 3.3 V signal is a valid high from a 5 V supply;
+#     inputs 5.5 V tolerant; II +-1 uA at VCC 0 V to 5.5 V (VI 0 V or VCC); VOH 4.5 V at -8 mA (VCC 5 V) (6.3, 6.5); JLCPCB C2682144
+#     (Texas Instruments, SOT-23-5, 27 September 2026). Fetched by stream w4b: v2/vendor/ti/ti-sn74lv1t08.pdf.
+# The value text names no power-part word (tests/test_rails_census.py POWER_WORDS): the gate drives an enable and delivers no supply.
+def lv1t08(uref, a, b, y, vcc, cref, why):
+    ic(uref, 5, "SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): " + why, "SOT235", {"1": a, "2": b, "3": "GND", "4": y, "5": vcc}, "C2682144"); _dec(uref, cref, vcc)
 def lvc1g157(uref, s_, i0, i1, y, vcc, cref, why):
     ic(uref, 6, "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): " + why, "SOT363", {"1": i1, "2": "GND", "3": i0, "4": y, "5": vcc, "6": s_}, "C135822"); _dec(uref, cref, vcc)
 
@@ -542,7 +553,8 @@ def slot(s):
     # S{s}A_EN follows PCIE_PWR_EN through a 10 k series resistor R{s}64, and Q{s}11 (gate EMCON_ON, the board's one
     # inverted copy of EMCON_HW) pulls it to ground while EMCON is asserted; the module pin only ever sees 10 k and
     # R{s}06, never a driven voltage. Round 8 (L3, L7): the pull-down is now the open-drain output 2Y of U{s}15, run from the
-    # module's own 3.3 V, where Q{s}11 was a 2N7002 on the board-wide EMCON_ON (see the EMCON block below).
+    # module's own 3.3 V, where Q{s}11 was a 2N7002 on the board-wide EMCON_ON (see the EMCON block below). Stream w4b (W4B-D3,
+    # below): the enable is now driven by U{s}16 = EMCON_HW AND PCIE_PWR_EN{s} from the buck's own 5 V; R{s}64 and 2Y are off it.
     # SD-EMC-1, round 8 (26 September 2026; taken by the session under the owner's standing rule of 26 September 2026, and
     # superseding EMCON.md's option (f) and r4b's SD-B-03): SLOT 2 TAKES THE SAME PATTERN. Its card buck U203 is enabled from
     # S2A_EN through R264, 10 k from PCIE_PWR_EN2, and EMCON pulls S2A_EN low through U215 with no firmware in the path, while
@@ -577,7 +589,33 @@ def slot(s):
     # 86 mV loop sag = 3.213 V, 78 mV above the module's minimum for the copper.
     _s2a = dict(rt_val="33.2k 1%", rt_lcsc="C23003", rco_val="120k 1%", rco_lcsc="C25808", c6=(C(98), "68p 50V C0G", "C107009")) if s == 2 else {}
     buck33(U(3), "S%dA" % s, n5, "S%dA_EN" % s, a33, [L(1), C(11), C(12), C(13), C(14), C(15), C(16), R(2), R(3), R(4), R(5), C(17)], **_s2a); r(R(6), "100k", "PCIE_PWR_EN%d" % s, "GND")
-    r(R(64), "10k", "PCIE_PWR_EN%d" % s, "S%dA_EN" % s)   # the AP64500's EN sources 1.5 uA: 15 mV across this, and R{s}06 holds both low with the module off
+    # THE CARD BUCK'S EN IS DRIVEN BY AN EMCON GATE ON THE BUCK'S OWN INPUT RAIL (stream w4b, 27 September 2026, decision W4B-D3;
+    # taken by the session under the owner's standing rule of 26 September 2026; EMCON.md 5a fault F2, found by RF-002's walk once
+    # it read the SN74LVC2G06). WHAT WAS OPEN: S{s}A_EN followed PCIE_PWR_EN{s} through R{s}64 (10 k) and was held low under EMCON
+    # only by U{s}15's 2Y, which runs from the module's own +3V3_CM{s} (L3's choice). With that rail down and +5V_S{s} up (the
+    # module off or its PMIC disabled, or no module in the slot, while board A feeds the slot) nothing drove the node: R{s}06 and
+    # R{s}64 (110 k) held it against the AP64500's own EN sources, "an internal 1.5uA pullup current source" (1 to 2 uA at VEN
+    # 1 V) and, once the buck is on, "a 4uA hysteresis pullup current source" (DS41979 Rev. 5-2, Enable and Adjusting UVLO; IEN
+    # 5.5 uA typical at VEN 1.5 V with no maximum). A buck that was on when its module's rail fell stays on if that current
+    # exceeds 9.4 uA, which no held figure excludes, and then EMCON cannot reach the card: on slot 2 that is the RM520N-GL, which
+    # runs its own firmware with no host. THE CHANGE: U{s}16, an SN74LV1T08 run from +5V_S{s}, the buck's own input, drives
+    # S{s}A_EN = EMCON_HW AND PCIE_PWR_EN{s} push-pull, with nothing else on the node; R{s}64 is removed and U{s}15's second
+    # channel is freed (its 2A on GND as SCES307J 6.3 note 1 asks of an unused input, its 2Y open). Whenever the buck has an input
+    # the gate is powered: EMCON asserted, its output is at most 0.1 V at 20 uA and 0.35 V at 8 mA (SCLS739F 6.5, VCC 4.5 V), so
+    # the EN pin's own current, whatever it is up to 8 mA, leaves the node under VEN_L 1.03 V minimum, whatever the module, its
+    # firmware or its rail do and with no resistor for that current to lift; EMCON released, the node follows PCIE_PWR_EN{s} as
+    # before (VOH at least 4.5 V at -8 mA with VCC 5 V, above VEN_H 1.25 V maximum; "The EN pin is a high-voltage pin and can be
+    # directly connected to VIN", DS41979 Enable). The gate loses its supply only with the buck's input, which stops the buck (VIN
+    # UVLO 3.5 V typical, 3.7 V maximum rising, DS41979), so it has no unpowered state that matters, and in its unspecified band
+    # (+5V_S{s} under 1.6 V) the buck's input is under its UVLO too. Its inputs are 5.5 V tolerant with II +-1 uA at VCC 0 V to 5.5
+    # V, so EMCON_HW gains three readers of 1 uA inside R58's sum, and no slot rail reaches the line through them. PCIE_PWR_EN{s}
+    # is a gate input now: a firmware error on it cannot reach the node while EMCON is asserted. What is given up: U{s}15's 2Y was a
+    # second EMCON path onto this node, from EMCON_ON{s}; it failed in exactly the state above, and an open drain on a push-pull
+    # node would fight the gate whenever the two disagreed, so the node has one driver. EMCON_ON{s} keeps the card's W_DISABLE1#,
+    # the module's two radios and, on slot 2, FULL_CARD_POWER_OFF# (U220) and the rail's discharge (Q212). Cost: three gates and
+    # three 100 nF (C607, C637, C667), 10 uA each, and R164, R264, R364 out. Reversal: R{s}64 from PCIE_PWR_EN{s} to S{s}A_EN,
+    # U{s}15's 2Y back on S{s}A_EN, U{s}16 out.
+    lv1t08(U(16), "EMCON_HW", "PCIE_PWR_EN%d" % s, "S%dA_EN" % s, n5, _cx(s, 7), "slot %d's card-socket supply enable = EMCON AND PCIE_PWR_EN%d, run from +5V_S%d, that supply's own input (W4B-D3)" % (s, s, s))
     buck33(U(4), "S%dB" % s, n5, "EN33_S%d" % s, b33, [L(2), C(18), C(19), C(20), C(21), C(22), C(23), R(7), R(8), R(9), R(10), C(24)])
     r(R(11), "100k", cm33, "EN33_S%d" % s); r(R(12), "100k", "EN33_S%d" % s, "GND")   # 1.65 V when the module's 3.3 V is up
     buck_small(U(5), "S%dC" % s, n5, "EN33_S%d" % s, v10, [L(3), C(25), C(26), C(27), C(28), C(29), R(13), R(14)], "40.2k 1%", "1.0 V PCIe switch core S%d" % s, cvin=_cx(s, 5))   # G4
@@ -891,7 +929,7 @@ def slot(s):
     #   Q{s}10, R{s}73 and R{s}74.
     #   U{s}15 pulls the card's W_DISABLE1# (1Y) and its buck's EN S{s}A_EN (2Y) low from EMCON_ON{s}, replacing Q{s}06 and, on
     #   slots 1 and 3, Q{s}11: 0.35 mA from R{s}37 and 0.33 mA from R{s}64, VOL at most 0.4 V against VEN_L 1.03 V minimum
-    #   (AP64500 DS41979 Rev 5-2).
+    #   (AP64500 DS41979 Rev 5-2). Since stream w4b (W4B-D3) the card buck's EN is U{s}16's, on the slot's 5 V, and 2Y is spare.
     #   L4 on these parts: below their 1.65 V operating minimum they are unspecified, but +3V3_CM{s} crosses that band while the
     #   module is still starting, before its software can raise PCIE_PWR_EN{s} or run a radio (CM5 datasheet 3.1, the rails'
     #   order), so no radio of this slot is live while its gates are in that band. INFERRED from the module's boot order.
@@ -902,7 +940,9 @@ def slot(s):
     lvc1g04(U(12), "EMCON_HW", eon, cm33, C(97), "EMCON_ON%d = NOT EMCON_HW, run from slot %d's own 3.3 V (EMCON L3)" % (s, s))
     lvc2g06(U(13), eon, "WL_nDIS%d" % s, eon, "BT_nDIS%d" % s, cm33, _dcp[0], "EMCON pulls slot %d's WL_nDisable and BT_nDisable low (L3, L7)" % s)
     lvc2g06(U(14), "WL_nDIS%d_OFF" % s, "WL_nDIS%d" % s, "BT_nDIS%d_OFF" % s, "BT_nDIS%d" % s, cm33, _dcp[1], "the panel's off requests pull slot %d's WL_nDisable and BT_nDisable low" % s)
-    lvc2g06(U(15), eon, w_dis, eon, "S%dA_EN" % s, cm33, _dcp[2], "EMCON pulls slot %d's card W_DISABLE1# and the card supply's enable S%dA_EN low (L7; SD-EMC-1 on slot 2)" % (s, s))
+    # Stream w4b (W4B-D3, at the card buck above): U{s}15's 2Y no longer reaches S{s}A_EN, which U{s}16 drives from the buck's own
+    # input rail; its 2A is held at GND (SCES307J 6.3 note 1) and 2Y is left open, as U220's second channel is.
+    lvc2g06(U(15), eon, w_dis, "GND", "NC", cm33, _dcp[2], "EMCON pulls slot %d's card W_DISABLE1# low (L7); channel 2 spare since W4B-D3" % s)
     r(R(62), "10k", "WL_nDIS%d_OFF" % s, "+3V3_DEV"); r(R(63), "10k", "BT_nDIS%d_OFF" % s, "+3V3_DEV")
     _TP(100 * s + 4, eon, s)
     if s == 2:
@@ -1315,7 +1355,7 @@ synth("U12", "E22_900M30S", "Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1:
 # 400 Ohm at VIN = VOUT = 5 V (7.5), where QOD open left the dead rail to whatever the live lines fed into it (EMCON.md 4.14).
 # That bounds, it does not close, the back-feed into the E22 and the E72: the series resistance the lines still owe is listed
 # in the record (not done).
-part("U21", "Power_Management", "TPS22810DRV", "TPS22810DRV", "WSON6", {"6": "+5V_DEV", "5": "E22_EN", "1": "+5V_LORA", "2": "+5V_LORA", "3": "E22_CT", "4": "GND", "7": "GND"}); c("C45", "1n", "E22_CT", "GND"); c("C46", "10u", "+5V_LORA", "GND", "C10u"); c("C47", "100n", "+5V_LORA", "GND"); r("R25", "10k", "SPI3_CE1", "+3V3_S3B")
+part("U21", "Power_Management", "TPS22810DRV", "TPS22810DRV", "WSON6", {"6": "+5V_DEV", "5": "E22_UVLO", "1": "+5V_LORA", "2": "+5V_LORA", "3": "E22_CT", "4": "GND", "7": "GND"}); c("C45", "1n", "E22_CT", "GND"); c("C46", "10u", "+5V_LORA", "GND", "C10u"); c("C47", "100n", "+5V_LORA", "GND"); r("R25", "10k", "SPI3_CE1", "+3V3_S3B")
 part("J_LORA1", "Connector", "Conn_Coaxial", "U.FL socket: pigtail to A22's LoRa jack J_RF11", "UFL", {"1": "LORA_ANT", "2": "GND"}, "C88373")
 # PWR-001 (w3b, 27 September 2026): LORA_ANT is RF, not a supply: the E22's pin 21 "ANT: Antenna interface, stamp hole (50 ohm
 # characteristic impedance)" (E22-900M30S user manual v1.20, p.5) to the U.FL. A NODE at the largest RF voltage on it: "Max Tx
@@ -1344,12 +1384,12 @@ _SEC_MARKS.append(('LIMESDR MINI RECEPTACLE (BANK 1 HUB, PORT 1, USB 3) AND THE 
 part("J_LIME", "Connector", "USB3_A", "USB 3.0 type A receptacle (Wuerth 692122030100 land): the LimeSDR Mini 2.4 in its bay", "USB3A",
      {"1": "+5V_LIME", "2": "LIME_DM", "3": "LIME_DP", "4": "GND", "5": "LIME_SSRX_N", "6": "LIME_SSRX_P", "7": "GND", "8": "LIME_SSTX_N", "9": "LIME_SSTX_P", "10": "GND"}, "C5355286")
 esd("U33", "LIME_DP", "LIME_DM", "+5V_LIME")
-efuse("U23", "+5V_DEV", "+5V_LIME", "LIME_EN", "LIME_FLT", ["C56", "R36", "R37", "R38", "R39", "C57"], "301R 1% (ILM: 3.0 A)"); c("C58", "22u 6.3V", "+5V_LIME", "GND", "C10u")
+efuse("U23", "+5V_DEV", "+5V_LIME", "LIME_UVLO", "LIME_FLT", ["C56", "R36", "R37", "R38", "R39", "C57"], "301R 1% (ILM: 3.0 A)"); c("C58", "22u 6.3V", "+5V_LIME", "GND", "C10u")
 part("J_RB9704", "Connector_Generic", "Conn_02x08_Odd_Even", "RockBLOCK 9704 16-pin (IDC 2x8) on the Ground Control bracket", "IDC16", {
  "1": "GND", "2": "NC", "3": "RB_IEN", "4": "GND", "5": "NC", "6": "RB_CTRL", "7": "RB_STATUS", "8": "RB_XMTG", "9": "NC", "10": "GND", "11": "NC", "12": "NC", "13": "RB_TXD", "14": "RB_RXD", "15": "+5V_RB", "16": "GND"})
 cp2102("U18", "RB", "+5V_DEV", "RB_DP", "RB_DM", "RB_RXD", "RB_TXD", refs=("R40", "C59", "C60"), vregin=("C557", "C558"))   # G7
 r("R41", "10k", "RB_STATUS", "+3V3_DEV"); r("R42", "10k", "RB_XMTG", "+3V3_DEV")
-efuse("U24", "+5V_DEV", "+5V_RB", "RB_EN", "RB_FLT", ["C61", "R43", "R44", "R45", "R46", "C62"], "301R 1% (ILM: 3.0 A)"); c("C63", "22u 6.3V", "+5V_RB", "GND", "C10u")
+efuse("U24", "+5V_DEV", "+5V_RB", "RB_UVLO", "RB_FLT", ["C61", "R43", "R44", "R45", "R46", "C62"], "301R 1% (ILM: 3.0 A)"); c("C63", "22u 6.3V", "+5V_RB", "GND", "C10u")
 # ================================================================= camera, QMX and spare USB headers, the wall USB pair (bank 3 hub, port 3) with its ESD
 _SEC_MARKS.append(('CAMERA, QMX AND SPARE USB HEADERS, THE WALL USB PAIR (BANK 3 HUB, PORT 3) WITH ITS ESD', len(P)))
 # S-08 (adjudication A01), 26 September 2026: R48 is 4.7 k, not 100 k. The fitted TI PCA9555 pulls every pin up
@@ -1408,7 +1448,64 @@ r("R49", "100k", "LIME_HW_EN", "GND"); r("R50", "4.7k", "LIME_SW_EN", "GND"); r(
 # leakage here is 10 uA, not the PCA9555's 100 uA pull-up, and 10 k is already on this board's BOM (R58, R513).
 # Round 8: the gates ARE SN74LVC1G08 now (U501 to U505), so the 10 uA taken from SCES217AA above is their own figure, and with
 # +3V3_DEV lost each EN reads 0.10 V: L3's state (2) PASSES (R4T-F9).
-r("R514", "10k", "LIME_EN", "GND"); r("R515", "10k", "RB_EN", "GND"); r("R516", "10k", "E22_EN", "GND"); r("R517", "10k", "E72_EN", "GND")
+# L4 CASE (2) ON U501 TO U504, CLOSED AT DESK BY A DIVIDER (stream w4b, 27 September 2026, EMCON.md section 3 L4 and 5a F6;
+# taken by the session under the owner's standing rule of 26 September 2026, decision W4B-D2; board A's SD-A8-3 is the same
+# remedy on its LM5176 enables). A single gate that states Ioff is specified at VCC 0 V (outputs off) and from 1.65 V up
+# (SCES217AA 5.3), and nowhere between: with +3V3_DEV anywhere from 0 to 1.65 V while +5V_DEV stays up (fault F6) the
+# output of U502, U503 or U504 is not specified, and an output at up to its own 1.65 V was above both switches' turn-off
+# thresholds, so the LimeSDR, the RockBLOCK or the E22 could be powered in that band whatever EMCON said. Each switch's
+# EN/UVLO pin now sits on its own node (LIME_UVLO, RB_UVLO, E22_UVLO) at 0.6 of the gate's output: R529, R530, R531 10 k 1
+# percent in series from the gate, and R514, R515, R516 15 k 1 percent to GND on the node (the values and codes board A
+# buys for PA_UVLO). The ratio is 0.595 to 0.605 over the parts' tolerance. THE BAND: an output of a part whose VCC is at
+# most 1.65 V is at most 1.65 V (VO 0 to VCC, SCES217AA 5.3; the output's high side runs from VCC, INFERRED as on board A),
+# so the node is at most 0.998 V, under the TPS259631's VUVLO(F) 1.08 V minimum (SLVSET8A 7.5) and the TPS22810's VENF
+# 1.08 V minimum (SLVSDH0C 7.5): the three radios' supplies are off in the band whatever the gates do. POWERED AND HIGH:
+# VOH is at least 2.4 V at IOH -16 mA and VCC 3 V (SCES217AA 5.5; the load here is about 0.1 mA), so the node is at least
+# 1.43 V, above VUVLO(R) 1.22 V maximum and VENR 1.30 V maximum: the switches turn on as before. UNPOWERED: the gate's Ioff,
+# 10 uA, and the pin's 0.1 uA leakage into 15.15 k is 0.15 V, under VSD 0.53 V and VSHUTF 0.5 V minimum (full shutdown;
+# it was 0.10 V into 10 k). The cost: 0.13 mA per output while it drives high, where the 10 k took 0.33 mA. E72_EN keeps its
+# 10 k with no divider: U22's input is +3V3_DEV itself, so in the band +3V3_ZB cannot exceed 1.65 V, under the E72's 1.9 V
+# minimum (EMCON.md 4.15). Reversal: the enables back on the gate outputs with R514 to R516 at 10 k, and R529 to R531 out.
+r("R529", "10k 1%", "LIME_EN", "LIME_UVLO", lcsc="C25804"); r("R514", "15k 1%", "LIME_UVLO", "GND", lcsc="C22809")
+r("R530", "10k 1%", "RB_EN", "RB_UVLO", lcsc="C25804"); r("R515", "15k 1%", "RB_UVLO", "GND", lcsc="C22809")
+r("R531", "10k 1%", "E22_EN", "E22_UVLO", lcsc="C25804"); r("R516", "15k 1%", "E22_UVLO", "GND", lcsc="C22809")
+r("R517", "10k", "E72_EN", "GND")
+# THE ROCKBLOCK'S ENABLE IS FORCED LOW BY EMCON IN HARDWARE (stream w4b, 27 September 2026, EMCON.md 4.4 and 5a row 4, the
+# board B hand-off of EMCON.md section 8; taken by the session under the owner's standing rule of 26 September 2026, decision
+# W4B-D1). WHAT WAS WRONG: J_RB9704 pin 3 (RB_IEN, the RockBLOCK's I_EN) joined U6 pin 19 and nothing else. The RockBLOCK
+# keeps two 10 F supercapacitors of its own charged to 4.25 V (Ground Control schematic rev 2B, v2/vendor/rockblock/
+# rb9704-sch-2B1.pdf page 4), so removing +5V_RB under EMCON did not stop the module while firmware held I_EN high through
+# the expander: the module ran on about 16 J (EMCON.md 4.4). WHAT THE MAKER GIVES: "This input pin is used to initiate
+# startup and shutdown of the 9704 module. The signal is buffered into the ENABLE input of the 9704 module. It has a weak
+# voltage-divider (270KOhm/430KOhm) pull-up to the input voltage, ensuring that the 9704 Boots up when powered on, and begins
+# shutting down as soon as external power is removed. This pin has a series 10KOhm resistor to the input of the buffer. It
+# can be driven directly with an MCU pin, or an open-drain output" (Ground Control, docs.groundcontrol.com/iot/rockblock-9704/
+# hardware, section Connections, 3 - I_EN, fetched 27 September 2026, v2/vendor/rockblock/); the schematic draws R33 270 k
+# from V_IN_ORED and R32 430 k to 0 V on the input of U2, a 74AUP1G125 on the module's own 3V3_IRID, with R6 10 k from the pin
+# and the note "U2 V_IN_H_MIN = 2.0V" (page 3). THE CHANGE: U536, an SN74LVC1G08 on +3V3_DEV (Ioff +-10 uA, SCES217AA 5.5),
+# makes RB_IEN = EMCON_HW AND RB_SW_IEN, where RB_SW_IEN is U6 pin 19's request (the net the pin used to drive). EMCON
+# asserted: the output is LOW (VOL 0.1 V at 100 uA; the pin's load is the maker's 176 kOhm, at most 18 uA), the buffer input
+# about 0.28 V with V_IN_ORED at its 5.3 V maximum, and +5V_RB goes at the same instant (U503), so the maker's own divider
+# falls with it: no firmware, the expander's or the panel's, can hold the module enabled on its capacitors. R527 (10 k)
+# holds RB_IEN low with U536 unpowered: its 10 uA Ioff reads 0.10 V at the pin, where the maker's 176 kOhm alone would let
+# it reach about 1.8 V, inside the buffer's undefined band, while the module runs on its capacitors (+3V3_DEV lost is also
+# RB_UVLO held low, so +5V_RB is off then). R528 (4.7 k, S-08's value and reason) holds RB_SW_IEN low against U6's power-on
+# pull-up (SCPS131J, IIL up to -100 uA: 0.47 V, under the gate's 0.8 V VIL): the module is enabled only when the panel
+# firmware asks, after +5V_RB, which is the maker's own startup order ("Apply Power to RockBLOCK 9704", then I_EN). EMCON
+# released: RB_IEN follows RB_SW_IEN. The cost: 0.33 mA from U536 while RB_IEN is high, 0.7 mA from U6 while it asks.
+# WHAT IT DOES NOT CLOSE, named: (a) what the Iridium 9704 module does when ENABLE falls, and how long its "shutting down"
+# takes on its capacitors, is stated by no held document (the Iridium 9704 module's own ENABLE document is a lookup owed),
+# so row 4's 1 s L_max is TBD at desk (bench E-04); (b) Ground Control's warning, "once I_EN has been driven high, the host
+# application must wait for I_BTD to transition high before driving I_EN low again ... Failure to follow this procedure may
+# result in damage to the 9704 module": EMCON while the module boots drives I_EN low before I_BTD rises. The maker's own
+# divider does exactly that on every loss of external power, and EMCON removes +5V_RB at the same instant, so the module
+# sees the power loss its maker designed for; accepted as a stated residual, as the 5G module's flash warning is, and the
+# panel firmware keeps RB_SW_IEN low after an EMCON until RB_STATUS reads low (PANEL.md correction (17)); (c) L4 case (2) on U536 itself: with +3V3_DEV from 0 to
+# 1.65 V its output is not specified, and there RB_UVLO holds +5V_RB off (above), so the module can run only on its own
+# capacitors, the bound it had before this change (bench E-11 with E-04). Reversal: U6 pin 19 back on RB_IEN, U536, C559,
+# R527 and R528 out.
+lvc1g08("U536", "EMCON_HW", "RB_SW_IEN", "RB_IEN", "+3V3_DEV", "C559", "RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), EMCON AND software (EMCON.md 4.4, W4B-D1)")
+r("R527", "10k", "RB_IEN", "GND"); r("R528", "4.7k", "RB_SW_IEN", "GND")
 # 9 September 2026 (ARCH-PCB-B-IOHA section 2, defect 3): three expander-driven FET gates had no pull-down, so they float
 # through the PCA9555's power-on reset, when its ports come up as high-impedance inputs. KSZ_RST holds the Ethernet switch
 # in reset for the whole kit if it floats high; 5G_OFF and 5G_RESET do the same to the cellular module. The six gates around
@@ -1454,10 +1551,11 @@ _SEC_MARKS.append(('EXPANDERS, SECURE ELEMENT, HOLDOVER CLOCK, TEMPERATURE (KIT 
 # 10 k pull-ups so the power-on state is off), each into its slot's gate U{s}11 and never onto a module pin. S-16, the same day: slot 1's module is the one on the WIFI 2.4 jack
 # (ASSEMBLY.md: "one Compute Module's antenna-kit lead (slot 1)", A's J_RF3, dtparam=ant2); slots 2 and 3 keep their
 # radios dark (WL_nDIS2/3_OFF and BT_nDIS2/3_OFF high) unless the panel firmware moves the local WiFi to them after losing slot 1.
+# Stream w4b (27 September 2026, W4B-D1): pin 19 is a REQUEST too, RB_SW_IEN into U536; the RockBLOCK's I_EN is U536's output.
 part("U6", "Interface_Expansion", "PCA9555PW", "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)", "EXP", {
  "24": "+3V3_DEV", "12": "GND", "22": "SCL", "23": "SDA", "1": "EXP_INT", "2": "GND", "21": "GND", "3": "GND",
  "4": "KSZ_RST", "5": "LIME_SW_EN", "6": "RB_SW_EN", "7": "LORA_ON", "8": "ZB_ON", "9": "CAM_EN", "10": "5G_OFF", "11": "5G_RESET",
- "13": "WL_nDIS1_OFF", "14": "WL_nDIS2_OFF", "15": "WL_nDIS3_OFF", "16": "BT_nDIS1_OFF", "17": "BT_nDIS2_OFF", "18": "BT_nDIS3_OFF", "19": "RB_IEN", "20": "RB_CTRL"}, "C2864778")
+ "13": "WL_nDIS1_OFF", "14": "WL_nDIS2_OFF", "15": "WL_nDIS3_OFF", "16": "BT_nDIS1_OFF", "17": "BT_nDIS2_OFF", "18": "BT_nDIS3_OFF", "19": "RB_SW_IEN", "20": "RB_CTRL"}, "C2864778")
 part("U7", "Interface_Expansion", "PCA9555PW", "PCA9555PW 0x25: inputs (faults, RockBLOCK status) and spares", "EXP", {
  "24": "+3V3_DEV", "12": "GND", "22": "SCL", "23": "SDA", "1": "EXP_INT", "2": "GND", "21": "+3V3_DEV", "3": "+3V3_DEV",
  "4": "LIME_FLT", "5": "RB_FLT", "6": "CAM_FLT", "7": "RB_STATUS", "8": "RB_XMTG", "9": "EXP_SPARE1", "10": "EXP_SPARE2", "11": "EXP_SPARE3",
@@ -1995,6 +2093,10 @@ def _dec_rule(e):
                      "is recommended\" (Power Supply Recommendations, p.14)")
     if pv.startswith("SN74LVC1G04"):
         return ("D", "TI SN74LVC1G04 SCES214AF (v2/vendor/ti/ti-sn74lvc1g04.pdf): " + _TI_GATE % "p.12")
+    if pv.startswith("SN74LV1T08"):
+        return ("D", "TI SN74LV1T08 SCLS739F (v2/vendor/ti/ti-sn74lv1t08.pdf): \"Each VCC terminal should have a good bypass capacitor "
+                     "to prevent power disturbance. A 0.1uF capacitor is recommended for this device\" (9.1 Power Supply "
+                     "Recommendations, p.14)")
     if pv.startswith("SN74LVC2G06"):
         return ("D", "TI SN74LVC2G06 SCES307J (v2/vendor/ti/ti-sn74lvc2g06.pdf): \"Each VCC pin must have a good bypass capacitor "
                      "in order to prevent power disturbance. For devices with a single supply, a 0.1-uF capacitor is recommended\" "

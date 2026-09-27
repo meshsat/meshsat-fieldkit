@@ -641,7 +641,10 @@ def t_a_declaration_resting_on_an_inference_leaves_its_board_undecided():
     """The QMX's USB lead: the manual gives the DC input's range and does not say USB cannot run the transmitter,
     so the declaration is owed, not proved, and the board reads UNDECIDED rather than PASS."""
     nl = _nl({"J_QMX": ("QMX USB lead (bank 2 hub, port 4)", "Connector:X", "X:Y")}, {"GND": [("J_QMX", "1", "")]})
-    r = T.judge({"B": nl}, table=[], accessories=[], receivers=[])
+    # stream w4b: J_QMX left the tree's OWED list (QRP Labs' schematics answer it, EMCON.md 4.3), so the row is passed here
+    owed = [dict(board="B", ref="J_QMX", value=r"QMX USB lead", why="the QMX's USB data lead",
+                 owed="a QRP Labs statement that USB VBUS does not power the QMX's transmitter")]
+    r = T.judge({"B": nl}, table=[], accessories=[], receivers=[], owed=owed)
     cls = [x for x in r if "names a radio" in x["text"]][0]
     assert cls["ok"] is None and "owed" in cls["detail"], cls
 
@@ -2550,9 +2553,9 @@ def t_a_compute_modules_5v_is_a_load_only_with_gpio_vref_on_its_own_outputs():
     # slot 1's EMCON open drains U113 to U115 (SN74LVC2G06, TI SCES307J) from the module's own +3V3_CM1 (EMCON.md L3), and
     # the walk holds no pin map for that part, so each supply pin is named as a part no class reads (EMCON.md section 4b,
     # handed to the tools author); the six pulls of the eleventh and twelfth passes read as before*
-    assert sorted(x.split(" pin ")[0] for x in src) == ["R111", "R151", "R154", "R155", "R156", "R157",
-                                                        "U113", "U114", "U115"], src
-    assert all(x.endswith("'+3V3_CM1'), a part no class here reads") for x in src if x.startswith("U11")), src
+    # *changed with stream w4b's rows (27 September 2026): the SN74LVC2G06 has its row (SCES307J), so U113 to U115 are read
+    # as the open drains they are and only the six pulls of the eleventh and twelfth passes remain*
+    assert sorted(x.split(" pin ")[0] for x in src) == ["R111", "R151", "R154", "R155", "R156", "R157"], src
     # *changed in the twelfth pass (R4T-D71): behind R111 the AP64500's enable U104 pin 3 is named first now, a current
     # source its maker states (DS41979 3 Enable), which the eleventh pass skipped; the TPS62933 U105 is still named*
     assert "behind which U104 pin 3 (AP64500SP-13 5 A buck" in src[0] and "its maker states a current sourced out of the pin" \
@@ -3425,5 +3428,7 @@ def t_a_high_held_at_a_schmitt_input_is_not_read_as_passing():
     assert tx["ok"] is None and "which its sheet does not state over VCC 3 V to 3.6 V" in tx["detail"] \
         and "SCES414P 6.5" in tx["detail"], (tx["ok"], tx["detail"][:800])
     row17 = [f for f in T.LOGIC if f["name"] == "74LVC1G17 Schmitt buffer"][0]
+    # stream w4b: the SN74LV1T08 states VIH 2.03 V and 2.11 V at VCC 4.5 V to 5.5 V (SCLS739F 6.5), above VIH_HIGH
     assert "DS35124" in row17["vih_gap"] and all(not f.get("vih_gap") for f in T.LOGIC
-                                                 if f["name"] not in ("74LVC1G17 Schmitt buffer", "74LVC1G57 configurable gate"))
+                                                 if f["name"] not in ("74LVC1G17 Schmitt buffer", "74LVC1G57 configurable gate",
+                                                                      "74LV1T08 AND"))

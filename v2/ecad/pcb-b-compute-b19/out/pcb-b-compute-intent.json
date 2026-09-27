@@ -1,6 +1,6 @@
 {
  "board": "pcb-b-compute",
- "written": "2026-09-27 10:30",
+ "written": "2026-09-27 15:05",
  "bypass": [
   {
    "cap": "C112",
@@ -19,6 +19,14 @@
    "class": "R",
    "basis": "Diodes AP64500 DS41979 Rev 5-2 (v2/vendor/diodes/diodes-ap64500.pdf): pin 2 VIN \"Power Input. VIN supplies the power to the IC as well as the step-down converter power MOSFETs\" (p.3); PCB Layout item 2 \"Place the input capacitors as closely across VIN and GND as possible\" (p.23)",
    "same_side": true
+  },
+  {
+   "cap": "C607",
+   "part": "U116",
+   "pin": "5",
+   "net": "+5V_S1",
+   "class": "D",
+   "basis": "TI SN74LV1T08 SCLS739F (v2/vendor/ti/ti-sn74lv1t08.pdf): \"Each VCC terminal should have a good bypass capacitor to prevent power disturbance. A 0.1uF capacitor is recommended for this device\" (9.1 Power Supply Recommendations, p.14)"
   },
   {
    "cap": "C119",
@@ -363,6 +371,14 @@
    "class": "R",
    "basis": "Diodes AP64500 DS41979 Rev 5-2 (v2/vendor/diodes/diodes-ap64500.pdf): pin 2 VIN \"Power Input. VIN supplies the power to the IC as well as the step-down converter power MOSFETs\" (p.3); PCB Layout item 2 \"Place the input capacitors as closely across VIN and GND as possible\" (p.23)",
    "same_side": true
+  },
+  {
+   "cap": "C637",
+   "part": "U216",
+   "pin": "5",
+   "net": "+5V_S2",
+   "class": "D",
+   "basis": "TI SN74LV1T08 SCLS739F (v2/vendor/ti/ti-sn74lv1t08.pdf): \"Each VCC terminal should have a good bypass capacitor to prevent power disturbance. A 0.1uF capacitor is recommended for this device\" (9.1 Power Supply Recommendations, p.14)"
   },
   {
    "cap": "C219",
@@ -827,6 +843,14 @@
    "class": "R",
    "basis": "Diodes AP64500 DS41979 Rev 5-2 (v2/vendor/diodes/diodes-ap64500.pdf): pin 2 VIN \"Power Input. VIN supplies the power to the IC as well as the step-down converter power MOSFETs\" (p.3); PCB Layout item 2 \"Place the input capacitors as closely across VIN and GND as possible\" (p.23)",
    "same_side": true
+  },
+  {
+   "cap": "C667",
+   "part": "U316",
+   "pin": "5",
+   "net": "+5V_S3",
+   "class": "D",
+   "basis": "TI SN74LV1T08 SCLS739F (v2/vendor/ti/ti-sn74lv1t08.pdf): \"Each VCC terminal should have a good bypass capacitor to prevent power disturbance. A 0.1uF capacitor is recommended for this device\" (9.1 Power Supply Recommendations, p.14)"
   },
   {
    "cap": "C319",
@@ -1645,6 +1669,14 @@
    "basis": "TI SN74LVC1G08 SCES217AA (v2/vendor/ti/ti-sn74lvc1g08.pdf): \"For the SN74LVC1G08, a 0.1uF bypass capacitor is recommended\" (Power Supply Recommendations, p.14)"
   },
   {
+   "cap": "C559",
+   "part": "U536",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI SN74LVC1G08 SCES217AA (v2/vendor/ti/ti-sn74lvc1g08.pdf): \"For the SN74LVC1G08, a 0.1uF bypass capacitor is recommended\" (Power Supply Recommendations, p.14)"
+  },
+  {
    "cap": "C511",
    "part": "U506",
    "pin": "5",
@@ -2281,7 +2313,8 @@
     "U103": 2.2,
     "U104": 0.7,
     "U105": 0.15,
-    "J_FAN1": 0.1
+    "J_FAN1": 0.1,
+    "U116": 0.001
    },
    "note": "slot rail from A22 (JST-VH): the module, the two 3.3 V bucks, the 1.0 V switch core and the fan. THIS BOARD'S SHARE is 1.5 of the rail's 2 percent (16 September 2026): board A regulates it and measures 0.07 percent from its shunt to the header, and the long copper is this side, from the VH header across the board to a module receptacle carrying 2.5 A",
    "budget": 0.02,
@@ -2300,7 +2333,8 @@
     "U203": 2.2,
     "U204": 0.7,
     "U205": 0.15,
-    "J_FAN2": 0.1
+    "J_FAN2": 0.1,
+    "U216": 0.001
    },
    "note": "slot rail from A22 (JST-VH): the module, the two 3.3 V bucks, the 1.0 V switch core and the fan. THIS BOARD'S SHARE is 1.5 of the rail's 2 percent (16 September 2026): board A regulates it and measures 0.07 percent from its shunt to the header, and the long copper is this side, from the VH header across the board to a module receptacle carrying 2.5 A",
    "budget": 0.02,
@@ -2319,7 +2353,8 @@
     "U303": 2.2,
     "U304": 0.7,
     "U305": 0.15,
-    "J_FAN3": 0.1
+    "J_FAN3": 0.1,
+    "U316": 0.001
    },
    "note": "slot rail from A22 (JST-VH): the module, the two 3.3 V bucks, the 1.0 V switch core and the fan. THIS BOARD'S SHARE is 1.5 of the rail's 2 percent (16 September 2026): board A regulates it and measures 0.07 percent from its shunt to the header, and the long copper is this side, from the VH header across the board to a module receptacle carrying 2.5 A",
    "budget": 0.02,
@@ -2418,6 +2453,7 @@
     "U533": 0.002,
     "U534": 0.002,
     "U535": 0.002,
+    "U536": 0.002,
     "U102": 0.1,
     "U109": 0.05,
     "U110": 0.01,
@@ -2845,6 +2881,8 @@
     "U12": 0.7
    },
    "note": "the 1 W LoRa module behind its load switch: 0.7 A on a transmit burst at 30 dBm, milliamps between",
+   "switch": "U21",
+   "enable_net": "E22_UVLO",
    "converted": false,
    "fed_from": "+5V_DEV"
   },
@@ -2857,6 +2895,8 @@
     "J_LIME": 3.0
    },
    "note": "the software-defined radio bay behind the eFuse U23 (ILM 301R, 3.0 A): a LimeSDR Mini 2.4 on USB 3 draws about 1.2 A and peaks higher while its FPGA configures",
+   "switch": "U23",
+   "enable_net": "LIME_UVLO",
    "converted": false,
    "fed_from": "+5V_DEV"
   },
@@ -2869,6 +2909,8 @@
     "J_RB9704": 2.0
    },
    "note": "the satellite modem behind the eFuse U24 (ILM 301R, 3.0 A): the RockBLOCK 9704's burst current on a transmit attempt is the number the copper has to carry, not its average",
+   "switch": "U24",
+   "enable_net": "RB_UVLO",
    "converted": false,
    "fed_from": "+5V_DEV"
   },
@@ -2950,16 +2992,19 @@
     "U104": 0.7,
     "U105": 0.15,
     "J_FAN1": 0.1,
+    "U116": 0.001,
     "U31A": 1.6,
     "U203": 2.2,
     "U204": 0.7,
     "U205": 0.15,
     "J_FAN2": 0.1,
+    "U216": 0.001,
     "U32A": 1.6,
     "U303": 2.2,
     "U304": 0.7,
     "U305": 0.15,
-    "J_FAN3": 0.1
+    "J_FAN3": 0.1,
+    "U316": 0.001
    },
    "note": "the return of every rail: the three slot rails and the device rail, 19.4 A with all four at their declared peak",
    "always_on": true,

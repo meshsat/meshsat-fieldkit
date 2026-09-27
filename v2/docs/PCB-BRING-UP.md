@@ -85,9 +85,9 @@ fault from one that reads low.
 | 10 | VBUS_FLASH3 | 5.00 V | 0.00 A | J_FLASH3 | U307 |
 | 11 | VBUS_QMX | 5.00 V | 0.30 A | F3 | J_QMX |
 | 12 | PANEL_5V | 5.00 V | 0.60 A | F1 | J_PANEL |
-| 13 | +5V_S1 | 5.10 V | 2.50 A | J_5V_S1 | J_FAN1, U103, U104, U105, U30A |
-| 14 | +5V_S2 | 5.10 V | 4.20 A | J_5V_S2 | J_FAN2, U203, U204, U205, U31A |
-| 15 | +5V_S3 | 5.10 V | 2.50 A | J_5V_S3 | J_FAN3, U303, U304, U305, U32A |
+| 13 | +5V_S1 | 5.10 V | 2.50 A | J_5V_S1 | J_FAN1, U103, U104, U105, U116, U30A |
+| 14 | +5V_S2 | 5.10 V | 4.20 A | J_5V_S2 | J_FAN2, U203, U204, U205, U216, U31A |
+| 15 | +5V_S3 | 5.10 V | 2.50 A | J_5V_S3 | J_FAN3, U303, U304, U305, U316, U32A |
 | 16 | +54V_POE | 54.00 V | 0.30 A | J_54V | R13, U5 |
 
 **Measured, in this order, after the inputs are up.**

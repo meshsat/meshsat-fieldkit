@@ -1,0 +1,145 @@
+{
+ "kind": "bom",
+ "rows": [
+  297,
+  302
+ ],
+ "rows_only_committed": [
+  [
+   "C3,C10,C17-C26,C29-C32,C36-C38,C40,C44,C47,C49,C51,C54,C55,C57,C60,C62,C65-C71,C73,C110,C111,C118,C128,C133,C135-C146,C150,C158,C166-C173,C183-C185,C192,C194,C197,C200,C210,C211,C218,C228,C233,C235-C246,C250,C258,C261,C262,C266-C273,C285,C286,C289,C292,C294,C297,C299,C310,C311,C318,C328,C333,C335-C346,C350,C358,C366-C373,C383-C385,C392,C394,C397,C402-C406,C409,C412,C422-C426,C429,C432,C442-C446,C449,C452,C470-C480,C508-C519,C531-C548,C552,C554,C556,C558,C560-C590,C601-C606,C631-C636,C661-C666",
+   "100n",
+   "Capacitor_SMD:C_0603_1608Metric",
+   "",
+   "255"
+  ],
+  [
+   "R1,R103,R108,R113,R115,R144,R203,R208,R213,R215,R244,R303,R308,R313,R315,R344",
+   "10k 1%",
+   "Resistor_SMD:R_0603_1608Metric",
+   "",
+   "16"
+  ],
+  [
+   "R4,R11,R15,R16,R21,R22,R25,R28-R31,R37,R41,R42,R44,R47,R56,R63,R64,R75,R76,R87,R88,R132-R135,R137,R138,R141,R145,R146,R149,R151,R154-R158,R162-R164,R232-R235,R237,R238,R241,R245,R246,R249,R251,R254-R258,R262-R264,R296,R332-R335,R337,R338,R341,R345,R346,R349,R351,R354-R358,R362-R364,R474-R476,R480-R500,R510,R514-R524",
+   "10k",
+   "Resistor_SMD:R_0603_1608Metric",
+   "",
+   "117"
+  ],
+  [
+   "R48,R50-R53,R60-R62,R127,R227,R327",
+   "4.7k",
+   "Resistor_SMD:R_0603_1608Metric",
+   "",
+   "11"
+  ],
+  [
+   "U115",
+   "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's card W_DISABLE1# and the card supply's enable S1A_EN low (L7; SD-EMC-1 on slot 2)",
+   "Package_TO_SOT_SMD:SOT-23-6",
+   "C402162",
+   "1"
+  ],
+  [
+   "U215",
+   "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's card W_DISABLE1# and the card supply's enable S2A_EN low (L7; SD-EMC-1 on slot 2)",
+   "Package_TO_SOT_SMD:SOT-23-6",
+   "C402162",
+   "1"
+  ],
+  [
+   "U315",
+   "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's card W_DISABLE1# and the card supply's enable S3A_EN low (L7; SD-EMC-1 on slot 2)",
+   "Package_TO_SOT_SMD:SOT-23-6",
+   "C402162",
+   "1"
+  ]
+ ],
+ "rows_only_other": [
+  [
+   "C3,C10,C17-C26,C29-C32,C36-C38,C40,C44,C47,C49,C51,C54,C55,C57,C60,C62,C65-C71,C73,C110,C111,C118,C128,C133,C135-C146,C150,C158,C166-C173,C183-C185,C192,C194,C197,C200,C210,C211,C218,C228,C233,C235-C246,C250,C258,C261,C262,C266-C273,C285,C286,C289,C292,C294,C297,C299,C310,C311,C318,C328,C333,C335-C346,C350,C358,C366-C373,C383-C385,C392,C394,C397,C402-C406,C409,C412,C422-C426,C429,C432,C442-C446,C449,C452,C470-C480,C508-C519,C531-C548,C552,C554,C556,C558-C590,C601-C607,C631-C637,C661-C667",
+   "100n",
+   "Capacitor_SMD:C_0603_1608Metric",
+   "",
+   "259"
+  ],
+  [
+   "R1,R103,R108,R113,R115,R144,R203,R208,R213,R215,R244,R303,R308,R313,R315,R344,R529-R531",
+   "10k 1%",
+   "Resistor_SMD:R_0603_1608Metric",
+   "C25804",
+   "19"
+  ],
+  [
+   "R4,R11,R15,R16,R21,R22,R25,R28-R31,R37,R41,R42,R44,R47,R56,R63,R64,R75,R76,R87,R88,R132-R135,R137,R138,R141,R145,R146,R149,R151,R154-R158,R162,R163,R232-R235,R237,R238,R241,R245,R246,R249,R251,R254-R258,R262,R263,R296,R332-R335,R337,R338,R341,R345,R346,R349,R351,R354-R358,R362,R363,R474-R476,R480-R500,R510,R517-R524,R527",
+   "10k",
+   "Resistor_SMD:R_0603_1608Metric",
+   "",
+   "112"
+  ],
+  [
+   "R48,R50-R53,R60-R62,R127,R227,R327,R528",
+   "4.7k",
+   "Resistor_SMD:R_0603_1608Metric",
+   "",
+   "12"
+  ],
+  [
+   "R514-R516",
+   "15k 1%",
+   "Resistor_SMD:R_0603_1608Metric",
+   "C22809",
+   "3"
+  ],
+  [
+   "U115",
+   "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's card W_DISABLE1# low (L7); channel 2 spare since W4B-D3",
+   "Package_TO_SOT_SMD:SOT-23-6",
+   "C402162",
+   "1"
+  ],
+  [
+   "U116",
+   "SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's card-socket supply enable = EMCON AND PCIE_PWR_EN1, run from +5V_S1, that supply's own input (W4B-D3)",
+   "Package_TO_SOT_SMD:SOT-23-5",
+   "C2682144",
+   "1"
+  ],
+  [
+   "U215",
+   "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's card W_DISABLE1# low (L7); channel 2 spare since W4B-D3",
+   "Package_TO_SOT_SMD:SOT-23-6",
+   "C402162",
+   "1"
+  ],
+  [
+   "U216",
+   "SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's card-socket supply enable = EMCON AND PCIE_PWR_EN2, run from +5V_S2, that supply's own input (W4B-D3)",
+   "Package_TO_SOT_SMD:SOT-23-5",
+   "C2682144",
+   "1"
+  ],
+  [
+   "U315",
+   "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's card W_DISABLE1# low (L7); channel 2 spare since W4B-D3",
+   "Package_TO_SOT_SMD:SOT-23-6",
+   "C402162",
+   "1"
+  ],
+  [
+   "U316",
+   "SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's card-socket supply enable = EMCON AND PCIE_PWR_EN3, run from +5V_S3, that supply's own input (W4B-D3)",
+   "Package_TO_SOT_SMD:SOT-23-5",
+   "C2682144",
+   "1"
+  ],
+  [
+   "U536",
+   "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), EMCON AND software (EMCON.md 4.4, W4B-D1)",
+   "Package_TO_SOT_SMD:SOT-23-5",
+   "C7666",
+   "1"
+  ]
+ ],
+ "result": "DIFFERENT"
+}

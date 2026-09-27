@@ -1,0 +1,16 @@
+parts 1270 -> 1280 (+13 -3 ~6); nets 2004 -> 2011 (+7 -0 ~19)
+unexplained: 14
+  UNEXPLAINED nets_changed /+5V_S1 ['C607', 'U116']
+  UNEXPLAINED nets_changed /+5V_S2 ['C637', 'U216']
+  UNEXPLAINED nets_changed /+5V_S3 ['C667', 'U316']
+  UNEXPLAINED nets_changed /EMCON_HW ['U116', 'U216', 'U316']
+  UNEXPLAINED nets_changed /EMCON_ON1 ['U115']
+  UNEXPLAINED nets_changed /EMCON_ON2 ['U215']
+  UNEXPLAINED nets_changed /EMCON_ON3 ['U315']
+  UNEXPLAINED nets_changed /PCIE_PWR_EN1 ['R164', 'U116']
+  UNEXPLAINED nets_changed /PCIE_PWR_EN2 ['R264', 'U216']
+  UNEXPLAINED nets_changed /PCIE_PWR_EN3 ['R364', 'U316']
+  UNEXPLAINED nets_changed /S1A_EN ['R164', 'U115', 'U116']
+  UNEXPLAINED nets_changed /S2A_EN ['R264', 'U215', 'U216']
+  UNEXPLAINED nets_changed /S3A_EN ['R364', 'U315', 'U316']
+  UNEXPLAINED nets_changed GND ['C607', 'C637', 'C667', 'U115', 'U116', 'U215', 'U216', 'U315', 'U316']
