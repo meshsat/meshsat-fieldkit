@@ -1,0 +1,13 @@
+w3b: base: verdict: erc_gate               PASS         of 2869 {"allowed": 7, "blocking": 0, "violations": 2869} | 7 error(s) allow-listed with a reason
+w3b: cand: verdict: erc_gate               PASS         of 2879 {"allowed": 7, "blocking": 0, "violations": 2879} | 7 error(s) allow-listed with a reason
+w3b: rename check exit 1: RENAME MISMATCH
+w3b: base status after gates:
+     M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json
+     M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net
+     M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net.prov.json
+w3b: cand status after gates:
+     M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json
+     M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net
+     M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net.prov.json
+     M v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_sch
+w3b: gates done 2026-09-27T10:36:43Z

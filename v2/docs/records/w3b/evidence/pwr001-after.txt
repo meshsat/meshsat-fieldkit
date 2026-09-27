@@ -1,0 +1,147 @@
+PASS  intent rail +1V0_S1 names where its current goes: source L103 and 1 load(s)
+PASS  intent rail +1V0_S2 names where its current goes: source L203 and 1 load(s)
+PASS  intent rail +1V0_S3 names where its current goes: source L303 and 1 load(s)
+PASS  intent rail +1V1_S1 names where its current goes: source L104 and 1 load(s)
+PASS  intent rail +1V1_S2 names where its current goes: source L204 and 1 load(s)
+PASS  intent rail +1V1_S3 names where its current goes: source L304 and 1 load(s)
+PASS  intent rail +1V2_KSZ names where its current goes: source L2 and 1 load(s)
+PASS  intent rail +1V8_CM1 names where its current goes: source U30A and 1 load(s)
+PASS  intent rail +1V8_CM2 names where its current goes: source U31A and 1 load(s)
+PASS  intent rail +1V8_CM3 names where its current goes: source U32A and 1 load(s)
+PASS  intent rail +2V5_KSZ names where its current goes: source U27 and 1 load(s)
+PASS  intent rail +3V3_CM1 names where its current goes: source U30A and 1 load(s)
+PASS  intent rail +3V3_CM2 names where its current goes: source U31A and 1 load(s)
+PASS  intent rail +3V3_CM3 names where its current goes: source U32A and 1 load(s)
+PASS  intent rail +3V3_DEV names where its current goes: source L1 and 70 load(s)
+PASS  intent rail +3V3_IOCA names where its current goes: source U40 and 4 load(s)
+PASS  intent rail +3V3_IOCB names where its current goes: source U50 and 4 load(s)
+PASS  intent rail +3V3_IOCC names where its current goes: source U60 and 4 load(s)
+PASS  intent rail +3V3_M2C1 names where its current goes: source R165 and 1 load(s)
+PASS  intent rail +3V3_M2C2 names where its current goes: source R265 and 1 load(s)
+PASS  intent rail +3V3_M2C3 names where its current goes: source R365 and 1 load(s)
+PASS  intent rail +3V3_S1A names where its current goes: source L101 and 1 load(s)
+PASS  intent rail +3V3_S1B names where its current goes: source L102 and 2 load(s)
+PASS  intent rail +3V3_S2A names where its current goes: source L201 and 1 load(s)
+PASS  intent rail +3V3_S2B names where its current goes: source L202 and 2 load(s)
+PASS  intent rail +3V3_S3A names where its current goes: source L301 and 1 load(s)
+PASS  intent rail +3V3_S3B names where its current goes: source L302 and 2 load(s)
+PASS  intent rail +3V3_ZB names where its current goes: source U22 and 4 load(s)
+PASS  intent rail +54V_POE names where its current goes: source J_54V and 2 load(s)
+PASS  intent rail +5V_CAM names where its current goes: source U28 and 1 load(s)
+PASS  intent rail +5V_DEV names where its current goes: source J_5V_DEV and 19 load(s)
+PASS  intent rail +5V_HDMI names where its current goes: source F2 and 1 load(s)
+PASS  intent rail +5V_LIME names where its current goes: source U23 and 1 load(s)
+PASS  intent rail +5V_LORA names where its current goes: source U21 and 1 load(s)
+PASS  intent rail +5V_RB names where its current goes: source U24 and 1 load(s)
+PASS  intent rail +5V_S1 names where its current goes: source J_5V_S1 and 5 load(s)
+PASS  intent rail +5V_S2 names where its current goes: source J_5V_S2 and 5 load(s)
+PASS  intent rail +5V_S3 names where its current goes: source J_5V_S3 and 5 load(s)
+PASS  intent rail GND names where its current goes: source J_5V_S1, J_5V_S2, J_5V_S3, J_5V_DEV and 35 load(s)
+PASS  intent rail GNSS_ANT names where its current goes: source L3 and 1 load(s)
+PASS  intent rail GNSS_BIAS names where its current goes: source R23 and 1 load(s)
+PASS  intent rail GNSS_VDD_RF names where its current goes: source U11 and 1 load(s)
+PASS  intent rail MDI_A_N names where its current goes: source T1 and 1 load(s)
+PASS  intent rail MDI_A_P names where its current goes: source T1 and 1 load(s)
+PASS  intent rail MDI_B_N names where its current goes: source J_ETH and 1 load(s)
+PASS  intent rail MDI_B_P names where its current goes: source J_ETH and 1 load(s)
+PASS  intent rail PANEL_5V names where its current goes: source F1 and 1 load(s)
+PASS  intent rail POE_DRAIN names where its current goes: source T1 and 1 load(s)
+PASS  intent rail POE_P names where its current goes: source R13 and 1 load(s)
+PASS  intent rail POE_SEN names where its current goes: source Q1 and 1 load(s)
+PASS  intent rail SIM1_VCC names where its current goes: source J_M2C2 and 2 load(s)
+PASS  intent rail SIM2_VCC names where its current goes: source J_M2C2 and 1 load(s)
+PASS  intent rail SIMC2_VCC names where its current goes: source R272 and 2 load(s)
+PASS  intent rail VBAT_RTC names where its current goes: source BT1 and 5 load(s)
+PASS  intent rail VBUS_FLASH1 names where its current goes: source J_FLASH1 and 1 load(s)
+PASS  intent rail VBUS_FLASH2 names where its current goes: source J_FLASH2 and 1 load(s)
+PASS  intent rail VBUS_FLASH3 names where its current goes: source J_FLASH3 and 1 load(s)
+PASS  intent rail VBUS_QMX names where its current goes: source F3 and 1 load(s)
+PASS  the count of declared rails equals the count of power nets carrying more than 0.00 A: 58 declared (58 of them nets of the netlist), 58 power nets not declared as nodes (by kind, a net counted under each that applies: 38 power-symbol, 15 supply-pin by type, 56 power-class, 45 supply-pin by name, 49 supply-pin by its held datasheet, 14 reached by a rail's current, 58 declared rails), 35 declared as nodes
+NOTE  declared as a node, not a rail: DEV_BST (supply pin by its held datasheet (U25.6 BST: v2/vendor/diodes/diodes-ap63200-series-buck.pdf))
+NOTE  declared as a node, not a rail: DEV_SW (power class PWR in the netlist; supply pin by its held datasheet (U25.5 SW: v2/vendor/diodes/diodes-ap63200-series-buck.)
+NOTE  declared as a node, not a rail: GNSS_3V3 (supply pin by name (U15.6 VDD), and the intent's bypass list decouples it (C43:U15.6, C44:U15.6))
+NOTE  declared as a node, not a rail: IOCA_VCAP (supply pin by name (U41.48 VCAP, U41.73 VCAP), and the intent's bypass list decouples it (C407:U41.48, C408:U41.73))
+NOTE  declared as a node, not a rail: IOCB_VCAP (supply pin by name (U51.48 VCAP, U51.73 VCAP), and the intent's bypass list decouples it (C427:U51.48, C428:U51.73))
+NOTE  declared as a node, not a rail: IOCC_VCAP (supply pin by name (U61.48 VCAP, U61.73 VCAP), and the intent's bypass list decouples it (C447:U61.48, C448:U61.73))
+NOTE  declared as a node, not a rail: KSZC_BST (supply pin by its held datasheet (U26.6 BST: v2/vendor/ti/ti-tps62933.pdf))
+NOTE  declared as a node, not a rail: KSZC_SW (power class PWR in the netlist; supply pin by its held datasheet (U26.5 SW: v2/vendor/ti/ti-tps62933.pdf); series conduc)
+NOTE  declared as a node, not a rail: RB_3V3 (supply pin by name (U18.6 VDD), and the intent's bypass list decouples it (C59:U18.6, C60:U18.6))
+NOTE  declared as a node, not a rail: S1A_BOOT (supply pin by its held datasheet (U103.1 BST: v2/vendor/diodes/diodes-ap64500.pdf))
+NOTE  declared as a node, not a rail: S1A_SW (power class PWR in the netlist; supply pin by its held datasheet (U103.8 SW: v2/vendor/diodes/diodes-ap64500.pdf); serie)
+NOTE  declared as a node, not a rail: S1B_BOOT (supply pin by its held datasheet (U104.1 BST: v2/vendor/diodes/diodes-ap64500.pdf))
+NOTE  declared as a node, not a rail: S1B_SW (power class PWR in the netlist; supply pin by its held datasheet (U104.8 SW: v2/vendor/diodes/diodes-ap64500.pdf); serie)
+NOTE  declared as a node, not a rail: S1C_BST (supply pin by its held datasheet (U105.6 BST: v2/vendor/ti/ti-tps62933.pdf))
+NOTE  declared as a node, not a rail: S1C_SW (power class PWR in the netlist; supply pin by its held datasheet (U105.5 SW: v2/vendor/ti/ti-tps62933.pdf); series condu)
+NOTE  declared as a node, not a rail: S1D_BST (supply pin by its held datasheet (U106.6 BST: v2/vendor/ti/ti-tps62933.pdf))
+NOTE  declared as a node, not a rail: S1D_SW (power class PWR in the netlist; supply pin by its held datasheet (U106.5 SW: v2/vendor/ti/ti-tps62933.pdf); series condu)
+NOTE  declared as a node, not a rail: S2A_BOOT (supply pin by its held datasheet (U203.1 BST: v2/vendor/diodes/diodes-ap64500.pdf))
+NOTE  declared as a node, not a rail: S2A_SW (power class PWR in the netlist; supply pin by its held datasheet (U203.8 SW: v2/vendor/diodes/diodes-ap64500.pdf); serie)
+NOTE  declared as a node, not a rail: S2B_BOOT (supply pin by its held datasheet (U204.1 BST: v2/vendor/diodes/diodes-ap64500.pdf))
+NOTE  declared as a node, not a rail: S2B_SW (power class PWR in the netlist; supply pin by its held datasheet (U204.8 SW: v2/vendor/diodes/diodes-ap64500.pdf); serie)
+NOTE  declared as a node, not a rail: S2C_BST (supply pin by its held datasheet (U205.6 BST: v2/vendor/ti/ti-tps62933.pdf))
+NOTE  declared as a node, not a rail: S2C_SW (power class PWR in the netlist; supply pin by its held datasheet (U205.5 SW: v2/vendor/ti/ti-tps62933.pdf); series condu)
+NOTE  declared as a node, not a rail: S2D_BST (supply pin by its held datasheet (U206.6 BST: v2/vendor/ti/ti-tps62933.pdf))
+NOTE  declared as a node, not a rail: S2D_SW (power class PWR in the netlist; supply pin by its held datasheet (U206.5 SW: v2/vendor/ti/ti-tps62933.pdf); series condu)
+NOTE  declared as a node, not a rail: S3A_BOOT (supply pin by its held datasheet (U303.1 BST: v2/vendor/diodes/diodes-ap64500.pdf))
+NOTE  declared as a node, not a rail: S3A_SW (power class PWR in the netlist; supply pin by its held datasheet (U303.8 SW: v2/vendor/diodes/diodes-ap64500.pdf); serie)
+NOTE  declared as a node, not a rail: S3B_BOOT (supply pin by its held datasheet (U304.1 BST: v2/vendor/diodes/diodes-ap64500.pdf))
+NOTE  declared as a node, not a rail: S3B_SW (power class PWR in the netlist; supply pin by its held datasheet (U304.8 SW: v2/vendor/diodes/diodes-ap64500.pdf); serie)
+NOTE  declared as a node, not a rail: S3C_BST (supply pin by its held datasheet (U305.6 BST: v2/vendor/ti/ti-tps62933.pdf))
+NOTE  declared as a node, not a rail: S3C_SW (power class PWR in the netlist; supply pin by its held datasheet (U305.5 SW: v2/vendor/ti/ti-tps62933.pdf); series condu)
+NOTE  declared as a node, not a rail: S3D_BST (supply pin by its held datasheet (U306.6 BST: v2/vendor/ti/ti-tps62933.pdf))
+NOTE  declared as a node, not a rail: S3D_SW (power class PWR in the netlist; supply pin by its held datasheet (U306.5 SW: v2/vendor/ti/ti-tps62933.pdf); series condu)
+NOTE  declared as a node, not a rail: ZBA_3V3 (supply pin by name (U16.6 VDD), and the intent's bypass list decouples it (C48:U16.6, C49:U16.6))
+NOTE  declared as a node, not a rail: ZBB_3V3 (supply pin by name (U17.6 VDD), and the intent's bypass list decouples it (C50:U17.6, C51:U17.6))
+SETTLED  BOB: only resistors, capacitors and test points
+SETTLED  CANT2_A: only resistors, capacitors and test points
+SETTLED  CANT2_B: only resistors, capacitors and test points
+SETTLED  CANT_A: only resistors, capacitors and test points
+SETTLED  CANT_B: only resistors, capacitors and test points
+SETTLED  E22_CT: nothing on it supplies: U21.3 CT (timing, ti-tps22810-load-switch.pdf)
+SETTLED  E72_CT: nothing on it supplies: U22.3 CT (timing, ti-tps22810-load-switch.pdf)
+SETTLED  HUB1_RST_n: nothing on it supplies: Q3.3 a channel that sinks to ground; U102.50 GRSTz (reset, ti-tusb8041.pdf)
+SETTLED  HUB1_VBUS: nothing on it supplies: U102.48 USB_VBUS (sense, ti-tusb8041.pdf)
+SETTLED  HUB1_XI: an oscillator net: Y101 is a crystal or resonator
+SETTLED  HUB1_XO: an oscillator net: Y101 is a crystal or resonator
+SETTLED  HUB2_RST_n: nothing on it supplies: Q4.3 a channel that sinks to ground; U202.50 GRSTz (reset, ti-tusb8041.pdf)
+SETTLED  HUB2_VBUS: nothing on it supplies: U202.48 USB_VBUS (sense, ti-tusb8041.pdf)
+SETTLED  HUB2_XI: an oscillator net: Y201 is a crystal or resonator
+SETTLED  HUB2_XO: an oscillator net: Y201 is a crystal or resonator
+SETTLED  HUB3_RST_n: nothing on it supplies: Q5.3 a channel that sinks to ground; U302.50 GRSTz (reset, ti-tusb8041.pdf)
+SETTLED  HUB3_VBUS: nothing on it supplies: U302.48 USB_VBUS (sense, ti-tusb8041.pdf)
+SETTLED  HUB3_XI: an oscillator net: Y301 is a crystal or resonator
+SETTLED  HUB3_XO: an oscillator net: Y301 is a crystal or resonator
+SETTLED  IOCA_LDO_EN: nothing on it supplies: U40.3 EN (signal, diodes-ap2112-ldo.pdf); the lead J_IOCOFF_A.1 carries what these pins carry
+SETTLED  IOCA_XI: an oscillator net: Y2 is a crystal or resonator
+SETTLED  IOCA_XO: an oscillator net: Y2 is a crystal or resonator
+SETTLED  IOCB_LDO_EN: nothing on it supplies: U50.3 EN (signal, diodes-ap2112-ldo.pdf); the lead J_IOCOFF_B.1 carries what these pins carry
+SETTLED  IOCB_XI: an oscillator net: Y3 is a crystal or resonator
+SETTLED  IOCB_XO: an oscillator net: Y3 is a crystal or resonator
+SETTLED  IOCC_LDO_EN: nothing on it supplies: U60.3 EN (signal, diodes-ap2112-ldo.pdf); the lead J_IOCOFF_C.1 carries what these pins carry
+SETTLED  IOCC_XI: an oscillator net: Y4 is a crystal or resonator
+SETTLED  IOCC_XO: an oscillator net: Y4 is a crystal or resonator
+SETTLED  KSZC_SS: nothing on it supplies: U26.7 SS/PG (timing, ti-tps62933.pdf)
+SETTLED  KSZ_RST_n: nothing on it supplies: Q2.3 a channel that sinks to ground; U1.96 RESET_N (reset, microchip-ksz9897-datasheet.pdf)
+SETTLED  KSZ_XI: an oscillator net: Y1 is a crystal or resonator
+SETTLED  KSZ_XO: an oscillator net: Y1 is a crystal or resonator
+SETTLED  S1A_COMPC: only resistors, capacitors and test points
+SETTLED  S1B_COMPC: only resistors, capacitors and test points
+SETTLED  S1C_SS: nothing on it supplies: U105.7 SS/PG (timing, ti-tps62933.pdf)
+SETTLED  S1D_SS: nothing on it supplies: U106.7 SS/PG (timing, ti-tps62933.pdf)
+SETTLED  S2A_COMPC: only resistors, capacitors and test points
+SETTLED  S2B_COMPC: only resistors, capacitors and test points
+SETTLED  S2C_SS: nothing on it supplies: U205.7 SS/PG (timing, ti-tps62933.pdf)
+SETTLED  S2D_SS: nothing on it supplies: U206.7 SS/PG (timing, ti-tps62933.pdf)
+SETTLED  S3A_COMPC: only resistors, capacitors and test points
+SETTLED  S3B_COMPC: only resistors, capacitors and test points
+SETTLED  S3C_SS: nothing on it supplies: U305.7 SS/PG (timing, ti-tps62933.pdf)
+SETTLED  S3D_SS: nothing on it supplies: U306.7 SS/PG (timing, ti-tps62933.pdf)
+SETTLED  TCT1: nothing on it supplies: T1.1 TCT1 (centre tap, pulse-h5007nl.pdf)
+SETTLED  TCT2: nothing on it supplies: T1.4 TCT2 (centre tap, pulse-h5007nl.pdf)
+SETTLED  TCT3: nothing on it supplies: T1.7 TCT3 (centre tap, pulse-h5007nl.pdf)
+SETTLED  TCT4: nothing on it supplies: T1.10 TCT4 (centre tap, pulse-h5007nl.pdf)
+SETTLED  U23_DVDT: nothing on it supplies: U23.2 dVdt (timing, tps2596.pdf)
+SETTLED  U24_DVDT: nothing on it supplies: U24.2 dVdt (timing, tps2596.pdf)
+CENSUS  58 counted, 154 declared node, 0 ground, 50 settled, 1035 unconnected, 0 undecided, 707 unmarked
+verdict: intent_rails           PASS         of 59 {"census_nets": 2004, "checks": 59, "declared_nodes": 35, "declared_not_in_netlist": 0, "declared_rails": 58, "fail": 0, "held_pin_roles": 260, "nodes_supplying_parts": 0, "power_nets": 58, "rails_without_destination": 0, "settled": 50, "switches_unresolved": 0, "undecided": 0, "undeclared": 0, "unmarked": 707} | PWR-001 on the committed netlist and the intent file beside it: every power net is a declared rail, and every declared rail is a net of the netlist whose source and loads are on it. A power net is a power-symbol net, a net carrying a pin typed power_in or power_out, a net of a power class in the netlist, a net carrying a supply-named pin that a bypass entry, a capacitor to ground or a second supply pin corroborates, a net carrying a pin its held datasheet makes a supply, or a ground off a ground net (intent_checks.PIN_ROLES, each row carrying every power and ground pin of its table, each document recorded by sha), or a net a declared rail's current reaches through a two-terminal part or a transistor's channel, at a threshold of 0.00 A. FAIL CLOSED: every other net carrying the mark of a supply (a capacitor to ground, a capacitor to a power net or across one part's pins, a fuse, inductor, ferrite, diode, jumper, switch or link resistor to a power net, a transistor channel shared with one, the switched low side of a load, a lead whose other pins are all ground, a sense class) is settled only by what is read (a crystal, a held non-supply pin role, a gate, a sink to ground, a declared clamp, a switch to ground; on a lead or a sense net the connector carries what the read pins carry) and is otherwise undecided; an undecided net holds the reading at INCONCLUSIVE when nothing fails, and the census names every net's disposition. A power net declared as a node is reported, and refused when it carries the supply pins of two or more parts. Session decisions of 26 September 2026 under the owner's standing rule: the kinds of power net, the fail-closed marks and the undecided class, the 0 A threshold, the node rule
+exit 0

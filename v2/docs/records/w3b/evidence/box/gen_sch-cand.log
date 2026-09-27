@@ -1,0 +1,12 @@
+gen_env: [] PHASE=B21
+lands: 68 footprint(s) judged, 0 pin(s) on a pad the land does not carry, 0 land(s) unreadable
+schlayout: WARNING cell U101 of section 'SLOT S1: COMPUTE MODULE 5, PCIe SWITCH, ' is larger than a page (266 x 304 mm)
+schlayout: WARNING cell U102 of section 'SLOT S1: COMPUTE MODULE 5, PCIe SWITCH, ' is larger than a page (401 x 131 mm)
+schlayout: WARNING cell U201 of section 'SLOT S2: COMPUTE MODULE 5, PCIe SWITCH, ' is larger than a page (266 x 304 mm)
+schlayout: WARNING cell U301 of section 'SLOT S3: COMPUTE MODULE 5, PCIe SWITCH, ' is larger than a page (266 x 304 mm)
+schlayout verify: 4772 pins in 3898 nets, every component one name
+layout: 43 A3 pages on a 6 x 8 sheet -> paper "User" 2514.60 2377.44
+wrote pcb-b-compute.kicad_sch parts: 1318 lib symbols: 158
+nets: 969 single-pin nets (should be empty or intentional): []
+intent: /root/w3b/cand/v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json (277 bypass, 58 rails, 154 nodes, 5 pair classes)
+gen_sch exit 0

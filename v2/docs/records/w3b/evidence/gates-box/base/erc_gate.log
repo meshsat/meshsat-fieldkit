@@ -1,0 +1,9 @@
+erc_gate: warning  endpoint_off_grid                        598
+erc_gate: warning  lib_symbol_issues                        1979
+erc_gate: error    pin_to_pin                               5
+erc_gate: error    power_pin_not_driven                     2
+erc_gate: warning  unconnected_wire_endpoint                285
+erc_gate: netlist NOT tied: the ERC report carries no provenance sidecar (erc_gate.py --run writes one), so which schematic it was taken on is not known
+erc_gate: no blocking error (2869 violations, 7 error(s) allow-listed with a reason, warnings 2862)
+verdict: erc_gate               PASS         of 2869 {"allowed": 7, "blocking": 0, "violations": 2869} | 7 error(s) allow-listed with a reason
+erc_gate exit 0

@@ -1,0 +1,190 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "intent_checks.py",
+  "files": {
+   "boardorder.py": "298e46edcc028954",
+   "boardtable.py": "41bd92e61f12c374",
+   "hardset.py": "be29a44c4a592876",
+   "intent.py": "f1ac033e0f3c10f1",
+   "intent_checks.py": "1ad7af0c718ba940",
+   "kicad_compat.py": "6b8f77490466e939",
+   "netclass.py": "4cc1adf0ddae0390",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "return_via.py": "b61d138e54955dd4",
+   "rules_lib.py": "c0458c53923d7925",
+   "signal_class.py": "60b8647301428da4",
+   "signalnets.py": "688be12d8e42e7a4",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "5aa3d5157698ae2a",
+  "unresolved": []
+ },
+ "counts": {
+  "census_nets": 2004,
+  "checks": 59,
+  "declared_nodes": 35,
+  "declared_not_in_netlist": 0,
+  "declared_rails": 58,
+  "fail": 0,
+  "held_pin_roles": 260,
+  "nodes_supplying_parts": 0,
+  "power_nets": 58,
+  "rails_without_destination": 0,
+  "settled": 50,
+  "switches_unresolved": 0,
+  "undecided": 0,
+  "undeclared": 0,
+  "unmarked": 707
+ },
+ "denominator": 59,
+ "evidence": [
+  "census of the 2004 nets: 58 counted, 154 declared node, 0 ground, 50 settled, 1035 unconnected, 0 undecided, 707 unmarked",
+  "settled, they supply nothing (50): BOB, CANT2_A, CANT2_B, CANT_A, CANT_B, E22_CT, E72_CT, HUB1_RST_n, HUB1_VBUS, HUB1_XI, HUB1_XO, HUB2_RST_n, HUB2_VBUS, HUB2_XI, HUB2_XO, HUB3_RST_n, HUB3_VBUS, HUB3_XI, HUB3_XO, IOCA_LDO_EN, IOCA_XI, IOCA_XO, IOCB_LDO_EN, IOCB_XI, IOCB_XO, IOCC_LDO_EN, IOCC_XI, IOCC_XO, KSZC_SS, KSZ_RST_n, KSZ_XI, KSZ_XO, S1A_COMPC, S1B_COMPC, S1C_SS, S1D_SS, S2A_COMPC, S2B_COMPC, S2C_SS, S2D_SS, S3A_COMPC, S3B_COMPC, S3C_SS, S3D_SS, TCT1, TCT2, TCT3, TCT4, U23_DVDT, U24_DVDT",
+  "declared as a node, not a rail: DEV_BST (supply pin by its held datasheet (U25.6 BST: v2/vendor/diodes/diodes-ap63200-series-buck.pdf))",
+  "declared as a node, not a rail: DEV_SW (power class PWR in the netlist; supply pin by its held datasheet (U25.5 SW: v2/vendor/diodes/diodes-ap63200-series-buck.)",
+  "declared as a node, not a rail: GNSS_3V3 (supply pin by name (U15.6 VDD), and the intent's bypass list decouples it (C43:U15.6, C44:U15.6))",
+  "declared as a node, not a rail: IOCA_VCAP (supply pin by name (U41.48 VCAP, U41.73 VCAP), and the intent's bypass list decouples it (C407:U41.48, C408:U41.73))",
+  "declared as a node, not a rail: IOCB_VCAP (supply pin by name (U51.48 VCAP, U51.73 VCAP), and the intent's bypass list decouples it (C427:U51.48, C428:U51.73))",
+  "declared as a node, not a rail: IOCC_VCAP (supply pin by name (U61.48 VCAP, U61.73 VCAP), and the intent's bypass list decouples it (C447:U61.48, C448:U61.73))",
+  "declared as a node, not a rail: KSZC_BST (supply pin by its held datasheet (U26.6 BST: v2/vendor/ti/ti-tps62933.pdf))",
+  "declared as a node, not a rail: KSZC_SW (power class PWR in the netlist; supply pin by its held datasheet (U26.5 SW: v2/vendor/ti/ti-tps62933.pdf); series conduc)",
+  "declared as a node, not a rail: RB_3V3 (supply pin by name (U18.6 VDD), and the intent's bypass list decouples it (C59:U18.6, C60:U18.6))",
+  "declared as a node, not a rail: S1A_BOOT (supply pin by its held datasheet (U103.1 BST: v2/vendor/diodes/diodes-ap64500.pdf))",
+  "settled, it supplies nothing: BOB: only resistors, capacitors and test points",
+  "settled, it supplies nothing: CANT2_A: only resistors, capacitors and test points",
+  "settled, it supplies nothing: CANT2_B: only resistors, capacitors and test points",
+  "settled, it supplies nothing: CANT_A: only resistors, capacitors and test points",
+  "settled, it supplies nothing: CANT_B: only resistors, capacitors and test points",
+  "settled, it supplies nothing: E22_CT: nothing on it supplies: U21.3 CT (timing, ti-tps22810-load-switch.pdf)",
+  "settled, it supplies nothing: E72_CT: nothing on it supplies: U22.3 CT (timing, ti-tps22810-load-switch.pdf)",
+  "settled, it supplies nothing: HUB1_RST_n: nothing on it supplies: Q3.3 a channel that sinks to ground; U102.50 GRSTz (reset, ti-tusb8041.pdf)",
+  "settled, it supplies nothing: HUB1_VBUS: nothing on it supplies: U102.48 USB_VBUS (sense, ti-tusb8041.pdf)",
+  "settled, it supplies nothing: HUB1_XI: an oscillator net: Y101 is a crystal or resonator",
+  "settled, it supplies nothing: HUB1_XO: an oscillator net: Y101 is a crystal or resonator",
+  "settled, it supplies nothing: HUB2_RST_n: nothing on it supplies: Q4.3 a channel that sinks to ground; U202.50 GRSTz (reset, ti-tusb8041.pdf)",
+  "settled, it supplies nothing: HUB2_VBUS: nothing on it supplies: U202.48 USB_VBUS (sense, ti-tusb8041.pdf)",
+  "settled, it supplies nothing: HUB2_XI: an oscillator net: Y201 is a crystal or resonator",
+  "settled, it supplies nothing: HUB2_XO: an oscillator net: Y201 is a crystal or resonator",
+  "settled, it supplies nothing: HUB3_RST_n: nothing on it supplies: Q5.3 a channel that sinks to ground; U302.50 GRSTz (reset, ti-tusb8041.pdf)",
+  "settled, it supplies nothing: HUB3_VBUS: nothing on it supplies: U302.48 USB_VBUS (sense, ti-tusb8041.pdf)",
+  "settled, it supplies nothing: HUB3_XI: an oscillator net: Y301 is a crystal or resonator",
+  "settled, it supplies nothing: HUB3_XO: an oscillator net: Y301 is a crystal or resonator",
+  "settled, it supplies nothing: IOCA_LDO_EN: nothing on it supplies: U40.3 EN (signal, diodes-ap2112-ldo.pdf); the lead J_IOCOFF_A.1 carries what these pins carry",
+  "settled, it supplies nothing: IOCA_XI: an oscillator net: Y2 is a crystal or resonator",
+  "settled, it supplies nothing: IOCA_XO: an oscillator net: Y2 is a crystal or resonator",
+  "settled, it supplies nothing: IOCB_LDO_EN: nothing on it supplies: U50.3 EN (signal, diodes-ap2112-ldo.pdf); the lead J_IOCOFF_B.1 carries what these pins carry",
+  "settled, it supplies nothing: IOCB_XI: an oscillator net: Y3 is a crystal or resonator",
+  "settled, it supplies nothing: IOCB_XO: an oscillator net: Y3 is a crystal or resonator",
+  "settled, it supplies nothing: IOCC_LDO_EN: nothing on it supplies: U60.3 EN (signal, diodes-ap2112-ldo.pdf); the lead J_IOCOFF_C.1 carries what these pins carry",
+  "settled, it supplies nothing: IOCC_XI: an oscillator net: Y4 is a crystal or resonator",
+  "settled, it supplies nothing: IOCC_XO: an oscillator net: Y4 is a crystal or resonator",
+  "settled, it supplies nothing: KSZC_SS: nothing on it supplies: U26.7 SS/PG (timing, ti-tps62933.pdf)",
+  "settled, it supplies nothing: KSZ_RST_n: nothing on it supplies: Q2.3 a channel that sinks to ground; U1.96 RESET_N (reset, microchip-ksz9897-datasheet.pdf)",
+  "settled, it supplies nothing: KSZ_XI: an oscillator net: Y1 is a crystal or resonator",
+  "settled, it supplies nothing: KSZ_XO: an oscillator net: Y1 is a crystal or resonator",
+  "settled, it supplies nothing: S1A_COMPC: only resistors, capacitors and test points",
+  "settled, it supplies nothing: S1B_COMPC: only resistors, capacitors and test points",
+  "settled, it supplies nothing: S1C_SS: nothing on it supplies: U105.7 SS/PG (timing, ti-tps62933.pdf)",
+  "settled, it supplies nothing: S1D_SS: nothing on it supplies: U106.7 SS/PG (timing, ti-tps62933.pdf)",
+  "settled, it supplies nothing: S2A_COMPC: only resistors, capacitors and test points",
+  "settled, it supplies nothing: S2B_COMPC: only resistors, capacitors and test points"
+ ],
+ "inputs": {
+  "board": "b",
+  "document_1": {
+   "path": "v2/vendor/diodes/diodes-ap2112-ldo.pdf",
+   "sha256_16": "ef8d376f2ec356e2"
+  },
+  "document_10": {
+   "path": "v2/vendor/ti/ti-tps22810-load-switch.pdf",
+   "sha256_16": "10450eedecbc4542"
+  },
+  "document_11": {
+   "path": "v2/vendor/ti/ti-tps62933.pdf",
+   "sha256_16": "16ec2eac43c7374e"
+  },
+  "document_12": {
+   "path": "v2/vendor/ti/ti-tusb8041.pdf",
+   "sha256_16": "b715bce72e988310"
+  },
+  "document_13": {
+   "path": "v2/vendor/ti/tps23861-datasheet.pdf",
+   "sha256_16": "65262ce4766a5f8e"
+  },
+  "document_2": {
+   "path": "v2/vendor/diodes/diodes-ap63200-series-buck.pdf",
+   "sha256_16": "ef99daa3789d835b"
+  },
+  "document_3": {
+   "path": "v2/vendor/diodes/diodes-ap64500.pdf",
+   "sha256_16": "d3bcdc7dd4ca44cb"
+  },
+  "document_4": {
+   "path": "v2/vendor/microchip/microchip-ksz9897-datasheet.pdf",
+   "sha256_16": "72b89179ed6a42a7"
+  },
+  "document_5": {
+   "path": "v2/vendor/power/ti-csd19532q5b-n-fet.pdf",
+   "sha256_16": "353ce937cff0b719"
+  },
+  "document_6": {
+   "path": "v2/vendor/power/tps2596.pdf",
+   "sha256_16": "66f6bae4494f7bfe"
+  },
+  "document_7": {
+   "path": "v2/vendor/pulse/pulse-h5007nl.pdf",
+   "sha256_16": "76b85b47d0bd9f46"
+  },
+  "document_8": {
+   "path": "v2/vendor/quectel/lg290p03-hardware-design-v1.1.pdf",
+   "sha256_16": "422ca9a2aa5495c1"
+  },
+  "document_9": {
+   "path": "v2/vendor/ti/ti-tps2065c-slvsau6i.pdf",
+   "sha256_16": "898c093489ac30dd"
+  },
+  "intent": {
+   "path": "pcb-b-compute-b19/out/pcb-b-compute-intent.json",
+   "sha256_16": "162fcb9b95f680a7"
+  },
+  "netlist": {
+   "content16": "39d83d25efcd75a6",
+   "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
+   "sha256_16": "8b78c59754a6a0c7"
+  },
+  "threshold_a": 0.0
+ },
+ "missing_input": null,
+ "note": "PWR-001 on the committed netlist and the intent file beside it: every power net is a declared rail, and every declared rail is a net of the netlist whose source and loads are on it. A power net is a power-symbol net, a net carrying a pin typed power_in or power_out, a net of a power class in the netlist, a net carrying a supply-named pin that a bypass entry, a capacitor to ground or a second supply pin corroborates, a net carrying a pin its held datasheet makes a supply, or a ground off a ground net (intent_checks.PIN_ROLES, each row carrying every power and ground pin of its table, each document recorded by sha), or a net a declared rail's current reaches through a two-terminal part or a transistor's channel, at a threshold of 0.00 A. FAIL CLOSED: every other net carrying the mark of a supply (a capacitor to ground, a capacitor to a power net or across one part's pins, a fuse, inductor, ferrite, diode, jumper, switch or link resistor to a power net, a transistor channel shared with one, the switched low side of a load, a lead whose other pins are all ground, a sense class) is settled only by what is read (a crystal, a held non-supply pin role, a gate, a sink to ground, a declared clamp, a switch to ground; on a lead or a sense net the connector carries what the read pins carry) and is otherwise undecided; an undecided net holds the reading at INCONCLUSIVE when nothing fails, and the census names every net's disposition. A power net declared as a node is reported, and refused when it carries the supply pins of two or more parts. Session decisions of 26 September 2026 under the owner's standing rule: the kinds of power net, the fail-closed marks and the undecided class, the 0 A threshold, the node rule",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "PWR-001": "6e91133d2ef9dee3"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "PWR-001"
+ ],
+ "runtime": {
+  "kicad": "9.0.9-9.0.9~ubuntu24.04.1",
+  "python": "3.12.3"
+ },
+ "tool": "intent_rails",
+ "tools": {
+  "git_head": "6e8d4c016dc4",
+  "tools_tree_sha": "4af76d8b200b64b5"
+ },
+ "ts": "2026-09-27T10:36:42Z",
+ "verdict": "PASS",
+ "version": "6e8d4c016dc4",
+ "writer": {
+  "file": "intent_checks.py",
+  "sha16": "1ad7af0c718ba940"
+ }
+}

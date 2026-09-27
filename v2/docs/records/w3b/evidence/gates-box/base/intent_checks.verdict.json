@@ -1,0 +1,114 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "intent_checks.py",
+  "files": {
+   "boardorder.py": "298e46edcc028954",
+   "boardtable.py": "41bd92e61f12c374",
+   "hardset.py": "be29a44c4a592876",
+   "intent.py": "f1ac033e0f3c10f1",
+   "intent_checks.py": "1ad7af0c718ba940",
+   "kicad_compat.py": "6b8f77490466e939",
+   "netclass.py": "4cc1adf0ddae0390",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "return_via.py": "b61d138e54955dd4",
+   "rules_lib.py": "c0458c53923d7925",
+   "signal_class.py": "60b8647301428da4",
+   "signalnets.py": "688be12d8e42e7a4",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "5aa3d5157698ae2a",
+  "unresolved": []
+ },
+ "counts": {
+  "fail": 152,
+  "pass": 893,
+  "unclaimed": 42
+ },
+ "denominator": 1045,
+ "evidence": [
+  "return path under HOST3_1RX_N (USB, CONTROLLED_IMPEDANCE): 11.0 of 192.5 mm without a plane on a neighbouring layer (limit 10.0; 8.2 mm more is this net's own via anti-pads, which RET-003 judges; 5.2 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]",
+  "return via: 4 of 12 signal vias have a ground via within 1.5 mm (586 exempt in fine-pitch fans, 687 on one reference plane, 512 on a net whose declared class has no edge to return); without one: SEL2_O1 at (0.57, 144.25): nearest ground via 3.15 mm; SEL2_O1 at (1.40, 147.50): nearest ground via 3.99 mm; HUBRST2_AB at (3.72, 139.94): nearest ground via 2.60 mm; HUBRST2_A at (3.72, 141.24): nearest ground via 3.01 mm; SEL3_AB at (3.72, 148.15): nearest ground via 3.90 mm; SDA at (11.07, 27.54): nearest ground via 2.12 mm; HUBRST1_VOTE at (13.55, 146.20): nearest ground via 3.03 mm; WSEC_C at (28.02, 141.24): nearest ground via 2.12 mm",
+  "bypass C605 -> U105.3: pads found on the board",
+  "bypass C606 -> U106.3: pads found on the board",
+  "bypass C197 -> U112.5: pads found on the board",
+  "bypass C183 -> U113.5: pads found on the board",
+  "bypass C184 -> U114.5: pads found on the board",
+  "bypass C185 -> U115.5: pads found on the board",
+  "bypass C601 -> U102.28: pads found on the board",
+  "bypass C602 -> U102.31: pads found on the board",
+  "bypass C603 -> U102.51: pads found on the board",
+  "bypass C604 -> U102.57: pads found on the board",
+  "bypass C635 -> U205.3: pads found on the board",
+  "bypass C636 -> U206.3: pads found on the board",
+  "bypass C520 -> J_M2C2.2: pads found on the board",
+  "bypass C521 -> J_M2C2.70: pads found on the board",
+  "bypass C522 -> J_M2C2.2: pads found on the board",
+  "bypass C523 -> J_M2C2.2: pads found on the board",
+  "bypass C524 -> J_M2C2.2: pads found on the board",
+  "bypass C525 -> J_M2C2.70: pads found on the board",
+  "bypass C526 -> J_M2C2.70: pads found on the board",
+  "bypass C527 -> J_M2C2.70: pads found on the board",
+  "bypass C528 -> J_M2C2.70: pads found on the board",
+  "bypass C529 -> J_M2C2.70: pads found on the board",
+  "bypass C530 -> J_M2C2.70: pads found on the board",
+  "bypass C286 -> U222.5: pads found on the board",
+  "bypass C289 -> U223.5: pads found on the board",
+  "bypass C297 -> U212.5: pads found on the board",
+  "bypass C261 -> U213.5: pads found on the board",
+  "bypass C262 -> U214.5: pads found on the board",
+  "bypass C285 -> U215.5: pads found on the board",
+  "bypass C299 -> U220.5: pads found on the board",
+  "bypass C200 -> U221.6: pads found on the board",
+  "bypass C631 -> U202.28: pads found on the board",
+  "bypass C632 -> U202.31: pads found on the board",
+  "bypass C633 -> U202.51: pads found on the board",
+  "bypass C634 -> U202.57: pads found on the board",
+  "bypass C665 -> U305.3: pads found on the board",
+  "bypass C666 -> U306.3: pads found on the board",
+  "bypass C397 -> U312.5: pads found on the board",
+  "bypass C383 -> U313.5: pads found on the board",
+  "bypass C384 -> U314.5: pads found on the board",
+  "bypass C385 -> U315.5: pads found on the board",
+  "bypass C661 -> U302.28: pads found on the board",
+  "bypass C662 -> U302.31: pads found on the board",
+  "bypass C663 -> U302.51: pads found on the board",
+  "bypass C664 -> U302.57: pads found on the board",
+  "bypass C571 -> U26.3: pads found on the board",
+  "bypass C545 -> U1.44: pads found on the board",
+  "bypass C546 -> U1.111: pads found on the board"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "2e64b5bf2d9cd3bc"
+  }
+ },
+ "missing_input": null,
+ "note": "the whole file; each rule also has its own verdict (intent_return_path, intent_return_via, intent_decoupling, intent_rails)",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [],
+ "runtime": {
+  "kicad": "9.0.9-9.0.9~ubuntu24.04.1",
+  "python": "3.12.3"
+ },
+ "tool": "intent_checks",
+ "tools": {
+  "git_head": "38dcd76442a1",
+  "tools_tree_sha": "a2f69336ab196da0"
+ },
+ "ts": "2026-09-27T10:34:54Z",
+ "verdict": "FAIL",
+ "version": "38dcd76442a1",
+ "writer": {
+  "file": "intent_checks.py",
+  "sha16": "1ad7af0c718ba940"
+ }
+}

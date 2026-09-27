@@ -1,0 +1,18 @@
+warn  out/rule-audit is not in this tree: a PASS is not checked against its rules' classes
+warn  closed item S-03: git cannot say here whether commit 458b2873 exists
+warn  closed item S-04: git cannot say here whether commit 458b2873 exists
+warn  closed item S-05: git cannot say here whether commit 93138ac1 exists
+warn  closed item S-43: git cannot say here whether commit dd39fb15 exists
+warn  closed item S-07: git cannot say here whether commit 9a151c78 exists
+warn  closed item S-09: git cannot say here whether commit 3a1f6576 exists
+warn  closed item S-06: git cannot say here whether commit 4ec785d8 exists
+warn  closed item S-08: git cannot say here whether commit 458b2873 exists
+warn  closed item S-10: git cannot say here whether commit faf8c981 exists
+warn  closed item S-11: git cannot say here whether commit faf8c981 exists
+warn  closed item S-17: git cannot say here whether commit 68bc9e8f exists
+warn  closed item S-21: git cannot say here whether commit 458b2873 exists
+warn  closed item S-25: git cannot say here whether commit 4ec785d8 exists
+warn  closed item S-29: git cannot say here whether commit faf8c981 exists
+warn  closed item S-30: git cannot say here whether commit 458b2873 exists
+warn  closed item S-31: git cannot say here whether commit 458b2873 exists
+rules_lib: 132 requirement record(s), 0 error(s), 16 warning(s)

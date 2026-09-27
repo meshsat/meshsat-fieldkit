@@ -1,0 +1,27 @@
+== $SP/wt/w3b/v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net: 1270 parts, 2004 nets
+I2C map: 0x20=U6/U7
+  DECOUPLING U1.94 (INTRP_N) on net /EXP_INT has no capacitor
+  DECOUPLING U5.6 (INT) on net /EXP_INT has no capacitor
+  DECOUPLING U11.9 (VDD_RF) on net /GNSS_VDD_RF has no capacitor
+  DECOUPLING U30B.111 (VBUS_EN) on net unconnected-(U30B-VBUS_EN-Pad111) has no capacitor
+  DECOUPLING U31B.111 (VBUS_EN) on net unconnected-(U31B-VBUS_EN-Pad111) has no capacitor
+  DECOUPLING U32B.111 (VBUS_EN) on net unconnected-(U32B-VBUS_EN-Pad111) has no capacitor
+  DECOUPLING U35.5 (VBUS) on net /VBUS_QMX has no capacitor
+  DECOUPLING U107.5 (VBUS) on net /VBUS_FLASH1 has no capacitor
+  DECOUPLING U207.5 (VBUS) on net /VBUS_FLASH2 has no capacitor
+  DECOUPLING U307.5 (VBUS) on net /VBUS_FLASH3 has no capacitor
+  NOPULL U41.81 (PD0) on net /IOCA_CAN1_RX (U41.81,U43.4)
+  NOPULL U41.82 (PD1) on net /IOCA_CAN1_TX (U41.82,U43.1)
+  NOPULL U51.81 (PD0) on net /IOCB_CAN1_RX (U51.81,U53.4)
+  NOPULL U51.82 (PD1) on net /IOCB_CAN1_TX (U51.82,U53.1)
+  NOPULL U61.81 (PD0) on net /IOCC_CAN1_RX (U61.81,U63.4)
+  NOPULL U61.82 (PD1) on net /IOCC_CAN1_TX (U61.82,U63.1)
+  NOESD /USB_5G_N (J_M2C2.9,U302.25)
+  NOESD /USB_5G_P (J_M2C2.7,U302.24)
+  NOESD /USB_D8_N (J_AB1.2,U302.2)
+  NOESD /USB_D8_P (J_AB1.1,U302.1)
+  NOESD /USB_E6_N (J_AB1.26,U302.10)
+  NOESD /USB_E6_P (J_AB1.25,U302.9)
+  I2C address 0x20 used by ['U6', 'U7']
+issues: 23
+exit 0

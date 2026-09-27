@@ -102,7 +102,7 @@ _intent.rail("+5V_DEV", 5.0, 3.8, 6.0, "J_5V_DEV", loads=_DEV_LOADS, budget=0.02
 _3V3_LOADS = {"U1": 0.25,            # KSZ9897R seven-port switch, its 3.3 V I/O
               "U22": 0.25,           # load switch -> +3V3_ZB, the two E72 radios
               "U27": 0.15,           # AP2112K -> the switch's 2.5 V analog rail
-              "U11": 0.05,           # LG290P GNSS
+              "U11": 0.165,          # LG290P GNSS: VCC 135 mA peak (IVCC, LG290P(03) HD V1.1 Table 11, p.39) and the active antenna's 30 mA through its VDD_RF (PWR-001, w3b, 27 September 2026; was 0.05)
               "U5": 0.02,            # TPS23861 PoE controller
               "U6": 0.01, "U7": 0.01,            # the two PCA9555
               "U3": 0.01, "U4": 0.01,            # the two TS3DV642 display switches
@@ -251,9 +251,13 @@ _intent.rail("+5V_HDMI", 5.0, 0.10, 0.50, "F2", always_on=True, converted=False,
              note="the HDMI connector's own 5 V behind the 0.5 A polyfuse F2, which is what the standard asks a source to supply")
 _intent.rail("+54V_POE", 54.0, 0.30, 0.60, "J_54V", budget=0.02, share=0.015, converted=False,
              always_on=True, always_on_why="it arrives from board A over the JST-VH lead; board A switches it and this board consumes it",
-             loads={"U5": 0.60},
-             note="the Power over Ethernet feed arriving from board A's own +54V_POE stage, into the TPS23861 "
-                  "injector U5. It is a rail of board A and a load of this one")
+             # PWR-001 (w3b, 27 September 2026): the port current leaves through the 0 Ohm link R13 into POE_P, the magnetics'
+             # positive centre tap, and only the controller's own supply current goes into U5's VPWR pin (IVPWR 3.5 mA
+             # typical, 7 mA maximum at 57 V, SLUSBX9I 6.5); the load list used to send all 0.60 A into U5
+             loads={"R13": 0.593, "U5": 0.007},
+             note="the Power over Ethernet feed arriving from board A's own +54V_POE stage: the port current through "
+                  "R13 to POE_P and the TPS23861 injector U5's own VPWR supply (at most 7 mA). It is a rail of board A "
+                  "and a load of this one")
 
 _intent.rail("GND", 0.0, 10.0, 21.0, ["J_5V_S1", "J_5V_S2", "J_5V_S3", "J_5V_DEV"], loads=_GND_LOADS, converted=False,
              always_on=True, always_on_why="the return, which nothing switches",
@@ -376,6 +380,15 @@ def buck33(uref, tag, vin, en, out, refs, rt_val="31.6k 1%", rt_lcsc="", rco_val
                  "the %s buck's switching node: it swings to %s, the rail that feeds it, and a diode drop "
                  "below ground on the other half of the cycle" % (out, vin), v_min=-1.0)
     part(L, "Device", "L", "3.3uH XAL6030-332ME", "L6060", {"1": tag + "_SW", "2": out}); c(cb, "100n", tag + "_BOOT", tag + "_SW")
+    # PWR-001 (w3b, 27 September 2026): the bootstrap is a supply NODE of this one part, riding on its switching node. DS41979
+    # Rev 5-2: pin 1 BST "High-Side Gate Drive Boost Input. BST supplies the drive for the high-side n-channel power MOSFET. A
+    # 100nF capacitor is recommended from BST to SW to power the high-side driver" (p.3); VBST "VSW - 0.3 to VSW + 6.0" V
+    # (Absolute Maximum Ratings, p.5); the internal regulator holds it (test condition VBST - VSW = 5 V, p.6; refreshed above
+    # 2.55 V, section 15, p.16). Declared at the maker's 6.0 V ceiling above the switching node, so its 100 nF is judged against that.
+    _intent.node(tag + "_BOOT", _intent.net_volts(vin) + 6.0,
+                 "the %s AP64500's bootstrap (pin 1 BST, DS41979 Rev 5-2 p.3): it rides on %s_SW at up to 6.0 V (VBST "
+                 "absolute maximum VSW + 6.0 V, p.5), so it reaches %s plus 6.0 V with the high side on" % (out, tag, vin),
+                 rides_on=tag + "_SW", bias_v=6.0)
     c(ci1, "22u 10V X7R 1210", vin, "GND", "C1210", bypass=(uref, "2")); c(ci2, "22u 10V X7R 1210", vin, "GND", "C1210", bypass=(uref, "2"))   # the buck's VIN pin
     for cr in (co1, co2, co3): c(cr, "22u 10V X7R 1210", out, "GND", "C1210")
     r(rt, rt_val, out, tag + "_FB", "R", rt_lcsc); r(rb, "10k 1%", tag + "_FB", "GND"); r(rrt, "68k (RT: 500 kHz)", tag + "_RT", "GND"); r(rco, rco_val, tag + "_COMP", tag + "_COMPC", "R", rco_lcsc); c(cco, "3.3n", tag + "_COMPC", "GND")
@@ -405,6 +418,14 @@ def buck_small(uref, tag, vin, en, out, refs, rb_val, note, cvin=None):
                  "below ground on the other half of the cycle" % (out, vin), v_min=-1.0)
     part(L, "Device", "L", "2.2uH XAL4020-222ME", "L4020", {"1": tag + "_SW", "2": out}); c(ci, "10u", vin, "GND", "C10u", bypass=(uref, "3")); c(co1, "22u 6.3V", out, "GND", "C10u"); c(co2, "22u 6.3V", out, "GND", "C10u")
     c(cb, "100n", tag + "_BST", tag + "_SW"); c(css, "10n", tag + "_SS", "GND"); r(rt, "10k 1%", out, tag + "_FB"); r(rb, rb_val, tag + "_FB", "GND")
+    # PWR-001 (w3b, 27 September 2026): the bootstrap is a supply NODE of this one part, riding on its switching node. SLUSEA4D:
+    # pin 6 BST, type P, "Bootstrap capacitor connection for high-side FET driver. Connect a high-quality, 100-nF ceramic
+    # capacitor from this pin to the SW pin" (p.3); BST-SW -0.1 to 5.5 V recommended, 6 V absolute (p.5); the 2.5 V UVLO
+    # recharges it (p.16). Declared at the recommended 5.5 V above the switching node.
+    _intent.node(tag + "_BST", _intent.net_volts(vin) + 5.5,
+                 "the %s TPS62933's bootstrap (pin 6 BST, SLUSEA4D p.3): it rides on %s_SW at up to 5.5 V (BST-SW "
+                 "recommended -0.1 to 5.5 V, p.5), so it reaches %s plus 5.5 V with the high side on" % (out, tag, vin),
+                 rides_on=tag + "_SW", bias_v=5.5)
 def cp2102(uref, tag, vusb, dp, dm, txd, rxd, rts="NC", dtr="NC", refs=(), vregin=()):
     """CP2102N-A02-GQFN28 bridge: bus sense and regulator input from the slot rail whose hub carries it, its own 3.3 V out (VDD) bypassed, RSTb pulled to VDD.
     vregin (round 8, DECOUPLING.md G7): "4.7 uF and 0.1 uF bypass capacitors required for each power pin placed as close to the pins
@@ -413,6 +434,14 @@ def cp2102(uref, tag, vusb, dp, dm, txd, rxd, rts="NC", dtr="NC", refs=(), vregi
     synth(uref, "CP2102N", "CP2102N-A02-GQFN28 USB-UART bridge (%s)" % tag, "QFN28", {3: "GND", 29: "GND", 4: dp, 5: dm, 6: tag + "_3V3", 7: vusb, 8: vusb, 9: tag + "_RST", 25: rxd, 26: txd, 24: rts, 28: dtr}, "C964632")
     rr, c1, c2 = refs
     r(rr, "1k", tag + "_RST", tag + "_3V3"); c(c1, "4.7u", tag + "_3V3", "GND", "C10u", bypass=(uref, "6")); c(c2, "100n", tag + "_3V3", "GND", bypass=(uref, "6"))
+    # PWR-001 (w3b, 27 September 2026): <tag>_3V3 is this bridge's own regulator output, a supply NODE of one part. Silicon Labs
+    # CP2102N data sheet Rev 1.5: the 5 V regulator's "3.3 V (out)" on VDD (p.5 figure), "Output Voltage on VDD" VREGOUT 3.1 to
+    # 3.6 V at 1 to 100 mA, "total regulator output, including any current required by the device" (p.12). Nothing else takes
+    # a supply from it here: RSTb's 1 k pull-up and the two bypass capacitors.
+    _intent.node(tag + "_3V3", 3.6,
+                 "the %s's internal regulator output on VDD (pin 6): 3.1 to 3.6 V (VREGOUT, CP2102N data sheet Rev 1.5 "
+                 "p.12, '3.3 V (out)' in the p.5 figure), feeding only the part itself, its RSTb pull-up and its two "
+                 "bypass capacitors" % uref)
     if vregin:
         c(vregin[0], "4.7u", vusb, "GND", "C10u", bypass=(uref, "7")); c(vregin[1], "100n", vusb, "GND", bypass=(uref, "7"))
 
@@ -480,7 +509,7 @@ def slot(s):
     if s < 3:
         for g in (7, 8, 9, 10, 11, 23, 24, 26): CM5[{7: 37, 8: 39, 9: 40, 10: 44, 11: 38, 23: 47, 24: 45, 26: 24}[g]] = "NC"   # the SPI0 breakout exists on S3 only (the E22)
     CM5.update({54: "LORA_TXEN" if s == 3 else "NC", 34: "LORA_RXEN" if s == 3 else "NC",   # GPIO4, GPIO5: the E22's T/R switch lines on S3
-                16: "FAN_TACHO%d" % s, 19: "FAN_PWM%d" % s, 20: "NC", 21: "LED_nACT%d" % s, 76: "VBAT", 78: cm33, 89: "WL_nDIS%d" % s, 91: "BT_nDIS%d" % s, 92: "NC",
+                16: "FAN_TACHO%d" % s, 19: "FAN_PWM%d" % s, 20: "NC", 21: "LED_nACT%d" % s, 76: "VBAT_RTC", 78: cm33, 89: "WL_nDIS%d" % s, 91: "BT_nDIS%d" % s, 92: "NC",
                 93: "nRPIBOOT%d" % s, 95: "LED_nPWR%d" % s, 99: "NC", 103: "USB_OTG_N%d" % s, 105: "USB_OTG_P%d" % s,
                 3: "ETH%d_P3_P" % s, 5: "ETH%d_P3_N" % s, 4: "ETH%d_P1_P" % s, 6: "ETH%d_P1_N" % s, 9: "ETH%d_P2_N" % s, 11: "ETH%d_P2_P" % s, 10: "ETH%d_P0_N" % s, 12: "ETH%d_P0_P" % s,
                 102: "PCIE%d_CLKREQ_n" % s, 104: "PCIE%d_nWAKE" % s, 106: "PCIE_PWR_EN%d" % s, 109: "PCIE%d_nRST" % s, 110: "PCIE%d_CLK_P" % s, 112: "PCIE%d_CLK_N" % s,
@@ -656,7 +685,7 @@ def slot(s):
     # (section 3.5 lists the supply pins and nothing more), so the count is the generator's own (decision 42, D1: "where the maker
     # states none the count is TBD and the generator's own count stands"), one per supply group: VDDR 1, 49, 96, CVDDR 82 (the
     # clock buffer), VAUX 15, AVDDH 113 at 3.3 V; VDDC 3, 29, 55, 91, VDDCAUX 13, AVDD 105 at 1.0 V; the two 10 uF at VDDR 64 and
-    # VDDC 62. Class D (the 10 uF, B2), which intent.py cannot yet carry (drafts/b/decoupling-classes-b.json).
+    # VDDC 62. Class D (the 10 uF, B2), written onto the entries by the decision 42 block before the sheet is laid out (w3b).
     for _k, _p in zip(range(35, 41), ("1", "49", "96", "82", "15", "113")): _intent.bypass(C(_k), U(1), _p, b33)
     for _k, _p in zip(range(41, 47), ("3", "29", "55", "91", "13", "105")): _intent.bypass(C(_k), U(1), _p, v10)
     _intent.bypass(C(47), U(1), "64", b33); _intent.bypass(C(48), U(1), "62", v10)
@@ -791,6 +820,29 @@ def slot(s):
             ic(U(21 + k), 6, "TPD4E001DBVR SIM %d ESD array (IO1 RST, IO2 CLK, IO3 IO, VCC the SIM supply; 1.5 pF): Quectel HD v1.1 4.1.7" % k, "SOT236",
                {"1": cd("RST"), "2": "GND", "3": cd("CLK"), "4": cd("IO"), "5": vcc, "6": "NC"}, "C465736")
             _intent.bypass(C(83 + 3 * k), U(21 + k), "5", vcc)
+            # PWR-001 (w3b, 27 September 2026): the SIM supply is a RAIL, the module's own USIM{k}_VDD output ("(U)SIM{k} card
+            # power supply", type PO, 1.8/3.0 V: RM520N series HD v1.1 pin table, pins 36 and 48, pp.23-24) to the card and the
+            # TPD4E001's VCC (ICC 1 nA typical, 100 nA maximum, SLLS682P 5.5). Quectel's HD states no current for USIM_VDD; the
+            # 50 mA peak is the figure another cellular module maker in this tree gives for the same output ("its output
+            # current is up to 50mA", SIMCom A7672X/A7670X series hardware design V1.03, USIM1_VDD and USIM2_VDD), INFERRED for
+            # the RM520N and to be read on the module at bring-up; 10 mA typical is a card at work (INFERRED). SIM 2's supply
+            # is two nets: SIM2_VCC from the module's pin 48 to the eSIM option link R272, and SIMC2_VCC from the link to the
+            # holder, a series segment of it. The module switches the supply with the card; this board cannot.
+            _sim_src = "SIM%d_VCC" % k
+            _intent.rail(_sim_src, 3.0, 0.01, 0.05, "J_M2C2", loads={("J_SIM1" if k == 1 else "R272"): 0.05, **({U(21 + k): 1e-7} if k == 1 else {})},
+                         converted=False, v_max=3.3, always_on=True,
+                         always_on_why="the RM520N's own USIM%d_VDD output (HD v1.1 pin %d, PO): the module turns it on and "
+                                       "off with the card, and nothing on this board can switch it" % (k, 36 if k == 1 else 48),
+                         note="SIM %d's supply from the module's USIM%d_VDD (1.8 or 3.0 V by card class, HD v1.1 pin table) "
+                              "%s; 50 mA peak INFERRED from SIMCom's figure for the same output (A7672X/A7670X HD V1.03), "
+                              "the RM520N HD giving none; declared at 3.3 V worst like the card lines"
+                              % (k, k, "to the holder J_SIM1 and the ESD array U222's VCC" if k == 1 else
+                                 "to R272, the eSIM option link at the module (HD 4.1.6 Figure 19)"))
+            if k == 2:
+                _intent.rail("SIMC2_VCC", 3.0, 0.01, 0.05, "R272", loads={"J_SIM2": 0.05, U(23): 1e-7}, converted=False, v_max=3.3,
+                             series_of="SIM2_VCC",
+                             note="SIM 2's supply at the holder, past the 0 Ohm eSIM option link R272: the same current as "
+                                  "SIM2_VCC, to J_SIM2 and the ESD array U223's VCC (ICC at most 100 nA, SLLS682P 5.5)")
             for x in ("RST", "CLK", "IO"):
                 _intent.node(cd(x), 3.3, "a SIM card line at the holder, swinging to USIM%d_VDD, which the module sets to 1.8 or "
                              "3.0 V (HD v1.1 pin table: 1.8/3.0 V, Class B and C cards); declared at 3.3 V for the 50 V capacitor on it" % k)
@@ -961,13 +1013,38 @@ def slot(s):
     r(R(48), "1k", cm33, "LED_ACT_A%d" % s); led("LED%d6" % s, "green ACT (LED_nACT sinks)", "LED_ACT_A%d" % s, "LED_nACT%d" % s)
     part(Q(1), "Transistor_BJT", "BC857", "BC857: LED_nPWR must be buffered (datasheet Table 4)", "SOT23", {"1": "Q%dB" % s, "2": cm33, "3": "Q%dC" % s})
     r(R(49), "10k", "LED_nPWR%d" % s, "Q%dB" % s); r(R(50), "1k", "Q%dC" % s, "LED_PWR_A%d" % s); led("LED%d7" % s, "red PWR", "LED_PWR_A%d" % s, "GND")
+    # PWR-001 (w3b, 27 September 2026): Q{s}C is the PNP buffer's collector feeding the power LED through its 1 k, a NODE like
+    # LED_5V_A{s}: about 1 mA from the module's own 3.3 V ((3.3 V less the LED's forward drop) over 1 k), which no drop or
+    # density rule has anything to judge. The CM5 asks for the buffer ("LED_nPWR ... this signal needs to be buffered", CM5
+    # datasheet pin 95, p.21). The part bought is Slkor's BC857B (lcsc_fill C556165), whose sheet stream w3b fetched from LCSC
+    # (BC856-BC858, SOT-23 "1. BASE 2. EMITTER 3. COLLECTOR", IC -0.1 A, VCEO -45 V, p.1): the symbol's 1 B 2 E 3 C agree.
+    _intent.node("Q%dC" % s, _intent.net_volts(cm33),
+                 "slot %d's power-LED feed, the BC857 buffer Q%d01's collector (pin 3) into R%d50 1k and the red LED: it "
+                 "can only reach the module's own 3.3 V on the emitter, less the transistor's saturation voltage" % (s, s, s))
     part("J_FAN%d" % s, "Connector_Generic", "Conn_01x04", "IP68 cooler fan of S%d (JST-SH 1.0): 5V GND TACHO PWM" % s, "SH4", {"1": n5, "2": "GND", "3": "FAN_TACHO%d" % s, "4": "FAN_PWM%d" % s, "MP": "NC"}, "C160390"); r(R(51), "10k", "FAN_PWM%d" % s, cm33)   # J_FAN: JST BM04B-SRSS-TB(LF)(SN), the part this line names (JLCPCB stock 70,953 on 14 Sep 2026). R151/R251/R351: the fan PWM pull-up, swallowed by this comment 14 to 15 Sep 2026 (test_swallowed_calls).
     # MP: the JST-SH land's two mechanical retention tabs. They are declared NC rather than tied to ground: the tab is
     # a strain relief that solders to its own pad and carries no current, and giving it a net would put copper of that
     # net under the connector body (17 September 2026, found by judging every pin map against its land).
     usb_c_recept("J_FLASH%d" % s, "USB_OTG_P%d" % s, "USB_OTG_N%d" % s, "VBUS_FLASH%d" % s, "CC1_F%d" % s, "CC2_F%d" % s); r(R(52), "5.1k", "CC1_F%d" % s, "GND"); r(R(53), "5.1k", "CC2_F%d" % s, "GND")
     esd(U(7), "USB_OTG_P%d" % s, "USB_OTG_N%d" % s, "VBUS_FLASH%d" % s)
+    # PWR-001 (w3b, 27 September 2026): VBUS_FLASH{s} is a RAIL, the flashing host's VBUS on the receptacle's four VBUS pins,
+    # and it reaches the supply pins of two parts (J_FLASH{s} and the USBLC6-2SC6's pin 5), so it cannot be a node. Its only
+    # load is that ESD array's VBUS reference: IRM 10 nA typical and 150 nA maximum at VRM 5.25 V (ST DS4260 Rev 7, p.2).
+    # Nothing on this board draws from it and nothing switches it: it is there while a cable is plugged in.
+    _intent.rail("VBUS_FLASH%d" % s, 5.0, 1e-8, 1.5e-7, "J_FLASH%d" % s, loads={U(7): 1.5e-7}, converted=False,
+                 always_on=True,
+                 always_on_why="the flashing host's own VBUS, present only while a cable is plugged into J_FLASH%d; "
+                               "nothing on this board switches it" % s,
+                 note="slot %d's flashing receptacle VBUS: it feeds only the USBLC6-2SC6's VBUS reference (pin 5), "
+                      "at most 150 nA at VRM 5.25 V (ST DS4260 Rev 7, p.2); the module is powered from the slot rail, "
+                      "never from this" % s)
     part("J_RPIBOOT%d" % s, "Connector_Generic", "Conn_01x02", "nRPIBOOT jumper S%d: fit to flash the eMMC over J_FLASH%d" % (s, s), "PH1x2", {"1": "nRPIBOOT%d" % s, "2": "GND"})
+    # PWR-001 (w3b, 27 September 2026): nRPIBOOT{s} is a boot-select INPUT, not a supply: "A low on this pin forces booting from
+    # an RPI server ...; if not used, leave floating; internally pulled up through 10 kOhm to CM5_3.3V" (CM5 datasheet pin 93,
+    # p.21). The jumper only grounds it. A NODE at the module's own 3.3 V.
+    _intent.node("nRPIBOOT%d" % s, _intent.net_volts(cm33),
+                 "slot %d's nRPIBOOT (CM5 pin 93, p.21): an input pulled up inside the module through 10 kOhm to "
+                 "CM5_3.3V, grounded only by the bench jumper J_RPIBOOT%d" % (s, s))
     # B16: the EEPROM_nWP, PMIC_Enable and PWR_Button bench jumpers of B15 are gone (the module pins stay unconnected; the panel controller owns power control over SLOT_ENx)
     part("J_DBG%d" % s, "Connector_Generic", "Conn_01x05", "console UART0 and the module I2C of S%d (3.3 V, bench): GND TX RX SDA SCL" % s, "PH1x5", {"1": "GND", "2": "UART0_TX%d" % s, "3": "UART0_RX%d" % s, "4": "SDA_CM%d" % s, "5": "SCL_CM%d" % s})
     if s == 3: part("J_SPI3", "Connector_Generic", "Conn_02x05_Odd_Even", "SPI0 breakout of S3 (2x5): 3V3 GND MISO MOSI SCLK CE0 CE1 IO23 IO24 IO26; the E22 LoRa module hangs on these nets", "PH2x5",
@@ -992,12 +1069,38 @@ ic("U25", 6, "AP63203WU-7 3.3 V 2 A buck: the shared logic (+3V3_DEV)", "TSOT6",
 _intent.node("DEV_SW", _intent.net_volts("+5V_DEV"),
              "the AP63203's switching node for +3V3_DEV: it swings to +5V_DEV, the rail that feeds it, and a "
              "diode drop below ground on the other half of the cycle", v_min=-1.0)
+# PWR-001 (w3b, 27 September 2026): DEV_BST, the AP63203's bootstrap, a supply NODE of U25 riding on DEV_SW. DS41326 Rev. 3-2:
+# pin 6 BST "High-Side Gate Drive Boost Input. BST supplies the drive for the high-side N-Channel MOSFET. A 100nF capacitor is
+# recommended from SW to BST to power the high-side switch" (p.2); VBST "VSW - 0.3 to VSW + 6.0" V (Absolute Maximum Ratings,
+# p.4). Declared at that 6.0 V ceiling above DEV_SW.
+_intent.node("DEV_BST", _intent.net_volts("+5V_DEV") + 6.0,
+             "the AP63203's bootstrap (U25 pin 6 BST, DS41326 Rev. 3-2 p.2): it rides on DEV_SW at up to 6.0 V (VBST "
+             "absolute maximum VSW + 6.0 V, p.4), so it reaches +5V_DEV plus 6.0 V with the high side on",
+             rides_on="DEV_SW", bias_v=6.0)
 part("L1", "Device", "L", "4.7uH XAL4030-472ME", "L4020", {"1": "DEV_SW", "2": "+3V3_DEV"}); c("C3", "100n", "DEV_BST", "DEV_SW"); c("C4", "10u", "+5V_DEV", "GND", "C10u"); c("C5", "22u 6.3V", "+3V3_DEV", "GND", "C10u"); c("C6", "22u 6.3V", "+3V3_DEV", "GND", "C10u")
 buck_small("U26", "KSZC", "+5V_DEV", "+5V_DEV", "+1V2_KSZ", ["L2", "C7", "C8", "C9", "C10", "C11", "R1", "R2"], "20.0k 1%", "1.2 V Ethernet switch core", cvin="C571")   # G4
 # U27's code is the Diodes part itself (2.5 V 600 mA, 2,997 in stock); the only other hit for it is a
 # house-brand relabel, which is what the 11 September certification pass refused for the M.2 sockets.
 ic("U27", 5, "AP2112K-2.5 LDO: the switch's 2.5 V analog rail", "SOT235", {"1": "+3V3_DEV", "2": "GND", "3": "+3V3_DEV", "4": "NC", "5": "+2V5_KSZ"}, "C176945"); c("C12", "1u", "+2V5_KSZ", "GND"); c("C13", "1u", "+3V3_DEV", "GND")
-part("BT1", "Device", "Battery_Cell", "CR2032 holder Keystone 3034: VBAT for the three modules' RTCs, the LG290P backup and the DS3231", "CR2032", {"1": "VBAT", "2": "GND"})
+part("BT1", "Device", "Battery_Cell", "CR2032 holder Keystone 3034: VBAT for the three modules' RTCs, the LG290P backup and the DS3231", "CR2032", {"1": "VBAT_RTC", "2": "GND"})
+# PWR-001 (w3b, 27 September 2026): VBAT_RTC is a RAIL from the coin cell BT1 to the backup pins of five parts. It was named
+# VBAT, which is board A's pack node (14.4 V): the cross-board contracts key a rail by its name (check_contracts reads two
+# boards' rails of one name as one conductor across a connector and asks for its drop budget's split), and this 3 V net shares
+# no connector with board A, so declaring it under that name read as a crossing that does not exist. Renamed by the session
+# under the owner's standing rule of 26 September 2026: a distinct conductor takes a distinct name; reverse by naming it VBAT
+# again. Each current is the
+# maker's: the CM5's RTC "IVBAT" 1.7 uA with the module powered and 6 uA with it unpowered (CM5 datasheet Table 9, p.28;
+# pin 76 "RTC battery input 2.5 V to 3.5 V; typically 3 V", p.20); the DS3231SN's IBATT 3.0 uA maximum timekeeping and IBATTC
+# 575 uA during a temperature conversion at VBAT 3.63 V, IBATLKG 100 nA maximum while VCC is up (19-5170 Rev 10, pp.2-3);
+# the LG290P's V_BCKP, IV_BCKP 3 uA typical and 40 uA peak in Continuous mode, 12 uA and 57 uA in Backup mode (Quectel
+# LG290P(03) hardware design V1.1 Table 11, p.39). The peak adds each part's worst at once: 3 x 6 + 575 + 57 = 650 uA.
+_intent.rail("VBAT_RTC", 3.0, 8e-6, 6.5e-4, "BT1", loads={"U30A": 6e-6, "U31A": 6e-6, "U32A": 6e-6, "U9": 5.75e-4, "U11": 5.7e-5},
+             converted=False, always_on=True,
+             always_on_why="a primary cell in its holder: nothing switches it, and every part on it takes its backup "
+                           "current from it whenever its own supply is down",
+             note="the CR2032's 3 V to the three modules' RTC inputs (pin 76), the DS3231SN's VBAT (pin 14) and the "
+                  "LG290P's V_BCKP (pin 22): about 8 uA with everything powered (3 x 1.7 + 3 + 0.1), 650 uA at the "
+                  "coincident worst (a DS3231 temperature conversion), 3 x 6 + 3.0 + 57 = 78 uA with the kit stored")
 # ================================================================= Ethernet switch KSZ9897R: ports 1-3 the modules, port 4 the wall RJ45 through the magnetics with the PoE injector
 _SEC_MARKS.append(('ETHERNET SWITCH KSZ9897R: PORTS 1-3 THE MODULES, PORT 4 THE WALL RJ45 THROUGH THE..', len(P)))
 k = {}
@@ -1058,7 +1161,7 @@ kisch.tvs("D2", "SMBJ58A", "+54V_POE", "GND", "TVS", "C135085"); c("C34", "100n 
 # at 100 V on the 54 V rail, in less board area than before.
 c("C35", "10u 100V", "+54V_POE", "GND", "C1210", "C576517")
 synth("U5", "TPS23861", "TI TPS23861PWR PoE PSE controller, port 1 to the wall RJ45 (802.3at), I2C on the kit bus", "TSSOP28",
-      {1: "+3V3_DEV", 2: "POE_RST_n", 3: "SCL", 4: "SDA", 5: "SDA", 6: "EXP_INT", 7: "GND", 22: "GND", 28: "+54V_POE", 15: "POE_SEN", 16: "POE_DRAIN", 17: "POE_GATE", 18: "GND", 11: "GND", 8: "GND", 12: "GND", 19: "GND"}, "C93245")
+      {1: "+3V3_DEV", 2: "POE_RST_n", 3: "SCL", 4: "SDA", 5: "SDA", 6: "EXP_INT", 7: "GND", 22: "GND", 28: "+54V_POE", 15: "POE_SEN_PIN", 16: "POE_DRAIN_PIN", 17: "POE_GATE", 18: "GND", 11: "GND", 8: "GND", 12: "GND", 19: "GND"}, "C93245")   # W3B-F1: SEN1 and DRAIN1 through RSENS and RDRAIN (below)
 r("R11", "10k", "POE_RST_n", "+3V3_DEV"); c("C36", "100n", "+3V3_DEV", "GND")
 part("Q1", "Connector_Generic", "Conn_01x05", "CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6), PoE port switch (1-3 source, 4 gate, 5 drain tab)", "PPAK", {"1": "POE_SEN", "2": "POE_SEN", "3": "POE_SEN", "4": "POE_GATE", "5": "POE_DRAIN"}, "C473333")
 # R12 is 250 mOhm, not the 255 mOhm TI specifies for the TPS23861 sense: JLCPCB stocks 255 mOhm
@@ -1068,6 +1171,65 @@ r("R12", "0.25R 1% 2512", "POE_SEN", "GND", "R2512"); r("R13", "0R 2512 (POE_P l
 # positive centre tap of the port magnetics, that is, the feed to the powered device. At 802.3at (about 600 mA) it dropped 15 V, leaving 39 V against a
 # 44 V minimum, and dissipated 9 W in a part rated for 0.1 W. Detection and classification are the TPS23861's own pins; nothing belongs in the feed.
 # A 0 ohm 2512 link keeps a place to open the path on the bench and carries the port current.
+# W3B-F1 (stream w3b, 27 September 2026; taken by the session under the owner's standing rule of 26 September 2026, found while
+# declaring this port's conductors for PWR-001 from the maker's sheet): TI SLUSBX9I, the TPS23861's pin table, "DRAIN1-4: Port 1-4
+# output voltage monitor; connect to output port through a 47-Ohm resistor" and "SEN1-4: Port 1-4 current-sense input; connect to
+# current-sense resistor through a 22-Ohm resistor" (p.5), and every electrical table is stated with "RSENS = 22 Ohm, RDRAIN = 47
+# Ohm" (6.5, pp.7-9; the Simplified Schematic on p.1 draws the 47). Pins 15 and 16 sat straight on POE_SEN and POE_DRAIN, so the
+# port was measured and protected under conditions its maker does not specify. R525 (22 Ohm) and R526 (47 Ohm) are now in those
+# two lines, 0603 thick film rated 75 V (UNI-ROYAL 0603WAF220JT5E C23345, which lcsc_fill's MAP gives every 22R 0603 of the set,
+# and 0603WAF470JT5E C23182, written here because no MAP line covers 47R; both read back from JLCPCB on 27 September 2026): the
+# drain resistor's far end reaches the port's 57 V and it carries only the monitor pin's current. KSENSA
+# (pin 18, "Kelvin point connection for SEN1 and SEN2") stays on GND in the schematic, as R12's return is; its Kelvin tap at
+# R12's ground pad is a layout constraint. Reverse by removing the two resistors, which puts pins 15 and 16 back on the port nets.
+r("R525", "22R", "POE_SEN", "POE_SEN_PIN")                     # RSENS, SLUSBX9I p.5 and 6.5 (no code here, as the board's other 22 Ohm lines: lcsc_fill fills C23345)
+r("R526", "47R", "POE_DRAIN", "POE_DRAIN_PIN", "R", "C23182")  # RDRAIN, SLUSBX9I p.1, p.5 and 6.5
+# PWR-001 (w3b, 27 September 2026): THE PORT'S CONDUCTORS, DECLARED. The TPS23861 switches the port on its LOW side (802.3
+# Alternative A on this board: the feed on pairs 1-2 and 3-6): +54V_POE through R13 to POE_P, the positive centre tap MCT1 of
+# T1, out through the two halves of the winding on MDI_A_P and MDI_A_N (half the current each) to the jack's pins 1 and 2; back
+# on pins 3 and 6, MDI_B_P and MDI_B_N, through the other winding to its centre tap MCT2, POE_DRAIN, the FET Q1, POE_SEN and the
+# 0.25 Ohm sense resistor R12 to ground. The forward conductors are series segments of +54V_POE and the return ones are its
+# return (their drop is judged against it, and their watts are counted there): 0.30 A typical and 0.60 A peak as +54V_POE
+# declares, half of it on each conductor of a pair. What a part on them can see: VVPWR 44 to 57 V (SLUSBX9I 6.3), so 57 V on
+# the forward side and on the return side with the port off (the powered device's input then holds its return near the feed);
+# with the port on, the return sits at the sense voltage, at most VSHORT2X 408 mV before the part cuts the port (6.5). The
+# pairs 4-5 and 7-8 (MDI_C, MDI_D) carry no feed here and are NODES, declared at the feed's 57 V all the same: they are the
+# cable side of the same port. The H5007NL states no PoE current rating (known: v2/docs/parts/PROCUREMENT.md).
+_intent.rail("POE_P", 54.0, 0.30, 0.60, "R13", loads={"T1": 0.60}, series_of="+54V_POE", converted=False, v_max=57.0,
+             note="the port's positive feed from the 0 Ohm link R13 to T1's centre tap MCT1 (pin 24), a series segment of "
+                  "+54V_POE at the port's 0.60 A peak; VVPWR at most 57 V (SLUSBX9I 6.3)")
+for _pn, _jp in (("MDI_A_P", "1"), ("MDI_A_N", "2")):
+    _intent.rail(_pn, 54.0, 0.15, 0.30, "T1", loads={"J_ETH": 0.30}, series_of="POE_P", converted=False, v_max=57.0,
+                 note="half the port's feed from T1's cable-side winding to the jack's pin %s (802.3 Alternative A, pair "
+                      "1-2): a series segment of POE_P carrying half its current, and a 1000BASE-T signal conductor" % _jp)
+for _pn, _jp in (("MDI_B_P", "3"), ("MDI_B_N", "6")):
+    _intent.rail(_pn, 0.15, 0.15, 0.30, "J_ETH", loads={"T1": 0.30}, returns="+54V_POE", converted=False, v_max=57.0,
+                 switch="Q1", enable_net="POE_GATE",
+                 note="half the port's return from the jack's pin %s into T1's cable-side winding (pair 3-6), at the sense "
+                      "voltage with the port on (0.60 A x 0.25 Ohm) and up to 57 V with it off; the TPS23861 turns the "
+                      "port on through Q1's gate, POE_GATE; also a 1000BASE-T signal conductor" % _jp)
+_intent.rail("POE_DRAIN", 0.15, 0.30, 0.60, "T1", loads={"Q1": 0.60}, returns="+54V_POE", converted=False, v_max=57.0,
+             switch="Q1", enable_net="POE_GATE",
+             note="the port's return from T1's centre tap MCT2 (pin 21) to the drain of the port switch Q1, with the "
+                  "TPS23861's DRAIN1 monitor on it through R526: near the sense voltage with the port on, up to 57 V "
+                  "with it off (the FET's drain is the one node the powered device lifts)")
+_intent.rail("POE_SEN", 0.15, 0.30, 0.60, "Q1", loads={"R12": 0.60}, returns="+54V_POE", converted=False, v_max=0.41,
+             switch="Q1", enable_net="POE_GATE",
+             note="the port's return from Q1's source to the 0.25 Ohm sense resistor R12: 0.15 V at 0.60 A, and the "
+                  "part cuts the port at VSHORT2X, 357 to 408 mV (SLUSBX9I 6.5), so a part on it sees at most 0.41 V; "
+                  "the TPS23861's SEN1 reads it through R525")
+for _pn in ("MDI_C_P", "MDI_C_N", "MDI_D_P", "MDI_D_N"):
+    _intent.node(_pn, 57.0, "a cable-side conductor of the PoE port on pairs 4-5 or 7-8, which carry no feed on this board "
+                 "(Alternative A); declared at the feed's 57 V (VVPWR maximum, SLUSBX9I 6.3) because it is the same "
+                 "port's cable side, a 1000BASE-T signal conductor referenced through 75 Ohm to BOB")
+_intent.node("POE_GATE", 12.5, "the TPS23861's GATE1 output to Q1's gate: VGOH 10 to 12.5 V (SLUSBX9I 6.5), absolute "
+             "maximum 13 V (6.1)")
+_intent.node("POE_RST_n", _intent.net_volts("+3V3_DEV"), "the TPS23861's RESET input, \"internally pulled up to VDD\" "
+             "(SLUSBX9I p.5) and by R11 to +3V3_DEV")
+_intent.node("POE_SEN_PIN", 0.41, "SEN1 of the TPS23861 behind RSENS R525 (22 Ohm, SLUSBX9I p.5): it follows POE_SEN, at "
+             "most VSHORT2X 408 mV (6.5); SEN1 absolute maximum 3 V (6.1)")
+_intent.node("POE_DRAIN_PIN", 57.0, "DRAIN1 of the TPS23861 behind RDRAIN R526 (47 Ohm, SLUSBX9I p.5): it follows POE_DRAIN, "
+             "up to 57 V with the port off (VVPWR maximum, 6.3; DRAIN1 absolute maximum 70 V, 6.1)")
 # ================================================================= display switch: two TS3DV642 in cascade to the HDMI receptacle; SEL2 chooses the slot (SEL1 high = all channels), selects from the panel controller
 _SEC_MARKS.append(('DISPLAY SWITCH: TWO TS3DV642 IN CASCADE TO THE HDMI RECEPTACLE; SEL2 CHOOSES THE SLOT..', len(P)))
 def ts3(ref, a, b, cmn, sel, en):
@@ -1101,11 +1263,46 @@ r("R19", "15k", "HDMIO_HPD_IN", "HDMIO_HPD"); r("R20", "22k", "HDMIO_HPD", "GND"
 # ================================================================= GNSS LG290P on a CP2102N bridge (bank 2 hub, port 1; a BANK is not a slot since the I/O HA work: bank s is hosted by slot s or by its neighbour); 1PPS to the three slots through level stages; active antenna bias from VDD_RF
 _SEC_MARKS.append(('GNSS LG290P ON A CP2102N BRIDGE (BANK 2 HUB, PORT 1; A BANK IS NOT A SLOT SINCE THE I/O..', len(P)))
 g = {n: "GND" for n, nm in LG.items() if nm == "GND"}
-g.update({23: "+3V3_DEV", 22: "VBAT", 20: "GNSS_TXD", 21: "GNSS_RXD", 3: "GNSS_PPS", 8: "GNSS_RST_n", 9: "GNSS_VDD_RF", 11: "GNSS_RF_IN", 6: "GNSS_TXD2", 7: "GNSS_RXD2"})
+g.update({23: "+3V3_DEV", 22: "VBAT_RTC", 20: "GNSS_TXD", 21: "GNSS_RXD", 3: "GNSS_PPS", 8: "GNSS_RST_n", 9: "GNSS_VDD_RF", 11: "GNSS_RF_IN", 6: "GNSS_TXD2", 7: "GNSS_RXD2"})
 synth("U11", "LG290P", "Quectel LG290P03AAMD GNSS RTK module: UART1 to the bridge, 1PPS to every slot, active antenna on the west-wall GNSS jack", "LG290P", g, "C29781241")
 r("R21", "10k", "GNSS_RST_n", "+3V3_DEV"); c("C40", "100n", "+3V3_DEV", "GND"); c("C41", "10u", "+3V3_DEV", "GND", "C10u"); r("R22", "10k", "GNSS_PPS", "GND")
+# W3B-F2 (stream w3b, 27 September 2026; taken by the session under the owner's standing rule of 26 September 2026, found while
+# declaring VBAT for PWR-001 from the maker's sheet): "It is recommended to place a TVS and a combination of a 4.7 uF, a 100 nF
+# and a 33 pF decoupling capacitor near the V_BCKP pin" (Quectel LG290P(03) hardware design V1.1 3.2.2, p.25, Figure 6). V_BCKP
+# (pin 22) sat on VBAT with no capacitor at all. The three capacitors are drawn at the pin and declared against it (class D, a
+# capacitor the maker ties to a supply pin); their leakage is nanoamps against the pin's own 3 to 57 uA (Table 11, p.39). The TVS
+# is NOT drawn here: the maker's figures feed V_BCKP from an always-on supply or an LDO, where board B feeds it from the on-board
+# CR2032 over board copper only, and a TVS pick needs its own datasheet and a standby leakage the coin cell can carry; it stays an
+# open item of stream w3b. Reverse by removing C72 to C74.
+c("C72", "4.7u", "VBAT_RTC", "GND", "C10u", bypass=("U11", "22")); c("C73", "100n", "VBAT_RTC", "GND", bypass=("U11", "22")); c("C74", "33p", "VBAT_RTC", "GND", "C0402", bypass=("U11", "22"))
 r("R23", "10R", "GNSS_VDD_RF", "GNSS_BIAS"); part("L3", "Device", "L", "27nH 0402 (antenna bias tee)", "L0402", {"1": "GNSS_BIAS", "2": "GNSS_ANT"}, "C12669"); c("C42", "47p", "GNSS_ANT", "GNSS_RF_IN", "C0402")
 part("J_GNSS1", "Connector", "Conn_Coaxial", "U.FL socket: pigtail to A22's GNSS jack J_RF4", "UFL", {"1": "GNSS_ANT", "2": "GND"}, "C88373")
+# PWR-001 (w3b, 27 September 2026): THE ACTIVE ANTENNA'S FEED IS A RAIL, three nets in series: GNSS_VDD_RF from the module's
+# VDD_RF, R23 (10 Ohm, the maker's R2 "to protect the module in case the active antenna is short-circuited"), GNSS_BIAS, the bias
+# inductor L3, GNSS_ANT (which also carries the RF, blocked from RF_IN by C42) and the U.FL J_GNSS1. Quectel LG290P(03) hardware
+# design V1.1: pin 9 VDD_RF, type PO, "VOnom = VCC ... Typically used to supply power for an external active antenna or LNA", its
+# "output current capacity depends on VCC" (p.21); "VDD_RF is an output pin, equal in voltage to the VCC input ... Only if the VCC
+# is turned off, VDD_RF is turned off" (3.2, p.23); Figure 17 (p.35). No held document gives the antenna's current: 20 mA
+# typical and 30 mA peak are INFERRED for an active GNSS antenna's LNA and owed from the antenna maker (open item of stream
+# w3b); a shorted antenna draws at most 3.3 V over R23's 10 Ohm, a fault current named here and not declared as the peak.
+_intent.rail("GNSS_VDD_RF", 3.3, 0.02, 0.03, "U11", loads={"R23": 0.03}, converted=False, fed_from="+3V3_DEV", always_on=True,
+             always_on_why="VDD_RF follows the LG290P's VCC, +3V3_DEV, which is always on (HD V1.1 3.2: 'Only if the VCC is "
+                           "turned off, VDD_RF is turned off')",
+             source_ic="U11 pin 9 VDD_RF is the module's power OUTPUT to the active antenna (type PO, VOnom = VCC, LG290P(03) "
+                       "hardware design V1.1 p.21): its pad is the power path",
+             note="the active antenna's supply from the LG290P's VDD_RF to R23; 20 mA typical and 30 mA peak INFERRED (no "
+                  "held antenna datasheet states it); an antenna short is bounded by R23, 3.3 V / 10 Ohm, a fault current")
+_intent.rail("GNSS_BIAS", 3.3, 0.02, 0.03, "R23", loads={"L3": 0.03}, series_of="GNSS_VDD_RF", converted=False,
+             note="the antenna feed between R23 (the maker's short-circuit resistor R2) and the bias inductor L3: a series "
+                  "segment of GNSS_VDD_RF")
+_intent.rail("GNSS_ANT", 3.3, 0.02, 0.03, "L3", loads={"J_GNSS1": 0.03}, series_of="GNSS_VDD_RF", converted=False,
+             note="the antenna feed from L3 to the U.FL J_GNSS1, shared with the RF the antenna returns (DC-blocked from RF_IN "
+                  "by C42): a series segment of GNSS_VDD_RF")
+# GNSS_RF_IN is RF, not a supply: pin 11 RF_IN, type AI, "GNSS antenna interface ... 50 Ohm characteristic impedance" (p.21),
+# PRF_IN at most 10 dBm (Table 9 Absolute Maximum Ratings, p.37), 1.0 V peak into 50 Ohm; it is marked only because C42 couples
+# it to the feed. A NODE at the feed's 3.3 V, the most C42 can carry across when the feed steps.
+_intent.node("GNSS_RF_IN", 3.3, "the LG290P's RF input (pin 11 RF_IN, 50 Ohm, LG290P(03) hardware design V1.1 p.21) behind the "
+             "47 pF DC block C42: RF at most 10 dBm (PRF_IN, Table 9, p.37), declared at the 3.3 V antenna feed C42 blocks")
 part("J_GNSS2", "Connector_Generic", "Conn_01x03", "LG290P UART2 (bench): GND TX RX", "PH1x3", {"1": "GND", "2": "GNSS_TXD2", "3": "GNSS_RXD2"})
 cp2102("U15", "GNSS", "+5V_DEV", "GNSS_DP", "GNSS_DM", "GNSS_RXD", "GNSS_TXD", refs=("R24", "C43", "C44"), vregin=("C551", "C552"))   # G7
 # ================================================================= LoRa E22-900M30S on S3's SPI0, 5 V through a TPS22810 gated by EMCON; antenna pad to a U.FL for A22's LoRa jack
@@ -1120,6 +1317,12 @@ synth("U12", "E22_900M30S", "Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1:
 # in the record (not done).
 part("U21", "Power_Management", "TPS22810DRV", "TPS22810DRV", "WSON6", {"6": "+5V_DEV", "5": "E22_EN", "1": "+5V_LORA", "2": "+5V_LORA", "3": "E22_CT", "4": "GND", "7": "GND"}); c("C45", "1n", "E22_CT", "GND"); c("C46", "10u", "+5V_LORA", "GND", "C10u"); c("C47", "100n", "+5V_LORA", "GND"); r("R25", "10k", "SPI3_CE1", "+3V3_S3B")
 part("J_LORA1", "Connector", "Conn_Coaxial", "U.FL socket: pigtail to A22's LoRa jack J_RF11", "UFL", {"1": "LORA_ANT", "2": "GND"}, "C88373")
+# PWR-001 (w3b, 27 September 2026): LORA_ANT is RF, not a supply: the E22's pin 21 "ANT: Antenna interface, stamp hole (50 ohm
+# characteristic impedance)" (E22-900M30S user manual v1.20, p.5) to the U.FL. A NODE at the largest RF voltage on it: "Max Tx
+# power (dBm) 29.5 / 30.0 / 31" (p.3) is 11.2 V peak at 31 dBm into 50 Ohm, and a fully reflecting (open or shorted) lead doubles
+# it, 22.4 V.
+_intent.node("LORA_ANT", 22.4, "the E22-900M30S's antenna pad (pin 21, 50 Ohm, user manual v1.20 p.5) to J_LORA1: 31 dBm "
+             "maximum (p.3) is 11.2 V peak into 50 Ohm and 22.4 V with the lead fully reflecting")
 # ================================================================= two E72 CC2652P radios (Zigbee coordinator, Thread RCP) on CP2102N bridges (bank 2 hub, ports 2 and 3), 3.3 V through one TPS22810 gated by EMCON
 _SEC_MARKS.append(('TWO E72 CC2652P RADIOS (ZIGBEE COORDINATOR, THREAD RCP) ON CP2102N BRIDGES (BANK 2 HUB,..', len(P)))
 for i, (tag, uref, ub, refs) in enumerate((("ZBA", "U13", "U16", ("R26", "C48", "C49")), ("ZBB", "U14", "U17", ("R27", "C50", "C51"))), 1):
@@ -1269,7 +1472,7 @@ ic("U8", 8, "ATECC608B-SSHDA-T secure element (I2C 0x60): keys behind ZEROIZE", 
 # using a 0.1uF to 1.0uF capacitor", C70), 3 INT/SQW, 4 RST (internal 50 k pull-up, "No external pullup resistors should be
 # connected"; unused), 5 to 12 N.C. ("No Connection. Must be connected to ground."), 13 GND, 14 VBAT, 15 SDA, 16 SCL. Same
 # address (0x68), same signals, -40 to +85 C (DS3231SN#).
-_ds = {"1": "NC", "2": "+3V3_DEV", "3": "EXP_INT", "4": "NC", "13": "GND", "14": "VBAT", "15": "SDA", "16": "SCL"}
+_ds = {"1": "NC", "2": "+3V3_DEV", "3": "EXP_INT", "4": "NC", "13": "GND", "14": "VBAT_RTC", "15": "SDA", "16": "SCL"}
 _ds.update({str(k): "GND" for k in range(5, 13)})
 ic("U9", 16, "DS3231SN# holdover clock (I2C 0x68, TCXO and crystal), CR2032 backed", "SOIC16W", _ds, "C9866"); c("C70", "100n", "+3V3_DEV", "GND")
 # U10 through ic() since 17 Sep 2026: the library TMP117xxDRV symbol has no pin 7, so the "7": "GND" this line always
@@ -1320,7 +1523,7 @@ part("J_AB1", "Connector_Generic", "Conn_02x13_Odd_Even", "A-B interconnect (IDC
 # on J_AB2 pins 1 and 2 with U29 at its hub end, and board A routes it to the Glenair pigtail (drafts/r4-interfaces.md).
 part("J_AB2", "Connector_Generic", "Conn_02x05_Odd_Even", "A-B wall-port ribbon (IDC 2x5): the wall USB pair (bank 3 hub port 3) on the END row with eight grounds behind it, to board A's pigtail for the sealed Glenair 233-370 (D-12)", "IDC10", {
  "1": "USB_WALL_P", "2": "USB_WALL_N", "3": "GND", "4": "GND", "5": "GND", "6": "GND", "7": "GND", "8": "GND", "9": "GND", "10": "GND"})
-for i, net in enumerate(("+5V_DEV", "+3V3_DEV", "+1V2_KSZ", "+2V5_KSZ", "VBAT", "EMCON_HW", "ZEROIZE_HW", "GNSS_PPS", "SDA", "SCL", "+54V_POE", "POE_DRAIN", "+5V_LIME", "+5V_RB", "+5V_LORA", "+3V3_ZB", "HDMI_SEL1", "HDMI_SEL2",
+for i, net in enumerate(("+5V_DEV", "+3V3_DEV", "+1V2_KSZ", "+2V5_KSZ", "VBAT_RTC", "EMCON_HW", "ZEROIZE_HW", "GNSS_PPS", "SDA", "SCL", "+54V_POE", "POE_DRAIN", "+5V_LIME", "+5V_RB", "+5V_LORA", "+3V3_ZB", "HDMI_SEL1", "HDMI_SEL2",
                         "+3V3_S1A", "+3V3_S1B", "+1V0_S1", "+1V1_S1", "+3V3_S2A", "+3V3_S2B", "+1V0_S2", "+1V1_S2", "+3V3_S3A", "+3V3_S3B", "+1V0_S3", "+1V1_S3"), 2):
     part("TP%d" % i, "Connector", "TestPoint", net, "TP", {"1": net})
 # ================================================================= the I/O high-availability control plane (ARCH-PCB-B-IOHA)
@@ -1400,6 +1603,18 @@ for _tag, _k in (("A", 0), ("B", 1), ("C", 2)):
     _intent.bypass(C_(1), U_(1), "50", v33); _intent.bypass(C_(7), U_(1), "48"); _intent.bypass(C_(8), U_(1), "73")
     _intent.bypass(C_(12), U_(1), "21", v33); _intent.bypass(C_(13), U_(1), "21", v33); _intent.bypass(C_(0), U_(0), "1", "+5V_DEV")
     r(R_(0), "10k", "IOC%s_RST_n" % _tag, v33); c(C_(9), "100n", "IOC%s_RST_n" % _tag, "GND")
+    # PWR-001 (w3b, 27 September 2026): IOC{t}_VCAP is the controller's own core regulator output, a supply NODE of this one
+    # part: "VCAP: VCORE supply voltage, which values depend on voltage scaling (1.0 V, 1.1 V, 1.2 V or 1.35 V)" (ST DS12110
+    # Rev 10 section 3.5, p.27), at most 1.40 V at VOS0 (Table 123, p.212), stabilised by the two 2.2 uF of 6.3.2 Table 25
+    # (p.107). IOC{t}_RST_n is the NRST input, not a supply: "Bidirectional reset pin with embedded weak pull-up resistor"
+    # (p.63), RPU 30 to 50 kOhm (p.138), with its 10 k pull-up (R63, R75, R87) to the controller's 3.3 V, its 100 nF (C409,
+    # C429, C449) and the SWD pads' reset line; a NODE at that rail.
+    _intent.node("IOC%s_VCAP" % _tag, 1.40,
+                 "controller %s's VCAP pins 48 and 73: the STM32H743's internal LDO output VCORE, 1.0 to 1.35 V by voltage "
+                 "scaling (DS12110 Rev 10 p.27), at most 1.40 V at VOS0 (Table 123, p.212)" % _tag)
+    _intent.node("IOC%s_RST_n" % _tag, _intent.net_volts(v33),
+                 "controller %s's NRST (pin 14): an input with an embedded weak pull-up (DS12110 Rev 10 p.63), pulled to "
+                 "the controller's own 3.3 V by %s and held by the reset capacitor %s; it can reach that rail only" % (_tag, R_(0), C_(9)))
     r(R_(1), "10k", "IOC%s_BOOT0" % _tag, "GND")
     part("Y%d" % (2 + _k), "Device", "Crystal_GND24", "25 MHz 3225 (CAN-FD bit timing needs a crystal, not the HSI)", "XTAL",
          {"1": "IOC%s_XI" % _tag, "3": "IOC%s_XO" % _tag, "2": "GND", "4": "GND"}, "C164047")
@@ -1620,7 +1835,7 @@ for _ch, _u, _c0 in (("A", "U82", 500), ("B", "U83", 503)):
     ic(_u, 6, "SKY13351-378LF SPDT antenna changeover, chain %s: OUTPUT1 the slot 1 card, OUTPUT2 the slot 3 card" % _ch, "MLPD6",
        {"1": "SW%s_O1" % _ch, "2": "GND", "3": "SW%s_O2" % _ch, "4": "WIFI_SEC", "5": "SW%s_IN" % _ch, "6": "WIFI_PRI"}, "C129189")
 
-RAILS = ["+5V_DEV", "+3V3_DEV", "+1V2_KSZ", "+2V5_KSZ", "VBAT", "+54V_POE", "+5V_LIME", "+5V_RB", "+5V_LORA", "+3V3_ZB", "+5V_HDMI", "+5V_CAM", "VBUS_QMX", "PANEL_5V", "GND", "POE_P", "POE_DRAIN", "GNSS_3V3", "ZBA_3V3", "ZBB_3V3", "RB_3V3"]
+RAILS = ["+5V_DEV", "+3V3_DEV", "+1V2_KSZ", "+2V5_KSZ", "VBAT_RTC", "+54V_POE", "+5V_LIME", "+5V_RB", "+5V_LORA", "+3V3_ZB", "+5V_HDMI", "+5V_CAM", "VBUS_QMX", "PANEL_5V", "GND", "POE_P", "POE_DRAIN", "GNSS_3V3", "ZBA_3V3", "ZBB_3V3", "RB_3V3"]
 for s in (1, 2, 3): RAILS += ["+5V_S%d" % s, "+3V3_S%dA" % s, "+3V3_S%dB" % s, "+1V0_S%d" % s, "+1V1_S%d" % s, "+3V3_CM%d" % s, "+1V8_CM%d" % s, "VBUS_FLASH%d" % s,
                                "+3V3_M2C%d" % s]   # 26 September 2026: the socket side of the Kelvin shunt feeds the socket's power pins
 for i, net in enumerate(RAILS, 1): part("#FLG%02d" % i, "power", "PWR_FLAG", "PWR_FLAG", "", {"1": net})
@@ -1667,7 +1882,7 @@ def layout(page_h):
 # G10 (round 8, DECOUPLING.md 8.3): U25 is an AP63203 whose pins are 1 FB, 2 EN, 3 VIN ("Bypass VIN to GND with a suitably
 # large capacitor"), 4 GND (Diodes DS41326 p.2), so C4, its input capacitor, is declared at pin 3, not pin 2 (EN); C5 and C6 are
 # its output capacitors and are declared against the output loop, L1's output pad, not pin 1 (FB) (decision 42, R4). U27's C12
-# (class L) and C13 (class D) keep their pins; the classes are in drafts/b/decoupling-classes-b.json until intent.py carries them.
+# (class L) and C13 (class D) keep their pins; every entry's class and basis are written by the decision 42 block below (w3b).
 _intent.bypass("C4", "U25", "3", "+5V_DEV")
 _intent.bypass("C5", "L1", "2", "+3V3_DEV")
 _intent.bypass("C6", "L1", "2", "+3V3_DEV")
@@ -1682,6 +1897,167 @@ _intent.bypass("C69", "U8", "8", "+3V3_DEV")
 _intent.bypass("C70", "U9", "2", "+3V3_DEV")
 # Found in G5's pass (round 8): C71 is the TMP117's own capacitor (it follows U10 at its V+ pin 4) and was declared at U9.
 _intent.bypass("C71", "U10", "4", "+3V3_DEV")
+# DECISION 42 ON THIS BOARD (stream w3b, 27 September 2026, MESHSAT-1357; DECOUPLING.md sections 6, 6a, 8.3 items G6 and G10,
+# and section 10's open line for board B): EVERY DECLARED CAPACITOR CARRIES ITS CLASS AND THE MAKER'S CLAUSE THAT GIVES IT, as
+# boards A, C, D, E and P write theirs. A class is the capacitor's ROLE as its maker describes it, never its value string: R a
+# converter's own power-stage capacitor (with same_side, R3), D one a maker ties to a supply pin, of any value, L a regulator's
+# output or VCAP capacitor (with the maker's value floor, L2, and ESR bound where one is stated), B1 rail bulk the maker frees,
+# B2 microfarad bulk no maker places. Where the maker states no capacitor the class is D by role and the value and count are this
+# generator's own (D1, said as such). intent.bypass() takes no class yet (DECOUPLING.md 8.1 T5 is the tools stream's), so the two
+# fields are written onto the entries here, and an entry with no class, a class outside the six or a class L entry without its
+# floor stops the generator. The classes are the round's map (v2/docs/records/r8b/
+# decoupling-classes-b.json, 274 entries on intent 5af19ea259fba27b) with four corrections: C65, C66, C508 and C509 serve the
+# SN74LVC1G08 gates U501 to U504 (class D, TI SCES217AA), where the map carried another part's clause and, for C508 and C509,
+# class R; and W3B-F2's three V_BCKP capacitors (C72 to C74, class D) are new. Stream w3b's record, v2/docs/records/w3b/, holds
+# the comparison entry by entry.
+_TI_GATE = ("\"Each VCC pin should have a good bypass capacitor to prevent power disturbance. For devices with a single supply, "
+            "a 0.1uF capacitor is recommended\" (Power Supply Recommendations, %s)")
+_D1 = ("states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where "
+       "the maker states none, the generator's count stands, said as such)")
+def _dec_rule(e):
+    """(class, basis, extra) of one declaration, from the part it serves, the pin and the capacitor's value."""
+    pv = str(byref[e["part"]]["value"]); cv = str(byref[e["cap"]]["value"]); pin = e["pin"]
+    if pv.startswith("AP64500"):
+        return ("R", "Diodes AP64500 DS41979 Rev 5-2 (v2/vendor/diodes/diodes-ap64500.pdf): pin 2 VIN \"Power Input. VIN supplies "
+                     "the power to the IC as well as the step-down converter power MOSFETs\" (p.3); PCB Layout item 2 \"Place the "
+                     "input capacitors as closely across VIN and GND as possible\" (p.23)", {"same_side": True})
+    if pv.startswith("TPS62933"):
+        return ("R", "TI TPS62933 SLUSEA4D (v2/vendor/ti/ti-tps62933.pdf) 12.1 Layout Guidelines (p.40): \"the most critical PCB "
+                     "feature is the loop formed by the input capacitors and power ground\", \"Place the inductor, input and "
+                     "output capacitors, and the IC on the same layer\", \"Place a 0.1-uF ceramic decoupling capacitor or capacitors "
+                     "as close as possible to VIN and GND pins, which is key to EMI reduction\"; declared against VIN (pin 3)",
+                {"same_side": True})
+    if pv.startswith("AP63203"):
+        return ("R", "Diodes AP63200/AP63201/AP63203/AP63205 DS41326 Rev. 3-2 (v2/vendor/diodes/diodes-ap63200-series-buck.pdf): "
+                     "pin 3 VIN \"Bypass VIN to GND with a suitably large capacitor\" (p.2); 11 Input Capacitor (p.13); PCB Layout "
+                     "item 4 \"Place the VIN capacitors as close to the device as possible\" (p.15). G10: declared at VIN, not EN",
+                {"same_side": True})
+    if e["part"] == "L1":
+        return ("R", "the AP63203 U25's output capacitors, declared against the output loop, L1's output pad, and not against the "
+                     "FB sense pin (DECOUPLING.md R4 and G10; DS41326 Rev. 3-2 pin 1 FB, p.2): a converter's own power-stage part "
+                     "(R2), on the IC's layer (SLUSEA4D 12.1, p.40, the same rule for its sibling buck)", {"same_side": True})
+    if re.fullmatch(r"L[123]04", e["part"]):
+        return ("B1", "TI TUSB8041 SLLSEE4E (v2/vendor/ti/ti-tusb8041.pdf): \"All power rails require a 10 uF capacitor or 1 uF "
+                      "capacitors for stability and noise immunity. These bulk capacitors can be placed anywhere on the power "
+                      "rail\" (10.1, p.37); \"the large bulk capacitors associated with each power rail should be placed as close "
+                      "as possible to the voltage regulators\" (11.1.1 item 7, p.38): declared against the 1.1 V regulator's "
+                      "output, the TPS62933's inductor pad (DECOUPLING.md B1)")
+    if "PI7C9X2G404SL" in pv:
+        if cv.startswith("10u"):
+            return ("B2", "Diodes PI7C9X2G404SL DS40068 Rev 5-2 (v2/vendor/diodes/diodes-pi7c9x2g404sl.pdf) 3.5 Power Pins (p.14) "
+                          "states no decoupling requirement; this 10 uF is the generator's own bulk with no maker placement clause "
+                          "(DECOUPLING.md B2 and section 10: the Diodes reference design is asked)")
+        return ("D", "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) " + _D1 + "; the maker's requirement is TBD and "
+                     "asked of Diodes (DECOUPLING.md section 10)")
+    if "TUSB8041" in pv:
+        return ("D", "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each "
+                     "VDD and VDD33 power pin\"")
+    if "TMUXHS4212" in pv:
+        return ("D", "TI TMUXHS4212 SLASEP7A (v2/vendor/ti/ti-tmuxhs4212.pdf): 9.2.1.2 \"See the application schematics on "
+                     "recommended decouple capacitors from VCC pins to ground\" (p.14), Figure 9-2's 0.1 uF at VCC (p.13); "
+                     + ("the 1 uF beside it is this generator's own (DECOUPLING.md D1)" if cv.startswith("1u") else
+                        "this is that 0.1 uF"))
+    if "TS3USB221A" in pv:
+        return ("D", "TI TS3USB221A SCDS277C (v2/vendor/ti/ti-ts3usb221a.pdf): \"A bypass capacitor is recommended to be placed "
+                     "as close to the supply pin VCC\" (p.15)")
+    if "TS3DV642" in pv:
+        return ("D", "TI TS3DV642 SCDS343F (v2/vendor/ti/ti-ts3dv642.pdf): \"VCC decoupling capacitor 0.1 uF\" (design "
+                     "requirements, p.18) and \"Decoupling capacitors should be used between power supply pin and ground pin\" "
+                     "(layout, p.23); G5: declared at the switch's own VCC, pin 1")
+    if e["part"] == "J_M2C2":
+        return ("D", "Quectel RM520N series hardware design V1.1 (v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf) "
+                     "3.3.1 (p.29): \"two bypass capacitors of 220 uF with low ESR should be used, and a multi-layer ceramic chip "
+                     "capacitor (MLCC) array should also be used\"; Figure 6 (p.30) draws 220 uF, 100 nF, 6.8 nF, 220 pF, 68 pF at "
+                     "the PMU pins 2 and 4 and 220 uF, 100 nF, 220 pF, 68 pF, 15 pF, 9.1 pF, 4.7 pF at the APT pins 70, 72, 74: "
+                     "capacitors the maker ties to the module's supply pins")
+    if pv.startswith("TPD4E001"):
+        return ("D", "TI TPD4E001 SLLS682P (v2/vendor/ti/ti-tpd4e001.pdf): pin VCC \"Power-supply input. Bypass VCC to GND with a "
+                     "0.1-uF ceramic capacitor\" (p.3); 8.1 item 2 \"Place a 0.1uF capacitor very close to the VCC pin\" (p.9)")
+    if pv.startswith("TPS3808"):
+        return ("D", "TI TPS3808 SBVS050N (v2/vendor/ti/ti-tps3808.pdf) layout: \"Place a 0.1-uF ceramic capacitor near the VDD "
+                     "pin\" (p.15)")
+    if "KSZ9897" in pv:
+        if cv.startswith("100n"):
+            return ("D", "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 "
+                         "Power Connection Diagram (p.51): one 0.1 uF at every supply pin")
+        return ("B2", "Microchip KSZ9897R DS00002330D Figure 4-8 (p.51) draws the 22 uF on DVDDL, AVDDL and AVDDH and the 10 uF on "
+                      "VDDIO in an example figure with no placement clause (DECOUPLING.md B2)")
+    if pv.startswith("74LVC1G157"):
+        return ("D", "Nexperia 74LVC1G157 Rev. 12 (v2/vendor/nexperia/nexperia-74lvc1g157.pdf) " + _D1)
+    if pv.startswith("74LVC1G17"):
+        return ("D", "Diodes 74LVC1G17 DS35124 Rev. 8-2 (v2/vendor/diodes/diodes-74lvc1g17.pdf) " + _D1)
+    if pv.startswith("74LVC1G34"):
+        return ("D", "Diodes 74LVC1G34 DS36108 Rev. 10-2 (v2/vendor/diodes/diodes-74lvc1g34.pdf) " + _D1)
+    if pv.startswith("ATECC608B"):
+        return ("D", "Microchip ATECC608B DS40002239A (v2/vendor/microchip/microchip-atecc608b-datasheet.pdf) " + _D1)
+    if pv.startswith("SN74LVC1G08"):
+        return ("D", "TI SN74LVC1G08 SCES217AA (v2/vendor/ti/ti-sn74lvc1g08.pdf): \"For the SN74LVC1G08, a 0.1uF bypass capacitor "
+                     "is recommended\" (Power Supply Recommendations, p.14)")
+    if pv.startswith("SN74LVC1G04"):
+        return ("D", "TI SN74LVC1G04 SCES214AF (v2/vendor/ti/ti-sn74lvc1g04.pdf): " + _TI_GATE % "p.12")
+    if pv.startswith("SN74LVC2G06"):
+        return ("D", "TI SN74LVC2G06 SCES307J (v2/vendor/ti/ti-sn74lvc2g06.pdf): \"Each VCC pin must have a good bypass capacitor "
+                     "in order to prevent power disturbance. For devices with a single supply, a 0.1-uF capacitor is recommended\" "
+                     "(Power Supply Recommendations, p.11)")
+    if pv.startswith("SN74LVC86A"):
+        return ("D", "TI SN74LVC86A SCAS288R (v2/vendor/ti/ti-sn74lvc86a.pdf): " + _TI_GATE.replace("a 0.1uF capacitor", "0.1 uF") % "p.11")
+    if pv.startswith("SN74LVC32A"):
+        return ("D", "TI SN74LVC32A SCAS286U (v2/vendor/ti/ti-sn74lvc32a-quad-or.pdf): " + _TI_GATE.replace("a 0.1uF capacitor", "0.1 uF") % "p.11")
+    if pv.startswith("STM32H743"):
+        if pin in ("48", "73"):
+            return ("L", "ST AN4938 Rev 7 (v2/vendor/st/st-an4938-rev7.pdf) 2.1: \"The LDO regulator requires a capacitor on VCAP "
+                         "pins\" (p.10); ST DS12110 Rev 10 (v2/vendor/st/st-stm32h743xi-datasheet.pdf) 6.3.2 Table 25 (p.107): CEXT "
+                         "2.2 uF (+-20 percent tolerated), ESR < 100 mOhm, \"Two external capacitors can be connected to VCAP pins\"",
+                    {"value_floor": "2.2u (-20 percent)", "esr_max": "100 mOhm"})
+        if pin == "21":
+            return ("D", "ST AN4938 Rev 7 2.2 (p.12): \"VDDA pin must be connected to two external decoupling capacitors (100 nF "
+                         "ceramic capacitors and a 1 uF tantalum or ceramic capacitor)\"")
+        if cv.startswith("10u"):
+            return ("D", "ST AN4938 Rev 7 2.2 (p.12): \"one single tantalum or ceramic capacitor (of 4.7 uF minimum capacitance) "
+                         "for the package\"; 7.4 (p.32): \"one single tantalum or ceramic capacitor (min. 4.7 uF) ... placed as "
+                         "close as possible to, or below, the appropriate pins\": tied to the pins, so class D, not bulk")
+        return ("D", "ST AN4938 Rev 7 2.2 (p.12): \"a 100 nF ceramic capacitor for each VDD pin\"; 7.4 (p.32): \"each power supply "
+                     "pair must be decoupled with filtering ceramic capacitors (100 nF)\"")
+    if pv.startswith("CP2102N"):
+        _cp = ("Silicon Labs CP2102N data sheet Rev 1.5 (v2/vendor/silabs/silabs-cp2102n.pdf), the bus-powered figure (p.5): "
+               "\"4.7 uF and 0.1 uF bypass capacitors required for each power pin placed as close to the pins as possible\"")
+        if pin == "6" and cv.startswith("4.7u"):
+            return ("L", _cp + "; VDD is the internal regulator's \"3.3 V (out)\" (p.5; VREGOUT 3.1 to 3.6 V, p.12)",
+                    {"value_floor": "4.7u", "esr_max": "not stated by the maker"})
+        return ("D", _cp)
+    if pv.startswith("AP2112K"):
+        _ap = ("Diodes AP2112 DS39724 Rev. 2-2 (v2/vendor/diodes/diodes-ap2112-ldo.pdf): \"Stable with 1.0uF Flexible Cap\" "
+               "(Features, p.1); the typical application's CIN and COUT of 1 uF (p.2); every electrical table at \"CIN = 1.0uF "
+               "(Ceramic), COUT = 1.0uF (Ceramic)\" (pp.4-7)")
+        if pin == "5":
+            return ("L", _ap + ": the LDO's output capacitor", {"value_floor": "1.0u", "esr_max": "not stated by the maker"})
+        return ("D", _ap + ": an LDO's input capacitor is class D (DECOUPLING.md section 6)")
+    if "TPS23861" in pv:
+        return ("D", "TI TPS23861 SLUSBX9I (v2/vendor/ti/tps23861-datasheet.pdf), pin VDD: \"Digital 3.3-V supply. Bypass VDD to "
+                     "DGND using a 0.1-uF capacitor\" (p.5)")
+    if pv.startswith("DS3231"):
+        return ("D", "Maxim DS3231 19-5170 Rev 10 (v2/vendor/adi/adi-ds3231sn.pdf), pin VCC: \"DC Power Pin for Primary Power "
+                     "Supply. This pin should be decoupled using a 0.1uF to 1.0uF capacitor\" (p.9)")
+    if "LG290P" in pv and pin == "22":
+        return ("D", "Quectel LG290P(03) hardware design V1.1 (v2/vendor/quectel/lg290p03-hardware-design-v1.1.pdf) 3.2.2 (p.25): "
+                     "\"It is recommended to place a TVS and a combination of a 4.7 uF, a 100 nF and a 33 pF decoupling capacitor "
+                     "near the V_BCKP pin\" (Figure 6); W3B-F2, the TVS still open")
+    if pv.startswith("TMP117"):
+        return ("D", "TI TMP117 SNOSD82D (v2/vendor/ti/ti-tmp117-temperature.pdf) Power Supply Recommendations: \"The "
+                     "recommended value for this supply bypass capacitor is 100 nF\" (p.35)")
+    return None
+_DEC_RULED = ("R", "D", "L", "A", "B1", "B2")   # decision 42's six classes (DECOUPLING.md section 6)
+for _e in _intent._I["bypass"]:
+    _row = _dec_rule(_e)
+    if _row is None:
+        raise SystemExit("gen_sch_b: decoupling entry %s -> %s.%s (%s) carries no class (decision 42): add its maker's clause "
+                         "to _dec_rule" % (_e["cap"], _e["part"], _e["pin"], byref[_e["part"]]["value"][:40]))
+    _cls, _basis = _row[0], _row[1]; _extra = _row[2] if len(_row) > 2 else {}
+    if _cls not in _DEC_RULED or not _basis.strip():
+        raise SystemExit("gen_sch_b: decoupling entry %s: class %r is not one of %s, or its basis is empty" % (_e["cap"], _cls, _DEC_RULED))
+    if _cls == "L" and not _extra.get("value_floor"):
+        raise SystemExit("gen_sch_b: class L entry %s names no value floor (DECOUPLING.md L2)" % _e["cap"])
+    _e.update({"class": _cls, "basis": _basis}, **_extra)
 import schlayout, time as _time
 PAPER, NPAGES, NCOLS, NROWS = schlayout.run(P, SECTIONS, POWER, _intent._I["bypass"], {"date": _time.strftime("%Y-%m-%d")}, os.environ.get("PHASE", ""), 'PCB-B COMPUTE')   # 15 Sep 2026: one A3 page per block, real wiring (32.196)
 out = kisch.out

@@ -1,0 +1,64 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "intent_checks.py",
+  "files": {
+   "boardorder.py": "298e46edcc028954",
+   "boardtable.py": "41bd92e61f12c374",
+   "hardset.py": "be29a44c4a592876",
+   "intent.py": "f1ac033e0f3c10f1",
+   "intent_checks.py": "1ad7af0c718ba940",
+   "kicad_compat.py": "6b8f77490466e939",
+   "netclass.py": "4cc1adf0ddae0390",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "return_via.py": "b61d138e54955dd4",
+   "rules_lib.py": "c0458c53923d7925",
+   "signal_class.py": "60b8647301428da4",
+   "signalnets.py": "688be12d8e42e7a4",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "5aa3d5157698ae2a",
+  "unresolved": []
+ },
+ "counts": {
+  "fail": 1,
+  "pass": 0
+ },
+ "denominator": 1,
+ "evidence": [
+  "return via: 4 of 12 signal vias have a ground via within 1.5 mm (586 exempt in fine-pitch fans, 687 on one reference plane, 512 on a net whose declared class has no edge to return); without one: SEL2_O1 at (0.57, 144.25): nearest ground via 3.15 mm; SEL2_O1 at (1.40, 147.50): nearest ground via 3.99 mm; HUBRST2_AB at (3.72, 139.94): nearest ground via 2.60 mm; HUBRST2_A at (3.72, 141.24): nearest ground via 3.01 mm; SEL3_AB at (3.72, 148.15): nearest ground via 3.90 mm; SDA at (11.07, 27.54): nearest ground via 2.12 mm; HUBRST1_VOTE at (13.55, 146.20): nearest ground via 3.03 mm; WSEC_C at (28.02, 141.24): nearest ground via 2.12 mm"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "2e64b5bf2d9cd3bc"
+  }
+ },
+ "missing_input": null,
+ "note": "a ground via at a signal's reference change",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [],
+ "runtime": {
+  "kicad": "9.0.9-9.0.9~ubuntu24.04.1",
+  "python": "3.12.3"
+ },
+ "tool": "intent_return_via",
+ "tools": {
+  "git_head": "38dcd76442a1",
+  "tools_tree_sha": "a2f69336ab196da0"
+ },
+ "ts": "2026-09-27T10:34:54Z",
+ "verdict": "FAIL",
+ "version": "38dcd76442a1",
+ "writer": {
+  "file": "intent_checks.py",
+  "sha16": "1ad7af0c718ba940"
+ }
+}

@@ -1,0 +1,3 @@
+pin_map_lands: board B: 33 part(s) judged against their land, 0 failure(s), 0 pin(s) on a merged pad, 1237 land(s) unreadable
+verdict: pin_map_lands_b        INCONCLUSIVE of 1270 {"judged": 33, "unreadable": 1237}
+exit 3

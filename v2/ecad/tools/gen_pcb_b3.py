@@ -574,7 +574,7 @@ PATTERNS = [("*_ANT", "RF"), ("USB*", "USB"), ("HUB*", "USB"), ("LIME_SS*", "USB
             ("PCIE*", "USB"), ("NVME*_RX_*", "USB"), ("NVME*_TX_*", "USB"), ("NVME*_CLK_*", "USB"), ("CARD*_RX_*", "USB"), ("CARD*_TX_*", "USB"), ("CARD*_CLK_*", "USB"),
             ("HDMI*_D*", "DIFF100"), ("HDMI*_CK_*", "DIFF100"), ("ETH*", "DIFF100"), ("SWP*", "DIFF100"),
             ("MDI_*", "HV"), ("POE_*", "HV"), ("+54V_POE", "HV"),
-            ("+5V_*", "PWR"), ("+3V3_*", "PWR"), ("+1V*", "PWR"), ("+2V5*", "PWR"), ("PANEL_5V", "PANEL"), ("VBUS*", "PWR"), ("GND", "PWR"), ("*_SW", "PWR"), ("VBAT", "PWR")]
+            ("+5V_*", "PWR"), ("+3V3_*", "PWR"), ("+1V*", "PWR"), ("+2V5*", "PWR"), ("PANEL_5V", "PANEL"), ("VBUS*", "PWR"), ("GND", "PWR"), ("*_SW", "PWR"), ("VBAT_RTC", "PWR")]
 PATTERNS += [("/" + pat, cls_) for pat, cls_ in PATTERNS if not pat.startswith("/")]
 # A net class clearance below the board minimum never applies: KiCad enforces the minimum as a floor while the router takes the class value
 # from the DSN, so every pair laid at that spacing is a violation (A23, 25 of them, 9 Sep 2026 02:10; MESHSAT-862).

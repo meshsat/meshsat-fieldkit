@@ -1,0 +1,56 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "ground_system.py",
+  "files": {
+   "ground_system.py": "228e0a905a75b254",
+   "intent.py": "f1ac033e0f3c10f1",
+   "kisch.py": "3e28374d15be25e0",
+   "sch_prov.py": "a98e5a71ac74ccee",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "cce41d4d1d6a7d41",
+  "unresolved": []
+ },
+ "counts": {
+  "crossings": 0,
+  "fail": 0,
+  "grounds": 1,
+  "signals_crossing": 0
+ },
+ "denominator": 1,
+ "evidence": [],
+ "inputs": {
+  "board": "b",
+  "netlist": "pcb-b-compute.net"
+ },
+ "missing_input": null,
+ "note": "one ground declared, or every partition declared with its crossing points and the signals that cross; found from the netlist and compared with the board's own declaration",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "GND-001": "4ab0f011480d0da5"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "GND-001"
+ ],
+ "runtime": {
+  "python": "3.11.2"
+ },
+ "tool": "ground_system",
+ "tools": {
+  "git_head": "38dcd76442a1",
+  "tools_tree_sha": "a2f69336ab196da0"
+ },
+ "ts": "2026-09-27T09:54:58Z",
+ "verdict": "PASS",
+ "version": "38dcd76442a1",
+ "writer": {
+  "file": "ground_system.py",
+  "sha16": "228e0a905a75b254"
+ }
+}

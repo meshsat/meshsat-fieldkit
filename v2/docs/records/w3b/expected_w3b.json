@@ -1,0 +1,93 @@
+{
+ "_what": "Stream w3b (MESHSAT-1357, 27 September 2026): every netlist difference board B's candidate may show against main 38dcd764's committed netlist (adcc3c6736c90e9f), per finding; read by the independent comparator (v2/docs/records/r8b/integration/indep_cmp.py). W3B-F1 is the TPS23861's RSENS and RDRAIN, W3B-F2 the LG290P's V_BCKP capacitors, W3B-R1 the coin-cell net renamed VBAT_RTC (board A's pack node is VBAT; its nodes are held equal to the old VBAT's plus C72 to C74 by drafts/w3b/tools/rename_check.py). Everything else w3b changes is in the intent file only (PWR-001 declarations, decision 42 classes).",
+ "_findings": [
+  {
+   "finding": "W3B-F1",
+   "kind": "parts_added",
+   "patterns": [
+    "R525",
+    "R526"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "W3B-F1",
+   "kind": "nets_added",
+   "patterns": [
+    "/POE_SEN_PIN",
+    "/POE_DRAIN_PIN"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "W3B-F1",
+   "kind": "nets_changed",
+   "patterns": [
+    "/POE_SEN"
+   ],
+   "allowed": [
+    "U5",
+    "R525"
+   ]
+  },
+  {
+   "finding": "W3B-F1",
+   "kind": "nets_changed",
+   "patterns": [
+    "/POE_DRAIN"
+   ],
+   "allowed": [
+    "U5",
+    "R526"
+   ]
+  },
+  {
+   "finding": "W3B-F2",
+   "kind": "parts_added",
+   "patterns": [
+    "C72",
+    "C73",
+    "C74"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "W3B-F2",
+   "kind": "nets_changed",
+   "patterns": [
+    "GND"
+   ],
+   "allowed": [
+    "C72",
+    "C73",
+    "C74"
+   ]
+  },
+  {
+   "finding": "W3B-R1",
+   "kind": "nets_removed",
+   "patterns": [
+    "/VBAT"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "W3B-R1",
+   "kind": "nets_added",
+   "patterns": [
+    "/VBAT_RTC"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "W3B-R1",
+   "kind": "parts_changed",
+   "patterns": [
+    "TP6"
+   ],
+   "allowed": [
+    "value"
+   ]
+  }
+ ]
+}

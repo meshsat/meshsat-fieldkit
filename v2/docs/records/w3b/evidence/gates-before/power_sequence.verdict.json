@@ -1,0 +1,66 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "power_sequence.py",
+  "files": {
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "power_sequence.py": "2ba1e2e1a719c9d1",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "05304516ac07bc7d",
+  "unresolved": []
+ },
+ "counts": {
+  "always_on": 22,
+  "deadlocks": 0,
+  "rails": 41,
+  "segments": 5,
+  "unresolved": 0
+ },
+ "denominator": 41,
+ "evidence": [],
+ "inputs": {
+  "board": "b",
+  "intent": {
+   "path": "pcb-b-compute-b19/out/pcb-b-compute-intent.json",
+   "sha256_16": "1038d0f6ce8104b5"
+  },
+  "netlist": {
+   "content16": "1992622c2519ed0d",
+   "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
+   "sha256_16": "adcc3c6736c90e9f"
+  }
+ },
+ "missing_input": null,
+ "note": "each rail's enable derived from the netlist and the part that drives it named; a rail whose enable is driven only by a device powered from that same rail cannot start and is a failure. The ORDER between rails is reported as the graph and not decided here, because which order is correct is a property of the modules' own datasheets",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "PWR-002": "e3e7bbe7d6246a13"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "PWR-002"
+ ],
+ "runtime": {
+  "python": "3.11.2"
+ },
+ "tool": "power_sequence",
+ "tools": {
+  "git_head": "38dcd76442a1",
+  "tools_tree_sha": "a2f69336ab196da0"
+ },
+ "ts": "2026-09-27T09:54:57Z",
+ "verdict": "PASS",
+ "version": "38dcd76442a1",
+ "writer": {
+  "file": "power_sequence.py",
+  "sha16": "2ba1e2e1a719c9d1"
+ }
+}

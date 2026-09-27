@@ -1,0 +1,8 @@
+ERC: violations (out/pcb-b-compute-erc.json, out/pcb-b-compute-erc.rpt; erc_gate.py decides)
+netlist: out/pcb-b-compute.net
+sch_prov: pcb-b-compute.net written by generator 6dba22222360b29b (boards/b.json#gen_env, gen_footprints_b16.py, gen_footprints_e.py, gen_footprints_idc.py, gen_footprints_panel.py, gen_sch_b.py, idc_pads.py, intent.py, kisch.py, schlayout.py, and 60 land(s) in meshsat.pretty)
+sheet pdf: out/pcb-b-compute-schematic-sheet.pdf
+sch_pages: 6 x 8 cells, 43 pages kept of 48 tiles
+pdf: out/pcb-b-compute-schematic.pdf
+bom: out/pcb-b-compute-bom.csv
+build_sch exit 0

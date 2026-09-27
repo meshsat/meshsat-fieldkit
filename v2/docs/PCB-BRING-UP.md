@@ -73,38 +73,54 @@ fault from one that reads low.
 
 | step | rail | apply | current limit | at | what it feeds |
 |---|---|---|---|---|---|
-| 1 | +5V_DEV | 5.00 V | 3.80 A | J_5V_DEV | F1, F2, F3, U106, U15, U16 |
-| 2 | +5V_HDMI | 5.00 V | 0.10 A | F2 | J_HDMI |
-| 3 | VBUS_QMX | 5.00 V | 0.30 A | F3 | J_QMX |
-| 4 | PANEL_5V | 5.00 V | 0.60 A | F1 | J_PANEL |
-| 5 | +5V_S1 | 5.10 V | 2.50 A | J_5V_S1 | J_FAN1, U103, U104, U105, U30A |
-| 6 | +5V_S2 | 5.10 V | 4.20 A | J_5V_S2 | J_FAN2, U203, U204, U205, U31A |
-| 7 | +5V_S3 | 5.10 V | 2.50 A | J_5V_S3 | J_FAN3, U303, U304, U305, U32A |
-| 8 | +54V_POE | 54.00 V | 0.30 A | J_54V | U5 |
+| 1 | MDI_B_P | 0.15 V | 0.15 A | J_ETH | T1 |
+| 2 | MDI_B_N | 0.15 V | 0.15 A | J_ETH | T1 |
+| 3 | SIM1_VCC | 3.00 V | 0.01 A | J_M2C2 | J_SIM1, U222 |
+| 4 | SIM2_VCC | 3.00 V | 0.01 A | J_M2C2 | R272 |
+| 5 | +5V_DEV | 5.00 V | 3.80 A | J_5V_DEV | F1, F2, F3, U106, U15, U16 |
+| 6 | +5V_HDMI | 5.00 V | 0.10 A | F2 | J_HDMI |
+| 7 | VBUS_FLASH1 | 5.00 V | 0.00 A | J_FLASH1 | U107 |
+| 8 | VBUS_FLASH2 | 5.00 V | 0.00 A | J_FLASH2 | U207 |
+| 9 | VBUS_FLASH3 | 5.00 V | 0.00 A | J_FLASH3 | U307 |
+| 10 | VBUS_QMX | 5.00 V | 0.30 A | F3 | J_QMX |
+| 11 | PANEL_5V | 5.00 V | 0.60 A | F1 | J_PANEL |
+| 12 | +5V_S1 | 5.10 V | 2.50 A | J_5V_S1 | J_FAN1, U103, U104, U105, U30A |
+| 13 | +5V_S2 | 5.10 V | 4.20 A | J_5V_S2 | J_FAN2, U203, U204, U205, U31A |
+| 14 | +5V_S3 | 5.10 V | 2.50 A | J_5V_S3 | J_FAN3, U303, U304, U305, U32A |
+| 15 | +54V_POE | 54.00 V | 0.30 A | J_54V | R13, U5 |
 
 **Measured, in this order, after the inputs are up.**
 
 | step | rail | expect | at | what it feeds |
 |---|---|---|---|---|
 | 1 | GND | 0.00 V (0.00 to 0.00) | ['J_5V_S1', 'J_5V_S2', 'J_5V_S3', 'J_5V_DEV'] | J_FAN1, J_FAN2, J_FAN3, J_PANEL, J_QMX, U103 |
-| 2 | +1V8_CM1 | 1.80 V (1.71 to 1.89) | U30A | U30A |
-| 3 | +1V8_CM2 | 1.80 V (1.71 to 1.89) | U31A | U31A |
-| 4 | +1V8_CM3 | 1.80 V (1.71 to 1.89) | U32A | U32A |
-| 5 | +2V5_KSZ | 2.50 V (2.38 to 2.62) | U27 | U1 |
-| 6 | +3V3_M2C1 | 3.30 V (3.13 to 3.46) | R165 | J_M2C1 |
-| 7 | +3V3_CM1 | 3.30 V (3.13 to 3.46) | U30A | U30A |
-| 8 | +3V3_CM2 | 3.30 V (3.13 to 3.46) | U31A | U31A |
-| 9 | +3V3_M2C3 | 3.30 V (3.13 to 3.46) | R365 | J_M2C3 |
-| 10 | +3V3_CM3 | 3.30 V (3.13 to 3.46) | U32A | U32A |
-| 11 | +3V3_IOCA | 3.30 V (3.13 to 3.46) | U40 | U41, U42, U43, U44 |
-| 12 | +3V3_IOCB | 3.30 V (3.13 to 3.46) | U50 | U51, U52, U53, U54 |
-| 13 | +3V3_IOCC | 3.30 V (3.13 to 3.46) | U60 | U61, U62, U63, U64 |
-| 14 | +3V3_ZB | 3.30 V (3.13 to 3.46) | U22 | J_ZBDBG1, J_ZBDBG2, U13, U14 |
-| 15 | +3V3_M2C2 | 3.46 V (3.28 to 3.63) | R265 | J_M2C2 |
-| 16 | +5V_LORA | 5.00 V (4.75 to 5.25) | U21 | U12 |
-| 17 | +5V_LIME | 5.00 V (4.75 to 5.25) | U23 | J_LIME |
-| 18 | +5V_RB | 5.00 V (4.75 to 5.25) | U24 | J_RB9704 |
-| 19 | +5V_CAM | 5.00 V (4.75 to 5.25) | U28 | J_CAM |
+| 2 | POE_DRAIN | 0.15 V (0.14 to 0.16) | T1 | Q1 |
+| 3 | POE_SEN | 0.15 V (0.14 to 0.16) | Q1 | R12 |
+| 4 | +1V8_CM1 | 1.80 V (1.71 to 1.89) | U30A | U30A |
+| 5 | +1V8_CM2 | 1.80 V (1.71 to 1.89) | U31A | U31A |
+| 6 | +1V8_CM3 | 1.80 V (1.71 to 1.89) | U32A | U32A |
+| 7 | +2V5_KSZ | 2.50 V (2.38 to 2.62) | U27 | U1 |
+| 8 | SIMC2_VCC | 3.00 V (2.85 to 3.15) | R272 | J_SIM2, U223 |
+| 9 | VBAT_RTC | 3.00 V (2.85 to 3.15) | BT1 | U11, U30A, U31A, U32A, U9 |
+| 10 | +3V3_M2C1 | 3.30 V (3.13 to 3.46) | R165 | J_M2C1 |
+| 11 | +3V3_CM1 | 3.30 V (3.13 to 3.46) | U30A | U30A |
+| 12 | +3V3_CM2 | 3.30 V (3.13 to 3.46) | U31A | U31A |
+| 13 | +3V3_M2C3 | 3.30 V (3.13 to 3.46) | R365 | J_M2C3 |
+| 14 | +3V3_CM3 | 3.30 V (3.13 to 3.46) | U32A | U32A |
+| 15 | +3V3_IOCA | 3.30 V (3.13 to 3.46) | U40 | U41, U42, U43, U44 |
+| 16 | +3V3_IOCB | 3.30 V (3.13 to 3.46) | U50 | U51, U52, U53, U54 |
+| 17 | +3V3_IOCC | 3.30 V (3.13 to 3.46) | U60 | U61, U62, U63, U64 |
+| 18 | +3V3_ZB | 3.30 V (3.13 to 3.46) | U22 | J_ZBDBG1, J_ZBDBG2, U13, U14 |
+| 19 | GNSS_VDD_RF | 3.30 V (3.13 to 3.46) | U11 | R23 |
+| 20 | GNSS_BIAS | 3.30 V (3.13 to 3.46) | R23 | L3 |
+| 21 | +3V3_M2C2 | 3.46 V (3.28 to 3.63) | R265 | J_M2C2 |
+| 22 | +5V_LORA | 5.00 V (4.75 to 5.25) | U21 | U12 |
+| 23 | +5V_LIME | 5.00 V (4.75 to 5.25) | U23 | J_LIME |
+| 24 | +5V_RB | 5.00 V (4.75 to 5.25) | U24 | J_RB9704 |
+| 25 | +5V_CAM | 5.00 V (4.75 to 5.25) | U28 | J_CAM |
+| 26 | POE_P | 54.00 V (51.30 to 56.70) | R13 | T1 |
+| 27 | MDI_A_P | 54.00 V (51.30 to 56.70) | T1 | J_ETH |
+| 28 | MDI_A_N | 54.00 V (51.30 to 56.70) | T1 | J_ETH |
 
 **Decide before powering: the declared source is an inductor or a ferrite, which is a filter on an incoming feed on some boards and a converter's output on others.**
 
@@ -123,6 +139,7 @@ fault from one that reads low.
 | +3V3_S2B | 3.30 V | 0.90 A | L202 | J_M2N2, U201 |
 | +3V3_S3A | 3.30 V | 0.50 A | L301 | R365 |
 | +3V3_S3B | 3.30 V | 0.90 A | L302 | J_M2N3, U301 |
+| GNSS_ANT | 3.30 V | 0.02 A | L3 | J_GNSS1 |
 | +3V3_S2A | 3.46 V | 3.00 A | L201 | R265 |
 
 ## Board C

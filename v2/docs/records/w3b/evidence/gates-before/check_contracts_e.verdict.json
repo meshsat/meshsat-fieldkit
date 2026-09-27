@@ -1,0 +1,88 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "check_contracts.py",
+  "files": {
+   "boardtable.py": "41bd92e61f12c374",
+   "check_contracts.py": "308fdefb90335da4",
+   "intent.py": "f1ac033e0f3c10f1",
+   "kisch.py": "3e28374d15be25e0",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "sch_prov.py": "a98e5a71ac74ccee",
+   "tx_inhibit.py": "1d01e6d2999f0f7d",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "466e434f1262d343",
+  "unresolved": []
+ },
+ "counts": {
+  "fail": 0,
+  "pass": 12,
+  "undecided": 0,
+  "unjudged": 0
+ },
+ "denominator": 12,
+ "evidence": [],
+ "inputs": {
+  "boards": "A,B,C,D,E,P",
+  "intent_a": {
+   "path": "pcb-a-power-a23/out/pcb-a-power-intent.json",
+   "sha256_16": "98f0100b1023700e"
+  },
+  "intent_e": {
+   "path": "pcb-e1-dock-e7/out/pcb-e1-dock-intent.json",
+   "sha256_16": "b4c90bb84593638b"
+  },
+  "intent_p": {
+   "path": "pcb-p-pack-p2/out/pcb-p-pack-intent.json",
+   "sha256_16": "6ff1b8129a5c5aff"
+  },
+  "netlist_a": {
+   "content16": "66797255f4591a23",
+   "path": "pcb-a-power-a23/out/pcb-a-power.net",
+   "sha256_16": "3a786cf31614fe63"
+  },
+  "netlist_e": {
+   "content16": "256cc3f96d41dcab",
+   "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
+   "sha256_16": "f3c1ad6153002976"
+  },
+  "netlist_p": {
+   "content16": "efe60479293f0004",
+   "path": "pcb-p-pack-p2/out/pcb-p-pack.net",
+   "sha256_16": "085f833362fbbda8"
+  }
+ },
+ "missing_input": null,
+ "note": "the contracts that name this board; the set's own verdict is check_contracts",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "SCH-003": "ddf200a8e65c127b"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "SCH-003"
+ ],
+ "runtime": {
+  "python": "3.11.2"
+ },
+ "tool": "check_contracts_e",
+ "tools": {
+  "git_head": "38dcd76442a1",
+  "tools_tree_sha": "a2f69336ab196da0"
+ },
+ "ts": "2026-09-27T09:55:04Z",
+ "verdict": "PASS",
+ "version": "38dcd76442a1",
+ "writer": {
+  "file": "check_contracts.py",
+  "sha16": "308fdefb90335da4"
+ }
+}
