@@ -1,0 +1,120 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "port_protect.py",
+  "files": {
+   "boardtable.py": "41bd92e61f12c374",
+   "intent.py": "f1ac033e0f3c10f1",
+   "kisch.py": "3e28374d15be25e0",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "port_protect.py": "2179463c3d90d9dc",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "a260597cb25267f5",
+  "unresolved": []
+ },
+ "counts": {
+  "answered_in_part": 0,
+  "behind_an_active_part": 0,
+  "clamps": 5,
+  "clamps_one_way": 5,
+  "clamps_reversed": 0,
+  "clamps_symbol_mismatch": 0,
+  "clamps_unjudged": 0,
+  "declarations_refused": 2,
+  "declared": 3,
+  "ground_pins_not_judged": 5,
+  "internal_pins": 0,
+  "not_on_netlist": 0,
+  "ports": 3,
+  "uncovered_pins": 76,
+  "unprotected": 0
+ },
+ "denominator": 26,
+ "evidence": [
+  "DECLARATION J_DOCK.1 is on GND: the external entry lists a pin that carries no supply and no signal (a ground or a no-connect), so it names no conductor there and nothing was judged",
+  "DECLARATION J_DOCK.2 is on GND: the external entry lists a pin that carries no supply and no signal (a ground or a no-connect), so it names no conductor there and nothing was judged",
+  "UNCOVERED J_54V.1 on +54V_POE",
+  "UNCOVERED J_5V_DEV.1 on +5V_DEV",
+  "UNCOVERED J_5V_S1.1 on +5V_S1",
+  "UNCOVERED J_5V_S2.1 on +5V_S2",
+  "UNCOVERED J_5V_S3.1 on +5V_S3",
+  "UNCOVERED J_AB1.1 on USB_D8_P",
+  "UNCOVERED J_AB1.10 on PI_KILL",
+  "UNCOVERED J_AB1.11 on SDA",
+  "UNCOVERED J_AB1.12 on SCL",
+  "UNCOVERED J_AB1.13 on EXP_INT",
+  "UNCOVERED J_AB1.14 on TR_APRS",
+  "UNCOVERED J_AB1.15 on EMCON_HW",
+  "UNCOVERED J_AB1.16 on TX_INHIBIT_n",
+  "UNCOVERED J_AB1.17 on SLOT_EN1",
+  "UNCOVERED J_AB1.18 on SLOT_EN2",
+  "UNCOVERED J_AB1.19 on SLOT_EN3",
+  "UNCOVERED J_AB1.2 on USB_D8_N",
+  "UNCOVERED J_AB1.20 on ZEROIZE_HW",
+  "UNCOVERED J_AB1.21 on SHORE_INHIBIT",
+  "UNCOVERED J_AB1.25 on USB_E6_P",
+  "UNCOVERED J_AB1.26 on USB_E6_N",
+  "UNCOVERED J_AB1.9 on PI_SHDN_REQ",
+  "UNCOVERED J_AB2.1 on USB_WALL_P",
+  "UNCOVERED J_AB2.2 on USB_WALL_N",
+  "UNCOVERED J_BM1.1 on RF_VHF",
+  "UNCOVERED J_BM10.1 on RF_IRIDIUM",
+  "UNCOVERED J_BM11.1 on RF_LORA",
+  "UNCOVERED J_BM2.1 on RF_HF",
+  "UNCOVERED J_BM3.1 on RF_WIFI24",
+  "UNCOVERED J_BM4.1 on RF_GNSS",
+  "UNCOVERED J_BM5.1 on RF_SDR",
+  "UNCOVERED J_BM6.1 on RF_P2PA",
+  "UNCOVERED J_BM7.1 on RF_P2PB",
+  "UNCOVERED J_BM8.1 on RF_5G1",
+  "UNCOVERED J_BM9.1 on RF_5G2",
+  "UNCOVERED J_CP1.1 on CELL+",
+  "UNCOVERED J_CP2.1 on CELL+",
+  "UNCOVERED J_CP3.1 on CELL+"
+ ],
+ "inputs": {
+  "board": "a",
+  "intent": {
+   "path": "pcb-a-power-a23/out/pcb-a-power-intent.json",
+   "sha256_16": "3422910a15c4d145"
+  },
+  "netlist": {
+   "content16": "d464d30a17fb30f7",
+   "path": "pcb-a-power-a23/out/pcb-a-power.net",
+   "sha256_16": "0a2b59087bcc2678"
+  }
+ },
+ "missing_input": null,
+ "note": "2 entry(ies) of the declaration name no conductor, 0 conductor(s) reach a semiconductor with nothing between, 0 meet their clamp only through an active part, which therefore sees the transient itself, and 0 clamp(s) are reversed or drawn so their polarity cannot be read; 76 connector pin(s) are covered by no entry",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "TRN-001": "5d38bd6db7d4e11f"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "TRN-001"
+ ],
+ "runtime": {
+  "python": "3.11.2"
+ },
+ "tool": "port_protect_a",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "b8ff01c3b5225f82"
+ },
+ "ts": "2026-09-27T22:05:29Z",
+ "verdict": "FAIL",
+ "version": "unknown",
+ "writer": {
+  "file": "port_protect.py",
+  "sha16": "2179463c3d90d9dc"
+ }
+}
