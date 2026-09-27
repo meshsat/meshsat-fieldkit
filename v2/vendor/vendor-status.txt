@@ -220,3 +220,15 @@ ti/ti-ads1115-sbas444e.pdf   current   # ADS1115IDGSR, board D's U22, the PA fla
 kento/kento-kt-0603y-citayl-0603.pdf   current   # KT-0603Y (C2287), board D's LED2 and LED5, yellow (SOURCES.yaml, round8_board_d_parts)
 yageo/yageo-cc-general-purpose-np0-16v-250v.pdf   current   # CC0402JRNPO9BN102 (C113780), board D's 1 nF NP0 bypasses (SOURCES.yaml, round8_board_d_parts, R8D-P1)
 samsung/samsung-cl05a225ko5nqn-spec.html   current   # CL05A225KO5NQNC (C170151), board D's C31 and C32, G12 (SOURCES.yaml, round8_board_d_parts)
+# --- added 27 September 2026 (MESHSAT-1357, round 8 integration): the documents the RF-002 walk (tools/tx_inhibit.py)
+# cites that main did not hold. A current status means the walk's tables read the document; no board fits the five logic
+# families yet, and the walk refuses to cross a part whose sheet is not held, so each is here before a board fits it.
+ti/ti-sn74lvc00a.pdf   current   # SN74LVC00A, the tx_inhibit LOGIC row (quad NAND) and its 7.3.3 negative-only clamps (R4T-D65, R4T-D71); no board fits it
+ti/ti-sn74lvc07a.pdf   current   # SN74LVC07A, the tx_inhibit LOGIC row (hex open-drain buffer; page 1 open drain, R4T-D71); no board fits it
+ti/ti-sn74lvc1g07.pdf   current   # SN74LVC1G07, the tx_inhibit LOGIC row (open-drain buffer; page 1 open drain, R4T-D71); no board fits it
+ti/ti-sn74lvc1g34.pdf   current   # SN74LVC1G34, the tx_inhibit LOGIC row (buffer; II and Ioff, 5.5); board C's U9 was this family before round 4
+ti/ti-sn74lvc2g07.pdf   current   # SN74LVC2G07, the tx_inhibit LOGIC row (dual open-drain buffer; page 1 open drain, R4T-D71); no board fits it
+cm5/doc-rtc.adoc   current   # the RTC's 3 mA constant-current, constant-voltage battery charger and how firmware switches it on (tx_inhibit FW_PIN_TABLES, Compute Module 5, R4T-D51)
+cm5/rpi-firmware-overlays-README.txt   current   # the rtc_bbat_vchg parameter that switches the RTC battery charger on, '2712 only' (tx_inhibit, R4T-D51)
+cm5/linux-bcm2712-rpi.dtsi   current   # the rpi_rtc node with trickle-charge-microvolt and the rtc_bbat_vchg parameter (tx_inhibit, R4T-D51)
+cm5/linux-bcm2712-rpi-cm5.dtsi   current   # the Compute Module 5's own device tree, which includes bcm2712-rpi.dtsi (tx_inhibit, R4T-D51)
