@@ -1976,10 +1976,11 @@ open_items:
       node TRK_CS, R5 from it to GND, R6 and R7 from R5's two pads, L1 from TRK_SW1 to TRK_SW2), GATEVCC's C63,
       the four supply-pin declarations and MODE on LDO33 (SC-56), regenerated with parity, and boards/e.json's
       two TRK_LSENSE entries follow (the switching pre-lay group takes TRK_CS in TRK_LSENSE's place, a switching
-      conductor as board A's LM5176 CS nodes are under F-PR-04). Still open: the drafted knock-ons in
-      pcb_sensitive.yaml (board e's switch list, TRK_CS for TRK_LSENSE, and Kelvin rows) and gen_pcb_e3.py
-      (PATTERNS, the TRKS region, v2/docs/records/w3de/), and item 10, the boost diodes (a silicon part with its
-      sheet and order code, or the BAT54's own sheet read against 8705af p.29).
+      conductor as board A's LM5176 CS nodes are under F-PR-04). The knock-ons landed in the same integration
+      (fnd/r8int5, b7f96784): pcb_sensitive.yaml board e (TRK_CS in the switch list for TRK_LSENSE, the Kelvin rows
+      TRK_CSP and TRK_CSN) and gen_pcb_e3.py (PATTERNS, C63 and C64 in the TRKS region, a marker that stops the
+      placement until P_VR and P_VN are placed). Still open: item 10, the boost diodes (a silicon part with its
+      sheet and order code, or the BAT54's own sheet read against 8705af p.29), and board E's next placement.
   - id: S-57
     class: SESSION
     status: OPEN
@@ -7008,11 +7009,21 @@ records:
           v2/docs/records/w3de/parity-r8int5/), it differs only in J_VR1 to J_VR4 (VIN_RAW) and J_VN1 to J_VN4 (GND)
           added and J_DOCK's value and pins 1 to 4 (VIN_RAW to GND); board A's PA_EN (U35, U36) and its gates are
           unchanged, so it stands INCONCLUSIVE on the file at da05dc02bc1e612f
+      - >-
+          v2/docs/CURRENT-EVIDENCE.md re-read at the r8int5 integration of 27 September 2026 (set 5 of the handover:
+          streams w3t, w3a, w3b, w3de and w3g), rendered after rules_status ran three times on the committed
+          integration: the ready-for-layout table carries set 5's netlists of boards A (da05dc02bc1e612f), B
+          (8b78c59754a6a0c7), D (76700a687eb6187f) and E (d6137f50059e5cbc); PWR-001 on A and E moves from
+          CURRENT_CANDIDATE to AWAITING_REVALIDATION (NETLIST_MISMATCH) and on D (CONFIG_CHANGED), SI-001 on A and E
+          from CONFIG_CHANGED to NETLIST_MISMATCH, and the counts follow (current-candidate rows 11 to 8 of 338); board
+          D's RF-002 and SCH-004 rows, which this constraint reads, keep their class and cause, and its own reasons (the
+          line contracts only, the SA868's open row) are unchanged, so it stands INCONCLUSIVE on the file at
+          0cf3947848784ced
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
       - "v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3"
-      - "v2/docs/CURRENT-EVIDENCE.md@ed8d4fbaefde46f7"
+      - "v2/docs/CURRENT-EVIDENCE.md@0cf3947848784ced"
     release_effect: BLOCKER
     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2825", "v2/docs/PANEL.md section 6", "v2/docs/feasibility/EMCON.md sections 4.1 and 4.2"]
     source_check: VERIFIED
@@ -8271,10 +8282,19 @@ records:
           boards moving from TOOL_CHANGED to UNBOUND (claims_check re-taken under its current tool after f2b7fa66);
           board P's row, its netlist 085f833362fbbda8 and every reason given above are unchanged, so it stands on the
           file at ed8d4fbaefde46f7
+      - >-
+          v2/docs/CURRENT-EVIDENCE.md re-read at the r8int5 integration of 27 September 2026 (set 5 of the handover:
+          streams w3t, w3a, w3b, w3de and w3g), rendered after rules_status ran three times on the committed
+          integration: the ready-for-layout table carries set 5's netlists of boards A (da05dc02bc1e612f), B
+          (8b78c59754a6a0c7), D (76700a687eb6187f) and E (d6137f50059e5cbc); PWR-001 on A and E moves from
+          CURRENT_CANDIDATE to AWAITING_REVALIDATION (NETLIST_MISMATCH) and on D (CONFIG_CHANGED), SI-001 on A and E
+          from CONFIG_CHANGED to NETLIST_MISMATCH, and the counts follow (current-candidate rows 11 to 8 of 338); board
+          P's rows, its netlist 085f833362fbbda8 and every reason given against it are unchanged, so it stands
+          INCONCLUSIVE on the file at 0cf3947848784ced
     evidence_bound_to:
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
       - "v2/ecad/tools/gen_sch_p.py@91ccbb922c427d43"
-      - "v2/docs/CURRENT-EVIDENCE.md@ed8d4fbaefde46f7"
+      - "v2/docs/CURRENT-EVIDENCE.md@0cf3947848784ced"
       - "v2/docs/review-packets/battery/REVIEW-REQUEST.md@91a257430cbeb53a"
     release_effect: BLOCKER
     source:

@@ -1,0 +1,40 @@
+{
+ "kind": "netlist",
+ "phase_labels": [
+  [
+   "D37P"
+  ],
+  [
+   "D37P"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  },
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  }
+ ],
+ "design_header": [
+  [
+   "/root/w3de/final/v2/ecad/pcb-d-aprs-d9/pcb-d-aprs.kicad_sch",
+   "2026-09-27T10:33:24+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ],
+  [
+   "/root/r8int5/xf/v2/ecad/pcb-d-aprs-d9/pcb-d-aprs.kicad_sch",
+   "2026-09-27T13:00:38+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ]
+ ],
+ "content_hash": [
+  "ecc07f382c735835",
+  "ecc07f382c735835"
+ ],
+ "result": "PARITY_AFTER_NOISE"
+}
