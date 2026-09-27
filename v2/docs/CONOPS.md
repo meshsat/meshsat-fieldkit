@@ -1,52 +1,37 @@
 # MeshSat field kit V2: concept of operations
 
-**Status: BASELINED as layer 2 of the foundation baseline (MESHSAT-1357) at `79963b3b`, the commit that carries on main `91894cd7` the content the second release check of layer 2 read at `eb9f9030` and found no blocking item in (`reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md`, an AI review; this document byte-identical, sha256/16 `3ff59edc96a3f8f4`, before this status line and the Review A paragraph's last sentence were written). Written 25 September 2026, revised the
-same day after an independent challenge, and revised on 26 September 2026 to carry the owner's rulings D-01 to
-D-17 of 25 and 26 September 2026 and the choices the session took under the owner's standing rule of 26
-September 2026; section 7 lists every question with its ruling, and D-18, the one still open and
-conditional. Corrected later on 26 September 2026 (appendix 32.367): the owner reversed D-08 at about 09:30 CEST
-and D-08a stands (section 7), the session settled SC-02 at about 11:35 CEST (section 2a), and the pack's
-transport route follows the review of that day (section 4, Transport row). Corrected again later that day (open
-item S-07 of the requirements registry): sections 3 (M2 and M4), 4, 4a (PS-EMCON), 4b and 5 describe the circuit
-as generated at `45bde541`, after the circuit corrections of `faf8c981`, `458b2873` and `d90f30e4`; no need of section
-2 changed.** **Revised on 27 September 2026 to close the layer-2 items of the handover audit (MESHSAT-1357; the owner's
-execution prompt of that day, `reviews/2026-09-27-handover-execution-prompt.md` sections 2 and 3):** the reduced mode
-is defined with the modules that can host it (section 4c), the hot end is stated as controls on measured internal
-temperatures with the ambient figures as bounds (section 4c), the power and runtime figures follow
-`feasibility/POWER-THERMAL.md` (sections 4a, 5 and 6), EMCON's latency and fault conditions are carried (section
-4b.1), storage, transport, commissioning, shutdown and faults have scenarios (sections 4, 4d, 4e and 4f), the mission
-duration, the duty profile, "aged" and the recovery and delivery targets are set, and every choice this revision took
-is in section 7a. No need of section 2 changed. Prototype design. **Revised again on 27 September 2026 (pass 2) to
-answer the seven blocking findings of Review A's first pass (`reviews/REVIEW-A-LAYER-2-2026-09-27-pass1.md`, B1 to B7) and
-its minor ones:** the heat stage's losses and its shutdown source are stated (sections 4 and 4c); a start-up with the
-lid closed is defined on what the panel controller can know (section 4c); M1's finding is restated with the pack's
-energy across the night as the binding limit (section 3); the closed-lid requirement stays at the owner's example set,
-the bank allocation that lets one module carry it is taken as a board B design item (BANK-R1), and the generated
-board's shortfall is stated as a finding (section 4c); commissioning drops the ten-minute key-down that K1 forbids
-(section 4d); and the cold end names the warm-up that brings the inside air to 0 C and the conductance at which it
-fails (section 4c). **Revised a third time on 27 September 2026 (pass 3) to answer Review A's second pass (P2-B1,
-P2-B2) and the ConOps side of Review B of layer 3 (`reviews/REVIEW-B-LAYER-3-2026-09-27.md`, B1 to B5):** past the
-heat stage the kit acts on the pack's measured cell temperature on every input state, the hot stop, whose path from
-the sensor controller to the panel controller is a board A and board E design item (HOT-R1) and whose firing inside
-the envelope stays a feasibility question (sections 4, 4c, 4e and 4f, and M2); M1 carries the solar window board E's
-generator declares and the design month of its energy balance, with no season taken off the mission (section 3); the
-NVG mode has a compatibility target and no claim before its test (section 4, NVG row); the lightning mast-down alarm
-is carried (section 4e); and the session's choices in D-02b's row are marked as the session's (section 7).
+**Status: layer 2 of the foundation baseline (MESHSAT-1357), BASELINED at `79963b3b`.** How it was reviewed and
+baselined is recorded in the appendix at the end of this file; how this file's present text relates to the text
+baselined at that commit, and the current state of everything this document depends on, is
+`handover/DEFINITION-STATUS.md`.
 
-**Review A, the gate this layer closes through (defined 27 September 2026).** One fresh reviewer who wrote none of
-this layer's documents checks this document, `OPERATING-ENVELOPE.md`, `v2/ecad/tools/pcb_envelope.yaml`, the operator
-sections of `PANEL.md` (1, 3, 5, 8, 9 and 10) and the state and envelope rows of `TEST-PLAN.md`, at one pinned commit,
-against the layer-2 items of the owner's execution prompt (section 3: normal, degraded, startup, charging, shutdown,
-storage, service and fault scenarios; the operating envelope; simultaneous modes; the explicit behaviour of the core
-functions; product decisions settled under existing authority) and against `ARCH-PCB-B-IOHA.md` section 15,
-`feasibility/EMCON.md` section 5a and `feasibility/POWER-THERMAL.md` section 9. The review is recorded under
-`v2/docs/reviews/` with the commit it read, **labelled AI review**; it is never a qualified review,
-it replaces no qualified review a record requires (D-09), and it establishes no circuit's correctness. Its findings are answered
-in the documents; the layer is then marked baselined at that commit. The first pass was recorded (FAIL, seven blocking
-findings, read on `e3aedb25` with this revision's first draft; filed at `reviews/REVIEW-A-LAYER-2-2026-09-27-pass1.md`, sha256 `e854c2a46ea3d542`, with the reviewers' brief at `reviews/2026-09-27-review-A-layer2-brief.md`)
-and pass 2 answered it; the second pass (`reviews/REVIEW-A-LAYER-2-2026-09-27.md`, FAIL, two blocking findings, P2-B1 and P2-B2) is answered by pass 3; the pass at the integrating
-commit `f2b7fa66` (`reviews/REVIEW-LAYER-2-RELEASE-2026-09-27.md`, FAIL, four blocking findings, B1 to B4) is answered at desk in two steps (`handover/LAYER-STATUS.md`, layer 2: the wording and citations in `08f3665a`; then, in the second release attempt of the same day, B2's forced trigger of the hot stop, `TEST-PLAN.md` P15, and B4's one definition of C1 in the documents that follow section 4c), and the second release check (`reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md`, at `eb9f9030`, AI review) found no blocking item, so the layer is baselined at `79963b3b` (`handover/LAYER-STATUS.md`, layer 2, names the record and its evidence). Until that pass
-this document was a DRAFT for Review A. Prototype design.
+**When this document is reopened (the rule of the independent review of handover H2, `reviews/2026-09-27-h2-independent-review.md` section 4).** This definition is reopened only when a requirement, the scope,
+the operating concept or a product decision changes. A changed count or a circuit correction updates the status page,
+`handover/DEFINITION-STATUS.md`, and the records it names, not this baseline. A figure, a commit or an "as generated"
+remark that stands inside a sentence or a table row of the definition below is its value when this document was
+baselined; its current value is kept where the list below says, and a change to it alone does not reopen this
+document.
+
+**Where the current state of each dependency lives.**
+
+- What the design has and has not shown, board by board, and whether any board is ready for layout, is kept on
+  `CURRENT-EVIDENCE.md`.
+- Every requirement traced to the needs of section 2, with its reading, and every feasibility blocker on the core with
+  the evidence that closes it, is kept in the requirements registry `v2/ecad/tools/pcb_requirements.yaml` and its
+  generated page `REQUIREMENTS-TRACE.md`.
+- Where each transmitter stands against EMCON as the owner ruled it (D-05) and against REQ-071's latency is kept in
+  `feasibility/EMCON.md` section 0a, under feasibility blocker FEA-002.
+- Whether board B's generator carries BANK-R1 and the generators of boards A and E carry HOT-R1, and so how REQ-052
+  and the hot stop's requirement REQ-077 read on the generated boards, is kept in the requirements registry.
+- The power, thermal and runtime figures, the hot end and the energy balance of mission M1 are kept in
+  `feasibility/POWER-THERMAL.md`, under feasibility blocker FEA-004 and requirement REQ-072.
+- The kit's fit in the Peli 1450 is kept in `CASE-MARGINS.md` and `CASE-FIT-UNCERTAINTIES.md`, under feasibility
+  blocker FEA-007.
+- Whether the fitted secure element allows ZEROIZE as ruled is kept in `feasibility/ZEROIZE.md`, under feasibility
+  blocker FEA-001.
+- The state of each layer of the handover, with its review records, is kept on `handover/LAYER-STATUS.md`.
+
+Prototype design.
 Nothing described here has been built, powered or field deployed. This document says how the kit is meant to be
 used, so that requirements, budgets and tests have something to trace to. The needs of section 2 carry stable
 identifiers (NEED-nn); requirements trace to them, and an identifier is never reused for a different need.
@@ -108,9 +93,6 @@ also carried as conflict records in the requirements registry `v2/ecad/tools/pcb
 | NEED-18 | Work in its electromagnetic surroundings: bounded conducted and radiated emissions outside the intentional transmissions, and no upset from conducted, radiated or electrostatic disturbance. | 32.50 item 16e (line 2804); `TEST-PLAN.md` M1 to M5 and M7; decision 34 (ESD level); owner rulings D-04 (no EMC claim for the prototype) and D-17 |
 | NEED-19 | Let the operator raise a distress or assistance alert with one deliberate, covered action. | `PANEL.md` sections 1, 3 and 9; `V2-SPEC.md` line 58; owner ruling D-10 |
 
-NEED-18 and NEED-19 were added in the revision of 25 September 2026: the approved test plan already tests
-NEED-18, and the SOS toggle is on the face, but neither had a need to trace to.
-
 ### 2a. What prototype 1 is accepted against (owner ruling D-01)
 
 The owner ruled the prototype scope on 25 September 2026: **full design, staged acceptance.** Every ruled function
@@ -156,10 +138,7 @@ about 11:35 CEST):** making either bearer critical needs a second LoRa site or t
 both change the floor plan of board B, the board that is not routed; the exceptions need no board B change, and
 without them the kit is designed to keep at least three of D-01's four messaging bearers through the loss of any
 one module (`ARCH-PCB-B-IOHA.md` section 15a). Reverse by naming either bearer critical, which reopens board B's
-floor plan. **Corrected 26 September 2026:** this paragraph first called the two "open design gaps against
-NEED-03, not accepted exceptions", on the reading that the owner's requirement ("every device visible to all
-modules", `V2-SPEC.md` line 29) names no exception; that contradicted section 15a and appendix 32.366, and SC-02
-settles it as above. Prototype 1's NEED-03 acceptance stays IOHA tests A1 to A14, as D-01 names it.
+floor plan. Prototype 1's NEED-03 acceptance stays IOHA tests A1 to A14, as D-01 names it.
 
 ## 3. Representative missions
 
@@ -272,17 +251,7 @@ row's L_max, not from the instant the toggle closes. Nothing lights or sounds in
 the secure element's wrapping keys as ruled in D-03 (section 4, ZEROIZE row; NEED-10).
 **Ruled (D-05, 26 September 2026): radios dark.** Every radio with an emission path is powered off or RF-disabled
 in hardware; the VHF path keeps listening because its gate is on the transmit side only; GNSS, DCF77 and the
-lightning sensor continue. The kit therefore stops RECEIVING on every other radio while EMCON is closed. As
-generated since `458b2873` the two gaps this mission first named are closed in the schematic: the compute modules'
-own WiFi and Bluetooth are pulled off through open drains, and the WiFi link cards lose their supply. What remains is
-session work under the ruling (S-01), read transmitter by transmitter in `feasibility/EMCON.md` section 0a: the 5G
-module, whose only path was its disable pin, a firmware-mediated airplane mode, and the items every row of the EMCON
-line shares (section 4b). **Since board B's round 8 (27 September 2026) the 5G module's supply is removed by hardware
-at once and board B's shared items are drawn (section 4b)**, so the radio's own chain is closed at desk for 15 of the
-17 transmitters and open for two: the SA868 (its PTT pin's receive threshold is unpublished) and the RockBLOCK 9704
-(once its supply is cut it runs on its own supercapacitors with its ENABLE held by firmware). No row is closed end to
-end, from the toggle to silence at the antenna port, so NEED-08 is not met for any transmitter until the design closes
-it, and no row has been shown on a bench.
+lightning sensor continue. The kit therefore stops RECEIVING on every other radio while EMCON is closed.
 
 ### M5. Degraded operation during a mission
 
@@ -318,30 +287,28 @@ common modes section 4e names, and the operator is told (MASTER CAUT or MASTER W
 ## 4. Operating modes
 
 "Guarantee" says what is designed to hold the mode: **HW** means a hardware line that holds with every processor dead,
-**FW** means firmware on the panel or sensor controller, **SW** means software on the compute modules.
-The table has eighteen rows: the fourteen of the first draft, SOS (added on 25 September 2026), the heat stage
-and commissioning (added on 27 September 2026), and the hot stop (added later that day, pass 3). "Power state" points
+**FW** means firmware on the panel or sensor controller, **SW** means software on the compute modules. "Power state" points
 to section 4a. How the reduced mode, the heat stage, the hot stop, the hot and cold ends, the recovery and delivery targets and the graceful shutdown are set is section 4c;
 commissioning is section 4d; the faults are section 4e; section 4f joins the core functions to every mode.
 
 | Mode | Entry | Exit | Running | Off or held | Guarantee | Power state | Source | Open |
 |---|---|---|---|---|---|---|---|---|
-| Transport | carried as cargo: lid closed and latched, antennas off, cables out, pack fitted, the kit off, and the pack put in the gauge's SHUTDOWN (ManufacturerAccess 0x0010 over the pack's SMBus, sent by the sensor controller: the gauge opens both FETs, TI SLUUAQ3A 5.4.2; `gen_sch_e.py` line 213), which it enters only with no charger present (SLUUAQ3A 5.4.2 and 13.1.8), so every input is unplugged first | an input applied (the gauge returns to NORMAL when its PACK pin rises above VSTARTUP, SLUUAQ3A 5.4.2), then deploy | nothing; no load on the cells | everything | the pack's hardware protection, which needs no firmware: its PTC trip ("also works in SHUTDOWN mode", SLUUAQ3A 3.15) and the floor of owner ruling D-15, in board P's schematic since `faf8c981` (a BQ7720700 second level whose over-voltage, open-wire and over-temperature output blows the chemical fuse F2, as the gauge's FUSE output can, once the arming jumper JP1 is closed at commissioning, and whose under-voltage output holds the discharge FET off; `gen_sch_p.py` lines 243, 288 and 414 to 502 at `45bde541`, with the over-temperature network of `d90f30e4`); the 25 A blade | PS-SHUT | `TEST-PLAN.md` section 1; session choice of 27 September 2026 (section 7a) | a kit operated in a vehicle is not in this mode: it runs the reduced mode on the vehicle input (M2). Altitude 0 to 4500 m in transport and 0 to 3000 m in use (owner ruling D-02c). The cell maker's restriction applies: the kit with its pack fitted is never left "in a car or similar place where inside of temperature may be over 60°C" (Samsung INR18650-35E Ver. 1.1, handling notes). The pack's transport route (owner ruling D-04, REQ-069): **no route is claimed**. The pack is built for the kit rather than bought and its UN 38.3 status is unknown, and an unknown status permits no route by itself: road carriage has its own dangerous-goods rules (the ADR, which the Dutch ILT names for road consignments; review of 26 September 2026, `reviews/2026-09-26-foundation-progress-review.md` section 5, reference R5), as air and parcel carriage have theirs. The pack's classification, the conditions that apply to it or an exception that applies are to be established from the ADR's own text before any route is claimed; that is a bounded desk item (the battery stream's), not a broad compliance project, and no ADR text is held in this tree yet (the UNECE site refused this host on 27 September 2026, HTTP 403). No mode, interface or board of this layer depends on its answer, because nothing claims a route; if the reading requires a UN 38.3 test, that is a purchase for the owner, and if it requires the pack to travel apart from the kit, the pack's bonded mounting (`ASSEMBLY.md` section 1, VHB pads) reopens in layer 7. **What this state does not run** (Review A, m5): board E's always-on domain sits on the pack side of the gauge's FETs, so with the pack in shutdown the lid and tamper log (NEED-10's case-open record, REQ-036) does not run while the kit is carried, and the kit cannot start from its own pack until an input has woken the gauge (Deploy row). **Corrected 26 September 2026:** this cell had stated a road route with the kit as the session's choice, inferring from the unknown status that carriage by road was open where air and parcel carriage were not; that inference is withdrawn (appendix 32.367). **Changed 27 September 2026:** the kit in transport is off with its pack in the gauge's shutdown; before, whether it was powered was TBD |
+| Transport | carried as cargo: lid closed and latched, antennas off, cables out, pack fitted, the kit off, and the pack put in the gauge's SHUTDOWN (ManufacturerAccess 0x0010 over the pack's SMBus, sent by the sensor controller: the gauge opens both FETs, TI SLUUAQ3A 5.4.2; `gen_sch_e.py` line 213), which it enters only with no charger present (SLUUAQ3A 5.4.2 and 13.1.8), so every input is unplugged first | an input applied (the gauge returns to NORMAL when its PACK pin rises above VSTARTUP, SLUUAQ3A 5.4.2), then deploy | nothing; no load on the cells | everything | the pack's hardware protection, which needs no firmware: its PTC trip ("also works in SHUTDOWN mode", SLUUAQ3A 3.15) and the floor of owner ruling D-15, in board P's schematic since `faf8c981` (a BQ7720700 second level whose over-voltage, open-wire and over-temperature output blows the chemical fuse F2, as the gauge's FUSE output can, once the arming jumper JP1 is closed at commissioning, and whose under-voltage output holds the discharge FET off; `gen_sch_p.py` lines 243, 288 and 414 to 502 at `45bde541`, with the over-temperature network of `d90f30e4`); the 25 A blade | PS-SHUT | `TEST-PLAN.md` section 1; session choice of 27 September 2026 (section 7a) | a kit operated in a vehicle is not in this mode: it runs the reduced mode on the vehicle input (M2). Altitude 0 to 4500 m in transport and 0 to 3000 m in use (owner ruling D-02c). The cell maker's restriction applies: the kit with its pack fitted is never left "in a car or similar place where inside of temperature may be over 60°C" (Samsung INR18650-35E Ver. 1.1, handling notes). The pack's transport route (owner ruling D-04, REQ-069): **no route is claimed**. The pack is built for the kit rather than bought and its UN 38.3 status is unknown, and an unknown status permits no route by itself: road carriage has its own dangerous-goods rules (the ADR, which the Dutch ILT names for road consignments; review of 26 September 2026, `reviews/2026-09-26-foundation-progress-review.md` section 5, reference R5), as air and parcel carriage have theirs. The pack's classification, the conditions that apply to it or an exception that applies are to be established from the ADR's own text before any route is claimed; that is a bounded desk item (the battery stream's), not a broad compliance project, and no ADR text is held in this tree yet (the UNECE site refused this host on 27 September 2026, HTTP 403). No mode, interface or board of this layer depends on its answer, because nothing claims a route; if the reading requires a UN 38.3 test, that is a purchase for the owner, and if it requires the pack to travel apart from the kit, the pack's bonded mounting (`ASSEMBLY.md` section 1, VHB pads) reopens in layer 7. **What this state does not run** (Review A, m5): board E's always-on domain sits on the pack side of the gauge's FETs, so with the pack in shutdown the lid and tamper log (NEED-10's case-open record, REQ-036) does not run while the kit is carried, and the kit cannot start from its own pack until an input has woken the gauge (Deploy row). |
 | Deploy | operator opens the lid, fits antennas, connects cables, shades the plate (D-02e); a kit whose pack is in the gauge's shutdown (Transport, Storage) first gets an input (shore, vehicle or solar) to wake the gauge, and a kit out of storage is charged before a mission, because it was stored at about 30 % charge | startup | none | none | operator | PS-SHUT to PS-OFF | `TEST-PLAN.md` section 1 | none |
-| Startup | MAIN PWR held (hardware lead to board A's power controller) | normal, reduced or degraded | board A's 3.3 V and the shared device rail come up; the panel controller boots, reads the ZEROIZE toggle (`ZEROIZE_SW`) and completes any pending wipe (D-03), then raises `SLOT_EN1..3`; LED rail dark until firmware is up; `SHORE_INHIBIT` low | every slot stays off until the panel controller raises its enable (pull-downs on board A); a slot with a flat heartbeat after 60 s is marked faulty, cycled once, then left off | HW power path, FW slot enable and supervision | transient | `PANEL.md` sections 3, 5, 6 and 10 | cold start from a pack below about -10 C at the cells is out of scope (D-02d); the fixes this cell used to name are in board A's schematic since `458b2873`: the device rail's enable is pulled up to board A's 3.3 V (`R42`, `gen_sch_a.py` line 887), the power controller's KILL input is pulled to 3.3 V (`R4`) and the 3.3 V buck's EN sits on a divider from the pack that reaches at most 4.7 V at 16.8 V (`R2` over `R184`, lines 260 and 261), the software enables are held off, and the charge inhibit released, by 4.7 k pull-downs until the firmware writes the expanders (lines 763, 1009, 1112 and 1125), and the monitor and heater eFuses trip at about 17.6 to 19.0 V (143 k over 10 k, lines 1041 to 1064); the power-up calculation of every enable at requirement level is owed (CON-014 of the registry); rail sequencing, inrush and hot-plug bounds (rule PWR-002): **TBD**; a kit whose pack is in the gauge's shutdown starts only once an input has woken the gauge (Transport and Storage rows); the panel controller cannot know the lid's state at start-up (the reed lands on the sensor controller alone, `gen_sch_e.py` lines 524 to 542, and the sensor controller reaches a module only as a USB device on bank 3), so it raises all three slots at every start-up, and a kit started with its lid closed enters the reduced mode by the normal route once the bridge has read the lid (section 4c). **Changed 27 September 2026 after Review A (B2):** this cell had the panel controller raise `SLOT_EN2` and `SLOT_EN3` only when the lid was closed, which it cannot sense |
+| Startup | MAIN PWR held (hardware lead to board A's power controller) | normal, reduced or degraded | board A's 3.3 V and the shared device rail come up; the panel controller boots, reads the ZEROIZE toggle (`ZEROIZE_SW`) and completes any pending wipe (D-03), then raises `SLOT_EN1..3`; LED rail dark until firmware is up; `SHORE_INHIBIT` low | every slot stays off until the panel controller raises its enable (pull-downs on board A); a slot with a flat heartbeat after 60 s is marked faulty, cycled once, then left off | HW power path, FW slot enable and supervision | transient | `PANEL.md` sections 3, 5, 6 and 10 | cold start from a pack below about -10 C at the cells is out of scope (D-02d); the fixes this cell used to name are in board A's schematic since `458b2873`: the device rail's enable is pulled up to board A's 3.3 V (`R42`, `gen_sch_a.py` line 887), the power controller's KILL input is pulled to 3.3 V (`R4`) and the 3.3 V buck's EN sits on a divider from the pack that reaches at most 4.7 V at 16.8 V (`R2` over `R184`, lines 260 and 261), the software enables are held off, and the charge inhibit released, by 4.7 k pull-downs until the firmware writes the expanders (lines 763, 1009, 1112 and 1125), and the monitor and heater eFuses trip at about 17.6 to 19.0 V (143 k over 10 k, lines 1041 to 1064); the power-up calculation of every enable at requirement level is owed (CON-014 of the registry); rail sequencing, inrush and hot-plug bounds (rule PWR-002): **TBD**; a kit whose pack is in the gauge's shutdown starts only once an input has woken the gauge (Transport and Storage rows); the panel controller cannot know the lid's state at start-up (the reed lands on the sensor controller alone, `gen_sch_e.py` lines 524 to 542, and the sensor controller reaches a module only as a USB device on bank 3), so it raises all three slots at every start-up, and a kit started with its lid closed enters the reduced mode by the normal route once the bridge has read the lid (section 4c). |
 | Normal (full) | startup with three modules, lid open, C1's triggers clear (inside air under +50 C and every cell under +55 C, section 4c) | lid closed, C1 or C3 acting (to Reduced), a fault (to Degraded), EMCON, shutdown | three modules, monitor, every bearer available, sensors | none | SW | PS-IDLE 39.7 W to PS-TYP 63.0 W; PS-BUSY a bounded mode (its sustained bound 92.0 W, ended by C1 at every conductance in the record); PS-ALLTX bursts inside the bounds of D-11 (section 5) | `OPERATING-ENVELOPE.md` section 4; `feasibility/POWER-THERMAL.md` sections 4 and 7.1 | the planning duty profile is section 5's (session choice); D-11's key-down time and floors are the figures the session set (SC-10: every transmitter at once only above a pack rest voltage of 15.5 V, the PA alone above 12.4 V, each PA key-down at most 60 s, `feasibility/POWER-THERMAL.md` section 7.2), requirement REQ-018's pass lines since 27 September 2026 (the layer-3 closer's session choice on D-11's declared values); whether the design meets them is feasibility blocker FEA-004's (PWR-F12, PWR-F15), and if it closes in failure they reopen |
 | Reduced | lid closed (the reed under the frame on board E's `J_TAMP`, read by the sensor controller, `gen_sch_e.py` lines 524 to 542), or C1 (inside air +50 C, or any cell +55 C on the gauge's thermistors), or C3 (with the outlets already off, a 10 s average pack current above 9.0 A for 30 s), or the operator; a kit started with its lid closed starts all three modules and enters it once the bridge has read the lid (section 4c) | lid open and every trigger clear (C1's 5 K below its trigger; C3's predicted current under 8.0 A for 60 s), or the operator | **slots 2 and 3** (section 4c): slot 2 hosts bank 2 (GNSS, both E72, the QMX receiving) and, by the fabric's failover, bank 1 (Iridium, the panel controller and with it the SOS path, the kit I2C devices); slot 3 hosts bank 3 (the APRS board D8, the sensor controller, the wall USB port, the 5G management link) and the LoRa module; the 5G module on slot 2's PCIe, registered and idle; APRS position beacons. That is board B as generated; after BANK-R1 (section 4c) the same two slots carry the same set, with Iridium on bank 2 (slot 2's own) and the panel controller on bank 3 (slot 3's own), and bank 1 (the SDR, the camera, the QMX, the wall port) failed over to slot 2 | slot 1; both WiFi link cards (card 1 hangs on slot 1, card 2 is held off by software); the monitor; the SDR and the camera; HF transmit | SW decides, FW switches: the bridge asks, the panel controller drops `SLOT_EN1`, and the three supervisors move bank 1 to slot 2 through the voted fabric (their 2-of-3 decision in firmware, the voting in hardware, `ARCH-PCB-B-IOHA.md` sections 4, 5 and 7). **Preconditions owed on board B, because this mode makes dropping `SLOT_EN1` routine** (Review A, m3): the break-before-make order, which the generated circuit does not have (FAB-03, CON-003); a bank detached from a host that has lost its power, which nothing does as generated (FAB-02, CON-022); and the supervisors' I2C status path, absent as generated (`ARCH-PCB-B-IOHA.md` section 6) | PS-RED2 31.4 W (17.6 to 55.6), PROVISIONAL (section 4a) | owner ruling D-02b; section 4c; `ARCH-PCB-B-IOHA.md` section 15; `feasibility/POWER-THERMAL.md` section 9.3, `ARCHITECTURE.md` section 8 and `HW-FW-CONTRACT.md` FW-C09, which follow this row since 27 September 2026 (section 4c) | the definition is the session's (section 7a), a departure from the owner's example in one respect, two modules where the example says one, because no single slot hosts the example's bearers and the SOS path as board B is generated; the owner's example on one module is the heat stage's required set (next row); the thermal proof is FEA-004's (`TEST-PLAN.md` E3-L and T-H1); the ambient at which C1 acts with the lid closed is a bound, +20.1 to +37.3 C on the independent bound and +28.9 to +34.2 C on 32.53's conductance (section 4c); `feasibility/POWER-THERMAL.md` follows this definition since 27 September 2026 (its sections 1 and 9.3: C1 sheds here first, and its PS-RED rows model one module, slot 3, the heat stage's case) |
 | Heat stage | in the reduced mode, C1's triggers reached again | the inside-air reading this stage keeps (board B's TMP117 under the coolers, on the kit bus through the panel controller) 5 K under its value at entry; the reduced mode is then restored, at most once in any 30 minutes (a planning value), and sheds again at once if C1's triggers still hold. **Past it, the hot stop (next row):** with C1's triggers still set the kit stays here until the pack's measured cell temperature reaches the hot stop's first step (section 4c) | **one module carrying the owner's D-02b example (GNSS, the LoRa mesh, Iridium and APRS beacons) with the SOS path, the required set (REQ-052).** After BANK-R1 (section 4c): **slot 3 alone**, with bank 3 (APRS, the sensor controller and with it the pack's readings and the lid, water and gas sensors, the panel controller and the SOS path), bank 2 by failover (GNSS, both E72, Iridium) and the LoRa module. **As board B is generated: slot 2 alone**, with bank 1 by failover (Iridium, the panel controller, SOS), bank 2 (GNSS, both E72) and the 5G module's data and AT control over slot 2's PCIe (Quectel RM520N series hardware design v1.1 section 3.2: in its PCIe modes the module "Supports MBIM/QMI/QRTR/AT over PCIe interface"; `feasibility/EMCON.md` section 4.5; the AT control counted only once the bridge's PCIe AT channel is shown) | after BANK-R1: slots 1 and 2, so bank 1 (the SDR, the camera, the QMX, the wall port), the 5G module (its data is slot 2's), both WiFi link cards, the monitor. As generated: slots 1 and 3; bank 3 has no host (its home slot 3 and its failover slot 1 are both off): APRS, the sensor controller's USB link (the gauge's readings, the lid switch, the water and gas sensors reach no module; the sensor controller itself keeps running on board E's always-on domain), the wall USB port and **the 5G module's USB link** (bank 3, port 4: in the module's USB-AT-based PCIe mode its only firmware-update path, HD v1.1 section 3.2); the LoRa module; the monitor; and the outlets, held off because C2's cell input is lost | SW decides, FW switches; the pack gauge's own windows and board P's second level act whatever the kit can read (the second level destructively, above the cells' limit). On the cells' measured temperature the gauge's charge window acts first (a charge start refused above 42 C, a running charge ended above 43 C, OTC at 44 C; section 4c), and the hot stop (next row) is designed to act after it and before the gauge's discharge cut (OTD, 57.5 C), board P's second level, the gauge's SOT and the PTC; as generated the hot stop has no path in this stage, whose one module does not host bank 3, until HOT-R1 is in the generators of boards A and E (its requirement reads FAIL until then, next row) | after BANK-R1 PS-SURV-R 23.3 W (12.8 to 46.9); as generated PS-SURV 21.7 W (12.4 to 42.0); PROVISIONAL (section 4a) | owner ruling D-02b ("above +35 C ambient the kit runs one module"); section 4c; `ARCH-PCB-B-IOHA.md` section 15 | the stage and BANK-R1 are the session's (section 7a). **As board B is generated the stage does not carry its required set:** slot 2 has neither the LoRa mesh nor APRS, a finding against the generated board, reported to the owner, until BANK-R1 is in board B's generator (section 4c). **As generated, with the gauge's readings lost:** the bridge reads the pack's voltage and discharge current from the charger over the kit bus instead (the BQ25731's ADC, SLUSE66A 9.6.8 and 9.6.10, with its low power mode off), which gives C3 its input and the graceful shutdown a pack-voltage line (section 4c); C1's cell trigger, the cells' voltages and the state of charge are lost, the battery bar shows the pack voltage, and the e-paper says so; the water and gas responses of section 4e wait for a host of bank 3. The ambient at which C1 acts in this stage: after BANK-R1 +27.9 to +40.6 C lid closed and +30.8 to +41.8 C lid open on the independent bound (+34.4 to +38.3 C and +42.2 to +42.9 C on 32.53's conductance); as generated +29.4 to +41.2 C and +32.1 to +42.3 C (+35.4 to +39.1 C and +42.7 to +43.4 C) |
 | Hot stop | on the pack's measured cell temperature, in any mode and on every input state: the hottest of the gauge's four cell thermistors at +56.5 C in two readings a second apart (H1, shed to the minimum load), then at +57.0 C with H1 acting (H2, the kit's controlled shutdown); read by the sensor controller and passed to the panel controller on HOT-R1 (section 4c); with the sensor controller lost, board B's TMP117 at +55.0 and +56.0 C | H1: the hottest cell at +46.5 C or less and at least 30 minutes after the stop, the panel controller then raising the heat stage's one module; H2: the operator's MAIN, after which no slot is raised until the cells read released | H1: the panel controller, board A's 3.3 V logic and expanders, the shared device rail that feeds the panel, board E's always-on domain with the mixer fans at full speed, the pack gauge, the e-paper page; H2: the pack gauge and board E's always-on domain | H1: every compute module (a clean shutdown on `PI_SHDN_REQ`, then `SLOT_EN1..3` dropped within 60 s), the monitor, the heater, board D, PoE, the USB-C outlet, the wall port's VBUS, the PA and HF rails, the charge (the charger's `CHRG_INHIBIT` bit, its converter still carrying the kit on an input), every bearer and SOS; H2: every converter on board A (`PI_KILL`, the LTC2954's `KILL`, `RAIL_EN`) | FW (the sensor controller detects, the panel controller acts) over one hardware line and hardware that keeps a released load off; behind it the gauge's OTD (firmware in the pack, recoverable) and the destructive backstops (board P's second level from 62.7 C, which blows F2; the gauge's SOT from 64.2 C; the PTC) | H1 PS-HOLD, not computed (the heat stage's loads less any module, **TBD**); H2 PS-OFF (0.2 to 1.7 W) | section 4c; `review-packets/battery/THERMAL-COORDINATION.md` sections 3, 4 and 8; `records/hc2/hotstop_bounds.out` | the stop and HOT-R1 are the session's (section 7a); **HOT-R1 is owed on boards A and E before their layout entry, and until it is in both generators the hot stop's requirement reads FAIL on the generated boards** (as generated the cells' temperature reaches the panel controller only through the bridge on a module that hosts bank 3, which the heat stage as generated does not have); the thresholds are PROVISIONAL (`TEST-PLAN.md` P14 and E3-H), and `TEST-PLAN.md` P15 forces both steps at room temperature on the pack and on shore, so the stop is verified whatever a chamber reaches; whether it fires inside the envelope is FEA-004's, OPEN until T-H1 (at the independent bound's worst corner it acts from +33.2 to +38.6 C, section 4c); a non-destructive hardware stage is an open design question (section 4c) |
-| Charging | shore, vehicle or solar present, the panel controller has configured the charger, and the pack gauge reports the cells inside their charge window | input gone, inhibit asserted, pack full | the BQ25731 (its cell-count strap at 4S since `458b2873`, `gen_sch_a.py` lines 764 to 771) regulates the charge into the 4S pack beyond its sense resistor `R17`, and the kit's loads sit on the charger's system node (VSYS, the net `VBAT`, lines 18 to 48), so shore carries the loads up to the charger's input limit and the pack supplies above it; board E's always-on domain (the sensor controller and the fans) sits on the pack side and shares the charge current | charge held off by the pack gauge outside 0 to +45 C at the cells (the over-temperature half acts on the charge FET only with the golden image's OTFET bit set, `review-packets/battery/CHARGER-STATE-SEQUENCE.md` section 3; the bridge clears its own hold above +3 C); once armed, board P's second level opens the chemical fuse at its fixed 70 C over-temperature, a backstop; the front end held off by `SHORE_INHIBIT`; the charger held off by `CHG_INHIBIT`; the heater mat warms the pack in the cold | pack gauge firmware (decision 40), with the second level of D-15 in hardware behind it; FW writes the charger (it has no thermistor input, a 175 s watchdog, and it never ends a charge by itself) | overlay: pack current reverses while the source covers the load | `PANEL.md` section 10; `review-packets/battery/CHARGER-STATE-SEQUENCE.md`; `pcb_pack_protection.yaml` CHARGE_TEMPERATURE_WINDOW; `OPERATING-ENVELOPE.md` sections 3 and 4; appendix 32.55 line 2915, 32.57 line 2984; BQ25731 datasheet SLUSE66A | without its host the charger's input limit is about 31 W at the 20 V bus, near the kit's idle load, and its charge current is 256 mA (SLUSE66A section 9.3.21.1: on a watchdog timeout "ChargeCurrent() resets to 256 mA"; TI's answer on its start-up value, E2E thread 1316778 of 23 January 2024, https://e2e.ti.com/support/power-management-group/power-management/f/power-management-forum/1316778/bq25731-bq25731-chargecurrent-start-up-behavior; whether it charges before any host write, bench confirmation owed), of which board E's always-on draw takes about half, so a hostless kit's pack is held rather than charged (`CHARGER-STATE-SEQUENCE.md` section 6); the 4 A charge setting is to be lowered for cell life on the ruled 4S3P pack (a session item under D-06); charge current and time: **TBD**. **Corrected 26 September 2026 (S-07):** this row said the kit's loads sat on the pack side of the charger's sense resistor and the strap selected 2S, the circuit before `458b2873` |
+| Charging | shore, vehicle or solar present, the panel controller has configured the charger, and the pack gauge reports the cells inside their charge window | input gone, inhibit asserted, pack full | the BQ25731 (its cell-count strap at 4S since `458b2873`, `gen_sch_a.py` lines 764 to 771) regulates the charge into the 4S pack beyond its sense resistor `R17`, and the kit's loads sit on the charger's system node (VSYS, the net `VBAT`, lines 18 to 48), so shore carries the loads up to the charger's input limit and the pack supplies above it; board E's always-on domain (the sensor controller and the fans) sits on the pack side and shares the charge current | charge held off by the pack gauge outside 0 to +45 C at the cells (the over-temperature half acts on the charge FET only with the golden image's OTFET bit set, `review-packets/battery/CHARGER-STATE-SEQUENCE.md` section 3; the bridge clears its own hold above +3 C); once armed, board P's second level opens the chemical fuse at its fixed 70 C over-temperature, a backstop; the front end held off by `SHORE_INHIBIT`; the charger held off by `CHG_INHIBIT`; the heater mat warms the pack in the cold | pack gauge firmware (decision 40), with the second level of D-15 in hardware behind it; FW writes the charger (it has no thermistor input, a 175 s watchdog, and it never ends a charge by itself) | overlay: pack current reverses while the source covers the load | `PANEL.md` section 10; `review-packets/battery/CHARGER-STATE-SEQUENCE.md`; `pcb_pack_protection.yaml` CHARGE_TEMPERATURE_WINDOW; `OPERATING-ENVELOPE.md` sections 3 and 4; appendix 32.55 line 2915, 32.57 line 2984; BQ25731 datasheet SLUSE66A | without its host the charger's input limit is about 31 W at the 20 V bus, near the kit's idle load, and its charge current is 256 mA (SLUSE66A section 9.3.21.1: on a watchdog timeout "ChargeCurrent() resets to 256 mA"; TI's answer on its start-up value, E2E thread 1316778 of 23 January 2024, https://e2e.ti.com/support/power-management-group/power-management/f/power-management-forum/1316778/bq25731-bq25731-chargecurrent-start-up-behavior; whether it charges before any host write, bench confirmation owed), of which board E's always-on draw takes about half, so a hostless kit's pack is held rather than charged (`CHARGER-STATE-SEQUENCE.md` section 6); the 4 A charge setting is to be lowered for cell life on the ruled 4S3P pack (a session item under D-06); charge current and time: **TBD**. |
 | Degraded | a module, supervisor, bearer or sensor lost, or a carve-out reached | cause removed | whatever survives | the lost item | HW (voted fabric), FW, SW | between PS-SURV and the state before the fault, not computed | `ARCH-PCB-B-IOHA.md` sections 7 and 12; `PANEL.md` section 5; section 4e | per-device recovery: **required** within 30 s of the home module's loss, plus the device's own start-up where its maker states a longer one, "back in service" being `ARCH-PCB-B-IOHA.md` section 7 step 12 (application access resumed) by a bridge instance already running on the adopting module; the bridge's own service **required** back on a surviving module within 60 s of the loss (section 4c, both session choices); the measured time on hardware must be at or under it (`ARCH-PCB-B-IOHA.md` section 7, "measured on hardware, not invented", which is the measurement, not the bound) |
-| EMCON | `SW_EMCON` closed (locking toggle) | toggle opened | receive-only radios (GNSS, DCF77, lightning sensor), the VHF receiver, compute, display in its lighting mode | radios dark (owner ruling D-05), as section 4b: power removed from the SDR, the RockBLOCK, the LoRa module, both E72, the HF unit and the two WiFi link cards; the compute modules' own WiFi and Bluetooth disabled through open drains; the 5G module's supply removed by hardware with its disable pins pulled low at the same moment (since board B's round 8, section 4b); the PA rail and keying off; software holds every send, an SOS included | HW for the gated rails, the module radio disables and the VHF keying, and the RockBLOCK keeps running on its own stored energy with its ENABLE held by firmware until that ENABLE is forced low in hardware (`feasibility/EMCON.md` section 4.4); SW hold on top | PS-EMCON 47.1 W (37.3 to 80.6) as generated since `458b2873`, PROVISIONAL (section 4a) | `PANEL.md` sections 6 and 9; `feasibility/EMCON.md`; `gen_sch_b.py` lines 478, 716 to 741, 974 to 977 and 1029, `gen_sch_a.py` line 1102, `gen_sch_d.py` lines 532 to 534, at `45bde541` | session work owed under D-05 (S-01): the RockBLOCK's ENABLE forced low by the EMCON hardware with its stored energy bounded (EMCON.md section 4.4), the SA868's PTT threshold (bench E-01), the line's shared items left open after board B's round 8 (the gate supplies of `U501` to `U505`, `feasibility/EMCON.md` sections 4b and 7) and the back-feed paths into the RockBLOCK, the E22 and the E72 (SD-EMC-2); the hardware EMCON lamp's plate light guide (SD-EMC-6; the lamp is drawn on board C since its round 8); the 5G module's staged supply removal (SD-EMC-1) is drawn since board B's round 8 (SD-EMC-1r8); twelve bench tests, none of them with the kit's own SDR (EMCON.md section 6). **Corrected 26 September 2026 (S-07):** this row said the module radios were off the line and the WiFi cards had only their disable pin, the circuit before `458b2873` |
+| EMCON | `SW_EMCON` closed (locking toggle) | toggle opened | receive-only radios (GNSS, DCF77, lightning sensor), the VHF receiver, compute, display in its lighting mode | radios dark (owner ruling D-05), as section 4b: power removed from the SDR, the RockBLOCK, the LoRa module, both E72, the HF unit and the two WiFi link cards; the compute modules' own WiFi and Bluetooth disabled through open drains; the 5G module's supply removed by hardware with its disable pins pulled low at the same moment (since board B's round 8, section 4b); the PA rail and keying off; software holds every send, an SOS included | HW for the gated rails, the module radio disables and the VHF keying, and the RockBLOCK keeps running on its own stored energy with its ENABLE held by firmware until that ENABLE is forced low in hardware (`feasibility/EMCON.md` section 4.4); SW hold on top | PS-EMCON 47.1 W (37.3 to 80.6) as generated since `458b2873`, PROVISIONAL (section 4a) | `PANEL.md` sections 6 and 9; `feasibility/EMCON.md`; `gen_sch_b.py` lines 478, 716 to 741, 974 to 977 and 1029, `gen_sch_a.py` line 1102, `gen_sch_d.py` lines 532 to 534, at `45bde541` | session work owed under D-05 (S-01): the RockBLOCK's ENABLE forced low by the EMCON hardware with its stored energy bounded (EMCON.md section 4.4), the SA868's PTT threshold (bench E-01), the line's shared items left open after board B's round 8 (the gate supplies of `U501` to `U505`, `feasibility/EMCON.md` sections 4b and 7) and the back-feed paths into the RockBLOCK, the E22 and the E72 (SD-EMC-2); the hardware EMCON lamp's plate light guide (SD-EMC-6; the lamp is drawn on board C since its round 8); the 5G module's staged supply removal (SD-EMC-1) is drawn since board B's round 8 (SD-EMC-1r8); twelve bench tests, none of them with the kit's own SDR (EMCON.md section 6). |
 | Blackout | LIGHTING toggle at BLACKOUT | toggle moved | everything else as before | LED rail opened in hardware, monitor backlight and touch UI dark, speaker and sounder muted, TX lamp dark | HW for the LED rail; FW and SW for the monitor and sound | overlay: removes most of the monitor share, TBD | `PANEL.md` section 8; `V2-SPEC.md` line 60 | none |
 | NVG | LIGHTING at NIGHT plus the bridge's NVG mode | either removed | panel at 2 % duty, backlight 5 %, red and amber indicators only | green and white indicators | FW and SW | overlay: monitor power at 5 % backlight TBD | `PANEL.md` section 8 | the compatibility target is MIL-STD-3009's lighting system NVIS compatible examination (5.7.2) for a Type I, Class B NVIS, applied to the panel, its light guides and the monitor at their NVG levels (the requirements registry's REQ-034, a session choice, section 7a; Class B because the standard makes Class A incompatible with red lights, and the ruled NVG light is red); no night-vision compatibility is claimed until that examination has passed on the built prototype (the claim deferred under D-01) |
 | SOS | `SW_SOS` closed 2 s (covered locking toggle) | toggle returned (cancels; the e-paper confirms both) | MASTER WARN flashes; sounder 1 s on, 1 s off (muted in blackout); the e-paper confirms; a distress message with the kit's position goes over the available bearers, Iridium first when nothing else is up, to a configured recipient list (owner ruling D-10) | never transmitted through EMCON: while EMCON is closed the message is queued and the operator is told (D-10) | FW (the panel controller reads the switch) and SW (the message); firmware only, no board change | transient transmit, not computed | `PANEL.md` sections 1, 3 and 9; `V2-SPEC.md` line 58; owner ruling D-10 | the recipient list and the message format are the session's; in prototype 1's core (section 2a) |
 | ZEROIZE | `SW_ZERO` held closed 5 s (covered locking toggle), the only trigger (owner ruling D-03: the case-open or lid switch logs only; a remote wipe is deferred) | switch returned; the kit re-arms only when the toggle returns | MASTER WARN flashes while armed; flipping back inside 5 s aborts; then a crypto-erase through the secure element: every drive and eMMC key is wrapped by keys only the secure element holds (two, both needed, `feasibility/ZEROIZE.md` section 3), ZEROIZE destroys them, then the running modules drop their keys from RAM, then the slots are cut; continuous 3 s sounder when complete; e-paper full refresh | the wrapping keys, which leaves every drive unreadable, a powered-off module's included | FW and provisioning: the covered toggle pulls a net local to board C that only the panel controller reads (`ZEROIZE_SW`, GPIO22), and the buffer `U12` copies it onto `ZEROIZE_HW`, which runs over the ribbons to a 10 k pull-up on board A (`R117`) and to test pads on boards B and D where no part listens (`gen_sch_c.py` lines 168 to 178 and 217, `gen_sch_a.py` line 1150, at `45bde541`; the buffer is the one board change, `faf8c981`), and the panel controller is also the kit I2C master that reaches the secure element; level-sensitive after a power loss: the toggle is read at boot before any slot powers and a wipe-pending record resumes the wipe | transient | `PANEL.md` sections 6 and 9; decision 30; owner ruling D-03 | precondition: the fitted ATECC608B must let the wrapping keys be destroyed after its zones are locked; `feasibility/ZEROIZE.md` closes that at desk from Microchip's public documents (the full datasheet stays under NDA) and leaves the physical demonstration to bench experiments Z-EXP-A and Z-EXP-B (S-35), with the SLB 9673 TPM 2.0 on board B's `U8` site the fallback (a TPM 2.0 is what 32.50 item 5 already names): **TBD** until the bench; accepted residual risk (D-03): a drive unlocks at boot only through the secure element, the panel controller and the kit I2C bus |
 | Shutdown | PI button short press (clean shutdown of every module) or held 8 s (hard kill); MAIN PWR; on the pack, the graceful threshold of section 4c | startup | e-paper keeps identity and status with the power off | modules, radios | FW request, HW kill | PS-OFF after | `PANEL.md` section 5; `V2-SPEC.md` line 57 | **graceful shutdown on the pack** (section 4c, PROVISIONAL, a session choice): the bridge starts a clean shutdown when the gauge's relative state of charge reaches 5 % (the reserve section 6's runtimes keep) or the lowest cell reads 3.00 V or less under load for 10 s, whichever comes first, and writes the e-paper's power-off page; in the heat stage as board B is generated, where the gauge's readings reach no module, it starts it when the pack voltage the charger reads falls to 12.8 V or less under load for 10 s (section 4c); behind it the gauge opens the discharge FET at 2.5 V per cell (`TEST-PLAN.md` section 5, row 2), in its firmware, and since `faf8c981` board P's second level holds the discharge FET off in hardware below 2.25 V per cell (the first branch of owner ruling D-15, `gen_sch_p.py` lines 414 and 502); if the proposed over-current backstop (OCD1 at 11 A for 90 s, `feasibility/POWER-THERMAL.md` section 9.3) trips on the pack, the kit goes dark until an input returns, taken as the safe state (section 4e) |
-| Storage | closed and latched, **pack fitted**, brought to the cells' ex-factory state (3.49 to 3.69 V per cell, about 30 % of charge: Samsung INR18650-35E Ver. 1.1 7.11 and 3.13 note 1, the charge its storage ratings are stated at), then, with every input unplugged, the pack put in the gauge's shutdown as in Transport | an input applied, then charge and deploy | nothing | everything | the pack's hardware protection, as in Transport | PS-SHUT | `OPERATING-ENVELOPE.md` section 4; the cell specification 3.13, 7.11 and handling notes 1.1 and 11.1; session choice of 27 September 2026 (section 7a) | the storage envelope is the cells': -20 to +45 C for three months, -20 to +25 C for a year, and at most a month up to +60 C; dry, and preferably below +20 C (the maker's handling note 1.1); never where the temperature may exceed +60 C. The LimeSDR Mini's own storage range is 0 to +70 C (section 4c, an exception recorded, not a lowered envelope). Storage humidity has no number in any held source: non-condensing and dry (TBD as a figure). D-02a's storage margins (+71 C, -33 C) are beyond the cells' ratings, so they run on the kit less its pack and on the pack at its cells' own limits, and the stored product's result is recorded as finding BAT-F19 (`TEST-PLAN.md` section 6). **Changed 27 September 2026:** this row had the pack out; the pack is bonded under the stack (`ASSEMBLY.md` section 1) and comes out only by the service lift of D-14, so storage keeps it fitted (section 7a). As in Transport, the lid and tamper log does not run in storage and the kit starts only once an input has woken the gauge (Review A, m5) |
+| Storage | closed and latched, **pack fitted**, brought to the cells' ex-factory state (3.49 to 3.69 V per cell, about 30 % of charge: Samsung INR18650-35E Ver. 1.1 7.11 and 3.13 note 1, the charge its storage ratings are stated at), then, with every input unplugged, the pack put in the gauge's shutdown as in Transport | an input applied, then charge and deploy | nothing | everything | the pack's hardware protection, as in Transport | PS-SHUT | `OPERATING-ENVELOPE.md` section 4; the cell specification 3.13, 7.11 and handling notes 1.1 and 11.1; session choice of 27 September 2026 (section 7a) | the storage envelope is the cells': -20 to +45 C for three months, -20 to +25 C for a year, and at most a month up to +60 C; dry, and preferably below +20 C (the maker's handling note 1.1); never where the temperature may exceed +60 C. The LimeSDR Mini's own storage range is 0 to +70 C (section 4c, an exception recorded, not a lowered envelope). Storage humidity has no number in any held source: non-condensing and dry (TBD as a figure). D-02a's storage margins (+71 C, -33 C) are beyond the cells' ratings, so they run on the kit less its pack and on the pack at its cells' own limits, and the stored product's result is recorded as finding BAT-F19 (`TEST-PLAN.md` section 6). As in Transport, the lid and tamper log does not run in storage and the kit starts only once an input has woken the gauge (Review A, m5) |
 | Service | face plate off (ten 6-32 screws, case choice C1 of `CASE-MARGINS.md` section 4), rod stack lifted off the blind-mate joint, pack out of its cradle | reassembly | console and key fill over the sealed Glenair 233-370 USB receptacle (owner ruling D-12), `rpiboot` per module, SWD on the controllers | as the task needs | procedure (owner ruling D-14): before the lift the kit is off, the pack's XT60 unplugged and shore removed, and an insulating cap covers the dock block E5 while the stack is out | bench supply | `V2-SPEC.md` line 13; 32.50 items 2 and 16f; `ARCH-PCB-B-IOHA.md` section 2; `ASSEMBLY.md` sections 4 and 7 | since `458b2873` the wall data path (bank 3's hub, port 3) leaves board A at `J_USBW` for the 233-370 with its own VBUS eFuse, and the USB-C outlet carries VBUS, CC1 and CC2 only (`gen_sch_a.py` lines 1012 to 1015 and 1151 to 1167); lifting the stack live is an accepted, recorded residual risk (D-14), and a hardware stack-present interlock is studied at Review D; test access list per board: **TBD** (foundation baseline, before placement); the first power-up of a built or rebuilt kit is the Commissioning row and section 4d |
 | Commissioning | a newly built or rebuilt kit, or a replaced pack, secure element or panel controller | every step of section 4d recorded | the steps of section 4d, in order, on shore with the pack's arming jumper open until its step | slots until the secure element is provisioned and its zones locked | procedure; the record is the commissioning log (`ASSEMBLY.md` section 8) | bench supply, then shore | section 4d; `ASSEMBLY.md` section 8; `feasibility/ZEROIZE.md` section 3; `review-packets/battery/PROTECTION-ARCHITECTURE.md` (O-9) | added 27 September 2026 (the audit found no scenario for it while D-03, D-12 and D-15 depend on it) |
 
@@ -355,9 +322,7 @@ All figures are **PROVISIONAL**: arithmetic over datasheet figures, generator de
 assumptions, and nothing has been measured. **Since 27 September 2026 they are `feasibility/POWER-THERMAL.md`'s**
 (sections 4 and 6, finding PWR-F07), computed by `records/rv-pwr/pwr_budget.py`; the reduced mode, the heat stage and
 EMCON as generated since `458b2873`, which that model does not carry as states, are computed by
-`records/hc2/pwr_red2.py`, which imports it unchanged. The figures this table carried until then were the W2 model's
-of 25 September 2026 (`records/w2/w2-runtime.md` and `w2-power.md`), which the current model supersedes: PS-IDLE-SPEC
-moved from 32.4 to 42.8 W and PS-TYP from 60.1 to 63.0 W. Battery W is at the pack terminals and includes each
+`records/hc2/pwr_red2.py`, which imports it unchanged. Battery W is at the pack terminals and includes each
 converter's loss read off its own datasheet and the distribution loss (22.5 mOhm, the chemical fuse F2 at its
 maximum included); PLAN is the headline and LOW to HIGH the documented bounds (HIGH puts every load at its maximum at
 once, an upper bound, not a scenario). Runtime is usable energy over battery W, with the Samsung INR18650-35E at its
@@ -384,13 +349,6 @@ assumed duty (`feasibility/POWER-THERMAL.md` section 4); those shares move every
 | PS-EMCON | EMCON as generated since `458b2873` (section 4b): PS-TYP with the gated radios dark and both WiFi link cards unpowered (all three runtimes printed by `records/hc2/pwr_red2.py`, the 60 % one since pass 2) | 47.1 (37.3 to 80.6) | 2.9 / 2.3 / 1.7 |
 | PS-ALLTX | every transmitter keyed at once, monitor full, fans, outlets off, the standby WiFi card off, the other loads at typical: D-11 bounds it by a declared key-down time above a declared state of charge, with the outlets at their minimum contract, **0 W** (section 5) | 203.8 (168.9 to 272.0) | 0.61 / 0.49 / 0.36 (energy only) |
 | PS-ALLTX-OUT | PS-ALLTX with the outlets on: excluded by D-11, whose hardware interlock drops the outlets while the PA keys (section 5); about 316 W on the W2 figures | excluded | excluded |
-
-**What the table does not carry any more (27 September 2026).** The 4S4P columns: no 4S4P 18650 block has been shown
-to fit either pocket with the pack board beside it (the pack paragraph below), so they described no configuration
-the design carries, and the current model computes the ruled pack only. PS-EMCON-L (EMCON with the receivers kept
-listening, 52.5 W on the W2 figures): the option D-05 did not take. The PS-EMCON of 25 September (47.6 W) was computed
-for the circuit before `458b2873`; `feasibility/POWER-THERMAL.md`'s 53.1 W still carries both WiFi link cards (4.0 W
-and 1.0 W, the circuit before `458b2873`), which is why this table's figure is lower.
 
 **The pack (owner ruling D-06, 26 September 2026).** One 4S3P block of the held cell, the Samsung INR18650-35E, of
 about 145 Wh (144.7 Wh at the cell's specification minimum), shrink-wrapped in the east pocket under board B,
@@ -452,28 +410,12 @@ rows below that name `U19`, `U20`, `Q206`, `Q111`, `Q311`, `Q106`, `Q306` or `U{
 
 **Owner ruling D-05 (26 September 2026): EMCON means radios dark, as generated and completed.** Every radio with an
 emission path is powered off or RF-disabled in hardware; the VHF path keeps listening because its gate is on the
-transmit side only; GNSS, DCF77 and the lightning sensor continue. Read transmitter by transmitter
-(`feasibility/EMCON.md` section 0a, sixth revision), the radio's own chain meets that meaning at desk for 15 of the 17
-transmitters. The 5G module's is among them since board B's round 8 (27 September 2026): its only EMCON path had been
-its disable pin, and its supply is now removed by hardware at once with a bounded time to RF off (EMCON.md section 4b,
-SD-EMC-1r8). Two stay open: the SA868, whose PTT pin's receive threshold its maker does not publish (bench E-01), and
-the RockBLOCK 9704, whose own supercapacitors keep the module running after its supply gate opens, with its ENABLE held
-by firmware (EMCON.md section 4.4). What every row
-shares was open as well (EMCON.md section 7: the line's hold with its source gone, a loss of board B's `+3V3_DEV`
-that released every gate hung on `EMCON_ON` or on `U{s}11`, gate supplies outside their range, the drive of the
-2N7002s, and the back-feed paths of SD-EMC-2); on board B round 8 closes the hold, the `+3V3_DEV` loss and the drive at
-desk, and the 5G module's back-feed, and leaves open the gate supplies of `U501` to `U505` and the back-feed into the
-RockBLOCK, the E22 and the E72 (EMCON.md section 4b); end to end, from the toggle to silence at the antenna port within
-the latency of REQ-071, no row is closed; and no row has been shown on a bench (EMCON.md section 6, twelve tests, none
-of which can use the kit's own SDR, whose supply EMCON removes).
+transmit side only; GNSS, DCF77 and the lightning sensor continue.
 The 5G module's own GNSS receiver is not counted in the last row: the kit's position source is the LG290P, the module's GNSS ports (L5 on ANT1, L1 on ANT3, Quectel hardware design v1.1
 Table 32) are fitted only in part under D-07, and whether W_DISABLE1# stops it is not established.
 
 The design record listed both switches under EMCON (appendix 32.55, line 2930: a supply switch for the 5G module and
-a converter enable for the WiFi card). The WiFi cards' converter enables are drawn since `458b2873`; the 5G supply
-switch, SD-EMC-1's, is drawn since board B's round 8 (SD-EMC-1r8, EMCON.md section 4b). **Corrected 26 September 2026 (S-07):** this section described the circuit before
-`458b2873`, in which the compute modules' radios were driven only by a software I/O expander and the WiFi link cards
-had only their disable pin.
+a converter enable for the WiFi card).
 
 ### 4b.1 How fast EMCON must act, and in which faults (added 27 September 2026)
 
@@ -502,9 +444,7 @@ before silence is needed while the 5G module is running, or has the 5G module tu
 row, kept as the operator's lead until bench E-12 measures the drawn circuit's time to RF off. After setting EMCON the operator confirms the EMCON lamp before relying on it, and sets EMCON and
 confirms the lamp before selecting BLACKOUT, in which the lamp is dark by choice (`feasibility/EMCON.md` section 5,
 SD-EMC-6, the procedure lines it owes); until its light guide is in the plate the lamp cannot be seen, and no indicator the operator can see shows the line's state without the panel
-controller. **State at this revision:** this is a requirement on the design (REQ-071), and no row meets it end to end at desk yet
-(`feasibility/EMCON.md` sections 0a and 5a: locally 15 of the 17 rows close at desk, rows 1 and 4, the SA868 and the RockBLOCK 9704, are open, and every row inherits the shared items of
-its section 3, so 0 of 17 close end to end). NEED-08 is not met until the design closes
+controller. NEED-08 is not met until the design closes
 it and the bench tests of `feasibility/EMCON.md` section 6 pass.
 
 ### 4c. The reduced mode, the heat stage, the hot and cold ends, and the targets (27 September 2026)
@@ -523,7 +463,7 @@ slot 3 alone has LoRa, APRS and GNSS but neither Iridium nor the panel; slot 1 a
 but neither LoRa nor GNSS; slot 2 alone has Iridium, the panel, GNSS and 5G but neither LoRa nor APRS.
 `feasibility/POWER-THERMAL.md` (sections 1 and 9.3), `ARCHITECTURE.md` (its PS-RED row) and `HW-FW-CONTRACT.md` (FW-C09, C1 as a shed to one module) first took the reduced mode as one module (slot 3 alone in the first two), which
 leaves Iridium and SOS, a core function (section 2a), with no host as board B is generated. The ring of the fabric
-cannot change that; the hub port each device hangs on can, which is BANK-R1 below. Those three documents follow this section since 27 September 2026 (the second release attempt of layers 1 to 3, layer 2's finding B4; `records/hc2/handoffs.md` sections 4 and 5): C1 sheds to the reduced mode of slots 2 and 3 and, reached again there, to the heat stage's one module, in `feasibility/POWER-THERMAL.md` sections 1 and 9.3, `ARCHITECTURE.md` section 8 and `HW-FW-CONTRACT.md` FW-C09, and `HW-FW-CONTRACT.md` carries the hot stop and HOT-R1 as firmware rows (FW-C13, FW-C14, FW-E10).
+cannot change that; the hub port each device hangs on can, which is BANK-R1 below.
 
 **The reduced mode: slots 2 and 3.** Slot 2 hosts bank 2 and, by the fabric's failover, bank 1; slot 3 hosts bank 3 and
 the LoRa module. It carries every bearer of the owner's example, the SOS path, and 5G (the fourth core bearer),
@@ -674,9 +614,7 @@ fallback `THERMAL-COORDINATION.md` section 7 drafts for a lost sensor controller
 with the line, that fallback no longer mistakes the heat stage as generated, where the readings stop reaching a
 module by design, for a lost sensor controller. With HOT-R1 the stop needs no compute module, the panel controller
 sees the release itself, and at every start-up it reads the line before it raises any slot, as it reads the ZEROIZE
-toggle. **Until HOT-R1 is in both generators the hot stop's requirement reads FAIL on the generated boards,** a finding
-reported to the owner, not asked: the stop then acts only where the bridge links the two controllers (the normal and
-reduced modes, and the heat stage after BANK-R1, up to H1 itself), and falls back to the `TMP117` elsewhere. The
+toggle. The
 hand-offs are layer 5's: the dock contract's pin 12, and the four states in the sensor controller's and the panel
 controller's firmware contracts (`PANEL.md`).
 
@@ -735,9 +673,7 @@ controller's (`ARCH-PCB-B-IOHA.md` sections 4, 15 and 15a, `feasibility/ZEROIZE.
 `PANEL.md`) are board B's owner's, before board B's layout entry, from a hand-off that carries the proposed generator
 change. If board B's owner finds a reason the exchange cannot be made, the other one that keeps section 8's rule (the
 panel controller with the 5G management link, bank 3, port 4) is tried; if neither can, the finding below stands and
-goes to the owner as a trade between his example and section 8's rule. **Until BANK-R1 is in board B's generator,
-REQ-052 is not met by board B as generated** (its one-module stage lacks the LoRa mesh and APRS): a finding against the
-generated board, reported to the owner at the next checkpoint, not asked.
+goes to the owner as a trade between his example and section 8's rule.
 
 **The hot end is behaviour on measured internal temperatures; the ambient figures are bounds.** The kit has no ambient
 sensor in prototype 1's core (the outside pod is deferred by D-01), so no mode can be entered on "ambient above +35
@@ -866,7 +802,7 @@ within **10 s** of the declaration (NEED-02). (3) **The kit's own share of every
 that is up is handed to that bearer's device within **10 s** of being queued. (4) **End to end**, from the kit to a
 correspondent, is set by networks outside the kit (the Iridium constellation, a cellular network, a mesh, an APRS
 digipeater or gateway): it is measured per bearer in the functional check and recorded as characterisation, not
-a pass line. These close S-37 and REQ-003's latency TBD for the kit's part.
+a pass line.
 
 **Graceful shutdown on the pack.** The bridge starts a clean shutdown of every module when the gauge's relative state
 of charge reaches 5 % (the reserve the runtimes of section 6 keep) or the lowest cell reads 3.00 V or less under load
@@ -990,8 +926,7 @@ firmware), and if FEA-004 closes in failure these values reopen; until then one 
 figure, and repeated key-downs are OPEN (`feasibility/POWER-THERMAL.md` PWR-F15). The hardware interlock that drops the outlets while the PA keys, which the design record asks for
 (32.55 line 2932), is on board A since `458b2873`: `U30` forms OUTLET_OK = NOT (TR_APRS AND PA_EN), low while the PA
 keys, and two gates of `U26` give POE_EN = POE_SW_EN AND OUTLET_OK and PD_EN = PD_SW_EN AND OUTLET_OK (`gen_sch_a.py`
-lines 1088 to 1104 at `45bde541`). **Corrected 26 September 2026 (S-07):** this paragraph said the PoE and USB-C
-enables were software expander pins with no hardware tie to the PA keying, the circuit before `458b2873`. The load figures below are the design estimate of
+lines 1088 to 1104 at `45bde541`). The load figures below are the design estimate of
 appendix 32.52 item 3 (line 2846) unless a datasheet figure is given beside it; **none has been measured**. Duty
 cycles are the weakest part of the record: where no source exists the cell says **TBD** and names what the
 missing number moves.
@@ -1006,7 +941,7 @@ missing number moves.
 | LoRa E22-900M30S | 0.5 / 6.5 | TX 650 mA, RX 14 mA (Ebyte manual v1.20) | **TBD** (mesh traffic) | regulatory cap: 10 % duty at 27 dBm on 869.4 to 869.65 MHz (32.49 item 4) | runtime |
 | RockBLOCK 9704 | 0.5 / 5 | 60 mW idle, 1.4 W max (`rb9704-datasheet-RB9704-001-JUN26.pdf`) | message driven: **TBD** | continuous session | runtime (the budget is above the datasheet) |
 | QMX HF | 1 / 12 | RX 80 mA, TX 0.7 to 1.1 A at 12 V (32.51 line 2816) | **TBD** (a Winlink or Mercury transfer is long) | continuous transmit for a transfer | runtime, thermal |
-| APRS with the 30 W PA | 1.5 / 75 | over 30 W out at over 40 % efficiency at 12.5 V, about 45 W of heat (32.51 line 2813) | a beacon every 10 minutes at a fixed site, at most one a minute on the move (the planning profile below); "APRS duty only at full power" (32.49 item 8) | **at most 60 s per key-down** (K1), started only inside K2 to K5 and cut by C4 (`feasibility/POWER-THERMAL.md` sections 7.2 and 9.3, PWR-F14); the design record's two figures bracket it: 32.53's "the 200 W peak (PA key-down) lasts minutes" (line 2860) and 32.56's "a 20 s key-down at 45 W" on the plate's local patch (line 2940). Corrected 27 September 2026: this cell said "key-down for minutes" | thermal (PA flange and plate patch, PWR-F15), runtime |
+| APRS with the 30 W PA | 1.5 / 75 | over 30 W out at over 40 % efficiency at 12.5 V, about 45 W of heat (32.51 line 2813) | a beacon every 10 minutes at a fixed site, at most one a minute on the move (the planning profile below); "APRS duty only at full power" (32.49 item 8) | **at most 60 s per key-down** (K1), started only inside K2 to K5 and cut by C4 (`feasibility/POWER-THERMAL.md` sections 7.2 and 9.3, PWR-F14); the design record's two figures bracket it: 32.53's "the 200 W peak (PA key-down) lasts minutes" (line 2860) and 32.56's "a 20 s key-down at 45 W" on the plate's local patch (line 2940). | thermal (PA flange and plate patch, PWR-F15), runtime |
 | Switches, hubs, bridges, controllers | 6 / 8 | plus about 0.9 W for the I/O supervisors (`ARCH-PCB-B-IOHA.md` section 14) | continuous | continuous | runtime |
 | Sensors and panel | 2.5 / 2.5 | none | continuous | continuous | runtime |
 | PoE and USB-C outlets | 0 / 90 | 45 W USB-C (32.57 line 2980), PoE 54 V at 0.6 A (32.55 line 2927) | accessory dependent: **TBD** | full, cut to minimum while the PA keys (D-11) | runtime, input budget |
@@ -1060,9 +995,6 @@ section 6):
 - the typical state of 32.52, PS-TYP: about 2.1 h new and 1.7 h aged (0.9 to 2.3 h aged);
 - the reduced mode (PS-RED2, section 4c): about 4.3 h new and 3.5 h aged; the heat stage: 5.9 h and 4.7 h after
   BANK-R1 (PS-SURV-R), 6.3 h and 5.0 h as board B is generated (PS-SURV).
-
-These replace the W2 model's 4.2 and 3.4 h, 2.2 and 1.8 h, and the one-module reduced figures, which were computed
-before the loads were sourced (section 4a).
 
 **The runtime requirement (owner ruling D-06, 26 September 2026)** is stated as battery-only hours in an idle and
 a typical mode at +20 C for an aged pack. The session takes PS-IDLE-SPEC and PS-TYP as those two modes, the pair
@@ -1171,4 +1103,177 @@ rows marked **pass 3** answer its second pass and the ConOps side of Review B of
 | The NVG mode's compatibility target (Review B of layer 3, B3); **pass 3** | MIL-STD-3009, Type I, Class B NVIS, judged by the standard's own examination (5.7.2): the goggle resolves the same line of the 50 % NVG chart at 20 ft with the kit's NVG lighting on as with every light off, and no light leak is seen; no claim until it has passed | D-01 defers the claim, not the design; Class A is by the standard's words incompatible with red lights and the owner ruled the NVG light red (32.50 item 16c). Reverse by naming Class A (a change of the NVG colour) or another criterion | section 4, NVG row |
 | The lightning mast-down alarm (Review B of layer 3, B2); **pass 3** | MASTER WARN when the AS3935 reports a lightning event at 10 km or less; cleared after 30 minutes with none at 10 km or less; it informs and switches nothing | the owner approved the detector with a mast-down alarm and set no level; the sensor's factsheet quotes the 30-30 rule (a storm within 10 km, shelter for 30 minutes after the last thunder). Reverse by another distance or hold | section 4e |
 | M1's solar window and design month (REQ-016 and REQ-072 of the requirements registry; Review B of layer 3, B4 and B5); **pass 3** | the window board E's generator declares: at most 25 V open circuit at the panel's coldest, 17.6 V held, at most 100 W; the balance judged on the mean day of September at Leiden (4.0 kWh/m2 on the optimally inclined plane, PVGIS) as the design month, with no season taken off M1 | the generator's own declaration, against which the entry's parts are judged, and a public irradiation record; a season clause that the registry's first text carried would have narrowed M1 in a session choice alone, and is withdrawn. Reverse by re-declaring the entry and judging its parts again, or by another site or month | section 3, M1 |
+
+## Appendix: review and status history (not part of the baseline)
+
+Not part of the baseline. Moved here word for word on 27 September 2026 (branch `fnd/defstab`, MESHSAT-1357) from the document above, as it stood at `31cd29b9`: the record of how this document was reviewed and baselined, and the notes that recorded its own revisions. The changing implementation results that stood in its running text moved to `handover/DEFINITION-STATUS.md`. Each entry names where it stood and its lines at `31cd29b9`; a moved section's own heading is one level lower here. Nothing below is maintained: the current state is where the head of this file says.
+
+### A1. From the head (the status paragraph)
+
+*Lines 3 to 34 at `31cd29b9`: the status line and the revision history of 25 to 27 September 2026 (passes 1 to 3).*
+
+**Status: BASELINED as layer 2 of the foundation baseline (MESHSAT-1357) at `79963b3b`, the commit that carries on main `91894cd7` the content the second release check of layer 2 read at `eb9f9030` and found no blocking item in (`reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md`, an AI review; this document byte-identical, sha256/16 `3ff59edc96a3f8f4`, before this status line and the Review A paragraph's last sentence were written). Written 25 September 2026, revised the
+same day after an independent challenge, and revised on 26 September 2026 to carry the owner's rulings D-01 to
+D-17 of 25 and 26 September 2026 and the choices the session took under the owner's standing rule of 26
+September 2026; section 7 lists every question with its ruling, and D-18, the one still open and
+conditional. Corrected later on 26 September 2026 (appendix 32.367): the owner reversed D-08 at about 09:30 CEST
+and D-08a stands (section 7), the session settled SC-02 at about 11:35 CEST (section 2a), and the pack's
+transport route follows the review of that day (section 4, Transport row). Corrected again later that day (open
+item S-07 of the requirements registry): sections 3 (M2 and M4), 4, 4a (PS-EMCON), 4b and 5 describe the circuit
+as generated at `45bde541`, after the circuit corrections of `faf8c981`, `458b2873` and `d90f30e4`; no need of section
+2 changed.** **Revised on 27 September 2026 to close the layer-2 items of the handover audit (MESHSAT-1357; the owner's
+execution prompt of that day, `reviews/2026-09-27-handover-execution-prompt.md` sections 2 and 3):** the reduced mode
+is defined with the modules that can host it (section 4c), the hot end is stated as controls on measured internal
+temperatures with the ambient figures as bounds (section 4c), the power and runtime figures follow
+`feasibility/POWER-THERMAL.md` (sections 4a, 5 and 6), EMCON's latency and fault conditions are carried (section
+4b.1), storage, transport, commissioning, shutdown and faults have scenarios (sections 4, 4d, 4e and 4f), the mission
+duration, the duty profile, "aged" and the recovery and delivery targets are set, and every choice this revision took
+is in section 7a. No need of section 2 changed. Prototype design. **Revised again on 27 September 2026 (pass 2) to
+answer the seven blocking findings of Review A's first pass (`reviews/REVIEW-A-LAYER-2-2026-09-27-pass1.md`, B1 to B7) and
+its minor ones:** the heat stage's losses and its shutdown source are stated (sections 4 and 4c); a start-up with the
+lid closed is defined on what the panel controller can know (section 4c); M1's finding is restated with the pack's
+energy across the night as the binding limit (section 3); the closed-lid requirement stays at the owner's example set,
+the bank allocation that lets one module carry it is taken as a board B design item (BANK-R1), and the generated
+board's shortfall is stated as a finding (section 4c); commissioning drops the ten-minute key-down that K1 forbids
+(section 4d); and the cold end names the warm-up that brings the inside air to 0 C and the conductance at which it
+fails (section 4c). **Revised a third time on 27 September 2026 (pass 3) to answer Review A's second pass (P2-B1,
+P2-B2) and the ConOps side of Review B of layer 3 (`reviews/REVIEW-B-LAYER-3-2026-09-27.md`, B1 to B5):** past the
+heat stage the kit acts on the pack's measured cell temperature on every input state, the hot stop, whose path from
+the sensor controller to the panel controller is a board A and board E design item (HOT-R1) and whose firing inside
+the envelope stays a feasibility question (sections 4, 4c, 4e and 4f, and M2); M1 carries the solar window board E's
+generator declares and the design month of its energy balance, with no season taken off the mission (section 3); the
+NVG mode has a compatibility target and no claim before its test (section 4, NVG row); the lightning mast-down alarm
+is carried (section 4e); and the session's choices in D-02b's row are marked as the session's (section 7).
+
+### A2. From the head (the Review A paragraph)
+
+*Lines 36 to 49 at `31cd29b9`: the definition of Review A for layer 2 and the record of its passes and release checks.*
+
+**Review A, the gate this layer closes through (defined 27 September 2026).** One fresh reviewer who wrote none of
+this layer's documents checks this document, `OPERATING-ENVELOPE.md`, `v2/ecad/tools/pcb_envelope.yaml`, the operator
+sections of `PANEL.md` (1, 3, 5, 8, 9 and 10) and the state and envelope rows of `TEST-PLAN.md`, at one pinned commit,
+against the layer-2 items of the owner's execution prompt (section 3: normal, degraded, startup, charging, shutdown,
+storage, service and fault scenarios; the operating envelope; simultaneous modes; the explicit behaviour of the core
+functions; product decisions settled under existing authority) and against `ARCH-PCB-B-IOHA.md` section 15,
+`feasibility/EMCON.md` section 5a and `feasibility/POWER-THERMAL.md` section 9. The review is recorded under
+`v2/docs/reviews/` with the commit it read, **labelled AI review**; it is never a qualified review,
+it replaces no qualified review a record requires (D-09), and it establishes no circuit's correctness. Its findings are answered
+in the documents; the layer is then marked baselined at that commit. The first pass was recorded (FAIL, seven blocking
+findings, read on `e3aedb25` with this revision's first draft; filed at `reviews/REVIEW-A-LAYER-2-2026-09-27-pass1.md`, sha256 `e854c2a46ea3d542`, with the reviewers' brief at `reviews/2026-09-27-review-A-layer2-brief.md`)
+and pass 2 answered it; the second pass (`reviews/REVIEW-A-LAYER-2-2026-09-27.md`, FAIL, two blocking findings, P2-B1 and P2-B2) is answered by pass 3; the pass at the integrating
+commit `f2b7fa66` (`reviews/REVIEW-LAYER-2-RELEASE-2026-09-27.md`, FAIL, four blocking findings, B1 to B4) is answered at desk in two steps (`handover/LAYER-STATUS.md`, layer 2: the wording and citations in `08f3665a`; then, in the second release attempt of the same day, B2's forced trigger of the hot stop, `TEST-PLAN.md` P15, and B4's one definition of C1 in the documents that follow section 4c), and the second release check (`reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md`, at `eb9f9030`, AI review) found no blocking item, so the layer is baselined at `79963b3b` (`handover/LAYER-STATUS.md`, layer 2, names the record and its evidence). Until that pass
+this document was a DRAFT for Review A.
+
+### A3. From section 2 (the paragraph under the needs table)
+
+*Lines 111 to 112 at `31cd29b9`: when two needs were added (the needs table itself is unchanged).*
+
+NEED-18 and NEED-19 were added in the revision of 25 September 2026: the approved test plan already tests
+NEED-18, and the SOS toggle is on the face, but neither had a need to trace to.
+
+### A4. From section 2a (which peripherals NEED-03 protects)
+
+*Lines 159 to 162 at `31cd29b9`: a correction note of the document itself.*
+
+**Corrected 26 September 2026:** this paragraph first called the two "open design gaps against
+NEED-03, not accepted exceptions", on the reading that the owner's requirement ("every device visible to all
+modules", `V2-SPEC.md` line 29) names no exception; that contradicted section 15a and appendix 32.366, and SC-02
+settles it as above.
+
+### A5. From section 4 (its introduction)
+
+*Lines 322 to 323 at `31cd29b9`: when the mode rows were added.*
+
+The table has eighteen rows: the fourteen of the first draft, SOS (added on 25 September 2026), the heat stage
+and commissioning (added on 27 September 2026), and the hot stop (added later that day, pass 3).
+
+### A6. From section 4, the Transport row
+
+*Lines 329 to 329 at `31cd29b9`: two correction notes of the document itself.*
+
+**Corrected 26 September 2026:** this cell had stated a road route with the kit as the session's choice, inferring from the unknown status that carriage by road was open where air and parcel carriage were not; that inference is withdrawn (appendix 32.367). **Changed 27 September 2026:** the kit in transport is off with its pack in the gauge's shutdown; before, whether it was powered was TBD
+
+### A7. From section 4, the Startup row
+
+*Lines 331 to 331 at `31cd29b9`: a correction note of the document itself.*
+
+**Changed 27 September 2026 after Review A (B2):** this cell had the panel controller raise `SLOT_EN2` and `SLOT_EN3` only when the lid was closed, which it cannot sense
+
+### A8. From section 4, the Charging row
+
+*Lines 336 to 336 at `31cd29b9`: a correction note of the document itself.*
+
+**Corrected 26 September 2026 (S-07):** this row said the kit's loads sat on the pack side of the charger's sense resistor and the strap selected 2S, the circuit before `458b2873`
+
+### A9. From section 4, the EMCON row
+
+*Lines 338 to 338 at `31cd29b9`: a correction note of the document itself.*
+
+**Corrected 26 September 2026 (S-07):** this row said the module radios were off the line and the WiFi cards had only their disable pin, the circuit before `458b2873`
+
+### A10. From section 4, the Storage row
+
+*Lines 344 to 344 at `31cd29b9`: a correction note of the document itself (its reason stands in section 7a's storage and transport row).*
+
+**Changed 27 September 2026:** this row had the pack out; the pack is bonded under the stack (`ASSEMBLY.md` section 1) and comes out only by the service lift of D-14, so storage keeps it fitted (section 7a).
+
+### A11. From section 4a (the paragraph under its heading)
+
+*Lines 358 to 360 at `31cd29b9`: which model the table's figures replaced.*
+
+The figures this table carried until then were the W2 model's
+of 25 September 2026 (`records/w2/w2-runtime.md` and `w2-power.md`), which the current model supersedes: PS-IDLE-SPEC
+moved from 32.4 to 42.8 W and PS-TYP from 60.1 to 63.0 W.
+
+### A12. From section 4a (the paragraph under its table)
+
+*Lines 388 to 393 at `31cd29b9`: the rows and columns the table dropped on 27 September 2026.*
+
+**What the table does not carry any more (27 September 2026).** The 4S4P columns: no 4S4P 18650 block has been shown
+to fit either pocket with the pack board beside it (the pack paragraph below), so they described no configuration
+the design carries, and the current model computes the ruled pack only. PS-EMCON-L (EMCON with the receivers kept
+listening, 52.5 W on the W2 figures): the option D-05 did not take. The PS-EMCON of 25 September (47.6 W) was computed
+for the circuit before `458b2873`; `feasibility/POWER-THERMAL.md`'s 53.1 W still carries both WiFi link cards (4.0 W
+and 1.0 W, the circuit before `458b2873`), which is why this table's figure is lower.
+
+### A13. From section 4b (its closing paragraph)
+
+*Lines 474 to 476 at `31cd29b9`: a correction note of the document itself.*
+
+**Corrected 26 September 2026 (S-07):** this section described the circuit before
+`458b2873`, in which the compute modules' radios were driven only by a software I/O expander and the WiFi link cards
+had only their disable pin.
+
+### A14. From section 4c (which modules can host what)
+
+*Lines 526 to 526 at `31cd29b9`: the answer to finding B4 of the release check of layer 2: three other documents brought into line.*
+
+Those three documents follow this section since 27 September 2026 (the second release attempt of layers 1 to 3, layer 2's finding B4; `records/hc2/handoffs.md` sections 4 and 5): C1 sheds to the reduced mode of slots 2 and 3 and, reached again there, to the heat stage's one module, in `feasibility/POWER-THERMAL.md` sections 1 and 9.3, `ARCHITECTURE.md` section 8 and `HW-FW-CONTRACT.md` FW-C09, and `HW-FW-CONTRACT.md` carries the hot stop and HOT-R1 as firmware rows (FW-C13, FW-C14, FW-E10).
+
+### A15. From section 5 (the rule the hardware is designed to)
+
+*Lines 993 to 994 at `31cd29b9`: a correction note of the document itself.*
+
+**Corrected 26 September 2026 (S-07):** this paragraph said the PoE and USB-C
+enables were software expander pins with no hardware tie to the PA keying, the circuit before `458b2873`.
+
+### A16. From section 5 (the load table, the row of APRS with the 30 W PA)
+
+*Lines 1009 to 1009 at `31cd29b9`: a correction note of the document itself.*
+
+Corrected 27 September 2026: this cell said "key-down for minutes"
+
+### A17. From section 6 (the paragraph under its list)
+
+*Lines 1064 to 1065 at `31cd29b9`: which model's runtimes these replaced.*
+
+These replace the W2 model's 4.2 and 3.4 h, 2.2 and 1.8 h, and the one-module reduced figures, which were computed
+before the loads were sourced (section 4a).
+
+### A18. From section 7a (the Review A row)
+
+*Lines 1174 to 1174 at `31cd29b9`: the review gate's own choice row, which points at the status paragraph that moved with it.*
+
+| Choice | Taken | Why | Where |
+|---|---|---|---|
 | Review A | one fresh reviewer, recorded under `v2/docs/reviews/`, labelled AI review, never a qualified review | the audit found the gate undefined; the owner's prompt allows an agent to check usability and consistency and keeps qualified reviews separate | the status paragraph at the top |
