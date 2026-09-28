@@ -22,6 +22,7 @@ python3 v2/ecad/tools/z_budget.py > "$OUT/zstack/z-budget.txt" || true          
 "$PY" v2/cad/connector_plate.py "$OUT/connector-plate"
 "$PY" v2/cad/rf_entry_plate.py "$OUT/rf-entry-plates"
 "$PY" v2/cad/lid_bracket_qmx.py "$OUT/lid-tray-qmx"                                      # the QMX lid tray (C5); its place is sheet 14
+PY="$PY" bash v2/cad/build_lid_tray_r2.sh "$OUT"                                          # the QMX lid tray r2 (27 Sep 2026), which supersedes the line above and sheet 14
 "$PY" v2/cad/plate_drawing.py "$OUT/face-plate/face-plate.dxf" "$OUT/drawings/face-plate-drawing.pdf"
 "$PY" v2/cad/case_drawings.py "$OUT/drawings"
 "$PY" v2/ecad/tools/case_wall_cutouts.py "$OUT/templates/case-templates-1to1.pdf" --face "$OUT/face-plate/face-plate.dxf" "$OUT/templates/face-plate-1to1-A3.pdf"
