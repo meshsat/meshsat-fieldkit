@@ -36,7 +36,7 @@ import yaml
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 PINS = {
-    "v2/docs/records/energy/energy_budget.py": "36cede1b5fd59cf8728179b32ffa763a2e5b09457748d243d1ecfc84bc2c1fff",
+    "v2/docs/records/energy/energy_budget.py": "cf6c377fa1015a468a61dc83f1c735e54b5f778eb3bb39834495ee2eb24d02c1",
     "v2/docs/records/energy/energy_inputs.yaml": "64dd014bee56d855023d43caeaf848cfd6dc54f65b58e341d6696851460f7470",
     "v2/ecad/tools/gen_sch_p.py": "740817ada5c8e14af8c8e001b775e09cbae94d6a03ad462ee2e1c1755bc935a3",
     "v2/ecad/tools/pcb_pack_protection.yaml": "ab1dbc3f3f69aa4687a4fa9745c0cbdc96d0521146dc5d3f84698656e33c484b",

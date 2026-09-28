@@ -7,7 +7,7 @@ criteria visible. **Prototype design: nothing built, ordered or measured; an AI 
 
 | file | what it is |
 |---|---|
-| `ENERGY-RECONCILIATION.md` | the record, sections 1 to 7: the loads with their kinds, the usable energy, the night, the solar input, the balance and the conflict, the options ranked, the smallest justified changes |
+| `ENERGY-RECONCILIATION.md` | the record, sections 1 to 7: the loads with their kinds, the usable energy, the night, the solar input, the balance and the conflict, the options ranked, the smallest justified changes (every set holds its state for all 72 hours; 7c the sun-following schedule with its reduced hours a day per month and set, added 29 September 2026); section 8 the one 4S6P pack |
 | `DECISION-PARAGRAPH.md` | the owner's sheet, under 120 words |
 | `energy_inputs.yaml` | every input with its document, page and kind; the loads of PS-IDLE-SPEC as the tree's model prints them; the state rules; the pack; the solar resource and chain; the pockets |
 | `energy_budget.py` | the tool: pins the inputs by sha256 (refuses a changed one by name), recounts the states, discharges the pack, computes the night, the solar day, the hour-by-hour balance, the sensitivity and the options; deterministic output |

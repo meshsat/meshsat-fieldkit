@@ -466,6 +466,46 @@ def simulate(d, pack, prof, p_load, wp, window, eta, pr, start_h, t_c, age, hour
                    "nights": nights, "chg_max_w": chg_max_w, "ok": first_stop is None, "lowest": lowest}
 
 
+def simulate_sched(d, pack, prof, load_of_hh, wp, window, eta, pr, start_h, t_c, age, hours, dod="3v00", n_p=None):
+    """simulate() with a load that changes by hour of day (load_of_hh(hh) in W at the pack terminals), the record's
+    charge rule unchanged; the usable energy and the pack voltage are taken at the schedule's highest load (the
+    conservative choice). With a constant schedule it returns simulate()'s summary exactly (checked in section 7c)."""
+    n_p = n_p or pack.n_p
+    p_ref = max(load_of_hh(hh) for hh in range(24))
+    e_full, _ = pack.usable_wh(p_ref, t_c, age, dod, n_p)
+    v_pack = pack.n_s * interp(pack.vmean, pack.cell_current(p_ref, n_p))
+    chg_max_w = pack.chg_a * (n_p / pack.n_p) * v_pack
+    can_charge = d["pack"]["charge_window_c"]["low"] <= t_c <= d["pack"]["charge_window_c"]["high"]
+    e, lowest, running, first_stop, short_wh, hours_run = e_full, e_full, True, None, 0.0, 0
+    for h in range(hours):
+        hh = (start_h + h) % 24
+        p_load = load_of_hh(hh)
+        p_sun = node_w(prof[hh], wp, pr, window, eta)
+        if not running and (p_sun >= p_load or e >= 0.5 * e_full):
+            running = True
+        load = p_load if running else 0.0
+        if not running:
+            short_wh += max(0.0, p_load - p_sun)
+        if p_sun >= load:
+            soc = e / e_full
+            cap = chg_max_w if soc < pack.taper else chg_max_w * max(0.0, (1.0 - soc) / (1.0 - pack.taper))
+            e = min(e_full, e + (min(p_sun - load, cap) * pack.chg_eta if can_charge else 0.0))
+        else:
+            deficit = load - p_sun
+            if e >= deficit:
+                e -= deficit
+            else:
+                short_wh += deficit - e
+                e = 0.0
+                running = False
+                if first_stop is None:
+                    first_stop = h
+        if running:
+            hours_run += 1
+        lowest = min(lowest, e)
+    return {"e_full": e_full, "first_stop": first_stop, "short_wh": short_wh, "hours_run": hours_run, "ok": first_stop is None, "lowest": lowest}
+
+
 def section5(o, d, pack, res1, res3, res4, monthly_json):
     s = d["solar"]
     pr, eta, window = res4["pr"], res4["eta"], res4["window"]
@@ -548,8 +588,8 @@ def section5(o, d, pack, res1, res3, res4, monthly_json):
     o.table(["input", "value that closes M1 alone", "meaning"], rows)
     o()
     # combined: night state + 2v80 + panel with no window
-    o("5d. Combinations inside the approved constraints, September, start 06:00, aged 80 percent (the night state of")
-    o("   option (a), the 2.80 V line of (b), the panel and window of (e)):")
+    o("5d. Combinations inside the approved constraints, start 06:00, aged 80 percent (the night state of option (a), the")
+    o("   2.80 V line of (b), the panel and window of (e)); EACH STATE IS HELD FOR ALL 72 HOURS, DAY AND NIGHT:")
     rows = []
     pn = res1["PS-NIGHT-RELAY"]["model"]
     for st, pl in (("PS-IDLE-SPEC", p), ("PS-RED2", res1["PS-RED2"]["model"]), ("PS-SURV-R", res1["PS-SURV-R"]["model"]), ("PS-NIGHT-RELAY", pn)):
@@ -575,7 +615,8 @@ def section6(o, d, pack, res1, res2, res3, res4, res5):
     o()
     pn = res1["PS-NIGHT-RELAY"]
     mb = d["model_states"]["PS-NIGHT-RELAY"]
-    o("6a. Operating modes at night: PS-NIGHT-RELAY, the lowest state that still meets M1's must-hold (a handheld's")
+    o("6a. The night state PS-NIGHT-RELAY (named for the night; every run of 5d and 7 holds it for ALL 72 HOURS, day")
+    o("    included, and 7c gives the sun-following schedule): the lowest state that still meets M1's must-hold (a handheld's")
     o("    message over the LoRa mesh reaches a remote correspondent over Iridium, or APRS; the kit keeps running).")
     rows = []
     for r in state_rows(d, "PS-NIGHT-RELAY"):
@@ -584,7 +625,7 @@ def section6(o, d, pack, res1, res2, res3, res4, res5):
     o.table(["load ON in PS-NIGHT-RELAY", "at load W", "battery W", "kind"], rows)
     o("    OFF: slots 1 and 2 with their fans, PCIe switches and drives; both WiFi link cards; the 5G module (no host on")
     o("    slot 3); the monitor and HDMI 5 V; the SDR, the camera, the QMX, the Geiger (deferred by D-01); the E72 pair;")
-    o("    the mixer fans (a shaded, cool night; on in the heat). ON at night with traffic: the LoRa module at the planning")
+    o("    the mixer fans (a shaded, cool night; on in the heat). ON, with traffic: the LoRa module at the planning")
     o("    duty (receive plus about 9 percent airtime, 0.3 W) and the RockBLOCK at one session in ten minutes (0.1 W); the")
     o("    panel at its declaration's logic share with the lamps at NIGHT's 15 percent (0.82 W, a declaration, not a maker's")
     o("    figure). On the tree's model (night_bounds.out, pwr_budget.py imported unchanged): LOW / PLAN / HIGH %.2f / %.2f /" % (mb["low"], mb["plan"]))
@@ -596,7 +637,9 @@ def section6(o, d, pack, res1, res2, res3, res4, res5):
     o("    What it changes: firmware and operator settings only (the KSZ energy-detect mode and the supervisors' 200 MHz")
     o("    clock are firmware items to confirm on the generated boards); it is the heat stage after BANK-R1 with six")
     o("    loads off or lowered, so it needs BANK-R1 in board B's generator (CONOPS 4c). Cost: none in parts. Mission:")
-    o("    the monitor, the WiFi link, 5G and Zigbee are dark at night; the e-paper and the panel lamps carry the status.")
+    o("    the monitor, the WiFi link, 5G, Zigbee and two of the three compute modules are off in EVERY HOUR the state runs:")
+    o("    all 72 hours in sets 1 to 3 of 7, or each hour the panel alone does not carry PS-IDLE-SPEC under 7c's schedule;")
+    o("    the e-paper and the panel lamps carry the status.")
     o()
     e20 = res2[("PS-IDLE-SPEC", 20.0)]
     e280 = pack.usable_wh(42.8, 20.0, 0.8, "2v80")[0]
@@ -753,14 +796,16 @@ def section7(o, d, pack, res1, res4, res5, res6):
     o("   BELOW: on one aged 4S3P pack no combination of (a), (b) and (e) meets it (in the design case, September with")
     o("   100 Wp in the window and the 3.00 V line, the night binds at every kit load above %.1f W, 5c; the scope of that" % res5["w_max_load"])
     o("   figure is in 7b), and with two packs PS-IDLE-SPEC is still NOT MET (set 6). The sets that meet M1's must-hold do so by")
-    o("   CHANGING M1's operating mode at night to the night state (%.2f W PLAN, %.2f to %.2f W), a change presented for" % (pn, mb["low"], mb["high"]))
+    o("   CHANGING M1's operating state to the night state (%.2f W PLAN, %.2f to %.2f W) FOR ALL 72 HOURS, day and night" % (pn, mb["low"], mb["high"]))
+    o("   (every set below holds its state constant; 7c gives the schedule that runs PS-IDLE-SPEC while the panel alone")
+    o("   carries it), a change presented for")
     o("   the owner's decision, not a fulfilment of REQ-072. From a full aged pack, cells as section 5 takes them:")
     keys = [
-        ("1. night state (a) + 2.80 V line (b) + second 4S3P pack (d), 100 Wp", ("PS-NIGHT-RELAY", "2v80", 100.0, 100.0)),
+        ("1. night state (a) for all 72 h + 2.80 V line (b) + second 4S3P pack (d), 100 Wp", ("PS-NIGHT-RELAY", "2v80", 100.0, 100.0)),
         ("2. as 1 with a 200 Wp panel (the stage's 100 W: route A or B of 6e)", ("PS-NIGHT-RELAY", "2v80", 200.0, 100.0)),
         ("3. as 1 with the path re-rated to 300 W and a 330 Wp panel (e)", ("PS-NIGHT-RELAY", "2v80", 330.0, 300.0)),
-        ("4. heat stage PS-SURV-R at night + (b) + second pack + 300 W path, 330 Wp", ("PS-SURV-R", "2v80", 330.0, 300.0)),
-        ("5. reduced mode PS-RED2 at night + (b) + second pack + 300 W path, 330 Wp", ("PS-RED2", "2v80", 330.0, 300.0)),
+        ("4. heat stage PS-SURV-R for all 72 h + (b) + second pack + 300 W path, 330 Wp", ("PS-SURV-R", "2v80", 330.0, 300.0)),
+        ("5. reduced mode PS-RED2 for all 72 h + (b) + second pack + 300 W path, 330 Wp", ("PS-RED2", "2v80", 330.0, 300.0)),
         ("6. PS-IDLE-SPEC as written + (b) + second pack + 300 W path, 330 Wp", ("PS-IDLE-SPEC", "2v80", 330.0, 300.0)),
     ]
     rows = []
@@ -806,7 +851,7 @@ def section7(o, d, pack, res1, res4, res5, res6):
     rbw = run2(window=rb["(ii)"]["worst90"])
     o("   SET 2's CONDITIONS, September, start 06:00, two aged packs (the hour-by-hour run):")
     o.table(["case", "result", "lowest point Wh", "first stop h"], [
-        ["as stated: night state %.2f W, cells +20 C, 2.80 V line, the model's 100 W clip" % pn, "MET" if base["ok"] else "NOT MET", f1(base["lowest"]), str(base["first_stop"])],
+        ["as stated: night state %.2f W for all 72 h, cells +20 C, 2.80 V line, the model's 100 W clip" % pn, "MET" if base["ok"] else "NOT MET", f1(base["lowest"]), str(base["first_stop"])],
         ["cells at +15 C (the counter-case)", "MET" if c15["ok"] else "NOT MET", f1(c15["lowest"]), str(c15["first_stop"])],
         ["without the 2.80 V line (graceful at 3.00 V)", "MET" if no280["ok"] else "NOT MET", f1(no280["lowest"]), str(no280["first_stop"])],
         ["the night state at its LOW %.2f W" % mb["low"], "MET" if at_low["ok"] else "NOT MET", f1(at_low["lowest"]), str(at_low["first_stop"])],
@@ -856,6 +901,36 @@ def section7(o, d, pack, res1, res4, res5, res6):
     o("   The largest load ONE aged pack carries for 72 h (cells +20 C): June %.2f W with 400 Wp and no window (2.80 V)," % wmax(6, 400.0, 1e9, "2v80"))
     o("   %.2f W with 100 Wp in the window (3.00 V); September %.2f W and %.2f W. The 8.4 W of 5c is the design case only." % (
         wmax(6, 100.0, 100.0, "3v00"), wmax(9, 400.0, 1e9, "2v80"), wmax(9, 100.0, 100.0, "3v00")))
+    o()
+    p_idle = d["model_states"]["PS-IDLE-SPEC"]["plan"]
+    same = []
+    for (m, wp, win, n_p) in ((9, 200.0, 100.0, 6), (6, 100.0, 100.0, 6), (12, 330.0, 300.0, 3)):
+        t_c = d["mission"]["cell_temp_c_by_month"][m]
+        a = simulate(d, pack, res4["months"][m]["profile"], pn, wp, win, eta, pr, 6, t_c, pack.age80, hours, dod="2v80", n_p=n_p)[1]
+        b = simulate_sched(d, pack, res4["months"][m]["profile"], lambda hh: pn, wp, win, eta, pr, 6, t_c, pack.age80, hours, dod="2v80", n_p=n_p)
+        same.append(all(a[k] == b[k] for k in ("e_full", "first_stop", "short_wh", "hours_run", "lowest")))
+    if not all(same):
+        raise InputError("7c: simulate_sched does not reproduce simulate on a constant schedule")
+    o("7c. THE SUN-FOLLOWING SCHEDULE: PS-IDLE-SPEC (%.1f W) in every hour the panel ALONE carries it at the node on the" % p_idle)
+    o("   month's mean day, the night state (%.2f W) in every other hour; the 2.80 V line, aged, start 06:00, the record's" % pn)
+    o("   charge rule (section 8 shows the charge current binds in none of these runs). The three months are the ones the")
+    o("   tree holds a mean-day profile for. In the reduced hours the monitor, 5G, the WiFi link, Zigbee and two of the three")
+    o("   compute modules are OFF (6a). Check: on a constant schedule the scheduled run equals simulate() (3 cases): %s." % ("PASS" if all(same) else "FAIL"))
+    rows = []
+    for label, wp, win in (("set 1: 100 Wp, 100 W", 100.0, 100.0), ("set 2: 200 Wp, 100 W", 200.0, 100.0), ("set 3: 330 Wp, 300 W", 330.0, 300.0)):
+        for m in (9, 6, 12):
+            prf = res4["months"][m]["profile"]
+            t_c = d["mission"]["cell_temp_c_by_month"][m]
+            full = [hh for hh in range(24) if node_w(prf[hh], wp, pr, win, eta) >= p_idle]
+            sched = lambda hh, full=full: p_idle if hh in full else pn
+            r2 = simulate_sched(d, pack, prf, sched, wp, win, eta, pr, 6, t_c, pack.age80, hours, dod="2v80", n_p=6)
+            r1 = simulate_sched(d, pack, prf, sched, wp, win, eta, pr, 6, t_c, pack.age80, hours, dod="2v80")
+            fmt = lambda r: ("MET, lowest %.1f Wh" % r["lowest"]) if r["ok"] else ("NOT MET, stop h %d, unserved %.0f Wh" % (r["first_stop"], r["short_wh"]))
+            rows.append([label, MONTHS[m - 1], "%+.0f" % t_c, "%d" % len(full), "%d" % (24 - len(full)),
+                         ("%02d:00 to %02d:59" % (min(full), max(full)) if full else "none"), fmt(r2), fmt(r1)])
+    o.table(["set", "month", "cells C", "h a day at PS-IDLE-SPEC", "h a day REDUCED", "full-power hours (UTC)", "two packs (4S6P)", "one pack"], rows)
+    o("   REQ-072 (PS-IDLE-SPEC for all 72 hours) reads FAIL under this schedule as under every set: the kit runs reduced in")
+    o("   every hour the table counts.")
     o()
     return {"t_min": t_min, "t_min_300": t_min_300, "w_ok": w_ok, "base": base, "c15": c15}
 

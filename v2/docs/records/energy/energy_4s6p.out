@@ -1,7 +1,7 @@
 SECTION 8: ONE 4S6P PACK UNDER ONE BOARD P (the west block in parallel with the east block). PROTOTYPE DESIGN:
 nothing built, ordered or measured; AI review. Inputs pinned (sha256, first 16):
   a2a050dc24c461f2  v2/docs/records/adj/A06-pack-geometry/drafts/pack_fit.py
-  36cede1b5fd59cf8  v2/docs/records/energy/energy_budget.py
+  cf6c377fa1015a46  v2/docs/records/energy/energy_budget.py
   64dd014bee56d855  v2/docs/records/energy/energy_inputs.yaml
   9684e7a9606aede6  v2/ecad/tools/gen_sch_a.py
   740817ada5c8e14a  v2/ecad/tools/gen_sch_p.py

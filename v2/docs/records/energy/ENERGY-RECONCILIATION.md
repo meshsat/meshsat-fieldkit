@@ -37,7 +37,12 @@ The fault-current margin is stated as 1.25 times the short-circuit current, with
 **Section 8 (29 September 2026), the integrator's follow-up.** The second 4S3P block in the west pocket wired in
 parallel with the first under the one board P (one 4S6P pack): board P's protection with its additions, the
 harness, the energy re-run with one charge current, and the consequences; `energy_4s6p.py` and `.out`, and the
-options sheet `DECISION-OPTIONS.md`. Sections 1 to 7 are unchanged.
+options sheet `DECISION-OPTIONS.md`. Sections 1 to 7 are unchanged by it.
+
+**Correction (29 September 2026).** Sections 5d, 6a and 7, `energy_budget.out`'s labels and `DECISION-PARAGRAPH.md`
+said the night state runs "at night"; every run holds it for all 72 hours, day included. Each place now says so, and
+section 7c gives the sun-following schedule (full power only while the panel alone carries it) with its hours a day
+per month and set. No figure of sections 1 to 7 changed.
 
 **The inputs this rests on, pinned by sha256** (`energy_budget.py` refuses to run if any changed): the PVGIS
 monthly irradiation file, the two Samsung INR18650-35E documents, the tree's power model outputs
@@ -303,8 +308,8 @@ No single input closes M1 as written; the night and the window bind independentl
 figures is FAIL, unchanged.** The arithmetic on verified figures moves the aged usable energy by under 1 Wh
 (107.9 against the record's 108.1) and confirms the record's 2.5 h; it does not move the verdict.
 
-**5d. Combinations inside the approved constraints** (`energy_budget.out` 5d, 96 rows): with ONE pack and the
-night state at its PLAN of 16.20 W, no combination of the 2.80 V line (b) and the panels and windows examined (e)
+**5d. Combinations inside the approved constraints** (`energy_budget.out` 5d, 96 rows; each state is held for
+all 72 hours, day and night, as in every run of 5d and 7): with ONE pack and the night state at its PLAN of 16.20 W, no combination of the 2.80 V line (b) and the panels and windows examined (e)
 meets 72 hours in any of the three months; the best one-pack case (2.80 V, 330 Wp on a 300 W path, September)
 stops at hour 18, in the first night, and leaves 261 Wh of the 72 hours' 1166 Wh unserved. **That is the scope,
 not an impossibility:** at the night state's LOW of 11.02 W one aged pack with the 2.80 V line and the cells at
@@ -319,7 +324,9 @@ Every option keeps the Peli 1450 (the ruling of 7 September 2026), the cell (D-0
 Costs are ESTIMATES with no quotation held; nothing is ordered. Ranked by how much of M1 each recovers per unit
 of change; nothing is rejected silently. `energy_budget.out` section 6 prints every figure below.
 
-**Rank 1, option (a), an operating mode at night: PS-NIGHT-RELAY, 16.20 W PLAN (11.02 LOW, 39.67 HIGH).** The
+**Rank 1, option (a), the night state PS-NIGHT-RELAY, 16.20 W PLAN (11.02 LOW, 39.67 HIGH).** It is named for the
+night, but every run of 5d and 7 holds it for all 72 hours, day included; section 7c gives the schedule that runs
+PS-IDLE-SPEC while the panel alone carries it and this state in every other hour. The
 lowest-power state found that still meets M1's must-hold (a message typed on a handheld reaches a remote
 correspondent over at least one bearer; the kit keeps running). It is the heat stage after BANK-R1 (slot 3 alone,
 the one module that carries the owner's D-02b example with the SOS path) with six loads lowered or off, computed on
@@ -330,17 +337,18 @@ energy-detect (DS00002330D's low row; two of its ports have no module); the LoRa
 duty's 9 percent airtime (0.3 W, the relay passing traffic); the RockBLOCK at one session in ten minutes (0.1 W);
 board D with the SA868 receiving; the APRS beacons at the fixed-site rate, one beacon in ten minutes (0.125 W);
 the GNSS; the panel at NIGHT lighting at its declaration's own logic share (0.82 W: a declaration, not the makers'
-figure); the hubs, bridges and logic rows. **OFF at night, stated in full:** the monitor (messages show on the
-e-paper and the lamps only); two of the three compute modules, so the kit has no running spare module at night (a
+figure); the hubs, bridges and logic rows. **OFF in every hour the state runs, stated in full:** the monitor (messages show on the
+e-paper and the lamps only); two of the three compute modules, so the kit has no running spare module while it runs (a
 fault of slot 3 is met by the panel controller powering slot 1 again, `CONOPS.md` 4c, not by a module already
 running); the kit-to-kit WiFi link (both cards); 5G (its data lane is slot 2's), leaving Iridium, APRS and the
-LoRa mesh as the night's bearers; Zigbee and Thread (the E72 pair); the SDR, the camera, the QMX and the Geiger
+LoRa mesh as the bearers while it runs; Zigbee and Thread (the E72 pair); the SDR, the camera, the QMX and the Geiger
 (the last two deferred by D-01); the mixer fans (a shaded, cool night; on in the heat). The recount of its rows
 reads 16.63 W (S 10 loads, R 4, D 6 carrying 4.9 W, T 1); with the D rows at the makers' figures 13.77 W. The
 aged pack carries it 6.7 h at +20 C (9.9 h at LOW, 2.7 h at HIGH) against September's 11.3 h of sun-down and
-16 h of sun below the load on 100 Wp: not a September night alone. What it changes: **M1's operating mode at
-night, and so REQ-072's energy basis (PS-IDLE-SPEC for 72 hours): a reduction of the kit's capability at night,
-presented for the owner's decision and not taken.** On the boards: firmware and operator settings only (the
+16 h of sun below the load on 100 Wp: not a September night alone. What it changes: **M1's operating state, for all 72
+hours as sets 1 to 3 run it (16 of 24 hours of a September day and 14 of June's under 7c's schedule with 200 Wp),
+and so REQ-072's energy basis (PS-IDLE-SPEC for 72 hours): a reduction of the kit's capability in every hour the
+state runs, presented for the owner's decision and not taken.** On the boards: firmware and operator settings only (the
 switch's energy-detect mode and the supervisors' clock are firmware items to confirm), and BANK-R1 in board B's
 generator (`CONOPS.md` 4c). Cost: none in parts.
 
@@ -458,26 +466,27 @@ the 3.00 V line) the night binds at every kit load above 8.4 W (5c), and that fi
 with 400 Wp, no window and the 2.80 V line one aged pack carries at most 9.24 W for 72 hours in September and
 12.30 W in June (10.13 W in June with 100 Wp in the window), all far below PS-IDLE-SPEC's 42.8 W (section 7b). With
 two packs PS-IDLE-SPEC is still NOT MET (set 6). The sets that meet M1's must-hold do so by **changing M1's
-operating mode at night** to the night state of section 6a (16.20 W PLAN, 11.02 to 39.67 W), with the capability
-listed there switched off: a change presented for the owner's decision, not a fulfilment of REQ-072. From a full
+operating state to the night state of section 6a for all 72 hours, day and night** (16.20 W PLAN, 11.02 to 39.67 W;
+every set below holds its state constant, and 7c gives the sun-following schedule), with the capability listed
+there switched off in every one of those hours: a change presented for the owner's decision, not a fulfilment of REQ-072. From a full
 aged pack, cells at +20 C in September and June and +5 C in December; MET is the hour-by-hour run ending above
 the graceful threshold with no stop, and its **lowest point** is the least energy left in the packs over the 72
 hours (the margin); "asks" and "holds" are the one-night arithmetic beside it (`energy_budget.out` section 7):
 
 | change set (two 4S3P packs in every row) | September | June | December |
 |---|---|---|---|
-| 1. night state (a) + 2.80 V line (b) + second pack (d), 100 Wp | NOT MET, stops at hour 44 (asks 259 Wh, holds 221) | MET, lowest point 32.3 Wh | NOT MET, hour 15 (asks 356, holds 156) |
+| 1. night state (a) for all 72 h + 2.80 V line (b) + second pack (d), 100 Wp | NOT MET, stops at hour 44 (asks 259 Wh, holds 221) | MET, lowest point 32.3 Wh | NOT MET, hour 15 (asks 356, holds 156) |
 | **2. as 1 with a 200 Wp panel, and route A or B of 6e for the stage** | **MET, lowest point 12.1 Wh** (asks 227, holds 221) | MET, 51.7 Wh | NOT MET, hour 18 (asks 292, holds 156) |
 | 3. as 1 with a 300 W path and a 330 Wp panel | MET, 23.4 Wh | MET, 67.8 Wh | NOT MET, hour 18 |
-| 4. the heat stage PS-SURV-R at night (23.3 W) + (b) + 300 W path, 330 Wp | NOT MET, hour 21 (asks 326) | NOT MET, hour 22 | NOT MET, hour 15 |
-| 5. the reduced mode PS-RED2 at night (31.4 W) + (b) + 300 W path, 330 Wp | NOT MET, hour 18 (asks 439) | NOT MET, hour 19 | NOT MET, hour 14 |
+| 4. the heat stage PS-SURV-R for all 72 h (23.3 W) + (b) + 300 W path, 330 Wp | NOT MET, hour 21 (asks 326) | NOT MET, hour 22 | NOT MET, hour 15 |
+| 5. the reduced mode PS-RED2 for all 72 h (31.4 W) + (b) + 300 W path, 330 Wp | NOT MET, hour 18 (asks 439) | NOT MET, hour 19 | NOT MET, hour 14 |
 | 6. PS-IDLE-SPEC as written + (b) + 300 W path, 330 Wp | NOT MET, hour 16 (asks 599, holds 219) | NOT MET, hour 17 | NOT MET, hour 10 |
 
 **Set 2's conditions** (September, start 06:00, the hour-by-hour run):
 
 | case | result | lowest point | first stop |
 |---|---|---|---|
-| as stated: night state 16.20 W, cells +20 C, 2.80 V line, the mean September day | MET | 12.1 Wh | none |
+| as stated: night state 16.20 W for all 72 h, cells +20 C, 2.80 V line, the mean September day | MET | 12.1 Wh | none |
 | **cells at +15 C (the counter-case)** | **NOT MET** | 0 | **hour 23** |
 | without the 2.80 V line (graceful at 3.00 V) | MET | 9.1 Wh | none |
 | the night state at its LOW, 11.02 W | MET | 84.6 Wh | none |
@@ -493,8 +502,9 @@ the panel row at its declaration's share (m1) and the relay's LoRa and Iridium t
 conversion, 16.20 W, and the threshold tightens accordingly. The cells' temperature through a September night in
 this state is not computed in the tree (the +20 C is inferred) and decides the result.
 
-**The smallest justified change is set 2**, stated with everything it changes: (1) M1's operating mode at night
-becomes the night state of 6a, with the monitor, 5G, the WiFi link, Zigbee and two of the three compute modules
+**The smallest justified change is set 2**, stated with everything it changes: (1) M1's operating state
+becomes the night state of 6a for all 72 hours as run (under 7c's sun-following schedule the same September result
+with the state in 16 of 24 hours), with the monitor, 5G, the WiFi link, Zigbee and two of the three compute modules
 off; (2) a second 4S3P pack, with no location proven (the lid block cannot be checked in the tree today; the west
 pocket takes the block but not its board P, and no place for board P is found); (3) a 200 Wp panel, with either
 route B (REQ-016's 100 W kept by a designed limit on the LT8705A's output current loop, about 2 EUR of parts and
@@ -523,6 +533,29 @@ at PS-IDLE-SPEC's model LOW, two packs and a panel with no window fail the first
 set examined meets December, even at the night state's LOW. Scoped: one pack meets no month at the night state's
 PLAN (at its LOW it carries June, not September); the 8.4 W of 5c is the design case's; December at +20 C is met
 by set 3 at the night state's LOW; a third pack has no location found.
+
+**7c. The sun-following schedule** (`energy_budget.out` section 7c; added 29 September 2026). PS-IDLE-SPEC (42.8 W)
+in every hour the panel alone carries it at the node on the month's mean day, the night state (16.20 W) in every
+other hour; the 2.80 V line, aged, start 06:00, the record's charge rule (section 8: the charge current binds in none
+of these runs). The tree holds a mean-day profile for June, September and December only. In every reduced hour the
+monitor, 5G, the WiFi link, Zigbee and Thread, and two of the three compute modules are off (6a).
+
+| set | month | hours a day at PS-IDLE-SPEC (UTC) | hours a day REDUCED | two packs (4S6P) | one pack |
+|---|---|---|---|---|---|
+| 1: 100 Wp, 100 W | September | 0 | 24 | NOT MET, hour 44 | NOT MET, hour 18 |
+| 1: 100 Wp, 100 W | June | 5 (10:00 to 14:59) | 19 | NOT MET, hour 44 | NOT MET, hour 19 |
+| 1: 100 Wp, 100 W | December (+5 C) | 0 | 24 | NOT MET, hour 15 | NOT MET, hour 10 |
+| **2: 200 Wp, 100 W** | **September** | **8 (08:00 to 15:59)** | **16** | **MET, lowest 12.1 Wh** | NOT MET, hour 18 |
+| 2: 200 Wp, 100 W | June | 10 (07:00 to 16:59) | 14 | MET, lowest 51.7 Wh | NOT MET, hour 19 |
+| 2: 200 Wp, 100 W | December (+5 C) | 0 | 24 | NOT MET, hour 18 | NOT MET, hour 13 |
+| 3: 330 Wp, 300 W | September | 10 (07:00 to 16:59) | 14 | MET, lowest 23.4 Wh | NOT MET, hour 18 |
+| 3: 330 Wp, 300 W | June | 11 (07:00 to 17:59) | 13 | MET, lowest 67.8 Wh | NOT MET, hour 20 |
+| 3: 330 Wp, 300 W | December (+5 C) | 4 (10:00 to 13:59) | 20 | NOT MET, hour 18 | NOT MET, hour 13 |
+
+So with two packs sets 2 and 3 meet September and June on the mean day with the kit reduced 14 to 16 hours a day,
+at the same lowest points as the constant runs; set 1 now fails June (its constant run met it); December is met by
+no set; one pack meets nothing. **REQ-072 reads FAIL under this schedule**: the kit runs reduced in every hour the
+table counts.
 
 **What must be verified at the bench before any of this is relied on** (section 1's T-P1 to T-P4): the power of the
 night state and of PS-IDLE-SPEC at the pack terminals (the D rows carry 4.9 W of the night state's recount as
@@ -713,7 +746,8 @@ stops at hour 23. Set 1 (100 Wp) meets June only; set 3 meets September and June
 meets December only at +20 C (lowest 30.0 Wh); its HIGH, 39.67 W, meets nothing.
 
 **What the sets hold, stated exactly** (3c; this section's reading of the record). Sections 5d and 7 run the night
-state for all 72 hours, day included; the record calls it "M1's operating mode at night". Two schedules test that
+state for all 72 hours, day included; the record called it "M1's operating mode at night" until the correction of
+29 September 2026, which states it throughout and adds 7c for sets 1 to 3. Two schedules test that
 wording on 4S6P: with **PS-IDLE-SPEC in every lit hour** of the mean day and the night state otherwise, no panel
 examined meets any month (September with 400 Wp stops at hour 22); with **PS-IDLE-SPEC only in the hours the panel
 alone carries it** at the node (sun-following), 200 Wp and above meet September (8 hours a day at PS-IDLE-SPEC with
