@@ -1,0 +1,44 @@
+board a phase A65 in pcb-a-power-a23: wrote pcb-a-power.kicad_sch parts: 651 lib symbols: 102; lands: 42 footprint(s) judged, 0 pin(s) on a pad the land does not carry, 0 land(s) unreadable; gen_sch exit 0; build_sch exit 0; erc_gate erc_gate exit 0
+  parity schematic  DIFFERENT
+  parity netlist    DIFFERENT
+  parity intent     DIFFERENT
+  parity provenance DIFFERENT
+  parity bom        DIFFERENT
+  parity erc        DIFFERENT
+board b phase B21 in pcb-b-compute-b19: wrote pcb-b-compute.kicad_sch parts: 1328 lib symbols: 162; lands: 68 footprint(s) judged, 0 pin(s) on a pad the land does not carry, 0 land(s) unreadable; gen_sch exit 0; build_sch exit 0; erc_gate erc_gate exit 0
+  parity schematic  PARITY
+  parity netlist    PARITY_AFTER_NOISE
+  parity intent     PARITY_AFTER_NOISE
+  parity provenance PARITY_AFTER_NOISE
+  parity bom        PARITY
+  parity erc        PARITY_AFTER_NOISE
+== check_contracts
+verdict: check_contracts        PASS         of 99 {"boards_without_intent": 0, "fail": 0, "missing_boards": 0, "pass": 99, "rails_unsplit": 0, "undecided": 0, "unjudged": 0}
+== interfaces
+interfaces: 12 interface assignment(s) over 7 board(s) against the parts' own specifications; 0 disagreement(s)
+  note C USB_FULL_SPEED: no impedance target, which is what its parts' datasheets say
+  note D USB_FULL_SPEED: no impedance target, which is what its parts' datasheets say
+== lead_ends
+lead_ends: A intent v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json sha256/16 070b4c5e41e023e5
+lead_ends: B intent v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json sha256/16 8be7ae5e6e8842a9
+lead_ends: +5V_S1    AGREE    A 2.50 / 5.00 A (load J_5V_S1 5.0), B 2.50 / 5.00 A
+lead_ends: +5V_S2    AGREE    A 4.20 / 5.63 A (load J_5V_S2 5.63), B 4.20 / 5.63 A
+lead_ends: +5V_S3    AGREE    A 2.50 / 5.00 A (load J_5V_S3 5.0), B 2.50 / 5.00 A
+lead_ends: +5V_DEV   AGREE    at the lead: A apportions 3.8 A to J_5V_DEV, B declares 3.80 A typical arriving; A's typical 4.10 A = 3.8 + U32 0.30
+lead_ends:           S-99     converter side, NOT JUDGED HERE: A's peak 6.91 A against B's peak 6.00 A arriving plus A's other branches at their load figures (0.30 A); the coincident figures and the LM5176 average loop's limit are S-99's
+lead_ends: +54V_POE  AGREE    A 0.30 / 0.60 A (load J_54V 0.3), B 0.30 / 0.60 A
+lead_ends: 5 of 5 leads AGREE (declaration consistency only; adequacy, the mode currents and S-99 are not judged here)
+lead_ends exit 0
+== driver
+  P   interfaces.py      rc 0       2.0s  interfaces_p PASS
+  P   port_protect.py    rc 0       0.9s  port_protect_p PASS
+  P   pack_protection.py rc 1       1.0s  pack_protection FAIL
+
+board A   pcb-a-power-a23 REFUSED (inputs not committed: pcb-a-power-a23/pcb-a-power.kicad_sch differs from its commit (M ); pcb-a-power-a23/out/pcb-a-power.net differs from its commit (M ); pcb-a-power-a23/out/pcb-a-power.net.prov.json differs from its commit (M ); pcb-a-power-a23/out/pcb-a-power-intent.json differs from its commit (M )) 0 reading(s) in 0.0s: ; 0 file(s) copied to routed/
+board B   pcb-b-compute-b19 REFUSED (inputs not committed: pcb-b-compute-b19/out/pcb-b-compute.net differs from its commit (M ); pcb-b-compute-b19/out/pcb-b-compute.net.prov.json differs from its commit (M ); pcb-b-compute-b19/out/pcb-b-compute-intent.json differs from its commit (M )) 0 reading(s) in 0.0s: ; 0 file(s) copied to routed/
+board C   pcb-c-display-c8 10 reading(s) in 22.7s: check_contracts PASS, clock_check PASS, derate PASS, edge_length INCONCLUSIVE, erc_gate PASS, inhibit_chain_c PASS, intent_rails PASS, interfaces_c PASS, pin_map_lands_c PASS, port_protect_c INCONCLUSIVE; 11 file(s) copied to routed/
+board D   pcb-d-aprs-d9 11 reading(s) in 22.6s: check_contracts PASS, clock_check PASS, derate PASS, edge_length INCONCLUSIVE, erc_gate PASS, inhibit_chain_d INCONCLUSIVE, intent_rails PASS, interfaces_d PASS, pin_map_lands_d PASS, port_protect_d PASS, safe_lines_d PASS; 12 file(s) copied to routed/
+board E   pcb-e1-dock-e7 14 reading(s) in 24.4s: check_contracts PASS, clock_check PASS, derate PASS, edge_length INCONCLUSIVE, energy_chain PASS, energy_chain_e PASS, erc_gate PASS, inhibit_chain_e PASS, intent_rails PASS, interfaces_e PASS, pin_map_lands_e PASS, port_protect_e PASS, power_sequence PASS, safe_lines_e PASS; 15 file(s) copied to routed/
+board E5  pcb-e5-block 7 reading(s) in 7.0s: check_contracts_e5 FAIL, derate PASS, energy_chain PASS, energy_chain_e5 PASS, interfaces_e5 PASS, port_protect_e5 PASS, safe_lines_e5 PASS; 7 file(s) copied to routed/
+board P   pcb-p-pack-p2 14 reading(s) in 19.6s: check_contracts PASS, derate PASS, edge_length INCONCLUSIVE, energy_chain PASS, energy_chain_p PASS, erc_gate PASS, inhibit_chain_p PASS, intent_rails PASS, interfaces_p PASS, pack_protection FAIL, pin_map_lands_p PASS, port_protect_p PASS, power_sequence PASS, safe_lines_p PASS; 15 file(s) copied to routed/
+retake_schematic_phase: INCOMPLETE (see above) in 97.2s

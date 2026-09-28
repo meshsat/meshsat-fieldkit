@@ -1,6 +1,6 @@
 {
  "board": "pcb-a-power",
- "written": "2026-09-28 21:10",
+ "written": "2026-09-28 22:18",
  "bypass": [
   {
    "cap": "C8",
@@ -360,6 +360,22 @@
    "basis": "TI SLUSEA4D (TPS62933) 12.1 p.40: 'the most critical PCB feature is the loop formed by the input capacitors and power ground'; 'Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins'"
   },
   {
+   "cap": "C229",
+   "part": "U41",
+   "pin": "3",
+   "net": "VBAT",
+   "class": "R",
+   "basis": "TI SLUSEA4D (TPS62933) 12.1 p.40: 'the most critical PCB feature is the loop formed by the input capacitors and power ground'; 'Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins'"
+  },
+  {
+   "cap": "C230",
+   "part": "U41",
+   "pin": "3",
+   "net": "VBAT",
+   "class": "R",
+   "basis": "TI SLUSEA4D (TPS62933) 12.1 p.40: 'the most critical PCB feature is the loop formed by the input capacitors and power ground'; 'Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins'"
+  },
+  {
    "cap": "C4",
    "part": "U1",
    "pin": "1",
@@ -513,7 +529,8 @@
     "U4": 2.0,
     "Q28": 2.22,
     "U6": 2.0,
-    "Q32": 2.0,
+    "Q32": 1.61,
+    "U41": 0.4,
     "Q11": 1.5,
     "U15": 0.3,
     "U12": 0.2,
@@ -610,15 +627,14 @@
   },
   "+5V_DEV": {
    "volts": 5.0,
-   "amps_typ": 5.1,
-   "amps_peak": 6.9,
+   "amps_typ": 4.1,
+   "amps_peak": 6.9142,
    "source": "R43",
    "loads": {
     "J_5V_DEV": 3.8,
-    "U23": 1.0,
     "U32": 0.3
    },
-   "note": "the USB devices, the LimeSDR bay and the RockBLOCK behind their switches, the D8 mezzanine behind U23 and the wall host port behind U32; the net starts at the ISNS shunt R43. 9 September 2026 (ARCH-PCB-B-IOHA): +0.8 A because B16's three hub banks had to leave the slot rails. 26 September 2026 (F-PR-04, D-12): the converter is an LM5176 stage with a 7.2 A minimum average limit (7.10 A with the ISNS shunt at +1 percent, 7.17 A nominal: SNVSAI1D VSNS 43 mV over 6 mOhm), and the declared peak became 6.9 A, board B's 6.0 A plus the Glenair port's 0.9 A with the D8 mezzanine at zero. 28 September 2026 (S-98, finding I-03, INTERIM): the typical is 5.1 A, board B's 3.8 A at J_5V_DEV plus the D8 mezzanine's 1.0 A behind U23 plus the wall port's 0.3 A allocation behind U32; the PS-ALLTX mode current is INCONCLUSIVE (v2/docs/records/cx1/CORRECTION.md B2). The 6.9 A peak is held pending S-99: the coincident figures are 7.9 A with D8 at its typical and 8.9 A at every declared limit, both above the loop's minimum.",
+   "note": "the USB devices, LimeSDR bay and RockBLOCK behind board B's switches, plus the wall host port behind U32; D8 is supplied separately by U41 through U23 from +5V_D8IN. The net starts at the output ISNS shunt R43. LM5176 minimum average limit is 7.095710 A with initial +/-1 percent, or 7.056897 A with the assumed 50 K shunt temperature change and +/-110 ppm/K TCR. The 6.9142 A declared peak (B 6.0 + the wall port's 0.9142 A, U32's nominal limit by TPS2596 equation 7, SLVSET8A p.28) has 0.142697 A conditional margin; actual mode current, M/P reconciliation, timing, collapse/recovery and temperatures remain unverified (S-99).",
    "budget": 0.02,
    "share": 0.005,
    "switch": "U7",
@@ -704,7 +720,7 @@
    "loads": {
     "J_MEZZ_PWR1": 1.0
    },
-   "note": "BUDGET FROM THE TIGHTEST CONSUMER'S DATASHEET, 16 September 2026, replacing a number this project had only asserted. The consumers of this rail sit on board D and the tightest of them is the PCM2912A USB codec, whose recommended operating VBUS is 4.35 V minimum (v2/vendor/ti/ti-pcm2912a.pdf, Recommended Operating Conditions); the next is the CP2102N, whose 3.3 V regulator leaves regulation below VREGIN 4.1 V (v2/vendor/silabs/silabs-cp2102n.pdf). The source is board A's eFuse output on the 5.0 V device rail, and at a 2 percent source tolerance its worst case is 4.90 V, so the IR drop that keeps the codec in its recommended range is 550 mV, 11 percent. The declared budget is 6 percent, 300 mV, which leaves the codec at 4.60 V with 250 mV in hand. The 3 percent it replaces was derived from nothing and was tighter than the parts ask for. THIS BOARD'S SHARE is 4 of the 6 points, because the long copper is here: the eFuse sits at case (90, 66) and the mezzanine header at (-8, -18), about 129 mm apart, and the route measures 134 mV at 1.0 A, 2.68 percent. Board D's own half measures 0.58. The APRS board's 5 V behind the eFuse U23 (ILM 453R, 2.0 A), leaving on the mezzanine JST-VH. Board D declares the same rail with its own consumers. ONE CONDUCTOR, ONE BUDGET (16 September 2026): board D declares 3 percent end to end with its reason, and this board carries the half from the eFuse to the connector, so its share is 1.5. Until today each board measured its own half against the whole, and this half alone reads 2.68 percent, which is the finding: A's copper is spending nearly all of a budget it shares with D",
+   "note": "BUDGET FROM THE TIGHTEST CONSUMER'S DATASHEET, 16 September 2026, replacing a number this project had only asserted. The consumers of this rail sit on board D and the tightest of them is the PCM2912A USB codec, whose recommended operating VBUS is 4.35 V minimum (v2/vendor/ti/ti-pcm2912a.pdf, Recommended Operating Conditions); the next is the CP2102N, whose 3.3 V regulator leaves regulation below VREGIN 4.1 V (v2/vendor/silabs/silabs-cp2102n.pdf). The source is board A's eFuse output on the 5.0 V device rail, and at a 2 percent source tolerance its worst case is 4.90 V, so the IR drop that keeps the codec in its recommended range is 550 mV, 11 percent. The declared budget is 6 percent, 300 mV, which leaves the codec at 4.60 V with 250 mV in hand. The 3 percent it replaces was derived from nothing and was tighter than the parts ask for. THIS BOARD'S SHARE is 4 of the 6 points, because the long copper is here: the eFuse sits at case (90, 66) and the mezzanine header at (-8, -18), about 129 mm apart, and the route measures 134 mV at 1.0 A, 2.68 percent. Board D's own half measures 0.58. The APRS board's 5 V behind the eFuse U23 (ILM 453R, 2.0 A), leaving on the mezzanine JST-VH. Board D declares the same rail with its own consumers. ONE CONDUCTOR, ONE BUDGET (16 September 2026): board D declares 3 percent end to end with its reason, and this board carries the half from the eFuse to the connector, so its share is 1.5. Until today each board measured its own half against the whole, and this half alone reads 2.68 percent, which is the finding: A's copper is spending nearly all of a budget it shares with D. S-99 (stream s99a, 28 September 2026): the source is now the buck U41 through U23 on +5V_D8IN, 5.002 V nominal and 4.872 to 5.133 V over the reference, both 0.1 percent resistors, 25 ppm/C over 65 K and the FB leakage (v2/docs/records/s99a/u41_divider.out), a DC set-point band. From 4.872 V, U23's on resistance (SLVSET8A p.7: 89 mOhm typical, 115.3 mOhm maximum over -40 to 85 C, 131 mOhm to 125 C) and the 6 percent budget leave the codec 4.44 to 4.48 V at the 1.0 A typical, 0.09 to 0.13 V over its 4.35 V; if +5V_D8IN also spends its whole 2 percent the margin is 0.007 to -0.009 V at U23's maximum to 85 and 125 C, and at the 2.0 A peak the codec is under 4.35 V, as it was before the split (open item S-116, v2/docs/records/s99a/codec_floor.out). The top is 0.097 V under board D's 5.23 V",
    "budget": 0.06,
    "share": 0.04,
    "converted": false
@@ -790,11 +806,11 @@
   },
   "SD_OUT": {
    "volts": 5.0,
-   "amps_typ": 5.1,
-   "amps_peak": 6.9,
+   "amps_typ": 4.1,
+   "amps_peak": 6.9142,
    "source": "Q35",
    "loads": {
-    "R43": 5.1
+    "R43": 4.1
    },
    "note": "LM5176 stage SD, VBAT to +5V_DEV: the output conductor between Q35's drain tab and the ISNS shunt R43, at the stage's whole output current. It was a node until 20 September 2026, so no power rule had ever looked at it.",
    "v_work": 5.0,
@@ -940,6 +956,21 @@
    "efficiency": 0.9,
    "fed_from": "VHEAT_IN"
   },
+  "+5V_D8IN": {
+   "volts": 5.0,
+   "amps_typ": 1.0,
+   "amps_peak": 2.0,
+   "source": "L13",
+   "loads": {
+    "U23": 1.0
+   },
+   "note": "S-99, 28 September 2026: the D8 mezzanine's own 5.0 V from VBAT (U41, a TPS62933 at 500 kHz; 5.002 V nominal, 4.872 to 5.133 V over every tolerance by stream s99a, so v_work 5.14 V), between the buck's inductor L13 and the eFuse U23; 1.0 A typical (board D's +5V_D8 declaration), 2.0 A peak (U23's limit). It was a load of +5V_DEV until today, where it put the LM5176 stage's coincident PS-ALLTX demand above the average loop's minimum (v2/docs/records/s99/ANALYSIS.md)",
+   "budget": 0.02,
+   "switch": "U41",
+   "efficiency": 0.9,
+   "v_work": 5.14,
+   "fed_from": "VBAT"
+  },
   "+3V3_EMCON_EF": {
    "volts": 3.3,
    "amps_typ": 0.0004,
@@ -970,12 +1001,12 @@
   "VBUS_WALL": {
    "volts": 5.0,
    "amps_typ": 0.5,
-   "amps_peak": 0.9,
+   "amps_peak": 0.9142,
    "source": "U32",
    "loads": {
-    "J_USBW": 0.9
+    "J_USBW": 0.9142
    },
-   "note": "D-12, 26 September 2026: the Glenair 233-370 host port's VBUS behind the eFuse U32 (limit 0.89 A), out at the J_USBW lead; USB 2.0 asks 4.75 V at the port, so from a 5.09 V source the eFuse and the copper share 340 mV",
+   "note": "D-12, 26 September 2026: the Glenair 233-370 host port's VBUS behind the eFuse U32 (limit 0.9142 A nominal, TPS2596 equation 7 with its sign corrected by stream s99a; it read 0.89 A), out at the J_USBW lead; USB 2.0 asks 4.75 V at the port, so from a 5.09 V source the eFuse and the copper share 340 mV",
    "budget": 0.03,
    "converted": false,
    "fed_from": "+5V_DEV"
@@ -1465,6 +1496,18 @@
    "v_min": 0.0,
    "basis": "the heater buck U33's bootstrap supply (pin 6 BST): it rides on HT_SW at up to 5.5 V, SLUSEA4D 8.3's recommended BST-SW maximum, and supplies only the part's own high-side driver (see B33_BST)",
    "rides_on": "HT_SW",
+   "bias_v": 5.5
+  },
+  "D8B_SW": {
+   "v_max": 16.8,
+   "v_min": -1.0,
+   "basis": "the D8 buck U41's switching node: it swings to VBAT, the pack node that feeds it, and a diode drop below ground"
+  },
+  "D8B_BST": {
+   "v_max": 22.3,
+   "v_min": 0.0,
+   "basis": "the D8 buck U41's bootstrap supply (pin 6 BST): it rides on D8B_SW at up to 5.5 V, SLUSEA4D 8.3's recommended BST-SW maximum, and supplies only the part's own high-side driver",
+   "rides_on": "D8B_SW",
    "bias_v": 5.5
   }
  },
