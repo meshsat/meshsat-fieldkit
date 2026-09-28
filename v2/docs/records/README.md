@@ -80,7 +80,7 @@ Worktrees:
 | `int9/` | integration set 8 (28 and 29 September 2026, branch `fnd/int9`): S-98 closed for declaration consistency, the rebinds after the regeneration of boards A and B proved by AST and by parsed netlists, the netlist pins moved, the constraint sheets re-bound, and the box records |
 | `s99a/` | stream s99a (28 and 29 September 2026): S-99's corrected D8 split applied to board A's generator (decision 55): U41's divider arithmetic, the parsed comparison, the codec-floor and layout open items, the registry draft and the tests |
 | `od01/` | the OD-01 case package for the owner (28 September 2026): the checkout list, the machining request, the operator's test brief, and the two AI checks under `checks/`; purchasing stays with the owner |
-| `int10/` | integration set 9 (29 September 2026, branch `fnd/int10`): the regeneration of board A with S-99's D8 split, the pins moved on a parsed proof, sheet A re-bound, the judged rebind of the records bound to board A's netlist and generator, the page rebind, and the box records |
+| `int10/` | integration set 9 (29 September 2026, branch `fnd/int10`): the regeneration of board A with S-99's D8 split, the pins moved on a parsed proof, sheet A re-bound, the judged rebind of the records bound to board A's netlist and generator, stream s99reg's scripts for S-99's registry texts, decision 55, the interface rows and the pages (with its dry run and the erratum to the decision 31 review), the records index, the page rebind, and the box records |
 
 ## Filed files
 
