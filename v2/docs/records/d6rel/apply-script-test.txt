@@ -1,13 +1,16 @@
-THE APPLY SCRIPT EXERCISED ON A SCRATCH COPY OF fnd/int7 AT 1c4235ec (worker d6rel, MESHSAT-1357, 28 September 2026 17:11 CEST)
+THE TWO APPLY SCRIPTS EXERCISED ON A SCRATCH COPY OF fnd/int7 AT 1c4235ec (worker d6rel, MESHSAT-1357, 28 September 2026 17:56 CEST)
 The copy: git archive 1c4235ec of v2/ecad/tools, v2/docs, the two vendor source records, the seven declared-phase artefacts and the seven
 boards' routed/ evidence folders (which hold the integration line's re-take of reliability with the UNREPAIRED tool, PASS on every board,
 taken 2026-09-28T14:54:53Z to 14:54:58Z, that is 16:54 CEST), with this branch's reliability.py, wear_inventory.py, pcb_reliability.yaml,
-the two test files, sources.txt, v2/docs/records/d6rel/ and the 30 documents the list cites laid over it (as the merge would). It is not a git
-checkout, so --commit cannot give the floor and the closing commit is not checked here; --floor is passed instead. The registry validator's
-baseline on the copy is its own (errors for pages and documents the copy does not carry), and the bar is that the change adds none.
+the two test files, sources.txt and the 30 documents the list cites laid over it (as the merge would). It is not a git checkout, so --commit
+cannot give the floor and the closing commit is not checked here; --floor is passed instead. The registry validator's baseline on the copy
+is its own (errors for pages and documents the copy does not carry), and the bar is that the change adds none.
 Nothing in the real tree is touched; every path is inside the copy ($COPY).
 
-== 1. stage coverage with the floor of the first draft, 16:46:27 CEST (must refuse: the tip's word-list readings are later)
+== 1. stage coverage with a floor that says no offset (must refuse)
+apply_rel001_coverage: REFUSED: the floor '2026-09-28T19:00:00' carries no UTC offset: write it with one (for example 2026-09-28T19:00:00+02:00), because an instant without an offset would be read as UTC
+exit 2
+== 2. stage coverage with the floor of the first draft, 16:46:27 CEST (must refuse: the tip's word-list readings are later)
 apply_rel001_coverage: REFUSED: the floor 2026-09-28T16:46:27+02:00 is not after every reading of the unrepaired tool this tree holds:
   board A: the unrepaired tool's PASS at 2026-09-28T14:54:53Z (v2/ecad/pcb-a-power-a23/routed/reliability.verdict.json)
   board B: the unrepaired tool's PASS at 2026-09-28T14:54:54Z (v2/ecad/pcb-b-compute-b19/routed/reliability.verdict.json)
@@ -18,53 +21,79 @@ apply_rel001_coverage: REFUSED: the floor 2026-09-28T16:46:27+02:00 is not after
   board P: the unrepaired tool's PASS at 2026-09-28T14:54:58Z (v2/ecad/pcb-p-pack-p2/routed/reliability.verdict.json)
   pass a later --floor (the instant the repaired tool entered this tree)
 exit 2
-== 2. stage coverage with a floor after them, 17:00:00 CEST
-apply_rel001_coverage: coverage: REL-001 entry replaced in v2/ecad/tools/pcb_rules_coverage.yaml (sha256/16 d0ea449ec8909b8e -> cbddf903fd020788); floor 2026-09-28T17:00:00+02:00; re-parsed
+== 3. stage coverage with a floor after them, 17:00:00 CEST
+apply_rel001_coverage: coverage: REL-001 entry replaced in v2/ecad/tools/pcb_rules_coverage.yaml (sha256/16 d0ea449ec8909b8e -> 626525b606a7b866); floor 2026-09-28T17:00:00+02:00; re-parsed
+apply_rel001_coverage: what holds each board, as the note says it: A: REL-O-01, REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13 (4 of its classes have no figure because the maker states none); B: REL-O-02, REL-O-03, REL-O-07, REL-O-08, REL-O-09, REL-O-12, REL-O-13 (3 of its classes have no figure because the maker states none); C: REL-O-04, REL-O-05, REL-O-07, REL-O-08; D: REL-O-07, REL-O-08, REL-O-10, REL-O-12, REL-O-13 (3 of its classes have no figure because the maker states none); E: REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13 (3 of its classes have no figure because the maker states none); E5: REL-O-06, REL-O-07; P: REL-O-07, REL-O-08, REL-O-11, REL-O-12, REL-O-13 (3 of its classes have no figure because the maker states none)
 exit 0
-== 3. stage coverage again (must refuse)
+== 4. stage coverage again (must refuse)
 apply_rel001_coverage: REFUSED: the REL-001 entry already carries the inventory note: this stage has run
 exit 2
-== 4. the REL-001 entry now (its first two lines, cut at 200 characters)
-1206: REL-001: {implementation: NONE_YET, verification: {tool: reliability.py, verdict: reliability, fixtures: "tests/test_reliability.py, tests/test_reliability_inventory.py"}, maturity: ENFORCED, ga
-1207-   evidence_not_before: {"reliability": "2026-09-28T17:00:00+02:00"},
-== 5. stage close-s89 on the tip's own readings (must refuse: they are the unrepaired tool's, before the floor, no inventory counts)
+== 5. the REL-001 entry re-parsed: its floor, its fixtures and the sentences of its note that carry numbers
+   evidence_not_before: {'reliability': '2026-09-28T17:00:00+02:00'}
+   fixtures: tests/test_reliability.py, tests/test_reliability_inventory.py
+   note: ... On this tree's artefacts: 429 candidates (A 82, B 155, C 74, D 40, E 35, E5 17, P 26), 195 classed in 58 classes, 234 excluded under 15 exclusions, 0 refused. Of the 58 classes, 24 cite the maker's cycle figure to a document held under v2/vendor/ by sha256, page and words (30 documents in all), 16 have no figure because the maker's documents that were read state none, 8 mate nothing (solder lands, screw joints) and 10 owe their figure under an open item of the list; 4 measures are owed. A class whose maker publishes no figure is undecided and never lets its board read PASS. What holds each board from PASS, by the list's open items: A: REL-O-01, REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13 (4 of its classes have no figure because the maker states none); B: REL-O-02, REL-O-03, REL-O-07, REL-O-08, REL-O-09, REL-O-12, REL-O-13 (3 of its classes have no figure because the maker states none); C: REL-O-04, REL-O-05, REL-O-07, REL-O-08; D: REL-O-07, REL-O-08, REL-O-10, REL-O-12, REL-O-13 (3 of its classes have no figure because the maker states none); E: REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13 (3 of its classes have no figure because the maker states none); E5: REL-O-06, REL-O-07; P: REL-O-07, REL-O-08, REL-O-11, REL-O-12, REL-O-13 (3 of its classes have no figure because the maker states none). No board reads PASS. 
+   remediation: 28 September 2026: the checker and the list are repaired (stream d6rel, S-89). What remains of the SHEET is the list's 13 open items, each with its next action in pcb_reliability.yaml and the boards it holds: REL-O-01 holds A; REL-O-02 holds A, B, E; REL-O-03 holds B; REL-O-04 holds C; REL-O-05 holds C; REL-O-06 holds E5; REL-O-07 holds A, B, C, D, E, E5, P; REL-O-08 holds A, B, C, D, E, P; REL-O-09 holds B; REL-O-10 holds D; REL-O-11 holds P; REL-O-12 holds A, B, D, E, P; REL-O-13 holds A, B, D, E, P. The TEST PLAN for the prototype is the laboratory stage and belongs with it
+== 6. stage close-s89 --check on the tip's own readings (must refuse: they are the unrepaired tool's)
 apply_rel001_coverage: note: $COPY is not a git checkout, so the commit is not checked here
 apply_rel001_coverage: REFUSED: REL-001 has not been re-taken as this closure needs:
-  board A: taken 2026-09-28T14:54:53Z, before the floor 2026-09-28T17:00:00+02:00; read list None, this tree holds f0912cb02741be21; read netlist None, the declared phase's is 0a2b59087bcc2678; carries no counts of the inventory (a reading of the word-list tool?) (v2/ecad/pcb-a-power-a23/routed/reliability.verdict.json)
-  board B: taken 2026-09-28T14:54:54Z, before the floor 2026-09-28T17:00:00+02:00; read list None, this tree holds f0912cb02741be21; read netlist None, the declared phase's is 028997a6c5e8810f; carries no counts of the inventory (a reading of the word-list tool?) (v2/ecad/pcb-b-compute-b19/routed/reliability.verdict.json)
-  board C: taken 2026-09-28T14:54:55Z, before the floor 2026-09-28T17:00:00+02:00; read list None, this tree holds f0912cb02741be21; read netlist None, the declared phase's is 3fddbb3edcd4248a; carries no counts of the inventory (a reading of the word-list tool?) (v2/ecad/pcb-c-display-c8/routed/reliability.verdict.json)
-  board D: taken 2026-09-28T14:54:55Z, before the floor 2026-09-28T17:00:00+02:00; read list None, this tree holds f0912cb02741be21; read netlist None, the declared phase's is 7a2c0ac2190b141a; carries no counts of the inventory (a reading of the word-list tool?) (v2/ecad/pcb-d-aprs-d9/routed/reliability.verdict.json)
-  board E: taken 2026-09-28T14:54:56Z, before the floor 2026-09-28T17:00:00+02:00; read list None, this tree holds f0912cb02741be21; read netlist None, the declared phase's is 56adc9746d61c4e0; carries no counts of the inventory (a reading of the word-list tool?) (v2/ecad/pcb-e1-dock-e7/routed/reliability.verdict.json)
-  board E5: taken 2026-09-28T14:54:57Z, before the floor 2026-09-28T17:00:00+02:00; read list None, this tree holds f0912cb02741be21; read board_file None, the declared phase's is 686b29a734c55b9a; carries no counts of the inventory (a reading of the word-list tool?) (v2/ecad/pcb-e5-block/routed/reliability.verdict.json)
-  board P: taken 2026-09-28T14:54:58Z, before the floor 2026-09-28T17:00:00+02:00; read list None, this tree holds f0912cb02741be21; read netlist None, the declared phase's is 760ac6f74d62d194; carries no counts of the inventory (a reading of the word-list tool?) (v2/ecad/pcb-p-pack-p2/routed/reliability.verdict.json)
+  board A: taken 2026-09-28T14:54:53Z, before the floor 2026-09-28T17:00:00+02:00; carries no counts of the inventory for the board (a reading of the word-list tool?) (v2/ecad/pcb-a-power-a23/routed/reliability.verdict.json)
+  board B: taken 2026-09-28T14:54:54Z, before the floor 2026-09-28T17:00:00+02:00; carries no counts of the inventory for the board (a reading of the word-list tool?) (v2/ecad/pcb-b-compute-b19/routed/reliability.verdict.json)
+  board C: taken 2026-09-28T14:54:55Z, before the floor 2026-09-28T17:00:00+02:00; carries no counts of the inventory for the board (a reading of the word-list tool?) (v2/ecad/pcb-c-display-c8/routed/reliability.verdict.json)
+  board D: taken 2026-09-28T14:54:55Z, before the floor 2026-09-28T17:00:00+02:00; carries no counts of the inventory for the board (a reading of the word-list tool?) (v2/ecad/pcb-d-aprs-d9/routed/reliability.verdict.json)
+  board E: taken 2026-09-28T14:54:56Z, before the floor 2026-09-28T17:00:00+02:00; carries no counts of the inventory for the board (a reading of the word-list tool?) (v2/ecad/pcb-e1-dock-e7/routed/reliability.verdict.json)
+  board E5: taken 2026-09-28T14:54:57Z, before the floor 2026-09-28T17:00:00+02:00; carries no counts of the inventory for the board (a reading of the word-list tool?) (v2/ecad/pcb-e5-block/routed/reliability.verdict.json)
+  board P: taken 2026-09-28T14:54:58Z, before the floor 2026-09-28T17:00:00+02:00; carries no counts of the inventory for the board (a reading of the word-list tool?) (v2/ecad/pcb-p-pack-p2/routed/reliability.verdict.json)
   Re-take reliability on every board (the box: gate_sweep.sh, or retake_gate.sh), then run this stage again.
 exit 2
-== 6. the re-take of reliability on every board with this branch's tool, into the copy's <phase>/routed/ with --out-dir:
-   pcb-a-power-a23      INCONCLUSIVE ts 2026-09-28T15:11:15Z list f0912cb02741be21 artefact 0a2b59087bcc2678 refused 0 missing_input None
-   pcb-b-compute-b19    INCONCLUSIVE ts 2026-09-28T15:11:16Z list f0912cb02741be21 artefact 028997a6c5e8810f refused 0 missing_input None
-   pcb-c-display-c8     INCONCLUSIVE ts 2026-09-28T15:11:16Z list f0912cb02741be21 artefact 3fddbb3edcd4248a refused 0 missing_input None
-   pcb-d-aprs-d9        INCONCLUSIVE ts 2026-09-28T15:11:17Z list f0912cb02741be21 artefact 7a2c0ac2190b141a refused 0 missing_input None
-   pcb-e1-dock-e7       INCONCLUSIVE ts 2026-09-28T15:11:17Z list f0912cb02741be21 artefact 56adc9746d61c4e0 refused 0 missing_input None
-   pcb-e5-block         INCONCLUSIVE ts 2026-09-28T15:11:18Z list f0912cb02741be21 artefact 686b29a734c55b9a refused 0 missing_input None
-   pcb-p-pack-p2        INCONCLUSIVE ts 2026-09-28T15:11:18Z list f0912cb02741be21 artefact 760ac6f74d62d194 refused 0 missing_input None
-== 7. stage close-s89 after the re-take
+== 7. a re-take with this branch's tool and NO vendor library (--vendor names a folder that is not there), then --check (must refuse: citations not checked, input declared missing)
+   A   INCONCLUSIVE ts 2026-09-28T15:56:09Z list 40f2a98323b1f9ce netlist 0a2b59087bcc2678 bound True unjudged 12 held by REL-O-01, REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13
+   B   INCONCLUSIVE ts 2026-09-28T15:56:10Z list 40f2a98323b1f9ce netlist 028997a6c5e8810f bound True unjudged 15 held by REL-O-02, REL-O-03, REL-O-07, REL-O-08, REL-O-09, REL-O-12, REL-O-13
+   C   INCONCLUSIVE ts 2026-09-28T15:56:11Z list 40f2a98323b1f9ce netlist 3fddbb3edcd4248a bound True unjudged 5 held by REL-O-04, REL-O-05, REL-O-07, REL-O-08
+   D   INCONCLUSIVE ts 2026-09-28T15:56:11Z list 40f2a98323b1f9ce netlist 7a2c0ac2190b141a bound True unjudged 8 held by REL-O-07, REL-O-08, REL-O-10, REL-O-12, REL-O-13
+   E   INCONCLUSIVE ts 2026-09-28T15:56:12Z list 40f2a98323b1f9ce netlist 56adc9746d61c4e0 bound True unjudged 5 held by REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13
+   E5  INCONCLUSIVE ts 2026-09-28T15:56:12Z list 40f2a98323b1f9ce board_file 686b29a734c55b9a bound True unjudged 0 held by REL-O-06, REL-O-07
+   P   INCONCLUSIVE ts 2026-09-28T15:56:13Z list 40f2a98323b1f9ce netlist 760ac6f74d62d194 bound True unjudged 4 held by REL-O-07, REL-O-08, REL-O-11, REL-O-12, REL-O-13
+apply_rel001_coverage: note: $COPY is not a git checkout, so the commit is not checked here
+apply_rel001_coverage: REFUSED: REL-001 has not been re-taken as this closure needs:
+  board A: 12 cited document(s) were not checked (the vendor library was not in the tree it was taken in); declares its input missing: A: the vendor library is not in this tree (/tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit (v2/ecad/pcb-a-power-a23/routed/reliability.verdict.json)
+  board B: 15 cited document(s) were not checked (the vendor library was not in the tree it was taken in); declares its input missing: B: the vendor library is not in this tree (/tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit (v2/ecad/pcb-b-compute-b19/routed/reliability.verdict.json)
+  board C: 5 cited document(s) were not checked (the vendor library was not in the tree it was taken in); declares its input missing: C: the vendor library is not in this tree (/tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit (v2/ecad/pcb-c-display-c8/routed/reliability.verdict.json)
+  board D: 8 cited document(s) were not checked (the vendor library was not in the tree it was taken in); declares its input missing: D: the vendor library is not in this tree (/tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit (v2/ecad/pcb-d-aprs-d9/routed/reliability.verdict.json)
+  board E: 5 cited document(s) were not checked (the vendor library was not in the tree it was taken in); declares its input missing: E: the vendor library is not in this tree (/tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit (v2/ecad/pcb-e1-dock-e7/routed/reliability.verdict.json)
+  board P: 4 cited document(s) were not checked (the vendor library was not in the tree it was taken in); declares its input missing: P: the vendor library is not in this tree (/tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit (v2/ecad/pcb-p-pack-p2/routed/reliability.verdict.json)
+  Re-take reliability on every board (the box: gate_sweep.sh, or retake_gate.sh), then run this stage again.
+exit 2
+== 8. a SET-LEVEL re-take (no --board) into the copy's set-level out/, the per-board readings hidden, then --check: the binding is read per board from what the tool records
+   set-level reading: INCONCLUSIVE ts 2026-09-28T15:56:16Z inputs keys ['board_file_e5', 'list', 'netlist_a', 'netlist_b', 'netlist_c', 'netlist_d', 'netlist_e', 'netlist_p']
+apply_rel001_coverage: note: $COPY is not a git checkout, so the commit is not checked here
+apply_rel001_coverage: check: A INCONCLUSIVE, netlist 0a2b59087bcc2678, held by REL-O-01, REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13 (v2/ecad/out/reliability.verdict.json)
+apply_rel001_coverage: check: B INCONCLUSIVE, netlist 028997a6c5e8810f, held by REL-O-02, REL-O-03, REL-O-07, REL-O-08, REL-O-09, REL-O-12, REL-O-13 (v2/ecad/out/reliability.verdict.json)
+apply_rel001_coverage: check: C INCONCLUSIVE, netlist 3fddbb3edcd4248a, held by REL-O-04, REL-O-05, REL-O-07, REL-O-08 (v2/ecad/out/reliability.verdict.json)
+apply_rel001_coverage: check: D INCONCLUSIVE, netlist 7a2c0ac2190b141a, held by REL-O-07, REL-O-08, REL-O-10, REL-O-12, REL-O-13 (v2/ecad/out/reliability.verdict.json)
+apply_rel001_coverage: check: E INCONCLUSIVE, netlist 56adc9746d61c4e0, held by REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13 (v2/ecad/out/reliability.verdict.json)
+apply_rel001_coverage: check: E5 INCONCLUSIVE, board file 686b29a734c55b9a, held by REL-O-06, REL-O-07 (v2/ecad/out/reliability.verdict.json)
+apply_rel001_coverage: check: P INCONCLUSIVE, netlist 760ac6f74d62d194, held by REL-O-07, REL-O-08, REL-O-11, REL-O-12, REL-O-13 (v2/ecad/out/reliability.verdict.json)
+apply_rel001_coverage: check: the closure's conditions hold on 7 board(s); nothing was written
+exit 0
+== 9. the re-take per board with this branch's tool and the vendor library, into the copy's <phase>/routed/ with --out-dir
+   A   INCONCLUSIVE ts 2026-09-28T15:56:18Z list 40f2a98323b1f9ce netlist 0a2b59087bcc2678 bound True unjudged 0 held by REL-O-01, REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13
+   B   INCONCLUSIVE ts 2026-09-28T15:56:19Z list 40f2a98323b1f9ce netlist 028997a6c5e8810f bound True unjudged 0 held by REL-O-02, REL-O-03, REL-O-07, REL-O-08, REL-O-09, REL-O-12, REL-O-13
+   C   INCONCLUSIVE ts 2026-09-28T15:56:19Z list 40f2a98323b1f9ce netlist 3fddbb3edcd4248a bound True unjudged 0 held by REL-O-04, REL-O-05, REL-O-07, REL-O-08
+   D   INCONCLUSIVE ts 2026-09-28T15:56:20Z list 40f2a98323b1f9ce netlist 7a2c0ac2190b141a bound True unjudged 0 held by REL-O-07, REL-O-08, REL-O-10, REL-O-12, REL-O-13
+   E   INCONCLUSIVE ts 2026-09-28T15:56:20Z list 40f2a98323b1f9ce netlist 56adc9746d61c4e0 bound True unjudged 0 held by REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13
+   E5  INCONCLUSIVE ts 2026-09-28T15:56:21Z list 40f2a98323b1f9ce board_file 686b29a734c55b9a bound True unjudged 0 held by REL-O-06, REL-O-07
+   P   INCONCLUSIVE ts 2026-09-28T15:56:21Z list 40f2a98323b1f9ce netlist 760ac6f74d62d194 bound True unjudged 0 held by REL-O-07, REL-O-08, REL-O-11, REL-O-12, REL-O-13
+== 10. stage close-s89 after the re-take
 apply_rel001_coverage: note: $COPY is not a git checkout, so the commit is not checked here
 apply_rel001_coverage: close-s89: S-89 moved to closed_items in v2/ecad/tools/pcb_requirements.yaml (closed_by commit 59987cb9); the wait on it cited instead in REQ-022, REQ-024, REQ-026, REQ-028, REQ-064; re-parsed
+apply_rel001_coverage: what holds each board, as the closing evidence says it: A held by REL-O-01, REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13; B held by REL-O-02, REL-O-03, REL-O-07, REL-O-08, REL-O-09, REL-O-12, REL-O-13; C held by REL-O-04, REL-O-05, REL-O-07, REL-O-08; D held by REL-O-07, REL-O-08, REL-O-10, REL-O-12, REL-O-13; E held by REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13; E5 held by REL-O-06, REL-O-07; P held by REL-O-07, REL-O-08, REL-O-11, REL-O-12, REL-O-13
 apply_rel001_coverage: rules_lib.py requirements: 36 error(s) before this change, 36 after, 0 new
 exit 0
-== 8. stage close-s89 again (must refuse)
+== 11. stage close-s89 again (must refuse)
 apply_rel001_coverage: note: $COPY is not a git checkout, so the commit is not checked here
 apply_rel001_coverage: REFUSED: S-89 is already in closed_items: this stage has run
 exit 2
-== 9. S-89 in the registry now (the closed entry's first lines, cut at 160 characters)
-3129:  - id: S-89
-  - id: S-89
-    closed_by: commit 59987cb9
-    closing_evidence: >-
-      Stream d6rel, merged as commit 59987cb9 (v2/docs/records/d6rel/README.md). reliability.py reads an inventory by
-      reference class and land (wear_inventory.py; pcb_reliability.yaml section inventory), every candidate classed or
-   ...
-== 10. the registry and the coverage entry re-parsed
+== 12. the registry re-parsed
    S-89 open: False ; closed_by: commit 59987cb9 ; keys: ['closed_by', 'closing_evidence', 'id', 'title']
    open items: 63 ; closed items: 59 ; S-88 and S-90 still open: True
    REQ-022 waits_on None; history cites S-89: True
@@ -72,8 +101,17 @@ exit 2
    REQ-026 waits_on None; history cites S-89: True
    REQ-028 waits_on None; history cites S-89: True
    REQ-064 waits_on None; history cites S-89: True
-   coverage fixtures: tests/test_reliability.py, tests/test_reliability_inventory.py
-   coverage evidence_not_before: {'reliability': '2026-09-28T17:00:00+02:00'}
-== 11. the validator on the patched copy, its last line, and its lines that name S-89
+   closing evidence: ... What holds each board, read from its own reading and equal to what the list holds it by: A held by REL-O-01, REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13; B held by REL-O-02, REL-O-03, REL-O-07, REL-O-08, REL-O-09, REL-O-12, REL-O-13; C held by REL-O-04, REL-O-05, REL-O-07, REL-O-08; D held by REL-O-07, REL-O-08, REL-O-10, REL-O-12, REL-O-13; E held by REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13; E5 held by REL-O-06, REL-O-07; P held by REL-O-07, REL-O-08, REL-O-11, REL-O-12, REL-O-13. A board reads PASS only where the list holds it by nothing; a class whose maker publishes no figure, an owed figure, an owed measure and an open item that names the board each keep it INCONCLUSIVE. RE
+== 13. the validator on the patched copy: its last line and its lines that name S-89
 warn  closed item S-89: git cannot say here whether commit 59987cb9 exists
 rules_lib: 144 requirement record(s), 36 error(s), 22 warning(s)
+== 14. apply_config_inputs_reliability.py
+apply_config_inputs_reliability: CONFIG_INPUTS['reliability.py'] declares the list and 30 cited document(s); pcb_board_facts.yaml is gone from it; re-parsed with ast, 24 other entries unchanged
+exit 0
+== 15. apply_config_inputs_reliability.py again (must refuse)
+apply_config_inputs_reliability: REFUSED: the entry already describes the repaired tool: this script has run
+exit 2
+== 16. CONFIG_INPUTS re-parsed with ast from the patched rules_status.py
+   reliability.py declares 31 inputs; first tools/pcb_reliability.yaml ; pcb_board_facts.yaml among them: False
+   entries in CONFIG_INPUTS: 25
+   last three: ('../vendor/switches/ck-atp16-series-datasheet.pdf', '../vendor/switches/ck-atp19-series-datasheet.pdf', '../vendor/switches/nkk-m-series-toggles-datasheet.pdf')
