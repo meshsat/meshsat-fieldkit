@@ -43,12 +43,15 @@ ROWS = [
      "stm32h742_743_750_753_lqfp100.ibs"),
 ]
 ARCHIVE = {"st-stm32h7-lqfp100": ("https://web.archive.org/web/20250911224858id_/https://www.st.com/resource/en/ibis_model/stm32h7_ibis.zip",
-                                  "st.com refuses this host (both fetches of 27 September 2026); the Internet Archive's capture of 11 September 2025 "
-                                  "serves the zip gzip-wrapped, 35.1 MB, the wrapper's sha256/16 d0ecb57c18b83077 on both fetches")}
+                                  "st.com refused this host on both fetches of 27 September 2026, and the file was taken from the Internet "
+                                  "Archive's capture of 11 September 2025 (served gzip-wrapped, 35.1 MB, the wrapper's sha256/16 d0ecb57c18b83077 "
+                                  "both times). On 28 September 2026 st.com answered this host and served a zip whose member is the same bytes "
+                                  "(tools/ibis_fetch.py into a scratch folder, sha256 verified), so the maker's address and the capture agree")}
 # the sentences that speak of copying or distribution, searched in each header as written here
 PROHIBITS = ["Unauthorized reproduction and/or distribution is strictly prohibited.",
              "You and your company shall not distribute, sell or give these models to anyone else without prior written permission from TI."]
-FETCHED = "2026-09-27T17:00Z and again 2026-09-27T20:33Z (after the first copy was lost with its worktree), the same bytes both times"
+FETCHED = ("2026-09-27T17:00Z and again 2026-09-27T20:33Z (after the first copy was lost with its worktree), and a third time "
+           "2026-09-28T16:15Z by tools/ibis_fetch.py from this manifest into a scratch folder: the same bytes every time")
 
 
 def header(path):
@@ -167,10 +170,13 @@ HEAD = """# THE MAKERS' IBIS MODELS THIS PROJECT READS, AND WHERE EACH COMES FRO
 # maker's own address below, takes the `.ibs` out of the zip where the address is a zip (`container: zip`, `member`
 # the path inside it), verifies the sha256 and the byte count, and writes it to `file`. It never overwrites a file
 # that differs from its pin without --replace, and it is never run by a test or by a gate. `--check` fetches nothing
-# and says which state the tree is in. A maker's site may refuse a host (st.com refuses this project's): the script
+# and says which state the tree is in. A maker's site may refuse a host (st.com refused this project's runner on 27 September 2026): the script
 # then tries the Internet Archive, first the capture a row names (`archive_url`), then the newest capture of the
 # maker's address (https://web.archive.org/web/2026id_/<url>); the archive may serve a file gzip-wrapped, which the
 # script unwraps. Whoever fetches a model does so under the maker's terms, which the file itself states.
+# PROVEN ONCE, 28 September 2026 16:15 UTC: the script fetched all thirteen from the makers' own addresses into a
+# scratch folder and every sha256 and byte count was the one pinned here
+# (v2/docs/records/w5si2/readings/ibis-fetch-scratch-2026-09-28.txt).
 #
 # FIELDS: id; maker; part (what the model covers); file (where edge_length.py reads it, relative to the repository);
 # literature (the maker's literature number and title); url (the maker's address); container (ibs: the address serves

@@ -312,6 +312,26 @@ POWER_CLASSES = {"HV", "NODE", "PWR", "RAIL", "SW", "BANK", "GNDC"}
 #     above states for an open-drain pin; its RISE is the pull-up resistor charging the net's capacitance, which no
 #     driver sets. The data file's `open_drain` records state the rise with its derivation; the reading attaches it to
 #     the net (`rising`) and never takes it as the governing edge: for reflections the governing edge is the fall.
+#
+# THE MODELS ARE PINNED, NOT HELD (28 September 2026, stream w5si2; session decisions ER-D16 and ER-D17 in the data
+# file's header). The makers' IBIS models are not in the repository (several forbid distribution in their header), so
+# the reading works in three states and says which it is in:
+#   * a model is read only when v2/vendor/ibis-manifest.yaml PINS it (ibis_manifest.py) and the file present is the
+#     file pinned, by its full sha256; the record that cites it must cite the same file. The manifest is a tracked
+#     configuration input, recorded by sha (inputs.ibis_manifest);
+#   * a model that is ABSENT decides nothing: every net that waits on it is UNDECIDED, naming the file, its reason is
+#     of kind MODEL_ABSENT, and the reading is INCONCLUSIVE. It fails closed: no figure is taken from the record's own
+#     `edge_ns` in the model's absence, because that number is only a copy the model is there to hold;
+#   * every model a reading ASKED for is recorded (inputs.model_N: path, the sha256/16 read or `absent: true`, and the
+#     sha256/16 pinned), with the state of the set (inputs.model_state: PRESENT, PARTIAL, ABSENT or NOT_ASKED).
+# AN UNDECIDED NET CARRIES THE KIND OF ITS REASON (row["undecided_kind"]), set where the reason is made and never read
+# back out of its words: NO_DECLARATION (no signal-class entry names the net), MODEL_ABSENT (every reason the net has
+# is a model that is not in this tree, so the net is decided once the models are fetched), OTHER (anything else, a
+# net with a model absent AND another reason among them). counts: undecided_nets = undecided_no_declaration_nets +
+# undecided_model_absent_nets + undecided_other_nets.
+# A PIN WHOSE [Ramp] CELL THE MODEL'S OWN V-t TABLE CONTRADICTS (ibis_read FLAGGED, ER-D16) has no maker's figure: it
+# takes the instantaneous bound, its net is decided by a bound, and the family's `edge_ns` is the fastest of the pins
+# that are not flagged. The record names its flagged pins (`flagged_pins`) and is held to the file on that too.
 # ------------------------------------------------------------------------------------------------------------------
 RATES_PATH = os.path.join(HERE, "pcb_edge_rates.yaml")
 SECTIONS = ("interfaces", "families", "far_ends", "open_drain")
@@ -320,6 +340,31 @@ BOUND_KINDS = ("MODEL", "BOUND")
 NON_EDGE_KINDS = ("NOT_A_DRIVER", "PASSIVE_SWITCH", "CONNECTOR")
 DRIVER_PREFIXES = ("U", "Q")
 UNASKED_PREFIXES = ("K", "T")            # a relay, a transformer; and every SW... reference, a mechanical switch
+
+
+REASON_KINDS = ("NO_DECLARATION", "MODEL_ABSENT", "OTHER")
+
+
+class Reason(str):
+    """Why a net is undecided, as the words a reader sees, carrying WHAT KIND of reason it is (`kind`, one of
+    REASON_KINDS) and, for a model that is not in the tree, which file (`file`). The kind is set where the reason is
+    made; nothing reads it back out of the words. It serialises as its words."""
+    def __new__(cls, text, kind="OTHER", file=None):
+        o = str.__new__(cls, text)
+        o.kind, o.file = kind, file
+        return o
+
+
+def _because(text, inner):
+    """A reason wrapped in where it was met ("beyond J1 on board B: ..."), its kind and file kept."""
+    return Reason(text, getattr(inner, "kind", "OTHER"), getattr(inner, "file", None))
+
+
+def reasons_kind(reasons):
+    """The kind of a net's reasons together: MODEL_ABSENT only when EVERY reason is a model that is not in the tree (the
+    net is then decided by fetching the models), NO_DECLARATION only when every reason is that, else OTHER."""
+    kinds = {getattr(r, "kind", "OTHER") for r in reasons}
+    return kinds.pop() if len(kinds) == 1 else "OTHER"
 
 
 def _yaml_load(path):
@@ -592,13 +637,48 @@ def _page_text(path, page):
     return _TEXT[key]
 
 
+def model_record(repo, doc):
+    """What a reading records of a maker's model it asked for, or None when `doc` is no model: {"path", "sha256_16"
+    of the file present or "absent": True, "pinned_sha256_16" or None when no manifest row pins it}. A model is a file
+    the manifest pins, or any `.ibs` (which must then be pinned to be read)."""
+    import ibis_manifest as _im
+    row = _im.pin(_im.load(repo), doc)
+    if row is None and not str(doc).lower().endswith(".ibs"): return None
+    held = _im.sha256_of(os.path.join(repo, doc))
+    out = {"path": doc, "pinned_sha256_16": row["sha256"][:16] if row else None}
+    if held is None: out["absent"] = True
+    else: out["sha256_16"] = held[:16]
+    return out
+
+
+def _model_cited(repo, doc):
+    """None when `doc` is no model, or is a model in this tree and the file the manifest pins; else why it cannot be
+    read: a Reason of kind MODEL_ABSENT for a pinned model that is not in the tree (the state of a clean clone)."""
+    import ibis_manifest as _im
+    m = model_record(repo, doc)
+    if m is None: return None
+    man = _im.load(repo)
+    if m["pinned_sha256_16"] is None:
+        return "the model %s it cites is pinned by no row of %s%s" % (doc, man["path"], (" (%s)" % man["why"]) if man.get("why") else "")
+    if m.get("absent"):
+        return Reason("the IBIS model %s it cites is not in this tree: the makers' models are withheld from the repository, %s "
+                      "pins this one at sha256/16 %s and tools/ibis_fetch.py fetches it from the maker's address" % (
+                          doc, man["path"], m["pinned_sha256_16"]), "MODEL_ABSENT", doc)
+    if _im.state_of(repo, _im.pin(man, doc))[0] != _im.PRESENT:
+        return "%s is not the file %s pins (sha256/16 %s held, %s pinned)" % (doc, man["path"], m["sha256_16"], m["pinned_sha256_16"])
+    return None
+
+
 def _quotes_hold(rec, repo):
     """None when every document a record cites is held, IS the file the record was written from (sha256/16), and says
     what the record quotes from it, on the page the record names where it names one; else why not. A record whose
-    document changed since it was read decides nothing until it is read again."""
+    document changed since it was read decides nothing until it is read again. A cited document that is a maker's
+    MODEL is held to the manifest that pins it, and one that is not in the tree is said to be so (MODEL_ABSENT)."""
     for c in citations(rec):
         doc, q = c["document"], c["quote"]
         p = os.path.join(repo, doc)
+        bad = _model_cited(repo, doc)
+        if bad: return bad
         if not os.path.isfile(p): return "the document %s it names is not in this tree" % doc
         if c["sha256_16"] and _sha16(p) != c["sha256_16"]:
             return "%s is not the file the record was read from (sha256/16 %s held, %s cited)" % (doc, _sha16(p), c["sha256_16"])
@@ -773,6 +853,9 @@ class _Ctx:
         self.far_read = {}                     # letter -> {"path", "sha256_16"} of every other board's netlist read
         self._others = {}
         self.used_docs = {}
+        import ibis_manifest as _im
+        self.manifest = _im.load(repo)         # what pins each model (ER-D17); a model it does not pin is not read
+        self.models = {}                       # every model ASKED for: file -> {"path", "sha256_16" | "absent", "pinned_sha256_16"}
         self.fam_ok = {}
         self.contradicted = {}                               # family id -> why: the data file is wrong, a FAIL
         self.parts_on = {}
@@ -787,16 +870,35 @@ class _Ctx:
                 why = self._ibis_check(fam)
                 if why and why.startswith("CONTRADICTED"): self.contradicted[fam["id"]] = why
             self.fam_ok[fam["id"]] = why
-            if not why:
-                for d in [c["document"] for c in citations(fam)] + [(fam.get("ibis") or {}).get("file")]:
-                    if d: self.used_docs[d] = _sha16(os.path.join(self.repo, d))
+            for d in [c["document"] for c in citations(fam)]:           # a model is recorded under model_N,
+                m = model_record(self.repo, d)                          # read or absent; a document only when used
+                if m is not None: self.models[d] = m
+                elif not why: self.used_docs[d] = _sha16(os.path.join(self.repo, d))
         return self.fam_ok[fam["id"]]
 
     def _ibis_check(self, fam):
-        import ibis_read
+        import ibis_read, ibis_manifest as _im
         ib = fam["ibis"]
+        man = self.manifest
+        if man.get("why"):
+            return "nothing pins the IBIS model %s: %s" % (ib["file"], man["why"])
+        row = _im.pin(man, ib["file"])
+        if row is None:
+            return "the model manifest %s names no %s, so nothing pins the file the record cites%s" % (
+                man["path"], ib["file"], ("; it refuses: %s" % "; ".join(man["refusals"])[:200]) if man.get("refusals") else "")
+        if ib.get("sha256_16") and not row["sha256"].startswith(ib["sha256_16"]):
+            return "CONTRADICTED: the record cites %s at sha256/16 %s and %s pins it at %s" % (
+                ib["file"], ib["sha256_16"], man["path"], row["sha256"][:16])
         p = os.path.join(self.repo, ib["file"])
-        if not os.path.isfile(p): return "the IBIS file %s it names is not in this tree" % ib["file"]
+        st, held = _im.state_of(self.repo, row)
+        if st == _im.ABSENT:
+            self.models[ib["file"]] = {"path": ib["file"], "absent": True, "pinned_sha256_16": row["sha256"][:16]}
+            return Reason("the IBIS model %s is not in this tree: the makers' models are withheld from the repository, %s "
+                          "pins this one at sha256/16 %s and tools/ibis_fetch.py fetches it from the maker's address" % (
+                              ib["file"], man["path"], row["sha256"][:16]), "MODEL_ABSENT", ib["file"])
+        self.models[ib["file"]] = {"path": ib["file"], "sha256_16": held[:16], "pinned_sha256_16": row["sha256"][:16]}
+        if st == _im.DIFFERS:
+            return "%s is not the file %s pins (sha256 %s held, %s pinned)" % (ib["file"], man["path"], held, row["sha256"])
         if ib.get("sha256_16") and _sha16(p) != ib["sha256_16"]:
             return "%s is not the file the record was read from (sha256/16 %s held, %s cited)" % (ib["file"], _sha16(p), ib["sha256_16"])
         model = self._ibis(fam)
@@ -805,6 +907,11 @@ class _Ctx:
         if e is None: return "the IBIS file gives no driving pin for %s: %s" % (ib["component"], how)
         if not isinstance(stated, (int, float)) or abs(float(stated) - e) > 0.0005:
             return "CONTRADICTED: the record states %s ns and %s gives %.4f ns (%s)" % (stated, ib["file"], e, how)
+        flagged = sorted(str(p_) for p_, _h in ibis_read.flagged_pins(model, ib["component"], ib.get("models")))
+        named = sorted(str(x) for x in fam.get("flagged_pins") or [])
+        if flagged != named:
+            return ("CONTRADICTED: the record names the pins %s as having a [Ramp] cell the model's own V-t table "
+                    "contradicts, and %s gives %s" % (named or "none", ib["file"], flagged or "none"))
         kw, cell = ibis_read.fastest_cite(model, ib["component"], ib.get("models"))
         if ib.get("keyword") is not None and _norm(str(ib["keyword"])) != _norm(kw or ""):
             return "CONTRADICTED: the record cites %r and the number is under %r in %s" % (ib["keyword"], kw, ib["file"])
@@ -843,7 +950,7 @@ class _Ctx:
                         "record names them" % (ref, pin, pf or "", fam["id"])]
         if _is_input(fam, pin, pf): return [], []
         why = self.family_usable(fam)
-        if why: return [], ["%s %s (%s): %s" % (ref, " ".join(val.split()[:2]), fam["id"], why)]
+        if why: return [], [_because("%s %s (%s): %s" % (ref, " ".join(val.split()[:2]), fam["id"], why), why)]
         if k == "IBIS":
             import ibis_read
             ib = fam["ibis"]
@@ -856,6 +963,8 @@ class _Ctx:
             st, e, how = ibis_read.pin_edge(self._ibis(fam), ib["component"], pin, ib.get("models"), ib.get("pin_key", "number"))
             if st == "INPUT": return [], []
             if st == "UNKNOWN": return [], ["%s (%s): %s" % (ref, fam["id"], how)]
+            if st == "FLAGGED":         # no maker's figure for this pin: the instantaneous bound (ER-D8, ER-D16)
+                return [(0.0, "BOUND", fam["id"], "%s %s" % (ref, how))], []
             return [(e, "IBIS", fam["id"], "%s %s" % (ref, how))], []
         for pe in fam.get("pin_edges") or []:
             if re.match(pe["match"], pf or "") or str(pin) in {str(x) for x in pe.get("pins") or []}:
@@ -902,8 +1011,9 @@ class _Ctx:
                     reasons.append("beyond %s (far end %s): board %s's netlist has no net %s" % (ref, fe["id"], L2, net)); continue
                 b2, cc, rr = c2.resolve(net, quiet=True)
                 cands += [(e, k, fid, "beyond %s on board %s: %s" % (ref, L2.upper(), how)) for e, k, fid, how in cc]
-                reasons += ["beyond %s on board %s: %s" % (ref, L2.upper(), w) for w in rr]
+                reasons += [_because("beyond %s on board %s: %s" % (ref, L2.upper(), w), w) for w in rr]
                 self.used_docs.update(c2.used_docs)
+                self.models.update(c2.models)
                 self.contradicted.update(c2.contradicted)
             if fe.get("continues"): return cands, reasons
             fams = {f["id"]: f for f in self.rates["families"]}
@@ -911,7 +1021,14 @@ class _Ctx:
                 fam = fams[fid]
                 if fam["kind"] in NON_EDGE_KINDS: continue
                 why = self.family_usable(fam)
-                if why: reasons.append("beyond %s (%s, %s): %s" % (ref, fe["id"], fid, why)); continue
+                if why: reasons.append(_because("beyond %s (%s, %s): %s" % (ref, fe["id"], fid, why), why)); continue
+                if fam["kind"] == "IBIS":
+                    import ibis_read
+                    fl = ibis_read.flagged_pins(self._ibis(fam), fam["ibis"]["component"], fam["ibis"].get("models"))
+                    if fl:      # which pin is on the far side is not read, and one of them has no figure (ER-D16)
+                        cands.append((0.0, "BOUND", fid, "beyond %s (far end %s): %s, whose pin %s has a [Ramp] cell the "
+                                      "model's own V-t table contradicts" % (ref, fe["id"], fid, fl[0][0])))
+                        continue
                 # the part's fastest pin (ER-D7): which of its pins is on the far side is not read
                 opts = [(float(fam["edge_ns"]), fam["kind"])] + [(float(pe["edge_ns"]), pe["kind"]) for pe in fam.get("pin_edges") or []]
                 e, kind = min(opts)
@@ -938,7 +1055,7 @@ class _Ctx:
             if other == net or other not in self.signals: continue
             c2, w2 = self.local(other)
             cands += [(e, k, fid, "across %s from %s: %s" % (r, other, how)) for e, k, fid, how in c2]
-            reasons += ["across %s from %s: %s" % (r, other, w) for w in w2]
+            reasons += [_because("across %s from %s: %s" % (r, other, w), w) for w in w2]
         if not reasons and not cands:
             # a net nothing on the board drives, whose driver a far_ends record names by the land it touches (a
             # bench probe on a test pad): that record is its driver (ER-D7); without one the net is UNDECIDED
@@ -1113,7 +1230,8 @@ def schematic_table(net_path, letter=None, intent_path=None, facts=None, repo=No
     counts = {"signal_nets": len(signals), "decided_nets": 0, "undecided_nets": 0, "low_speed_nets": 0,
               "contradicted_nets": 0, "may_be_long_nets": 0, "answered_nets": 0, "layout_bound_nets": 0,
               "classes": len(rows), "maker_edge_nets": 0, "bound_edge_nets": 0, "bound_decided_nets": 0,
-              "maker_held_nets": 0}
+              "maker_held_nets": 0, "undecided_no_declaration_nets": 0, "undecided_model_absent_nets": 0,
+              "undecided_other_nets": 0}
     for x in RATES_REFUSALS: res["fails"].append("edge data refused: %s" % x)
     res["inputs"]["edge_rates"] = {"path": _shown(RATES["path"]), "sha256_16": RATES.get("sha16")}
     ctx = _Ctx(letter, nets, values, RATES, repo, signals, rails, netlists=netlists)
@@ -1122,7 +1240,7 @@ def schematic_table(net_path, letter=None, intent_path=None, facts=None, repo=No
         row = rows[pat]
         row["drivers"] = {v: sorted(rs) for v, rs in sorted(row["drivers"].items())}
         nn = len(row["nets"])
-        row["net_edges"], row["undecided"] = {}, {}
+        row["net_edges"], row["undecided"], row["undecided_kind"] = {}, {}, {}
         if row["class"] == LOW_CLASS and not row["rise_ns"]:
             row.update(status="LOW_SPEED_OR_DC", why="declared slow or DC with its basis; no edge is asked of it")
             counts["low_speed_nets"] += nn
@@ -1130,8 +1248,10 @@ def schematic_table(net_path, letter=None, intent_path=None, facts=None, repo=No
         if row["class"] == "UNKNOWN":
             row.update(status="UNDECIDED", why="no signal-class declaration names these nets, so neither their class "
                                                "nor their edge is known")
-            row["undecided"] = {n: ["no signal-class declaration"] for n in row["nets"]}
+            row["undecided"] = {n: [Reason("no signal-class declaration", "NO_DECLARATION")] for n in row["nets"]}
+            row["undecided_kind"] = {n: "NO_DECLARATION" for n in row["nets"]}
             counts["undecided_nets"] += nn
+            counts["undecided_no_declaration_nets"] += nn
             continue
         st, src, why = edge_source(letter, pat, row["rise_ns"], repo)
         row.update(why=why, source=(src or {}).get("id"), document=(src or {}).get("document"))
@@ -1140,14 +1260,16 @@ def schematic_table(net_path, letter=None, intent_path=None, facts=None, repo=No
             counts["contradicted_nets"] += nn
             res["fails"].append("%s (%s, %d net(s)): %s" % (pat, row["class"], nn, why))
             continue
+        for c in citations(src) if src else []:           # a model an interface record cites: asked for, read or absent
+            m = model_record(repo, c["document"])
+            if m is not None: ctx.models[c["document"]] = m
         if st == "DECIDED":
             kind = src.get("kind") or "STANDARD"
             for n in row["nets"]:
                 by = "class entry %s, %s" % (pat, src["id"])
                 row["net_edges"][n] = net_edge([(float(src["rise_ns"]), kind, src["id"], by)])
-            if src.get("document"): used[src["document"]] = _sha16(os.path.join(repo, src["document"]))
-            for c in src.get("checked") or []:
-                if isinstance(c, dict) and c.get("document"): used[c["document"]] = _sha16(os.path.join(repo, c["document"]))
+            for c in citations(src):
+                if c["document"] not in ctx.models: used[c["document"]] = _sha16(os.path.join(repo, c["document"]))
         elif st == "UNDECIDED":
             row["undecided"] = {n: [why] for n in row["nets"]}
         else:                                                 # NOT_COVERED: ask each net for its drivers
@@ -1159,6 +1281,12 @@ def schematic_table(net_path, letter=None, intent_path=None, facts=None, repo=No
             od = _open_drain_for(letter, n, RATES, repo, used)
             if od: e["rising"] = od
         nd, nu = len(row["net_edges"]), len(row["undecided"])
+        row["undecided_kind"] = {n: reasons_kind(rs) for n, rs in row["undecided"].items()}
+        row["undecided_models"] = {n: sorted({r.file for r in rs if getattr(r, "file", None)}) for n, rs in row["undecided"].items()
+                                   if any(getattr(r, "file", None) for r in rs)}
+        for kd in row["undecided_kind"].values():
+            counts[{"NO_DECLARATION": "undecided_no_declaration_nets", "MODEL_ABSENT": "undecided_model_absent_nets"}.get(
+                kd, "undecided_other_nets")] += 1
         row["status"] = "DECIDED" if not nu else ("UNDECIDED" if not nd else "PARTIAL")
         if row["status"] != "DECIDED" and st == "NOT_COVERED":
             row["why"] = "%d of %d net(s) have a driver the data file does not decide" % (nu, nn)
@@ -1233,10 +1361,33 @@ def schematic_table(net_path, letter=None, intent_path=None, facts=None, repo=No
         res["inputs"]["far_netlist_%s" % L2] = rec
     for fid, why in sorted(ctx.contradicted.items()):
         res["fails"].append("pcb_edge_rates.yaml family %s: %s" % (fid, why))
-    # every held document this board's edges are taken from, by sha, so a corrected transcription or model is seen
+    # every held document this board's edges are taken from, by sha, so a corrected transcription is seen
     used.update(ctx.used_docs)
+    for d in list(used):
+        m = model_record(repo, d)
+        if m is not None:
+            ctx.models.setdefault(d, m); del used[d]
     for i, d in enumerate(sorted(used), 1):
         res["inputs"]["document_%d" % i] = {"path": d, "sha256_16": used[d]}
+    # THE MODELS (ER-D17): the manifest that pins them, every model this reading asked for (read, or absent), and the
+    # state of that set. A model is never recorded as a document: it is not in the repository, and what dates it is
+    # its pin in the tracked manifest (rules_status.PINNED_INPUTS).
+    man = ctx.manifest
+    if man.get("sha256_16"):
+        res["inputs"]["ibis_manifest"] = {"path": man["path"], "sha256_16": man["sha256_16"]}
+    for x in man.get("refusals") or []: res["fails"].append("model manifest refused: %s" % x)
+    asked = [ctx.models[f] for f in sorted(ctx.models)]
+    for i, m in enumerate(asked, 1):
+        res["inputs"]["model_%d" % i] = dict(m)
+    absent = [m["path"] for m in asked if m.get("absent")]
+    differ = [m["path"] for m in asked if not m.get("absent") and m.get("sha256_16") != m.get("pinned_sha256_16")]
+    import ibis_manifest as _im
+    res["inputs"]["model_state"] = {
+        "state": _im.set_state([_im.DIFFERS if m["path"] in differ else (_im.ABSENT if m.get("absent") else _im.PRESENT) for m in asked]),
+        "asked": len(asked), "present": len(asked) - len(absent), "absent": len(absent), "absent_files": absent,
+        "manifest": man["path"], "how_to_fetch": "python3 v2/ecad/tools/ibis_fetch.py --fetch"}
+    counts["models_asked"] = len(asked)
+    counts["models_absent"] = len(absent)
     return res
 
 
@@ -1318,6 +1469,13 @@ def write_schematic_verdict(res, out_dir=None, quiet=False, table_file=True):
                 r["pattern"], r["class"], float(edge), basis, source, crit,
                 "a bound" if who == "BOUND" else "a published figure on every driver",
                 ", ".join(nets[:8]), " ..." if len(nets) > 8 else ""))
+    ms = (res.get("inputs") or {}).get("model_state") or {}
+    if ms.get("absent"):
+        ev.insert(len(res["fails"]), "MODELS_ABSENT %d of the %d makers' IBIS models this reading asks for are not in this "
+                  "tree (they are withheld from the repository and pinned by %s): %d net(s) wait on one and read UNDECIDED, "
+                  "naming it. Fetch them (%s) and re-take: %s" % (
+                      ms["absent"], ms["asked"], ms.get("manifest"), c.get("undecided_model_absent_nets", 0),
+                      ms.get("how_to_fetch"), ", ".join(ms.get("absent_files") or [])))
     inputs = dict(res.get("inputs") or {})
     if res.get("letter"): inputs["board"] = res["letter"]
     od = out_dir or os.environ.get("VERDICT_DIR") or "out"
@@ -1351,7 +1509,12 @@ def write_schematic_verdict(res, out_dir=None, quiet=False, table_file=True):
                           "driver with no published minimum makes the net decided by a bound whatever the others "
                           "publish (ER-D13); a layout-bound net a bound decides is named under BOUND_DECIDES and holds "
                           "the reading INCONCLUSIVE. counts: decided = maker_edge + bound_edge; layout_bound = "
-                          "maker_held + bound_decided"))
+                          "maker_held + bound_decided. Since 28 September 2026 the makers' IBIS models are pinned by "
+                          "v2/vendor/ibis-manifest.yaml (inputs.ibis_manifest) and are not in the repository: a model "
+                          "that is not in the tree decides nothing, its nets read UNDECIDED naming it, and "
+                          "inputs.model_state says which state the reading was taken in (ER-D17); undecided = "
+                          "undecided_no_declaration + undecided_model_absent + undecided_other; a pin whose [Ramp] "
+                          "cell the model's own V-t table contradicts takes the instantaneous bound (ER-D16)"))
 
 
 def print_table(res):
@@ -1367,6 +1530,12 @@ def print_table(res):
              c.get("low_speed_nets", 0), c.get("contradicted_nets", 0), c.get("may_be_long_nets", 0),
              c.get("answered_nets", 0), c.get("layout_bound_nets", 0), c.get("maker_edge_nets", 0),
              c.get("bound_edge_nets", 0), c.get("maker_held_nets", 0), c.get("bound_decided_nets", 0)))
+    ms = i.get("model_state") or {}
+    print("  models: state %s, %d asked for, %d in this tree, %d absent (pinned by %s); undecided by reason: %d with no "
+          "signal-class declaration, %d waiting only on a model that is not in this tree, %d other"
+          % (ms.get("state"), ms.get("asked", 0), ms.get("present", 0), ms.get("absent", 0), ms.get("manifest"),
+             c.get("undecided_no_declaration_nets", 0), c.get("undecided_model_absent_nets", 0),
+             c.get("undecided_other_nets", 0)))
     for r in res.get("rows") or []:
         tail = ""
         if r.get("critical_mm") is not None:
