@@ -1,11 +1,10 @@
 # Decision sheet: the 72-hour relay mission (M1)
 
-MESHSAT-1357, 29 September 2026. Prototype; AI analysis; figures in
-`ENERGY-RECONCILIATION.md` 7c and 8.
+MESHSAT-1357, 29 September 2026 (second issue). Prototype; AI analysis; figures in `ENERGY-RECONCILIATION.md` section 9.
 
-Neither choice meets the mission as written: REQ-072 stays FAIL. (1) Accept that: full power,
-stopping the first afternoon from a morning start; a 12-volt source may carry nights, optionally. (2) Add a second battery block
-(about 145 Wh, 290 Wh together), a 200-watt panel held to 100 W and a lower cutoff, and run reduced whenever the sun alone cannot
-carry the full kit: 16 hours a day in September, 14 in June. Reduced means the monitor, 5G, the WiFi link,
-Zigbee and two of three computers off. It carries average September days only with the battery above 17 C;
-December fails even reduced all day. I recommend 2.
+The mission as written needs about 655 Wh of battery (today 108 Wh). Option A meets it on the reference-day model, not
+yet drawn: two packs, the base pockets and a lid module, with either a 200 W solar stage and four panels or today's
+100 W stage and sixteen, which meets only at about +19 C or warmer. It needs your decisions on the pack size (D-06), the solar stage (REQ-016) and moving the second
+pack into prototype 1 in place of the lid's HF tray and tablet bracket (D-01). I recommend A with the 200 W stage.
+Option C, reduced service, stays a separate, conditional alternative. REQ-072 stays FAIL until a design is built and
+tested.
