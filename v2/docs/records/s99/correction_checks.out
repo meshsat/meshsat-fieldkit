@@ -1,0 +1,27 @@
+S-99 correction checks. Prototype, AI review support; no acceptance or physical result.
+(a) PASS: dev_stage.py exits 0 twice; both outputs match dev_stage.out byte for byte.
+    bytes=20569 sha256=9113fdbf2f9d8e951f3b21d86ca30e6c112154e59bc2ab1991670b5f826bddde
+    PASS one-byte refusal, exit 1, empty stdout: v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json
+    PASS one-byte refusal, exit 1, empty stdout: v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json
+    PASS one-byte refusal, exit 1, empty stdout: v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs-intent.json
+    PASS one-byte refusal, exit 1, empty stdout: v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
+    PASS: scratch removed; original input hashes unchanged.
+(b) PASS: draft --check exits 0; 9579 v2 entry metadata records unchanged; no marker.
+PASS S99-DEV: v2/ecad/tools/gen_sch_a.py: exact old text occurs once
+PASS S99-VBAT: v2/ecad/tools/gen_sch_a.py: exact old text occurs once
+PASS S99-STAGE: v2/ecad/tools/gen_sch_a.py: exact old text occurs once
+PASS S99-POWERNETS: v2/ecad/tools/gen_sch_a.py: exact old text occurs once
+PASS S99-SECTION: v2/ecad/tools/gen_sch_a.py: exact old text occurs once
+PASS AST: v2/ecad/tools/gen_sch_a.py: replaced text parses; the ten new references are unused in the original
+CHECK ONLY: 5 entries, 1 generator; no writes, no marker.
+    PASS F9: reconstructed declaration removes U23 load and replaces the stale D8/7.2 A note.
+(c) PASS: Decimal recomputation 903/1000 + 0.0112 = 0.9142 A.
+    PASS F1: wall high estimates 0.956043980/0.965582681 A; P before 9.761220451/9.770759151, after 8.171220451/8.180759151 A.
+    PASS: conditional loop 7.056896639 to 9.649029257 A; split D/M margins 0.156896639/1.114661345 A.
+    PASS F2 recomputation: initial 8.514851485/10.000000000/11.515151515 A; hot 8.468275967/11.578835108 A; re-rating FAILS both tests.
+    F3 illustrative onset only: 64.233333/5.667647/1.852885 ms; not bounds.
+    PASS F5 charge arithmetic: 440 uF * 100 mV = 44.0 uC; 44.0 us at 1 A deficit.
+    PASS F6 arithmetic: conditional 4.201349000 A, margin 0.798651000 A; IC shutdown only, other leakage unresolved.
+    PASS F10: R43 0.321690778 W nominal / 0.324907686 W +1%; VBAT 2.670647540 A.
+(d) PASS: nine changed files scanned; no Unicode dash U+2010..U+2015 or minus U+2212.
+All four required checks PASS. Physical timing, collapse, current maxima and temperature remain unverified.

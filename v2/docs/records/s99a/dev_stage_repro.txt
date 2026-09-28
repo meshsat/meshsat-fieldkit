@@ -1,0 +1,20 @@
+dev_stage.py (v2/docs/records/s99) reproduction by stream s99a, 28 September 2026 23:50 CEST. AI engineering check.
+
+1. On this worktree (base 36e10781, before and after s99a's generator edits, which regenerate nothing):
+   python3 v2/docs/records/s99/dev_stage.py
+   exit 1, empty stdout, stderr:
+   Refused: input v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json: sha256 mismatch; expected 3422910a15c4d1450141aa9a5fd725ba75bca9fcb42ae8c87e4cf3385d7d4498, got 35e430a791ab2b448f9a65ea68df7303b8a812e1f43deb075febec5b83e5ee8b
+   Cause: the script pins its four inputs at stream s99's base 2b7c9374. Set 7 and set 8 regenerated boards A and B
+   since (19a2bb15, S-98's interim alignment), so this line's board A intent (35e430a7...), board A netlist
+   (2dfe1c54...) and board B intent (a7bf625c...) already differ from the pins. The refusal is the script's design,
+   not a fault, and it predates s99a's edits.
+
+2. In a scratch root (the session scratchpad, outside the tree) holding a copy of dev_stage.py and the four pinned
+   inputs taken by `git show 2b7c9374:<path>` (sha256/12 3422910a15c4, 96ee391b3e3f, 8d9f3b225652, 0a2b59087bcc):
+   exit 0 twice; both outputs byte identical to the filed dev_stage.out,
+   sha256 9113fdbf2f9d8e951f3b21d86ca30e6c112154e59bc2ab1991670b5f826bddde (the figure of checks/check-2-claude.md).
+
+3. After the box regeneration of board A from this branch, the board A intent and netlist change again, so the
+   script will refuse by name as in 1. It is NOT re-pinned here (the task's instruction). When it is re-pinned on the
+   regenerated inputs, its D-tier line after the split must read the corrected wall limit: 6.9142 A declared and
+   0.142697 A to the 7.056897 A minimum (its filed output prints 6.900 A and 0.156897 A from the declared 0.9 A).
