@@ -1,0 +1,24 @@
+## apply_rebind_generator_a_s99
+apply_rebind_generator_a_s99: 4 records rebound (CFL-014, CON-018, CON-019, REQ-077); v2/ecad/tools/gen_sch_a.py ebb5c0f250780a48 -> eb2e347e4d371e0f
+OWED: rules_render.py --requirements (the registry changed)
+## apply_s99_registry
+apply_s99_registry: S-99's title re-stated (no disposition; REQ-018 still waits on it); S-115 opened (LAYOUT_STAGE); S-116 opened and REQ-018, REQ-009, REQ-002 wait on it
+## apply_decision_55
+apply_decision_55: decision 55 appended (SESSION, ruled 2026-09-28); v2/ecad/tools/pcb_decisions.yaml@4e1ff91f98e06b72 -> @ad64649584227d29; 1 record(s) rebound with an evidence entry: CFL-016
+OWED: decisions_render.py (the page's closed table has no row for decision 55 today, so --check reads it stale until it is re-rendered); rules_render.py --requirements (the registry changed by the rebind)
+## apply_if_ab_power_s99
+apply_if_ab_power_s99: 002ae8575028468a -> 363af4715553e42b; 13 replacement(s) (s99a's two included); cites read from the generators: IF-AB-POWER A 1051-1052, 1149, B 551, 1119, 1210, slot rails 119, Q28 54, +54V_POE 152; IF-AD-HARNESS A 1387, 1598-1599, D 259-261, U23 1387; IF-AB-WALL A 1596-1597, B 1637-1638, the D-12 block 1613-1618
+OWED: the readings that record pcb_interfaces.yaml by sha (interfaces.py, rules_status CONFIG_INPUTS) are re-taken
+## apply_pages_s99
+apply_pages_s99: v2/docs/HW-FW-CONTRACT.md, v2/docs/ASSEMBLY.md, v2/docs/records/s98/README.md and v2/docs/records/s98/LAYER-ROWS.md corrected; ASSEMBLY.md 0ca504d746b427cb -> ee4eff52fc5df307; rebound: CFL-015; the review of decision 31 left as filed (pinned 094817023210d1b0), its erratum v2/docs/records/int10/ERRATA-DECISION-31-REVIEW.md
+OWED: rules_render.py --requirements (the registry changed by the rebind)
+## energy REQ-072
+apply_req072_evidence_note: added one evidence line to REQ-072 in /home/claude-runner/worktrees/meshsat-fieldkit/int10/v2/ecad/tools/pcb_requirements.yaml (evidence 7 -> 8, FAIL unchanged)
+## circuit rebind
+changed parts: ['C227', 'C228', 'C229', 'C230', 'C231', 'C232', 'L13', 'R217', 'R218', 'U41', 'R186', 'R209', 'U23', 'U32', 'U39']
+changed nets: ['+5V_D8IN', '+5V_DEV', 'D8B_BST', 'D8B_FB', 'D8B_SS', 'D8B_SW', 'GND', 'RAIL_EN', 'VBAT', 'unconnected-(U41-NC-Pad1)']
+apply_rebind_after_circuit: 8 record(s) rebound from 2dfe1c546cb39ccb to 599ee964a9c23d6e: CON-019, CON-018, CFL-005, CON-010, REQ-077, CFL-016, CFL-014, CON-016
+## decisions_render
+decisions_render: wrote ../../docs/OWNER-DECISIONS-OPEN.md (56 lines)
+rules_lib: 144 requirement record(s), 0 error(s), 0 warning(s)
+rules_lib: 59 rule(s), 0 error(s), 0 warning(s), fingerprint 635ff031f210f48c

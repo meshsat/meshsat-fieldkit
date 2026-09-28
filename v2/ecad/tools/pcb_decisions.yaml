@@ -1700,3 +1700,62 @@ decisions:
     holds_nothing_today: >-
       it releases no rule-board pair: SI-001 on board C stays INCONCLUSIVE, held by 23 layout-bound nets a
       bound decides.
+  - n: 55
+    title: >-
+      board A: the D8 mezzanine leaves the +5V_DEV LM5176 stage for its own 5 V buck from VBAT
+    asked: 2026-09-28
+    status: ruled
+    authority: SESSION
+    authority_why: >-
+      it changes no line the never-auto floor protects (no class of tools/reserved.json names gen_sch_a.py),
+      spends nothing the owner decides (ten new component references inside the board's BOM; no purchase; the
+      XAL6060-682ME order code and board A's use of C705784 and C861078 still need the parts stream's
+      certification entry), changes no claim about the kit (the mezzanine keeps its 5.0 V and its 6 percent
+      budget), and accepts no residual risk a measurement in this tree cannot remove (the remaining child-peak
+      tier is board B's declarations and the bench test PT-4). The divider is the session's too: board D's
+      alternative, raising its v_work to 5.29 V, is refused on the PCM2912A's 5.25 V recommended maximum (TI
+      SLES230A 7.3 p.5).
+    ruled_by: SESSION
+    ruled_on: 2026-09-28
+    outcome: >-
+      THE MEZZANINE'S 5 V IS ITS OWN RAIL, +5V_D8IN, FROM A TPS62933 (U41) ON VBAT AT 5.002 V NOMINAL (56.2k /
+      10.7k, BOTH 0.1 PERCENT 25 ppm/C, THE CODES C705784 AND C861078 BOARD D ALREADY USES AS R80 AND R81),
+      4.872 TO 5.133 V OVER EVERY TOLERANCE, SO BOARD D'S DECLARED v_work OF 5.23 V ON +5V_D8 STANDS; 6.8 uH
+      XAL6060-682ME, 500 kHz, ENABLED WITH THE 3.3 V LOGIC (RAIL_EN), AND U23 STAYS THE MEZZANINE'S EFUSE
+      (D8_EN, 2.0 A, OVLO) FED FROM IT. The +5V_DEV stage's coincident PS-ALLTX demand returns to board B plus
+      the wall host port: 6.9142 A declared (the wall port at U32's corrected 0.9142 A, TPS2596 equation 7),
+      0.142697 A under the average loop's conditional minimum of 7.056897 A, and 5.942235 A with the makers'
+      figures, 1.114661 A under it (v2/docs/records/s99/ANALYSIS.md sections 3 to 5, dev_stage.out;
+      v2/docs/records/s99a/README.md section 2); the tier with board B's declared child peaks, 8.171220 A, is
+      above the minimum and stays open under S-99. The stage itself is unchanged: R43 6 mOhm stays because the
+      loop's 9.6 A maximum must stay under the JST-VH lead's 10 A rating.
+    reversed_by: >-
+      delete U41, L13, C227 to C232, R217 and R218, return U23's input to +5V_DEV, restore the +5V_DEV loads
+      (U23 1.0 A, as after S-98) and VBAT's map (no U41, and restore Q32's VBAT share to 2.0 A: it is 1.61 A
+      after the split, U41 carrying 0.4 A), and re-take PWR-001 and INT-001: the five replacements of
+      v2/docs/records/s99a/apply_d8_split_rebased.py in reverse, with the VBAT change of stream s99a's commit
+      80ebde44.
+    ask: >-
+      carry the mezzanine on the device rail (declare the 8.9 A bound with the fold-back named), re-rate the
+      stage's average loop (5 or 5.6 mOhm), interlock the wall host port with the outlets, or give the
+      mezzanine its own converter
+    recommendation: >-
+      THE OWN CONVERTER. Both B and B plus the wall-port interlock remain standing configurations. Under the
+      owner's standing rule of 26 September, SESSION may choose B because it meets the conditional declared
+      demand without moving the lead protection point and preserves console availability. The interlock
+      changes console behaviour and stays a fallback. M/P evidence, timing, collapse/recovery and thermal
+      verification remain open; this choice is not acceptance of residual risk.
+    evidence: >-
+      board A's netlist at 2b7c9374 (sha256 0a2b5908...), the intents of boards A, B and D (sha256
+      3422910a..., 96ee391b..., 8d9f3b22...), TI SNVSAI1D pp.3 to 7, 16 to 17, 23 to 26, TI SLPS414B p.3,
+      Coilcraft 804-1 and 887-1, Vishay 30100 pp.1 to 2, TI SLVSET8A printed p.28 (equation 7 and its worked
+      example), TI SLUSEA4D p.6 (VFB and IFB), TI SLES230A 7.3 p.5 (PCM2912A VBUS 4.35 to 5.25 V), NiceRF
+      SA868 v1.3 p.4, Ebyte E22-900M30S v1.20, Ground Control's RockBLOCK 9704 hardware page (snapshot
+      2026-09-27), MyriadRF's LimeSDR Mini pages, Microchip DS00002330D p.169;
+      v2/docs/records/s99/dev_stage.py (reproduced byte for byte, inputs refused by name when changed);
+      v2/docs/records/s99a/u41_divider.out; the independent AI reviews
+      v2/docs/records/s99/checks/check-2-claude.md and the check of stream s99a (accepted, no blocking item).
+    blocks: {}
+    holds_nothing_today: >-
+      it releases no rule-board pair: PWR-001 and INT-001 on board A are re-taken after the regeneration;
+      REQ-018 stays NOT_JUDGED under FEA-004 and S-99's closure conditions.

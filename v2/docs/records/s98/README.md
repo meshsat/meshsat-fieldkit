@@ -175,8 +175,13 @@ Which files change and which readings bind them:
   this stream: the connectors are at `gen_sch_a.py:1037-1038` (J_5V_Sx, J_5V_DEV) and `1135` (J_54V), and
   `gen_sch_b.py:551` (J_5V_S%d), `1119` (J_5V_DEV), `1210` (J_54V) at `c098b8f3`. Outside `apply_contract_i03.py`'s scope
   (the `currents` rows), left to the integrator.
-- **R3** The lead's own drop (16 AWG pair 300 mm plus four VH contacts at their 10 mOhm maximum: 0.225 V at 5.63 A, 4.4
-  percent of 5.1 V) is in no board's share of the 2 percent budget (both checks); a contract or budget item, no id.
+- **R3** The lead's own drop is in no board's share of the 2 percent budget (both checks); a contract or budget item, no
+  id. At 5.63 A the four VH contacts alone at their 10 mOhm initial maximum give 5.63 x 4 x 0.010 = 0.2252 V (4.42
+  percent of 5.1 V); with the pair's copper (150 mm supply and 150 mm return of 16 AWG, 1.25 mm2 at the tree's rho20:
+  0.004128 ohm, `records/cx1/ANALYSIS.md`) the lead gives 5.63 x (0.004128 + 0.040) = 0.248441 V, 4.87 percent of 5.1 V
+  (0.252094 V, 4.94 percent, with the copper at 60 C). Corrected at integration set 9 (stream s99reg,
+  `records/int10/apply_pages_s99.py`): this item first gave 0.225 V as the wire plus the contacts, which is the contacts
+  alone.
 - **R4** `records/cx1/apply_declarations_draft.applied`, the draft's marker, is untracked by instruction and not
   gitignored (`git check-ignore` exit 1); it will show in `git status` of any tree that ran the draft.
 
