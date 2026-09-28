@@ -1,0 +1,15 @@
+U41 output band, TJ -40 to 150 C reference (784 to 816 mV), IFB +/-0.15 uA through the top resistor
+divider                                       nominal      min      max   min+TC   max+TC  parts
+draft 53.6k/10k 1% 100ppm (C23074, 10k)        5.0880   4.8949   5.2862   4.8416   5.3447  both certified on board A
+52.3k/10k 1% 100ppm                            4.9840   4.7952   5.1778   4.7432   5.2349  52.3k not certified in JLC-CERTIFIED.tsv
+53.6k/10k 0.1% 25ppm                           5.0880   4.9698   5.2066   4.9562   5.2208  neither value certified at 0.1 percent
+56.2k/10.7k 0.1% 25ppm (C705784, C861078)      5.0019   4.8852   5.1189   4.8718   5.1329  both certified (board D's R80, R81)
+
+Board D window [4.90, 5.23] V: ratio 5.23/4.90 = 1.0673
+Band ratio of any 1 percent divider near 5 V (reference only, no TC, no IFB): 1.0765 > window: no 1 percent divider fits both ends
+1 percent divider ratio that keeps the maximum at 5.23 V without TC or IFB: Rt/Rb <= 5.30220
+
+CHOSEN 56.2k/10.7k 0.1%: nominal 5.0019 V, 4.8718 to 5.1329 V; margin to v_work 5.23 V 0.0971 V; codec after the 0.300 V budget at the minimum 4.5718 V, 0.2218 V over PCM2912A 4.35 V
+U23 OVLO pin (40.2k over 10k) in service: 0.970 to 1.022 V (0.5 to 2 V recommended, SLVSET8A 7.3)
+Ripple at 16.8 V in, 500 kHz, 6.8 uH: 1.033 A; peak at 2.0 A: 2.517 A (IHS_LIMIT 4.2 A minimum, p.6); L at -20 percent: 2.646 A
+U41 VBAT share at 1.0 A (declared typical), 0.90 (project efficiency), 14.4 V: 0.385947 A
