@@ -41,9 +41,51 @@ def _with_ports(letter, ports, why=None, internal=None):
     return lambda: open(p, "w", encoding="utf-8").write(original)
 
 
-def _run(p, cwd):
-    r = subprocess.run([sys.executable, os.path.join(TOOLS, "port_protect.py"), p], cwd=cwd,
-                       capture_output=True, text=True, timeout=120)
+REVIEWS = os.path.join(TOOLS, "pcb_port_reviews.json")
+REVIEW_DOC = "v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md"
+KEEP = object()
+
+
+def _reviewed_as_declared(letter, net_path):
+    """The reviewed record a fixture gets when it says nothing: exactly the pins it declares external, read from its
+    own netlist (28 September 2026, S-88 item B1). A fixture that tests the reviewed set passes its own record."""
+    t = json.loads(open(os.path.join(TOOLS, "boards", "%s.json" % letter), encoding="utf-8").read())
+    _bn, by_ref, _v = port_protect.netlist(net_path)
+    ext = {}
+    for e in t.get("external_ports") or []:
+        ref = e.get("ref") if isinstance(e, dict) else str(e)
+        want = [str(x) for x in ((e.get("pins") if isinstance(e, dict) else None) or [])]
+        for pin, net in sorted(by_ref.get(ref, ())):
+            if port_protect.carries_conductor(net) and (not want or pin in want): ext.setdefault(ref, {})[pin] = net
+    return {"review": REVIEW_DOC, "reviewed_on": "2026-09-28",
+            "why": "a fixture of the tests: the set is what the fixture declares external, read from its own netlist",
+            "external": ext, "changes": []}
+
+
+def _with_reviewed(letter, record):
+    """Set a board's reviewed record for the length of one run; None REMOVES it (a board nobody has reviewed)."""
+    original = open(REVIEWS, encoding="utf-8").read()
+    d = json.loads(original)
+    if record is None: d["boards"].pop(letter, None)
+    else: d["boards"][letter] = record
+    open(REVIEWS, "w", encoding="utf-8").write(json.dumps(d, indent=1, ensure_ascii=False) + "\n")
+    return lambda: open(REVIEWS, "w", encoding="utf-8").write(original)
+
+
+def _run(p, cwd, reviewed="as declared"):
+    """Run the tool on netlist `p`. `reviewed` is the board's reviewed record for this run: "as declared" (the
+    default, so a fixture about something else is not about the reviewed set), a record, None (no record), or KEEP
+    (the tree's own file untouched)."""
+    stem = os.path.basename(p).replace(".net", "")
+    letter = port_protect._bt.letter_for(stem + ".kicad_pcb") or "d"
+    restore = None
+    if reviewed is not KEEP:
+        restore = _with_reviewed(letter, _reviewed_as_declared(letter, p) if reviewed == "as declared" else reviewed)
+    try:
+        r = subprocess.run([sys.executable, os.path.join(TOOLS, "port_protect.py"), p], cwd=cwd,
+                           capture_output=True, text=True, timeout=120)
+    finally:
+        if restore: restore()
     return r.returncode, r.stdout + r.stderr
 
 
@@ -901,3 +943,210 @@ def t_a_connector_is_read_by_its_reference_and_never_by_its_library():
         assert bool(port_protect.CONNECTOR.match(ref)) == want, ref
     assert not port_protect.carries_conductor("GND_V") and not port_protect.carries_conductor("unconnected-(J1-Pad3)")
     assert port_protect.carries_conductor("VIN_RAW") and port_protect.carries_conductor("+3V3_E6")
+
+
+# ---------------------------------------------------------------------------------------------------------
+# THE REVIEWED SET (28 September 2026, the fresh check of stream d8dec31, item B1; open item S-88, finding H3-02 of the
+# independent review of handover H3). Open item S-88 asks that "moving or omitting a declared entry demands reconciliation
+# and never shrinks the coverage in silence". Three shapes of moving: onto ground pins (refused, FAIL, above), out of the
+# declaration (uncovered, INCONCLUSIVE, above), and from `external_ports` INTO `internal_ports` with a reason, which the
+# tool accepted in silence (board A's J_USBW moved that way read PASS of 38 instead of 42). The reviewed set closes the
+# third: the declaration's external pins must be exactly the pins a named review enumerated, pin by pin.
+
+_COMPS = {"J_X": "jack", "D9": "PESD5V0S1BA", "U1": "codec", "J_Y": "lead", "D8": "USBLC6-2SC6", "U2": "hub"}
+_NETS = {"SIG": [("J_X", "1"), ("D9", "2"), ("U1", "3")], "GND": [("J_X", "2"), ("D9", "1"), ("D8", "2"), ("J_Y", "4")],
+         "USB_P": [("J_Y", "3"), ("U2", "20"), ("D8", "1")], "USB_N": [("J_Y", "2"), ("U2", "21"), ("D8", "3")]}
+_EXT = [{"ref": "J_X", "why": "a jack on the face that a person plugs a lead into"},
+        {"ref": "J_Y", "why": "the wall USB port on the connector plate, a stranger's stick goes in"}]
+_INSIDE = "said to stay inside the case now, the port having moved to a lid harness"
+
+
+def _reviewed(ext, changes=(), review=REVIEW_DOC, why=None):
+    return {"review": review, "reviewed_on": "2026-09-28", "external": ext, "changes": list(changes),
+            "why": why if why is not None else "a fixture record: the pins a review enumerated from this fixture's netlist, for the test"}
+
+
+_REV_XY = {"J_X": {"1": "SIG"}, "J_Y": {"2": "USB_N", "3": "USB_P"}}
+
+
+def t_the_declaration_that_matches_its_reviewed_set_passes():
+    restore = _with_ports("d", _EXT)
+    try:
+        d = tempfile.mkdtemp(prefix="port-rev-ok-")
+        rc, out = _run(_net(d, _COMPS, _NETS), d, reviewed=_reviewed(_REV_XY))
+        assert rc == 0 and "holds 3 external pin(s) for board D, the declaration 3" in out, out[-900:]
+        v = _verdict_of(d)
+        assert v["counts"]["reviewed_pins"] == 3 and v["counts"]["declared_external_pins"] == 3 and \
+            v["counts"]["review_disagreements"] == 0, v["counts"]
+        assert v["inputs"]["port_reviews"]["sha256_16"], "the reviewed sets' file is not recorded as an input"
+    finally:
+        restore()
+
+
+def t_a_reviewed_entry_moved_into_internal_ports_is_inconclusive_by_name():
+    """THE THIRD SHAPE: J_Y leaves external_ports for internal_ports with a reason. Before: PASS of fewer pins, in
+    silence. Now: INCONCLUSIVE, naming J_Y.2 and J_Y.3 as RECLASSIFIED, until the reviewed set carries the change."""
+    restore = _with_ports("d", _EXT[:1], internal=[{"ref": "J_Y", "why": _INSIDE}])
+    try:
+        d = tempfile.mkdtemp(prefix="port-rev-moved-")
+        rc, out = _run(_net(d, _COMPS, _NETS), d, reviewed=_reviewed(_REV_XY))
+        assert rc == 3, "a reviewed external entry moved into internal_ports passed:\n%s" % out[-900:]
+        assert "RECLASSIFIED J_Y.2 on USB_N" in out and "RECLASSIFIED J_Y.3 on USB_P" in out, out[-900:]
+        v = _verdict_of(d)
+        assert v["verdict"] == "INCONCLUSIVE" and v["counts"]["review_disagreements"] == 2, v["counts"]
+        assert any("RECLASSIFIED J_Y.3" in e for e in v["evidence"]), v["evidence"]
+    finally:
+        restore()
+
+
+def t_the_reviewed_set_changed_with_its_reason_and_its_review_reconciles_the_move():
+    """The same move, reconciled: the reviewed set drops J_Y and records the change with a reason of forty characters
+    and the review it rests on. PASS. With the reason too short, or a review that is not in the tree, or the set still
+    holding the pin the change says left: INCONCLUSIVE, the record being no record."""
+    restore = _with_ports("d", _EXT[:1], internal=[{"ref": "J_Y", "why": _INSIDE}])
+    try:
+        ok = [{"entry": "J_Y.2", "was": "external", "now": "internal", "on": "2026-09-28", "review": REVIEW_DOC,
+               "why": "the wall USB port moved to the lid harness by a session choice, and the lead no longer leaves the case"},
+              {"entry": "J_Y.3", "was": "external", "now": "internal", "on": "2026-09-28", "review": REVIEW_DOC,
+               "why": "the wall USB port moved to the lid harness by a session choice, and the lead no longer leaves the case"}]
+        for changes, ext, want, word in (
+                (ok, {"J_X": {"1": "SIG"}}, 0, "3 external pin(s)"),
+                ([dict(ok[0], why="moved inside"), ok[1]], {"J_X": {"1": "SIG"}}, 3, "no reason of 40 characters"),
+                ([dict(ok[0], review="v2/docs/reviews/NO-SUCH-REVIEW.md"), ok[1]], {"J_X": {"1": "SIG"}}, 3, "which is not in this tree"),
+                (ok, _REV_XY, 3, "left the set and the set still holds it")):
+            d = tempfile.mkdtemp(prefix="port-rev-change-")
+            rc, out = _run(_net(d, _COMPS, _NETS), d, reviewed=_reviewed(ext, changes))
+            assert rc == want, (changes[0].get("why")[:20], changes[0].get("review"), rc, out[-900:])
+            if want == 0: assert "holds 1 external pin(s) for board D, the declaration 1; 2 change(s) recorded" in out, out[-900:]
+            else: assert word in out, (word, out[-900:])
+    finally:
+        restore()
+
+
+def t_a_reviewed_entry_left_out_of_the_declaration_is_named_twice():
+    """THE SECOND SHAPE, with the reviewed set: the entry is gone from both lists. UNCOVERED (the pin is in no entry)
+    and REVIEWED (the review holds it external), both by name."""
+    restore = _with_ports("d", _EXT[:1])
+    try:
+        d = tempfile.mkdtemp(prefix="port-rev-gone-")
+        rc, out = _run(_net(d, _COMPS, _NETS), d, reviewed=_reviewed(_REV_XY))
+        assert rc == 3 and "UNCOVERED J_Y.3 on USB_P" in out and "REVIEWED J_Y.3 on USB_P" in out, out[-900:]
+    finally:
+        restore()
+
+
+def t_a_reviewed_entry_on_ground_pins_is_refused_and_the_reviewed_pin_is_named():
+    """THE FIRST SHAPE, with the reviewed set: board A's J_DOCK. The entry lists two ground pins (FAIL, refused) and
+    the pin the review holds external, J_VR1.1, is in no entry: named as REVIEWED and as UNCOVERED."""
+    restore = _with_ports("d", [{"ref": "J_DOCK", "pins": ["1", "2"], "why": "shore and vehicle DC arriving over the dock"}])
+    try:
+        d = tempfile.mkdtemp(prefix="port-rev-ground-")
+        p = _net(d, {"J_DOCK": "spring pins", "J_VR1": "9 A spring pin, VIN_RAW", "D2": "SMCJ40A", "U2": "controller"},
+                 {"GND": [("J_DOCK", "1"), ("J_DOCK", "2"), ("U2", "9"), ("D2", "2")], "VIN_RAW": [("J_VR1", "1"), ("U2", "2"), ("D2", "1")]})
+        rc, out = _run(p, d, reviewed=_reviewed({"J_VR1": {"1": "VIN_RAW"}}))
+        assert rc == 1 and "J_DOCK.1 is on GND" in out and "UNCOVERED J_VR1.1 on VIN_RAW" in out, out[-900:]
+        assert "REVIEWED J_VR1.1 on VIN_RAW" in out and "no external entry covers it" in out, out[-900:]
+    finally:
+        restore()
+
+
+def t_a_declaration_narrowed_by_pins_is_inconclusive_for_the_pins_that_left():
+    """J_Y declared external on pin 3 only and internal on pin 2: the reviewed set holds both external."""
+    restore = _with_ports("d", [_EXT[0], dict(_EXT[1], pins=["3"])], internal=[{"ref": "J_Y", "pins": ["2"], "why": _INSIDE}])
+    try:
+        d = tempfile.mkdtemp(prefix="port-rev-narrow-")
+        rc, out = _run(_net(d, _COMPS, _NETS), d, reviewed=_reviewed(_REV_XY))
+        assert rc == 3 and "RECLASSIFIED J_Y.2 on USB_N" in out and "RECLASSIFIED J_Y.3" not in out, out[-900:]
+    finally:
+        restore()
+
+
+def t_a_reviewed_pin_that_moved_to_ground_is_inconclusive_even_with_its_entry_in_place():
+    """Board A's shape for an entry that lists no pins: the entry stays, the netlist moves the reviewed pin to
+    ground, and the entry silently covers less. The reviewed set names the pin."""
+    restore = _with_ports("d", _EXT)
+    try:
+        d = tempfile.mkdtemp(prefix="port-rev-toground-")
+        nets = dict(_NETS); nets["GND"] = nets["GND"] + [("J_Y", "3")]; nets["USB_P"] = [("U2", "20"), ("D8", "1")]
+        rc, out = _run(_net(d, _COMPS, nets), d, reviewed=_reviewed(_REV_XY))
+        assert rc == 3 and "REVIEWED J_Y.3 (was USB_P)" in out and "a ground or a no-connect" in out, out[-900:]
+    finally:
+        restore()
+
+
+def t_a_reviewed_connector_that_left_the_netlist_is_inconclusive():
+    """Renamed or removed: J_Y is J_Z on the new netlist and declared internal. Without the reviewed set the rename
+    would pass as a new internal lead; with it, J_Y.2 and J_Y.3 are named as not on this netlist."""
+    restore = _with_ports("d", _EXT[:1], internal=[{"ref": "J_Z", "why": _INSIDE}])
+    try:
+        d = tempfile.mkdtemp(prefix="port-rev-renamed-")
+        comps = dict(_COMPS); comps["J_Z"] = comps.pop("J_Y")
+        nets = {k: [(("J_Z" if r == "J_Y" else r), p) for r, p in v] for k, v in _NETS.items()}
+        rc, out = _run(_net(d, comps, nets), d, reviewed=_reviewed(_REV_XY))
+        assert rc == 3 and "REVIEWED J_Y.2 (was USB_N)" in out and "the connector is not on this netlist" in out, out[-900:]
+    finally:
+        restore()
+
+
+def t_a_declared_external_pin_no_review_holds_is_inconclusive():
+    """Growth is reconciled too: the declaration's external pins are EXACTLY the reviewed ones, so a new external
+    entry, one believed on its off_board text above all, waits for the review that judges it."""
+    restore = _with_ports("d", _EXT + [{"ref": "J_N", "off_board": "an arrestor in the wall", "why": "a new antenna conductor to the wall"}])
+    try:
+        d = tempfile.mkdtemp(prefix="port-rev-grew-")
+        comps = dict(_COMPS, J_N="SMA"); nets = dict(_NETS, RF=[("J_N", "1"), ("U2", "30")])
+        rc, out = _run(_net(d, comps, nets), d, reviewed=_reviewed(_REV_XY))
+        assert rc == 3 and "NOT REVIEWED J_N.1 on RF: declared off board and in no reviewed set" in out, out[-900:]
+    finally:
+        restore()
+
+
+def t_a_board_that_declares_external_ports_and_has_no_reviewed_set_is_inconclusive():
+    restore = _with_ports("d", _EXT)
+    try:
+        d = tempfile.mkdtemp(prefix="port-rev-none-")
+        rc, out = _run(_net(d, _COMPS, _NETS), d, reviewed=None)
+        assert rc == 3 and "NOT REVIEWED board D: it declares 2 external port(s) and no reviewed set holds them" in out, out[-900:]
+    finally:
+        restore()
+
+
+def t_a_declared_zero_while_the_review_holds_pins_is_not_a_pass():
+    """The largest reclassification: every external entry gone and the zero given its reason. Without the reviewed
+    set that reads PASS; with it, INCONCLUSIVE naming the pins."""
+    restore = _with_ports("d", [], why="every conductor of this board ends inside the sealed case, the reason written here")
+    try:
+        d = tempfile.mkdtemp(prefix="port-rev-zero-")
+        rc, out = _run(_net(d, _COMPS, _NETS), d, reviewed=_reviewed(_REV_XY))
+        assert rc == 3 and "REVIEWED J_X.1 on SIG" in out and _verdict_of(d)["verdict"] == "INCONCLUSIVE", out[-900:]
+        # and a declared zero with no record for the board is read as before
+        rc, out = _run(_net(d, _COMPS, _NETS), d, reviewed=None)
+        assert rc == 0, out[-600:]
+    finally:
+        restore()
+
+
+def t_a_reviewed_set_without_explicit_pins_or_without_its_review_is_no_record():
+    restore = _with_ports("d", _EXT)
+    try:
+        for rec, word in ((_reviewed({"J_X": {}, "J_Y": {"2": "USB_N", "3": "USB_P"}}), "with no explicit pins"),
+                          (_reviewed(_REV_XY, review="v2/docs/reviews/NO-SUCH-REVIEW.md"), "which is not in this tree"),
+                          (_reviewed(_REV_XY, why="reviewed"), "no reason of 40 characters")):
+            d = tempfile.mkdtemp(prefix="port-rev-shape-")
+            rc, out = _run(_net(d, _COMPS, _NETS), d, reviewed=rec)
+            assert rc == 3 and word in out, (word, out[-900:])
+    finally:
+        restore()
+
+
+def t_the_committed_reviewed_sets_are_explicit_and_rest_on_a_review_in_the_tree():
+    """The tree's own file: every record has the shape the tool demands, and the three boards of the review of
+    decision 31 hold the pins that review enumerated (22, 8 and 5 pins on 18, 4 and 3 connectors)."""
+    boards, problems = port_protect.reviews()
+    assert not problems, problems
+    for letter, rec in boards.items():
+        assert not port_protect._record_shape(letter, rec), port_protect._record_shape(letter, rec)
+    for letter, n_ref, n_pin in (("a", 18, 22), ("d", 4, 8), ("e", 3, 5)):
+        ext = boards[letter]["external"]
+        assert len(ext) == n_ref and sum(len(v) for v in ext.values()) == n_pin, (letter, len(ext), sum(len(v) for v in ext.values()))
+        assert boards[letter]["review"] == REVIEW_DOC and boards[letter]["netlist_sha256_16"]
