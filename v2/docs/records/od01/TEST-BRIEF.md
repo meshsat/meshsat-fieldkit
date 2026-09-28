@@ -9,7 +9,7 @@ case, dummy blocks and made plates, no board. Full procedures: `v2/docs/feasibil
 
 **A. Heat balance.**
 - Set-up: the case, the 1450PF frame on the four legs (C6), the blank plate H1 screwed on. The three 6.8 ohm heaters are
-  bolted with compound to the dummy stack plate H2 at the stack's place, on stand-offs; the pack block is in its pocket.
+  bolted with compound to the dummy stack plate H2 (330 x 200 x 3.0, matt black) at the stack's place, on stand-offs; the pack block is in its pocket.
 - Runs: 21, 42 and 64 W (12.0 V on one, two, three heaters), each held to steady state (3 h or more; the empty case's time
   constant is about 50 min, INFERRED), lid open and closed, fans off (on only if fans are fitted). Then the 2.2 ohm patch
   resistor bolted with compound to H1's four S-M3 nuts at the PA flange site: 45 and 83 W for 20, 30 and 60 s from a plate
@@ -39,7 +39,7 @@ soldering (have a heater's leads fitted by someone who solders if its tags need 
 
 - **Likely owned:** caliper (0.01 mm); feeler gauges (0.05 to 1.0 mm); a height gauge or depth rod on a flat plate; a bench
   supply of 15 V and 7 A with a current limit; multimeter; torque driver (6-32 and M4); chalk; a drill with hole saws of 29,
-  22 and 18 mm, drills of 8 and 4.5 mm and a step drill; deburring tool; phone camera; Kapton tape.
+  27, 22 and 18 mm, drills of 8, 5.0 and 4.5 mm and a step drill; deburring tool; phone camera; Kapton tape.
 - **To buy or borrow:** an 8-channel type K logger with cold-junction compensation, 0.1 K resolution and a CSV export (any
   make; `CHECKOUT-LIST.md` section 6); ten type K thermocouples with plugs to suit that logger; the heaters, compound and
   dummy blocks (`CHECKOUT-LIST.md`); 3M VHB 5952; ten 6-32 x 1/2 in pan-head screws; silicone wire of 0.75 mm2 or more
@@ -64,10 +64,11 @@ off** if a wall thermocouple reads 70 C, H1's edge over the frame's o-ring 70 C,
 thermocouple sits on one heater), the patch thermocouple 110 C, or on any smell or smoke. Check a powered, closed case at
 least hourly or set the logger's alarms at these limits. Drill the case clamped and empty; eye protection.
 
-**The lead exit, a proposal for the independent re-check to accept or change:** the procedure does not say how the leads
-leave the sealed case. Proposed: flat silicone wires under the lid gasket at one corner, photographed and noted. It bleeds
-some air, so it reads the conductance slightly HIGH (optimistic); the alternative is a sealed gland in the purge valve's
-port, which reads it right but alters the case.
+**The lead exit (accepted by the independent re-check):** the heated volume is the base under H1, sealed by the 1450PF
+frame's o-ring, so the leads pass as flat silicone wires between H1 and that o-ring, and under the lid gasket too when the
+lid is closed, each on a straight run of the seal, never where it turns a corner; photograph and note it. It reads the
+conductance high by well under 1 percent (the check's estimate). Do not replace Peli's purge valve with a gland: the valve
+stays in the design (appendix 32.53 item 1) and without it 35 K of heating raises the pressure by about 12 kPa.
 
 ## 6. The monitor and the logger
 

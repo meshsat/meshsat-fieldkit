@@ -6,7 +6,7 @@ checkout was used. Buying these parts closes no measurement gate; only the tests
 
 | File | What it is |
 |---|---|
-| `CHECKOUT-LIST.md` | The case variant confirmed from Peli's pages (the seller sells the 1450EU; Peli states the 1450PF is for the 1450EU) and the one list: eight priced lines from five sellers, each with its part number, page, price and VAT status, quantity, shipping to the Netherlands as stated, stock and the UTC moment read; totals EUR 418.29 excl. VAT and EUR 514.09 incl. (EUR 506.14 with the case at the Dutch rate), conversions labelled ESTIMATE; shipping as a separate line (EUR 11.17 known, three sellers not shown); the monitor and the logger deferred with the reason; the sources table |
+| `CHECKOUT-LIST.md` | The case variant confirmed from Peli's pages (the seller sells the 1450EU; Peli states the 1450PF is for the 1450EU) and the one list: seven priced lines from four sellers, each with its part number, page, price and VAT status, quantity, shipping to the Netherlands as stated, stock and the UTC moment read; totals EUR 416.40 excl. VAT and EUR 511.80 incl. (EUR 503.85 with the case at the Dutch rate), conversions labelled ESTIMATE; shipping as a separate line (EUR 30.26 known, two sellers not shown); the monitor and the logger deferred with the reason; the sources table |
 | `MACHINING-RFQ.md` | The request for quote for the made parts (H1 heat-test blank, C6 legs, C1 face plate, C4 entry plates, C3 connector plate, optional gaskets, dummy blocks, the QMX lid plate), the files to upload by path and sha256, what the quote must state, the two routes (JLCCNC upload, a local workshop). NOT SENT. The lid tray r2 is printed, not machined |
 | `TEST-BRIEF.md` | The operator's brief: the heat test first, then the mock-up's checks; what each decides and which board gate it lifts; the competence and equipment; the time; what is recorded and how the results reach the session; safety; the monitor and logger answer |
 
@@ -25,7 +25,7 @@ checkout was used. Buying these parts closes no measurement gate; only the tests
 - The jumper plug pick (M17g, M17x): until it is made check T10 cannot run and the T10 rows of boards B and E stay open.
 - The fan pick (the mixer fans' speed code; the cooler fans, D-18): until then the heat test runs fans off only.
 - The pack hold-down (S-27): it sets the dummy pack block's outline (H3) and lets T4 read M4a and M5 for boards A and P.
-- The heatsink pick: Kiwi's page gives SC1752 as 12.7 mm tall while M1's chain carries 21.0 mm; which cooler the kit
+- The heatsink pick: Raspberry Pi's own product brief gives SC1752 as 12.7 mm tall while M1's chain carries 21.0 mm (the line is removed from the list); which cooler the kit
   uses decides what T4 measures.
 - Prices not found in the time box: 3M VHB 5952 and 6-32 x 1/2 in pan-head screws (TBD by quote).
 - A drawing of H1 of its own would be cleaner than the layer instructions in the request (the case writer's, optional).
