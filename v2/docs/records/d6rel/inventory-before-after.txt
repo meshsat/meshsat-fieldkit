@@ -1,11 +1,11 @@
-THE INVENTORY OF REL-001 ON THE SET 6 ARTEFACTS, BEFORE AND AFTER (worker d6rel, MESHSAT-1357, 28 September 2026 00:26 CEST)
+THE INVENTORY OF REL-001 ON THE SET 6 ARTEFACTS, BEFORE AND AFTER (worker d6rel, MESHSAT-1357, taken 28 September 2026 16:46 CEST on the pinned list)
 Written by v2/docs/records/d6rel/measure_inventory.py (read only; the old list is git show 73ae2f21:v2/ecad/tools/pcb_reliability.yaml written to $SP/old/):
   python3 v2/docs/records/d6rel/measure_inventory.py v2/ecad/tools --old $SP/old
 No board has been built; these are readings of netlists and of board E5's board file.
 
 old list  : $SP/old/pcb_reliability.yaml sha16 fbf56eb06df1d007 (git show 73ae2f21:v2/ecad/tools/pcb_reliability.yaml)
-new list  : ecad/tools/pcb_reliability.yaml sha16 b83b335a0dc539ce
-tool      : reliability.py sha16 85bb2a8a05b78382, wear_inventory.py sha16 503a05eedb8a0a29
+new list  : ecad/tools/pcb_reliability.yaml sha16 f0912cb02741be21
+tool      : reliability.py sha16 a8d85b24b344e4dc, wear_inventory.py sha16 503a05eedb8a0a29
 
 == board A  netlist pcb-a-power-a23/out/pcb-a-power.net  sha16 0a2b59087bcc2678  612 part(s)
    candidates 82: by reference class 82, by a mechanical land 0, by an undeclared land 0, by no land 0, by the word net 0, undeclared class 0
@@ -520,4 +520,3 @@ tool      : reliability.py sha16 85bb2a8a05b78382, wear_inventory.py sha16 503a0
    P     26      7 /   19      9 /   17 /    0   INCONCLUSIVE
    set  427    111 /  316    185 /  242 /    0
    the old TOOL's own reading of the same netlists (its population the twelve words): 111 covered, 0 refused (v2/docs/records/r8int6/fix/wear-before-after.txt, 27 September 2026)
-exit: 0

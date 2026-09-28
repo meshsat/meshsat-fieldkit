@@ -58,8 +58,27 @@ def _tree(comps, stem="pcb-x-test", letter="x", phase=None, text=None, no_chain=
     return d
 
 
-def _judge(d, sheet, letter="x", vendor=True):
-    p = os.path.join(d, "rel.yaml"); open(p, "w", encoding="utf-8").write(sheet)
+def _pin(d, sheet, letters=("x", "a", "y", "q")):
+    """The fixture list bound to the fixture artefact it is judged against (`written_against`, 28 September 2026),
+    the way the committed list is bound to the committed netlists: for every board key the sheet declares whose
+    declared phase's artefact exists in the fixture, its sha256 goes under the key. A sheet that already carries a
+    pin is left as written (the mismatch tests write their own)."""
+    if "written_against" in sheet: return sheet
+    import wear_inventory as WI
+    with WI.declared(os.path.join(d, "manifest.json"), os.path.join(d, "profiles")):
+        for L in letters:
+            key = " %s:\n" % L
+            if key not in sheet: continue
+            kind, path = WI.artefact(L, os.path.join(d, "ecad"))
+            if not path or not os.path.isfile(path): continue
+            try: _parts, raw = WI.read(kind, path)
+            except WI.Unreadable: continue
+            sheet = sheet.replace(key, key + '   written_against: {sha256_16: "%s"}\n' % hashlib.sha256(raw).hexdigest()[:16], 1)
+    return sheet
+
+
+def _judge(d, sheet, letter="x", vendor=True, pin=True):
+    p = os.path.join(d, "rel.yaml"); open(p, "w", encoding="utf-8").write(_pin(d, sheet) if pin else sheet)
     return REL.judge(p, os.path.join(d, "ecad"), letter, vendor=os.path.join(d, "vendor") if vendor else os.path.join(d, "none"),
                      manifest=os.path.join(d, "manifest.json"), profiles=os.path.join(d, "profiles"))
 
@@ -70,7 +89,7 @@ def _run(sheet, comps, **kw):
 
 def _cli(d, sheet, letter="x", extra=()):
     """The command line, in process: (exit code, the verdict it wrote). The verdict goes to the fixture."""
-    p = os.path.join(d, "rel.yaml"); open(p, "w", encoding="utf-8").write(sheet)
+    p = os.path.join(d, "rel.yaml"); open(p, "w", encoding="utf-8").write(_pin(d, sheet))
     out = os.path.join(d, "verdicts")
     rc = REL.main(["--rel", p, "--ecad", os.path.join(d, "ecad"), "--board", letter, "--vendor", os.path.join(d, "vendor"),
                    "--manifest", os.path.join(d, "manifest.json"), "--profiles", os.path.join(d, "profiles"),
@@ -564,6 +583,101 @@ def t_the_reading_records_what_it_read_by_sha():
     assert c["per_board"] == {"x": {"result": "PASS", "candidates": 2, "classed": 1, "excluded": 1, "refused": 0}}, c
 
 
+def _content16(raw):
+    import regen_compare
+    return regen_compare.content_hash(raw.decode("utf-8"))
+
+
+def t_a_declaration_written_against_another_netlist_is_inconclusive_and_says_whether_the_design_moved():
+    """THE SHA MISMATCH (item 2 of stream d6rel's task). The list says which netlist its classes were written
+    against. Re-exported with a new export header, the same design has another sha and the reading is INCONCLUSIVE
+    saying so; with a connector added, the design changed, the reading says that too, and the refusal of the new
+    connector is still made on the netlist that is there, so FAIL wins over INCONCLUSIVE. Never PASS."""
+    d = _tree({"J_RF1": "SMA jack"})
+    net = os.path.join(d, "ecad", "pcb-x-test", "out", "pcb-x-test.net")
+    raw = open(net, "rb").read()
+    pinned = GOOD.replace(" x:\n", ' x:\n   written_against: {sha256_16: "%s", content16: "%s"}\n'
+                          % (hashlib.sha256(raw).hexdigest()[:16], _content16(raw)))
+    assert pinned != GOOD
+    r = _judge(d, pinned)["x"]
+    assert r["result"] == "PASS" and r["pin"]["bound"] is True and r["pin"]["same_design"] is True, r["pin"]
+    # the same design exported again: the export header is noise to the content identity, not to the sha
+    again = raw.decode("utf-8").replace('(export (version "E")', '(export (version "E")\n  (design\n    (source "again")\n'
+                                        '    (date "2026-09-28T16:00:00+0000")\n    (tool "fixture"))', 1).encode("utf-8")
+    assert again != raw and _content16(again) == _content16(raw), "the fixture's re-export must keep the content identity"
+    open(net, "wb").write(again)
+    r2 = _judge(d, pinned)["x"]
+    assert r2["result"] == "INCONCLUSIVE" and not r2["fails"], r2
+    assert r2["pin"]["bound"] is False and r2["pin"]["same_design"] is True, r2["pin"]
+    assert "written against" in r2["missing_input"] and "re-export of the same design" in r2["missing_input"], r2["missing_input"]
+    assert r2["netlist"] is True and r2["candidates"] == 1 and r2["covered"] == 1, "the comparison of what is there still ran: %r" % r2
+    rc, v = _cli(d, pinned)
+    assert rc == 3 and v["verdict"] == "INCONCLUSIVE" and "re-export of the same design" in v["missing_input"], (rc, v)
+    assert v["inputs"]["netlist"]["sha256_16"] == hashlib.sha256(again).hexdigest()[:16], v["inputs"]
+    # a changed design: the connector nobody declared is refused on the netlist that is there, and the pin says why
+    open(net, "w", encoding="utf-8").write(_net({"J_RF1": "SMA jack", "J_NEW1": "a jack nobody declared"}))
+    r3 = _judge(d, pinned)["x"]
+    assert r3["result"] == "FAIL" and any("J_NEW1" in f for f in r3["fails"]), r3
+    assert r3["pin"]["same_design"] is False and "the design changed" in r3["missing_input"], (r3["pin"], r3["missing_input"])
+    rc3, v3 = _cli(d, pinned)
+    assert rc3 == 1 and v3["verdict"] == "FAIL" and v3["missing_input"] is None, "a FAIL is a judgement of what is there: %r" % (rc3, v3["missing_input"])
+    # a pin without the content identity still binds by sha, and a board file has no content identity to compare
+    r4 = _judge(d, GOOD.replace(" x:\n", ' x:\n   written_against: {sha256_16: "%s"}\n' % hashlib.sha256(raw).hexdigest()[:16]))["x"]
+    assert r4["pin"]["bound"] is False and r4["pin"]["same_design"] is None, r4["pin"]
+    assert "carries no content identity" in r4["missing_input"] and "re-pin" in r4["missing_input"], r4["missing_input"]
+
+
+def t_a_declaration_with_no_pin_is_inconclusive_and_never_pass():
+    d = _tree({"J_RF1": "SMA jack"})
+    r = _judge(d, GOOD, pin=False)["x"]
+    assert not r["fails"] and r["result"] == "INCONCLUSIVE", r
+    assert r["pin"] == {"declared": None, "read": r["artefact"]["sha256_16"], "bound": False, "same_design": None}, r["pin"]
+    assert "does not say which netlist it was written against" in r["missing_input"], r["missing_input"]
+    for bad in ('written_against: {sha256_16: "not a sha"}', 'written_against: {sha256_16: ""}', "written_against: 12"):
+        r2 = _judge(d, GOOD.replace(" x:\n", " x:\n   %s\n" % bad), pin=False)["x"]
+        assert r2["result"] == "INCONCLUSIVE" and "does not say which" in r2["missing_input"], (bad, r2["missing_input"])
+    # and the same pin-less list on the command line declares its input missing
+    p = os.path.join(d, "rel.yaml"); open(p, "w", encoding="utf-8").write(GOOD)
+    out = os.path.join(d, "verdicts")
+    rc = REL.main(["--rel", p, "--ecad", os.path.join(d, "ecad"), "--board", "x", "--vendor", os.path.join(d, "vendor"),
+                   "--manifest", os.path.join(d, "manifest.json"), "--profiles", os.path.join(d, "profiles"), "--out-dir", out])
+    v = json.load(open(os.path.join(out, "reliability.verdict.json")))
+    assert rc == 3 and v["verdict"] == "INCONCLUSIVE" and "written against" in v["missing_input"], (rc, v["missing_input"])
+
+
+def t_pins_prints_every_boards_line_from_the_declared_phase_and_edits_nothing():
+    import io, contextlib
+    d = _tree({"J_RF1": "SMA jack"})
+    m = json.load(open(os.path.join(d, "manifest.json")))
+    m["boards"]["y"] = {"project": "pcb-y-test", "required": True}
+    m["boards"]["e"] = {"project": "pcb-e-test", "required": True, "no_chain": True}
+    json.dump(m, open(os.path.join(d, "manifest.json"), "w"))
+    os.makedirs(os.path.join(d, "ecad", "pcb-e-test"))
+    board = os.path.join(d, "ecad", "pcb-e-test", "pcb-e-test.kicad_pcb")
+    open(board, "w", encoding="utf-8").write('(kicad_pcb (version 20241229)\n  (footprint "PogoTargets_2x6" (layer "F.Cu")\n'
+                                             '    (property "Reference" "J_T1")\n    (property "Value" "targets")\n'
+                                             '    (pad "1" smd rect (at 0 0) (size 1 1) (layers "F.Cu"))\n  )\n)\n')
+    p = os.path.join(d, "rel.yaml"); open(p, "w", encoding="utf-8").write(GOOD)
+    before = open(p, "rb").read()
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        rc = REL.main(["--pins", "--rel", p, "--ecad", os.path.join(d, "ecad"), "--manifest", os.path.join(d, "manifest.json"),
+                       "--profiles", os.path.join(d, "profiles"), "--out-dir", os.path.join(d, "verdicts")])
+    text = buf.getvalue()
+    assert rc == 0 and open(p, "rb").read() == before, "--pins edited the list"
+    assert not os.path.exists(os.path.join(d, "verdicts")), "--pins wrote a verdict"
+    net = os.path.join(d, "ecad", "pcb-x-test", "out", "pcb-x-test.net")
+    raw = open(net, "rb").read()
+    assert (' x:\n   written_against: {artefact: netlist, path: "%s", sha256_16: "%s", content16: "%s"}' % (net, hashlib.sha256(raw).hexdigest()[:16], _content16(raw))) in text, text
+    assert ' y:   # no netlist of the declared phase in this tree' in text, text
+    assert (' e:\n   written_against: {artefact: board_file, path: "%s", sha256_16: "%s"}' % (board, hashlib.sha256(open(board, "rb").read()).hexdigest()[:16])) in text, text
+    assert "read the values against the list before pasting" in text, text
+    # what it prints is what the gate then accepts as bound
+    x_line = [l for l in text.split("\n") if "artefact: netlist" in l][0].split("   #")[0].strip()
+    r = _judge(d, GOOD.replace(" x:\n", " x:\n   %s\n" % x_line), pin=False)["x"]
+    assert r["result"] == "PASS" and r["pin"]["bound"] is True, r
+
+
 def t_a_board_with_no_schematic_is_read_from_its_board_file():
     """Board E5 has no schematic and no netlist by design (the manifest's no_chain): its board file is its design,
     and its contact targets are mated at every dock. The inventory is read from the board file's footprints with
@@ -590,7 +704,7 @@ def t_the_set_reading_is_the_worst_of_its_boards_and_names_each_artefact():
     json.dump(m, open(os.path.join(d, "manifest.json"), "w"))
     sheet = GOOD + " y:\n   classes:\n" + ('    - {name: "the jacks", refs: ["J_RF*"], cycles: 500, %s, load: "a wrench", '
                                             'measure: "the case wall takes it"}\n' % SRC)
-    p = os.path.join(d, "rel.yaml"); open(p, "w", encoding="utf-8").write(sheet)
+    p = os.path.join(d, "rel.yaml"); open(p, "w", encoding="utf-8").write(_pin(d, sheet))     # x pinned; y has no netlist yet
     out = os.path.join(d, "verdicts")
     argv = ["--rel", p, "--ecad", os.path.join(d, "ecad"), "--vendor", os.path.join(d, "vendor"),
             "--manifest", os.path.join(d, "manifest.json"), "--profiles", os.path.join(d, "profiles"), "--out-dir", out]
@@ -601,6 +715,7 @@ def t_the_set_reading_is_the_worst_of_its_boards_and_names_each_artefact():
     assert v["counts"]["per_board"]["x"]["result"] == "PASS" and v["counts"]["per_board"]["y"]["result"] == "INCONCLUSIVE", v["counts"]
     os.makedirs(os.path.join(d, "ecad", "pcb-y-test", "out"))
     open(os.path.join(d, "ecad", "pcb-y-test", "out", "pcb-y-test.net"), "w").write(_net({"J_RF1": "SMA jack", "J_X1": "unknown"}))
+    open(p, "w", encoding="utf-8").write(_pin(d, sheet))                                        # both boards pinned now
     rc = REL.main(argv)
     v = json.load(open(os.path.join(out, "reliability.verdict.json")))
     assert rc == 1 and v["verdict"] == "FAIL" and v["missing_input"] is None, (rc, v)
@@ -639,6 +754,13 @@ def t_the_committed_list_disposes_every_candidate_of_every_board():
         for c in b["classes"]:
             assert c.get("footprints"), "board %s class %s does not name the land it speaks of" % (letter, c.get("name"))
             assert c.get("count_expected") is not None, "board %s class %s declares no count" % (letter, c.get("name"))
+        # ...and every declaration is bound to the artefact it was written against, which is the one in this tree
+        pin = b.get("written_against")
+        assert isinstance(pin, dict) and pin.get("sha256_16") == r[letter]["artefact"]["sha256_16"], (letter, pin, r[letter]["artefact"])
+        assert r[letter]["pin"]["bound"] is True, (letter, r[letter]["pin"])
+        if r[letter]["artefact_kind"] == "netlist":
+            assert pin.get("content16") == r[letter]["artefact"].get("content16"), (letter, pin)
+            assert r[letter]["pin"]["same_design"] is True, (letter, r[letter]["pin"])
     assert sum(v["covered"] for v in r.values()) >= 100, r
 
 

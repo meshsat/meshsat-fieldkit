@@ -14,6 +14,11 @@
 #   boards       per board, the CLASSES (each with the lands it speaks of, its cycle figure or the reason it has
 #                none, its load and its measure) and the EXCLUSIONS (each with its reason and its lands).
 #                Every candidate falls in exactly one class or under exactly one exclusion, or the gate refuses.
+#                Each board's declaration is BOUND to the artefact its author read (`written_against`: the
+#                declared phase's netlist, or board E5's board file, by sha256 and for a netlist by its content
+#                identity). The gate cannot read a part off the value text, so a netlist of another sha is not the
+#                one this list speaks of and reads INCONCLUSIVE until a person re-reads the values and re-pins
+#                (`reliability.py --pins` prints the lines; it never writes them).
 #
 # THE FIGURES ARE THE MAKERS' RATINGS OF THE PARTS, each cited to the document held under v2/vendor/ by its
 # sha256, its page and its words. They are not a claim about the kit: no service life, duty cycle or mating-cycle
@@ -157,6 +162,7 @@ open_items:
 boards:
 
  a:
+   written_against: {artefact: netlist, path: "pcb-a-power-a23/out/pcb-a-power.net", sha256_16: "0a2b59087bcc2678", content16: "d464d30a17fb30f7"}
    classes:
     - name: "SMA jacks for the device pigtails"
       refs: ["J_RF*"]
@@ -309,6 +315,7 @@ boards:
       reason: "a test point: a bare pad touched by a probe at the bench, nothing is mated and nothing hangs on it"
 
  b:
+   written_against: {artefact: netlist, path: "pcb-b-compute-b19/out/pcb-b-compute.net", sha256_16: "028997a6c5e8810f", content16: "b9dbb9c4a430d108"}
    classes:
     - name: "CM5 module receptacles"
       refs: ["U30A", "U30B", "U31A", "U31B", "U32A", "U32B"]
@@ -507,6 +514,7 @@ boards:
         the class of lead headers mated in service"
 
  c:
+   written_against: {artefact: netlist, path: "pcb-c-display-c8/out/pcb-c-display.net", sha256_16: "3fddbb3edcd4248a", content16: "ebde053efc0a3906"}
    classes:
     - name: "the panel ribbon header"
       refs: ["J_PANEL"]
@@ -648,6 +656,7 @@ boards:
         is mated"
 
  d:
+   written_against: {artefact: netlist, path: "pcb-d-aprs-d9/out/pcb-d-aprs.net", sha256_16: "7a2c0ac2190b141a", content16: "be4194ed867c8406"}
    classes:
     - name: "SMA jacks"
       refs: ["J_ANT", "J_PAOUT"]
@@ -753,6 +762,7 @@ boards:
         is mated"
 
  e:
+   written_against: {artefact: netlist, path: "pcb-e1-dock-e7/out/pcb-e1-dock.net", sha256_16: "56adc9746d61c4e0", content16: "dc06b84a39724641"}
    classes:
     - name: "the pack lead connector"
       refs: ["J_BATT"]
@@ -845,6 +855,7 @@ boards:
         is mated"
 
  p:
+   written_against: {artefact: netlist, path: "pcb-p-pack-p2/out/pcb-p-pack.net", sha256_16: "760ac6f74d62d194", content16: "efe60479293f0004"}
    classes:
     - name: "the pack fuse holder"
       refs: ["F1"]
@@ -921,6 +932,7 @@ boards:
  # BOARD E5 HAS NO SCHEMATIC AND NO NETLIST (the manifest's no_chain): its board file is its design, and the
  # inventory is read from the board file's footprints. It is the board every dock mate lands on.
  e5:
+   written_against: {artefact: board_file, path: "pcb-e5-block/pcb-e5-block.kicad_pcb", sha256_16: "686b29a734c55b9a"}
    classes:
     - name: "power pin targets"
       refs: ["T_CN?", "T_CP?", "T_PRE"]

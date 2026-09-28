@@ -1,19 +1,19 @@
-THE FOUR-CASE MATRIX ON THE REPAIRED TOOL (worker d6rel, MESHSAT-1357, taken 28 September 2026 00:25 CEST)
-The tool is v2/ecad/tools/reliability.py of this branch; case 4's list is v2/ecad/tools/pcb_reliability.yaml beside it. Command, from the worktree root:
+THE FOUR-CASE MATRIX ON THE REPAIRED TOOL (worker d6rel, MESHSAT-1357, taken 28 September 2026 16:46 CEST; the pinned list, the second take after the sha binding of item 2)
+The tool is v2/ecad/tools/reliability.py of this branch; case 4's list is v2/ecad/tools/pcb_reliability.yaml beside it, whose board A declaration now carries written_against. Command, from the worktree root:
   python3 v2/docs/records/d6rel/matrix.py v2/ecad/tools v2/ecad/tools/reliability.py
-Exit code of the matrix script: 0 (the four cases read PASS, FAIL, FAIL, INCONCLUSIVE, as the review asks).
+Exit code of the matrix script: 0 (the four cases read PASS, FAIL, FAIL, INCONCLUSIVE, as the review asks). The fixture sheets of cases 1 to 3 are pinned to the fixture netlist's sha by matrix.py.
 Nothing was built or measured: these are readings of fixture netlists.
 
-tool under test : <worktree>/v2/ecad/tools/reliability.py  sha256/16 85bb2a8a05b78382
+tool under test : <worktree>/v2/ecad/tools/reliability.py  sha256/16 a8d85b24b344e4dc
 tools directory : <worktree>/v2/ecad/tools
-case 4's list   : <worktree>/v2/ecad/tools/pcb_reliability.yaml  sha256/16 b83b335a0dc539ce
+case 4's list   : <worktree>/v2/ecad/tools/pcb_reliability.yaml  sha256/16 f0912cb02741be21
 fixtures in     : a temporary directory outside the tree (mkdtemp prefix d6rel-matrix-)
 
 == case 1-one-declared-jst: one declared JST connector
    wanted PASS (exit 0); the tool says PASS (exit 0): as wanted
    counts {"boards": 1, "candidates": 1, "classed": 1, "classes": 1, "covered": 1, "excluded": 0, "exclusions": 0, "fail": 0, "figures_cited": 1, "figures_none_published": 0, "figures_not_mated": 0, "figures_owed": 0, "inconclusive": 0, "measures_owed": 0, "per_board": {"a": {"candidates": 1, "classed": 1, "excluded": 0, "refused": 0, "result": "PASS"}}, "refused": 0}  denominator 1  missing_input None
-   inputs recorded: {"board": "a", "list": {"path": "<fixtures>/1-one-declared-jst/list.yaml", "sha256": "fa012ad00726698c910aff0bb044d95c1c7d868a32257b53a282dff16e3cb191", "sha256_16": "fa012ad00726698c"}, "netlist": {"content16": "8649156fa63ebb2d", "parts": 1, "path": "<fixtures>/1-one-declared-jst/ecad/pcb-a-power/out/pcb-a-power.net", "sha256": "ed25c2105c339c38025ded5885383f2ff5ab3f65eb9107b3ffeb133e27418620", "sha256_16": "ed25c2105c339c38"}}
-   | reliability: the list <fixtures>/1-one-declared-jst/list.yaml sha256 fa012ad00726698c910aff0bb044d95c1c7d868a32257b53a282dff16e3cb191
+   inputs recorded: {"board": "a", "list": {"path": "<fixtures>/1-one-declared-jst/list.yaml", "sha256": "d7e72f12592c2343ff26dc04e17b6c6fe8a9245a16ebd84a92914d6a3de0b3d9", "sha256_16": "d7e72f12592c2343"}, "netlist": {"content16": "8649156fa63ebb2d", "parts": 1, "path": "<fixtures>/1-one-declared-jst/ecad/pcb-a-power/out/pcb-a-power.net", "sha256": "ed25c2105c339c38025ded5885383f2ff5ab3f65eb9107b3ffeb133e27418620", "sha256_16": "ed25c2105c339c38"}}
+   | reliability: the list <fixtures>/1-one-declared-jst/list.yaml sha256 d7e72f12592c2343ff26dc04e17b6c6fe8a9245a16ebd84a92914d6a3de0b3d9
    | reliability: A   PASS         netlist <fixtures>/1-one-declared-jst/ecad/pcb-a-power/out/pcb-a-power.net sha256 ed25c2105c339c38025ded5885383f2ff5ab3f65eb9107b3ffeb133e27418620, 1 part(s)
    |              1 candidate(s): 1 classed in 1 class(es), 0 excluded by 0 exclusion(s), 0 refused; figures: 1 cited, 0 none published, 0 not mated, 0 owed; measures owed: 0
    | verdict: reliability            PASS         of 1 {"boards": 1, "candidates": 1, "classed": 1, "classes": 1, "covered": 1, "excluded": 0, "exclusions": 0, "fail": 0, "figures_cited": 1, "figures_none_published": 0, "figures_not_mated": 0, "figures_owed": 0, "inconclusive": 0, "measures_owed": 0, "per_board": {"a": {"candidates": 1, "classed": 1, "excluded": 0, "refused": 0, "result": "PASS"}}, "refused": 0} | every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the measure taken, or under one declared exclusion with its reason. A desk reading of a netlist and a list: it tests nothing and replaces no physical verification; REL-001 is verified at the prototype and no board has been built
@@ -21,8 +21,8 @@ fixtures in     : a temporary directory outside the tree (mkdtemp prefix d6rel-m
 == case 2-plus-undeclared-idc: plus an undeclared IDC header
    wanted FAIL (exit 1); the tool says FAIL (exit 1): as wanted
    counts {"boards": 1, "candidates": 2, "classed": 1, "classes": 1, "covered": 1, "excluded": 0, "exclusions": 0, "fail": 1, "figures_cited": 1, "figures_none_published": 0, "figures_not_mated": 0, "figures_owed": 0, "inconclusive": 0, "measures_owed": 0, "per_board": {"a": {"candidates": 2, "classed": 1, "excluded": 0, "refused": 1, "result": "FAIL"}}, "refused": 1}  denominator 2  missing_input None
-   inputs recorded: {"board": "a", "list": {"path": "<fixtures>/2-plus-undeclared-idc/list.yaml", "sha256": "fa012ad00726698c910aff0bb044d95c1c7d868a32257b53a282dff16e3cb191", "sha256_16": "fa012ad00726698c"}, "netlist": {"content16": "4526a971764f5144", "parts": 2, "path": "<fixtures>/2-plus-undeclared-idc/ecad/pcb-a-power/out/pcb-a-power.net", "sha256": "9e47827f307ef37d0300847ba0ae3debd658bc3a1300bb12ad5f0b8844d668ff", "sha256_16": "9e47827f307ef37d"}}
-   | reliability: the list <fixtures>/2-plus-undeclared-idc/list.yaml sha256 fa012ad00726698c910aff0bb044d95c1c7d868a32257b53a282dff16e3cb191
+   inputs recorded: {"board": "a", "list": {"path": "<fixtures>/2-plus-undeclared-idc/list.yaml", "sha256": "3c683a36c35b485b6e2d50c0228198a405f1a53a9018a77a37b525715d1cedb0", "sha256_16": "3c683a36c35b485b"}, "netlist": {"content16": "4526a971764f5144", "parts": 2, "path": "<fixtures>/2-plus-undeclared-idc/ecad/pcb-a-power/out/pcb-a-power.net", "sha256": "9e47827f307ef37d0300847ba0ae3debd658bc3a1300bb12ad5f0b8844d668ff", "sha256_16": "9e47827f307ef37d"}}
+   | reliability: the list <fixtures>/2-plus-undeclared-idc/list.yaml sha256 3c683a36c35b485b6e2d50c0228198a405f1a53a9018a77a37b525715d1cedb0
    | reliability: A   FAIL         netlist <fixtures>/2-plus-undeclared-idc/ecad/pcb-a-power/out/pcb-a-power.net sha256 9e47827f307ef37d0300847ba0ae3debd658bc3a1300bb12ad5f0b8844d668ff, 2 part(s)
    |              2 candidate(s): 1 classed in 1 class(es), 0 excluded by 0 exclusion(s), 1 refused; figures: 1 cited, 0 none published, 0 not mated, 0 owed; measures owed: 0
    |   FAIL A: J_RIB1 (fixture ribbon (IDC 2x5)) carries load or sees cycling and is in no declared class and under no declared exclusion: reference class J (a connector)
@@ -31,8 +31,8 @@ fixtures in     : a temporary directory outside the tree (mkdtemp prefix d6rel-m
 == case 3-plus-undeclared-rj45: plus an undeclared "RJ45 MagJack"
    wanted FAIL (exit 1); the tool says FAIL (exit 1): as wanted
    counts {"boards": 1, "candidates": 2, "classed": 1, "classes": 1, "covered": 1, "excluded": 0, "exclusions": 0, "fail": 1, "figures_cited": 1, "figures_none_published": 0, "figures_not_mated": 0, "figures_owed": 0, "inconclusive": 0, "measures_owed": 0, "per_board": {"a": {"candidates": 2, "classed": 1, "excluded": 0, "refused": 1, "result": "FAIL"}}, "refused": 1}  denominator 2  missing_input None
-   inputs recorded: {"board": "a", "list": {"path": "<fixtures>/3-plus-undeclared-rj45/list.yaml", "sha256": "fa012ad00726698c910aff0bb044d95c1c7d868a32257b53a282dff16e3cb191", "sha256_16": "fa012ad00726698c"}, "netlist": {"content16": "5f0494a7619fc4c8", "parts": 2, "path": "<fixtures>/3-plus-undeclared-rj45/ecad/pcb-a-power/out/pcb-a-power.net", "sha256": "575299cd4ce2143e1e8d23801211aeb9fc864f85c959b36fb3f32373ca90dea7", "sha256_16": "575299cd4ce2143e"}}
-   | reliability: the list <fixtures>/3-plus-undeclared-rj45/list.yaml sha256 fa012ad00726698c910aff0bb044d95c1c7d868a32257b53a282dff16e3cb191
+   inputs recorded: {"board": "a", "list": {"path": "<fixtures>/3-plus-undeclared-rj45/list.yaml", "sha256": "646353cb9f3a5f9015ae1bc24134da42b675c20ddac818d62b5b9163aef51b30", "sha256_16": "646353cb9f3a5f90"}, "netlist": {"content16": "5f0494a7619fc4c8", "parts": 2, "path": "<fixtures>/3-plus-undeclared-rj45/ecad/pcb-a-power/out/pcb-a-power.net", "sha256": "575299cd4ce2143e1e8d23801211aeb9fc864f85c959b36fb3f32373ca90dea7", "sha256_16": "575299cd4ce2143e"}}
+   | reliability: the list <fixtures>/3-plus-undeclared-rj45/list.yaml sha256 646353cb9f3a5f9015ae1bc24134da42b675c20ddac818d62b5b9163aef51b30
    | reliability: A   FAIL         netlist <fixtures>/3-plus-undeclared-rj45/ecad/pcb-a-power/out/pcb-a-power.net sha256 575299cd4ce2143e1e8d23801211aeb9fc864f85c959b36fb3f32373ca90dea7, 2 part(s)
    |              2 candidate(s): 1 classed in 1 class(es), 0 excluded by 0 exclusion(s), 1 refused; figures: 1 cited, 0 none published, 0 not mated, 0 owed; measures owed: 0
    |   FAIL A: J_ETH (RJ45 MagJack) carries load or sees cycling and is in no declared class and under no declared exclusion: reference class J (a connector)
@@ -40,9 +40,9 @@ fixtures in     : a temporary directory outside the tree (mkdtemp prefix d6rel-m
 
 == case 4-board-a-no-netlist: board A's declaration and no netlist
    wanted INCONCLUSIVE (exit 3); the tool says INCONCLUSIVE (exit 3): as wanted
-   counts {"boards": 1, "candidates": 0, "classed": 0, "classes": 11, "covered": 0, "excluded": 0, "exclusions": 1, "fail": 0, "figures_cited": 5, "figures_none_published": 4, "figures_not_mated": 0, "figures_owed": 2, "inconclusive": 3, "measures_owed": 0, "per_board": {"a": {"candidates": 0, "classed": 0, "excluded": 0, "refused": 0, "result": "INCONCLUSIVE"}}, "refused": 0}  denominator 0  missing_input 'board A has no netlist of its declared phase in this tree (/tmp/d6rel-matrix-xnbdkcgm/4-board-a-no-netlist/ecad/pcb-a-power/out/pcb-a-power.net)'
-   inputs recorded: {"board": "a", "list": {"path": "<fixtures>/4-board-a-no-netlist/list.yaml", "sha256": "b83b335a0dc539ce931c98eec187bbbcd8a3bf66d0e5b65b78acea4522d431ae", "sha256_16": "b83b335a0dc539ce"}}
-   | reliability: the list <fixtures>/4-board-a-no-netlist/list.yaml sha256 b83b335a0dc539ce931c98eec187bbbcd8a3bf66d0e5b65b78acea4522d431ae
+   counts {"boards": 1, "candidates": 0, "classed": 0, "classes": 11, "covered": 0, "excluded": 0, "exclusions": 1, "fail": 0, "figures_cited": 5, "figures_none_published": 4, "figures_not_mated": 0, "figures_owed": 2, "inconclusive": 3, "measures_owed": 0, "per_board": {"a": {"candidates": 0, "classed": 0, "excluded": 0, "refused": 0, "result": "INCONCLUSIVE"}}, "refused": 0}  denominator 0  missing_input 'board A has no netlist of its declared phase in this tree (/tmp/d6rel-matrix-jfjowt63/4-board-a-no-netlist/ecad/pcb-a-power/out/pcb-a-power.net)'
+   inputs recorded: {"board": "a", "list": {"path": "<fixtures>/4-board-a-no-netlist/list.yaml", "sha256": "f0912cb02741be2134aa6649d4a75dc43e60726d86d7189e047dc7ea42e0b363", "sha256_16": "f0912cb02741be21"}}
+   | reliability: the list <fixtures>/4-board-a-no-netlist/list.yaml sha256 f0912cb02741be2134aa6649d4a75dc43e60726d86d7189e047dc7ea42e0b363
    | reliability: A   INCONCLUSIVE no artefact read
    |   note board A has no netlist of its declared phase in this tree (<fixtures>/4-board-a-no-netlist/ecad/pcb-a-power/out/pcb-a-power.net), so the list could not be compared with the board
    |   INCONCLUSIVE board A has no netlist of its declared phase in this tree (<fixtures>/4-board-a-no-netlist/ecad/pcb-a-power/out/pcb-a-power.net)
@@ -51,4 +51,3 @@ fixtures in     : a temporary directory outside the tree (mkdtemp prefix d6rel-m
    | verdict: reliability            INCONCLUSIVE of 0 {"boards": 1, "candidates": 0, "classed": 0, "classes": 11, "covered": 0, "excluded": 0, "exclusions": 1, "fail": 0, "figures_cited": 5, "figures_none_published": 4, "figures_not_mated": 0, "figures_owed": 2, "inconclusive": 3, "measures_owed": 0, "per_board": {"a": {"candidates": 0, "classed": 0, "excluded": 0, "refused": 0, "result": "INCONCLUSIVE"}}, "refused": 0} | every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the measure taken, or under one declared exclusion with its reason. A desk reading of a netlist and a list: it tests nothing and replaces no physical verification; REL-001 is verified at the prototype and no board has been built
 
 the matrix: 4 of 4 case(s) as wanted, 0 not
-matrix exit: 0
