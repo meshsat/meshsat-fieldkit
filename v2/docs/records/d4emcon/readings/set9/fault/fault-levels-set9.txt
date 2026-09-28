@@ -1,0 +1,544 @@
+The level at each EMCON control node in each fault state (stream d4emcon, tools/fault_levels.py)
+  board A  pcb-a-power-a23/out/pcb-a-power.net  sha256/16 599ee964a9c23d6e
+  board B  pcb-b-compute-b19/out/pcb-b-compute.net  sha256/16 21a1f74a3ec1ae28
+  board C  pcb-c-display-c8/out/pcb-c-display.net  sha256/16 3fddbb3edcd4248a
+  board D  pcb-d-aprs-d9/out/pcb-d-aprs.net  sha256/16 7a2c0ac2190b141a
+  conventions: resistors and rails at their adverse ends (5 percent where no tolerance is stated), a dead rail open,
+  pin currents at their stated maximum in the adverse direction (v_adverse) and in the other (v_other)
+
+======================================================================================================================
+L-TXI-1  TX_INHIBIT_n at board D's U12, board C unpowered, every ribbon in
+   node D TX_INHIBIT_n must stay LOW; limit 0.80 V: VIL 0.8 V at VCC 3 V to 3.6 V (TI SCES217AA 5.3; TECH PUBLIC 74LVC1G08 page 3 for board D)
+   RESULT: 0.205 V adverse, -0.205 V with the pin currents the other way, 26.2 uA of stated pin current: PASS
+     leg   D R2 100k (TX_INHIBIT_n, taken 1.05e+05) to GND
+     leg   A R145 100k (TX_INHIBIT_n, taken 1.05e+05) to GND
+     leg   B R59 100k (TX_INHIBIT_n, taken 1.05e+05) to GND
+     leg   C R14 2.2k 1% to +3V3, which is down: taken absent
+     leg   C R50 10k 1% (TX_INHIBIT_n, taken 1.01e+04) to GND
+     pin   D TX_INHIBIT_n U12 pin 2, an input (II, the reader, powered)    5.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   A TX_INHIBIT_n U35 pin 1, an input (the larger of II and Ioff, powered or not)    0.600 uA   SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7
+     pin   A TX_INHIBIT_n U37 pin 1, an input (the larger of II and Ioff, powered or not)    0.600 uA   SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7
+     pin   C TX_INHIBIT_n U14 pin 3, unpowered (Ioff)                    10.000 uA   SCES414P 6.5 (page 5), over the recommended operating free-air range (6.3: -40 to +125 C for every package but BGA): II 
+     pin   C TX_INHIBIT_n U9 pin 2, unpowered (Ioff)                     10.000 uA   DS35124 Rev. 8-2, Electrical Characteristics, -40 to +85 C: II +-5 uA, IOFF +-10 uA (VCC 0); VT- 0.80 V minimum and VT+ 
+     nodes (adverse): A TX_INHIBIT_n 0.205 V, B TX_INHIBIT_n 0.205 V, C TX_INHIBIT_n 0.205 V, D TX_INHIBIT_n 0.205 V
+======================================================================================================================
+L-TXI-2  TX_INHIBIT_n at board A's U35 and U37, board C unpowered, every ribbon in
+   node A TX_INHIBIT_n must stay LOW; limit 0.90 V: VIL 0.9 V at VCC 3 V to 3.6 V (TI SCES502Q 5.3)
+   RESULT: 0.244 V adverse, -0.244 V with the pin currents the other way, 31.1 uA of stated pin current: PASS
+     leg   A R145 100k (TX_INHIBIT_n, taken 1.05e+05) to GND
+     leg   B R59 100k (TX_INHIBIT_n, taken 1.05e+05) to GND
+     leg   D R2 100k (TX_INHIBIT_n, taken 1.05e+05) to GND
+     leg   C R14 2.2k 1% to +3V3, which is down: taken absent
+     leg   C R50 10k 1% (TX_INHIBIT_n, taken 1.01e+04) to GND
+     pin   A TX_INHIBIT_n U35 pin 1, an input (II, the reader, powered)    0.500 uA   SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7
+     pin   A TX_INHIBIT_n U37 pin 1, an input (the larger of II and Ioff, powered or not)    0.600 uA   SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7
+     pin   D TX_INHIBIT_n U12 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   C TX_INHIBIT_n U14 pin 3, unpowered (Ioff)                    10.000 uA   SCES414P 6.5 (page 5), over the recommended operating free-air range (6.3: -40 to +125 C for every package but BGA): II 
+     pin   C TX_INHIBIT_n U9 pin 2, unpowered (Ioff)                     10.000 uA   DS35124 Rev. 8-2, Electrical Characteristics, -40 to +85 C: II +-5 uA, IOFF +-10 uA (VCC 0); VT- 0.80 V minimum and VT+ 
+     nodes (adverse): A TX_INHIBIT_n 0.244 V, B TX_INHIBIT_n 0.244 V, C TX_INHIBIT_n 0.244 V, D TX_INHIBIT_n 0.244 V
+======================================================================================================================
+L-TXI-3  TX_INHIBIT_n at board D's U12, the panel ribbon unplugged
+   node D TX_INHIBIT_n must stay LOW; limit 0.80 V: VIL 0.8 V at VCC 3 V to 3.6 V (TI SCES217AA 5.3; TECH PUBLIC 74LVC1G08 page 3 for board D)
+   RESULT: 0.217 V adverse, -0.217 V with the pin currents the other way, 6.2 uA of stated pin current: PASS
+     leg   D R2 100k (TX_INHIBIT_n, taken 1.05e+05) to GND
+     leg   A R145 100k (TX_INHIBIT_n, taken 1.05e+05) to GND
+     leg   B R59 100k (TX_INHIBIT_n, taken 1.05e+05) to GND
+     pin   D TX_INHIBIT_n U12 pin 2, an input (II, the reader, powered)    5.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   A TX_INHIBIT_n U35 pin 1, an input (the larger of II and Ioff, powered or not)    0.600 uA   SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7
+     pin   A TX_INHIBIT_n U37 pin 1, an input (the larger of II and Ioff, powered or not)    0.600 uA   SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7
+     nodes (adverse): A TX_INHIBIT_n 0.217 V, B TX_INHIBIT_n 0.217 V, D TX_INHIBIT_n 0.217 V
+======================================================================================================================
+L-TXI-4  TX_INHIBIT_n at board A's U35 and U37, the panel ribbon unplugged
+   node A TX_INHIBIT_n must stay LOW; limit 0.90 V: VIL 0.9 V at VCC 3 V to 3.6 V (TI SCES502Q 5.3)
+   RESULT: 0.389 V adverse, -0.389 V with the pin currents the other way, 11.1 uA of stated pin current: PASS
+     leg   A R145 100k (TX_INHIBIT_n, taken 1.05e+05) to GND
+     leg   B R59 100k (TX_INHIBIT_n, taken 1.05e+05) to GND
+     leg   D R2 100k (TX_INHIBIT_n, taken 1.05e+05) to GND
+     pin   A TX_INHIBIT_n U35 pin 1, an input (II, the reader, powered)    0.500 uA   SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7
+     pin   A TX_INHIBIT_n U37 pin 1, an input (the larger of II and Ioff, powered or not)    0.600 uA   SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7
+     pin   D TX_INHIBIT_n U12 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     nodes (adverse): A TX_INHIBIT_n 0.389 V, B TX_INHIBIT_n 0.389 V, D TX_INHIBIT_n 0.389 V
+======================================================================================================================
+L-TXI-5  TX_INHIBIT_n at board D's U12, the A-B ribbon unplugged
+   node D TX_INHIBIT_n must stay LOW; limit 0.80 V: VIL 0.8 V at VCC 3 V to 3.6 V (TI SCES217AA 5.3; TECH PUBLIC 74LVC1G08 page 3 for board D)
+   RESULT: 0.326 V adverse, -0.326 V with the pin currents the other way, 6.2 uA of stated pin current: PASS
+     leg   D R2 100k (TX_INHIBIT_n, taken 1.05e+05) to GND
+     leg   A R145 100k (TX_INHIBIT_n, taken 1.05e+05) to GND
+     pin   D TX_INHIBIT_n U12 pin 2, an input (II, the reader, powered)    5.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   A TX_INHIBIT_n U35 pin 1, an input (the larger of II and Ioff, powered or not)    0.600 uA   SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7
+     pin   A TX_INHIBIT_n U37 pin 1, an input (the larger of II and Ioff, powered or not)    0.600 uA   SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7
+     nodes (adverse): A TX_INHIBIT_n 0.326 V, D TX_INHIBIT_n 0.326 V
+======================================================================================================================
+L-TXI-6  TX_INHIBIT_n at board A's U35 and U37, the A-B ribbon unplugged
+   node A TX_INHIBIT_n must stay LOW; limit 0.90 V: VIL 0.9 V at VCC 3 V to 3.6 V (TI SCES502Q 5.3)
+   RESULT: 0.583 V adverse, -0.583 V with the pin currents the other way, 11.1 uA of stated pin current: PASS
+     leg   A R145 100k (TX_INHIBIT_n, taken 1.05e+05) to GND
+     leg   D R2 100k (TX_INHIBIT_n, taken 1.05e+05) to GND
+     pin   A TX_INHIBIT_n U35 pin 1, an input (II, the reader, powered)    0.500 uA   SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7
+     pin   A TX_INHIBIT_n U37 pin 1, an input (the larger of II and Ioff, powered or not)    0.600 uA   SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7
+     pin   D TX_INHIBIT_n U12 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     nodes (adverse): A TX_INHIBIT_n 0.583 V, D TX_INHIBIT_n 0.583 V
+======================================================================================================================
+L-TXI-7  TX_INHIBIT_n at board A's U35 and U37, the mezzanine harness unplugged as well as the A-B ribbon
+   node A TX_INHIBIT_n must stay LOW; limit 0.90 V: VIL 0.9 V at VCC 3 V to 3.6 V (TI SCES502Q 5.3)
+   RESULT: 0.116 V adverse, -0.116 V with the pin currents the other way, 1.1 uA of stated pin current: PASS
+     leg   A R145 100k (TX_INHIBIT_n, taken 1.05e+05) to GND
+     pin   A TX_INHIBIT_n U35 pin 1, an input (II, the reader, powered)    0.500 uA   SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7
+     pin   A TX_INHIBIT_n U37 pin 1, an input (the larger of II and Ioff, powered or not)    0.600 uA   SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7
+======================================================================================================================
+L-TXI-8  TX_INHIBIT_n at board C's U9 and U14 (the lamp), board C powered, the panel ribbon unplugged and the toggle released: the released level
+   node C TX_INHIBIT_n must stay HIGH; limit 2.00 V: VT+ 2.00 V maximum at VCC 3 V (Diodes DS35124 Rev. 8-2; no row between 3 V and 4.5 V): the released level must be above it for the line to RELEASE, which is the function and not the inhibit
+   RESULT: 2.533 V adverse, 2.588 V with the pin currents the other way, 15.0 uA of stated pin current: PASS
+     leg   C R14 2.2k 1% (taken 2222) to +3V3 at 3.135 V
+     leg   C R50 10k 1% (TX_INHIBIT_n, taken 9900) to GND
+     pin   C TX_INHIBIT_n U14 pin 3, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES414P 6.5 (page 5), over the recommended operating free-air range (6.3: -40 to +125 C for every package but BGA): II 
+     pin   C TX_INHIBIT_n U9 pin 2, an input (II, the reader, powered)    5.000 uA   DS35124 Rev. 8-2, Electrical Characteristics, -40 to +85 C: II +-5 uA, IOFF +-10 uA (VCC 0); VT- 0.80 V minimum and VT+ 
+======================================================================================================================
+L-EH-1  EMCON_HW at board B's gates, board C unpowered, every ribbon in
+   node B EMCON_HW must stay LOW; limit 0.80 V: VIL 0.8 V at VCC 3 V to 3.6 V (TI SCES217AA 5.3; TECH PUBLIC 74LVC1G08 page 3 for board D)
+   RESULT: 0.385 V adverse, -0.385 V with the pin currents the other way, 119.2 uA of stated pin current: PASS
+     leg   B R58 4.7k 1% (EMCON_HW, taken 4747) to GND
+     leg   A R102 10k 1% (EMCON_HW, taken 1.01e+04) to GND
+     pin   B EMCON_HW     U112 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES214AF 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U116 pin 1, an input (the larger of II and Ioff, powered or not)    1.000 uA   SCLS739F 6.5, -40 to +125 C: II +-1 uA (A input, VI 0 V or VCC, VCC 0 V, 1.8 V, 2.5 V, 3.3 V and 5.5 V); VIL 0.8 V at VC
+     pin   B EMCON_HW     U212 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES214AF 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U216 pin 1, an input (the larger of II and Ioff, powered or not)    1.000 uA   SCLS739F 6.5, -40 to +125 C: II +-1 uA (A input, VI 0 V or VCC, VCC 0 V, 1.8 V, 2.5 V, 3.3 V and 5.5 V); VIL 0.8 V at VC
+     pin   B EMCON_HW     U312 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES214AF 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U316 pin 1, an input (the larger of II and Ioff, powered or not)    1.000 uA   SCLS739F 6.5, -40 to +125 C: II +-1 uA (A input, VI 0 V or VCC, VCC 0 V, 1.8 V, 2.5 V, 3.3 V and 5.5 V); VIL 0.8 V at VC
+     pin   B EMCON_HW     U501 pin 1, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U503 pin 1, an input (II, the reader, powered)    5.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U504 pin 1, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U505 pin 1, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U506 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES519O 5.5, -40 to +85 C: II +-1 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U536 pin 1, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   A EMCON_HW     U35 pin 2, an input (the larger of II and Ioff, powered or not)    0.600 uA   SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7
+     pin   A EMCON_HW     U37 pin 2, an input (the larger of II and Ioff, powered or not)    0.600 uA   SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7
+     pin   C EMCON_HW     U13 pin 2, unpowered (Ioff)                    10.000 uA   DS35124 Rev. 8-2, Electrical Characteristics, -40 to +85 C: II +-5 uA, IOFF +-10 uA (VCC 0); VT- 0.80 V minimum and VT+ 
+     pin   C EMCON_HW     U14 pin 6, unpowered (Ioff)                    10.000 uA   SCES414P 6.5 (page 5), over the recommended operating free-air range (6.3: -40 to +125 C for every package but BGA): II 
+     pin   C EMCON_HW     U9 pin 4, unpowered (Ioff)                     10.000 uA   DS35124 Rev. 8-2, Electrical Characteristics, -40 to +85 C: II +-5 uA, IOFF +-10 uA (VCC 0); VT- 0.80 V minimum and VT+ 
+     nodes (adverse): A EMCON_HW 0.385 V, B EMCON_HW 0.385 V, C EMCON_HW 0.385 V
+======================================================================================================================
+L-EH-2  EMCON_HW at board B's gates, board C unpowered and the A-B ribbon unplugged
+   node B EMCON_HW must stay LOW; limit 0.80 V: VIL 0.8 V at VCC 3 V to 3.6 V (TI SCES217AA 5.3; TECH PUBLIC 74LVC1G08 page 3 for board D)
+   RESULT: 0.560 V adverse, -0.560 V with the pin currents the other way, 118.0 uA of stated pin current: PASS
+     leg   B R58 4.7k 1% (EMCON_HW, taken 4747) to GND
+     pin   B EMCON_HW     U112 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES214AF 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U116 pin 1, an input (the larger of II and Ioff, powered or not)    1.000 uA   SCLS739F 6.5, -40 to +125 C: II +-1 uA (A input, VI 0 V or VCC, VCC 0 V, 1.8 V, 2.5 V, 3.3 V and 5.5 V); VIL 0.8 V at VC
+     pin   B EMCON_HW     U212 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES214AF 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U216 pin 1, an input (the larger of II and Ioff, powered or not)    1.000 uA   SCLS739F 6.5, -40 to +125 C: II +-1 uA (A input, VI 0 V or VCC, VCC 0 V, 1.8 V, 2.5 V, 3.3 V and 5.5 V); VIL 0.8 V at VC
+     pin   B EMCON_HW     U312 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES214AF 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U316 pin 1, an input (the larger of II and Ioff, powered or not)    1.000 uA   SCLS739F 6.5, -40 to +125 C: II +-1 uA (A input, VI 0 V or VCC, VCC 0 V, 1.8 V, 2.5 V, 3.3 V and 5.5 V); VIL 0.8 V at VC
+     pin   B EMCON_HW     U501 pin 1, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U503 pin 1, an input (II, the reader, powered)    5.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U504 pin 1, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U505 pin 1, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U506 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES519O 5.5, -40 to +85 C: II +-1 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U536 pin 1, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   C EMCON_HW     U13 pin 2, unpowered (Ioff)                    10.000 uA   DS35124 Rev. 8-2, Electrical Characteristics, -40 to +85 C: II +-5 uA, IOFF +-10 uA (VCC 0); VT- 0.80 V minimum and VT+ 
+     pin   C EMCON_HW     U14 pin 6, unpowered (Ioff)                    10.000 uA   SCES414P 6.5 (page 5), over the recommended operating free-air range (6.3: -40 to +125 C for every package but BGA): II 
+     pin   C EMCON_HW     U9 pin 4, unpowered (Ioff)                     10.000 uA   DS35124 Rev. 8-2, Electrical Characteristics, -40 to +85 C: II +-5 uA, IOFF +-10 uA (VCC 0); VT- 0.80 V minimum and VT+ 
+     nodes (adverse): B EMCON_HW 0.560 V, C EMCON_HW 0.560 V
+======================================================================================================================
+L-EH-3  EMCON_HW at board B's gates, the panel ribbon unplugged and the A-B ribbon unplugged
+   node B EMCON_HW must stay LOW; limit 0.80 V: VIL 0.8 V at VCC 3 V to 3.6 V (TI SCES217AA 5.3; TECH PUBLIC 74LVC1G08 page 3 for board D)
+   RESULT: 0.418 V adverse, -0.418 V with the pin currents the other way, 88.0 uA of stated pin current: PASS
+     leg   B R58 4.7k 1% (EMCON_HW, taken 4747) to GND
+     pin   B EMCON_HW     U112 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES214AF 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U116 pin 1, an input (the larger of II and Ioff, powered or not)    1.000 uA   SCLS739F 6.5, -40 to +125 C: II +-1 uA (A input, VI 0 V or VCC, VCC 0 V, 1.8 V, 2.5 V, 3.3 V and 5.5 V); VIL 0.8 V at VC
+     pin   B EMCON_HW     U212 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES214AF 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U216 pin 1, an input (the larger of II and Ioff, powered or not)    1.000 uA   SCLS739F 6.5, -40 to +125 C: II +-1 uA (A input, VI 0 V or VCC, VCC 0 V, 1.8 V, 2.5 V, 3.3 V and 5.5 V); VIL 0.8 V at VC
+     pin   B EMCON_HW     U312 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES214AF 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U316 pin 1, an input (the larger of II and Ioff, powered or not)    1.000 uA   SCLS739F 6.5, -40 to +125 C: II +-1 uA (A input, VI 0 V or VCC, VCC 0 V, 1.8 V, 2.5 V, 3.3 V and 5.5 V); VIL 0.8 V at VC
+     pin   B EMCON_HW     U501 pin 1, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U503 pin 1, an input (II, the reader, powered)    5.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U504 pin 1, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U505 pin 1, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U506 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES519O 5.5, -40 to +85 C: II +-1 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U536 pin 1, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+======================================================================================================================
+L-EH-4  EMCON_HW at board A's U35 and U37, the A-B ribbon unplugged
+   node A EMCON_HW must stay LOW; limit 0.90 V: VIL 0.9 V at VCC 3 V to 3.6 V (TI SCES502Q 5.3)
+   RESULT: 0.011 V adverse, -0.011 V with the pin currents the other way, 1.1 uA of stated pin current: PASS
+     leg   A R102 10k 1% (EMCON_HW, taken 1.01e+04) to GND
+     pin   A EMCON_HW     U35 pin 2, an input (II, the reader, powered)    0.500 uA   SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7
+     pin   A EMCON_HW     U37 pin 2, an input (the larger of II and Ioff, powered or not)    0.600 uA   SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7
+======================================================================================================================
+L-EH-5  EMCON_HW at board B's U116, U216, U316 (SN74LV1T08 on the slot's 5 V), board C unpowered and the A-B ribbon unplugged
+   node B EMCON_HW must stay LOW; limit 0.80 V: VIL 0.8 V at VCC 4.5 V to 5.5 V (TI SCLS739F 6.5); 0.65 V at VCC 3 V to 3.6 V
+   RESULT: 0.584 V adverse, -0.584 V with the pin currents the other way, 123.0 uA of stated pin current: PASS
+     leg   B R58 4.7k 1% (EMCON_HW, taken 4747) to GND
+     pin   B EMCON_HW     U112 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES214AF 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U116 pin 1, an input (the larger of II and Ioff, powered or not)    1.000 uA   SCLS739F 6.5, -40 to +125 C: II +-1 uA (A input, VI 0 V or VCC, VCC 0 V, 1.8 V, 2.5 V, 3.3 V and 5.5 V); VIL 0.8 V at VC
+     pin   B EMCON_HW     U212 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES214AF 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U216 pin 1, an input (II, the reader, powered)    1.000 uA   SCLS739F 6.5, -40 to +125 C: II +-1 uA (A input, VI 0 V or VCC, VCC 0 V, 1.8 V, 2.5 V, 3.3 V and 5.5 V); VIL 0.8 V at VC
+     pin   B EMCON_HW     U312 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES214AF 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U316 pin 1, an input (the larger of II and Ioff, powered or not)    1.000 uA   SCLS739F 6.5, -40 to +125 C: II +-1 uA (A input, VI 0 V or VCC, VCC 0 V, 1.8 V, 2.5 V, 3.3 V and 5.5 V); VIL 0.8 V at VC
+     pin   B EMCON_HW     U501 pin 1, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U503 pin 1, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U504 pin 1, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U505 pin 1, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U506 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES519O 5.5, -40 to +85 C: II +-1 uA, Ioff +-10 uA (VCC 0)
+     pin   B EMCON_HW     U536 pin 1, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   C EMCON_HW     U13 pin 2, unpowered (Ioff)                    10.000 uA   DS35124 Rev. 8-2, Electrical Characteristics, -40 to +85 C: II +-5 uA, IOFF +-10 uA (VCC 0); VT- 0.80 V minimum and VT+ 
+     pin   C EMCON_HW     U14 pin 6, unpowered (Ioff)                    10.000 uA   SCES414P 6.5 (page 5), over the recommended operating free-air range (6.3: -40 to +125 C for every package but BGA): II 
+     pin   C EMCON_HW     U9 pin 4, unpowered (Ioff)                     10.000 uA   DS35124 Rev. 8-2, Electrical Characteristics, -40 to +85 C: II +-5 uA, IOFF +-10 uA (VCC 0); VT- 0.80 V minimum and VT+ 
+     nodes (adverse): B EMCON_HW 0.584 V, C EMCON_HW 0.584 V
+======================================================================================================================
+2a (a)  PA drain supply: PA_UVLO at board A's U13 (LM5176), EMCON asserted and its gate powered: the gate drives LOW
+   node A PA_UVLO must stay LOW; limit 0.55 V: VEN(STBY) 0.55 V minimum: below it 'the converter is held in a low power shutdown mode' (TI SNVSAI1D 6.5, 7.3.3); VEN(OP) 1.17 V minimum, below which the PWM controller is disabled
+   RESULT: 0.104 V adverse, 0.017 V with the pin currents the other way, 27.33 uA of stated pin current: PASS on the stated currents; UNDECIDED by the rule (a pin's current has no stated maximum)
+     drv   A U36 pin 4, VOL 0.10 V at IOL 0.02 mA: TI SN74AUP1G08, SCES502Q 5.5 (page 7), -40 to +85 C: VOL 0.1 V at IOL 20 uA (VCC 0.8 V to 3.6 V), 0.33 V at 2.7 mA and 0.45 V at 4 mA (VCC 3 V); the node asks it to sink 19.5 uA of stated current, so the pins no sheet bounds would have to pass 0.000481 mA more to leave this row
+     leg   A R58 10k 1% (nominal) from PA_UVLO to PA_EN
+     leg   A R59 15k 1% (PA_UVLO, taken 1.515e+04) to GND
+     leg   A U36 pin 4 drives the node at 0.100 V
+     leg   D R3 100k (PA_EN, taken 1.05e+05) to GND
+     pin   A PA_UVLO      U13 enable (LM5176 buck-boost controller)       7.250 uA   SNVSAI1D 6.5 and 7.3.3: VEN(OP) 1.17 V minimum, below which 'the PWM controller is disabled'; out of the pin, IEN(STBY) 
+     pin   A PA_EN        U30 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES212AC, Electrical Characteristics, -40 to +85 C: II +-5 uA, Ioff +-10 uA
+     pin   D PA_EN        Q1 gate (a 25 C figure)                         0.080 uA   JSCJ 2N7002 (LCSC C8545), sheet J,Sep,2016, page 2: IGSS +-80 nA at Ta 25 C only, so it bounds nothing over the envelope
+     pin   D PA_EN        U14 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     UNBOUNDED  D Q1 gate (2N7002 PA_EN -> H/L low ): JSCJ 2N7002 (LCSC C8545), sheet J,Sep,2016, page 2: IGSS +-80 nA at Ta 25 C only, so it bounds nothing over the envelope; taken here as a 25 C figure and the state marked
+     nodes (adverse): A PA_EN 0.100 V, A PA_UVLO 0.104 V, D PA_EN 0.100 V
+======================================================================================================================
+2a (b)  PA drain supply: PA_UVLO at board A's U13 (LM5176), its gate's own supply +3V3_EMCON lost (0 V) with everything else up
+   node A PA_UVLO must stay LOW; limit 0.55 V: VEN(STBY) 0.55 V minimum: below it 'the converter is held in a low power shutdown mode' (TI SNVSAI1D 6.5, 7.3.3); VEN(OP) 1.17 V minimum, below which the PWM controller is disabled
+   RESULT: 0.350 V adverse, -0.350 V with the pin currents the other way, 27.93 uA of stated pin current: UNDECIDED (a pin current is unbounded)
+     leg   A R58 10k 1% (nominal) from PA_UVLO to PA_EN
+     leg   A R59 15k 1% (PA_UVLO, taken 1.515e+04) to GND
+     leg   D R3 100k (PA_EN, taken 1.05e+05) to GND
+     pin   A PA_UVLO      U13 enable (LM5176 buck-boost controller)       7.250 uA   SNVSAI1D 6.5 and 7.3.3: VEN(OP) 1.17 V minimum, below which 'the PWM controller is disabled'; out of the pin, IEN(STBY) 
+     pin   A PA_EN        U30 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES212AC, Electrical Characteristics, -40 to +85 C: II +-5 uA, Ioff +-10 uA
+     pin   A PA_EN        U36 pin 4, unpowered (Ioff)                     0.600 uA   SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7
+     pin   D PA_EN        Q1 gate (a 25 C figure)                         0.080 uA   JSCJ 2N7002 (LCSC C8545), sheet J,Sep,2016, page 2: IGSS +-80 nA at Ta 25 C only, so it bounds nothing over the envelope
+     pin   D PA_EN        U14 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     UNBOUNDED  D Q1 gate (2N7002 PA_EN -> H/L low ): JSCJ 2N7002 (LCSC C8545), sheet J,Sep,2016, page 2: IGSS +-80 nA at Ta 25 C only, so it bounds nothing over the envelope; taken here as a 25 C figure and the state marked
+     nodes (adverse): A PA_EN 0.508 V, A PA_UVLO 0.350 V, D PA_EN 0.508 V
+======================================================================================================================
+3 (a)  QMX: HF_UVLO at board A's U15 (LM5176), EMCON asserted and its gate powered: the gate drives LOW
+   node A HF_UVLO must stay LOW; limit 0.55 V: VEN(STBY) 0.55 V minimum: below it 'the converter is held in a low power shutdown mode' (TI SNVSAI1D 6.5, 7.3.3); VEN(OP) 1.17 V minimum, below which the PWM controller is disabled
+   RESULT: 0.104 V adverse, 0.017 V with the pin currents the other way, 7.25 uA of stated pin current: PASS
+     drv   A U38 pin 4, VOL 0.10 V at IOL 0.02 mA: TI SN74AUP1G08, SCES502Q 5.5 (page 7), -40 to +85 C: VOL 0.1 V at IOL 20 uA (VCC 0.8 V to 3.6 V), 0.33 V at 2.7 mA and 0.45 V at 4 mA (VCC 3 V); the node asks it to sink 0.4 uA of stated current, so the pins no sheet bounds would have to pass 0.0196 mA more to leave this row
+     leg   A R124 10k 1% (nominal) from HF_UVLO to HF_EN
+     leg   A R125 15k 1% (HF_UVLO, taken 1.515e+04) to GND
+     leg   A U38 pin 4 drives the node at 0.100 V
+     pin   A HF_UVLO      U15 enable (LM5176 buck-boost controller)       7.250 uA   SNVSAI1D 6.5 and 7.3.3: VEN(OP) 1.17 V minimum, below which 'the PWM controller is disabled'; out of the pin, IEN(STBY) 
+     nodes (adverse): A HF_EN 0.100 V, A HF_UVLO 0.104 V
+======================================================================================================================
+3 (b)  QMX: HF_UVLO at board A's U15 (LM5176), its gate's own supply +3V3_EMCON lost (0 V) with everything else up
+   node A HF_UVLO must stay LOW; limit 0.55 V: VEN(STBY) 0.55 V minimum: below it 'the converter is held in a low power shutdown mode' (TI SNVSAI1D 6.5, 7.3.3); VEN(OP) 1.17 V minimum, below which the PWM controller is disabled
+   RESULT: 0.119 V adverse, -0.119 V with the pin currents the other way, 7.85 uA of stated pin current: PASS
+     leg   A R124 10k 1% (nominal) from HF_UVLO to HF_EN
+     leg   A R125 15k 1% (HF_UVLO, taken 1.515e+04) to GND
+     pin   A HF_UVLO      U15 enable (LM5176 buck-boost controller)       7.250 uA   SNVSAI1D 6.5 and 7.3.3: VEN(OP) 1.17 V minimum, below which 'the PWM controller is disabled'; out of the pin, IEN(STBY) 
+     pin   A HF_EN        U38 pin 4, unpowered (Ioff)                     0.600 uA   SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7
+     nodes (adverse): A HF_EN 0.125 V, A HF_UVLO 0.119 V
+======================================================================================================================
+4 (a)  RockBLOCK supply: RB_UVLO at board B's U24 (TPS259631), EMCON asserted and its gate powered: the gate drives LOW
+   node B RB_UVLO must stay LOW; limit 1.08 V: VUVLO(F) 1.08 V minimum: 'the device turns OFF the FET' (TI SLVSET8A 7.5 and 8.3.x); VSD 0.53 V minimum for the lowest shutdown current
+   RESULT: 0.061 V adverse, 0.060 V with the pin currents the other way, 0.1 uA of stated pin current: PASS
+     drv   B U503 pin 4, VOL 0.10 V at IOL 0.1 mA: TI SN74LVC1G08, SCES217AA 5.5: VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.4 V at 16 mA and 0.55 V at 24 mA (VCC 3 V); the node asks it to sink -3.9 uA of stated current, so the pins no sheet bounds would have to pass 0.104 mA more to leave this row
+     leg   B R515 15k 1% (RB_UVLO, taken 1.515e+04) to GND
+     leg   B R530 10k 1% (nominal) from RB_UVLO to RB_EN
+     leg   B U503 pin 4 drives the node at 0.100 V
+     pin   B RB_UVLO      U24 enable (TPS25963x eFuse)                    0.100 uA   SLVSET8A 7.5: VUVLO(F) 1.08 V minimum, 'Whenever the voltage at the EN/UVLO pin falls below a threshold VUVLO(F), the de
+     nodes (adverse): B RB_EN 0.100 V, B RB_UVLO 0.061 V
+======================================================================================================================
+4 (b)  RockBLOCK supply: RB_UVLO at board B's U24 (TPS259631), its gate's own supply +3V3_DEV lost (0 V) with everything else up
+   node B RB_UVLO must stay LOW; limit 1.08 V: VUVLO(F) 1.08 V minimum: 'the device turns OFF the FET' (TI SLVSET8A 7.5 and 8.3.x); VSD 0.53 V minimum for the lowest shutdown current
+   RESULT: 0.153 V adverse, -0.153 V with the pin currents the other way, 10.1 uA of stated pin current: PASS
+     leg   B R515 15k 1% (RB_UVLO, taken 1.515e+04) to GND
+     leg   B R530 10k 1% (nominal) from RB_UVLO to RB_EN
+     pin   B RB_UVLO      U24 enable (TPS25963x eFuse)                    0.100 uA   SLVSET8A 7.5: VUVLO(F) 1.08 V minimum, 'Whenever the voltage at the EN/UVLO pin falls below a threshold VUVLO(F), the de
+     pin   B RB_EN        U503 pin 4, unpowered (Ioff)                   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     nodes (adverse): B RB_EN 0.253 V, B RB_UVLO 0.153 V
+======================================================================================================================
+4-en (a)  RockBLOCK ENABLE: RB_IEN at J_RB9704 pin 3, EMCON asserted and its gate powered: the gate drives LOW
+   node B RB_IEN must stay LOW; limit 0.40 V: Logic In LOW 0.4 V maximum (Ground Control, RockBLOCK 9704 hardware page, Signal Thresholds)
+   RESULT: 0.100 V adverse, 0.100 V with the pin currents the other way, 0.0 uA of stated pin current: PASS
+     drv   B U536 pin 4, VOL 0.10 V at IOL 0.1 mA: TI SN74LVC1G08, SCES217AA 5.5: VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.4 V at 16 mA and 0.55 V at 24 mA (VCC 3 V); the node asks it to sink 8.4 uA of stated current, so the pins no sheet bounds would have to pass 0.0916 mA more to leave this row
+     leg   B J_RB9704 pin 3: the module's divider 270 k / 430 k behind 10 k (Ground Control, RockBLOCK 9704 hardware page (fetc)
+     leg   B R527 10k (RB_IEN, taken 1.05e+04) to GND
+     leg   B U536 pin 4 drives the node at 0.100 V
+     nodes (adverse): B #inside J_RB9704.3 0.279 V, B RB_IEN 0.100 V
+======================================================================================================================
+4-en (b)  RockBLOCK ENABLE: RB_IEN at J_RB9704 pin 3, its gate's own supply +3V3_DEV lost (0 V) with everything else up
+   node B RB_IEN must stay LOW; limit 0.40 V: Logic In LOW 0.4 V maximum (Ground Control, RockBLOCK 9704 hardware page, Signal Thresholds)
+   RESULT: 0.283 V adverse, 0.084 V with the pin currents the other way, 10.0 uA of stated pin current: PASS
+     leg   B J_RB9704 pin 3: the module's divider 270 k / 430 k behind 10 k (Ground Control, RockBLOCK 9704 hardware page (fetc)
+     leg   B R527 10k (RB_IEN, taken 1.05e+04) to GND
+     pin   B RB_IEN       U536 pin 4, unpowered (Ioff)                   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     nodes (adverse): B #inside J_RB9704.3 0.452 V, B RB_IEN 0.282 V
+======================================================================================================================
+5 (a)  RM520N-GL supply: S2A_EN at board B's U203 (AP64500), EMCON asserted and its gate powered: the gate drives LOW
+   node B S2A_EN must stay LOW; limit 1.03 V: VEN_L 1.03 V minimum (Diodes DS41979 Rev. 5-2, Electrical Characteristics)
+   RESULT: 0.100 V adverse, 0.100 V with the pin currents the other way, 0.0 uA of stated pin current: PASS on the stated currents; UNDECIDED by the rule (a pin's current has no stated maximum)
+     drv   B U216 pin 4, VOL 0.10 V at IOL 0.02 mA: TI SN74LV1T08, SCLS739F 6.5, -40 to +125 C: VOL 0.1 V at IOL 20 uA (VCC 1.65 V to 5.5 V), 0.2 V at 4 mA and 0.35 V at 8 mA (VCC 4.5 V; the 8 mA row as stream w4b read it); the node asks it to sink 0.0 uA of stated current, so the pins no sheet bounds would have to pass 0.02 mA more to leave this row
+     leg   B U216 pin 4 drives the node at 0.100 V
+     UNBOUNDED  B U203 enable: DS41979 Rev. 5-2, Electrical Characteristics, -40 to +85 C: VEN_L 1.03 V minimum; IEN 1 to 2 uA at VEN 1 V and 5.5 uA typical with no maximum at VEN 1
+======================================================================================================================
+6 (a)  AW7915-AED slot 1 supply: S1A_EN at board B's U103 (AP64500), EMCON asserted and its gate powered: the gate drives LOW
+   node B S1A_EN must stay LOW; limit 1.03 V: VEN_L 1.03 V minimum (Diodes DS41979 Rev. 5-2, Electrical Characteristics)
+   RESULT: 0.100 V adverse, 0.100 V with the pin currents the other way, 0.0 uA of stated pin current: PASS on the stated currents; UNDECIDED by the rule (a pin's current has no stated maximum)
+     drv   B U116 pin 4, VOL 0.10 V at IOL 0.02 mA: TI SN74LV1T08, SCLS739F 6.5, -40 to +125 C: VOL 0.1 V at IOL 20 uA (VCC 1.65 V to 5.5 V), 0.2 V at 4 mA and 0.35 V at 8 mA (VCC 4.5 V; the 8 mA row as stream w4b read it); the node asks it to sink 0.0 uA of stated current, so the pins no sheet bounds would have to pass 0.02 mA more to leave this row
+     leg   B U116 pin 4 drives the node at 0.100 V
+     UNBOUNDED  B U103 enable: DS41979 Rev. 5-2, Electrical Characteristics, -40 to +85 C: VEN_L 1.03 V minimum; IEN 1 to 2 uA at VEN 1 V and 5.5 uA typical with no maximum at VEN 1
+======================================================================================================================
+7 (a)  AW7915-AED slot 3 supply: S3A_EN at board B's U303 (AP64500), EMCON asserted and its gate powered: the gate drives LOW
+   node B S3A_EN must stay LOW; limit 1.03 V: VEN_L 1.03 V minimum (Diodes DS41979 Rev. 5-2, Electrical Characteristics)
+   RESULT: 0.100 V adverse, 0.100 V with the pin currents the other way, 0.0 uA of stated pin current: PASS on the stated currents; UNDECIDED by the rule (a pin's current has no stated maximum)
+     drv   B U316 pin 4, VOL 0.10 V at IOL 0.02 mA: TI SN74LV1T08, SCLS739F 6.5, -40 to +125 C: VOL 0.1 V at IOL 20 uA (VCC 1.65 V to 5.5 V), 0.2 V at 4 mA and 0.35 V at 8 mA (VCC 4.5 V; the 8 mA row as stream w4b read it); the node asks it to sink 0.0 uA of stated current, so the pins no sheet bounds would have to pass 0.02 mA more to leave this row
+     leg   B U316 pin 4 drives the node at 0.100 V
+     UNBOUNDED  B U303 enable: DS41979 Rev. 5-2, Electrical Characteristics, -40 to +85 C: VEN_L 1.03 V minimum; IEN 1 to 2 uA at VEN 1 V and 5.5 uA typical with no maximum at VEN 1
+======================================================================================================================
+14 (a)  E22-900M30S supply: E22_UVLO at board B's U21 (TPS22810), EMCON asserted and its gate powered: the gate drives LOW
+   node B E22_UVLO must stay LOW; limit 1.08 V: VENF 1.08 V minimum (TI SLVSDH0C 7.5); VSHUTF 0.5 V minimum for low IQ
+   RESULT: 0.061 V adverse, 0.060 V with the pin currents the other way, 0.1 uA of stated pin current: PASS
+     drv   B U504 pin 4, VOL 0.10 V at IOL 0.1 mA: TI SN74LVC1G08, SCES217AA 5.5: VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.4 V at 16 mA and 0.55 V at 24 mA (VCC 3 V); the node asks it to sink -3.9 uA of stated current, so the pins no sheet bounds would have to pass 0.104 mA more to leave this row
+     leg   B R516 15k 1% (E22_UVLO, taken 1.515e+04) to GND
+     leg   B R531 10k 1% (nominal) from E22_UVLO to E22_EN
+     leg   B U504 pin 4 drives the node at 0.100 V
+     pin   B E22_UVLO     U21 enable (TPS22810 load switch (WSON))        0.100 uA   SLVSDH0C 7.5: VENF 1.08 V minimum, 'A voltage V(EN/UVLO) < V(ENF) on this pin turns off the internal FET' (8.3); IEN/UVL
+     nodes (adverse): B E22_EN 0.100 V, B E22_UVLO 0.061 V
+======================================================================================================================
+14 (b)  E22-900M30S supply: E22_UVLO at board B's U21 (TPS22810), its gate's own supply +3V3_DEV lost (0 V) with everything else up
+   node B E22_UVLO must stay LOW; limit 1.08 V: VENF 1.08 V minimum (TI SLVSDH0C 7.5); VSHUTF 0.5 V minimum for low IQ
+   RESULT: 0.153 V adverse, -0.153 V with the pin currents the other way, 10.1 uA of stated pin current: PASS
+     leg   B R516 15k 1% (E22_UVLO, taken 1.515e+04) to GND
+     leg   B R531 10k 1% (nominal) from E22_UVLO to E22_EN
+     pin   B E22_UVLO     U21 enable (TPS22810 load switch (WSON))        0.100 uA   SLVSDH0C 7.5: VENF 1.08 V minimum, 'A voltage V(EN/UVLO) < V(ENF) on this pin turns off the internal FET' (8.3); IEN/UVL
+     pin   B E22_EN       U504 pin 4, unpowered (Ioff)                   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     nodes (adverse): B E22_EN 0.253 V, B E22_UVLO 0.153 V
+======================================================================================================================
+15-16 (a)  both E72 supply: E72_EN at board B's U22 (TPS22810), EMCON asserted and its gate powered: the gate drives LOW
+   node B E72_EN must stay LOW; limit 1.08 V: VENF 1.08 V minimum (TI SLVSDH0C 7.5); VSHUTF 0.5 V minimum for low IQ
+   RESULT: 0.100 V adverse, 0.100 V with the pin currents the other way, 0.1 uA of stated pin current: PASS
+     drv   B U505 pin 4, VOL 0.10 V at IOL 0.1 mA: TI SN74LVC1G08, SCES217AA 5.5: VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.4 V at 16 mA and 0.55 V at 24 mA (VCC 3 V); the node asks it to sink -9.4 uA of stated current, so the pins no sheet bounds would have to pass 0.109 mA more to leave this row
+     leg   B R517 10k (E72_EN, taken 1.05e+04) to GND
+     leg   B U505 pin 4 drives the node at 0.100 V
+     pin   B E72_EN       U22 enable (TPS22810 load switch (WSON))        0.100 uA   SLVSDH0C 7.5: VENF 1.08 V minimum, 'A voltage V(EN/UVLO) < V(ENF) on this pin turns off the internal FET' (8.3); IEN/UVL
+======================================================================================================================
+15-16 (b)  both E72 supply: E72_EN at board B's U22 (TPS22810), its gate's own supply +3V3_DEV lost (0 V) with everything else up
+   node B E72_EN must stay LOW; limit 1.08 V: VENF 1.08 V minimum (TI SLVSDH0C 7.5); VSHUTF 0.5 V minimum for low IQ
+   RESULT: 0.106 V adverse, -0.106 V with the pin currents the other way, 10.1 uA of stated pin current: PASS
+     leg   B R517 10k (E72_EN, taken 1.05e+04) to GND
+     pin   B E72_EN       U22 enable (TPS22810 load switch (WSON))        0.100 uA   SLVSDH0C 7.5: VENF 1.08 V minimum, 'A voltage V(EN/UVLO) < V(ENF) on this pin turns off the internal FET' (8.3); IEN/UVL
+     pin   B E72_EN       U505 pin 4, unpowered (Ioff)                   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+======================================================================================================================
+17 (a)  LimeSDR supply: LIME_UVLO at board B's U23 (TPS259631), EMCON asserted and its gate powered: the gate drives LOW
+   node B LIME_UVLO must stay LOW; limit 1.08 V: VUVLO(F) 1.08 V minimum: 'the device turns OFF the FET' (TI SLVSET8A 7.5 and 8.3.x); VSD 0.53 V minimum for the lowest shutdown current
+   RESULT: 0.061 V adverse, 0.060 V with the pin currents the other way, 0.1 uA of stated pin current: PASS
+     drv   B U502 pin 4, VOL 0.10 V at IOL 0.1 mA: TI SN74LVC1G08, SCES217AA 5.5: VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.4 V at 16 mA and 0.55 V at 24 mA (VCC 3 V); the node asks it to sink -3.9 uA of stated current, so the pins no sheet bounds would have to pass 0.104 mA more to leave this row
+     leg   B R514 15k 1% (LIME_UVLO, taken 1.515e+04) to GND
+     leg   B R529 10k 1% (nominal) from LIME_UVLO to LIME_EN
+     leg   B U502 pin 4 drives the node at 0.100 V
+     pin   B LIME_UVLO    U23 enable (TPS25963x eFuse)                    0.100 uA   SLVSET8A 7.5: VUVLO(F) 1.08 V minimum, 'Whenever the voltage at the EN/UVLO pin falls below a threshold VUVLO(F), the de
+     nodes (adverse): B LIME_EN 0.100 V, B LIME_UVLO 0.061 V
+======================================================================================================================
+17 (b)  LimeSDR supply: LIME_UVLO at board B's U23 (TPS259631), its gate's own supply +3V3_DEV lost (0 V) with everything else up
+   node B LIME_UVLO must stay LOW; limit 1.08 V: VUVLO(F) 1.08 V minimum: 'the device turns OFF the FET' (TI SLVSET8A 7.5 and 8.3.x); VSD 0.53 V minimum for the lowest shutdown current
+   RESULT: 0.153 V adverse, -0.153 V with the pin currents the other way, 10.1 uA of stated pin current: PASS
+     leg   B R514 15k 1% (LIME_UVLO, taken 1.515e+04) to GND
+     leg   B R529 10k 1% (nominal) from LIME_UVLO to LIME_EN
+     pin   B LIME_UVLO    U23 enable (TPS25963x eFuse)                    0.100 uA   SLVSET8A 7.5: VUVLO(F) 1.08 V minimum, 'Whenever the voltage at the EN/UVLO pin falls below a threshold VUVLO(F), the de
+     pin   B LIME_EN      U502 pin 4, unpowered (Ioff)                   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     nodes (adverse): B LIME_EN 0.253 V, B LIME_UVLO 0.153 V
+======================================================================================================================
+2b (a)  PA gate bias: PA_KEY at board D's U15 (TLV75801P), EMCON asserted and its gate powered: the gate drives LOW
+   node D PA_KEY must stay LOW; limit 0.30 V: VEN(LO) 0.3 V maximum (TI SBVS351D 5.5)
+   RESULT: 0.100 V adverse, 0.100 V with the pin currents the other way, 10.08 uA of stated pin current: PASS on the stated currents; UNDECIDED by the rule (a pin's current has no stated maximum)
+     drv   D U14 pin 4, VOL 0.10 V at IOL 0.1 mA: TECH PUBLIC 74LVC1G08 (LCSC C19829591), page 3, -40 to +125 C: VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.6 V at 16 mA and 0.8 V at 24 mA (VCC 3.0 V); the node asks it to sink -0.4 uA of stated current, so the pins no sheet bounds would have to pass 0.1 mA more to leave this row
+     leg   D R50 1k (nominal) from PA_KEY to LED_PA_A
+     leg   D R52 1k (nominal) from PA_KEY to RLY_DRV
+     leg   D R85 10k (PA_KEY, taken 1.05e+04) to GND
+     leg   D U14 pin 4 drives the node at 0.100 V
+     leg   D R53 100k (RLY_DRV, taken 1.05e+05) to GND
+     pin   D PA_KEY       U20 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES519O 5.5, -40 to +85 C: II +-1 uA, Ioff +-10 uA (VCC 0)
+     pin   D RLY_DRV      Q2 gate (a 25 C figure)                         0.080 uA   JSCJ 2N7002 (LCSC C8545), sheet J,Sep,2016, page 2: IGSS +-80 nA at Ta 25 C only, so it bounds nothing over the envelope
+     UNBOUNDED  D U15 enable: SBVS351D 5.5 Electrical Characteristics (page 6), TJ -40 to +125 C: VEN(LO) 0.3 V maximum, VEN(HI) 1.0 V minimum; IEN 'Enable pin current' 10 nA typic
+     UNBOUNDED  D Q2 gate (2N7002 relay coil): JSCJ 2N7002 (LCSC C8545), sheet J,Sep,2016, page 2: IGSS +-80 nA at Ta 25 C only, so it bounds nothing over the envelope; taken here as a 25 C figure and the state marked
+     nodes (adverse): D LED_PA_A 0.100 V, D PA_KEY 0.100 V, D RLY_DRV 0.099 V
+======================================================================================================================
+2b (b)  PA gate bias: PA_KEY at board D's U15 (TLV75801P), its gate's own supply +3V3_D8 lost (0 V) with everything else up
+   node D PA_KEY must stay LOW; limit 0.30 V: VEN(LO) 0.3 V maximum (TI SBVS351D 5.5)
+   RESULT: 0.192 V adverse, -0.192 V with the pin currents the other way, 20.08 uA of stated pin current: UNDECIDED (a pin current is unbounded)
+     leg   D R50 1k (nominal) from PA_KEY to LED_PA_A
+     leg   D R52 1k (nominal) from PA_KEY to RLY_DRV
+     leg   D R85 10k (PA_KEY, taken 1.05e+04) to GND
+     leg   D R53 100k (RLY_DRV, taken 1.05e+05) to GND
+     pin   D PA_KEY       U14 pin 4, unpowered (Ioff)                    10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   D PA_KEY       U20 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES519O 5.5, -40 to +85 C: II +-1 uA, Ioff +-10 uA (VCC 0)
+     pin   D RLY_DRV      Q2 gate (a 25 C figure)                         0.080 uA   JSCJ 2N7002 (LCSC C8545), sheet J,Sep,2016, page 2: IGSS +-80 nA at Ta 25 C only, so it bounds nothing over the envelope
+     UNBOUNDED  D U15 enable: SBVS351D 5.5 Electrical Characteristics (page 6), TJ -40 to +125 C: VEN(LO) 0.3 V maximum, VEN(HI) 1.0 V minimum; IEN 'Enable pin current' 10 nA typic
+     UNBOUNDED  D Q2 gate (2N7002 relay coil): JSCJ 2N7002 (LCSC C8545), sheet J,Sep,2016, page 2: IGSS +-80 nA at Ta 25 C only, so it bounds nothing over the envelope; taken here as a 25 C figure and the state marked
+     nodes (adverse): D LED_PA_A 0.192 V, D PA_KEY 0.192 V, D RLY_DRV 0.190 V
+======================================================================================================================
+1-key (a)  SA868 keying: KEY at board D's U13 and U14, EMCON asserted and its gate powered: the gate drives LOW
+   node D KEY must stay LOW; limit 0.80 V: VIL 0.8 V at VCC 3 V to 3.6 V (TI SCES217AA 5.3; TECH PUBLIC 74LVC1G08 page 3 for board D)
+   RESULT: 0.100 V adverse, 0.100 V with the pin currents the other way, 31.0 uA of stated pin current: PASS
+     drv   D U12 pin 4, VOL 0.10 V at IOL 0.1 mA: TECH PUBLIC 74LVC1G08 (LCSC C19829591), page 3, -40 to +125 C: VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.6 V at 16 mA and 0.8 V at 24 mA (VCC 3.0 V); the node asks it to sink 21.5 uA of stated current, so the pins no sheet bounds would have to pass 0.0785 mA more to leave this row
+     leg   D R49 1k (nominal) from KEY to LED_TX_A
+     leg   D R84 10k (KEY, taken 1.05e+04) to GND
+     leg   D U12 pin 4 drives the node at 0.100 V
+     pin   D KEY          U13 pin 2, an input (II, the reader, powered)    1.000 uA   SCES295AB 5.5: II +-1 uA, Ioff +-10 uA
+     pin   D KEY          U14 pin 1, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   D KEY          U18 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES519O 5.5, -40 to +85 C: II +-1 uA, Ioff +-10 uA (VCC 0)
+     pin   D KEY          U19 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES519O 5.5, -40 to +85 C: II +-1 uA, Ioff +-10 uA (VCC 0)
+     nodes (adverse): D KEY 0.100 V, D LED_TX_A 0.100 V
+======================================================================================================================
+1-key (b)  SA868 keying: KEY at board D's U13 and U14, its gate's own supply +3V3_D8 lost (0 V) with everything else up
+   node D KEY must stay LOW; limit 0.80 V: VIL 0.8 V at VCC 3 V to 3.6 V (TI SCES217AA 5.3; TECH PUBLIC 74LVC1G08 page 3 for board D)
+   RESULT: 0.430 V adverse, -0.430 V with the pin currents the other way, 41.0 uA of stated pin current: PASS
+     leg   D R49 1k (nominal) from KEY to LED_TX_A
+     leg   D R84 10k (KEY, taken 1.05e+04) to GND
+     pin   D KEY          U12 pin 4, unpowered (Ioff)                    10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   D KEY          U13 pin 2, an input (II, the reader, powered)    1.000 uA   SCES295AB 5.5: II +-1 uA, Ioff +-10 uA
+     pin   D KEY          U14 pin 1, unpowered (Ioff)                    10.000 uA   SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)
+     pin   D KEY          U18 pin 2, unpowered (Ioff)                    10.000 uA   SCES519O 5.5, -40 to +85 C: II +-1 uA, Ioff +-10 uA (VCC 0)
+     pin   D KEY          U19 pin 2, an input (the larger of II and Ioff, powered or not)   10.000 uA   SCES519O 5.5, -40 to +85 C: II +-1 uA, Ioff +-10 uA (VCC 0)
+     nodes (adverse): D KEY 0.430 V, D LED_TX_A 0.430 V
+======================================================================================================================
+1-sup (b)  board D's +5V_TX switch: TXSUP_EN at U21 (TPS22810) with +3V3_D8 at 0 V: the exciter, the VGG regulator and the relay coil lose their supply with the keying gates
+   node D TXSUP_EN must stay LOW; limit 1.08 V: VENF 1.08 V minimum (TI SLVSDH0C 7.5); VSHUTF 0.5 V minimum for low IQ
+   RESULT: 0.001 V adverse, -0.001 V with the pin currents the other way, 0.1 uA of stated pin current: PASS
+     leg   D R90 11k 1% to +3V3_D8, which is down: taken absent
+     leg   D R91 10k 1% (TXSUP_EN, taken 1.01e+04) to GND
+     pin   D TXSUP_EN     U21 enable (TPS22810 load switch (WSON))        0.100 uA   SLVSDH0C 7.5: VENF 1.08 V minimum, 'A voltage V(EN/UVLO) < V(ENF) on this pin turns off the internal FET' (8.3); IEN/UVL
+======================================================================================================================
+1 (a)  SA868 PTT: SA_PTT_n at U2 pin 5, EMCON asserted: U13 released, the pin held by R88 and R89 from +5V_SA
+   node D SA_PTT_n must stay HIGH; limit none stated: NiceRF states no '1' level for PTT (SA868 Rev 1.3, page 9)
+   RESULT: 2.848 V adverse, 2.864 V with the pin currents the other way, 10.0 uA of stated pin current: UNDECIDED (no stated threshold)
+     leg   D R88 1.2k (taken 1260) to +5V_SA at 4.750 V
+     leg   D R89 2k (SA_PTT_n, taken 1900) to GND
+     pin   D SA_PTT_n     U13 pin 4, a released open drain (its Ioff row as a stand-in, not a bound)   10.000 uA   SCES295AB 5.5: II +-1 uA, Ioff +-10 uA
+     UNBOUNDED  D U13 pin 4: a powered open-drain output that is released, whose off-state current its sheet states only for VCC 0 V (Ioff 10 uA, SCES295AB 5.5: II +-1 uA, Ioff +-10 uA)
+     UNBOUNDED  D U2 pin 5: NiceRF SA868 datasheet Rev 1.3 (2022-8), section 8 Pin definition (page 9): pin 5 PTT 'Module Input, Transmitting/receiving control, "0" force the module to enter TX state; and "1" to Rx state'; no level, input current
+======================================================================================================================
+8 (a)  CM5 slot 1 WL_nDIS at U30A pin 89, EMCON asserted: U113 sinks the module's 1.8 kOhm pull-up
+   node B WL_nDIS1 must stay LOW; limit none stated: the CM5 datasheet states no input-low level for pins 89 and 91 ('if driven low, the ... interface will be disabled', release 3, page 20)
+   RESULT: 0.400 V adverse, 0.400 V with the pin currents the other way, 10.0 uA of stated pin current: UNDECIDED (no stated threshold)
+     drv   B U113 pin 6, VOL 0.40 V at IOL 16 mA: TI SN74LVC2G06, SCES307J 6.5 (page 6): VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.4 V at 16 mA and 0.55 V at 24 mA (VCC 3 V); the node asks it to sink 1712.8 uA of stated current, so the pins no sheet bounds would have to pass 14.3 mA more to leave this row
+     leg   B U113 pin 6 drives the node at 0.400 V
+     leg   B U30A pin 89: the module's own pull, 3.3 V through 1800 Ohm (Raspberry Pi Compute Module 5 datasheet, release 3, pin tabl)
+     pin   B WL_nDIS1     U114 pin 6, a released open drain (its Ioff row as a stand-in, not a bound)   10.000 uA   SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A inputs, VCC 0 to 5.5 V), Ioff +-10 uA (VCC 0, VI or VO 5.5 V)
+     UNBOUNDED  B U114 pin 6: a powered open-drain output that is released, whose off-state current its sheet states only for VCC 0 V (Ioff 10 uA, SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A i)
+======================================================================================================================
+11 (a)  CM5 slot 1 BT_nDIS at U30A pin 91, EMCON asserted: U113 sinks the module's 1.8 kOhm pull-up
+   node B BT_nDIS1 must stay LOW; limit none stated: the CM5 datasheet states no input-low level for pins 89 and 91 ('if driven low, the ... interface will be disabled', release 3, page 20)
+   RESULT: 0.400 V adverse, 0.400 V with the pin currents the other way, 10.0 uA of stated pin current: UNDECIDED (no stated threshold)
+     drv   B U113 pin 4, VOL 0.40 V at IOL 16 mA: TI SN74LVC2G06, SCES307J 6.5 (page 6): VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.4 V at 16 mA and 0.55 V at 24 mA (VCC 3 V); the node asks it to sink 1712.8 uA of stated current, so the pins no sheet bounds would have to pass 14.3 mA more to leave this row
+     leg   B U113 pin 4 drives the node at 0.400 V
+     leg   B U30A pin 91: the module's own pull, 3.3 V through 1800 Ohm (Raspberry Pi Compute Module 5 datasheet, release 3, pin tabl)
+     pin   B BT_nDIS1     U114 pin 4, a released open drain (its Ioff row as a stand-in, not a bound)   10.000 uA   SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A inputs, VCC 0 to 5.5 V), Ioff +-10 uA (VCC 0, VI or VO 5.5 V)
+     UNBOUNDED  B U114 pin 4: a powered open-drain output that is released, whose off-state current its sheet states only for VCC 0 V (Ioff 10 uA, SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A i)
+======================================================================================================================
+9 (a)  CM5 slot 2 WL_nDIS at U31A pin 89, EMCON asserted: U213 sinks the module's 1.8 kOhm pull-up
+   node B WL_nDIS2 must stay LOW; limit none stated: the CM5 datasheet states no input-low level for pins 89 and 91 ('if driven low, the ... interface will be disabled', release 3, page 20)
+   RESULT: 0.400 V adverse, 0.400 V with the pin currents the other way, 10.0 uA of stated pin current: UNDECIDED (no stated threshold)
+     drv   B U213 pin 6, VOL 0.40 V at IOL 16 mA: TI SN74LVC2G06, SCES307J 6.5 (page 6): VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.4 V at 16 mA and 0.55 V at 24 mA (VCC 3 V); the node asks it to sink 1712.8 uA of stated current, so the pins no sheet bounds would have to pass 14.3 mA more to leave this row
+     leg   B U213 pin 6 drives the node at 0.400 V
+     leg   B U31A pin 89: the module's own pull, 3.3 V through 1800 Ohm (Raspberry Pi Compute Module 5 datasheet, release 3, pin tabl)
+     pin   B WL_nDIS2     U214 pin 6, a released open drain (its Ioff row as a stand-in, not a bound)   10.000 uA   SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A inputs, VCC 0 to 5.5 V), Ioff +-10 uA (VCC 0, VI or VO 5.5 V)
+     UNBOUNDED  B U214 pin 6: a powered open-drain output that is released, whose off-state current its sheet states only for VCC 0 V (Ioff 10 uA, SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A i)
+======================================================================================================================
+12 (a)  CM5 slot 2 BT_nDIS at U31A pin 91, EMCON asserted: U213 sinks the module's 1.8 kOhm pull-up
+   node B BT_nDIS2 must stay LOW; limit none stated: the CM5 datasheet states no input-low level for pins 89 and 91 ('if driven low, the ... interface will be disabled', release 3, page 20)
+   RESULT: 0.400 V adverse, 0.400 V with the pin currents the other way, 10.0 uA of stated pin current: UNDECIDED (no stated threshold)
+     drv   B U213 pin 4, VOL 0.40 V at IOL 16 mA: TI SN74LVC2G06, SCES307J 6.5 (page 6): VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.4 V at 16 mA and 0.55 V at 24 mA (VCC 3 V); the node asks it to sink 1712.8 uA of stated current, so the pins no sheet bounds would have to pass 14.3 mA more to leave this row
+     leg   B U213 pin 4 drives the node at 0.400 V
+     leg   B U31A pin 91: the module's own pull, 3.3 V through 1800 Ohm (Raspberry Pi Compute Module 5 datasheet, release 3, pin tabl)
+     pin   B BT_nDIS2     U214 pin 4, a released open drain (its Ioff row as a stand-in, not a bound)   10.000 uA   SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A inputs, VCC 0 to 5.5 V), Ioff +-10 uA (VCC 0, VI or VO 5.5 V)
+     UNBOUNDED  B U214 pin 4: a powered open-drain output that is released, whose off-state current its sheet states only for VCC 0 V (Ioff 10 uA, SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A i)
+======================================================================================================================
+10 (a)  CM5 slot 3 WL_nDIS at U32A pin 89, EMCON asserted: U313 sinks the module's 1.8 kOhm pull-up
+   node B WL_nDIS3 must stay LOW; limit none stated: the CM5 datasheet states no input-low level for pins 89 and 91 ('if driven low, the ... interface will be disabled', release 3, page 20)
+   RESULT: 0.400 V adverse, 0.400 V with the pin currents the other way, 10.0 uA of stated pin current: UNDECIDED (no stated threshold)
+     drv   B U313 pin 6, VOL 0.40 V at IOL 16 mA: TI SN74LVC2G06, SCES307J 6.5 (page 6): VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.4 V at 16 mA and 0.55 V at 24 mA (VCC 3 V); the node asks it to sink 1712.8 uA of stated current, so the pins no sheet bounds would have to pass 14.3 mA more to leave this row
+     leg   B U313 pin 6 drives the node at 0.400 V
+     leg   B U32A pin 89: the module's own pull, 3.3 V through 1800 Ohm (Raspberry Pi Compute Module 5 datasheet, release 3, pin tabl)
+     pin   B WL_nDIS3     U314 pin 6, a released open drain (its Ioff row as a stand-in, not a bound)   10.000 uA   SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A inputs, VCC 0 to 5.5 V), Ioff +-10 uA (VCC 0, VI or VO 5.5 V)
+     UNBOUNDED  B U314 pin 6: a powered open-drain output that is released, whose off-state current its sheet states only for VCC 0 V (Ioff 10 uA, SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A i)
+======================================================================================================================
+13 (a)  CM5 slot 3 BT_nDIS at U32A pin 91, EMCON asserted: U313 sinks the module's 1.8 kOhm pull-up
+   node B BT_nDIS3 must stay LOW; limit none stated: the CM5 datasheet states no input-low level for pins 89 and 91 ('if driven low, the ... interface will be disabled', release 3, page 20)
+   RESULT: 0.400 V adverse, 0.400 V with the pin currents the other way, 10.0 uA of stated pin current: UNDECIDED (no stated threshold)
+     drv   B U313 pin 4, VOL 0.40 V at IOL 16 mA: TI SN74LVC2G06, SCES307J 6.5 (page 6): VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.4 V at 16 mA and 0.55 V at 24 mA (VCC 3 V); the node asks it to sink 1712.8 uA of stated current, so the pins no sheet bounds would have to pass 14.3 mA more to leave this row
+     leg   B U313 pin 4 drives the node at 0.400 V
+     leg   B U32A pin 91: the module's own pull, 3.3 V through 1800 Ohm (Raspberry Pi Compute Module 5 datasheet, release 3, pin tabl)
+     pin   B BT_nDIS3     U314 pin 4, a released open drain (its Ioff row as a stand-in, not a bound)   10.000 uA   SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A inputs, VCC 0 to 5.5 V), Ioff +-10 uA (VCC 0, VI or VO 5.5 V)
+     UNBOUNDED  B U314 pin 4: a powered open-drain output that is released, whose off-state current its sheet states only for VCC 0 V (Ioff 10 uA, SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A i)
+======================================================================================================================
+5-off (a1)  RM520N-GL FULL_CARD_POWER_OFF# at J_M2C2 pin 6 at the instant EMCON asserts, the socket rail still up: U220 sinks R238
+   node B 5G_PWROFF_n must stay LOW; limit 0.20 V: 'driving FULL_CARD_POWER_OFF# pin LOW (<= 0.2 V) or tri-stating the pin will turn off the module' (Quectel RM520N series Hardware Design v1.1, 3.5)
+   RESULT: 0.400 V adverse, 0.400 V with the pin currents the other way, 0.3 uA of stated pin current: FAIL of the bound (the sheet's rows bound the level at 0.40 V; what the part does is not stated)
+     drv   B U220 pin 6, VOL 0.40 V at IOL 16 mA: TI SN74LVC2G06, SCES307J 6.5 (page 6): VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.4 V at 16 mA and 0.55 V at 24 mA (VCC 3 V); the node asks it to sink 318.9 uA of stated current, so the pins no sheet bounds would have to pass 15.7 mA more to leave this row
+     leg   B J_M2C2 pin 6: the module's own pull, 0 V through 100000 Ohm (Quectel RM520N series Hardware Design v1.1, 3.5 (FULL_CARD_P)
+     leg   B R238 10k (taken 9500) to +3V3_S2A at 3.465 V
+     leg   B U220 pin 6 drives the node at 0.400 V
+     pin   B 5G_PWROFF_n  U221 pin 1                                      0.300 uA   TI TPS3808, SBVS050N 6.5 (page 6): IOH 'RESET leakage current' 300 nA maximum at VRESET 6.5 V, RESET not asserted; with 
+     UNBOUNDED  B Q207 drain (2N7002 expander -> FULL_), a switch to ground held off: its off-state current is stated at 25 C only, and it flows out of the node
+======================================================================================================================
+5-off (a2)  RM520N-GL FULL_CARD_POWER_OFF# at J_M2C2 pin 6 with EMCON held, the socket rail removed
+   node B 5G_PWROFF_n must stay LOW; limit 0.20 V: 'driving FULL_CARD_POWER_OFF# pin LOW (<= 0.2 V) or tri-stating the pin will turn off the module' (Quectel RM520N series Hardware Design v1.1, 3.5)
+   RESULT: 0.100 V adverse, 0.100 V with the pin currents the other way, 0.3 uA of stated pin current: PASS on the stated currents; UNDECIDED by the rule (a pin's current has no stated maximum)
+     drv   B U220 pin 6, VOL 0.10 V at IOL 0.1 mA: TI SN74LVC2G06, SCES307J 6.5 (page 6): VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.4 V at 16 mA and 0.55 V at 24 mA (VCC 3 V); the node asks it to sink -0.7 uA of stated current, so the pins no sheet bounds would have to pass 0.101 mA more to leave this row
+     leg   B J_M2C2 pin 6: the module's own pull, 0 V through 100000 Ohm (Quectel RM520N series Hardware Design v1.1, 3.5 (FULL_CARD_P)
+     leg   B R238 10k to +3V3_S2A, which is down: taken absent
+     leg   B U220 pin 6 drives the node at 0.100 V
+     pin   B 5G_PWROFF_n  U221 pin 1                                      0.300 uA   TI TPS3808, SBVS050N 6.5 (page 6): IOH 'RESET leakage current' 300 nA maximum at VRESET 6.5 V, RESET not asserted; with 
+     UNBOUNDED  B Q207 drain (2N7002 expander -> FULL_), a switch to ground held off: its off-state current is stated at 25 C only, and it flows out of the node
+======================================================================================================================
+lamp (b)  the EMCON lamp's gate: EMCLAMP_G at board C's Q7 with U14 unpowered (board C's +3V3 lost, its +5V up): the lamp is dark
+   node C EMCLAMP_G must stay LOW; limit 0.60 V: VGS(th) 0.6 V minimum (Vishay Si2300DS, as board C's part value quotes it; the sheet's own row is a 25 C figure)
+   RESULT: 0.106 V adverse, -0.106 V with the pin currents the other way, 10.08 uA of stated pin current: UNDECIDED (a pin current is unbounded)
+     leg   C R48 100R (nominal) from EMCLAMP_G to EMCLAMP_Y
+     leg   C R49 10k (EMCLAMP_G, taken 1.05e+04) to GND
+     pin   C EMCLAMP_G    Q7 gate (a 25 C figure)                         0.080 uA   JSCJ 2N7002 (LCSC C8545), sheet J,Sep,2016, page 2: IGSS +-80 nA at Ta 25 C only, so it bounds nothing over the envelope
+     pin   C EMCLAMP_Y    U14 pin 4, unpowered (Ioff)                    10.000 uA   SCES414P 6.5 (page 5), over the recommended operating free-air range (6.3: -40 to +125 C for every package but BGA): II 
+     UNBOUNDED  C Q7 gate (Si2300DS-T1-GE3 N-FET (V): JSCJ 2N7002 (LCSC C8545), sheet J,Sep,2016, page 2: IGSS +-80 nA at Ta 25 C only, so it bounds nothing over the envelope; taken here as a 25 C figure and the state marked
+     nodes (adverse): C EMCLAMP_G 0.106 V, C EMCLAMP_Y 0.107 V
+
+SUMMARY
+  L-TXI-1      D TX_INHIBIT_n 0.205 V (other polarity -0.205 V)      PASS against 0.80 V
+  L-TXI-2      A TX_INHIBIT_n 0.244 V (other polarity -0.244 V)      PASS against 0.90 V
+  L-TXI-3      D TX_INHIBIT_n 0.217 V (other polarity -0.217 V)      PASS against 0.80 V
+  L-TXI-4      A TX_INHIBIT_n 0.389 V (other polarity -0.389 V)      PASS against 0.90 V
+  L-TXI-5      D TX_INHIBIT_n 0.326 V (other polarity -0.326 V)      PASS against 0.80 V
+  L-TXI-6      A TX_INHIBIT_n 0.583 V (other polarity -0.583 V)      PASS against 0.90 V
+  L-TXI-7      A TX_INHIBIT_n 0.116 V (other polarity -0.116 V)      PASS against 0.90 V
+  L-TXI-8      C TX_INHIBIT_n 2.533 V (other polarity 2.588 V)       PASS against 2.00 V
+  L-EH-1       B EMCON_HW    0.385 V (other polarity -0.385 V)      PASS against 0.80 V
+  L-EH-2       B EMCON_HW    0.560 V (other polarity -0.560 V)      PASS against 0.80 V
+  L-EH-3       B EMCON_HW    0.418 V (other polarity -0.418 V)      PASS against 0.80 V
+  L-EH-4       A EMCON_HW    0.011 V (other polarity -0.011 V)      PASS against 0.90 V
+  L-EH-5       B EMCON_HW    0.584 V (other polarity -0.584 V)      PASS against 0.80 V
+  2a (a)       A PA_UVLO     0.104 V (other polarity 0.017 V)       PASS on the stated currents; UNDECIDED by the rule (a pin's current has no stated maximum) against 0.55 V
+  2a (b)       A PA_UVLO     0.350 V (other polarity -0.350 V)      UNDECIDED (a pin current is unbounded) against 0.55 V
+  3 (a)        A HF_UVLO     0.104 V (other polarity 0.017 V)       PASS against 0.55 V
+  3 (b)        A HF_UVLO     0.119 V (other polarity -0.119 V)      PASS against 0.55 V
+  4 (a)        B RB_UVLO     0.061 V (other polarity 0.060 V)       PASS against 1.08 V
+  4 (b)        B RB_UVLO     0.153 V (other polarity -0.153 V)      PASS against 1.08 V
+  4-en (a)     B RB_IEN      0.100 V (other polarity 0.100 V)       PASS against 0.40 V
+  4-en (b)     B RB_IEN      0.283 V (other polarity 0.084 V)       PASS against 0.40 V
+  5 (a)        B S2A_EN      0.100 V (other polarity 0.100 V)       PASS on the stated currents; UNDECIDED by the rule (a pin's current has no stated maximum) against 1.03 V
+  6 (a)        B S1A_EN      0.100 V (other polarity 0.100 V)       PASS on the stated currents; UNDECIDED by the rule (a pin's current has no stated maximum) against 1.03 V
+  7 (a)        B S3A_EN      0.100 V (other polarity 0.100 V)       PASS on the stated currents; UNDECIDED by the rule (a pin's current has no stated maximum) against 1.03 V
+  14 (a)       B E22_UVLO    0.061 V (other polarity 0.060 V)       PASS against 1.08 V
+  14 (b)       B E22_UVLO    0.153 V (other polarity -0.153 V)      PASS against 1.08 V
+  15-16 (a)    B E72_EN      0.100 V (other polarity 0.100 V)       PASS against 1.08 V
+  15-16 (b)    B E72_EN      0.106 V (other polarity -0.106 V)      PASS against 1.08 V
+  17 (a)       B LIME_UVLO   0.061 V (other polarity 0.060 V)       PASS against 1.08 V
+  17 (b)       B LIME_UVLO   0.153 V (other polarity -0.153 V)      PASS against 1.08 V
+  2b (a)       D PA_KEY      0.100 V (other polarity 0.100 V)       PASS on the stated currents; UNDECIDED by the rule (a pin's current has no stated maximum) against 0.30 V
+  2b (b)       D PA_KEY      0.192 V (other polarity -0.192 V)      UNDECIDED (a pin current is unbounded) against 0.30 V
+  1-key (a)    D KEY         0.100 V (other polarity 0.100 V)       PASS against 0.80 V
+  1-key (b)    D KEY         0.430 V (other polarity -0.430 V)      PASS against 0.80 V
+  1-sup (b)    D TXSUP_EN    0.001 V (other polarity -0.001 V)      PASS against 1.08 V
+  1 (a)        D SA_PTT_n    2.848 V (other polarity 2.864 V)       UNDECIDED (no stated threshold)
+  8 (a)        B WL_nDIS1    0.400 V (other polarity 0.400 V)       UNDECIDED (no stated threshold)
+  11 (a)       B BT_nDIS1    0.400 V (other polarity 0.400 V)       UNDECIDED (no stated threshold)
+  9 (a)        B WL_nDIS2    0.400 V (other polarity 0.400 V)       UNDECIDED (no stated threshold)
+  12 (a)       B BT_nDIS2    0.400 V (other polarity 0.400 V)       UNDECIDED (no stated threshold)
+  10 (a)       B WL_nDIS3    0.400 V (other polarity 0.400 V)       UNDECIDED (no stated threshold)
+  13 (a)       B BT_nDIS3    0.400 V (other polarity 0.400 V)       UNDECIDED (no stated threshold)
+  5-off (a1)   B 5G_PWROFF_n 0.400 V (other polarity 0.400 V)       FAIL of the bound (the sheet's rows bound the level at 0.40 V; what the part does is not stated) against 0.20 V
+  5-off (a2)   B 5G_PWROFF_n 0.100 V (other polarity 0.100 V)       PASS on the stated currents; UNDECIDED by the rule (a pin's current has no stated maximum) against 0.20 V
+  lamp (b)     C EMCLAMP_G   0.106 V (other polarity -0.106 V)      UNDECIDED (a pin current is unbounded) against 0.60 V
