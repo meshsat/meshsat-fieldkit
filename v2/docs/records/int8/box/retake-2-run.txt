@@ -1,0 +1,9 @@
+start 2026-09-28T19:14:50Z
+HEAD 05af085c675d0327d7dea17be0b68d0cf18f4a41
+status lines after install: 0
+retake exit 0
+end 2026-09-28T19:17:48Z
+---
+retake_schematic_phase: IN PLACE (each board's phase directory out/); verdicts to <phase>/out
+  T=/root/int8/rtk/v2/ecad/tools  E=/root/int8/rtk/v2/ecad  (every command: cd <cwd>; VERDICT_DIR=<cwd>/out python3 ...)
+
