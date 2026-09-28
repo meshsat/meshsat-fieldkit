@@ -1,6 +1,33 @@
 # Board A (power and I/O): layout constraints
 
-**Bound to the H2 line (after H2, 27 September 2026).** Candidate re-read at `ef144760`: phase A32, netlist
+**Bound to the set 6 candidate (27 September 2026, read at `760d7f41`).** This sheet's inputs stand in the block below,
+one to a line, each with its sha256/16 and the commit it last changed in, with the model and the stack the widths were
+computed on; `v2/ecad/tools/constraints_bound.py` fails when a committed input, the calculation or this sheet's power
+table moves without the others (README, "The bound block"). **Re-read on this candidate: section 2 alone.** Its power
+table is `calc/rail_widths.py`'s output on the inputs below, and the widths, currents and barrel counts the text under
+the table quotes were compared with the table and agree. **Not re-read on this candidate: sections 1 and 3 to 11**,
+which are the readings at `e3aedb25` with the H2 line's changes marked where they stand (`ef144760`, the paragraph
+below). Set 6 changed board A's netlist in `c4ad8350` (the hot stop line HOT-R1 drawn) and nothing of its intent file
+but the `written` stamp: **no row of the power table moved**. A line of the older sections that names a part, a net, a
+current or a count is compared with the netlist and the intent file below before it is followed, and where this sheet
+and a record disagree the record governs (README). Board A is not at layout entry: no board is
+(`v2/docs/CURRENT-EVIDENCE.md`, which holds the reasons current on this candidate; a count of reasons in a paragraph
+below is its own binding's).
+
+```bound
+sheet      A
+board      a
+read       2026-09-27 at 760d7f41
+current    section 2: the power table, and the figures the text under it quotes from it
+older      sections 1 and 3 to 11: read at e3aedb25, with the H2 line's changes marked at ef144760
+netlist    v2/ecad/pcb-a-power-a23/out/pcb-a-power.net sha256/16 0a2b59087bcc2678 changed c4ad8350
+intent     v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json sha256/16 3422910a15c4d145 changed c4ad8350
+board_file v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb sha256/16 58e26c67987b1daa changed b7e0d28f
+model      track_current.width_for_current decision 35 rise 10 K plating 18 um
+stack      JLC06161H-3313 outer 0.0350 mm inner 0.0152 mm
+```
+
+**As re-bound to the H2 line (after H2, 27 September 2026), kept as that binding's record.** Candidate re-read at `ef144760`: phase A32, netlist
 `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net` sha256/16 `da05dc02bc1e612f` (last changed at `b7f96784`, set 5), intent
 `pcb-a-power-intent.json` `92dd3b1cda9046b8`; the committed board file `58e26c67987b1daa` predates the netlist (SCH-002
 FAIL). Section 2's power table is regenerated from `calc/rail_widths.py` on that intent; its moved and new rows are
@@ -38,23 +65,47 @@ From `calc/rail_widths.py` (decision 35's model, 10 K; barrels at 18 um plating)
 judges the conductor at (README, "Current"). Widths are the minimum at the narrowest point that carries a meaningful
 share of the rail's current (PI-001's own wording, `pcb_rules.yaml`).
 
-| rail | V (working) | typ / peak A | governing A | one outer face, mm | two outer faces, each mm | inner, mm | barrels at 0.3 / 0.4 / 0.5 mm drill |
-|---|---|---|---|---:|---:|---:|---|
-| CELL+ | 14.4 (16.8) | 10.00 / 18.00 | 18.0, PWR-F12 | 23.91 | 6.72 | 195.8, not a practical conductor | 25 / 21 / 18 |
-| CELL_FUSED | 14.4 (16.8) | 10.00 / 18.00 | 18.0, PWR-F12 | 23.91 | 6.72 | 195.8 | 25 / 21 / 18 |
-| VBAT | 14.4 (16.8) | 10.00 / 18.00 | 18.0, PWR-F12 | 23.91 | 6.72 | 195.8 | 25 / 21 / 18 |
-| VIN_RAW (**H2**: 14.10 A, was 12.31) | 12.0 (36.0) | 14.10 / 14.10 | 14.1 | 15.29 | 4.43 | 125.2, not a practical conductor | 20 / 16 / 14 |
-| VBUS20, FE_OUT, CH_ACN | 20.0 | 6.00 / 8.00 | 6.0 | 3.55 | 1.37 | 26.2 | 11 / 9 / 8 |
-| +13V8_PA, PA_OUT | 13.8 | 5.00 / 6.00 | 5.0 | 2.76 | 1.06 | 18.8 | 9 / 7 / 6 |
-| +5V_DEV, SD_OUT | 5.0 | 4.00 / 6.90 | 4.0 | 2.03 | 0.78 | 12.5 | 10 / 8 / 7 |
-| PD_VPWR, PD_SW, PD_VBUS, PD_OUT | 15.0 | 3.00 / 3.00 | 3.0 | 1.37 | 0.53 | 8.2 | 5 / 4 / 3 |
-| +5V_S1, +5V_S2, +5V_S3, S1_OUT, S2_OUT, S3_OUT | 5.1 | 2.50 / 5.00 | 2.5 | 1.06 | 0.41 | 6.4 | 7 / 6 / 5 |
-| +12V_HF, HF_OUT, +5V_D8 | 12.0 / 5.0 | 1.00 / 2.00 | 1.0 | 0.30 | 0.12 | 1.8 | 3 / 3 / 2 |
-| VHEAT_IN, VHEAT, VBUS_WALL | 14.4 / 12.0 / 5.0 | 0.5 to 0.63 / 0.63 to 0.9 | 0.5 to 0.6 | 0.12 to 0.16 | under 0.1 | under 1 | 2 / 2 / 1 |
-| +3V3, +54V_POE, POE_OUT | 3.3 / 54.0 | 0.30 / 0.60 | 0.3 | 0.06 | | 0.3 | 1 / 1 / 1 |
-| VMON (**H2**, new: the monitor's supply behind the eFuse U21) | 14.4 (16.8) | 0.69 / 1.00 | 0.7 | 0.18 | 0.07 | 1.1 | 2 / 2 / 1 |
-| PRECHG (**H2**, new: the pack's pre-charge pin J_PRE1 into R1 and CELL+) | 14.4 (16.8) | 0.00 / 1.68 | 0.0 (barrels at the 1.68 A peak) | 0.00 | | 0.0 | 3 / 2 / 2 |
-| +3V3_EMCON_EF, +3V3_EMCON (**H2**, new: the EMCON gates' supply behind U39) | 3.3 | under 0.01 | under 0.01 | 0.00 | | 0.0 | 1 / 1 / 1 |
+The table is `calc/rail_widths.py`'s output on the inputs this sheet's `bound` block names, row for row in the tool's
+own order and cell for cell, and `v2/ecad/tools/constraints_bound.py` fails when the two differ; the `note` column is
+this sheet's and is not compared (README, "The bound block"). A width printed 0.00 is under 0.005 mm, a current of a few
+milliamperes: the fabricator's floor governs there, not the current.
+
+| rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill | note |
+|---|---|---|---|---:|---:|---:|---|---|
+| CELL+ | 14.4 (16.8) | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 | the pack path; the inner width is not a practical conductor, so outer copper only (item 1) |
+| CELL_FUSED | 14.4 (16.8) | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 | the pack path |
+| VBAT | 14.4 (16.8) | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 | the pack path |
+| VIN_RAW | 12.0 (36.0) | 14.10 / 14.10 | 14.10, typical (PI-001) | 15.29 | 4.43 | 125.22 (over 40 mm) | 20 / 16 / 14 | **H2**: 14.10 A since `b7f96784`; at `e3aedb25` it was 12.31 A, which is 11.92 mm on one outer face and 17 / 14 / 12 barrels. The intent file: "declared at board E's 14.10 A since R8E-N01 (27 September 2026: this board's front end at its ISNS limit drawing from a 9.0 V bus, R4A-N12)", "crossing the dock on the Mill-Max power pins J_VR1 to J_VR4 (EQ-16)". The inner width is not a practical conductor (item 4) |
+| VBUS20 | 20.00 | 6.00 / 8.00 | 6.00, typical (PI-001) | 3.55 | 1.37 | 26.20 | 11 / 9 / 8 |  |
+| +5V_S1 | 5.10 | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 | slot 1's rail runs at 4.65 A in PS-ALLTX PLAN (PWR-F02, item 5) |
+| +5V_S2 | 5.10 | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |  |
+| +5V_S3 | 5.10 | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |  |
+| +5V_DEV | 5.00 | 4.00 / 6.90 | 4.00, typical (PI-001) | 2.03 | 0.78 | 12.47 | 10 / 8 / 7 |  |
+| +3V3 | 3.30 | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |  |
+| +13V8_PA | 13.80 | 5.00 / 6.00 | 5.00, typical (PI-001) | 2.76 | 1.06 | 18.77 | 9 / 7 / 6 |  |
+| +12V_HF | 12.00 | 1.00 / 2.00 | 1.00, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |  |
+| +54V_POE | 54.00 | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |  |
+| +5V_D8 | 5.00 | 1.00 / 2.00 | 1.00, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |  |
+| PRECHG | 14.4 (16.8) | 0.00 / 1.68 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 3 / 2 / 2 | **H2**, new in `ffca0771`: "the pre-charge pin's conductor to R1 (10 Ohm) and CELL+: 1.68 A at most". The typical current is nil, so the widths are; the barrels are at the 1.68 A peak |
+| FE_OUT | 20.0 (20.0) | 6.00 / 8.00 | 6.00, typical (PI-001) | 3.55 | 1.37 | 26.20 | 11 / 9 / 8 |  |
+| CH_ACN | 20.0 (20.0) | 6.00 / 8.00 | 6.00, typical (PI-001) | 3.55 | 1.37 | 26.20 | 11 / 9 / 8 |  |
+| S1_OUT | 5.1 (5.1) | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |  |
+| S3_OUT | 5.1 (5.1) | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |  |
+| S2_OUT | 5.1 (5.1) | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |  |
+| SD_OUT | 5.0 (5.0) | 4.00 / 6.90 | 4.00, typical (PI-001) | 2.03 | 0.78 | 12.47 | 10 / 8 / 7 |  |
+| PA_OUT | 13.8 (13.8) | 5.00 / 6.00 | 5.00, typical (PI-001) | 2.76 | 1.06 | 18.77 | 9 / 7 / 6 |  |
+| HF_OUT | 12.0 (12.0) | 1.00 / 2.00 | 1.00, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |  |
+| POE_OUT | 54.0 (54.0) | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |  |
+| PD_VPWR | 15.0 (15.0) | 3.00 / 3.00 | 3.00, typical (PI-001) | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 |  |
+| PD_SW | 15.0 (15.0) | 3.00 / 3.00 | 3.00, typical (PI-001) | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 |  |
+| PD_VBUS | 15.0 (15.0) | 3.00 / 3.00 | 3.00, typical (PI-001) | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 |  |
+| PD_OUT | 15.0 (15.0) | 3.00 / 3.00 | 3.00, typical (PI-001) | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 |  |
+| VMON | 14.4 (16.8) | 0.69 / 1.00 | 0.69, typical (PI-001) | 0.18 | 0.07 | 1.08 | 2 / 2 / 1 | **H2**, new in `ffca0771`: "the Xenarc 709GNK monitor's supply behind the eFuse U21 (limit 1.2 A, MON_EN)" |
+| VHEAT_IN | 14.4 (16.8) | 0.58 / 0.90 | 0.58, typical (PI-001) | 0.14 | 0.05 | 0.85 | 2 / 2 / 1 |  |
+| VHEAT | 12.00 | 0.63 / 0.63 | 0.63, typical (PI-001) | 0.16 | 0.06 | 0.95 | 1 / 1 / 1 |  |
+| +3V3_EMCON_EF | 3.30 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `ffca0771`: "the EMCON gates' supply behind the eFuse U39"; declared at 0.4 mA typical and 2 mA peak, which print as 0.00 |
+| +3V3_EMCON | 3.30 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `ffca0771`: "the four SN74AUP1G08 EMCON gates' own supply behind R213"; declared at 0.4 mA typical and 2 mA peak, which print as 0.00 |
+| VBUS_WALL | 5.00 | 0.50 / 0.90 | 0.50, typical (PI-001) | 0.12 | 0.04 | 0.69 | 2 / 2 / 1 |  |
 
 What the table asks of the layout, each line with its source:
 

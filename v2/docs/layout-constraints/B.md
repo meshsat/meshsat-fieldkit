@@ -1,6 +1,35 @@
 # Board B (compute): layout constraints
 
-**Bound to the H2 line (after H2, 27 September 2026).** Candidate re-read at `ef144760`: phase B21, netlist
+**Bound to the set 6 candidate (27 September 2026, read at `760d7f41`).** This sheet's inputs stand in the block below,
+one to a line, each with its sha256/16 and the commit it last changed in, with the model and the stack the widths were
+computed on; `v2/ecad/tools/constraints_bound.py` fails when a committed input, the calculation or this sheet's power
+table moves without the others (README, "The bound block"). **Re-read on this candidate: section 2 alone.** Its power
+table is `calc/rail_widths.py`'s output on the inputs below, and the widths, currents and barrel counts the text under
+the table quotes were compared with the table and agree. **Not re-read on this candidate: sections 1 and 3 to 11**,
+which are the readings at `e3aedb25` with the H2 line's changes marked where they stand (`ef144760`, the paragraph
+below). Set 6 changed board B's netlist and intent file in `910da406` (EMCON forces the RockBLOCK's ENABLE low and
+drives each card rail's enable from its slot's own 5 V): four decoupling entries (C607, C637, C667, C559), the gates
+U116, U216, U316 and U536 entered as loads of 1 to 2 mA, and the switch and enable net of +5V_LORA, +5V_LIME and +5V_RB
+declared. No rail's declared typical or peak current changed: **no row of the power table moved**. A line of the older
+sections that names a part, a net, a current or a count is compared with the netlist and the intent file below before it
+is followed, and where this sheet and a record disagree the record governs (README). Board B is not at layout entry: no
+board is (`v2/docs/CURRENT-EVIDENCE.md`, which holds the reasons current on this candidate; a count of reasons in a
+paragraph below is its own binding's).
+
+```bound
+sheet      B
+board      b
+read       2026-09-27 at 760d7f41
+current    section 2: the power table, and the figures the text under it quotes from it
+older      sections 1 and 3 to 11: read at e3aedb25, with the H2 line's changes marked at ef144760
+netlist    v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net sha256/16 028997a6c5e8810f changed 910da406
+intent     v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json sha256/16 96ee391b3e3f638d changed 910da406
+board_file v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_pcb sha256/16 2e64b5bf2d9cd3bc changed f2541bea
+model      track_current.width_for_current decision 35 rise 10 K plating 18 um
+stack      JLC06161H-3313 outer 0.0350 mm inner 0.0152 mm
+```
+
+**As re-bound to the H2 line (after H2, 27 September 2026), kept as that binding's record.** Candidate re-read at `ef144760`: phase B21, netlist
 `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net` sha256/16 `8b78c59754a6a0c7` (board B's round 8 at `b76c18cb`, last
 changed by set 5 at `caba1876`), intent `pcb-b-compute-intent.json` `162fcb9b95f680a7`; the committed board file
 `2e64b5bf2d9cd3bc` carries B21's older netlist (SCH-002 FAIL) and 416 unrouted connections. Section 2's table is
@@ -36,28 +65,90 @@ closed on it first).
 ## 2. Power: band widths at the declared currents
 
 From `calc/rail_widths.py` (decision 35, 10 K). Where a maker's figure exceeds the declaration (POWER-THERMAL PWR-F01,
-F03, F05), the maker's figure is the one to size to, and the row says so.
+F03, F05), the maker's figure is the one to size to: the first table is the declaration's, its row says so in its note,
+and the second table sizes the same rail at the maker's figure.
 
-| rail | typ / peak A | one outer face, mm | inner, mm | barrels 0.3 / 0.4 / 0.5 mm | note |
-|---|---|---:|---:|---|---|
-| +5V_S2 | 4.2 / 5.0 | 2.17 | 13.64 | 7 / 6 / 5 | the 5G slot; board A declares 2.5 A typical on the same rail (IF-AB-POWER, `pcb_interfaces.yaml`, status DISAGREE) |
-| +5V_S1, +5V_S3 | 2.5 / 5.0 | 1.06 | 6.36 | 7 / 6 / 5 | the slot rails, planes on In4 today |
-| +5V_DEV | 3.8 / 6.0 | 1.89 | 11.36 | 9 / 7 / 6 | typical 3.80 A against 3.56 A of declared children, peak 6.0 against 9.72 (`boards/b.json` `_b_feeders_declared_and_the_device_rail_is_short_at_peak`) |
-| +3V3_S2A, +3V3_M2C2 | 3.0 / 4.0 | 1.37 | 8.18 | 6 / 5 / 4 | the RM520N-GL socket |
-| **+3V3_S1A, +3V3_S3A, +3V3_M2C1, +3V3_M2C3** | declared 0.5 / 1.5; **maker 3.0 A** | **1.37 at 3.0 A** | 8.18 | 5 / 4 / 3 at 3.0 A | PWR-F01: AsiaRF asks a 3.3 V supply of 3 A (2.5 A minimum) for the AW7915-AED; size as for 3.0 A until the declaration is corrected |
-| +1V2_KSZ | declared 0.5 / 0.8; **maker 1.21 A** | 0.39 at 1.21 A | 2.34 | 2 / 2 / 2 | PWR-F03 (KSZ9897R at 1000 Mb/s) |
-| +2V5_KSZ | declared 0.15 / 0.25; maker 0.33 A | 0.07 | 0.39 | 1 / 1 / 1 | PWR-F03 |
-| +1V1_S1..S3 | 0.4 / 0.7; maker's four-SS row 0.778 A | 0.21 at 0.778 A | 1.27 | 2 / 1 / 1 | PWR-F05; the kit's mix uses the 395 mA row |
-| +3V3_S1B..S3B | 0.9 / 1.8 | 0.26 | 1.56 | 3 / 3 / 2 | |
-| +1V0_S1..S3 | 0.8 / 1.2 | 0.22 | 1.32 | 2 / 2 / 2 | |
-| +3V3_DEV | 1.2 / 2.0 | 0.39 | 2.31 | 3 / 3 / 2 | |
-| +5V_LIME | 1.2 / 3.0 | 0.39 | 2.31 | 5 / 4 / 3 | the SDR bay's eFuse; peak with +5V_RB is the fabric question of `_b_feeders_declared...` |
-| +5V_RB | 0.15 / 2.0 | 0.02 | 0.13 | 3 / 3 / 2 | the satellite modem's transmit burst sets the barrels |
-| **PANEL_5V** | 0.6 / 0.6 (board C declares 1.0 A peak) | **0.80 mm** | 0.89 | 1 / 1 / 1 | **H2:** F1 is the MF-MSMF110 (1.1 A hold) since round 8, `b76c18cb`, so the 1.23 A track clears the hold and PWR-003 reads PASS; as first written: behind F1, a 2.0 A hold, 3.5 A trip polyfuse: the copper must clear the hold (0.78 mm at 2.0 A on 1 oz outer); **0.8 mm is the recorded answer** (`boards/b.json` `_panel_5v_fuse_why`; `pcb_energy_chain.yaml` known finding B_PANEL_5V; PWR-003 FAIL on B) |
-| +54V_POE | 0.3 / 0.6 | 0.06 | 0.34 | 1 / 1 / 1 | spacing governs, section 8 |
-| GND | 10 / 21 | a plane | a plane | 29 / 24 / 20 per transition at 21 A | the return of the four input rails; carried by the In1 plane and outer pours |
-| the rest (CM, IOC, ZB, LORA, CAM, HDMI, QMX) | under 0.3 typical | under 0.1 | | 1 to 3 | |
-| **H2**, declared in the H2 intent: VBUS_FLASH1 to 3, SIM1_VCC, SIM2_VCC, SIMC2_VCC, VBAT_RTC, POE_P, MDI_A_P, MDI_A_N, and the +54V_POE returns MDI_B_P, MDI_B_N, POE_DRAIN, POE_SEN; GNSS_VDD_RF, GNSS_BIAS, GNSS_ANT | 0.30 / 0.60 at most | 0.06 at most | 0.34 at most | 1 / 1 / 1 | spacing governs the 54 V ones (section 8); `calc/rail_widths.out` board B |
+The table is `calc/rail_widths.py`'s output on the inputs this sheet's `bound` block names, row for row in the tool's
+own order and cell for cell, and `v2/ecad/tools/constraints_bound.py` fails when the two differ; the `note` column is
+this sheet's and is not compared (README, "The bound block"). A width printed 0.00 is under 0.005 mm, a current of a few
+milliamperes: the fabricator's floor governs there, not the current.
+
+| rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill | note |
+|---|---|---|---|---:|---:|---:|---|---|
+| +5V_S1 | 5.10 | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 | a slot rail, a plane on In4 today |
+| +5V_S2 | 5.10 | 4.20 / 5.00 | 4.20, typical (PI-001) | 2.17 | 0.84 | 13.64 | 7 / 6 / 5 | the 5G slot; board A declares 2.5 A typical for the same conductor (`pcb_interfaces.yaml` IF-AB-POWER, status DISAGREE, I-03 open) |
+| +5V_S3 | 5.10 | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 | a slot rail, a plane on In4 today |
+| +5V_DEV | 5.00 | 3.80 / 6.00 | 3.80, typical (PI-001) | 1.89 | 0.73 | 11.36 | 9 / 7 / 6 | the device rail; its declared children and its peak are the question of `boards/b.json` `_b_feeders_declared_and_the_device_rail_is_short_at_peak` |
+| +3V3_DEV | 3.30 | 1.20 / 2.00 | 1.20, typical (PI-001) | 0.39 | 0.15 | 2.31 | 3 / 3 / 2 |  |
+| +3V3_S1A | 3.30 | 0.50 / 1.50 | 0.50, typical (PI-001) | 0.12 | 0.04 | 0.69 | 3 / 2 / 2 | **declared below its maker's figure** (PWR-F01): size it by the second table |
+| +3V3_M2C1 | 3.30 | 0.50 / 1.50 | 0.50, typical (PI-001) | 0.12 | 0.04 | 0.69 | 3 / 2 / 2 | **declared below its maker's figure** (PWR-F01): size it by the second table |
+| +3V3_S1B | 3.30 | 0.90 / 1.80 | 0.90, typical (PI-001) | 0.26 | 0.10 | 1.56 | 3 / 3 / 2 |  |
+| +1V0_S1 | 1.00 | 0.80 / 1.20 | 0.80, typical (PI-001) | 0.22 | 0.08 | 1.32 | 2 / 2 / 2 |  |
+| +1V1_S1 | 1.10 | 0.40 / 0.70 | 0.40, typical (PI-001) | 0.08 | 0.03 | 0.51 | 1 / 1 / 1 | **its peak is declared below the maker's four-SS row** (PWR-F05): the second table |
+| +3V3_CM1 | 3.30 | 0.10 / 0.20 | 0.10, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |  |
+| +1V8_CM1 | 1.80 | 0.02 / 0.05 | 0.02, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 |  |
+| +3V3_S2A | 3.46 | 3.00 / 4.00 | 3.00, typical (PI-001) | 1.37 | 0.53 | 8.18 | 6 / 5 / 4 | the RM520N-GL socket |
+| +3V3_M2C2 | 3.46 | 3.00 / 4.00 | 3.00, typical (PI-001) | 1.37 | 0.53 | 8.18 | 6 / 5 / 4 | the RM520N-GL socket, past its Kelvin shunt |
+| +3V3_S2B | 3.30 | 0.90 / 1.80 | 0.90, typical (PI-001) | 0.26 | 0.10 | 1.56 | 3 / 3 / 2 |  |
+| +1V0_S2 | 1.00 | 0.80 / 1.20 | 0.80, typical (PI-001) | 0.22 | 0.08 | 1.32 | 2 / 2 / 2 |  |
+| +1V1_S2 | 1.10 | 0.40 / 0.70 | 0.40, typical (PI-001) | 0.08 | 0.03 | 0.51 | 1 / 1 / 1 | **its peak is declared below the maker's four-SS row** (PWR-F05): the second table |
+| +3V3_CM2 | 3.30 | 0.10 / 0.20 | 0.10, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |  |
+| +1V8_CM2 | 1.80 | 0.02 / 0.05 | 0.02, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 |  |
+| +3V3_S3A | 3.30 | 0.50 / 1.50 | 0.50, typical (PI-001) | 0.12 | 0.04 | 0.69 | 3 / 2 / 2 | **declared below its maker's figure** (PWR-F01): size it by the second table |
+| +3V3_M2C3 | 3.30 | 0.50 / 1.50 | 0.50, typical (PI-001) | 0.12 | 0.04 | 0.69 | 3 / 2 / 2 | **declared below its maker's figure** (PWR-F01): size it by the second table |
+| +3V3_S3B | 3.30 | 0.90 / 1.80 | 0.90, typical (PI-001) | 0.26 | 0.10 | 1.56 | 3 / 3 / 2 |  |
+| +1V0_S3 | 1.00 | 0.80 / 1.20 | 0.80, typical (PI-001) | 0.22 | 0.08 | 1.32 | 2 / 2 / 2 |  |
+| +1V1_S3 | 1.10 | 0.40 / 0.70 | 0.40, typical (PI-001) | 0.08 | 0.03 | 0.51 | 1 / 1 / 1 | **its peak is declared below the maker's four-SS row** (PWR-F05): the second table |
+| +3V3_CM3 | 3.30 | 0.10 / 0.20 | 0.10, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |  |
+| +1V8_CM3 | 1.80 | 0.02 / 0.05 | 0.02, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 |  |
+| +3V3_IOCA | 3.30 | 0.12 / 0.25 | 0.12, typical (PI-001) | 0.02 | 0.01 | 0.10 | 1 / 1 / 1 |  |
+| +3V3_IOCB | 3.30 | 0.12 / 0.25 | 0.12, typical (PI-001) | 0.02 | 0.01 | 0.10 | 1 / 1 / 1 |  |
+| +3V3_IOCC | 3.30 | 0.12 / 0.25 | 0.12, typical (PI-001) | 0.02 | 0.01 | 0.10 | 1 / 1 / 1 |  |
+| +1V2_KSZ | 1.20 | 0.50 / 0.80 | 0.50, typical (PI-001) | 0.12 | 0.04 | 0.69 | 2 / 1 / 1 | **declared below its maker's figure** (PWR-F03): size it by the second table |
+| +2V5_KSZ | 2.50 | 0.15 / 0.25 | 0.15, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 | **declared below its maker's figure** (PWR-F03): size it by the second table |
+| +3V3_ZB | 3.30 | 0.10 / 0.30 | 0.10, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |  |
+| +5V_LORA | 5.00 | 0.15 / 0.70 | 0.15, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 |  |
+| +5V_LIME | 5.00 | 1.20 / 3.00 | 1.20, typical (PI-001) | 0.39 | 0.15 | 2.31 | 5 / 4 / 3 | the SDR bay's eFuse; its peak with +5V_RB's is the fabric question of `_b_feeders_declared_and_the_device_rail_is_short_at_peak` |
+| +5V_RB | 5.00 | 0.15 / 2.00 | 0.15, typical (PI-001) | 0.02 | 0.01 | 0.13 | 3 / 3 / 2 | the satellite modem: "burst current on a transmit attempt is the number the copper has to carry, not its average", so the peak sets the barrels |
+| +5V_CAM | 5.00 | 0.25 / 0.50 | 0.25, typical (PI-001) | 0.04 | 0.02 | 0.27 | 1 / 1 / 1 |  |
+| +5V_HDMI | 5.00 | 0.10 / 0.50 | 0.10, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |  |
+| +54V_POE | 54.00 | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 | spacing governs, section 8 |
+| GND | 0.00 | 10.00 / 21.00 | 10.00, typical (PI-001) | 8.15 | 2.76 | 66.76 (over 40 mm) | 29 / 24 / 20 | the return of the four input rails, carried by the In1 plane and the outer pours: the widths are what one conductor would need and no band is asked for; the barrels are per transition, at the 21 A peak |
+| VBUS_FLASH1 | 5.00 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `caba1876`: "it feeds only the USBLC6-2SC6's VBUS reference (pin 5)"; nanoamperes, which print as 0.00 |
+| SIM1_VCC | 3.00 | 0.01 / 0.05 | 0.01, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `caba1876`: "SIM 1's supply from the module's USIM1_VDD"; the 50 mA peak is INFERRED, the intent file says |
+| SIM2_VCC | 3.00 | 0.01 / 0.05 | 0.01, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `caba1876`: "SIM 2's supply from the module's USIM2_VDD" |
+| SIMC2_VCC | 3.00 | 0.01 / 0.05 | 0.01, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `caba1876`: "SIM 2's supply at the holder, past the 0 Ohm eSIM option link R272" |
+| VBUS_FLASH2 | 5.00 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `caba1876`: as VBUS_FLASH1 |
+| VBUS_FLASH3 | 5.00 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `caba1876`: as VBUS_FLASH1 |
+| VBAT_RTC | 3.00 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `caba1876`: "the CR2032's 3 V to the three modules' RTC inputs (pin 76)"; microamperes, which print as 0.00 |
+| POE_P | 54.00 | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 | **H2**, new in `caba1876`: "a series segment of +54V_POE at the port's 0.60 A peak"; spacing governs, section 8 |
+| MDI_A_P | 54.00 | 0.15 / 0.30 | 0.15, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 | **H2**, new in `caba1876`: "a series segment of POE_P carrying half its current, and a 1000BASE-T signal conductor"; spacing governs, section 8 |
+| MDI_A_N | 54.00 | 0.15 / 0.30 | 0.15, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 | **H2**, new in `caba1876`: as MDI_A_P |
+| MDI_B_P (return of +54V_POE) | 0.15 | 0.15 / 0.30 | 0.15, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 | **H2**, new in `caba1876`: "half the port's return from the jack's pin 3"; "up to 57 V with it off", so spacing governs, section 8 |
+| MDI_B_N (return of +54V_POE) | 0.15 | 0.15 / 0.30 | 0.15, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 | **H2**, new in `caba1876`: as MDI_B_P |
+| POE_DRAIN (return of +54V_POE) | 0.15 | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 | **H2**, new in `caba1876`: "the port's return from T1's centre tap MCT2 (pin 21) to the drain of the port switch Q1"; "up to 57 V with it off" |
+| POE_SEN (return of +54V_POE) | 0.15 | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 | **H2**, new in `caba1876`: "the port's return from Q1's source to the 0.25 Ohm sense resistor R12" |
+| GNSS_VDD_RF | 3.30 | 0.02 / 0.03 | 0.02, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 | **H2**, new in `caba1876`: "the active antenna's supply from the LG290P's VDD_RF to R23"; the currents are INFERRED, the intent file says |
+| GNSS_BIAS | 3.30 | 0.02 / 0.03 | 0.02, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 | **H2**, new in `caba1876`: "a series segment of GNSS_VDD_RF" |
+| GNSS_ANT | 3.30 | 0.02 / 0.03 | 0.02, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 | **H2**, new in `caba1876`: "a series segment of GNSS_VDD_RF" |
+| VBUS_QMX | 5.00 | 0.30 / 0.30 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |  |
+| PANEL_5V | 5.00 | 0.60 / 0.60 | 0.60, typical (PI-001) | 0.15 | 0.06 | 0.89 | 1 / 1 / 1 | behind F1, an MF-MSMF110 (1.1 A hold, 2.2 A trip) since round 8, `b76c18cb` (`boards/b.json` `_panel_5v_fuse_r8_why`): the copper must clear the fuse's hold, which the width of this row does not say. The record's answer is the PANEL class at 0.8 mm in `gen_pcb_b3.py` for the next cut (`pcb_energy_chain.yaml` stage B_PANEL_5V); board C declares 1.0 A peak on the same conductor |
+
+Sized at the maker's figure, above the declaration (`calc/rail_widths.py` SIZED_TO;
+`v2/docs/feasibility/POWER-THERMAL.md` section 10). The declaration is unchanged and is board B's owner's to correct;
+until it is, these are the widths and barrel counts to follow:
+
+| rail | declared typ / peak A | sized at, A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of the declared peak and the sized current, 0.3 / 0.4 / 0.5 mm drill | the maker's figure and its finding |
+|---|---|---|---:|---:|---:|---|---|
+| +3V3_S1A | 0.50 / 1.50 | 3.000 | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 | PWR-F01: AsiaRF asks a 3.3 V supply of 3 A (2.5 A minimum) for the AW7915-AED |
+| +3V3_M2C1 | 0.50 / 1.50 | 3.000 | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 | PWR-F01, the same conductor past its Kelvin shunt |
+| +3V3_S3A | 0.50 / 1.50 | 3.000 | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 | PWR-F01 |
+| +3V3_M2C3 | 0.50 / 1.50 | 3.000 | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 | PWR-F01, the same conductor past its Kelvin shunt |
+| +1V2_KSZ | 0.50 / 0.80 | 1.210 | 0.39 | 0.15 | 2.34 | 2 / 2 / 2 | PWR-F03: KSZ9897R at 1000 Mb/s draws 1.21 A typical on its 1.2 V rails |
+| +2V5_KSZ | 0.15 / 0.25 | 0.330 | 0.07 | 0.03 | 0.39 | 1 / 1 / 1 | PWR-F03: 330 mA on AVDDH |
+| +1V1_S1 | 0.40 / 0.70 | 0.778 | 0.21 | 0.08 | 1.27 | 2 / 1 / 1 | PWR-F05: TUSB8041's four-SS-devices row, 778 mA on VDD; the kit's mix uses the 395 mA row |
+| +1V1_S2 | 0.40 / 0.70 | 0.778 | 0.21 | 0.08 | 1.27 | 2 / 1 / 1 | PWR-F05 |
+| +1V1_S3 | 0.40 / 0.70 | 0.778 | 0.21 | 0.08 | 1.27 | 2 / 1 / 1 | PWR-F05 |
 
 ## 3. Pairs: targets, geometry, budgets
 
