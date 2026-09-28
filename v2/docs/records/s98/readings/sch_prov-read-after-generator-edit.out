@@ -1,0 +1,6 @@
+-- a
+sch_prov: pcb-a-power.net was written by generator b3ba8f977ea264e2 and this tree's generator is 6fa6de3616f33dec: the two describe different designs (changed inputs: gen_sch_a.py)
+exit 0
+-- b
+sch_prov: pcb-b-compute.net was written by generator d242446f0eef3122 and this tree's generator is bcf264c5ec352f7e: the two describe different designs (changed inputs: gen_sch_b.py)
+exit 0
