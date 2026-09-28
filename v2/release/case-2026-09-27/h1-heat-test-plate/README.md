@@ -59,15 +59,16 @@ lists every file an engineer needs, this folder's included, by path and sha256.
 
 ## Source revision
 
-Generated on 29 September 2026 at 01:37 CEST (23:37 UTC on 28 September, the date the sheet's title block prints) on the
-rented CAD box (Ubuntu 24.04, Python 3.12.3, x86_64) from branch `fnd/od01b` at `b8880536`
-(`CASE_BASE_COMMIT=b8880536`; a first build at `c0ec7684` had the HS100's hole misread on the sheet's section and note 2,
-with the same geometry: the STL bytes are identical), in a venv whose `pip freeze` equals `v2/cad/requirements-cad.lock` line for line
+Generated on 29 September 2026 at 01:49 CEST (23:49 UTC on 28 September, the date the sheet's title block prints) on the
+rented CAD box (Ubuntu 24.04, Python 3.12.3, x86_64) from branch `fnd/od01b` at `f2294a69`
+(`CASE_BASE_COMMIT=f2294a69`). Two earlier builds carried the same geometry (the STL bytes are identical in all three and
+the check record is identical to the second's): at `c0ec7684` the sheet misread the HS100's mounting hole, and at
+`b8880536` its note 5 named the receipt checks R1 to R8 rather than the five that gate H1. The venv whose `pip freeze` equals `v2/cad/requirements-cad.lock` line for line
 (build123d 0.13.0, cadquery-ocp-novtk 8.0.1.0.0, ezdxf 1.4.4, matplotlib 3.11.2). Commands, from the repository root:
 
     python v2/cad/h1_heat_test_plate.py <out>/h1-heat-test-plate
     python v2/cad/h1_heat_test_plate_drawing.py <out>/h1-heat-test-plate/h1-heat-test-plate-drawing.pdf <out>/h1.png
-    python v2/cad/case_manifest.py <out>/h1-heat-test-plate --base b8880536     (after this README is written)
+    python v2/cad/case_manifest.py <out>/h1-heat-test-plate --base f2294a69     (after this README is written)
 
 Inputs, sha256 first 16: `v2/ecad/tools/panel1450.py` 3bdb88df98260244 (the same file the release names);
 `v2/release/case-2026-09-27/face-plate/face-plate.dxf` 19703fa5838f9e4a; `v2/vendor/arcol/arcol-hs-datasheet-12-14-08.pdf`

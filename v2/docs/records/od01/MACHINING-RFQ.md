@@ -47,9 +47,9 @@ tolerances and notes a DXF or STEP does not.
 
 | Line | Upload | sha256 |
 |---|---|---|
-| H1 | `h1-heat-test-plate/h1-heat-test-plate-drawing.pdf` (sheet H1-1; governs) | `0cb0c51bce23f67bbb03bd2840c5c4f9f5916a70c132e1abd5eaaa9a49e29e89` |
-| H1 | `h1-heat-test-plate/h1-heat-test-plate.step` (CNC) | `122a1eff47f0d189ca5a311791994569cb6872cbff31043753fd83e6f4932f1b` |
-| H1 | `h1-heat-test-plate/h1-heat-test-plate.dxf` (layers OUTLINE, THROUGH, REBATE_2MM_TOP, RELIEF_0.8MM_UNDERSIDE, PEM_S_M3) | `7708c746b13efe94b40c3a83f5ab2f81e00b824230db2a791aa96d4c9ca44a0e` |
+| H1 | `h1-heat-test-plate/h1-heat-test-plate-drawing.pdf` (sheet H1-1; governs) | `570fa2fcb35d3ebd78b21636e2a65adab3a01c7951b307d3733e87c29e888104` |
+| H1 | `h1-heat-test-plate/h1-heat-test-plate.step` (CNC) | `02d32e191d8d66575ec4093177202096d64e7bde3ca18a3d5495748cb318fc7e` |
+| H1 | `h1-heat-test-plate/h1-heat-test-plate.dxf` (layers OUTLINE, THROUGH, REBATE_2MM_TOP, RELIEF_0.8MM_UNDERSIDE, PEM_S_M3) | `ee4ebf502a388b6a8be79193145d32e9f3f84be671e141f2cf2c27193fa78c23` |
 | C1 | `face-plate/face-plate.step` (CNC) | `48343402a8370f36eb8a0474de6eb3cdee50e1df127c515781736e2ada8ca696` |
 | C1 | `face-plate/face-plate.dxf` (layers OUTLINE, THROUGH, POCKET_1MM, REBATE_2MM_TOP, RELIEF_0.8MM_UNDERSIDE, STANDOFF_M3) | `19703fa5838f9e4acbe0dc4021a77ca34b38e8b3c2fbe840678c53dfc6e3c551` |
 | C1 | `drawings/face-plate-drawing.pdf` (sheet 1) | `ef9a2fb1df36deef74b5959633dd15583ea7388d8e48bd0f087f9f086fa4d061` |
