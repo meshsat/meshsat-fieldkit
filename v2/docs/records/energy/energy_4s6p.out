@@ -1,0 +1,266 @@
+SECTION 8: ONE 4S6P PACK UNDER ONE BOARD P (the west block in parallel with the east block). PROTOTYPE DESIGN:
+nothing built, ordered or measured; AI review. Inputs pinned (sha256, first 16):
+  a2a050dc24c461f2  v2/docs/records/adj/A06-pack-geometry/drafts/pack_fit.py
+  36cede1b5fd59cf8  v2/docs/records/energy/energy_budget.py
+  64dd014bee56d855  v2/docs/records/energy/energy_inputs.yaml
+  9684e7a9606aede6  v2/ecad/tools/gen_sch_a.py
+  740817ada5c8e14a  v2/ecad/tools/gen_sch_p.py
+  3bdb88df98260244  v2/ecad/tools/panel1450.py
+  ab1dbc3f3f69aa46  v2/ecad/tools/pcb_pack_protection.yaml
+  and energy_inputs.yaml's own pinned list (8 files), checked as energy_budget.py checks it.
+Typed figures (not parsed; each with its source):
+  awg12_mm2          3.31                   12 AWG = 3.31 mm2 (the gauge's definition); board P's W_P, W_N, W_BP, W_BN are 12 AWG lands (gen_sch_p.py), the pack lead 12 AWG silicone (ASSEMBLY.md section 3)
+  cp_j_gk            (0.8, 1.1)             POWER-THERMAL.md section 7.2: 0.8 to 1.1 J/gK, INFERRED, no Samsung figure
+  cu_cp_j_gk         0.385                  copper, a physical constant
+  cu_density_g_cm3   8.96                   copper, a physical constant
+  design_cap_max     32767                  SLUUAQ3A 14.13.5.1 and 14.13.5.2: Design Capacity mAh and cWh, I2, maximum 32767
+  drop_zone          (-165.0, 98.0)         CASE-MARGINS.md 3.4 (West): the drop zone, X -165 to the west wall at |Y| up to 98 from the floor to Z 54, is the west jumpers'
+  flat_floor_y       114.49                 CASE-MARGINS.md 2.1 and 2.3: the flat floor ends at Y +-114.49 (fillet tangent)
+  heater_w           7.5                    RS PRO 245-556: 7.5 W at 12 V, 50 x 150 mm (v2/vendor/battery/heater/rs-pro-245-556-heater-mat-sheet.pdf)
+  key_peak_a         18.0                   PWR-F12: 18 A for 60 s for every PA key-down (pcb_pack_protection.yaml declared_peak_a)
+  r_cb_ohm           200.0                  SLUSC67B 6.10: RCB, internal cell balance resistance, RDS(ON) of the internal FET switch at 2 V < VDS < 4 V, 200 ohm
+  r_cell_ohm         (0.035, 0.06)          POWER-THERMAL.md section 7.2: R_cell 0.035 to 0.06 Ohm (the cell sheet's 35 mOhm AC, Ver. 1.1 7.4, is the low end)
+  r_tap_ohm          100.0                  gen_sch_p.py, the cell sense filters R1 to R4: 100R each
+  rho_cu             1.724e-08              annealed copper at 20 C, IACS (a physical constant; no wire standard such as IEC 60228 is held in the tree)
+  tps2596_rilm       (903.0, 0.0112)        gen_sch_a.py at efuse(): TPS2596 equation 7, RILM = 903 / (ILIM + 0.0112) ohm
+
+Self-check: the scheduled run reproduces energy_budget.simulate on 4 cases (constant load, the record's charge rule): PASS
+
+1. ELECTRICAL
+
+1a. The pack and the gauge's capacity words (BQ4050 data flash; SLUUAQ3A 14.13.5):
+   4S3P: 12 cells, nominal 144.7 Wh (12 x 3.35 Ah x 3.60 V); Design Capacity 10050 mAh (min) or 10350 (typ 3.45 Ah), 14472 cWh; limit 32767: fits
+   4S6P: 24 cells, nominal 289.4 Wh (24 x 3.35 Ah x 3.60 V); Design Capacity 20100 mAh (min) or 20700 (typ 3.45 Ah), 28944 cWh; limit 32767: fits
+
+1b. Balancing: the internal bypass (RCB 200 ohm) through two 100 ohm tap filters at 3.9 V: 9.75 mA (SLUSC67B 8.2.2.3.1: the series
+   resistors set the current). Time to move 1 percent of a series group's minimum capacity: 4S3P 10.3 h, 4S6P 20.6 h.
+   It acts on a west group only through the equalising link of that node (the gauge's taps are on the east block).
+
+1c. Currents per cell (the pack's current is the kit's load: parallel cells share it, the ratings do not rise):
+  discharge                    pack A  A a cell, 4S3P or 6P with a block isolated  A a cell, 4S6P even share  cell limit A
+  ---------------------------  ------  ------------------------------------------  -------------------------  ------------
+  declared continuous          10.00   3.33                                        1.67                       8.00        
+  declared peak (PWR-F12)      18.00   6.00                                        3.00                       8.00        
+  gauge OCD1 trip              20.00   6.67                                        3.33                       8.00        
+  F1 opens from (135 percent)  33.75   11.25                                       5.62                       8.00        
+
+1d. Sharing between the two strings: block resistance 4 x R_cell / 3 = 46.7 to 80.0 mOhm (cells only); the west string adds
+   its harness, out and back, 3.6 to 5.7 mOhm (12 AWG, 5.21 mOhm/m, route 0.35 to 0.55 m, item 2 below); the east string takes 51.1 to 52.9
+   percent of the pack current (string fuses of equal rating in both strings cancel). East cell at the 18 A peak: 3.17 A.
+
+1e. S-85 item 3 (W4DP-F2): does an element acting without firmware open at or below the cells' continuous rating?
+   healthy 4S6P: the east block's cells reach 8.0 A each at a pack current of 45.4 A; F1 opens from 33.75 A (in 0.75 to 600 s)
+   and holds 27.5 A for 360,000 s at least: F1 opens BELOW the cells' limit.
+   one block isolated (its string fuse or its lead open, or a block not fitted): 4S3P again, cells' limit 24.0 A against F1's 33.75:
+   the gap of S-85 item 3 remains for that case. The gauge's thresholds therefore stay at the 3P values (parallel_min 3).
+
+1f. Charge current (one charger, BQ25731 on board A; one gauge OCC1 at 5.0 A, set for 3P, pcb_pack_protection.yaml):
+  setting                            pack A  A a cell at 6P  A a cell with a block isolated  below OCC1 5.0 A                                               isolated block within 2.0 A a cell
+  ---------------------------------  ------  --------------  ------------------------------  -------------------------------------------------------------  ----------------------------------
+  FW-A02 as written (3P cycle life)  3.00    0.50            1.00                            yes                                                            yes                               
+  this study's setting: OCC1 kept    4.00    0.67            1.33                            yes                                                            yes                               
+  the record's two-pack runs         6.12    1.02            2.04                            NO (OCC1 trips; raising it lets a 3P pack take 2.04 A a cell)  NO                                
+  6P cycle life (1.02 A a cell)      6.12    1.02            2.04                            NO (OCC1 trips; raising it lets a 3P pack take 2.04 A a cell)  NO                                
+   Pre-charge stays 1.0 A: 0.048C of 4S6P (the guideline's window is 0.1C to 0.5C; lower is the gentle side), 0.097C of 3P.
+
+1g. Charge time from the graceful line to 95 percent of the usable energy, the model's charge rule (CC to 85 percent, then
+   linear taper, 0.95 into the cells), at constant pack voltage (INFERRED; the charger's own termination is the host's):
+  charge A  pack     usable Wh  CC power W  hours to 95 percent
+  --------  -------  ---------  ----------  -------------------
+  3.00      new      273.0      43.5        6.7                
+  3.00      aged 80  218.4      43.5        5.4                
+  4.00      new      273.0      58.0        5.0                
+  4.00      aged 80  218.4      58.0        4.0                
+  6.12      new      273.0      88.7        3.3                
+  6.12      aged 80  218.4      88.7        2.6                
+
+2. MECHANICAL (the pockets from A06's pack_fit.py, the outlines from panel1450.py)
+   east pocket X 120..178 Y -120..120; west pocket X -178..-120 Y -40..120; board B's underside Z 47.90 (pack_fit.B_UNDER)
+   board A X -120..120 Y -80..80; board B X -165..165 Y -100..100; board E (dock strip) X -149..118 Y -113..-45
+   between the pockets: 240 mm in X. Candidate corridor at the floor along the back wall: outboard of board A (Y 80) and
+   inboard of the flat floor's edge (Y 114.49), 34.49 mm wide, under board B (Z 47.90 less its underside parts); shared with the
+   RJ45 patch lead and the connector plate's lead drops (CASE-MARGINS.md 3.3); the floor plan is not drawn (its section 6).
+   Under board A the floor is the RF jumpers' lane to E6's clamps (CASE-MARGINS.md 3.4) and E6's strip is at Y -113..-45.
+   Route length bound: 240 (between the pockets) plus up to 26.5 in the west pocket (the block's free Y) plus up to 205.5 along the
+   east group to board P, less what the placement saves: 0.35 to 0.55 m taken (ESTIMATE; no route is drawn).
+   The west jumpers' drop zone (X -165 to the wall, |Y| <= 98, floor to Z 54) overlaps the west pocket over 13 mm of X: a block
+   of 56.65 in a 58 pocket cannot leave it (X spare 1.35), so the block takes the drop zone the seven west jumpers were given.
+
+  route m  case                                          A      loop mOhm  drop mV  loss W
+  -------  --------------------------------------------  -----  ---------  -------  ------
+  0.35     east string open: the whole peak on the west  18.00  3.6        66       1.18  
+  0.35     even share, the peak                          8.80   3.6        32       0.28  
+  0.35     PS-IDLE-SPEC, west share                      1.49   3.6        5        0.01  
+  0.55     east string open: the whole peak on the west  18.00  5.7        103      1.86  
+  0.55     even share, the peak                          8.80   5.7        50       0.44  
+  0.55     PS-IDLE-SPEC, west share                      1.49   5.7        9        0.01  
+   12 AWG at 18 A for 60 s, adiabatic (no loss to the air, copper only): 8.9 K. The pack lead is already 12 AWG at this current.
+
+3. ENERGY: 4S6P, the chain of energy_budget.py section 2 at n_p = 6 (one pack, 24 cells)
+  state           W      cells C  new Wh  aged 80 Wh (3.00 V)  aged 80 Wh (2.80 V)  aged 60 Wh  4S3P aged 80 Wh  h aged 80
+  --------------  -----  -------  ------  -------------------  -------------------  ----------  ---------------  ---------
+  PS-IDLE-SPEC    42.80  +20      273.0   218.4                221.5                163.8       107.9            5.10     
+  PS-IDLE-SPEC    42.80  +5       192.8   154.3                156.4                115.7       76.2             3.60     
+  PS-IDLE-SPEC    42.80  +0       166.1   132.9                134.7                99.6        65.6             3.10     
+  PS-IDLE-SPEC    42.80  -10      112.6   90.1                 91.3                 67.6        44.5             2.10     
+  PS-NIGHT-RELAY  16.20  +20      273.0   218.4                221.5                163.8       109.2            13.48    
+  PS-NIGHT-RELAY  16.20  +5       192.8   154.3                156.4                115.7       77.1             9.52     
+  PS-NIGHT-RELAY  16.20  +0       166.1   132.9                134.7                99.6        66.4             8.20     
+  PS-NIGHT-RELAY  16.20  -10      112.6   90.1                 91.3                 67.6        45.0             5.56     
+
+3a. M1 AS WRITTEN: PS-IDLE-SPEC 42.8 W for 72 h, from a full aged 4S6P pack, charge 4.0 A (1f), 2.80 V line unless stated:
+  month      cells C  panel                                       start 06:00                                             start 18:00                                          
+  ---------  -------  ------------------------------------------  ------------------------------------------------------  -----------------------------------------------------
+  September  +20      100 Wp, 100 W window                        NOT MET, stop h 12, ran 26 h, unserved 1668 of 3082 Wh  NOT MET, stop h 5, ran 26 h, unserved 1567 of 3082 Wh
+  September  +20      200 Wp, 100 W (route B)                     NOT MET, stop h 16, ran 44 h, unserved 1110 of 3082 Wh  NOT MET, stop h 5, ran 43 h, unserved 1108 of 3082 Wh
+  September  +20      330 Wp, 300 W path                          NOT MET, stop h 16, ran 46 h, unserved 1019 of 3082 Wh  NOT MET, stop h 5, ran 46 h, unserved 1018 of 3082 Wh
+  September  +20      400 Wp, no window                           NOT MET, stop h 16, ran 46 h, unserved 1004 of 3082 Wh  NOT MET, stop h 5, ran 46 h, unserved 1002 of 3082 Wh
+  June       +20      100 Wp, 100 W window                        NOT MET, stop h 15, ran 35 h, unserved 1336 of 3082 Wh  NOT MET, stop h 5, ran 33 h, unserved 1310 of 3082 Wh
+  June       +20      200 Wp, 100 W (route B)                     NOT MET, stop h 17, ran 49 h, unserved 888 of 3082 Wh   NOT MET, stop h 5, ran 48 h, unserved 892 of 3082 Wh 
+  June       +20      330 Wp, 300 W path                          NOT MET, stop h 17, ran 49 h, unserved 763 of 3082 Wh   NOT MET, stop h 5, ran 48 h, unserved 767 of 3082 Wh 
+  June       +20      400 Wp, no window                           NOT MET, stop h 17, ran 51 h, unserved 728 of 3082 Wh   NOT MET, stop h 5, ran 51 h, unserved 728 of 3082 Wh 
+  December   +5       100 Wp, 100 W window                        NOT MET, stop h 3, ran 8 h, unserved 2484 of 3082 Wh    NOT MET, stop h 3, ran 6 h, unserved 2399 of 3082 Wh 
+  December   +5       200 Wp, 100 W (route B)                     NOT MET, stop h 4, ran 14 h, unserved 2112 of 3082 Wh   NOT MET, stop h 3, ran 15 h, unserved 2122 of 3082 Wh
+  December   +5       330 Wp, 300 W path                          NOT MET, stop h 10, ran 22 h, unserved 1961 of 3082 Wh  NOT MET, stop h 3, ran 21 h, unserved 1921 of 3082 Wh
+  December   +5       400 Wp, no window                           NOT MET, stop h 11, ran 27 h, unserved 1845 of 3082 Wh  NOT MET, stop h 3, ran 27 h, unserved 1838 of 3082 Wh
+  December   +20      100 Wp, 100 W window                        NOT MET, stop h 6, ran 10 h, unserved 2479 of 3082 Wh   NOT MET, stop h 5, ran 9 h, unserved 2478 of 3082 Wh 
+  December   +20      200 Wp, 100 W (route B)                     NOT MET, stop h 9, ran 17 h, unserved 2076 of 3082 Wh   NOT MET, stop h 5, ran 17 h, unserved 1954 of 3082 Wh
+  December   +20      330 Wp, 300 W path                          NOT MET, stop h 12, ran 24 h, unserved 1896 of 3082 Wh  NOT MET, stop h 5, ran 23 h, unserved 1856 of 3082 Wh
+  December   +20      400 Wp, no window                           NOT MET, stop h 13, ran 29 h, unserved 1780 of 3082 Wh  NOT MET, stop h 5, ran 29 h, unserved 1773 of 3082 Wh
+  September  +20      design case, 3.00 V line                    NOT MET, stop h 12, ran 26 h, unserved 1671 of 3082 Wh                                                       
+  September  +20      400 Wp, no window, NEW pack                 NOT MET, stop h 17, ran 49 h, unserved 838 of 3082 Wh                                                        
+  June       +20      400 Wp, no window, PS-IDLE-SPEC LOW 33.1 W  NOT MET, stop h 19, ran 57 h, unserved 379 of 2383 Wh                                                        
+   The charge current (3.0, 4.0 or 6.12 A) changes the verdict, first stop or hours run in 0 of these 32 runs.
+
+   The largest constant load the aged 4S6P pack carries for 72 h (2.80 V line, charge 4.0 A, start 06:00):
+  month      cells C  100 Wp, 100 W window  200 Wp, 100 W (route B)  330 Wp, 300 W path  400 Wp, no window
+  ---------  -------  --------------------  -----------------------  ------------------  -----------------
+  September  +20      13.92 W               17.06 W                  17.87 W             18.31 W          
+  June       +20      18.06 W               20.51 W                  21.85 W             22.57 W          
+  December   +5       5.25 W                7.95 W                   9.07 W              9.15 W           
+  December   +20      6.29 W                9.04 W                   12.25 W             12.77 W          
+   One night by hand, September: sun-down 11.28 h x 42.8 W = 483 Wh against 218.4 Wh aged (4S6P, 3.00 V line, +20 C).
+
+3b. THE NIGHT STATE as in the record's sets 1 to 3 (16.20 W constant; LOW 11.02, HIGH 39.67), 2.80 V line, start 06:00, aged,
+   with ONE charge current: 3.0 A (FW-A02), 4.0 A (1f) and 6.12 A (the record's two-pack runs, which one gauge's OCC1 refuses):
+  month      cells C  set                   3.0 A                                                  4.0 A                                                  6.12 A                                               
+  ---------  -------  --------------------  -----------------------------------------------------  -----------------------------------------------------  -----------------------------------------------------
+  September  +20      set 1: 100 Wp         NOT MET, stop h 44, ran 63 h, unserved 119 of 1166 Wh  NOT MET, stop h 44, ran 63 h, unserved 119 of 1166 Wh  NOT MET, stop h 44, ran 63 h, unserved 119 of 1166 Wh
+  September  +20      set 2: 200 Wp, 100 W  MET, lowest 12.1 Wh                                    MET, lowest 12.1 Wh                                    MET, lowest 12.1 Wh                                  
+  September  +20      set 3: 330 Wp, 300 W  MET, lowest 23.4 Wh                                    MET, lowest 23.4 Wh                                    MET, lowest 23.4 Wh                                  
+  September  +20      400 Wp, no window     MET, lowest 27.2 Wh                                    MET, lowest 27.2 Wh                                    MET, lowest 27.2 Wh                                  
+  June       +20      set 1: 100 Wp         MET, lowest 32.3 Wh                                    MET, lowest 32.3 Wh                                    MET, lowest 32.3 Wh                                  
+  June       +20      set 2: 200 Wp, 100 W  MET, lowest 51.7 Wh                                    MET, lowest 51.7 Wh                                    MET, lowest 51.7 Wh                                  
+  June       +20      set 3: 330 Wp, 300 W  MET, lowest 67.8 Wh                                    MET, lowest 67.8 Wh                                    MET, lowest 67.8 Wh                                  
+  June       +20      400 Wp, no window     MET, lowest 71.7 Wh                                    MET, lowest 71.7 Wh                                    MET, lowest 71.7 Wh                                  
+  December   +5       set 1: 100 Wp         NOT MET, stop h 15, ran 25 h, unserved 687 of 1166 Wh  NOT MET, stop h 15, ran 25 h, unserved 687 of 1166 Wh  NOT MET, stop h 15, ran 25 h, unserved 687 of 1166 Wh
+  December   +5       set 2: 200 Wp, 100 W  NOT MET, stop h 18, ran 38 h, unserved 505 of 1166 Wh  NOT MET, stop h 18, ran 38 h, unserved 505 of 1166 Wh  NOT MET, stop h 18, ran 38 h, unserved 505 of 1166 Wh
+  December   +5       set 3: 330 Wp, 300 W  NOT MET, stop h 18, ran 48 h, unserved 343 of 1166 Wh  NOT MET, stop h 18, ran 48 h, unserved 343 of 1166 Wh  NOT MET, stop h 18, ran 48 h, unserved 343 of 1166 Wh
+  December   +5       400 Wp, no window     NOT MET, stop h 18, ran 48 h, unserved 340 of 1166 Wh  NOT MET, stop h 18, ran 48 h, unserved 340 of 1166 Wh  NOT MET, stop h 18, ran 48 h, unserved 340 of 1166 Wh
+  December   +20      set 1: 100 Wp         NOT MET, stop h 19, ran 29 h, unserved 622 of 1166 Wh  NOT MET, stop h 19, ran 29 h, unserved 622 of 1166 Wh  NOT MET, stop h 19, ran 29 h, unserved 622 of 1166 Wh
+  December   +20      set 2: 200 Wp, 100 W  NOT MET, stop h 22, ran 42 h, unserved 440 of 1166 Wh  NOT MET, stop h 22, ran 42 h, unserved 440 of 1166 Wh  NOT MET, stop h 22, ran 42 h, unserved 440 of 1166 Wh
+  December   +20      set 3: 330 Wp, 300 W  NOT MET, stop h 22, ran 56 h, unserved 213 of 1166 Wh  NOT MET, stop h 22, ran 56 h, unserved 212 of 1166 Wh  NOT MET, stop h 22, ran 56 h, unserved 212 of 1166 Wh
+  December   +20      400 Wp, no window     NOT MET, stop h 22, ran 60 h, unserved 145 of 1166 Wh  NOT MET, stop h 22, ran 60 h, unserved 145 of 1166 Wh  NOT MET, stop h 22, ran 60 h, unserved 145 of 1166 Wh
+
+  night state  W      month      cells C  set                   4.0 A                                                 
+  -----------  -----  ---------  -------  --------------------  ------------------------------------------------------
+  LOW          11.02  September  +20      set 2: 200 Wp, 100 W  MET, lowest 84.6 Wh                                   
+  LOW          11.02  September  +20      set 3: 330 Wp, 300 W  MET, lowest 89.3 Wh                                   
+  LOW          11.02  June       +20      set 2: 200 Wp, 100 W  MET, lowest 113.9 Wh                                  
+  LOW          11.02  June       +20      set 3: 330 Wp, 300 W  MET, lowest 121.4 Wh                                  
+  LOW          11.02  December   +5       set 2: 200 Wp, 100 W  NOT MET, stop h 23, ran 53 h, unserved 181 of 793 Wh  
+  LOW          11.02  December   +5       set 3: 330 Wp, 300 W  NOT MET, stop h 23, ran 63 h, unserved 79 of 793 Wh   
+  LOW          11.02  December   +20      set 2: 200 Wp, 100 W  NOT MET, stop h 44, ran 59 h, unserved 120 of 793 Wh  
+  LOW          11.02  December   +20      set 3: 330 Wp, 300 W  MET, lowest 30.0 Wh                                   
+  HIGH         39.67  September  +20      set 2: 200 Wp, 100 W  NOT MET, stop h 16, ran 44 h, unserved 966 of 2856 Wh 
+  HIGH         39.67  September  +20      set 3: 330 Wp, 300 W  NOT MET, stop h 16, ran 46 h, unserved 891 of 2856 Wh 
+  HIGH         39.67  June       +20      set 2: 200 Wp, 100 W  NOT MET, stop h 17, ran 49 h, unserved 760 of 2856 Wh 
+  HIGH         39.67  June       +20      set 3: 330 Wp, 300 W  NOT MET, stop h 18, ran 52 h, unserved 644 of 2856 Wh 
+  HIGH         39.67  December   +5       set 2: 200 Wp, 100 W  NOT MET, stop h 7, ran 15 h, unserved 1964 of 2856 Wh 
+  HIGH         39.67  December   +5       set 3: 330 Wp, 300 W  NOT MET, stop h 11, ran 25 h, unserved 1738 of 2856 Wh
+  HIGH         39.67  December   +20      set 2: 200 Wp, 100 W  NOT MET, stop h 10, ran 18 h, unserved 1851 of 2856 Wh
+  HIGH         39.67  December   +20      set 3: 330 Wp, 300 W  NOT MET, stop h 12, ran 26 h, unserved 1673 of 2856 Wh
+
+   Set 2's conditions on 4S6P (September, 200 Wp, 100 W, 2.80 V line):
+  charge A  least cell temperature that meets it  largest night load met at +20 C  cells at +15 C                                      
+  --------  ------------------------------------  -------------------------------  ----------------------------------------------------
+  3.00      17.21 C                               17.06 W                          NOT MET, stop h 23, ran 67 h, unserved 22 of 1166 Wh
+  4.00      17.21 C                               17.06 W                          NOT MET, stop h 23, ran 67 h, unserved 22 of 1166 Wh
+  6.12      17.21 C                               17.06 W                          NOT MET, stop h 23, ran 67 h, unserved 22 of 1166 Wh
+
+3c. A DAY AND NIGHT SCHEDULE (this study's; not in the record): PS-IDLE-SPEC in every hour the PVGIS mean-day profile is lit,
+   the night state otherwise; usable energy at the day load; 2.80 V line, charge 4.0 A, aged, start 06:00:
+  month      cells C  lit hours  panel                    72 h                                                 
+  ---------  -------  ---------  -----------------------  -----------------------------------------------------
+  September  +20      13         100 Wp, 100 W window     NOT MET, stop h 12, ran 26 h, unserved 790 of 2204 Wh
+  September  +20      13         200 Wp, 100 W (route B)  NOT MET, stop h 21, ran 59 h, unserved 232 of 2204 Wh
+  September  +20      13         330 Wp, 300 W path       NOT MET, stop h 22, ran 64 h, unserved 141 of 2204 Wh
+  September  +20      13         400 Wp, no window        NOT MET, stop h 22, ran 64 h, unserved 126 of 2204 Wh
+  June       +20      16         100 Wp, 100 W window     NOT MET, stop h 17, ran 37 h, unserved 697 of 2443 Wh
+  June       +20      16         200 Wp, 100 W (route B)  NOT MET, stop h 22, ran 64 h, unserved 250 of 2443 Wh
+  June       +20      16         330 Wp, 300 W path       NOT MET, stop h 22, ran 64 h, unserved 125 of 2443 Wh
+  June       +20      16         400 Wp, no window        NOT MET, stop h 22, ran 66 h, unserved 90 of 2443 Wh 
+  December   +5       8          100 Wp, 100 W window     NOT MET, stop h 5, ran 11 h, unserved 1208 of 1805 Wh
+  December   +5       8          200 Wp, 100 W (route B)  NOT MET, stop h 9, ran 17 h, unserved 933 of 1805 Wh 
+  December   +5       8          330 Wp, 300 W path       NOT MET, stop h 14, ran 30 h, unserved 685 of 1805 Wh
+  December   +5       8          400 Wp, no window        NOT MET, stop h 16, ran 36 h, unserved 592 of 1805 Wh
+  December   +20      8          100 Wp, 100 W window     NOT MET, stop h 8, ran 12 h, unserved 1201 of 1805 Wh
+  December   +20      8          200 Wp, 100 W (route B)  NOT MET, stop h 11, ran 21 h, unserved 799 of 1805 Wh
+  December   +20      8          330 Wp, 300 W path       NOT MET, stop h 18, ran 34 h, unserved 619 of 1805 Wh
+  December   +20      8          400 Wp, no window        NOT MET, stop h 21, ran 41 h, unserved 527 of 1805 Wh
+
+   and SUN-FOLLOWING: PS-IDLE-SPEC only in the hours the panel alone carries it at the node, the night state otherwise:
+  month      cells C  panel                    hours at PS-IDLE-SPEC a day  72 h                                                 
+  ---------  -------  -----------------------  ---------------------------  -----------------------------------------------------
+  September  +20      100 Wp, 100 W window     0                            NOT MET, stop h 44, ran 63 h, unserved 119 of 1166 Wh
+  September  +20      200 Wp, 100 W (route B)  8                            MET, lowest 12.1 Wh                                  
+  September  +20      330 Wp, 300 W path       10                           MET, lowest 23.4 Wh                                  
+  September  +20      400 Wp, no window        10                           MET, lowest 27.2 Wh                                  
+  June       +20      100 Wp, 100 W window     5                            NOT MET, stop h 44, ran 62 h, unserved 125 of 1565 Wh
+  June       +20      200 Wp, 100 W (route B)  10                           MET, lowest 51.7 Wh                                  
+  June       +20      330 Wp, 300 W path       11                           MET, lowest 67.8 Wh                                  
+  June       +20      400 Wp, no window        12                           MET, lowest 71.7 Wh                                  
+  December   +5       100 Wp, 100 W window     0                            NOT MET, stop h 15, ran 25 h, unserved 687 of 1166 Wh
+  December   +5       200 Wp, 100 W (route B)  0                            NOT MET, stop h 18, ran 38 h, unserved 505 of 1166 Wh
+  December   +5       330 Wp, 300 W path       4                            NOT MET, stop h 18, ran 40 h, unserved 479 of 1486 Wh
+  December   +5       400 Wp, no window        5                            NOT MET, stop h 18, ran 44 h, unserved 407 of 1565 Wh
+  December   +20      100 Wp, 100 W window     0                            NOT MET, stop h 19, ran 29 h, unserved 622 of 1166 Wh
+  December   +20      200 Wp, 100 W (route B)  0                            NOT MET, stop h 22, ran 42 h, unserved 440 of 1166 Wh
+  December   +20      330 Wp, 300 W path       4                            NOT MET, stop h 22, ran 44 h, unserved 414 of 1486 Wh
+  December   +20      400 Wp, no window        5                            NOT MET, stop h 22, ran 48 h, unserved 342 of 1565 Wh
+
+4. CONSEQUENCES
+4a. Mass: 12 more cells at 50 g maximum each (spec 3.10): +600 g of cells, 1200 g for 24; harness, strip, wrap, fuses, the
+   second mat and the second second-level parts are not weighed here (ESTIMATE under 150 g with the harness's copper at
+   29.7 g/m per 12 AWG conductor).
+
+4b. Key-down at the 18 A peak, the cells' own I2R, adiabatic (POWER-THERMAL 7.2's method):
+  pack                               A a cell  K per minute  s for the 5 K from 55 to 60 C
+  ---------------------------------  --------  ------------  -----------------------------
+  4S3P (the record)                  6.00      1.37 to 3.24  93 to 218                    
+  4S6P, even share                   3.00      0.34 to 0.81  370 to 873                   
+  4S6P, the east block at its share  3.17      0.38 to 0.91  331 to 780                   
+
+4c. The heater branch on board A (gen_sch_a.py, parsed): VHEAT declared 0.63 A at 12 V (efficiency 0.90), VHEAT_IN 0.58 A at 14.4 V,
+   U22's ILM resistor 909R 1% gives 0.98 A (TPS2596 equation 7; the generator's note rounds it to 1.0 A). Two mats (one under each block, 7.5 W each at 12 V):
+  mats  W at 12 V  VHEAT A  pack V  VHEAT_IN A  under U22's limit
+  ----  ---------  -------  ------  ----------  -----------------
+  1     7.5        0.62     14.4    0.58        yes              
+  1     7.5        0.62     12.0    0.69        yes              
+  2     15.0       1.25     14.4    1.16        NO               
+  2     15.0       1.25     12.0    1.39        NO               
+   A 2.0 A limit needs RILM 449 ohm (the 453R the same comment lists). At full duty (the mats' rating, an upper bound; the
+   duty is set by the loss, which no held figure gives) the heater at the pack is 8.3 W with one mat and 16.7 W with two:
+  month      sun-down h  one mat Wh a night  two mats Wh a night  second block adds, aged, +5 C, Wh  at -10 C, Wh
+  ---------  ----------  ------------------  -------------------  ---------------------------------  ------------
+  December   16.24       135                 271                  77                                 45          
+  January    15.79       132                 263                  77                                 45          
+  September  11.24       94                  187                  77                                 45          
+
+4d. Cost, ESTIMATE (no quotation held except the JLC figures gen_sch_p.py quotes): 12 cells about 50 EUR (the record's
+   section 6); the second level for the west block (BQ7720700DSSR 2.12 USD at JLC per gen_sch_p.py, its filters, NTC and
+   sockets) under 10 EUR; string and link fuses with holders under 25 EUR; the harness (about 1.5 m of 12 AWG silicone and
+   sense wire, housings) under 20 EUR; a second heater mat (no price held) under 30 EUR; wrap, strip and hold-down under
+   15 EUR: under 150 EUR of parts, plus a second block build and the protection commissioning of TEST-PLAN.md section 5.
+
+END. REQ-072 as written: FAIL on these figures (section 8 of ENERGY-RECONCILIATION.md).
