@@ -1,6 +1,6 @@
 {
  "board": "pcb-b-compute",
- "written": "2026-09-27 15:05",
+ "written": "2026-09-28 21:11",
  "bypass": [
   {
    "cap": "C112",
@@ -2316,7 +2316,7 @@
     "J_FAN1": 0.1,
     "U116": 0.001
    },
-   "note": "slot rail from A22 (JST-VH): the module, the two 3.3 V bucks, the 1.0 V switch core and the fan. THIS BOARD'S SHARE is 1.5 of the rail's 2 percent (16 September 2026): board A regulates it and measures 0.07 percent from its shunt to the header, and the long copper is this side, from the VH header across the board to a module receptacle carrying 2.5 A",
+   "note": "slot rail from A22 (JST-VH): the module, the two 3.3 V bucks, the 1.0 V switch core and the fan. THIS BOARD'S SHARE is 1.5 of the rail's 2 percent (16 September 2026): board A regulates it and measures 0.07 percent from its shunt to the header, and the long copper is this side, from the VH header across the board to a module receptacle carrying 2.5 A (4.2 A typical on slot 2)",
    "budget": 0.02,
    "share": 0.015,
    "always_on": true,
@@ -2326,7 +2326,7 @@
   "+5V_S2": {
    "volts": 5.1,
    "amps_typ": 4.2,
-   "amps_peak": 5.0,
+   "amps_peak": 5.63,
    "source": "J_5V_S2",
    "loads": {
     "U31A": 1.6,
@@ -2336,7 +2336,7 @@
     "J_FAN2": 0.1,
     "U216": 0.001
    },
-   "note": "slot rail from A22 (JST-VH): the module, the two 3.3 V bucks, the 1.0 V switch core and the fan. THIS BOARD'S SHARE is 1.5 of the rail's 2 percent (16 September 2026): board A regulates it and measures 0.07 percent from its shunt to the header, and the long copper is this side, from the VH header across the board to a module receptacle carrying 2.5 A",
+   "note": "slot rail from A22 (JST-VH): the module, the two 3.3 V bucks, the 1.0 V switch core and the fan. THIS BOARD'S SHARE is 1.5 of the rail's 2 percent (16 September 2026): board A regulates it and measures 0.07 percent from its shunt to the header, and the long copper is this side, from the VH header across the board to a module receptacle carrying 2.5 A (4.2 A typical on slot 2)",
    "budget": 0.02,
    "share": 0.015,
    "always_on": true,
@@ -2356,7 +2356,7 @@
     "J_FAN3": 0.1,
     "U316": 0.001
    },
-   "note": "slot rail from A22 (JST-VH): the module, the two 3.3 V bucks, the 1.0 V switch core and the fan. THIS BOARD'S SHARE is 1.5 of the rail's 2 percent (16 September 2026): board A regulates it and measures 0.07 percent from its shunt to the header, and the long copper is this side, from the VH header across the board to a module receptacle carrying 2.5 A",
+   "note": "slot rail from A22 (JST-VH): the module, the two 3.3 V bucks, the 1.0 V switch core and the fan. THIS BOARD'S SHARE is 1.5 of the rail's 2 percent (16 September 2026): board A regulates it and measures 0.07 percent from its shunt to the header, and the long copper is this side, from the VH header across the board to a module receptacle carrying 2.5 A (4.2 A typical on slot 2)",
    "budget": 0.02,
    "share": 0.015,
    "always_on": true,
@@ -2371,7 +2371,7 @@
    "loads": {
     "U23": 1.2,
     "U25": 0.9,
-    "U21": 0.6,
+    "U21": 0.7,
     "F1": 0.6,
     "U24": 0.45,
     "F3": 0.3,
@@ -2381,9 +2381,9 @@
     "U106": 0.1,
     "U206": 0.1,
     "U306": 0.1,
-    "U40": 0.05,
-    "U50": 0.05,
-    "U60": 0.05,
+    "U40": 0.12,
+    "U50": 0.12,
+    "U60": 0.12,
     "U15": 0.02,
     "U16": 0.02,
     "U17": 0.02,
@@ -2969,16 +2969,16 @@
    "loads": {
     "U23": 1.2,
     "U25": 0.9,
-    "U21": 0.6,
+    "U21": 0.7,
     "U24": 0.45,
     "U28": 0.25,
     "U26": 0.15,
     "U106": 0.1,
     "U206": 0.1,
     "U306": 0.1,
-    "U40": 0.05,
-    "U50": 0.05,
-    "U60": 0.05,
+    "U40": 0.12,
+    "U50": 0.12,
+    "U60": 0.12,
     "U15": 0.02,
     "U16": 0.02,
     "U17": 0.02,
