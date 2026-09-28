@@ -90,7 +90,7 @@ def texts(root):
               "(%s + 0.040) = %s V at 5.63 A, %s percent of 5.1 V; the 0.225 V first written here is the four contacts alone, "
               "corrected at integration set 9) is in no board's share" % (L["rpair20"], L["lead20_v"], L["lead20_pct"]))
     return block, [
-        (HWFW, "FW-A07", "into eFuse U32 (0.89 A), held off by R190", "into eFuse U32 (%s), held off by R190" % LIMIT),
+        (HWFW, "FW-A07", "into eFuse U32 (0.89 A), held off by R190", "into eFuse U32 (0.9142 A nominal limit, TPS2596 equation 7, SLVSET8A p.28), held off by R190"),
         (ASM, "Wall USB host row", "VBUS from the eFuse `U32`, 0.89 A, switched by A22's expander; `gen_sch_a.py:1151-1167`)",
          "VBUS from the eFuse `U32`, %s, switched by A22's expander; `gen_sch_a.py:%s`)" % (LIMIT, block)),
         (S98R, "R3", r3_old, r3_new),
