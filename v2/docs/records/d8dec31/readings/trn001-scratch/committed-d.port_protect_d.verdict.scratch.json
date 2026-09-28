@@ -1,0 +1,98 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "port_protect.py",
+  "files": {
+   "boardtable.py": "41bd92e61f12c374",
+   "intent.py": "f1ac033e0f3c10f1",
+   "kisch.py": "3e28374d15be25e0",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "port_protect.py": "2179463c3d90d9dc",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "a260597cb25267f5",
+  "unresolved": []
+ },
+ "counts": {
+  "answered_in_part": 0,
+  "behind_an_active_part": 0,
+  "clamps": 7,
+  "clamps_one_way": 1,
+  "clamps_reversed": 0,
+  "clamps_symbol_mismatch": 0,
+  "clamps_unjudged": 0,
+  "declarations_refused": 0,
+  "declared": 4,
+  "ground_pins_not_judged": 6,
+  "internal_pins": 0,
+  "not_on_netlist": 0,
+  "ports": 4,
+  "uncovered_pins": 18,
+  "unprotected": 0
+ },
+ "denominator": 21,
+ "evidence": [
+  "UNCOVERED J_FLANGE.1 on FLANGE_NTC",
+  "UNCOVERED J_HARN1.1 on USB_D8_P",
+  "UNCOVERED J_HARN1.10 on SDA",
+  "UNCOVERED J_HARN1.11 on SCL",
+  "UNCOVERED J_HARN1.12 on EXP_INT",
+  "UNCOVERED J_HARN1.13 on +3V3",
+  "UNCOVERED J_HARN1.15 on ZEROIZE_HW",
+  "UNCOVERED J_HARN1.16 on AB_SPARE",
+  "UNCOVERED J_HARN1.2 on USB_D8_N",
+  "UNCOVERED J_HARN1.7 on TR_APRS",
+  "UNCOVERED J_HARN1.8 on TX_INHIBIT_n",
+  "UNCOVERED J_HARN1.9 on PA_EN",
+  "UNCOVERED J_PAIN.1 on RF_DRV",
+  "UNCOVERED J_PWR1.1 on +5V_D8",
+  "UNCOVERED J_USB3.1 on +5V_D8",
+  "UNCOVERED J_USB3.2 on USB3_N",
+  "UNCOVERED J_USB3.3 on USB3_P",
+  "UNCOVERED J_VGG.1 on VGG_SW"
+ ],
+ "inputs": {
+  "board": "d",
+  "intent": {
+   "path": "pcb-d-aprs-d9/out/pcb-d-aprs-intent.json",
+   "sha256_16": "8d9f3b2256521b0d"
+  },
+  "netlist": {
+   "content16": "be4194ed867c8406",
+   "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
+   "sha256_16": "7a2c0ac2190b141a"
+  }
+ },
+ "missing_input": null,
+ "note": "every declared external conductor meets a protection part before a chip; 0 clamp(s) could not be judged for polarity and 18 connector pin(s) are covered by no entry of the declaration, so nobody has said whether they leave the case",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "TRN-001": "5d38bd6db7d4e11f"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "TRN-001"
+ ],
+ "runtime": {
+  "python": "3.11.2"
+ },
+ "tool": "port_protect_d",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "b8ff01c3b5225f82"
+ },
+ "ts": "2026-09-27T22:05:31Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown",
+ "writer": {
+  "file": "port_protect.py",
+  "sha16": "2179463c3d90d9dc"
+ }
+}

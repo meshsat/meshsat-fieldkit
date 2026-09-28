@@ -1,0 +1,7 @@
+port_protect: board P declares 0 external port(s); 0 found on this netlist
+port_protect: 3 clamp(s) judged for polarity: 0 reversed, 0 drawn with a symbol that does not match the part's direction, 0 unjudged
+  CLAMP D1     OK       K/A       uni    cathode (its K pin) on PACK_P, anode on the return PACK_N
+  CLAMP D2     N/A      A1/A2     bi     a two-way part (PESD5V0S1BA: Nexperia's S1B type, 'Bidirectional ESD protection diode'): either way round is correct
+  CLAMP D3     N/A      A1/A2     bi     a two-way part (PESD5V0S1BA: Nexperia's S1B type, 'Bidirectional ESD protection diode'): either way round is correct
+verdict: port_protect           PASS         of 3 {"clamps": 3, "clamps_one_way": 1, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unjudged": 0, "ports": 0, "unprotected": 0} | this board declares that no conductor of its own leaves the enclosure, so the rule is true of it with nothing to check: Rule TRN-001, 16 September 2026. NOTHING ON BOARD P LEAVES THE ENCLOSURE, and this is the sentence that says so rather than a file nobody wrote. P is the pack's own protection and 
+rc=0
