@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+
+Note (integration, set 7): LOW_SPEED_OR_DC is also the class the EMC return rules return_via.py and ref_change.py skip; for these four nets (a FET gate, a NOR output and a GPIO level) that is the intended reading, as the record's section 5 says.
 """DRAFT for the integrator (stream w5si2, 28 September 2026, MESHSAT-1357, layer 9, rule SI-001): declare the signal
 class of board C's four nets that no entry of boards/c.json names: EMCLAMP_Y, EMCLAMP_G, EMCON_RD, EMCON_RD_R.
 boards/c.json is the integrator's file; this script makes the change and the integrator runs it.

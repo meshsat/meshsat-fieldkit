@@ -1420,3 +1420,283 @@ decisions:
       filter, so no rule-board pair reads differently today. What it holds is every FUTURE board A
       arm: the finish refuses before it writes a deliverable, so the next adoption of a board A
       phase needs this ruled.
+  - n: 48
+    title: >-
+      rule SI-001: what counts as a driver's edge, and which edge governs a net
+    asked: 2026-09-27
+    status: ruled
+    authority: SESSION
+    authority_why: >-
+      it changes no line the never-auto floor protects, spends nothing, claims nothing new about the kit and
+      accepts no residual risk that a measurement in this tree could remove: it makes SI-001's reading
+      STRICTER (40 nets that read as held by a maker's figure read as decided by a bound) and turns no reading
+      towards a pass. SI-001's readings were INCONCLUSIVE on all six boards before it and are INCONCLUSIVE
+      after it.
+    ruled_by: SESSION
+    ruled_on: 2026-09-27
+    outcome: >-
+      ONLY A PUBLISHED MINIMUM IS A MAKER'S FIGURE, AND ONE DRIVER WITHOUT ONE DECIDES THE NET. A driver's
+      edge is a maker's IBIS model at its fastest corner, a minimum the maker prints in its own table, or a
+      specification's minimum the part's own datasheet claims; a typical or a maximum is refused; where a
+      maker publishes none the bound is instantaneous and is named a bound. The governing edge of a net is the
+      fastest edge any driver on it can produce, so a net that carries even one driver with no published
+      minimum is decided by a bound, whatever the makers of the other drivers publish. A layout-bound net a
+      bound decides is named BOUND_DECIDES and holds the reading INCONCLUSIVE. An answered net decided by a
+      bound counts as decided, under the bound's count. tools/pcb_edge_rates.yaml holds the figures (ER-D8,
+      ER-D9, ER-D12, ER-D13 in its header) and tools/edge_length.py is the criterion (net_edge).
+    reversed_by: >-
+      in tools/edge_length.py, make net_edge take the fastest candidate's kind as the net's and restore the
+      maker-held test the first pass had; 40 nets then read as held by a maker's figure again, which the
+      independent check (AI review) of 27 September 2026 refused.
+    ask: >-
+      count a layout-bound net as held by a maker's figure when ANY maker's figure on it gives a length, or
+      only when EVERY driver on it has a published minimum
+    recommendation: >-
+      ONLY WHEN EVERY DRIVER HAS ONE. The critical length is what a layout is handed; with a driver of unknown
+      edge on the net that length is the bound's, and naming the net by another driver's figure hands a layout
+      a number that does not govern it.
+    evidence: >-
+      the independent check (AI review) of the first pass, 27 September 2026, from its own run of the tool on
+      the netlists at c23c5e76: 40 of the 83 nets the records called maker-held had a bound as their fastest
+      candidate and a critical length of 0.0 mm in the tool's own table (v2/docs/records/w5si/check-1/). After
+      the change the readings hold 43 nets by a maker's figure and 281 by a bound, of 324 layout-bound
+      (v2/docs/records/w5si/readings/si001-c23c5e76.txt); the same on the set 6 netlists.
+    blocks: {}
+    holds_nothing_today: >-
+      it holds no rule-board pair that was not held: SI-001 read INCONCLUSIVE on all six boards before it.
+      What it changes is which nets a reading names under which figure.
+  - n: 49
+    title: >-
+      rule SI-001: a specification's minimum binds only a part that claims it, and an open-drain net's fall
+      governs
+    asked: 2026-09-27
+    status: ruled
+    authority: SESSION
+    authority_why: >-
+      it changes no line the never-auto floor protects, spends nothing, claims nothing new about the kit and
+      accepts no residual risk that a measurement in this tree could remove: it admits one published figure
+      (10 ns for one pin of one part) on the maker's own written claim and refuses the same figure for three
+      parts that make no such claim, and it moves no net from a bound to a maker's figure.
+    ruled_by: SESSION
+    ruled_on: 2026-09-27
+    outcome: >-
+      AN OPEN-DRAIN NET HAS TWO EDGES AND THE FALL GOVERNS. The fall is the driver's pull-down; the rise is
+      the pull-up charging the net (0.8473 Rp Cb, UM10204 Rev. 6 section 7.1) and is stated beside it, never
+      taken as the governing edge. UM10204 Rev. 6's minimum output fall (Table 9, Fast-mode, 20 ns x VDD / 5.5
+      V; Table 11, Hs-mode, 10 ns; Standard-mode states none) is a published figure ONLY for a part whose own
+      datasheet claims the specification's timing. Of the parts on the kit bus the KSZ9897R does (DS00002330
+      section 6.4). The DS3231 and the TPS23861 print their own minimum. The BQ25731, the ATECC608B and the
+      VEML7700 call themselves compatible and print only a maximum or an input requirement, so they keep their
+      bound, and the RP2040, the bus master, publishes nothing: SCL and SDA stay decided by a bound on all
+      four boards.
+    reversed_by: >-
+      remove the STANDARD row from the KSZ9897R's record in tools/pcb_edge_rates.yaml; its data pin takes the
+      instantaneous bound again and no count moves.
+    ask: >-
+      give every part on an I2C bus the specification's minimum fall, give it to none, or give it to the parts
+      whose own datasheets claim the specification
+    recommendation: >-
+      TO THE PARTS THAT CLAIM IT. A specification binds a part through the maker's claim and through nothing
+      else, and Standard-mode, which this bus runs, states no minimum at all.
+    evidence: >-
+      UM10204 Rev. 6 pages 47, 51 and 55, and each maker's own words, cited with page and sha256/16 in
+      tools/pcb_edge_rates.yaml and checked on every run of the tool.
+    blocks: {}
+    holds_nothing_today: >-
+      no count moves by it: the kit bus is decided by a bound with or without the one figure it admits.
+  - n: 50
+    title: >-
+      board B: the RF switch ports are RF lines, and BOB keeps its class until a class that fits it is ruled
+    asked: 2026-09-27
+    status: ruled
+    authority: SESSION
+    authority_why: >-
+      it changes no line the never-auto floor protects, spends nothing, claims nothing new about the kit and
+      accepts no residual risk that a measurement in this tree could remove: it corrects two declarations to
+      say what the nets are and widens no rule's exemption: BOB stays in the class it had, which both return
+      rules judge.
+    ruled_by: SESSION
+    ruled_on: 2026-09-27
+    outcome: >-
+      SW?_IN AND SW?_O? ARE DECLARED RF LINES; BOB KEEPS CLOCKED_DIGITAL AND GETS A TRUE BASIS. The two
+      patterns match only the SKY13351 antenna changeovers' ports; they become HIGH_SPEED_DIGITAL in
+      boards/b.json and, with the card RF lines and GNSS_RF_IN, take the RF net class in gen_pcb_b3.py. BOB is
+      the common node of the wall Ethernet port's line-side termination. No signal class asks the right
+      question of it: three ask for an adjacent reference, which the switch maker's checklist says to keep
+      away from the line side, and the fourth is skipped by return_via.py and ref_change.py. So its class is
+      left as committed, and the class that fits is PROPOSED in
+      v2/docs/records/w5si/F-BOB-common-mode-termination.md.
+    reversed_by: >-
+      restore the three entries of boards/b.json and the three classes and remove the added pattern in
+      gen_pcb_b3.py (v2/docs/records/w5si/apply/apply_board_b_declarations.py names them).
+    ask: >-
+      move BOB to LOW_SPEED_OR_DC, move it to a faster class, or leave its class and propose the class that
+      fits
+    recommendation: >-
+      LEAVE IT AND PROPOSE. A class is the scope of the return rules, and a stream that corrects a basis has
+      no business narrowing or widening a rule's scope on the way.
+    evidence: >-
+      the netlist of board B's declared phase (pcb-b-compute-b19/out/pcb-b-compute.net, sha256/16
+      028997a6c5e8810f), on which BOB carries R9 pin 2 and R10 pin 2 (75 ohm each, from MCT3 and MCT4) and C33
+      pin 1 (1n 2kV, to GND); gen_sch_b.py line 1191, the calls that name the net; and the makers' words in
+      v2/docs/records/w5si/evidence/cable-side-termination.yaml, held to their pages. The sha256/16 and the
+      line were read from the tree this row was written on, when it was written.
+    blocks: {}
+    holds_nothing_today: >-
+      the net classes take effect at board B's next layout generation; no reading of the declared phase moves.
+  - n: 51
+    title: >-
+      rule SI-001: the power-stage nodes stay on their bound until a rule covers them
+    asked: 2026-09-27
+    status: ruled
+    authority: SESSION
+    authority_why: >-
+      it changes no line the never-auto floor protects, spends nothing, claims nothing new about the kit and
+      accepts no residual risk that a measurement in this tree could remove: it declines to write a
+      declaration and so leaves 82 nets holding SI-001's reading, which is the stricter of the two options.
+    ruled_by: SESSION
+    ruled_on: 2026-09-27
+    outcome: >-
+      NO EDGE_ALLOW DECLARATION IS WRITTEN FOR A GATE, BOOTSTRAP OR SWITCH NODE. 82 such nets are decided by a
+      bound and layout-bound on boards A, B, C and E. No maker of their nine controllers publishes a minimum
+      edge and no registry rule states a length, a loop area or a copper area for a power stage. A declaration
+      names what holds a net's length; nothing holds these, so none is written, and the rule that should
+      govern them and the way SI-001 would leave them to it are PROPOSED in
+      v2/docs/records/w5si/F-Q1-power-stage-nodes.md.
+    reversed_by: >-
+      once a power-stage layout rule is in the registry and names these nets in its own reading, exclude them
+      from SI-001 by declaration as the finding's section 5 describes.
+    ask: >-
+      declare the 82 nets as held by the makers' layout guidance, or leave them on their bound until a rule
+      states what holds them
+    recommendation: >-
+      LEAVE THEM. The makers' guidance gives three numbers in nine documents and all three are widths; a
+      declaration written on it would turn a reading on a sentence.
+    evidence: >-
+      v2/docs/records/w5si/evidence/power-stage-layout-guidance.yaml: 46 citations of 9 held documents, each
+      held to its page by v2/docs/records/w5si/tools/verify_citations.py.
+    blocks: {SI-001: [a, b, c, e]}
+  - n: 52
+    title: >-
+      rule SI-001: a [Ramp] cell is held to its model's own V-t table, and a pin whose cell it contradicts
+      takes the bound
+    asked: 2026-09-28
+    status: ruled
+    authority: SESSION
+    authority_why: >-
+      it changes no line the never-auto floor protects, spends nothing, claims nothing new about the kit and
+      accepts no residual risk that a measurement in this tree could remove: it can only take a maker's figure
+      away and never give one: a pin it flags takes the instantaneous bound, the strictest figure the rule
+      has. No count of any reading moves by it.
+    ruled_by: SESSION
+    ruled_on: 2026-09-28
+    outcome: >-
+      A [RAMP] CELL THE MODEL'S OWN TABLE CONTRADICTS IS NOT A MAKER'S FIGURE. An IBIS [Ramp] cell is dV/dt,
+      dV being by the keyword's definition the 20 to 80 percent swing. Where the same model carries a V-t
+      table of that edge in the [Ramp]'s own fixture, dV must be 50 to 70 percent of the table's swing and dt
+      within 25 percent of the time the table itself takes from 20 to 80 percent. A pin any of whose admitted
+      driven cells fails either reads FLAGGED: it has no figure, takes the instantaneous bound, and its net is
+      decided by a bound. A family's figure is its fastest pin that has one, and its record names the flagged
+      pins and is held to the model on that. tools/ibis_read.py is the criterion (cell_check, RAMP_DV,
+      RAMP_DT); ER-D16 in the header of tools/pcb_edge_rates.yaml.
+    reversed_by: >-
+      in tools/ibis_read.py widen RAMP_DV and RAMP_DT until no cell is flagged, or remove pin_edge's FLAGGED
+      branch, and restore the two records' figures (TI-PCA9555 0.121 ns, TI-TMP117 7.6757 ns) in
+      tools/pcb_edge_rates.yaml.
+    ask: >-
+      read a [Ramp] cell as the file writes it, leave a contradicted cell out and read the next, or give a pin
+      with a contradicted cell no figure
+    recommendation: >-
+      NO FIGURE. Reading it as written is right only by luck (both cells found erred short); leaving it out
+      and reading the next cell would give a slower figure than the table the cell was contradicted by may
+      hold.
+    evidence: >-
+      two AI reviews of 27 and 28 September 2026 (the first lens's M5, the drafts check's M8), and the
+      measurement on the thirteen models the manifest pins: of 585 driven cells 537 have a table of their
+      edge, 522 of them hold and 15 do not, all of TI's PCA9555 INT models (dt at 0.14 to 0.49 of the table's
+      time) and TMP117 SDA models (dV at 11 to 39 percent of the swing); 48 have no table and cannot be
+      contradicted (tools/tests/test_edge_length.py holds the two records to their models where the models are
+      in the tree).
+    blocks: {}
+    holds_nothing_today: >-
+      no count moves by it: both flagged pins sit on nets a bound already decided (EXP_INT, and the kit bus's
+      SDA).
+  - n: 53
+    title: >-
+      rule SI-001: the makers' IBIS models are pinned by a tracked manifest and are not in the repository
+    asked: 2026-09-28
+    status: ruled
+    authority: SESSION
+    authority_why: >-
+      it changes no line the never-auto floor protects, spends nothing, claims nothing new about the kit and
+      accepts no residual risk that a measurement in this tree could remove: it publishes nothing and decides
+      nothing about publication, which is the owner's and stays held back; it is how the instrument works
+      while the models are withheld, and it makes a tree without them read STRICTER (more nets undecided),
+      never towards a pass.
+    ruled_by: SESSION
+    ruled_on: 2026-09-28
+    outcome: >-
+      A MODEL IS READ ONLY WHEN THE MANIFEST PINS THE FILE PRESENT, AND A MODEL THAT IS ABSENT DECIDES
+      NOTHING. v2/vendor/ibis-manifest.yaml names each model's maker, address, how the .ibs is taken out of
+      what the address serves, the sha256 of the extracted file and the words of its header on copying;
+      tools/ibis_fetch.py fetches the models from the makers' own addresses and verifies each; .gitignore
+      keeps them out of the repository. A net that waits on an absent model reads UNDECIDED naming the file,
+      the reading is INCONCLUSIVE and records the state it was taken in; a record's own edge_ns is never used
+      in its model's place. The manifest is a configuration input dated like any other, and rules_status holds
+      a reading to the models through it (PINNED_INPUTS). ER-D17 in the header of tools/pcb_edge_rates.yaml.
+    reversed_by: >-
+      the owner decides to publish the models: they are committed, the ignore rule is dropped, and they may be
+      declared as ordinary configuration inputs; the manifest may stay as the record of where they came from.
+    ask: >-
+      commit the models, declare them as inputs and leave them uncommitted, or pin them by a tracked manifest
+    recommendation: >-
+      PIN THEM. Committing publishes files whose headers forbid it or grant nothing; declaring them
+      uncommitted makes the only state that reads current the one that publishes.
+    evidence: >-
+      the drafts check of 28 September 2026 (AI review), blocking item B1, with its simulation of the three
+      states; the headers' own words, quoted per file with their lines in v2/vendor/ibis-manifest.yaml (five
+      forbid distribution, eight carry a copyright line and no grant); and the fetch proven once into a
+      scratch folder (v2/docs/records/w5si2/readings/ibis-fetch-scratch-2026-09-28.txt).
+    blocks: {}
+    holds_nothing_today: >-
+      it holds no rule-board pair that was not held: SI-001 reads INCONCLUSIVE on all six boards with the
+      models and without them.
+  - n: 54
+    title: >-
+      board C: the four copies of the EMCON inhibit are declared by what they carry, LOW_SPEED_OR_DC
+    asked: 2026-09-28
+    status: ruled
+    authority: SESSION
+    authority_why: >-
+      it changes no line the never-auto floor protects, spends nothing, claims nothing new about the kit and
+      accepts no residual risk that a measurement in this tree could remove: the class is the one boards A, B
+      and C already give the line these nets copy (EMCON_HW), it turns no reading to a pass (board C reads
+      INCONCLUSIVE before and after, and in the other class too), and each entry says that its driver is fast.
+    ruled_by: SESSION
+    ruled_on: 2026-09-28
+    outcome: >-
+      EMCLAMP_Y, EMCLAMP_G, EMCON_RD AND EMCON_RD_R ARE LOW_SPEED_OR_DC ON THEIR CONTENT, NOT ON A SLOW
+      DRIVER. They are copies of the EMCON inhibit, a level that moves when a person moves the panel's locking
+      toggle; nothing samples them on their edge (a FET's gate behind 100R, a pin read as a level behind 1 k).
+      The class is defined by what a net carries (tools/signal_class.py) and SI-001 asks no edge of it
+      (tools/edge_length.py, LOW_CLASS). THE DRIVERS ARE FAST and each entry's basis says so: U14's output
+      moves in 0.221 ns by its maker's IBIS model, and the makers of U13 and of the RP2040 publish no output
+      transition.
+    reversed_by: >-
+      change `class` to CLOCKED_DIGITAL in the four entries of tools/boards/c.json and re-take SI-001:
+      EMCLAMP_Y and EMCLAMP_G are then answered by R48, and EMCON_RD and EMCON_RD_R are layout-bound and
+      decided by a bound (R46's 1 k is outside the series screen).
+    ask: >-
+      declare the four nets by what they carry (a level), or by what drives them (a fast gate)
+    recommendation: >-
+      BY WHAT THEY CARRY, as the class is defined and as the line they copy is declared on three boards; and
+      say in the basis that the driver is fast, so that nobody reads the class as a slow edge.
+    evidence: >-
+      board C's netlist and tools/gen_sch_c.py, read again when
+      v2/docs/records/w5si/apply/apply_board_c_declarations.py runs; TI SCES414P p. 3 and p. 6, Diodes DS35124
+      Rev. 8-2 p. 1 and p. 6, the RP2040 datasheet (build 2025-02-20) p. 303, each held to its page by that
+      draft; the three readings of board C it prints (before, after, and in the class not taken).
+    blocks: {}
+    holds_nothing_today: >-
+      it releases no rule-board pair: SI-001 on board C stays INCONCLUSIVE, held by 23 layout-bound nets a
+      bound decides.

@@ -126,6 +126,9 @@ EMCON_RD and EMCON_RD_R are layout-bound and decided by a bound, because R46's 1
 **To reverse:** change `class` to CLOCKED_DIGITAL in the four entries of `tools/boards/c.json`, correct their basis,
 and re-take SI-001.
 
+
+Note added at integration (set 7, the w5si2 check's minor item m1): LOW_SPEED_OR_DC is also the class both EMC return rules skip (`return_via.py` and `ref_change.py` judge no net of that class), the effect the first pass's check named for BOB. For a lamp FET's gate (EMCLAMP_G), a NOR's output into it (EMCLAMP_Y) and a GPIO level (EMCON_RD, EMCON_RD_R) the class's own question, whether a reference exists, is the right one; the four nets carry no clocked edge. Had they been CLOCKED_DIGITAL the return rules would judge them; the record's section above shows SI-001 reads INCONCLUSIVE in that case too.
+
 ## 6. Board C's 23 layout-bound nets: what is proposed for each
 
 **SI-001 passes a board at the schematic phase only when no net is left to the layout.** A maker's model alone does
