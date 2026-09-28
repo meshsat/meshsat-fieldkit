@@ -47,12 +47,12 @@
  },
  "tool": "pin_map_lands_e",
  "tools": {
-  "git_head": "87b7d5a9509c",
-  "tools_tree_sha": "bfeac03e9fe6170b"
+  "git_head": "cef7cb77c420",
+  "tools_tree_sha": "8639c5ed4c65deea"
  },
- "ts": "2026-09-28T21:55:44Z",
+ "ts": "2026-09-28T22:46:17Z",
  "verdict": "PASS",
- "version": "87b7d5a9509c",
+ "version": "cef7cb77c420",
  "writer": {
   "file": "pin_map_lands.py",
   "sha16": "89d2ad7c2bab8ba0"

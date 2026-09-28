@@ -25,16 +25,16 @@
   "board": "a",
   "intent": {
    "path": "pcb-a-power-a23/out/pcb-a-power-intent.json",
-   "sha256_16": "35e430a791ab2b44"
+   "sha256_16": "070b4c5e41e023e5"
   },
   "netlist": {
-   "content16": "d464d30a17fb30f7",
+   "content16": "2efce63fe72079f1",
    "path": "pcb-a-power-a23/out/pcb-a-power.net",
-   "sha256_16": "2dfe1c546cb39ccb"
+   "sha256_16": "599ee964a9c23d6e"
   },
   "spec": {
    "path": "tools/pcb_interfaces.yaml",
-   "sha256_16": "002ae8575028468a"
+   "sha256_16": "363af4715553e42b"
   }
  },
  "missing_input": null,
@@ -54,12 +54,12 @@
  },
  "tool": "interfaces_a",
  "tools": {
-  "git_head": "87b7d5a9509c",
-  "tools_tree_sha": "bfeac03e9fe6170b"
+  "git_head": "cef7cb77c420",
+  "tools_tree_sha": "8639c5ed4c65deea"
  },
- "ts": "2026-09-28T21:54:19Z",
+ "ts": "2026-09-28T22:44:52Z",
  "verdict": "PASS",
- "version": "87b7d5a9509c",
+ "version": "cef7cb77c420",
  "writer": {
   "file": "interfaces.py",
   "sha16": "7b7e4f3a0241cf35"

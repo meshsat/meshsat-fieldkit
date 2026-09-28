@@ -130,12 +130,12 @@
  },
  "tool": "intent_rails",
  "tools": {
-  "git_head": "87b7d5a9509c",
-  "tools_tree_sha": "bfeac03e9fe6170b"
+  "git_head": "cef7cb77c420",
+  "tools_tree_sha": "8639c5ed4c65deea"
  },
- "ts": "2026-09-28T21:55:46Z",
+ "ts": "2026-09-28T22:46:19Z",
  "verdict": "PASS",
- "version": "87b7d5a9509c",
+ "version": "cef7cb77c420",
  "writer": {
   "file": "intent_checks.py",
   "sha16": "1ad7af0c718ba940"

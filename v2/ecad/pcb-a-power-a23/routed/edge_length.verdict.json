@@ -32,40 +32,40 @@
  },
  "counts": {
   "answered_nets": 19,
-  "bound_decided_nets": 62,
-  "bound_edge_nets": 75,
+  "bound_decided_nets": 64,
+  "bound_edge_nets": 77,
   "classes": 64,
   "contradicted_nets": 0,
-  "decided_nets": 82,
-  "layout_bound_nets": 63,
-  "low_speed_nets": 170,
+  "decided_nets": 84,
+  "layout_bound_nets": 65,
+  "low_speed_nets": 172,
   "maker_edge_nets": 7,
   "maker_held_nets": 1,
-  "may_be_long_nets": 82,
+  "may_be_long_nets": 84,
   "models_absent": 0,
   "models_asked": 5,
-  "signal_nets": 290,
+  "signal_nets": 294,
   "unasked_part_nets": 0,
   "undecided_model_absent_nets": 0,
   "undecided_nets": 38,
   "undecided_no_declaration_nets": 38,
   "undecided_other_nets": 0
  },
- "denominator": 290,
+ "denominator": 294,
  "evidence": [
   "UNDECIDED (no declaration) (UNKNOWN, 38 of 38 net(s)): no signal-class declaration (x38); ICs on them: LM5176PWPR buck-boost U15, LM5176PWPR buck-boost U13, LM5176PWPR buck-boost U16, LM5176PWPR buck-boost U7",
-  "BOUND_DECIDES 62 layout-bound net(s) whose governing edge is a bound or a model: at least one driver on each has no published minimum, whatever the other drivers' makers publish (ER-D13): S1_BOOT, S3_BOOT, FE_BOOT1, HF_BOOT1, PA_BOOT1, PD_BOOT1, POE_BOOT1, S2_BOOT1, SD_BOOT1, FE_BOOT2, HF_BOOT2, PA_BOOT2 ...",
+  "BOUND_DECIDES 64 layout-bound net(s) whose governing edge is a bound or a model: at least one driver on each has no published minimum, whatever the other drivers' makers publish (ER-D13): S1_BOOT, S3_BOOT, FE_BOOT1, HF_BOOT1, PA_BOOT1, PD_BOOT1, POE_BOOT1, S2_BOOT1, SD_BOOT1, FE_BOOT2, HF_BOOT2, PA_BOOT2 ...",
   "MAKER_HELD 1 layout-bound net(s) on which every driver has a published minimum: INA_ALERT",
   "LAYOUT_BOUND *_BOOT (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): S1_BOOT, S3_BOOT",
   "LAYOUT_BOUND *_BOOT1 (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): FE_BOOT1, HF_BOOT1, PA_BOOT1, PD_BOOT1, POE_BOOT1, S2_BOOT1, SD_BOOT1",
   "LAYOUT_BOUND *_BOOT2 (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): FE_BOOT2, HF_BOOT2, PA_BOOT2, PD_BOOT2, POE_BOOT2, S2_BOOT2, SD_BOOT2",
-  "LAYOUT_BOUND *_BST (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): B33_BST, HT_BST",
+  "LAYOUT_BOUND *_BST (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): B33_BST, D8B_BST, HT_BST",
   "LAYOUT_BOUND *_BTST? (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): CH_BTST1, CH_BTST2",
   "LAYOUT_BOUND *_HDRV? (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): FE_HDRV1, FE_HDRV2, HF_HDRV1, HF_HDRV2, PA_HDRV1, PA_HDRV2, PD_HDRV1, PD_HDRV2 ...",
   "LAYOUT_BOUND *_HIDRV? (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): CH_HIDRV1, CH_HIDRV2",
   "LAYOUT_BOUND *_LDRV? (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): FE_LDRV1, FE_LDRV2, HF_LDRV1, HF_LDRV2, PA_LDRV1, PA_LDRV2, PD_LDRV1, PD_LDRV2 ...",
   "LAYOUT_BOUND *_LODRV? (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): CH_LODRV1, CH_LODRV2",
-  "LAYOUT_BOUND *_SW (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): HT_SW",
+  "LAYOUT_BOUND *_SW (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): D8B_SW, HT_SW",
   "LAYOUT_BOUND *_SW1 (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): S2_SW1, SD_SW1",
   "LAYOUT_BOUND *_SW2 (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): S2_SW2, SD_SW2",
   "LAYOUT_BOUND EXP_INT (CLOCKED_DIGITAL, 0.000 ns BOUND TI-PCA9555, critical 0.0 mm, decided by a bound): EXP_INT",
@@ -169,7 +169,7 @@
   },
   "intent": {
    "path": "pcb-a-power-a23/out/pcb-a-power-intent.json",
-   "sha256_16": "35e430a791ab2b44"
+   "sha256_16": "070b4c5e41e023e5"
   },
   "model_1": {
    "path": "v2/vendor/st/ibis/stm32h742_743_750_753_lqfp100.ibs",
@@ -206,9 +206,9 @@
    "state": "PRESENT"
   },
   "netlist": {
-   "content16": "d464d30a17fb30f7",
+   "content16": "2efce63fe72079f1",
    "path": "pcb-a-power-a23/out/pcb-a-power.net",
-   "sha256_16": "2dfe1c546cb39ccb"
+   "sha256_16": "599ee964a9c23d6e"
   },
   "project": {
    "path": "pcb-a-power-a23/pcb-a-power.kicad_pro",
@@ -245,12 +245,12 @@
  },
  "tool": "edge_length",
  "tools": {
-  "git_head": "87b7d5a9509c",
-  "tools_tree_sha": "bfeac03e9fe6170b"
+  "git_head": "cef7cb77c420",
+  "tools_tree_sha": "8639c5ed4c65deea"
  },
- "ts": "2026-09-28T21:54:11Z",
+ "ts": "2026-09-28T22:44:44Z",
  "verdict": "INCONCLUSIVE",
- "version": "87b7d5a9509c",
+ "version": "cef7cb77c420",
  "writer": {
   "file": "edge_length.py",
   "sha16": "21d61d18e18e56a8"

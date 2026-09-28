@@ -38,9 +38,9 @@
    "sha256_16": "686b29a734c55b9a"
   },
   "board_a_netlist": {
-   "content16": "d464d30a17fb30f7",
+   "content16": "2efce63fe72079f1",
    "path": "pcb-a-power-a23/out/pcb-a-power.net",
-   "sha256_16": "2dfe1c546cb39ccb"
+   "sha256_16": "599ee964a9c23d6e"
   },
   "dock_land": {
    "path": "meshsat.pretty/PogoPins_2x6.kicad_mod",
@@ -67,12 +67,12 @@
  },
  "tool": "check_contracts_e5",
  "tools": {
-  "git_head": "87b7d5a9509c",
-  "tools_tree_sha": "bfeac03e9fe6170b"
+  "git_head": "cef7cb77c420",
+  "tools_tree_sha": "8639c5ed4c65deea"
  },
- "ts": "2026-09-28T21:56:12Z",
+ "ts": "2026-09-28T22:46:45Z",
  "verdict": "FAIL",
- "version": "87b7d5a9509c",
+ "version": "cef7cb77c420",
  "writer": {
   "file": "block_contract.py",
   "sha16": "f6f01899199a66a3"
