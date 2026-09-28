@@ -27,7 +27,7 @@ import sys
 import yaml
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-INPUTS_SHA256 = "474a84e2d3ef877b02e1a6d1baa8c7063116d791e6d72322178e66dd57965e81"  # energy_inputs.yaml, set by --pin
+INPUTS_SHA256 = "85c92954b9d81250c76190597680ddd6cbedafaf3a627d78e85ee6b2799a7026"  # energy_inputs.yaml, set by --pin
 
 
 class InputError(Exception):
@@ -384,13 +384,16 @@ def section4(o, d, monthly_json):
                          f1(e_node * eta_lo / eta * 0.80 / pr), f1(e_node * eta_hi / eta)])
     o.table(["month", "kWh/m2 a day", "profile scale", "panel Wp", "panel Wh/day", "panel peak W", "hours clipped", "into node Wh/day (100 W window)", "no window", "low bracket", "high bracket"], rows)
     o()
-    o("   Reading the table: a 100 Wp panel never reaches the window (its peak is under 100 W) and gives %.0f Wh a day at the" % res["months"][9][100]["e_node"])
-    o("   node in September and %.0f in December (the low brackets %.0f and %.0f). A larger panel is clipped at 100 W into" % (
+    ceil = {m: sum(node_w(g, 20000.0, pr, window, eta) for g in res["months"][m]["profile"]) for m in (6, 9, 12)}
+    res["ceiling"] = ceil
+    o("   Reading the table: a 100 Wp panel never reaches 100 W (its peak is under it) and gives %.0f Wh a day at the" % res["months"][9][100]["e_node"])
+    o("   node in September and %.0f in December (the low brackets %.0f and %.0f). A larger panel is clipped here at 100 W" % (
         res["months"][12][100]["e_node"], res["months"][9][100]["e_node"] * eta_lo / eta * 0.80 / pr, res["months"][12][100]["e_node"] * eta_lo / eta * 0.80 / pr))
-    o("   the stage for the hours shown, and the most the window can pass in a day is %.0f W x the lit hours: %.0f Wh in" % (window * eta, window * eta * sum(1 for g in res["months"][9]["profile"] if g > 0)))
-    o("   September and %.0f Wh in December with a panel large enough to hold the clip all day. That is the ceiling a" % (window * eta * sum(1 for g in res["months"][12]["profile"] if g > 0)))
-    o("   re-rated input path (S-53) would lift; the fuse F2 and J_SOLAR at 10 A carry two paralleled 100 Wp panels'")
-    o("   short-circuit current (about 12.5 A) NOT, so more than about 150 Wp of 12 V class panel also re-rates the entry.")
+    o("   into the stage for the hours shown (a MODEL assumption: as generated nothing in the stage holds it to 100 W, 6e).")
+    o("   The window's own ceiling, a panel large enough to be clipped in every lit hour (20 kWp), is %.0f Wh a day at the" % ceil[6])
+    o("   node in June, %.0f in September and %.0f in December, against the %.0f Wh a day PS-IDLE-SPEC asks: above it in" % (ceil[9], ceil[12], 24 * 42.8))
+    o("   June, under it in September and December. A panel above about 150 Wp of the 12 V class also exceeds F2's and")
+    o("   J_SOLAR's 10 A at its short circuit (about 6.25 A per 100 Wp), so it re-rates the entry whatever the stage does.")
     o()
     return res
 
@@ -410,6 +413,7 @@ def simulate(d, pack, prof, p_load, wp, window, eta, pr, start_h, t_c, age, hour
     chg_max_w = pack.chg_a * (n_p / pack.n_p) * v_pack
     can_charge = d["pack"]["charge_window_c"]["low"] <= t_c <= d["pack"]["charge_window_c"]["high"]
     e = e_full
+    lowest = e_full
     running = True
     trace = []
     first_stop = None
@@ -454,11 +458,12 @@ def simulate(d, pack, prof, p_load, wp, window, eta, pr, start_h, t_c, age, hour
                     first_stop = h
         if running:
             hours_run += 1
+        lowest = min(lowest, e)
         trace.append((h, hh, g, p_sun, load, flow, e, running))
     if in_night:
         nights.append(night_draw)
     return trace, {"e_full": e_full, "first_stop": first_stop, "short_wh": short_wh, "hours_run": hours_run, "end_wh": e,
-                   "nights": nights, "chg_max_w": chg_max_w, "ok": first_stop is None}
+                   "nights": nights, "chg_max_w": chg_max_w, "ok": first_stop is None, "lowest": lowest}
 
 
 def section5(o, d, pack, res1, res3, res4, monthly_json):
@@ -530,10 +535,13 @@ def section5(o, d, pack, res1, res3, res4, monthly_json):
     wp_min_100 = bisect(lambda wp: ok_panel(wp, window), 100.0, 5000.0)
     wp_min_nowin = bisect(lambda wp: ok_panel(wp, 1e9), 100.0, 5000.0)
     e_aged = res[("PS-IDLE-SPEC", 9, 6)]["e_full"]
+    big = [node_w(g, 20000.0, pr, window, eta) for g in prof]
+    big_h = sum(1 for x in big if x < p)
+    big_ask = sum(p - x for x in big if x < p)
     rows = [
         ["load W at the pack (42.8 now)", f1(w_max), "the whole kit at %.0f percent of PS-IDLE-SPEC: below the heat stage's 21.7 W and this record's night state" % (100 * w_max / p)],
         ["usable pack energy Wh (%.0f aged now)" % e_aged, f1(k_min * e_aged) if k_min else "over 40 x", "%.1f packs of the ruled size, aged; %.1f new (%.0f Wh)" % (k_min, k_min * 0.8, k_min * e_aged) if k_min else ""],
-        ["panel Wp in the 100 W window (100 now)", (f1(wp_min_100) if wp_min_100 else "none: no panel size passes inside the window"), "the window's ceiling binds before the night does"],
+        ["panel Wp in the 100 W window (100 now)", (f1(wp_min_100) if wp_min_100 else "none: no panel size passes inside the window"), "the night binds first: a 20 kWp panel in the window leaves %d h below the load, asking %.0f Wh of a %.0f Wh pack" % (big_h, big_ask, e_aged)],
         ["panel Wp with no window (re-rated path)", (f1(wp_min_nowin) if wp_min_nowin else "none: no panel size passes with this pack"), "the night binds: the pack empties whatever the day gives"],
         ["night h the pack carries at 42.8 W", f2(e_aged / p), "against %.1f h of sun-down and %d h of sun below the load in September" % (res3[9]["night_h"], res[("PS-IDLE-SPEC", 9, 6)]["deficit_h"])],
     ]
@@ -543,7 +551,7 @@ def section5(o, d, pack, res1, res3, res4, monthly_json):
     o("5d. Combinations inside the approved constraints, September, start 06:00, aged 80 percent (the night state of")
     o("   option (a), the 2.80 V line of (b), the panel and window of (e)):")
     rows = []
-    pn = res1["PS-NIGHT-RELAY"]["recount_bat"]
+    pn = res1["PS-NIGHT-RELAY"]["model"]
     for st, pl in (("PS-IDLE-SPEC", p), ("PS-RED2", res1["PS-RED2"]["model"]), ("PS-SURV-R", res1["PS-SURV-R"]["model"]), ("PS-NIGHT-RELAY", pn)):
         for dod in ("3v00", "2v80"):
             for wp, win in ((100.0, window), (200.0, window), (330.0, 300.0), (400.0, 1e9)):
@@ -555,7 +563,7 @@ def section5(o, d, pack, res1, res3, res4, monthly_json):
                     rows.append([st, f1(pl), dod, "%.0f" % wp, ("%.0f" % win if win < 1e8 else "none"), MONTHS[m - 1], f1(sm["e_full"]),
                                  ("MET" if sm["ok"] else "NOT MET, unserved %.0f Wh, stop h %d" % (sm["short_wh"], sm["first_stop"])),
                                  ("MET" if sm2["ok"] else "NOT MET, unserved %.0f Wh" % sm2["short_wh"])])
-                    res[("combo", st, dod, wp, win, m)] = (sm["ok"], sm2["ok"], sm["short_wh"], sm2["short_wh"])
+                    res[("combo", st, dod, wp, win, m)] = (sm["ok"], sm2["ok"], sm["short_wh"], sm2["short_wh"], sm2)
     o.table(["state", "W", "graceful line", "panel Wp", "window W", "month", "usable Wh", "one 4S3P pack (the ruled one)", "two 4S3P packs (D-01's deferred second)"], rows)
     o()
     return res
@@ -566,6 +574,7 @@ def section6(o, d, pack, res1, res2, res3, res4, res5):
     o("6. THE OPTIONS, with numbers (all inside the case ruling of 7 September 2026: the Peli 1450 never changes)")
     o()
     pn = res1["PS-NIGHT-RELAY"]
+    mb = d["model_states"]["PS-NIGHT-RELAY"]
     o("6a. Operating modes at night: PS-NIGHT-RELAY, the lowest state that still meets M1's must-hold (a handheld's")
     o("    message over the LoRa mesh reaches a remote correspondent over Iridium, or APRS; the kit keeps running).")
     rows = []
@@ -575,9 +584,14 @@ def section6(o, d, pack, res1, res2, res3, res4, res5):
     o.table(["load ON in PS-NIGHT-RELAY", "at load W", "battery W", "kind"], rows)
     o("    OFF: slots 1 and 2 with their fans, PCIe switches and drives; both WiFi link cards; the 5G module (no host on")
     o("    slot 3); the monitor and HDMI 5 V; the SDR, the camera, the QMX, the Geiger (deferred by D-01); the E72 pair;")
-    o("    the mixer fans (a shaded, cool night; on in the heat). Battery-side %.1f W PLAN (%.1f W with the D rows at" % (pn["recount_bat"], pn["sourced_bat"]))
-    o("    the makers' figures); the aged pack carries it %.1f h at +20 C (%.1f h at the sourced figure), against" % (res2[("PS-NIGHT-RELAY", 20.0)]["a80"] / pn["recount_bat"], res2[("PS-NIGHT-RELAY", 20.0)]["a80"] / pn["sourced_bat"]))
-    o("    September's %.1f h of sun-down and %d h of sun below the load (100 Wp). It does not carry a September night alone." % (
+    o("    the mixer fans (a shaded, cool night; on in the heat). ON at night with traffic: the LoRa module at the planning")
+    o("    duty (receive plus about 9 percent airtime, 0.3 W) and the RockBLOCK at one session in ten minutes (0.1 W); the")
+    o("    panel at its declaration's logic share with the lamps at NIGHT's 15 percent (0.82 W, a declaration, not a maker's")
+    o("    figure). On the tree's model (night_bounds.out, pwr_budget.py imported unchanged): LOW / PLAN / HIGH %.2f / %.2f /" % (mb["low"], mb["plan"]))
+    o("    %.2f W at the pack; this page's recount of the rows above %.2f W; the D rows at the makers' figures %.2f W." % (mb["high"], pn["recount_bat"], pn["sourced_bat"]))
+    o("    The balance uses the model's PLAN %.2f W. The aged pack carries it %.1f h at +20 C (%.1f h at LOW, %.1f h at HIGH)," % (
+        mb["plan"], res2[("PS-NIGHT-RELAY", 20.0)]["a80"] / mb["plan"], pack.usable_wh(mb["low"], 20.0, pack.age80)[0] / mb["low"], pack.usable_wh(mb["high"], 20.0, pack.age80)[0] / mb["high"]))
+    o("    against September's %.1f h of sun-down and %d h of sun below the load (100 Wp): not a September night alone." % (
         res3[9]["night_h"], res5[("PS-NIGHT-RELAY", 9, 6)]["deficit_h"]))
     o("    What it changes: firmware and operator settings only (the KSZ energy-detect mode and the supervisors' 200 MHz")
     o("    clock are firmware items to confirm on the generated boards); it is the heat stage after BANK-R1 with six")
@@ -589,7 +603,7 @@ def section6(o, d, pack, res1, res2, res3, res4, res5):
     o("6b. The usable depth of discharge: the graceful line 3.00 V to 2.80 V under load gains %.1f Wh aged (%.0f to %.0f Wh);" % (e280 - e20["a80"], e20["a80"], e280))
     o("    the 5 percent RSOC reserve then ends the run first at low currents (f_dod capped at 0.95). Cost: none; a")
     o("    gauge image and bridge setting (CONOPS 4c's PROVISIONAL threshold). Mission: about %.0f minutes more at" % (60 * (e280 - e20["a80"]) / 42.8))
-    o("    PS-IDLE-SPEC, %.0f at the night state; cycle life is the maker's question (the cycle test discharges to 2.65 V)." % (60 * (e280 - e20["a80"]) / pn["recount_bat"]))
+    o("    PS-IDLE-SPEC, %.0f at the night state; cycle life is the maker's question (the cycle test discharges to 2.65 V)." % (60 * (e280 - e20["a80"]) / pn["model"]))
     o()
     o("6c. Cells in the east pocket (58 x 240 x 47.9 mm; A06's fit study on the committed board B underside):")
     o.table(["configuration", "nominal Wh", "east pocket", "west pocket"], [[v["config"], f1(v["wh_nominal"]), v["east"], v["west"]] for v in d["pockets"]["a06_verdicts"]])
@@ -599,21 +613,27 @@ def section6(o, d, pack, res1, res2, res3, res4, res5):
     lid = d["pockets"]["lid"]
     o("6d. A second pack's location inside the fixed case (D-01 deferred it, 'no location found'):")
     o("    - east pocket: taken by the ruled pack (6c).")
-    o("    - west pocket, 58 x 160 x 47.9: A06 found no arrangement with board P BESIDE the cells (X spare -17.42). Not")
-    o("      tried by A06: the 4S3P block alone (56.65 x 133.5 x 38.1) with its board P on top of the block or remote")
-    o("      over a cell-tap harness: 133.5 fits the 160, 56.65 the 58 (1.35 spare, the same as the east), and the")
-    o("      height 38.1 + a board P of about 8 mm assembled is about 46 against the 47.9 (about 2 mm, under the 3.32")
-    o("      the east block keeps at the worst base). A candidate to CHECK with A06's script, not a finding; it")
-    o("      displaces the west-wall cable drop zone (CASE-MARGINS section 3.4) and the heater mat's twin.")
+    o("    - west pocket, 58 x 160 x 47.9 (packfit_west.out: A06's pack_fit.py imported unchanged, its zones, bases and")
+    o("      search): the 4S3P block ALONE fits (X spare 1.35, Y spare 26.50, Z clear 5.20 at the nominal base, 3.99 at the")
+    o("      worst, under C33 on board B's underside). Board P does NOT fit with it: on top of the block the Z clearance")
+    o("      is -11.47 with its Keystone 3568 holder and blade (16.17), -5.10 with only its JST XH (9.80), -1.70 even at")
+    o("      the 8 mm board this page's first issue assumed (-12.68, -6.31, -2.91 at the worst base); at the block's end")
+    o("      the group is 205.50 long against 160 (Y spare -45.50); at its side 75.42 wide against 58 (X spare -17.42).")
+    o("      A second board P in the east pocket: the ruled group leaves 34.50 in Y against its 44.0 plus 2.0, and 1.35")
+    o("      in X: NO. So a west block needs its board P somewhere else, over a harness carrying the pack current and the")
+    o("      cell taps, and NO such place is found here: the tool models only the two pockets, and the rest of the")
+    o("      floor is the dock strip and board A's blind-mate gap (13.4 mm, CASE-MARGINS section 3.1), under board P's")
+    o("      19.8 mm with its holder. The west candidate stays a CANDIDATE with its board P unplaced.")
     o("    - the lid: the flat ceiling is %.0f x %.0f, the depth %.2f at the worst; the QMX tray r2 takes X %.1f to %.1f" % (
         lid["ceiling_x_mm"], lid["ceiling_y_mm"], lid["depth_worst_mm"], lid["tray_r2_x"][0], lid["tray_r2_x"][1]))
     o("      and stands %.2f below the ceiling. A ONE-LAYER 4S3P block, two rows of six cells (2 x 56.65 = 113.3 by" % lid["tray_r2_stack_below_ceiling_mm"])
     o("      2 x 66.25 + 1 = 133.5 by 19.55 high) or one row of twelve (223.6 x 66.25 x 19.55), on a 2 mm lid plate as")
-    o("      the tray's, over the WEST third of the lid (X -173 to 83, where D-01's deferred tablet bracket was to go)")
+    o("      the tray's, over the lid's west 256 mm of its 346 (X -173 to 83, where D-01's deferred tablet bracket was to go)")
     o("      leaves %.1f mm over the face parts, more than the tray's own room. Mass about 0.65 kg of cells and board" % (lid["depth_worst_mm"] - 2.0 - 19.55))
     o("      in the lid; a lid harness across the hinge (the QMX's crossing is already an open item, S-95); the drop")
     o("      and vibration hold-down (TEST-PLAN E1, E2) and the lid's own strength are new items. A candidate to CHECK")
-    o("      against CASE-MARGINS' lid rows (M3, M19) and the face parts' heights (T9), not a finding.")
+    o("      against CASE-MARGINS' lid rows (M3, M19) and the face parts' heights (T9, TBD), not a finding: A06's tool")
+    o("      has no lid pocket, so it cannot be checked in the tree today. Board P rides with that block in the lid.")
     o("    Energy: a second 4S3P in parallel doubles every usable figure of section 2 (%.0f Wh aged at PS-IDLE-SPEC);" % (2 * e20["a80"]))
     o("    what the combinations of 5d then meet is in that table's last column. Cost ESTIMATE: 12 cells (about 4 EUR")
     o("    each at a European distributor, about 50 EUR), a second board P (about 30 EUR fabricated and assembled, the")
@@ -626,7 +646,7 @@ def section6(o, d, pack, res1, res2, res3, res4, res5):
         m9[100]["e_node"], m12[100]["e_node"], m9[200]["e_node"], m12[200]["e_node"], m9[200]["clipped_h"], m9[330]["e_node"], m12[330]["e_node"]))
     o("    %d h); with no window at all 330 Wp gives %.0f / %.0f. PS-IDLE-SPEC asks %.0f Wh a day, the reduced mode %.0f," % (
         m9[330]["clipped_h"], m9[330]["e_node_noclip"], m12[330]["e_node_noclip"], 24 * 42.8, 24 * 31.38))
-    o("    the heat stage %.0f, the night state %.0f. So: inside the window no panel carries PS-IDLE-SPEC's day; a" % (24 * 23.27, 24 * pn["recount_bat"]))
+    o("    the heat stage %.0f, the night state %.0f. So: inside the window no panel carries PS-IDLE-SPEC's day; a" % (24 * 23.27, 24 * pn["model"]))
     o("    re-rated path to about 300 W with a 330 Wp panel carries the heat stage's September day and the night state's")
     o("    December day; what it cannot do is carry any night, which is the pack's. A panel above about 150 Wp of 12 V")
     o("    class also exceeds F2's and J_SOLAR's 10 A at its short circuit (about 6.25 A per 100 Wp, gen_sch_e.py:474),")
@@ -634,9 +654,57 @@ def section6(o, d, pack, res1, res2, res3, res4, res5):
     o("    inductor, FETs and sense resistor for 3 x the current, a 20 A fuse and connector, under 40 EUR of parts on")
     o("    board E; the panel itself 100 to 300 EUR per 100 Wp class. Mission: none removed; a bigger panel to carry.")
     o()
+    w = d["solar"]["window"]
+    sl = w["stage_limit"]
+    fe = w["front_end_draw_w"]["value"]
+    eta_s = sl["stage_eta"]
+    p_in_max = fe / eta_s
+    o("    WHAT BOUNDS THE STAGE AS GENERATED: nothing at 100 W. %s" % w["stage_current_loops_as_generated"])
+    o("    The tracker delivers the panel's power (gen_sch_e.py:99-101, 580-583) and only board A's front end bounds it, at")
+    o("    %.1f W drawn (gen_sch_e.py:104-107): %.0f W into the stage at 0.93. A 200 Wp panel on a clear day, on pack and" % (fe, p_in_max))
+    o("    solar alone, can therefore put about %.0f W into it: %.1f A at 17.6 V, and %.1f A on TRK_OUT at 15.1 V. The" % (
+        min(p_in_max, 200 * 0.9417), min(p_in_max, 200 * 0.9417) / 17.6, min(p_in_max, 200 * 0.9417) * eta_s / 15.1))
+    o("    model's 100 W clip is a model assumption, conservative for the energy (a mean September day never reaches it:")
+    o("    the 200 Wp peak is %.1f W). Two routes, both presented:" % m9[200]["peak"])
+    o("    ROUTE A, the window restated: REQ-016's 'at most 100 W into the stage' becomes at most %.0f W; PV_P and PV_IN" % p_in_max)
+    o("    from 5.68 A typical and 6.25 A peak to %.1f A and about 12.5 A (two 100 Wp panels' short circuit); TRK_OUT from" % (p_in_max / 17.6))
+    o("    6.16 A at 15.1 V to %.1f A (its 10.33 A declaration at the 9 V floor to %.1f A, which VIN_RAW's 14.10 A already" % (fe / 15.1, fe / 9.0))
+    o("    carries on board A); F2 and J_SOLAR above 12.5 A with margin (a JST-VH is a 10 A part: another connector, pick")
+    o("    TBD); L1's saturation current, the four FETs' dissipation and R5's sense range re-judged at the higher current")
+    o("    (the inductor valley limit is 69 mV / 5 mOhm = 13.8 A, gen_sch_e.py:103). D4 and the 25 V window are unchanged")
+    o("    (two 12 V class panels in parallel keep their open-circuit voltage). More energy on clear days; no change on the")
+    o("    mean day. It restates a core requirement (REQ-016, SC-36) and board E's declarations.")
+    vr, gm, rim, tol = sl["v_reg_imon_v"], sl["gm_imon_out_mmho"], sl["r_imon_kohm"] * 1e3, sl["resistor_tol"]
+    it, vo = sl["i_target_a"]["value"], sl["trk_out_v"]
+
+    def ilim(rs, v, g, sgn):
+        return v / (g * 1e-3 * rim * (1 + sgn * tol) * rs * (1 + sgn * tol))
+    rs_i = vr["typ"] / (gm["typ"] * 1e-3 * rim * it)
+    rs_ii = rs_i * ilim(rs_i, vr["max"], gm["min"], -1) / it
+    res_e = {}
+    for tag, rs in (("(i) the typical at 6.16 A", 0.008), ("(ii) the worst case at 6.16 A", 0.0091)):
+        lo_i, ty_i, hi_i = ilim(rs, vr["min"], gm["max"], +1), ilim(rs, vr["typ"], gm["typ"], 0), ilim(rs, vr["max"], gm["min"], -1)
+        res_e[tag[:4]] = {"rs": rs, "i": (lo_i, ty_i, hi_i), "p_in": tuple(x * vo / eta_s for x in (lo_i, ty_i, hi_i))}
+    o("    ROUTE B, a designed limit that keeps REQ-016's 100 W: the LT8705A's own output current loop (8705af PDF pages 4,")
+    o("    5, 11, 12 and 19): a sense resistor RSENSE2 between the stage's output and TRK_OUT with CSPOUT (pin 31) on the")
+    o("    stage side and CSNOUT (pin 30) on TRK_OUT, both untied from TRK_OUT; the loop regulates when IMON_OUT reaches")
+    o("    %.3f V (%.3f to %.3f), with I(IMON_OUT) = gm x V(sense), gm %.2f mmho (%.2f to %.3f, E and I grades over" % (vr["typ"], vr["min"], vr["max"], gm["typ"], gm["min"], gm["max"]))
+    o("    temperature). With R17 (IMON_OUT to ground, 10k as generated) at %.1f k 1 percent, the typical limit %.2f A at" % (rim / 1e3, it))
+    o("    15.1 V (100 W in at 0.93) needs %.2f mOhm; the worst-case limit at %.2f A needs %.2f mOhm. Two settings:" % (rs_i * 1e3, it, rs_ii * 1e3))
+    for tag, rs in (("(i) the typical at 6.16 A", 0.008), ("(ii) the worst case at 6.16 A", 0.0091)):
+        e_ = res_e[tag[:4]]
+        o("      %s: RSENSE2 %.1f mOhm: %.2f / %.2f / %.2f A (low / typical / high), %.0f / %.0f / %.0f W into the stage" % (
+            tag, rs * 1e3, e_["i"][0], e_["i"][1], e_["i"][2], e_["p_in"][0], e_["p_in"][1], e_["p_in"][2]))
+    o("      Setting (i) is 100 W typical and up to %.0f W at the sheet's worst, so REQ-016's 'at most' holds only as" % res_e["(i) "]["p_in"][2])
+    o("      'about'; setting (ii) holds it at the worst and gives %.0f W typical. With the bus held lower (a vehicle at 9 to" % res_e["(ii)"]["p_in"][1])
+    o("      15 V) the limit is a lower power, which the vehicle then covers. Parts: one 2512 sense resistor, R17's value,")
+    o("      two pins untied, under 2 EUR; it moves no REQ-016 figure except the peak (short-circuit) current on PV_P and")
+    o("      PV_IN, 6.25 to about 12.5 A, so F2 and J_SOLAR are still re-rated for a 200 Wp panel's fault current. The")
+    o("      constant-power front end against a current-limited source is the case the design already has whenever the")
+    o("      panel gives less than the front end draws (gen_sch_e.py:99-103); the host contract (FW-A16) must hold it.")
+    o()
+    res_out = {"route_b": res_e}
     ve = d["solar"]["vehicle_entry"]
-    for st, pl in (("PS-IDLE-SPEC", 42.8), ("PS-RED2", 31.38), ("PS-SURV-R", 23.27), ("PS-NIGHT-RELAY", pn["recount_bat"])):
-        pass
     o("6f. An external DC source on the 9 to 36 V entry, as an OPTION and not the mission's basis: the entry guarantees")
     o("    %.2f A (carries %.2f A) through F1 10 A, the LM74700 diode, the LM5069 hot-swap and the choke into board A's" % (ve["guaranteed_a"]["value"], ve["carried_a"]))
     o("    front end, chain %.3f to the node. At 12 V the guaranteed %.2f A is %.0f W at the source and %.0f W at the node," % (
@@ -645,7 +713,7 @@ def section6(o, d, pack, res1, res2, res3, res4, res5):
     o("    give per night, the sun-down hours of section 3 (September %.1f h, December %.1f h; by day the panel's" % (res3[9]["night_h"], res3[12]["night_h"]))
     o("    shortfall against the load is on top of it, section 5b's 'h sun < load'):")
     rows = []
-    for st, pl in (("PS-IDLE-SPEC", 42.8), ("PS-RED2", 31.38), ("PS-SURV-R", 23.27), ("PS-NIGHT-RELAY", pn["recount_bat"])):
+    for st, pl in (("PS-IDLE-SPEC", 42.8), ("PS-RED2", 31.38), ("PS-SURV-R", 23.27), ("PS-NIGHT-RELAY", pn["model"])):
         wh9 = pl * res3[9]["night_h"] / ve["chain_eta"]["value"]
         wh12 = pl * res3[12]["night_h"] / ve["chain_eta"]["value"]
         rows.append([st, f1(pl), f1(wh9), f1(wh9 / 12.0), f1(wh9 / 12.8), f1(wh12), f1(wh12 / 12.0)])
@@ -655,42 +723,80 @@ def section6(o, d, pack, res1, res2, res3, res4, res5):
     o("    board change (EQ-13, route b). It changes M1's setting from 'pack and solar', which is why it is stated here")
     o("    as optional and NOT taken as the basis (the owner's instruction of 28 September 2026).")
     o()
-    return {}
+    return res_out
 
 
 # --------------------------------------------------------------------------------------- 7. smallest changes
-def section7(o, d, pack, res1, res4, res5):
-    pn = res1["PS-NIGHT-RELAY"]["recount_bat"]
-    o("7. THE SMALLEST JUSTIFIED CHANGES (from 5d): M1 as written (PS-IDLE-SPEC, one aged 4S3P pack, the 100 W window)")
-    o("   is NOT met by any combination of (a), (b) and (e) alone: the night binds at every load of the kit above")
-    o("   %.1f W (5c), and the lowest state that meets the must-hold reads %.1f W. What meets M1's must-hold through" % (res5["w_max_load"], pn))
-    o("   the design month's night from a full aged pack, in order of the change asked:")
+def section7(o, d, pack, res1, res4, res5, res6):
+    mb = d["model_states"]["PS-NIGHT-RELAY"]
+    pn = mb["plan"]
+    pr, eta, hours = res4["pr"], res4["eta"], d["mission"]["hours"]
+    o("7. THE SMALLEST JUSTIFIED CHANGES (from 5d). REQ-072 AS WRITTEN (PS-IDLE-SPEC for 72 hours) READS FAIL UNDER EVERY SET")
+    o("   BELOW: on one aged 4S3P pack no combination of (a), (b) and (e) meets it (the night binds at every kit load above")
+    o("   %.1f W, 5c), and with two packs PS-IDLE-SPEC is still NOT MET (set 6). The sets that meet M1's must-hold do so by" % res5["w_max_load"])
+    o("   CHANGING M1's operating mode at night to the night state (%.2f W PLAN, %.2f to %.2f W), a change presented for" % (pn, mb["low"], mb["high"]))
+    o("   the owner's decision, not a fulfilment of REQ-072. From a full aged pack, cells as section 5 takes them:")
     keys = [
-        ("1. night state (a) + 2.80 V line (b) + second 4S3P pack (d), 100 Wp, 100 W window", ("PS-NIGHT-RELAY", "2v80", 100.0, 100.0)),
-        ("2. as 1 with a 200 Wp panel in the 100 W window", ("PS-NIGHT-RELAY", "2v80", 200.0, 100.0)),
+        ("1. night state (a) + 2.80 V line (b) + second 4S3P pack (d), 100 Wp", ("PS-NIGHT-RELAY", "2v80", 100.0, 100.0)),
+        ("2. as 1 with a 200 Wp panel (the stage's 100 W: route A or B of 6e)", ("PS-NIGHT-RELAY", "2v80", 200.0, 100.0)),
         ("3. as 1 with the path re-rated to 300 W and a 330 Wp panel (e)", ("PS-NIGHT-RELAY", "2v80", 330.0, 300.0)),
-        ("4. heat stage PS-SURV-R at night + (b) + second pack + re-rated path and 330 Wp", ("PS-SURV-R", "2v80", 330.0, 300.0)),
-        ("5. reduced mode PS-RED2 at night + (b) + second pack + re-rated path and 330 Wp", ("PS-RED2", "2v80", 330.0, 300.0)),
-        ("6. PS-IDLE-SPEC as written + (b) + second pack + re-rated path and 330 Wp", ("PS-IDLE-SPEC", "2v80", 330.0, 300.0)),
+        ("4. heat stage PS-SURV-R at night + (b) + second pack + 300 W path, 330 Wp", ("PS-SURV-R", "2v80", 330.0, 300.0)),
+        ("5. reduced mode PS-RED2 at night + (b) + second pack + 300 W path, 330 Wp", ("PS-RED2", "2v80", 330.0, 300.0)),
+        ("6. PS-IDLE-SPEC as written + (b) + second pack + 300 W path, 330 Wp", ("PS-IDLE-SPEC", "2v80", 330.0, 300.0)),
     ]
     rows = []
     for label, (st, dod, wp, win) in keys:
         cells = []
         pl = res1[st]["model"] or res1[st]["recount_bat"]
         for m in (9, 6, 12):
-            ok1, ok2, s1, s2 = res5[("combo", st, dod, wp, win, m)]
+            ok1, ok2, s1, s2, sm2 = res5[("combo", st, dod, wp, win, m)]
             prf = res4["months"][m]["profile"]
             t_c = d["mission"]["cell_temp_c_by_month"][m]
-            deficit_h = sum(1 for hh in range(24) if node_w(prf[hh], wp, res4["pr"], win, res4["eta"]) < pl)
+            deficit_h = sum(1 for hh in range(24) if node_w(prf[hh], wp, pr, win, eta) < pl)
             e2 = 2.0 * pack.usable_wh(pl, t_c, pack.age80, dod)[0]
-            cells.append(("MET" if ok2 else "NOT MET") + ": night asks %.0f Wh (%.1f W x %d h), two packs hold %.0f" % (pl * deficit_h, pl, deficit_h, e2))
+            head = ("MET, lowest point %.1f Wh" % sm2["lowest"]) if ok2 else ("NOT MET, first stop h %d" % sm2["first_stop"])
+            cells.append("%s (a night asks %.0f Wh, %.1f W x %d h; two packs hold %.0f)" % (head, pl * deficit_h, pl, deficit_h, e2))
         rows.append([label] + cells)
-    o.table(["change set (two packs)", "September", "June", "December"], rows)
+    o.table(["change set (two packs)", "September (cells +20 C)", "June (cells +20 C)", "December (cells +5 C)"], rows)
     o()
-    o("   'MET' is the hour-by-hour run ending above the graceful threshold with no stop; the ask and the hold beside")
-    o("   it are the one-night arithmetic that explains it (a run can pass with the ask slightly above the hold when")
-    o("   the sun charges the packs part way through the deficit hours, and fail the other way when December's")
-    o("   cold cells hold less).")
+    o("   'MET' is the hour-by-hour run ending above the graceful threshold with no stop, and its lowest point is the")
+    o("   smallest energy left in the packs over the 72 hours (the margin); the ask and the hold are the one-night")
+    o("   arithmetic beside it. No set inside the case meets December.")
+    o()
+    prof = res4["months"][9]["profile"]
+
+    def run2(load=pn, t_c=20.0, dod="2v80", window=100.0, wp=200.0):
+        return simulate(d, pack, prof, load, wp, window, eta, pr, 6, t_c, pack.age80, hours, dod=dod, n_p=6)[1]
+    base = run2()
+    t_min = bisect(lambda t: run2(t_c=t)["ok"], 0.0, 20.0)
+    t_min_300 = bisect(lambda t: run2(t_c=t, dod="3v00")["ok"], 0.0, 20.0)
+    lo, hi = pn, 40.0
+    for _ in range(50):
+        mid = 0.5 * (lo + hi)
+        if run2(load=mid)["ok"]:
+            lo = mid
+        else:
+            hi = mid
+    w_ok = lo
+    c15 = run2(t_c=15.0)
+    no280 = run2(dod="3v00")
+    at_low, at_high = run2(load=mb["low"]), run2(load=mb["high"])
+    rb = res6["route_b"]
+    rbi, rbl = run2(window=rb["(ii)"]["p_in"][1]), run2(window=rb["(ii)"]["p_in"][0])
+    o("   SET 2's CONDITIONS, September, start 06:00, two aged packs (the hour-by-hour run):")
+    o.table(["case", "result", "lowest point Wh", "first stop h"], [
+        ["as stated: night state %.2f W, cells +20 C, 2.80 V line, the model's 100 W clip" % pn, "MET" if base["ok"] else "NOT MET", f1(base["lowest"]), str(base["first_stop"])],
+        ["cells at +15 C (the counter-case)", "MET" if c15["ok"] else "NOT MET", f1(c15["lowest"]), str(c15["first_stop"])],
+        ["without the 2.80 V line (graceful at 3.00 V)", "MET" if no280["ok"] else "NOT MET", f1(no280["lowest"]), str(no280["first_stop"])],
+        ["the night state at its LOW %.2f W" % mb["low"], "MET" if at_low["ok"] else "NOT MET", f1(at_low["lowest"]), str(at_low["first_stop"])],
+        ["the night state at its HIGH %.2f W" % mb["high"], "MET" if at_high["ok"] else "NOT MET", f1(at_high["lowest"]), str(at_high["first_stop"])],
+        ["route B setting (ii) typical: %.0f W into the stage" % rb["(ii)"]["p_in"][1], "MET" if rbi["ok"] else "NOT MET", f1(rbi["lowest"]), str(rbi["first_stop"])],
+        ["route B setting (ii) at its low end: %.0f W into the stage" % rb["(ii)"]["p_in"][0], "MET" if rbl["ok"] else "NOT MET", f1(rbl["lowest"]), str(rbl["first_stop"])],
+    ])
+    o("   Set 2 meets September only with the cells at or above %.2f C (%.2f C without the 2.80 V line) and the night" % (t_min, t_min_300))
+    o("   state at or below %.2f W (%.2f W, %.1f percent, above its PLAN), on the mean September day and planning loads." % (w_ok, w_ok - pn, 100 * (w_ok - pn) / pn))
+    o()
+    return {"t_min": t_min, "t_min_300": t_min_300, "w_ok": w_ok, "base": base, "c15": c15}
 
 
 # ---------------------------------------------------------------------------------------------------- driver
@@ -730,8 +836,8 @@ def run(root, inputs_path):
         else:
             hi = mid
     res5["w_max_load"] = lo
-    section6(o, d, pack, res1, res2, res3, res4, res5)
-    section7(o, d, pack, res1, res4, res5)
+    res6 = section6(o, d, pack, res1, res2, res3, res4, res5)
+    section7(o, d, pack, res1, res4, res5, res6)
     o("END. REQ-072's verdict on these figures: FAIL (unchanged); see ENERGY-RECONCILIATION.md sections 5 and 7.")
     return o.text()
 

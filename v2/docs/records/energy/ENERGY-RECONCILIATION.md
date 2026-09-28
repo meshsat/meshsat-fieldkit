@@ -17,12 +17,25 @@ listed with numbers and ranked (section 6); the smallest justified changes are p
 owner's decision (section 7 and `DECISION-PARAGRAPH.md`). Unmet criteria are left visible: REQ-072 reads FAIL
 before and after this page.
 
+**Second issue (28 September 2026), after an independent AI review of the first (`fc8cf808`).** The review
+reproduced sections 1 to 5 and the conflict with its own code and found three blocking items, corrected here: the
+west pocket's second pack was written as nearly fitting where A06's own tool says its board P does not fit (B1,
+section 6d, now judged with `packfit_west.py`); set 2 said the stage's 100 W window was unchanged where nothing in
+the stage holds it to 100 W (B2, section 6e, two routes); and the owner's paragraph presented set 2 as meeting the
+mission (B3, section 7 and `DECISION-PARAGRAPH.md`). Its minor items are answered in place: the night state's panel
+row at its declaration's share and a low-to-high bound on the tree's model, with the relay's traffic added (m1,
+m2, `night_bounds.py`; 16.20 W where the first issue had 15.70), the hour-by-hour margin and its conditions (m3),
+the 2.80 V line named in the paragraph (m4), the window's ceiling (m5), the wording (m6 to m10) and the files that
+exist only on `fnd/d4energy` with the merge order (m11, section 7's last paragraph).
+
 **The inputs this rests on, pinned by sha256** (`energy_budget.py` refuses to run if any changed): the PVGIS
 monthly irradiation file, the two Samsung INR18650-35E documents, the tree's power model outputs
-(`records/rv-pwr/pwr_budget.out`, `records/hc2/pwr_red2.out`), board E's generator, and `energy_inputs.yaml`
-itself. Stream d4energy's `energy_data.yaml` (branch `fnd/d4energy`, commit `9b43e274`) was read in full and
+(`records/rv-pwr/pwr_budget.out`, `records/hc2/pwr_red2.out`), board E's generator, this page's two helper
+outputs (`night_bounds.out` and `packfit_west.out`, each written by a script that imports a committed tool unchanged
+and pinned: `records/rv-pwr/pwr_budget.py` and A06's `pack_fit.py`), and `energy_inputs.yaml` itself. Stream d4energy's `energy_data.yaml` (branch `fnd/d4energy`, commit `9b43e274`) was read in full and
 found sound; its load citations, its pack figures, its readings of the makers' curves and the PVGIS mean-day
-profile it filed (commit `71be4943`) are reused and cited, not duplicated. Its `energy_budget.py` (untracked
+profile it filed (commit `71be4943`) are reused and cited, not duplicated; those files exist only on
+`fnd/d4energy` and land with or before this record (section 7, last paragraph). Its `energy_budget.py` (untracked
 there, 1320 lines) did not finish in 240 s in a read-only scratch run on this host and was not run again (the
 host rule); nothing here depends on it.
 
@@ -64,6 +77,10 @@ to the PS-IDLE-SPEC rows with each row's own conversion factor; `energy_budget.o
 | PS-RED2, the reduced mode | slots 2 and 3 at the maker's typical 900 mA, slot 1 off, monitor off, both link cards off, 5G idle, beacons | 26.39 | 31.56 | 31.38 | +0.18 | S 16 / R 6 / D 8 / T 1 |
 | PS-SURV-R, the heat stage after BANK-R1 | slot 3 alone, 5G off, beacons | 19.64 | 23.73 | 23.27 | +0.46 | S 11 / R 5 / D 8 / T 1 |
 | PS-SURV, the heat stage as generated | slot 2 alone, LoRa and APRS off | 18.89 | 22.94 | 21.73 | +1.21 | S 11 / R 5 / D 8 / T 0 |
+
+The night state of section 6a is computed on the tree's model itself (`night_bounds.py` imports `pwr_budget.py`
+unchanged and reproduces PS-SURV-R's 12.78 / 23.27 / 46.94 W exactly): **LOW 11.02, PLAN 16.20, HIGH 39.67 W**;
+the recount of its rows reads 16.63 W (S 10 loads, R 4, D 6, T 1), 13.77 W with the D rows at the makers' figures.
 
 The recount does not re-solve the distribution I2R at the lower current (the model's I2R is about 0.2 W at
 43 W and 0.1 W at 22 W) and keeps each row's conversion factor at its PS-IDLE-SPEC operating point, which
@@ -114,7 +131,7 @@ E = 12 cells x C_min x f_rate(I) x f_T x V_mean(I) x f_dod x f_age, where
 | PS-RED2 | 31.4 | +20 C | 0.72 | 0.9995 | 1.000 | 3.622 | 0.937 | 136.3 | 109.1 | 81.8 | 4.34 / 3.48 / 2.61 |
 | PS-SURV-R | 23.3 | +20 C | 0.54 | 1.0000 | 1.000 | 3.624 | 0.937 | 136.5 | 109.2 | 81.9 | 5.87 / 4.69 / 3.52 |
 | PS-SURV | 21.7 | +20 C | 0.50 | 1.0000 | 1.000 | 3.624 | 0.937 | 136.5 | 109.2 | 81.9 | 6.28 / 5.03 / 3.77 |
-| PS-NIGHT-RELAY (6a) | 15.7 | +20 C | 0.36 | 1.0000 | 1.000 | 3.624 | 0.937 | 136.5 | 109.2 | 81.9 | 8.69 / 6.95 / 5.22 |
+| PS-NIGHT-RELAY (6a) | 16.2 | +20 C | 0.37 | 1.0000 | 1.000 | 3.624 | 0.937 | 136.5 | 109.2 | 81.9 | 8.43 / 6.74 / 5.06 |
 
 (The full table with the 0 C and -10 C rows of every state is `energy_budget.out` section 2.) **Check against
 the tree:** `POWER-THERMAL.md` section 6 reads 108.1 Wh aged for PS-IDLE-SPEC by a different route (rate factor,
@@ -132,10 +149,13 @@ window, so the charge is not held off on the mean day; a cold snap below 0 C at 
 ## 3. Night duration at 52 N
 
 No ephemeris is held in the tree, so the day length is computed (`energy_budget.py` section 3) from the solar
-declination by Spencer's (1971) Fourier series (within about 0.05 degrees of the ephemeris) and the sunrise
+declination by Spencer's (1971) Fourier series (a fit for no particular year: for 15 September 2026 it gives +3.34
+degrees where the Meeus low-precision method gives +2.91, the independent review's comparison, which moves that
+night by about 0.04 h) and the sunrise
 equation cos(w0) = (sin h0 - sin lat sin dec) / (cos lat cos dec), with h0 = -0.833 degrees (refraction and the
-sun's half-diameter, the usual sunrise and sunset) and h0 = -6 degrees (civil twilight), at 52.160 N. The day
-length is accurate to about 2 to 4 minutes (the series and the weather's effect on refraction). "Sun down" is
+sun's half-diameter, the usual sunrise and sunset) and h0 = -6 degrees (civil twilight), at 52.160 N. The night
+is accurate to within about 3 minutes from the declination and 2 to 4 minutes from the weather's effect on
+refraction. "Sun down" is
 24 h less sunrise-to-sunset; "dark" is 24 h less twilight-to-twilight (a panel gives almost nothing in twilight:
 PVGIS's first and last lit hours in September carry 0 to 57 W/m2).
 
@@ -180,7 +200,8 @@ kit's own stages). PVcalc's own September yield for 100 Wp at 14 percent loss, 0
 17.6 V (R8, R9), so a hot panel whose maximum-power voltage falls under 17.6 V gives less. No panel curve is held;
 the low bracket takes 0.80.
 
-**Window and chain:** at most 100 W into the stage (REQ-016, SC-36); above it the stage clips. Into the node:
+**Window and chain:** at most 100 W into the stage (REQ-016, SC-36); the model clips there. That clip is a MODEL
+assumption, conservative for the energy: as generated nothing in the stage holds it to 100 W (section 6e). Into the node:
 the LT8705A stage 0.93 (the intent's declaration, `gen_sch_e.py:606`; the datasheet plots a 48 V design, not this
 ratio) x board A's front end 0.93 (declared, `gen_sch_a.py:103`, not plotted at 20 V out) x the BQ25731 charger
 0.98 (SLUSE66A Figure 8-4, d4energy's reading) = **0.848** (bracket 0.782 to 0.926).
@@ -198,10 +219,10 @@ ratio) x board A's front end 0.93 (declared, `gen_sch_a.py:103`, not plotted at 
 | **December** | 1.13 | **100** | 106 | 21.4 | 0 | **90** | 90 | 70 |
 | December | 1.13 | 330 | 350 | 70.7 | 0 | 297 | 297 | 233 |
 
-**What a larger panel cannot do:** with the stage clipping at 100 W the most the window passes is 85 W at the
-node for the lit hours, about 1100 Wh on a September day and 680 Wh on a December day with a panel large enough
-to hold the clip all day; a 400 Wp panel reaches 834 Wh in September. The 100 W window alone therefore cannot
-carry PS-IDLE-SPEC's 1027 Wh a day in any month. And a panel above about 150 Wp of the 12 V class exceeds F2's
+**What a larger panel cannot do:** the window's own ceiling, a panel large enough to be clipped at 100 W in every
+lit hour (20 kWp on this profile), is **1356 Wh a day at the node in June, 1024 in September and 624 in December**;
+a 400 Wp panel reaches 834 Wh in September. Against PS-IDLE-SPEC's 1027 Wh a day the window's ceiling is above it
+in June and under it in September and December; in every month the night binds first (section 5c). And a panel above about 150 Wp of the 12 V class exceeds F2's
 and J_SOLAR's 10 A at its short circuit (about 6.25 A per 100 Wp), so it re-declares the entry (F2, J_SOLAR, D4,
 PV_P's copper) even where the stage's 100 W is not reached: that is S-53's route (section 6e).
 
@@ -224,7 +245,8 @@ kit runs 23 hours, restarted by the operator on each recharged pack, and leaves 
 unserved; it never sees a night running.
 
 **One night by hand.** From sunset to sunrise in September the sun gives nothing for 11.28 h: the night asks
-11.28 x 42.8 = 483 Wh of the pack (514 Wh over the 12 h of the profile's zero hours); the aged pack holds 107.9
+11.28 x 42.8 = 483 Wh of the pack (471 Wh over the profile's 11 zero hours, 514 Wh with its twelfth, lit at only
+0.42 W/m2); the aged pack holds 107.9
 Wh, so it carries 107.9 / 42.8 = 2.52 h of that night. The new pack holds 134.8 Wh, 3.15 h. Neither figure
 depends on the panel. The mean day's whole solar input at the node, 320 Wh, is less than the night alone asks.
 
@@ -241,18 +263,18 @@ depends on the panel. The mean day's whole solar input at the node, 320 Wh, is l
 | PS-SURV-R | 23.3 | September | 06:00 | 109.2 | 11.3 | 16 | 372 | 15 | 41 | NOT MET |
 | PS-SURV-R | 23.3 | December | 06:00 | 77.1 | 16.2 | 24 | 559 | 3 | 12 | NOT MET |
 | PS-SURV | 21.7 | September | 06:00 | 109.2 | 11.3 | 16 | 348 | 15 | 41 | NOT MET |
-| PS-NIGHT-RELAY | 15.7 | September | 06:00 | 109.2 | 11.3 | 16 | 251 | 18 | 50 | NOT MET |
-| PS-NIGHT-RELAY | 15.7 | June | 06:00 | 109.2 | 7.3 | 14 | 220 | 19 | 55 | NOT MET |
-| PS-NIGHT-RELAY | 15.7 | December | 06:00 | 77.1 | 16.2 | 22 | 346 | 10 | 20 | NOT MET |
+| PS-NIGHT-RELAY | 16.2 | September | 06:00 | 109.2 | 11.3 | 16 | 259 | 17 | 47 | NOT MET |
+| PS-NIGHT-RELAY | 16.2 | June | 06:00 | 109.2 | 7.3 | 14 | 227 | 18 | 52 | NOT MET |
+| PS-NIGHT-RELAY | 16.2 | December | 06:00 | 77.1 | 16.2 | 22 | 356 | 10 | 20 | NOT MET |
 
 "h sun below the load" is longer than the astronomical night because a 100 Wp panel exceeds 42.8 W at the node
-only above about 536 W/m2 (never on the September mean day) and exceeds 15.7 W only above 197 W/m2.
+only above about 536 W/m2 (never on the September mean day) and exceeds 16.2 W only above 203 W/m2.
 
 **The conflict, demonstrated.** On D-06's one 4S3P pack and REQ-016's 100 W window, M1 as written fails twice
 over, and the first failure is enough on its own: (1) the night: a September night asks 483 to 514 Wh at 42.8 W
 and the aged pack holds 108 Wh (a fifth of it; 135 Wh new, a quarter), so the kit stops 2.5 h into any night
-whatever the panel; (2) the day: 72 hours ask 3082 Wh, a 100 Wp panel gives 320 Wh a day in September, and no
-panel size inside the 100 W window gives more than about 830 Wh a day. The mission's first night is not reached
+whatever the panel; (2) the day: 72 hours ask 3082 Wh, a 100 Wp panel gives 320 Wh a day in September, and the
+100 W window's own ceiling is 1024 Wh a day in September, under the 1027 Wh the day asks. The mission's first night is not reached
 from a morning start and is 2.5 h long from an evening one.
 
 **5c. Sensitivity: which input it depends on, and how far each would have to move alone** (the design case;
@@ -260,9 +282,9 @@ from a morning start and is 2.5 h long from an evening one.
 
 | input | value now | value that closes M1 alone | meaning |
 |---|---|---|---|
-| load at the pack | 42.8 W | **8.4 W** | the whole kit at 20 percent of PS-IDLE-SPEC, below the heat stage's 21.7 W and below this page's night state (15.7 W) |
+| load at the pack | 42.8 W | **8.4 W** | the whole kit at 20 percent of PS-IDLE-SPEC, below the heat stage's 21.7 W and below this page's night state (16.2 W) |
 | usable pack energy | 108 Wh aged | **2120 Wh** | 19.7 packs of the ruled size aged (15.7 new): with a 100 Wp panel the pack carries almost the whole 72 h |
-| panel rating in the 100 W window | 100 Wp | **none passes** | the window's ceiling (about 830 Wh a day) is under the 1027 Wh the day asks |
+| panel rating in the 100 W window | 100 Wp | **none passes** | the night binds first: a 20 kWp panel in the window still leaves 12 h below the load, asking 507 Wh of a 108 Wh pack; the ceiling, 1024 Wh a day, is also under the 1027 the day asks |
 | panel rating with no window at all | 100 Wp | **none passes** | the night binds whatever the day gives: 42.8 W for 13 h of sun below the load asks 556 Wh of a 108 Wh pack |
 | the night the pack carries at 42.8 W | 2.52 h | | against 11.3 h of sun-down in September and 7.3 h in June |
 
@@ -273,72 +295,118 @@ figures is FAIL, unchanged.** The arithmetic on verified figures moves the aged 
 **5d. Combinations inside the approved constraints** (`energy_budget.out` 5d, 96 rows): with ONE pack no
 combination of the night state (a), the 2.80 V line (b) and any panel and window (e) meets 72 hours in any of
 the three months; the best one-pack case (the night state, 2.80 V, 330 Wp on a 300 W path, September) stops at
-hour 18, in the first night, and leaves 241 Wh of the 72 hours' 1130 Wh unserved. With TWO packs (section 6d) the
-night state at 2.80 V meets June on 100 Wp and September on 200 Wp or more; December is not met by any
-combination (section 7).
+hour 18, in the first night, and leaves 261 Wh of the 72 hours' 1166 Wh unserved. With TWO packs (section 6d) the
+night state at 2.80 V meets June on 100 Wp and September on 200 Wp or more, under conditions (section 7);
+December is not met by any combination.
 
 ## 6. Options within the approved constraints, with numbers and ranked
 
 Every option keeps the Peli 1450 (the ruling of 7 September 2026), the cell (D-06) and the missions as written.
 Costs are ESTIMATES with no quotation held; nothing is ordered. Ranked by how much of M1 each recovers per unit
-of change; nothing is rejected silently.
+of change; nothing is rejected silently. `energy_budget.out` section 6 prints every figure below.
 
-**Rank 1, option (a), operating modes at night: PS-NIGHT-RELAY, 15.7 W.** The lowest-power state that still
-meets M1's must-hold (a message typed on a handheld reaches a remote correspondent over at least one bearer; the
-kit keeps running). Built on the heat stage after BANK-R1 (slot 3 alone, the one module that carries the owner's
-D-02b example with the SOS path). ON, with its battery-side watts (`energy_budget.out` 6a lists each load):
-CM5 slot 3 at the maker's typical 900 mA (4.95 W); its fan, PCIe switch and drive (2.52 W); the three supervisors
-at 200 MHz (1.53 W, DS12110's 33 mA); the Ethernet switch in energy-detect (0.47 W, DS00002330D's low row, two of
-its ports have no module); the LoRa module receiving (0.08 W); the RockBLOCK idle (0.07 W); board D with the SA868
-receiving and the APRS beacons at the fixed-site rate of one a minute in ten (0.65 + 0.15 W); the GNSS (0.39 W);
-the panel at NIGHT lighting (0.27 W); the hubs, bridges and logic rows (4.62 W, of which 3.37 W are D rows). OFF:
-slots 1 and 2 with their fans, switches and drives; both WiFi link cards; the 5G module (its data lane is slot
-2's); the monitor and HDMI 5 V; the SDR, the camera, the QMX and the Geiger (deferred by D-01); the E72 pair (not
-a bearer of M1); the mixer fans (a shaded, cool night; on in the heat). **15.7 W PLAN, 13.1 W with the D rows at
-the makers' figures** (S 10 loads, R 4, D 6, T 1). The aged pack carries it 7.0 h at +20 C (8.4 h at the sourced
-figure) against September's 11.3 h of sun-down and 16 h of sun below the load: it does not carry a September
-night alone, and it does carry a June night on two packs. What it changes: firmware and operator settings only
-(the switch's energy-detect mode and the supervisors' clock are firmware items to confirm on the generated
-boards); it needs BANK-R1 in board B's generator (`CONOPS.md` 4c). Cost: none in parts. Mission: at night the
-monitor, the WiFi link, 5G and Zigbee are dark; the e-paper and the lamps carry the status; a message still
-reaches its correspondent over Iridium or APRS. **It is a change to M1's energy basis (REQ-072 names
-PS-IDLE-SPEC), presented for the owner's decision, not taken.**
+**Rank 1, option (a), an operating mode at night: PS-NIGHT-RELAY, 16.20 W PLAN (11.02 LOW, 39.67 HIGH).** The
+lowest-power state found that still meets M1's must-hold (a message typed on a handheld reaches a remote
+correspondent over at least one bearer; the kit keeps running). It is the heat stage after BANK-R1 (slot 3 alone,
+the one module that carries the owner's D-02b example with the SOS path) with six loads lowered or off, computed on
+the tree's own model (`night_bounds.py`, `records/rv-pwr/pwr_budget.py` imported unchanged; the same script
+reproduces PS-SURV-R's 12.78 / 23.27 / 46.94 W exactly). **ON:** CM5 slot 3 at the maker's typical 900 mA, its
+fan, PCIe switch and drive; the three supervisors at 200 MHz (DS12110 Table 30, 33 mA); the Ethernet switch in
+energy-detect (DS00002330D's low row; two of its ports have no module); the LoRa module receiving with the planning
+duty's 9 percent airtime (0.3 W, the relay passing traffic); the RockBLOCK at one session in ten minutes (0.1 W);
+board D with the SA868 receiving; the APRS beacons at the fixed-site rate, one beacon in ten minutes (0.125 W);
+the GNSS; the panel at NIGHT lighting at its declaration's own logic share (0.82 W: a declaration, not the makers'
+figure); the hubs, bridges and logic rows. **OFF at night, stated in full:** the monitor (messages show on the
+e-paper and the lamps only); two of the three compute modules, so the kit has no running spare module at night (a
+fault of slot 3 is met by the panel controller powering slot 1 again, `CONOPS.md` 4c, not by a module already
+running); the kit-to-kit WiFi link (both cards); 5G (its data lane is slot 2's), leaving Iridium, APRS and the
+LoRa mesh as the night's bearers; Zigbee and Thread (the E72 pair); the SDR, the camera, the QMX and the Geiger
+(the last two deferred by D-01); the mixer fans (a shaded, cool night; on in the heat). The recount of its rows
+reads 16.63 W (S 10 loads, R 4, D 6 carrying 4.9 W, T 1); with the D rows at the makers' figures 13.77 W. The
+aged pack carries it 6.7 h at +20 C (9.9 h at LOW, 2.7 h at HIGH) against September's 11.3 h of sun-down and
+16 h of sun below the load on 100 Wp: not a September night alone. What it changes: **M1's operating mode at
+night, and so REQ-072's energy basis (PS-IDLE-SPEC for 72 hours): a reduction of the kit's capability at night,
+presented for the owner's decision and not taken.** On the boards: firmware and operator settings only (the
+switch's energy-detect mode and the supervisors' clock are firmware items to confirm), and BANK-R1 in board B's
+generator (`CONOPS.md` 4c). Cost: none in parts.
 
 **Rank 2, option (d), a second pack of the ruled size** (D-01 deferred it: "no location found"). It doubles every
-usable figure of section 2 (216 Wh aged at PS-IDLE-SPEC, 218 at the night state). Where it was looked for and
-what is free (`CASE-MARGINS.md`; A06's fit study on the committed board B underside, re-run unchanged by d4energy
-on 28 September 2026): the **east pocket** (58 x 240 x 47.9) is taken by the ruled pack, and nothing larger fits
-it with board P beside the cells (4S4P 18650: X spare -17.42; 4S3P 21700: -4.87). The **west pocket** (58 x 160 x
-47.9, X -178 to -120, Y -40 to 120): A06 found no arrangement with board P BESIDE the cells (X spare -17.42), which
-is D-01's "no location found". NOT tried by A06: the 4S3P block alone (56.65 x 133.5 x 38.1) with its board P on
-top of the block or remote over a cell-tap harness: 133.5 fits the 160, 56.65 the 58 (1.35 spare, as the east),
-and 38.1 plus a board P of about 8 mm assembled is about 46 against the 47.9 (about 2 mm, under the 3.32 the east
-block keeps at the worst base). A candidate to CHECK with A06's script, not a finding; it displaces the west
-cable drop zone (`CASE-MARGINS.md` section 3.4) and needs a second heater mat. The **lid**: the flat ceiling is
-346 x 232 and the depth 44.45 at the worst; the QMX tray r2 takes X 83.2 to 171.0 and stands 33.95 below the
-ceiling. A one-layer 4S3P block, two rows of six cells (113.3 x 133.5 x 19.55) or one row of twelve (223.6 x
-66.25 x 19.55), on a 2 mm lid plate as the tray's, over the west third of the lid (X -173 to 83, where D-01's
-deferred tablet bracket was to go) leaves 22.9 mm over the face parts, more than the tray's own room. About
-0.65 kg in the lid; a lid harness across the hinge (the QMX's crossing is already open, S-95, EQ-31); the drop
-and vibration hold-down (`TEST-PLAN.md` E1, E2) and the lid's strength are new items. A candidate to CHECK against
-`CASE-MARGINS.md` M3 and M19 and the face parts' heights (T9), not a finding. Cost ESTIMATE: 12 cells about 50
-EUR, a second board P about 30 EUR, strip, wrap and plate, under 150 EUR; a second pack build and protection
-commissioning (`TEST-PLAN.md` section 5 twice). What it displaces: the tablet bracket (deferred) or the west drop
-zone. **Reopens D-01's deferral: the owner's.**
+usable figure of section 2 (216 Wh aged at PS-IDLE-SPEC, 218 at the night state). Where it was looked for, with
+A06's own tool this time (`packfit_west.py` imports `v2/docs/records/adj/A06-pack-geometry/drafts/pack_fit.py`
+unchanged, pinned, and uses its pockets, board B's underside zones, the heater mat's bases and its placement
+search; output `packfit_west.out`):
 
-**Rank 3, option (e), the panel and the window** (S-53's route, the session's). A 200 Wp panel gives 641 Wh a
-day at the node in September and 180 in December without reaching the stage's 100 W on the mean day (peak 98 W;
-it clips on a clear day), but its short-circuit current of about 12.5 A exceeds F2 and J_SOLAR at 10 A, so the
-entry is re-declared (F2, J_SOLAR, D4, PV_P). A path re-rated to 300 W with a 330 Wp panel gives 807 / 297 Wh a
-day (1057 in September with no window at all). What it cannot do: carry any night. Cost ESTIMATE: the stage's
-inductor, FETs and sense resistor for three times the current, a 20 A fuse and connector, under 40 EUR on board
-E; the panel 100 to 300 EUR per 100 Wp class. Mission: nothing removed; a bigger panel to carry and deploy.
+- **east pocket** (58 x 240 x 47.9): taken by the ruled group (block, 2 mm, board P: 205.50 long). A second board
+  P needs its 44.0 plus 2.0 in the 34.50 left in Y, or more than the 1.35 left in X: NO. Nothing larger than the
+  ruled block fits with board P beside the cells (4S4P 18650: X spare -17.42; 4S3P 21700: -4.87).
+- **west pocket** (58 x 160 x 47.9, X -178 to -120, Y -40 to 120): **the 4S3P block alone fits** (56.65 x 133.50
+  x 38.10: X spare 1.35, Y spare 26.50, Z clear 5.20 at the nominal base and 3.99 at the worst, under C33 on board
+  B's underside). **Board P does not fit with it:** on top of the block the Z clearance is -11.47 mm with its
+  Keystone 3568 holder and blade (16.17 mm), -5.10 mm with only its JST XH (9.80 mm), and -1.70 mm even at the
+  8 mm board the first issue of this page assumed (-12.68, -6.31, -2.91 at the worst base; the first issue left
+  out the heater mat's base, board B's underside parts and board P's real heights, and its "about 2 mm clear" was
+  wrong); at the block's end the group is 205.50 long against 160 (Y spare -45.50); at its side 75.42 wide against
+  58 (X spare -17.42). So a west block needs its board P somewhere else, over a harness carrying the pack current
+  and the cell taps, and **no place for it is found**: the tool models only the two pockets, the floor between them
+  is the dock strip under board A's blind-mate gap of 13.4 mm (`CASE-MARGINS.md` section 3.1), against board P's
+  19.8 mm with its holder, and no other volume was checked. The west pocket stays a CANDIDATE with board P unplaced.
+- **the lid**: the flat ceiling is 346 x 232 and the depth 44.45 at the worst; the QMX tray r2 takes X 83.2 to
+  171.0 and stands 33.95 below the ceiling. A one-layer 4S3P block, two rows of six cells (113.3 x 133.5 x 19.55)
+  or one row of twelve (223.6 x 66.25 x 19.55), on a 2 mm lid plate as the tray's, over the lid's west 256 mm of
+  its 346 (X -173 to 83, where D-01's deferred tablet bracket was to go) leaves 22.9 mm over the face parts; board
+  P rides with the block in the lid. About 0.65 kg in the lid; a lid harness across the hinge (the QMX's crossing is
+  already open, S-95, EQ-31); the drop and vibration hold-down (`TEST-PLAN.md` E1, E2) and the lid's strength are
+  new items. A06's tool has no lid pocket and the face parts' heights under the lid are TBD (`CASE-MARGINS.md` T9),
+  so it **cannot be checked in the tree today**: a CANDIDATE, not a finding.
+
+Cost ESTIMATE: 12 cells about 50 EUR, a second board P about 30 EUR, strip, wrap and plate, under 150 EUR; a
+second pack build and protection commissioning (`TEST-PLAN.md` section 5 twice). What it displaces: the tablet
+bracket (deferred) or, in the west, the cable drop zone (`CASE-MARGINS.md` section 3.4) and a second heater mat.
+**Reopens D-01's deferral: the owner's. No location is proven.**
+
+**Rank 3, option (e), the panel and the stage** (S-53's route, the session's). A 200 Wp panel gives 641 Wh a day
+at the node in September and 180 in December on the model's 100 W clip (its mean-day peak is 98.1 W); a 300 W
+path with 330 Wp gives 807 / 297 Wh (1057 in September with no window at all). What it cannot do: carry any
+night. **What bounds the stage as generated: nothing at 100 W.** Board E's U5 pin map (`gen_sch_e.py:482-484`)
+ties pins 29 to 31 (EXTVCC, CSNOUT, CSPOUT on the 38-lead QFN) to TRK_OUT and pins 32 to 34 (CSNIN, CSPIN, VIN)
+to PV_P, which is how the maker says to leave a current monitor "not in use" (LT8705A 8705af, PDF pages 11 and
+12), so neither current loop can act; the tracker "delivers the panel's power" (`gen_sch_e.py:99-101`, 580-583)
+and only board A's front end bounds it, at 126.9 W drawn (lines 104 to 107), 136 W into the stage at 0.93. A
+200 Wp panel on a clear day, on pack and solar alone, can therefore put about 136 W into the stage: 7.8 A at
+17.6 V and 8.4 A on TRK_OUT at 15.1 V. **The 100 W in this page's model is a model assumption, conservative for
+the energy; it is not a property of the stage.** Two routes, both presented, and set 2 takes one of them:
+
+- **Route A, the window restated.** REQ-016's "at most 100 W into the stage" becomes at most 136 W; PV_P and PV_IN
+  go from 5.68 A typical and 6.25 A peak to 7.8 A and about 12.5 A (two 100 Wp panels' short circuit); TRK_OUT
+  from 6.16 A at 15.1 V to 8.4 A (its 10.33 A declaration at the 9 V floor to 14.1 A, which VIN_RAW's 14.10 A
+  already carries on board A); F2 and J_SOLAR above 12.5 A with margin (a JST-VH is a 10 A part: another connector,
+  pick TBD); L1's saturation current, the four FETs' dissipation and R5's range re-judged (the inductor valley
+  limit is 69 mV over 5 mOhm, 13.8 A, `gen_sch_e.py:103`). D4 and the 25 V window are unchanged. Consequence: it
+  restates a core requirement (REQ-016, session choice SC-36) and board E's declarations and ratings; more energy
+  on clear days, none on the mean day. Cost ESTIMATE: under 40 EUR of parts on board E.
+- **Route B, a designed limit that keeps REQ-016's 100 W.** The LT8705A's own output current loop (8705af PDF
+  pages 4, 5, 11, 12, 19): a sense resistor RSENSE2 between the stage's output and TRK_OUT, CSPOUT (pin 31) on the
+  stage side and CSNOUT (pin 30) on TRK_OUT, both untied from TRK_OUT; the loop regulates when IMON_OUT reaches
+  1.208 V (1.187 to 1.229), with I(IMON_OUT) = gm x V(sense), gm 1.00 mmho (0.94 to 1.085 for the E and I grades
+  over temperature). With R17 (IMON_OUT to ground, 10k as generated) at 24.3k 1 percent: setting (i) RSENSE2
+  8.0 mOhm limits TRK_OUT at 5.52 / 6.21 / 6.86 A (low, typical, high), 90 / 101 / 111 W into the stage, so
+  "at most 100 W" holds only as "about 100 W"; setting (ii) RSENSE2 9.1 mOhm limits it at 4.85 / 5.46 / 6.03 A,
+  **79 / 89 / 98 W into the stage, which holds REQ-016's 100 W at the sheet's worst**. PV_P and PV_IN keep their
+  5.68 A typical (the stage cannot draw more than 100 W at 17.6 V or above); their peak (the panel's short-circuit
+  current, a fault) rises from 6.25 to about 12.5 A, so F2 and J_SOLAR are still re-rated for a 200 Wp panel. With
+  the bus held lower by a vehicle the limit is a lower power, which the vehicle covers. Parts: one 2512 sense
+  resistor, R17's value, two pins untied, under 2 EUR. Consequence: board E's schematic changes (a layer-5 item)
+  and the host contract (FW-A16) must keep the constant-power front end inside what a current-limited stage gives,
+  which is the case the design already has whenever a panel gives less than the front end draws
+  (`gen_sch_e.py:99-103`). On the mean September day set 2 is MET under setting (ii) at its typical 89 W and at its
+  low 79 W, with the same lowest point, 12.1 Wh (section 7).
 
 **Rank 4, option (b), the usable depth of discharge.** The graceful line at 2.80 V under load instead of 3.00 V
 (still above the gauge's 2.50 V trip, the maker's 2.50 V terminate line and its 2.65 V cut-off) gains 1.9 Wh aged
-(107.9 to 109.7 Wh at PS-IDLE-SPEC; the 5 percent RSOC reserve then ends the run first at low currents): about
-3 minutes more at 42.8 W, 7 at the night state. Cost: none (a gauge image and a bridge setting, the PROVISIONAL
-threshold of `CONOPS.md` 4c). Cycle life below 3.0 V is the maker's question (its cycle test discharges to 2.65 V).
+at PS-IDLE-SPEC (107.9 to 109.7 Wh; the 5 percent RSOC reserve then ends the run first at low currents): about
+3 minutes more at 42.8 W, 7 at the night state. In set 2 it moves the lowest point from 9.1 to 12.1 Wh and the
+cell threshold from 17.88 C to 17.21 C. Cost: none (a gauge image and a bridge setting). Cycle life below 3.0 V is
+the maker's question (its cycle test discharges to 2.65 V).
 
 **Rank 5, option (c), cells in the east pocket.** Nothing larger than the ruled 4S3P 18650 fits with board P
 beside the cells; a 4S2P 21700 (about 144 Wh with a representative 5 Ah cell, no 21700 sheet held) fits at the
@@ -350,53 +418,83 @@ the LM74700 diode, the hot-swap FET and the choke into board A's front end (chai
 guaranteed 4.85 A is 58 W at the source and 53 W at the node, above every state M1 uses (42.8 W needs 3.9 A at
 12 V, 2.0 A at 24 V). Energy a source must give per night (the sun-down hours): PS-IDLE-SPEC 530 Wh in September
 (44 Ah at 12 V) and 760 Wh in December (63 Ah); the reduced mode 388 / 557 Wh; the heat stage 288 / 413 Wh; the
-night state 194 / 279 Wh (16 / 23 Ah at 12 V). A vehicle's 70 Ah lead-acid battery gives about 35 Ah before half
+night state 200 / 288 Wh (17 / 24 Ah at 12 V). A vehicle's 70 Ah lead-acid battery gives about 35 Ah before half
 discharge, a 100 Ah LiFePO4 about 80 Ah: PS-IDLE-SPEC takes a vehicle battery below half in one night, the night
 state does not. No board change (EQ-13's route b). It changes M1's setting from "pack and solar", which is why it
 is stated as optional and not taken as the basis, as the owner instructed on 28 September 2026.
 
 ## 7. The smallest justified changes, for the owner's decision
 
-**M1 as written is not met by any combination of (a), (b) and (e) alone** (section 5d): on one aged pack the
-night binds at every kit load above 8.4 W, and the lowest state that meets the must-hold reads 15.7 W. The
-smallest change that meets M1's must-hold through the design month's night from a full aged pack, and the next
-smallest, each with its consequences (`energy_budget.out` section 7; MET is the hour-by-hour run ending above
-the graceful threshold with no stop; the ask and the hold beside it are the one-night arithmetic):
+**REQ-072 as written (PS-IDLE-SPEC for 72 hours on pack and solar) reads FAIL under every set below.** On one
+aged pack no combination of (a), (b) and (e) meets it (the night binds at every kit load above 8.4 W, 5c); with
+two packs PS-IDLE-SPEC is still NOT MET (set 6). The sets that meet M1's must-hold do so by **changing M1's
+operating mode at night** to the night state of section 6a (16.20 W PLAN, 11.02 to 39.67 W), with the capability
+listed there switched off: a change presented for the owner's decision, not a fulfilment of REQ-072. From a full
+aged pack, cells at +20 C in September and June and +5 C in December; MET is the hour-by-hour run ending above
+the graceful threshold with no stop, and its **lowest point** is the least energy left in the packs over the 72
+hours (the margin); "asks" and "holds" are the one-night arithmetic beside it (`energy_budget.out` section 7):
 
-| change set | September | June | December | what it changes |
-|---|---|---|---|---|
-| **1. the night state (a) as M1's energy basis at night + the 2.80 V line (b) + a second 4S3P pack (d), 100 Wp, 100 W window** | NOT MET: the night asks 251 Wh (15.7 W x 16 h), two packs hold 221 | MET: 220 asked, 221 held | NOT MET: 345 asked, 156 held (cold cells) | M1's energy basis at night (REQ-072 restated for the owner, not by the session); D-01's deferral reopened; a pack location shown (6d); firmware for the night state and BANK-R1 |
-| **2. as 1 with a 200 Wp panel, F2 and J_SOLAR re-rated for its 12.5 A** | **MET**: 220 asked, 221 held | MET: 188 asked, 221 held | NOT MET: 283 asked, 156 held | as 1, plus the entry's fuse and connector (S-53's smaller half); the stage's 100 W stays |
-| 3. as 1 with the path re-rated to 300 W and a 330 Wp panel (e) | MET: 220 asked, 221 held | MET: 173 asked, 221 held | NOT MET: 283 asked, 156 held | as 2, plus the stage (S-53 in full) |
-| 4. the heat stage PS-SURV-R at night (23.3 W) + (b) + second pack + re-rated path and 330 Wp | NOT MET: 326 asked, 221 held | NOT MET: 279 asked, 221 held | NOT MET: 419 asked, 156 held | keeps 5G off only; needs a third pack, which has no location |
-| 5. the reduced mode PS-RED2 at night (31.4 W) + (b) + second pack + re-rated path and 330 Wp | NOT MET: 439 asked, 221 held | NOT MET: 377 asked, 221 held | NOT MET: 565 asked, 156 held | two modules and 5G at night; needs four packs |
-| 6. PS-IDLE-SPEC as written + (b) + second pack + re-rated path and 330 Wp | NOT MET: 599 asked, 219 held | NOT MET: 556 asked, 219 held | NOT MET: 856 asked, 155 held | the mission's basis unchanged; needs six packs and a 300 W path, neither of which fits |
+| change set (two 4S3P packs in every row) | September | June | December |
+|---|---|---|---|
+| 1. night state (a) + 2.80 V line (b) + second pack (d), 100 Wp | NOT MET, stops at hour 44 (asks 259 Wh, holds 221) | MET, lowest point 32.3 Wh | NOT MET, hour 15 (asks 356, holds 156) |
+| **2. as 1 with a 200 Wp panel, and route A or B of 6e for the stage** | **MET, lowest point 12.1 Wh** (asks 227, holds 221) | MET, 51.7 Wh | NOT MET, hour 18 (asks 292, holds 156) |
+| 3. as 1 with a 300 W path and a 330 Wp panel | MET, 23.4 Wh | MET, 67.8 Wh | NOT MET, hour 18 |
+| 4. the heat stage PS-SURV-R at night (23.3 W) + (b) + 300 W path, 330 Wp | NOT MET, hour 21 (asks 326) | NOT MET, hour 22 | NOT MET, hour 15 |
+| 5. the reduced mode PS-RED2 at night (31.4 W) + (b) + 300 W path, 330 Wp | NOT MET, hour 18 (asks 439) | NOT MET, hour 19 | NOT MET, hour 14 |
+| 6. PS-IDLE-SPEC as written + (b) + 300 W path, 330 Wp | NOT MET, hour 16 (asks 599, holds 219) | NOT MET, hour 17 | NOT MET, hour 10 |
 
-**The smallest justified change is set 2:** the night state as M1's energy basis between sunset and sunrise, a
-second 4S3P pack (location to be shown: the lid's west third or the west pocket with board P on top, both to be
-checked, 6d), the 2.80 V graceful line, and a 200 Wp panel with the solar entry's fuse and connector re-rated
-(the stage's 100 W window unchanged). It meets M1's must-hold through the September and June nights from a full
-aged pack and leaves REQ-072 as written FAIL until the owner restates its basis. **The next smallest is set 3**,
-which adds the stage's re-rating and buys nothing more in September or June. **No set inside the case meets
-December** on pack and solar: at +5 C two packs hold 156 Wh against a night's 283 Wh at the lowest state, and a
-third and fourth pack have no location; December on pack and solar alone is a residual for the owner to accept or
-to cover with option (f) (23 Ah at 12 V per night at the night state). **If the owner keeps M1's basis at
-PS-IDLE-SPEC**, no change inside the case and the cell ruling meets a single night (set 6), and the honest
-statement is that prototype 1 does not meet M1 on pack and solar alone (M-02's residual), with option (f) as the
-way through a night.
+**Set 2's conditions** (September, start 06:00, the hour-by-hour run):
 
-**What must be verified at the bench before any of this is relied on** (section 1's T-P1 to T-P4): the power of
-the night state and of PS-IDLE-SPEC at the pack terminals (the D rows carry 4.3 W of the night state's 15.7 W as
-declarations; at the makers' figures they read about 1.7 W and the state 13.1 W); the WiFi card's idle and the
-monitor's typical, which nobody
-has published; the LT8705A stage's efficiency at 17.6 V in and 15.1 V out and the front end's at 20 V out (both
-declared 0.93, neither plotted); the pack's delivered energy to the 3.00 V line new at +20 C and 0 C; and the
-switch's energy-detect mode and the supervisors' 200 MHz clock in firmware.
+| case | result | lowest point | first stop |
+|---|---|---|---|
+| as stated: night state 16.20 W, cells +20 C, 2.80 V line, the mean September day | MET | 12.1 Wh | none |
+| **cells at +15 C (the counter-case)** | **NOT MET** | 0 | **hour 23** |
+| without the 2.80 V line (graceful at 3.00 V) | MET | 9.1 Wh | none |
+| the night state at its LOW, 11.02 W | MET | 84.6 Wh | none |
+| the night state at its HIGH, 39.67 W | NOT MET | 0 | hour 16 |
+| route B setting (ii), 89 W into the stage (typical) | MET | 12.1 Wh | none |
+| route B setting (ii), 79 W into the stage (its low end) | MET | 12.1 Wh | none |
+
+**Set 2 meets September only with the cells at or above 17.21 C (17.88 C without the 2.80 V line) and the night
+state at or below 17.06 W (0.86 W, 5.3 percent, above its PLAN), on the mean September day and planning loads.**
+The independent review computed 15.61 C on the first issue's 15.70 W night state; the night state now carries
+the panel row at its declaration's share (m1) and the relay's LoRa and Iridium traffic on the model's own
+conversion, 16.20 W, and the threshold tightens accordingly. The cells' temperature through a September night in
+this state is not computed in the tree (the +20 C is inferred) and decides the result.
+
+**The smallest justified change is set 2**, stated with everything it changes: (1) M1's operating mode at night
+becomes the night state of 6a, with the monitor, 5G, the WiFi link, Zigbee and two of the three compute modules
+off; (2) a second 4S3P pack, with no location proven (the lid block cannot be checked in the tree today; the west
+pocket takes the block but not its board P, and no place for board P is found); (3) a 200 Wp panel, with either
+route B (REQ-016's 100 W kept by a designed limit on the LT8705A's output current loop, about 2 EUR of parts and
+board E's schematic changed) or route A (REQ-016 and board E's declarations restated to 136 W); in both routes F2,
+J_SOLAR and the peak current of PV_P and PV_IN are re-rated for the panel's fault current; (4) the graceful line
+at 2.80 V. The session's recommendation within set 2 is route B setting (ii), because it keeps a core requirement
+as written and costs the least; set 2's September result is the same under it. **The next smallest is set 3**,
+which re-rates the stage's path to 300 W and buys margin (23.4 Wh against 12.1) but no further month. **No set
+inside the case meets December** on pack and solar: at +5 C two packs hold 156 Wh against a night's 292 Wh at the
+lowest state, and a third pack has no location; December is a residual for the owner to accept or to cover with
+option (f) (24 Ah at 12 V per night at the night state). **If the owner keeps M1's basis at PS-IDLE-SPEC**, no
+change inside the case and the cell ruling meets a single night (set 6), and the statement is that prototype 1
+does not meet M1 on pack and solar alone (M-02's residual), with option (f) as the way through a night.
+
+**What must be verified at the bench before any of this is relied on** (section 1's T-P1 to T-P4): the power of the
+night state and of PS-IDLE-SPEC at the pack terminals (the D rows carry 4.9 W of the night state's recount as
+declarations; at the makers' figures the state reads 13.77 W); the cells' temperature through a night in the night
+state (set 2 needs 17.21 C or more); the WiFi card's idle and the monitor's typical, which nobody has published;
+the LT8705A stage's efficiency at 17.6 V in and 15.1 V out and the front end's at 20 V out (both declared 0.93,
+neither plotted), and under route B the output current limit's setting; the pack's delivered energy to the 3.00 V
+line new at +20 C and 0 C; and the switch's energy-detect mode and the supervisors' 200 MHz clock in firmware.
 
 **Draft apply scripts for the shared files (none executed):** `apply_records_readme_row.py` adds this folder's
 row to `v2/docs/records/README.md`; `apply_req072_evidence_note.py` adds one evidence line to REQ-072 in
 `v2/ecad/tools/pcb_requirements.yaml` citing this record, leaving its FAIL and its statement untouched.
-`DECISION-PARAGRAPH.md` is the owner's sheet (at most 120 words).
+`DECISION-PARAGRAPH.md` is the owner's sheet (at most 120 words). **Merge order (m11):** the files this page cites
+from stream d4energy exist only on `fnd/d4energy` (its data file `v2/docs/records/d4energy/energy_data.yaml` and
+readings at `9b43e274`; the PVGIS daily profile, the PVcalc answer and `v2/vendor/solar/sources.txt` at
+`71be4943`); they land with or before this record. The daily profile's three months used here are copied into
+`energy_inputs.yaml` with that file's sha256, which the independent review verified at `71be4943`. For the
+integrator: diff this stream against `038037ed`, not `main` (the branch carries set 7's registry commits).
 
 ## Sources
 
@@ -406,7 +504,10 @@ JRC), MRcalc monthly 2015 to 2020 (pinned), DRcalc mean-day profile and PVcalc 1
 `v2/vendor/solar/sources.txt` there gives URLs, dates and sha256); `records/rv-pwr/pwr_budget.py` and `.out`
 (PS-IDLE-SPEC's loads), `records/hc2/pwr_red2.out` (the reduced states); `records/d4energy/energy_data.yaml`
 (d4energy, `9b43e274`: the makers' documents and pages for each load, the curve readings, the A06 re-run);
-`v2/ecad/tools/gen_sch_e.py` (the solar stage and the vehicle entry), `gen_sch_a.py` (the front end);
+`v2/ecad/tools/gen_sch_e.py` (the solar stage, U5's pin map and the vehicle entry), `gen_sch_a.py` (the front end);
+Linear Technology LT8705A datasheet 8705af, `v2/vendor/power/lt8705a.pdf` (PDF pages 4, 5, 11, 12 and 19: the
+IMON regulation voltage, the output monitor's gm, the current-sense pins and the output current loop);
+`v2/docs/records/adj/A06-pack-geometry/drafts/pack_fit.py` (A06, imported unchanged by `packfit_west.py`);
 `v2/ecad/tools/pcb_pack_protection.yaml` and `v2/docs/review-packets/battery/PROTECTION-ARCHITECTURE.md` (the
 protection window); `v2/docs/CONOPS.md` sections 3, 4a, 4c, 5, 6 and 7; `v2/docs/feasibility/POWER-THERMAL.md`
 sections 2 to 6; `v2/docs/CASE-MARGINS.md` sections 2, 3.2 and 3.4; `v2/docs/ASSEMBLY.md` steps 7, 10 and 11;
