@@ -45,7 +45,7 @@ _intent.rail("CELL_FUSED", 14.4, 10.0, 18.0, "F1", v_work=16.8, converted=False,
 # LM5176 stages (F-PR-04), whose input current enters at their buck-side high FETs Q28 and Q32 and not at the
 # controllers, and the heater's regulated rail enters at its eFuse U22 (F-PR-06).
 _intent.rail("VBAT", 14.4, 10.0, 18.0, "R17", always_on=True, v_work=16.8, converted=False, fed_from="CELL_FUSED",
-             always_on_why="the system node (VSYS): nothing on this board switches it. The pack reaches it through the 25 A blade F1 and the RSR shunt R17, opened only by the pack's own BQ4050 FETs and the blade; the charger's converter feeds it from shore through Q10", loads={"U4": 2.0, "Q28": 2.22, "U6": 2.0, "Q32": 2.0, "Q11": 1.5, "U15": 0.3, "U12": 0.2, "U22": 0.65, "U21": 0.69}, note="the 4S system node (VSYS) behind the RSR shunt R17; 10 A continuous, 18 A peak by the pack's rating (32.55)")
+             always_on_why="the system node (VSYS): nothing on this board switches it. The pack reaches it through the 25 A blade F1 and the RSR shunt R17, opened only by the pack's own BQ4050 FETs and the blade; the charger's converter feeds it from shore through Q10", loads={"U4": 2.0, "Q28": 2.22, "U6": 2.0, "Q32": 2.0, "U41": 0.4, "Q11": 1.5, "U15": 0.3, "U12": 0.2, "U22": 0.65, "U21": 0.69}, note="the 4S system node (VSYS) behind the RSR shunt R17; 10 A continuous, 18 A peak by the pack's rating (32.55)")
 # VIN_RAW RECONCILED WITH BOARD E (third fix-up of round 4, 26 September 2026; board E's F-IN-02 on main faf8c981 handed
 # this line to this board). Board E declares its VIN_RAW at 6.15 A typical and peak: its LM5069 U6 with R19 = 10 mOhm
 # limits the VEHICLE entry at VCL / RS, 4.85 / 5.5 / 6.15 A (ti-lm5069.pdf SNVS452G), and a unit at VCL max passes 6.15 A
@@ -122,17 +122,13 @@ for _n, _sh in (("1", "R31"), ("2", "R35"), ("3", "R39")):
                        "board's share of the 2 percent is 0.5 point, measured 0.07" if _n == "2" else
                        "one CM5 slot with its cooler fan; 5 A peak at the module, the AP64500's rating (DS41979 p.1); the rail "
                        "net starts at the INA226 shunt. This board's share of the 2 percent is 0.5 point, measured 0.07"))
-# F-PR-04, 26 September 2026: the device rail's converter is an LM5176 stage now, not an AP64500. W2 found this
-# rail declared at 6.0 A peak on a 5 A part (VERIFIED) and summed its loads to the same 6.0 A (INFERRED); D-12 adds
-# the Glenair host port's own eFuse U32 (0.9 A limit) behind it, so the peak is 6.9 A. The LM5176 stage's average
-# current loop holds 43 to 57 mV across its 6 mOhm ISNS shunt R43 (SNVSAI1D, VSNS), 7.2 to 9.5 A, above the 6.9 A
-# peak and below the JST-VH lead's 10 A. The loads now name board A's own two eFuses as well as the lead to B.
-# INTERIM I-03 (S-98, 28 September 2026): typical 5.1 A = board B's 3.8 A arriving at J_5V_DEV + the D8 mezzanine's 1.0 A
-# behind U23 + the wall port's 0.3 A allocation behind U32; the PS-ALLTX mode current is INCONCLUSIVE (records/cx1).
-# The 6.9 A peak is HELD AS IS: open item S-99 (stream s99) decides it. It is board B's 6.0 A plus the wall port's 0.9 A
-# with the D8 mezzanine at zero; the coincident figures are 7.9 A (D8 at its 1.0 A typical) and 8.9 A (every declared
-# limit), both above the LM5176 average loop's 7.10 A minimum (the ISNS shunt at +1 percent), which is S-99's question.
-_intent.rail("+5V_DEV", 5.0, 5.1, 6.9, "R43", loads={"J_5V_DEV": 3.8, "U23": 1.0, "U32": 0.3}, budget=0.02, share=0.005, switch="U7", efficiency=0.90, fed_from="VBAT", note="the USB devices, the LimeSDR bay and the RockBLOCK behind their switches, the D8 mezzanine behind U23 and the wall host port behind U32; the net starts at the ISNS shunt R43. 9 September 2026 (ARCH-PCB-B-IOHA): +0.8 A because B16's three hub banks had to leave the slot rails. 26 September 2026 (F-PR-04, D-12): the converter is an LM5176 stage with a 7.2 A minimum average limit (7.10 A with the ISNS shunt at +1 percent, 7.17 A nominal: SNVSAI1D VSNS 43 mV over 6 mOhm), and the declared peak became 6.9 A, board B's 6.0 A plus the Glenair port's 0.9 A with the D8 mezzanine at zero. 28 September 2026 (S-98, finding I-03, INTERIM): the typical is 5.1 A, board B's 3.8 A at J_5V_DEV plus the D8 mezzanine's 1.0 A behind U23 plus the wall port's 0.3 A allocation behind U32; the PS-ALLTX mode current is INCONCLUSIVE (v2/docs/records/cx1/CORRECTION.md B2). The 6.9 A peak is held pending S-99: the coincident figures are 7.9 A with D8 at its typical and 8.9 A at every declared limit, both above the loop's minimum.")
+# S-99 (28 September 2026): D8 leaves +5V_DEV for its own buck U41 and eFuse U23 on +5V_D8IN.
+# The remaining loads are board B and the wall port: 4.1 A typical, 6.9 A declared peak (B 6.0 + wall 0.9).
+# R43 6 mOhm gives 7.095710 to 9.595960 A at initial +/-1 percent; with assumed 50 K and +/-110 ppm/K
+# it gives 7.056897 to 9.649029 A (SNVSAI1D p.7, Vishay 30100 pp.1-2). The declared margin is 0.156897 A.
+# Conditional M-tier 5.942235 A passes by 1.114661 A; P-tier 8.171220 A (8.180759 A with R186 tolerance)
+# fails the minimum. I-03's M/P adequacy and prototype current, timing, collapse/recovery and thermal tests remain.
+_intent.rail("+5V_DEV", 5.0, 4.1, 6.9, "R43", loads={"J_5V_DEV": 3.8, "U32": 0.3}, budget=0.02, share=0.005, switch="U7", efficiency=0.90, fed_from="VBAT", note="the USB devices, LimeSDR bay and RockBLOCK behind board B's switches, plus the wall host port behind U32; D8 is supplied separately by U41 through U23 from +5V_D8IN. The net starts at the output ISNS shunt R43. LM5176 minimum average limit is 7.095710 A with initial +/-1 percent, or 7.056897 A with the assumed 50 K shunt temperature change and +/-110 ppm/K TCR. The 6.9 A declared peak (B 6.0 + wall 0.9) has 0.156897 A conditional margin; actual mode current, M/P reconciliation, timing, collapse/recovery and temperatures remain unverified (S-99).")
 # LOADS DECLARED 13 September 2026, apportioning the declared 0.3 A rather than measuring it: this is logic,
 # tens of milliamps a part, and the biggest single draw is the gated 3.3 V leaving on the mezzanine harness.
 # 27 September 2026 (EQ-17): U39, the EMCON gates' eFuse, passes their 0.4 mA and draws its own IQ, 0.19 to 0.26 mA
@@ -1320,7 +1316,39 @@ _intent.node("HT_BST", _intent.net_volts("HT_SW") + _TPS62933_BST,
 # U23 on +5V_DEV (S-08, 26 September 2026): 40.2k over 10k trips at 5.87 to 6.12 V nominal and releases at 5.42 to 5.67 V (5.33 V at the 1
 # percent extremes), above the 5.09 V rail and its 2 percent, and puts its OVLO pin at 1.01 V, inside the 0.5 to 2 V
 # the sheet recommends (the minor half of F-SQ-06). 40.2 k is C12447, certified on this board already.
-efuse("U23", "+5V_DEV", "+5V_D8", "D8_EN", "D8_FLT", ["C102", "R98", "R99", "R100", "R101", "C103"], "453R 1% (ILM: 2.0 A)", ovlo_top="40.2k 1%", ovlo_lcsc="C12447"); vh2("J_MEZZ_PWR1", "D8 mezzanine 5 V (JST-VH): + -", "+5V_D8")
+# S-99 (stream s99, 28 September 2026, MESHSAT-1357; ANALYSIS.md section 5 option B, decision 55): THE D8 MEZZANINE
+# LEAVES THE DEVICE RAIL FOR ITS OWN 5 V BUCK FROM VBAT. In PS-ALLTX the exciter keys with the PA, and the mezzanine's
+# 1.4 to 2.0 A on +5V_DEV, with board B's 5.4 to 7.2 A and the wall port's 0.5 to 0.9 A, put the LM5176 stage's
+# coincident demand (7.3 A with the makers' figures, 8.9 A at every declared limit) above its average loop's minimum
+# of 7.057 A (43 mV over 6 mOhm at +1 percent and assumed 50 K, SNVSAI1D p.7, Vishay 30100 pp.1-2). Sustained
+# overload risks fold-back; onset and collapse require waveforms. Lowering R43 raises the limit beyond the JST-VH lead's
+# 10 A rating and 5 mOhm still fails 8.9 A at its minimum. So the mezzanine takes the part this board already fits twice (U12, U33): a TPS62933DRLR (SLUSEA4D, 3.8 to
+# 30 V in, 3 A, IHS_LIMIT 4.2 A minimum) at 5.088 V (53.6k over 10k, the LM5176 stages' figure, so U23's OVLO
+# arithmetic stands), 6.8 uH XAL6060-682ME (Table 10-2's value for 5 V at 500 kHz; Isat 9.2 A over the part's 5.8 A
+# maximum high-side limit, Coilcraft 887-1), two 22 uF 10 V 1210 (about 30 uF effective at 5 V, over the 10 uF
+# minimum), RT open (500 kHz), SS 10 nF (TI's minimum is 6.8 nF), EN on RAIL_EN as U12: the buck is up whenever the
+# 3.3 V logic is, and U23 (D8_EN, ILM 2.0 A, OVLO 5.87 to 6.12 V) still switches and protects the mezzanine. At 2.0 A
+# the ripple is 1.04 A at 16.8 V in and the peak 2.5 A. The device rail's coincident demand returns to board B plus
+# the wall port: 6.900 A declared, 5.942235 A conditional M-tier, under the conditional 7.056897 A minimum.
+# P-tier 8.171220 A (8.180759 A with R186 tolerance) still fails; 1 kohm wall maxima are extrapolations, not guarantees.
+ic("U41", 8, "TPS62933DRLR 3 A buck, 5.0 V for the D8 mezzanine", "SOT583", {"1": "NC", "2": "RAIL_EN", "3": "VBAT", "4": "GND", "5": "D8B_SW", "6": "D8B_BST", "7": "D8B_SS", "8": "D8B_FB"}, "C3200405")
+part("L13", "Device", "L", "6.8uH XAL6060-682ME (Isat 9.2 A)", "L6060", {"1": "D8B_SW", "2": "+5V_D8IN"})
+c("C227", "100n", "D8B_BST", "D8B_SW"); c("C228", "10n", "D8B_SS", "GND")
+c("C229", "10u 25V 1210", "VBAT", "GND", "C1210", bypass=("U41", "3")); c("C230", "100n", "VBAT", "GND", bypass=("U41", "3"))
+for _ci in ("C229", "C230"): _cls(_ci, "R", "TI SLUSEA4D (TPS62933) 12.1 p.40: 'the most critical PCB feature is the loop formed by the input capacitors and power ground'; 'Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins'")
+c("C231", "22u 10V X7R 1210", "+5V_D8IN", "GND", "C1210"); c("C232", "22u 10V X7R 1210", "+5V_D8IN", "GND", "C1210")
+r("R217", "53.6k 1%", "+5V_D8IN", "D8B_FB"); r("R218", "10k 1%", "D8B_FB", "GND")
+_intent.rail("+5V_D8IN", 5.0, 1.0, 2.0, "L13", loads={"U23": 1.0}, switch="U41", efficiency=0.90, fed_from="VBAT", budget=0.02,
+             note="S-99, 28 September 2026: the D8 mezzanine's own 5.088 V from VBAT (U41, a TPS62933 at 500 kHz), between the "
+                  "buck's inductor L13 and the eFuse U23; 1.0 A typical (board D's +5V_D8 declaration), 2.0 A peak (U23's limit). "
+                  "It was a load of +5V_DEV until today, where it put the LM5176 stage's coincident PS-ALLTX demand above the "
+                  "average loop's minimum (v2/docs/records/s99/ANALYSIS.md)")
+_intent.node("D8B_SW", 16.8, "the D8 buck U41's switching node: it swings to VBAT, the pack node that feeds it, and a diode drop below ground", v_min=-1.0)
+_intent.node("D8B_BST", _intent.net_volts("D8B_SW") + _TPS62933_BST,
+             "the D8 buck U41's bootstrap supply (pin 6 BST): it rides on D8B_SW at up to 5.5 V, SLUSEA4D 8.3's "
+             "recommended BST-SW maximum, and supplies only the part's own high-side driver",
+             rides_on="D8B_SW", bias_v=_TPS62933_BST)
+efuse("U23", "+5V_D8IN", "+5V_D8", "D8_EN", "D8_FLT", ["C102", "R98", "R99", "R100", "R101", "C103"], "453R 1% (ILM: 2.0 A)", ovlo_top="40.2k 1%", ovlo_lcsc="C12447"); vh2("J_MEZZ_PWR1", "D8 mezzanine 5 V (JST-VH): + -", "+5V_D8")
 # --- hardware EMCON gates: SN74LVC08APWR quad AND (TSSOP-14: 1 1A 2 1B 3 1Y 4 2A 5 2B 6 2Y 7 GND 8 3Y 9 3A 10 3B 11 4Y 12 4A 13 4B 14 VCC).
 #     EMCON_HW is active LOW (low silences) and this board only READS it: gate 3 used to drive TX_INHIBIT_n from EMCON_HW, which closed a
 #     one-inversion loop through C7's inverter and put a push-pull output on the same net as the panel's mechanical toggle. Deleted 9 September
@@ -1557,7 +1585,7 @@ for k, (nm, net) in enumerate(RF, 1):
     part("J_BM%d" % k, "Connector", "Conn_Coaxial", "SMP-MAX slide-on receptacle R222M00720 (underside), %s to the dock plug" % nm, "SMPMAX", {"1": net, "2": "GND"})
 # --- test points and flags
 for ref, net in (("TP9", "VBAT"), ("TP10", "GND"), ("TP11", "+3V3"), ("TP12", "VBUS20"), ("TP13", "VIN_RAW"), ("TP14", "CELL+"), ("TP15", "EMCON_HW"), ("TP16", "RAIL_EN"), ("TP17", "SDA"), ("TP18", "SCL"), ("TP19", "IADPT"), ("TP20", "IBAT"), ("TP21", "DOCK_SPARE"), ("TP22", "REGN"), ("TP27", "AB_SPARE")): tp(ref, net)   # TP27: AB_SPARE lost its seat on J_AB1 when the ribbon pairs took their columns (10 Sep 2026), and it reaches D alone
-for i, net in enumerate(("CELL+", "VBAT", "GND", "+3V3", "VIN_RAW", "VBUS20", "+5V_S1", "+5V_S2", "+5V_S3", "+5V_DEV", "+13V8_PA", "+12V_HF", "+54V_POE", "VMON", "VHEAT", "+5V_D8", "PD_VBUS", "PD_VPWR", "PD_SW", "REGN", "CELL_FUSED", "CH_ACN", "PRECHG", "FE_OUT", "PA_OUT", "HF_OUT", "POE_OUT", "PD_OUT"), 1):
+for i, net in enumerate(("CELL+", "VBAT", "GND", "+3V3", "VIN_RAW", "VBUS20", "+5V_S1", "+5V_S2", "+5V_S3", "+5V_DEV", "+13V8_PA", "+12V_HF", "+54V_POE", "VMON", "VHEAT", "+5V_D8", "+5V_D8IN", "PD_VBUS", "PD_VPWR", "PD_SW", "REGN", "CELL_FUSED", "CH_ACN", "PRECHG", "FE_OUT", "PA_OUT", "HF_OUT", "POE_OUT", "PD_OUT"), 1):
     part("#FLG%02d" % i, "power", "PWR_FLAG", "PWR_FLAG", "", {"1": net})
 
 # ----------------------------------------------------------------- emit
@@ -1585,7 +1613,7 @@ SECTIONS = [("PACK NODE OVER THE DOCK BLOCK (32.56): 9 A PINS, PRE-CHARGE, 25 A 
             ("HF RAIL: LM5176 12.0 V 2 A, EMCON GATED", ["U15", "Q15", "Q16", "Q23", "Q24", "L9", "R60", "R61", "R62", "C149", "R64", "C68", "C69", "C70", "C71", "C72", "C73", "R65", "R122", "R123", "R124", "R125", "C74", "C108", "C109", "C110", "C111", "C172", "C173", "C196", "R126", "D13", "D14", "D21", "C209", "J_HF"]),
             ("POE RAIL: LM5176 BOOST 54 V 0.6 A, INA226 0x47", ["U16", "Q17", "Q18", "Q19", "Q20", "L10", "R66", "R67", "R68", "C150", "R70", "C75", "C76", "C77", "C78", "C79", "C80", "R71", "R72", "R73", "R74", "R75", "C81", "C82", "C83", "C84", "C85", "C176", "C177", "C197", "C221", "R121", "D15", "D16", "U17", "J_54V"]),
             ("USB-C PD OUTLET: TPS25740A + LM5176 5/9/15 V STAGE", ["U19", "Q21", "Q22", "Q25", "Q26", "L11", "R76", "R77", "R78", "C151", "R80", "C86", "C87", "C88", "C89", "C90", "C91", "R81", "R127", "R128", "R133", "R134", "C92", "C116", "C117", "C118", "C119", "C174", "C175", "C198", "C222", "R135", "R136", "R137", "U18", "Q27", "R138", "R139", "R140", "R141", "R142", "R143", "C93", "C94", "C95", "C96", "C97", "C120", "D4", "D17", "D18", "J_USBC_OUT", "U31"]),
-            ("EFUSES: MONITOR, HEATER (12.0 V BUCK), D8 5 V", ["U21", "C98", "R90", "R91", "R92", "R93", "C99", "J_MON", "U22", "C100", "R94", "R95", "R96", "R97", "C101", "U33", "L12", "C157", "C158", "C159", "C160", "C161", "C162", "R191", "R192", "R193", "R194", "J_HEAT", "U23", "C102", "R98", "R99", "R100", "R101", "C103", "J_MEZZ_PWR1"]),
+            ("EFUSES: MONITOR, HEATER (12.0 V BUCK), D8 5 V", ["U21", "C98", "R90", "R91", "R92", "R93", "C99", "J_MON", "U22", "C100", "R94", "R95", "R96", "R97", "C101", "U33", "L12", "C157", "C158", "C159", "C160", "C161", "C162", "R191", "R192", "R193", "R194", "J_HEAT", "U41", "L13", "C227", "C228", "C229", "C230", "C231", "C232", "R217", "R218", "U23", "C102", "R98", "R99", "R100", "R101", "C103", "J_MEZZ_PWR1"]),
             ("EMCON GATES 74AUP1G08 (BOTH LINES) ON THEIR OWN SUPPLY (U39 EFUSE, U40), OUTLET INTERLOCK 74LVC08, EXPANDERS 0x21 0x24", ["U39", "C224", "R209", "R210", "R211", "R212", "C225", "R213", "U40", "C226", "R214", "R215", "U35", "C215", "U36", "C216", "U37", "C217", "U38", "C218", "R207", "R208", "U26", "U30", "C153", "R102", "C104", "R103", "R104", "U27", "U28", "C106", "C107", "R110", "R216", "R111", "R112", "R113", "R114"] + ["TP%d" % k for k in range(3, 9)] + ["TP23", "TP24", "TP25", "TP26"]),
             ("RIBBON J_AB1 2x13, WALL-PORT RIBBON J_AB2 2x5, MEZZANINE HARNESS J_MEZZ1 2x8, GLENAIR WALL USB HOST PORT", ["J_AB1", "J_AB2", "J_MEZZ1", "R116", "R117", "R118", "J_USBW", "U29", "U32", "C154", "R186", "R187", "R188", "R189", "C155", "R190", "C156"] + [p["ref"] for p in P if p["ref"] == "R145"]),
             ("ELEVEN BLIND-MATE RF SITES: SMA JACK (TOP) + SMP-MAX RECEPTACLE (UNDERSIDE)", ["J_RF%d" % k for k in range(1, 12)] + ["J_BM%d" % k for k in range(1, 12)]),
