@@ -1,0 +1,8 @@
+# Files the box regeneration rebuilds from branch fnd/s99a (stream s99a, 28 September 2026). Board A only.
+v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_sch
+v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
+v2/ecad/pcb-a-power-a23/out/pcb-a-power.net.prov.json
+v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json
+# read, not committed unless the retake path commits them: ERC report and BOM of board A
+# NOT rebuilt: v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb (layout phase, open item S-115)
+# NOT rebuilt: board D (gen_sch_d.py unchanged; item 4 kept board D's declarations)
