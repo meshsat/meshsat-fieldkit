@@ -67,7 +67,7 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32.
 | RF-001 RF paths are designed as RF | BLOCKER | ROUTED_BOARD | **FAIL** | rf_line FAIL: {'judged': 11, 'missed': 11} |
 | RF-002 transmit inhibit is hardware | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | inhibit_chain_a INCONCLUSIVE: RF-002 on this board: where the transmit inhibit line runs, it is present, reaches the gate it keys, has the panel toggl |
 | INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **PASS** | interfaces_a PASS of 1 |
-| TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **PASS** | port_protect_a PASS of 26; LIMITED (open item S-88) |
+| TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **PASS** | port_protect_a PASS of 42 |
 | ISO-001 creepage and clearance | BLOCKER | ROUTED_BOARD | **FAIL** | spacing FAIL: {'below_limit': 5, 'closest_mm': 0.1287, 'hv_nets': 6, 'pairs_measured': 10124} |
 | THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the sourc |
 | PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **FAIL** | place_audit FAIL: {'collisions': 1, 'fine_pitch': 19, 'footprints': 400, 'measured': 19} |
@@ -82,7 +82,7 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32.
 | DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | verify_deliverable_a INCONCLUSIVE: the folder judged here is meshsat-pcb-a-revA-A24 and this board declares A32, so its properties are a reading of a  |
 | DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was |
 | TST-001 the board can be brought up safely | MUST_JUSTIFY | SCHEMATIC | **PASS** | PCB-BRING-UP.md is current with the registry |
-| REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **INCONCLUSIVE** | reliability was taken 2026-09-28T14:54:53, before 2026-09-28T20:33:53+02:00, when its tool changed what the verdict means; re-take it; LIMITED (open item S-89) |
+| REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **INCONCLUSIVE** | reliability INCONCLUSIVE: every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the re |
 | BAT-002 the energy chain is bounded end to end | BLOCKER | SCHEMATIC | **PASS** | energy_chain PASS of 98 |
 | DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | final_gate_a INCONCLUSIVE: this board is HELD by an open owner decision, so its paperwork is not current and cannot be made current while the hold sta |
 | DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **INCONCLUSIVE** | doc_provenance_a INCONCLUSIVE: board A declares A32 and the order set holds A22: the note beside those folders describes a board this project is not b |

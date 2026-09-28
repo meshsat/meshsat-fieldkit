@@ -13,9 +13,9 @@ Measured on board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24.
 
 | historical aggregate, mixed revisions | rules | percent of this board's required rules |
 |---|---|---|
-| PASS | 34 | 70.8 |
+| PASS | 33 | 68.8 |
 | FAIL | 4 | 8.3 |
-| INCONCLUSIVE | 10 | 20.8 |
+| INCONCLUSIVE | 11 | 22.9 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **48** | 100.0 |
 
@@ -49,7 +49,7 @@ Measured on board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24.
 | CLK-001 oscillators, straps and boot pins | BLOCKER | SCHEMATIC | **PASS** | clock_check PASS of 1 |
 | RF-002 transmit inhibit is hardware | BLOCKER | SCHEMATIC | **PASS** | inhibit_chain_c PASS of 6 |
 | INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **PASS** | interfaces_c PASS of 1 |
-| TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **PASS** | port_protect_c PASS of 4 |
+| TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | port_protect_c INCONCLUSIVE: every declared external conductor meets a protection part before a chip; 0 clamp(s) could not be judged for polarity, 39  |
 | THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the sourc |
 | PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **PASS** | hardset-placed PASS of 15 |
 | PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | closer_audit PASS of 16 |
@@ -63,7 +63,7 @@ Measured on board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24.
 | DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **PASS** | verify_deliverable_c PASS of 1 |
 | DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was |
 | TST-001 the board can be brought up safely | MUST_JUSTIFY | SCHEMATIC | **PASS** | PCB-BRING-UP.md is current with the registry |
-| REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **INCONCLUSIVE** | reliability was taken 2026-09-28T14:54:55, before 2026-09-28T20:33:53+02:00, when its tool changed what the verdict means; re-take it; LIMITED (open item S-89) |
+| REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **INCONCLUSIVE** | reliability INCONCLUSIVE: every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the re |
 | DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **PASS** | final_gate_c PASS of 1 |
 | DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **PASS** | doc_provenance_c PASS of 1 |
 | OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |

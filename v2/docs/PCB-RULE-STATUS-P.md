@@ -61,7 +61,7 @@ Measured on board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4.
 | DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **PASS** | verify_deliverable_p PASS of 1 |
 | DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was |
 | TST-001 the board can be brought up safely | MUST_JUSTIFY | SCHEMATIC | **PASS** | PCB-BRING-UP.md is current with the registry |
-| REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **INCONCLUSIVE** | reliability was taken 2026-09-28T14:54:58, before 2026-09-28T20:33:53+02:00, when its tool changed what the verdict means; re-take it; LIMITED (open item S-89) |
+| REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **INCONCLUSIVE** | reliability INCONCLUSIVE: every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the re |
 | BAT-001 the cell block is protected in hardware | BLOCKER | SCHEMATIC | **FAIL** | pack_protection FAIL: {'checks': 63, 'devices': 13, 'fail': 3, 'functions': 14, 'limits': 14, 'software_only': 9} |
 | BAT-002 the energy chain is bounded end to end | BLOCKER | SCHEMATIC | **PASS** | energy_chain PASS of 98 |
 | DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **PASS** | final_gate_p PASS of 1 |

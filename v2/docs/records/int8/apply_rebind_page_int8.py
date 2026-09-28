@@ -120,11 +120,13 @@ def main():
         if not got.startswith(begins): refuse("the row %r reads %r, expected it to begin %r" % (start, got[:160], begins))
     if (sd["verdict"], sa["verdict"]) != ("PASS", "PASS"): refuse("safe_lines reads %s, %s" % (sd["verdict"], sa["verdict"]))
 
-    how = ("%s re-read at integration set 7 of 28 September 2026 (branch fnd/int8: the lid tray stream w5tray with its two "
-           "drafts, the third check's carried items, the Codex pilot's records on finding I-03 with its items S-98 and S-99, "
-           "and the contract IF-AB-POWER's contact rating rewritten from the held JST VH catalogue, which is a configuration "
-           "input of interfaces.py, so INT-001 reads CONFIG_CHANGED on every board until the set's re-take on the KiCad host), "
-           "rules_status three times and rules_render on the tree with main's gitignored evidence installed (the file at %s before). Of "
+    how = ("%s re-read at the FINAL render of integration set 7 of 28 September 2026 (branch fnd/int8: the lid tray stream "
+           "w5tray with its two drafts; the third check's carried items; the Codex pilot's records on finding I-03 with its items "
+           "S-98 and S-99 and the contract's contact rating from the held JST VH catalogue; the edge-rate stream w5si2 with its "
+           "seven drafts and the makers' pinned models; decision 31's stream d8dec31 with the reviewed set of external pins; the "
+           "reliability stream d6rel; the constraint-binding stream p3bind; then the consolidated re-take of every schematic-phase "
+           "reading on the KiCad box at 8b623c96 and the closures of S-88 and S-89 by their own stages), rules_status three times "
+           "and rules_render on the tree with the re-take's evidence installed (the file at %s before). Of "
            "the page's %d sections %d differ from that file (%s) and %d are byte-identical (%s); %s." % (
                CE, OLD, len(sn), len(differ), "; ".join(differ) or "none", len(same), "; ".join(same) or "none", counts))
     notes = {

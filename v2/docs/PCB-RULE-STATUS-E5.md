@@ -39,7 +39,7 @@ Measured on board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5.
 | MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **PASS** | check_pcb_e5 PASS of 27 |
 | DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **PASS** | verify_deliverable_e5 PASS of 1 |
 | DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **PASS** | assembly_set PASS of 1 |
-| REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **INCONCLUSIVE** | reliability was taken 2026-09-28T14:54:57, before 2026-09-28T20:33:53+02:00, when its tool changed what the verdict means; re-take it; LIMITED (open item S-89) |
+| REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **INCONCLUSIVE** | reliability INCONCLUSIVE: every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the re |
 | BAT-002 the energy chain is bounded end to end | BLOCKER | SCHEMATIC | **PASS** | energy_chain PASS of 98 |
 | DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **PASS** | final_gate_e5 PASS of 1 |
 | DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **PASS** | doc_provenance_e5 PASS of 1 |
