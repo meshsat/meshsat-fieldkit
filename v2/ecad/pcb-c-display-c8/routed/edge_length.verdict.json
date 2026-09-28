@@ -262,12 +262,12 @@
  },
  "tool": "edge_length",
  "tools": {
-  "git_head": "19a2bb15a47b",
-  "tools_tree_sha": "d1e2b2878f05965a"
+  "git_head": "8ae28b233e9b",
+  "tools_tree_sha": "bfeac03e9fe6170b"
  },
- "ts": "2026-09-28T21:18:44Z",
+ "ts": "2026-09-28T21:30:59Z",
  "verdict": "INCONCLUSIVE",
- "version": "19a2bb15a47b",
+ "version": "8ae28b233e9b",
  "writer": {
   "file": "edge_length.py",
   "sha16": "21d61d18e18e56a8"

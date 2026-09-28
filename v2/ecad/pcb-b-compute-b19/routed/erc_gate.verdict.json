@@ -33,7 +33,7 @@
   "board": "b",
   "erc_report": {
    "path": "pcb-b-compute-b19/out/pcb-b-compute-erc.json",
-   "sha256_16": "98204ecfed8f5ac8"
+   "sha256_16": "a4547b0bd25d841f"
   },
   "netlist": {
    "content16": "b9dbb9c4a430d108",
@@ -70,12 +70,12 @@
  },
  "tool": "erc_gate",
  "tools": {
-  "git_head": "19a2bb15a47b",
-  "tools_tree_sha": "d1e2b2878f05965a"
+  "git_head": "8ae28b233e9b",
+  "tools_tree_sha": "bfeac03e9fe6170b"
  },
- "ts": "2026-09-28T21:18:01Z",
+ "ts": "2026-09-28T21:30:16Z",
  "verdict": "PASS",
- "version": "19a2bb15a47b",
+ "version": "8ae28b233e9b",
  "writer": {
   "file": "erc_gate.py",
   "sha16": "bb4bf868c515f37a"

@@ -31,7 +31,7 @@
   "figures_none_published": 3,
   "figures_not_mated": 0,
   "figures_owed": 3,
-  "inconclusive": 12,
+  "inconclusive": 11,
   "measures_owed": 2,
   "per_board": {
    "b": {
@@ -39,7 +39,7 @@
      "kind": "netlist",
      "sha256_16": "21a1f74a3ec1ae28"
     },
-    "bound": false,
+    "bound": true,
     "candidates": 155,
     "citations_unjudged": 0,
     "classed": 56,
@@ -62,7 +62,6 @@
  },
  "denominator": 155,
  "evidence": [
-  "board B's declaration was written against the netlist of sha256 028997a6c5e8810f and the declared phase's netlist pcb-b-compute-b19/out/pcb-b-compute.net reads 21a1f74a3ec1ae28: its components and nets are the same (a re-export of the same design): read the values against the list and re-pin it (reliability.py --pins)",
   "B: class M.2 NVMe sockets (Amphenol) owes its cycle figure (open item REL-O-03: board B's three NVMe sockets are Amphenol MDT420M02001. The held drawing of that part states no durability, and Amphenol's series sheet (SSIOPCIEM20519EA4) gives 25 to 60 mating cycles for a normal M.2 by plating option and does not list this part number in its table)",
   "B: class the coin cell retainer owes its measure (open item REL-O-09: board B's coin cell retainer is surface mounted (Keystone 3034), and no measure is recorded against the lever of changing the cell on its two solder tails; the list of 16 September called it through-hole)",
   "B: class lead headers on 2.54 mm lands, mated in service owes its cycle figure (open item REL-O-02: the 2.54 mm pin header lands carry no named part: their values in the netlists name the lead, the module or the bench use and no header, and whether a header is fitted or the lead is soldered into the holes is a build choice not made. ASSEMBLY.md section 4 names JST PH housings for J_CAM, J_QMX, J_POD and the three sensor modules and SH housings for board E's two mixer fans, and the netlists draw 2.54 mm pin header lands for all of them. Board B's ten bench and commissioning headers are owed under the same item: whether a header is fitted on them at all is the same choice)",
@@ -84,8 +83,8 @@
   "board": "b",
   "list": {
    "path": "tools/pcb_reliability.yaml",
-   "sha256": "40f2a98323b1f9ceeea024fac42b46521d565f0547ee6824ff29dcd5ddaabd96",
-   "sha256_16": "40f2a98323b1f9ce"
+   "sha256": "b568aed64fe8e734e53de390f3119a7798ba94b8ded385849aea38a84580a45a",
+   "sha256_16": "b568aed64fe8e734"
   },
   "netlist": {
    "content16": "b9dbb9c4a430d108",
@@ -95,7 +94,7 @@
    "sha256_16": "21a1f74a3ec1ae28"
   }
  },
- "missing_input": "board B's declaration was written against the netlist of sha256 028997a6c5e8810f and the declared phase's netlist pcb-b-compute-b19/out/pcb-b-compute.net reads 21a1f74a3ec1ae28: its components and nets are the same (a re-export of the same design): read the values against the list and re-pin it (reliability.py --pins)",
+ "missing_input": null,
  "note": "every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the measure taken, or under one declared exclusion with its reason. A desk reading of a netlist and a list: it tests nothing and replaces no physical verification; REL-001 is verified at the prototype and no board has been built",
  "policy": {
   "hard_types": 15,
@@ -112,12 +111,12 @@
  },
  "tool": "reliability",
  "tools": {
-  "git_head": "19a2bb15a47b",
-  "tools_tree_sha": "d1e2b2878f05965a"
+  "git_head": "8ae28b233e9b",
+  "tools_tree_sha": "bfeac03e9fe6170b"
  },
- "ts": "2026-09-28T21:20:11Z",
+ "ts": "2026-09-28T21:32:25Z",
  "verdict": "INCONCLUSIVE",
- "version": "19a2bb15a47b",
+ "version": "8ae28b233e9b",
  "writer": {
   "file": "reliability.py",
   "sha16": "c50f2b8b35d1d57b"

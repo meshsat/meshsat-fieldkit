@@ -31,7 +31,7 @@
   "figures_none_published": 4,
   "figures_not_mated": 0,
   "figures_owed": 2,
-  "inconclusive": 10,
+  "inconclusive": 9,
   "measures_owed": 0,
   "per_board": {
    "a": {
@@ -39,7 +39,7 @@
      "kind": "netlist",
      "sha256_16": "2dfe1c546cb39ccb"
     },
-    "bound": false,
+    "bound": true,
     "candidates": 82,
     "citations_unjudged": 0,
     "classed": 57,
@@ -61,7 +61,6 @@
  },
  "denominator": 82,
  "evidence": [
-  "board A's declaration was written against the netlist of sha256 0a2b59087bcc2678 and the declared phase's netlist pcb-a-power-a23/out/pcb-a-power.net reads 2dfe1c546cb39ccb: its components and nets are the same (a re-export of the same design): read the values against the list and re-pin it (reliability.py --pins)",
   "A: class the pre-charge pin owes its cycle figure (open item REL-O-01: board A's pre-charge pin J_PRE1, the longer Mill-Max pin that mates first, has no order code: its value in the netlist names no part ('pre-charge pin, longer, mates first (32.24 AX)') and no document of a longer pin is held, so no maker's figure can be cited for it)",
   "A: class the USB-C outlet's pigtail header owes its cycle figure (open item REL-O-02: the 2.54 mm pin header lands carry no named part: their values in the netlists name the lead, the module or the bench use and no header, and whether a header is fitted or the lead is soldered into the holes is a build choice not made. ASSEMBLY.md section 4 names JST PH housings for J_CAM, J_QMX, J_POD and the three sensor modules and SH housings for board E's two mixer fans, and the netlists draw 2.54 mm pin header lands for all of them. Board B's ten bench and commissioning headers are owed under the same item: whether a header is fitted on them at all is the same choice)",
   "A: open item REL-O-07 holds the board: the expected number of mates of each connector over a service life is stated nowhere (REQ-028: no life requirement for prototype 1), so this list carries ratings and compares them with nothing (next action: when a service life is ruled, state the expected mates per connector from CONOPS section 5 and compare each class's figure with it)",
@@ -77,8 +76,8 @@
   "board": "a",
   "list": {
    "path": "tools/pcb_reliability.yaml",
-   "sha256": "40f2a98323b1f9ceeea024fac42b46521d565f0547ee6824ff29dcd5ddaabd96",
-   "sha256_16": "40f2a98323b1f9ce"
+   "sha256": "b568aed64fe8e734e53de390f3119a7798ba94b8ded385849aea38a84580a45a",
+   "sha256_16": "b568aed64fe8e734"
   },
   "netlist": {
    "content16": "d464d30a17fb30f7",
@@ -88,7 +87,7 @@
    "sha256_16": "2dfe1c546cb39ccb"
   }
  },
- "missing_input": "board A's declaration was written against the netlist of sha256 0a2b59087bcc2678 and the declared phase's netlist pcb-a-power-a23/out/pcb-a-power.net reads 2dfe1c546cb39ccb: its components and nets are the same (a re-export of the same design): read the values against the list and re-pin it (reliability.py --pins)",
+ "missing_input": null,
  "note": "every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the measure taken, or under one declared exclusion with its reason. A desk reading of a netlist and a list: it tests nothing and replaces no physical verification; REL-001 is verified at the prototype and no board has been built",
  "policy": {
   "hard_types": 15,
@@ -105,12 +104,12 @@
  },
  "tool": "reliability",
  "tools": {
-  "git_head": "19a2bb15a47b",
-  "tools_tree_sha": "d1e2b2878f05965a"
+  "git_head": "8ae28b233e9b",
+  "tools_tree_sha": "bfeac03e9fe6170b"
  },
- "ts": "2026-09-28T21:20:09Z",
+ "ts": "2026-09-28T21:32:23Z",
  "verdict": "INCONCLUSIVE",
- "version": "19a2bb15a47b",
+ "version": "8ae28b233e9b",
  "writer": {
   "file": "reliability.py",
   "sha16": "c50f2b8b35d1d57b"
