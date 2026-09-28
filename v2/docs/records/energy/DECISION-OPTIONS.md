@@ -1,19 +1,22 @@
-# Options: a second battery block for the relay mission (M1)
+# Options: the 72-hour relay mission (M1)
 
-Prototype; AI analysis on planning figures (`ENERGY-RECONCILIATION.md` 7c, 8). **In every option the mission as written (full kit, 72 hours,
-battery and sun) fails: REQ-072 stays FAIL.** "Reduced" means the monitor, 5G, the WiFi link, Zigbee and
-two of the three computers OFF; one computer on 16 W keeps LoRa, Iridium, APRS, GNSS.
+MESHSAT-1357, 29 September 2026 (second issue, after an independent AI review). Prototype; AI analysis on the September
+reference-day model (`ENERGY-RECONCILIATION.md` section 9). Nothing is bought or built.
 
-1. **Second block wired to the first (one 290 Wh battery, one protection board), a 200-watt panel held
-   to 100 W, the lower shutdown line, and reduced whenever the sun alone cannot carry the full kit.** Reduced 16
-   hours a day in September and 14 in June; carries average September days (battery above 17 C) and June
-   days. December: reduced all 24 hours and still fails. Under 150 EUR, 0.6 kg, protection board
-   additions, board A's heater limit; west antenna cables re-planned (open); transport rules unknown.
-2. **The same battery, never reduced.** Full kit every hour; stops in the first night (September, June) or the first morning (December),
-   every month examined. Same costs.
-3. **Keep one block, never reduced by rule.** From a morning start it stops the first afternoon. M1 recorded unmet for prototype 1: open, not fulfilled.
-   A 12 V external source may carry a night, optionally, never the basis.
+The mission as written (full kit at 42.8 W, 72 hours, battery and sun) needs about 655 Wh of usable battery with margin
+(at least 546 Wh with none), against today's 108 Wh.
 
-**Recommendation: 1**, the only option carrying a relay through a September night on battery and sun, at 16
-reduced hours a day; it reopens your deferral of the second pack (D-01) and changes the mission's
-operating state, both yours.
+**A. Full mission (recommended).** Two packs: the base pockets (4S6P) and a lid module (4S12P), 72 cells, 3.6 kg of
+cells. Solar, your choice: (i) a 200 W solar stage with four 100 W panels, which meets September down to about +13 C
+cell temperature; or (ii) today's 100 W stage (REQ-016 kept) with sixteen 100 W panels in parallel, which meets only at
+about +19 C or warmer. Not yet drawn or tested: REQ-072 stays FAIL until it is. Your decisions: **D-06**, the battery
+grows from 145 Wh to about 870 Wh nominal; **REQ-016**, way (i) or way (ii); **D-01**, the second pack moves into
+prototype 1 and takes the lid space of the HF radio tray and the tablet bracket you approved on 6 September, whose new
+place is not yet found. No transport route is claimed for the larger pack (REQ-069).
+
+**B. Keep today's limits.** M1 is not met; REQ-072 stays FAIL. Under D-06's pack no design carries the full kit
+through a September night.
+
+**C. Reduced service (conditional, not a replacement).** Base pockets only, a 200 W panel held to 100 W, part of the kit
+switched off 16 hours a day. REQ-072 stays FAIL. It holds on the average-day model only with cells at about 17 C or
+warmer and the night load within 0.86 W of its plan; its protection, harness, heater and mechanical findings stay open.
