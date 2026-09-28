@@ -842,3 +842,18 @@ def t_a_negation_in_front_of_a_claim_word_is_not_a_claim():
         p = os.path.join(d, "doc.md"); open(p, "w", encoding="utf-8").write(text + "\n")
         n, bad = CC.check([p])
         assert n == 1 and bool(bad) == flagged, (text, bad)
+
+
+# ------------------------------------------------------------------- open items are linked or disposed (28 September 2026)
+def t_an_open_item_no_record_waits_on_needs_a_disposition():
+    """The reassessment of handover H3, correction 2: 24 of 58 open items were in no record's waits_on and one decided a
+    verdict. An unlinked item is refused unless it carries a disposition with its reason; a linked one needs none."""
+    req, kw = _fixture(); req["open_items"].append({"id": "S-77", "class": "SESSION", "status": "OPEN", "title": "a loose end"})
+    _refused(req, kw, ("S-77", "no record waits on it"))
+    req["open_items"][-1].update(disposition="PROCESS", disposition_why="short")
+    _refused(req, kw, ("S-77", "disposition_why"))
+    req["open_items"][-1]["disposition_why"] = "A wording item for the brief's writer that changes no record's evidence result at all."
+    assert not [e for e in _errors(req, kw) if "S-77" in e], _errors(req, kw)
+    req, kw = _fixture(); req["open_items"].append({"id": "S-78", "class": "SESSION", "status": "OPEN", "title": "x"})
+    _rec(req, "REQ-001")["waits_on"] = ["S-78"]
+    assert not [e for e in _errors(req, kw) if "S-78" in e], _errors(req, kw)
