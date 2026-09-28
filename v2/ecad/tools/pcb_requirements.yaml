@@ -693,7 +693,8 @@ owner_rulings:
       mission), presents any change to battery capacity, placement or operating modes explicitly, and, if the fixed
       case, the pack and the mission are incompatible, demonstrates the conflict and presents the smallest justified
       changes for the owner's decision. Unmet criteria stay visible: REQ-072 reads FAIL until the reconciliation decides
-      otherwise. The routes (c) to (e) of EQ-13 are not taken.
+      otherwise. The routes (c) to (e) of EQ-13 are not taken by this ruling; (c) and (d) return only as options the
+      reconciliation presents explicitly, and (e) is excluded because unmet criteria stay visible.
     source: ["owner ruling OD-02 of 28 September 2026, corrected the same evening", "v2/docs/CONOPS.md sections 3 and 7", "v2/docs/handover/ENGINEERING-QUESTIONS.md EQ-13"]
 # Choices the session took under the owner's standing rule of 26 September 2026: each is the session's, never
 # the owner's, names the ruling that lets the session take it, says why, and can be reversed. `closes` names the
@@ -2999,9 +3000,9 @@ open_items:
       boards A, E and P enter layout, because the answer can move the pack pocket, board E's solar stage (D4, F2,
       J_SOLAR) and board A's front end. Until then REQ-072 stays FAIL, CONOPS M1 states that a night needs an overnight
       input on the 9 to 36 V entry, and nothing is lowered: neither REQ-016 nor REQ-072 is restated to fit. Owner's
-      instruction of 28 September 2026 (D-20): the routes (c), (d) and (e) are not chosen; the energy budget is
-      reconciled first (S-114) and the smallest justified changes come back to the owner; M1 and REQ-072 stay as
-      written.
+      instruction of 28 September 2026 (D-20): the routes (c), (d) and (e) are not chosen by the ruling, (c) and (d)
+      returning only as options the reconciliation presents explicitly; the energy budget is reconciled first (S-114)
+      and the smallest justified changes come back to the owner; M1 and REQ-072 stay as written.
 
   - id: S-82
     class: SESSION
@@ -3445,17 +3446,18 @@ open_items:
     class: SESSION
     status: OPEN
     title: >-
-      (stream energy, owner ruling D-20) The energy reconciliation of mission M1 on the approved constraints: every load
-      of the states M1 uses classed as a maker's figure, a project allocation or a bound (measured: none until the
-      bench); the usable energy of the 4S3P pack new and aged from the cell maker's sheet and the protection and gauge
-      windows; the dark hours at 52 N by month computed from the solar declination; the solar energy per day into the
-      kit within REQ-016's 25 V and 100 W entry by month; an hour-by-hour balance of M1 as written for the design and
-      the worst month with a sensitivity table; the options within the constraints (a night operating mode that still
-      meets M1's must-hold, the usable depth of discharge, the cells the pocket admits, a second pack's location in the
-      fixed case, the panel against the stage's ceiling, an external DC source as optional only) with their numbers;
-      and, if M1 as written is not met, the smallest justified changes for the owner's decision. Record:
-      v2/docs/records/energy/. Open until the study is filed and REQ-072 re-read on it; REQ-072's statement and
-      acceptance are not rewritten.
+      (stream energy, owner ruling D-20; the finding: EQ-13's arithmetic, M-02: on the one pack of D-06 the balance of
+      mission M1 fails at desk on both limits, the night and the day) The energy reconciliation of mission M1 on the
+      approved constraints: every load of the states M1 uses classed as a maker's figure, a project allocation or a
+      bound (measured: none until the bench); the usable energy of the 4S3P pack new and aged from the cell maker's
+      sheet and the protection and gauge windows; the dark hours at 52 N by month computed from the solar declination;
+      the solar energy per day into the kit within REQ-016's 25 V and 100 W entry by month; an hour-by-hour balance of
+      M1 as written for the design and the worst month with a sensitivity table; the options within the constraints (a
+      night operating mode that still meets M1's must-hold, the usable depth of discharge, the cells the pocket admits,
+      a second pack's location in the fixed case, the panel against the stage's ceiling, an external DC source as
+      optional only) with their numbers; and, if M1 as written is not met, the smallest justified changes for the
+      owner's decision. Record: v2/docs/records/energy/. Open until the study is filed and REQ-072 re-read on it;
+      REQ-072's statement and acceptance are not rewritten.
 closed_items:
   - id: S-89
     closed_by: commit aaed6daa4434f2ae94331cdafb3134056fb1eb97

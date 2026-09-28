@@ -24,6 +24,6 @@
   "The draft's ASSEMBLY lead rows say 'bend radius 20 or less' while step 10 says 'R 20 or more'. They mean the lead's rated minimum versus the installed radius, and the wording should say so. The tray row keeps 0.4 N m for an M3 with 1.4 mm (2.8 threads) of engagement in 5052.",
   "The QMX's own button actuators (about 2 mm, photograph 15) appear in no face-room row. They sit near XFRAME_1 at (110.875, 16.0). The margin is large.",
   "vendor-status.txt has lines for the materials folder and the PETG sheet only. The new qrp-labs files and the PC Blend sheet have none.",
-  "Suggested commit subject (integrator, once B1 and B2 are fixed): feat(case): QMX lid tray r2 open at both end panels, fitted from the keeper end with the lintel on the keeper, face-room rows over the deepest element [MESHSAT-1357]. Body: S-63 closes by SC-64 only after a swept-insertion check passes; S-81 (EQ-31) and S-82 stay open; no Co-Authored-By trailer in this repo."
+  "Suggested commit subject (integrator, once B1 and B2 are fixed): feat(case): QMX lid tray r2 open at both end panels, fitted from the keeper end with the lintel on the keeper, face-room rows over the deepest element [MESHSAT-1357]. Body: S-63 closes by SC-64 only after a swept-insertion check passes; S-81 (EQ-31) and S-82 stay open; no the co-author trailer (its name is not written in this repository) trailer in this repo."
  ]
 }
