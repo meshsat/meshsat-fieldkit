@@ -4275,8 +4275,14 @@ records:
           nets added (RB_SW_IEN, LIME_UVLO, RB_UVLO, E22_UVLO and the three freed U{s}15 pin 4 nets) and 19 changed, 0
           unexplained against v2/docs/records/w4b/expected_w4b.json and refused when any decision's entries are dropped;
           no device changes, so this reading stands on the file at 028997a6c5e8810f
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at integration set 8 (28 September 2026, stream s98, S-98): the file at
+          25fa2401d71691b9 and at a57047c3daa946f3 were parsed and every call other than an electrical-intent
+          declaration is identical (1009 calls), so no part, pin, net, value or footprint moved; 2 intent declarations
+          differ and the module assignment _DEV_LOADS (the +5V_DEV load map). This record judges no declared current, so
+          its reading stands; rebound (apply_rebind_generators_s98.py). No result changes.
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@25fa2401d71691b9"
+      - "v2/ecad/tools/gen_sch_b.py@a57047c3daa946f3"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
       - "v2/docs/evidence/WRONG-MODEL-RECONCILIATION.md@97b1f63aa6ea11f1"
     release_effect: MUST_JUSTIFY
@@ -5354,8 +5360,14 @@ records:
           unexplained against v2/docs/records/w4b/expected_w4b.json and refused when any decision's entries are dropped;
           U41, U51 and U61's pins are on the same nets, so this reading stands INCONCLUSIVE on the file at
           028997a6c5e8810f
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at integration set 8 (28 September 2026, stream s98, S-98): the file at
+          25fa2401d71691b9 and at a57047c3daa946f3 were parsed and every call other than an electrical-intent
+          declaration is identical (1009 calls), so no part, pin, net, value or footprint moved; 2 intent declarations
+          differ and the module assignment _DEV_LOADS (the +5V_DEV load map). This record judges no declared current, so
+          its reading stands; rebound (apply_rebind_generators_s98.py). No result changes.
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@25fa2401d71691b9"
+      - "v2/ecad/tools/gen_sch_b.py@a57047c3daa946f3"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
       - "v2/docs/parts/STM32H743-COMPATIBILITY.md@67335ea42747e22f"
       - "v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf@f6e620179006c8c4"
@@ -5706,10 +5718,16 @@ records:
           section 7's 0x21 and 0x24 row (U27's P1.5 reads HOT-R1), with the line count kept; every other line is
           byte-identical to the file at 57a56726f9db723a; no line this record reads is among the two, so it stands PASS
           on the file at 4647782f5aca7c13
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at integration set 8 (28 September 2026, stream s98, S-98): the file at
+          25fa2401d71691b9 and at a57047c3daa946f3 were parsed and every call other than an electrical-intent
+          declaration is identical (1009 calls), so no part, pin, net, value or footprint moved; 2 intent declarations
+          differ and the module assignment _DEV_LOADS (the +5V_DEV load map). This record judges no declared current, so
+          its reading stands; rebound (apply_rebind_generators_s98.py). No result changes.
     evidence_bound_to:
       - "v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8"
       - "v2/docs/PANEL.md@4647782f5aca7c13"
-      - "v2/ecad/tools/gen_sch_b.py@25fa2401d71691b9"
+      - "v2/ecad/tools/gen_sch_b.py@a57047c3daa946f3"
     release_effect: ADVISORY
     source:
       - "v2/docs/ARCH-PCB-B-IOHA.md section 4"
@@ -6792,8 +6810,14 @@ records:
           net's pins compared (v2/docs/records/w4dp/parity: w3de's net_compare.py against expected-d-netlist.json,
           'ONLY THE EXPECTED CHANGES'); U14, U18, R48, TR_APRS, KEY and PA_EN on board D are unchanged, so
           this reading stands on v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@7a2c0ac2190b141a
+      - >-
+          v2/ecad/tools/gen_sch_a.py re-read at integration set 8 (28 September 2026, stream s98, S-98): the file at
+          9684e7a9606aede6 and at ebb5c0f250780a48 were parsed and every call other than an electrical-intent
+          declaration is identical (465 calls), so no part, pin, net, value or footprint moved; 6 intent declarations
+          differ. This record judges no declared current, so its reading stands; rebound
+          (apply_rebind_generators_s98.py). No result changes.
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_a.py@9684e7a9606aede6"
+      - "v2/ecad/tools/gen_sch_a.py@ebb5c0f250780a48"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@7a2c0ac2190b141a"
     release_effect: BLOCKER
@@ -7596,8 +7620,14 @@ records:
           the rows and sections this record cites (sections 1 to 4, rows E3 to E8, M7) are among the
           unchanged text, and every added row states its Purpose and the requirement it Verifies, so this
           reading stands on v2/docs/TEST-PLAN.md@ae57da0b57e214f7
+      - >-
+          v2/ecad/tools/gen_sch_a.py re-read at integration set 8 (28 September 2026, stream s98, S-98): the file at
+          9684e7a9606aede6 and at ebb5c0f250780a48 were parsed and every call other than an electrical-intent
+          declaration is identical (465 calls), so no part, pin, net, value or footprint moved; 6 intent declarations
+          differ. This record judges no declared current, so its reading stands; rebound
+          (apply_rebind_generators_s98.py). No result changes.
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_a.py@9684e7a9606aede6"
+      - "v2/ecad/tools/gen_sch_a.py@ebb5c0f250780a48"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
       - "v2/docs/TEST-PLAN.md@ae57da0b57e214f7"
     release_effect: MUST_JUSTIFY
@@ -8377,8 +8407,14 @@ records:
           nets added (RB_SW_IEN, LIME_UVLO, RB_UVLO, E22_UVLO and the three freed U{s}15 pin 4 nets) and 19 changed, 0
           unexplained against v2/docs/records/w4b/expected_w4b.json and refused when any decision's entries are dropped;
           WL_nDIS1..3 and BT_nDIS1..3 carry the same nodes, so this reading stands PASS on the file at 028997a6c5e8810f
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at integration set 8 (28 September 2026, stream s98, S-98): the file at
+          25fa2401d71691b9 and at a57047c3daa946f3 were parsed and every call other than an electrical-intent
+          declaration is identical (1009 calls), so no part, pin, net, value or footprint moved; 2 intent declarations
+          differ and the module assignment _DEV_LOADS (the +5V_DEV load map). This record judges no declared current, so
+          its reading stands; rebound (apply_rebind_generators_s98.py). No result changes.
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@25fa2401d71691b9"
+      - "v2/ecad/tools/gen_sch_b.py@a57047c3daa946f3"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
     release_effect: ADVISORY
     source:
@@ -11139,9 +11175,15 @@ records:
           (the panel's and the sensor controller's HOT-R1 rows of HW-FW-CONTRACT.md as stream w4ae drafts them); whether
           a firmware-free stage must stand behind it stays S-58, and the prototype acceptance (TEST-PLAN P15 and E3-H)
           is untouched. It stands INCONCLUSIVE on the file at f846e138cb53a8c6
+      - >-
+          v2/ecad/tools/gen_sch_a.py re-read at integration set 8 (28 September 2026, stream s98, S-98): the file at
+          9684e7a9606aede6 and at ebb5c0f250780a48 were parsed and every call other than an electrical-intent
+          declaration is identical (465 calls), so no part, pin, net, value or footprint moved; 6 intent declarations
+          differ. This record judges no declared current, so its reading stands; rebound
+          (apply_rebind_generators_s98.py). No result changes.
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_e.py@f846e138cb53a8c6"
-      - "v2/ecad/tools/gen_sch_a.py@9684e7a9606aede6"
+      - "v2/ecad/tools/gen_sch_a.py@ebb5c0f250780a48"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@56adc9746d61c4e0"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
       - "v2/docs/records/w4ae/hot_r1_trace.py@2350c321fa744293"
@@ -12504,7 +12546,13 @@ records:
           panel firmware (comments only): the hub ports (PORTS, line 995), the bank ring (f = s % 3 + 1, line 1028) and
           the LoRa module on S3's SPI (U12, line 1352) are unchanged; the stream moves no device between banks, so the
           reading stands FAIL on the file at 25fa2401d71691b9
-    evidence_bound_to: ["v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8", "v2/ecad/tools/gen_sch_b.py@25fa2401d71691b9"]
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at integration set 8 (28 September 2026, stream s98, S-98): the file at
+          25fa2401d71691b9 and at a57047c3daa946f3 were parsed and every call other than an electrical-intent
+          declaration is identical (1009 calls), so no part, pin, net, value or footprint moved; 2 intent declarations
+          differ and the module assignment _DEV_LOADS (the +5V_DEV load map). This record judges no declared current, so
+          its reading stands; rebound (apply_rebind_generators_s98.py). No result changes.
+    evidence_bound_to: ["v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8", "v2/ecad/tools/gen_sch_b.py@a57047c3daa946f3"]
     release_effect: MUST_JUSTIFY
     source:
       - "owner ruling D-02b"
@@ -12952,8 +13000,14 @@ records:
           comments' two maker-document paths point at v2/vendor/ and the RockBLOCK request's firmware duty names the
           panel firmware (comments only): the SIM block is at lines 826 to 885 and byte-identical (the holders, the 0
           Ohm links, U222 and U223), so the schematic half stands PASS on the file at 25fa2401d71691b9
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at integration set 8 (28 September 2026, stream s98, S-98): the file at
+          25fa2401d71691b9 and at a57047c3daa946f3 were parsed and every call other than an electrical-intent
+          declaration is identical (1009 calls), so no part, pin, net, value or footprint moved; 2 intent declarations
+          differ and the module assignment _DEV_LOADS (the +5V_DEV load map). This record judges no declared current, so
+          its reading stands; rebound (apply_rebind_generators_s98.py). No result changes.
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@25fa2401d71691b9"
+      - "v2/ecad/tools/gen_sch_b.py@a57047c3daa946f3"
     release_effect: BLOCKER
     source:
       - "v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf section 4.1.7"
@@ -14025,11 +14079,17 @@ records:
           (owner rulings D-19 and D-20) and one paragraph appended to section 3's M1 (the owner's instruction that M1
           and REQ-072 stand as written); every other section byte-identical by heading, the sections this record cites
           among them. Rebound from 6ebe6760c4312bca to 6cb7b241cb84d729; this entry changes no result.
+      - >-
+          v2/ecad/tools/gen_sch_a.py re-read at integration set 8 (28 September 2026, stream s98, S-98): the file at
+          9684e7a9606aede6 and at ebb5c0f250780a48 were parsed and every call other than an electrical-intent
+          declaration is identical (465 calls), so no part, pin, net, value or footprint moved; 6 intent declarations
+          differ. This record judges no declared current, so its reading stands; rebound
+          (apply_rebind_generators_s98.py). No result changes.
     evidence_bound_to:
       - "v2/docs/PANEL.md@4647782f5aca7c13"
       - "v2/docs/CONOPS.md@6cb7b241cb84d729"
       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
-      - "v2/ecad/tools/gen_sch_a.py@9684e7a9606aede6"
+      - "v2/ecad/tools/gen_sch_a.py@ebb5c0f250780a48"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
       - "v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md@44fdf9a022c49337"
     release_effect: BLOCKER
@@ -14458,8 +14518,14 @@ records:
           nets added (RB_SW_IEN, LIME_UVLO, RB_UVLO, E22_UVLO and the three freed U{s}15 pin 4 nets) and 19 changed, 0
           unexplained against v2/docs/records/w4b/expected_w4b.json and refused when any decision's entries are dropped;
           J_M2C2's nets are unchanged, so this reading stands on the file at 028997a6c5e8810f
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at integration set 8 (28 September 2026, stream s98, S-98): the file at
+          25fa2401d71691b9 and at a57047c3daa946f3 were parsed and every call other than an electrical-intent
+          declaration is identical (1009 calls), so no part, pin, net, value or footprint moved; 2 intent declarations
+          differ and the module assignment _DEV_LOADS (the +5V_DEV load map). This record judges no declared current, so
+          its reading stands; rebound (apply_rebind_generators_s98.py). No result changes.
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@25fa2401d71691b9"
+      - "v2/ecad/tools/gen_sch_b.py@a57047c3daa946f3"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
     release_effect: BLOCKER
     source:
