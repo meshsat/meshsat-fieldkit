@@ -323,14 +323,32 @@ def tools(ecad):
             if len(c.args) >= 4 and isinstance(c.args[3], ast.Constant): rot.append("%s:%d place(..., rotation %r, ...)" % (name, c.lineno, c.args[3].value))
     setrot = [n.lineno for n in ast.walk(bp) if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute)
               and n.func.attr in ("SetOrientationDegrees", "SetOrientation", "Rotate")]
-    rows.append(("T3", "the placers try the four rotations", False if rot and not setrot else None,
-                 ["%s; bypass_place.py calls that turn a footprint: %s" % (rot or "no constant rotation found", setrot or "none")]))
+    # 29 September 2026 (the resumed stream): the seat search moved into bypass_search.py, which both placers call,
+    # so T3 is read there: the search walks decoupling_rules.rotations() and apply() turns the footprint. The first
+    # form of this row read bypass_slots' first drop at rotation 0, which the search then turns.
+    srch = _ast(os.path.join(T, "bypass_search.py")) if os.path.exists(os.path.join(T, "bypass_search.py")) else None
+    s_rot = bool(srch) and bool(_calls(srch, "rotations"))
+    s_turn = bool(srch) and any(isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute) and n.func.attr == "SetOrientationDegrees" for n in ast.walk(srch))
+    both = {"bypass_slots.py": "bypass_search" in _imports(bs), "bypass_place.py": "bypass_search" in _imports(bp)}
+    rows.append(("T3", "the placers try the four rotations", (s_rot and s_turn and all(both.values())) if srch else (False if rot and not setrot else None),
+                 ["bypass_search.py walks rotations(): %s, turns the footprint: %s; placers that call it: %s; bypass_slots' first drop: %s"
+                  % (s_rot, s_turn, both, rot or "none")]))
     src_bs = open(os.path.join(T, "bypass_slots.py"), encoding="utf-8").read(); src_bp = open(os.path.join(T, "bypass_place.py"), encoding="utf-8").read()
     src_esc = open(os.path.join(T, "escape.py"), encoding="utf-8").read()
     reads_class = {n: bool(re.search(r'\.get\(\s*"class"\s*\)|\[\s*"class"\s*\]', s)) for n, s in
                    (("bypass_slots.py", src_bs), ("bypass_place.py", src_bp), ("escape.py", src_esc))}
+    # 29 September 2026: the class is read where the question is asked, bypass_search.py (the window and the converter's
+    # opening, through decoupling_rules.fan_blocks) and escape_cost.py (the cost per part and cause, which escape.py
+    # imports), not in escape.py's own text
+    ec = os.path.join(T, "escape_cost.py")
+    fb_kw = sorted({k.arg for c in (_calls(srch, "fan_blocks") if srch else []) for k in c.keywords})
+    ec_src = open(ec, encoding="utf-8").read() if os.path.exists(ec) else ""
+    causes = re.search(r'CAUSES = \(("window", "stage", "far_side")\)', ec_src) is not None
+    esc_imp = "escape_cost" in _imports(esc)
     rows.append(("T4", "the fan opened for a class R entry's own converter and a class D or L entry's own-pin window; escapes lost printed per cause",
-                 all(reads_class.values()), ["which of the three reads an entry's class: %s" % reads_class]))
+                 {"own_window", "own_converter"} <= set(fb_kw) and causes and esc_imp,
+                 ["bypass_search.py calls fan_blocks with %s; escape_cost.py's causes window, stage and far_side: %s; escape.py imports escape_cost: %s; "
+                  "the placers read the class: %s" % (fb_kw, causes, esc_imp, reads_class)]))
     bdef = next(n for n in it.body if isinstance(n, ast.FunctionDef) and n.name == "bypass")
     args = [a.arg for a in bdef.args.args]
     rows.append(("T5", "intent.bypass takes a class and a basis and intent.write refuses an entry without one",

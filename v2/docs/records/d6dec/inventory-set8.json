@@ -1,6 +1,6 @@
 {
  "what": "FEA-006 inventory, read on the set 6 netlists",
- "tree": "d62e768b",
+ "tree": "ed6f15da",
  "inputs": {
   "a": {
    "netlist": "pcb-a-power-a23/out/pcb-a-power.net",
@@ -238,17 +238,17 @@
   {
    "item": "T3",
    "asks": "the placers try the four rotations",
-   "status": "NOT DONE",
+   "status": "DONE",
    "evidence": [
-    "['bypass_slots.py:97 place(..., rotation 0.0, ...)']; bypass_place.py calls that turn a footprint: none"
+    "bypass_search.py walks rotations(): True, turns the footprint: True; placers that call it: {'bypass_slots.py': True, 'bypass_place.py': True}; bypass_slots' first drop: ['bypass_slots.py:97 place(..., rotation 0.0, ...)']"
    ]
   },
   {
    "item": "T4",
    "asks": "the fan opened for a class R entry's own converter and a class D or L entry's own-pin window; escapes lost printed per cause",
-   "status": "NOT DONE",
+   "status": "DONE",
    "evidence": [
-    "which of the three reads an entry's class: {'bypass_slots.py': True, 'bypass_place.py': True, 'escape.py': False}"
+    "bypass_search.py calls fan_blocks with ['own_converter', 'own_window']; escape_cost.py's causes window, stage and far_side: True; escape.py imports escape_cost: True; the placers read the class: {'bypass_slots.py': True, 'bypass_place.py': True, 'escape.py': False}"
    ]
   },
   {
