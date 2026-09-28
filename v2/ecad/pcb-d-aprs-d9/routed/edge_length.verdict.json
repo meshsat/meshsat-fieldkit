@@ -17,14 +17,14 @@
    "netlist_parts.py": "41cf192223d822c2",
    "regen_compare.py": "341d7f129a1e6f24",
    "return_via.py": "b61d138e54955dd4",
-   "rules_lib.py": "6154bd6c15bdfa6b",
+   "rules_lib.py": "a6e2421096c1473f",
    "signal_class.py": "60b8647301428da4",
    "signalnets.py": "688be12d8e42e7a4",
    "stackup_write.py": "b55a3c0f58c805c2",
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "5b817048ed7bc29f",
+  "sha16": "ac4e23da0105c4df",
   "unresolved": []
  },
  "counts": {
@@ -109,12 +109,12 @@
  },
  "tool": "edge_length",
  "tools": {
-  "git_head": "73ae2f2104c9",
-  "tools_tree_sha": "83ef0a1b203cfb46"
+  "git_head": "a4b157f07618",
+  "tools_tree_sha": "293a55e153ef9d1e"
  },
- "ts": "2026-09-27T21:00:14Z",
+ "ts": "2026-09-28T14:54:03Z",
  "verdict": "INCONCLUSIVE",
- "version": "73ae2f2104c9",
+ "version": "a4b157f07618",
  "writer": {
   "file": "edge_length.py",
   "sha16": "fd66cbd9bce2fa7b"

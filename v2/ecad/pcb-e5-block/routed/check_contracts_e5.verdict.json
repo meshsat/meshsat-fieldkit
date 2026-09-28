@@ -67,12 +67,12 @@
  },
  "tool": "check_contracts_e5",
  "tools": {
-  "git_head": "73ae2f2104c9",
-  "tools_tree_sha": "83ef0a1b203cfb46"
+  "git_head": "a4b157f07618",
+  "tools_tree_sha": "293a55e153ef9d1e"
  },
- "ts": "2026-09-27T21:00:46Z",
+ "ts": "2026-09-28T14:54:35Z",
  "verdict": "FAIL",
- "version": "73ae2f2104c9",
+ "version": "a4b157f07618",
  "writer": {
   "file": "block_contract.py",
   "sha16": "f6f01899199a66a3"

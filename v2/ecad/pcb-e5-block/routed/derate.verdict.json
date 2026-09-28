@@ -5,11 +5,11 @@
   "entry": "derate.py",
   "files": {
    "derate.py": "6c29d1b9a523d385",
-   "rules_lib.py": "6154bd6c15bdfa6b",
+   "rules_lib.py": "a6e2421096c1473f",
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "1e03e805d1e67712",
+  "sha16": "8993c5af67e24c79",
   "unresolved": []
  },
  "counts": {
@@ -41,12 +41,12 @@
  },
  "tool": "derate",
  "tools": {
-  "git_head": "73ae2f2104c9",
-  "tools_tree_sha": "83ef0a1b203cfb46"
+  "git_head": "a4b157f07618",
+  "tools_tree_sha": "293a55e153ef9d1e"
  },
- "ts": "2026-09-27T21:00:41Z",
+ "ts": "2026-09-28T14:54:30Z",
  "verdict": "PASS",
- "version": "73ae2f2104c9",
+ "version": "a4b157f07618",
  "writer": {
   "file": "derate.py",
   "sha16": "6c29d1b9a523d385"

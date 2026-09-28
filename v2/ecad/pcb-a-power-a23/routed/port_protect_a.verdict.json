@@ -62,12 +62,12 @@
  },
  "tool": "port_protect_a",
  "tools": {
-  "git_head": "73ae2f2104c9",
-  "tools_tree_sha": "83ef0a1b203cfb46"
+  "git_head": "a4b157f07618",
+  "tools_tree_sha": "293a55e153ef9d1e"
  },
- "ts": "2026-09-27T20:59:31Z",
+ "ts": "2026-09-28T14:53:20Z",
  "verdict": "PASS",
- "version": "73ae2f2104c9",
+ "version": "a4b157f07618",
  "writer": {
   "file": "port_protect.py",
   "sha16": "2d69facd3c25c8a4"

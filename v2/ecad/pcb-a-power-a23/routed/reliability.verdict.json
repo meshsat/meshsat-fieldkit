@@ -5,11 +5,11 @@
   "entry": "reliability.py",
   "files": {
    "reliability.py": "71d0872195905c9d",
-   "rules_lib.py": "6154bd6c15bdfa6b",
+   "rules_lib.py": "a6e2421096c1473f",
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "ee8cd7e02a042732",
+  "sha16": "29602b41d6b33541",
   "unresolved": []
  },
  "counts": {
@@ -41,12 +41,12 @@
  },
  "tool": "reliability",
  "tools": {
-  "git_head": "73ae2f2104c9",
-  "tools_tree_sha": "83ef0a1b203cfb46"
+  "git_head": "a4b157f07618",
+  "tools_tree_sha": "293a55e153ef9d1e"
  },
- "ts": "2026-09-27T21:05:02Z",
+ "ts": "2026-09-28T14:54:53Z",
  "verdict": "PASS",
- "version": "73ae2f2104c9",
+ "version": "a4b157f07618",
  "writer": {
   "file": "reliability.py",
   "sha16": "71d0872195905c9d"
