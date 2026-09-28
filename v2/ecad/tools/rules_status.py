@@ -728,9 +728,45 @@ CONFIG_INPUTS = {
     # port_protect.reviews() reads tools/pcb_port_reviews.json, the external pins a review enumerated for each board,
     # which reconcile() holds the declaration against pin by pin; the reading records it as inputs.port_reviews by sha.
     "port_protect.py": ("tools/boards/{letter}.json", "{phase}/out/{stem}-intent.json", "tools/pcb_port_reviews.json"),
-    # reliability.py:31 and :53 the declared list; :55 rules_lib.board_facts for the project names. (It also reads
-    # the newest `<stem>*/out/<stem>.net` by mtime, :47, and records no netlist, so its readings do not bind anyway.)
-    "reliability.py": ("tools/pcb_reliability.yaml", "tools/pcb_board_facts.yaml"),
+    # reliability.py, the repaired tool of stream d6rel (28 September 2026, S-89; declared by
+    # v2/docs/records/d6rel/apply_config_inputs_reliability.py): judge() reads the declared list (the inventory's
+    # rules, the open items, every board's classes, exclusions and `written_against` pin) and records it by sha256
+    # in inputs.list; _cited() reads every document the list cites under v2/vendor/ and compares its bytes with the
+    # sha256 the list carries, so each is an input too (30 documents, listed from the list on the day this entry
+    # was written; a citation added to the list later is added here). It no longer reads pcb_board_facts.yaml
+    # and no longer takes the newest netlist by mtime: the artefact is the declared phase's (wear_inventory.artefact
+    # through phase_artefacts), recorded by sha256 and by content, so its readings bind.
+    "reliability.py": ("tools/pcb_reliability.yaml",
+                       "../vendor/battery/amass-xt60-spec-tme.pdf",
+                       "../vendor/cm5/amphenol-10164227-bergstak-0.40mm-product-sheet.pdf",
+                       "../vendor/connectors/amphenol-rjhse5380-rj45-jack.pdf",
+                       "../vendor/connectors/gct-sim8060-nano-sim-socket.pdf",
+                       "../vendor/connectors/hro-type-c-31-m-12.pdf",
+                       "../vendor/connectors/jst-handling-precautions-2020.pdf",
+                       "../vendor/connectors/jst-ph-catalogue.pdf",
+                       "../vendor/connectors/jst-sh-catalogue.pdf",
+                       "../vendor/connectors/jst-vh-catalogue.pdf",
+                       "../vendor/connectors/jst-xh-catalogue.pdf",
+                       "../vendor/connectors/millmax-0858-product-page-20260927.html",
+                       "../vendor/connectors/molex-2086581001-part-page-wayback-20251116.html",
+                       "../vendor/connectors/wurth-wr-bhd-box-header-61201021621.pdf",
+                       "../vendor/connectors/wurth-wr-bhd-box-header-61201621621.pdf",
+                       "../vendor/connectors/wurth-wr-bhd-box-header-61202621621.pdf",
+                       "../vendor/connectors/wurth-wr-com-usb3-a-692122030100.pdf",
+                       "../vendor/hirose/hirose-fh34-series-ffc-connectors.pdf",
+                       "../vendor/hirose/hirose-ufl-series-catalogue-2009-02-digikey-copy.pdf",
+                       "../vendor/keystone/M65p42.pdf",
+                       "../vendor/keystone/M65p9.pdf",
+                       "../vendor/m2/te-2199119-m2-b-key.pdf",
+                       "../vendor/omron/omron-g6k-signal-relay.pdf",
+                       "../vendor/precidip/precidip-813-spring-loaded-connector-pages-31-34.pdf",
+                       "../vendor/rf/amphenol-rf-132134-11-part-page-wayback-20260217.html",
+                       "../vendor/rf/amphenol-rf-132134-part-page-wayback-20260213.html",
+                       "../vendor/rf/radiall-R222M00720-tds.pdf",
+                       "../vendor/seals/apem-5000-series-datasheet-rs-copy.pdf",
+                       "../vendor/switches/ck-atp16-series-datasheet.pdf",
+                       "../vendor/switches/ck-atp19-series-datasheet.pdf",
+                       "../vendor/switches/nkk-m-series-toggles-datasheet.pdf"),
     # check_pcb_e5.py:38 `_bt.value("e5", "copper_layers", 2)`; every other number is a literal in the tool.
     "check_pcb_e5.py": ("tools/boards/e5.json",),
     # fab_limits.py:61-63 the project file beside the board (design rules, net classes); :31 DOC, the fabricator
