@@ -1,0 +1,120 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "port_protect.py",
+  "files": {
+   "boardtable.py": "41bd92e61f12c374",
+   "intent.py": "f1ac033e0f3c10f1",
+   "kisch.py": "3e28374d15be25e0",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "port_protect.py": "2179463c3d90d9dc",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "a260597cb25267f5",
+  "unresolved": []
+ },
+ "counts": {
+  "answered_in_part": 0,
+  "behind_an_active_part": 0,
+  "clamps": 6,
+  "clamps_one_way": 6,
+  "clamps_reversed": 0,
+  "clamps_symbol_mismatch": 0,
+  "clamps_unjudged": 0,
+  "declarations_refused": 0,
+  "declared": 2,
+  "ground_pins_not_judged": 2,
+  "internal_pins": 0,
+  "not_on_netlist": 0,
+  "ports": 2,
+  "uncovered_pins": 290,
+  "unprotected": 0
+ },
+ "denominator": 17,
+ "evidence": [
+  "UNCOVERED J_5V_DEV.1 on +5V_DEV",
+  "UNCOVERED J_5V_S1.1 on +5V_S1",
+  "UNCOVERED J_5V_S2.1 on +5V_S2",
+  "UNCOVERED J_5V_S3.1 on +5V_S3",
+  "UNCOVERED J_AB1.1 on USB_D8_P",
+  "UNCOVERED J_AB1.10 on PI_KILL",
+  "UNCOVERED J_AB1.11 on SDA",
+  "UNCOVERED J_AB1.12 on SCL",
+  "UNCOVERED J_AB1.13 on EXP_INT",
+  "UNCOVERED J_AB1.14 on TR_APRS",
+  "UNCOVERED J_AB1.15 on EMCON_HW",
+  "UNCOVERED J_AB1.16 on TX_INHIBIT_n",
+  "UNCOVERED J_AB1.17 on SLOT_EN1",
+  "UNCOVERED J_AB1.18 on SLOT_EN2",
+  "UNCOVERED J_AB1.19 on SLOT_EN3",
+  "UNCOVERED J_AB1.2 on USB_D8_N",
+  "UNCOVERED J_AB1.20 on ZEROIZE_HW",
+  "UNCOVERED J_AB1.21 on SHORE_INHIBIT",
+  "UNCOVERED J_AB1.25 on USB_E6_P",
+  "UNCOVERED J_AB1.26 on USB_E6_N",
+  "UNCOVERED J_AB1.9 on PI_SHDN_REQ",
+  "UNCOVERED J_AB2.1 on USB_WALL_P",
+  "UNCOVERED J_AB2.2 on USB_WALL_N",
+  "UNCOVERED J_CAM.1 on +5V_CAM",
+  "UNCOVERED J_CAM.2 on CAM_DM",
+  "UNCOVERED J_CAM.3 on CAM_DP",
+  "UNCOVERED J_DBG1.2 on UART0_TX1",
+  "UNCOVERED J_DBG1.3 on UART0_RX1",
+  "UNCOVERED J_DBG1.4 on SDA_CM1",
+  "UNCOVERED J_DBG1.5 on SCL_CM1",
+  "UNCOVERED J_DBG2.2 on UART0_TX2",
+  "UNCOVERED J_DBG2.3 on UART0_RX2",
+  "UNCOVERED J_DBG2.4 on SDA_CM2",
+  "UNCOVERED J_DBG2.5 on SCL_CM2",
+  "UNCOVERED J_DBG3.2 on UART0_TX3",
+  "UNCOVERED J_DBG3.3 on UART0_RX3",
+  "UNCOVERED J_DBG3.4 on SDA_CM3",
+  "UNCOVERED J_DBG3.5 on SCL_CM3",
+  "UNCOVERED J_FAN1.1 on +5V_S1",
+  "UNCOVERED J_FAN1.3 on FAN_TACHO1"
+ ],
+ "inputs": {
+  "board": "b",
+  "intent": {
+   "path": "pcb-b-compute-b19/out/pcb-b-compute-intent.json",
+   "sha256_16": "96ee391b3e3f638d"
+  },
+  "netlist": {
+   "content16": "b9dbb9c4a430d108",
+   "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
+   "sha256_16": "028997a6c5e8810f"
+  }
+ },
+ "missing_input": null,
+ "note": "every declared external conductor meets a protection part before a chip; 0 clamp(s) could not be judged for polarity and 290 connector pin(s) are covered by no entry of the declaration, so nobody has said whether they leave the case",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "TRN-001": "5d38bd6db7d4e11f"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "TRN-001"
+ ],
+ "runtime": {
+  "python": "3.11.2"
+ },
+ "tool": "port_protect_b",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "b8ff01c3b5225f82"
+ },
+ "ts": "2026-09-27T22:05:30Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown",
+ "writer": {
+  "file": "port_protect.py",
+  "sha16": "2179463c3d90d9dc"
+ }
+}

@@ -1,0 +1,215 @@
+##### D RF_ANT
+NET RF_ANT (2 nodes)  [RF_ANT]
+  J_ANT      pin 1   In             passive      SMA jack: antenna pigtail to A22's VHF jack J_RF1
+  K1         pin 6                  passive      Omron G6K-2F-Y 5 VDC DPDT signal relay, T/R
+##### D RF_PAOUT
+NET RF_PAOUT (3 nodes)  [RF_PAOUT]
+  C58        pin 1                  passive      22p 500V NP0 1206
+  J_PAOUT    pin 1   In             passive      SMA jack: PA output (coax from the RA30H1317M1 output on the plate)
+  L1         pin 1   1              passive      68nH 0805 (LPF, 145 MHz 5th order; values to be verified in MESHSAT-818)
+  NET RF_LPF_M (3 nodes)  [through L1]
+    C59        pin 1                  passive      39p 500V NP0 1206
+    L1         pin 2   2              passive      68nH 0805 (LPF, 145 MHz 5th order; values to be verified in MESHSAT-818)
+    L2         pin 1   1              passive      68nH 0805 (LPF)
+##### D RF_DRV
+NET RF_DRV (2 nodes)  [RF_DRV]
+  J_PAIN     pin 1   In             passive      U.FL socket: PA drive (coax to the RA30H1317M1 input on the plate)
+  R56        pin 2                  passive      27 1% 2010
+  NET RF_PAD_M (3 nodes)  [through R56]
+    R54        pin 2                  passive      27 1% 2010
+    R55        pin 1                  passive      36 1% 2010
+    R56        pin 1                  passive      27 1% 2010
+##### D HS1_SPK
+NET HS1_SPK (3 nodes)  [HS1_SPK]
+  D9         pin 2   A2             passive      PESD5V0S1BA bidirectional ESD clamp at the jack: headset 1 speaker
+  J_HS1      pin 1   Pin_1          passive      JST-PH 1x5 socket: headset 1, SPK GND MIC GND PTT (the lead runs to the face plate U-174/U jack)
+  U7         pin 16  OUTL           passive      TI TPA6132A2 headphone amplifier (QFN-16), receive audio to the two headset leads
+##### D HS1_MIC
+NET HS1_MIC (5 nodes)  [HS1_MIC]
+  C41        pin 1                  passive      1u
+  C44        pin 1                  passive      1n NP0
+  D10        pin 2   A2             passive      PESD12VL1BA bidirectional ESD clamp at the jack: headset 1 microphone, above the electret bias
+  JP1        pin 1   A              passive      electret bias headset 1 (close for an electret microphone)
+  J_HS1      pin 3   Pin_3          passive      JST-PH 1x5 socket: headset 1, SPK GND MIC GND PTT (the lead runs to the face plate U-174/U jack)
+  NET HS1_BIAS_R (2 nodes)  [through JP1]
+    JP1        pin 2   B              passive      electret bias headset 1 (close for an electret microphone)
+    R43        pin 1                  passive      2.2k
+##### D PTT_HS1_n
+NET PTT_HS1_n (6 nodes)  [PTT_HS1_n]
+  C49        pin 1                  passive      100n
+  D11        pin 2   A2             passive      PESD5V0S1BA bidirectional ESD clamp at the jack: headset 1 push to talk
+  J_HS1      pin 5   Pin_5          passive      JST-PH 1x5 socket: headset 1, SPK GND MIC GND PTT (the lead runs to the face plate U-174/U jack)
+  Q4         pin 2   S              passive      2N7002
+  R68        pin 1                  passive      10k
+  U9         pin 1   PTT_HS1_n      passive      74LVC1G08 AND (1 A 2 B 3 GND 4 Y 5 VCC): both headset PTT lines idle high
+  NET +3V3_D8 (35 nodes)  [through R68]
+    C51        pin 1                  passive      100n
+    C52        pin 1                  passive      100n
+    C53        pin 1                  passive      100n
+    C54        pin 1                  passive      100n
+    C55        pin 1                  passive      100n
+    C56        pin 1                  passive      100n
+    C66        pin 1                  passive      100n
+    C8         pin 1                  passive      1u
+    C9         pin 1                  passive      10u
+    Q3         pin 1   G              input        2N7002
+    Q4         pin 1   G              input        2N7002
+    Q5         pin 1   G              input        2N7002
+    Q8         pin 1   G              input        2N7002
+    Q9         pin 1   G              input        2N7002
+    R1         pin 1                  passive      2.2k
+    R29        pin 1                  passive      1k
+    R30        pin 1                  passive      1k
+    R5         pin 2                  passive      10k
+    R51        pin 1                  passive      2.2k
+    R66        pin 2                  passive      10k
+    R68        pin 2                  passive      10k
+    R70        pin 2                  passive      10k
+    R76        pin 2                  passive      10k
+    R78        pin 2                  passive      10k
+    R90        pin 1                  passive      11k 1%
+    TP5        pin 1   1              passive      +3V3_D8
+    U1         pin 5   +3V3_D8        passive      TLV75533PDBV 3.3 V 500 mA LDO (1 IN 2 GND 3 EN 4 NC 5 OUT)
+    U10        pin 5   +3V3_D8        passive      74LVC1G08 AND: headsets AND software PTT (RTS)
+    U11        pin 5   +3V3_D8        passive      74LVC1G04 inverter (2 A 4 Y): PTT_ANY
+    U12        pin 5   +3V3_D8        passive      74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)
+    U13        pin 5   +3V3_D8        passive      74LVC1G06 open-drain inverter (2 A 4 Y): KEY -> SA868 PTT (low = transmit; released = receive, held 
+    U14        pin 5   +3V3_D8        passive      74LVC1G08 AND: PA_KEY = KEY AND PA_EN (A22's PA rail state)
+    U18        pin 5   +3V3_D8        passive      74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): KEY -> PTT_MIR, the one-way driver of the PTT mirror TR
+    U7         pin 6   G0             passive      TI TPA6132A2 headphone amplifier (QFN-16), receive audio to the two headset leads
+    U9         pin 5   +3V3_D8        passive      74LVC1G08 AND (1 A 2 B 3 GND 4 Y 5 VCC): both headset PTT lines idle high
+##### D HS2_SPK
+NET HS2_SPK (3 nodes)  [HS2_SPK]
+  D12        pin 2   A2             passive      PESD5V0S1BA bidirectional ESD clamp at the jack: headset 2 speaker
+  J_HS2      pin 1   Pin_1          passive      JST-PH 1x5 socket: headset 2, SPK GND MIC GND PTT (the lead runs to the face plate U-174/U jack)
+  U7         pin 5   OUTR           passive      TI TPA6132A2 headphone amplifier (QFN-16), receive audio to the two headset leads
+##### D HS2_MIC
+NET HS2_MIC (5 nodes)  [HS2_MIC]
+  C42        pin 1                  passive      1u
+  C45        pin 1                  passive      1n NP0
+  D13        pin 2   A2             passive      PESD12VL1BA bidirectional ESD clamp at the jack: headset 2 microphone, above the electret bias
+  JP2        pin 1   A              passive      electret bias headset 2
+  J_HS2      pin 3   Pin_3          passive      JST-PH 1x5 socket: headset 2, SPK GND MIC GND PTT (the lead runs to the face plate U-174/U jack)
+  NET HS2_BIAS_R (2 nodes)  [through JP2]
+    JP2        pin 2   B              passive      electret bias headset 2
+    R44        pin 1                  passive      2.2k
+##### D PTT_HS2_n
+NET PTT_HS2_n (6 nodes)  [PTT_HS2_n]
+  C50        pin 1                  passive      100n
+  D14        pin 2   A2             passive      PESD5V0S1BA bidirectional ESD clamp at the jack: headset 2 push to talk
+  J_HS2      pin 5   Pin_5          passive      JST-PH 1x5 socket: headset 2, SPK GND MIC GND PTT (the lead runs to the face plate U-174/U jack)
+  Q5         pin 2   S              passive      2N7002
+  R70        pin 1                  passive      10k
+  U9         pin 2   PTT_HS2_n      passive      74LVC1G08 AND (1 A 2 B 3 GND 4 Y 5 VCC): both headset PTT lines idle high
+  NET +3V3_D8 (35 nodes)  [through R70]
+    C51        pin 1                  passive      100n
+    C52        pin 1                  passive      100n
+    C53        pin 1                  passive      100n
+    C54        pin 1                  passive      100n
+    C55        pin 1                  passive      100n
+    C56        pin 1                  passive      100n
+    C66        pin 1                  passive      100n
+    C8         pin 1                  passive      1u
+    C9         pin 1                  passive      10u
+    Q3         pin 1   G              input        2N7002
+    Q4         pin 1   G              input        2N7002
+    Q5         pin 1   G              input        2N7002
+    Q8         pin 1   G              input        2N7002
+    Q9         pin 1   G              input        2N7002
+    R1         pin 1                  passive      2.2k
+    R29        pin 1                  passive      1k
+    R30        pin 1                  passive      1k
+    R5         pin 2                  passive      10k
+    R51        pin 1                  passive      2.2k
+    R66        pin 2                  passive      10k
+    R68        pin 2                  passive      10k
+    R70        pin 2                  passive      10k
+    R76        pin 2                  passive      10k
+    R78        pin 2                  passive      10k
+    R90        pin 1                  passive      11k 1%
+    TP5        pin 1   1              passive      +3V3_D8
+    U1         pin 5   +3V3_D8        passive      TLV75533PDBV 3.3 V 500 mA LDO (1 IN 2 GND 3 EN 4 NC 5 OUT)
+    U10        pin 5   +3V3_D8        passive      74LVC1G08 AND: headsets AND software PTT (RTS)
+    U11        pin 5   +3V3_D8        passive      74LVC1G04 inverter (2 A 4 Y): PTT_ANY
+    U12        pin 5   +3V3_D8        passive      74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)
+    U13        pin 5   +3V3_D8        passive      74LVC1G06 open-drain inverter (2 A 4 Y): KEY -> SA868 PTT (low = transmit; released = receive, held 
+    U14        pin 5   +3V3_D8        passive      74LVC1G08 AND: PA_KEY = KEY AND PA_EN (A22's PA rail state)
+    U18        pin 5   +3V3_D8        passive      74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): KEY -> PTT_MIR, the one-way driver of the PTT mirror TR
+    U7         pin 6   G0             passive      TI TPA6132A2 headphone amplifier (QFN-16), receive audio to the two headset leads
+    U9         pin 5   +3V3_D8        passive      74LVC1G08 AND (1 A 2 B 3 GND 4 Y 5 VCC): both headset PTT lines idle high
+##### D USB3_P
+NET USB3_P (3 nodes)  [USB3_P]
+  J_USB3     pin 3   Pin_3          passive      JST-PH 1x4 socket: spare hub port 3, 5V D- D+ GND (the lead is made up at build)
+  R20        pin 2                  passive      22
+  R22        pin 1                  passive      15k
+  NET HUB_DP3 (2 nodes)  [through R20]
+    R20        pin 1                  passive      22
+    U4         pin 20  DP3            passive      TUSB2046IBVFR four-port USB 2.0 full-speed hub (TI, LQFP-32 VF, -40 to 85 C, VCC 3.3 to 3.6 from +3V
+##### D USB3_N
+NET USB3_N (3 nodes)  [USB3_N]
+  J_USB3     pin 2   Pin_2          passive      JST-PH 1x4 socket: spare hub port 3, 5V D- D+ GND (the lead is made up at build)
+  R21        pin 2                  passive      22
+  R23        pin 1                  passive      15k
+  NET HUB_DM3 (2 nodes)  [through R21]
+    R21        pin 1                  passive      22
+    U4         pin 19  DM3            passive      TUSB2046IBVFR four-port USB 2.0 full-speed hub (TI, LQFP-32 VF, -40 to 85 C, VCC 3.3 to 3.6 from +3V
+##### D FLANGE_NTC
+NET FLANGE_NTC (5 nodes)  [FLANGE_NTC]
+  C72        pin 1                  passive      1n NP0
+  J_FLANGE   pin 1   Pin_1          passive      JST-XH 1x2 socket: power amplifier flange NTC lead (Semitec 103AT-2 on the flange, bench-fitted): NT
+  R92        pin 2                  passive      2k 1%
+  R93        pin 1                  passive      1k
+  TP26       pin 1   1              passive      FLANGE_NTC
+  NET +3V3 (18 nodes)  [through R92]
+    C63        pin 1                  passive      100n
+    C67        pin 1                  passive      100n
+    C68        pin 1                  passive      100n
+    C75        pin 1                  passive      100n
+    J_HARN1    pin 13  Pin_13         passive      A22 mezzanine harness J_MEZZ1 (IDC 2x8): USB pair, PTT mirror, inhibit, PA rail state, I2C, 3.3 V
+    R67        pin 2                  passive      10k
+    R69        pin 2                  passive      10k
+    R71        pin 2                  passive      10k
+    R77        pin 2                  passive      10k
+    R79        pin 2                  passive      10k
+    R92        pin 1                  passive      2k 1%
+    R94        pin 1                  passive      1k
+    U16        pin 2   A1             input        PCA9555PW 0x26: COS, PTT states, KEY, PA_KEY in; exciter PD, amplifier EN, codec mute out; eight spa
+    U16        pin 24  VDD            power_in     PCA9555PW 0x26: COS, PTT states, KEY, PA_KEY in; exciter PD, amplifier EN, codec mute out; eight spa
+    U16        pin 3   A2             input        PCA9555PW 0x26: COS, PTT states, KEY, PA_KEY in; exciter PD, amplifier EN, codec mute out; eight spa
+    U19        pin 5   +3V3           passive      74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): KEY read back into U16 IO0_3, one way (VCC the harness 
+    U20        pin 5   +3V3           passive      74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): PA_KEY read back into U16 IO0_4, one way (VCC the harne
+    U22        pin 8   +3V3           passive      ADS1115IDGSR 16-bit ADC at 0x48 (1 ADDR 2 ALERT/RDY 3 GND 4 AIN0 5 AIN1 6 AIN2 7 AIN3 8 VDD 9 SDA 10
+  NET FLANGE_AIN0 (3 nodes)  [through R93]
+    C73        pin 1                  passive      100n
+    R93        pin 2                  passive      1k
+    U22        pin 4   FLANGE_AIN0    passive      ADS1115IDGSR 16-bit ADC at 0x48 (1 ADDR 2 ALERT/RDY 3 GND 4 AIN0 5 AIN1 6 AIN2 7 AIN3 8 VDD 9 SDA 10
+##### D VGG_SW
+NET VGG_SW (5 nodes)  [VGG_SW]
+  C62        pin 1                  passive      2.2u 16V X5R
+  J_VGG      pin 1   Pin_1          passive      JST-PH 1x2 socket: PA gate bias, VGG GND (the lead runs to the RA30H1317M1 VGG pin)
+  R82        pin 1                  passive      71.5k 1%
+  TP7        pin 1   1              passive      VGG_SW
+  U15        pin 1   VGG_SW         passive      TLV75801PDRVR adjustable LDO, PA gate bias VGG 4.48 V while PA_KEY is high (1 OUT 2 FB 3 GND 4 EN 5 
+  NET VGG_FB (3 nodes)  [through R82]
+    R82        pin 2                  passive      71.5k 1%
+    R83        pin 1                  passive      10.0k 1%
+    U15        pin 2   VGG_FB         passive      TLV75801PDRVR adjustable LDO, PA gate bias VGG 4.48 V while PA_KEY is high (1 OUT 2 FB 3 GND 4 EN 5 
+##### D USB_D8_P
+NET USB_D8_P (4 nodes)  [USB_D8_P]
+  J_HARN1    pin 1   Pin_1          passive      A22 mezzanine harness J_MEZZ1 (IDC 2x8): USB pair, PTT mirror, inhibit, PA rail state, I2C, 3.3 V
+  R6         pin 1                  passive      22
+  U5         pin 1   I/O1           passive      USBLC6-2SC6
+  U5         pin 6   I/O1           passive      USBLC6-2SC6
+  NET HUB_DP0 (3 nodes)  [through R6]
+    R6         pin 2                  passive      22
+    R8         pin 1                  passive      1.5k
+    U4         pin 1   DP0            passive      TUSB2046IBVFR four-port USB 2.0 full-speed hub (TI, LQFP-32 VF, -40 to 85 C, VCC 3.3 to 3.6 from +3V
+##### D USB_D8_N
+NET USB_D8_N (4 nodes)  [USB_D8_N]
+  J_HARN1    pin 2   Pin_2          passive      A22 mezzanine harness J_MEZZ1 (IDC 2x8): USB pair, PTT mirror, inhibit, PA rail state, I2C, 3.3 V
+  R7         pin 1                  passive      22
+  U5         pin 3   I/O2           passive      USBLC6-2SC6
+  U5         pin 4   I/O2           passive      USBLC6-2SC6
+  NET HUB_DM0 (2 nodes)  [through R7]
+    R7         pin 2                  passive      22
+    U4         pin 2   DM0            passive      TUSB2046IBVFR four-port USB 2.0 full-speed hub (TI, LQFP-32 VF, -40 to 85 C, VCC 3.3 to 3.6 from +3V

@@ -1,0 +1,96 @@
+port_protect: board A declares 3 external port(s); 3 found on this netlist
+port_protect: 5 clamp(s) judged for polarity: 0 reversed, 0 drawn with a symbol that does not match the part's direction, 0 unjudged
+  CLAMP D1     OK       K/A       uni    cathode (its K pin) on VBAT, anode on the return GND
+  CLAMP D2     OK       K/A       uni    cathode (its K pin) on VIN_RAW, anode on the return GND
+  CLAMP D22    OK       K/A       uni    cathode (its K pin) on FE_VZ, anode on the return GND
+  CLAMP D3     OK       K/A       uni    cathode (its K pin) on +3V3, anode on the return GND
+  CLAMP D4     OK       K/A       uni    cathode (its K pin) on PD_VBUS, anode on the return GND
+  J_DOCK       12 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [shore and vehicle DC arriving over the dock from the wall recept]
+  J_USBW       4 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [the wall USB host port through the MIL-DTL-38999 receptacle: a p]
+  J_USBC_OUT   5 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [the USB-C outlet on the connector plate, out of the case: VBUS m]
+  SKIPPED J_DOCK.1 on GND: a ground or a no-connect, not judged
+  SKIPPED J_DOCK.2 on GND: a ground or a no-connect, not judged
+  SKIPPED J_USBW.4 on GND: a ground or a no-connect, not judged
+  SKIPPED J_USBC_OUT.4 on GND: a ground or a no-connect, not judged
+  SKIPPED J_USBC_OUT.5 on GND: a ground or a no-connect, not judged
+port_protect: 0 connector pin(s) declared internal, 76 connector pin(s) that no entry covers
+  UNCOVERED J_54V.1 on +54V_POE: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_5V_DEV.1 on +5V_DEV: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_5V_S1.1 on +5V_S1: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_5V_S2.1 on +5V_S2: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_5V_S3.1 on +5V_S3: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_AB1.1 on USB_D8_P: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_AB1.10 on PI_KILL: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_AB1.11 on SDA: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_AB1.12 on SCL: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_AB1.13 on EXP_INT: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_AB1.14 on TR_APRS: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_AB1.15 on EMCON_HW: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_AB1.16 on TX_INHIBIT_n: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_AB1.17 on SLOT_EN1: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_AB1.18 on SLOT_EN2: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_AB1.19 on SLOT_EN3: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_AB1.2 on USB_D8_N: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_AB1.20 on ZEROIZE_HW: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_AB1.21 on SHORE_INHIBIT: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_AB1.25 on USB_E6_P: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_AB1.26 on USB_E6_N: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_AB1.9 on PI_SHDN_REQ: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_AB2.1 on USB_WALL_P: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_AB2.2 on USB_WALL_N: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_BM1.1 on RF_VHF: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_BM10.1 on RF_IRIDIUM: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_BM11.1 on RF_LORA: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_BM2.1 on RF_HF: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_BM3.1 on RF_WIFI24: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_BM4.1 on RF_GNSS: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_BM5.1 on RF_SDR: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_BM6.1 on RF_P2PA: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_BM7.1 on RF_P2PB: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_BM8.1 on RF_5G1: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_BM9.1 on RF_5G2: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_CP1.1 on CELL+: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_CP2.1 on CELL+: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_CP3.1 on CELL+: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_CP4.1 on CELL+: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_DOCK.10 on USB_E6_N: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_DOCK.12 on DOCK_SPARE: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_DOCK.8 on SHORE_INHIBIT: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_DOCK.9 on USB_E6_P: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_HEAT.1 on VHEAT: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_HF.1 on +12V_HF: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_MAINSW.1 on MAIN_PB: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_MEZZ1.1 on USB_D8_P: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_MEZZ1.10 on SDA: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_MEZZ1.11 on SCL: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_MEZZ1.12 on EXP_INT: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_MEZZ1.13 on +3V3: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_MEZZ1.15 on ZEROIZE_HW: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_MEZZ1.16 on AB_SPARE: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_MEZZ1.2 on USB_D8_N: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_MEZZ1.7 on TR_APRS: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_MEZZ1.8 on TX_INHIBIT_n: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_MEZZ1.9 on PA_EN: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_MEZZ_PWR1.1 on +5V_D8: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_MON.1 on VMON: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_PA.1 on +13V8_PA: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_PRE1.1 on PRECHG: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_RF1.1 on RF_VHF: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_RF10.1 on RF_IRIDIUM: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_RF11.1 on RF_LORA: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_RF2.1 on RF_HF: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_RF3.1 on RF_WIFI24: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_RF4.1 on RF_GNSS: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_RF5.1 on RF_SDR: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_RF6.1 on RF_P2PA: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_RF7.1 on RF_P2PB: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_RF8.1 on RF_5G1: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_RF9.1 on RF_5G2: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_VR1.1 on VIN_RAW: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_VR2.1 on VIN_RAW: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_VR3.1 on VIN_RAW: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_VR4.1 on VIN_RAW: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  FAIL DECLARATION J_DOCK.1 is on GND: the external entry lists a pin that carries no supply and no signal (a ground or a no-connect), so it names no conductor there and nothing was judged
+  FAIL DECLARATION J_DOCK.2 is on GND: the external entry lists a pin that carries no supply and no signal (a ground or a no-connect), so it names no conductor there and nothing was judged
+verdict: port_protect           FAIL         of 26 {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 5, "clamps_one_way": 5, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unjudged": 0, "declarations_refused": 2, "declared": 3, "ground_pins_not_judged": 5, "internal_pins": 0, "not_on_netlist": 0, "ports": 3, "uncovered_pins": 76, "unprotected": 0} | 2 entry(ies) of the declaration name no conductor, 0 conductor(s) reach a semiconductor with nothing between, 0 meet their clamp only through an active part, which therefore sees the transient itself, and 0 clamp(s) are reversed or drawn so their polarity cannot be read; 76 connector pin(s) are covered by no entry
+rc=1

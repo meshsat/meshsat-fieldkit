@@ -20,6 +20,31 @@ knows which is which and nothing else does, so the board says, with a reason for
 A board that declares no external port at all is INCONCLUSIVE, never a pass: no board of this kit is truly
 internal, so an empty declaration means nobody has written it yet.
 
+THE DECLARATION IS JUDGED TOO (28 September 2026, MESHSAT-1357, the review of decision 31). Board A declared J_DOCK
+pins 1 and 2 as the shore and vehicle input. Session choice SC-55 (EQ-16) moved VIN_RAW to the four power pins J_VR1
+to J_VR4 and left those two pins ground, and this tool skips a ground pin, so the entry judged nothing and the rule
+read PASS while the conductor it was written for stood on four pins no entry named. Two checks close that class:
+  - AN ENTRY THAT NAMES NO CONDUCTOR IS REFUSED (FAIL). A pin the entry lists that the connector does not have, or
+    that lands on a ground or a no-connect, names no supply and no signal; so does an entry none of whose pins
+    carries one. A declaration that judges nothing is a wrong declaration, never a pass.
+  - A CONNECTOR PIN NO ENTRY COVERS IS REPORTED, AND THE VERDICT IS INCONCLUSIVE WHILE ONE STANDS. Every pin of
+    every connector (a reference J, P, PAD or W) that carries a supply or a signal is either in `external_ports` or
+    in `internal_ports`, the list of {ref, pins, why} that says where a lead that stays inside the case goes. A pin
+    in neither is a conductor nobody has classified, and a conductor nobody has classified may be one that leaves
+    the case. A board that declares a zero of external ports with its reason has said that of every connector it
+    carries, and is read as before.
+  - THE DECLARATION IS HELD AGAINST THE SET A REVIEW ENUMERATED (the fresh check of stream d8dec31, item B1; open
+    item S-88, finding H3-02 of the independent review of handover H3). The two checks above catch an entry moved onto
+    ground pins (FAIL) and an entry removed (INCONCLUSIVE, the pins are uncovered); they did not catch an entry MOVED
+    from `external_ports` into `internal_ports` with a twenty-character reason, which shrank the judged coverage with
+    no refusal (board A's J_USBW moved that way read PASS of 38 instead of 42). So `pcb_port_reviews.json`, beside the
+    board tables, holds for each board the external pins a named review enumerated from the netlist, pin by pin, and
+    the declaration's external pins must be exactly those: a reviewed pin that is declared internal, that no entry
+    covers, that is not on the netlist or that carries no supply or signal any more reads INCONCLUSIVE by name, and so
+    does a declared external pin that no review holds, until the reviewed set is changed with its reason and the review
+    it rests on (a `changes` entry). A board that declares external ports and has no reviewed set reads INCONCLUSIVE:
+    nobody has enumerated what leaves it, so a reclassification there could not be seen.
+
 Usage: port_protect.py <netlist.net> [--json]
 """
 import os, re, sys, json
@@ -74,6 +99,207 @@ def is_ground(name):
     return bool(GROUND.match((name or "").strip()))
 
 
+# A CONNECTOR, BY ITS REFERENCE (28 September 2026). The library cannot say it: these generators draw several
+# integrated circuits and a common-mode choke with Connector_Generic symbols (board E's U3 and L2). The reference
+# can: J1 and J_DOCK, P_VR (a solder pad to a wire), PAD_W1 (a bare electrode), W_P (a soldered lead). JP1 is a
+# solder jumper and is not one; a test point is a probe site on the board and leaves it on nothing.
+CONNECTOR = re.compile(r"^(J|P|PAD|W)(_|\d|$)")
+
+
+def carries_conductor(net):
+    """Does this net carry a supply or a signal? A ground, a no-connect and KiCad's own name for a pin that nothing
+    reaches (unconnected-(...)) do not."""
+    n = (net or "").strip()
+    return not (n.upper() in SKIP_NETS or is_ground(n) or n.lower().startswith("unconnected-"))
+
+
+def cover(by_ref, letter):
+    """What the board's declaration covers and what it leaves (28 September 2026, the review of decision 31).
+
+    {refused: [text], covered: {(ref, pin): "external" | "off board" | "internal"}, uncovered: [(ref, pin, net)],
+     grounds: [(ref, pin, net)], internal: n pins, internal_missing: [ref]}
+
+    `refused` holds every entry that names no conductor: a listed pin the connector does not have, a listed pin on
+    a ground or a no-connect, an entry none of whose pins carries a supply or a signal, an internal entry with no
+    reason, and a pin declared both ways. `uncovered` holds every connector pin carrying a supply or a signal that
+    no entry names. `grounds` names the ground and no-connect pins of the declared external connectors, which are
+    not judged and which the output owes the reader by name."""
+    t = _bt.table(letter or "") or {}
+    refused, covered, grounds, missing = [], {}, [], []
+
+    def walk(entry, kind):
+        ref = entry.get("ref") if isinstance(entry, dict) else str(entry)
+        if not ref:
+            refused.append("an %s entry names no connector: %r" % (kind, entry)); return
+        if kind == "internal" and len(str((entry.get("why") if isinstance(entry, dict) else "") or "").strip()) < 20:
+            refused.append("%s: declared internal with no reason, so nobody can audit where the lead goes and the "
+                           "entry covers nothing" % ref)
+            return
+        if ref not in by_ref:
+            if kind == "internal": missing.append(ref)
+            return
+        on_part = dict(by_ref[ref])
+        listed = [str(x) for x in ((entry.get("pins") if isinstance(entry, dict) else None) or [])]
+        for p in listed:
+            if p not in on_part:
+                refused.append("%s: the %s entry lists pin %s and %s has no such pin on this netlist" % (ref, kind, p, ref))
+            elif not carries_conductor(on_part[p]):
+                refused.append("%s.%s is on %s: the %s entry lists a pin that carries no supply and no signal (a "
+                               "ground or a no-connect), so it names no conductor there and nothing was judged"
+                               % (ref, p, on_part[p] or "no net", kind))
+        mine = [(p, n) for p, n in sorted(on_part.items()) if (not listed or p in listed)]
+        live = [(p, n) for p, n in mine if carries_conductor(n)]
+        if not live and not listed:
+            refused.append("%s: no pin of this %s entry carries a supply or a signal (%s), so it names no conductor "
+                           "and nothing was judged" % (ref, kind, ", ".join("%s on %s" % (p, n or "no net") for p, n in mine[:6])))
+        if kind != "internal":
+            grounds.extend((ref, p, n) for p, n in mine if not carries_conductor(n))
+        label = ("off board" if (isinstance(entry, dict) and entry.get("off_board")) else "external") if kind == "external" else "internal"
+        for p, _n in live:
+            if (ref, p) in covered and covered[(ref, p)] != label and "internal" in (label, covered[(ref, p)]):
+                refused.append("%s.%s is declared both %s and %s: a conductor leaves the case or it does not"
+                               % (ref, p, covered[(ref, p)], label))
+            covered.setdefault((ref, p), label)
+
+    for e in (t.get("external_ports") or []): walk(e, "external")
+    for e in (t.get("internal_ports") or []): walk(e, "internal")
+    uncovered = [(ref, p, n) for ref in sorted(by_ref) if CONNECTOR.match(ref)
+                 for p, n in sorted(by_ref[ref]) if carries_conductor(n) and (ref, p) not in covered]
+    return dict(refused=refused, covered=covered, uncovered=uncovered, grounds=grounds,
+                internal=sum(1 for v in covered.values() if v == "internal"), internal_missing=missing)
+
+
+# ---------------------------------------------------------------- the reviewed set (28 September 2026, S-88, B1)
+#
+# WHY A SECOND FILE AND NOT A KEY IN THE BOARD TABLE. The board tables are written by many hands (generator owners,
+# chain parameters, the apply scripts of every stream), and a reclassification made in one of them would carry its own
+# approval in the same hunk if the reviewed set lived beside the declaration. pcb_port_reviews.json has one purpose and
+# one writer, the review that enumerated the set (the integrator files it), and a change to it is visible as a change
+# to that file alone. Its records name the review document, the netlist the review read and every pin, with the net it
+# carried, so that a pin whose conductor has moved since the review is seen (board A's J_DOCK shape: the entry stayed
+# and its pins went to ground). It is a configuration input of this tool, declared in rules_status.CONFIG_INPUTS and
+# recorded in every reading's inputs by sha, so a change to it makes the readings stale as a change to a board table does.
+REVIEWS = os.path.join(HERE, "pcb_port_reviews.json")
+REPO = os.path.normpath(os.path.join(HERE, "..", "..", ".."))
+WHY_MIN = 40
+
+
+def reviews(path=None):
+    """({letter: record}, problems): the reviewed sets' file parsed, or the reason it could not be."""
+    path = path or REVIEWS
+    if not os.path.exists(path):
+        return {}, ["the reviewed sets' file %s is not in this tree" % os.path.relpath(path, REPO)]
+    try:
+        d = json.load(open(path, encoding="utf-8")) or {}
+    except (ValueError, OSError) as e:
+        return {}, ["the reviewed sets' file %s cannot be read: %s" % (os.path.relpath(path, REPO), e)]
+    boards = d.get("boards")
+    if not isinstance(boards, dict):
+        return {}, ["the reviewed sets' file %s has no `boards` map" % os.path.relpath(path, REPO)]
+    return boards, []
+
+
+def _record_shape(letter, rec):
+    """Every defect of a board's reviewed record that makes it no record: each is a reason nobody can audit the set."""
+    out = []
+    if not isinstance(rec, dict):
+        return ["board %s's reviewed record is not a map" % letter.upper()]
+    rv = str(rec.get("review") or "").strip()
+    if not rv: out.append("board %s's reviewed set names no review" % letter.upper())
+    elif not os.path.isfile(os.path.join(REPO, rv)):
+        out.append("board %s's reviewed set rests on %s, which is not in this tree" % (letter.upper(), rv))
+    if len(str(rec.get("why") or "").strip()) < WHY_MIN:
+        out.append("board %s's reviewed set carries no reason of %d characters or more" % (letter.upper(), WHY_MIN))
+    ext = rec.get("external")
+    if not isinstance(ext, dict):
+        out.append("board %s's reviewed set has no `external` map of {ref: {pin: net}}" % letter.upper())
+    else:
+        for ref, pins in ext.items():
+            if not isinstance(pins, dict) or not pins or not all(isinstance(k, str) and k.strip() for k in pins):
+                out.append("board %s's reviewed set lists %s with no explicit pins: a set that names a connector and not "
+                           "its pins cannot see a pin that moved to ground" % (letter.upper(), ref))
+    for i, ch in enumerate(rec.get("changes") or []):
+        if not isinstance(ch, dict) or not str(ch.get("entry") or "").strip() or \
+                len(str(ch.get("why") or "").strip()) < WHY_MIN or not str(ch.get("review") or "").strip():
+            out.append("board %s's reviewed set: change %d carries no entry, no reason of %d characters or more, or no "
+                       "review" % (letter.upper(), i + 1, WHY_MIN))
+            continue
+        if not os.path.isfile(os.path.join(REPO, str(ch["review"]))):
+            out.append("board %s's reviewed set: change %d (%s) rests on %s, which is not in this tree"
+                       % (letter.upper(), i + 1, ch["entry"], ch["review"]))
+        r, _s, pin = str(ch["entry"]).partition(".")
+        if isinstance(ext, dict) and pin and pin in (ext.get(r) or {}):
+            out.append("board %s's reviewed set: change %d says %s left the set and the set still holds it"
+                       % (letter.upper(), i + 1, ch["entry"]))
+    return out
+
+
+def reconcile(by_ref, letter, cov, n_declared, boards=None, problems=None):
+    """The declaration's external pins against the reviewed set, pin by pin (28 September 2026).
+
+    {problems: [text], notes: [text], reviewed_pins: n, declared_pins: n, changes: n, record: bool}. A problem makes
+    the verdict INCONCLUSIVE and names the pin; a note changes nothing. `by_ref` may be None (no netlist)."""
+    if boards is None: boards, problems = reviews()
+    problems = list(problems or [])
+    notes = []
+    rec = boards.get(letter or "")
+    declared = {k: v for k, v in (cov or {}).get("covered", {}).items() if v in ("external", "off board")}
+    if rec is None:
+        if n_declared:
+            problems.append("NOT REVIEWED board %s: it declares %d external port(s) and no reviewed set holds them, so "
+                            "a reclassification here could not be seen" % ((letter or "?").upper(), n_declared))
+        return dict(problems=problems, notes=notes, reviewed_pins=0, declared_pins=len(declared), changes=0, record=False)
+    shape = _record_shape(letter, rec)
+    if shape:
+        return dict(problems=problems + shape, notes=notes, reviewed_pins=0, declared_pins=len(declared),
+                    changes=len(rec.get("changes") or []) if isinstance(rec, dict) else 0, record=True)
+    rv = str(rec.get("review"))
+    reviewed = {(ref, str(pin)): net for ref, pins in rec["external"].items() for pin, net in pins.items()}
+    for (ref, pin), net_then in sorted(reviewed.items()):
+        if by_ref is None:
+            problems.append("REVIEWED %s.%s (was %s): the review holds it external and there is no netlist to find it on"
+                            % (ref, pin, net_then)); continue
+        on = dict(by_ref.get(ref, ()))
+        if ref not in by_ref:
+            problems.append("REVIEWED %s.%s (was %s): the review (%s) holds it external and the connector is not on this "
+                            "netlist; the reviewed set is changed with its reason and the review, or the netlist is "
+                            "wrong" % (ref, pin, net_then, rv))
+        elif pin not in on:
+            problems.append("REVIEWED %s.%s (was %s): the review (%s) holds it external and %s has no pin %s on this "
+                            "netlist" % (ref, pin, net_then, rv, ref, pin))
+        elif not carries_conductor(on[pin]):
+            problems.append("REVIEWED %s.%s (was %s): the review (%s) holds it external and on this netlist it is on %s, "
+                            "a ground or a no-connect: the conductor the review judged has moved and the reviewed set "
+                            "must be re-read" % (ref, pin, net_then, rv, on[pin] or "no net"))
+        elif cov["covered"].get((ref, pin)) == "internal":
+            problems.append("RECLASSIFIED %s.%s on %s: the review (%s) holds it external and the declaration says internal; "
+                            "the reviewed set is changed with its reason and the review it rests on before the coverage "
+                            "shrinks" % (ref, pin, on[pin], rv))
+        elif (ref, pin) not in declared:
+            problems.append("REVIEWED %s.%s on %s: the review (%s) holds it external and no external entry covers it"
+                            % (ref, pin, on[pin], rv))
+        elif on[pin] != net_then:
+            notes.append("REVIEWED %s.%s was %s when reviewed (%s) and is %s on this netlist" % (ref, pin, net_then, rv, on[pin]))
+    for (ref, pin), label in sorted(declared.items()):
+        if (ref, pin) not in reviewed:
+            problems.append("NOT REVIEWED %s.%s on %s: declared %s and in no reviewed set; the review that judges the "
+                            "conductor adds it to %s" % (ref, pin, dict(by_ref.get(ref, ())).get(pin, "?") if by_ref else "?",
+                                                         label, os.path.relpath(REVIEWS, REPO)))
+    ns = str(rec.get("netlist_sha256_16") or "")
+    return dict(problems=problems, notes=notes, reviewed_pins=len(reviewed), declared_pins=len(declared),
+                changes=len(rec.get("changes") or []), record=True, netlist_then=ns)
+
+
+def _reviews_input():
+    """The reviewed sets' file as a reading input, by sha (a configuration input, like the intent beside the netlist)."""
+    try:
+        import phase_artefacts as _pa
+        r = _pa.record(REVIEWS, content=False)
+    except Exception:
+        r = None
+    return r or {"path": os.path.relpath(REVIEWS, REPO), "sha256_16": None}
+
+
 def netlist(path):
     txt = open(path, encoding="utf-8", errors="replace").read()
     by_net, by_ref = {}, {}
@@ -110,7 +336,10 @@ def judge(net_path, letter=None):
     rails |= {n for n in by_net if n.startswith("+")}
     letter = letter or ""
     ports = _bt.value(letter, "external_ports", []) or []
-    rows, bad, missing_refs = [], [], []
+    rows, missing_refs = [], []
+    # AN ENTRY THAT NAMES NO CONDUCTOR FAILS THE RULE BEFORE ANY CONDUCTOR IS JUDGED (28 September 2026): board A's
+    # J_DOCK entry listed two ground pins, every one of them was skipped below, and the rule read PASS of nothing.
+    bad = ["DECLARATION " + x for x in cover(by_ref, letter)["refused"]]
     for entry in ports:
         ref = entry.get("ref") if isinstance(entry, dict) else str(entry)
         why = (entry.get("why") if isinstance(entry, dict) else "") or ""
@@ -129,7 +358,7 @@ def judge(net_path, letter=None):
         ip_pins = [str(x) for x in (ip.get("pins") or [])]
         ip_part, ip_cite = str(ip.get("part") or "").strip(), str(ip.get("cite") or "").strip()
         for pin, net in sorted(by_ref[ref]):
-            if net.upper() in SKIP_NETS or is_ground(net): continue
+            if not carries_conductor(net): continue      # named in the output by main(), from cover()["grounds"]
             if pins_wanted and pin not in [str(x) for x in pins_wanted]: continue
             if off: continue        # protected by a part in the wall, named in the declaration and listed below
             if pin in ip_pins:
@@ -463,20 +692,29 @@ def main(argv):
         why = str(t.get("_external_ports_why") or "").strip()
         items = t.get("external_ports")
         out_dir = os.environ.get("VERDICT_DIR") or "out"
+        # the reviewed set holds pins for this board: with no netlist to find them on, nothing is a pass (S-88, B1)
+        rev = reconcile(None, letter, {"covered": {}}, len(items or []))
+        for x in rev["problems"]: print("  %s" % x)
+        if rev["problems"] and not items:
+            return _write_both(letter, _v.INCONCLUSIVE, counts={"declared": 0, "reviewed_pins": rev["reviewed_pins"]},
+                               denominator=0, evidence=rev["problems"][:20], rules=["TRN-001"], out_dir=out_dir,
+                               inputs=dict(recorded_inputs(letter), port_reviews=_reviews_input()),
+                               missing_input="the reviewed set holds pins of this board and there is no netlist to find them on",
+                               note="the reviewed set and the declaration disagree, and there is no netlist")
         if items:
             print("port_protect: board %s declares %d item(s) and has no netlist to judge them on" % (letter.upper(), len(items)))
             return _write_both(letter, _v.INCONCLUSIVE, counts={"declared": len(items)}, denominator=0,
-                               inputs=recorded_inputs(letter), rules=["TRN-001"], out_dir=out_dir,
+                               inputs=dict(recorded_inputs(letter), port_reviews=_reviews_input()), rules=["TRN-001"], out_dir=out_dir,
                                missing_input="this board declares items of this kind and has no netlist to judge them on",
                                note="declared, and not judgeable without a netlist")
         if ("external_ports" in t) and why:
             print("port_protect: board %s declares none, with its reason" % letter.upper())
             return _write_both(letter, _v.PASS, counts={"declared": 0}, denominator=0, evidence=[why],
-                               inputs=recorded_inputs(letter), rules=["TRN-001"], out_dir=out_dir,
+                               inputs=dict(recorded_inputs(letter), port_reviews=_reviews_input()), rules=["TRN-001"], out_dir=out_dir,
                                note="this board declares that it has none, with its reason, and it has no netlist")
         print("port_protect: board %s declares nothing and has no netlist" % letter.upper())
         return _write_both(letter, _v.INCONCLUSIVE, counts={"declared": 0}, denominator=0,
-                           inputs=recorded_inputs(letter), rules=["TRN-001"], out_dir=out_dir,
+                           inputs=dict(recorded_inputs(letter), port_reviews=_reviews_input()), rules=["TRN-001"], out_dir=out_dir,
                            missing_input="this board has no netlist and no declaration, so nobody has looked",
                            note="no netlist and no declaration")
     letter = _bt.letter_for(path.replace("/out/", "/").replace(".net", ".kicad_pcb"))
@@ -484,6 +722,8 @@ def main(argv):
         stem = os.path.basename(path).replace(".net", "")
         letter = _bt.letter_for(stem + ".kicad_pcb")
     rows, bad, missing, n_declared = judge(path, letter)
+    cov = cover(netlist(path)[1], letter)      # what the declaration covers, and what it leaves (28 September 2026)
+    rev = reconcile(netlist(path)[1], letter, cov, n_declared)   # against the set a review enumerated (S-88, B1)
     # S-09 (26 September 2026): every clamp's polarity, on every board, before anything returns early.
     clamps = clamp_rows(path)
     c_bad = ["%s %s (%s): %s" % (c["verdict"], c["ref"], c["value"][:40], c["why"]) for c in clamps
@@ -507,9 +747,35 @@ def main(argv):
                 % (len(r["unprotected"]), len(r.get("behind") or []), len(r.get("in_part") or [])))
         print("  %-12s %d pin(s), %s  [%s]" % (r["ref"], r["pins"], tail, r["why"][:64]))
         for line in (r.get("in_part") or []): print("      ANSWERED %s" % line)
+    # THE DOCSTRING PROMISED THE SKIPPED PINS BY NAME AND NOTHING PRINTED THEM (28 September 2026): a reader could not
+    # tell a ground pin that was rightly skipped from a conductor the entry had never reached.
+    for ref, p, n in cov["grounds"]:
+        print("  SKIPPED %s.%s on %s: a ground or a no-connect, not judged" % (ref, p, n or "no net"))
+    if n_declared:
+        print("port_protect: %d connector pin(s) declared internal, %d connector pin(s) that no entry covers"
+              % (cov["internal"], len(cov["uncovered"])))
+        for ref, p, n in cov["uncovered"]:
+            print("  UNCOVERED %s.%s on %s: a connector pin carrying a supply or a signal that neither external_ports "
+                  "nor internal_ports names" % (ref, p, n))
+    for m in cov["internal_missing"]: print("  NOTE declared internal connector %s is not on this netlist" % m)
+    if rev["record"] or n_declared:
+        print("port_protect: the reviewed set holds %d external pin(s) for board %s, the declaration %d; %d change(s) recorded"
+              % (rev["reviewed_pins"], (letter or "?").upper(), rev["declared_pins"], rev["changes"]))
+    for x in rev["notes"]: print("  NOTE %s" % x)
+    for x in rev["problems"]: print("  %s" % x)
     for b in bad: print("  FAIL %s" % b)
     for m in missing: print("  NOTE declared port %s is not on this netlist" % m)
     if "--json" in argv: print(json.dumps(rows, indent=1))
+    d_counts = {"declarations_refused": len(cov["refused"]), "uncovered_pins": len(cov["uncovered"]) if n_declared else 0,
+                "internal_pins": cov["internal"], "ground_pins_not_judged": len(cov["grounds"]),
+                "reviewed_pins": rev["reviewed_pins"], "declared_external_pins": rev["declared_pins"],
+                "reviewed_changes": rev["changes"], "review_disagreements": len(rev["problems"])}
+    inputs = dict(recorded_inputs(letter, path), port_reviews=_reviews_input())
+    if not n_declared and bad:
+        # a board that declares no external port can still carry an internal entry that names nothing
+        return _write_both(letter, _v.FAIL, denominator=len(bad), counts=dict({"ports": 0, "unprotected": 0}, **d_counts),
+                           evidence=bad[:20], inputs=inputs,
+                           note="no external port is declared, and %d entry(ies) of the declaration name no conductor" % len(bad))
     if not n_declared and c_bad:
         # A DECLARED ZERO OF PORTS SAYS NOTHING ABOUT A CLAMP THE WRONG WAY ROUND (S-09, 26 September 2026). Board P
         # declares that nothing of its own leaves the case, and its D1 sits across the pack terminals with the band
@@ -517,7 +783,7 @@ def main(argv):
         for b in c_bad: print("  FAIL %s" % b)
         return _write_both(letter, _v.FAIL, denominator=len(clamps),
                            counts=dict({"ports": 0, "unprotected": 0}, **c_counts), evidence=c_bad[:20],
-                           inputs=recorded_inputs(letter, path),
+                           inputs=inputs,
                            note="no external port is declared, and %d clamp(s) on this board are reversed or drawn "
                                 "so their polarity cannot be read" % len(c_bad))
     if not n_declared and c_unj and "external_ports" in (_bt.table(letter) or {}) and \
@@ -525,9 +791,17 @@ def main(argv):
         for u in c_unj: print("  UNJUDGED %s" % u)
         return _write_both(letter, _v.INCONCLUSIVE, denominator=len(clamps),
                            counts=dict({"ports": 0, "unprotected": 0}, **c_counts), evidence=c_unj[:20],
-                           inputs=recorded_inputs(letter, path),
+                           inputs=inputs,
                            note="no external port is declared, and %d clamp(s) could not be judged for polarity"
                                 % len(c_unj))
+    if not n_declared and rev["problems"]:
+        # A DECLARED ZERO WHILE A REVIEW HOLDS PINS EXTERNAL IS THE LARGEST RECLASSIFICATION THERE IS (S-88, B1).
+        return _write_both(letter, _v.INCONCLUSIVE, denominator=len(clamps),
+                           counts=dict({"ports": 0, "unprotected": 0}, **dict(c_counts, **d_counts)),
+                           evidence=rev["problems"][:20], inputs=inputs,
+                           note="this board declares no external port, and the reviewed set holds %d pin(s) of it "
+                                "external: the reviewed set is changed with its reason and the review it rests on, or "
+                                "the declaration is wrong" % rev["reviewed_pins"])
     if not n_declared:
         # AN EMPTY DECLARATION IS AN ANSWER; A MISSING ONE IS A QUESTION (16 September 2026). Board P carries
         # nothing out of the case: its cell taps, its thermistor lead and its gauge bus all end inside the
@@ -546,10 +820,10 @@ def main(argv):
         # and so does a board with no declaration at all.
         if answered and why:
             return _write_both(letter, _v.PASS, denominator=len(clamps), counts=dict({"ports": 0, "unprotected": 0}, **c_counts),
-                            inputs=recorded_inputs(letter, path),
+                            inputs=inputs,
                             note="this board declares that no conductor of its own leaves the enclosure, so the "
                                  "rule is true of it with nothing to check: %s" % why[:180])
-        return _write_both(letter, _v.INCONCLUSIVE, denominator=0, inputs=recorded_inputs(letter, path),
+        return _write_both(letter, _v.INCONCLUSIVE, denominator=0, inputs=inputs,
                         note=("this board declares no external port and gives no reason: a zero with nothing "
                               "behind it is a question, not an answer") if answered else
                              ("this board declares no external port, and no board of this kit is truly internal: "
@@ -565,21 +839,33 @@ def main(argv):
     for u in c_unj: print("  UNJUDGED %s" % u)
     n_port_bad = len(bad)
     bad = bad + c_bad            # a reversed or unreadable clamp fails the rule as a bare conductor does (S-09)
-    result = _v.FAIL if bad else _v.PASS if not c_unj else _v.INCONCLUSIVE
-    return _write_both(letter, _v.FAIL if bad else _v.PASS if not c_unj else _v.INCONCLUSIVE,
-                    counts=dict({"ports": len(rows), "declared": n_declared, "unprotected": n_unprot,
-                                 "behind_an_active_part": n_behind, "answered_in_part": n_in_part,
-                                 "not_on_netlist": len(missing)}, **c_counts),
+    # A CONNECTOR PIN NOBODY CLASSIFIED IS A QUESTION, NEVER A PASS (28 September 2026): the rule is about every
+    # conductor that leaves the case, and a pin in neither list may be one.
+    unc = ["UNCOVERED %s.%s on %s" % x for x in cov["uncovered"]]
+    # THE DECLARATION AND THE REVIEWED SET MUST AGREE PIN BY PIN, OR NOBODY HAS SAID WHAT LEAVES THE CASE (S-88, B1).
+    rvp = rev["problems"]
+    result = _v.FAIL if bad else _v.PASS if not (c_unj or unc or rvp) else _v.INCONCLUSIVE
+    return _write_both(letter, _v.FAIL if bad else _v.PASS if not (c_unj or unc or rvp) else _v.INCONCLUSIVE,
+                    counts=dict(dict({"ports": len(rows), "declared": n_declared, "unprotected": n_unprot,
+                                      "behind_an_active_part": n_behind, "answered_in_part": n_in_part,
+                                      "not_on_netlist": len(missing)}, **c_counts), **d_counts),
                     denominator=(sum(r["pins"] for r in rows) or 1) + len(clamps),
-                    evidence=(bad[:n_port_bad][:12] + c_bad[:12] + ["UNJUDGED " + u for u in c_unj[:6]])[:20],
-                    inputs=recorded_inputs(letter, path),
-                    note=("every declared external conductor meets a protection part before a chip, and every clamp "
-                          "is drawn and placed the right way round" if result == _v.PASS else
+                    evidence=(bad[:n_port_bad][:12] + c_bad[:12] + ["UNJUDGED " + u for u in c_unj[:6]] + unc + rvp)[:40],
+                    inputs=inputs,
+                    note=("every declared external conductor meets a protection part before a chip, every clamp "
+                          "is drawn and placed the right way round, every connector pin is declared external or "
+                          "internal, and the external pins are exactly the ones the review enumerated" if result == _v.PASS else
                           ("every declared external conductor meets a protection part before a chip; %d clamp(s) could "
-                           "not be judged for polarity" % len(c_unj)) if result == _v.INCONCLUSIVE else
-                          "%d conductor(s) reach a semiconductor with nothing between, %d meet their clamp only "
-                          "through an active part, which therefore sees the transient itself, and %d clamp(s) are "
-                          "reversed or drawn so their polarity cannot be read" % (n_unprot, n_behind, len(c_bad))))
+                           "not be judged for polarity, %d connector pin(s) are covered by no entry of the "
+                           "declaration, so nobody has said whether they leave the case, and the declaration and the "
+                           "reviewed set disagree on %d pin(s)"
+                           % (len(c_unj), len(unc), len(rvp))) if result == _v.INCONCLUSIVE else
+                          "%d entry(ies) of the declaration name no conductor, %d conductor(s) reach a semiconductor "
+                          "with nothing between, %d meet their clamp only through an active part, which therefore "
+                          "sees the transient itself, and %d clamp(s) are reversed or drawn so their polarity cannot "
+                          "be read; %d connector pin(s) are covered by no entry and the declaration and the reviewed "
+                          "set disagree on %d pin(s)"
+                          % (len(cov["refused"]), n_unprot, n_behind, len(c_bad), len(unc), len(rvp))))
 
 
 if __name__ == "__main__":
