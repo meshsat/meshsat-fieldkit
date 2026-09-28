@@ -87,7 +87,15 @@ def main():
     OLD = olds.pop()
     if new == OLD: refuse("the tree's page is the page the records are bound to (%s): nothing was rendered" % OLD)
     if sha16(old_page.encode("utf-8")) != OLD:
-        refuse("the page at HEAD is %s, not %s: render, run this script, then commit page and registry together" % (sha16(old_page.encode("utf-8")), OLD))
+        # set 7 committed its pages more than once between renders; the comparison is with the page the RECORDS are bound to,
+        # read from git at the commit that carries that sha, or from HEAD when HEAD still carries it
+        print("apply_rebind_page_int8: the page at HEAD is %s and the records are bound to %s; comparing with the bound page from history" % (sha16(old_page.encode("utf-8")), OLD))
+        found = None
+        for rev in subprocess.run(["git", "rev-list", "--max-count=40", "HEAD", "--", CE], capture_output=True, text=True).stdout.split():
+            cand = subprocess.run(["git", "show", "%s:%s" % (rev, CE)], capture_output=True, text=True).stdout
+            if sha16(cand.encode("utf-8")) == OLD: found = cand; break
+        if found is None: refuse("no commit in the last 40 that touched %s carries the bound page %s" % (CE, OLD))
+        old_page = found
 
     so, sn = sections(old_page), sections(new_page)
     if [h for h, _ in so] != [h for h, _ in sn]: refuse("the two pages do not carry the same headings: %s vs %s" % ([h for h, _ in so], [h for h, _ in sn]))
