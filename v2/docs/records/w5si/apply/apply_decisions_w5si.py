@@ -382,7 +382,8 @@ def main():
                 ("%d record(s) bound to pcb_decisions.yaml@%s rebound to @%s, each with a re-read sentence added to its evidence: %s"
                  % (len(ids), was16, now16, ", ".join(ids))) if ids else
                 "no record is bound to pcb_decisions.yaml at the sha256/16 it had (%s), so none is rebound" % was16,
-                "; and the requirements trace page rendered again, because pcb_requirements.yaml changed" if ids else "",
+                "; and `rules_render.py --requirements`, because v2/docs/REQUIREMENTS-TRACE.md is rendered from pcb_requirements.yaml, "
+                "which the rebind changed: until then two tests of test_requirements refuse the stale page" if ids else "",
                 ("\n  NOT REBOUND, because they were bound to ANOTHER version of the file than the one this draft found (%s): bindings at %s. "
                  "They did not validate before this draft either; re-read them" % (was16, ", ".join(stale))) if stale else ""))
     if "--dry-run" in sys.argv:
