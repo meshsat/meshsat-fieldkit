@@ -41,7 +41,11 @@ Reused, cited, not duplicated: stream d4energy's `energy_data.yaml` (branch `fnd
 for the load citations and the pack's curve readings, and the PVGIS mean-day profile it filed at `71be4943`.
 
 **Fourth issue (29 September 2026)**, on the owner's ruling that reduced capability does not replace M1 or REQ-072:
-section 9 of the record and `energy_architecture.py`. Run it after `energy_budget.py`:
+section 9 of the record and `energy_architecture.py` (second issue the same day, after an independent AI review filed in
+`checks/check-section9.md` with the checker's own recomputation `checks/recompute.py` and `.out`: REQ-016 restated as a
+trade against the array, the transport sentence withdrawn, the model pinned by sha256). It refuses with exit 2 when
+`energy_inputs.yaml` is not the pinned file and exit 3 when `energy_budget.py` or a pinned input changed. Run it after
+`energy_budget.py`:
 `python3 v2/docs/records/energy/energy_architecture.py > v2/docs/records/energy/energy_architecture.out` (about 1 s).
 
 ## Reproducing every figure

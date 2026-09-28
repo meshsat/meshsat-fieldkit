@@ -443,7 +443,7 @@ the energy; it is not a property of the stage.** Two routes, both presented, and
   and the host contract (FW-A16) must keep the constant-power front end inside what a current-limited stage gives,
   which is the case the design already has whenever a panel gives less than the front end draws
   (`gen_sch_e.py:99-103`). On the mean September day set 2 is MET under setting (ii) at its typical 81 W, its low
-  72 W and its worst 94.9 W, with the same lowest point, 12.1 Wh (section 7).
+  72 W and its computed high of 94.9 W (a conditional bound, section 9j), with the same lowest point, 12.1 Wh (section 7).
 
 **Rank 4, option (b), the usable depth of discharge.** The graceful line at 2.80 V under load instead of 3.00 V
 (still above the gauge's 2.50 V trip, the maker's 2.50 V terminate line and its 2.65 V cut-off) gains 1.9 Wh aged
@@ -502,7 +502,7 @@ hours (the margin); "asks" and "holds" are the one-night arithmetic beside it (`
 | the night state at its HIGH, 39.67 W | NOT MET | 0 | hour 16 |
 | route B setting (ii) at 10 mOhm, 81 W into the stage (typical) | MET | 12.1 Wh | none |
 | route B setting (ii) at 10 mOhm, 72 W into the stage (its low end) | MET | 12.1 Wh | none |
-| route B setting (ii) at 10 mOhm, 94.9 W into the stage (its worst high) | MET | 12.1 Wh | none |
+| route B setting (ii) at 10 mOhm, 94.9 W into the stage (its computed high, section 9j) | MET | 12.1 Wh | none |
 
 **On the mean-day model, set 2 meets September only with the cells at or above about 17 C (the model's 17.21 C,
 17.88 C without the 2.80 V line; not an operating guarantee, section 9j) and the night
@@ -570,7 +570,7 @@ table counts.
 **What must be verified at the bench before any of this is relied on** (section 1's T-P1 to T-P4): the power of the
 night state and of PS-IDLE-SPEC at the pack terminals (the D rows carry 4.9 W of the night state's recount as
 declarations; at the makers' figures the state reads 13.77 W); the cells' temperature through a night in the night
-state (set 2 needs 17.21 C or more); the WiFi card's idle and the monitor's typical, which nobody has published;
+state (set 2 needs about 17 C or more on the model, 17.21 C as computed, section 9j); the WiFi card's idle and the monitor's typical, which nobody has published;
 the LT8705A stage's efficiency at 17.6 V in and 15.1 V out and the front end's at 20 V out (both declared 0.93,
 neither plotted), and under route B the output current limit's setting; the pack's delivered energy to the 3.00 V
 line new at +20 C and 0 C; and the switch's energy-detect mode and the supervisors' 200 MHz clock in firmware.
@@ -799,7 +799,7 @@ under 10 EUR; string and link fuses with holders under 25 EUR; the harness under
 held) under 30 EUR; wrap, strip and hold-down under 15 EUR: under 150 EUR of parts, plus a second block build and
 the protection commissioning. Nothing is ordered.
 
-**For the owner** (`DECISION-OPTIONS.md`, at most 250 words): the second block reopens D-01's deferral and the night
+**For the owner** (`DECISION-OPTIONS.md`, at most 300 words, the owner's limit for a decision sheet; rewritten on 29 September 2026 for section 9): the second block reopens D-01's deferral and the night
 state changes M1's operating state, both the owner's; REQ-072 as written reads FAIL under every option.
 
 ## 9. M1 from the requirement side: what the mission asks, and the architecture that meets it
@@ -807,39 +807,45 @@ state changes M1's operating state, both the owner's; REQ-072 as written reads F
 **Why this section (29 September 2026).** The owner ruled that reduced capability does not replace M1 or REQ-072, that
 battery and solar stay mandatory under the unchanged mission, and that external DC stays optional. Sections 5 to 8
 started from the ruled pack and asked how far it goes; this section starts from the mission and asks what it needs.
-Every figure is printed by `energy_architecture.py` into `energy_architecture.out` (beside this page), which imports
-`energy_budget.py` unchanged and runs its own `simulate()` on its own pinned inputs. **Scope of every result below:** the
-September reference day of SC-37 (PVGIS's monthly-average hourly profile repeated for three days), the cells at +20 C
-(REQ-014) aged to 80 percent, the 3.00 V line with its 5 percent reserve, both start hours, the planning loads. These
-are reference-day model results, not a field-weather reliability claim: that would need PVGIS's chronological hourly
-series over several years and a stated population of runs, which this page does not do and does not claim.
+Every figure is printed by `energy_architecture.py` into `energy_architecture.out` (beside this page), which pins
+`energy_budget.py` by sha256, imports it and runs its own `simulate()` on its own pinned inputs. **Scope of every result
+below:** the September reference day of SC-37 (PVGIS's monthly-average hourly profile repeated for three days), the
+cells at +20 C (REQ-014) unless a line says otherwise, aged to 80 percent, the 3.00 V line with its 5 percent reserve,
+both start hours, the planning loads. These are reference-day model results, not a field-weather reliability claim:
+that would need PVGIS's chronological hourly series over several years and a stated population of runs, which this
+page does not do and does not claim. **Second issue of this section (29 September 2026)**, after an independent AI
+review (`records/energy/checks/check-section9.md`): REQ-016 is restated as a trade against the array's size (B1), the
+transport sentence is withdrawn (B2, REQ-069), and its minor items are answered in place.
 
-**9a. What PS-IDLE-SPEC asks** (out section 1). 42.8 W at the pack: 1027.2 Wh a day, 3081.6 Wh over 72 hours, 482.8 Wh
-over September's 11.28 h with the sun down. Of the 42.8 W, 36.4 W reaches the loads and 6.4 W is conversion; 16.8 W
-rests on makers' typical figures, 11.3 W on makers' ranges, 6.3 W on generator declarations and 8.4 W on placeholders
-(section 1).
+**9a. What PS-IDLE-SPEC asks** (out section 1). 42.8 W at the pack: 1027.2 Wh a day, 3081.6 Wh over 72 hours, and
+482.7 Wh over September's mean 11.28 h with the sun down (section 3). Of the 42.8 W, 36.4 W reaches the loads and 6.4 W
+is conversion; 16.8 W rests on makers' typical figures, 11.3 W on makers' ranges, 6.3 W on generator declarations and
+8.4 W on placeholders (section 1).
 
 **9b. The storage floor no panel removes** (out section 2). However large the panel, the hours when the sun at the node
 stays under the load leave a deficit every day that storage must carry: 606.7 Wh with 200 Wp, 564.3 Wh with 400 Wp,
-529.5 Wh with 800 Wp and 506.8 Wh with 20 kWp. At 15 to 18 strings each string of the ruled cell holds 36.41 Wh
-usable at this load (one string alone, at three times the current, holds 32.94), so the floor alone is 14 to 17 strings.
+529.5 Wh with 800 Wp and 506.8 Wh with 20 kWp. At 15 to 18 strings each string of the ruled cell holds 36.41 Wh usable
+at this load (one string alone, at three times the current, holds 32.94), so the floor alone is 14 to 17 strings.
 
-**9c. The smallest pack for each window** (out sections 3 and 4). A pack meets M1 only if it carries the night AND the
-day refills it. Inside REQ-016's 100 W window the day's harvest is capped (1023.9 Wh a day at the node even with 20 kWp,
-under the 1027.2 asked), so the pack also carries the days' shortfall: the smallest is 4S19P (691.7 Wh usable) with a
-1300 Wp array, 4S23P with 600 Wp, 4S38P with 200 Wp. With a window of 200 W or more the day refills the pack: 4S16P
-(582.5 Wh) from 350 Wp, 4S15P (546.1 Wh) from 650 Wp; no larger window changes it (the night binds).
+**9c. The smallest pack for each window** (out sections 3, 4 and 9). A pack meets M1 only if it carries the night AND
+the day refills it. Inside REQ-016's 100 W window the day's harvest is capped (1023.9 Wh a day at the node even with
+20 kWp, under the 1027.2 asked), so the pack also carries the days' shortfall and the array must be large: 4S38P with
+200 Wp, 4S23P with 600 Wp, 4S19P with 1300 Wp, 4S18P with 1600 Wp, 4S17P with 2000 Wp, 4S16P from 2100 Wp. None of these
+meets M1 at +15 C. With a window of 200 W or more the day refills the pack: 4S16P from 350 Wp and 4S15P from 650 Wp (for
+arrays up to the 3 kWp swept; the independent review found 4S15P still needed at 5 kWp and 4S14P meeting only at 20 kWp).
 
-**9d. The consumption each storage allows** (out section 6; the largest steady load meeting M1). D-06's one 4S3P:
-9.1 W, whatever the panel or window. Both base pockets (4S6P, section 8): 18.2 W. 4S15P: 41.5 W (400 Wp) to 43.1 W
-(650 Wp) in a 200 W window, 35.9 to 39.5 W in REQ-016's 100 W window. 4S18P: 49.3 to 53.0 W in a 200 W window,
-37.7 to 41.4 W in the 100 W window.
+**9d. The consumption each storage allows** (out sections 6 and 9; the largest steady load meeting M1). D-06's one
+4S3P: 9.1 W, whatever the panel or window. Both base pockets (4S6P, section 8): 18.2 W. 4S15P: 41.5 W (400 Wp) to
+43.1 W (650 Wp) in a 200 W window, 35.9 to 39.5 W in the 100 W window up to 1000 Wp. 4S18P: 49.3 to 53.0 W in a 200 W
+window; in the 100 W window it rises with the array, 41.35 W at 1000 Wp, 42.20 W at 1300 Wp and 42.77 W at 1500 Wp.
 
-**9e. Margins** (out section 7). 4S15P, 650 Wp, 200 W window: MEETS at +20 C with 3.6 Wh left at the lowest point, NOT
-MET at +15 C; it has no usable margin. 4S16P, 400 Wp: MEETS at +20 C (18.2 Wh left), NOT MET at +15 C. 4S18P, 400 Wp,
-200 W window: MEETS at +20 C with 91.0 Wh left and at +15 C with 26.8 Wh left; with 650 Wp, 112.8 and 48.6 Wh. The
-efficiency chain's brackets move the smallest pack by one string (out section 5). The 2.80 V line saves no string at
-these sizes (out section 8).
+**9e. Margins** (out sections 7 and 10). 4S15P, 650 Wp, 200 W window: MEETS at +20 C with 3.6 Wh left at the lowest
+point, NOT MET at +15 C; it meets only with the cells at or above about +19.7 C, so it has no usable margin. 4S16P,
+400 Wp: MEETS at +20 C (18.2 Wh left), needs about +18.4 C. 4S18P, 400 Wp, 200 W window: MEETS at +20 C with 91.0 Wh
+left and at +15 C with 26.8 Wh left, down to about +12.9 C (with 650 Wp, 112.8 and 48.6 Wh, down to about +11.2 C).
+Inside the 100 W window, 4S19P with 1300 Wp needs about +19.9 C and 4S18P with 1600 Wp about +18.9 C. The efficiency
+chain's brackets move the smallest pack by one string (out section 5); the 2.80 V line saves no string at these sizes
+(out section 8). Each temperature above is the model's figure on its temperature curve, not an operating guarantee.
 
 **9f. Engineering alternatives, before any waiver.** Each is judged against 9c to 9e.
 - *Consumption at unchanged service.* Candidates: the Ethernet switch's power with its links connected but idle
@@ -848,65 +854,77 @@ these sizes (out section 8).
   6.4 W of conversion). About 1 to 4 W together, each to be shown at the bench. It buys margin (4S15P allows 43 W at
   650 Wp), never the basis: no figure of 9d moves from 18 W to 43 W this way. Powering the standby WiFi card down is
   left out here: it lengthens a failover, which is a service change.
-- *Denser cells in the same pockets.* The ruled 35E is 3.35 Ah minimum; no 18650 held in the tree exceeds it by more
-  than a few percent, and A06's fit gives a 21700 4S2P the same 144 Wh as the 4S3P in the east pocket (section 8's
-  pocket table). Not enough.
+- *Denser cells in the same pockets.* The ruled 35E is 3.35 Ah minimum; A06's fit gives a 21700 4S2P about 144 Wh in the
+  east pocket with a representative 5 Ah cell (no 21700 datasheet is held; section 8's pocket table), no more than the
+  4S3P. Not enough.
 - *Another chemistry.* LiFePO4 holds less energy per litre; it makes the volume problem worse.
-- *More panel alone.* Beyond about 650 Wp nothing reduces the pack below 4S15P (9b): the night binds.
+- *More panel alone.* Beyond about 650 Wp in a 200 W window nothing reduces the pack below 4S15P (9b, 9c): the night
+  binds.
 - *Storage outside the case.* It would be external energy, which the owner's ruling keeps optional and never the basis.
-- *Volume inside the fixed case.* The base pockets hold 4S6P (section 8). The one other volume is the lid: the space
-  from the face top to the lid's ceiling is 44.39 mm at the worst over a face on which only the buttons (3.5 mm), the
-  toggles (height TBD) and the QMX tray stand (ASSEMBLY.md step 11; CASE-MARGINS row M3); the ceiling is 346.16 x
-  231.86 mm. One layer of cells lying flat, about 22 mm deep with holders, fits about 36 cells (4S9P) beside the QMX
-  tray, or about 52 cells (4S13P) over the whole lid (ESTIMATE: footprint arithmetic at an 18.55 mm pitch and 66.25 mm
-  rows, no holder, board or harness designed). D-01 already lists a second pack, the tablet bracket and HF (the
-  QMX) among the deferred items that stay designed.
+- *Volume inside the fixed case.* The base pockets hold 4S6P (section 8). The one other volume is the lid: from the face
+  top to the lid's ceiling is 44.39 mm at the worst, over a face on which the buttons (3.5 mm), the toggles (height TBD),
+  the LED D1 and the QMX's knob tips stand, and from which the QMX tray hangs (ASSEMBLY.md step 11; CASE-MARGINS row
+  M3); the ceiling is 346.16 x 231.86 mm with R 16.26 fillets. One layer of cells lying flat, about 22 mm deep with
+  holders, fits about 36 cells (4S9P) beside the QMX tray, and over the whole lid 54 cells with the rows across the short
+  side or 60 along the long side (ESTIMATE: footprint arithmetic at an 18.55 mm pitch and 66.25 mm rows, the cell's
+  65.25 mm maximum plus 1 mm; the fillets not applied; no holder, board or harness designed).
 
 **9g. The architecture that meets M1 on this model** (the session's recommendation; engineering, not yet shown):
 - **Storage:** 4S18P or more of the ruled cell: the base pockets' 4S6P (section 8, its board P additions) plus a lid
   module of at least 4S12P under its own protection board, the two packs joined at the system node through their own
   path so that neither can charge the other (the circuit is to be designed and reviewed; nothing of it is drawn).
-  655 Wh usable aged at +20 C, 868 Wh nominal, 72 cells, 3.6 kg of cells.
-- **Solar:** 400 Wp of the 12 V class as two series pairs (about 35 V at maximum power, about 50 V open circuit when
-  cold, about 12.5 A short circuit), into a stage of at least 200 W; the entry fuse and connector re-rated (section 6e).
-- **Charging:** about 125 W of charge acceptance at the node: at 400 Wp in a 200 W window the node's peak is 166.3 W,
-  so up to 123.5 W is offered to the cells (117.3 W stored at the model's 0.95), about 8.6 A at 14.4 V, inside the
-  cells' 1.02 A a cell cycle-life figure for 18 strings (18.4 A).
+  655.3 Wh usable aged at +20 C, 868.2 Wh nominal, 72 cells, 3.6 kg of cells.
+- **Solar, two ways, one the owner's choice (9i):** (i) a 200 W stage with 400 Wp of the 12 V class; wired as two series
+  pairs this is about 35 V at maximum power, about 50 V open circuit when cold and about 12.5 A short circuit (ESTIMATE:
+  from the 36-cell class of `energy_inputs.yaml`, no panel datasheet), which also exceeds REQ-016's 25 V, or wired all in
+  parallel it keeps 25 V at about 25 A of fault current; or (ii) REQ-016's 100 W stage kept, with 1600 Wp of the 12 V
+  class in parallel (sixteen 100 W panels, a fault current near 100 A at about 6.25 A per 100 Wp), which meets only at
+  about +18.9 C or warmer. The entry fuse and connector are re-rated either way (section 6e).
+- **Charging:** about 125 W of charge acceptance at the node in way (i): at 400 Wp in a 200 W window the node's peak is
+  166.3 W, so up to 123.5 W is offered to the cells (117.3 W stored at the model's 0.95), about 8.6 A at 14.4 V, inside
+  the cells' 1.02 A a cell cycle-life figure for 18 strings (18.4 A). Way (ii) offers at most about 42 W.
 - **Consumption:** PS-IDLE-SPEC at its PLAN 42.8 W; the engineering of 9f as margin only.
-- **Result on the model:** meets the September reference day for 72 hours from either start with 91.0 Wh left at
-  +20 C and 26.8 Wh at +15 C. REQ-072 stays FAIL until this is drawn, reviewed and tested; this is a plausible
-  architecture, not a passed requirement.
+- **Result on the model:** in way (i), meets the September reference day for 72 hours from either start with 91.0 Wh
+  left at +20 C and 26.8 Wh at +15 C, down to about +12.9 C. REQ-072 stays FAIL until this is drawn, reviewed and
+  tested; this is a plausible architecture, not a passed requirement.
 
 **9h. What it does not yet show, each a finding for the engineering that follows:** the lid module's fit over the
 toggles (their lever heights are TBD) and beside or instead of the QMX tray; the lid's added mass (about 2.4 kg of cells
 and 0.6 kg of holders and board, ESTIMATE) against the hinges and TEST-PLAN's drop E1; the harness across the hinge at
 about 8 A; the two packs' protection, their charge sharing and the qualified battery review D-09 asks for; a heater for
-the lid pack (the charge window starts at 0 C); the lid's temperature in the sun (the shade rule D-02e); the transport
-route of an 868 Wh lithium ion set (above the 160 Wh passenger limit; UN 38.3 status unknown, D-04); and board E's stage
-and board A's charger at the new powers. Section 8's open items (protection, harness, board area, heater, RF cables)
-stand for the base pack as they were.
+the lid pack (the charge window starts at 0 C); **the lid pack's own temperature:** the +20 C basis rests on the cells
+sharing the kit's own heat inside the closed base, which a pack in the open lid does not, and the recommended 4S18P meets
+only down to about +12.9 C on the model; the lid's temperature in the sun (the shade rule D-02e); the pack's transport,
+on which nothing is claimed (REQ-069: its UN 38.3 status is unknown); and board E's stage and board A's charger at the
+new powers. Section 8's open items (protection, harness, board area, heater, RF cables) stand for the base pack as
+they were.
 
-**9i. The explicit constraints this conflicts with, for the owner's decision (none is assumed changed here):**
+**9i. The explicit constraints this meets or conflicts with, for the owner's decision (none is assumed changed here):**
 - **D-06** rules one 4S3P pack of about 145 Wh in the east pocket. M1 needs at least 4S15P and, with margin, 4S18P
-  (9c, 9e), in the base pockets and the lid.
-- **REQ-016** holds the stage to 100 W and the panel to 25 V open circuit. Inside it no pack the case can hold carries
-  42.8 W (9d: 4S18P allows at most 41.4 W); M1 needs at least 200 W and about 50 V.
-- **D-01** defers the second pack, the tablet bracket and HF. The architecture brings a second pack into prototype 1;
-  the version with margin also takes the lid space of the QMX tray and the tablet bracket.
-- **The kit's claimed form:** a 400 Wp array (about 2 square metres of panels) carried with the kit, and a pack that
-  travels by road or sea as dangerous goods rather than by air.
-The Peli 1450 ruling (7 September 2026) is not in conflict on this model: the architecture fits the fixed case if the
-lid findings of 9h close. If they do not, the case's volume becomes the binding constraint and that is a further
-decision.
+  (9c, 9e), in the base pockets and the lid. This is a conflict: no pack D-06 allows carries more than 9.1 W for M1.
+- **REQ-016** caps the stage's input at 100 W and each panel at 25 V open circuit; it sets no limit on the array. It is a
+  trade, not a hard conflict: kept, M1 needs about 1300 to 2100 Wp of 12 V class panels in parallel and 4S16P to 4S19P,
+  with no margin at +15 C (9c, 9e); raised to 200 W, 400 Wp and 4S18P give margin. The 50 V of 9g way (i) follows from
+  wiring the panels as series pairs and is a design choice, not a need.
+- **D-01** defers the second pack and, with it, the lid tablet bracket and HF. The architecture brings a second pack into
+  prototype 1, and the version with margin takes the lid space of the HF module (appendix 32.50 item 16a, the QMX in its
+  lid tray) and the lid tablet bracket (16d), both approved by the owner on 6 September 2026; where the HF module would
+  go instead is not answered here.
+- **The kit's claimed form:** an array of 400 Wp (way i, about 2 square metres) or 1600 Wp (way ii, about 8; ESTIMATE at about
+  0.5 square metres per 100 W panel of the 12 V class) carried with the kit, and a pack about six times D-06's.
+The Peli 1450 ruling (7 September 2026) is not tested by this model: the energy model has no geometry, and whether the
+fixed case holds the architecture rests on the lid findings of 9h, an estimate today. If they do not close, the case's
+volume becomes the binding constraint and that is a further decision.
 
 **9j. The reduced-service alternative, kept separate and conditional.** Sections 7c and 8c (the 4S6P pack, 200 Wp held
 to 100 W, the 2.80 V line, the reduced state whenever the sun alone cannot carry the full kit) do not meet M1 as written:
 REQ-072 stays FAIL under them. Their September result is a reference-day simulation that holds only with the cells at or
-above about 17 C and the night state within 0.86 W of its plan (sections 7b, 8c; the two-decimal thresholds there are the
-model's arithmetic, more precise than its inputs, and not operating guarantees). Route B's 94.9 W (section 6e) is a
+above about 17 C AND the night state within 0.86 W of its plan (sections 7b, 8c; the two-decimal thresholds there are
+the model's arithmetic, more precise than its inputs, and not operating guarantees). Route B's 94.9 W (section 6e) is a
 conditional calculated bound at this stream's efficiency floor and TRK_OUT's reference-tolerance maximum, on a circuit
 change that is not implemented, with its loss, temperature and control-loop behaviour unverified; the stage's output
-current loop is not by itself an input power limit.
+current loop is not by itself an input power limit. `energy_budget.out` keeps the wording of the issue that wrote it
+("at every worst", "17.21 C"); this section governs how those figures are read.
 
 ## Sources
 
