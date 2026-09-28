@@ -2,13 +2,13 @@
 
 ```bound
 board      a
-netlist    v2/ecad/pcb-a-power-a23/out/pcb-a-power.net sha256/16 2dfe1c546cb39ccb
-intent     v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json sha256/16 35e430a791ab2b44
+netlist    v2/ecad/pcb-a-power-a23/out/pcb-a-power.net sha256/16 599ee964a9c23d6e
+intent     v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json sha256/16 070b4c5e41e023e5
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC06161H-3313 outer 0.0350 mm inner 0.0152 mm
 ```
 
-Intent written 2026-09-28 21:10. Stack: six layers, measured (LAYER-DECISIONS-2026-09-11.md, A arm 345 open at four); copper weight OPEN. Pack path, judged at 18 A (PWR-F12): CELL+, CELL_FUSED, VBAT.
+Intent written 2026-09-28 22:18. Stack: six layers, measured (LAYER-DECISIONS-2026-09-11.md, A arm 345 open at four); copper weight OPEN. Pack path, judged at 18 A (PWR-F12): CELL+, CELL_FUSED, VBAT.
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
 |---|---|---|---|---:|---:|---:|---|
@@ -20,7 +20,7 @@ Intent written 2026-09-28 21:10. Stack: six layers, measured (LAYER-DECISIONS-20
 | +5V_S1 | 5.10 | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
 | +5V_S2 | 5.10 | 4.20 / 5.63 | 4.20, typical (PI-001) | 2.17 | 0.84 | 13.64 | 8 / 7 / 6 |
 | +5V_S3 | 5.10 | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
-| +5V_DEV | 5.00 | 5.10 / 6.90 | 5.10, typical (PI-001) | 2.84 | 1.09 | 19.46 | 10 / 8 / 7 |
+| +5V_DEV | 5.00 | 4.10 / 6.91 | 4.10, typical (PI-001) | 2.10 | 0.81 | 13.05 | 10 / 8 / 7 |
 | +3V3 | 3.30 | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
 | +13V8_PA | 13.80 | 5.00 / 6.00 | 5.00, typical (PI-001) | 2.76 | 1.06 | 18.77 | 9 / 7 / 6 |
 | +12V_HF | 12.00 | 1.00 / 2.00 | 1.00, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |
@@ -32,7 +32,7 @@ Intent written 2026-09-28 21:10. Stack: six layers, measured (LAYER-DECISIONS-20
 | S1_OUT | 5.1 (5.1) | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
 | S3_OUT | 5.1 (5.1) | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
 | S2_OUT | 5.1 (5.1) | 4.20 / 5.63 | 4.20, typical (PI-001) | 2.17 | 0.84 | 13.64 | 8 / 7 / 6 |
-| SD_OUT | 5.0 (5.0) | 5.10 / 6.90 | 5.10, typical (PI-001) | 2.84 | 1.09 | 19.46 | 10 / 8 / 7 |
+| SD_OUT | 5.0 (5.0) | 4.10 / 6.91 | 4.10, typical (PI-001) | 2.10 | 0.81 | 13.05 | 10 / 8 / 7 |
 | PA_OUT | 13.8 (13.8) | 5.00 / 6.00 | 5.00, typical (PI-001) | 2.76 | 1.06 | 18.77 | 9 / 7 / 6 |
 | HF_OUT | 12.0 (12.0) | 1.00 / 2.00 | 1.00, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |
 | POE_OUT | 54.0 (54.0) | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
@@ -43,9 +43,10 @@ Intent written 2026-09-28 21:10. Stack: six layers, measured (LAYER-DECISIONS-20
 | VMON | 14.4 (16.8) | 0.69 / 1.00 | 0.69, typical (PI-001) | 0.18 | 0.07 | 1.08 | 2 / 2 / 1 |
 | VHEAT_IN | 14.4 (16.8) | 0.58 / 0.90 | 0.58, typical (PI-001) | 0.14 | 0.05 | 0.85 | 2 / 2 / 1 |
 | VHEAT | 12.00 | 0.63 / 0.63 | 0.63, typical (PI-001) | 0.16 | 0.06 | 0.95 | 1 / 1 / 1 |
+| +5V_D8IN | 5.0 (5.1) | 1.00 / 2.00 | 1.00, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |
 | +3V3_EMCON_EF | 3.30 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
 | +3V3_EMCON | 3.30 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
-| VBUS_WALL | 5.00 | 0.50 / 0.90 | 0.50, typical (PI-001) | 0.12 | 0.04 | 0.69 | 2 / 2 / 1 |
+| VBUS_WALL | 5.00 | 0.50 / 0.91 | 0.50, typical (PI-001) | 0.12 | 0.04 | 0.69 | 2 / 2 / 1 |
 
 ### Board B
 
