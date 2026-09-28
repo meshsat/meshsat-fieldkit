@@ -4,28 +4,90 @@
  "code_bundle": {
   "entry": "reliability.py",
   "files": {
-   "reliability.py": "71d0872195905c9d",
-   "rules_lib.py": "a6e2421096c1473f",
-   "verdict.py": "e7d66c930b2c4357"
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "reliability.py": "c50f2b8b35d1d57b",
+   "verdict.py": "e7d66c930b2c4357",
+   "wear_inventory.py": "503a05eedb8a0a29"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "29602b41d6b33541",
+  "sha16": "70940aae54caa88b",
   "unresolved": []
  },
  "counts": {
   "boards": 1,
-  "classes": 3,
-  "covered": 7,
-  "fail": 0
+  "candidates": 26,
+  "citations_unjudged": 0,
+  "classed": 9,
+  "classes": 4,
+  "classes_undecided": 3,
+  "covered": 9,
+  "excluded": 17,
+  "exclusions": 3,
+  "fail": 0,
+  "figures_cited": 0,
+  "figures_none_published": 3,
+  "figures_not_mated": 1,
+  "figures_owed": 0,
+  "inconclusive": 7,
+  "measures_owed": 1,
+  "per_board": {
+   "p": {
+    "artefact": {
+     "kind": "netlist",
+     "sha256_16": "760ac6f74d62d194"
+    },
+    "bound": true,
+    "candidates": 26,
+    "citations_unjudged": 0,
+    "classed": 9,
+    "classes_undecided": 3,
+    "excluded": 17,
+    "held_by": [
+     "REL-O-07",
+     "REL-O-08",
+     "REL-O-11",
+     "REL-O-12",
+     "REL-O-13"
+    ],
+    "refused": 0,
+    "result": "INCONCLUSIVE"
+   }
+  },
+  "refused": 0
  },
- "denominator": 10,
- "evidence": [],
+ "denominator": 26,
+ "evidence": [
+  "P: class the pack's wire lands owes its measure (open item REL-O-11: how the pack and its 12 AWG lead are held is not designed (the pack's hold-down, S-27), so nothing keeps a pull on the lead from board P's solder lands)",
+  "P: open item REL-O-07 holds the board: the expected number of mates of each connector over a service life is stated nowhere (REQ-028: no life requirement for prototype 1), so this list carries ratings and compares them with nothing (next action: when a service life is ruled, state the expected mates per connector from CONOPS section 5 and compare each class's figure with it)",
+  "P: open item REL-O-08 holds the board: the joints under heavy soldered parts (the soldered radio modules, the magnetics, the large inductors) are joints that carry load in transport, and this inventory cannot find them: a netlist carries no mass (next action: list the parts above a mass limit from the makers' documents and add them as a class per board with the staking or support each needs)",
+  "P: open item REL-O-13 holds the board: the inventory of a board with a schematic is its NETLIST's, and the declared-phase board files carry footprints no netlist holds: mounting holes H1 to H8 on board A, twenty on board B (M2.5, M3 and M4) with six S_ references beside them, H1 to H4 on boards D and P and twenty-eight on board E, every H on a MountingHole land, while boards C and E5 class the same kind of joint because their own artefacts carry it. The board files also carry a few R, Q, C and U references the netlists do not, and the netlists carry parts the board files do not (225 on board A), so the two are different generations of each design (next action: when each board file is regenerated from its declared netlist, read its footprints beside the netlist (wear_inventory.read_board) and class every screw joint per board with its torque, its thread lock and what hangs on it, from ASSEMBLY.md)",
+  "P: class the pack fuse holder has no cycle figure: the maker's documents that were read state none (v2/vendor/keystone/M65p42.pdf), so the class is undecided and the board is not passed on it (open item REL-O-12: prepare the question to each maker for the owner to send (outside contact is his), or take each class's figure from the prototype's mate-cycle test once TEST-PLAN.md sets its cycle count; carry the figure with its document, or with the test's record)",
+  "P: class JST XH lead headers has no cycle figure: the maker's documents that were read state none (v2/vendor/connectors/jst-xh-catalogue.pdf, v2/vendor/connectors/jst-handling-precautions-2020.pdf), so the class is undecided and the board is not passed on it (open item REL-O-12: prepare the question to each maker for the owner to send (outside contact is his), or take each class's figure from the prototype's mate-cycle test once TEST-PLAN.md sets its cycle count; carry the figure with its document, or with the test's record)",
+  "P: class JST PH thermistor headers has no cycle figure: the maker's documents that were read state none (v2/vendor/connectors/jst-ph-catalogue.pdf, v2/vendor/connectors/jst-handling-precautions-2020.pdf), so the class is undecided and the board is not passed on it (open item REL-O-12: prepare the question to each maker for the owner to send (outside contact is his), or take each class's figure from the prototype's mate-cycle test once TEST-PLAN.md sets its cycle count; carry the figure with its document, or with the test's record)",
+  "P: 15 part(s) excluded (TP1, TP10, TP11, TP12, TP13, TP14 and 9 more): a test point: a bare pad touched by a probe at the bench, nothing is mated and nothing hangs on it",
+  "P: 1 part(s) excluded (JP1): the fuse arming jumper, a solder jumper: two copper pads closed with solder at commissioning, no part is fitted and nothing is mated",
+  "P: 1 part(s) excluded (F2): the self-control fuse is soldered to the board (Eaton SCF9550, surface mount): there is no holder and nothing is mated"
+ ],
  "inputs": {
   "board": "p",
-  "list": "pcb_reliability.yaml"
+  "list": {
+   "path": "tools/pcb_reliability.yaml",
+   "sha256": "40f2a98323b1f9ceeea024fac42b46521d565f0547ee6824ff29dcd5ddaabd96",
+   "sha256_16": "40f2a98323b1f9ce"
+  },
+  "netlist": {
+   "content16": "efe60479293f0004",
+   "parts": 85,
+   "path": "pcb-p-pack-p2/out/pcb-p-pack.net",
+   "sha256": "760ac6f74d62d1947d34e1a56c0c97dfacf07f5b3667b5691c611581ab6a58fc",
+   "sha256_16": "760ac6f74d62d194"
+  }
  },
  "missing_input": null,
- "note": "every part that carries load or sees cycling falls in a declared class with its cycle figure or the reason it has none, its load and the measure taken. It tests nothing: REL-001 is verified at the prototype and no board has been built",
+ "note": "every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the measure taken, or under one declared exclusion with its reason. A desk reading of a netlist and a list: it tests nothing and replaces no physical verification; REL-001 is verified at the prototype and no board has been built",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
@@ -41,14 +103,14 @@
  },
  "tool": "reliability",
  "tools": {
-  "git_head": "a4b157f07618",
-  "tools_tree_sha": "293a55e153ef9d1e"
+  "git_head": "8b623c96380b",
+  "tools_tree_sha": "780a9555854f55da"
  },
- "ts": "2026-09-28T14:54:58Z",
- "verdict": "PASS",
- "version": "a4b157f07618",
+ "ts": "2026-09-28T18:45:05Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "8b623c96380b",
  "writer": {
   "file": "reliability.py",
-  "sha16": "71d0872195905c9d"
+  "sha16": "c50f2b8b35d1d57b"
  }
 }

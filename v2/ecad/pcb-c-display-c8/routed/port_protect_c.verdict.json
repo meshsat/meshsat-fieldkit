@@ -10,12 +10,12 @@
    "netlist_board.py": "655bc402d36b0fa5",
    "netlist_parts.py": "41cf192223d822c2",
    "phase_artefacts.py": "96642ce767188c73",
-   "port_protect.py": "2d69facd3c25c8a4",
+   "port_protect.py": "7acd5333fc59f8d0",
    "regen_compare.py": "341d7f129a1e6f24",
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "0fe457dc75321185",
+  "sha16": "dc13fd58ac5b7922",
   "unresolved": []
  },
  "counts": {
@@ -26,13 +26,62 @@
   "clamps_reversed": 0,
   "clamps_symbol_mismatch": 0,
   "clamps_unjudged": 0,
+  "declarations_refused": 0,
   "declared": 2,
+  "declared_external_pins": 4,
+  "ground_pins_not_judged": 0,
+  "internal_pins": 0,
   "not_on_netlist": 0,
   "ports": 2,
+  "review_disagreements": 1,
+  "reviewed_changes": 0,
+  "reviewed_pins": 0,
+  "uncovered_pins": 39,
   "unprotected": 0
  },
  "denominator": 4,
- "evidence": [],
+ "evidence": [
+  "UNCOVERED J_EPD.10 on EPD_RST",
+  "UNCOVERED J_EPD.11 on EPD_DC",
+  "UNCOVERED J_EPD.12 on EPD_CS",
+  "UNCOVERED J_EPD.13 on EPD_SCL",
+  "UNCOVERED J_EPD.14 on EPD_SDA",
+  "UNCOVERED J_EPD.15 on EPD_VCC",
+  "UNCOVERED J_EPD.16 on EPD_VCC",
+  "UNCOVERED J_EPD.18 on EPD_VDDD",
+  "UNCOVERED J_EPD.2 on EPD_GDR",
+  "UNCOVERED J_EPD.20 on EPD_VDH",
+  "UNCOVERED J_EPD.21 on EPD_VGH",
+  "UNCOVERED J_EPD.22 on EPD_VDL",
+  "UNCOVERED J_EPD.23 on EPD_VGL",
+  "UNCOVERED J_EPD.24 on EPD_VCOM",
+  "UNCOVERED J_EPD.3 on EPD_RESE",
+  "UNCOVERED J_EPD.5 on EPD_VDHR",
+  "UNCOVERED J_EPD.9 on EPD_BUSY",
+  "UNCOVERED J_PANEL.1 on +5V",
+  "UNCOVERED J_PANEL.10 on ZEROIZE_HW",
+  "UNCOVERED J_PANEL.11 on TX_INHIBIT_n",
+  "UNCOVERED J_PANEL.12 on HDMI_SEL1",
+  "UNCOVERED J_PANEL.13 on HDMI_SEL2",
+  "UNCOVERED J_PANEL.15 on USB_PNL_P",
+  "UNCOVERED J_PANEL.16 on USB_PNL_N",
+  "UNCOVERED J_PANEL.18 on HB1",
+  "UNCOVERED J_PANEL.19 on HB2",
+  "UNCOVERED J_PANEL.2 on +5V",
+  "UNCOVERED J_PANEL.20 on HB3",
+  "UNCOVERED J_PANEL.21 on SLOT_EN1",
+  "UNCOVERED J_PANEL.22 on SLOT_EN2",
+  "UNCOVERED J_PANEL.23 on SLOT_EN3",
+  "UNCOVERED J_PANEL.24 on PI_SHDN_REQ",
+  "UNCOVERED J_PANEL.25 on PI_KILL",
+  "UNCOVERED J_PANEL.26 on SHORE_INHIBIT",
+  "UNCOVERED J_PANEL.4 on SDA",
+  "UNCOVERED J_PANEL.5 on SCL",
+  "UNCOVERED J_PANEL.6 on EXP_INT",
+  "UNCOVERED J_PANEL.7 on TR_APRS",
+  "UNCOVERED J_PANEL.8 on EMCON_HW",
+  "NOT REVIEWED board C: it declares 2 external port(s) and no reviewed set holds them, so a reclassification here could not be seen"
+ ],
  "inputs": {
   "board": "c",
   "intent": {
@@ -43,10 +92,14 @@
    "content16": "ebde053efc0a3906",
    "path": "pcb-c-display-c8/out/pcb-c-display.net",
    "sha256_16": "3fddbb3edcd4248a"
+  },
+  "port_reviews": {
+   "path": "tools/pcb_port_reviews.json",
+   "sha256_16": "dcaa890424a8d15f"
   }
  },
  "missing_input": null,
- "note": "every declared external conductor meets a protection part before a chip, and every clamp is drawn and placed the right way round",
+ "note": "every declared external conductor meets a protection part before a chip; 0 clamp(s) could not be judged for polarity, 39 connector pin(s) are covered by no entry of the declaration, so nobody has said whether they leave the case, and the declaration and the reviewed set disagree on 1 pin(s)",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
@@ -62,14 +115,14 @@
  },
  "tool": "port_protect_c",
  "tools": {
-  "git_head": "a4b157f07618",
-  "tools_tree_sha": "293a55e153ef9d1e"
+  "git_head": "8b623c96380b",
+  "tools_tree_sha": "780a9555854f55da"
  },
- "ts": "2026-09-28T14:53:57Z",
- "verdict": "PASS",
- "version": "a4b157f07618",
+ "ts": "2026-09-28T18:43:44Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "8b623c96380b",
  "writer": {
   "file": "port_protect.py",
-  "sha16": "2d69facd3c25c8a4"
+  "sha16": "7acd5333fc59f8d0"
  }
 }

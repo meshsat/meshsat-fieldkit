@@ -1,15 +1,25 @@
 {
  "board": "p",
  "counts": {
-  "answered_nets": 0,
+  "answered_nets": 4,
+  "bound_decided_nets": 1,
+  "bound_edge_nets": 5,
   "classes": 12,
   "contradicted_nets": 0,
-  "decided_nets": 0,
-  "layout_bound_nets": 0,
+  "decided_nets": 5,
+  "layout_bound_nets": 1,
   "low_speed_nets": 20,
-  "may_be_long_nets": 0,
+  "maker_edge_nets": 0,
+  "maker_held_nets": 0,
+  "may_be_long_nets": 5,
+  "models_absent": 0,
+  "models_asked": 0,
   "signal_nets": 40,
-  "undecided_nets": 20
+  "unasked_part_nets": 0,
+  "undecided_model_absent_nets": 0,
+  "undecided_nets": 15,
+  "undecided_no_declaration_nets": 15,
+  "undecided_other_nets": 0
  },
  "inputs": {
   "board": "p",
@@ -22,10 +32,39 @@
    "sha256_16": "fb26e422307afb21"
   },
   "critical_k": 6,
+  "document_1": {
+   "path": "v2/vendor/battery/ti-bq4050.pdf",
+   "sha256_16": "2664e33fe6d6ebed"
+  },
+  "document_2": {
+   "path": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+   "sha256_16": "be56fbb75ba0ae9e"
+  },
+  "edge_rates": {
+   "path": "tools/pcb_edge_rates.yaml",
+   "sha256_16": "0689086680f7a4a4"
+  },
   "extent_mm": 114.0,
+  "far_netlist_e": {
+   "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
+   "sha256_16": "56adc9746d61c4e0"
+  },
+  "ibis_manifest": {
+   "path": "v2/vendor/ibis-manifest.yaml",
+   "sha256_16": "47952602c17f0dfd"
+  },
   "intent": {
    "path": "pcb-p-pack-p2/out/pcb-p-pack-intent.json",
    "sha256_16": "12f92bd3ce7a8264"
+  },
+  "model_state": {
+   "absent": 0,
+   "absent_files": [],
+   "asked": 0,
+   "how_to_fetch": "python3 v2/ecad/tools/ibis_fetch.py --fetch",
+   "manifest": "v2/vendor/ibis-manifest.yaml",
+   "present": 0,
+   "state": "NOT_ASKED"
   },
   "netlist": {
    "content16": "efe60479293f0004",
@@ -35,6 +74,10 @@
   "project": {
    "path": "pcb-p-pack-p2/pcb-p-pack.kicad_pro",
    "sha256_16": "9c9da1f900f7ef59"
+  },
+  "search_listing": {
+   "path": "v2/docs/records/w5si/readings/edge-search.txt",
+   "sha256_16": "d08bc489782c976b"
   },
   "slowest_layer": "JLC04162H-7628 In1.Cu",
   "stack_table": {
@@ -60,6 +103,7 @@
      "U2"
     ]
    },
+   "net_edges": {},
    "nets": [
     "FUSE",
     "FUSE_G",
@@ -80,30 +124,130 @@
    "pattern": "(no declaration)",
    "rise_ns": null,
    "status": "UNDECIDED",
+   "undecided": {
+    "FUSE": [
+     "no signal-class declaration"
+    ],
+    "FUSE_G": [
+     "no signal-class declaration"
+    ],
+    "FUSE_GQ": [
+     "no signal-class declaration"
+    ],
+    "PACK_F": [
+     "no signal-class declaration"
+    ],
+    "PACK_MID": [
+     "no signal-class declaration"
+    ],
+    "PRES_J": [
+     "no signal-class declaration"
+    ],
+    "PTC": [
+     "no signal-class declaration"
+    ],
+    "SEC_COUT": [
+     "no signal-class declaration"
+    ],
+    "SEC_DOUT": [
+     "no signal-class declaration"
+    ],
+    "SEC_V1": [
+     "no signal-class declaration"
+    ],
+    "SEC_V2": [
+     "no signal-class declaration"
+    ],
+    "SEC_V3": [
+     "no signal-class declaration"
+    ],
+    "SEC_V4": [
+     "no signal-class declaration"
+    ],
+    "TS_SEC": [
+     "no signal-class declaration"
+    ],
+    "TS_SEC_J": [
+     "no signal-class declaration"
+    ]
+   },
+   "undecided_kind": {
+    "FUSE": "NO_DECLARATION",
+    "FUSE_G": "NO_DECLARATION",
+    "FUSE_GQ": "NO_DECLARATION",
+    "PACK_F": "NO_DECLARATION",
+    "PACK_MID": "NO_DECLARATION",
+    "PRES_J": "NO_DECLARATION",
+    "PTC": "NO_DECLARATION",
+    "SEC_COUT": "NO_DECLARATION",
+    "SEC_DOUT": "NO_DECLARATION",
+    "SEC_V1": "NO_DECLARATION",
+    "SEC_V2": "NO_DECLARATION",
+    "SEC_V3": "NO_DECLARATION",
+    "SEC_V4": "NO_DECLARATION",
+    "TS_SEC": "NO_DECLARATION",
+    "TS_SEC_J": "NO_DECLARATION"
+   },
    "why": "no signal-class declaration names these nets, so neither their class nor their edge is known"
   },
   {
+   "answered": {},
    "basis": "the gauge's battery-trip interrupt, an edge into the host",
+   "bound_decides": [
+    "BTP_INT"
+   ],
+   "bound_nets": [
+    "BTP_INT"
+   ],
    "class": "CLOCKED_DIGITAL",
+   "critical_by_net": {
+    "BTP_INT": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm": [
      "U1"
     ]
    },
+   "layout_bound": [
+    "BTP_INT"
+   ],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "BTP_INT": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "TI-BQ4050: U1 pin 15 BTP_INT"
+     ],
+     "by": "U1 pin 15 BTP_INT",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "TI-BQ4050"
+    }
+   },
    "nets": [
     "BTP_INT"
    ],
    "pattern": "BTP_INT",
-   "rise_ns": null,
+   "rise_ns": 0.0,
    "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "no interface record covers the entry"
   },
   {
    "basis": "a cell tap, a DC node of the pack",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {},
+   "net_edges": {},
    "nets": [
     "CELL1",
     "CELL2",
@@ -112,6 +256,8 @@
    "pattern": "CELL?",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -122,6 +268,7 @@
      "U1"
     ]
    },
+   "net_edges": {},
    "nets": [
     "CHG_G",
     "CHG_R"
@@ -129,6 +276,8 @@
    "pattern": "CHG_*",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -139,12 +288,15 @@
      "U1"
     ]
    },
+   "net_edges": {},
    "nets": [
     "DISP"
    ],
    "pattern": "DISP",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -155,6 +307,7 @@
      "U1"
     ]
    },
+   "net_edges": {},
    "nets": [
     "DSG_G",
     "DSG_R"
@@ -162,6 +315,8 @@
    "pattern": "DSG_*",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -172,12 +327,15 @@
      "U1"
     ]
    },
+   "net_edges": {},
    "nets": [
     "PBI"
    ],
    "pattern": "PBI",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -188,22 +346,104 @@
      "U1"
     ]
    },
+   "net_edges": {},
    "nets": [
     "PRES"
    ],
    "pattern": "PRES",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
+   "answered": {
+    "SMBC": "series resistor R20 100R to SMBC_I (a screen)",
+    "SMBC_I": "series resistor R20 100R to SMBC (a screen)",
+    "SMBD": "series resistor R21 100R to SMBD_I (a screen)",
+    "SMBD_I": "series resistor R21 100R to SMBD (a screen)"
+   },
    "basis": "SMBus at 100 kHz, open drain, the edge set by the pull-up and the bus capacitance",
+   "bound_decides": [],
+   "bound_nets": [
+    "SMBC",
+    "SMBC_I",
+    "SMBD",
+    "SMBD_I"
+   ],
    "class": "CLOCKED_DIGITAL",
+   "critical_by_net": {
+    "SMBC": 0.0,
+    "SMBC_I": 0.0,
+    "SMBD": 0.0,
+    "SMBD_I": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm": [
      "U1"
     ]
+   },
+   "layout_bound": [],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "SMBC": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "RPI-RP2040: beyond J_SMB on board E: U10 pin 5 SMBC",
+      "TI-BQ4050: across R20 from SMBC_I: U1 pin 19 SMBC"
+     ],
+     "by": "beyond J_SMB on board E: U10 pin 5 SMBC",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "RPI-RP2040"
+    },
+    "SMBC_I": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "TI-BQ4050: U1 pin 19 SMBC",
+      "RPI-RP2040: across R20 from SMBC: beyond J_SMB on board E: U10 pin 5 SMBC"
+     ],
+     "by": "U1 pin 19 SMBC",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "TI-BQ4050"
+    },
+    "SMBD": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "RPI-RP2040: beyond J_SMB on board E: U10 pin 4 SMBD",
+      "TI-BQ4050: across R21 from SMBD_I: U1 pin 18 SMBD"
+     ],
+     "by": "beyond J_SMB on board E: U10 pin 4 SMBD",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "RPI-RP2040"
+    },
+    "SMBD_I": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "TI-BQ4050: U1 pin 18 SMBD",
+      "RPI-RP2040: across R21 from SMBD: beyond J_SMB on board E: U10 pin 4 SMBD"
+     ],
+     "by": "U1 pin 18 SMBD",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "TI-BQ4050"
+    }
    },
    "nets": [
     "SMBC",
@@ -212,10 +452,13 @@
     "SMBD_I"
    ],
    "pattern": "SMB*",
-   "rise_ns": null,
+   "rise_ns": 0.0,
    "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "no interface record covers the entry"
   },
   {
    "basis": "a shunt sense line through its filter, millivolts of DC",
@@ -225,6 +468,7 @@
      "U1"
     ]
    },
+   "net_edges": {},
    "nets": [
     "SRN_F",
     "SRP_F"
@@ -232,6 +476,8 @@
    "pattern": "SR?_F",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -242,6 +488,7 @@
      "U1"
     ]
    },
+   "net_edges": {},
    "nets": [
     "TS1",
     "TS2",
@@ -251,6 +498,8 @@
    "pattern": "TS?",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -261,6 +510,7 @@
      "U1"
     ]
    },
+   "net_edges": {},
    "nets": [
     "VC1_F",
     "VC2_F",
@@ -270,6 +520,8 @@
    "pattern": "VC?_F",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   }
  ],
