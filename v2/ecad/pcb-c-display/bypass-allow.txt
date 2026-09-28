@@ -1,3 +1,7 @@
-# Reasons the decoupling distances of this board are accepted for now, one line each (place_audit.py reads this file).
-# Written 8 September 2026 with the numbers in the design record, the section "The decoupling gate of Stage C ran for the first time".
-The sixteen declared capacitors sit 8.2 to 32.1 mm from their pins because the placement generator shelf-packs passives by reference number; moving them is a floor-plan change across the whole board set (nine of the sixteen fit today, seven need room reserved beside each part before its neighbours are packed) and is an owner decision, not a quiet edit mid-wave.
+# The decoupling deviations of this board, ONE CAPACITOR PER LINE: `C36: the reason, with its distance and its loop estimate`.
+# Read by intent_checks.py (the board gate) and place_audit.py (the placement gate) through decoupling_rules.parse_allow.
+# A line allows the capacitor it names and no other; an allowed capacitor is a JUSTIFIED DEVIATION, counted as one and
+# never as a pass; a maker's own distance (the TPA6132A2's 5 mm) is passed by no line. Decision 42, DECOUPLING.md 6 D4.
+# 27 September 2026 (MESHSAT-1357, T6): the line of 8 September 2026 that stood here named no capacitor and allowed
+# every far one on the board ("moving them is a floor-plan change across the whole board set ... an owner decision").
+# The decision it waited for is decision 42, and no capacitor of this board carries a deviation under it yet.

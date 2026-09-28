@@ -9,6 +9,7 @@ import sys, re, math, pcbnew
 import os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import boardorder
+import fan_select, escape_cost
 from pcbnew import VECTOR2I, FromMM
 b = pcbnew.LoadBoard(sys.argv[1]); CLR = FromMM(0.16)
 NCC = {}
@@ -31,22 +32,12 @@ def net_clr(name):
             if fnmatch.fnmatchcase(name, pat) or fnmatch.fnmatchcase(name.lstrip("/"), pat): v = NC_CLS.get(cl, 0); break
         NCC[name] = v
     return max(CLR, NCC[name])
-def is_fine(fp):
-    if re.search(r"SOT-23-[68]", fp.GetFPIDAsString()): return True
-    pads = [p.GetPosition() for p in fp.Pads() if p.GetAttribute() == pcbnew.PAD_ATTRIB_SMD]
-    best = 1e9
-    for i in range(len(pads)):
-        for j in range(i + 1, len(pads)):
-            d = math.hypot(pads[i].x - pads[j].x, pads[i].y - pads[j].y)
-            if 0 < d < best: best = d
-    return best <= FromMM(0.7)
-def min_pitch(fp):
-    pads = [p.GetPosition() for p in fp.Pads() if p.GetAttribute() == pcbnew.PAD_ATTRIB_SMD]; best = 1e9
-    for i in range(len(pads)):
-        for j in range(i + 1, len(pads)):
-            d = math.hypot(pads[i].x - pads[j].x, pads[i].y - pads[j].y)
-            if 0 < d < best: best = d
-    return best
+# WHICH PARTS ARE ESCAPED is decided in one place since 27 September 2026 (decision 42, T1): `fan_select`, which the
+# two decoupling placers call too, so the fan they keep clear is the fan of the parts this pass escapes. The test is
+# the one this file has always applied (the land's name holds SOT-23-6 or SOT-23-8, or its closest two SMD pads are
+# 0.7 mm apart or less; a J part over 0.6 mm pitch and the board's ESCAPE_SKIP are left to the router), moved and
+# not changed: tests/test_decoupling_rules.py holds it to the committed lands.
+SKIP = fan_select.escape_skip(sys.argv[1])
 def pad_poly(p):
     L = next((l for l in (pcbnew.F_Cu, pcbnew.B_Cu, pcbnew.In1_Cu) if p.IsOnLayer(l)), pcbnew.F_Cu)
     return p.GetEffectivePolygon(L)
@@ -86,14 +77,17 @@ def seg_dist(p, a, c):
 import os
 DEBUG_REF = os.environ.get("DEBUG_REF", "")
 LAST = [""]
-def clear(v, r, me, me_ref, net, lane=0.75):
+def clear(v, r, me, me_ref, net, lane=0.75, ignore=None):
     """Circle (v, r) clear of: board edge, other-net pads (own footprint: plain clearance; other footprints: the lane rule, 0.75 mm by default,
-    relaxed to 0.35 on a second pass when a fine-pitch row has a neighbour part right past its tips), all vias, all tracks, rule areas."""
+    relaxed to 0.35 on a second pass when a fine-pitch row has a neighbour part right past its tips), all vias, all tracks, rule areas.
+    `ignore` is a set of references whose pads are left out: it is given only by the QUESTION asked after a pad has been refused
+    its escape (would it have had one without these parts, T4), never while copper is laid."""
     LAST[0] = ""
     if not (edges.GetLeft() + FromMM(1.0) < v.x < edges.GetRight() - FromMM(1.0) and edges.GetTop() + FromMM(1.0) < v.y < edges.GetBottom() - FromMM(1.0)): LAST[0] = "edge"; return False
     for q, qp, qpoly, qnet, qref, qreach in allpads:
         if qp.x == me.GetPosition().x and qp.y == me.GetPosition().y: continue
         if qnet == net and qref == me_ref: continue
+        if ignore and qref in ignore: continue
         gap = CLR if qref == me_ref else (FromMM(0.3) if qnet == net else FromMM(lane))
         # the window carries the pad's own reach, so a large land is not skipped for being wide
         if abs(v.x - qp.x) > FromMM(6) + qreach or abs(v.y - qp.y) > FromMM(6) + qreach: continue
@@ -107,6 +101,26 @@ def clear(v, r, me, me_ref, net, lane=0.75):
         o = z.Outline()
         if o.Contains(VECTOR2I(int(v.x), int(v.y))) or o.Contains(VECTOR2I(int(v.x + r), int(v.y))) or o.Contains(VECTOR2I(int(v.x - r), int(v.y))) or o.Contains(VECTOR2I(int(v.x), int(v.y + r))) or o.Contains(VECTOR2I(int(v.x), int(v.y - r))): LAST[0] = "rule-area"; return False
     return True
+# WHAT THE DECLARED DECOUPLING SEATS COST THIS PASS (decision 42, T4; 27 September 2026). The intent file beside the
+# board says which capacitor serves which part and in which class; `escape_cost` is asked, for every pad refused
+# below, whether the same attempts pass without the part's own-pin windows, without its own power-stage parts, or
+# without the declared capacitors on the other side. It is a QUESTION asked after a refusal: it lays nothing, and
+# nothing that is laid depends on it. A board with no intent file has no declared seat and says so.
+def _intent_beside(path):
+    import json
+    ip = os.path.join(os.path.dirname(os.path.abspath(path)) or ".", "out", os.path.splitext(os.path.basename(path))[0] + "-intent.json")
+    try: return json.load(open(ip, encoding="utf-8"))
+    except (OSError, ValueError): return None
+_INTENT = _intent_beside(sys.argv[1])
+_SIDE = {f.GetReference(): ("F" if f.GetLayer() == pcbnew.F_Cu else "B") for f in b.GetFootprints()}
+COST = escape_cost.Cost(_INTENT, _SIDE.get)
+def _ask_clear(me, me_ref, net):
+    """escape.py's own `clear` for one pad, in the shape escape_cost asks it, with the last refusal kept as it was."""
+    def ask(pt, r, lane, ignore):
+        keep = LAST[0]
+        try: return clear(pt, r, me, me_ref, net, lane, ignore)
+        finally: LAST[0] = keep
+    return ask
 added = skipped = ep_skipped = 0
 ep_pads = []   # (ref, pad number, net, laid, wanted, refusal reasons, vias of its own net already on the pad)
 def thermal_vias(fp):
@@ -151,6 +165,8 @@ def thermal_vias(fp):
             if not clear(v, FromMM(0.3), pad, fp.GetReference(), pad.GetNetname()):
                 ep_skipped += 1
                 ep_why.append("(%+.1f,%+.1f) %s" % (dx, dy, LAST[0] or "?"))
+                _by = re.match(r"^pad ([^.]+)\.", LAST[0] or "")
+                if _by: COST.site_refused(fp.GetReference(), _by.group(1))
                 continue
             via = pcbnew.PCB_VIA(b); via.SetPosition(v); via.SetDrill(FromMM(0.3)); via.SetWidth(FromMM(0.6)); via.SetViaType(pcbnew.VIATYPE_THROUGH); via.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); via.SetNet(pad.GetNet()); b.Add(via)
             vias.append((v, FromMM(0.3), pad.GetNetname())); added += 1; ep_laid += 1
@@ -173,11 +189,11 @@ def thermal_vias(fp):
                             list(ep_why), _have))
 
 for fp in boardorder.footprints(b):   # stage 0b, 11 Sep 2026: this loop LAYS, so its order decides what fits; board order follows a random uuid
-    if not is_fine(fp) or (fp.GetReference().startswith("J") and min_pitch(fp) > FromMM(0.6)): continue      # coarse connectors route fine without escapes; a 0.5 mm M.2 socket (B14 J_WIFI1) does not (5 Sep: the router thrashed 75 min on its 67 bare pads)
-    if fp.GetReference() in set(filter(None, __import__("os").environ.get("ESCAPE_SKIP", "").split(","))): continue   # A19: parts the router escapes itself (mixed pad sizes)
+    if not fan_select.is_escaped(fp): continue      # coarse connectors route fine without escapes; a 0.5 mm M.2 socket (B14 J_WIFI1) does not (5 Sep: the router thrashed 75 min on its 67 bare pads)
+    if fp.GetReference() in SKIP: continue   # A19: parts the router escapes itself (mixed pad sizes)
     ONLY = set(filter(None, os.environ.get("ESCAPE_ONLY", "").split(",")))
     if ONLY and fp.GetReference() not in ONLY: continue                    # test runs on one part
-    pitch = min_pitch(fp); fc = fp.GetPosition()
+    pitch = fan_select.min_pitch(fp); fc = fp.GetPosition()
     # 8 Sep 2026 (B17): the 0.5 mm rows take this scheme by pitch instead of by name. B14's M.2 socket was named here because it is
     # a 0.5 mm row and the splay cannot serve one; B17 has five of them, and on the splay their end pins landed 5 mm sideways. The
     # scheme's own margin is what decides: a 0.127 track passes a neighbour's 0.40 via at 0.5 mm lateral with 0.11 mm to spare, where
@@ -237,7 +253,7 @@ for fp in boardorder.footprints(b):   # stage 0b, 11 Sep 2026: this loop LAYS, s
             centre_along = sum(t[0] for t in lst) / n
             for idx, (along, pad, L) in enumerate(lst):
                 c = pad.GetPosition(); half = max(pad.GetSize().x, pad.GetSize().y) / 2; net = pad.GetNetname()
-                done = False
+                done = False; TRIED = []   # every attempt's probes, for the question asked if all are refused (T4)
                 # 8 Sep 2026 (B17): a splayed via row is `vpitch / pitch` times as wide as the pad row, so a long row (an M.2 socket's 37 pads at
                 # 0.5 mm) throws its end pins 5 mm sideways into whatever stands beside the connector and ten to thirteen pads of every socket
                 # got no escape at all. STAGGER first: each pin goes straight out on its own axis to one of `k` depths by index, so the via row
@@ -262,6 +278,7 @@ for fp in boardorder.footprints(b):   # stage 0b, 11 Sep 2026: this loop LAYS, s
                     knee = VECTOR2I(int(c.x + L[0] * (half + FromMM(kd))), int(c.y + L[1] * (half + FromMM(kd))))
                     v = VECTOR2I(int(c.x + L[0] * (half + FromMM(depth_)) + side_dir[0] * s_k), int(c.y + L[1] * (half + FromMM(depth_)) + side_dir[1] * s_k))
                     mids = [VECTOR2I(int(knee.x + (v.x - knee.x) * k / 12.0), int(knee.y + (v.y - knee.y) * k / 12.0)) for k in range(1, 12)]   # B16: a 0.4 mm via slipped between samples 0.4 mm apart on a long splay
+                    TRIED.append((lane, [(v, VIA_D / 2), (knee, TW / 2)] + [(m, TW / 2) for m in mids]))
                     if clear(v, VIA_D / 2, pad, fp.GetReference(), net, lane) and clear(knee, TW / 2, pad, fp.GetReference(), net, lane) and all(clear(m, TW / 2, pad, fp.GetReference(), net, lane) for m in mids):
                         layer = pcbnew.F_Cu if pad.IsOnLayer(pcbnew.F_Cu) else pcbnew.B_Cu
                         via = pcbnew.PCB_VIA(b); via.SetPosition(v); via.SetDrill(VIA_DR); via.SetWidth(VIA_D); via.SetViaType(pcbnew.VIATYPE_THROUGH); via.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); via.SetNet(pad.GetNet()); via.SetLocked(True); b.Add(via)
@@ -269,7 +286,8 @@ for fp in boardorder.footprints(b):   # stage 0b, 11 Sep 2026: this loop LAYS, s
                             t = pcbnew.PCB_TRACK(b); t.SetStart(s0); t.SetEnd(e0); t.SetWidth(TW); t.SetLayer(layer); t.SetNet(pad.GetNet()); t.SetLocked(True); b.Add(t); tracks.append((s0, e0, TW / 2, net))
                         vias.append((v, VIA_D / 2, net)); added += 1; done = True; break
                 if not done:
-                    skipped += 1; print("  no escape for %s pad %s (%s)%s" % (fp.GetReference(), pad.GetNumber(), net, ("  last reject: " + LAST[0]) if fp.GetReference() == DEBUG_REF else ""))
+                    _lost = COST.ask(fp.GetReference(), pad.GetNumber(), TRIED, _ask_clear(pad, fp.GetReference(), net))
+                    skipped += 1; print("  no escape for %s pad %s (%s)%s%s" % (fp.GetReference(), pad.GetNumber(), net, ("  last reject: " + LAST[0]) if fp.GetReference() == DEBUG_REF else "", ("  lost to " + escape_cost.WHAT[_lost]) if _lost else ""))
             continue
         for idx, (along, pad, L) in enumerate(lst):
             c = pad.GetPosition(); half = max(pad.GetSize().x, pad.GetSize().y) / 2; net = pad.GetNetname()
@@ -278,10 +296,11 @@ for fp in boardorder.footprints(b):   # stage 0b, 11 Sep 2026: this loop LAYS, s
             # 0.14 mm class clearance, so the second via is rejected and falls back to the alternating depth anyway. Measured on B17: the
             # attempt cost 5 escapes (1330 -> 1325) and 5 more skipped pads (58 -> 63) and laid no extra pair. The row alternates.
             order = (OFFS[0], OFFS[1], OFFS[2]) if idx % 2 == 0 else (OFFS[1], OFFS[0], OFFS[2])
-            done = False
+            done = False; TRIED = []
             for lane, off in [(ln, o) for ln in (0.75, 0.35) for o in order]:
                 v = VECTOR2I(int(c.x + L[0] * (half + FromMM(off))), int(c.y + L[1] * (half + FromMM(off))))
                 mids = [VECTOR2I(int(c.x + (v.x - c.x) * k / 12.0), int(c.y + (v.y - c.y) * k / 12.0)) for k in range(3, 12)]
+                TRIED.append((lane, [(v, VIA_D / 2)] + [(m, TW / 2) for m in mids]))
                 ok = clear(v, VIA_D / 2, pad, fp.GetReference(), net, lane) and all(clear(m, TW / 2, pad, fp.GetReference(), net, lane) for m in mids)
                 if not ok and fp.GetReference() == DEBUG_REF: print("    %s pad %s lane %.2f off %.2f: %s" % (fp.GetReference(), pad.GetNumber(), lane, off, LAST[0]))
                 if ok:
@@ -290,15 +309,56 @@ for fp in boardorder.footprints(b):   # stage 0b, 11 Sep 2026: this loop LAYS, s
                     t = pcbnew.PCB_TRACK(b); t.SetStart(c); t.SetEnd(v); t.SetWidth(TW); t.SetLayer(layer); t.SetNet(pad.GetNet()); t.SetLocked(True); b.Add(t)
                     vias.append((v, VIA_D / 2, net)); tracks.append((c, v, TW / 2, net)); added += 1; done = True; break
             if not done:
-                skipped += 1; print("  no escape for %s pad %s (%s)%s" % (fp.GetReference(), pad.GetNumber(), net, ("  last reject: " + LAST[0]) if fp.GetReference() == DEBUG_REF else ""))
+                _lost = COST.ask(fp.GetReference(), pad.GetNumber(), TRIED, _ask_clear(pad, fp.GetReference(), net))
+                skipped += 1; print("  no escape for %s pad %s (%s)%s%s" % (fp.GetReference(), pad.GetNumber(), net, ("  last reject: " + LAST[0]) if fp.GetReference() == DEBUG_REF else "", ("  lost to " + escape_cost.WHAT[_lost]) if _lost else ""))
     thermal_vias(fp)
 # THE COARSE PARTS: no escape stubs (they route fine without), only the thermal vias of an exposed pad (17 September 2026).
 for fp in boardorder.footprints(b):
-    if is_fine(fp) and not (fp.GetReference().startswith("J") and min_pitch(fp) > FromMM(0.6)): continue
-    if fp.GetReference() in set(filter(None, os.environ.get("ESCAPE_SKIP", "").split(","))): continue
+    if fan_select.is_escaped(fp): continue
+    if fp.GetReference() in SKIP: continue
     ONLY = set(filter(None, os.environ.get("ESCAPE_ONLY", "").split(",")))
     if ONLY and fp.GetReference() not in ONLY: continue
     thermal_vias(fp)
+# THE FAR SIDE UNDER A PART THIS PASS LEAVES TO THE ROUTER (D5, T4). A part that is neither escaped nor fanned has no
+# fan to refuse a far-side capacitor, so the capacitor can take a via site of that part's own pins. The sites asked
+# about are the ones this pass uses for a part above 0.7 mm pitch (a 0.6 mm via 0.8, 1.5 and 2.2 mm past the pad's
+# tip, straight out), and only parts that have a declared capacitor of the other side within 3 mm are asked.
+_DECL_FP = [f for f in b.GetFootprints() if f.GetReference() in COST.caps]
+def _near_far_cap(fp):
+    bb = fp.GetBoundingBox(False, False); i = FromMM(3.0)
+    box = pcbnew.BOX2I(VECTOR2I(bb.GetLeft() - i, bb.GetTop() - i), VECTOR2I(bb.GetWidth() + 2 * i, bb.GetHeight() + 2 * i))
+    return any(g.GetLayer() != fp.GetLayer() and box.Intersects(g.GetBoundingBox(False, False)) for g in _DECL_FP)
+for fp in (boardorder.footprints(b) if _DECL_FP else []):
+    if fan_select.is_fanned(fp, SKIP) or not _near_far_cap(fp): continue
+    fc = fp.GetPosition(); eps = ep_numbers(fp)
+    for pad in fp.Pads():
+        if pad.GetAttribute() != pcbnew.PAD_ATTRIB_SMD or pad.GetNetCode() <= 0 or pad.GetNetname().startswith("unconnected-"): continue
+        if pad.GetNumber() in eps or max(pad.GetSize().x, pad.GetSize().y) >= FromMM(2.0) or not _is_copper(pad): continue
+        c = pad.GetPosition(); sx, sy = pad.GetSize().x, pad.GetSize().y; half = max(sx, sy) / 2
+        th = math.radians(pad.GetOrientationDegrees()); L = (math.cos(th), -math.sin(th)) if sx >= sy else (math.sin(th), math.cos(th))
+        if L[0] * (c.x - fc.x) + L[1] * (c.y - fc.y) < 0: L = (-L[0], -L[1])
+        sites = [(VECTOR2I(int(c.x + L[0] * (half + FromMM(o))), int(c.y + L[1] * (half + FromMM(o)))), FromMM(0.3)) for o in (0.8, 1.5, 2.2)]
+        COST.pin_sites(fp.GetReference(), pad.GetNumber(), sites, _ask_clear(pad, fp.GetReference(), pad.GetNetname()))
+for _l in COST.lines(): print(_l)
+if _INTENT is None: print("escape: decoupling cost: no intent file beside this board, so no declared seat was asked about")
+else:
+    # THE COST AS DATA, for the next placement (D3, T4; 29 September 2026): `bypass_search.Context` reads the
+    # `close` list and seats those capacitors with that one opening shut while the part whose escape they cost
+    # stands where it stood here. The file beside the intent; it never decides a gate.
+    import json as _json
+    _FP = {f.GetReference(): f for f in b.GetFootprints()}
+    def _at(ref):
+        f = _FP.get(ref)
+        if f is None: return None
+        return [int(f.GetPosition().x), int(f.GetPosition().y), round(float(f.GetOrientationDegrees()), 3), _SIDE.get(ref)]
+    _cp = os.path.join(os.path.dirname(os.path.abspath(sys.argv[1])) or ".", "out",
+                       os.path.splitext(os.path.basename(sys.argv[1]))[0] + "-escape-cost.json")
+    try:
+        os.makedirs(os.path.dirname(_cp), exist_ok=True)
+        _json.dump(COST.record(_at), open(_cp, "w", encoding="utf-8"), indent=1, sort_keys=True)
+        print("escape: decoupling cost written to %s" % os.path.relpath(_cp))
+    except OSError as _e:
+        print("escape: decoupling cost NOT written (%s): the next placement will not close what this pass found" % _e)
 print("escape: %d escapes added, %d pads skipped, %d thermal via(s) refused for what is on the other side" % (added, skipped, ep_skipped))
 for ref, num, net, laid, want, why, have in ep_pads:
     print("escape: exposed pad %s.%s (%s) got %d thermal via(s) of %d, %d via(s) of its own net already on the pad: %s%s"
