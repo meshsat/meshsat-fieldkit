@@ -26,7 +26,7 @@ entry plates are released for cutting only after the checks their row names have
   the Arcol HS100 patch resistor on H1's four PEM S-M3 nuts: 45 and 83 W for 20, 30 and 60 s from a plate at or under
   +50 C, and its cooling.
 - **What it can prove:** the enclosure's conductance for heat released into the inside air, fans off, lid open and
-  closed, in still indoor air, to about +-3 % at 64 W and +-7 % at 21 W (the session's budget, INFERRED), and the rise
+  closed, in still indoor air, to about -2 to +4 % at 64 W and -3 to +8 % at 21 W (the session's budget, INFERRED), and the rise
   of H1 under a 45 to 83 W block. **What it cannot:** any part's temperature, the fans-on case, the face with the monitor
   and its openings, sun and wind, the kit's transients, or anything about sealing; its readings close neither final
   thermal nor sealing acceptance. It may close FEA-004's conductance clause and W4 T9's spread, and feed the desk

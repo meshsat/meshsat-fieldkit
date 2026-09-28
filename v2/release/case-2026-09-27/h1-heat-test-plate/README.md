@@ -77,7 +77,8 @@ legibility and of the figures against the check record).
 ## Before cutting
 
 H1 fits only a case and frame of the moulding the design assumes. **Do not release H1 for cutting before the receipt checks
-R1 to R8 of `v2/docs/records/od01/MACHINING-RFQ.md` section 6 have passed** on the case and frame bought for the test.
+R1, R2, R3, R5 and R6 of `v2/docs/records/od01/MACHINING-RFQ.md` section 6 have passed** on the case and frame bought for
+the test (identity, the rim zone, the depths, the frame, the insert pattern).
 Quotes may be asked before that.
 
 ## Review

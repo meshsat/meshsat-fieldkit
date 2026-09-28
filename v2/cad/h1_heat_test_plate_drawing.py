@@ -131,7 +131,8 @@ with PdfPages(out_pdf) as pdf:
              "3. The resistor's footprint stays inside the 1450PF window, %.1f mm from its edge at +Y (the ring under the plate): bend the +Y tag's lead down and "
              "toward -Y (h1-heat-test-plate-check.out)." % (L.WINDOW[1] / 2 - P.PATCH_RECT[3]),
              "4. Break all edges 0.2 to 0.5; no burr on the underside's sealing band. Deburr the PEM holes lightly on the top face only.",
-             "5. Quote per RFQ line H1 (v2/docs/records/od01/MACHINING-RFQ.md). Do not cut before the case and frame have passed the receipt checks R1 to R8 of that request."]
+             "5. Quote per RFQ line H1 (v2/docs/records/od01/MACHINING-RFQ.md). Do not cut before the case and frame bought for the test have passed "
+             "that request's receipt checks R1, R2, R3, R5 and R6 (its section 6)."]
     nx.text(0, 1, "\n".join(sum((textwrap.wrap(n, 130) for n in notes), [])), fontsize=5.4, va="top", linespacing=1.15)
     K.tolerance_box(fig, None, extra=["H1 (this sheet): outline +-0.10; thickness 3.0 +-0.13; rebate depth 2.0 and its line +-0.10; relief depth 0.8 +-0.10; the ten "
                                       "6-32 holes and the four PEM holes on position +-0.10 from the datum; hole diameters as drawn +0.10/-0.00 unless the nut maker's "
