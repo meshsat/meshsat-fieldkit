@@ -40,7 +40,10 @@ shared file; the integrator lands them by its own apply script.
         efficiency (a project figure), by calculation on the routed copper and by measurement on the prototype;
         (e) the stage's FET and shunt temperatures and switching waveforms (the 112 C figure is a scenario, SLPS414B
         p.3), PT-4 over VBAT, load and ambient including the 60 s key-down; (f) board A's layout generator does not
-        yet place the ten new parts nor re-derive +5V_DEV's outlet island (S-115, layout stage). Closes when: board A
+        yet place the ten new parts nor re-derive +5V_DEV's outlet island (S-115, layout stage); (g) board D's codec
+        supply: from U41's 4.872 V bottom, U23's on resistance (SLVSET8A p.7) and the 6 percent budget leave the PCM2912A
+        4.44 to 4.48 V at the 1.0 A typical (0.09 to 0.13 V over its 4.35 V), 0.007 to -0.009 V with +5V_D8IN's own 2
+        percent spent, and under 4.35 V at the 2.0 A peak, which predates the split (S-116). Closes when: board A
         is regenerated from fnd/s99a on the box and its intent, netlist and ERC are read; PWR-001 and INT-001 are
         re-taken on it; the IF-AB-POWER +5V_DEV row reads the new figures; (a) is decided by board B's declarations or
         a document. (b), (c), (d) and (e) are prototype verification in TEST-PLAN rows PT-2 and PT-4 (proposed in
@@ -61,7 +64,11 @@ shared file; the integrator lands them by its own apply script.
 
 ## 3. IF-AB-POWER (`pcb_interfaces.yaml`)
 
-- The +5V_DEV currents row (line 391 on set 8's line): `a_declares: "4.1 A typical, 6.9142 A peak at the converter
+- The +5V_DEV currents row (lines 391 to 398 on set 8's line), `a_declares` and `status` both restated: the apply
+  script `apply_if_ab_power_dev.py` holds the exact old and new row (its `--check` passes on this tree and writes
+  nothing). The old `status` still describes D8 at zero with 7.9 and 8.9 A coincident; the new one gives the split,
+  the 6.9142 A declared peak 0.142697 A under the 7.056897 A minimum and the P-tier left open under S-99. The first
+  draft's wording, kept for reference: `a_declares: "4.1 A typical, 6.9142 A peak at the converter
   (B 6.0 + the wall host port 0.9142, U32's nominal limit by TPS2596 equation 7; the D8 mezzanine on its own rail
   +5V_D8IN since decision 55), of which 3.8 A apportioned to J_5V_DEV (gen_sch_a.py, the S-99 lines)"`;
   `converter_limit`: "the LM5176 average loop on the OUTPUT side, 7.056897 to 9.649029 A over tolerance and an
