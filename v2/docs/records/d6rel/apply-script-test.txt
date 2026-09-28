@@ -1,0 +1,79 @@
+THE APPLY SCRIPT EXERCISED ON A SCRATCH COPY OF fnd/int7 AT 1c4235ec (worker d6rel, MESHSAT-1357, 28 September 2026 17:11 CEST)
+The copy: git archive 1c4235ec of v2/ecad/tools, v2/docs, the two vendor source records, the seven declared-phase artefacts and the seven
+boards' routed/ evidence folders (which hold the integration line's re-take of reliability with the UNREPAIRED tool, PASS on every board,
+taken 2026-09-28T14:54:53Z to 14:54:58Z, that is 16:54 CEST), with this branch's reliability.py, wear_inventory.py, pcb_reliability.yaml,
+the two test files, sources.txt, v2/docs/records/d6rel/ and the 30 documents the list cites laid over it (as the merge would). It is not a git
+checkout, so --commit cannot give the floor and the closing commit is not checked here; --floor is passed instead. The registry validator's
+baseline on the copy is its own (errors for pages and documents the copy does not carry), and the bar is that the change adds none.
+Nothing in the real tree is touched; every path is inside the copy ($COPY).
+
+== 1. stage coverage with the floor of the first draft, 16:46:27 CEST (must refuse: the tip's word-list readings are later)
+apply_rel001_coverage: REFUSED: the floor 2026-09-28T16:46:27+02:00 is not after every reading of the unrepaired tool this tree holds:
+  board A: the unrepaired tool's PASS at 2026-09-28T14:54:53Z (v2/ecad/pcb-a-power-a23/routed/reliability.verdict.json)
+  board B: the unrepaired tool's PASS at 2026-09-28T14:54:54Z (v2/ecad/pcb-b-compute-b19/routed/reliability.verdict.json)
+  board C: the unrepaired tool's PASS at 2026-09-28T14:54:55Z (v2/ecad/pcb-c-display-c8/routed/reliability.verdict.json)
+  board D: the unrepaired tool's PASS at 2026-09-28T14:54:55Z (v2/ecad/pcb-d-aprs-d9/routed/reliability.verdict.json)
+  board E: the unrepaired tool's PASS at 2026-09-28T14:54:56Z (v2/ecad/pcb-e1-dock-e7/routed/reliability.verdict.json)
+  board E5: the unrepaired tool's PASS at 2026-09-28T14:54:57Z (v2/ecad/pcb-e5-block/routed/reliability.verdict.json)
+  board P: the unrepaired tool's PASS at 2026-09-28T14:54:58Z (v2/ecad/pcb-p-pack-p2/routed/reliability.verdict.json)
+  pass a later --floor (the instant the repaired tool entered this tree)
+exit 2
+== 2. stage coverage with a floor after them, 17:00:00 CEST
+apply_rel001_coverage: coverage: REL-001 entry replaced in v2/ecad/tools/pcb_rules_coverage.yaml (sha256/16 d0ea449ec8909b8e -> cbddf903fd020788); floor 2026-09-28T17:00:00+02:00; re-parsed
+exit 0
+== 3. stage coverage again (must refuse)
+apply_rel001_coverage: REFUSED: the REL-001 entry already carries the inventory note: this stage has run
+exit 2
+== 4. the REL-001 entry now (its first two lines, cut at 200 characters)
+1206: REL-001: {implementation: NONE_YET, verification: {tool: reliability.py, verdict: reliability, fixtures: "tests/test_reliability.py, tests/test_reliability_inventory.py"}, maturity: ENFORCED, ga
+1207-   evidence_not_before: {"reliability": "2026-09-28T17:00:00+02:00"},
+== 5. stage close-s89 on the tip's own readings (must refuse: they are the unrepaired tool's, before the floor, no inventory counts)
+apply_rel001_coverage: note: $COPY is not a git checkout, so the commit is not checked here
+apply_rel001_coverage: REFUSED: REL-001 has not been re-taken as this closure needs:
+  board A: taken 2026-09-28T14:54:53Z, before the floor 2026-09-28T17:00:00+02:00; read list None, this tree holds f0912cb02741be21; read netlist None, the declared phase's is 0a2b59087bcc2678; carries no counts of the inventory (a reading of the word-list tool?) (v2/ecad/pcb-a-power-a23/routed/reliability.verdict.json)
+  board B: taken 2026-09-28T14:54:54Z, before the floor 2026-09-28T17:00:00+02:00; read list None, this tree holds f0912cb02741be21; read netlist None, the declared phase's is 028997a6c5e8810f; carries no counts of the inventory (a reading of the word-list tool?) (v2/ecad/pcb-b-compute-b19/routed/reliability.verdict.json)
+  board C: taken 2026-09-28T14:54:55Z, before the floor 2026-09-28T17:00:00+02:00; read list None, this tree holds f0912cb02741be21; read netlist None, the declared phase's is 3fddbb3edcd4248a; carries no counts of the inventory (a reading of the word-list tool?) (v2/ecad/pcb-c-display-c8/routed/reliability.verdict.json)
+  board D: taken 2026-09-28T14:54:55Z, before the floor 2026-09-28T17:00:00+02:00; read list None, this tree holds f0912cb02741be21; read netlist None, the declared phase's is 7a2c0ac2190b141a; carries no counts of the inventory (a reading of the word-list tool?) (v2/ecad/pcb-d-aprs-d9/routed/reliability.verdict.json)
+  board E: taken 2026-09-28T14:54:56Z, before the floor 2026-09-28T17:00:00+02:00; read list None, this tree holds f0912cb02741be21; read netlist None, the declared phase's is 56adc9746d61c4e0; carries no counts of the inventory (a reading of the word-list tool?) (v2/ecad/pcb-e1-dock-e7/routed/reliability.verdict.json)
+  board E5: taken 2026-09-28T14:54:57Z, before the floor 2026-09-28T17:00:00+02:00; read list None, this tree holds f0912cb02741be21; read board_file None, the declared phase's is 686b29a734c55b9a; carries no counts of the inventory (a reading of the word-list tool?) (v2/ecad/pcb-e5-block/routed/reliability.verdict.json)
+  board P: taken 2026-09-28T14:54:58Z, before the floor 2026-09-28T17:00:00+02:00; read list None, this tree holds f0912cb02741be21; read netlist None, the declared phase's is 760ac6f74d62d194; carries no counts of the inventory (a reading of the word-list tool?) (v2/ecad/pcb-p-pack-p2/routed/reliability.verdict.json)
+  Re-take reliability on every board (the box: gate_sweep.sh, or retake_gate.sh), then run this stage again.
+exit 2
+== 6. the re-take of reliability on every board with this branch's tool, into the copy's <phase>/routed/ with --out-dir:
+   pcb-a-power-a23      INCONCLUSIVE ts 2026-09-28T15:11:15Z list f0912cb02741be21 artefact 0a2b59087bcc2678 refused 0 missing_input None
+   pcb-b-compute-b19    INCONCLUSIVE ts 2026-09-28T15:11:16Z list f0912cb02741be21 artefact 028997a6c5e8810f refused 0 missing_input None
+   pcb-c-display-c8     INCONCLUSIVE ts 2026-09-28T15:11:16Z list f0912cb02741be21 artefact 3fddbb3edcd4248a refused 0 missing_input None
+   pcb-d-aprs-d9        INCONCLUSIVE ts 2026-09-28T15:11:17Z list f0912cb02741be21 artefact 7a2c0ac2190b141a refused 0 missing_input None
+   pcb-e1-dock-e7       INCONCLUSIVE ts 2026-09-28T15:11:17Z list f0912cb02741be21 artefact 56adc9746d61c4e0 refused 0 missing_input None
+   pcb-e5-block         INCONCLUSIVE ts 2026-09-28T15:11:18Z list f0912cb02741be21 artefact 686b29a734c55b9a refused 0 missing_input None
+   pcb-p-pack-p2        INCONCLUSIVE ts 2026-09-28T15:11:18Z list f0912cb02741be21 artefact 760ac6f74d62d194 refused 0 missing_input None
+== 7. stage close-s89 after the re-take
+apply_rel001_coverage: note: $COPY is not a git checkout, so the commit is not checked here
+apply_rel001_coverage: close-s89: S-89 moved to closed_items in v2/ecad/tools/pcb_requirements.yaml (closed_by commit 59987cb9); the wait on it cited instead in REQ-022, REQ-024, REQ-026, REQ-028, REQ-064; re-parsed
+apply_rel001_coverage: rules_lib.py requirements: 36 error(s) before this change, 36 after, 0 new
+exit 0
+== 8. stage close-s89 again (must refuse)
+apply_rel001_coverage: note: $COPY is not a git checkout, so the commit is not checked here
+apply_rel001_coverage: REFUSED: S-89 is already in closed_items: this stage has run
+exit 2
+== 9. S-89 in the registry now (the closed entry's first lines, cut at 160 characters)
+3129:  - id: S-89
+  - id: S-89
+    closed_by: commit 59987cb9
+    closing_evidence: >-
+      Stream d6rel, merged as commit 59987cb9 (v2/docs/records/d6rel/README.md). reliability.py reads an inventory by
+      reference class and land (wear_inventory.py; pcb_reliability.yaml section inventory), every candidate classed or
+   ...
+== 10. the registry and the coverage entry re-parsed
+   S-89 open: False ; closed_by: commit 59987cb9 ; keys: ['closed_by', 'closing_evidence', 'id', 'title']
+   open items: 63 ; closed items: 59 ; S-88 and S-90 still open: True
+   REQ-022 waits_on None; history cites S-89: True
+   REQ-024 waits_on ['S-55']; history cites S-89: True
+   REQ-026 waits_on None; history cites S-89: True
+   REQ-028 waits_on None; history cites S-89: True
+   REQ-064 waits_on None; history cites S-89: True
+   coverage fixtures: tests/test_reliability.py, tests/test_reliability_inventory.py
+   coverage evidence_not_before: {'reliability': '2026-09-28T17:00:00+02:00'}
+== 11. the validator on the patched copy, its last line, and its lines that name S-89
+warn  closed item S-89: git cannot say here whether commit 59987cb9 exists
+rules_lib: 144 requirement record(s), 36 error(s), 22 warning(s)
