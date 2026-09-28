@@ -643,8 +643,10 @@ def emit_block(letter, root=None, calc=None, today=None):
     for l in RW.bound_lines(t):
         w = l.split()
         if w[0] in INPUT_ROLES:
-            rc, last = _git(root, "log", "-1", "--format=%h", "--", w[1]) if gs is not None else (1, "")
-            l += " changed %s" % (last if rc == 0 and last else "UNKNOWN")
+            # the full hash cut to 8: git's %h grows with the repository's size (a clone with more objects printed 9
+            # characters on 29 September 2026 and every sheet read as changed), so the length is fixed here
+            rc, last = _git(root, "log", "-1", "--format=%H", "--", w[1]) if gs is not None else (1, "")
+            l += " changed %s" % (last[:8] if rc == 0 and last else "UNKNOWN")
         L.append(l)
     rc, head = _git(root, "rev-parse", "--short=8", "HEAD") if gs is not None else (1, "")
     L.append("read       %s at %s" % (today or datetime.date.today().isoformat(), head if rc == 0 and head else "UNKNOWN"))
@@ -717,7 +719,8 @@ def emit_sheet(letter, root=None, calc=None, today=None):
 
     def input_line(role, path):
         now = sha16(os.path.join(root, path))
-        rc, last = _git(root, "log", "-1", "--format=%h", "--", path) if gs is not None else (1, "")
+        rc, last = _git(root, "log", "-1", "--format=%H", "--", path) if gs is not None else (1, "")
+        last = last[:8] if rc == 0 and last else last   # a fixed length, as in emit above
         was = said["inputs"].get(role) or {}
         if not (rc == 0 and last):
             last = was.get("changed") if was.get("sha16") == now and was.get("path") == path and was.get("changed") else "UNKNOWN"

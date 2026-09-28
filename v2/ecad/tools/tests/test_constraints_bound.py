@@ -673,6 +673,29 @@ def t_THE_REAL_TREE_every_sheet_emitted_again_is_itself():
         assert len(have) == len(want) and all(a.split()[:1] == ["read"] == b.split()[:1] for a, b in diff), (name, diff[:3])
 
 
+def t_THE_REAL_TREE_a_longer_git_abbreviation_does_not_move_a_sheet():
+    """A `changed` commit is written at a fixed 8 characters: git's own abbreviation grows with the repository (a box
+    clone with more objects printed 9 on 29 September 2026 and every sheet read as moved). Forcing core.abbrev to 12
+    for the emitting git must leave every sheet as committed but for its `read` line."""
+    _yaml_or_skip()
+    keys = ("GIT_CONFIG_COUNT", "GIT_CONFIG_KEY_0", "GIT_CONFIG_VALUE_0")
+    saved = {k: os.environ.get(k) for k in keys}
+    os.environ.update({"GIT_CONFIG_COUNT": "1", "GIT_CONFIG_KEY_0": "core.abbrev", "GIT_CONFIG_VALUE_0": "12"})
+    try:
+        for letter, name in sorted(CB.SHEETS.items()):
+            have = open(os.path.join(CB.ROOT, *(SHEETS + (name,))), encoding="utf-8").read().split("\n")
+            want = CB.emit_sheet(letter, None, RW).split("\n")
+            diff = [(a, b) for a, b in zip(have, want) if a != b]
+            assert len(have) == len(want) and all(a.split()[:1] == ["read"] == b.split()[:1] for a, b in diff), (name, diff[:3])
+            for l in want:
+                if l.split()[:1] and l.split()[0] in CB.INPUT_ROLES and " changed " in l and not l.endswith("UNKNOWN"):
+                    assert len(l.rsplit(" ", 1)[1]) == 8, (name, l)
+    finally:
+        for k, v in saved.items():
+            if v is None: os.environ.pop(k, None)
+            else: os.environ[k] = v
+
+
 def t_THE_REAL_TREE_the_tool_by_default_leaves_the_tree_alone():
     _yaml_or_skip()
     cwd = tempfile.mkdtemp(prefix="cbound-cwd-")
