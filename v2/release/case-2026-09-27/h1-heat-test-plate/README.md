@@ -59,7 +59,7 @@ lists every file an engineer needs, this folder's included, by path and sha256.
 
 ## Source revision
 
-Generated on 29 September 2026 at 01:34 CEST (23:34 UTC on 28 September, the date the sheet's title block prints) on the
+Generated on 29 September 2026 at 01:37 CEST (23:37 UTC on 28 September, the date the sheet's title block prints) on the
 rented CAD box (Ubuntu 24.04, Python 3.12.3, x86_64) from branch `fnd/od01b` at `b8880536`
 (`CASE_BASE_COMMIT=b8880536`; a first build at `c0ec7684` had the HS100's hole misread on the sheet's section and note 2,
 with the same geometry: the STL bytes are identical), in a venv whose `pip freeze` equals `v2/cad/requirements-cad.lock` line for line
