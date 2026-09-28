@@ -1,7 +1,7 @@
-# MeshSat V2 case release h1-heat-test-plate: sha256 of every file (sha256sum -c MANIFEST.sha256). Written 2026-09-29 by v2/cad/case_manifest.py from tree f2294a69.
-ddce52b9e7086ab7b53f96ea083869f5e457b6a7b00a2d5468dea15aecd84624  README.md
+# MeshSat V2 case release h1-heat-test-plate: sha256 of every file (sha256sum -c MANIFEST.sha256). Written 2026-09-29 by v2/cad/case_manifest.py from tree c5a95973.
+d113e7d9da080a226e85bd67ed9546c6c7fa55ce80a840ece9cbfa2a20f18275  README.md
 2aead4eeb039a7f25f3e3271d619213235d8670b20451baa33e2ac1b89b3aaa8  h1-heat-test-plate-check.out
-570fa2fcb35d3ebd78b21636e2a65adab3a01c7951b307d3733e87c29e888104  h1-heat-test-plate-drawing.pdf
-ee4ebf502a388b6a8be79193145d32e9f3f84be671e141f2cf2c27193fa78c23  h1-heat-test-plate.dxf
-02d32e191d8d66575ec4093177202096d64e7bde3ca18a3d5495748cb318fc7e  h1-heat-test-plate.step
+92059843ba66a495990c9fe94303d1d5f49a9e237506e620bc4ffe67c80688e0  h1-heat-test-plate-drawing.pdf
+5547c559da4b9c77a006b4e49e3f18729c1d729bf80563351dce998136e98025  h1-heat-test-plate.dxf
+f33a6b6b705c3bf4ee99ae8a822727f894e5f77966908d05f09e33b58685c2c7  h1-heat-test-plate.step
 71aedd882d888358f1c7f62c694dc3a119e62f32c989006d230a1c7f37a4444b  h1-heat-test-plate.stl
