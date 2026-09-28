@@ -7,7 +7,7 @@ Every rule this project holds a board to, with its authority, its applicability,
 its verification is currently worth. Generated from the registry: the registry is the authority and this page
 is its rendering.
 
-Registry version **2026-09-16.1**, fingerprint **635ff031f210f48c**, 59 rules over 34 domains.
+Registry version **2026-09-16.1**, fingerprint **a9b1e7f7412f9c0c**, 59 rules over 34 domains.
 
 ## How to read a rule
 
@@ -692,18 +692,42 @@ frequencies that pin's current actually contains.
 | release effect | **MUST_JUSTIFY** |
 | risk | POWER_INTEGRITY, EMC, SIGNAL_INTEGRITY |
 | verified by | SCRIPT, CALCULATION at PLACED_BOARD (partially automatable) |
-| source | SOURCE_UNVERIFIED |
-| implementation | bypass_slots.py, bypass_place.py |
+| source | PARTIALLY_VERIFIED |
+| | AN4938 Getting started with STM32H74xI/G and STM32H75xI/G MCU hardware development, STMicroelectronics, 2.2 (p.12), 7.4 (p.32), 9.3 and Figure 21 (pp.38-39) -- v2/vendor/st/st-an4938-rev7.pdf |
+| | TPA6132A2 25-mW DirectPath Stereo Headphone Amplifier, Texas Instruments, 9 and 9.1 (p.17) -- v2/vendor/ti/ti-tpa6132a2.pdf |
+| | High-Speed Layout Guidelines, Texas Instruments, 2.4 (p.13) -- v2/vendor/ti/ti-scaa082a-high-speed-layout-guidelines.pdf |
+| | AN 574 Printed Circuit Board (PCB) Power Delivery Network (PDN) Design Methodology, Altera (Intel), pp.6, 13, 16 -- v2/vendor/standards/intel-an574.pdf |
+| | the part makers' layout clauses, one per class, TI, Diodes, Microchip, Silicon Labs, Raspberry Pi, section 4 of that page -- v2/docs/feasibility/DECOUPLING.md |
+| implementation | decoupling_rules.py (the class rules, one limit per class, the allowance, the far side, the own via), fan_select.py (one fan selection with escape.py), bypass_search.py (one seat search), bypass_slots.py, bypass_place.py, escape.py with escape_cost.py (the per-part cost of the windows, the converter openings and the far side), intent.py (a declaration without a class or a basis is refused) |
 | maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one capacitor, expires the next placement |
 
-**Accept when** Each declared decoupling entry states its pin, its distance, its via count and the loop it forms; an entry
-beyond the declared distance carries a written reason. The distance itself is derived per device from the
-current's spectral content, not taken as one project-wide number.
+**Accept when** Each declared decoupling entry states its pin, its distance, its via count and the loop it forms, and names
+its class, by the role its maker gives it and never by its value, and the maker clause behind it. Class R (a
+converter's own power-stage capacitor): on the IC's side, the input capacitor's rail pad within 3.0 mm of VIN
+and declared at VIN, no via in the loop, output capacitors declared against the output loop; the fan does not
+apply to the converter's own power-stage parts; never on the other side. Class D (a capacitor a maker ties to
+a supply pin, any value) and class L (a regulator's output or VCAP capacitor, with the maker's value floor
+and ESR bound): rail pad within 3.0 mm in the part's own-pin window, ground pad to the plane by its own via;
+where a maker states a distance, that distance is a hard limit; on a board already assembled with SMD parts
+on both sides, a seat on the other side is judged by its in-plane distance plus the stackup's via allowance,
+and is never inside the escape fan of a fanned part on either side, never over a through-hole part, and never
+used for a part whose maker names the same side; otherwise a justified deviation naming the capacitor, its
+distance and its loop estimate. Class A (a supply pin behind a series resistor, or a backup reservoir): the
+nearest free seat outside the fan at the pin end of its RC, with no high-current conductor between or
+alongside (provisional for the battery protection parts until the qualified review of review section 2).
+Class B1 (bulk the maker calls rail bulk): value and count, no pin distance, declared against the regulator
+that feeds the rail and seated toward it, its distance printed. Class B2 (bulk no maker places): 6.0 mm from
+the pin it is declared against. The 3.0 and 6.0 mm are project screens, not maker numbers. The distance
+itself is derived per device from the current's spectral content, not taken as one project-wide number; until
+that derivation exists for a device, its screen decides only between a pass and a justified deviation. A
+justified deviation is counted as such and never as a pass.
 
-**Why** Loop inductance, not capacitance, decides high-frequency decoupling. The project's present 3 mm number is a
-heuristic and is recorded as one.
+**Why** Loop inductance decides high-frequency decoupling, and what forms the loop differs by class: the switching
+loop of a converter, the track from a capacitor to its pin where the rail is not a plane, the far-side vias,
+and nothing that matters behind a series resistor. A regulator's output capacitor is also part of its
+stability. One maker document in the tree gives a distance (decision 42, ruled 26 September 2026).
 
 **If violated** Rail collapse at switching edges, radiated emissions, and marginal digital timing.
 
