@@ -3,7 +3,14 @@
 
 Every connector-class part of boards A, D and E (a reference J, P, PAD or W), pin by pin: the net, whether it carries
 a supply or a signal, and the entry of the corrected declaration that covers it. It stops if a pin that carries a
-supply or a signal is covered by no entry, so the tables cannot leave one out. Markdown on stdout.
+supply or a signal is covered by no entry (keyed by PIN, so an entry with a partial `pins` list cannot pass it; the
+fresh check's item M10), so the tables cannot leave one out. Markdown on stdout.
+
+THE CLASS COLUMN SAYS WHAT WAS JUDGED (the fresh check's item M2). An `off_board` entry is believed by port_protect.py
+on its text. Where this review read the protecting parts itself, on another board's netlist, the column says so
+(READ_OFF_BOARD: J_MAINSW, board C's U10 behind FB1, FB2 and C26); every other off_board entry names a part in the wall
+whose sheet states no figure at the ruled level, and its verdict is CANNOT BE JUDGED AT THE DESK, so the column says
+"protection claimed off this board, not judged here" and never "protected".
 
 Usage: make_pin_tables.py <tree root>
 """
@@ -13,6 +20,7 @@ import netread
 import apply_port_declarations as D
 
 CONNECTOR = re.compile(r"^(J|P|PAD|W)(_|\d|$)")
+READ_OFF_BOARD = {"J_MAINSW": "board C's netlist"}      # the off_board entries whose protecting parts this review read
 
 
 def key(p):
@@ -42,8 +50,19 @@ def main(root):
         comps, nets = netread.read(os.path.join(root, D.NETLIST[letter]))
         sha = hashlib.sha256(open(os.path.join(root, D.NETLIST[letter]), "rb").read()).hexdigest()
         cls = {}
-        for e in ext: cls[e["ref"]] = ("EXTERNAL, protected off this board" if e.get("off_board") else "EXTERNAL", e)
+        for e in ext:
+            label = "EXTERNAL"
+            if e.get("off_board"):
+                label = ("EXTERNAL, protected off this board (read on %s)" % READ_OFF_BOARD[e["ref"]] if e["ref"] in READ_OFF_BOARD
+                         else "EXTERNAL, protection claimed off this board, not judged here")
+            cls[e["ref"]] = (label, e)
         for e in internal: cls[e["ref"]] = ("INTERNAL", e)
+        # every pin that carries a supply or a signal is in exactly one entry, BY PIN (M10): an entry listing some pins
+        # of a connector covers those pins only
+        covered = {}
+        for r, (c, e) in cls.items():
+            for p in (e.get("pins") or list(comps.get(r, {"pins": {}})["pins"])):
+                covered[(r, str(p))] = c
         refs = sorted((r for r in comps if CONNECTOR.match(r)), key=rkey)
         print("\n### Board %s: every connector pin (%s, sha256 %s)\n" % (letter.upper(), D.NETLIST[letter].split("/")[-1], sha[:16]))
         print("%d connector-class parts, %d pins, of which %d carry a supply or a signal and %d are ground.\n"
@@ -57,7 +76,8 @@ def main(root):
             live = ["%s: %s" % (p, pins[p]) for p in sorted(pins, key=key) if D.conductor(pins[p])]
             gnd = [p for p in sorted(pins, key=key) if not D.conductor(pins[p])]
             if live:
-                assert r in cls, "board %s: %s carries %s and no entry covers it" % (letter.upper(), r, live)
+                left = [p for p in sorted(pins, key=key) if D.conductor(pins[p]) and (r, p) not in covered]
+                assert not left, "board %s: %s.%s carries %s and no entry covers it" % (letter.upper(), r, left[0], pins[left[0]])
                 c, e = cls[r]; why = e["why"]
             else:
                 c, why = "carries no conductor", "a return: every pin is on %s" % ", ".join(sorted({pins[p] for p in pins}))

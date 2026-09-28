@@ -1,0 +1,132 @@
+ok   board A baseline     rc=0 want 0 verdict PASS of 42 ports 18 ext_pins 22 reviewed 22 disagreements 0
+      verdict: port_protect           PASS         of 42 {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 5, "clamps_one_way": 5, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unju
+ok   board A moved-ground rc=1 want 1 verdict FAIL of 42 ports 18 ext_pins 19 reviewed 22 disagreements 3
+      UNCOVERED J_USBW.1 on VBUS_WALL: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+      UNCOVERED J_USBW.2 on USB_WALL_N: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+      UNCOVERED J_USBW.3 on USB_WALL_P: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+      REVIEWED J_USBW.1 on VBUS_WALL: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and no external entry covers it
+      REVIEWED J_USBW.2 on USB_WALL_N: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and no external entry covers it
+      REVIEWED J_USBW.3 on USB_WALL_P: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and no external entry covers it
+      FAIL DECLARATION J_USBW.4 is on GND: the external entry lists a pin that carries no supply and no signal (a ground or a no-connect), so it names no conductor there and nothing was judged
+      verdict: port_protect           FAIL         of 42 {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 5, "clamps_one_way": 5, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unju
+ok   board A removed      rc=3 want 3 verdict INCONCLUSIVE of 38 ports 17 ext_pins 19 reviewed 22 disagreements 3
+      UNCOVERED J_USBW.1 on VBUS_WALL: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+      UNCOVERED J_USBW.2 on USB_WALL_N: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+      UNCOVERED J_USBW.3 on USB_WALL_P: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+      REVIEWED J_USBW.1 on VBUS_WALL: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and no external entry covers it
+      REVIEWED J_USBW.2 on USB_WALL_N: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and no external entry covers it
+      REVIEWED J_USBW.3 on USB_WALL_P: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and no external entry covers it
+      verdict: port_protect           INCONCLUSIVE of 38 {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 5, "clamps_one_way": 5, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unju
+ok   board A reclassified rc=3 want 3 verdict INCONCLUSIVE of 38 ports 17 ext_pins 19 reviewed 22 disagreements 3
+      RECLASSIFIED J_USBW.1 on VBUS_WALL: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and
+      RECLASSIFIED J_USBW.2 on USB_WALL_N: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason an
+      RECLASSIFIED J_USBW.3 on USB_WALL_P: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason an
+      verdict: port_protect           INCONCLUSIVE of 38 {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 5, "clamps_one_way": 5, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unju
+ok   board A narrowed     rc=3 want 3 verdict INCONCLUSIVE of 42 ports 18 ext_pins 20 reviewed 22 disagreements 2
+      RECLASSIFIED J_USBW.2 on USB_WALL_N: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason an
+      RECLASSIFIED J_USBW.3 on USB_WALL_P: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason an
+      verdict: port_protect           INCONCLUSIVE of 42 {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 5, "clamps_one_way": 5, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unju
+ok   board A zero         rc=3 want 3 verdict INCONCLUSIVE of 5 ports 0 ext_pins 0 reviewed 22 disagreements 22
+      RECLASSIFIED J_BM1.1 on RF_VHF: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and the
+      RECLASSIFIED J_BM10.1 on RF_IRIDIUM: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason an
+      RECLASSIFIED J_BM11.1 on RF_LORA: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and t
+      RECLASSIFIED J_BM2.1 on RF_HF: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and the 
+      RECLASSIFIED J_BM3.1 on RF_WIFI24: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and 
+      RECLASSIFIED J_BM4.1 on RF_GNSS: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and th
+      RECLASSIFIED J_BM5.1 on RF_SDR: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and the
+      RECLASSIFIED J_BM6.1 on RF_P2PA: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and th
+      RECLASSIFIED J_BM7.1 on RF_P2PB: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and th
+      RECLASSIFIED J_BM8.1 on RF_5G1: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and the
+      RECLASSIFIED J_BM9.1 on RF_5G2: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and the
+      RECLASSIFIED J_MAINSW.1 on MAIN_PB: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and
+      RECLASSIFIED J_USBC_OUT.1 on PD_VBUS: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason a
+      RECLASSIFIED J_USBC_OUT.2 on PD_CC1: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason an
+      RECLASSIFIED J_USBC_OUT.3 on PD_CC2: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason an
+      RECLASSIFIED J_USBW.1 on VBUS_WALL: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and
+      RECLASSIFIED J_USBW.2 on USB_WALL_N: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason an
+      RECLASSIFIED J_USBW.3 on USB_WALL_P: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason an
+      RECLASSIFIED J_VR1.1 on VIN_RAW: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and th
+      RECLASSIFIED J_VR2.1 on VIN_RAW: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and th
+      RECLASSIFIED J_VR3.1 on VIN_RAW: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and th
+      RECLASSIFIED J_VR4.1 on VIN_RAW: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and th
+      verdict: port_protect           INCONCLUSIVE of 5 {"clamps": 5, "clamps_one_way": 5, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unjudged": 0, "declarations_refused": 0, "declared_exter
+ok   board A reconciled   rc=0 want 0 verdict PASS of 38 ports 17 ext_pins 19 reviewed 19 disagreements 0
+      verdict: port_protect           PASS         of 38 {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 5, "clamps_one_way": 5, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unju
+ok   board D baseline     rc=0 want 0 verdict PASS of 21 ports 4 ext_pins 8 reviewed 8 disagreements 0
+      verdict: port_protect           PASS         of 21 {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 7, "clamps_one_way": 1, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unju
+ok   board D moved-ground rc=1 want 1 verdict FAIL of 21 ports 4 ext_pins 5 reviewed 8 disagreements 3
+      UNCOVERED J_HS1.1 on HS1_SPK: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+      UNCOVERED J_HS1.3 on HS1_MIC: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+      UNCOVERED J_HS1.5 on PTT_HS1_n: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+      REVIEWED J_HS1.1 on HS1_SPK: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and no external entry covers it
+      REVIEWED J_HS1.3 on HS1_MIC: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and no external entry covers it
+      REVIEWED J_HS1.5 on PTT_HS1_n: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and no external entry covers it
+      FAIL DECLARATION J_HS1.2 is on GND: the external entry lists a pin that carries no supply and no signal (a ground or a no-connect), so it names no conductor there and nothing was judged
+      verdict: port_protect           FAIL         of 21 {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 7, "clamps_one_way": 1, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unju
+ok   board D removed      rc=3 want 3 verdict INCONCLUSIVE of 16 ports 3 ext_pins 5 reviewed 8 disagreements 3
+      UNCOVERED J_HS1.1 on HS1_SPK: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+      UNCOVERED J_HS1.3 on HS1_MIC: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+      UNCOVERED J_HS1.5 on PTT_HS1_n: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+      REVIEWED J_HS1.1 on HS1_SPK: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and no external entry covers it
+      REVIEWED J_HS1.3 on HS1_MIC: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and no external entry covers it
+      REVIEWED J_HS1.5 on PTT_HS1_n: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and no external entry covers it
+      verdict: port_protect           INCONCLUSIVE of 16 {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 7, "clamps_one_way": 1, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unju
+ok   board D reclassified rc=3 want 3 verdict INCONCLUSIVE of 16 ports 3 ext_pins 5 reviewed 8 disagreements 3
+      RECLASSIFIED J_HS1.1 on HS1_SPK: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and th
+      RECLASSIFIED J_HS1.3 on HS1_MIC: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and th
+      RECLASSIFIED J_HS1.5 on PTT_HS1_n: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and 
+      verdict: port_protect           INCONCLUSIVE of 16 {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 7, "clamps_one_way": 1, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unju
+ok   board D narrowed     rc=3 want 3 verdict INCONCLUSIVE of 21 ports 4 ext_pins 6 reviewed 8 disagreements 2
+      RECLASSIFIED J_HS1.3 on HS1_MIC: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and th
+      RECLASSIFIED J_HS1.5 on PTT_HS1_n: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and 
+      verdict: port_protect           INCONCLUSIVE of 21 {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 7, "clamps_one_way": 1, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unju
+ok   board D zero         rc=3 want 3 verdict INCONCLUSIVE of 7 ports 0 ext_pins 0 reviewed 8 disagreements 8
+      RECLASSIFIED J_ANT.1 on RF_ANT: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and the
+      RECLASSIFIED J_HS1.1 on HS1_SPK: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and th
+      RECLASSIFIED J_HS1.3 on HS1_MIC: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and th
+      RECLASSIFIED J_HS1.5 on PTT_HS1_n: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and 
+      RECLASSIFIED J_HS2.1 on HS2_SPK: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and th
+      RECLASSIFIED J_HS2.3 on HS2_MIC: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and th
+      RECLASSIFIED J_HS2.5 on PTT_HS2_n: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and 
+      RECLASSIFIED J_PAOUT.1 on RF_PAOUT: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and
+      verdict: port_protect           INCONCLUSIVE of 7 {"clamps": 7, "clamps_one_way": 1, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unjudged": 0, "declarations_refused": 0, "declared_exter
+ok   board D reconciled   rc=0 want 0 verdict PASS of 16 ports 3 ext_pins 5 reviewed 5 disagreements 0
+      verdict: port_protect           PASS         of 16 {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 7, "clamps_one_way": 1, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unju
+ok   board E baseline     rc=0 want 0 verdict PASS of 13 ports 3 ext_pins 5 reviewed 5 disagreements 0
+      verdict: port_protect           PASS         of 13 {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 5, "clamps_one_way": 4, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unju
+ok   board E moved-ground rc=1 want 1 verdict FAIL of 13 ports 3 ext_pins 2 reviewed 5 disagreements 3
+      UNCOVERED J_POD.1 on +3V3_E6: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+      UNCOVERED J_POD.3 on SDA1: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+      UNCOVERED J_POD.4 on SCL1: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+      REVIEWED J_POD.1 on +3V3_E6: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and no external entry covers it
+      REVIEWED J_POD.3 on SDA1: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and no external entry covers it
+      REVIEWED J_POD.4 on SCL1: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and no external entry covers it
+      FAIL DECLARATION J_POD.2 is on GND: the external entry lists a pin that carries no supply and no signal (a ground or a no-connect), so it names no conductor there and nothing was judged
+      verdict: port_protect           FAIL         of 13 {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 5, "clamps_one_way": 4, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unju
+ok   board E removed      rc=3 want 3 verdict INCONCLUSIVE of 9 ports 2 ext_pins 2 reviewed 5 disagreements 3
+      UNCOVERED J_POD.1 on +3V3_E6: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+      UNCOVERED J_POD.3 on SDA1: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+      UNCOVERED J_POD.4 on SCL1: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+      REVIEWED J_POD.1 on +3V3_E6: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and no external entry covers it
+      REVIEWED J_POD.3 on SDA1: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and no external entry covers it
+      REVIEWED J_POD.4 on SCL1: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and no external entry covers it
+      verdict: port_protect           INCONCLUSIVE of 9 {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 5, "clamps_one_way": 4, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unjud
+ok   board E reclassified rc=3 want 3 verdict INCONCLUSIVE of 9 ports 2 ext_pins 2 reviewed 5 disagreements 3
+      RECLASSIFIED J_POD.1 on +3V3_E6: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and th
+      RECLASSIFIED J_POD.3 on SDA1: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and the r
+      RECLASSIFIED J_POD.4 on SCL1: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and the r
+      verdict: port_protect           INCONCLUSIVE of 9 {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 5, "clamps_one_way": 4, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unjud
+ok   board E narrowed     rc=3 want 3 verdict INCONCLUSIVE of 13 ports 3 ext_pins 3 reviewed 5 disagreements 2
+      RECLASSIFIED J_POD.3 on SDA1: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and the r
+      RECLASSIFIED J_POD.4 on SCL1: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and the r
+      verdict: port_protect           INCONCLUSIVE of 13 {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 5, "clamps_one_way": 4, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unju
+ok   board E zero         rc=3 want 3 verdict INCONCLUSIVE of 5 ports 0 ext_pins 0 reviewed 5 disagreements 5
+      RECLASSIFIED J_DCIN.1 on DC_IN: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and the
+      RECLASSIFIED J_POD.1 on +3V3_E6: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and th
+      RECLASSIFIED J_POD.3 on SDA1: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and the r
+      RECLASSIFIED J_POD.4 on SCL1: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and the r
+      RECLASSIFIED J_SOLAR.1 on PV_IN: the review (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) holds it external and the declaration says internal; the reviewed set is changed with its reason and th
+      verdict: port_protect           INCONCLUSIVE of 5 {"clamps": 5, "clamps_one_way": 4, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unjudged": 0, "declarations_refused": 0, "declared_exter
+ok   board E reconciled   rc=0 want 0 verdict PASS of 9 ports 2 ext_pins 2 reviewed 2 disagreements 0
+      verdict: port_protect           PASS         of 9 {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 5, "clamps_one_way": 4, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unjud
+regress_reclassify: 0 case(s) failed

@@ -19,7 +19,11 @@ a negative SURGE, which is not claimed (owner ruling D-16); an electrostatic dis
 moves DC_F by 1.2 V and 2.25 V at 1 uF nominal, and by ten times that if direct voltage bias left a tenth of it (the
 part's bias curve is not held): the clamp is not reached and Q1 stays inside its rating.
 
-THE CHANGE. One capacitor, the part boards A and E already buy: 1 uF 100 V X7R 1210 (C382212, the code board A's
+THE CHANGE. One capacitor, 1 uF 100 V X7R 1210, with the distributor code C382212. WHERE THE CODE COMES FROM (the
+fresh check's item M7): board E's C6 and C7 have the same value text ("1u 100V 1210") and carry NO code in gen_sch_e.py
+(line 399); the code is board A's C207's, which gen_sch_a.py fits three times with that value text (lines 665, 729 and
+800: PSA FS32X105K101EFG, C382212, "1u 100V 1210"). So the new part is board A's C207, not "the part of C6 and C7";
+C6 and C7 are the same value with no code, and whether they should carry this code is board E's owner's. (The code board A's
 C207 carries), from DC_F to GND_V, declared at U3's ANODE (pin 6) so the placement seats it at the pin, which is also
 at the fuse and the connector. 22 nF is the maker's minimum; 1 uF is taken so that the minimum holds at any bias
 derating a class II dielectric can show, and because it is the part already on the bill. It sees a reversed input as

@@ -5,9 +5,13 @@
 WHAT IT CHANGES, in v2/ecad/tools/boards/a.json, d.json and e.json (the integrator's files):
 
   board A  external_ports: the entry J_DOCK pins 1 and 2, which are ground since session choice SC-55 (EQ-16), leaves;
-           J_VR1 to J_VR4, the four pins that carry VIN_RAW since, enter; J_MAINSW enters, protected off board by
-           board C's parts at the MAIN switch; J_BM1 to J_BM11, the eleven antenna conductors that cross the board and
-           leave through the dock plug and the end walls, enter, each protected off board by its bulkhead arrestor.
+           J_VR1 to J_VR4, the four pins that carry VIN_RAW since, enter; J_MAINSW enters as an off_board entry, its
+           protection board C's parts at the MAIN switch, which the review read on board C's netlist; J_BM1 to J_BM11,
+           the eleven antenna conductors that cross the board and leave through the dock plug and the end walls, enter
+           as off_board entries naming the bulkhead arrestor, whose protection is CLAIMED and NOT JUDGED at the desk
+           (the arrestor's sheet states no figure at the ruled level; review section 4.5). port_protect.py believes an
+           off_board entry on its text (finding T-3), so TRN-001's PASS on board A after this script believes 12 of its
+           18 entries on that text: the eleven antenna conductors and J_MAINSW.
            J_USBW and J_USBC_OUT stay as they are, word for word.
            internal_ports (new): every other connector that carries a supply or a signal, with where its lead goes.
   board D  external_ports unchanged; internal_ports (new).

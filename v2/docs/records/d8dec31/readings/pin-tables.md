@@ -12,17 +12,17 @@
 | J_5V_S3 | 1: +5V_S3 | 2 | INTERNAL | a rail lead to board B, inside the case (IF-AB-POWER) |
 | J_AB1 | 1: USB_D8_P; 2: USB_D8_N; 9: PI_SHDN_REQ; 10: PI_KILL; 11: SDA; 12: SCL; 13: EXP_INT; 14: TR_APRS; 15: EMCON_HW; 16: TX_INHIBIT_n; 17: SLOT_EN1; 18: SLOT_EN2; 19: SLOT_EN3; 20: ZEROIZE_HW; 21: SHORE_INHIBIT; 25: USB_E6_P; 26: USB_E6_N | 3 to 8, 22 to 24 | INTERNAL | the control ribbon to board B above this board, inside the case (IF-AB-RIBBON) |
 | J_AB2 | 1: USB_WALL_P; 2: USB_WALL_N | 3 to 10 | INTERNAL | the wall-port ribbon to board B, inside the case (IF-AB-WALL): it carries the wall USB pair on from J_USBW, which is declared external and clamped on this board by U29 |
-| J_BM1 | 1: RF_VHF | 2 | EXTERNAL, protected off this board | the VHF antenna conductor: it crosses this board from the SMA jack J_RF1 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
-| J_BM2 | 1: RF_HF | 2 | EXTERNAL, protected off this board | the HF antenna conductor: it crosses this board from the SMA jack J_RF2 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
-| J_BM3 | 1: RF_WIFI24 | 2 | EXTERNAL, protected off this board | the WIFI 2.4 antenna conductor: it crosses this board from the SMA jack J_RF3 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
-| J_BM4 | 1: RF_GNSS | 2 | EXTERNAL, protected off this board | the GNSS antenna conductor: it crosses this board from the SMA jack J_RF4 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
-| J_BM5 | 1: RF_SDR | 2 | EXTERNAL, protected off this board | the SDR antenna conductor: it crosses this board from the SMA jack J_RF5 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
-| J_BM6 | 1: RF_P2PA | 2 | EXTERNAL, protected off this board | the WIFI P2P A antenna conductor: it crosses this board from the SMA jack J_RF6 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
-| J_BM7 | 1: RF_P2PB | 2 | EXTERNAL, protected off this board | the WIFI P2P B antenna conductor: it crosses this board from the SMA jack J_RF7 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
-| J_BM8 | 1: RF_5G1 | 2 | EXTERNAL, protected off this board | the 5G MAIN antenna conductor: it crosses this board from the SMA jack J_RF8 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
-| J_BM9 | 1: RF_5G2 | 2 | EXTERNAL, protected off this board | the 5G DIV antenna conductor: it crosses this board from the SMA jack J_RF9 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
-| J_BM10 | 1: RF_IRIDIUM | 2 | EXTERNAL, protected off this board | the IRIDIUM antenna conductor: it crosses this board from the SMA jack J_RF10 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
-| J_BM11 | 1: RF_LORA | 2 | EXTERNAL, protected off this board | the LORA antenna conductor: it crosses this board from the SMA jack J_RF11 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
+| J_BM1 | 1: RF_VHF | 2 | EXTERNAL, protection claimed off this board, not judged here | the VHF antenna conductor: it crosses this board from the SMA jack J_RF1 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
+| J_BM2 | 1: RF_HF | 2 | EXTERNAL, protection claimed off this board, not judged here | the HF antenna conductor: it crosses this board from the SMA jack J_RF2 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
+| J_BM3 | 1: RF_WIFI24 | 2 | EXTERNAL, protection claimed off this board, not judged here | the WIFI 2.4 antenna conductor: it crosses this board from the SMA jack J_RF3 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
+| J_BM4 | 1: RF_GNSS | 2 | EXTERNAL, protection claimed off this board, not judged here | the GNSS antenna conductor: it crosses this board from the SMA jack J_RF4 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
+| J_BM5 | 1: RF_SDR | 2 | EXTERNAL, protection claimed off this board, not judged here | the SDR antenna conductor: it crosses this board from the SMA jack J_RF5 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
+| J_BM6 | 1: RF_P2PA | 2 | EXTERNAL, protection claimed off this board, not judged here | the WIFI P2P A antenna conductor: it crosses this board from the SMA jack J_RF6 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
+| J_BM7 | 1: RF_P2PB | 2 | EXTERNAL, protection claimed off this board, not judged here | the WIFI P2P B antenna conductor: it crosses this board from the SMA jack J_RF7 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
+| J_BM8 | 1: RF_5G1 | 2 | EXTERNAL, protection claimed off this board, not judged here | the 5G MAIN antenna conductor: it crosses this board from the SMA jack J_RF8 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
+| J_BM9 | 1: RF_5G2 | 2 | EXTERNAL, protection claimed off this board, not judged here | the 5G DIV antenna conductor: it crosses this board from the SMA jack J_RF9 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
+| J_BM10 | 1: RF_IRIDIUM | 2 | EXTERNAL, protection claimed off this board, not judged here | the IRIDIUM antenna conductor: it crosses this board from the SMA jack J_RF10 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
+| J_BM11 | 1: RF_LORA | 2 | EXTERNAL, protection claimed off this board, not judged here | the LORA antenna conductor: it crosses this board from the SMA jack J_RF11 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
 | J_CN1 | none | 1 | carries no conductor | a return: every pin is on GND |
 | J_CN2 | none | 1 | carries no conductor | a return: every pin is on GND |
 | J_CN3 | none | 1 | carries no conductor | a return: every pin is on GND |
@@ -34,7 +34,7 @@
 | J_DOCK | 8: SHORE_INHIBIT; 9: USB_E6_P; 10: USB_E6_N; 12: DOCK_SPARE | 1 to 7, 11 | INTERNAL | signals between board A and board E inside the case, through the dock block E5 (interface contract IF-AE-DOCK): SHORE_INHIBIT on pin 8, the sensor controller's USB pair on pins 9 and 10, the hot stop line HOT-R1 on pin 12; the other pins are ground |
 | J_HEAT | 1: VHEAT | 2 | INTERNAL | the pack heater mat in the pack bay, inside the case (IF-A-HEAT) |
 | J_HF | 1: +12V_HF | 2 | INTERNAL | 12 V to the QMX HF unit in the lid tray, in the lid harness (IF-LID-HF). The lead stays inside the case; the unit's own panel is touched by the operator, and what reaches this lead through the unit is recorded in the review of decision 31 as not judged at the desk |
-| J_MAINSW | 1: MAIN_PB | 2 | EXTERNAL, protected off this board | the MAIN button's lead from the panel: a person presses the button on the face, and its contact reaches the LTC2954's PB pin on this board |
+| J_MAINSW | 1: MAIN_PB | 2 | EXTERNAL, protected off this board (read on board C's netlist) | the MAIN button's lead from the panel: a person presses the button on the face, and its contact reaches the LTC2954's PB pin on this board |
 | J_MEZZ1 | 1: USB_D8_P; 2: USB_D8_N; 7: TR_APRS; 8: TX_INHIBIT_n; 9: PA_EN; 10: SDA; 11: SCL; 12: EXP_INT; 13: +3V3; 15: ZEROIZE_HW; 16: AB_SPARE | 3 to 6, 14 | INTERNAL | the mezzanine harness to board D, inside the case (IF-AD-HARNESS) |
 | J_MEZZ_PWR1 | 1: +5V_D8 | 2 | INTERNAL | board D's 5 V lead behind the eFuse U23, inside the case (IF-AD-HARNESS) |
 | J_MON | 1: VMON | 2 | INTERNAL | the supply lead of the Xenarc monitor on the face, behind the eFuse U21 (IF-MON). The lead stays inside the case; the monitor's glass and bezel are touched by the operator, and what reaches this lead through the monitor is recorded in the review of decision 31 as not judged at the desk |
@@ -71,13 +71,13 @@ Not connectors, and on no lead: test points (25: TP3 to TP27).
 
 | connector | pins that carry a supply or a signal (pin: net) | ground pins | class | where the lead goes |
 |---|---|---|---|---|
-| J_ANT | 1: RF_ANT | 2 | EXTERNAL, protected off this board | the VHF antenna SMA: an outdoor conductor with a 30 W transmitter behind it, arrested in the wall rather than on the board |
+| J_ANT | 1: RF_ANT | 2 | EXTERNAL, protection claimed off this board, not judged here | the VHF antenna SMA: an outdoor conductor with a 30 W transmitter behind it, arrested in the wall rather than on the board |
 | J_FLANGE | 1: FLANGE_NTC | 2 | INTERNAL | the thermistor lead of the power amplifier's flange, inside the case (IF-D-FLANGE) |
 | J_HARN1 | 1: USB_D8_P; 2: USB_D8_N; 7: TR_APRS; 8: TX_INHIBIT_n; 9: PA_EN; 10: SDA; 11: SCL; 12: EXP_INT; 13: +3V3; 15: ZEROIZE_HW; 16: AB_SPARE | 3 to 6, 14 | INTERNAL | the mezzanine harness from board A, inside the case (IF-AD-HARNESS) |
 | J_HS1 | 1: HS1_SPK; 3: HS1_MIC; 5: PTT_HS1_n | 2, 4 | EXTERNAL | a headset jack on the face, which a person plugs a headset into |
 | J_HS2 | 1: HS2_SPK; 3: HS2_MIC; 5: PTT_HS2_n | 2, 4 | EXTERNAL | the second headset jack |
 | J_PAIN | 1: RF_DRV | 2 | INTERNAL | the drive coax to the power amplifier module on the inside of the face plate (IF-A-PA) |
-| J_PAOUT | 1: RF_PAOUT | 2 | EXTERNAL, protected off this board | the power amplifier output to the antenna path, which reaches the same arrested bulkhead |
+| J_PAOUT | 1: RF_PAOUT | 2 | EXTERNAL, protection claimed off this board, not judged here | the power amplifier output to the antenna path, which reaches the same arrested bulkhead |
 | J_PWR1 | 1: +5V_D8 | 2 | INTERNAL | the 5 V lead from board A's eFuse U23, inside the case (IF-AD-HARNESS) |
 | J_USB3 | 1: +5V_D8; 2: USB3_N; 3: USB3_P | 4 | INTERNAL | the touch USB lead of the Xenarc monitor on the face (IF-MON, session choice SC-HF-06). The lead stays inside the case; the monitor's glass and bezel are touched by the operator, no clamp stands on this pair, and the review of decision 31 records it as finding D-F3, not judged at the desk |
 | J_VGG | 1: VGG_SW | 2 | INTERNAL | the gate bias lead to the power amplifier module on the inside of the face plate (IF-A-PA) |
