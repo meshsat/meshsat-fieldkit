@@ -34,6 +34,11 @@ and the new 7b); and Route B's setting (ii) moves from 9.1 to 10 mOhm, because a
 100.9 W at 0.93 and 104.3 W at 0.90 with TRK_OUT at its reference-tolerance maximum of 15.56 V (R2, section 6e).
 The fault-current margin is stated as 1.25 times the short-circuit current, with no standard for it held here.
 
+**Section 8 (29 September 2026), the integrator's follow-up.** The second 4S3P block in the west pocket wired in
+parallel with the first under the one board P (one 4S6P pack): board P's protection with its additions, the
+harness, the energy re-run with one charge current, and the consequences; `energy_4s6p.py` and `.out`, and the
+options sheet `DECISION-OPTIONS.md`. Sections 1 to 7 are unchanged.
+
 **The inputs this rests on, pinned by sha256** (`energy_budget.py` refuses to run if any changed): the PVGIS
 monthly irradiation file, the two Samsung INR18650-35E documents, the tree's power model outputs
 (`records/rv-pwr/pwr_budget.out`, `records/hc2/pwr_red2.out`), board E's generator, this page's two helper
@@ -537,6 +542,221 @@ readings at `9b43e274`; the PVGIS daily profile, the PVcalc answer and `v2/vendo
 `energy_inputs.yaml` with that file's sha256, which the independent review verified at `71be4943`. For the
 integrator: diff this stream against `038037ed`, not `main` (the branch carries set 7's registry commits).
 
+## 8. One 4S6P pack under one board P: the alternative the record did not examine
+
+Added 29 September 2026 on the integrator's follow-up (the owner's instruction of 28 September stands: M1 and
+REQ-072 preserved with their duration and conditions, external DC optional and never the overnight basis). Every
+figure below is printed by `energy_4s6p.py` (beside this page; output `energy_4s6p.out`), which pins its inputs by
+sha256, imports `energy_budget.py` unchanged for the discharge chain, the profiles and the hour-by-hour rule (its
+own scheduled run reproduces `energy_budget.simulate` on four cases before anything is printed) and imports A06's
+`pack_fit.py` unchanged for the pockets. **Prototype design, AI review: nothing built, ordered or measured.**
+
+**The configuration.** Section 6d found that the second 4S3P block fits the west pocket alone (X spare 1.35, Y
+spare 26.50, Z clear 5.20 nominal and 3.99 at the worst base, `packfit_west.out`) and that its own board P fits
+nowhere found. This section examines the case section 6d did not: the west block wired **in parallel** with the east
+block at every series node, under the **one** board P in the east pocket, so the kit carries one 4S6P pack of 24
+cells, 289.4 Wh nominal (24 x 3.35 Ah x 3.60 V), with one gauge, one second level and one pair of FETs.
+
+**The answer in brief.** (1) Board P can protect it with named additions (8a); nothing on board P's power path
+changes rating, because the pack current is the kit's load. (2) The harness has a candidate route but no drawn one,
+and the west block takes the west RF jumpers' drop zone, an open mechanical conflict (8b). (3) **M1 as written
+(PS-IDLE-SPEC, 42.8 W, 72 h) is met in no month examined**, with any panel examined and from either start; the
+largest constant load the aged 4S6P pack carries for 72 hours is 18.3 W in September and 22.6 W in June at best
+(8c). With the night state, the 4S6P pack reproduces the record's sets 1 to 3 exactly: the energy result of section
+7's two packs does not need a second board P. (4) The pack passes 160 Wh, weighs 600 g more in cells, halves the
+cells' key-down heating rate per cell to a quarter, and needs a second heater mat that board A's heater branch cannot
+carry as generated (8d). **REQ-072 reads FAIL, unchanged.**
+
+### 8a. Electrical: what board P does with two parallel 3P blocks, and what must change
+
+**What it already does.** `gen_sch_p.py` states that "nothing below depends on the parallel count except the per-cell
+currents, which are the worst case at three". The BQ4050 senses and balances per series group (VC1 to VC4 through
+R1 to R4; SLUSC67B pin table: each VCx is the sense input and the balance current path of its cell), and the
+BQ7720700 second level U2 reads the same four nodes through its own filters. So a 4S6P pack is a 4S pack to both,
+**provided every series node of the west block is joined to the same node of the east block**: the pack ends (B+
+and B-) and the three middle nodes, five inter-pocket power conductors. Paralleled at the ends only, the west
+block's three middle nodes would be sensed by nothing, balanced by nothing and protected by neither level; that is
+not a configuration this study offers.
+
+**The hazard the ONE gauge cannot see, and the addition that covers it.** If one of the three middle links opens
+(a crimp, a solder joint, a chafe), the west group on that node sits in a series string that no tap reads: the
+gauge's taps and U2's read the east group, the gauge's balancing reaches the west group only through that link
+(at 9.75 mA, through RCB 200 ohm and two 100 ohm filters, SLUSC67B 6.10 and 8.2.2.3.1), and a west cell can then
+be over-charged or over-discharged with every protection reading normal. **Taken by the session (authority SESSION,
+reversible by removing the parts; reason: without it the west block has no protection of its own against a single
+link failure):** a second BQ7720700DSSR, U2B, on the west block's OWN taps (a JST-XH 1x5 J_CELL2 on board P, five
+sense wires from the west block), with its own 1 kohm and 0.1 uF filters, 300 ohm and 0.1 uF supply, its own Semitec
+103AT-2 on a JST-PH 1x2 J_TS3 behind its own 270 ohm and 18 kohm network, its COUT into FUSE_G through its own
+resistor beside R29 (the resistor OR that already joins U2's COUT and the gauge's FUSE), and its DOUT on a second
+2N7002 holding DSG_G as Q5 does. The parts are U2's set as `gen_sch_p.py` codes it (C3681715, C25810, C22966,
+C131337, C8545). U2B's open-wire detection covers its own five wires; each of them, a sense run of about half a
+metre across the case, gets a fusible element at the cell end (part TBD). Whether all of it fits board P's 44 x 70
+outline is not checked here: it is board P's four-layer regeneration's question (O-11).
+
+**The fuses.** Board P's F1 (25 A MINI) sits after the point where the two strings join. A short inside the
+inter-pocket harness is fed by BOTH blocks without passing F1, so each string needs its own fuse at its own B+
+(the west block's at the block, the east block's where the harness lands), and each middle link is fused at both
+ends. The string fuse is F1's part, a Littelfuse 297 25 A MINI: it holds 27.5 A for 360,000 s at least, so one
+string can carry the whole 18 A peak if the other is open. The negative conductor is left unfused, as board P's
+negative is (the high-side design, `gen_sch_p.py` PACK_N). The equalising links carry balancing and imbalance
+current in service, but the whole string share (up to 8.8 A at the peak) if a series strip opens inside one block,
+so they are 12 AWG like the leads. Inline holder parts: TBD (the held Littelfuse inline sheet is for the ATO size).
+
+**Currents: the pack current is shared, the ratings do not rise.** The kit draws the same 10 A continuous and 18 A
+for 60 s (PWR-F12) from 4S6P as from 4S3P, so F1 (25 A), F2 (SCF9550-30-05, 30 A), Q1 and Q2 (CSD17570Q5B), R10
+(2 mOhm) and the pack leads keep their ratings and their findings (BAT-F20's body-diode loss at 10 A is unchanged).
+Per cell the peak falls from 6.00 A to 3.00 A with an even share; the east string takes 51.1 to 52.9 percent (the
+west string's harness, 3.6 to 5.7 mOhm, against a block's 46.7 to 80.0 mOhm), 3.17 A a cell at the peak. **The
+gauge's current thresholds stay at the 3P values** (OCD1 20 A, OCC1 5.0 A; `parallel_min` stays 3), because a
+string with its fuse open, or a west block not fitted, leaves a 4S3P pack behind the same gauge.
+
+**The capacity words.** Design Capacity 20100 mAh at the sheet's minimum (20700 at its typical 3.45 Ah) and 28944
+cWh, inside the data-flash maximum of 32767 for both (SLUUAQ3A 14.13.5.1 and 14.13.5.2); the CEDV gauging then
+learns the pack at commissioning (a `TEST-PLAN.md` section 5 item, twice as long). Balancing moves 1 percent of a
+group in 20.6 h instead of 10.3 h.
+
+**The charge.** One charger (board A's BQ25731) and one gauge. FW-A02 writes at most 3.0 A (the 3P cycle-life
+figure). At 6P the cells' cycle-life figure would allow 6.12 A, which is also what section 7's two-pack runs assumed;
+one gauge refuses it: OCC1 at 5.0 A trips, and raising OCC1 above 6.12 A would let an isolated 3P block be charged
+at 2.04 A a cell, over the sheet's 2.0 A maximum. **The session's setting (authority SESSION; reversible to 3.0 A):
+ChargeCurrent at most 4.0 A**, the setting `pcb_pack_protection.yaml`'s own OCC test names as not tripping: 0.67 A a
+cell at 6P, 1.33 A for an isolated block, OCC1 unchanged. From the graceful line to 95 percent: 4.0 h aged and 5.0 h
+new at 4.0 A (5.4 and 6.7 h at 3.0 A), the model's charge rule. **The charge current binds in none of the runs**:
+0 of the 32 runs of M1 as written change with 3.0, 4.0 or 6.12 A, and every night-state run gives the same verdict and stop hour at
+all three; the pack either refills before evening or is emptied by the night whatever the rate. The pre-charge
+stays 1.0 A: 0.048C of 4S6P, under the guideline's 0.1C to 0.5C window on the gentle side, 0.097C of an isolated block.
+
+**The thermistors.** The gauge has four TS inputs and reads them as cell temperatures; one per series group becomes
+**two per block** (TS1 and TS2 on the east block's two cells expected hottest, TS3 and TS4 on the west block's), and
+the hot stop (`CONOPS.md` 4c, the hottest of TS1 to TS4) and OTD then read both blocks. The error budget's TBD term
+"the sensed cell to the hottest cell" (`THERMAL-COORDINATION.md` section 3, `TEST-PLAN.md` P14) is judged per block
+on half the sensors: a bench item. U2's NTC stays on the east block and U2B's goes on the west block.
+
+**S-85 (BAT-001's three hardware gaps).** (1) W4DP-F1, the second level's 2.25 V under-voltage: unchanged, and it
+applies to U2B as well. (2) BAT-F16, the second level's fixed 70 C: unchanged for each block; without U2B the west
+block would have no firmware-independent over-temperature at all, so U2B is what keeps S-85 from growing. (3)
+W4DP-F2: for the healthy 4S6P pack **F1 opens below the cells' limit** (from 33.75 A, where the east block's cells
+reach their 8.0 A only at 45.4 A of pack current); with a block isolated the pack is 4S3P again and the gap returns
+(24 A against 33.75 A). S-85 stays open with its three items and gains a fourth: the equalising links' integrity,
+covered by U2B.
+
+**What must change** (none of it done here; the shared files are the integrator's). Board P: U2B's set, J_CELL2,
+J_TS3, the west string's lands and its fuse (a second Keystone 3568 or an inline holder), its outline and layout at
+O-11. The pack harness: five 12 AWG power conductors (B-, the three middle nodes, B+), fused as above; five west
+sense wires fused at the cell end; two gauge NTC leads and U2B's NTC pair. `pcb_pack_protection.yaml`: the topology,
+`parallel_max` 6 with `parallel_min` 3, and the new devices. `HW-FW-CONTRACT.md` FW-A02: 4.0 A. The golden image:
+the Design Capacity words. Board A's heater branch (8d). A pack-build step: the two blocks at the same voltage
+before any link is joined (the joining current is the voltage difference over a few milliohms; the tolerance is TBD).
+
+### 8b. Mechanical: the route between the pockets, the hold-down and the heater mat
+
+**No route is drawn** (the floor plan is `CASE-MARGINS.md` section 6's, not drawn). The pockets are 240 mm apart in
+X (west X -178 to -120, east X 120 to 178). **The candidate corridor** runs along the back wall at the floor,
+outboard of board A (Y 80) and inboard of the flat floor's edge (Y 114.49), 34.49 mm wide, under board B (underside Z
+47.90 less its parts; U51 hangs 1.60 at Y 68.3 to 85.8), shared with the RJ45 patch lead and the connector plate's
+lead drops between X -57 and 57 (`CASE-MARGINS.md` 3.3). The record's 13.4 mm is the blind-mate gap above the dock
+strip, which lies along the front wall (Y -113 to -45); the floor under the rest of board A is the RF jumpers' lane
+to board E's clamps (3.4) and is not taken. Length 0.35 to 0.55 m (ESTIMATE: 240 between the pockets, up to 26.5 in
+the west pocket and up to 205.5 along the east group to board P).
+
+**The conductors.** 12 AWG, the gauge of the pack lead (`ASSEMBLY.md` section 3, 12 AWG silicone): 5.21 mOhm/m on
+the annealed-copper constant (no wire standard is held), a loop of 3.6 to 5.7 mOhm. At the 18 A peak carried by the
+west string alone (the east string open) the loop drops 66 to 103 mV and dissipates 1.2 to 1.9 W; the copper's
+adiabatic rise over the 60 s is 8.9 K; at an even share 32 to 50 mV and 0.3 to 0.4 W; at PS-IDLE-SPEC 0.01 W, which
+this section does not subtract from the energy.
+
+**The conflict it creates: the west jumpers' drop zone.** "The drop zone, X -165 to the west wall at |Y| up to 98
+from the floor to Z 54, is the jumpers'" (`CASE-MARGINS.md` 3.4, West, written because "no pack stands under the west
+plugs"). The west pocket overlaps it over 13 mm of X, and a 56.65 mm block in a 58 mm pocket cannot leave it. The
+seven west jumpers' ferrules end at Z 43.0, so their fall meets the block's top at Z 39.50 (40.71 at the worst), 3.5
+mm (2.3) lower, or passes in the slot between the block and the wall, which the floor fillet closes below Z 15.32.
+That is the east wall's M17 case (OPEN, FAILS AS ASSUMED there with five jumpers) moved to the west wall with seven.
+**It is not solved here**: the west RF entry and its jumpers must be re-planned before the west block is taken
+(the class of rows M17a to M17x, OPEN), a case-layout item.
+
+**The hold-down and the mat.** S-27 is open for the east block too (`v2/cad/pack_4s.py` still draws the 4S4P block);
+the west block takes the same hold-down once S-27 answers, and a strap over its top must keep off C33's 1812 site on
+board B's underside (Y 62.77 to 69.38), the zone that sets the 5.20 and 3.99 mm. A second RS PRO 245-556 mat (50 x 150
+mm) lies under it in the pocket's 26.50 mm of free Y; A06's bases already carry a mat (1.40 nominal, 2.61 at the
+worst). Its supply is 8d.
+
+### 8c. Energy: 4S6P on the record's model, with one charge current
+
+**Usable energy** (the chain of section 2 at 24 cells): **273.0 Wh new and 218.4 Wh aged at PS-IDLE-SPEC, cells
++20 C** (221.5 with the 2.80 V line; 163.8 at the 60 percent bracket), 154.3 aged at +5 C, 90.1 at -10 C; the same at
+the night state. The aged pack carries PS-IDLE-SPEC 5.10 h at +20 C and the night state 13.48 h.
+
+**Hand calculation** (checked against the output): new = 24 x 3.35 Ah x f_rate 1.000 (0.50 A a cell, under the
+sheet's 0.68 A point) x f_T 1.000 x V_mean 3.6244 V (clamped at the 0.2C point) x f_dod 0.937 (clamped at the 0.7 A
+reading) = 80.40 x 3.6244 x 0.937 = 273.0 Wh; aged x 0.80 = 218.4 Wh. A September night at 42.8 W asks 11.28 h x 42.8 W
+= 482.8 Wh, so the aged 4S6P pack carries 218.4 / 42.8 = 5.10 h of it: less than half the night, whatever the panel.
+
+**M1 as written, PS-IDLE-SPEC 42.8 W for 72 hours** (`energy_4s6p.out` 3a; aged, 2.80 V line, ChargeCurrent 4.0 A):
+
+| month (cells) | 100 Wp in the window | 200 Wp, 100 W (route B) | 330 Wp, 300 W path | 400 Wp, no window | largest 72 h load |
+|---|---|---|---|---|---|
+| September (+20 C) | NOT MET, stops h 12 | NOT MET, h 16 | NOT MET, h 16 | NOT MET, h 16, 1004 Wh unserved | 13.9 to 18.3 W |
+| June (+20 C) | NOT MET, h 15 | NOT MET, h 17 | NOT MET, h 17 | NOT MET, h 17, 728 Wh unserved | 18.1 to 22.6 W |
+| December (+5 C) | NOT MET, h 3 | NOT MET, h 4 | NOT MET, h 10 | NOT MET, h 11 | 5.3 to 9.2 W |
+| December (+20 C, a bound) | NOT MET, h 6 | NOT MET, h 9 | NOT MET, h 12 | NOT MET, h 13 | 6.3 to 12.8 W |
+
+From 18:00 every case stops at hour 3 to 5, in the first night. The design case at the 3.00 V line stops at hour 12. A
+NEW 4S6P pack with 400 Wp and no window stops at hour 17 in September; PS-IDLE-SPEC's model LOW, 33.1 W, with 400 Wp
+and no window in June stops at hour 19. **So M1 as written is met in no month, panel or start examined; the scope is
+one or two 3P blocks, panels to 400 Wp with no window, the 2.80 V line, cells at +20 C (+5 C in December).**
+
+**With the night state, as in the record's sets 1 to 3** (the night state held for all 72 hours; 3b): the 4S6P pack
+gives section 7's two-pack results exactly, at 3.0, 4.0 and 6.12 A alike. Set 2 (200 Wp, the stage at 100 W, 2.80 V):
+September MET, lowest point 12.1 Wh; June MET, 51.7 Wh; December NOT MET (stop h 18 at +5 C, h 22 at +20 C). Its
+conditions are the record's: the cells at or above 17.21 C and the night state at or below 17.06 W; at +15 C it
+stops at hour 23. Set 1 (100 Wp) meets June only; set 3 meets September and June; the night state's LOW with set 3
+meets December only at +20 C (lowest 30.0 Wh); its HIGH, 39.67 W, meets nothing.
+
+**What the sets hold, stated exactly** (3c; this section's reading of the record). Sections 5d and 7 run the night
+state for all 72 hours, day included; the record calls it "M1's operating mode at night". Two schedules test that
+wording on 4S6P: with **PS-IDLE-SPEC in every lit hour** of the mean day and the night state otherwise, no panel
+examined meets any month (September with 400 Wp stops at hour 22); with **PS-IDLE-SPEC only in the hours the panel
+alone carries it** at the node (sun-following), 200 Wp and above meet September (8 hours a day at PS-IDLE-SPEC with
+200 Wp, 10 with 330 or 400 Wp) and June (10 to 12 hours), with the same lowest points as set 2 and set 3 (12.1 and
+23.4 Wh in September), and December is not met. So the night state is the mission's state whenever the panel alone
+does not carry PS-IDLE-SPEC, about 16 of 24 hours in September: the reduction of capability is larger than "at
+night" says, and the owner's sheet must say so.
+
+### 8d. Consequences
+
+**Transport.** 289.4 Wh nominal in one pack. The tree holds no regulation text: the ADR could not be fetched on 27
+September 2026 (UNECE refused this host, `records/hc3/blocked-questions-layer-3.md`), and no air or carrier rule is
+filed; this study had no network. The 145 Wh pack was already above the 100 Wh the tree's EQ row names for special
+provision 188 (`handover/ENGINEERING-QUESTIONS.md`, S-52's row, not a held text), and 289.4 Wh is above the 160 Wh
+passenger figure the follow-up names, which is not verified here. What changes cannot be stated from the tree; S-52
+carries it. A lever to put to S-52, not a finding: a disconnect in the inter-pocket harness would let the kit travel
+with the west block apart, two 145 Wh units; whether that changes the classification is the regulation's question.
+
+**Mass.** 12 more cells at 50 g maximum (spec 3.10): +600 g, 1200 g of cells in all; the harness, second mat, fuses,
+U2B's parts, strip and wrap add an ESTIMATED under 150 g (12 AWG copper alone is 29.7 g a metre a conductor).
+
+**Heat.** At the 18 A peak the cells' own heating falls from 1.37 to 3.24 K a minute (4S3P) to 0.34 to 0.81 (even
+share) and 0.38 to 0.91 on the east block at its share, adiabatic on 50 g cells at 0.8 to 1.1 J/gK and 35 to 60 mOhm
+(POWER-THERMAL 7.2's method): the 5 K between 55 and 60 C lasts 331 to 780 s instead of 93 to 218 s. The hot stop's
+thresholds do not move; its sensors are halved per block (8a). The west block's top sits 3.99 to 5.20 mm under board B's
+underside parts at C33 (the IOCTRL logic over part of it), a heat environment no tool in the tree computes.
+
+**The heater.** Two mats (7.5 W each at 12 V) draw 1.25 A on VHEAT and 1.16 A (14.4 V) to 1.39 A (12.0 V) on
+VHEAT_IN, above the 0.98 A that U22's 909 ohm ILM gives (TPS2596 equation 7, as `gen_sch_a.py` quotes it); a 2.0 A
+limit needs 449 ohm, the 453R the same comment lists, and VHEAT's and VHEAT_IN's declarations follow (board A, a
+layer-5 item; L12's 2.9 A and U33's 3 A carry 1.25 A). At full duty, an upper bound (the duty is the loss, which no
+held figure gives), the second mat costs 135 Wh a December night at the pack, where the second block adds 77 Wh aged
+at the night state with its cells at +5 C and 45 Wh at -10 C: **in deep cold the second mat can take more than the
+second block gives.** M1's month rows do not run the heater (cells at +5 C and +20 C).
+
+**Cost, ESTIMATE** (no quotation held but the JLC figures `gen_sch_p.py` quotes): 12 cells about 50 EUR; U2B's set
+under 10 EUR; string and link fuses with holders under 25 EUR; the harness under 20 EUR; the second mat (no price
+held) under 30 EUR; wrap, strip and hold-down under 15 EUR: under 150 EUR of parts, plus a second block build and
+the protection commissioning. Nothing is ordered.
+
+**For the owner** (`DECISION-OPTIONS.md`, at most 250 words): the second block reopens D-01's deferral and the night
+state changes M1's operating state, both the owner's; REQ-072 as written reads FAIL under every option.
+
 ## Sources
 
 Samsung SDI INR18650-35E specification Ver. 1.1 (9 July 2015) and Technical Report (June 2015), distributors'
@@ -554,5 +774,9 @@ protection window); `v2/docs/CONOPS.md` sections 3, 4a, 4c, 5, 6 and 7; `v2/docs
 sections 2 to 6; `v2/docs/CASE-MARGINS.md` sections 2, 3.2 and 3.4; `v2/docs/ASSEMBLY.md` steps 7, 10 and 11;
 `v2/docs/handover/ENGINEERING-QUESTIONS.md` EQ-13; the registry's REQ-014, REQ-016, REQ-072, S-53, M-02, SC-21,
 SC-23, SC-36, SC-37; owner rulings D-01, D-02b, D-02d, D-02e, D-06, D-15 and the case ruling of 7 September 2026.
+Section 8 adds: TI BQ4050 datasheet SLUSC67B (6.10 RCB; 8.2.2.3.1) and technical reference manual SLUUAQ3A
+(14.13.5), `v2/vendor/battery/`; `gen_sch_p.py`, `pcb_pack_protection.yaml`, `gen_sch_a.py` (the heater branch),
+`panel1450.py` (the outlines), `HW-FW-CONTRACT.md` FW-A02, the RS PRO 245-556 sheet, `CASE-MARGINS.md` 2.1, 3.3 and 3.4,
+`records/hc3/blocked-questions-layer-3.md`.
 Spencer, J. W. (1971), "Fourier series representation of the position of the sun", Search 2(5), 172: the
 declination series (not held in the tree; a standard formula, its coefficients typed from the literature).
