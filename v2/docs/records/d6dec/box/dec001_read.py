@@ -56,10 +56,10 @@ def main(a):
         board_sha = hashlib.sha256(open(os.path.join(src, stem + ".kicad_pcb"), "rb").read()).hexdigest()[:16]
         intent_sha = hashlib.sha256(open(os.path.join(src, "out", stem + "-intent.json"), "rb").read()).hexdigest()[:16]
         rows.append({"board": letter, "phase": phase, "board_sha256_16": board_sha, "intent_sha256_16": intent_sha,
-                     "exit": r.returncode, "result": v.get("result"), "counts": v.get("counts"), "denominator": v.get("denominator"),
+                     "exit": r.returncode, "result": v.get("verdict") or v.get("result"), "counts": v.get("counts"), "denominator": v.get("denominator"),
                      "summary": summary, "fail_by_cause": {k: len(x) for k, x in fails.items()}, "fail_lines": fails,
                      "justified_lines": just, "recorded_lines": rec, "bypass_lines": len(lines)})
-        print("%s %-20s %s %s | %s" % (letter, phase, v.get("result"), json.dumps(v.get("counts"), sort_keys=True),
+        print("%s %-20s %s %s | %s" % (letter, phase, v.get("verdict") or v.get("result"), json.dumps(v.get("counts"), sort_keys=True),
                                        "; ".join(summary)[:400]))
         for k, x in sorted(fails.items()): print("     FAIL %3d  %s" % (len(x), k))
     json.dump({"what": "DEC-001 (intent_decoupling) on each board's committed candidate under decision 42's tools; "
