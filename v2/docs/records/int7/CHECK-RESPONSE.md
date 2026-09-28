@@ -37,3 +37,35 @@ suited and checked again before promotion.
 
 - The suite at `1c4235ec`: the log's last line is the commit it ran on (`box/suite-1c4235ec.txt` quotes it with the log's sha256). The corrected candidate gets its own run.
 - `rules_status` on the final commit: run three times in an isolated clone of the exact commit with the one evidence archive installed; the pages reproduced byte for byte (recorded in the checkpoint). Repeated for the corrected candidate.
+
+# Second part: answers to the re-check (`CHECK-2.md`, an AI review, 28 September 2026)
+
+The re-check read the corrected candidate `85ad1193` NOT mergeable on one finding, R-1, and confirmed B-2 and B-3 of the
+first check answered. It was the second failure on the same point (CON-010's dependency items), so the method changed
+before the third candidate: the items are no longer written from a summary of the readings, which carry one line per
+undecided row, but from the walk's own report, which carries every ground, and a script asserts the coverage.
+
+## Blocking finding
+
+| Finding | Answer | Where |
+|---|---|---|
+| R-1 (a) S-92 said "one of the two dependencies that remain" | S-92 is rewritten: it is the SA868 exciter's row with its three grounds, and says that what remains for CON-010 is this row and board A's two rows (S-93). No count of dependencies is typed | `pcb_requirements.yaml` S-92, by `apply_check2_answers.py` |
+| R-1 (b) the amplifier's row is undecided on three grounds and S-93 gave one | S-93 is rewritten to the QMX's row (one ground: Q24 on U15's drive) and the amplifier's row (three: Q14 on U13's drive; U14, the INA226, whose pins no class of the walk reads; board D's Q1 on PA_EN with U36's supply down, IGSS stated at 25 C only) | the same |
+| R-1 (c) the SA868's row is undecided on three grounds and S-92 gave one | S-92 names all three (no input threshold and no input current stated for U2 pin 5; the off-state current of the released open-drain output U13 pin 4) | the same |
+| R-1, the consequence (closing the items as worded would leave CON-010 INCONCLUSIVE with nothing to wait on) | each item now closes when RF-002, re-taken, reads its row DECIDED, whichever way each ground is answered; and `apply_check2_answers.py` refuses to write unless every part the walk's undecided grounds name, for every undecided row on CON-010's allocated boards, is named in an item CON-010 waits on (`walk_grounds.py` gives the parts: U2, U13; Q1, Q14, U13, U14, U36; Q24, U15) | `walk_grounds.py`, `walk-grounds.txt`, `apply_check2_answers.py` |
+| R-1, CON-010's entry and CLOSURE.md | the entry's clause names every ground per row and cites `walk-grounds.txt`; CLOSURE.md sections 5 and 6 follow | `pcb_requirements.yaml` CON-010, `CLOSURE.md` |
+
+## Minor items
+
+| Item | Answer |
+|---|---|
+| n1 REQ-032 should take S-65 in | REQ-032 waits on S-65 |
+| n2 CFL-006 and FEA-005 are bound to files S-86 changes | both wait on S-86. REQ-015, REQ-018 and CHO-003, which rest on the same rules, are not linked: the checker could not show a verdict of theirs moving and neither can this session; their rules' readings are owed again when the file changes, which `rules_status` reports by itself |
+| n3 R51 not listed | listed in CLOSURE.md section 1 with the re-take's attribution (no moved reading) |
+| n4 S-81's closing evidence pointed at S-91's list | the pointer is gone: with S-64 closed the wording is moot |
+| n5 "the owner's review" is an outside reviewer's, pasted by the owner | CON-010's entry says so. The same words in a comment of `rules_lib.py` and in a test's docstring stay as they are: changing `rules_lib.py` again would change the code bundle of 26 readings for a comment. Carried to the next change of that file |
+| n6 S-61's reason | rewritten: it names the unmerged branch and file, says what finding D-F3 asks for (a clamp, a bulk capacitor and a ferrite, not this current limit) and that nothing but S-61 carries the current limit until that review is on `main` |
+| n7 "252 gitignored readings" | CLOSURE.md says 252 files: 240 verdict files and 12 ERC reports with their provenance files |
+| n8 the streams' check results were in no tree | filed under `checks/` with a table of branch, commit and verdict |
+| n9 a bench reading on one built board is a sample | S-92 and S-93 say so in their closing conditions: it is recorded as a sample of one board |
+| n10 S-91's title and S-89's "four fixtures" | carried as the first part says (m8, m9) |

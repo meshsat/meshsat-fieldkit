@@ -14,7 +14,7 @@ moved reading is the re-take's own, `v2/docs/records/retake6/RESULT.txt` section
 | Commit | Board | Change | What the re-take read of it |
 |---|---|---|---|
 | `910da406` | B | EMCON forces the RockBLOCK 9704's ENABLE low in hardware (U536, R527, SC-64), holds the radio switches off in their gates' supply band and drives each card rail's enable; the two WiFi link cards | RF-002 on B: three of its eleven failed rows moved by circuit changes (the TX_INHIBIT_n line below and the two WiFi link cards). The other eight moved by an instrument correction, section 3 |
-| `e28f91a6` | C | TX_INHIBIT_n fails safe with the panel unpowered: R14 10 k to 2.2 k and a new R50, 10 k, to ground (SC-67, which closes S-64, finding W3T-F1) | RF-002 on C FAIL to PASS (inhibit_chain_c PASS of 6); RF-002 on A and D FAIL to INCONCLUSIVE: the same line's check no longer fails, what stays is undecided (S-92, S-93) |
+| `e28f91a6` | C | TX_INHIBIT_n fails safe with the panel unpowered: R14 10 k to 2.2 k and a new R50, 10 k, to ground (SC-67, which closes S-64, finding W3T-F1); R51, the bottom leg of the RAIL_SENSE divider (W4C-F1), to which the re-take attributes no moved reading | RF-002 on C FAIL to PASS (inhibit_chain_c PASS of 6); RF-002 on A and D FAIL to INCONCLUSIVE: the same line's check no longer fails, what stays is undecided (S-92, S-93) |
 | `c4ad8350` | A, E | the hot stop line HOT-R1 drawn on boards A and E (SC-70, which closes S-57) | SCH-004: safe_lines_a PASS of 7, safe_lines_e PASS of 2. REQ-077 (a desk-review record with no rule) moved FAIL to INCONCLUSIVE in set 6 and reaches `main` with this promotion |
 
 **Electrical state after them:** 0 boards ready for layout, 35 layout-entry reasons (A 7, B 7, C 3, D 7, E 4, P 5, E5
@@ -36,7 +36,7 @@ choices and are read, not claimed.
 A declaration that lets a rule decide is not a circuit change: each PASS above says the declared figure is inside the
 part's stated limits, and rests on the declaration being the circuit's. Owed, and not in this integration: board A's
 external-port declaration (S-88, H3-02), corrected by stream d8dec31's `apply_port_declarations.py`, checked on 28
-September (mergeable; one regression owed before S-88 closes) and applied after this promotion with TRN-001 re-taken.
+September (`checks/d8dec31-check-1.md`: mergeable; one regression owed before S-88 closes) and applied after this promotion with TRN-001 re-taken.
 
 ## 3. Checker, contract and instrument corrections
 
@@ -56,7 +56,7 @@ September (mergeable; one regression owed before S-88 closes) and applied after 
 | Refresh | Where | What it read |
 |---|---|---|
 | the consolidated re-take on the set 6 netlists (worker retake6, 27 September, KiCad host, `50e3b60b` to `7f3a4956`) | 83 readings on seven boards | 71 PASS, 10 INCONCLUSIVE, 2 FAIL. Of the 90 tracked readings 58 carried the same result, counts and evidence, 23 the same result with other counts or evidence, 9 another result (the rows of sections 1 to 3) |
-| the re-take of 28 September on this line's tools (KiCad host, `/root/int7`, commit `a4b157f0`, 14:52:52 to 14:55:01 UTC, driver 110.7 s, exit 0; run records under `box/`) | every schematic-phase reading, `reliability.py` per board, `claims_check.py` | the same 90 tracked readings re-written with the current code bundles and 252 gitignored readings; no verdict, count or evidence line changed against `7f3a4956` (the fresh check's item 6) |
+| the re-take of 28 September on this line's tools (KiCad host, `/root/int7`, commit `a4b157f0`, 14:52:52 to 14:55:01 UTC, driver 110.7 s, exit 0; run records under `box/`) | every schematic-phase reading, `reliability.py` per board, `claims_check.py` | the same 90 tracked readings re-written with the current code bundles and 252 gitignored files (240 verdict files and 12 ERC reports with their provenance files); no verdict, count or evidence line changed against `7f3a4956` (the fresh check's item 6) |
 | `rules_status` three times and `rules_render` on the merged tree | the pages | FAIL 40, INCONCLUSIVE 89, PASS 209 of 338 rule-board readings (the historical aggregate of mixed revisions, not readiness); 35 layout-entry reasons |
 
 ## 5. Registry changes (the writer's, this integration)
@@ -66,19 +66,25 @@ September (mergeable; one regression owed before S-88 closes) and applied after 
 - `a4b157f0`: **CON-010 re-decided from the readings by a stated predicate** (`apply_con010_redecide.py`): FAIL to INCONCLUSIVE, because the check that set FAIL (W3T-F1) fails on no board since SC-67 while three rows stay undecided; S-92 opened; S-88 and S-89 carry `limits_reading`; every open item linked from a record or disposed (`apply_waits_on_dispositions.py`).
 - `1c4235ec`: CON-010 and REQ-044 rebound to the final page (`apply_rebind_final_page.py`), results unchanged.
 - the answers to the fresh check (`apply_check1_answers.py`, `CHECK-RESPONSE.md`): S-93 opened for the LM5176's gate drive in shutdown and CON-010 waits on S-92 and S-93; S-65 and S-86 linked instead of disposed; S-13 disposed instead of linked; S-81 closed on its own second condition; S-94 opened for the re-read of REQ-030, REQ-032 and REQ-071.
-- **After them:** 65 open items, 59 closed, 144 records. 54 open items have a record waiting on them (96 links on 60 distinct records, those that stood before this integration included) and 11 carry a disposition with its reason; none has neither, none has both.
+- the answers to the re-check (`apply_check2_answers.py`, `walk_grounds.py`, `walk-grounds.txt`): S-92 and S-93 rewritten to EVERY ground RF-002's walk names for the SA868's row (three) and for board A's two rows (one and three), read from the walk's own report, with the script asserting that each part those grounds name is in an item CON-010 waits on; REQ-032 waits on S-65; CFL-006 and FEA-005 wait on S-86.
+- **After them:** 65 open items, 59 closed, 144 records. 54 open items have a record waiting on them (99 links on 60 distinct records, those that stood before this integration included; the figures are read from the parsed registry) and 11 carry a disposition with its reason; none has neither, none has both.
 
 ## 6. The fresh check of the merge
 
 `CHECK.md` (an AI review, 28 September 17:15 to 17:34 CEST) read the first candidate `1c4235ec` NOT mergeable on three
 findings, all in text this integration wrote; it found no reading, count or merge result wrong and recomputed CON-010's
-predicate as INCONCLUSIVE. `CHECK-RESPONSE.md` answers each finding and each minor item. The full suite on the KiCad
-host at `1c4235ec` read 2019 passed, 0 failed, 3 skipped (`box/suite-1c4235ec.txt`); the corrected candidate is suited and
-checked again before promotion, and those records are filed with the checkpoint of `v2/docs/EXECUTION-PLAN.md`.
+predicate as INCONCLUSIVE. `CHECK-2.md` (an AI review by another checker, 18:00 to 18:16 CEST) read the corrected candidate
+`85ad1193` NOT mergeable on one finding, R-1: B-2 and B-3 answered, B-1 answered for the QMX's row only, because S-92 and
+S-93 each named one ground where the walk names up to three. That was the second failure on the same point, so the
+method changed: the items are now written from the walk's own report and a script asserts their coverage (section 5).
+`CHECK-RESPONSE.md` answers each finding and each minor item of both checks. The full suite on the KiCad host read 2019
+passed, 0 failed, 3 skipped at `1c4235ec` (`box/suite-1c4235ec.txt`) and the same at `85ad1193`; each later candidate is
+suited and checked again before promotion, and those records are filed with the checkpoint of
+`v2/docs/EXECUTION-PLAN.md`.
 
 ## 7. What this integration does not do
 
 It closes no layer and readies no board for layout. Layers 1 to 3 stay COMPLETE as H3 released them; H3 is untouched.
-The reviews' P1 items stay open and are named: H3-01 (REL-001, stream d6rel, checked mergeable on 28 September, its
-follow-up in hand), H3-02 (TRN-001 on A, stream d8dec31, one regression owed), board E's constraint sheet against its
-netlist (stream d5dock).
+The reviews' P1 items stay open and are named: H3-01 (REL-001, stream d6rel, `checks/d6rel-check-1.md`, its follow-up
+done on its branch), H3-02 (TRN-001 on A, stream d8dec31, `checks/d8dec31-check-1.md`, one regression owed), board E's
+constraint sheet against its netlist (stream d5dock, not started).
