@@ -45,6 +45,8 @@ boards:
        basis: "the RT pin is left open, which the part's own table gives as 500 kHz"}
     - {ref: U33, part: TPS62933, what: "3 A buck, the 12.0 V heater rail behind the eFuse U22 (F-PR-06, 26 September 2026)", f_khz: 500, edge_ns: null,
        basis: "v2/vendor/ti/ti-tps62933.pdf; the RT pin is left open, which the part's own table gives as 500 kHz"}
+    - {ref: U41, part: TPS62933, what: "3 A buck, board D's feed +5V_D8IN from VBAT behind RAIL_EN (S-99, decision 55, integration set 9, 29 September 2026)", f_khz: 500, edge_ns: null,
+       basis: "v2/vendor/ti/ti-tps62933.pdf Table 7-1: RT (pin 1) floating gives 500 kHz; board A's netlist leaves U41 pin 1 unconnected. Its switch node D8B_SW is on board A; its output leaves through the mezzanine harness, which the second path below covers"}
    victims:
     - {what: "the five INA226 rail monitors", refs: [U8, U9, U10, U11, U14],
        why: "they measure millivolts across 5 mOhm shunts sitting between the converters they monitor"}

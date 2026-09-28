@@ -348,6 +348,32 @@
    "why": "the second headset jack"
   }
  ],
+ "internal_ports": [
+  {
+   "ref": "J_HARN1",
+   "why": "the mezzanine harness from board A, inside the case (IF-AD-HARNESS)"
+  },
+  {
+   "ref": "J_PWR1",
+   "why": "the 5 V lead from board A's eFuse U23, inside the case (IF-AD-HARNESS)"
+  },
+  {
+   "ref": "J_PAIN",
+   "why": "the drive coax to the power amplifier module on the inside of the face plate (IF-A-PA)"
+  },
+  {
+   "ref": "J_VGG",
+   "why": "the gate bias lead to the power amplifier module on the inside of the face plate (IF-A-PA)"
+  },
+  {
+   "ref": "J_FLANGE",
+   "why": "the thermistor lead of the power amplifier's flange, inside the case (IF-D-FLANGE)"
+  },
+  {
+   "ref": "J_USB3",
+   "why": "the touch USB lead of the Xenarc monitor on the face (IF-MON, session choice SC-HF-06). The lead stays inside the case; the monitor's glass and bezel are touched by the operator, no clamp stands on this pair, and the review of decision 31 records it as finding D-F3, not judged at the desk"
+  }
+ ],
  "_external_ports_why": "Rule TRN-001, 16 September 2026. A port that leaves the ENCLOSURE is a wire a person will plug something into, in the rain, having walked across a floor. Every one of them reaches a semiconductor, and the only thing between is a suppressor, a choke, a series resistor into a clamp, or nothing. Most connectors on these boards are internal (board-to-board ribbons, module sockets, fan leads inside a sealed case) and treating every J as external would refuse every board for wires that never leave it. The board knows which is which and nothing else does, so each one is named with where it goes.",
  "grounds": {
   "GND": {

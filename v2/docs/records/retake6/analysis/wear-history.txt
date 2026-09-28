@@ -1,0 +1,38 @@
+retake6: why boards D, E and P each count one more covered part than their readings of 21 September 2026 (written by wear_history.py, read only)
+The readings of 21 September: D 9 (12:51:26Z), E 7 (12:52:10Z), P 6 (12:52:46Z). The re-take: D 10, E 8, P 7.
+
+8ce0b892  v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net: wear set 9, covered by exactly one declared class 9, classes declared 3 (the radio module's sockets; the antenna jack and the PA ports; the power and harness headers)
+824ec9d4  v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net: wear set 9, covered by exactly one declared class 9, classes declared 3 (the radio module's sockets; the antenna jack and the PA ports; the power and harness headers)
+232231be  v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net: wear set 9, covered by exactly one declared class 9, classes declared 3 (the radio module's sockets; the antenna jack and the PA ports; the power and harness headers)
+faf8c981  v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net: wear set 9, covered by exactly one declared class 9, classes declared 3 (the radio module's sockets; the antenna jack and the PA ports; the power and harness headers)
+458b2873  v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net: wear set 9, covered by exactly one declared class 9, classes declared 3 (the radio module's sockets; the antenna jack and the PA ports; the power and harness headers)
+76235aad  v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net: wear set 10, covered by exactly one declared class 10, classes declared 4 (the radio module's sockets; the antenna jack and the PA ports; the power and harness headers; the power amplifier's flange NTC lead)
+     + J_FLANGE   JST-XH 1x2 socket: power amplifier flange NTC lead (Semitec 103AT-2 on the flange, bench-fitted): NTC GND
+b7f96784  v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net: wear set 10, covered by exactly one declared class 10, classes declared 4 (the radio module's sockets; the antenna jack and the PA ports; the power and harness headers; the power amplifier's flange NTC lead)
+6ec37197  v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net: wear set 10, covered by exactly one declared class 10, classes declared 4 (the radio module's sockets; the antenna jack and the PA ports; the power and harness headers; the power amplifier's flange NTC lead)
+73ae2f21  v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net: wear set 10, covered by exactly one declared class 10, classes declared 4 (the radio module's sockets; the antenna jack and the PA ports; the power and harness headers; the power amplifier's flange NTC lead)
+
+d58b8d45  v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net: wear set 7, covered by exactly one declared class 7, classes declared 3 (the pack lead connector; the blade fuse holders; the DC inlet, the solar input and the SMBus header)
+824ec9d4  v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net: wear set 7, covered by exactly one declared class 7, classes declared 3 (the pack lead connector; the blade fuse holders; the DC inlet, the solar input and the SMBus header)
+faf8c981  v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net: wear set 8, covered by exactly one declared class 8, classes declared 3 (the pack lead connector; the blade fuse holders; the DC inlet, the solar input, the SMBus header and the lid sensor lead)
+     + J_TAMP     JST-XH 1x2 (B2B-XH-A): lid and tamper reed sensor lead, Littelfuse 59140-1-S-05-A normally open under the frame, 57140-000 magnet in the lid: 1 lead, 
+bc0f562f  v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net: wear set 8, covered by exactly one declared class 8, classes declared 3 (the pack lead connector; the blade fuse holders; the DC inlet, the solar input, the SMBus header and the lid sensor lead)
+b7f96784  v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net: wear set 8, covered by exactly one declared class 8, classes declared 3 (the pack lead connector; the blade fuse holders; the DC inlet, the solar input, the SMBus header and the lid sensor lead)
+6ec37197  v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net: wear set 8, covered by exactly one declared class 8, classes declared 3 (the pack lead connector; the blade fuse holders; the DC inlet, the solar input, the SMBus header and the lid sensor lead)
+73ae2f21  v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net: wear set 8, covered by exactly one declared class 8, classes declared 3 (the pack lead connector; the blade fuse holders; the DC inlet, the solar input, the SMBus header and the lid sensor lead)
+
+a0b707f9  v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net: wear set 6, covered by exactly one declared class 6, classes declared 3 (the pack terminals; the cell tap and thermistor headers; the pack fuse holder)
+faf8c981  v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net: wear set 6, covered by exactly one declared class 6, classes declared 3 (the pack terminals; the cell tap and thermistor headers; the pack fuse holder)
+d90f30e4  v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net: wear set 7, covered by exactly one declared class 7, classes declared 3 (the pack terminals; the cell tap and thermistor headers; the pack fuse holder)
+     + J_TS2      second-level cell thermistor socket, JST-PH 1x2 (Semitec 103AT-2 on the hottest cell): 1 TS_SEC_J, 2 VSS
+7bef62bd  v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net: wear set 7, covered by exactly one declared class 7, classes declared 3 (the pack terminals; the cell tap and thermistor headers; the pack fuse holder)
+6ec37197  v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net: wear set 7, covered by exactly one declared class 7, classes declared 3 (the pack terminals; the cell tap and thermistor headers; the pack fuse holder)
+73ae2f21  v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net: wear set 7, covered by exactly one declared class 7, classes declared 3 (the pack terminals; the cell tap and thermistor headers; the pack fuse holder)
+
+6ec37197  v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net: wear set 38, covered by exactly one declared class 38, classes declared 6 (CM5 module receptacles; M.2 sockets; U.FL antenna sockets; the coin cell holder; fan and flash headers, the panel ribbon, the HDMI and USB receptacles; the PCIe switches' own sockets on the carrier)
+73ae2f21  v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net: wear set 38, covered by exactly one declared class 38, classes declared 6 (CM5 module receptacles; M.2 sockets; U.FL antenna sockets; the coin cell holder; fan and flash headers, the panel ribbon, the HDMI and USB receptacles; the PCIe switches' own sockets on the carrier)
+
+6ec37197  v2/ecad/pcb-a-power-a23/out/pcb-a-power.net: wear set 39, covered by exactly one declared class 39, classes declared 6 (SMA bulkhead jacks; blind-mate dock contacts; JST-VH power headers; IDC ribbon headers; the main switch and USB-C wall leads; the blade fuse holder)
+73ae2f21  v2/ecad/pcb-a-power-a23/out/pcb-a-power.net: wear set 39, covered by exactly one declared class 39, classes declared 6 (SMA bulkhead jacks; blind-mate dock contacts; JST-VH power headers; IDC ribbon headers; the main switch and USB-C wall leads; the blade fuse holder)
+6ec37197  v2/ecad/pcb-c-display-c8/out/pcb-c-display.net: wear set 9, covered by exactly one declared class 9, classes declared 2 (the panel ribbon header; the face plate's mounting holes)
+73ae2f21  v2/ecad/pcb-c-display-c8/out/pcb-c-display.net: wear set 9, covered by exactly one declared class 9, classes declared 2 (the panel ribbon header; the face plate's mounting holes)

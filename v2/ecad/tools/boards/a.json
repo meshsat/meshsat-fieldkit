@@ -506,12 +506,20 @@
  "_copper_layers_why": "Six layers since 7 September 2026. Under the P0 ruling of 11 September this is OPEN: the record's own note says A's 33 hard on four layers turned out to be one router knot, and no four-layer rerun with unknot.py was ever done. The number lives here so that answering P0 is a declaration and not an edit to a gate.",
  "external_ports": [
   {
-   "ref": "J_DOCK",
-   "pins": [
-    "1",
-    "2"
-   ],
-   "why": "shore and vehicle DC arriving over the dock from the wall receptacle; the USB pair and the spare on this same connector are board A to board E INSIDE the case and are not external conductors"
+   "ref": "J_VR1",
+   "why": "shore and vehicle DC (VIN_RAW) arriving over the dock from board E, which takes it from the wall receptacle: one of the four 9 A power pins that carry VIN_RAW since session choice SC-55 (EQ-16, 27 September 2026). Until then the entry named J_DOCK pins 1 and 2, which are ground since, so it judged nothing. D2 (SMCJ40A) sits on these pins' own net"
+  },
+  {
+   "ref": "J_VR2",
+   "why": "shore and vehicle DC (VIN_RAW) arriving over the dock from board E, which takes it from the wall receptacle: one of the four 9 A power pins that carry VIN_RAW since session choice SC-55 (EQ-16, 27 September 2026). Until then the entry named J_DOCK pins 1 and 2, which are ground since, so it judged nothing. D2 (SMCJ40A) sits on these pins' own net"
+  },
+  {
+   "ref": "J_VR3",
+   "why": "shore and vehicle DC (VIN_RAW) arriving over the dock from board E, which takes it from the wall receptacle: one of the four 9 A power pins that carry VIN_RAW since session choice SC-55 (EQ-16, 27 September 2026). Until then the entry named J_DOCK pins 1 and 2, which are ground since, so it judged nothing. D2 (SMCJ40A) sits on these pins' own net"
+  },
+  {
+   "ref": "J_VR4",
+   "why": "shore and vehicle DC (VIN_RAW) arriving over the dock from board E, which takes it from the wall receptacle: one of the four 9 A power pins that carry VIN_RAW since session choice SC-55 (EQ-16, 27 September 2026). Until then the entry named J_DOCK pins 1 and 2, which are ground since, so it judged nothing. D2 (SMCJ40A) sits on these pins' own net"
   },
   {
    "ref": "J_USBW",
@@ -521,6 +529,188 @@
    "ref": "J_USBC_OUT",
    "why": "the USB-C outlet on the connector plate, out of the case: VBUS meets D4 (SMBJ18A) and CC1 and CC2 meet U31 (TPD2E2U06QDBZRQ1, the owner's D-17 array) at the connector, and port_protect judges both",
    "_protected_in_part_removed_why": "ROUND 8, 26 September 2026 (MESHSAT-1357, r4a open item O-20). Until round 8 pins 2 and 3 were declared protected inside U18, citing TI SLVSDG8B 9.1.1 ('The device has ESD protection built into the CC1 and CC2 pins so that no external protection is necessary'), owner decision 31 as ruled on 21 September 2026. Owner ruling D-17 of 26 September 2026 removed that residual with an external low-capacitance array at the connector, U31 (TI TPD2E2U06QDBZRQ1, SLLSEJ9E, IEC 61000-4-2 25 kV contact), on PD_CC1 and PD_CC2. With the declaration in place port_protect answered both conductors by U18 and never judged U31, so the array D-17 bought was never read. The declaration is removed and the two conductors are judged like every other: U31's value names an ESD array, which port_protect's PROTECT pattern reads, on the connector's own nets. Reversing it means restoring the protected_in_part entry, which is decision 31's own reversal text"
+  },
+  {
+   "ref": "J_MAINSW",
+   "off_board": "board C's parts at the MAIN switch on the face: U10 (USBLC6-2SC6) on both conductors of the pair, behind the beads FB1 and FB2 (600 R) with C26 (100 nF) across the pair (board C's netlist: SW_MAIN, FB1, FB2, C26, U10, J_MAINSW; board C declares the same lead external). Nothing on this board stands between the lead and U1's PB pin: findings A-F2 and X-C1 of the review of decision 31",
+   "why": "the MAIN button's lead from the panel: a person presses the button on the face, and its contact reaches the LTC2954's PB pin on this board"
+  },
+  {
+   "ref": "J_BM1",
+   "off_board": "the gas-discharge arrestor that is this port's antenna bulkhead on the end wall's RF entry plate (PolyPhaser GTH-SFF-AL, v2/vendor/polyphaser; v2/docs/CASE-MARGINS.md C2 and C4; interface contract IF-AE-RF). It is rated for surge (10 kA) with a 90 V turn-on; its sheet states no IEC 61000-4-2 figure, which the review of decision 31 records as not judged at the desk",
+   "why": "the VHF antenna conductor: it crosses this board from the SMA jack J_RF1 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall"
+  },
+  {
+   "ref": "J_BM2",
+   "off_board": "the gas-discharge arrestor that is this port's antenna bulkhead on the end wall's RF entry plate (PolyPhaser GTH-SFF-AL, v2/vendor/polyphaser; v2/docs/CASE-MARGINS.md C2 and C4; interface contract IF-AE-RF). It is rated for surge (10 kA) with a 90 V turn-on; its sheet states no IEC 61000-4-2 figure, which the review of decision 31 records as not judged at the desk",
+   "why": "the HF antenna conductor: it crosses this board from the SMA jack J_RF2 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall"
+  },
+  {
+   "ref": "J_BM3",
+   "off_board": "the gas-discharge arrestor that is this port's antenna bulkhead on the end wall's RF entry plate (PolyPhaser GTH-SFF-AL, v2/vendor/polyphaser; v2/docs/CASE-MARGINS.md C2 and C4; interface contract IF-AE-RF). It is rated for surge (10 kA) with a 90 V turn-on; its sheet states no IEC 61000-4-2 figure, which the review of decision 31 records as not judged at the desk",
+   "why": "the WIFI 2.4 antenna conductor: it crosses this board from the SMA jack J_RF3 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall"
+  },
+  {
+   "ref": "J_BM4",
+   "off_board": "the gas-discharge arrestor that is this port's antenna bulkhead on the end wall's RF entry plate (PolyPhaser GTH-SFF-AL, v2/vendor/polyphaser; v2/docs/CASE-MARGINS.md C2 and C4; interface contract IF-AE-RF). It is rated for surge (10 kA) with a 90 V turn-on; its sheet states no IEC 61000-4-2 figure, which the review of decision 31 records as not judged at the desk",
+   "why": "the GNSS antenna conductor: it crosses this board from the SMA jack J_RF4 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall"
+  },
+  {
+   "ref": "J_BM5",
+   "off_board": "the gas-discharge arrestor that is this port's antenna bulkhead on the end wall's RF entry plate (PolyPhaser GTH-SFF-AL, v2/vendor/polyphaser; v2/docs/CASE-MARGINS.md C2 and C4; interface contract IF-AE-RF). It is rated for surge (10 kA) with a 90 V turn-on; its sheet states no IEC 61000-4-2 figure, which the review of decision 31 records as not judged at the desk",
+   "why": "the SDR antenna conductor: it crosses this board from the SMA jack J_RF5 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall"
+  },
+  {
+   "ref": "J_BM6",
+   "off_board": "the gas-discharge arrestor that is this port's antenna bulkhead on the end wall's RF entry plate (PolyPhaser GTH-SFF-AL, v2/vendor/polyphaser; v2/docs/CASE-MARGINS.md C2 and C4; interface contract IF-AE-RF). It is rated for surge (10 kA) with a 90 V turn-on; its sheet states no IEC 61000-4-2 figure, which the review of decision 31 records as not judged at the desk",
+   "why": "the WIFI P2P A antenna conductor: it crosses this board from the SMA jack J_RF6 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall"
+  },
+  {
+   "ref": "J_BM7",
+   "off_board": "the gas-discharge arrestor that is this port's antenna bulkhead on the end wall's RF entry plate (PolyPhaser GTH-SFF-AL, v2/vendor/polyphaser; v2/docs/CASE-MARGINS.md C2 and C4; interface contract IF-AE-RF). It is rated for surge (10 kA) with a 90 V turn-on; its sheet states no IEC 61000-4-2 figure, which the review of decision 31 records as not judged at the desk",
+   "why": "the WIFI P2P B antenna conductor: it crosses this board from the SMA jack J_RF7 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall"
+  },
+  {
+   "ref": "J_BM8",
+   "off_board": "the gas-discharge arrestor that is this port's antenna bulkhead on the end wall's RF entry plate (PolyPhaser GTH-SFF-AL, v2/vendor/polyphaser; v2/docs/CASE-MARGINS.md C2 and C4; interface contract IF-AE-RF). It is rated for surge (10 kA) with a 90 V turn-on; its sheet states no IEC 61000-4-2 figure, which the review of decision 31 records as not judged at the desk",
+   "why": "the 5G MAIN antenna conductor: it crosses this board from the SMA jack J_RF8 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall"
+  },
+  {
+   "ref": "J_BM9",
+   "off_board": "the gas-discharge arrestor that is this port's antenna bulkhead on the end wall's RF entry plate (PolyPhaser GTH-SFF-AL, v2/vendor/polyphaser; v2/docs/CASE-MARGINS.md C2 and C4; interface contract IF-AE-RF). It is rated for surge (10 kA) with a 90 V turn-on; its sheet states no IEC 61000-4-2 figure, which the review of decision 31 records as not judged at the desk",
+   "why": "the 5G DIV antenna conductor: it crosses this board from the SMA jack J_RF9 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall"
+  },
+  {
+   "ref": "J_BM10",
+   "off_board": "the gas-discharge arrestor that is this port's antenna bulkhead on the end wall's RF entry plate (PolyPhaser GTH-SFF-AL, v2/vendor/polyphaser; v2/docs/CASE-MARGINS.md C2 and C4; interface contract IF-AE-RF). It is rated for surge (10 kA) with a 90 V turn-on; its sheet states no IEC 61000-4-2 figure, which the review of decision 31 records as not judged at the desk",
+   "why": "the IRIDIUM antenna conductor: it crosses this board from the SMA jack J_RF10 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall"
+  },
+  {
+   "ref": "J_BM11",
+   "off_board": "the gas-discharge arrestor that is this port's antenna bulkhead on the end wall's RF entry plate (PolyPhaser GTH-SFF-AL, v2/vendor/polyphaser; v2/docs/CASE-MARGINS.md C2 and C4; interface contract IF-AE-RF). It is rated for surge (10 kA) with a 90 V turn-on; its sheet states no IEC 61000-4-2 figure, which the review of decision 31 records as not judged at the desk",
+   "why": "the LORA antenna conductor: it crosses this board from the SMA jack J_RF11 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall"
+  }
+ ],
+ "internal_ports": [
+  {
+   "ref": "J_RF1",
+   "why": "the SMA jack of the pigtail to the VHF radio inside the case: the same conductor as J_BM1, which is declared external, and no part of this board is on it"
+  },
+  {
+   "ref": "J_RF2",
+   "why": "the SMA jack of the pigtail to the HF radio inside the case: the same conductor as J_BM2, which is declared external, and no part of this board is on it"
+  },
+  {
+   "ref": "J_RF3",
+   "why": "the SMA jack of the pigtail to the WIFI 2.4 radio inside the case: the same conductor as J_BM3, which is declared external, and no part of this board is on it"
+  },
+  {
+   "ref": "J_RF4",
+   "why": "the SMA jack of the pigtail to the GNSS radio inside the case: the same conductor as J_BM4, which is declared external, and no part of this board is on it"
+  },
+  {
+   "ref": "J_RF5",
+   "why": "the SMA jack of the pigtail to the SDR radio inside the case: the same conductor as J_BM5, which is declared external, and no part of this board is on it"
+  },
+  {
+   "ref": "J_RF6",
+   "why": "the SMA jack of the pigtail to the WIFI P2P A radio inside the case: the same conductor as J_BM6, which is declared external, and no part of this board is on it"
+  },
+  {
+   "ref": "J_RF7",
+   "why": "the SMA jack of the pigtail to the WIFI P2P B radio inside the case: the same conductor as J_BM7, which is declared external, and no part of this board is on it"
+  },
+  {
+   "ref": "J_RF8",
+   "why": "the SMA jack of the pigtail to the 5G MAIN radio inside the case: the same conductor as J_BM8, which is declared external, and no part of this board is on it"
+  },
+  {
+   "ref": "J_RF9",
+   "why": "the SMA jack of the pigtail to the 5G DIV radio inside the case: the same conductor as J_BM9, which is declared external, and no part of this board is on it"
+  },
+  {
+   "ref": "J_RF10",
+   "why": "the SMA jack of the pigtail to the IRIDIUM radio inside the case: the same conductor as J_BM10, which is declared external, and no part of this board is on it"
+  },
+  {
+   "ref": "J_RF11",
+   "why": "the SMA jack of the pigtail to the LORA radio inside the case: the same conductor as J_BM11, which is declared external, and no part of this board is on it"
+  },
+  {
+   "ref": "J_DOCK",
+   "why": "signals between board A and board E inside the case, through the dock block E5 (interface contract IF-AE-DOCK): SHORE_INHIBIT on pin 8, the sensor controller's USB pair on pins 9 and 10, the hot stop line HOT-R1 on pin 12; the other pins are ground"
+  },
+  {
+   "ref": "J_CP1",
+   "why": "the pack's positive over the dock block, from board P by board E's F3, all inside the case (IF-AE-DOCK, IF-PE-PACK); the pack's own protection is on board P"
+  },
+  {
+   "ref": "J_CP2",
+   "why": "the pack's positive over the dock block, from board P by board E's F3, all inside the case (IF-AE-DOCK, IF-PE-PACK); the pack's own protection is on board P"
+  },
+  {
+   "ref": "J_CP3",
+   "why": "the pack's positive over the dock block, from board P by board E's F3, all inside the case (IF-AE-DOCK, IF-PE-PACK); the pack's own protection is on board P"
+  },
+  {
+   "ref": "J_CP4",
+   "why": "the pack's positive over the dock block, from board P by board E's F3, all inside the case (IF-AE-DOCK, IF-PE-PACK); the pack's own protection is on board P"
+  },
+  {
+   "ref": "J_PRE1",
+   "why": "the pre-charge pin of the pack's positive over the dock block, inside the case: it mates first and reaches CELL+ through R1 (10 R)"
+  },
+  {
+   "ref": "J_AB1",
+   "why": "the control ribbon to board B above this board, inside the case (IF-AB-RIBBON)"
+  },
+  {
+   "ref": "J_AB2",
+   "why": "the wall-port ribbon to board B, inside the case (IF-AB-WALL): it carries the wall USB pair on from J_USBW, which is declared external and clamped on this board by U29"
+  },
+  {
+   "ref": "J_MEZZ1",
+   "why": "the mezzanine harness to board D, inside the case (IF-AD-HARNESS)"
+  },
+  {
+   "ref": "J_MEZZ_PWR1",
+   "why": "board D's 5 V lead behind the eFuse U23, inside the case (IF-AD-HARNESS)"
+  },
+  {
+   "ref": "J_5V_S1",
+   "why": "a rail lead to board B, inside the case (IF-AB-POWER)"
+  },
+  {
+   "ref": "J_5V_S2",
+   "why": "a rail lead to board B, inside the case (IF-AB-POWER)"
+  },
+  {
+   "ref": "J_5V_S3",
+   "why": "a rail lead to board B, inside the case (IF-AB-POWER)"
+  },
+  {
+   "ref": "J_5V_DEV",
+   "why": "a rail lead to board B, inside the case (IF-AB-POWER)"
+  },
+  {
+   "ref": "J_54V",
+   "why": "the 54 V lead to board B's PoE injector, inside the case (IF-AB-POWER); the conductor that leaves the case is board B's Ethernet jack, which board B declares"
+  },
+  {
+   "ref": "J_PA",
+   "why": "13.8 V to the power amplifier module on the inside of the face plate (IF-A-PA); the lead stays inside the case"
+  },
+  {
+   "ref": "J_HF",
+   "why": "12 V to the QMX HF unit in the lid tray, in the lid harness (IF-LID-HF). The lead stays inside the case; the unit's own panel is touched by the operator, and what reaches this lead through the unit is recorded in the review of decision 31 as not judged at the desk"
+  },
+  {
+   "ref": "J_MON",
+   "why": "the supply lead of the Xenarc monitor on the face, behind the eFuse U21 (IF-MON). The lead stays inside the case; the monitor's glass and bezel are touched by the operator, and what reaches this lead through the monitor is recorded in the review of decision 31 as not judged at the desk"
+  },
+  {
+   "ref": "J_HEAT",
+   "why": "the pack heater mat in the pack bay, inside the case (IF-A-HEAT)"
   }
  ],
  "_external_ports_why": "Rule TRN-001, 16 September 2026. A port that leaves the ENCLOSURE is a wire a person will plug something into, in the rain, having walked across a floor. Every one of them reaches a semiconductor, and the only thing between is a suppressor, a choke, a series resistor into a clamp, or nothing. Most connectors on these boards are internal (board-to-board ribbons, module sockets, fan leads inside a sealed case) and treating every J as external would refuse every board for wires that never leave it. The board knows which is which and nothing else does, so each one is named with where it goes.",

@@ -28,12 +28,12 @@
   "board": "b",
   "intent": {
    "path": "pcb-b-compute-b19/out/pcb-b-compute-intent.json",
-   "sha256_16": "162fcb9b95f680a7"
+   "sha256_16": "a7bf625c8b878dd5"
   },
   "netlist": {
-   "content16": "39d83d25efcd75a6",
+   "content16": "b9dbb9c4a430d108",
    "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
-   "sha256_16": "8b78c59754a6a0c7"
+   "sha256_16": "21a1f74a3ec1ae28"
   }
  },
  "missing_input": null,
@@ -53,12 +53,12 @@
  },
  "tool": "power_sequence",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "cef7cb77c420",
+  "tools_tree_sha": "8639c5ed4c65deea"
  },
- "ts": "2026-09-27T13:22:18Z",
+ "ts": "2026-09-28T22:45:04Z",
  "verdict": "PASS",
- "version": "391d857966d6",
+ "version": "cef7cb77c420",
  "writer": {
   "file": "power_sequence.py",
   "sha16": "2ba1e2e1a719c9d1"

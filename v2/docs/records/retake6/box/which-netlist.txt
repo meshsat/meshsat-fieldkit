@@ -1,0 +1,22 @@
+board A  stem pcb-a-power
+   candidate pcb-a-power-a23/out/pcb-a-power.net                mtime_ns 1790542700441469121 sha16 0a2b59087bcc2678  <- picked
+   declared phase netlist pcb-a-power-a23/out/pcb-a-power.net: THE PICKED FILE
+board B  stem pcb-b-compute
+   candidate pcb-b-compute-b19/out/pcb-b-compute.net            mtime_ns 1790542700458468708 sha16 028997a6c5e8810f  <- picked
+   declared phase netlist pcb-b-compute-b19/out/pcb-b-compute.net: THE PICKED FILE
+board C  stem pcb-c-display
+   candidate pcb-c-display-c8/out/pcb-c-display.net             mtime_ns 1790542700484468077 sha16 3fddbb3edcd4248a  <- picked
+   declared phase netlist pcb-c-display-c8/out/pcb-c-display.net: THE PICKED FILE
+board D  stem pcb-d-aprs
+   candidate pcb-d-aprs-d9/out/pcb-d-aprs.net                   mtime_ns 1790542700491467908 sha16 7a2c0ac2190b141a  <- picked
+   declared phase netlist pcb-d-aprs-d9/out/pcb-d-aprs.net: THE PICKED FILE
+board E  stem pcb-e1-dock
+   candidate pcb-e1-dock-e7/out/pcb-e1-dock.net                 mtime_ns 1790542700496467786 sha16 56adc9746d61c4e0  <- picked
+   declared phase netlist pcb-e1-dock-e7/out/pcb-e1-dock.net: THE PICKED FILE
+board E5 stem pcb-e5-block
+   no netlist (the tool says so in a note)
+   declared phase netlist pcb-e5-block/out/pcb-e5-block.net: THE PICKED FILE
+board P  stem pcb-p-pack
+   candidate pcb-p-pack-p2/out/pcb-p-pack.net                   mtime_ns 1790542700502467641 sha16 760ac6f74d62d194  <- picked
+   declared phase netlist pcb-p-pack-p2/out/pcb-p-pack.net: THE PICKED FILE
+every board's picked netlist is its declared phase's: yes

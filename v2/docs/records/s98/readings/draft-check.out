@@ -1,0 +1,7 @@
+PASS B1-A-S2: v2/ecad/tools/gen_sch_a.py: exact old text occurs once
+PASS B1-A-Q28: v2/ecad/tools/gen_sch_a.py: exact old text occurs once
+PASS B1-B-S2: v2/ecad/tools/gen_sch_b.py: exact old text occurs once
+PASS B2-A-DEV: v2/ecad/tools/gen_sch_a.py: exact old text occurs once
+PASS AST: v2/ecad/tools/gen_sch_a.py: replaced text parses
+PASS AST: v2/ecad/tools/gen_sch_b.py: replaced text parses
+CHECK ONLY: 4 entries, 2 generators; no writes, no marker.

@@ -6,8 +6,10 @@
   "files": {
    "boardorder.py": "298e46edcc028954",
    "boardtable.py": "41bd92e61f12c374",
-   "edge_length.py": "fd66cbd9bce2fa7b",
+   "edge_length.py": "21d61d18e18e56a8",
    "hardset.py": "be29a44c4a592876",
+   "ibis_manifest.py": "ff27099a74e5efe9",
+   "ibis_read.py": "1d48c256b6ceca65",
    "impedance_check.py": "e2495a04e16fc600",
    "intent.py": "f1ac033e0f3c10f1",
    "intent_checks.py": "1ad7af0c718ba940",
@@ -15,51 +17,62 @@
    "netclass.py": "4cc1adf0ddae0390",
    "netlist_board.py": "655bc402d36b0fa5",
    "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
    "regen_compare.py": "341d7f129a1e6f24",
    "return_via.py": "b61d138e54955dd4",
-   "rules_lib.py": "c0458c53923d7925",
+   "rules_lib.py": "a6e2421096c1473f",
    "signal_class.py": "60b8647301428da4",
    "signalnets.py": "688be12d8e42e7a4",
    "stackup_write.py": "b55a3c0f58c805c2",
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "9882ad1bc5620724",
+  "sha16": "4011f598a4f49255",
   "unresolved": []
  },
  "counts": {
-  "answered_nets": 4,
-  "classes": 49,
+  "answered_nets": 10,
+  "bound_decided_nets": 31,
+  "bound_edge_nets": 37,
+  "classes": 50,
   "contradicted_nets": 0,
-  "decided_nets": 4,
-  "layout_bound_nets": 0,
-  "low_speed_nets": 41,
-  "may_be_long_nets": 4,
-  "signal_nets": 82,
-  "undecided_nets": 37
+  "decided_nets": 41,
+  "layout_bound_nets": 31,
+  "low_speed_nets": 42,
+  "maker_edge_nets": 4,
+  "maker_held_nets": 0,
+  "may_be_long_nets": 41,
+  "models_absent": 0,
+  "models_asked": 0,
+  "signal_nets": 83,
+  "unasked_part_nets": 0,
+  "undecided_model_absent_nets": 0,
+  "undecided_nets": 0,
+  "undecided_no_declaration_nets": 0,
+  "undecided_other_nets": 0
  },
- "denominator": 82,
+ "denominator": 83,
  "evidence": [
-  "UNDECIDED *_BST (HIGH_SPEED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: AP63205WU-7 5 V 2 A buck for the controller, the Geiger module and the fans' logic U12",
-  "UNDECIDED *_PULSE (CLOCKED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: RP2040 sensor controller (USB to B16 through the dock) U10",
-  "UNDECIDED *_SW (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: none",
-  "UNDECIDED FAN?_G (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: none",
-  "UNDECIDED FAN?_PWM (CLOCKED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: RP2040 sensor controller (USB to B16 through the dock) U10",
-  "UNDECIDED HS_GATE (HIGH_SPEED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: LM5069MM-2 hot-swap controller: 9 V on, 40 V off, current and power limit U6",
-  "UNDECIDED IMU_* (CLOCKED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: BMI270 six-axis IMU (I2C 0x68): shock and tilt log, motion wake U15, RP2040 sensor controller (USB to B16 through the dock) U10",
-  "UNDECIDED LTG_IRQ (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: RP2040 sensor controller (USB to B16 through the dock) U10",
-  "UNDECIDED Q?_G (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: LM74700-Q1 ideal-diode controller: 1 VCAP 2 GND 3 EN 4 CATHODE 5 GATE 6 ANODE U3/U4",
-  "UNDECIDED QSPI_* (HIGH_SPEED_DIGITAL, 6 net(s)): no edge is declared and no held document states one; ICs on them: RP2040 sensor controller (USB to B16 through the dock) U10, W25Q16JVUXIQ 16 Mbit QSPI flash (USON-8: 1 CS 2 DO/IO1 3 WP/IO2 4 GND 5 DI/IO0 6 CLK 7 HOLD/IO3 8 VCC, pad) U11",
-  "UNDECIDED SCL* (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: BME688 inside climate: temperature, humidity, pressure, gas index (I2C 0x76) U14, BMI270 six-axis IMU (I2C 0x68): shock and tilt log, motion wake U15, RP2040 sensor controller (USB to B16 through the dock) U10, SGP41-D-R4 VOC and NOx gas sensor, battery-bay air (I2C 0x59; DFN-6: 1 VDD 2 VSS 3 SDA 4 n/a to GND 5 VDDH 6 SCL, 7 die pad GND) U17",
-  "UNDECIDED SDA* (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: BME688 inside climate: temperature, humidity, pressure, gas index (I2C 0x76) U14, BMI270 six-axis IMU (I2C 0x68): shock and tilt log, motion wake U15, RP2040 sensor controller (USB to B16 through the dock) U10, SGP41-D-R4 VOC and NOx gas sensor, battery-bay air (I2C 0x59; DFN-6: 1 VDD 2 VSS 3 SDA 4 n/a to GND 5 VDDH 6 SCL, 7 die pad GND) U17",
-  "UNDECIDED SMB? (CLOCKED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: RP2040 sensor controller (USB to B16 through the dock) U10",
-  "UNDECIDED SW* (CLOCKED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: RP2040 sensor controller (USB to B16 through the dock) U10",
-  "UNDECIDED TRK_BG* (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted U5",
-  "UNDECIDED TRK_BOOST* (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted U5",
-  "UNDECIDED TRK_CS (HIGH_SPEED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: none",
-  "UNDECIDED TRK_TG* (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted U5",
-  "UNDECIDED XIN (HIGH_SPEED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: RP2040 sensor controller (USB to B16 through the dock) U10",
-  "UNDECIDED XOUT* (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: RP2040 sensor controller (USB to B16 through the dock) U10"
+  "BOUND_DECIDES 31 layout-bound net(s) whose governing edge is a bound or a model: at least one driver on each has no published minimum, whatever the other drivers' makers publish (ER-D13): E6_BST, DCF_PULSE, FAN1_SW, FAN2_SW, HS_GATE, IMU_CSB, IMU_INT1, LTG_IRQ, Q1_G, Q2_G, QSPI_D0, QSPI_D1 ...",
+  "LAYOUT_BOUND *_BST (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): E6_BST",
+  "LAYOUT_BOUND *_PULSE (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): DCF_PULSE",
+  "LAYOUT_BOUND *_SW (HIGH_SPEED_DIGITAL, 0.000 ns BOUND DISCRETE-MOSFET, critical 0.0 mm, decided by a bound): FAN1_SW, FAN2_SW",
+  "LAYOUT_BOUND HS_GATE (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): HS_GATE",
+  "LAYOUT_BOUND IMU_* (CLOCKED_DIGITAL, 0.000 ns BOUND BOSCH-BMI270, critical 0.0 mm, decided by a bound): IMU_CSB",
+  "LAYOUT_BOUND IMU_* (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): IMU_INT1",
+  "LAYOUT_BOUND LTG_IRQ (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): LTG_IRQ",
+  "LAYOUT_BOUND Q?_G (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): Q1_G, Q2_G",
+  "LAYOUT_BOUND QSPI_* (HIGH_SPEED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): QSPI_D0, QSPI_D1, QSPI_D2, QSPI_D3, QSPI_SCLK, QSPI_SS",
+  "LAYOUT_BOUND SCL* (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): SCL1",
+  "LAYOUT_BOUND SDA* (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): SDA1",
+  "LAYOUT_BOUND SMB? (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): SMBC, SMBD",
+  "LAYOUT_BOUND SW* (CLOCKED_DIGITAL, 0.000 ns BOUND FAR-BENCH-PROBE, critical 0.0 mm, decided by a bound): SWCLK",
+  "LAYOUT_BOUND SW* (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): SWDIO",
+  "LAYOUT_BOUND TRK_BG* (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): TRK_BG1, TRK_BG2",
+  "LAYOUT_BOUND TRK_BOOST* (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): TRK_BOOST1, TRK_BOOST2",
+  "LAYOUT_BOUND TRK_TG* (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): TRK_TG1, TRK_TG2",
+  "LAYOUT_BOUND XIN (HIGH_SPEED_DIGITAL, 0.000 ns BOUND OSCILLATOR-NODES, critical 0.0 mm, decided by a bound): XIN",
+  "LAYOUT_BOUND XOUT* (HIGH_SPEED_DIGITAL, 0.000 ns BOUND OSCILLATOR-NODES, critical 0.0 mm, decided by a bound): XOUT, XOUT_R"
  ],
  "inputs": {
   "board": "e",
@@ -69,26 +82,103 @@
   },
   "board_table": {
    "path": "tools/boards/e.json",
-   "sha256_16": "b83f77baaec09080"
+   "sha256_16": "9f023513bfb98c15"
   },
   "critical_k": 6,
   "document_1": {
+   "path": "v2/vendor/ams/ams-as7331.pdf",
+   "sha256_16": "60c13168a4012c16"
+  },
+  "document_10": {
+   "path": "v2/vendor/sensirion/sgp41-datasheet.pdf",
+   "sha256_16": "331f35ed1f027a74"
+  },
+  "document_11": {
+   "path": "v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf",
+   "sha256_16": "f6e620179006c8c4"
+  },
+  "document_12": {
    "path": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
    "sha256_16": "2ecb40606d4b84fe"
   },
+  "document_13": {
+   "path": "v2/vendor/ti/lm5176-datasheet.pdf",
+   "sha256_16": "98191bec36d43771"
+  },
+  "document_14": {
+   "path": "v2/vendor/winbond/winbond-w25q16jv-serial-flash.pdf",
+   "sha256_16": "81af3f69b0bff95f"
+  },
+  "document_2": {
+   "path": "v2/vendor/battery/ti-bq4050.pdf",
+   "sha256_16": "2664e33fe6d6ebed"
+  },
+  "document_3": {
+   "path": "v2/vendor/bosch/bosch-bme688.pdf",
+   "sha256_16": "fce73ae028a985b3"
+  },
+  "document_4": {
+   "path": "v2/vendor/bosch/bosch-bmi270.pdf",
+   "sha256_16": "f68ce3c74f011a80"
+  },
+  "document_5": {
+   "path": "v2/vendor/cm5/cm5-datasheet.pdf",
+   "sha256_16": "80070fefd8db6e8a"
+  },
+  "document_6": {
+   "path": "v2/vendor/power/aos-ao3401a-p-mosfet.pdf",
+   "sha256_16": "0d8e3261ae280e00"
+  },
+  "document_7": {
+   "path": "v2/vendor/power/jscj-2n7002-c8545.pdf",
+   "sha256_16": "7941fb423af7c6c6"
+  },
+  "document_8": {
+   "path": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+   "sha256_16": "be56fbb75ba0ae9e"
+  },
+  "document_9": {
+   "path": "v2/vendor/sciosense/sciosense-as3935-factsheet.pdf",
+   "sha256_16": "b1d889c1768bab4b"
+  },
+  "edge_rates": {
+   "path": "tools/pcb_edge_rates.yaml",
+   "sha256_16": "0689086680f7a4a4"
+  },
   "extent_mm": 335.0,
+  "far_netlist_p": {
+   "path": "pcb-p-pack-p2/out/pcb-p-pack.net",
+   "sha256_16": "760ac6f74d62d194"
+  },
+  "ibis_manifest": {
+   "path": "v2/vendor/ibis-manifest.yaml",
+   "sha256_16": "47952602c17f0dfd"
+  },
   "intent": {
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock-intent.json",
-   "sha256_16": "5913e38b20333d35"
+   "sha256_16": "dad1163afd720b5e"
+  },
+  "model_state": {
+   "absent": 0,
+   "absent_files": [],
+   "asked": 0,
+   "how_to_fetch": "python3 v2/ecad/tools/ibis_fetch.py --fetch",
+   "manifest": "v2/vendor/ibis-manifest.yaml",
+   "present": 0,
+   "state": "NOT_ASKED"
   },
   "netlist": {
-   "content16": "b8d237f0b8d759f5",
+   "content16": "dc06b84a39724641",
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
-   "sha256_16": "d6137f50059e5cbc"
+   "sha256_16": "56adc9746d61c4e0"
   },
   "project": {
    "path": "pcb-e1-dock-e7/pcb-e1-dock.kicad_pro",
    "sha256_16": "9f3d11f497873838"
+  },
+  "search_listing": {
+   "path": "v2/docs/records/w5si/readings/edge-search.txt",
+   "sha256_16": "d08bc489782c976b"
   },
   "slowest_layer": "JLC04161H-7628 In2.Cu",
   "stack_table": {
@@ -101,7 +191,7 @@
   "t_pd_ps_per_mm": 7.154
  },
  "missing_input": null,
- "note": "SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (UNDECIDED where none does), the critical length l = t_r / (k t_pd) on the slowest layer of every stack the board may be drawn on, and whether the netlist carries an impedance target, a series termination or a declaration where a net may be electrically long. The routed lengths are the layout gate's (edge_length_routed). The table is edge_length.table.json beside this verdict. Session decisions of 26 September 2026: LOW_SPEED_OR_DC asked no edge, the first matching entry decides, the slowest layer of the declared and ruled stacks, the stripline bound, the corner-to-corner extent, the project file's class where the netlist says Default",
+ "note": "SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (UNDECIDED where none does), the critical length l = t_r / (k t_pd) on the slowest layer of every stack the board may be drawn on, and whether the netlist carries an impedance target, a series termination or a declaration where a net may be electrically long. The routed lengths are the layout gate's (edge_length_routed). The table is edge_length.table.json beside this verdict. Session decisions of 26 September 2026: LOW_SPEED_OR_DC asked no edge, the first matching entry decides, the slowest layer of the declared and ruled stacks, the stripline bound, the corner-to-corner extent, the project file's class where the netlist says Default. Since 27 September 2026 every edge is a record of tools/pcb_edge_rates.yaml (a configuration input, by sha in inputs.edge_rates): a class entry's interface record, or per net the fastest of its drivers' families (a maker's IBIS model read per pin, a published minimum, a model or a bound), its far ends and one series resistor away; a net whose driver has no record is UNDECIDED. The governing edge of a net is the fastest any driver on it can produce, so one driver with no published minimum makes the net decided by a bound whatever the others publish (ER-D13); a layout-bound net a bound decides is named under BOUND_DECIDES and holds the reading INCONCLUSIVE. counts: decided = maker_edge + bound_edge; layout_bound = maker_held + bound_decided. Since 28 September 2026 the makers' IBIS models are pinned by v2/vendor/ibis-manifest.yaml (inputs.ibis_manifest) and are not in the repository: a pinned model the checkout does not hold decides nothing, its nets read UNDECIDED naming it, and inputs.model_state says which state the reading was taken in (ER-D17); undecided = undecided_no_declaration + undecided_model_absent + undecided_other; a pin whose [Ramp] cell the model's own V-t table contradicts takes the instantaneous bound (ER-D16)",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
@@ -117,14 +207,14 @@
  },
  "tool": "edge_length",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "cef7cb77c420",
+  "tools_tree_sha": "8639c5ed4c65deea"
  },
- "ts": "2026-09-27T13:23:04Z",
+ "ts": "2026-09-28T22:46:29Z",
  "verdict": "INCONCLUSIVE",
- "version": "391d857966d6",
+ "version": "cef7cb77c420",
  "writer": {
   "file": "edge_length.py",
-  "sha16": "fd66cbd9bce2fa7b"
+  "sha16": "21d61d18e18e56a8"
  }
 }

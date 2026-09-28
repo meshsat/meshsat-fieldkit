@@ -10,12 +10,12 @@
    "netlist_board.py": "655bc402d36b0fa5",
    "netlist_parts.py": "41cf192223d822c2",
    "phase_artefacts.py": "96642ce767188c73",
-   "port_protect.py": "2d69facd3c25c8a4",
+   "port_protect.py": "7acd5333fc59f8d0",
    "regen_compare.py": "341d7f129a1e6f24",
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "0fe457dc75321185",
+  "sha16": "dc13fd58ac5b7922",
   "unresolved": []
  },
  "counts": {
@@ -33,12 +33,16 @@
   "board": "p",
   "intent": {
    "path": "pcb-p-pack-p2/out/pcb-p-pack-intent.json",
-   "sha256_16": "6ff1b8129a5c5aff"
+   "sha256_16": "12f92bd3ce7a8264"
   },
   "netlist": {
    "content16": "efe60479293f0004",
    "path": "pcb-p-pack-p2/out/pcb-p-pack.net",
-   "sha256_16": "085f833362fbbda8"
+   "sha256_16": "760ac6f74d62d194"
+  },
+  "port_reviews": {
+   "path": "tools/pcb_port_reviews.json",
+   "sha256_16": "626fb85002cfc9b8"
   }
  },
  "missing_input": null,
@@ -58,14 +62,14 @@
  },
  "tool": "port_protect_p",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "cef7cb77c420",
+  "tools_tree_sha": "8639c5ed4c65deea"
  },
- "ts": "2026-09-27T13:23:37Z",
+ "ts": "2026-09-28T22:47:04Z",
  "verdict": "PASS",
- "version": "391d857966d6",
+ "version": "cef7cb77c420",
  "writer": {
   "file": "port_protect.py",
-  "sha16": "2d69facd3c25c8a4"
+  "sha16": "7acd5333fc59f8d0"
  }
 }

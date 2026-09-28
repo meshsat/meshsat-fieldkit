@@ -15,13 +15,13 @@
    "netlist_parts.py": "41cf192223d822c2",
    "regen_compare.py": "341d7f129a1e6f24",
    "return_via.py": "b61d138e54955dd4",
-   "rules_lib.py": "c0458c53923d7925",
+   "rules_lib.py": "a6e2421096c1473f",
    "signal_class.py": "60b8647301428da4",
    "signalnets.py": "688be12d8e42e7a4",
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "5aa3d5157698ae2a",
+  "sha16": "8d11079ea3d16df7",
   "unresolved": []
  },
  "counts": {
@@ -37,17 +37,14 @@
   "rails_without_destination": 0,
   "settled": 11,
   "switches_unresolved": 0,
-  "undecided": 2,
+  "undecided": 0,
   "undeclared": 0,
-  "unmarked": 59
+  "unmarked": 60
  },
  "denominator": 16,
  "evidence": [
-  "census of the 124 nets: 15 counted, 13 declared node, 2 ground, 11 settled, 22 unconnected, 2 undecided, 59 unmarked",
-  "undecided, named and not counted (2): FAN1_SW, FAN2_SW",
+  "census of the 124 nets: 15 counted, 15 declared node, 2 ground, 11 settled, 21 unconnected, 0 undecided, 60 unmarked",
   "settled, they supply nothing (11): GEIGER_CT, HS_TIMER, TAMPER_IO, TRK_CSN, TRK_CSP, TRK_SS, TRK_VC, TRK_VCC1, VIN_MON, XIN, XOUT",
-  "undecided, named and not counted: FAN1_SW: it carries the mark of a supply (M3 D7 joins it to the power net CELL_F; M4 the switched return of D7: the channel of Q9 sinks it to ground) and nothing read settles it: D7.2, J_FAN1.2, Q9.3",
-  "undecided, named and not counted: FAN2_SW: it carries the mark of a supply (M3 D8 joins it to the power net CELL_F; M4 the switched return of D8: the channel of Q10 sinks it to ground) and nothing read settles it: D8.2, J_FAN2.2, Q10.3",
   "declared as a node, not a rail: E6_BST (supply pin by its held datasheet (U12.6 BST: v2/vendor/diodes/diodes-ap63200-series-buck.pdf))",
   "declared as a node, not a rail: E6_DVDD (supply pin by name (U10.23 E6_DVDD, U10.45 E6_DVDD, U10.50 E6_DVDD), and the intent's bypass list decouples it (C45:U10.)",
   "declared as a node, not a rail: E6_SW (power class SW in the netlist; supply pin by its held datasheet (U12.5 SW: v2/vendor/diodes/diodes-ap63200-series-buck.p)",
@@ -106,12 +103,12 @@
   },
   "intent": {
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock-intent.json",
-   "sha256_16": "5913e38b20333d35"
+   "sha256_16": "dad1163afd720b5e"
   },
   "netlist": {
-   "content16": "b8d237f0b8d759f5",
+   "content16": "dc06b84a39724641",
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
-   "sha256_16": "d6137f50059e5cbc"
+   "sha256_16": "56adc9746d61c4e0"
   },
   "threshold_a": 0.0
  },
@@ -133,12 +130,12 @@
  },
  "tool": "intent_rails",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "cef7cb77c420",
+  "tools_tree_sha": "8639c5ed4c65deea"
  },
- "ts": "2026-09-27T13:23:01Z",
- "verdict": "INCONCLUSIVE",
- "version": "391d857966d6",
+ "ts": "2026-09-28T22:46:19Z",
+ "verdict": "PASS",
+ "version": "cef7cb77c420",
  "writer": {
   "file": "intent_checks.py",
   "sha16": "1ad7af0c718ba940"

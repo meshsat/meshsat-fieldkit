@@ -1,0 +1,38 @@
+QMX end panels and top face scaled from the maker's undimensioned figures (operating manual 1_04_004 pp. 7, 8, 13) to the maker's
+63 x 25 panel; SCALED, INFERRED, not maker dimensions. Positions: x from the panel's left edge as drawn (the panel seen from outside,
+top face up), y from its bottom edge; hole sizes are the figure's openings.
+
+LEFT panel (p. 7: Paddle, Audio, DC): outline 7..474 x 6..192 px, aspect 2.511 (63/25 = 2.520), 0.1349 x 0.1344 mm/px
+  hole  x   3.0  y   3.0    4.9 x  4.8
+  hole  x   3.0  y  22.0    4.9 x  4.8
+  hole  x  30.2  y   8.5    6.2 x  6.2
+  hole  x  42.1  y   8.5    6.3 x  6.2
+  hole  x  52.3  y  11.9    6.3 x  6.2
+  hole  x  60.0  y   3.0    4.9 x  4.8
+  hole  x  60.0  y  22.0    4.9 x  4.8
+RIGHT panel (p. 8: RF, PTT, USB): outline 6..473 x 4..189 px, aspect 2.524 (63/25 = 2.520), 0.1349 x 0.1351 mm/px
+  hole  x   3.0  y   3.0    4.7 x  4.7
+  hole  x   3.0  y  22.0    4.7 x  4.7
+  hole  x  12.1  y  11.6   12.4 x 12.3
+  hole  x  29.7  y   8.5    6.3 x  6.4
+  hole  x  41.1  y   7.0    8.8 x  3.4
+  hole  x  60.0  y   3.0    4.9 x  4.7
+  hole  x  60.0  y  22.0    4.9 x  4.7
+
+TOP face (p. 13) at 0.1349 mm/px (the panels' scale): outline 5..687 x 4..471 px = 92.0 long x 63.0 wide mm
+  (the long side is the extrusion between the end panels: 92.0 against the maker's 95 overall, so each end panel stands about 1.5;
+   x below is from the LEFT end panel's outer face (VOL side), y from the BACK long edge (the edge away from the knobs))
+  LCD window  x  15.5 ..  79.5   y  16.3 ..  30.5
+  circle      x  21.4   y  49.3   d  7.8   (13.7 from the front, knob, edge)
+  circle      x  39.9   y  52.7   d  4.3   (10.3 from the front, knob, edge)
+  circle      x  55.0   y  52.7   d  4.3   (10.3 from the front, knob, edge)
+  circle      x  73.5   y  49.3   d  7.8   (13.7 from the front, knob, edge)
+
+RIGHT panel on the maker's photograph qmx-product-photo-qmx4-right-panel.jpg (homography on the four corner screws at x 3/60, y 3/22 of the figure):
+  RF            x   8.3  y  10.5
+  PTT           x  29.0  y   7.9
+  USB           x  41.1  y   6.8
+  USB left end  x  36.4  y   6.6
+  USB right end x  45.7  y   7.0
+  USB top       x  41.0  y   8.4
+  USB bottom    x  41.1  y   5.1

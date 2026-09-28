@@ -1,0 +1,107 @@
+
+== 1 apply_port_declarations
+apply_port_declarations: board A external_ports 3 -> 18 entries, internal_ports 30 entries, 82 connector pins covered
+apply_port_declarations: board D external_ports 4 -> 4 entries, internal_ports 6 entries, 26 connector pins covered
+apply_port_declarations: board E external_ports 3 -> 3 entries, internal_ports 13 entries, 32 connector pins covered
+rc=0
+
+== 2 make_port_reviews --check
+make_port_reviews: board A 18 connector(s), 22 pin(s), netlist 0a2b59087bcc2678
+make_port_reviews: board D 4 connector(s), 8 pin(s), netlist 7a2c0ac2190b141a
+make_port_reviews: board E 3 connector(s), 5 pin(s), netlist 56adc9746d61c4e0
+make_port_reviews: v2/ecad/tools/pcb_port_reviews.json is exactly what this script would write
+rc=0
+
+== 3 apply_config_inputs_port_reviews
+apply_config_inputs_port_reviews: port_protect.py declares 3 configuration inputs
+rc=0
+
+== 4 apply_registry_d31 stage 1
+apply_registry_d31: 14 open items, S-95 to S-108, each linked from its record(s)
+   S-95   A-F2  waited on by REQ-029, REQ-007
+   S-96   X-C1  waited on by REQ-007, REQ-029
+   S-97   D-F1  waited on by REQ-009, REQ-029
+   S-98   D-F2  waited on by REQ-009, REQ-029
+   S-99   D-F3  waited on by REQ-029
+   S-100  D-F4  waited on by REQ-009
+   S-101  E-F1  waited on by REQ-015, REQ-029
+   S-102  E-F2  waited on by REQ-015
+   S-103  E-F3  waited on by REQ-041, REQ-029
+   S-104  E-F4  waited on by REQ-041, REQ-029
+   S-105  D-N1  waited on by REQ-058
+   S-106  A-N1  waited on by REQ-015, CHO-003
+   S-107  T-2   waited on by REQ-029
+   S-108  T-3   waited on by REQ-029, REQ-058
+rc=0
+
+== 4b second run refused
+apply_registry_d31: already applied (its marker is in the file)
+rc=1
+
+== 5 rules_lib requirements
+warn  out/rule-audit is not in this tree: a PASS is not checked against its rules' classes
+rules_lib: 144 requirement record(s), 0 error(s), 22 warning(s)
+
+== 6 apply_sources_d31
+apply_sources_d31: documents_filed_d8dec31 with 2 entries
+rc=0
+
+== 7 apply_holds_review_pin
+apply_holds_review_pin: v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md pinned as 094817023210d1b0 on netlists a 0a2b59087bcc2678, d 7a2c0ac2190b141a, e 56adc9746d61c4e0
+rc=0
+
+== 8 apply_interfaces_mainsw, refused on today's netlist
+apply_interfaces_mainsw: board A's netlist has J_MAINSW.1 on MAIN_PB, not MAIN_PB_LEAD: apply apply_gen_sch_a_mainpb.py and re-run the generator first (or --force-netlist to write the contract ahead of the circuit, which makes the contract wrong until then)
+rc=1
+
+== 8b apply_interfaces_mainsw --force-netlist --check
+apply_interfaces_mainsw: IF-AC-MAINSW board A pin 1 MAIN_PB -> MAIN_PB_LEAD (checked, not written)
+rc=0
+
+== 9 regress_reclassify on the corrected tables
+ok   board A baseline     rc=0 want 0 verdict PASS of 42 ports 18 ext_pins 22 reviewed 22 disagreements 0
+ok   board A moved-ground rc=1 want 1 verdict FAIL of 42 ports 18 ext_pins 19 reviewed 22 disagreements 3
+ok   board A removed      rc=3 want 3 verdict INCONCLUSIVE of 38 ports 17 ext_pins 19 reviewed 22 disagreements 3
+ok   board A reclassified rc=3 want 3 verdict INCONCLUSIVE of 38 ports 17 ext_pins 19 reviewed 22 disagreements 3
+ok   board A narrowed     rc=3 want 3 verdict INCONCLUSIVE of 42 ports 18 ext_pins 20 reviewed 22 disagreements 2
+ok   board A zero         rc=3 want 3 verdict INCONCLUSIVE of 5 ports 0 ext_pins 0 reviewed 22 disagreements 22
+ok   board A reconciled   rc=0 want 0 verdict PASS of 38 ports 17 ext_pins 19 reviewed 19 disagreements 0
+ok   board D baseline     rc=0 want 0 verdict PASS of 21 ports 4 ext_pins 8 reviewed 8 disagreements 0
+ok   board D moved-ground rc=1 want 1 verdict FAIL of 21 ports 4 ext_pins 5 reviewed 8 disagreements 3
+ok   board D removed      rc=3 want 3 verdict INCONCLUSIVE of 16 ports 3 ext_pins 5 reviewed 8 disagreements 3
+ok   board D reclassified rc=3 want 3 verdict INCONCLUSIVE of 16 ports 3 ext_pins 5 reviewed 8 disagreements 3
+ok   board D narrowed     rc=3 want 3 verdict INCONCLUSIVE of 21 ports 4 ext_pins 6 reviewed 8 disagreements 2
+ok   board D zero         rc=3 want 3 verdict INCONCLUSIVE of 7 ports 0 ext_pins 0 reviewed 8 disagreements 8
+ok   board D reconciled   rc=0 want 0 verdict PASS of 16 ports 3 ext_pins 5 reviewed 5 disagreements 0
+ok   board E baseline     rc=0 want 0 verdict PASS of 13 ports 3 ext_pins 5 reviewed 5 disagreements 0
+ok   board E moved-ground rc=1 want 1 verdict FAIL of 13 ports 3 ext_pins 2 reviewed 5 disagreements 3
+ok   board E removed      rc=3 want 3 verdict INCONCLUSIVE of 9 ports 2 ext_pins 2 reviewed 5 disagreements 3
+ok   board E reclassified rc=3 want 3 verdict INCONCLUSIVE of 9 ports 2 ext_pins 2 reviewed 5 disagreements 3
+ok   board E narrowed     rc=3 want 3 verdict INCONCLUSIVE of 13 ports 3 ext_pins 3 reviewed 5 disagreements 2
+ok   board E zero         rc=3 want 3 verdict INCONCLUSIVE of 5 ports 0 ext_pins 0 reviewed 5 disagreements 5
+ok   board E reconciled   rc=0 want 0 verdict PASS of 9 ports 2 ext_pins 2 reviewed 2 disagreements 0
+regress_reclassify: 0 case(s) failed
+
+== 10 close-s88 refusals
+apply_registry_d31: REFUSED, v2/ecad/out/port_protect_a.verdict.json is not in the tree: TRN-001 has not been re-taken on board A here
+rc=1
+apply_registry_d31: REFUSED, the reading judged netlist 0000000000000000 and board A's declared phase's netlist is 0a2b59087bcc2678
+rc=1
+apply_registry_d31: REFUSED, the reading was written by port_protect.py 2d69facd3c25c8a4 (bundle 2d69facd3c25c8a4) and the tree's is 7acd5333fc59f8d0
+rc=1
+apply_registry_d31: REFUSED, the re-taken reading is INCONCLUSIVE, not PASS: ['RECLASSIFIED J_USBW.1 on VBUS_WALL: the review (v2/docs/reviews/DECISION-31-PROTE
+rc=1
+
+== 11 close-s88 on the re-taken reading
+apply_registry_d31: git cannot say here whether 0123456789ab exists (not a checkout); the validator will warn
+apply_registry_d31: S-88 closed by commit 0123456789ab on the re-taken reading (PASS of 42, netlist 0a2b59087bcc2678, tool 7acd5333fc59f8d0); waits_on dropped from REQ-015, REQ-017, REQ-029, CON-018 (checked, not written)
+rc=0
+apply_registry_d31: git cannot say here whether 0123456789ab exists (not a checkout); the validator will warn
+apply_registry_d31: S-88 closed by commit 0123456789ab on the re-taken reading (PASS of 42, netlist 0a2b59087bcc2678, tool 7acd5333fc59f8d0); waits_on dropped from REQ-015, REQ-017, REQ-029, CON-018
+rc=0
+apply_registry_d31: S-88 is already closed
+second run rc=1
+
+== 12 rules_lib requirements after the closure
+warn  out/rule-audit is not in this tree: a PASS is not checked against its rules' classes
+rules_lib: 144 requirement record(s), 0 error(s), 23 warning(s)

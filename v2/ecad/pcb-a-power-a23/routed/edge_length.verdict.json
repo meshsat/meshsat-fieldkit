@@ -6,8 +6,10 @@
   "files": {
    "boardorder.py": "298e46edcc028954",
    "boardtable.py": "41bd92e61f12c374",
-   "edge_length.py": "fd66cbd9bce2fa7b",
+   "edge_length.py": "21d61d18e18e56a8",
    "hardset.py": "be29a44c4a592876",
+   "ibis_manifest.py": "ff27099a74e5efe9",
+   "ibis_read.py": "1d48c256b6ceca65",
    "impedance_check.py": "e2495a04e16fc600",
    "intent.py": "f1ac033e0f3c10f1",
    "intent_checks.py": "1ad7af0c718ba940",
@@ -15,52 +17,63 @@
    "netclass.py": "4cc1adf0ddae0390",
    "netlist_board.py": "655bc402d36b0fa5",
    "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
    "regen_compare.py": "341d7f129a1e6f24",
    "return_via.py": "b61d138e54955dd4",
-   "rules_lib.py": "c0458c53923d7925",
+   "rules_lib.py": "a6e2421096c1473f",
    "signal_class.py": "60b8647301428da4",
    "signalnets.py": "688be12d8e42e7a4",
    "stackup_write.py": "b55a3c0f58c805c2",
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "9882ad1bc5620724",
+  "sha16": "4011f598a4f49255",
   "unresolved": []
  },
  "counts": {
-  "answered_nets": 6,
-  "classes": 63,
+  "answered_nets": 19,
+  "bound_decided_nets": 64,
+  "bound_edge_nets": 77,
+  "classes": 64,
   "contradicted_nets": 0,
-  "decided_nets": 6,
-  "layout_bound_nets": 0,
-  "low_speed_nets": 170,
-  "may_be_long_nets": 6,
-  "signal_nets": 290,
-  "undecided_nets": 114
+  "decided_nets": 84,
+  "layout_bound_nets": 65,
+  "low_speed_nets": 172,
+  "maker_edge_nets": 7,
+  "maker_held_nets": 1,
+  "may_be_long_nets": 84,
+  "models_absent": 0,
+  "models_asked": 5,
+  "signal_nets": 294,
+  "unasked_part_nets": 0,
+  "undecided_model_absent_nets": 0,
+  "undecided_nets": 38,
+  "undecided_no_declaration_nets": 38,
+  "undecided_other_nets": 0
  },
- "denominator": 290,
+ "denominator": 294,
  "evidence": [
-  "UNDECIDED (no declaration) (UNKNOWN, 38 net(s)): no signal-class declaration names these nets, so neither their class nor their edge is kno; ICs on them: LM5176PWPR buck-boost controller, +12V_HF from VBAT U15, LM5176PWPR buck-boost controller, +13V8_PA from VBAT U13, LM5176PWPR buck-boost controller, +54V_POE from VBAT U16, LM5176PWPR buck-boost controller, +5V_DEV from VBAT U7, LM5176PWPR buck-boost controller, +5V_S2 from VBAT U5",
-  "UNDECIDED *_BOOT (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: AP64500SP-13 5 A buck, 5.1 V rail +5V_S1 U4, AP64500SP-13 5 A buck, 5.1 V rail +5V_S3 U6",
-  "UNDECIDED *_BOOT1 (HIGH_SPEED_DIGITAL, 7 net(s)): no edge is declared and no held document states one; ICs on them: LM5176PWPR buck-boost controller, +12V_HF from VBAT U15, LM5176PWPR buck-boost controller, +13V8_PA from VBAT U13, LM5176PWPR buck-boost controller, +54V_POE from VBAT U16, LM5176PWPR buck-boost controller, +5V_DEV from VBAT U7, LM5176PWPR buck-boost controller, +5V_S2 from VBAT U5",
-  "UNDECIDED *_BOOT2 (HIGH_SPEED_DIGITAL, 7 net(s)): no edge is declared and no held document states one; ICs on them: LM5176PWPR buck-boost controller, +12V_HF from VBAT U15, LM5176PWPR buck-boost controller, +13V8_PA from VBAT U13, LM5176PWPR buck-boost controller, +54V_POE from VBAT U16, LM5176PWPR buck-boost controller, +5V_DEV from VBAT U7, LM5176PWPR buck-boost controller, +5V_S2 from VBAT U5",
-  "UNDECIDED *_BST (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: TPS62933DRLR 3 A buck, 12.0 V heater rail U33, TPS62933DRLR 3 A buck, 3.3 V logic U12",
-  "UNDECIDED *_BTST? (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B U3",
-  "UNDECIDED *_HDRV? (HIGH_SPEED_DIGITAL, 14 net(s)): no edge is declared and no held document states one; ICs on them: LM5176PWPR buck-boost controller, +12V_HF from VBAT U15, LM5176PWPR buck-boost controller, +13V8_PA from VBAT U13, LM5176PWPR buck-boost controller, +54V_POE from VBAT U16, LM5176PWPR buck-boost controller, +5V_DEV from VBAT U7, LM5176PWPR buck-boost controller, +5V_S2 from VBAT U5",
-  "UNDECIDED *_HIDRV? (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B U3",
-  "UNDECIDED *_LDRV? (HIGH_SPEED_DIGITAL, 14 net(s)): no edge is declared and no held document states one; ICs on them: LM5176PWPR buck-boost controller, +12V_HF from VBAT U15, LM5176PWPR buck-boost controller, +13V8_PA from VBAT U13, LM5176PWPR buck-boost controller, +54V_POE from VBAT U16, LM5176PWPR buck-boost controller, +5V_DEV from VBAT U7, LM5176PWPR buck-boost controller, +5V_S2 from VBAT U5",
-  "UNDECIDED *_LODRV? (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B U3",
-  "UNDECIDED *_SW (HIGH_SPEED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: TPS62933DRLR 3 A buck, 12.0 V heater rail U33",
-  "UNDECIDED *_SW1 (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: LM5176PWPR buck-boost controller, +5V_DEV from VBAT U7, LM5176PWPR buck-boost controller, +5V_S2 from VBAT U5",
-  "UNDECIDED *_SW2 (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: LM5176PWPR buck-boost controller, +5V_DEV from VBAT U7, LM5176PWPR buck-boost controller, +5V_S2 from VBAT U5",
-  "UNDECIDED EXP_INT (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: PCA9555PW (0x21): enables and status U27, PCA9555PW (0x24): power-good lines, spares U28",
-  "UNDECIDED INA_ALERT (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: INA226 PA rail monitor (0x46) U14, INA226 PoE rail monitor (0x47) U17, INA226 rail monitor +5V_DEV U11, INA226 rail monitor +5V_S1 U8, INA226 rail monitor +5V_S2 U9",
-  "UNDECIDED PD_CC? (CLOCKED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: TPD2E2U06QDBZRQ1 low-capacitance ESD array, USB-C CC1 and CC2 at the connector U31, TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A) U18",
-  "UNDECIDED PD_VTX (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A) U18",
-  "UNDECIDED PROCHOT (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B U3, PCA9555PW (0x21): enables and status U27",
-  "UNDECIDED RF_* (HIGH_SPEED_DIGITAL, 11 net(s)): no edge is declared and no held document states one; ICs on them: none",
-  "UNDECIDED SCL (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B U3, INA226 PA rail monitor (0x46) U14, INA226 PoE rail monitor (0x47) U17, INA226 rail monitor +5V_DEV U11, INA226 rail monitor +5V_S1 U8",
-  "UNDECIDED SDA (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B U3, INA226 PA rail monitor (0x46) U14, INA226 PoE rail monitor (0x47) U17, INA226 rail monitor +5V_DEV U11, INA226 rail monitor +5V_S1 U8"
+  "UNDECIDED (no declaration) (UNKNOWN, 38 of 38 net(s)): no signal-class declaration (x38); ICs on them: LM5176PWPR buck-boost U15, LM5176PWPR buck-boost U13, LM5176PWPR buck-boost U16, LM5176PWPR buck-boost U7",
+  "BOUND_DECIDES 64 layout-bound net(s) whose governing edge is a bound or a model: at least one driver on each has no published minimum, whatever the other drivers' makers publish (ER-D13): S1_BOOT, S3_BOOT, FE_BOOT1, HF_BOOT1, PA_BOOT1, PD_BOOT1, POE_BOOT1, S2_BOOT1, SD_BOOT1, FE_BOOT2, HF_BOOT2, PA_BOOT2 ...",
+  "MAKER_HELD 1 layout-bound net(s) on which every driver has a published minimum: INA_ALERT",
+  "LAYOUT_BOUND *_BOOT (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): S1_BOOT, S3_BOOT",
+  "LAYOUT_BOUND *_BOOT1 (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): FE_BOOT1, HF_BOOT1, PA_BOOT1, PD_BOOT1, POE_BOOT1, S2_BOOT1, SD_BOOT1",
+  "LAYOUT_BOUND *_BOOT2 (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): FE_BOOT2, HF_BOOT2, PA_BOOT2, PD_BOOT2, POE_BOOT2, S2_BOOT2, SD_BOOT2",
+  "LAYOUT_BOUND *_BST (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): B33_BST, D8B_BST, HT_BST",
+  "LAYOUT_BOUND *_BTST? (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): CH_BTST1, CH_BTST2",
+  "LAYOUT_BOUND *_HDRV? (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): FE_HDRV1, FE_HDRV2, HF_HDRV1, HF_HDRV2, PA_HDRV1, PA_HDRV2, PD_HDRV1, PD_HDRV2 ...",
+  "LAYOUT_BOUND *_HIDRV? (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): CH_HIDRV1, CH_HIDRV2",
+  "LAYOUT_BOUND *_LDRV? (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): FE_LDRV1, FE_LDRV2, HF_LDRV1, HF_LDRV2, PA_LDRV1, PA_LDRV2, PD_LDRV1, PD_LDRV2 ...",
+  "LAYOUT_BOUND *_LODRV? (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): CH_LODRV1, CH_LODRV2",
+  "LAYOUT_BOUND *_SW (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): D8B_SW, HT_SW",
+  "LAYOUT_BOUND *_SW1 (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): S2_SW1, SD_SW1",
+  "LAYOUT_BOUND *_SW2 (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): S2_SW2, SD_SW2",
+  "LAYOUT_BOUND EXP_INT (CLOCKED_DIGITAL, 0.000 ns BOUND TI-PCA9555, critical 0.0 mm, decided by a bound): EXP_INT",
+  "LAYOUT_BOUND INA_ALERT (CLOCKED_DIGITAL, 5.890 ns IBIS TI-PCA9555, critical 137.2 mm, decided by a published figure on every driver): INA_ALERT",
+  "LAYOUT_BOUND PD_VTX (CLOCKED_DIGITAL, 0.000 ns BOUND TI-TPS25740, critical 0.0 mm, decided by a bound): PD_VTX",
+  "LAYOUT_BOUND PROCHOT (CLOCKED_DIGITAL, 0.000 ns BOUND TI-BQ25731, critical 0.0 mm, decided by a bound): PROCHOT",
+  "LAYOUT_BOUND SCL (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): SCL",
+  "LAYOUT_BOUND SDA (CLOCKED_DIGITAL, 0.000 ns BOUND TI-BQ25731, critical 0.0 mm, decided by a bound): SDA"
  ],
  "inputs": {
   "board": "a",
@@ -70,26 +83,140 @@
   },
   "board_table": {
    "path": "tools/boards/a.json",
-   "sha256_16": "b9411f2403e03da7"
+   "sha256_16": "4c55ace3c841ebf7"
   },
   "critical_k": 6,
   "document_1": {
+   "path": "v2/docs/records/hc5/kit_i2c_budget.round8-d.out.txt",
+   "sha256_16": "7967404c281d4e12"
+  },
+  "document_10": {
    "path": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
    "sha256_16": "2ecb40606d4b84fe"
   },
+  "document_11": {
+   "path": "v2/vendor/ti/bq25731-datasheet.pdf",
+   "sha256_16": "3e5e927fdf63cf6a"
+  },
+  "document_12": {
+   "path": "v2/vendor/ti/lm5176-datasheet.pdf",
+   "sha256_16": "98191bec36d43771"
+  },
+  "document_13": {
+   "path": "v2/vendor/ti/ti-tps25740.pdf",
+   "sha256_16": "60276c7a0e2a138a"
+  },
+  "document_14": {
+   "path": "v2/vendor/ti/tps23861-datasheet.pdf",
+   "sha256_16": "65262ce4766a5f8e"
+  },
+  "document_15": {
+   "path": "v2/vendor/vishay/veml7700-datasheet.pdf",
+   "sha256_16": "f338cf7d5911828a"
+  },
+  "document_2": {
+   "path": "v2/vendor/adi/adi-ds3231sn.pdf",
+   "sha256_16": "dc81cd89bee82d0c"
+  },
+  "document_3": {
+   "path": "v2/vendor/microchip/microchip-atecc608b-summary-DS40002239B.pdf",
+   "sha256_16": "1b21d7b0d5c6265f"
+  },
+  "document_4": {
+   "path": "v2/vendor/microchip/microchip-ksz9897-datasheet.pdf",
+   "sha256_16": "72b89179ed6a42a7"
+  },
+  "document_5": {
+   "path": "v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf",
+   "sha256_16": "938ef5ef5007df6b"
+  },
+  "document_6": {
+   "path": "v2/vendor/quectel/lg290p03-hardware-design-v1.1.pdf",
+   "sha256_16": "422ca9a2aa5495c1"
+  },
+  "document_7": {
+   "path": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+   "sha256_16": "be56fbb75ba0ae9e"
+  },
+  "document_8": {
+   "path": "v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf",
+   "sha256_16": "f6e620179006c8c4"
+  },
+  "document_9": {
+   "path": "v2/vendor/standards/nxp-um10204-rev6-i2c-bus-specification.pdf",
+   "sha256_16": "b7619700e8bb9dd4"
+  },
+  "edge_rates": {
+   "path": "tools/pcb_edge_rates.yaml",
+   "sha256_16": "0689086680f7a4a4"
+  },
   "extent_mm": 400.0,
+  "far_netlist_b": {
+   "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
+   "sha256_16": "21a1f74a3ec1ae28"
+  },
+  "far_netlist_c": {
+   "path": "pcb-c-display-c8/out/pcb-c-display.net",
+   "sha256_16": "3fddbb3edcd4248a"
+  },
+  "far_netlist_d": {
+   "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
+   "sha256_16": "7a2c0ac2190b141a"
+  },
+  "ibis_manifest": {
+   "path": "v2/vendor/ibis-manifest.yaml",
+   "sha256_16": "47952602c17f0dfd"
+  },
   "intent": {
    "path": "pcb-a-power-a23/out/pcb-a-power-intent.json",
-   "sha256_16": "92dd3b1cda9046b8"
+   "sha256_16": "070b4c5e41e023e5"
+  },
+  "model_1": {
+   "path": "v2/vendor/st/ibis/stm32h742_743_750_753_lqfp100.ibs",
+   "pinned_sha256_16": "0fb7767c1ee034db",
+   "sha256_16": "0fb7767c1ee034db"
+  },
+  "model_2": {
+   "path": "v2/vendor/ti/ibis/ads1x1x.ibs",
+   "pinned_sha256_16": "c9975d3cb6ad0161",
+   "sha256_16": "c9975d3cb6ad0161"
+  },
+  "model_3": {
+   "path": "v2/vendor/ti/ibis/ina226.ibs",
+   "pinned_sha256_16": "fb4ebf43bde617c2",
+   "sha256_16": "fb4ebf43bde617c2"
+  },
+  "model_4": {
+   "path": "v2/vendor/ti/ibis/pca9555.ibs",
+   "pinned_sha256_16": "56c19a4da921e38c",
+   "sha256_16": "56c19a4da921e38c"
+  },
+  "model_5": {
+   "path": "v2/vendor/ti/ibis/tmp117.ibs",
+   "pinned_sha256_16": "5c71fbcce9e13803",
+   "sha256_16": "5c71fbcce9e13803"
+  },
+  "model_state": {
+   "absent": 0,
+   "absent_files": [],
+   "asked": 5,
+   "how_to_fetch": "python3 v2/ecad/tools/ibis_fetch.py --fetch",
+   "manifest": "v2/vendor/ibis-manifest.yaml",
+   "present": 5,
+   "state": "PRESENT"
   },
   "netlist": {
-   "content16": "2c5c1d5a388cc95f",
+   "content16": "2efce63fe72079f1",
    "path": "pcb-a-power-a23/out/pcb-a-power.net",
-   "sha256_16": "da05dc02bc1e612f"
+   "sha256_16": "599ee964a9c23d6e"
   },
   "project": {
    "path": "pcb-a-power-a23/pcb-a-power.kicad_pro",
    "sha256_16": "a5f669ecb899545f"
+  },
+  "search_listing": {
+   "path": "v2/docs/records/w5si/readings/edge-search.txt",
+   "sha256_16": "d08bc489782c976b"
   },
   "slowest_layer": "JLC06161H-3313 In2.Cu",
   "stack_table": {
@@ -102,7 +229,7 @@
   "t_pd_ps_per_mm": 7.154
  },
  "missing_input": null,
- "note": "SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (UNDECIDED where none does), the critical length l = t_r / (k t_pd) on the slowest layer of every stack the board may be drawn on, and whether the netlist carries an impedance target, a series termination or a declaration where a net may be electrically long. The routed lengths are the layout gate's (edge_length_routed). The table is edge_length.table.json beside this verdict. Session decisions of 26 September 2026: LOW_SPEED_OR_DC asked no edge, the first matching entry decides, the slowest layer of the declared and ruled stacks, the stripline bound, the corner-to-corner extent, the project file's class where the netlist says Default",
+ "note": "SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (UNDECIDED where none does), the critical length l = t_r / (k t_pd) on the slowest layer of every stack the board may be drawn on, and whether the netlist carries an impedance target, a series termination or a declaration where a net may be electrically long. The routed lengths are the layout gate's (edge_length_routed). The table is edge_length.table.json beside this verdict. Session decisions of 26 September 2026: LOW_SPEED_OR_DC asked no edge, the first matching entry decides, the slowest layer of the declared and ruled stacks, the stripline bound, the corner-to-corner extent, the project file's class where the netlist says Default. Since 27 September 2026 every edge is a record of tools/pcb_edge_rates.yaml (a configuration input, by sha in inputs.edge_rates): a class entry's interface record, or per net the fastest of its drivers' families (a maker's IBIS model read per pin, a published minimum, a model or a bound), its far ends and one series resistor away; a net whose driver has no record is UNDECIDED. The governing edge of a net is the fastest any driver on it can produce, so one driver with no published minimum makes the net decided by a bound whatever the others publish (ER-D13); a layout-bound net a bound decides is named under BOUND_DECIDES and holds the reading INCONCLUSIVE. counts: decided = maker_edge + bound_edge; layout_bound = maker_held + bound_decided. Since 28 September 2026 the makers' IBIS models are pinned by v2/vendor/ibis-manifest.yaml (inputs.ibis_manifest) and are not in the repository: a pinned model the checkout does not hold decides nothing, its nets read UNDECIDED naming it, and inputs.model_state says which state the reading was taken in (ER-D17); undecided = undecided_no_declaration + undecided_model_absent + undecided_other; a pin whose [Ramp] cell the model's own V-t table contradicts takes the instantaneous bound (ER-D16)",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
@@ -118,14 +245,14 @@
  },
  "tool": "edge_length",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "cef7cb77c420",
+  "tools_tree_sha": "8639c5ed4c65deea"
  },
- "ts": "2026-09-27T13:21:59Z",
+ "ts": "2026-09-28T22:44:44Z",
  "verdict": "INCONCLUSIVE",
- "version": "391d857966d6",
+ "version": "cef7cb77c420",
  "writer": {
   "file": "edge_length.py",
-  "sha16": "fd66cbd9bce2fa7b"
+  "sha16": "21d61d18e18e56a8"
  }
 }

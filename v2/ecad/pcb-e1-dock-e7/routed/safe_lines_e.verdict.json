@@ -10,35 +10,36 @@
    "netlist_board.py": "655bc402d36b0fa5",
    "netlist_parts.py": "41cf192223d822c2",
    "phase_artefacts.py": "96642ce767188c73",
-   "port_protect.py": "2d69facd3c25c8a4",
+   "port_protect.py": "7acd5333fc59f8d0",
    "regen_compare.py": "341d7f129a1e6f24",
    "safe_lines.py": "8529487f405ec55d",
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "7e3540d47e33f75e",
+  "sha16": "f223a804eeea9cec",
   "unresolved": []
  },
  "counts": {
   "floating": 0,
-  "lines": 1,
+  "lines": 2,
   "listened": 1,
-  "on_netlist": 1
+  "on_netlist": 2
  },
- "denominator": 1,
+ "denominator": 2,
  "evidence": [
-  "SHORE_INHIBIT: safe low, pull down [R26 (100k)], pull up [none], drivers [none], reads [Q8.1 (2N7002: SHORE_INHIBIT high p), U10.18 (RP2040 sensor controller (US)], leaves on [J_BLK.8]"
+  "SHORE_INHIBIT: safe low, pull down [R26 (100k)], pull up [none], drivers [none], reads [Q8.1 (2N7002: SHORE_INHIBIT high p), U10.18 (RP2040 sensor controller (US)], leaves on [J_BLK.8]",
+  "BLK_SPARE: safe high, pull down [none], pull up [none], drivers [none], reads [Q11.3 (2N7002 HOT-R1 open drain: GP)], leaves on [J_BLK.12]"
  ],
  "inputs": {
   "board": "e",
   "intent": {
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock-intent.json",
-   "sha256_16": "5913e38b20333d35"
+   "sha256_16": "dad1163afd720b5e"
   },
   "netlist": {
-   "content16": "b8d237f0b8d759f5",
+   "content16": "dc06b84a39724641",
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
-   "sha256_16": "d6137f50059e5cbc"
+   "sha256_16": "56adc9746d61c4e0"
   }
  },
  "missing_input": null,
@@ -58,12 +59,12 @@
  },
  "tool": "safe_lines_e",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "cef7cb77c420",
+  "tools_tree_sha": "8639c5ed4c65deea"
  },
- "ts": "2026-09-27T13:22:59Z",
+ "ts": "2026-09-28T22:46:17Z",
  "verdict": "PASS",
- "version": "391d857966d6",
+ "version": "cef7cb77c420",
  "writer": {
   "file": "safe_lines.py",
   "sha16": "8529487f405ec55d"

@@ -1,0 +1,89 @@
+#!/usr/bin/env python3
+"""DRAFT (stream w5si, 27 September 2026, MESHSAT-1357, layer 9): declare what edge_length.py now reads.
+
+rules_status.CONFIG_INPUTS["edge_length.py"] lists the configuration a SI-001 reading depends on. Since w5si the reading
+also reads tools/pcb_edge_rates.yaml (the edge rates as data), every held document and IBIS model that data file cites,
+and, for a net that continues onto another board of the set, that board's declared netlist. rules_status examines only
+DECLARED paths, so without this entry a corrected IBIS model, a changed data file or a regenerated neighbour netlist
+would leave a SI-001 reading reading current.
+
+Applied on the integrated tree (after set 6), from the repository root:
+    python3 drafts/w5si/apply_rules_status_config_inputs.py
+It asserts the entry's old text, derives the document list from the data file and the netlist paths from
+phase_artefacts ON THE TREE IT RUNS IN (so it is re-derivable after any regeneration), writes, re-parses the module and
+asserts the new text differs. It refuses to run twice.
+"""
+import os, sys, ast
+
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+if "--root" in sys.argv: ROOT = os.path.abspath(sys.argv[sys.argv.index("--root") + 1])   # a scratch copy, for a dry run
+TOOLS = os.path.join(ROOT, "v2", "ecad", "tools")
+TARGET = os.path.join(TOOLS, "rules_status.py")
+sys.path.insert(0, TOOLS)
+
+OLD = '''    # EDGE_SOURCES names (one today). It records every one of them by sha, the netlist by content16 too. A document
+    # added to EDGE_SOURCES is not seen here until it is added to this entry (an instrument limit, as for any new read).
+    "edge_length.py": ("tools/boards/{letter}.json", "{phase}/out/{stem}-intent.json", "{phase}/{stem}.kicad_pro",
+                       "tools/pcb_board_facts.yaml", "tools/stackup_write.py",
+                       "../vendor/standards/usb-2-0-specification-2024-09-27.md"),
+'''
+
+
+def documents():
+    """Every held file the data file cites, as a path relative to v2/ecad, sorted."""
+    import yaml
+    d = yaml.safe_load(open(os.path.join(TOOLS, "pcb_edge_rates.yaml"), encoding="utf-8"))
+    out = set()
+    for sect in ("interfaces", "families"):
+        for r in d.get(sect) or []:
+            cands = [r.get("document"), (r.get("ibis") or {}).get("file")]
+            cands += [c.get("document") for c in list(r.get("checked") or []) + list(r.get("pin_edges") or []) if isinstance(c, dict)]
+            for c in cands:
+                if c and c.startswith("v2/"): out.add(os.path.join("..", c[len("v2/"):]))
+    return sorted(out)
+
+
+def netlists():
+    import phase_artefacts as pa
+    ecad = os.path.join(ROOT, "v2", "ecad")
+    out = []
+    for L in "abcdep":
+        p = pa.netlist(L, ecad)
+        if p: out.append(os.path.relpath(p, ecad))
+    return out
+
+
+def main():
+    src = open(TARGET, encoding="utf-8").read()
+    assert "tools/pcb_edge_rates.yaml" not in src, "already applied"
+    assert src.count(OLD) == 1, "the old CONFIG_INPUTS entry of edge_length.py is not found exactly once: re-read it"
+    docs, nls = documents(), netlists()
+    assert docs and len(nls) == 6, (docs, nls)
+    for p in docs + nls:
+        assert os.path.exists(os.path.join(ROOT, "v2", "ecad", p)), "declared input %s is not in this tree" % p
+    lines = ['    # EDGE_SOURCES is since 27 September 2026 (stream w5si) the STANDARD records of tools/pcb_edge_rates.yaml, the',
+             '    # data file every edge is read from (:282 onward, load_rates); the reading records it by sha (inputs.edge_rates),',
+             '    # every document and IBIS model a record it used cites (inputs.document_N, _Ctx.used_docs), and every other',
+             '    # board\'s netlist a continued net was answered from (inputs.far_netlist_<letter>, _Ctx.other). All of them are',
+             '    # declared below, derived from the data file and phase_artefacts when this entry was written; a document added',
+             '    # to the data file later is not seen here until it is added (an instrument limit, as for any new read).',
+             '    "edge_length.py": ("tools/boards/{letter}.json", "{phase}/out/{stem}-intent.json", "{phase}/{stem}.kicad_pro",',
+             '                       "tools/pcb_board_facts.yaml", "tools/stackup_write.py", "tools/pcb_edge_rates.yaml",']
+    for p in docs + nls:
+        lines.append('                       "%s",' % p)
+    lines[-1] = lines[-1][:-1] + "),"
+    new = '''    # EDGE_SOURCES names (one today). It records every one of them by sha, the netlist by content16 too.
+''' + "\n".join(lines) + "\n"
+    out = src.replace(OLD, new)
+    assert out != src
+    ast.parse(out)
+    open(TARGET, "w", encoding="utf-8").write(out)
+    import importlib; sys.modules.pop("rules_status", None)
+    import rules_status
+    e = rules_status.CONFIG_INPUTS["edge_length.py"]
+    assert "tools/pcb_edge_rates.yaml" in e and all(p in e for p in docs + nls), e
+    print("rules_status.CONFIG_INPUTS['edge_length.py']: %d inputs (%d documents, %d netlists)" % (len(e), len(docs), len(nls)))
+
+
+if __name__ == "__main__":
+    main()

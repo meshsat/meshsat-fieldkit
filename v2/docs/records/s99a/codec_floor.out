@@ -1,0 +1,54 @@
+U41 DC set-point minimum 4.871818 V (u41_divider.py); pre-split LM5176 minimum 4.874561 V
+I (A)   U23 RON         budgets                              codec V  margin V
+1.00    typ 25 C        6% only, bars                         4.4828   +0.1328
+1.00    typ 25 C        6% + D8IN 2%, bars                    4.3828   +0.0328
+1.00    typ 25 C        6% + D8IN 0.5%, bars                  4.4578   +0.1078
+1.00    max 25 C        6% only, bars                         4.4792   +0.1292
+1.00    max 25 C        6% + D8IN 2%, bars                    4.3792   +0.0292
+1.00    max 25 C        6% + D8IN 0.5%, bars                  4.4542   +0.1042
+1.00    max -40..85 C   6% only, bars                         4.4565   +0.1065
+1.00    max -40..85 C   6% + D8IN 2%, bars                    4.3565   +0.0065
+1.00    max -40..85 C   6% + D8IN 0.5%, bars                  4.4315   +0.0815
+1.00    max -40..125 C  6% only, bars                         4.4408   +0.0908
+1.00    max -40..125 C  6% + D8IN 2%, bars                    4.3408   -0.0092
+1.00    max -40..125 C  6% + D8IN 0.5%, bars                  4.4158   +0.0658
+1.59    typ 25 C        6% only, bars                         4.4303   +0.0803
+1.59    typ 25 C        6% + D8IN 2%, bars                    4.3303   -0.0197
+1.59    typ 25 C        6% + D8IN 0.5%, bars                  4.4053   +0.0553
+1.59    typ 25 C        6% + D8IN 2%, scaled from 1 A         4.0943   -0.2557
+1.59    max 25 C        6% only, bars                         4.4246   +0.0746
+1.59    max 25 C        6% + D8IN 2%, bars                    4.3246   -0.0254
+1.59    max 25 C        6% + D8IN 0.5%, bars                  4.3996   +0.0496
+1.59    max 25 C        6% + D8IN 2%, scaled from 1 A         4.0886   -0.2614
+1.59    max -40..85 C   6% only, bars                         4.3885   +0.0385
+1.59    max -40..85 C   6% + D8IN 2%, bars                    4.2885   -0.0615
+1.59    max -40..85 C   6% + D8IN 0.5%, bars                  4.3635   +0.0135
+1.59    max -40..85 C   6% + D8IN 2%, scaled from 1 A         4.0525   -0.2975
+1.59    max -40..125 C  6% only, bars                         4.3635   +0.0135
+1.59    max -40..125 C  6% + D8IN 2%, bars                    4.2635   -0.0865
+1.59    max -40..125 C  6% + D8IN 0.5%, bars                  4.3385   -0.0115
+1.59    max -40..125 C  6% + D8IN 2%, scaled from 1 A         4.0275   -0.3225
+2.00    typ 25 C        6% only, bars                         4.3938   +0.0438
+2.00    typ 25 C        6% + D8IN 2%, bars                    4.2938   -0.0562
+2.00    typ 25 C        6% + D8IN 0.5%, bars                  4.3688   +0.0188
+2.00    typ 25 C        6% + D8IN 2%, scaled from 1 A         3.8938   -0.4562
+2.00    max 25 C        6% only, bars                         4.3866   +0.0366
+2.00    max 25 C        6% + D8IN 2%, bars                    4.2866   -0.0634
+2.00    max 25 C        6% + D8IN 0.5%, bars                  4.3616   +0.0116
+2.00    max 25 C        6% + D8IN 2%, scaled from 1 A         3.8866   -0.4634
+2.00    max -40..85 C   6% only, bars                         4.3412   -0.0088
+2.00    max -40..85 C   6% + D8IN 2%, bars                    4.2412   -0.1088
+2.00    max -40..85 C   6% + D8IN 0.5%, bars                  4.3162   -0.0338
+2.00    max -40..85 C   6% + D8IN 2%, scaled from 1 A         3.8412   -0.5088
+2.00    max -40..125 C  6% only, bars                         4.3098   -0.0402
+2.00    max -40..125 C  6% + D8IN 2%, bars                    4.2098   -0.1402
+2.00    max -40..125 C  6% + D8IN 0.5%, bars                  4.2848   -0.0652
+2.00    max -40..125 C  6% + D8IN 2%, scaled from 1 A         3.8098   -0.5402
+
+PRE-SPLIT 2.00 A, U23 RON max -40..85 C, 6% bar only: codec 4.3440 V, margin -0.0060 V
+PRE-SPLIT 2.00 A, U23 RON max -40..125 C, 6% bar only: codec 4.3126 V, margin -0.0374 V
+OPTION raise U41 so its top is 5.23 V (same 0.1 percent class, band ratio 1.0536): bottom 4.9640 V
+OPTION 53.6k/10k 0.1% (bottom 4.9562 V), 2.00 A, RON max -40..85 C, D8IN 0.025 V bar: codec 4.4006 V, margin +0.0506 V
+OPTION 53.6k/10k 0.1% (bottom 4.9562 V), 2.00 A, RON max -40..85 C, D8IN 0.100 V bar: codec 4.3256 V, margin -0.0244 V
+OPTION 53.6k/10k 0.1% (bottom 4.9562 V), 2.00 A, RON max -40..125 C, D8IN 0.025 V bar: codec 4.3692 V, margin +0.0192 V
+OPTION 53.6k/10k 0.1% (bottom 4.9562 V), 2.00 A, RON max -40..125 C, D8IN 0.100 V bar: codec 4.2942 V, margin -0.0558 V

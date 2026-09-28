@@ -1,0 +1,7 @@
+PASS S99-DEV: v2/ecad/tools/gen_sch_a.py: exact old text occurs once
+PASS S99-VBAT: v2/ecad/tools/gen_sch_a.py: exact old text occurs once
+PASS S99-STAGE: v2/ecad/tools/gen_sch_a.py: exact old text occurs once
+PASS S99-POWERNETS: v2/ecad/tools/gen_sch_a.py: exact old text occurs once
+PASS S99-SECTION: v2/ecad/tools/gen_sch_a.py: exact old text occurs once
+PASS AST: v2/ecad/tools/gen_sch_a.py: replaced text parses; the ten new references are unused in the original
+CHECK ONLY: 5 entries, 1 generator; no writes, no marker.

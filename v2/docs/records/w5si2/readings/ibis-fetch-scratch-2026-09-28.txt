@@ -1,0 +1,29 @@
+ibis_fetch: v2/vendor/ibis-manifest.yaml (sha256/16 232d72ce67c365bb), 13 model(s); destination <scratch>/fetchdest
+  fetched  ti-sn74lvc08a          from the maker's address (the zip's sn74lvc08a.ibs), sha256 verified, 193205 bytes
+  fetched  ti-sn74lvc32a          from the maker's address (the file as served), sha256 verified, 195184 bytes
+  fetched  ti-sn74lvc86a          from the maker's address (the zip's SN74LVC86A_IBIS/sn74lvc86a.ibs), sha256 verified, 190085 bytes
+  fetched  ti-sn74lvc1g00         from the maker's address (the zip's SN74LVC1G00_IBIS/lvc1g00.ibs), sha256 verified, 245022 bytes
+  fetched  ti-sn74lvc1g04         from the maker's address (the zip's SN74LVC1G04_IBIS/sn74lvc1g04.ibs), sha256 verified, 254207 bytes
+  fetched  ti-sn74lvc1g57         from the maker's address (the file as served), sha256 verified, 247448 bytes
+  fetched  ti-pca9555             from the maker's address (the zip's PCA9555/Release_TI/IBIS/PCA9555_IBIS/pca9555.ibs), sha256 verified, 551360 bytes
+  fetched  ti-tcan33x             from the maker's address (the zip's TCAN33x_IBIS/tcan33x.ibs), sha256 verified, 199181 bytes
+  fetched  ti-ina226              from the maker's address (the zip's INA226/Release_TI/IBIS/INA226_IBIS/ina226.ibs), sha256 verified, 176240 bytes
+  fetched  ti-tmp117              from the maker's address (the zip's tmp117.ibs), sha256 verified, 217886 bytes
+  fetched  ti-ads1x1x             from the maker's address (the zip's ads1x1x.ibs), sha256 verified, 109336 bytes
+  fetched  ti-tusb8041            from the maker's address (the zip's TUSB8041RGC.ibs), sha256 verified, 884316 bytes
+  fetched  st-stm32h7-lqfp100     from the maker's address (the zip's stm32h742_743_750_753_lqfp100.ibs), sha256 verified, 1935427 bytes
+  PRESENT  ti-sn74lvc08a          v2/vendor/ti/ibis/sn74lvc08a.ibs  notice PROHIBITS_DISTRIBUTION
+  PRESENT  ti-sn74lvc32a          v2/vendor/ti/ibis/sn74lvc32a.ibs  notice PROHIBITS_DISTRIBUTION
+  PRESENT  ti-sn74lvc86a          v2/vendor/ti/ibis/sn74lvc86a.ibs  notice COPYRIGHT_NO_GRANT
+  PRESENT  ti-sn74lvc1g00         v2/vendor/ti/ibis/sn74lvc1g00.ibs  notice COPYRIGHT_NO_GRANT
+  PRESENT  ti-sn74lvc1g04         v2/vendor/ti/ibis/sn74lvc1g04.ibs  notice PROHIBITS_DISTRIBUTION
+  PRESENT  ti-sn74lvc1g57         v2/vendor/ti/ibis/sn74lvc1g57.ibs  notice PROHIBITS_DISTRIBUTION
+  PRESENT  ti-pca9555             v2/vendor/ti/ibis/pca9555.ibs  notice PROHIBITS_DISTRIBUTION
+  PRESENT  ti-tcan33x             v2/vendor/ti/ibis/tcan33x.ibs  notice COPYRIGHT_NO_GRANT
+  PRESENT  ti-ina226              v2/vendor/ti/ibis/ina226.ibs  notice COPYRIGHT_NO_GRANT
+  PRESENT  ti-tmp117              v2/vendor/ti/ibis/tmp117.ibs  notice COPYRIGHT_NO_GRANT
+  PRESENT  ti-ads1x1x             v2/vendor/ti/ibis/ads1x1x.ibs  notice COPYRIGHT_NO_GRANT
+  PRESENT  ti-tusb8041            v2/vendor/ti/ibis/tusb8041rgc.ibs  notice COPYRIGHT_NO_GRANT
+  PRESENT  st-stm32h7-lqfp100     v2/vendor/st/ibis/stm32h742_743_750_753_lqfp100.ibs  notice COPYRIGHT_NO_GRANT
+ibis_fetch: state PRESENT: 13 present, 0 absent, 0 differ, of 13
+exit 0

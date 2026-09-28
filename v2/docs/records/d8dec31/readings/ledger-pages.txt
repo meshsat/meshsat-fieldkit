@@ -1,0 +1,47 @@
+LOOK SMCJ40A, SMCJ40CA, SMCJ28A,  littelfuse-smcj-series-tvs.pdf             p.1        quotes 2/4 figures 2/2  MISSING QUOTES: IEC-61000-4-2 ESD 30kV(Air), 30kV (Contact) | Fast response time: typically less than 1.0ps from 0V to BV 
+ok                                littelfuse-smcj-series-tvs.pdf             p.2        quotes 0/0 figures 15/15
+LOOK SMBJ18A, SMBJ6.0A            littelfuse-smbj-series-tvs.pdf             p.1        quotes 1/2 figures 0/0  MISSING QUOTES: IEC-61000-4-2 ESD 30 kV(Air), 30 kV (Contact)
+ok                                littelfuse-smbj-series-tvs.pdf             p.2        quotes 0/0 figures 10/10
+ok   SMBJ5.0A                     mdd-smbj-series-tvs.pdf                    p.2        quotes 0/0 figures 5/5
+ok   PESD5V0S1BA                  nexperia-pesd5v0s1ba.pdf                   p.3        quotes 2/2 figures 0/0
+ok                                nexperia-pesd5v0s1ba.pdf                   p.4        quotes 0/0 figures 2/2
+ok                                nexperia-pesd5v0s1ba.pdf                   p.5, 6     quotes 1/1 figures 0/0
+ok   PESD12VL1BA                  nexperia-pesd12vl1ba.pdf                   p.3, 4     quotes 0/0 figures 3/3
+LOOK USBLC6-2SC6                  st-usblc6-2-esd-protection.pdf             p.1        quotes 1/2 figures 1/1  MISSING QUOTES: IEC 61000-4-2 level 4: 15 kV (air discharge), 8 kV (contact 
+LOOK                              st-usblc6-2-esd-protection.pdf             p.2        quotes 1/2 figures 4/4  MISSING QUOTES: between VBUS and GND
+ok                                st-usblc6-2-esd-protection.pdf             p.5, 6     quotes 1/1 figures 1/1
+ok   TPD2E2U06-Q1                 ti-tpd2e2u06-q1.pdf                        p.4        quotes 0/0 figures 4/4
+ok                                ti-tpd2e2u06-q1.pdf                        p.5        quotes 0/0 figures 9/9
+ok   TPS25740A                    ti-tps25740.pdf                            p.6        quotes 0/0 figures 5/5
+ok                                ti-tps25740.pdf                            p.7, 36    quotes 0/0 figures 1/1
+ok   TPS259631                    tps2596.pdf                                p.5        quotes 1/1 figures 2/2
+ok   LTC2954                      ltc2954.pdf                                p.1, 2, 3  quotes 2/2 figures 3/3
+ok                                ltc2954.pdf                                p.12, 13   quotes 1/1 figures 0/0
+LOOK LM5176                       lm5176-datasheet.pdf                       p.5, 17    quotes 1/2 figures 4/4  MISSING QUOTES: a 2-kohm resistor in series with the VISNS pin is required
+ok   TPS37A010122                 ti-tps37-snvsbj1e.pdf                      p.6        quotes 0/0 figures 2/2
+ok   CSD19532Q5B                  ti-csd19532q5b-n-fet.pdf                   p.1        quotes 1/1 figures 0/0
+ok   CSD18510Q5B                  ti-csd18510q5b.pdf                         p.1        quotes 0/0 figures 0/0
+ok   BAT46W                       diodes-bat46w.pdf                          p.2        quotes 0/0 figures 1/1
+ok   TPA6132A2                    ti-tpa6132a2.pdf                           p.1, 4     quotes 2/2 figures 6/6
+LOOK 74LVC1G08GV                  techpublic-74lvc1g08gv-c19829591.pdf       p.2        quotes 0/0 figures 0/2  MISSING FIGURES: 0.5, 6.5
+ok   2N7002                       jscj-2n7002-c8545.pdf                      p.1        quotes 0/0 figures 0/0
+ok   TLV9062                      ti-tlv9062-op-amp.pdf                      p.10       quotes 0/0 figures 1/1
+ok   TUSB2046I                    ti-tusb2046b.pdf                           p.6, 17, 1 quotes 0/0 figures 4/4
+ok   GTH-SFF-AL                   polyphaser-gth-sff-al-sma-surge-protector. p.1        quotes 4/4 figures 0/0
+LOOK G6K-2F-Y                     omron-g6k-signal-relay.pdf                 p.1, 3     quotes 1/2 figures 0/0  MISSING QUOTES: -Y models offer an impulse withstand voltage of 2,500 V for 
+ok   SA868                        nicerf-sa868-datasheet-v1.3.pdf            p.9        quotes 1/1 figures 0/0
+ok   RA30H1317M1                  ra30h1317m1-datasheet.pdf                  p.2        quotes 2/2 figures 0/0
+ok   LM74700-Q1                   ti-lm74700-q1.pdf                          p.5        quotes 0/0 figures 2/2
+ok                                ti-lm74700-q1.pdf                          p.17, 18,  quotes 0/0 figures 4/4
+LOOK BSC039N06NS                  infineon-bsc039n06ns-rev2.4-c534330.pdf    p.1, 3     quotes 0/1 figures 0/0  MISSING QUOTES: 100% avalanche tested
+ok   LM5069                       ti-lm5069.pdf                              p.4        quotes 0/0 figures 1/1
+ok   LT8705A                      lt8705a.pdf                                p.2        quotes 0/0 figures 1/1
+LOOK MINI blade fuse              littelfuse-297-ficcorp.pdf                 p.1        quotes 1/2 figures 0/0  MISSING QUOTES: Interrupting Rating: 1000A @ 32 VDC
+ok   the fuse holder              M65p42.pdf                                 p.1        quotes 1/1 figures 0/0
+LOOK TLV75533                     ti-tlv755p-ldo.pdf                         p.1, 15    quotes 2/3 figures 1/1  MISSING QUOTES: Output accuracy: 1% (maximum at 85 C)
+ok   RP2040                       rpi-rp2040-datasheet.pdf                   p.615      quotes 0/0 figures 5/5
+ok   BME688                       bosch-bme688.pdf                           p.15       quotes 0/0 figures 2/2
+ok   BMI270                       bosch-bmi270.pdf                           p.16       quotes 0/0 figures 1/1
+ok   SGP41                        sgp41-datasheet.pdf                        p.7        quotes 0/0 figures 2/2
+SKIP  the insulation table         standards/ecss-q-st-70-12c-2014-07-14.md      pages ''
+rows to look at: 10

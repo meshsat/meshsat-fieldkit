@@ -1,0 +1,6 @@
+interfaces: 12 interface assignment(s) over 7 board(s) against the parts' own specifications; 0 disagreement(s)
+  note C USB_FULL_SPEED: no impedance target, which is what its parts' datasheets say
+  note D USB_FULL_SPEED: no impedance target, which is what its parts' datasheets say
+  note E USB_FULL_SPEED: no impedance target, which is what its parts' datasheets say
+  note P SMBUS_GAUGE: no impedance target, which is what its parts' datasheets say
+verdict: interfaces             PASS         of 12 {"assignments": 12, "boards": 7, "disagreements": 0} | every interface's impedance target and matching tolerance against the specification of the part that defines it, from pcb_interfaces.yaml; the sources are the hosts' and the modules' own datasheets; each board also carries its own interfaces_<letter> verdict, because a set-level result deciding every board's own is a defect this project has already met once

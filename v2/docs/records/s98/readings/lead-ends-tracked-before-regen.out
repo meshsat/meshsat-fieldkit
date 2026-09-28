@@ -1,0 +1,9 @@
+lead_ends: A intent v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json sha256/16 3422910a15c4d145
+lead_ends: B intent v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json sha256/16 96ee391b3e3f638d
+lead_ends: +5V_S1    AGREE    A 2.50 / 5.00 A (load J_5V_S1 5.0), B 2.50 / 5.00 A
+lead_ends: +5V_S2    DISAGREE A 2.50 / 5.00 A (load J_5V_S2 5.0), B 4.20 / 5.00 A
+lead_ends: +5V_S3    AGREE    A 2.50 / 5.00 A (load J_5V_S3 5.0), B 2.50 / 5.00 A
+lead_ends: +5V_DEV   DISAGREE at the lead: A apportions 3.2 A to J_5V_DEV, B declares 3.80 A typical arriving; A's typical 4.00 A = 3.2 + U23 0.50 + U32 0.30
+lead_ends:           S-99     converter side, NOT JUDGED HERE: A's peak 6.90 A against B's peak 6.00 A arriving plus A's other branches at their load figures (0.80 A); the coincident figures and the LM5176 average loop's limit are S-99's
+lead_ends: +54V_POE  AGREE    A 0.30 / 0.60 A (load J_54V 0.3), B 0.30 / 0.60 A
+lead_ends: 3 of 5 leads AGREE (declaration consistency only; adequacy, the mode currents and S-99 are not judged here)

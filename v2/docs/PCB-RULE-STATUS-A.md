@@ -25,9 +25,9 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32.
 
 | historical aggregate, mixed revisions | rules | percent of this board's required rules |
 |---|---|---|
-| PASS | 30 | 54.5 |
-| FAIL | 14 | 25.5 |
-| INCONCLUSIVE | 11 | 20.0 |
+| PASS | 29 | 52.7 |
+| FAIL | 13 | 23.6 |
+| INCONCLUSIVE | 13 | 23.6 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **55** | 100.0 |
 
@@ -35,16 +35,16 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32.
 |---|---|---|---|---|
 | ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **PASS** | OPERATING-ENVELOPE.md is the record that was verified (sha 43361b02743cf3af) |
 | ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 91 |
-| SCH-001 ERC clean or explained | BLOCKER | SCHEMATIC | **PASS** | erc_gate PASS of 1522 |
+| SCH-001 ERC clean or explained | BLOCKER | SCHEMATIC | **PASS** | erc_gate PASS of 1557 |
 | SCH-002 board matches its netlist | BLOCKER | PLACED_BOARD | **FAIL** | netlist_board FAIL: {'agree': 1980, 'aliased_pins': 0, 'board_footprints': 400, 'board_only_inert': 0, 'fail': 60, 'netlist_refs': 428} |
 | SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts_a PASS of 34 |
-| SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **PASS** | safe_lines_a PASS of 6 |
-| SCH-005 every pad of a part's land carries a net or a declared no-connect | BLOCKER | SCHEMATIC | **PASS** | pin_map_lands_a PASS of 611 |
-| CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **PASS** | derate PASS of 268 |
+| SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **PASS** | safe_lines_a PASS of 7 |
+| SCH-005 every pad of a part's land carries a net or a declared no-connect | BLOCKER | SCHEMATIC | **PASS** | pin_map_lands_a PASS of 622 |
+| CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **PASS** | derate PASS of 274 |
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_a was taken 2026-09-20T14:11:40, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_a was taken 2026-09-20T14:11:40, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
-| PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **PASS** | intent_rails PASS of 35 |
-| PWR-002 sequencing and inrush | MUST_JUSTIFY | SCHEMATIC | **PASS** | power_sequence PASS of 34 |
+| PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **PASS** | intent_rails PASS of 36 |
+| PWR-002 sequencing and inrush | MUST_JUSTIFY | SCHEMATIC | **PASS** | power_sequence PASS of 35 |
 | PWR-003 protection coordination | BLOCKER | SCHEMATIC | **PASS** | energy_chain_a PASS of 4 |
 | DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **FAIL** | intent_decoupling FAIL: {'fail': 10, 'pass': 30} |
 | PI-001 conductor current capacity | BLOCKER | ROUTED_BOARD | **FAIL** | dc_density FAIL: {'met': 14, 'missed': 13, 'undeclared': 0} |
@@ -65,9 +65,9 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32.
 | CLK-001 oscillators, straps and boot pins | BLOCKER | SCHEMATIC | **NOT_APPLICABLE** | this board carries no crystal, so CLK-001 has nothing on it to judge |
 | ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **FAIL** | sensitive_nodes FAIL: {'declared': 34, 'fail': 25, 'measured': 10} |
 | RF-001 RF paths are designed as RF | BLOCKER | ROUTED_BOARD | **FAIL** | rf_line FAIL: {'judged': 11, 'missed': 11} |
-| RF-002 transmit inhibit is hardware | BLOCKER | SCHEMATIC | **FAIL** | inhibit_chain_a FAIL: {'fail': 1, 'pass': 6, 'undecided': 2, 'unjudged': 0} |
+| RF-002 transmit inhibit is hardware | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | inhibit_chain_a INCONCLUSIVE: RF-002 on this board: where the transmit inhibit line runs, it is present, reaches the gate it keys, has the panel toggl |
 | INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **PASS** | interfaces_a PASS of 1 |
-| TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **PASS** | port_protect_a PASS of 26 |
+| TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **PASS** | port_protect_a PASS of 42 |
 | ISO-001 creepage and clearance | BLOCKER | ROUTED_BOARD | **FAIL** | spacing FAIL: {'below_limit': 5, 'closest_mm': 0.1287, 'hv_nets': 6, 'pairs_measured': 10124} |
 | THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the sourc |
 | PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **FAIL** | place_audit FAIL: {'collisions': 1, 'fine_pitch': 19, 'footprints': 400, 'measured': 19} |
@@ -82,7 +82,7 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32.
 | DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | verify_deliverable_a INCONCLUSIVE: the folder judged here is meshsat-pcb-a-revA-A24 and this board declares A32, so its properties are a reading of a  |
 | DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was |
 | TST-001 the board can be brought up safely | MUST_JUSTIFY | SCHEMATIC | **PASS** | PCB-BRING-UP.md is current with the registry |
-| REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **PASS** | reliability PASS of 45 |
+| REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **INCONCLUSIVE** | reliability INCONCLUSIVE: every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the re |
 | BAT-002 the energy chain is bounded end to end | BLOCKER | SCHEMATIC | **PASS** | energy_chain PASS of 98 |
 | DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | final_gate_a INCONCLUSIVE: this board is HELD by an open owner decision, so its paperwork is not current and cannot be made current while the hold sta |
 | DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **INCONCLUSIVE** | doc_provenance_a INCONCLUSIVE: board A declares A32 and the order set holds A22: the note beside those folders describes a board this project is not b |

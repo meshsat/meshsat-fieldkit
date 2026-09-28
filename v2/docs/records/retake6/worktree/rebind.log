@@ -1,0 +1,5 @@
+apply_rebind_current_evidence: CON-010 rebound from 856a59529bb3f5a1 to 2d36f9b4d0cfa487, evidence_result FAIL unchanged
+apply_rebind_current_evidence: REQ-044 rebound from 856a59529bb3f5a1 to 2d36f9b4d0cfa487, evidence_result INCONCLUSIVE unchanged
+apply_rebind_current_evidence: sections that differ: The candidate each board is judged against; Layout entry, per board: the exact remaining blockers; Holds; Readings whose class changed when the tool identity became the code bundle; Evidence classes, per board; Rules with a PASS on the current candidate; Reused under a recorded rationale; Why the rest awaits revalidation; Historical aggregate, mixed revisions
+apply_rebind_current_evidence: sections byte-identical: the head (headline and introduction); Held at later stages: fabrication release and prototype verification; Feasibility blockers; Writers whose configuration is not declared yet; Desk reviews, which are not physical tests; How this page is computed
+apply_rebind_current_evidence: layout-entry reasons 96 to 35 (A 18 to 7, B 17 to 7, C 11 to 3, D 16 to 7, E 17 to 4, P 14 to 5, E5 3 to 2)

@@ -1,0 +1,4 @@
+tests: test_netlist_classes.t_a_committed_netlist_that_carries_one_class_for_every_net_is_named PASS
+tests: test_netlist_classes.t_the_known_list_is_accurate_and_not_a_blanket PASS
+tests: test_rails_netlist.t_a_net_the_netlist_classes_sense_is_undecided_until_declared_or_read PASS
+tests: 3 passed, 0 failed, 0 skipped

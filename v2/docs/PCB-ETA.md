@@ -11,8 +11,8 @@ it.
 
 | | P50 | P80 |
 |---|---|---|
-| engineering effort, one worker | 68 h | 210 h |
-| the same at 6 hours a day | 11.3 days | 35.0 days |
+| engineering effort, one worker | 72 h | 220 h |
+| the same at 6 hours a day | 12.0 days | 36.7 days |
 | critical path through the dependencies | 14 h | 72 h |
 
 Read the table above as WORK REMAINING and never as a delivery date. The two are different questions: a
@@ -25,7 +25,7 @@ figures are below.
 | class | items | P50 | P80 | what it means |
 |---|---|---|---|---|
 | PARALLEL_AGENT | 9 | 34 h | 104 h | session work with no shared file, so several may run at once in their own worktrees |
-| SEQUENTIAL | 6 | 22 h | 72 h | session work that must be serialised: one producer, a shared file, or a never-auto floor |
+| SEQUENTIAL | 7 | 26 h | 82 h | session work that must be serialised: one producer, a shared file, or a never-auto floor |
 | OWNER | 4 | 13 h | 107 h | a ruling. No amount of compute shortens it and it is never in the engineering total |
 | PARALLEL_BOX | 3 | 12 h | 34 h | work whose cost is a route, a sweep or a solve on a rented host, so it runs at the fleet's width |
 | HARDWARE | 2 | 11 h | 34 h | needs built hardware, so it cannot start before the fabrication stage ends |
@@ -35,27 +35,27 @@ figures are below.
 
 | | P50 | P80 |
 |---|---|---|
-| session pool | 9.3 days | 29.3 days |
+| session pool | 10.0 days | 31.0 days |
 | fleet pool | 0.2 days | 0.7 days |
 | longest dependency chain | 2.3 days | 12.0 days |
-| **design package ready for prototype** | **9.3 days** | **29.3 days** |
+| **design package ready for prototype** | **10.0 days** | **31.0 days** |
 
 ## The programme, cumulative elapsed days from the day this page was generated
 
 | milestone | P50 | P80 | where the number comes from |
 |---|---|---|---|
-| DESIGN_PACKAGE_READY_FOR_PROTOTYPE | 9 days | 29 days | COMPUTED |
-| FABRICATION_AND_ASSEMBLY | 21 days | 59 days | VENDOR_PUBLISHED |
-| BENCH_BRING_UP | 35 days | 104 days | DECLARED_ESTIMATE |
-| LAB_VALIDATION | 56 days | 194 days | DECLARED_ESTIMATE |
-| PRODUCTION_RELEASE_READY | 86 days | 314 days | DECLARED_ESTIMATE |
+| DESIGN_PACKAGE_READY_FOR_PROTOTYPE | 10 days | 31 days | COMPUTED |
+| FABRICATION_AND_ASSEMBLY | 22 days | 61 days | VENDOR_PUBLISHED |
+| BENCH_BRING_UP | 36 days | 106 days | DECLARED_ESTIMATE |
+| LAB_VALIDATION | 57 days | 196 days | DECLARED_ESTIMATE |
+| PRODUCTION_RELEASE_READY | 87 days | 316 days | DECLARED_ESTIMATE |
 
 Only the first milestone is computed from this project's own register. Every stage after it is a vendor's
 published figure or this session's declared estimate, and NONE of them has been measured here, because
 nothing has been ordered. The basis of each is in `v2/ecad/tools/pcb_programme_stages.yaml` beside its
 number.
 
-26 open item(s): 18 are work and 6 are waits on the owner, a vendor or a standard. Waits are not engineering
+27 open item(s): 19 are work and 6 are waits on the owner, a vendor or a standard. Waits are not engineering
 time and are listed separately below.
 
 ## Waits, which no amount of engineering shortens

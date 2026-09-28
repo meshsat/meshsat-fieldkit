@@ -1,0 +1,357 @@
+##### E DC_IN
+NET DC_IN (3 nodes)  [DC_IN]
+  F1         pin 1                  passive      10 A mini blade (Keystone 3568 holder): vehicle input
+  J_DCIN     pin 1   Pin_1          passive      JST-VH socket, 10 A: vehicle and shore DC in 9 to 36 V (lead from the D38999 wall receptacle DC pair
+  TP1        pin 1   1              passive      DC_IN
+  NET DC_F (9 nodes)  [through F1]
+    C4         pin 2                  passive      100n 50V
+    D10        pin 1   A1             passive      SMCJ40CA (bidirectional, Littelfuse SMCJ40 row: 40 V standoff and 44.4 V minimum breakdown each way,
+    F1         pin 2                  passive      10 A mini blade (Keystone 3568 holder): vehicle input
+    Q1         pin 1   S              passive      BSC039N06NS 60 V 3.9 mOhm N-FET (PG-TDSON-8: 1-3 S, 4 G, 5-8 D)
+    Q1         pin 2   S              passive      BSC039N06NS 60 V 3.9 mOhm N-FET (PG-TDSON-8: 1-3 S, 4 G, 5-8 D)
+    Q1         pin 3   S              passive      BSC039N06NS 60 V 3.9 mOhm N-FET (PG-TDSON-8: 1-3 S, 4 G, 5-8 D)
+    R1         pin 2                  passive      100k
+    U3         pin 3   DC_F           passive      LM74700-Q1 ideal-diode controller: 1 VCAP 2 GND 3 EN 4 CATHODE 5 GATE 6 ANODE
+    U3         pin 6   DC_F           passive      LM74700-Q1 ideal-diode controller: 1 VCAP 2 GND 3 EN 4 CATHODE 5 GATE 6 ANODE
+    NET Q1_G (3 nodes)  [through R1]
+      Q1         pin 4   G              passive      BSC039N06NS 60 V 3.9 mOhm N-FET (PG-TDSON-8: 1-3 S, 4 G, 5-8 D)
+      R1         pin 1                  passive      100k
+      U3         pin 5   Q1_G           passive      LM74700-Q1 ideal-diode controller: 1 VCAP 2 GND 3 EN 4 CATHODE 5 GATE 6 ANODE
+##### E GND_V
+NET GND_V (13 nodes)  [GND_V]
+  C2         pin 2                  passive      100n 100V
+  C5         pin 2                  passive      100n (TIMER)
+  C6         pin 2                  passive      1u 100V 1210 (X, input side)
+  D1         pin 2   A              passive      SMCJ40A (input surge: 40 V standoff on a line specified to 36 V, clamping 64.5 V; unidirectional, ca
+  D10        pin 2   A2             passive      SMCJ40CA (bidirectional, Littelfuse SMCJ40 row: 40 V standoff and 44.4 V minimum breakdown each way,
+  J_DCIN     pin 2   Pin_2          passive      JST-VH socket, 10 A: vehicle and shore DC in 9 to 36 V (lead from the D38999 wall receptacle DC pair
+  L2         pin 2   Pin_2          passive      Bourns SRF1260-1R5Y dual-winding choke, common-mode connection (each winding carries the line curren
+  Q8         pin 2   S              passive      2N7002: SHORE_INHIBIT high pulls UVLO low = input off (1 G, 2 S, 3 D)
+  R21        pin 2                  passive      38.3k 1% (UVLO: 9 V)
+  R23        pin 2                  passive      6.65k 1% (OVLO: 40 V)
+  R24        pin 2                  passive      20k (PWR: power limit)
+  U3         pin 2   GND_V          passive      LM74700-Q1 ideal-diode controller: 1 VCAP 2 GND 3 EN 4 CATHODE 5 GATE 6 ANODE
+  U6         pin 5   GND_V          passive      LM5069MM-2 hot-swap controller: 9 V on, 40 V off, current and power limit
+  NET DC_P (12 nodes)  [through D1]
+    C2         pin 1                  passive      100n 100V
+    D1         pin 1   K              passive      SMCJ40A (input surge: 40 V standoff on a line specified to 36 V, clamping 64.5 V; unidirectional, ca
+    Q1         pin 5   D              passive      BSC039N06NS 60 V 3.9 mOhm N-FET (PG-TDSON-8: 1-3 S, 4 G, 5-8 D)
+    Q1         pin 6   D              passive      BSC039N06NS 60 V 3.9 mOhm N-FET (PG-TDSON-8: 1-3 S, 4 G, 5-8 D)
+    Q1         pin 7   D              passive      BSC039N06NS 60 V 3.9 mOhm N-FET (PG-TDSON-8: 1-3 S, 4 G, 5-8 D)
+    Q1         pin 8   D              passive      BSC039N06NS 60 V 3.9 mOhm N-FET (PG-TDSON-8: 1-3 S, 4 G, 5-8 D)
+    R19        pin 1                  passive      10mOhm 1% 2512 (hot-swap sense)
+    R20        pin 1                  passive      100k 1%
+    R22        pin 1                  passive      100k 1%
+    TP2        pin 1   1              passive      DC_P
+    U3         pin 4   DC_P           passive      LM74700-Q1 ideal-diode controller: 1 VCAP 2 GND 3 EN 4 CATHODE 5 GATE 6 ANODE
+    U6         pin 2   DC_P           passive      LM5069MM-2 hot-swap controller: 9 V on, 40 V off, current and power limit
+  NET DC_F (9 nodes)  [through D10]
+    C4         pin 2                  passive      100n 50V
+    D10        pin 1   A1             passive      SMCJ40CA (bidirectional, Littelfuse SMCJ40 row: 40 V standoff and 44.4 V minimum breakdown each way,
+    F1         pin 2                  passive      10 A mini blade (Keystone 3568 holder): vehicle input
+    Q1         pin 1   S              passive      BSC039N06NS 60 V 3.9 mOhm N-FET (PG-TDSON-8: 1-3 S, 4 G, 5-8 D)
+    Q1         pin 2   S              passive      BSC039N06NS 60 V 3.9 mOhm N-FET (PG-TDSON-8: 1-3 S, 4 G, 5-8 D)
+    Q1         pin 3   S              passive      BSC039N06NS 60 V 3.9 mOhm N-FET (PG-TDSON-8: 1-3 S, 4 G, 5-8 D)
+    R1         pin 2                  passive      100k
+    U3         pin 3   DC_F           passive      LM74700-Q1 ideal-diode controller: 1 VCAP 2 GND 3 EN 4 CATHODE 5 GATE 6 ANODE
+    U3         pin 6   DC_F           passive      LM74700-Q1 ideal-diode controller: 1 VCAP 2 GND 3 EN 4 CATHODE 5 GATE 6 ANODE
+  NET HS_UVLO (4 nodes)  [through R21]
+    Q8         pin 3   D              passive      2N7002: SHORE_INHIBIT high pulls UVLO low = input off (1 G, 2 S, 3 D)
+    R20        pin 2                  passive      100k 1%
+    R21        pin 1                  passive      38.3k 1% (UVLO: 9 V)
+    U6         pin 3   HS_UVLO        passive      LM5069MM-2 hot-swap controller: 9 V on, 40 V off, current and power limit
+  NET HS_OVLO (3 nodes)  [through R23]
+    R22        pin 2                  passive      100k 1%
+    R23        pin 1                  passive      6.65k 1% (OVLO: 40 V)
+    U6         pin 4   HS_OVLO        passive      LM5069MM-2 hot-swap controller: 9 V on, 40 V off, current and power limit
+  NET HS_PWR (2 nodes)  [through R24]
+    R24        pin 1                  passive      20k (PWR: power limit)
+    U6         pin 7   HS_PWR         passive      LM5069MM-2 hot-swap controller: 9 V on, 40 V off, current and power limit
+    NET HS_S (3 nodes)  [through R19]
+      Q7         pin 5   HS_S           passive      CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6), hot-swap pass
+      R19        pin 2                  passive      10mOhm 1% 2512 (hot-swap sense)
+      U6         pin 1   HS_S           passive      LM5069MM-2 hot-swap controller: 9 V on, 40 V off, current and power limit
+    NET DC_IN (3 nodes)  [through F1]
+      F1         pin 1                  passive      10 A mini blade (Keystone 3568 holder): vehicle input
+      J_DCIN     pin 1   Pin_1          passive      JST-VH socket, 10 A: vehicle and shore DC in 9 to 36 V (lead from the D38999 wall receptacle DC pair
+      TP1        pin 1   1              passive      DC_IN
+    NET Q1_G (3 nodes)  [through R1]
+      Q1         pin 4   G              passive      BSC039N06NS 60 V 3.9 mOhm N-FET (PG-TDSON-8: 1-3 S, 4 G, 5-8 D)
+      R1         pin 1                  passive      100k
+      U3         pin 5   Q1_G           passive      LM74700-Q1 ideal-diode controller: 1 VCAP 2 GND 3 EN 4 CATHODE 5 GATE 6 ANODE
+##### E PV_IN
+NET PV_IN (2 nodes)  [PV_IN]
+  F2         pin 1                  passive      10 A mini blade (Keystone 3568 holder): panel input
+  J_SOLAR    pin 1   Pin_1          passive      JST-VH socket, 10 A: bare panel in (lead from the D38999 spare pair; a 36-cell 12 V class panel, up 
+  NET PV_P (18 nodes)  [through F2]
+    C11        pin 1                  passive      100u 35V Panasonic EEHZK1V101XP hybrid polymer (7.7 mm)
+    C12        pin 1                  passive      100u 35V Panasonic EEHZK1V101XP hybrid polymer (7.7 mm)
+    C13        pin 1                  passive      10u 50V
+    C14        pin 1                  passive      10u 50V
+    C15        pin 1                  passive      4.7u 50V
+    C64        pin 1                  passive      100n
+    D4         pin 1   K              passive      SMCJ28A (panel surge: 28 V standoff, conducting from 31.1 V, below the 35 V bulk capacitors; unidire
+    F2         pin 2                  passive      10 A mini blade (Keystone 3568 holder): panel input
+    Q3         pin 5   D              passive      BSC028N06NS 60 V 2.8 mOhm N-FET, M1 buck top (TDSON-8: 1-3 S, 4 G, 5-8 D)
+    Q3         pin 6   D              passive      BSC028N06NS 60 V 2.8 mOhm N-FET, M1 buck top (TDSON-8: 1-3 S, 4 G, 5-8 D)
+    Q3         pin 7   D              passive      BSC028N06NS 60 V 2.8 mOhm N-FET, M1 buck top (TDSON-8: 1-3 S, 4 G, 5-8 D)
+    Q3         pin 8   D              passive      BSC028N06NS 60 V 2.8 mOhm N-FET, M1 buck top (TDSON-8: 1-3 S, 4 G, 5-8 D)
+    R14        pin 1                  passive      100k 1%
+    R8         pin 1                  passive      102k 1% (RFBIN1: panel point 17.6 V)
+    TP5        pin 1   1              passive      PV_P
+    U5         pin 32  Pin_32         passive      LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitt
+    U5         pin 33  Pin_33         passive      LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitt
+    U5         pin 34  Pin_34         passive      LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitt
+    NET TRK_SHDN (3 nodes)  [through R14]
+      R14        pin 2                  passive      100k 1%
+      R15        pin 1                  passive      15.0k 1% (SHDN: enable above about 9.5 V)
+      U5         pin 1   Pin_1          passive      LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitt
+    NET TRK_FBIN (3 nodes)  [through R8]
+      R8         pin 2                  passive      102k 1% (RFBIN1: panel point 17.6 V)
+      R9         pin 1                  passive      7.50k 1% (RFBIN2)
+      U5         pin 5   Pin_5          passive      LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitt
+##### E SDA1
+NET SDA1 (9 nodes)  [SDA1]
+  D9         pin 1   I/O1           passive      USBLC6-2SC6
+  D9         pin 6   I/O1           passive      USBLC6-2SC6
+  J_LTG      pin 3   Pin_3          passive      AS3935 lightning sensor module (CJMCU-3935 class): 3.3 V, GND, SDA, SCL, IRQ
+  J_POD      pin 3   Pin_3          passive      outside sensor pod on the connector plate (M8 sealed lead): 3.3 V, GND, SDA, SCL
+  R36        pin 1                  passive      4.7k
+  U10        pin 6   SDA1           passive      RP2040 sensor controller (USB to B16 through the dock)
+  U14        pin 3   SDA1           passive      BME688 inside climate: temperature, humidity, pressure, gas index (I2C 0x76)
+  U15        pin 14  SDA1           passive      BMI270 six-axis IMU (I2C 0x68): shock and tilt log, motion wake
+  U17        pin 3   SDA1           passive      SGP41-D-R4 VOC and NOx gas sensor, battery-bay air (I2C 0x59; DFN-6: 1 VDD 2 VSS 3 SDA 4 n/a to GND 
+  NET +3V3_E6 (52 nodes)  [through R36]
+    (a rail or a bus of 52 nodes: not expanded)
+##### E SCL1
+NET SCL1 (9 nodes)  [SCL1]
+  D9         pin 3   I/O2           passive      USBLC6-2SC6
+  D9         pin 4   I/O2           passive      USBLC6-2SC6
+  J_LTG      pin 4   Pin_4          passive      AS3935 lightning sensor module (CJMCU-3935 class): 3.3 V, GND, SDA, SCL, IRQ
+  J_POD      pin 4   Pin_4          passive      outside sensor pod on the connector plate (M8 sealed lead): 3.3 V, GND, SDA, SCL
+  R37        pin 1                  passive      4.7k
+  U10        pin 7   SCL1           passive      RP2040 sensor controller (USB to B16 through the dock)
+  U14        pin 4   SCL1           passive      BME688 inside climate: temperature, humidity, pressure, gas index (I2C 0x76)
+  U15        pin 13  SCL1           passive      BMI270 six-axis IMU (I2C 0x68): shock and tilt log, motion wake
+  U17        pin 6   SCL1           passive      SGP41-D-R4 VOC and NOx gas sensor, battery-bay air (I2C 0x59; DFN-6: 1 VDD 2 VSS 3 SDA 4 n/a to GND 
+  NET +3V3_E6 (52 nodes)  [through R37]
+    (a rail or a bus of 52 nodes: not expanded)
+##### E TAMPER_LEAD
+NET TAMPER_LEAD (3 nodes)  [TAMPER_LEAD]
+  J_TAMP     pin 1   Pin_1          passive      JST-XH 1x2 (B2B-XH-A): lid and tamper reed sensor lead, Littelfuse 59140-1-S-05-A normally open unde
+  R52        pin 1                  passive      100k
+  R53        pin 1                  passive      10k
+  NET +3V3_E6 (52 nodes)  [through R52]
+    (a rail or a bus of 52 nodes: not expanded)
+  NET TAMPER_IO (3 nodes)  [through R53]
+    C52        pin 1                  passive      100n
+    R53        pin 2                  passive      10k
+    U10        pin 27  TAMPER_IO      passive      RP2040 sensor controller (USB to B16 through the dock)
+##### E WATER_A
+NET WATER_A (2 nodes)  [WATER_A]
+  PAD_W1     pin 1   Pin_1          passive      water electrode A (bare copper, +3.3 V through 1 M)
+  R38        pin 2                  passive      1M
+  NET +3V3_E6 (52 nodes)  [through R38]
+    (a rail or a bus of 52 nodes: not expanded)
+##### E WATER_SENSE
+NET WATER_SENSE (4 nodes)  [WATER_SENSE]
+  C51        pin 1                  passive      100n
+  PAD_W2     pin 1   Pin_1          passive      water electrode B (bare copper, to ADC0)
+  R39        pin 1                  passive      1M
+  U10        pin 38  WATER_SENSE    passive      RP2040 sensor controller (USB to B16 through the dock)
+##### E DCF_PULSE
+NET DCF_PULSE (3 nodes)  [DCF_PULSE]
+  J_DCF      pin 3   Pin_3          passive      DCF77 receiver module: 3.3 V, GND, pulse
+  R49        pin 1                  passive      10k
+  U10        pin 8   DCF_PULSE      passive      RP2040 sensor controller (USB to B16 through the dock)
+  NET +3V3_E6 (52 nodes)  [through R49]
+    (a rail or a bus of 52 nodes: not expanded)
+##### E GEIGER_PULSE
+NET GEIGER_PULSE (2 nodes)  [GEIGER_PULSE]
+  J_GEIGER   pin 3   Pin_3          passive      Geiger counter module (RadiationD-v1.1 class): 5 V switched by U16, GND, pulse
+  R48        pin 1                  passive      22R (pulse input series)
+  NET GEIGER_IN (3 nodes)  [through R48]
+    R48        pin 2                  passive      22R (pulse input series)
+    TP13       pin 1   1              passive      GEIGER_IN
+    U10        pin 9   GEIGER_IN      passive      RP2040 sensor controller (USB to B16 through the dock)
+##### E LTG_IRQ
+NET LTG_IRQ (3 nodes)  [LTG_IRQ]
+  J_LTG      pin 5   Pin_5          passive      AS3935 lightning sensor module (CJMCU-3935 class): 3.3 V, GND, SDA, SCL, IRQ
+  R50        pin 1                  passive      10k
+  U10        pin 17  LTG_IRQ        passive      RP2040 sensor controller (USB to B16 through the dock)
+  NET +3V3_E6 (52 nodes)  [through R50]
+    (a rail or a bus of 52 nodes: not expanded)
+##### E SMBC
+NET SMBC (3 nodes)  [SMBC]
+  J_SMB      pin 1   Pin_1          passive      SMBus lead to board P, JST-XH 1x4 (B4B-XH-A), P's pin order: 1 SMBC, 2 SMBD, 3 GND, 4 PRES
+  R35        pin 1                  passive      4.7k
+  U10        pin 5   SMBC           passive      RP2040 sensor controller (USB to B16 through the dock)
+  NET +3V3_E6 (52 nodes)  [through R35]
+    (a rail or a bus of 52 nodes: not expanded)
+##### E SMBD
+NET SMBD (3 nodes)  [SMBD]
+  J_SMB      pin 2   Pin_2          passive      SMBus lead to board P, JST-XH 1x4 (B4B-XH-A), P's pin order: 1 SMBC, 2 SMBD, 3 GND, 4 PRES
+  R34        pin 1                  passive      4.7k
+  U10        pin 4   SMBD           passive      RP2040 sensor controller (USB to B16 through the dock)
+  NET +3V3_E6 (52 nodes)  [through R34]
+    (a rail or a bus of 52 nodes: not expanded)
+##### E PRES_LEAD
+NET PRES_LEAD (2 nodes)  [PRES_LEAD]
+  J_SMB      pin 4   Pin_4          passive      SMBus lead to board P, JST-XH 1x4 (B4B-XH-A), P's pin order: 1 SMBC, 2 SMBD, 3 GND, 4 PRES
+  R54        pin 1                  passive      1k
+  NET PRES_IO (3 nodes)  [through R54]
+    R54        pin 2                  passive      1k
+    R55        pin 1                  passive      1M
+    U10        pin 28  PRES_IO        passive      RP2040 sensor controller (USB to B16 through the dock)
+    NET +3V3_E6 (52 nodes)  [through R55]
+      (a rail or a bus of 52 nodes: not expanded)
+##### E CELL+
+NET CELL+ (2 nodes)  [CELL+]
+  F3         pin 1                  passive      25 A mini blade (Keystone 3568 holder): pack to the block
+  J_BATT     pin 2   Pin_2          passive      Amass XT60-M: the 4S pack power lead from board P, 12 AWG (pin 2, the pad nearer the fuse F3, is + f
+  NET CELL_F (13 nodes)  [through F3]
+    C1         pin 1                  passive      10u 25V 1210
+    C31        pin 1                  passive      10u 25V 1210
+    D3         pin 1   K              passive      SMCJ18A (pack node clamp, unidirectional: cathode on CELL_F)
+    D7         pin 1   K              passive      SS14 flyback across fan 1
+    D8         pin 1   K              passive      SS14 flyback across fan 2
+    F3         pin 2                  passive      25 A mini blade (Keystone 3568 holder): pack to the block
+    J_FAN1     pin 1   Pin_1          passive      mixer fan 1 under the plate (12 V class fan on the pack node, low-side PWM, tachometer)
+    J_FAN2     pin 1   Pin_1          passive      mixer fan 2 under the plate (12 V class fan on the pack node, low-side PWM, tachometer)
+    P_CP       pin 1   Pin_1          passive      solder pad, 12 AWG wire to the block board CELL+ targets
+    R42        pin 1                  passive      100k 1%
+    TP8        pin 1   1              passive      CELL_F
+    U12        pin 2   CELL_F         passive      AP63205WU-7 5 V 2 A buck for the controller, the Geiger module and the fans' logic
+    U12        pin 3   CELL_F         passive      AP63205WU-7 5 V 2 A buck for the controller, the Geiger module and the fans' logic
+    NET FAN1_SW (3 nodes)  [through D7]
+      D7         pin 2   A              passive      SS14 flyback across fan 1
+      J_FAN1     pin 2   Pin_2          passive      mixer fan 1 under the plate (12 V class fan on the pack node, low-side PWM, tachometer)
+      Q9         pin 3   D              passive      2N7002 fan 1 low-side switch (1 G, 2 S, 3 D)
+    NET FAN2_SW (3 nodes)  [through D8]
+      D8         pin 2   A              passive      SS14 flyback across fan 2
+      J_FAN2     pin 2   Pin_2          passive      mixer fan 2 under the plate (12 V class fan on the pack node, low-side PWM, tachometer)
+      Q10        pin 3   D              passive      2N7002 fan 2 low-side switch (1 G, 2 S, 3 D)
+    NET CELL_MON (3 nodes)  [through R42]
+      R42        pin 2                  passive      100k 1%
+      R43        pin 1                  passive      22k 1% (ADC2: 0.18 x pack)
+      U10        pin 40  CELL_MON       passive      RP2040 sensor controller (USB to B16 through the dock)
+##### E CELL_F
+NET CELL_F (13 nodes)  [CELL_F]
+  C1         pin 1                  passive      10u 25V 1210
+  C31        pin 1                  passive      10u 25V 1210
+  D3         pin 1   K              passive      SMCJ18A (pack node clamp, unidirectional: cathode on CELL_F)
+  D7         pin 1   K              passive      SS14 flyback across fan 1
+  D8         pin 1   K              passive      SS14 flyback across fan 2
+  F3         pin 2                  passive      25 A mini blade (Keystone 3568 holder): pack to the block
+  J_FAN1     pin 1   Pin_1          passive      mixer fan 1 under the plate (12 V class fan on the pack node, low-side PWM, tachometer)
+  J_FAN2     pin 1   Pin_1          passive      mixer fan 2 under the plate (12 V class fan on the pack node, low-side PWM, tachometer)
+  P_CP       pin 1   Pin_1          passive      solder pad, 12 AWG wire to the block board CELL+ targets
+  R42        pin 1                  passive      100k 1%
+  TP8        pin 1   1              passive      CELL_F
+  U12        pin 2   CELL_F         passive      AP63205WU-7 5 V 2 A buck for the controller, the Geiger module and the fans' logic
+  U12        pin 3   CELL_F         passive      AP63205WU-7 5 V 2 A buck for the controller, the Geiger module and the fans' logic
+  NET FAN1_SW (3 nodes)  [through D7]
+    D7         pin 2   A              passive      SS14 flyback across fan 1
+    J_FAN1     pin 2   Pin_2          passive      mixer fan 1 under the plate (12 V class fan on the pack node, low-side PWM, tachometer)
+    Q9         pin 3   D              passive      2N7002 fan 1 low-side switch (1 G, 2 S, 3 D)
+  NET FAN2_SW (3 nodes)  [through D8]
+    D8         pin 2   A              passive      SS14 flyback across fan 2
+    J_FAN2     pin 2   Pin_2          passive      mixer fan 2 under the plate (12 V class fan on the pack node, low-side PWM, tachometer)
+    Q10        pin 3   D              passive      2N7002 fan 2 low-side switch (1 G, 2 S, 3 D)
+  NET CELL+ (2 nodes)  [through F3]
+    F3         pin 1                  passive      25 A mini blade (Keystone 3568 holder): pack to the block
+    J_BATT     pin 2   Pin_2          passive      Amass XT60-M: the 4S pack power lead from board P, 12 AWG (pin 2, the pad nearer the fuse F3, is + f
+  NET CELL_MON (3 nodes)  [through R42]
+    R42        pin 2                  passive      100k 1%
+    R43        pin 1                  passive      22k 1% (ADC2: 0.18 x pack)
+    U10        pin 40  CELL_MON       passive      RP2040 sensor controller (USB to B16 through the dock)
+##### E VIN_RAW
+NET VIN_RAW (13 nodes)  [VIN_RAW]
+  C7         pin 1                  passive      1u 100V 1210 (X, bus side)
+  C8         pin 1                  passive      10u 100V X7R 1210
+  D2         pin 1   K              passive      SMCJ40A (bus clamp: 40 V standoff on the 9 to 36 V bus; unidirectional, cathode on VIN_RAW)
+  L2         pin 3   Pin_3          passive      Bourns SRF1260-1R5Y dual-winding choke, common-mode connection (each winding carries the line curren
+  P_VR       pin 1   Pin_1          passive      solder pad, 12 AWG wire to the block board VIN_RAW targets (board A's four 9 A power pins J_VR1-4, E
+  Q2         pin 5   D              passive      BSC039N06NS 60 V 3.9 mOhm N-FET (PG-TDSON-8: 1-3 S, 4 G, 5-8 D)
+  Q2         pin 6   D              passive      BSC039N06NS 60 V 3.9 mOhm N-FET (PG-TDSON-8: 1-3 S, 4 G, 5-8 D)
+  Q2         pin 7   D              passive      BSC039N06NS 60 V 3.9 mOhm N-FET (PG-TDSON-8: 1-3 S, 4 G, 5-8 D)
+  Q2         pin 8   D              passive      BSC039N06NS 60 V 3.9 mOhm N-FET (PG-TDSON-8: 1-3 S, 4 G, 5-8 D)
+  R27        pin 1                  passive      2.2k
+  R40        pin 1                  passive      100k 1%
+  TP3        pin 1   1              passive      VIN_RAW
+  U4         pin 4   VIN_RAW        passive      LM74700-Q1 ideal-diode controller: 1 VCAP 2 GND 3 EN 4 CATHODE 5 GATE 6 ANODE
+  NET LED_A (2 nodes)  [through R27]
+    LED1       pin 2   A              passive      green: vehicle input present
+    R27        pin 2                  passive      2.2k
+  NET VIN_MON (3 nodes)  [through R40]
+    R40        pin 2                  passive      100k 1%
+    R41        pin 1                  passive      10k 1% (ADC1: 0.091 x bus)
+    U10        pin 39  VIN_MON        passive      RP2040 sensor controller (USB to B16 through the dock)
+##### E SHORE_INHIBIT
+NET SHORE_INHIBIT (4 nodes)  [SHORE_INHIBIT]
+  J_BLK      pin 8   Pin_8          passive      solder lands for the 12 signal wires to the block board underside (mirror of A22 J_DOCK): 1-7 GND, 8
+  Q8         pin 1   G              input        2N7002: SHORE_INHIBIT high pulls UVLO low = input off (1 G, 2 S, 3 D)
+  R26        pin 1                  passive      100k
+  U10        pin 18  SHORE_INHIBIT  passive      RP2040 sensor controller (USB to B16 through the dock)
+##### E USB_E6_P
+NET USB_E6_P (2 nodes)  [USB_E6_P]
+  J_BLK      pin 9   Pin_9          passive      solder lands for the 12 signal wires to the block board underside (mirror of A22 J_DOCK): 1-7 GND, 8
+  R29        pin 2                  passive      27R
+  NET USB_DP_R (2 nodes)  [through R29]
+    R29        pin 1                  passive      27R
+    U10        pin 47  USB_DP_R       passive      RP2040 sensor controller (USB to B16 through the dock)
+##### E USB_E6_N
+NET USB_E6_N (2 nodes)  [USB_E6_N]
+  J_BLK      pin 10  Pin_10         passive      solder lands for the 12 signal wires to the block board underside (mirror of A22 J_DOCK): 1-7 GND, 8
+  R30        pin 2                  passive      27R
+  NET USB_DM_R (2 nodes)  [through R30]
+    R30        pin 1                  passive      27R
+    U10        pin 46  USB_DM_R       passive      RP2040 sensor controller (USB to B16 through the dock)
+##### E BLK_SPARE
+NET BLK_SPARE (3 nodes)  [BLK_SPARE]
+  J_BLK      pin 12  Pin_12         passive      solder lands for the 12 signal wires to the block board underside (mirror of A22 J_DOCK): 1-7 GND, 8
+  Q11        pin 3   D              passive      2N7002 HOT-R1 open drain: GPIO19 high pulls the dock line BLK_SPARE low (1 G, 2 S, 3 D)
+  TP7        pin 1   1              passive      BLK_SPARE
+##### E +5V_GEIGER
+NET +5V_GEIGER (4 nodes)  [+5V_GEIGER]
+  C54        pin 1                  passive      10u 25V
+  C55        pin 1                  passive      100n
+  J_GEIGER   pin 1   Pin_1          passive      Geiger counter module (RadiationD-v1.1 class): 5 V switched by U16, GND, pulse
+  U16        pin 1   VOUT           power_out    TPS22810DRV
+##### E FAN1_SW
+NET FAN1_SW (3 nodes)  [FAN1_SW]
+  D7         pin 2   A              passive      SS14 flyback across fan 1
+  J_FAN1     pin 2   Pin_2          passive      mixer fan 1 under the plate (12 V class fan on the pack node, low-side PWM, tachometer)
+  Q9         pin 3   D              passive      2N7002 fan 1 low-side switch (1 G, 2 S, 3 D)
+  NET CELL_F (13 nodes)  [through D7]
+    C1         pin 1                  passive      10u 25V 1210
+    C31        pin 1                  passive      10u 25V 1210
+    D3         pin 1   K              passive      SMCJ18A (pack node clamp, unidirectional: cathode on CELL_F)
+    D7         pin 1   K              passive      SS14 flyback across fan 1
+    D8         pin 1   K              passive      SS14 flyback across fan 2
+    F3         pin 2                  passive      25 A mini blade (Keystone 3568 holder): pack to the block
+    J_FAN1     pin 1   Pin_1          passive      mixer fan 1 under the plate (12 V class fan on the pack node, low-side PWM, tachometer)
+    J_FAN2     pin 1   Pin_1          passive      mixer fan 2 under the plate (12 V class fan on the pack node, low-side PWM, tachometer)
+    P_CP       pin 1   Pin_1          passive      solder pad, 12 AWG wire to the block board CELL+ targets
+    R42        pin 1                  passive      100k 1%
+    TP8        pin 1   1              passive      CELL_F
+    U12        pin 2   CELL_F         passive      AP63205WU-7 5 V 2 A buck for the controller, the Geiger module and the fans' logic
+    U12        pin 3   CELL_F         passive      AP63205WU-7 5 V 2 A buck for the controller, the Geiger module and the fans' logic
+    NET FAN2_SW (3 nodes)  [through D8]
+      D8         pin 2   A              passive      SS14 flyback across fan 2
+      J_FAN2     pin 2   Pin_2          passive      mixer fan 2 under the plate (12 V class fan on the pack node, low-side PWM, tachometer)
+      Q10        pin 3   D              passive      2N7002 fan 2 low-side switch (1 G, 2 S, 3 D)
+    NET CELL+ (2 nodes)  [through F3]
+      F3         pin 1                  passive      25 A mini blade (Keystone 3568 holder): pack to the block
+      J_BATT     pin 2   Pin_2          passive      Amass XT60-M: the 4S pack power lead from board P, 12 AWG (pin 2, the pad nearer the fuse F3, is + f
+    NET CELL_MON (3 nodes)  [through R42]
+      R42        pin 2                  passive      100k 1%
+      R43        pin 1                  passive      22k 1% (ADC2: 0.18 x pack)
+      U10        pin 40  CELL_MON       passive      RP2040 sensor controller (USB to B16 through the dock)
+##### E FAN1_TACH
+NET FAN1_TACH (3 nodes)  [FAN1_TACH]
+  J_FAN1     pin 3   Pin_3          passive      mixer fan 1 under the plate (12 V class fan on the pack node, low-side PWM, tachometer)
+  R46        pin 1                  passive      10k
+  U10        pin 13  FAN1_TACH      passive      RP2040 sensor controller (USB to B16 through the dock)
+  NET +3V3_E6 (52 nodes)  [through R46]
+    (a rail or a bus of 52 nodes: not expanded)

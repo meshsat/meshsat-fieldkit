@@ -1,0 +1,58 @@
+ M v2/docs/CURRENT-EVIDENCE.md
+ M v2/docs/PCB-GAP-REGISTER.md
+ M v2/docs/PCB-GOLDEN-RULES.md
+ M v2/docs/PCB-OPEN-PAIRS.md
+ M v2/docs/PCB-PROTOTYPE-UNKNOWNS.md
+ M v2/docs/PCB-RULE-COVERAGE.md
+ M v2/docs/PCB-RULE-STATUS-A.md
+ M v2/docs/PCB-RULE-STATUS-B.md
+ M v2/docs/PCB-RULE-STATUS-C.md
+ M v2/docs/PCB-RULE-STATUS-D.md
+ M v2/docs/PCB-RULE-STATUS-E.md
+ M v2/docs/PCB-RULE-STATUS-E5.md
+ M v2/docs/PCB-RULE-STATUS-P.md
+ M v2/docs/REQUIREMENTS-TRACE.md
+ M v2/ecad/tools/gate_sweep.sh
+ M v2/ecad/tools/pcb_rules.yaml
+ M v2/ecad/tools/pcb_rules_coverage.yaml
+ M v2/ecad/tools/retake_schematic_phase.py
+ M v2/ecad/tools/rules_status.py
+==== second run of test_rule_gate_mapping
+tests: 18 passed, 0 failed, 0 skipped
+==== render check
+rules_render: 16 document(s), 0 out of date
+==== status after
+ M v2/docs/CURRENT-EVIDENCE.md
+ M v2/docs/PCB-GAP-REGISTER.md
+ M v2/docs/PCB-GOLDEN-RULES.md
+ M v2/docs/PCB-OPEN-PAIRS.md
+ M v2/docs/PCB-PROTOTYPE-UNKNOWNS.md
+ M v2/docs/PCB-RULE-COVERAGE.md
+ M v2/docs/PCB-RULE-STATUS-A.md
+ M v2/docs/PCB-RULE-STATUS-B.md
+ M v2/docs/PCB-RULE-STATUS-C.md
+ M v2/docs/PCB-RULE-STATUS-D.md
+ M v2/docs/PCB-RULE-STATUS-E.md
+ M v2/docs/PCB-RULE-STATUS-E5.md
+ M v2/docs/PCB-RULE-STATUS-P.md
+ M v2/docs/REQUIREMENTS-TRACE.md
+ M v2/ecad/tools/gate_sweep.sh
+ M v2/ecad/tools/pcb_rules.yaml
+ M v2/ecad/tools/pcb_rules_coverage.yaml
+ M v2/ecad/tools/retake_schematic_phase.py
+ M v2/ecad/tools/rules_status.py
+==== retake e5 and a
+  E5  block_contract.py  rc 1       1.4s  check_contracts_e5 FAIL
+  E5  port_protect.py    rc 0       0.7s  port_protect_e5 PASS
+  E5  constraints_bound.py rc 0       1.1s  constraints_bound_e5 PASS
+
+board E5  pcb-e5-block 8 reading(s) in 7.9s: check_contracts_e5 FAIL, constraints_bound_e5 PASS, derate PASS, energy_chain PASS, energy_chain_e5 PASS, interfaces_e5 PASS, port_protect_e5 PASS, safe_lines_e5 PASS
+retake_schematic_phase: done in 8.0s
+  A   interfaces.py      rc 0       2.0s  interfaces_a PASS
+  A   port_protect.py    rc 0       1.1s  port_protect_a PASS
+  A   constraints_bound.py rc 0       1.2s  constraints_bound_a PASS
+
+board A   pcb-a-power-a23 15 reading(s) in 19.1s: check_contracts PASS, clock_check INCONCLUSIVE, constraints_bound_a PASS, derate PASS, edge_length INCONCLUSIVE, energy_chain PASS, energy_chain_a PASS, erc_gate PASS, inhibit_chain_a INCONCLUSIVE, intent_rails PASS, interfaces_a PASS, pin_map_lands_a PASS, port_protect_a PASS, power_sequence PASS, safe_lines_a PASS
+retake_schematic_phase: done in 19.2s
+constraints_bound_a.verdict.json
+constraints_bound_e5.verdict.json

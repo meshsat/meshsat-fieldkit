@@ -1,0 +1,165 @@
+tests: test_agent_contract.t_a_b_templates_pair_pass_is_the_boards_own_first_pass PASS
+tests: test_agent_contract.t_a_basis_locked_knob_is_refused     PASS
+tests: test_agent_contract.t_a_basis_that_says_nothing_is_refused PASS
+tests: test_agent_contract.t_a_flag_given_a_threshold_is_refused PASS
+tests: test_agent_contract.t_a_knob_nobody_reads_is_refused     PASS
+tests: test_agent_contract.t_a_knob_that_never_arrived_is_not_a_measurement PASS
+tests: test_agent_contract.t_a_knob_this_run_cannot_execute_is_refused PASS
+tests: test_agent_contract.t_a_legal_arm_keeps_its_board        PASS
+tests: test_agent_contract.t_a_missing_config_is_infra_fail_and_never_a_fallback PASS
+tests: test_agent_contract.t_a_prediction_must_be_able_to_be_wrong PASS
+tests: test_agent_contract.t_a_prediction_outside_the_denominator_is_refused PASS
+tests: test_agent_contract.t_a_prediction_that_is_not_a_number_is_refused PASS
+tests: test_agent_contract.t_a_repeat_is_refused_and_allowed_on_purpose PASS
+tests: test_agent_contract.t_a_reserved_knob_is_refused_with_its_reason PASS
+tests: test_agent_contract.t_a_review_must_say_where            PASS
+tests: test_agent_contract.t_a_row_belongs_to_the_cycle_that_produced_it PASS
+tests: test_agent_contract.t_a_row_without_a_tool_fingerprint_is_unmeasured PASS
+tests: test_agent_contract.t_a_tool_change_is_proved_in_a_worktree_never_the_working_tree PASS
+tests: test_agent_contract.t_an_arm_name_must_be_a_slug         PASS
+tests: test_agent_contract.t_an_arm_without_a_prediction_is_refused PASS
+tests: test_agent_contract.t_an_empty_env_is_refused            PASS
+tests: test_agent_contract.t_arms_refuses_an_unsafe_arm_name    PASS
+tests: test_agent_contract.t_every_call_records_what_was_sent_and_what_came_back PASS
+tests: test_agent_contract.t_every_knob_the_tools_read_is_in_the_registry PASS
+tests: test_agent_contract.t_hardset_has_a_gate_verb_whose_exit_code_is_its_verdict PASS
+tests: test_agent_contract.t_more_arms_than_the_cap_are_refused PASS
+tests: test_agent_contract.t_no_count_is_a_remainder            PASS
+tests: test_agent_contract.t_no_gate_or_chain_imports_the_agent PASS
+tests: test_agent_contract.t_nothing_about_the_endpoint_is_in_the_tree PASS
+tests: test_agent_contract.t_one_variable_is_mechanical_not_a_prompt_rule PASS
+tests: test_agent_contract.t_the_arm_width_is_an_argument_and_a_missing_declaration_is_refused PASS
+tests: test_agent_contract.t_the_budget_is_counted_in_work      PASS
+tests: test_agent_contract.t_the_cheap_gate_runs_before_the_expensive_stage PASS
+tests: test_agent_contract.t_the_client_carries_no_default_endpoint_or_key PASS
+tests: test_agent_contract.t_the_client_refuses_a_config_anyone_can_read PASS
+tests: test_agent_contract.t_the_evidence_refuses_a_ledger_that_does_not_verify PASS
+tests: test_agent_contract.t_the_good_fixture_is_accepted       PASS
+tests: test_agent_contract.t_the_judge_is_never_the_model       PASS
+tests: test_agent_contract.t_the_loop_actuates_through_an_argv  PASS
+tests: test_agent_contract.t_the_metric_is_closed_and_the_judge_grades_it PASS
+tests: test_agent_contract.t_the_model_owns_three_fields        PASS
+tests: test_agent_contract.t_the_pair_count_alone_is_not_the_objective PASS
+tests: test_agent_contract.t_the_patch_flow_proves_the_red_side PASS
+tests: test_agent_contract.t_the_place_run_shape_is_implemented_or_absent PASS
+tests: test_agent_contract.t_the_proposer_cannot_actuate        PASS
+tests: test_agent_contract.t_the_registry_is_the_authority_not_the_source_scan PASS
+tests: test_agent_contract.t_the_reviewers_refusal_gates_the_write_up PASS
+tests: test_agent_contract.t_there_is_only_one_judge            PASS
+tests: test_artefact_recording.t_check_contracts_records_each_boards_netlist_and_nothing_of_e5 PASS
+tests: test_artefact_recording.t_interfaces_records_the_netlist_beside_the_declared_intent_and_e5s_board_file PASS
+tests: test_block_contract.t_a_power_pin_board_a_gains_with_no_target_is_refused SKIP no pcbnew here (ModuleNotFoundError)
+tests: test_block_contract.t_a_target_on_the_wrong_net_is_refused SKIP no pcbnew here (ModuleNotFoundError)
+tests: test_block_contract.t_it_records_what_binds_it_to_both_boards SKIP no pcbnew here (ModuleNotFoundError)
+tests: test_block_contract.t_the_block_passes_against_the_dock_map_it_was_generated_from SKIP no pcbnew here (ModuleNotFoundError)
+tests: test_block_contract.t_the_contract_check_no_longer_writes_this_board_s_verdict PASS
+tests: test_contract_attribution.t_a_board_with_unjudged_contracts_is_inconclusive_and_never_passing PASS
+tests: test_contract_attribution.t_a_contract_whose_other_board_is_absent_is_not_this_board_s_failure PASS
+PASS  B: something
+FAIL  A and B disagree
+tests: test_contract_attribution.t_a_contract_with_no_board_is_refused_rather_than_attributed_to_none PASS
+PASS  A: the pre-charge pin lands on a cell node net
+FAIL  B: PCIE1_RX_P has exactly one series AC coupling capacitor
+tests: test_contract_attribution.t_a_failure_on_one_board_does_not_fail_another PASS
+UNJUDGED  panel controller USB pair USB_PNL_P on B and C J_PANEL   (B absent from this tree)
+FAIL  C: something of C's own
+tests: test_contract_attribution.t_an_absent_board_makes_both_ends_unjudged_and_neither_failed PASS
+tests: test_contract_attribution.t_every_contract_declares_the_boards_it_is_about PASS
+tests: test_contract_attribution.t_the_guard_covers_both_ends   PASS
+tests: test_contract_attribution.t_the_registry_reads_the_per_board_verdict_for_the_cross_board_rules PASS
+tests: test_contract_attribution.t_the_staleness_guard_reads_the_schematic_it_came_from_and_not_a_timestamp PASS
+tests: test_current_model.t_below_the_crossover_nothing_moves   PASS
+tests: test_current_model.t_no_tool_carries_the_constants_itself PASS
+tests: test_current_model.t_the_bar_is_the_lowest_published_model_at_every_area PASS
+tests: test_current_model.t_the_sizer_and_the_judge_agree       PASS
+final_gate: 7 deliverable folder(s), 7 required
+  A   meshsat-pcb-a-revA-A1              PASS   ALL PASS (36 of 36 properties)
+  B   meshsat-pcb-b-revA-B1              PASS   ALL PASS (36 of 36 properties)
+  C   meshsat-pcb-c-revA-C1              PASS   ALL PASS (36 of 36 properties)
+  D   meshsat-pcb-d-revA-D1              PASS   ALL PASS (36 of 36 properties)
+  E   meshsat-pcb-e-revA-E1              PASS   ALL PASS (36 of 36 properties)
+  E5  meshsat-pcb-e5-revA-E51            PASS   ALL PASS (36 of 36 properties)
+  P   meshsat-pcb-p-revA-P1              PASS   ALL PASS (36 of 36 properties)
+  contracts : contracts: 2 FAIL of 42
+  parts     : jlc_certify: 469 components, CERTIFIED 469
+  claims    : claims_check: 19 claim sentence(s) in 8 document(s), 0 without a qualifier, an evidence reference or a declared reason
+final_gate: 7 of 7 folder(s) pass, 0 quote-only, 0 missing, contracts FAIL, parts PASS
+verdict: final_gate             FAIL         of 7 {"certify_rc": 0, "claims_rc": 0, "contracts_rc": 1, "fail": 0, "held": 0, "missing": 0, "pass": 7, "quote": 0} | deliverable folders re-read today; contracts FAIL; parts PASS; claims PASS; jlc_certify: 469 components, CERTIFIED 469
+final_gate: 7 deliverable folder(s), 7 required
+  A   meshsat-pcb-a-revA-A1              PASS   ALL PASS (36 of 36 properties)
+  B   meshsat-pcb-b-revA-B1              PASS   ALL PASS (36 of 36 properties)
+  C   meshsat-pcb-c-revA-C1              PASS   ALL PASS (36 of 36 properties)
+  D   meshsat-pcb-d-revA-D1              PASS   ALL PASS (36 of 36 properties)
+  E   meshsat-pcb-e-revA-E1              PASS   ALL PASS (36 of 36 properties)
+  E5  meshsat-pcb-e5-revA-E51            PASS   ALL PASS (36 of 36 properties)
+  P   meshsat-pcb-p-revA-P1              PASS   ALL PASS (36 of 36 properties)
+  contracts : no contracts line
+  parts     : jlc_certify: 469 components, CERTIFIED 469
+  claims    : claims_check: 19 claim sentence(s) in 8 document(s), 0 without a qualifier, an evidence reference or a declared reason
+final_gate: 7 of 7 folder(s) pass, 0 quote-only, 0 missing, contracts NOT JUDGED HERE (no netlist in this tree), parts PASS
+verdict: final_gate             INCONCLUSIVE of 7 {"certify_rc": 0, "claims_rc": 0, "contracts_rc": 3, "fail": 0, "held": 0, "missing": 0, "pass": 7, "quote": 0} | deliverable folders re-read today; contracts NOT JUDGED HERE (no netlist in this tree); parts PASS; claims PASS; jlc_certify: 469 components, CERTIFIED 469
+tests: test_final_gate.t_failed_contracts_are_fail_and_absent_contracts_are_inconclusive PASS
+tests: test_gate_fixtures.t_check_contracts_counts_every_contract_it_evaluated PASS
+tests: test_gate_fixtures.t_check_contracts_is_inconclusive_when_a_board_is_absent PASS
+tests: test_gate_fixtures.t_check_contracts_is_inconclusive_with_no_netlist_at_all PASS
+tests: test_gate_fixtures.t_the_finish_treats_an_inconclusive_contract_set_differently_from_a_failed_one PASS
+tests: test_interfaces.t_a_class_that_disagrees_with_its_interface_is_refused PASS
+tests: test_interfaces.t_a_pair_is_judged_at_the_tighter_of_the_two_numbers PASS
+tests: test_interfaces.t_an_interface_with_no_target_says_so_with_its_reason PASS
+tests: test_interfaces.t_both_board_gates_judge_at_the_bar_and_not_at_a_literal PASS
+tests: test_interfaces.t_every_interface_number_carries_the_document_it_came_from PASS
+tests: test_interfaces.t_every_number_in_the_sheet_appears_in_one_of_its_own_quotes PASS
+tests: test_interfaces.t_the_boards_impedance_targets_agree_with_the_parts_today PASS
+tests: test_interfaces.t_the_pair_gate_cites_the_interfaces_own_budget_beside_the_projects PASS
+tests: test_interfaces.t_the_projects_own_tolerance_is_compared_with_the_parts PASS
+tests: test_interfaces.t_the_verdict_is_per_board_and_not_one_for_the_set PASS
+tests: test_netlist_classes.t_a_committed_netlist_that_carries_one_class_for_every_net_is_named PASS
+tests: test_netlist_classes.t_the_known_list_is_accurate_and_not_a_blanket PASS
+tests: test_order_codes.t_every_board_of_the_set_gets_a_contracts_verdict_even_when_nothing_names_it PASS
+tests: test_per_board_contract_verdict.t_a_board_a_board_file_names_its_netlist_and_is_not_read PASS
+tests: test_per_board_contract_verdict.t_a_per_board_verdict_named_in_the_map_is_the_one_read PASS
+tests: test_per_board_contract_verdict.t_a_reading_that_records_what_the_tool_records_binds_on_e5 PASS
+tests: test_per_board_contract_verdict.t_a_verdict_shared_through_a_per_board_line_says_why PASS
+tests: test_per_board_contract_verdict.t_the_dock_mount_is_the_one_board_a_s_placement_states PASS
+tests: test_per_board_contract_verdict.t_the_map_names_e5_s_own_contract_reading_for_int_001_and_nothing_else_moves PASS
+tests: test_per_board_contract_verdict.t_the_netlist_is_parsed_whole PASS
+tests: test_per_board_contract_verdict.t_the_per_board_reading_decides_every_rule_that_names_it PASS
+tests: test_per_board_contract_verdict.t_the_re_take_driver_plans_the_per_board_reading_with_its_own_writer PASS
+tests: test_per_board_contract_verdict.t_without_pcbnew_the_tool_writes_its_own_verdict_declaring_the_absence PASS
+tests: test_port_protect.t_a_clamp_on_the_next_segment_of_the_power_path_is_this_conductors_clamp PASS
+tests: test_power_path.t_a_controllers_other_pins_are_not_segments_of_its_rail PASS
+tests: test_power_path.t_a_declared_pass_through_is_walked_whatever_its_land_looks_like PASS
+tests: test_power_path.t_a_declared_pass_through_needs_its_reason PASS
+tests: test_power_path.t_a_ground_a_return_and_a_switching_node_are_never_segments PASS
+tests: test_power_path.t_a_netlist_it_parsed_nothing_from_is_inconclusive_and_not_a_pass PASS
+tests: test_power_path.t_a_pass_element_moves_the_current_it_is_given PASS
+tests: test_power_path.t_a_rail_is_asked_whether_it_declares_what_its_converters_draw PASS
+tests: test_power_path.t_a_segment_declared_as_a_node_is_found_at_both_ends_of_its_rail PASS
+tests: test_power_path.t_an_undeclared_net_on_a_power_path_is_reported_and_not_skipped PASS
+tests: test_power_path.t_fed_from_must_name_a_declared_rail_and_not_itself PASS
+tests: test_power_path.t_the_same_conductors_declared_as_rails_are_not_flagged PASS
+tests: test_rail_loads.t_a_rail_may_declare_several_sources     PASS
+tests: test_rail_loads.t_a_rail_that_crosses_a_connector_declares_its_share_of_one_budget PASS
+tests: test_rail_loads.t_a_rails_loads_sum_to_about_its_declared_current PASS
+tests: test_rail_loads.t_an_unsplit_shared_rail_is_an_open_question_and_not_a_failed_contract PASS
+tests: test_rail_loads.t_every_rail_declares_its_loads          PASS
+tests: test_rail_loads.t_intent_refuses_a_controller_source_and_accepts_a_declared_one PASS
+tests: test_rail_loads.t_intent_refuses_a_load_with_no_current  PASS
+tests: test_rail_loads.t_intent_refuses_a_rail_that_declares_no_loads PASS
+tests: test_rail_loads.t_intent_refuses_loads_that_exceed_the_rails_own_peak PASS
+tests: test_rail_loads.t_no_rail_names_a_controller_as_its_source PASS
+tests: test_rails_netlist.t_a_net_the_netlist_classes_sense_is_undecided_until_declared_or_read PASS
+tests: test_review_packet.t_the_contracts_listed_are_those_that_name_the_board PASS
+tests: test_sch_prov.t_the_contract_check_refuses_a_netlist_of_unknown_origin PASS
+tests: test_smbus_lead_contract.t_the_host_may_ground_the_presence_pin_as_ti_draws_it PASS
+tests: test_smbus_lead_contract.t_the_host_may_not_drive_the_presence_pin_with_a_signal PASS
+tests: test_smbus_lead_contract.t_the_lead_as_designed_on_25_september_fails_every_contract PASS
+tests: test_smbus_lead_contract.t_the_lead_of_the_a07_fix_passes_every_contract PASS
+tests: test_smbus_lead_contract.t_the_return_on_the_cell_side_ground_fails_even_with_the_right_connector PASS
+tests: test_smbus_lead_contract.t_the_right_connector_with_clock_and_data_crossed_still_fails PASS
+tests: test_smbus_lead_contract.t_the_shape_is_read_from_the_footprint_name PASS
+tests: test_smbus_lead_contract.t_the_smbus_clamps_return_to_the_packs_own_negative_lead PASS
+tests: test_stale_netlist.t_the_contract_check_refuses_a_netlist_older_than_its_schematic PASS
+tests: test_tx_inhibit.t_a_held_off_fets_pull_up_rail_down_floats_the_power_path PASS
+tests: test_tx_inhibit.t_the_walk_decides_rf002_and_no_contract PASS
+tests: 128 passed, 0 failed, 4 skipped

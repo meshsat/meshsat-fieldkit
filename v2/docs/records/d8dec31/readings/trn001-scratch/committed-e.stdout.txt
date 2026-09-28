@@ -1,0 +1,43 @@
+port_protect: board E declares 3 external port(s); 3 found on this netlist
+port_protect: 5 clamp(s) judged for polarity: 0 reversed, 0 drawn with a symbol that does not match the part's direction, 0 unjudged
+  CLAMP D1     OK       K/A       uni    cathode (its K pin) on DC_P, anode on the return GND_V
+  CLAMP D10    N/A      A1/A2     bi     a two-way part (SMCJ40CA: a C in the suffix is the bidirectional part (Littelfuse, Diodes Inc and MDD number them alike)): either way round is correct
+  CLAMP D2     OK       K/A       uni    cathode (its K pin) on VIN_RAW, anode on the return GND
+  CLAMP D3     OK       K/A       uni    cathode (its K pin) on CELL_F, anode on the return GND
+  CLAMP D4     OK       K/A       uni    cathode (its K pin) on PV_P, anode on the return GND
+  J_DCIN       2 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [shore and vehicle DC entry from the MIL-DTL-38999 wall receptacl]
+  J_SOLAR      2 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [the solar input, a long outdoor lead by definition]
+  J_POD        4 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [the outside climate and ultraviolet sensor pod, through an M8 se]
+  SKIPPED J_DCIN.2 on GND_V: a ground or a no-connect, not judged
+  SKIPPED J_SOLAR.2 on GND: a ground or a no-connect, not judged
+  SKIPPED J_POD.2 on GND: a ground or a no-connect, not judged
+port_protect: 0 connector pin(s) declared internal, 27 connector pin(s) that no entry covers
+  UNCOVERED J_BATT.2 on CELL+: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_BLK.10 on USB_E6_N: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_BLK.12 on BLK_SPARE: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_BLK.8 on SHORE_INHIBIT: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_BLK.9 on USB_E6_P: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_DCF.1 on +3V3_E6: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_DCF.3 on DCF_PULSE: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_FAN1.1 on CELL_F: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_FAN1.2 on FAN1_SW: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_FAN1.3 on FAN1_TACH: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_FAN2.1 on CELL_F: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_FAN2.2 on FAN2_SW: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_FAN2.3 on FAN2_TACH: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_GEIGER.1 on +5V_GEIGER: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_GEIGER.3 on GEIGER_PULSE: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_LTG.1 on +3V3_E6: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_LTG.3 on SDA1: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_LTG.4 on SCL1: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_LTG.5 on LTG_IRQ: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_SMB.1 on SMBC: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_SMB.2 on SMBD: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_SMB.4 on PRES_LEAD: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_TAMP.1 on TAMPER_LEAD: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED PAD_W1.1 on WATER_A: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED PAD_W2.1 on WATER_SENSE: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED P_CP.1 on CELL_F: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED P_VR.1 on VIN_RAW: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+verdict: port_protect           INCONCLUSIVE of 13 {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 5, "clamps_one_way": 4, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unjudged": 0, "declarations_refused": 0, "declared": 3, "ground_pins_not_judged": 3, "internal_pins": 0, "not_on_netlist": 0, "ports": 3, "uncovered_pins": 27, "unprotected": 0} | every declared external conductor meets a protection part before a chip; 0 clamp(s) could not be judged for polarity and 27 connector pin(s) are covered by no entry of the declaration, so nobody has said whether they leave the case
+rc=3

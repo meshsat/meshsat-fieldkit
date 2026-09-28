@@ -1,0 +1,21 @@
+== walk-set6_tree-main (changed against main: M v2/ecad/tools/tx_inhibit.py ?? v2/vendor/pdi/ultrachip-uc8253c-a0.6.pdf ?? v2/vendor/power/st-semtech-1n4148w-c81598.pdf ?? v2/vendor/rockblock/groundcontrol-docs-rockblock-9704-hardware-20260927.html ?? v2/vendor/rockblock/groundcontrol-docs-rockblock-9704-hardware-20260927.txt ?? v2/vendor/ti/ti-sn74lv1t08.pdf ?? v2/vendor/zhengxin/)
+   A: FAIL         of 9   {"fail": 1, "pass": 6, "undecided": 2, "unjudged": 0}
+        - RF-002 the asserted line TX_INHIBIT_n: nothing on any board but its own source can drive it, and with that source unpowered or unplugged its own pull-downs hold it under 0.8 V against every pin's stated current, every other part powered or not
+        - undecided: RF-002 30 W VHF power amplifier (RA30H1317M1 on the plate): EMCON reaches it in hardware (A power on J_PA)
+        - undecided: RF-002 QMX HF transceiver: EMCON reaches it in hardware (A power on J_HF)
+   B: FAIL         of 20  {"fail": 3, "pass": 13, "undecided": 4, "unjudged": 0}
+        - RF-002 the asserted line TX_INHIBIT_n: nothing on any board but its own source can drive it, and with that source unpowered or unplugged its own pull-downs hold it under 0.8 V against every pin's stated current, every other part powered or not
+        - RF-002 AW7915-AED WiFi link card, slot 1: EMCON reaches it in hardware (B rf_disable on J_M2C1 or B power on J_M2C1)
+        - RF-002 AW7915-AED WiFi link card, slot 3: EMCON reaches it in hardware (B rf_disable on J_M2C3 or B power on J_M2C3)
+        - undecided: RF-002 LimeSDR Mini 2.4 in its USB 3 bay: EMCON reaches it in hardware (B power on J_LIME)
+        - undecided: RF-002 E72 CC2652P Zigbee coordinator: EMCON reaches it in hardware (B power on U13)
+        - undecided: RF-002 E72 CC2652P OpenThread RCP: EMCON reaches it in hardware (B power on U14)
+        - undecided: RF-002 RM520N-GL 5G module: EMCON reaches it in hardware (B rf_disable on J_M2C2 or B power on J_M2C2)
+   C: FAIL         of 6   {"fail": 1, "pass": 5, "undecided": 0, "unjudged": 0}
+        - RF-002 the asserted line TX_INHIBIT_n: nothing on any board but its own source can drive it, and with that source unpowered or unplugged its own pull-downs hold it under 0.8 V against every pin's stated current, every other part powered or not
+   D: FAIL         of 8   {"fail": 2, "pass": 6, "undecided": 0, "unjudged": 0}
+        - RF-002 the asserted line TX_INHIBIT_n: nothing on any board but its own source can drive it, and with that source unpowered or unplugged its own pull-downs hold it under 0.8 V against every pin's stated current, every other part powered or not
+        - RF-002 SA868 VHF exciter: EMCON reaches it in hardware (D key on U2)
+   E: PASS         of 1   {"fail": 0, "pass": 1, "undecided": 0, "unjudged": 0}
+   P: PASS         of 1   {"fail": 0, "pass": 1, "undecided": 0, "unjudged": 0}
+0
