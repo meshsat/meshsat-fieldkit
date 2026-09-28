@@ -16,16 +16,18 @@
   "unresolved": []
  },
  "counts": {
-  "checks": 45,
-  "devices": 5,
-  "fail": 1,
-  "functions": 9,
+  "checks": 63,
+  "devices": 13,
+  "fail": 3,
+  "functions": 14,
   "limits": 14,
   "software_only": 9
  },
- "denominator": 45,
+ "denominator": 63,
  "evidence": [
-  "BAT-001 asks for protection IN HARDWARE, INDEPENDENT OF ANY SOFTWARE, and 9 of 9 functions are implemented by a device whose thresholds live in firmware, with no second protector and no chemical fuse on this board: gen_sch_p.py: `no chemical fuse (the 25 A mini blade is the fuse)`, PTC and PTCEN tied off, and no second protector IC. Every CELL-LEVEL protection below is the"
+  "FUSE_OVER_CURRENT_DISCHARGE trips at 33.8 A and 3 cells in parallel are rated 24.0 A (max_continuous_discharge_ma)",
+  "SECOND_LEVEL_CELL_UNDER_VOLTAGE trips at 2.25, BELOW the cell maker's own overdischarge_protect_v of 2.3",
+  "SECOND_LEVEL_OVER_TEMPERATURE allows -inf to 70.0 and the cell maker allows -10.0 to 60.0"
  ],
  "inputs": {
   "board": "p",
@@ -36,11 +38,11 @@
   "netlist": {
    "content16": "efe60479293f0004",
    "path": "pcb-p-pack-p2/out/pcb-p-pack.net",
-   "sha256_16": "085f833362fbbda8"
+   "sha256_16": "760ac6f74d62d194"
   },
   "table": {
    "path": "tools/pcb_pack_protection.yaml",
-   "sha256_16": "1cd670d6c7685645"
+   "sha256_16": "ab1dbc3f3f69aa46"
   }
  },
  "missing_input": null,
@@ -60,12 +62,12 @@
  },
  "tool": "pack_protection",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "cef7cb77c420",
+  "tools_tree_sha": "8639c5ed4c65deea"
  },
- "ts": "2026-09-27T13:23:38Z",
+ "ts": "2026-09-28T22:47:05Z",
  "verdict": "FAIL",
- "version": "391d857966d6",
+ "version": "cef7cb77c420",
  "writer": {
   "file": "pack_protection.py",
   "sha16": "bcd644b9822c724d"

@@ -1,0 +1,209 @@
+main-6ec37197: 40 reasons: A 7, B 7, C 5, D 8, E 5, P 6, E5 2
+before-73ae2f21: 96 reasons: A 18, B 17, C 11, D 16, E 17, P 14, E5 3
+after: 35 reasons: A 7, B 7, C 3, D 7, E 4, P 5, E5 2
+
+board A
+  main-6ec37197 (7):
+     SI-001 INCONCLUSIVE      VALID_HISTORICAL (RATIONALE)
+     RF-002 FAIL              CURRENT_CANDIDATE (BOUND)
+     decision 31              review: not met
+     FEA-006                  layout-entry stage open
+     FEA-004                  layout-entry stage open
+     FEA-002                  layout-entry stage open
+     FEA-007                  layout-entry stage open
+  before-73ae2f21 (18):
+     SCH-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     SCH-004 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     SCH-005 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     CMP-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     PWR-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     PWR-002 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     PWR-003 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     SI-001 INCONCLUSIVE      AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     RF-002 FAIL              AWAITING_REVALIDATION (TOOL_CHANGED)
+     INT-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     TRN-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     BAT-002 PASS             AWAITING_REVALIDATION (OTHER_DESIGN)
+     decision 31              review: not met
+     decision 31              rule_pass: not met
+     FEA-006                  layout-entry stage open
+     FEA-004                  layout-entry stage open
+     FEA-002                  layout-entry stage open
+     FEA-007                  layout-entry stage open
+  after (7):
+     SI-001 INCONCLUSIVE      CURRENT_CANDIDATE (BOUND)
+     RF-002 INCONCLUSIVE      CURRENT_CANDIDATE (BOUND)
+     decision 31              review: not met
+     FEA-006                  layout-entry stage open
+     FEA-004                  layout-entry stage open
+     FEA-002                  layout-entry stage open
+     FEA-007                  layout-entry stage open
+
+board B
+  main-6ec37197 (7):
+     SI-001 INCONCLUSIVE      VALID_HISTORICAL (RATIONALE)
+     RF-002 FAIL              CURRENT_CANDIDATE (BOUND)
+     FEA-003                  layout-entry stage open
+     FEA-006                  layout-entry stage open
+     FEA-002                  layout-entry stage open
+     FEA-001                  layout-entry stage open
+     FEA-007                  layout-entry stage open
+  before-73ae2f21 (17):
+     SCH-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     SCH-004 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     SCH-005 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     CMP-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     PWR-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     PWR-002 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     PWR-003 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     SI-001 INCONCLUSIVE      AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     CLK-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     RF-002 FAIL              AWAITING_REVALIDATION (TOOL_CHANGED)
+     INT-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     TRN-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     FEA-003                  layout-entry stage open
+     FEA-006                  layout-entry stage open
+     FEA-002                  layout-entry stage open
+     FEA-001                  layout-entry stage open
+     FEA-007                  layout-entry stage open
+  after (7):
+     SI-001 INCONCLUSIVE      CURRENT_CANDIDATE (BOUND)
+     RF-002 INCONCLUSIVE      CURRENT_CANDIDATE (BOUND)
+     FEA-003                  layout-entry stage open
+     FEA-006                  layout-entry stage open
+     FEA-002                  layout-entry stage open
+     FEA-001                  layout-entry stage open
+     FEA-007                  layout-entry stage open
+
+board C
+  main-6ec37197 (5):
+     PWR-001 FAIL             VALID_HISTORICAL (RATIONALE)
+     SI-001 INCONCLUSIVE      VALID_HISTORICAL (RATIONALE)
+     RF-002 FAIL              CURRENT_CANDIDATE (BOUND)
+     FEA-006                  layout-entry stage open
+     FEA-002                  layout-entry stage open
+  before-73ae2f21 (11):
+     SCH-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     SCH-005 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     CMP-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     PWR-001 FAIL             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     SI-001 INCONCLUSIVE      AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     CLK-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     RF-002 FAIL              AWAITING_REVALIDATION (TOOL_CHANGED)
+     INT-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     TRN-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     FEA-006                  layout-entry stage open
+     FEA-002                  layout-entry stage open
+  after (3):
+     SI-001 INCONCLUSIVE      CURRENT_CANDIDATE (BOUND)
+     FEA-006                  layout-entry stage open
+     FEA-002                  layout-entry stage open
+
+board D
+  main-6ec37197 (8):
+     PWR-001 INCONCLUSIVE     VALID_HISTORICAL (RATIONALE)
+     SI-001 INCONCLUSIVE      VALID_HISTORICAL (RATIONALE)
+     RF-002 FAIL              CURRENT_CANDIDATE (BOUND)
+     decision 31              review: not met
+     FEA-006                  layout-entry stage open
+     FEA-004                  layout-entry stage open
+     FEA-002                  layout-entry stage open
+     FEA-007                  layout-entry stage open
+  before-73ae2f21 (16):
+     SCH-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     SCH-004 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     SCH-005 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     CMP-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     PWR-001 INCONCLUSIVE     AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     SI-001 INCONCLUSIVE      AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     CLK-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     RF-002 FAIL              AWAITING_REVALIDATION (TOOL_CHANGED)
+     INT-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     TRN-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     decision 31              review: not met
+     decision 31              rule_pass: not met
+     FEA-006                  layout-entry stage open
+     FEA-004                  layout-entry stage open
+     FEA-002                  layout-entry stage open
+     FEA-007                  layout-entry stage open
+  after (7):
+     SI-001 INCONCLUSIVE      CURRENT_CANDIDATE (BOUND)
+     RF-002 INCONCLUSIVE      CURRENT_CANDIDATE (BOUND)
+     decision 31              review: not met
+     FEA-006                  layout-entry stage open
+     FEA-004                  layout-entry stage open
+     FEA-002                  layout-entry stage open
+     FEA-007                  layout-entry stage open
+
+board E
+  main-6ec37197 (5):
+     PWR-001 INCONCLUSIVE     VALID_HISTORICAL (RATIONALE)
+     SI-001 INCONCLUSIVE      VALID_HISTORICAL (RATIONALE)
+     decision 31              review: not met
+     FEA-006                  layout-entry stage open
+     FEA-007                  layout-entry stage open
+  before-73ae2f21 (17):
+     SCH-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     SCH-004 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     SCH-005 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     CMP-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     PWR-001 INCONCLUSIVE     AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     PWR-002 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     PWR-003 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     SI-001 INCONCLUSIVE      AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     CLK-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     RF-002 PASS              AWAITING_REVALIDATION (TOOL_CHANGED)
+     INT-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     TRN-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     BAT-002 PASS             AWAITING_REVALIDATION (OTHER_DESIGN)
+     decision 31              review: not met
+     decision 31              rule_pass: not met
+     FEA-006                  layout-entry stage open
+     FEA-007                  layout-entry stage open
+  after (4):
+     SI-001 INCONCLUSIVE      CURRENT_CANDIDATE (BOUND)
+     decision 31              review: not met
+     FEA-006                  layout-entry stage open
+     FEA-007                  layout-entry stage open
+
+board P
+  main-6ec37197 (6):
+     PWR-001 FAIL             VALID_HISTORICAL (RATIONALE)
+     SI-001 INCONCLUSIVE      VALID_HISTORICAL (RATIONALE)
+     BAT-001 FAIL             CURRENT_CANDIDATE (BOUND)
+     FEA-006                  layout-entry stage open
+     FEA-005                  layout-entry stage open
+     FEA-007                  layout-entry stage open
+  before-73ae2f21 (14):
+     SCH-004 PASS             AWAITING_REVALIDATION (CONFIG_CHANGED)
+     SCH-005 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     CMP-001 PASS             AWAITING_REVALIDATION (NETLIST_MISMATCH)
+     PWR-001 FAIL             AWAITING_REVALIDATION (CONFIG_CHANGED)
+     PWR-002 PASS             AWAITING_REVALIDATION (CONFIG_CHANGED)
+     SI-001 INCONCLUSIVE      AWAITING_REVALIDATION (CONFIG_CHANGED)
+     RF-002 PASS              AWAITING_REVALIDATION (TOOL_CHANGED)
+     INT-001 PASS             AWAITING_REVALIDATION (CONFIG_CHANGED)
+     TRN-001 PASS             AWAITING_REVALIDATION (CONFIG_CHANGED)
+     BAT-001 FAIL             AWAITING_REVALIDATION (CONFIG_CHANGED)
+     BAT-002 PASS             AWAITING_REVALIDATION (OTHER_DESIGN)
+     FEA-006                  layout-entry stage open
+     FEA-005                  layout-entry stage open
+     FEA-007                  layout-entry stage open
+  after (5):
+     SI-001 INCONCLUSIVE      CURRENT_CANDIDATE (BOUND)
+     BAT-001 FAIL             CURRENT_CANDIDATE (BOUND)
+     FEA-006                  layout-entry stage open
+     FEA-005                  layout-entry stage open
+     FEA-007                  layout-entry stage open
+
+board E5
+  main-6ec37197 (2):
+     INT-001 PASS             AWAITING_REVALIDATION (UNBOUND)
+     FEA-007                  layout-entry stage open
+  before-73ae2f21 (3):
+     INT-001 INCONCLUSIVE     AWAITING_REVALIDATION (CONFIG_CHANGED)
+     BAT-002 PASS             AWAITING_REVALIDATION (OTHER_DESIGN)
+     FEA-007                  layout-entry stage open
+  after (2):
+     INT-001 FAIL             CURRENT_CANDIDATE (BOUND)
+     FEA-007                  layout-entry stage open

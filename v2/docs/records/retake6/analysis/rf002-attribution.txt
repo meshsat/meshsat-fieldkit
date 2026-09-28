@@ -1,0 +1,61 @@
+RF-002 (inhibit_chain_<letter>): WHAT MOVED THE READINGS, THE WALK OR THE NETLISTS
+Worker retake6, MESHSAT-1357, 27 September 2026, 21:28 to 21:35 UTC, on the KiCad box under /root/retake6/attr.
+Nothing here is evidence: three of the four cells were read in scratch clones with one thing swapped and a verdict
+directory outside every tree; nothing was copied into any tree's evidence folders. No board exists.
+
+WHY IT WAS ASKED. Commit 910da406 of set 6 changed board B's circuit AND the instrument, tx_inhibit.py (the logic
+families SN74LVC2G06 and SN74LV1T08 added, J_QMX moved from OWED to ACCESSORIES, U221 declared an accessory, AO3400
+read as an N-FET). A reading that moved between main and the re-take cannot say by itself which of the two moved it,
+and a row the instrument's correction moved is not a finding a circuit change closed.
+
+THE FOUR CELLS (failed, passed, undecided of the checks; check_contracts.py run once per cell)
+                          main's netlists (6ec37197)            set 6 netlists (73ae2f21)
+  main's walk      A  FAIL          1,  6, 2 of 9        A  INCONCLUSIVE  0,  6, 3 of 9
+  (tx_inhibit.py   B  FAIL         11,  6, 3 of 20       B  FAIL         10,  4, 6 of 20
+   of 6ec37197)    C  FAIL          1,  5, 0 of 6        C  INCONCLUSIVE  0,  5, 1 of 6
+                   D  FAIL          2,  6, 0 of 8        D  INCONCLUSIVE  0,  7, 1 of 8
+                   E, P PASS of 1                        E, P PASS of 1
+                   (the tracked readings of 13:22 UTC,    (box/attribution/attribution.txt, first cell)
+                    8ea7867e)
+  set 6 walk       A  FAIL          1,  6, 2 of 9        A  INCONCLUSIVE  0,  7, 2 of 9
+  (tx_inhibit.py   B  FAIL          3, 13, 4 of 20       B  INCONCLUSIVE  0, 16, 4 of 20
+   of 73ae2f21)    C  FAIL          1,  5, 0 of 6        C  PASS          0,  6, 0 of 6
+                   D  FAIL          2,  6, 0 of 8        D  INCONCLUSIVE  0,  7, 1 of 8
+                   E, P PASS of 1                        E, P PASS of 1
+                   (box/attribution/attribution3.txt)     (the re-take's readings, 50e3b60b)
+
+READ ROW BY ROW
+  1. The asserted line TX_INHIBIT_n (its level with board C unpowered, W3T-F1): FAIL on main's netlists under either
+     walk on A, B, C and D; PASS on the set 6 netlists under either walk (box/attribution/walk-main_netlists-set6.log
+     line 64). MOVED BY THE CIRCUIT: board C's R14 at 2.2 k and R50 at 10 k, e28f91a6. The walk checks a second line,
+     EMCON_HW, which passes in the other three cells; under main's walk it reads UNDECIDED on the set 6 netlists (on A, B
+     and C, and board B's RockBLOCK and E22 rows through it): set 6 put gates of a family that walk does not know on
+     EMCON_HW (board B's U116, U216, U316, SN74LV1T08), and the set 6 walk reads them.
+  2. Board D's SA868 exciter (D key on U2): FAIL on main's netlists under either walk, UNDECIDED on the set 6
+     netlists under either walk. MOVED BY THE CIRCUIT (it failed through the line, e28f91a6); it stays undecided.
+  3. Board B, eight rows: the RM520N-GL 5G module (FAIL to UNDECIDED), the three compute modules' on-module WiFi and
+     Bluetooth (six rows, FAIL to PASS) and "every part that names a radio is a listed transmitter, an accessory or
+     a receiver" (FAIL to PASS). They move on MAIN'S netlists when the walk alone is changed (11 failed to 3).
+     MOVED BY THE INSTRUMENT (910da406's tx_inhibit.py), not by a circuit change of set 6: the parts they rest on
+     have been on board B since its round 8, and the walk did not know their family.
+  4. Board B, two rows: the AW7915-AED WiFi link cards of slots 1 and 3. FAIL on main's netlists under the set 6
+     walk, PASS on the set 6 netlists under it. MOVED BY THE CIRCUIT: each card rail's enable driven from its slot's
+     own 5 V, 910da406. (Under main's walk they still read FAIL on the set 6 netlists: that walk cannot read the new
+     gate, so the circuit change shows only with the instrument that knows it.)
+  5. Board B, RockBLOCK 9704 and E22-900M30S: PASS on main's netlists under both walks, UNDECIDED on the set 6
+     netlists under main's walk, PASS under the set 6 walk. No move between main's reading and the re-take's.
+  6. What stays undecided after the re-take, seven rows: A's power amplifier and QMX (A power on J_PA, J_HF); B's
+     LimeSDR, the two E72 modules and the RM520N-GL; D's SA868. The first six read undecided on main's netlists
+     under the set 6 walk as well; they are each transmitter's own row and no change of set 6 answers them.
+
+SO, OF THE ROWS THAT MOVED BETWEEN MAIN'S READINGS AND THE RE-TAKE'S
+  by a circuit change of set 6: the line's check on A, B, C and D (4 rows, e28f91a6), D's SA868 row (1, e28f91a6,
+    FAIL to UNDECIDED), B's two WiFi link cards (2, 910da406): 7 rows.
+  by the instrument's correction: 8 rows on board B (910da406's tx_inhibit.py).
+
+HOW THE CELLS WERE TAKEN (scripts box/retake6_attribution.sh and box/retake6_attribution3.sh, logs box/attribution/)
+  main's walk on the set 6 netlists: a clone at 73ae2f21 with tx_inhibit.py as 6ec37197 has it.
+  the set 6 walk on main's netlists: a clone at 6ec37197 with tx_inhibit.py and the six maker documents set 6 filed
+    under v2/vendor as 73ae2f21 has them. Two earlier attempts swapped main's netlists (then its schematics too)
+    into a clone at 73ae2f21; check_contracts.py refused both (a netlist whose provenance does not match the tree
+    reads MISSING, 56 contracts UNJUDGED), which is the tool's guard working (box/attribution/attribution-attempt1.txt).

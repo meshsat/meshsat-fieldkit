@@ -671,6 +671,7 @@ parts:
         sha256: "b715bce72e988310d18dbc8eb041a05b5f15e4a0b690843a873abdc373a1ad87"
         currency: "byte-identical to ti.com on 2026-09-25"
         matches_fitted: "yes: orderable table lists TUSB8041IRGCR, -40 to 85 C"
+      - {path: "v2/vendor/ti/ibis/tusb8041rgc.ibs", doc_id: "Texas Instruments SLLC445, TUSB8041 IBIS Model", revision: "file rev 1.0, 05/22/2014", url: "https://www.ti.com/lit/zip/SLLC445", served: "the address serves a zip; the model is its TUSB8041RGC.ibs", fetched: "2026-09-27T17:00Z and again 2026-09-27T20:33Z (after the first copy was lost with its worktree), and a third time 2026-09-28T16:15Z by tools/ibis_fetch.py from this manifest into a scratch folder: the same bytes every time", sha256: "925a6c7f6917401ed6252237ee8fc9c2e4106771d177832dfe5f7dabe11c2f7d", held: "NOT in the repository (the makers' models are withheld; publication is the owner's decision): pinned by v2/vendor/ibis-manifest.yaml and fetched by v2/ecad/tools/ibis_fetch.py", notice: "COPYRIGHT_NO_GRANT", matches_fitted: "yes: [Component] TUSB8041, the RGC (VQFN-64) package of the fitted TUSB8041IRGCR", cited_by: "v2/ecad/tools/pcb_edge_rates.yaml (rule SI-001)"}
 
   - id: usb3-host-mux
     function: "SuperSpeed 2:1 host select per bank (IOHA fabric)"
@@ -901,6 +902,7 @@ parts:
         sha256: "217b5dcbfdd27cec4f6013cf1f51930bf81c338ccbaf7bf8dce3fa69592bb8b3"
         currency: "newest archived capture is 2025-07-26; whether ST has published a Rev 8 since is UNCONFIRMED"
         matches_fitted: "yes: covers both the STM32H743 and the STM32H753 lines"
+      - {path: "v2/vendor/st/ibis/stm32h742_743_750_753_lqfp100.ibs", doc_id: "STMicroelectronics stm32h7_ibis.zip, ST's STM32H7 IBIS models", revision: "file rev 2.3, 06-03-2024", url: "https://www.st.com/resource/en/ibis_model/stm32h7_ibis.zip", served: "the address serves a zip; the model is its stm32h742_743_750_753_lqfp100.ibs; where the maker refuses a host: https://web.archive.org/web/20250911224858id_/https://www.st.com/resource/en/ibis_model/stm32h7_ibis.zip", fetched: "2026-09-27T17:00Z and again 2026-09-27T20:33Z (after the first copy was lost with its worktree), and a third time 2026-09-28T16:15Z by tools/ibis_fetch.py from this manifest into a scratch folder: the same bytes every time", sha256: "0fb7767c1ee034db0cd4d9c92334f4860ddb1980d3fba950c3109f0fc5bc1bc8", held: "NOT in the repository (the makers' models are withheld; publication is the owner's decision): pinned by v2/vendor/ibis-manifest.yaml and fetched by v2/ecad/tools/ibis_fetch.py", notice: "COPYRIGHT_NO_GRANT", matches_fitted: "yes: [Component] stm32h7_450_lqfp100_l covers STM32H742/743/750/753 in LQFP100, the fitted STM32H743VIT6 and the schematic's named H753 alike", cited_by: "v2/ecad/tools/pcb_edge_rates.yaml (rule SI-001)"}
     update_53a98a71:
       read_on: "2026-09-27"
       what_moved: "no pin of U41, U51 or U61 moved since 45bde541 (the committed netlist read pin by pin at e3aedb25 and byte-identical at 53a98a71: 30 pins used, 14 supplies, 56 unconnected); the round 8 candidate (fnd/r8b) changes only pin 33's net, PC5 reading EMCON_SUP. The related_defect above (I2C on PB1/PB2) was corrected at 458b2873: SCL and SDA are PB6 and PB7, I2C1 AF4 (gen_sch_b.py:1138-1139)"
@@ -954,6 +956,7 @@ parts:
         url: TBD
         sha256: "bb89f067e6a7902867bf6b82eaab762167f403ae8464a29ec4f318ab0c71628f"
         matches_fitted: "yes (family sheet TCAN330/332/334/337 and G variants; -40 C ambient minimum stated on p.1)"
+      - {path: "v2/vendor/ti/ibis/tcan33x.ibs", doc_id: "Texas Instruments SLLM313, TCAN33X IBIS Model", revision: "file rev 1.0, 06/09/2016", url: "https://www.ti.com/lit/zip/SLLM313", served: "the address serves a zip; the model is its TCAN33x_IBIS/tcan33x.ibs", fetched: "2026-09-27T17:00Z and again 2026-09-27T20:33Z (after the first copy was lost with its worktree), and a third time 2026-09-28T16:15Z by tools/ibis_fetch.py from this manifest into a scratch folder: the same bytes every time", sha256: "0e5a9429146148c11252dcea4c5dacc3386634c4cb492bd641a24a1d31fe508b", held: "NOT in the repository (the makers' models are withheld; publication is the owner's decision): pinned by v2/vendor/ibis-manifest.yaml and fetched by v2/ecad/tools/ibis_fetch.py", notice: "COPYRIGHT_NO_GRANT", matches_fitted: "the model's component is TCAN334DCN (SOT-23); the fitted TCAN334DR is the SOIC-8 D package with the same pin numbers (TI SLLSEQ7 Table 4-1)", cited_by: "v2/ecad/tools/pcb_edge_rates.yaml (rule SI-001)"}
 
   - id: rp2040
     function: "panel controller (C) and sensor controller (E)"
@@ -1988,6 +1991,7 @@ parts:
         sha256: "078364de617898af0dd4cee99931ab1d36b622824a06e8f9b7fa95087644af24"
         currency: "byte-identical to ti.com on 2026-09-26"
         matches_fitted: "yes: the device information table names SN74LVC1G57DBV, SOT-23 (6) (page 1); the function table (Table 1, page 8) with In1 low gives Y = NOR(In0, In2), the configuration of Figure 7; Schmitt inputs (8.3.1), Ioff +-10 uA at VCC 0 and II +-1 uA (6.5, page 5)"
+      - {path: "v2/vendor/ti/ibis/sn74lvc1g57.ibs", doc_id: "Texas Instruments SCEM292, SN74LVC1G57 IBIS Model (Rev. A)", revision: "file rev 1.2 | x_die, December 3, 2002", url: "https://www.ti.com/lit/ibs/SCEM292", served: "the address serves the model itself", fetched: "2026-09-27T17:00Z and again 2026-09-27T20:33Z (after the first copy was lost with its worktree), and a third time 2026-09-28T16:15Z by tools/ibis_fetch.py from this manifest into a scratch folder: the same bytes every time", sha256: "7abbc41dad6b027a0061534f7ba31dfa74e827b8d339381b1e9daf653078198d", held: "NOT in the repository (the makers' models are withheld; publication is the owner's decision): pinned by v2/vendor/ibis-manifest.yaml and fetched by v2/ecad/tools/ibis_fetch.py", notice: "PROHIBITS_DISTRIBUTION", matches_fitted: "yes: [Component] LVC1G57_DBV, the SOT-23-6 of the fitted SN74LVC1G57DBVR", cited_by: "v2/ecad/tools/pcb_edge_rates.yaml (rule SI-001)"}
 
   - id: epd-rectifiers
     function: "the three Schottky rectifiers of the e-paper boost on board C (D19, D20, D21), polarity corrected in round 4 (S-09, A03, F-IN-01)"
@@ -2337,6 +2341,7 @@ parts:
         sha256: "1264f79853e6119b66d60fe54f1f6e87995c12c00138bd820981fe68febb1063"
         currency: "byte-identical to ti.com on 2026-09-26"
         matches_fitted: "yes: packaging information lists SN74LVC1G00DBVR"
+      - {path: "v2/vendor/ti/ibis/sn74lvc1g00.ibs", doc_id: "Texas Instruments SCEM165, SN74LVC1G00 IBIS Model (Rev. A)", revision: "file rev 1.2 | d_die, April 24, 2013", url: "https://www.ti.com/lit/zip/SCEM165", served: "the address serves a zip; the model is its SN74LVC1G00_IBIS/lvc1g00.ibs", fetched: "2026-09-27T17:00Z and again 2026-09-27T20:33Z (after the first copy was lost with its worktree), and a third time 2026-09-28T16:15Z by tools/ibis_fetch.py from this manifest into a scratch folder: the same bytes every time", sha256: "e085986b1ed2969ed7312e201a68197865a8342e576793408dcd7e19ea92abb4", held: "NOT in the repository (the makers' models are withheld; publication is the owner's decision): pinned by v2/vendor/ibis-manifest.yaml and fetched by v2/ecad/tools/ibis_fetch.py", notice: "COPYRIGHT_NO_GRANT", matches_fitted: "yes: [Component] LVC1G00_DBV, the SOT-23-5 of the fitted SN74LVC1G00DBVR", cited_by: "v2/ecad/tools/pcb_edge_rates.yaml (rule SI-001)"}
     update_45bde541:
       read_on: "2026-09-26"
       what_moved: "on main since 458b2873: the 45bde541 netlists place A U30 with the code(s) this entry names. The `where` of the entry is the candidate's; main's lines follow"
@@ -2580,6 +2585,7 @@ parts:
         fetched: "2026-09-26T12:31Z, HTTP 200 application/pdf, 242741 bytes (fabric review stream; the first request without a browser user agent was refused with HTTP 403)"
         sha256: "aa449c7949d141d555967710a235c7686a6ece02468f783f8c8cf924a1fc926a"
         matches_fitted: "no: it describes the part the schematic value names, not the ordered TI part"
+      - {path: "v2/vendor/ti/ibis/sn74lvc86a.ibs", doc_id: "Texas Instruments SCEM060, SN74LVC86A IBIS Model (Rev. B)", revision: "file rev 1.2 | k_die, January 3, 2012", url: "https://www.ti.com/lit/zip/SCEM060", served: "the address serves a zip; the model is its SN74LVC86A_IBIS/sn74lvc86a.ibs", fetched: "2026-09-27T17:00Z and again 2026-09-27T20:33Z (after the first copy was lost with its worktree), and a third time 2026-09-28T16:15Z by tools/ibis_fetch.py from this manifest into a scratch folder: the same bytes every time", sha256: "0f9780c8d3fd9b898438a57c8624469e46df247ccbda073fc14db15b79a53eb8", held: "NOT in the repository (the makers' models are withheld; publication is the owner's decision): pinned by v2/vendor/ibis-manifest.yaml and fetched by v2/ecad/tools/ibis_fetch.py", notice: "COPYRIGHT_NO_GRANT", matches_fitted: "yes: [Component] LVC86A_PW, the TSSOP-14 of the fitted SN74LVC86APWR", cited_by: "v2/ecad/tools/pcb_edge_rates.yaml (rule SI-001)"}
 
   # --- added 26 September 2026 at 45bde541 (parts stream): the entries the `owed` list named, D22's zener, and the
   # --- case documents. Every where is main's generator line at 45bde541; every document re-fetched that evening.
@@ -2763,6 +2769,7 @@ parts:
         sha256: "9b5cc24c3c9e286a7132e27267f98e8b8b36f02ead2157d66df2676de3a474cb"
         currency: "byte-identical to ti.com on 2026-09-26"
         matches_fitted: "yes: package option addendum lists PCA9555PWR, Active, TSSOP (PW) 24, 2,000 per large reel, -40 to 85, marking PD9555 (and PCA9555PW, Obsolete)"
+      - {path: "v2/vendor/ti/ibis/pca9555.ibs", doc_id: "Texas Instruments SCPM035, PCA9555 IBIS Model", revision: "file rev 1.0 | x_die, March 8, 2011", url: "https://www.ti.com/lit/zip/SCPM035", served: "the address serves a zip; the model is its PCA9555/Release_TI/IBIS/PCA9555_IBIS/pca9555.ibs", fetched: "2026-09-27T17:00Z and again 2026-09-27T20:33Z (after the first copy was lost with its worktree), and a third time 2026-09-28T16:15Z by tools/ibis_fetch.py from this manifest into a scratch folder: the same bytes every time", sha256: "56c19a4da921e38cdfb67c3c24d2ea98ce63beae787de611d5e50378e497b300", held: "NOT in the repository (the makers' models are withheld; publication is the owner's decision): pinned by v2/vendor/ibis-manifest.yaml and fetched by v2/ecad/tools/ibis_fetch.py", notice: "PROHIBITS_DISTRIBUTION", matches_fitted: "yes: [Component] PCA9555_PW, the TSSOP (PW) 24 of the fitted PCA9555PWR", cited_by: "v2/ecad/tools/pcb_edge_rates.yaml (rule SI-001)"}
 
   - id: case-peli-1450
     function: "the enclosure: Peli 1450 Protector case (current moulding, customer drawing 1451-931) and the 1450PF panel frame, the documents v2/docs/CASE-MARGINS.md holds every case-dependent margin against (ruling of 7 September 2026, D-08a, the D-08 reversal)"
@@ -2902,6 +2909,7 @@ parts:
         sha256: "eefff4d412ce2dcd7e659f47238edc9b2fa02e5971f2625af730502033701834"
         currency: "ti.com's copy on 2026-09-26"
         matches_fitted: "yes: package information lists ADS111x in DGS (VSSOP, 10); Table 7-2 ADDR to GND = 1001000b; VDD 2.0 to 5.5 V"
+      - {path: "v2/vendor/ti/ibis/ads1x1x.ibs", doc_id: "Texas Instruments SBAM025, ADS1013-5, ADS1113-5 IBIS Model", revision: "file rev 1.0, 09/23/2009", url: "https://www.ti.com/lit/zip/SBAM025", served: "the address serves a zip; the model is its ads1x1x.ibs", fetched: "2026-09-27T17:00Z and again 2026-09-27T20:33Z (after the first copy was lost with its worktree), and a third time 2026-09-28T16:15Z by tools/ibis_fetch.py from this manifest into a scratch folder: the same bytes every time", sha256: "c9975d3cb6ad0161d4c41a26e18316c4d3c6fb61b839121032b1de16f68a1ac2", held: "NOT in the repository (the makers' models are withheld; publication is the owner's decision): pinned by v2/vendor/ibis-manifest.yaml and fetched by v2/ecad/tools/ibis_fetch.py", notice: "COPYRIGHT_NO_GRANT", matches_fitted: "yes: [Component] ADS1X15IDGS, the VSSOP-10 of the fitted ADS1115IDGSR", cited_by: "v2/ecad/tools/pcb_edge_rates.yaml (rule SI-001)"}
 
   - id: flange-ntc-103at2
     function: "the NTC on the power amplifier's flange, on a two-wire lead to board D's J_FLANGE (PWR-F15); the same part board P uses for its cells"
@@ -3414,6 +3422,7 @@ parts:
       - {path: "v2/vendor/diodes/diodes-74lvc1g34.pdf", doc_id: "Diodes 74LVC1G34", revision: "DS36108 Rev 10-2", sha256: "efd2d7978bb880b7e07e05dee034b87701f12b834aa8132b6f61ce3705187a98"}
       - {path: "v2/vendor/power/aos-ao3400a-n-mosfet.pdf", doc_id: "AOS AO3400A", revision: "Rev 3.1, July 2023", sha256: "9c60d0b6c1ddc7609a4b788a91181468d8ffe6c3e9ba425c3d8ffc5ba88c5033"}
       - {path: "v2/vendor/power/bourns-mf-msmf-pptc.pdf", doc_id: "Bourns MF-MSMF series", revision: "as held", sha256: "a84b990157dd1d755b5c7a413156ddf8792a3a95cff56f09a95d10754e9e49ed"}
+      - {path: "v2/vendor/ti/ibis/sn74lvc1g04.ibs", doc_id: "Texas Instruments SCEM216, SN74LVC1G04 IBIS Model (Rev. C)", revision: "file rev 1.4 | d_die, 03/05/2014", url: "https://www.ti.com/lit/zip/SCEM216", served: "the address serves a zip; the model is its SN74LVC1G04_IBIS/sn74lvc1g04.ibs", fetched: "2026-09-27T17:00Z and again 2026-09-27T20:33Z (after the first copy was lost with its worktree), and a third time 2026-09-28T16:15Z by tools/ibis_fetch.py from this manifest into a scratch folder: the same bytes every time", sha256: "03033638d7fe8bf268428be133a5aad63aae0145980113561b20ab92063e2c00", held: "NOT in the repository (the makers' models are withheld; publication is the owner's decision): pinned by v2/vendor/ibis-manifest.yaml and fetched by v2/ecad/tools/ibis_fetch.py", notice: "PROHIBITS_DISTRIBUTION", matches_fitted: "yes for SN74LVC1G04DBVR: [Component] LVC1G04_DBV", cited_by: "v2/ecad/tools/pcb_edge_rates.yaml (rule SI-001)"}
     open_items:
       - "F1 (independent check 2 of 27 September 2026, condition 1): C89647 is Bourns MF-MSMF110-2, which LCSC lists at 1.1 A, 6 V and 100 A; the held sheet's MF-MSMF110 rows are /8X, /16X, /16, /24X and /33X, not the plain part, so the 1.10 A hold and 2.20 A trip rest on the How-to-Order code and the Vmax, Imax and Thermal Derating rows (0.85, 0.77, 0.71 A at 50, 60, 70 C) are the siblings'. Closed by filing a Bourns sheet that lists the plain MF-MSMF110 or by ordering MF-MSMF110/8X-2. The siblings' table also gives 0.95 A of hold at 40 C, under board C's declared 1.0 A peak inside the sealed case, so the 'must stay a peak' contract of pcb_energy_chain.yaml B_PANEL_5V owes board C and PANEL.md a duration"
       - "Q212 (independent checks 1 and 2): the AO3400A sheet (Rev 3.1) states VGS(th) 0.65 to 1.45 V and RDS(on) 48 mOhm at VGS 2.5 V at TJ 25 C only; SD-EMC-1r8's discharge bound rests on Q212 conducting at about 3.1 V of gate drive into 15 Ohm, a large margin that no held row states over -40 to +85 C (EMCON.md section 4b, L7)"
@@ -3475,6 +3484,7 @@ parts:
         matches_fitted: "yes for the driver: the PDi flyer names CHIP-UC8253c for the E2370KS0C1; DC characteristics (page 59): VDD, VDDIO and VDDA 2.3 / 3.3 / 3.6 V; IVDD digital operating current 0.1 mA max, IVDDIO IO operating current 0.1 mA max, IVDDA DCDC operating current 20.0 mA max at VDD = VDDA = VDDIO = 3.0 V, 25 C; absolute maximum VDD, VDDIO, VDDA -0.3 to +6.0 V (page 58). The panel's own current (the boost's inductor current) is not in this sheet"
 
 owed:
+  - "28 September 2026 (stream w5si2): four makers' IBIS models read for rule SI-001 and cited by v2/ecad/tools/pcb_edge_rates.yaml have NO PART ENTRY here to carry them. What is owed for each is the part entry itself (the part as the generator names it, the order code it resolves to, its grade against the envelope), an identity audit that is the parts stream's and is not made by filing a model; the model's row follows that entry. None of the four files is in the repository: v2/vendor/ibis-manifest.yaml pins them and v2/ecad/tools/ibis_fetch.py fetches them. v2/vendor/ti/ibis/sn74lvc08a.ibs (SN74LVC08APWR, board B's voters U70 to U75 and board A's U26; Texas Instruments, SCEM010, SN74LVC08A IBIS Model (Rev. A); https://www.ti.com/lit/zip/SCEM010; sha256 adb5d455adc3a057282075c94d7454b01a37d720ac993db1d1eeea9e5eda9779; header: PROHIBITS_DISTRIBUTION); v2/vendor/ti/ibis/sn74lvc32a.ibs (SN74LVC32APWR, board B's voters U76 to U79, U84 and U85; Texas Instruments, SCEM055, SN74LVC32A IBIS Model (Rev. B); https://www.ti.com/lit/ibs/SCEM055; sha256 396e2d220f1cc59f07c11d98a9294bcf5f44cc09db4802354ff318c7b99f4499; header: PROHIBITS_DISTRIBUTION); v2/vendor/ti/ibis/ina226.ibs (INA226, board A's six rail monitors; Texas Instruments, SBOM458, INA226 IBIS Model; https://www.ti.com/lit/zip/SBOM458; sha256 fb4ebf43bde617c24a1a15d3c8ad57731e1cf5abf6ad66631f435248185396f8; header: COPYRIGHT_NO_GRANT); v2/vendor/ti/ibis/tmp117.ibs (TMP117AIDRVR, board B's temperature sensor U10; Texas Instruments, SNOM652, TMP117 IBIS Model; https://www.ti.com/lit/zip/SNOM652; sha256 5c71fbcce9e138034fbe4d3053bbb2340af30e327053e3eb092144322d862391; header: COPYRIGHT_NO_GRANT)"
   - "DONE 26 September 2026 (integration I6): sources.txt file lines for the six documents added on 25 and 26 September and for this file, a vendor-status.txt line for each, a vendor-noindex.txt line for the text-less TE drawing, and the correction of sources.txt's m2 folder line and the same sentence in README.md ('key to be read from the drawing': the drawing says key M)"
   - "the appendix entry recording that the conditional pick at appendix line 2884 resolved to its else-branch (the drawing says key M); the appendix is not a vendor file"
   - "the full ATECC608B datasheet (under NDA) for owner ruling D-03's precondition that the slot map is erasable. 26 September 2026 (stream r8docs): the maker's current SUMMARY revision B and the ZEROIZE study's public documents are filed (secure-element update_fc144600, documents_filed_fc144600); none of them settles the slot map, so this item is unchanged; the bounded development-device experiment Z-EXP-A (ZEROIZE.md) is the other route"
@@ -3557,3 +3567,91 @@ documents_filed_hc3:
     filing_note: "fetched, not redistributed, as for every standard in v2/vendor/standards/; the kit claims no conformity with it and no night-vision compatibility until the examination has passed (owner ruling D-01)"
     status: VERIFIED
     matches_fitted: "not a part document: the design target and test of the NVG mode"
+
+# ADDED 27 SEPTEMBER 2026 (MESHSAT-1357, the QMX lid tray r2, branch fnd/w5tray). Outside `parts:` on purpose, as the closers'
+# documents_filed blocks above: the QMX is a bought unit in the lid and the filaments are a made part's material, so they join no BOM line.
+documents_filed_w5tray:
+  - for_entry: null
+    role: "the QMX's enclosure, 95 x 63 x 25 mm without protrusions and 220 g with the enclosure, which the r1 tray typed from no held document (S-63)"
+    path: "v2/vendor/qrp-labs/qmx-product-page-2026-09-27.txt"
+    doc_id: "QRP Labs, QMX product page (Created 19 May 2023, Last Updated 24 September 2026), text extraction"
+    url: "https://qrp-labs.com/qmx.html"
+    fetched: "2026-09-27T16:38Z, curl from the runner, HTTP 200, 105306 bytes, HTML sha256 377a906c03afe46a (lost with the first worktree); again 2026-09-27T20:53:04Z, HTML sha256 7da9d31b052540e1, whose text differs in the page's hit counter only and gives this file byte for byte with that line set back"
+    sha256: "ea72e0782d8ef82286f6ca8f32d8ee4f8faa489253b31e50b89663585b9c7bbf"
+    status: VERIFIED
+    matches_fitted: "the unit as bought (the optional enclosure); the jack places are not stated here"
+  - for_entry: null
+    role: "the enclosure's size (page 3), its parts (page 21: left and right panels, eight M2.5 screws, four optional rubber feet, two 15 mm knobs), the countersunk panel screws and the knobs' fitting (pages 76 and 77) and photographs 13 and 15 of the sibling QCX-mini in the same enclosure family (what stands proud of the unit, INFERRED)"
+    path: "v2/vendor/qrp-labs/qmx-assembly-1_04r-pages-1-3-20-21-75-78.pdf"
+    doc_id: "QRP Labs, QMX assembly Rev 1.04r (PCB Rev 4/5), pages 1-3, 20-21 and 75-78, a page subset"
+    url: "https://qrp-labs.com/images/qmx/manuals/assembly_1_04r.pdf"
+    fetched: "2026-09-27T20:53:05Z, curl from the runner, HTTP 200, 16261051 bytes, sha256 55c08baaf6ca5fb23aa7bd131fb6200374536bf6ae0ac5759f31d742be282a2b (the same at the first fetch of 16:40:30Z); the subset made with Ghostscript 10.00.0 pdfwrite, which writes its run time into the file"
+    sha256: "ece9bed53713d5fa98c09c35a471f822033678061f7d076763924eb000631056"
+    status: VERIFIED
+    matches_fitted: "PCB Rev 4/5; the enclosure is the same family on every revision"
+  - for_entry: null
+    role: "the maker's photograph of the right panel face on, which cross-checks the scaled panel figure (the RF jack 8.3 mm from the knob edge against the figure's 12.1)"
+    path: "v2/vendor/qrp-labs/qmx-product-photo-qmx4-right-panel.jpg"
+    doc_id: "QRP Labs, QMX product photograph qmx4.jpg"
+    url: "https://qrp-labs.com/images/qmx/1/qmx4.jpg"
+    fetched: "2026-09-27T20:53:05Z, curl from the runner, HTTP 200, 192643 bytes (the same bytes as the first fetch of 16:44Z)"
+    sha256: "4eab70ca5c51f1d3304549d8c9396380280d72758b270218ae3d553de9a3a946"
+    status: VERIFIED
+    matches_fitted: "an early unit's panel; the tray takes both the figure's and the photograph's places"
+  - for_entry: null
+    role: "the r2 tray's and frame's material: heat deflection 113 C at 0.45 MPa and 93 C at 1.80 MPa, interlayer adhesion 21 +-2 MPa, printed-specimen strengths"
+    path: "v2/vendor/materials/prusament-pc-blend-tds-v1.1-2022-02-16.pdf"
+    doc_id: "Prusa Polymers, Prusament PC Blend technical datasheet"
+    revision: "Version 1.1, last update 16-02-2022"
+    url: "https://prusament.com/wp-content/uploads/2022/10/PCBlend_Prusament_TDS_2022_16_EN.pdf"
+    fetched: "2026-09-27T20:53:06Z, curl from the runner, HTTP 200, 1601329 bytes (the same bytes as the first fetch of 16:55:56Z)"
+    sha256: "25f7aa7b99cc24e5b7d75fbbfd5fa949a3e5689b7201c6b34a9cb588d7c040c7"
+    status: VERIFIED
+    matches_fitted: "the material the r2 drawing names; typical values of the maker's own specimens"
+  - for_entry: null
+    role: "the r1 tray's PETG: heat deflection 68 C at 0.45 MPa, under TEST-PLAN E3-S's +71 C (why r2 is PC Blend)"
+    path: "v2/vendor/materials/prusament-petg-tds-v1.1-2022-02-16.pdf"
+    doc_id: "Prusa Polymers, Prusament PETG technical datasheet"
+    revision: "Version 1.1, last update 16-02-2022"
+    url: "https://prusament.com/wp-content/uploads/2022/10/PETG_Prusament_TDS_2021_10_EN.pdf"
+    fetched: "2026-09-27T20:53:06Z, curl from the runner, HTTP 200, 1646301 bytes (the same bytes as the first fetch of 16:55:37Z)"
+    sha256: "0159322f3d14300fe1b3a27a7e1233d87b6d7905ccb738f9f5a5bba88bb2e50d"
+    status: VERIFIED
+    matches_fitted: "not fitted: the superseded r1 tray's material"
+  - for_entry: null
+    role: "TEST-PLAN E2's level: the composite wheeled vehicle schedule, 2.24 g rms in the envelope for an unknown orientation, drive limited to 3 sigma, 40 minutes an axis (the r2 record's section D)"
+    path: "v2/vendor/standards/mil-std-810h-method-514-8.md"
+    doc_id: "MIL-STD-810H, Method 514.8 Vibration, Annex C paragraph 2.1.3 b (2); a TRANSCRIPTION of the lines cited (pages 514.8C-11 to 514.8C-13)"
+    url: "https://cvgstrategy.com/wp-content/uploads/2019/08/MIL-STD-810H-Method-514.8-Vibration.pdf (a copy of the ASSIST download of 2019-03-04)"
+    fetched: "2026-09-27T21:13:01Z, curl from the runner, HTTP 200, 3564432 bytes; sha256 of the file read cc8ec677d3b06eaab5c24244f10ee8acf52dba950ab25c645deeb99c9b177650"
+    sha256: "2b63b2122fc00f8dae5a29aa2338a588ff4715f6156d99cc539a07196b024b00"
+    status: VERIFIED
+    matches_fitted: "a test level, not a part; whether Change Notice 1 altered these lines was not checked"
+
+# ADDED 28 SEPTEMBER 2026 (MESHSAT-1357, the review of decision 31, worktree fnd/d8dec31). Outside `parts:` because no
+# parts entry names the fitted codes yet (C534330, board E's Q1, Q4 and Q6; C3685740, board A's U34): those entries are
+# the parts stream's and are owed. Part documents, read for the review's ledger (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md
+# section 8) and filed so the ledger's rows can be reproduced.
+documents_filed_d8dec31:
+  - for_entry: null
+    role: "the ratings of board E's Q1, the N-FET the LM74700-Q1 ideal-diode controller U3 drives on the vehicle entry (also Q4 and Q6 of the panel tracker), read for finding E-F1 of the review of decision 31: VDS 60 V, 100 percent avalanche tested, EAS 50 mJ; session filing of 27 September 2026 under the owner's standing rule"
+    path: "v2/vendor/infineon/infineon-bsc039n06ns-rev2.4-c534330.pdf"
+    doc_id: "Infineon BSC039N06NS OptiMOS 5 Power-Transistor, 60 V, Final Data Sheet"
+    revision: "Rev.2.4, 2020-02-03 (13 pages, with a text layer; Infineon's own site serves a scan with no text layer)"
+    url: "https://datasheet.lcsc.com/datasheet/pdf/8e4886fa29da7cb0f19c73d556cca14b.pdf?productCode=C534330 (LCSC's copy of the maker's sheet, the pdfUrl of LCSC's product record for C534330; infineon.com was not tried by name because its file ids are not guessable)"
+    fetched: "2026-09-27T21:49:31Z, curl from the runner, 1,344,705 bytes, 13 pages"
+    sha256_of_the_file_read: "8d95c1da9c78b3afb037e1f80c3bea1ed0f874f689e3a0c96d926dafe6a437b9"
+    filing_note: "the fitted code C534330 is gen_sch_e.py's for Q1, Q4 and Q6 (value text 'BSC039N06NS 60 V ...'); whether LCSC's C534330 is this exact part and package (PG-TDSON-8) is the parts stream's condition 1 check, not done here"
+    status: VERIFIED
+    matches_fitted: "the value text names the part; the code's match to the part and package is not certified here"
+  - for_entry: null
+    role: "the absolute maximum ratings of board A's U34 (TPS37A010122DSKR, the front end's 65 V over- and under-voltage supervisor on VIN_RAW), read for the ledger of the review of decision 31: VDD, VSENSE, VRESET -0.3 to 70 V (7.1, p.6); session filing of 27 September 2026 under the owner's standing rule"
+    path: "v2/vendor/ti/ti-tps37-snvsbj1e.pdf"
+    doc_id: "TI TPS37 Wide VIN 65 V Dual Channel Overvoltage and Undervoltage (OV and UV) Detector with Programmable Sense and Reset Delay Function, datasheet"
+    revision: "SNVSBJ1E, October 2020, revised August 2023 (Rev. E, 44 pages)"
+    url: "https://www.ti.com/lit/ds/symlink/tps37.pdf"
+    fetched: "2026-09-27T21:49:20Z, curl from the runner, 3,124,179 bytes, 44 pages; the same bytes gen_sch_a.py:754 cites by sha256 d6aed9d9 from stream r4a's draft copy"
+    sha256_of_the_file_read: "d6aed9d98fbf7f16f4dea2d6edf7c889e5fd3fa862f4072da656fb3fe7cef545"
+    filing_note: "the fitted code C3685740 is gen_sch_a.py's for U34 (line 798); the code's match to the -DSKR suffix and the WSON-10 package is the parts stream's condition 1 check, not done here"
+    status: VERIFIED
+    matches_fitted: "the value text names the part; the code's match to the part and package is not certified here"

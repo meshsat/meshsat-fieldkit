@@ -1,0 +1,238 @@
+=== J_54V [54 V to the PoE injector on B16 (JST-VH): + -] fp=Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical LCSC=C274411
+    pin 1   +54V_POE               (10) C176.1, C177.1, C83.1, C84.1, C85.1, R167.1, R66.1, R71.2, U16.12, U17.9
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_5V_DEV [USB device rail to B16 (JST-VH): + -] fp=Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical LCSC=C274411
+    pin 1   +5V_DEV                (19) C103.1, C155.1, C167.1, C168.1, C169.1, C49.1, C50.1, C51.1, R100.1, R183.1, R188.1, R40.1, R43.2, U11.8, U11.9, U18.17, U23.4, U32.4, U7.12
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_5V_S1 [slot 1 5.1 V rail to B16 (JST-VH, 16 AWG): + -] fp=Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical LCSC=C274411
+    pin 1   +5V_S1                 (7) C31.1, C32.1, C33.1, R28.1, R31.2, U8.8, U8.9
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_5V_S2 [slot 2 5.1 V rail to B16 (JST-VH, 16 AWG): + -] fp=Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical LCSC=C274411
+    pin 1   +5V_S2                 (12) C164.1, C165.1, C166.1, C37.1, C38.1, C39.1, R176.1, R32.1, R35.2, U5.12, U9.8, U9.9
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_5V_S3 [slot 3 5.1 V rail to B16 (JST-VH, 16 AWG): + -] fp=Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical LCSC=C274411
+    pin 1   +5V_S3                 (7) C43.1, C44.1, C45.1, R36.1, R39.2, U10.8, U10.9
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_AB1 [A-B interconnect (IDC 2x13, top side) to B16's underside header] fp=meshsat:IDC-Header_2x13_P2.54mm_Vertical_NarrowPad LCSC=
+    pin 1   USB_D8_P               (1) J_MEZZ1.1
+    pin 2   USB_D8_N               (1) J_MEZZ1.2
+    pin 3   GND                    (ground, 434 other nodes)
+    pin 4   GND                    (ground, 434 other nodes)
+    pin 5   GND                    (ground, 434 other nodes)
+    pin 6   GND                    (ground, 434 other nodes)
+    pin 7   GND                    (ground, 434 other nodes)
+    pin 8   GND                    (ground, 434 other nodes)
+    pin 9   PI_SHDN_REQ            (2) R3.1, U1.5
+    pin 10  PI_KILL                (2) Q1.1, R5.1
+    pin 11  SDA                    (12) J_MEZZ1.10, TP17.1, U10.4, U11.4, U14.2, U14.4, U17.4, U27.23, U28.23, U3.12, U8.4, U9.4
+    pin 12  SCL                    (12) J_MEZZ1.11, TP18.1, U10.5, U11.5, U14.5, U17.2, U17.5, U27.22, U28.22, U3.13, U8.5, U9.5
+    pin 13  EXP_INT                (4) J_MEZZ1.12, R110.1, U27.1, U28.1
+    pin 14  TR_APRS                (3) J_MEZZ1.7, R116.1, U30.1
+    pin 15  EMCON_HW               (4) R102.1, TP15.1, U35.2, U37.2
+    pin 16  TX_INHIBIT_n           (4) J_MEZZ1.8, R145.1, U35.1, U37.1
+    pin 17  SLOT_EN1               (2) R30.1, U4.3
+    pin 18  SLOT_EN2               (2) R34.1, U5.1
+    pin 19  SLOT_EN3               (2) R38.1, U6.3
+    pin 20  ZEROIZE_HW             (2) J_MEZZ1.15, R117.1
+    pin 21  SHORE_INHIBIT          (2) J_DOCK.8, R118.1
+    pin 22  GND                    (ground, 434 other nodes)
+    pin 23  GND                    (ground, 434 other nodes)
+    pin 24  GND                    (ground, 434 other nodes)
+    pin 25  USB_E6_P               (1) J_DOCK.9
+    pin 26  USB_E6_N               (1) J_DOCK.10
+=== J_AB2 [A-B wall-port ribbon (IDC 2x5): the wall USB pair on the END row with eight grounds behind it] fp=meshsat:IDC-Header_2x05_P2.54mm_Vertical_NarrowPad LCSC=
+    pin 1   USB_WALL_P             (3) J_USBW.3, U29.1, U29.6
+    pin 2   USB_WALL_N             (3) J_USBW.2, U29.3, U29.4
+    pin 3   GND                    (ground, 435 other nodes)
+    pin 4   GND                    (ground, 435 other nodes)
+    pin 5   GND                    (ground, 435 other nodes)
+    pin 6   GND                    (ground, 435 other nodes)
+    pin 7   GND                    (ground, 435 other nodes)
+    pin 8   GND                    (ground, 435 other nodes)
+    pin 9   GND                    (ground, 435 other nodes)
+    pin 10  GND                    (ground, 435 other nodes)
+=== J_BM1 [SMP-MAX slide-on receptacle R222M00720 (underside), VHF to the dock plug] fp=meshsat:Radiall_SMPMAX_R222M00720 LCSC=
+    pin 1   RF_VHF                 (1) J_RF1.1
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_BM10 [SMP-MAX slide-on receptacle R222M00720 (underside), IRID to the dock plug] fp=meshsat:Radiall_SMPMAX_R222M00720 LCSC=
+    pin 1   RF_IRIDIUM             (1) J_RF10.1
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_BM11 [SMP-MAX slide-on receptacle R222M00720 (underside), LORA to the dock plug] fp=meshsat:Radiall_SMPMAX_R222M00720 LCSC=
+    pin 1   RF_LORA                (1) J_RF11.1
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_BM2 [SMP-MAX slide-on receptacle R222M00720 (underside), HF to the dock plug] fp=meshsat:Radiall_SMPMAX_R222M00720 LCSC=
+    pin 1   RF_HF                  (1) J_RF2.1
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_BM3 [SMP-MAX slide-on receptacle R222M00720 (underside), WIFI24 to the dock plug] fp=meshsat:Radiall_SMPMAX_R222M00720 LCSC=
+    pin 1   RF_WIFI24              (1) J_RF3.1
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_BM4 [SMP-MAX slide-on receptacle R222M00720 (underside), GNSS to the dock plug] fp=meshsat:Radiall_SMPMAX_R222M00720 LCSC=
+    pin 1   RF_GNSS                (1) J_RF4.1
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_BM5 [SMP-MAX slide-on receptacle R222M00720 (underside), SDR to the dock plug] fp=meshsat:Radiall_SMPMAX_R222M00720 LCSC=
+    pin 1   RF_SDR                 (1) J_RF5.1
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_BM6 [SMP-MAX slide-on receptacle R222M00720 (underside), P2P-A to the dock plug] fp=meshsat:Radiall_SMPMAX_R222M00720 LCSC=
+    pin 1   RF_P2PA                (1) J_RF6.1
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_BM7 [SMP-MAX slide-on receptacle R222M00720 (underside), P2P-B to the dock plug] fp=meshsat:Radiall_SMPMAX_R222M00720 LCSC=
+    pin 1   RF_P2PB                (1) J_RF7.1
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_BM8 [SMP-MAX slide-on receptacle R222M00720 (underside), 5G-MAIN to the dock plug] fp=meshsat:Radiall_SMPMAX_R222M00720 LCSC=
+    pin 1   RF_5G1                 (1) J_RF8.1
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_BM9 [SMP-MAX slide-on receptacle R222M00720 (underside), 5G-DIV to the dock plug] fp=meshsat:Radiall_SMPMAX_R222M00720 LCSC=
+    pin 1   RF_5G2                 (1) J_RF9.1
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_CN1 [9 A spring pin, pack return (Mill-Max 0858 class, dock block)] fp=meshsat:Mill-Max_0858_power_pin LCSC=
+    pin 1   GND                    (ground, 442 other nodes)
+=== J_CN2 [9 A spring pin, pack return (Mill-Max 0858 class, dock block)] fp=meshsat:Mill-Max_0858_power_pin LCSC=
+    pin 1   GND                    (ground, 442 other nodes)
+=== J_CN3 [9 A spring pin, pack return (Mill-Max 0858 class, dock block)] fp=meshsat:Mill-Max_0858_power_pin LCSC=
+    pin 1   GND                    (ground, 442 other nodes)
+=== J_CN4 [9 A spring pin, pack return (Mill-Max 0858 class, dock block)] fp=meshsat:Mill-Max_0858_power_pin LCSC=
+    pin 1   GND                    (ground, 442 other nodes)
+=== J_CP1 [9 A spring pin, CELL+ (Mill-Max 0858 class, dock block)] fp=meshsat:Mill-Max_0858_power_pin LCSC=
+    pin 1   CELL+                  (6) F1.1, J_CP2.1, J_CP3.1, J_CP4.1, R1.2, TP14.1
+=== J_CP2 [9 A spring pin, CELL+ (Mill-Max 0858 class, dock block)] fp=meshsat:Mill-Max_0858_power_pin LCSC=
+    pin 1   CELL+                  (6) F1.1, J_CP1.1, J_CP3.1, J_CP4.1, R1.2, TP14.1
+=== J_CP3 [9 A spring pin, CELL+ (Mill-Max 0858 class, dock block)] fp=meshsat:Mill-Max_0858_power_pin LCSC=
+    pin 1   CELL+                  (6) F1.1, J_CP1.1, J_CP2.1, J_CP4.1, R1.2, TP14.1
+=== J_CP4 [9 A spring pin, CELL+ (Mill-Max 0858 class, dock block)] fp=meshsat:Mill-Max_0858_power_pin LCSC=
+    pin 1   CELL+                  (6) F1.1, J_CP1.1, J_CP2.1, J_CP3.1, R1.2, TP14.1
+=== J_DOCK [spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 HOT-R1 hot stop line from E's open drain, pulled up by R216 (SC-50; VIN_RAW crosses on J_VR1-4 since EQ-16)] fp=meshsat:PogoPins_2x6 LCSC=
+    pin 1   GND                    (ground, 435 other nodes)
+    pin 2   GND                    (ground, 435 other nodes)
+    pin 3   GND                    (ground, 435 other nodes)
+    pin 4   GND                    (ground, 435 other nodes)
+    pin 5   GND                    (ground, 435 other nodes)
+    pin 6   GND                    (ground, 435 other nodes)
+    pin 7   GND                    (ground, 435 other nodes)
+    pin 8   SHORE_INHIBIT          (2) J_AB1.21, R118.1
+    pin 9   USB_E6_P               (1) J_AB1.25
+    pin 10  USB_E6_N               (1) J_AB1.26
+    pin 11  GND                    (ground, 435 other nodes)
+    pin 12  DOCK_SPARE             (3) R216.1, TP21.1, U27.18
+=== J_HEAT [JST-XH 1x2 socket: the pack heater mat (12 V, 7.5 W), fed a regulated 12.0 V: + and -] fp=Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical LCSC=C158012
+    pin 1   VHEAT                  (4) C161.1, C162.1, L12.2, R191.1
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_HF [12.0 V to the QMX HF unit in its lid tray (JST-VH, in the lid harness): + -] fp=Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical LCSC=C274411
+    pin 1   +12V_HF                (11) C109.1, C110.1, C111.1, C172.1, C173.1, C196.1, R165.1, R60.1, R65.2, U15.12, U15.24
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_MAINSW [JST-XH 1x2 socket: the MAIN button lead from the panel, PB and GND] fp=Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical LCSC=C158012
+    pin 1   MAIN_PB                (1) U1.2
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_MEZZ1 [D8 mezzanine harness (IDC 2x8): its USB pair, the PTT mirror, the inhibit, the PA rail state, I2C] fp=meshsat:IDC-Header_2x08_P2.54mm_Vertical_NarrowPad LCSC=
+    pin 1   USB_D8_P               (1) J_AB1.1
+    pin 2   USB_D8_N               (1) J_AB1.2
+    pin 3   GND                    (ground, 438 other nodes)
+    pin 4   GND                    (ground, 438 other nodes)
+    pin 5   GND                    (ground, 438 other nodes)
+    pin 6   GND                    (ground, 438 other nodes)
+    pin 7   TR_APRS                (3) J_AB1.14, R116.1, U30.1
+    pin 8   TX_INHIBIT_n           (4) J_AB1.16, R145.1, U35.1, U37.1
+    pin 9   PA_EN                  (3) R58.1, U30.2, U36.4
+    pin 10  SDA                    (12) J_AB1.11, TP17.1, U10.4, U11.4, U14.2, U14.4, U17.4, U27.23, U28.23, U3.12, U8.4, U9.4
+    pin 11  SCL                    (12) J_AB1.12, TP18.1, U10.5, U11.5, U14.5, U17.2, U17.5, U27.22, U28.22, U3.13, U8.5, U9.5
+    pin 12  EXP_INT                (4) J_AB1.13, R110.1, U27.1, U28.1
+    pin 13  +3V3                   (55) C104.1, C106.1, C107.1, C153.1, C225.1, C226.1, C55.1, C56.1, D3.1, L7.2, R110.2, R117.2, R123.2, R128.2, R13.2, R142.2, R171.2, R178.2, R187.2, R210.2, R211.1, R216.2, R22.2, R23.2, R3.2, R4.2, R42.2, R44.2, R48.1, R57.2, R73.2, R91.2, R95.2, R99.2, TP11.1, U10.1, U10.6, U11.1, U11.2, U11.6 ...
+    pin 14  GND                    (ground, 438 other nodes)
+    pin 15  ZEROIZE_HW             (2) J_AB1.20, R117.1
+    pin 16  AB_SPARE               (1) TP27.1
+=== J_MEZZ_PWR1 [D8 mezzanine 5 V (JST-VH): + -] fp=Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical LCSC=C274411
+    pin 1   +5V_D8                 (1) U23.5
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_MON [monitor supply lead to the Xenarc (JST-VH): + -] fp=Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical LCSC=C274411
+    pin 1   VMON                   (1) U21.5
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_PA [13.8 V to the PA module on the face plate (JST-VH, 16 AWG): + -] fp=Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical LCSC=C274411
+    pin 1   +13V8_PA               (13) C170.1, C171.1, C195.1, C65.1, C66.1, C67.1, R163.1, R50.1, R55.2, U13.12, U13.24, U14.8, U14.9
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_PRE1 [pre-charge pin, longer, mates first (32.24 AX)] fp=meshsat:Mill-Max_0858_power_pin LCSC=
+    pin 1   PRECHG                 (1) R1.1
+=== J_RF1 [SMA jack, Amphenol 132134-11 vertical (pigtail to the VHF device)] fp=Connector_Coaxial:SMA_Amphenol_132134-11_Vertical LCSC=C3174425
+    pin 1   RF_VHF                 (1) J_BM1.1
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_RF10 [SMA jack, Amphenol 132134-11 vertical (pigtail to the IRID device)] fp=Connector_Coaxial:SMA_Amphenol_132134-11_Vertical LCSC=C3174425
+    pin 1   RF_IRIDIUM             (1) J_BM10.1
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_RF11 [SMA jack, Amphenol 132134-11 vertical (pigtail to the LORA device)] fp=Connector_Coaxial:SMA_Amphenol_132134-11_Vertical LCSC=C3174425
+    pin 1   RF_LORA                (1) J_BM11.1
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_RF2 [SMA jack, Amphenol 132134-11 vertical (pigtail to the HF device)] fp=Connector_Coaxial:SMA_Amphenol_132134-11_Vertical LCSC=C3174425
+    pin 1   RF_HF                  (1) J_BM2.1
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_RF3 [SMA jack, Amphenol 132134-11 vertical (pigtail to the WIFI24 device)] fp=Connector_Coaxial:SMA_Amphenol_132134-11_Vertical LCSC=C3174425
+    pin 1   RF_WIFI24              (1) J_BM3.1
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_RF4 [SMA jack, Amphenol 132134-11 vertical (pigtail to the GNSS device)] fp=Connector_Coaxial:SMA_Amphenol_132134-11_Vertical LCSC=C3174425
+    pin 1   RF_GNSS                (1) J_BM4.1
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_RF5 [SMA jack, Amphenol 132134-11 vertical (pigtail to the SDR device)] fp=Connector_Coaxial:SMA_Amphenol_132134-11_Vertical LCSC=C3174425
+    pin 1   RF_SDR                 (1) J_BM5.1
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_RF6 [SMA jack, Amphenol 132134-11 vertical (pigtail to the P2P-A device)] fp=Connector_Coaxial:SMA_Amphenol_132134-11_Vertical LCSC=C3174425
+    pin 1   RF_P2PA                (1) J_BM6.1
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_RF7 [SMA jack, Amphenol 132134-11 vertical (pigtail to the P2P-B device)] fp=Connector_Coaxial:SMA_Amphenol_132134-11_Vertical LCSC=C3174425
+    pin 1   RF_P2PB                (1) J_BM7.1
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_RF8 [SMA jack, Amphenol 132134-11 vertical (pigtail to the 5G-MAIN device)] fp=Connector_Coaxial:SMA_Amphenol_132134-11_Vertical LCSC=C3174425
+    pin 1   RF_5G1                 (1) J_BM8.1
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_RF9 [SMA jack, Amphenol 132134-11 vertical (pigtail to the 5G-DIV device)] fp=Connector_Coaxial:SMA_Amphenol_132134-11_Vertical LCSC=C3174425
+    pin 1   RF_5G2                 (1) J_BM9.1
+    pin 2   GND                    (ground, 442 other nodes)
+=== J_USBC_OUT [wall USB-C outlet, power only (pigtail header): VBUS CC1 CC2 GND GND] fp=Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical LCSC=
+    pin 1   PD_VBUS                (5) C120.1, D4.1, R138.2, R139.2, U18.21
+    pin 2   PD_CC1                 (3) C96.1, U18.2, U31.1
+    pin 3   PD_CC2                 (3) C97.1, U18.3, U31.2
+    pin 4   GND                    (ground, 441 other nodes)
+    pin 5   GND                    (ground, 441 other nodes)
+=== J_USBW [JST-PH 1x4 socket: the Glenair 233-370 USB host feed-through lead (VBUS D- D+ GND), B16 bank 3 hub port 3] fp=Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical LCSC=C131334
+    pin 1   VBUS_WALL              (3) C156.1, U29.5, U32.5
+    pin 2   USB_WALL_N             (3) J_AB2.2, U29.3, U29.4
+    pin 3   USB_WALL_P             (3) J_AB2.1, U29.1, U29.6
+    pin 4   GND                    (ground, 442 other nodes)
+=== J_VN1 [9 A spring pin, VIN_RAW return (Mill-Max 0858 class, dock block; EQ-16)] fp=meshsat:Mill-Max_0858_power_pin LCSC=
+    pin 1   GND                    (ground, 442 other nodes)
+=== J_VN2 [9 A spring pin, VIN_RAW return (Mill-Max 0858 class, dock block; EQ-16)] fp=meshsat:Mill-Max_0858_power_pin LCSC=
+    pin 1   GND                    (ground, 442 other nodes)
+=== J_VN3 [9 A spring pin, VIN_RAW return (Mill-Max 0858 class, dock block; EQ-16)] fp=meshsat:Mill-Max_0858_power_pin LCSC=
+    pin 1   GND                    (ground, 442 other nodes)
+=== J_VN4 [9 A spring pin, VIN_RAW return (Mill-Max 0858 class, dock block; EQ-16)] fp=meshsat:Mill-Max_0858_power_pin LCSC=
+    pin 1   GND                    (ground, 442 other nodes)
+=== J_VR1 [9 A spring pin, VIN_RAW (Mill-Max 0858 class, dock block; EQ-16)] fp=meshsat:Mill-Max_0858_power_pin LCSC=
+    pin 1   VIN_RAW                (13) C11.1, C12.1, D19.2, D2.1, J_VR2.1, J_VR3.1, J_VR4.1, Q2.5, R14.1, R195.1, R196.1, R200.1, TP13.1
+=== J_VR2 [9 A spring pin, VIN_RAW (Mill-Max 0858 class, dock block; EQ-16)] fp=meshsat:Mill-Max_0858_power_pin LCSC=
+    pin 1   VIN_RAW                (13) C11.1, C12.1, D19.2, D2.1, J_VR1.1, J_VR3.1, J_VR4.1, Q2.5, R14.1, R195.1, R196.1, R200.1, TP13.1
+=== J_VR3 [9 A spring pin, VIN_RAW (Mill-Max 0858 class, dock block; EQ-16)] fp=meshsat:Mill-Max_0858_power_pin LCSC=
+    pin 1   VIN_RAW                (13) C11.1, C12.1, D19.2, D2.1, J_VR1.1, J_VR2.1, J_VR4.1, Q2.5, R14.1, R195.1, R196.1, R200.1, TP13.1
+=== J_VR4 [9 A spring pin, VIN_RAW (Mill-Max 0858 class, dock block; EQ-16)] fp=meshsat:Mill-Max_0858_power_pin LCSC=
+    pin 1   VIN_RAW                (13) C11.1, C12.1, D19.2, D2.1, J_VR1.1, J_VR2.1, J_VR3.1, Q2.5, R14.1, R195.1, R196.1, R200.1, TP13.1
+=== test points
+    TP10   pin 1 GND                    [GND]
+    TP11   pin 1 +3V3                   [+3V3]
+    TP12   pin 1 VBUS20                 [VBUS20]
+    TP13   pin 1 VIN_RAW                [VIN_RAW]
+    TP14   pin 1 CELL+                  [CELL+]
+    TP15   pin 1 EMCON_HW               [EMCON_HW]
+    TP16   pin 1 RAIL_EN                [RAIL_EN]
+    TP17   pin 1 SDA                    [SDA]
+    TP18   pin 1 SCL                    [SCL]
+    TP19   pin 1 IADPT                  [IADPT]
+    TP20   pin 1 IBAT                   [IBAT]
+    TP21   pin 1 DOCK_SPARE             [DOCK_SPARE]
+    TP22   pin 1 REGN                   [REGN]
+    TP23   pin 1 USBX_EN                [USBX_EN]
+    TP24   pin 1 USBX_FLT               [USBX_FLT]
+    TP25   pin 1 EXP2_SPC               [EXP2_SPC]
+    TP26   pin 1 EXP2_SPD               [EXP2_SPD]
+    TP27   pin 1 AB_SPARE               [AB_SPARE]
+    TP3    pin 1 EMCON_EF_FLT           [EMCON_EF_FLT]
+    TP4    pin 1 EXP2_SP4               [EXP2_SP4]
+    TP5    pin 1 EXP2_SP5               [EXP2_SP5]
+    TP6    pin 1 EXP2_SP6               [EXP2_SP6]
+    TP7    pin 1 EXP2_SP7               [EXP2_SP7]
+    TP8    pin 1 EXP2_SP8               [EXP2_SP8]
+    TP9    pin 1 VBAT                   [VBAT]

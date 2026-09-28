@@ -1,0 +1,291 @@
+# THE MAKERS' IBIS MODELS THIS PROJECT READS, AND WHERE EACH COMES FROM (rule SI-001, tools/pcb_edge_rates.yaml)
+#
+# Written 28 September 2026 (MESHSAT-1357, layer 9, stream w5si2). Prototype design work: nothing has been built or
+# measured.
+#
+# THE MODELS ARE NOT IN THIS REPOSITORY. They are the makers' files. Five of the thirteen say in their own header that
+# reproduction and distribution are forbidden without the maker's written permission; the other eight carry a
+# copyright line and no grant (each row's `notice` quotes the words and the lines they stand on). This repository is
+# mirrored publicly within minutes of a push, so committing a model would publish it. Whether any of them is published
+# is the owner's decision; the standing decision is to hold them back (v2/docs/EXECUTION-PLAN.md). `.gitignore`
+# ignores `v2/vendor/*/ibis/*.ibs`. NEVER `git add -f` a model.
+#
+# THIS FILE IS WHAT IS TRACKED IN THEIR PLACE, and it is a CONFIGURATION INPUT of the edge_length verdict: it is
+# recorded by sha in every SI-001 reading (inputs.ibis_manifest) and declared in rules_status.CONFIG_INPUTS, so it is
+# dated by its commit like any other input. It PINS each model by the sha256 of the extracted `.ibs` file:
+#   * tools/edge_length.py reads a model only when the file present is the one pinned here (the full sha256), and the
+#     record of tools/pcb_edge_rates.yaml that cites the model must cite the same file (its sha256/16);
+#   * a model that is ABSENT decides nothing: every net that waits on it reads UNDECIDED naming the file, the reading
+#     is INCONCLUSIVE, and it records which models were absent (inputs.model_N, `absent: true`) and the state of the
+#     set (inputs.model_state: PRESENT, PARTIAL, ABSENT or NOT_ASKED);
+#   * rules_status holds a reading to this file: a model the reading read must be the one pinned here, a model present
+#     in the checkout must be the one pinned here, and a reading taken without a model that is present now is re-taken.
+#     A model that is absent from the checkout never makes a reading taken WITH it read as changed: the pin is what
+#     dates it (rules_status.PINNED_INPUTS, applied by v2/docs/records/w5si/apply/apply_rules_status_pinned_models.py).
+#
+# HOW TO GET THE MODELS: `python3 v2/ecad/tools/ibis_fetch.py --fetch` from anywhere. It downloads each file from the
+# maker's own address below, takes the `.ibs` out of the zip where the address is a zip (`container: zip`, `member`
+# the path inside it), verifies the sha256 and the byte count, and writes it to `file`. It never overwrites a file
+# that differs from its pin without --replace, and it is never run by a test or by a gate. `--check` fetches nothing
+# and says which state the tree is in. A maker's site may refuse a host (st.com refused this project's runner on 27 September 2026): the script
+# then tries the Internet Archive, first the capture a row names (`archive_url`), then the newest capture of the
+# maker's address (https://web.archive.org/web/2026id_/<url>); the archive may serve a file gzip-wrapped, which the
+# script unwraps. Whoever fetches a model does so under the maker's terms, which the file itself states.
+# PROVEN ONCE, 28 September 2026 16:15 UTC: the script fetched all thirteen from the makers' own addresses into a
+# scratch folder and every sha256 and byte count was the one pinned here
+# (v2/docs/records/w5si2/readings/ibis-fetch-scratch-2026-09-28.txt).
+#
+# FIELDS: id; maker; part (what the model covers); file (where edge_length.py reads it, relative to the repository);
+# literature (the maker's literature number and title); url (the maker's address); container (ibs: the address serves
+# the model itself; zip: it serves an archive and `member` is the model's path in it); archive_url and archive_note
+# (where the maker's address was refused); sha256 and bytes (of the extracted `.ibs`); file_rev and file_date (the
+# model's own [File Rev] and [Date]); fetched; notice (kind, what it says, and the header's words with their lines).
+schema_version: 1
+written: "2026-09-28"
+publication: "WITHHELD from the repository by the standing decision; publication is the owner's decision"
+models:
+  - id: ti-sn74lvc08a
+    maker: "Texas Instruments"
+    part: "SN74LVC08A"
+    file: v2/vendor/ti/ibis/sn74lvc08a.ibs
+    literature: "SCEM010, SN74LVC08A IBIS Model (Rev. A)"
+    url: https://www.ti.com/lit/zip/SCEM010
+    container: zip
+    member: "sn74lvc08a.ibs"
+    sha256: "adb5d455adc3a057282075c94d7454b01a37d720ac993db1d1eeea9e5eda9779"
+    bytes: 193205
+    file_rev: "1.1 | k_die"
+    file_date: "May 23, 2002"
+    fetched: "2026-09-27T17:00Z and again 2026-09-27T20:33Z (after the first copy was lost with its worktree), and a third time 2026-09-28T16:15Z by tools/ibis_fetch.py from this manifest into a scratch folder: the same bytes every time"
+    notice:
+      kind: PROHIBITS_DISTRIBUTION
+      says: "the header forbids reproduction and distribution without the maker's written permission"
+      quotes:
+        - {lines: "32 to 33", text: "Unauthorized reproduction and/or distribution is strictly prohibited."}
+        - {lines: "52 to 54", text: "You and your company shall not distribute, sell or give these models to anyone else without prior written permission from TI."}
+        - {lines: "36", text: "Created 2002, (C) Copyright 2002, Texas Instruments"}
+  - id: ti-sn74lvc32a
+    maker: "Texas Instruments"
+    part: "SN74LVC32A"
+    file: v2/vendor/ti/ibis/sn74lvc32a.ibs
+    literature: "SCEM055, SN74LVC32A IBIS Model (Rev. B)"
+    url: https://www.ti.com/lit/ibs/SCEM055
+    container: ibs
+    sha256: "396e2d220f1cc59f07c11d98a9294bcf5f44cc09db4802354ff318c7b99f4499"
+    bytes: 195184
+    file_rev: "1.2 | k_die"
+    file_date: "August 19, 2003"
+    fetched: "2026-09-27T17:00Z and again 2026-09-27T20:33Z (after the first copy was lost with its worktree), and a third time 2026-09-28T16:15Z by tools/ibis_fetch.py from this manifest into a scratch folder: the same bytes every time"
+    notice:
+      kind: PROHIBITS_DISTRIBUTION
+      says: "the header forbids reproduction and distribution without the maker's written permission"
+      quotes:
+        - {lines: "34 to 35", text: "Unauthorized reproduction and/or distribution is strictly prohibited."}
+        - {lines: "54 to 56", text: "You and your company shall not distribute, sell or give these models to anyone else without prior written permission from TI."}
+        - {lines: "38", text: "Created 2002, (C) Copyright 2002, Texas Instruments"}
+  - id: ti-sn74lvc86a
+    maker: "Texas Instruments"
+    part: "SN74LVC86A"
+    file: v2/vendor/ti/ibis/sn74lvc86a.ibs
+    literature: "SCEM060, SN74LVC86A IBIS Model (Rev. B)"
+    url: https://www.ti.com/lit/zip/SCEM060
+    container: zip
+    member: "SN74LVC86A_IBIS/sn74lvc86a.ibs"
+    sha256: "0f9780c8d3fd9b898438a57c8624469e46df247ccbda073fc14db15b79a53eb8"
+    bytes: 190085
+    file_rev: "1.2 | k_die"
+    file_date: "January 3, 2012"
+    fetched: "2026-09-27T17:00Z and again 2026-09-27T20:33Z (after the first copy was lost with its worktree), and a third time 2026-09-28T16:15Z by tools/ibis_fetch.py from this manifest into a scratch folder: the same bytes every time"
+    notice:
+      kind: COPYRIGHT_NO_GRANT
+      says: "the header carries a disclaimer of warranty and a copyright line and NO sentence on copying or distribution: nothing in the file grants a right to redistribute it, and nothing in it forbids it in words"
+      quotes:
+        - {lines: "39", text: "[Copyright] (C)Copyright 2011 Texas Instruments Incorporated."}
+  - id: ti-sn74lvc1g00
+    maker: "Texas Instruments"
+    part: "SN74LVC1G00"
+    file: v2/vendor/ti/ibis/sn74lvc1g00.ibs
+    literature: "SCEM165, SN74LVC1G00 IBIS Model (Rev. A)"
+    url: https://www.ti.com/lit/zip/SCEM165
+    container: zip
+    member: "SN74LVC1G00_IBIS/lvc1g00.ibs"
+    sha256: "e085986b1ed2969ed7312e201a68197865a8342e576793408dcd7e19ea92abb4"
+    bytes: 245022
+    file_rev: "1.2 | d_die"
+    file_date: "April 24, 2013"
+    fetched: "2026-09-27T17:00Z and again 2026-09-27T20:33Z (after the first copy was lost with its worktree), and a third time 2026-09-28T16:15Z by tools/ibis_fetch.py from this manifest into a scratch folder: the same bytes every time"
+    notice:
+      kind: COPYRIGHT_NO_GRANT
+      says: "the header carries a disclaimer of warranty and a copyright line and NO sentence on copying or distribution: nothing in the file grants a right to redistribute it, and nothing in it forbids it in words"
+      quotes:
+        - {lines: "41", text: "[Copyright] (C)Copyright 2013 Texas Instruments Incorporated."}
+  - id: ti-sn74lvc1g04
+    maker: "Texas Instruments"
+    part: "SN74LVC1G04"
+    file: v2/vendor/ti/ibis/sn74lvc1g04.ibs
+    literature: "SCEM216, SN74LVC1G04 IBIS Model (Rev. C)"
+    url: https://www.ti.com/lit/zip/SCEM216
+    container: zip
+    member: "SN74LVC1G04_IBIS/sn74lvc1g04.ibs"
+    sha256: "03033638d7fe8bf268428be133a5aad63aae0145980113561b20ab92063e2c00"
+    bytes: 254207
+    file_rev: "1.4 | d_die"
+    file_date: "03/05/2014"
+    fetched: "2026-09-27T17:00Z and again 2026-09-27T20:33Z (after the first copy was lost with its worktree), and a third time 2026-09-28T16:15Z by tools/ibis_fetch.py from this manifest into a scratch folder: the same bytes every time"
+    notice:
+      kind: PROHIBITS_DISTRIBUTION
+      says: "the header forbids reproduction and distribution without the maker's written permission"
+      quotes:
+        - {lines: "52 to 53", text: "Unauthorized reproduction and/or distribution is strictly prohibited."}
+        - {lines: "72 to 74", text: "You and your company shall not distribute, sell or give these models to anyone else without prior written permission from TI."}
+        - {lines: "56", text: "Created 2007, (C) Copyright 2007, Texas Instruments"}
+        - {lines: "90", text: "(C) Copyright 2014 Texas Instruments Incorporated.All rights reserved."}
+  - id: ti-sn74lvc1g57
+    maker: "Texas Instruments"
+    part: "SN74LVC1G57"
+    file: v2/vendor/ti/ibis/sn74lvc1g57.ibs
+    literature: "SCEM292, SN74LVC1G57 IBIS Model (Rev. A)"
+    url: https://www.ti.com/lit/ibs/SCEM292
+    container: ibs
+    sha256: "7abbc41dad6b027a0061534f7ba31dfa74e827b8d339381b1e9daf653078198d"
+    bytes: 247448
+    file_rev: "1.2 | x_die"
+    file_date: "December 3, 2002"
+    fetched: "2026-09-27T17:00Z and again 2026-09-27T20:33Z (after the first copy was lost with its worktree), and a third time 2026-09-28T16:15Z by tools/ibis_fetch.py from this manifest into a scratch folder: the same bytes every time"
+    notice:
+      kind: PROHIBITS_DISTRIBUTION
+      says: "the header forbids reproduction and distribution without the maker's written permission"
+      quotes:
+        - {lines: "37 to 38", text: "Unauthorized reproduction and/or distribution is strictly prohibited."}
+        - {lines: "57 to 59", text: "You and your company shall not distribute, sell or give these models to anyone else without prior written permission from TI."}
+        - {lines: "41", text: "Created 2002, (C) Copyright 2002, Texas Instruments"}
+  - id: ti-pca9555
+    maker: "Texas Instruments"
+    part: "PCA9555"
+    file: v2/vendor/ti/ibis/pca9555.ibs
+    literature: "SCPM035, PCA9555 IBIS Model"
+    url: https://www.ti.com/lit/zip/SCPM035
+    container: zip
+    member: "PCA9555/Release_TI/IBIS/PCA9555_IBIS/pca9555.ibs"
+    sha256: "56c19a4da921e38cdfb67c3c24d2ea98ce63beae787de611d5e50378e497b300"
+    bytes: 551360
+    file_rev: "1.0 | x_die"
+    file_date: "March 8, 2011"
+    fetched: "2026-09-27T17:00Z and again 2026-09-27T20:33Z (after the first copy was lost with its worktree), and a third time 2026-09-28T16:15Z by tools/ibis_fetch.py from this manifest into a scratch folder: the same bytes every time"
+    notice:
+      kind: PROHIBITS_DISTRIBUTION
+      says: "the header forbids reproduction and distribution without the maker's written permission"
+      quotes:
+        - {lines: "35 to 36", text: "Unauthorized reproduction and/or distribution is strictly prohibited."}
+        - {lines: "55 to 57", text: "You and your company shall not distribute, sell or give these models to anyone else without prior written permission from TI."}
+        - {lines: "39", text: "Created 2007, (C) Copyright 2007, Texas Instruments"}
+  - id: ti-tcan33x
+    maker: "Texas Instruments"
+    part: "TCAN330 to TCAN337"
+    file: v2/vendor/ti/ibis/tcan33x.ibs
+    literature: "SLLM313, TCAN33X IBIS Model"
+    url: https://www.ti.com/lit/zip/SLLM313
+    container: zip
+    member: "TCAN33x_IBIS/tcan33x.ibs"
+    sha256: "0e5a9429146148c11252dcea4c5dacc3386634c4cb492bd641a24a1d31fe508b"
+    bytes: 199181
+    file_rev: "1.0"
+    file_date: "06/09/2016"
+    fetched: "2026-09-27T17:00Z and again 2026-09-27T20:33Z (after the first copy was lost with its worktree), and a third time 2026-09-28T16:15Z by tools/ibis_fetch.py from this manifest into a scratch folder: the same bytes every time"
+    notice:
+      kind: COPYRIGHT_NO_GRANT
+      says: "the header carries a disclaimer of warranty and a copyright line and NO sentence on copying or distribution: nothing in the file grants a right to redistribute it, and nothing in it forbids it in words"
+      quotes:
+        - {lines: "66", text: "(C) Copyright 2016 Texas Instruments Incorporated.All rights reserved."}
+  - id: ti-ina226
+    maker: "Texas Instruments"
+    part: "INA226"
+    file: v2/vendor/ti/ibis/ina226.ibs
+    literature: "SBOM458, INA226 IBIS Model"
+    url: https://www.ti.com/lit/zip/SBOM458
+    container: zip
+    member: "INA226/Release_TI/IBIS/INA226_IBIS/ina226.ibs"
+    sha256: "fb4ebf43bde617c24a1a15d3c8ad57731e1cf5abf6ad66631f435248185396f8"
+    bytes: 176240
+    file_rev: "1.0"
+    file_date: "06/16/2011"
+    fetched: "2026-09-27T17:00Z and again 2026-09-27T20:33Z (after the first copy was lost with its worktree), and a third time 2026-09-28T16:15Z by tools/ibis_fetch.py from this manifest into a scratch folder: the same bytes every time"
+    notice:
+      kind: COPYRIGHT_NO_GRANT
+      says: "the header carries a disclaimer of warranty and a copyright line and NO sentence on copying or distribution: nothing in the file grants a right to redistribute it, and nothing in it forbids it in words"
+      quotes:
+        - {lines: "48", text: "[Copyright] (C) Copyright 2011 Texas Instruments Incorporated."}
+  - id: ti-tmp117
+    maker: "Texas Instruments"
+    part: "TMP117"
+    file: v2/vendor/ti/ibis/tmp117.ibs
+    literature: "SNOM652, TMP117 IBIS Model"
+    url: https://www.ti.com/lit/zip/SNOM652
+    container: zip
+    member: "tmp117.ibs"
+    sha256: "5c71fbcce9e138034fbe4d3053bbb2340af30e327053e3eb092144322d862391"
+    bytes: 217886
+    file_rev: "1.0"
+    file_date: "07/02/2018"
+    fetched: "2026-09-27T17:00Z and again 2026-09-27T20:33Z (after the first copy was lost with its worktree), and a third time 2026-09-28T16:15Z by tools/ibis_fetch.py from this manifest into a scratch folder: the same bytes every time"
+    notice:
+      kind: COPYRIGHT_NO_GRANT
+      says: "the header carries a disclaimer of warranty and a copyright line and NO sentence on copying or distribution: nothing in the file grants a right to redistribute it, and nothing in it forbids it in words"
+      quotes:
+        - {lines: "41", text: "(C) Copyright 2018 Texas Instruments Incorporated.All rights reserved."}
+  - id: ti-ads1x1x
+    maker: "Texas Instruments"
+    part: "ADS1013 to ADS1015, ADS1113 to ADS1115"
+    file: v2/vendor/ti/ibis/ads1x1x.ibs
+    literature: "SBAM025, ADS1013-5, ADS1113-5 IBIS Model"
+    url: https://www.ti.com/lit/zip/SBAM025
+    container: zip
+    member: "ads1x1x.ibs"
+    sha256: "c9975d3cb6ad0161d4c41a26e18316c4d3c6fb61b839121032b1de16f68a1ac2"
+    bytes: 109336
+    file_rev: "1.0"
+    file_date: "09/23/2009"
+    fetched: "2026-09-27T17:00Z and again 2026-09-27T20:33Z (after the first copy was lost with its worktree), and a third time 2026-09-28T16:15Z by tools/ibis_fetch.py from this manifest into a scratch folder: the same bytes every time"
+    notice:
+      kind: COPYRIGHT_NO_GRANT
+      says: "the header carries a disclaimer of warranty and a copyright line and NO sentence on copying or distribution: nothing in the file grants a right to redistribute it, and nothing in it forbids it in words"
+      quotes:
+        - {lines: "52", text: "[Copyright] (C)Copyright 2009 Texas Instruments Incorporated."}
+  - id: ti-tusb8041
+    maker: "Texas Instruments"
+    part: "TUSB8041 (RGC)"
+    file: v2/vendor/ti/ibis/tusb8041rgc.ibs
+    literature: "SLLC445, TUSB8041 IBIS Model"
+    url: https://www.ti.com/lit/zip/SLLC445
+    container: zip
+    member: "TUSB8041RGC.ibs"
+    sha256: "925a6c7f6917401ed6252237ee8fc9c2e4106771d177832dfe5f7dabe11c2f7d"
+    bytes: 884316
+    file_rev: "1.0"
+    file_date: "05/22/2014"
+    fetched: "2026-09-27T17:00Z and again 2026-09-27T20:33Z (after the first copy was lost with its worktree), and a third time 2026-09-28T16:15Z by tools/ibis_fetch.py from this manifest into a scratch folder: the same bytes every time"
+    notice:
+      kind: COPYRIGHT_NO_GRANT
+      says: "the header carries a disclaimer of warranty and a copyright line and NO sentence on copying or distribution: nothing in the file grants a right to redistribute it, and nothing in it forbids it in words"
+      quotes:
+        - {lines: "31", text: "[Copyright] (C)Copyright 2014 Texas Instruments Incorporated."}
+  - id: st-stm32h7-lqfp100
+    maker: "STMicroelectronics"
+    part: "STM32H742, H743, H750, H753 in LQFP100"
+    file: v2/vendor/st/ibis/stm32h742_743_750_753_lqfp100.ibs
+    literature: "stm32h7_ibis.zip, ST's STM32H7 IBIS models"
+    url: https://www.st.com/resource/en/ibis_model/stm32h7_ibis.zip
+    container: zip
+    member: "stm32h742_743_750_753_lqfp100.ibs"
+    archive_url: https://web.archive.org/web/20250911224858id_/https://www.st.com/resource/en/ibis_model/stm32h7_ibis.zip
+    archive_note: "st.com refused this host on both fetches of 27 September 2026, and the file was taken from the Internet Archive's capture of 11 September 2025 (served gzip-wrapped, 35.1 MB, the wrapper's sha256/16 d0ecb57c18b83077 both times). On 28 September 2026 st.com answered this host and served a zip whose member is the same bytes (tools/ibis_fetch.py into a scratch folder, sha256 verified), so the maker's address and the capture agree"
+    sha256: "0fb7767c1ee034db0cd4d9c92334f4860ddb1980d3fba950c3109f0fc5bc1bc8"
+    bytes: 1935427
+    file_rev: "2.3"
+    file_date: "06-03-2024"
+    fetched: "2026-09-27T17:00Z and again 2026-09-27T20:33Z (after the first copy was lost with its worktree), and a third time 2026-09-28T16:15Z by tools/ibis_fetch.py from this manifest into a scratch folder: the same bytes every time"
+    notice:
+      kind: COPYRIGHT_NO_GRANT
+      says: "the header carries a disclaimer of warranty and a copyright line and NO sentence on copying or distribution: nothing in the file grants a right to redistribute it, and nothing in it forbids it in words"
+      quotes:
+        - {lines: "13", text: "[Copyright] Copyright 2024 STMicroelectronics Inc."}

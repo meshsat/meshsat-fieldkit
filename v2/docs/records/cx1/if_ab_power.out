@@ -1,0 +1,297 @@
+# IF-AB-POWER calculation: prototype, AI review arithmetic
+Mode: PS-ALLTX, REQ-018 / CONOPS section 5, case S3 over S2. Condition: three CM5s loaded; standby WiFi in slot 3, PoE, USB-C outlet and heater off.
+
+No sourced typical or guaranteed coincident peak is established. Generic declarations and conditional stresses follow; they are not alternate operating modes.
+
+Input v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json: sha256 3422910a15c4d1450141aa9a5fd725ba75bca9fcb42ae8c87e4cf3385d7d4498 (pin verified)
+Input v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json: sha256 96ee391b3e3f638d7436cad51fcabf77999b530d8734c1feb93f7766a4877d8a (pin verified)
+
+Copper model: dc_drop.py:23 rho20=1.72e-8 ohm m; JST VH catalogue p.2 areas AWG16=1.25 mm2, AWG18=0.83 mm2. Alpha=0.00393/C remains an explicit ideal-copper assumption; actual cable is INCONCLUSIVE.
+
+| Rail | AWG | Pair length m | Pair R20 ohm | Pair R60 ohm | Contact rating |
+|---|---|---|---|---|---|
+| +5V_S1 | 16 | 0.300 | 0.004128000 | 0.004776922 | 10 A, standard/AWG16 |
+| +5V_S2 | 16 | 0.300 | 0.004128000 | 0.004776922 | 10 A, standard/AWG16 |
+| +5V_S3 | 16 | 0.300 | 0.004128000 | 0.004776922 | 10 A, standard/AWG16 |
+| +5V_DEV | 16 | 0.300 | 0.004128000 | 0.004776922 | 10 A, standard/AWG16 |
+| +54V_POE | 18 | 0.300 | 0.006216867 | 0.007194159 | INCONCLUSIVE: 7 A quoted only for shrouded/AWG18 |
+
+## +5V_S1
+
+| End | V | Typical A | Peak A | Source | Raw load sum A | Loads |
+|---|---|---|---|---|---|---|
+| A converter | 5.1 | 2.5 | 5.0 | R31 | 5.000000 | {"J_5V_S1": 5.0} |
+| B lead | 5.1 | 2.5 | 5.0 | J_5V_S1 | 4.751000 | {"J_FAN1": 0.1, "U103": 2.2, "U104": 0.7, "U105": 0.15, "U116": 0.001, "U30A": 1.6} |
+
+A note: one CM5 slot with its cooler fan; 5 A peak at the module; the rail net starts at the INA226 shunt. This board's share of the 2 percent is 0.5 point, measured 0.07
+
+B note: slot rail from A22 (JST-VH): the module, the two 3.3 V bucks, the 1.0 V switch core and the fan. THIS BOARD'S SHARE is 1.5 of the rail's 2 percent (16 September 2026): board A regulates it and measures 0.07 percent from its shunt to the header, and the long copper is this side, from the VH header across the board to a module receptacle carrying 2.5 A
+
+B raw sum minus B typical = +2.251000 A; raw sum minus B peak = -0.249000 A. Mixed allocations, not a sourced operating total.
+
+| B load | Function | Declared A | Typical or peak? | Basis and uncertainty |
+|---|---|---|---|---|
+| U30A | CM5 | 1.600000 | estimate, neither sourced typical nor peak | CM5 Table 9: 0.9 A typical; B.3: 2.5 A design allowance; 1.6 A is generator headroom |
+| U103 | card buck input | 2.200000 | capacity-derived estimate, not typical | generator applies 2.2 A to every slot; S2 is now 3.456 V; Q11 minimum supply 3/4 A; W1 applies to S1/S3 |
+| U104 | NVMe and PCIe 3.3 V buck | 0.700000 | typical allocation, unverified | generator; child +3V3_SxB declares 0.9/1.8 A; selected SSD/workload and efficiency not established |
+| U105 | PCIe 1.0 V buck | 0.150000 | typical allocation, unverified | generator; child +1V0_Sx declares 0.8/1.2 A; efficiency is an assumption |
+| J_FAN1 | cooler fan | 0.100000 | estimate, typical/peak unspecified | generator; IF-CM5-FAN current is TBD with exact fan part |
+| U116 | card enable gate | 0.001000 | design allowance, not typical/peak | generator 1 mA; TI SCLS739F p.6 ICC maximum 10 uA, switching current extra |
+
+Converter U4 AP64500: rated continuous output 5.000000 A (D1 p.1), not its switch-current threshold.
+
+PS-ALLTX registry comparison: CM5 project 1.6 A + AsiaRF 9.1 W + other children typical + fan/gate = 4.574938345 A, difference from POWER-THERMAL.md:707 PLAN 4.65 A = -0.075061655 A. PWR-F01/F02 (:960-961); HIGH is 4.66 A. Original planning mix uses 0.9 A CM5 and 7 W WiFi instead.
+
+Reconstruction uses child intent V, I and efficiency. Efficiency is an unverified assumption; the resulting stress is a CONDITIONAL BOUND, not a guaranteed upper bound.
+
+| Case (conditional unless declaration) | Lead A | Converter A | Converter margin A (%) | Contact margin A (%) | Pair drop 20 C V | Pair drop 60 C V | Unused WHOLE 2% budget 20/60 C V |
+|---|---|---|---|---|---|---|---|
+| A declared typical | 2.500000 | 2.500000 | +2.500000 (+50.00%) | +7.500000 (+75.00%) | 0.010320 | 0.011942 | +0.091680 / +0.090058 |
+| A declared peak | 5.000000 | 5.000000 | +0.000000 (+0.00%) | +5.000000 (+50.00%) | 0.020640 | 0.023885 | +0.081360 / +0.078115 |
+| B declared typical | 2.500000 | 2.500000 | +2.500000 (+50.00%) | +7.500000 (+75.00%) | 0.010320 | 0.011942 | +0.091680 / +0.090058 |
+| B declared peak | 5.000000 | 5.000000 | +0.000000 (+0.00%) | +5.000000 (+50.00%) | 0.020640 | 0.023885 | +0.081360 / +0.078115 |
+| B mixed raw load sum | 4.751000 | 4.751000 | +0.249000 (+4.98%) | +5.249000 (+52.49%) | 0.019612 | 0.022695 | +0.082388 / +0.079305 |
+| Sourced/intent planning mix, NOT typical | 3.407024 | 3.407024 | +1.592976 (+31.86%) | +6.592976 (+65.93%) | 0.014064 | 0.016275 | +0.087936 / +0.085725 |
+| CM5 design + child peaks conditional BOUND | 6.228975 | 6.228975 | -1.228975 (-24.58%) | +3.771025 (+37.71%) | 0.025713 | 0.029755 | +0.076287 / +0.072245 |
+| Registry PLAN comparison input mix | 4.574938 | 4.574938 | +0.425062 (+8.50%) | +5.425062 (+54.25%) | 0.018885 | 0.021854 | +0.083115 / +0.080146 |
+
+| Case | Wire + initial contact MAX bound, 20/60 C V | Wire + after-test contact MAX bound, 20/60 C V | Whole-budget margin at 60 C, initial/after V |
+|---|---|---|---|
+| A declared typical | 0.110320 / 0.111942 | 0.210320 / 0.211942 | -0.009942 / -0.109942 |
+| A declared peak | 0.220640 / 0.223885 | 0.420640 / 0.423885 | -0.121885 / -0.321885 |
+| B declared typical | 0.110320 / 0.111942 | 0.210320 / 0.211942 | -0.009942 / -0.109942 |
+| B declared peak | 0.220640 / 0.223885 | 0.420640 / 0.423885 | -0.121885 / -0.321885 |
+| B mixed raw load sum | 0.209652 / 0.212735 | 0.399692 / 0.402775 | -0.110735 / -0.300775 |
+| Sourced/intent planning mix, NOT typical | 0.150345 / 0.152556 | 0.286626 / 0.288837 | -0.050556 / -0.186837 |
+| CM5 design + child peaks conditional BOUND | 0.274872 / 0.278914 | 0.524031 / 0.528073 | -0.176914 / -0.426073 |
+| Registry PLAN comparison input mix | 0.201883 / 0.204852 | 0.384880 / 0.387849 | -0.102852 / -0.285849 |
+
+Contact bounds apply the catalogue maximum to four mated contacts, without a further temperature correction not stated by JST. Crimp/wire tolerances and board drops are additional or uncharacterised. These are conditional resistance bounds, not measured drops.
+
+Verdict: INCONCLUSIVE mode current. A/B scalar declarations AGREE, but neither the raw allocations nor conditional stress validate those scalars.
+
+## +5V_S2
+
+| End | V | Typical A | Peak A | Source | Raw load sum A | Loads |
+|---|---|---|---|---|---|---|
+| A converter | 5.1 | 2.5 | 5.0 | R35 | 5.000000 | {"J_5V_S2": 5.0} |
+| B lead | 5.1 | 4.2 | 5.0 | J_5V_S2 | 4.751000 | {"J_FAN2": 0.1, "U203": 2.2, "U204": 0.7, "U205": 0.15, "U216": 0.001, "U31A": 1.6} |
+
+A note: one CM5 slot with its cooler fan; 5 A peak at the module; the rail net starts at the INA226 shunt. This board's share of the 2 percent is 0.5 point, measured 0.07
+
+B note: slot rail from A22 (JST-VH): the module, the two 3.3 V bucks, the 1.0 V switch core and the fan. THIS BOARD'S SHARE is 1.5 of the rail's 2 percent (16 September 2026): board A regulates it and measures 0.07 percent from its shunt to the header, and the long copper is this side, from the VH header across the board to a module receptacle carrying 2.5 A
+
+B raw sum minus B typical = +0.551000 A; raw sum minus B peak = -0.249000 A. Mixed allocations, not a sourced operating total.
+
+| B load | Function | Declared A | Typical or peak? | Basis and uncertainty |
+|---|---|---|---|---|
+| U31A | CM5 | 1.600000 | estimate, neither sourced typical nor peak | CM5 Table 9: 0.9 A typical; B.3: 2.5 A design allowance; 1.6 A is generator headroom |
+| U203 | card buck input | 2.200000 | capacity-derived estimate, not typical | generator applies 2.2 A to every slot; S2 is now 3.456 V; Q11 minimum supply 3/4 A; W1 applies to S1/S3 |
+| U204 | NVMe and PCIe 3.3 V buck | 0.700000 | typical allocation, unverified | generator; child +3V3_SxB declares 0.9/1.8 A; selected SSD/workload and efficiency not established |
+| U205 | PCIe 1.0 V buck | 0.150000 | typical allocation, unverified | generator; child +1V0_Sx declares 0.8/1.2 A; efficiency is an assumption |
+| J_FAN2 | cooler fan | 0.100000 | estimate, typical/peak unspecified | generator; IF-CM5-FAN current is TBD with exact fan part |
+| U216 | card enable gate | 0.001000 | design allowance, not typical/peak | generator 1 mA; TI SCLS739F p.6 ICC maximum 10 uA, switching current extra |
+
+Converter U5 LM5176: shunt R35 = 0.006000 ohm +/-1%; nominal-R VSNS limits = 7.166667/8.333333/9.500000 A (min/typ/max).
+Including initial shunt tolerance: 7.095710 to 9.595960 A. This is average-loop onset, not a guaranteed stage rating or instantaneous clamp.
+
+Reproduce old S2 coincidence: 1.6 + 3.080213904 + 0.846309112 + 0.100000 = 5.626523016 A; with gate 5.627523016 A.
+
+INTERIM draft alignment: A/B S2 typical 4.2 A, peak/J_5V_S2 5.63 A; Q28 nominal-input allocation 2.215509259 A rounds to 2.22 A. All-peak conditional bound 7.281560 A remains above loop minimum; mode INCONCLUSIVE.
+
+Reconstruction uses child intent V, I and efficiency. Efficiency is an unverified assumption; the resulting stress is a CONDITIONAL BOUND, not a guaranteed upper bound.
+
+| Case (conditional unless declaration) | Lead A | Converter A | Converter margin A (%) | Contact margin A (%) | Pair drop 20 C V | Pair drop 60 C V | Unused WHOLE 2% budget 20/60 C V |
+|---|---|---|---|---|---|---|---|
+| A declared typical | 2.500000 | 2.500000 | +4.595710 (+64.77%) | +7.500000 (+75.00%) | 0.010320 | 0.011942 | +0.091680 / +0.090058 |
+| A declared peak | 5.000000 | 5.000000 | +2.095710 (+29.53%) | +5.000000 (+50.00%) | 0.020640 | 0.023885 | +0.081360 / +0.078115 |
+| B declared typical | 4.200000 | 4.200000 | +2.895710 (+40.81%) | +5.800000 (+58.00%) | 0.017338 | 0.020063 | +0.084662 / +0.081937 |
+| B declared peak | 5.000000 | 5.000000 | +2.095710 (+29.53%) | +5.000000 (+50.00%) | 0.020640 | 0.023885 | +0.081360 / +0.078115 |
+| B mixed raw load sum | 4.751000 | 4.751000 | +2.344710 (+33.04%) | +5.249000 (+52.49%) | 0.019612 | 0.022695 | +0.082388 / +0.079305 |
+| Sourced/intent planning mix, NOT typical | 4.157470 | 4.157470 | +2.938240 (+41.41%) | +5.842530 (+58.43%) | 0.017162 | 0.019860 | +0.084838 / +0.082140 |
+| CM5 design + child peaks conditional BOUND | 7.281560 | 7.281560 | -0.185850 (-2.62%) | +2.718440 (+27.18%) | 0.030058 | 0.034783 | +0.071942 / +0.067217 |
+| Contract quoted 5.63 A conditional | 5.630000 | 5.630000 | +1.465710 (+20.66%) | +4.370000 (+43.70%) | 0.023241 | 0.026894 | +0.078759 / +0.075106 |
+| CM5 design + 5G peak + other typical | 6.527523 | 6.527523 | +0.568187 (+8.01%) | +3.472477 (+34.72%) | 0.026946 | 0.031181 | +0.075054 / +0.070819 |
+
+| Case | Wire + initial contact MAX bound, 20/60 C V | Wire + after-test contact MAX bound, 20/60 C V | Whole-budget margin at 60 C, initial/after V |
+|---|---|---|---|
+| A declared typical | 0.110320 / 0.111942 | 0.210320 / 0.211942 | -0.009942 / -0.109942 |
+| A declared peak | 0.220640 / 0.223885 | 0.420640 / 0.423885 | -0.121885 / -0.321885 |
+| B declared typical | 0.185338 / 0.188063 | 0.353338 / 0.356063 | -0.086063 / -0.254063 |
+| B declared peak | 0.220640 / 0.223885 | 0.420640 / 0.423885 | -0.121885 / -0.321885 |
+| B mixed raw load sum | 0.209652 / 0.212735 | 0.399692 / 0.402775 | -0.110735 / -0.300775 |
+| Sourced/intent planning mix, NOT typical | 0.183461 / 0.186159 | 0.349760 / 0.352457 | -0.084159 / -0.250457 |
+| CM5 design + child peaks conditional BOUND | 0.321321 / 0.326046 | 0.612583 / 0.617308 | -0.224046 / -0.515308 |
+| Contract quoted 5.63 A conditional | 0.248441 / 0.252094 | 0.473641 / 0.477294 | -0.150094 / -0.375294 |
+| CM5 design + 5G peak + other typical | 0.288047 / 0.292282 | 0.549147 / 0.553383 | -0.190282 / -0.451383 |
+
+Contact bounds apply the catalogue maximum to four mated contacts, without a further temperature correction not stated by JST. Crimp/wire tolerances and board drops are additional or uncharacterised. These are conditional resistance bounds, not measured drops.
+
+Verdict: INCONCLUSIVE mode current. Held A/B declarations DISAGREE; unexecuted draft supplies INTERIM alignment. Conditional peaks do not become verified operating figures.
+
+## +5V_S3
+
+| End | V | Typical A | Peak A | Source | Raw load sum A | Loads |
+|---|---|---|---|---|---|---|
+| A converter | 5.1 | 2.5 | 5.0 | R39 | 5.000000 | {"J_5V_S3": 5.0} |
+| B lead | 5.1 | 2.5 | 5.0 | J_5V_S3 | 4.751000 | {"J_FAN3": 0.1, "U303": 2.2, "U304": 0.7, "U305": 0.15, "U316": 0.001, "U32A": 1.6} |
+
+A note: one CM5 slot with its cooler fan; 5 A peak at the module; the rail net starts at the INA226 shunt. This board's share of the 2 percent is 0.5 point, measured 0.07
+
+B note: slot rail from A22 (JST-VH): the module, the two 3.3 V bucks, the 1.0 V switch core and the fan. THIS BOARD'S SHARE is 1.5 of the rail's 2 percent (16 September 2026): board A regulates it and measures 0.07 percent from its shunt to the header, and the long copper is this side, from the VH header across the board to a module receptacle carrying 2.5 A
+
+B raw sum minus B typical = +2.251000 A; raw sum minus B peak = -0.249000 A. Mixed allocations, not a sourced operating total.
+
+| B load | Function | Declared A | Typical or peak? | Basis and uncertainty |
+|---|---|---|---|---|
+| U32A | CM5 | 1.600000 | estimate, neither sourced typical nor peak | CM5 Table 9: 0.9 A typical; B.3: 2.5 A design allowance; 1.6 A is generator headroom |
+| U303 | card buck input | 2.200000 | capacity-derived estimate, not typical | generator applies 2.2 A to every slot; S2 is now 3.456 V; Q11 minimum supply 3/4 A; W1 applies to S1/S3 |
+| U304 | NVMe and PCIe 3.3 V buck | 0.700000 | typical allocation, unverified | generator; child +3V3_SxB declares 0.9/1.8 A; selected SSD/workload and efficiency not established |
+| U305 | PCIe 1.0 V buck | 0.150000 | typical allocation, unverified | generator; child +1V0_Sx declares 0.8/1.2 A; efficiency is an assumption |
+| J_FAN3 | cooler fan | 0.100000 | estimate, typical/peak unspecified | generator; IF-CM5-FAN current is TBD with exact fan part |
+| U316 | card enable gate | 0.001000 | design allowance, not typical/peak | generator 1 mA; TI SCLS739F p.6 ICC maximum 10 uA, switching current extra |
+
+Converter U6 AP64500: rated continuous output 5.000000 A (D1 p.1), not its switch-current threshold.
+
+Reconstruction uses child intent V, I and efficiency. Efficiency is an unverified assumption; the resulting stress is a CONDITIONAL BOUND, not a guaranteed upper bound.
+
+| Case (conditional unless declaration) | Lead A | Converter A | Converter margin A (%) | Contact margin A (%) | Pair drop 20 C V | Pair drop 60 C V | Unused WHOLE 2% budget 20/60 C V |
+|---|---|---|---|---|---|---|---|
+| A declared typical | 2.500000 | 2.500000 | +2.500000 (+50.00%) | +7.500000 (+75.00%) | 0.010320 | 0.011942 | +0.091680 / +0.090058 |
+| A declared peak | 5.000000 | 5.000000 | +0.000000 (+0.00%) | +5.000000 (+50.00%) | 0.020640 | 0.023885 | +0.081360 / +0.078115 |
+| B declared typical | 2.500000 | 2.500000 | +2.500000 (+50.00%) | +7.500000 (+75.00%) | 0.010320 | 0.011942 | +0.091680 / +0.090058 |
+| B declared peak | 5.000000 | 5.000000 | +0.000000 (+0.00%) | +5.000000 (+50.00%) | 0.020640 | 0.023885 | +0.081360 / +0.078115 |
+| B mixed raw load sum | 4.751000 | 4.751000 | +0.249000 (+4.98%) | +5.249000 (+52.49%) | 0.019612 | 0.022695 | +0.082388 / +0.079305 |
+| Sourced/intent planning mix, NOT typical | 1.847309 | 1.847309 | +3.152691 (+63.05%) | +8.152691 (+81.53%) | 0.007626 | 0.008824 | +0.094374 / +0.093176 |
+| CM5 design + child peaks conditional BOUND | 4.201346 | 4.201346 | +0.798654 (+15.97%) | +5.798654 (+57.99%) | 0.017343 | 0.020070 | +0.084657 / +0.081930 |
+
+| Case | Wire + initial contact MAX bound, 20/60 C V | Wire + after-test contact MAX bound, 20/60 C V | Whole-budget margin at 60 C, initial/after V |
+|---|---|---|---|
+| A declared typical | 0.110320 / 0.111942 | 0.210320 / 0.211942 | -0.009942 / -0.109942 |
+| A declared peak | 0.220640 / 0.223885 | 0.420640 / 0.423885 | -0.121885 / -0.321885 |
+| B declared typical | 0.110320 / 0.111942 | 0.210320 / 0.211942 | -0.009942 / -0.109942 |
+| B declared peak | 0.220640 / 0.223885 | 0.420640 / 0.423885 | -0.121885 / -0.321885 |
+| B mixed raw load sum | 0.209652 / 0.212735 | 0.399692 / 0.402775 | -0.110735 / -0.300775 |
+| Sourced/intent planning mix, NOT typical | 0.081518 / 0.082717 | 0.155410 / 0.156609 | +0.019283 / -0.054609 |
+| CM5 design + child peaks conditional BOUND | 0.185397 / 0.188123 | 0.353451 / 0.356177 | -0.086123 / -0.254177 |
+
+Contact bounds apply the catalogue maximum to four mated contacts, without a further temperature correction not stated by JST. Crimp/wire tolerances and board drops are additional or uncharacterised. These are conditional resistance bounds, not measured drops.
+
+Verdict: INCONCLUSIVE mode current. A/B scalar declarations AGREE, but neither the raw allocations nor conditional stress validate those scalars.
+
+## +5V_DEV
+
+| End | V | Typical A | Peak A | Source | Raw load sum A | Loads |
+|---|---|---|---|---|---|---|
+| A converter | 5.0 | 4.0 | 6.9 | R43 | 4.000000 | {"J_5V_DEV": 3.2, "U23": 0.5, "U32": 0.3} |
+| B lead | 5.0 | 3.8 | 6.0 | J_5V_DEV | 5.180000 | {"F1": 0.6, "F2": 0.2, "F3": 0.3, "U106": 0.1, "U15": 0.02, "U16": 0.02, "U17": 0.02, "U18": 0.02, "U206": 0.1, "U21": 0.6, "U23": 1.2, "U24": 0.45, "U25": 0.9, "U26": 0.15, "U28": 0.25, "U306": 0.1, "U40": 0.05, "U50": 0.05, "U60": 0.05} |
+
+A note: the USB devices, the LimeSDR bay and the RockBLOCK behind their switches, the D8 mezzanine behind U23 and the wall host port behind U32; the net starts at the ISNS shunt R43. 9 September 2026 (ARCH-PCB-B-IOHA): +0.8 A because B16's three hub banks had to leave the slot rails. 26 September 2026 (F-PR-04, D-12): the converter is an LM5176 stage with a 7.2 A minimum average limit, and the Glenair port's 0.9 A takes the peak to 6.9 A.
+
+B note: the device rail from A22; +0.8 A since the three hubs and their cores moved off the slot rails (ARCH-PCB-B-IOHA)
+
+B raw sum minus B typical = +1.380000 A; raw sum minus B peak = -0.820000 A. Mixed allocations, not a sourced operating total.
+
+| B load | Function | Declared A | Typical or peak? | Basis and uncertainty |
+|---|---|---|---|---|
+| U23 | LimeSDR eFuse | 1.200000 | typical estimate, unverified | generator 1.2 A; held Mini 2.0 pages say 4.5 W / 5 V 900 mA; exact 2.4 configuration not established |
+| U25 | shared 3.3 V buck | 0.900000 | typical allocation, assumed efficiency | 0.9 A matches child 1.2 A at 3.3 V with 0.88 efficiency; generator's 1.4 A comment is stale |
+| U21 | LoRa switch | 0.600000 | transmit estimate, not maker peak | E22 v1.20 p.2 (PDF p.3) gives 0.650 A typical instantaneous TX, not 0.600 A |
+| F1 | panel feed | 0.600000 | typical allocation, unverified | generator cites board C declaration; not a maker load or loaded-panel measurement |
+| U24 | RockBLOCK eFuse | 0.450000 | burst estimate, not proven peak | held Ground Control input documentation: default charge limit about 0.460 A, input maximum 0.500 A; configurable 0.800 A |
+| F3 | QMX USB VBUS | 0.300000 | allocation, typical/peak unspecified | generator only; HF main DC supply is separate; USB sink draw not established |
+| U28 | camera switch | 0.250000 | typical estimate, unverified | child intent 0.250 A typical / 0.500 A port allocation; exact camera absent |
+| F2 | HDMI VBUS | 0.200000 | allocation, neither child typical nor peak | generator comment wrongly names display switches; child +5V_HDMI declares 0.100/0.500 A at J_HDMI |
+| U26 | KSZ 1.2 V buck | 0.150000 | declaration below VERIFIED maker typical; input inferred | PWR-F03; DS00002330D Table 6-1 p.169: 0.460+0.750=1.210 A typical at 1.2 V, 25 C, full 1000 Mb/s; 0.341647 A input at assumed 0.85 efficiency and 5.0 V; no maker maximum |
+| U106 | hub 1.1 V buck | 0.100000 | typical allocation, unverified | child 0.400 A typical / 0.700 A peak; 0.85 efficiency assumption |
+| U206 | hub 1.1 V buck | 0.100000 | typical allocation, unverified | child 0.400 A typical / 0.700 A peak; 0.85 efficiency assumption |
+| U306 | hub 1.1 V buck | 0.100000 | typical allocation, unverified | child 0.400 A typical / 0.700 A peak; 0.85 efficiency assumption |
+| U40 | supervisor private LDO | 0.050000 | typical allocation, inconsistent | child +3V3_IOCx declares 0.120/0.250 A; LDO input current approximately output plus bias, not 0.050 A |
+| U50 | supervisor private LDO | 0.050000 | typical allocation, inconsistent | child +3V3_IOCx declares 0.120/0.250 A; LDO input current approximately output plus bias, not 0.050 A |
+| U60 | supervisor private LDO | 0.050000 | typical allocation, inconsistent | child +3V3_IOCx declares 0.120/0.250 A; LDO input current approximately output plus bias, not 0.050 A |
+| U15 | CP2102N bridge | 0.020000 | design allocation, not maker typical/peak | Silicon Labs rev.1.5 p.10: 9.5/13.7 mA typical at 115200 baud/3 Mbaud; no max; generator allocates 20 mA |
+| U16 | CP2102N bridge | 0.020000 | design allocation, not maker typical/peak | Silicon Labs rev.1.5 p.10: 9.5/13.7 mA typical at 115200 baud/3 Mbaud; no max; generator allocates 20 mA |
+| U17 | CP2102N bridge | 0.020000 | design allocation, not maker typical/peak | Silicon Labs rev.1.5 p.10: 9.5/13.7 mA typical at 115200 baud/3 Mbaud; no max; generator allocates 20 mA |
+| U18 | CP2102N bridge | 0.020000 | design allocation, not maker typical/peak | Silicon Labs rev.1.5 p.10: 9.5/13.7 mA typical at 115200 baud/3 Mbaud; no max; generator allocates 20 mA |
+
+Converter U7 LM5176: shunt R43 = 0.006000 ohm +/-1%; nominal-R VSNS limits = 7.166667/8.333333/9.500000 A (min/typ/max).
+Including initial shunt tolerance: 7.095710 to 9.595960 A. This is average-loop onset, not a guaranteed stage rating or instantaneous clamp.
+
+U26 inferred input from VERIFIED maker typical: 1.210 * 1.2 / (0.85 * 5.0) = 0.341647059 A. Replacing only U26's 0.150 A moves the mixed B sum to 5.371647059 A; not a mode total.
+
+A converter declared peak alone = 6.900000 A; onset margin +0.195710 (+2.76%); no per-lead peak apportioned by A.
+
+Held A peak 6.900 = B peak 6.000 + wall peak 0.900 + D8 ZERO. D8 and wall are not outlets dropped by D-11.
+
+POWER-THERMAL.md:706-711,1037-1038 PS-ALLTX PLAN/HIGH = 5.89/7.8 A at converter. HIGH onset margin -0.704290 (-9.93%); HIGH is inside the loop band, not below it. PWR-F01 to PWR-F03 at lines 960-962 also flag understated child declarations.
+
+Recommend SESSION decision: converter peak 8.900 A coincident BOUND; 7.900 A with D8 typical. Limiter: LM5176 average-loop fold-back (SNVSAI1D p.17), reducing output voltage if sustained demand reaches its threshold. Device brown-out/shared-fabric loss is possible; REQ-018 regulation remains unproven. Draft applies only interim typical alignment, not this pending peak decision.
+
+| Case (conditional unless declaration) | Lead A | Converter A | Converter margin A (%) | Contact margin A (%) | Pair drop 20 C V | Pair drop 60 C V | Unused WHOLE 2% budget 20/60 C V |
+|---|---|---|---|---|---|---|---|
+| A J_5V_DEV allocation, local allocations | 3.200000 | 4.000000 | +3.095710 (+43.63%) | +6.800000 (+68.00%) | 0.013210 | 0.015286 | +0.086790 / +0.084714 |
+| B declared typical + A local allocations | 3.800000 | 4.600000 | +2.495710 (+35.17%) | +6.200000 (+62.00%) | 0.015686 | 0.018152 | +0.084314 / +0.081848 |
+| INTERIM B typical + D8 typical + parent wall | 3.800000 | 5.100000 | +1.995710 (+28.13%) | +6.200000 (+62.00%) | 0.015686 | 0.018152 | +0.084314 / +0.081848 |
+| B raw loads + A local allocations | 5.180000 | 5.980000 | +1.115710 (+15.72%) | +4.820000 (+48.20%) | 0.021383 | 0.024744 | +0.078617 / +0.075256 |
+| B declared typical + A child typical | 3.800000 | 5.300000 | +1.795710 (+25.31%) | +6.200000 (+62.00%) | 0.015686 | 0.018152 | +0.084314 / +0.081848 |
+| B peak + D8 typical + wall peak coincidence | 6.000000 | 7.900000 | -0.804290 (-11.33%) | +4.000000 (+40.00%) | 0.024768 | 0.028662 | +0.075232 / +0.071338 |
+| B declared peak + A child peak BOUND | 6.000000 | 8.900000 | -1.804290 (-25.43%) | +4.000000 (+40.00%) | 0.024768 | 0.028662 | +0.075232 / +0.071338 |
+
+| Case | Wire + initial contact MAX bound, 20/60 C V | Wire + after-test contact MAX bound, 20/60 C V | Whole-budget margin at 60 C, initial/after V |
+|---|---|---|---|
+| A J_5V_DEV allocation, local allocations | 0.141210 / 0.143286 | 0.269210 / 0.271286 | -0.043286 / -0.171286 |
+| B declared typical + A local allocations | 0.167686 / 0.170152 | 0.319686 / 0.322152 | -0.070152 / -0.222152 |
+| INTERIM B typical + D8 typical + parent wall | 0.167686 / 0.170152 | 0.319686 / 0.322152 | -0.070152 / -0.222152 |
+| B raw loads + A local allocations | 0.228583 / 0.231944 | 0.435783 / 0.439144 | -0.131944 / -0.339144 |
+| B declared typical + A child typical | 0.167686 / 0.170152 | 0.319686 / 0.322152 | -0.070152 / -0.222152 |
+| B peak + D8 typical + wall peak coincidence | 0.264768 / 0.268662 | 0.504768 / 0.508662 | -0.168662 / -0.408662 |
+| B declared peak + A child peak BOUND | 0.264768 / 0.268662 | 0.504768 / 0.508662 | -0.168662 / -0.408662 |
+
+Contact bounds apply the catalogue maximum to four mated contacts, without a further temperature correction not stated by JST. Crimp/wire tolerances and board drops are additional or uncharacterised. These are conditional resistance bounds, not measured drops.
+
+Verdict: INCONCLUSIVE mode current. Held A/B declarations DISAGREE; unexecuted draft supplies INTERIM alignment. Conditional peaks do not become verified operating figures.
+
+## +54V_POE
+
+| End | V | Typical A | Peak A | Source | Raw load sum A | Loads |
+|---|---|---|---|---|---|---|
+| A converter | 54.0 | 0.3 | 0.6 | R71 | 0.300000 | {"J_54V": 0.3} |
+| B lead | 54.0 | 0.3 | 0.6 | J_54V | 0.600000 | {"R13": 0.593, "U5": 0.007} |
+
+A note: the TPS23861 PSE on B16; U16's EN/UVLO is POE_UVLO, 0.6 of the interlock gate's output POE_EN since 27 September 2026 (it sat on POE_EN itself behind a 62 k with both pins on that net)
+
+B note: the Power over Ethernet feed arriving from board A's own +54V_POE stage: the port current through R13 to POE_P and the TPS23861 injector U5's own VPWR supply (at most 7 mA). It is a rail of board A and a load of this one
+
+B raw sum minus B typical = +0.300000 A; raw sum minus B peak = +0.000000 A. Mixed allocations, not a sourced operating total.
+
+| B load | Function | Declared A | Typical or peak? | Basis and uncertainty |
+|---|---|---|---|---|
+| R13 | PoE port | 0.593000 | peak residual allocation, not maker figure | generator: 0.600 A total minus 0.007 A controller; disabled in named mode |
+| U5 | TPS23861 VPWR | 0.007000 | maximum at stated test condition | TI SLUSBX9I p.7: 0.007 A max at 57 V; not a typical at 54 V; mode supply disabled |
+
+Converter U16 LM5176: shunt R71 = 0.020000 ohm +/-1%; nominal-R VSNS limits = 2.150000/2.500000/2.850000 A (min/typ/max).
+Including initial shunt tolerance: 2.128713 to 2.878788 A. This is average-loop onset, not a guaranteed stage rating or instantaneous clamp.
+
+| Case (conditional unless declaration) | Lead A | Converter A | Converter margin A (%) | Contact margin A (%) | Pair drop 20 C V | Pair drop 60 C V | Unused WHOLE 2% budget 20/60 C V |
+|---|---|---|---|---|---|---|---|
+| A declared typical | 0.300000 | 0.300000 | +1.828713 (+85.91%) | INCONCLUSIVE (7 A is other header) | 0.001865 | 0.002158 | +1.078135 / +1.077842 |
+| A declared peak | 0.600000 | 0.600000 | +1.528713 (+71.81%) | INCONCLUSIVE (7 A is other header) | 0.003730 | 0.004316 | +1.076270 / +1.075684 |
+| B declared typical | 0.300000 | 0.300000 | +1.828713 (+85.91%) | INCONCLUSIVE (7 A is other header) | 0.001865 | 0.002158 | +1.078135 / +1.077842 |
+| B declared peak | 0.600000 | 0.600000 | +1.528713 (+71.81%) | INCONCLUSIVE (7 A is other header) | 0.003730 | 0.004316 | +1.076270 / +1.075684 |
+| B mixed raw load sum | 0.600000 | 0.600000 | +1.528713 (+71.81%) | INCONCLUSIVE (7 A is other header) | 0.003730 | 0.004316 | +1.076270 / +1.075684 |
+| Named mode commanded OFF, ideal settled | 0.000000 | 0.000000 | +2.128713 (+100.00%) | INCONCLUSIVE (7 A is other header) | 0.000000 | 0.000000 | +1.080000 / +1.080000 |
+
+| Case | Wire + initial contact MAX bound, 20/60 C V | Wire + after-test contact MAX bound, 20/60 C V | Whole-budget margin at 60 C, initial/after V |
+|---|---|---|---|
+| A declared typical | 0.013865 / 0.014158 | 0.025865 / 0.026158 | +1.065842 / +1.053842 |
+| A declared peak | 0.027730 / 0.028316 | 0.051730 / 0.052316 | +1.051684 / +1.027684 |
+| B declared typical | 0.013865 / 0.014158 | 0.025865 / 0.026158 | +1.065842 / +1.053842 |
+| B declared peak | 0.027730 / 0.028316 | 0.051730 / 0.052316 | +1.051684 / +1.027684 |
+| B mixed raw load sum | 0.027730 / 0.028316 | 0.051730 / 0.052316 | +1.051684 / +1.027684 |
+| Named mode commanded OFF, ideal settled | 0.000000 / 0.000000 | 0.000000 / 0.000000 | +1.080000 / +1.080000 |
+
+Contact bounds apply the catalogue maximum to four mated contacts, without a further temperature correction not stated by JST. Crimp/wire tolerances and board drops are additional or uncharacterised. These are conditional resistance bounds, not measured drops.
+
+Verdict: INCONCLUSIVE for a sourced mode current/contact margin. Generic A/B declarations AGREE; mode demands outlet OFF, actual leakage/discharge needs evidence.
+
+All current margins are limit minus current; positive is arithmetic headroom only. Negative conditional margins flag unresolved regulation risk. The 2% voltage column is the entire existing budget, NOT a new allowance for the cable; A/B shares already sum to 2%. No requirement, protection or declaration was changed.

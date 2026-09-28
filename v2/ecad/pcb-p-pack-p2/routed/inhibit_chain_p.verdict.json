@@ -13,11 +13,11 @@
    "phase_artefacts.py": "96642ce767188c73",
    "regen_compare.py": "341d7f129a1e6f24",
    "sch_prov.py": "a98e5a71ac74ccee",
-   "tx_inhibit.py": "67cba7a55beebc1d",
+   "tx_inhibit.py": "7dd14f45f5d62cb4",
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "86f82710cd723e3c",
+  "sha16": "fdea734a59239131",
   "unresolved": []
  },
  "counts": {
@@ -32,21 +32,21 @@
   "boards": "A,B,C,D,E,P",
   "intent_e": {
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock-intent.json",
-   "sha256_16": "5913e38b20333d35"
+   "sha256_16": "dad1163afd720b5e"
   },
   "intent_p": {
    "path": "pcb-p-pack-p2/out/pcb-p-pack-intent.json",
-   "sha256_16": "6ff1b8129a5c5aff"
+   "sha256_16": "12f92bd3ce7a8264"
   },
   "netlist_e": {
-   "content16": "b8d237f0b8d759f5",
+   "content16": "dc06b84a39724641",
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
-   "sha256_16": "d6137f50059e5cbc"
+   "sha256_16": "56adc9746d61c4e0"
   },
   "netlist_p": {
    "content16": "efe60479293f0004",
    "path": "pcb-p-pack-p2/out/pcb-p-pack.net",
-   "sha256_16": "085f833362fbbda8"
+   "sha256_16": "760ac6f74d62d194"
   }
  },
  "missing_input": null,
@@ -66,12 +66,12 @@
  },
  "tool": "inhibit_chain_p",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "cef7cb77c420",
+  "tools_tree_sha": "8639c5ed4c65deea"
  },
- "ts": "2026-09-27T13:23:35Z",
+ "ts": "2026-09-28T22:47:02Z",
  "verdict": "PASS",
- "version": "391d857966d6",
+ "version": "cef7cb77c420",
  "writer": {
   "file": "check_contracts.py",
   "sha16": "5e14f456a0791c35"

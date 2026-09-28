@@ -349,14 +349,14 @@ board_to_board:
       title: "A to B wall-port ribbon, A J_AB2 to B J_AB2, then A's lead to the sealed Glenair 233-370"
       kind: board_to_board
       ends:
-        - {board: a, ref: J_AB2, part: "IDC 2x5 vertical box header", src: "v2/ecad/tools/gen_sch_a.py:1288-1289"}
-        - {board: b, ref: J_AB2, part: "IDC 2x5", src: "v2/ecad/tools/gen_sch_b.py:1083-1085"}
+        - {board: a, ref: J_AB2, part: "IDC 2x5 vertical box header", src: "v2/ecad/tools/gen_sch_a.py:1596-1597"}
+        - {board: b, ref: J_AB2, part: "IDC 2x5", src: "v2/ecad/tools/gen_sch_b.py:1637-1638"}
       cable: {what: "10-way ribbon", length: "TBD: no J_AB2 row in the leads table (v2/docs/ASSEMBLY.md section 4)"}
       map_identity: {status: VERIFIED, judged_by: "check_contracts.py sections 7b (the J_AB2 map) and 10 (the pair reaches A's J_USBW)"}
       pins: {1: USB_WALL_P, 2: USB_WALL_N, 3: GND, 4: GND, 5: GND, 6: GND, 7: GND, 8: GND, 9: GND, 10: GND}
       usb: "B bank 3 hub port 3 to A's J_USBW (JST-PH 1x4: VBUS_WALL, D-, D+, GND), the Glenair 233-370 feed-through's lead
         (a USB 2.0 type A coupler), a HOST port and the console and key-fill port (owner ruling D-12, in the netlist since
-        458b2873: gen_sch_a.py:1293-1309). VBUS_WALL comes from +5V_DEV through A's eFuse U32 (limit 0.89 A), switched and
+        458b2873; now gen_sch_a.py:1613-1618). VBUS_WALL comes from +5V_DEV through A's eFuse U32 (limit 0.9142 A nominal, TPS2596 equation 7), switched and
         watched by U28's USBX_EN and USBX_FLT; ESD on A (U29) and B. No impedance target declared for the ribbon (a bring-up
         link-speed test is owed). The USB-C outlet is power only (IF-EXT-USB)"
       mechanical: "COLLISION: A's J_AB2 stands inside board D's outline, its body to about Z 25.7 against D's underside on
@@ -368,24 +368,44 @@ board_to_board:
       title: "A to B rail leads: J_5V_S1..3, J_5V_DEV, J_54V (JST-VH pairs, 16 and 18 AWG, 150 mm)"
       kind: board_to_board
       ends:
-        - {board: a, refs: [J_5V_S1, J_5V_S2, J_5V_S3, J_5V_DEV, J_54V], src: "v2/ecad/tools/gen_sch_a.py:967-968, 1038"}
-        - {board: b, refs: [J_5V_S1, J_5V_S2, J_5V_S3, J_5V_DEV, J_54V], src: "v2/ecad/tools/gen_sch_b.py:434, 831, 875"}
+        - {board: a, refs: [J_5V_S1, J_5V_S2, J_5V_S3, J_5V_DEV, J_54V], src: "v2/ecad/tools/gen_sch_a.py:1051-1052, 1149"}
+        - {board: b, refs: [J_5V_S1, J_5V_S2, J_5V_S3, J_5V_DEV, J_54V], src: "v2/ecad/tools/gen_sch_b.py:551, 1119, 1210"}
       cable: {src: "v2/docs/ASSEMBLY.md section 4, slot rails, device rail and PoE feed rows"}
       pins_each: "1 = the rail, 2 = GND, on both ends"
       converters: "A: +5V_S1 and +5V_S3 on AP64500 (U4, U6); +5V_S2 and +5V_DEV on LM5176 stages with a 7.2 to 9.5 A average
         current limit (U5, U7; F-PR-04, 458b2873); +54V_POE on an LM5176 boost (U16)"
       currents:
-        - {rail: "+5V_S1, +5V_S3", a_declares: "2.5 A typical, 5.0 A peak (gen_sch_a.py:106)", b_declares: "2.5 A typical, 5.0 A peak (gen_sch_b.py:72)",
+        - {rail: "+5V_S1, +5V_S3", a_declares: "2.5 A typical, 5.0 A peak (gen_sch_a.py:119, slots 1 and 3; the AP64500's 5 A rating)",
+           b_declares: "2.5 A typical, 5.0 A peak (gen_sch_b.py:85)",
            enable: "SLOT_ENx from the panel; OFF until the panel firmware drives it"}
-        - {rail: "+5V_S2", a_declares: "2.5 A typical, 5.0 A peak (gen_sch_a.py:106)",
-           b_declares: "4.2 A typical, 5.0 A peak, 5.63 A coincident peak with the 5G module at 4 A (gen_sch_b.py:66-72)",
-           status: "DISAGREE: the two ends declare different currents for one conductor (I-03, open); A's stage limits at 7.2 A"}
-        - {rail: "+5V_DEV", a_declares: "4.0 A typical, 6.9 A peak at the converter, of which 3.2 A apportioned to J_5V_DEV
-             (gen_sch_a.py:110-115)", b_declares: "3.8 A typical, 6.0 A peak arriving (gen_sch_b.py:90)",
-           status: "DISAGREE at the lead (A 3.2 A against B 3.8 A typical); enable DEV_EN, ON by design since 458b2873 (R42)"}
-        - {rail: "+54V_POE", declared: "0.3 A typical, 0.6 A peak on both ends (gen_sch_a.py:125, gen_sch_b.py:242)",
+        - {rail: "+5V_S2", a_declares: "4.2 A typical, 5.63 A peak, J_5V_S2 5.63 A (gen_sch_a.py:119; the VBAT load Q28 2.22 A,
+             gen_sch_a.py:54)",
+           b_declares: "4.2 A typical, 5.63 A peak, the CM5 at its 1.6 A allowance coincident with the 5G module at 4 A
+             (gen_sch_b.py:85)",
+           status: "AGREE since S-98 (28 September 2026), INTERIM: both ends carry the figures board B derives from the held
+             maker pages (the CM5's 0.9 A typical, release 3 Table 9, no maximum published; the RM520N-GL's 3 A continuous
+             and 4 A peak supply capability, Hardware Design v1.0 and v1.1; v2/docs/records/cx1/ANALYSIS.md, CORRECTION.md
+             B1). The PS-ALLTX mode current is INCONCLUSIVE at both ends: no held document decides it, the bench decides it
+             at J_5V_S2 (TEST-PLAN power tests). The all-peak conditional bound, 7.28 A, sits above the stage's average loop
+             minimum of 7.10 to 7.17 A (S-99 owns the stage limits)"}
+        - {rail: "+5V_DEV", a_declares: "4.1 A typical, 6.9142 A peak at the converter, of which 3.8 A apportioned to
+             J_5V_DEV and 0.3 A to the wall port's eFuse U32; the peak is B's 6.0 A plus U32's 0.9142 A nominal limit (TPS2596
+             equation 7, SLVSET8A p.28). The D8 mezzanine is on its own rail +5V_D8IN from the buck U41 since decision 55
+             (gen_sch_a.py, the S-99 lines)",
+           b_declares: "3.8 A typical, 6.0 A peak arriving (gen_sch_b.py:111)",
+           status: "AGREE at the lead since S-98 (28 September 2026), INTERIM: A apportions 3.8 A to J_5V_DEV and B declares
+             3.8 A typical arriving; the PS-ALLTX mode current is INCONCLUSIVE at both ends (v2/docs/records/cx1/CORRECTION.md
+             B2). The converter side is S-99's: since decision 55 (stream s99a) the D8 mezzanine no longer loads +5V_DEV, and
+             A's 6.9142 A declared peak is 0.142697 A under the LM5176 average loop's conditional minimum of 7.056897 A (43 mV
+             over R43 at +1 percent and an assumed 50 K shunt temperature change); the P-tier with B's declared child peaks,
+             8.171220 A, is above that minimum and stays open under S-99 (board B's reconciliation of its children, bench
+             PT-4). Enable DEV_EN, ON by design since 458b2873 (R42)"}
+        - {rail: "+54V_POE", declared: "0.3 A typical, 0.6 A peak on both ends (gen_sch_a.py:152, gen_sch_b.py:271)",
            enable: "POE_EN = POE_SW_EN AND OUTLET_OK: OFF at power-up and while the PA keys (S-14)"}
-      contact_rating: "JST-VH is a 10 A class family per the generator descriptions; datasheet not held (TBD)"
+      contact_rating: "JST VH catalogue held (v2/vendor/connectors/jst-vh-catalogue.pdf, page 1): 10 A per contact when
+        using AWG 16 with the standard header, which the four 5 V leads are; 7 A is stated for AWG 18 with the shrouded
+        header only, so the fitted B2P-VH standard header with AWG 18 on J_54V carries no stated rating (INCONCLUSIVE;
+        v2/docs/records/cx1/ANALYSIS.md)"
       hot_plug: "not hot-pluggable (the session's choice SC-HF-04 of 27 September 2026 under the owner's standing rule, v2/docs/HW-FW-CONTRACT.md section 8): crimped leads, mate with the kit off"
       back_power: "the always-on fabric on +5V_DEV and +3V3_DEV applies voltage to the pins of an unpowered module
         (FAILOVER-FABRIC.md FAB-02; remedy: each bank's and each display switch's enable qualified by the selected slot's
@@ -397,13 +417,13 @@ board_to_board:
       title: "A to D mezzanine harness, A J_MEZZ1 to D J_HARN1 (IDC 2x8, 60 mm), and the 5 V lead A J_MEZZ_PWR1 to D J_PWR1 (VH, 18 AWG, 60 mm)"
       kind: board_to_board
       ends:
-        - {board: a, refs: [J_MEZZ1, J_MEZZ_PWR1], src: "v2/ecad/tools/gen_sch_a.py:1290-1291, 1171"}
-        - {board: d, refs: [J_HARN1, J_PWR1], src: "v2/ecad/tools/gen_sch_d.py:220-222"}
+        - {board: a, refs: [J_MEZZ1, J_MEZZ_PWR1], src: "v2/ecad/tools/gen_sch_a.py:1387, 1598-1599"}
+        - {board: d, refs: [J_HARN1, J_PWR1], src: "v2/ecad/tools/gen_sch_d.py:259-261"}
       cable: {src: "v2/docs/ASSEMBLY.md section 4, mezzanine harness and mezzanine 5 V rows"}
       map_identity: {status: VERIFIED, judged_by: "check_contracts.py section 8 (J_MEZZ1 and J_HARN1)"}
       pins: {1: USB_D8_P, 2: USB_D8_N, 3: GND, 4: GND, 5: GND, 6: GND, 7: TR_APRS, 8: TX_INHIBIT_n, 9: PA_EN, 10: SDA,
              11: SCL, 12: EXP_INT, 13: "+3V3", 14: GND, 15: ZEROIZE_HW, 16: AB_SPARE}
-      power_lead: {net: "+5V_D8", from: "A U23 eFuse, ILM 2.0 A, enable D8_EN (gen_sch_a.py:1171)", declared_a: 1.0,
+      power_lead: {net: "+5V_D8", from: "A U23 eFuse, ILM 2.0 A, enable D8_EN, its input +5V_D8IN from board A's buck U41 on VBAT since decision 55 (gen_sch_a.py:1387)", declared_a: 1.0,
                    power_up: "D8_EN held OFF by R113 4.7k until the panel firmware writes U27 (458b2873)"}
       cable_out_states: {TX_INHIBIT_n: "LOW (D R2 100k)", PA_EN: "LOW (D R3 100k)",
                          note: "KEY and PA_KEY carry only logic inputs and passive pulls since 458b2873 (RF-002, R6D-1): the KEY gate cannot key"}

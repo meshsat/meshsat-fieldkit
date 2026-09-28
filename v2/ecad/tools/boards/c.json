@@ -249,6 +249,26 @@
    "basis": "the emission-control line, a static level"
   },
   {
+   "pattern": "EMCLAMP_Y",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the EMCON lamp gate's output, U14 pin 4 (SN74LVC1G57DBVR as a NOR of TX_INHIBIT_n and EMCON_HW) to R48: a copy of the EMCON inhibit, a level that moves when a person moves the panel's locking toggle; nothing samples it on its edge. LOW_SPEED_OR_DC by what the net carries, NOT by a slow driver: U14's output moves in 0.221 ns by its maker's IBIS model (TI SCEM292 Rev. A, LVC1G57_OUT_33 [Ramp] dV/dt_f max; the datasheet SCES414P prints no output transition, p. 6) (28 September 2026, stream w5si2, W5SI2-D1)"
+  },
+  {
+   "pattern": "EMCLAMP_G",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the gate of Q7, the EMCON lamp's sink, behind R48 (100R) from U14's output, R49 (10 k) to GND: a copy of the EMCON inhibit, a level that moves when a person moves the panel's locking toggle; nothing samples it on its edge. LOW_SPEED_OR_DC by what the net carries, NOT by a slow driver: the driver is U14 through 100R, 0.221 ns at U14's pin by its maker's IBIS model; the lamp is lit or dark, neither dimmed nor blinked (28 September 2026, stream w5si2, W5SI2-D1)"
+  },
+  {
+   "pattern": "EMCON_RD",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the panel controller's one-way copy of EMCON_HW, U13 pin 4 (74LVC1G17 Schmitt buffer) to R46: a copy of the EMCON inhibit, a level that moves when a person moves the panel's locking toggle; nothing samples it on its edge. LOW_SPEED_OR_DC by what the net carries, NOT by a slow driver: U13's maker publishes no output transition (Diodes DS35124 Rev. 8-2, p. 6, propagation delay only), so its fastest edge is not known (28 September 2026, stream w5si2, W5SI2-D1)"
+  },
+  {
+   "pattern": "EMCON_RD_R",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the same copy behind R46 (1 k) at the RP2040's GPIO21, which reads it as a level and is never an output (HW-FW-CONTRACT FW-C07): a copy of the EMCON inhibit, a level that moves when a person moves the panel's locking toggle; nothing samples it on its edge. LOW_SPEED_OR_DC by what the net carries, NOT by a slow driver: neither U13's maker nor the RP2040's publishes an output transition, so the fastest edge is not known (28 September 2026, stream w5si2, W5SI2-D1)"
+  },
+  {
    "pattern": "ZEROIZE_HW",
    "class": "LOW_SPEED_OR_DC",
    "basis": "the zeroize line, a static level"

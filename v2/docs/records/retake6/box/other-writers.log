@@ -1,0 +1,52 @@
+HEAD 73ae2f2104c98bc39e5194f82a31e8862e12dbb5  start 2026-09-27T21:05:01Z
+tools dir dirty lines: 0
+a pcb-a-power-a23
+b pcb-b-compute-b19
+c pcb-c-display-c8
+d pcb-d-aprs-d9
+e pcb-e1-dock-e7
+e5 pcb-e5-block
+p pcb-p-pack-p2
+--- reliability board a in pcb-a-power-a23
+reliability: A    6 class(es), 39 part(s) covered
+verdict: reliability            PASS         of 45 {"boards": 1, "classes": 6, "covered": 39, "fail": 0} | every part that carries load or sees cycling falls in a declared class with its cycle figure or the reason it has none, its load and the measure taken. It tests nothing: REL-001 is verified at the prototype and no board has been built
+exit 0
+copied to pcb-a-power-a23/routed/ (was faa8f1243c559225, is d33d75533bad28ab)
+--- reliability board b in pcb-b-compute-b19
+reliability: B    6 class(es), 38 part(s) covered
+  note B: 6 part(s) carry a wear word only in the description of what they do and are not asked for: U101, U116, U201, U216, U301, U316
+verdict: reliability            PASS         of 44 {"boards": 1, "classes": 6, "covered": 38, "fail": 0} | every part that carries load or sees cycling falls in a declared class with its cycle figure or the reason it has none, its load and the measure taken. It tests nothing: REL-001 is verified at the prototype and no board has been built
+exit 0
+copied to pcb-b-compute-b19/routed/ (was 68ab6951cb2cce60, is 3c1cfef17b2521e5)
+--- reliability board c in pcb-c-display-c8
+reliability: C    2 class(es),  9 part(s) covered
+verdict: reliability            PASS         of 11 {"boards": 1, "classes": 2, "covered": 9, "fail": 0} | every part that carries load or sees cycling falls in a declared class with its cycle figure or the reason it has none, its load and the measure taken. It tests nothing: REL-001 is verified at the prototype and no board has been built
+exit 0
+copied to pcb-c-display-c8/routed/ (was 4fa7fe8d506e339b, is cdba5db490f82c5d)
+--- reliability board d in pcb-d-aprs-d9
+reliability: D    4 class(es), 10 part(s) covered
+verdict: reliability            PASS         of 14 {"boards": 1, "classes": 4, "covered": 10, "fail": 0} | every part that carries load or sees cycling falls in a declared class with its cycle figure or the reason it has none, its load and the measure taken. It tests nothing: REL-001 is verified at the prototype and no board has been built
+exit 0
+copied to pcb-d-aprs-d9/routed/ (was f122c7c241d52421, is 44b4bcb2f7154793)
+--- reliability board e in pcb-e1-dock-e7
+reliability: E    3 class(es),  8 part(s) covered
+verdict: reliability            PASS         of 11 {"boards": 1, "classes": 3, "covered": 8, "fail": 0} | every part that carries load or sees cycling falls in a declared class with its cycle figure or the reason it has none, its load and the measure taken. It tests nothing: REL-001 is verified at the prototype and no board has been built
+exit 0
+copied to pcb-e1-dock-e7/routed/ (was 4ea58ac2dc8febf3, is 0715e8c63535d6c2)
+--- reliability board e5 in pcb-e5-block
+reliability: E5   2 class(es),  0 part(s) covered  (no netlist here)
+  note board E5 has no netlist in this tree, so the list could not be compared with it
+verdict: reliability            PASS         of 2 {"boards": 1, "classes": 2, "covered": 0, "fail": 0} | every part that carries load or sees cycling falls in a declared class with its cycle figure or the reason it has none, its load and the measure taken. It tests nothing: REL-001 is verified at the prototype and no board has been built
+exit 0
+copied to pcb-e5-block/routed/ (was cbddd0efabb46b3c, is fcea63bbd2420443)
+--- reliability board p in pcb-p-pack-p2
+reliability: P    3 class(es),  7 part(s) covered
+verdict: reliability            PASS         of 10 {"boards": 1, "classes": 3, "covered": 7, "fail": 0} | every part that carries load or sees cycling falls in a declared class with its cycle figure or the reason it has none, its load and the measure taken. It tests nothing: REL-001 is verified at the prototype and no board has been built
+exit 0
+copied to pcb-p-pack-p2/routed/ (was 2cdef8aeb3eb3159, is 0587b07ed619ae03)
+--- claims_check from v2/ecad
+claims_check: 91 claim sentence(s) in 12 document(s), 0 without a qualifier, an evidence reference or a declared reason
+verdict: claims_check           PASS         of 91 {"claims": 91, "unqualified": 0} | a rating claimed without its test is a promise to whoever carries the kit
+exit 0
+-rw-r--r-- 1 root root 1206 2026-09-27 21:05:07.874868079 +0000 /root/retake6/rtk/v2/ecad/out/claims_check.verdict.json
+end 2026-09-27T21:05:07Z

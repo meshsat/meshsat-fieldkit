@@ -1,0 +1,120 @@
+{
+ "_what": "The external pins of each board as a review enumerated them from the board's netlist, held by port_protect.py (rule TRN-001) against the board table's declaration pin by pin: a reviewed pin declared internal, left out or moved to ground, and a declared external pin no review holds, each read INCONCLUSIVE by name until this file is changed with its reason and the review it rests on (a `changes` entry: entry, was, now, why of 40 characters or more, review, on). One writer: the review that enumerated the set, filed by the integrator. A change here makes the readings of TRN-001 stale, as a change to a board table does (rules_status.CONFIG_INPUTS).",
+ "boards": {
+  "a": {
+   "review": "v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md",
+   "reviewed_on": "2026-09-28",
+   "netlist": "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net",
+   "netlist_sha256_16": "599ee964a9c23d6e",
+   "why": "the review of decision 31 (an AI review, stream d8dec31) enumerated every connector pin of this board's netlist that carries a supply or a signal and classed each as external or internal; the external pins are these, and the declaration is corrected to them by v2/docs/records/d8dec31/apply_port_declarations.py",
+   "external": {
+    "J_VR1": {
+     "1": "VIN_RAW"
+    },
+    "J_VR2": {
+     "1": "VIN_RAW"
+    },
+    "J_VR3": {
+     "1": "VIN_RAW"
+    },
+    "J_VR4": {
+     "1": "VIN_RAW"
+    },
+    "J_USBW": {
+     "1": "VBUS_WALL",
+     "2": "USB_WALL_N",
+     "3": "USB_WALL_P"
+    },
+    "J_USBC_OUT": {
+     "1": "PD_VBUS",
+     "2": "PD_CC1",
+     "3": "PD_CC2"
+    },
+    "J_MAINSW": {
+     "1": "MAIN_PB"
+    },
+    "J_BM1": {
+     "1": "RF_VHF"
+    },
+    "J_BM2": {
+     "1": "RF_HF"
+    },
+    "J_BM3": {
+     "1": "RF_WIFI24"
+    },
+    "J_BM4": {
+     "1": "RF_GNSS"
+    },
+    "J_BM5": {
+     "1": "RF_SDR"
+    },
+    "J_BM6": {
+     "1": "RF_P2PA"
+    },
+    "J_BM7": {
+     "1": "RF_P2PB"
+    },
+    "J_BM8": {
+     "1": "RF_5G1"
+    },
+    "J_BM9": {
+     "1": "RF_5G2"
+    },
+    "J_BM10": {
+     "1": "RF_IRIDIUM"
+    },
+    "J_BM11": {
+     "1": "RF_LORA"
+    }
+   },
+   "changes": []
+  },
+  "d": {
+   "review": "v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md",
+   "reviewed_on": "2026-09-28",
+   "netlist": "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net",
+   "netlist_sha256_16": "7a2c0ac2190b141a",
+   "why": "the review of decision 31 (an AI review, stream d8dec31) enumerated every connector pin of this board's netlist that carries a supply or a signal and classed each as external or internal; the external pins are these, and the declaration is corrected to them by v2/docs/records/d8dec31/apply_port_declarations.py",
+   "external": {
+    "J_ANT": {
+     "1": "RF_ANT"
+    },
+    "J_PAOUT": {
+     "1": "RF_PAOUT"
+    },
+    "J_HS1": {
+     "1": "HS1_SPK",
+     "3": "HS1_MIC",
+     "5": "PTT_HS1_n"
+    },
+    "J_HS2": {
+     "1": "HS2_SPK",
+     "3": "HS2_MIC",
+     "5": "PTT_HS2_n"
+    }
+   },
+   "changes": []
+  },
+  "e": {
+   "review": "v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md",
+   "reviewed_on": "2026-09-28",
+   "netlist": "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net",
+   "netlist_sha256_16": "56adc9746d61c4e0",
+   "why": "the review of decision 31 (an AI review, stream d8dec31) enumerated every connector pin of this board's netlist that carries a supply or a signal and classed each as external or internal; the external pins are these, and the declaration is corrected to them by v2/docs/records/d8dec31/apply_port_declarations.py",
+   "external": {
+    "J_DCIN": {
+     "1": "DC_IN"
+    },
+    "J_SOLAR": {
+     "1": "PV_IN"
+    },
+    "J_POD": {
+     "1": "+3V3_E6",
+     "3": "SDA1",
+     "4": "SCL1"
+    }
+   },
+   "changes": []
+  }
+ }
+}

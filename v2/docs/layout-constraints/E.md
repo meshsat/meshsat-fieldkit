@@ -1,6 +1,33 @@
 # Board E1 (dock strip): layout constraints
 
-**Bound to the H2 line (after H2, 27 September 2026).** Candidate re-read at `ef144760`: phase E17, netlist
+**Bound to the set 6 candidate (27 September 2026, read at `760d7f41`).** This sheet's inputs stand in the block below,
+one to a line, each with its sha256/16 and the commit it last changed in, with the model and the stack the widths were
+computed on; `v2/ecad/tools/constraints_bound.py` fails when a committed input, the calculation or this sheet's power
+table moves without the others (README, "The bound block"). **Re-read on this candidate: section 2 alone.** Its power
+table is `calc/rail_widths.py`'s output on the inputs below, and the widths, currents and barrel counts the text under
+the table quotes were compared with the table and agree. **Not re-read on this candidate: sections 1 and 3 to 10**,
+which are the readings at `e3aedb25` with the H2 line's changes marked where they stand (`ef144760`, the paragraph
+below). Set 6 changed board E's netlist and intent file in `c4ad8350` (the hot stop line HOT-R1 drawn; the nodes FAN1_SW
+and FAN2_SW declared). A node is not a rail: **no row of the power table moved**. A line of the older sections that
+names a part, a net, a current or a count is compared with the netlist and the intent file below before it is followed,
+and where this sheet and a record disagree the record governs (README). Board E is not at layout entry: no board is
+(`v2/docs/CURRENT-EVIDENCE.md`, which holds the reasons current on this candidate; a count of reasons in a paragraph
+below is its own binding's).
+
+```bound
+sheet      E
+board      e
+read       2026-09-27 at 760d7f41
+current    section 2: the power table, and the figures the text under it quotes from it
+older      sections 1 and 3 to 10: read at e3aedb25, with the H2 line's changes marked at ef144760
+netlist    v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net sha256/16 56adc9746d61c4e0 changed c4ad8350
+intent     v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock-intent.json sha256/16 dad1163afd720b5e changed c4ad8350
+board_file v2/ecad/pcb-e1-dock-e7/pcb-e1-dock.kicad_pcb sha256/16 a462ac2620b9b8d3 changed bed211b6
+model      track_current.width_for_current decision 35 rise 10 K plating 18 um
+stack      JLC04161H-7628 outer 0.0350 mm inner 0.0152 mm
+```
+
+**As re-bound to the H2 line (after H2, 27 September 2026), kept as that binding's record.** Candidate re-read at `ef144760`: phase E17, netlist
 `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net` sha256/16 `d6137f50059e5cbc` (round 8 at `bc0f562f`, set 5 at `b7f96784`),
 intent `pcb-e1-dock-intent.json` `5913e38b20333d35`; the committed board file `a462ac2620b9b8d3` is E17. Section 2's
 table is regenerated from `calc/rail_widths.py` on that intent: VIN_RAW at 14.10 A and TRK_OUT at 10.33 A are now the
@@ -67,15 +94,28 @@ handed to the EMC sheet's writer with this layer's drafts.
 
 From `calc/rail_widths.py` (decision 35, 10 K; 1 oz outer, 0.0152 mm inner).
 
-| rail | V (working) | typ / peak A | governing A | one outer face, mm | two outer faces, each mm | inner, mm | barrels 0.3 / 0.4 / 0.5 mm |
-|---|---|---|---|---:|---:|---:|---|
-| CELL+ (J_BATT to F3), CELL_F (F3 to the dock block) | 14.4 (16.8) | 10 / 18 | 18.0, PWR-F12 | **23.91** | 6.72 | 195.8, not a conductor | 25 / 21 / 18 |
-| VIN_RAW (the input filter's output to J_BLK; **H2**: 14.10 A committed) | 12.0 (36.0) | 6.15 / 6.15; **round 8: 14.1** | 6.15; **14.1** | 3.67; **15.29** | 1.41; **4.43** | 27.4; 125.2 | 9 / 7 / 6; **20 / 16 / 14** |
-| TRK_OUT (the tracker's output; **H2**: 10.33 A committed) | 15.1 | 6.16 / 6.16; **round 8: 10.33** | 6.16; **10.33** | 3.68; **8.65** | 1.42; **2.89** | 27.5; 70.8 | 9 / 7 / 6; **14 / 12 / 10** |
-| DC_IN, DC_F, DC_P, HS_S, DC_HS (the shore and vehicle inlet) | 12.0 (36.0) | 6.15 / 6.15 | 6.15 | 3.67 | 1.41 | 27.4 | 9 / 7 / 6 |
-| PV_IN, PV_P (the solar input) | 17.6 (25.0) | 5.68 / 6.25 | 5.68 | 3.29 | 1.27 | 23.7 | 9 / 7 / 6 |
-| +3V3_E6, +5V_E6, +5V_GEIGER | 3.3 / 5.0 | 0.1 to 0.35 / up to 0.6 | | under 0.1 | | under 0.5 | 1 / 1 / 1 |
-| SGP_VDD (**H2**, declared in the H2 intent) | 3.3 | under 0.01 | | 0.00 | | 0.0 | 1 / 1 / 1 |
+The table is `calc/rail_widths.py`'s output on the inputs this sheet's `bound` block names, row for row in the tool's
+own order and cell for cell, and `v2/ecad/tools/constraints_bound.py` fails when the two differ; the `note` column is
+this sheet's and is not compared (README, "The bound block"). A width printed 0.00 is under 0.005 mm, a current of a few
+milliamperes: the fabricator's floor governs there, not the current.
+
+| rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill | note |
+|---|---|---|---|---:|---:|---:|---|---|
+| CELL_F | 14.4 (16.8) | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 | the pack path, F3 to the dock block; the inner width is not a conductor (item 1) |
+| CELL+ | 14.4 (16.8) | 10.00 / 18.00 | 18.00, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 | the pack path, J_BATT to F3 |
+| VIN_RAW | 12.0 (36.0) | 14.10 / 14.10 | 14.10, typical (PI-001) | 15.29 | 4.43 | 125.22 (over 40 mm) | 20 / 16 / 14 | **H2**: 14.10 A since `bc0f562f` (round 8); at `e3aedb25` it was 6.15 A, which is 3.67 mm on one outer face and 9 / 7 / 6 barrels. The intent file: "Declared at 14.10 A typical and peak (R4A-N12, 26 September 2026): board A's front end at its ISNS limit (5.7 A at 20.7 V, 0.93) drawing from a 9.0 V bus"; "the 12 AWG pad to the dock's four VIN_RAW power pins (EQ-16, 27 September 2026; until then J_BLK pins 1 to 4)" |
+| +3V3_E6 | 3.30 | 0.35 / 0.60 | 0.35, typical (PI-001) | 0.07 | 0.03 | 0.42 | 1 / 1 / 1 |  |
+| +5V_E6 | 5.00 | 0.30 / 0.50 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |  |
+| +5V_GEIGER | 5.00 | 0.10 / 0.10 | 0.10, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |  |
+| DC_IN | 12.0 (36.0) | 6.15 / 6.15 | 6.15, typical (PI-001) | 3.67 | 1.41 | 27.42 | 9 / 7 / 6 | the shore and vehicle inlet |
+| DC_F | 12.0 (36.0) | 6.15 / 6.15 | 6.15, typical (PI-001) | 3.67 | 1.41 | 27.42 | 9 / 7 / 6 | the shore and vehicle inlet |
+| DC_P | 12.0 (36.0) | 6.15 / 6.15 | 6.15, typical (PI-001) | 3.67 | 1.41 | 27.42 | 9 / 7 / 6 | the shore and vehicle inlet |
+| HS_S | 12.0 (36.0) | 6.15 / 6.15 | 6.15, typical (PI-001) | 3.67 | 1.41 | 27.42 | 9 / 7 / 6 | the shore and vehicle inlet |
+| DC_HS | 12.0 (36.0) | 6.15 / 6.15 | 6.15, typical (PI-001) | 3.67 | 1.41 | 27.42 | 9 / 7 / 6 | the shore and vehicle inlet |
+| PV_P | 17.6 (25.0) | 5.68 / 6.25 | 5.68, typical (PI-001) | 3.29 | 1.27 | 23.70 | 9 / 7 / 6 | the solar input |
+| PV_IN | 17.6 (25.0) | 5.68 / 6.25 | 5.68, typical (PI-001) | 3.29 | 1.27 | 23.70 | 9 / 7 / 6 | the solar input |
+| TRK_OUT | 15.10 | 10.33 / 10.33 | 10.33, typical (PI-001) | 8.65 | 2.89 | 70.84 (over 40 mm) | 14 / 12 / 10 | **H2**: 10.33 A since `bc0f562f` (round 8); at `e3aedb25` it was 6.16 A, which is 3.68 mm on one outer face and 9 / 7 / 6 barrels. The intent file: "Declared at 10.33 A typical and peak (R4A-N12, 26 September 2026): the panel's 93 W at the 9 V bus floor, when a vehicle holds the bus under 15.1 V; 6.16 A is the figure at 15.1 V" |
+| SGP_VDD | 3.30 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `b7f96784`: "the SGP41's VDD behind its RC element"; 4.6 mA, which prints as 0.00 |
 
 What the table asks of the layout:
 

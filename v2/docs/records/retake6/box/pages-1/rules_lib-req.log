@@ -1,0 +1,3 @@
+warn  CON-010: its reading is bound to v2/docs/CURRENT-EVIDENCE.md at 856a59529bb3f5a1 and the tree holds 2d36f9b4d0cfa487: re-read it before it decides
+warn  REQ-044: its reading is bound to v2/docs/CURRENT-EVIDENCE.md at 856a59529bb3f5a1 and the tree holds 2d36f9b4d0cfa487: re-read it before it decides
+rules_lib: 144 requirement record(s), 0 error(s), 2 warning(s)

@@ -570,7 +570,10 @@ CLASSES = {"USB": (0.127, 0.127, 0.7, 0.3, 0.127, 0.13), "DIFF100": (0.127, 0.12
             # "no controlled line found" on board B (18 September 2026, sweep 27). Same class as board A: 0.14 mm is
             # 50 ohm on this six-layer 3313 outer layer (32.221); first carried by B23.
             "RF": (0.18, 0.14, 0.7, 0.3, 0.2, 0.15)}   # HV 0.18: above the 0.2 pad gap of the TSSOP-28 PoE controller it fails inside the part
-PATTERNS = [("*_ANT", "RF"), ("USB*", "USB"), ("HUB*", "USB"), ("LIME_SS*", "USB"), ("LIME_D*", "USB"), ("CAM_D*", "USB"), ("QMX_D*", "USB"), ("HOST*", "USB"), ("BANK*", "USB"), ("MUX*", "USB"), ("SW?_O*", "USB"), ("SW?_IN", "USB"), ("W?*_CARD", "USB"), ("GNSS_D*", "USB"), ("ZBA_D*", "USB"), ("ZBB_D*", "USB"), ("RB_D*", "USB"),
+# RF (27 September 2026, stream w5si, W5SI-D1): the SKY13351 switch ports (SW?_O*, SW?_IN), the card RF lines (W?*_CARD) and the
+# LG290P's RF input (GNSS_RF_IN) are single-ended 50 ohm lines and take the RF class; until that day the first
+# three sat in the USB pair class and GNSS_RF_IN in none.
+PATTERNS = [("*_ANT", "RF"), ("GNSS_RF_IN", "RF"), ("USB*", "USB"), ("HUB*", "USB"), ("LIME_SS*", "USB"), ("LIME_D*", "USB"), ("CAM_D*", "USB"), ("QMX_D*", "USB"), ("HOST*", "USB"), ("BANK*", "USB"), ("MUX*", "USB"), ("SW?_O*", "RF"), ("SW?_IN", "RF"), ("W?*_CARD", "RF"), ("GNSS_D*", "USB"), ("ZBA_D*", "USB"), ("ZBB_D*", "USB"), ("RB_D*", "USB"),
             ("PCIE*", "USB"), ("NVME*_RX_*", "USB"), ("NVME*_TX_*", "USB"), ("NVME*_CLK_*", "USB"), ("CARD*_RX_*", "USB"), ("CARD*_TX_*", "USB"), ("CARD*_CLK_*", "USB"),
             ("HDMI*_D*", "DIFF100"), ("HDMI*_CK_*", "DIFF100"), ("ETH*", "DIFF100"), ("SWP*", "DIFF100"),
             ("MDI_*", "HV"), ("POE_*", "HV"), ("+54V_POE", "HV"),

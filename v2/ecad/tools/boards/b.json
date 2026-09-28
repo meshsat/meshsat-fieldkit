@@ -601,13 +601,13 @@
   },
   {
    "pattern": "SW?_IN",
-   "class": "CLOCKED_DIGITAL",
-   "basis": "a voter input"
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the common RF port of the SKY13351-378LF antenna changeovers U82 and U83 (pin 5), behind a 22 pF DC block: radio frequency, a single-ended 50 ohm line (27 September 2026, stream w5si, W5SI-D1: the entry read 'a voter input' and no voter net carries this name)"
   },
   {
    "pattern": "SW?_O?",
-   "class": "CLOCKED_DIGITAL",
-   "basis": "a voter output"
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the two RF throws of the SKY13351-378LF antenna changeovers U82 and U83 (pins 1 and 3), each behind a 22 pF DC block to a card's U.FL: radio frequency, a single-ended 50 ohm line (27 September 2026, stream w5si, W5SI-D1: the entry read 'a voter output' and no voter net carries this name)"
   },
   {
    "pattern": "BSEL*",
@@ -622,7 +622,7 @@
   {
    "pattern": "BOB",
    "class": "CLOCKED_DIGITAL",
-   "basis": "the break-before-make timing node of the same logic"
+   "basis": "the common node of the wall Ethernet port's line-side (Bob Smith) termination: the magnetics' cable-side centre taps MCT3 and MCT4 through R9 and R10, 75 ohm, to this node, and C33, 1 nF 2 kV, from it to GND. It carries the cable's common-mode current and is NOT a clocked bus: no class of this table asks the right question of it, and it is held in this one only so that the return rules keep judging it until the class proposed in v2/docs/records/w5si/F-BOB-common-mode-termination.md is ruled (27 September 2026, stream w5si, W5SI-D2 as replaced: the entry read 'the break-before-make timing node', which is BBM*)"
   },
   {
    "pattern": "BBM*",

@@ -1,0 +1,16 @@
+HEAD 50e3b60b1fda567ac78432c239bc215fe45102b0  start 2026-09-27T21:23:31Z  tree /home/claude-runner/worktrees/meshsat-fieldkit/retake6/v2/ecad
+status-1 exit 1 in 15 s: verdict: rules_status           FAIL         of 338 {"FAIL": 40, "INCONCLUSIVE": 89, "PASS": 209, "WAIVED": 0, "denominator": 338, "fail_percent": 11.8, "inconclusive_percent": 26.3, "pass_percent": 61.8, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen
+status-2 exit 1 in 12 s: verdict: rules_status           FAIL         of 338 {"FAIL": 40, "INCONCLUSIVE": 89, "PASS": 209, "WAIVED": 0, "denominator": 338, "fail_percent": 11.8, "inconclusive_percent": 26.3, "pass_percent": 61.8, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen
+status-3 exit 1 in 12 s: verdict: rules_status           FAIL         of 338 {"FAIL": 40, "INCONCLUSIVE": 89, "PASS": 209, "WAIVED": 0, "denominator": 338, "fail_percent": 11.8, "inconclusive_percent": 26.3, "pass_percent": 61.8, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen
+render-1 exit 0 in 5 s
+decisions_render exit 0
+render-2 exit 0: 0 page(s) written
+rebind exit 0
+rebind second run exit 1 (1 expected: refused)
+render-3 exit 0: 1 page(s) written
+render-4 exit 0: 0 page(s) written
+rules_render --check exit 0: rules_render: 16 document(s), 0 out of date
+rules_render --requirements --check exit 0: rules_render: ../docs/REQUIREMENTS-TRACE.md is current
+decisions_render --check exit 0
+rules_lib exit 0: rules_lib: 59 rule(s), 0 error(s), 0 warning(s), fingerprint 635ff031f210f48c
+rules_lib requirements exit 0: rules_lib: 144 requirement record(s), 0 error(s), 0 warning(s)

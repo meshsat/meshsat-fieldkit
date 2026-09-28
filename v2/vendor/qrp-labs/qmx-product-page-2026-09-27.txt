@@ -1,0 +1,804 @@
+# QRP Labs QMX product page, text extraction (MESHSAT-1357, 27 September 2026, worktree fnd/w5tray)
+# Source: https://qrp-labs.com/qmx.html (page header: Created 19 May 2023, Last Updated 24 September 2026), fetched by curl from the runner
+# on 2026-09-27T16:38Z, HTTP 200, 105306 bytes; sha256 of the HTML read: 377a906c03afe46aad2cda6e0ce8c7ff652669ba7cf8209c5ef0bfe20d7c39e6.
+# Derived: scripts, styles and tags removed, entities decoded, blank lines dropped; the words are the maker's. Read for the enclosure
+# sentence (line 'The Optional enclosure ... 95 x 63 x 25mm without protrusions ...') and 'Weight: 220 grams including enclosure'.
+
+QMX multi-band transceiver kit
+QRP Labs Shop
+Click here for Shop!
+Buy me a coffee!
+Shipping status
+News
+August 2021 newsletter
+July 2020 newsletter
+2019 archive
+2018 archive
+2017 archive
+2016 archive
+Kits
+QMX+ 160-6m multi-mode transceiver
+QMX multi-band transceiver kit Troubleshooting
+20m sensitivity modification
+SMPS Step change
+Recommended PCB Rev 2 mod
+PTT modification (Rev 1, 2, 3)
+Modifications
+Bringing SSB to QMX
+Zener diode D109
+QCX-mini 5W CW transceiver kit
+QCX+ 5W CW transceiver kit
+QDX Digital Transceiver
+QDX-M 5W Digital Transceiver
+Ultimate3/3S QRSS/WSPR kit
+U4B - Balloon tracker
+50W Amp for QCX
+Ultimate relay-switched LPF kit
+GPS receiver kit QLG2
+GPS receiver kit QLG3
+10W HF Linear PA
+Low Pass Filter
+Band Pass Filter
+Si5351A synthesizer
+Si5351A VFO/SigGen
+ProgRock2 triple programmable crystal
+50-ohm 20W dummy load
+Receiver module
+Polyphase network
+Clock
+QCX-series AGC module
+Digi VFO
+Morse trainer
+Morserino M32 Pocket
+APRS trackers
+LightAPRS tracker
+LightAPRS 2.0 tracker
+LightAPRS-W (+WSPR) tracker
+LightAPRS-W 2.0 (+WSPR) tracker
+LightTracker Plus 1.0
+Enclosures
+Ultimate3/3S case
+VFO/SigGen case
+Clock case
+Custom case
+Blank case
+QCX enclosure
+50W Amp enclosure
+Retired kits
+QSX all-band all-mode transceiver
+5W HF PA kit
+QCX 5W CW transceiver kit
+OCXO/Si5351A synthesizer
+ProgRock - triple programmable crystal
+GPS receiver kit QLG2-SE
+GPS receiver kit QLG1
+GPS Module SKM61
+GPS Module SKM52
+GPS Module VK16E
+QRSS Arduino shield
+Ultimate2 QRSS kit
+Ultimate QRSS kit
+30/40/80/160m QRSS TX kit
+Arduino shield
+High Altitude Balloons
+The Circumnavigators
+Tracking
+Flights
+Ocean Tracking
+Fleet II transatlantic sailboat crossing
+C3
+MyDream
+Misc. Info.
+App Notes
+Discussion group
+QCX Challenge
+QCX WARC Party
+Shipping information
+Beware imitations!
+QCX - uSDX... Clones?
+FAQ
+Links
+Bank transfer
+3-D printed enclosures
+Contact
+Support
+QMX multi-band multi-mode transceiver
+" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no'); return false;" rel="nofollow">
+Print
+Email
+Details
+Created: 19 May 2023
+Last Updated: 24 September 2026
+Hits: 1272616
+QMX: a feature-packed, high performance, 5-BAND 5W, Multi-mode (CW, Digi, SSB) transceiver kit, including embedded SDR, 24-bit 48 ksps USB sound card, CAT control, synthesized VFO with TCXO reference.
+Click!
+Shop order
+Kit: $102.47
+(Assembled: $152.47)
+The "QMX" ( Q RP Labs M ultimode X cvr): a feature-packed, high performance, five-band (80, 60, 40, 30 and 20m) 3-5W CW, Digi and SSB-modes transceiver kit, including embedded SDR receiver, 24-bit 48 ksps USB sound card, CAT control, synthesized VFO with TCXO reference. QMX may be used in CW modes standalone, or with a single USB cable to a PC for digi mode operation, or SSB (USB/LSB). QMX also incorporates standalone CW, FSKCW and WSPR beacon functionality (no PC connection required).
+QMX is available either as a KIT or as an Assembled/Tested/Adjusted transceiver: CLICK HERE
+In Digi mode, QMX transmits a SINGLE SIGNAL on FSK signal modes, it is not an SSB modulator with associated unwanted sideband and residual carrier, or intermodulation due to amplifier non-linearity. QMX outputs a pure single signal. This may be used with single tone FSK modes, which covers the majority of digital modes in use today, including everything in WSJT-X (except MSK144), JS8Call, some fldigi modes e.g. RTTY, Olivia and more. For phase shift keyed modes such as PSK31 or modes involving multiple concurrent tones such as VARA WinLink, use QMX' SSB (USB) mode.
+The Optional enclosure is black anodized extruded aluminium, very sturdy and elegant. The enclosure size is 95 x 63 x 25mm without protrusions. The front and rear panels are drilled and cut to match the QMX PCB with laser-etched lettering. The enclosure includes four self-adhesive feet and end panel securing screws.
+Note that the SMPS boards are also available separately in the spare parts section of the QRP Labs shop .
+QMX is available in kit or assembled versions.
+List of features:
+Versions: 80, 60, 40, 30 and 20m --- or --- 20, 17, 15, 12, 11 and 10m -- or -- 60, 40, 30, 20, 17 and 15m.
+CW, FSK Digi, and SSB (USB/LSB) modes
+All features of QCX-mini (VFO A/B/Split, RIT, Message and frequency memories, beacon, keyer, etc)
+3-5W output at 12V supply (can be built for 4-5W at 9V supply)
+SWR bridge built in
+Single signal digi mode transmission (zero unwanted sideband, zero residual carrier, zero intermodulation distortion)
+Solid-state band switching and transmit/receive switching under CAT control
+High performance embedded SDR SSB receiver with 60-70dB of unwanted sideband cancellation
+Built-in 24-bit 48ksps USB sound card
+Built-in USB Virtual COM Serial port for CAT control
+Si5351A Synthesized VFO with 25MHz TCXO as standard
+Easy to build single-board design, Professional quality 6-layer, through-hole plated, silk-screen printed PCBs
+All SMD components factory assembled
+Connectors: 2.1mm power barrel connector, USB-C (for audio and CAT control), BNC RF input/output, 3.5mm jacks for audio out, paddle/GPS/mic/PTT in, and PTT out
+Built-in test signal generator and testing tools
+GPS interface for frequency calibration, real time clock and location (internal WSPR beacon)
+IQ output mode for use with SDR software
+Switched mode regulators Receive current 80mA, Transmit current 1.0-1.1A for 5W output with 9V supply (around 0.7A for 5W with 12V supply).
+Optional aluminium extruded cut/drilled/laser-etched black anodized enclosure
+Weight: 220 grams including enclosure
+Documentation
+Make sure you have the correct assembly manual for your PCB revision, and the correct operating manual for your firmware version (see further down this page). Note:
+PCB QMX Rev 1 PCBs can use any firmware version.
+PCB QMX Rev 2 and 3 PCBs should only use recommended to use firmware 1_00_011 and up.
+QMX Rev 2 PCBs shipped during 2023 - please CLICK HERE for details of this strongly recommended modification.
+QMX Rev 1, 2 and 3 PCB's - please CLICK HERE  for details of necessary modification for grounded PTT output to work
+QMX Rev 4 PCBs don't need the PTT mod; note that there is a silkscreen error, there's a "Rev 3" printed under the 2.1mm power jack so please look at the area near the BNC connector, which has the correct "Rev 4" printed.
+Latest manuals:
+Assembly manual for PCB Rev 4 and 5  (document revision 1.04r published 10-Aug-2026)
+PA transformer manual  - you need this with the assembly manual (rev 1.00d published 27-Nov-2025)
+Operating manual for firmware 1_04_004  and above (document revision 1_04_004 published 23-Jul-2026)
+Virtual U3S manual for firmware 1_04_008a  and above (document revision 1_04_008a published 28-Aug-2026)
+CAT programming manual for firmware 1_04_004 and above  (document revision 1_04_004 published 23-Jul-2026)
+Schematics for PCB Rev 5  (published 20-Nov-2025)
+All manuals and for older versions:
+Assembly manual for PCB Rev 4 and 5  (document revision 1.04r published 10-Aug-2026)
+Assembly manual for PCB Rev 2 and 3  (document revision 1.02a published 10-Feb-2024)
+Assembly manual for PCB Rev 1 (document revision 1.00j published 24-Sep-2023)
+PA transformer manual - you need this with the assembly manual (rev 1.00d published 25-Nov-2025)
+PA transformer manual ITALIAN  - thanks to Lele IZ1UKX for this Italian translation!
+http://ja1xrq.g.dgdg.jp/QMX/qmx.html  JA1XRQ Shig has a Japanese translation of the manual on his website.
+Schematics for PCB Rev 5  (published 20-Nov-2025)
+Schematics for PCB Rev 3/Rev 4  (published 06-Mar-2024)
+Schematics for PCB Rev 2 (published 29-Nov-2023)
+Schematics for PCB Rev 1 (published 08-Jul-2023)
+Operating manuals for older firmware versions, please see firmware log below.
+(Note, schematics and the English version of the assembly manual were updated to reflect recommended modification solution #2 to the low 20m sensitivity problem as documented here ). The schematics do NOT include the grounded PTT modification  described here , so bear this in mind when looking at X201 on page 2 of the schematics; the PTT output signal should correctly be routed to pin 4 not pin 2 of X201.
+Other documentation:
+FDIM May 2023 conference proceedings article - please note that this was written in February 2023 and several changes took place between the early prototype builds and the final production model. Bear this in mind when reading the description of the QMX circuits in the article.
+FDIM May 2023 seminar slides - the slides I presented at FDIM on 18-May-2023; with all due apologies for the bad jokes in the first few pages...
+PCB Rev 1 -> Rev 2 changes briefly described
+Searchable schematics by Ian G4GIR (thanks!) these are .PDF files where you can Ctrl-F to find the component number you are looking for.
+QMX Rev 1 searchable schematic (Rev 1b)
+QMX Rev 1 searchable layout
+Photographs & Videos
+QRP Labs videos about QMX are on YouTube at this PlayList .
+Microphone
+The question of what microphone to use with QMX for SSB comes up frequently. As yet, QRP Labs does not supply a matching microphone. Please read the section titled "Microphone choice" on the SSB Beta firmware page. All development was done with this particular Electret microphone from Digikey, part number 668-AOM-5024L-HD-F-R-ND:
+https://www.digikey.com/en/products/detail/pui-audio-inc/AOM-5024L-HD-F-R/12152286
+Mini Mic by Hannes DL9SCO
+My friend Hannes, DL9SCO, has developed a compact, high-quality external microphone for QMX, QMX+ and a range of other transceivers, which he calls the Mini Mic . It is intended mainly for portable operation, although it is equally useful at the home station or in a vehicle where space is limited. The microphone is supplied fully assembled and tested, so it may be a convenient option for operators who prefer a ready-to-use microphone rather than building one themselves.
+The Mini Mic uses the high-quality electret capsule which I recommended for QMX and QMX+ during the development of the SSB firmware. It gives clear and natural-sounding audio.
+The construction is rather more substantial than its small size might suggest. The anodized aluminium housing, laser-engraved logo and precision injection-moulded parts give the Mini Mic a neat, professional finish. It is only 84 mm long and weighs 16 g.
+Some of its main features are:
+Properly shaped PTT button with positive tactile feedback
+Internally adjustable microphone level by pot on the pcb bottom side
+Switchable MIC/PTT wiring for QMX, QMX+ and other transceivers
+Thin, flexible and detachable connecting cable
+Supplied complete with cable, instructions and travel case
+Three versions are available:
+MM-B - black
+MM-Li - lime green
+MM-LED - lime green with an LED for QMX and QMX+
+The MM-LED version requires a small internal modification to the QMX or QMX+ to provide power for the LED. The required resistor and wire are supplied together with the instructions.
+The Mini Mic is manufactured and supplied directly by Hannes, DL9SCO. For more information, or to order one, please contact him at This email address is being protected from spambots. You need JavaScript enabled to view it. . Full specifications and further details can be found in the downloadable data sheet below.
+Download the Mini Mic data sheet
+Download the MM-LED modification instructions for QMX/QMX+
+Adam K6ARK 3D-printed mic
+Adam K6ARK has designed a nice miniature 3D printed microphone including PTT button, which is suitable for the above electret mic insert, see:
+https://www.printables.com/model/320559-mini-microphone-for-qmx-trusdx-usdx-kx2-and-kx3
+Firmware
+Please refer to the manual for the firmware update procedure, which is very easy and does not require any special hardware, software, drivers etc. It requires only a PC and an appropriate USB cable. Click the file in the first column of the table below, to download the firmware file of interest. Note that firmware files are encrypted and can only be used on the QRP Labs QMX.
+The downloads are a zip file; please unzip the file before copying the .QMX firmware file into the QMX.
+Note that a new QMX must have firmware installed on it before you can use it; you must press the left encoder shaft button to switch on QMX for this to happen; during firmware update mode the LCD is blank and the backlight is off. Please refer to the assembly manual carefully for instructions and checks before applying power.
+Firmware version history
+Note:
+Beta : this is a version which contains new features or lots of detailed changes and could have a higher risk of bugs.
+Stable : this is a version which is considered reasonably stable. Nothing has zero bugs but, the risk is relatively low.
+You can read community feedback on the versions on the QRP Labs group , the topic threads of the recent versions are pinned at the top.
+Version
+Date
+Contents
+1_04_015
+24-Sep-2026
+Consider this a Beta firmware version
+1. Bug fix: SWR Tune showing SWR but was not outputting RF
+2. Bug fix: Radio unlock did not occur properly on keying at speed = 0 (Tune)
+1_04_014
+23-Sep-2026
+Consider this a Beta firmware version
+1. Bug fix: SSB mode not keyed properly from CAT TX; RX; command (Winlink etc)
+2. Bug fix: SWR screen in terminal, 'T' started TX but it did not end after 0.5s and no SWR display
+3. Bug fix: SWR Tune on LCD, exit during TX then re-enter didn't clear the underline
+4. Bug fix: CW keying entry of preset messages was not working
+1_04_013
+22-Sep-2026
+Consider this a Beta firmware version
+1. Bug fix: Tune mode on Speed=0 CW, caused permanent key-down, required power cycle
+2. Bug fix: SWR Tune in Hardware menu, underline under 'A' didn't go after TX stopped
+1_04_012
+21-Sep-2026
+Consider this a Beta firmware version
+1. Bug fix: DiGi mode always reported insufficient audio
+2. Bug fix: SWR Tune and other Hardware Tests menu items on LCD froze
+1_04_011
+19-Sep-2026
+Consider this a Beta firmware version
+1. TX indicator now shown on key-down in CW mode
+2. Clean-up of "Practice mode" in CW Keyer menu. Now clearly only applies to CW, everywhere
+3. LPF and SWR Sweeps, and Diagnostics screen, run properly even when CW Practice Mode enabled
+4. Major clean-up of multi-terminal functionality (locking etc)
+5. Bug fix: Virtual GPS stats display t (tracked sats) and s (SNR) could be incorrect
+6. Bug fix: CW Message playback didn't work when Practice mode is on
+7. Bug fix: Don't recalculate WSPR encoding in the case of a change in GPS locator (vU3S does it)
+8. Bug fix: Don't stop SWR Tune display when a CAT character is received
+9. Bug fix: SSB calibration graph titles no longer hidden when there's no calibration data
+1_04_010
+14-Sep-2026
+Stable version
+1. Symmetric phase wrap is now ON by default after a factory reset
+2. Bug fix: 2nd and subsequent CW message sending lost the first part of the message
+3. Bug fix: interval between CW message repeats decreased at double rate in some cases
+4. Bug fix: Where a CW message caused SWR protection, canceling SWR protection resumed message
+5. Bug fix: Pixel duration calculated incorrectly in U3S "Custom" pattern mode
+6. Bug fix: CAT not reporting correct frequency during Virtual U3S operations
+7. Bug fix: QMX not returned to normal operating frequency during gaps between Virtual U3S TX
+8. Bug fix: Virtual U3S RX mode not receiving on stated frequency
+9. Bug fix: Virtual U3S displayed band LPF number was incorrect (one TX slot behind)
+1_04_009
+30-Aug-2026
+1. Bug fix: Accidentally WSPR was transmitted 250 Hz too low - now it's correct
+1_04_008
+27-Aug-2026
+Virtual U3S Operating manual
+1. Bug fix: Virtual U3S Frame parameter could not be more than 30
+2. Added all remaining U3S modes to Virtual U3S
+3. Added RTTY to Virtual U3S (not available in real U3S)
+1_04_007
+14-Aug-2026
+1. Bug fix: Fixed the 160m image rejection (90-degree quad LO phase relationship on 160m)
+2. Bug fix: Image Sweep screen had incorrect result first time it ran
+3. Bug fix: Sending stored CW message wrote frequency to 00,000,000
+4. Bug fix: Fixed continuous key-down between stored message repeats
+5. Bug fix: 'M' in practice mode character was not displayed during stored message play
+6. Bug fix: '006 had re-introduced leading edge CW RF spikes 50% of the time (another race condx)
+1_04_006
+12-Aug-2026
+1. Show S-meter in Digi mode
+2. Bug fix: TX underlines the correct VFO indicator character now in B and Split mode
+3. Bug fix: Prevent occasional CW glitch due to race condition in the microsecond timer
+4. Virtual U3S adds: WSPR15, CW, CW ID, FSK, FSKCW, QRSS, DFCW, Slow Hell, Hell, DX Hell
+5. GPS Protection disabled when not in CW mode or when internal GPS (QLG3 in QMX+) selected
+1_04_005
+06-Aug-2026
+1. Bug fix: removed spike on first dit after power-up
+2. Bug fix: PA mod test (and other functions) did not work until after a dit or 'T' in diag
+3. Bug fix: CAT GP command had reversed longitude sign
+4. Reduced current spike on key-down
+1_04_004
+23-Jul-2026
+Operating manual
+CAT programming manual
+1. Added option in Power menu to set full scale deflection to 12W - useful for 4:4 PA mod
+2. New CAT command GP returns GPS position and date and time
+3. New CAT command SR returns SWR protection status and can reset it
+4. SMPS Bias circuit pre-warm up at radio power up
+5. CW menu: added choice of CW shaping envelope, and rise/fall times
+6. Bug fix: Removing leading edge spike on CW key-down
+7. Bug fix: Semi QSK CW keyed 2nd and subsequent dits even when TX disabled in Band Config
+8. Bug fix: Certain menu items that should be editable as 1 digit, allowed two
+1_04_003
+18-Jul-2026
+Operating manual
+CAT programming manual
+1. CAT new command UI gets 24-character unique serial number of the STM32 chip
+2. CAT new commands BU, BD for Band Up, Band Down
+3. CAT new command BN get/set the band from/to the column number of the Band Config table
+4. 'E' symbol on no or insufficient digi mode audio is delayed 0.5 seconds to avoid concern
+5. Bug fix: Errors with CAT MM commands for list values like EQ global gain
+6. Bug fix: CAT MM for returning display delimiter didn't return it.
+7. Bug fix: CAT MM issues with CW Center frequency due to pointing at wrong list
+8. Bug fix: Error reporting and actions on Virtual U3S fixed
+9. Bug fix: Output RF when Practice mode on and Semi QSK enabled
+10. Bug fix: Stored message sending couldn't be stopped by a dit or dah press
+11. Bug fix: Prevent GPS streaming to a port configured at not more than 9600 baud
+12. Bug fix: 1pps Heart icon was not displayed correctly in U3S screens
+1_04_002
+18-Jun-2026
+Beta firmware version
+NOTE: Installing this firmware executes a Factory Reset: be sure to select your correct firmware version after the reset, at the prompt, by rotating Tune knob, then pressing the menu button or Tune knob button.
+1. Bug fix: SWR Style could be incorrect if EEPROM contents not set up
+2. Bug fix: Virtual U3S not stoppable by pressing any button, had to cycle power
+3. Bug fix: Virtual U3S did not transmit properly
+4. Bug fix: Virtual U3S missing PPS "heartbeat"
+5. Bug fix: Virtual U3S Maidenhead grid locator display error
+6. Bug fix: Repeated CW message sending omitted first part of message
+1_04_001
+12-Jun-2026
+BETA firmware version
+Operating manual
+CAT programming manual
+1. Bug fix: 1_04_000 hung when run on a QMX, but was OK on QMX+
+2. Bug fix: AM mode indicator incorrect when using character type mode indicator
+3. Bug fix: Add AM (mode 5) to CAT MD command Get/Set
+4. Bug fix: Resolved distorted TX audio in LSB mode when Symmetric phase switched on
+5. Bug fix: CAT MU command and MM (when auto update enabled) loaded previously saved state (VFO etc)
+6. Bug fix: On first installing 1_04_000, hung with message "Radio load"
+7. Bug fix: Virtual U3S would not run
+1_04_000
+08-May-2026
+Beta firmware version: Use only on QMX+ it does not work on QMX
+Documentation is pending.
+Details are in the QRP Labs groups.io forum here .
+1. Added AM mode experimentally, currently receive only, with 150-3200 Hz filter
+2. Virtual U3S: complete Ultimate3S in a QMX - see separate manual
+3. LCD/buttons UI now supports editing grid screens such as Band Configuration
+4. Glitchy supply protection saves SMPS modules
+5. Fullscreen CW practice decode modes (line and character scroll)
+6. System config menu "Modes enabled" setting lets you choose what modes to enable for the radio
+7. Optional setting "SWR warn style" allows inverted 's' or flashing inverted 's'
+8. Flashing normal/inverted 'E' error on Digi mode when no audio or insufficient audio
+9. SSB config menu re-arrangement: all mic items in microphone sub-menu, likewise for USB audio
+10. SSB new menu item "Symmetric phase" improves performance - recommend setting: YES
+11. SSB transmit polar modulation CPU speed improvement
+12. New parameter "PTT from DTR" lets Virtual COM port DTR operate USB audio SSB transmit PTT
+13. CAT configuration items moved to a submenu
+14. CAT new configuration menu item "CAT MM effect" to control whether updates are on demand or immediate
+15. CAT new command MU forces a complete config menu reload
+16. CAT new command KD for get/set key-down state
+17. CAT mew commands TR and RR to set/get Tune Rate and RIT Rate respectively.
+18. CAT new command PS for power supply status; read returns 1, and PS0; shuts down
+19. CAT new command AI for Auto Info (modes Old, Extended, Both)
+20. CAT MD8; command puts QMX into SWR Tune mode (MD0; exits)
+21. Bug fix: Semi-QSK mode, TX signal high during key-up, caused high current in 2 of 4 transistors
+22. Bug fix: Adjusting volume while in config menu messed up the screen a lot
+23. Bug fix: When RIT was enabled, Volume change timeout moved focus to main tuning
+24. Bug fix: Pressing volume button at the same time as rotating it could cause buttons to lock up
+25. Bug fix: When RIT was enabled, long press menu button did not enter menu
+26. Bug fix: CW Keyer key from DTR only worked for USB port 1
+27. Bug fix: Triple click to toggle backlight persists until power cycle or menu change
+28. Bug fix: CAT command PC only returned two digits when power >= 10W; now returns 3 digits then
+29. Bug fix: CAT MM commands stripping floating point decimal point when thousands delimiter is .
+30. Bug fix: CAT MM CW Bandwidth and center commands had to be issued twice to take effect!
+1_03_002
+07-Feb-2026
+Operating manual
+CAT programming manual
+1. Bug fix: DTR keying would only work on USB 1, not on 2 or 3
+2. USB audio monitor during SSB transmit, volume adjustable in SSB menu
+3. Remove spurious 1.00000 on terminal bottom left, on releasing PTT in SSB TX
+4. Bug fix: PTT_P was ON by default at power-up, until first TX occurred
+5. Bug fix: Removed loud pop when changing bands
+1_03_001
+06-Feb-2026
+Operating manual
+CAT programming manual
+1. Bug fix: Removed "nan" in "Max PA Voltage" setting on upgrading to 1_03_000
+2. Bug fix: Fixed hanging when handling VFO modes or Tune rates etc., in VFO menu
+3. Bug fix: Editing issue with floating point parameters (Max PA Voltage) on LCD
+1_03_000
+06-Feb-2026
+1. Keying from USB Virtual COM DTR signal (N1MM, fldigi etc)
+2. Option to display mode as a character (C, D, U, L) not graphic; see Display/Controls menu
+3. Menu "Strght mode" renamed "Straight mode"; and "Sidetone frq" renamed "Sidetone freq."
+4. Double-click default increased to 500; sensible defaults (20) for Band and Volume Change timeouts
+5. New parameter in VFO menu specifies max denominator value for the continued fraction
+6. New CAT command PL for Get/Set of Receive PLL parameters
+7. Display option for numeric S-meter, Power meter, SWR meters instead of the bar graph
+8. Protection menu now has max PA voltage setting to protect the PA from high supply voltages
+9. Add Reverse power to Diagnostics page
+10. SWR Protection reset options: by button press, timer, or on TX->RX
+11. Accessibility feature: In terminal menu, press Tab then a number to go to that row
+12. Accessibility feature: Simplified terminal menu option
+13. New SSB audio source option "Auto" uses Ext Mic unless CAT switched to TX, then USB audio is used
+14. SideKar CAT connection workaround: sends /0/0/0/003/OM; instead of OM; now ignores characters < 32
+1_02_009
+03-Nov-2025
+Operating manual
+CAT programming manual
+1. Bug fix: Serial 6 baud rate (PTT port) wasn't set properly
+2. Bug fix: Fault in two-tone test generator fixed!
+1_02_006
+31-Oct-2025
+Operating manual
+CAT programming manual
+1. Bug fix: CAT IF command incorrectly shows VFO B when in TX and in VFO A mode
+2. Bug fix: When changing band up/down the RF Gain doesn't get changed properly
+3. Bug fix: On the LCD, SWR tool now operates correctly at the displayed VFO frequency
+4. Bug fix: TX indicator always under A, even in VFO B and Split modes (means not displayed at all in B)
+5. Change "Audio gain (dB)" row name in Band Config to "RF gain (dB)", a more accurate description
+6. New CAT RG command now gets/sets RF Gain (used to be called Audio gain, and command AG)
+7. CAT AG command now gets/sets AF Gain, which is Volume, in steps of 0.25 dB e.g. AG083; is 20.75 dB.
+8. System wide update to config handling of boolean parameters to prevent accidental enabling
+9. New CAT ML and MM commands provide complete CAT accessible configuration menu interface
+10. System config submenu "Experimental" for polar modulation SSB experiments (you can't touch this)
+11. Bug fix: CAT Q2 command Set did not work as described (sets VFO A, same as FA command)
+1_02_005
+23-Aug-2025
+Operating manual
+1. Functionality for programming QLG3 E108 module firmware update (fix date issue).
+2. Volume time and Band display time are limited to 99 now.
+3. When volume is displayed, pressing any other button or tuning cancels the display.
+4. Bug fix: Audo USB/LSB should select USB for 60m band.
+1_02_004
+06-Aug-2025
+Operating manual
+1. Bug fix: CAT IF command incorrect VFO freq when not in VFO A mode
+2. New CAT command TA (transmit audio) e.g. TA1502.34;
+3. New style band selection, allows up or down selection using the volume encoder
+4. Volume display after you adjust it for a configurable time
+5. CAT KY command TS480 compatibility mode
+6. Move factory reset on power up to right button
+7. Auto USB or LSB selection based on band (40m and below are LSB)
+8. Bug fix to GPS time setting, to fix a 1 second time discrepancy that could arise due to GPS timing
+1_02_003
+24-Jun-2025
+Operating manual (same as 1_02_002)
+1. Bug fix: streaming GPS NMEA data to serial port broke terminal access on other ports
+2. Bug fix: issue in 1_02_002 affecting our factory QMX+ board test only
+1_02_002
+12-Jun-2025
+Operating manual
+1. System Config / Band version menu item is now read-only
+2. Update version text to QRP Labs, 2025 (was 2024)
+3. Enable QMX+ AUX jack as serial port, including Config menu and baud rate
+4. Enable PTT jack as serial port (requires hardware mmod), config and baud rate
+5. Re-group all serial port settings into their own menu
+6. Capability to stream GPS NMEA data to any serial port
+7. Add CAT command OM: radio model number (QRP Works SideKar compatibility)
+8. Add CAT command TB: retrieve decoded CW text buffer (QRP Works SideKar compatibility)
+1_02_001
+11-Jun-2025
+Operating manual
+1. SSB Calibration shapes the RF envelope to avoid hard keying causing voltage spikes
+2. New setting in System Config menu: "CAT RU and RD" specifies Absolute or Relative commands
+3. CAT RU and RD can now do a relative up/down shift matching N1MM keyboard RIT adjustment
+4. Now TX indication bar appears under the top left character of display (A or B) on SSB microphone transmit
+5. Band Configuration screen now re-coded as menu-driven table editor; and removed from Hardware tests menu
+6. Bug fix: CAT FW; returned FW000; always when in CW mode, not the correct bandwidth
+7. Bug fix: Redrawing CW Offset and Sidetone frq on CW config screen in terminal corrupted display
+1_02_000
+02-May-2025
+Operating manual
+1. SSB modes added (USB and LCB), with CESSB, TX Equalization, Mic AGC, VOX, etc
+2. Rationalization of menus, grouped into CW, Digi and SSB submenus
+3. Added up to two more USB Virtual COM serial ports (configurable)
+4. LCD versions of AF, RF, Image, LPF, Test ADC I/Q sweeps (miniature graph on LCD)
+5. New function PA mod. test to check operation of amplitude modulator
+6. Diagnostics screens are now available on the LCD interface too
+7. Now remembers previous menu location on ALL menus regardless of nesting level
+8. Add way of forcing factory reset, press Menu (left) button during power-up
+9. Change TX color in diagnostics screen from red to blue, to avoid confusion since red things are errors
+10. Added CAT LC command to retrieve LCD contents
+11. Added CAT commands SA (AGC meter), SM (S meter), PC (Power meter), SW (SWR meter)
+12. Added CAT command SS (get/set SSB input source)
+13: Bug fix: PTT P did not work properly
+14: Bug fix: Incorrect PA voltage display on the Diagnostics screen
+1_00_027
+22-Aug-2024
+Operating manual (same as 1_00_026)
+1. 20m Factory Reset Band Cfg sweep start freq changed to 6,500,000; 17m now 13,000,000
+2. Slower shut-down and start-up procedure for 5V supply
+3. Support for additional factory test procedures
+1_00_026
+10-Aug-2024
+Operating manual
+1. Bug fix: VFO tune rate defaulted to 10M/1M/10k/10k digits; should default to 1k/500Hz/100Hz/10Hz
+2. Bug fix: Change default VFO mask to all three (A/B/Split) to match previous behavior
+3. Bug fix: Functionality 'N' to copy A->B and 'D' to copy 'B->A' didn't work (op man page 14)
+4. "Tune SWR" moved to top of Hardware tests menu instead of GPS Viewer
+5. Improvements to "Tune SWR" tool (start in current band; allow freq tuning)
+6. Bug fix: LCD message editing was broken in 024/025
+7. When beacon mode is enabled, return to usual VFO frequency when not TXing on beacon freq
+8. Reduce clicks on power up, power down, band change
+1_00_025
+06-Aug-2024
+Operating manual (same as 1_00_024)
+1. Bug fix: Hang with msg "Initializing audio system" in some cases on firmware upgrade to 024
+2. Bug fix: Prevent initial CW decoder buffer being filled with S-meter characters!
+3. Bug fix: CW-R now works properly (when enabled, is in LSB mode, automatically)
+4. Bug fix: During RIT mode, left rot enc button functions not working (power down, band & mode change)
+5. Bug fix: Diagnostics screen 160m TX doesn't work until you change bands and come back to 160m
+6. Bug fix: Audio in diagnostics sounded awful if you were in Digi mode when you opened it
+1_00_024
+06-Aug-2024
+Operating manual
+1. Added many more CW filters and CW filter options in the filter menu
+2. Bug fix: Display corruption on exiting system config menu on the LCD
+3. Add BK, AS, KA as prosigns, and other punctuation
+4. Change "IQ Mode": now radio functions normally, but raw I & Q are streamed out not demod audio
+5. Add VFO menu with UI masks for VFO Mode, VFO tune rate and RIT tune rate
+6. Bug fixes and improvements in display and behavior of RIT and decoded CW
+7. Bug fix: fix incorrectly swapped tip/ring meaning in Straight key mode
+8. Switch off CLK2 carrier during key-up between Semi-QSK
+1_00_023
+31-Jul-2024
+Operating manual (same as 1_00_022)
+1. Bug fix: SWR and GPS tools were not accessible on the LCD/Knobs of the radio itself (erroneous message "Locked by terminal app").
+1_00_022
+31-Jul-2024
+Operating manual
+1. Bug fix: CAT KY when keyer speed is zero sends very fast; now just returns ? and does nothing
+2. Bug fix: CAT KY when transmit disabled for any reason incl practice mode, got stuck
+3. Bug fix: Playing a message memory when speed is zero sent very fast, now ignores
+4. Semi QSK settings: OFF, Auto, Contest, Custom dits, Custom decidits, Custom ms, new Custom val param
+5. Bug fix: LPF and SWR sweep didn't work for QMX+ 160m and 11m when band limits are enabled
+6. New sys config setting "RX outside band" (default OFF); when off, restricts rx to in-band
+7. CW Offset range now 400-999
+8. Added new filter sub-menu, with CW filter selection and "Auto-offset/tone"; 300/500 Hz filters at various centers
+9. Bug fix: now lock buttons/knobs to prevent corruption while running terminal apps RF Sweep etc
+10. Bug fix: Prevent LCD frequency changes while terminal apps like RF Sweep are active
+1_00_021
+25-Jul-2024
+Operating manual
+1. Japan limits setting renamed "Band Limits": "ITU Region 2" (default), Japan, or None
+2. CAT: Implement KS command to Get/Set CW keyer speed
+3. CAT: Implement KY command to send text via CW transmission
+4. CAT: Implemented Set command for RT: RT1; to enable RIT mode, RT0; to disable it
+5. CAT: Implemented RC (RIT Clear) command RT; to disable RIT mode
+6. Click "Tune" rotary encoder knob in RIT mode to move RIT cursor one character right
+7. Test ADC I/Q screen now has band +/- so can run for all bands
+8. Force display of battery icon, if TX is disabled due to supply voltage being out of range
+9. Diagnostics screen now shows the REASON for not transmitting, if it produces no RF
+10. I2C bus speed increased from 400kHz to 1MHz
+11. Bug fix: Implemented semi-QSK properly (8 dit lengths delay like in QCX)
+12. Bug fix: CAT: RD0; and RDU; Set commands made RIT zero but this wasn't displayed
+13. Bug fix: CAT: Now calling RD or RU CAT Set commands causes the UI to enter RIT mode
+14. Bug fix: CAT: Proper behaviour when CAT RIT commands are called and LCD is in menu mode
+15. Bug fix: If RIT is non zero when leaving menu, RIT mode wasn't re-entered
+16. Bug fix: Incorrect characters on LCD in SWR tool, when changing band 160 -> 80m etc
+17. Bug fix: Preset number was missing on the display, when selecting a preset frequency
+18. Bug fix: Settings reload only done on exiting Configuration menu (some menus accessed elsewhere)
+19. Bug fix: Power supply range TX disabling didn't work properly
+20. Bug fix: Battery icon froze when CW decoder enabled
+21. Bug fix: RX PTT was not activated after Band Config edit until keyed
+22. Bug fix: Test ADC I/Q screen was corrupt on first opening, needed R to refresh
+1_00_020
+11-Jul-2024
+Operating manual
+1. New Test ADC I/Q tool shows baseband I/Q samples, aiding diagnostics
+2. Add 20dB of attenuation in earphones when in Digi mode (equalize volume to CW)
+3. Remove the experimental "SuppressThump" setting which is now always on
+4. Configure AGC defaults on factory reset (or new installation)
+5. Bug fix: Display leftovers on GPS display on LCD
+6. Bug fix: RF, AF and Image Sweep tools didn't work unless in VFO Mode A already
+7. Bug fix: Selecting a preset did not change the LPF selection, only the VFO
+8. Bug fix: LPF and SWR sweep screens broke if not all bands were enabled
+9. Bug fix: CAT bug, remove \0 character in AG; command response
+10. Bug fix: CAT bug, in IF command (1 character too long)
+11. Bug fix: CAT bug, remove \0 character in TM; command response
+12. Bug fix: Change minimum frequency from 3.2 MHz to 1.5 MHz
+1_00_019
+20-May-2024
+1. Added QMX+ 160-6m to list of options at first power-up or after factory reset
+2. New CPU Monitor utility in the System menu in the terminal
+3. System configuration "GPS Source" selects paddle port or QLG3 as GPS source in QMX+
+4. System configuration "Real Time Clock" selects hardware CR2032 RTC in QMX+ or the QMX software clock
+5. Bug fix: occasionally hanging LCD updates during rapid frequency changes
+1_00_018
+01-May-2024
+Operating manual
+1. Bug fix: date for December in GPS was called "DEV", should be "DEC"
+2. Bug fix: GPS date display in terminal was one month out
+3. Bug fix: On selecting factory reset, the LCD did not update to show the "Reset..." message
+4. Expanded Band Config screen to 16 columns
+5. New version available at power up which populates Band Configuration for the 60-15m version
+6. New menu item in Audio "Suppress thump" to enable click suppression logic
+1_00_017
+16-Feb-2024
+Operating manual
+1. Bug fix: '5351 synth code for setting TX params could lock up in some circumstances
+2. New LPF Sweep application in the terminal
+3. Added S-meter
+4. Added AGC implementation and supporting configuration menu parameters
+5. Bug fix: Parameter corruption (incl IQ Mode setting lost) in Digi config menu
+1_00_016
+10-Feb-2024
+Operating manual (same as 1_00_015)
+1. Bug fix: Was returning to the last saved band frequency after a sent message
+2. Bug fix: Power/SWR meter not shown in message memory transmissions
+3. Bug fix: Sideband selection and CW-R selection not properly cached, leading to wrong sideband reception
+4. Bug fix: dot, double-dot and underline of top left (VFO A/B) character not shown when WSJT-X transmits
+5. Bug fix: Power/SWR meter menu update interval parameter editing not working properly
+6. Bug fix: Attempted fix for what seems to be a new extra dits affecting Iambic B
+7. Bug fix: Battery icon showed incorrectly, during standalone beacon mode (should not be shown)
+8. Bug fix: WSPR beacon display not cleared properly between waiting stage and running stage
+1_00_015
+09-Feb-2024
+Operating manual
+1. Bug fix: CW timing glitches resolved.
+2. Removed unused S-meter step parameter.
+3. Remembers frequency by band.
+4. Re-arrangement of EEPROM config - automatically performs factory reset on upgrade to 1_00_015.
+5. Bug fix: if you tuned below 3.2MHz it locked up; now added minimum 3.2MHz frequency to avoid this
+6. Bug fix: PTT output port wasn't enabled; now PTT output is enabled.
+7. Bug fix: When in Japanese band limits mode, message sending did not work.
+8. Bug fix: It allowed you to send message when you're in Digi mode!
+9. Bug fix: Some of the Message presets got truncated, due to EEPROM page boundary issue.
+10. Bug fix: when message editing, left button on a space didn't move right (if the space was really a null).
+11. Bug fix: substantial reduction in keying to sidetone latency, and sped up sidetone amplitude shaping 10x.
+12. Bug fix: when message editing, on exit of a long message it didn't scroll back to the beginning by itself.
+13. Moved CW-R parameter to the System config menu, alongside Sideband selection.
+14. Increased gain control range to 200dB.
+15. Added setting "Audio attenuation" 0, 20, 40, 60, 80 or 100dB to move the audio gain window down.
+16. Added setting "Mute at min. vol.", if YES means you get total silence when at minimum volume.
+17. When SWR protection triggered, sidetone is silenced as well as power output, so you know it happened.
+18. During WSPR beacon mode, if SWR protection is triggered it shows an S in the bottom right hand corner.
+19. Bug fix: WSPR beacon now works correctly from start-up and from menu-enabling and everywhere else.
+20. Added real time clock Time setting menu in Beacon and System menus.
+21. Added CAT command TM for get/set of real time clock.
+22. Bug fix: TX shift threshold in Digi menu was only two digits but needs to contain number 500 (by default).
+23. Bug fix: SWR protection kicked in sometimes at very low powers at the end of transmissions etc.
+24. Bug fix: Incorrect cursor position on LCD when editing byte values such as Sidetone volume.
+25. Bug fix: After being in SWR test mode, no keying was possible until you re-entered and exited menu.
+26. Bug fix: a new LCD driver from scratch, prevents screen corruption when decode, battery, clock etc all on.
+27. Bug fix: If you plugged in GPS while in the menu, GPS auto-protection wasn't triggered.
+28. Bug fix: Opening terminal apps (Band Config, hardware diagnostics etc) blocked TX until enter/exit menu.
+29. Moved Battery and Power/SWR meter configurations to their own sub-menu.
+30. Added Power meter interval and TX->RX hang time configurations.
+31. Recall last used top level menu item; next time you enter the menu system it goes back to same place.
+32. Bug fix: First clockwise click of encoders got ignored.
+1_00_014
+13-Dec-2023
+Operating manual
+1. Bug fix: Simple bug fix to 1_00_013 which needed factory reset every power cycle!
+1_00_013
+12-Dec-2023
+1. Bug fix: CW-R didn't work.
+2. Bug fix: CAT MD command set didn't work (change mode command).
+3. CW-R and Sideband selection are now part of the saved radio state (not just menu parameters).
+4. SWR protection and SWR on transmit display are disabled if power is below 0.5W.
+5. Bug fix: Make sure SWR protection is disabled when in Practice mode.
+6. Bug fix: Diagnostics screen shouldn't display SWR when in Practice mode.
+7. Add "CW Offset" parameter to the Keyer menu; works between 600-800 Hz only.
+8. Bug fix: Sidetone frequency is now implemented (100-999Hz).
+9. "ENABLE"/"DISABLE" changed to "ENABLED"/"DISABLED" which is less confusing.
+10. Bug fix: CAT command MD7 didn't properly set the mode to CW-R (reported mode 6).
+11. Bug fix: Solve keyer glitches.
+12. Bug fix: Hyperactive SWR protection: now only allow if not already in some kind of practice mode.
+13. Bug fix: SWR protection mistakenly set on exiting message sending if in key-down.
+1_00_012
+05-Dec-2023
+Operating manual
+1. Fix to volume control erratic behavior.
+2. Prevent audio over-drive causing sudden distortion.
+3. Add "Audio" menu.
+4. Adjustable audio gain in steps of 0.25, 0.5, 1, 2 or 4 dB.
+5. Sidetone volume can be applied absolutely or relative to audio volume.
+6. Adjustable sidetone volume works properly.
+7. Bug fix: There was silence if you started up on 80m band.
+8. Bug fix: Custom splash screen is now working.
+9. CAT command MD now sets/returns 9 for FSR (FSK Reverse) in LSB & Digi mode
+10. CAT command FW now returns 3200 when in Digi mode (FSK)
+11. CAT command AG now operates consistent with TS-480 documentation (AG; still works too)
+1_00_011
+29-Nov-2023
+Operating manual
+1. Add band version selection in system menu and on first power-up
+2. The CAT MD command now supports 3 (CW), 6 (FSK) and 7 (CWR)
+3. Added advanced settings menu - use with caution - normally leave all enabled!
+3a. "Mod. high in RX" - sets PA modulator high in RX mode which should improve RX performance
+3b. "Normal 5ms shape" - when disabled, shape is done 33x faster (0.15ms rise/fall)
+3c. "20/80m BPF TXswap" -  swaps 20m BPF and 80m BPF on transmit (see Rev 2 PCB issue )
+4. CAT FW command now returns 0000 for SSB and 0300 for CW (was 3200 always)
+NOTE: After upgrade from an earlier version, please check the new settings items and make sure they are all  set to ENABLE and that the band version is set correctly to match your hardware.
+1_00_010
+30-Sep-2023
+Operating manual
+1. Single character battery voltage option instead of battery image
+2. Initialization sequence on display so if stuck anywhere we'll know where
+3. PA voltage is always on in diag screen and green/red to indicate correct range
+4. Power and SWR added to diag screen
+5. Pwr and SWR meter on display; controlled by menu entry in Display/controls menu
+6. Bug fix: Battery now shown correctly at power-up, and when CW decoding disabled
+7. New protection menu, with SWR protection enable and threshold
+8. Supply voltage min/max protection including warn or optional TX inhibit
+9. SWR sweep added to terminal applications
+10. SWR Tuneup screen on QMX LCD
+1_00_009
+05-Aug-2023
+Operating manual
+1. Just a recompile of 1_00_008 because it seems some items didn't get compiled in
+1_00_008
+05-Aug-2023
+1. Improved PWM control loop for the buck converter power supplies
+2. Bug fix: When decoding transmitted CW it was written to wrong parts of the LCD
+3. Bug fix: CW Beacon was at the VFO frequency, not the beacon frequency
+4. Bug fix: Stored message sending didn't work
+5. Only run the CW decoder in CW mode
+6. Swap the dit and dah naming in the diagnostics screen for consistency
+7. Do not allow mode change during transmit
+1_00_007
+01-Aug-2023
+1. Add Keyer menu configuration "GPS protection" to enable auto protection
+2. Make GPS protection auto-practice a bit less paranoid
+3. Bug fix: Fix the WSPR/CW/FSKCW beacon functionality
+4. Bug fix: Fix the applicable CAT Q1, Q2 etc commands
+5. Add mode indicator character, row 1, column 12
+6. Digimode transmit status indicator, underlines VFO A symbol
+7. Fix string editing (messages editing) in the LCD/buttons
+8. When editing messages, horizontal scroll when message longer than a screen width
+9. Bug fix: Practice mode indicator not shown if it is set at power-up
+10. Bug fix: Keyer Swap reversed compared to QCX
+11. Bug fix: Practice mode indicator not shown in Digi mode
+12. Bug fix: On digi, carrier transmission started on PTT not on incoming audio
+13. Improve LCD write speed by a factor of approx 50
+14. Bug fix: When battery indicator enabled, CW decode could corrupt top row
+1_00_006
+27-Jul-2023
+1. New GPS viewer screen in terminal, some data also available on the LCD
+2. New hardware diagnostics screen in terminal, replaces TX Test screen
+3. Bug fix: CW message memories now work
+4. Bug fix: Some settings such as USB/LSB did not work until power cycled
+1_00_005
+20-Jul-2023
+1. Big Bug fix to 1_00_004: WSJT-X stopped transmitting after a second or so
+2. Bug fix: RX frequency offset not set/reset after CW/Digi mode change
+1_00_004
+19-Jul-2023
+1. Menu system rewrite, consistent between terminal and UI
+2. Removed Tx/Rx Param 1/2 from Band Config screen and hard code to 0 and 1 resp.
+3. Fix CW decoder
+1_00_003
+09-Jul-2023
+1. Amended defaults of Band Configuration screen to suit revised assembly manual including #2 mod
+2. Increased version string size from 7 to 8 to properly display firmware version on terminal screen
+1_00_002
+14-Jun-2023
+1. RF Envelope shaping and sidetone shaping, key-click removal
+2. Larger USB buffer avoids terminal overflow with this fast CPU
+3. Fix RIT and VFO A/B/Split operation
+4. Fix backlight toggle on left button triple click
+5. Fix tune rate cursor (erased by battery icon update)
+6. Add Other menu option for firmware update
+1_00_001
+31-May-2023
+Initial alpha firmware release for QMX.
+CPU
+QDX is an embedded SDR. To provide the highest possible performance and scope for future features, a powerful STM32 microcontroller was chosen, the STM32F446. This is a 32-bit ARM Cortex M4 with floating point unit, DSP instructions, 512K Flash and 128K RAM, plenty of I/O and running at 168 MHz. It is by far the most poweful processor used on any QRP Labs product to date. At the QMX launch, well under 25% of the system resources are used.
+First QSOs
+The first QSOs were made on the 20m band on 04-Apr-2023 with a QMX prototype built for 12V, but run at 7V supply voltage with approx 1W output to my off-center-fed-dipole antenna; the first QSO was with LZ2MP.
+CW features
+Excellent CW performance is and always will be a very high priority on all QRP Labs transceivers that include CW mode operation. QMX is of course no exception (there are no exceptions!).
+In the graph below left you can see the measured CW filter performance of QMX (red line) vs the QCX-mini (blue line). The QMX filter is 300Hz wide (compared to the QCX-mini filter which is approximately 200Hz) but the QMX filter has much sharper edges. Both are centered on 700Hz. Note that in future QMX firmware releases, both the center frequency and the filter width will be configurable and adjustable.
+Another very important feature is clean break-in operation (QSK) without audible clicks. I did a lot of work in this area to ensure that QMX has NO audible clicks at all on the transmit/receive changeover. The 700Hz sidetone frequency is a clean sinewave produced by a software emulated DDS (Direct Digital Synthesizer) running at 48ksps (kilo samples per second). The amplitude envelope of the sidetone has leading and trailing edges shaped as a raised cosine with 5ms rise/fall time. Sidetone therefore sounds extremely clean.
+All transmit/receive switching in QMX is solid state (no relays) so is fast and clean. A common problem with SDR receivers is that the audio processing can have considerable latency; this is a killer for good break-in operation (QSK) because if the latency is slower than the CW dit (symbol length) then there is no time for the receiver to recover and produce any audio in the gaps between symbols and QSK is therefore impossible. SDR software running on a PC can be particularly problematic due to all the additional layers of latency involved in the operating system, as well as the DSP (digital signal processing) in the SDR itself. In QMX the SDR is implemented in the on-board powerful 168MHz 32-bit ARM Cortex M4 processor with Floating point and DSP instructions. It is therefore possible to closely control the latency performance.
+In the audacity audio recordings below, the small amplitude trace is the sidetone during some CW keying. The huge amplitude tone is the reception of a massive S9++ signal injected into the QMX BNC port. It is possible to zoom in and measure the duration of the gap between key-up and the receive audio. The latency is approximately 15ms. This compares rather favourably with other well-respected transceivers:
+Elecraft KX2: 40ms (source: ARRL QST review, May 2017)
+Elecraft K3S: 14ms (source: ARRL QST review, November 2016)
+QRP Labs QCX: 22ms (source: ARRL QST review, August 2019)
+QRP Labs QMX: 15ms (my measurement)
+Another method to measure the latency also yielded an almost identical result (15ms): using a dual channel digital 'scope with one channel connected to the RF input of the QMX and the other, the audio output, then enabling a gigantic RF signal. The digital 'scope allows accurate cursor measurements on a screen capture, the delay from RF in to AF out measured 15ms. The audio in ADC and audio out DAC both operate on 32-sample blocks every 667 microseconds. Most of the 15ms delay is inherent in the Digital Signal Processing.
+Buck converters
+This is one of the most interesting and unique aspects of the QMX design.
+An SDR requires a quite powerful CPU for good performance. A powerful CPU goes hand in hand with relatively high current consumption compared to an analog radio. Therefore switching (buck) converters are ideal for providing a high efficiency DC-DC conversion of the 9 or 12V supply to the required internal 3.3V and 5.0V supply rails. Unfortunately switching supplies can create high amounts of RF interference at the harmonics of the switching frequency, and these interference bands can destroy reception over several kHz as the oscillation is drifty and has high phase noise.
+QMX contains three buck converters, for the 3.3V, 5.0V supplies (always), and the PIN diode forward bias current (transmit-only). These are implemented with a small number of discrete components (each having resistors, capacitors, diodes, transistors and an inductor). The PWM (pulse width modulation) for the P-channel MOSFET switch is generated by the QMX CPU. The CPU also senses the output voltage via an ADC input. Accordingly the control loop for the buck converter is implemented in the CPU firmware. The PWM frequency is nominally around 116kHz.
+The rather unique aspect is that the microcontroller knows the radio's operating frequency; it also knows the switching frequency. Both are known relative to the high precision 25MHz TCXO reference which is the master clock for the entire design. The CPU can calculate where the harmonics of the switching frequency occur and slightly alter the buck converter PWM frequency to move the interference far away from the operating frequency.
+In practice this works very well. In the leftmost of the images below, the bottom half of the display shows the 20m FT8 waterfall at 14074 kHz. The 361st harmonic of the PWM frequency occurs at 14072.44 kHz. Even though it is only 2 or 3kHz below the operating frequency, it is still not troubling the receiver. However the upper half of the display shows the spectrum when the radio is tuned to 14071 kHz, with the harmonic very clearly visible (and high amplitude noise) at 1439 Hz audio offset and at least 500Hz either side. Now in the next right image, the PWM switching frequency was moved several 10's of kHz away and you can see the reception is perfectly clear.
+Let's call it Dynamic Noise Relocation, or DNR for short. Which for the medically tended among you might remind you of another DNR (Do Not Resuscitate), which is also what will happen to your STM32F446 CPU if things go too badly wrong. Fortunately it is possible to code in numerous safety features, for example such as a simulated performance envelope, and shut down the switching regulator if the PWM duty cycle is out of the expected range for a given input supply voltage.
+Another detail is necessary to resolve the chicken-and-egg problem inherent in a CPU which is the control loop of its own voltage regulator! The circuit contains a 78M33 linear voltage regulator and switches which allow the CPU to choose between the 78M33 linear regulator, and the buck converter. There's also a 47-ohm load resistor switched across the buck converter output to provide a load to operate into while spinning up the buck converter. The oscilloscope trace (third from left) shows the 3.3V and 5V rails; the 78M33 linear voltage regulator is used for the first 0.25 seconds, then the system switches across to the buck converter output. Another 25ms later the 5V regulator is ready and the audio, SDR and LCD subsystems are initialized.
+The circuit also provides a soft on/off power switch, and the CPU saves QMX's current state (operating frequency, mode, band, volume etc) to EEPROM so that it can set the radio up in the same way at next power up. There's also a reverse polarity protection circuit.
+With linear regulators the current consumption of QMX is a little over 220mA. With the buck converters in circuit, the current consumption drops to around 80mA (at 12V supply). An excellent result!
+Cover and protective rails for QMX by Tomasz Pabich
+https://www.thingiverse.com/thing:6585607
+QMX/QMX+ interface Paul DJ0CU
+https://github.com/Sparks72/QMX-Interface
+Prev
+Next
+Back to Top
+© 2026 qrp-labs.com

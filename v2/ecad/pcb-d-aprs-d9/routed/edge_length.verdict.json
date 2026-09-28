@@ -6,8 +6,10 @@
   "files": {
    "boardorder.py": "298e46edcc028954",
    "boardtable.py": "41bd92e61f12c374",
-   "edge_length.py": "fd66cbd9bce2fa7b",
+   "edge_length.py": "21d61d18e18e56a8",
    "hardset.py": "be29a44c4a592876",
+   "ibis_manifest.py": "ff27099a74e5efe9",
+   "ibis_read.py": "1d48c256b6ceca65",
    "impedance_check.py": "e2495a04e16fc600",
    "intent.py": "f1ac033e0f3c10f1",
    "intent_checks.py": "1ad7af0c718ba940",
@@ -15,43 +17,55 @@
    "netclass.py": "4cc1adf0ddae0390",
    "netlist_board.py": "655bc402d36b0fa5",
    "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
    "regen_compare.py": "341d7f129a1e6f24",
    "return_via.py": "b61d138e54955dd4",
-   "rules_lib.py": "c0458c53923d7925",
+   "rules_lib.py": "a6e2421096c1473f",
    "signal_class.py": "60b8647301428da4",
    "signalnets.py": "688be12d8e42e7a4",
    "stackup_write.py": "b55a3c0f58c805c2",
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "9882ad1bc5620724",
+  "sha16": "4011f598a4f49255",
   "unresolved": []
  },
  "counts": {
-  "answered_nets": 18,
+  "answered_nets": 26,
+  "bound_decided_nets": 11,
+  "bound_edge_nets": 19,
   "classes": 45,
   "contradicted_nets": 0,
-  "decided_nets": 20,
-  "layout_bound_nets": 2,
+  "decided_nets": 39,
+  "layout_bound_nets": 13,
   "low_speed_nets": 88,
-  "may_be_long_nets": 20,
+  "maker_edge_nets": 20,
+  "maker_held_nets": 2,
+  "may_be_long_nets": 39,
+  "models_absent": 0,
+  "models_asked": 5,
   "signal_nets": 135,
-  "undecided_nets": 27
+  "unasked_part_nets": 4,
+  "undecided_model_absent_nets": 0,
+  "undecided_nets": 8,
+  "undecided_no_declaration_nets": 8,
+  "undecided_other_nets": 0
  },
  "denominator": 135,
  "evidence": [
-  "UNDECIDED (no declaration) (UNKNOWN, 8 net(s)): no signal-class declaration names these nets, so neither their class nor their edge is kno; ICs on them: ADS1115IDGSR 16-bit ADC at 0x48 (1 ADDR 2 ALERT/RDY 3 GND 4 AIN0 5 AIN1 6 AIN2 7 AIN3 8 VDD 9 SDA 10 SCL): the flange NTC over +3V3, ratiometric U22, TLV75801PDBVR adjustable LDO, +3V4_HUB 3.44 V for the hub (1 IN 2 GND 3 EN 4 FB 5 OUT) U17, TLV75801PDRVR adjustable LDO, PA gate bias VGG 4.48 V while PA_KEY is high (1 OUT 2 FB 3 GND 4 EN 5 DNC 6 IN 7 pad) U15, TPS22810DRV load switch, +5V_TX on while +3V3_D8 is above 2.23 to 2.78 V (EN/UVLO divider R90 R91, QOD through R95) U21",
-  "UNDECIDED EXP_INT (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: PCA9555PW 0x26: COS, PTT states, KEY, PA_KEY in; exciter PD, amplifier EN, codec mute out; eight spares U16",
-  "UNDECIDED HUB_RST_n (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: TUSB2046IBVFR four-port USB 2.0 full-speed hub (TI, LQFP-32 VF, -40 to 85 C, VCC 3.3 to 3.6 from +3V4_HUB; BUSPWR low = self-powered, EXTMEM high, GANGED high, TSTMODE low) U4",
-  "UNDECIDED HUB_XTAL* (HIGH_SPEED_DIGITAL, 3 net(s)): no edge is declared and no held document states one; ICs on them: TUSB2046IBVFR four-port USB 2.0 full-speed hub (TI, LQFP-32 VF, -40 to 85 C, VCC 3.3 to 3.6 from +3V4_HUB; BUSPWR low = self-powered, EXTMEM high, GANGED high, TSTMODE low) U4",
-  "UNDECIDED PCM_XT* (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: TI PCM2912A USB audio codec (TQFP-32): mono input from the exciter, stereo output to the headphone amplifier and the transmit sum U6",
-  "UNDECIDED RF_* (HIGH_SPEED_DIGITAL, 8 net(s)): no edge is declared and no held document states one; ICs on them: NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A) U2",
-  "UNDECIDED SA_RXD (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: CP2102N-A02-GQFN28 USB-UART bridge (SAU) U3, NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A) U2",
-  "UNDECIDED SA_TXD (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: CP2102N-A02-GQFN28 USB-UART bridge (SAU) U3, NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A) U2",
-  "UNDECIDED SCL (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: ADS1115IDGSR 16-bit ADC at 0x48 (1 ADDR 2 ALERT/RDY 3 GND 4 AIN0 5 AIN1 6 AIN2 7 AIN3 8 VDD 9 SDA 10 SCL): the flange NTC over +3V3, ratiometric U22, PCA9555PW 0x26: COS, PTT states, KEY, PA_KEY in; exciter PD, amplifier EN, codec mute out; eight spares U16",
-  "UNDECIDED SDA (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: ADS1115IDGSR 16-bit ADC at 0x48 (1 ADDR 2 ALERT/RDY 3 GND 4 AIN0 5 AIN1 6 AIN2 7 AIN3 8 VDD 9 SDA 10 SCL): the flange NTC over +3V3, ratiometric U22, PCA9555PW 0x26: COS, PTT states, KEY, PA_KEY in; exciter PD, amplifier EN, codec mute out; eight spares U16",
-  "LAYOUT_BOUND HUB_DM* (HIGH_SPEED_DIGITAL, 0.5 ns, critical 15.1 mm): HUB_DM4",
-  "LAYOUT_BOUND HUB_DP* (HIGH_SPEED_DIGITAL, 0.5 ns, critical 15.1 mm): HUB_DP4"
+  "UNDECIDED (no declaration) (UNKNOWN, 8 of 8 net(s)): no signal-class declaration (x8); ICs on them: ADS1115IDGSR 16-bit U22, TLV75801PDBVR adjustable U17, TLV75801PDRVR adjustable U15, TPS22810DRV load U21",
+  "BOUND_DECIDES 11 layout-bound net(s) whose governing edge is a bound or a model: at least one driver on each has no published minimum, whatever the other drivers' makers publish (ER-D13): EXP_INT, HUB_RST_n, HUB_XTAL1, HUB_XTAL2, HUB_XTAL2R, PCM_XTI, PCM_XTO, SA_RXD, SA_TXD, SCL, SDA",
+  "MAKER_HELD 2 layout-bound net(s) on which every driver has a published minimum: HUB_DM4, HUB_DP4",
+  "LAYOUT_BOUND EXP_INT (CLOCKED_DIGITAL, 0.000 ns BOUND TI-PCA9555, critical 0.0 mm, decided by a bound): EXP_INT",
+  "LAYOUT_BOUND HUB_DM* (HIGH_SPEED_DIGITAL, 0.500 ns STANDARD USB2-HS, critical 15.1 mm, decided by a published figure on every driver): HUB_DM4",
+  "LAYOUT_BOUND HUB_DP* (HIGH_SPEED_DIGITAL, 0.500 ns STANDARD USB2-HS, critical 15.1 mm, decided by a published figure on every driver): HUB_DP4",
+  "LAYOUT_BOUND HUB_RST_n (CLOCKED_DIGITAL, 0.000 ns BOUND TI-TUSB2046B, critical 0.0 mm, decided by a bound): HUB_RST_n",
+  "LAYOUT_BOUND HUB_XTAL* (HIGH_SPEED_DIGITAL, 0.000 ns BOUND OSCILLATOR-NODES, critical 0.0 mm, decided by a bound): HUB_XTAL1, HUB_XTAL2, HUB_XTAL2R",
+  "LAYOUT_BOUND PCM_XT* (HIGH_SPEED_DIGITAL, 0.000 ns BOUND OSCILLATOR-NODES, critical 0.0 mm, decided by a bound): PCM_XTI, PCM_XTO",
+  "LAYOUT_BOUND SA_RXD (CLOCKED_DIGITAL, 0.000 ns BOUND NICERF-SA868, critical 0.0 mm, decided by a bound): SA_RXD",
+  "LAYOUT_BOUND SA_TXD (CLOCKED_DIGITAL, 0.000 ns BOUND NICERF-SA868, critical 0.0 mm, decided by a bound): SA_TXD",
+  "LAYOUT_BOUND SCL (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): SCL",
+  "LAYOUT_BOUND SDA (CLOCKED_DIGITAL, 0.000 ns BOUND TI-BQ25731, critical 0.0 mm, decided by a bound): SDA"
  ],
  "inputs": {
   "board": "d",
@@ -61,26 +75,140 @@
   },
   "board_table": {
    "path": "tools/boards/d.json",
-   "sha256_16": "e0f787a8bfe117a1"
+   "sha256_16": "56b35eba0cd6d04b"
   },
   "critical_k": 6,
   "document_1": {
+   "path": "v2/docs/records/hc5/kit_i2c_budget.round8-d.out.txt",
+   "sha256_16": "7967404c281d4e12"
+  },
+  "document_10": {
+   "path": "v2/vendor/standards/nxp-um10204-rev6-i2c-bus-specification.pdf",
+   "sha256_16": "b7619700e8bb9dd4"
+  },
+  "document_11": {
    "path": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
    "sha256_16": "2ecb40606d4b84fe"
   },
+  "document_12": {
+   "path": "v2/vendor/ti/bq25731-datasheet.pdf",
+   "sha256_16": "3e5e927fdf63cf6a"
+  },
+  "document_13": {
+   "path": "v2/vendor/ti/ti-tusb2046b.pdf",
+   "sha256_16": "d02d0b8af5cbdb1b"
+  },
+  "document_14": {
+   "path": "v2/vendor/ti/tps23861-datasheet.pdf",
+   "sha256_16": "65262ce4766a5f8e"
+  },
+  "document_15": {
+   "path": "v2/vendor/vishay/veml7700-datasheet.pdf",
+   "sha256_16": "f338cf7d5911828a"
+  },
+  "document_2": {
+   "path": "v2/vendor/adi/adi-ds3231sn.pdf",
+   "sha256_16": "dc81cd89bee82d0c"
+  },
+  "document_3": {
+   "path": "v2/vendor/microchip/microchip-atecc608b-summary-DS40002239B.pdf",
+   "sha256_16": "1b21d7b0d5c6265f"
+  },
+  "document_4": {
+   "path": "v2/vendor/microchip/microchip-ksz9897-datasheet.pdf",
+   "sha256_16": "72b89179ed6a42a7"
+  },
+  "document_5": {
+   "path": "v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf",
+   "sha256_16": "938ef5ef5007df6b"
+  },
+  "document_6": {
+   "path": "v2/vendor/quectel/lg290p03-hardware-design-v1.1.pdf",
+   "sha256_16": "422ca9a2aa5495c1"
+  },
+  "document_7": {
+   "path": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+   "sha256_16": "be56fbb75ba0ae9e"
+  },
+  "document_8": {
+   "path": "v2/vendor/silabs/silabs-cp2102n.pdf",
+   "sha256_16": "32fbab0ba17f394a"
+  },
+  "document_9": {
+   "path": "v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf",
+   "sha256_16": "f6e620179006c8c4"
+  },
+  "edge_rates": {
+   "path": "tools/pcb_edge_rates.yaml",
+   "sha256_16": "0689086680f7a4a4"
+  },
   "extent_mm": 180.0,
+  "far_netlist_a": {
+   "path": "pcb-a-power-a23/out/pcb-a-power.net",
+   "sha256_16": "599ee964a9c23d6e"
+  },
+  "far_netlist_b": {
+   "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
+   "sha256_16": "21a1f74a3ec1ae28"
+  },
+  "far_netlist_c": {
+   "path": "pcb-c-display-c8/out/pcb-c-display.net",
+   "sha256_16": "3fddbb3edcd4248a"
+  },
+  "ibis_manifest": {
+   "path": "v2/vendor/ibis-manifest.yaml",
+   "sha256_16": "47952602c17f0dfd"
+  },
   "intent": {
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs-intent.json",
-   "sha256_16": "443fd745879d3022"
+   "sha256_16": "8d9f3b2256521b0d"
+  },
+  "model_1": {
+   "path": "v2/vendor/st/ibis/stm32h742_743_750_753_lqfp100.ibs",
+   "pinned_sha256_16": "0fb7767c1ee034db",
+   "sha256_16": "0fb7767c1ee034db"
+  },
+  "model_2": {
+   "path": "v2/vendor/ti/ibis/ads1x1x.ibs",
+   "pinned_sha256_16": "c9975d3cb6ad0161",
+   "sha256_16": "c9975d3cb6ad0161"
+  },
+  "model_3": {
+   "path": "v2/vendor/ti/ibis/ina226.ibs",
+   "pinned_sha256_16": "fb4ebf43bde617c2",
+   "sha256_16": "fb4ebf43bde617c2"
+  },
+  "model_4": {
+   "path": "v2/vendor/ti/ibis/pca9555.ibs",
+   "pinned_sha256_16": "56c19a4da921e38c",
+   "sha256_16": "56c19a4da921e38c"
+  },
+  "model_5": {
+   "path": "v2/vendor/ti/ibis/tmp117.ibs",
+   "pinned_sha256_16": "5c71fbcce9e13803",
+   "sha256_16": "5c71fbcce9e13803"
+  },
+  "model_state": {
+   "absent": 0,
+   "absent_files": [],
+   "asked": 5,
+   "how_to_fetch": "python3 v2/ecad/tools/ibis_fetch.py --fetch",
+   "manifest": "v2/vendor/ibis-manifest.yaml",
+   "present": 5,
+   "state": "PRESENT"
   },
   "netlist": {
-   "content16": "ecc07f382c735835",
+   "content16": "be4194ed867c8406",
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
-   "sha256_16": "76700a687eb6187f"
+   "sha256_16": "7a2c0ac2190b141a"
   },
   "project": {
    "path": "pcb-d-aprs-d9/pcb-d-aprs.kicad_pro",
    "sha256_16": "a820c200f1b4a542"
+  },
+  "search_listing": {
+   "path": "v2/docs/records/w5si/readings/edge-search.txt",
+   "sha256_16": "d08bc489782c976b"
   },
   "slowest_layer": "JLC04161H-7628 F.Cu",
   "stack_table": {
@@ -93,7 +221,7 @@
   "t_pd_ps_per_mm": 5.521
  },
  "missing_input": null,
- "note": "SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (UNDECIDED where none does), the critical length l = t_r / (k t_pd) on the slowest layer of every stack the board may be drawn on, and whether the netlist carries an impedance target, a series termination or a declaration where a net may be electrically long. The routed lengths are the layout gate's (edge_length_routed). The table is edge_length.table.json beside this verdict. Session decisions of 26 September 2026: LOW_SPEED_OR_DC asked no edge, the first matching entry decides, the slowest layer of the declared and ruled stacks, the stripline bound, the corner-to-corner extent, the project file's class where the netlist says Default",
+ "note": "SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (UNDECIDED where none does), the critical length l = t_r / (k t_pd) on the slowest layer of every stack the board may be drawn on, and whether the netlist carries an impedance target, a series termination or a declaration where a net may be electrically long. The routed lengths are the layout gate's (edge_length_routed). The table is edge_length.table.json beside this verdict. Session decisions of 26 September 2026: LOW_SPEED_OR_DC asked no edge, the first matching entry decides, the slowest layer of the declared and ruled stacks, the stripline bound, the corner-to-corner extent, the project file's class where the netlist says Default. Since 27 September 2026 every edge is a record of tools/pcb_edge_rates.yaml (a configuration input, by sha in inputs.edge_rates): a class entry's interface record, or per net the fastest of its drivers' families (a maker's IBIS model read per pin, a published minimum, a model or a bound), its far ends and one series resistor away; a net whose driver has no record is UNDECIDED. The governing edge of a net is the fastest any driver on it can produce, so one driver with no published minimum makes the net decided by a bound whatever the others publish (ER-D13); a layout-bound net a bound decides is named under BOUND_DECIDES and holds the reading INCONCLUSIVE. counts: decided = maker_edge + bound_edge; layout_bound = maker_held + bound_decided. Since 28 September 2026 the makers' IBIS models are pinned by v2/vendor/ibis-manifest.yaml (inputs.ibis_manifest) and are not in the repository: a pinned model the checkout does not hold decides nothing, its nets read UNDECIDED naming it, and inputs.model_state says which state the reading was taken in (ER-D17); undecided = undecided_no_declaration + undecided_model_absent + undecided_other; a pin whose [Ramp] cell the model's own V-t table contradicts takes the instantaneous bound (ER-D16)",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
@@ -109,14 +237,14 @@
  },
  "tool": "edge_length",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "cef7cb77c420",
+  "tools_tree_sha": "8639c5ed4c65deea"
  },
- "ts": "2026-09-27T13:22:48Z",
+ "ts": "2026-09-28T22:46:05Z",
  "verdict": "INCONCLUSIVE",
- "version": "391d857966d6",
+ "version": "cef7cb77c420",
  "writer": {
   "file": "edge_length.py",
-  "sha16": "fd66cbd9bce2fa7b"
+  "sha16": "21d61d18e18e56a8"
  }
 }

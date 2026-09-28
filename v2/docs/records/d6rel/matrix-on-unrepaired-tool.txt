@@ -1,0 +1,43 @@
+THE FOUR-CASE MATRIX ON THE UNREPAIRED TOOL (worker d6rel, MESHSAT-1357, first taken 27 September 2026 23:57 CEST, re-taken 28 September 2026 17:55 CEST with the final matrix.py)
+The tool is git show 73ae2f21:v2/ecad/tools/reliability.py written to $SP/old/ ($SP is the session's scratch directory, outside the tree);
+case 4's list is git show 73ae2f21:v2/ecad/tools/pcb_reliability.yaml beside it. Command, from anywhere:
+  python3 v2/docs/records/d6rel/matrix.py v2/ecad/tools $SP/old/reliability.py
+Exit code of the matrix script: 1 (two of the four cases are not as wanted: cases 3 and 4, the reviewer's two silent cases). The sheets are as the reviewer wrote them (no pin: the unrepaired tool knows no such key).
+Nothing was built or measured: these are readings of fixture netlists.
+
+tool under test : $SP/old/reliability.py  sha256/16 71d0872195905c9d
+tools directory : <worktree>/v2/ecad/tools
+case 4's list   : $SP/old/pcb_reliability.yaml  sha256/16 fbf56eb06df1d007
+fixtures in     : a temporary directory outside the tree (mkdtemp prefix d6rel-matrix-)
+
+== case 1-one-declared-jst: one declared JST connector
+   wanted PASS (exit 0); the tool says PASS (exit 0): as wanted
+   counts {"boards": 1, "classes": 1, "covered": 1, "fail": 0}  denominator 2  missing_input None
+   inputs recorded: {"board": "a", "list": {"path": "list.yaml", "sha256_16": "fa012ad00726698c"}}
+   | reliability: A    1 class(es),  1 part(s) covered
+   | verdict: reliability            PASS         of 2 {"boards": 1, "classes": 1, "covered": 1, "fail": 0} | every part that carries load or sees cycling falls in a declared class with its cycle figure or the reason it has none, its load and the measure taken. It tests nothing: REL-001 is verified at the prototype and no board has been built
+
+== case 2-plus-undeclared-idc: plus an undeclared IDC header
+   wanted FAIL (exit 1); the tool says FAIL (exit 1): as wanted
+   counts {"boards": 1, "classes": 1, "covered": 1, "fail": 1}  denominator 2  missing_input None
+   inputs recorded: {"board": "a", "list": {"path": "list.yaml", "sha256_16": "fa012ad00726698c"}}
+   | reliability: A    1 class(es),  1 part(s) covered
+   |   FAIL A: J_RIB1 (fixture ribbon (IDC 2x5)) carries load or sees cycling and is in no declared class
+   | verdict: reliability            FAIL         of 2 {"boards": 1, "classes": 1, "covered": 1, "fail": 1} | every part that carries load or sees cycling falls in a declared class with its cycle figure or the reason it has none, its load and the measure taken. It tests nothing: REL-001 is verified at the prototype and no board has been built
+
+== case 3-plus-undeclared-rj45: plus an undeclared "RJ45 MagJack"
+   wanted FAIL (exit 1); the tool says PASS (exit 0): NOT AS WANTED
+   counts {"boards": 1, "classes": 1, "covered": 1, "fail": 0}  denominator 2  missing_input None
+   inputs recorded: {"board": "a", "list": {"path": "list.yaml", "sha256_16": "fa012ad00726698c"}}
+   | reliability: A    1 class(es),  1 part(s) covered
+   | verdict: reliability            PASS         of 2 {"boards": 1, "classes": 1, "covered": 1, "fail": 0} | every part that carries load or sees cycling falls in a declared class with its cycle figure or the reason it has none, its load and the measure taken. It tests nothing: REL-001 is verified at the prototype and no board has been built
+
+== case 4-board-a-no-netlist: board A's declaration and no netlist
+   wanted INCONCLUSIVE (exit 3); the tool says PASS (exit 0): NOT AS WANTED
+   counts {"boards": 1, "classes": 6, "covered": 0, "fail": 0}  denominator 6  missing_input None
+   inputs recorded: {"board": "a", "list": {"path": "list.yaml", "sha256_16": "fbf56eb06df1d007"}}
+   | reliability: A    6 class(es),  0 part(s) covered  (no netlist here)
+   |   note board A has no netlist in this tree, so the list could not be compared with it
+   | verdict: reliability            PASS         of 6 {"boards": 1, "classes": 6, "covered": 0, "fail": 0} | every part that carries load or sees cycling falls in a declared class with its cycle figure or the reason it has none, its load and the measure taken. It tests nothing: REL-001 is verified at the prototype and no board has been built
+
+the matrix: 2 of 4 case(s) as wanted, 2 not

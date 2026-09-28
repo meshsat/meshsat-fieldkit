@@ -1,0 +1,92 @@
+=== JP1 [BOOTSEL: short while powering to enter the USB bootloader] fp=Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm LCSC=
+    pin 1   BOOT_J                 (1) R32.2
+    pin 2   GND                    (ground, 119 other nodes)
+=== J_BATT [Amass XT60-M: the 4S pack power lead from board P, 12 AWG (pin 2, the pad nearer the fuse F3, is + from P's W_P; pin 1 is the return from P's W_N; the pack's protection is on board P. E6 run 11: a 3 mm CELL+ track could not pass the return pad to reach pin 1)] fp=Connector_AMASS:AMASS_XT60-M_1x02_P7.20mm_Vertical LCSC=C98733
+    pin 1   GND                    (ground, 119 other nodes)
+    pin 2   CELL+                  (1) F3.1
+=== J_BLK [solder lands for the 12 signal wires to the block board underside (mirror of A22 J_DOCK): 1-7 GND, 8 SHORE_INHIBIT, 9 USB D+, 10 USB D-, 11 GND, 12 HOT-R1 hot stop line, open drain Q11 (SC-50; VIN_RAW crosses on P_VR since EQ-16)] fp=meshsat:PogoTargets_2x6 LCSC=
+    pin 1   GND                    (ground, 112 other nodes)
+    pin 2   GND                    (ground, 112 other nodes)
+    pin 3   GND                    (ground, 112 other nodes)
+    pin 4   GND                    (ground, 112 other nodes)
+    pin 5   GND                    (ground, 112 other nodes)
+    pin 6   GND                    (ground, 112 other nodes)
+    pin 7   GND                    (ground, 112 other nodes)
+    pin 8   SHORE_INHIBIT          (3) Q8.1, R26.1, U10.18
+    pin 9   USB_E6_P               (1) R29.2
+    pin 10  USB_E6_N               (1) R30.2
+    pin 11  GND                    (ground, 112 other nodes)
+    pin 12  BLK_SPARE              (2) Q11.3, TP7.1
+=== J_DCF [DCF77 receiver module: 3.3 V, GND, pulse] fp=Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical LCSC=
+    pin 1   +3V3_E6                (51) C35.1, C38.1, C39.1, C40.1, C41.1, C42.1, C43.1, C44.1, C47.1, C48.1, C49.1, C50.1, C58.1, C60.1, C61.1, C62.1, D9.5, J_LTG.1, J_POD.1, R25.2, R31.2, R34.2, R35.2, R36.2, R37.2, R38.1, R46.2, R47.2, R49.2, R50.2, R51.1, R52.2, R55.2, R57.1, U10.1, U10.10, U10.22, U10.33, U10.42, U10.43 ...
+    pin 2   GND                    (ground, 119 other nodes)
+    pin 3   DCF_PULSE              (2) R49.1, U10.8
+=== J_DCIN [JST-VH socket, 10 A: vehicle and shore DC in 9 to 36 V (lead from the D38999 wall receptacle DC pair): + -] fp=Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical LCSC=C274411
+    pin 1   DC_IN                  (2) F1.1, TP1.1
+    pin 2   GND_V                  (ground, 12 other nodes)
+=== J_FAN1 [mixer fan 1 under the plate (12 V class fan on the pack node, low-side PWM, tachometer)] fp=Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical LCSC=
+    pin 1   CELL_F                 (12) C1.1, C31.1, D3.1, D7.1, D8.1, F3.2, J_FAN2.1, P_CP.1, R42.1, TP8.1, U12.2, U12.3
+    pin 2   FAN1_SW                (2) D7.2, Q9.3
+    pin 3   FAN1_TACH              (2) R46.1, U10.13
+=== J_FAN2 [mixer fan 2 under the plate (12 V class fan on the pack node, low-side PWM, tachometer)] fp=Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical LCSC=
+    pin 1   CELL_F                 (12) C1.1, C31.1, D3.1, D7.1, D8.1, F3.2, J_FAN1.1, P_CP.1, R42.1, TP8.1, U12.2, U12.3
+    pin 2   FAN2_SW                (2) D8.2, Q10.3
+    pin 3   FAN2_TACH              (2) R47.1, U10.14
+=== J_GEIGER [Geiger counter module (RadiationD-v1.1 class): 5 V switched by U16, GND, pulse] fp=Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical LCSC=
+    pin 1   +5V_GEIGER             (3) C54.1, C55.1, U16.1
+    pin 2   GND                    (ground, 119 other nodes)
+    pin 3   GEIGER_PULSE           (1) R48.1
+=== J_LTG [AS3935 lightning sensor module (CJMCU-3935 class): 3.3 V, GND, SDA, SCL, IRQ] fp=Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical LCSC=
+    pin 1   +3V3_E6                (51) C35.1, C38.1, C39.1, C40.1, C41.1, C42.1, C43.1, C44.1, C47.1, C48.1, C49.1, C50.1, C58.1, C60.1, C61.1, C62.1, D9.5, J_DCF.1, J_POD.1, R25.2, R31.2, R34.2, R35.2, R36.2, R37.2, R38.1, R46.2, R47.2, R49.2, R50.2, R51.1, R52.2, R55.2, R57.1, U10.1, U10.10, U10.22, U10.33, U10.42, U10.43 ...
+    pin 2   GND                    (ground, 119 other nodes)
+    pin 3   SDA1                   (8) D9.1, D9.6, J_POD.3, R36.1, U10.6, U14.3, U15.14, U17.3
+    pin 4   SCL1                   (8) D9.3, D9.4, J_POD.4, R37.1, U10.7, U14.4, U15.13, U17.6
+    pin 5   LTG_IRQ                (2) R50.1, U10.17
+=== J_POD [outside sensor pod on the connector plate (M8 sealed lead): 3.3 V, GND, SDA, SCL] fp=Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical LCSC=
+    pin 1   +3V3_E6                (51) C35.1, C38.1, C39.1, C40.1, C41.1, C42.1, C43.1, C44.1, C47.1, C48.1, C49.1, C50.1, C58.1, C60.1, C61.1, C62.1, D9.5, J_DCF.1, J_LTG.1, R25.2, R31.2, R34.2, R35.2, R36.2, R37.2, R38.1, R46.2, R47.2, R49.2, R50.2, R51.1, R52.2, R55.2, R57.1, U10.1, U10.10, U10.22, U10.33, U10.42, U10.43 ...
+    pin 2   GND                    (ground, 119 other nodes)
+    pin 3   SDA1                   (8) D9.1, D9.6, J_LTG.3, R36.1, U10.6, U14.3, U15.14, U17.3
+    pin 4   SCL1                   (8) D9.3, D9.4, J_LTG.4, R37.1, U10.7, U14.4, U15.13, U17.6
+=== J_SMB [SMBus lead to board P, JST-XH 1x4 (B4B-XH-A), P's pin order: 1 SMBC, 2 SMBD, 3 GND, 4 PRES] fp=Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical LCSC=C144395
+    pin 1   SMBC                   (2) R35.1, U10.5
+    pin 2   SMBD                   (2) R34.1, U10.4
+    pin 3   GND                    (ground, 119 other nodes)
+    pin 4   PRES_LEAD              (1) R54.1
+=== J_SOLAR [JST-VH socket, 10 A: bare panel in (lead from the D38999 spare pair; a 36-cell 12 V class panel, up to about 22 V open circuit, 100 W): + -] fp=Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical LCSC=C274411
+    pin 1   PV_IN                  (1) F2.1
+    pin 2   GND                    (ground, 119 other nodes)
+=== J_TAMP [JST-XH 1x2 (B2B-XH-A): lid and tamper reed sensor lead, Littelfuse 59140-1-S-05-A normally open under the frame, 57140-000 magnet in the lid: 1 lead, 2 GND] fp=Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical LCSC=C158012
+    pin 1   TAMPER_LEAD            (2) R52.1, R53.1
+    pin 2   GND                    (ground, 119 other nodes)
+=== LED1 [green: vehicle input present] fp=LED_SMD:LED_0603_1608Metric LCSC=
+    pin 1   GND                    (ground, 119 other nodes)
+    pin 2   LED_A                  (1) R27.2
+=== LED2 [status (GPIO25)] fp=LED_SMD:LED_0603_1608Metric LCSC=
+    pin 1   GND                    (ground, 119 other nodes)
+    pin 2   LED_STAT_A             (1) R33.2
+=== PAD_W1 [water electrode A (bare copper, +3.3 V through 1 M)] fp=meshsat:SolderPad_8x6 LCSC=
+    pin 1   WATER_A                (1) R38.2
+=== PAD_W2 [water electrode B (bare copper, to ADC0)] fp=meshsat:SolderPad_8x6 LCSC=
+    pin 1   WATER_SENSE            (3) C51.1, R39.1, U10.38
+=== P_CN [solder pad, 12 AWG wire to the block board return targets] fp=meshsat:SolderPad_8x6 LCSC=
+    pin 1   GND                    (ground, 119 other nodes)
+=== P_CP [solder pad, 12 AWG wire to the block board CELL+ targets] fp=meshsat:SolderPad_8x6 LCSC=
+    pin 1   CELL_F                 (12) C1.1, C31.1, D3.1, D7.1, D8.1, F3.2, J_FAN1.1, J_FAN2.1, R42.1, TP8.1, U12.2, U12.3
+=== P_VN [solder pad, 12 AWG wire to the block board VIN_RAW return targets (board A's four 9 A power pins J_VN1-4, EQ-16)] fp=meshsat:SolderPad_8x6 LCSC=
+    pin 1   GND                    (ground, 119 other nodes)
+=== P_VR [solder pad, 12 AWG wire to the block board VIN_RAW targets (board A's four 9 A power pins J_VR1-4, EQ-16)] fp=meshsat:SolderPad_8x6 LCSC=
+    pin 1   VIN_RAW                (12) C7.1, C8.1, D2.1, L2.3, Q2.5, Q2.6, Q2.7, Q2.8, R27.1, R40.1, TP3.1, U4.4
+=== test points
+    TP1    pin 1 DC_IN                  [DC_IN]
+    TP10   pin 1 SWCLK                  [SWCLK]
+    TP11   pin 1 SWDIO                  [SWDIO]
+    TP12   pin 1 E6_RUN                 [E6_RUN]
+    TP13   pin 1 GEIGER_IN              [GEIGER_IN]
+    TP2    pin 1 DC_P                   [DC_P]
+    TP3    pin 1 VIN_RAW                [VIN_RAW]
+    TP4    pin 1 GND                    [GND]
+    TP5    pin 1 PV_P                   [PV_P]
+    TP6    pin 1 TRK_OUT                [TRK_OUT]
+    TP7    pin 1 BLK_SPARE              [BLK_SPARE]
+    TP8    pin 1 CELL_F                 [CELL_F]
+    TP9    pin 1 +5V_E6                 [+5V_E6]
