@@ -115,7 +115,7 @@
   "extent_mm": 572.0,
   "far_netlist_a": {
    "path": "pcb-a-power-a23/out/pcb-a-power.net",
-   "sha256_16": "2dfe1c546cb39ccb"
+   "sha256_16": "599ee964a9c23d6e"
   },
   "far_netlist_b": {
    "path": "pcb-b-compute-b19/out/pcb-b-compute.net",

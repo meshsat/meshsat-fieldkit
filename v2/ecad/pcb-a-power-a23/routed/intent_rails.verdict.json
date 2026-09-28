@@ -25,26 +25,26 @@
   "unresolved": []
  },
  "counts": {
-  "census_nets": 356,
-  "checks": 35,
-  "declared_nodes": 56,
+  "census_nets": 362,
+  "checks": 36,
+  "declared_nodes": 58,
   "declared_not_in_netlist": 0,
-  "declared_rails": 34,
+  "declared_rails": 35,
   "fail": 0,
-  "held_pin_roles": 436,
+  "held_pin_roles": 441,
   "nodes_supplying_parts": 0,
-  "power_nets": 34,
+  "power_nets": 35,
   "rails_without_destination": 0,
-  "settled": 59,
+  "settled": 60,
   "switches_unresolved": 0,
   "undecided": 0,
   "undeclared": 0,
-  "unmarked": 163
+  "unmarked": 164
  },
- "denominator": 35,
+ "denominator": 36,
  "evidence": [
-  "census of the 356 nets: 34 counted, 88 declared node, 1 ground, 59 settled, 11 unconnected, 0 undecided, 163 unmarked",
-  "settled, they supply nothing (59): B33_SS, CH_ACN_F, CH_ACP_F, CH_COMP1C, CH_COMP2, CH_SRN_F, CH_SRP_F, FE_COMP, FE_COMPC, FE_ISNS_N, FE_ISNS_P, FE_SLOPE, FE_SS, HF_COMP, HF_COMPC, HF_ISNS_N, HF_ISNS_P, HF_SLOPE, HF_SS, HT_SS, MAIN_PB, MAIN_PDT, PA_COMP, PA_COMPC, PA_ISNS_N, PA_ISNS_P, PA_SLOPE, PA_SS, PD_COMP, PD_COMPC, PD_ISNS_N, PD_ISNS_P, PD_SLOPE, PD_SS, POE_COMP, POE_COMPC, POE_ISNS_N, POE_ISNS_P, POE_SLOPE, POE_SS, S1_COMPC, S2_COMP, S2_COMPC, S2_ISNS_N, S2_ISNS_P, S2_SLOPE, S2_SS, S3_COMPC, SD_COMP, SD_COMPC, SD_ISNS_N, SD_ISNS_P, SD_SLOPE, SD_SS, U21_DVDT, U22_DVDT, U23_DVDT, U32_DVDT, U39_DVDT",
+  "census of the 362 nets: 35 counted, 90 declared node, 1 ground, 60 settled, 12 unconnected, 0 undecided, 164 unmarked",
+  "settled, they supply nothing (60): B33_SS, CH_ACN_F, CH_ACP_F, CH_COMP1C, CH_COMP2, CH_SRN_F, CH_SRP_F, D8B_SS, FE_COMP, FE_COMPC, FE_ISNS_N, FE_ISNS_P, FE_SLOPE, FE_SS, HF_COMP, HF_COMPC, HF_ISNS_N, HF_ISNS_P, HF_SLOPE, HF_SS, HT_SS, MAIN_PB, MAIN_PDT, PA_COMP, PA_COMPC, PA_ISNS_N, PA_ISNS_P, PA_SLOPE, PA_SS, PD_COMP, PD_COMPC, PD_ISNS_N, PD_ISNS_P, PD_SLOPE, PD_SS, POE_COMP, POE_COMPC, POE_ISNS_N, POE_ISNS_P, POE_SLOPE, POE_SS, S1_COMPC, S2_COMP, S2_COMPC, S2_ISNS_N, S2_ISNS_P, S2_SLOPE, S2_SS, S3_COMPC, SD_COMP, SD_COMPC, SD_ISNS_N, SD_ISNS_P, SD_SLOPE, SD_SS, U21_DVDT, U22_DVDT, U23_DVDT, U32_DVDT, U39_DVDT",
   "declared as a node, not a rail: B33_BST (supply pin by its held datasheet (U12.6 BST: v2/vendor/ti/ti-tps62933.pdf))",
   "declared as a node, not a rail: B33_SW (supply pin by its held datasheet (U12.5 SW: v2/vendor/ti/ti-tps62933.pdf); series conductor: the source L7 of rail +3V3 )",
   "declared as a node, not a rail: CH_BTST1 (supply pin by its held datasheet (U3.30 BTST1: v2/vendor/ti/bq25731-datasheet.pdf))",
@@ -52,9 +52,9 @@
   "declared as a node, not a rail: CH_SW1 (supply pin by its held datasheet (U3.32 SW1: v2/vendor/ti/bq25731-datasheet.pdf); switch output: the load Q7 of rail CH_)",
   "declared as a node, not a rail: CH_SW2 (supply pin by its held datasheet (U3.23 SW2: v2/vendor/ti/bq25731-datasheet.pdf))",
   "declared as a node, not a rail: CH_VDDA (supply pin by name (U3.7 CH_VDDA), and the intent's bypass list decouples it (C19:U3.7); supply pin by its held datashee)",
+  "declared as a node, not a rail: D8B_BST (supply pin by its held datasheet (U41.6 BST: v2/vendor/ti/ti-tps62933.pdf))",
+  "declared as a node, not a rail: D8B_SW (supply pin by its held datasheet (U41.5 SW: v2/vendor/ti/ti-tps62933.pdf); series conductor: the source L13 of rail +5V_)",
   "declared as a node, not a rail: FE_BOOT1 (supply pin by its held datasheet (U2.26 BOOT1: v2/vendor/ti/lm5176-datasheet.pdf))",
-  "declared as a node, not a rail: FE_BOOT2 (supply pin by its held datasheet (U2.20 BOOT2: v2/vendor/ti/lm5176-datasheet.pdf))",
-  "declared as a node, not a rail: FE_GVDD (supply pin by name (U34.1 FE_GVDD), and the intent's bypass list decouples it (C210:U34.1))",
   "settled, it supplies nothing: B33_SS: nothing on it supplies: U12.7 SS/PG (timing, ti-tps62933.pdf)",
   "settled, it supplies nothing: CH_ACN_F: nothing on it supplies: U3.2 ACN (sense, bq25731-datasheet.pdf)",
   "settled, it supplies nothing: CH_ACP_F: nothing on it supplies: U3.3 ACP (sense, bq25731-datasheet.pdf)",
@@ -62,6 +62,7 @@
   "settled, it supplies nothing: CH_COMP2: nothing on it supplies: U3.17 COMP2 (compensation, bq25731-datasheet.pdf)",
   "settled, it supplies nothing: CH_SRN_F: nothing on it supplies: U3.19 SRN (sense, bq25731-datasheet.pdf)",
   "settled, it supplies nothing: CH_SRP_F: nothing on it supplies: U3.20 SRP (sense, bq25731-datasheet.pdf)",
+  "settled, it supplies nothing: D8B_SS: nothing on it supplies: U41.7 SS/PG (timing, ti-tps62933.pdf)",
   "settled, it supplies nothing: FE_COMP: nothing on it supplies: U2.9 COMP (compensation, lm5176-datasheet.pdf)",
   "settled, it supplies nothing: FE_COMPC: only resistors, capacitors and test points",
   "settled, it supplies nothing: FE_ISNS_N: nothing on it supplies: U2.13 ISNS(\u2013) (sense, lm5176-datasheet.pdf)",
@@ -91,8 +92,7 @@
   "settled, it supplies nothing: PD_SS: nothing on it supplies: U19.8 SS (timing, lm5176-datasheet.pdf)",
   "settled, it supplies nothing: POE_COMP: nothing on it supplies: U16.9 COMP (compensation, lm5176-datasheet.pdf)",
   "settled, it supplies nothing: POE_COMPC: only resistors, capacitors and test points",
-  "settled, it supplies nothing: POE_ISNS_N: nothing on it supplies: U16.13 ISNS(\u2013) (sense, lm5176-datasheet.pdf)",
-  "settled, it supplies nothing: POE_ISNS_P: nothing on it supplies: U16.14 ISNS(+) (sense, lm5176-datasheet.pdf)"
+  "settled, it supplies nothing: POE_ISNS_N: nothing on it supplies: U16.13 ISNS(\u2013) (sense, lm5176-datasheet.pdf)"
  ],
  "inputs": {
   "board": "a",
@@ -134,12 +134,12 @@
   },
   "intent": {
    "path": "pcb-a-power-a23/out/pcb-a-power-intent.json",
-   "sha256_16": "35e430a791ab2b44"
+   "sha256_16": "070b4c5e41e023e5"
   },
   "netlist": {
-   "content16": "d464d30a17fb30f7",
+   "content16": "2efce63fe72079f1",
    "path": "pcb-a-power-a23/out/pcb-a-power.net",
-   "sha256_16": "2dfe1c546cb39ccb"
+   "sha256_16": "599ee964a9c23d6e"
   },
   "threshold_a": 0.0
  },
@@ -161,12 +161,12 @@
  },
  "tool": "intent_rails",
  "tools": {
-  "git_head": "87b7d5a9509c",
-  "tools_tree_sha": "bfeac03e9fe6170b"
+  "git_head": "cef7cb77c420",
+  "tools_tree_sha": "8639c5ed4c65deea"
  },
- "ts": "2026-09-28T21:54:00Z",
+ "ts": "2026-09-28T22:44:34Z",
  "verdict": "PASS",
- "version": "87b7d5a9509c",
+ "version": "cef7cb77c420",
  "writer": {
   "file": "intent_checks.py",
   "sha16": "1ad7af0c718ba940"

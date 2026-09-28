@@ -2,19 +2,19 @@
  "board": "a",
  "counts": {
   "answered_nets": 19,
-  "bound_decided_nets": 62,
-  "bound_edge_nets": 75,
+  "bound_decided_nets": 64,
+  "bound_edge_nets": 77,
   "classes": 64,
   "contradicted_nets": 0,
-  "decided_nets": 82,
-  "layout_bound_nets": 63,
-  "low_speed_nets": 170,
+  "decided_nets": 84,
+  "layout_bound_nets": 65,
+  "low_speed_nets": 172,
   "maker_edge_nets": 7,
   "maker_held_nets": 1,
-  "may_be_long_nets": 82,
+  "may_be_long_nets": 84,
   "models_absent": 0,
   "models_asked": 5,
-  "signal_nets": 290,
+  "signal_nets": 294,
   "unasked_part_nets": 0,
   "undecided_model_absent_nets": 0,
   "undecided_nets": 38,
@@ -115,7 +115,7 @@
   },
   "intent": {
    "path": "pcb-a-power-a23/out/pcb-a-power-intent.json",
-   "sha256_16": "35e430a791ab2b44"
+   "sha256_16": "070b4c5e41e023e5"
   },
   "model_1": {
    "path": "v2/vendor/st/ibis/stm32h742_743_750_753_lqfp100.ibs",
@@ -152,9 +152,9 @@
    "state": "PRESENT"
   },
   "netlist": {
-   "content16": "d464d30a17fb30f7",
+   "content16": "2efce63fe72079f1",
    "path": "pcb-a-power-a23/out/pcb-a-power.net",
-   "sha256_16": "2dfe1c546cb39ccb"
+   "sha256_16": "599ee964a9c23d6e"
   },
   "project": {
    "path": "pcb-a-power-a23/pcb-a-power.kicad_pro",
@@ -839,15 +839,18 @@
    "basis": "a bootstrap node riding on a switch node",
    "bound_decides": [
     "B33_BST",
+    "D8B_BST",
     "HT_BST"
    ],
    "bound_nets": [
     "B33_BST",
+    "D8B_BST",
     "HT_BST"
    ],
    "class": "HIGH_SPEED_DIGITAL",
    "critical_by_net": {
     "B33_BST": 0.0,
+    "D8B_BST": 0.0,
     "HT_BST": 0.0
    },
    "critical_mm": 0.0,
@@ -858,10 +861,14 @@
     ],
     "TPS62933DRLR 3 A buck, 3.3 V logic": [
      "U12"
+    ],
+    "TPS62933DRLR 3 A buck, 5.0 V for the D8 mezzanine": [
+     "U41"
     ]
    },
    "layout_bound": [
     "B33_BST",
+    "D8B_BST",
     "HT_BST"
    ],
    "maker_holds": [],
@@ -870,6 +877,18 @@
    "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
    "net_edges": {
     "B33_BST": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_BST, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_BST, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "D8B_BST": {
      "basis": "BOUND",
      "bound_drivers": [
       "POWER-STAGE-NODES: class entry *_BST, POWER-STAGE-NODES"
@@ -896,6 +915,7 @@
    },
    "nets": [
     "B33_BST",
+    "D8B_BST",
     "HT_BST"
    ],
    "pattern": "*_BST",
@@ -1092,13 +1112,13 @@
    "basis": "an eFuse slew-rate capacitor node, deliberately slow",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {
-    "TPS259631DDAR eFuse +3V3 -> +3V3_EMCON_EF (4.7k 1% (ILM: 0.18 A))": [
+    "TPS259631DDAR eFuse +3V3 -> +3V3_EMCON_EF (4.7k 1% (ILM: 0.20 A))": [
      "U39"
     ],
-    "TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (453R 1% (ILM: 2.0 A))": [
+    "TPS259631DDAR eFuse +5V_D8IN -> +5V_D8 (453R 1% (ILM: 2.0 A))": [
      "U23"
     ],
-    "TPS259631DDAR eFuse +5V_DEV -> VBUS_WALL (1k 1% (ILM: 0.89 A))": [
+    "TPS259631DDAR eFuse +5V_DEV -> VBUS_WALL (1k 1% (ILM: 0.91 A))": [
      "U32"
     ],
     "TPS259631DDAR eFuse VBAT -> VHEAT_IN (909R 1% (ILM: 1.0 A))": [
@@ -1154,13 +1174,13 @@
     "SN74LVC1G00DBVR NAND: OUTLET_OK = NOT (TR_APRS AND PA_EN), the outlet interlock": [
      "U30"
     ],
-    "TPS259631DDAR eFuse +3V3 -> +3V3_EMCON_EF (4.7k 1% (ILM: 0.18 A))": [
+    "TPS259631DDAR eFuse +3V3 -> +3V3_EMCON_EF (4.7k 1% (ILM: 0.20 A))": [
      "U39"
     ],
-    "TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (453R 1% (ILM: 2.0 A))": [
+    "TPS259631DDAR eFuse +5V_D8IN -> +5V_D8 (453R 1% (ILM: 2.0 A))": [
      "U23"
     ],
-    "TPS259631DDAR eFuse +5V_DEV -> VBUS_WALL (1k 1% (ILM: 0.89 A))": [
+    "TPS259631DDAR eFuse +5V_DEV -> VBUS_WALL (1k 1% (ILM: 0.91 A))": [
      "U32"
     ],
     "TPS259631DDAR eFuse VBAT -> VHEAT_IN (909R 1% (ILM: 1.0 A))": [
@@ -1174,6 +1194,9 @@
     ],
     "TPS62933DRLR 3 A buck, 3.3 V logic": [
      "U12"
+    ],
+    "TPS62933DRLR 3 A buck, 5.0 V for the D8 mezzanine": [
+     "U41"
     ]
    },
    "net_edges": {},
@@ -1236,11 +1259,15 @@
     ],
     "TPS62933DRLR 3 A buck, 3.3 V logic": [
      "U12"
+    ],
+    "TPS62933DRLR 3 A buck, 5.0 V for the D8 mezzanine": [
+     "U41"
     ]
    },
    "net_edges": {},
    "nets": [
     "B33_FB",
+    "D8B_FB",
     "FE_FB",
     "HF_FB",
     "HT_FB",
@@ -1269,13 +1296,13 @@
     "PCA9555PW (0x24): power-good lines, spares": [
      "U28"
     ],
-    "TPS259631DDAR eFuse +3V3 -> +3V3_EMCON_EF (4.7k 1% (ILM: 0.18 A))": [
+    "TPS259631DDAR eFuse +3V3 -> +3V3_EMCON_EF (4.7k 1% (ILM: 0.20 A))": [
      "U39"
     ],
-    "TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (453R 1% (ILM: 2.0 A))": [
+    "TPS259631DDAR eFuse +5V_D8IN -> +5V_D8 (453R 1% (ILM: 2.0 A))": [
      "U23"
     ],
-    "TPS259631DDAR eFuse +5V_DEV -> VBUS_WALL (1k 1% (ILM: 0.89 A))": [
+    "TPS259631DDAR eFuse +5V_DEV -> VBUS_WALL (1k 1% (ILM: 0.91 A))": [
      "U32"
     ],
     "TPS259631DDAR eFuse VBAT -> VHEAT_IN (909R 1% (ILM: 1.0 A))": [
@@ -1692,13 +1719,13 @@
    "basis": "an eFuse current-limit resistor node, a DC bias",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {
-    "TPS259631DDAR eFuse +3V3 -> +3V3_EMCON_EF (4.7k 1% (ILM: 0.18 A))": [
+    "TPS259631DDAR eFuse +3V3 -> +3V3_EMCON_EF (4.7k 1% (ILM: 0.20 A))": [
      "U39"
     ],
-    "TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (453R 1% (ILM: 2.0 A))": [
+    "TPS259631DDAR eFuse +5V_D8IN -> +5V_D8 (453R 1% (ILM: 2.0 A))": [
      "U23"
     ],
-    "TPS259631DDAR eFuse +5V_DEV -> VBUS_WALL (1k 1% (ILM: 0.89 A))": [
+    "TPS259631DDAR eFuse +5V_DEV -> VBUS_WALL (1k 1% (ILM: 0.91 A))": [
      "U32"
     ],
     "TPS259631DDAR eFuse VBAT -> VHEAT_IN (909R 1% (ILM: 1.0 A))": [
@@ -2132,13 +2159,13 @@
    "basis": "an overvoltage-lockout divider tap, a DC level",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {
-    "TPS259631DDAR eFuse +3V3 -> +3V3_EMCON_EF (4.7k 1% (ILM: 0.18 A))": [
+    "TPS259631DDAR eFuse +3V3 -> +3V3_EMCON_EF (4.7k 1% (ILM: 0.20 A))": [
      "U39"
     ],
-    "TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (453R 1% (ILM: 2.0 A))": [
+    "TPS259631DDAR eFuse +5V_D8IN -> +5V_D8 (453R 1% (ILM: 2.0 A))": [
      "U23"
     ],
-    "TPS259631DDAR eFuse +5V_DEV -> VBUS_WALL (1k 1% (ILM: 0.89 A))": [
+    "TPS259631DDAR eFuse +5V_DEV -> VBUS_WALL (1k 1% (ILM: 0.91 A))": [
      "U32"
     ],
     "TPS259631DDAR eFuse VBAT -> VHEAT_IN (909R 1% (ILM: 1.0 A))": [
@@ -2351,11 +2378,15 @@
     ],
     "TPS62933DRLR 3 A buck, 3.3 V logic": [
      "U12"
+    ],
+    "TPS62933DRLR 3 A buck, 5.0 V for the D8 mezzanine": [
+     "U41"
     ]
    },
    "net_edges": {},
    "nets": [
     "B33_SS",
+    "D8B_SS",
     "FE_SS",
     "HF_SS",
     "HT_SS",
@@ -2376,13 +2407,16 @@
    "answered": {},
    "basis": "a converter switch node: the fastest edges on this board and its primary radiated source",
    "bound_decides": [
+    "D8B_SW",
     "HT_SW"
    ],
    "bound_nets": [
+    "D8B_SW",
     "HT_SW"
    ],
    "class": "HIGH_SPEED_DIGITAL",
    "critical_by_net": {
+    "D8B_SW": 0.0,
     "HT_SW": 0.0
    },
    "critical_mm": 0.0,
@@ -2390,9 +2424,13 @@
    "drivers": {
     "TPS62933DRLR 3 A buck, 12.0 V heater rail": [
      "U33"
+    ],
+    "TPS62933DRLR 3 A buck, 5.0 V for the D8 mezzanine": [
+     "U41"
     ]
    },
    "layout_bound": [
+    "D8B_SW",
     "HT_SW"
    ],
    "maker_holds": [],
@@ -2400,6 +2438,18 @@
    "may_be_long": true,
    "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
    "net_edges": {
+    "D8B_SW": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_SW, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_SW, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
     "HT_SW": {
      "basis": "BOUND",
      "bound_drivers": [
@@ -2414,6 +2464,7 @@
     }
    },
    "nets": [
+    "D8B_SW",
     "HT_SW"
    ],
    "pattern": "*_SW",

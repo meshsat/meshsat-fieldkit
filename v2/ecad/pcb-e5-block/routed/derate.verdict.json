@@ -41,12 +41,12 @@
  },
  "tool": "derate",
  "tools": {
-  "git_head": "87b7d5a9509c",
-  "tools_tree_sha": "bfeac03e9fe6170b"
+  "git_head": "cef7cb77c420",
+  "tools_tree_sha": "8639c5ed4c65deea"
  },
- "ts": "2026-09-28T21:56:07Z",
+ "ts": "2026-09-28T22:46:40Z",
  "verdict": "PASS",
- "version": "87b7d5a9509c",
+ "version": "cef7cb77c420",
  "writer": {
   "file": "derate.py",
   "sha16": "6c29d1b9a523d385"

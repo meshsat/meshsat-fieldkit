@@ -145,7 +145,7 @@
   "extent_mm": 180.0,
   "far_netlist_a": {
    "path": "pcb-a-power-a23/out/pcb-a-power.net",
-   "sha256_16": "2dfe1c546cb39ccb"
+   "sha256_16": "599ee964a9c23d6e"
   },
   "far_netlist_b": {
    "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
@@ -237,12 +237,12 @@
  },
  "tool": "edge_length",
  "tools": {
-  "git_head": "87b7d5a9509c",
-  "tools_tree_sha": "bfeac03e9fe6170b"
+  "git_head": "cef7cb77c420",
+  "tools_tree_sha": "8639c5ed4c65deea"
  },
- "ts": "2026-09-28T21:55:32Z",
+ "ts": "2026-09-28T22:46:05Z",
  "verdict": "INCONCLUSIVE",
- "version": "87b7d5a9509c",
+ "version": "cef7cb77c420",
  "writer": {
   "file": "edge_length.py",
   "sha16": "21d61d18e18e56a8"
