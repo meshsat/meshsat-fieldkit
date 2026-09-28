@@ -13,7 +13,7 @@ The ruling this implements is `v2/docs/feasibility/DECOUPLING.md` section 6; the
 
 | item | what it became | tests | status |
 |---|---|---|---|
-| T1, the fan set follows the escape pass | `decoupling_rules.py`: `is_fine`, `min_pitch_nm`, `escaped` (escape.py's old selection with its two exemptions, unchanged), `copper_fanned` (eight or more numbered copper SMD pads at 1.0 mm or less, paste apertures not counted), `fanned` (the union). `fan_select.py` turns a KiCad footprint into those inputs (`is_escaped`, `is_fanned`, `escape_skip` from the caller's environment or `tools/boards/<x>.json`, `fan_boxes`, `tht_boxes`). `escape.py`, `bypass_slots.py`, `bypass_place.py` (through `bypass_search.Context`), `bypass_seats.py` and `intent_checks.py` all call it; none keeps a copy. | `test_decoupling_rules.py`: the SOIC-8-1EP not fanned, the WSON-6-1EP fanned, SOT-23-6 and MLPD-6 fanned, the 0.8 mm TQFP fanned, the fine-pitch parts fanned, an ESCAPE_SKIP part fanned only by its copper pads, the selection part by part against the record that measured the ruling (lands read from the committed boards into `tests/fixtures/decoupling/footprints.json`), and an AST check that none of the files defines its own selection. `box/escape_parity.py`: the escape pass of 73ae2f21 against this branch on the six committed boards stripped of copper. | DONE |
+| T1, the fan set follows the escape pass | `decoupling_rules.py`: `is_fine`, `min_pitch_nm`, `escaped` (escape.py's old selection with its two exemptions, unchanged), `copper_fanned` (eight or more numbered copper SMD pads at 1.0 mm or less, paste apertures not counted), `fanned` (the union). `fan_select.py` turns a KiCad footprint into those inputs (`is_escaped`, `is_fanned`, `escape_skip` from the caller's environment or `tools/boards/<x>.json`, `fan_boxes`, `tht_boxes`). `escape.py`, `bypass_slots.py`, `bypass_place.py` (through `bypass_search.Context`), `bypass_seats.py` and `intent_checks.py` all call it; none keeps a copy. | `test_decoupling_rules.py`: the SOIC-8-1EP not fanned, the WSON-6-1EP fanned, SOT-23-6 and MLPD-6 fanned, the 0.8 mm TQFP fanned, the fine-pitch parts fanned, an ESCAPE_SKIP part fanned only by its copper pads, the selection part by part against the record that measured the ruling (lands read from the committed boards into `tests/fixtures/decoupling/footprints.json`), and an AST check that none of the files defines its own selection. `box/escape_parity.py`: the escape pass of 73ae2f21 against this branch on the six committed boards stripped of copper: the same copper on all six (run5). | DONE |
 | T2, one limit keyed by class | `decoupling_rules.limit` (screen 3.0 mm for R, D, L; 6.0 mm for B2; none for A and B1; the maker's `maker_mm` as a cap no allowance passes) and `judge` (pass, justified, recorded, fail; an allowance never gives pass). The gate, `bypass_search.search` (both placers) and `bypass_place`'s own "where it sits now" all measure rail pad to pin (`bypass_search.rail_pad_number`, from the netlist beside the board where there is one, else a bound: the farther pad). The value string is not an argument. | `test_decoupling_rules.py` (the value string cannot decide the limit, each class its own limit, an unclassed entry refused and never defaulted, a maker's distance no allowance passes); `test_decoupling_board.py` (the same on boards KiCad built, through the gate). | DONE. `bypass_seats.py`, the report of seats further out (not one of T2's three, named by DEC-001's coverage row), takes each entry's class screen too and measures rail pad to pin since 91e7649e; its walk still steps capacitor centres and keeps every fan closed, own-pin windows included (the windows are the placers'). |
 | T3, four rotations | `decoupling_rules.rotations`, `rotate`, `best_rotation`; `bypass_search.search` tries every orientation at every seat and keeps the smallest loop-equivalent distance; `bypass_search.apply` turns the footprint. `bypass_slots.reserve` first drops the capacitor at rotation 0 and then hands it to the search (the `place(..., 0.0, ...)` the set 8 inventory flags is that first drop, not the seat). | `test_decoupling_rules.py` (the rotation kept is the one that brings the rail pad nearest); `test_decoupling_board.py` (a class D capacitor seated in its window with its rail pad toward the pin, turned). | DONE |
 | T4, the fan opened for the own-pin window and R2 only, and the cost per part | `decoupling_rules.window_box`, `pin_side`, `fan_blocks` (the own-pin window of a class D or L entry, the converter's fan for its own class R parts, no other fan ever opened); `bypass_search._refuse` and `Context.converter_of`. `escape_cost.py`: every refused pad is asked again without the part's own-pin window capacitors, without its own power-stage parts, and without the declared capacitors of the other side; `pin_sites` and `site_refused` for parts left to the router (D5). **Closed again (29 September):** the parts whose absence alone clears a lost pad are named (all of the cause's parts when none does alone); `escape.py` writes `out/<stem>-escape-cost.json` with a `close` list; `bypass_search.closures` reads it and shuts that one opening while the part whose escape it cost stands where the pass measured it (a moved part makes the entry stale, counted and not applied); `bypass_place` re-seats a capacitor that sits in a closed opening, even to a seat further out, and reports STUCK when none is left inside the screen. | `test_escape_cost.py` (11: the three causes, a pad refused by something else blamed on nothing, bulk given no window, the question lays no copper, the culprit named alone, all named when none alone, nothing closed when nothing was lost); `test_decoupling_board.py` (an escape lost to an own-pin window reported by part and cause, the same capacitor undeclared blames nothing, a window that cost an escape closed again on the next placement, a stale closure not applied, a converter's fan open to its own input capacitor and to no other). | DONE in the tools. The chain (`full.sh`) still runs the placers before the escape pass and not again after it, so a closure acts at the board's next regeneration or at a `bypass_place.py` run, not in the same chain run: open item 2. |
@@ -34,12 +34,80 @@ The ruling this implements is `v2/docs/feasibility/DECOUPLING.md` section 6; the
   G14 read DONE on the committed netlists and intents. Its T3 and T4 rows read NOT DONE because their detectors predate
   the implementation (T3 looks at the first drop in `bypass_slots`, T4 asks whether `escape.py` itself reads a class;
   `escape_cost.py` does). The table above is this stream's reading of T1 to T10. `inventory.json` stays the set 6 read.
-- `box/escape_parity.py`, `box/dec001_read.py`, `box/run_box.sh`, `box/before_after.py`, `box/to_box.sh`: the box
-  records.
+- `box/escape_parity.py`, `box/dec001_read.py`, `box/gen_check.py`, `box/run_box.sh`, `box/results_md.py`,
+  `box/before_after.py`, `box/to_box.sh`: the box scripts; `box/run5/` and `box/run6/` their fetched outputs (tests,
+  parity, generator check, DEC-001 read). The first author's box outputs of 27 September stay on the box under
+  `/root/d6dec/run/` (escape parity then: same copper on all six; before_after: each fixture before and after).
 
 ## Results
 
-RESULTS_PLACEHOLDER
+### Tests on the KiCad box at 475586ca (the code of 91e7649e, the last code commit): the 33 test files of `box/run_box.sh`, the ones this branch adds or changes and every one that names a tool it changes, in one `run.py` call
+
+`tests: 533 passed, 0 failed, 1 skipped`
+
+- SKIP: `test_finish_order.t_routeflow_validate_agrees_with_these_rules SKIP the profiles pin /root/gitlab/products/meshsat/meshsat-fieldkit, which exists here and is not this tree, so validate's one-tree property is about`
+
+Earlier box runs, kept for the record: run3 at c1a1f28e, 526 passed, 1 failed (the stale source check of S-5), 1
+skipped; run4 at d62e768b, 532 passed, 0 failed, 1 skipped; run5 at cd28d77d, 533 passed, 0 failed, 1 skipped
+(`box/run5/tests.log`). On this host, at 91e7649e: `test_decoupling_rules` 31 passed, `test_escape_cost` 11 passed,
+`test_intent_bypass_class` 6 passed, `test_exposed_pad_vias` 9 passed, 0 failed, 0 skipped each; the pcbnew tests skip
+here by design.
+
+### The six schematic generators under this branch's `intent.py` (run5, `box/gen_check.py`)
+
+All six exit 0 and write an intent identical to the committed one apart from `written`; `intent.write` refused
+nothing; it printed 8 notes on board A (class R without `same_side`) and 15 on board D (class L without an ESR
+statement or a floor), as S-1 says (`box/run5/gen_check.log`, `gen_check.json`).
+
+### Escape parity at cd28d77d: 73ae2f21's escape.py against this branch's, six committed boards stripped of copper
+
+`escape.py`, `escape_cost.py` and `fan_select.py` are unchanged from cd28d77d to the branch's tip, so this parity holds for the tip. Board B's pass took about 4.5 minutes before and 5.5 after, as on 27 September.
+
+| board | same copper | vias | tracks | pads with no escape | decoupling cost line |
+|---|---|---|---|---|---|
+| A (pcb-a-power-a23) | yes | 467 / 467 | 452 / 452 | 0 / 0 | 0 refused pad(s) would have been escaped without a declared seat (56 declaration(s) read); 0 refused for another reason |
+| B (pcb-b-compute-b19) | yes | 1477 / 1477 | 1631 / 1631 | 288 / 288 | 62 refused pad(s) would have been escaped without a declared seat (281 declaration(s) read); 226 refused for another reason |
+| C (pcb-c-display-c8) | yes | 165 / 165 | 188 / 188 | 3 / 3 | 0 refused pad(s) would have been escaped without a declared seat (24 declaration(s) read); 3 refused for another reason |
+| D (pcb-d-aprs-d9) | yes | 68 / 68 | 92 / 92 | 7 / 7 | 4 refused pad(s) would have been escaped without a declared seat (31 declaration(s) read); 3 refused for another reason |
+| E (pcb-e1-dock-e7) | yes | 179 / 179 | 171 / 171 | 4 / 4 | 0 refused pad(s) would have been escaped without a declared seat (29 declaration(s) read); 4 refused for another reason |
+| P (pcb-p-pack-p2) | yes | 46 / 46 | 62 / 62 | 0 / 0 | 0 refused pad(s) would have been escaped without a declared seat (4 declaration(s) read); 0 refused for another reason |
+
+Before / after in each cell. The cost lines of the new pass (per part and cause) are in `box/run5/escape_parity.log`.
+
+### What DEC-001 reads on each committed candidate under the new rules (NOT EVIDENCE: read outside the tree)
+
+Read by `box/dec001_read.py` at 475586ca on the KiCad box: each phase folder copied whole to `/root/d6dec/run6/read/`, this branch's `intent_checks.py` run there. The boards are the committed candidates (A32, B21, C24, D12, E17, P4); the intents are the committed ones (A and B regenerated in set 8), so a declaration newer than its board's placement is read as not on the board. Nothing here is a reading the registry may count.
+
+| board | verdict | declared | pass | justified | recorded | fail | no own ground via | far side | FAIL lines by cause |
+|---|---|---|---|---|---|---|---|---|---|
+| A (pcb-a-power-a23, board 58e26c67987b1daa, intent 35e430a791ab2b44) | FAIL | 56 | 0 | 0 | 1 | 55 | 0 | 0 | declared, not on this board (the intent is newer than the placement) 40; past the class screen, no allowance names it 15 |
+| B (pcb-b-compute-b19, board 2e64b5bf2d9cd3bc, intent a7bf625c8b878dd5) | FAIL | 281 | 0 | 0 | 0 | 281 | 0 | 78 | declared, not on this board (the intent is newer than the placement) 125; past the class screen, no allowance names it 133; far side refused (inside a fan) 23 |
+| C (pcb-c-display-c8, board 2a273803757c68fb, intent 270ebb4ccf1d0e8e) | FAIL | 24 | 1 | 0 | 0 | 23 | 0 | 0 | declared, not on this board (the intent is newer than the placement) 6; past the class screen, no allowance names it 17 |
+| D (pcb-d-aprs-d9, board 929bf82d2bf6eed4, intent 8d9f3b2256521b0d) | FAIL | 31 | 3 | 0 | 0 | 28 | 0 | 10 | declared, not on this board (the intent is newer than the placement) 8; past the class screen, no allowance names it 15; past its maker's own distance 2; far side refused (inside a fan) 2; the capacitor is not on the pin's net on this board 1 |
+| E (pcb-e1-dock-e7, board a462ac2620b9b8d3, intent dad1163afd720b5e) | FAIL | 29 | 2 | 0 | 1 | 26 | 0 | 0 | declared, not on this board (the intent is newer than the placement) 9; past the class screen, no allowance names it 17 |
+| P (pcb-p-pack-p2, board d79865e7b1aceb95, intent 12f92bd3ce7a8264) | FAIL | 4 | 0 | 0 | 3 | 1 | 0 | 0 | declared, not on this board (the intent is newer than the placement) 1 |
+
+The verdict's counts are the gate's lines, one per declared entry: `pass` is the lines that did not fail less the justified and recorded ones. Every FAIL and justified line is in `box/run6/dec001_read.json`. The gate's own summary line per board:
+
+- A: `intent_checks: decoupling, 56 declared: 0 pass, 0 justified deviation(s), 1 recorded with no distance to judge, 55 fail (0 with no ruled class); 0 with no ground via of their own; 0 on the side opposite their part (SMD parts 343 front, 0 back without them, so the other side is no seat)`
+- B: `intent_checks: decoupling, 281 declared: 0 pass, 0 justified deviation(s), 0 recorded with no distance to judge, 281 fail (0 with no ruled class); 0 with no ground via of their own; 78 on the side opposite their part (SMD parts 431 front, 386 back without them, so the other side is a seat)`
+- C: `intent_checks: decoupling, 24 declared: 1 pass, 0 justified deviation(s), 0 recorded with no distance to judge, 23 fail (0 with no ruled class); 0 with no ground via of their own; 0 on the side opposite their part (SMD parts 31 front, 135 back without them, so the other side is a seat)`
+- D: `intent_checks: decoupling, 31 declared: 3 pass, 0 justified deviation(s), 0 recorded with no distance to judge, 28 fail (0 with no ruled class); 0 with no ground via of their own; 10 on the side opposite their part (SMD parts 128 front, 61 back without them, so the other side is a seat)`
+- E: `intent_checks: decoupling, 29 declared: 2 pass, 0 justified deviation(s), 1 recorded with no distance to judge, 26 fail (0 with no ruled class); 0 with no ground via of their own; 0 on the side opposite their part (SMD parts 148 front, 0 back without them, so the other side is no seat)`
+- P: `intent_checks: decoupling, 4 declared: 0 pass, 0 justified deviation(s), 3 recorded with no distance to judge, 1 fail (0 with no ruled class); 0 with no ground via of their own; 0 on the side opposite their part (SMD parts 48 front, 0 back without them, so the other side is no seat)`
+
+**What the table says, read against DECOUPLING.md's own predictions.** Every board reads FAIL, and none of it is
+current evidence: the placed boards predate the round 8 declarations (40 of A's 56 entries, 125 of B's 281, and 6, 8,
+9 and 1 on C, D, E and P name capacitors the placed board does not carry), and the rest sit where the shelf packer put
+them. The page's real-board fixtures read as it said: D12's C53 passes at 2.80 mm loop-equivalent (0.54 mm in plane
+plus the 2.3 mm allowance); C15 and C16 are refused inside U7's fan box; C31 and C32 are past the TPA6132A2's own
+5 mm (18.10 and 13.59 mm), so D reads FAIL at U7 as section 9 predicted. C17 is declared against U17 pin 5 since
+round 8 and is not on D12 at that pin. B21's allowance reads 3.5 mm from the board file's own stackup (S-3), D12's
+2.3 mm. No far-side seat on B21, C24 or D12 has a via of its own within 1.5 mm on both pads (their rails reach
+pours), so every far-side line is priced at the page's 0.8 mm pitch and says so. A32, E17 and P4 read one-sided (no
+SMD part on the back), B21, C24 and D12 two-sided, as section 3.3 found. No allowance line remains in any allow file,
+so no entry reads `justified`, and the 8 September lines' 33 passes on B and P are gone. Board P's three class A
+entries are recorded (10.11 to 14.39 mm), not passed.
 
 ## Decisions taken by this stream (authority: SESSION, under the owner's standing rule of 26 September 2026)
 
