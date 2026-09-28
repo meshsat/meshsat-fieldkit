@@ -69,3 +69,25 @@ undecided row, but from the walk's own report, which carries every ground, and a
 | n8 the streams' check results were in no tree | filed under `checks/` with a table of branch, commit and verdict |
 | n9 a bench reading on one built board is a sample | S-92 and S-93 say so in their closing conditions: it is recorded as a sample of one board |
 | n10 S-91's title and S-89's "four fixtures" | carried as the first part says (m8, m9) |
+
+# Third part: answers to the third check (`CHECK-3.md`, an AI review, 28 September 2026)
+
+The third check read the candidate `f2b8f98d` mergeable with no blocking finding; `main` was fast-forwarded to it. Its
+thirteen minor items are answered here. Those that need a registry edit are carried to the next integration set, because
+a registry edit after the check would make the promoted revision another than the checked one.
+
+| Item | Answer |
+|---|---|
+| p1 `walk_grounds.py` reads the four netlists `inhibit_chain_d` records; `inhibit_chain_a` records five | carried to the script's next use: it will read every filed reading's netlists and refuse a disagreement. The checker's own run on the five gave the same seven rows and identical reports |
+| p2 the coverage assertion is a necessary condition only, by designator and without the board | accepted as the script's stated limit: it guards against a ground left out, not against a ground misstated. The prose of S-92 and S-93 was read ground by ground by the checker and carries each ground's substance |
+| p3 `tx_inhibit.py` prints at most three unsure grounds per state | carried as a tool item for the next registry edit: the walk's report is to print every ground or say how many it cut. On these netlists the longest list is 2, so nothing was cut; an item closes on its row reading decided, which covers a cut ground |
+| p4 S-92's 2.86 V is the walk's adverse level, the chain line's 3.12 V the nominal | carried to S-92's next edit: it will name both and say which is which |
+| p5 bench E-01 names pin 5's threshold and current, not U13 pin 4's off-state current | carried to S-92's next edit and to EMCON.md's writer: the bench row gains the third ground or the item names another bench row |
+| p6 the grounds of Q14 and Q24 are half the instrument's and half a maker's unstated figure | S-93 states both halves; its closing route is reworded at its next edit so that "the instrument's own" is said of the first half only |
+| p7 FEA-002 does not wait on S-92 or S-93, and EMCON.md does not show U14 or U13 pin 4's off-state current | carried to the next registry edit, with S-94's re-read of REQ-030, REQ-032 and REQ-071: FEA-002 will wait on S-92 and S-93, and EMCON.md's writer gets the two grounds the page does not show |
+| p8 the words "the owner's review" remain in a comment of `rules_lib.py` and in a test's docstring | carried to the next change of `rules_lib.py`, as the second part says; the test's docstring goes with it |
+| p9 "12 ERC reports with their provenance files" | corrected in CLOSURE.md: 6 ERC reports and their 6 provenance files |
+| p10 the d6rel row of `checks/README.md` did not carry the checker's condition | the row carries it, and says the integrator took the condition as binding |
+| p11 six new files cite scratch folders by the runner's absolute path | accepted as a limit of these records: the scratch folders are the checkers' working files and are not part of the repository; each record states what was run and what it read. The paths are kept so that the session that holds them can find them |
+| p12 no record of the suite at `85ad1193` in the tree | filed: `box/suite-85ad1193.txt`, and `box/suite-f2b8f98d.txt` for the promoted candidate |
+| p13 the first part's "96 links" against CLOSURE.md's 99 | the first part is the second candidate's record and is left as written; the current figures are CLOSURE.md section 5's: 54 open items linked by 99 links on 60 records, 11 disposed |

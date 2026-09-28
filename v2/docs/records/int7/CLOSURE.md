@@ -56,7 +56,7 @@ September (`checks/d8dec31-check-1.md`: mergeable; one regression owed before S-
 | Refresh | Where | What it read |
 |---|---|---|
 | the consolidated re-take on the set 6 netlists (worker retake6, 27 September, KiCad host, `50e3b60b` to `7f3a4956`) | 83 readings on seven boards | 71 PASS, 10 INCONCLUSIVE, 2 FAIL. Of the 90 tracked readings 58 carried the same result, counts and evidence, 23 the same result with other counts or evidence, 9 another result (the rows of sections 1 to 3) |
-| the re-take of 28 September on this line's tools (KiCad host, `/root/int7`, commit `a4b157f0`, 14:52:52 to 14:55:01 UTC, driver 110.7 s, exit 0; run records under `box/`) | every schematic-phase reading, `reliability.py` per board, `claims_check.py` | the same 90 tracked readings re-written with the current code bundles and 252 gitignored files (240 verdict files and 12 ERC reports with their provenance files); no verdict, count or evidence line changed against `7f3a4956` (the fresh check's item 6) |
+| the re-take of 28 September on this line's tools (KiCad host, `/root/int7`, commit `a4b157f0`, 14:52:52 to 14:55:01 UTC, driver 110.7 s, exit 0; run records under `box/`) | every schematic-phase reading, `reliability.py` per board, `claims_check.py` | the same 90 tracked readings re-written with the current code bundles and 252 gitignored files (240 verdict files, 6 ERC reports and their 6 provenance files); no verdict, count or evidence line changed against `7f3a4956` (the fresh check's item 6) |
 | `rules_status` three times and `rules_render` on the merged tree | the pages | FAIL 40, INCONCLUSIVE 89, PASS 209 of 338 rule-board readings (the historical aggregate of mixed revisions, not readiness); 35 layout-entry reasons |
 
 ## 5. Registry changes (the writer's, this integration)
@@ -77,10 +77,12 @@ predicate as INCONCLUSIVE. `CHECK-2.md` (an AI review by another checker, 18:00 
 `85ad1193` NOT mergeable on one finding, R-1: B-2 and B-3 answered, B-1 answered for the QMX's row only, because S-92 and
 S-93 each named one ground where the walk names up to three. That was the second failure on the same point, so the
 method changed: the items are now written from the walk's own report and a script asserts their coverage (section 5).
-`CHECK-RESPONSE.md` answers each finding and each minor item of both checks. The full suite on the KiCad host read 2019
-passed, 0 failed, 3 skipped at `1c4235ec` (`box/suite-1c4235ec.txt`) and the same at `85ad1193`; each later candidate is
-suited and checked again before promotion, and those records are filed with the checkpoint of
-`v2/docs/EXECUTION-PLAN.md`.
+`CHECK-3.md` (an AI review by a third checker, 18:26 to 18:42 CEST) read the third candidate `f2b8f98d` **mergeable**, with no
+blocking finding and thirteen minor items: R-1 answered by the walk's own measure, nothing moved that should not have.
+`CHECK-RESPONSE.md` answers each finding and each minor item of the three checks. The full suite on the KiCad host read
+2019 passed, 0 failed, 3 skipped at each candidate (`box/suite-1c4235ec.txt`, `box/suite-85ad1193.txt`,
+`box/suite-f2b8f98d.txt`). `main` was fast-forwarded to `f2b8f98d` on 28 September 2026 and pushed; this edition of the
+record and the third check were filed in the commit after it.
 
 ## 7. What this integration does not do
 
