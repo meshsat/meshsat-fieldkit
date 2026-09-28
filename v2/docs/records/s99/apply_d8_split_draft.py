@@ -13,7 +13,8 @@ path (no flag) writes the generator once and refuses a second run by an exclusiv
 board A on the KiCad box afterwards and reads the intent, the netlist and ERC before anything is committed.
 
 CONFLICT: entry S99-DEV below targets the same line as v2/docs/records/cx1/apply_declarations_draft.py's B2-A-DEV.
-Apply one or the other, never both; if cx1's ran first, replace its result line by hand as the comment there says.
+This worktree holds the original line. Stream s98 changed the integrated declaration; the integrator must
+rebase S99-DEV old text onto that line, including its note. CORRECTION.md gives exact old/new text.
 
 Values (ANALYSIS.md section 2): TI SLUSEA4D Table 10-2, 5 V at 500 kHz: 52.5k / 10k, 6.8 uH, 10 uF minimum effective
 COUT; 53.6k / 10k (5.088 V, the same figure as the LM5176 stages, both resistors certified on this board) is used so the
@@ -32,16 +33,17 @@ NEW_STAGE = '''# S-99 (stream s99, 28 September 2026, MESHSAT-1357; ANALYSIS.md 
 # LEAVES THE DEVICE RAIL FOR ITS OWN 5 V BUCK FROM VBAT. In PS-ALLTX the exciter keys with the PA, and the mezzanine's
 # 1.4 to 2.0 A on +5V_DEV, with board B's 5.4 to 7.2 A and the wall port's 0.5 to 0.9 A, put the LM5176 stage's
 # coincident demand (7.3 A with the makers' figures, 8.9 A at every declared limit) above its average loop's minimum
-# of 7.06 A (43 mV over 6 mOhm at +1 percent and a hot shunt, SNVSAI1D p.7): the loop would fold the device rail back
-# during the key-down. Raising the shunt is not open: 6 mOhm keeps the loop's maximum (9.6 A) under the JST-VH lead's
-# 10 A. So the mezzanine takes the part this board already fits twice (U12, U33): a TPS62933DRLR (SLUSEA4D, 3.8 to
+# of 7.057 A (43 mV over 6 mOhm at +1 percent and assumed 50 K, SNVSAI1D p.7, Vishay 30100 pp.1-2). Sustained
+# overload risks fold-back; onset and collapse require waveforms. Lowering R43 raises the limit beyond the JST-VH lead's
+# 10 A rating and 5 mOhm still fails 8.9 A at its minimum. So the mezzanine takes the part this board already fits twice (U12, U33): a TPS62933DRLR (SLUSEA4D, 3.8 to
 # 30 V in, 3 A, IHS_LIMIT 4.2 A minimum) at 5.088 V (53.6k over 10k, the LM5176 stages' figure, so U23's OVLO
 # arithmetic stands), 6.8 uH XAL6060-682ME (Table 10-2's value for 5 V at 500 kHz; Isat 9.2 A over the part's 5.8 A
 # maximum high-side limit, Coilcraft 887-1), two 22 uF 10 V 1210 (about 30 uF effective at 5 V, over the 10 uF
 # minimum), RT open (500 kHz), SS 10 nF (TI's minimum is 6.8 nF), EN on RAIL_EN as U12: the buck is up whenever the
 # 3.3 V logic is, and U23 (D8_EN, ILM 2.0 A, OVLO 5.87 to 6.12 V) still switches and protects the mezzanine. At 2.0 A
 # the ripple is 1.04 A at 16.8 V in and the peak 2.5 A. The device rail's coincident demand returns to board B plus
-# the wall port: 6.9 A declared, 5.9 A with the makers' figures, under the loop's minimum.
+# the wall port: 6.900 A declared, 5.942235 A conditional M-tier, under the conditional 7.056897 A minimum.
+# P-tier 8.171220 A (8.180759 A with R186 tolerance) still fails; 1 kohm wall maxima are extrapolations, not guarantees.
 ic("U41", 8, "TPS62933DRLR 3 A buck, 5.0 V for the D8 mezzanine", "SOT583", {"1": "NC", "2": "RAIL_EN", "3": "VBAT", "4": "GND", "5": "D8B_SW", "6": "D8B_BST", "7": "D8B_SS", "8": "D8B_FB"}, "C3200405")
 part("L13", "Device", "L", "6.8uH XAL6060-682ME (Isat 9.2 A)", "L6060", {"1": "D8B_SW", "2": "+5V_D8IN"})
 c("C227", "100n", "D8B_BST", "D8B_SW"); c("C228", "10n", "D8B_SS", "GND")
@@ -64,10 +66,8 @@ _intent.node("D8B_BST", _intent.net_volts("D8B_SW") + _TPS62933_BST,
 CHANGES = [
     {
         "id": "S99-DEV",
-        "old": '_intent.rail("+5V_DEV", 5.0, 4.0, 6.9, "R43", loads={"J_5V_DEV": 3.2, "U23": 0.5, "U32": 0.3},',
-        "new": '# S-99 (28 September 2026): the D8 mezzanine left this rail for its own buck U41 (decision 55), so the loads are the\n'
-               '# lead to B (3.8 A, board B\'s typical arriving, S-98 interim) and the wall port; the 6.9 A peak is B 6.0 + wall 0.9.\n'
-               '_intent.rail("+5V_DEV", 5.0, 4.1, 6.9, "R43", loads={"J_5V_DEV": 3.8, "U32": 0.3},',
+        "old": '# F-PR-04, 26 September 2026: the device rail\'s converter is an LM5176 stage now, not an AP64500. W2 found this\n# rail declared at 6.0 A peak on a 5 A part (VERIFIED) and summed its loads to the same 6.0 A (INFERRED); D-12 adds\n# the Glenair host port\'s own eFuse U32 (0.9 A limit) behind it, so the peak is 6.9 A. The LM5176 stage\'s average\n# current loop holds 43 to 57 mV across its 6 mOhm ISNS shunt R43 (SNVSAI1D, VSNS), 7.2 to 9.5 A, above the 6.9 A\n# peak and below the JST-VH lead\'s 10 A. The loads now name board A\'s own two eFuses as well as the lead to B.\n_intent.rail("+5V_DEV", 5.0, 4.0, 6.9, "R43", loads={"J_5V_DEV": 3.2, "U23": 0.5, "U32": 0.3}, budget=0.02, share=0.005, switch="U7", efficiency=0.90, fed_from="VBAT", note="the USB devices, the LimeSDR bay and the RockBLOCK behind their switches, the D8 mezzanine behind U23 and the wall host port behind U32; the net starts at the ISNS shunt R43. 9 September 2026 (ARCH-PCB-B-IOHA): +0.8 A because B16\'s three hub banks had to leave the slot rails. 26 September 2026 (F-PR-04, D-12): the converter is an LM5176 stage with a 7.2 A minimum average limit, and the Glenair port\'s 0.9 A takes the peak to 6.9 A.")',
+        "new": '# S-99 (28 September 2026): D8 leaves +5V_DEV for its own buck U41 and eFuse U23 on +5V_D8IN.\n# The remaining loads are board B and the wall port: 4.1 A typical, 6.9 A declared peak (B 6.0 + wall 0.9).\n# R43 6 mOhm gives 7.095710 to 9.595960 A at initial +/-1 percent; with assumed 50 K and +/-110 ppm/K\n# it gives 7.056897 to 9.649029 A (SNVSAI1D p.7, Vishay 30100 pp.1-2). The declared margin is 0.156897 A.\n# Conditional M-tier 5.942235 A passes by 1.114661 A; P-tier 8.171220 A (8.180759 A with R186 tolerance)\n# fails the minimum. S-98 reconciliation and prototype current, timing, collapse/recovery and thermal tests remain.\n_intent.rail("+5V_DEV", 5.0, 4.1, 6.9, "R43", loads={"J_5V_DEV": 3.8, "U32": 0.3}, budget=0.02, share=0.005, switch="U7", efficiency=0.90, fed_from="VBAT", note="the USB devices, LimeSDR bay and RockBLOCK behind board B\'s switches, plus the wall host port behind U32; D8 is supplied separately by U41 through U23 from +5V_D8IN. The net starts at the output ISNS shunt R43. LM5176 minimum average limit is 7.095710 A with initial +/-1 percent, or 7.056897 A with the assumed 50 K shunt temperature change and +/-110 ppm/K TCR. The 6.9 A declared peak (B 6.0 + wall 0.9) has 0.156897 A conditional margin; actual mode current, M/P reconciliation, timing, collapse/recovery and temperatures remain unverified (S-99).")',
     },
     {
         "id": "S99-VBAT",

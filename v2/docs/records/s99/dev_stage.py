@@ -32,8 +32,8 @@ VREF = (0.788, 0.800, 0.812)          # p.6, EA VREF min/typ/max
 VSNS_V = (0.043, 0.050, 0.057)        # p.7, VSNS average current loop regulation target
 VCS_BUCK_V = (0.066, 0.080, 0.094)    # p.7, VCS(BUCK) valley threshold, HTSSOP-28
 ISS_A = (3.75e-6, 5.0e-6, 6.35e-6)    # p.6, ISS soft-start pullup current
-VSS_CL = 1.21                         # p.6, SS clamp voltage, typical
-GM_SS = 1.0e-3                        # p.7, gm of the soft-start pulldown amplifier, 1 mS
+VSS_CL = 1.21                         # p.6, SS clamp voltage, typical; no guaranteed timing bound
+GM_SS = 1.0e-3                        # p.7, typical gm at ISNS differential 55 mV, VSS 0.5 V; 1 mS
 VCC_V = (6.95, 7.35, 7.88)            # p.6, VCC regulation voltage
 FSW_SPREAD = (175.0 / 200.0, 225.0 / 200.0)   # p.6, fSW(1) 175/200/225 kHz at RT 40 k
 T_DEAD_S = 45e-9                      # p.8, tDT1 and tDT2
@@ -71,7 +71,11 @@ VH_CONTACT_OHM = (0.010, 0.020)       # initial / after test maxima
 # TI TPS2596 SLVSET8A (May 2019, revised August 2019), v2/vendor/power/tps2596.pdf
 TPS2596_ILIM_453 = (1.83, 2.004, 2.147)      # RILM 453 ohm: min/typ/max
 TPS2596_ILIM_909 = (0.949, 1.005, 1.051)     # RILM 909 ohm: min/typ/max
-TPS2596_ILIM_1K_NOM = 903.0 / 1000.0 - 0.0112   # equation 7 as the generator applies it
+# p.28 equation 7: RILM [ohm] = 903 [A ohm] / (ILIM [A] - 0.0112 [A]).
+# Positive ILIM flows into the load. p.6 has no guaranteed row at 1 kohm.
+TPS2596_ILIM_1K_NOM = 903.0 / 1000.0 + 0.0112
+TPS2596_RILM_TOL = 0.01
+TPS2596_ILIM_1K_RMIN = 903.0 / (1000.0 * (1 - TPS2596_RILM_TOL)) + 0.0112
 # TI TPS62933 SLUSEA4D (June 2021, revised August 2022), v2/vendor/ti/ti-tps62933.pdf (the option's part)
 TPS62933_IHS_LIMIT = (4.2, 5.0, 5.8)
 # Coilcraft XAL6060, document 887-1 revised 02/25/26, v2/vendor/coilcraft/coilcraft-xal60xx-series.pdf, -682ME row
@@ -209,7 +213,9 @@ def main():
     for rel in INPUT_SHA256:
         say("  %s %s" % (INPUT_SHA256[rel], rel))
     say()
-    stage_facts(comps, nets)
+    if not stage_facts(comps, nets):
+        raise SystemExit("Refused: fitted stage differs from the expected netlist")
+    say("  R186's held netlist label 0.89 A is stale: the corrected equation gives 0.9142 A; no design input is edited here.")
 
     # ------------------------------------------------------------ 2. thresholds
     say()
@@ -287,9 +293,9 @@ def main():
     b_limits = 0.0
     maker = {
         "U23": (LIME_SUPPLY_A, LIME_SUPPLY_A, "MAKER: LimeSDR Mini host supply 5 V 900 mA (setup page); 4.5 W maximum (product page)"),
-        "U21": (E22_TX_A, None, "MAKER: E22-900M30S TX 650 mA typical (manual v1.20 p.3); peak tier uses the declared 0.70"),
+        "U21": (E22_TX_A, None, "MAKER: E22-900M30S TX 650 mA typical (manual v1.20 printed p.2, PDF p.3); peak tier uses the declared 0.70"),
         "U24": (RB_DC_IN_MAX_A, RB_DC_IN_MAX_A, "MAKER: RockBLOCK 9704 DC input maximum 500 mA, charger default about 460 mA (hardware page)"),
-        "U26": (KSZ_1V2_A * 1.2 / (0.85 * 5.0), KSZ_1V2_A * 1.2 / (0.85 * 5.0), "MAKER: KSZ9897R 1.21 A at 1.2 V, 1000 Mbps all ports (DS00002330D Table 6-1 p.169), 0.85 buck, PWR-F03"),
+        "U26": (KSZ_1V2_A * 1.2 / (0.85 * 5.0), KSZ_1V2_A * 1.2 / (0.85 * 5.0), "MAKER: KSZ9897R 1.21 A TYPICAL at 25 C, 1.2 V, 1000 Mbps all ports (DS00002330D Table 6-1 p.169), 0.85 buck, PWR-F03"),
     }
     for ref in sorted(rb["loads"], key=lambda k: (-rb["loads"][k], k)):
         decl = rb["loads"][ref]
@@ -307,7 +313,7 @@ def main():
             p_val = maker[ref][1] if maker[ref][1] is not None else cp
             basis = maker[ref][2]
         if ref in ("U40", "U50", "U60"):
-            basis = "PROJECT: child LDO %s / %s A (input about equals output); the parent's 0.05 is inconsistent (S-98 M7)" % (r["amps_typ"], r["amps_peak"])
+            basis = "PROJECT: child LDO %s / %s A (Iin = Iout + Ignd, Ignd omitted from these allocations, not a maximum); the parent's 0.05 is inconsistent (S-98 M7)" % (r["amps_typ"], r["amps_peak"])
         if ref == "U25":
             m_val = ct + zb_tx_increment
             basis = "PROJECT: child +3V3_DEV 1.2 A typ through the 0.88 buck (0.900 A) plus the two Zigbee radios' transmit increment %s A (+3V3_ZB 0.30 peak over 0.10 typ)" % fmt(zb_tx_increment)
@@ -335,16 +341,21 @@ def main():
     say("  U23's limit itself: %s / %s / %s A (SLVSET8A, RILM 453 ohm); U32's: %s A nominal at 1 k (equation 7), about %s to %s A scaling the 909 ohm row's spread"
         % (TPS2596_ILIM_453[0], TPS2596_ILIM_453[1], u23_max, fmt(TPS2596_ILIM_1K_NOM), fmt(TPS2596_ILIM_1K_NOM * TPS2596_ILIM_909[0] / TPS2596_ILIM_909[1]), fmt(TPS2596_ILIM_1K_NOM * TPS2596_ILIM_909[2] / TPS2596_ILIM_909[1])))
     wall_m = USB2_DEVICE_MAX_A
+    # Same 909 ohm row extrapolation as the original analysis, now with the correct sign.
+    # It is an estimate, NOT a guaranteed maximum for R186 at 1 kohm.
     wall_p = TPS2596_ILIM_1K_NOM * TPS2596_ILIM_909[2] / TPS2596_ILIM_909[1]
+    wall_p_rmin = TPS2596_ILIM_1K_RMIN * TPS2596_ILIM_909[2] / TPS2596_ILIM_909[1]
+    say("  Wall equation: 903/1000 + 0.0112 = %.7f A; estimated high %.9f A, with R186 -1 percent %.9f A; no guaranteed 1 kohm maximum" % (TPS2596_ILIM_1K_NOM, wall_p, wall_p_rmin))
+    say("  Corrected P demand before split %.9f A (R186 -1 percent %.9f A); after split %.9f A (%.9f A)" % (b_p + d_p + wall_p, b_p + d_p + wall_p_rmin, b_p + wall_p, b_p + wall_p_rmin))
     wall_d = a["rails"]["VBUS_WALL"]["amps_peak"]
-    say("  Wall host port: M-tier %s A (BOUND: a USB 2.0 device's maximum), P-tier %s A (the eFuse's maximum), D-tier %s A (declared)" % (fmt(wall_m), fmt(wall_p), fmt(wall_d)))
+    say("  Wall host port: M-tier %s A (BOUND: a USB 2.0 device's maximum), P-tier %s A (extrapolated eFuse estimate, not a guaranteed maximum), D-tier %s A (declared)" % (fmt(wall_m), fmt(wall_p), fmt(wall_d)))
 
     tiers = [
         ("D  every declared limit (cx1): B 6.0 + D8 2.0 + wall 0.9", rb["amps_peak"] + d_d + wall_d),
         ("Dt declared with D8 at its typical (cx1): B 6.0 + D8 1.0 + wall 0.9", rb["amps_peak"] + rd["amps_typ"] + wall_d),
         ("M  maker figures, declared typicals elsewhere, SA868 at 0.9 A, a USB 2.0 device on the wall port", b_m + d_m + wall_m),
         ("Mx M with the SA868 at its 1.0 A maximum", b_m + d_mmax + wall_m),
-        ("P  maker figures for the transmitters, declared child peaks elsewhere, the wall eFuse at its maximum", b_p + d_p + wall_p),
+        ("P  maker figures for the transmitters, declared child peaks elsewhere, the wall eFuse at its extrapolated high estimate", b_p + d_p + wall_p),
     ]
     say()
     say("== 4a. THE CONVERTER'S COINCIDENT OUTPUT CURRENT against the average loop (output-side sense, so 1:1)")
@@ -360,17 +371,18 @@ def main():
 
     # loop response
     say()
-    say("== 4b. THE AVERAGE LOOP'S RESPONSE (SNVSAI1D 7.3.4 and 7.3.6; CSS 47 nF, gm 1 mS, VSS(CL) 1.21 V, VREF 0.8 V) -- INFERRED from those parameters, the sheet states no time constant")
+    say("== 4b. ILLUSTRATIVE TIMING ESTIMATES ONLY (SNVSAI1D pp.6-7,16-17; CSS 47 nF, typical gm 1 mS, VSS(CL) 1.21 V, VREF 0.8 V); no closed-loop time constant or onset bound is stated")
     css = 47e-9
-    say("  intrinsic time constant CSS / gm = %s us" % fmt(css / GM_SS * 1e6, 1))
-    say("  onset: the gm amplifier must pull SS from its %s V clamp to VREF %s V before the output starts to fall; net pulldown = gm x (V_isns - V_target)" % (VSS_CL, VREF[1]))
+    say("  dimensional ratio CSS / gm (NOT a closed-loop time constant) = %s us" % fmt(css / GM_SS * 1e6, 1))
+    say("  assume constant overdrive, constant typical gm and initial SS %s V; illustrative onset at VREF %s V; assume NET pulldown = gm x positive overdrive (not a separately established net-current model)" % (VSS_CL, VREF[1]))
     for over_mv in (0.3, 1.0, 3.4, 10.4, 20.0):
         i_pd = GM_SS * over_mv * 1e-3
         t_on = css * (VSS_CL - VREF[1]) / i_pd
         dvdt = i_pd / css * (vo / VREF[1])
-        say("  overdrive %5.1f mV (%s A over the point on 6 mOhm): onset %8.2f ms, then the output falls at about %6.1f V/s" % (over_mv, fmt(over_mv * 1e-3 / rsns, 2), t_on * 1e3, dvdt))
-    say("  => onset in milliseconds to tens of milliseconds, the fall to the loads' 4.6 V floor in milliseconds more: every PS-ALLTX burst (LoRa packet, Iridium session, a 60 s key-down) is longer, so burst duration does not keep the loop out; only the current does")
-    say("  => bucks and LDOs behind the rail draw MORE input current as the rail falls (constant power), so the fold-back is regenerative until an eFuse's or a buck's UVLO opens: the brown-out of the always-on fabric S-99 names")
+        say("  overdrive %5.1f mV (%s A over the point on 6 mOhm): illustrative onset %8.3f ms, illustrative droop magnitude %6.1f V/s (dVout/dt negative)" % (over_mv, fmt(over_mv * 1e-3 / rsns, 2), t_on * 1e3, dvdt))
+    say("  => These are illustrative estimates, not bounds or measured responses. The 60 s coincident plateau is an assumption; the held Ebyte page supplies no airtime and charger limits supply no duration.")
+    say("  => Regulated bucks may draw more current as voltage falls only while regulating at assumed fixed output power/efficiency. AP2112 LDOs draw Iout + Ignd (DS39724 Rev.2-2 pp.2,8), not constant power.")
+    say("  => Complete-rail collapse, onset and recovery remain INCONCLUSIVE: measure SS, rail voltage and input/load current through actual bursts, controlled overloads, dropout and UVLO transitions.")
 
     # cycle-by-cycle at the demand
     say()
@@ -388,12 +400,13 @@ def main():
     for lab, i in (("M-tier", b_m + d_m + wall_m), ("D-tier 8.9 A", 8.9), ("loop maximum", i_max0)):
         p = i * i * r_hi
         say("  %-14s %s A: %s W, %s percent of the +70 C rating" % (lab, fmt(i, 2), fmt(p, 3), fmt(p / WSL2512_P70_W * 100, 1)))
-    say("  => PASS on the rating at ambients to +70 C; the derating above +70 C is a figure on p.3 of 30100 not read numerically here; the element's temperature rise needs the board's copper (INCONCLUSIVE, calculation once the layout exists)")
+    say("  M-tier exact shunt dissipation: %.9f W nominal; %.9f W at +1 percent" % ((b_m + d_m + wall_m) ** 2 * rsns, (b_m + d_m + wall_m) ** 2 * r_hi))
+    say("  => PASS on the rating at ambients to +70 C; the derating above +70 C is a figure on p.3 of 30100 not read numerically here; the element's temperature rise needs the board's copper (INCONCLUSIVE, layout calculation followed by prototype temperature measurement)")
     say("  R177 (CS, 5 mOhm) at 8.9 A carries the low-side share: I^2 (1 - D) R = %s W at 16.8 V in" % fmt(8.9 ** 2 * (1 - vo / 16.8) * rc_hi, 3))
 
     # FETs
     say()
-    say("== 4e. THE FETs AT 8.9 A (CSD19532Q5B; bounds, not a thermal model: RDS(on) max at 6 V x %s hot, edges x %s the sheet's; the sheet's 1 in2 2 oz pad)" % (FET_HOT_FACTOR, FET_EDGE_FACTOR))
+    say("== 4e. THE FETs AT 8.9 A (CSD19532Q5B; illustrative thermal scenario, NOT upper bounds: RDS(on) max at 6 V x %s hot, edges x %s the sheet's; the sheet's 1 in2 2 oz pad)" % (FET_HOT_FACTOR, FET_EDGE_FACTOR))
     i = 8.9
     rds = FET_RDS_6V[1] * FET_HOT_FACTOR
     worst_fet_w = 0.0
@@ -417,9 +430,9 @@ def main():
     p_l = i * i * L_DCR_OHM[1]
     p_shunts = i * i * r_hi + 8.9 ** 2 * (1 - vo / 16.8) * rc_hi
     p_total = total_fet_w + p_shunts + p_l
-    say("  L6 DCR loss at 8.9 A: %s W (DCR max, core loss not held); total stage loss bound about %s W at 16.8 V in (FETs %s + shunts %s + DCR %s), efficiency about %s (declared floor %s)"
+    say("  L6 DCR loss at 8.9 A: %s W (DCR max, core loss not held); stage loss scenario about %s W at 16.8 V in (FETs %s + shunts %s + DCR %s), efficiency about %s (declared floor %s)"
         % (fmt(p_l, 2), fmt(p_total, 1), fmt(total_fet_w, 2), fmt(p_shunts, 2), fmt(p_l, 2), fmt(vo * i / (vo * i + p_total), 3), EFF_DECL))
-    say("  => at +50 C inside air (K2's key-down ceiling) the hottest FET (%s W) stays under about %s C on the sheet's pad against TJ %s C: PASS as a bound; the board's own copper per FET is the missing parameter (INCONCLUSIVE, calculation at layout)" % (fmt(worst_fet_w, 2), fmt(50 + worst_fet_w * FET_RTHJA, 0), fmt(FET_TJ_MAX, 0)))
+    say("  => at assumed +50 C air the scenario gives hottest FET (%s W) about %s C on the sheet's pad against TJ %s C. No upper bound or thermal PASS: layout loss/thermal calculation and actual FET/shunt temperatures and switching waveforms over intended loads, ambient and VBAT are required (INCONCLUSIVE)" % (fmt(worst_fet_w, 2), fmt(50 + worst_fet_w * FET_RTHJA, 0), fmt(FET_TJ_MAX, 0)))
 
     # copper, INA226, lead
     say()
@@ -438,6 +451,7 @@ def main():
     say("== 4g. WHAT THE STAGE ASKS OF VBAT (Iin = Vout Iout / (eff Vin), eff %s declared)" % EFF_DECL)
     for name, dem in tiers:
         say("  %-100s %s A at 12.4 V, %s A at 15.5 V" % (name, fmt(vo * dem / (EFF_DECL * V_BAT_RANGE[0]), 2), fmt(vo * dem / (EFF_DECL * V_BAT_RANGE[1]), 2)))
+    say("  M-tier exact VBAT current at %.3f V out, 15.5 V in, efficiency %.2f: %.9f A" % (vo, EFF_DECL, vo * (b_m + d_m + wall_m) / (EFF_DECL * 15.5)))
     say("  VBAT's load map carries Q32 at 2.0 A (typical); the 8.9 A case is %s A at 15.5 V, +%s A over that entry" % (fmt(vo * 8.9 / (EFF_DECL * V_BAT_RANGE[1]), 2), fmt(vo * 8.9 / (EFF_DECL * V_BAT_RANGE[1]) - 2.0, 2)))
 
     # ------------------------------------------------------------ 5. options
@@ -447,7 +461,10 @@ def main():
     for rr, lab in ((5.0e-3, "5.0 mOhm"), (5.6e-3, "5.6 mOhm")):
         lo, hi = rr * (1 + WSL_TOL), rr * (1 - WSL_TOL)
         say("    %s: loop %s / %s / %s A; the maximum against the lead's 10 A: %s A %s" % (lab, fmt(VSNS_V[0] / lo, 2), fmt(VSNS_V[1] / rr, 2), fmt(VSNS_V[2] / hi, 2), fmt(VSNS_V[2] / hi - VH16_A, 2), "FAIL (over the contact rating in a B-side fault held by a CCM stage with no hiccup)" if VSNS_V[2] / hi > VH16_A else "PASS"))
-    say("    => the 6 mOhm value is pinned by the lead's 10 A (the generator's own reason); re-rating alone fails the downstream test at the lead")
+        hot_min = VSNS_V[0] / (lo * (1 + tcr))
+        hot_max = VSNS_V[2] / (hi * (1 - tcr))
+        say("      assumed +50 K TCR range %.9f to %.9f A; 8.900 A declared demand %s initial minimum %.9f A and hot minimum %.9f A" % (hot_min, hot_max, "FAILS" if 8.9 > VSNS_V[0] / lo else "PASSES", VSNS_V[0] / lo, hot_min))
+    say("    => the 6 mOhm value is pinned by the lead's 10 A (the generator's own reason); re-rating alone fails BOTH the 8.900 A demand at its minimum and the downstream 10 A lead test; a higher threshold is not capacity evidence")
     say("  Option B, the D8 mezzanine on its own buck from VBAT (TPS62933, C3200405, fitted twice on this board; XAL6060-682ME Isat %s A above the part's %s A maximum high-side limit):" % (XAL6060_682_ISAT, TPS62933_IHS_LIMIT[2]))
     tiers_b = [("D", rb["amps_peak"] + wall_d), ("M", b_m + wall_m), ("Mx", b_m + wall_m), ("P", b_p + wall_p)]
     for lab, dem in tiers_b:
@@ -464,6 +481,8 @@ def main():
     say()
     say("== 6. RECOMMENDATION (authority SESSION, the two-part test in ANALYSIS.md section 5)")
     say("  Take option B now: the coincident demand on +5V_DEV returns to B + wall = %s A declared (the present 6.9 A declaration becomes true), %s A at the M-tier, under the loop's minimum with %s and %s A in hand;" % (fmt(rb["amps_peak"] + wall_d, 1), fmt(b_m + wall_m, 2), fmt(i_min1 - (rb["amps_peak"] + wall_d), 2), fmt(i_min1 - (b_m + wall_m), 2)))
+    say("  Precise split margins: declared %.9f A; M-tier %.9f A below conditional minimum %.9f A" % (i_min1 - (rb["amps_peak"] + wall_d), i_min1 - (b_m + wall_m), i_min1))
+    say("  Both B and B plus the wall interlock remain configurations; choose B to preserve console availability. S-99 remains open; reconcile M/P allocations and measure current, SS, voltage, collapse/recovery and temperature.")
     say("  the P-tier (%s A) stays FAIL by %s A and is board B's declarations to reconcile (S-98) and the bench to measure; option C is the fallback that buys %s A more if the bench asks for it." % (fmt(b_p + wall_p, 2), fmt(b_p + wall_p - i_min1, 2), fmt(wall_p, 2)))
     print("\n".join(OUT))
 
