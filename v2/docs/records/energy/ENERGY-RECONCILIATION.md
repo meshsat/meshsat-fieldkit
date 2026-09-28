@@ -28,6 +28,12 @@ m2, `night_bounds.py`; 16.20 W where the first issue had 15.70), the hour-by-hou
 the 2.80 V line named in the paragraph (m4), the window's ceiling (m5), the wording (m6 to m10) and the files that
 exist only on `fnd/d4energy` with the merge order (m11, section 7's last paragraph).
 
+**Third issue (28 September 2026), after the re-check of `7697c172`.** Two narrow corrections: four universal
+sentences are replaced by their supported scope, with the bounds that establish or limit each (R1, sections 5d, 7
+and the new 7b); and Route B's setting (ii) moves from 9.1 to 10 mOhm, because at 9.1 mOhm the stage reaches
+100.9 W at 0.93 and 104.3 W at 0.90 with TRK_OUT at its reference-tolerance maximum of 15.56 V (R2, section 6e).
+The fault-current margin is stated as 1.25 times the short-circuit current, with no standard for it held here.
+
 **The inputs this rests on, pinned by sha256** (`energy_budget.py` refuses to run if any changed): the PVGIS
 monthly irradiation file, the two Samsung INR18650-35E documents, the tree's power model outputs
 (`records/rv-pwr/pwr_budget.out`, `records/hc2/pwr_red2.out`), board E's generator, this page's two helper
@@ -292,12 +298,15 @@ No single input closes M1 as written; the night and the window bind independentl
 figures is FAIL, unchanged.** The arithmetic on verified figures moves the aged usable energy by under 1 Wh
 (107.9 against the record's 108.1) and confirms the record's 2.5 h; it does not move the verdict.
 
-**5d. Combinations inside the approved constraints** (`energy_budget.out` 5d, 96 rows): with ONE pack no
-combination of the night state (a), the 2.80 V line (b) and any panel and window (e) meets 72 hours in any of
-the three months; the best one-pack case (the night state, 2.80 V, 330 Wp on a 300 W path, September) stops at
-hour 18, in the first night, and leaves 261 Wh of the 72 hours' 1166 Wh unserved. With TWO packs (section 6d) the
-night state at 2.80 V meets June on 100 Wp and September on 200 Wp or more, under conditions (section 7);
-December is not met by any combination.
+**5d. Combinations inside the approved constraints** (`energy_budget.out` 5d, 96 rows): with ONE pack and the
+night state at its PLAN of 16.20 W, no combination of the 2.80 V line (b) and the panels and windows examined (e)
+meets 72 hours in any of the three months; the best one-pack case (2.80 V, 330 Wp on a 300 W path, September)
+stops at hour 18, in the first night, and leaves 261 Wh of the 72 hours' 1166 Wh unserved. **That is the scope,
+not an impossibility:** at the night state's LOW of 11.02 W one aged pack with the 2.80 V line and the cells at
++20 C carries June for 72 hours (200 Wp in the 100 W window: lowest point 3.2 Wh; 330 Wp on a 300 W path:
+10.7 Wh; 400 Wp with no window: 12.8 Wh), though no September (section 7b). With TWO packs (section 6d) the night
+state at 2.80 V meets June on 100 Wp and September on 200 Wp or more, under conditions (section 7); December
+with the cells at +5 C is not met by any combination examined (section 7b gives the +20 C case).
 
 ## 6. Options within the approved constraints, with numbers and ranked
 
@@ -379,27 +388,40 @@ the energy; it is not a property of the stage.** Two routes, both presented, and
 - **Route A, the window restated.** REQ-016's "at most 100 W into the stage" becomes at most 136 W; PV_P and PV_IN
   go from 5.68 A typical and 6.25 A peak to 7.8 A and about 12.5 A (two 100 Wp panels' short circuit); TRK_OUT
   from 6.16 A at 15.1 V to 8.4 A (its 10.33 A declaration at the 9 V floor to 14.1 A, which VIN_RAW's 14.10 A
-  already carries on board A); F2 and J_SOLAR above 12.5 A with margin (a JST-VH is a 10 A part: another connector,
-  pick TBD); L1's saturation current, the four FETs' dissipation and R5's range re-judged (the inductor valley
+  already carries on board A); F2 and J_SOLAR at 1.25 times the short-circuit current or more, about 15.6 A for a
+  200 Wp panel (the usual photovoltaic practice; no standard for it is held in the tree; a JST-VH is a 10 A part:
+  another connector, pick TBD); L1's saturation current, the four FETs' dissipation and R5's range re-judged (the inductor valley
   limit is 69 mV over 5 mOhm, 13.8 A, `gen_sch_e.py:103`). D4 and the 25 V window are unchanged. Consequence: it
   restates a core requirement (REQ-016, session choice SC-36) and board E's declarations and ratings; more energy
   on clear days, none on the mean day. Cost ESTIMATE: under 40 EUR of parts on board E.
 - **Route B, a designed limit that keeps REQ-016's 100 W.** The LT8705A's own output current loop (8705af PDF
   pages 4, 5, 11, 12, 19): a sense resistor RSENSE2 between the stage's output and TRK_OUT, CSPOUT (pin 31) on the
   stage side and CSNOUT (pin 30) on TRK_OUT, both untied from TRK_OUT; the loop regulates when IMON_OUT reaches
-  1.208 V (1.187 to 1.229), with I(IMON_OUT) = gm x V(sense), gm 1.00 mmho (0.94 to 1.085 for the E and I grades
-  over temperature). With R17 (IMON_OUT to ground, 10k as generated) at 24.3k 1 percent: setting (i) RSENSE2
-  8.0 mOhm limits TRK_OUT at 5.52 / 6.21 / 6.86 A (low, typical, high), 90 / 101 / 111 W into the stage, so
-  "at most 100 W" holds only as "about 100 W"; setting (ii) RSENSE2 9.1 mOhm limits it at 4.85 / 5.46 / 6.03 A,
-  **79 / 89 / 98 W into the stage, which holds REQ-016's 100 W at the sheet's worst**. PV_P and PV_IN keep their
-  5.68 A typical (the stage cannot draw more than 100 W at 17.6 V or above); their peak (the panel's short-circuit
-  current, a fault) rises from 6.25 to about 12.5 A, so F2 and J_SOLAR are still re-rated for a 200 Wp panel. With
+  1.208 V (1.187 to 1.229, page 4), with I(IMON_OUT) = gm x V(sense), gm 1.00 mmho (0.94 to 1.085 for the E and I
+  grades over temperature, page 5; the fitted part is LT8705AEUHF; the sheet characterises gm at VCSPOUT 5.025 V
+  only, so at 15.1 V it is a bench item, T-P3), and R17 (IMON_OUT to ground, 10k as generated) at 24.3k 1 percent.
+  The worst case takes TRK_OUT at its highest as well: FBOUT 1.193 / 1.207 / 1.222 V (page 4) on R10 115k and R11
+  10.0k at 1 percent (`gen_sch_e.py:576`) gives 15.56 V (15.09 V typical), and the stage at this record's low
+  efficiency bracket, 0.90 (`energy_budget.out` section 6e):
+
+  | RSENSE2 | limit, low / typical / high | into the stage at 15.1 V and 0.93 | worst, 15.56 V and 0.93 | worst, 15.56 V and 0.90 | 100 W at every worst |
+  |---|---|---|---|---|---|
+  | 8.0 mOhm, setting (i) | 5.52 / 6.21 / 6.86 A | 90 / 101 / 111 W | 114.8 W | 118.6 W | no |
+  | 9.1 mOhm (the second issue's setting (ii)) | 4.85 / 5.46 / 6.03 A | 79 / 89 / 98 W | 100.9 W | 104.3 W | **no** |
+  | **10.0 mOhm, setting (ii)** | 4.41 / 4.97 / 5.49 A | 72 / 81 / 89 W | 91.8 W | **94.9 W** | yes |
+
+  The second issue's "9.1 mOhm holds REQ-016's 100 W at the sheet's worst" was false: it held only at TRK_OUT's
+  nominal 15.1 V and the declared 0.93. The least RSENSE2 that holds 100 W at every worst is 9.49 mOhm, so
+  **setting (ii) is 10 mOhm: at most 94.9 W into the stage in every worst case, 81 W typical, 72 W at its low
+  end.** At that setting PV_P and PV_IN keep their 5.68 A typical (the stage draws at most 94.9 W, so at most
+  5.39 A at 17.6 V or above); their peak (the panel's short-circuit current, a fault) rises from 6.25 to about
+  12.5 A, so F2 and J_SOLAR are still re-rated for a 200 Wp panel (at 1.25 times, about 15.6 A, as route A). With
   the bus held lower by a vehicle the limit is a lower power, which the vehicle covers. Parts: one 2512 sense
   resistor, R17's value, two pins untied, under 2 EUR. Consequence: board E's schematic changes (a layer-5 item)
   and the host contract (FW-A16) must keep the constant-power front end inside what a current-limited stage gives,
   which is the case the design already has whenever a panel gives less than the front end draws
-  (`gen_sch_e.py:99-103`). On the mean September day set 2 is MET under setting (ii) at its typical 89 W and at its
-  low 79 W, with the same lowest point, 12.1 Wh (section 7).
+  (`gen_sch_e.py:99-103`). On the mean September day set 2 is MET under setting (ii) at its typical 81 W, its low
+  72 W and its worst 94.9 W, with the same lowest point, 12.1 Wh (section 7).
 
 **Rank 4, option (b), the usable depth of discharge.** The graceful line at 2.80 V under load instead of 3.00 V
 (still above the gauge's 2.50 V trip, the maker's 2.50 V terminate line and its 2.65 V cut-off) gains 1.9 Wh aged
@@ -426,7 +448,10 @@ is stated as optional and not taken as the basis, as the owner instructed on 28 
 ## 7. The smallest justified changes, for the owner's decision
 
 **REQ-072 as written (PS-IDLE-SPEC for 72 hours on pack and solar) reads FAIL under every set below.** On one
-aged pack no combination of (a), (b) and (e) meets it (the night binds at every kit load above 8.4 W, 5c); with
+aged pack no combination of (a), (b) and (e) meets it; in the design case (September, 100 Wp in the 100 W window,
+the 3.00 V line) the night binds at every kit load above 8.4 W (5c), and that figure is the design case's only:
+with 400 Wp, no window and the 2.80 V line one aged pack carries at most 9.24 W for 72 hours in September and
+12.30 W in June (10.13 W in June with 100 Wp in the window), all far below PS-IDLE-SPEC's 42.8 W (section 7b). With
 two packs PS-IDLE-SPEC is still NOT MET (set 6). The sets that meet M1's must-hold do so by **changing M1's
 operating mode at night** to the night state of section 6a (16.20 W PLAN, 11.02 to 39.67 W), with the capability
 listed there switched off: a change presented for the owner's decision, not a fulfilment of REQ-072. From a full
@@ -452,8 +477,9 @@ hours (the margin); "asks" and "holds" are the one-night arithmetic beside it (`
 | without the 2.80 V line (graceful at 3.00 V) | MET | 9.1 Wh | none |
 | the night state at its LOW, 11.02 W | MET | 84.6 Wh | none |
 | the night state at its HIGH, 39.67 W | NOT MET | 0 | hour 16 |
-| route B setting (ii), 89 W into the stage (typical) | MET | 12.1 Wh | none |
-| route B setting (ii), 79 W into the stage (its low end) | MET | 12.1 Wh | none |
+| route B setting (ii) at 10 mOhm, 81 W into the stage (typical) | MET | 12.1 Wh | none |
+| route B setting (ii) at 10 mOhm, 72 W into the stage (its low end) | MET | 12.1 Wh | none |
+| route B setting (ii) at 10 mOhm, 94.9 W into the stage (its worst high) | MET | 12.1 Wh | none |
 
 **Set 2 meets September only with the cells at or above 17.21 C (17.88 C without the 2.80 V line) and the night
 state at or below 17.06 W (0.86 W, 5.3 percent, above its PLAN), on the mean September day and planning loads.**
@@ -469,14 +495,29 @@ pocket takes the block but not its board P, and no place for board P is found); 
 route B (REQ-016's 100 W kept by a designed limit on the LT8705A's output current loop, about 2 EUR of parts and
 board E's schematic changed) or route A (REQ-016 and board E's declarations restated to 136 W); in both routes F2,
 J_SOLAR and the peak current of PV_P and PV_IN are re-rated for the panel's fault current; (4) the graceful line
-at 2.80 V. The session's recommendation within set 2 is route B setting (ii), because it keeps a core requirement
-as written and costs the least; set 2's September result is the same under it. **The next smallest is set 3**,
-which re-rates the stage's path to 300 W and buys margin (23.4 Wh against 12.1) but no further month. **No set
-inside the case meets December** on pack and solar: at +5 C two packs hold 156 Wh against a night's 292 Wh at the
-lowest state, and a third pack has no location; December is a residual for the owner to accept or to cover with
-option (f) (24 Ah at 12 V per night at the night state). **If the owner keeps M1's basis at PS-IDLE-SPEC**, no
-change inside the case and the cell ruling meets a single night (set 6), and the statement is that prototype 1
-does not meet M1 on pack and solar alone (M-02's residual), with option (f) as the way through a night.
+at 2.80 V. The session's recommendation within set 2 is route B setting (ii) at 10 mOhm, because it keeps a core
+requirement as written at every worst case and costs the least; set 2's September result is the same under it. **The next smallest is set 3**,
+which re-rates the stage's path to 300 W and buys margin (23.4 Wh against 12.1) but no further month. **With
+the cells at +5 C no set examined meets December** on pack and solar, not even the night state at its LOW of
+11.02 W with two packs and any panel examined (section 7b): at +5 C two packs hold 156 Wh against a night's
+292 Wh at the planned night state, and a third pack has no location found. With the cells at +20 C, set 3 does
+meet December at the LOW of 11.02 W (lowest point 30.0 Wh; 31.4 Wh with 400 Wp and no window), and at the PLAN of
+16.20 W it does not; the December night's cell temperature is not computed in the tree. December is a residual for
+the owner to accept or to cover with option (f) (24 Ah at 12 V per night at the night state). **If the owner keeps
+M1's basis at PS-IDLE-SPEC**, no change examined meets a single night: up to two packs (the second with no proven
+location), the 2.80 V line and a panel with no window at all still stop in the first night even at PS-IDLE-SPEC's
+model LOW of 33.1 W (hour 18 in September, 606 Wh unserved; hour 19 in June, 379 Wh; section 7b). A third or later
+pack has no location FOUND, which is not the same as no location possible. The statement is then that prototype 1
+does not meet M1 on pack and solar alone within the changes examined (M-02's residual), with option (f) as the way
+through a night.
+
+**7b. The scope of the universal statements** (`energy_budget.out` section 7b, computed by this page's own tool
+at the tree's documented bounds; the independent review's phase 3 found the same figures). A statement of
+impossibility is kept only where these bounds establish it; elsewhere the supported scope is stated. Established:
+at PS-IDLE-SPEC's model LOW, two packs and a panel with no window fail the first night; with the cells at +5 C no
+set examined meets December, even at the night state's LOW. Scoped: one pack meets no month at the night state's
+PLAN (at its LOW it carries June, not September); the 8.4 W of 5c is the design case's; December at +20 C is met
+by set 3 at the night state's LOW; a third pack has no location found.
 
 **What must be verified at the bench before any of this is relied on** (section 1's T-P1 to T-P4): the power of the
 night state and of PS-IDLE-SPEC at the pack terminals (the D rows carry 4.9 W of the night state's recount as
