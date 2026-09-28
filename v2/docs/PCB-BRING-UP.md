@@ -33,7 +33,7 @@ fault from one that reads low.
 |---|---|---|---|---|
 | 1 | +3V3_EMCON_EF | 3.30 V (3.13 to 3.46) | U39 | R213 |
 | 2 | +3V3_EMCON | 3.30 V (3.13 to 3.46) | R213 | U35, U36, U37, U38 |
-| 3 | +5V_DEV | 5.00 V (4.75 to 5.25) | R43 | J_5V_DEV, U23, U32 |
+| 3 | +5V_DEV | 5.00 V (4.75 to 5.25) | R43 | J_5V_DEV, U32 |
 | 4 | +5V_D8 | 5.00 V (4.75 to 5.25) | U23 | J_MEZZ_PWR1 |
 | 5 | SD_OUT | 5.00 V (4.75 to 5.25) | Q35 | R43 |
 | 6 | VBUS_WALL | 5.00 V (4.75 to 5.25) | U32 | J_USBW |
@@ -63,6 +63,7 @@ fault from one that reads low.
 | rail | volts | current | source | what it feeds |
 |---|---|---|---|---|
 | +3V3 | 3.30 V | 0.30 A | L7 | J_MEZZ1, U10, U11, U14, U17, U26 |
+| +5V_D8IN | 5.00 V | 1.00 A | L13 | U23 |
 | S1_OUT | 5.10 V | 2.50 A | L3 | R31 |
 | S3_OUT | 5.10 V | 2.50 A | L5 | R39 |
 | VHEAT | 12.00 V | 0.63 A | L12 | J_HEAT |
