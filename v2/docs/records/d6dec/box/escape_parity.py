@@ -17,7 +17,20 @@ BOARDS = [("a", "pcb-a-power-a23", "pcb-a-power"), ("b", "pcb-b-compute-b19", "p
           ("e", "pcb-e1-dock-e7", "pcb-e1-dock"), ("p", "pcb-p-pack-p2", "pcb-p-pack")]
 
 
+def _sub(*args):
+    """One board per process: a second LoadBoard in one KiCad 9.0.9 process came back as a bare SwigPyObject here
+    (28 September 2026), so every read and every write of a board is its own run of this file."""
+    r = subprocess.run([sys.executable, os.path.abspath(__file__)] + list(args), capture_output=True, text=True, timeout=1800)
+    if r.returncode != 0: raise SystemExit("escape_parity: %s failed:\n%s" % (" ".join(args[:2]), (r.stdout + r.stderr)[-800:]))
+    return r.stdout
+
+
 def copper(path):
+    v, t = json.loads(_sub("--copper", path).strip().splitlines()[-1])
+    return [tuple(x) for x in v], [tuple(x) for x in t]
+
+
+def _copper(path):
     import pcbnew
     b = pcbnew.LoadBoard(path); vias, tracks = [], []
     for t in b.GetTracks():
@@ -25,10 +38,14 @@ def copper(path):
             vias.append((t.GetPosition().x, t.GetPosition().y, t.GetNetname(), t.GetWidth(pcbnew.F_Cu), t.GetDrill(), bool(t.IsLocked())))
         else:
             tracks.append((t.GetStart().x, t.GetStart().y, t.GetEnd().x, t.GetEnd().y, t.GetWidth(), t.GetLayerName(), t.GetNetname(), bool(t.IsLocked())))
-    return sorted(vias), sorted(tracks)
+    print(json.dumps([sorted(vias), sorted(tracks)]))
 
 
 def bare(src, dst):
+    _sub("--bare", src, dst)
+
+
+def _bare(src, dst):
     import pcbnew
     b = pcbnew.LoadBoard(src)
     for t in list(b.GetTracks()): b.Remove(t)
@@ -75,4 +92,7 @@ def main(a):
     return 0 if all(r["same_copper"] for r in rows) else 1
 
 
-if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
+if __name__ == "__main__":
+    if sys.argv[1:2] == ["--copper"]: _copper(sys.argv[2]); sys.exit(0)
+    if sys.argv[1:2] == ["--bare"]: _bare(sys.argv[2], sys.argv[3]); sys.exit(0)
+    sys.exit(main(sys.argv[1:]))
