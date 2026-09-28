@@ -15,13 +15,13 @@
    "netlist_parts.py": "41cf192223d822c2",
    "regen_compare.py": "341d7f129a1e6f24",
    "return_via.py": "b61d138e54955dd4",
-   "rules_lib.py": "c0458c53923d7925",
+   "rules_lib.py": "a6e2421096c1473f",
    "signal_class.py": "60b8647301428da4",
    "signalnets.py": "688be12d8e42e7a4",
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "5aa3d5157698ae2a",
+  "sha16": "8d11079ea3d16df7",
   "unresolved": []
  },
  "counts": {
@@ -37,16 +37,14 @@
   "rails_without_destination": 0,
   "settled": 16,
   "switches_unresolved": 0,
-  "undecided": 1,
+  "undecided": 0,
   "undeclared": 0,
   "unmarked": 94
  },
  "denominator": 7,
  "evidence": [
-  "census of the 188 nets: 6 counted, 27 declared node, 1 ground, 16 settled, 43 unconnected, 1 undecided, 94 unmarked",
-  "undecided, named and not counted (1): RLY_K",
+  "census of the 188 nets: 6 counted, 28 declared node, 1 ground, 16 settled, 43 unconnected, 0 undecided, 94 unmarked",
   "settled, they supply nothing (16): AMP_INL_N, AMP_INR_N, HS1_MIC_AC, HS2_MIC_AC, HUB_RST_n, HUB_XTAL1, HUB_XTAL2R, MICAMP_IN_N, MICAMP_OUT, PCM_VCOM1, PCM_VCOM2, PCM_VIN, PCM_XTI, PCM_XTO, TXSUP_CT, VREF",
-  "undecided, named and not counted: RLY_K: it carries the mark of a supply (M3 D2 joins it to the power net +5V_TX; M4 the switched return of D2, K1: the channel of Q2 sinks it to ground) and nothing read settles it: D2.2, K1.8, Q2.3",
   "declared as a node, not a rail: AMP_CPN (supply pin by its held datasheet (U7.9 CPN: v2/vendor/ti/ti-tpa6132a2.pdf))",
   "declared as a node, not a rail: AMP_CPP (supply pin by its held datasheet (U7.11 CPP: v2/vendor/ti/ti-tpa6132a2.pdf))",
   "declared as a node, not a rail: AMP_HPVDD (supply pin by name (U7.12 HPVDD), and the intent's bypass list decouples it (C31:U7.12); supply pin by its held datashee)",
@@ -106,12 +104,12 @@
   },
   "intent": {
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs-intent.json",
-   "sha256_16": "443fd745879d3022"
+   "sha256_16": "8d9f3b2256521b0d"
   },
   "netlist": {
-   "content16": "ecc07f382c735835",
+   "content16": "be4194ed867c8406",
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
-   "sha256_16": "76700a687eb6187f"
+   "sha256_16": "7a2c0ac2190b141a"
   },
   "threshold_a": 0.0
  },
@@ -133,12 +131,12 @@
  },
  "tool": "intent_rails",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "87b7d5a9509c",
+  "tools_tree_sha": "bfeac03e9fe6170b"
  },
- "ts": "2026-09-27T13:22:47Z",
- "verdict": "INCONCLUSIVE",
- "version": "391d857966d6",
+ "ts": "2026-09-28T21:55:23Z",
+ "verdict": "PASS",
+ "version": "87b7d5a9509c",
  "writer": {
   "file": "intent_checks.py",
   "sha16": "1ad7af0c718ba940"

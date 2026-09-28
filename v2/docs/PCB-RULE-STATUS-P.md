@@ -14,8 +14,8 @@ Measured on board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4.
 | historical aggregate, mixed revisions | rules | percent of this board's required rules |
 |---|---|---|
 | PASS | 32 | 66.7 |
-| FAIL | 8 | 16.7 |
-| INCONCLUSIVE | 8 | 16.7 |
+| FAIL | 7 | 14.6 |
+| INCONCLUSIVE | 9 | 18.8 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **48** | 100.0 |
 
@@ -31,8 +31,8 @@ Measured on board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4.
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **PASS** | derate PASS of 6 |
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_p was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_p was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
-| PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **FAIL** | intent_rails FAIL: {'census_nets': 55, 'checks': 11, 'declared_nodes': 0, 'declared_not_in_netlist': 0, 'declared_rails': 5, 'fail': 6, 'he |
-| PWR-002 sequencing and inrush | MUST_JUSTIFY | SCHEMATIC | **PASS** | power_sequence PASS of 5 |
+| PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **PASS** | intent_rails PASS of 11 |
+| PWR-002 sequencing and inrush | MUST_JUSTIFY | SCHEMATIC | **PASS** | power_sequence PASS of 10 |
 | PWR-003 protection coordination | BLOCKER | SCHEMATIC | **PASS** | energy_chain_p PASS of 3 |
 | DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **PASS** | intent_decoupling PASS of 3 |
 | PI-001 conductor current capacity | BLOCKER | ROUTED_BOARD | **FAIL** | dc_density FAIL: {'met': 3, 'missed': 1, 'undeclared': 0} |
@@ -61,8 +61,8 @@ Measured on board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4.
 | DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **PASS** | verify_deliverable_p PASS of 1 |
 | DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was |
 | TST-001 the board can be brought up safely | MUST_JUSTIFY | SCHEMATIC | **PASS** | PCB-BRING-UP.md is current with the registry |
-| REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **PASS** | reliability PASS of 9 |
-| BAT-001 the cell block is protected in hardware | BLOCKER | SCHEMATIC | **FAIL** | pack_protection FAIL: {'checks': 45, 'devices': 5, 'fail': 1, 'functions': 9, 'limits': 14, 'software_only': 9} |
+| REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **INCONCLUSIVE** | reliability INCONCLUSIVE: every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the re |
+| BAT-001 the cell block is protected in hardware | BLOCKER | SCHEMATIC | **FAIL** | pack_protection FAIL: {'checks': 63, 'devices': 13, 'fail': 3, 'functions': 14, 'limits': 14, 'software_only': 9} |
 | BAT-002 the energy chain is bounded end to end | BLOCKER | SCHEMATIC | **PASS** | energy_chain PASS of 98 |
 | DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **PASS** | final_gate_p PASS of 1 |
 | DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **PASS** | doc_provenance_p PASS of 1 |

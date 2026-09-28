@@ -1,10 +1,11 @@
 # MeshSat field kit V2: start here
 
-**Engineering handover, edition H2, partial.** First written 27 September 2026 from the repository at commit
+**Engineering handover, edition H3, partial.** First written 27 September 2026 from the repository at commit
 `e3aedb25` (`e3aedb25c849dbda931888b27093ac6c444621cb`, 27 September 2026 01:17 CEST), under tracker issue
-MESHSAT-1357, and brought to H2 the same day; section 3 is H2's. Every path below is a path in this repository,
+MESHSAT-1357, brought to H2 the same day and to H3 after it; section 1a is H3's, and section 3 is H2's, whose design
+H3 keeps. Every path below is a path in this repository,
 written from the repository root. When you read this page inside a handover snapshot (the `<version>/` folder of
-`v2/release/handover/<version>.zip`; H1 was also committed unzipped, H1.1 onward only as the ZIP with its manifest
+`v2/release/handover/<version>.zip`; H1 was also committed unzipped, H1.1, H2 and H3 only as the ZIP with its manifest
 beside it), the snapshot keeps every file under the same path and its manifest names the commit, each file's revision
 and each file's sha256.
 
@@ -15,21 +16,24 @@ far was done by AI agent sessions (an author and a separate refuting checker), a
 AI review; none of it is electrical sign-off (`v2/docs/reviews/REVIEW-ROUTES.md`, opening paragraphs).
 
 **What this edition is.** The owner asked for the pre-PCB work to be transferable to an outside engineer or company
-even if PCB layout stalls (`v2/docs/reviews/2026-09-27-handover-execution-prompt.md`). **This is handover H2, the third
-snapshot, and it is partial: layers 1 (product definition) and 2 (concept of operations) are COMPLETE for their own
-engineering purpose, with their review records; layers 3 to 9 are IN_PROGRESS**, and the pages say exactly what each
-still lacks. COMPLETE never means a physical test has passed: nothing is built. H2 is a usable map of a design whose
-first two layers are released and whose other seven are not, not a claim that the engineering is done. The pages were
-written from the audit at `e3aedb25` and brought forward edition by edition: section 3 below, LAYER-STATUS's "Status
-at handover H2" and the **H2** step of each layer's `INTEGRATOR LINE`, CONTINUATION-BRIEF section 0 and the
-ENGINEERING-QUESTIONS index carry H2; the H1 sections (3a here, "Status at handover H1" there, the brief's section
-0a) and the `e3aedb25` record are kept as history beneath them. The snapshot's `SOURCE.txt` names the one commit every
-file of it comes from.
+even if PCB layout stalls (`v2/docs/reviews/2026-09-27-handover-execution-prompt.md`). **This is handover H3, the
+fourth snapshot (after H1, H1.1 and H2), and it is partial: layers 1 (product definition), 2 (concept of operations)
+and 3 (requirements) are COMPLETE for their own engineering purpose, with their review records; layers 4 to 9 are
+IN_PROGRESS**, and the pages say exactly what each still lacks. COMPLETE never means a physical test has passed:
+nothing is built. H3 is a usable map of a design whose first three layers are released and whose other six are not,
+not a claim that the engineering is done. **H3's design content is H2's:** no schematic, netlist, generator or
+checking tool changed between them (section 1a). The pages were written from the audit at `e3aedb25` and brought
+forward edition by edition: section 1a below, LAYER-STATUS's "Status at handover H3" and `RELEASE-H3.md` carry H3;
+section 3 below, LAYER-STATUS's "Status at handover H2" and the **H2** step of each layer's `INTEGRATOR LINE`,
+CONTINUATION-BRIEF section 0 and the ENGINEERING-QUESTIONS index carry H2, corrected where a sentence is marked
+**H3**; the H1 sections (3a here, "Status at handover H1" there, the brief's section 0a) and the `e3aedb25` record
+are kept as history beneath them. The snapshot's `SOURCE.txt` names the one commit every file of it comes from.
 
 **Which commit is which.** Four commits anchor these pages: `e3aedb25` (27 September 2026 01:17 CEST), the audit the
 pages were first written from; main `84e52461` plus the handover branch, whose last design change is `99cde56b`, the
-design H1 carries; main `62f26a44` plus branch `fnd/h2`, whose last design change is `b7f96784`, the design H2 carries;
-and the build commit that `SOURCE.txt` names, the commit every file of a snapshot is copied from.
+design H1 carries; main `62f26a44` plus branch `fnd/h2`, whose last design change is `b7f96784`, the design H2 carries
+and H3 keeps (H2's source commit is `b89b50b4`; H3 is cut from main `6ec37197` plus the branch that carries these
+pages); and the build commit that `SOURCE.txt` names, the commit every file of a snapshot is copied from.
 `SOURCE.txt` also carries a generated commit timeline: every commit id these pages name, with its date, its subject,
 whether it is in the snapshot's history and whether it was on the public repository
 (`https://github.com/meshsat/meshsat-fieldkit`) when the snapshot was built. The snapshot carries no git history, so
@@ -59,6 +63,14 @@ section 9 gives three routes to the re-take, one of them a repository built from
 repo`), with board P's run; LAYER-STATUS opens each layer with an acceptance table at H2; the glossary names the
 overloaded families and the evidence classes. The next snapshot carries these pages; H2's ZIP keeps its own.
 
+**Edition H3** (prepared 27 September 2026; `SOURCE.txt` gives the build). H3 is H2's design with layer 3 released. It
+adds to H2: the pages of "After H2" above; layer 3's re-baseline and its re-check (`a54b793b`, `2c12be91`, `24e7bf5a`);
+the restructure of the two definition documents, which changes no definition, with their status page
+`v2/docs/handover/DEFINITION-STATUS.md` (`fa89c7c6`, `a9f212c7`, `edd3c848`); the release record of H2, its usability
+check, and two outside reviews saved as the owner pasted them, of the 18:00 progress report and of H2 itself
+(`v2/docs/reviews/2026-09-27-third-checkpoint-review.md`, `2026-09-27-h2-independent-review.md`); and the corrections
+and errata of section 1a. `v2/docs/handover/RELEASE-H3.md` is its release record.
+
 ## 1. The handover pages
 
 | Page | Read it for |
@@ -71,7 +83,67 @@ overloaded families and the evidence classes. The next snapshot carries these pa
 | `v2/docs/handover/GLOSSARY.md` | every internal name the pages use: closers and streams, rounds, finding-id schemes, evidence labels, the title-block labels A65, D37P and E42P |
 | `v2/docs/handover/H1.1-RESPONSE.md` | the usability check of H1, finding by finding: where each is answered, in which commit, and what is left open |
 | `v2/docs/handover/H2-RESPONSE.md` | the usability check of H2 (no blocking finding, fourteen minor ones), finding by finding: where each is answered and in which commit (after H2) |
+| `v2/docs/handover/RELEASE-H3.md` | the release record of H3: the layers it delivers as COMPLETE with their baseline commits and review records by sha256, what was and was not repeated independently, and its errata. Inside the ZIP its build figures are blank, because a snapshot cannot carry its own checksum: read them beside the ZIP |
+| `v2/docs/handover/RELEASE-H2.md` | the release record of H2, kept as written |
+| `v2/docs/handover/DEFINITION-STATUS.md` | the running status of layers 1 and 2: which commit each definition is baselined at, the restructure of 27 September 2026 and its check, and where each dependency's current state lives. The product brief and the concept of operations point to it and carry no changing result themselves |
 | `v2/docs/handover/candidates/README.md` | the candidates of H1.1 (board B's round 8, the layer 2, 3, 5 and 7 closers), SUPERSEDED since, each merged from a later state; the README names each merging commit, and since H2 the patches are referenced, not bundled |
+
+## 1a. Handover H3: what it delivers, three ways to use it, and its errata
+
+**What H3 delivers.** Every review named is an AI review or an AI check, labelled as one in its own heading; none is
+a qualified engineering review, and nothing has been built. `RELEASE-H3.md` gives each record's sha256.
+
+| Layer | Status in H3 | Baseline |
+|---|---|---|
+| 1. Product definition | **COMPLETE** | `v2/docs/PRODUCT-BRIEF.md`, definition baselined at `6b2a9965`; re-stamped BASELINED at `a9f212c7` by an editorial restructure with no definition change (`v2/docs/reviews/DEFINITION-RESTRUCTURE-CHECK-2026-09-27.md`, CONTENT_PRESERVED) |
+| 2. Concept of operations | **COMPLETE** | `v2/docs/CONOPS.md`, definition baselined at `79963b3b`; re-stamped BASELINED at `a9f212c7` the same way |
+| 3. Requirements | **COMPLETE** since commit `24e7bf5a` | `v2/ecad/tools/pcb_requirements.yaml`, `baseline_state` BASELINED at `a54b793b`, written in `2c12be91`; the re-check `v2/docs/reviews/TARGETED-RECHECK-LAYER-3-2026-09-27.md` finds B-1 CLOSED at `2c12be91`, and S-51, S-78 and S-80 are closed. H3 is its versioned package (acceptance item 3.18). The registry H3 carries still lists S-79, the item that waits for this package, as open: it is closed in the commit that files the snapshot, after the build |
+| 4 to 9 | IN_PROGRESS | as in H2: LAYER-STATUS, sections "Status at handover H3" and "Status at handover H2" |
+
+The three complete layers state what the kit is for, how it is used and what it must do. They do not claim that the
+design meets a requirement: where it does not (REQ-072 reads FAIL at desk, for one), the registry says so.
+
+**What changed since H2, and what did not.** Compared with H2's source commit `b89b50b4`, no design file differs: no
+schematic, netlist, intent, land, generator, board table, checking tool, export, CAD file, diagram or maker document.
+Under `v2/ecad/` eleven files differ: the packer and its test, the requirements registry (its baseline, open and
+closed items, and the readings and notes of four records; no record's statement, acceptance, allocation, verification
+or release effect), the interfaces registry (its `read_at` block) and INT-001's seven tracked readings, each PASS as
+before. `v2/docs/records/h3/design_difference.py` prints and asserts this, and needs a git checkout. The headline and
+the layout-entry reasons are H2's: 0 boards ready for layout, 40 reasons (`v2/docs/CURRENT-EVIDENCE.md`, the same file
+by sha256). The counts of H3 are printed by `v2/docs/records/h3/handover_counts.py`, which reads only files the snapshot carries.
+
+**Three ways to use this handover.** They are separate, and only the first needs nothing but the ZIP.
+`REGENERATE.md` gives each route's prerequisites and expected results in full.
+
+| Route | Needs |
+|---|---|
+| A. Read the handover and continue from it | the ZIP and a reader for Markdown and PDF |
+| B. Reproduce a calculation (the stored-energy chain) or a schematic (one board regenerated and compared) | Python 3 with PyYAML, and one maker document restored first (Mill-Max's catalogue page 28, fetched and checked by REGENERATE section 1a); for a schematic also KiCad 9.0.9 |
+| C. Run the test suite and re-take the readings | a git checkout with history, outside `/tmp`, and KiCad 9.0.9. **From the ZIP alone the suite is not expected to pass:** H2 read 1956 passed, 20 failed and 23 skipped from its ZIP, each failure caused by an input a snapshot leaves out |
+
+**Errata of H3: what it knowingly does not fix.** Each is known and stated here; none changes the status of layers 1
+to 3.
+
+| # | What is not fixed | Effect on a reader | Where it will be fixed |
+|---|---|---|---|
+| a | Each layout constraint sheet's sections other than its power table are readings at `e3aedb25`, as the sheet's own head says; the power tables are current on H3's netlists | a placement, protection or test-access line of a sheet may describe an older netlist; where it and a record disagree, the record governs. One such row was found and corrected for H3 (board A, section 7) | each board's sheet re-derived on its netlist by the board stream, before that board's layout entry |
+| b | `LAYER-STATUS.md` mixes status with history: its Appendix A holds the audit at `e3aedb25` and every integrator line | the page is long (about 290 KB); read its sections "Status at handover H3" and "Status at handover H2" and each layer's acceptance table, and use Appendix A only to trace an item | a restructure of the page after H3 |
+| c | Re-taking one board in a repository built from the ZIP re-renders every other board's page as NO_EVIDENCE (REGENERATE section 9) | compare only the re-taken board's rows; the other boards' pages in that repository are not evidence | the readings bundled with a later snapshot, or a re-take of every board |
+| d | `ENGINEERING-QUESTIONS.md` was not re-read row by row for H3. Five rows found stale against later records were corrected in place, each marked **Corrected for H3**: EQ-01, EQ-04, EQ-10, EQ-16 and EQ-17 | another row's options or recommended action may predate its own attempts row; the attempts row is the newer, and the record it cites governs | the page's next edition |
+| e | The set 6 circuit candidate is not in H3 | H3 lists as open several items for which a drawn candidate exists outside it (next paragraph) | the snapshot after set 6 is promoted |
+| f | Board A's external-port declaration (`v2/ecad/tools/boards/a.json`) still names J_DOCK pins 1 and 2, which are ground since SC-55 moved VIN_RAW to J_VR1 to J_VR4 | TRN-001's PASS on board A does not judge VIN_RAW's entry (read in `port_protect.py`'s code, not re-run; `v2/docs/layout-constraints/A.md` section 7); the clamp D2 is on VIN_RAW in the netlist | board A's stream: the declaration moved, TRN-001 re-taken |
+
+**What exists outside H3.** A circuit candidate called set 6 stands on branch `fnd/r8int6`, not promoted and not in
+this snapshot: remedies for EQ-25 on board C, HOT-R1 on boards A and E, the undeclared supplies and flyback diodes
+behind PWR-001 on boards C, D, E and P, board P's protection table, the RockBLOCK's ENABLE under EMCON on board B and
+E5's INT-001. Its suite on the KiCad host read 2010 passed, 1 failed, 3 skipped at `a76a246e`, the failure a checker's false
+positive (`reliability.py` read the word "socket" in the description of three logic gates of board B); with the
+checker corrected it reads 2015 passed, 0 failed, 3 skipped at `760d7f41` on that branch, where those records are
+filed. They are not in H3, and the candidate's readings were being re-taken when this was written. Five desk streams called wave 5a (branches
+`fnd/w5tray`, `fnd/w5stack`, `fnd/w5si`, `fnd/w5ident` and `fnd/w5i2c`: the lid tray, the stackups, the signal rules,
+the parts and the I2C work of layer 5) are being recovered from their transcripts, as unchecked checkpoints on four
+of the five branches when this was written. None of
+this changes a statement of H3, and none of it is evidence until it is checked and promoted.
 
 ## 2. What is being built, and for whom
 
@@ -132,7 +204,9 @@ and no certification claimed; no vehicle surge claim (D-16); no finished runtime
 The counts of the design's state in this section (the layout-entry reasons, the registry's counts, the BOM rows) are
 printed by `v2/docs/records/h2/handover_counts.py` from the snapshot's own files (its output is `handover_counts.out`
 beside it; re-run it from the snapshot's root to check them); every other figure names the commit or the run it comes
-from.
+from. **H3:** this section is H2's and its design statements hold in H3. What H3 changes in it is marked **H3**; H3's
+counts are `v2/docs/records/h3/handover_counts.out`, which differs from H2's in the registry's state and its open and
+closed items, in the two definition documents' hashes and in the review records listed, and in no count of the design.
 
 - **Source.** Main `62f26a44` plus branch `fnd/h2` (the targeted fix and narrow verification of layers 1 and 3, the
   claims screen re-taken after them, the H2 exports, these pages). Last design change `b7f96784` (set 5); last tool
@@ -146,12 +220,12 @@ from.
 
   | Layer | Status in H2 | Evidence |
   |---|---|---|
-  | 1. Product definition | **COMPLETE** | `v2/docs/PRODUCT-BRIEF.md` BASELINED (`6b2a9965`); Review A layer 1, two release checks and the narrow verification `v2/docs/reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md` (AI reviews) |
-  | 2. Concept of operations | **COMPLETE** | `v2/docs/CONOPS.md` BASELINED (`79963b3b`); Review A layer 2 and the second release check `v2/docs/reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md`, no blocking finding (AI reviews) |
-  | 3. Requirements | IN_PROGRESS | the registry validates (144 records, 0 errors and 0 warnings in a git checkout holding its closing commits and the gitignored readings; from the ZIP alone 13 errors and 17 warnings, and in a repository built from the ZIP 30 errors: REGENERATE.md section 7 gives each count's condition) at READY_FOR_REVIEW_B; the baseline waits on S-80's wording fix and its re-check (EQ-30) |
+  | 1. Product definition | **COMPLETE** | `v2/docs/PRODUCT-BRIEF.md` BASELINED (`6b2a9965`); Review A layer 1, two release checks and the narrow verification `v2/docs/reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md` (AI reviews). **H3:** re-stamped BASELINED at `a9f212c7`, an editorial restructure with no definition change (section 1a) |
+  | 2. Concept of operations | **COMPLETE** | `v2/docs/CONOPS.md` BASELINED (`79963b3b`); Review A layer 2 and the second release check `v2/docs/reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md`, no blocking finding (AI reviews). **H3:** re-stamped BASELINED at `a9f212c7` the same way |
+  | 3. Requirements | IN_PROGRESS in H2. **H3: COMPLETE** since commit `24e7bf5a` | the registry validates (144 records, 0 errors and 0 warnings in a git checkout holding its closing commits and the gitignored readings; from the ZIP alone 13 errors and 17 warnings, and in a repository built from the ZIP 30 errors: REGENERATE.md section 7 gives each count's condition). In H2 it stood at READY_FOR_REVIEW_B and its baseline waited on S-80's wording fix and its re-check (EQ-30). **H3:** both are done: `baseline_state` reads BASELINED at `a54b793b`, written in `2c12be91`, and the re-check `v2/docs/reviews/TARGETED-RECHECK-LAYER-3-2026-09-27.md` (an AI check) finds B-1 CLOSED at `2c12be91`; S-51, S-78 and S-80 are closed, and nothing of layer 3 waits on S-80 |
   | 4 to 9 | IN_PROGRESS | LAYER-STATUS, section "Status at handover H2": what landed since H1 and what remains, per layer |
 
-  None is BLOCKED as a whole. Layer 3 closes with desk work; layers 4 to 9 each hold items that need a purchase, a
+  None is BLOCKED as a whole. Layer 3 closed with desk work, after H2; layers 4 to 9 each hold items that need a purchase, a
   bench, an outside reviewer or an outside answer (ENGINEERING-QUESTIONS groups B and C). A board's layout entry
   also needs its own reasons closed; completing one board would not complete the schematic layer.
 - **Readable exports.** `v2/release/handover/_generated/<board>/`: an A3-paged schematic PDF, two BOMs named
@@ -274,15 +348,15 @@ from.
 | `v2/docs/records/` | session records that committed pages cite (scripts, outputs, decision logs), filed byte for byte with sha256 (`v2/docs/records/README.md`) | records, not tools and not authorities |
 | `v2/docs/review-packets/battery/` | the packet for the qualified battery review R-BAT, with its manifest check | review input |
 | `v2/docs/MESHSAT-709-geometry-appendix.md` | the design record, about 19,000 lines of dated entries (rulings, measurements, audit rounds) | history; use it only to trace a ruling another page cites |
-| `v2/ecad/tools/pcb_requirements.yaml` | the requirements registry: 19 needs, 144 records (REQ 77, CON 26, CFL 18, ASM 7, FEA 7, SPD 6, CHO 3), 29 owner rulings, 63 session choices (SC-01 to SC-63), 60 open and 50 closed items, counted for H2 (132 records and 16 session choices at H1); `SOURCE.txt` prints the counts at the snapshot's build commit, and those govern | the single authority for requirements; `v2/docs/REQUIREMENTS-TRACE.md` is its generated view |
+| `v2/ecad/tools/pcb_requirements.yaml` | the requirements registry: 19 needs, 144 records (REQ 77, CON 26, CFL 18, ASM 7, FEA 7, SPD 6, CHO 3), 29 owner rulings, 63 session choices (SC-01 to SC-63), 58 open and 53 closed items, counted for H3 (60 open and 50 closed at H2, the rest the same; 132 records and 16 session choices at H1); `SOURCE.txt` prints the counts at the snapshot's build commit, and those govern | the single authority for requirements; `v2/docs/REQUIREMENTS-TRACE.md` is its generated view |
 | `v2/ecad/tools/pcb_decisions.yaml`, `pcb_rules.yaml`, `pcb_interfaces.yaml`, `pcb_envelope.yaml`, `pcb_board_holds.yaml`, `pcb_energy_chain.yaml`, `pcb_pack_protection.yaml`, `pcb_part_temps.yaml`, `reserved.json` | the decision, rule, interface, envelope, hold, energy-chain, pack-protection and part-temperature registries | machine-read authorities for the tools; some are stale at `e3aedb25` (LAYER-STATUS says which) |
 | `v2/ecad/tools/gen_sch_<x>.py`, `boards/<x>.json`, `kisch.py`, `intent.py`, `schlayout.py`, `gen_footprints_*.py`, `v2/ecad/meshsat.pretty/` | the schematic generators and their shared inputs: the boards are generated by scripts, not drawn | the source of truth for each circuit |
 | `v2/ecad/pcb-*/` | per board: the generated `.kicad_sch`, the committed netlist `out/<board>.net` with its provenance sidecar `.net.prov.json` and intent file `-intent.json`, allow lists; also the historical layouts | schematic and netlist current; layouts historical |
 | `v2/ecad/tools/` (the rest) | the checking tools, the pipeline and its tests (`tests/run.py`) | tools; a tool's verdict is evidence only when bound to the current candidate |
 | `v2/vendor/` | makers' documents and CAD, with `SOURCES.yaml` (identity, revision, source and sha256 per critical part), `sources.txt`, `vendor-status.txt`, `open-picks.txt` | reference material under the makers' own terms; a held document does not validate a part |
 | `v2/cad/` | CAD generators of the made parts (face plate, pack box, lid tray, float clamp) and the render scene | carries the case choices C1 to C6 since `c351115d` (the pack box still draws the older 4S4P block, S-27; the render scene is presentation) |
-| `v2/release/case-2026-09-27/` | the case release for C1 to C6: the made parts' STEP and DXF, dimensioned drawings (sheets 1 to 14, the QMX lid tray on sheet 14), templates, the stack report, `MANIFEST.sha256` | current; the lid tray is not to be printed before S-63 (EQ-24) |
-| `v2/release/handover/` | the snapshots (`H1/` unzipped; `H1.zip`, `H1.1.zip`, `H2.zip` with their sha256 and manifests) and `_generated/`, the readable exports of the schematics | a snapshot is an immutable copy; `_generated/` is regenerated per edition |
+| `v2/release/case-2026-09-27/` | the case release for C1 to C6: the made parts' STEP and DXF, dimensioned drawings (sheets 1 to 14, the QMX lid tray on sheet 14), templates, the stack report, `MANIFEST.sha256` | current; beside it, with its own manifest, `lid-tray-qmx-r2/` of 27 September 2026 (sheets 14r2-1 to 14r2-3) supersedes the r1 lid tray and sheet 14, which are not to be printed (EQ-24 answered; S-96, EQ-31) |
+| `v2/release/handover/` | the snapshots (`H1/` unzipped; `H1.zip`, `H1.1.zip`, `H2.zip` and `H3.zip` with their sha256 and manifests) and `_generated/`, the readable exports of the schematics | a snapshot is an immutable copy; `_generated/` is regenerated when a schematic changes (H3 keeps H2's exports: no schematic changed) |
 | `v2/release/revA/` | deliverable folders, review prints and case templates of earlier layout phases, and the order set | historical; the order set was rebuilt and quarantined (decision 41), and nothing is to be ordered from it. One file is the exception: `v2/release/revA/order/JLC-CERTIFIED.tsv` is bundled and current (section 5, layer 6) |
 | `v2/release/review-packets/` | review packets of boards C, D, E and P at `1f614233`; D and P superseded, C and E to be rebuilt (`v2/release/review-packets/README.md`) | review input, with the README's labels |
 
@@ -311,9 +385,9 @@ Read in order; each layer's authoritative files first, then its status in LAYER-
 
 | Layer | Authoritative files (read first) | Supporting |
 |---|---|---|
-| 1. Product definition (COMPLETE in H2) | `v2/docs/PRODUCT-BRIEF.md` (BASELINED) | `v2/docs/V2-SPEC.md` (the device set with dated corrections 1 to 19), `pcb_requirements.yaml` `owner_rulings` |
-| 2. Concept of operations (COMPLETE in H2) | `v2/docs/CONOPS.md` (BASELINED; needs NEED-01 to NEED-19, missions, modes, power states, rulings), `v2/docs/OPERATING-ENVELOPE.md`, `v2/ecad/tools/pcb_envelope.yaml` | `v2/docs/PANEL.md` (operator-facing behaviour), `v2/docs/TEST-PLAN.md` (envelope limits) |
-| 3. Requirements | `v2/ecad/tools/pcb_requirements.yaml`, its generated view `v2/docs/REQUIREMENTS-TRACE.md` | `v2/ecad/tools/rules_lib.py` (the validator), `v2/ecad/tools/pcb_rules.yaml` (the board rules records name) |
+| 1. Product definition (COMPLETE since H2) | `v2/docs/PRODUCT-BRIEF.md` (BASELINED) | `v2/docs/handover/DEFINITION-STATUS.md` (the running status of layers 1 and 2), `v2/docs/V2-SPEC.md` (the device set with dated corrections 1 to 19), `pcb_requirements.yaml` `owner_rulings` |
+| 2. Concept of operations (COMPLETE since H2) | `v2/docs/CONOPS.md` (BASELINED; needs NEED-01 to NEED-19, missions, modes, power states, rulings), `v2/docs/OPERATING-ENVELOPE.md`, `v2/ecad/tools/pcb_envelope.yaml` | `v2/docs/PANEL.md` (operator-facing behaviour), `v2/docs/TEST-PLAN.md` (envelope limits) |
+| 3. Requirements (COMPLETE in H3) | `v2/ecad/tools/pcb_requirements.yaml` (BASELINED at `a54b793b`), its generated view `v2/docs/REQUIREMENTS-TRACE.md` | `v2/ecad/tools/rules_lib.py` (the validator), `v2/ecad/tools/pcb_rules.yaml` (the board rules records name) |
 | 4. System architecture | `v2/docs/ARCHITECTURE.md` (sections 14 and 15 first: the feasibility blockers and the stale siblings) | `v2/docs/feasibility/*.md`, `v2/docs/B-FEASIBILITY.md`, `v2/docs/ARCH-PCB-B-IOHA.md`, `v2/docs/review-packets/battery/` |
 | 5. Partitioning and interfaces | `v2/ecad/tools/pcb_interfaces.yaml` (`board_to_board`, 30 contracts; its `read_at` names the H2 line's netlists since after H2, and each contract's `src` lines stay as that contract states them), `v2/docs/HW-FW-CONTRACT.md` (the firmware obligations that affect hardware), `v2/docs/ARCHITECTURE.md` sections 3, 10 and 12 | `v2/docs/PANEL.md`, `v2/docs/ASSEMBLY.md` section 4, `v2/docs/GROUNDING-AND-SHIELDS.md`, `v2/ecad/tools/check_contracts.py` |
 | 6. Components | `v2/vendor/SOURCES.yaml` (read each entry's update blocks, not only its top-level fields), `v2/release/revA/order/JLC-CERTIFIED.tsv` (bundled and current: it is the one file of the quarantined order folder that is not historical, the dated catalogue reading `jlc_certify.py` writes; a `pack.yaml` rule carves it out of the folder's exclusion) | `v2/docs/evidence/WRONG-MODEL-RECONCILIATION.md`, `v2/ecad/tools/pcb_part_temps.yaml`, `v2/vendor/open-picks.txt` |
@@ -331,13 +405,14 @@ costed external and bench work).
 The full instructions are `v2/docs/handover/REGENERATE.md`. In short:
 
 - **Runs anywhere with Python 3.11 and PyYAML 6, no KiCad, from the ZIP alone** (each run from a fresh extraction of
-  H2): the power model `v2/docs/records/rv-pwr/pwr_budget.py <out.json>` (the JSON it writes byte-identical to
+  H2, and not run again on H3, whose inputs to these commands are H2's but for the registry: REGENERATE.md, "Edition
+  H3", says what is expected to differ): the power model `v2/docs/records/rv-pwr/pwr_budget.py <out.json>` (the JSON it writes byte-identical to
   `pwr_budget.json` and its stdout to `pwr_budget.out`, both beside it); the case margin scripts
   `v2/vendor/peli/frame_seat.py` and `v2/vendor/peli/case_margins.py` (stdout byte-identical to
   `v2/vendor/peli/1450/frame_seat.out` and `case_margins.out`); `v2/ecad/tools/check_contracts.py v2/ecad` on the
   committed netlists, with `VERDICT_DIR` pointed outside the tree (PASS 99 of 99 cross-board checks; they judge pin-map
   identity and presence, not currents, levels, timing or mating); `v2/docs/records/h2/handover_counts.py`, which prints
-  every count these pages quote. `python3 v2/ecad/tools/rules_lib.py requirements` reads 144 records with 13 errors and
+  every count these pages quote (for H3, `v2/docs/records/h3/handover_counts.py`). `python3 v2/ecad/tools/rules_lib.py requirements` reads 144 records with 13 errors and
   17 warnings from the ZIP: every error is a maker document the registry cites and the snapshot references rather than
   bundles (CON-017's three ST documents and eight cited since H1), and the warnings are closed-by-commit checks that
   need git history and the gitignored readings (REGENERATE.md section 7, whose table gives the condition of every

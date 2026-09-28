@@ -2,22 +2,108 @@
 
 MESHSAT-1357, pre-PCB layer 9 of the handover (`v2/docs/reviews/2026-09-27-handover-execution-prompt.md`, sections 3
 and 5: "Layout entry requires the reviewed schematic, parts, interfaces, geometry, stackup and electrical
-constraints"). Written 27 September 2026 against `main` at `e3aedb25`, and **re-bound to the H2 line after H2 (the
-same day, at `ef144760`)**: the table below names the candidate each sheet is now read against, `calc/rail_widths.py`
-was re-run on those intent files (its output names each netlist and intent by sha256/16), and each sheet's opening
-lines say what was re-read at the H2 line and what stays as read at `e3aedb25`. **Prototype design: no V2 board has
-been fabricated, ordered, assembled or powered. No board is ready for layout: 0 of 7 pass the staged layout-entry
-test (`v2/docs/CURRENT-EVIDENCE.md`).** A sheet here is an input a layout needs, never an admission to layout.
+constraints"). Written 27 September 2026 against `main` at `e3aedb25`; re-bound by hand to the H2 line after H2 (the
+same day, at `ef144760`, commit `ecfe5414`); and **bound to the set 6 candidate that night (read at `760d7f41`) with a
+check that fails when a sheet and its inputs part** (`v2/ecad/tools/constraints_bound.py`, "The bound block" below).
+**Prototype design: no V2 board has been fabricated, ordered, assembled or powered. No board is ready for layout: 0
+of 7 pass the staged layout-entry test (`v2/docs/CURRENT-EVIDENCE.md`).** A sheet here is an input a layout needs,
+never an admission to layout.
 
-| Board | Sheet | Candidate it is read against at the H2 line (`CURRENT-EVIDENCE.md`); at `e3aedb25` (history) |
-|---|---|---|
-| A power | [A.md](A.md) | phase A32; netlist `pcb-a-power-a23/out/pcb-a-power.net` da05dc02bc1e612f, intent 92dd3b1cda9046b8; was netlist 7b08510106687b3d |
-| B compute | [B.md](B.md) | phase B21; netlist 8b78c59754a6a0c7, intent 162fcb9b95f680a7; was 669d02d07aeaae4b |
-| C panel backer | [C.md](C.md) | phase C24; netlist 11eabc2dddca5161, intent 854436c729322993; was 2834f0d8c4071d56 |
-| D APRS | [D.md](D.md) | phase D12; netlist 76700a687eb6187f, intent 443fd745879d3022; was f13d8b70099ab03e |
-| E1 dock | [E.md](E.md) | phase E17; netlist d6137f50059e5cbc, intent 5913e38b20333d35; was d910e49c5f5f50b2 |
-| P pack BMS | [P.md](P.md) | phase P4; netlist 085f833362fbbda8, intent 6ff1b8129a5c5aff; was 4342c4cbe1b43dc4 |
-| E5 dock block | [E5.md](E5.md) | board file 686b29a734c55b9a (no schematic), unchanged |
+| Board | Sheet | Declared phase | What is current in the sheet |
+|---|---|---|---|
+| A power | [A.md](A.md) | A32 | section 2, on the set 6 candidate; the rest at `e3aedb25` with the H2 line's marks |
+| B compute | [B.md](B.md) | B21 | section 2, on the set 6 candidate; the rest at `e3aedb25` with the H2 line's marks |
+| C panel backer | [C.md](C.md) | C24 | section 2, on the set 6 candidate; the rest at `e3aedb25` with the H2 line's marks |
+| D APRS | [D.md](D.md) | D12 | section 2, on the set 6 candidate; the rest at `e3aedb25` with the H2 line's marks |
+| E1 dock | [E.md](E.md) | E17 | section 2, on the set 6 candidate; the rest at `e3aedb25` with the H2 line's marks |
+| P pack BMS | [P.md](P.md) | P4 | section 2, on the set 6 candidate; the rest at `e3aedb25` with the H2 line's marks |
+| E5 dock block | [E5.md](E5.md) | E5 (no schematic) | section 2, on the set 6 candidate; the rest at `e3aedb25` with the H2 line's marks |
+
+**This table carries no hash on purpose.** Until the set 6 binding it named each board's netlist and intent file by
+sha256/16, a second typed copy of what each sheet's opening lines said, and a copy is what goes stale. The inputs of
+a sheet are named once, in the sheet's own `bound` block, and compared with the committed files by the check.
+
+## The bound block
+
+**Why it exists** (the independent review of handover H2, `v2/docs/reviews/2026-09-27-h2-independent-review.md`,
+section 3 A). At H2 board A's sheet gave VIN_RAW as 12.31 A and 11.92 mm on one outer face while the committed intent
+file declared 14.10 A, which is 15.29 mm: the sheet had been written against one candidate, the boards had moved, and
+nothing compared the page with its inputs. Set 6 then moved every board's netlist again. The rule since: **derived
+data a designer will follow names the inputs it was computed from by their hashes, and a check fails when the
+committed inputs move.**
+
+**The form.** Each sheet's opening paragraph ends in one fenced block whose info word is `bound`. One line per fact,
+the key first, the values separated by spaces, the words `sha256/16`, `changed`, `at`, `decision`, `rise`, `plating`,
+`outer` and `inner` each followed by their value. Nothing else is read from a sheet's opening, and no sentence is
+parsed:
+
+    ```bound
+    sheet      <the sheet's name, A to P or E5>
+    board      <the board's letter, a to p or e5>
+    read       <yyyy-mm-dd> at <the commit the sheet was read on>
+    current    <which sections were re-read on that commit, in words>
+    older      <which sections are readings of an older commit, and which, in words>
+    netlist    <path from the repository root> sha256/16 <16 hex> changed <the commit the file last changed in>
+    intent     <path> sha256/16 <16 hex> changed <commit>
+    board_file <path> sha256/16 <16 hex> changed <commit>
+    chain      <path> sha256/16 <16 hex> changed <commit>
+    model      track_current.width_for_current decision 35 rise 10 K plating 18 um
+    stack      <the stack's name in stackup_write.STACKS> outer <mm> mm inner <mm> mm
+    ```
+
+- `netlist` and `intent` are the inputs of a board with a schematic; `board_file` and `chain` are board E5's (its
+  board file is its design, and its currents are the energy chain's stage DOCK_BLOCK). A sheet of a board with a
+  schematic also declares its `board_file`: the committed layout the older sections' readings were taken on. **Every
+  declared input is compared with the committed file, whether the calculation reads it or not.**
+- `inner none` on a two-layer stack. `current` and `older` are for the reader and are not judged beyond their presence.
+- `calc/rail_widths.out` opens each board's section with the same block as the tool printed it (no `sheet`, `read`,
+  `current`, `older` or `changed`: the tool knows the files, not the history).
+
+**The power tables of section 2** are the tables `calc/rail_widths.py` prints for the board, in its columns and its
+row order, with one more column, `note`, which is the sheet's own: what a rail is, what moved and why in the intent
+file's own words, and the commit that moved it. **The check compares every cell but the note**, of which it asks one
+thing: that it no longer opens with the mark a re-binding leaves on a row that moved. A number in a note is a
+quotation and names its source beside it; the check cannot vouch for it, and the record it names governs.
+
+**The check**, `v2/ecad/tools/constraints_bound.py`, fails, naming the sheet, the input and both values, when:
+
+1. a sheet declares no input (no `bound` block in its opening, or a block naming no file);
+2. a declared input's sha256/16 is not the committed file's; its path is not the file the calculation reads or not
+   the declared phase's; an input the calculation reads is not declared; the declared commit is not the one git names
+   for the file (asked wherever git answers; an extraction with no history is told apart and not failed for it);
+3. the sheet's model or stack is not the calculation's (the function, decision 35, the rise, the hole plating, the
+   stack's name, its outer and inner copper), or the calculation's copper is not `stackup_write.STACKS`'s;
+4. a power table differs from what `rail_widths.py` prints now in any cell, row or row order, or section 2 carries a
+   table of widths the tool does not print;
+5. `calc/rail_widths.out` differs from a fresh run: a board's section in that board's reading, the file byte for byte
+   in the set's;
+6. a typed list of the calculation has outlived its subject: a pack-path root or a maker's-figure rail the intent
+   file no longer declares, a maker's figure the declaration has caught up with, a net of E5's table its board file
+   does not carry;
+7. a row's note still opens with the mark the re-binding leaves on a row that moved or is new (step 3 below).
+
+It prints and writes nothing by default; `--out-dir DIR` (or the pipeline's `VERDICT_DIR`) gets one verdict per board,
+`constraints_bound_<letter>`. Its fixtures are `v2/ecad/tools/tests/test_constraints_bound.py`: the H2 defect with
+its own numbers, a width narrowed by hand, a sheet with no declaration and a stale output must fail, a consistent
+tree must pass, and one test judges this tree.
+
+**To re-bind a sheet** when an input has moved:
+
+1. `python3 v2/docs/layout-constraints/calc/rail_widths.py --markdown > v2/docs/layout-constraints/calc/rail_widths.out`
+2. `python3 v2/ecad/tools/constraints_bound.py --emit <letter> --sheet` prints the whole sheet re-bound: the block's
+   hashes, commits and `read` line, the model and the stack, and section 2's tables as the tool prints them now, with
+   the notes the sheet holds kept by rail. Every other line is the sheet's own. Put it in the sheet's place. (Without
+   `--sheet` it prints the block and the tables alone.)
+3. **Every row that moved or is new carries a mark in its note, and the check fails on the mark.** Replace each with
+   what moved the row, from the intent file's own text, and the commit or finding that moved it. A re-binding by
+   machine gives a sheet the right numbers; it cannot say why they changed, and a sheet is read by somebody who
+   needs to know.
+4. Correct the block's `current` and `older` lines and the opening paragraph to say which sections were re-read on
+   the new candidate, and re-read the text under section 2's tables against the tables.
+5. `python3 v2/ecad/tools/constraints_bound.py` until it passes.
+
+Never copy a width from a report, a review or an older page: a width is the tool's output on the committed input or
+it is not in the table.
 
 ## What a sheet is, and what it is not
 
@@ -29,16 +115,16 @@ test (`v2/docs/CURRENT-EVIDENCE.md`).** A sheet here is an input a layout needs,
 - **A sheet adds no rule.** Where the record has a gap, the sheet says so and names who closes it. The one kind of
   line a sheet writes on its own authority is an INFERRED reading of the record (marked so) or a recommendation of the
   session (marked so, with its reason and reversal), under the owner's standing rule of 26 September 2026.
-- **Bound to the H2 line since after H2** (the table above), and before that to the committed candidates at
-  `e3aedb25`, which the text below describes. At the H2 line `calc/rail_widths.py` changed 41 lines of its output
-  against the `e3aedb25` one: board A's VIN_RAW from 12.31 A and 11.92 mm to 14.10 A and 15.29 mm on one outer face,
-  rails new on A (PRECHG, VMON, +3V3_EMCON_EF, +3V3_EMCON), B (seventeen, each at most 0.3 A), D (+5V_TX) and E
-  (SGP_VDD), board E's VIN_RAW and TRK_OUT at 14.10 A and 10.33 A, and every intent's sha. As first written: Round 8's
-  circuit streams change boards A, B, C, D, E and P.
-  At the time of writing `fnd/r8int1` (commit `53a98a71`) integrates A, D and E and changes their intent files; its
-  rail deltas that move a width are quoted in the sheets as "round 8". That branch reached `main` as `53a98a71` before
-  this layer was integrated. **Every sheet is re-read against the netlist and intent file of the merge commit before a
-  layout starts** (`calc/rail_widths.py` regenerates the power tables in under a second).
+- **Bound to the set 6 candidate since the night of 27 September 2026** (each sheet's `bound` block), before that
+  by hand to the H2 line, and before that to the committed candidates at `e3aedb25`, which the text of every section
+  but section 2 still describes. What moved, from `calc/rail_widths.py` run on each candidate's own intent files
+  (`v2/docs/records/p3bind/rail-moves.md`): **at the H2 line**, board A's VIN_RAW from 12.31 A and 11.92 mm to 14.10 A
+  and 15.29 mm on one outer face, rails new on A (PRECHG, VMON, +3V3_EMCON_EF, +3V3_EMCON), B (seventeen, each at
+  most 0.3 A), D (+5V_TX) and E (SGP_VDD), board E's VIN_RAW and TRK_OUT to 14.10 A and 10.33 A; **at set 6**, board
+  C's +3V3 from 0.12 / 0.20 A to 0.15 / 0.72 A with EPD_VCC, LED_RAIL_SW and LED_RAIL new, and board P's BAT_F, VCC_F,
+  SEC_VDD, SW and SCP_HTR new, SW at the pack path's 18 A; nothing on A, B, D, E or E5. **Every sheet is re-bound
+  against the netlist and intent file of the merge commit before a layout starts**: the calculation regenerates the
+  power tables in under a second and the check says whether a sheet is that candidate's ("The bound block").
 
 ## The rules every sheet applies, and where each comes from
 
@@ -53,6 +139,17 @@ test (`v2/docs/CURRENT-EVIDENCE.md`).** A sheet here is an input a layout needs,
   18 A for 60 s is a service current for every PA key-down) until a transient analysis of that copper at 60 s says
   otherwise. PWR-F12 names board A's pack path; the same chain stages cross E, E5 and P (`pcb_energy_chain.yaml`), so
   their sheets carry it too.
+- **Which rails are the pack path** (the session's, 27 September 2026, authority SESSION under the owner's standing
+  rule of 26 September; `calc/rail_widths.py`, WHICH RAILS ARE THE PACK PATH): the roots the calculation names per
+  board, and every rail the intent file itself declares a series segment (`series_of`) or the return (`returns`) of
+  one of them at that rail's own typical and peak currents. Set 6 declared board P's SW, the common drain of the
+  pack's two FETs, and the typed list did not know it: it would have been sized at its typical 10 A, 4.08 mm at 2 oz,
+  between two segments of the same conductor sized at 18 A and 11.95 mm. A branch (`series_of` at a lower current, as
+  board B's PANEL_5V) is judged at its own current. Reverse by making `pack_path` return the roots alone.
+- **A rail whose maker asks more than the board declares** (POWER-THERMAL findings PWR-F01, F03 and F05, board B) is
+  in the first table at its declaration, which is the committed input, and in a second table at the maker's figure,
+  which is the one to size to until the declaration is corrected. The figures are typed in the calculation
+  (`SIZED_TO`) with the finding each comes from; the check refuses an entry the declaration has caught up with.
 - **Rail current comes from generator-laid copper, never from router tracks** (`v2/ecad/tools/power_copper.py`,
   appendix 32.67 rule 3).
 - **The two-face column** of each power table assumes the two outer faces share the current equally; it is INFERRED,
@@ -172,9 +269,14 @@ Each sheet's last section lists the ones that apply to its board, with what each
 
 ## Files
 
-- `calc/rail_widths.py` and `calc/rail_widths.out`: the power tables (stdlib, any host, under a second); the output is
-  the run at the H2 line (after H2), each table headed by the netlist and intent it read.
+- `calc/rail_widths.py` and `calc/rail_widths.out`: the power tables (stdlib and the two model modules, PyYAML for
+  board E5's chain stage; any host, under a second); the output is the run on the set 6 candidate, each board's
+  section opened by the `bound` block that names its inputs, and a second run is the same bytes.
+- `v2/ecad/tools/constraints_bound.py` and `v2/ecad/tools/tests/test_constraints_bound.py`: the check and its
+  fixtures ("The bound block").
+- `v2/docs/records/p3bind/`: how the set 6 binding was made (`rebind_sheets.py`, which ran once), which rows moved
+  between the three candidates (`rail-moves.md`) and in which commit (`rail-commits.md`).
 - `calc/stack_solves.py` and `calc/stack_solves.out`: the pair and RF line solves (atlc 4.6.1; run on the rented box,
   30 s on 12 workers). They depend on the stacks' geometry and the pair classes' widths, not on a netlist, so they
-  were not re-run at the H2 line.
+  were not re-run at the H2 line or on the set 6 candidate, and no check binds them yet (they need atlc).
 - `v2/docs/STACKUP-DECISIONS.md`: the per-board stackup record the sheets' section 1 summarises.

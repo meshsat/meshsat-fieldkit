@@ -15,53 +15,45 @@
    "netlist_parts.py": "41cf192223d822c2",
    "regen_compare.py": "341d7f129a1e6f24",
    "return_via.py": "b61d138e54955dd4",
-   "rules_lib.py": "c0458c53923d7925",
+   "rules_lib.py": "a6e2421096c1473f",
    "signal_class.py": "60b8647301428da4",
    "signalnets.py": "688be12d8e42e7a4",
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "5aa3d5157698ae2a",
+  "sha16": "8d11079ea3d16df7",
   "unresolved": []
  },
  "counts": {
   "census_nets": 153,
-  "checks": 7,
-  "declared_nodes": 1,
+  "checks": 6,
+  "declared_nodes": 25,
   "declared_not_in_netlist": 0,
-  "declared_rails": 2,
-  "fail": 5,
+  "declared_rails": 5,
+  "fail": 0,
   "held_pin_roles": 22,
   "nodes_supplying_parts": 0,
-  "power_nets": 6,
+  "power_nets": 5,
   "rails_without_destination": 0,
   "settled": 3,
   "switches_unresolved": 0,
-  "undecided": 11,
-  "undeclared": 4,
-  "unmarked": 109
+  "undecided": 0,
+  "undeclared": 0,
+  "unmarked": 74
  },
- "denominator": 7,
+ "denominator": 6,
  "evidence": [
-  "census of the 153 nets: 6 counted, 10 declared node, 1 ground, 3 settled, 13 unconnected, 11 undecided, 109 unmarked",
-  "undecided, named and not counted (11): EMCLAMP_A, EMCLAMP_K, EPD_RESE, LIGHT_DAY_n, LIGHT_NIGHT_n, TEST_SW, TX_A, TX_INHIBIT_n, TX_K, TX_LAMPTEST, ZEROIZE_SW",
+  "census of the 153 nets: 5 counted, 57 declared node, 1 ground, 3 settled, 13 unconnected, 0 undecided, 74 unmarked",
   "settled, they supply nothing (3): SOS_SW, XIN, XOUT",
-  "power net C_DVDD is a declared rail (it is not: supply pin by name (U3.23 DVDD, U3.45 VREG_VOUT, U3.50 DVDD), and the intent's bypass list decouples it (C14:U3.45, C15:U3.50); supply pin by its held datasheet)",
-  "power net EPD_VCC is a declared rail (it is not: power class PWR in the netlist; supply pin by name (J_EPD.15 VDDIO, J_EPD.16 VDD), and the intent's bypass list decouples it (C29:J_EPD.15, C28:J_EPD.16); switc)",
-  "power net LED_RAIL is a declared rail (it is not: power class PWR in the netlist)",
-  "power net LED_RAIL_SW is a declared rail (it is not: power class PWR in the netlist)",
-  "the count of declared rails equals the count of power nets carrying more than 0.00 A: 2 declared (2 of them nets of the netlist), 6 power nets not declared as nodes (by kind, a net counted under each that applies: 2 power-symbol, 1 supply-pin by type, 5 power-class, 5 supply-pin by name, 3 supply-pin by its held datasheet, 1 reached by a rail's current, 2 declared rails), 1 declared as nodes; undeclared: C_DVDD, EPD_VCC, LED_RAIL, LED_RAIL_SW",
-  "undecided, named and not counted: EMCLAMP_A: it carries the mark of a supply (M3 D22 joins it to the undecided net EMCLAMP_K) and nothing read settles it: D22.2",
-  "undecided, named and not counted: EMCLAMP_K: it carries the mark of a supply (M4 the switched return of D22: the channel of Q7 sinks it to ground) and nothing read settles it: D22.1, Q7.3",
-  "undecided, named and not counted: EPD_RESE: it carries the mark of a supply (M4 the channel of Q6 with the net EPD_SW) and nothing read settles it: J_EPD.3, Q6.2",
-  "undecided, named and not counted: LIGHT_DAY_n: it carries the mark of a supply (M1 capacitor C22 to ground) and nothing read settles it: SW_LIGHT.5, U1.13",
-  "undecided, named and not counted: LIGHT_NIGHT_n: it carries the mark of a supply (M1 capacitor C23 to ground) and nothing read settles it: SW_LIGHT.6, U1.14",
-  "undecided, named and not counted: TEST_SW: it carries the mark of a supply (M1 capacitor C21 to ground) and nothing read settles it: SW_TEST.1, U3.39",
-  "undecided, named and not counted: TX_A: it carries the mark of a supply (M3 D3 joins it to the undecided net TX_K) and nothing read settles it: D3.2",
-  "undecided, named and not counted: TX_INHIBIT_n: it carries the mark of a supply (M1 capacitor C24 to ground) and nothing read settles it: J_PANEL.11, SW_EMCON.1, U14.3, U9.2",
-  "undecided, named and not counted: TX_K: it carries the mark of a supply (M4 the switched return of D17, D3: the channel of Q3 sinks it to ground) and nothing read settles it: D17.2, D3.1, Q3.3",
-  "undecided, named and not counted: TX_LAMPTEST: it carries the mark of a supply (M3 D17 joins it to the undecided net TX_K) and nothing read settles it: D17.1, U2.13",
-  "undecided, named and not counted: ZEROIZE_SW: it carries the mark of a supply (M1 capacitor C20 to ground) and nothing read settles it: SW_ZERO.1, U12.2, U3.34",
+  "declared as a node, not a rail: BAT1_A (series conductor: the load R31 of rail LED_RAIL at 0.02 A)",
+  "declared as a node, not a rail: BAT2_A (series conductor: the load R32 of rail LED_RAIL at 0.03 A)",
+  "declared as a node, not a rail: BAT3_A (series conductor: the load R33 of rail LED_RAIL at 0.03 A)",
+  "declared as a node, not a rail: BAT4_A (series conductor: the load R34 of rail LED_RAIL at 0.03 A)",
+  "declared as a node, not a rail: BAT5_A (series conductor: the load R35 of rail LED_RAIL at 0.03 A)",
+  "declared as a node, not a rail: CHG_A (series conductor: the load R29 of rail LED_RAIL at 0.03 A)",
+  "declared as a node, not a rail: C_DVDD (supply pin by name (U3.23 DVDD, U3.45 VREG_VOUT, U3.50 DVDD), and the intent's bypass list decouples it (C14:U3.45, C15:)",
+  "declared as a node, not a rail: EMCLAMP_A (series conductor: the load R47 of rail LED_RAIL_SW at 0.01 A)",
+  "declared as a node, not a rail: EPD_SW (series conductor: the load L1 of rail EPD_VCC at 0.50 A)",
   "declared as a node, not a rail: EPD_VDDD (supply pin by name (J_EPD.18 VDDD), and capacitor C34 joins it to ground)",
   "settled, it supplies nothing: SOS_SW: nothing on it supplies: SW_SOS.1 a switch to ground; U3.40 GPIO28 / ADC2 (signal, rpi-rp2040-datasheet.pdf)",
   "settled, it supplies nothing: XIN: an oscillator net: Y1 is a crystal or resonator",
@@ -79,12 +71,12 @@
   },
   "intent": {
    "path": "pcb-c-display-c8/out/pcb-c-display-intent.json",
-   "sha256_16": "854436c729322993"
+   "sha256_16": "270ebb4ccf1d0e8e"
   },
   "netlist": {
-   "content16": "96c2678f4a3303b8",
+   "content16": "ebde053efc0a3906",
    "path": "pcb-c-display-c8/out/pcb-c-display.net",
-   "sha256_16": "11eabc2dddca5161"
+   "sha256_16": "3fddbb3edcd4248a"
   },
   "threshold_a": 0.0
  },
@@ -106,12 +98,12 @@
  },
  "tool": "intent_rails",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "87b7d5a9509c",
+  "tools_tree_sha": "bfeac03e9fe6170b"
  },
- "ts": "2026-09-27T13:22:33Z",
- "verdict": "FAIL",
- "version": "391d857966d6",
+ "ts": "2026-09-28T21:55:00Z",
+ "verdict": "PASS",
+ "version": "87b7d5a9509c",
  "writer": {
   "file": "intent_checks.py",
   "sha16": "1ad7af0c718ba940"

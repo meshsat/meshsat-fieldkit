@@ -1,0 +1,1136 @@
+# HOW FAST EACH DRIVER ON THESE BOARDS CAN MOVE A NET: the input of rule SI-001 (transmission-line classification)
+#
+# Written 27 September 2026 (MESHSAT-1357, layer 9, pre-layout design analysis) by stream w5si, on the third checkpoint
+# review's instruction (sections 5 and 6): "for undocumented signal edge rates, do not insert convenient values simply
+# to turn SI-001 green. Record a justified design bound or suitable model, its applicability and the verification
+# still required. If the uncertainty decides feasibility, keep that decision open."
+# Prototype design work: nothing here has been built or measured. Every number below is a maker's (read out of its
+# datasheet or IBIS model), a standard's, or a bound stated with its derivation. None was chosen so that a rule passes.
+#
+# THIS FILE IS A CONFIGURATION INPUT of the edge_length verdict (rule SI-001): edge_length.py reads it on every run and
+# records its sha in the reading's inputs (edge_rates). An edit here makes every board's SI-001 reading stale until it
+# is re-taken, and an integration must COMMIT this file before running rules_status / rules_render (the integration
+# recipe: an uncommitted configuration input reads CONFIG_CHANGED). The makers' IBIS models it cites are NOT committed
+# and need not be: the tracked manifest v2/vendor/ibis-manifest.yaml pins them and is the configuration input in
+# their place (ER-D17).
+#
+# ------------------------------------------------------------------------------------------------------------------
+# THE SCHEMA
+#   interfaces  decide every net of a board's signal-class entry (covers: {board letter: [entry patterns]}):
+#     kind STANDARD   a specification that binds EVERY conforming driver of the interface, with the minimum it allows
+#                     (statistic: min); the board table's own rise_ns, where one is written, must equal it (else FAIL)
+#     kind MODEL      an edge computed from a maker's figures by a stated derivation
+#     kind BOUND      a lower bound on the edge stated with its derivation and the documents checked (checked:)
+#   families    decide a DRIVER, matched by `parts` (regular expressions matched at the START of the netlist's value
+#               field, which begins with the part number the schematic names; never a distributor order code):
+#     kind IBIS       the maker's IBIS model, read per pin by ibis_read.py: `ibis: {file, component, models}`; `models`
+#                     is a regular expression admitting the model variants the circuit can select (the supply
+#                     voltage, a firmware speed setting); `edge_ns` is what the file gives for the fastest admitted
+#                     pin that has a figure, and a record whose edge_ns the file does not give is refused as
+#                     CONTRADICTED; `flagged_pins` names the pins whose [Ramp] cell the model's own V-t table
+#                     contradicts (ER-D16), which take the instantaneous bound; `supply` names the supply pins and
+#                     the rail pattern the admitted models cover. The file is NOT in the repository: it is pinned by
+#                     v2/vendor/ibis-manifest.yaml and fetched by tools/ibis_fetch.py (ER-D17)
+#     kind DATASHEET  a published MINIMUM transition time (statistic: min) with its table and conditions
+#     kind MODEL, BOUND  as above, for the driver
+#     kind NOT_A_DRIVER   a part that drives no signal net (an ESD array), with the words that say so
+#     kind PASSIVE_SWITCH a switch that makes no edge and passes its far side's through the pins `through` matches
+#     kind CONNECTOR      a land whose far side drives its pins (a debug pad set)
+#     `inputs` (a regular expression on the netlist's pin function) and `input_pins` (pin numbers) name pins that
+#     drive nothing; `inputs_cited` quotes the maker's pin table for them. A PASSIVE_SWITCH names its through pins
+#     (`through`, or `through_pins` by number where a netlist writes net names as pin functions) and its control
+#     inputs; a pin of it that is neither leaves its net UNDECIDED, named
+#     `pin_edges` give one pin its own figure. A row of kind STANDARD is a specification's minimum, and it binds a
+#     part only where the part's own datasheet claims the specification: `claimed_by` quotes that claim
+#   far_ends    the drivers beyond a connector (or a passive switch) on a board's named nets: `families` by id, the
+#               record that names them (`basis`) and the parts it names (`members`)
+#   open_drain  the RISE of open-drain nets, which no driver sets (the pull-up charging the net): `rise` with its
+#               derivation. Attached to the net for the reader; never the net's governing edge (ER-D14)
+#   Every record that gives an edge carries `applicability` (where the number holds) and `verification_owed` (what
+#   would replace or confirm it).
+#   EVERY CITATION carries the document's path, the sha256/16 of the held file it was read from (`sha256_16`), where
+#   in it the words are (`page`, as pdftotext counts the pages of a PDF, the first being 1; `clause` or `where` for a
+#   transcription), and the words quoted (`quote`). An IBIS record carries its model's `sha256_16`, the keyword its
+#   number is under (`keyword`) and the cell as the file writes it (`ramp`). edge_length.py checks all of it on every
+#   run: a document that is not held, is not the file cited, or does not say the words on the page named, and a
+#   model whose keyword, cell or number differ, leave the record deciding nothing (its nets read UNDECIDED; a number
+#   the model contradicts FAILs the reading). The fields were written by v2/docs/records/w5si/tools/cite_fill.py.
+#   A BOUND OR MODEL SAYS WHAT WAS SEARCHED: `search_listing` below names the listing of every line, in every document
+#   a bound or model cites, that carries the words a transition time is written with (rise time, fall time,
+#   transition, slew rate, tr, tf and the like), written by v2/docs/records/w5si/tools/edge_search.py. A bound whose
+#   cited document the listing does not hold at the held file's sha256/16 decides nothing: a quote of the part's
+#   name proves a document is held, not that anyone looked in it (the independent check of 27 September 2026).
+#
+# ------------------------------------------------------------------------------------------------------------------
+# SESSION DECISIONS, 27 September 2026, taken under the owner's standing rule of 26 September 2026 (never ask; take the
+# recommended option). Each is the session's, not the owner's. ruled_by: SESSION (stream w5si). Reverse any of them
+# by editing the rule named, in this file or in edge_length.py.
+#   ER-D1  The data file is the declaration of every edge. Why: an edge in a board table (rise_ns) or a code constant
+#          (EDGE_SOURCES) had no place for the document's conditions, the applicability or the verification owed,
+#          and a board table is regenerated by the generators. A board table's own rise_ns still has to agree.
+#          Reverse: restore edge_length.EDGE_SOURCES as a constant.
+#   ER-D2  A driver is an IC or module (reference U...) or a transistor (Q...); a connector's pin is its far side.
+#          A part with no record leaves its net UNDECIDED and is named. Why: the rule asks for the DRIVER's edge, and
+#          a part nobody looked up must not be read as a slow one. Reverse: edge_length.DRIVER_PREFIXES.
+#   ER-D3  A part is recognised by the part number at the start of its value field, the way intent_checks.PIN_ROLES
+#          recognises one. Why: the third review (section 5) separates the manufacturer part number from the
+#          distributor order code; an LCSC code names a purchase, not a part.
+#   ER-D4  The FASTEST candidate on a net decides. Why: the critical length shrinks with the edge, so the fastest
+#          driver is the worst case; any slower one only lengthens it.
+#   ER-D5  From an IBIS model: the fastest DRIVEN 20 to 80 percent transition over every admitted model and all three
+#          corners, used as it stands and not stretched to 10 to 90 percent; an open-drain output drives only its
+#          fall. Why: stretching (a linear ramp's 10 to 90 percent is 4/3 of its 20 to 80) lengthens the critical
+#          length, and the fixture pull-up of an open-drain model is not the part. Reverse: ibis_read.model_edge.
+#          What a model cannot say: it describes the die TI or ST modelled ([File Rev] names it: d_die, k_die, x_die),
+#          and the fitted part's die is not read from its order code; a later die is a question for the maker.
+#   ER-D6  A net takes the drivers one two-pin resistor away (a series resistor to another signal net), once. Why:
+#          their edge reaches it through the resistor, only slower, so counting it unslowed is the safe side.
+#   ER-D7  A far end's family contributes its fastest pin: which of its pins sits on the far side is not read. A
+#          board of this set that a net continues onto is read pin by pin from its own netlist instead, and on it a
+#          connector no record names leaves the net UNDECIDED (second pass: it used to contribute nothing, silently).
+#   ER-D8  A published TYPICAL or MAXIMUM transition is not an edge for SI-001, only a MINIMUM bounds the fastest
+#          edge. Where a maker publishes none and no model is held, the bound is INSTANTANEOUS (0 ns): the net is
+#          then a transmission line at any length and must carry an impedance target, a termination or a
+#          declaration. Why: it is the one bound that needs no assumption about the part, and it can only turn a
+#          verdict against the design, never for it. What it costs: a critical length of 0 mm tells a layout
+#          nothing, so such a net is named under BOUND_DECIDES and its owed verification says what would narrow it.
+#   ER-D9  A LAYOUT_BOUND net whose governing edge is a bound or a model (ER-D13) is named BOUND_DECIDES, with the
+#          drivers on it that have no published minimum, and holds the reading INCONCLUSIVE, as every LAYOUT_BOUND net
+#          does (TSN-D18 of 26 September 2026, not changed).
+#   ER-D10 A firmware-set drive, slew or pin direction (the STM32H743's OSPEEDR, the RP2040's SLEWFAST, drive and
+#          output enable, the CM5's GPIO drive and slew) is taken at its fastest setting, and a pin firmware holds as an
+#          input is still asked as a driver. Why (corrected in the second pass; the first said the contract holds no
+#          pin slow, which is wrong): v2/docs/HW-FW-CONTRACT.md DOES hold two of these pins. Row FW-K02 holds the
+#          panel RP2040's GPIO0 and GPIO1 (the kit I2C bus) at the default 4 mA drive and slow slew, and row FW-B08
+#          limits the STM32H743's PB6 and PB7 to I2C1 target duty (never a master, SCL stretched at most 1 ms). Neither
+#          changes a figure here: Raspberry Pi publishes no transition for the RP2040 at either slew setting, so the
+#          slow setting has no number to admit, and FW-B08 fixes no OSPEEDR, so every speed model of the STM32H743's
+#          pads stays admitted. A contract row that fixed OSPEEDR 00 on named pins would admit only io8_ft_ls_3v3 for
+#          them (6.70 ns); that row is a layer 5 proposal of this stream's record, not a fact of this file. The
+#          contract is a working document and is not cited as a document by any record (it would stale every reading
+#          on each edit).
+#   ER-D12 (CORRECTED in the second pass.) A net decided by a bound that is ANSWERED in the netlist (an impedance
+#          target, a series termination, a declaration) counts as decided, under bound_edge_nets and never under a
+#          maker's figure: it is a designed transmission line whatever its edge, so its verdict does not depend on
+#          the bound. The first pass also called a layout-bound net "maker-held" when any maker's figure on it gave a
+#          length, on the reason that the bound then "changes a number in the table and no outcome". That reason was
+#          wrong: the number is the critical length handed to the layout, and with a bound beside the maker's figure
+#          that length is the bound's. ER-D13 replaces that half. Reverse the remaining half: in
+#          edge_length.schematic_result, count every net decided by a bound as undecided.
+#   ER-D13 THE GOVERNING EDGE of a net is the fastest edge any driver on it can produce. A driver whose maker
+#          publishes no minimum has no known fastest edge, so ONE such driver on a net makes the net decided by a
+#          bound, whatever the makers of the other drivers publish; their figures are recorded (maker_edge_ns) and
+#          decide nothing. A net is decided by a maker's figure only when EVERY driver on it has a published minimum:
+#          a maker's IBIS model, a maker's published minimum, or a standard's minimum the part's own datasheet claims.
+#          Why: the independent check of 27 September 2026 found 40 of the 83 nets the first pass called maker-held
+#          governed by a bound in the tool's own table (critical length 0.0 mm) and described by a maker's figure in
+#          the records. Counts: decided = decided by a maker's figure + decided by a bound; layout-bound = held by a
+#          maker's figure + BOUND_DECIDES. Reverse: edge_length.net_edge.
+#   ER-D14 AN OPEN-DRAIN NET HAS TWO EDGES. Its FALL is the driver's pull-down: the figure every record here states
+#          for an open-drain pin (an IBIS [Ramp] dV/dt_f, a published fall-time minimum). Its RISE is the pull-up
+#          resistor charging the net's capacitance, T(30 to 70 percent) = 0.8473 Rp Cb (UM10204 Rev. 6, 7.1), which no
+#          driver sets and which is two orders slower than the falls on the kit bus. For reflections the governing
+#          edge is the fall; the rise is stated in `open_drain` and never governs. A SPECIFICATION'S MINIMUM FALL
+#          (UM10204 Rev. 6 Table 9, tof, Fast-mode: 20 ns x VDD / 5.5 V, so 12 ns at 3.3 V; Table 11, Hs-mode: 10 ns;
+#          Standard-mode states NO minimum) is a published figure only for a part whose own datasheet claims the
+#          specification's timing. Of the parts on the kit bus one does: the KSZ9897R ("The I2C interface timing
+#          adheres to the NXP I2C-Bus Specification (UM10204, Rev. 6)", DS00002330 section 6.4). The DS3231 and the
+#          TPS23861 print their own minimum in their own tables. The BQ25731, ATECC608B and VEML7700 call themselves
+#          I2C-compatible and print only a MAXIMUM fall or an input requirement, so they keep their bound; the
+#          RP2040 (the bus master) publishes nothing. Such a minimum is measured into a capacitive bus load (10 pF or
+#          more), not into a line: each record says so under conditions.
+#   ER-D15 Every citation carries the held file's sha256/16 and the page of its words, and every bound names what was
+#          searched (see THE SCHEMA). Why: the acceptance of this pass, and the check's finding that a part-name
+#          quote proves nothing about a search. Reverse: edge_length._cite_shape and the search_listing check.
+#   ER-D16 (28 September 2026, stream w5si2, on two AI reviews' findings.) A [RAMP] CELL IS HELD TO ITS MODEL'S OWN
+#          V-t TABLE. Where the model carries a waveform table of the same edge in the [Ramp]'s own fixture, the cell's
+#          dV must be 50 to 70 percent of the table's swing (the keyword defines it as the 20 to 80 percent swing) and
+#          its dt within 25 percent of the time the table itself takes from 20 to 80 percent. A pin any of whose
+#          admitted driven cells fails either has NO maker's figure: it takes the instantaneous bound (ER-D8) and its
+#          net is decided by a bound. A family's edge_ns is the fastest of its pins that are not flagged, the record
+#          names the flagged pins (flagged_pins) and is held to the file on both. A far end that names such a family
+#          takes the bound, because which pin is on the far side is not read (ER-D7). Why: the first lens found
+#          TMP117's SDA cells with dV at 15 percent of the swing, and the drafts check found PCA9555's INT cell at a
+#          fifth of its table's time. Both erred short, which is the safe side, but a reader that takes a cell its own
+#          model contradicts is right by luck. Why these tolerances: measured on the thirteen models, 522 of the 537
+#          cells that have a table lie inside both (504 within 10 percent on dt) and the 15 outside are all of those
+#          two pins' models, with dV at 11 to 39 percent or dt at 0.14 to 0.65; the tolerances sit in the gap. What it
+#          changes on the six netlists: no count, because both pins sit on nets a bound already decided; the two
+#          records' edge_ns (PCA9555 0.121 to 5.89 ns, TMP117 7.68 to 12.61 ns) now state the fastest pin that HAS a
+#          figure. A limit, said: 48 driven cells of the thirteen models have no table of their edge (ST's reset and
+#          VBUS models, TI's USB 3 and PCIe transmitter models); nothing in the file can contradict them and they are
+#          read as before. Reverse: ibis_read.RAMP_DV and RAMP_DT, or ibis_read.pin_edge's FLAGGED branch.
+#   ER-D17 (28 September 2026, stream w5si2.) THE MODELS ARE PINNED BY A TRACKED MANIFEST AND ARE NOT IN THE REPOSITORY.
+#          v2/vendor/ibis-manifest.yaml names each model's maker, address, how the .ibs is taken out of what the
+#          address serves, the sha256 of the extracted file and the words of its header on copying. A model is read
+#          only when the manifest pins it, the file present is that file (full sha256) and this file's record cites
+#          the same file. A model that is absent decides nothing: its nets read UNDECIDED naming it (reason kind
+#          MODEL_ABSENT), the reading is INCONCLUSIVE and records the state it was taken in (inputs.model_state). An
+#          IBIS record's own edge_ns is never used in the model's absence: it is a copy the model is there to hold.
+#          Why: five of the thirteen headers forbid distribution and the rest grant nothing, this repository is
+#          mirrored publicly, and publication is the owner's decision (held back). What it costs: a clean clone reads
+#          397 more nets UNDECIDED than a tree with the models (set 6: 73 against 470) until tools/ibis_fetch.py has
+#          fetched them. Reverse: commit the models (the owner's decision), and drop the ignore rule.
+#   ER-D11 The STM32H743's HSLV-capable pins (IBIS selector io8_hslv_ft) are read at 3.3 V with the io8_ft 3.3 V
+#          models. Why: ST's file gives that selector only the 1.2, 1.8 and 2.5 V variants of the HSLV option, which
+#          DS12110 section 6.3.16 says is for supplies below 2.5 V; with it off, Table 53 ("Output timing
+#          characteristics (HSLV OFF)") is one table for every FT I/O, and io8_ft_*_3v3 is ST's model of it.
+schema_version: 2
+written: "2026-09-27"
+search_listing: {path: v2/docs/records/w5si/readings/edge-search.txt, sha256_16: "d08bc489782c976b"}
+
+interfaces:
+  - id: USB2-HS
+    kind: STANDARD
+    edge_ns: 0.5
+    statistic: min
+    measure: "10 to 90 percent"
+    document: v2/vendor/standards/usb-2-0-specification-2024-09-27.md
+    sha256_16: "2ecb40606d4b84fe"
+    clause: "USB 2.0 section 7.1.2.2, THSR and THSF, 10 to 90 percent, a minimum"
+    quote: "high-speed differential rise and fall times must be 500 ps or longer"
+    conditions: "a high-speed transmitter into its specified load"
+    applicability: "every USB 2.0 high-speed transmitter on these lines, the hub's and the host's alike"
+    verification_owed: "none for the edge; the lines' impedance and length match are the layout gate's"
+    covers:
+      a: ["USB_*_P", "USB_*_N"]
+      b: ["USB_*_N", "USB_*_P", "USB_OTG_*", "*_DM", "*_DP"]
+      d: ["USB1_?R", "USB*_P", "USB*_N", "HUB_DP*", "HUB_DM*"]
+  - id: USB2-FS
+    kind: STANDARD
+    edge_ns: 4.0
+    statistic: min
+    measure: "10 to 90 percent"
+    document: v2/vendor/standards/usb-2-0-specification-2024-09-27.md
+    sha256_16: "2ecb40606d4b84fe"
+    clause: "USB 2.0 Table 7-9, TFR and TFF, 10 to 90 percent, a minimum"
+    quote: "| Rise time | TFR | Figure 7-8, Figure 7-9 | 4 | 20 | ns |"
+    conditions: "a full-speed driver into the specified 50 pF load"
+    applicability: "every USB 2.0 full-speed driver on these lines (the RP2040's device port, board E's hub port)"
+    verification_owed: "none for the edge"
+    covers:
+      c: ["USB_PNL_*", "USB_D*_R"]
+      e: ["USB_*"]
+  - id: LINK-CONTROLLED-B
+    kind: BOUND
+    edge_ns: 0.0
+    derivation: >
+      The multi-gigabit links of board B (PCIe from the Compute Modules and the three PCIe switches, the USB 3 lanes
+      of the hubs and the host multiplexers, HDMI TMDS through the display switches, the Gigabit Ethernet MDI of the
+      modules and the switch) each carry at least one transmitter whose maker publishes no lowest edge that applies
+      here: the CM5 datasheet gives the links' impedance and matching and no transmitter edge, the KSZ9897R's only
+      published transition (3 to 5 ns) is its 100BASE-TX mode and not the 1000BASE-T these ports run, and TI's own
+      IBIS model of the TUSB8041 gives its USB 3 transmitter a 20 to 80 percent ramp of 6 to 23 ps. One maker does
+      publish a minimum: the PI7C9X2G404SL's PCIe transmitter, 0.125 and 0.15 unit intervals (25 to 60 ps at 5 and
+      2.5 GT/s); the far end of each of its lanes is a module or a card that publishes none, so the lanes stay on the
+      bound (ER-D13). The bound is instantaneous (ER-D8): every net of these entries is a transmission line at any
+      length on this board and must carry an impedance target, which is the question the reading then asks.
+    checked:
+      - {document: v2/vendor/cm5/cm5-datasheet.pdf, sha256_16: "80070fefd8db6e8a", page: 9, quote: "PCIe differential signals should be routed as 90 Ω differential pairs"}
+      - {document: v2/vendor/microchip/microchip-ksz9897-datasheet.pdf, sha256_16: "72b89179ed6a42a7", page: 170, quote: "100BASE-TX Transmit (Measured Differentially After 1:1 Transformer)"}
+      - {document: v2/vendor/ti/ibis/tusb8041rgc.ibs, sha256_16: "925a6c7f6917401e", where: "the keyword quoted", quote: "[Model]       usb3_DE"}
+      - {document: v2/vendor/diodes/diodes-pi7c9x2g404sl.pdf, sha256_16: "675fa7ee40c91ad6", page: 83, quote: "Transmitter rise and fall time"}
+    applicability: "board B's controlled high-speed classes named in covers, whatever drives them"
+    verification_owed: >
+      none decides a verdict here while every net of these entries carries an impedance target; were one to lack
+      it, the net would be named under BOUND_DECIDES, and the link's own specification (PCIe Base 2.0, USB 3.2, HDMI,
+      IEEE 802.3 clause 40, none held) or the transmitter's IBIS-AMI model would give it a length
+    covers:
+      b: ["PCIE*_RX_*", "PCIE*_TX_*", "PCIE*_RXSW_*", "PCIE*_CLK_*", "PCIE*_RCLK*", "NVME*_RX_*", "NVME*_TX_*",
+          "NVME*_CLK_*", "CARD*_RX_*", "CARD*_TX_*", "CARD*_CLK_*", "HOST*_*", "HUB*_D*TX_*", "BANK*_UP*", "MUX*_A*",
+          "SWP*_*", "ETH*_P*", "MDI_*", "HDMI*_CK_*", "HDMI*_D*_*", "LIME_SS*"]
+  - id: RF-LINES
+    kind: BOUND
+    edge_ns: 0.0
+    derivation: >
+      An RF line carries a radio's carrier and its modulation: a signal band-limited to the band's upper edge f, whose
+      fastest 10 to 90 percent swing is no shorter than 0.255 / f by Bernstein's inequality (a slope of at most 2 pi f
+      times the amplitude). No record here holds each radio's f yet, so the bound written is the instantaneous one
+      (ER-D8), which every band satisfies: each line is then a transmission line at any length and must carry an
+      impedance target (the kit's 50 ohm RF classes).
+    checked:
+      - {document: v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf, sha256_16: "938ef5ef5007df6b", page: 2, quote: "SA868"}
+      - {document: v2/vendor/quectel/lg290p03-hardware-design-v1.1.pdf, sha256_16: "422ca9a2aa5495c1", page: 1, quote: "LG290P"}
+    applicability: "the RF classes named in covers: antenna feeds, the blind-mate RF lines, the WiFi changeover ports"
+    verification_owed: >
+      the band edge of each radio from its datasheet would give a line its 0.255 / f length (LoRa 930 MHz: 0.27 ns;
+      GNSS L1 1.61 GHz: 0.16 ns); none of that changes a verdict while each line carries its 50 ohm target
+    covers:
+      a: ["RF_*"]
+      b: ["*_ANT", "*_RF_IN", "W?A_CARD", "W?B_CARD", "SW?_IN", "SW?_O?"]
+      d: ["RF_*"]
+  - id: POWER-STAGE-NODES
+    kind: BOUND
+    edge_ns: 0.0
+    derivation: >
+      A converter's switch node, bootstrap node and gate drives, and a hot-swap or ideal-diode controller's gate, move
+      at a rate the controller's driver and the power FET's charge set together. The makers publish driver
+      resistances and typical switching times at a test load, and LM5176's own datasheet says of the switching
+      times that they come from the MOSFET's data sheet or the lab. No maker states a lowest edge for these
+      circuits, so the bound is instantaneous (ER-D8).
+    checked:
+      - {document: v2/vendor/ti/lm5176-datasheet.pdf, sha256_16: "98191bec36d43771", page: 26, quote: "The rise (tr) and the fall (tf) times are based on the MOSFET data sheet information or measured in the lab."}
+    applicability: "the gate, bootstrap and switch nodes of the power stages on boards A, B and E, and board C's e-paper boost switch"
+    verification_owed: >
+      the node's edge measured at bring-up, or a model per stage from the driver resistance and the FET's input and
+      Miller charge; the SI-001 question for these nodes is ruled in the reading as open: the rule's failure modes
+      (overshoot into a receiver's clamp, double clocking) name a receiver these nodes do not have, and their length
+      is held by the power-loop and return rules, which a declaration in edge_allow would have to name
+    covers:
+      a: ["*_SW", "*_SW1", "*_SW2", "*_BOOT1", "*_BOOT2", "*_BOOT", "*_BST", "*_BTST?", "*_HDRV?", "*_LDRV?", "*_HIDRV?", "*_LODRV?"]
+      b: ["*_BST", "*_BOOT"]
+      c: ["EPD_SW"]
+      e: ["*_BST", "TRK_BOOST*", "TRK_TG*", "TRK_BG*", "TRK_CS", "HS_GATE", "Q?_G"]
+  - id: OSCILLATOR-NODES
+    kind: BOUND
+    edge_ns: 0.0
+    derivation: >
+      A crystal oscillator's input and output nodes carry the amplifier's output shaped by the crystal and its load
+      capacitors. No maker of these oscillators (the RP2040's XOSC, the STM32H743's HSE, the KSZ9897R's, the TUSB2046B's
+      and the PCM2912A's) states the amplifier's transition, and the pin's GPIO model does not describe it. The bound
+      is instantaneous (ER-D8).
+    checked:
+      - {document: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf, sha256_16: "be56fbb75ba0ae9e", page: 217, quote: "The Crystal Oscillator (XOSC) uses an external crystal to produce an accurate reference clock."}
+      - {document: v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf, sha256_16: "f6e620179006c8c4", page: 123, quote: "High-speed external user clock generated from an external source"}
+    applicability: "the crystal nodes named in covers"
+    verification_owed: >
+      none a desk can do: the placement and loading of each crystal are rule CLK-001's, and whether SI-001 asks
+      anything of a node a few millimetres long is the declaration question the reading leaves open
+    covers:
+      b: ["*_XI", "*_XO"]
+      c: ["XIN", "XOUT*"]
+      d: ["HUB_XTAL*", "PCM_XT*"]
+      e: ["XIN", "XOUT*"]
+  - id: CABLE-SIDE-TERMINATION
+    kind: BOUND
+    edge_ns: 0.0
+    derivation: >
+      Board B's BOB is the common node of the line-side (Bob Smith) termination of the wall Ethernet port: the
+      magnetics' cable-side centre taps of pairs C and D (MCT3, MCT4) through R9 and R10, 75 ohm, to this node, and
+      C33, 1 nF 2 kV, from it to ground. No part of the board drives it. What it carries is the cable's: the
+      common-mode part of both ends' transmitters through the magnetics, and whatever the cable brings (a discharge,
+      a fast transient), whose edge no document of this board bounds. The bound is instantaneous (ER-D8)
+    checked:
+      - {document: v2/vendor/cluster/ksz989x-hw-design-checklist.pdf, sha256_16: "2a9d80931a0bed4b", page: 10, quote: "The common node is then connected to chassis ground through a 1000 pF, 2 kV capacitor."}
+      - {document: v2/vendor/ti/tps23861-datasheet.pdf, sha256_16: "65262ce4766a5f8e", page: 91, quote: "bypassed to a chassis ground (or system earth ground) with a high-voltage capacitor"}
+    applicability: "board B's BOB, the one net of the entry"
+    verification_owed: >
+      none a desk can do for an edge: SI-001 asks what terminates a driven line, and this net IS a termination. What
+      holds its copper is not a critical length: it is the maker's layout guidance (no signal ground under the
+      magnetics, the connector and the area between; the termination returned to chassis ground), the isolation
+      clearance its 2 kV capacitor implies (ISO-001) and the chassis strategy (GND-002). No signal class of this
+      project asks those questions today; the class proposed for it is a finding for the integrator,
+      v2/docs/records/w5si/F-BOB-common-mode-termination.md. The reading's series-resistor screen answers the net
+      with R9 and R10 (75 ohm to MCT3 and MCT4), which are the termination itself and no source termination of a
+      driver: the screen says of itself that it cannot tell. No declaration is written for the net
+    covers:
+      b: ["BOB"]
+
+families:
+  # ---------------------------------------------------------------------------- the makers' IBIS models (ER-D5)
+  - id: TI-SN74LVC08A
+    kind: IBIS
+    parts: ["SN74LVC08A"]
+    ibis: {file: v2/vendor/ti/ibis/sn74lvc08a.ibs, sha256_16: "adb5d455adc3a057", keyword: "[Model] LVC08A_OUT_33 [Ramp] dV/dt_r max", ramp: "2.14/2.15E-10", component: LVC08A_PW, models: "_33$"}
+    edge_ns: 0.215
+    supply: {pins: ["14"], rail: "3V3"}
+    conditions: "TI IBIS SCEM010, model LVC08A_OUT_33 (Vcc 3.0 to 3.6 V, -40 to 100 C), R_load 500 ohm; the fastest is the rising edge at the max corner"
+    applicability: "SN74LVC08APWR (TSSOP-14 PW) supplied from a 3.3 V rail: board B's voters U70 to U75, board A's U26"
+    verification_owed: "none for the number as the model states it; an edge measured at bring-up would confirm the corner, and the die the model describes is the maker's to confirm (ER-D5)"
+  - id: TI-SN74LVC32A
+    kind: IBIS
+    parts: ["SN74LVC32A"]
+    ibis: {file: v2/vendor/ti/ibis/sn74lvc32a.ibs, sha256_16: "396e2d220f1cc59f", keyword: "[Model] LVC32A_OUT_33 [Ramp] dV/dt_r max", ramp: "2.15/1.36E-10", component: LVC32A_PW, models: "_33$"}
+    edge_ns: 0.136
+    supply: {pins: ["14"], rail: "3V3"}
+    conditions: "TI IBIS SCEM055 rev B, model LVC32A_OUT_33 (Vcc 3.0 to 3.6 V), R_load 500 ohm; rising edge, max corner"
+    applicability: "SN74LVC32APWR (PW) from a 3.3 V rail: board B's U76 to U79, U84, U85"
+    verification_owed: "none for the number as the model states it; the model is of the die the maker modelled (its [File Rev]), and whether the fitted part carries a later die is a question for the maker (ER-D5)"
+  - id: TI-SN74LVC86A
+    kind: IBIS
+    parts: ["SN74LVC86A"]
+    ibis: {file: v2/vendor/ti/ibis/sn74lvc86a.ibs, sha256_16: "0f9780c8d3fd9b89", keyword: "[Model] LVC86A_OUT_33 [Ramp] dV/dt_f max", ramp: "2.17/1.13E-10", component: LVC86A_PW, models: "_33$"}
+    edge_ns: 0.113
+    supply: {pins: ["14"], rail: "3V3"}
+    conditions: "TI IBIS SCEM060 rev B, model LVC86A_OUT_33 (Vcc 3.0 to 3.6 V), R_load 500 ohm; falling edge, max corner"
+    applicability: "SN74LVC86APWR (PW) from a 3.3 V rail: board B's U80 and U81"
+    verification_owed: "none for the number as the model states it; the model is of the die the maker modelled (its [File Rev]), and whether the fitted part carries a later die is a question for the maker (ER-D5)"
+  - id: TI-SN74LVC1G00
+    kind: IBIS
+    parts: ["SN74LVC1G00"]
+    ibis: {file: v2/vendor/ti/ibis/sn74lvc1g00.ibs, sha256_16: "e085986b1ed2969e", keyword: "[Model] LVC1G00_OUT_33 [Ramp] dV/dt_f max", ramp: "1.89/2.82E-10", component: LVC1G00_DBV, models: "_33$"}
+    edge_ns: 0.282
+    supply: {pins: ["5"], rail: "3V3"}
+    conditions: "TI IBIS SCEM165, model LVC1G00_OUT_33 (Vcc 3.0 to 3.6 V), R_load 50 ohm; falling edge, max corner"
+    applicability: "SN74LVC1G00DBVR (SOT-23-5 DBV) from a 3.3 V rail: board A's U30"
+    verification_owed: "none for the number as the model states it; the model is of the die the maker modelled (its [File Rev]), and whether the fitted part carries a later die is a question for the maker (ER-D5)"
+  - id: TI-SN74LVC1G04
+    kind: IBIS
+    parts: ["SN74LVC1G04"]
+    ibis: {file: v2/vendor/ti/ibis/sn74lvc1g04.ibs, sha256_16: "03033638d7fe8bf2", keyword: "[Model] LVC1G04_OUT_33 [Ramp] dV/dt_f max", ramp: "2.03/1.98E-10", component: LVC1G04_DBV, models: "_33$"}
+    edge_ns: 0.198
+    supply: {pins: ["5"], rail: "3V3"}
+    conditions: "TI IBIS SCEM216 rev C (file rev 1.4), model LVC1G04_OUT_33 (Vcc 3.0 to 3.6 V), R_load 50 ohm; falling edge, max corner"
+    applicability: "SN74LVC1G04DBVR (DBV) from a 3.3 V rail: board B's U112, U212, U312, U533 to U535"
+    verification_owed: "none for the number as the model states it; the model is of the die the maker modelled (its [File Rev]), and whether the fitted part carries a later die is a question for the maker (ER-D5)"
+  - id: TI-SN74LVC1G57
+    kind: IBIS
+    parts: ["SN74LVC1G57"]
+    ibis: {file: v2/vendor/ti/ibis/sn74lvc1g57.ibs, sha256_16: "7abbc41dad6b027a", keyword: "[Model] LVC1G57_OUT_33 [Ramp] dV/dt_f max", ramp: "2.18/2.21E-10", component: LVC1G57_DBV, models: "_33$"}
+    edge_ns: 0.221
+    supply: {pins: ["5"], rail: "3V3"}
+    conditions: "TI IBIS SCEM292 rev A, model LVC1G57_OUT_33 (Vcc 3.0 to 3.6 V), R_load 500 ohm; falling edge, max corner"
+    applicability: "SN74LVC1G57DBVR (DBV) from a 3.3 V rail: board C's U14"
+    verification_owed: "none for the number as the model states it; the model is of the die the maker modelled (its [File Rev]), and whether the fitted part carries a later die is a question for the maker (ER-D5)"
+  - id: TI-PCA9555
+    kind: IBIS
+    parts: ["PCA9555PW"]
+    ibis: {file: v2/vendor/ti/ibis/pca9555.ibs, sha256_16: "56c19a4da921e38c", keyword: "[Model] PCA9555_P_33 [Ramp] dV/dt_r max", ramp: "2.26/5.89E-09", component: PCA9555_PW, models: "_33$"}
+    edge_ns: 5.89
+    flagged_pins: ["1"]
+    supply: {pins: ["24"], rail: "3V3"}
+    conditions: >
+      TI IBIS SCPM035, 3.3 V models (Vcc 3.0 to 3.6 V), R_load 500 ohm: the port outputs move in 5.89 ns (rising,
+      max corner), SDA falls in 72.3 ns (I2C slope-controlled). THE OPEN-DRAIN INT OUTPUT (pin 1) HAS NO FIGURE
+      (ER-D16): its [Ramp] cells state a fall of 0.121 ns (max), 0.236 ns (typ) and 0.448 ns (min), and the same
+      model's own [Falling Waveform] table, in the same 500 ohm fixture, takes 0.605, 1.200 and 0.920 ns from 20 to 80
+      percent of its swing, so the cells state a fifth to a half of what the table shows. Until 28 September 2026 this
+      record gave the family 0.121 ns from that cell. The pin takes the instantaneous bound; the nets it is on (EXP_INT)
+      were and are decided by a bound
+    applicability: "PCA9555PW (TSSOP-24 PW) from a 3.3 V rail: the expanders on boards A, B, C and D"
+    verification_owed: "none for the number as the model states it; the model is of the die the maker modelled (its [File Rev]), and whether the fitted part carries a later die is a question for the maker (ER-D5)"
+  - id: TI-TCAN334
+    kind: IBIS
+    parts: ["TCAN334D"]
+    ibis: {file: v2/vendor/ti/ibis/tcan33x.ibs, sha256_16: "0e5a9429146148c1", keyword: "[Model] rxd [Ramp] dV/dt_r max", ramp: "1.30999/1.56942e-09", component: TCAN334DCN, models: "."}
+    edge_ns: 1.5694
+    supply: {pins: ["3"], rail: "3V3"}
+    conditions: >
+      TI IBIS SLLM313 (TCAN33x), component TCAN334DCN: the RXD output rises in 1.57 ns (max corner, R_load 150 ohm),
+      CANL falls in 3.70 ns, CANH rises in 5.28 ns. The model is of the SOT-23 DCN package; the datasheet's Table 4-1
+      gives the D (SOIC) package the same pin numbers ("TCAN334 D, DCN Packages, 8-Pin"), so the pins are read by number
+    document: v2/vendor/ti/ti-tcan334-can-fd-transceiver.pdf
+    sha256_16: "bb89f067e6a79028"
+    page: 4
+    quote: "Figure 4-3. TCAN334 D, DCN Packages, 8-Pin"
+    applicability: "TCAN334D on board B's CAN-FD heartbeat fabrics (U43, U44, U53, U54, U63, U64), supplied at 3.3 V"
+    verification_owed: "the package parasitics differ between DCN and D by a fraction of a nanohenry, which moves no edge on these lines"
+  - id: TI-INA226
+    kind: IBIS
+    parts: ["INA226"]
+    ibis: {file: v2/vendor/ti/ibis/ina226.ibs, sha256_16: "fb4ebf43bde617c2", keyword: "[Model] SDA_33 [Ramp] dV/dt_f max", ramp: "2.13116/1.60634e-008", component: ina226, models: "_33$"}
+    edge_ns: 16.0634
+    supply: {pins: ["6"], rail: "3V3"}
+    conditions: "TI IBIS SBOM458, 3.3 V models, R_load 1200 ohm: SDA and ALERT are open drain and fall in 16.1 ns at the max corner"
+    applicability: "INA226 (VSSOP-10) on a 3.3 V supply: board A's six rail monitors"
+    verification_owed: "none for the number as the model states it; the model is of the die the maker modelled (its [File Rev]), and whether the fitted part carries a later die is a question for the maker (ER-D5)"
+  - id: TI-TMP117
+    kind: IBIS
+    parts: ["TMP117AIDRVR"]
+    ibis: {file: v2/vendor/ti/ibis/tmp117.ibs, sha256_16: "5c71fbcce9e13803", keyword: "[Model] alert_3p3 [Ramp] dV/dt_f max", ramp: "2.14113/1.26129e-08", component: TMP117AIDRV, models: "3p3$"}
+    edge_ns: 12.6129
+    flagged_pins: ["6"]
+    supply: {pins: ["5"], rail: "3V3"}
+    conditions: >
+      TI IBIS SNOM652, 3.3 V models (Vcc 3.0 to 3.6 V), R_load 967 ohm: ALERT falls in 12.6 ns at the max corner. SDA
+      (pin 6) HAS NO FIGURE (ER-D16): its [Ramp] cells at the min and max corners state dV 1.119 V and 0.534 V, which
+      are 38 and 15 percent of the swing of the same model's own [Falling Waveform] table (2.907 V and 3.569 V) where
+      the keyword defines dV as the 20 to 80 percent swing, and that table takes 62.2 ns and 34.0 ns from 20 to 80
+      percent where the cells state 35.6 ns and 7.68 ns. Until 28 September 2026 this record gave the family 7.68 ns
+      from the max cell. The pin takes the instantaneous bound; the kit bus's SDA was and is decided by a bound
+    applicability: "TMP117AIDRVR (WSON-6 DRV) at 3.3 V: board B's U10"
+    verification_owed: "none for the number as the model states it; the model is of the die the maker modelled (its [File Rev]), and whether the fitted part carries a later die is a question for the maker (ER-D5)"
+  - id: TI-ADS1115
+    kind: IBIS
+    parts: ["ADS1115IDGSR"]
+    ibis: {file: v2/vendor/ti/ibis/ads1x1x.ibs, sha256_16: "c9975d3cb6ad0161", keyword: "[Model] SDA_HS0 [Ramp] dV/dt_f max", ramp: "2.48697/7.8649e-010", component: ADS1X15IDGS, models: "."}
+    edge_ns: 0.7865
+    supply: {pins: ["8"], rail: "3V3"}
+    conditions: >
+      TI IBIS SBAM025 (ADS1013 to ADS1115, one set of models for 2.0 to 5.5 V), R_load 50 ohm: the SDA pin's
+      high-speed-mode pull-down (SDA_HS0 and SDA_HS1, typed I/O_open_sink, so only the fall is read) falls in 0.786 ns
+      at the max corner; ALERT/RDY (Open_sink) falls in 20.5 ns
+    applicability: "ADS1115IDGSR (VSSOP-10 DGS) at 3.3 V: board D's U22 on the kit I2C bus"
+    verification_owed: "none for the number (the maker's model); the kit bus runs Standard-mode (HW-FW-CONTRACT FW-K01), which does not stop the part's pull-down from being the high-speed one"
+  - id: TI-TUSB8041
+    kind: IBIS
+    parts: ["TI TUSB8041IRGCR"]
+    ibis: {file: v2/vendor/ti/ibis/tusb8041rgc.ibs, sha256_16: "925a6c7f6917401e", keyword: "[Model] usb3_SATA1 [Ramp] dV/dt_f max", ramp: "0.122619/5.70782e-12", component: TUSB8041, models: "."}
+    edge_ns: 0.0057
+    supply: {pins: ["16", "34", "52", "63"], rail: "3V3"}
+    conditions: >
+      TI IBIS SLLC445: the USB 3 transmitter's falling ramp is 5.7 ps at the max corner (R_load 50 ohm); its
+      3.3 V GPIO and control buffers move in 0.094 to 0.23 ns
+    applicability: "TUSB8041IRGCR (VQFN-64 RGC): board B's per-slot hubs U102, U202, U302"
+    verification_owed: "none for the number (the maker's model); the USB 3 lanes are decided by LINK-CONTROLLED-B"
+  - id: ST-STM32H743
+    kind: IBIS
+    parts: ["STM32H743VIT6"]
+    ibis:
+      file: v2/vendor/st/ibis/stm32h742_743_750_753_lqfp100.ibs
+      sha256_16: "0fb7767c1ee034db"
+      keyword: "[Model] io8_ft_hs_3v3 [Ramp] dV/dt_f typ"
+      ramp: "1.66295/0.45102n"
+      component: stm32h7_450_lqfp100_l
+      models: "_3v3$"
+      selector_add: {io8_hslv_ft: [io8_ft_hs_3v3, io8_ft_fs_3v3, io8_ft_ms_3v3, io8_ft_ls_3v3]}
+    edge_ns: 0.451
+    supply: {pins: ["50", "75", "100"], rail: "3V3"}
+    document: v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf
+    sha256_16: "f6e620179006c8c4"
+    page: 141
+    quote: "Table 53. Output timing characteristics (HSLV OFF)"
+    conditions: >
+      ST IBIS file rev 2.3 (6 March 2024), 3.3 V models, R_load 50 ohm: the very-high-speed setting (io8_ft_hs_3v3,
+      OSPEEDR 11) falls in 0.451 ns at the TYP corner, which in this file is faster than the max corner (0.563 ns);
+      at the low-speed setting (io8_ft_ls_3v3, OSPEEDR 00) the fastest is 6.70 ns; the I2C Fm+ pads (io8_i2c_ft_3v3)
+      8.83 ns; NRST (open drain) 60 ns. Datasheet DS12110 rev 11 Table 53 publishes only MAXIMUM rise and fall
+      times (1.5 ns at 10 pF, speed 11), which bound the edge from the slow side and are not used (ER-D8)
+    applicability: >
+      STM32H743VIT6 (LQFP100) at VDD 3.3 V with HSLV off: board B's I/O supervisors U41, U51, U61. Every GPIO speed
+      setting is admitted (ER-D10); the HSLV pins read with the io8_ft 3.3 V models (ER-D11)
+    verification_owed: >
+      a firmware obligation holding named outputs at OSPEEDR 00 would admit only io8_ft_ls_3v3 and lengthen their
+      critical length about fifteen times (a layer 5 question, HW-FW-CONTRACT.md section 3: row FW-B08 holds PB6 and
+      PB7 to I2C1 target duty and fixes no OSPEEDR, ER-D10); the die the model describes is the maker's to confirm
+      (ER-D5)
+
+  # ---------------------------------------------------------------------- published minimums, per pin where given
+  - id: TI-TPS25740
+    kind: BOUND
+    parts: ["TPS25740"]
+    edge_ns: 0.0
+    derivation: >
+      TPS25740 publishes two minimum transitions, carried per pin below: its USB PD transmitter on CC1 and CC2
+      (tRise and tFall 300 ns minimum, USB PD's own limit) and its open-drain digital outputs (fall 20 ps minimum,
+      70 to 30 percent of the pull-up, 10 pF). Its other outputs (the gate drives GDNG and GDNS, the VTX and DSCG
+      paths) publish none, and they take the instantaneous bound (ER-D8)
+    checked:
+      - {document: v2/vendor/ti/ti-tps25740.pdf, sha256_16: "60276c7a0e2a138a", page: 12, quote: "Digital output fall time"}
+    pin_edges:
+      - {match: "^CC[12]$", kind: DATASHEET, edge_ns: 300.0, statistic: min, document: v2/vendor/ti/ti-tps25740.pdf, sha256_16: "60276c7a0e2a138a", page: 11,
+         quote: "Rise/fall time, tFall and tRise (refer to USB", conditions: "transmitter on CC1/CC2, external loading per its Figure 25"}
+      - {match: "^(CTL[12]|UFP)$", kind: DATASHEET, edge_ns: 0.02, statistic: min, document: v2/vendor/ti/ti-tps25740.pdf, sha256_16: "60276c7a0e2a138a", page: 12,
+         quote: "Digital output fall time", conditions: "V(PULLUP) 1.8 V, CL 10 pF, R(PULLUP) 10 kOhm, 70 to 30 percent"}
+    applicability: "TPS25740ARGER, board A's USB-C PD source controller U18"
+    verification_owed: "none for CC and the digital outputs (the maker's minimums); the gate and discharge paths are power-stage nodes"
+  - id: TI-TPS23861
+    kind: BOUND
+    parts: ["TI TPS23861"]
+    edge_ns: 0.0
+    inputs: "^(SCL|SDAI)$"
+    inputs_cited:
+      - {document: v2/vendor/ti/tps23861-datasheet.pdf, sha256_16: "65262ce4766a5f8e", page: 5, quote: "Serial clock input for I2C bus."}
+      - {document: v2/vendor/ti/tps23861-datasheet.pdf, sha256_16: "65262ce4766a5f8e", page: 5, quote: "Serial data input for I2C bus; this pin can be connected to SDAO for non-isolated systems."}
+    derivation: >
+      TPS23861 publishes one minimum transition, its I2C data output SDAO (21 ns, 2.3 to 0.8 V, Cb 10 pF, 10 kOhm
+      pull-up; 60 ns at Cb 400 pF and 1.3 kOhm), carried below: the fall of an open-drain output into a capacitive
+      bus load, its rise being the pull-up's (ER-D14). SCL and SDAI are inputs by the maker's pin table. Its
+      interrupt output and gate drives publish none (ER-D8)
+    checked:
+      - {document: v2/vendor/ti/tps23861-datasheet.pdf, sha256_16: "65262ce4766a5f8e", page: 11, quote: "SDAO output fall time, SDAO, 2.3 → 0.8 V, Cb = 10 pF, 10-kΩ pullup"}
+    pin_edges:
+      - {match: "^SDAO$", kind: DATASHEET, edge_ns: 21.0, statistic: min, document: v2/vendor/ti/tps23861-datasheet.pdf, sha256_16: "65262ce4766a5f8e", page: 11,
+         quote: "SDAO output fall time, SDAO, 2.3 → 0.8 V, Cb = 10 pF, 10-kΩ pullup", conditions: "SDAO fall, 2.3 to 0.8 V, Cb 10 pF, 10 kOhm pull-up to 3.3 V: into a capacitive load, not into a line"}
+    applicability: "TPS23861PWR, board B's PoE PSE controller U5"
+    verification_owed: "the INT output's fall measured at bring-up would replace its bound"
+  - id: ADI-DS3231SN
+    kind: BOUND
+    parts: ["DS3231SN"]
+    edge_ns: 0.0
+    inputs: "^SCL$"
+    inputs_cited:
+      - {document: v2/vendor/adi/adi-ds3231sn.pdf, sha256_16: "dc81cd89bee82d0c", page: 9, quote: "Serial Clock Input. This pin is the clock input for the I2C serial interface"}
+    derivation: >
+      DS3231 states a fall time of 20 + 0.1 Cb ns minimum for SDA and SCL in its own timing table (Cb the bus line's
+      capacitance in pF, so at least 20 ns), carried below for SDA, the one of the two it drives: the fall of an
+      open-drain output into a capacitive bus load, its rise being the pull-up's (ER-D14). SCL is an input by the
+      maker's pin description. Its INT/SQW and 32kHz open-drain outputs publish none (ER-D8)
+    checked:
+      - {document: v2/vendor/adi/adi-ds3231sn.pdf, sha256_16: "dc81cd89bee82d0c", page: 4, quote: "Fall Time of Both SDA and SCL"}
+    pin_edges:
+      - {match: "^SDA$", kind: DATASHEET, edge_ns: 20.0, statistic: min, document: v2/vendor/adi/adi-ds3231sn.pdf, sha256_16: "dc81cd89bee82d0c", page: 4,
+         quote: "Fall Time of Both SDA and SCL", conditions: "20 + 0.1 Cb ns with Cb taken at 0 pF, the least the formula gives: into a capacitive load, not into a line"}
+    applicability: "DS3231SN, board B's holdover clock U9"
+    verification_owed: "INT/SQW's fall measured at bring-up would replace its bound"
+  - id: DIODES-PI7C9X2G404SL
+    kind: BOUND
+    parts: ["Diodes PI7C9X2G404SL"]
+    edge_ns: 0.0
+    derivation: >
+      PI7C9X2G404SL publishes a minimum transition for its reference-clock outputs only (Table 8-1, REFCLKO, 175 ps,
+      20 to 80 percent), carried below; its PCIe lanes are decided by LINK-CONTROLLED-B, and its SMBus, reset and
+      GPIO pins publish none (ER-D8)
+    checked:
+      - {document: v2/vendor/diodes/diodes-pi7c9x2g404sl.pdf, sha256_16: "675fa7ee40c91ad6", page: 75, quote: "Table 8-1 AC Switching and DC Electrical Characteristics for REFCLKI_P/N and REFCLKO_P/N[3:0]"}
+    pin_edges:
+      - {match: "^REFCLKO", kind: DATASHEET, edge_ns: 0.175, statistic: min, document: v2/vendor/diodes/diodes-pi7c9x2g404sl.pdf, sha256_16: "675fa7ee40c91ad6", page: 75,
+         quote: "Rise and Fall Time in 20-80%", conditions: "Table 8-1, REFCLKO_P/N, 20 to 80 percent"}
+    applicability: "PI7C9X2G404SL, board B's per-slot PCIe switches U101, U201, U301"
+    verification_owed: "the SMBus data output's fall measured at bring-up would replace its bound"
+
+  # ------------------------------------------------------ makers who publish no output transition: bounds (ER-D8)
+  - id: RPI-RP2040
+    kind: BOUND
+    parts: ["RP2040"]
+    edge_ns: 0.0
+    inputs: "^(XIN|RUN|SWCLK|TESTEN)$"
+    derivation: >
+      The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no
+      transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document
+      pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+    checked:
+      - {document: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf, sha256_16: "be56fbb75ba0ae9e", page: 303, quote: "SLEWFAST: Slew rate control. 1 = Fast, 0 = Slow"}
+    applicability: "RP2040 GPIO, QSPI and SWD outputs: board C's panel controller U3, board E's sensor controller U10"
+    verification_owed: >
+      Raspberry Pi's IBIS model on request, or the edge measured at bring-up at the drive and slew the firmware sets;
+      a firmware obligation fixing SLEWFAST 0 on named pins is the lever (HW-FW-CONTRACT.md, layer 5)
+  - id: RPI-CM5-RECEPTACLE
+    kind: BOUND
+    parts: ["Amphenol 10164227"]
+    edge_ns: 0.0
+    derivation: >
+      The receptacle's pins carry the Compute Module 5's own signals. The CM5 datasheet asks for GPIO drive and slew
+      to be set as low as necessary and publishes no transition for any setting; Raspberry Pi publishes no IBIS
+      model of the CM5 or its RP1 I/O controller. The bound is instantaneous
+    checked:
+      - {document: v2/vendor/cm5/cm5-datasheet.pdf, sha256_16: "80070fefd8db6e8a", page: 12, quote: "we recommend setting the drive strength and slew rate to the lowest levels necessary"}
+    applicability: "the CM5 GPIO, UART, I2C, SPI and fan signals on board B's receptacles U30A to U32B"
+    verification_owed: "the edge measured at bring-up at the firmware's drive and slew; the high-speed links are LINK-CONTROLLED-B's"
+  - id: NEXPERIA-74LVC1G157
+    kind: BOUND
+    parts: ["74LVC1G157GW"]
+    edge_ns: 0.0
+    derivation: >
+      Nexperia's 74LVC1G157 datasheet gives propagation delays and input transition limits and no output
+      transition; Nexperia offers an IBIS model on its product page, which answers this host with a browser
+      challenge, so it is not held. TI's IBIS models of LVC gates of the same JEDEC family at 3.3 V (held in
+      v2/vendor/ti/ibis/) move in 0.11 to 0.28 ns, which is where this part's edge is expected; the bound written is
+      the instantaneous one because a different maker's model is not this part's
+    checked:
+      - {document: v2/vendor/nexperia/nexperia-74lvc1g157.pdf, sha256_16: "62f9b85c44785ca1", page: 1, quote: "Schmitt-trigger action at all inputs makes the circuit tolerant of slower input rise and fall times."}
+    applicability: "74LVC1G157GW, board B's fabric qualifiers and select locks U513 to U520, U524 to U529"
+    verification_owed: "Nexperia's IBIS model of the 74LVC1G157, fetched by a browser, would replace the bound"
+  - id: DIODES-74LVC1G17
+    kind: BOUND
+    parts: ["74LVC1G17"]
+    edge_ns: 0.0
+    derivation: >
+      Diodes' 74LVC1G17 datasheet gives propagation delays and the input transition its test generator uses, and no
+      output transition; diodes.com refuses this host, so no IBIS model is held. As for the 74LVC1G157, TI's LVC
+      models place the expected edge at 0.11 to 0.28 ns; the bound written is instantaneous
+    checked:
+      - {document: v2/vendor/diodes/diodes-74lvc1g17.pdf, sha256_16: "029f345a1e7be917", page: 1, quote: "74LVC1G17"}
+    applicability: "74LVC1G17 Schmitt buffers on boards B and C"
+    verification_owed: "Diodes' IBIS model, fetched by a browser, would replace the bound"
+  - id: TI-SN74LVC2G06
+    kind: BOUND
+    parts: ["SN74LVC2G06"]
+    edge_ns: 0.0
+    derivation: >
+      The SN74LVC2G06 datasheet gives no output transition and TI's product page offers a PSpice model (SCEM622) and
+      no IBIS model. Its open-drain outputs fall like the LVC outputs TI does model (0.11 to 0.28 ns at 3.3 V); the
+      bound written is instantaneous because no model of this part is held
+    checked:
+      - {document: v2/vendor/ti/ti-sn74lvc2g06.pdf, sha256_16: "b5533064ff102afc", page: 10, quote: "Rise time and fall time specs. See (Δt/ΔV) in the Recommended Operating Conditions table."}
+    applicability: "SN74LVC2G06DBVR, board B's EMCON open drains"
+    verification_owed: "a simulation of TI's PSpice model SCEM622 at 3.3 V into 50 ohm would give a MODEL figure"
+  - id: SILABS-CP2102N
+    kind: BOUND
+    parts: ["CP2102N"]
+    edge_ns: 0.0
+    inputs: "^(RXD|CTS|RSTb|VBUS|VREGIN|DSR|DCD|RI.*)$"
+    derivation: >
+      The CP2102N datasheet publishes rise and fall times only for its USB full-speed transceiver (4 to 20 ns, the
+      USB 2.0 figure, decided by USB2-FS where the lines' class is USB); its UART and GPIO outputs publish none, and
+      Silicon Labs offers no IBIS model. The bound is instantaneous
+    checked:
+      - {document: v2/vendor/silabs/silabs-cp2102n.pdf, sha256_16: "32fbab0ba17f394a", page: 14, quote: "Output Rise Time"}
+    applicability: "CP2102N-A02-GQFN28 UART outputs (TXD, RTS, DTR, GPIO): board B's U15 to U18, board D's U3"
+    verification_owed: "the UART output's edge measured at bring-up"
+  - id: MICROCHIP-KSZ9897
+    kind: BOUND
+    parts: ["Microchip KSZ9897"]
+    edge_ns: 0.0
+    inputs: "^SCL_MDC$"
+    inputs_cited:
+      - {document: v2/vendor/microchip/microchip-ksz9897-datasheet.pdf, sha256_16: "72b89179ed6a42a7", page: 13, quote: "SCL/MDC IPU SPI/I2C Modes: SCL serial clock."}
+    derivation: >
+      The KSZ9897R datasheet publishes transitions for its copper PHYs (100BASE-TX 3 to 5 ns, 10BASE-Te 25 ns),
+      which are LINK-CONTROLLED-B's, and states of its I2C interface that its timing adheres to UM10204 Rev. 6, high-
+      speed mode and slower: the specification's minimum output fall is carried below for the data pin, at the
+      least of the modes the claim covers (Hs-mode 10 ns; Fast-mode 20 ns x VDD / 5.5 V is 12 ns at 3.3 V;
+      Standard-mode states none). Its clock pin SCL/MDC is an input (type IPU). Its interrupt, LED, other management
+      and reset pins publish none. Microchip lists an IBIS model for the KSZ9897R, and microchip.com refuses this
+      host. The bound is instantaneous
+    checked:
+      - {document: v2/vendor/microchip/microchip-ksz9897-datasheet.pdf, sha256_16: "72b89179ed6a42a7", page: 170, quote: "100BASE-TX Transmit (Measured Differentially After 1:1 Transformer)"}
+    pin_edges:
+      - match: "^SDI_SDA$"
+        kind: STANDARD
+        edge_ns: 10.0
+        statistic: min
+        document: v2/vendor/standards/nxp-um10204-rev6-i2c-bus-specification.pdf
+        sha256_16: "b7619700e8bb9dd4"
+        page: 51
+        quote: "fall time of SDAH signal capacitive load from 10 pF to 100 pF 10 80 ns"
+        clause: "UM10204 Rev. 6 (4 April 2014), Table 11, tfDA, Hs-mode, minimum; Table 9, tof, Fast-mode, gives 20 ns x (VDD / 5.5 V), 12 ns at 3.3 V, and Standard-mode none"
+        conditions: "from VIHmin to VILmax (70 to 30 percent of VDD), into a capacitive bus load of 10 pF or more: not into a line"
+        claimed_by: {document: v2/vendor/microchip/microchip-ksz9897-datasheet.pdf, sha256_16: "72b89179ed6a42a7", page: 172, quote: "The I2C interface timing adheres to the NXP I2C-Bus Specification (UM10204, Rev. 6) (high-speed mode"}
+    applicability: "KSZ9897RTXI management, interrupt and control pins: board B's U1, its I/O supplied at 3.3 V"
+    verification_owed: >
+      Microchip's KSZ9897R IBIS model, fetched by a browser, would replace the bound and show the data pin's fall
+      into a line; bench item V-K01 of HW-FW-CONTRACT.md measures the fall on the bus (12 to 100 ns asked)
+  - id: MICROCHIP-ATECC608B
+    kind: BOUND
+    parts: ["ATECC608B"]
+    edge_ns: 0.0
+    inputs: "^SCL$"
+    inputs_cited:
+      - {document: v2/vendor/microchip/microchip-atecc608b-summary-DS40002239B.pdf, sha256_16: "1b21d7b0d5c6265f", page: 2, quote: "SCL Serial Clock Input"}
+    derivation: "the ATECC608B summary publishes only the rise and fall its SDA and SCL inputs accept (300 and 100 ns maximum), and no output transition; it claims no specification's timing (ER-D14); SCL is an input by its pin table"
+    checked:
+      - {document: v2/vendor/microchip/microchip-atecc608b-summary-DS40002239B.pdf, sha256_16: "1b21d7b0d5c6265f", page: 10, quote: "Input Fall Time"}
+    applicability: "ATECC608B-SSHDA-T, board B's secure element U8"
+    verification_owed: "the SDA fall measured at bring-up"
+  - id: TI-BQ25731
+    kind: BOUND
+    parts: ["BQ25731"]
+    edge_ns: 0.0
+    inputs: "^SCL$"
+    inputs_cited:
+      - {document: v2/vendor/ti/bq25731-datasheet.pdf, sha256_16: "3e5e927fdf63cf6a", page: 7, quote: "I2C clock input. Connect to clock line from the host controller or smart battery."}
+    derivation: >
+      BQ25731 calls its interface I2C compatible and publishes the SCL and SDA rise and fall its bus requires (300 ns
+      MAXIMUM), not a minimum and not its own data output's fall; it claims no specification's timing, so UM10204's
+      minimum is not its figure (ER-D14). SCL is an input by the maker's pin table. Its PROCHOT and CHRG_OK open
+      drains and its gate drives publish none
+    checked:
+      - {document: v2/vendor/ti/bq25731-datasheet.pdf, sha256_16: "3e5e927fdf63cf6a", page: 18, quote: "SCL/SDA fall time"}
+    applicability: "BQ25731RSNR, board A's charger U3 (its gate and switch nodes are POWER-STAGE-NODES')"
+    verification_owed: "the SDA and PROCHOT falls measured at bring-up"
+  - id: TI-BQ4050
+    kind: BOUND
+    parts: ["BQ4050"]
+    edge_ns: 0.0
+    derivation: >
+      BQ4050 publishes transitions for its CHG and DSG FET drives (tens of microseconds) and none for its SMBus
+      data output or its BTP_INT output
+    checked:
+      - {document: v2/vendor/battery/ti-bq4050.pdf, sha256_16: "2664e33fe6d6ebed", page: 2, quote: "Electrical Characteristics: CHG, DSG FET Drive"}
+    applicability: "BQ4050RSMR, board P's gauge U1"
+    verification_owed: "the SMBD and BTP_INT falls measured at bring-up"
+  - id: WINBOND-W25Q16JV
+    kind: BOUND
+    parts: ["W25Q16JV"]
+    edge_ns: 0.0
+    inputs: "^(CS|/CS|CLK)$"
+    derivation: >
+      The W25Q16JV datasheet publishes the clock slew its input needs (0.1 V/ns) and no output transition; Winbond
+      lists an IBIS model that is not held
+    checked:
+      - {document: v2/vendor/winbond/winbond-w25q16jv-serial-flash.pdf, sha256_16: "81af3f69b0bff95f", page: 62, quote: "Clock Rise Time peak to peak"}
+    applicability: "W25Q16JVUXIQ data outputs on the QSPI nets of boards C and E"
+    verification_owed: "Winbond's W25Q16JV IBIS model would replace the bound"
+  - id: TI-TUSB2046B
+    kind: BOUND
+    parts: ["TUSB2046"]
+    edge_ns: 0.0
+    derivation: "TUSB2046B publishes transitions for its USB full-speed D+ and D- only (4 to 20 ns), decided by USB2 where those lines' class is USB; none for its other outputs"
+    checked:
+      - {document: v2/vendor/ti/ti-tusb2046b.pdf, sha256_16: "d02d0b8af5cbdb1b", page: 7, quote: "Transition rise time for DP or DM"}
+    applicability: "TUSB2046IBVFR, board D's hub U4"
+    verification_owed: "none decides a verdict unless a non-USB output of the hub sits on an unanswered net"
+  - id: VISHAY-VEML7700
+    kind: BOUND
+    parts: ["Vishay VEML7700"]
+    edge_ns: 0.0
+    derivation: "VEML7700 calls its interface compatible with I2C standard and fast modes and prints, in its own table, a fall time with NO minimum in either mode (300 ns maximum), so UM10204's minimum is not its figure (ER-D14); its SCL pin is not typed an input here because its datasheet describes the pin as the bus clock and does not say input"
+    checked:
+      - {document: v2/vendor/vishay/veml7700-datasheet.pdf, sha256_16: "f338cf7d5911828a", page: 3, quote: "Clock / data fall time"}
+    applicability: "VEML7700, board C's ambient light sensor on the kit bus"
+    verification_owed: "the SDA fall measured at bring-up"
+  - id: BOSCH-BMI270
+    kind: BOUND
+    parts: ["BMI270"]
+    edge_ns: 0.0
+    derivation: "the BMI270 datasheet publishes no output transition for its SPI, I2C or interrupt pins"
+    checked:
+      - {document: v2/vendor/bosch/bosch-bmi270.pdf, sha256_16: "f68ce3c74f011a80", page: 1, quote: "BMI270"}
+    applicability: "BMI270, board E's IMU U15"
+    verification_owed: "the INT1 and SDA edges measured at bring-up"
+  - id: BOSCH-BME688
+    kind: BOUND
+    parts: ["BME688"]
+    far_only: false
+    edge_ns: 0.0
+    derivation: "the BME688 datasheet publishes no output transition"
+    checked:
+      - {document: v2/vendor/bosch/bosch-bme688.pdf, sha256_16: "fce73ae028a985b3", page: 1, quote: "BME688"}
+    applicability: "BME688 on board E's sensor bus, and the outside pod's BME688 beyond J_POD"
+    verification_owed: "the SDA fall measured at bring-up"
+  - id: SENSIRION-SGP41
+    kind: BOUND
+    parts: ["SGP41"]
+    edge_ns: 0.0
+    derivation: "the SGP41 datasheet publishes no output transition"
+    checked:
+      - {document: v2/vendor/sensirion/sgp41-datasheet.pdf, sha256_16: "331f35ed1f027a74", page: 1, quote: "SGP41"}
+    applicability: "SGP41-D-R4 on board E's sensor bus"
+    verification_owed: "the SDA fall measured at bring-up"
+  - id: EBYTE-E72-CC2652P
+    kind: BOUND
+    parts: ["Ebyte E72"]
+    edge_ns: 0.0
+    derivation: "the E72-2G4M20S1E manual publishes no output transition for the module's CC2652P pins"
+    checked:
+      - {document: v2/vendor/zigbee/ebyte-e72-2g4m20s1e-user-manual.pdf, sha256_16: "4bae5b3e67483b0b", page: 1, quote: "CC2652P"}
+    applicability: "the two E72 modules on board B (U13, U14)"
+    verification_owed: "the edge measured at bring-up; TI's CC2652P documents are not held"
+  - id: EBYTE-E22-SX1262
+    kind: BOUND
+    parts: ["Ebyte E22"]
+    edge_ns: 0.0
+    derivation: "the E22-900M30S manual publishes no output transition for the module's SX1262 or switch-control pins"
+    checked:
+      - {document: v2/vendor/lora/ebyte-e22-900m30s-user-manual-en-v1.20.pdf, sha256_16: "d864e9ca390f15c9", page: 1, quote: "SX1262"}
+    applicability: "the E22-900M30S LoRa module on board B (U12)"
+    verification_owed: "the MISO, DIO1 and BUSY edges measured at bring-up"
+  - id: QUECTEL-LG290P
+    kind: BOUND
+    parts: ["Quectel LG290P"]
+    edge_ns: 0.0
+    derivation: "the LG290P(03) hardware design publishes its UART and 1PPS pins' levels and no transition"
+    checked:
+      - {document: v2/vendor/quectel/lg290p03-hardware-design-v1.1.pdf, sha256_16: "422ca9a2aa5495c1", page: 1, quote: "LG290P"}
+    applicability: "the LG290P GNSS module on board B (U11)"
+    verification_owed: "the TXD and 1PPS edges measured at bring-up"
+  - id: NICERF-SA868
+    kind: BOUND
+    parts: ["NiceRF SA868"]
+    edge_ns: 0.0
+    derivation: "the SA868 datasheet publishes no transition for its UART pins"
+    checked:
+      - {document: v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf, sha256_16: "938ef5ef5007df6b", page: 2, quote: "SA868"}
+    applicability: "the SA868 exciter on board D (U2)"
+    verification_owed: "the TXD edge measured at bring-up"
+  - id: DISCRETE-MOSFET
+    kind: BOUND
+    parts: ["2N7002", "AO3400A", "AO3401A", "Si2300DS", "CSD1", "BSC0"]
+    edge_ns: 0.0
+    inputs: "^G$"
+    input_pins: ["4"]
+    derivation: >
+      A discrete FET's drain moves at the rate its gate drive and its own charge set; its datasheet gives typical
+      switching times at one test circuit (AO3401A: turn-on rise 3.5 ns typical), which are neither a minimum nor
+      this circuit. The gate pin drives nothing: pin function G, or pin 4 of the SON-8 and TDSON-8 power FETs
+      (CSD19532Q5B, CSD18510Q5B, CSD17570Q5B, BSC039N06NS, BSC028N06NS: pins 1 to 3 source, 4 gate, 5 to 8 drain),
+      whose pin functions some netlists write as net names. The bound is instantaneous
+    checked:
+      - {document: v2/vendor/power/aos-ao3401a-p-mosfet.pdf, sha256_16: "0d8e3261ae280e00", page: 2, quote: "Turn-On Rise Time"}
+      - {document: v2/vendor/power/jscj-2n7002-c8545.pdf, sha256_16: "7941fb423af7c6c6", page: 1, quote: "2N7002"}
+    applicability: "the small-signal and switch FETs whose drain or source is on a signal net"
+    verification_owed: "the drain edge in its circuit, measured at bring-up or computed from the gate network"
+  - id: DISCRETE-BJT
+    kind: BOUND
+    parts: ["BC857"]
+    edge_ns: 0.0
+    inputs: "^B$"
+    derivation: "a discrete transistor's collector edge is set by its base drive and load; no minimum is published"
+    checked:
+      - {document: v2/vendor/slkor/slkor-bc857b-c556165.pdf, sha256_16: "b27e6044426e3c60", page: 1, quote: "BC857"}
+    applicability: "the PNP buffers on board B"
+    verification_owed: "the collector edge measured at bring-up"
+
+  - id: LVC1G34-BUFFER
+    kind: BOUND
+    parts: ["74LVC1G34", "SN74LVC1G34"]
+    edge_ns: 0.0
+    derivation: >
+      A 74LVC1G34 buffer whose value field names no maker; both makers' sheets held (TI SN74LVC1G34, Diodes
+      74LVC1G34) publish propagation delays and no output transition, and no IBIS model of either is held. TI's LVC
+      models place the expected edge at 0.11 to 0.28 ns; the bound written is instantaneous
+    checked:
+      - {document: v2/vendor/ti/ti-sn74lvc1g34.pdf, sha256_16: "04384d3a3cf65b2b", page: 5, quote: "Input transition rise or fall rate"}
+      - {document: v2/vendor/diodes/diodes-74lvc1g34.pdf, sha256_16: "efd2d7978bb880b7", page: 3, quote: "Input Transition Rise or Fall Rate"}
+    applicability: "the 74LVC1G34 buffers on boards B and D (board D's PTT mirror U18 drives TR_APRS across R48)"
+    verification_owed: "Diodes' IBIS model of the 74LVC1G34 would replace the bound: v2/vendor/SOURCES.yaml (logic-held-sheets-round-8) pins the part bought to Diodes 74LVC1G34W5-7, so TI's model of the SN74LVC1G34 is another maker's part and would not"
+
+  # ------------------------------------------------------------------------------ parts that make no edge
+  - id: ESD-ARRAYS
+    kind: NOT_A_DRIVER
+    parts: ["TPD4E001", "TPD2E2U06", "USBLC6-2SC6"]
+    basis: "an ESD clamp array: diodes to the rails and ground, no output stage"
+    document: v2/vendor/ti/ti-tpd4e001.pdf
+    sha256_16: "e10f97586a1aa314"
+    page: 1
+    quote: "TPD4E001"
+    checked:
+      - {document: v2/vendor/ti/ti-tpd2e2u06-q1.pdf, sha256_16: "dca8b4e0bc48d8fc", page: 1, quote: "TPD2E2U06"}
+      - {document: v2/vendor/st/st-usblc6-2-esd-protection.pdf, sha256_16: "bc30154f310cd631", page: 1, quote: "USBLC6-2"}
+  - id: TI-TS3USB221A
+    kind: PASSIVE_SWITCH
+    parts: ["TI TS3USB221A"]
+    through: "^(1D[pn]|2D[pn]|D[pn])$"
+    inputs: "^(OEn|S)$"
+    basis: "a FET switch with no output stage; its through pins pass the far side's edge (the datasheet: the switch's own time constant is 0.25 ns at 10 pF, far below the edges it carries)"
+    document: v2/vendor/ti/ti-ts3usb221a.pdf
+    sha256_16: "cccebf8c10df6051"
+    page: 6
+    quote: "The time constant for the switch alone is of the order of 0.25ns for 10pF load."
+  - id: TI-TMUXHS4212
+    kind: PASSIVE_SWITCH
+    parts: ["TI TMUXHS4212"]
+    through: "^[ABC][01][pn]$"
+    inputs: "^(OEn|SEL)$"
+    basis: "a passive 2:1 multiplexer for USB 3 lanes; SEL and OEn are its control inputs"
+    document: v2/vendor/ti/ti-tmuxhs4212.pdf
+    sha256_16: "34fa7c385e6aa898"
+    page: 1
+    quote: "TMUXHS4212"
+  - id: TI-TS3DV642
+    kind: PASSIVE_SWITCH
+    parts: ["TI TS3DV642"]
+    through: "^(D[0-3][PN](_[AB])?|SCL(_[AB])?|SDA(_[AB])?|HPD(_[AB])?|CEC(_[AB])?)$"
+    inputs: "^(EN|SEL[12]|NC)$"
+    basis: "a passive 2:1 switch for HDMI's TMDS, DDC, HPD and CEC lines; EN, SEL1 and SEL2 are its control inputs"
+    document: v2/vendor/ti/ti-ts3dv642.pdf
+    sha256_16: "31e45a0729bc2e71"
+    page: 1
+    quote: "TS3DV642"
+  - id: SKY13351
+    kind: PASSIVE_SWITCH
+    parts: ["SKY13351"]
+    through_pins: ["1", "3", "5"]
+    input_pins: ["4", "6"]
+    basis: "an RF SPDT switch; its RF ports (pins 1, 3 and 5) are RF-LINES' and its two control inputs (pins 4 and 6) drive nothing. Its pins are read by number because the netlist writes net names as its pin functions, and a name would follow a renamed net"
+    document: v2/vendor/rf/skyworks-sky13351-378lf-spdt.pdf
+    sha256_16: "878d1d44ee03b65c"
+    page: 1
+    quote: "SKY13351"
+  - id: BENCH-PADS
+    kind: CONNECTOR
+    parts: ["SWD pads"]
+    basis: "a land for a bench probe (SWD): whatever drives its pins is the probe"
+
+  # ------------------------------------------------------------------------ met only beyond a connector
+  - id: FAR-BENCH-PROBE
+    kind: BOUND
+    far_only: true
+    edge_ns: 0.0
+    derivation: >
+      A bench instrument (a debug probe, a USB-UART adapter) on a bench header is not part of the kit and its edge is
+      not this design's; it is present only at bring-up and service. The bound is instantaneous
+    no_document: "a bench instrument is whatever the bench holds: no document of this tree can state its edge; the citation below shows only that the headers are bench headers"
+    checked:
+      - {document: v2/vendor/cm5/cm5-datasheet.pdf, sha256_16: "80070fefd8db6e8a", page: 12, quote: "allowing you access to the debug UART signals"}
+    applicability: "bench headers and pads: SWD pads, J_DBG1 to J_DBG3, J_ZBDBG1 and J_ZBDBG2, J_GNSS2, J_SPI3"
+    verification_owed: "none for the kit in use; the bench wiring's own length is the bring-up procedure's"
+  - id: FAR-USB-PD-SINK
+    kind: BOUND
+    far_only: true
+    edge_ns: 0.0
+    derivation: >
+      The device plugged into board A's USB-C outlet drives CC with its own USB PD transmitter, which USB PD bounds
+      at 300 ns (the figure TPS25740 quotes for itself); the USB PD specification is not held, so the bound written
+      is instantaneous
+    checked:
+      - {document: v2/vendor/ti/ti-tps25740.pdf, sha256_16: "60276c7a0e2a138a", page: 11, quote: "Rise/fall time, tFall and tRise (refer to USB"}
+    applicability: "the far side of board A's J_USBC_OUT"
+    verification_owed: "the USB Power Delivery specification's tRise and tFall, held, would make this a STANDARD record of 300 ns"
+  - id: FAR-QUECTEL-RM520N
+    kind: BOUND
+    far_only: true
+    edge_ns: 0.0
+    derivation: "the RM520N-GL hardware design gives its SIM and control pins' levels and no transition"
+    checked:
+      - {document: v2/vendor/quectel/quectel-rm520n-gl-hardware-design-v1.0.pdf, sha256_16: "139583b38ce1fd47", page: 1, quote: "RM520N"}
+    applicability: "the 5G module in board B's M.2 socket J_M2C2"
+    verification_owed: "the USIM_CLK and USIM_DATA edges measured at bring-up"
+  - id: FAR-SIM-CARD
+    kind: BOUND
+    far_only: true
+    edge_ns: 0.0
+    derivation: "a SIM card's I/O is driven by the card (ISO/IEC 7816-3, not held); the bound is instantaneous"
+    checked:
+      - {document: v2/vendor/quectel/quectel-rm520n-gl-hardware-design-v1.0.pdf, sha256_16: "139583b38ce1fd47", page: 4, quote: "SIM"}
+    applicability: "the far side of board B's J_SIM1 and J_SIM2"
+    verification_owed: "ISO/IEC 7816-3's I/O transition, if held"
+  - id: FAR-ROCKBLOCK-9704
+    kind: BOUND
+    far_only: true
+    edge_ns: 0.0
+    derivation: "the RockBLOCK 9704 datasheet gives its UART levels and no transition"
+    checked:
+      - {document: v2/vendor/rockblock/rb9704-datasheet-RB9704-001-JUN26.pdf, sha256_16: "d48acbea28ee2a7d", page: 1, quote: "9704"}
+    applicability: "the far side of board B's J_RB9704"
+    verification_owed: "the TXD edge measured at bring-up"
+  - id: FAR-FAN-TACH
+    kind: BOUND
+    far_only: true
+    edge_ns: 0.0
+    derivation: "a fan's tachometer output is an open collector in the fan; Sunon's catalogue publishes no transition"
+    checked:
+      - {document: v2/vendor/fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf, sha256_16: "fae7e21365939be5", page: 1, quote: "SUNON"}
+    applicability: "the far side of board B's J_FAN1 to J_FAN3"
+    verification_owed: "the tach edge measured at bring-up"
+  - id: FAR-HDMI-SINK
+    kind: BOUND
+    far_only: true
+    edge_ns: 0.0
+    derivation: "the monitor's DDC and HPD drivers; the Xenarc manual publishes no transition"
+    checked:
+      - {document: v2/vendor/xenarc/xenarc-709gnk-product-manual-v2.pdf, sha256_16: "ba3b1474406fdaf5", page: 3, quote: "HDMI"}
+    applicability: "the far side of board B's J_HDMI"
+    verification_owed: "none decides a verdict while the DDC lines carry what the display switch's HDMI class gives them"
+  - id: FAR-PDI-EPD
+    kind: BOUND
+    far_only: true
+    edge_ns: 0.0
+    derivation: "the e-paper panel's driver IC answers on the flex (BUSY, and SDA in a read); PDi's note gives no transition"
+    checked:
+      - {document: v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf, sha256_16: "1ea68f814afe04ca", page: 7, quote: "BUSY"}
+    applicability: "the far side of board C's J_EPD"
+    verification_owed: "the BUSY and SDA edges measured at bring-up"
+  - id: FAR-AMS-AS3935
+    kind: BOUND
+    far_only: true
+    edge_ns: 0.0
+    derivation: "the AS3935 documents held (factsheet, hardware guide) publish no output transition"
+    checked:
+      - {document: v2/vendor/sciosense/sciosense-as3935-factsheet.pdf, sha256_16: "b1d889c1768bab4b", page: 2, quote: "AS3935"}
+    applicability: "the lightning module beyond board E's J_LTG"
+    verification_owed: "the maker's full datasheet (not public) or the IRQ edge measured at bring-up"
+  - id: FAR-AMS-AS7331
+    kind: BOUND
+    far_only: true
+    edge_ns: 0.0
+    derivation: "the AS7331 datasheet publishes the rise and fall of SCL and SDA as one figure (0.3 us), a bus limit and not a minimum of its output"
+    checked:
+      - {document: v2/vendor/ams/ams-as7331.pdf, sha256_16: "60c13168a4012c16", page: 45, quote: "SCL and SDA Fall Time."}
+    applicability: "the UV sensor in the outside pod beyond board E's J_POD"
+    verification_owed: "the SDA fall measured at bring-up"
+  - id: FAR-DCF77-MODULE
+    kind: BOUND
+    far_only: true
+    edge_ns: 0.0
+    derivation: "no maker's document for the DCF77 receiver module is held; the bound is instantaneous"
+    no_document: "no maker's document for the DCF77 receiver module is held in v2/vendor (J_DCF's value field names the module class only)"
+    applicability: "the far side of board E's J_DCF"
+    verification_owed: "the module's maker document, or its pulse edge measured at bring-up"
+  - id: FAR-GEIGER-MODULE
+    kind: BOUND
+    far_only: true
+    edge_ns: 0.0
+    derivation: "no maker's document for the Geiger counter module is held; the bound is instantaneous"
+    no_document: "no maker's document for the Geiger counter module is held in v2/vendor (J_GEIGER's value field names the RadiationD-v1.1 class only)"
+    applicability: "the far side of board E's J_GEIGER"
+    verification_owed: "the module's maker document, or its pulse edge measured at bring-up"
+
+far_ends:
+  # THE KIT'S OWN BOARD-TO-BOARD NETS: answered from the continued boards' committed netlists, pin by pin (the kit I2C
+  # bus, the expanders' wired-OR interrupt, the supervisors' heartbeats, the transmit request, the gauge's SMBus).
+  - id: KIT-I2C
+    board: a
+    nets: ["SCL", "SDA"]
+    via: ["J_AB1", "J_MEZZ1"]
+    continues: [b, c, d]
+    basis: >
+      the kit I2C bus runs on boards A, B, C and D under the same net names (v2/docs/HW-FW-CONTRACT.md section 6;
+      v2/docs/records/hc5/kit_i2c_budget.py lists its parts from the committed netlists)
+    members: ["A: INA226 x6, PCA9555 x2, BQ25731", "B: KSZ9897, TMP117, STM32H743 x3, TPS23861, PCA9555 x2, ATECC608B, DS3231",
+              "C: PCA9555 x2, RP2040, VEML7700", "D: PCA9555, ADS1115"]
+  - {id: KIT-I2C-B, board: b, nets: ["SCL", "SDA"], via: ["J_AB1", "J_PANEL"], continues: [a, c, d], basis: "as KIT-I2C", members: ["as KIT-I2C"]}
+  - {id: KIT-I2C-C, board: c, nets: ["SCL", "SDA"], via: ["J_PANEL"], continues: [a, b, d], basis: "as KIT-I2C", members: ["as KIT-I2C"]}
+  - {id: KIT-I2C-D, board: d, nets: ["SCL", "SDA"], via: ["J_HARN1"], continues: [a, b, c], basis: "as KIT-I2C", members: ["as KIT-I2C"]}
+  - id: KIT-EXP-INT
+    board: a
+    nets: ["EXP_INT"]
+    via: ["J_AB1", "J_MEZZ1"]
+    continues: [b, c, d]
+    basis: >
+      the wired-OR expander interrupt to the panel controller's GPIO24 (HW-FW-CONTRACT.md FW-C14: A:U27 pin 1 with
+      R110, J_AB1 pin 13, B:J_PANEL pin 6), EXP_INT on boards A, B, C and D
+    members: ["A: PCA9555 x2", "B: PCA9555 x2, DS3231, KSZ9897, TPS23861, TMP117", "C: PCA9555 x2, RP2040", "D: PCA9555"]
+  - {id: KIT-EXP-INT-B, board: b, nets: ["EXP_INT"], via: ["J_AB1", "J_PANEL"], continues: [a, c, d], basis: "as KIT-EXP-INT", members: ["as KIT-EXP-INT"]}
+  - {id: KIT-EXP-INT-C, board: c, nets: ["EXP_INT"], via: ["J_PANEL"], continues: [a, b, d], basis: "as KIT-EXP-INT", members: ["as KIT-EXP-INT"]}
+  - {id: KIT-EXP-INT-D, board: d, nets: ["EXP_INT"], via: ["J_HARN1"], continues: [a, b, c], basis: "as KIT-EXP-INT", members: ["as KIT-EXP-INT"]}
+  - {id: PANEL-HEARTBEATS, board: b, nets: ["HB?"], via: ["J_PANEL"], continues: [c],
+     basis: "the supervisors' heartbeats HB1 to HB3 run over the panel ribbon to the panel controller (board C's HB1 to HB3)", members: ["C: RP2040 U3"]}
+  - {id: PANEL-HEARTBEATS-C, board: c, nets: ["HB?"], via: ["J_PANEL"], continues: [b],
+     basis: "the heartbeats' drivers are board B's three supervisors", members: ["B: STM32H743 U41, U51, U61"]}
+  - {id: C-TR-APRS, board: c, nets: ["TR_APRS"], via: ["J_PANEL"], continues: [a, b, d],
+     basis: "TR_APRS runs D's J_HARN1 pin 7, A's J_MEZZ1 and J_AB1, B's J_AB1 pin 14 and J_PANEL pin 7 to board C; board D drives it from its PTT mirror U18 across R48 (220 ohm)", members: ["D: 74LVC1G34 U18"]}
+  # the same net as the boards it passes through see it: their connectors lead back into the set (second pass: a
+  # connector of a continued board that no record names leaves the net UNDECIDED, so the links are written)
+  - {id: A-TR-APRS, board: a, nets: ["TR_APRS"], via: ["J_AB1", "J_MEZZ1"], continues: [b, c, d], basis: "as C-TR-APRS", members: ["as C-TR-APRS"]}
+  - {id: B-TR-APRS, board: b, nets: ["TR_APRS"], via: ["J_AB1", "J_PANEL"], continues: [a, c, d], basis: "as C-TR-APRS", members: ["as C-TR-APRS"]}
+  - {id: D-TR-APRS, board: d, nets: ["TR_APRS"], via: ["J_HARN1"], continues: [a, b, c], basis: "as C-TR-APRS", members: ["as C-TR-APRS"]}
+  - {id: E-SMBUS, board: e, nets: ["SMB?"], via: ["J_SMB"], continues: [p],
+     basis: "the SMBus lead to board P's gauge (HW-FW-CONTRACT.md FW-E01)", members: ["P: BQ4050 U1"]}
+  - {id: P-SMBUS, board: p, nets: ["SMBC", "SMBD"], via: ["J_SMB"], continues: [e],
+     basis: "the SMBus lead to board E's sensor controller (HW-FW-CONTRACT.md FW-E01)", members: ["E: RP2040 U10"]}
+  # beyond the kit's boards: the parts named by the connector's value field and the records cited
+  - {id: USBC-OUTLET-CC, board: a, nets: ["PD_CC?"], via: ["J_USBC_OUT"], families: [FAR-USB-PD-SINK],
+     basis: "the wall USB-C outlet: the plugged device's CC", members: ["an external USB PD sink"]}
+  - {id: M2-5G-SOCKET, board: b, nets: ["SIM*", "5G_*"], via: ["J_M2C2"], families: [FAR-QUECTEL-RM520N],
+     basis: "the M.2 B-key socket's RM520N-GL (J_M2C2's value field)", members: ["Quectel RM520N-GL"]}
+  - {id: SIM-SOCKETS, board: b, nets: ["SIMC*"], via: ["J_SIM1", "J_SIM2"], families: [FAR-SIM-CARD],
+     basis: "the nano-SIM sockets", members: ["a SIM card"]}
+  - {id: ROCKBLOCK, board: b, nets: ["RB_*"], via: ["J_RB9704"], families: [FAR-ROCKBLOCK-9704],
+     basis: "J_RB9704's value field: RockBLOCK 9704 16-pin", members: ["RockBLOCK 9704"]}
+  - {id: B-FANS, board: b, nets: ["FAN_*"], via: ["J_FAN?"], families: [FAR-FAN-TACH],
+     basis: "the CM5 coolers' fans (J_FAN1 to J_FAN3: 5V GND TACHO PWM)", members: ["IP68 cooler fans"]}
+  - {id: B-HDMI-OUT, board: b, nets: ["HDMIO_*"], via: ["J_HDMI"], families: [FAR-HDMI-SINK],
+     basis: "the HDMI receptacle's cable to the face-plate monitor", members: ["Xenarc 709GNK"]}
+  - {id: B-BENCH, board: b, nets: ["*"], via: ["J_DBG?", "J_ZBDBG?", "J_GNSS2", "J_SPI3", "U42", "U52", "U62"], families: [FAR-BENCH-PROBE],
+     basis: "bench headers and pads (their value fields say bench, breakout or SWD)", members: ["a bench probe or adapter"]}
+  - {id: C-EPD, board: c, nets: ["EPD_*"], via: ["J_EPD"], families: [FAR-PDI-EPD],
+     basis: "the E2370KS0C1 flex on J_EPD", members: ["PDi E2370KS0C1"]}
+  - {id: E-LIGHTNING, board: e, nets: ["LTG_IRQ", "SCL1", "SDA1"], via: ["J_LTG"], families: [FAR-AMS-AS3935],
+     basis: "J_LTG's value field: AS3935 lightning sensor module", members: ["AS3935 module"]}
+  - {id: E-POD, board: e, nets: ["SCL1", "SDA1"], via: ["J_POD"], families: [BOSCH-BME688, FAR-AMS-AS7331],
+     basis: "the outside pod's sensors (appendix 32.53; the BME688 outside and the AS7331 UV sensor)", members: ["BME688", "AS7331"]}
+  - {id: E-DCF, board: e, nets: ["DCF_PULSE"], via: ["J_DCF"], families: [FAR-DCF77-MODULE],
+     basis: "J_DCF's value field: DCF77 receiver module", members: ["DCF77 module"]}
+  - {id: E-GEIGER, board: e, nets: ["GEIGER_PULSE"], via: ["J_GEIGER"], families: [FAR-GEIGER-MODULE],
+     basis: "J_GEIGER's value field: Geiger counter module", members: ["Geiger module"]}
+  - {id: E-FANS, board: e, nets: ["FAN*"], via: ["J_FAN?"], why_none: "the mixer fans' motor leads: the fan drives no signal edge onto its switched lead", basis: "J_FAN1 and J_FAN2: 12 V class fans, low-side PWM", members: ["mixer fans"], families: []}
+  - {id: B-HDMI-DDC, board: b, nets: ["HDMI*_SCL", "HDMI*_SDA"], via: ["U3", "U4"], families: [RPI-CM5-RECEPTACLE, FAR-HDMI-SINK],
+     basis: "through the display switches TS3DV642 U3 and U4: the three CM5s' DDC (their receptacles) and the monitor's", members: ["CM5 x3", "Xenarc 709GNK"]}
+  - {id: C-SWD, board: c, nets: ["SWCLK"], via: ["TP*"], undriven_land: true, families: [FAR-BENCH-PROBE],
+     basis: "the RP2040's SWCLK is an input driven only by a probe on its test pad at bring-up", members: ["a bench SWD probe"]}
+  - {id: E-SWD, board: e, nets: ["SWCLK"], via: ["TP*"], undriven_land: true, families: [FAR-BENCH-PROBE],
+     basis: "the RP2040's SWCLK is an input driven only by a probe on its test pad at bring-up", members: ["a bench SWD probe"]}
+
+# THE RISE OF THE OPEN-DRAIN NETS (ER-D14). The fall is in the families above, per pin. The rise is stated here for the
+# kit I2C bus, whose capacitance a record of this tree has computed; for the other open-drain nets (the expanders'
+# interrupt EXP_INT, the gauge's SMBus, board E's sensor bus, the modules' and the monitor's DDC) no record states a
+# capacitance, so no rise is written for them: the fall governs each of them all the same.
+open_drain:
+  - id: KIT-I2C-RISE
+    nets: {a: ["SCL", "SDA"], b: ["SCL", "SDA"], c: ["SCL", "SDA"], d: ["SCL", "SDA"]}
+    fall: >
+      the governing edge: each driver's pull-down, per pin, from the families above (an IBIS dV/dt_f, a published
+      minimum, or a bound); the reading takes the fastest and names every driver on the net without a figure
+    rise:
+      kind: MODEL
+      edge_ns: 150.5
+      measure: "30 to 70 percent of VDD"
+      derivation: >
+        T = 0.8473 x Rp x Cb (UM10204 Rev. 6, 7.1) with Rp 1019 ohm, the drawn pull-ups at their low tolerance (board
+        B's R54 and R55 and board C's R7 and R8, 2.2 kOhm each, with the KSZ9897R's internal 58 kOhm), and Cb
+        174.3 pF on SCL: the pins at their makers' TYPICAL capacitance, 151.0 pF, and the three ribbons, 23.3 pF,
+        with no copper at all, which only adds. 0.8473 x 1019 ohm x 174.3 pF = 150.5 ns (SDA, 153.0 pF of pins:
+        152.2 ns). A MODEL and not a minimum: no maker publishes a least pin capacitance
+      document: v2/vendor/standards/nxp-um10204-rev6-i2c-bus-specification.pdf
+      sha256_16: "b7619700e8bb9dd4"
+      page: 55
+      quote: "T = t2 − t1 = 0.8473 × RC"
+      checked:
+        - {document: v2/docs/records/hc5/kit_i2c_budget.round8-d.out.txt, sha256_16: "7967404c281d4e12", quote: "pins total: bound 264.5 pF, nominal 151.0 pF; ribbons 490 mm at 47.5 pF/m = 23.3 pF", where: "the section headed SCL"}
+        - {document: v2/docs/records/hc5/kit_i2c_budget.round8-d.out.txt, sha256_16: "7967404c281d4e12", quote: "effective Rp: 1019 ohm at -5 % (sink check), 1080 nominal, 1138 at +5 % (rise check)", where: "the section headed Pull-up window"}
+    applicability: >
+      the kit I2C bus as one segment, as the committed netlists draw it at c23c5e76. The three-segment design of
+      HW-FW-CONTRACT.md 6.5 (SC-HF-02), once drawn, changes Rp and Cb per segment, and this record with them
+    verification_owed: "bench item V-K01 of HW-FW-CONTRACT.md: the rise and the fall on each segment's farthest pin"

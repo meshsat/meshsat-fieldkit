@@ -1,15 +1,25 @@
 {
  "board": "d",
  "counts": {
-  "answered_nets": 18,
+  "answered_nets": 26,
+  "bound_decided_nets": 11,
+  "bound_edge_nets": 19,
   "classes": 45,
   "contradicted_nets": 0,
-  "decided_nets": 20,
-  "layout_bound_nets": 2,
+  "decided_nets": 39,
+  "layout_bound_nets": 13,
   "low_speed_nets": 88,
-  "may_be_long_nets": 20,
+  "maker_edge_nets": 20,
+  "maker_held_nets": 2,
+  "may_be_long_nets": 39,
+  "models_absent": 0,
+  "models_asked": 5,
   "signal_nets": 135,
-  "undecided_nets": 27
+  "unasked_part_nets": 4,
+  "undecided_model_absent_nets": 0,
+  "undecided_nets": 8,
+  "undecided_no_declaration_nets": 8,
+  "undecided_other_nets": 0
  },
  "inputs": {
   "board": "d",
@@ -19,26 +29,140 @@
   },
   "board_table": {
    "path": "tools/boards/d.json",
-   "sha256_16": "e0f787a8bfe117a1"
+   "sha256_16": "56b35eba0cd6d04b"
   },
   "critical_k": 6,
   "document_1": {
+   "path": "v2/docs/records/hc5/kit_i2c_budget.round8-d.out.txt",
+   "sha256_16": "7967404c281d4e12"
+  },
+  "document_10": {
+   "path": "v2/vendor/standards/nxp-um10204-rev6-i2c-bus-specification.pdf",
+   "sha256_16": "b7619700e8bb9dd4"
+  },
+  "document_11": {
    "path": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
    "sha256_16": "2ecb40606d4b84fe"
   },
+  "document_12": {
+   "path": "v2/vendor/ti/bq25731-datasheet.pdf",
+   "sha256_16": "3e5e927fdf63cf6a"
+  },
+  "document_13": {
+   "path": "v2/vendor/ti/ti-tusb2046b.pdf",
+   "sha256_16": "d02d0b8af5cbdb1b"
+  },
+  "document_14": {
+   "path": "v2/vendor/ti/tps23861-datasheet.pdf",
+   "sha256_16": "65262ce4766a5f8e"
+  },
+  "document_15": {
+   "path": "v2/vendor/vishay/veml7700-datasheet.pdf",
+   "sha256_16": "f338cf7d5911828a"
+  },
+  "document_2": {
+   "path": "v2/vendor/adi/adi-ds3231sn.pdf",
+   "sha256_16": "dc81cd89bee82d0c"
+  },
+  "document_3": {
+   "path": "v2/vendor/microchip/microchip-atecc608b-summary-DS40002239B.pdf",
+   "sha256_16": "1b21d7b0d5c6265f"
+  },
+  "document_4": {
+   "path": "v2/vendor/microchip/microchip-ksz9897-datasheet.pdf",
+   "sha256_16": "72b89179ed6a42a7"
+  },
+  "document_5": {
+   "path": "v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf",
+   "sha256_16": "938ef5ef5007df6b"
+  },
+  "document_6": {
+   "path": "v2/vendor/quectel/lg290p03-hardware-design-v1.1.pdf",
+   "sha256_16": "422ca9a2aa5495c1"
+  },
+  "document_7": {
+   "path": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+   "sha256_16": "be56fbb75ba0ae9e"
+  },
+  "document_8": {
+   "path": "v2/vendor/silabs/silabs-cp2102n.pdf",
+   "sha256_16": "32fbab0ba17f394a"
+  },
+  "document_9": {
+   "path": "v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf",
+   "sha256_16": "f6e620179006c8c4"
+  },
+  "edge_rates": {
+   "path": "tools/pcb_edge_rates.yaml",
+   "sha256_16": "0689086680f7a4a4"
+  },
   "extent_mm": 180.0,
+  "far_netlist_a": {
+   "path": "pcb-a-power-a23/out/pcb-a-power.net",
+   "sha256_16": "2dfe1c546cb39ccb"
+  },
+  "far_netlist_b": {
+   "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
+   "sha256_16": "21a1f74a3ec1ae28"
+  },
+  "far_netlist_c": {
+   "path": "pcb-c-display-c8/out/pcb-c-display.net",
+   "sha256_16": "3fddbb3edcd4248a"
+  },
+  "ibis_manifest": {
+   "path": "v2/vendor/ibis-manifest.yaml",
+   "sha256_16": "47952602c17f0dfd"
+  },
   "intent": {
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs-intent.json",
-   "sha256_16": "443fd745879d3022"
+   "sha256_16": "8d9f3b2256521b0d"
+  },
+  "model_1": {
+   "path": "v2/vendor/st/ibis/stm32h742_743_750_753_lqfp100.ibs",
+   "pinned_sha256_16": "0fb7767c1ee034db",
+   "sha256_16": "0fb7767c1ee034db"
+  },
+  "model_2": {
+   "path": "v2/vendor/ti/ibis/ads1x1x.ibs",
+   "pinned_sha256_16": "c9975d3cb6ad0161",
+   "sha256_16": "c9975d3cb6ad0161"
+  },
+  "model_3": {
+   "path": "v2/vendor/ti/ibis/ina226.ibs",
+   "pinned_sha256_16": "fb4ebf43bde617c2",
+   "sha256_16": "fb4ebf43bde617c2"
+  },
+  "model_4": {
+   "path": "v2/vendor/ti/ibis/pca9555.ibs",
+   "pinned_sha256_16": "56c19a4da921e38c",
+   "sha256_16": "56c19a4da921e38c"
+  },
+  "model_5": {
+   "path": "v2/vendor/ti/ibis/tmp117.ibs",
+   "pinned_sha256_16": "5c71fbcce9e13803",
+   "sha256_16": "5c71fbcce9e13803"
+  },
+  "model_state": {
+   "absent": 0,
+   "absent_files": [],
+   "asked": 5,
+   "how_to_fetch": "python3 v2/ecad/tools/ibis_fetch.py --fetch",
+   "manifest": "v2/vendor/ibis-manifest.yaml",
+   "present": 5,
+   "state": "PRESENT"
   },
   "netlist": {
-   "content16": "ecc07f382c735835",
+   "content16": "be4194ed867c8406",
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
-   "sha256_16": "76700a687eb6187f"
+   "sha256_16": "7a2c0ac2190b141a"
   },
   "project": {
    "path": "pcb-d-aprs-d9/pcb-d-aprs.kicad_pro",
    "sha256_16": "a820c200f1b4a542"
+  },
+  "search_listing": {
+   "path": "v2/docs/records/w5si/readings/edge-search.txt",
+   "sha256_16": "d08bc489782c976b"
   },
   "slowest_layer": "JLC04161H-7628 F.Cu",
   "stack_table": {
@@ -50,7 +174,9 @@
   ],
   "t_pd_ps_per_mm": 5.521
  },
- "notes": [],
+ "notes": [
+  "4 signal net(s) outside LOW_SPEED_OR_DC carry a relay, a switch or a transformer, which the reading asks for no edge (ER-D2, an instrument limit): RF_ANT (K1), RF_LPF_OUT (K1), RF_PAD_IN (K1), RF_SA (K1)"
+ ],
  "rows": [
   {
    "basis": "",
@@ -69,6 +195,7 @@
      "U21"
     ]
    },
+   "net_edges": {},
    "nets": [
     "FLANGE_AIN0",
     "FLANGE_NTC",
@@ -82,18 +209,57 @@
    "pattern": "(no declaration)",
    "rise_ns": null,
    "status": "UNDECIDED",
+   "undecided": {
+    "FLANGE_AIN0": [
+     "no signal-class declaration"
+    ],
+    "FLANGE_NTC": [
+     "no signal-class declaration"
+    ],
+    "FLANGE_REF": [
+     "no signal-class declaration"
+    ],
+    "HUB_FB": [
+     "no signal-class declaration"
+    ],
+    "TXSUP_CT": [
+     "no signal-class declaration"
+    ],
+    "TXSUP_EN": [
+     "no signal-class declaration"
+    ],
+    "TXSUP_QOD": [
+     "no signal-class declaration"
+    ],
+    "VGG_FB": [
+     "no signal-class declaration"
+    ]
+   },
+   "undecided_kind": {
+    "FLANGE_AIN0": "NO_DECLARATION",
+    "FLANGE_NTC": "NO_DECLARATION",
+    "FLANGE_REF": "NO_DECLARATION",
+    "HUB_FB": "NO_DECLARATION",
+    "TXSUP_CT": "NO_DECLARATION",
+    "TXSUP_EN": "NO_DECLARATION",
+    "TXSUP_QOD": "NO_DECLARATION",
+    "VGG_FB": "NO_DECLARATION"
+   },
    "why": "no signal-class declaration names these nets, so neither their class nor their edge is known"
   },
   {
    "basis": "a spare conductor on the A-to-B ribbon, connected to a test point and no driver",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {},
+   "net_edges": {},
    "nets": [
     "AB_SPARE"
    ],
    "pattern": "AB_SPARE",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -104,6 +270,7 @@
      "U2"
     ]
    },
+   "net_edges": {},
    "nets": [
     "AF_DIV",
     "AF_OUT"
@@ -111,6 +278,8 @@
    "pattern": "AF_*",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -121,6 +290,7 @@
      "U7"
     ]
    },
+   "net_edges": {},
    "nets": [
     "AMP_CPN",
     "AMP_CPP"
@@ -128,6 +298,8 @@
    "pattern": "AMP_CP*",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -138,12 +310,15 @@
      "U7"
     ]
    },
+   "net_edges": {},
    "nets": [
     "AMP_EN"
    ],
    "pattern": "AMP_EN",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -154,6 +329,7 @@
      "U7"
     ]
    },
+   "net_edges": {},
    "nets": [
     "AMP_HPVDD",
     "AMP_HPVSS"
@@ -161,6 +337,8 @@
    "pattern": "AMP_HPV*",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -171,6 +349,7 @@
      "U7"
     ]
    },
+   "net_edges": {},
    "nets": [
     "AMP_INL_N",
     "AMP_INL_P",
@@ -180,25 +359,72 @@
    "pattern": "AMP_IN*",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
+   "answered": {},
    "basis": "the expander's interrupt, an edge into a GPIO",
+   "bound_decides": [
+    "EXP_INT"
+   ],
+   "bound_nets": [
+    "EXP_INT"
+   ],
    "class": "CLOCKED_DIGITAL",
+   "critical_by_net": {
+    "EXP_INT": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "PCA9555PW 0x26: COS, PTT states, KEY, PA_KEY in; exciter PD, amplifier EN, codec mute out; eight spares": [
      "U16"
     ]
    },
+   "layout_bound": [
+    "EXP_INT"
+   ],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "EXP_INT": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "TI-PCA9555: U16 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V",
+      "TI-PCA9555: beyond J_HARN1 on board A: U27 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V",
+      "TI-PCA9555: beyond J_HARN1 on board A: U28 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V",
+      "MICROCHIP-KSZ9897: beyond J_HARN1 on board B: U1 pin 94 INTRP_N",
+      "TI-TPS23861: beyond J_HARN1 on board B: U5 pin 6 INT",
+      "TI-PCA9555: beyond J_HARN1 on board B: U6 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V",
+      "TI-PCA9555: beyond J_HARN1 on board B: U7 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V",
+      "ADI-DS3231SN: beyond J_HARN1 on board B: U9 pin 3 EXP_INT",
+      "TI-PCA9555: beyond J_HARN1 on board C: U1 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V",
+      "TI-PCA9555: beyond J_HARN1 on board C: U2 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V",
+      "RPI-RP2040: beyond J_HARN1 on board C: U3 pin 36 GPIO24"
+     ],
+     "by": "U16 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": "TI-TMP117: beyond J_HARN1 on board B: U10 pin 3 ALERT, alert_3p3 f max",
+     "maker_edge_ns": 12.6129,
+     "source": "TI-PCA9555"
+    }
+   },
    "nets": [
     "EXP_INT"
    ],
    "pattern": "EXP_INT",
-   "rise_ns": null,
+   "rise_ns": 0.0,
    "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "no interface record covers the entry"
   },
   {
    "basis": "an unused expander pin, driven by nothing",
@@ -208,6 +434,7 @@
      "U16"
     ]
    },
+   "net_edges": {},
    "nets": [
     "EXP_SPARE1",
     "EXP_SPARE2",
@@ -221,6 +448,8 @@
    "pattern": "EXP_SPARE*",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -231,6 +460,7 @@
      "U7"
     ]
    },
+   "net_edges": {},
    "nets": [
     "HS1_BIAS_R",
     "HS1_MIC",
@@ -244,6 +474,8 @@
    "pattern": "HS?_*",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -254,7 +486,16 @@
     "HUB_DM3": "series resistor R21 22 to USB3_N (a screen)"
    },
    "basis": "the other half of the same hub port",
+   "bound_decides": [],
+   "bound_nets": [],
    "class": "HIGH_SPEED_DIGITAL",
+   "critical_by_net": {
+    "HUB_DM0": 15.1,
+    "HUB_DM1": 15.1,
+    "HUB_DM2": 15.1,
+    "HUB_DM3": 15.1,
+    "HUB_DM4": 15.1
+   },
    "critical_mm": 15.1,
    "document": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
    "drivers": {
@@ -265,8 +506,70 @@
    "layout_bound": [
     "HUB_DM4"
    ],
+   "maker_holds": [
+    "HUB_DM4"
+   ],
+   "maker_nets": [
+    "HUB_DM0",
+    "HUB_DM1",
+    "HUB_DM2",
+    "HUB_DM3",
+    "HUB_DM4"
+   ],
    "may_be_long": true,
    "needs": "an impedance target, a series termination or a declaration, or every net under 15.1 mm",
+   "net_edges": {
+    "HUB_DM0": {
+     "basis": "STANDARD",
+     "bound_drivers": [],
+     "by": "class entry HUB_DM*, USB2-HS",
+     "decided_by": "MAKER",
+     "edge_ns": 0.5,
+     "maker_by": "USB2-HS: class entry HUB_DM*, USB2-HS",
+     "maker_edge_ns": 0.5,
+     "source": "USB2-HS"
+    },
+    "HUB_DM1": {
+     "basis": "STANDARD",
+     "bound_drivers": [],
+     "by": "class entry HUB_DM*, USB2-HS",
+     "decided_by": "MAKER",
+     "edge_ns": 0.5,
+     "maker_by": "USB2-HS: class entry HUB_DM*, USB2-HS",
+     "maker_edge_ns": 0.5,
+     "source": "USB2-HS"
+    },
+    "HUB_DM2": {
+     "basis": "STANDARD",
+     "bound_drivers": [],
+     "by": "class entry HUB_DM*, USB2-HS",
+     "decided_by": "MAKER",
+     "edge_ns": 0.5,
+     "maker_by": "USB2-HS: class entry HUB_DM*, USB2-HS",
+     "maker_edge_ns": 0.5,
+     "source": "USB2-HS"
+    },
+    "HUB_DM3": {
+     "basis": "STANDARD",
+     "bound_drivers": [],
+     "by": "class entry HUB_DM*, USB2-HS",
+     "decided_by": "MAKER",
+     "edge_ns": 0.5,
+     "maker_by": "USB2-HS: class entry HUB_DM*, USB2-HS",
+     "maker_edge_ns": 0.5,
+     "source": "USB2-HS"
+    },
+    "HUB_DM4": {
+     "basis": "STANDARD",
+     "bound_drivers": [],
+     "by": "class entry HUB_DM*, USB2-HS",
+     "decided_by": "MAKER",
+     "edge_ns": 0.5,
+     "maker_by": "USB2-HS: class entry HUB_DM*, USB2-HS",
+     "maker_edge_ns": 0.5,
+     "source": "USB2-HS"
+    }
+   },
    "nets": [
     "HUB_DM0",
     "HUB_DM1",
@@ -278,6 +581,9 @@
    "rise_ns": 0.5,
    "source": "USB2-HS",
    "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
    "why": "USB 2.0 section 7.1.2.2, THSR and THSF, 10 to 90 percent, a minimum: v2/vendor/standards/usb-2-0-specification-2024-09-27.md"
   },
   {
@@ -288,7 +594,16 @@
     "HUB_DP3": "series resistor R20 22 to USB3_P (a screen)"
    },
    "basis": "a hub downstream USB data line, same signalling as above",
+   "bound_decides": [],
+   "bound_nets": [],
    "class": "HIGH_SPEED_DIGITAL",
+   "critical_by_net": {
+    "HUB_DP0": 15.1,
+    "HUB_DP1": 15.1,
+    "HUB_DP2": 15.1,
+    "HUB_DP3": 15.1,
+    "HUB_DP4": 15.1
+   },
    "critical_mm": 15.1,
    "document": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
    "drivers": {
@@ -299,8 +614,70 @@
    "layout_bound": [
     "HUB_DP4"
    ],
+   "maker_holds": [
+    "HUB_DP4"
+   ],
+   "maker_nets": [
+    "HUB_DP0",
+    "HUB_DP1",
+    "HUB_DP2",
+    "HUB_DP3",
+    "HUB_DP4"
+   ],
    "may_be_long": true,
    "needs": "an impedance target, a series termination or a declaration, or every net under 15.1 mm",
+   "net_edges": {
+    "HUB_DP0": {
+     "basis": "STANDARD",
+     "bound_drivers": [],
+     "by": "class entry HUB_DP*, USB2-HS",
+     "decided_by": "MAKER",
+     "edge_ns": 0.5,
+     "maker_by": "USB2-HS: class entry HUB_DP*, USB2-HS",
+     "maker_edge_ns": 0.5,
+     "source": "USB2-HS"
+    },
+    "HUB_DP1": {
+     "basis": "STANDARD",
+     "bound_drivers": [],
+     "by": "class entry HUB_DP*, USB2-HS",
+     "decided_by": "MAKER",
+     "edge_ns": 0.5,
+     "maker_by": "USB2-HS: class entry HUB_DP*, USB2-HS",
+     "maker_edge_ns": 0.5,
+     "source": "USB2-HS"
+    },
+    "HUB_DP2": {
+     "basis": "STANDARD",
+     "bound_drivers": [],
+     "by": "class entry HUB_DP*, USB2-HS",
+     "decided_by": "MAKER",
+     "edge_ns": 0.5,
+     "maker_by": "USB2-HS: class entry HUB_DP*, USB2-HS",
+     "maker_edge_ns": 0.5,
+     "source": "USB2-HS"
+    },
+    "HUB_DP3": {
+     "basis": "STANDARD",
+     "bound_drivers": [],
+     "by": "class entry HUB_DP*, USB2-HS",
+     "decided_by": "MAKER",
+     "edge_ns": 0.5,
+     "maker_by": "USB2-HS: class entry HUB_DP*, USB2-HS",
+     "maker_edge_ns": 0.5,
+     "source": "USB2-HS"
+    },
+    "HUB_DP4": {
+     "basis": "STANDARD",
+     "bound_drivers": [],
+     "by": "class entry HUB_DP*, USB2-HS",
+     "decided_by": "MAKER",
+     "edge_ns": 0.5,
+     "maker_by": "USB2-HS: class entry HUB_DP*, USB2-HS",
+     "maker_edge_ns": 0.5,
+     "source": "USB2-HS"
+    }
+   },
    "nets": [
     "HUB_DP0",
     "HUB_DP1",
@@ -312,6 +689,9 @@
    "rise_ns": 0.5,
    "source": "USB2-HS",
    "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
    "why": "USB 2.0 section 7.1.2.2, THSR and THSF, 10 to 90 percent, a minimum: v2/vendor/standards/usb-2-0-specification-2024-09-27.md"
   },
   {
@@ -322,40 +702,142 @@
      "U4"
     ]
    },
+   "net_edges": {},
    "nets": [
     "HUB_OVRCUR_n"
    ],
    "pattern": "HUB_OVRCUR_n",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
+   "answered": {},
    "basis": "the hub's reset, a logic edge with an RC on it",
+   "bound_decides": [
+    "HUB_RST_n"
+   ],
+   "bound_nets": [
+    "HUB_RST_n"
+   ],
    "class": "CLOCKED_DIGITAL",
+   "critical_by_net": {
+    "HUB_RST_n": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "TUSB2046IBVFR four-port USB 2.0 full-speed hub (TI, LQFP-32 VF, -40 to 85 C, VCC 3.3 to 3.6 from +3V4_HUB; BUSPWR low = self-powered, EXTMEM high, GANGED high, TSTMODE low)": [
      "U4"
     ]
    },
+   "layout_bound": [
+    "HUB_RST_n"
+   ],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "HUB_RST_n": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "TI-TUSB2046B: U4 pin 4 RESET_n"
+     ],
+     "by": "U4 pin 4 RESET_n",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "TI-TUSB2046B"
+    }
+   },
    "nets": [
     "HUB_RST_n"
    ],
    "pattern": "HUB_RST_n",
-   "rise_ns": null,
+   "rise_ns": 0.0,
    "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "no interface record covers the entry"
   },
   {
+   "answered": {},
    "basis": "the hub's 24 MHz crystal loop, a continuous periodic source",
+   "bound_decides": [
+    "HUB_XTAL1",
+    "HUB_XTAL2",
+    "HUB_XTAL2R"
+   ],
+   "bound_nets": [
+    "HUB_XTAL1",
+    "HUB_XTAL2",
+    "HUB_XTAL2R"
+   ],
    "class": "HIGH_SPEED_DIGITAL",
+   "critical_by_net": {
+    "HUB_XTAL1": 0.0,
+    "HUB_XTAL2": 0.0,
+    "HUB_XTAL2R": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "TUSB2046IBVFR four-port USB 2.0 full-speed hub (TI, LQFP-32 VF, -40 to 85 C, VCC 3.3 to 3.6 from +3V4_HUB; BUSPWR low = self-powered, EXTMEM high, GANGED high, TSTMODE low)": [
      "U4"
     ]
+   },
+   "layout_bound": [
+    "HUB_XTAL1",
+    "HUB_XTAL2",
+    "HUB_XTAL2R"
+   ],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "HUB_XTAL1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "OSCILLATOR-NODES: class entry HUB_XTAL*, OSCILLATOR-NODES"
+     ],
+     "by": "class entry HUB_XTAL*, OSCILLATOR-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "OSCILLATOR-NODES"
+    },
+    "HUB_XTAL2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "OSCILLATOR-NODES: class entry HUB_XTAL*, OSCILLATOR-NODES"
+     ],
+     "by": "class entry HUB_XTAL*, OSCILLATOR-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "OSCILLATOR-NODES"
+    },
+    "HUB_XTAL2R": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "OSCILLATOR-NODES: class entry HUB_XTAL*, OSCILLATOR-NODES"
+     ],
+     "by": "class entry HUB_XTAL*, OSCILLATOR-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "OSCILLATOR-NODES"
+    }
    },
    "nets": [
     "HUB_XTAL1",
@@ -363,10 +845,13 @@
     "HUB_XTAL2R"
    ],
    "pattern": "HUB_XTAL*",
-   "rise_ns": null,
-   "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "rise_ns": 0.0,
+   "source": "OSCILLATOR-NODES",
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "A crystal oscillator's input and output nodes carry the amplifier's output shaped by the c: pcb_edge_rates.yaml OSCILLATOR-NODES"
   },
   {
    "basis": "the transmit key line, a static level",
@@ -388,12 +873,15 @@
      "U19"
     ]
    },
+   "net_edges": {},
    "nets": [
     "KEY"
    ],
    "pattern": "KEY",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -404,6 +892,7 @@
      "U6"
     ]
    },
+   "net_edges": {},
    "nets": [
     "LED_PA_A",
     "LED_PLAY_A",
@@ -417,6 +906,8 @@
    "pattern": "LED_*",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -430,6 +921,7 @@
      "U8"
     ]
    },
+   "net_edges": {},
    "nets": [
     "MICAMP_AC",
     "MICAMP_IN_N",
@@ -440,6 +932,8 @@
    "pattern": "MIC*",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -450,12 +944,15 @@
      "U6"
     ]
    },
+   "net_edges": {},
    "nets": [
     "MMUTE"
    ],
    "pattern": "MMUTE",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -472,6 +969,7 @@
      "U15"
     ]
    },
+   "net_edges": {},
    "nets": [
     "PA_EN",
     "PA_KEY"
@@ -479,12 +977,15 @@
    "pattern": "PA_*",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
    "basis": "an audio output through its coupling capacitor, audio band",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {},
+   "net_edges": {},
    "nets": [
     "PCM_L_AC",
     "PCM_R_AC"
@@ -492,6 +993,8 @@
    "pattern": "PCM_?_AC",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -502,6 +1005,7 @@
      "U6"
     ]
    },
+   "net_edges": {},
    "nets": [
     "PCM_VCCA",
     "PCM_VCCL",
@@ -511,6 +1015,8 @@
    "pattern": "PCM_VCC*",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -521,6 +1027,7 @@
      "U6"
     ]
    },
+   "net_edges": {},
    "nets": [
     "PCM_VCOM1",
     "PCM_VCOM2"
@@ -528,6 +1035,8 @@
    "pattern": "PCM_VCOM*",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -538,12 +1047,15 @@
      "U6"
     ]
    },
+   "net_edges": {},
    "nets": [
     "PCM_VDD"
    ],
    "pattern": "PCM_VDD",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -554,12 +1066,15 @@
      "U6"
     ]
    },
+   "net_edges": {},
    "nets": [
     "PCM_VIN"
    ],
    "pattern": "PCM_VIN",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -570,6 +1085,7 @@
      "U6"
     ]
    },
+   "net_edges": {},
    "nets": [
     "PCM_VOUTL",
     "PCM_VOUTR"
@@ -577,26 +1093,79 @@
    "pattern": "PCM_VOUT*",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
+   "answered": {},
    "basis": "the codec's crystal loop",
+   "bound_decides": [
+    "PCM_XTI",
+    "PCM_XTO"
+   ],
+   "bound_nets": [
+    "PCM_XTI",
+    "PCM_XTO"
+   ],
    "class": "HIGH_SPEED_DIGITAL",
+   "critical_by_net": {
+    "PCM_XTI": 0.0,
+    "PCM_XTO": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "TI PCM2912A USB audio codec (TQFP-32): mono input from the exciter, stereo output to the headphone amplifier and the transmit sum": [
      "U6"
     ]
    },
+   "layout_bound": [
+    "PCM_XTI",
+    "PCM_XTO"
+   ],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "PCM_XTI": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "OSCILLATOR-NODES: class entry PCM_XT*, OSCILLATOR-NODES"
+     ],
+     "by": "class entry PCM_XT*, OSCILLATOR-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "OSCILLATOR-NODES"
+    },
+    "PCM_XTO": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "OSCILLATOR-NODES: class entry PCM_XT*, OSCILLATOR-NODES"
+     ],
+     "by": "class entry PCM_XT*, OSCILLATOR-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "OSCILLATOR-NODES"
+    }
+   },
    "nets": [
     "PCM_XTI",
     "PCM_XTO"
    ],
    "pattern": "PCM_XT*",
-   "rise_ns": null,
-   "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "rise_ns": 0.0,
+   "source": "OSCILLATOR-NODES",
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "A crystal oscillator's input and output nodes carry the amplifier's output shaped by the c: pcb_edge_rates.yaml OSCILLATOR-NODES"
   },
   {
    "basis": "a push-to-talk line: a static level that changes when a person presses a switch",
@@ -621,6 +1190,7 @@
      "U3"
     ]
    },
+   "net_edges": {},
    "nets": [
     "PTT_ANY",
     "PTT_ANY_n",
@@ -633,16 +1203,153 @@
    "pattern": "PTT_*",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
+   "answered": {
+    "RF_ANT": "impedance target on class RF (z_se 50.0, from the netlist)",
+    "RF_DRV": "impedance target on class RF (z_se 50.0, from the netlist)",
+    "RF_LPF_M": "impedance target on class RF (z_se 50.0, from the netlist)",
+    "RF_LPF_OUT": "impedance target on class RF (z_se 50.0, from the netlist)",
+    "RF_PAD_IN": "impedance target on class RF (z_se 50.0, from the netlist)",
+    "RF_PAD_M": "impedance target on class RF (z_se 50.0, from the netlist)",
+    "RF_PAOUT": "impedance target on class RF (z_se 50.0, from the netlist)",
+    "RF_SA": "impedance target on class RF (z_se 50.0, from the netlist)"
+   },
    "basis": "the VHF transmit chain at 144 MHz and its 30 W stage: the only true radio-frequency nets on this board",
+   "bound_decides": [],
+   "bound_nets": [
+    "RF_ANT",
+    "RF_DRV",
+    "RF_LPF_M",
+    "RF_LPF_OUT",
+    "RF_PAD_IN",
+    "RF_PAD_M",
+    "RF_PAOUT",
+    "RF_SA"
+   ],
    "class": "HIGH_SPEED_DIGITAL",
+   "critical_by_net": {
+    "RF_ANT": 0.0,
+    "RF_DRV": 0.0,
+    "RF_LPF_M": 0.0,
+    "RF_LPF_OUT": 0.0,
+    "RF_PAD_IN": 0.0,
+    "RF_PAD_M": 0.0,
+    "RF_PAOUT": 0.0,
+    "RF_SA": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A)": [
      "U2"
     ]
+   },
+   "layout_bound": [],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "RF_ANT": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "RF-LINES: class entry RF_*, RF-LINES"
+     ],
+     "by": "class entry RF_*, RF-LINES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "RF-LINES"
+    },
+    "RF_DRV": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "RF-LINES: class entry RF_*, RF-LINES"
+     ],
+     "by": "class entry RF_*, RF-LINES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "RF-LINES"
+    },
+    "RF_LPF_M": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "RF-LINES: class entry RF_*, RF-LINES"
+     ],
+     "by": "class entry RF_*, RF-LINES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "RF-LINES"
+    },
+    "RF_LPF_OUT": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "RF-LINES: class entry RF_*, RF-LINES"
+     ],
+     "by": "class entry RF_*, RF-LINES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "RF-LINES"
+    },
+    "RF_PAD_IN": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "RF-LINES: class entry RF_*, RF-LINES"
+     ],
+     "by": "class entry RF_*, RF-LINES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "RF-LINES"
+    },
+    "RF_PAD_M": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "RF-LINES: class entry RF_*, RF-LINES"
+     ],
+     "by": "class entry RF_*, RF-LINES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "RF-LINES"
+    },
+    "RF_PAOUT": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "RF-LINES: class entry RF_*, RF-LINES"
+     ],
+     "by": "class entry RF_*, RF-LINES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "RF-LINES"
+    },
+    "RF_SA": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "RF-LINES: class entry RF_*, RF-LINES"
+     ],
+     "by": "class entry RF_*, RF-LINES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "RF-LINES"
+    }
    },
    "nets": [
     "RF_ANT",
@@ -655,15 +1362,19 @@
     "RF_SA"
    ],
    "pattern": "RF_*",
-   "rise_ns": null,
-   "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "rise_ns": 0.0,
+   "source": "RF-LINES",
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "An RF line carries a radio's carrier and its modulation: a signal band-limited to the band: pcb_edge_rates.yaml RF-LINES"
   },
   {
    "basis": "the antenna relay's drive and coil, switched at most once per transmission",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {},
+   "net_edges": {},
    "nets": [
     "RLY_DRV",
     "RLY_K"
@@ -671,18 +1382,23 @@
    "pattern": "RLY_*",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
    "basis": "the receive audio mix node, audio band",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {},
+   "net_edges": {},
    "nets": [
     "RX_MIX"
    ],
    "pattern": "RX_MIX",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -693,6 +1409,7 @@
      "U3"
     ]
    },
+   "net_edges": {},
    "nets": [
     "SAU_3V3",
     "SAU_RST"
@@ -700,6 +1417,8 @@
    "pattern": "SAU_*",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -713,6 +1432,7 @@
      "U2"
     ]
    },
+   "net_edges": {},
    "nets": [
     "SA_AUDIO_ON_n",
     "SA_HL",
@@ -722,11 +1442,24 @@
    "pattern": "SA_*",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
+   "answered": {},
    "basis": "the radio module's control UART, 9600 to 115200 baud through a bridge",
+   "bound_decides": [
+    "SA_RXD"
+   ],
+   "bound_nets": [
+    "SA_RXD"
+   ],
    "class": "CLOCKED_DIGITAL",
+   "critical_by_net": {
+    "SA_RXD": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "CP2102N-A02-GQFN28 USB-UART bridge (SAU)": [
@@ -735,19 +1468,55 @@
     "NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A)": [
      "U2"
     ]
+   },
+   "layout_bound": [
+    "SA_RXD"
+   ],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "SA_RXD": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "NICERF-SA868: U2 pin 16 RXD",
+      "SILABS-CP2102N: U3 pin 26 TXD"
+     ],
+     "by": "U2 pin 16 RXD",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "NICERF-SA868"
+    }
    },
    "nets": [
     "SA_RXD"
    ],
    "pattern": "SA_RXD",
-   "rise_ns": null,
+   "rise_ns": 0.0,
    "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "no interface record covers the entry"
   },
   {
+   "answered": {},
    "basis": "the other direction of the same UART",
+   "bound_decides": [
+    "SA_TXD"
+   ],
+   "bound_nets": [
+    "SA_TXD"
+   ],
    "class": "CLOCKED_DIGITAL",
+   "critical_by_net": {
+    "SA_TXD": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "CP2102N-A02-GQFN28 USB-UART bridge (SAU)": [
@@ -757,18 +1526,53 @@
      "U2"
     ]
    },
+   "layout_bound": [
+    "SA_TXD"
+   ],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "SA_TXD": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "NICERF-SA868: U2 pin 17 TXD"
+     ],
+     "by": "U2 pin 17 TXD",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "NICERF-SA868"
+    }
+   },
    "nets": [
     "SA_TXD"
    ],
    "pattern": "SA_TXD",
-   "rise_ns": null,
+   "rise_ns": 0.0,
    "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "no interface record covers the entry"
   },
   {
+   "answered": {},
    "basis": "I2C at 100 or 400 kHz, open drain, the edge set by the pull-up",
+   "bound_decides": [
+    "SCL"
+   ],
+   "bound_nets": [
+    "SCL"
+   ],
    "class": "CLOCKED_DIGITAL",
+   "critical_by_net": {
+    "SCL": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "ADS1115IDGSR 16-bit ADC at 0x48 (1 ADDR 2 ALERT/RDY 3 GND 4 AIN0 5 AIN1 6 AIN2 7 AIN3 8 VDD 9 SDA 10 SCL): the flange NTC over +3V3, ratiometric": [
@@ -777,19 +1581,61 @@
     "PCA9555PW 0x26: COS, PTT states, KEY, PA_KEY in; exciter PD, amplifier EN, codec mute out; eight spares": [
      "U16"
     ]
+   },
+   "layout_bound": [
+    "SCL"
+   ],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "SCL": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "RPI-RP2040: beyond J_HARN1 on board C: U3 pin 3 GPIO1",
+      "VISHAY-VEML7700: beyond J_HARN1 on board C: U_LIGHT pin 1 SCL"
+     ],
+     "by": "beyond J_HARN1 on board C: U3 pin 3 GPIO1",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": "ST-STM32H743: beyond J_HARN1 on board B: U41 pin 92 PB6, io8_ft_hs_3v3 f typ",
+     "maker_edge_ns": 0.451,
+     "rising": {
+      "basis": "MODEL",
+      "edge_ns": 150.5,
+      "measure": "30 to 70 percent of VDD",
+      "source": "KIT-I2C-RISE"
+     },
+     "source": "RPI-RP2040"
+    }
    },
    "nets": [
     "SCL"
    ],
    "pattern": "SCL",
-   "rise_ns": null,
+   "rise_ns": 0.0,
    "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "no interface record covers the entry"
   },
   {
+   "answered": {},
    "basis": "the data half of the same I2C bus",
+   "bound_decides": [
+    "SDA"
+   ],
+   "bound_nets": [
+    "SDA"
+   ],
    "class": "CLOCKED_DIGITAL",
+   "critical_by_net": {
+    "SDA": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "ADS1115IDGSR 16-bit ADC at 0x48 (1 ADDR 2 ALERT/RDY 3 GND 4 AIN0 5 AIN1 6 AIN2 7 AIN3 8 VDD 9 SDA 10 SCL): the flange NTC over +3V3, ratiometric": [
@@ -799,25 +1645,62 @@
      "U16"
     ]
    },
+   "layout_bound": [
+    "SDA"
+   ],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "SDA": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "TI-BQ25731: beyond J_HARN1 on board A: U3 pin 12 SDA",
+      "TI-TMP117: beyond J_HARN1 on board B: U10 pin 6 SDA: 2 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] sda_3p3 [Ramp] dV/dt_f min: dV 1.119 V is 38 percent of its own V-t table's swing (2.907 V) and dt 35.63 ns is 0.57 of the time that table takes from 20 to 80 percent (62.22 ns), R_fixture 967 ohm, V_fixture 3.3 V",
+      "MICROCHIP-ATECC608B: beyond J_HARN1 on board B: U8 pin 5 SDA",
+      "RPI-RP2040: beyond J_HARN1 on board C: U3 pin 2 GPIO0",
+      "VISHAY-VEML7700: beyond J_HARN1 on board C: U_LIGHT pin 4 SDA"
+     ],
+     "by": "beyond J_HARN1 on board A: U3 pin 12 SDA",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": "ST-STM32H743: beyond J_HARN1 on board B: U41 pin 93 PB7, io8_ft_hs_3v3 f typ",
+     "maker_edge_ns": 0.451,
+     "rising": {
+      "basis": "MODEL",
+      "edge_ns": 150.5,
+      "measure": "30 to 70 percent of VDD",
+      "source": "KIT-I2C-RISE"
+     },
+     "source": "TI-BQ25731"
+    }
+   },
    "nets": [
     "SDA"
    ],
    "pattern": "SDA",
-   "rise_ns": null,
+   "rise_ns": 0.0,
    "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "no interface record covers the entry"
   },
   {
    "basis": "the transmit-indication line to the panel, a static level",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {},
+   "net_edges": {},
    "nets": [
     "TR_APRS"
    ],
    "pattern": "TR_APRS",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -828,12 +1711,15 @@
      "U12"
     ]
    },
+   "net_edges": {},
    "nets": [
     "TX_INHIBIT_n"
    ],
    "pattern": "TX_INHIBIT_n",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -844,7 +1730,15 @@
     "USB_D8_N": "series resistor R7 22 to HUB_DM0 (a screen)"
    },
    "basis": "the other half of the same USB 2.0 pair",
+   "bound_decides": [],
+   "bound_nets": [],
    "class": "HIGH_SPEED_DIGITAL",
+   "critical_by_net": {
+    "USB1_N": 15.1,
+    "USB2_N": 15.1,
+    "USB3_N": 15.1,
+    "USB_D8_N": 15.1
+   },
    "critical_mm": 15.1,
    "document": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
    "drivers": {
@@ -856,8 +1750,57 @@
     ]
    },
    "layout_bound": [],
+   "maker_holds": [],
+   "maker_nets": [
+    "USB1_N",
+    "USB2_N",
+    "USB3_N",
+    "USB_D8_N"
+   ],
    "may_be_long": true,
    "needs": "an impedance target, a series termination or a declaration, or every net under 15.1 mm",
+   "net_edges": {
+    "USB1_N": {
+     "basis": "STANDARD",
+     "bound_drivers": [],
+     "by": "class entry USB*_N, USB2-HS",
+     "decided_by": "MAKER",
+     "edge_ns": 0.5,
+     "maker_by": "USB2-HS: class entry USB*_N, USB2-HS",
+     "maker_edge_ns": 0.5,
+     "source": "USB2-HS"
+    },
+    "USB2_N": {
+     "basis": "STANDARD",
+     "bound_drivers": [],
+     "by": "class entry USB*_N, USB2-HS",
+     "decided_by": "MAKER",
+     "edge_ns": 0.5,
+     "maker_by": "USB2-HS: class entry USB*_N, USB2-HS",
+     "maker_edge_ns": 0.5,
+     "source": "USB2-HS"
+    },
+    "USB3_N": {
+     "basis": "STANDARD",
+     "bound_drivers": [],
+     "by": "class entry USB*_N, USB2-HS",
+     "decided_by": "MAKER",
+     "edge_ns": 0.5,
+     "maker_by": "USB2-HS: class entry USB*_N, USB2-HS",
+     "maker_edge_ns": 0.5,
+     "source": "USB2-HS"
+    },
+    "USB_D8_N": {
+     "basis": "STANDARD",
+     "bound_drivers": [],
+     "by": "class entry USB*_N, USB2-HS",
+     "decided_by": "MAKER",
+     "edge_ns": 0.5,
+     "maker_by": "USB2-HS: class entry USB*_N, USB2-HS",
+     "maker_edge_ns": 0.5,
+     "source": "USB2-HS"
+    }
+   },
    "nets": [
     "USB1_N",
     "USB2_N",
@@ -868,6 +1811,9 @@
    "rise_ns": 0.5,
    "source": "USB2-HS",
    "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
    "why": "USB 2.0 section 7.1.2.2, THSR and THSF, 10 to 90 percent, a minimum: v2/vendor/standards/usb-2-0-specification-2024-09-27.md"
   },
   {
@@ -878,7 +1824,15 @@
     "USB_D8_P": "series resistor R6 22 to HUB_DP0 (a screen)"
    },
    "basis": "a USB 2.0 high-speed pair into the TUSB hub: 480 Mbit/s with sub-nanosecond edges",
+   "bound_decides": [],
+   "bound_nets": [],
    "class": "HIGH_SPEED_DIGITAL",
+   "critical_by_net": {
+    "USB1_P": 15.1,
+    "USB2_P": 15.1,
+    "USB3_P": 15.1,
+    "USB_D8_P": 15.1
+   },
    "critical_mm": 15.1,
    "document": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
    "drivers": {
@@ -890,8 +1844,57 @@
     ]
    },
    "layout_bound": [],
+   "maker_holds": [],
+   "maker_nets": [
+    "USB1_P",
+    "USB2_P",
+    "USB3_P",
+    "USB_D8_P"
+   ],
    "may_be_long": true,
    "needs": "an impedance target, a series termination or a declaration, or every net under 15.1 mm",
+   "net_edges": {
+    "USB1_P": {
+     "basis": "STANDARD",
+     "bound_drivers": [],
+     "by": "class entry USB*_P, USB2-HS",
+     "decided_by": "MAKER",
+     "edge_ns": 0.5,
+     "maker_by": "USB2-HS: class entry USB*_P, USB2-HS",
+     "maker_edge_ns": 0.5,
+     "source": "USB2-HS"
+    },
+    "USB2_P": {
+     "basis": "STANDARD",
+     "bound_drivers": [],
+     "by": "class entry USB*_P, USB2-HS",
+     "decided_by": "MAKER",
+     "edge_ns": 0.5,
+     "maker_by": "USB2-HS: class entry USB*_P, USB2-HS",
+     "maker_edge_ns": 0.5,
+     "source": "USB2-HS"
+    },
+    "USB3_P": {
+     "basis": "STANDARD",
+     "bound_drivers": [],
+     "by": "class entry USB*_P, USB2-HS",
+     "decided_by": "MAKER",
+     "edge_ns": 0.5,
+     "maker_by": "USB2-HS: class entry USB*_P, USB2-HS",
+     "maker_edge_ns": 0.5,
+     "source": "USB2-HS"
+    },
+    "USB_D8_P": {
+     "basis": "STANDARD",
+     "bound_drivers": [],
+     "by": "class entry USB*_P, USB2-HS",
+     "decided_by": "MAKER",
+     "edge_ns": 0.5,
+     "maker_by": "USB2-HS: class entry USB*_P, USB2-HS",
+     "maker_edge_ns": 0.5,
+     "source": "USB2-HS"
+    }
+   },
    "nets": [
     "USB1_P",
     "USB2_P",
@@ -902,6 +1905,9 @@
    "rise_ns": 0.5,
    "source": "USB2-HS",
    "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
    "why": "USB 2.0 section 7.1.2.2, THSR and THSF, 10 to 90 percent, a minimum: v2/vendor/standards/usb-2-0-specification-2024-09-27.md"
   },
   {
@@ -910,7 +1916,13 @@
     "USB1_PR": "series resistor R26 33 to USB1_P (a screen)"
    },
    "basis": "the upstream USB pair after its series resistors: the same 480 Mbit/s signalling as before them",
+   "bound_decides": [],
+   "bound_nets": [],
    "class": "HIGH_SPEED_DIGITAL",
+   "critical_by_net": {
+    "USB1_NR": 15.1,
+    "USB1_PR": 15.1
+   },
    "critical_mm": 15.1,
    "document": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
    "drivers": {
@@ -919,8 +1931,35 @@
     ]
    },
    "layout_bound": [],
+   "maker_holds": [],
+   "maker_nets": [
+    "USB1_NR",
+    "USB1_PR"
+   ],
    "may_be_long": true,
    "needs": "an impedance target, a series termination or a declaration, or every net under 15.1 mm",
+   "net_edges": {
+    "USB1_NR": {
+     "basis": "STANDARD",
+     "bound_drivers": [],
+     "by": "class entry USB1_?R, USB2-HS",
+     "decided_by": "MAKER",
+     "edge_ns": 0.5,
+     "maker_by": "USB2-HS: class entry USB1_?R, USB2-HS",
+     "maker_edge_ns": 0.5,
+     "source": "USB2-HS"
+    },
+    "USB1_PR": {
+     "basis": "STANDARD",
+     "bound_drivers": [],
+     "by": "class entry USB1_?R, USB2-HS",
+     "decided_by": "MAKER",
+     "edge_ns": 0.5,
+     "maker_by": "USB2-HS: class entry USB1_?R, USB2-HS",
+     "maker_edge_ns": 0.5,
+     "source": "USB2-HS"
+    }
+   },
    "nets": [
     "USB1_NR",
     "USB1_PR"
@@ -929,6 +1968,9 @@
    "rise_ns": 0.5,
    "source": "USB2-HS",
    "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
    "why": "USB 2.0 section 7.1.2.2, THSR and THSF, 10 to 90 percent, a minimum: v2/vendor/standards/usb-2-0-specification-2024-09-27.md"
   },
   {
@@ -939,12 +1981,15 @@
      "U8"
     ]
    },
+   "net_edges": {},
    "nets": [
     "VREF"
    ],
    "pattern": "VREF",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -961,6 +2006,7 @@
      "U16"
     ]
    },
+   "net_edges": {},
    "nets": [
     "X_AMP_EN",
     "X_COS_n",
@@ -976,18 +2022,23 @@
    "pattern": "X_*",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
    "basis": "the zeroize line from the panel, a static level",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {},
+   "net_edges": {},
    "nets": [
     "ZEROIZE_HW"
    ],
    "pattern": "ZEROIZE_HW",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   }
  ],

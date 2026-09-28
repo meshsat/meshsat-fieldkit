@@ -27,7 +27,7 @@
   "board": "p",
   "netlist": {
    "path": "out/pcb-p-pack.net",
-   "sha256_16": "085f833362fbbda8"
+   "sha256_16": "760ac6f74d62d194"
   }
  },
  "missing_input": null,
@@ -47,12 +47,12 @@
  },
  "tool": "pin_map_lands_p",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "87b7d5a9509c",
+  "tools_tree_sha": "bfeac03e9fe6170b"
  },
- "ts": "2026-09-27T13:23:26Z",
+ "ts": "2026-09-28T21:56:16Z",
  "verdict": "PASS",
- "version": "391d857966d6",
+ "version": "87b7d5a9509c",
  "writer": {
   "file": "pin_map_lands.py",
   "sha16": "89d2ad7c2bab8ba0"

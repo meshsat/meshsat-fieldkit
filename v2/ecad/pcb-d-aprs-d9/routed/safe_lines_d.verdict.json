@@ -10,13 +10,13 @@
    "netlist_board.py": "655bc402d36b0fa5",
    "netlist_parts.py": "41cf192223d822c2",
    "phase_artefacts.py": "96642ce767188c73",
-   "port_protect.py": "2d69facd3c25c8a4",
+   "port_protect.py": "7acd5333fc59f8d0",
    "regen_compare.py": "341d7f129a1e6f24",
    "safe_lines.py": "8529487f405ec55d",
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "7e3540d47e33f75e",
+  "sha16": "f223a804eeea9cec",
   "unresolved": []
  },
  "counts": {
@@ -34,12 +34,12 @@
   "board": "d",
   "intent": {
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs-intent.json",
-   "sha256_16": "443fd745879d3022"
+   "sha256_16": "8d9f3b2256521b0d"
   },
   "netlist": {
-   "content16": "ecc07f382c735835",
+   "content16": "be4194ed867c8406",
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
-   "sha256_16": "76700a687eb6187f"
+   "sha256_16": "7a2c0ac2190b141a"
   }
  },
  "missing_input": null,
@@ -59,12 +59,12 @@
  },
  "tool": "safe_lines_d",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "87b7d5a9509c",
+  "tools_tree_sha": "bfeac03e9fe6170b"
  },
- "ts": "2026-09-27T13:22:45Z",
+ "ts": "2026-09-28T21:55:21Z",
  "verdict": "PASS",
- "version": "391d857966d6",
+ "version": "87b7d5a9509c",
  "writer": {
   "file": "safe_lines.py",
   "sha16": "8529487f405ec55d"

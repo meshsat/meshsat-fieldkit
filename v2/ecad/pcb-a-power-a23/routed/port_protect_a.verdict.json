@@ -10,12 +10,12 @@
    "netlist_board.py": "655bc402d36b0fa5",
    "netlist_parts.py": "41cf192223d822c2",
    "phase_artefacts.py": "96642ce767188c73",
-   "port_protect.py": "2d69facd3c25c8a4",
+   "port_protect.py": "7acd5333fc59f8d0",
    "regen_compare.py": "341d7f129a1e6f24",
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "0fe457dc75321185",
+  "sha16": "dc13fd58ac5b7922",
   "unresolved": []
  },
  "counts": {
@@ -26,27 +26,39 @@
   "clamps_reversed": 0,
   "clamps_symbol_mismatch": 0,
   "clamps_unjudged": 0,
-  "declared": 3,
+  "declarations_refused": 0,
+  "declared": 18,
+  "declared_external_pins": 22,
+  "ground_pins_not_judged": 15,
+  "internal_pins": 60,
   "not_on_netlist": 0,
-  "ports": 3,
+  "ports": 18,
+  "review_disagreements": 0,
+  "reviewed_changes": 0,
+  "reviewed_pins": 22,
+  "uncovered_pins": 0,
   "unprotected": 0
  },
- "denominator": 26,
+ "denominator": 42,
  "evidence": [],
  "inputs": {
   "board": "a",
   "intent": {
    "path": "pcb-a-power-a23/out/pcb-a-power-intent.json",
-   "sha256_16": "92dd3b1cda9046b8"
+   "sha256_16": "35e430a791ab2b44"
   },
   "netlist": {
-   "content16": "2c5c1d5a388cc95f",
+   "content16": "d464d30a17fb30f7",
    "path": "pcb-a-power-a23/out/pcb-a-power.net",
-   "sha256_16": "da05dc02bc1e612f"
+   "sha256_16": "2dfe1c546cb39ccb"
+  },
+  "port_reviews": {
+   "path": "tools/pcb_port_reviews.json",
+   "sha256_16": "57acfedbe4950248"
   }
  },
  "missing_input": null,
- "note": "every declared external conductor meets a protection part before a chip, and every clamp is drawn and placed the right way round",
+ "note": "every declared external conductor meets a protection part before a chip, every clamp is drawn and placed the right way round, every connector pin is declared external or internal, and the external pins are exactly the ones the review enumerated",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
@@ -62,14 +74,14 @@
  },
  "tool": "port_protect_a",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "87b7d5a9509c",
+  "tools_tree_sha": "bfeac03e9fe6170b"
  },
- "ts": "2026-09-27T13:22:07Z",
+ "ts": "2026-09-28T21:54:20Z",
  "verdict": "PASS",
- "version": "391d857966d6",
+ "version": "87b7d5a9509c",
  "writer": {
   "file": "port_protect.py",
-  "sha16": "2d69facd3c25c8a4"
+  "sha16": "7acd5333fc59f8d0"
  }
 }

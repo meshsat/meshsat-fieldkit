@@ -1156,6 +1156,20 @@ def validate_requirements(req=None, path=None, root=None, rules=None, decisions=
                 errs.append("%s: blocks %s, a %s record" % (r["id"], x, t.get("kind")))
             if r.get("status") == "FEASIBILITY_OPEN" and t.get("evidence_result") == "PASS":
                 errs.append("%s reads PASS while %s, which holds it, is open" % (x, r["id"]))
+    # --- AN OPEN ITEM EITHER HAS A RECORD WAITING ON IT OR SAYS WHY NONE DOES (28 September 2026: the reassessment of
+    # handover H3, correction 2, and the owner's review of the restart plan). In H3, 24 of 58 open items were in no
+    # record's waits_on and one of them decided a verdict (S-64 under CON-010, which read FAIL with no link). Every open
+    # item is now linked from the record(s) whose verdict it can move, or carries a `disposition` with its reason, so
+    # an item that can change a verdict cannot stand unlinked in silence.
+    waited = {x for r in req.get("records") or [] for x in (r.get("waits_on") or [])}
+    for it in req.get("open_items") or []:
+        iid = it.get("id")
+        if iid in waited: continue
+        if not str(it.get("disposition") or "").strip():
+            errs.append("open item %s: no record waits on it and it carries no disposition; link it from the record(s) "
+                        "whose verdict it can move, or give it a disposition and a disposition_why" % iid)
+        elif len(str(it.get("disposition_why") or "").strip()) < 40:
+            errs.append("open item %s: disposition %s with no disposition_why (40 characters at least)" % (iid, it.get("disposition")))
     return errs, warns
 
 

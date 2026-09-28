@@ -1,15 +1,25 @@
 {
  "board": "a",
  "counts": {
-  "answered_nets": 6,
-  "classes": 63,
+  "answered_nets": 19,
+  "bound_decided_nets": 62,
+  "bound_edge_nets": 75,
+  "classes": 64,
   "contradicted_nets": 0,
-  "decided_nets": 6,
-  "layout_bound_nets": 0,
+  "decided_nets": 82,
+  "layout_bound_nets": 63,
   "low_speed_nets": 170,
-  "may_be_long_nets": 6,
+  "maker_edge_nets": 7,
+  "maker_held_nets": 1,
+  "may_be_long_nets": 82,
+  "models_absent": 0,
+  "models_asked": 5,
   "signal_nets": 290,
-  "undecided_nets": 114
+  "unasked_part_nets": 0,
+  "undecided_model_absent_nets": 0,
+  "undecided_nets": 38,
+  "undecided_no_declaration_nets": 38,
+  "undecided_other_nets": 0
  },
  "inputs": {
   "board": "a",
@@ -19,26 +29,140 @@
   },
   "board_table": {
    "path": "tools/boards/a.json",
-   "sha256_16": "b9411f2403e03da7"
+   "sha256_16": "4c55ace3c841ebf7"
   },
   "critical_k": 6,
   "document_1": {
+   "path": "v2/docs/records/hc5/kit_i2c_budget.round8-d.out.txt",
+   "sha256_16": "7967404c281d4e12"
+  },
+  "document_10": {
    "path": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
    "sha256_16": "2ecb40606d4b84fe"
   },
+  "document_11": {
+   "path": "v2/vendor/ti/bq25731-datasheet.pdf",
+   "sha256_16": "3e5e927fdf63cf6a"
+  },
+  "document_12": {
+   "path": "v2/vendor/ti/lm5176-datasheet.pdf",
+   "sha256_16": "98191bec36d43771"
+  },
+  "document_13": {
+   "path": "v2/vendor/ti/ti-tps25740.pdf",
+   "sha256_16": "60276c7a0e2a138a"
+  },
+  "document_14": {
+   "path": "v2/vendor/ti/tps23861-datasheet.pdf",
+   "sha256_16": "65262ce4766a5f8e"
+  },
+  "document_15": {
+   "path": "v2/vendor/vishay/veml7700-datasheet.pdf",
+   "sha256_16": "f338cf7d5911828a"
+  },
+  "document_2": {
+   "path": "v2/vendor/adi/adi-ds3231sn.pdf",
+   "sha256_16": "dc81cd89bee82d0c"
+  },
+  "document_3": {
+   "path": "v2/vendor/microchip/microchip-atecc608b-summary-DS40002239B.pdf",
+   "sha256_16": "1b21d7b0d5c6265f"
+  },
+  "document_4": {
+   "path": "v2/vendor/microchip/microchip-ksz9897-datasheet.pdf",
+   "sha256_16": "72b89179ed6a42a7"
+  },
+  "document_5": {
+   "path": "v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf",
+   "sha256_16": "938ef5ef5007df6b"
+  },
+  "document_6": {
+   "path": "v2/vendor/quectel/lg290p03-hardware-design-v1.1.pdf",
+   "sha256_16": "422ca9a2aa5495c1"
+  },
+  "document_7": {
+   "path": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+   "sha256_16": "be56fbb75ba0ae9e"
+  },
+  "document_8": {
+   "path": "v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf",
+   "sha256_16": "f6e620179006c8c4"
+  },
+  "document_9": {
+   "path": "v2/vendor/standards/nxp-um10204-rev6-i2c-bus-specification.pdf",
+   "sha256_16": "b7619700e8bb9dd4"
+  },
+  "edge_rates": {
+   "path": "tools/pcb_edge_rates.yaml",
+   "sha256_16": "0689086680f7a4a4"
+  },
   "extent_mm": 400.0,
+  "far_netlist_b": {
+   "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
+   "sha256_16": "21a1f74a3ec1ae28"
+  },
+  "far_netlist_c": {
+   "path": "pcb-c-display-c8/out/pcb-c-display.net",
+   "sha256_16": "3fddbb3edcd4248a"
+  },
+  "far_netlist_d": {
+   "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
+   "sha256_16": "7a2c0ac2190b141a"
+  },
+  "ibis_manifest": {
+   "path": "v2/vendor/ibis-manifest.yaml",
+   "sha256_16": "47952602c17f0dfd"
+  },
   "intent": {
    "path": "pcb-a-power-a23/out/pcb-a-power-intent.json",
-   "sha256_16": "92dd3b1cda9046b8"
+   "sha256_16": "35e430a791ab2b44"
+  },
+  "model_1": {
+   "path": "v2/vendor/st/ibis/stm32h742_743_750_753_lqfp100.ibs",
+   "pinned_sha256_16": "0fb7767c1ee034db",
+   "sha256_16": "0fb7767c1ee034db"
+  },
+  "model_2": {
+   "path": "v2/vendor/ti/ibis/ads1x1x.ibs",
+   "pinned_sha256_16": "c9975d3cb6ad0161",
+   "sha256_16": "c9975d3cb6ad0161"
+  },
+  "model_3": {
+   "path": "v2/vendor/ti/ibis/ina226.ibs",
+   "pinned_sha256_16": "fb4ebf43bde617c2",
+   "sha256_16": "fb4ebf43bde617c2"
+  },
+  "model_4": {
+   "path": "v2/vendor/ti/ibis/pca9555.ibs",
+   "pinned_sha256_16": "56c19a4da921e38c",
+   "sha256_16": "56c19a4da921e38c"
+  },
+  "model_5": {
+   "path": "v2/vendor/ti/ibis/tmp117.ibs",
+   "pinned_sha256_16": "5c71fbcce9e13803",
+   "sha256_16": "5c71fbcce9e13803"
+  },
+  "model_state": {
+   "absent": 0,
+   "absent_files": [],
+   "asked": 5,
+   "how_to_fetch": "python3 v2/ecad/tools/ibis_fetch.py --fetch",
+   "manifest": "v2/vendor/ibis-manifest.yaml",
+   "present": 5,
+   "state": "PRESENT"
   },
   "netlist": {
-   "content16": "2c5c1d5a388cc95f",
+   "content16": "d464d30a17fb30f7",
    "path": "pcb-a-power-a23/out/pcb-a-power.net",
-   "sha256_16": "da05dc02bc1e612f"
+   "sha256_16": "2dfe1c546cb39ccb"
   },
   "project": {
    "path": "pcb-a-power-a23/pcb-a-power.kicad_pro",
    "sha256_16": "a5f669ecb899545f"
+  },
+  "search_listing": {
+   "path": "v2/docs/records/w5si/readings/edge-search.txt",
+   "sha256_16": "d08bc489782c976b"
   },
   "slowest_layer": "JLC06161H-3313 In2.Cu",
   "stack_table": {
@@ -89,6 +213,7 @@
      "U34"
     ]
    },
+   "net_edges": {},
    "nets": [
     "FE_BLEED",
     "FE_BLEED_G",
@@ -132,11 +257,181 @@
    "pattern": "(no declaration)",
    "rise_ns": null,
    "status": "UNDECIDED",
+   "undecided": {
+    "FE_BLEED": [
+     "no signal-class declaration"
+    ],
+    "FE_BLEED_G": [
+     "no signal-class declaration"
+    ],
+    "FE_CSF": [
+     "no signal-class declaration"
+    ],
+    "FE_CSGF": [
+     "no signal-class declaration"
+    ],
+    "FE_CTR2": [
+     "no signal-class declaration"
+    ],
+    "FE_GVDD": [
+     "no signal-class declaration"
+    ],
+    "FE_ISNS_N": [
+     "no signal-class declaration"
+    ],
+    "FE_ISNS_P": [
+     "no signal-class declaration"
+    ],
+    "FE_LATCH": [
+     "no signal-class declaration"
+    ],
+    "FE_RUN": [
+     "no signal-class declaration"
+    ],
+    "FE_UVS": [
+     "no signal-class declaration"
+    ],
+    "FE_VINP": [
+     "no signal-class declaration"
+    ],
+    "FE_VISNS": [
+     "no signal-class declaration"
+    ],
+    "FE_VZ": [
+     "no signal-class declaration"
+    ],
+    "HF_CSF": [
+     "no signal-class declaration"
+    ],
+    "HF_CSGF": [
+     "no signal-class declaration"
+    ],
+    "HF_ISNS_N": [
+     "no signal-class declaration"
+    ],
+    "HF_ISNS_P": [
+     "no signal-class declaration"
+    ],
+    "HF_VINP": [
+     "no signal-class declaration"
+    ],
+    "MAIN_PDT": [
+     "no signal-class declaration"
+    ],
+    "OUTLET_OK": [
+     "no signal-class declaration"
+    ],
+    "PA_CSF": [
+     "no signal-class declaration"
+    ],
+    "PA_CSGF": [
+     "no signal-class declaration"
+    ],
+    "PA_ISNS_N": [
+     "no signal-class declaration"
+    ],
+    "PA_ISNS_P": [
+     "no signal-class declaration"
+    ],
+    "PA_VINP": [
+     "no signal-class declaration"
+    ],
+    "POE_CSF": [
+     "no signal-class declaration"
+    ],
+    "POE_CSGF": [
+     "no signal-class declaration"
+    ],
+    "POE_ISNS_N": [
+     "no signal-class declaration"
+    ],
+    "POE_ISNS_P": [
+     "no signal-class declaration"
+    ],
+    "S2_CSF": [
+     "no signal-class declaration"
+    ],
+    "S2_CSGF": [
+     "no signal-class declaration"
+    ],
+    "S2_ISNS_N": [
+     "no signal-class declaration"
+    ],
+    "S2_ISNS_P": [
+     "no signal-class declaration"
+    ],
+    "SD_CSF": [
+     "no signal-class declaration"
+    ],
+    "SD_CSGF": [
+     "no signal-class declaration"
+    ],
+    "SD_ISNS_N": [
+     "no signal-class declaration"
+    ],
+    "SD_ISNS_P": [
+     "no signal-class declaration"
+    ]
+   },
+   "undecided_kind": {
+    "FE_BLEED": "NO_DECLARATION",
+    "FE_BLEED_G": "NO_DECLARATION",
+    "FE_CSF": "NO_DECLARATION",
+    "FE_CSGF": "NO_DECLARATION",
+    "FE_CTR2": "NO_DECLARATION",
+    "FE_GVDD": "NO_DECLARATION",
+    "FE_ISNS_N": "NO_DECLARATION",
+    "FE_ISNS_P": "NO_DECLARATION",
+    "FE_LATCH": "NO_DECLARATION",
+    "FE_RUN": "NO_DECLARATION",
+    "FE_UVS": "NO_DECLARATION",
+    "FE_VINP": "NO_DECLARATION",
+    "FE_VISNS": "NO_DECLARATION",
+    "FE_VZ": "NO_DECLARATION",
+    "HF_CSF": "NO_DECLARATION",
+    "HF_CSGF": "NO_DECLARATION",
+    "HF_ISNS_N": "NO_DECLARATION",
+    "HF_ISNS_P": "NO_DECLARATION",
+    "HF_VINP": "NO_DECLARATION",
+    "MAIN_PDT": "NO_DECLARATION",
+    "OUTLET_OK": "NO_DECLARATION",
+    "PA_CSF": "NO_DECLARATION",
+    "PA_CSGF": "NO_DECLARATION",
+    "PA_ISNS_N": "NO_DECLARATION",
+    "PA_ISNS_P": "NO_DECLARATION",
+    "PA_VINP": "NO_DECLARATION",
+    "POE_CSF": "NO_DECLARATION",
+    "POE_CSGF": "NO_DECLARATION",
+    "POE_ISNS_N": "NO_DECLARATION",
+    "POE_ISNS_P": "NO_DECLARATION",
+    "S2_CSF": "NO_DECLARATION",
+    "S2_CSGF": "NO_DECLARATION",
+    "S2_ISNS_N": "NO_DECLARATION",
+    "S2_ISNS_P": "NO_DECLARATION",
+    "SD_CSF": "NO_DECLARATION",
+    "SD_CSGF": "NO_DECLARATION",
+    "SD_ISNS_N": "NO_DECLARATION",
+    "SD_ISNS_P": "NO_DECLARATION"
+   },
    "why": "no signal-class declaration names these nets, so neither their class nor their edge is known"
   },
   {
+   "answered": {},
    "basis": "the bootstrap node of a single-switch buck, riding on its switch node and carrying the same edges",
+   "bound_decides": [
+    "S1_BOOT",
+    "S3_BOOT"
+   ],
+   "bound_nets": [
+    "S1_BOOT",
+    "S3_BOOT"
+   ],
    "class": "HIGH_SPEED_DIGITAL",
+   "critical_by_net": {
+    "S1_BOOT": 0.0,
+    "S3_BOOT": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "AP64500SP-13 5 A buck, 5.1 V rail +5V_S1": [
@@ -146,19 +441,85 @@
      "U6"
     ]
    },
+   "layout_bound": [
+    "S1_BOOT",
+    "S3_BOOT"
+   ],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "S1_BOOT": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_BOOT, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_BOOT, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "S3_BOOT": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_BOOT, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_BOOT, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    }
+   },
    "nets": [
     "S1_BOOT",
     "S3_BOOT"
    ],
    "pattern": "*_BOOT",
-   "rise_ns": null,
-   "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "rise_ns": 0.0,
+   "source": "POWER-STAGE-NODES",
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "A converter's switch node, bootstrap node and gate drives, and a hot-swap or ideal-diode c: pcb_edge_rates.yaml POWER-STAGE-NODES"
   },
   {
+   "answered": {},
    "basis": "a bootstrap node riding on a switch node",
+   "bound_decides": [
+    "FE_BOOT1",
+    "HF_BOOT1",
+    "PA_BOOT1",
+    "PD_BOOT1",
+    "POE_BOOT1",
+    "S2_BOOT1",
+    "SD_BOOT1"
+   ],
+   "bound_nets": [
+    "FE_BOOT1",
+    "HF_BOOT1",
+    "PA_BOOT1",
+    "PD_BOOT1",
+    "POE_BOOT1",
+    "S2_BOOT1",
+    "SD_BOOT1"
+   ],
    "class": "HIGH_SPEED_DIGITAL",
+   "critical_by_net": {
+    "FE_BOOT1": 0.0,
+    "HF_BOOT1": 0.0,
+    "PA_BOOT1": 0.0,
+    "PD_BOOT1": 0.0,
+    "POE_BOOT1": 0.0,
+    "S2_BOOT1": 0.0,
+    "SD_BOOT1": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "LM5176PWPR buck-boost controller, +12V_HF from VBAT": [
@@ -182,6 +543,105 @@
     "LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW": [
      "U2"
     ]
+   },
+   "layout_bound": [
+    "FE_BOOT1",
+    "HF_BOOT1",
+    "PA_BOOT1",
+    "PD_BOOT1",
+    "POE_BOOT1",
+    "S2_BOOT1",
+    "SD_BOOT1"
+   ],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "FE_BOOT1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_BOOT1, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_BOOT1, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "HF_BOOT1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_BOOT1, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_BOOT1, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "PA_BOOT1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_BOOT1, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_BOOT1, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "PD_BOOT1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_BOOT1, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_BOOT1, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "POE_BOOT1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_BOOT1, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_BOOT1, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "S2_BOOT1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_BOOT1, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_BOOT1, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "SD_BOOT1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_BOOT1, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_BOOT1, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    }
    },
    "nets": [
     "FE_BOOT1",
@@ -193,14 +653,46 @@
     "SD_BOOT1"
    ],
    "pattern": "*_BOOT1",
-   "rise_ns": null,
-   "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "rise_ns": 0.0,
+   "source": "POWER-STAGE-NODES",
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "A converter's switch node, bootstrap node and gate drives, and a hot-swap or ideal-diode c: pcb_edge_rates.yaml POWER-STAGE-NODES"
   },
   {
+   "answered": {},
    "basis": "the second bootstrap node of the same converter",
+   "bound_decides": [
+    "FE_BOOT2",
+    "HF_BOOT2",
+    "PA_BOOT2",
+    "PD_BOOT2",
+    "POE_BOOT2",
+    "S2_BOOT2",
+    "SD_BOOT2"
+   ],
+   "bound_nets": [
+    "FE_BOOT2",
+    "HF_BOOT2",
+    "PA_BOOT2",
+    "PD_BOOT2",
+    "POE_BOOT2",
+    "S2_BOOT2",
+    "SD_BOOT2"
+   ],
    "class": "HIGH_SPEED_DIGITAL",
+   "critical_by_net": {
+    "FE_BOOT2": 0.0,
+    "HF_BOOT2": 0.0,
+    "PA_BOOT2": 0.0,
+    "PD_BOOT2": 0.0,
+    "POE_BOOT2": 0.0,
+    "S2_BOOT2": 0.0,
+    "SD_BOOT2": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "LM5176PWPR buck-boost controller, +12V_HF from VBAT": [
@@ -225,6 +717,105 @@
      "U2"
     ]
    },
+   "layout_bound": [
+    "FE_BOOT2",
+    "HF_BOOT2",
+    "PA_BOOT2",
+    "PD_BOOT2",
+    "POE_BOOT2",
+    "S2_BOOT2",
+    "SD_BOOT2"
+   ],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "FE_BOOT2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_BOOT2, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_BOOT2, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "HF_BOOT2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_BOOT2, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_BOOT2, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "PA_BOOT2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_BOOT2, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_BOOT2, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "PD_BOOT2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_BOOT2, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_BOOT2, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "POE_BOOT2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_BOOT2, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_BOOT2, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "S2_BOOT2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_BOOT2, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_BOOT2, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "SD_BOOT2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_BOOT2, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_BOOT2, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    }
+   },
    "nets": [
     "FE_BOOT2",
     "HF_BOOT2",
@@ -235,14 +826,31 @@
     "SD_BOOT2"
    ],
    "pattern": "*_BOOT2",
-   "rise_ns": null,
-   "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "rise_ns": 0.0,
+   "source": "POWER-STAGE-NODES",
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "A converter's switch node, bootstrap node and gate drives, and a hot-swap or ideal-diode c: pcb_edge_rates.yaml POWER-STAGE-NODES"
   },
   {
+   "answered": {},
    "basis": "a bootstrap node riding on a switch node",
+   "bound_decides": [
+    "B33_BST",
+    "HT_BST"
+   ],
+   "bound_nets": [
+    "B33_BST",
+    "HT_BST"
+   ],
    "class": "HIGH_SPEED_DIGITAL",
+   "critical_by_net": {
+    "B33_BST": 0.0,
+    "HT_BST": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "TPS62933DRLR 3 A buck, 12.0 V heater rail": [
@@ -252,34 +860,122 @@
      "U12"
     ]
    },
+   "layout_bound": [
+    "B33_BST",
+    "HT_BST"
+   ],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "B33_BST": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_BST, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_BST, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "HT_BST": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_BST, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_BST, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    }
+   },
    "nets": [
     "B33_BST",
     "HT_BST"
    ],
    "pattern": "*_BST",
-   "rise_ns": null,
-   "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "rise_ns": 0.0,
+   "source": "POWER-STAGE-NODES",
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "A converter's switch node, bootstrap node and gate drives, and a hot-swap or ideal-diode c: pcb_edge_rates.yaml POWER-STAGE-NODES"
   },
   {
+   "answered": {},
    "basis": "a charger's bootstrap node, as above",
+   "bound_decides": [
+    "CH_BTST1",
+    "CH_BTST2"
+   ],
+   "bound_nets": [
+    "CH_BTST1",
+    "CH_BTST2"
+   ],
    "class": "HIGH_SPEED_DIGITAL",
+   "critical_by_net": {
+    "CH_BTST1": 0.0,
+    "CH_BTST2": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B": [
      "U3"
     ]
    },
+   "layout_bound": [
+    "CH_BTST1",
+    "CH_BTST2"
+   ],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "CH_BTST1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_BTST?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_BTST?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "CH_BTST2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_BTST?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_BTST?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    }
+   },
    "nets": [
     "CH_BTST1",
     "CH_BTST2"
    ],
    "pattern": "*_BTST?",
-   "rise_ns": null,
-   "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "rise_ns": 0.0,
+   "source": "POWER-STAGE-NODES",
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "A converter's switch node, bootstrap node and gate drives, and a hot-swap or ideal-diode c: pcb_edge_rates.yaml POWER-STAGE-NODES"
   },
   {
    "basis": "an error amplifier's compensation node, a capacitor and a resistor to ground",
@@ -313,6 +1009,7 @@
      "U2"
     ]
    },
+   "net_edges": {},
    "nets": [
     "FE_COMP",
     "HF_COMP",
@@ -327,12 +1024,15 @@
    "pattern": "*_COMP",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
    "basis": "the second element of the same compensation network",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {},
+   "net_edges": {},
    "nets": [
     "FE_COMPC",
     "HF_COMPC",
@@ -347,12 +1047,15 @@
    "pattern": "*_COMPC",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
    "basis": "a current-sense input across a shunt, millivolts of DC with a filter",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {},
+   "net_edges": {},
    "nets": [
     "HF_CS",
     "PD_CS",
@@ -362,6 +1065,8 @@
    "pattern": "*_CS",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -372,12 +1077,15 @@
      "U18"
     ]
    },
+   "net_edges": {},
    "nets": [
     "PD_DVDD"
    ],
    "pattern": "*_DVDD",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -400,6 +1108,7 @@
      "U21"
     ]
    },
+   "net_edges": {},
    "nets": [
     "U21_DVDT",
     "U22_DVDT",
@@ -410,6 +1119,8 @@
    "pattern": "*_DVDT",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -465,6 +1176,7 @@
      "U12"
     ]
    },
+   "net_edges": {},
    "nets": [
     "D8_EN",
     "DEV_EN",
@@ -484,6 +1196,8 @@
    "pattern": "*_EN",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -524,6 +1238,7 @@
      "U12"
     ]
    },
+   "net_edges": {},
    "nets": [
     "B33_FB",
     "FE_FB",
@@ -540,6 +1255,8 @@
    "pattern": "*_FB",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -568,6 +1285,7 @@
      "U21"
     ]
    },
+   "net_edges": {},
    "nets": [
     "D8_FLT",
     "EMCON_EF_FLT",
@@ -578,11 +1296,63 @@
    "pattern": "*_FLT",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
+   "answered": {},
    "basis": "a high-side gate drive: amperes into a FET gate in nanoseconds",
+   "bound_decides": [
+    "FE_HDRV1",
+    "FE_HDRV2",
+    "HF_HDRV1",
+    "HF_HDRV2",
+    "PA_HDRV1",
+    "PA_HDRV2",
+    "PD_HDRV1",
+    "PD_HDRV2",
+    "POE_HDRV1",
+    "POE_HDRV2",
+    "S2_HDRV1",
+    "S2_HDRV2",
+    "SD_HDRV1",
+    "SD_HDRV2"
+   ],
+   "bound_nets": [
+    "FE_HDRV1",
+    "FE_HDRV2",
+    "HF_HDRV1",
+    "HF_HDRV2",
+    "PA_HDRV1",
+    "PA_HDRV2",
+    "PD_HDRV1",
+    "PD_HDRV2",
+    "POE_HDRV1",
+    "POE_HDRV2",
+    "S2_HDRV1",
+    "S2_HDRV2",
+    "SD_HDRV1",
+    "SD_HDRV2"
+   ],
    "class": "HIGH_SPEED_DIGITAL",
+   "critical_by_net": {
+    "FE_HDRV1": 0.0,
+    "FE_HDRV2": 0.0,
+    "HF_HDRV1": 0.0,
+    "HF_HDRV2": 0.0,
+    "PA_HDRV1": 0.0,
+    "PA_HDRV2": 0.0,
+    "PD_HDRV1": 0.0,
+    "PD_HDRV2": 0.0,
+    "POE_HDRV1": 0.0,
+    "POE_HDRV2": 0.0,
+    "S2_HDRV1": 0.0,
+    "S2_HDRV2": 0.0,
+    "SD_HDRV1": 0.0,
+    "SD_HDRV2": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "LM5176PWPR buck-boost controller, +12V_HF from VBAT": [
@@ -607,6 +1377,196 @@
      "U2"
     ]
    },
+   "layout_bound": [
+    "FE_HDRV1",
+    "FE_HDRV2",
+    "HF_HDRV1",
+    "HF_HDRV2",
+    "PA_HDRV1",
+    "PA_HDRV2",
+    "PD_HDRV1",
+    "PD_HDRV2",
+    "POE_HDRV1",
+    "POE_HDRV2",
+    "S2_HDRV1",
+    "S2_HDRV2",
+    "SD_HDRV1",
+    "SD_HDRV2"
+   ],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "FE_HDRV1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_HDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_HDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "FE_HDRV2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_HDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_HDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "HF_HDRV1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_HDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_HDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "HF_HDRV2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_HDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_HDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "PA_HDRV1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_HDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_HDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "PA_HDRV2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_HDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_HDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "PD_HDRV1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_HDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_HDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "PD_HDRV2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_HDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_HDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "POE_HDRV1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_HDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_HDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "POE_HDRV2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_HDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_HDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "S2_HDRV1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_HDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_HDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "S2_HDRV2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_HDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_HDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "SD_HDRV1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_HDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_HDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "SD_HDRV2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_HDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_HDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    }
+   },
    "nets": [
     "FE_HDRV1",
     "FE_HDRV2",
@@ -624,29 +1584,83 @@
     "SD_HDRV2"
    ],
    "pattern": "*_HDRV?",
-   "rise_ns": null,
-   "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "rise_ns": 0.0,
+   "source": "POWER-STAGE-NODES",
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "A converter's switch node, bootstrap node and gate drives, and a hot-swap or ideal-diode c: pcb_edge_rates.yaml POWER-STAGE-NODES"
   },
   {
+   "answered": {},
    "basis": "a charger's high-side gate drive",
+   "bound_decides": [
+    "CH_HIDRV1",
+    "CH_HIDRV2"
+   ],
+   "bound_nets": [
+    "CH_HIDRV1",
+    "CH_HIDRV2"
+   ],
    "class": "HIGH_SPEED_DIGITAL",
+   "critical_by_net": {
+    "CH_HIDRV1": 0.0,
+    "CH_HIDRV2": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B": [
      "U3"
     ]
    },
+   "layout_bound": [
+    "CH_HIDRV1",
+    "CH_HIDRV2"
+   ],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "CH_HIDRV1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_HIDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_HIDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "CH_HIDRV2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_HIDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_HIDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    }
+   },
    "nets": [
     "CH_HIDRV1",
     "CH_HIDRV2"
    ],
    "pattern": "*_HIDRV?",
-   "rise_ns": null,
-   "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "rise_ns": 0.0,
+   "source": "POWER-STAGE-NODES",
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "A converter's switch node, bootstrap node and gate drives, and a hot-swap or ideal-diode c: pcb_edge_rates.yaml POWER-STAGE-NODES"
   },
   {
    "basis": "a software hold re-driven by U40's open-drain output into the EMCON gates' protected supply domain, 10 k up to +3V3_EMCON: a static level",
@@ -662,6 +1676,7 @@
      "U40"
     ]
    },
+   "net_edges": {},
    "nets": [
     "HF_HOLD",
     "PA_HOLD"
@@ -669,6 +1684,8 @@
    "pattern": "*_HOLD",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -691,6 +1708,7 @@
      "U21"
     ]
    },
+   "net_edges": {},
    "nets": [
     "U21_ILM",
     "U22_ILM",
@@ -701,11 +1719,63 @@
    "pattern": "*_ILM",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
+   "answered": {},
    "basis": "a low-side gate drive, as above",
+   "bound_decides": [
+    "FE_LDRV1",
+    "FE_LDRV2",
+    "HF_LDRV1",
+    "HF_LDRV2",
+    "PA_LDRV1",
+    "PA_LDRV2",
+    "PD_LDRV1",
+    "PD_LDRV2",
+    "POE_LDRV1",
+    "POE_LDRV2",
+    "S2_LDRV1",
+    "S2_LDRV2",
+    "SD_LDRV1",
+    "SD_LDRV2"
+   ],
+   "bound_nets": [
+    "FE_LDRV1",
+    "FE_LDRV2",
+    "HF_LDRV1",
+    "HF_LDRV2",
+    "PA_LDRV1",
+    "PA_LDRV2",
+    "PD_LDRV1",
+    "PD_LDRV2",
+    "POE_LDRV1",
+    "POE_LDRV2",
+    "S2_LDRV1",
+    "S2_LDRV2",
+    "SD_LDRV1",
+    "SD_LDRV2"
+   ],
    "class": "HIGH_SPEED_DIGITAL",
+   "critical_by_net": {
+    "FE_LDRV1": 0.0,
+    "FE_LDRV2": 0.0,
+    "HF_LDRV1": 0.0,
+    "HF_LDRV2": 0.0,
+    "PA_LDRV1": 0.0,
+    "PA_LDRV2": 0.0,
+    "PD_LDRV1": 0.0,
+    "PD_LDRV2": 0.0,
+    "POE_LDRV1": 0.0,
+    "POE_LDRV2": 0.0,
+    "S2_LDRV1": 0.0,
+    "S2_LDRV2": 0.0,
+    "SD_LDRV1": 0.0,
+    "SD_LDRV2": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "LM5176PWPR buck-boost controller, +12V_HF from VBAT": [
@@ -730,6 +1800,196 @@
      "U2"
     ]
    },
+   "layout_bound": [
+    "FE_LDRV1",
+    "FE_LDRV2",
+    "HF_LDRV1",
+    "HF_LDRV2",
+    "PA_LDRV1",
+    "PA_LDRV2",
+    "PD_LDRV1",
+    "PD_LDRV2",
+    "POE_LDRV1",
+    "POE_LDRV2",
+    "S2_LDRV1",
+    "S2_LDRV2",
+    "SD_LDRV1",
+    "SD_LDRV2"
+   ],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "FE_LDRV1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_LDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_LDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "FE_LDRV2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_LDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_LDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "HF_LDRV1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_LDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_LDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "HF_LDRV2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_LDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_LDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "PA_LDRV1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_LDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_LDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "PA_LDRV2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_LDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_LDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "PD_LDRV1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_LDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_LDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "PD_LDRV2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_LDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_LDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "POE_LDRV1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_LDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_LDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "POE_LDRV2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_LDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_LDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "S2_LDRV1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_LDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_LDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "S2_LDRV2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_LDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_LDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "SD_LDRV1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_LDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_LDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "SD_LDRV2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_LDRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_LDRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    }
+   },
    "nets": [
     "FE_LDRV1",
     "FE_LDRV2",
@@ -747,29 +2007,83 @@
     "SD_LDRV2"
    ],
    "pattern": "*_LDRV?",
-   "rise_ns": null,
-   "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "rise_ns": 0.0,
+   "source": "POWER-STAGE-NODES",
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "A converter's switch node, bootstrap node and gate drives, and a hot-swap or ideal-diode c: pcb_edge_rates.yaml POWER-STAGE-NODES"
   },
   {
+   "answered": {},
    "basis": "a charger's low-side gate drive",
+   "bound_decides": [
+    "CH_LODRV1",
+    "CH_LODRV2"
+   ],
+   "bound_nets": [
+    "CH_LODRV1",
+    "CH_LODRV2"
+   ],
    "class": "HIGH_SPEED_DIGITAL",
+   "critical_by_net": {
+    "CH_LODRV1": 0.0,
+    "CH_LODRV2": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B": [
      "U3"
     ]
    },
+   "layout_bound": [
+    "CH_LODRV1",
+    "CH_LODRV2"
+   ],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "CH_LODRV1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_LODRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_LODRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "CH_LODRV2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_LODRV?, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_LODRV?, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    }
+   },
    "nets": [
     "CH_LODRV1",
     "CH_LODRV2"
    ],
    "pattern": "*_LODRV?",
-   "rise_ns": null,
-   "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "rise_ns": 0.0,
+   "source": "POWER-STAGE-NODES",
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "A converter's switch node, bootstrap node and gate drives, and a hot-swap or ideal-diode c: pcb_edge_rates.yaml POWER-STAGE-NODES"
   },
   {
    "basis": "a mode-select pin, strapped to a static level",
@@ -797,6 +2111,7 @@
      "U2"
     ]
    },
+   "net_edges": {},
    "nets": [
     "FE_MODE",
     "HF_MODE",
@@ -809,6 +2124,8 @@
    "pattern": "*_MODE",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -831,6 +2148,7 @@
      "U21"
     ]
    },
+   "net_edges": {},
    "nets": [
     "U21_OVLO",
     "U22_OVLO",
@@ -841,6 +2159,8 @@
    "pattern": "*_OVLO",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -875,6 +2195,7 @@
      "U28"
     ]
    },
+   "net_edges": {},
    "nets": [
     "FE_PGOOD",
     "HF_PGOOD",
@@ -887,6 +2208,8 @@
    "pattern": "*_PGOOD",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -921,6 +2244,7 @@
      "U2"
     ]
    },
+   "net_edges": {},
    "nets": [
     "FE_RT",
     "HF_RT",
@@ -935,6 +2259,8 @@
    "pattern": "*_RT",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -963,6 +2289,7 @@
      "U2"
     ]
    },
+   "net_edges": {},
    "nets": [
     "FE_SLOPE",
     "HF_SLOPE",
@@ -975,23 +2302,23 @@
    "pattern": "*_SLOPE",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
    "basis": "a spare conductor with no driver, landing on a test point",
    "class": "LOW_SPEED_OR_DC",
-   "drivers": {
-    "PCA9555PW (0x21): enables and status": [
-     "U27"
-    ]
-   },
+   "drivers": {},
+   "net_edges": {},
    "nets": [
-    "AB_SPARE",
-    "DOCK_SPARE"
+    "AB_SPARE"
    ],
    "pattern": "*_SPARE",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -1026,6 +2353,7 @@
      "U12"
     ]
    },
+   "net_edges": {},
    "nets": [
     "B33_SS",
     "FE_SS",
@@ -1040,29 +2368,80 @@
    "pattern": "*_SS",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
+   "answered": {},
    "basis": "a converter switch node: the fastest edges on this board and its primary radiated source",
+   "bound_decides": [
+    "HT_SW"
+   ],
+   "bound_nets": [
+    "HT_SW"
+   ],
    "class": "HIGH_SPEED_DIGITAL",
+   "critical_by_net": {
+    "HT_SW": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "TPS62933DRLR 3 A buck, 12.0 V heater rail": [
      "U33"
     ]
    },
+   "layout_bound": [
+    "HT_SW"
+   ],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "HT_SW": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_SW, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_SW, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    }
+   },
    "nets": [
     "HT_SW"
    ],
    "pattern": "*_SW",
-   "rise_ns": null,
-   "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "rise_ns": 0.0,
+   "source": "POWER-STAGE-NODES",
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "A converter's switch node, bootstrap node and gate drives, and a hot-swap or ideal-diode c: pcb_edge_rates.yaml POWER-STAGE-NODES"
   },
   {
+   "answered": {},
    "basis": "a four-switch buck-boost's first switch node",
+   "bound_decides": [
+    "S2_SW1",
+    "SD_SW1"
+   ],
+   "bound_nets": [
+    "S2_SW1",
+    "SD_SW1"
+   ],
    "class": "HIGH_SPEED_DIGITAL",
+   "critical_by_net": {
+    "S2_SW1": 0.0,
+    "SD_SW1": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "LM5176PWPR buck-boost controller, +5V_DEV from VBAT": [
@@ -1071,20 +2450,71 @@
     "LM5176PWPR buck-boost controller, +5V_S2 from VBAT": [
      "U5"
     ]
+   },
+   "layout_bound": [
+    "S2_SW1",
+    "SD_SW1"
+   ],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "S2_SW1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_SW1, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_SW1, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "SD_SW1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_SW1, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_SW1, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    }
    },
    "nets": [
     "S2_SW1",
     "SD_SW1"
    ],
    "pattern": "*_SW1",
-   "rise_ns": null,
-   "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "rise_ns": 0.0,
+   "source": "POWER-STAGE-NODES",
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "A converter's switch node, bootstrap node and gate drives, and a hot-swap or ideal-diode c: pcb_edge_rates.yaml POWER-STAGE-NODES"
   },
   {
+   "answered": {},
    "basis": "the same converter's second switch node",
+   "bound_decides": [
+    "S2_SW2",
+    "SD_SW2"
+   ],
+   "bound_nets": [
+    "S2_SW2",
+    "SD_SW2"
+   ],
    "class": "HIGH_SPEED_DIGITAL",
+   "critical_by_net": {
+    "S2_SW2": 0.0,
+    "SD_SW2": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "LM5176PWPR buck-boost controller, +5V_DEV from VBAT": [
@@ -1094,15 +2524,52 @@
      "U5"
     ]
    },
+   "layout_bound": [
+    "S2_SW2",
+    "SD_SW2"
+   ],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "S2_SW2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_SW2, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_SW2, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    },
+    "SD_SW2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "POWER-STAGE-NODES: class entry *_SW2, POWER-STAGE-NODES"
+     ],
+     "by": "class entry *_SW2, POWER-STAGE-NODES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "POWER-STAGE-NODES"
+    }
+   },
    "nets": [
     "S2_SW2",
     "SD_SW2"
    ],
    "pattern": "*_SW2",
-   "rise_ns": null,
-   "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "rise_ns": 0.0,
+   "source": "POWER-STAGE-NODES",
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "A converter's switch node, bootstrap node and gate drives, and a hot-swap or ideal-diode c: pcb_edge_rates.yaml POWER-STAGE-NODES"
   },
   {
    "basis": "an EMCON gate's intermediate (U35 or U37, TX_INHIBIT_n AND EMCON_HW), held down by 100 k: a static level that follows the panel toggle",
@@ -1121,6 +2588,7 @@
      "U35"
     ]
    },
+   "net_edges": {},
    "nets": [
     "HF_TXOK",
     "PA_TXOK"
@@ -1128,6 +2596,8 @@
    "pattern": "*_TXOK",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -1147,6 +2617,7 @@
      "U19"
     ]
    },
+   "net_edges": {},
    "nets": [
     "HF_UVLO",
     "PA_UVLO",
@@ -1156,6 +2627,8 @@
    "pattern": "*_UVLO",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -1166,12 +2639,15 @@
      "U18"
     ]
    },
+   "net_edges": {},
    "nets": [
     "PD_VAUX"
    ],
    "pattern": "*_VAUX",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -1200,6 +2676,7 @@
      "U2"
     ]
    },
+   "net_edges": {},
    "nets": [
     "FE_VCC",
     "HF_VCC",
@@ -1212,6 +2689,8 @@
    "pattern": "*_VCC",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -1222,12 +2701,15 @@
      "U3"
     ]
    },
+   "net_edges": {},
    "nets": [
     "CH_VDDA"
    ],
    "pattern": "*_VDDA",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -1241,6 +2723,7 @@
      "U27"
     ]
    },
+   "net_edges": {},
    "nets": [
     "CHG_ILIM",
     "CHG_INHIBIT"
@@ -1248,6 +2731,8 @@
    "pattern": "CHG_*",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -1261,12 +2746,15 @@
      "U27"
     ]
    },
+   "net_edges": {},
    "nets": [
     "CHRG_OK"
    ],
    "pattern": "CHRG_OK",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -1277,6 +2765,7 @@
      "U3"
     ]
    },
+   "net_edges": {},
    "nets": [
     "CH_ACN_F",
     "CH_ACP_F",
@@ -1290,6 +2779,27 @@
    "pattern": "CH_*",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the hot stop line HOT-R1 (SC-50, S-57): board E's open drain Q11 toggles it at 1 or 5 Hz or holds it, R216 (10 k to +3V3) holds it up, U27 P15 reads it; a slow ",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "PCA9555PW (0x21): enables and status": [
+     "U27"
+    ]
+   },
+   "net_edges": {},
+   "nets": [
+    "DOCK_SPARE"
+   ],
+   "pattern": "DOCK_SPARE",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -1303,12 +2813,15 @@
      "U35"
     ]
    },
+   "net_edges": {},
    "nets": [
     "EMCON_HW"
    ],
    "pattern": "EMCON_HW",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -1319,6 +2832,7 @@
      "U28"
     ]
    },
+   "net_edges": {},
    "nets": [
     "EXP2_SP4",
     "EXP2_SP5",
@@ -1331,11 +2845,24 @@
    "pattern": "EXP2_SP*",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
+   "answered": {},
    "basis": "the expander's interrupt, an edge into a GPIO",
+   "bound_decides": [
+    "EXP_INT"
+   ],
+   "bound_nets": [
+    "EXP_INT"
+   ],
    "class": "CLOCKED_DIGITAL",
+   "critical_by_net": {
+    "EXP_INT": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "PCA9555PW (0x21): enables and status": [
@@ -1345,14 +2872,57 @@
      "U28"
     ]
    },
+   "layout_bound": [
+    "EXP_INT"
+   ],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "EXP_INT": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "TI-PCA9555: U27 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V",
+      "TI-PCA9555: U28 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V",
+      "MICROCHIP-KSZ9897: beyond J_AB1 on board B: U1 pin 94 INTRP_N",
+      "TI-TPS23861: beyond J_AB1 on board B: U5 pin 6 INT",
+      "TI-PCA9555: beyond J_AB1 on board B: U6 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V",
+      "TI-PCA9555: beyond J_AB1 on board B: U7 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V",
+      "ADI-DS3231SN: beyond J_AB1 on board B: U9 pin 3 EXP_INT",
+      "TI-PCA9555: beyond J_AB1 on board C: U1 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V",
+      "TI-PCA9555: beyond J_AB1 on board C: U2 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V",
+      "RPI-RP2040: beyond J_AB1 on board C: U3 pin 36 GPIO24",
+      "TI-PCA9555: beyond J_AB1 on board D: U16 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V",
+      "MICROCHIP-KSZ9897: beyond J_MEZZ1 on board B: U1 pin 94 INTRP_N",
+      "TI-TPS23861: beyond J_MEZZ1 on board B: U5 pin 6 INT",
+      "TI-PCA9555: beyond J_MEZZ1 on board B: U6 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V",
+      "TI-PCA9555: beyond J_MEZZ1 on board B: U7 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V",
+      "ADI-DS3231SN: beyond J_MEZZ1 on board B: U9 pin 3 EXP_INT",
+      "TI-PCA9555: beyond J_MEZZ1 on board C: U1 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V",
+      "TI-PCA9555: beyond J_MEZZ1 on board C: U2 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V",
+      "RPI-RP2040: beyond J_MEZZ1 on board C: U3 pin 36 GPIO24",
+      "TI-PCA9555: beyond J_MEZZ1 on board D: U16 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V"
+     ],
+     "by": "U27 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": "TI-TMP117: beyond J_AB1 on board B: U10 pin 3 ALERT, alert_3p3 f max",
+     "maker_edge_ns": 12.6129,
+     "source": "TI-PCA9555"
+    }
+   },
    "nets": [
     "EXP_INT"
    ],
    "pattern": "EXP_INT",
-   "rise_ns": null,
+   "rise_ns": 0.0,
    "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "no interface record covers the entry"
   },
   {
    "basis": "the adapter current monitor output, a DC level",
@@ -1362,12 +2932,15 @@
      "U3"
     ]
    },
+   "net_edges": {},
    "nets": [
     "IADPT"
    ],
    "pattern": "IADPT",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -1378,17 +2951,27 @@
      "U3"
     ]
    },
+   "net_edges": {},
    "nets": [
     "IBAT"
    ],
    "pattern": "IBAT",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
+   "answered": {},
    "basis": "a current monitor's alert, an open-drain edge",
+   "bound_decides": [],
+   "bound_nets": [],
    "class": "CLOCKED_DIGITAL",
+   "critical_by_net": {
+    "INA_ALERT": 137.2
+   },
+   "critical_mm": 137.2,
    "document": null,
    "drivers": {
     "INA226 PA rail monitor (0x46)": [
@@ -1413,14 +2996,40 @@
      "U27"
     ]
    },
+   "layout_bound": [
+    "INA_ALERT"
+   ],
+   "maker_holds": [
+    "INA_ALERT"
+   ],
+   "maker_nets": [
+    "INA_ALERT"
+   ],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 137.2 mm",
+   "net_edges": {
+    "INA_ALERT": {
+     "basis": "IBIS",
+     "bound_drivers": [],
+     "by": "U27 pin 19 P16, PCA9555_P_33 r max",
+     "decided_by": "MAKER",
+     "edge_ns": 5.89,
+     "maker_by": "TI-PCA9555: U27 pin 19 P16, PCA9555_P_33 r max",
+     "maker_edge_ns": 5.89,
+     "source": "TI-PCA9555"
+    }
+   },
    "nets": [
     "INA_ALERT"
    ],
    "pattern": "INA_ALERT",
-   "rise_ns": null,
+   "rise_ns": 5.89,
    "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "no interface record covers the entry"
   },
   {
    "basis": "the main power controller's kill input, a static level",
@@ -1430,12 +3039,15 @@
      "U1"
     ]
    },
+   "net_edges": {},
    "nets": [
     "KILL"
    ],
    "pattern": "KILL",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -1446,12 +3058,15 @@
      "U1"
     ]
    },
+   "net_edges": {},
    "nets": [
     "MAIN_PB"
    ],
    "pattern": "MAIN_PB",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -1468,6 +3083,7 @@
      "U18"
     ]
    },
+   "net_edges": {},
    "nets": [
     "PD_CSF",
     "PD_CSGF",
@@ -1483,11 +3099,27 @@
    "pattern": "PD_*",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
+   "answered": {
+    "PD_CC1": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the project file)",
+    "PD_CC2": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the project file)"
+   },
    "basis": "USB Power Delivery's configuration channel, BMC at 300 kHz",
+   "bound_decides": [],
+   "bound_nets": [
+    "PD_CC1",
+    "PD_CC2"
+   ],
    "class": "CLOCKED_DIGITAL",
+   "critical_by_net": {
+    "PD_CC1": 0.0,
+    "PD_CC2": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "TPD2E2U06QDBZRQ1 low-capacitance ESD array, USB-C CC1 and CC2 at the connector": [
@@ -1497,33 +3129,104 @@
      "U18"
     ]
    },
+   "layout_bound": [],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "PD_CC1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "TI-TPS25740: U18 pin 2 PD_CC1",
+      "FAR-USB-PD-SINK: beyond J_USBC_OUT (far end USBC-OUTLET-CC): FAR-USB-PD-SINK"
+     ],
+     "by": "U18 pin 2 PD_CC1",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "TI-TPS25740"
+    },
+    "PD_CC2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "TI-TPS25740: U18 pin 3 PD_CC2",
+      "FAR-USB-PD-SINK: beyond J_USBC_OUT (far end USBC-OUTLET-CC): FAR-USB-PD-SINK"
+     ],
+     "by": "U18 pin 3 PD_CC2",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "TI-TPS25740"
+    }
+   },
    "nets": [
     "PD_CC1",
     "PD_CC2"
    ],
    "pattern": "PD_CC?",
-   "rise_ns": null,
+   "rise_ns": 0.0,
    "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "no interface record covers the entry"
   },
   {
+   "answered": {},
    "basis": "the PD controller's transmit node into the same channel",
+   "bound_decides": [
+    "PD_VTX"
+   ],
+   "bound_nets": [
+    "PD_VTX"
+   ],
    "class": "CLOCKED_DIGITAL",
+   "critical_by_net": {
+    "PD_VTX": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)": [
      "U18"
     ]
    },
+   "layout_bound": [
+    "PD_VTX"
+   ],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "PD_VTX": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "TI-TPS25740: U18 pin 1 PD_VTX"
+     ],
+     "by": "U18 pin 1 PD_VTX",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "TI-TPS25740"
+    }
+   },
    "nets": [
     "PD_VTX"
    ],
    "pattern": "PD_VTX",
-   "rise_ns": null,
+   "rise_ns": 0.0,
    "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "no interface record covers the entry"
   },
   {
    "basis": "the shutdown-request and kill lines, static levels",
@@ -1533,6 +3236,7 @@
      "U1"
     ]
    },
+   "net_edges": {},
    "nets": [
     "PI_KILL",
     "PI_SHDN_REQ"
@@ -1540,11 +3244,24 @@
    "pattern": "PI_*",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
+   "answered": {},
    "basis": "the charger's processor-hot flag, an open-drain edge that must be seen quickly",
+   "bound_decides": [
+    "PROCHOT"
+   ],
+   "bound_nets": [
+    "PROCHOT"
+   ],
    "class": "CLOCKED_DIGITAL",
+   "critical_by_net": {
+    "PROCHOT": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B": [
@@ -1554,14 +3271,38 @@
      "U27"
     ]
    },
+   "layout_bound": [
+    "PROCHOT"
+   ],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "PROCHOT": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "TI-BQ25731: U3 pin 11 PROCHOT"
+     ],
+     "by": "U3 pin 11 PROCHOT",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": "TI-PCA9555: U27 pin 14 P11, PCA9555_P_33 r max",
+     "maker_edge_ns": 5.89,
+     "source": "TI-BQ25731"
+    }
+   },
    "nets": [
     "PROCHOT"
    ],
    "pattern": "PROCHOT",
-   "rise_ns": null,
+   "rise_ns": 0.0,
    "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "no interface record covers the entry"
   },
   {
    "basis": "the system power monitor output, a DC level",
@@ -1571,12 +3312,15 @@
      "U3"
     ]
    },
+   "net_edges": {},
    "nets": [
     "PSYS"
    ],
    "pattern": "PSYS",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -1587,19 +3331,202 @@
      "U3"
     ]
    },
+   "net_edges": {},
    "nets": [
     "REGN"
    ],
    "pattern": "REGN",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
+   "answered": {
+    "RF_5G1": "impedance target on class RF (z_se 50.0, from the project file)",
+    "RF_5G2": "impedance target on class RF (z_se 50.0, from the project file)",
+    "RF_GNSS": "impedance target on class RF (z_se 50.0, from the project file)",
+    "RF_HF": "impedance target on class RF (z_se 50.0, from the project file)",
+    "RF_IRIDIUM": "impedance target on class RF (z_se 50.0, from the project file)",
+    "RF_LORA": "impedance target on class RF (z_se 50.0, from the project file)",
+    "RF_P2PA": "impedance target on class RF (z_se 50.0, from the project file)",
+    "RF_P2PB": "impedance target on class RF (z_se 50.0, from the project file)",
+    "RF_SDR": "impedance target on class RF (z_se 50.0, from the project file)",
+    "RF_VHF": "impedance target on class RF (z_se 50.0, from the project file)",
+    "RF_WIFI24": "impedance target on class RF (z_se 50.0, from the project file)"
+   },
    "basis": "a radio-frequency path to an SMA jack or a blind-mate receptacle, from 144 MHz to 6 GHz",
+   "bound_decides": [],
+   "bound_nets": [
+    "RF_5G1",
+    "RF_5G2",
+    "RF_GNSS",
+    "RF_HF",
+    "RF_IRIDIUM",
+    "RF_LORA",
+    "RF_P2PA",
+    "RF_P2PB",
+    "RF_SDR",
+    "RF_VHF",
+    "RF_WIFI24"
+   ],
    "class": "HIGH_SPEED_DIGITAL",
+   "critical_by_net": {
+    "RF_5G1": 0.0,
+    "RF_5G2": 0.0,
+    "RF_GNSS": 0.0,
+    "RF_HF": 0.0,
+    "RF_IRIDIUM": 0.0,
+    "RF_LORA": 0.0,
+    "RF_P2PA": 0.0,
+    "RF_P2PB": 0.0,
+    "RF_SDR": 0.0,
+    "RF_VHF": 0.0,
+    "RF_WIFI24": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {},
+   "layout_bound": [],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "RF_5G1": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "RF-LINES: class entry RF_*, RF-LINES"
+     ],
+     "by": "class entry RF_*, RF-LINES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "RF-LINES"
+    },
+    "RF_5G2": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "RF-LINES: class entry RF_*, RF-LINES"
+     ],
+     "by": "class entry RF_*, RF-LINES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "RF-LINES"
+    },
+    "RF_GNSS": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "RF-LINES: class entry RF_*, RF-LINES"
+     ],
+     "by": "class entry RF_*, RF-LINES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "RF-LINES"
+    },
+    "RF_HF": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "RF-LINES: class entry RF_*, RF-LINES"
+     ],
+     "by": "class entry RF_*, RF-LINES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "RF-LINES"
+    },
+    "RF_IRIDIUM": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "RF-LINES: class entry RF_*, RF-LINES"
+     ],
+     "by": "class entry RF_*, RF-LINES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "RF-LINES"
+    },
+    "RF_LORA": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "RF-LINES: class entry RF_*, RF-LINES"
+     ],
+     "by": "class entry RF_*, RF-LINES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "RF-LINES"
+    },
+    "RF_P2PA": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "RF-LINES: class entry RF_*, RF-LINES"
+     ],
+     "by": "class entry RF_*, RF-LINES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "RF-LINES"
+    },
+    "RF_P2PB": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "RF-LINES: class entry RF_*, RF-LINES"
+     ],
+     "by": "class entry RF_*, RF-LINES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "RF-LINES"
+    },
+    "RF_SDR": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "RF-LINES: class entry RF_*, RF-LINES"
+     ],
+     "by": "class entry RF_*, RF-LINES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "RF-LINES"
+    },
+    "RF_VHF": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "RF-LINES: class entry RF_*, RF-LINES"
+     ],
+     "by": "class entry RF_*, RF-LINES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "RF-LINES"
+    },
+    "RF_WIFI24": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "RF-LINES: class entry RF_*, RF-LINES"
+     ],
+     "by": "class entry RF_*, RF-LINES",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "RF-LINES"
+    }
+   },
    "nets": [
     "RF_5G1",
     "RF_5G2",
@@ -1614,14 +3541,28 @@
     "RF_WIFI24"
    ],
    "pattern": "RF_*",
-   "rise_ns": null,
-   "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "rise_ns": 0.0,
+   "source": "RF-LINES",
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "An RF line carries a radio's carrier and its modulation: a signal band-limited to the band: pcb_edge_rates.yaml RF-LINES"
   },
   {
+   "answered": {},
    "basis": "I2C at 100 or 400 kHz, open drain",
+   "bound_decides": [
+    "SCL"
+   ],
+   "bound_nets": [
+    "SCL"
+   ],
    "class": "CLOCKED_DIGITAL",
+   "critical_by_net": {
+    "SCL": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B": [
@@ -1651,19 +3592,63 @@
     "PCA9555PW (0x24): power-good lines, spares": [
      "U28"
     ]
+   },
+   "layout_bound": [
+    "SCL"
+   ],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "SCL": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "RPI-RP2040: beyond J_AB1 on board C: U3 pin 3 GPIO1",
+      "VISHAY-VEML7700: beyond J_AB1 on board C: U_LIGHT pin 1 SCL",
+      "RPI-RP2040: beyond J_MEZZ1 on board C: U3 pin 3 GPIO1",
+      "VISHAY-VEML7700: beyond J_MEZZ1 on board C: U_LIGHT pin 1 SCL"
+     ],
+     "by": "beyond J_AB1 on board C: U3 pin 3 GPIO1",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": "ST-STM32H743: beyond J_AB1 on board B: U41 pin 92 PB6, io8_ft_hs_3v3 f typ",
+     "maker_edge_ns": 0.451,
+     "rising": {
+      "basis": "MODEL",
+      "edge_ns": 150.5,
+      "measure": "30 to 70 percent of VDD",
+      "source": "KIT-I2C-RISE"
+     },
+     "source": "RPI-RP2040"
+    }
    },
    "nets": [
     "SCL"
    ],
    "pattern": "SCL",
-   "rise_ns": null,
+   "rise_ns": 0.0,
    "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "no interface record covers the entry"
   },
   {
+   "answered": {},
    "basis": "the data half of the same I2C bus",
+   "bound_decides": [
+    "SDA"
+   ],
+   "bound_nets": [
+    "SDA"
+   ],
    "class": "CLOCKED_DIGITAL",
+   "critical_by_net": {
+    "SDA": 0.0
+   },
+   "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B": [
@@ -1694,25 +3679,66 @@
      "U28"
     ]
    },
+   "layout_bound": [
+    "SDA"
+   ],
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "SDA": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "TI-BQ25731: U3 pin 12 SDA",
+      "TI-TMP117: beyond J_AB1 on board B: U10 pin 6 SDA: 2 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] sda_3p3 [Ramp] dV/dt_f min: dV 1.119 V is 38 percent of its own V-t table's swing (2.907 V) and dt 35.63 ns is 0.57 of the time that table takes from 20 to 80 percent (62.22 ns), R_fixture 967 ohm, V_fixture 3.3 V",
+      "MICROCHIP-ATECC608B: beyond J_AB1 on board B: U8 pin 5 SDA",
+      "RPI-RP2040: beyond J_AB1 on board C: U3 pin 2 GPIO0",
+      "VISHAY-VEML7700: beyond J_AB1 on board C: U_LIGHT pin 4 SDA",
+      "TI-TMP117: beyond J_MEZZ1 on board B: U10 pin 6 SDA: 2 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] sda_3p3 [Ramp] dV/dt_f min: dV 1.119 V is 38 percent of its own V-t table's swing (2.907 V) and dt 35.63 ns is 0.57 of the time that table takes from 20 to 80 percent (62.22 ns), R_fixture 967 ohm, V_fixture 3.3 V",
+      "MICROCHIP-ATECC608B: beyond J_MEZZ1 on board B: U8 pin 5 SDA",
+      "RPI-RP2040: beyond J_MEZZ1 on board C: U3 pin 2 GPIO0",
+      "VISHAY-VEML7700: beyond J_MEZZ1 on board C: U_LIGHT pin 4 SDA"
+     ],
+     "by": "U3 pin 12 SDA",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": "ST-STM32H743: beyond J_AB1 on board B: U41 pin 93 PB7, io8_ft_hs_3v3 f typ",
+     "maker_edge_ns": 0.451,
+     "rising": {
+      "basis": "MODEL",
+      "edge_ns": 150.5,
+      "measure": "30 to 70 percent of VDD",
+      "source": "KIT-I2C-RISE"
+     },
+     "source": "TI-BQ25731"
+    }
+   },
    "nets": [
     "SDA"
    ],
    "pattern": "SDA",
-   "rise_ns": null,
+   "rise_ns": 0.0,
    "source": null,
-   "status": "UNDECIDED",
-   "why": "no edge is declared and no held document states one"
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "no interface record covers the entry"
   },
   {
    "basis": "the shore and cold-charge inhibit, a static level through an optocoupler",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {},
+   "net_edges": {},
    "nets": [
     "SHORE_INHIBIT"
    ],
    "pattern": "SHORE_INHIBIT",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -1729,6 +3755,7 @@
      "U5"
     ]
    },
+   "net_edges": {},
    "nets": [
     "SLOT_EN1",
     "SLOT_EN2",
@@ -1737,6 +3764,8 @@
    "pattern": "SLOT_EN?",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -1747,12 +3776,15 @@
      "U30"
     ]
    },
+   "net_edges": {},
    "nets": [
     "TR_APRS"
    ],
    "pattern": "TR_APRS",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -1766,12 +3798,15 @@
      "U35"
     ]
    },
+   "net_edges": {},
    "nets": [
     "TX_INHIBIT_n"
    ],
    "pattern": "TX_INHIBIT_n",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
@@ -1781,7 +3816,14 @@
     "USB_WALL_N": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the project file)"
    },
    "basis": "the other half of the same USB pair",
+   "bound_decides": [],
+   "bound_nets": [],
    "class": "HIGH_SPEED_DIGITAL",
+   "critical_by_net": {
+    "USB_D8_N": 11.6,
+    "USB_E6_N": 11.6,
+    "USB_WALL_N": 11.6
+   },
    "critical_mm": 11.6,
    "document": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
    "drivers": {
@@ -1790,8 +3832,46 @@
     ]
    },
    "layout_bound": [],
+   "maker_holds": [],
+   "maker_nets": [
+    "USB_D8_N",
+    "USB_E6_N",
+    "USB_WALL_N"
+   ],
    "may_be_long": true,
    "needs": "an impedance target, a series termination or a declaration, or every net under 11.6 mm",
+   "net_edges": {
+    "USB_D8_N": {
+     "basis": "STANDARD",
+     "bound_drivers": [],
+     "by": "class entry USB_*_N, USB2-HS",
+     "decided_by": "MAKER",
+     "edge_ns": 0.5,
+     "maker_by": "USB2-HS: class entry USB_*_N, USB2-HS",
+     "maker_edge_ns": 0.5,
+     "source": "USB2-HS"
+    },
+    "USB_E6_N": {
+     "basis": "STANDARD",
+     "bound_drivers": [],
+     "by": "class entry USB_*_N, USB2-HS",
+     "decided_by": "MAKER",
+     "edge_ns": 0.5,
+     "maker_by": "USB2-HS: class entry USB_*_N, USB2-HS",
+     "maker_edge_ns": 0.5,
+     "source": "USB2-HS"
+    },
+    "USB_WALL_N": {
+     "basis": "STANDARD",
+     "bound_drivers": [],
+     "by": "class entry USB_*_N, USB2-HS",
+     "decided_by": "MAKER",
+     "edge_ns": 0.5,
+     "maker_by": "USB2-HS: class entry USB_*_N, USB2-HS",
+     "maker_edge_ns": 0.5,
+     "source": "USB2-HS"
+    }
+   },
    "nets": [
     "USB_D8_N",
     "USB_E6_N",
@@ -1801,6 +3881,9 @@
    "rise_ns": 0.5,
    "source": "USB2-HS",
    "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
    "why": "USB 2.0 section 7.1.2.2, THSR and THSF, 10 to 90 percent, a minimum: v2/vendor/standards/usb-2-0-specification-2024-09-27.md"
   },
   {
@@ -1810,7 +3893,14 @@
     "USB_WALL_P": "impedance target on class USB (z_diff 90.0, z_se 50.0, from the project file)"
    },
    "basis": "a USB 2.0 data line: 480 Mbit/s with sub-nanosecond edges",
+   "bound_decides": [],
+   "bound_nets": [],
    "class": "HIGH_SPEED_DIGITAL",
+   "critical_by_net": {
+    "USB_D8_P": 11.6,
+    "USB_E6_P": 11.6,
+    "USB_WALL_P": 11.6
+   },
    "critical_mm": 11.6,
    "document": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
    "drivers": {
@@ -1819,8 +3909,46 @@
     ]
    },
    "layout_bound": [],
+   "maker_holds": [],
+   "maker_nets": [
+    "USB_D8_P",
+    "USB_E6_P",
+    "USB_WALL_P"
+   ],
    "may_be_long": true,
    "needs": "an impedance target, a series termination or a declaration, or every net under 11.6 mm",
+   "net_edges": {
+    "USB_D8_P": {
+     "basis": "STANDARD",
+     "bound_drivers": [],
+     "by": "class entry USB_*_P, USB2-HS",
+     "decided_by": "MAKER",
+     "edge_ns": 0.5,
+     "maker_by": "USB2-HS: class entry USB_*_P, USB2-HS",
+     "maker_edge_ns": 0.5,
+     "source": "USB2-HS"
+    },
+    "USB_E6_P": {
+     "basis": "STANDARD",
+     "bound_drivers": [],
+     "by": "class entry USB_*_P, USB2-HS",
+     "decided_by": "MAKER",
+     "edge_ns": 0.5,
+     "maker_by": "USB2-HS: class entry USB_*_P, USB2-HS",
+     "maker_edge_ns": 0.5,
+     "source": "USB2-HS"
+    },
+    "USB_WALL_P": {
+     "basis": "STANDARD",
+     "bound_drivers": [],
+     "by": "class entry USB_*_P, USB2-HS",
+     "decided_by": "MAKER",
+     "edge_ns": 0.5,
+     "maker_by": "USB2-HS: class entry USB_*_P, USB2-HS",
+     "maker_edge_ns": 0.5,
+     "source": "USB2-HS"
+    }
+   },
    "nets": [
     "USB_D8_P",
     "USB_E6_P",
@@ -1830,18 +3958,24 @@
    "rise_ns": 0.5,
    "source": "USB2-HS",
    "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
    "why": "USB 2.0 section 7.1.2.2, THSR and THSF, 10 to 90 percent, a minimum: v2/vendor/standards/usb-2-0-specification-2024-09-27.md"
   },
   {
    "basis": "the zeroize line, a static level",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {},
+   "net_edges": {},
    "nets": [
     "ZEROIZE_HW"
    ],
    "pattern": "ZEROIZE_HW",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
    "why": "declared slow or DC with its basis; no edge is asked of it"
   }
  ],

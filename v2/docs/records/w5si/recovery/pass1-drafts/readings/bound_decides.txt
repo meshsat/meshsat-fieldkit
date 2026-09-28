@@ -1,0 +1,74 @@
+=== board A: 58 nets the bound decides, 5 a maker's figure holds
+  BOUND POWER-STAGE-NODES (57): B33_BST, CH_BTST1, CH_BTST2, CH_HIDRV1, CH_HIDRV2, CH_LODRV1, CH_LODRV2, FE_BOOT1, FE_BOOT2, FE_HDRV1, FE_HDRV2, FE_LDRV1, FE_LDRV2, HF_BOOT1, HF_BOOT2, HF_HDRV1, HF_HDRV2, HF_LDRV1, HF_LDRV2, HT_BST, HT_SW, PA_BOOT1, PA_BOOT2, PA_HDRV1, PA_HDRV2, PA_LDRV1, PA_LDRV2, PD_BOOT1, PD_BOOT2, PD_HDRV1, PD_HDRV2, PD_LDRV1, PD_LDRV2, POE_BOOT1, POE_BOOT2, POE_HDRV1, POE_HDRV2, POE_LDRV1, POE_LDRV2, S1_BOOT, S2_BOOT1, S2_BOOT2, S2_HDRV1, S2_HDRV2, S2_LDRV1, S2_LDRV2, S2_SW1, S2_SW2, S3_BOOT, SD_BOOT1, SD_BOOT2, SD_HDRV1, SD_HDRV2, SD_LDRV1, SD_LDRV2, SD_SW1, SD_SW2
+  BOUND TI-TPS25740 (1): PD_VTX
+  MAKER EXP_INT at 0.121 ns (critical 2.8 mm) (1): EXP_INT
+  MAKER INA_ALERT at 5.89 ns (critical 137.2 mm) (1): INA_ALERT
+  MAKER PROCHOT at 5.89 ns (critical 137.2 mm) (1): PROCHOT
+  MAKER SCL at 0.451 ns (critical 10.5 mm) (1): SCL
+  MAKER SDA at 0.451 ns (critical 10.5 mm) (1): SDA
+  UNDECIDED (38): FE_BLEED: no signal-class declaration; FE_BLEED_G: no signal-class declaration; FE_CSF: no signal-class declaration; FE_CSGF: no signal-class declaration; FE_CTR2: no signal-class declaration; FE_GVDD: no signal-class declaration
+=== board B: 126 nets the bound decides, 67 a maker's figure holds
+  BOUND RPI-CM5-RECEPTACLE (27): FAN_PWM1, FAN_PWM2, FAN_PWM3, FAN_TACHO1, FAN_TACHO2, FAN_TACHO3, HDMI1_SCL, HDMI1_SDA, HDMI2_SCL, HDMI2_SDA, HDMI3_SCL, HDMI3_SDA, HDMIM_SCL, HDMIM_SDA, SCL_CM1, SCL_CM2, SCL_CM3, SDA_CM1, SDA_CM2, SDA_CM3, SPI3_CE0, UART0_RX1, UART0_RX2, UART0_RX3, UART0_TX1, UART0_TX2, UART0_TX3
+  BOUND DIODES-74LVC1G17 (15): BBM1_ARM, BBM2_ARM, BBM3_ARM, BSEL1_D, BSEL1_D2, BSEL1_D2R, BSEL1_S, BSEL2_D, BSEL2_D2, BSEL2_D2R, BSEL2_S, BSEL3_D, BSEL3_D2, BSEL3_D2R, BSEL3_S
+  BOUND POWER-STAGE-NODES (14): DEV_BST, KSZC_BST, S1A_BOOT, S1B_BOOT, S1C_BST, S1D_BST, S2A_BOOT, S2B_BOOT, S2C_BST, S2D_BST, S3A_BOOT, S3B_BOOT, S3C_BST, S3D_BST
+  BOUND EBYTE-E72-CC2652P (10): ZBA_RST_n, ZBA_RXD, ZBA_TCKC, ZBA_TMSC, ZBA_TXD, ZBB_RST_n, ZBB_RXD, ZBB_TCKC, ZBB_TMSC, ZBB_TXD
+  BOUND DISCRETE-MOSFET (9): 5G_RST_n, GNSS_PPS, GNSS_PPS_CM1, GNSS_PPS_CM2, GNSS_PPS_CM3, HB_CM1, HB_CM2, HB_CM3, KSZ_RST_n
+  BOUND NEXPERIA-74LVC1G157 (9): BOE1_n, BOE2_n, BOE3_n, BSEL1_H, BSEL1_H1, BSEL2_H, BSEL2_H1, BSEL3_H, BSEL3_H1
+  BOUND OSCILLATOR-NODES (8): IOCA_XI, IOCA_XO, IOCB_XI, IOCB_XO, IOCC_XI, IOCC_XO, KSZ_XI, KSZ_XO
+  BOUND EBYTE-E22-SX1262 (7): SPI3_CE1, SPI3_IO23, SPI3_IO24, SPI3_IO26, SPI3_MISO, SPI3_MOSI, SPI3_SCLK
+  BOUND DIODES-PI7C9X2G404SL (6): S1_SMBCLK, S1_SMBDAT, S2_SMBCLK, S2_SMBDAT, S3_SMBCLK, S3_SMBDAT
+  BOUND SILABS-CP2102N (5): GNSS_RST, RB_RST, RB_RXD, ZBA_RST, ZBB_RST
+  BOUND QUECTEL-LG290P (5): GNSS_RST_n, GNSS_RXD, GNSS_RXD2, GNSS_TXD, GNSS_TXD2
+  BOUND FAR-QUECTEL-RM520N (3): SIM2_CLK, SIM2_IO, SIM2_RST
+  BOUND FAR-BENCH-PROBE (3): IOCA_RST_n, IOCB_RST_n, IOCC_RST_n
+  BOUND RF-LINES (2): GNSS_RF_IN, LORA_ANT
+  BOUND FAR-HDMI-SINK (2): HDMIO_SCL, HDMIO_SDA
+  BOUND FAR-ROCKBLOCK-9704 (1): RB_TXD
+  MAKER *_RST at 5.89 ns (critical 137.2 mm) (1): KSZ_RST
+  MAKER *_SWCLK at 0.451 ns (critical 10.5 mm) (3): IOCA_SWCLK, IOCB_SWCLK, IOCC_SWCLK
+  MAKER *_SWDIO at 0.451 ns (critical 10.5 mm) (3): IOCA_SWDIO, IOCB_SWDIO, IOCC_SWDIO
+  MAKER BBM* at 0.113 ns (critical 2.6 mm) (9): BBM1_ARMR, BBM1_MOV, BBM1_REQ, BBM2_ARMR, BBM2_MOV, BBM2_REQ, BBM3_ARMR, BBM3_MOV, BBM3_REQ
+  MAKER BBM* at 0.136 ns (critical 3.2 mm) (6): BBM1, BBM1_RA, BBM2, BBM2_RA, BBM3, BBM3_RA
+  MAKER BSEL* at 0.136 ns (critical 3.2 mm) (3): BSEL1, BSEL2, BSEL3
+  MAKER EXP_INT at 0.121 ns (critical 2.8 mm) (1): EXP_INT
+  MAKER HB* at 0.451 ns (critical 10.5 mm) (3): HB1, HB2, HB3
+  MAKER IOC?_CAN* at 0.451 ns (critical 10.5 mm) (12): IOCA_CAN1_RX, IOCA_CAN1_TX, IOCA_CAN2_RX, IOCA_CAN2_TX, IOCB_CAN1_RX, IOCB_CAN1_TX, IOCB_CAN2_RX, IOCB_CAN2_TX, IOCC_CAN1_RX, IOCC_CAN1_TX, IOCC_CAN2_RX, IOCC_CAN2_TX
+  MAKER SCL* at 0.451 ns (critical 10.5 mm) (1): SCL
+  MAKER SDA* at 0.451 ns (critical 10.5 mm) (1): SDA
+  MAKER SEL* at 0.215 ns (critical 5.0 mm) (9): SEL1_AB, SEL1_BC, SEL1_CA, SEL2_AB, SEL2_BC, SEL2_CA, SEL3_AB, SEL3_BC, SEL3_CA
+  MAKER SEL* at 0.451 ns (critical 10.5 mm) (9): SEL1_A, SEL1_B, SEL1_C, SEL2_A, SEL2_B, SEL2_C, SEL3_A, SEL3_B, SEL3_C
+  MAKER WSEC_* at 0.215 ns (critical 5.0 mm) (3): WSEC_AB, WSEC_BC, WSEC_CA
+  MAKER WSEC_* at 0.451 ns (critical 10.5 mm) (3): WSEC_A, WSEC_B, WSEC_C
+  UNDECIDED (9): 5G_DCHG: no signal-class declaration; 5G_TPR_CT: no signal-class declaration; CARD1_PERST_n: no signal-class declaration; CARD2_PERST_n: no signal-class declaration; CARD3_PERST_n: no signal-class declaration; EMCON_ON1: no signal-class declaration
+=== board C: 17 nets the bound decides, 6 a maker's figure holds
+  BOUND RPI-RP2040 (11): EPD_CS, EPD_DC, EPD_SCL, EPD_SDA, QSPI_D0, QSPI_D1, QSPI_D2, QSPI_D3, QSPI_SCLK, QSPI_SS, SWDIO
+  BOUND OSCILLATOR-NODES (3): XIN, XOUT, XOUT_R
+  BOUND POWER-STAGE-NODES (1): EPD_SW
+  BOUND LVC1G34-BUFFER (1): Q3_G
+  BOUND FAR-BENCH-PROBE (1): SWCLK
+  MAKER EXP_INT at 0.121 ns (critical 2.8 mm) (1): EXP_INT
+  MAKER HB? at 0.451 ns (critical 10.5 mm) (3): HB1, HB2, HB3
+  MAKER SCL at 0.451 ns (critical 10.5 mm) (1): SCL
+  MAKER SDA at 0.451 ns (critical 10.5 mm) (1): SDA
+  UNDECIDED (4): EMCLAMP_G: no signal-class declaration; EMCLAMP_Y: no signal-class declaration; EMCON_RD: no signal-class declaration; EMCON_RD_R: no signal-class declaration
+=== board D: 8 nets the bound decides, 5 a maker's figure holds
+  BOUND OSCILLATOR-NODES (5): HUB_XTAL1, HUB_XTAL2, HUB_XTAL2R, PCM_XTI, PCM_XTO
+  BOUND NICERF-SA868 (2): SA_RXD, SA_TXD
+  BOUND TI-TUSB2046B (1): HUB_RST_n
+  MAKER EXP_INT at 0.121 ns (critical 3.7 mm) (1): EXP_INT
+  MAKER HUB_DM* at 0.5 ns (critical 15.1 mm) (1): HUB_DM4
+  MAKER HUB_DP* at 0.5 ns (critical 15.1 mm) (1): HUB_DP4
+  MAKER SCL at 0.451 ns (critical 13.6 mm) (1): SCL
+  MAKER SDA at 0.451 ns (critical 13.6 mm) (1): SDA
+  UNDECIDED (8): FLANGE_AIN0: no signal-class declaration; FLANGE_NTC: no signal-class declaration; FLANGE_REF: no signal-class declaration; HUB_FB: no signal-class declaration; TXSUP_CT: no signal-class declaration; TXSUP_EN: no signal-class declaration
+=== board E: 31 nets the bound decides, 0 a maker's figure holds
+  BOUND RPI-RP2040 (14): DCF_PULSE, IMU_INT1, LTG_IRQ, QSPI_D0, QSPI_D1, QSPI_D2, QSPI_D3, QSPI_SCLK, QSPI_SS, SCL1, SDA1, SMBC, SMBD, SWDIO
+  BOUND POWER-STAGE-NODES (10): E6_BST, HS_GATE, Q1_G, Q2_G, TRK_BG1, TRK_BG2, TRK_BOOST1, TRK_BOOST2, TRK_TG1, TRK_TG2
+  BOUND OSCILLATOR-NODES (3): XIN, XOUT, XOUT_R
+  BOUND DISCRETE-MOSFET (2): FAN1_SW, FAN2_SW
+  BOUND BOSCH-BMI270 (1): IMU_CSB
+  BOUND FAR-BENCH-PROBE (1): SWCLK
+  UNDECIDED (0): 
+=== board P: 1 nets the bound decides, 0 a maker's figure holds
+  BOUND TI-BQ4050 (1): BTP_INT
+  UNDECIDED (17): FUSE: no signal-class declaration; FUSE_G: no signal-class declaration; FUSE_GQ: no signal-class declaration; PACK_F: no signal-class declaration; PACK_MID: no signal-class declaration; PRES_J: no signal-class declaration

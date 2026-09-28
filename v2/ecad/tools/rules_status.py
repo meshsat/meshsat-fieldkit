@@ -724,11 +724,49 @@ CONFIG_INPUTS = {
     # port_protect.py:112, :463-472, :523-524 and :538-539 the board table's external_ports and _external_ports_why;
     # :482-485 boardtable.letter_for (every table's `name`; the reading records the letter it resolved); :101-106 and
     # :285-288 the intent file beside the netlist, whose rails stop the search, which the reading records by sha
-    # (phase_artefacts.reading_inputs, :436).
-    "port_protect.py": ("tools/boards/{letter}.json", "{phase}/out/{stem}-intent.json"),
-    # reliability.py:31 and :53 the declared list; :55 rules_lib.board_facts for the project names. (It also reads
-    # the newest `<stem>*/out/<stem>.net` by mtime, :47, and records no netlist, so its readings do not bind anyway.)
-    "reliability.py": ("tools/pcb_reliability.yaml", "tools/pcb_board_facts.yaml"),
+    # (phase_artefacts.reading_inputs, :436). Since 28 September 2026 (S-88, the review of decision 31, item B1):
+    # port_protect.reviews() reads tools/pcb_port_reviews.json, the external pins a review enumerated for each board,
+    # which reconcile() holds the declaration against pin by pin; the reading records it as inputs.port_reviews by sha.
+    "port_protect.py": ("tools/boards/{letter}.json", "{phase}/out/{stem}-intent.json", "tools/pcb_port_reviews.json"),
+    # reliability.py, the repaired tool of stream d6rel (28 September 2026, S-89; declared by
+    # v2/docs/records/d6rel/apply_config_inputs_reliability.py): judge() reads the declared list (the inventory's
+    # rules, the open items, every board's classes, exclusions and `written_against` pin) and records it by sha256
+    # in inputs.list; _cited() reads every document the list cites under v2/vendor/ and compares its bytes with the
+    # sha256 the list carries, so each is an input too (30 documents, listed from the list on the day this entry
+    # was written; a citation added to the list later is added here). It no longer reads pcb_board_facts.yaml
+    # and no longer takes the newest netlist by mtime: the artefact is the declared phase's (wear_inventory.artefact
+    # through phase_artefacts), recorded by sha256 and by content, so its readings bind.
+    "reliability.py": ("tools/pcb_reliability.yaml",
+                       "../vendor/battery/amass-xt60-spec-tme.pdf",
+                       "../vendor/cm5/amphenol-10164227-bergstak-0.40mm-product-sheet.pdf",
+                       "../vendor/connectors/amphenol-rjhse5380-rj45-jack.pdf",
+                       "../vendor/connectors/gct-sim8060-nano-sim-socket.pdf",
+                       "../vendor/connectors/hro-type-c-31-m-12.pdf",
+                       "../vendor/connectors/jst-handling-precautions-2020.pdf",
+                       "../vendor/connectors/jst-ph-catalogue.pdf",
+                       "../vendor/connectors/jst-sh-catalogue.pdf",
+                       "../vendor/connectors/jst-vh-catalogue.pdf",
+                       "../vendor/connectors/jst-xh-catalogue.pdf",
+                       "../vendor/connectors/millmax-0858-product-page-20260927.html",
+                       "../vendor/connectors/molex-2086581001-part-page-wayback-20251116.html",
+                       "../vendor/connectors/wurth-wr-bhd-box-header-61201021621.pdf",
+                       "../vendor/connectors/wurth-wr-bhd-box-header-61201621621.pdf",
+                       "../vendor/connectors/wurth-wr-bhd-box-header-61202621621.pdf",
+                       "../vendor/connectors/wurth-wr-com-usb3-a-692122030100.pdf",
+                       "../vendor/hirose/hirose-fh34-series-ffc-connectors.pdf",
+                       "../vendor/hirose/hirose-ufl-series-catalogue-2009-02-digikey-copy.pdf",
+                       "../vendor/keystone/M65p42.pdf",
+                       "../vendor/keystone/M65p9.pdf",
+                       "../vendor/m2/te-2199119-m2-b-key.pdf",
+                       "../vendor/omron/omron-g6k-signal-relay.pdf",
+                       "../vendor/precidip/precidip-813-spring-loaded-connector-pages-31-34.pdf",
+                       "../vendor/rf/amphenol-rf-132134-11-part-page-wayback-20260217.html",
+                       "../vendor/rf/amphenol-rf-132134-part-page-wayback-20260213.html",
+                       "../vendor/rf/radiall-R222M00720-tds.pdf",
+                       "../vendor/seals/apem-5000-series-datasheet-rs-copy.pdf",
+                       "../vendor/switches/ck-atp16-series-datasheet.pdf",
+                       "../vendor/switches/ck-atp19-series-datasheet.pdf",
+                       "../vendor/switches/nkk-m-series-toggles-datasheet.pdf"),
     # check_pcb_e5.py:38 `_bt.value("e5", "copper_layers", 2)`; every other number is a literal in the tool.
     "check_pcb_e5.py": ("tools/boards/e5.json",),
     # fab_limits.py:61-63 the project file beside the board (design rules, net classes); :31 DOC, the fabricator
@@ -871,9 +909,55 @@ CONFIG_INPUTS = {
     # stackup_write.STACKS (a data table in an imported module, declared as stackup_gate's is); :351 every document
     # EDGE_SOURCES names (one today). It records every one of them by sha, the netlist by content16 too. A document
     # added to EDGE_SOURCES is not seen here until it is added to this entry (an instrument limit, as for any new read).
+    # SINCE 27 SEPTEMBER 2026 (stream w5si, MESHSAT-1357) EDGE_SOURCES is the STANDARD records of tools/pcb_edge_rates.yaml,
+    # the data file every edge is read from (edge_length.load_rates). The reading records it by sha (inputs.edge_rates),
+    # with every document a record it used cites (inputs.document_N), the search listing the data file names
+    # (inputs.search_listing), every other board's netlist a continued net was answered from (inputs.far_netlist_<letter>)
+    # and the manifest that pins the makers' IBIS models (inputs.ibis_manifest). All of them are declared below. THE MODELS
+    # ARE NOT: they are not in the repository, and PINNED_INPUTS holds them to the manifest. The documents and the netlist paths were DERIVED
+    # from the data file and from phase_artefacts when the entry was written, by
+    # v2/docs/records/w5si/apply/apply_rules_status_config_inputs.py: the netlists are named by phase directory, so
+    # when a board's declared phase moves or the data file cites a new document, that script is run again with --refresh.
     "edge_length.py": ("tools/boards/{letter}.json", "{phase}/out/{stem}-intent.json", "{phase}/{stem}.kicad_pro",
                        "tools/pcb_board_facts.yaml", "tools/stackup_write.py",
-                       "../vendor/standards/usb-2-0-specification-2024-09-27.md"),
+                       "../vendor/standards/usb-2-0-specification-2024-09-27.md", "tools/pcb_edge_rates.yaml",
+                       "../vendor/ibis-manifest.yaml", "../docs/records/hc5/kit_i2c_budget.round8-d.out.txt",
+                       "../vendor/adi/adi-ds3231sn.pdf", "../vendor/ams/ams-as7331.pdf",
+                       "../vendor/battery/ti-bq4050.pdf", "../vendor/bosch/bosch-bme688.pdf",
+                       "../vendor/bosch/bosch-bmi270.pdf", "../vendor/cluster/ksz989x-hw-design-checklist.pdf",
+                       "../vendor/cm5/cm5-datasheet.pdf", "../vendor/diodes/diodes-74lvc1g17.pdf",
+                       "../vendor/diodes/diodes-74lvc1g34.pdf", "../vendor/diodes/diodes-pi7c9x2g404sl.pdf",
+                       "../vendor/fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf",
+                       "../vendor/lora/ebyte-e22-900m30s-user-manual-en-v1.20.pdf",
+                       "../vendor/microchip/microchip-atecc608b-summary-DS40002239B.pdf",
+                       "../vendor/microchip/microchip-ksz9897-datasheet.pdf",
+                       "../vendor/nexperia/nexperia-74lvc1g157.pdf",
+                       "../vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf",
+                       "../vendor/pdi/pdi-epd-driving-circuit-rev02.pdf", "../vendor/power/aos-ao3401a-p-mosfet.pdf",
+                       "../vendor/power/jscj-2n7002-c8545.pdf", "../vendor/quectel/lg290p03-hardware-design-v1.1.pdf",
+                       "../vendor/quectel/quectel-rm520n-gl-hardware-design-v1.0.pdf",
+                       "../vendor/rf/skyworks-sky13351-378lf-spdt.pdf",
+                       "../vendor/rockblock/rb9704-datasheet-RB9704-001-JUN26.pdf",
+                       "../vendor/rp2040/rpi-rp2040-datasheet.pdf",
+                       "../vendor/sciosense/sciosense-as3935-factsheet.pdf",
+                       "../vendor/sensirion/sgp41-datasheet.pdf", "../vendor/silabs/silabs-cp2102n.pdf",
+                       "../vendor/slkor/slkor-bc857b-c556165.pdf", "../vendor/st/st-stm32h743xi-datasheet-rev11.pdf",
+                       "../vendor/st/st-usblc6-2-esd-protection.pdf",
+                       "../vendor/standards/nxp-um10204-rev6-i2c-bus-specification.pdf",
+                       "../vendor/ti/bq25731-datasheet.pdf", "../vendor/ti/lm5176-datasheet.pdf",
+                       "../vendor/ti/ti-sn74lvc1g34.pdf", "../vendor/ti/ti-sn74lvc2g06.pdf",
+                       "../vendor/ti/ti-tcan334-can-fd-transceiver.pdf", "../vendor/ti/ti-tmuxhs4212.pdf",
+                       "../vendor/ti/ti-tpd2e2u06-q1.pdf", "../vendor/ti/ti-tpd4e001.pdf",
+                       "../vendor/ti/ti-tps25740.pdf", "../vendor/ti/ti-ts3dv642.pdf",
+                       "../vendor/ti/ti-ts3usb221a.pdf", "../vendor/ti/ti-tusb2046b.pdf",
+                       "../vendor/ti/tps23861-datasheet.pdf", "../vendor/vishay/veml7700-datasheet.pdf",
+                       "../vendor/winbond/winbond-w25q16jv-serial-flash.pdf",
+                       "../vendor/xenarc/xenarc-709gnk-product-manual-v2.pdf",
+                       "../vendor/zigbee/ebyte-e72-2g4m20s1e-user-manual.pdf",
+                       "../docs/records/w5si/readings/edge-search.txt", "pcb-a-power-a23/out/pcb-a-power.net",
+                       "pcb-b-compute-b19/out/pcb-b-compute.net", "pcb-c-display-c8/out/pcb-c-display.net",
+                       "pcb-d-aprs-d9/out/pcb-d-aprs.net", "pcb-e1-dock-e7/out/pcb-e1-dock.net",
+                       "pcb-p-pack-p2/out/pcb-p-pack.net"),
     # ground_system.py:52-56 board_decl, the board table's `grounds`; :128-130 sch_prov.letter_for (every table's
     # `name`; the reading records the letter it resolved, as port_protect's does). It was not declared at all, so a
     # GND-001 reading that bound its artefact would still have read CONFIG_UNDECLARED (ts-net, 26 September 2026; the
@@ -969,6 +1053,65 @@ def _recorded_sha(rec, path):
     return None
 
 
+# ------------------------------------------------------------------------------------------------------------------
+# INPUTS A TRACKED MANIFEST PINS (28 September 2026, MESHSAT-1357, stream w5si2). The makers' IBIS models rule SI-001
+# reads are NOT in the repository: several forbid distribution in their own header and publication is the owner's
+# decision. What is tracked is v2/vendor/ibis-manifest.yaml, which pins each model by the sha256 of the extracted
+# file; it is declared in CONFIG_INPUTS and dated like any input. The models are held to it HERE and never asked of
+# git: a file no commit holds "cannot be dated by a commit", which would make the only current state the one that
+# publishes. Per model the manifest pins and the reading asked for (inputs.model_N, or a document of the same path in
+# a reading older than the manifest):
+#   the reading read it at the sha pinned           BOUND, whether the model is in this checkout or not
+#   the reading read it at another sha              CONFIG_CHANGED
+#   the file in this checkout is not the one pinned CONFIG_CHANGED
+#   the reading recorded it absent, and it is absent now    BOUND (the reading is INCONCLUSIVE by the tool)
+#   the reading recorded it absent, and it is here now      CONFIG_CHANGED: a re-take reads more, and says so
+# A manifest lies at <repository>/v2/vendor/ and names its files relative to the repository. Paths are relative to
+# v2/ecad, as in CONFIG_INPUTS; a fixture hands an absolute path.
+PINNED_INPUTS = {"edge_length.py": ("../vendor/ibis-manifest.yaml",)}
+
+
+def _recorded_model(rec, file):
+    """("READ", sha256/16) or ("ABSENT", None) as the reading recorded a pinned file, by its path; None when the reading
+    did not ask for it."""
+    want = os.path.normpath(str(file))
+    for v in (rec.get("inputs") or {}).values():
+        if not isinstance(v, dict) or os.path.normpath(str(v.get("path") or "")) != want: continue
+        if v.get("absent"): return "ABSENT", None
+        if v.get("sha256_16"): return "READ", str(v["sha256_16"])
+    return None
+
+
+def _pinned_state(rec, wf, pinned=None):
+    """None, or why a reading is not current against the files a tracked manifest pins. See the block comment above."""
+    table = PINNED_INPUTS if pinned is None else pinned
+    for tmpl in table.get(wf, ()):
+        mp = os.path.normpath(os.path.join(ECAD, tmpl))
+        root = os.path.dirname(os.path.dirname(os.path.dirname(mp)))
+        rel = os.path.relpath(mp, root)
+        try:
+            import ibis_manifest as _im
+            man = _im.load(root, rel)
+        except Exception as e:
+            return "the manifest %s could not be read (%s), so nothing pins the models a reading read" % (rel, type(e).__name__)
+        if man.get("why"): return "%s, so nothing pins the models a reading read" % man["why"]
+        if man.get("refusals"): return "the manifest refuses a row, so not every model is pinned: %s" % "; ".join(man["refusals"])[:200]
+        for file, row in sorted(man["models"].items()):
+            got = _recorded_model(rec, file)
+            if got is None: continue
+            pin16 = row["sha256"][:16]
+            state, held = _im.state_of(root, row)
+            if state == _im.DIFFERS:
+                return ("the model %s in this checkout is not the file %s pins (sha256/16 %s held, %s pinned)"
+                        % (file, rel, held[:16], pin16))
+            if got[0] == "READ" and got[1] != pin16:
+                return "the reading read %s at sha256/16 %s and %s pins it at %s" % (file, got[1], rel, pin16)
+            if got[0] == "ABSENT" and state == _im.PRESENT:
+                return ("the reading was taken without the model %s, which is in this checkout now and is the file %s pins: "
+                        "a re-take reads more than this reading did" % (file, rel))
+    return None
+
+
 def _config_state(rec, letter, m, rid, regs, config_inputs=None):
     """(ok, cause, why, entries): is every configuration input the reading's writer is declared to read unchanged since
     the reading, or reused under a `kind: config` entry? See the block comment above CONFIG_INPUTS."""
@@ -1007,6 +1150,8 @@ def _config_state(rec, letter, m, rid, regs, config_inputs=None):
         e = _compatible("config", regs, rule=rid, board=letter, input=rel, now=now or "absent", reading=ts)
         if e: used.append(e); continue
         return False, "CONFIG_CHANGED", "configuration input %s changed since the reading: %s" % (rel, how), []
+    why = _pinned_state(rec, wf)
+    if why: return False, "CONFIG_CHANGED", "a file the manifest pins changed since the reading: %s" % why, []
     return True, "BOUND", "", used
 
 

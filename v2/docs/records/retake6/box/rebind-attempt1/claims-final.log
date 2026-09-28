@@ -1,0 +1,3 @@
+claims_check: 92 claim sentence(s) in 12 document(s), 1 without a qualifier, an evidence reference or a declared reason
+  FAIL v2/docs/REQUIREMENTS-TRACE.md: The qualified review of D-09 is still not engaged and nothing in a re-take changes that; this entry rebinds the page and does not re-decide the record
+verdict: claims_check           FAIL         of 92 {"claims": 92, "unqualified": 1} | a rating claimed without its test is a promise to whoever carries the kit

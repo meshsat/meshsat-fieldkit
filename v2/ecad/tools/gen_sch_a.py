@@ -45,7 +45,7 @@ _intent.rail("CELL_FUSED", 14.4, 10.0, 18.0, "F1", v_work=16.8, converted=False,
 # LM5176 stages (F-PR-04), whose input current enters at their buck-side high FETs Q28 and Q32 and not at the
 # controllers, and the heater's regulated rail enters at its eFuse U22 (F-PR-06).
 _intent.rail("VBAT", 14.4, 10.0, 18.0, "R17", always_on=True, v_work=16.8, converted=False, fed_from="CELL_FUSED",
-             always_on_why="the system node (VSYS): nothing on this board switches it. The pack reaches it through the 25 A blade F1 and the RSR shunt R17, opened only by the pack's own BQ4050 FETs and the blade; the charger's converter feeds it from shore through Q10", loads={"U4": 2.0, "Q28": 2.0, "U6": 2.0, "Q32": 2.0, "Q11": 1.5, "U15": 0.3, "U12": 0.2, "U22": 0.65, "U21": 0.69}, note="the 4S system node (VSYS) behind the RSR shunt R17; 10 A continuous, 18 A peak by the pack's rating (32.55)")
+             always_on_why="the system node (VSYS): nothing on this board switches it. The pack reaches it through the 25 A blade F1 and the RSR shunt R17, opened only by the pack's own BQ4050 FETs and the blade; the charger's converter feeds it from shore through Q10", loads={"U4": 2.0, "Q28": 2.22, "U6": 2.0, "Q32": 2.0, "Q11": 1.5, "U15": 0.3, "U12": 0.2, "U22": 0.65, "U21": 0.69}, note="the 4S system node (VSYS) behind the RSR shunt R17; 10 A continuous, 18 A peak by the pack's rating (32.55)")
 # VIN_RAW RECONCILED WITH BOARD E (third fix-up of round 4, 26 September 2026; board E's F-IN-02 on main faf8c981 handed
 # this line to this board). Board E declares its VIN_RAW at 6.15 A typical and peak: its LM5069 U6 with R19 = 10 mOhm
 # limits the VEHICLE entry at VCL / RS, 4.85 / 5.5 / 6.15 A (ti-lm5069.pdf SNVS452G), and a unit at VCL max passes 6.15 A
@@ -108,16 +108,31 @@ for _n, _sh in (("1", "R31"), ("2", "R35"), ("3", "R39")):
     # morning, generalised. This board regulates the rail and its copper runs from the INA226 shunt to the
     # VH header, measured at 0.07 percent of 5.1 V; board B carries it across 245 mm to a module receptacle
     # at 2.5 A and takes the other 1.5 points of the 2 percent.
-    _intent.rail("+5V_S%s" % _n, 5.1, 2.5, 5.0, _sh, loads={"J_5V_S%s" % _n: 5.0}, budget=0.02, share=0.005, fed_from="VBAT",
+    # INTERIM I-03: S2 aligned to B; PS-ALLTX current INCONCLUSIVE.
+    # S2 all-peak conditional bound 7.28 A vs loop minimum 7.10 to 7.17 A.
+    _intent.rail("+5V_S%s" % _n, 5.1, 4.2 if _n == "2" else 2.5, 5.63 if _n == "2" else 5.0, _sh, loads={"J_5V_S%s" % _n: 5.63 if _n == "2" else 5.0}, budget=0.02, share=0.005, fed_from="VBAT",
                  switch={"1": "U4", "2": "U5", "3": "U6"}[_n], efficiency=0.90,
-                 note="one CM5 slot with its cooler fan; 5 A peak at the module; the rail net starts at the "
-                      "INA226 shunt. This board's share of the 2 percent is 0.5 point, measured 0.07")
+                 note=("one CM5 slot with its cooler fan and the 5G module on the M.2 socket. INTERIM (S-98, finding I-03, "
+                       "28 September 2026): 4.2 A typical and 5.63 A peak, aligned to board B's derivation from the held maker "
+                       "pages (the CM5's 0.9 A typical, release 3 Table 9, no maximum published; the RM520N-GL's 3 A continuous "
+                       "and 4 A peak supply capability, Hardware Design v1.0 and v1.1); the PS-ALLTX mode current is INCONCLUSIVE, "
+                       "no held document decides it (v2/docs/records/cx1/ANALYSIS.md, CORRECTION.md B1); the all-peak conditional "
+                       "bound, 7.28 A, sits above the LM5176 stage's average loop minimum of 7.10 to 7.17 A (SNVSAI1D VSNS 43 mV "
+                       "over the 6 mOhm ISNS shunt at +1 percent and nominal). The rail net starts at the INA226 shunt. This "
+                       "board's share of the 2 percent is 0.5 point, measured 0.07" if _n == "2" else
+                       "one CM5 slot with its cooler fan; 5 A peak at the module, the AP64500's rating (DS41979 p.1); the rail "
+                       "net starts at the INA226 shunt. This board's share of the 2 percent is 0.5 point, measured 0.07"))
 # F-PR-04, 26 September 2026: the device rail's converter is an LM5176 stage now, not an AP64500. W2 found this
 # rail declared at 6.0 A peak on a 5 A part (VERIFIED) and summed its loads to the same 6.0 A (INFERRED); D-12 adds
 # the Glenair host port's own eFuse U32 (0.9 A limit) behind it, so the peak is 6.9 A. The LM5176 stage's average
 # current loop holds 43 to 57 mV across its 6 mOhm ISNS shunt R43 (SNVSAI1D, VSNS), 7.2 to 9.5 A, above the 6.9 A
 # peak and below the JST-VH lead's 10 A. The loads now name board A's own two eFuses as well as the lead to B.
-_intent.rail("+5V_DEV", 5.0, 4.0, 6.9, "R43", loads={"J_5V_DEV": 3.2, "U23": 0.5, "U32": 0.3}, budget=0.02, share=0.005, switch="U7", efficiency=0.90, fed_from="VBAT", note="the USB devices, the LimeSDR bay and the RockBLOCK behind their switches, the D8 mezzanine behind U23 and the wall host port behind U32; the net starts at the ISNS shunt R43. 9 September 2026 (ARCH-PCB-B-IOHA): +0.8 A because B16's three hub banks had to leave the slot rails. 26 September 2026 (F-PR-04, D-12): the converter is an LM5176 stage with a 7.2 A minimum average limit, and the Glenair port's 0.9 A takes the peak to 6.9 A.")
+# INTERIM I-03 (S-98, 28 September 2026): typical 5.1 A = board B's 3.8 A arriving at J_5V_DEV + the D8 mezzanine's 1.0 A
+# behind U23 + the wall port's 0.3 A allocation behind U32; the PS-ALLTX mode current is INCONCLUSIVE (records/cx1).
+# The 6.9 A peak is HELD AS IS: open item S-99 (stream s99) decides it. It is board B's 6.0 A plus the wall port's 0.9 A
+# with the D8 mezzanine at zero; the coincident figures are 7.9 A (D8 at its 1.0 A typical) and 8.9 A (every declared
+# limit), both above the LM5176 average loop's 7.10 A minimum (the ISNS shunt at +1 percent), which is S-99's question.
+_intent.rail("+5V_DEV", 5.0, 5.1, 6.9, "R43", loads={"J_5V_DEV": 3.8, "U23": 1.0, "U32": 0.3}, budget=0.02, share=0.005, switch="U7", efficiency=0.90, fed_from="VBAT", note="the USB devices, the LimeSDR bay and the RockBLOCK behind their switches, the D8 mezzanine behind U23 and the wall host port behind U32; the net starts at the ISNS shunt R43. 9 September 2026 (ARCH-PCB-B-IOHA): +0.8 A because B16's three hub banks had to leave the slot rails. 26 September 2026 (F-PR-04, D-12): the converter is an LM5176 stage with a 7.2 A minimum average limit (7.10 A with the ISNS shunt at +1 percent, 7.17 A nominal: SNVSAI1D VSNS 43 mV over 6 mOhm), and the declared peak became 6.9 A, board B's 6.0 A plus the Glenair port's 0.9 A with the D8 mezzanine at zero. 28 September 2026 (S-98, finding I-03, INTERIM): the typical is 5.1 A, board B's 3.8 A at J_5V_DEV plus the D8 mezzanine's 1.0 A behind U23 plus the wall port's 0.3 A allocation behind U32; the PS-ALLTX mode current is INCONCLUSIVE (v2/docs/records/cx1/CORRECTION.md B2). The 6.9 A peak is held pending S-99: the coincident figures are 7.9 A with D8 at its typical and 8.9 A at every declared limit, both above the loop's minimum.")
 # LOADS DECLARED 13 September 2026, apportioning the declared 0.3 A rather than measuring it: this is logic,
 # tens of milliamps a part, and the biggest single draw is the gated 3.3 V leaving on the mezzanine harness.
 # 27 September 2026 (EQ-17): U39, the EMCON gates' eFuse, passes their 0.4 mA and draws its own IQ, 0.19 to 0.26 mA

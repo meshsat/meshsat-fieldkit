@@ -1,0 +1,33 @@
+# WHAT THE MAKERS SAY OF THE LINE-SIDE (BOB SMITH) TERMINATION OF AN ETHERNET PORT AND OF THE COPPER AROUND IT (stream
+# w5si, 27 September 2026, MESHSAT-1357). The evidence of finding F-BOB
+# (v2/docs/records/w5si/F-BOB-common-mode-termination.md). Prototype design work: nothing has been built or measured.
+# Checked by tools/verify_citations.py: each document is the held file named by its sha256/16 and carries the quoted
+# words on the page named (the first page of a PDF is 1).
+parts:
+  - id: MICROCHIP-KSZ989X-CHECKLIST
+    part: "Microchip KSZ989x/KSZ956x/KSZ9477 hardware design checklist (board B's switch U1 is a KSZ9897R)"
+    document: v2/vendor/cluster/ksz989x-hw-design-checklist.pdf
+    sha256_16: "2a9d80931a0bed4b"
+    identifier: "DS00004151A (2021)"
+    quotes:
+      - {topic: "the termination", page: 10, quote: "All line-side transformer center taps should be individually terminated to a common node through"}
+      - {topic: "its return is chassis ground", page: 10, quote: "The common node is then connected to chassis ground through a 1000 pF, 2 kV capacitor."}
+      - {topic: "the shield", page: 10, quote: "The metal case shield of the RJ45 connector is also tied to chassis ground."}
+      - {topic: "NO signal ground under the line side", page: 12, quote: "The signal ground should extend only to the edge of the magnetics, and there should be no signal ground under the magnetics, connector, and the area in between."}
+      - {topic: "where the termination returns", page: 12, quote: "If a true chassis ground is available, the connector shield and line-side termination should connect to it."}
+      - {topic: "with no chassis", page: 12, quote: "If there is no true chassis ground, then route “chassis ground” with ample copper along the edge of the board to a place where it can be connected to the digital ground"}
+  - id: TI-TPS23861
+    part: "TI TPS23861, board B's PoE controller U5, which feeds pairs A and B of the same port"
+    document: v2/vendor/ti/tps23861-datasheet.pdf
+    sha256_16: "65262ce4766a5f8e"
+    identifier: "SLUSBX9I, March 2014, revised July 2019"
+    quotes:
+      - {topic: "the termination on a powered port: a capacitor in series with each 75 ohm", page: 91, quote: "The cable terminations typically consist of series resistor (usually 75 Ω) and capacitor (usually 10 nF) circuits from each data transformer center tap to a common node which is then bypassed to a chassis ground (or system earth ground) with a high-voltage capacitor (usually 1000 pF to 4700 pF at 2 kV)."}
+  - id: PULSE-H5007NL
+    part: "Pulse H5007NL, board B's magnetics T1"
+    document: v2/vendor/pulse/pulse-h5007nl.pdf
+    sha256_16: "76b85b47d0bd9f46"
+    identifier: "H500.O (06/08), as its file name prints it"
+    quotes:
+      - {topic: "the isolation the barrier is built for: 1500 V rms", page: 1, quote: "H5007 3c H5007NL 3d 1 1 -18 -18 -16 -12 -10 -43 -37 -33 -43 -37 -33 1500"}
+      - {topic: "the column that figure is under", page: 1, quote: "Hipot"}

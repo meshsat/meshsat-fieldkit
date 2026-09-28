@@ -15,17 +15,17 @@
    "netlist_parts.py": "41cf192223d822c2",
    "regen_compare.py": "341d7f129a1e6f24",
    "return_via.py": "b61d138e54955dd4",
-   "rules_lib.py": "c0458c53923d7925",
+   "rules_lib.py": "a6e2421096c1473f",
    "signal_class.py": "60b8647301428da4",
    "signalnets.py": "688be12d8e42e7a4",
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "5aa3d5157698ae2a",
+  "sha16": "8d11079ea3d16df7",
   "unresolved": []
  },
  "counts": {
-  "census_nets": 2004,
+  "census_nets": 2011,
   "checks": 59,
   "declared_nodes": 35,
   "declared_not_in_netlist": 0,
@@ -39,11 +39,11 @@
   "switches_unresolved": 0,
   "undecided": 0,
   "undeclared": 0,
-  "unmarked": 707
+  "unmarked": 711
  },
  "denominator": 59,
  "evidence": [
-  "census of the 2004 nets: 58 counted, 154 declared node, 0 ground, 50 settled, 1035 unconnected, 0 undecided, 707 unmarked",
+  "census of the 2011 nets: 58 counted, 154 declared node, 0 ground, 50 settled, 1038 unconnected, 0 undecided, 711 unmarked",
   "settled, they supply nothing (50): BOB, CANT2_A, CANT2_B, CANT_A, CANT_B, E22_CT, E72_CT, HUB1_RST_n, HUB1_VBUS, HUB1_XI, HUB1_XO, HUB2_RST_n, HUB2_VBUS, HUB2_XI, HUB2_XO, HUB3_RST_n, HUB3_VBUS, HUB3_XI, HUB3_XO, IOCA_LDO_EN, IOCA_XI, IOCA_XO, IOCB_LDO_EN, IOCB_XI, IOCB_XO, IOCC_LDO_EN, IOCC_XI, IOCC_XO, KSZC_SS, KSZ_RST_n, KSZ_XI, KSZ_XO, S1A_COMPC, S1B_COMPC, S1C_SS, S1D_SS, S2A_COMPC, S2B_COMPC, S2C_SS, S2D_SS, S3A_COMPC, S3B_COMPC, S3C_SS, S3D_SS, TCT1, TCT2, TCT3, TCT4, U23_DVDT, U24_DVDT",
   "declared as a node, not a rail: DEV_BST (supply pin by its held datasheet (U25.6 BST: v2/vendor/diodes/diodes-ap63200-series-buck.pdf))",
   "declared as a node, not a rail: DEV_SW (power class PWR in the netlist; supply pin by its held datasheet (U25.5 SW: v2/vendor/diodes/diodes-ap63200-series-buck.)",
@@ -150,12 +150,12 @@
   },
   "intent": {
    "path": "pcb-b-compute-b19/out/pcb-b-compute-intent.json",
-   "sha256_16": "162fcb9b95f680a7"
+   "sha256_16": "a7bf625c8b878dd5"
   },
   "netlist": {
-   "content16": "39d83d25efcd75a6",
+   "content16": "b9dbb9c4a430d108",
    "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
-   "sha256_16": "8b78c59754a6a0c7"
+   "sha256_16": "21a1f74a3ec1ae28"
   },
   "threshold_a": 0.0
  },
@@ -177,12 +177,12 @@
  },
  "tool": "intent_rails",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "87b7d5a9509c",
+  "tools_tree_sha": "bfeac03e9fe6170b"
  },
- "ts": "2026-09-27T13:22:17Z",
+ "ts": "2026-09-28T21:54:30Z",
  "verdict": "PASS",
- "version": "391d857966d6",
+ "version": "87b7d5a9509c",
  "writer": {
   "file": "intent_checks.py",
   "sha16": "1ad7af0c718ba940"
