@@ -7,8 +7,12 @@ answers the third blocking item of the independent check (AI review) of the firs
 ## 1. What BOB is
 
 Board B's net BOB is the common node of the line-side termination of the wall Ethernet port, the one known as the Bob
-Smith termination. On the committed netlist (`pcb-b-compute-b19/out/pcb-b-compute.net`, sha256/16 `8b78c59754a6a0c7`)
-and in `gen_sch_b.py` (line 1151):
+Smith termination. On the committed netlist (`pcb-b-compute-b19/out/pcb-b-compute.net`) and in `gen_sch_b.py`, read
+twice: at `c23c5e76`, where this finding was written, the netlist was sha256/16 `8b78c59754a6a0c7` and the three calls
+that name the net stood on line 1151; on the set 6 integration line (`85ad1193`, read 28 September 2026 by stream
+w5si2) the netlist is `028997a6c5e8810f` and the calls stand on line 1191. The facts are the same on both (the net
+carries R9 pin 2, R10 pin 2 and C33 pin 1; 75 ohm, 75 ohm, 1 nF 2 kV). A line number and a digest are pointers into
+one revision: `apply/apply_decisions_w5si.py` derives both from the tree it runs on and asserts the facts.
 
 ```
 T1 pin 18 (MCT3, the cable-side centre tap of pair C) -- R9, 75 ohm --+

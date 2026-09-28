@@ -55,9 +55,9 @@ import os, sys, json, ast
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import _pyedit as PE
+import _apply as AP          # since 28 September 2026 (stream w5si2, the drafts check's M4): preconditions, and a sentence for a refusal
 
-ROOT = os.path.abspath(os.path.join(HERE, "..", "..", "..", "..", ".."))
-if "--root" in sys.argv: ROOT = os.path.abspath(sys.argv[sys.argv.index("--root") + 1])
+ROOT = AP.root_of(HERE) if "--root" not in sys.argv or sys.argv.index("--root") + 1 < len(sys.argv) else os.path.abspath(".")
 TOOLS = os.path.join(ROOT, "v2", "ecad", "tools")
 TABLE = os.path.join(TOOLS, "boards", "b.json")
 GEN = os.path.join(TOOLS, "gen_pcb_b3.py")
@@ -164,22 +164,27 @@ def new_generator(src):
 
 
 def main():
+    # this draft needs nothing of the stream's tools: what it needs is the two files it changes, as it read them
+    AP.need_files(ROOT, ["v2/ecad/tools/boards/b.json", "v2/ecad/tools/gen_pcb_b3.py"], "this draft changes it")
     t = open(TABLE, encoding="utf-8").read()
     g = open(GEN, encoding="utf-8").read()
     t2 = new_table(t)
     g2, old, new = new_generator(g)
+    owed = ("\n  OWED after this draft: re-take board B's readings that read boards/b.json (it is a configuration input of every "
+            "reading that declares it) with retake_gate.sh; the net classes take effect at board B's next layout generation")
     if "--dry-run" in sys.argv:
-        print("dry run, nothing written: boards/b.json 3 entries; gen_pcb_b3.py PATTERNS %d entries become %d" % (len(old), len(new)))
-        return
-    open(TABLE, "w", encoding="utf-8").write(t2)
-    open(GEN, "w", encoding="utf-8").write(g2)
+        print("dry run, nothing written: boards/b.json 3 entries; gen_pcb_b3.py PATTERNS %d entries become %d%s" % (len(old), len(new), owed))
+        return 0
+    AP.write(TABLE, t2)
+    AP.write(GEN, g2)
     # read both back from the disk
     json.loads(open(TABLE, encoding="utf-8").read())
     back = [tuple(x) for x in ast.literal_eval(PE.assignment(PE.parse(open(GEN, encoding="utf-8").read()), "PATTERNS").value)]
     assert back == new
     print("board B: SW?_IN and SW?_O? declared RF and BOB's basis corrected (its class kept); gen_pcb_b3.py PATTERNS "
-          "%d entries become %d: the switch ports and the card RF lines in class RF, GNSS_RF_IN added" % (len(old), len(new)))
+          "%d entries become %d: the switch ports and the card RF lines in class RF, GNSS_RF_IN added%s" % (len(old), len(new), owed))
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    AP.run(main)

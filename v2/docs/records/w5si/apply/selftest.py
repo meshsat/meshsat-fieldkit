@@ -86,7 +86,19 @@ def main():
     check(ents["BOB"]["class"] == "CLOCKED_DIGITAL" and "Bob Smith" in ents["BOB"]["basis"] and ents["BBM*"] == TABLE["signal_classes"][3]
           and ents["SW?_IN"]["class"] == "HIGH_SPEED_DIGITAL", "the table: BOB keeps its class and gets its basis, the RF ports move, BBM* is untouched")
     r = run()
-    check(r.returncode != 0 and "already applied" in r.stderr, "a second run is refused")
+    said = r.stdout + r.stderr
+    check(r.returncode == 2 and "REFUSED: already applied" in said and "Traceback" not in said and "nothing was written" in said,
+          "a second run is refused, in a sentence and with no traceback")
+
+    # 2b. EVERY DRAFT REFUSES IN A SENTENCE (28 September 2026, stream w5si2, the drafts check's M4): on a tree that holds
+    # nothing of what a draft needs, each ends with exit code 2 and one line that starts REFUSED, says what is missing and
+    # that nothing was written; none raises
+    empty = tempfile.mkdtemp(prefix="w5si-selftest-empty-")
+    for name in sorted(f for f in os.listdir(HERE) if f.startswith("apply_") and f.endswith(".py")):
+        r = subprocess.run([sys.executable, "-B", os.path.join(HERE, name), "--root", empty], capture_output=True, text=True)
+        said = (r.stdout + r.stderr).strip()
+        check(r.returncode == 2 and said.startswith("REFUSED: ") and "Traceback" not in said and said.endswith("nothing was written")
+              and len(said.splitlines()) == 1 and not os.listdir(empty), "%s refuses an empty tree in one sentence: %s" % (name, said[:110]))
 
     # 3. byte positions
     src = 'A = ["Ω", ("x", "USB")]\n'
