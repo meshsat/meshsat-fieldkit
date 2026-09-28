@@ -369,6 +369,60 @@
    "why": "the outside climate and ultraviolet sensor pod, through an M8 sealed receptacle on the connector plate"
   }
  ],
+ "internal_ports": [
+  {
+   "ref": "J_BATT",
+   "why": "the pack's power lead from board P on its XT60, inside the case (IF-PE-PACK); the pack's own protection is on board P"
+  },
+  {
+   "ref": "J_SMB",
+   "why": "the SMBus lead to board P's gauge, inside the case (IF-PE-PACK)"
+  },
+  {
+   "ref": "J_BLK",
+   "why": "the twelve signal wires to the dock block E5 and through it to board A, inside the case (IF-AE-DOCK): SHORE_INHIBIT, the sensor controller's USB pair and the hot stop line HOT-R1"
+  },
+  {
+   "ref": "P_CP",
+   "why": "the pack's positive to the dock block E5 on a 12 AWG wire, inside the case (IF-AE-DOCK)"
+  },
+  {
+   "ref": "P_VR",
+   "why": "VIN_RAW to the dock block E5 on a 12 AWG wire, inside the case (IF-AE-DOCK): the bus behind this board's own entry protection, which board A declares external at J_VR1 to J_VR4"
+  },
+  {
+   "ref": "J_DCF",
+   "why": "the DCF77 receiver module beside this board, inside the case (IF-E-SENSORS)"
+  },
+  {
+   "ref": "J_GEIGER",
+   "why": "the Geiger counter module beside this board, inside the case (IF-E-SENSORS)"
+  },
+  {
+   "ref": "J_LTG",
+   "why": "the lightning sensor module beside this board, inside the case (IF-E-SENSORS). It shares the sensor bus SDA1 and SCL1 with the outside pod J_POD, which is declared external"
+  },
+  {
+   "ref": "J_FAN1",
+   "why": "mixer fan 1 under the plate, inside the sealed case (IF-E-FANS)"
+  },
+  {
+   "ref": "J_FAN2",
+   "why": "mixer fan 2 under the plate, inside the sealed case (IF-E-FANS)"
+  },
+  {
+   "ref": "J_TAMP",
+   "why": "the lid and tamper reed sensor's lead under the frame, inside the case (IF-E-TAMP)"
+  },
+  {
+   "ref": "PAD_W1",
+   "why": "water electrode A on the case floor, bare copper under the plate, inside the sealed case (IF-E-WATER): fed from +3V3_E6 through R38 (1 M)"
+  },
+  {
+   "ref": "PAD_W2",
+   "why": "water electrode B on the case floor, bare copper under the plate, inside the sealed case (IF-E-WATER): into the sensor controller's ADC0 past R39 (1 M) and C51 (100 nF)"
+  }
+ ],
  "_external_ports_why": "Rule TRN-001, 16 September 2026. A port that leaves the ENCLOSURE is a wire a person will plug something into, in the rain, having walked across a floor. Every one of them reaches a semiconductor, and the only thing between is a suppressor, a choke, a series resistor into a clamp, or nothing. Most connectors on these boards are internal (board-to-board ribbons, module sockets, fan leads inside a sealed case) and treating every J as external would refuse every board for wires that never leave it. The board knows which is which and nothing else does, so each one is named with where it goes.",
  "grounds": {
   "GND": {

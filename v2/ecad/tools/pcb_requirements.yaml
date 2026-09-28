@@ -3298,6 +3298,152 @@ open_items:
       PWR-001 and INT-001 re-taken; the bench decides the mode current at J_5V_DEV under PS-ALLTX with the LoRa,
       RockBLOCK and APRS bursts (prototype verification). Record: v2/docs/records/cx1/ANALYSIS.md, CORRECTION.md item B2
       and checks/check-1-RESULT.md item B2.
+  - id: S-100
+    class: SESSION
+    status: OPEN
+    title: >-
+      A-F2: Board A: the MAIN button's lead runs from the face to the LTC2954's PB pin with nothing on this board (the
+      net is J_MAINSW.1 and U1.2). ADI 2954fb p.12 and p.13 ask for 5.1 k and 0.1 uF at the pin for a button far from
+      the chip; the lead's clamp is board C's U10 at the switch. Finding A-F2 of the review of decision 31 (stream
+      d8dec31, 28 September 2026), section 4.3; the change is v2/docs/records/d8dec31/apply_gen_sch_a_mainpb.py, for
+      board A's generator owner in the next circuit round, with apply_interfaces_mainsw.py for the contract
+      IF-AC-MAINSW after it. Closed by the parts on board A's netlist and a re-review on it.
+  - id: S-101
+    class: SESSION
+    status: OPEN
+    title: >-
+      X-C1: Board C: U10 (USBLC6-2SC6), the clamp of the MAIN button's pair, has its rail pin on board C's +3V3, which
+      is off while the kit is off and the PB conductor is live at 1 to 2 V from a source of 1 to 15 uA (2954fb p.3).
+      If the array's upper diode holds under the PB threshold (0.6 to 1.0 V) at those currents, the LTC2954 reads a
+      pressed button while the kit is off. Not judged at the desk: ST gives the forward voltage at 10 mA only (DS4260
+      Table 2). Finding X-C1 of the review of decision 31 (stream d8dec31, 28 September 2026), section 4.4; the same
+      question stands for U11 on the PI button's pair. For board C's owner: the array's characteristic at microamps
+      from ST, or a bench measurement, or a clamp that refers to no rail (a substitution to prove).
+  - id: S-102
+    class: SESSION
+    status: OPEN
+    title: >-
+      D-F1: Board D: the push-to-talk clamps D11 and D14 (PESD5V0S1BA, VBR 5.5 to 9.5 V, VCL 10 to 14 V) stand on the
+      same net as U9's inputs (74LVC1G08GV, -0.5 to 6.5 V, IIK -50 mA) and Q4, Q5's sources with nothing in series:
+      positive, the clamp does not clamp below the gate's rating and C49, C50 hold what it left for a millisecond;
+      negative, the gate's own input conducts first. Finding D-F1 of the review of decision 31 (stream d8dec31, 28
+      September 2026), section 5.3; the change is v2/docs/records/d8dec31/apply_gen_sch_d_ptt.py (1 k and two BAT46W
+      per line), for board D's generator owner. Closed by the parts on board D's netlist and a re-review on it.
+  - id: S-103
+    class: SESSION
+    status: OPEN
+    title: >-
+      D-F2: Board D: the speaker clamps D9 and D12 stand on U7's outputs (TPA6132A2) with nothing in series; the
+      amplifier's output conducts from about 2.5 V, before the clamp's 5.5 V, and TI gives the outputs a human body
+      model figure only (SLOS597B p.4). Not judged at the desk. Finding D-F2 of the review of decision 31 (stream
+      d8dec31, 28 September 2026), section 5.3. Decided by TI's IEC 61000-4-2 figure for these outputs or by test M7;
+      removed by a series element between the jack's clamp and the output, sized by the headset's impedance, which is
+      board D's owner's.
+  - id: S-104
+    class: SESSION
+    status: OPEN
+    title: >-
+      D-F3: Board D: J_USB3 is the touch lead of the monitor on the face (SC-HF-06) and carries no clamp on its pair
+      and none of the port parts its hub's maker asks for (TI SLLS413L p.17: 22 uF on the port's VBUS, a bead with 100
+      nF on the connector side). Not judged at the desk, the lead staying inside the case. Finding D-F3 of the review
+      of decision 31 (stream d8dec31, 28 September 2026), section 5.3. Removed by the USBLC6-2SC6 the set already buys
+      at the header and the maker's two port parts, for board D's owner, with HF-F06's port limit.
+  - id: S-105
+    class: SESSION
+    status: OPEN
+    title: >-
+      D-F4: Board D: C41 and C42 (value '1u', no code) stand on the microphone conductors behind D10 and D13, whose
+      clamp reaches 37 V at 5 A and whose breakdown is 16.7 V at most, and their value text states no voltage. Finding
+      D-F4 of the review of decision 31 (stream d8dec31, 28 September 2026), section 5.3. Closed by a value text
+      naming 50 V or more, so the bill carries it.
+  - id: S-106
+    class: SESSION
+    status: OPEN
+    title: >-
+      E-F1: Board E: U3 (LM74700-Q1) has no input capacitor; TI SNOSD17G 10.1.1.2.3 (p.17) requires 22 nF at the
+      least, and DC_F carries only the VCAP capacitor C4. With none, a negative discharge at the receptacle drives
+      DC_F to D10's clamping voltage and puts that plus DC_P's voltage across Q1 (60 V) and U3 (75 V), TI's own
+      criterion (10.1.1.3, p.18). Finding E-F1 of the review of decision 31 (stream d8dec31, 28 September 2026),
+      section 6.3; the change is v2/docs/records/d8dec31/apply_gen_sch_e_cin.py (1 uF 100 V, board A's C207's part and
+      code C382212; board E's C6 and C7 have the same value text and no code), for board E's generator owner. Closed
+      by the part on board E's netlist and a re-review on it.
+  - id: S-107
+    class: SESSION
+    status: OPEN
+    title: >-
+      E-F2: Board E: F1 is a MINI blade of the class the Keystone 3568 holder takes, and the series the record holds
+      (Littelfuse 297) is rated 32 V DC with an interrupting rating of 1000 A at 32 V DC, on a line specified to 36 V
+      whose hot swap admits 40 V. Finding E-F2 of the review of decision 31 (stream d8dec31, 28 September 2026),
+      section 6.3. Closed by a fuse of the same form rated above 40 V, with its maker's sheet filed: the 58 V MINI
+      series is the candidate and its sheet is not held (littelfuse.com answered 403; the Internet Archive held no
+      copy at the addresses tried on 27 September 2026); that its series number is 997 is INFERRED. For board E's
+      owner and R-PWR.
+  - id: S-108
+    class: SESSION
+    status: OPEN
+    title: >-
+      E-F3: Board E, by a conservative bound and not a demonstrated defect: J_POD.1 is the rail +3V3_E6 out of the
+      case; D9's VBUS element breaks down at 6 V at the least, above the absolute maximum supply of every part on the
+      rail (SGP41 3.6 V, RP2040 3.63 V, BMI270 4 V, BME688 4.25 V), and the rail's 4.3 uF lets the whole charge of the
+      IEC 61000-4-2 network lift it to 3.61 V at 8 kV and 3.86 V at 15 kV from the regulator's 3.333 V maximum (the
+      bound: nothing into the loads, which take the excess in microseconds). Finding E-F3 of the review of decision 31
+      (stream d8dec31, 28 September 2026), section 6.3; the change is v2/docs/records/d8dec31/apply_gen_sch_e_pod.py
+      (two 10 uF 25 V at the header, which puts the same bound at 3.38 and 3.43 V), for board E's generator owner.
+      Closed by the parts on board E's netlist and a re-review on it, or by a measurement under test M7 that reads the
+      rail under the ratings.
+  - id: S-109
+    class: SESSION
+    status: OPEN
+    title: >-
+      E-F4: Board E: the pod's lead has no series element, so a short of its 3.3 V conductor outside takes the sensor
+      controller's rail and the hot stop line with it, and SDA1 and SCL1 run from the pod's pins to five parts inside
+      (U10, U14, U15, U17 and the module on J_LTG) with D9 on them and nothing in series. Not judged at the desk.
+      Finding E-F4 of the review of decision 31 (stream d8dec31, 28 September 2026), section 6.3. Options: series
+      resistors between D9 and the bus inside, or the pod on a bus of its own; a series element on the feed, sized by
+      the pod's supply current, which waits for the pod's part (IF-E-POD). For board E's owner.
+  - id: S-110
+    class: SESSION
+    status: OPEN
+    title: >-
+      D-N1: The antenna bulkheads' arrestor (PolyPhaser GTH-SFF-AL) is rated for surge (10 kA, no waveform stated)
+      with a 90 V turn-on and a 60 V DC operating maximum, and its sheet states no IEC 61000-4-2 figure and no
+      let-through; the VHF conductor's transmit peak with the wave wholly reflected is the intent's own 110 V. Eleven
+      antenna conductors of board A and board D's antenna path are therefore not judged at the desk (the review of
+      decision 31 (stream d8dec31, 28 September 2026), sections 4.5 and 5.3). The question for the maker is prepared
+      in section 9.3 and not sent; sending it is the owner's. Decided by the maker's answer, by each radio's
+      antenna-port rating, or by test M7. (finding D-N1)
+  - id: S-111
+    class: SESSION
+    status: OPEN
+    title: >-
+      A-N1: For R-PWR: at their rated pulse the VIN_RAW clamps (SMCJ40A, 64.5 V at 23.3 A) carry board A's front-end
+      controller U2 (LM5176, VIN and VISNS rated 60 V) outside its rating, and board E's D10 carries U3's ANODE (65 V)
+      to within 0.5 V; no surge level is ruled (D-16), so nothing fails, and the coordination of board E's hot swap
+      (stops above 40 V) with the four SMCJ40 parts between the receptacle and U2 is the qualified power review's to
+      compute. Notes A-N1 and E-N2 of the review of decision 31 (stream d8dec31, 28 September 2026), sections 4.3 and
+      6.3.
+  - id: S-112
+    class: SESSION
+    status: OPEN
+    title: >-
+      T-2: With port_protect.py's change of stream d8dec31 (a connector pin carrying a supply or a signal that no
+      entry of the declaration covers makes TRN-001 INCONCLUSIVE, and so does a declaration whose external pins no
+      review has enumerated into v2/ecad/tools/pcb_port_reviews.json), boards B and C read INCONCLUSIVE until their
+      tables carry `internal_ports` naming where each internal lead goes (290 connector pins on board B and 39 on
+      board C in the scratch reading, the review of decision 31 (stream d8dec31, 28 September 2026), section 10) and a
+      review of their exposed conductors, as decision 31's for A, D and E, writes their reviewed sets. For the owners
+      of boards/b.json and boards/c.json; the shape is boards/a.json, d.json and e.json after
+      apply_port_declarations.py and the three records of pcb_port_reviews.json. (finding T-2)
+  - id: S-113
+    class: SESSION
+    status: OPEN
+    title: >-
+      T-3: port_protect.py believes an `off_board` entry on its text: it cannot ask what the part named in the wall is
+      rated for, so an arrestor rated for surge answers a rule about electrostatic discharge, and TRN-001's PASS on
+      board A after apply_port_declarations.py believes 12 of its 18 entries on that text (the eleven antenna
+      conductors, not judged at the desk, and J_MAINSW, read on board C's netlist). A declaration form that names the
+      part, its document and the level it is rated to, read by the tool, is owed (the review of decision 31 (stream
+      d8dec31, 28 September 2026), section 10, T-3). For the tools stream.
 closed_items:
   - id: S-57
     closed_by: SC-70
@@ -5502,6 +5648,7 @@ records:
       decisions: []
     rule_coverage: PARTIAL
     choices: [SC-30]
+    waits_on: [S-100, S-101]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
@@ -5569,6 +5716,7 @@ records:
       rules: [SCH-003]
       decisions: []
     rule_coverage: PARTIAL
+    waits_on: [S-102, S-103, S-105]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
@@ -6017,7 +6165,7 @@ records:
       decisions: [31, 34]
     rule_coverage: PARTIAL
     rulings: [D-16]
-    waits_on: [S-88]
+    waits_on: [S-88, S-106, S-107, S-111]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: BLOCKER
@@ -7155,7 +7303,7 @@ records:
       rules: [TRN-001, GND-002]
       decisions: [34]
     rule_coverage: PARTIAL
-    waits_on: [S-88]
+    waits_on: [S-88, S-100, S-101, S-102, S-103, S-104, S-106, S-108, S-109, S-112, S-113]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
@@ -7344,6 +7492,7 @@ records:
       decisions: [31]
     rule_coverage: PARTIAL
     rulings: [D-16]
+    waits_on: [S-111]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
@@ -10060,7 +10209,7 @@ records:
       decisions: []
     rule_coverage: PARTIAL
     choices: [SC-45, SC-47]
-    waits_on: [S-62]
+    waits_on: [S-62, S-108, S-109]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
@@ -12710,6 +12859,7 @@ records:
       decisions: []
     rule_coverage: PARTIAL
     choices: [SC-45]
+    waits_on: [S-110, S-113]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY

@@ -60,8 +60,8 @@ holds:
          part it meets first, the clamp's rating against decision 34's level, and the placement and return-path
          constraints the layout must keep (the clamp at the entry, its ground return short and on the plane)"
        document: "v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md"
-       sha256: null
-       netlist_sha16: null
+       sha256: "094817023210d1b09d92e62716ba550d0fb5b11affc75fe18986bfc6ebae3609"
+       netlist_sha16: "0a2b59087bcc2678"
      - kind: fitted_parts
        what: "the exact fitted parts decision 31's executed record lists for board A, at their conductors"
        parts:
@@ -99,8 +99,8 @@ holds:
          part it meets first, the clamp's rating against decision 34's level, and the placement and return-path
          constraints the layout must keep (the clamp at the entry, its ground return short and on the plane)"
        document: "v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md"
-       sha256: null
-       netlist_sha16: null
+       sha256: "094817023210d1b09d92e62716ba550d0fb5b11affc75fe18986bfc6ebae3609"
+       netlist_sha16: "7a2c0ac2190b141a"
      - kind: fitted_parts
        what: "the exact fitted parts decision 31's executed record lists for board D, at their conductors"
        parts:
@@ -144,8 +144,8 @@ holds:
          part it meets first, the clamp's rating against decision 34's level, and the placement and return-path
          constraints the layout must keep (the clamp at the entry, its ground return short and on the plane)"
        document: "v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md"
-       sha256: null
-       netlist_sha16: null
+       sha256: "094817023210d1b09d92e62716ba550d0fb5b11affc75fe18986bfc6ebae3609"
+       netlist_sha16: "56adc9746d61c4e0"
      - kind: fitted_parts
        what: "the exact fitted parts decision 31's executed record lists for board E, at their conductors"
        parts:
