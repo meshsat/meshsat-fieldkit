@@ -1,0 +1,200 @@
+S-99 desk arithmetic. Inputs (sha256): 
+  3422910a15c4d1450141aa9a5fd725ba75bca9fcb42ae8c87e4cf3385d7d4498 v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json
+  96ee391b3e3f638d7436cad51fcabf77999b530d8734c1feb93f7766a4877d8a v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json
+  8d9f3b2256521b0d76373d434c1104fae6438002e5945088d890ec743a4d260a v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs-intent.json
+  0a2b59087bcc2678dac7e05b8b67c669f3d1957af846a0827bf59289dcea77d7 v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
+
+== 1. THE FITTED STAGE, read from the netlist (value must start with or contain the expected text)
+  C115     PASS     100n
+  C140     PASS     470p
+  C141     PASS     1n
+  C142     PASS     47n
+  C143     PASS     4.7u
+  C145     PASS     1n
+  C146     PASS     1n
+  C167     PASS     150u 25V Panasonic EEHZK1E151XP hybrid polymer (7.7 mm)
+  C168     PASS     150u 25V Panasonic EEHZK1E151XP hybrid polymer (7.7 mm)
+  C169     PASS     150u 25V Panasonic EEHZK1E151XP hybrid polymer (7.7 mm)
+  C47      PASS     10u 50V X7R 1210
+  C48      PASS     10u 50V X7R 1210
+  C49      PASS     22u 25V 1210
+  C50      PASS     22u 25V 1210
+  C51      PASS     22u 25V 1210
+  J_5V_DEV PASS     USB device rail to B16 (JST-VH): + -
+  L6       PASS     6.8uH XAL1010-682ME (Isat 21.8 A)
+  Q32      PASS     CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)
+  Q33      PASS     CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)
+  Q34      PASS     CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)
+  Q35      PASS     CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)
+  R115     PASS     40.2k (206 kHz)
+  R132     PASS     2.2k
+  R177     PASS     5mOhm 1% 2512 (CS)
+  R179     PASS     100k (MODE: CCM)
+  R180     PASS     100R 1% (CS filter, Kelvin from the shunt's top)
+  R181     PASS     100R 1% (CSG filter, Kelvin from the shunt's ground pad)
+  R182     PASS     100R 1% (ISNS+ filter, Kelvin from the shunt's output pad)
+  R183     PASS     100R 1% (ISNS- filter, Kelvin from the shunt's rail pad)
+  R186     PASS     1k 1% (ILM: 0.89 A)
+  R40      PASS     53.6k 1%
+  R41      PASS     10k 1%
+  R43      PASS     6mOhm 1% 2512 (ISNS)
+  R98      PASS     453R 1% (ILM: 2.0 A)
+  U11      PASS     INA226 rail monitor +5V_DEV
+  U23      PASS     TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (453R 1% (ILM: 2.0 A))
+  U32      PASS     TPS259631DDAR eFuse +5V_DEV -> VBUS_WALL (1k 1% (ILM: 0.89 A))
+  U7       PASS     LM5176PWPR buck-boost controller, +5V_DEV from VBAT
+  R43 (ISNS) pins on SD_OUT: ['1'], on +5V_DEV: ['2']; Q35 (boost high side) pins on SD_OUT: ['5']
+  R177 (CS) pins on SD_CS: ['1']; Q33 pins on SD_CS: ['1', '2', '3']; Q34 pins on SD_CS: ['1', '2', '3']
+  => the average current loop's shunt R43 is on the OUTPUT side (between Q35's drain and the +5V_DEV rail)
+  => the cycle-by-cycle shunt R177 is in the low-side FETs' common source (SD_CS) to GND: PASS
+  netlist parts check: ALL PASS
+  R186's held netlist label 0.89 A is stale: the corrected equation gives 0.9142 A; no design input is edited here.
+
+== 2. THE PROGRAMMED LIMITS (SNVSAI1D p.7; shunt tolerances Vishay 30100)
+  Output: VREF 0.788 to 0.812 V on 53.6k/10k -> 5.012 / 5.088 / 5.164 V (resistor tolerance not added)
+  Average loop, R43 6 mOhm: nominal shunt 43/50/57 mV -> 7.167 / 8.333 / 9.500 A
+  with +-1 percent initial tolerance: 7.096 (min) to 9.596 (max) A
+  with the shunt 50 K hot (TCR +-110 ppm/K, 0.55 percent): 7.057 to 9.649 A
+  ISS / gm offset: ISS 3.75 to 6.35 uA over gm 1 mS is 3.75 to 6.35 mV, 0.62 to 1.06 A on 6 mOhm; the VSNS spec is taken at VSS = 0.8 V
+  so the 43 to 57 mV band is taken as the regulation point as published; the offset is named, not added
+  Cycle-by-cycle (buck, VALLEY), R177 5 mOhm +-1 percent: 66/80/94 mV -> valley 13.069 / 16.000 / 18.990 A
+  Switching frequency: RT 40.2k -> 206.0 kHz nominal (equation 5), 180.3 to 231.8 kHz over the fSW(1) spread
+  Inductor ripple (buck, CCM): 2.14 A at 12.4 V in, 2.53 A at 16.8 V in; worst (L -20 percent, fsw 180.3 kHz): 3.62 A at 16.8 V
+  Cycle limit as an OUTPUT current (valley limit + half the ripple): 14.335 / 17.266 / 20.256 A nominal ripple
+  Inductor PEAK in cycle limit (equation 18, valley + full ripple): nominal 18.532 A; corner (VCS max, R -1, L -20, fsw -12.5 percent) 22.606 A against Isat 21.8 A
+  => at the corner the cycle-limit backstop exceeds Isat by 0.81 A (INFERRED; an observation for the stage owner, not S-99's verdict)
+
+== 3. THE LOADS THAT COINCIDE IN PS-ALLTX (intents parsed; maker figures typed and cited)
+  A declares +5V_DEV 4.0 A typ, 6.9 A peak, loads {"J_5V_DEV": 3.2, "U23": 0.5, "U32": 0.3}
+  B declares +5V_DEV 3.8 A typ, 6.0 A peak, 19 loads summing to 5.18 A
+  D declares +5V_D8 1.0 A typ, 2.0 A peak, loads summing to 0.96 A
+  A's +5V_D8 (behind U23): 1.0 / 2.0 A; A's VBUS_WALL (behind U32): 0.5 / 0.9 A
+
+  Board B load table (A = input-referred at 5.0 V; MAKER = a held maker figure, PROJECT = a declaration, BOUND = a stated limit)
+  ref    declared  childTyp  childPk   M-tier     basis of the M-tier figure
+  U23    1.200     1.200     3.000     0.900      MAKER: LimeSDR Mini host supply 5 V 900 mA (setup page); 4.5 W maximum (product page)
+  U25    0.900     0.900     1.500     1.050      PROJECT: child +3V3_DEV 1.2 A typ through the 0.88 buck (0.900 A) plus the two Zigbee radios' transmit increment 0.150 A (+3V3_ZB 0.30 peak over 0.10 typ)
+  F1     0.600     0.600     0.600     0.600      PROJECT: the declared allocation (no child rail in the intent)
+  U21    0.600     0.150     0.700     0.650      MAKER: E22-900M30S TX 650 mA typical (manual v1.20 printed p.2, PDF p.3); peak tier uses the declared 0.70
+  U24    0.450     0.150     2.000     0.500      MAKER: RockBLOCK 9704 DC input maximum 500 mA, charger default about 460 mA (hardware page)
+  F3     0.300     0.300     0.300     0.300      PROJECT: the declared allocation (no child rail in the intent)
+  U28    0.250     0.250     0.500     0.250      PROJECT: child +5V_CAM 0.25 / 0.5 A
+  F2     0.200     0.100     0.500     0.100      PROJECT: child +5V_HDMI 0.1 / 0.5 A
+  U26    0.150     0.141     0.226     0.342      MAKER: KSZ9897R 1.21 A TYPICAL at 25 C, 1.2 V, 1000 Mbps all ports (DS00002330D Table 6-1 p.169), 0.85 buck, PWR-F03
+  U106   0.100     0.104     0.181     0.104      PROJECT: child +1V1_S1 0.4 / 0.7 A through a 1.1 buck at 0.85
+  U206   0.100     0.104     0.181     0.104      PROJECT: child +1V1_S2 0.4 / 0.7 A through a 1.1 buck at 0.85
+  U306   0.100     0.104     0.181     0.104      PROJECT: child +1V1_S3 0.4 / 0.7 A through a 1.1 buck at 0.85
+  U40    0.050     0.120     0.250     0.120      PROJECT: child LDO 0.12 / 0.25 A (Iin = Iout + Ignd, Ignd omitted from these allocations, not a maximum); the parent's 0.05 is inconsistent (S-98 M7)
+  U50    0.050     0.120     0.250     0.120      PROJECT: child LDO 0.12 / 0.25 A (Iin = Iout + Ignd, Ignd omitted from these allocations, not a maximum); the parent's 0.05 is inconsistent (S-98 M7)
+  U60    0.050     0.120     0.250     0.120      PROJECT: child LDO 0.12 / 0.25 A (Iin = Iout + Ignd, Ignd omitted from these allocations, not a maximum); the parent's 0.05 is inconsistent (S-98 M7)
+  U15    0.020     0.020     0.020     0.020      PROJECT: the declared allocation (no child rail in the intent)
+  U16    0.020     0.020     0.020     0.020      PROJECT: the declared allocation (no child rail in the intent)
+  U17    0.020     0.020     0.020     0.020      PROJECT: the declared allocation (no child rail in the intent)
+  U18    0.020     0.020     0.020     0.020      PROJECT: the declared allocation (no child rail in the intent)
+  B declared load sum 5.180 A against its declared typical 3.8 A and declared peak 6.0 A
+  B M-tier (maker figures where held, declared typicals elsewhere, every transmitter keyed): 5.442 A on the lead
+  B P-tier (maker figures for the transmitters and the switch, declared child PEAKS elsewhere): 7.215 A on the lead
+  B every-declared-limit sum (the eFuse settings counted as loads): 10.815 A; above B's own 6.0 A peak and the lead's 10 A: unphysical as one load, a declaration inconsistency for board B's owner
+
+  Board D (the D8 mezzanine behind U23) in PS-ALLTX, the exciter keyed: others 0.440 A (D's +5V_D8 loads less U21) + the +5V_TX branch
+  D8 M-tier: SA868 TX 0.9 A typ (MAKER, v1.3 p.4) + U15/K1 0.040 + others = 1.380 A; at the maker's 1.000 A maximum 1.480 A
+  D8 P-tier: +5V_TX declared peak 1.15 A + others = 1.590 A; D-tier (declared, the eFuse's nominal 2.0 A): 2.000 A
+  U23's limit itself: 1.83 / 2.004 / 2.147 A (SLVSET8A, RILM 453 ohm); U32's: 0.914 A nominal at 1 k (equation 7), about 0.863 to 0.956 A scaling the 909 ohm row's spread
+  Wall equation: 903/1000 + 0.0112 = 0.9142000 A; estimated high 0.956043980 A, with R186 -1 percent 0.965582681 A; no guaranteed 1 kohm maximum
+  Corrected P demand before split 9.761220451 A (R186 -1 percent 9.770759151 A); after split 8.171220451 A (8.180759151 A)
+  Wall host port: M-tier 0.500 A (BOUND: a USB 2.0 device's maximum), P-tier 0.956 A (extrapolated eFuse estimate, not a guaranteed maximum), D-tier 0.900 A (declared)
+
+== 4a. THE CONVERTER'S COINCIDENT OUTPUT CURRENT against the average loop (output-side sense, so 1:1)
+  loop band: 7.057 (min, 1 percent + TCR at 50 K) / 8.333 (typ) / 9.649 (max) A
+  tier                                                                                                 demand A     vs min     vs typ     vs max
+  D  every declared limit (cx1): B 6.0 + D8 2.0 + wall 0.9                                                 8.90 FAIL -1.84 FAIL -0.57  PASS 0.75
+  Dt declared with D8 at its typical (cx1): B 6.0 + D8 1.0 + wall 0.9                                      7.90 FAIL -0.84  PASS 0.43  PASS 1.75
+  M  maker figures, declared typicals elsewhere, SA868 at 0.9 A, a USB 2.0 device on the wall port         7.32 FAIL -0.27  PASS 1.01  PASS 2.33
+  Mx M with the SA868 at its 1.0 A maximum                                                                 7.42 FAIL -0.37  PASS 0.91  PASS 2.23
+  P  maker figures for the transmitters, declared child peaks elsewhere, the wall eFuse at its extrapolated high estimate     9.76 FAIL -2.70 FAIL -1.43 FAIL -0.11
+  => no tier is under the loop's minimum; the M-tier is over it by 0.27 A (3.8 percent) and the P-tier is over even the maximum
+  Registry model (POWER-THERMAL.md +5V_DEV HIGH 7.8 A, line 709): vs min -0.74 A
+
+== 4b. ILLUSTRATIVE TIMING ESTIMATES ONLY (SNVSAI1D pp.6-7,16-17; CSS 47 nF, typical gm 1 mS, VSS(CL) 1.21 V, VREF 0.8 V); no closed-loop time constant or onset bound is stated
+  dimensional ratio CSS / gm (NOT a closed-loop time constant) = 47.0 us
+  assume constant overdrive, constant typical gm and initial SS 1.21 V; illustrative onset at VREF 0.8 V; assume NET pulldown = gm x positive overdrive (not a separately established net-current model)
+  overdrive   0.3 mV (0.05 A over the point on 6 mOhm): illustrative onset   64.233 ms, illustrative droop magnitude   40.6 V/s (dVout/dt negative)
+  overdrive   1.0 mV (0.17 A over the point on 6 mOhm): illustrative onset   19.270 ms, illustrative droop magnitude  135.3 V/s (dVout/dt negative)
+  overdrive   3.4 mV (0.57 A over the point on 6 mOhm): illustrative onset    5.668 ms, illustrative droop magnitude  460.1 V/s (dVout/dt negative)
+  overdrive  10.4 mV (1.73 A over the point on 6 mOhm): illustrative onset    1.853 ms, illustrative droop magnitude 1407.3 V/s (dVout/dt negative)
+  overdrive  20.0 mV (3.33 A over the point on 6 mOhm): illustrative onset    0.963 ms, illustrative droop magnitude 2706.4 V/s (dVout/dt negative)
+  => These are illustrative estimates, not bounds or measured responses. The 60 s coincident plateau is an assumption; the held Ebyte page supplies no airtime and charger limits supply no duration.
+  => Regulated bucks may draw more current as voltage falls only while regulating at assumed fixed output power/efficiency. AP2112 LDOs draw Iout + Ignd (DS39724 Rev.2-2 pp.2,8), not constant power.
+  => Complete-rail collapse, onset and recovery remain INCONCLUSIVE: measure SS, rail voltage and input/load current through actual bursts, controlled overloads, dropout and UVLO transitions.
+
+== 4c. THE CYCLE-BY-CYCLE LIMIT AT THE DEMAND (buck; valley = Iout - ripple/2, peak = Iout + ripple/2)
+  D  every declared limit (cx1): B 6.0 + D8 2.0 + wall 0.9     Iout 8.90 A: valley 7.63 A (limit min 13.07 A, margin 5.44 A PASS); peak 10.71 A worst ripple vs Isat 21.8 (PASS), Irms 20 K 14.0 (PASS)
+  M  maker figures, declared typicals elsewhere, SA868 at 0.9  Iout 7.32 A: valley 6.06 A (limit min 13.07 A, margin 7.01 A PASS); peak 9.13 A worst ripple vs Isat 21.8 (PASS), Irms 20 K 14.0 (PASS)
+  P  maker figures for the transmitters, declared child peaks  Iout 9.76 A: valley 8.50 A (limit min 13.07 A, margin 4.57 A PASS); peak 11.57 A worst ripple vs Isat 21.8 (PASS), Irms 20 K 14.0 (PASS)
+  => the cycle-by-cycle limit never acts at the coincident demand; the average loop is the governing limiter
+
+== 4d. THE SHUNT R43 (WSL2512, 1.0 W at +70 C, 30100 p.1)
+  M-tier         7.32 A: 0.325 W, 32.5 percent of the +70 C rating
+  D-tier 8.9 A   8.90 A: 0.480 W, 48.0 percent of the +70 C rating
+  loop maximum   9.60 A: 0.558 W, 55.8 percent of the +70 C rating
+  M-tier exact shunt dissipation: 0.321690778 W nominal; 0.324907686 W at +1 percent
+  => PASS on the rating at ambients to +70 C; the derating above +70 C is a figure on p.3 of 30100 not read numerically here; the element's temperature rise needs the board's copper (INCONCLUSIVE, layout calculation followed by prototype temperature measurement)
+  R177 (CS, 5 mOhm) at 8.9 A carries the low-side share: I^2 (1 - D) R = 0.279 W at 16.8 V in
+
+== 4e. THE FETs AT 8.9 A (CSD19532Q5B; illustrative thermal scenario, NOT upper bounds: RDS(on) max at 6 V x 1.5 hot, edges x 3.0 the sheet's; the sheet's 1 in2 2 oz pad)
+  VIN 12.4 V, D 0.410:
+    Q35 (boost high side, on all the time in buck): 0.68 W conduction -> +34 K on the sheet's pad
+    Q32 (buck high side): 0.28 W conduction + 0.41 W switching + 0.015 W Coss + 0.33 W recovery (Qrr scaled to 8.9 A) = 1.03 W -> +52 K
+    Q33 (buck low side): 0.40 W conduction + 0.17 W dead-time diode = 0.56 W -> +28 K
+    Q34 (boost low side): off in buck, about 0 W
+  VIN 16.8 V, D 0.303:
+    Q35 (boost high side, on all the time in buck): 0.68 W conduction -> +34 K on the sheet's pad
+    Q32 (buck high side): 0.21 W conduction + 0.55 W switching + 0.027 W Coss + 0.45 W recovery (Qrr scaled to 8.9 A) = 1.24 W -> +62 K
+    Q33 (buck low side): 0.47 W conduction + 0.17 W dead-time diode = 0.64 W -> +32 K
+    Q34 (boost low side): off in buck, about 0 W
+  L6 DCR loss at 8.9 A: 0.70 W (DCR max, core loss not held); stage loss scenario about 4.0 W at 16.8 V in (FETs 2.55 + shunts 0.76 + DCR 0.70), efficiency about 0.919 (declared floor 0.9)
+  => at assumed +50 C air the scenario gives hottest FET (1.24 W) about 112 C on the sheet's pad against TJ 150 C. No upper bound or thermal PASS: layout loss/thermal calculation and actual FET/shunt temperatures and switching waveforms over intended loads, ambient and VBAT are required (INCONCLUSIVE)
+
+== 4f. COPPER, MONITOR, LEAD
+  Board A copper: the filed dc_drop and dc_density verdicts of 21 September (board sha 58e26c67, judged at the declared 4.0 / 6.9 A) hold +5V_DEV and SD_OUT as MET with no per-rail margin recorded;
+    at 8.9 A the density reading scales by 1.29: INCONCLUSIVE until dc_density runs on the regenerated board with the corrected declaration (calculation, not measurement)
+  INA226 U11 across R43: 58.2 mV at the loop's maximum 9.60 A, 71 percent of the +-81.92 mV range; bus 5.09 V of 36 V; LSB 2.5 uV = 0.42 mA: PASS
+  JST VH lead at B declared peak 6.00 A: rating 10.0 A (AWG 16, standard header), margin 4.00 A PASS; pair drop 24.8 mV at 20 C plus up to 240 mV in four contacts at 10 mOhm
+  JST VH lead at B M-tier 5.44 A: rating 10.0 A (AWG 16, standard header), margin 4.56 A PASS; pair drop 22.5 mV at 20 C plus up to 218 mV in four contacts at 10 mOhm
+  JST VH lead at B P-tier 7.22 A: rating 10.0 A (AWG 16, standard header), margin 2.78 A PASS; pair drop 29.8 mV at 20 C plus up to 289 mV in four contacts at 10 mOhm
+  the D8 lead (J_MEZZ_PWR1, VH, AWG 18 per ASSEMBLY.md section 4): no JST rating is stated for AWG 18 with the standard header (cx1 J1): INCONCLUSIVE, the same item as +54V_POE's
+
+== 4g. WHAT THE STAGE ASKS OF VBAT (Iin = Vout Iout / (eff Vin), eff 0.9 declared)
+  D  every declared limit (cx1): B 6.0 + D8 2.0 + wall 0.9                                             4.06 A at 12.4 V, 3.25 A at 15.5 V
+  Dt declared with D8 at its typical (cx1): B 6.0 + D8 1.0 + wall 0.9                                  3.60 A at 12.4 V, 2.88 A at 15.5 V
+  M  maker figures, declared typicals elsewhere, SA868 at 0.9 A, a USB 2.0 device on the wall port     3.34 A at 12.4 V, 2.67 A at 15.5 V
+  Mx M with the SA868 at its 1.0 A maximum                                                             3.38 A at 12.4 V, 2.71 A at 15.5 V
+  P  maker figures for the transmitters, declared child peaks elsewhere, the wall eFuse at its extrapolated high estimate 4.45 A at 12.4 V, 3.56 A at 15.5 V
+  M-tier exact VBAT current at 5.088 V out, 15.5 V in, efficiency 0.90: 2.670647540 A
+  VBAT's load map carries Q32 at 2.0 A (typical); the 8.9 A case is 3.25 A at 15.5 V, +1.25 A over that entry
+
+== 5. THE OPTIONS
+  Option A, re-rate the average loop with a 5 mOhm ISNS shunt (the same WSL2512 family):
+    5.0 mOhm: loop 8.51 / 10.00 / 11.52 A; the maximum against the lead's 10 A: 1.52 A FAIL (over the contact rating in a B-side fault held by a CCM stage with no hiccup)
+      assumed +50 K TCR range 8.468275967 to 11.578835108 A; 8.900 A declared demand FAILS initial minimum 8.514851485 A and hot minimum 8.468275967 A
+    5.6 mOhm: loop 7.60 / 8.93 / 10.28 A; the maximum against the lead's 10 A: 0.28 A FAIL (over the contact rating in a B-side fault held by a CCM stage with no hiccup)
+      assumed +50 K TCR range 7.560960685 to 10.338245632 A; 8.900 A declared demand FAILS initial minimum 7.602545969 A and hot minimum 7.560960685 A
+    => the 6 mOhm value is pinned by the lead's 10 A (the generator's own reason); re-rating alone fails BOTH the 8.900 A demand at its minimum and the downstream 10 A lead test; a higher threshold is not capacity evidence
+  Option B, the D8 mezzanine on its own buck from VBAT (TPS62933, C3200405, fitted twice on this board; XAL6060-682ME Isat 9.2 A above the part's 5.8 A maximum high-side limit):
+    tier D  demand 6.90 A: vs loop min PASS 0.16 A, vs typ PASS 1.43 A
+    tier M  demand 5.94 A: vs loop min PASS 1.11 A, vs typ PASS 2.39 A
+    tier Mx demand 5.94 A: vs loop min PASS 1.11 A, vs typ PASS 2.39 A
+    tier P  demand 8.17 A: vs loop min FAIL -1.11 A, vs typ PASS 0.16 A
+    the new buck at 2.0 A (U23's limit): ripple 1.04 A at 16.8 V and 500 kHz on 6.8 uH, peak 2.52 A against IHS_LIMIT min 4.2 A and Isat 9.2 A: PASS; VBAT +0.91 A at 12.4 V
+  Option C, B plus the wall host port on the outlet interlock (U26's spare section 1: USBX_EN_HW = USBX_EN AND OUTLET_OK):
+    tier D  demand 6.00 A: vs loop min PASS 1.06 A
+    tier M  demand 5.44 A: vs loop min PASS 1.61 A
+    tier P  demand 7.22 A: vs loop min FAIL -0.16 A
+  Option D, declare the 8.9 A bound and name the fold-back as the limiter (cx1's third option): leaves REQ-018's 'every rail in regulation' unmet on the record; not an engineering option
+  Option E, re-allocate D8 or the wall port to +5V_S1 or +5V_S3 (AP64500, 5 A): S1 reads 4.65 A PLAN in PS-ALLTX (PWR-F02, 7 percent margin), S3 about 4.2 A with its card off (cx1): no headroom for 1.5 to 2.0 A; rejected
+
+== 6. RECOMMENDATION (authority SESSION, the two-part test in ANALYSIS.md section 5)
+  Take option B now: the coincident demand on +5V_DEV returns to B + wall = 6.9 A declared (the present 6.9 A declaration becomes true), 5.94 A at the M-tier, under the loop's minimum with 0.16 and 1.11 A in hand;
+  Precise split margins: declared 0.156896639 A; M-tier 1.114661345 A below conditional minimum 7.056896639 A
+  Both B and B plus the wall interlock remain configurations; choose B to preserve console availability. S-99 remains open; reconcile M/P allocations and measure current, SS, voltage, collapse/recovery and temperature.
+  the P-tier (8.17 A) stays FAIL by 1.11 A and is board B's declarations to reconcile (S-98) and the bench to measure; option C is the fallback that buys 0.96 A more if the bench asks for it.
