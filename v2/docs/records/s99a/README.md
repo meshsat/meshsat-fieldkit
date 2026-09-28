@@ -57,8 +57,8 @@ The draft added U41 at 0.4 A and kept Q32 at 2.0 A, which was the pre-split stag
 (the stage's declared load sum at its output voltage over the declared efficiency and VBAT's 14.4 V nominal):
 
 - Q32 = 4.1 A x 5.088 V / (0.90 x 14.4 V) = **1.609630 A, declared 1.61 A** (old 2.0 A).
-- U41 = 1.0 A (+5V_D8IN typical) x 5.002 V / (0.90 x 14.4 V) = **0.385947 A, declared 0.4 A** as drafted (the
-  draft's 0.392593 A used 5.088 V). 0.90 is the project's efficiency figure for the TPS62933, not a maker's reading.
+- U41 = 1.0 A (+5V_D8IN typical) x 5.002 V / (0.90 x 14.4 V) = **0.385957 A, declared 0.4 A** as drafted (the
+  draft's 0.392593 A used 5.088 V; `u41_divider.out` prints 0.385947 A because it uses the unrounded 5.001869 V). 0.90 is the project's efficiency figure for the TPS62933, not a maker's reading.
 
 VBAT's load map sums 11.57 A (was 11.96 A with the double count). On the PWR-002 feed sums (typical), +5V_DEV's
 child draw falls by 0.39 A and +5V_D8IN's adds 0.39 A, so VBAT's draw stays at 17.62 A against its declared 10.0 A: a
@@ -82,8 +82,13 @@ revised August 2022, 8.5 printed p.6) and the FB leakage (0.15 uA maximum, p.6, 
 - **Chosen: 56.2k over 10.7k, both 0.1 percent 25 ppm/C YAGEO RT0603 (C705784, C861078), the pair board D already
   certifies as R80 and R81** (`JLC-CERTIFIED.tsv`, CERTIFIED, 2026-09-26). Nominal 5.002 V; 4.872 to 5.133 V over
   the reference, both tolerances, 25 ppm/C over 65 K and the leakage. The top is 0.097 V under 5.23 V, so board D's
-  declarations stand and board D is not regenerated. At the bottom the 6 percent drop budget leaves the codec at
-  4.57 V, 0.22 V over its 4.35 V (the notes' 4.90 V assumption gave 4.60 V and 0.25 V). U23's OVLO pin sits at 0.97
+  declarations stand and board D is not regenerated. At the bottom, U23's on resistance (SLVSET8A printed p.7: 89
+  mOhm typical, 115.3 mOhm maximum over -40 to 85 C, 131 mOhm to 125 C) and the 6 percent drop budget leave the codec
+  4.44 to 4.48 V at the 1.0 A typical, 0.09 to 0.13 V over its 4.35 V; with +5V_D8IN's own 2 percent also spent the
+  margin is 0.007 V (U23 at its 85 C maximum) to -0.009 V (125 C); at the 2.0 A peak the codec is under 4.35 V, which
+  predates the split (U23 was in series and the LM5176 source's bottom was 4.875 V). `codec_floor.out`, open item
+  S-116 (`OPEN-ITEM-CODEC-FLOOR.md`). (The first version of this record said 4.57 V and 0.22 V, leaving out U23 and
+  +5V_D8IN's budget; corrected after the independent check.) U23's OVLO pin sits at 0.97
   to 1.02 V (0.5 to 2 V recommended) and its re-close (5.33 V at the extremes) stays above 5.133 V. At 16.8 V in the
   ripple is 1.033 A and the peak 2.517 A at 2.0 A (2.646 A with L at -20 percent) against IHS_LIMIT 4.2 A minimum.
   The 53.6k over 10k pair at 0.1 percent would also fit (4.956 to 5.221 V) but neither code is certified and its
@@ -145,5 +150,25 @@ INT-001 re-taken on board A. `pcb-a-power.kicad_pcb` is NOT regenerated (layout 
 | The layout generator (S-115) | board A's layout owner | `OPEN-ITEM-LAYOUT-A.md` |
 | Parts: board A's BOM gains C705784 and C861078 (certified for board D) and the XAL6060-682ME, which `tools/jlc-handfit.txt` does not list (only -472ME) | parts stream | add board A's use to the certification table and a hand-fit line for XAL6060-682ME |
 | Board D's stale source text (section 4) | board D's owner | rewrite at its next circuit round; no declaration changes |
+| The codec's floor at the +5V_D8 peak (S-116) | boards A and D | `OPEN-ITEM-CODEC-FLOOR.md`: tighten +5V_D8IN's budget, raise U41's set point, or bound the peak the codec must run through |
 | dev_stage.py's pins and its D-tier line (6.9142 A, 0.142697 A) | integrator | re-pin on the regenerated inputs when the record is next reproduced |
 | Shared-file text: S-99, decision 55, IF-AB-POWER, 0.89 A pages | integrator | `REGISTRY-DRAFT.md` |
+
+## 9. After the independent check of 29 September 2026 (`_scratch/chk-s99a/RESULT.md`: accepted, no blocking item)
+
+- (1) The codec floor is restated with U23's drop and +5V_D8IN's budget in the generator (+5V_D8 note, the divider
+  comment), section 4 above, `REGISTRY-DRAFT.md` and the new open item S-116 (`OPEN-ITEM-CODEC-FLOOR.md`), from
+  `codec_floor.py`. No declared figure changed.
+- (2) PWR_FLAG: +5V_D8IN went in at position 17 of the flag tuple, so the twelve virtual parts #FLG17 to #FLG28 shift
+  to other nets and #FLG29 is new; check_contracts ignores `#FLG`, but the regenerated netlist will show twelve changed flags.
+- (3) SD_OUT, the intent series segment of +5V_DEV, follows it: typical 5.1 to 4.1 A, peak 6.9 to 6.9142 A (R43's load 5.1 to 4.1 A).
+- (4) U41's VBAT share at 5.002 V is 0.385957 A (the generator comment now says so); the declared 0.4 A stands.
+- (5) The 4.872 to 5.133 V band is a DC set-point band: the TPS62933's PFM ripple at light load (SLUSEA4D 9.3.2) and
+  the load-step overshoot at the exciter's unkey are not in it; a bench item under S-99 (d) and PT-4.
+- (9) After the split the INA226 U11 (0x45, across R43) no longer sees the mezzanine's supply: a telemetry loss for
+  the HAL's power accounting and an item for the firmware contract's owner (FW-A09's text stays true).
+- (10) C231 and C232's "22u 10V X7R 1210" maps to C2918511, Samwha CS3225X7R226K250NRL, 22 uF +/-10 percent X7R
+  25 V 1210 (JLC-CERTIFIED.tsv line 241; LCSC reading of 2026-09-27). No DC-bias curve of that part is held, so the
+  "about 30 uF effective at 5 V" is an estimate OWED on that part; Table 10-2 asks 10 uF minimum effective.
+- (7) The IF-AB-POWER +5V_DEV row's `status` is restated in `apply_if_ab_power_dev.py` (with `a_declares` and the wall
+  line's "limit 0.89 A"), for the integrator: `--check` on this tree exit 0, last line `CHECK ONLY: no writes, no marker.`

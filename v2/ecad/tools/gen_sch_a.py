@@ -48,7 +48,7 @@ _intent.rail("CELL_FUSED", 14.4, 10.0, 18.0, "F1", v_work=16.8, converted=False,
 # LM5176 stage's VBAT entry is its declared load sum at its output voltage over the declared efficiency and the pack's
 # 14.4 V nominal, the S-98 method of Q28's 2.22 A: Q32 = 4.1 A x 5.088 V / (0.90 x 14.4 V) = 1.609630 A, declared
 # 1.61 A. It was 2.0 A, the pre-split 5.1 A's 2.002222 A, so with U41 added the mezzanine's input was counted twice
-# (about 0.39 A). U41 = 1.0 A (+5V_D8IN typical) x 5.002 V / (0.90 x 14.4 V) = 0.385947 A, declared 0.4 A; 0.90 is
+# (about 0.39 A). U41 = 1.0 A (+5V_D8IN typical) x 5.002 V / (0.90 x 14.4 V) = 0.385957 A, declared 0.4 A; 0.90 is
 # the project's efficiency figure for the TPS62933 at this point, not a maker's reading.
 _intent.rail("VBAT", 14.4, 10.0, 18.0, "R17", always_on=True, v_work=16.8, converted=False, fed_from="CELL_FUSED",
              always_on_why="the system node (VSYS): nothing on this board switches it. The pack reaches it through the 25 A blade F1 and the RSR shunt R17, opened only by the pack's own BQ4050 FETs and the blade; the charger's converter feeds it from shore through Q10", loads={"U4": 2.0, "Q28": 2.22, "U6": 2.0, "Q32": 1.61, "U41": 0.4, "Q11": 1.5, "U15": 0.3, "U12": 0.2, "U22": 0.65, "U21": 0.69}, note="the 4S system node (VSYS) behind the RSR shunt R17; 10 A continuous, 18 A peak by the pack's rating (32.55)")
@@ -200,8 +200,13 @@ _intent.rail("+5V_D8", 5.0, 1.0, 2.0, "U23", converted=False,
                   "which is the finding: A's copper is spending nearly all of a budget it shares with D. "
                   "S-99 (stream s99a, 28 September 2026): the source is now the buck U41 through U23 on +5V_D8IN, "
                   "5.002 V nominal and 4.872 to 5.133 V over the reference, both 0.1 percent resistors, 25 ppm/C over "
-                  "65 K and the FB leakage (v2/docs/records/s99a/u41_divider.out): at 4.872 V the 6 percent budget "
-                  "leaves the codec at 4.57 V, 0.22 V over its 4.35 V, and the top is 0.097 V under board D's 5.23 V")
+                  "65 K and the FB leakage (v2/docs/records/s99a/u41_divider.out), a DC set-point band. From 4.872 V, "
+                  "U23's on resistance (SLVSET8A p.7: 89 mOhm typical, 115.3 mOhm maximum over -40 to 85 C, 131 "
+                  "mOhm to 125 C) and the 6 percent budget leave the codec 4.44 to 4.48 V at the 1.0 A typical, 0.09 "
+                  "to 0.13 V over its 4.35 V; if +5V_D8IN also spends its whole 2 percent the margin is 0.007 to "
+                  "-0.009 V at U23's maximum to 85 and 125 C, and at the 2.0 A peak the codec is under 4.35 V, as "
+                  "it was before the split (open item S-116, v2/docs/records/s99a/codec_floor.out). The top is "
+                  "0.097 V under board D's 5.23 V")
 def usb_c_plug(ref, dp, dm, vbus, cc):
     # captive USB-C pigtail (4-wire cable with the Rp resistor in the plug) on a JST-PH 4-pin header: VBUS, D-, D+, GND
     part(ref, "Connector_Generic", "Conn_01x04", "USB-C pigtail header (JST-PH 2.0): VBUS D- D+ GND", "PH4", {"1": vbus, "2": dm, "3": dp, "4": "GND"})
@@ -1353,8 +1358,12 @@ _intent.node("HT_BST", _intent.net_volts("HT_SW") + _TPS62933_BST,
 # (SLUSEA4D 8.5 p.6: 784 to 816 mV over TJ -40 to 150 C) with the FB leakage (0.15 uA maximum), over board D's
 # declared v_work of 5.23 V on +5V_D8; with 100 ppm/C over 65 K it reached 5.34 V. This pair gives 5.002 V nominal
 # and 4.872 to 5.133 V over the reference, both tolerances, 25 ppm/C over 65 K and the leakage: 0.097 V under board D's
-# 5.23 V, so board D's declarations stand, and at the bottom the 6 percent budget leaves board D's PCM2912A at 4.57 V,
-# 0.22 V over its 4.35 V recommended minimum (SLES230A 7.3). Raising board D's v_work instead was refused: the codec's
+# 5.23 V, so board D's declarations stand (a DC set-point band: PFM ripple and load-step overshoot are not in it). At
+# the bottom, U23's on resistance (SLVSET8A p.7: 89 mOhm typical, 115.3 and 131 mOhm maximum to 85 and 125 C) and the 6
+# percent budget leave board D's PCM2912A at 4.44 to 4.48 V at the 1.0 A typical, 0.09 to 0.13 V over its 4.35 V
+# recommended minimum (SLES230A 7.3); with +5V_D8IN's own 2 percent spent it is 0.007 to -0.009 V at U23's maximum
+# on resistance, and at the 2.0 A peak the codec is under 4.35 V, which predates the split (U23 was in series, and
+# the LM5176 source's bottom was 4.875 V): open item S-116, v2/docs/records/s99a/codec_floor.out. Raising board D's v_work instead was refused: the codec's
 # recommended maximum is 5.25 V. No 1 percent divider holds both 4.90 and 5.23 V (u41_divider.out in records/s99a).
 # P-tier 8.171220 A (8.180759 A with R186 tolerance) still fails; 1 kohm wall maxima are extrapolations, not guarantees.
 ic("U41", 8, "TPS62933DRLR 3 A buck, 5.0 V for the D8 mezzanine", "SOT583", {"1": "NC", "2": "RAIL_EN", "3": "VBAT", "4": "GND", "5": "D8B_SW", "6": "D8B_BST", "7": "D8B_SS", "8": "D8B_FB"}, "C3200405")
