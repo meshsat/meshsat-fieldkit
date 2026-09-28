@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The QMX lid tray r2 fits the unit the maker describes, the unit can be put into it, and its face room is read from the solid above
+"""On the model, the QMX lid tray r2 fits the unit the maker describes and the unit can be put into it; its face room is read from the solid above
 each part (MESHSAT-1357, S-63, EQ-24; stream w5tray, second pass of 27 to 28 September 2026).
 
 The r1 tray of 9 September 2026 was notched at one end while the QMX has jacks on both end panels, and its 95 x 63 x 25 came from no

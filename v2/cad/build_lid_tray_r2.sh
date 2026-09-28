@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Regenerate the QMX lid tray r2 set (MESHSAT-1357, S-63; second pass of 27 to 28 Sep 2026): <out dir>/lid-tray-qmx-r2/ with the tray, its
-# retaining frame and the lid plate (STEP, STL, DXF), the check record (sections A to E and the checks on the solids) and sheets 14r2-1 and
-# 14r2-2, plus the two page images for the read-back in <out dir>/.lid-tray-qmx-r2-readback/. Needs the CAD venv of
+# retaining frame and the lid plate (STEP, STL, DXF), the check record (sections A to E and the checks on the solids) and sheets 14r2-1 to
+# 14r2-3, plus the three page images for the read-back in <out dir>/.lid-tray-qmx-r2-readback/. Needs the CAD venv of
 # v2/cad/requirements-cad.lock (PY, default .venv-cad/bin/python). Nothing here reads or writes outside the clone and <out dir>; no KiCad,
 # no network. The folder's README.md is hand-written, not generated; its MANIFEST.sha256 is written last, by v2/cad/case_manifest.py.
 set -euo pipefail

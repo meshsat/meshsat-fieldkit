@@ -172,6 +172,14 @@
 # registry at 2c12be91 and are kept as written. Taken by the session under the owner's standing rule of 26 September
 # 2026.
 #
+# THE QMX LID TRAY r2 (27 September 2026, set w5tray, v2/docs/records/w5tray/drafts/apply_w5tray.py). Session choice SC-75 (drafted as SC-TR-01)
+# records the r2 tray of v2/release/case-2026-09-27/lid-tray-qmx-r2/ and closes S-63, which moves to closed_items with its title
+# unchanged; open items S-95 (the lid harness's crossing of the sealed face, ENGINEERING-QUESTIONS EQ-31) and S-96 (the r2 tray's verification)
+# are added; CFL-015 (ASSEMBLY.md), CON-006 and REQ-019 (CASE-MARGINS.md) and FEA-007 (CASE-FIT-UNCERTAINTIES.md) are re-read and
+# rebound with a note each, the sections their readings cite asserted byte-identical. No record's reading, statement, acceptance,
+# applicability, allocation, verification or release effect changes, and no owner ruling. This is a registry change after
+# layer 3's reviewed file: the layer 3 re-baseline (S-80, S-51, S-78) reads it with the other differences.
+#
 # PART NAMES IN STATEMENTS. A part a statement names was ruled by the owner (the device set of 6 September 2026,
 # appendix 32.49 and 32.50; the LT8705A tracker, ruling F of 4 September 2026; the BQ4050 gauge and the second level,
 # D-15; the 4S3P Samsung INR18650-35E pack, D-06) unless the record's choices or notes name a session choice or a
@@ -2381,6 +2389,45 @@ session_choices:
       - "v2/vendor/battery/ti-bq77207.pdf (SLUSEG7D Device Comparison Table, 6.5, 6.6)"
       - "v2/vendor/keystone/littelfuse-297-ficcorp.pdf (time-current table)"
       - "v2/vendor/battery/samsung-35e-orbtronic.pdf (3.8, 3.12, Pack Design Guideline)"
+  - id: SC-75
+    authority: SESSION
+    under: standing-rule
+    taken_on: "2026-09-27"
+    drafted_as: SC-TR-01
+    question: >-
+      How the QMX lid tray fits the unit, which has jacks on both end panels, and how it keeps the unit through
+      TEST-PLAN E1 and E2 (S-63, ENGINEERING-QUESTIONS EQ-24).
+    taken: >-
+      The r2 set of v2/cad/lid_tray_qmx_r2.py, v2/release/case-2026-09-27/lid-tray-qmx-r2/ with sheets 14r2-1 to 14r2-3,
+      which supersede the r1 tray and sheet 14: both end panels open over their whole height above a 1.5 mm sill, the
+      sill cut to the floor under the RF jack; the unit top face out, its knob edge west and its right panel toward the
+      hinge; LOWERED INTO AN OPEN POCKET FROM ABOVE (a floor, two long walls buttressed by posts, a sill at each end)
+      and held by a flat retaining frame laid on the wall tops and screwed with six M3 x 10 into square nuts in the
+      posts, its ledges clear of both knobs, with two Rogers PORON 4701-30 pads pressing the unit to the ledges; both
+      printed parts in Prusament PC Blend; the tray fixed by ten flush M3 x 5 into a 2.0 mm 5052-H32 lid plate bonded to
+      the lid with 3M DP8005; all sixteen M3 at 0.25 N m; the retention designed to 100 g on the unit, the peak
+      CASE-MARGINS.md assumes for E1; its east edge kept at X 171.0 (C5, M19 unchanged) and grown west to X 83.2. The
+      set stands beside the case release with its own manifest; no file of the release is edited.
+    why: >-
+      QRP Labs states the enclosure (95 x 63 x 25 without protrusions, 220 g) and draws both end panels undimensioned;
+      the jack places scaled from those figures and from the maker's photograph disagree by up to 3.8 mm (the RF jack),
+      so a tray open across each end admits every jack's plug whichever reading holds, which boolean checks on the built
+      solids confirm (v2/release/case-2026-09-27/lid-tray-qmx-r2/lid-tray-qmx-r2-check.out). A first pass held the unit
+      under ledges and end lintels that were part of the tray; its checker found that the unit cannot pass under a
+      lintel at the height of its top face, above which its knobs, encoder shafts and button actuators stand, so the
+      unit goes in from above and the frame is screwed on after it: the record sweeps the unit at its largest and the
+      frame along their way in (0.30 and 4.15 least clearance against a stated 0.20) and runs the first pass's tray
+      through the same check as a control that fails. The controls face the operator with the lid open, and the VOL knob
+      switches the radio (operating manual 1_04_004 section 4). PETG's heat deflection (68 C at 0.45 MPa) is under
+      TEST-PLAN E3-S's +71 C and PC Blend's is 113 C, 93 C at 1.80 MPa (v2/vendor/materials/). The case takes no hole
+      (ruling of 7 September 2026), so the plate is bonded. On the makers' typical figures every link holds 7.1 times
+      the 100 g load case or more (707 g, the frame's screws); E1's peak on the lid is stated by no held document and
+      its half-sine bound, 96 to 958 g over 20 to 2 mm of stopping distance, includes failure; no board, interface or
+      purchase depends on it, so the retention's verification stays open as S-96. Reverse by a maker's dimensioned panel
+      drawing that lets an end wall stand clear of every plug, by E1 or E2 showing a lighter retention holds, or by a
+      lid item that needs X 83.2 to 102.0.
+    source: ["v2/release/case-2026-09-27/lid-tray-qmx-r2/README.md", "v2/cad/lid_tray_qmx_r2.py", "v2/release/case-2026-09-27/lid-tray-qmx-r2/lid-tray-qmx-r2-check.out", "v2/vendor/qrp-labs/qmx-figures.out"]
+    closes: [S-63]
 
 # What is still open. SESSION items are engineering the session decides and records with authority SESSION;
 # OWNER_ACTION is something the owner has ruled that he does or sets himself, or that only he can do because it reopens
@@ -2750,16 +2797,6 @@ open_items:
       the RP2040's IOVDD + 0.5 V absolute maximum (datasheet Table 622): pick the module, read its output stage, and add a
       divider or a clamp if needed; and give the fan switches Q9, Q10 discrete gate pull-downs instead of the RP2040's pad
       pull-down (v2/docs/HW-FW-CONTRACT.md section 7).
-  - id: S-63
-    class: SESSION
-    status: OPEN
-    title: >-
-      (r8int4: the QMX lid tray) The QMX lid tray released in v2/release/case-2026-09-27/lid-tray-qmx/ (sheet 14) does not
-      fit the unit's connector layout: the held QRP Labs QMX manual (1_04_004, pages 7 to 9) puts the DC jack on the
-      left panel and the BNC and USB-C on the right panel, and the tray has notches in one end wall only; the unit's
-      95 x 63 x 25 and the notch heights are checked against no maker drawing. Revise the tray from the QMX enclosure
-      drawing before it is printed (v2/docs/CASE-FIT-UNCERTAINTIES.md section 3; the layer 7 fixer c7). Desk work on a
-      made part: no board moves (J_QMX, J_HF and J_RF2 stay) and nothing is bought. ENGINEERING-QUESTIONS EQ-24.
   - id: S-65
     class: SESSION
     status: OPEN
@@ -3037,6 +3074,40 @@ open_items:
       (EMCON local 15 of 17 at desk, end to end 0 of 17; the RockBLOCK row stays open on the Iridium module's
       unpublished response to ENABLE). Closed when FEA-002's statement is changed under a review of the baseline by a
       reviewer who wrote none of the changed lines.
+  - id: S-95
+    class: SESSION
+    status: OPEN
+    title: >-
+      (w5tray, the QMX lid tray r2) The lid harness, the QMX's DC lead, USB-C lead and RG-316 jumper, has no designed
+      path from the lid to board B's J_QMX and board A's J_HF and J_RF2 under the face plate: C1's plate covers the
+      frame window and Peli's o-ring with no pass-through, and ASSEMBLY.md build step 10 ties the harness along the
+      hinge side without saying where it crosses the sealed face. Design the crossing (a sealed bulkhead connector set
+      in the plate's top strip near the hinge, or a sealed gland), its seal against REQ-021 and CON-008, its place in
+      panel1450.py and the face plate, the harness split and lengths and the lid's swing, then a new case release. It
+      blocks the harness picks, ASSEMBLY.md's lid harness steps and the closing of the lid on a wired QMX (so E6, E7 and
+      E8 for a kit with its QMX connected); it does not block printing or fitting the r2 set, and it moves no board
+      connector. The tray is not changed by it; its leads' admitted plug bodies and bend radii are
+      v2/release/case-2026-09-27/lid-tray-qmx-r2/lid-tray-qmx-r2-check.out section A. ENGINEERING-QUESTIONS EQ-31.
+  - id: S-96
+    class: SESSION
+    status: OPEN
+    title: >-
+      (w5tray, the QMX lid tray r2) What the desk cannot close on the r2 set
+      (v2/release/case-2026-09-27/lid-tray-qmx-r2/lid-tray-qmx-r2-check.out sections B, C and D): (1) the lid plate's
+      DP8005 bond on the case's polypropylene, bounded by no held figure (the adhesive's sheet gives a T-peel on HDPE
+      only), and across -33 to +71 C (no expansion figure of Peli's polypropylene or of PC Blend is held): a pull test
+      with CASE-MARGINS T8 after a thermal cycle; (2) the peak TEST-PLAN E1 puts on the lid, stated by no held document:
+      E1 with an accelerometer on the lid, against the 100 g the set is designed to and the 707 g its known links hold;
+      (3) the QMX knob's height above the top face, not stated by QRP Labs (11.6 scaled, INFERRED): the two knob rows
+      are OPEN, 3.06 over the flat face and 2.26 over the monitor's window at the worst, 0.35 and -0.45 with unstated
+      allowances twice, MET there for a knob up to 10.15 and at the plain worst up to 12.86: T9 with chalk on the knob
+      tips, or the unit in hand; (4) the lid's response in TEST-PLAN E2 (the pads' preload keeps the unit seated if the
+      lid magnifies the case's 6.72 g by less than 1.3 to 3.3) and the pads' preload and the frame's sustained stress at
+      the pads' real compression, read in E2 and after E3-S and E4-S; (5) the harness picks (the RG-316 BNC plug, the
+      USB-C lead, the 2.1 x 5.5 plug lead) against the admitted plug bodies and the lanes' R 20, and a threadlocker its
+      maker states compatible with polycarbonate; (6) the unit's own heat in the pocket, not assessed. No board,
+      interface or purchase depends on (1) to (4): the remedy is a made part (the same parts machined in 6061, a larger
+      plate, a lid plate cut out under the unit).
 
 # Items that left the open list, and what closed each: an owner ruling, a session choice, or a commit whose effect
 # was read in the file `closing_evidence` names. A record never waits on a closed item; it cites what closed it.
@@ -3692,6 +3763,15 @@ closed_items:
       only: its section 7 does not list it and its section 3 still reads the line PASS in every fail-safe state, which
       is that page's writer's. Open until the brief's next issue names W3T-F1 in the FEA-002 row and counts the bounds
       that include failure, or S-64 closes before that issue. The brief is not edited by the pass that recorded this.
+  - id: S-63
+    closed_by: SC-75
+    title: >-
+      (r8int4: the QMX lid tray) The QMX lid tray released in v2/release/case-2026-09-27/lid-tray-qmx/ (sheet 14) does not
+      fit the unit's connector layout: the held QRP Labs QMX manual (1_04_004, pages 7 to 9) puts the DC jack on the
+      left panel and the BNC and USB-C on the right panel, and the tray has notches in one end wall only; the unit's
+      95 x 63 x 25 and the notch heights are checked against no maker drawing. Revise the tray from the QMX enclosure
+      drawing before it is printed (v2/docs/CASE-FIT-UNCERTAINTIES.md section 3; the layer 7 fixer c7). Desk work on a
+      made part: no board moves (J_QMX, J_HF and J_RF2 stay) and nothing is bought. ENGINEERING-QUESTIONS EQ-24.
 
 records:
   - id: REQ-001
@@ -6178,8 +6258,13 @@ records:
           MET on the design basis, M4a and M5 OPEN), so this reading stands on the file at 275a3083db30a7bf
       - >-
           v2/docs/CASE-MARGINS.md re-read at 0fc449b72532ba7c (MESHSAT-1357 layer 7, 27 September 2026): the edit adds the note that C1 to C6 are implemented in CAD (v2/release/case-2026-09-27/), labels the agent checks behind its revisions as AI review, points the dock and blind-mate stack to CASE-FIT-UNCERTAINTIES.md and revises section 7's timing (the targeted mock-up before the layout entry of the boards a failing check would move, A, B, E and P, BLOCKED on the owner's purchase decision, where it had been carried to their fabrication release), and brings its opening summary, its paragraph on why the document exists and finding 23 to that timing; with the frame_seat.py draft, M18's part list read from the committed board B and U51's 1.60 sourced to ST's maximum (DS12117 Rev 9 Table 217); no figure or verdict of section 3 moved, so this reading stands on the file at 0fc449b72532ba7c
+      - >-
+          v2/docs/CASE-MARGINS.md re-read at the QMX lid tray r2 draft of 27 September 2026 (set w5tray, SC-TR-01): it
+          adds the r2 note to C5, the lid plate's pull test to T8, the QMX knob tips and the buttons' read heights to T9
+          and the knob height to the lookups; section 3, every margin and verdict this reading rests on, is
+          byte-identical, so it stands on the file at 55244f94aace54ca
     evidence_bound_to:
-      - "v2/docs/CASE-MARGINS.md@0fc449b72532ba7c"
+      - "v2/docs/CASE-MARGINS.md@55244f94aace54ca"
     release_effect: BLOCKER
     source:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:3060-3062"
@@ -6563,8 +6648,13 @@ records:
           P freeze, the rest at the build. The record stays INCONCLUSIVE on the file at 275a3083db30a7bf
       - >-
           v2/docs/CASE-MARGINS.md re-read at 0fc449b72532ba7c (MESHSAT-1357 layer 7, 27 September 2026): the edit adds the note that C1 to C6 are implemented in CAD (v2/release/case-2026-09-27/), labels the agent checks behind its revisions as AI review, points the dock and blind-mate stack to CASE-FIT-UNCERTAINTIES.md and revises section 7's timing (the targeted mock-up before the layout entry of the boards a failing check would move, A, B, E and P, BLOCKED on the owner's purchase decision, where it had been carried to their fabrication release), and brings its opening summary, its paragraph on why the document exists and finding 23 to that timing; with the frame_seat.py draft, M18's part list read from the committed board B and U51's 1.60 sourced to ST's maximum (DS12117 Rev 9 Table 217); no figure or verdict of section 3 moved, so this reading stands on the file at 0fc449b72532ba7c
+      - >-
+          v2/docs/CASE-MARGINS.md re-read at the QMX lid tray r2 draft of 27 September 2026 (set w5tray, SC-TR-01): it
+          adds the r2 note to C5, the lid plate's pull test to T8, the QMX knob tips and the buttons' read heights to T9
+          and the knob height to the lookups; section 3, every margin and verdict this reading rests on, is
+          byte-identical, so it stands on the file at 55244f94aace54ca
     evidence_bound_to:
-      - "v2/docs/CASE-MARGINS.md@0fc449b72532ba7c"
+      - "v2/docs/CASE-MARGINS.md@55244f94aace54ca"
     release_effect: BLOCKER
     source:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:3054-3056"
@@ -6654,6 +6744,7 @@ records:
       rules: [ENV-002]
       decisions: []
     rule_coverage: PARTIAL
+    waits_on: [S-95]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
@@ -13693,10 +13784,15 @@ records:
           net's pins (content16 efe60479293f0004 on both; net_compare.py 'ONLY THE EXPECTED CHANGES' against
           an empty list); J_SMB and its four nets are unchanged, so this reading stands on
           v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@760ac6f74d62d194
+      - >-
+          v2/docs/ASSEMBLY.md re-read at the QMX lid tray r2 draft of 27 September 2026 (set w5tray, SC-TR-01): it
+          changes the QMX tray row, build steps 10 and 11, section 4's three QMX lead rows, the removal paragraph's
+          first clause, the parts list and note (13); every sentence naming the pack's SMBus lead and build step 7,
+          which this reading cites, are byte-identical, so it stands on the file at 0ca504d746b427cb
     evidence_bound_to:
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@56adc9746d61c4e0"
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@760ac6f74d62d194"
-      - "v2/docs/ASSEMBLY.md@b49f853f450d49ee"
+      - "v2/docs/ASSEMBLY.md@0ca504d746b427cb"
       - "v2/docs/PANEL.md@4647782f5aca7c13"
       - "v2/ecad/tools/check_contracts.py@5e14f456a0791c35"
     release_effect: BLOCKER
@@ -14245,8 +14341,8 @@ records:
       decisions: []
     rule_coverage: PARTIAL
     rulings: [D-08-reversal, D-08a, D-09]
-    choices: [SC-07]
-    waits_on: [S-27, L-07, S-63]
+    choices: [SC-07, SC-75]
+    waits_on: [S-27, L-07, S-95, S-96]
     status: FEASIBILITY_OPEN
     evidence_result: INCONCLUSIVE
     evidence_phase: PLACED_BOARD
@@ -14260,8 +14356,13 @@ records:
           pick); the pack hold-down, W4-F17 and the dock stack undesigned. Board C's gate (MEC-001), with the board
           reading recorded by sha, reads PASS of 48 on the chosen arrangement and INCONCLUSIVE without the reading, a
           scratch reading the consolidated re-take records. Nothing here is measured, so the record is INCONCLUSIVE.
+      - >-
+          v2/docs/CASE-FIT-UNCERTAINTIES.md re-read at the QMX lid tray r2 draft of 27 September 2026 (set w5tray,
+          SC-TR-01): it restates section 3's QMX tray row for the r2 tray (answered; its verification and the harness's
+          face crossing open, neither moving a board); section 2's allocation and its YES rows, which this reading rests
+          on, are byte-identical, so it stands on the file at 056bda16132bd88f
     evidence_bound_to:
-      - "v2/docs/CASE-FIT-UNCERTAINTIES.md@efc66afe9140e022"
+      - "v2/docs/CASE-FIT-UNCERTAINTIES.md@056bda16132bd88f"
     release_effect: BLOCKER
     source:
       - "v2/docs/CASE-MARGINS.md"

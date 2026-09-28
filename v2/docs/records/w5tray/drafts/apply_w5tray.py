@@ -246,7 +246,7 @@ f = f[:i] + ("| The QMX lid tray (C5). **Answered on 27 September 2026 by the r2
              "its east edge stays at X 171.0 (M19 unchanged), and it grows west to X 83.2. What stays open (%s): the lid plate's DP8005 bond on the "
              "case's polypropylene, the peak E1 puts on the lid (the set is designed to 100 g and its known links hold to 707 g, the drop's bound spans "
              "96 to 958 g), the knob's height (its two rows OPEN: MET with unstated allowances twice for a knob up to 10.15, at the plain worst up to "
-             "12.86), E2, the harness picks; and the harness's crossing of the sealed face, which nothing designs (%s, %s) | desk: done for the fit; "
+             "12.86), E2, the harness picks; and the harness's crossing of the sealed face, which nothing designs (%s, %s) | desk: done for the fit on the model; "
              "the crossing is desk work at the next case release | T8 (the plate's pull test, after a thermal cycle), T9 (the knob tips, chalk), E1 "
              "with an accelerometer on the lid, E2, the look after E3-S and E4-S | none: the set is made parts and the harness ends (B16 `J_QMX`, A22 "
              "`J_HF` and `J_RF2`) do not move; the crossing changes the face plate, a made part |" % (REL, S_V, S_H, EQ)) + f[j:]
