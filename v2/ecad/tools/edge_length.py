@@ -1510,8 +1510,8 @@ def write_schematic_verdict(res, out_dir=None, quiet=False, table_file=True):
                           "publish (ER-D13); a layout-bound net a bound decides is named under BOUND_DECIDES and holds "
                           "the reading INCONCLUSIVE. counts: decided = maker_edge + bound_edge; layout_bound = "
                           "maker_held + bound_decided. Since 28 September 2026 the makers' IBIS models are pinned by "
-                          "v2/vendor/ibis-manifest.yaml (inputs.ibis_manifest) and are not in the repository: a model "
-                          "that is not in the tree decides nothing, its nets read UNDECIDED naming it, and "
+                          "v2/vendor/ibis-manifest.yaml (inputs.ibis_manifest) and are not in the repository: a pinned model "
+                          "the checkout does not hold decides nothing, its nets read UNDECIDED naming it, and "
                           "inputs.model_state says which state the reading was taken in (ER-D17); undecided = "
                           "undecided_no_declaration + undecided_model_absent + undecided_other; a pin whose [Ramp] "
                           "cell the model's own V-t table contradicts takes the instantaneous bound (ER-D16)"))
