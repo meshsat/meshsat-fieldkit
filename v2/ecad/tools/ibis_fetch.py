@@ -39,6 +39,7 @@ import os, sys, io, gzip, zipfile, hashlib, urllib.request, urllib.error
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import ibis_manifest as M
+from verdict import opt as _opt
 
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
 UA = "Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0"
@@ -143,8 +144,8 @@ def check(repo, man, only=None, quiet=False):
 def main(a):
     if not a or not ({"--check", "--fetch"} & set(a)): print(__doc__); return 2
     repo = REPO
-    if "--root" in a: repo = os.path.abspath(a[a.index("--root") + 1])
-    dest = os.path.abspath(a[a.index("--dest") + 1]) if "--dest" in a else repo
+    if "--root" in a: repo = os.path.abspath(_opt(a, "--root", repo))   # a flag given no value is answered, never raised (verdict.opt)
+    dest = os.path.abspath(_opt(a, "--dest", repo)) if "--dest" in a else repo
     only = set()
     if "--only" in a:
         for x in a[a.index("--only") + 1:]:
