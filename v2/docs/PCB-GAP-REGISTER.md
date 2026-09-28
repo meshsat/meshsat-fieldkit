@@ -158,8 +158,40 @@ decided nets are the USB 2.0 lines (0.5 ns high speed, 4 ns full speed, both fro
 transcription). Every one is answered in the netlist except board D's HUB_DM4 and HUB_DP4, which carry no
 impedance target (board D's USB class has none) and no series resistor, so a layout must hold them under
 their critical length or the schematic gives them one. No reading moved class: all six were INCONCLUSIVE
-already.  
-*Close it by* decision 39 rules the criterion k as a declared calibration (21 September 2026), so the whole of what is left is an edge rate for the classes whose drivers publish none (checked: RP2040, 74LVC from two vendors, SCAA082A: the datasheets carry a slew-rate control bit, an input transition rate and a propagation delay, and no edge). That is an oscilloscope at bring-up, which is why the owner is LAB and the execution HARDWARE rather than a standards wait: the vendors' documents were the wait and they have been read. A direct question to a vendor is the only shortcut and nobody has asked one. Owner **LAB**. Effort P50 8h, P80 24h.
+already. 28 September 2026 (streams w5si and w5si2, MESHSAT-1357, layer 9, after two AI reviews, neither a
+qualified engineering review): THE EDGE RATES ARE DATA. tools/pcb_edge_rates.yaml (sha256/16 0689086680f7a4a4
+when this paragraph was written), a configuration input of the edge_length verdict, holds every edge the
+reading uses. Each record carries its document with the sha256/16 of the held file, the page or the IBIS
+keyword, the words or the cell quoted, its conditions, its applicability and the verification owed, and the
+tool checks all of it on every run. ONLY A PUBLISHED MINIMUM IS A MAKER'S FIGURE: a maker's IBIS model at its
+fastest corner, a minimum the maker prints in its own table, or a specification's minimum that the part's own
+datasheet claims; a typical or a maximum is refused; where a maker publishes none the instantaneous bound
+stands in and is named a bound; a pin whose [Ramp] cell the model's own V-t table contradicts has no figure
+and takes the bound. THE MODELS ARE NOT IN THE REPOSITORY: v2/vendor/ibis-manifest.yaml pins 13 of them by
+the sha256 of the extracted file, tools/ibis_fetch.py fetches them from the makers' own addresses, and a
+model that is not in the tree decides nothing. THE STATE OF THE MODELS WHEN THESE COUNTS WERE TAKEN: PRESENT:
+every model a reading asked for was in the tree and was the file pinned (13 of the 13 the manifest pins were
+in the tree). THE GOVERNING EDGE of a net is the fastest any driver on it can produce, so ONE driver with no
+published minimum makes the net decided by a bound, whatever the other drivers' makers publish. An open-drain
+net has two edges: its fall is the driver's and governs, its rise is the pull-up's and is stated beside it.
+Counts on the declared netlists of this tree, per board, taken in memory when this paragraph was written
+(netlists A 0a2b59087bcc2678, B 028997a6c5e8810f, C 3fddbb3edcd4248a, D 7a2c0ac2190b141a, E 56adc9746d61c4e0,
+P 760ac6f74d62d194): signal nets outside LOW_SPEED_OR_DC A 120, B 562, C 33, D 47, E 41, P 20 (823 in all);
+of them decided by a published figure on every driver A 7, B 103, C 4, D 20, E 4, P 0 (138: 74 by a maker's
+IBIS model, 64 by a specification's class record, the USB 2.0 minimums), decided by a bound A 75, B 451, C
+29, D 19, E 37, P 5 (616), undecided A 38, B 8, C 0, D 8, E 0, P 15 (69: 69 with no signal-class
+declaration). Of the decided, answered in the netlist A 19, B 361, C 10, D 26, E 10, P 4 (430) and
+layout-bound A 63, B 193, C 23, D 13, E 31, P 1 (324); of the layout-bound, held by a published figure on
+every driver A 1, B 40, C 0, D 2, E 0, P 0 (43) and decided by a bound, BOUND_DECIDES, A 62, B 153, C 23, D
+11, E 31, P 1 (281). Every reading is INCONCLUSIVE; none is a PASS, and a board stays INCONCLUSIVE wherever a
+bound decides a net whose length is the layout's. The nets, the drivers that govern them and the ones that
+carry a maker's figure beside a bound are listed per board in v2/docs/records/w5si/readings/ and
+v2/docs/records/w5si2/readings/. Two findings go with it: the power-stage nodes (gate, bootstrap and switch
+nodes) are asked the wrong question by this rule and no rule asks the right one
+(v2/docs/records/w5si/F-Q1-power-stage-nodes.md), and board B's BOB is a common-mode termination that no
+signal class fits (v2/docs/records/w5si/F-BOB-common-mode-termination.md). Session decisions ER-D1 to ER-D17
+are in the data file's header.  
+*Close it by* since the edge rates became data (27 September 2026, stream w5si) what is left is of two kinds. DESK: a schematic answer for each layout-bound net that has one (an impedance target, a series termination at the driver, a firmware obligation that slows the driver), a signal-class declaration for each net that carries none, and the two rules this stream's findings propose (a power-stage layout rule, F-Q1, and a class for the cable side of an isolation barrier, F-BOB). BENCH OR MAKER: for every net a bound decides, the edge of the driver that publishes none, from the maker's IBIS model where one exists and this host could not fetch it (Nexperia, Diodes, Microchip, Winbond: a browser fetch) or from an oscilloscope at bring-up, which is why the owner stays LAB and the execution HARDWARE. Asking a maker for a model it does not publish is outside contact and is the owner's to send. Owner **LAB**. Effort P50 8h, P80 24h.
 
 ## prose only (1)
 
