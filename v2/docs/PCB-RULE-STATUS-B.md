@@ -3,7 +3,7 @@
 
 # Rule status: board B
 
-Manifest **2026-09-16.1**, rule set **635ff031f210f48c**, evidence epoch **2026-09-16T00:35:00+02:00**.
+Manifest **2026-09-16.1**, rule set **a9b1e7f7412f9c0c**, evidence epoch **2026-09-16T00:35:00+02:00**.
 
 **Readiness: NOT_READY**
 
@@ -13,9 +13,9 @@ Measured on board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21.
 
 | historical aggregate, mixed revisions | rules | percent of this board's required rules |
 |---|---|---|
-| PASS | 18 | 32.1 |
+| PASS | 17 | 30.4 |
 | FAIL | 4 | 7.1 |
-| INCONCLUSIVE | 34 | 60.7 |
+| INCONCLUSIVE | 35 | 62.5 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **56** | 100.0 |
 
@@ -34,7 +34,7 @@ Measured on board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21.
 | PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **PASS** | intent_rails PASS of 59 |
 | PWR-002 sequencing and inrush | MUST_JUSTIFY | SCHEMATIC | **PASS** | power_sequence PASS of 58 |
 | PWR-003 protection coordination | BLOCKER | SCHEMATIC | **PASS** | energy_chain_b PASS of 3 |
-| DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **PASS** | intent_decoupling PASS of 30 |
+| DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **INCONCLUSIVE** | taken under a different version of DEC-001 (c4c7b77158f31d92, current is 12ed33adeb80860d) |
 | PI-001 conductor current capacity | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed  |
 | PI-002 rail voltage drop | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed  |
 | PI-003 via current capacity | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed  |

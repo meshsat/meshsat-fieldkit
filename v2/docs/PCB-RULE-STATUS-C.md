@@ -3,7 +3,7 @@
 
 # Rule status: board C
 
-Manifest **2026-09-16.1**, rule set **635ff031f210f48c**, evidence epoch **2026-09-16T00:35:00+02:00**.
+Manifest **2026-09-16.1**, rule set **a9b1e7f7412f9c0c**, evidence epoch **2026-09-16T00:35:00+02:00**.
 
 **Readiness: NOT_READY**
 
@@ -13,9 +13,9 @@ Measured on board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24.
 
 | historical aggregate, mixed revisions | rules | percent of this board's required rules |
 |---|---|---|
-| PASS | 33 | 68.8 |
+| PASS | 32 | 66.7 |
 | FAIL | 4 | 8.3 |
-| INCONCLUSIVE | 11 | 22.9 |
+| INCONCLUSIVE | 12 | 25.0 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **48** | 100.0 |
 
@@ -31,7 +31,7 @@ Measured on board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24.
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_c was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_c was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
 | PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **PASS** | intent_rails PASS of 6 |
-| DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **PASS** | intent_decoupling PASS of 19 |
+| DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **INCONCLUSIVE** | taken under a different version of DEC-001 (c4c7b77158f31d92, current is 12ed33adeb80860d) |
 | PI-001 conductor current capacity | BLOCKER | ROUTED_BOARD | **PASS** | dc_density PASS of 2 |
 | PI-002 rail voltage drop | BLOCKER | ROUTED_BOARD | **PASS** | dc_drop PASS of 2 |
 | PI-003 via current capacity | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | via_current PASS of 2 |
