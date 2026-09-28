@@ -14,7 +14,7 @@ CAUSE_ORDER = ["declared, not on this board (the intent is newer than the placem
 
 
 def main(a):
-    d = a[0]; commit = a[1] if len(a) > 1 else "?"
+    d = a[0]; commit = a[1] if len(a) > 1 else "?"; rn = os.path.basename(os.path.normpath(d))
     L = []
     t = open(os.path.join(d, "tests.log"), encoding="utf-8", errors="replace").read()
     tot = [l for l in t.splitlines() if re.match(r"^tests: \d+ passed", l)]
@@ -36,13 +36,13 @@ def main(a):
             r["board"].upper(), r["phase"], "yes" if r["same_copper"] else "**NO**", b["vias"], n["vias"], b["tracks"],
             n["tracks"], b["no_escape"], n["no_escape"], (cost[0][len("escape: decoupling cost: "):] if cost else "none")))
     L.append("\nBefore / after in each cell. The cost lines of the new pass (per part and cause) are in "
-             "`box/run4/escape_parity.log`.\n")
+             "`box/%s/escape_parity.log`.\n" % rn)
     dr = json.load(open(os.path.join(d, "dec001_read.json")))
     L.append("### What DEC-001 reads on each committed candidate under the new rules (NOT EVIDENCE: read outside the tree)\n")
-    L.append("Read by `box/dec001_read.py` at %s on the KiCad box: each phase folder copied whole to `/root/d6dec/run4/read/`, "
+    L.append("Read by `box/dec001_read.py` at %s on the KiCad box: each phase folder copied whole to `/root/d6dec/%s/read/`, "
              "this branch's `intent_checks.py` run there. The boards are the committed candidates (A32, B21, C24, D12, "
              "E17, P4); the intents are the committed ones (A and B regenerated in set 8), so a declaration newer than "
-             "its board's placement is read as not on the board. Nothing here is a reading the registry may count.\n" % commit)
+             "its board's placement is read as not on the board. Nothing here is a reading the registry may count.\n" % (commit, rn))
     L.append("| board | verdict | declared | pass | justified | recorded | fail | no own ground via | far side | FAIL lines by cause |")
     L.append("|---|---|---|---|---|---|---|---|---|---|")
     for r in dr["rows"]:
@@ -57,8 +57,8 @@ def main(a):
             c.get("pass"), c.get("justified"), c.get("recorded"), c.get("fail"), c.get("no_own_via"), c.get("far_side"),
             causes or "none"))
     L.append("\nThe verdict's counts are the gate's lines, one per declared entry: `pass` is the lines that did not fail "
-             "less the justified and recorded ones. Every FAIL and justified line is in `box/run4/dec001_read.json`. The "
-             "gate's own summary line per board:\n")
+             "less the justified and recorded ones. Every FAIL and justified line is in `box/%s/dec001_read.json`. The "
+             "gate's own summary line per board:\n" % rn)
     for r in dr["rows"]:
         for s in r.get("summary") or []:
             L.append("- %s: `%s`" % (r["board"].upper(), s[:400]))
