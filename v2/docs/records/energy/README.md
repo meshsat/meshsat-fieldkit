@@ -24,7 +24,9 @@ en dash in the folder.
 
 **Second issue (28 September 2026)**, after an independent AI review of `fc8cf808`: blocking items B1 (west
 pocket), B2 (the solar stage's 100 W is not held by the stage; routes A and B) and B3 (the decision paragraph), and
-minor items m1 to m11, answered in `ENERGY-RECONCILIATION.md` (its header lists where). Run order: `night_bounds.py`
+minor items m1 to m11, answered in `ENERGY-RECONCILIATION.md` (its header lists where). **Third issue (28 September 2026)**, after the re-check of `7697c172`: R1 (four universal sentences scoped, section
+7b of the record and of `energy_budget.out`) and R2 (Route B's sense resistor 10 mOhm, its worst case at TRK_OUT's
+15.56 V and the stage's 0.90). Run order: `night_bounds.py`
 and `packfit_west.py` first (their outputs are pinned inputs of `energy_budget.py`), then `energy_budget.py`.
 
 Reused, cited, not duplicated: stream d4energy's `energy_data.yaml` (branch `fnd/d4energy`, commit `9b43e274`)

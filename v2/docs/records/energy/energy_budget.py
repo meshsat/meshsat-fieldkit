@@ -27,7 +27,7 @@ import sys
 import yaml
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-INPUTS_SHA256 = "85c92954b9d81250c76190597680ddd6cbedafaf3a627d78e85ee6b2799a7026"  # energy_inputs.yaml, set by --pin
+INPUTS_SHA256 = "64dd014bee56d855023d43caeaf848cfd6dc54f65b58e341d6696851460f7470"  # energy_inputs.yaml, set by --pin
 
 
 class InputError(Exception):
@@ -669,8 +669,9 @@ def section6(o, d, pack, res1, res2, res3, res4, res5):
     o("    ROUTE A, the window restated: REQ-016's 'at most 100 W into the stage' becomes at most %.0f W; PV_P and PV_IN" % p_in_max)
     o("    from 5.68 A typical and 6.25 A peak to %.1f A and about 12.5 A (two 100 Wp panels' short circuit); TRK_OUT from" % (p_in_max / 17.6))
     o("    6.16 A at 15.1 V to %.1f A (its 10.33 A declaration at the 9 V floor to %.1f A, which VIN_RAW's 14.10 A already" % (fe / 15.1, fe / 9.0))
-    o("    carries on board A); F2 and J_SOLAR above 12.5 A with margin (a JST-VH is a 10 A part: another connector, pick")
-    o("    TBD); L1's saturation current, the four FETs' dissipation and R5's sense range re-judged at the higher current")
+    o("    carries on board A); F2 and J_SOLAR at %.2f times the short-circuit current or more, about %.1f A for a 200 Wp" % (w["pv_fault_multiplier"]["value"], w["pv_fault_multiplier"]["value"] * 12.5))
+    o("    panel (the usual photovoltaic practice; no standard for it is held in the tree; a JST-VH is a 10 A part: another")
+    o("    connector, pick TBD); L1's saturation current, the four FETs' dissipation and R5's sense range re-judged at the higher current")
     o("    (the inductor valley limit is 69 mV / 5 mOhm = 13.8 A, gen_sch_e.py:103). D4 and the 25 V window are unchanged")
     o("    (two 12 V class panels in parallel keep their open-circuit voltage). More energy on clear days; no change on the")
     o("    mean day. It restates a core requirement (REQ-016, SC-36) and board E's declarations.")
@@ -681,27 +682,44 @@ def section6(o, d, pack, res1, res2, res3, res4, res5):
         return v / (g * 1e-3 * rim * (1 + sgn * tol) * rs * (1 + sgn * tol))
     rs_i = vr["typ"] / (gm["typ"] * 1e-3 * rim * it)
     rs_ii = rs_i * ilim(rs_i, vr["max"], gm["min"], -1) / it
+    fb, r10, r11 = sl["fbout_v"], sl["r10_kohm"]["value"], sl["r11_kohm"]["value"]
+    eta_lo_s = sl["stage_eta_low"]["value"]
+    v_out_max = fb["max"] * (1 + r10 * (1 + tol) / (r11 * (1 - tol)))
+    v_out_typ = fb["typ"] * (1 + r10 / r11)
     res_e = {}
-    for tag, rs in (("(i) the typical at 6.16 A", 0.008), ("(ii) the worst case at 6.16 A", 0.0091)):
+    for rs_m in sl["settings_mohm"]:
+        rs = rs_m / 1e3
         lo_i, ty_i, hi_i = ilim(rs, vr["min"], gm["max"], +1), ilim(rs, vr["typ"], gm["typ"], 0), ilim(rs, vr["max"], gm["min"], -1)
-        res_e[tag[:4]] = {"rs": rs, "i": (lo_i, ty_i, hi_i), "p_in": tuple(x * vo / eta_s for x in (lo_i, ty_i, hi_i))}
+        res_e[rs_m] = {"rs": rs, "i": (lo_i, ty_i, hi_i), "p_in": tuple(x * vo / eta_s for x in (lo_i, ty_i, hi_i)),
+                       "worst93": hi_i * v_out_max / eta_s, "worst90": hi_i * v_out_max / eta_lo_s}
+    i_need = 100.0 * eta_lo_s / v_out_max
+    rs_min = vr["max"] / (gm["min"] * 1e-3 * rim * (1 - tol) * (1 - tol) * i_need)
+    res_e["(ii)"] = res_e[10.0]
     o("    ROUTE B, a designed limit that keeps REQ-016's 100 W: the LT8705A's own output current loop (8705af PDF pages 4,")
     o("    5, 11, 12 and 19): a sense resistor RSENSE2 between the stage's output and TRK_OUT with CSPOUT (pin 31) on the")
     o("    stage side and CSNOUT (pin 30) on TRK_OUT, both untied from TRK_OUT; the loop regulates when IMON_OUT reaches")
     o("    %.3f V (%.3f to %.3f), with I(IMON_OUT) = gm x V(sense), gm %.2f mmho (%.2f to %.3f, E and I grades over" % (vr["typ"], vr["min"], vr["max"], gm["typ"], gm["min"], gm["max"]))
-    o("    temperature). With R17 (IMON_OUT to ground, 10k as generated) at %.1f k 1 percent, the typical limit %.2f A at" % (rim / 1e3, it))
-    o("    15.1 V (100 W in at 0.93) needs %.2f mOhm; the worst-case limit at %.2f A needs %.2f mOhm. Two settings:" % (rs_i * 1e3, it, rs_ii * 1e3))
-    for tag, rs in (("(i) the typical at 6.16 A", 0.008), ("(ii) the worst case at 6.16 A", 0.0091)):
-        e_ = res_e[tag[:4]]
-        o("      %s: RSENSE2 %.1f mOhm: %.2f / %.2f / %.2f A (low / typical / high), %.0f / %.0f / %.0f W into the stage" % (
-            tag, rs * 1e3, e_["i"][0], e_["i"][1], e_["i"][2], e_["p_in"][0], e_["p_in"][1], e_["p_in"][2]))
-    o("      Setting (i) is 100 W typical and up to %.0f W at the sheet's worst, so REQ-016's 'at most' holds only as" % res_e["(i) "]["p_in"][2])
-    o("      'about'; setting (ii) holds it at the worst and gives %.0f W typical. With the bus held lower (a vehicle at 9 to" % res_e["(ii)"]["p_in"][1])
-    o("      15 V) the limit is a lower power, which the vehicle then covers. Parts: one 2512 sense resistor, R17's value,")
-    o("      two pins untied, under 2 EUR; it moves no REQ-016 figure except the peak (short-circuit) current on PV_P and")
-    o("      PV_IN, 6.25 to about 12.5 A, so F2 and J_SOLAR are still re-rated for a 200 Wp panel's fault current. The")
-    o("      constant-power front end against a current-limited source is the case the design already has whenever the")
-    o("      panel gives less than the front end draws (gen_sch_e.py:99-103); the host contract (FW-A16) must hold it.")
+    o("    temperature, characterised at VCSPOUT 5.025 V only: at 15.1 V it is a bench item, T-P3). R17 (IMON_OUT to")
+    o("    ground, 10k as generated) at %.1f k 1 percent. The worst case also takes TRK_OUT at its highest: FBOUT %.3f V" % (rim / 1e3, fb["max"]))
+    o("    (%.3f to %.3f, page 4) on R10 %.0fk and R11 %.1fk at 1 percent (gen_sch_e.py:576) gives %.2f V (%.2f V typical)," % (fb["min"], fb["max"], r10, r11, v_out_max, v_out_typ))
+    o("    and the stage at this record's low efficiency bracket, %.2f. Into the stage, W:" % eta_lo_s)
+    rows = []
+    for rs_m in sl["settings_mohm"]:
+        e_ = res_e[rs_m]
+        rows.append(["%.1f" % rs_m, "%.2f / %.2f / %.2f" % e_["i"], "%.0f / %.0f / %.0f" % e_["p_in"], "%.1f" % e_["worst93"], "%.1f" % e_["worst90"],
+                     "yes" if e_["worst90"] <= 100.0 else "NO"])
+    o.table(["RSENSE2 mOhm", "limit A low / typ / high", "W in at 15.1 V, 0.93: low / typ / high", "worst W, 15.56 V, 0.93", "worst W, 15.56 V, 0.90", "holds 100 W at every worst"], rows)
+    o("      The least RSENSE2 that holds 100 W at every worst is %.2f mOhm. Setting (ii) is therefore %.1f mOhm: at most" % (rs_min * 1e3, 10.0))
+    o("      %.1f W into the stage in every worst case, %.0f W typical, %.0f W at its low end. 8.0 mOhm is 100 W only" % (
+        res_e[10.0]["worst90"], res_e[10.0]["p_in"][1], res_e[10.0]["p_in"][0]))
+    o("      typically; 9.1 mOhm (this record's second issue) reaches %.1f W at 0.93 and %.1f W at 0.90 at the worst." % (res_e[9.1]["worst93"], res_e[9.1]["worst90"]))
+    o("      With the bus held lower (a vehicle at 9 to 15 V) the limit is a lower power, which the vehicle then covers.")
+    o("      Parts: one 2512 sense resistor, R17's value, two pins untied, under 2 EUR. At setting (ii) the stage draws at")
+    o("      most %.2f A at 17.6 V or above, inside PV_P's declared 5.68 A; the peak (the panel's short-circuit current, a" % (res_e[10.0]["worst90"] / 17.6))
+    o("      fault) rises from 6.25 to about 12.5 A, so F2 and J_SOLAR are still re-rated for a 200 Wp panel (at %.2f times," % w["pv_fault_multiplier"]["value"])
+    o("      about %.1f A, as route A). The constant-power front end against a current-limited source is the case the" % (w["pv_fault_multiplier"]["value"] * 12.5))
+    o("      design already has whenever the panel gives less than the front end draws (gen_sch_e.py:99-103); the host")
+    o("      contract (FW-A16) must hold it.")
     o()
     res_out = {"route_b": res_e}
     ve = d["solar"]["vehicle_entry"]
@@ -732,8 +750,9 @@ def section7(o, d, pack, res1, res4, res5, res6):
     pn = mb["plan"]
     pr, eta, hours = res4["pr"], res4["eta"], d["mission"]["hours"]
     o("7. THE SMALLEST JUSTIFIED CHANGES (from 5d). REQ-072 AS WRITTEN (PS-IDLE-SPEC for 72 hours) READS FAIL UNDER EVERY SET")
-    o("   BELOW: on one aged 4S3P pack no combination of (a), (b) and (e) meets it (the night binds at every kit load above")
-    o("   %.1f W, 5c), and with two packs PS-IDLE-SPEC is still NOT MET (set 6). The sets that meet M1's must-hold do so by" % res5["w_max_load"])
+    o("   BELOW: on one aged 4S3P pack no combination of (a), (b) and (e) meets it (in the design case, September with")
+    o("   100 Wp in the window and the 3.00 V line, the night binds at every kit load above %.1f W, 5c; the scope of that" % res5["w_max_load"])
+    o("   figure is in 7b), and with two packs PS-IDLE-SPEC is still NOT MET (set 6). The sets that meet M1's must-hold do so by")
     o("   CHANGING M1's operating mode at night to the night state (%.2f W PLAN, %.2f to %.2f W), a change presented for" % (pn, mb["low"], mb["high"]))
     o("   the owner's decision, not a fulfilment of REQ-072. From a full aged pack, cells as section 5 takes them:")
     keys = [
@@ -761,7 +780,8 @@ def section7(o, d, pack, res1, res4, res5, res6):
     o()
     o("   'MET' is the hour-by-hour run ending above the graceful threshold with no stop, and its lowest point is the")
     o("   smallest energy left in the packs over the 72 hours (the margin); the ask and the hold are the one-night")
-    o("   arithmetic beside it. No set inside the case meets December.")
+    o("   arithmetic beside it. With the cells at +5 C no set examined meets December; with them at +20 C set 3 does at the")
+    o("   night state's LOW of 11.02 W (7b). The December night's cell temperature is not computed in the tree.")
     o()
     prof = res4["months"][9]["profile"]
 
@@ -783,6 +803,7 @@ def section7(o, d, pack, res1, res4, res5, res6):
     at_low, at_high = run2(load=mb["low"]), run2(load=mb["high"])
     rb = res6["route_b"]
     rbi, rbl = run2(window=rb["(ii)"]["p_in"][1]), run2(window=rb["(ii)"]["p_in"][0])
+    rbw = run2(window=rb["(ii)"]["worst90"])
     o("   SET 2's CONDITIONS, September, start 06:00, two aged packs (the hour-by-hour run):")
     o.table(["case", "result", "lowest point Wh", "first stop h"], [
         ["as stated: night state %.2f W, cells +20 C, 2.80 V line, the model's 100 W clip" % pn, "MET" if base["ok"] else "NOT MET", f1(base["lowest"]), str(base["first_stop"])],
@@ -792,9 +813,49 @@ def section7(o, d, pack, res1, res4, res5, res6):
         ["the night state at its HIGH %.2f W" % mb["high"], "MET" if at_high["ok"] else "NOT MET", f1(at_high["lowest"]), str(at_high["first_stop"])],
         ["route B setting (ii) typical: %.0f W into the stage" % rb["(ii)"]["p_in"][1], "MET" if rbi["ok"] else "NOT MET", f1(rbi["lowest"]), str(rbi["first_stop"])],
         ["route B setting (ii) at its low end: %.0f W into the stage" % rb["(ii)"]["p_in"][0], "MET" if rbl["ok"] else "NOT MET", f1(rbl["lowest"]), str(rbl["first_stop"])],
+        ["route B setting (ii) at its worst high: %.1f W into the stage" % rb["(ii)"]["worst90"], "MET" if rbw["ok"] else "NOT MET", f1(rbw["lowest"]), str(rbw["first_stop"])],
     ])
     o("   Set 2 meets September only with the cells at or above %.2f C (%.2f C without the 2.80 V line) and the night" % (t_min, t_min_300))
     o("   state at or below %.2f W (%.2f W, %.1f percent, above its PLAN), on the mean September day and planning loads." % (w_ok, w_ok - pn, 100 * (w_ok - pn) / pn))
+    o()
+    o("7b. THE SCOPE OF THE UNIVERSAL STATEMENTS, at the tree's documented bounds (the night state's LOW %.2f W, PS-IDLE-SPEC's" % mb["low"])
+    o("   model LOW %.1f W), start 06:00, aged 80 percent. A statement of impossibility is kept only where these bounds" % d["model_states"]["PS-IDLE-SPEC"]["low"])
+    o("   establish it; otherwise the supported scope is stated.")
+    panels = ((100.0, 100.0), (200.0, 100.0), (330.0, 300.0), (400.0, 1e9))
+
+    def one(m, load, wp, win, dod, t_c, n_p=None):
+        return simulate(d, pack, res4["months"][m]["profile"], load, wp, win, eta, pr, 6, t_c, pack.age80, hours, dod=dod, n_p=n_p)[1]
+
+    def fmt(sm):
+        return ("MET, lowest point %.1f Wh" % sm["lowest"]) if sm["ok"] else ("NOT MET, first stop h %d, unserved %.0f Wh" % (sm["first_stop"], sm["short_wh"]))
+    rows = []
+    for m in (6, 9):
+        for wp, win in panels:
+            rows.append(["ONE pack, night state LOW %.2f W, 2.80 V, +20 C" % mb["low"], MONTHS[m - 1], "%.0f" % wp, ("%.0f" % win if win < 1e8 else "none"), fmt(one(m, mb["low"], wp, win, "2v80", 20.0))])
+    for m in (12,):
+        for lab, load in (("PLAN", pn), ("LOW", mb["low"])):
+            for t_c in (5.0, 20.0):
+                for wp, win in panels[1:]:
+                    rows.append(["TWO packs, night state %s %.2f W, 2.80 V, %+.0f C" % (lab, load, t_c), MONTHS[m - 1], "%.0f" % wp, ("%.0f" % win if win < 1e8 else "none"),
+                                 fmt(one(m, load, wp, win, "2v80", t_c, n_p=6))])
+    idle_lo = d["model_states"]["PS-IDLE-SPEC"]["low"]
+    for m in (9, 6):
+        rows.append(["TWO packs, PS-IDLE-SPEC at its LOW %.1f W, 2.80 V, +20 C" % idle_lo, MONTHS[m - 1], "400", "none", fmt(one(m, idle_lo, 400.0, 1e9, "2v80", 20.0, n_p=6))])
+    o.table(["case", "month", "panel Wp", "window W", "72 h"], rows)
+    o()
+
+    def wmax(m, wp, win, dod):
+        lo, hi = 0.0, 42.8
+        for _ in range(50):
+            mid = 0.5 * (lo + hi)
+            if one(m, mid, wp, win, dod, 20.0)["ok"]:
+                lo = mid
+            else:
+                hi = mid
+        return lo
+    o("   The largest load ONE aged pack carries for 72 h (cells +20 C): June %.2f W with 400 Wp and no window (2.80 V)," % wmax(6, 400.0, 1e9, "2v80"))
+    o("   %.2f W with 100 Wp in the window (3.00 V); September %.2f W and %.2f W. The 8.4 W of 5c is the design case only." % (
+        wmax(6, 100.0, 100.0, "3v00"), wmax(9, 400.0, 1e9, "2v80"), wmax(9, 100.0, 100.0, "3v00")))
     o()
     return {"t_min": t_min, "t_min_300": t_min_300, "w_ok": w_ok, "base": base, "c15": c15}
 

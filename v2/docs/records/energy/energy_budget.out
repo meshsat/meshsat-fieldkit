@@ -8,7 +8,7 @@ figure is arithmetic on makers' figures, generator declarations and stated assum
   f846e138cb53a8c6  v2/ecad/tools/gen_sch_e.py
   bb695d4f8e9fce1c  v2/docs/records/energy/night_bounds.out
   1af26f00624e17d7  v2/docs/records/energy/packfit_west.out
-  85c92954b9d81250  v2/docs/records/energy/energy_inputs.yaml
+  64dd014bee56d855  v2/docs/records/energy/energy_inputs.yaml
 
 1. THE LOADS OF THE STATES M1 USES (battery-side W, PLAN, 14.4 V; kinds S maker / R maker's bound at a duty /
    D declaration / T placeholder; MEASURED: none, the tree holds no measurement of any load)
@@ -517,8 +517,9 @@ figure is arithmetic on makers' figures, generator declarations and stated assum
     ROUTE A, the window restated: REQ-016's 'at most 100 W into the stage' becomes at most 136 W; PV_P and PV_IN
     from 5.68 A typical and 6.25 A peak to 7.8 A and about 12.5 A (two 100 Wp panels' short circuit); TRK_OUT from
     6.16 A at 15.1 V to 8.4 A (its 10.33 A declaration at the 9 V floor to 14.1 A, which VIN_RAW's 14.10 A already
-    carries on board A); F2 and J_SOLAR above 12.5 A with margin (a JST-VH is a 10 A part: another connector, pick
-    TBD); L1's saturation current, the four FETs' dissipation and R5's sense range re-judged at the higher current
+    carries on board A); F2 and J_SOLAR at 1.25 times the short-circuit current or more, about 15.6 A for a 200 Wp
+    panel (the usual photovoltaic practice; no standard for it is held in the tree; a JST-VH is a 10 A part: another
+    connector, pick TBD); L1's saturation current, the four FETs' dissipation and R5's sense range re-judged at the higher current
     (the inductor valley limit is 69 mV / 5 mOhm = 13.8 A, gen_sch_e.py:103). D4 and the 25 V window are unchanged
     (two 12 V class panels in parallel keep their open-circuit voltage). More energy on clear days; no change on the
     mean day. It restates a core requirement (REQ-016, SC-36) and board E's declarations.
@@ -526,17 +527,25 @@ figure is arithmetic on makers' figures, generator declarations and stated assum
     5, 11, 12 and 19): a sense resistor RSENSE2 between the stage's output and TRK_OUT with CSPOUT (pin 31) on the
     stage side and CSNOUT (pin 30) on TRK_OUT, both untied from TRK_OUT; the loop regulates when IMON_OUT reaches
     1.208 V (1.187 to 1.229), with I(IMON_OUT) = gm x V(sense), gm 1.00 mmho (0.94 to 1.085, E and I grades over
-    temperature). With R17 (IMON_OUT to ground, 10k as generated) at 24.3 k 1 percent, the typical limit 6.16 A at
-    15.1 V (100 W in at 0.93) needs 8.07 mOhm; the worst-case limit at 6.16 A needs 8.91 mOhm. Two settings:
-      (i) the typical at 6.16 A: RSENSE2 8.0 mOhm: 5.52 / 6.21 / 6.86 A (low / typical / high), 90 / 101 / 111 W into the stage
-      (ii) the worst case at 6.16 A: RSENSE2 9.1 mOhm: 4.85 / 5.46 / 6.03 A (low / typical / high), 79 / 89 / 98 W into the stage
-      Setting (i) is 100 W typical and up to 111 W at the sheet's worst, so REQ-016's 'at most' holds only as
-      'about'; setting (ii) holds it at the worst and gives 89 W typical. With the bus held lower (a vehicle at 9 to
-      15 V) the limit is a lower power, which the vehicle then covers. Parts: one 2512 sense resistor, R17's value,
-      two pins untied, under 2 EUR; it moves no REQ-016 figure except the peak (short-circuit) current on PV_P and
-      PV_IN, 6.25 to about 12.5 A, so F2 and J_SOLAR are still re-rated for a 200 Wp panel's fault current. The
-      constant-power front end against a current-limited source is the case the design already has whenever the
-      panel gives less than the front end draws (gen_sch_e.py:99-103); the host contract (FW-A16) must hold it.
+    temperature, characterised at VCSPOUT 5.025 V only: at 15.1 V it is a bench item, T-P3). R17 (IMON_OUT to
+    ground, 10k as generated) at 24.3 k 1 percent. The worst case also takes TRK_OUT at its highest: FBOUT 1.222 V
+    (1.193 to 1.222, page 4) on R10 115k and R11 10.0k at 1 percent (gen_sch_e.py:576) gives 15.56 V (15.09 V typical),
+    and the stage at this record's low efficiency bracket, 0.90. Into the stage, W:
+  RSENSE2 mOhm  limit A low / typ / high  W in at 15.1 V, 0.93: low / typ / high  worst W, 15.56 V, 0.93  worst W, 15.56 V, 0.90  holds 100 W at every worst
+  ------------  ------------------------  --------------------------------------  ----------------------  ----------------------  --------------------------
+  8.0           5.52 / 6.21 / 6.86        90 / 101 / 111                          114.8                   118.6                   NO                        
+  9.1           4.85 / 5.46 / 6.03        79 / 89 / 98                            100.9                   104.3                   NO                        
+  10.0          4.41 / 4.97 / 5.49        72 / 81 / 89                            91.8                    94.9                    yes                       
+      The least RSENSE2 that holds 100 W at every worst is 9.49 mOhm. Setting (ii) is therefore 10.0 mOhm: at most
+      94.9 W into the stage in every worst case, 81 W typical, 72 W at its low end. 8.0 mOhm is 100 W only
+      typically; 9.1 mOhm (this record's second issue) reaches 100.9 W at 0.93 and 104.3 W at 0.90 at the worst.
+      With the bus held lower (a vehicle at 9 to 15 V) the limit is a lower power, which the vehicle then covers.
+      Parts: one 2512 sense resistor, R17's value, two pins untied, under 2 EUR. At setting (ii) the stage draws at
+      most 5.39 A at 17.6 V or above, inside PV_P's declared 5.68 A; the peak (the panel's short-circuit current, a
+      fault) rises from 6.25 to about 12.5 A, so F2 and J_SOLAR are still re-rated for a 200 Wp panel (at 1.25 times,
+      about 15.6 A, as route A). The constant-power front end against a current-limited source is the case the
+      design already has whenever the panel gives less than the front end draws (gen_sch_e.py:99-103); the host
+      contract (FW-A16) must hold it.
 
 6f. An external DC source on the 9 to 36 V entry, as an OPTION and not the mission's basis: the entry guarantees
     4.85 A (carries 6.15 A) through F1 10 A, the LM74700 diode, the LM5069 hot-swap and the choke into board A's
@@ -556,8 +565,9 @@ figure is arithmetic on makers' figures, generator declarations and stated assum
     as optional and NOT taken as the basis (the owner's instruction of 28 September 2026).
 
 7. THE SMALLEST JUSTIFIED CHANGES (from 5d). REQ-072 AS WRITTEN (PS-IDLE-SPEC for 72 hours) READS FAIL UNDER EVERY SET
-   BELOW: on one aged 4S3P pack no combination of (a), (b) and (e) meets it (the night binds at every kit load above
-   8.4 W, 5c), and with two packs PS-IDLE-SPEC is still NOT MET (set 6). The sets that meet M1's must-hold do so by
+   BELOW: on one aged 4S3P pack no combination of (a), (b) and (e) meets it (in the design case, September with
+   100 Wp in the window and the 3.00 V line, the night binds at every kit load above 8.4 W, 5c; the scope of that
+   figure is in 7b), and with two packs PS-IDLE-SPEC is still NOT MET (set 6). The sets that meet M1's must-hold do so by
    CHANGING M1's operating mode at night to the night state (16.20 W PLAN, 11.02 to 39.67 W), a change presented for
    the owner's decision, not a fulfilment of REQ-072. From a full aged pack, cells as section 5 takes them:
   change set (two packs)                                                     September (cells +20 C)                                                             June (cells +20 C)                                                                  December (cells +5 C)                                                            
@@ -571,7 +581,8 @@ figure is arithmetic on makers' figures, generator declarations and stated assum
 
    'MET' is the hour-by-hour run ending above the graceful threshold with no stop, and its lowest point is the
    smallest energy left in the packs over the 72 hours (the margin); the ask and the hold are the one-night
-   arithmetic beside it. No set inside the case meets December.
+   arithmetic beside it. With the cells at +5 C no set examined meets December; with them at +20 C set 3 does at the
+   night state's LOW of 11.02 W (7b). The December night's cell temperature is not computed in the tree.
 
    SET 2's CONDITIONS, September, start 06:00, two aged packs (the hour-by-hour run):
   case                                                                              result   lowest point Wh  first stop h
@@ -581,9 +592,41 @@ figure is arithmetic on makers' figures, generator declarations and stated assum
   without the 2.80 V line (graceful at 3.00 V)                                      MET      9.1              None        
   the night state at its LOW 11.02 W                                                MET      84.6             None        
   the night state at its HIGH 39.67 W                                               NOT MET  0.0              16          
-  route B setting (ii) typical: 89 W into the stage                                 MET      12.1             None        
-  route B setting (ii) at its low end: 79 W into the stage                          MET      12.1             None        
+  route B setting (ii) typical: 81 W into the stage                                 MET      12.1             None        
+  route B setting (ii) at its low end: 72 W into the stage                          MET      12.1             None        
+  route B setting (ii) at its worst high: 94.9 W into the stage                     MET      12.1             None        
    Set 2 meets September only with the cells at or above 17.21 C (17.88 C without the 2.80 V line) and the night
    state at or below 17.06 W (0.86 W, 5.3 percent, above its PLAN), on the mean September day and planning loads.
+
+7b. THE SCOPE OF THE UNIVERSAL STATEMENTS, at the tree's documented bounds (the night state's LOW 11.02 W, PS-IDLE-SPEC's
+   model LOW 33.1 W), start 06:00, aged 80 percent. A statement of impossibility is kept only where these bounds
+   establish it; otherwise the supported scope is stated.
+  case                                                      month      panel Wp  window W  72 h                                     
+  --------------------------------------------------------  ---------  --------  --------  -----------------------------------------
+  ONE pack, night state LOW 11.02 W, 2.80 V, +20 C          June       100       100       NOT MET, first stop h 22, unserved 28 Wh 
+  ONE pack, night state LOW 11.02 W, 2.80 V, +20 C          June       200       100       MET, lowest point 3.2 Wh                 
+  ONE pack, night state LOW 11.02 W, 2.80 V, +20 C          June       330       300       MET, lowest point 10.7 Wh                
+  ONE pack, night state LOW 11.02 W, 2.80 V, +20 C          June       400       none      MET, lowest point 12.8 Wh                
+  ONE pack, night state LOW 11.02 W, 2.80 V, +20 C          September  100       100       NOT MET, first stop h 21, unserved 98 Wh 
+  ONE pack, night state LOW 11.02 W, 2.80 V, +20 C          September  200       100       NOT MET, first stop h 21, unserved 76 Wh 
+  ONE pack, night state LOW 11.02 W, 2.80 V, +20 C          September  330       300       NOT MET, first stop h 22, unserved 64 Wh 
+  ONE pack, night state LOW 11.02 W, 2.80 V, +20 C          September  400       none      NOT MET, first stop h 22, unserved 64 Wh 
+  TWO packs, night state PLAN 16.20 W, 2.80 V, +5 C         December   200       100       NOT MET, first stop h 18, unserved 505 Wh
+  TWO packs, night state PLAN 16.20 W, 2.80 V, +5 C         December   330       300       NOT MET, first stop h 18, unserved 343 Wh
+  TWO packs, night state PLAN 16.20 W, 2.80 V, +5 C         December   400       none      NOT MET, first stop h 18, unserved 340 Wh
+  TWO packs, night state PLAN 16.20 W, 2.80 V, +20 C        December   200       100       NOT MET, first stop h 22, unserved 440 Wh
+  TWO packs, night state PLAN 16.20 W, 2.80 V, +20 C        December   330       300       NOT MET, first stop h 22, unserved 212 Wh
+  TWO packs, night state PLAN 16.20 W, 2.80 V, +20 C        December   400       none      NOT MET, first stop h 22, unserved 145 Wh
+  TWO packs, night state LOW 11.02 W, 2.80 V, +5 C          December   200       100       NOT MET, first stop h 23, unserved 181 Wh
+  TWO packs, night state LOW 11.02 W, 2.80 V, +5 C          December   330       300       NOT MET, first stop h 23, unserved 79 Wh 
+  TWO packs, night state LOW 11.02 W, 2.80 V, +5 C          December   400       none      NOT MET, first stop h 23, unserved 76 Wh 
+  TWO packs, night state LOW 11.02 W, 2.80 V, +20 C         December   200       100       NOT MET, first stop h 44, unserved 120 Wh
+  TWO packs, night state LOW 11.02 W, 2.80 V, +20 C         December   330       300       MET, lowest point 30.0 Wh                
+  TWO packs, night state LOW 11.02 W, 2.80 V, +20 C         December   400       none      MET, lowest point 31.4 Wh                
+  TWO packs, PS-IDLE-SPEC at its LOW 33.1 W, 2.80 V, +20 C  September  400       none      NOT MET, first stop h 18, unserved 606 Wh
+  TWO packs, PS-IDLE-SPEC at its LOW 33.1 W, 2.80 V, +20 C  June       400       none      NOT MET, first stop h 19, unserved 379 Wh
+
+   The largest load ONE aged pack carries for 72 h (cells +20 C): June 12.30 W with 400 Wp and no window (2.80 V),
+   10.13 W with 100 Wp in the window (3.00 V); September 9.24 W and 8.42 W. The 8.4 W of 5c is the design case only.
 
 END. REQ-072's verdict on these figures: FAIL (unchanged); see ENERGY-RECONCILIATION.md sections 5 and 7.

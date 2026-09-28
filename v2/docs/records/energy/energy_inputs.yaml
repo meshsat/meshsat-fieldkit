@@ -206,6 +206,12 @@ solar:
       i_target_a: {value: 6.16, src: "the stage's output at 15.1 V for 100 W in at the declared 0.93: 100 x 0.93 / 15.1 (gen_sch_e.py:583)"}
       trk_out_v: 15.1
       stage_eta: 0.93
+      stage_eta_low: {value: 0.90, src: "this record's low bracket for the stage (solar.chain, the LT8705A row)"}
+      fbout_v: {min: 1.193, typ: 1.207, max: 1.222, src: "8705af PDF page 4: Regulation Voltage for FBOUT, VC = 1.2 V, LT8705AE and LT8705AI (the fitted part is LT8705AEUHF, v2/vendor/SOURCES.yaml)"}
+      r10_kohm: {value: 115.0, src: "gen_sch_e.py:576: R10 115k 1% (RFBOUT1), TRK_OUT to TRK_FBOUT"}
+      r11_kohm: {value: 10.0, src: "gen_sch_e.py:576: R11 10.0k 1% (RFBOUT2), TRK_FBOUT to GND"}
+      settings_mohm: [8.0, 9.1, 10.0]
+    pv_fault_multiplier: {value: 1.25, src: "the usual photovoltaic practice of rating a string's protection at 1.25 times its short-circuit current; NO standard for it is held in the tree"}
   chain:
     - {stage: "board E's LT8705A stage, PV_P (17.6 V) to TRK_OUT (15.1 V)", eta: 0.93, low: 0.90, high: 0.97, src: "the intent's declared 0.93 (gen_sch_e.py:606, rail TRK_OUT); NOT PLOTTED at this ratio (8705af plots a 48 V design); the bracket is this stream's"}
     - {stage: "board A's front end LM5176 U2, VIN_RAW to VBUS20 (20 V)", eta: 0.93, low: 0.90, high: 0.97, src: "the intent's declared 0.93 (gen_sch_a.py:103, rail VBUS20); NOT PLOTTED at 20 V out"}
