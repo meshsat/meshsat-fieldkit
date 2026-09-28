@@ -26,8 +26,10 @@ lists every file an engineer needs, this folder's included, by path and sha256.
   underside over the 1450PF frame's lettering; ten 4.6 holes at Peli's insert bores for 6-32 UNC x 1/2 in A2 pan heads.
   It lies on the frame and covers Peli's o-ring as C1 does.
 - **The one H1-only feature:** four PEM S-M3 self-clinching nuts in 4.2 holes on the Arcol HS100's fixing pattern, F 35.0
-  by G 37.0 (Arcol "HS Aluminium Housed Resistors" sheet 12/14.08, page 2: F and G +-0.3, holes 3.2 max, flange 3.0 +-0.1;
-  held as `v2/vendor/arcol/arcol-hs-datasheet-12-14-08.pdf`), centred on the PA flange site (X -45.0, Y 70.0,
+  by G 37.0 (Arcol "HS Aluminium Housed Resistors" sheet 12/14.08, page 2: F and G +-0.3, mounting holes L 4.4 +-0.25,
+  mounting foot K 3.7 max; held as `v2/vendor/arcol/arcol-hs-datasheet-12-14-08.pdf`. The "3.2 max." on that page sits at
+  the solder tag and is read here as the tag's hole, not the mounting hole, which corrects the independent check's reading
+  of 28 September), centred on the PA flange site (X -45.0, Y 70.0,
   `panel1450.PA_MOUNT`), **G 37.0 along the plate's X and F 35.0 along its Y** (the owner's instruction), so the
   resistor's long axis runs along Y. Holes at X -63.50 and -26.50, Y 52.50 and 87.50. The nuts are pressed from the top
   face, flush on the underside, so the resistor's flange sits flat on the plate with compound between.
@@ -44,10 +46,10 @@ lists every file an engineer needs, this folder's included, by path and sha256.
    on 29 September 2026 at 01:30 CEST), so the code is the session's reading of PEM's S table for a 3.0 sheet (INFERRED),
    the hole stays at C1's 4.2, and the drawing asks the shop to follow PEM's installation data and say so where they differ.
    Reversal: PEM's bulletin, or the shop's statement.
-2. **The pattern tolerance +-0.10**, tighter than Arcol's +-0.3 on the resistor: an M3 in a 3.2 hole floats only about
-   0.1, so the resistor's own pattern is read at receipt (`TEST-PROCEDURE.md` step A0); if an M3 does not pass all four
-   holes, the operator opens the resistor's four holes to 3.4 with a hand drill (they pass only the aluminium housing's
-   mounting flange on Arcol's page 2 drawing, INFERRED) and records it; H1 is not re-machined for it.
+2. **The pattern at C1's +-0.10** on position: an M3 in the HS100's 4.4 +-0.25 mounting holes floats at least 0.5
+   (4.15 minimum hole, 3.0 screw), more than Arcol's +-0.3 on the pattern and H1's +-0.10 together, so M3 x 10 A2 pan
+   heads with flat washers pass all four holes at every tolerance. Reversal: none needed unless the owner's M3 choice
+   changes.
 3. **Flatness 0.5** over the plate after anodising and nut insertion, and the measured value reported: a gap under the
    edge would open the o-ring seal the test relies on. Reversal: a shop's stated flatness with a reason.
 4. **Its own manifest**, not lines appended to `../MANIFEST.sha256`, because the release README says a change makes a new

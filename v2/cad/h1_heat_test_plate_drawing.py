@@ -90,13 +90,13 @@ with PdfPages(out_pdf) as pdf:
     sx.add_patch(Rectangle((13.9, 0), 4.2, T, fc="white", ec="k", lw=0.4))                    # the 4.2 hole
     sx.add_patch(Rectangle((13.9, T - 1.38), 4.2, 1.38, fc="#3d6fa8", ec="k", lw=0.4))       # clinched shank (indicative)
     sx.add_patch(Rectangle((12.9, T), 6.2, 1.5, fc="#3d6fa8", ec="k", lw=0.4))                # the nut's head on the top face (indicative)
-    sx.add_patch(Rectangle((4, -3.0), 22, 3.0, fc="#c9c9c9", ec="k", lw=0.5))                  # the HS100's flange, 3.0 (Arcol)
+    sx.add_patch(Rectangle((4, -3.7), 22, 3.7, fc="#c9c9c9", ec="k", lw=0.5))                  # the HS100's mounting foot, K 3.7 max (Arcol)
     sx.add_patch(Rectangle((4, -0.15), 22, 0.15, fc="#f2c14e", ec="none"))                     # compound
-    sx.add_patch(Rectangle((14.5, -6.5), 3.0, 6.5 + T + 1.5, fc="none", ec="k", lw=0.5, ls="--"))  # M3 screw
-    sx.add_patch(Rectangle((13.0, -4.2), 6.0, 1.2, fc="#666666", ec="k", lw=0.3))              # washer and head
+    sx.add_patch(Rectangle((14.5, -4.9), 3.0, 4.9 + T + 1.5, fc="none", ec="k", lw=0.5, ls="--"))  # M3 screw
+    sx.add_patch(Rectangle((13.0, -4.9), 6.0, 1.2, fc="#666666", ec="k", lw=0.3))              # washer and head
     sx.text(31, T / 2, "H1, %.1f, black anodised" % T, fontsize=5.4, va="center")
     sx.text(20, T + 1.8, "%s head on the TOP face\n(install after anodising)" % P.PEM_PART, fontsize=5.0)
-    sx.text(27, -1.5, "HS100 flange 3.0 +-0.1, holes d3.2 max\n(Arcol 12/14.08 p. 2); compound in between", fontsize=5.0, va="center")
+    sx.text(27, -1.5, "HS100 mounting foot (K %.1f max), holes L %.1f +-%.2f\n(Arcol 12/14.08 p. 2); compound in between" % (P.HS100["K_max"], P.HS100["L_hole"], P.HS100["L_tol"]), fontsize=5.0, va="center")
     sx.text(0, -7.5, "M3 A2 pan head and flat washer from BELOW through the resistor into the nut", fontsize=5.0)
     sx.text(0, 9.0, "SECTION THROUGH ONE NUT (schematic): the resistor sits flat on the flush underside", fontsize=5.8)
     sx.set_xlim(-1, 55); sx.set_ylim(-9, 10)
@@ -125,8 +125,9 @@ with PdfPages(out_pdf) as pdf:
     nx = fig.add_axes([0.015, 0.098, 0.505, 0.19]); nx.axis("off")
     notes = ["NOTES",
              "1. Units mm. Datum: the case centre (the plate's centre); X along the case, +Y toward the hinge wall. The DXF is in the same frame.",
-             "2. The HS100 is not part of H1: it is shown to place the pattern. Its holes are 3.2 max on F 35.0 +-0.3 x G 37.0 +-0.3 (Arcol 12/14.08 p. 2); an M3 floats "
-             "about 0.1 in them, so the pattern's tolerance here is +-0.10 and the operator checks the resistor's own pattern at receipt (TEST-PROCEDURE.md).",
+             "2. The HS100 is not part of H1: it is shown to place the pattern. Its mounting holes are L %.1f +-%.2f on F 35.0 +-0.3 x G 37.0 +-0.3 "
+             "(Arcol 12/14.08 p. 2), so an M3 floats at least 0.5 in them, more than the pattern's +-0.3 and H1's +-0.10 together; M3 x 10 A2 pan "
+             "heads with flat washers." % (P.HS100["L_hole"], P.HS100["L_tol"]),
              "3. The resistor's footprint stays inside the 1450PF window, %.1f mm from its edge at +Y (the ring under the plate): bend the +Y tag's lead down and "
              "toward -Y (h1-heat-test-plate-check.out)." % (L.WINDOW[1] / 2 - P.PATCH_RECT[3]),
              "4. Break all edges 0.2 to 0.5; no burr on the underside's sealing band. Deburr the PEM holes lightly on the top face only.",
