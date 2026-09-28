@@ -226,7 +226,7 @@ rules:
   # ---------------------------------------------------------------- evidence, reviews and records
   - {action: include, group: EV, glob: ["v2/docs/CURRENT-EVIDENCE.md", "v2/docs/PCB-RULE-STATUS-*.md", "v2/docs/PCB-OPEN-PAIRS.md", "v2/docs/PCB-GAP-REGISTER.md", "v2/docs/PCB-PROTOTYPE-UNKNOWNS.md", "v2/docs/PCB-BRING-UP.md", "v2/docs/PCB-ETA.md", "v2/docs/PCB-ROTATION-CHECKLIST.md"],
      role: "generated status pages: every reading classified against the current candidate, per board, with the exact remaining blockers"}
-  - {action: include, group: EV, glob: ["v2/docs/EXECUTION-PLAN.md", "v2/docs/reviews/**", "v2/docs/records/**", "v2/docs/evidence/**"],
+  - {action: include, group: EV, glob: ["v2/docs/EXECUTION-PLAN.md", "v2/docs/CODEX-WORKER.md", "v2/docs/reviews/**", "v2/docs/records/**", "v2/docs/evidence/**"],
      role: "execution plan, the owner's reviews and prompts, review routes, and the filed records of each work round"}
 
   # ---------------------------------------------------------------- history: kept to trace a ruling, never an authority
