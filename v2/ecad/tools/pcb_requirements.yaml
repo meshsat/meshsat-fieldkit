@@ -2470,6 +2470,12 @@ open_items:
   - id: S-13
     class: SESSION
     status: OPEN
+    disposition: PROCUREMENT
+    disposition_why: >-
+      An order code named before an eSIM build of the RM520N-GL is bought (SC-13). CON-025's constraint is the parasitic
+      capacitance of the TVS arrays at the SIM holders, which reads PASS on the drawn parts and which an order code of
+      the module cannot move; the link first written at this integration was withdrawn after its fresh check
+      (v2/docs/records/int7/CHECK.md, m6).
     title: >-
       The order code of an eSIM-fitted RM520N-GL, named before an eSIM build is bought (the components layer's list).
       The description is settled by session choice SC-13 (V2-SPEC line 41 and its correction on dual SIM: the
@@ -2722,7 +2728,9 @@ open_items:
     disposition_why: >-
       A board D circuit item (a current limit on the hub port J_USB3 that the monitor's touch USB takes, SC-63) that no
       registry record judges by rule. Board D's generator owner applies it in the circuit round; PWR-001 on D reads the
-      result then.
+      result then. Decision 31's protection review of board D (stream d8dec31, an AI review checked on 28 September 2026
+      and applied after this integration) names the same port as its finding D-F3, which brings it under board D's hold
+      before that board's layout entry.
     title: >-
       (hc5-layer5: SC-63, drafted as SC-HF-06; HF-F06) The monitor's touch USB takes board D's spare hub port J_USB3 (the
       session's choice SC-63, drafted as SC-HF-06 in v2/docs/HW-FW-CONTRACT.md section 8; no board B change; the HAL shares it
@@ -2753,12 +2761,6 @@ open_items:
   - id: S-65
     class: SESSION
     status: OPEN
-    disposition: CIRCUIT_ITEM
-    disposition_why: >-
-      Board A's +3V3 clamp D3 above the rail's parts' absolute maximum is an internal-rail protection finding for board
-      A's generator owner. No record's acceptance names the rail's clamp coordination, and decision 31's review covers
-      exposed conductors, not internal rails. The circuit round applies it and TRN-001 and PWR-001 on A are re-taken
-      then.
     title: >-
       Board A's +3V3 clamp D3 (SMBJ5.0A: VBR 6.40 to 7.00 V at 10 mA, 9.2 V at IPP, MDD SMBJ series) sits above the
       absolute maximum of the rest of the rail: U27 and U28 (PCA9555, 6.0 V, SCPS131J), the six INA226 (6.0 V,
@@ -2913,29 +2915,6 @@ open_items:
       among the eight 813 ground contacts (the independent check) the lowest carries 2.44 A, 2.58 A with one
       open, 80.3 and 83.6 C at the 51 C inside air and 94 to 98 C at the +55 C margin. Owed to TEST-PLAN.md:
       each contact group's resistance and one 813 ground contact's temperature at the declared currents.
-  - id: S-81
-    class: SESSION
-    status: OPEN
-    disposition: PROCESS
-    disposition_why: >-
-      A wording defect of v2/docs/PRODUCT-BRIEF.md's open-items row (FEA-002's counts as EMCON.md states them), for the
-      product brief's writer. CON-010 and FEA-002 carry their own counts.
-    title: >-
-      (Layer 1, for the product brief's writer; the narrow verification's observation (c),
-      v2/docs/reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md section 4, checked at the re-baseline of layer 3 on 27
-      September 2026) v2/docs/PRODUCT-BRIEF.md's open-items row for FEA-002 states EMCON's counts as
-      v2/docs/feasibility/EMCON.md section 0a gives them (locally 15 of 17 closed at desk, end to end 0 of 17), and
-      W3T-F1 does not move them: it is a finding on the shared TX_INHIBIT_n conductor, which every end-to-end row already
-      waits on. The row does not name W3T-F1 (S-64, ENGINEERING-QUESTIONS EQ-25), under which RF-002's fail-safe state
-      reads FAIL on boards A to D and CON-010 reads FAIL at desk, and its sentence 'One bound includes failure' names
-      only the RockBLOCK 9704's, where W3T-F1's bound on TX_INHIBIT_n's fail-safe level with board C unpowered (about
-      0.42 V with the stated II at VCC 0 V, 1.09 V with the stated Ioff, against the 0.8 V VIL the walk applies) also
-      includes failure. The row's reason layer 1 can close stands (S-64's remedy is on board C and changes no ruled
-      radio, the case or a board-to-board interface), so the session reads this as wording for the brief's next issue
-      under its open-items rule, not as a reopening of layer 1. The page the row cites carries W3T-F1 in its section 4b
-      only: its section 7 does not list it and its section 3 still reads the line PASS in every fail-safe state, which
-      is that page's writer's. Open until the brief's next issue names W3T-F1 in the FEA-002 row and counts the bounds
-      that include failure, or S-64 closes before that issue. The brief is not edited by the pass that recorded this.
   - id: M-02
     class: OWNER_ACTION
     status: OPEN
@@ -3033,10 +3012,6 @@ open_items:
   - id: S-86
     class: SESSION
     status: OPEN
-    disposition: PROCESS
-    disposition_why: >-
-      Documents that cite pcb_pack_protection.yaml by line numbers that moved (the battery packet). A citation refresh
-      for the documents' writer, changing no reading.
     title: >-
       Documents that cite pcb_pack_protection.yaml by line, or describe the rows SC-74 corrected, now point at
       other text: the battery packet (SECONDARY-OT-DECISION.md ':142-158', PRIMARY-CONFIGURATION.md ':51-65',
@@ -3140,10 +3115,37 @@ open_items:
       exciter's row UNDECIDED (inhibit_chain_d: 7 pass, 0 failed, 1 undecided of 8 on the set 6 netlist; the text of the
       row is 'EMCON reaches it in hardware (D key on U2)'), so CON-010, the transmit gate on board D (KEY = PTT_ANY AND
       TX_INHIBIT_n), cannot read PASS at the desk. S-64 (W3T-F1, TX_INHIBIT_n's fail-safe level with board C unpowered)
-      is closed by SC-67 and that check fails on no board since set 6; this item is the dependency that remains. Open
-      until the maker states the threshold in a held document under v2/vendor/, or bench E-01 of
-      v2/docs/feasibility/EMCON.md measures it on the module (prototype verification, on a built board), and RF-002 is
-      re-taken on board D.
+      is closed by SC-67 and that check fails on no board since set 6; this item is one of the two dependencies that
+      remain; the other is S-93 (the LM5176's gate drive in shutdown, behind board A's two undecided rows). Open until
+      the maker states the threshold in a held document under v2/vendor/, or bench E-01 of v2/docs/feasibility/EMCON.md
+      measures it on the module (prototype verification, on a built board), and RF-002 is re-taken on board D.
+  - id: S-93
+    class: SESSION
+    status: OPEN
+    title: >-
+      The LM5176 controllers' gate-drive level in shutdown, which TI does not state (SNVSAI1D 7.4.1 gives the shutdown
+      as 'VCC off, No switching' and states no level for HDRV1 and HDRV2): RF-002's walk on board A reads the 30 W power
+      amplifier's row (A power on J_PA) and the QMX's row (A power on J_HF) UNDECIDED on it (inhibit_chain_a: 7 pass, 0
+      failed, 2 undecided of 9 on the set 6 netlist; v2/ecad/tools/tx_inhibit.py, the rule for a transistor whose gate
+      is driven by the gated switch itself; v2/docs/feasibility/EMCON.md section 0a rows 2 and 3 and section 4a, which
+      name it as the residual of board A's round 8). CON-010, whose allocated boards are D and A, cannot read PASS at
+      the desk while these two rows are undecided. Found missing from CON-010's links by the fresh check of the set 6
+      integration (v2/docs/records/int7/CHECK.md, finding B-1). Open until TI states the level in a held document under
+      v2/vendor/, or the stages are given a hardware element that holds the high-side gates off in shutdown whatever the
+      controller does, or a bench reading on a built board gives the level (prototype verification), and RF-002 is
+      re-taken on board A.
+  - id: S-94
+    class: SESSION
+    status: OPEN
+    title: >-
+      REQ-030, REQ-032 and REQ-071 read FAIL, unchanged since before set 6, and among the grounds their evidence names
+      is RF-002's reading of board B, which since the consolidated re-take reads 0 failed (inhibit_chain_b: 16 pass, 0
+      failed, 4 undecided of 20; of its eleven failed rows eight were an instrument defect that 910da406 corrected in
+      tx_inhibit.py and three were moved by circuit changes, v2/docs/records/retake6/RESULT.txt section 5). Found by the
+      fresh check of the set 6 integration (v2/docs/records/int7/CHECK.md, m12). Each record is to be re-read by a
+      stated predicate over the elements it rests on (RF-002 and SCH-004 on its allocated boards, and the rows of
+      v2/docs/feasibility/EMCON.md it is bound to), as CON-010 was; until then each stands FAIL as it was set, which is
+      the cautious reading. Open until the three are re-decided with their derivation in the evidence.
 
 closed_items:
   - id: S-57
@@ -3649,6 +3651,31 @@ closed_items:
       was cut as option (b), carrying layer 3 IN_PROGRESS. The re-baseline (a54b793b, baselined in 2c12be91) and its
       re-check (v2/docs/reviews/TARGETED-RECHECK-LAYER-3-2026-09-27.md, B-1 CLOSED) are on branch fnd/l3rb; the package
       is the next snapshot, H3, cut from the pushed commit that carries them, and this item closes with it.
+  - id: S-81
+    closed_by: commit e28f91a6
+    closing_evidence: >-
+      v2/ecad/tools/pcb_requirements.yaml at the set 6 integration: S-64 is closed by session choice SC-67 (board C's
+      R14 2.2 k and R50 10 k in v2/ecad/tools/gen_sch_c.py, drawn in e28f91a6), which is this item's own second closing
+      condition ('or S-64 closes before that issue'). v2/ecad/pcb-c-display-c8/routed/inhibit_chain_c.verdict.json reads
+      PASS of 6 and RF-002's walk reads 0 failed on every board, so CON-010 no longer reads FAIL at desk (INCONCLUSIVE,
+      waiting on S-92 and S-93). The brief's row is still to be worded at its next issue, which is S-91's list; no layer
+      is reopened. Closed on the fresh check's finding m5 (v2/docs/records/int7/CHECK.md).
+    title: >-
+      (Layer 1, for the product brief's writer; the narrow verification's observation (c),
+      v2/docs/reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md section 4, checked at the re-baseline of layer 3 on 27
+      September 2026) v2/docs/PRODUCT-BRIEF.md's open-items row for FEA-002 states EMCON's counts as
+      v2/docs/feasibility/EMCON.md section 0a gives them (locally 15 of 17 closed at desk, end to end 0 of 17), and
+      W3T-F1 does not move them: it is a finding on the shared TX_INHIBIT_n conductor, which every end-to-end row already
+      waits on. The row does not name W3T-F1 (S-64, ENGINEERING-QUESTIONS EQ-25), under which RF-002's fail-safe state
+      reads FAIL on boards A to D and CON-010 reads FAIL at desk, and its sentence 'One bound includes failure' names
+      only the RockBLOCK 9704's, where W3T-F1's bound on TX_INHIBIT_n's fail-safe level with board C unpowered (about
+      0.42 V with the stated II at VCC 0 V, 1.09 V with the stated Ioff, against the 0.8 V VIL the walk applies) also
+      includes failure. The row's reason layer 1 can close stands (S-64's remedy is on board C and changes no ruled
+      radio, the case or a board-to-board interface), so the session reads this as wording for the brief's next issue
+      under its open-items rule, not as a reopening of layer 1. The page the row cites carries W3T-F1 in its section 4b
+      only: its section 7 does not list it and its section 3 still reads the line PASS in every fail-safe state, which
+      is that page's writer's. Open until the brief's next issue names W3T-F1 in the FEA-002 row and counts the bounds
+      that include failure, or S-64 closes before that issue. The brief is not edited by the pass that recorded this.
 
 records:
   - id: REQ-001
@@ -5753,7 +5780,7 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-06, D-11]
     choices: [SC-10, SC-35, SC-49, SC-23]
-    waits_on: [L-04, S-69]
+    waits_on: [L-04, S-69, S-86]
     status: FEASIBILITY_OPEN
     evidence_result: INCONCLUSIVE
     evidence_phase: SCHEMATIC
@@ -7399,7 +7426,7 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-05]
     choices: [SC-11, SC-38]
-    waits_on: [S-01, S-02]
+    waits_on: [S-01, S-02, S-65, S-94]
     status: DEFINED
     evidence_result: FAIL
     evidence_phase: SCHEMATIC
@@ -7619,7 +7646,7 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-05]
     choices: [SC-38]
-    waits_on: [S-01, S-02]
+    waits_on: [S-01, S-02, S-94]
     status: DEFINED
     evidence_result: FAIL
     evidence_phase: SCHEMATIC
@@ -7964,7 +7991,7 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-05]
     choices: [SC-11]
-    waits_on: [S-01]
+    waits_on: [S-01, S-94]
     status: DEFINED
     evidence_result: FAIL
     evidence_phase: SCHEMATIC
@@ -8334,7 +8361,7 @@ records:
       rules: [RF-002, SCH-004]
       decisions: []
     rule_coverage: FULL
-    waits_on: [S-92]
+    waits_on: [S-92, S-93]
     status: DEFINED
     evidence_result: INCONCLUSIVE
     evidence_phase: SCHEMATIC
@@ -8681,25 +8708,28 @@ records:
       - >-
           v2/ecad/pcb-d-aprs-d9/routed/inhibit_chain_d.verdict.json, inhibit_chain_a, safe_lines_d and safe_lines_a
           re-read at the set 6 integration of 28 September 2026 (branch fnd/int7), and the record RE-DECIDED from them
-          by a stated predicate (the owner's review of the restart plan, amendment XH-04): the elements are the readings
-          this record rests on, on its allocated boards D and A; it reads FAIL if any element reads a failed check,
-          INCONCLUSIVE if none fails and at least one check is undecided or a reading is missing, PASS only if every
-          element is decided and holds. What set FAIL at the re-take of 8ea7867e was W3T-F1 (open item S-64:
-          TX_INHIBIT_n at 1.09 V with board C unpowered under the walk's worst-case Ioff); set 6 remedied it on board
-          C's generator (SC-67: R14 2.2 k and R50 10 k, the line at 0.243 V), S-64 is CLOSED by SC-67 on this line, and
-          inhibit_chain_c PASS of 6 on netlist 3fddbb3edcd4248a, so that check fails on no board. The elements now:
-          inhibit_chain_d INCONCLUSIVE, 7 pass, 0 failed, 1 undecided of 8 on netlist 7a2c0ac2190b141a (undecided:
-          RF-002 SA868 VHF exciter: EMCON reaches it in hardware (D key on U2)); inhibit_chain_a INCONCLUSIVE, 7 pass, 0
-          failed, 2 undecided of 9 on netlist 0a2b59087bcc2678 (undecided: RF-002 30 W VHF power amplifier (RA30H1317M1
-          on the plate): EMCON reaches it in hardware (A power on J_PA); RF-002 QMX HF transceiver: EMCON reaches it in
-          hardware (A power on J_HF)); safe_lines_d PASS on netlist 7a2c0ac2190b141a (2 safety line(s), 0 floating);
-          safe_lines_a PASS on netlist 0a2b59087bcc2678 (7 safety line(s), 0 floating). Failed elements: none;
-          undecided: inhibit_chain_d, inhibit_chain_a; missing: none. Result by the predicate: INCONCLUSIVE. What stays
-          undecided is named, not judged: the SA868 exciter's PTT receive threshold, which its maker does not state
-          (bench E-01 of v2/docs/feasibility/EMCON.md, prototype verification), and on board A the two power-fed rows
-          (the 30 W amplifier on J_PA and the QMX on J_HF), which the walk reaches in hardware and cannot time from a
-          held document. The record therefore waits on S-92 (opened with this entry) and no longer on S-64. A desk
-          reading: no board has been built or measured.
+          by a stated predicate (the owner's review of the restart plan,
+          v2/docs/reviews/2026-09-28-restart-plan-review.md, amendment XH-04): the elements are the readings this record
+          rests on, on its allocated boards D and A; it reads FAIL if any element reads a failed check, INCONCLUSIVE if
+          none fails and at least one check is undecided or a reading is missing, PASS only if every element is decided
+          and holds. What set FAIL at the re-take of 8ea7867e was W3T-F1 (open item S-64: TX_INHIBIT_n at 1.09 V with
+          board C unpowered under the walk's worst-case Ioff); set 6 remedied it on board C's generator (SC-67: R14 2.2
+          k and R50 10 k, the line at 0.243 V), S-64 is CLOSED by SC-67 on this line, and inhibit_chain_c PASS of 6 on
+          netlist 3fddbb3edcd4248a, so that check fails on no board. The elements now: inhibit_chain_d INCONCLUSIVE, 7
+          pass, 0 failed, 1 undecided of 8 on netlist 7a2c0ac2190b141a (undecided: RF-002 SA868 VHF exciter: EMCON
+          reaches it in hardware (D key on U2)); inhibit_chain_a INCONCLUSIVE, 7 pass, 0 failed, 2 undecided of 9 on
+          netlist 0a2b59087bcc2678 (undecided: RF-002 30 W VHF power amplifier (RA30H1317M1 on the plate): EMCON reaches
+          it in hardware (A power on J_PA); RF-002 QMX HF transceiver: EMCON reaches it in hardware (A power on J_HF));
+          safe_lines_d PASS on netlist 7a2c0ac2190b141a (2 safety line(s), 0 floating); safe_lines_a PASS on netlist
+          0a2b59087bcc2678 (7 safety line(s), 0 floating). Failed elements: none; undecided: inhibit_chain_d,
+          inhibit_chain_a; missing: none. Result by the predicate: INCONCLUSIVE. What stays undecided is named, not
+          judged: the SA868 exciter's PTT receive threshold, which its maker does not state (bench E-01 of
+          v2/docs/feasibility/EMCON.md, prototype verification), and on board A the two rows fed through the LM5176
+          stages (the 30 W amplifier on J_PA and the QMX on J_HF), which the walk reads UNDECIDED because TI states no
+          gate-drive level for the LM5176 in shutdown (SNVSAI1D 7.4.1; v2/docs/feasibility/EMCON.md section 0a rows 2
+          and 3; open item S-93). The record therefore waits on S-92 and S-93 and no longer on S-64 (S-93 and this
+          sentence's second item were added, and the clause on board A's rows corrected, after the fresh check of the
+          merge, v2/docs/records/int7/CHECK.md finding B-1). A desk reading: no board has been built or measured.
       - >-
           v2/docs/CURRENT-EVIDENCE.md re-read at the set 6 integration of 28 September 2026 (branch fnd/int7: the set 6
           line and its consolidated re-take merged with the H3 line, the renderer's head sentence and limit notices now
@@ -8735,7 +8765,7 @@ records:
       current-candidate evidence on boards D and A       (TX_INHIBIT_n's fail-safe level, W3T-F1), so it reads FAIL.
       Re-decided at the set 6 integration of 28 September 2026 by the predicate in the evidence entry of that day: the
       W3T-F1 check no longer fails on any board (SC-67), the walk reads 0 failed on D and A with the SA868's row and
-      board A's two power-fed rows undecided, so it reads INCONCLUSIVE and waits on S-92.
+      board A's two power-fed rows undecided, so it reads INCONCLUSIVE and waits on S-92 and S-93.
 
   - id: CON-021
     kind: constraint
@@ -8976,7 +9006,7 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-05]
     choices: [SC-11]
-    waits_on: [S-01, S-02, S-44, S-87]
+    waits_on: [S-01, S-02, S-44, S-87, S-65]
     status: FEASIBILITY_OPEN
     evidence_result: INCONCLUSIVE
     evidence_phase: SCHEMATIC
@@ -10365,7 +10395,7 @@ records:
       rules: [BAT-002, PWR-003, PI-001, PI-003]
       decisions: [35]
     rule_coverage: FULL
-    waits_on: [S-66, S-74]
+    waits_on: [S-66, S-74, S-86]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: BLOCKER
@@ -12309,7 +12339,6 @@ records:
       decisions: []
     rule_coverage: NONE
     choices: [SC-13]
-    waits_on: [S-13]
     status: DEFINED
     evidence_result: PASS
     evidence_phase: SCHEMATIC

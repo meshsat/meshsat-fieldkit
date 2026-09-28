@@ -1,0 +1,13 @@
+The full suite on the KiCad host at the first candidate of the set 6 integration, fnd/int7 1c4235ec2f025161c5418911797b9b5fb64bd9ce
+(MESHSAT-1357, 28 September 2026). Driver: _bin/box_suite.sh int7s <commit> int7-evidence-1c4235ec.tar int7-1c4235ec.bundle fnd/int7,
+in /root/int7s on vast.ai 52646493 (KiCad 9.0.9, Python 3.12.3). Started 15:03:53 UTC, ended 15:14:34 UTC (10 min 41 s).
+The clone's git status was empty before and after the run. The log itself stays local (sha256 1720a00da72e2ff6f25f28f3b8f1df8aed66166615c53933145ba68a3b4bf371, 2946 lines); its last lines:
+
+tests: 2019 passed, 0 failed, 3 skipped
+EXIT 0
+1c4235ec2f025161c5418911797b9b5fb64bd9ce
+
+Skipped tests (each a property of that host, a skip is not a pass):
+tests: test_finish_order.t_routeflow_validate_agrees_with_these_rules SKIP the profiles pin /root/gitlab/products/meshsat/meshsat-fieldkit, which exists here and is not this tree, so validate's one-tree property is about the host rather than the profile
+tests: test_pairsearch.t_the_three_implementations_agree        SKIP no numba on this host: the heapq original and the array kernel agree, the compiled one was not run
+tests: test_per_board_contract_verdict.t_without_pcbnew_the_tool_writes_its_own_verdict_declaring_the_absence SKIP pcbnew is importable here: the absence cannot be shown
