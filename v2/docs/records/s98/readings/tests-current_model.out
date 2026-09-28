@@ -1,0 +1,5 @@
+tests: test_current_model.t_below_the_crossover_nothing_moves   PASS
+tests: test_current_model.t_no_tool_carries_the_constants_itself PASS
+tests: test_current_model.t_the_bar_is_the_lowest_published_model_at_every_area PASS
+tests: test_current_model.t_the_sizer_and_the_judge_agree       PASS
+tests: 4 passed, 0 failed, 0 skipped
