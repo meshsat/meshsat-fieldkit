@@ -379,3 +379,53 @@ workers at a time, no automatic orchestration.
 | Environment ready | **yes** (unchanged from 18:50). |
 | Delegation ready | **yes, proven on two engineering calls.** Both runs ended DONE_CANDIDATE by the launcher's computed checks (normal exit, one completed turn, no error event, HEAD at the base, only the permitted folder touched, every deliverable present); the client's session record names `gpt-6-astra`, `xhigh`, approval `never`, sandbox `workspace-write` (the event stream names no model). Run records under `_runs/codex/cx1-if-ab-power/` and `cx1-if-ab-power-c1/`, copied to the laptop. |
 | Pilot | **accepted as a record; I-03 open.** The author's first answer stopped at INCONCLUSIVE with an empty draft; the independent check (blind reproduction of every figure, fifteen citations opened on their pages, the 7.28 A marginal case reproduced by hand) credited the record and found two things the sources DO support that the author had refused to do (align board A's stale +5V_S2 declaration to the end that derives its figure; call the +5V_DEV converter-side coincidence); the one correction did both, pinned the inputs by hash, cited the registry's power model, and left the +5V_DEV peak to a session decision (S-99). The next layer item it advances: layer 4 item 4.10 and layer 5 item 5.5, when the generator owners apply S-98 and INT-001 is re-read. |
+
+### Checkpoint, 28 September 2026 23:00 CEST: integration set 7 on main
+
+The owner's status request of 28 September, answered in these terms (the same text went to him):
+
+**1. Delivered since the last report (21:40)**
+- **Integrated and on main:** set 7, `6b419b02` to `9fc79c1f`, pushed. Its gates: the fresh merge check read it mergeable with no blocking item, the suite passed 2171 with 0 failures, and an isolated clone rendered byte-identical pages. It carries the lid tray, the edge-rate rule, the port protection, the reliability fix and the pilot records. H3-01 and H3-02 are closed. Layout-entry reasons went from 35 to 34.
+- **Candidates awaiting review:** S-98 (`fnd/s98`), S-99 (`fnd/s99`, failed its check), the energy reconciliation (`fnd/energy`, failed its check, being corrected), the case purchase list (`fnd/od01`, being written).
+
+**2. Layers**
+
+| Layer | State |
+|---|---|
+| 1 to 3 | ACCEPTED; the H3 errata e and f are now answered |
+| 4 to 9 | IN PROGRESS |
+| 10, layout | BLOCKED: 0 of 7 boards pass layout entry |
+| 11 | not defined in the plan |
+
+No layer completed tonight.
+
+**3. Priorities**
+- **Edge-rate and port-protection checks:** both mergeable and integrated. SI-001 stays INCONCLUSIVE on every board.
+- **S-98:** both generators aligned (INTERIM), not integrated. It needs the box regeneration and a contract re-read.
+- **S-99:** the analysis failed the Codex check on ten findings; the sign error is confirmed on TI's page. The D8 split remains the candidate. Correction pending.
+- **I-03:** open.
+
+**4. Battery and solar**
+Your correction is applied: M1 and REQ-072 are unchanged and REQ-072 reads FAIL. The gap below comes from desk calculation, reproduced independently:
+
+| Quantity | Value |
+|---|---|
+| Aged pack | 108 Wh |
+| September night at 42.8 W | 483 to 514 Wh |
+| 72 hours | 3,082 Wh |
+| Stage ceiling per September day | about 1,024 Wh |
+
+- **Unresolved:** every load is a planning figure, the night cell temperature is assumed, and the solar day is a mean.
+- **No configuration inside the case meets REQ-072 as written.**
+- **Next:** correct three faults (second-pack fit, the 200 W panel against REQ-016, the paragraph's wording), re-check, then your decision.
+
+**5. Running and resources**
+- **Workers:** the case list, resumed at 22:39, and the energy correction, started at 22:55.
+- **Box:** idle. Spend is 10.65 of 20 USD, confirmed from the provider's balance.
+- **Codex:** 1 check and 1 correction remain.
+- **Claude since 18:48:** 0.45 M output tokens from 618 messages. A usage limit stopped work from 21:52 to 22:39.
+
+**6. Blockers and next milestone**
+- **Owner:** none now. Coming: the checkout list, then the energy decision.
+- **Engineering:** the case tests (A, B, E, P), the energy decision (A, E, P), S-99, S-98, and the port reviews of boards B and C.
+- **Next milestone:** set 8. Acceptance: IF-AB-POWER reads AGREE on regenerated netlists, the suite reads 0 failures and the check is clean. No completion time is defensible yet.
