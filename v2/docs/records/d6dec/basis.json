@@ -1,0 +1,3737 @@
+{
+ "what": "the quoted clauses of the decoupling declarations, looked up in the held documents",
+ "documents": 428,
+ "documents_with_no_text": [
+  "v2/vendor/aioc/k1-aioc-schematic-rev1.2.pdf",
+  "v2/vendor/connectors/hro-type-c-31-m-12.pdf",
+  "v2/vendor/crystals/yxc-ysx321sl-x322525mob4si.pdf",
+  "v2/vendor/dmr858/dmr858m-datasheet.pdf",
+  "v2/vendor/lte/te-2041119-mini-pcie-msata-socket-4mm-customer-drawing-rev-d.pdf",
+  "v2/vendor/m2/amphenol-mdt420m02001-m2-m-key.pdf",
+  "v2/vendor/m2/te-2199119-customer-drawing-revF.pdf",
+  "v2/vendor/m2/te-2199230-m2-e-key.pdf",
+  "v2/vendor/pulse/pulse-hx6096nl-datasheet-rev-a.pdf",
+  "v2/vendor/quectel/sparkfun-lg290p-breakout-schematic.pdf",
+  "v2/vendor/rf/amphenol-connex-132170-sma-bulkhead-ff-drawing.pdf",
+  "v2/vendor/techpublic/techpublic-74lvc1g08gv-c19829591.pdf",
+  "v2/vendor/xenarc/xenarc-709gnk-dimensional-drawing-v3.pdf"
+ ],
+ "claims": 440,
+ "distinct_bases": 125,
+ "by_status_bases": {
+  "FOUND": 76,
+  "NOT_FOUND": 3,
+  "NO_QUOTE": 30,
+  "PAGE": 16
+ },
+ "by_status_declarations": {
+  "FOUND": 262,
+  "NOT_FOUND": 3,
+  "NO_QUOTE": 133,
+  "PAGE": 42
+ },
+ "rows": [
+  {
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the VCC bypass capacitor close to the controller IC, between the VCC and PGND pins'; 7.3.2 p.15: 'A ceramic capacitor of 16 V or higher voltage rating and a value between 1 uF and 4.7 uF is required'",
+   "used_by": [
+    "board A C8 at U2.23 class L",
+    "board A C136 at U5.23 class L",
+    "board A C143 at U7.23 class L",
+    "board A C60 at U13.23 class L",
+    "board A C71 at U15.23 class L",
+    "board A C78 at U16.23 class L",
+    "board A C89 at U19.23 class L"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/lm5176-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Place the VCC bypass capacitor close to the controller IC, between the VCC and PGND pins",
+     "pages_stated": [
+      30
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/lm5176-datasheet.pdf",
+       "pages": [
+        30
+       ]
+      }
+     ],
+     "status": "FOUND"
+    },
+    {
+     "quote": "A ceramic capacitor of 16 V or higher voltage rating and a value between 1 uF and 4.7 uF is required",
+     "pages_stated": [
+      15
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/lm5176-datasheet.pdf",
+       "pages": [
+        15
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the BIAS bypass capacitor close to the controller IC, between the BIAS and PGND pins. A 0.1-uF ceramic capacitor is typically used'",
+   "used_by": [
+    "board A C192 at U2.24 class D",
+    "board A C193 at U5.24 class D",
+    "board A C194 at U7.24 class D",
+    "board A C195 at U13.24 class D",
+    "board A C196 at U15.24 class D",
+    "board A C197 at U16.24 class D",
+    "board A C198 at U19.24 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/lm5176-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Place the BIAS bypass capacitor close to the controller IC, between the BIAS and PGND pins. A 0.1-uF ceramic capacitor is typically used",
+     "pages_stated": [
+      30
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/lm5176-datasheet.pdf",
+       "pages": [
+        30
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the filter capacitor for the current sense signal as close to the IC pins as possible'",
+   "used_by": [
+    "board A C123 at U2.16 class D",
+    "board A C138 at U5.16 class D",
+    "board A C145 at U7.16 class D",
+    "board A C124 at U13.16 class D",
+    "board A C125 at U15.16 class D",
+    "board A C126 at U16.16 class D",
+    "board A C127 at U19.16 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/lm5176-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Place the filter capacitor for the current sense signal as close to the IC pins as possible",
+     "pages_stated": [
+      30
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/lm5176-datasheet.pdf",
+       "pages": [
+        30
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the average current loop filter capacitor close to the IC between the ISNS(+) and ISNS(-) pins'",
+   "used_by": [
+    "board A C128 at U2.14 class D",
+    "board A C139 at U5.14 class D",
+    "board A C146 at U7.14 class D",
+    "board A C129 at U13.14 class D",
+    "board A C130 at U15.14 class D",
+    "board A C131 at U16.14 class D",
+    "board A C132 at U19.14 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/lm5176-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Place the average current loop filter capacitor close to the IC between the ISNS(+) and ISNS(-) pins",
+     "pages_stated": [
+      30
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/lm5176-datasheet.pdf",
+       "pages": [
+        30
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SNVSAI1D (LM5176) 10.1 p.30: 'Bypass the VIN pin to AGND with a low ESR ceramic capacitor located close to the controller IC. A 0.1-uF ceramic capacitor is typically used'",
+   "used_by": [
+    "board A C207 at U2.2 class D",
+    "board A C219 at U5.2 class D",
+    "board A C220 at U7.2 class D",
+    "board A C208 at U13.2 class D",
+    "board A C209 at U15.2 class D",
+    "board A C221 at U16.2 class D",
+    "board A C222 at U19.2 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/lm5176-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Bypass the VIN pin to AGND with a low ESR ceramic capacitor located close to the controller IC. A 0.1-uF ceramic capacitor is typically used",
+     "pages_stated": [
+      30
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/lm5176-datasheet.pdf",
+       "pages": [
+        30
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SNVSBJ1E (TPS37A) pin table: VDD 'Input Supply Voltage: Bypass with a 0.1 uF capacitor to GND' (the sheet is r4a's drafts/datasheets/ti-tps37.pdf, sha256 d6aed9d9, not yet filed under v2/vendor); the fitted 1 uF behind R196 is also VDD's filter",
+   "used_by": [
+    "board A C210 at U34.1 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-tps37-snvsbj1e.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Input Supply Voltage: Bypass with a 0.1 uF capacitor to GND",
+     "pages_stated": [],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tps37-snvsbj1e.pdf",
+       "pages": [
+        5
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "Diodes DS41979 Rev 5-2 (AP64500), Layout item 2 p.23: 'Place the input capacitors as closely across VIN and GND as possible'",
+   "used_by": [
+    "board A C29 at U4.2 class R",
+    "board A C30 at U4.2 class R",
+    "board A C41 at U6.2 class R",
+    "board A C42 at U6.2 class R"
+   ],
+   "documents_named": [
+    "v2/vendor/diodes/diodes-ap64500.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Place the input capacitors as closely across VIN and GND as possible",
+     "pages_stated": [
+      23
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/diodes/diodes-ap64500.pdf",
+       "pages": [
+        23
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SLUSEA4D (TPS62933) 12.1 p.40: 'the most critical PCB feature is the loop formed by the input capacitors and power ground'; 'Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins'",
+   "used_by": [
+    "board A C159 at U33.3 class R",
+    "board A C160 at U33.3 class R"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-tps62933.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "the most critical PCB feature is the loop formed by the input capacitors and power ground",
+     "pages_stated": [
+      40
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tps62933.pdf",
+       "pages": [
+        40
+       ]
+      }
+     ],
+     "status": "FOUND"
+    },
+    {
+     "quote": "Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins",
+     "pages_stated": [
+      40
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tps62933.pdf",
+       "pages": [
+        40
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "ADI 2954fb (LTC2954) pin functions p.6: 'VIN: Power Supply Input: 2.7V to 26.4V'; the sheet states no capacitor, class D by role, the generator's own 1 uF (decision 42 D1)",
+   "used_by": [
+    "board A C4 at U1.1 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/power/ltc2954.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "VIN: Power Supply Input: 2.7V to 26.4V",
+     "pages_stated": [
+      6
+     ],
+     "found": [],
+     "pieces_not_found": [
+      "vin: power supply input: 2.7v to 26.4v"
+     ],
+     "status": "NOT_FOUND"
+    }
+   ],
+   "status": "NOT_FOUND"
+  },
+  {
+   "basis": "TI SLUSE66A (BQ25731) pin table p.7: VDDA 'Internal reference bias pin. Connect a 10-Ohm resistor from REGN to VDDA and a 1-uF ceramic capacitor from VDDA to power ground' (R18 and C19: the RC the maker draws)",
+   "used_by": [
+    "board A C19 at U3.7 class A"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/bq25731-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Internal reference bias pin. Connect a 10-Ohm resistor from REGN to VDDA and a 1-uF ceramic capacitor from VDDA to power ground",
+     "pages_stated": [
+      7
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/bq25731-datasheet.pdf",
+       "pages": [
+        7
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SLUSEA4D (TPS62933) 12.1 p.40: 'the most critical PCB feature is the loop formed by the input capacitors and power ground'; 'Place the inductor, input and output capacitors, and the IC on the same layer'",
+   "used_by": [
+    "board A C54 at U12.3 class R"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-tps62933.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "the most critical PCB feature is the loop formed by the input capacitors and power ground",
+     "pages_stated": [
+      40
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tps62933.pdf",
+       "pages": [
+        40
+       ]
+      }
+     ],
+     "status": "FOUND"
+    },
+    {
+     "quote": "Place the inductor, input and output capacitors, and the IC on the same layer",
+     "pages_stated": [
+      40
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tps62933.pdf",
+       "pages": [
+        40
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SLVSDG8B (TPS25740A) pin table p.5: DVDD 'Internally regulated 1.85 V rail ... Connect this pin to GND via the recommended bypass capacitor'; p.7: C(DVDD) 0.198 / 0.22 / 0.242 uF",
+   "used_by": [
+    "board A C94 at U18.13 class L"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-tps25740.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Internally regulated 1.85 V rail ... Connect this pin to GND via the recommended bypass capacitor",
+     "pages_stated": [
+      5
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tps25740.pdf",
+       "pages": [
+        5
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SCAS283W (SN74LVC08A): the maker's sheet ties no value or distance to VCC; class D by role (a supply pin's own decoupling), the generator's own 100 nF (decision 42 D1)",
+   "used_by": [
+    "board A C104 at U26.14 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-sn74lvc08a-quad-and.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "TI SCPS131J (PCA9555): the maker's sheet ties no value or distance to VCC; class D by role (a supply pin's own decoupling), the generator's own 100 nF (decision 42 D1)",
+   "used_by": [
+    "board A C106 at U27.24 class D",
+    "board A C107 at U28.24 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-pca9555.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "TI SCES212AC (SN74LVC1G00): the maker's sheet ties no value or distance to VCC; class D by role (a supply pin's own decoupling), the generator's own 100 nF (decision 42 D1)",
+   "used_by": [
+    "board A C153 at U30.5 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-sn74lvc1g00.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "TI SCES502Q (SN74AUP1G08) 9 p.14: 'For devices with a single supply, 0.1 uF is recommended ... The bypass capacitor should be installed as close to the power terminal as possible'",
+   "used_by": [
+    "board A C215 at U35.5 class D",
+    "board A C216 at U36.5 class D",
+    "board A C217 at U37.5 class D",
+    "board A C218 at U38.5 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-sn74aup1g08.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "For devices with a single supply, 0.1 uF is recommended ... The bypass capacitor should be installed as close to the power terminal as possible",
+     "pages_stated": [
+      14
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-sn74aup1g08.pdf",
+       "pages": [
+        14
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SCES308L (SN74LVC2G07) 10 p.10: 'For devices with a single supply a 0.1-uF capacitor is recommended'",
+   "used_by": [
+    "board A C226 at U40.5 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-sn74lvc2g07.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "For devices with a single supply a 0.1-uF capacitor is recommended",
+     "pages_stated": [
+      10
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-sn74lvc2g07.pdf",
+       "pages": [
+        10
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SLUSEA4D (TPS62933) 12.1 p.40: 'Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins, which is key to EMI reduction' (round 8, G2)",
+   "used_by": [
+    "board A C223 at U12.3 class R"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-tps62933.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins, which is key to EMI reduction",
+     "pages_stated": [
+      40
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tps62933.pdf",
+       "pages": [
+        40
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the input filter capacitor CIN, the power MOSFETs QL1 and QH1, and the sense resistor RSENSE close together to minimize the loop area for input switching current in buck operation'",
+   "used_by": [
+    "board A input loop of U2",
+    "board A input loop of U5",
+    "board A input loop of U7",
+    "board A input loop of U13",
+    "board A input loop of U15",
+    "board A input loop of U16",
+    "board A input loop of U19"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/lm5176-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Place the power components including the input filter capacitor CIN, the power MOSFETs QL1 and QH1, and the sense resistor RSENSE close together to minimize the loop area for input switching current in buck operation",
+     "pages_stated": [
+      30
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/lm5176-datasheet.pdf",
+       "pages": [
+        30
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the output filter capacitor COUT, the power MOSFETs QL2 and QH2, and the sense resistor RSENSE close together to minimize the loop area for output switching current in boost operation'",
+   "used_by": [
+    "board A output loop of U2",
+    "board A output loop of U5",
+    "board A output loop of U7",
+    "board A output loop of U13",
+    "board A output loop of U15",
+    "board A output loop of U16",
+    "board A output loop of U19"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/lm5176-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Place the power components including the output filter capacitor COUT, the power MOSFETs QL2 and QH2, and the sense resistor RSENSE close together to minimize the loop area for output switching current in boost operation",
+     "pages_stated": [
+      30
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/lm5176-datasheet.pdf",
+       "pages": [
+        30
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SLUSE66A (BQ25731) Table 12-1 rule 2 p.93: 'VBUS capacitors, RAC, Q1 and Q2 form a small loop 1. It is best to put them on the same side ... After RAC before Q1 and Q2 power stage recommend to put 10 nF + 1 nF (0402 package) decoupling capacitors as close as possible to IC'",
+   "used_by": [
+    "board A input loop of U3"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/bq25731-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "VBUS capacitors, RAC, Q1 and Q2 form a small loop 1. It is best to put them on the same side ... After RAC before Q1 and Q2 power stage recommend to put 10 nF + 1 nF (0402 package) decoupling capacitors as close as possible to IC",
+     "pages_stated": [
+      93
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/bq25731-datasheet.pdf",
+       "pages": [
+        93
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "Diodes AP64500 DS41979 Rev 5-2 (v2/vendor/diodes/diodes-ap64500.pdf): pin 2 VIN \"Power Input. VIN supplies the power to the IC as well as the step-down converter power MOSFETs\" (p.3); PCB Layout item 2 \"Place the input capacitors as closely across VIN and GND as possible\" (p.23)",
+   "used_by": [
+    "board B C112 at U103.2 class R",
+    "board B C113 at U103.2 class R",
+    "board B C119 at U104.2 class R",
+    "board B C120 at U104.2 class R",
+    "board B C212 at U203.2 class R",
+    "board B C213 at U203.2 class R",
+    "board B C219 at U204.2 class R",
+    "board B C220 at U204.2 class R",
+    "board B C312 at U303.2 class R",
+    "board B C313 at U303.2 class R",
+    "board B C319 at U304.2 class R",
+    "board B C320 at U304.2 class R"
+   ],
+   "documents_named": [
+    "v2/vendor/diodes/diodes-ap64500.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Power Input. VIN supplies the power to the IC as well as the step-down converter power MOSFETs",
+     "pages_stated": [
+      3
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/diodes/diodes-ap64500.pdf",
+       "pages": [
+        3
+       ]
+      }
+     ],
+     "status": "FOUND"
+    },
+    {
+     "quote": "Place the input capacitors as closely across VIN and GND as possible",
+     "pages_stated": [
+      23
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/diodes/diodes-ap64500.pdf",
+       "pages": [
+        23
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SN74LV1T08 SCLS739F (v2/vendor/ti/ti-sn74lv1t08.pdf): \"Each VCC terminal should have a good bypass capacitor to prevent power disturbance. A 0.1uF capacitor is recommended for this device\" (9.1 Power Supply Recommendations, p.14)",
+   "used_by": [
+    "board B C607 at U116.5 class D",
+    "board B C637 at U216.5 class D",
+    "board B C667 at U316.5 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-sn74lv1t08.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Each VCC terminal should have a good bypass capacitor to prevent power disturbance. A 0.1uF capacitor is recommended for this device",
+     "pages_stated": [],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-sn74lv1t08.pdf",
+       "pages": [
+        14
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI TPS62933 SLUSEA4D (v2/vendor/ti/ti-tps62933.pdf) 12.1 Layout Guidelines (p.40): \"the most critical PCB feature is the loop formed by the input capacitors and power ground\", \"Place the inductor, input and output capacitors, and the IC on the same layer\", \"Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins, which is key to EMI reduction\"; declared against VIN (pin 3)",
+   "used_by": [
+    "board B C605 at U105.3 class R",
+    "board B C125 at U105.3 class R",
+    "board B C606 at U106.3 class R",
+    "board B C130 at U106.3 class R",
+    "board B C635 at U205.3 class R",
+    "board B C225 at U205.3 class R",
+    "board B C636 at U206.3 class R",
+    "board B C230 at U206.3 class R",
+    "board B C665 at U305.3 class R",
+    "board B C325 at U305.3 class R",
+    "board B C666 at U306.3 class R",
+    "board B C330 at U306.3 class R",
+    "board B C571 at U26.3 class R",
+    "board B C7 at U26.3 class R"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-tps62933.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "the most critical PCB feature is the loop formed by the input capacitors and power ground",
+     "pages_stated": [
+      40
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tps62933.pdf",
+       "pages": [
+        40
+       ]
+      }
+     ],
+     "status": "FOUND"
+    },
+    {
+     "quote": "Place the inductor, input and output capacitors, and the IC on the same layer",
+     "pages_stated": [
+      40
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tps62933.pdf",
+       "pages": [
+        40
+       ]
+      }
+     ],
+     "status": "FOUND"
+    },
+    {
+     "quote": "Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins, which is key to EMI reduction",
+     "pages_stated": [
+      40
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tps62933.pdf",
+       "pages": [
+        40
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 3.5 Power Pins (p.14) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such); the maker's requirement is TBD and asked of Diodes (DECOUPLING.md section 10)",
+   "used_by": [
+    "board B C135 at U101.1 class D",
+    "board B C136 at U101.49 class D",
+    "board B C137 at U101.96 class D",
+    "board B C138 at U101.82 class D",
+    "board B C139 at U101.15 class D",
+    "board B C140 at U101.113 class D",
+    "board B C141 at U101.3 class D",
+    "board B C142 at U101.29 class D",
+    "board B C143 at U101.55 class D",
+    "board B C144 at U101.91 class D",
+    "board B C145 at U101.13 class D",
+    "board B C146 at U101.105 class D",
+    "board B C235 at U201.1 class D",
+    "board B C236 at U201.49 class D",
+    "board B C237 at U201.96 class D",
+    "board B C238 at U201.82 class D",
+    "board B C239 at U201.15 class D",
+    "board B C240 at U201.113 class D",
+    "board B C241 at U201.3 class D",
+    "board B C242 at U201.29 class D",
+    "board B C243 at U201.55 class D",
+    "board B C244 at U201.91 class D",
+    "board B C245 at U201.13 class D",
+    "board B C246 at U201.105 class D",
+    "board B C335 at U301.1 class D",
+    "board B C336 at U301.49 class D",
+    "board B C337 at U301.96 class D",
+    "board B C338 at U301.82 class D",
+    "board B C339 at U301.15 class D",
+    "board B C340 at U301.113 class D",
+    "board B C341 at U301.3 class D",
+    "board B C342 at U301.29 class D",
+    "board B C343 at U301.55 class D",
+    "board B C344 at U301.91 class D",
+    "board B C345 at U301.13 class D",
+    "board B C346 at U301.105 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/diodes/diodes-pi7c9x2g404sl.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "Diodes PI7C9X2G404SL DS40068 Rev 5-2 (v2/vendor/diodes/diodes-pi7c9x2g404sl.pdf) 3.5 Power Pins (p.14) states no decoupling requirement; this 10 uF is the generator's own bulk with no maker placement clause (DECOUPLING.md B2 and section 10: the Diodes reference design is asked)",
+   "used_by": [
+    "board B C147 at U101.64 class B2",
+    "board B C148 at U101.62 class B2",
+    "board B C247 at U201.64 class B2",
+    "board B C248 at U201.62 class B2",
+    "board B C347 at U301.64 class B2",
+    "board B C348 at U301.62 class B2"
+   ],
+   "documents_named": [
+    "v2/vendor/diodes/diodes-pi7c9x2g404sl.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "TI SN74LVC1G04 SCES214AF (v2/vendor/ti/ti-sn74lvc1g04.pdf): \"Each VCC pin should have a good bypass capacitor to prevent power disturbance. For devices with a single supply, a 0.1uF capacitor is recommended\" (Power Supply Recommendations, p.12)",
+   "used_by": [
+    "board B C197 at U112.5 class D",
+    "board B C297 at U212.5 class D",
+    "board B C397 at U312.5 class D",
+    "board B C588 at U533.5 class D",
+    "board B C589 at U534.5 class D",
+    "board B C590 at U535.5 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-sn74lvc1g04.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Each VCC pin should have a good bypass capacitor to prevent power disturbance. For devices with a single supply, a 0.1uF capacitor is recommended",
+     "pages_stated": [],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-sn74lvc1g04.pdf",
+       "pages": [
+        12
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SN74LVC2G06 SCES307J (v2/vendor/ti/ti-sn74lvc2g06.pdf): \"Each VCC pin must have a good bypass capacitor in order to prevent power disturbance. For devices with a single supply, a 0.1-uF capacitor is recommended\" (Power Supply Recommendations, p.11)",
+   "used_by": [
+    "board B C183 at U113.5 class D",
+    "board B C184 at U114.5 class D",
+    "board B C185 at U115.5 class D",
+    "board B C261 at U213.5 class D",
+    "board B C262 at U214.5 class D",
+    "board B C285 at U215.5 class D",
+    "board B C299 at U220.5 class D",
+    "board B C383 at U313.5 class D",
+    "board B C384 at U314.5 class D",
+    "board B C385 at U315.5 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-sn74lvc2g06.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Each VCC pin must have a good bypass capacitor in order to prevent power disturbance. For devices with a single supply, a 0.1-uF capacitor is recommended",
+     "pages_stated": [],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-sn74lvc2g06.pdf",
+       "pages": [
+        11
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI TUSB8041 SLLSEE4E 11.1.1 item 2 (p.38): \"A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin\"",
+   "used_by": [
+    "board B C166 at U102.5 class D",
+    "board B C167 at U102.8 class D",
+    "board B C168 at U102.13 class D",
+    "board B C169 at U102.21 class D",
+    "board B C601 at U102.28 class D",
+    "board B C602 at U102.31 class D",
+    "board B C603 at U102.51 class D",
+    "board B C604 at U102.57 class D",
+    "board B C170 at U102.16 class D",
+    "board B C171 at U102.34 class D",
+    "board B C172 at U102.52 class D",
+    "board B C173 at U102.63 class D",
+    "board B C266 at U202.5 class D",
+    "board B C267 at U202.8 class D",
+    "board B C268 at U202.13 class D",
+    "board B C269 at U202.21 class D",
+    "board B C631 at U202.28 class D",
+    "board B C632 at U202.31 class D",
+    "board B C633 at U202.51 class D",
+    "board B C634 at U202.57 class D",
+    "board B C270 at U202.16 class D",
+    "board B C271 at U202.34 class D",
+    "board B C272 at U202.52 class D",
+    "board B C273 at U202.63 class D",
+    "board B C366 at U302.5 class D",
+    "board B C367 at U302.8 class D",
+    "board B C368 at U302.13 class D",
+    "board B C369 at U302.21 class D",
+    "board B C661 at U302.28 class D",
+    "board B C662 at U302.31 class D",
+    "board B C663 at U302.51 class D",
+    "board B C664 at U302.57 class D",
+    "board B C370 at U302.16 class D",
+    "board B C371 at U302.34 class D",
+    "board B C372 at U302.52 class D",
+    "board B C373 at U302.63 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-tusb8041.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin",
+     "pages_stated": [
+      38
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tusb8041.pdf",
+       "pages": [
+        38
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI TUSB8041 SLLSEE4E (v2/vendor/ti/ti-tusb8041.pdf): \"All power rails require a 10 uF capacitor or 1 uF capacitors for stability and noise immunity. These bulk capacitors can be placed anywhere on the power rail\" (10.1, p.37); \"the large bulk capacitors associated with each power rail should be placed as close as possible to the voltage regulators\" (11.1.1 item 7, p.38): declared against the 1.1 V regulator's output, the TPS62933's inductor pad (DECOUPLING.md B1)",
+   "used_by": [
+    "board B C174 at L104.2 class B1",
+    "board B C274 at L204.2 class B1",
+    "board B C374 at L304.2 class B1"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-tusb8041.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "All power rails require a 10 uF capacitor or 1 uF capacitors for stability and noise immunity. These bulk capacitors can be placed anywhere on the power rail",
+     "pages_stated": [
+      37
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tusb8041.pdf",
+       "pages": [
+        37
+       ]
+      }
+     ],
+     "status": "FOUND"
+    },
+    {
+     "quote": "the large bulk capacitors associated with each power rail should be placed as close as possible to the voltage regulators",
+     "pages_stated": [
+      37
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tusb8041.pdf",
+       "pages": [
+        38
+       ]
+      }
+     ],
+     "status": "PAGE"
+    }
+   ],
+   "status": "PAGE"
+  },
+  {
+   "basis": "TI TMUXHS4212 SLASEP7A (v2/vendor/ti/ti-tmuxhs4212.pdf): 9.2.1.2 \"See the application schematics on recommended decouple capacitors from VCC pins to ground\" (p.14), Figure 9-2's 0.1 uF at VCC (p.13); this is that 0.1 uF",
+   "used_by": [
+    "board B C192 at U109.6 class D",
+    "board B C292 at U209.6 class D",
+    "board B C392 at U309.6 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-tmuxhs4212.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "See the application schematics on recommended decouple capacitors from VCC pins to ground",
+     "pages_stated": [
+      14
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tmuxhs4212.pdf",
+       "pages": [
+        14
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI TMUXHS4212 SLASEP7A (v2/vendor/ti/ti-tmuxhs4212.pdf): 9.2.1.2 \"See the application schematics on recommended decouple capacitors from VCC pins to ground\" (p.14), Figure 9-2's 0.1 uF at VCC (p.13); the 1 uF beside it is this generator's own (DECOUPLING.md D1)",
+   "used_by": [
+    "board B C193 at U109.6 class D",
+    "board B C293 at U209.6 class D",
+    "board B C393 at U309.6 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-tmuxhs4212.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "See the application schematics on recommended decouple capacitors from VCC pins to ground",
+     "pages_stated": [
+      14
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tmuxhs4212.pdf",
+       "pages": [
+        14
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI TS3USB221A SCDS277C (v2/vendor/ti/ti-ts3usb221a.pdf): \"A bypass capacitor is recommended to be placed as close to the supply pin VCC\" (p.15)",
+   "used_by": [
+    "board B C194 at U110.10 class D",
+    "board B C294 at U210.10 class D",
+    "board B C394 at U310.10 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-ts3usb221a.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "A bypass capacitor is recommended to be placed as close to the supply pin VCC",
+     "pages_stated": [
+      15
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-ts3usb221a.pdf",
+       "pages": [
+        15
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "Quectel RM520N series hardware design V1.1 (v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf) 3.3.1 (p.29): \"two bypass capacitors of 220 uF with low ESR should be used, and a multi-layer ceramic chip capacitor (MLCC) array should also be used\"; Figure 6 (p.30) draws 220 uF, 100 nF, 6.8 nF, 220 pF, 68 pF at the PMU pins 2 and 4 and 220 uF, 100 nF, 220 pF, 68 pF, 15 pF, 9.1 pF, 4.7 pF at the APT pins 70, 72, 74: capacitors the maker ties to the module's supply pins",
+   "used_by": [
+    "board B C520 at J_M2C2.2 class D",
+    "board B C521 at J_M2C2.70 class D",
+    "board B C522 at J_M2C2.2 class D",
+    "board B C523 at J_M2C2.2 class D",
+    "board B C524 at J_M2C2.2 class D",
+    "board B C525 at J_M2C2.70 class D",
+    "board B C526 at J_M2C2.70 class D",
+    "board B C527 at J_M2C2.70 class D",
+    "board B C528 at J_M2C2.70 class D",
+    "board B C529 at J_M2C2.70 class D",
+    "board B C530 at J_M2C2.70 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "two bypass capacitors of 220 uF with low ESR should be used, and a multi-layer ceramic chip capacitor (MLCC) array should also be used",
+     "pages_stated": [
+      29
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf",
+       "pages": [
+        30
+       ]
+      }
+     ],
+     "status": "PAGE"
+    }
+   ],
+   "status": "PAGE"
+  },
+  {
+   "basis": "TI TPD4E001 SLLS682P (v2/vendor/ti/ti-tpd4e001.pdf): pin VCC \"Power-supply input. Bypass VCC to GND with a 0.1-uF ceramic capacitor\" (p.3); 8.1 item 2 \"Place a 0.1uF capacitor very close to the VCC pin\" (p.9)",
+   "used_by": [
+    "board B C286 at U222.5 class D",
+    "board B C289 at U223.5 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-tpd4e001.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Power-supply input. Bypass VCC to GND with a 0.1-uF ceramic capacitor",
+     "pages_stated": [
+      3
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tpd4e001.pdf",
+       "pages": [
+        3
+       ]
+      }
+     ],
+     "status": "FOUND"
+    },
+    {
+     "quote": "Place a 0.1uF capacitor very close to the VCC pin",
+     "pages_stated": [
+      9
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tpd4e001.pdf",
+       "pages": [
+        9
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI TPS3808 SBVS050N (v2/vendor/ti/ti-tps3808.pdf) layout: \"Place a 0.1-uF ceramic capacitor near the VDD pin\" (p.15)",
+   "used_by": [
+    "board B C200 at U221.6 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-tps3808.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Place a 0.1-uF ceramic capacitor near the VDD pin",
+     "pages_stated": [
+      15
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tps3808.pdf",
+       "pages": [
+        15
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "Microchip KSZ9897R DS00002330D (v2/vendor/microchip/microchip-ksz9897-datasheet.pdf) 4.7, Figure 4-8 Power Connection Diagram (p.51): one 0.1 uF at every supply pin",
+   "used_by": [
+    "board B C17 at U1.61 class D",
+    "board B C20 at U1.77 class D",
+    "board B C23 at U1.99 class D",
+    "board B C26 at U1.61 class D",
+    "board B C19 at U1.10 class D",
+    "board B C22 at U1.22 class D",
+    "board B C25 at U1.33 class D",
+    "board B C545 at U1.44 class D",
+    "board B C546 at U1.111 class D",
+    "board B C547 at U1.122 class D",
+    "board B C548 at U1.128 class D",
+    "board B C18 at U1.11 class D",
+    "board B C21 at U1.23 class D",
+    "board B C24 at U1.45 class D",
+    "board B C531 at U1.56 class D",
+    "board B C532 at U1.74 class D",
+    "board B C533 at U1.87 class D",
+    "board B C534 at U1.104 class D",
+    "board B C535 at U1.110 class D",
+    "board B C536 at U1.3 class D",
+    "board B C537 at U1.14 class D",
+    "board B C538 at U1.19 class D",
+    "board B C539 at U1.30 class D",
+    "board B C540 at U1.36 class D",
+    "board B C541 at U1.41 class D",
+    "board B C542 at U1.114 class D",
+    "board B C543 at U1.119 class D",
+    "board B C544 at U1.124 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/microchip/microchip-ksz9897-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "Microchip KSZ9897R DS00002330D Figure 4-8 (p.51) draws the 22 uF on DVDDL, AVDDL and AVDDH and the 10 uF on VDDIO in an example figure with no placement clause (DECOUPLING.md B2)",
+   "used_by": [
+    "board B C27 at U1.11 class B2",
+    "board B C549 at U1.3 class B2",
+    "board B C28 at U1.10 class B2",
+    "board B C550 at U1.61 class B2"
+   ],
+   "documents_named": [],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "Nexperia 74LVC1G157 Rev. 12 (v2/vendor/nexperia/nexperia-74lvc1g157.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)",
+   "used_by": [
+    "board B C564 at U519.5 class D",
+    "board B C565 at U520.5 class D",
+    "board B C579 at U524.5 class D",
+    "board B C582 at U527.5 class D",
+    "board B C518 at U513.5 class D",
+    "board B C561 at U516.5 class D",
+    "board B C580 at U525.5 class D",
+    "board B C583 at U528.5 class D",
+    "board B C519 at U514.5 class D",
+    "board B C562 at U517.5 class D",
+    "board B C581 at U526.5 class D",
+    "board B C584 at U529.5 class D",
+    "board B C560 at U515.5 class D",
+    "board B C563 at U518.5 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/nexperia/nexperia-74lvc1g157.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "Quectel LG290P(03) hardware design V1.1 (v2/vendor/quectel/lg290p03-hardware-design-v1.1.pdf) 3.2.2 (p.25): \"It is recommended to place a TVS and a combination of a 4.7 uF, a 100 nF and a 33 pF decoupling capacitor near the V_BCKP pin\" (Figure 6); W3B-F2, the TVS still open",
+   "used_by": [
+    "board B C72 at U11.22 class D",
+    "board B C73 at U11.22 class D",
+    "board B C74 at U11.22 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/quectel/lg290p03-hardware-design-v1.1.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "It is recommended to place a TVS and a combination of a 4.7 uF, a 100 nF and a 33 pF decoupling capacitor near the V_BCKP pin",
+     "pages_stated": [
+      25
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/quectel/lg290p03-hardware-design-v1.1.pdf",
+       "pages": [
+        26
+       ]
+      }
+     ],
+     "status": "PAGE"
+    }
+   ],
+   "status": "PAGE"
+  },
+  {
+   "basis": "Silicon Labs CP2102N data sheet Rev 1.5 (v2/vendor/silabs/silabs-cp2102n.pdf), the bus-powered figure (p.5): \"4.7 uF and 0.1 uF bypass capacitors required for each power pin placed as close to the pins as possible\"; VDD is the internal regulator's \"3.3 V (out)\" (p.5; VREGOUT 3.1 to 3.6 V, p.12)",
+   "used_by": [
+    "board B C43 at U15.6 class L",
+    "board B C48 at U16.6 class L",
+    "board B C50 at U17.6 class L",
+    "board B C59 at U18.6 class L"
+   ],
+   "documents_named": [
+    "v2/vendor/silabs/silabs-cp2102n.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "4.7 uF and 0.1 uF bypass capacitors required for each power pin placed as close to the pins as possible",
+     "pages_stated": [
+      5
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/silabs/silabs-cp2102n.pdf",
+       "pages": [
+        5
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "Silicon Labs CP2102N data sheet Rev 1.5 (v2/vendor/silabs/silabs-cp2102n.pdf), the bus-powered figure (p.5): \"4.7 uF and 0.1 uF bypass capacitors required for each power pin placed as close to the pins as possible\"",
+   "used_by": [
+    "board B C44 at U15.6 class D",
+    "board B C551 at U15.7 class D",
+    "board B C552 at U15.7 class D",
+    "board B C49 at U16.6 class D",
+    "board B C553 at U16.7 class D",
+    "board B C554 at U16.7 class D",
+    "board B C51 at U17.6 class D",
+    "board B C555 at U17.7 class D",
+    "board B C556 at U17.7 class D",
+    "board B C60 at U18.6 class D",
+    "board B C557 at U18.7 class D",
+    "board B C558 at U18.7 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/silabs/silabs-cp2102n.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "4.7 uF and 0.1 uF bypass capacitors required for each power pin placed as close to the pins as possible",
+     "pages_stated": [
+      5
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/silabs/silabs-cp2102n.pdf",
+       "pages": [
+        5
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SN74LVC1G08 SCES217AA (v2/vendor/ti/ti-sn74lvc1g08.pdf): \"For the SN74LVC1G08, a 0.1uF bypass capacitor is recommended\" (Power Supply Recommendations, p.14)",
+   "used_by": [
+    "board B C65 at U501.5 class D",
+    "board B C66 at U502.5 class D",
+    "board B C508 at U503.5 class D",
+    "board B C509 at U504.5 class D",
+    "board B C510 at U505.5 class D",
+    "board B C559 at U536.5 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-sn74lvc1g08.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "For the SN74LVC1G08, a 0.1uF bypass capacitor is recommended",
+     "pages_stated": [],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-sn74lvc1g08.pdf",
+       "pages": [
+        14
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "Diodes 74LVC1G34 DS36108 Rev. 10-2 (v2/vendor/diodes/diodes-74lvc1g34.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)",
+   "used_by": [
+    "board B C511 at U506.5 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/diodes/diodes-74lvc1g34.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"a 100 nF ceramic capacitor for each VDD pin\"; 7.4 (p.32): \"each power supply pair must be decoupled with filtering ceramic capacitors (100 nF)\"",
+   "used_by": [
+    "board B C402 at U41.11 class D",
+    "board B C403 at U41.27 class D",
+    "board B C404 at U41.50 class D",
+    "board B C405 at U41.75 class D",
+    "board B C406 at U41.100 class D",
+    "board B C422 at U51.11 class D",
+    "board B C423 at U51.27 class D",
+    "board B C424 at U51.50 class D",
+    "board B C425 at U51.75 class D",
+    "board B C426 at U51.100 class D",
+    "board B C442 at U61.11 class D",
+    "board B C443 at U61.27 class D",
+    "board B C444 at U61.50 class D",
+    "board B C445 at U61.75 class D",
+    "board B C446 at U61.100 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/st/st-an4938-rev7.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "a 100 nF ceramic capacitor for each VDD pin",
+     "pages_stated": [
+      12
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/st/st-an4938-rev7.pdf",
+       "pages": [
+        12
+       ]
+      }
+     ],
+     "status": "FOUND"
+    },
+    {
+     "quote": "each power supply pair must be decoupled with filtering ceramic capacitors (100 nF)",
+     "pages_stated": [
+      32
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/st/st-an4938-rev7.pdf",
+       "pages": [
+        32
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"one single tantalum or ceramic capacitor (of 4.7 uF minimum capacitance) for the package\"; 7.4 (p.32): \"one single tantalum or ceramic capacitor (min. 4.7 uF) ... placed as close as possible to, or below, the appropriate pins\": tied to the pins, so class D, not bulk",
+   "used_by": [
+    "board B C401 at U41.50 class D",
+    "board B C421 at U51.50 class D",
+    "board B C441 at U61.50 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/st/st-an4938-rev7.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "one single tantalum or ceramic capacitor (of 4.7 uF minimum capacitance) for the package",
+     "pages_stated": [
+      12
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/st/st-an4938-rev7.pdf",
+       "pages": [
+        12
+       ]
+      }
+     ],
+     "status": "FOUND"
+    },
+    {
+     "quote": "one single tantalum or ceramic capacitor (min. 4.7 uF) ... placed as close as possible to, or below, the appropriate pins",
+     "pages_stated": [
+      32
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/st/st-an4938-rev7.pdf",
+       "pages": [
+        32
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "ST AN4938 Rev 7 (v2/vendor/st/st-an4938-rev7.pdf) 2.1: \"The LDO regulator requires a capacitor on VCAP pins\" (p.10); ST DS12110 Rev 10 (v2/vendor/st/st-stm32h743xi-datasheet.pdf) 6.3.2 Table 25 (p.107): CEXT 2.2 uF (+-20 percent tolerated), ESR < 100 mOhm, \"Two external capacitors can be connected to VCAP pins\"",
+   "used_by": [
+    "board B C407 at U41.48 class L",
+    "board B C408 at U41.73 class L",
+    "board B C427 at U51.48 class L",
+    "board B C428 at U51.73 class L",
+    "board B C447 at U61.48 class L",
+    "board B C448 at U61.73 class L"
+   ],
+   "documents_named": [
+    "v2/vendor/st/st-an4938-rev7.pdf",
+    "v2/vendor/st/st-stm32h743xi-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "The LDO regulator requires a capacitor on VCAP pins",
+     "pages_stated": [
+      10
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/st/st-an4938-rev7.pdf",
+       "pages": [
+        10
+       ]
+      }
+     ],
+     "status": "FOUND"
+    },
+    {
+     "quote": "Two external capacitors can be connected to VCAP pins",
+     "pages_stated": [
+      107
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/st/st-stm32h743xi-datasheet.pdf",
+       "pages": [
+        107
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "ST AN4938 Rev 7 2.2 (p.12): \"VDDA pin must be connected to two external decoupling capacitors (100 nF ceramic capacitors and a 1 uF tantalum or ceramic capacitor)\"",
+   "used_by": [
+    "board B C412 at U41.21 class D",
+    "board B C413 at U41.21 class D",
+    "board B C432 at U51.21 class D",
+    "board B C433 at U51.21 class D",
+    "board B C452 at U61.21 class D",
+    "board B C453 at U61.21 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/st/st-an4938-rev7.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "VDDA pin must be connected to two external decoupling capacitors (100 nF ceramic capacitors and a 1 uF tantalum or ceramic capacitor)",
+     "pages_stated": [
+      12
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/st/st-an4938-rev7.pdf",
+       "pages": [
+        12
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "Diodes AP2112 DS39724 Rev. 2-2 (v2/vendor/diodes/diodes-ap2112-ldo.pdf): \"Stable with 1.0uF Flexible Cap\" (Features, p.1); the typical application's CIN and COUT of 1 uF (p.2); every electrical table at \"CIN = 1.0uF (Ceramic), COUT = 1.0uF (Ceramic)\" (pp.4-7): an LDO's input capacitor is class D (DECOUPLING.md section 6)",
+   "used_by": [
+    "board B C400 at U40.1 class D",
+    "board B C420 at U50.1 class D",
+    "board B C440 at U60.1 class D",
+    "board B C13 at U27.1 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/diodes/diodes-ap2112-ldo.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Stable with 1.0uF Flexible Cap",
+     "pages_stated": [],
+     "found": [
+      {
+       "document": "v2/vendor/diodes/diodes-ap2112-ldo.pdf",
+       "pages": [
+        1
+       ]
+      }
+     ],
+     "status": "FOUND"
+    },
+    {
+     "quote": "CIN = 1.0uF (Ceramic), COUT = 1.0uF (Ceramic)",
+     "pages_stated": [
+      4,
+      5,
+      6,
+      7
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/diodes/diodes-ap2112-ldo.pdf",
+       "pages": [
+        4
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SN74LVC86A SCAS288R (v2/vendor/ti/ti-sn74lvc86a.pdf): \"Each VCC pin should have a good bypass capacitor to prevent power disturbance. For devices with a single supply, 0.1 uF is recommended\" (Power Supply Recommendations, p.11)",
+   "used_by": [
+    "board B C480 at U80.14 class D",
+    "board B C566 at U81.14 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-sn74lvc86a.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Each VCC pin should have a good bypass capacitor to prevent power disturbance. For devices with a single supply, 0.1 uF is recommended",
+     "pages_stated": [],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-sn74lvc86a.pdf",
+       "pages": [
+        11
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SN74LVC32A SCAS286U (v2/vendor/ti/ti-sn74lvc32a-quad-or.pdf): \"Each VCC pin should have a good bypass capacitor to prevent power disturbance. For devices with a single supply, 0.1 uF is recommended\" (Power Supply Recommendations, p.11)",
+   "used_by": [
+    "board B C567 at U84.14 class D",
+    "board B C572 at U85.14 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-sn74lvc32a-quad-or.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Each VCC pin should have a good bypass capacitor to prevent power disturbance. For devices with a single supply, 0.1 uF is recommended",
+     "pages_stated": [],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-sn74lvc32a-quad-or.pdf",
+       "pages": [
+        11
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "Diodes 74LVC1G17 DS35124 Rev. 8-2 (v2/vendor/diodes/diodes-74lvc1g17.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)",
+   "used_by": [
+    "board B C585 at U530.5 class D",
+    "board B C586 at U531.5 class D",
+    "board B C587 at U532.5 class D",
+    "board B C576 at U521.5 class D",
+    "board B C512 at U507.5 class D",
+    "board B C515 at U510.5 class D",
+    "board B C577 at U522.5 class D",
+    "board B C513 at U508.5 class D",
+    "board B C516 at U511.5 class D",
+    "board B C578 at U523.5 class D",
+    "board B C514 at U509.5 class D",
+    "board B C517 at U512.5 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/diodes/diodes-74lvc1g17.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "Diodes AP63200/AP63201/AP63203/AP63205 DS41326 Rev. 3-2 (v2/vendor/diodes/diodes-ap63200-series-buck.pdf): pin 3 VIN \"Bypass VIN to GND with a suitably large capacitor\" (p.2); 11 Input Capacitor (p.13); PCB Layout item 4 \"Place the VIN capacitors as close to the device as possible\" (p.15). G10: declared at VIN, not EN",
+   "used_by": [
+    "board B C4 at U25.3 class R"
+   ],
+   "documents_named": [
+    "v2/vendor/diodes/diodes-ap63200-series-buck.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Bypass VIN to GND with a suitably large capacitor",
+     "pages_stated": [
+      2
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/diodes/diodes-ap63200-series-buck.pdf",
+       "pages": [
+        2
+       ]
+      }
+     ],
+     "status": "FOUND"
+    },
+    {
+     "quote": "Place the VIN capacitors as close to the device as possible",
+     "pages_stated": [
+      15
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/diodes/diodes-ap63200-series-buck.pdf",
+       "pages": [
+        15
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "the AP63203 U25's output capacitors, declared against the output loop, L1's output pad, and not against the FB sense pin (DECOUPLING.md R4 and G10; DS41326 Rev. 3-2 pin 1 FB, p.2): a converter's own power-stage part (R2), on the IC's layer (SLUSEA4D 12.1, p.40, the same rule for its sibling buck)",
+   "used_by": [
+    "board B C5 at L1.2 class R",
+    "board B C6 at L1.2 class R"
+   ],
+   "documents_named": [
+    "v2/vendor/diodes/diodes-ap63200-series-buck.pdf",
+    "v2/vendor/ti/ti-tps62933.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "Diodes AP2112 DS39724 Rev. 2-2 (v2/vendor/diodes/diodes-ap2112-ldo.pdf): \"Stable with 1.0uF Flexible Cap\" (Features, p.1); the typical application's CIN and COUT of 1 uF (p.2); every electrical table at \"CIN = 1.0uF (Ceramic), COUT = 1.0uF (Ceramic)\" (pp.4-7): the LDO's output capacitor",
+   "used_by": [
+    "board B C12 at U27.5 class L"
+   ],
+   "documents_named": [
+    "v2/vendor/diodes/diodes-ap2112-ldo.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Stable with 1.0uF Flexible Cap",
+     "pages_stated": [],
+     "found": [
+      {
+       "document": "v2/vendor/diodes/diodes-ap2112-ldo.pdf",
+       "pages": [
+        1
+       ]
+      }
+     ],
+     "status": "FOUND"
+    },
+    {
+     "quote": "CIN = 1.0uF (Ceramic), COUT = 1.0uF (Ceramic)",
+     "pages_stated": [
+      4,
+      5,
+      6,
+      7
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/diodes/diodes-ap2112-ldo.pdf",
+       "pages": [
+        4
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI TPS23861 SLUSBX9I (v2/vendor/ti/tps23861-datasheet.pdf), pin VDD: \"Digital 3.3-V supply. Bypass VDD to DGND using a 0.1-uF capacitor\" (p.5)",
+   "used_by": [
+    "board B C36 at U5.1 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/tps23861-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Digital 3.3-V supply. Bypass VDD to DGND using a 0.1-uF capacitor",
+     "pages_stated": [
+      5
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/tps23861-datasheet.pdf",
+       "pages": [
+        5
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI TS3DV642 SCDS343F (v2/vendor/ti/ti-ts3dv642.pdf): \"VCC decoupling capacitor 0.1 uF\" (design requirements, p.18) and \"Decoupling capacitors should be used between power supply pin and ground pin\" (layout, p.23); G5: declared at the switch's own VCC, pin 1",
+   "used_by": [
+    "board B C37 at U3.1 class D",
+    "board B C38 at U4.1 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-ts3dv642.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "VCC decoupling capacitor 0.1 uF",
+     "pages_stated": [],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-ts3dv642.pdf",
+       "pages": [
+        18
+       ]
+      }
+     ],
+     "status": "FOUND"
+    },
+    {
+     "quote": "Decoupling capacitors should be used between power supply pin and ground pin",
+     "pages_stated": [
+      18
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-ts3dv642.pdf",
+       "pages": [
+        23
+       ]
+      }
+     ],
+     "status": "PAGE"
+    }
+   ],
+   "status": "PAGE"
+  },
+  {
+   "basis": "Microchip ATECC608B DS40002239A (v2/vendor/microchip/microchip-atecc608b-datasheet.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)",
+   "used_by": [
+    "board B C69 at U8.8 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/microchip/microchip-atecc608b-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "Maxim DS3231 19-5170 Rev 10 (v2/vendor/adi/adi-ds3231sn.pdf), pin VCC: \"DC Power Pin for Primary Power Supply. This pin should be decoupled using a 0.1uF to 1.0uF capacitor\" (p.9)",
+   "used_by": [
+    "board B C70 at U9.2 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/adi/adi-ds3231sn.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "DC Power Pin for Primary Power Supply. This pin should be decoupled using a 0.1uF to 1.0uF capacitor",
+     "pages_stated": [
+      9
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/adi/adi-ds3231sn.pdf",
+       "pages": [
+        9
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI TMP117 SNOSD82D (v2/vendor/ti/ti-tmp117-temperature.pdf) Power Supply Recommendations: \"The recommended value for this supply bypass capacitor is 100 nF\" (p.35)",
+   "used_by": [
+    "board B C71 at U10.4 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-tmp117-temperature.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "The recommended value for this supply bypass capacitor is 100 nF",
+     "pages_stated": [
+      35
+     ],
+     "found": [],
+     "pieces_not_found": [
+      "the recommended value for this supply bypass capacitor is 100nf"
+     ],
+     "status": "NOT_FOUND"
+    }
+   ],
+   "status": "NOT_FOUND"
+  },
+  {
+   "basis": "RP2040 Datasheet, v2/vendor/rp2040/rpi-rp2040-datasheet.pdf, build-version 3184e62-clean, 2.9.1 (printed page 151): 'IOVDD should be decoupled with a 100nF capacitor close to each of the chip's IOVDD pins'",
+   "used_by": [
+    "board C C7 at U3.1 class D",
+    "board C C8 at U3.10 class D",
+    "board C C9 at U3.22 class D",
+    "board C C10 at U3.33 class D",
+    "board C C11 at U3.42 class D",
+    "board C C12 at U3.49 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "IOVDD should be decoupled with a 100nF capacitor close to each of the chip's IOVDD pins",
+     "pages_stated": [
+      151
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+       "pages": [
+        152
+       ]
+      }
+     ],
+     "status": "PAGE"
+    }
+   ],
+   "status": "PAGE"
+  },
+  {
+   "basis": "Winbond W25Q16JV, v2/vendor/winbond/winbond-w25q16jv-serial-flash.pdf, Revision H, states no supply capacitor in its text; the generator's own 100 nF stands (DECOUPLING.md rule D1)",
+   "used_by": [
+    "board C C13 at U4.8 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/winbond/winbond-w25q16jv-serial-flash.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "RP2040 Datasheet, v2/vendor/rp2040/rpi-rp2040-datasheet.pdf, build-version 3184e62-clean, 2.10.1 (printed page 156): 'The regulator must have 1uF capacitors placed close to its input (VREG_VIN) and output (VREG_VOUT) pins'; Hardware design with RP2040, v2/vendor/rp2040/rpi-rp2040-hardware-design.pdf, build date 20/08/2026, 2.1.3 (printed page 8)",
+   "used_by": [
+    "board C C14 at U3.45 class L"
+   ],
+   "documents_named": [
+    "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+    "v2/vendor/rp2040/rpi-rp2040-hardware-design.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "The regulator must have 1uF capacitors placed close to its input (VREG_VIN) and output (VREG_VOUT) pins",
+     "pages_stated": [
+      156
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+       "pages": [
+        157
+       ]
+      }
+     ],
+     "status": "PAGE"
+    }
+   ],
+   "status": "PAGE"
+  },
+  {
+   "basis": "RP2040 Datasheet, v2/vendor/rp2040/rpi-rp2040-datasheet.pdf, build-version 3184e62-clean, 2.9.2 (printed page 151): 'DVDD should be decoupled with a 100nF capacitor close to each of the chip's DVDD pins'",
+   "used_by": [
+    "board C C15 at U3.50 class D",
+    "board C C44 at U3.23 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "DVDD should be decoupled with a 100nF capacitor close to each of the chip's DVDD pins",
+     "pages_stated": [
+      151
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+       "pages": [
+        152
+       ]
+      }
+     ],
+     "status": "PAGE"
+    }
+   ],
+   "status": "PAGE"
+  },
+  {
+   "basis": "RP2040 Datasheet, v2/vendor/rp2040/rpi-rp2040-datasheet.pdf, build-version 3184e62-clean, 2.9.3 (printed page 151): 'A 1uF capacitor should be connected between VREG_VIN and ground close to the chip's VREG_VIN pin'; 2.10.1 (printed page 156)",
+   "used_by": [
+    "board C C16 at U3.44 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "A 1uF capacitor should be connected between VREG_VIN and ground close to the chip's VREG_VIN pin",
+     "pages_stated": [
+      151
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+       "pages": [
+        152
+       ]
+      }
+     ],
+     "status": "PAGE"
+    }
+   ],
+   "status": "PAGE"
+  },
+  {
+   "basis": "TI TLV755P, SBVS320D, v2/vendor/power/ti-tlv755p-ldo.pdf, Table 4-1 (page 3): IN, 'A capacitor with a value of 1uF or larger is required from this pin to ground'; 7.1.1 (page 15)",
+   "used_by": [
+    "board C C3 at U5.1 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/power/ti-tlv755p-ldo.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "A capacitor with a value of 1uF or larger is required from this pin to ground",
+     "pages_stated": [
+      3
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/power/ti-tlv755p-ldo.pdf",
+       "pages": [
+        3
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI TLV755P, SBVS320D, Table 4-1 (page 3): OUT, 'A capacitor with a value of 1uF or larger is required'; 7.1.1 (page 15): 'requires an output capacitance of 0.47uF or larger for stability'",
+   "used_by": [
+    "board C C4 at U5.5 class L"
+   ],
+   "documents_named": [
+    "v2/vendor/power/ti-tlv755p-ldo.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "A capacitor with a value of 1uF or larger is required",
+     "pages_stated": [
+      3
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/power/ti-tlv755p-ldo.pdf",
+       "pages": [
+        3
+       ]
+      }
+     ],
+     "status": "FOUND"
+    },
+    {
+     "quote": "requires an output capacitance of 0.47uF or larger for stability",
+     "pages_stated": [
+      15
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/power/ti-tlv755p-ldo.pdf",
+       "pages": [
+        15
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI PCA9555, SCPS131J, v2/vendor/ti/ti-pca9555.pdf, 11.1 (printed page 29): 'By-pass and de-coupling capacitors are commonly used to control the voltage on the VCC pin, using a larger capacitor to provide additional power in the event of a short power supply glitch and a smaller capacitor to filter out high-frequency ripple. These capacitors must be placed as close to the PCA9555 as possible. These best practices are shown in the Section 11.2'; Figure 11-1 (printed page 29), that section's example layout, draws one '0603 Cap' on VCC and no second capacitor, and the sheet gives no value for either (Figure 9-1, printed page 24, draws none). One 100 nF per expander stands, its value by DECOUPLING.md rule D1 and its count by Figure 11-1: the session's choice under the owner's standing rule of 26 September 2026, over adding a larger part the maker neither sizes nor draws. Section 10 bounds the supply glitch the device rides through without naming a capacitor (Table 10-1, printed page 27: VCC_GH 1.2 V at VCC_GW 1 us), so the choice is reopened if the prototype's +3V3 is measured outside that bound",
+   "used_by": [
+    "board C C17 at U1.24 class D",
+    "board C C18 at U2.24 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-pca9555.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "By-pass and de-coupling capacitors are commonly used to control the voltage on the VCC pin, using a larger capacitor to provide additional power in the event of a short power supply glitch and a smaller capacitor to filter out high-frequency ripple. These capacitors must be placed as close to the PCA9555 as possible. These best practices are shown in the Section 11.2",
+     "pages_stated": [
+      29
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-pca9555.pdf",
+       "pages": [
+        29
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "Diodes 74LVC1G17, DS35124 Rev. 8-2, v2/vendor/diodes/diodes-74lvc1g17.pdf, states no supply capacitor in its text; the generator's own 100 nF stands (DECOUPLING.md rule D1)",
+   "used_by": [
+    "board C C25 at U9.5 class D",
+    "board C C39 at U12.5 class D",
+    "board C C40 at U13.5 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/diodes/diodes-74lvc1g17.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "Vishay VEML7700, document 84286 Rev. 1.8, v2/vendor/vishay/veml7700-datasheet.pdf, Application Circuit (page 6): C2 100 nF at VDD (C1 and R3 optional)",
+   "used_by": [
+    "board C C38 at U_LIGHT.2 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/vishay/veml7700-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "Pervasive Displays EPD driving circuit note Rev. 02, v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf, page 4: the 0.1 uF beside C1 on the switched supply that feeds VDDIO and VDD (DECOUPLING.md section 6, B2)",
+   "used_by": [
+    "board C C29 at J_EPD.15 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "Pervasive Displays EPD driving circuit note Rev. 02, pages 3 and 4: C1, 4.7 uF / 6.3 V for group G2, with no placement or distance given (DECOUPLING.md sections 6 and 6a)",
+   "used_by": [
+    "board C C28 at J_EPD.16 class B2"
+   ],
+   "documents_named": [],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "RP2040 Datasheet, v2/vendor/rp2040/rpi-rp2040-datasheet.pdf, build-version 3184e62-clean, 2.9.5 (printed page 152): 'ADC_AVDD should be decoupled with a 100nF capacitor close to the chip's ADC_AVDD pin'",
+   "used_by": [
+    "board C C42 at U3.43 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "ADC_AVDD should be decoupled with a 100nF capacitor close to the chip's ADC_AVDD pin",
+     "pages_stated": [
+      152
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+       "pages": [
+        153
+       ]
+      }
+     ],
+     "status": "PAGE"
+    }
+   ],
+   "status": "PAGE"
+  },
+  {
+   "basis": "RP2040 Datasheet, v2/vendor/rp2040/rpi-rp2040-datasheet.pdf, build-version 3184e62-clean, 2.9.4 (printed page 151): 'USB_VDD should be decoupled with a 100nF capacitor close to the chip's USB_VDD pin'",
+   "used_by": [
+    "board C C43 at U3.48 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "USB_VDD should be decoupled with a 100nF capacitor close to the chip's USB_VDD pin",
+     "pages_stated": [
+      151
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+       "pages": [
+        152
+       ]
+      }
+     ],
+     "status": "PAGE"
+    }
+   ],
+   "status": "PAGE"
+  },
+  {
+   "basis": "TI SN74LVC1G57, SCES414P, section 10 (page 12): 'For devices with a single supply, a 0.1-uF bypass capacitor is recommended', 'installed as close to the power terminal as possible'",
+   "used_by": [
+    "board C C41 at U14.5 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-sn74lvc1g57.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "For devices with a single supply, a 0.1-uF bypass capacitor is recommended",
+     "pages_stated": [
+      12
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-sn74lvc1g57.pdf",
+       "pages": [
+        12
+       ]
+      }
+     ],
+     "status": "FOUND"
+    },
+    {
+     "quote": "installed as close to the power terminal as possible",
+     "pages_stated": [
+      12
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-sn74lvc1g57.pdf",
+       "pages": [
+        12
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SCES217AA 8.3, the family sheet (the fitted TECH PUBLIC 74LVC1G08 sheet states no decoupling): a 0.1 uF bypass capacitor at VCC, near the supply terminal",
+   "used_by": [
+    "board D C51 at U9.5 class D",
+    "board D C52 at U10.5 class D",
+    "board D C54 at U12.5 class D",
+    "board D C56 at U14.5 class D"
+   ],
+   "documents_named": [],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "TI SCES214AF 8.4: a 0.1 uF bypass capacitor at VCC, near the supply terminal",
+   "used_by": [
+    "board D C53 at U11.5 class D"
+   ],
+   "documents_named": [],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "TI SCES295AB 7.3: a 0.1 uF bypass capacitor at VCC, near the supply terminal",
+   "used_by": [
+    "board D C55 at U13.5 class D"
+   ],
+   "documents_named": [],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "Diodes DS36108 states no decoupling; TI SCES217AA 8.3 for the LVC family: a 0.1 uF bypass capacitor at VCC, near the supply terminal",
+   "used_by": [
+    "board D C66 at U18.5 class D",
+    "board D C67 at U19.5 class D",
+    "board D C68 at U20.5 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/diodes/diodes-74lvc1g34.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "TI SBVS320D 7.1.1, p.15: 'Place a 1uF or greater capacitor on the input pin of the LDO'",
+   "used_by": [
+    "board D C7 at U1.1 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/power/ti-tlv755p-ldo.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Place a 1uF or greater capacitor on the input pin of the LDO",
+     "pages_stated": [
+      15
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/power/ti-tlv755p-ldo.pdf",
+       "pages": [
+        15
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SBVS320D 7.1.1, p.15: 'requires an output capacitance of 0.47uF or larger for stability'",
+   "used_by": [
+    "board D C8 at U1.5 class L",
+    "board D C9 at U1.5 class L"
+   ],
+   "documents_named": [
+    "v2/vendor/power/ti-tlv755p-ldo.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "requires an output capacitance of 0.47uF or larger for stability",
+     "pages_stated": [
+      15
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/power/ti-tlv755p-ldo.pdf",
+       "pages": [
+        15
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SLLS413L 11.1.1 item 1, p.18: 'A 0.1-uF should be placed as close as possible on VCC power pin'",
+   "used_by": [
+    "board D C15 at U4.3 class D",
+    "board D C16 at U4.3 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-tusb2046b-slls413l-addendum-2025.pdf",
+    "v2/vendor/ti/ti-tusb2046b.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "A 0.1-uF should be placed as close as possible on VCC power pin",
+     "pages_stated": [
+      18
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tusb2046b-slls413l-addendum-2025.pdf",
+       "pages": [
+        18
+       ]
+      },
+      {
+       "document": "v2/vendor/ti/ti-tusb2046b.pdf",
+       "pages": [
+        18
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SLLS413L 10.1, p.17, bulk 'can be placed anywhere on the power rail', and 11.1.1 item 5, p.18, bulk 'as close as possible to the voltage regulators': declared against U17 pin 5",
+   "used_by": [
+    "board D C17 at U17.5 class B1"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-tusb2046b-slls413l-addendum-2025.pdf",
+    "v2/vendor/ti/ti-tusb2046b.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "can be placed anywhere on the power rail",
+     "pages_stated": [
+      17
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tusb2046b-slls413l-addendum-2025.pdf",
+       "pages": [
+        17
+       ]
+      },
+      {
+       "document": "v2/vendor/ti/ti-tusb2046b.pdf",
+       "pages": [
+        17
+       ]
+      }
+     ],
+     "status": "FOUND"
+    },
+    {
+     "quote": "as close as possible to the voltage regulators",
+     "pages_stated": [
+      18
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tusb2046b-slls413l-addendum-2025.pdf",
+       "pages": [
+        18
+       ]
+      },
+      {
+       "document": "v2/vendor/ti/ti-tusb2046b.pdf",
+       "pages": [
+        18
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SBVS351D 7.1.2: an input capacitor 'is not required for stability' but is good practice; CIN 1 uF (5.3)",
+   "used_by": [
+    "board D C64 at U17.1 class D",
+    "board D C61 at U15.6 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-tlv758p.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "is not required for stability",
+     "pages_stated": [],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tlv758p.pdf",
+       "pages": [
+        16
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SBVS351D 7.1.2: 'requires an output capacitance of 0.47 uF or larger for stability'",
+   "used_by": [
+    "board D C65 at U17.5 class L",
+    "board D C62 at U15.1 class L"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-tlv758p.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "requires an output capacitance of 0.47 uF or larger for stability",
+     "pages_stated": [],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tlv758p.pdf",
+       "pages": [
+        16
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SLES230A p.27: 'The decoupling capacitors must be as close as possible to the PCM2912A pins' (VBUS, the regulators' input)",
+   "used_by": [
+    "board D C18 at U6.2 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-pcm2912a.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "The decoupling capacitors must be as close as possible to the PCM2912A pins",
+     "pages_stated": [
+      27
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-pcm2912a.pdf",
+       "pages": [
+        27
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SLES230A 9.5.1.6 and Table 6: VDD is an internal regulator's output pin; p.27 for placement",
+   "used_by": [
+    "board D C19 at U6.5 class L"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-pcm2912a.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "TI SLES230A 9.5.1.6 and Table 6: VCCA is an internal regulator's output pin; p.27 for placement",
+   "used_by": [
+    "board D C20 at U6.15 class L"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-pcm2912a.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "TI SLES230A 9.5.1.6 and Table 6: VCCL is an internal regulator's output pin; p.27 for placement",
+   "used_by": [
+    "board D C21 at U6.19 class L"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-pcm2912a.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "TI SLES230A 9.5.1.6 and Table 6: VCCR is an internal regulator's output pin; p.27 for placement",
+   "used_by": [
+    "board D C22 at U6.21 class L"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-pcm2912a.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "TI SLES230A 9.5.1.6 and Table 6: VCCP is an internal regulator's output pin; p.27 for placement",
+   "used_by": [
+    "board D C23 at U6.26 class L"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-pcm2912a.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "TI SLOS597B 9, p.17: 'Connect the HPVDD pin only to a 2.2 uF, X5R or better, capacitor ... within 5 mm'",
+   "used_by": [
+    "board D C31 at U7.12 class L"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-tpa6132a2.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Connect the HPVDD pin only to a 2.2 uF, X5R or better, capacitor ... within 5 mm",
+     "pages_stated": [
+      17
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tpa6132a2.pdf",
+       "pages": [
+        17
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SLOS597B 9.1, p.17: 'Place a 2.2 uF capacitor within 5 mm of the VDD pin'",
+   "used_by": [
+    "board D C32 at U7.14 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-tpa6132a2.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Place a 2.2 uF capacitor within 5 mm of the VDD pin",
+     "pages_stated": [
+      17
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tpa6132a2.pdf",
+       "pages": [
+        17
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SLOS597B 9.1, p.17: 'an additional 10 uF or higher value capacitor ... unnecessary in most applications'",
+   "used_by": [
+    "board D C33 at U7.14 class B2"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-tpa6132a2.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "an additional 10 uF or higher value capacitor ... unnecessary in most applications",
+     "pages_stated": [
+      17
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tpa6132a2.pdf",
+       "pages": [
+        17
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SBOS839N 8.3: 'Place 0.1uF bypass capacitors close to the power-supply pins'",
+   "used_by": [
+    "board D C39 at U8.8 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-tlv9062-op-amp.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Place 0.1uF bypass capacitors close to the power-supply pins",
+     "pages_stated": [],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tlv9062-op-amp.pdf",
+       "pages": [
+        26
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SLVSDH0C pin table: VIN, 'Place ceramic bypass capacitor(s) between this pin and GND'; CIN 1 uF (7.3)",
+   "used_by": [
+    "board D C71 at U21.6 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-tps22810-load-switch.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Place ceramic bypass capacitor(s) between this pin and GND",
+     "pages_stated": [],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tps22810-load-switch.pdf",
+       "pages": [
+        3
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI SBAS444E pin table: VDD, 'Connect a 0.1uF, power-supply decoupling capacitor to GND'",
+   "used_by": [
+    "board D C75 at U22.8 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-ads1115-sbas444e.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Connect a 0.1uF, power-supply decoupling capacitor to GND",
+     "pages_stated": [],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-ads1115-sbas444e.pdf",
+       "pages": [
+        3
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "LT8705A datasheet 8705af (v2/vendor/power/lt8705a.pdf): Inductor Current Sense Filtering and Figure 13a (p.34), \"The network should be placed as close as possible to the IC\"; PCB layout \"The optional filter network capacitor between CSP and CSN should be as close as possible to the IC\" (p.36). A sense filter, not a supply capacitor: of the ruled classes only A (a capacitor at the pin end of its series resistors, the nearest free seat, A1 and A2) states that seat, where D's 3.0 mm screen answers a supply question it does not ask and dropping the declaration (R4) would lose the seat ANA-001 needs. Taken by the session under the owner's standing rule of 26 September 2026",
+   "used_by": [
+    "board E C16 at U5.3 class A"
+   ],
+   "documents_named": [
+    "v2/vendor/power/lt8705a.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "The network should be placed as close as possible to the IC",
+     "pages_stated": [
+      34
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/power/lt8705a.pdf",
+       "pages": [
+        34
+       ]
+      }
+     ],
+     "status": "FOUND"
+    },
+    {
+     "quote": "The optional filter network capacitor between CSP and CSN should be as close as possible to the IC",
+     "pages_stated": [
+      36
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/power/lt8705a.pdf",
+       "pages": [
+        36
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "8705af: GATEVCC (Pin 15) \"Must be connected to the INTVCC pin ... Locally bypass to GND\" (p.11); \"The bypass capacitance from GATEVCC to GND should be at least ten times the CB1 or CB2 capacitance\" (p.28), C17 and C18 being 470 nF; \"Connect the INTVCC and GATEVCC bypass capacitors close to the IC\" (p.36)",
+   "used_by": [
+    "board E C63 at U5.15 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/power/lt8705a.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Must be connected to the INTVCC pin ... Locally bypass to GND",
+     "pages_stated": [
+      11
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/power/lt8705a.pdf",
+       "pages": [
+        11
+       ]
+      }
+     ],
+     "status": "FOUND"
+    },
+    {
+     "quote": "The bypass capacitance from GATEVCC to GND should be at least ten times the CB1 or CB2 capacitance",
+     "pages_stated": [
+      28
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/power/lt8705a.pdf",
+       "pages": [
+        28
+       ]
+      }
+     ],
+     "status": "FOUND"
+    },
+    {
+     "quote": "Connect the INTVCC and GATEVCC bypass capacitors close to the IC",
+     "pages_stated": [
+      36
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/power/lt8705a.pdf",
+       "pages": [
+        36
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "LT8705A datasheet 8705af (v2/vendor/power/lt8705a.pdf): VIN (Pin 34) \"Main Input Supply Pin. It must be locally bypassed to ground\" (p.12); the front-page circuit fits 1 uF there (p.1)",
+   "used_by": [
+    "board E C64 at U5.34 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/power/lt8705a.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Main Input Supply Pin. It must be locally bypassed to ground",
+     "pages_stated": [
+      12
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/power/lt8705a.pdf",
+       "pages": [
+        12
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "8705af: INTVCC (Pin 35) \"Internal 6.35V Regulator Output ... Bypass this pin to ground with a minimum 4.7uF ceramic capacitor\" (p.12); p.36 as C63",
+   "used_by": [
+    "board E C19 at U5.35 class L"
+   ],
+   "documents_named": [
+    "v2/vendor/power/lt8705a.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Internal 6.35V Regulator Output ... Bypass this pin to ground with a minimum 4.7uF ceramic capacitor",
+     "pages_stated": [
+      12
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/power/lt8705a.pdf",
+       "pages": [
+        12
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "8705af: LDO33 (Pin 4) \"3.3V Regulator Output. Bypass this pin to ground with a minimum 0.1uF ceramic capacitor\" (p.11)",
+   "used_by": [
+    "board E C20 at U5.4 class L"
+   ],
+   "documents_named": [
+    "v2/vendor/power/lt8705a.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "3.3V Regulator Output. Bypass this pin to ground with a minimum 0.1uF ceramic capacitor",
+     "pages_stated": [
+      11
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/power/lt8705a.pdf",
+       "pages": [
+        11
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "RP2040 datasheet (v2/vendor/rp2040/rpi-rp2040-datasheet.pdf, build-date 2025-02-20) 2.9.1, printed p.151: \"IOVDD should be decoupled with a 100nF capacitor close to each of the chip's IOVDD pins\"",
+   "used_by": [
+    "board E C38 at U10.1 class D",
+    "board E C39 at U10.10 class D",
+    "board E C40 at U10.22 class D",
+    "board E C41 at U10.33 class D",
+    "board E C42 at U10.42 class D",
+    "board E C43 at U10.49 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "IOVDD should be decoupled with a 100nF capacitor close to each of the chip's IOVDD pins",
+     "pages_stated": [
+      151
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+       "pages": [
+        152
+       ]
+      }
+     ],
+     "status": "PAGE"
+    }
+   ],
+   "status": "PAGE"
+  },
+  {
+   "basis": "Winbond W25Q16JV datasheet Revision H (v2/vendor/winbond/winbond-w25q16jv-serial-flash.pdf) states no decoupling capacitor; the flash's only supply capacitor, so class D by role, and value and count are this generator's own (DECOUPLING.md D1: where the maker states none, the generator's count stands, said as such)",
+   "used_by": [
+    "board E C44 at U11.8 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/winbond/winbond-w25q16jv-serial-flash.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "RP2040 datasheet (v2/vendor/rp2040/rpi-rp2040-datasheet.pdf, build-date 2025-02-20) 2.10.1, printed p.156: \"The regulator must have 1uF capacitors placed close to its input (VREG_VIN) and output (VREG_VOUT) pins\"; the hardware design guide (build 20/08/2026) 2.1.3, p.9, the same with a restriction on ESR it gives no figure for",
+   "used_by": [
+    "board E C45 at U10.45 class L"
+   ],
+   "documents_named": [
+    "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "The regulator must have 1uF capacitors placed close to its input (VREG_VIN) and output (VREG_VOUT) pins",
+     "pages_stated": [
+      156
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+       "pages": [
+        157
+       ]
+      }
+     ],
+     "status": "PAGE"
+    }
+   ],
+   "status": "PAGE"
+  },
+  {
+   "basis": "RP2040 datasheet (v2/vendor/rp2040/rpi-rp2040-datasheet.pdf, build-date 2025-02-20) 2.9.2, printed p.151: \"DVDD should be decoupled with a 100nF capacitor close to each of the chip's DVDD pins\"",
+   "used_by": [
+    "board E C46 at U10.50 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "DVDD should be decoupled with a 100nF capacitor close to each of the chip's DVDD pins",
+     "pages_stated": [
+      151
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+       "pages": [
+        152
+       ]
+      }
+     ],
+     "status": "PAGE"
+    }
+   ],
+   "status": "PAGE"
+  },
+  {
+   "basis": "RP2040 datasheet (v2/vendor/rp2040/rpi-rp2040-datasheet.pdf, build-date 2025-02-20) 2.9.2, printed p.151, as C46 (the other DVDD pin)",
+   "used_by": [
+    "board E C59 at U10.23 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "RP2040 datasheet (v2/vendor/rp2040/rpi-rp2040-datasheet.pdf, build-date 2025-02-20) 2.9.3, printed p.151: \"A 1uF capacitor should be connected between VREG_VIN and ground close to the chip's VREG_VIN pin\"",
+   "used_by": [
+    "board E C47 at U10.44 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "A 1uF capacitor should be connected between VREG_VIN and ground close to the chip's VREG_VIN pin",
+     "pages_stated": [
+      151
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+       "pages": [
+        152
+       ]
+      }
+     ],
+     "status": "PAGE"
+    }
+   ],
+   "status": "PAGE"
+  },
+  {
+   "basis": "RP2040 datasheet (v2/vendor/rp2040/rpi-rp2040-datasheet.pdf, build-date 2025-02-20) 2.9.5, printed p.152: \"ADC_AVDD should be decoupled with a 100nF capacitor close to the chip's ADC_AVDD pin\"",
+   "used_by": [
+    "board E C60 at U10.43 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "ADC_AVDD should be decoupled with a 100nF capacitor close to the chip's ADC_AVDD pin",
+     "pages_stated": [
+      152
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+       "pages": [
+        153
+       ]
+      }
+     ],
+     "status": "PAGE"
+    }
+   ],
+   "status": "PAGE"
+  },
+  {
+   "basis": "RP2040 datasheet (v2/vendor/rp2040/rpi-rp2040-datasheet.pdf, build-date 2025-02-20) 2.9.4, printed p.151: \"USB_VDD should be decoupled with a 100nF capacitor close to the chip's USB_VDD pin\"",
+   "used_by": [
+    "board E C61 at U10.48 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "USB_VDD should be decoupled with a 100nF capacitor close to the chip's USB_VDD pin",
+     "pages_stated": [
+      151
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+       "pages": [
+        152
+       ]
+      }
+     ],
+     "status": "PAGE"
+    }
+   ],
+   "status": "PAGE"
+  },
+  {
+   "basis": "Diodes AP63200/AP63201/AP63203/AP63205 DS41326 Rev. 3-2, November 2024 (v2/vendor/diodes/diodes-ap63200-series-buck.pdf): pin 3 VIN \"Bypass VIN to GND with a suitably large capacitor\" (p.2); 11 Input Capacitor (p.13); PCB layout item 4 \"Place the VIN capacitors as close to the device as possible\" (p.15)",
+   "used_by": [
+    "board E C31 at U12.3 class R"
+   ],
+   "documents_named": [
+    "v2/vendor/diodes/diodes-ap63200-series-buck.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Bypass VIN to GND with a suitably large capacitor",
+     "pages_stated": [
+      2
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/diodes/diodes-ap63200-series-buck.pdf",
+       "pages": [
+        2
+       ]
+      }
+     ],
+     "status": "FOUND"
+    },
+    {
+     "quote": "Place the VIN capacitors as close to the device as possible",
+     "pages_stated": [
+      15
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/diodes/diodes-ap63200-series-buck.pdf",
+       "pages": [
+        15
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "DS41326 Rev. 3-2: pin 6 BST \"A 100nF capacitor is recommended from SW to BST\" (p.2), bootstrap capacitor (p.14); a converter's own bootstrap capacitor is a power-stage part (DECOUPLING.md R2)",
+   "used_by": [
+    "board E C30 at U12.6 class R"
+   ],
+   "documents_named": [
+    "v2/vendor/diodes/diodes-ap63200-series-buck.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "A 100nF capacitor is recommended from SW to BST",
+     "pages_stated": [
+      2
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/diodes/diodes-ap63200-series-buck.pdf",
+       "pages": [
+        2
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI TLV755P SBVS320D, September 2024 (v2/vendor/power/ti-tlv755p-ldo.pdf): recommended CIN 1 uF (p.4), 7.1.1 Input and Output Capacitor Selection (p.15), 7.4.1 \"Place input and output capacitors as close as possible to the device\" (p.21); an LDO's input capacitor is class D (DECOUPLING.md section 6)",
+   "used_by": [
+    "board E C34 at U13.1 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/power/ti-tlv755p-ldo.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Place input and output capacitors as close as possible to the device",
+     "pages_stated": [
+      21
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/power/ti-tlv755p-ldo.pdf",
+       "pages": [
+        21
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "TI TLV755P SBVS320D: 7.1.1 \"requires an output capacitance of 0.47uF or larger for stability\" (p.15), the pin table's note \"Make sure the effective capacitance at the pin is greater than 0.47uF\" (p.3), 7.4.1 (p.21)",
+   "used_by": [
+    "board E C35 at U13.5 class L"
+   ],
+   "documents_named": [
+    "v2/vendor/power/ti-tlv755p-ldo.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "requires an output capacitance of 0.47uF or larger for stability",
+     "pages_stated": [
+      15
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/power/ti-tlv755p-ldo.pdf",
+       "pages": [
+        15
+       ]
+      }
+     ],
+     "status": "FOUND"
+    },
+    {
+     "quote": "Make sure the effective capacitance at the pin is greater than 0.47uF",
+     "pages_stated": [
+      3
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/power/ti-tlv755p-ldo.pdf",
+       "pages": [
+        3
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "Bosch BME688 BST-BME688-DS000-03 revision 1.3, February 2024 (v2/vendor/bosch/bosch-bme688.pdf): 7.2 \"For the I2C connection, it is recommended to use 100 nF for C1 and C2\" (p.52), the VDD line (pin 8, Table 26 p.51)",
+   "used_by": [
+    "board E C48 at U14.8 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/bosch/bosch-bme688.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "For the I2C connection, it is recommended to use 100 nF for C1 and C2",
+     "pages_stated": [
+      52
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/bosch/bosch-bme688.pdf",
+       "pages": [
+        52
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "Bosch BME688 BST-BME688-DS000-03 revision 1.3: 7.2 (p.52), the VDDIO line (pin 6, Table 26 p.51)",
+   "used_by": [
+    "board E C62 at U14.6 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/bosch/bosch-bme688.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "Bosch BMI270 BST-BMI270-DS000-08 revision 1.6, March 2026 (v2/vendor/bosch/bosch-bmi270.pdf): 7.2 \"It is recommended to use 100nF decoupling capacitors at pin 5 (VDDIO) and pin 8 (VDD)\" (p.136)",
+   "used_by": [
+    "board E C49 at U15.8 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/bosch/bosch-bmi270.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "It is recommended to use 100nF decoupling capacitors at pin 5 (VDDIO) and pin 8 (VDD)",
+     "pages_stated": [
+      136
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/bosch/bosch-bmi270.pdf",
+       "pages": [
+        136
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "Bosch BMI270 BST-BMI270-DS000-08 revision 1.6: 7.2 (p.136), as C49",
+   "used_by": [
+    "board E C50 at U15.5 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/bosch/bosch-bmi270.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [],
+   "status": "NO_QUOTE"
+  },
+  {
+   "basis": "Sensirion SGP41 datasheet version 1.0, December 2021 (v2/vendor/sensirion/sgp41-datasheet.pdf): 2.5 \"The VDD pin must be decoupled with an RC element\" (p.7), Figure 6 (p.8): R57 4.7 Ohm then C57 at the pin",
+   "used_by": [
+    "board E C57 at U17.1 class A"
+   ],
+   "documents_named": [
+    "v2/vendor/sensirion/sgp41-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "The VDD pin must be decoupled with an RC element",
+     "pages_stated": [
+      7
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/sensirion/sgp41-datasheet.pdf",
+       "pages": [
+        7
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "Sensirion SGP41 version 1.0: 2.5 \"The required decoupling for VDDH depends on the power supply network ... a capacitor of 1 uF is recommended\" (p.7)",
+   "used_by": [
+    "board E C58 at U17.5 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/sensirion/sgp41-datasheet.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "The required decoupling for VDDH depends on the power supply network ... a capacitor of 1 uF is recommended",
+     "pages_stated": [
+      7
+     ],
+     "found": [],
+     "pieces_not_found": [
+      "a capacitor of 1uf is recommended"
+     ],
+     "status": "NOT_FOUND"
+    }
+   ],
+   "status": "NOT_FOUND"
+  },
+  {
+   "basis": "TI TPS22810 SLVSDH0C, January 2018 (v2/vendor/ti/ti-tps22810-load-switch.pdf): pin 6 VIN \"Place ceramic bypass capacitor(s) between this pin and GND\" (p.3), recommended CIN 1 uF (p.4)",
+   "used_by": [
+    "board E C56 at U16.6 class D"
+   ],
+   "documents_named": [
+    "v2/vendor/ti/ti-tps22810-load-switch.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Place ceramic bypass capacitor(s) between this pin and GND",
+     "pages_stated": [
+      3
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/ti/ti-tps22810-load-switch.pdf",
+       "pages": [
+        3
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "backup reservoir on PBI. TI SLUSC67B Rev. B 8.2.2.2.2, p.33: 'The PBI pin is used as a power supply backup input pin providing power during brief transient power outages. A standard 2.2-uF ceramic capacitor is connected from the PBI pin to ground as shown in Figure 27' (Figure 21, p.28: C13 2.2 uF). Fitted: 2.2 uF, the maker's figure. Seat (A2): 10.1, p.43, 'Place all filter components as close as possible to the device'.",
+   "used_by": [
+    "board P C1 at U1.1 class A"
+   ],
+   "documents_named": [
+    "v2/vendor/battery/ti-bq4050.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "The PBI pin is used as a power supply backup input pin providing power during brief transient power outages. A standard 2.2-uF ceramic capacitor is connected from the PBI pin to ground as shown in Figure 27",
+     "pages_stated": [
+      33
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/battery/ti-bq4050.pdf",
+       "pages": [
+        33
+       ]
+      }
+     ],
+     "status": "FOUND"
+    },
+    {
+     "quote": "Place all filter components as close as possible to the device",
+     "pages_stated": [
+      43
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/battery/ti-bq4050.pdf",
+       "pages": [
+        43
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "BAT, the primary supply, behind R5 100 ohm from CELL4. TI SLUSC67B Rev. B: 'The bq4050 gauge has an internal LDO that is internally compensated and does not require an external decoupling capacitor' (8.2.2.2.2, p.33); 'The BAT pin should be connected to the positive termination of the battery stack' (9, p.42); 'The BAT input uses a diode (D1) to isolate and decouple it from the cells in the event of a transient dip in voltage caused by a short-circuit event' (8.2.2.3.1, p.37; Figure 21, p.28: D1 BAT54HT1 from 4P, no capacitor from BAT to ground). The maker gives no figure for this RC: R5 and C6 are the board's own, kept unchanged in front of the qualified battery review, which gets the difference as R8P-05. Seat (A1, A2): 10.1, pp.42-43.",
+   "used_by": [
+    "board P C6 at U1.32 class A"
+   ],
+   "documents_named": [
+    "v2/vendor/battery/ti-bq4050.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "The bq4050 gauge has an internal LDO that is internally compensated and does not require an external decoupling capacitor",
+     "pages_stated": [
+      33
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/battery/ti-bq4050.pdf",
+       "pages": [
+        33
+       ]
+      }
+     ],
+     "status": "FOUND"
+    },
+    {
+     "quote": "The BAT pin should be connected to the positive termination of the battery stack",
+     "pages_stated": [
+      42
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/battery/ti-bq4050.pdf",
+       "pages": [
+        42
+       ]
+      }
+     ],
+     "status": "FOUND"
+    },
+    {
+     "quote": "The BAT input uses a diode (D1) to isolate and decouple it from the cells in the event of a transient dip in voltage caused by a short-circuit event",
+     "pages_stated": [
+      37
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/battery/ti-bq4050.pdf",
+       "pages": [
+        37
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "VCC, the secondary supply, behind R7 1 kohm from PACK_P. TI SLUSC67B Rev. B 9, p.42: 'The VCC pin is the secondary power input ... The VCC pin should be connected to the common drain of the CHG and DSG FETs'; Figure 21, p.28, feeds it from the common drain through R9 100 ohm with no capacitor from VCC to ground; 8.2.2.2.2, p.33: no external decoupling capacitor required. The board feeds VCC from PACK_P (the discharge FET's source), not from SW (the common drain), and adds C8: kept unchanged in front of the qualified battery review, which gets the difference as R8P-05. Seat (A1, A2): 10.1, pp.42-43.",
+   "used_by": [
+    "board P C8 at U1.26 class A"
+   ],
+   "documents_named": [
+    "v2/vendor/battery/ti-bq4050.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "The VCC pin is the secondary power input ... The VCC pin should be connected to the common drain of the CHG and DSG FETs",
+     "pages_stated": [
+      42
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/battery/ti-bq4050.pdf",
+       "pages": [
+        42
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  },
+  {
+   "basis": "VDD of the second-level protector, behind R23 300 ohm from CELL4 (RVD and CVD). TI SLUSEG7D Rev. D Table 8-1 (8.1.1, p.14): supply voltage filter resistance RVD 100 min, 300 nom, 1k max ohm; capacitance CVD 0.05 min, 0.1 nom, 1 max uF. Fitted: 300 ohm and 100 nF, the maker's nominal figures. Seat (A1, A2): 8.4.1, p.17, 'Ensure the RC filters for the Vn and VDD pins are placed as close as possible to the target terminal'.",
+   "used_by": [
+    "board P C14 at U2.1 class A"
+   ],
+   "documents_named": [
+    "v2/vendor/battery/ti-bq77207.pdf"
+   ],
+   "paths_not_held": [],
+   "quotes": [
+    {
+     "quote": "Ensure the RC filters for the Vn and VDD pins are placed as close as possible to the target terminal",
+     "pages_stated": [
+      17
+     ],
+     "found": [
+      {
+       "document": "v2/vendor/battery/ti-bq77207.pdf",
+       "pages": [
+        17
+       ]
+      }
+     ],
+     "status": "FOUND"
+    }
+   ],
+   "status": "FOUND"
+  }
+ ]
+}

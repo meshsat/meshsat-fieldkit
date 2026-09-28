@@ -2,7 +2,8 @@
 """Design intent as data (MESHSAT-862 Stage C, 8 Sep 2026, appendix 32.64 W2). The schematic generators used to emit reference, symbol, value,
 footprint and a pin-to-net map and nothing else, so no gate could ask "is this capacitor near the pin it bypasses", "does this rail's copper
 carry its current" or "is this pair at its impedance". Each gen_sch_*.py now collects:
-  bypass(cap_ref, part_ref, pin)            the pin a decoupling capacitor serves (through c(..., bypass=(part, pin)))
+  bypass(cap_ref, part_ref, pin, net, cls, basis, **fields)   the pin a decoupling capacitor serves, its class and its maker's clause
+                                            (through c(..., bypass=(part, pin)); decision 42, T5)
   rail(net, volts, amps_typ, amps_peak, source_ref, loads={ref: amps})   the currents a rail carries, from the record (appendix 32.55 for A22)
   pair_class(class_name, z_diff=None, z_se=None)   the impedance target of a net class (the class itself is assigned in the project file)
 and writes out/<name>-intent.json beside the netlist. The gates read it with load(); a missing file is a FAIL there (fail closed), an empty
@@ -37,8 +38,49 @@ def pass_through(ref, basis):
     _I["pass_through"][str(ref)] = str(basis)
 
 
-def bypass(cap_ref, part_ref, pin, net=None):
-    _I["bypass"].append({"cap": cap_ref, "part": part_ref, "pin": str(pin), "net": net})
+def bypass(cap_ref, part_ref, pin, net=None, cls=None, basis=None, **fields):
+    """The pin a decoupling capacitor serves, with its CLASS and the maker's clause it rests on (decision 42, T5).
+
+    cls     one of decoupling_rules.CLASSES: R (a converter's own power stage), D (tied to a supply pin by its
+            maker), L (a regulator's output or VCAP), A (behind a series resistor, or a backup reservoir), B1 (rail
+            bulk its maker frees of a distance), B2 (bulk no maker places). Passed as `cls` because `class` is a
+            Python keyword; `**{"class": "D"}` is read the same way.
+    basis   the maker's words the class rests on, with document, revision, section and page.
+    fields  what the class carries (DECOUPLING.md 8.1 T5): `value_floor` and `esr_max` on class L, `same_side` where
+            the maker names the part's side (every class R entry, the STM32H743 in a non-BGA package), `maker_mm`
+            where the maker gives a distance, `provisional` for class A under A3.
+    Until 29 September 2026 this took no class, and the six generators set `class` and `basis` on the entry after
+    the call; they still may, because `write()` is where an entry is refused, after every generator has had its say."""
+    e = {"cap": cap_ref, "part": part_ref, "pin": str(pin), "net": net}
+    if "class" in fields: cls = fields.pop("class") if cls is None else cls
+    if cls is not None: e["class"] = cls
+    if basis is not None: e["basis"] = basis
+    e.update(fields)
+    _I["bypass"].append(e)
+
+
+def bypass_form():
+    """(refused, notes) for the bypass entries as they stand (decision 42, T5).
+
+    refused  entries `write()` refuses: no ruled class, or no basis. A class decides the limit every tool applies
+             (decoupling_rules.limit), so an entry without one has no limit and is never given a default.
+    notes    what a ruled entry still lacks of its class's fields (class L's value floor and ESR bound, class R's
+             same side), as sentences naming the capacitor. `write()` prints them and does not refuse them: the
+             fields belong to each board's generator, and refusing them here would stop a board's regeneration on
+             a tools merge (a SESSION decision of stream d6dec, 29 September 2026; reversed by refusing `notes` too
+             once every generator writes them)."""
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import decoupling_rules as _dr
+    refused, notes = [], []
+    for b in _I["bypass"]:
+        why = []
+        if b.get("class") not in _dr.CLASSES: why.append("class %r is not one of %s" % (b.get("class"), ", ".join(_dr.CLASSES)))
+        if not str(b.get("basis") or "").strip(): why.append("no basis")
+        if why:
+            refused.append("%s -> %s.%s: %s" % (b.get("cap"), b.get("part"), b.get("pin"), "; ".join(why)))
+        else:
+            notes.extend(_dr.form_problems(b))
+    return refused, notes
 
 # WHAT amps_typ AND amps_peak MEAN TO THE RULES THAT READ THEM (20 September 2026, appendix 32.245).
 # They are not two decorations of one number: the two halves of the power rule set read DIFFERENT ones.
@@ -312,6 +354,12 @@ def write(sch_path, project, parts=None):
                 if _sr not in on_net: raise SystemExit("intent: rail %s names source %s, which is not on that net (refs on it: %s)" % (net, _sr, sorted(on_net)[:8]))
             for ref in r["loads"]:
                 if ref not in on_net: raise SystemExit("intent: rail %s names load %s, which is not on that net" % (net, ref))
+    # decision 42, T5 (29 September 2026): an entry without a ruled class or a basis is refused, never written
+    refused, notes = bypass_form()
+    if refused:
+        raise SystemExit("intent: %d bypass entr%s without a ruled class or the maker's clause (decision 42, T5): %s"
+                         % (len(refused), "y" if len(refused) == 1 else "ies", " | ".join(refused[:12])))
+    for n in notes: print("intent: bypass %s (decision 42, T5; noted, not refused)" % n)
     d = dict(board=project, written=time.strftime("%Y-%m-%d %H:%M"), **_I)
     json.dump(d, open(out, "w"), indent=1)
     print("intent: %s (%d bypass, %d rails, %d nodes, %d pair classes)"

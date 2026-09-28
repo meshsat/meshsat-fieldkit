@@ -56,26 +56,35 @@ def pdf_text(args):
 
 
 def quotes(basis):
-    """The passages a basis puts in quotation marks, each as its pieces between ellipses, with the page stated
-    nearest before it."""
-    b = "".join(TR.get(c, c) if c in "‘’“”" else c for c in basis)
+    """The passages a basis puts in quotation marks, each as its pieces between ellipses, with the page it states.
+
+    A single quote opens a passage only where no letter or digit stands before it and closes one only where no
+    letter follows, so the apostrophe of "the maker's" neither opens nor closes a passage (the first version let
+    it open one and swallow the real opening quote after it). The page is the reference that follows the passage
+    within a few characters ("... (p.11)", board E's style), else the nearest one before it ("p.23: '...'")."""
+    b = "".join(TR.get(c, c) if c in "\u2018\u2019\u201c\u201d" else c for c in basis)
     out = []
-    for m in re.finditer(r"'((?:[^']|'(?=[a-z]))+)'|\"([^\"]+)\"", b):
+    pat = re.compile(r"(?<![A-Za-z0-9])'((?:[^']|(?<=[A-Za-z])'(?=[A-Za-z]))+)'(?![A-Za-z])|\"([^\"]+)\"")
+    pref = re.compile(r"(?:pp?\.|pages?|printed pages?)\s*(\d+)(?:\s*(?:-|to|and|,)\s*(\d+))?")
+    for m in pat.finditer(b):
         q = (m.group(1) or m.group(2) or "").strip()
         if len(q) < 12 or not re.search(r"[a-z]{3}", q): continue
-        before = b[:m.start()]
-        pg = re.findall(r"(?:pp?\.|pages?|printed pages?)\s*(\d+)(?:\s*(?:-|to|and|,)\s*(\d+))?", before)
+        after = re.match(r"\s*\(\s*(?:[\d.]+,\s*)?(?:pp?\.)\s*(\d+)(?:\s*(?:-|to|and|,)\s*(\d+))?", b[m.end():m.end() + 60])
+        pg = [after.groups()] if after else pref.findall(b[:m.start()])
         pages = []
         if pg:
-            a, z = pg[-1]; pages = list(range(int(a), int(z or a) + 1)) if z and int(z) - int(a) < 12 else [int(a)] + ([int(z)] if z else [])
-        pieces = [p.strip(" ,;:") for p in re.split(r"\s*\.\.\.\s*|\s*\[\.\.\.\]\s*", q) if len(p.strip(" ,;:")) >= 8]
+            a, z = pg[-1]
+            pages = list(range(int(a), int(z) + 1)) if z and 0 <= int(z) - int(a) < 12 else [int(a)] + ([int(z)] if z else [])
+        pieces = [p.strip(" ,;:") for p in re.split(r"\s*\.\.\.\s*|\s*\[\.\.\.\]\s*|\s*\u2026\s*", q) if len(p.strip(" ,;:")) >= 8]
         if pieces: out.append({"quote": q, "pieces": pieces, "pages_stated": pages})
     return out
 
 
 def doc_hints(basis):
     paths = re.findall(r"v2/vendor/[\w./\-]+\.pdf", basis)
-    ids = re.findall(r"\b(?:S[A-Z]{3,4}\d{3}[A-Z]{0,2}|DS\d{5}|AN\s?\d{3,4}|\d{4}a?f[a-z]?|BST-[A-Z0-9\-]+|SCA[A-Z]\d+[A-Z]?)\b", basis)
+    # TI literature numbers (SLUSC67B, SNVSAI1D, SLOS597B, SCAA082A: S, three letters, three letters or digits with
+    # at least one digit, a revision letter), Diodes and Microchip DS numbers, application notes, ADI's 8705af style
+    ids = re.findall(r"\b(?:S[A-Z]{3}(?=[A-Z0-9]{0,2}\d)[A-Z0-9]{3}[A-Z]?|DS\d{5}|AN\s?\d{3,4}|\d{4}a?f[a-z]?|BST-[A-Z0-9\-]+)\b", basis)
     parts = re.findall(r"\b(?:[A-Z]{2,}\d{2,}[A-Z0-9\-]*|RP2040|W25Q16JV|VEML7700|ATECC608B|DS3231\w*)\b", basis)
     return paths, [i.replace(" ", "") for i in ids], parts
 
@@ -93,7 +102,7 @@ def main(a):
         pages = [norm(p) for p in raw.split("\f")]
         rel = os.path.relpath(path, root)
         docs[rel] = {"sha256": h, "pages": pages, "head": " ".join(pages[:3])[:6000], "n": len(pages),
-                     "chars": sum(len(p) for p in pages)}
+                     "chars": sum(len(p) for p in pages), "flat": " \f ".join(pages)}
     claims = []
     for letter, phase, stem in BOARDS:
         it = json.load(open(os.path.join(root, "v2", "ecad", phase, "out", stem + "-intent.json"), encoding="utf-8"))
@@ -138,7 +147,7 @@ def main(a):
                 hits = []
                 for rel in cands:
                     d = docs[rel]; pg = []
-                    flat = " \f ".join(d["pages"])
+                    flat = d["flat"]
                     pos = 0; okp = True; where = []
                     for pc in pieces:
                         i = flat.find(pc, pos)
@@ -162,7 +171,7 @@ def main(a):
                 # which pieces are missing, against the named documents
                 miss = []
                 for pc in pieces:
-                    if not any(pc in " ".join(docs[r]["pages"]) for r in (row["documents_named"] or docs)): miss.append(pc)
+                    if not any(pc in docs[r]["flat"] for r in (row["documents_named"] or docs)): miss.append(pc)
                 res["pieces_not_found"] = miss
             res["status"] = st; res["found"] = hits[:4]
             row["quotes"].append(res)
