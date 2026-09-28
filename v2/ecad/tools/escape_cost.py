@@ -80,7 +80,10 @@ class Cost:
             if not refs: continue
             if passes(refs):
                 self.lost.setdefault(part, {}).setdefault(cause, []).append(str(pad))
-                alone = [x for x in sorted(refs) if passes({x})]
+                # each part asked alone only where something is closed again on the answer (window, stage): a
+                # far-side cause is reported, not closed, and its parts are every declared capacitor of the other
+                # side of the board, which would be one more question per capacitor for every pad it cost
+                alone = [x for x in sorted(refs) if passes({x})] if cause in ("window", "stage") and len(refs) > 1 else []
                 self.culprits.setdefault(part, {}).setdefault(cause, set()).update(alone or refs)
                 return cause
         self.other.setdefault(part, []).append(str(pad)); return None
