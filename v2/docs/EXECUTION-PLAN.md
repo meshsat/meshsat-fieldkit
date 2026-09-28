@@ -453,3 +453,15 @@ and assembly handoff: the fabrication-release gate of the stage table above, per
 schematic; the physical protection, parity and routed checks; the qualified reviews where a blocker names them; the order
 set of `v2/release/<rev>/` with gerbers, BOM, CPL, assembly drawings and order notes; the case's made parts cut to the
 mock-up's numbers). State: layer 10 BLOCKED, 0 of 7 boards pass layout entry; layer 11 NOT STARTED, it follows layer 10.
+
+### Milestone, 29 September 2026 00:18 CEST: integration set 8 on main (S-98)
+
+**Accepted:** `20afa7a4`. S-98 is CLOSED for declaration consistency: boards A and B regenerated, the netlists identical
+apart from their date, the five A to B leads AGREE, check_contracts PASS of 99, and the constraint sheets re-bound.
+Board A's `+5V_S2` copper width at typical current rises from 1.06 to 2.17 mm. Gates: suite 2171/0/3, isolated clone
+byte-identical, and the last authorised Codex check mergeable. I-03's adequacy, S-99, the mode currents and the lead
+drop stay open. No layer closed.
+
+**Next critical action:** set 9, S-99's D8 split on board A (checked, accepted): the box regeneration runs; then the
+registry texts, a re-take, rebinds, the suite and a Claude check. **Box:** 10.85 USD of 20 spent (credit 117.14). **Codex:**
+none left.
