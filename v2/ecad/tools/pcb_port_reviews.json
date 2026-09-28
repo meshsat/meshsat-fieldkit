@@ -5,7 +5,7 @@
    "review": "v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md",
    "reviewed_on": "2026-09-28",
    "netlist": "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net",
-   "netlist_sha256_16": "0a2b59087bcc2678",
+   "netlist_sha256_16": "2dfe1c546cb39ccb",
    "why": "the review of decision 31 (an AI review, stream d8dec31) enumerated every connector pin of this board's netlist that carries a supply or a signal and classed each as external or internal; the external pins are these, and the declaration is corrected to them by v2/docs/records/d8dec31/apply_port_declarations.py",
    "external": {
     "J_VR1": {
