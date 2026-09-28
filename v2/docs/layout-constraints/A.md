@@ -17,11 +17,11 @@ below is its own binding's).
 ```bound
 sheet      A
 board      a
-read       2026-09-28 at 2f051e71
+read       2026-09-29 at 01b6d9bb
 current    section 2: the power table, and the figures the text under it quotes from it
 older      sections 1 and 3 to 11: read at e3aedb25, with the H2 line's changes marked at ef144760
-netlist    v2/ecad/pcb-a-power-a23/out/pcb-a-power.net sha256/16 2dfe1c546cb39ccb changed 19a2bb15
-intent     v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json sha256/16 35e430a791ab2b44 changed 19a2bb15
+netlist    v2/ecad/pcb-a-power-a23/out/pcb-a-power.net sha256/16 599ee964a9c23d6e changed c1137542
+intent     v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json sha256/16 070b4c5e41e023e5 changed c1137542
 board_file v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb sha256/16 58e26c67987b1daa changed b7e0d28f
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC06161H-3313 outer 0.0350 mm inner 0.0152 mm
@@ -80,7 +80,7 @@ milliamperes: the fabricator's floor governs there, not the current.
 | +5V_S1 | 5.10 | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 | slot 1's rail runs at 4.65 A in PS-ALLTX PLAN (PWR-F02, item 5) |
 | +5V_S2 | 5.10 | 4.20 / 5.63 | 4.20, typical (PI-001) | 2.17 | 0.84 | 13.64 | 8 / 7 / 6 | Moved at integration set 8 by S-98 (finding I-03, INTERIM alignment of the A to B leads, records/cx1/CORRECTION.md B1, records/s98): the declared typical rose from 2.50 to 4.20 A and the peak from 5.00 to 5.63 A, board B's figures derived from held maker pages; the widths follow the governing typical current (PI-001). The PS-ALLTX mode current stays INCONCLUSIVE (I-03's adequacy, the bench). Before: `typ / peak A` was 2.50 / 5.00; `governing A` was 2.50, typical (PI-001); `outer mm` was 1.06; `two outer faces, each mm` was 0.41; `inner mm` was 6.36; `barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill` was 7 / 6 / 5. |
 | +5V_S3 | 5.10 | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |  |
-| +5V_DEV | 5.00 | 5.10 / 6.90 | 5.10, typical (PI-001) | 2.84 | 1.09 | 19.46 | 10 / 8 / 7 | Moved at integration set 8 by S-98 (records/cx1/CORRECTION.md B2): the declared typical rose from 4.00 to 5.10 A (board B's 3.8 A arriving at J_5V_DEV plus the D8 mezzanine's 1.0 A plus the wall port's 0.3 A); the 6.90 A peak is held pending S-99 (the D8 split, set 9, lowers it). The widths follow the governing typical current (PI-001). Before: `typ / peak A` was 4.00 / 6.90; `governing A` was 4.00, typical (PI-001); `outer mm` was 2.03; `two outer faces, each mm` was 0.78; `inner mm` was 12.47. |
+| +5V_DEV | 5.00 | 4.10 / 6.91 | 4.10, typical (PI-001) | 2.10 | 0.81 | 13.05 | 10 / 8 / 7 | Moved at integration set 9 by S-99 (decision 55, records/s99a/README.md): the D8 mezzanine left this stage for its own buck U41 on +5V_D8IN, so the declared typical fell from 5.10 to 4.10 A (board B's 3.8 A plus the wall port's 0.3 A) and the peak is 6.9142 A (board B's 6.0 A plus the wall port at U32's corrected 0.9142 A, TPS2596 equation 7, SLVSET8A printed page 28); the widths follow the governing typical current (PI-001). Before: `typ / peak A` was 5.10 / 6.90; `governing A` was 5.10, typical (PI-001); `outer mm` was 2.84; `two outer faces, each mm` was 1.09; `inner mm` was 19.46. |
 | +3V3 | 3.30 | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |  |
 | +13V8_PA | 13.80 | 5.00 / 6.00 | 5.00, typical (PI-001) | 2.76 | 1.06 | 18.77 | 9 / 7 / 6 |  |
 | +12V_HF | 12.00 | 1.00 / 2.00 | 1.00, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |  |
@@ -92,7 +92,7 @@ milliamperes: the fabricator's floor governs there, not the current.
 | S1_OUT | 5.1 (5.1) | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |  |
 | S3_OUT | 5.1 (5.1) | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |  |
 | S2_OUT | 5.1 (5.1) | 4.20 / 5.63 | 4.20, typical (PI-001) | 2.17 | 0.84 | 13.64 | 8 / 7 / 6 | Moved with +5V_S2 above (S-98, set 8): the converter output node carries the rail's declared current. Before: `typ / peak A` was 2.50 / 5.00; `governing A` was 2.50, typical (PI-001); `outer mm` was 1.06; `two outer faces, each mm` was 0.41; `inner mm` was 6.36; `barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill` was 7 / 6 / 5. |
-| SD_OUT | 5.0 (5.0) | 5.10 / 6.90 | 5.10, typical (PI-001) | 2.84 | 1.09 | 19.46 | 10 / 8 / 7 | Moved with +5V_DEV above (S-98, set 8): the converter output node carries the rail's declared current. Before: `typ / peak A` was 4.00 / 6.90; `governing A` was 4.00, typical (PI-001); `outer mm` was 2.03; `two outer faces, each mm` was 0.78; `inner mm` was 12.47. |
+| SD_OUT | 5.0 (5.0) | 4.10 / 6.91 | 4.10, typical (PI-001) | 2.10 | 0.81 | 13.05 | 10 / 8 / 7 | Moved with +5V_DEV above (S-99, set 9): the stage's output node carries the rail's declared current. Before: `typ / peak A` was 5.10 / 6.90; `governing A` was 5.10, typical (PI-001); `outer mm` was 2.84; `two outer faces, each mm` was 1.09; `inner mm` was 19.46. |
 | PA_OUT | 13.8 (13.8) | 5.00 / 6.00 | 5.00, typical (PI-001) | 2.76 | 1.06 | 18.77 | 9 / 7 / 6 |  |
 | HF_OUT | 12.0 (12.0) | 1.00 / 2.00 | 1.00, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |  |
 | POE_OUT | 54.0 (54.0) | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |  |
@@ -103,9 +103,10 @@ milliamperes: the fabricator's floor governs there, not the current.
 | VMON | 14.4 (16.8) | 0.69 / 1.00 | 0.69, typical (PI-001) | 0.18 | 0.07 | 1.08 | 2 / 2 / 1 | **H2**, new in `ffca0771`: "the Xenarc 709GNK monitor's supply behind the eFuse U21 (limit 1.2 A, MON_EN)" |
 | VHEAT_IN | 14.4 (16.8) | 0.58 / 0.90 | 0.58, typical (PI-001) | 0.14 | 0.05 | 0.85 | 2 / 2 / 1 |  |
 | VHEAT | 12.00 | 0.63 / 0.63 | 0.63, typical (PI-001) | 0.16 | 0.06 | 0.95 | 1 / 1 / 1 |  |
+| +5V_D8IN | 5.0 (5.1) | 1.00 / 2.00 | 1.00, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 | New at integration set 9 by S-99 (decision 55): the output of the new TPS62933 buck U41 from VBAT, feeding the eFuse U23 and board D's +5V_D8 behind it, declared 1.0 A typical and 2.0 A peak (the mezzanine's own figures) at 5.0 V (5.002 V nominal, 4.872 to 5.133 V over every tolerance); its 2 percent drop budget and the codec floor it bears on are open item S-116 and its layout reading S-115. |
 | +3V3_EMCON_EF | 3.30 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `ffca0771`: "the EMCON gates' supply behind the eFuse U39"; declared at 0.4 mA typical and 2 mA peak, which print as 0.00 |
 | +3V3_EMCON | 3.30 | 0.00 / 0.00 | 0.00, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 | **H2**, new in `ffca0771`: "the four SN74AUP1G08 EMCON gates' own supply behind R213"; declared at 0.4 mA typical and 2 mA peak, which print as 0.00 |
-| VBUS_WALL | 5.00 | 0.50 / 0.90 | 0.50, typical (PI-001) | 0.12 | 0.04 | 0.69 | 2 / 2 / 1 |  |
+| VBUS_WALL | 5.00 | 0.50 / 0.91 | 0.50, typical (PI-001) | 0.12 | 0.04 | 0.69 | 2 / 2 / 1 | Moved at integration set 9: the wall port's peak is U32's current limit read by TPS2596 equation 7 with its true sign, 0.9142 A nominal (the generator had read 0.89 A); the typical is unchanged. Before: `typ / peak A` was 0.50 / 0.90. |
 
 What the table asks of the layout, each line with its source:
 
