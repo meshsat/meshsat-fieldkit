@@ -3111,43 +3111,6 @@ open_items:
 
 # Items that left the open list, and what closed each: an owner ruling, a session choice, or a commit whose effect
 # was read in the file `closing_evidence` names. A record never waits on a closed item; it cites what closed it.
-  - id: S-88
-    class: SESSION
-    status: OPEN
-    limits_reading:
-      - {rule: TRN-001, boards: [a]}
-    title: >-
-      TRN-001 on board A does not judge VIN_RAW's entry (the independent review of handover H3, finding H3-02,
-      v2/docs/reviews/2026-09-27-h3-independent-review.md; erratum f of v2/docs/handover/RELEASE-H3.md).
-      v2/ecad/tools/boards/a.json still declares J_DOCK pins 1 and 2 as the power entry; both are ground since SC-55
-      moved VIN_RAW to J_VR1 to J_VR4, and port_protect.py skips a ground pin and never selects an undeclared one, so
-      the reading is PASS about a population that no longer holds the entry. The clamp D2 is on VIN_RAW in the netlist:
-      this is a defect of the declaration and the checker's boundary, not proof that the circuit lacks a clamp. Until
-      repaired TRN-001's PASS on board A is LIMITED wherever it is quoted. Open until the declaration names the real
-      entry, the checker refuses a declared port whose pins carry no supply or signal net and reports an exposed
-      connector pin that no declaration covers, a regression shows that moving or omitting a declared entry demands
-      reconciliation and never shrinks the coverage in silence, and TRN-001 is re-taken on board A (stream d8dec31, with
-      decision 31's protection review of boards A, D and E, whose holds stand).
-  - id: S-89
-    class: SESSION
-    status: OPEN
-    limits_reading:
-      - {rule: REL-001, boards: all}
-    title: >-
-      REL-001's completeness can be false (the independent review of handover H3, finding H3-01, reproduced by the
-      reviewer on four fixtures with the tool's own command line). reliability.py takes the population it inspects from
-      twelve words in the parts' value text, so a connector whose value carries none of them leaves the denominator in
-      silence (an undeclared 'RJ45 MagJack' reads PASS; on the boards J_ETH, J_SIM1, J_SIM2, the dock's spring pins and
-      others: 61 parts whose reference begins J, BT, H, MP, W, SW, X or P are in neither the wear set nor a class on the
-      set 6 netlists, v2/docs/records/r8int6/fix/wear-before-after.txt); with a board's netlist absent it reads PASS of
-      zero; it picks the newest matching netlist by file time and records no netlist, so its readings cannot be bound
-      (they read UNBOUND after the re-take of set 6). Set 6 corrected the opposite error only (a logic gate whose
-      description names a socket, 760d7f41). Until repaired every REL-001 reading is LIMITED to the tool's twelve words.
-      Open until the population is an explicit inventory in which every candidate is classed or excluded with a visible
-      reason, a missing required input reads INCONCLUSIVE and reaches its consumers as such, the reading names the
-      declared phase's netlist by content, the reviewer's four-case matrix reads as he specifies, and REL-001 is
-      re-taken on every board (stream d6rel). REL-001 stays a desk reading: it tests nothing and replaces no physical
-      verification.
   - id: S-90
     class: SESSION
     status: OPEN
@@ -3445,6 +3408,56 @@ open_items:
       part, its document and the level it is rated to, read by the tool, is owed (the review of decision 31 (stream
       d8dec31, 28 September 2026), section 10, T-3). For the tools stream.
 closed_items:
+  - id: S-89
+    closed_by: commit aaed6daa4434f2ae94331cdafb3134056fb1eb97
+    closing_evidence: >-
+      Stream d6rel, merged as commit aaed6daa4434f2ae94331cdafb3134056fb1eb97 (v2/docs/records/d6rel/README.md).
+      reliability.py reads an inventory by reference class and land (wear_inventory.py; pcb_reliability.yaml section
+      inventory), every candidate classed or excluded with a visible reason and the land it speaks of; a missing, unreadable
+      or empty netlist reads INCONCLUSIVE with the reason (verdict.write's missing_input, which rules_status reads as
+      INCONCLUSIVE: v2/docs/records/d6rel/consumers-probe.txt); the netlist is the declared phase's (phase_artefacts) and
+      the reading records it by sha256 and by content; each board's declaration is bound to the artefact it was written
+      against (written_against) and another sha reads INCONCLUSIVE; the reviewer's four cases read PASS, FAIL, FAIL,
+      INCONCLUSIVE on the repaired tool (v2/docs/records/d6rel/matrix-on-repaired-tool.txt; 2 of 4 on the unrepaired tool,
+      matrix-on-unrepaired-tool.txt) and are tests/test_reliability.py t_matrix_1 to t_matrix_4, with fixtures for a
+      connector whose value carries no wear word, the empty netlist, a class with no cycle figure and the sha mismatch
+      (inventory-before-after.txt has the inventory of the set 6 artefacts before and after). REL-001 re-taken on every
+      board of the manifest with list sha256/16 40f2a98323b1f9ce after the evidence floor 2026-09-28T20:33:53+02:00 of
+      pcb_rules_coverage.yaml: A INCONCLUSIVE (82 candidates, 57 classed, 25 excluded, 0 refused; netlist 0a2b59087bcc2678;
+      v2/ecad/pcb-a-power-a23/routed/reliability.verdict.json); B INCONCLUSIVE (155 candidates, 56 classed, 99 excluded, 0
+      refused; netlist 028997a6c5e8810f; v2/ecad/pcb-b-compute-b19/routed/reliability.verdict.json); C INCONCLUSIVE (74
+      candidates, 24 classed, 50 excluded, 0 refused; netlist 3fddbb3edcd4248a;
+      v2/ecad/pcb-c-display-c8/routed/reliability.verdict.json); D INCONCLUSIVE (40 candidates, 11 classed, 29 excluded, 0
+      refused; netlist 7a2c0ac2190b141a; v2/ecad/pcb-d-aprs-d9/routed/reliability.verdict.json); E INCONCLUSIVE (35
+      candidates, 21 classed, 14 excluded, 0 refused; netlist 56adc9746d61c4e0;
+      v2/ecad/pcb-e1-dock-e7/routed/reliability.verdict.json); E5 INCONCLUSIVE (17 candidates, 17 classed, 0 excluded, 0
+      refused; board file 686b29a734c55b9a; v2/ecad/pcb-e5-block/routed/reliability.verdict.json); P INCONCLUSIVE (26
+      candidates, 9 classed, 17 excluded, 0 refused; netlist 760ac6f74d62d194;
+      v2/ecad/pcb-p-pack-p2/routed/reliability.verdict.json). What holds each board, read from its own reading and equal to
+      what the list holds it by: A held by REL-O-01, REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13; B held by REL-O-02,
+      REL-O-03, REL-O-07, REL-O-08, REL-O-09, REL-O-12, REL-O-13; C held by REL-O-04, REL-O-05, REL-O-07, REL-O-08; D held
+      by REL-O-07, REL-O-08, REL-O-10, REL-O-12, REL-O-13; E held by REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13; E5
+      held by REL-O-06, REL-O-07; P held by REL-O-07, REL-O-08, REL-O-11, REL-O-12, REL-O-13. A board reads PASS only where
+      the list holds it by nothing; a class whose maker publishes no figure, an owed figure, an owed measure and an open
+      item that names the board each keep it INCONCLUSIVE. REL-001 stays a desk reading that tests nothing and replaces no
+      physical verification. The item's limit on the readings (limits_reading: - {rule: REL-001, boards: all}) ends with it:
+      a reading taken after the floor is the repaired tool's and is not LIMITED; one taken before it is, and the floor makes
+      it not current.
+    title: >-
+      REL-001's completeness can be false (the independent review of handover H3, finding H3-01, reproduced by the
+      reviewer on four fixtures with the tool's own command line). reliability.py takes the population it inspects from
+      twelve words in the parts' value text, so a connector whose value carries none of them leaves the denominator in
+      silence (an undeclared 'RJ45 MagJack' reads PASS; on the boards J_ETH, J_SIM1, J_SIM2, the dock's spring pins and
+      others: 61 parts whose reference begins J, BT, H, MP, W, SW, X or P are in neither the wear set nor a class on the
+      set 6 netlists, v2/docs/records/r8int6/fix/wear-before-after.txt); with a board's netlist absent it reads PASS of
+      zero; it picks the newest matching netlist by file time and records no netlist, so its readings cannot be bound
+      (they read UNBOUND after the re-take of set 6). Set 6 corrected the opposite error only (a logic gate whose
+      description names a socket, 760d7f41). Until repaired every REL-001 reading is LIMITED to the tool's twelve words.
+      Open until the population is an explicit inventory in which every candidate is classed or excluded with a visible
+      reason, a missing required input reads INCONCLUSIVE and reaches its consumers as such, the reading names the
+      declared phase's netlist by content, the reviewer's four-case matrix reads as he specifies, and REL-001 is
+      re-taken on every board (stream d6rel). REL-001 stays a desk reading: it tests nothing and replaces no physical
+      verification.
   - id: S-57
     closed_by: SC-70
     title: >-
@@ -3982,6 +3995,34 @@ closed_items:
       95 x 63 x 25 and the notch heights are checked against no maker drawing. Revise the tray from the QMX enclosure
       drawing before it is printed (v2/docs/CASE-FIT-UNCERTAINTIES.md section 3; the layer 7 fixer c7). Desk work on a
       made part: no board moves (J_QMX, J_HF and J_RF2 stay) and nothing is bought. ENGINEERING-QUESTIONS EQ-24.
+  - id: S-88
+    closed_by: commit aaed6daa4434f2ae94331cdafb3134056fb1eb97
+    closing_evidence: >-
+      TRN-001 re-taken on board A on the corrected declaration
+      (v2/ecad/pcb-a-power-a23/out/port_protect_a.verdict.json, PASS of 42, netlist 0a2b59087bcc2678, written by
+      port_protect.py 7acd5333fc59f8d0, 18 ports, 60 pins declared internal, 0 declarations refused, 0 uncovered pins,
+      0 disagreements with the reviewed set of pcb_port_reviews.json), landed by commit
+      aaed6daa4434f2ae94331cdafb3134056fb1eb97. The declaration names VIN_RAW's entry (J_VR1 to J_VR4,
+      apply_port_declarations.py); the checker refuses a declared port whose pins carry no supply or signal and
+      reports every connector pin no entry covers (port_protect.py cover, d3125b1e); the regression that an entry
+      moved onto ground pins, out of the declaration, into internal_ports or narrowed by pins demands reconciliation
+      is tests/test_port_protect.py's reviewed-set tests on fixtures and
+      v2/docs/records/d8dec31/readings/regress-reclassify.txt on the three real tables. The limit this item put on
+      TRN-001's reading of board A is lifted by this reading. The review of decision 31
+      (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) is the record; its own findings are open items of their own
+      and are not closed by this.
+    title: >-
+      TRN-001 on board A does not judge VIN_RAW's entry (the independent review of handover H3, finding H3-02,
+      v2/docs/reviews/2026-09-27-h3-independent-review.md; erratum f of v2/docs/handover/RELEASE-H3.md).
+      v2/ecad/tools/boards/a.json still declares J_DOCK pins 1 and 2 as the power entry; both are ground since SC-55
+      moved VIN_RAW to J_VR1 to J_VR4, and port_protect.py skips a ground pin and never selects an undeclared one, so
+      the reading is PASS about a population that no longer holds the entry. The clamp D2 is on VIN_RAW in the netlist:
+      this is a defect of the declaration and the checker's boundary, not proof that the circuit lacks a clamp. Until
+      repaired TRN-001's PASS on board A is LIMITED wherever it is quoted. Open until the declaration names the real
+      entry, the checker refuses a declared port whose pins carry no supply or signal net and reports an exposed
+      connector pin that no declaration covers, a regression shows that moving or omitting a declared entry demands
+      reconciliation and never shrinks the coverage in silence, and TRN-001 is re-taken on board A (stream d8dec31, with
+      decision 31's protection review of boards A, D and E, whose holds stand).
 
 records:
   - id: REQ-001
@@ -6165,7 +6206,7 @@ records:
       decisions: [31, 34]
     rule_coverage: PARTIAL
     rulings: [D-16]
-    waits_on: [S-88, S-106, S-107, S-111]
+    waits_on: [S-106, S-107, S-111]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: BLOCKER
@@ -6359,7 +6400,7 @@ records:
       decisions: []
     rule_coverage: PARTIAL
     rulings: [D-11, D-12]
-    waits_on: [S-60, S-88]
+    waits_on: [S-60]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
@@ -6985,7 +7026,6 @@ records:
       decisions: []
     rule_coverage: PARTIAL
     rulings: [D-02c]
-    waits_on: [S-89]
     status: DEFINED
     evidence_result: NOT_YET_TESTED
     release_effect: MUST_JUSTIFY
@@ -6995,6 +7035,16 @@ records:
       - "v2/ecad/tools/pcb_envelope.yaml:134-139"
       - "owner ruling D-02c"
     source_check: VERIFIED
+    history: >-
+      28 September 2026: S-89 (REL-001's population, inputs and binding: the independent review of handover H3, finding
+      H3-01) closed by commit aaed6daa4434f2ae94331cdafb3134056fb1eb97, stream d6rel, v2/docs/records/d6rel/README.md; this
+      record cited the wait on it and cites the closing instead. REL-001's readings taken after the evidence floor
+      2026-09-28T20:33:53+02:00 are the repaired tool's (an inventory by reference class and land, the netlist bound by sha)
+      and are not LIMITED; what holds each board from PASS at the closing, by the open items of pcb_reliability.yaml: A held
+      by REL-O-01, REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13; B held by REL-O-02, REL-O-03, REL-O-07, REL-O-08,
+      REL-O-09, REL-O-12, REL-O-13; C held by REL-O-04, REL-O-05, REL-O-07, REL-O-08; D held by REL-O-07, REL-O-08,
+      REL-O-10, REL-O-12, REL-O-13; E held by REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13; E5 held by REL-O-06,
+      REL-O-07; P held by REL-O-07, REL-O-08, REL-O-11, REL-O-12, REL-O-13.
     conflict_ref: C-07
     notes: >-
       D-02c sets the severities decision 34 left open. OPERATING-ENVELOPE.md (sections 4 and 8) and pcb_envelope.yaml
@@ -7066,7 +7116,7 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-02a, D-02b, D-02d, D-02e]
     choices: [SC-18, SC-27, SC-49]
-    waits_on: [S-55, S-89]
+    waits_on: [S-55]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
@@ -7076,6 +7126,16 @@ records:
       - "v2/ecad/tools/pcb_decisions.yaml:525-593 (decision 34)"
       - "v2/docs/CONOPS.md section 4c"
     source_check: VERIFIED
+    history: >-
+      28 September 2026: S-89 (REL-001's population, inputs and binding: the independent review of handover H3, finding
+      H3-01) closed by commit aaed6daa4434f2ae94331cdafb3134056fb1eb97, stream d6rel, v2/docs/records/d6rel/README.md; this
+      record cited the wait on it and cites the closing instead. REL-001's readings taken after the evidence floor
+      2026-09-28T20:33:53+02:00 are the repaired tool's (an inventory by reference class and land, the netlist bound by sha)
+      and are not LIMITED; what holds each board from PASS at the closing, by the open items of pcb_reliability.yaml: A held
+      by REL-O-01, REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13; B held by REL-O-02, REL-O-03, REL-O-07, REL-O-08,
+      REL-O-09, REL-O-12, REL-O-13; C held by REL-O-04, REL-O-05, REL-O-07, REL-O-08; D held by REL-O-07, REL-O-08,
+      REL-O-10, REL-O-12, REL-O-13; E held by REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13; E5 held by REL-O-06,
+      REL-O-07; P held by REL-O-07, REL-O-08, REL-O-11, REL-O-12, REL-O-13.
     conflict_ref: C-05
     notes: >-
       Under D-02a this is the 'operate to specification inside the envelope' pass line; D-02b accepts the one-module
@@ -7182,12 +7242,21 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-02a]
     choices: [SC-03, SC-12]
-    waits_on: [S-89]
     status: DEFINED
     evidence_result: NOT_YET_TESTED
     release_effect: MUST_JUSTIFY
     source: ["v2/docs/OPERATING-ENVELOPE.md:258", "v2/docs/TEST-PLAN.md:28", "v2/docs/TEST-PLAN.md section 6"]
     source_check: VERIFIED
+    history: >-
+      28 September 2026: S-89 (REL-001's population, inputs and binding: the independent review of handover H3, finding
+      H3-01) closed by commit aaed6daa4434f2ae94331cdafb3134056fb1eb97, stream d6rel, v2/docs/records/d6rel/README.md; this
+      record cited the wait on it and cites the closing instead. REL-001's readings taken after the evidence floor
+      2026-09-28T20:33:53+02:00 are the repaired tool's (an inventory by reference class and land, the netlist bound by sha)
+      and are not LIMITED; what holds each board from PASS at the closing, by the open items of pcb_reliability.yaml: A held
+      by REL-O-01, REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13; B held by REL-O-02, REL-O-03, REL-O-07, REL-O-08,
+      REL-O-09, REL-O-12, REL-O-13; C held by REL-O-04, REL-O-05, REL-O-07, REL-O-08; D held by REL-O-07, REL-O-08,
+      REL-O-10, REL-O-12, REL-O-13; E held by REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13; E5 held by REL-O-06,
+      REL-O-07; P held by REL-O-07, REL-O-08, REL-O-11, REL-O-12, REL-O-13.
     conflict_ref: C-06
 
   - id: ASM-004
@@ -7276,12 +7345,21 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-02c]
     choices: [SC-45, SC-29]
-    waits_on: [S-89]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
     source: ["v2/docs/OPERATING-ENVELOPE.md:315-325", "v2/ecad/tools/pcb_envelope.yaml:197", "owner ruling D-02c"]
     source_check: VERIFIED
+    history: >-
+      28 September 2026: S-89 (REL-001's population, inputs and binding: the independent review of handover H3, finding
+      H3-01) closed by commit aaed6daa4434f2ae94331cdafb3134056fb1eb97, stream d6rel, v2/docs/records/d6rel/README.md; this
+      record cited the wait on it and cites the closing instead. REL-001's readings taken after the evidence floor
+      2026-09-28T20:33:53+02:00 are the repaired tool's (an inventory by reference class and land, the netlist bound by sha)
+      and are not LIMITED; what holds each board from PASS at the closing, by the open items of pcb_reliability.yaml: A held
+      by REL-O-01, REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13; B held by REL-O-02, REL-O-03, REL-O-07, REL-O-08,
+      REL-O-09, REL-O-12, REL-O-13; C held by REL-O-04, REL-O-05, REL-O-07, REL-O-08; D held by REL-O-07, REL-O-08,
+      REL-O-10, REL-O-12, REL-O-13; E held by REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13; E5 held by REL-O-06,
+      REL-O-07; P held by REL-O-07, REL-O-08, REL-O-11, REL-O-12, REL-O-13.
 
   - id: REQ-029
     kind: requirement
@@ -7303,7 +7381,7 @@ records:
       rules: [TRN-001, GND-002]
       decisions: [34]
     rule_coverage: PARTIAL
-    waits_on: [S-88, S-100, S-101, S-102, S-103, S-104, S-106, S-108, S-109, S-112, S-113]
+    waits_on: [S-100, S-101, S-102, S-103, S-104, S-106, S-108, S-109, S-112, S-113]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
@@ -7335,7 +7413,6 @@ records:
       decisions: [31]
     rule_coverage: PARTIAL
     rulings: [D-17]
-    waits_on: [S-88]
     status: DEFINED
     evidence_result: PASS
     evidence_phase: SCHEMATIC
@@ -13347,12 +13424,21 @@ records:
       rules: [REL-001, ENV-002]
       decisions: []
     rule_coverage: PARTIAL
-    waits_on: [S-89]
     status: DEFINED
     evidence_result: NOT_YET_TESTED
     release_effect: MUST_JUSTIFY
     source: ["v2/docs/TEST-PLAN.md:31"]
     source_check: VERIFIED
+    history: >-
+      28 September 2026: S-89 (REL-001's population, inputs and binding: the independent review of handover H3, finding
+      H3-01) closed by commit aaed6daa4434f2ae94331cdafb3134056fb1eb97, stream d6rel, v2/docs/records/d6rel/README.md; this
+      record cited the wait on it and cites the closing instead. REL-001's readings taken after the evidence floor
+      2026-09-28T20:33:53+02:00 are the repaired tool's (an inventory by reference class and land, the netlist bound by sha)
+      and are not LIMITED; what holds each board from PASS at the closing, by the open items of pcb_reliability.yaml: A held
+      by REL-O-01, REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13; B held by REL-O-02, REL-O-03, REL-O-07, REL-O-08,
+      REL-O-09, REL-O-12, REL-O-13; C held by REL-O-04, REL-O-05, REL-O-07, REL-O-08; D held by REL-O-07, REL-O-08,
+      REL-O-10, REL-O-12, REL-O-13; E held by REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13; E5 held by REL-O-06,
+      REL-O-07; P held by REL-O-07, REL-O-08, REL-O-11, REL-O-12, REL-O-13.
     notes: "E8's 'vent' is read as Peli's pressure valve, which 32.53 keeps (challenger); W5 settles the wording."
 
   - id: ASM-007
