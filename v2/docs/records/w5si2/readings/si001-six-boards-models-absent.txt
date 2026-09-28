@@ -1,0 +1,134 @@
+SI-001 AT THE SCHEMATIC PHASE, taken in scratch outside any tree: fnd/w5si2 at e504d5c1 with board C's four declarations applied in the scratch view, models ABSENT (the state of a clean clone)
+Prototype design work: nothing has been built or measured. tools/pcb_edge_rates.yaml sha256/16 0689086680f7a4a4.
+
+board | netlist sha256/16 | signal | slow | non-slow | by a published figure | by a bound | undecided (no declaration + model absent + other) | answered | layout-bound (figure-held + BOUND_DECIDES) | models: state, asked, absent | verdict
+A | 0a2b59087bcc2678 | 290 | 170 | 120 | 6 | 71 | 43 (38 + 5 + 0) | 19 | 58 (0 + 58) | ABSENT, 5, 5 | INCONCLUSIVE
+B | 028997a6c5e8810f | 886 | 324 | 562 | 30 | 142 | 390 (8 + 382 + 0) | 61 | 111 (0 + 111) | ABSENT, 10, 10 | INCONCLUSIVE
+C | 3fddbb3edcd4248a | 134 | 101 | 33 | 4 | 22 | 7 (0 + 7 + 0) | 10 | 16 (0 + 16) | ABSENT, 6, 6 | INCONCLUSIVE
+D | 7a2c0ac2190b141a | 135 | 88 | 47 | 20 | 16 | 11 (8 + 3 + 0) | 26 | 10 (2 + 8) | ABSENT, 5, 5 | INCONCLUSIVE
+E | 56adc9746d61c4e0 | 83 | 42 | 41 | 4 | 37 | 0 (0 + 0 + 0) | 10 | 31 (0 + 31) | NOT_ASKED, 0, 0 | INCONCLUSIVE
+P | 760ac6f74d62d194 | 40 | 20 | 20 | 0 | 5 | 15 (15 + 0 + 0) | 4 | 1 (0 + 1) | NOT_ASKED, 0, 0 | INCONCLUSIVE
+all | | 1568 | 745 | 823 | 64 | 293 | 466 (69 + 397 + 0) | 130 | 227 (2 + 225) | |
+
+DECIDED BY A PUBLISHED FIGURE, by what kind of figure: STANDARD 64
+
+BOARD A, UNDECIDED (43):
+  NO_DECLARATION (38): FE_BLEED, FE_BLEED_G, FE_CSF, FE_CSGF, FE_CTR2, FE_GVDD, FE_ISNS_N, FE_ISNS_P, FE_LATCH, FE_RUN, FE_UVS, FE_VINP, FE_VISNS, FE_VZ, HF_CSF, HF_CSGF, HF_ISNS_N, HF_ISNS_P, HF_VINP, MAIN_PDT, OUTLET_OK, PA_CSF, PA_CSGF, PA_ISNS_N, PA_ISNS_P, PA_VINP, POE_CSF, POE_CSGF, POE_ISNS_N, POE_ISNS_P, S2_CSF, S2_CSGF, S2_ISNS_N, S2_ISNS_P, SD_CSF, SD_CSGF, SD_ISNS_N, SD_ISNS_P
+  MODEL_ABSENT (5): EXP_INT, INA_ALERT, PROCHOT, SCL, SDA
+
+BOARD B, UNDECIDED (390):
+  NO_DECLARATION (8): 5G_DCHG, 5G_TPR_CT, CARD1_PERST_n, CARD2_PERST_n, CARD3_PERST_n, EMCON_ON1, EMCON_ON2, EMCON_ON3
+  MODEL_ABSENT (382): KSZ_RST, HUB1_RST_n, HUB2_RST_n, HUB3_RST_n, IOCA_RST_n, IOCB_RST_n, IOCC_RST_n, IOCA_SWCLK, IOCB_SWCLK, IOCC_SWCLK, IOCA_SWDIO, IOCB_SWDIO, IOCC_SWDIO, BANK1_UPD_N, BANK1_UPD_P, BANK1_UPRX_N, BANK1_UPRX_P, BANK1_UPTX_N, BANK1_UPTX_P, BANK2_UPD_N, BANK2_UPD_P, BANK2_UPRX_N, BANK2_UPRX_P, BANK2_UPTX_N, BANK2_UPTX_P, BANK3_UPD_N, BANK3_UPD_P, BANK3_UPRX_N, BANK3_UPRX_P, BANK3_UPTX_N, BANK3_UPTX_P, BBM1, BBM1_ARM, BBM1_ARMR, BBM1_MOV, BBM1_RA, BBM1_REQ, BBM2, BBM2_ARM, BBM2_ARMR, BBM2_MOV, BBM2_RA, BBM2_REQ, BBM3, BBM3_ARM, BBM3_ARMR, BBM3_MOV, BBM3_RA, BBM3_REQ, BSEL1, BSEL1_D2, BSEL1_D2R, BSEL1_S, BSEL2, BSEL2_D2, BSEL2_D2R, BSEL2_S, BSEL3, BSEL3_D2, BSEL3_D2R, BSEL3_S, CANH_A, CANH_A1, CANH_B, CANH_B1, CANL_A, CANL_A1, CANL_B, CANL_B1, CANT_A, CANT_B, CANT2_A, CANT2_B, CARD1_CLK_N, CARD1_CLK_P, CARD1_CLK_SRC_N, CARD1_CLK_SRC_P, CARD2_CLK_N, CARD2_CLK_P, CARD2_CLK_SRC_N, CARD2_CLK_SRC_P, CARD3_CLK_N, CARD3_CLK_P, CARD3_CLK_SRC_N, CARD3_CLK_SRC_P, CARD1_RX_N, CARD1_RX_P, CARD1_RX_SW_N, CARD1_RX_SW_P, CARD2_RX_N, CARD2_RX_P, CARD2_RX_SW_N, CARD2_RX_SW_P, CARD3_RX_N, CARD3_RX_P, CARD3_RX_SW_N, CARD3_RX_SW_P, CARD1_TX_N, CARD1_TX_P, CARD2_TX_N, CARD2_TX_P, CARD3_TX_N, CARD3_TX_P, ETH1_P0_N, ETH1_P0_P, ETH1_P1_N, ETH1_P1_P, ETH1_P2_N, ETH1_P2_P, ETH1_P3_N, ETH1_P3_P, ETH2_P0_N, ETH2_P0_P, ETH2_P1_N, ETH2_P1_P, ETH2_P2_N, ETH2_P2_P, ETH2_P3_N, ETH2_P3_P, ETH3_P0_N, ETH3_P0_P, ETH3_P1_N, ETH3_P1_P, ETH3_P2_N, ETH3_P2_P, ETH3_P3_N, ETH3_P3_P, EXP_INT, HB1, HB2, HB3, HDMI1_CK_N, HDMI1_CK_P, HDMI2_CK_N, HDMI2_CK_P, HDMI3_CK_N, HDMI3_CK_P, HDMIM_CK_N, HDMIM_CK_P, HDMIO_CK_N, HDMIO_CK_P, HDMI1_D0_N, HDMI1_D0_P, HDMI1_D1_N, HDMI1_D1_P, HDMI1_D2_N, HDMI1_D2_P, HDMI2_D0_N, HDMI2_D0_P, HDMI2_D1_N, HDMI2_D1_P, HDMI2_D2_N, HDMI2_D2_P, HDMI3_D0_N, HDMI3_D0_P, HDMI3_D1_N, HDMI3_D1_P, HDMI3_D2_N, HDMI3_D2_P, HDMIM_D0_N, HDMIM_D0_P, HDMIM_D1_N, HDMIM_D1_P, HDMIM_D2_N, HDMIM_D2_P, HDMIO_D0_N, HDMIO_D0_P, HDMIO_D1_N, HDMIO_D1_P, HDMIO_D2_N, HDMIO_D2_P, HOST1_0D_N, HOST1_0D_P, HOST1_0RX_N, HOST1_0RX_P, HOST1_0TX_N, HOST1_0TX_P, HOST1_1D_N, HOST1_1D_P, HOST1_1RX_N, HOST1_1RX_P, HOST1_1TX_N, HOST1_1TX_P, HOST2_0D_N, HOST2_0D_P, HOST2_0RX_N, HOST2_0RX_P, HOST2_0TX_N, HOST2_0TX_P, HOST2_1D_N, HOST2_1D_P, HOST2_1RX_N, HOST2_1RX_P, HOST2_1TX_N, HOST2_1TX_P, HOST3_0D_N, HOST3_0D_P, HOST3_0RX_N, HOST3_0RX_P, HOST3_0TX_N, HOST3_0TX_P, HOST3_1D_N, HOST3_1D_P, HOST3_1RX_N, HOST3_1RX_P, HOST3_1TX_N, HOST3_1TX_P, HUB1_D1TX_N, HUB1_D1TX_P, HUBRST1_A, HUBRST1_AB, HUBRST1_B, HUBRST1_BC, HUBRST1_C, HUBRST1_CA, HUBRST1_VOTE, HUBRST2_A, HUBRST2_AB, HUBRST2_B, HUBRST2_BC, HUBRST2_C, HUBRST2_CA, HUBRST2_VOTE, HUBRST3_A, HUBRST3_AB, HUBRST3_B, HUBRST3_BC, HUBRST3_C, HUBRST3_CA, HUBRST3_VOTE, IOCA_CAN1_RX, IOCA_CAN1_TX, IOCA_CAN2_RX, IOCA_CAN2_TX, IOCB_CAN1_RX, IOCB_CAN1_TX, IOCB_CAN2_RX, IOCB_CAN2_TX, IOCC_CAN1_RX, IOCC_CAN1_TX, IOCC_CAN2_RX, IOCC_CAN2_TX, LIME_SSRX_N, LIME_SSRX_P, LIME_SSTX_N, LIME_SSTX_P, MUX1_A1N, MUX1_A1P, MUX2_A1N, MUX2_A1P, MUX3_A1N, MUX3_A1P, NVME1_CLK_N, NVME1_CLK_P, NVME1_CLK_SRC_N, NVME1_CLK_SRC_P, NVME2_CLK_N, NVME2_CLK_P, NVME2_CLK_SRC_N, NVME2_CLK_SRC_P, NVME3_CLK_N, NVME3_CLK_P, NVME3_CLK_SRC_N, NVME3_CLK_SRC_P, NVME1_RX_N, NVME1_RX_P, NVME1_RX_SW_N, NVME1_RX_SW_P, NVME2_RX_N, NVME2_RX_P, NVME2_RX_SW_N, NVME2_RX_SW_P, NVME3_RX_N, NVME3_RX_P, NVME3_RX_SW_N, NVME3_RX_SW_P, NVME1_TX_N, NVME1_TX_P, NVME2_TX_N, NVME2_TX_P, NVME3_TX_N, NVME3_TX_P, PCIE1_CLK_N, PCIE1_CLK_P, PCIE2_CLK_N, PCIE2_CLK_P, PCIE3_CLK_N, PCIE3_CLK_P, PCIE1_RCLK0_N, PCIE1_RCLK0_P, PCIE1_RCLK0_SRC_N, PCIE1_RCLK0_SRC_P, PCIE1_RCLKIN_N, PCIE1_RCLKIN_P, PCIE2_RCLK0_N, PCIE2_RCLK0_P, PCIE2_RCLK0_SRC_N, PCIE2_RCLK0_SRC_P, PCIE2_RCLKIN_N, PCIE2_RCLKIN_P, PCIE3_RCLK0_N, PCIE3_RCLK0_P, PCIE3_RCLK0_SRC_N, PCIE3_RCLK0_SRC_P, PCIE3_RCLKIN_N, PCIE3_RCLKIN_P, PCIE1_RXSW_N, PCIE1_RXSW_P, PCIE2_RXSW_N, PCIE2_RXSW_P, PCIE3_RXSW_N, PCIE3_RXSW_P, PCIE1_RX_N, PCIE1_RX_P, PCIE2_RX_N, PCIE2_RX_P, PCIE3_RX_N, PCIE3_RX_P, PCIE1_TX_N, PCIE1_TX_P, PCIE2_TX_N, PCIE2_TX_P, PCIE3_TX_N, PCIE3_TX_P, SCL, SDA, SEL1_A, SEL1_AB, SEL1_B, SEL1_BC, SEL1_C, SEL1_CA, SEL2_A, SEL2_AB, SEL2_B, SEL2_BC, SEL2_C, SEL2_CA, SEL3_A, SEL3_AB, SEL3_B, SEL3_BC, SEL3_C, SEL3_CA, SWP1_A_N, SWP1_A_P, SWP1_B_N, SWP1_B_P, SWP1_C_N, SWP1_C_P, SWP1_D_N, SWP1_D_P, SWP2_A_N, SWP2_A_P, SWP2_B_N, SWP2_B_P, SWP2_C_N, SWP2_C_P, SWP2_D_N, SWP2_D_P, SWP3_A_N, SWP3_A_P, SWP3_B_N, SWP3_B_P, SWP3_C_N, SWP3_C_P, SWP3_D_N, SWP3_D_P, SWP4_A_N, SWP4_A_P, SWP4_B_N, SWP4_B_P, SWP4_C_N, SWP4_C_P, SWP4_D_N, SWP4_D_P, WSEC_A, WSEC_AB, WSEC_B, WSEC_BC, WSEC_C, WSEC_CA
+
+BOARD C, UNDECIDED (7):
+  MODEL_ABSENT (7): EXP_INT, HB1, HB2, HB3, Q3_G, SCL, SDA
+    EXP_INT: beyond J_PANEL on board A: U27 PCA9555PW (0x21): (TI-PCA9555): the IBIS model v2/vendor/ti/ibis/pca9555.ibs is not in this tree: the makers' models are withheld from the repository, v2/vendor/ibis-manifest.yaml pins this one at sha256/16 56c19a4da921e38c and tools/ibis_fetch.py fetches it from the maker's address | beyond J_PANEL on board A: U28 PCA9555PW (0x24): (TI-PCA9555): the IBIS model v2/ve
+    HB1: beyond J_PANEL on board B: U41 STM32H743VIT6 I/O (ST-STM32H743): the IBIS model v2/vendor/st/ibis/stm32h742_743_750_753_lqfp100.ibs is not in this tree: the makers' models are withheld from the repository, v2/vendor/ibis-manifest.yaml pins this one at sha256/16 0fb7767c1ee034db and tools/ibis_fetch.py fetches it from the maker's address | beyond J_PANEL on board B: U51 STM32H743VIT6 I/O (ST-STM32H
+    HB2: beyond J_PANEL on board B: U41 STM32H743VIT6 I/O (ST-STM32H743): the IBIS model v2/vendor/st/ibis/stm32h742_743_750_753_lqfp100.ibs is not in this tree: the makers' models are withheld from the repository, v2/vendor/ibis-manifest.yaml pins this one at sha256/16 0fb7767c1ee034db and tools/ibis_fetch.py fetches it from the maker's address | beyond J_PANEL on board B: U51 STM32H743VIT6 I/O (ST-STM32H
+    HB3: beyond J_PANEL on board B: U41 STM32H743VIT6 I/O (ST-STM32H743): the IBIS model v2/vendor/st/ibis/stm32h742_743_750_753_lqfp100.ibs is not in this tree: the makers' models are withheld from the repository, v2/vendor/ibis-manifest.yaml pins this one at sha256/16 0fb7767c1ee034db and tools/ibis_fetch.py fetches it from the maker's address | beyond J_PANEL on board B: U51 STM32H743VIT6 I/O (ST-STM32H
+    Q3_G: across R37 from TR_APRS: beyond J_PANEL on board A: U30 SN74LVC1G00DBVR NAND: (TI-SN74LVC1G00): the IBIS model v2/vendor/ti/ibis/sn74lvc1g00.ibs is not in this tree: the makers' models are withheld from the repository, v2/vendor/ibis-manifest.yaml pins this one at sha256/16 e085986b1ed2969e and tools/ibis_fetch.py fetches it from the maker's address
+    SCL: beyond J_PANEL on board A: U10 INA226 rail (TI-INA226): the IBIS model v2/vendor/ti/ibis/ina226.ibs is not in this tree: the makers' models are withheld from the repository, v2/vendor/ibis-manifest.yaml pins this one at sha256/16 fb4ebf43bde617c2 and tools/ibis_fetch.py fetches it from the maker's address | beyond J_PANEL on board A: U11 INA226 rail (TI-INA226): the IBIS model v2/vendor/ti/ibis/in
+    SDA: beyond J_PANEL on board A: U10 INA226 rail (TI-INA226): the IBIS model v2/vendor/ti/ibis/ina226.ibs is not in this tree: the makers' models are withheld from the repository, v2/vendor/ibis-manifest.yaml pins this one at sha256/16 fb4ebf43bde617c2 and tools/ibis_fetch.py fetches it from the maker's address | beyond J_PANEL on board A: U11 INA226 rail (TI-INA226): the IBIS model v2/vendor/ti/ibis/in
+
+BOARD C, NET BY NET, every net outside LOW_SPEED_OR_DC that is not decided by a published figure:
+  EPD_CS [entry EPD_CS, CLOCKED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 7 GPIO5; FAR-PDI-EPD: beyond J_EPD (far end C-EPD): FAR-PDI-EPD
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  EPD_DC [entry EPD_DC, CLOCKED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 6 GPIO4; FAR-PDI-EPD: beyond J_EPD (far end C-EPD): FAR-PDI-EPD
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  EPD_SCL [entry EPD_SCL, CLOCKED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 4 GPIO2; FAR-PDI-EPD: beyond J_EPD (far end C-EPD): FAR-PDI-EPD
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  EPD_SDA [entry EPD_SDA, CLOCKED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 5 GPIO3; FAR-PDI-EPD: beyond J_EPD (far end C-EPD): FAR-PDI-EPD
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  EPD_SW [entry EPD_SW, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND POWER-STAGE-NODES; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: POWER-STAGE-NODES: class entry EPD_SW, POWER-STAGE-NODES
+      why a bound: A converter's switch node, bootstrap node and gate drives, and a hot-swap or ideal-diode controller's gate, move at a rate the controller's driver and the power FET's charge set together. The makers publish driver resistances and typical switching times at a test load, and LM5176's own datasheet says of the switching times that they come from the MOSFET's data sheet or the lab. No maker states a lowest edge for these
+      documents searched: v2/vendor/ti/lm5176-datasheet.pdf p. 26 (sha256/16 98191bec36d43771)
+  PANEL_PWM [entry PANEL_PWM, CLOCKED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; ANSWERED in the netlist: series resistor R19 100R to Q2_G (a screen)
+      governed by: RPI-RP2040: U3 pin 11 GPIO8
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  PWM1 [entry PWM1, CLOCKED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; ANSWERED in the netlist: series resistor R44 100R to Q4_G (a screen)
+      governed by: RPI-RP2040: U3 pin 12 GPIO9
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  Q2_D [entry Q?_D, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND DISCRETE-MOSFET; ANSWERED in the netlist: series resistor R18 47R to Q1_G (a screen)
+      governed by: DISCRETE-MOSFET: Q2 pin 3 D
+      why a bound: A discrete FET's drain moves at the rate its gate drive and its own charge set; its datasheet gives typical switching times at one test circuit (AO3401A: turn-on rise 3.5 ns typical), which are neither a minimum nor this circuit. The gate pin drives nothing: pin function G, or pin 4 of the SON-8 and TDSON-8 power FETs (CSD19532Q5B, CSD18510Q5B, CSD17570Q5B, BSC039N06NS, BSC028N06NS: pins 1 to 3 source, 4 gate, 5 to 8
+      documents searched: v2/vendor/power/aos-ao3401a-p-mosfet.pdf p. 2 (sha256/16 0d8e3261ae280e00); v2/vendor/power/jscj-2n7002-c8545.pdf p. 1 (sha256/16 7941fb423af7c6c6)
+  Q1_G [entry Q?_G, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND DISCRETE-MOSFET; ANSWERED in the netlist: series resistor R18 47R to Q2_D (a screen)
+      governed by: DISCRETE-MOSFET: across R18 from Q2_D: Q2 pin 3 D
+      why a bound: A discrete FET's drain moves at the rate its gate drive and its own charge set; its datasheet gives typical switching times at one test circuit (AO3401A: turn-on rise 3.5 ns typical), which are neither a minimum nor this circuit. The gate pin drives nothing: pin function G, or pin 4 of the SON-8 and TDSON-8 power FETs (CSD19532Q5B, CSD18510Q5B, CSD17570Q5B, BSC039N06NS, BSC028N06NS: pins 1 to 3 source, 4 gate, 5 to 8
+      documents searched: v2/vendor/power/aos-ao3401a-p-mosfet.pdf p. 2 (sha256/16 0d8e3261ae280e00); v2/vendor/power/jscj-2n7002-c8545.pdf p. 1 (sha256/16 7941fb423af7c6c6)
+  Q2_G [entry Q?_G, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; ANSWERED in the netlist: series resistor R19 100R to PANEL_PWM (a screen)
+      governed by: RPI-RP2040: across R19 from PANEL_PWM: U3 pin 11 GPIO8
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  Q4_G [entry Q?_G, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; ANSWERED in the netlist: series resistor R44 100R to PWM1 (a screen)
+      governed by: RPI-RP2040: across R44 from PWM1: U3 pin 12 GPIO9
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  QSPI_D0 [entry QSPI_*, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 53 QSPI_SD0; WINBOND-W25Q16JV: U4 pin 5 QSPI_D0
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  QSPI_D1 [entry QSPI_*, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 55 QSPI_SD1; WINBOND-W25Q16JV: U4 pin 2 QSPI_D1
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  QSPI_D2 [entry QSPI_*, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 54 QSPI_SD2; WINBOND-W25Q16JV: U4 pin 3 QSPI_D2
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  QSPI_D3 [entry QSPI_*, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 51 QSPI_SD3; WINBOND-W25Q16JV: U4 pin 7 QSPI_D3
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  QSPI_SCLK [entry QSPI_*, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 52 QSPI_SCLK; WINBOND-W25Q16JV: U4 pin 6 QSPI_SCLK
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  QSPI_SS [entry QSPI_*, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 56 QSPI_SS_N; WINBOND-W25Q16JV: U4 pin 1 QSPI_SS
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  SWCLK [entry SW*, CLOCKED_DIGITAL]: 0.0 ns, BOUND FAR-BENCH-PROBE; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: FAR-BENCH-PROBE: beyond TP1 (far end C-SWD): FAR-BENCH-PROBE
+      why a bound: A bench instrument (a debug probe, a USB-UART adapter) on a bench header is not part of the kit and its edge is not this design's; it is present only at bring-up and service. The bound is instantaneous
+      documents searched: v2/vendor/cm5/cm5-datasheet.pdf p. 12 (sha256/16 80070fefd8db6e8a)
+  SWDIO [entry SW*, CLOCKED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 25 SWD
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  XIN [entry XIN, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND OSCILLATOR-NODES; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: OSCILLATOR-NODES: class entry XIN, OSCILLATOR-NODES
+      why a bound: A crystal oscillator's input and output nodes carry the amplifier's output shaped by the crystal and its load capacitors. No maker of these oscillators (the RP2040's XOSC, the STM32H743's HSE, the KSZ9897R's, the TUSB2046B's and the PCM2912A's) states the amplifier's transition, and the pin's GPIO model does not describe it. The bound is instantaneous (ER-D8).
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 217 (sha256/16 be56fbb75ba0ae9e); v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf p. 123 (sha256/16 f6e620179006c8c4)
+  XOUT [entry XOUT*, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND OSCILLATOR-NODES; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: OSCILLATOR-NODES: class entry XOUT*, OSCILLATOR-NODES
+      why a bound: A crystal oscillator's input and output nodes carry the amplifier's output shaped by the crystal and its load capacitors. No maker of these oscillators (the RP2040's XOSC, the STM32H743's HSE, the KSZ9897R's, the TUSB2046B's and the PCM2912A's) states the amplifier's transition, and the pin's GPIO model does not describe it. The bound is instantaneous (ER-D8).
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 217 (sha256/16 be56fbb75ba0ae9e); v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf p. 123 (sha256/16 f6e620179006c8c4)
+  XOUT_R [entry XOUT*, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND OSCILLATOR-NODES; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: OSCILLATOR-NODES: class entry XOUT*, OSCILLATOR-NODES
+      why a bound: A crystal oscillator's input and output nodes carry the amplifier's output shaped by the crystal and its load capacitors. No maker of these oscillators (the RP2040's XOSC, the STM32H743's HSE, the KSZ9897R's, the TUSB2046B's and the PCM2912A's) states the amplifier's transition, and the pin's GPIO model does not describe it. The bound is instantaneous (ER-D8).
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 217 (sha256/16 be56fbb75ba0ae9e); v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf p. 123 (sha256/16 f6e620179006c8c4)
+
+BOARD C, decided by a published figure:
+  USB_DM_R [entry USB_D*_R]: 4.0 ns, STANDARD USB2-FS (class entry USB_D*_R, USB2-FS); answered: series resistor R3 27R to USB_PNL_N (a screen)
+  USB_DP_R [entry USB_D*_R]: 4.0 ns, STANDARD USB2-FS (class entry USB_D*_R, USB2-FS); answered: series resistor R2 27R to USB_PNL_P (a screen)
+  USB_PNL_N [entry USB_PNL_*]: 4.0 ns, STANDARD USB2-FS (class entry USB_PNL_*, USB2-FS); answered: series resistor R3 27R to USB_DM_R (a screen)
+  USB_PNL_P [entry USB_PNL_*]: 4.0 ns, STANDARD USB2-FS (class entry USB_PNL_*, USB2-FS); answered: series resistor R2 27R to USB_DP_R (a screen)
+
+BOARD D, UNDECIDED (11):
+  NO_DECLARATION (8): FLANGE_AIN0, FLANGE_NTC, FLANGE_REF, HUB_FB, TXSUP_CT, TXSUP_EN, TXSUP_QOD, VGG_FB
+  MODEL_ABSENT (3): EXP_INT, SCL, SDA
+
+BOARD P, UNDECIDED (15):
+  NO_DECLARATION (15): FUSE, FUSE_G, FUSE_GQ, PACK_F, PACK_MID, PRES_J, PTC, SEC_COUT, SEC_DOUT, SEC_V1, SEC_V2, SEC_V3, SEC_V4, TS_SEC, TS_SEC_J

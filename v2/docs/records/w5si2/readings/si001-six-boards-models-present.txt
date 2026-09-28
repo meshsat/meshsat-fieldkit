@@ -1,0 +1,155 @@
+SI-001 AT THE SCHEMATIC PHASE, taken in scratch outside any tree: fnd/w5si2 at e504d5c1 with board C's four declarations applied in the scratch view, models PRESENT
+Prototype design work: nothing has been built or measured. tools/pcb_edge_rates.yaml sha256/16 0689086680f7a4a4.
+
+board | netlist sha256/16 | signal | slow | non-slow | by a published figure | by a bound | undecided (no declaration + model absent + other) | answered | layout-bound (figure-held + BOUND_DECIDES) | models: state, asked, absent | verdict
+A | 0a2b59087bcc2678 | 290 | 170 | 120 | 7 | 75 | 38 (38 + 0 + 0) | 19 | 63 (1 + 62) | PRESENT, 5, 0 | INCONCLUSIVE
+B | 028997a6c5e8810f | 886 | 324 | 562 | 103 | 451 | 8 (8 + 0 + 0) | 361 | 193 (40 + 153) | PRESENT, 10, 0 | INCONCLUSIVE
+C | 3fddbb3edcd4248a | 134 | 101 | 33 | 4 | 29 | 0 (0 + 0 + 0) | 10 | 23 (0 + 23) | PRESENT, 6, 0 | INCONCLUSIVE
+D | 7a2c0ac2190b141a | 135 | 88 | 47 | 20 | 19 | 8 (8 + 0 + 0) | 26 | 13 (2 + 11) | PRESENT, 5, 0 | INCONCLUSIVE
+E | 56adc9746d61c4e0 | 83 | 42 | 41 | 4 | 37 | 0 (0 + 0 + 0) | 10 | 31 (0 + 31) | NOT_ASKED, 0, 0 | INCONCLUSIVE
+P | 760ac6f74d62d194 | 40 | 20 | 20 | 0 | 5 | 15 (15 + 0 + 0) | 4 | 1 (0 + 1) | NOT_ASKED, 0, 0 | INCONCLUSIVE
+all | | 1568 | 745 | 823 | 138 | 616 | 69 (69 + 0 + 0) | 430 | 324 (43 + 281) | |
+
+DECIDED BY A PUBLISHED FIGURE, by what kind of figure: IBIS 74, STANDARD 64
+
+BOARD A, UNDECIDED (38):
+  NO_DECLARATION (38): FE_BLEED, FE_BLEED_G, FE_CSF, FE_CSGF, FE_CTR2, FE_GVDD, FE_ISNS_N, FE_ISNS_P, FE_LATCH, FE_RUN, FE_UVS, FE_VINP, FE_VISNS, FE_VZ, HF_CSF, HF_CSGF, HF_ISNS_N, HF_ISNS_P, HF_VINP, MAIN_PDT, OUTLET_OK, PA_CSF, PA_CSGF, PA_ISNS_N, PA_ISNS_P, PA_VINP, POE_CSF, POE_CSGF, POE_ISNS_N, POE_ISNS_P, S2_CSF, S2_CSGF, S2_ISNS_N, S2_ISNS_P, SD_CSF, SD_CSGF, SD_ISNS_N, SD_ISNS_P
+
+BOARD B, UNDECIDED (8):
+  NO_DECLARATION (8): 5G_DCHG, 5G_TPR_CT, CARD1_PERST_n, CARD2_PERST_n, CARD3_PERST_n, EMCON_ON1, EMCON_ON2, EMCON_ON3
+
+BOARD C, NET BY NET, every net outside LOW_SPEED_OR_DC that is not decided by a published figure:
+  EPD_CS [entry EPD_CS, CLOCKED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 7 GPIO5; FAR-PDI-EPD: beyond J_EPD (far end C-EPD): FAR-PDI-EPD
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  EPD_DC [entry EPD_DC, CLOCKED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 6 GPIO4; FAR-PDI-EPD: beyond J_EPD (far end C-EPD): FAR-PDI-EPD
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  EPD_SCL [entry EPD_SCL, CLOCKED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 4 GPIO2; FAR-PDI-EPD: beyond J_EPD (far end C-EPD): FAR-PDI-EPD
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  EPD_SDA [entry EPD_SDA, CLOCKED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 5 GPIO3; FAR-PDI-EPD: beyond J_EPD (far end C-EPD): FAR-PDI-EPD
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  EPD_SW [entry EPD_SW, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND POWER-STAGE-NODES; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: POWER-STAGE-NODES: class entry EPD_SW, POWER-STAGE-NODES
+      why a bound: A converter's switch node, bootstrap node and gate drives, and a hot-swap or ideal-diode controller's gate, move at a rate the controller's driver and the power FET's charge set together. The makers publish driver resistances and typical switching times at a test load, and LM5176's own datasheet says of the switching times that they come from the MOSFET's data sheet or the lab. No maker states a lowest edge for these
+      documents searched: v2/vendor/ti/lm5176-datasheet.pdf p. 26 (sha256/16 98191bec36d43771)
+  EXP_INT [entry EXP_INT, CLOCKED_DIGITAL]: 0.0 ns, BOUND TI-PCA9555; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: TI-PCA9555: U1 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V; TI-PCA9555: U2 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V; RPI-RP2040: U3 pin 36 GPIO24; TI-PCA9555: beyond J_PANEL on board A: U27 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V; TI-PCA9555: beyond J_PANEL on board A: U28 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V; MICROCHIP-KSZ9897: beyond J_PANEL on board B: U1 pin 94 INTRP_N; TI-TPS23861: beyond J_PANEL on board B: U5 pin 6 INT; TI-PCA9555: beyond J_PANEL on board B: U6 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V; TI-PCA9555: beyond J_PANEL on board B: U7 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V; ADI-DS3231SN: beyond J_PANEL on board B: U9 pin 3 EXP_INT; TI-PCA9555: beyond J_PANEL on board D: U16 pin 1 NINT: 3 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] PCA9555_INT_33 [Ramp] dV/dt_f typ: dV 1.84 V is 60 percent of its own V-t table's swing (3.053 V) and dt 0.236 ns is 0.20 of the time that table takes from 20 to 80 percent (1.2 ns), R_fixture 500 ohm, V_fixture 3.3 V
+      a published figure beside it, deciding nothing: 12.6129 ns (TI-TMP117: beyond J_PANEL on board B: U10 pin 3 ALERT, alert_3p3 f max)
+      why a bound: 
+      documents searched: none named
+  HB1 [entry HB?, CLOCKED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 13 GPIO10; DISCRETE-MOSFET: beyond J_PANEL on board B: Q105 pin 3 D
+      a published figure beside it, deciding nothing: 0.451 ns (ST-STM32H743: beyond J_PANEL on board B: U41 pin 30 PA6, io8_ft_hs_3v3 f typ)
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  HB2 [entry HB?, CLOCKED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 14 GPIO11; DISCRETE-MOSFET: beyond J_PANEL on board B: Q205 pin 3 D
+      a published figure beside it, deciding nothing: 0.451 ns (ST-STM32H743: beyond J_PANEL on board B: U41 pin 31 PA7, io8_ft_hs_3v3 f typ)
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  HB3 [entry HB?, CLOCKED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 15 GPIO12; DISCRETE-MOSFET: beyond J_PANEL on board B: Q305 pin 3 D
+      a published figure beside it, deciding nothing: 0.451 ns (ST-STM32H743: beyond J_PANEL on board B: U41 pin 32 PC4, io8_ft_hs_3v3 f typ)
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  PANEL_PWM [entry PANEL_PWM, CLOCKED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; ANSWERED in the netlist: series resistor R19 100R to Q2_G (a screen)
+      governed by: RPI-RP2040: U3 pin 11 GPIO8
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  PWM1 [entry PWM1, CLOCKED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; ANSWERED in the netlist: series resistor R44 100R to Q4_G (a screen)
+      governed by: RPI-RP2040: U3 pin 12 GPIO9
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  Q2_D [entry Q?_D, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND DISCRETE-MOSFET; ANSWERED in the netlist: series resistor R18 47R to Q1_G (a screen)
+      governed by: DISCRETE-MOSFET: Q2 pin 3 D
+      why a bound: A discrete FET's drain moves at the rate its gate drive and its own charge set; its datasheet gives typical switching times at one test circuit (AO3401A: turn-on rise 3.5 ns typical), which are neither a minimum nor this circuit. The gate pin drives nothing: pin function G, or pin 4 of the SON-8 and TDSON-8 power FETs (CSD19532Q5B, CSD18510Q5B, CSD17570Q5B, BSC039N06NS, BSC028N06NS: pins 1 to 3 source, 4 gate, 5 to 8
+      documents searched: v2/vendor/power/aos-ao3401a-p-mosfet.pdf p. 2 (sha256/16 0d8e3261ae280e00); v2/vendor/power/jscj-2n7002-c8545.pdf p. 1 (sha256/16 7941fb423af7c6c6)
+  Q1_G [entry Q?_G, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND DISCRETE-MOSFET; ANSWERED in the netlist: series resistor R18 47R to Q2_D (a screen)
+      governed by: DISCRETE-MOSFET: across R18 from Q2_D: Q2 pin 3 D
+      why a bound: A discrete FET's drain moves at the rate its gate drive and its own charge set; its datasheet gives typical switching times at one test circuit (AO3401A: turn-on rise 3.5 ns typical), which are neither a minimum nor this circuit. The gate pin drives nothing: pin function G, or pin 4 of the SON-8 and TDSON-8 power FETs (CSD19532Q5B, CSD18510Q5B, CSD17570Q5B, BSC039N06NS, BSC028N06NS: pins 1 to 3 source, 4 gate, 5 to 8
+      documents searched: v2/vendor/power/aos-ao3401a-p-mosfet.pdf p. 2 (sha256/16 0d8e3261ae280e00); v2/vendor/power/jscj-2n7002-c8545.pdf p. 1 (sha256/16 7941fb423af7c6c6)
+  Q2_G [entry Q?_G, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; ANSWERED in the netlist: series resistor R19 100R to PANEL_PWM (a screen)
+      governed by: RPI-RP2040: across R19 from PANEL_PWM: U3 pin 11 GPIO8
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  Q3_G [entry Q?_G, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND LVC1G34-BUFFER; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: LVC1G34-BUFFER: across R37 from TR_APRS: beyond J_PANEL on board D: across R48 from PTT_MIR: U18 pin 4 PTT_MIR; RPI-RP2040: across R37 from TR_APRS: U3 pin 35 GPIO23
+      why a bound: A 74LVC1G34 buffer whose value field names no maker; both makers' sheets held (TI SN74LVC1G34, Diodes 74LVC1G34) publish propagation delays and no output transition, and no IBIS model of either is held. TI's LVC models place the expected edge at 0.11 to 0.28 ns; the bound written is instantaneous
+      documents searched: v2/vendor/ti/ti-sn74lvc1g34.pdf p. 5 (sha256/16 04384d3a3cf65b2b); v2/vendor/diodes/diodes-74lvc1g34.pdf p. 3 (sha256/16 efd2d7978bb880b7)
+  Q4_G [entry Q?_G, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; ANSWERED in the netlist: series resistor R44 100R to PWM1 (a screen)
+      governed by: RPI-RP2040: across R44 from PWM1: U3 pin 12 GPIO9
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  QSPI_D0 [entry QSPI_*, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 53 QSPI_SD0; WINBOND-W25Q16JV: U4 pin 5 QSPI_D0
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  QSPI_D1 [entry QSPI_*, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 55 QSPI_SD1; WINBOND-W25Q16JV: U4 pin 2 QSPI_D1
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  QSPI_D2 [entry QSPI_*, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 54 QSPI_SD2; WINBOND-W25Q16JV: U4 pin 3 QSPI_D2
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  QSPI_D3 [entry QSPI_*, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 51 QSPI_SD3; WINBOND-W25Q16JV: U4 pin 7 QSPI_D3
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  QSPI_SCLK [entry QSPI_*, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 52 QSPI_SCLK; WINBOND-W25Q16JV: U4 pin 6 QSPI_SCLK
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  QSPI_SS [entry QSPI_*, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 56 QSPI_SS_N; WINBOND-W25Q16JV: U4 pin 1 QSPI_SS
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  SCL [entry SCL, CLOCKED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 3 GPIO1; VISHAY-VEML7700: U_LIGHT pin 1 SCL
+      a published figure beside it, deciding nothing: 0.451 ns (ST-STM32H743: beyond J_PANEL on board B: U41 pin 92 PB6, io8_ft_hs_3v3 f typ)
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  SDA [entry SDA, CLOCKED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 2 GPIO0; VISHAY-VEML7700: U_LIGHT pin 4 SDA; TI-BQ25731: beyond J_PANEL on board A: U3 pin 12 SDA; TI-TMP117: beyond J_PANEL on board B: U10 pin 6 SDA: 2 [Ramp] cell(s) of its admitted model(s) are contradicted by the model's own V-t table, so the file gives this pin no transition time: [Model] sda_3p3 [Ramp] dV/dt_f min: dV 1.119 V is 38 percent of its own V-t table's swing (2.907 V) and dt 35.63 ns is 0.57 of the time that table takes from 20 to 80 percent (62.22 ns), R_fixture 967 ohm, V_fixture 3.3 V; MICROCHIP-ATECC608B: beyond J_PANEL on board B: U8 pin 5 SDA
+      a published figure beside it, deciding nothing: 0.451 ns (ST-STM32H743: beyond J_PANEL on board B: U41 pin 93 PB7, io8_ft_hs_3v3 f typ)
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  SWCLK [entry SW*, CLOCKED_DIGITAL]: 0.0 ns, BOUND FAR-BENCH-PROBE; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: FAR-BENCH-PROBE: beyond TP1 (far end C-SWD): FAR-BENCH-PROBE
+      why a bound: A bench instrument (a debug probe, a USB-UART adapter) on a bench header is not part of the kit and its edge is not this design's; it is present only at bring-up and service. The bound is instantaneous
+      documents searched: v2/vendor/cm5/cm5-datasheet.pdf p. 12 (sha256/16 80070fefd8db6e8a)
+  SWDIO [entry SW*, CLOCKED_DIGITAL]: 0.0 ns, BOUND RPI-RP2040; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: RPI-RP2040: U3 pin 25 SWD
+      why a bound: The RP2040 datasheet documents a slew-rate control bit and a drive-strength field per pad and publishes no transition time for either setting, and Raspberry Pi offers no IBIS model on the RP2040's product and document pages (datasheets.raspberrypi.com and pip.raspberrypi.com, read 27 September 2026). The bound is instantaneous
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 303 (sha256/16 be56fbb75ba0ae9e)
+  XIN [entry XIN, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND OSCILLATOR-NODES; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: OSCILLATOR-NODES: class entry XIN, OSCILLATOR-NODES
+      why a bound: A crystal oscillator's input and output nodes carry the amplifier's output shaped by the crystal and its load capacitors. No maker of these oscillators (the RP2040's XOSC, the STM32H743's HSE, the KSZ9897R's, the TUSB2046B's and the PCM2912A's) states the amplifier's transition, and the pin's GPIO model does not describe it. The bound is instantaneous (ER-D8).
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 217 (sha256/16 be56fbb75ba0ae9e); v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf p. 123 (sha256/16 f6e620179006c8c4)
+  XOUT [entry XOUT*, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND OSCILLATOR-NODES; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: OSCILLATOR-NODES: class entry XOUT*, OSCILLATOR-NODES
+      why a bound: A crystal oscillator's input and output nodes carry the amplifier's output shaped by the crystal and its load capacitors. No maker of these oscillators (the RP2040's XOSC, the STM32H743's HSE, the KSZ9897R's, the TUSB2046B's and the PCM2912A's) states the amplifier's transition, and the pin's GPIO model does not describe it. The bound is instantaneous (ER-D8).
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 217 (sha256/16 be56fbb75ba0ae9e); v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf p. 123 (sha256/16 f6e620179006c8c4)
+  XOUT_R [entry XOUT*, HIGH_SPEED_DIGITAL]: 0.0 ns, BOUND OSCILLATOR-NODES; LAYOUT-BOUND, BOUND_DECIDES
+      governed by: OSCILLATOR-NODES: class entry XOUT*, OSCILLATOR-NODES
+      why a bound: A crystal oscillator's input and output nodes carry the amplifier's output shaped by the crystal and its load capacitors. No maker of these oscillators (the RP2040's XOSC, the STM32H743's HSE, the KSZ9897R's, the TUSB2046B's and the PCM2912A's) states the amplifier's transition, and the pin's GPIO model does not describe it. The bound is instantaneous (ER-D8).
+      documents searched: v2/vendor/rp2040/rpi-rp2040-datasheet.pdf p. 217 (sha256/16 be56fbb75ba0ae9e); v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf p. 123 (sha256/16 f6e620179006c8c4)
+
+BOARD C, decided by a published figure:
+  USB_DM_R [entry USB_D*_R]: 4.0 ns, STANDARD USB2-FS (class entry USB_D*_R, USB2-FS); answered: series resistor R3 27R to USB_PNL_N (a screen)
+  USB_DP_R [entry USB_D*_R]: 4.0 ns, STANDARD USB2-FS (class entry USB_D*_R, USB2-FS); answered: series resistor R2 27R to USB_PNL_P (a screen)
+  USB_PNL_N [entry USB_PNL_*]: 4.0 ns, STANDARD USB2-FS (class entry USB_PNL_*, USB2-FS); answered: series resistor R3 27R to USB_DM_R (a screen)
+  USB_PNL_P [entry USB_PNL_*]: 4.0 ns, STANDARD USB2-FS (class entry USB_PNL_*, USB2-FS); answered: series resistor R2 27R to USB_DP_R (a screen)
+
+BOARD D, UNDECIDED (8):
+  NO_DECLARATION (8): FLANGE_AIN0, FLANGE_NTC, FLANGE_REF, HUB_FB, TXSUP_CT, TXSUP_EN, TXSUP_QOD, VGG_FB
+
+BOARD P, UNDECIDED (15):
+  NO_DECLARATION (15): FUSE, FUSE_G, FUSE_GQ, PACK_F, PACK_MID, PRES_J, PTC, SEC_COUT, SEC_DOUT, SEC_V1, SEC_V2, SEC_V3, SEC_V4, TS_SEC, TS_SEC_J
