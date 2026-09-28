@@ -37,20 +37,27 @@ def _box_mm(bb):
     return (bb.GetLeft() / MM, bb.GetTop() / MM, bb.GetRight() / MM, bb.GetBottom() / MM)
 
 
-def allowance(board, path=None):
-    """(mm, source): the via allowance of this board's own stackup, or of the default row for its copper layer
-    count where the board file carries no stackup yet (a board still in the placement generator)."""
+def allowance_row(board, path=None):
+    """(stackup row or None, source): the row the via allowance is computed from, the board file's own stackup, or
+    the default row for its copper layer count where the board file carries none yet (a board still in the
+    placement generator)."""
     layers = []
     if path and os.path.exists(path):
         try: layers = stackup_read.layers(path)
         except Exception: layers = []
     row = dr.stack_from_layers(layers)
     if len([x for x in row if len(x) == 2]) >= 2 and any(len(x) == 4 for x in row):
-        return dr.via_allowance_mm(row), "the board file's own stackup"
+        return row, "the board file's own stackup"
     n = board.GetCopperLayerCount()
     name = {4: "JLC04161H-7628", 6: "JLC06161H-3313", 8: "JLC08161H-2116"}.get(n)
     if name is None: return None, "a board of %d copper layers has no inner plane to return through" % n
-    return dr.via_allowance_mm(stackup_write.STACKS[name]), "stackup_write's row %s, the default for %d layers" % (name, n)
+    return stackup_write.STACKS[name], "stackup_write's row %s, the default for %d layers" % (name, n)
+
+
+def allowance(board, path=None):
+    """(mm, source): the via allowance of `allowance_row`'s row at the page's 0.8 mm via pitch (section 5.2)."""
+    row, src = allowance_row(board, path)
+    return (None if row is None else dr.via_allowance_mm(row)), src
 
 
 def closures(path, board):

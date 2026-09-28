@@ -334,3 +334,22 @@ def t_a_ground_pad_with_a_via_no_other_pad_lands_on_has_its_own():
     assert r["own"] is True and r["shared_with"] == [], r
     none = dr.own_via(pad, [{"xy": (10.0, 14.0), "net": "GND", "r": 0.3}], far)
     assert none["via"] is None and none["own"] is False, "a via 4 mm away is no via of this pad"
+
+
+def t_a_far_side_seat_is_priced_at_its_own_via_pitch_where_it_has_two_vias():
+    """T9: "On a placed board it is re-read with the seat's own via pitch" (29 September 2026). A pair 0.8 mm apart
+    reads the page's allowance; 1.6 mm apart reads more (the loop is larger); a pad with no via of its net within
+    1.5 mm gives no pitch, and the caller keeps the page's 0.8 mm and says so."""
+    import stackup_write as sw
+    row = sw.STACKS["JLC04161H-7628"]
+    rail = {"xy": (10.0, 10.0), "net": "+3V3"}; gnd = {"xy": (11.0, 10.0), "net": "GND"}
+    at = lambda gx: [{"xy": (9.6, 10.0), "net": "+3V3", "r": 0.3}, {"xy": (gx, 10.0), "net": "GND", "r": 0.3},
+                     {"xy": (10.0, 10.4), "net": "SIG", "r": 0.3}]
+    p, why = dr.seat_via_pitch(rail, gnd, at(10.4))
+    assert abs(p - 0.8) < 1e-9 and "own via pair" in why, (p, why)
+    assert abs(dr.via_allowance_mm(row, via_pitch=p) - dr.via_allowance_mm(row)) < 1e-9
+    p2, _ = dr.seat_via_pitch(rail, gnd, at(11.2))
+    assert abs(p2 - 1.6) < 1e-9 and dr.via_allowance_mm(row, via_pitch=p2) > dr.via_allowance_mm(row) + 0.3
+    none, why = dr.seat_via_pitch(rail, gnd, at(14.0))
+    assert none is None and "no via of GND" in why, why
+    assert dr.seat_via_pitch(rail, None, at(10.4))[0] is None

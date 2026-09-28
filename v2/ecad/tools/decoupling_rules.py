@@ -379,6 +379,27 @@ def far_side(entry, board_two_sided, cap_box=None, fan_boxes=(), tht_boxes=()):
     return True, "%s: a far-side seat, judged by its in-plane distance plus the via allowance" % cap
 
 
+def seat_via_pitch(rail_pad, gnd_pad, vias, reach_mm=1.5, radius=0.15):
+    """(pitch mm or None, why): the distance between the via a far-side capacitor's rail pad reaches and the via its
+    ground pad reaches, each the nearest of its pad's net within `reach_mm` (T9: "On a placed board it is re-read
+    with the seat's own via pitch"). None, with the reason, when either via is missing or the two are too close for
+    the two-wire form (a pitch at or under twice the via radius), and the caller keeps the page's 0.8 mm.
+    Pads and vias are the dictionaries `own_via` takes."""
+    got = []
+    for pad in (rail_pad, gnd_pad):
+        if pad is None: return None, "the capacitor has no second pad"
+        best = None
+        for v in vias:
+            if v["net"] != pad["net"]: continue
+            d = math.hypot(v["xy"][0] - pad["xy"][0], v["xy"][1] - pad["xy"][1])
+            if d <= reach_mm + 1e-9 and (best is None or d < best[0]): best = (d, v)
+        if best is None: return None, "no via of %s within %.1f mm of its pad" % (pad["net"], reach_mm)
+        got.append(best[1])
+    p = math.hypot(got[0]["xy"][0] - got[1]["xy"][0], got[0]["xy"][1] - got[1]["xy"][1])
+    if p <= 2 * radius + 1e-6: return None, "its two vias are %.2f mm apart, under the two-wire form's floor" % p
+    return p, "its own via pair, %.2f mm apart" % p
+
+
 def loop_equivalent_mm(d_in_plane, far, allowance_mm):
     return d_in_plane + (allowance_mm if far else 0.0)
 
