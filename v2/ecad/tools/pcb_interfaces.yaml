@@ -385,7 +385,10 @@ board_to_board:
            status: "DISAGREE at the lead (A 3.2 A against B 3.8 A typical); enable DEV_EN, ON by design since 458b2873 (R42)"}
         - {rail: "+54V_POE", declared: "0.3 A typical, 0.6 A peak on both ends (gen_sch_a.py:125, gen_sch_b.py:242)",
            enable: "POE_EN = POE_SW_EN AND OUTLET_OK: OFF at power-up and while the PA keys (S-14)"}
-      contact_rating: "JST-VH is a 10 A class family per the generator descriptions; datasheet not held (TBD)"
+      contact_rating: "JST VH catalogue held (v2/vendor/connectors/jst-vh-catalogue.pdf, page 1): 10 A per contact when
+        using AWG 16 with the standard header, which the four 5 V leads are; 7 A is stated for AWG 18 with the shrouded
+        header only, so the fitted B2P-VH standard header with AWG 18 on J_54V carries no stated rating (INCONCLUSIVE;
+        v2/docs/records/cx1/ANALYSIS.md)"
       hot_plug: "not hot-pluggable (the session's choice SC-HF-04 of 27 September 2026 under the owner's standing rule, v2/docs/HW-FW-CONTRACT.md section 8): crimped leads, mate with the kit off"
       back_power: "the always-on fabric on +5V_DEV and +3V3_DEV applies voltage to the pins of an unpowered module
         (FAILOVER-FABRIC.md FAB-02; remedy: each bank's and each display switch's enable qualified by the selected slot's
