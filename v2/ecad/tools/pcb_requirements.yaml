@@ -2397,6 +2397,10 @@ open_items:
   - id: L-01
     class: LATER
     status: OPEN
+    disposition: PROCUREMENT
+    disposition_why: >-
+      A fabrication quote taken before an order (decision 43, D-09). It changes no record's evidence; the order set is
+      gated by it, not a requirement's verdict.
     title: >-
       Board B eight-layer fabrication price and any per-stackup fixed fee (decision 43): quoted before any order;
       spend beyond the SIDN voucher needs a quote and the owner's approval (D-09).
@@ -2482,6 +2486,11 @@ open_items:
   - id: S-23
     class: SESSION
     status: OPEN
+    disposition: HOLD_TRACKED
+    disposition_why: >-
+      Board A's decision-31 hold lives in tools/pcb_board_holds.yaml and gates layout entry through
+      rules_status.layout_entry; the records TRN-001 on board A satisfies wait on S-88, which the hold's review closes.
+      This item tracks the hold's lifting condition C-A31, not a verdict.
     title: "Board A's decision-31 hold kept until criterion C-A31 passes."
   - id: S-27
     class: SESSION
@@ -2709,6 +2718,11 @@ open_items:
   - id: S-61
     class: SESSION
     status: OPEN
+    disposition: CIRCUIT_ITEM
+    disposition_why: >-
+      A board D circuit item (a current limit on the hub port J_USB3 that the monitor's touch USB takes, SC-63) that no
+      registry record judges by rule. Board D's generator owner applies it in the circuit round; PWR-001 on D reads the
+      result then.
     title: >-
       (hc5-layer5: SC-63, drafted as SC-HF-06; HF-F06) The monitor's touch USB takes board D's spare hub port J_USB3 (the
       session's choice SC-63, drafted as SC-HF-06 in v2/docs/HW-FW-CONTRACT.md section 8; no board B change; the HAL shares it
@@ -2739,6 +2753,12 @@ open_items:
   - id: S-65
     class: SESSION
     status: OPEN
+    disposition: CIRCUIT_ITEM
+    disposition_why: >-
+      Board A's +3V3 clamp D3 above the rail's parts' absolute maximum is an internal-rail protection finding for board
+      A's generator owner. No record's acceptance names the rail's clamp coordination, and decision 31's review covers
+      exposed conductors, not internal rails. The circuit round applies it and TRN-001 and PWR-001 on A are re-taken
+      then.
     title: >-
       Board A's +3V3 clamp D3 (SMBJ5.0A: VBR 6.40 to 7.00 V at 10 mA, 9.2 V at IPP, MDD SMBJ series) sits above the
       absolute maximum of the rest of the rail: U27 and U28 (PCA9555, 6.0 V, SCPS131J), the six INA226 (6.0 V,
@@ -2761,6 +2781,11 @@ open_items:
   - id: S-67
     class: SESSION
     status: OPEN
+    disposition: DECLARATION
+    disposition_why: >-
+      Board A's intent file declares its switching nodes at VBAT's nominal and not its working maximum. The figure feeds
+      the spacing and derating instruments, not a record's acceptance directly; board A's generator owner corrects the
+      declaration in the circuit round and those instruments re-read.
     title: >-
       Board A's switching nodes fed from VBAT (B33_SW, S1_SW, S3_SW and the LM5176 stages' SW1 and BOOT1) are declared
       at VBAT's 14.4 V nominal (intent.net_volts reads `volts`), not its 16.8 V working maximum (`v_work`), and the
@@ -2770,6 +2795,10 @@ open_items:
   - id: S-68
     class: SESSION
     status: OPEN
+    disposition: LAYOUT_STAGE
+    disposition_why: >-
+      A netclass pattern list of board A's KiCad project, applied when the layout is drawn. No schematic-phase record
+      rests on it.
     title: >-
       Board A's project netclass patterns PA_SW* and HF_SW* (class SW, the switch nodes) also catch the static enables
       PA_SW_EN and HF_SW_EN, so they take the switch-node class at layout; the new PA_HOLD and HF_HOLD are named out
@@ -2784,6 +2813,11 @@ open_items:
   - id: S-70
     class: SESSION
     status: OPEN
+    disposition: FIRMWARE
+    disposition_why: >-
+      A panel-firmware duty (read EMCON_EF_FLT, log the overvoltage, treat the PA and HF rails as unavailable) owed to
+      HW-FW-CONTRACT.md and PANEL.md. The hardware record REQ-030 reads its EMCON evidence from the netlist; the duty
+      changes no hardware verdict.
     title: >-
       Firmware obligation from EQ-17: U28 (0x24) P1.2 is EMCON_EF_FLT, low when U39 has cut the EMCON gates' supply
       (+3V3 over 3.83 to 4.11 V, or U39's thermal shutdown); the panel firmware reads it, logs a +3V3 overvoltage and
@@ -2882,6 +2916,10 @@ open_items:
   - id: S-81
     class: SESSION
     status: OPEN
+    disposition: PROCESS
+    disposition_why: >-
+      A wording defect of v2/docs/PRODUCT-BRIEF.md's open-items row (FEA-002's counts as EMCON.md states them), for the
+      product brief's writer. CON-010 and FEA-002 carry their own counts.
     title: >-
       (Layer 1, for the product brief's writer; the narrow verification's observation (c),
       v2/docs/reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md section 4, checked at the re-baseline of layer 3 on 27
@@ -2916,6 +2954,11 @@ open_items:
   - id: S-82
     class: SESSION
     status: OPEN
+    disposition: TOOLING
+    disposition_why: >-
+      The instrument rows RF-002's walk gained from stream w4b are in the tool and in the set 6 re-take's readings. The
+      item asks for the instrument's own fixtures and record, not a circuit change; a defect those fixtures found would
+      re-open through RF-002's re-take.
     title: >-
       RF-002's instrument after stream w4b (27 September 2026): the rows board B's circuit needs landed with it
       (tools/tx_inhibit.py from v2/docs/records/w4b/tools/apply_tx_inhibit_w4b.py and apply_tx_inhibit_tests_w4b.py:
@@ -2928,6 +2971,10 @@ open_items:
   - id: S-83
     class: SESSION
     status: OPEN
+    disposition: DECLARATION
+    disposition_why: >-
+      Board C's +3V3 peak declaration against its child EPD_VCC is a declaration for board C's generator owner. PWR-001
+      on C reads the declaration and is re-taken when it changes; no record allocated to board C rests on PWR-001.
     title: >-
       Finding W4C-F5 (stream w4c, 27 September 2026; board C; the stream's independent check): +3V3 declared a 0.20 A
       peak while its child EPD_VCC declares 0.521 A (the e-paper boost's 0.5 A switch-current class into L1, PDi
@@ -2986,6 +3033,10 @@ open_items:
   - id: S-86
     class: SESSION
     status: OPEN
+    disposition: PROCESS
+    disposition_why: >-
+      Documents that cite pcb_pack_protection.yaml by line numbers that moved (the battery packet). A citation refresh
+      for the documents' writer, changing no reading.
     title: >-
       Documents that cite pcb_pack_protection.yaml by line, or describe the rows SC-74 corrected, now point at
       other text: the battery packet (SECONDARY-OT-DECISION.md ':142-158', PRIMARY-CONFIGURATION.md ':51-65',
@@ -3015,6 +3066,8 @@ open_items:
   - id: S-88
     class: SESSION
     status: OPEN
+    limits_reading:
+      - {rule: TRN-001, boards: [a]}
     title: >-
       TRN-001 on board A does not judge VIN_RAW's entry (the independent review of handover H3, finding H3-02,
       v2/docs/reviews/2026-09-27-h3-independent-review.md; erratum f of v2/docs/handover/RELEASE-H3.md).
@@ -3030,6 +3083,8 @@ open_items:
   - id: S-89
     class: SESSION
     status: OPEN
+    limits_reading:
+      - {rule: REL-001, boards: all}
     title: >-
       REL-001's completeness can be false (the independent review of handover H3, finding H3-01, reproduced by the
       reviewer on four fixtures with the tool's own command line). reliability.py takes the population it inspects from
@@ -3048,6 +3103,10 @@ open_items:
   - id: S-90
     class: SESSION
     status: OPEN
+    disposition: TOOLING
+    disposition_why: >-
+      The rule audit's absolute paths (rules_status.py) are a portability defect of the audit files; the audit is
+      re-taken by rules_status in whichever tree judges the pages, so no verdict depends on it.
     title: >-
       The rule audit names its verdicts by absolute path (found at the set 6 integration,
       v2/docs/records/r8int6/fix/validators-760d7f41.txt): v2/ecad/out/rule-audit/<board>.json carries the path of the
@@ -3059,6 +3118,10 @@ open_items:
   - id: S-91
     class: SESSION
     status: OPEN
+    disposition: PROCESS
+    disposition_why: >-
+      The answers owed to handover H3's two fresh checks (H3-RESPONSE.md). It lists corrections whose engineering halves
+      are their own items (S-88, S-89 and S-92 among them) and changes no verdict itself.
     title: >-
       The twenty-eight minor findings of handover H3's two fresh checks (v2/docs/records/handover/H3-COHERENCE-CHECK.md,
       H3-USABILITY-CHECK.md) and the errata g to m of v2/docs/handover/RELEASE-H3.md, answered in the pages and listed
@@ -3069,6 +3132,18 @@ open_items:
       S-64's successor, and the short statement 'no definition change' without the two exceptions DEFINITION-STATUS.md
       reports. None changes the status of layers 1 to 3. Open until H3-RESPONSE.md is filed with every finding answered
       or carried with its reason.
+  - id: S-92
+    class: SESSION
+    status: OPEN
+    title: >-
+      The SA868 VHF exciter's PTT receive threshold, which its maker does not state: RF-002's walk on board D reads the
+      exciter's row UNDECIDED (inhibit_chain_d: 7 pass, 0 failed, 1 undecided of 8 on the set 6 netlist; the text of the
+      row is 'EMCON reaches it in hardware (D key on U2)'), so CON-010, the transmit gate on board D (KEY = PTT_ANY AND
+      TX_INHIBIT_n), cannot read PASS at the desk. S-64 (W3T-F1, TX_INHIBIT_n's fail-safe level with board C unpowered)
+      is closed by SC-67 and that check fails on no board since set 6; this item is the dependency that remains. Open
+      until the maker states the threshold in a held document under v2/vendor/, or bench E-01 of
+      v2/docs/feasibility/EMCON.md measures it on the module (prototype verification, on a built board), and RF-002 is
+      re-taken on board D.
 
 closed_items:
   - id: S-57
@@ -3949,6 +4024,7 @@ records:
       decisions: []
     rule_coverage: NONE
     choices: [SC-02, SC-25]
+    waits_on: [S-84]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: BLOCKER
@@ -4490,7 +4566,7 @@ records:
       rules: [SI-001, PLC-001, IMP-001, IMP-002, PAIR-001, STK-001]
       decisions: [43]
     rule_coverage: PARTIAL
-    waits_on: [S-42, L-05]
+    waits_on: [S-42, L-05, S-84]
     status: FEASIBILITY_OPEN
     evidence_result: INCONCLUSIVE
     evidence_phase: SCHEMATIC
@@ -4603,6 +4679,7 @@ records:
       rules: [DEC-001]
       decisions: [42]
     rule_coverage: PARTIAL
+    waits_on: [S-73]
     status: FEASIBILITY_OPEN
     evidence_result: INCONCLUSIVE
     evidence_phase: SCHEMATIC
@@ -5676,7 +5753,7 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-06, D-11]
     choices: [SC-10, SC-35, SC-49, SC-23]
-    waits_on: [L-04]
+    waits_on: [L-04, S-69]
     status: FEASIBILITY_OPEN
     evidence_result: INCONCLUSIVE
     evidence_phase: SCHEMATIC
@@ -5753,6 +5830,7 @@ records:
       decisions: [31, 34]
     rule_coverage: PARTIAL
     rulings: [D-16]
+    waits_on: [S-88]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: BLOCKER
@@ -5800,7 +5878,7 @@ records:
       decisions: []
     rule_coverage: PARTIAL
     choices: [SC-36]
-    waits_on: [S-53]
+    waits_on: [S-53, S-47]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: BLOCKER
@@ -5946,6 +6024,7 @@ records:
       decisions: []
     rule_coverage: PARTIAL
     rulings: [D-11, D-12]
+    waits_on: [S-60, S-88]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
@@ -6110,6 +6189,7 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-11]
     choices: [SC-10, SC-35, SC-24]
+    waits_on: [S-74, S-75]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: BLOCKER
@@ -6559,6 +6639,7 @@ records:
       decisions: []
     rule_coverage: PARTIAL
     rulings: [D-02c]
+    waits_on: [S-89]
     status: DEFINED
     evidence_result: NOT_YET_TESTED
     release_effect: MUST_JUSTIFY
@@ -6639,7 +6720,7 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-02a, D-02b, D-02d, D-02e]
     choices: [SC-18, SC-27, SC-49]
-    waits_on: [S-55]
+    waits_on: [S-55, S-89]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
@@ -6755,6 +6836,7 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-02a]
     choices: [SC-03, SC-12]
+    waits_on: [S-89]
     status: DEFINED
     evidence_result: NOT_YET_TESTED
     release_effect: MUST_JUSTIFY
@@ -6848,6 +6930,7 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-02c]
     choices: [SC-45, SC-29]
+    waits_on: [S-89]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
@@ -6874,6 +6957,7 @@ records:
       rules: [TRN-001, GND-002]
       decisions: [34]
     rule_coverage: PARTIAL
+    waits_on: [S-88]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
@@ -6905,6 +6989,7 @@ records:
       decisions: [31]
     rule_coverage: PARTIAL
     rulings: [D-17]
+    waits_on: [S-88]
     status: DEFINED
     evidence_result: PASS
     evidence_phase: SCHEMATIC
@@ -8249,8 +8334,9 @@ records:
       rules: [RF-002, SCH-004]
       decisions: []
     rule_coverage: FULL
+    waits_on: [S-92]
     status: DEFINED
-    evidence_result: FAIL
+    evidence_result: INCONCLUSIVE
     evidence_phase: SCHEMATIC
     evidence_class: DESK_REVIEW
     evidence:
@@ -8592,6 +8678,28 @@ records:
           re-decide the record: evidence_result was set to FAIL on RF-002's FAIL rows, those rows now read INCONCLUSIVE,
           and whether the record returns to INCONCLUSIVE is the registry writer's re-read (the re-take changes no
           declaration), so until then it stands FAIL as it was set, bound to the file at 2d36f9b4d0cfa487
+      - >-
+          v2/ecad/pcb-d-aprs-d9/routed/inhibit_chain_d.verdict.json, inhibit_chain_a, safe_lines_d and safe_lines_a
+          re-read at the set 6 integration of 28 September 2026 (branch fnd/int7), and the record RE-DECIDED from them
+          by a stated predicate (the owner's review of the restart plan, amendment XH-04): the elements are the readings
+          this record rests on, on its allocated boards D and A; it reads FAIL if any element reads a failed check,
+          INCONCLUSIVE if none fails and at least one check is undecided or a reading is missing, PASS only if every
+          element is decided and holds. What set FAIL at the re-take of 8ea7867e was W3T-F1 (open item S-64:
+          TX_INHIBIT_n at 1.09 V with board C unpowered under the walk's worst-case Ioff); set 6 remedied it on board
+          C's generator (SC-67: R14 2.2 k and R50 10 k, the line at 0.243 V), S-64 is CLOSED by SC-67 on this line, and
+          inhibit_chain_c PASS of 6 on netlist 3fddbb3edcd4248a, so that check fails on no board. The elements now:
+          inhibit_chain_d INCONCLUSIVE, 7 pass, 0 failed, 1 undecided of 8 on netlist 7a2c0ac2190b141a (undecided:
+          RF-002 SA868 VHF exciter: EMCON reaches it in hardware (D key on U2)); inhibit_chain_a INCONCLUSIVE, 7 pass, 0
+          failed, 2 undecided of 9 on netlist 0a2b59087bcc2678 (undecided: RF-002 30 W VHF power amplifier (RA30H1317M1
+          on the plate): EMCON reaches it in hardware (A power on J_PA); RF-002 QMX HF transceiver: EMCON reaches it in
+          hardware (A power on J_HF)); safe_lines_d PASS on netlist 7a2c0ac2190b141a (2 safety line(s), 0 floating);
+          safe_lines_a PASS on netlist 0a2b59087bcc2678 (7 safety line(s), 0 floating). Failed elements: none;
+          undecided: inhibit_chain_d, inhibit_chain_a; missing: none. Result by the predicate: INCONCLUSIVE. What stays
+          undecided is named, not judged: the SA868 exciter's PTT receive threshold, which its maker does not state
+          (bench E-01 of v2/docs/feasibility/EMCON.md, prototype verification), and on board A the two power-fed rows
+          (the 30 W amplifier on J_PA and the QMX on J_HF), which the walk reaches in hardware and cannot time from a
+          held document. The record therefore waits on S-92 (opened with this entry) and no longer on S-64. A desk
+          reading: no board has been built or measured.
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@7a2c0ac2190b141a"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
@@ -8601,11 +8709,14 @@ records:
     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2825", "v2/docs/PANEL.md section 6", "v2/docs/feasibility/EMCON.md sections 4.1 and 4.2"]
     source_check: VERIFIED
     history: >-
-      Read PASS at d468613e on the generator lines alone, before evidence was classed. Its rules read AWAITING_REVALIDATION
-      and the EMCON page leaves the exciter's row open, so it reads INCONCLUSIVE; the acceptance now names what the trace
-      has to show. Board D's KEY chain was rebuilt in 458b2873 (three 74LVC1G34 buffers, U13 open drain). From the
-      consolidated re-take of 27 September 2026 RF-002 reads FAIL on current-candidate evidence on boards D and A
-      (TX_INHIBIT_n's fail-safe level, W3T-F1), so it reads FAIL.
+      Read PASS at d468613e on the generator lines alone, before evidence was classed. Its rules read
+      AWAITING_REVALIDATION       and the EMCON page leaves the exciter's row open, so it reads INCONCLUSIVE; the
+      acceptance now names what the trace       has to show. Board D's KEY chain was rebuilt in 458b2873 (three
+      74LVC1G34 buffers, U13 open drain). From the       consolidated re-take of 27 September 2026 RF-002 reads FAIL on
+      current-candidate evidence on boards D and A       (TX_INHIBIT_n's fail-safe level, W3T-F1), so it reads FAIL.
+      Re-decided at the set 6 integration of 28 September 2026 by the predicate in the evidence entry of that day: the
+      W3T-F1 check no longer fails on any board (SC-67), the walk reads 0 failed on D and A with the SA868's row and
+      board A's two power-fed rows undecided, so it reads INCONCLUSIVE and waits on S-92.
 
   - id: CON-021
     kind: constraint
@@ -8846,7 +8957,7 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-05]
     choices: [SC-11]
-    waits_on: [S-01, S-02, S-44]
+    waits_on: [S-01, S-02, S-44, S-87]
     status: FEASIBILITY_OPEN
     evidence_result: INCONCLUSIVE
     evidence_phase: SCHEMATIC
@@ -9623,6 +9734,7 @@ records:
       rules: [SCH-003, RF-001]
       decisions: []
     rule_coverage: PARTIAL
+    waits_on: [S-71, S-72]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
@@ -9702,6 +9814,7 @@ records:
       decisions: []
     rule_coverage: PARTIAL
     choices: [SC-45, SC-47]
+    waits_on: [S-62]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
@@ -9744,7 +9857,7 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-15]
     choices: [SC-41, SC-31]
-    waits_on: [S-49]
+    waits_on: [S-49, S-56]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
@@ -9810,7 +9923,7 @@ records:
       decisions: []
     rule_coverage: PARTIAL
     choices: [SC-45]
-    waits_on: [D-18]
+    waits_on: [D-18, S-62]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
@@ -10213,6 +10326,7 @@ records:
       rules: [BAT-002, PWR-003, PI-001, PI-003]
       decisions: [35]
     rule_coverage: FULL
+    waits_on: [S-66, S-74]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: BLOCKER
@@ -11697,7 +11811,7 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-02b]
     choices: [SC-17, SC-18, SC-34]
-    waits_on: [S-54]
+    waits_on: [S-54, S-56]
     status: DEFINED
     evidence_result: FAIL
     evidence_phase: SCHEMATIC
@@ -12156,6 +12270,7 @@ records:
       decisions: []
     rule_coverage: NONE
     choices: [SC-13]
+    waits_on: [S-13]
     status: DEFINED
     evidence_result: PASS
     evidence_phase: SCHEMATIC
@@ -12787,6 +12902,7 @@ records:
       rules: [REL-001, ENV-002]
       decisions: []
     rule_coverage: PARTIAL
+    waits_on: [S-89]
     status: DEFINED
     evidence_result: NOT_YET_TESTED
     release_effect: MUST_JUSTIFY
@@ -14041,7 +14157,7 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-08-reversal, D-08a, D-09]
     choices: [SC-07]
-    waits_on: [S-27, L-07]
+    waits_on: [S-27, L-07, S-63]
     status: FEASIBILITY_OPEN
     evidence_result: INCONCLUSIVE
     evidence_phase: PLACED_BOARD
