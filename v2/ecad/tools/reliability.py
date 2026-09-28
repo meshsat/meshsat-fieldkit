@@ -22,10 +22,17 @@ causes, each repaired here:
   3. THE NETLIST WAS THE NEWEST FILE BY MTIME, and the reading named none. It is the netlist of the board's
      DECLARED phase (`phase_artefacts`, the resolution `rules_status` uses), or for a board with no schematic
      (E5) its declared phase's board file, and the reading records it by path and sha256 with the list's own sha.
+  4. THE LIST WAS BOUND TO NOTHING. A class names a PART and cites that part's figure, and this gate cannot read
+     the part off the value text (reading the value text is the defect above), so nothing showed which netlist a
+     board's classes had been written against. Each board's declaration now carries `written_against`, the
+     sha256 of the artefact its author read (printed by `--pins`); an artefact of another sha is not the one the
+     list speaks of, and the reading is INCONCLUSIVE with the reason, whether the components and nets are the
+     same (a re-export: read the values against the list and re-pin) or differ (the design changed: re-declare).
 
 WHAT IT CHECKS:
   * completeness: every candidate is disposed, exactly once, and a class or an exclusion speaks of the land the
     board really carries (`footprints`), so a class written for one connector family cannot cover another;
+  * the artefact read is the one the board's declaration was written against (`written_against.sha256_16`);
   * a class names its load and its measure;
   * a class's cycle figure cites the maker's document held in this tree, by its sha, with the page and the words;
     a class with no figure says which of three things is true: the maker's document states none
@@ -44,6 +51,10 @@ Usage: reliability.py [--rel pcb_reliability.yaml] [--ecad <dir>] [--board <lett
                       [--manifest <readiness_manifest.json>] [--profiles <dir holding routeflow/>]
                       [--out-dir <dir>] [--json]
        exit 0 PASS, 1 FAIL, 3 INCONCLUSIVE
+       reliability.py --pins [--ecad <dir>] [--manifest ...] [--profiles ...]
+       prints the `written_against` line of every board of the manifest from the declared phase's artefact in
+       this tree, for a person to read against the list and paste; it edits nothing (a sha says nothing about
+       the values, and a substitution is a mismatch until proven)
 """
 import os, re, sys, json, fnmatch, hashlib
 
@@ -231,6 +242,44 @@ def judge_board(letter, b, inv, open_items, ecad=None, vendor=None, rel_dir=None
     if missing:
         why_not.append(missing)
         notes.append("%s, so the list could not be compared with the board" % missing)
+    # ---- THE DECLARATION IS BOUND TO THE ARTEFACT IT WAS WRITTEN AGAINST (28 September 2026). A class names a
+    # PART and cites that part's figure, and this gate cannot read the part off the value text (that reading is the
+    # defect of H3-01), so the list says which artefact its author read: `written_against.sha256_16`, the sha256 of
+    # the declared phase's netlist or board file. An artefact of another sha is not the one the list speaks of. The
+    # reading is INCONCLUSIVE and declares it as a missing input (the artefact the list was written against is not
+    # here), and says whether the components and nets are the same (a re-export: read the values against the list
+    # and re-pin with --pins) or not (the design changed: re-declare the list against it). The comparison below
+    # still runs, because a refusal on the artefact that IS here is real and FAIL wins; a PASS cannot come of it.
+    out["pin"] = None
+    if parts is not None and b is not None:
+        pin = b.get("written_against") if isinstance(b.get("written_against"), dict) else {}
+        said = str(pin.get("sha256_16") or "").strip().lower()
+        c_said = str(pin.get("content16") or "").strip().lower()
+        have, c_have = out["artefact"]["sha256_16"], out["artefact"].get("content16")
+        same = (c_said == c_have) if (c_said and c_have) else None      # None: nothing to compare the design by
+        out["pin"] = {"declared": said or None, "read": have, "bound": bool(said) and said == have, "same_design": same}
+        shown = kind.replace("_", " ")
+        if not re.fullmatch(r"[0-9a-f]{16}", said):
+            missing = ("board %s's declaration does not say which %s it was written against (written_against: "
+                       "{sha256_16: ...}, printed by reliability.py --pins), so the list cannot be bound to the %s "
+                       "that was read (%s, sha256 %s)" % (L, shown, shown, _pa.rel(path), have))
+        elif said != have:
+            if same is True:
+                tail = ("its components and nets are the same (a re-export of the same design): read the values "
+                        "against the list and re-pin it (reliability.py --pins)")
+            elif same is False:
+                tail = "its components or nets differ, so the design changed: re-declare the list against it and re-pin"
+            elif c_have:
+                tail = ("the pin carries no content identity, so whether the design is the same cannot be told: read "
+                        "the netlist against the list and re-pin (reliability.py --pins)")
+            else:
+                tail = ("whether the design is the same cannot be told from a board file: read it against the list "
+                        "and re-pin (reliability.py --pins)")
+            missing = ("board %s's declaration was written against the %s of sha256 %s and the declared phase's %s "
+                       "%s reads %s: %s" % (L, shown, said, shown, _pa.rel(path), have, tail))
+        if missing:
+            why_not.append(missing)
+            notes.append("%s; the comparison below is of the artefact that is here" % missing)
     if parts is not None and b is not None:
         out["netlist"] = True
         found = _wi.candidates(parts, inv, (WEAR, NOT_WEAR_PREFIX, identity))
@@ -346,6 +395,39 @@ def identity(value):
     return v
 
 
+def pins(ecad=None, manifest=None, profiles=None):
+    """The `written_against` record of every board of the manifest, read from the declared phase's artefact in this
+    tree: [(letter, kind, record or None, path)], the record as `phase_artefacts.record` gives it with `parts`, or
+    {"unreadable": why} when the artefact cannot be read. Printed by --pins and never written into the list by this
+    tool: a sha says nothing about the VALUES, and re-pinning is a person reading the parts against the list."""
+    out = []
+    with _wi.declared(manifest, profiles) as _pa:
+        for letter in _pa.letters():
+            kind, path = _wi.artefact(letter, ecad)
+            rec = None
+            if path and os.path.isfile(path):
+                try:
+                    parts, raw = _wi.read(kind, path)
+                    rec = _pa.record(path, raw, parts=len(parts))
+                except _wi.Unreadable as e:
+                    rec = {"unreadable": str(e)}
+            out.append((letter, kind, rec, _pa.rel(path) if path else None))
+    return out
+
+
+def _print_pins(ecad, manifest, profiles):
+    for letter, kind, rec, path in pins(ecad, manifest, profiles):
+        shown = (kind or "artefact").replace("_", " ")
+        if rec is None:
+            print(" %s:   # no %s of the declared phase in this tree (%s)" % (letter, shown, path)); continue
+        if "unreadable" in rec:
+            print(" %s:   # the %s %s cannot be read: %s" % (letter, shown, path, rec["unreadable"])); continue
+        extra = (', content16: "%s"' % rec["content16"]) if rec.get("content16") else ""
+        print(' %s:\n   written_against: {artefact: %s, path: "%s", sha256_16: "%s"%s}   # %d part(s); read the '
+              'values against the list before pasting' % (letter, kind, rec["path"], rec["sha256_16"], extra, rec["parts"]))
+    return 0
+
+
 def _inputs(r, rel, only):
     """What the reading judged, by content: the list, and per board the artefact of its declared phase."""
     import phase_artefacts as _pa
@@ -365,6 +447,8 @@ def main(argv):
     out_dir = _v.opt(argv, "--out-dir", None)
     kw = {"out_dir": out_dir} if out_dir else {}
     only = (_v.opt(argv, "--board", None) or "").lower() or None
+    if "--pins" in argv:
+        return _print_pins(ecad, _v.opt(argv, "--manifest", None), _v.opt(argv, "--profiles", None))
     try:
         r = judge(rel, ecad, only, vendor, _v.opt(argv, "--manifest", None), _v.opt(argv, "--profiles", None))
     except Exception as e:

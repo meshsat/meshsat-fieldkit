@@ -1,12 +1,12 @@
-THE FOUR-CASE MATRIX ON THE UNREPAIRED TOOL (worker d6rel, MESHSAT-1357, taken 27 September 2026 23:57 CEST)
+THE FOUR-CASE MATRIX ON THE UNREPAIRED TOOL (worker d6rel, MESHSAT-1357, first taken 27 September 2026 23:57 CEST, re-taken 28 September 2026 16:46 CEST with the final matrix.py)
 The tool is git show 73ae2f21:v2/ecad/tools/reliability.py written to $SP/old/ ($SP is the session's scratch directory, outside the tree);
 case 4's list is git show 73ae2f21:v2/ecad/tools/pcb_reliability.yaml beside it. Command, from anywhere:
   python3 v2/docs/records/d6rel/matrix.py v2/ecad/tools $SP/old/reliability.py
-Exit code of the matrix script: 1 (two of the four cases are not as wanted: cases 3 and 4, the reviewer's two silent cases).
+Exit code of the matrix script: 1 (two of the four cases are not as wanted: cases 3 and 4, the reviewer's two silent cases). The sheets are as the reviewer wrote them (no pin: the unrepaired tool knows no such key).
 Nothing was built or measured: these are readings of fixture netlists.
 
 tool under test : $SP/old/reliability.py  sha256/16 71d0872195905c9d
-tools directory : /home/claude-runner/worktrees/meshsat-fieldkit/d6rel/v2/ecad/tools
+tools directory : <worktree>/v2/ecad/tools
 case 4's list   : $SP/old/pcb_reliability.yaml  sha256/16 fbf56eb06df1d007
 fixtures in     : a temporary directory outside the tree (mkdtemp prefix d6rel-matrix-)
 

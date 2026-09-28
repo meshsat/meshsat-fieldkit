@@ -133,9 +133,18 @@ def main(argv):
     )
     code = {"PASS": 0, "FAIL": 1, "INCONCLUSIVE": 3}
     bad = 0
+    src = open(tool, encoding="utf-8").read()
     for name, parts, sh, want, what in cases:
         d, ecad, vendor, p = fixture(root, name, parts, sh)
         if parts is None: vendor = os.path.normpath(os.path.join(tools, "..", "..", "vendor"))   # case 4: the tree's documents
+        if parts is not None and "written_against" in src:
+            # The repaired tool binds each board's declaration to the artefact it was written against (28 September
+            # 2026): the fixture sheet is pinned to the fixture netlist's sha, as the committed list is to the
+            # committed netlists. The unrepaired tool knows no such key; its sheet is left as the reviewer wrote it.
+            raw = open(os.path.join(ecad, "pcb-a-power", "out", "pcb-a-power.net"), "rb").read()
+            pinned = sh.replace(" a:\n", ' a:\n   written_against: {sha256_16: "%s"}\n' % hashlib.sha256(raw).hexdigest()[:16], 1)
+            assert pinned != sh
+            open(p, "w", encoding="utf-8").write(pinned)
         r, v = run(tools, tool, d, ecad, vendor, p)
         got = v.get("verdict")
         ok = (got == want and r.returncode == code[want])
