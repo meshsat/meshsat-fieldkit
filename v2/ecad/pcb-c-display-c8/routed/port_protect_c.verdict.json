@@ -115,12 +115,12 @@
  },
  "tool": "port_protect_c",
  "tools": {
-  "git_head": "05af085c675d",
-  "tools_tree_sha": "14485a8d448de4d9"
+  "git_head": "19a2bb15a47b",
+  "tools_tree_sha": "d1e2b2878f05965a"
  },
- "ts": "2026-09-28T19:16:23Z",
+ "ts": "2026-09-28T21:18:53Z",
  "verdict": "INCONCLUSIVE",
- "version": "05af085c675d",
+ "version": "19a2bb15a47b",
  "writer": {
   "file": "port_protect.py",
   "sha16": "7acd5333fc59f8d0"

@@ -37,7 +37,7 @@
   "netlist_a": {
    "content16": "d464d30a17fb30f7",
    "path": "pcb-a-power-a23/out/pcb-a-power.net",
-   "sha256_16": "0a2b59087bcc2678"
+   "sha256_16": "2dfe1c546cb39ccb"
   },
   "stages": "DOCK_BLOCK,BOARD_A_NODE,BOARD_A_CONVERTERS,A_EFUSED_BRANCHES"
  },
@@ -58,12 +58,12 @@
  },
  "tool": "energy_chain_a",
  "tools": {
-  "git_head": "05af085c675d",
-  "tools_tree_sha": "14485a8d448de4d9"
+  "git_head": "19a2bb15a47b",
+  "tools_tree_sha": "d1e2b2878f05965a"
  },
- "ts": "2026-09-28T19:15:08Z",
+ "ts": "2026-09-28T21:17:38Z",
  "verdict": "PASS",
- "version": "05af085c675d",
+ "version": "19a2bb15a47b",
  "writer": {
   "file": "energy_chain.py",
   "sha16": "2eb665d0e50ee781"

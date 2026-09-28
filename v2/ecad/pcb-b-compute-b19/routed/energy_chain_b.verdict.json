@@ -33,7 +33,7 @@
   "netlist_b": {
    "content16": "b9dbb9c4a430d108",
    "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
-   "sha256_16": "028997a6c5e8810f"
+   "sha256_16": "21a1f74a3ec1ae28"
   },
   "stages": "B_PANEL_5V,B_HDMI_5V,B_QMX_5V"
  },
@@ -54,12 +54,12 @@
  },
  "tool": "energy_chain_b",
  "tools": {
-  "git_head": "05af085c675d",
-  "tools_tree_sha": "14485a8d448de4d9"
+  "git_head": "19a2bb15a47b",
+  "tools_tree_sha": "d1e2b2878f05965a"
  },
- "ts": "2026-09-28T19:15:38Z",
+ "ts": "2026-09-28T21:18:08Z",
  "verdict": "PASS",
- "version": "05af085c675d",
+ "version": "19a2bb15a47b",
  "writer": {
   "file": "energy_chain.py",
   "sha16": "2eb665d0e50ee781"

@@ -145,11 +145,11 @@
   "extent_mm": 180.0,
   "far_netlist_a": {
    "path": "pcb-a-power-a23/out/pcb-a-power.net",
-   "sha256_16": "0a2b59087bcc2678"
+   "sha256_16": "2dfe1c546cb39ccb"
   },
   "far_netlist_b": {
    "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
-   "sha256_16": "028997a6c5e8810f"
+   "sha256_16": "21a1f74a3ec1ae28"
   },
   "far_netlist_c": {
    "path": "pcb-c-display-c8/out/pcb-c-display.net",
@@ -237,12 +237,12 @@
  },
  "tool": "edge_length",
  "tools": {
-  "git_head": "05af085c675d",
-  "tools_tree_sha": "14485a8d448de4d9"
+  "git_head": "19a2bb15a47b",
+  "tools_tree_sha": "d1e2b2878f05965a"
  },
- "ts": "2026-09-28T19:16:37Z",
+ "ts": "2026-09-28T21:19:07Z",
  "verdict": "INCONCLUSIVE",
- "version": "05af085c675d",
+ "version": "19a2bb15a47b",
  "writer": {
   "file": "edge_length.py",
   "sha16": "21d61d18e18e56a8"
