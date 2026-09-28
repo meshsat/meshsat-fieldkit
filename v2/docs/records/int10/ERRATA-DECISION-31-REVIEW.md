@@ -23,7 +23,7 @@ turns each hold's review requirement to "re-review it", and the pinning script
 (`v2/docs/records/d8dec31/apply_holds_review_pin.py`) cannot re-pin: it refuses unless the netlists in the tree are the
 ones the review read (board A's has moved since, and moves again with decision 55's regeneration). The review stays as
 filed; `v2/docs/records/int10/apply_pages_s99.py` asserts it is byte-identical to its pins and that this erratum is
-present. The next review of board A (owed anyway after the regeneration) should quote 0.9142 A.
+present. Any later review of board A should quote 0.9142 A; none is owed by the regeneration itself, since the decision 31 hold's review pin moved to the new netlist on a parsed proof and reads met (set 9's AI check, minor item M4).
 
 **Other places the wrong-sign figure stays, as history (not edited):** `v2/docs/records/r4a/r4-decisions.md` line 196
 ("ILM 1.00 k = 0.89 A") and `v2/docs/records/r4b/r4-interfaces.md` line 11 (records of round 4 streams), and the frozen
