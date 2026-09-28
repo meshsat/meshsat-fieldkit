@@ -3284,11 +3284,12 @@ open_items:
       island (S-115, layout stage); (g) board D's codec supply: from U41's 4.872 V bottom, U23's on resistance (SLVSET8A
       p.7) and the 6 percent budget leave the PCM2912A 4.44 to 4.48 V at the 1.0 A typical (0.09 to 0.13 V over its 4.35
       V), 0.007 to -0.009 V with +5V_D8IN's own 2 percent spent, and under 4.35 V at the 2.0 A peak, which predates the
-      split (S-116). Closes when: board A is regenerated from fnd/s99a on the box and its intent, netlist and ERC are
-      read; PWR-001 and INT-001 are re-taken on it; the IF-AB-POWER +5V_DEV row reads the new figures; (a) is decided by
-      board B's declarations or a document. (b), (c), (d) and (e) are prototype verification in TEST-PLAN rows PT-2 and
-      PT-4 (proposed in v2/docs/records/s99/RAILS-ACTIONABLE.md), kept separate from the desk closure. Record:
-      v2/docs/records/s99/ANALYSIS.md, CORRECTION.md, checks/check-2-claude.md; v2/docs/records/s99a/README.md.
+      split (S-116). Done at integration set 9: board A regenerated from fnd/s99a on the box with its intent, netlist
+      and ERC read, PWR-001 and INT-001 re-taken on it, and the IF-AB-POWER +5V_DEV row reading the new figures. Closes
+      when: (a) is decided by board B's declarations or a document. (b), (c), (d) and (e) are prototype verification in
+      TEST-PLAN rows PT-2 and PT-4 (proposed in v2/docs/records/s99/RAILS-ACTIONABLE.md), kept separate from the desk
+      closure. Record: v2/docs/records/s99/ANALYSIS.md, CORRECTION.md, checks/check-2-claude.md;
+      v2/docs/records/s99a/README.md.
   - id: S-100
     class: SESSION
     status: OPEN
@@ -9031,10 +9032,12 @@ records:
           by parsed components and net node sets; changed parts C227, C228, C229, C230, C231, C232, L13, R217, R218,
           U41, R186, R209, U23, U32, U39; changed nets +5V_D8IN, +5V_DEV, D8B_BST, D8B_FB, D8B_SS, D8B_SW, GND, RAIL_EN,
           VBAT, unconnected-(U41-NC-Pad1). Its subject is the pull direction of EMCON_HW and SLOT_EN1 to SLOT_EN3 on a
-          panel-less kit; neither net changed; U39 and R209 appear only in an earlier rebind entry that lists the H2
-          differences; both are the same parts with the same values, and only the generator's printed limit for R209
-          moved from 0.18 to 0.20 A by TPS2596 equation 7's true sign (SLVSET8A printed page 28); rebound to the new
-          files (netlist 599ee964a9c23d6e). No result changes.
+          panel-less kit; neither net changed; U39 and R209 appear in an earlier rebind entry that lists the H2
+          differences, and U39 also in this record's re-read of PANEL.md or EMCON.md about its overvoltage lockout and
+          fault line, which the change leaves as it was (sentence corrected after set 9's AI check, minor item M1); both
+          are the same parts with the same values, and only the generator's printed limit for R209 moved from 0.18 to
+          0.20 A by TPS2596 equation 7's true sign (SLVSET8A printed page 28); rebound to the new files (netlist
+          599ee964a9c23d6e). No result changes.
     evidence_bound_to:
       - "v2/docs/PANEL.md@4647782f5aca7c13"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@599ee964a9c23d6e"
@@ -9538,10 +9541,12 @@ records:
           U41, R186, R209, U23, U32, U39; changed nets +5V_D8IN, +5V_DEV, D8B_BST, D8B_FB, D8B_SS, D8B_SW, GND, RAIL_EN,
           VBAT, unconnected-(U41-NC-Pad1). Its subject is the PA's VGG gate and board D's KEY logic; no part of that
           path and none of its nets changed (the added parts sit on VBAT, RAIL_EN, GND and the new nets D8B_BST, D8B_FB,
-          D8B_SS, D8B_SW and +5V_D8IN); U39 and R209 appear only in an earlier rebind entry that lists the H2
-          differences; both are the same parts with the same values, and only the generator's printed limit for R209
-          moved from 0.18 to 0.20 A by TPS2596 equation 7's true sign (SLVSET8A printed page 28); rebound to the new
-          files (netlist 599ee964a9c23d6e). No result changes.
+          D8B_SS, D8B_SW and +5V_D8IN); U39 and R209 appear in an earlier rebind entry that lists the H2 differences,
+          and U39 also in this record's re-read of PANEL.md or EMCON.md about its overvoltage lockout and fault line,
+          which the change leaves as it was (sentence corrected after set 9's AI check, minor item M1); both are the
+          same parts with the same values, and only the generator's printed limit for R209 moved from 0.18 to 0.20 A by
+          TPS2596 equation 7's true sign (SLVSET8A printed page 28); rebound to the new files (netlist
+          599ee964a9c23d6e). No result changes.
       - >-
           v2/docs/CURRENT-EVIDENCE.md re-read at the FINAL render of integration set 9 of 29 September 2026 (branch
           fnd/int10: S-99's corrected D8 split on board A, decision 55, with the TPS62933 buck U41 on +5V_D8IN and the
@@ -12501,9 +12506,11 @@ records:
           U41, R186, R209, U23, U32, U39; changed nets +5V_D8IN, +5V_DEV, D8B_BST, D8B_FB, D8B_SS, D8B_SW, GND, RAIL_EN,
           VBAT, unconnected-(U41-NC-Pad1). Its subject is the published contracts against faf8c981, 458b2873 and
           d90f30e4, none of which is this change; VBAT is named only in a netlist diff of an earlier change; U39 and
-          R209 appear only in an earlier rebind entry that lists the H2 differences; both are the same parts with the
-          same values, and only the generator's printed limit for R209 moved from 0.18 to 0.20 A by TPS2596 equation 7's
-          true sign (SLVSET8A printed page 28); rebound to the new files (netlist 599ee964a9c23d6e). No result changes.
+          R209 appear in an earlier rebind entry that lists the H2 differences, and U39 also in this record's re-read of
+          PANEL.md or EMCON.md about its overvoltage lockout and fault line, which the change leaves as it was (sentence
+          corrected after set 9's AI check, minor item M1); both are the same parts with the same values, and only the
+          generator's printed limit for R209 moved from 0.18 to 0.20 A by TPS2596 equation 7's true sign (SLVSET8A
+          printed page 28); rebound to the new files (netlist 599ee964a9c23d6e). No result changes.
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@7a2c0ac2190b141a"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@56adc9746d61c4e0"
@@ -14491,10 +14498,12 @@ records:
           U41, R186, R209, U23, U32, U39; changed nets +5V_D8IN, +5V_DEV, D8B_BST, D8B_FB, D8B_SS, D8B_SW, GND, RAIL_EN,
           VBAT, unconnected-(U41-NC-Pad1). Its one sentence on VBAT says the loads on VBAT are the charger's system side
           with the pack beyond the shunt; that still holds, since U41 takes VBAT at its VIN (TPS62933 pin 3) on the
-          system side of R17 and is enabled by RAIL_EN; U39 and R209 appear only in an earlier rebind entry that lists
-          the H2 differences; both are the same parts with the same values, and only the generator's printed limit for
-          R209 moved from 0.18 to 0.20 A by TPS2596 equation 7's true sign (SLVSET8A printed page 28); rebound to the
-          new files (netlist 599ee964a9c23d6e). No result changes.
+          system side of R17 and is enabled by RAIL_EN; U39 and R209 appear in an earlier rebind entry that lists the H2
+          differences, and U39 also in this record's re-read of PANEL.md or EMCON.md about its overvoltage lockout and
+          fault line, which the change leaves as it was (sentence corrected after set 9's AI check, minor item M1); both
+          are the same parts with the same values, and only the generator's printed limit for R209 moved from 0.18 to
+          0.20 A by TPS2596 equation 7's true sign (SLVSET8A printed page 28); rebound to the new files (netlist
+          599ee964a9c23d6e). No result changes.
     evidence_bound_to:
       - "v2/docs/PANEL.md@4647782f5aca7c13"
       - "v2/docs/CONOPS.md@6cb7b241cb84d729"
