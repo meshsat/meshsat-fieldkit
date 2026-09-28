@@ -1,0 +1,252 @@
+== v2/vendor/adi/adi-ds3231sn.pdf (sha256/16 dc81cd89bee82d0c, 21 page(s)); cited by ADI-DS3231SN: 6 line(s)
+   p.4  Rise Time of Both SDA and SCL Fast mode 20 + 300
+   p.4  tR ns
+   p.4  Fall Time of Both SDA and SCL Fast mode 20 + 300
+   p.4  tF ns
+   p.4  VCC Fall Time; VPF(MAX) to
+   p.4  VCC Rise Time; VPF(MIN) to
+== v2/vendor/ams/ams-as7331.pdf (sha256/16 60c13168a4012c16, 73 page(s)); cited by FAR-AMS-AS7331: 2 line(s)
+   p.45  tR SCL and SDA Rise Time. 0.3 µs
+   p.45  tF SCL and SDA Fall Time. 0.3 µs
+== v2/vendor/battery/ti-bq4050.pdf (sha256/16 2664e33fe6d6ebed, 55 page(s)); cited by TI-BQ4050: 7 line(s)
+   p.12  tR Rise time µs
+   p.13  tF Fall time µs
+   p.13  tR Rise time 4.7 nF between PCHG and VCC, 5.1 kΩ between PCHG 40 200 µs
+   p.13  tF Fall time 4.7 nF between PCHG and VCC, 5.1 kΩ between PCHG 40 200 µs
+   p.14  Slew rate
+   p.17  tR Clock rise time 10% to 90% 1000 ns
+   p.17  tF Clock fall time 90% to 10% 300 ns
+== v2/vendor/bosch/bosch-bme688.pdf (sha256/16 fce73ae028a985b3, 61 page(s)); cited by BOSCH-BME688: 0 line(s)
+== v2/vendor/bosch/bosch-bmi270.pdf (sha256/16 f68ce3c74f011a80, 151 page(s)); cited by BOSCH-BMI270: 1 line(s)
+   p.24  supply pin VDD or VDDIO falls below the specified minimum values. No constraints exist for the minimum slew-rate of
+== v2/vendor/cluster/ksz989x-hw-design-checklist.pdf (sha256/16 2a9d80931a0bed4b, 39 page(s)); cited by CABLE-SIDE-TERMINATION: 0 line(s)
+== v2/vendor/cm5/cm5-datasheet.pdf (sha256/16 80070fefd8db6e8a, 39 page(s)); cited by FAR-BENCH-PROBE, LINK-CONTROLLED-B, RPI-CM5-RECEPTACLE: 1 line(s)
+   p.12  To minimise electromagnetic compatibility (EMC) issues, we recommend setting the drive strength and slew rate to the lowest
+== v2/vendor/diodes/diodes-74lvc1g17.pdf (sha256/16 029f345a1e7be917, 19 page(s)); cited by DIODES-74LVC1G17: 0 line(s)
+== v2/vendor/diodes/diodes-74lvc1g34.pdf (sha256/16 efd2d7978bb880b7, 18 page(s)); cited by LVC1G34-BUFFER: 1 line(s)
+   p.3  Δt/ΔV Input Transition Rise or Fall Rate VCC = 3.3V ± 0.3V - 10 ns/V
+== v2/vendor/diodes/diodes-pi7c9x2g404sl.pdf (sha256/16 675fa7ee40c91ad6, 88 page(s)); cited by DIODES-PI7C9X2G404SL, LINK-CONTROLLED-B: 9 line(s)
+   p.75  Trise/ Tfall Rise and Fall Time in 20-80% 175 700 ps 2
+   p.75  ΔTrise/ ΔTfall Rise and Fall Time Variation 125 ps 2
+   p.75  Trise/ Tfall Rise and Fall Time in 20-80% 175 700 ps 2
+   p.75  ΔTrise/ ΔTfall Rise and Fall Time Variation 125 ps 2
+   p.82  RST#Slew PERST_L Slew Rate 50 mV/ns
+   p.82  2. The min. value for PERST_L Slew Rate is 50 mV/ns, which translates to the requirement that the time for PERST_L
+   p.83  Transmitter rise and fall time TTX-RISE-FALL 0.15 - UI
+   p.83  TX rise/fall mismatch TRF-MISMATCH 0.1 UI
+   p.83  Transmitter rise and fall time TTX-RISE-FALL 0.125 UI
+== v2/vendor/fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf (sha256/16 fae7e21365939be5, 3 page(s)); cited by FAR-FAN-TACH: 0 line(s)
+== v2/vendor/lora/ebyte-e22-900m30s-user-manual-en-v1.20.pdf (sha256/16 d864e9ca390f15c9, 12 page(s)); cited by EBYTE-E22-SX1262: 0 line(s)
+== v2/vendor/microchip/microchip-atecc608b-summary-DS40002239B.pdf (sha256/16 1b21d7b0d5c6265f, 31 page(s)); cited by MICROCHIP-ATECC608B: 3 line(s)
+   p.10  Input Rise Time1 tR - 300 ns
+   p.10  Input Fall Time1 tF - 100 ns
+   p.10  - Input rise and fall times: ≤ 50 ns
+== v2/vendor/microchip/microchip-ksz9897-datasheet.pdf (sha256/16 72b89179ed6a42a7, 197 page(s)); cited by LINK-CONTROLLED-B, MICROCHIP-KSZ9897: 9 line(s)
+   p.19  The output signal has a typical rise/fall time of 4ns and complies with the ANSI TP-PMD standard regarding amplitude
+   p.20  4.1.6 WAVE SHAPING, SLEW-RATE CONTROL, AND PARTIAL RESPONSE
+   p.20  • For 100BASE-TX, a simple slew-rate control method is used to minimize EMI.
+   p.170  tr , tf Rise/Fall Time 3 5 ns
+   p.170  Rise/Fall Time Imbalance 0 0.5 ns
+   p.171  tr , tf Rise/Fall Time 25 ns
+   p.172  T r / Tf Rise / Fall time (20-80%) Note 6-8 ns
+   p.181  tvr Supply voltage rise time (must be monotonic) 200 s
+   p.183  CPU. At power-on reset, R, C and D1 provide the necessary ramp rise time to reset the KSZ9897R. The RST_OUT_N
+== v2/vendor/nexperia/nexperia-74lvc1g157.pdf (sha256/16 62f9b85c44785ca1, 16 page(s)); cited by NEXPERIA-74LVC1G157: 4 line(s)
+   p.1  Schmitt-trigger action at all inputs makes the circuit tolerant of slower input rise and fall times.
+   p.4  Δt/ΔV input transition rise and fall rate VCC = 1.65 V to 2.7 V - - 20 ns/V
+   p.7  VEXT = External voltage for measuring switching times.
+   p.7  Fig. 9. Test circuit for measuring switching times
+== v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf (sha256/16 938ef5ef5007df6b, 17 page(s)); cited by NICERF-SA868, RF-LINES: 0 line(s)
+== v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf (sha256/16 1ea68f814afe04ca, 12 page(s)); cited by FAR-PDI-EPD: 0 line(s)
+== v2/vendor/power/aos-ao3401a-p-mosfet.pdf (sha256/16 0d8e3261ae280e00, 6 page(s)); cited by DISCRETE-MOSFET: 2 line(s)
+   p.2  tr Turn-On Rise Time VGS=-10V, VDS=-15V, RL=3.75W, 3.5 ns
+   p.2  tf Turn-Off Fall Time 9 ns
+== v2/vendor/power/jscj-2n7002-c8545.pdf (sha256/16 7941fb423af7c6c6, 6 page(s)); cited by DISCRETE-MOSFET: 3 line(s)
+   p.2  SWITCHING TIME
+   p.2  Turn-on Time * td(on) VDD=25 V, RL=50Ω, 20
+   p.2  Turn-off Time * td(off) 40
+== v2/vendor/quectel/lg290p03-hardware-design-v1.1.pdf (sha256/16 422ca9a2aa5495c1, 54 page(s)); cited by QUECTEL-LG290P, RF-LINES: 0 line(s)
+== v2/vendor/quectel/quectel-rm520n-gl-hardware-design-v1.0.pdf (sha256/16 139583b38ce1fd47, 86 page(s)); cited by FAR-QUECTEL-RM520N, FAR-SIM-CARD: 1 line(s)
+   p.31  Tpr 100 ms - - System turn-on time depending on the host.
+== v2/vendor/rockblock/rb9704-datasheet-RB9704-001-JUN26.pdf (sha256/16 d48acbea28ee2a7d, 3 page(s)); cited by FAR-ROCKBLOCK-9704: 0 line(s)
+== v2/vendor/rp2040/rpi-rp2040-datasheet.pdf (sha256/16 be56fbb75ba0ae9e, 643 page(s)); cited by OSCILLATOR-NODES, RPI-RP2040: 19 line(s)
+   p.241  • Output slew rate can be set to slow or fast
+   p.241  Slew Rate
+   p.303  0 SLEWFAST: Slew rate control. 1 = Fast, 0 = Slow RW 0x0
+   p.303  0 SLEWFAST: Slew rate control. 1 = Fast, 0 = Slow RW 0x0
+   p.304  0 SLEWFAST: Slew rate control. 1 = Fast, 0 = Slow RW 0x0
+   p.305  0 SLEWFAST: Slew rate control. 1 = Fast, 0 = Slow RW 0x0
+   p.305  0 SLEWFAST: Slew rate control. 1 = Fast, 0 = Slow RW 0x0
+   p.306  0 SLEWFAST: Slew rate control. 1 = Fast, 0 = Slow RW 0x0
+   p.412  14 TX_FSSLEW: TX_FSSLEW=0: Low speed slew rate RW 0x0
+   p.412  TX_FSSLEW=1: Full speed slew rate
+   p.441  • slew rate limited
+   p.461  The total high time and low time of SCL generated by the DW_apb_i2c master is also influenced by the rise time and
+   p.461  fall time of the SCL line, as shown in the illustration and equations in Figure 86. It should be noted that the SCL rise and
+   p.461  fall time parameters vary, depending on external factors such as:
+   p.462  SCL Rise Time and Fall
+   p.462  rise time fall time rise time
+   p.613  Digital In Input only Standard Digital. Programmable Pull-Up, Pull-Down, Slew Rate,
+   p.613  Digital IO (FT) Bi-directional protection on these pins. Programmable Pull-Up, Pull-Down, Slew Rate,
+   p.613  Input (Analogue) Slew Rate, Schmitt Trigger and Drive Strength. Default Drive Strength
+== v2/vendor/sciosense/sciosense-as3935-factsheet.pdf (sha256/16 b1d889c1768bab4b, 4 page(s)); cited by FAR-AMS-AS3935: 0 line(s)
+== v2/vendor/sensirion/sgp41-datasheet.pdf (sha256/16 331f35ed1f027a74, 23 page(s)); cited by SENSIRION-SGP41: 0 line(s)
+== v2/vendor/silabs/silabs-cp2102n.pdf (sha256/16 32fbab0ba17f394a, 49 page(s)); cited by SILABS-CP2102N: 2 line(s)
+   p.14  Output Rise Time TR Full Speed 4 - 20 ns
+   p.14  Output Fall Time TF Full Speed 4 - 20 ns
+== v2/vendor/slkor/slkor-bc857b-c556165.pdf (sha256/16 b27e6044426e3c60, 5 page(s)); cited by DISCRETE-BJT: 0 line(s)
+== v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf (sha256/16 f6e620179006c8c4, 358 page(s)); cited by OSCILLATOR-NODES: 50 line(s)
+   p.106  VDD rise time rate 0 ∞
+   p.106  VDD fall time rate 10 ∞
+   p.106  VDDA rise time rate 0 ∞
+   p.106  VDDA fall time rate 10 ∞
+   p.106  VDDUSB rise time rate 0 ∞
+   p.106  VDDUSB fall time rate 10 ∞
+   p.141  tr/tf(4) fall time and output low ns
+   p.141  to high level rise time C=30 pF, 1.62 V≤VDD≤2.7 V - 25
+   p.141  tr/tf(4) fall time and output low ns
+   p.141  to high level rise time C=30 pF, 1.62 V≤VDD≤2.7 V - 7.5
+   p.142  tr/tf(4) fall time and output low ns
+   p.142  to high level rise time C=30 pF, 1.62 V≤VDD≤2.7 V(5) - 5.2
+   p.142  tr/tf(4) fall time and output low ns
+   p.142  to high level rise time C=30 pF, 1.62 V≤VDD≤2.7 V(5) - 4.5
+   p.142  4. The fall and rise times are defined between 90% and 10% and between 10% and 90% of the output waveform, respectively.
+   p.143  tr/tf(3) fall time and output low C=30 pF, 1.62 V≤VDD≤2.7 V - 9 ns
+   p.143  to high level rise time
+   p.143  tr/tf(3) fall time and output low C=30 pF, 1.62 V≤VDD≤2.7 V - 4.8 ns
+   p.143  to high level rise time
+   p.143  tr/tf(3) fall time and output low C=30 pF, 1.62 V≤VDD≤2.7 V(4) - 4 ns
+   p.143  to high level rise time
+   p.143  tr/tf(3) fall time and output low C=30 pF, 1.62 V≤VDD≤2.7 V(4) - 3.6 ns
+   p.143  to high level rise time (4)
+   p.143  3. The fall and rise times are defined between 90% and 10% and between 10% and 90% of the output waveform, respectively.
+   p.178  Slew rate (from 10% and Normal mode - 3 -
+   p.211  VDD rise time rate 0 ∞
+   p.211  VDD fall time rate 10 ∞
+   p.211  VDDA rise time rate 0 ∞
+   p.211  VDDA fall time rate 10 ∞
+   p.211  VDDUSB rise time rate 0 ∞
+   p.211  VDDUSB fall time rate 10 ∞
+   p.245  tr/tf(4) fall time and output low ns
+   p.245  to high level rise time C=30 pF, 1.62 V≤VDD≤2.7 V - 25
+   p.245  tr/tf(4) fall time and output low ns
+   p.245  to high level rise time C=30 pF, 1.62 V≤VDD≤2.7 V - 7.5
+   p.246  tr/tf(4) fall time and output low ns
+   p.246  to high level rise time C=30 pF, 1.62 V≤VDD≤2.7 V(5) - 5.2
+   p.246  tr/tf(4) fall time and output low ns
+   p.246  to high level rise time C=30 pF, 1.62 V≤VDD≤2.7 V(5) - 4.5
+   p.246  4. The fall and rise times are defined between 90% and 10% and between 10% and 90% of the output waveform, respectively.
+   ... and 10 more line(s), on pages 247, 289
+== v2/vendor/standards/nxp-um10204-rev6-i2c-bus-specification.pdf (sha256/16 b7619700e8bb9dd4, 65 page(s)); cited by MICROCHIP-KSZ9897: 49 line(s)
+   p.35  with rise time accelerators, and 3-state capability. The I2C controller must be able to
+   p.36  the shorter maximum permissible rise time for the Fast-mode I2C-bus. For bus loads up to
+   p.36  compatible with Standard-mode, they are also tolerant of the 1 μs rise time of
+   p.36  high drive strength and tolerance for slow rise and fall times allow the use of larger bus
+   p.36  Fast-mode Plus are all satisfied and the fall time and rise time do not exceed the 300 ns tf
+   p.36  and 1 μs tr specifications of Standard-mode. Bus speed can be traded against load
+   p.37  SCLH output. This current-source circuit shortens the rise time of the SCLH signal.
+   p.37  resulting in faster rise and fall times.
+   p.37  required rise time. For higher capacitive bus-line loads (>100 pF), the resistor Rp can be
+   p.37  replaced by external current source pull-ups to meet the rise time requirements. Unless
+   p.38  proceeded by an acknowledge bit, the rise time of the SCLH clock pulses in Hs-mode
+   p.39  SCLH signal’s rise time.
+   p.44  reaches a HIGH level, and so speeds up the last part of the SCLH signal rise time. In
+   p.47  tof output fall time from VIHmin - 250[5] 20 × 250[5] 20 × 120[7] ns
+   p.47  [5] The maximum tf for the SDA and SCL bus lines quoted in Table 10 (300 ns) is longer than the specified maximum tof for the output stages (250 ns). This allows series p
+   p.47  [7] In Fast-mode Plus, fall time is specified the same for both output stage and bus timing. If series resistors are used, designers should allow for this when considerin
+   p.48  tr rise time of both SDA and SCL signals - 1000 20 300 - 120 ns
+   p.48  tf fall time of both SDA and SCL - 300 20 × 300 20 × 120[8] ns
+   p.48  [4] The maximum tHD;DAT could be 3.45 μs and 0.9 μs for Standard-mode and Fast-mode, but must be less than the maximum of tVD;DAT or tVD;ACK by a transition time. This ma
+   p.49  tr(max) + tSU;DAT = 1000 + 250 = 1250 ns (according to the Standard-mode I2C-bus specification) before the SCL line is released. Also the acknowledge timing must meet thi
+   p.49  [6] If mixed with Hs-mode devices, faster fall times according to Table 10 are allowed.
+   p.49  [7] The maximum tf for the SDA and SCL bus lines is specified at 300 ns. The maximum fall time for the SDA output stage tf is specified at 250 ns. This allows series prot
+   p.49  [8] In Fast-mode Plus, fall time is specified the same for both output stage and bus timing. If series resistors are used, designers should allow for this when considerin
+   p.50  HIGH and LOW periods and the maximum rise and fall times of the SCLH clock signal
+   p.50  SCLH clock pulses (taking the rise and fall times into account) for the maximum bit rate of
+   p.51  interpolated linearly. Rise and fall times are in accordance with the maximum propagation
+   p.51  trCL rise time of SCLH signal output rise time (current-source enabled)
+   p.51  tfCL fall time of SCLH signal output fall time (current-source enabled)
+   p.51  tfDA fall time of SDAH signal capacitive load from 10 pF to 100 pF 10 80 ns
+   p.51  [3] For capacitive bus loads between 100 pF and 400 pF, the rise and fall time values must be linearly interpolated.
+   p.52  trCL rise time of SCLH signal 10 40 20 80 ns
+   p.52  trCL1 rise time of SCLH signal after a 10 80 20 160 ns
+   p.52  tfCL fall time of SCLH signal 10 40 20 80 ns
+   p.52  trDA rise time of SDAH signal 10 80 20 160 ns
+   p.52  tfDA fall time of SDAH signal 10 80 20 160 ns
+   p.54  tf fall time of both USDA and USCL signals -[2] 50 ns
+   p.54  tr rise time of both USDA and USCL signals -[2] 50 ns
+   p.54  [2] Typical rise time or fall time for UFm signals is 25 ns measured from the 30 % level to the 70 % level (rise time) or from the 70 % level to
+   p.54  the 30 % level (fall time).
+   p.55  capacitance limits the maximum value of Rp due to the specified rise time. Figure 41
+   ... and 9 more line(s), on pages 55, 56, 57, 58
+== v2/vendor/ti/bq25731-datasheet.pdf (sha256/16 3e5e927fdf63cf6a, 106 page(s)); cited by TI-BQ25731: 7 line(s)
+   p.3  transition slew rate can be configured to comply with the USB-PD 3.0 PPS specification.
+   p.18  tr SCL/SDA rise time 300 ns
+   p.18  tf SCL/SDA fall time 300 ns
+   p.87  resistance (RDS(ON)_top), input voltage (VIN), switching frequency (fS), turn-on time (ton) and turn-off time (toff):
+   p.87  • ton is the MOSFET turn-on time that VDS falling time from VIN to almost zero (MOSFET turn on conduction
+   p.87  • toff is the MOSFET turn-off time that IDS falling time from Ipeak to zero;
+   p.87  The MOSFET turn-on and turn-off times are given by:
+== v2/vendor/ti/ibis/tusb8041rgc.ibs (sha256/16 925a6c7f6917401e, 1 page(s)); cited by LINK-CONTROLLED-B: 0 line(s)
+== v2/vendor/ti/lm5176-datasheet.pdf (sha256/16 98191bec36d43771, 46 page(s)); cited by POWER-STAGE-NODES: 2 line(s)
+   p.26  Typically, a MOSFET with smaller RDSON (smaller conduction loss) will have longer rise and fall times (larger
+   p.26  Typically, a MOSFET with smaller RDSON (lower conduction loss) has longer rise and fall times (larger switching
+== v2/vendor/ti/ti-sn74lvc1g34.pdf (sha256/16 04384d3a3cf65b2b, 55 page(s)); cited by LVC1G34-BUFFER: 1 line(s)
+   p.5  Δt/Δv Input transition rise or fall rate VCC = 3.3V ± 0.3V 10 ns/V
+== v2/vendor/ti/ti-sn74lvc2g06.pdf (sha256/16 b5533064ff102afc, 34 page(s)); cited by TI-SN74LVC2G06: 2 line(s)
+   p.5  Δt/Δv Input transition rise or fall rate VCC = 3.3 V ± 0.3 V 10 ns/V
+   p.10  - Rise time and fall time specs. See (Δt/ΔV) in the Recommended Operating Conditions table.
+== v2/vendor/ti/ti-tps25740.pdf (sha256/16 60276c7a0e2a138a, 67 page(s)); cited by FAR-USB-PD-SINK, TI-TPS25740: 18 line(s)
+   p.2  • Added sentence "All slew rate control methods" to the Voltage Transition Requirements section...................................... 41
+   p.11  Rise/fall time, tFall and tRise (refer to USB
+   p.12  Digital output fall time 20 300 ps
+   p.39  During VBUS voltage transitions, the slew rate (vSrcSlewPos) must be kept below 30 mV/µs in all portions of the
+   p.39  transition ramp rate must be slowed in order to meet the slew rate requirement.
+   p.39  Table 7. Minimum Slew-Rate Requirements
+   p.40  Figure 41. Slew-Rate Control Example No. 1
+   p.41  Figure 42. Slew-Rate Control Example No. 2
+   p.41  All slew rate control methods should be verified on the bench to ensure that the slew rate requirements are being
+   p.41  Care should be taken to control the slew rate of Q1 using C(SLEW); particularly in applications where COUT >>
+   p.41  C(SLEW). The slew rate observed on VBUS when charging a purely capacitive load is the same as the slew rate of
+   p.42  Figure 43. Slew-Rate control Using GDNG
+   p.42  onto the VBUS of the Type-C receptacle. It is recommended to use a slew rate less than the maximum of
+   p.42  VSrcSlewPos (30 mV / µs) allowed by USB (refer to Documentation Support), the slew rate should instead be set in
+   p.45  • C(SLEW): To achieve a slew rate from zero to 5 V of less than 30 mV / µs using the typical GDNG current of 20
+   p.49  • C(SLEW): To achieve a slew rate from zero to 5 V of less than 30 mV / µs using the typical GDNG current of 20
+   p.49  • C(SLU)/C(SLL): The value of C(SLU) is calculated based on the desired 95% slew rate using Equation 12 and
+   p.51  opened. Other fault conditions may also pull PGOOD low, but the slew rate of the voltage transition should be
+== v2/vendor/ti/ti-tusb2046b.pdf (sha256/16 d02d0b8af5cbdb1b, 33 page(s)); cited by TI-TUSB2046B: 10 line(s)
+   p.1  - Self-Powered Mode automatically setting the slew rate according to the
+   p.6  tt Input transition times, TTL/LVCMOS 0 25 ns
+   p.7  tr Transition rise time for DP or DM See Figure 1 and Figure 2 4 20 ns
+   p.7  tf Transition fall time for DP or DM See Figure 1 and Figure 2 4 20 ns
+   p.7  t(RFM) Rise/fall time matching (1) (tr/tf) × 100 90% 110%
+   p.8  tr Transition rise time for DP or DM CL = 200 pF to 600 pF, See Figure 1 and Figure 2 75 300 ns
+   p.8  tf Transition fall time for DP or DM (1) CL = 200 pF to 600 pF, See Figure 1 and Figure 2 75 300 ns
+   p.8  t(RFM) Rise/fall time matching (1) (tr/tf) × 100 80% 120%
+   p.9  downstream ports support full-speed and low-speed devices by automatically setting the slew rate according to
+   p.17  path to ground for fast rise time ESD current that might have coupled onto the VBUS trace from the cable.
+== v2/vendor/ti/tps23861-datasheet.pdf (sha256/16 65262ce4766a5f8e, 108 page(s)); cited by CABLE-SIDE-TERMINATION, TI-TPS23861: 11 line(s)
+   p.6  Voltage slew rate on DRAIN1-4 1 V/µs
+   p.11  SDAO output fall time, SDAO, 2.3 → 0.8 V, Cb = 10 pF, 10-kΩ pullup
+   p.11  SDAO output fall time, SDAO, 2.3 → 0.8 V, Cb = 400 pF, 1.3-kΩ
+   p.11  tfSDA Input fall times of SDAI, 2.3 → 0.8 V 20 250 ns
+   p.11  trSDA Input rise times of SDAI, 0.8 → 2.3 V 20 300 ns
+   p.11  tr Input rise time of SCL, 0.8 → 2.3 V 20 300 ns
+   p.11  tf Input fall time of SCL, 2.3 → 0.8 V 20 200 ns
+   p.13  tD_off_SHDW Gate turn-off time from SHTDWN From SHTDWN to VGATEn < 1 V, VSENn =
+   p.13  Gate turn-off time from port off From port off command to VGATEn < 1 V,
+   p.13  Gate turn-off time with RESET From RESET low to, VGATEn < 1 V, VSENn
+   p.13  Gate turn-off time from SENn 0.425 V
+== v2/vendor/vishay/veml7700-datasheet.pdf (sha256/16 f338cf7d5911828a, 16 page(s)); cited by VISHAY-VEML7700: 2 line(s)
+   p.3  Clock / data fall time t(F) - 300 - 300 ns
+   p.3  Clock / data rise time t(R) - 1000 - 300 ns
+== v2/vendor/winbond/winbond-w25q16jv-serial-flash.pdf (sha256/16 81af3f69b0bff95f, 76 page(s)); cited by WINBOND-W25Q16JV: 3 line(s)
+   p.61  Input Rise and Fall Times TR, TF 5 ns
+   p.62  Clock Rise Time peak to peak tCLCH(2) 0.1 V/ns
+   p.62  Clock Fall Time peak to peak tCHCL(2) 0.1 V/ns
+== v2/vendor/xenarc/xenarc-709gnk-product-manual-v2.pdf (sha256/16 ba3b1474406fdaf5, 18 page(s)); cited by FAR-HDMI-SINK: 0 line(s)
+== v2/vendor/zigbee/ebyte-e72-2g4m20s1e-user-manual.pdf (sha256/16 4bae5b3e67483b0b, 17 page(s)); cited by EBYTE-E72-CC2652P: 0 line(s)
+
+DOCUMENTS IN WHICH NONE OF THE WORDS OCCURS (15): v2/vendor/bosch/bosch-bme688.pdf, v2/vendor/cluster/ksz989x-hw-design-checklist.pdf, v2/vendor/diodes/diodes-74lvc1g17.pdf, v2/vendor/fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf, v2/vendor/lora/ebyte-e22-900m30s-user-manual-en-v1.20.pdf, v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf, v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf, v2/vendor/quectel/lg290p03-hardware-design-v1.1.pdf, v2/vendor/rockblock/rb9704-datasheet-RB9704-001-JUN26.pdf, v2/vendor/sciosense/sciosense-as3935-factsheet.pdf, v2/vendor/sensirion/sgp41-datasheet.pdf, v2/vendor/slkor/slkor-bc857b-c556165.pdf, v2/vendor/ti/ibis/tusb8041rgc.ibs, v2/vendor/xenarc/xenarc-709gnk-product-manual-v2.pdf, v2/vendor/zigbee/ebyte-e72-2g4m20s1e-user-manual.pdf
+words: rise time, fall time, rise/fall, rise and fall, transition time, transition rise, transition fall, turn-on time, turn-off time, switching time, rise or fall, slew rate, slew-rate, output transition, edge rate; symbols with a time unit on the line: (?<![A-Za-z])(t[rRfF]|tof|tOF|tfo|t\(F\)|t\(R\)|tRise|tFall|TFR|TFF)(?![A-Za-z])

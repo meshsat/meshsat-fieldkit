@@ -36,3 +36,6 @@ Thumbs.db
 # Agent instruction files are local-only, never committed (the same rule as CLAUDE.md): the launcher of
 # v2/docs/CODEX-WORKER.md writes one into a job's worktree and removes it after the job
 AGENTS.md
+# Makers' IBIS models (stream w5si, SI-001): held locally and fetched by their manifest, never committed,
+# because several of their headers forbid redistribution (owner decision pending; v2/docs/EXECUTION-PLAN.md).
+v2/vendor/*/ibis/*.ibs
