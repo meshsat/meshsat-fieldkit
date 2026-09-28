@@ -10,7 +10,9 @@
 # THIS FILE IS A CONFIGURATION INPUT of the edge_length verdict (rule SI-001): edge_length.py reads it on every run and
 # records its sha in the reading's inputs (edge_rates). An edit here makes every board's SI-001 reading stale until it
 # is re-taken, and an integration must COMMIT this file before running rules_status / rules_render (the integration
-# recipe: an uncommitted configuration input reads CONFIG_CHANGED).
+# recipe: an uncommitted configuration input reads CONFIG_CHANGED). The makers' IBIS models it cites are NOT committed
+# and need not be: the tracked manifest v2/vendor/ibis-manifest.yaml pins them and is the configuration input in
+# their place (ER-D17).
 #
 # ------------------------------------------------------------------------------------------------------------------
 # THE SCHEMA
@@ -24,8 +26,11 @@
 #     kind IBIS       the maker's IBIS model, read per pin by ibis_read.py: `ibis: {file, component, models}`; `models`
 #                     is a regular expression admitting the model variants the circuit can select (the supply
 #                     voltage, a firmware speed setting); `edge_ns` is what the file gives for the fastest admitted
-#                     pin, and a record whose edge_ns the file does not give is refused as CONTRADICTED; `supply`
-#                     names the supply pins and the rail pattern the admitted models cover
+#                     pin that has a figure, and a record whose edge_ns the file does not give is refused as
+#                     CONTRADICTED; `flagged_pins` names the pins whose [Ramp] cell the model's own V-t table
+#                     contradicts (ER-D16), which take the instantaneous bound; `supply` names the supply pins and
+#                     the rail pattern the admitted models cover. The file is NOT in the repository: it is pinned by
+#                     v2/vendor/ibis-manifest.yaml and fetched by tools/ibis_fetch.py (ER-D17)
 #     kind DATASHEET  a published MINIMUM transition time (statistic: min) with its table and conditions
 #     kind MODEL, BOUND  as above, for the driver
 #     kind NOT_A_DRIVER   a part that drives no signal net (an ESD array), with the words that say so
@@ -137,6 +142,35 @@
 #   ER-D15 Every citation carries the held file's sha256/16 and the page of its words, and every bound names what was
 #          searched (see THE SCHEMA). Why: the acceptance of this pass, and the check's finding that a part-name
 #          quote proves nothing about a search. Reverse: edge_length._cite_shape and the search_listing check.
+#   ER-D16 (28 September 2026, stream w5si2, on two AI reviews' findings.) A [RAMP] CELL IS HELD TO ITS MODEL'S OWN
+#          V-t TABLE. Where the model carries a waveform table of the same edge in the [Ramp]'s own fixture, the cell's
+#          dV must be 50 to 70 percent of the table's swing (the keyword defines it as the 20 to 80 percent swing) and
+#          its dt within 25 percent of the time the table itself takes from 20 to 80 percent. A pin any of whose
+#          admitted driven cells fails either has NO maker's figure: it takes the instantaneous bound (ER-D8) and its
+#          net is decided by a bound. A family's edge_ns is the fastest of its pins that are not flagged, the record
+#          names the flagged pins (flagged_pins) and is held to the file on both. A far end that names such a family
+#          takes the bound, because which pin is on the far side is not read (ER-D7). Why: the first lens found
+#          TMP117's SDA cells with dV at 15 percent of the swing, and the drafts check found PCA9555's INT cell at a
+#          fifth of its table's time. Both erred short, which is the safe side, but a reader that takes a cell its own
+#          model contradicts is right by luck. Why these tolerances: measured on the thirteen models, 522 of the 537
+#          cells that have a table lie inside both (504 within 10 percent on dt) and the 15 outside are all of those
+#          two pins' models, with dV at 11 to 39 percent or dt at 0.14 to 0.65; the tolerances sit in the gap. What it
+#          changes on the six netlists: no count, because both pins sit on nets a bound already decided; the two
+#          records' edge_ns (PCA9555 0.121 to 5.89 ns, TMP117 7.68 to 12.61 ns) now state the fastest pin that HAS a
+#          figure. A limit, said: 48 driven cells of the thirteen models have no table of their edge (ST's reset and
+#          VBUS models, TI's USB 3 and PCIe transmitter models); nothing in the file can contradict them and they are
+#          read as before. Reverse: ibis_read.RAMP_DV and RAMP_DT, or ibis_read.pin_edge's FLAGGED branch.
+#   ER-D17 (28 September 2026, stream w5si2.) THE MODELS ARE PINNED BY A TRACKED MANIFEST AND ARE NOT IN THE REPOSITORY.
+#          v2/vendor/ibis-manifest.yaml names each model's maker, address, how the .ibs is taken out of what the
+#          address serves, the sha256 of the extracted file and the words of its header on copying. A model is read
+#          only when the manifest pins it, the file present is that file (full sha256) and this file's record cites
+#          the same file. A model that is absent decides nothing: its nets read UNDECIDED naming it (reason kind
+#          MODEL_ABSENT), the reading is INCONCLUSIVE and records the state it was taken in (inputs.model_state). An
+#          IBIS record's own edge_ns is never used in the model's absence: it is a copy the model is there to hold.
+#          Why: five of the thirteen headers forbid distribution and the rest grant nothing, this repository is
+#          mirrored publicly, and publication is the owner's decision (held back). What it costs: a clean clone reads
+#          397 more nets UNDECIDED than a tree with the models (set 6: 73 against 470) until tools/ibis_fetch.py has
+#          fetched them. Reverse: commit the models (the owner's decision), and drop the ignore rule.
 #   ER-D11 The STM32H743's HSLV-capable pins (IBIS selector io8_hslv_ft) are read at 3.3 V with the io8_ft 3.3 V
 #          models. Why: ST's file gives that selector only the 1.2, 1.8 and 2.5 V variants of the HSLV option, which
 #          DS12110 section 6.3.16 says is for supplies below 2.5 V; with it off, Table 53 ("Output timing
@@ -351,12 +385,18 @@ families:
   - id: TI-PCA9555
     kind: IBIS
     parts: ["PCA9555PW"]
-    ibis: {file: v2/vendor/ti/ibis/pca9555.ibs, sha256_16: "56c19a4da921e38c", keyword: "[Model] PCA9555_INT_33 [Ramp] dV/dt_f max", ramp: "2.06/1.21E-10", component: PCA9555_PW, models: "_33$"}
-    edge_ns: 0.121
+    ibis: {file: v2/vendor/ti/ibis/pca9555.ibs, sha256_16: "56c19a4da921e38c", keyword: "[Model] PCA9555_P_33 [Ramp] dV/dt_r max", ramp: "2.26/5.89E-09", component: PCA9555_PW, models: "_33$"}
+    edge_ns: 5.89
+    flagged_pins: ["1"]
     supply: {pins: ["24"], rail: "3V3"}
     conditions: >
-      TI IBIS SCPM035, 3.3 V models (Vcc 3.0 to 3.6 V), R_load 500 ohm: the open-drain INT output falls in 0.121 ns
-      (max corner), the port outputs move in 5.89 ns, SDA falls in 72.3 ns (I2C slope-controlled)
+      TI IBIS SCPM035, 3.3 V models (Vcc 3.0 to 3.6 V), R_load 500 ohm: the port outputs move in 5.89 ns (rising,
+      max corner), SDA falls in 72.3 ns (I2C slope-controlled). THE OPEN-DRAIN INT OUTPUT (pin 1) HAS NO FIGURE
+      (ER-D16): its [Ramp] cells state a fall of 0.121 ns (max), 0.236 ns (typ) and 0.448 ns (min), and the same
+      model's own [Falling Waveform] table, in the same 500 ohm fixture, takes 0.605, 1.200 and 0.920 ns from 20 to 80
+      percent of its swing, so the cells state a fifth to a half of what the table shows. Until 28 September 2026 this
+      record gave the family 0.121 ns from that cell. The pin takes the instantaneous bound; the nets it is on (EXP_INT)
+      were and are decided by a bound
     applicability: "PCA9555PW (TSSOP-24 PW) from a 3.3 V rail: the expanders on boards A, B, C and D"
     verification_owed: "none for the number as the model states it; the model is of the die the maker modelled (its [File Rev]), and whether the fitted part carries a later die is a question for the maker (ER-D5)"
   - id: TI-TCAN334
@@ -387,10 +427,17 @@ families:
   - id: TI-TMP117
     kind: IBIS
     parts: ["TMP117AIDRVR"]
-    ibis: {file: v2/vendor/ti/ibis/tmp117.ibs, sha256_16: "5c71fbcce9e13803", keyword: "[Model] sda_3p3 [Ramp] dV/dt_f max", ramp: "0.534433/7.67568e-09", component: TMP117AIDRV, models: "3p3$"}
-    edge_ns: 7.6757
+    ibis: {file: v2/vendor/ti/ibis/tmp117.ibs, sha256_16: "5c71fbcce9e13803", keyword: "[Model] alert_3p3 [Ramp] dV/dt_f max", ramp: "2.14113/1.26129e-08", component: TMP117AIDRV, models: "3p3$"}
+    edge_ns: 12.6129
+    flagged_pins: ["6"]
     supply: {pins: ["5"], rail: "3V3"}
-    conditions: "TI IBIS SNOM652, 3.3 V models (Vcc 3.0 to 3.6 V): SDA falls in 7.68 ns at the max corner (R_load 967 ohm), ALERT in 12.6 ns"
+    conditions: >
+      TI IBIS SNOM652, 3.3 V models (Vcc 3.0 to 3.6 V), R_load 967 ohm: ALERT falls in 12.6 ns at the max corner. SDA
+      (pin 6) HAS NO FIGURE (ER-D16): its [Ramp] cells at the min and max corners state dV 1.119 V and 0.534 V, which
+      are 38 and 15 percent of the swing of the same model's own [Falling Waveform] table (2.907 V and 3.569 V) where
+      the keyword defines dV as the 20 to 80 percent swing, and that table takes 62.2 ns and 34.0 ns from 20 to 80
+      percent where the cells state 35.6 ns and 7.68 ns. Until 28 September 2026 this record gave the family 7.68 ns
+      from the max cell. The pin takes the instantaneous bound; the kit bus's SDA was and is decided by a bound
     applicability: "TMP117AIDRVR (WSON-6 DRV) at 3.3 V: board B's U10"
     verification_owed: "none for the number as the model states it; the model is of the die the maker modelled (its [File Rev]), and whether the fitted part carries a later die is a question for the maker (ER-D5)"
   - id: TI-ADS1115
