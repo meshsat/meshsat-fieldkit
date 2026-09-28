@@ -37,4 +37,58 @@ The ruling this implements is `v2/docs/feasibility/DECOUPLING.md` section 6; the
 - `box/escape_parity.py`, `box/dec001_read.py`, `box/run_box.sh`, `box/before_after.py`, `box/to_box.sh`: the box
   records.
 
+## Results
+
 RESULTS_PLACEHOLDER
+
+## Decisions taken by this stream (authority: SESSION, under the owner's standing rule of 26 September 2026)
+
+| id | decision | why | how to reverse |
+|---|---|---|---|
+| S-1 | `intent.write` refuses an entry with no ruled class or no basis, and PRINTS by name (does not refuse) a class L entry without its value floor or ESR statement and a class R entry without `same_side`. | T5 names the refusal "an entry without one" (a class and a basis). The class fields belong to each board's generator; refusing them in `intent.py` would stop board A's regeneration (8 class R entries without `same_side`) and board D's (15 class L gaps) on a tools merge, while board A is being regenerated in integration set 9 (`fnd/int10`). The gate still refuses a class R seat on the other side whatever the flag says (`far_side` reads the class). | In `intent.bypass_form`, move the `notes` into `refused` once generators A and D write the fields. |
+| S-2 | A lost escape is charged to the parts whose absence ALONE clears it; when none does alone, to every part of that cause. The closure is applied only while every costed part stands where the pass measured it. | D3 and T4 close "for the part that costs it"; asking each part alone names it without guessing, and when two parts block together neither alone is the cause, so both are closed (the conservative reading: a window stays shut rather than an escape staying lost). A part that moved invalidates the measurement. | Delete `out/<stem>-escape-cost.json` beside a board, or drop the read in `bypass_search.closures`. |
+| S-3 | The via allowance is computed from the fabricator's stackup row: 3.54 mm on JLC06161H-3313 (B21), 2.26 mm on JLC04161H-7628 (D12), where DECOUPLING.md 5.2 and T9's fixture say 3.7 and 2.3. | The page's 3.7 mm took a six-layer board of 1.5832 mm; the row's own layers sum to 1.5384 mm (the first author's finding F-1, in `test_decoupling_rules.py`). The four-layer row gives the page's figure. The number is the row's, never typed, so a stackup change moves it. | Correct the row in `stackup_write.py` if the fabricator's thickness is the page's; the allowance follows. |
+| S-4 | The 8 September blanket line was removed from the six phase-folder copies of `bypass-allow.txt` too (the first author's change, kept), where T6 says the snapshot copies "stay as history". | The phase folders hold the committed candidates the gate reads (A32, B21, C24, D12, E17, P4), not an archive, and `parse_allow` refuses a line that names no capacitor, so the verdict is the same with or without the line; the old text is in git. `test_decoupling_rules.t_no_allow_file_carries_a_line_that_names_no_capacitor` holds every allow file to the new form. | `git checkout 73ae2f21 -- v2/ecad/pcb-*-*/bypass-allow.txt` and narrow that test to the project folders. |
+| S-5 | `test_exposed_pad_vias.t_the_thermal_vias_are_asked_of_every_footprint...` now accepts `if fan_select.is_escaped(fp)` beside the old `if is_fine(fp)`. | The first author moved the selection into `fan_select` (T1); the coarse loop skips exactly what it skipped before (`is_escaped` is the old `is_fine` less the J exemption the loop also applied), and the source check failed on the spelling alone (box run3 at c1a1f28e). | Revert the test's one line if the selection moves back. |
+| S-6 | `box/basis_check.py` counts a single quote as opening a passage only where no letter or digit stands before it, reads the page that follows a passage first, and recognises TI literature numbers. | The first version let the apostrophe of "maker's" open a passage and swallow the real opening quote, read "p.2" out of "(Figure 21, p.28" and named no document for SLUSC67B: 13 ELSEWHERE and several wrong pages that were the tool's, not the bases'. | The first version is in commit ee5303a5. |
+
+## Open items, each with its next action
+
+1. The chain does not re-place after the escape pass, so a closure acts at the next regeneration or `bypass_place.py`
+   run. Next action (the integrator, in `full.sh`): after `escape.py`, when `out/<stem>-escape-cost.json` has a
+   non-empty `close`, run `bypass_place.py` and `escape.py` once more, then continue to the route.
+2. T7 and T8: run `apply_dec001_registry.py <checkout root>` on the integration line, then `rules_render.py`, and
+   commit both files and the rendered pages together.
+3. The three NOT_FOUND quotations of `BASIS.md` (A's C4, B's C71; E's C58 is a text-layer artefact and needs nothing)
+   and B's C37/C38 page: each board's writer corrects the basis text in its generator.
+4. Boards A and D's class fields (S-1): board A's writer adds `same_side: true` to its 8 class R entries; board D's
+   writer states the ESR (or "not stated by the maker") on its 10 class L entries and the floor on C19 to C23.
+5. The inventory's T3 and T4 detectors (`inventory.py`) read the wrong places; next action if the inventory is re-used:
+   point T3 at `bypass_search.search`'s rotation loop and T4 at `escape_cost`.
+6. Every board's next placement under these tools, on the box, with the seats read and the escape cost measured
+   (FEA-006's closing evidence); the integrator's, after this branch is merged.
+
+## What remains of FEA-006's layout-entry stage, per board
+
+FEA-006's LAYOUT_ENTRY stage (`pcb_requirements.yaml`) asks for four things. Read on this branch at its merge of main
+9147db5d:
+
+- **The per-class requirement from the makers' own words, with its source per class.** Written in DECOUPLING.md
+  sections 4 and 6; every one of the 425 declarations on the six committed intents carries a class and a basis
+  (`test_intent_bypass_class`), and `BASIS.md` looks their quotations up: 3 not verbatim, 1 page wrong, 133 quote
+  nothing (most say the maker states no capacitor, rule D1).
+- **T1 to T10 merged with DEC-001's registry text.** This branch holds T1 to T6, T9 and T10 in the tools and T7 as an
+  apply script; T8 is the render in the merge commit. Open: items 1 and 2 of the list above.
+- **G1 to G14 in each generator and the circuit gaps closed, read back on the committed netlist.** `inventory-set8.json`
+  reads all fourteen DONE on the set 8 netlists and intents.
+- **The PI7C9X2G404SL question asked of Diodes** (board B only): drafted in `v2/docs/records/rv-dec/`, not sent; outside
+  contact is not a stream's.
+
+| board | what remains of LAYOUT_ENTRY after this branch |
+|---|---|
+| A | the merge of this branch, T7 applied and T8 rendered; `same_side` on its 8 class R entries (S-1); C4's quotation (BASIS.md); A changes again in integration set 9 (`fnd/int10`, U41 with C227 to C232), whose new entries its generator must class (it already stops on an unclassed one); then the next placement read under the class rules (closing evidence). |
+| B | the merge, T7, T8; C71's quotation and C37/C38's page (BASIS.md); the Diodes question; the next placement (B21 predates round 8's declarations, so most of its 281 entries are not on the placed board: see the table above). |
+| C | the merge, T7, T8; the next placement, with C3 and C4 out of U11's fan box. |
+| D | the merge, T7, T8; the ESR statement on its 10 class L entries and the floor on C19 to C23 (S-1); the next placement, with C31 and C32 inside the TPA6132A2's 5 mm and C15, C16 and C17 out of the fan boxes they sit in on D12. |
+| E | the merge, T7, T8; the next placement. |
+| P | the merge, T7, T8; class A stays provisional until the qualified battery review answers Q-P19 to Q-P21; the next placement. |
