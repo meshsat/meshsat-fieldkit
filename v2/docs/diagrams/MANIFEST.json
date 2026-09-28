@@ -1,89 +1,81 @@
 {
  "what": "The diagrams of the MeshSat V2 field kit handover, layer 4. Design diagrams of an unbuilt prototype.",
- "tree": "b7f96784",
- "inputs_differing_from_the_tree": [
-  "v2/docs/ARCHITECTURE.md",
-  "v2/docs/diagrams/tools/case_drawings.py",
-  "v2/docs/diagrams/tools/control_lines.py",
-  "v2/docs/diagrams/tools/extract_mermaid.py",
-  "v2/docs/diagrams/tools/netlist.py",
-  "v2/docs/diagrams/tools/power_tree.py",
-  "v2/docs/diagrams/tools/render.sh"
- ],
+ "tree": "2781cee6",
+ "inputs_differing_from_the_tree": [],
  "toolchain": {
-  "python": "Python 3.11.2",
-  "matplotlib": "3.10.9",
-  "pyyaml": "6.0.3",
-  "node": "v20.20.2",
+  "python": "Python 3.12.3",
+  "matplotlib": "3.6.3",
+  "pyyaml": "6.0.1",
+  "node": "v18.19.1",
   "mermaid_cli": "@mermaid-js/mermaid-cli@11.12.0 (npx; its bundle carries the ELK layout)",
   "mermaid": "11.17.2 (resolved by npx for that mermaid-cli, loaded from its node_modules)",
   "puppeteer": "23.11.1",
-  "chromium": "Google Chrome for Testing 151.0.7922.34"
+  "chromium": "Puppeteer's own download"
  },
  "diagrams": {
   "arch-2-context": {
    "inputs": {
-    "v2/docs/ARCHITECTURE.md": "5cf45b4783dbe092",
+    "v2/docs/ARCHITECTURE.md": "c883f948f3221e74",
     "v2/docs/diagrams/tools/extract_mermaid.py": "de3e26f8b634aafb",
     "v2/docs/diagrams/tools/render.sh": "857134feff410358",
     "v2/docs/diagrams/tools/mermaid.json": "7899e96fd6eb9cc0"
    },
    "outputs": {
-    "v2/docs/diagrams/src/arch-2-context.mmd": "748457ac77449aa6",
-    "v2/docs/diagrams/svg/arch-2-context.svg": "dbf8d4eeefb3c4b6",
-    "v2/docs/diagrams/pdf/arch-2-context.pdf": "b979688ed252f4d0"
+    "v2/docs/diagrams/src/arch-2-context.mmd": "3f2417d86d862d18",
+    "v2/docs/diagrams/svg/arch-2-context.svg": "6029726039d555e9",
+    "v2/docs/diagrams/pdf/arch-2-context.pdf": "3150c20b94b3b605"
    }
   },
   "arch-3-2-board-interconnect": {
    "inputs": {
-    "v2/docs/ARCHITECTURE.md": "5cf45b4783dbe092",
+    "v2/docs/ARCHITECTURE.md": "c883f948f3221e74",
     "v2/docs/diagrams/tools/extract_mermaid.py": "de3e26f8b634aafb",
     "v2/docs/diagrams/tools/render.sh": "857134feff410358",
     "v2/docs/diagrams/tools/mermaid.json": "7899e96fd6eb9cc0"
    },
    "outputs": {
-    "v2/docs/diagrams/src/arch-3-2-board-interconnect.mmd": "5b2a02a9327505e6",
-    "v2/docs/diagrams/svg/arch-3-2-board-interconnect.svg": "175fc8ab40992b85",
-    "v2/docs/diagrams/pdf/arch-3-2-board-interconnect.pdf": "2f54e3912c96185d"
+    "v2/docs/diagrams/src/arch-3-2-board-interconnect.mmd": "8e15f17de4cd9d01",
+    "v2/docs/diagrams/svg/arch-3-2-board-interconnect.svg": "f26ca595e4b0ef26",
+    "v2/docs/diagrams/pdf/arch-3-2-board-interconnect.pdf": "2f07ff9dcc3b16e7"
    }
   },
   "arch-4-1-power-tree": {
    "inputs": {
-    "v2/docs/ARCHITECTURE.md": "5cf45b4783dbe092",
+    "v2/docs/ARCHITECTURE.md": "c883f948f3221e74",
     "v2/docs/diagrams/tools/extract_mermaid.py": "de3e26f8b634aafb",
     "v2/docs/diagrams/tools/render.sh": "857134feff410358",
     "v2/docs/diagrams/tools/mermaid.json": "7899e96fd6eb9cc0"
    },
    "outputs": {
-    "v2/docs/diagrams/src/arch-4-1-power-tree.mmd": "47870fad16588c68",
-    "v2/docs/diagrams/svg/arch-4-1-power-tree.svg": "2264e23ddd7a745f",
-    "v2/docs/diagrams/pdf/arch-4-1-power-tree.pdf": "e9eb4b99368f8362"
+    "v2/docs/diagrams/src/arch-4-1-power-tree.mmd": "54818926140dd9ed",
+    "v2/docs/diagrams/svg/arch-4-1-power-tree.svg": "5ac36ad2ccd5c05a",
+    "v2/docs/diagrams/pdf/arch-4-1-power-tree.pdf": "157766209c414a41"
    }
   },
   "arch-4-3-power-up": {
    "inputs": {
-    "v2/docs/ARCHITECTURE.md": "5cf45b4783dbe092",
+    "v2/docs/ARCHITECTURE.md": "c883f948f3221e74",
     "v2/docs/diagrams/tools/extract_mermaid.py": "de3e26f8b634aafb",
     "v2/docs/diagrams/tools/render.sh": "857134feff410358",
     "v2/docs/diagrams/tools/mermaid.json": "7899e96fd6eb9cc0"
    },
    "outputs": {
-    "v2/docs/diagrams/src/arch-4-3-power-up.mmd": "4207b2be02e6f1b4",
-    "v2/docs/diagrams/svg/arch-4-3-power-up.svg": "3144fbe7089a527e",
-    "v2/docs/diagrams/pdf/arch-4-3-power-up.pdf": "8f1d4fa3a70920de"
+    "v2/docs/diagrams/src/arch-4-3-power-up.mmd": "028ccd1a11b663c6",
+    "v2/docs/diagrams/svg/arch-4-3-power-up.svg": "a15b95c0e8a0c74a",
+    "v2/docs/diagrams/pdf/arch-4-3-power-up.pdf": "b4e66fef9d7ffab3"
    }
   },
   "arch-5-5-lanes-and-fabric": {
    "inputs": {
-    "v2/docs/ARCHITECTURE.md": "5cf45b4783dbe092",
+    "v2/docs/ARCHITECTURE.md": "c883f948f3221e74",
     "v2/docs/diagrams/tools/extract_mermaid.py": "de3e26f8b634aafb",
     "v2/docs/diagrams/tools/render.sh": "857134feff410358",
     "v2/docs/diagrams/tools/mermaid.json": "7899e96fd6eb9cc0"
    },
    "outputs": {
-    "v2/docs/diagrams/src/arch-5-5-lanes-and-fabric.mmd": "564066c93725c51c",
-    "v2/docs/diagrams/svg/arch-5-5-lanes-and-fabric.svg": "e91c20623aac74a8",
-    "v2/docs/diagrams/pdf/arch-5-5-lanes-and-fabric.pdf": "fc7e991e153f9962"
+    "v2/docs/diagrams/src/arch-5-5-lanes-and-fabric.mmd": "62872764c5ea65c8",
+    "v2/docs/diagrams/svg/arch-5-5-lanes-and-fabric.svg": "9b05a856b314a927",
+    "v2/docs/diagrams/pdf/arch-5-5-lanes-and-fabric.pdf": "a1b27798e0907185"
    }
   },
   "battery-protection-states": {
@@ -96,7 +88,7 @@
    "outputs": {
     "v2/docs/diagrams/src/battery-protection-states.mmd": "06971fe183bd035f",
     "v2/docs/diagrams/svg/battery-protection-states.svg": "f6d190132b0a812e",
-    "v2/docs/diagrams/pdf/battery-protection-states.pdf": "24f0445d0cbbad34"
+    "v2/docs/diagrams/pdf/battery-protection-states.pdf": "b2c918043020038b"
    }
   },
   "battery-charger-states": {
@@ -109,54 +101,54 @@
    "outputs": {
     "v2/docs/diagrams/src/battery-charger-states.mmd": "e3fb51c60cb21f57",
     "v2/docs/diagrams/svg/battery-charger-states.svg": "9148a19df16d5b55",
-    "v2/docs/diagrams/pdf/battery-charger-states.pdf": "83637aa484137b2f"
+    "v2/docs/diagrams/pdf/battery-charger-states.pdf": "4154b6adcad033a9"
    }
   },
   "control-lines": {
    "inputs": {
-    "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net": "da05dc02bc1e612f",
-    "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net": "8b78c59754a6a0c7",
-    "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net": "11eabc2dddca5161",
-    "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net": "76700a687eb6187f",
-    "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net": "d6137f50059e5cbc",
-    "v2/ecad/tools/pcb_interfaces.yaml": "a30b5d408a3dab93",
+    "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net": "599ee964a9c23d6e",
+    "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net": "21a1f74a3ec1ae28",
+    "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net": "3fddbb3edcd4248a",
+    "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net": "7a2c0ac2190b141a",
+    "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net": "56adc9746d61c4e0",
+    "v2/ecad/tools/pcb_interfaces.yaml": "363af4715553e42b",
     "v2/docs/diagrams/tools/control_lines.py": "09e18834d5a2d0bc",
-    "v2/docs/diagrams/tools/netlist.py": "7325728aa88d2c76",
+    "v2/docs/diagrams/tools/netlist.py": "bbde6f34036deede",
     "v2/docs/diagrams/tools/render.sh": "857134feff410358",
     "v2/docs/diagrams/tools/mermaid.json": "7899e96fd6eb9cc0"
    },
    "outputs": {
-    "v2/docs/diagrams/src/control-lines.mmd": "6542629d67204d9b",
-    "v2/docs/diagrams/svg/control-lines.svg": "a1907c1ce85f1838",
-    "v2/docs/diagrams/pdf/control-lines.pdf": "3c6d510ff10ab567",
-    "v2/docs/diagrams/control-lines.md": "c199ffbe1b0109df"
+    "v2/docs/diagrams/src/control-lines.mmd": "2b50771d9270e5f5",
+    "v2/docs/diagrams/svg/control-lines.svg": "3c04ffa1e9ce25da",
+    "v2/docs/diagrams/pdf/control-lines.pdf": "2fdac5b54046df39",
+    "v2/docs/diagrams/control-lines.md": "fe022faa05447127"
    }
   },
   "power-tree": {
    "inputs": {
-    "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net": "da05dc02bc1e612f",
-    "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net": "8b78c59754a6a0c7",
-    "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net": "11eabc2dddca5161",
-    "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net": "76700a687eb6187f",
-    "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net": "d6137f50059e5cbc",
-    "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net": "085f833362fbbda8",
+    "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net": "599ee964a9c23d6e",
+    "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net": "21a1f74a3ec1ae28",
+    "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net": "3fddbb3edcd4248a",
+    "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net": "7a2c0ac2190b141a",
+    "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net": "56adc9746d61c4e0",
+    "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net": "760ac6f74d62d194",
     "v2/ecad/tools/pcb_energy_chain.yaml": "a09ca0293afd1f7c",
-    "v2/docs/diagrams/tools/power_tree.py": "1ddc66e9c3993384",
-    "v2/docs/diagrams/tools/netlist.py": "7325728aa88d2c76",
+    "v2/docs/diagrams/tools/power_tree.py": "607a6402e2d3264b",
+    "v2/docs/diagrams/tools/netlist.py": "bbde6f34036deede",
     "v2/docs/diagrams/tools/render.sh": "857134feff410358",
     "v2/docs/diagrams/tools/mermaid.json": "7899e96fd6eb9cc0"
    },
    "outputs": {
-    "v2/docs/diagrams/src/power-tree.mmd": "7eb9a3cb38b3985d",
-    "v2/docs/diagrams/svg/power-tree.svg": "bc9995a5c8ec4f9e",
-    "v2/docs/diagrams/pdf/power-tree.pdf": "6a360bb7c8574abf",
-    "v2/docs/diagrams/power-tree.md": "4b84a3e46e0757b1"
+    "v2/docs/diagrams/src/power-tree.mmd": "0c54a626b639c039",
+    "v2/docs/diagrams/svg/power-tree.svg": "a6c03b1716b443c6",
+    "v2/docs/diagrams/pdf/power-tree.pdf": "4114ccb14b133e66",
+    "v2/docs/diagrams/power-tree.md": "145afe023b704faf"
    }
   },
   "case-plan": {
    "inputs": {
-    "v2/vendor/peli/frame_seat.py": "959b9326f614f72a",
-    "v2/vendor/peli/1450/frame_seat.out": "a65c0792a7a08c08",
+    "v2/vendor/peli/frame_seat.py": "b653dc655fcc47c9",
+    "v2/vendor/peli/1450/frame_seat.out": "94e4ec924f226246",
     "v2/vendor/peli/case_margins.py": "3391fe828e17870c",
     "v2/ecad/tools/panel1450.py": "3bdb88df98260244",
     "v2/ecad/tools/gen_pcb_a.py": "2101683401aa426d",
@@ -165,19 +157,19 @@
     "v2/ecad/tools/gen_pcb_p.py": "091919dfe5c7da2e",
     "v2/cad/render/scene.py": "0887cab96fdf05ee",
     "v2/ecad/tools/pcb_board_facts.yaml": "07af4d0f2b166694",
-    "v2/docs/CASE-MARGINS.md": "0fc449b72532ba7c",
+    "v2/docs/CASE-MARGINS.md": "55244f94aace54ca",
     "v2/docs/diagrams/tools/case_drawings.py": "69103f13ff638680"
    },
    "outputs": {
-    "v2/docs/diagrams/svg/case-plan.svg": "a8bcde15b33c3939",
-    "v2/docs/diagrams/pdf/case-plan.pdf": "4412832a9656ede2",
-    "v2/docs/diagrams/case-drawings.md": "6d8ecdb90b1dd821"
+    "v2/docs/diagrams/svg/case-plan.svg": "dbdf5c0be1877c19",
+    "v2/docs/diagrams/pdf/case-plan.pdf": "96a52e00d2e36f09",
+    "v2/docs/diagrams/case-drawings.md": "dc22a92e99a00ca3"
    }
   },
   "case-zstack": {
    "inputs": {
-    "v2/vendor/peli/frame_seat.py": "959b9326f614f72a",
-    "v2/vendor/peli/1450/frame_seat.out": "a65c0792a7a08c08",
+    "v2/vendor/peli/frame_seat.py": "b653dc655fcc47c9",
+    "v2/vendor/peli/1450/frame_seat.out": "94e4ec924f226246",
     "v2/vendor/peli/case_margins.py": "3391fe828e17870c",
     "v2/ecad/tools/panel1450.py": "3bdb88df98260244",
     "v2/ecad/tools/gen_pcb_a.py": "2101683401aa426d",
@@ -186,13 +178,13 @@
     "v2/ecad/tools/gen_pcb_p.py": "091919dfe5c7da2e",
     "v2/cad/render/scene.py": "0887cab96fdf05ee",
     "v2/ecad/tools/pcb_board_facts.yaml": "07af4d0f2b166694",
-    "v2/docs/CASE-MARGINS.md": "0fc449b72532ba7c",
+    "v2/docs/CASE-MARGINS.md": "55244f94aace54ca",
     "v2/docs/diagrams/tools/case_drawings.py": "69103f13ff638680"
    },
    "outputs": {
-    "v2/docs/diagrams/svg/case-zstack.svg": "7f3db61ddcef712d",
-    "v2/docs/diagrams/pdf/case-zstack.pdf": "3f7cc91713d9309e",
-    "v2/docs/diagrams/case-drawings.md": "6d8ecdb90b1dd821"
+    "v2/docs/diagrams/svg/case-zstack.svg": "356b315a32892c75",
+    "v2/docs/diagrams/pdf/case-zstack.pdf": "489a11b8b6e5988c",
+    "v2/docs/diagrams/case-drawings.md": "dc22a92e99a00ca3"
    }
   }
  }

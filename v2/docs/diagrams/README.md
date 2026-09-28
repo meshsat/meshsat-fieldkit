@@ -4,6 +4,16 @@ MESHSAT-1357, 27 September 2026. **Every diagram here is a design diagram of an 
 been fabricated, ordered or powered, no kit has been built, fitted to a case or field deployed, and nothing drawn here
 has been measured. Each rendered file says so in its own title or footer.
 
+**Status: rebuilt at `2781cee6` (29 September 2026, integration set 9's line, MESHSAT-1357), all 11 diagrams.** The
+rebuild follows sets 6 to 9: the power tree types board D's feed as S-99 (decision 55) made it, VBAT to +5V_D8IN through
+the TPS62933 buck U41 (enabled by RAIL_EN) and +5V_D8IN to +5V_D8 through the eFuse U23, where it had +5V_DEV to +5V_D8;
+its sweep still accepts 15 substitutions, as before. The control lines follow board B's per-slot EMCON_HW gates (the
+SN74LV1T08 map added to `tools/netlist.py` from TI SCLS739F Table 5-1, which the build refused without). Rendered on the
+rented box (Mermaid CLI 11.12.0, Node 18, matplotlib 3.6.3); `build.py --check` reads 11 of 11 current against
+`MANIFEST.json`; the readback (`readback.py`, its output in `v2/docs/records/diag/readback.log`) reports no problem: every
+SVG parses, carries no foreignObject and states that it is a design diagram of an unbuilt prototype, and every PDF
+prints at its drawing's natural size. The paragraph below is the record of the build at `b7f96784`.
+
 **Status: drawn at `b7f96784`, with round 8 on all six boards and set 5 on boards A, B, D and E.** The r8int5 integration
 (27 September 2026, branch `fnd/r8int5`) rebuilt every diagram again from the tree at `b7f96784` (netlists A `da05dc02bc1e612f`, B
 `8b78c59754a6a0c7`, C `11eabc2dddca5161`, D `76700a687eb6187f`, E `d6137f50059e5cbc`, P `085f833362fbbda8`; `pcb_energy_chain.yaml` `a09ca0293afd1f7c`), after set 5 changed
