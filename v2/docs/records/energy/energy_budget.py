@@ -425,6 +425,8 @@ def simulate(d, pack, prof, p_load, wp, window, eta, pr, start_h, t_c, age, hour
         if not running and (p_sun >= p_load or e >= 0.5 * e_full):
             running = True   # the operator restarts it once the sun carries the load or the pack is half recharged
         load = p_load if running else 0.0
+        if not running:
+            short_wh += max(0.0, p_load - p_sun)   # the load the stopped kit does not serve and the sun does not carry
         if p_sun >= load:
             surplus = p_sun - load
             soc = e / e_full
@@ -438,10 +440,7 @@ def simulate(d, pack, prof, p_load, wp, window, eta, pr, start_h, t_c, age, hour
         else:
             deficit = load - p_sun
             in_night = True
-            if not running:
-                short_wh += p_load - p_sun   # the load the stopped kit does not serve and the sun does not carry
-                flow = 0.0
-            elif e >= deficit:
+            if e >= deficit:
                 e -= deficit
                 night_draw += deficit
                 flow = -deficit
