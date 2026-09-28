@@ -14,11 +14,11 @@ the ruling is the action that moves it, and the measurement is reported beside i
 | `DECISION_UNCLAIMED` | 7 | a rule that says a decision is open while no decision claims it |
 | `AUTHORITY` | 3 | an authority this project does not have |
 | `NO_INSTRUMENT` | 11 | nothing verifies it |
-| `MISSING_INPUT` | 19 | an input the reading declared absent |
+| `MISSING_INPUT` | 17 | an input the reading declared absent |
 | `MEASURED_FAILURE` | 40 | the tool looked and the board failed |
 | `VENDOR_WAIT` | 2 | a fabricator or a standards body, and nobody here |
 | `OWNER_WORK` | 7 | work only the owner or the ordering session can do |
-| `NOT_JUDGED` | 49 | not judged, for the reason the reading gives |
+| `NOT_JUDGED` | 51 | not judged, for the reason the reading gives |
 
 A pair is what a BOARD has to satisfy, so the table counts pairs; these rules are decided by a verdict
 written ONCE for the whole set, so their rows are one reading seen on every board and not that many separate
@@ -30,8 +30,8 @@ things to fix.
 
 | board | open | of which measured | decision-bound | authority | missing input | not judged |
 |---|---:|---:|---:|---:|---:|---:|
-| A | 26 | 13 | 1 | 1 | 5 | 5 |
-| B | 38 | 4 | 1 | 1 | 6 | 23 |
+| A | 26 | 13 | 1 | 1 | 4 | 6 |
+| B | 38 | 4 | 1 | 1 | 5 | 24 |
 | C | 15 | 4 | 1 | 0 | 0 | 9 |
 | D | 16 | 2 | 1 | 1 | 4 | 7 |
 | E | 19 | 6 | 1 | 0 | 4 | 7 |
@@ -130,19 +130,17 @@ What closes these is a re-cut and a route, not a drawing.
 | `THM-001` | E | INCONCLUSIVE | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) and from what each |
 | `THM-001` | P | INCONCLUSIVE | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) and from what each |
 
-## MISSING_INPUT (19): an input the reading declared absent
+## MISSING_INPUT (17): an input the reading declared absent
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
 | `CMP-002` | A | INCONCLUSIVE | no deliverable folder at the declared phase A32, so this board's parts were not certified against the board this tree holds (the folders that exist are A19, A20, A21, A22, A24) |
 | `SUP-001` | A | INCONCLUSIVE | no deliverable folder at the declared phase A32, so this board's parts were not certified against the board this tree holds (the folders that exist are A19, A20, A21, A22, A24) |
 | `DFM-001` | A | INCONCLUSIVE | the folder judged here is meshsat-pcb-a-revA-A24 and this board declares A32, so its properties are a reading of a board this set is not building |
-| `REL-001` | A | INCONCLUSIVE | board A's declaration was written against the netlist of sha256 0a2b59087bcc2678 and the declared phase's netlist pcb-a-power-a23/out/pcb-a-power.net reads 2dfe1c546cb39ccb: its components and nets are the same (a re-exp |
 | `DOC-002` | A | INCONCLUSIVE | board A declares A32 and the order set holds A22: the note beside those folders describes a board this project is not building |
 | `CMP-002` | B | INCONCLUSIVE | no deliverable folder at the declared phase B21, so this board's parts were not certified against the board this tree holds (the folders that exist are B12, B13, B14, B15, B19) |
 | `SUP-001` | B | INCONCLUSIVE | no deliverable folder at the declared phase B21, so this board's parts were not certified against the board this tree holds (the folders that exist are B12, B13, B14, B15, B19) |
 | `DFM-001` | B | INCONCLUSIVE | the folder judged here is meshsat-pcb-b-revA-B19-quote and this board declares B21, so its properties are a reading of a board this set is not building |
-| `REL-001` | B | INCONCLUSIVE | board B's declaration was written against the netlist of sha256 028997a6c5e8810f and the declared phase's netlist pcb-b-compute-b19/out/pcb-b-compute.net reads 21a1f74a3ec1ae28: its components and nets are the same (a re |
 | `DOC-001` | B | INCONCLUSIVE | a deliverable folder at the declared phase B21: the only folder is meshsat-pcb-b-revA-B19-quote, a quote, and a folder is judged against itself |
 | `DOC-002` | B | INCONCLUSIVE | board B declares B21 and the order set holds B16: the note beside those folders describes a board this project is not building |
 | `CMP-002` | D | INCONCLUSIVE | no deliverable folder at the declared phase D12, so this board's parts were not certified against the board this tree holds (the folders that exist are D10, D11, D5, D6, D7, D8, D9) |
@@ -218,12 +216,13 @@ What closes these is a re-cut and a route, not a drawing.
 | `DFA-001` | E | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 | `DFA-001` | P | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 
-## NOT_JUDGED (49): not judged, for the reason the reading gives
+## NOT_JUDGED (51): not judged, for the reason the reading gives
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
 | `SI-001` | A | INCONCLUSIVE | edge_length INCONCLUSIVE: SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (U |
 | `RF-002` | A | INCONCLUSIVE | inhibit_chain_a INCONCLUSIVE: RF-002 on this board: where the transmit inhibit line runs, it is present, reaches the gate it keys, has the panel toggle as its only source, is buffered and no |
+| `REL-001` | A | INCONCLUSIVE | reliability INCONCLUSIVE: every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the m |
 | `DOC-001` | A | INCONCLUSIVE | final_gate_a INCONCLUSIVE: this board is HELD by an open owner decision, so its paperwork is not current and cannot be made current while the hold stands |
 | `SCH-003` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
 | `PI-002` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
@@ -245,6 +244,7 @@ What closes these is a re-cut and a route, not a drawing.
 | `VIA-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
 | `PLN-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
 | `EMC-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
+| `REL-001` | B | INCONCLUSIVE | reliability INCONCLUSIVE: every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the m |
 | `SCH-002` | C | INCONCLUSIVE | no netlist_parts verdict for this board |
 | `CMP-002` | C | INCONCLUSIVE | jlc_certify_c was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
 | `SUP-001` | C | INCONCLUSIVE | jlc_certify_c was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
