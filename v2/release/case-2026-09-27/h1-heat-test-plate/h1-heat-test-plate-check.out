@@ -1,7 +1,7 @@
 # H1 heat-test plate blank: check record (v2/cad/h1_heat_test_plate.py, MESHSAT-1357 stream od01b)
 # inputs, sha256 first 16:
 #   3bdb88df98260244  v2/ecad/tools/panel1450.py
-#   d88450ad82a1da57  v2/cad/h1_heat_test_plate.py
+#   166d753f6354dd5a  v2/cad/h1_heat_test_plate.py
 #   19703fa5838f9e4a  v2/release/case-2026-09-27/face-plate/face-plate.dxf
 #   ec17870c5a92d11e  v2/vendor/arcol/arcol-hs-datasheet-12-14-08.pdf
 # PEM holes (x, y): (-63.50, 52.50); (-26.50, 52.50); (-63.50, 87.50); (-26.50, 87.50)
