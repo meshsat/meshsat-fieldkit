@@ -1,0 +1,11 @@
+11:  decisions_render.py --check    refuse a hand-edited copy (exit 1)
+24:        "     Do not edit: `python3 tools/decisions_render.py --check` refuses a hand-edited copy. -->\n")
+decisions_render: ../../docs/OWNER-DECISIONS-OPEN.md differs from what the register renders
+decisions_render: wrote ../../docs/OWNER-DECISIONS-OPEN.md (48 lines)
+ v2/docs/OWNER-DECISIONS-OPEN.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+--- a/v2/docs/OWNER-DECISIONS-OPEN.md
++++ b/v2/docs/OWNER-DECISIONS-OPEN.md
+-**0 decisions are open and they hold 0 rule-board pairs of the 338 the set is judged on.** A pair held by a
++**0 decisions are open and they hold 0 rule-board pairs of the 345 the set is judged on.** A pair held by a
+tests: 5 passed, 0 failed, 0 skipped

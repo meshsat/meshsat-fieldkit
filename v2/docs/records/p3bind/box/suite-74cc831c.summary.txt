@@ -1,0 +1,13 @@
+# the full suite on the box at 74cc831c (box_suite.sh, evidence /root/r8int6/evidence-head.tar), 2026-09-27T21:54:11Z
+# every line of tests/run.py that is not a PASS line, then its last lines
+tests: test_finish_order.t_routeflow_validate_agrees_with_these_rules SKIP the profiles pin /root/gitlab/products/meshsat/meshsat-fieldkit, which exists here and is not this tree, so validate's one-tree property is about the host rather than the profile
+tests: test_pairsearch.t_the_three_implementations_agree        SKIP no numba on this host: the heapq original and the array kernel agree, the compiled one was not run
+tests: test_per_board_contract_verdict.t_without_pcbnew_the_tool_writes_its_own_verdict_declaring_the_absence SKIP pcbnew is importable here: the absence cannot be shown
+tests: 2051 passed, 0 failed, 3 skipped
+# the log ends:
+tests: 2051 passed, 0 failed, 3 skipped
+EXIT 0
+74cc831c038aabbe25c2212cf19d9dd0e8cf434c
+# git status before the run:
+# git status after the run:
+ M v2/docs/CURRENT-EVIDENCE.md
