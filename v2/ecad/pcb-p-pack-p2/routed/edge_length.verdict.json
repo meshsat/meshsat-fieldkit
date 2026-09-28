@@ -6,8 +6,10 @@
   "files": {
    "boardorder.py": "298e46edcc028954",
    "boardtable.py": "41bd92e61f12c374",
-   "edge_length.py": "fd66cbd9bce2fa7b",
+   "edge_length.py": "ac1c6b023787cf1d",
    "hardset.py": "be29a44c4a592876",
+   "ibis_manifest.py": "ff27099a74e5efe9",
+   "ibis_read.py": "1d48c256b6ceca65",
    "impedance_check.py": "e2495a04e16fc600",
    "intent.py": "f1ac033e0f3c10f1",
    "intent_checks.py": "1ad7af0c718ba940",
@@ -15,6 +17,7 @@
    "netclass.py": "4cc1adf0ddae0390",
    "netlist_board.py": "655bc402d36b0fa5",
    "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
    "regen_compare.py": "341d7f129a1e6f24",
    "return_via.py": "b61d138e54955dd4",
    "rules_lib.py": "a6e2421096c1473f",
@@ -24,25 +27,35 @@
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "ac4e23da0105c4df",
+  "sha16": "79aee841821f3fd0",
   "unresolved": []
  },
  "counts": {
-  "answered_nets": 0,
+  "answered_nets": 4,
+  "bound_decided_nets": 1,
+  "bound_edge_nets": 5,
   "classes": 12,
   "contradicted_nets": 0,
-  "decided_nets": 0,
-  "layout_bound_nets": 0,
+  "decided_nets": 5,
+  "layout_bound_nets": 1,
   "low_speed_nets": 20,
-  "may_be_long_nets": 0,
+  "maker_edge_nets": 0,
+  "maker_held_nets": 0,
+  "may_be_long_nets": 5,
+  "models_absent": 0,
+  "models_asked": 0,
   "signal_nets": 40,
-  "undecided_nets": 20
+  "unasked_part_nets": 0,
+  "undecided_model_absent_nets": 0,
+  "undecided_nets": 15,
+  "undecided_no_declaration_nets": 15,
+  "undecided_other_nets": 0
  },
  "denominator": 40,
  "evidence": [
-  "UNDECIDED (no declaration) (UNKNOWN, 15 net(s)): no signal-class declaration names these nets, so neither their class nor their edge is kno; ICs on them: BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm U1, BQ7720700DSSR: second-level cell OV 4.325 V / UV 2.25 V / open wire / OT 70 C on its own 103AT-2 (J_TS2), 3S-7S (SLUSEG7D) U2",
-  "UNDECIDED BTP_INT (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm U1",
-  "UNDECIDED SMB* (CLOCKED_DIGITAL, 4 net(s)): no edge is declared and no held document states one; ICs on them: BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm U1"
+  "UNDECIDED (no declaration) (UNKNOWN, 15 of 15 net(s)): no signal-class declaration (x15); ICs on them: BQ4050RSMR: SMBus U1, BQ7720700DSSR: second-level U2",
+  "BOUND_DECIDES 1 layout-bound net(s) whose governing edge is a bound or a model: at least one driver on each has no published minimum, whatever the other drivers' makers publish (ER-D13): BTP_INT",
+  "LAYOUT_BOUND BTP_INT (CLOCKED_DIGITAL, 0.000 ns BOUND TI-BQ4050, critical 0.0 mm, decided by a bound): BTP_INT"
  ],
  "inputs": {
   "board": "p",
@@ -55,10 +68,39 @@
    "sha256_16": "fb26e422307afb21"
   },
   "critical_k": 6,
+  "document_1": {
+   "path": "v2/vendor/battery/ti-bq4050.pdf",
+   "sha256_16": "2664e33fe6d6ebed"
+  },
+  "document_2": {
+   "path": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+   "sha256_16": "be56fbb75ba0ae9e"
+  },
+  "edge_rates": {
+   "path": "tools/pcb_edge_rates.yaml",
+   "sha256_16": "0689086680f7a4a4"
+  },
   "extent_mm": 114.0,
+  "far_netlist_e": {
+   "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
+   "sha256_16": "56adc9746d61c4e0"
+  },
+  "ibis_manifest": {
+   "path": "v2/vendor/ibis-manifest.yaml",
+   "sha256_16": "47952602c17f0dfd"
+  },
   "intent": {
    "path": "pcb-p-pack-p2/out/pcb-p-pack-intent.json",
    "sha256_16": "12f92bd3ce7a8264"
+  },
+  "model_state": {
+   "absent": 0,
+   "absent_files": [],
+   "asked": 0,
+   "how_to_fetch": "python3 v2/ecad/tools/ibis_fetch.py --fetch",
+   "manifest": "v2/vendor/ibis-manifest.yaml",
+   "present": 0,
+   "state": "NOT_ASKED"
   },
   "netlist": {
    "content16": "efe60479293f0004",
@@ -68,6 +110,10 @@
   "project": {
    "path": "pcb-p-pack-p2/pcb-p-pack.kicad_pro",
    "sha256_16": "9c9da1f900f7ef59"
+  },
+  "search_listing": {
+   "path": "v2/docs/records/w5si/readings/edge-search.txt",
+   "sha256_16": "d08bc489782c976b"
   },
   "slowest_layer": "JLC04162H-7628 In1.Cu",
   "stack_table": {
@@ -81,7 +127,7 @@
   "t_pd_ps_per_mm": 6.997
  },
  "missing_input": null,
- "note": "SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (UNDECIDED where none does), the critical length l = t_r / (k t_pd) on the slowest layer of every stack the board may be drawn on, and whether the netlist carries an impedance target, a series termination or a declaration where a net may be electrically long. The routed lengths are the layout gate's (edge_length_routed). The table is edge_length.table.json beside this verdict. Session decisions of 26 September 2026: LOW_SPEED_OR_DC asked no edge, the first matching entry decides, the slowest layer of the declared and ruled stacks, the stripline bound, the corner-to-corner extent, the project file's class where the netlist says Default",
+ "note": "SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (UNDECIDED where none does), the critical length l = t_r / (k t_pd) on the slowest layer of every stack the board may be drawn on, and whether the netlist carries an impedance target, a series termination or a declaration where a net may be electrically long. The routed lengths are the layout gate's (edge_length_routed). The table is edge_length.table.json beside this verdict. Session decisions of 26 September 2026: LOW_SPEED_OR_DC asked no edge, the first matching entry decides, the slowest layer of the declared and ruled stacks, the stripline bound, the corner-to-corner extent, the project file's class where the netlist says Default. Since 27 September 2026 every edge is a record of tools/pcb_edge_rates.yaml (a configuration input, by sha in inputs.edge_rates): a class entry's interface record, or per net the fastest of its drivers' families (a maker's IBIS model read per pin, a published minimum, a model or a bound), its far ends and one series resistor away; a net whose driver has no record is UNDECIDED. The governing edge of a net is the fastest any driver on it can produce, so one driver with no published minimum makes the net decided by a bound whatever the others publish (ER-D13); a layout-bound net a bound decides is named under BOUND_DECIDES and holds the reading INCONCLUSIVE. counts: decided = maker_edge + bound_edge; layout_bound = maker_held + bound_decided. Since 28 September 2026 the makers' IBIS models are pinned by v2/vendor/ibis-manifest.yaml (inputs.ibis_manifest) and are not in the repository: a model that is not in the tree decides nothing, its nets read UNDECIDED naming it, and inputs.model_state says which state the reading was taken in (ER-D17); undecided = undecided_no_declaration + undecided_model_absent + undecided_other; a pin whose [Ramp] cell the model's own V-t table contradicts takes the instantaneous bound (ER-D16)",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
@@ -97,14 +143,14 @@
  },
  "tool": "edge_length",
  "tools": {
-  "git_head": "a4b157f07618",
-  "tools_tree_sha": "293a55e153ef9d1e"
+  "git_head": "8b623c96380b",
+  "tools_tree_sha": "780a9555854f55da"
  },
- "ts": "2026-09-28T14:54:43Z",
+ "ts": "2026-09-28T18:44:48Z",
  "verdict": "INCONCLUSIVE",
- "version": "a4b157f07618",
+ "version": "8b623c96380b",
  "writer": {
   "file": "edge_length.py",
-  "sha16": "fd66cbd9bce2fa7b"
+  "sha16": "ac1c6b023787cf1d"
  }
 }

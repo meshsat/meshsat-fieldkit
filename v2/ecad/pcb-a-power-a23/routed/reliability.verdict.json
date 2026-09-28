@@ -4,28 +4,91 @@
  "code_bundle": {
   "entry": "reliability.py",
   "files": {
-   "reliability.py": "71d0872195905c9d",
-   "rules_lib.py": "a6e2421096c1473f",
-   "verdict.py": "e7d66c930b2c4357"
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "reliability.py": "c50f2b8b35d1d57b",
+   "verdict.py": "e7d66c930b2c4357",
+   "wear_inventory.py": "503a05eedb8a0a29"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "29602b41d6b33541",
+  "sha16": "70940aae54caa88b",
   "unresolved": []
  },
  "counts": {
   "boards": 1,
-  "classes": 6,
-  "covered": 39,
-  "fail": 0
+  "candidates": 82,
+  "citations_unjudged": 0,
+  "classed": 57,
+  "classes": 11,
+  "classes_undecided": 4,
+  "covered": 57,
+  "excluded": 25,
+  "exclusions": 1,
+  "fail": 0,
+  "figures_cited": 5,
+  "figures_none_published": 4,
+  "figures_not_mated": 0,
+  "figures_owed": 2,
+  "inconclusive": 9,
+  "measures_owed": 0,
+  "per_board": {
+   "a": {
+    "artefact": {
+     "kind": "netlist",
+     "sha256_16": "0a2b59087bcc2678"
+    },
+    "bound": true,
+    "candidates": 82,
+    "citations_unjudged": 0,
+    "classed": 57,
+    "classes_undecided": 4,
+    "excluded": 25,
+    "held_by": [
+     "REL-O-01",
+     "REL-O-02",
+     "REL-O-07",
+     "REL-O-08",
+     "REL-O-12",
+     "REL-O-13"
+    ],
+    "refused": 0,
+    "result": "INCONCLUSIVE"
+   }
+  },
+  "refused": 0
  },
- "denominator": 45,
- "evidence": [],
+ "denominator": 82,
+ "evidence": [
+  "A: class the pre-charge pin owes its cycle figure (open item REL-O-01: board A's pre-charge pin J_PRE1, the longer Mill-Max pin that mates first, has no order code: its value in the netlist names no part ('pre-charge pin, longer, mates first (32.24 AX)') and no document of a longer pin is held, so no maker's figure can be cited for it)",
+  "A: class the USB-C outlet's pigtail header owes its cycle figure (open item REL-O-02: the 2.54 mm pin header lands carry no named part: their values in the netlists name the lead, the module or the bench use and no header, and whether a header is fitted or the lead is soldered into the holes is a build choice not made. ASSEMBLY.md section 4 names JST PH housings for J_CAM, J_QMX, J_POD and the three sensor modules and SH housings for board E's two mixer fans, and the netlists draw 2.54 mm pin header lands for all of them. Board B's ten bench and commissioning headers are owed under the same item: whether a header is fitted on them at all is the same choice)",
+  "A: open item REL-O-07 holds the board: the expected number of mates of each connector over a service life is stated nowhere (REQ-028: no life requirement for prototype 1), so this list carries ratings and compares them with nothing (next action: when a service life is ruled, state the expected mates per connector from CONOPS section 5 and compare each class's figure with it)",
+  "A: open item REL-O-08 holds the board: the joints under heavy soldered parts (the soldered radio modules, the magnetics, the large inductors) are joints that carry load in transport, and this inventory cannot find them: a netlist carries no mass (next action: list the parts above a mass limit from the makers' documents and add them as a class per board with the staking or support each needs)",
+  "A: open item REL-O-13 holds the board: the inventory of a board with a schematic is its NETLIST's, and the declared-phase board files carry footprints no netlist holds: mounting holes H1 to H8 on board A, twenty on board B (M2.5, M3 and M4) with six S_ references beside them, H1 to H4 on boards D and P and twenty-eight on board E, every H on a MountingHole land, while boards C and E5 class the same kind of joint because their own artefacts carry it. The board files also carry a few R, Q, C and U references the netlists do not, and the netlists carry parts the board files do not (225 on board A), so the two are different generations of each design (next action: when each board file is regenerated from its declared netlist, read its footprints beside the netlist (wear_inventory.read_board) and class every screw joint per board with its torque, its thread lock and what hangs on it, from ASSEMBLY.md)",
+  "A: class JST VH power headers has no cycle figure: the maker's documents that were read state none (v2/vendor/connectors/jst-vh-catalogue.pdf, v2/vendor/connectors/jst-handling-precautions-2020.pdf), so the class is undecided and the board is not passed on it (open item REL-O-12: prepare the question to each maker for the owner to send (outside contact is his), or take each class's figure from the prototype's mate-cycle test once TEST-PLAN.md sets its cycle count; carry the figure with its document, or with the test's record)",
+  "A: class JST XH lead headers has no cycle figure: the maker's documents that were read state none (v2/vendor/connectors/jst-xh-catalogue.pdf, v2/vendor/connectors/jst-handling-precautions-2020.pdf), so the class is undecided and the board is not passed on it (open item REL-O-12: prepare the question to each maker for the owner to send (outside contact is his), or take each class's figure from the prototype's mate-cycle test once TEST-PLAN.md sets its cycle count; carry the figure with its document, or with the test's record)",
+  "A: class JST PH lead header has no cycle figure: the maker's documents that were read state none (v2/vendor/connectors/jst-ph-catalogue.pdf, v2/vendor/connectors/jst-handling-precautions-2020.pdf), so the class is undecided and the board is not passed on it (open item REL-O-12: prepare the question to each maker for the owner to send (outside contact is his), or take each class's figure from the prototype's mate-cycle test once TEST-PLAN.md sets its cycle count; carry the figure with its document, or with the test's record)",
+  "A: class the blade fuse holder has no cycle figure: the maker's documents that were read state none (v2/vendor/keystone/M65p42.pdf), so the class is undecided and the board is not passed on it (open item REL-O-12: prepare the question to each maker for the owner to send (outside contact is his), or take each class's figure from the prototype's mate-cycle test once TEST-PLAN.md sets its cycle count; carry the figure with its document, or with the test's record)",
+  "A: 25 part(s) excluded (TP10, TP11, TP12, TP13, TP14, TP15 and 19 more): a test point: a bare pad touched by a probe at the bench, nothing is mated and nothing hangs on it"
+ ],
  "inputs": {
   "board": "a",
-  "list": "pcb_reliability.yaml"
+  "list": {
+   "path": "tools/pcb_reliability.yaml",
+   "sha256": "40f2a98323b1f9ceeea024fac42b46521d565f0547ee6824ff29dcd5ddaabd96",
+   "sha256_16": "40f2a98323b1f9ce"
+  },
+  "netlist": {
+   "content16": "d464d30a17fb30f7",
+   "parts": 612,
+   "path": "pcb-a-power-a23/out/pcb-a-power.net",
+   "sha256": "0a2b59087bcc2678dac7e05b8b67c669f3d1957af846a0827bf59289dcea77d7",
+   "sha256_16": "0a2b59087bcc2678"
+  }
  },
  "missing_input": null,
- "note": "every part that carries load or sees cycling falls in a declared class with its cycle figure or the reason it has none, its load and the measure taken. It tests nothing: REL-001 is verified at the prototype and no board has been built",
+ "note": "every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the measure taken, or under one declared exclusion with its reason. A desk reading of a netlist and a list: it tests nothing and replaces no physical verification; REL-001 is verified at the prototype and no board has been built",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
@@ -41,14 +104,14 @@
  },
  "tool": "reliability",
  "tools": {
-  "git_head": "a4b157f07618",
-  "tools_tree_sha": "293a55e153ef9d1e"
+  "git_head": "8b623c96380b",
+  "tools_tree_sha": "780a9555854f55da"
  },
- "ts": "2026-09-28T14:54:53Z",
- "verdict": "PASS",
- "version": "a4b157f07618",
+ "ts": "2026-09-28T18:44:59Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "8b623c96380b",
  "writer": {
   "file": "reliability.py",
-  "sha16": "71d0872195905c9d"
+  "sha16": "c50f2b8b35d1d57b"
  }
 }

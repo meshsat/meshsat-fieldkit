@@ -6,8 +6,10 @@
   "files": {
    "boardorder.py": "298e46edcc028954",
    "boardtable.py": "41bd92e61f12c374",
-   "edge_length.py": "fd66cbd9bce2fa7b",
+   "edge_length.py": "ac1c6b023787cf1d",
    "hardset.py": "be29a44c4a592876",
+   "ibis_manifest.py": "ff27099a74e5efe9",
+   "ibis_read.py": "1d48c256b6ceca65",
    "impedance_check.py": "e2495a04e16fc600",
    "intent.py": "f1ac033e0f3c10f1",
    "intent_checks.py": "1ad7af0c718ba940",
@@ -15,6 +17,7 @@
    "netclass.py": "4cc1adf0ddae0390",
    "netlist_board.py": "655bc402d36b0fa5",
    "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
    "regen_compare.py": "341d7f129a1e6f24",
    "return_via.py": "b61d138e54955dd4",
    "rules_lib.py": "a6e2421096c1473f",
@@ -24,72 +27,82 @@
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "ac4e23da0105c4df",
+  "sha16": "79aee841821f3fd0",
   "unresolved": []
  },
  "counts": {
-  "answered_nets": 30,
+  "answered_nets": 361,
+  "bound_decided_nets": 153,
+  "bound_edge_nets": 451,
   "classes": 154,
   "contradicted_nets": 0,
-  "decided_nets": 30,
-  "layout_bound_nets": 0,
+  "decided_nets": 554,
+  "layout_bound_nets": 193,
   "low_speed_nets": 324,
-  "may_be_long_nets": 30,
+  "maker_edge_nets": 103,
+  "maker_held_nets": 40,
+  "may_be_long_nets": 554,
+  "models_absent": 0,
+  "models_asked": 10,
   "signal_nets": 886,
-  "undecided_nets": 532
+  "unasked_part_nets": 8,
+  "undecided_model_absent_nets": 0,
+  "undecided_nets": 8,
+  "undecided_no_declaration_nets": 8,
+  "undecided_other_nets": 0
  },
  "denominator": 886,
  "evidence": [
-  "UNDECIDED (no declaration) (UNKNOWN, 8 net(s)): no signal-class declaration names these nets, so neither their class nor their edge is kno; ICs on them: SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 V (EMCON L3) U112, SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 V (EMCON L3) U212, SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 V (EMCON L3) U312, SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls FULL_CARD_POWER_OFF# low at once (SD-EMC-1); channel 2 spare U220, SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's WL_nDisable and BT_nDisable low (L3, L7) U113",
-  "UNDECIDED *_ANT (HIGH_SPEED_DIGITAL, 3 net(s)): no edge is declared and no held document states one; ICs on them: Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1: TXEN GPIO4, RXEN GPIO5, DIO1 GPIO24, BUSY GPIO23, NRST GPIO26; EU power cap in meshtasticd U12",
-  "UNDECIDED *_BOOT (HIGH_SPEED_DIGITAL, 6 net(s)): no edge is declared and no held document states one; ICs on them: AP64500SP-13 5 A buck, 3.3 V rail +3V3_S1A U103, AP64500SP-13 5 A buck, 3.3 V rail +3V3_S1B U104, AP64500SP-13 5 A buck, 3.3 V rail +3V3_S2A U203, AP64500SP-13 5 A buck, 3.3 V rail +3V3_S2B U204, AP64500SP-13 5 A buck, 3.3 V rail +3V3_S3A U303",
-  "UNDECIDED *_BST (HIGH_SPEED_DIGITAL, 8 net(s)): no edge is declared and no held document states one; ICs on them: AP63203WU-7 3.3 V 2 A buck: the shared logic (+3V3_DEV) U25, TPS62933DRLR buck 1.0 V PCIe switch core S1 U105, TPS62933DRLR buck 1.0 V PCIe switch core S2 U205, TPS62933DRLR buck 1.0 V PCIe switch core S3 U305, TPS62933DRLR buck 1.1 V hub core S1 (on the device rail and always on: the bank outlives its module) U106",
-  "UNDECIDED *_RF_IN (HIGH_SPEED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: Quectel LG290P03AAMD GNSS RTK module: UART1 to the bridge, 1PPS to every slot, active antenna on the west-wall GNSS jack U11",
-  "UNDECIDED *_RST (CLOCKED_DIGITAL, 10 net(s)): no edge is declared and no held document states one; ICs on them: CP2102N-A02-GQFN28 USB-UART bridge (GNSS) U15, CP2102N-A02-GQFN28 USB-UART bridge (RB) U18, CP2102N-A02-GQFN28 USB-UART bridge (ZBA) U16, CP2102N-A02-GQFN28 USB-UART bridge (ZBB) U17, PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control) U6",
-  "UNDECIDED *_RST_n (CLOCKED_DIGITAL, 11 net(s)): no edge is declared and no held document states one; ICs on them: CP2102N-A02-GQFN28 USB-UART bridge (ZBA) U16, CP2102N-A02-GQFN28 USB-UART bridge (ZBB) U17, Ebyte E72-2G4M20S1E CC2652P (OpenThread RCP for Matter): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge U14, Ebyte E72-2G4M20S1E CC2652P (Zigbee coordinator): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge U13, Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 the CM5 slots (PHY to PHY), port 4 the wall RJ45; I2C management on the kit bus U1",
-  "UNDECIDED *_RXD (CLOCKED_DIGITAL, 4 net(s)): no edge is declared and no held document states one; ICs on them: CP2102N-A02-GQFN28 USB-UART bridge (GNSS) U15, CP2102N-A02-GQFN28 USB-UART bridge (RB) U18, CP2102N-A02-GQFN28 USB-UART bridge (ZBA) U16, CP2102N-A02-GQFN28 USB-UART bridge (ZBB) U17, Ebyte E72-2G4M20S1E CC2652P (OpenThread RCP for Matter): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge U14",
-  "UNDECIDED *_RXD? (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: Quectel LG290P03AAMD GNSS RTK module: UART1 to the bridge, 1PPS to every slot, active antenna on the west-wall GNSS jack U11",
-  "UNDECIDED *_SMBCLK (CLOCKED_DIGITAL, 3 net(s)): no edge is declared and no held document states one; ICs on them: Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket U101, Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket U201, Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket U301",
-  "UNDECIDED *_SMBDAT (CLOCKED_DIGITAL, 3 net(s)): no edge is declared and no held document states one; ICs on them: Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket U101, Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket U201, Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket U301",
-  "UNDECIDED *_SWCLK (CLOCKED_DIGITAL, 3 net(s)): no edge is declared and no held document states one; ICs on them: STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset U41, STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset U51, STM32H743VIT6 I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset U61, SWD pads, controller A: 3V3 SWDIO SWCLK NRST GND U42, SWD pads, controller B: 3V3 SWDIO SWCLK NRST GND U52",
-  "UNDECIDED *_SWDIO (CLOCKED_DIGITAL, 3 net(s)): no edge is declared and no held document states one; ICs on them: STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset U41, STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset U51, STM32H743VIT6 I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset U61, SWD pads, controller A: 3V3 SWDIO SWCLK NRST GND U42, SWD pads, controller B: 3V3 SWDIO SWCLK NRST GND U52",
-  "UNDECIDED *_TCKC (CLOCKED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: Ebyte E72-2G4M20S1E CC2652P (OpenThread RCP for Matter): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge U14, Ebyte E72-2G4M20S1E CC2652P (Zigbee coordinator): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge U13",
-  "UNDECIDED *_TMSC (CLOCKED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: Ebyte E72-2G4M20S1E CC2652P (OpenThread RCP for Matter): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge U14, Ebyte E72-2G4M20S1E CC2652P (Zigbee coordinator): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge U13",
-  "UNDECIDED *_TXD (CLOCKED_DIGITAL, 4 net(s)): no edge is declared and no held document states one; ICs on them: CP2102N-A02-GQFN28 USB-UART bridge (GNSS) U15, CP2102N-A02-GQFN28 USB-UART bridge (RB) U18, CP2102N-A02-GQFN28 USB-UART bridge (ZBA) U16, CP2102N-A02-GQFN28 USB-UART bridge (ZBB) U17, Ebyte E72-2G4M20S1E CC2652P (OpenThread RCP for Matter): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge U14",
-  "UNDECIDED *_TXD? (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: Quectel LG290P03AAMD GNSS RTK module: UART1 to the bridge, 1PPS to every slot, active antenna on the west-wall GNSS jack U11",
-  "UNDECIDED *_XI (HIGH_SPEED_DIGITAL, 7 net(s)): no edge is declared and no held document states one; ICs on them: Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 the CM5 slots (PHY to PHY), port 4 the wall RJ45; I2C management on the kit bus U1, STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset U41, STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset U51, STM32H743VIT6 I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset U61, TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port) U102",
-  "UNDECIDED *_XO (HIGH_SPEED_DIGITAL, 7 net(s)): no edge is declared and no held document states one; ICs on them: Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 the CM5 slots (PHY to PHY), port 4 the wall RJ45; I2C management on the kit bus U1, STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset U41, STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset U51, STM32H743VIT6 I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset U61, TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port) U102",
-  "UNDECIDED BANK*_UP* (HIGH_SPEED_DIGITAL, 18 net(s)): no edge is declared and no held document states one; ICs on them: TI TMUXHS4212 SuperSpeed 2:1 host select, bank 1: B = slot 1 USB3-0 (home), C = slot 2 USB3-1 (failover) U109, TI TMUXHS4212 SuperSpeed 2:1 host select, bank 2: B = slot 2 USB3-0 (home), C = slot 3 USB3-1 (failover) U209, TI TMUXHS4212 SuperSpeed 2:1 host select, bank 3: B = slot 3 USB3-0 (home), C = slot 1 USB3-1 (failover) U309, TI TS3USB221A USB2 2:1 host select, bank 1: port 1 = slot 1 (home), port 2 = slot 2 (failover) U110, TI TS3USB221A USB2 2:1 host select, bank 2: port 1 = slot 2 (home), port 2 = slot 3 (failover) U210",
-  "UNDECIDED BBM* (CLOCKED_DIGITAL, 18 net(s)): no edge is declared and no held document states one; ICs on them: 74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 1 enable: BOE_n = BBM ? 1 : PGSEL_n (FAB-02 (b), FAB-03) U516, 74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 1 lock, first half: the vote only while armed (FAB-03) U524, 74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 1 lock, second half: the select holds itself while it moves (FAB-03) U527, 74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 2 enable: BOE_n = BBM ? 1 : PGSEL_n (FAB-02 (b), FAB-03) U517, 74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 2 lock, first half: the vote only while armed (FAB-03) U525",
-  "UNDECIDED BOB (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: none",
-  "UNDECIDED BOE*_n (CLOCKED_DIGITAL, 3 net(s)): no edge is declared and no held document states one; ICs on them: 74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 1 enable: BOE_n = BBM ? 1 : PGSEL_n (FAB-02 (b), FAB-03) U516, 74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 2 enable: BOE_n = BBM ? 1 : PGSEL_n (FAB-02 (b), FAB-03) U517, 74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 3 enable: BOE_n = BBM ? 1 : PGSEL_n (FAB-02 (b), FAB-03) U518, TI TMUXHS4212 SuperSpeed 2:1 host select, bank 1: B = slot 1 USB3-0 (home), C = slot 2 USB3-1 (failover) U109, TI TMUXHS4212 SuperSpeed 2:1 host select, bank 2: B = slot 2 USB3-0 (home), C = slot 3 USB3-1 (failover) U209",
-  "UNDECIDED BSEL* (CLOCKED_DIGITAL, 21 net(s)): no edge is declared and no held document states one; ICs on them: 74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 1 lock, first half: the vote only while armed (FAB-03) U524, 74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 1 lock, second half: the select holds itself while it moves (FAB-03) U527, 74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 1: the host the delayed select passes is dark, slot 1 or slot 2 (FAB-02 (b)) U513, 74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 2 lock, first half: the vote only while armed (FAB-03) U525, 74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 2 lock, second half: the select holds itself while it moves (FAB-03) U528",
-  "UNDECIDED CAN?_* (CLOCKED_DIGITAL, 10 net(s)): no edge is declared and no held document states one; ICs on them: TCAN334D CAN-FD transceiver, controller A on heartbeat fabric A U43, TCAN334D CAN-FD transceiver, controller A on heartbeat fabric B U44, TCAN334D CAN-FD transceiver, controller B on heartbeat fabric A U53, TCAN334D CAN-FD transceiver, controller B on heartbeat fabric B U54, TCAN334D CAN-FD transceiver, controller C on heartbeat fabric A U63",
-  "UNDECIDED CANT* (CLOCKED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: none",
-  "UNDECIDED CARD*_CLK_* (HIGH_SPEED_DIGITAL, 12 net(s)): no edge is declared and no held document states one; ICs on them: Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket U101, Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket U201, Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket U301",
-  "UNDECIDED CARD*_RX_* (HIGH_SPEED_DIGITAL, 12 net(s)): no edge is declared and no held document states one; ICs on them: Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket U101, Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket U201, Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket U301",
-  "UNDECIDED CARD*_TX_* (HIGH_SPEED_DIGITAL, 6 net(s)): no edge is declared and no held document states one; ICs on them: Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket U101, Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket U201, Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket U301",
-  "UNDECIDED ETH*_P* (HIGH_SPEED_DIGITAL, 24 net(s)): no edge is declared and no held document states one; ICs on them: Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted U30A, Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted U31A, Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted U32A",
-  "UNDECIDED EXP_INT (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: DS3231SN# holdover clock (I2C 0x68, TCXO and crystal), CR2032 backed U9, Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 the CM5 slots (PHY to PHY), port 4 the wall RJ45; I2C management on the kit bus U1, PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control) U6, PCA9555PW 0x25: inputs (faults, RockBLOCK status) and spares U7, TI TPS23861PWR PoE PSE controller, port 1 to the wall RJ45 (802.3at), I2C on the kit bus U5",
-  "UNDECIDED FAN_PWM* (CLOCKED_DIGITAL, 3 net(s)): no edge is declared and no held document states one; ICs on them: Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted U30A, Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted U31A, Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted U32A",
-  "UNDECIDED FAN_TACHO* (CLOCKED_DIGITAL, 3 net(s)): no edge is declared and no held document states one; ICs on them: Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted U30A, Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted U31A, Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted U32A",
-  "UNDECIDED GNSS_PPS* (CLOCKED_DIGITAL, 4 net(s)): no edge is declared and no held document states one; ICs on them: Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted U30A, Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted U31A, Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted U32A, Quectel LG290P03AAMD GNSS RTK module: UART1 to the bridge, 1PPS to every slot, active antenna on the west-wall GNSS jack U11",
-  "UNDECIDED HB* (CLOCKED_DIGITAL, 6 net(s)): no edge is declared and no held document states one; ICs on them: Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted U30A, Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted U31A, Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted U32A, STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset U41, STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset U51",
-  "UNDECIDED HDMI*_CK_* (HIGH_SPEED_DIGITAL, 10 net(s)): no edge is declared and no held document states one; ICs on them: Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side) U30B, Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side) U31B, Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side) U32B, TI TS3DV642A0RUAR HDMI 2:1 switch (HDMI1 / HDMI2 -> HDMIM) U3, TI TS3DV642A0RUAR HDMI 2:1 switch (HDMIM / HDMI3 -> HDMIO) U4",
-  "UNDECIDED HDMI*_D*_* (HIGH_SPEED_DIGITAL, 30 net(s)): no edge is declared and no held document states one; ICs on them: Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side) U30B, Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side) U31B, Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side) U32B, TI TS3DV642A0RUAR HDMI 2:1 switch (HDMI1 / HDMI2 -> HDMIM) U3, TI TS3DV642A0RUAR HDMI 2:1 switch (HDMIM / HDMI3 -> HDMIO) U4",
-  "UNDECIDED HDMI*_SCL (CLOCKED_DIGITAL, 5 net(s)): no edge is declared and no held document states one; ICs on them: Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side) U30B, Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side) U31B, Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side) U32B, TI TS3DV642A0RUAR HDMI 2:1 switch (HDMI1 / HDMI2 -> HDMIM) U3, TI TS3DV642A0RUAR HDMI 2:1 switch (HDMIM / HDMI3 -> HDMIO) U4",
-  "UNDECIDED HDMI*_SDA (CLOCKED_DIGITAL, 5 net(s)): no edge is declared and no held document states one; ICs on them: Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side) U30B, Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side) U31B, Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side) U32B, TI TS3DV642A0RUAR HDMI 2:1 switch (HDMI1 / HDMI2 -> HDMIM) U3, TI TS3DV642A0RUAR HDMI 2:1 switch (HDMIM / HDMI3 -> HDMIO) U4",
-  "UNDECIDED HOST*_* (HIGH_SPEED_DIGITAL, 36 net(s)): no edge is declared and no held document states one; ICs on them: Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side) U30B, Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side) U31B, Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side) U32B, TI TMUXHS4212 SuperSpeed 2:1 host select, bank 1: B = slot 1 USB3-0 (home), C = slot 2 USB3-1 (failover) U109, TI TMUXHS4212 SuperSpeed 2:1 host select, bank 2: B = slot 2 USB3-0 (home), C = slot 3 USB3-1 (failover) U209",
-  "UNDECIDED HUB*_D*TX_* (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port) U102",
-  "UNDECIDED HUBRST* (CLOCKED_DIGITAL, 21 net(s)): no edge is declared and no held document states one; ICs on them: SN74LVC08APWR quad 2-input AND: the 2-of-3 majority voters of the I/O control plane U72/U73/U74, SN74LVC32APWR quad 2-input OR: the 2-of-3 majority voters of the I/O control plane U77/U78, STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset U41, STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset U51, STM32H743VIT6 I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset U61",
-  "UNDECIDED IOC?_CAN* (CLOCKED_DIGITAL, 12 net(s)): no edge is declared and no held document states one; ICs on them: STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset U41, STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset U51, STM32H743VIT6 I/O supervisor C: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset U61, TCAN334D CAN-FD transceiver, controller A on heartbeat fabric A U43, TCAN334D CAN-FD transceiver, controller A on heartbeat fabric B U44",
-  "UNDECIDED LIME_SS* (HIGH_SPEED_DIGITAL, 4 net(s)): no edge is declared and no held document states one; ICs on them: TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port) U102",
-  "UNDECIDED MUX*_A* (HIGH_SPEED_DIGITAL, 6 net(s)): no edge is declared and no held document states one; ICs on them: TI TMUXHS4212 SuperSpeed 2:1 host select, bank 1: B = slot 1 USB3-0 (home), C = slot 2 USB3-1 (failover) U109, TI TMUXHS4212 SuperSpeed 2:1 host select, bank 2: B = slot 2 USB3-0 (home), C = slot 3 USB3-1 (failover) U209, TI TMUXHS4212 SuperSpeed 2:1 host select, bank 3: B = slot 3 USB3-0 (home), C = slot 1 USB3-1 (failover) U309",
-  "UNDECIDED NVME*_CLK_* (HIGH_SPEED_DIGITAL, 12 net(s)): no edge is declared and no held document states one; ICs on them: Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket U101, Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket U201, Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket U301",
-  "UNDECIDED NVME*_RX_* (HIGH_SPEED_DIGITAL, 12 net(s)): no edge is declared and no held document states one; ICs on them: Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket U101, Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket U201, Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket U301",
-  "UNDECIDED NVME*_TX_* (HIGH_SPEED_DIGITAL, 6 net(s)): no edge is declared and no held document states one; ICs on them: Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket U101, Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket U201, Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket U301",
-  "UNDECIDED PCIE*_CLK_* (HIGH_SPEED_DIGITAL, 6 net(s)): no edge is declared and no held document states one; ICs on them: Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side) U30B, Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side) U31B, Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side) U32B, Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket U101, Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket U201",
-  "UNDECIDED PCIE*_RCLK* (HIGH_SPEED_DIGITAL, 18 net(s)): no edge is declared and no held document states one; ICs on them: Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket U101, Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket U201, Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket U301"
+  "UNDECIDED (no declaration) (UNKNOWN, 8 of 8 net(s)): no signal-class declaration (x8); ICs on them: SN74LVC1G04DBVR inverter U112, SN74LVC1G04DBVR inverter U212, SN74LVC1G04DBVR inverter U312, SN74LVC2G06DBVR dual U220",
+  "BOUND_DECIDES 153 layout-bound net(s) whose governing edge is a bound or a model: at least one driver on each has no published minimum, whatever the other drivers' makers publish (ER-D13): LORA_ANT, S1A_BOOT, S1B_BOOT, S2A_BOOT, S2B_BOOT, S3A_BOOT, S3B_BOOT, DEV_BST, KSZC_BST, S1C_BST, S1D_BST, S2C_BST ...",
+  "MAKER_HELD 40 layout-bound net(s) on which every driver has a published minimum: KSZ_RST, BBM1_RA, BBM2_RA, BBM3_RA, IOCA_CAN1_RX, IOCA_CAN1_TX, IOCA_CAN2_RX, IOCA_CAN2_TX, IOCB_CAN1_RX, IOCB_CAN1_TX, IOCB_CAN2_RX, IOCB_CAN2_TX ...",
+  "LAYOUT_BOUND *_ANT (HIGH_SPEED_DIGITAL, 0.000 ns BOUND RF-LINES, critical 0.0 mm, decided by a bound): LORA_ANT",
+  "LAYOUT_BOUND *_BOOT (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): S1A_BOOT, S1B_BOOT, S2A_BOOT, S2B_BOOT, S3A_BOOT, S3B_BOOT",
+  "LAYOUT_BOUND *_BST (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): DEV_BST, KSZC_BST, S1C_BST, S1D_BST, S2C_BST, S2D_BST, S3C_BST, S3D_BST",
+  "LAYOUT_BOUND *_RF_IN (HIGH_SPEED_DIGITAL, 0.000 ns BOUND RF-LINES, critical 0.0 mm, decided by a bound): GNSS_RF_IN",
+  "LAYOUT_BOUND *_RST (CLOCKED_DIGITAL, 0.000 ns BOUND FAR-QUECTEL-RM520N, critical 0.0 mm, decided by a bound): SIM2_RST",
+  "LAYOUT_BOUND *_RST (CLOCKED_DIGITAL, 0.000 ns BOUND SILABS-CP2102N, critical 0.0 mm, decided by a bound): GNSS_RST, RB_RST, ZBA_RST, ZBB_RST",
+  "LAYOUT_BOUND *_RST (CLOCKED_DIGITAL, 5.890 ns IBIS TI-PCA9555, critical 137.2 mm, decided by a published figure on every driver): KSZ_RST",
+  "LAYOUT_BOUND *_RST_n (CLOCKED_DIGITAL, 0.000 ns BOUND DISCRETE-MOSFET, critical 0.0 mm, decided by a bound): 5G_RST_n, KSZ_RST_n",
+  "LAYOUT_BOUND *_RST_n (CLOCKED_DIGITAL, 0.000 ns BOUND EBYTE-E72-CC2652P, critical 0.0 mm, decided by a bound): ZBA_RST_n, ZBB_RST_n",
+  "LAYOUT_BOUND *_RST_n (CLOCKED_DIGITAL, 0.000 ns BOUND FAR-BENCH-PROBE, critical 0.0 mm, decided by a bound): IOCA_RST_n, IOCB_RST_n, IOCC_RST_n",
+  "LAYOUT_BOUND *_RST_n (CLOCKED_DIGITAL, 0.000 ns BOUND QUECTEL-LG290P, critical 0.0 mm, decided by a bound): GNSS_RST_n",
+  "LAYOUT_BOUND *_RXD (CLOCKED_DIGITAL, 0.000 ns BOUND EBYTE-E72-CC2652P, critical 0.0 mm, decided by a bound): ZBA_RXD, ZBB_RXD",
+  "LAYOUT_BOUND *_RXD (CLOCKED_DIGITAL, 0.000 ns BOUND QUECTEL-LG290P, critical 0.0 mm, decided by a bound): GNSS_RXD",
+  "LAYOUT_BOUND *_RXD (CLOCKED_DIGITAL, 0.000 ns BOUND SILABS-CP2102N, critical 0.0 mm, decided by a bound): RB_RXD",
+  "LAYOUT_BOUND *_RXD? (CLOCKED_DIGITAL, 0.000 ns BOUND QUECTEL-LG290P, critical 0.0 mm, decided by a bound): GNSS_RXD2",
+  "LAYOUT_BOUND *_SMBCLK (CLOCKED_DIGITAL, 0.000 ns BOUND DIODES-PI7C9X2G404SL, critical 0.0 mm, decided by a bound): S1_SMBCLK, S2_SMBCLK, S3_SMBCLK",
+  "LAYOUT_BOUND *_SMBDAT (CLOCKED_DIGITAL, 0.000 ns BOUND DIODES-PI7C9X2G404SL, critical 0.0 mm, decided by a bound): S1_SMBDAT, S2_SMBDAT, S3_SMBDAT",
+  "LAYOUT_BOUND *_SWCLK (CLOCKED_DIGITAL, 0.000 ns BOUND FAR-BENCH-PROBE, critical 0.0 mm, decided by a bound): IOCA_SWCLK, IOCB_SWCLK, IOCC_SWCLK",
+  "LAYOUT_BOUND *_SWDIO (CLOCKED_DIGITAL, 0.000 ns BOUND FAR-BENCH-PROBE, critical 0.0 mm, decided by a bound): IOCA_SWDIO, IOCB_SWDIO, IOCC_SWDIO",
+  "LAYOUT_BOUND *_TCKC (CLOCKED_DIGITAL, 0.000 ns BOUND EBYTE-E72-CC2652P, critical 0.0 mm, decided by a bound): ZBA_TCKC, ZBB_TCKC",
+  "LAYOUT_BOUND *_TMSC (CLOCKED_DIGITAL, 0.000 ns BOUND EBYTE-E72-CC2652P, critical 0.0 mm, decided by a bound): ZBA_TMSC, ZBB_TMSC",
+  "LAYOUT_BOUND *_TXD (CLOCKED_DIGITAL, 0.000 ns BOUND EBYTE-E72-CC2652P, critical 0.0 mm, decided by a bound): ZBA_TXD, ZBB_TXD",
+  "LAYOUT_BOUND *_TXD (CLOCKED_DIGITAL, 0.000 ns BOUND FAR-ROCKBLOCK-9704, critical 0.0 mm, decided by a bound): RB_TXD",
+  "LAYOUT_BOUND *_TXD (CLOCKED_DIGITAL, 0.000 ns BOUND QUECTEL-LG290P, critical 0.0 mm, decided by a bound): GNSS_TXD",
+  "LAYOUT_BOUND *_TXD? (CLOCKED_DIGITAL, 0.000 ns BOUND QUECTEL-LG290P, critical 0.0 mm, decided by a bound): GNSS_TXD2",
+  "LAYOUT_BOUND *_XI (HIGH_SPEED_DIGITAL, 0.000 ns BOUND OSCILLATOR-NODES, critical 0.0 mm, decided by a bound): IOCA_XI, IOCB_XI, IOCC_XI, KSZ_XI",
+  "LAYOUT_BOUND *_XO (HIGH_SPEED_DIGITAL, 0.000 ns BOUND OSCILLATOR-NODES, critical 0.0 mm, decided by a bound): IOCA_XO, IOCB_XO, IOCC_XO, KSZ_XO",
+  "LAYOUT_BOUND BBM* (CLOCKED_DIGITAL, 0.000 ns BOUND DIODES-74LVC1G17, critical 0.0 mm, decided by a bound): BBM1_ARM, BBM1_ARMR, BBM1_REQ, BBM2_ARM, BBM2_ARMR, BBM2_REQ, BBM3_ARM, BBM3_ARMR ...",
+  "LAYOUT_BOUND BBM* (CLOCKED_DIGITAL, 0.000 ns BOUND NEXPERIA-74LVC1G157, critical 0.0 mm, decided by a bound): BBM1, BBM1_MOV, BBM2, BBM2_MOV, BBM3, BBM3_MOV",
+  "LAYOUT_BOUND BBM* (CLOCKED_DIGITAL, 0.136 ns IBIS TI-SN74LVC32A, critical 3.2 mm, decided by a published figure on every driver): BBM1_RA, BBM2_RA, BBM3_RA",
+  "LAYOUT_BOUND BOE*_n (CLOCKED_DIGITAL, 0.000 ns BOUND NEXPERIA-74LVC1G157, critical 0.0 mm, decided by a bound): BOE1_n, BOE2_n, BOE3_n",
+  "LAYOUT_BOUND BSEL* (CLOCKED_DIGITAL, 0.000 ns BOUND DIODES-74LVC1G17, critical 0.0 mm, decided by a bound): BSEL1_D, BSEL1_D2, BSEL1_D2R, BSEL1_S, BSEL2_D, BSEL2_D2, BSEL2_D2R, BSEL2_S ...",
+  "LAYOUT_BOUND BSEL* (CLOCKED_DIGITAL, 0.000 ns BOUND NEXPERIA-74LVC1G157, critical 0.0 mm, decided by a bound): BSEL1, BSEL1_H, BSEL1_H1, BSEL2, BSEL2_H, BSEL2_H1, BSEL3, BSEL3_H ...",
+  "LAYOUT_BOUND EXP_INT (CLOCKED_DIGITAL, 0.000 ns BOUND MICROCHIP-KSZ9897, critical 0.0 mm, decided by a bound): EXP_INT",
+  "LAYOUT_BOUND FAN_PWM* (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-CM5-RECEPTACLE, critical 0.0 mm, decided by a bound): FAN_PWM1, FAN_PWM2, FAN_PWM3",
+  "LAYOUT_BOUND FAN_TACHO* (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-CM5-RECEPTACLE, critical 0.0 mm, decided by a bound): FAN_TACHO1, FAN_TACHO2, FAN_TACHO3",
+  "LAYOUT_BOUND GNSS_PPS* (CLOCKED_DIGITAL, 0.000 ns BOUND DISCRETE-MOSFET, critical 0.0 mm, decided by a bound): GNSS_PPS, GNSS_PPS_CM1, GNSS_PPS_CM2, GNSS_PPS_CM3",
+  "LAYOUT_BOUND HB* (CLOCKED_DIGITAL, 0.000 ns BOUND DISCRETE-MOSFET, critical 0.0 mm, decided by a bound): HB1, HB2, HB3, HB_CM1, HB_CM2, HB_CM3",
+  "LAYOUT_BOUND HDMI*_SCL (CLOCKED_DIGITAL, 0.000 ns BOUND FAR-HDMI-SINK, critical 0.0 mm, decided by a bound): HDMIO_SCL",
+  "LAYOUT_BOUND HDMI*_SCL (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-CM5-RECEPTACLE, critical 0.0 mm, decided by a bound): HDMI1_SCL, HDMI2_SCL, HDMI3_SCL, HDMIM_SCL",
+  "LAYOUT_BOUND HDMI*_SDA (CLOCKED_DIGITAL, 0.000 ns BOUND FAR-HDMI-SINK, critical 0.0 mm, decided by a bound): HDMIO_SDA",
+  "LAYOUT_BOUND HDMI*_SDA (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-CM5-RECEPTACLE, critical 0.0 mm, decided by a bound): HDMI1_SDA, HDMI2_SDA, HDMI3_SDA, HDMIM_SDA",
+  "LAYOUT_BOUND IOC?_CAN* (CLOCKED_DIGITAL, 0.451 ns IBIS ST-STM32H743, critical 10.5 mm, decided by a published figure on every driver): IOCA_CAN1_RX, IOCA_CAN1_TX, IOCA_CAN2_RX, IOCA_CAN2_TX, IOCB_CAN1_RX, IOCB_CAN1_TX, IOCB_CAN2_RX, IOCB_CAN2_TX ...",
+  "LAYOUT_BOUND SCL* (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-CM5-RECEPTACLE, critical 0.0 mm, decided by a bound): SCL_CM1, SCL_CM2, SCL_CM3",
+  "LAYOUT_BOUND SCL* (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): SCL",
+  "LAYOUT_BOUND SDA* (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-CM5-RECEPTACLE, critical 0.0 mm, decided by a bound): SDA_CM1, SDA_CM2, SDA_CM3",
+  "LAYOUT_BOUND SDA* (CLOCKED_DIGITAL, 0.000 ns BOUND TI-TMP117, critical 0.0 mm, decided by a bound): SDA"
  ],
  "inputs": {
   "board": "b",
@@ -99,17 +112,208 @@
   },
   "board_table": {
    "path": "tools/boards/b.json",
-   "sha256_16": "2cedcd91cb6198df"
+   "sha256_16": "fa1dd4affea4084f"
   },
   "critical_k": 6,
   "document_1": {
+   "path": "v2/docs/records/hc5/kit_i2c_budget.round8-d.out.txt",
+   "sha256_16": "7967404c281d4e12"
+  },
+  "document_10": {
+   "path": "v2/vendor/microchip/microchip-ksz9897-datasheet.pdf",
+   "sha256_16": "72b89179ed6a42a7"
+  },
+  "document_11": {
+   "path": "v2/vendor/nexperia/nexperia-74lvc1g157.pdf",
+   "sha256_16": "62f9b85c44785ca1"
+  },
+  "document_12": {
+   "path": "v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf",
+   "sha256_16": "938ef5ef5007df6b"
+  },
+  "document_13": {
+   "path": "v2/vendor/power/aos-ao3401a-p-mosfet.pdf",
+   "sha256_16": "0d8e3261ae280e00"
+  },
+  "document_14": {
+   "path": "v2/vendor/power/jscj-2n7002-c8545.pdf",
+   "sha256_16": "7941fb423af7c6c6"
+  },
+  "document_15": {
+   "path": "v2/vendor/quectel/lg290p03-hardware-design-v1.1.pdf",
+   "sha256_16": "422ca9a2aa5495c1"
+  },
+  "document_16": {
+   "path": "v2/vendor/quectel/quectel-rm520n-gl-hardware-design-v1.0.pdf",
+   "sha256_16": "139583b38ce1fd47"
+  },
+  "document_17": {
+   "path": "v2/vendor/rockblock/rb9704-datasheet-RB9704-001-JUN26.pdf",
+   "sha256_16": "d48acbea28ee2a7d"
+  },
+  "document_18": {
+   "path": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+   "sha256_16": "be56fbb75ba0ae9e"
+  },
+  "document_19": {
+   "path": "v2/vendor/silabs/silabs-cp2102n.pdf",
+   "sha256_16": "32fbab0ba17f394a"
+  },
+  "document_2": {
+   "path": "v2/vendor/adi/adi-ds3231sn.pdf",
+   "sha256_16": "dc81cd89bee82d0c"
+  },
+  "document_20": {
+   "path": "v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf",
+   "sha256_16": "f6e620179006c8c4"
+  },
+  "document_21": {
+   "path": "v2/vendor/standards/nxp-um10204-rev6-i2c-bus-specification.pdf",
+   "sha256_16": "b7619700e8bb9dd4"
+  },
+  "document_22": {
    "path": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
    "sha256_16": "2ecb40606d4b84fe"
   },
+  "document_23": {
+   "path": "v2/vendor/ti/bq25731-datasheet.pdf",
+   "sha256_16": "3e5e927fdf63cf6a"
+  },
+  "document_24": {
+   "path": "v2/vendor/ti/lm5176-datasheet.pdf",
+   "sha256_16": "98191bec36d43771"
+  },
+  "document_25": {
+   "path": "v2/vendor/ti/ti-tcan334-can-fd-transceiver.pdf",
+   "sha256_16": "bb89f067e6a79028"
+  },
+  "document_26": {
+   "path": "v2/vendor/ti/tps23861-datasheet.pdf",
+   "sha256_16": "65262ce4766a5f8e"
+  },
+  "document_27": {
+   "path": "v2/vendor/vishay/veml7700-datasheet.pdf",
+   "sha256_16": "f338cf7d5911828a"
+  },
+  "document_28": {
+   "path": "v2/vendor/xenarc/xenarc-709gnk-product-manual-v2.pdf",
+   "sha256_16": "ba3b1474406fdaf5"
+  },
+  "document_29": {
+   "path": "v2/vendor/zigbee/ebyte-e72-2g4m20s1e-user-manual.pdf",
+   "sha256_16": "4bae5b3e67483b0b"
+  },
+  "document_3": {
+   "path": "v2/vendor/cluster/ksz989x-hw-design-checklist.pdf",
+   "sha256_16": "2a9d80931a0bed4b"
+  },
+  "document_4": {
+   "path": "v2/vendor/cm5/cm5-datasheet.pdf",
+   "sha256_16": "80070fefd8db6e8a"
+  },
+  "document_5": {
+   "path": "v2/vendor/diodes/diodes-74lvc1g17.pdf",
+   "sha256_16": "029f345a1e7be917"
+  },
+  "document_6": {
+   "path": "v2/vendor/diodes/diodes-pi7c9x2g404sl.pdf",
+   "sha256_16": "675fa7ee40c91ad6"
+  },
+  "document_7": {
+   "path": "v2/vendor/fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf",
+   "sha256_16": "fae7e21365939be5"
+  },
+  "document_8": {
+   "path": "v2/vendor/lora/ebyte-e22-900m30s-user-manual-en-v1.20.pdf",
+   "sha256_16": "d864e9ca390f15c9"
+  },
+  "document_9": {
+   "path": "v2/vendor/microchip/microchip-atecc608b-summary-DS40002239B.pdf",
+   "sha256_16": "1b21d7b0d5c6265f"
+  },
+  "edge_rates": {
+   "path": "tools/pcb_edge_rates.yaml",
+   "sha256_16": "0689086680f7a4a4"
+  },
   "extent_mm": 530.0,
+  "far_netlist_a": {
+   "path": "pcb-a-power-a23/out/pcb-a-power.net",
+   "sha256_16": "0a2b59087bcc2678"
+  },
+  "far_netlist_c": {
+   "path": "pcb-c-display-c8/out/pcb-c-display.net",
+   "sha256_16": "3fddbb3edcd4248a"
+  },
+  "far_netlist_d": {
+   "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
+   "sha256_16": "7a2c0ac2190b141a"
+  },
+  "ibis_manifest": {
+   "path": "v2/vendor/ibis-manifest.yaml",
+   "sha256_16": "47952602c17f0dfd"
+  },
   "intent": {
    "path": "pcb-b-compute-b19/out/pcb-b-compute-intent.json",
    "sha256_16": "96ee391b3e3f638d"
+  },
+  "model_1": {
+   "path": "v2/vendor/st/ibis/stm32h742_743_750_753_lqfp100.ibs",
+   "pinned_sha256_16": "0fb7767c1ee034db",
+   "sha256_16": "0fb7767c1ee034db"
+  },
+  "model_10": {
+   "path": "v2/vendor/ti/ibis/tusb8041rgc.ibs",
+   "pinned_sha256_16": "925a6c7f6917401e",
+   "sha256_16": "925a6c7f6917401e"
+  },
+  "model_2": {
+   "path": "v2/vendor/ti/ibis/ads1x1x.ibs",
+   "pinned_sha256_16": "c9975d3cb6ad0161",
+   "sha256_16": "c9975d3cb6ad0161"
+  },
+  "model_3": {
+   "path": "v2/vendor/ti/ibis/ina226.ibs",
+   "pinned_sha256_16": "fb4ebf43bde617c2",
+   "sha256_16": "fb4ebf43bde617c2"
+  },
+  "model_4": {
+   "path": "v2/vendor/ti/ibis/pca9555.ibs",
+   "pinned_sha256_16": "56c19a4da921e38c",
+   "sha256_16": "56c19a4da921e38c"
+  },
+  "model_5": {
+   "path": "v2/vendor/ti/ibis/sn74lvc08a.ibs",
+   "pinned_sha256_16": "adb5d455adc3a057",
+   "sha256_16": "adb5d455adc3a057"
+  },
+  "model_6": {
+   "path": "v2/vendor/ti/ibis/sn74lvc32a.ibs",
+   "pinned_sha256_16": "396e2d220f1cc59f",
+   "sha256_16": "396e2d220f1cc59f"
+  },
+  "model_7": {
+   "path": "v2/vendor/ti/ibis/sn74lvc86a.ibs",
+   "pinned_sha256_16": "0f9780c8d3fd9b89",
+   "sha256_16": "0f9780c8d3fd9b89"
+  },
+  "model_8": {
+   "path": "v2/vendor/ti/ibis/tcan33x.ibs",
+   "pinned_sha256_16": "0e5a9429146148c1",
+   "sha256_16": "0e5a9429146148c1"
+  },
+  "model_9": {
+   "path": "v2/vendor/ti/ibis/tmp117.ibs",
+   "pinned_sha256_16": "5c71fbcce9e13803",
+   "sha256_16": "5c71fbcce9e13803"
+  },
+  "model_state": {
+   "absent": 0,
+   "absent_files": [],
+   "asked": 10,
+   "how_to_fetch": "python3 v2/ecad/tools/ibis_fetch.py --fetch",
+   "manifest": "v2/vendor/ibis-manifest.yaml",
+   "present": 10,
+   "state": "PRESENT"
   },
   "netlist": {
    "content16": "b9dbb9c4a430d108",
@@ -119,6 +323,10 @@
   "project": {
    "path": "pcb-b-compute-b19/pcb-b-compute.kicad_pro",
    "sha256_16": "c2c6e771722d9f53"
+  },
+  "search_listing": {
+   "path": "v2/docs/records/w5si/readings/edge-search.txt",
+   "sha256_16": "d08bc489782c976b"
   },
   "slowest_layer": "JLC06161H-3313 In2.Cu",
   "stack_table": {
@@ -132,7 +340,7 @@
   "t_pd_ps_per_mm": 7.154
  },
  "missing_input": null,
- "note": "SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (UNDECIDED where none does), the critical length l = t_r / (k t_pd) on the slowest layer of every stack the board may be drawn on, and whether the netlist carries an impedance target, a series termination or a declaration where a net may be electrically long. The routed lengths are the layout gate's (edge_length_routed). The table is edge_length.table.json beside this verdict. Session decisions of 26 September 2026: LOW_SPEED_OR_DC asked no edge, the first matching entry decides, the slowest layer of the declared and ruled stacks, the stripline bound, the corner-to-corner extent, the project file's class where the netlist says Default",
+ "note": "SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (UNDECIDED where none does), the critical length l = t_r / (k t_pd) on the slowest layer of every stack the board may be drawn on, and whether the netlist carries an impedance target, a series termination or a declaration where a net may be electrically long. The routed lengths are the layout gate's (edge_length_routed). The table is edge_length.table.json beside this verdict. Session decisions of 26 September 2026: LOW_SPEED_OR_DC asked no edge, the first matching entry decides, the slowest layer of the declared and ruled stacks, the stripline bound, the corner-to-corner extent, the project file's class where the netlist says Default. Since 27 September 2026 every edge is a record of tools/pcb_edge_rates.yaml (a configuration input, by sha in inputs.edge_rates): a class entry's interface record, or per net the fastest of its drivers' families (a maker's IBIS model read per pin, a published minimum, a model or a bound), its far ends and one series resistor away; a net whose driver has no record is UNDECIDED. The governing edge of a net is the fastest any driver on it can produce, so one driver with no published minimum makes the net decided by a bound whatever the others publish (ER-D13); a layout-bound net a bound decides is named under BOUND_DECIDES and holds the reading INCONCLUSIVE. counts: decided = maker_edge + bound_edge; layout_bound = maker_held + bound_decided. Since 28 September 2026 the makers' IBIS models are pinned by v2/vendor/ibis-manifest.yaml (inputs.ibis_manifest) and are not in the repository: a model that is not in the tree decides nothing, its nets read UNDECIDED naming it, and inputs.model_state says which state the reading was taken in (ER-D17); undecided = undecided_no_declaration + undecided_model_absent + undecided_other; a pin whose [Ramp] cell the model's own V-t table contradicts takes the instantaneous bound (ER-D16)",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
@@ -148,14 +356,14 @@
  },
  "tool": "edge_length",
  "tools": {
-  "git_head": "a4b157f07618",
-  "tools_tree_sha": "293a55e153ef9d1e"
+  "git_head": "8b623c96380b",
+  "tools_tree_sha": "780a9555854f55da"
  },
- "ts": "2026-09-28T14:53:33Z",
+ "ts": "2026-09-28T18:43:11Z",
  "verdict": "INCONCLUSIVE",
- "version": "a4b157f07618",
+ "version": "8b623c96380b",
  "writer": {
   "file": "edge_length.py",
-  "sha16": "fd66cbd9bce2fa7b"
+  "sha16": "ac1c6b023787cf1d"
  }
 }
