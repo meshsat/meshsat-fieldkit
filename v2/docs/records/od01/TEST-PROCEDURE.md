@@ -28,7 +28,7 @@ definition `v2/release/case-2026-09-27/h1-heat-test-plate/`, the independent che
 **What it measures.** The empty case, sealed by H1 on the 1450PF frame and its o-ring, lid open and lid closed, with 21,
 42 and 64 W released into the base volume from a black dummy plate (H2) at the stack's place, fans off. At steady state
 each step gives one number: the enclosure's conductance for heat released into the inside air,
-`G = P / (T_air,in - T_room)` in W/K, with `T_air,in` read at the named point CH2 (section 4.6). The patch runs give the
+`G = P / (T_air,in - T_room)` in W/K, with `T_air,in` read at the named point CH2 (section 4, item 6). The patch runs give the
 rise of H1 under a 45 to 83 W block (an Arcol HS100 on its 35.0 x 37.0 fixing) for 20, 30 and 60 s, and its cooling.
 
 **Its uncertainty (the session's budget, INFERRED until the operator's own instruments' stated accuracies replace the
@@ -36,11 +36,11 @@ typical figures used here):**
 
 | Term | At 64 W (rise about 30 K) | At 21 W (rise about 10 K) | Basis |
 |---|---|---|---|
-| Power, volts x amps on two meters | about 1.2 % | about 1.2 % | typical handheld DC accuracy, 0.5 % on volts and 1 % on amps |
+| Power, volts x amps on two meters | about 1.1 % | about 1.1 % | typical handheld DC accuracy, 0.5 % on volts and 1 % on amps |
 | The rise, after the 15-minute common soak removes each channel's offset | about 0.3 K = 1.0 % | about 0.3 K = 3 % | same logger, same cold junction; type K slope differences between channels of one batch |
 | Not yet steady at the criterion of section 5.3 | at most 0.33 K = 1.1 % low | at most 0.33 K = 3.3 % low | 0.2 K per 30 min on a 50 min time constant leaves at most 0.33 K to come |
 | Heat conducted out along the leads and past the seal at the lead exit | under 1 %, reads G high | under 1 %, reads G high | check-2 (about 0.006 W/K against 2.1 W/K) |
-| **Combined** | **about +-3 %** | **about +-7 %** | root sum of squares, the biases kept in their sign |
+| **Combined** | **-1.5 % to +3.6 %** | **-3.2 % to +7.5 %** | the two random terms by root sum of squares; the two biases, both reading `G` high, added in their sign |
 
 Two things this budget does NOT cover, and the record reports them separately instead of folding them in: the spread of
 the inside air between points (fans off, the air stratifies; CH2, CH3 and CH8 are all reported and `G` is quoted against
@@ -85,8 +85,8 @@ arrangement of heat.
    nuts. Record the readings.
 3. **The three HS50 heaters:** fixing holes 3.2 +-0.25 (L) on F 39.7 by G 21.4 (Arcol page 2), two holes at diagonal
    corners. Read their resistance cold: 6.8 ohm +-1 %.
-4. **The thermostats (section 3):** read the part number on each body against the list (two 60 C NC, one 90 C NC);
-   continuity closed at room temperature.
+4. **The thermostats (section 3):** read the part number on each body against the list (two 60 C NC, one 90 C NC, one
+   140 C NC); continuity closed at room temperature.
 5. **H1:** the shop's dimensional report against sheet H1-1, the finish black anodised, the four PEM nuts flush on the
    underside, flatness 0.5 or better on a flat table with feeler gauges (the plate face down, the gauge under each corner
    and mid-side). Record.
@@ -129,19 +129,21 @@ over the o-ring (stop 70 C), which on a 3 mm aluminium plate heated from below d
 window's edge by a few kelvin at most (INFERRED); TS4 holds the middle heater's body at or under 144 C (stop 150 C, Arcol's
 hot spot 200 C). Arcol's 3.0 K/W is a body's rise over the air on a standard heatsink: at 21.2 W about 64 K, so about 120 C
 with the inside air at 55 C (check-1, INFERRED). The middle heater is on in every step, so TS1 and TS4 always sit at an
-energised heater. If V1 reads TS4 opening above 147 C (the 150 C stop less the logger's 3 K), it is rejected.
+energised heater; the outer heaters run at the same 21.2 W on the same plate with heat on one side only, so they sit no
+hotter than the middle one (INFERRED).
 
 **The Arcol ratings depend on the heatsink, and derate with temperature (Arcol 12/14.08, pages 1 and 2):**
 - HS50: 50 W on its standard heatsink (535 cm2 of 1 mm aluminium), 14 W with no heatsink, both at 25 C; "dissipation
   derates linearly to zero at 200 C". On H2 each heater has about 220 cm2 of the 3 mm plate, less area than its standard
-  heatsink, so its 50 W does not apply: its limit is the 200 C hot spot, held by the body stop of 150 C and TS1. At 55 C
+  heatsink, so its 50 W does not apply: its limit is the 200 C hot spot, held by TS4 (opens by 144 C) and the 150 C body
+  stop. At 55 C
   air the linear derating gives 41 W on the standard heatsink; 21.2 W is about half of that (INFERRED).
 - HS100: 100 W on its standard heatsink (995 cm2 of 3 mm aluminium), 30 W with none, at 25 C, derating to zero at 200 C.
   H1 (992 cm2 of 3 mm) is practically that heatsink: 85.7 W at a 50 C plate, 80.0 W at 60 C (linear). **So the 83 W
   pulses start only from a plate at or under 50 C, last at most 60 s, and stop at the patch stop of 110 C, whichever comes
   first.** 45 W is inside the rating at any plate temperature under 121 C.
 
-**Wiring (all outside the case except the three thermostats; crimped terminals, 0.75 mm2 silicone wire for the heater
+**Wiring (all outside the case except the four thermostats; crimped terminals, 0.75 mm2 silicone wire for the heater
 leads, 0.25 mm2 or more for the coil chain):**
 1. Supply + -> F1 (7.5 A) -> K1 contact 11-14 (normally open) -> a three-way link block outside the case -> one + lead
    per heater into the case (three leads) -> each HS50 on H2 -> one common - lead out of the case -> supply -. The link
@@ -156,15 +158,15 @@ leads, 0.25 mm2 or more for the coil chain):**
 - **V1, each thermostat alone.** Clamp it cap-down on an aluminium block of about 50 x 50 x 10 mm with one thermocouple
   taped beside it, on a hot plate (or under a hot-air gun held 20 cm off). Multimeter on its terminals (continuity). Warm
   at no more than 2 K per minute over the last 15 K. Record the block temperature when it opens and, cooling, when it
-  closes. **Pass:** TS1 opens between 84 and 96 C; TS2 and TS3 between 57 and 63 C; TS4 between 136 and 147 C; each
+  closes. **Pass:** TS1 opens between 84 and 96 C; TS2 and TS3 between 57 and 63 C; TS4 between 136 and 144 C; each
   closes again on cooling. A part outside its band is rejected, not adjusted.
-- **V2, the latch on the bench.** Wire the arrangement with the three heaters on the bench (not in the case) at 12 V on
-  the supply for the coil, the heaters' link block open (no heat). START: K1 pulls in (audible) and, with one heater
-  linked for a few seconds, the heater current reads. STOP/TEST: the current reads zero and stays zero when the
-  button is released. START again: current. Then warm each thermostat in turn with the air gun until it opens: current
-  zero; let it cool until it closes: **the current stays zero** until START. Pass: all four actions behave so.
-- **V3, in place.** With the thermostats fixed at their places, H1 screwed on and the leads out under the seal, one
-  heater linked: START; the current reads; STOP/TEST: zero, and it stays zero on release. Pass: as V2.
+- **V2, the latch on the bench.** Wire the arrangement on the bench (not in the case) at 12.0 V, the heaters' link block
+  open so nothing heats, a multimeter on volts at the link block's input (the load side of K1): it reads the supply's
+  volts when K1 is in and 0 when it is out. START: K1 pulls in (audible), the meter reads 12. STOP/TEST: 0, and it stays
+  0 when the button is released. START again: 12. Then warm each thermostat in turn with the air gun until it opens: 0;
+  let it cool until it closes: **the meter stays at 0** until START. Pass: every action behaves so.
+- **V3, in place.** With the thermostats fixed at their places, H1 screwed on and the leads out under the seal, the link
+  block open: START, 12; STOP/TEST, 0, and it stays 0 on release; START, 12. Pass: as V2.
 - **V4, at the start of every step and after each lid change.** Press STOP/TEST once: the heater current falls to zero
   (this also shows K1's contact has not welded). START. Record the time.
 
@@ -181,9 +183,11 @@ limits temperature. A step started without V4, or with any V1 to V3 failed, is a
    the two wedge pairs, fix it with Peli's four self-tapping screws (Peli's instructions, step 3: press firmly while
    starting them). The o-ring into the channel between the frame and the case wall (step 4).
 3. **H2 at the stack's place:** H2 (330 x 200 x 3.0 aluminium, both faces matt black, `MACHINING-RFQ.md` line H2)
-   centred on the case centre, long side along X, top face at about Z 50 (board B's top at Z 50.6), on four M4 PA66
-   (nylon) stand-offs of 45 mm standing on the floor at its corners, 10 mm in from each edge, not bonded. H2 then clears
-   the legs (at |X| 175 to 180) by 10 mm and the pack block's top (Z 39.9) by about 8 mm.
+   centred on the case centre, long side along X, top face at about Z 48 (board B's top at Z 50.6), on four M4 PA66
+   (nylon) stand-offs of 45 mm standing on the floor at X +-110, Y +-90 (its holes, 10 mm from the long edges), not bonded:
+   they stand 12 mm west of the pack pocket's edge at X 122.0, and H2 overhangs them by 55 mm at each end. H2 then clears
+   the legs' columns (X +-175.4 to +-180.2) by about 10 mm and the pack block's top (Z 39.9) by about 5 mm, as board B
+   stands over the pack in the kit.
 4. **The heaters on H2's top face:** the three HS50 at X -110, 0 and +110, Y 0, long axis along X. Mark each one's two
    holes from the part itself, drill 2.5 and tap M3 through H2, bolt with M3 x 8 A2 and flat washers, a thin even layer of
    the Amasan compound under each (wipe the excess: squeeze-out should be a thin line). Solder or crimp the leads to the
