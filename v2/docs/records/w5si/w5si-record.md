@@ -5,6 +5,13 @@ been built or measured. Every edge is a maker's figure, a standard's, or a bound
 reading of this page is a PASS. The checks named here are the stream's own and an AI review of the first pass; none is
 a qualified engineering review.
 
+**CONTINUED BY STREAM w5si2 (28 September 2026), whose record is `v2/docs/records/w5si2/README.md`.** That page
+supersedes this one in three places: section 12 (the order of the drafts and what must be committed), the counts
+wherever the makers' models are not in the tree, and two records' figures (TI-PCA9555 and TI-TMP117, session decision
+ER-D16). The makers' thirteen IBIS models are NOT in the repository: they are pinned by
+`v2/vendor/ibis-manifest.yaml` and fetched by `v2/ecad/tools/ibis_fetch.py`. Sections 12.1 and 12.5 below are amended
+in place and say so.
+
 This is the record of the second and last pass of the loop. The first pass's record is kept as it was recovered
 (`recovery/pass1-drafts/w5si-record.md`) and is superseded by this page wherever they differ. How the first pass was
 rebuilt from its transcripts is `RECOVERY.md`. The instruction this stream answers is the third checkpoint review's:
@@ -299,9 +306,14 @@ not settle, so that decision stays open under Q4.
 
 ## 12. For the integrator
 
-1. **Commit order.** `tools/pcb_edge_rates.yaml`, the 13 IBIS files and `v2/docs/records/w5si/readings/edge-search.txt`
-   are configuration inputs of the `edge_length` verdict. They are committed on this branch. After a merge, run
-   nothing that writes evidence before they are in the tree, or every SI-001 reading reads CONFIG_CHANGED.
+1. **Commit order.** AMENDED 28 September 2026 (stream w5si2). `tools/pcb_edge_rates.yaml`,
+   `v2/vendor/ibis-manifest.yaml` and `v2/docs/records/w5si/readings/edge-search.txt` are configuration inputs of the
+   `edge_length` verdict and are committed on the branch `fnd/w5si2`. **The 13 IBIS files are not committed and must
+   never be** (`.gitignore` ignores `v2/vendor/*/ibis/*.ibs`; never `git add -f` one): the manifest is the
+   configuration input in their place, and `rules_status` holds a reading to the models through it. After a merge, run
+   nothing that writes evidence before the three files above are in the tree, or every SI-001 reading reads
+   CONFIG_CHANGED. As first written on 27 September this item said the 13 files "are committed on this branch"; that
+   branch (`fnd/w5si`) is not the one that is integrated.
 2. **The drafts**, each refusing a second run, each checked on a scratch copy of `c23c5e76` and of `fnd/r8int6` at
    `73ae2f21`. Run from anywhere; `--dry-run` writes nothing.
 
@@ -317,11 +329,22 @@ not settle, so that decision stays open under Q4.
    continuation reads every board's netlist.
 4. **A merge conflict to expect.** Set 6 appends to `v2/vendor/sources.txt` and `v2/vendor/vendor-status.txt`, and so
    does this branch (13 lines each). Both sides' lines are kept.
-5. **Publication (Q8).** TI's IBIS headers say "Unauthorized reproduction and/or distribution is strictly
-   prohibited" and ST's carry a copyright. They are filed under `v2/vendor/README.md`'s standing terms (the makers'
-   property, taken down on request), as the datasheets are. `main` is mirrored publicly within minutes of a push.
-   Whether these 13 files go out with it is the owner's decision, and it is not taken here. If they are withheld the
-   records that cite them decide nothing and their nets read UNDECIDED: the tool fails closed.
+5. **Publication (Q8).** AMENDED 28 September 2026 (stream w5si2, on the drafts check's M6). What each file's own
+   header says, file by file, is quoted with its lines in `v2/vendor/ibis-manifest.yaml`:
+   - FIVE forbid it in words (`pca9555.ibs`, `sn74lvc08a.ibs`, `sn74lvc1g04.ibs`, `sn74lvc1g57.ibs`,
+     `sn74lvc32a.ibs`): "Unauthorized reproduction and/or distribution is strictly prohibited." and "You and your
+     company shall not distribute, sell or give these models to anyone else without prior written permission from TI."
+   - EIGHT carry a disclaimer of warranty and a copyright line and NO sentence on copying or distribution
+     (`ads1x1x.ibs`, `ina226.ibs`, `sn74lvc1g00.ibs`, `sn74lvc86a.ibs`, `tcan33x.ibs`, `tmp117.ibs`, `tusb8041rgc.ibs`
+     and ST's `stm32h742_743_750_753_lqfp100.ibs`): nothing in them grants a right to redistribute, and nothing in
+     them forbids it in words.
+   As first written this item said TI's headers forbid distribution "and ST's carry a copyright", and that the files
+   were "filed under `v2/vendor/README.md`'s standing terms (the makers' property, taken down on request), as the
+   datasheets are". Both were wrong: the wording is five files', not TI's twelve, and the README's terms are
+   publish-as-is, which is not what the five allow. **The files are withheld.** `main` is mirrored publicly within
+   minutes of a push. Whether any of the 13 is ever published is the owner's decision, and it is not taken here. With
+   them withheld the records that cite them decide nothing in a tree that has not fetched them, and their nets read
+   UNDECIDED naming the absent file: the tool fails closed, and says which state it was in.
 
 ## 13. What was run, and what it gave
 

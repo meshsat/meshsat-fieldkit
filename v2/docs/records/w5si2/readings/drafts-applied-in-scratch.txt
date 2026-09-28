@@ -1,0 +1,57 @@
+##### view-present apply_rules_status_config_inputs
+rules_status.CONFIG_INPUTS['edge_length.py']: 64 inputs (6 before): the data file, the manifest that pins the makers' models, 50 document(s), 1 listing, 6 netlists; no model is declared
+  THE NETLISTS ARE NAMED BY PHASE DIRECTORY (pcb-a-power-a23, pcb-b-compute-b19, pcb-c-display-c8, pcb-d-aprs-d9, pcb-e1-dock-e7, pcb-p-pack-p2): when a board's declared phase moves, or the data file cites a new document, run this draft again with --refresh, or a reading is held to a netlist the design has left
+  OWED after this draft: apply_rules_status_pinned_models.py, and the data file, the manifest and the search listing committed before rules_status or rules_render run
+##### view-present apply_rules_status_pinned_models
+rules_status.py: PINNED_INPUTS, _recorded_model and _pinned_state added above _config_state, which asks _pinned_state before it answers BOUND (61 lines added)
+  OWED after this draft: `python3 tests/run.py pinned_models` and `python3 tests/run.py rules_status` from v2/ecad/tools/tests; the code bundle of every reading rules_status.py writes changes with this edit
+##### view-present apply_sources_yaml_ibis
+SOURCES.yaml: 9 document rows and one owed line added, every address, revision and sha256 read from v2/vendor/ibis-manifest.yaml; the models in this tree: PRESENT (13 of 13 present)
+  OWED after this draft: a part entry for each of sn74lvc08a.ibs, sn74lvc32a.ibs, ina226.ibs, tmp117.ibs (the parts stream's)
+##### view-present apply_board_b_declarations
+board B: SW?_IN and SW?_O? declared RF and BOB's basis corrected (its class kept); gen_pcb_b3.py PATTERNS 40 entries become 41: the switch ports and the card RF lines in class RF, GNSS_RF_IN added
+  OWED after this draft: re-take board B's readings that read boards/b.json (it is a configuration input of every reading that declares it) with retake_gate.sh; the net classes take effect at board B's next layout generation
+##### view-present apply_board_c_declarations
+boards/c.json: signal_classes 50 entries (46 before): EMCLAMP_Y, EMCLAMP_G, EMCON_RD and EMCON_RD_R declared LOW_SPEED_OR_DC after EMCON_HW (decision W5SI2-D1, authority SESSION)
+  SI-001 on board C, netlist sha256/16 3fddbb3edcd4248a, taken in memory on this tree, nothing written:
+    before:                         INCONCLUSIVE: 134 signal nets, 97 slow, 4 by a published figure, 29 by a bound, 4 undecided (4 no declaration, 0 waiting on a model that is not in the tree, 0 other), 10 answered, 23 layout-bound of which 23 a bound decides; models PRESENT (6 asked, 0 absent)
+    after (LOW_SPEED_OR_DC):        INCONCLUSIVE: 134 signal nets, 101 slow, 4 by a published figure, 29 by a bound, 0 undecided (0 no declaration, 0 waiting on a model that is not in the tree, 0 other), 10 answered, 23 layout-bound of which 23 a bound decides; models PRESENT (6 asked, 0 absent)
+    had they been CLOCKED_DIGITAL:  INCONCLUSIVE: 134 signal nets, 97 slow, 6 by a published figure, 31 by a bound, 0 undecided (0 no declaration, 0 waiting on a model that is not in the tree, 0 other), 12 answered, 25 layout-bound of which 25 a bound decides; models PRESENT (7 asked, 0 absent)
+  OWED after this draft: re-take SI-001 on board C with retake_gate.sh (boards/c.json is a configuration input of every reading that declares it: those readings go stale with this edit), and board C's other gates that read the table.
+##### view-present apply_coverage_si001
+pcb_rules_coverage.yaml SI-001: note extended by 3413 characters, remediation's action replaced, owner and execution kept
+  THE MODELS WHEN THE COUNTS WERE TAKEN: PRESENT: every model a reading asked for was in the tree and was the file pinned (13 of the 13 the manifest pins were in the tree)
+  OWED after this draft: `rules_render.py`, because v2/docs/PCB-GOLDEN-RULES.md and v2/docs/PCB-GAP-REGISTER.md are rendered from this file and are out of date until they are rendered again (`rules_render.py --check` says which)
+##### view-present apply_decisions_w5si
+pcb_decisions.yaml: decisions 48 to 54 added (SESSION, ruled)
+  pcb_requirements.yaml: 1 record(s) bound to pcb_decisions.yaml@b5f7162443d5ad91 rebound to @4e1ff91f98e06b72, each with a re-read sentence added to its evidence: CFL-016
+  OWED after this draft: `decisions_render.py` (v2/docs/OWNER-DECISIONS-OPEN.md is generated from pcb_decisions.yaml and a test refuses a stale page); and the requirements trace page rendered again, because pcb_requirements.yaml changed
+##### view-absent apply_rules_status_config_inputs
+rules_status.CONFIG_INPUTS['edge_length.py']: 64 inputs (6 before): the data file, the manifest that pins the makers' models, 50 document(s), 1 listing, 6 netlists; no model is declared
+  THE NETLISTS ARE NAMED BY PHASE DIRECTORY (pcb-a-power-a23, pcb-b-compute-b19, pcb-c-display-c8, pcb-d-aprs-d9, pcb-e1-dock-e7, pcb-p-pack-p2): when a board's declared phase moves, or the data file cites a new document, run this draft again with --refresh, or a reading is held to a netlist the design has left
+  OWED after this draft: apply_rules_status_pinned_models.py, and the data file, the manifest and the search listing committed before rules_status or rules_render run
+##### view-absent apply_rules_status_pinned_models
+rules_status.py: PINNED_INPUTS, _recorded_model and _pinned_state added above _config_state, which asks _pinned_state before it answers BOUND (61 lines added)
+  OWED after this draft: `python3 tests/run.py pinned_models` and `python3 tests/run.py rules_status` from v2/ecad/tools/tests; the code bundle of every reading rules_status.py writes changes with this edit
+##### view-absent apply_sources_yaml_ibis
+SOURCES.yaml: 9 document rows and one owed line added, every address, revision and sha256 read from v2/vendor/ibis-manifest.yaml; the models in this tree: ABSENT (0 of 13 present)
+  OWED after this draft: a part entry for each of sn74lvc08a.ibs, sn74lvc32a.ibs, ina226.ibs, tmp117.ibs (the parts stream's)
+##### view-absent apply_board_b_declarations
+board B: SW?_IN and SW?_O? declared RF and BOB's basis corrected (its class kept); gen_pcb_b3.py PATTERNS 40 entries become 41: the switch ports and the card RF lines in class RF, GNSS_RF_IN added
+  OWED after this draft: re-take board B's readings that read boards/b.json (it is a configuration input of every reading that declares it) with retake_gate.sh; the net classes take effect at board B's next layout generation
+##### view-absent apply_board_c_declarations
+boards/c.json: signal_classes 50 entries (46 before): EMCLAMP_Y, EMCLAMP_G, EMCON_RD and EMCON_RD_R declared LOW_SPEED_OR_DC after EMCON_HW (decision W5SI2-D1, authority SESSION)
+  SI-001 on board C, netlist sha256/16 3fddbb3edcd4248a, taken in memory on this tree, nothing written:
+    before:                         INCONCLUSIVE: 134 signal nets, 97 slow, 4 by a published figure, 22 by a bound, 11 undecided (4 no declaration, 7 waiting on a model that is not in the tree, 0 other), 10 answered, 16 layout-bound of which 16 a bound decides; models ABSENT (6 asked, 6 absent)
+    after (LOW_SPEED_OR_DC):        INCONCLUSIVE: 134 signal nets, 101 slow, 4 by a published figure, 22 by a bound, 7 undecided (0 no declaration, 7 waiting on a model that is not in the tree, 0 other), 10 answered, 16 layout-bound of which 16 a bound decides; models ABSENT (6 asked, 6 absent)
+    had they been CLOCKED_DIGITAL:  INCONCLUSIVE: 134 signal nets, 97 slow, 4 by a published figure, 24 by a bound, 9 undecided (0 no declaration, 9 waiting on a model that is not in the tree, 0 other), 10 answered, 18 layout-bound of which 18 a bound decides; models ABSENT (7 asked, 7 absent)
+  OWED after this draft: re-take SI-001 on board C with retake_gate.sh (boards/c.json is a configuration input of every reading that declares it: those readings go stale with this edit), and board C's other gates that read the table.
+##### view-absent apply_coverage_si001
+pcb_rules_coverage.yaml SI-001: note extended by 3789 characters, remediation's action replaced, owner and execution kept
+  THE MODELS WHEN THE COUNTS WERE TAKEN: ABSENT: 11 model(s) a reading asked for were NOT in the tree (stm32h742_743_750_753_lqfp100.ibs, ads1x1x.ibs, ina226.ibs, pca9555.ibs, sn74lvc08a.ibs, sn74lvc1g00.ibs, sn74lvc32a.ibs, sn74lvc86a.ibs, tcan33x.ibs, tmp117.ibs, tusb8041rgc.ibs), so every net that waits on one reads UNDECIDED, naming it, and the counts below are those of a tree without them; with the models fetched (tools/ibis_fetch.py) those nets are decided and this paragraph is superseded by the re-taken readings
+  OWED after this draft: `rules_render.py`, because v2/docs/PCB-GOLDEN-RULES.md and v2/docs/PCB-GAP-REGISTER.md are rendered from this file and are out of date until they are rendered again (`rules_render.py --check` says which)
+  AND: this paragraph was written WITHOUT the models. It says so. When the models are in the tree and SI-001 is re-taken, the paragraph's counts are those of another state: say so in the record that re-takes
+##### view-absent apply_decisions_w5si
+pcb_decisions.yaml: decisions 48 to 54 added (SESSION, ruled)
+  pcb_requirements.yaml: 1 record(s) bound to pcb_decisions.yaml@b5f7162443d5ad91 rebound to @4e1ff91f98e06b72, each with a re-read sentence added to its evidence: CFL-016
+  OWED after this draft: `decisions_render.py` (v2/docs/OWNER-DECISIONS-OPEN.md is generated from pcb_decisions.yaml and a test refuses a stale page); and the requirements trace page rendered again, because pcb_requirements.yaml changed

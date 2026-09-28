@@ -1,4 +1,4 @@
-SI-001 AT THE SCHEMATIC PHASE, taken in scratch outside any tree: fnd/w5si2 at e504d5c1 with board C's four declarations applied in the scratch view, models ABSENT (the state of a clean clone)
+SI-001 AT THE SCHEMATIC PHASE, taken in scratch outside any tree: fnd/w5si2 at b30531fe with the seven drafts applied in a scratch view, models ABSENT (the state of a clean clone)
 Prototype design work: nothing has been built or measured. tools/pcb_edge_rates.yaml sha256/16 0689086680f7a4a4.
 
 board | netlist sha256/16 | signal | slow | non-slow | by a published figure | by a bound | undecided (no declaration + model absent + other) | answered | layout-bound (figure-held + BOUND_DECIDES) | models: state, asked, absent | verdict

@@ -58,7 +58,7 @@ def main(a):
                 assert "not in the repository" not in reason
                 new = "%s   %s   # %s; not in the repository: pinned by ibis-manifest.yaml and fetched by v2/ecad/tools/ibis_fetch.py" % (
                     key, m.group(2), reason)
-            assert new != old and "—" not in new and "\n" not in new
+            assert new != old and chr(0x2014) not in new and "\n" not in new
             lines[i] = new; changed += 1
         assert changed == 13
         text = "\n".join(lines)

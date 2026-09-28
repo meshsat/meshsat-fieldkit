@@ -207,7 +207,7 @@ def main():
     assert not moved, "nets other than the four change the entry they match: %s" % ", ".join(moved)
     for e in ENTRIES:
         assert e["class"] in SC.CLASSES and e["class"] != "UNKNOWN" and len(e["basis"].strip()) >= 12, e["pattern"]
-        assert "—" not in e["basis"] and "–" not in e["basis"], "a dash the house style forbids in %s" % e["pattern"]
+        assert chr(0x2014) not in e["basis"] and chr(0x2013) not in e["basis"], "a dash the house style forbids in %s" % e["pattern"]
 
     # what SI-001 reads on board C, in memory, on this tree: before, after, and in the class the decision did not take
     alt = json.loads(out)
