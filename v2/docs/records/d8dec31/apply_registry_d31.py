@@ -17,7 +17,7 @@ second run by a marker. IT CLOSES NOTHING.
 
 STAGE 2 (--close-s88 <commit>). S-88 (finding H3-02 of the independent review of handover H3; erratum f of
 RELEASE-H3.md) closes only when TRN-001 has been RE-TAKEN on board A on the corrected declaration, which is the
-integrator's on the KiCad host. This stage REFUSES unless, in the tree it is given: v2/ecad/out/port_protect_a.verdict.json
+integrator's on the KiCad host. This stage REFUSES unless, in the tree it is given: port_protect_a.verdict.json beside board A's declared phase (its out/ or routed/ directory, or v2/ecad/out)
 reads PASS; its inputs.netlist.sha256_16 is the sha256/16 of board A's declared-phase netlist in the tree; its
 writer and code bundle name port_protect.py at the sha256/16 of the tree's port_protect.py, and that module carries the
 reviewed-set reconciliation (its syntax tree defines `reconcile`, `reviews` and `cover`; a parse, not a grep); its
@@ -285,13 +285,19 @@ def stage_close_s88(root, commit, dry):
         raise SystemExit("apply_registry_d31: --close-s88 needs the commit (8 to 40 hex digits) that landed the re-take")
     tools = os.path.join(root, "v2", "ecad", "tools")
     # the re-taken reading, in the tree
-    vp = os.path.join(root, "v2", "ecad", "out", "port_protect_a.verdict.json")
-    if not os.path.exists(vp): _refuse("%s is not in the tree: TRN-001 has not been re-taken on board A here" % os.path.relpath(vp, root))
-    v = json.load(open(vp, encoding="utf-8"))
-    if v.get("verdict") != "PASS": _refuse("the re-taken reading is %s, not PASS: %s" % (v.get("verdict"), (v.get("evidence") or [])[:3]))
+    # integrator fix (check 2, B3): the reading lives where rules_status reads it, beside the declared phase's netlist
+    # (<phase dir>/out, then <phase dir>/routed, then v2/ecad/out), never only under v2/ecad/out
     sys.path.insert(0, tools)
     import phase_artefacts as PA
     net = PA.netlist("a")
+    phase_dir = os.path.dirname(os.path.dirname(net)) if net else None
+    cands = ([os.path.join(phase_dir, "out", "port_protect_a.verdict.json"), os.path.join(phase_dir, "routed", "port_protect_a.verdict.json")] if phase_dir else []) \
+        + [os.path.join(root, "v2", "ecad", "out", "port_protect_a.verdict.json")]
+    found = [c for c in cands if os.path.exists(c)]
+    if not found: _refuse("no port_protect_a.verdict.json in %s: TRN-001 has not been re-taken on board A here" % ", ".join(os.path.relpath(c, root) for c in cands))
+    vp = found[0]
+    v = json.load(open(vp, encoding="utf-8"))
+    if v.get("verdict") != "PASS": _refuse("the re-taken reading %s is %s, not PASS: %s" % (os.path.relpath(vp, root), v.get("verdict"), (v.get("evidence") or [])[:3]))
     want = _sha16(net) if net and os.path.exists(net) else None
     ni = (v.get("inputs") or {}).get("netlist")
     got = ni.get("sha256_16") if isinstance(ni, dict) else None
@@ -329,7 +335,7 @@ def stage_close_s88(root, commit, dry):
     assert tm, "S-88 has no folded title"
     title_lines = blk[tm.end():].rstrip("\n")
     waiters = [r["id"] for r in d0["records"] if "S-88" in (r.get("waits_on") or [])]
-    ev = ("TRN-001 re-taken on board A on the corrected declaration (v2/ecad/out/port_protect_a.verdict.json, PASS of %s, "
+    ev = ("TRN-001 re-taken on board A on the corrected declaration (%s, PASS of %s, "
           "netlist %s, written by port_protect.py %s, %d ports, %d pins declared internal, 0 declarations refused, 0 "
           "uncovered pins, 0 disagreements with the reviewed set of pcb_port_reviews.json), landed by commit %s. The "
           "declaration names VIN_RAW's entry (J_VR1 to J_VR4, apply_port_declarations.py); the checker refuses a declared "
@@ -340,7 +346,7 @@ def stage_close_s88(root, commit, dry):
           "this item put on TRN-001's reading of board A is lifted by this reading. The review of decision 31 "
           "(v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md) is the record; its own findings are open items of "
           "their own and are not closed by this."
-          % (v.get("denominator"), got, tool_sha, c.get("ports", 0), c.get("internal_pins", 0), commit))
+          % (os.path.relpath(vp, root), v.get("denominator"), got, tool_sha, c.get("ports", 0), c.get("internal_pins", 0), commit))
     closed = "  - id: S-88\n    closed_by: commit %s\n    closing_evidence: >-\n%s    title: >-\n%s\n" % (commit, wrap(ev), title_lines)
     t = old[:s] + old[e:]
     tail = "\nrecords:\n"
