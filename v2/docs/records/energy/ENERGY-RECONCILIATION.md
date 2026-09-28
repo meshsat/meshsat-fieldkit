@@ -830,7 +830,7 @@ at this load (one string alone, at three times the current, holds 32.94), so the
 **9c. The smallest pack for each window** (out sections 3, 4 and 9). A pack meets M1 only if it carries the night AND
 the day refills it. Inside REQ-016's 100 W window the day's harvest is capped (1023.9 Wh a day at the node even with
 20 kWp, under the 1027.2 asked), so the pack also carries the days' shortfall and the array must be large: 4S38P with
-200 Wp, 4S23P with 600 Wp, 4S19P with 1300 Wp, 4S18P with 1600 Wp, 4S17P with 2000 Wp, 4S16P from 2100 Wp. None of these
+200 Wp, 4S23P with 600 Wp, 4S19P from 1300 Wp, 4S18P from 1550 Wp, 4S17P from 1950 Wp, 4S16P from 2100 Wp (out section 3's rows). None of these
 meets M1 at +15 C. With a window of 200 W or more the day refills the pack: 4S16P from 350 Wp and 4S15P from 650 Wp (for
 arrays up to the 3 kWp swept; the independent review found 4S15P still needed at 5 kWp and 4S14P meeting only at 20 kWp).
 
@@ -890,7 +890,8 @@ chain's brackets move the smallest pack by one string (out section 5); the 2.80 
 
 **9h. What it does not yet show, each a finding for the engineering that follows:** the lid module's fit over the
 toggles (their lever heights are TBD) and beside or instead of the QMX tray; the lid's added mass (about 2.4 kg of cells
-and 0.6 kg of holders and board, ESTIMATE) against the hinges and TEST-PLAN's drop E1; the harness across the hinge at
+and 0.6 kg of holders and board, ESTIMATE) against the hinges and TEST-PLAN's drop E1, and as a tipping load on the
+open case; the harness across the hinge at
 about 8 A; the two packs' protection, their charge sharing and the qualified battery review D-09 asks for; a heater for
 the lid pack (the charge window starts at 0 C); **the lid pack's own temperature:** the +20 C basis rests on the cells
 sharing the kit's own heat inside the closed base, which a pack in the open lid does not, and the recommended 4S18P meets
@@ -904,9 +905,10 @@ they were.
   (9c, 9e), in the base pockets and the lid. This is a conflict: no pack D-06 allows carries more than 9.1 W for M1.
 - **REQ-016** caps the stage's input at 100 W and each panel at 25 V open circuit; it sets no limit on the array. It is a
   trade, not a hard conflict: kept, M1 needs about 1300 to 2100 Wp of 12 V class panels in parallel and 4S16P to 4S19P,
-  with no margin at +15 C (9c, 9e); raised to 200 W, 400 Wp and 4S18P give margin. The 50 V of 9g way (i) follows from
+  with no margin at +15 C (9c, 9e); a lid holding the 60-cell estimate of 9f (4S21P in all) would meet at about 900 Wp
+  (4S21P) or 1100 Wp (4S20P), still not at +15 C (the re-check's figures, `checks/check-section9-2.md`); raised to 200 W, 400 Wp and 4S18P give margin. The 50 V of 9g way (i) follows from
   wiring the panels as series pairs and is a design choice, not a need.
-- **D-01** defers the second pack and, with it, the lid tablet bracket and HF. The architecture brings a second pack into
+- **D-01** defers, among other items, the second pack, the lid tablet bracket and HF (three separate deferrals). The architecture brings a second pack into
   prototype 1, and the version with margin takes the lid space of the HF module (appendix 32.50 item 16a, the QMX in its
   lid tray) and the lid tablet bracket (16d), both approved by the owner on 6 September 2026; where the HF module would
   go instead is not answered here.
