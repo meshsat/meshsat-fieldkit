@@ -29,6 +29,12 @@ current above the switch: 77 mV at the 15 uA maximum the sheet gives at 0.6 V (p
 ALSO OWED WITH IT, in v2/ecad/tools/boards/a.json (the integrator's file): the signal class entry whose pattern is
 MAIN_PB covers the new net only as MAIN_PB*; this script changes it when given the table's path.
 
+AND THE INTERFACE CONTRACT (the fresh check's item M6): v2/ecad/tools/pcb_interfaces.yaml IF-AC-MAINSW maps board A's
+J_MAINSW pin 1 to MAIN_PB and cites gen_sch_a.py:278; after this change pin 1 is on MAIN_PB_LEAD, so the contract goes
+stale (judged_by none, so no gate trips). The contract's change is delivered as apply_interfaces_mainsw.py beside this
+script, for the integrator, to run AFTER this script has been applied and the generator re-run; it refuses while the
+netlist still carries J_MAINSW.1 on MAIN_PB.
+
 NOT CHANGED HERE, and said so: board C's U10 is a rail-referenced array on a line that is live while its rail is off
 (finding X-C1 of the review). That is board C's generator and its owner's.
 

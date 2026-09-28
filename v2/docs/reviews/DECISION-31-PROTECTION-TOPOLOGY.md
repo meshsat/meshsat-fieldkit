@@ -13,6 +13,17 @@ layout must keep (the clamp at the entry, its ground return short and on the pla
 **That the record exists says the topology was read. It does not say the topology is sound.** Sections 2 and 9 say
 what was found, and four of the findings are circuit changes.
 
+**Why this review exists now, and what it closes.** The independent review of handover H3
+(`v2/docs/reviews/2026-09-27-h3-independent-review.md`) found **H3-02**: TRN-001 on board A judged nothing of VIN_RAW's
+entry, because `boards/a.json` named J_DOCK pins 1 and 2, ground since SC-55; `v2/docs/handover/RELEASE-H3.md` carries
+it as **erratum f**, and the requirements registry as open item **S-88**, which limits TRN-001's reading on board A
+wherever it is quoted. This review is the repair S-88 names: the declaration corrected (finding A-F1,
+`apply_port_declarations.py`), the checker refusing a declared port that names no conductor and reporting a connector
+pin no entry covers, the regression that a declared entry moved, narrowed, reclassified or omitted demands
+reconciliation and never shrinks the coverage in silence (section 10, the reviewed set), and TRN-001 re-taken on board
+A on the corrected declaration, which is the integrator's on the KiCad host. **S-88 closes on that re-take**
+(`apply_registry_d31.py --close-s88` refuses until the reading is in the tree), not on this document.
+
 ## 1. What was read, and how
 
 | input | identity |
@@ -42,22 +53,25 @@ review. Every rating quoted is in the ledger of section 8 with its document, its
 | PROTECTED AS DRAWN | a protection part rated to the ruled level stands on the conductor, the right way round, ahead of every semiconductor, and what it lets through is inside the rating of what stands behind it |
 | PROTECTED WITH A CONSTRAINT | the same, provided the layout keeps what section 7 states, or provided a named part rating holds |
 | NOT PROTECTED | a circuit finding: by the makers' own figures the protection does not keep the parts behind it inside their ratings. A change is proposed as an apply script |
+| NOT PROTECTED, BY A BOUND | a conservative model's answer, not a demonstrated circuit defect: with every coulomb of the discharge network on the conductor and none into its loads, the conductor rises above a part's absolute maximum. The bound is stated with what it leaves out, and a change is proposed that puts the same bound under the ratings |
 | CANNOT BE JUDGED AT THE DESK | no document held decides it. What would decide it is stated |
 
 ## 2. The result
 
 **Conductors that leave the case or that a person touches, as this review enumerated them: 32 on 35 pins**
 (board A 19, board D 8, board E 5), against 19 that the three declarations as they stood judged (20 with the conductor board A's J_DOCK entry meant and missed). **Verdicts: 2 protected as
-drawn, 9 protected with a constraint, 4 not protected, 17 that cannot be judged at the desk.**
+drawn, 9 protected with a constraint, 4 not protected (3 demonstrated by the makers' own figures: D-F1 twice, on the two
+push-to-talk conductors, and E-F1; 1 by a conservative bound: E-F3), 17 that cannot be judged at the desk.**
 
 | board | conductors | as drawn | with a constraint | not protected | cannot be judged |
 |---|---|---|---|---|---|
 | A | 19 | 2 (PD_CC1, PD_CC2) | 6 (VIN_RAW, VBUS_WALL, USB_WALL_P, USB_WALL_N, PD_VBUS, MAIN_PB) | 0 | 11 (the antenna conductors) |
 | D | 8 | 0 | 2 (the microphone conductors) | 2 (the push-to-talk conductors) | 4 (the antenna path twice, the speaker conductors) |
-| E | 5 | 0 | 1 (PV_IN) | 2 (DC_IN, the pod's 3.3 V) | 2 (the pod's SDA1 and SCL1) |
+| E | 5 | 0 | 1 (PV_IN) | 2 (DC_IN, by the maker's own criterion; the pod's 3.3 V, by a bound) | 2 (the pod's SDA1 and SCL1) |
 
-**The findings, by kind.** CIRCUIT is a defect or an omission of the design; INSTRUMENT is a defect of a
-declaration or of a tool; NOTE is handed to a named reader and changes no verdict.
+**The findings, by kind.** CIRCUIT is a defect or an omission of the design, shown by the makers' own figures; BOUND
+is a conservative model's answer, which is not a demonstrated circuit defect and is never labelled one; INSTRUMENT is a
+defect of a declaration or of a tool; NOTE is handed to a named reader and changes no verdict.
 
 | id | kind | board | what | what is proposed |
 |---|---|---|---|---|
@@ -73,8 +87,8 @@ declaration or of a tool; NOTE is handed to a named reader and changes no verdic
 | D-N1 | NOTE | D, A | the arrestor's turn-on is 90 V and the intent's own figure for the antenna conductor in transmit is 110 V | a question for the maker: section 9.3 |
 | E-F1 | CIRCUIT | E | the ideal diode controller has no input capacitor, against its maker's minimum; with none, a negative discharge puts the clamp's voltage plus DC_P's across Q1 (60 V) and U3 (75 V) | `apply_gen_sch_e_cin.py` |
 | E-F2 | CIRCUIT | E | F1 is a MINI blade of the 297 series class, rated 32 V DC, on a line specified to 36 V whose hot swap lets 40 V in | a fuse rated above 40 V: section 6.3 |
-| E-F3 | CIRCUIT, by a bound | E | the pod's 3.3 V conductor is the rail itself; its clamp breaks down above every part's rating on the rail, and the rail's 4.3 uF does not hold the bound under them | `apply_gen_sch_e_pod.py` |
-| E-F4 | CIRCUIT, not judged | E | the pod's lead has no series element: a short outside takes the sensor controller's rail, and the pod shares SDA1 and SCL1 with four parts inside | options in section 6.3; the pod's part is not picked |
+| E-F3 | BOUND, a conservative model's answer | E | the pod's 3.3 V conductor is the rail itself; its clamp breaks down above every part's rating on the rail, and the rail's 4.3 uF does not hold the bound under them | `apply_gen_sch_e_pod.py` |
+| E-F4 | CIRCUIT, not judged | E | the pod's lead has no series element: a short outside takes the sensor controller's rail, and the pod shares SDA1 and SCL1 with five parts inside (U10, U14, U15, U17 and the module on J_LTG) | options in section 6.3; the pod's part is not picked |
 | E-N1 | NOTE | E | a reversed panel finds D4's forward path at the panel's short-circuit current, which is below F2's rating | section 6.3 |
 | E-N2 | NOTE for R-PWR | E | D10 clamps at 64.5 V at its rated pulse and U3's ANODE is rated 65 V | section 6.3 |
 | T-1 | INSTRUMENT | tool | `port_protect.py` skipped a declared ground pin and never asked whether a connector was in any entry | done: section 10 |
@@ -119,17 +133,17 @@ figures this review uses are arithmetic on those two elements, and each is a bou
 | J_5V_S3 | 1: +5V_S3 | 2 | INTERNAL | a rail lead to board B, inside the case (IF-AB-POWER) |
 | J_AB1 | 1: USB_D8_P; 2: USB_D8_N; 9: PI_SHDN_REQ; 10: PI_KILL; 11: SDA; 12: SCL; 13: EXP_INT; 14: TR_APRS; 15: EMCON_HW; 16: TX_INHIBIT_n; 17: SLOT_EN1; 18: SLOT_EN2; 19: SLOT_EN3; 20: ZEROIZE_HW; 21: SHORE_INHIBIT; 25: USB_E6_P; 26: USB_E6_N | 3 to 8, 22 to 24 | INTERNAL | the control ribbon to board B above this board, inside the case (IF-AB-RIBBON) |
 | J_AB2 | 1: USB_WALL_P; 2: USB_WALL_N | 3 to 10 | INTERNAL | the wall-port ribbon to board B, inside the case (IF-AB-WALL): it carries the wall USB pair on from J_USBW, which is declared external and clamped on this board by U29 |
-| J_BM1 | 1: RF_VHF | 2 | EXTERNAL, protected off this board | the VHF antenna conductor: it crosses this board from the SMA jack J_RF1 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
-| J_BM2 | 1: RF_HF | 2 | EXTERNAL, protected off this board | the HF antenna conductor: it crosses this board from the SMA jack J_RF2 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
-| J_BM3 | 1: RF_WIFI24 | 2 | EXTERNAL, protected off this board | the WIFI 2.4 antenna conductor: it crosses this board from the SMA jack J_RF3 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
-| J_BM4 | 1: RF_GNSS | 2 | EXTERNAL, protected off this board | the GNSS antenna conductor: it crosses this board from the SMA jack J_RF4 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
-| J_BM5 | 1: RF_SDR | 2 | EXTERNAL, protected off this board | the SDR antenna conductor: it crosses this board from the SMA jack J_RF5 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
-| J_BM6 | 1: RF_P2PA | 2 | EXTERNAL, protected off this board | the WIFI P2P A antenna conductor: it crosses this board from the SMA jack J_RF6 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
-| J_BM7 | 1: RF_P2PB | 2 | EXTERNAL, protected off this board | the WIFI P2P B antenna conductor: it crosses this board from the SMA jack J_RF7 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
-| J_BM8 | 1: RF_5G1 | 2 | EXTERNAL, protected off this board | the 5G MAIN antenna conductor: it crosses this board from the SMA jack J_RF8 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
-| J_BM9 | 1: RF_5G2 | 2 | EXTERNAL, protected off this board | the 5G DIV antenna conductor: it crosses this board from the SMA jack J_RF9 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
-| J_BM10 | 1: RF_IRIDIUM | 2 | EXTERNAL, protected off this board | the IRIDIUM antenna conductor: it crosses this board from the SMA jack J_RF10 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
-| J_BM11 | 1: RF_LORA | 2 | EXTERNAL, protected off this board | the LORA antenna conductor: it crosses this board from the SMA jack J_RF11 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
+| J_BM1 | 1: RF_VHF | 2 | EXTERNAL, protection claimed off this board, not judged here | the VHF antenna conductor: it crosses this board from the SMA jack J_RF1 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
+| J_BM2 | 1: RF_HF | 2 | EXTERNAL, protection claimed off this board, not judged here | the HF antenna conductor: it crosses this board from the SMA jack J_RF2 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
+| J_BM3 | 1: RF_WIFI24 | 2 | EXTERNAL, protection claimed off this board, not judged here | the WIFI 2.4 antenna conductor: it crosses this board from the SMA jack J_RF3 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
+| J_BM4 | 1: RF_GNSS | 2 | EXTERNAL, protection claimed off this board, not judged here | the GNSS antenna conductor: it crosses this board from the SMA jack J_RF4 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
+| J_BM5 | 1: RF_SDR | 2 | EXTERNAL, protection claimed off this board, not judged here | the SDR antenna conductor: it crosses this board from the SMA jack J_RF5 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
+| J_BM6 | 1: RF_P2PA | 2 | EXTERNAL, protection claimed off this board, not judged here | the WIFI P2P A antenna conductor: it crosses this board from the SMA jack J_RF6 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
+| J_BM7 | 1: RF_P2PB | 2 | EXTERNAL, protection claimed off this board, not judged here | the WIFI P2P B antenna conductor: it crosses this board from the SMA jack J_RF7 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
+| J_BM8 | 1: RF_5G1 | 2 | EXTERNAL, protection claimed off this board, not judged here | the 5G MAIN antenna conductor: it crosses this board from the SMA jack J_RF8 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
+| J_BM9 | 1: RF_5G2 | 2 | EXTERNAL, protection claimed off this board, not judged here | the 5G DIV antenna conductor: it crosses this board from the SMA jack J_RF9 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
+| J_BM10 | 1: RF_IRIDIUM | 2 | EXTERNAL, protection claimed off this board, not judged here | the IRIDIUM antenna conductor: it crosses this board from the SMA jack J_RF10 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
+| J_BM11 | 1: RF_LORA | 2 | EXTERNAL, protection claimed off this board, not judged here | the LORA antenna conductor: it crosses this board from the SMA jack J_RF11 to this blind-mate receptacle with no part on it, and leaves through the dock plug and the end wall |
 | J_CN1 | none | 1 | carries no conductor | a return: every pin is on GND |
 | J_CN2 | none | 1 | carries no conductor | a return: every pin is on GND |
 | J_CN3 | none | 1 | carries no conductor | a return: every pin is on GND |
@@ -141,7 +155,7 @@ figures this review uses are arithmetic on those two elements, and each is a bou
 | J_DOCK | 8: SHORE_INHIBIT; 9: USB_E6_P; 10: USB_E6_N; 12: DOCK_SPARE | 1 to 7, 11 | INTERNAL | signals between board A and board E inside the case, through the dock block E5 (interface contract IF-AE-DOCK): SHORE_INHIBIT on pin 8, the sensor controller's USB pair on pins 9 and 10, the hot stop line HOT-R1 on pin 12; the other pins are ground |
 | J_HEAT | 1: VHEAT | 2 | INTERNAL | the pack heater mat in the pack bay, inside the case (IF-A-HEAT) |
 | J_HF | 1: +12V_HF | 2 | INTERNAL | 12 V to the QMX HF unit in the lid tray, in the lid harness (IF-LID-HF). The lead stays inside the case; the unit's own panel is touched by the operator, and what reaches this lead through the unit is recorded in the review of decision 31 as not judged at the desk |
-| J_MAINSW | 1: MAIN_PB | 2 | EXTERNAL, protected off this board | the MAIN button's lead from the panel: a person presses the button on the face, and its contact reaches the LTC2954's PB pin on this board |
+| J_MAINSW | 1: MAIN_PB | 2 | EXTERNAL, protected off this board (read on board C's netlist) | the MAIN button's lead from the panel: a person presses the button on the face, and its contact reaches the LTC2954's PB pin on this board |
 | J_MEZZ1 | 1: USB_D8_P; 2: USB_D8_N; 7: TR_APRS; 8: TX_INHIBIT_n; 9: PA_EN; 10: SDA; 11: SCL; 12: EXP_INT; 13: +3V3; 15: ZEROIZE_HW; 16: AB_SPARE | 3 to 6, 14 | INTERNAL | the mezzanine harness to board D, inside the case (IF-AD-HARNESS) |
 | J_MEZZ_PWR1 | 1: +5V_D8 | 2 | INTERNAL | board D's 5 V lead behind the eFuse U23, inside the case (IF-AD-HARNESS) |
 | J_MON | 1: VMON | 2 | INTERNAL | the supply lead of the Xenarc monitor on the face, behind the eFuse U21 (IF-MON). The lead stays inside the case; the monitor's glass and bezel are touched by the operator, and what reaches this lead through the monitor is recorded in the review of decision 31 as not judged at the desk |
@@ -308,13 +322,13 @@ not judged, and recorded so that test M7 looks at both.
 
 | connector | pins that carry a supply or a signal (pin: net) | ground pins | class | where the lead goes |
 |---|---|---|---|---|
-| J_ANT | 1: RF_ANT | 2 | EXTERNAL, protected off this board | the VHF antenna SMA: an outdoor conductor with a 30 W transmitter behind it, arrested in the wall rather than on the board |
+| J_ANT | 1: RF_ANT | 2 | EXTERNAL, protection claimed off this board, not judged here | the VHF antenna SMA: an outdoor conductor with a 30 W transmitter behind it, arrested in the wall rather than on the board |
 | J_FLANGE | 1: FLANGE_NTC | 2 | INTERNAL | the thermistor lead of the power amplifier's flange, inside the case (IF-D-FLANGE) |
 | J_HARN1 | 1: USB_D8_P; 2: USB_D8_N; 7: TR_APRS; 8: TX_INHIBIT_n; 9: PA_EN; 10: SDA; 11: SCL; 12: EXP_INT; 13: +3V3; 15: ZEROIZE_HW; 16: AB_SPARE | 3 to 6, 14 | INTERNAL | the mezzanine harness from board A, inside the case (IF-AD-HARNESS) |
 | J_HS1 | 1: HS1_SPK; 3: HS1_MIC; 5: PTT_HS1_n | 2, 4 | EXTERNAL | a headset jack on the face, which a person plugs a headset into |
 | J_HS2 | 1: HS2_SPK; 3: HS2_MIC; 5: PTT_HS2_n | 2, 4 | EXTERNAL | the second headset jack |
 | J_PAIN | 1: RF_DRV | 2 | INTERNAL | the drive coax to the power amplifier module on the inside of the face plate (IF-A-PA) |
-| J_PAOUT | 1: RF_PAOUT | 2 | EXTERNAL, protected off this board | the power amplifier output to the antenna path, which reaches the same arrested bulkhead |
+| J_PAOUT | 1: RF_PAOUT | 2 | EXTERNAL, protection claimed off this board, not judged here | the power amplifier output to the antenna path, which reaches the same arrested bulkhead |
 | J_PWR1 | 1: +5V_D8 | 2 | INTERNAL | the 5 V lead from board A's eFuse U23, inside the case (IF-AD-HARNESS) |
 | J_USB3 | 1: +5V_D8; 2: USB3_N; 3: USB3_P | 4 | INTERNAL | the touch USB lead of the Xenarc monitor on the face (IF-MON, session choice SC-HF-06). The lead stays inside the case; the monitor's glass and bezel are touched by the operator, no clamp stands on this pair, and the review of decision 31 records it as finding D-F3, not judged at the desk |
 | J_VGG | 1: VGG_SW | 2 | INTERNAL | the gate bias lead to the power amplifier module on the inside of the face plate (IF-A-PA) |
@@ -609,7 +623,7 @@ the page of the PDF file.
 | G6K-2F-Y | `omron/omron-g6k-signal-relay.pdf` | 1, 3 | "-Y models offer an impulse withstand voltage of 2,500 V for 2 x 10 us"; "Max. switching voltage 125 VAC, 60 VDC" |
 | SA868 | `nicerf/nicerf-sa868-datasheet-v1.3.pdf` | 9 | pin 12 "ANT connect 50 ohm antenna"; no rating of the pin and no discharge figure anywhere in the sheet |
 | RA30H1317M1 | `mitsubishi/ra30h1317m1-datasheet.pdf` | 2 | VDD 17 V, VGG 6 V, Pin 100 mW; "Load VSWR Tolerance ... No degradation or destroy", "Load VSWR=20:1"; no discharge figure |
-| LM74700-Q1 | `ti/ti-lm74700-q1.pdf`, SNOSD17G, revised December 2020 | 4 | 6.1: ANODE to GND -65 to 65 V; CATHODE to ANODE -5 to 75 V. 6.2: HBM +-2000 |
+| LM74700-Q1 | `ti/ti-lm74700-q1.pdf`, SNOSD17G, revised December 2020 | 5 | 6.1: ANODE to GND -65 to 65 V; CATHODE to ANODE -5 to 75 V. 6.2: HBM +-2000 |
 | | | 17, 18, 19 | 10.1.1.2.3, the minimum capacitances; 10.1.1.3 and 10.1.1.4, the choice of the clamps |
 | BSC039N06NS | `infineon/infineon-bsc039n06ns-rev2.4-c534330.pdf`, Final Data Sheet Rev.2.4, 2020-02-03 (filed by this stream; it has a text layer) | 1, 3 | VDS 60 V; "100% avalanche tested"; EAS 50 mJ at ID 50 A; VGS -20 to 20 V. No discharge figure |
 | LM5069 | `ti/ti-lm5069.pdf`, SNVS452G, revised January 2020 | 4 | VIN, SENSE, OUT, UVLO to GND -0.3 to 100 V; OVLO 7 V; HBM +-2000 |
@@ -659,8 +673,13 @@ voltage of C41, C42, C49 and C50 on board D, which no text states.
 | `apply_gen_sch_e_pod.py` | E-F3: two 10 uF 25 V at J_POD pin 1 | board E's generator | the same |
 | `apply_gen_sch_a_mainpb.py` | A-F2: 5.1 k and 100 nF at U1's PB pin, the two nodes, the signal class | board A's generator and table | the same |
 | `apply_gen_sch_d_ptt.py` | D-F1: per push-to-talk line 1 k and two BAT46W | board D's generator | the same |
-| `apply_registry_d31.py` | the open items of this review, at the next free numbers | the integrator's | on a copy of the registry |
+| `apply_registry_d31.py` | the fourteen open items of this review at the next free numbers, each linked from the record(s) whose verdict it can move (so `rules_lib.py requirements` passes); its second stage `--close-s88 <commit>` closes S-88 and refuses until the re-taken reading of TRN-001 on board A is in the tree (PASS, the declared phase's netlist, the changed tool, 0 disagreements) | the integrator's | on a copy of main's registry: 0 errors after stage 1; every refusal of stage 2 exercised, then the closure, 0 errors |
 | `apply_holds_review_pin.py` | the sha256 of this file and the three netlists it read, into the three holds | the integrator's | on a copy |
+| `make_port_reviews.py` | writes `v2/ecad/tools/pcb_port_reviews.json`, the reviewed set (section 10); the file is committed on this branch and the script's `--check` confirms it is what the corrected declarations give | this stream's (a new file) | on a copy: "exactly what this script would write" after `apply_port_declarations.py` |
+| `apply_config_inputs_port_reviews.py` | declares `tools/pcb_port_reviews.json` a configuration input of `port_protect.py` in `rules_status.CONFIG_INPUTS`, so a change to the reviewed set makes TRN-001's readings stale | the integrator's | on a copy; the patched module imported and its entry read back |
+| `apply_interfaces_mainsw.py` | IF-AC-MAINSW's board A end after A-F2: pin 1 on MAIN_PB_LEAD; refuses while board A's netlist still has J_MAINSW.1 on MAIN_PB (run it after the generator) | the integrator's | on a copy: refused on today's netlist; the change checked with `--force-netlist --check` |
+| `apply_sources_d31.py` | the `SOURCES.yaml` entries of the two sheets this stream filed (Infineon BSC039N06NS, TI TPS37) | the integrator's | on a copy; second run refused |
+| `regress_reclassify.py` | the three shapes of moving an entry on the three REAL corrected tables, in a scratch tree (`readings/regress-reclassify.txt`) | a scratch driver | 21 cases, 0 failed |
 
 **Any of the four circuit changes moves its board's netlist, and the hold's pin names a netlist.** After the
 circuit round the pinned review reads "re-review it" by the rule's own text, and this review is owed again on
@@ -704,12 +723,34 @@ any pin left, and nothing asked whether a connector was in any entry at all.
    read by its reference and never by its library, because these generators draw several integrated circuits and
    a choke with connector symbols.
 3. The ground pins of the declared ports are printed by name, which the tool's own description had promised.
-4. A board that declares a zero of external ports with its reason is read as before (board P).
+4. A board that declares a zero of external ports with its reason is read as before (board P), unless a review holds
+   pins of it external (below).
+5. **The reviewed set** (second commit of this branch after the fresh check, item B1, for open item S-88's condition
+   "moving or omitting a declared entry demands reconciliation and never shrinks the coverage in silence"). Items 1
+   and 2 catch an entry moved onto ground pins (FAIL) and an entry removed (INCONCLUSIVE); they did not catch an entry
+   moved from `external_ports` into `internal_ports` with a twenty-character reason: on the corrected `a.json`,
+   J_USBW moved that way read PASS of 38 instead of 42, in silence. Now `v2/ecad/tools/pcb_port_reviews.json`
+   holds, for each board, the external pins this review enumerated from the netlist, pin by pin with the net each
+   carried (22 on board A, 8 on D, 5 on E: the 35 pins of section 2), the review it rests on and the netlist's
+   sha256/16. `port_protect.py` holds the declaration's external pins against that set and reads INCONCLUSIVE by name
+   for a reviewed pin declared internal (RECLASSIFIED), covered by no entry (REVIEWED, beside UNCOVERED), gone from
+   the netlist or moved to ground (the J_DOCK shape, for an entry that lists no pins), and for a declared external
+   pin no review holds (NOT REVIEWED), until the set is changed with its reason and the review it rests on (a
+   `changes` entry of forty characters or more naming a review in the tree); a board that declares external ports
+   and has no reviewed set reads INCONCLUSIVE, and a declared zero while a review holds pins is not a PASS. **Why a
+   separate file and not a key in the board table:** the tables are written by many hands and a reclassification made
+   in one would carry its own approval in the same hunk; the reviewed set has one purpose and one writer, and its
+   change is visible as a change to that file alone. It is a configuration input of the tool
+   (`apply_config_inputs_port_reviews.py`) and every reading records it by sha. Thirteen fixture tests
+   (`tests/test_port_protect.py`, the reviewed-set block) and `regress_reclassify.py` on the three real corrected
+   tables (21 cases, 0 failed) cover the three shapes; the reclassification of J_USBW now reads INCONCLUSIVE of 38
+   with the three pins named, and reads PASS of 38 only once the reviewed set carries the change with its reason.
 
-**The test** (`v2/ecad/tools/tests/test_port_protect.py`, seven tests added). On the tool as it stood at
-`73ae2f21`: 40 passed, 7 failed, the seven new ones, and the first of them with the tool's own words, "verdict:
-port_protect PASS of 2", for a port declared on two ground pins. On the changed tool: 48 passed, 0 failed (the 47
-of this file and one of `test_artefact_recording.py` whose name matches). Five neighbouring test files that
+**The test** (`v2/ecad/tools/tests/test_port_protect.py`, seven tests added, then thirteen for the reviewed set). On
+the tool as it stood at `73ae2f21`: 40 passed, 7 failed, the seven new ones, and the first of them with the tool's own
+words, "verdict: port_protect PASS of 2", for a port declared on two ground pins. On the changed tool: 48 passed, 0
+failed (the 47 of this file and one of `test_artefact_recording.py` whose name matches); with the reviewed set, 61
+passed, 0 failed. Five neighbouring test files that
 import or name the tool: 77 passed, 0 failed, 2 skipped for want of KiCad on this host. The full suite was not
 run here; it runs on the KiCad host. Readings: `readings/test-port-protect-before.txt` and `-after.txt`.
 
@@ -725,7 +766,10 @@ run here; it runs on the KiCad host. Readings: `readings/test-port-protect-befor
 
 **What a PASS of this rule says, and what it does not.** It says that every declared conductor meets a protection
 part before a semiconductor, that every clamp points the right way, and now that every connector pin is in a
-list. It does not compare a clamp's voltage with the rating of what stands behind it, and it believes an
-`off_board` entry on its text (T-3). Board A reads PASS with finding A-F2 open, board D with D-F1 open and board
+list, and that the external pins are exactly the ones a review enumerated. It does not compare a clamp's voltage with
+the rating of what stands behind it, and it believes an `off_board` entry on its text (T-3): **TRN-001's PASS of 42 on
+board A believes 12 of its 18 entries on that text**, the eleven antenna conductors (J_BM1 to J_BM11), which this
+review could not judge at the desk, and J_MAINSW, whose clamp this review read on board C's netlist; the tool judged
+6 entries on 10 pins itself. Board A reads PASS with finding A-F2 open, board D with D-F1 open and board
 E with E-F1, E-F2 and E-F3 open. **That is why this rule's PASS and this record are two requirements of the hold
 and not one.**
