@@ -27,7 +27,8 @@ import energy_budget as EB
 
 ROOT = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
 WINDOWS = [(100.0, "100 W (REQ-016)"), (200.0, "200 W"), (300.0, "300 W"), (400.0, "400 W"), (1e9, "no window")]
-PANELS = list(range(100, 1501, 50))
+PANELS = list(range(100, 3001, 50))
+EB_SHA256 = "cf6c377fa1015a468a61dc83f1c735e54b5f778eb3bb39834495ee2eb24d02c1"  # energy_budget.py, the model this script imports; a changed model refuses (exit 3)
 LOADS = [42.8, 40.0, 37.5, 35.0, 30.0]
 NP_MAX = 80
 MONTH = 9
@@ -36,11 +37,13 @@ MONTH = 9
 def load_model():
     d = yaml.safe_load(open(os.path.join(HERE, "energy_inputs.yaml"), encoding="utf-8"))
     if EB.sha256_of(os.path.join(HERE, "energy_inputs.yaml")) != EB.INPUTS_SHA256:
-        raise SystemExit("energy_architecture: energy_inputs.yaml is not the file energy_budget.py pins; refusing")
+        sys.stderr.write("energy_architecture: energy_inputs.yaml is not the file energy_budget.py pins; refusing\n"); sys.exit(2)
+    if EB.sha256_of(os.path.join(HERE, "energy_budget.py")) != EB_SHA256:
+        sys.stderr.write("energy_architecture: energy_budget.py changed (sha256 %s); refusing\n" % EB.sha256_of(os.path.join(HERE, "energy_budget.py"))[:16]); sys.exit(3)
     for p in d["pinned"]:
         full = os.path.join(ROOT, p["path"])
         if not os.path.exists(full) or EB.sha256_of(full) != p["sha256"]:
-            raise SystemExit("energy_architecture: pinned input %s missing or changed; refusing" % p["path"])
+            sys.stderr.write("energy_architecture: pinned input %s missing or changed; refusing\n" % p["path"]); sys.exit(3)
     monthly = json.load(open(os.path.join(ROOT, d["pinned"][0]["path"]), encoding="utf-8"))
     pack = EB.Pack(d)
     res4 = EB.section4(EB.Out(), d, monthly)
@@ -86,8 +89,10 @@ def main():
     o.append("")
     L = 42.8
     o.append("1. THE CONSUMPTION BUDGET THE MISSION STATES")
-    o.append("   PS-IDLE-SPEC at the pack: %.1f W PLAN; 24 h = %.1f Wh; 72 h = %.1f Wh; September sun-down %.2f h = %.1f Wh." % (
-        L, 24 * L, 72 * L, 11.28, 11.28 * L))
+    night = EB.section3(EB.Out(), d)[MONTH]["night_h"]   # the month's mean sun-down, energy_budget.py's own section 3
+    o.append("   PS-IDLE-SPEC at the pack: %.1f W PLAN; 24 h = %.1f Wh; 72 h = %.1f Wh; September sun-down %.2f h = %.1f Wh" % (
+        L, 24 * L, 72 * L, night, night * L))
+    o.append("   (the month's mean sun-down from energy_budget.py's section 3, sunrise and sunset at -0.833 degrees).")
     e1 = pack.usable_wh(L, 20.0, pack.age80, "3v00", 1)[0]
     o.append("   One parallel string of the ruled cell (4S1P) delivers %.2f Wh usable aged at +20 C at this load." % e1)
     o.append("")
@@ -160,7 +165,7 @@ def main():
                     else: hi = mid
                 o.append("   %-26s %-10s %9d %14.2f" % (lab, wn, wp, lo))
     o.append("")
-    o.append("7. THE CANDIDATE AND ITS MARGINS (4S15P and 4S16P at 42.8 W): lowest usable energy left over the 72 hours")
+    o.append("7. THE CANDIDATES AND THEIR MARGINS (4S15P, 4S16P and 4S18P at 42.8 W): lowest usable energy left over the 72 hours")
     for n_p in (15, 16, 18):
         for wv, wn in ((200.0, "200 W"), (300.0, "300 W")):
             for wp in (400, 650, 800):
@@ -181,6 +186,36 @@ def main():
                     n_found = n_p
                     break
             o.append("   window %-6s, %4d Wp: smallest n_p with the 2.80 V line %s" % (wn, wp, n_found))
+    o.append("")
+    o.append("9. INSIDE REQ-016's 100 W WINDOW: the trade against the array (42.8 W; lowest usable energy; +20 and +15 C)")
+    for n_p, wp in ((19, 1300), (19, 1500), (18, 1600), (17, 2000), (16, 3000)):
+        rows = []
+        for t_c in (20.0, 15.0):
+            ok, out = meets(d, pack, res4, 42.8, wp, 100.0, n_p, t_c)
+            rows.append("%s %.1f Wh" % ("MEETS" if ok else "NOT MET", min(sm["lowest"] for sm, _ in out)))
+        o.append("   4S%dP, %4d Wp in the 100 W window: +20 C %s; +15 C %s" % (n_p, wp, rows[0], rows[1]))
+    for n_p in (18,):
+        for wp in (1000, 1300, 1500):
+            lo, hi = 0.0, 80.0
+            for _ in range(40):
+                mid = 0.5 * (lo + hi)
+                if meets(d, pack, res4, mid, wp, 100.0, n_p)[0]: lo = mid
+                else: hi = mid
+            o.append("   4S%dP, %4d Wp in the 100 W window: largest load meeting M1 %.2f W" % (n_p, wp, lo))
+    o.append("")
+    o.append("10. THE LOWEST CELL TEMPERATURE AT WHICH EACH CANDIDATE STILL MEETS M1 (42.8 W; bisection on the cell temperature)")
+    for n_p, wp, wv, wn in ((18, 400, 200.0, "200 W"), (18, 650, 200.0, "200 W"), (16, 400, 200.0, "200 W"), (15, 650, 200.0, "200 W"),
+                            (19, 1300, 100.0, "100 W"), (18, 1600, 100.0, "100 W")):
+        if not meets(d, pack, res4, 42.8, wp, wv, n_p, 40.0)[0]:
+            o.append("   4S%dP, %4d Wp, window %s: does not meet M1 even at +40 C" % (n_p, wp, wn)); continue
+        lo, hi = -10.0, 40.0   # lo fails or is the floor, hi meets
+        if meets(d, pack, res4, 42.8, wp, wv, n_p, lo)[0]:
+            o.append("   4S%dP, %4d Wp, window %s: meets M1 down to -10 C (the model's lowest temperature point)" % (n_p, wp, wn)); continue
+        for _ in range(40):
+            mid = 0.5 * (lo + hi)
+            if meets(d, pack, res4, 42.8, wp, wv, n_p, mid)[0]: hi = mid
+            else: lo = mid
+        o.append("   4S%dP, %4d Wp, window %s: meets M1 with the cells at or above about %+.1f C" % (n_p, wp, wn, hi))
     o.append("")
     o.append("END. No combination on this page is a demonstration: each is the record's model on the reference day.")
     sys.stdout.write("\n".join(o) + "\n")
