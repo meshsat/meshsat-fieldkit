@@ -98,12 +98,12 @@
  },
  "tool": "intent_rails",
  "tools": {
-  "git_head": "8ae28b233e9b",
+  "git_head": "87b7d5a9509c",
   "tools_tree_sha": "bfeac03e9fe6170b"
  },
- "ts": "2026-09-28T21:30:50Z",
+ "ts": "2026-09-28T21:55:00Z",
  "verdict": "PASS",
- "version": "8ae28b233e9b",
+ "version": "87b7d5a9509c",
  "writer": {
   "file": "intent_checks.py",
   "sha16": "1ad7af0c718ba940"

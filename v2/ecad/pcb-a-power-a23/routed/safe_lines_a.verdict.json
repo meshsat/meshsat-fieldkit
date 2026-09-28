@@ -64,12 +64,12 @@
  },
  "tool": "safe_lines_a",
  "tools": {
-  "git_head": "8ae28b233e9b",
+  "git_head": "87b7d5a9509c",
   "tools_tree_sha": "bfeac03e9fe6170b"
  },
- "ts": "2026-09-28T21:29:48Z",
+ "ts": "2026-09-28T21:53:58Z",
  "verdict": "PASS",
- "version": "8ae28b233e9b",
+ "version": "87b7d5a9509c",
  "writer": {
   "file": "safe_lines.py",
   "sha16": "8529487f405ec55d"
