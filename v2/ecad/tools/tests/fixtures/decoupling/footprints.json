@@ -1,0 +1,3879 @@
+{
+ "what": "pad sets of committed lands, for tests/test_decoupling_rules.py",
+ "boards": {
+  "A32": {
+   "file": "pcb-a-power-a23/pcb-a-power.kicad_pcb",
+   "sha256": "58e26c67987b1daa8eb236777a435480617ba0e918e263a5398e5060d64db3e9",
+   "escape_skip": []
+  },
+  "B21": {
+   "file": "pcb-b-compute-b19/pcb-b-compute.kicad_pcb",
+   "sha256": "2e64b5bf2d9cd3bc37dd68f118fb452a301778fd47eb26641a1db39faa04a024",
+   "escape_skip": [
+    "J_HDMI",
+    "U3",
+    "U4"
+   ]
+  },
+  "D12": {
+   "file": "pcb-d-aprs-d9/pcb-d-aprs.kicad_pcb",
+   "sha256": "929bf82d2bf6eed4d12c8e37a589a3ed000772393b1176c79772e9c45b8df449",
+   "escape_skip": []
+  },
+  "E17": {
+   "file": "pcb-e1-dock-e7/pcb-e1-dock.kicad_pcb",
+   "sha256": "a462ac2620b9b8d3a25a335f611b547333f9f8a462dc201ec6eee4d82ac98401",
+   "escape_skip": []
+  },
+  "C24": {
+   "file": "pcb-c-display-c8/pcb-c-display.kicad_pcb",
+   "sha256": "2a273803757c68fb99f5b22bfdf32f6ab863f4340c37e229d140afb5e93bd7f9",
+   "escape_skip": []
+  }
+ },
+ "parts": {
+  "A32:U4": {
+   "ref": "U4",
+   "fpid": "SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm",
+   "layer": "F.Cu",
+   "value": "AP64500SP-13 5 A buck, 5.1 V rail +5V_S1",
+   "pads": [
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 89430000,
+     "y_nm": 62317500
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 89430000,
+     "y_nm": 63817500
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 90570000,
+     "y_nm": 62317500
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 90570000,
+     "y_nm": 63817500
+    },
+    {
+     "num": "1",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 87525000,
+     "y_nm": 61162500
+    },
+    {
+     "num": "2",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 87525000,
+     "y_nm": 62432500
+    },
+    {
+     "num": "3",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 87525000,
+     "y_nm": 63702500
+    },
+    {
+     "num": "4",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 87525000,
+     "y_nm": 64972500
+    },
+    {
+     "num": "5",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 92475000,
+     "y_nm": 64972500
+    },
+    {
+     "num": "6",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 92475000,
+     "y_nm": 63702500
+    },
+    {
+     "num": "7",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 92475000,
+     "y_nm": 62432500
+    },
+    {
+     "num": "8",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 92475000,
+     "y_nm": 61162500
+    },
+    {
+     "num": "9",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 90000000,
+     "y_nm": 63067500
+    }
+   ],
+   "record": {
+    "fan_today": true,
+    "fan_copper_term": false,
+    "escaped": false,
+    "fan_as_ruled": false
+   }
+  },
+  "A32:U29": {
+   "ref": "U29",
+   "fpid": "SOT-23-6",
+   "layer": "F.Cu",
+   "value": "USBLC6-2SC6",
+   "pads": [
+    {
+     "num": "1",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 252137500,
+     "y_nm": 126137500
+    },
+    {
+     "num": "2",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 253087500,
+     "y_nm": 126137500
+    },
+    {
+     "num": "3",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 254037500,
+     "y_nm": 126137500
+    },
+    {
+     "num": "4",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 254037500,
+     "y_nm": 123862500
+    },
+    {
+     "num": "5",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 253087500,
+     "y_nm": 123862500
+    },
+    {
+     "num": "6",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 252137500,
+     "y_nm": 123862500
+    }
+   ],
+   "record": {
+    "fan_today": false,
+    "fan_copper_term": false,
+    "escaped": true,
+    "fan_as_ruled": true
+   }
+  },
+  "A32:U2": {
+   "ref": "U2",
+   "fpid": "HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP2.85x5.4mm",
+   "layer": "F.Cu",
+   "value": "LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW",
+   "pads": [
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 56000000,
+     "y_nm": 54047500
+    },
+    {
+     "num": "1",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 53137500,
+     "y_nm": 49822500
+    },
+    {
+     "num": "2",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 53137500,
+     "y_nm": 50472500
+    },
+    {
+     "num": "3",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 53137500,
+     "y_nm": 51122500
+    },
+    {
+     "num": "4",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 53137500,
+     "y_nm": 51772500
+    },
+    {
+     "num": "5",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 53137500,
+     "y_nm": 52422500
+    },
+    {
+     "num": "6",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 53137500,
+     "y_nm": 53072500
+    },
+    {
+     "num": "7",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 53137500,
+     "y_nm": 53722500
+    },
+    {
+     "num": "8",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 53137500,
+     "y_nm": 54372500
+    },
+    {
+     "num": "9",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 53137500,
+     "y_nm": 55022500
+    },
+    {
+     "num": "10",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 53137500,
+     "y_nm": 55672500
+    },
+    {
+     "num": "11",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 53137500,
+     "y_nm": 56322500
+    },
+    {
+     "num": "12",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 53137500,
+     "y_nm": 56972500
+    },
+    {
+     "num": "13",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 53137500,
+     "y_nm": 57622500
+    },
+    {
+     "num": "14",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 53137500,
+     "y_nm": 58272500
+    },
+    {
+     "num": "15",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 58862500,
+     "y_nm": 58272500
+    },
+    {
+     "num": "16",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 58862500,
+     "y_nm": 57622500
+    },
+    {
+     "num": "17",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 58862500,
+     "y_nm": 56972500
+    },
+    {
+     "num": "18",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 58862500,
+     "y_nm": 56322500
+    },
+    {
+     "num": "19",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 58862500,
+     "y_nm": 55672500
+    },
+    {
+     "num": "20",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 58862500,
+     "y_nm": 55022500
+    },
+    {
+     "num": "21",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 58862500,
+     "y_nm": 54372500
+    },
+    {
+     "num": "22",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 58862500,
+     "y_nm": 53722500
+    },
+    {
+     "num": "23",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 58862500,
+     "y_nm": 53072500
+    },
+    {
+     "num": "24",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 58862500,
+     "y_nm": 52422500
+    },
+    {
+     "num": "25",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 58862500,
+     "y_nm": 51772500
+    },
+    {
+     "num": "26",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 58862500,
+     "y_nm": 51122500
+    },
+    {
+     "num": "27",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 58862500,
+     "y_nm": 50472500
+    },
+    {
+     "num": "28",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 58862500,
+     "y_nm": 49822500
+    },
+    {
+     "num": "29",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 56000000,
+     "y_nm": 54047500
+    }
+   ],
+   "record": {
+    "fan_today": true,
+    "fan_copper_term": true,
+    "escaped": true,
+    "fan_as_ruled": true
+   }
+  },
+  "A32:U3": {
+   "ref": "U3",
+   "fpid": "QFN-32-1EP_4x4mm_P0.4mm_EP2.65x2.65mm",
+   "layer": "F.Cu",
+   "value": "BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V",
+   "pads": [
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 53527500,
+     "y_nm": 97340000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 53527500,
+     "y_nm": 98660000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 54847500,
+     "y_nm": 97340000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 54847500,
+     "y_nm": 98660000
+    },
+    {
+     "num": "1",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 52237500,
+     "y_nm": 96600000
+    },
+    {
+     "num": "2",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 52237500,
+     "y_nm": 97000000
+    },
+    {
+     "num": "3",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 52237500,
+     "y_nm": 97400000
+    },
+    {
+     "num": "4",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 52237500,
+     "y_nm": 97800000
+    },
+    {
+     "num": "5",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 52237500,
+     "y_nm": 98200000
+    },
+    {
+     "num": "6",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 52237500,
+     "y_nm": 98600000
+    },
+    {
+     "num": "7",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 52237500,
+     "y_nm": 99000000
+    },
+    {
+     "num": "8",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 52237500,
+     "y_nm": 99400000
+    },
+    {
+     "num": "9",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 52787500,
+     "y_nm": 99950000
+    },
+    {
+     "num": "10",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 53187500,
+     "y_nm": 99950000
+    },
+    {
+     "num": "11",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 53587500,
+     "y_nm": 99950000
+    },
+    {
+     "num": "12",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 53987500,
+     "y_nm": 99950000
+    },
+    {
+     "num": "13",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 54387500,
+     "y_nm": 99950000
+    },
+    {
+     "num": "14",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 54787500,
+     "y_nm": 99950000
+    },
+    {
+     "num": "15",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 55187500,
+     "y_nm": 99950000
+    },
+    {
+     "num": "16",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 55587500,
+     "y_nm": 99950000
+    },
+    {
+     "num": "17",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 56137500,
+     "y_nm": 99400000
+    },
+    {
+     "num": "18",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 56137500,
+     "y_nm": 99000000
+    },
+    {
+     "num": "19",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 56137500,
+     "y_nm": 98600000
+    },
+    {
+     "num": "20",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 56137500,
+     "y_nm": 98200000
+    },
+    {
+     "num": "21",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 56137500,
+     "y_nm": 97800000
+    },
+    {
+     "num": "22",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 56137500,
+     "y_nm": 97400000
+    },
+    {
+     "num": "23",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 56137500,
+     "y_nm": 97000000
+    },
+    {
+     "num": "24",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 56137500,
+     "y_nm": 96600000
+    },
+    {
+     "num": "25",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 55587500,
+     "y_nm": 96050000
+    },
+    {
+     "num": "26",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 55187500,
+     "y_nm": 96050000
+    },
+    {
+     "num": "27",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 54787500,
+     "y_nm": 96050000
+    },
+    {
+     "num": "28",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 54387500,
+     "y_nm": 96050000
+    },
+    {
+     "num": "29",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 53987500,
+     "y_nm": 96050000
+    },
+    {
+     "num": "30",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 53587500,
+     "y_nm": 96050000
+    },
+    {
+     "num": "31",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 53187500,
+     "y_nm": 96050000
+    },
+    {
+     "num": "32",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 52787500,
+     "y_nm": 96050000
+    },
+    {
+     "num": "33",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 54187500,
+     "y_nm": 98000000
+    }
+   ],
+   "record": {
+    "fan_today": true,
+    "fan_copper_term": true,
+    "escaped": true,
+    "fan_as_ruled": true
+   }
+  },
+  "B21:U82": {
+   "ref": "U82",
+   "fpid": "Skyworks_SKY13351_MLPD-6_1x1mm",
+   "layer": "B.Cu",
+   "value": "SKY13351-378LF SPDT antenna changeover, chain A: OUTPUT1 the",
+   "pads": [
+    {
+     "num": "1",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 284640000,
+     "y_nm": 103429000
+    },
+    {
+     "num": "2",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 284695000,
+     "y_nm": 103075000
+    },
+    {
+     "num": "2",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 285140000,
+     "y_nm": 103075000
+    },
+    {
+     "num": "3",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 284640000,
+     "y_nm": 102721000
+    },
+    {
+     "num": "4",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 285610000,
+     "y_nm": 102721000
+    },
+    {
+     "num": "5",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 285610000,
+     "y_nm": 103075000
+    },
+    {
+     "num": "6",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 285610000,
+     "y_nm": 103429000
+    }
+   ],
+   "record": {
+    "fan_today": false,
+    "fan_copper_term": false,
+    "escaped": true,
+    "fan_as_ruled": true
+   }
+  },
+  "B21:U3": {
+   "ref": "U3",
+   "fpid": "WQFN-42-1EP_3.5x9mm_P0.5mm_EP2.05x7.55mm",
+   "layer": "F.Cu",
+   "value": "TI TS3DV642A0RUAR HDMI 2:1 switch (HDMI1 / HDMI2 -> HDMIM)",
+   "pads": [
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 250177500,
+     "y_nm": 17760000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 250177500,
+     "y_nm": 18840000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 250177500,
+     "y_nm": 19920000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 250177500,
+     "y_nm": 21000000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 250177500,
+     "y_nm": 22080000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 250177500,
+     "y_nm": 23160000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 250177500,
+     "y_nm": 24240000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 251197500,
+     "y_nm": 17760000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 251197500,
+     "y_nm": 18840000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 251197500,
+     "y_nm": 19920000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 251197500,
+     "y_nm": 21000000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 251197500,
+     "y_nm": 22080000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 251197500,
+     "y_nm": 23160000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 251197500,
+     "y_nm": 24240000
+    },
+    {
+     "num": "1",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 249000000,
+     "y_nm": 17000000
+    },
+    {
+     "num": "2",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 249000000,
+     "y_nm": 17500000
+    },
+    {
+     "num": "3",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 249000000,
+     "y_nm": 18000000
+    },
+    {
+     "num": "4",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 249000000,
+     "y_nm": 18500000
+    },
+    {
+     "num": "5",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 249000000,
+     "y_nm": 19000000
+    },
+    {
+     "num": "6",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 249000000,
+     "y_nm": 19500000
+    },
+    {
+     "num": "7",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 249000000,
+     "y_nm": 20000000
+    },
+    {
+     "num": "8",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 249000000,
+     "y_nm": 20500000
+    },
+    {
+     "num": "9",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 249000000,
+     "y_nm": 21000000
+    },
+    {
+     "num": "10",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 249000000,
+     "y_nm": 21500000
+    },
+    {
+     "num": "11",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 249000000,
+     "y_nm": 22000000
+    },
+    {
+     "num": "12",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 249000000,
+     "y_nm": 22500000
+    },
+    {
+     "num": "13",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 249000000,
+     "y_nm": 23000000
+    },
+    {
+     "num": "14",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 249000000,
+     "y_nm": 23500000
+    },
+    {
+     "num": "15",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 249000000,
+     "y_nm": 24000000
+    },
+    {
+     "num": "16",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 249000000,
+     "y_nm": 24500000
+    },
+    {
+     "num": "17",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 249000000,
+     "y_nm": 25000000
+    },
+    {
+     "num": "18",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 249937500,
+     "y_nm": 25437500
+    },
+    {
+     "num": "19",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 250437500,
+     "y_nm": 25437500
+    },
+    {
+     "num": "20",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 250937500,
+     "y_nm": 25437500
+    },
+    {
+     "num": "21",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 251437500,
+     "y_nm": 25437500
+    },
+    {
+     "num": "22",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 252375000,
+     "y_nm": 25000000
+    },
+    {
+     "num": "23",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 252375000,
+     "y_nm": 24500000
+    },
+    {
+     "num": "24",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 252375000,
+     "y_nm": 24000000
+    },
+    {
+     "num": "25",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 252375000,
+     "y_nm": 23500000
+    },
+    {
+     "num": "26",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 252375000,
+     "y_nm": 23000000
+    },
+    {
+     "num": "27",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 252375000,
+     "y_nm": 22500000
+    },
+    {
+     "num": "28",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 252375000,
+     "y_nm": 22000000
+    },
+    {
+     "num": "29",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 252375000,
+     "y_nm": 21500000
+    },
+    {
+     "num": "30",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 252375000,
+     "y_nm": 21000000
+    },
+    {
+     "num": "31",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 252375000,
+     "y_nm": 20500000
+    },
+    {
+     "num": "32",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 252375000,
+     "y_nm": 20000000
+    },
+    {
+     "num": "33",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 252375000,
+     "y_nm": 19500000
+    },
+    {
+     "num": "34",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 252375000,
+     "y_nm": 19000000
+    },
+    {
+     "num": "35",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 252375000,
+     "y_nm": 18500000
+    },
+    {
+     "num": "36",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 252375000,
+     "y_nm": 18000000
+    },
+    {
+     "num": "37",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 252375000,
+     "y_nm": 17500000
+    },
+    {
+     "num": "38",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 252375000,
+     "y_nm": 17000000
+    },
+    {
+     "num": "39",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 251437500,
+     "y_nm": 16562500
+    },
+    {
+     "num": "40",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 250937500,
+     "y_nm": 16562500
+    },
+    {
+     "num": "41",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 250437500,
+     "y_nm": 16562500
+    },
+    {
+     "num": "42",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 249937500,
+     "y_nm": 16562500
+    },
+    {
+     "num": "43",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 250687500,
+     "y_nm": 21000000
+    }
+   ],
+   "record": {
+    "fan_today": true,
+    "fan_copper_term": true,
+    "escaped": false,
+    "fan_as_ruled": true
+   }
+  },
+  "B21:U41": {
+   "ref": "U41",
+   "fpid": "LQFP-100_14x14mm_P0.5mm",
+   "layer": "B.Cu",
+   "value": "STM32H753VITx I/O supervisor A: 2-of-3 quorum on two CAN-FD ",
+   "pads": [
+    {
+     "num": "1",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -6720000,
+     "y_nm": 130955000
+    },
+    {
+     "num": "2",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -6720000,
+     "y_nm": 130455000
+    },
+    {
+     "num": "3",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -6720000,
+     "y_nm": 129955000
+    },
+    {
+     "num": "4",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -6720000,
+     "y_nm": 129455000
+    },
+    {
+     "num": "5",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -6720000,
+     "y_nm": 128955000
+    },
+    {
+     "num": "6",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -6720000,
+     "y_nm": 128455000
+    },
+    {
+     "num": "7",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -6720000,
+     "y_nm": 127955000
+    },
+    {
+     "num": "8",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -6720000,
+     "y_nm": 127455000
+    },
+    {
+     "num": "9",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -6720000,
+     "y_nm": 126955000
+    },
+    {
+     "num": "10",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -6720000,
+     "y_nm": 126455000
+    },
+    {
+     "num": "11",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -6720000,
+     "y_nm": 125955000
+    },
+    {
+     "num": "12",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -6720000,
+     "y_nm": 125455000
+    },
+    {
+     "num": "13",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -6720000,
+     "y_nm": 124955000
+    },
+    {
+     "num": "14",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -6720000,
+     "y_nm": 124455000
+    },
+    {
+     "num": "15",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -6720000,
+     "y_nm": 123955000
+    },
+    {
+     "num": "16",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -6720000,
+     "y_nm": 123455000
+    },
+    {
+     "num": "17",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -6720000,
+     "y_nm": 122955000
+    },
+    {
+     "num": "18",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -6720000,
+     "y_nm": 122455000
+    },
+    {
+     "num": "19",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -6720000,
+     "y_nm": 121955000
+    },
+    {
+     "num": "20",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -6720000,
+     "y_nm": 121455000
+    },
+    {
+     "num": "21",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -6720000,
+     "y_nm": 120955000
+    },
+    {
+     "num": "22",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -6720000,
+     "y_nm": 120455000
+    },
+    {
+     "num": "23",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -6720000,
+     "y_nm": 119955000
+    },
+    {
+     "num": "24",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -6720000,
+     "y_nm": 119455000
+    },
+    {
+     "num": "25",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -6720000,
+     "y_nm": 118955000
+    },
+    {
+     "num": "26",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -5045000,
+     "y_nm": 117280000
+    },
+    {
+     "num": "27",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -4545000,
+     "y_nm": 117280000
+    },
+    {
+     "num": "28",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -4045000,
+     "y_nm": 117280000
+    },
+    {
+     "num": "29",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -3545000,
+     "y_nm": 117280000
+    },
+    {
+     "num": "30",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -3045000,
+     "y_nm": 117280000
+    },
+    {
+     "num": "31",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -2545000,
+     "y_nm": 117280000
+    },
+    {
+     "num": "32",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -2045000,
+     "y_nm": 117280000
+    },
+    {
+     "num": "33",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -1545000,
+     "y_nm": 117280000
+    },
+    {
+     "num": "34",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -1045000,
+     "y_nm": 117280000
+    },
+    {
+     "num": "35",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -545000,
+     "y_nm": 117280000
+    },
+    {
+     "num": "36",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -45000,
+     "y_nm": 117280000
+    },
+    {
+     "num": "37",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 455000,
+     "y_nm": 117280000
+    },
+    {
+     "num": "38",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 955000,
+     "y_nm": 117280000
+    },
+    {
+     "num": "39",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 1455000,
+     "y_nm": 117280000
+    },
+    {
+     "num": "40",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 1955000,
+     "y_nm": 117280000
+    },
+    {
+     "num": "41",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 2455000,
+     "y_nm": 117280000
+    },
+    {
+     "num": "42",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 2955000,
+     "y_nm": 117280000
+    },
+    {
+     "num": "43",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 3455000,
+     "y_nm": 117280000
+    },
+    {
+     "num": "44",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 3955000,
+     "y_nm": 117280000
+    },
+    {
+     "num": "45",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 4455000,
+     "y_nm": 117280000
+    },
+    {
+     "num": "46",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 4955000,
+     "y_nm": 117280000
+    },
+    {
+     "num": "47",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 5455000,
+     "y_nm": 117280000
+    },
+    {
+     "num": "48",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 5955000,
+     "y_nm": 117280000
+    },
+    {
+     "num": "49",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 6455000,
+     "y_nm": 117280000
+    },
+    {
+     "num": "50",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 6955000,
+     "y_nm": 117280000
+    },
+    {
+     "num": "51",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 8630000,
+     "y_nm": 118955000
+    },
+    {
+     "num": "52",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 8630000,
+     "y_nm": 119455000
+    },
+    {
+     "num": "53",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 8630000,
+     "y_nm": 119955000
+    },
+    {
+     "num": "54",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 8630000,
+     "y_nm": 120455000
+    },
+    {
+     "num": "55",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 8630000,
+     "y_nm": 120955000
+    },
+    {
+     "num": "56",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 8630000,
+     "y_nm": 121455000
+    },
+    {
+     "num": "57",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 8630000,
+     "y_nm": 121955000
+    },
+    {
+     "num": "58",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 8630000,
+     "y_nm": 122455000
+    },
+    {
+     "num": "59",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 8630000,
+     "y_nm": 122955000
+    },
+    {
+     "num": "60",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 8630000,
+     "y_nm": 123455000
+    },
+    {
+     "num": "61",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 8630000,
+     "y_nm": 123955000
+    },
+    {
+     "num": "62",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 8630000,
+     "y_nm": 124455000
+    },
+    {
+     "num": "63",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 8630000,
+     "y_nm": 124955000
+    },
+    {
+     "num": "64",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 8630000,
+     "y_nm": 125455000
+    },
+    {
+     "num": "65",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 8630000,
+     "y_nm": 125955000
+    },
+    {
+     "num": "66",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 8630000,
+     "y_nm": 126455000
+    },
+    {
+     "num": "67",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 8630000,
+     "y_nm": 126955000
+    },
+    {
+     "num": "68",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 8630000,
+     "y_nm": 127455000
+    },
+    {
+     "num": "69",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 8630000,
+     "y_nm": 127955000
+    },
+    {
+     "num": "70",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 8630000,
+     "y_nm": 128455000
+    },
+    {
+     "num": "71",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 8630000,
+     "y_nm": 128955000
+    },
+    {
+     "num": "72",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 8630000,
+     "y_nm": 129455000
+    },
+    {
+     "num": "73",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 8630000,
+     "y_nm": 129955000
+    },
+    {
+     "num": "74",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 8630000,
+     "y_nm": 130455000
+    },
+    {
+     "num": "75",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 8630000,
+     "y_nm": 130955000
+    },
+    {
+     "num": "76",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 6955000,
+     "y_nm": 132630000
+    },
+    {
+     "num": "77",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 6455000,
+     "y_nm": 132630000
+    },
+    {
+     "num": "78",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 5955000,
+     "y_nm": 132630000
+    },
+    {
+     "num": "79",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 5455000,
+     "y_nm": 132630000
+    },
+    {
+     "num": "80",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 4955000,
+     "y_nm": 132630000
+    },
+    {
+     "num": "81",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 4455000,
+     "y_nm": 132630000
+    },
+    {
+     "num": "82",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 3955000,
+     "y_nm": 132630000
+    },
+    {
+     "num": "83",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 3455000,
+     "y_nm": 132630000
+    },
+    {
+     "num": "84",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 2955000,
+     "y_nm": 132630000
+    },
+    {
+     "num": "85",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 2455000,
+     "y_nm": 132630000
+    },
+    {
+     "num": "86",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 1955000,
+     "y_nm": 132630000
+    },
+    {
+     "num": "87",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 1455000,
+     "y_nm": 132630000
+    },
+    {
+     "num": "88",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 955000,
+     "y_nm": 132630000
+    },
+    {
+     "num": "89",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 455000,
+     "y_nm": 132630000
+    },
+    {
+     "num": "90",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -45000,
+     "y_nm": 132630000
+    },
+    {
+     "num": "91",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -545000,
+     "y_nm": 132630000
+    },
+    {
+     "num": "92",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -1045000,
+     "y_nm": 132630000
+    },
+    {
+     "num": "93",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -1545000,
+     "y_nm": 132630000
+    },
+    {
+     "num": "94",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -2045000,
+     "y_nm": 132630000
+    },
+    {
+     "num": "95",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -2545000,
+     "y_nm": 132630000
+    },
+    {
+     "num": "96",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -3045000,
+     "y_nm": 132630000
+    },
+    {
+     "num": "97",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -3545000,
+     "y_nm": 132630000
+    },
+    {
+     "num": "98",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -4045000,
+     "y_nm": 132630000
+    },
+    {
+     "num": "99",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -4545000,
+     "y_nm": 132630000
+    },
+    {
+     "num": "100",
+     "type": "smd",
+     "cu": true,
+     "x_nm": -5045000,
+     "y_nm": 132630000
+    }
+   ],
+   "record": {
+    "fan_today": true,
+    "fan_copper_term": true,
+    "escaped": true,
+    "fan_as_ruled": true
+   }
+  },
+  "B21:U25": {
+   "ref": "U25",
+   "fpid": "TSOT-23-6",
+   "layer": "F.Cu",
+   "value": "AP63203WU-7 3.3 V 2 A buck: the shared logic (+3V3_DEV)",
+   "pads": [
+    {
+     "num": "1",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 32137500,
+     "y_nm": 43550000
+    },
+    {
+     "num": "2",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 32137500,
+     "y_nm": 44500000
+    },
+    {
+     "num": "3",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 32137500,
+     "y_nm": 45450000
+    },
+    {
+     "num": "4",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 34412500,
+     "y_nm": 45450000
+    },
+    {
+     "num": "5",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 34412500,
+     "y_nm": 44500000
+    },
+    {
+     "num": "6",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 34412500,
+     "y_nm": 43550000
+    }
+   ],
+   "record": {
+    "fan_today": false,
+    "fan_copper_term": false,
+    "escaped": true,
+    "fan_as_ruled": true
+   }
+  },
+  "B21:U27": {
+   "ref": "U27",
+   "fpid": "SOT-23-5",
+   "layer": "F.Cu",
+   "value": "AP2112K-2.5 LDO: the switch's 2.5 V analog rail",
+   "pads": [
+    {
+     "num": "1",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 36587500,
+     "y_nm": 59125000
+    },
+    {
+     "num": "2",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 36587500,
+     "y_nm": 60075000
+    },
+    {
+     "num": "3",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 36587500,
+     "y_nm": 61025000
+    },
+    {
+     "num": "4",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 38862500,
+     "y_nm": 61025000
+    },
+    {
+     "num": "5",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 38862500,
+     "y_nm": 59125000
+    }
+   ],
+   "record": {
+    "fan_today": false,
+    "fan_copper_term": false,
+    "escaped": false,
+    "fan_as_ruled": false
+   }
+  },
+  "B21:U103": {
+   "ref": "U103",
+   "fpid": "SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm",
+   "layer": "F.Cu",
+   "value": "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S1A",
+   "pads": [
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 84555000,
+     "y_nm": 164710000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 84555000,
+     "y_nm": 166210000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 85695000,
+     "y_nm": 164710000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 85695000,
+     "y_nm": 166210000
+    },
+    {
+     "num": "1",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 82650000,
+     "y_nm": 163555000
+    },
+    {
+     "num": "2",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 82650000,
+     "y_nm": 164825000
+    },
+    {
+     "num": "3",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 82650000,
+     "y_nm": 166095000
+    },
+    {
+     "num": "4",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 82650000,
+     "y_nm": 167365000
+    },
+    {
+     "num": "5",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 87600000,
+     "y_nm": 167365000
+    },
+    {
+     "num": "6",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 87600000,
+     "y_nm": 166095000
+    },
+    {
+     "num": "7",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 87600000,
+     "y_nm": 164825000
+    },
+    {
+     "num": "8",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 87600000,
+     "y_nm": 163555000
+    },
+    {
+     "num": "9",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 85125000,
+     "y_nm": 165460000
+    }
+   ],
+   "record": {
+    "fan_today": true,
+    "fan_copper_term": false,
+    "escaped": false,
+    "fan_as_ruled": false
+   }
+  },
+  "B21:U10": {
+   "ref": "U10",
+   "fpid": "WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm",
+   "layer": "F.Cu",
+   "value": "TMP117AIDRVR board temperature under the coolers (I2C 0x49)",
+   "pads": [
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 172555000,
+     "y_nm": 16170000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 172555000,
+     "y_nm": 16970000
+    },
+    {
+     "num": "1",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 171667500,
+     "y_nm": 15920000
+    },
+    {
+     "num": "2",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 171667500,
+     "y_nm": 16570000
+    },
+    {
+     "num": "3",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 171667500,
+     "y_nm": 17220000
+    },
+    {
+     "num": "4",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 173442500,
+     "y_nm": 17220000
+    },
+    {
+     "num": "5",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 173442500,
+     "y_nm": 16570000
+    },
+    {
+     "num": "6",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 173442500,
+     "y_nm": 15920000
+    },
+    {
+     "num": "7",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 172555000,
+     "y_nm": 16570000
+    }
+   ],
+   "record": {
+    "fan_today": true,
+    "fan_copper_term": false,
+    "escaped": true,
+    "fan_as_ruled": true
+   }
+  },
+  "B21:J_HDMI": {
+   "ref": "J_HDMI",
+   "fpid": "HDMI_A_Molex_208658-1001_Horizontal",
+   "layer": "F.Cu",
+   "value": "HDMI type A receptacle (Molex 208658-1001): cable to the mon",
+   "pads": [
+    {
+     "num": "1",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 259000000,
+     "y_nm": 197995000
+    },
+    {
+     "num": "2",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 258500000,
+     "y_nm": 197995000
+    },
+    {
+     "num": "3",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 258000000,
+     "y_nm": 197995000
+    },
+    {
+     "num": "4",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 257500000,
+     "y_nm": 197995000
+    },
+    {
+     "num": "5",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 257000000,
+     "y_nm": 197995000
+    },
+    {
+     "num": "6",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 256500000,
+     "y_nm": 197995000
+    },
+    {
+     "num": "7",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 256000000,
+     "y_nm": 197995000
+    },
+    {
+     "num": "8",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 255500000,
+     "y_nm": 197995000
+    },
+    {
+     "num": "9",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 255000000,
+     "y_nm": 197995000
+    },
+    {
+     "num": "10",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 254500000,
+     "y_nm": 197995000
+    },
+    {
+     "num": "11",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 254000000,
+     "y_nm": 197995000
+    },
+    {
+     "num": "12",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 253500000,
+     "y_nm": 197995000
+    },
+    {
+     "num": "13",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 253000000,
+     "y_nm": 197995000
+    },
+    {
+     "num": "14",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 252500000,
+     "y_nm": 197995000
+    },
+    {
+     "num": "15",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 252000000,
+     "y_nm": 197995000
+    },
+    {
+     "num": "16",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 251500000,
+     "y_nm": 197995000
+    },
+    {
+     "num": "17",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 251000000,
+     "y_nm": 197995000
+    },
+    {
+     "num": "18",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 250500000,
+     "y_nm": 197995000
+    },
+    {
+     "num": "19",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 250000000,
+     "y_nm": 197995000
+    },
+    {
+     "num": "SH",
+     "type": "thru_hole",
+     "cu": true,
+     "x_nm": 261750000,
+     "y_nm": 198755000
+    },
+    {
+     "num": "SH",
+     "type": "thru_hole",
+     "cu": true,
+     "x_nm": 247250000,
+     "y_nm": 198755000
+    },
+    {
+     "num": "SH",
+     "type": "thru_hole",
+     "cu": true,
+     "x_nm": 261750000,
+     "y_nm": 204715000
+    },
+    {
+     "num": "SH",
+     "type": "thru_hole",
+     "cu": true,
+     "x_nm": 247250000,
+     "y_nm": 204715000
+    }
+   ],
+   "record": {
+    "fan_today": true,
+    "fan_copper_term": true,
+    "escaped": false,
+    "fan_as_ruled": true
+   }
+  },
+  "D12:U15": {
+   "ref": "U15",
+   "fpid": "WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm",
+   "layer": "F.Cu",
+   "value": "TPS22810DRV",
+   "pads": [
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 138355000,
+     "y_nm": 92820000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 138355000,
+     "y_nm": 93620000
+    },
+    {
+     "num": "1",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 137467500,
+     "y_nm": 92570000
+    },
+    {
+     "num": "2",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 137467500,
+     "y_nm": 93220000
+    },
+    {
+     "num": "3",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 137467500,
+     "y_nm": 93870000
+    },
+    {
+     "num": "4",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 139242500,
+     "y_nm": 93870000
+    },
+    {
+     "num": "5",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 139242500,
+     "y_nm": 93220000
+    },
+    {
+     "num": "6",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 139242500,
+     "y_nm": 92570000
+    },
+    {
+     "num": "7",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 138355000,
+     "y_nm": 93220000
+    }
+   ],
+   "record": {
+    "fan_today": true,
+    "fan_copper_term": false,
+    "escaped": true,
+    "fan_as_ruled": true
+   }
+  },
+  "D12:U5": {
+   "ref": "U5",
+   "fpid": "SOT-23-6",
+   "layer": "F.Cu",
+   "value": "USBLC6-2SC6",
+   "pads": [
+    {
+     "num": "1",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 107862500,
+     "y_nm": 82937500
+    },
+    {
+     "num": "2",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 107862500,
+     "y_nm": 83887500
+    },
+    {
+     "num": "3",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 107862500,
+     "y_nm": 84837500
+    },
+    {
+     "num": "4",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 110137500,
+     "y_nm": 84837500
+    },
+    {
+     "num": "5",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 110137500,
+     "y_nm": 83887500
+    },
+    {
+     "num": "6",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 110137500,
+     "y_nm": 82937500
+    }
+   ],
+   "record": {
+    "fan_today": false,
+    "fan_copper_term": false,
+    "escaped": true,
+    "fan_as_ruled": true
+   }
+  },
+  "D12:U6": {
+   "ref": "U6",
+   "fpid": "TQFP-32_7x7mm_P0.8mm",
+   "layer": "F.Cu",
+   "value": "TI PCM2912A USB audio codec (TQFP-32): mono input from the e",
+   "pads": [
+    {
+     "num": "1",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 117837500,
+     "y_nm": 106700000
+    },
+    {
+     "num": "2",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 117837500,
+     "y_nm": 107500000
+    },
+    {
+     "num": "3",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 117837500,
+     "y_nm": 108300000
+    },
+    {
+     "num": "4",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 117837500,
+     "y_nm": 109100000
+    },
+    {
+     "num": "5",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 117837500,
+     "y_nm": 109900000
+    },
+    {
+     "num": "6",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 117837500,
+     "y_nm": 110700000
+    },
+    {
+     "num": "7",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 117837500,
+     "y_nm": 111500000
+    },
+    {
+     "num": "8",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 117837500,
+     "y_nm": 112300000
+    },
+    {
+     "num": "9",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 119200000,
+     "y_nm": 113662500
+    },
+    {
+     "num": "10",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 120000000,
+     "y_nm": 113662500
+    },
+    {
+     "num": "11",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 120800000,
+     "y_nm": 113662500
+    },
+    {
+     "num": "12",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 121600000,
+     "y_nm": 113662500
+    },
+    {
+     "num": "13",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 122400000,
+     "y_nm": 113662500
+    },
+    {
+     "num": "14",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 123200000,
+     "y_nm": 113662500
+    },
+    {
+     "num": "15",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 124000000,
+     "y_nm": 113662500
+    },
+    {
+     "num": "16",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 124800000,
+     "y_nm": 113662500
+    },
+    {
+     "num": "17",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 126162500,
+     "y_nm": 112300000
+    },
+    {
+     "num": "18",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 126162500,
+     "y_nm": 111500000
+    },
+    {
+     "num": "19",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 126162500,
+     "y_nm": 110700000
+    },
+    {
+     "num": "20",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 126162500,
+     "y_nm": 109900000
+    },
+    {
+     "num": "21",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 126162500,
+     "y_nm": 109100000
+    },
+    {
+     "num": "22",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 126162500,
+     "y_nm": 108300000
+    },
+    {
+     "num": "23",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 126162500,
+     "y_nm": 107500000
+    },
+    {
+     "num": "24",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 126162500,
+     "y_nm": 106700000
+    },
+    {
+     "num": "25",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 124800000,
+     "y_nm": 105337500
+    },
+    {
+     "num": "26",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 124000000,
+     "y_nm": 105337500
+    },
+    {
+     "num": "27",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 123200000,
+     "y_nm": 105337500
+    },
+    {
+     "num": "28",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 122400000,
+     "y_nm": 105337500
+    },
+    {
+     "num": "29",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 121600000,
+     "y_nm": 105337500
+    },
+    {
+     "num": "30",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 120800000,
+     "y_nm": 105337500
+    },
+    {
+     "num": "31",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 120000000,
+     "y_nm": 105337500
+    },
+    {
+     "num": "32",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 119200000,
+     "y_nm": 105337500
+    }
+   ],
+   "record": {
+    "fan_today": true,
+    "fan_copper_term": true,
+    "escaped": false,
+    "fan_as_ruled": true
+   }
+  },
+  "D12:U4": {
+   "ref": "U4",
+   "fpid": "LQFP-32_7x7mm_P0.8mm",
+   "layer": "F.Cu",
+   "value": "TUSB2046BI four-port USB 2.0 full-speed hub (LQFP-32; BUSPWR",
+   "pads": [
+    {
+     "num": "1",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 117825000,
+     "y_nm": 83200000
+    },
+    {
+     "num": "2",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 117825000,
+     "y_nm": 84000000
+    },
+    {
+     "num": "3",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 117825000,
+     "y_nm": 84800000
+    },
+    {
+     "num": "4",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 117825000,
+     "y_nm": 85600000
+    },
+    {
+     "num": "5",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 117825000,
+     "y_nm": 86400000
+    },
+    {
+     "num": "6",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 117825000,
+     "y_nm": 87200000
+    },
+    {
+     "num": "7",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 117825000,
+     "y_nm": 88000000
+    },
+    {
+     "num": "8",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 117825000,
+     "y_nm": 88800000
+    },
+    {
+     "num": "9",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 119200000,
+     "y_nm": 90175000
+    },
+    {
+     "num": "10",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 120000000,
+     "y_nm": 90175000
+    },
+    {
+     "num": "11",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 120800000,
+     "y_nm": 90175000
+    },
+    {
+     "num": "12",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 121600000,
+     "y_nm": 90175000
+    },
+    {
+     "num": "13",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 122400000,
+     "y_nm": 90175000
+    },
+    {
+     "num": "14",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 123200000,
+     "y_nm": 90175000
+    },
+    {
+     "num": "15",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 124000000,
+     "y_nm": 90175000
+    },
+    {
+     "num": "16",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 124800000,
+     "y_nm": 90175000
+    },
+    {
+     "num": "17",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 126175000,
+     "y_nm": 88800000
+    },
+    {
+     "num": "18",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 126175000,
+     "y_nm": 88000000
+    },
+    {
+     "num": "19",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 126175000,
+     "y_nm": 87200000
+    },
+    {
+     "num": "20",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 126175000,
+     "y_nm": 86400000
+    },
+    {
+     "num": "21",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 126175000,
+     "y_nm": 85600000
+    },
+    {
+     "num": "22",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 126175000,
+     "y_nm": 84800000
+    },
+    {
+     "num": "23",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 126175000,
+     "y_nm": 84000000
+    },
+    {
+     "num": "24",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 126175000,
+     "y_nm": 83200000
+    },
+    {
+     "num": "25",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 124800000,
+     "y_nm": 81825000
+    },
+    {
+     "num": "26",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 124000000,
+     "y_nm": 81825000
+    },
+    {
+     "num": "27",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 123200000,
+     "y_nm": 81825000
+    },
+    {
+     "num": "28",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 122400000,
+     "y_nm": 81825000
+    },
+    {
+     "num": "29",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 121600000,
+     "y_nm": 81825000
+    },
+    {
+     "num": "30",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 120800000,
+     "y_nm": 81825000
+    },
+    {
+     "num": "31",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 120000000,
+     "y_nm": 81825000
+    },
+    {
+     "num": "32",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 119200000,
+     "y_nm": 81825000
+    }
+   ],
+   "record": {
+    "fan_today": true,
+    "fan_copper_term": true,
+    "escaped": false,
+    "fan_as_ruled": true
+   }
+  },
+  "D12:U11": {
+   "ref": "U11",
+   "fpid": "SOT-23-5",
+   "layer": "F.Cu",
+   "value": "74LVC1G04 inverter (2 A 4 Y): PTT_ANY",
+   "pads": [
+    {
+     "num": "1",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 88962500,
+     "y_nm": 106050000
+    },
+    {
+     "num": "2",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 88962500,
+     "y_nm": 107000000
+    },
+    {
+     "num": "3",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 88962500,
+     "y_nm": 107950000
+    },
+    {
+     "num": "4",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 91237500,
+     "y_nm": 107950000
+    },
+    {
+     "num": "5",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 91237500,
+     "y_nm": 106050000
+    }
+   ],
+   "record": {
+    "fan_today": false,
+    "fan_copper_term": false,
+    "escaped": false,
+    "fan_as_ruled": false
+   }
+  },
+  "D12:U7": {
+   "ref": "U7",
+   "fpid": "QFN-16-1EP_3x3mm_P0.5mm_EP1.75x1.75mm",
+   "layer": "F.Cu",
+   "value": "TI TPA6132A2 headphone amplifier (QFN-16), receive audio to ",
+   "pads": [
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 139870000,
+     "y_nm": 84485000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 139870000,
+     "y_nm": 85365000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 140750000,
+     "y_nm": 84485000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 140750000,
+     "y_nm": 85365000
+    },
+    {
+     "num": "1",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 138847500,
+     "y_nm": 84175000
+    },
+    {
+     "num": "2",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 138847500,
+     "y_nm": 84675000
+    },
+    {
+     "num": "3",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 138847500,
+     "y_nm": 85175000
+    },
+    {
+     "num": "4",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 138847500,
+     "y_nm": 85675000
+    },
+    {
+     "num": "5",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 139560000,
+     "y_nm": 86387500
+    },
+    {
+     "num": "6",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 140060000,
+     "y_nm": 86387500
+    },
+    {
+     "num": "7",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 140560000,
+     "y_nm": 86387500
+    },
+    {
+     "num": "8",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 141060000,
+     "y_nm": 86387500
+    },
+    {
+     "num": "9",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 141772500,
+     "y_nm": 85675000
+    },
+    {
+     "num": "10",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 141772500,
+     "y_nm": 85175000
+    },
+    {
+     "num": "11",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 141772500,
+     "y_nm": 84675000
+    },
+    {
+     "num": "12",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 141772500,
+     "y_nm": 84175000
+    },
+    {
+     "num": "13",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 141060000,
+     "y_nm": 83462500
+    },
+    {
+     "num": "14",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 140560000,
+     "y_nm": 83462500
+    },
+    {
+     "num": "15",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 140060000,
+     "y_nm": 83462500
+    },
+    {
+     "num": "16",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 139560000,
+     "y_nm": 83462500
+    },
+    {
+     "num": "17",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 140310000,
+     "y_nm": 84925000
+    }
+   ],
+   "record": {
+    "fan_today": true,
+    "fan_copper_term": true,
+    "escaped": true,
+    "fan_as_ruled": true
+   }
+  },
+  "E17:Q1": {
+   "ref": "Q1",
+   "fpid": "TDSON-8-1",
+   "layer": "F.Cu",
+   "value": "BSC039N06NS 60 V 3.9 mOhm N-FET (PG-TDSON-8: 1-3 S, 4 G, 5-8",
+   "pads": [
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 79405000,
+     "y_nm": 199605000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 79405000,
+     "y_nm": 201305000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 80255000,
+     "y_nm": 200455000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 81105000,
+     "y_nm": 199605000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 81105000,
+     "y_nm": 201305000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 82510000,
+     "y_nm": 198550000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 82510000,
+     "y_nm": 199820000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 82510000,
+     "y_nm": 201090000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 82510000,
+     "y_nm": 202360000
+    },
+    {
+     "num": "1",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 76705000,
+     "y_nm": 198550000
+    },
+    {
+     "num": "2",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 76705000,
+     "y_nm": 199820000
+    },
+    {
+     "num": "3",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 76705000,
+     "y_nm": 201090000
+    },
+    {
+     "num": "4",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 76705000,
+     "y_nm": 202360000
+    },
+    {
+     "num": "5",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 80655000,
+     "y_nm": 200455000
+    }
+   ],
+   "record": {
+    "fan_today": true,
+    "fan_copper_term": false,
+    "escaped": true,
+    "fan_as_ruled": true
+   }
+  },
+  "E17:U12": {
+   "ref": "U12",
+   "fpid": "TSOT-23-6",
+   "layer": "F.Cu",
+   "value": "AP63205WU-7 5 V 2 A buck for the controller, the Geiger modu",
+   "pads": [
+    {
+     "num": "1",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 6937500,
+     "y_nm": 195050000
+    },
+    {
+     "num": "2",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 6937500,
+     "y_nm": 196000000
+    },
+    {
+     "num": "3",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 6937500,
+     "y_nm": 196950000
+    },
+    {
+     "num": "4",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 9212500,
+     "y_nm": 196950000
+    },
+    {
+     "num": "5",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 9212500,
+     "y_nm": 196000000
+    },
+    {
+     "num": "6",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 9212500,
+     "y_nm": 195050000
+    }
+   ],
+   "record": {
+    "fan_today": false,
+    "fan_copper_term": false,
+    "escaped": true,
+    "fan_as_ruled": true
+   }
+  },
+  "C24:U3": {
+   "ref": "U3",
+   "fpid": "QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm",
+   "layer": "B.Cu",
+   "value": "RP2040 panel controller (USB device on B16's slot-1 hub, the",
+   "pads": [
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 423530000,
+     "y_nm": 272155000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 423530000,
+     "y_nm": 273755000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 425130000,
+     "y_nm": 272155000
+    },
+    {
+     "num": "",
+     "type": "smd",
+     "cu": false,
+     "x_nm": 425130000,
+     "y_nm": 273755000
+    },
+    {
+     "num": "1",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 420892500,
+     "y_nm": 275555000
+    },
+    {
+     "num": "2",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 420892500,
+     "y_nm": 275155000
+    },
+    {
+     "num": "3",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 420892500,
+     "y_nm": 274755000
+    },
+    {
+     "num": "4",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 420892500,
+     "y_nm": 274355000
+    },
+    {
+     "num": "5",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 420892500,
+     "y_nm": 273955000
+    },
+    {
+     "num": "6",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 420892500,
+     "y_nm": 273555000
+    },
+    {
+     "num": "7",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 420892500,
+     "y_nm": 273155000
+    },
+    {
+     "num": "8",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 420892500,
+     "y_nm": 272755000
+    },
+    {
+     "num": "9",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 420892500,
+     "y_nm": 272355000
+    },
+    {
+     "num": "10",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 420892500,
+     "y_nm": 271955000
+    },
+    {
+     "num": "11",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 420892500,
+     "y_nm": 271555000
+    },
+    {
+     "num": "12",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 420892500,
+     "y_nm": 271155000
+    },
+    {
+     "num": "13",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 420892500,
+     "y_nm": 270755000
+    },
+    {
+     "num": "14",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 420892500,
+     "y_nm": 270355000
+    },
+    {
+     "num": "15",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 421730000,
+     "y_nm": 269517500
+    },
+    {
+     "num": "16",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 422130000,
+     "y_nm": 269517500
+    },
+    {
+     "num": "17",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 422530000,
+     "y_nm": 269517500
+    },
+    {
+     "num": "18",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 422930000,
+     "y_nm": 269517500
+    },
+    {
+     "num": "19",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 423330000,
+     "y_nm": 269517500
+    },
+    {
+     "num": "20",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 423730000,
+     "y_nm": 269517500
+    },
+    {
+     "num": "21",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 424130000,
+     "y_nm": 269517500
+    },
+    {
+     "num": "22",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 424530000,
+     "y_nm": 269517500
+    },
+    {
+     "num": "23",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 424930000,
+     "y_nm": 269517500
+    },
+    {
+     "num": "24",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 425330000,
+     "y_nm": 269517500
+    },
+    {
+     "num": "25",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 425730000,
+     "y_nm": 269517500
+    },
+    {
+     "num": "26",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 426130000,
+     "y_nm": 269517500
+    },
+    {
+     "num": "27",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 426530000,
+     "y_nm": 269517500
+    },
+    {
+     "num": "28",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 426930000,
+     "y_nm": 269517500
+    },
+    {
+     "num": "29",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 427767500,
+     "y_nm": 270355000
+    },
+    {
+     "num": "30",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 427767500,
+     "y_nm": 270755000
+    },
+    {
+     "num": "31",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 427767500,
+     "y_nm": 271155000
+    },
+    {
+     "num": "32",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 427767500,
+     "y_nm": 271555000
+    },
+    {
+     "num": "33",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 427767500,
+     "y_nm": 271955000
+    },
+    {
+     "num": "34",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 427767500,
+     "y_nm": 272355000
+    },
+    {
+     "num": "35",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 427767500,
+     "y_nm": 272755000
+    },
+    {
+     "num": "36",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 427767500,
+     "y_nm": 273155000
+    },
+    {
+     "num": "37",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 427767500,
+     "y_nm": 273555000
+    },
+    {
+     "num": "38",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 427767500,
+     "y_nm": 273955000
+    },
+    {
+     "num": "39",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 427767500,
+     "y_nm": 274355000
+    },
+    {
+     "num": "40",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 427767500,
+     "y_nm": 274755000
+    },
+    {
+     "num": "41",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 427767500,
+     "y_nm": 275155000
+    },
+    {
+     "num": "42",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 427767500,
+     "y_nm": 275555000
+    },
+    {
+     "num": "43",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 426930000,
+     "y_nm": 276392500
+    },
+    {
+     "num": "44",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 426530000,
+     "y_nm": 276392500
+    },
+    {
+     "num": "45",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 426130000,
+     "y_nm": 276392500
+    },
+    {
+     "num": "46",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 425730000,
+     "y_nm": 276392500
+    },
+    {
+     "num": "47",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 425330000,
+     "y_nm": 276392500
+    },
+    {
+     "num": "48",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 424930000,
+     "y_nm": 276392500
+    },
+    {
+     "num": "49",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 424530000,
+     "y_nm": 276392500
+    },
+    {
+     "num": "50",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 424130000,
+     "y_nm": 276392500
+    },
+    {
+     "num": "51",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 423730000,
+     "y_nm": 276392500
+    },
+    {
+     "num": "52",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 423330000,
+     "y_nm": 276392500
+    },
+    {
+     "num": "53",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 422930000,
+     "y_nm": 276392500
+    },
+    {
+     "num": "54",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 422530000,
+     "y_nm": 276392500
+    },
+    {
+     "num": "55",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 422130000,
+     "y_nm": 276392500
+    },
+    {
+     "num": "56",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 421730000,
+     "y_nm": 276392500
+    },
+    {
+     "num": "57",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 424330000,
+     "y_nm": 272955000
+    }
+   ],
+   "record": {
+    "fan_today": true,
+    "fan_copper_term": true,
+    "escaped": true,
+    "fan_as_ruled": true
+   }
+  },
+  "C24:U5": {
+   "ref": "U5",
+   "fpid": "SOT-23-5",
+   "layer": "B.Cu",
+   "value": "TLV75533PDBV 3.3 V 500 mA LDO for the controller, expanders,",
+   "pads": [
+    {
+     "num": "1",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 464737500,
+     "y_nm": 283185000
+    },
+    {
+     "num": "2",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 464737500,
+     "y_nm": 282235000
+    },
+    {
+     "num": "3",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 464737500,
+     "y_nm": 281285000
+    },
+    {
+     "num": "4",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 467012500,
+     "y_nm": 281285000
+    },
+    {
+     "num": "5",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 467012500,
+     "y_nm": 283185000
+    }
+   ],
+   "record": {
+    "fan_today": false,
+    "fan_copper_term": false,
+    "escaped": false,
+    "fan_as_ruled": false
+   }
+  },
+  "C24:U11": {
+   "ref": "U11",
+   "fpid": "SOT-23-6",
+   "layer": "B.Cu",
+   "value": "USBLC6-2SC6",
+   "pads": [
+    {
+     "num": "1",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 452537500,
+     "y_nm": 283185000
+    },
+    {
+     "num": "2",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 452537500,
+     "y_nm": 282235000
+    },
+    {
+     "num": "3",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 452537500,
+     "y_nm": 281285000
+    },
+    {
+     "num": "4",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 454812500,
+     "y_nm": 281285000
+    },
+    {
+     "num": "5",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 454812500,
+     "y_nm": 282235000
+    },
+    {
+     "num": "6",
+     "type": "smd",
+     "cu": true,
+     "x_nm": 454812500,
+     "y_nm": 283185000
+    }
+   ],
+   "record": {
+    "fan_today": false,
+    "fan_copper_term": false,
+    "escaped": true,
+    "fan_as_ruled": true
+   }
+  }
+ }
+}

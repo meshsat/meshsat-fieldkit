@@ -11,7 +11,7 @@ THIS IS A REPORT AND IT MOVES NOTHING. It prints the seat line a generator's FIX
 every declared capacitor further from its pin than the limit, measured on the board the generator makes:
 
   * outside every other footprint's courtyard on that side,
-  * outside every escape fan (the same `_needs_fan` and `_fan_box` the reservation uses),
+  * outside every escape fan (the same fan set the reservation and the escape pass use, `fan_select`),
   * outside every rule area that forbids a part,
   * outside every packer REGION rectangle, read from `out/<stem>-regions.json`, which `regionfit` already
     writes beside the board, because a seat INSIDE a rectangle leaves the shelf packer a hole it cannot pack
@@ -21,7 +21,7 @@ every declared capacitor further from its pin than the limit, measured on the bo
 Board A's A82 arm is what a set of these seats is worth: hard 0, 461 escapes and 2 pads skipped, every
 number the baseline's, with the decoupling distance median 13.2 to 5.7 mm and the total 530 to 293.
 
-Usage: bypass_seats.py <board.kicad_pcb> --board <letter> [--limit 3.0] [--reach 12.0] [--frame OX,OY]
+Usage: bypass_seats.py <board.kicad_pcb> --board <letter> [--limit <mm>, else each class's screen] [--reach 12.0] [--frame OX,OY]
        [--out-dir DIR] [--json]
 """
 import os, sys, json, math, re
@@ -30,7 +30,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import verdict as _v
 import pcbnew
-import bypass_slots as _bs
+import fan_select
+import decoupling_rules as _dr
 
 MM = 1e6
 COPPER = "copper already laid"
@@ -80,7 +81,14 @@ def _cbox(fp):
     return bb.GetLeft() / MM, bb.GetTop() / MM, bb.GetRight() / MM, bb.GetBottom() / MM
 
 
-def seats(board_path, letter, limit=LIMIT, reach=REACH, frame=None):
+def seats(board_path, letter, limit=None, reach=REACH, frame=None):
+    """THE LIMIT IS THE ENTRY'S CLASS'S (decision 42, T2 and T7; 29 September 2026): each declared capacitor is
+    "near" within its class's screen (3.0 mm for R, D and L, 6.0 mm for B2), measured from its RAIL pad to the pin as
+    the gate and the placers measure it (the farther pad where the netlist beside the board does not say which is
+    the rail's); classes A and B1 have no screen, so their nearest free seat is always looked for and reported as
+    recorded; an entry with no ruled class is refused by name. `limit` (the command's --limit) replaces every
+    class's screen, for an arm that asks one number. The seats offered stay outside every escape fan, the own-pin
+    windows included: this report names seats further out, the window is the placers' (D3)."""
     b = pcbnew.LoadBoard(board_path)
     stem = os.path.splitext(os.path.basename(board_path))[0]
     d = os.path.dirname(os.path.abspath(board_path))
@@ -121,11 +129,8 @@ def seats(board_path, letter, limit=LIMIT, reach=REACH, frame=None):
     fps = {f.GetReference(): f for f in b.GetFootprints()}
     moving = {e.get("cap") for e in entries}
     boxes = [(f.GetReference(), *_cbox(f), f.GetLayer()) for f in b.GetFootprints()]
-    fans = []
-    for g in b.GetFootprints():
-        if _bs._needs_fan(g):
-            fb = _bs._fan_box(g, 2.2)
-            fans.append((fb.GetLeft() / MM, fb.GetTop() / MM, fb.GetRight() / MM, fb.GetBottom() / MM))
+    # the fan set is the escape pass's own since 27 September 2026 (decision 42, T1): fan_select, as both placers
+    fans = [fb for _ref, fb in fan_select.fan_boxes(b, fan_select.escape_skip(board_path), 2.2)]
     ras = []
     for z in b.Zones():
         if not z.GetIsRuleArea(): continue
@@ -187,19 +192,27 @@ def seats(board_path, letter, limit=LIMIT, reach=REACH, frame=None):
         return None
     fixed = _fixed(letter)
     near, found, none, held = [], [], [], []
+    import bypass_search
+    nets = bypass_search.netlist_beside(os.path.join(os.path.dirname(outd), base + ".kicad_pcb"))   # <outd>/<base>.net
     for e in entries:
         cap, part, pin = e.get("cap"), e.get("part"), str(e.get("pin"))
         if cap not in fps or part not in fps: none.append((cap, part, pin, 0.0, "not on this board")); continue
         p = next((q for q in fps[part].Pads() if q.GetNumber() == pin), None)
         if p is None: none.append((cap, part, pin, 0.0, "no pin %s on %s" % (pin, part))); continue
+        if e.get("class") not in _dr.CLASSES:
+            none.append((cap, part, pin, 0.0, "no ruled class, so no limit: refused (decision 42, T5)")); continue
+        lim = limit if limit is not None else _dr.limit(e)["screen_mm"]
         px, py = p.GetPosition().x / MM, p.GetPosition().y / MM
-        was = math.hypot(fps[cap].GetPosition().x / MM - px, fps[cap].GetPosition().y / MM - py)
-        if was <= limit: near.append((cap, part, pin, was)); continue
+        num, _how = bypass_search.rail_pad_number(e, fps[cap], p, nets.get(cap))
+        rp = [q for q in fps[cap].Pads() if str(q.GetNumber()).strip() and (num is None or q.GetNumber() == num)]
+        was = max(math.hypot(q.GetPosition().x / MM - px, q.GetPosition().y / MM - py) for q in rp) if rp else \
+            math.hypot(fps[cap].GetPosition().x / MM - px, fps[cap].GetPosition().y / MM - py)
+        if lim is not None and was <= lim: near.append((cap, part, pin, was)); continue
         if cap in fixed: held.append((cap, part, pin, was)); continue
         L, T, R, B = _cbox(fps[cap]); w, h = R - L + 0.50, B - T + 0.50
         side = fps[cap].GetLayer()
         got = None
-        for dd in [x / 10.0 for x in range(int(limit * 10) // 3, int(reach * 10) + 1)]:
+        for dd in [x / 10.0 for x in range(int((lim if lim is not None else 3.0) * 10) // 3, int(reach * 10) + 1)]:
             for ang in range(0, 360, 5):
                 x, y = px + dd * math.cos(math.radians(ang)), py + dd * math.sin(math.radians(ang))
                 if refuse(x, y, w, h, side) is None: got = (dd, x, y); break
@@ -217,7 +230,8 @@ def main(argv):
     if not argv: print(__doc__); return 2
     bp = argv[0]
     letter = _v.opt(argv, "--board", "")
-    limit = float(_v.opt(argv, "--limit", str(LIMIT)))
+    _lo = _v.opt(argv, "--limit", None)
+    limit = float(_lo) if _lo not in (None, "") else None     # None: each entry's class's own screen (T2)
     reach = float(_v.opt(argv, "--reach", str(REACH)))
     r = seats(bp, letter, limit, reach, _v.opt(argv, "--frame", ""))
     OX, OY, how = r["frame"]
@@ -228,9 +242,10 @@ def main(argv):
                         advisory=True, out_dir=_v.opt(argv, "--out-dir", None),
                         missing_input="the intent file beside the board (%s)" % r["intent"],
                         note="no declared decoupling capacitor to seat, which is a missing input and not a pass")
-    print("bypass_seats: %d declared, %d already within %.1f mm; the frame is (%.1f, %.1f) from %s, "
+    print("bypass_seats: %d declared, %d already within %s; the frame is (%.1f, %.1f) from %s, "
           "%d region rectangle(s) grown by the board's declared %.1f mm, %d escape fan(s) and %d piece(s) of laid copper in the map"
-          % (r["declared"], len(r["near"]), limit, OX, OY, how, r["regions"], r["allow"], r["fans"], r["tracks"]))
+          % (r["declared"], len(r["near"]), ("%.1f mm" % limit) if limit is not None else "their class's screen, rail pad to pin",
+             OX, OY, how, r["regions"], r["allow"], r["fans"], r["tracks"]))
     if "--json" in argv:
         print(json.dumps(r, indent=1, default=list))
     else:

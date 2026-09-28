@@ -1,0 +1,21 @@
+a pcb-a-power-a23      None {"allow_lines_refused": 0, "fail": 55, "far_side": 0, "justified": 0, "no_own_via": 0, "pass": 0, "recorded": 1, "unclassed": 0} | intent_checks: decoupling, 56 declared: 0 pass, 0 justified deviation(s), 1 recorded with no distance to judge, 55 fail (0 with no ruled class); 0 with no ground via of their own; 0 on the side opposite their part (SMD parts 343 front, 0 back without them, so the other side is no seat)
+     FAIL  40  declared, not on this board (the intent is newer than the placement)
+     FAIL  15  past the class screen, no allowance names it
+b pcb-b-compute-b19    None {"allow_lines_refused": 0, "fail": 281, "far_side": 78, "justified": 0, "no_own_via": 0, "pass": 0, "recorded": 0, "unclassed": 0} | intent_checks: decoupling, 281 declared: 0 pass, 0 justified deviation(s), 0 recorded with no distance to judge, 281 fail (0 with no ruled class); 0 with no ground via of their own; 78 on the side opposite their part (SMD parts 431 front, 386 back without them, so the other side is a seat)
+     FAIL 125  declared, not on this board (the intent is newer than the placement)
+     FAIL  23  far side refused (inside a fan)
+     FAIL 133  past the class screen, no allowance names it
+c pcb-c-display-c8     None {"allow_lines_refused": 0, "fail": 23, "far_side": 0, "justified": 0, "no_own_via": 0, "pass": 1, "recorded": 0, "unclassed": 0} | intent_checks: decoupling, 24 declared: 1 pass, 0 justified deviation(s), 0 recorded with no distance to judge, 23 fail (0 with no ruled class); 0 with no ground via of their own; 0 on the side opposite their part (SMD parts 31 front, 135 back without them, so the other side is a seat)
+     FAIL   6  declared, not on this board (the intent is newer than the placement)
+     FAIL  17  past the class screen, no allowance names it
+d pcb-d-aprs-d9        None {"allow_lines_refused": 0, "fail": 28, "far_side": 10, "justified": 0, "no_own_via": 0, "pass": 3, "recorded": 0, "unclassed": 0} | intent_checks: decoupling, 31 declared: 3 pass, 0 justified deviation(s), 0 recorded with no distance to judge, 28 fail (0 with no ruled class); 0 with no ground via of their own; 10 on the side opposite their part (SMD parts 128 front, 61 back without them, so the other side is a seat)
+     FAIL   8  declared, not on this board (the intent is newer than the placement)
+     FAIL   2  far side refused (inside a fan)
+     FAIL   2  past its maker's own distance
+     FAIL  15  past the class screen, no allowance names it
+     FAIL   1  the capacitor is not on the pin's net on this board
+e pcb-e1-dock-e7       None {"allow_lines_refused": 0, "fail": 26, "far_side": 0, "justified": 0, "no_own_via": 0, "pass": 2, "recorded": 1, "unclassed": 0} | intent_checks: decoupling, 29 declared: 2 pass, 0 justified deviation(s), 1 recorded with no distance to judge, 26 fail (0 with no ruled class); 0 with no ground via of their own; 0 on the side opposite their part (SMD parts 148 front, 0 back without them, so the other side is no seat)
+     FAIL   9  declared, not on this board (the intent is newer than the placement)
+     FAIL  17  past the class screen, no allowance names it
+p pcb-p-pack-p2        None {"allow_lines_refused": 0, "fail": 1, "far_side": 0, "justified": 0, "no_own_via": 0, "pass": 0, "recorded": 3, "unclassed": 0} | intent_checks: decoupling, 4 declared: 0 pass, 0 justified deviation(s), 3 recorded with no distance to judge, 1 fail (0 with no ruled class); 0 with no ground via of their own; 0 on the side opposite their part (SMD parts 48 front, 0 back without them, so the other side is no seat)
+     FAIL   1  declared, not on this board (the intent is newer than the placement)
