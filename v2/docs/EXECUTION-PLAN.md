@@ -429,3 +429,27 @@ Your correction is applied: M1 and REQ-072 are unchanged and REQ-072 reads FAIL.
 - **Owner:** none now. Coming: the checkout list, then the energy decision.
 - **Engineering:** the case tests (A, B, E, P), the energy decision (A, E, P), S-99, S-98, and the port reviews of boards B and C.
 - **Next milestone:** set 8. Acceptance: IF-AB-POWER reads AGREE on regenerated netlists, the suite reads 0 failures and the check is clean. No completion time is defensible yet.
+
+### Scheduling, 28 September 2026 23:15 CEST: each active item's next action (the owner's instruction of 23:05)
+
+| Item | Next action | Prerequisite | Worker | Acceptance evidence |
+|---|---|---|---|---|
+| S-98, the A and B declarations | regenerate A and B on the box at `fff04e64` (set 8), install the pack, re-read IF-AB-POWER | none: running since 23:10 | box job, then the integrator | netlist parity on both boards; the contract AGREE on the regenerated intents; INT-001 and PWR-001 current |
+| S-99, the +5V_DEV stage | the ten review findings corrected, each with source, corrected calculation and verification | none: running since 23:12 | Codex, the one authorised correction (isolated worktree `s99c`) | an independent Claude check passes the correction and its interfaces |
+| Board A, second regeneration | the corrected D8 split applied on set 8, its `+5V_DEV` entry rebased onto S-98's line, board A regenerated | S-99's check | integrator, box | parity; the declared demand under the loop minimum with tolerance |
+| Set 8 | suite, isolated clone, fresh check, then the last authorised Codex check on S-98's integrated scope | the three rows above | integrator; Codex check | suite 0 failed; AGREE; check mergeable. This accepts set 8 for integration only: it closes neither I-03's adequacy nor any layout entry |
+| I-03 adequacy | stays open: the mode currents are INCONCLUSIVE until measured | set 8 | TEST-PLAN power rows | measured currents at J_5V_S2 and J_5V_DEV under PS-ALLTX |
+| Energy, S-114 and REQ-072 | independent re-check of the second issue `7697c172` | a free worker slot | the energy checker | figures reproduced; then at most three options for the owner; REQ-072 stays FAIL until justified |
+| OD-01 case list | technical-fit and test-validity check, then handed to the owner | the check (running since 23:02) | checker; prices by the coordinator | part numbers and compatibility confirmed; totals recomputed |
+| Board C packet | d6dec, d4emcon, C's identities, the SI desk remedies | free slots after the rows above | authors | C's FEA-002 and FEA-006 layout-entry stages; SI-001 on C decided or allocated |
+
+**Why S-98 waited, and the dependency now:** it was held for S-99 because both change one line of board A's generator, the
+`+5V_DEV` declaration. Board B and board A's `+5V_S2` do not depend on S-99, and a regeneration is a deterministic box job,
+so it runs now and board A is regenerated once more when S-99's change lands.
+
+**Layers 10 and 11, reconciled with this page's stage gates (no new framework):** layer 10 is layout, opened per board by the
+layout-entry gate and closed when SCH-002 reads PASS on the layout with the routed-board checks. Layer 11 is the fabrication
+and assembly handoff: the fabrication-release gate of the stage table above, per board (the layout implements the reviewed
+schematic; the physical protection, parity and routed checks; the qualified reviews where a blocker names them; the order
+set of `v2/release/<rev>/` with gerbers, BOM, CPL, assembly drawings and order notes; the case's made parts cut to the
+mock-up's numbers). State: layer 10 BLOCKED, 0 of 7 boards pass layout entry; layer 11 NOT STARTED, it follows layer 10.
