@@ -341,6 +341,24 @@ for fp in (boardorder.footprints(b) if _DECL_FP else []):
         COST.pin_sites(fp.GetReference(), pad.GetNumber(), sites, _ask_clear(pad, fp.GetReference(), pad.GetNetname()))
 for _l in COST.lines(): print(_l)
 if _INTENT is None: print("escape: decoupling cost: no intent file beside this board, so no declared seat was asked about")
+else:
+    # THE COST AS DATA, for the next placement (D3, T4; 29 September 2026): `bypass_search.Context` reads the
+    # `close` list and seats those capacitors with that one opening shut while the part whose escape they cost
+    # stands where it stood here. The file beside the intent; it never decides a gate.
+    import json as _json
+    _FP = {f.GetReference(): f for f in b.GetFootprints()}
+    def _at(ref):
+        f = _FP.get(ref)
+        if f is None: return None
+        return [int(f.GetPosition().x), int(f.GetPosition().y), round(float(f.GetOrientationDegrees()), 3), _SIDE.get(ref)]
+    _cp = os.path.join(os.path.dirname(os.path.abspath(sys.argv[1])) or ".", "out",
+                       os.path.splitext(os.path.basename(sys.argv[1]))[0] + "-escape-cost.json")
+    try:
+        os.makedirs(os.path.dirname(_cp), exist_ok=True)
+        _json.dump(COST.record(_at), open(_cp, "w", encoding="utf-8"), indent=1, sort_keys=True)
+        print("escape: decoupling cost written to %s" % os.path.relpath(_cp))
+    except OSError as _e:
+        print("escape: decoupling cost NOT written (%s): the next placement will not close what this pass found" % _e)
 print("escape: %d escapes added, %d pads skipped, %d thermal via(s) refused for what is on the other side" % (added, skipped, ep_skipped))
 for ref, num, net, laid, want, why, have in ep_pads:
     print("escape: exposed pad %s.%s (%s) got %d thermal via(s) of %d, %d via(s) of its own net already on the pad: %s%s"

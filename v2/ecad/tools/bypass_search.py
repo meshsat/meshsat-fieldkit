@@ -53,10 +53,47 @@ def allowance(board, path=None):
     return dr.via_allowance_mm(stackup_write.STACKS[name]), "stackup_write's row %s, the default for %d layers" % (name, n)
 
 
-class Context:
-    """What one board offers a seat, read once: its fans, its through-hole parts, its sides, its allowance."""
+def closures(path, board):
+    """({"window": {capacitor refs}, "stage": {capacitor refs}}, note): what the escape pass closed again (D3, T4).
 
-    def __init__(self, board, path=None, fan=dr.FAN_MM, rule_hit=False):
+    Read from `out/<stem>-escape-cost.json` beside the board, which escape.py writes after every pass: a capacitor
+    whose own-pin window, or whose opening in its converter's fan, cost an escape the part needed is seated with
+    that one opening shut. An entry is applied only while every part whose escape it cost stands where it stood when
+    the pass measured it (position, orientation and side); a moved or missing part makes it stale, and a stale entry
+    is counted in the note and not applied. No file, no closure: the first placement of a board opens every window."""
+    closed = {"window": set(), "stage": set()}
+    if not path: return closed, "no board path, so no escape cost was read"
+    d = os.path.dirname(os.path.abspath(path)); stem = os.path.splitext(os.path.basename(path))[0]
+    outd = d if os.path.basename(d) == "out" else os.path.join(d, "out")
+    base = stem[:-len("-placed")] if stem.endswith("-placed") else stem
+    cp = os.path.join(outd, base + "-escape-cost.json")
+    if not os.path.exists(cp): return closed, "no escape cost beside the board (%s), so every window is open" % os.path.basename(cp)
+    import json
+    try: rec = json.load(open(cp, encoding="utf-8"))
+    except (OSError, ValueError) as e: return closed, "the escape cost %s is unreadable (%s); no window closed" % (os.path.basename(cp), e)
+    fps = {f.GetReference(): f for f in board.GetFootprints()}
+
+    def now(ref):
+        f = fps.get(ref)
+        if f is None: return None
+        return [int(f.GetPosition().x), int(f.GetPosition().y), round(float(f.GetOrientationDegrees()), 3),
+                "F" if f.GetLayer() == pcbnew.F_Cu else "B"]
+    stale = 0
+    for kind in ("window", "stage"):
+        for row in (rec.get("close") or {}).get(kind, []) or []:
+            at = row.get("parts_at") or {}
+            if at and all(at.get(q) is not None and now(q) == list(at.get(q)) for q in at):
+                closed[kind].add(row.get("ref"))
+            else: stale += 1
+    return closed, ("closed again from %s: %d own-pin window(s), %d converter opening(s); %d stale entr%s not applied"
+                    % (os.path.basename(cp), len(closed["window"]), len(closed["stage"]), stale, "y" if stale == 1 else "ies"))
+
+
+class Context:
+    """What one board offers a seat, read once: its fans, its through-hole parts, its sides, its allowance, and
+    the openings the escape pass closed again."""
+
+    def __init__(self, board, path=None, fan=dr.FAN_MM, rule_hit=False, closed=None):
         self.board = board; self.path = path or board.GetFileName() or ""
         self.fan = fan; self.rule_hit = rule_hit
         self.skip = fan_select.escape_skip(self.path)
@@ -69,6 +106,8 @@ class Context:
         self.rule = [z for z in board.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowFootprints()]
         self.rule_boxes = [_box_mm(z.GetBoundingBox()) for z in self.rule]
         self.converters = {}
+        if closed is None: self.closed, self.closed_note = closures(self.path, board)
+        else: self.closed, self.closed_note = closed, "closed again as the caller gave them"
 
     def converter_of(self, entry, intent=None):
         """The converter whose fan is open to a class R entry (R2): the part it is declared against when that part
@@ -246,6 +285,11 @@ def _refuse(ctx, entry, box, centre, far, own_back, near, fans, tht, rules, pcy,
     win = None
     if entry.get("class") in ("D", "L") and side_name is not None:
         win = dr.window_box(pcy, pin, h if side_name in ("e", "w") else w, ctx.fan)
+    # CLOSED AGAIN (D3, T4): the escape pass found this capacitor's window, or its opening in its converter's fan,
+    # costing an escape the part needed; that one opening stays shut while the part stands where it was measured
+    cap = entry.get("cap"); closed = getattr(ctx, "closed", None) or {}
+    if cap in closed.get("window", ()): win = None
+    if cap in closed.get("stage", ()): conv = None
     blk = dr.fan_blocks(box, fans, entry, own_window=win, own_converter=conv)
     if blk: return "the escape fan of %s" % blk
     return None

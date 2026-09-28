@@ -126,7 +126,11 @@ def t_the_thermal_vias_are_asked_of_every_footprint_and_not_only_the_fine_pitch_
     assert "def thermal_vias(fp):" in s, "the exposed-pad block is not a function any loop can call"
     assert s.count("    thermal_vias(fp)") >= 2, "thermal_vias is called from fewer than two loops: the coarse parts are not asked"
     i = s.index("# THE COARSE PARTS")
-    assert "if is_fine(fp)" in s[i:i + 600] and "thermal_vias(fp)" in s[i:i + 900], \
+    # the selection moved to fan_select on 27 September 2026 (decision 42, T1: one selection for the escape pass and
+    # both placers), so the loop skips `fan_select.is_escaped(fp)`, which is the old `is_fine` less the J exemption
+    # this loop also applied; either spelling keeps the property asked here
+    seg = s[i:i + 600]
+    assert ("if is_fine(fp)" in seg or "if fan_select.is_escaped(fp)" in seg) and "thermal_vias(fp)" in s[i:i + 900], \
         "the coarse-part loop does not skip the fine parts and call thermal_vias"
 
 

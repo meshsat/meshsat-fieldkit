@@ -84,6 +84,7 @@ def main(a):
     print("bypass_place: SMD parts %d front and %d back, so the other side is %s; via allowance %s; %d fanned part(s)"
           % (ctx.smd[0], ctx.smd[1], "offered" if ctx.two_sided else "not offered",
              ("%.1f mm (%s)" % (ctx.allow_mm, ctx.allow_src)) if ctx.allow_mm is not None else ctx.allow_src, len(ctx.fans)))
+    print("bypass_place: %s" % ctx.closed_note)
     moved = near = stuck = recorded = 0
     for e in entries:
         f = b.FindFootprintByReference(e["cap"]); p = b.FindFootprintByReference(e["part"])
@@ -102,30 +103,41 @@ def main(a):
         far0 = f.GetLayer() != p.GetLayer()
         loop0 = _dr.loop_equivalent_mm(d0, far0, ctx.allow_mm or 0.0)
         st0, _why0 = _dr.judge(e, loop0)
-        if st0 == "pass" and (tighten is None or loop0 <= tighten + 1e-9): near += 1; continue
+        # CLOSED AGAIN (D3, T4; 29 September 2026): a capacitor that sits in an opening the escape pass found costing
+        # an escape (its own-pin window, or its converter's fan) is re-seated with that opening shut, even to a seat
+        # further out; it is never "already within its limit" there
+        shut = e["part"] if (e["cap"] in ctx.closed.get("window", ()) and e.get("class") in ("D", "L")) else \
+            (ctx.converter_of(e, intent) if (e["cap"] in ctx.closed.get("stage", ()) and e.get("class") == "R") else None)
+        in_shut = False
+        if shut is not None and not far0:
+            fb = dict(ctx.fans).get(shut)
+            in_shut = fb is not None and _dr.boxes_meet(fan_select.courtyard_box(f), fb)
+        if st0 == "pass" and not in_shut and (tighten is None or loop0 <= tighten + 1e-9): near += 1; continue
         # the search speaks of the part's own side and the other one, so the capacitor is put on the part's side
         # for it and put back if it does not move
         if far0: f.Flip(f.GetPosition(), False)
         res = bypass_search.search(ctx, e, f, p, pin, intent=intent, netlist_pins=nets.get(e["cap"]), tighten=tighten)
-        stays = res.get("seat") is None or res["loop_mm"] >= loop0 - 0.05 or dry
+        stays = res.get("seat") is None or dry or (not in_shut and res["loop_mm"] >= loop0 - 0.05)
         if stays and far0: f.Flip(f.GetPosition(), False)
         if res.get("seat") is None:
             if st0 == "recorded":
                 recorded += 1
                 print("bypass_place: %-5s class %s stays %.1f mm from %s.%s: %s" % (e["cap"], e["class"], loop0, e["part"], e["pin"], res.get("why")))
                 continue
-            print("bypass_place: STUCK %s (class %s) -> %s.%s, %s (it sits %.1f mm away, rail pad to pin%s)"
-                  % (e["cap"], e["class"], e["part"], e["pin"], res.get("why"), d0, ", the other side" if far0 else ""))
+            print("bypass_place: STUCK %s (class %s) -> %s.%s, %s (it sits %.1f mm away, rail pad to pin%s)%s"
+                  % (e["cap"], e["class"], e["part"], e["pin"], res.get("why"), d0, ", the other side" if far0 else "",
+                     ("; it sits in the fan of %s, closed again by the escape pass, so the seat it has is refused" % shut) if in_shut else ""))
             stuck += 1; continue
-        if res["loop_mm"] >= loop0 - 0.05:
+        if res["loop_mm"] >= loop0 - 0.05 and not in_shut:
             # the search found nothing nearer than where it is (a class with no screen): it stays
             recorded += 1
             print("bypass_place: %-5s class %s stays %.1f mm from %s.%s, the nearest free seat" % (e["cap"], e["class"], loop0, e["part"], e["pin"]))
             continue
         if not dry: bypass_search.apply(f, res)
-        print("bypass_place: %-5s class %-2s -> %s.%-3s %5.1f mm to %.1f mm%s, turned %d (%s)"
+        print("bypass_place: %-5s class %-2s -> %s.%-3s %5.1f mm to %.1f mm%s, turned %d (%s)%s"
               % (e["cap"], e["class"], e["part"], e["pin"], loop0, res["loop_mm"],
-                 (" on the other side (%.1f mm in plane)" % res["d_mm"]) if res.get("far") else "", int(res["rotation"]), res["rail"]))
+                 (" on the other side (%.1f mm in plane)" % res["d_mm"]) if res.get("far") else "", int(res["rotation"]), res["rail"],
+                 (", out of the fan of %s, closed again by the escape pass" % shut) if in_shut else ""))
         if res["status"] == "recorded": recorded += 1
         moved += 1
     print("bypass_place: %d moved, %d already within their class's limit, %d stuck of %d declared%s"
