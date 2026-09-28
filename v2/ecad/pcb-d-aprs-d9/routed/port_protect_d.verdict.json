@@ -74,12 +74,12 @@
  },
  "tool": "port_protect_d",
  "tools": {
-  "git_head": "8b623c96380b",
-  "tools_tree_sha": "780a9555854f55da"
+  "git_head": "05af085c675d",
+  "tools_tree_sha": "14485a8d448de4d9"
  },
- "ts": "2026-09-28T18:44:06Z",
+ "ts": "2026-09-28T19:16:46Z",
  "verdict": "PASS",
- "version": "8b623c96380b",
+ "version": "05af085c675d",
  "writer": {
   "file": "port_protect.py",
   "sha16": "7acd5333fc59f8d0"
