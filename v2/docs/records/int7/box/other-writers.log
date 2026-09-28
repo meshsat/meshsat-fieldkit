@@ -1,0 +1,40 @@
+--- reliability board a in pcb-a-power-a23
+reliability: A    6 class(es), 39 part(s) covered
+verdict: reliability            PASS         of 45 {"boards": 1, "classes": 6, "covered": 39, "fail": 0} | every part that carries load or sees cycling falls in a declared class with its cycle figure or the reason it has none, its load and the measure taken. It tests nothing: REL-001 is verified at the prototype and no board has been built
+exit 0
+copied to pcb-a-power-a23/routed/
+--- reliability board b in pcb-b-compute-b19
+reliability: B    6 class(es), 38 part(s) covered
+  note B: 6 part(s) carry a wear word only in the description of what they do and are not asked for: U101, U116, U201, U216, U301, U316
+verdict: reliability            PASS         of 44 {"boards": 1, "classes": 6, "covered": 38, "fail": 0} | every part that carries load or sees cycling falls in a declared class with its cycle figure or the reason it has none, its load and the measure taken. It tests nothing: REL-001 is verified at the prototype and no board has been built
+exit 0
+copied to pcb-b-compute-b19/routed/
+--- reliability board c in pcb-c-display-c8
+reliability: C    2 class(es),  9 part(s) covered
+verdict: reliability            PASS         of 11 {"boards": 1, "classes": 2, "covered": 9, "fail": 0} | every part that carries load or sees cycling falls in a declared class with its cycle figure or the reason it has none, its load and the measure taken. It tests nothing: REL-001 is verified at the prototype and no board has been built
+exit 0
+copied to pcb-c-display-c8/routed/
+--- reliability board d in pcb-d-aprs-d9
+reliability: D    4 class(es), 10 part(s) covered
+verdict: reliability            PASS         of 14 {"boards": 1, "classes": 4, "covered": 10, "fail": 0} | every part that carries load or sees cycling falls in a declared class with its cycle figure or the reason it has none, its load and the measure taken. It tests nothing: REL-001 is verified at the prototype and no board has been built
+exit 0
+copied to pcb-d-aprs-d9/routed/
+--- reliability board e in pcb-e1-dock-e7
+reliability: E    3 class(es),  8 part(s) covered
+verdict: reliability            PASS         of 11 {"boards": 1, "classes": 3, "covered": 8, "fail": 0} | every part that carries load or sees cycling falls in a declared class with its cycle figure or the reason it has none, its load and the measure taken. It tests nothing: REL-001 is verified at the prototype and no board has been built
+exit 0
+copied to pcb-e1-dock-e7/routed/
+--- reliability board e5 in pcb-e5-block
+reliability: E5   2 class(es),  0 part(s) covered  (no netlist here)
+  note board E5 has no netlist in this tree, so the list could not be compared with it
+verdict: reliability            PASS         of 2 {"boards": 1, "classes": 2, "covered": 0, "fail": 0} | every part that carries load or sees cycling falls in a declared class with its cycle figure or the reason it has none, its load and the measure taken. It tests nothing: REL-001 is verified at the prototype and no board has been built
+exit 0
+copied to pcb-e5-block/routed/
+--- reliability board p in pcb-p-pack-p2
+reliability: P    3 class(es),  7 part(s) covered
+verdict: reliability            PASS         of 10 {"boards": 1, "classes": 3, "covered": 7, "fail": 0} | every part that carries load or sees cycling falls in a declared class with its cycle figure or the reason it has none, its load and the measure taken. It tests nothing: REL-001 is verified at the prototype and no board has been built
+exit 0
+copied to pcb-p-pack-p2/routed/
+claims_check: 91 claim sentence(s) in 12 document(s), 0 without a qualifier, an evidence reference or a declared reason
+verdict: claims_check           PASS         of 91 {"claims": 91, "unqualified": 0} | a rating claimed without its test is a promise to whoever carries the kit
+claims_check exit 0
