@@ -1,0 +1,41 @@
+base 36e10781: 331 statements; worktree: 345 statements
+ADDED 14
+  + ic(U41) #0
+  + part(L13) #0
+  + c(C227) #0
+  + c(C228) #0
+  + c(C229) #0
+  + c(C230) #0
+  + For for _ci in ('C229', 'C230'): #0
+  + c(C231) #0
+  + c(C232) #0
+  + r(R217) #0
+  + r(R218) #0
+  + _intent.rail(+5V_D8IN) #0
+  + _intent.node(D8B_SW) #0
+  + _intent.node(D8B_BST) #0
+REMOVED 0
+CHANGED 9
+  ~ _intent.rail(VBAT) #0
+      loads: {'U4': 2.0, 'Q28': 2.22, 'U6': 2.0, 'Q32': 2.0, 'Q11': 1.5, 'U15': 0.3, 'U12': 0.2, 'U22': -> {'U4': 2.0, 'Q28': 2.22, 'U6': 2.0, 'Q32': 1.61, 'U41': 0.4, 'Q11': 1.5, 'U15': 0.3, 'U12'
+  ~ _intent.rail(+5V_DEV) #0
+      arg2: 5.1 -> 4.1
+      arg3: 6.9 -> 6.9142
+      loads: {'J_5V_DEV': 3.8, 'U23': 1.0, 'U32': 0.3} -> {'J_5V_DEV': 3.8, 'U32': 0.3}
+      note: "the USB devices, the LimeSDR bay and the RockBLOCK behind their switches, the D8 mezzanin -> "the USB devices, LimeSDR bay and RockBLOCK behind board B's switches, plus the wall host 
+  ~ _intent.rail(+5V_D8) #0
+      note: "BUDGET FROM THE TIGHTEST CONSUMER'S DATASHEET, 16 September 2026, replacing a number this -> "BUDGET FROM THE TIGHTEST CONSUMER'S DATASHEET, 16 September 2026, replacing a number this
+  ~ efuse(U23) #0
+      arg1: '+5V_DEV' -> '+5V_D8IN'
+  ~ efuse(U39) #0
+      arg6: '4.7k 1% (ILM: 0.18 A)' -> '4.7k 1% (ILM: 0.20 A)'
+  ~ efuse(U32) #0
+      arg6: '1k 1% (ILM: 0.89 A)' -> '1k 1% (ILM: 0.91 A)'
+  ~ _intent.rail(VBUS_WALL) #0
+      arg3: 0.9 -> 0.9142
+      loads: {'J_USBW': 0.9} -> {'J_USBW': 0.9142}
+      note: "D-12, 26 September 2026: the Glenair 233-370 host port's VBUS behind the eFuse U32 (limit -> "D-12, 26 September 2026: the Glenair 233-370 host port's VBUS behind the eFuse U32 (limit
+  ~ For for i, net in enumerate(('CELL+', 'VBAT', 'GND', '+3V3', 'VIN_RAW', 'VBUS20', '+5V_S1', '+5V_S2', '+5V_S3', '+5V_DEV', ' #0
+      (statement text differs)
+  ~ assign SECTIONS #0
+      (statement text differs)
