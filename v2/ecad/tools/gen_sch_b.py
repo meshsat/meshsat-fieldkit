@@ -70,21 +70,31 @@ for _n in (1, 2, 3):
     # F-PR-05, 26 September 2026: slot 2's continuous current rises with its 5G module's 3.0 A at 3.3 V. power_path
     # adds up what the slot's three converters draw at their declared typical currents (3.05 A on slot 2, 2.21 of it
     # the card buck), and with the module's own 0.9 A (CM5 datasheet Table 9) and the fan's 0.1 A that is 4.05 A,
-    # against the 2.5 A this line declared for every slot. The peak stays the source's 5.0 A (board A's AP64500).
-    # Fix-up, 26 September 2026: whether the socket's two 220 uF carry the 5G burst so that +5V_S2 stays under that
-    # 5.0 A is NOT computed here; the coincident worst case is open item I-03 on board A (drafts/r4-interfaces.md).
+    # against the 2.5 A this line declared for every slot. The peak stayed the source's 5.0 A (board A's AP64500 on slots
+    # 1 and 3; slot 2's converter on board A has been an LM5176 stage since F-PR-04, and its peak is 5.63 A since S-98).
+    # Fix-up, 26 September 2026: whether the socket's two 220 uF carry the 5G burst so that +5V_S2 stays under 5.0 A
+    # is NOT computed here; the coincident worst case was open item I-03 on board A (drafts/r4-interfaces.md), answered
+    # INTERIM by S-98 (28 September 2026): slot 2 declares the 5.63 A coincidence as its peak at both ends of the lead,
+    # the PS-ALLTX mode current INCONCLUSIVE, no held document decides it (v2/docs/records/cx1/ANALYSIS.md).
     # O-17, 26 September 2026 (fix-up pass 2): the card buck now sets 3.456 V, so its 3.0 A draws 2.31 A at 5.1 V
     # (3.0 x 3.456 / 0.88 / 5.1) and the three converters 3.16 A; with the module and the fan that is 4.16 A, so the
-    # typical is 4.2 A. The coincident peak with the module at 4 A becomes 5.63 A (I-03).
-    _intent.rail("+5V_S%d" % _n, 5.1, 4.2 if _n == 2 else 2.5, 5.0, "J_5V_S%d" % _n, loads=_SLOT_LOADS(_n), budget=0.02, share=0.015, converted=False,
+    # typical is 4.2 A. The coincident peak with the module at 4 A becomes 5.63 A (I-03), the peak this line declares for
+    # slot 2 since S-98.
+    # INTERIM I-03: S2 5.63 A coincidence; PS-ALLTX current INCONCLUSIVE.
+    # All-peak conditional bound 7.28 A vs loop minimum 7.10 to 7.17 A.
+    _intent.rail("+5V_S%d" % _n, 5.1, 4.2 if _n == 2 else 2.5, 5.63 if _n == 2 else 5.0, "J_5V_S%d" % _n, loads=_SLOT_LOADS(_n), budget=0.02, share=0.015, converted=False,
                  always_on=True, always_on_why="it arrives from board A over the JST-VH lead; board A switches it and this board consumes it",
                  note="slot rail from A22 (JST-VH): the module, the two 3.3 V bucks, the 1.0 V switch core and the fan. "
                       "THIS BOARD'S SHARE is 1.5 of the rail's 2 percent (16 September 2026): board A regulates it and "
                       "measures 0.07 percent from its shunt to the header, and the long copper is this side, from the "
-                      "VH header across the board to a module receptacle carrying 2.5 A")
+                      "VH header across the board to a module receptacle carrying 2.5 A (4.2 A typical on slot 2)")
 _DEV_LOADS = {"U23": 1.2,            # eFuse -> +5V_LIME, the LimeSDR Mini 2.4 (the eFuse's ILM is 3.0 A)
-              "U25": 0.90,           # the AP63203 buck -> +3V3_DEV, 1.4 A at 3.3 V through it
-              "U21": 0.60,           # load switch -> +5V_LORA, the E22-900M30S at 1 W transmit
+              "U25": 0.90,           # the AP63203 buck -> +3V3_DEV: its declared 1.2 A typical at 3.3 V through 0.88 from 5.0 V
+                                     # (1.2 x 3.3 / 0.88 / 5.0 = 0.90 A). S-98 M7: this comment said 1.4 A, an older sum of that
+                                     # rail's loads, against the declared 1.2 A; the allocation matched the declaration and stands.
+              "U21": 0.70,           # load switch -> +5V_LORA, the E22-900M30S at 1 W transmit: the child rail's declared 0.70 A
+                                     # burst, which bounds Ebyte's 650 mA typical instantaneous TX current, no maximum stated
+                                     # (E22-900M30S user manual v1.20, 2.2, PDF p.3); was 0.60 (S-98 M7, 28 September 2026)
               "F1": 0.60,            # polyfuse -> PANEL_5V, board C's own 5 V rail (its intent declares 0.6 A)
               "U24": 0.45,           # eFuse -> +5V_RB, the RockBLOCK 9704 on a transmit burst
               "F3": 0.30,            # polyfuse -> VBUS_QMX, the HF unit in the lid tray
@@ -92,14 +102,19 @@ _DEV_LOADS = {"U23": 1.2,            # eFuse -> +5V_LIME, the LimeSDR Mini 2.4 (
               "F2": 0.20,            # polyfuse -> +5V_HDMI, the two TS3DV642 display switches
               "U26": 0.15,           # TPS62933 -> the KSZ9897R's 1.2 V core
               "U106": 0.10, "U206": 0.10, "U306": 0.10,   # the three 1.1 V hub cores, always on: a bank outlives its module
-              "U40": 0.05, "U50": 0.05, "U60": 0.05,      # the three controllers' private 3.3 V LDOs
+              "U40": 0.12, "U50": 0.12, "U60": 0.12,      # the three controllers' private 3.3 V LDOs (AP2112K-3.3): each child rail
+                                     # +3V3_IOCx declares 0.12 A typical and 0.25 A peak, and an LDO's input is its output plus
+                                     # its ground current; the sheet's tables give that at no load only, 55 uA typical and 80 uA
+                                     # maximum (Diodes DS39724 Rev. 2-2, pp.4 to 6), so 0.12 A each holds for any ground current
+                                     # under 5 mA at 0.12 A out, a figure the tables do not state; were 0.05 (S-98 M7)
               "U15": 0.02, "U16": 0.02, "U17": 0.02, "U18": 0.02}   # the four CP2102N bridges
 _intent.rail("+5V_DEV", 5.0, 3.8, 6.0, "J_5V_DEV", loads=_DEV_LOADS, budget=0.02, share=0.015, converted=False,
              always_on=True, always_on_why="it arrives from board A over the JST-VH lead; board A switches it and this board consumes it",
              note="the device rail from A22; +0.8 A since the three hubs and their cores moved off the slot rails (ARCH-PCB-B-IOHA)")
 # THE PEAK IS THE SOURCE PART'S RATING. This rail declared 5.0 A peak behind U25, an AP63203 whose rating is
 # 2 A: a peak the source cannot deliver is not a peak, and the density verdict would have judged the copper
-# against a current that can never flow in it. 2.0 A is what the part gives; the loads below sum to 1.38 A.
+# against a current that can never flow in it. 2.0 A is what the part gives; the loads below summed to 1.38 A when this
+# was written and sum to 1.58 A since round 8 and w3b (U11 0.165, the thirty-six single gates; S-98 M7, 28 September 2026).
 _3V3_LOADS = {"U1": 0.25,            # KSZ9897R seven-port switch, its 3.3 V I/O
               "U22": 0.25,           # load switch -> +3V3_ZB, the two E72 radios
               "U27": 0.15,           # AP2112K -> the switch's 2.5 V analog rail

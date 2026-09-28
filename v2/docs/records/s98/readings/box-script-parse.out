@@ -1,0 +1,7 @@
+== bash -n box_regen_ab.sh
+bash -n: ok
+== tests/run.py shell_parses
+tests: test_shell_parses.t_every_shell_tool_parses              PASS
+tests: 1 passed, 0 failed, 0 skipped
+== python files of the record parse
+ok 4 scripts parse

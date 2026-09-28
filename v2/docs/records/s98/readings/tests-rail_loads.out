@@ -1,0 +1,11 @@
+tests: test_rail_loads.t_a_rail_may_declare_several_sources     PASS
+tests: test_rail_loads.t_a_rail_that_crosses_a_connector_declares_its_share_of_one_budget PASS
+tests: test_rail_loads.t_a_rails_loads_sum_to_about_its_declared_current PASS
+tests: test_rail_loads.t_an_unsplit_shared_rail_is_an_open_question_and_not_a_failed_contract PASS
+tests: test_rail_loads.t_every_rail_declares_its_loads          PASS
+tests: test_rail_loads.t_intent_refuses_a_controller_source_and_accepts_a_declared_one PASS
+tests: test_rail_loads.t_intent_refuses_a_load_with_no_current  PASS
+tests: test_rail_loads.t_intent_refuses_a_rail_that_declares_no_loads PASS
+tests: test_rail_loads.t_intent_refuses_loads_that_exceed_the_rails_own_peak PASS
+tests: test_rail_loads.t_no_rail_names_a_controller_as_its_source PASS
+tests: 10 passed, 0 failed, 0 skipped

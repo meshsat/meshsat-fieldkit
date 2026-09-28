@@ -1,0 +1,96 @@
+UNKNOWN GENERATOR for pcb-a-power: pcb-a-power.net was written by generator b3ba8f977ea264e2 and this tree's generator is 6fa6de3616f33dec: the two describe different designs (changed inputs: gen_sch_a.py)
+MISSING netlist for A (pcb-a-power), run its chain first
+UNKNOWN GENERATOR for pcb-b-compute: pcb-b-compute.net was written by generator d242446f0eef3122 and this tree's generator is bcf264c5ec352f7e: the two describe different designs (changed inputs: gen_sch_b.py)
+MISSING netlist for B (pcb-b-compute), run its chain first
+MISSING J_PANEL map on B: its netlist names no pin of the connector, so the ribbon contract is not judged
+UNJUDGED  J_PANEL 2x13 map identical on B and C   (B absent from this tree)
+PASS  transmit inhibit present on C (SW_EMCON)
+UNJUDGED  transmit inhibit present on B (J_PANEL)   (B absent from this tree)
+UNJUDGED  transmit inhibit present on A (J_AB1)   (A absent from this tree)
+PASS  transmit inhibit present on D (J_HARN1)
+PASS  D: TX_INHIBIT_n reaches the KEY gate U12 (D8: KEY = PTT_ANY AND TX_INHIBIT_n)
+PASS  D: nothing but the harness, its pull-down, a test point and the KEY gate touches TX_INHIBIT_n
+UNJUDGED  rail +5V_S1 leaves A on J_5V_S1 and enters B on J_5V_S1   (B, A absent from this tree)
+UNJUDGED  rail +5V_S2 leaves A on J_5V_S2 and enters B on J_5V_S2   (B, A absent from this tree)
+UNJUDGED  rail +5V_S3 leaves A on J_5V_S3 and enters B on J_5V_S3   (B, A absent from this tree)
+UNJUDGED  rail +5V_DEV leaves A on J_5V_DEV and enters B on J_5V_DEV   (B, A absent from this tree)
+UNJUDGED  dock 2x6 contact map identical on A (J_DOCK) and E (J_BLK)   (A absent from this tree)
+UNJUDGED  A J_DOCK pin 8 is SHORE_INHIBIT   (A absent from this tree)
+PASS  E6: SHORE_INHIBIT reaches the sensor controller U10 (directly or through its series resistor)
+UNJUDGED  A22: four CELL+ pins and four return pins (GND, the In1 plane, 32.56) on the dock block   (A absent from this tree)
+UNJUDGED  A: the pre-charge pin lands on a cell node net   (A absent from this tree)
+PASS  E: the 12 AWG lands P_CP and P_CN exist
+PASS  E6: the pack return lands on GND (the 14.4 V node's return is the ground plane, 32.56)
+UNJUDGED  A: four VIN_RAW power pins and four return pins on the dock block (EQ-16)   (A absent from this tree)
+PASS  E: the 12 AWG lands P_VR on VIN_RAW and P_VN on GND to the block's VIN_RAW pins (EQ-16)
+UNJUDGED  no Preci-Dip 813 signal contact of the dock carries VIN_RAW (EQ-16)   (A absent from this tree)
+UNJUDGED  ribbon net PI_SHDN_REQ exists on A and B   (B, A absent from this tree)
+UNJUDGED  ribbon net PI_KILL exists on A and B   (B, A absent from this tree)
+UNJUDGED  J_AB1 2x13 map identical on A and B   (B, A absent from this tree)
+UNJUDGED  J_AB2 2x5 map identical on A and B   (B, A absent from this tree)
+UNJUDGED  J_AB2 carries the wall pair on its END row (pins 1 and 2)   (B, A absent from this tree)
+UNJUDGED  J_MEZZ1 (A) and J_HARN1 (D) 2x8 maps identical   (A absent from this tree)
+UNJUDGED  D8 USB pair USB_D8_P: B16 J_AB1 -> A22 J_AB1/J_MEZZ1 -> D8 J_HARN1   (B, A absent from this tree)
+UNJUDGED  D8 USB pair USB_D8_N: B16 J_AB1 -> A22 J_AB1/J_MEZZ1 -> D8 J_HARN1   (B, A absent from this tree)
+UNJUDGED  wall-port pair USB_WALL_P: B16 slot hub -> J_AB2 -> A22 J_USBW   (B, A absent from this tree)
+UNJUDGED  wall-port pair USB_WALL_N: B16 slot hub -> J_AB2 -> A22 J_USBW   (B, A absent from this tree)
+UNJUDGED  +3V3 on A J_MEZZ1   (A absent from this tree)
+PASS  +3V3 on D J_HARN1
+UNJUDGED  panel controller USB pair USB_PNL_P on B16 and C7 J_PANEL   (B absent from this tree)
+UNJUDGED  panel controller USB pair USB_PNL_N on B16 and C7 J_PANEL   (B absent from this tree)
+PASS  C7: SW_EMCON drives TX_INHIBIT_n, EMCON_HW leaves on J_PANEL
+PASS  D8: TX_INHIBIT_n from J_HARN1 into the KEY gate
+UNJUDGED  A: no device drives TX_INHIBIT_n, the panel toggle is its only source (a device on it is a gate input by its maker's pin table)   (A absent from this tree)
+UNJUDGED  B: no device drives TX_INHIBIT_n, the panel toggle is its only source (a device on it is a gate input by its maker's pin table)   (B absent from this tree)
+UNJUDGED  A: EMCON_HW reaches only gate inputs on this board, never an output   (A absent from this tree)
+UNJUDGED  A: TX_INHIBIT_n is pulled DOWN on this board, so a missing panel inhibits   (A absent from this tree)
+UNJUDGED  B: TX_INHIBIT_n is pulled DOWN on this board, so a missing panel inhibits   (B absent from this tree)
+PASS  D: TX_INHIBIT_n is pulled DOWN on this board, so a missing panel inhibits
+PASS  C7: U9 buffers TX_INHIBIT_n into EMCON_HW rather than inverting it
+UNJUDGED  RF-002 the asserted line EMCON_HW: nothing on any board but its own source can drive it, and with that source unpowered or unplugged its own pull-downs hold it under 0.8 V against every pin's stated current, every other part powered or not   [inhibit only]
+UNJUDGED  RF-002 the asserted line TX_INHIBIT_n: nothing on any board but its own source can drive it, and with that source unpowered or unplugged its own pull-downs hold it under 0.8 V against every pin's stated current, every other part powered or not   [inhibit only]
+UNJUDGED  RF-002 LimeSDR Mini 2.4 in its USB 3 bay: EMCON reaches it in hardware   board absent   [inhibit only]
+UNJUDGED  RF-002 RockBLOCK 9704 (Iridium): EMCON reaches it in hardware   board absent   [inhibit only]
+UNJUDGED  RF-002 E22-900M30S LoRa: EMCON reaches it in hardware   board absent   [inhibit only]
+UNJUDGED  RF-002 E72 CC2652P Zigbee coordinator: EMCON reaches it in hardware   board absent   [inhibit only]
+UNJUDGED  RF-002 E72 CC2652P OpenThread RCP: EMCON reaches it in hardware   board absent   [inhibit only]
+UNJUDGED  RF-002 RM520N-GL 5G module: EMCON reaches it in hardware   board absent   [inhibit only]
+UNJUDGED  RF-002 AW7915-AED WiFi link card, slot 1: EMCON reaches it in hardware   board absent   [inhibit only]
+UNJUDGED  RF-002 AW7915-AED WiFi link card, slot 3: EMCON reaches it in hardware   board absent   [inhibit only]
+UNJUDGED  RF-002 Compute Module 5 slot S1 on-module WiFi: EMCON reaches it in hardware   board absent   [inhibit only]
+UNJUDGED  RF-002 Compute Module 5 slot S1 on-module Bluetooth: EMCON reaches it in hardware   board absent   [inhibit only]
+UNJUDGED  RF-002 Compute Module 5 slot S2 on-module WiFi: EMCON reaches it in hardware   board absent   [inhibit only]
+UNJUDGED  RF-002 Compute Module 5 slot S2 on-module Bluetooth: EMCON reaches it in hardware   board absent   [inhibit only]
+UNJUDGED  RF-002 Compute Module 5 slot S3 on-module WiFi: EMCON reaches it in hardware   board absent   [inhibit only]
+UNJUDGED  RF-002 Compute Module 5 slot S3 on-module Bluetooth: EMCON reaches it in hardware   board absent   [inhibit only]
+UNJUDGED  RF-002 SA868 VHF exciter: EMCON reaches it in hardware (D key on U2)   board D, key: U2 pin 5 through TX_INHIBIT_n (asserted LOW) > U12 AND 2->4 > U13 INV_OD 2->4 released, held at 3.12 V by R88 1.2k to +5V_SA, R89 2k to GND; UNDECIDED: with U13's supply +3V3_D8 down (and every rail it feeds through a bead or a link), U13 no longer drives SA_PTT_n: SA_PTT_n sits at 2.85 V from the currents that are known, and its maker states no input threshold for this pin; D U2 pin 5 (NiceRF SA868 VHF 2 W exciter, ): its maker states no input current for it; with EMCON on, the open-drain U13 is released and SA_PTT_n is held only by what else is on it: SA_PTT_n sits at 2.86 V from the currents that are known, and its maker states no input threshold for this pin; D U13 pin 4: an open-drain output EMCON releases, whose off-state current while powered its sheet does not state; D U2 pin 5 (NiceRF SA868 VHF 2 W exciter, ): its maker states no input current for it   [inhibit only]
+UNJUDGED  RF-002 30 W VHF power amplifier (RA30H1317M1 on the plate): EMCON reaches it in hardware   board absent   [inhibit only]
+UNJUDGED  RF-002 QMX HF transceiver: EMCON reaches it in hardware   board absent   [inhibit only]
+PASS  RF-002 C: every part that names a radio is a listed transmitter, an accessory or a receiver   [inhibit only]
+PASS  RF-002 D: every part that names a radio is a listed transmitter, an accessory or a receiver   [inhibit only]
+PASS  RF-002 E: every part that names a radio is a listed transmitter, an accessory or a receiver   [inhibit only]
+PASS  RF-002 P: every part that names a radio is a listed transmitter, an accessory or a receiver   [inhibit only]
+PASS  P: the pack leads are the pack's own two nets, W_P on the positive and W_N on the return
+PASS  E: the XT60 carries the pack on pin 2 and the return on pin 1, which is what P's leads land on
+PASS  the pack pair is not crossed between board P's leads and board E's XT60
+PASS  P: the pack's blade fuse is on the netlist and carries a net
+PASS  P and E: the pack SMBus lead has a J_SMB at both ends
+PASS  P and E: J_SMB is the same connector family, pitch and pin count at both ends of the pack SMBus lead
+PASS  P and E: J_SMB pin n carries the same role at both ends (clock, data, return; E may leave P's PRES open or ground it)
+PASS  P: the SMBus lead's return is the pack's own negative lead W_N (the load side of the shunt), not the cell side
+PASS  P: every clamp on the SMBus lead's clock and data lines returns to W_N, the net the lead's return pin carries
+PASS  E: R48 (22R (pulse input series)) is in series with a real pin on both sides
+UNJUDGED  rail +3V3: the shares sum to 3.0% within the 3.0% the rail declares   (A absent from this tree)
+UNJUDGED  rail +54V_POE: the shares sum to 2.0% within the 2.0% the rail declares   (B, A absent from this tree)
+UNJUDGED  rail +5V_D8: the shares sum to 6.0% within the 6.0% the rail declares   (A absent from this tree)
+UNJUDGED  rail +5V_DEV: the shares sum to 2.0% within the 2.0% the rail declares   (B, A absent from this tree)
+UNJUDGED  rail +5V_S1: the shares sum to 2.0% within the 2.0% the rail declares   (B, A absent from this tree)
+UNJUDGED  rail +5V_S2: the shares sum to 2.0% within the 2.0% the rail declares   (B, A absent from this tree)
+UNJUDGED  rail +5V_S3: the shares sum to 2.0% within the 2.0% the rail declares   (B, A absent from this tree)
+UNJUDGED  rail CELL+: the shares sum to 1.0% within the 2.0% the rail declares   (A absent from this tree)
+UNJUDGED  rail VIN_RAW: the shares sum to 2.0% within the 2.0% the rail declares   (A absent from this tree)
+
+2 board netlist(s) absent from this tree: A, B. Every contract that names one of them was judged against nothing, so this is INCONCLUSIVE and not a verdict on the design; generate those boards and run it again.
+
+RF-002's transmitter walk (section 15a, decides inhibit_chain_<letter> only): 19 UNJUDGED, 4 PASS
+verdict: check_contracts        INCONCLUSIVE of 63 {"boards_without_intent": 0, "fail": 0, "missing_boards": 2, "pass": 23, "rails_unsplit": 0, "undecided": 0, "unjudged": 40} | A, B absent from this tree, so nothing that names them was judged
