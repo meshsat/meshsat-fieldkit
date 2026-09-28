@@ -465,3 +465,24 @@ drop stay open. No layer closed.
 **Next critical action:** set 9, S-99's D8 split on board A (checked, accepted): the box regeneration runs; then the
 registry texts, a re-take, rebinds, the suite and a Claude check. **Box:** 10.85 USD of 20 spent (credit 117.14). **Codex:**
 none left.
+
+### Milestone, 29 September 2026 01:53 CEST: integration set 9 on main (S-99, the D8 split)
+
+**Accepted:** `83e4bf46`. Board A regenerated with S-99's D8 split (decision 55): board D's feed on its own buck U41 from
+VBAT, the device stage left with board B and the wall port (declared 4.10 A typical, 6.9142 A peak against the average
+loop's conditional minimum of 7.057 A), the TPS2596 limits read with equation 7's true sign. Netlist pins moved on a
+parsed proof, sheet A re-bound (+5V_DEV 2.84 to 2.10 mm), eight records rebound on judged reasons, S-115 and S-116
+opened, EMC sheet row for U41. Gates: one re-take (73 steps, 0 errors), isolated clone byte-identical, suite 2172 passed, 0 failed, 3 skipped at `83e4bf46` (two earlier runs found a missing EMC source row for U41 and a sheet tool that wrote git's automatic abbreviation, both fixed, the second with a regression test),
+a fresh AI check whose blocking item (four merge commits under the runner's identity) was fixed by re-authoring them with
+identical trees. Also merged: the energy and OD-01 records of 28 September. S-99 stays OPEN (adequacy is not shown by
+declarations). No layer closed.
+
+**The owner's rulings of 29 September (OD-02, OD-01, handover), answered on side branches, not yet integrated:**
+`fnd/energy2` (section 9: M1 derived from the requirement side; one architecture meets the reference day on the model,
+4S18P across the base and the lid with a 200 W solar stage or REQ-016 kept with about 1.6 kWp; the conflicts are D-06,
+REQ-016 as a trade, D-01; independent AI check and re-check acceptable; the self-contained package on the laptop),
+`fnd/od01b` (OD-01 release corrections, author running), `fnd/diag` (all eleven diagrams rebuilt and read back),
+`fnd/d6dec` (FEA-006's tool items T1 to T6, T9, T10; T7 and T8 for the integrator).
+
+**Next critical action:** set 10: d6dec, energy2, diag and od01b (after its check), then T7 and T8, one re-take and the
+suite. **Owner decisions required:** OD-02 option A's three items (D-06, REQ-016 way i or ii, D-01), or B or C.
