@@ -2728,9 +2728,11 @@ open_items:
     disposition_why: >-
       A board D circuit item (a current limit on the hub port J_USB3 that the monitor's touch USB takes, SC-63) that no
       registry record judges by rule. Board D's generator owner applies it in the circuit round; PWR-001 on D reads the
-      result then. Decision 31's protection review of board D (stream d8dec31, an AI review checked on 28 September 2026
-      and applied after this integration) names the same port as its finding D-F3, which brings it under board D's hold
-      before that board's layout entry.
+      result then. On the unmerged branch fnd/d8dec31 (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md there, an AI
+      review that is not on main yet) the same port is finding D-F3 of decision 31's review of board D, which asks for a
+      clamp, a bulk capacitor and a ferrite on it and not for this current limit; until that review is on main and its
+      registry items name this one, nothing but this item carries the current limit, and tools/pcb_board_holds.yaml
+      names neither.
     title: >-
       (hc5-layer5: SC-63, drafted as SC-HF-06; HF-F06) The monitor's touch USB takes board D's spare hub port J_USB3 (the
       session's choice SC-63, drafted as SC-HF-06 in v2/docs/HW-FW-CONTRACT.md section 8; no board B change; the HAL shares it
@@ -3111,29 +3113,43 @@ open_items:
     class: SESSION
     status: OPEN
     title: >-
-      The SA868 VHF exciter's PTT receive threshold, which its maker does not state: RF-002's walk on board D reads the
-      exciter's row UNDECIDED (inhibit_chain_d: 7 pass, 0 failed, 1 undecided of 8 on the set 6 netlist; the text of the
-      row is 'EMCON reaches it in hardware (D key on U2)'), so CON-010, the transmit gate on board D (KEY = PTT_ANY AND
-      TX_INHIBIT_n), cannot read PASS at the desk. S-64 (W3T-F1, TX_INHIBIT_n's fail-safe level with board C unpowered)
-      is closed by SC-67 and that check fails on no board since set 6; this item is one of the two dependencies that
-      remain; the other is S-93 (the LM5176's gate drive in shutdown, behind board A's two undecided rows). Open until
-      the maker states the threshold in a held document under v2/vendor/, or bench E-01 of v2/docs/feasibility/EMCON.md
-      measures it on the module (prototype verification, on a built board), and RF-002 is re-taken on board D.
+      RF-002's walk reads the SA868 VHF exciter's row (board D, the key on U2 pin 5) UNDECIDED, on every ground its own
+      report names (v2/docs/records/int7/walk-grounds.txt, written by walk_grounds.py from the walk on the set 6
+      netlists; inhibit_chain_d: 7 pass, 0 failed, 1 undecided of 8): (1) with U13's supply +3V3_D8 down, U13 no longer
+      drives SA_PTT_n, which sits at 2.85 V from the currents that are known, and the SA868's maker states no input
+      threshold for U2 pin 5; (2) its maker states no input current for U2 pin 5 either; (3) with EMCON on, the
+      open-drain output U13 pin 4 is released and SA_PTT_n is held at 2.86 V by R88 and R89 alone, and U13's sheet does
+      not state that output's off-state current while powered. CON-010, the transmit gate on board D (KEY = PTT_ANY AND
+      TX_INHIBIT_n), cannot read PASS at the desk while the row is undecided. S-64 (W3T-F1, TX_INHIBIT_n's fail-safe
+      level with board C unpowered) is closed by SC-67 and that check fails on no board since set 6; what remains for
+      CON-010 is this row and board A's two rows (S-93). Open until RF-002, re-taken on board D, reads the row decided:
+      each ground answered by a maker's figure in a held document under v2/vendor/, or by a hardware element that makes
+      it moot, or by a bench reading on a built board (bench E-01 of v2/docs/feasibility/EMCON.md; prototype
+      verification), which is a sample of one board and is recorded as one.
   - id: S-93
     class: SESSION
     status: OPEN
     title: >-
-      The LM5176 controllers' gate-drive level in shutdown, which TI does not state (SNVSAI1D 7.4.1 gives the shutdown
-      as 'VCC off, No switching' and states no level for HDRV1 and HDRV2): RF-002's walk on board A reads the 30 W power
-      amplifier's row (A power on J_PA) and the QMX's row (A power on J_HF) UNDECIDED on it (inhibit_chain_a: 7 pass, 0
-      failed, 2 undecided of 9 on the set 6 netlist; v2/ecad/tools/tx_inhibit.py, the rule for a transistor whose gate
-      is driven by the gated switch itself; v2/docs/feasibility/EMCON.md section 0a rows 2 and 3 and section 4a, which
-      name it as the residual of board A's round 8). CON-010, whose allocated boards are D and A, cannot read PASS at
-      the desk while these two rows are undecided. Found missing from CON-010's links by the fresh check of the set 6
-      integration (v2/docs/records/int7/CHECK.md, finding B-1). Open until TI states the level in a held document under
-      v2/vendor/, or the stages are given a hardware element that holds the high-side gates off in shutdown whatever the
-      controller does, or a bench reading on a built board gives the level (prototype verification), and RF-002 is
-      re-taken on board A.
+      RF-002's walk reads two rows of board A UNDECIDED, on every ground its own report names
+      (v2/docs/records/int7/walk-grounds.txt; inhibit_chain_a: 7 pass, 0 failed, 2 undecided of 9 on the set 6 netlist).
+      The QMX HF transceiver's row (A power on J_HF), on one ground: Q24 pin 5 (CSD18510Q5B) on HF_OUT is a transistor
+      whose type or pin map the walk cannot read, and its other pins sit on HF_HDRV2 and HF_SW2, the drive of U15, the
+      gated LM5176 itself, for which no table states that its drive is off with its enable (TI's SNVSAI1D 7.4.1 gives
+      the shutdown as 'VCC off, No switching' and states no level for HDRV1 and HDRV2). The 30 W power amplifier's row
+      (A power on J_PA), on three grounds: the same for Q14 pin 5 on PA_OUT with U13's drive (PA_HDRV2, PA_SW2); U14,
+      the INA226 on the rail (pins 8 and 9 on +13V8_PA, pin 10 on PA_OUT), a part no class of the walk reads, so whether
+      it can feed the rail is not known (a ground of the instrument: no pin map or protection row of its maker's is held
+      for the walk); and, with U36's supply +3V3_EMCON down, PA_UVLO sits at 0.35 V from the currents that are known
+      while the sheet of board D's Q1 (the 2N7002 on PA_EN) states its gate leakage IGSS at 25 C only.
+      v2/docs/feasibility/EMCON.md section 0a rows 2 and 3 and section 4a name the LM5176 residual and, for the
+      amplifier, board D's Q1. CON-010, whose allocated boards are D and A, cannot read PASS at the desk while these
+      rows are undecided. Found missing from CON-010's links by the fresh check of the set 6 integration
+      (v2/docs/records/int7/CHECK.md, finding B-1) and found incomplete by its re-check (CHECK-2.md, finding R-1), after
+      which the grounds were read from the walk itself. Open until RF-002, re-taken on board A, reads both rows decided:
+      each ground answered by a maker's figure in a held document under v2/vendor/, by a hardware element that makes it
+      moot (one that holds the high-side gates off in shutdown whatever the controller does), by the walk learning the
+      part's class from its maker's document where the ground is the instrument's own (U14, Q14, Q24), or by a bench
+      reading on a built board, which is a sample of one board and is recorded as one (prototype verification).
   - id: S-94
     class: SESSION
     status: OPEN
@@ -3658,8 +3674,8 @@ closed_items:
       R14 2.2 k and R50 10 k in v2/ecad/tools/gen_sch_c.py, drawn in e28f91a6), which is this item's own second closing
       condition ('or S-64 closes before that issue'). v2/ecad/pcb-c-display-c8/routed/inhibit_chain_c.verdict.json reads
       PASS of 6 and RF-002's walk reads 0 failed on every board, so CON-010 no longer reads FAIL at desk (INCONCLUSIVE,
-      waiting on S-92 and S-93). The brief's row is still to be worded at its next issue, which is S-91's list; no layer
-      is reopened. Closed on the fresh check's finding m5 (v2/docs/records/int7/CHECK.md).
+      waiting on S-92 and S-93). With S-64 closed the wording this item asked of the brief is moot; no layer is
+      reopened. Closed on the fresh check's finding m5 (v2/docs/records/int7/CHECK.md).
     title: >-
       (Layer 1, for the product brief's writer; the narrow verification's observation (c),
       v2/docs/reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md section 4, checked at the re-baseline of layer 3 on 27
@@ -7991,7 +8007,7 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-05]
     choices: [SC-11]
-    waits_on: [S-01, S-94]
+    waits_on: [S-01, S-94, S-65]
     status: DEFINED
     evidence_result: FAIL
     evidence_phase: SCHEMATIC
@@ -8708,7 +8724,7 @@ records:
       - >-
           v2/ecad/pcb-d-aprs-d9/routed/inhibit_chain_d.verdict.json, inhibit_chain_a, safe_lines_d and safe_lines_a
           re-read at the set 6 integration of 28 September 2026 (branch fnd/int7), and the record RE-DECIDED from them
-          by a stated predicate (the owner's review of the restart plan,
+          by a stated predicate (the review of the restart plan that the owner pasted,
           v2/docs/reviews/2026-09-28-restart-plan-review.md, amendment XH-04): the elements are the readings this record
           rests on, on its allocated boards D and A; it reads FAIL if any element reads a failed check, INCONCLUSIVE if
           none fails and at least one check is undecided or a reading is missing, PASS only if every element is decided
@@ -8723,13 +8739,18 @@ records:
           safe_lines_d PASS on netlist 7a2c0ac2190b141a (2 safety line(s), 0 floating); safe_lines_a PASS on netlist
           0a2b59087bcc2678 (7 safety line(s), 0 floating). Failed elements: none; undecided: inhibit_chain_d,
           inhibit_chain_a; missing: none. Result by the predicate: INCONCLUSIVE. What stays undecided is named, not
-          judged: the SA868 exciter's PTT receive threshold, which its maker does not state (bench E-01 of
-          v2/docs/feasibility/EMCON.md, prototype verification), and on board A the two rows fed through the LM5176
-          stages (the 30 W amplifier on J_PA and the QMX on J_HF), which the walk reads UNDECIDED because TI states no
-          gate-drive level for the LM5176 in shutdown (SNVSAI1D 7.4.1; v2/docs/feasibility/EMCON.md section 0a rows 2
-          and 3; open item S-93). The record therefore waits on S-92 and S-93 and no longer on S-64 (S-93 and this
-          sentence's second item were added, and the clause on board A's rows corrected, after the fresh check of the
-          merge, v2/docs/records/int7/CHECK.md finding B-1). A desk reading: no board has been built or measured.
+          judged, and is every ground the walk's own report gives for the three rows
+          (v2/docs/records/int7/walk-grounds.txt): on board D the SA868 exciter's row, on three grounds (no input
+          threshold and no input current stated by its maker for U2 pin 5, and the off-state current of the released
+          open-drain output U13 pin 4, which its sheet does not state; open item S-92); on board A the QMX's row on one
+          ground (Q24 on the drive of U15, the gated LM5176 itself, for which TI states no level in shutdown, SNVSAI1D
+          7.4.1) and the 30 W amplifier's row on three (the same for Q14 on U13's drive; U14, the INA226 on the rail,
+          whose pins no class of the walk reads; and the gate of board D's Q1 on PA_EN with U36's supply down, whose
+          sheet states IGSS at 25 C only; open item S-93). The record therefore waits on S-92 and S-93 and no longer on
+          S-64 (S-93 and this sentence's second item were added, and the clause on board A's rows corrected, after the
+          fresh check of the merge, v2/docs/records/int7/CHECK.md finding B-1, and the grounds were completed from the
+          walk's own report after its re-check, CHECK-2.md finding R-1). A desk reading: no board has been built or
+          measured.
       - >-
           v2/docs/CURRENT-EVIDENCE.md re-read at the set 6 integration of 28 September 2026 (branch fnd/int7: the set 6
           line and its consolidated re-take merged with the H3 line, the renderer's head sentence and limit notices now
@@ -10317,7 +10338,7 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-09, D-15]
     choices: [SC-12]
-    waits_on: [L-03, S-34, S-46, S-85]
+    waits_on: [L-03, S-34, S-46, S-85, S-86]
     status: FEASIBILITY_OPEN
     evidence_result: INCONCLUSIVE
     evidence_phase: SCHEMATIC
@@ -10641,7 +10662,7 @@ records:
       decisions: []
     rule_coverage: PARTIAL
     rulings: [D-06]
-    waits_on: [S-27]
+    waits_on: [S-27, S-86]
     status: CONFLICT_RESOLVED
     resolved_by: >-
       D-06: one 4S3P block of the Samsung INR18650-35E, about 145 Wh, whose sheet is held in v2/vendor/battery/.
