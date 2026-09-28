@@ -1,5 +1,11 @@
 # OD-01: the checkout list for the minimum physical test package, one prototype case
 
+> **Revised 29 September 2026 (stream od01b)** after the owner's instruction of that day: the quoted totals of lines 1 to
+> 8 stay as recomputed (EUR 416.40 excl. VAT; EUR 511.80 and 503.85 with VAT); the shipping figure EUR 30.26 is now
+> labelled for what it is, a "from" price plus an exchange-rate ESTIMATE, not a delivered total; lines 10 to 14 are added
+> for the automatic over-temperature shutdown the owner asked for (R5), each priced from the seller's page with the time
+> read, and line 15 lists the small items left unpriced. Nothing was bought, carted or asked.
+
 > **Revised by the coordinator on 28 September 2026 after the independent AI check** (`checks/check-1.md` beside this file): line 4 removed (B2), line 8 at Pico's EUR price with its stated freight (m1), the totals recomputed from the line values (B3), the case variant's evidence strengthened (m2), a Dutch alternative seller named (m9). Every part number, price and stock figure was re-read by the check between 21:00 and 21:07 UTC and had not moved.
 
 MESHSAT-1357, stream od01, 28 September 2026, prepared by an AI session for the owner's ruling D-19 (OD-01). **Nothing on
@@ -82,6 +88,24 @@ lead as the page shows them.
 | 8 | Thermocouples: Pico `SE001`, type K, exposed tip, fibreglass insulated, 1 m, moulded flat-pin mini plug, tip -60 to +350 C. Revised after the check (m1): Pico charges in the currency selected (GBP, EUR or USD) and lists SE001 at EUR 12.50, so the line is EUR 125.00; Pico's how-to-order page states Europe delivery at GBP 20 registered or GBP 30 by courier, duties and taxes the receiver's. Buy these after the logger is chosen, so the plug suits it (m12) | Pico Technology (UK), https://www.picotech.com/accessories/type-k-thermocouple/thermocouple-type-k-glass-fibre-1-m (O13) | EUR 12.50 (Pico's own EUR price; GBP 10.50 in pounds; VAT status not stated in the text read) | 10 | EUR 125.00 | GBP 20 registered to Europe (about EUR 23.31 ESTIMATE) or GBP 30 by courier; duties and taxes the receiver's | "In stock. Available for despatch." | 20:48 |
 | 9 | Dummy stack plate and dummy pack block | the machining request (`MACHINING-RFQ.md`, lines H2 and H3) or the operator's workshop | TBD by quote | 1 set | TBD | TBD | TBD | |
 
+**Added 29 September 2026: the automatic over-temperature shutdown** (`TEST-PROCEDURE.md` section 3; the owner's
+instruction R5). Read at reichelt's Netherlands shop on 28 September 2026 between 23:24 and 23:33 UTC (29 September,
+01:24 to 01:33 CEST), in the same parcel as lines 5 to 7. The thermostats' maker states AC contact ratings only, so they
+carry only the relay coil's 54 mA and the relay (DC1 breaking capacity 8 A at 30 V, Finder's sheet) switches the heaters.
+
+| # | Part (exact number) | Seller and page | Unit price as shown, VAT status | Qty | Line total | Shipping to NL as stated | Stock or lead as shown | Read (UTC) |
+|---|---|---|---|---|---|---|---|---|
+| 10 | Elmwood (Honeywell) 2455R thermostat, 90 C, normally closed, automatic reset; reichelt "2455R 90 NC" (TS1) | reichelt elektronik, Netherlands shop (O21) | EUR 12.71 "incl. 21 % VAT" (EUR 10.50 excl., arithmetic) | 1 | EUR 10.50 excl., 12.71 incl. | as line 5 (one reichelt parcel; "Shipping costs from EUR 6.95") | "in stock, delivery within 2 - 3 business days" | 23:31 |
+| 11 | Elmwood (Honeywell) 2455R thermostat, 60 C +-3 C, normally closed, closes at 45 C, with bracket B203-S; reichelt "2455R 60 NC" (TS2, TS3) | reichelt elektronik, Netherlands shop (O20) | EUR 13.47 "incl. 21 % VAT" (EUR 11.13 excl., arithmetic) | 2 | EUR 22.26 excl., 26.94 incl. | as line 5 (one reichelt parcel; "Shipping costs from EUR 6.95") | "in stock, delivery within 2 - 3 business days" | 23:31 |
+| 12 | Elmwood (Honeywell) 2455R thermostat, 140 C, normally closed; reichelt "2455R 140 NC" (TS4) | reichelt elektronik, Netherlands shop (O22) | EUR 23.69 "incl. 21 % VAT" (EUR 19.58 excl., arithmetic) | 1 | EUR 19.58 excl., 23.69 incl. | as line 5 (one reichelt parcel; "Shipping costs from EUR 6.95") | "in stock, delivery within 2 - 3 business days" | 23:24 |
+| 13 | Finder 40.52.9.012.0000 relay, 2 changeover, 8 A, 12 V DC coil; reichelt "FIN 40.52.9 12V" (K1) | reichelt elektronik, Netherlands shop (O23) | EUR 4.98 "incl. 21 % VAT" (EUR 4.12 excl., arithmetic) | 1 | EUR 4.12 excl., 4.98 incl. | as line 5 (one reichelt parcel; "Shipping costs from EUR 6.95") | "in stock, delivery within 2 - 3 business days" | 23:33 |
+| 14 | Finder 95.05 relay socket for the 40.52, screw terminals, DIN rail; reichelt "FIN 95.05" (X1) | reichelt elektronik, Netherlands shop (O24) | EUR 4.73 "incl. 21 % VAT" (EUR 3.91 excl., arithmetic) | 1 | EUR 3.91 excl., 4.73 incl. | as line 5 (one reichelt parcel; "Shipping costs from EUR 6.95") | "in stock, delivery within 2 - 3 business days" | 23:33 |
+| 15 | Unpriced small items: two panel pushbuttons (one normally open START, one normally closed STOP/TEST, each 1 A at 24 V DC or more); two in-line blade fuse holders with a 7.5 A and a 1 A fuse; a three-way link block; four M4 x 45 mm PA66 (nylon) stand-offs; M3 A2 screws, nuts and washers; heat-resistant matt black paint rated to 200 C or more (H2) | not read | **unpriced** | 1 set | unpriced | - | - | |
+
+Lines 10 to 14 together: **EUR 60.37 excl. VAT, EUR 73.05 incl. 21 % VAT** (arithmetic from the page prices). They are not
+added into the totals of section 3, which stay the reviewed figures for lines 1 to 8; with them, lines 1 to 14 would be EUR
+476.77 excl. VAT (arithmetic).
+
 Alternatives read, not on the list: for lines 1 and 2, Multi-Cases.nl lists `1450-001-110E` from EUR 158,00 (in stock) and `1450-300-110E` from EUR 31,00 (read by the independent check; its VAT basis was not read), a Dutch seller; also for line 8, Kiwi Electronics' Adafruit `P270` type K glass braid 1 m (bare wire
 ends, no plug), EUR 11.48 incl. VAT, "EUR 9.49 Ex. VAT", "10 or more EUR 10.91 Ea.", "13 piece(s) in stock" (O17, 20:48),
 an NL seller at Dutch VAT but needing a plug per channel unless the logger has screw terminals; for line 5, Rapid
@@ -104,7 +128,7 @@ power is set by the measured voltage and current either way, so the tolerance do
 | Kiwi Electronics (line 4) | removed | removed | none |
 | reichelt (lines 5 to 7) | EUR 23.32 | EUR 28.22 | from EUR 6.95 |
 | Pico Technology (line 8) | EUR 125.00 (Pico's EUR price, 10 x 12.50) | EUR 151.25 ESTIMATE (21 % import VAT on the goods alone; duty and clearance not included) | GBP 20 registered, about EUR 23.31 ESTIMATE, or GBP 30 by courier |
-| **Total, lines 1 to 8** | **EUR 416.40** (of which EUR 69.42 ESTIMATE by conversion, the arrestor) | **EUR 511.80** with the case line as its page shows it (25 %), or **EUR 503.85** with the case line at 21 % (ESTIMATE) | **separate line: EUR 30.26 known (reichelt 6.95 "from", Pico about 23.31 ESTIMATE), plus two sellers' freight not shown (flight-cases.eu, PolyPhaser)** |
+| **Total, lines 1 to 8** | **EUR 416.40** (of which EUR 69.42 ESTIMATE by conversion, the arrestor) | **EUR 511.80** with the case line as its page shows it (25 %), or **EUR 503.85** with the case line at 21 % (ESTIMATE) | **separate line, not a delivered total: EUR 30.26 is reichelt's "from EUR 6.95" (a from price, the real figure shown only at checkout) plus Pico's GBP 20 registered converted at the ECB rate (EUR 23.31, an exchange-rate ESTIMATE); two sellers' freight is not shown at all (flight-cases.eu, PolyPhaser), and import charges on the PolyPhaser and Pico parcels are not included** |
 
 Line 9 (the dummy blocks) and every made part are outside these totals: `MACHINING-RFQ.md`. B2B note: the seller of
 lines 1 and 2 states "B2B NO VAT" (O1), so a buyer with a valid EU VAT number would pay the excl. figures there.
@@ -112,8 +136,10 @@ lines 1 and 2 states "B2B NO VAT" (O1), so a buyer with a valid EU VAT number wo
 ## 4. What the two tests also need, and what is deferred
 
 **Needed, not priced here (so the list is not yet the whole spend):**
-- The made parts: the face-plate blank for the heat test (H1), the four setting legs (C6) for both tests, then C1, C3
-  and the two C4 plates: `MACHINING-RFQ.md`.
+- The made parts: the heat-test plate blank H1 (its own sheet H1-1 since 29 September), the four setting legs (C6) for
+  both tests, then C1, C3 and the two C4 plates: `MACHINING-RFQ.md`, released for cutting only after the receipt checks
+  of its section 6.
+- The shutdown's small items (line 15), unpriced.
 - 3M VHB 5952 tape for the legs' pads (the legs are bonded to the frame, sheet 2) and ten 6-32 UNC x 1/2 in A2 pan-head
   screws for the plate into Peli's inserts (sheet 1): TBD by quote; no NL page listing either was found in the time box
   (reichelt's search for "vhb 5952" returned 0 results at 20:51 UTC).
@@ -163,6 +189,12 @@ bytes received. The bytes are third-party pages kept in the session's scratch sp
 | O17 | https://www.kiwi-electronics.com/en/thermocouple-type-k-glass-braid-insulated-1m-809 | 20:48:31 | runner, `8b0d6a97247ff591` | ADA-270, MPN P270, as section 2 |
 | O18 | https://www.rapidonline.com/arcol-hs50-6r8-j-aluminium-clad-resistor-50w-62-8148 | 20:45:52 | runner, `74e656788ecff59f` | as section 2 |
 | O19 | https://www.rapidonline.com/arcol-hs100-2r2-j-100w-aluminium-clad-resistor-62-8180 | 20:49:22 | runner, `9524c67ef7b041ed` | "No longer stocked" |
+| O20 | https://www.reichelt.com/nl/en/shop/product/thermostat_60_c_-3_c_nc_contact-263592 (29 Sep, od01b) | 23:31:50 | runner, `3ffa38c2edeb4c29` | "2455R 60 NC", "ELMWOOD SENSORS", "Opening temperature: 60°C", "Closing temperature: 45°C", "With mounting bracket B203-S", "Tolerance ±3 °C", "240 V AC", current 10, "€13.47 incl. 21% VAT" (struck "€13.68"), in stock, 2 to 3 business days; datasheet link 2455R_DB_EN.pdf |
+| O21 | https://www.reichelt.com/nl/en/shop/product/thermostat_90_c_-3_c_nc_contact-263595 (od01b) | 23:31:51 | runner, `f081eb0dd0bfe75d` | "2455R 90 NC", "ELMWOOD SENSORS", "Tolerance ±6 °C" (the title says +-3; the procedure takes +-6), "€12.71 incl. 21% VAT" (struck "€12.91"), in stock |
+| O22 | https://www.reichelt.com/nl/en/shop/search/bimetallschalter (od01b) | 23:24:26 | runner, `3b4040d679ca8321` | 13 results, the 2455R series; "2455R 140 NC", "Thermostat 140°C ±4°C, NC contact", "€23.69 incl. 21% VAT", in stock |
+| O23 | https://www.reichelt.com/nl/en/shop/product/plug-in_relay_2x_um_250_v_8_a_12_v_rm_5_0_mm-8105 (od01b) | 23:33:25 | runner, `fa0dfa3fcea4143d` | "40.52.9.012.0000", "FINDER", "€4.98 incl. 21% VAT", in stock; datasheet link FIN_40_DB_EN.pdf |
+| O24 | https://www.reichelt.com/nl/en/shop/search/finder%2040.52 (od01b) | 23:33:00 | runner, `7825e364d17a1a76` | "FIN 95.05", "Relay base for relay Fin 40..", "For FIN 40.51, 40.52, 40.61", "10 A, 250 V", "€4.73 incl. 21% VAT", in stock |
+| O25 | makers' sheets filed in the tree (od01b): `v2/vendor/elmwood/honeywell-commercial-thermostats-2455r.pdf` (Honeywell "Commercial Thermostats", 2455R pages 4 and 5), `v2/vendor/finder/finder-40-series-en.pdf` (Finder 40 series, XI-2018), `v2/vendor/arcol/arcol-hs-datasheet-12-14-08.pdf` (Arcol HS, 12/14.08) | 23:24 to 23:33 | sha256 in each folder's `sources.txt` | the thermostats' tolerance bands (Table 1) and AC-only contact ratings (Table 4); the relay's 8 A and DC1 8 A at 30 V, coil 0.65 W; the HS resistors' ratings, heatsinks and hole sizes |
 
 Refused this host on 28 September 2026: peli.com and pelican.com (HTTP 403, every product URL, 20:40 and 20:42 UTC;
 read through the Archive instead), tme.eu (403, 20:45), conrad.nl (403), nl.farnell.com (403), nl.mouser.com (an
