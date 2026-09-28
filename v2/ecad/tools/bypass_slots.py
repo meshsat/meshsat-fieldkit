@@ -107,6 +107,7 @@ def reserve(board, place, to_case, entries, limit=None, quiet=False, fan=_dr.FAN
               % (len(done), len({e.get("cap") for e in entries}), (" (this arm: no seat past %.1f mm)" % float(limit)) if limit is not None else "",
                  ctx.smd[0], ctx.smd[1], "offered" if ctx.two_sided else "not offered",
                  ("%.1f mm (%s)" % (ctx.allow_mm, ctx.allow_src)) if ctx.allow_mm is not None else ctx.allow_src))
+        print("bypass_slots: %s" % ctx.closed_note)
         for cap, ref, pin, d, k, res in report[:6]:
             print("bypass_slots:   %-6s class %-2s beside %s.%-3s rail pad at %.1f mm%s, turned %d (%s)"
                   % (cap, k, ref, pin, d, (", the other side, loop-equivalent %.1f mm" % res["loop_mm"]) if res.get("far") else "",

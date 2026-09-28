@@ -101,3 +101,35 @@ def t_the_question_never_lays_copper():
     assert with_ignore and set(with_ignore) <= inside, "clear() is called with `ignore` outside the question: lines %s" % sorted(set(with_ignore) - inside)
     adds = [n for n in ast.walk(ask) if isinstance(n, ast.Attribute) and n.attr in ("Add", "SaveBoard")]
     assert not adds, "the question adds something to the board"
+
+
+# ------------------------------------------------------------------------------ closed again (D3, T4; 29 Sep 2026)
+def t_the_part_that_costs_the_escape_is_named_and_closed_again():
+    """A pad refused where only C1 stands in the way: C1 alone is named, and the record closes C1's window and no
+    other window of U1 (C2 is also a window capacitor of U1 and cost nothing)."""
+    c = _cost()
+    assert c.ask("U1", "4", [(0.35, [((2.0, 0.3), 0.3)])], _clear) == "window"
+    assert c.culprits == {"U1": {"window": {"C1"}}}, c.culprits
+    rec = c.record(lambda r: [100, 200, 0.0, "F"] if r == "U1" else None)
+    assert rec["close"]["window"] == [{"ref": "C1", "cost": ["U1"], "parts_at": {"U1": [100, 200, 0.0, "F"]}}], rec["close"]
+    assert rec["close"]["stage"] == [] and rec["lost"] == {"U1": {"window": ["4"]}}, rec
+    assert any("closed again for the next placement" in l and "C1's own-pin window" in l for l in c.lines()), c.lines()
+
+
+def t_when_no_part_alone_costs_it_every_part_of_the_cause_is_named():
+    """THE DEFECTIVE READING it guards against: naming nobody when two parts together block the only attempt. Here
+    the converter's pad is refused by its own C3 and Q1 at once; leaving out either alone does not clear it."""
+    c = _cost()
+    tried = [(0.35, [((13.0, 0.0), 0.3)])]
+    assert not _clear((13.0, 0.0), 0.3, 0.35, {"C3"}) and not _clear((13.0, 0.0), 0.3, 0.35, {"Q1"})
+    assert c.ask("U2", "6", tried, _clear) == "stage"
+    got = c.culprits["U2"]["stage"]
+    assert got == {"C3", "C4", "Q1", "R1"}, got
+    assert [r["ref"] for r in c.record()["close"]["stage"]] == ["C3", "C4", "Q1", "R1"]
+
+
+def t_nothing_is_closed_when_nothing_was_lost():
+    c = _cost()
+    c.ask("U1", "30", [(0.35, [((32.0, 0.3), 0.3)])], _clear)
+    assert c.record()["close"] == {"window": [], "stage": []}
+    assert not any("closed again" in l for l in c.lines())

@@ -25,7 +25,16 @@ This file holds no KiCad call. `escape.py` gives it the board's facts as plain d
     cost.ask(part, pad, tried, clear)               tried: [(lane, [(point, radius), ...]), ...]
     cost.pin_sites(part, pad, sites, clear)         sites: [(point, radius)], the standard sites at one pin
     cost.site_refused(part, by_ref)                 a via site of an exposed pad refused by `by_ref`'s pad
-    cost.lines()                                    what to print"""
+    cost.lines()                                    what to print
+    cost.record(part_at)                            the JSON escape.py writes beside the board, with `close`
+
+WHAT IS CLOSED AGAIN (D3 and T4: "A window that costs an escape the part needs is closed again", "An R2 opening that
+costs an escape the converter needs is closed again for the part that costs it"). For a pad lost to a cause, each of
+that cause's parts is asked alone: the parts whose absence alone lets an attempt pass are the ones that cost it. When
+no single part does, every part of the cause is named, because together they cost it. `record()` lists them under
+`close`, window and stage, each with the part whose escape it cost and where that part stood; the placers
+(`bypass_search.Context`) read the list on the next placement and seat those capacitors with that one opening shut,
+while the part stands where it stood (a moved part makes the entry stale, and a stale entry is said and not applied)."""
 
 CAUSES = ("window", "stage", "far_side")
 WHAT = {"window": "its own-pin windows (D3)", "stage": "its own power-stage parts inside its fan (R2)",
@@ -37,6 +46,7 @@ class Cost:
         self.side_of = side_of
         self.window, self.stage, self.caps = {}, {}, set()
         self.lost, self.other, self.sites, self.pins = {}, {}, {}, {}
+        self.culprits = {}
         self.declared = 0
         it = intent or {}
         for e in it.get("bypass", []) or []:
@@ -63,12 +73,16 @@ class Cost:
     def ask(self, part, pad, tried, clear):
         """The cause a refused pad is lost to, or None. `clear(point, radius, lane, ignore)` is escape.py's own
         test with `ignore` left out of its pads; an attempt passes when every one of its probes is clear."""
+        def passes(ignore):
+            return any(all(clear(pt, r, lane, ignore) for pt, r in probes) for lane, probes in tried)
         for cause in CAUSES:
             refs = self.refs(part, cause)
             if not refs: continue
-            for lane, probes in tried:
-                if all(clear(pt, r, lane, refs) for pt, r in probes):
-                    self.lost.setdefault(part, {}).setdefault(cause, []).append(str(pad)); return cause
+            if passes(refs):
+                self.lost.setdefault(part, {}).setdefault(cause, []).append(str(pad))
+                alone = [x for x in sorted(refs) if passes({x})]
+                self.culprits.setdefault(part, {}).setdefault(cause, set()).update(alone or refs)
+                return cause
         self.other.setdefault(part, []).append(str(pad)); return None
 
     def pin_sites(self, part, pad, sites, clear, lane=0.75):
@@ -90,6 +104,30 @@ class Cost:
             d = self.sites.setdefault(part, {}); d[by_ref] = d.get(by_ref, 0) + 1; return True
         return False
 
+    def closing(self):
+        """{"window": {capacitor: [parts whose escape its window cost]}, "stage": {part: [converters]}}."""
+        out = {"window": {}, "stage": {}}
+        for part, d in self.culprits.items():
+            for cause in ("window", "stage"):
+                for ref in d.get(cause, ()):
+                    out[cause].setdefault(ref, []).append(part)
+        return {k: {r: sorted(v) for r, v in sorted(d.items())} for k, d in out.items()}
+
+    def record(self, part_at=None):
+        """The cost as data, for the file escape.py writes beside the board (`out/<stem>-escape-cost.json`).
+        `part_at(ref)` gives (x nm, y nm, orientation degrees, side) of a part, so a reader can tell a stale entry."""
+        at = part_at or (lambda r: None)
+        cl = self.closing()
+        return {"what": "what the declared decoupling seats cost the escape pass, per part and cause (decision 42, T4)",
+                "declared": self.declared,
+                "lost": {p: {c: list(v) for c, v in d.items()} for p, d in sorted(self.lost.items())},
+                "culprits": {p: {c: sorted(v) for c, v in d.items()} for p, d in sorted(self.culprits.items())},
+                "close": {k: [{"ref": r, "cost": parts, "parts_at": {q: at(q) for q in parts}} for r, parts in d.items()]
+                          for k, d in cl.items()},
+                "far_side_sites": {p: d for p, d in sorted(self.sites.items())},
+                "far_side_pins": {p: {k: list(v) for k, v in d.items()} for p, d in sorted(self.pins.items())},
+                "other": {p: list(v) for p, v in sorted(self.other.items())}}
+
     def lines(self):
         out = []
         n_lost = sum(len(v) for d in self.lost.values() for v in d.values())
@@ -102,7 +140,7 @@ class Cost:
                 if pads:
                     out.append("escape: %s lost %d escape(s) to %s: pad(s) %s; the parts that cost them: %s"
                                % (p, len(pads), WHAT[cause], ", ".join(pads[:12]) + (" ..." if len(pads) > 12 else ""),
-                                  ", ".join(sorted(self.refs(p, cause)))[:160]))
+                                  ", ".join(sorted((self.culprits.get(p) or {}).get(cause) or self.refs(p, cause)))[:160]))
             for ref, n in sorted((self.sites.get(p) or {}).items()):
                 out.append("escape: %s had %d via site(s) of its exposed pad refused by the far-side capacitor %s (D5)"
                            % (p, n, ref))
@@ -112,4 +150,9 @@ class Cost:
                 out.append("escape: %s is left to the router, and far-side declared capacitors refuse %d of the via "
                            "site(s) at %d of its pins (D5); pins with every site refused: %s"
                            % (p, sum(n for n, m in pins.values()), len(pins), ", ".join(full) or "none"))
+        cl = self.closing()
+        if cl["window"] or cl["stage"]:
+            out.append("escape: closed again for the next placement (D3, T4): %s"
+                       % "; ".join("%s's %s" % (r, "own-pin window" if k == "window" else "opening in its converter's fan")
+                                   for k in ("window", "stage") for r in cl[k])[:400])
         return out

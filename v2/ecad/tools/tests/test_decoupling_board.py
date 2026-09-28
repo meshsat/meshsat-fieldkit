@@ -295,3 +295,50 @@ def t_the_same_capacitor_undeclared_is_another_reason_and_no_window_is_blamed():
     assert rc == 0, out[-900:]
     assert "lost to" not in out, out[-1200:]
     assert "escape: decoupling cost: 0 refused pad(s) would have been escaped without a declared seat" in out, out[-1200:]
+
+
+# ---------------------------------------------------------------------- closed again (D3, T4; 29 September 2026)
+def _escape_then_place(tamper=None):
+    """The e_window board: the escape pass runs, writes what it closes again beside the intent, and the placer runs
+    on the same board. `tamper(record)` edits the record between the two, to make it stale."""
+    _pcbnew()
+    d = tempfile.mkdtemp(prefix="dec-close-")
+    path = _build("e_window", d)
+    r = subprocess.run([sys.executable, os.path.join(TOOLS, "escape.py"), path], cwd=d, env=_env(d),
+                       capture_output=True, text=True, timeout=600)
+    assert r.returncode == 0, (r.stdout + r.stderr)[-900:]
+    cp = os.path.join(d, "out", "fix-escape-cost.json")
+    assert os.path.exists(cp), "the escape pass wrote no cost record:\n%s" % (r.stdout + r.stderr)[-900:]
+    rec = json.load(open(cp))
+    if tamper: tamper(rec); json.dump(rec, open(cp, "w"))
+    before = _read(path)
+    p = subprocess.run([sys.executable, os.path.join(TOOLS, "bypass_place.py"), path], cwd=d, env=_env(d),
+                       capture_output=True, text=True, timeout=600)
+    return rec, p.returncode, p.stdout + p.stderr, before, _read(path)
+
+
+def t_a_window_that_cost_an_escape_is_closed_again_on_the_next_placement():
+    """D3: "A window that costs an escape the part needs is closed again". THE DEFECT before 29 September: the pass
+    printed the cost and the next placement opened the same window again, so C1 read "already within its limit"."""
+    rec, rc, out, before, after = _escape_then_place()
+    assert [x["ref"] for x in rec["close"]["window"]] == ["C1"] and rec["close"]["window"][0]["cost"] == ["U1"], rec["close"]
+    assert "closed again from fix-escape-cost.json: 1 own-pin window(s), 0 converter opening(s); 0 stale" in out, out[-900:]
+    assert "0 already within" in out, "C1 was read as already within its limit inside a closed window:\n" + out[-900:]
+    if "1 moved" in out:
+        assert not _meets(after["C1"]["box"], _fan(after)), "C1 was moved and is still inside U1's fan"
+    else:
+        # the conflict decision 42 measured: outside the fan nothing lies within the 3.0 mm screen, so it is STUCK and
+        # says why, and bypass_seats names the seat further out (D4)
+        assert rc == 1 and "STUCK C1" in out and "closed again by the escape pass" in out, out[-900:]
+
+
+def t_a_stale_closure_is_not_applied_and_says_so():
+    """THE ACCEPTABLE PAIR: the same record with U1 recorded 1 mm from where it stands is stale (the part moved since
+    the pass measured it), so nothing is closed and C1 stays in its window, within its limit."""
+    def moved(rec):
+        for row in rec["close"]["window"]:
+            row["parts_at"]["U1"][0] += 1000000
+    rec, rc, out, before, after = _escape_then_place(moved)
+    assert "closed again from fix-escape-cost.json: 0 own-pin window(s), 0 converter opening(s); 1 stale entry not applied" in out, out[-900:]
+    assert rc == 0 and "1 already within" in out, out[-900:]
+    assert abs(after["C1"]["x"] - before["C1"]["x"]) < 1e-6 and abs(after["C1"]["y"] - before["C1"]["y"]) < 1e-6
