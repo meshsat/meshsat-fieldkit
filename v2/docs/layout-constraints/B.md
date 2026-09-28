@@ -19,11 +19,11 @@ paragraph below is its own binding's).
 ```bound
 sheet      B
 board      b
-read       2026-09-27 at 760d7f41
+read       2026-09-28 at 2f051e71
 current    section 2: the power table, and the figures the text under it quotes from it
 older      sections 1 and 3 to 11: read at e3aedb25, with the H2 line's changes marked at ef144760
-netlist    v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net sha256/16 028997a6c5e8810f changed 910da406
-intent     v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json sha256/16 96ee391b3e3f638d changed 910da406
+netlist    v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net sha256/16 21a1f74a3ec1ae28 changed 19a2bb15
+intent     v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json sha256/16 a7bf625c8b878dd5 changed 19a2bb15
 board_file v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_pcb sha256/16 2e64b5bf2d9cd3bc changed f2541bea
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC06161H-3313 outer 0.0350 mm inner 0.0152 mm
@@ -76,7 +76,7 @@ milliamperes: the fabricator's floor governs there, not the current.
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill | note |
 |---|---|---|---|---:|---:|---:|---|---|
 | +5V_S1 | 5.10 | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 | a slot rail, a plane on In4 today |
-| +5V_S2 | 5.10 | 4.20 / 5.00 | 4.20, typical (PI-001) | 2.17 | 0.84 | 13.64 | 7 / 6 / 5 | the 5G slot; board A declares 2.5 A typical for the same conductor (`pcb_interfaces.yaml` IF-AB-POWER, status DISAGREE, I-03 open) |
+| +5V_S2 | 5.10 | 4.20 / 5.63 | 4.20, typical (PI-001) | 2.17 | 0.84 | 13.64 | 8 / 7 / 6 | Moved at integration set 8 by S-98: board B's own peak call now declares the 5.63 A coincident peak its comment derived (5.00 before), and both ends of the lead declare 4.20 A typical and 5.63 A peak (IF-AB-POWER AGREE, INTERIM); the widths are unchanged (governing typical 4.20 A), the barrel counts follow the larger peak. Before: `typ / peak A` was 4.20 / 5.00; `barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill` was 7 / 6 / 5) the 5G slot; board A declares 2.5 A typical for the same conductor (`pcb_interfaces.yaml` IF-AB-POWER, status DISAGREE, I-03 open. |
 | +5V_S3 | 5.10 | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 | a slot rail, a plane on In4 today |
 | +5V_DEV | 5.00 | 3.80 / 6.00 | 3.80, typical (PI-001) | 1.89 | 0.73 | 11.36 | 9 / 7 / 6 | the device rail; its declared children and its peak are the question of `boards/b.json` `_b_feeders_declared_and_the_device_rail_is_short_at_peak` |
 | +3V3_DEV | 3.30 | 1.20 / 2.00 | 1.20, typical (PI-001) | 0.39 | 0.15 | 2.31 | 3 / 3 / 2 |  |

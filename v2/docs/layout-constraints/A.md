@@ -17,11 +17,11 @@ below is its own binding's).
 ```bound
 sheet      A
 board      a
-read       2026-09-27 at 760d7f41
+read       2026-09-28 at 2f051e71
 current    section 2: the power table, and the figures the text under it quotes from it
 older      sections 1 and 3 to 11: read at e3aedb25, with the H2 line's changes marked at ef144760
-netlist    v2/ecad/pcb-a-power-a23/out/pcb-a-power.net sha256/16 0a2b59087bcc2678 changed c4ad8350
-intent     v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json sha256/16 3422910a15c4d145 changed c4ad8350
+netlist    v2/ecad/pcb-a-power-a23/out/pcb-a-power.net sha256/16 2dfe1c546cb39ccb changed 19a2bb15
+intent     v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json sha256/16 35e430a791ab2b44 changed 19a2bb15
 board_file v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb sha256/16 58e26c67987b1daa changed b7e0d28f
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC06161H-3313 outer 0.0350 mm inner 0.0152 mm
@@ -78,9 +78,9 @@ milliamperes: the fabricator's floor governs there, not the current.
 | VIN_RAW | 12.0 (36.0) | 14.10 / 14.10 | 14.10, typical (PI-001) | 15.29 | 4.43 | 125.22 (over 40 mm) | 20 / 16 / 14 | **H2**: 14.10 A since `b7f96784`; at `e3aedb25` it was 12.31 A, which is 11.92 mm on one outer face and 17 / 14 / 12 barrels. The intent file: "declared at board E's 14.10 A since R8E-N01 (27 September 2026: this board's front end at its ISNS limit drawing from a 9.0 V bus, R4A-N12)", "crossing the dock on the Mill-Max power pins J_VR1 to J_VR4 (EQ-16)". The inner width is not a practical conductor (item 4) |
 | VBUS20 | 20.00 | 6.00 / 8.00 | 6.00, typical (PI-001) | 3.55 | 1.37 | 26.20 | 11 / 9 / 8 |  |
 | +5V_S1 | 5.10 | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 | slot 1's rail runs at 4.65 A in PS-ALLTX PLAN (PWR-F02, item 5) |
-| +5V_S2 | 5.10 | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |  |
+| +5V_S2 | 5.10 | 4.20 / 5.63 | 4.20, typical (PI-001) | 2.17 | 0.84 | 13.64 | 8 / 7 / 6 | Moved at integration set 8 by S-98 (finding I-03, INTERIM alignment of the A to B leads, records/cx1/CORRECTION.md B1, records/s98): the declared typical rose from 2.50 to 4.20 A and the peak from 5.00 to 5.63 A, board B's figures derived from held maker pages; the widths follow the governing typical current (PI-001). The PS-ALLTX mode current stays INCONCLUSIVE (I-03's adequacy, the bench). Before: `typ / peak A` was 2.50 / 5.00; `governing A` was 2.50, typical (PI-001); `outer mm` was 1.06; `two outer faces, each mm` was 0.41; `inner mm` was 6.36; `barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill` was 7 / 6 / 5. |
 | +5V_S3 | 5.10 | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |  |
-| +5V_DEV | 5.00 | 4.00 / 6.90 | 4.00, typical (PI-001) | 2.03 | 0.78 | 12.47 | 10 / 8 / 7 |  |
+| +5V_DEV | 5.00 | 5.10 / 6.90 | 5.10, typical (PI-001) | 2.84 | 1.09 | 19.46 | 10 / 8 / 7 | Moved at integration set 8 by S-98 (records/cx1/CORRECTION.md B2): the declared typical rose from 4.00 to 5.10 A (board B's 3.8 A arriving at J_5V_DEV plus the D8 mezzanine's 1.0 A plus the wall port's 0.3 A); the 6.90 A peak is held pending S-99 (the D8 split, set 9, lowers it). The widths follow the governing typical current (PI-001). Before: `typ / peak A` was 4.00 / 6.90; `governing A` was 4.00, typical (PI-001); `outer mm` was 2.03; `two outer faces, each mm` was 0.78; `inner mm` was 12.47. |
 | +3V3 | 3.30 | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |  |
 | +13V8_PA | 13.80 | 5.00 / 6.00 | 5.00, typical (PI-001) | 2.76 | 1.06 | 18.77 | 9 / 7 / 6 |  |
 | +12V_HF | 12.00 | 1.00 / 2.00 | 1.00, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |  |
@@ -91,8 +91,8 @@ milliamperes: the fabricator's floor governs there, not the current.
 | CH_ACN | 20.0 (20.0) | 6.00 / 8.00 | 6.00, typical (PI-001) | 3.55 | 1.37 | 26.20 | 11 / 9 / 8 |  |
 | S1_OUT | 5.1 (5.1) | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |  |
 | S3_OUT | 5.1 (5.1) | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |  |
-| S2_OUT | 5.1 (5.1) | 2.50 / 5.00 | 2.50, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |  |
-| SD_OUT | 5.0 (5.0) | 4.00 / 6.90 | 4.00, typical (PI-001) | 2.03 | 0.78 | 12.47 | 10 / 8 / 7 |  |
+| S2_OUT | 5.1 (5.1) | 4.20 / 5.63 | 4.20, typical (PI-001) | 2.17 | 0.84 | 13.64 | 8 / 7 / 6 | Moved with +5V_S2 above (S-98, set 8): the converter output node carries the rail's declared current. Before: `typ / peak A` was 2.50 / 5.00; `governing A` was 2.50, typical (PI-001); `outer mm` was 1.06; `two outer faces, each mm` was 0.41; `inner mm` was 6.36; `barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill` was 7 / 6 / 5. |
+| SD_OUT | 5.0 (5.0) | 5.10 / 6.90 | 5.10, typical (PI-001) | 2.84 | 1.09 | 19.46 | 10 / 8 / 7 | Moved with +5V_DEV above (S-98, set 8): the converter output node carries the rail's declared current. Before: `typ / peak A` was 4.00 / 6.90; `governing A` was 4.00, typical (PI-001); `outer mm` was 2.03; `two outer faces, each mm` was 0.78; `inner mm` was 12.47. |
 | PA_OUT | 13.8 (13.8) | 5.00 / 6.00 | 5.00, typical (PI-001) | 2.76 | 1.06 | 18.77 | 9 / 7 / 6 |  |
 | HF_OUT | 12.0 (12.0) | 1.00 / 2.00 | 1.00, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |  |
 | POE_OUT | 54.0 (54.0) | 0.30 / 0.60 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |  |
