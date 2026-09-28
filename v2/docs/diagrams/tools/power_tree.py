@@ -86,7 +86,10 @@ TREE = [
     ("A", "VBAT", "VMON", ("U21",), "monitor eFuse (MON_EN)"),
     ("A", "VBAT", "VHEAT_IN", ("U22",), "heater eFuse (HEAT_EN)"),
     ("A", "VHEAT_IN", "VHEAT", ("U33",), "heater 12.0 V"),
-    ("A", "+5V_DEV", "+5V_D8", ("U23",), "board D feed eFuse (D8_EN)"),
+    # S-99 (decision 55, integration set 9, 29 September 2026): board D's feed has its own buck U41 from VBAT,
+    # enabled by RAIL_EN (TPS62933 pin 2, SLUSEA4D Table 7-1), and the eFuse U23 now sits on its output +5V_D8IN.
+    ("A", "VBAT", "+5V_D8IN", ("U41",), "board D feed buck 5.0 V (RAIL_EN)"),
+    ("A", "+5V_D8IN", "+5V_D8", ("U23",), "board D feed eFuse (D8_EN)"),
     ("A", "+5V_DEV", "VBUS_WALL", ("U32",), "Glenair port VBUS eFuse"),
     ("B", "+5V_S1", "+3V3_S1A", ("U103",), "slot 1 card 3.3 V, WiFi card 1 (S1A_EN, which EMCON_ON1 pulls low)"),
     ("B", "+5V_S1", "+3V3_S1B", ("U104",), "slot 1 NVMe 3.3 V"),
