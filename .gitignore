@@ -32,3 +32,7 @@ _autosave-*
 desktop.ini
 .DS_Store
 Thumbs.db
+
+# Makers' IBIS models (stream w5si, SI-001): held locally and fetched by their manifest, never committed,
+# because several of their headers forbid redistribution (owner decision pending; v2/docs/EXECUTION-PLAN.md).
+v2/vendor/*/ibis/*.ibs

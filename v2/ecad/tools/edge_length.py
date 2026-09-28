@@ -231,13 +231,14 @@ def routed_main(a):
 # verdict edge_length_routed); what the table says per class instead is the length a layout must stay under, and
 # whether the netlist already carries what a net needs if it does not.
 #
-# THE EDGE RATE IS A DOCUMENT'S OR IT IS UNDECIDED. A class entry's `rise_ns` in boards/<letter>.json is accepted only
-# where EDGE_SOURCES below names a held file that states it: the file must be in the tree, the quoted words must be in
-# it (whitespace and markdown quote marks aside), and the number it states must be the declared number. A declared
-# number the named document contradicts is a FAIL, because every length computed from it is wrong; a declared number
-# no held document states, and a class with no number at all, are UNDECIDED, and any UNDECIDED net outside
-# LOW_SPEED_OR_DC makes the reading INCONCLUSIVE with the net, its class and the ICs on it named, which is the list
-# of datasheets a decision still needs. Nothing is estimated.
+# THE EDGE RATE IS A DOCUMENT'S OR IT IS UNDECIDED. Since 27 September 2026 every edge is a record of
+# tools/pcb_edge_rates.yaml (see "THE EDGE RATES ARE DATA" below): the document it names must be in the tree, the
+# quoted words must be in it (whitespace and markdown quote marks aside), and an IBIS record's number must be the one
+# its held model gives. A class entry's own `rise_ns` in boards/<letter>.json must agree with the record that covers
+# it; a number the named document or model contradicts is a FAIL, because every length computed from it is wrong. A
+# net whose driver has no record is UNDECIDED, and any UNDECIDED net outside LOW_SPEED_OR_DC makes the reading
+# INCONCLUSIVE with the net, its class and the part on it named, which is the list of documents a decision still
+# needs. Nothing is estimated; where a maker publishes no edge, a stated bound stands in and is marked as one.
 #
 # THE CHOICES THIS MAKES where more than one option stood, each a session decision of 26 September 2026 under the
 # owner's standing rule of that day (reverse any of them by changing the constant it names):
@@ -276,24 +277,235 @@ GROUND = re.compile(r"(^|_)GND[0-9]*$|^GND", re.I)      # the ground test ground
 # here so the reading does not depend on a module the writer instrument cannot see)
 POWER_CLASSES = {"HV", "NODE", "PWR", "RAIL", "SW", "BANK", "GNDC"}
 
-# The held documents that state an edge, and the class entries each one decides. A board-table entry with a rise time
-# that no row here covers is UNDECIDED. `quote` must be found in `document` (normalised), and `rise_ns` is the number
-# the document states for the fastest conforming driver, the worst case a board is designed for.
-EDGE_SOURCES = (
-    {"id": "USB2-HS", "rise_ns": 0.5,
-     "document": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
-     "clause": "USB 2.0 section 7.1.2.2, THSR and THSF, 10 to 90 percent, a minimum",
-     "quote": "high-speed differential rise and fall times must be 500 ps or longer",
-     "covers": {"a": ("USB_*_P", "USB_*_N"),
-                "b": ("USB_*_N", "USB_*_P", "USB_OTG_*", "*_DM", "*_DP"),
-                "d": ("USB1_?R", "USB*_P", "USB*_N", "HUB_DP*", "HUB_DM*")}},
-    {"id": "USB2-FS", "rise_ns": 4.0,
-     "document": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
-     "clause": "USB 2.0 Table 7-9, TFR and TFF, 10 to 90 percent, a minimum",
-     "quote": "| Rise time | TFR | Figure 7-8, Figure 7-9 | 4 | 20 | ns |",
-     "covers": {"c": ("USB_PNL_*", "USB_D*_R"),
-                "e": ("USB_*",)}},
-)
+# ------------------------------------------------------------------------------------------------------------------
+# THE EDGE RATES ARE DATA (27 September 2026, MESHSAT-1357, layer 9; the third checkpoint review, sections 5 and 6).
+#
+# Every edge this reading uses comes from tools/pcb_edge_rates.yaml, a CONFIGURATION INPUT of the edge_length verdict
+# (recorded by sha in every reading). It holds three kinds of record, each with the maker's document, the words quoted
+# from it, the conditions, the applicability and the verification still owed:
+#   interfaces  an edge for a whole signal-class entry of a board, from a document that binds EVERY driver of it (a
+#               standard's minimum, the USB 2.0 rows that were EDGE_SOURCES until today), or a stated bound or model
+#               for a class whose drivers publish nothing (a power-stage node, an oscillator node, a controlled link);
+#   families    an edge for a DRIVER, recognised by its part number at the start of the netlist's value field (never an
+#               order code): a maker's IBIS model read per pin by ibis_read.py, a published minimum, a model, or a
+#               bound; or a part that drives nothing (an ESD array), a passive switch that passes its far side's edge
+#               through, a land that is a connector;
+#   far_ends    the drivers beyond a connector, named from the record that lists the far end's parts.
+# THE RESOLUTION, per signal net whose class entry no interface record covers (session decisions ER-D1 to ER-D9 of
+# 27 September 2026, stated in the data file's header with their reasons and how to reverse each):
+#   * every IC or module (reference U...) and every transistor (Q...) on the net is asked for its family; a part with
+#     none leaves the net UNDECIDED and is named: nothing is estimated and nothing is defaulted;
+#   * a pin the family types as an input, or whose IBIS model drives nothing, contributes no edge;
+#   * a connector on the net, or a passive switch's through pin, contributes the far end's drivers when a far_ends
+#     record names them, and otherwise leaves the net UNDECIDED naming the connector;
+#   * the drivers of a net one two-pin resistor away (a series resistor to another signal net) are the net's too, as
+#     they arrive through the resistor only slower; that hop is taken once;
+#   * THE GOVERNING EDGE (ER-D13, 27 September 2026, second pass, on the independent check's first blocking item): the
+#     governing edge of a net is the fastest edge ANY driver on it can produce. A driver whose maker publishes no
+#     minimum has no known fastest edge, so a net that carries even one such driver is DECIDED BY A BOUND, whatever the
+#     makers of the other drivers on it publish: their figures are recorded beside it (maker_edge_ns) and decide
+#     nothing. Only a net on which EVERY driver has a published minimum (a maker's IBIS model, a maker's published
+#     minimum, or a standard's minimum that binds every conforming driver) is decided by a maker's figure. A net that
+#     is LAYOUT_BOUND and decided by a bound is named BOUND_DECIDES and its drivers without a figure are named; it is
+#     never passed, and its critical length is the bound's.
+#   * AN OPEN-DRAIN NET HAS TWO EDGES (the same pass): its FALL is the driver's pull-down and is the edge every record
+#     above states for an open-drain pin; its RISE is the pull-up resistor charging the net's capacitance, which no
+#     driver sets. The data file's `open_drain` records state the rise with its derivation; the reading attaches it to
+#     the net (`rising`) and never takes it as the governing edge: for reflections the governing edge is the fall.
+# ------------------------------------------------------------------------------------------------------------------
+RATES_PATH = os.path.join(HERE, "pcb_edge_rates.yaml")
+SECTIONS = ("interfaces", "families", "far_ends", "open_drain")
+EDGE_KINDS = ("STANDARD", "IBIS", "DATASHEET", "MODEL", "BOUND")
+BOUND_KINDS = ("MODEL", "BOUND")
+NON_EDGE_KINDS = ("NOT_A_DRIVER", "PASSIVE_SWITCH", "CONNECTOR")
+DRIVER_PREFIXES = ("U", "Q")
+UNASKED_PREFIXES = ("K", "T")            # a relay, a transformer; and every SW... reference, a mechanical switch
+
+
+def _yaml_load(path):
+    import yaml
+    return yaml.safe_load(open(path, encoding="utf-8")) or {}
+
+
+def _no_rates(path):
+    return dict({k: [] for k in SECTIONS}, path=path, sha16=None, search_listing=None)
+
+
+def load_rates(path=None):
+    """(rates, refusals). rates: {"interfaces", "families", "far_ends", "path", "sha16"}; a record the checks below
+    refuse is left out and named in refusals (the reading lists them under its fails: the data file is wrong)."""
+    path = path or RATES_PATH
+    refusals = []
+    try:
+        raw = _yaml_load(path)
+    except Exception as e:
+        return _no_rates(path), ["pcb_edge_rates.yaml could not be read: %s: %s" % (type(e).__name__, str(e)[:120])]
+    out = dict(_no_rates(path), sha16=hashlib.sha256(open(path, "rb").read()).hexdigest()[:16],
+               search_listing=raw.get("search_listing"))
+    ids = set()
+    for sect in SECTIONS:
+        for i, r in enumerate(raw.get(sect) or []):
+            why = _refuse(sect, r)
+            rid = (r or {}).get("id")
+            if not why and rid in ids: why = "the id %s is used twice" % rid
+            if why:
+                refusals.append("pcb_edge_rates.yaml %s[%d] (%s): %s" % (sect, i, rid, why)); continue
+            ids.add(rid)
+            out[sect].append(r)
+    fam_ids = {f["id"] for f in out["families"]}
+    keep = []
+    for fe in out["far_ends"]:
+        bad = [x for x in fe.get("families") or [] if x not in fam_ids]
+        if bad: refusals.append("pcb_edge_rates.yaml far_ends %s names families it does not define: %s" % (fe["id"], ", ".join(bad)))
+        else: keep.append(fe)
+    out["far_ends"] = keep
+    return out, refusals
+
+
+def citations(rec):
+    """Every document a record cites, as [{"document", "quote", "sha256_16", "page", "where", "at"}]: its own
+    (document, quote, sha256_16, and page or clause or where), each row of `checked`, each row of `pin_edges`, and an
+    open-drain record's `rise`. `at` says where in the record the citation sits, for a refusal's words."""
+    out = []
+    def one(d, at):
+        if isinstance(d, dict) and d.get("document"):
+            out.append({"document": d["document"], "quote": d.get("quote"), "sha256_16": d.get("sha256_16"),
+                        "page": d.get("page"), "where": d.get("where") or d.get("clause"), "at": at})
+        if isinstance(d, dict) and isinstance(d.get("claimed_by"), dict): one(d["claimed_by"], at + ".claimed_by")
+    one(rec, "the record")
+    for key in ("checked", "pin_edges", "inputs_cited"):
+        for j, c in enumerate(rec.get(key) or []): one(c, "%s[%d]" % (key, j))
+    if isinstance(rec.get("rise"), dict):
+        one(rec["rise"], "rise")
+        for j, c in enumerate(rec["rise"].get("checked") or []): one(c, "rise.checked[%d]" % j)
+    return out
+
+
+def _cite_shape(rec):
+    """None, or why a citation of the record cannot stand: EVERY document cited carries the sha256/16 of the held
+    file it was read from and WHERE in it the words are (a page of a PDF, a clause or table of a transcription), and
+    an IBIS record the sha256/16 of its model, the keyword its number is under and the cell as the file writes it
+    (the acceptance of 27 September 2026: document, sha256/16, page or IBIS keyword, the words or numbers quoted)."""
+    for c in citations(rec):
+        sha = c["sha256_16"]
+        if not (isinstance(sha, str) and re.fullmatch(r"[0-9a-f]{16}", sha)):
+            return "%s cites %s with no sha256_16 of the held file" % (c["at"], c["document"])
+        if not c["quote"]: return "%s cites %s and quotes nothing from it" % (c["at"], c["document"])
+        pg = c["page"]
+        if pg is not None and not (isinstance(pg, int) and pg >= 1): return "%s: page %r is not a page number" % (c["at"], pg)
+        if pg is None and not str(c["where"] or "").strip():
+            return "%s cites %s with no page and no clause (where)" % (c["at"], c["document"])
+    if rec.get("kind") == "IBIS":
+        ib = rec.get("ibis") or {}
+        sha = ib.get("sha256_16")
+        if not (isinstance(sha, str) and re.fullmatch(r"[0-9a-f]{16}", sha)): return "an IBIS record with no sha256_16 of its model"
+        if not (ib.get("keyword") and ib.get("ramp")):
+            return "an IBIS record that does not say under which keyword its number is (ibis.keyword) and how the file writes it (ibis.ramp)"
+    return None
+
+
+def _refuse_open_drain(r):
+    """An open-drain record states the RISE of nets whose fall the drivers set: the pull-up and the capacitance it
+    charges. It never gives a net its governing edge."""
+    nets = r.get("nets")
+    if not (isinstance(nets, dict) and nets and all(isinstance(v, list) and v for v in nets.values())):
+        return "an open-drain record names no nets ({board letter: [net patterns]})"
+    rise = r.get("rise")
+    if not isinstance(rise, dict): return "an open-drain record with no rise"
+    if rise.get("kind") not in BOUND_KINDS: return "rise.kind %r: a rise is computed, so it is a MODEL or a BOUND" % (rise.get("kind"),)
+    e = rise.get("edge_ns")
+    if not isinstance(e, (int, float)) or e < 0: return "rise.edge_ns %r is not a number of nanoseconds" % (e,)
+    for f in ("derivation", "measure"):
+        if not str(rise.get(f) or "").strip(): return "rise with no %s" % f
+    if not rise.get("checked"): return "rise names no document checked"
+    for f in ("fall", "applicability", "verification_owed"):
+        if not str(r.get(f) or "").strip(): return "no %s" % f
+    return _cite_shape(r)
+
+
+def _refuse(sect, r):
+    """None, or why the record cannot stand. The checks are on its SHAPE: an edge with no document, a published figure
+    that is not a minimum, a bound or model with no derivation, a citation with no sha256/16 or no page. Whether the
+    quoted words are in the document, on that page, and whether the held file is the one cited, is asked when the
+    record is used, from the held file."""
+    if not isinstance(r, dict) or not r.get("id"): return "no id"
+    if sect == "open_drain": return _refuse_open_drain(r)
+    k = r.get("kind")
+    ok_kinds = {"interfaces": ("STANDARD", "MODEL", "BOUND"), "families": EDGE_KINDS + NON_EDGE_KINDS,
+                "far_ends": (None,)}[sect]
+    if sect == "far_ends":
+        if not r.get("board") or not r.get("nets") or not r.get("basis"): return "a far end needs board, nets and basis"
+        if not (r.get("families") or r.get("why_none") or r.get("continues")):
+            return "a far end with no families and no continues must say why (why_none)"
+        return None
+    if k not in ok_kinds: return "kind %r is not one of %s" % (k, ", ".join(x for x in ok_kinds if x))
+    if sect == "interfaces" and not r.get("covers"): return "an interface record covers no class entry"
+    if sect == "families" and not r.get("parts") and not r.get("far_only"):
+        return "a family names no part (a family met only beyond a connector says far_only: true)"
+    if sect == "families" and k == "STANDARD" and not (r.get("claimed_by") or {}).get("document"):
+        return ("a specification's minimum binds a part only where the part's own datasheet claims the specification: "
+                "the record quotes no such claim (claimed_by)")
+    if k in EDGE_KINDS:
+        for f in ("applicability", "verification_owed"):
+            if not str(r.get(f) or "").strip(): return "no %s" % f
+        if k == "IBIS":
+            ib = r.get("ibis") or {}
+            if not (ib.get("file") and ib.get("component")): return "an IBIS record names no file or component"
+        if k != "IBIS":
+            e = r.get("edge_ns")
+            if not isinstance(e, (int, float)) or e < 0: return "edge_ns %r is not a number of nanoseconds" % (e,)
+        if k in ("STANDARD", "DATASHEET"):
+            if r.get("statistic") != "min":
+                return ("statistic %r: only a published MINIMUM bounds the fastest edge; a typical or a maximum value "
+                        "is not one (write a MODEL with its margin, or a BOUND)" % (r.get("statistic"),))
+            if not (r.get("document") and r.get("quote")): return "a published figure with no document or quote"
+        if k in BOUND_KINDS:
+            if not str(r.get("derivation") or "").strip(): return "a %s with no derivation" % k
+            if not r.get("checked") and not str(r.get("no_document") or "").strip():
+                return ("a %s that names no document checked for a published edge (or, where the maker's document is not "
+                        "held at all, says so in no_document)" % k)
+    for j, pe in enumerate(r.get("pin_edges") or []):
+        if not isinstance(pe, dict) or not pe.get("match"): return "pin_edges[%d] names no pin (match)" % j
+        pk = pe.get("kind")
+        if pk not in ("DATASHEET", "STANDARD", "MODEL", "BOUND"): return "pin_edges[%d] kind %r" % (j, pk)
+        pe_e = pe.get("edge_ns")
+        if not isinstance(pe_e, (int, float)) or pe_e < 0: return "pin_edges[%d] edge_ns %r" % (j, pe_e)
+        if pk in ("DATASHEET", "STANDARD") and (pe.get("statistic") != "min" or not (pe.get("document") and pe.get("quote"))):
+            return "pin_edges[%d]: a published figure must be a minimum with its document and quote" % j
+        if pk == "STANDARD" and not (pe.get("claimed_by") or {}).get("document"):
+            return ("pin_edges[%d]: a specification's minimum binds a part only where the part's own datasheet claims "
+                    "the specification, and the row quotes no such claim (claimed_by)" % j)
+        if pk in BOUND_KINDS and not pe.get("derivation"): return "pin_edges[%d]: a %s with no derivation" % (j, pk)
+    if k == "PASSIVE_SWITCH" and not (r.get("through") or r.get("through_pins")): return "a passive switch names no through pins"
+    if (r.get("inputs") or r.get("input_pins")) and k in (EDGE_KINDS + ("PASSIVE_SWITCH",)) and sect == "families":
+        for rx in (r.get("inputs"), r.get("through")):
+            if rx:
+                try: re.compile(rx)
+                except re.error as e: return "a pin pattern that is no regular expression (%s)" % e
+    if k in ("NOT_A_DRIVER", "PASSIVE_SWITCH", "CONNECTOR") and not (r.get("document") or r.get("basis")):
+        return "no document or basis for calling the part %s" % k
+    return _cite_shape(r)
+
+
+def _standards(rates):
+    """The STANDARD interface records in the shape EDGE_SOURCES has always had (the fixtures hand their own)."""
+    out = []
+    for r in rates["interfaces"]:
+        if r.get("kind") != "STANDARD": continue
+        out.append({"id": r["id"], "rise_ns": float(r["edge_ns"]), "document": r["document"],
+                    "clause": r.get("clause") or r.get("conditions") or "", "quote": r["quote"],
+                    "covers": {k: tuple(v) for k, v in (r.get("covers") or {}).items()}, "kind": "STANDARD"})
+    return tuple(out)
+
+
+try:
+    RATES, RATES_REFUSALS = load_rates()
+except Exception as _e:                                     # the reading still runs, and names why nothing decided
+    RATES, RATES_REFUSALS = _no_rates(RATES_PATH), ["pcb_edge_rates.yaml: %s: %s" % (type(_e).__name__, str(_e)[:120])]
+# The held documents that state an edge for a whole class entry, as the fixtures and the older readers know them: the
+# STANDARD records of the data file. `quote` must be found in `document` (normalised), and `rise_ns` is the number the
+# document states for the fastest conforming driver, the worst case a board is designed for.
+EDGE_SOURCES = _standards(RATES)
 
 # The stacks a layer decision has ruled for a board, beside the one pcb_board_facts.yaml declares. These are RULINGS,
 # dated, and are held here rather than read from pcb_decisions.yaml at run time: that file changes whenever any
@@ -340,25 +552,406 @@ def _norm(text):
     return " ".join(re.sub(r"(?m)^\s*>\s?", " ", text).split())
 
 
+_TEXT = {}
+
+
+def _doc_text(path):
+    """A held document's words: a PDF through the host's pdftotext (as pack_protection.py and the rails census read
+    theirs), anything else as text. None when it cannot be read, which leaves whatever relies on it UNDECIDED."""
+    try:
+        key = (path, os.path.getmtime(path), os.path.getsize(path))
+    except OSError:
+        return None
+    if key not in _TEXT:
+        if path.lower().endswith(".pdf"):
+            import subprocess
+            try:
+                r = subprocess.run(["pdftotext", "-layout", path, "-"], capture_output=True, text=True, timeout=120)
+                _TEXT[key] = r.stdout if r.returncode == 0 else None
+            except (OSError, subprocess.SubprocessError):
+                _TEXT[key] = None
+        else:
+            _TEXT[key] = open(path, encoding="utf-8", errors="replace").read()
+    return _TEXT[key]
+
+
+def _page_text(path, page):
+    """One page of a held PDF, as pdftotext counts pages (the first is 1), or None."""
+    try:
+        key = (path, os.path.getmtime(path), os.path.getsize(path), int(page))
+    except (OSError, ValueError, TypeError):
+        return None
+    if key not in _TEXT:
+        import subprocess
+        try:
+            r = subprocess.run(["pdftotext", "-f", str(int(page)), "-l", str(int(page)), "-layout", path, "-"],
+                               capture_output=True, text=True, timeout=120)
+            _TEXT[key] = r.stdout if r.returncode == 0 else None
+        except (OSError, subprocess.SubprocessError):
+            _TEXT[key] = None
+    return _TEXT[key]
+
+
+def _quotes_hold(rec, repo):
+    """None when every document a record cites is held, IS the file the record was written from (sha256/16), and says
+    what the record quotes from it, on the page the record names where it names one; else why not. A record whose
+    document changed since it was read decides nothing until it is read again."""
+    for c in citations(rec):
+        doc, q = c["document"], c["quote"]
+        p = os.path.join(repo, doc)
+        if not os.path.isfile(p): return "the document %s it names is not in this tree" % doc
+        if c["sha256_16"] and _sha16(p) != c["sha256_16"]:
+            return "%s is not the file the record was read from (sha256/16 %s held, %s cited)" % (doc, _sha16(p), c["sha256_16"])
+        if q:
+            t = _doc_text(p)
+            if t is None: return "the text of %s could not be read" % doc
+            if _norm(q) not in _norm(t): return "%s does not contain the words quoted from it (%r)" % (doc, q[:60])
+            if c["page"] is not None and p.lower().endswith(".pdf"):
+                tp = _page_text(p, c["page"])
+                if tp is None: return "page %s of %s could not be read" % (c["page"], doc)
+                if _norm(q) not in _norm(tp):
+                    return "page %s of %s does not contain the words quoted from it (%r)" % (c["page"], doc, q[:60])
+    return None
+
+
+_LISTING = {}
+
+
+def _listing(path):
+    """{document path: sha256/16} as a search listing names them (edge_search.py's lines "== <document> (sha256/16
+    <sha>, ..."), or None when the listing cannot be read."""
+    try:
+        key = (path, os.path.getmtime(path), os.path.getsize(path))
+    except OSError:
+        return None
+    if key not in _LISTING:
+        _LISTING[key] = dict(re.findall(r"(?m)^== (\S+) \(sha256/16 ([0-9a-f]{16}),",
+                                        open(path, encoding="utf-8", errors="replace").read()))
+    return _LISTING[key]
+
+
+def _searched(rec, repo, rates=None):
+    """None, or why a bound or a model has not shown that its documents were SEARCHED for a published transition: the
+    data file names a search listing (search_listing: path and sha256/16), and every document the record cites under
+    `checked` is in it at the held file's sha256/16. A record that says no document exists (no_document) cites none."""
+    if rec.get("kind") not in BOUND_KINDS: return None
+    docs = sorted({c["document"] for c in rec.get("checked") or [] if isinstance(c, dict) and c.get("document")})
+    if not docs: return None
+    sl = (rates if rates is not None else RATES).get("search_listing") or {}
+    if not (sl.get("path") and sl.get("sha256_16")):
+        return "the data file names no search listing, so nothing shows its documents were searched for a transition time"
+    lp = os.path.join(repo, sl["path"])
+    if not os.path.isfile(lp): return "the search listing %s is not in this tree" % sl["path"]
+    if _sha16(lp) != sl["sha256_16"]:
+        return "the search listing %s is not the file the data file names (sha256/16 %s held, %s named)" % (sl["path"], _sha16(lp), sl["sha256_16"])
+    held = _listing(lp) or {}
+    for d in docs:
+        if d not in held: return "the search listing does not hold %s" % d
+        if held[d] != _sha16(os.path.join(repo, d)):
+            return "the search listing read %s at sha256/16 %s and the held file is %s" % (d, held[d], _sha16(os.path.join(repo, d)))
+    return None
+
+
+def record_holds(rec, repo, rates=None):
+    """None when a record's citations hold (_quotes_hold) and, for a bound or a model, its documents were searched
+    (_searched); else why not."""
+    return _quotes_hold(rec, repo) or _searched(rec, repo, rates)
+
+
+def _open_drain_for(letter, net, rates=None, repo=None, used=None):
+    """The rise of an open-drain net as the data file's `open_drain` records state it, or None: {"edge_ns", "basis",
+    "source", "measure"}, or {"source", "unusable": why} when the record's documents do not hold. Attached to the net
+    for the reader; it is never the net's governing edge (the fall is). `used` collects the documents read, by sha."""
+    for r in (rates or RATES).get("open_drain") or []:
+        if any(fnmatch.fnmatchcase(net, pat) for pat in (r.get("nets") or {}).get(letter, ())):
+            why = _quotes_hold(r, repo or REPO)
+            if why: return {"source": r["id"], "unusable": why}
+            if used is not None:
+                for c in citations(r): used[c["document"]] = _sha16(os.path.join(repo or REPO, c["document"]))
+            rise = r["rise"]
+            return {"edge_ns": float(rise["edge_ns"]), "basis": rise["kind"], "source": r["id"],
+                    "measure": rise.get("measure")}
+    return None
+
+
+def _interface_records():
+    """The interface records that decide a class entry: the STANDARD ones as EDGE_SOURCES holds them (the fixtures
+    replace that tuple) and the MODEL and BOUND ones from the data file."""
+    rest = [dict(r, rise_ns=float(r["edge_ns"]), covers={k: tuple(v) for k, v in (r.get("covers") or {}).items()})
+            for r in RATES["interfaces"] if r.get("kind") in BOUND_KINDS]
+    return [dict(s, kind=s.get("kind") or "STANDARD") for s in EDGE_SOURCES] + rest
+
+
 def edge_source(letter, pattern, rise_ns, repo=None):
-    """(status, source, why) for one class entry's declared rise time. status: DECIDED, UNDECIDED or CONTRADICTED."""
+    """(status, source, why) for one class entry. status: DECIDED, UNDECIDED, CONTRADICTED or NOT_COVERED (no interface
+    record covers the entry, so its nets are asked for their drivers). The data file is the declaration: a board
+    table's own rise_ns, where one is written, must agree with it."""
     repo = repo or REPO
-    for s in EDGE_SOURCES:
+    for s in _interface_records():
         if pattern not in (s.get("covers") or {}).get(letter, ()): continue
-        doc = os.path.join(repo, s["document"])
-        if not os.path.isfile(doc):
-            return "UNDECIDED", s, "the document %s it names is not in this tree" % s["document"]
-        if _norm(s["quote"]) not in _norm(open(doc, encoding="utf-8", errors="replace").read()):
-            return "UNDECIDED", s, "%s does not contain the words quoted from it (%r)" % (s["document"], s["quote"][:60])
-        if rise_ns is None:
-            return "DECIDED", s, "%s: %s" % (s["clause"], s["document"])
-        if abs(float(rise_ns) - float(s["rise_ns"])) > 1e-9:
-            return "CONTRADICTED", s, "declared %s ns, and %s states %s ns (%s)" % (rise_ns, s["document"], s["rise_ns"], s["clause"])
-        return "DECIDED", s, "%s: %s" % (s["clause"], s["document"])
+        bad = record_holds(s, repo)
+        if bad: return "UNDECIDED", s, bad
+        where = s.get("clause") or s.get("derivation", "")[:90]
+        if rise_ns is not None and abs(float(rise_ns) - float(s["rise_ns"])) > 1e-9:
+            return "CONTRADICTED", s, "declared %s ns, and %s states %s ns (%s)" % (
+                rise_ns, s.get("document") or "pcb_edge_rates.yaml", s["rise_ns"], where)
+        return "DECIDED", s, "%s: %s" % (where, s.get("document") or "pcb_edge_rates.yaml %s" % s["id"])
     if rise_ns:
-        return "UNDECIDED", None, ("declares %s ns and no held document is named for it in edge_length.EDGE_SOURCES"
+        return "UNDECIDED", None, ("declares %s ns and no held document is named for it in pcb_edge_rates.yaml"
                                    % rise_ns)
-    return "UNDECIDED", None, "no edge is declared and no held document states one"
+    return "NOT_COVERED", None, "no interface record covers the entry"
+
+
+# ------------------------------------------------------------------------------------------------------------------
+# THE DRIVERS OF ONE NET (ER-D1 to ER-D9, see the block above and the data file's header)
+# ------------------------------------------------------------------------------------------------------------------
+def _prefix(ref):
+    m = re.match(r"^([A-Za-z_]+?)(?=\d|$)", ref or "")
+    return (m.group(1) if m else ref or "").rstrip("_")
+
+
+def _is_connector(prefix):
+    """A connector's, a wire land's or a pad's reference (intent_checks.is_connector's test): its value field names
+    what it carries, and whatever drives its pin is on the far side."""
+    return prefix == "J" or prefix.startswith(("J_", "P_", "PAD", "W_"))
+
+
+def _family_for(value, families):
+    for f in families:
+        for rx in f.get("parts") or []:
+            if re.match(rx, value or ""): return f
+    return None
+
+
+def _is_input(fam, pin, pinfunction):
+    if str(pin) in {str(x) for x in fam.get("input_pins") or []}: return True
+    rx = fam.get("inputs")
+    return bool(rx and re.match(rx, pinfunction or ""))
+
+
+MAKER_KINDS = ("STANDARD", "IBIS", "DATASHEET")
+
+
+def _cand_key(c):
+    """The fastest candidate first; at a tie a maker's figure before a model or a bound, and a part on the net before
+    one beyond a connector or across a resistor, so the reading names the most direct source of the number."""
+    return (c[0], 0 if c[1] in MAKER_KINDS else 1, 1 if c[3].startswith(("beyond", "across")) else 0)
+
+
+def net_edge(cands):
+    """THE GOVERNING EDGE OF ONE NET, from its candidates [(edge_ns, kind, family id, how)] (ER-D13).
+
+    The governing edge is the fastest edge any driver on the net can produce. A driver with a MODEL or a BOUND has no
+    published minimum, so its fastest edge is not known: ONE such driver makes the net `decided_by: BOUND`, whatever
+    the other drivers' makers publish. `edge_ns` is the fastest candidate of all (the number the critical length is
+    computed from); `basis`, `source` and `by` name the candidate that GOVERNS: the fastest of the drivers without a
+    published minimum when there is one, else the fastest maker's figure. `maker_edge_ns` is the fastest published
+    figure on the net, recorded for the reader and deciding nothing while a bound governs; `bound_drivers` names every
+    driver on the net whose maker publishes no minimum."""
+    fastest = min(cands, key=_cand_key)
+    bounds = sorted((c for c in cands if c[1] in BOUND_KINDS), key=_cand_key)
+    makers = sorted((c for c in cands if c[1] in MAKER_KINDS), key=_cand_key)
+    gov = bounds[0] if bounds else fastest
+    seen, named = set(), []
+    for c in bounds:
+        if (c[2], c[3]) in seen: continue
+        seen.add((c[2], c[3])); named.append("%s: %s" % (c[2], c[3]))
+    return {"edge_ns": round(fastest[0], 4), "basis": gov[1], "source": gov[2], "by": gov[3],
+            "decided_by": "BOUND" if bounds else "MAKER",
+            "maker_edge_ns": round(makers[0][0], 4) if makers else None,
+            "maker_by": ("%s: %s" % (makers[0][2], makers[0][3])) if makers else None,
+            "bound_drivers": named}
+
+
+class _Ctx:
+    """What resolving the nets of one board needs, read once."""
+    def __init__(self, letter, nets, values, rates, repo, signals, rails, no_far=False, netlists=None):
+        self.letter, self.nets, self.values, self.rates, self.repo = letter, nets, values, rates, repo
+        self.signals, self.rails = set(signals), rails
+        self.no_far = no_far                   # a continued board: its own connectors lead back, never further
+        self.netlists = netlists if netlists is not None else {}   # letter -> path of the netlist a continuation reads
+        self.far_read = {}                     # letter -> {"path", "sha256_16"} of every other board's netlist read
+        self._others = {}
+        self.used_docs = {}
+        self.fam_ok = {}
+        self.contradicted = {}                               # family id -> why: the data file is wrong, a FAIL
+        self.parts_on = {}
+        for n, d in nets.items():
+            for r, p, f, t in d["nodes"]: self.parts_on.setdefault(r, []).append((p, f, n))
+
+    def family_usable(self, fam):
+        """None, or why the family's record cannot decide anything (its document is not held or does not say it)."""
+        if fam["id"] not in self.fam_ok:
+            why = record_holds(fam, self.repo, self.rates)
+            if not why and fam.get("kind") == "IBIS":
+                why = self._ibis_check(fam)
+                if why and why.startswith("CONTRADICTED"): self.contradicted[fam["id"]] = why
+            self.fam_ok[fam["id"]] = why
+            if not why:
+                for d in [c["document"] for c in citations(fam)] + [(fam.get("ibis") or {}).get("file")]:
+                    if d: self.used_docs[d] = _sha16(os.path.join(self.repo, d))
+        return self.fam_ok[fam["id"]]
+
+    def _ibis_check(self, fam):
+        import ibis_read
+        ib = fam["ibis"]
+        p = os.path.join(self.repo, ib["file"])
+        if not os.path.isfile(p): return "the IBIS file %s it names is not in this tree" % ib["file"]
+        if ib.get("sha256_16") and _sha16(p) != ib["sha256_16"]:
+            return "%s is not the file the record was read from (sha256/16 %s held, %s cited)" % (ib["file"], _sha16(p), ib["sha256_16"])
+        model = self._ibis(fam)
+        e, how = ibis_read.fastest(model, ib["component"], ib.get("models"))
+        stated = fam.get("edge_ns")
+        if e is None: return "the IBIS file gives no driving pin for %s: %s" % (ib["component"], how)
+        if not isinstance(stated, (int, float)) or abs(float(stated) - e) > 0.0005:
+            return "CONTRADICTED: the record states %s ns and %s gives %.4f ns (%s)" % (stated, ib["file"], e, how)
+        kw, cell = ibis_read.fastest_cite(model, ib["component"], ib.get("models"))
+        if ib.get("keyword") is not None and _norm(str(ib["keyword"])) != _norm(kw or ""):
+            return "CONTRADICTED: the record cites %r and the number is under %r in %s" % (ib["keyword"], kw, ib["file"])
+        if ib.get("ramp") is not None and str(ib["ramp"]).strip() != (cell or ""):
+            return "CONTRADICTED: the record quotes the cell %r and %s writes %r" % (ib["ramp"], ib["file"], cell)
+        return None
+
+    def _ibis(self, fam):
+        import ibis_read
+        ib = fam["ibis"]
+        model = ibis_read.load(os.path.join(self.repo, ib["file"]))
+        if ib.get("selector_add"):
+            model = dict(model, selectors=dict(model["selectors"]))
+            for sel, extra in ib["selector_add"].items():
+                model["selectors"][sel.lower()] = list(model["selectors"].get(sel.lower(), [])) + list(extra)
+        return model
+
+    def pin_candidates(self, ref, pin, pf, net):
+        """([(edge_ns, kind, family id, how)], [reason]) for one node of the net."""
+        pre = _prefix(ref)
+        val = self.values.get(ref, "")
+        if _is_connector(pre):
+            return self.far(ref, net)
+        if not pre.startswith(DRIVER_PREFIXES): return [], []
+        fam = _family_for(val, self.rates["families"])
+        if fam is None:
+            return [], ["%s %s: no family in pcb_edge_rates.yaml" % (ref, " ".join(val.split()[:3]))]
+        k = fam["kind"]
+        if k == "NOT_A_DRIVER": return [], []
+        if k == "CONNECTOR": return self.far(ref, net)
+        if k == "PASSIVE_SWITCH":
+            if str(pin) in {str(x) for x in fam.get("through_pins") or []} or \
+               (fam.get("through") and re.match(fam["through"], pf or "")): return self.far(ref, net)
+            if _is_input(fam, pin, pf): return [], []
+            return [], ["%s pin %s %s (%s): neither a through pin nor a control input of the passive switch as its "
+                        "record names them" % (ref, pin, pf or "", fam["id"])]
+        if _is_input(fam, pin, pf): return [], []
+        why = self.family_usable(fam)
+        if why: return [], ["%s %s (%s): %s" % (ref, " ".join(val.split()[:2]), fam["id"], why)]
+        if k == "IBIS":
+            import ibis_read
+            ib = fam["ibis"]
+            sup = fam.get("supply")
+            if sup:
+                bad = [p for (p, f_, n) in self.parts_on.get(ref, []) if str(p) in {str(x) for x in sup.get("pins") or []}
+                       and not re.search(sup.get("rail", "$^"), n)]
+                if bad: return [], ["%s (%s): supply pin(s) %s are not on a rail the admitted models cover (%s)" % (
+                    ref, fam["id"], ", ".join(bad), sup.get("rail"))]
+            st, e, how = ibis_read.pin_edge(self._ibis(fam), ib["component"], pin, ib.get("models"), ib.get("pin_key", "number"))
+            if st == "INPUT": return [], []
+            if st == "UNKNOWN": return [], ["%s (%s): %s" % (ref, fam["id"], how)]
+            return [(e, "IBIS", fam["id"], "%s %s" % (ref, how))], []
+        for pe in fam.get("pin_edges") or []:
+            if re.match(pe["match"], pf or "") or str(pin) in {str(x) for x in pe.get("pins") or []}:
+                return [(float(pe["edge_ns"]), pe["kind"], fam["id"], "%s pin %s %s (%s)" % (ref, pin, pf or "", pe.get("conditions", pe["kind"])[:60]))], []
+        return [(float(fam["edge_ns"]), k, fam["id"], "%s pin %s %s" % (ref, pin, pf or ""))], []
+
+    def other(self, letter):
+        """(_Ctx, None) for another board of this set, read from its committed netlist, or (None, why)."""
+        if letter not in self._others:
+            path = self.netlists.get(letter)
+            if path is None:
+                try:
+                    import phase_artefacts as _pa
+                    path = _pa.netlist(letter)
+                except Exception:
+                    path = None
+            if not path or not os.path.exists(path):
+                self._others[letter] = (None, "board %s's netlist is not in this tree" % letter)
+            else:
+                nets2, values2 = read_netlist(path)
+                sig2 = [n for n, d in nets2.items() if not (n.startswith("unconnected-") or n.startswith("+") or GROUND.search(n))]
+                self._others[letter] = (_Ctx(letter, nets2, values2, self.rates, self.repo, sig2, set(), no_far=True), None)
+                self.far_read[letter] = {"path": _shown(path), "sha256_16": _sha16(path)}
+        return self._others[letter]
+
+    def far(self, ref, net):
+        """The drivers beyond a connector or a passive switch's through pin, from the far_ends records. A record that
+        names the boards the net continues onto is answered from those boards' own netlists, pin by pin; one that
+        names families is answered by each family's fastest figure (ER-D7). ON A CONTINUED BOARD (no_far) a record
+        that names boards is the link back to the set and adds nothing (the board that asked reads every board of the
+        net itself); a record that names families leads off the set and is answered; a connector no record names is a
+        reason, as it is on the board that asked."""
+        for fe in self.rates["far_ends"]:
+            if fe["board"] != self.letter: continue
+            if not any(fnmatch.fnmatchcase(net, pat) for pat in fe["nets"]): continue
+            via = fe.get("via")
+            if via and not any(fnmatch.fnmatchcase(ref, v) for v in via): continue
+            cands, reasons = [], []
+            if self.no_far and fe.get("continues"): return [], []
+            for L2 in fe.get("continues") or []:
+                c2, why = self.other(L2)
+                if c2 is None: reasons.append("beyond %s (far end %s): %s" % (ref, fe["id"], why)); continue
+                if net not in c2.nets:
+                    reasons.append("beyond %s (far end %s): board %s's netlist has no net %s" % (ref, fe["id"], L2, net)); continue
+                b2, cc, rr = c2.resolve(net, quiet=True)
+                cands += [(e, k, fid, "beyond %s on board %s: %s" % (ref, L2.upper(), how)) for e, k, fid, how in cc]
+                reasons += ["beyond %s on board %s: %s" % (ref, L2.upper(), w) for w in rr]
+                self.used_docs.update(c2.used_docs)
+                self.contradicted.update(c2.contradicted)
+            if fe.get("continues"): return cands, reasons
+            fams = {f["id"]: f for f in self.rates["families"]}
+            for fid in fe.get("families") or []:
+                fam = fams[fid]
+                if fam["kind"] in NON_EDGE_KINDS: continue
+                why = self.family_usable(fam)
+                if why: reasons.append("beyond %s (%s, %s): %s" % (ref, fe["id"], fid, why)); continue
+                # the part's fastest pin (ER-D7): which of its pins is on the far side is not read
+                opts = [(float(fam["edge_ns"]), fam["kind"])] + [(float(pe["edge_ns"]), pe["kind"]) for pe in fam.get("pin_edges") or []]
+                e, kind = min(opts)
+                cands.append((e, kind, fid, "beyond %s (far end %s): %s" % (ref, fe["id"], fid)))
+            return cands, reasons
+        return [], ["reaches %s: the driver beyond it is not named in pcb_edge_rates.yaml far_ends" % ref]
+
+    def local(self, net):
+        cands, reasons = [], []
+        for r, p, f, t in self.nets[net]["nodes"]:
+            c, why = self.pin_candidates(r, p, f, net)
+            cands += c; reasons += why
+        return cands, reasons
+
+    def resolve(self, net, quiet=False):
+        """(best candidate or None, [candidates], [reasons]). A net with any reason is UNDECIDED. `quiet`: a continued
+        board's net with no driver of its own is not a reason (its drivers may all be on the board that asked)."""
+        cands, reasons = self.local(net)
+        for r, p, f, t in self.nets[net]["nodes"]:          # one hop through a two-pin series resistor (ER-D6)
+            if _prefix(r) != "R": continue
+            pins = self.parts_on.get(r, [])
+            if len(pins) != 2: continue
+            other = pins[1][2] if pins[0][2] == net else pins[0][2]
+            if other == net or other not in self.signals: continue
+            c2, w2 = self.local(other)
+            cands += [(e, k, fid, "across %s from %s: %s" % (r, other, how)) for e, k, fid, how in c2]
+            reasons += ["across %s from %s: %s" % (r, other, w) for w in w2]
+        if not reasons and not cands:
+            # a net nothing on the board drives, whose driver a far_ends record names by the land it touches (a
+            # bench probe on a test pad): that record is its driver (ER-D7); without one the net is UNDECIDED
+            for r, p, f, t in self.nets[net]["nodes"]:
+                if any(fe["board"] == self.letter and fe.get("undriven_land") and any(fnmatch.fnmatchcase(net, x) for x in fe["nets"])
+                       and any(fnmatch.fnmatchcase(r, v) for v in fe.get("via") or []) for fe in self.rates["far_ends"]):
+                    c, w = self.far(r, net)
+                    cands += c; reasons += w
+                    break
+        if not reasons and not cands and not quiet:
+            reasons = ["no part on the net, or one series resistor away, drives it"]
+        best = min(cands, key=_cand_key) if cands else None
+        return best, cands, reasons
 
 
 def stack_delays(name):
@@ -410,7 +1003,7 @@ def _ohms(v):
     return x * {None: 1.0, "R": 1.0, "K": 1e3, "M": 1e6}[m2.group(2)]
 
 
-def schematic_table(net_path, letter=None, intent_path=None, facts=None, repo=None):
+def schematic_table(net_path, letter=None, intent_path=None, facts=None, repo=None, netlists=None):
     """SI-001 at the schematic phase: the per-class table and its result. See the block comment above."""
     import boardtable as _bt, signal_class as _sc, netclass as _nc, rules_lib as _R
     repo = repo or REPO
@@ -512,43 +1105,85 @@ def schematic_table(net_path, letter=None, intent_path=None, facts=None, repo=No
         for r, _p, _f, _t in nets[n]["nodes"]:
             if r.startswith("U"): row["drivers"].setdefault(values.get(r, "?"), set()).add(r)
 
+    # THE COUNTS, and the sums a reader can check (tests/test_edge_length.py holds them on every fixture and on the
+    # committed netlists): signal_nets = low_speed_nets + decided_nets + undecided_nets + contradicted_nets;
+    # decided_nets = maker_edge_nets + bound_edge_nets (ER-D13: decided by a published figure on every driver, or by a
+    # bound); may_be_long_nets = answered_nets + layout_bound_nets; layout_bound_nets = maker_held_nets +
+    # bound_decided_nets.
     counts = {"signal_nets": len(signals), "decided_nets": 0, "undecided_nets": 0, "low_speed_nets": 0,
               "contradicted_nets": 0, "may_be_long_nets": 0, "answered_nets": 0, "layout_bound_nets": 0,
-              "classes": len(rows)}
+              "classes": len(rows), "maker_edge_nets": 0, "bound_edge_nets": 0, "bound_decided_nets": 0,
+              "maker_held_nets": 0}
+    for x in RATES_REFUSALS: res["fails"].append("edge data refused: %s" % x)
+    res["inputs"]["edge_rates"] = {"path": _shown(RATES["path"]), "sha256_16": RATES.get("sha16")}
+    ctx = _Ctx(letter, nets, values, RATES, repo, signals, rails, netlists=netlists)
+    used = {}
     for pat in sorted(rows):
         row = rows[pat]
         row["drivers"] = {v: sorted(rs) for v, rs in sorted(row["drivers"].items())}
         nn = len(row["nets"])
+        row["net_edges"], row["undecided"] = {}, {}
         if row["class"] == LOW_CLASS and not row["rise_ns"]:
             row.update(status="LOW_SPEED_OR_DC", why="declared slow or DC with its basis; no edge is asked of it")
             counts["low_speed_nets"] += nn
-        elif row["class"] == "UNKNOWN":
+            continue
+        if row["class"] == "UNKNOWN":
             row.update(status="UNDECIDED", why="no signal-class declaration names these nets, so neither their class "
                                                "nor their edge is known")
+            row["undecided"] = {n: ["no signal-class declaration"] for n in row["nets"]}
             counts["undecided_nets"] += nn
-        else:
-            st, src, why = edge_source(letter, pat, row["rise_ns"], repo)
-            if st == "DECIDED" and row["rise_ns"] is None: st, why = "UNDECIDED", "the entry declares no rise time"
-            row.update(status=st, why=why, source=(src or {}).get("id"), document=(src or {}).get("document"))
-            if st == "CONTRADICTED":
-                counts["contradicted_nets"] += nn
-                res["fails"].append("%s (%s, %d net(s)): %s" % (pat, row["class"], nn, why))
-            elif st == "UNDECIDED":
-                counts["undecided_nets"] += nn
-        if row["status"] != "DECIDED":
             continue
-        counts["decided_nets"] += nn
-        crit = float(row["rise_ns"]) * 1000.0 / (float(k) * tpd)
-        row["critical_mm"] = round(crit, 1)
+        st, src, why = edge_source(letter, pat, row["rise_ns"], repo)
+        row.update(why=why, source=(src or {}).get("id"), document=(src or {}).get("document"))
+        if st == "CONTRADICTED":
+            row["status"] = st
+            counts["contradicted_nets"] += nn
+            res["fails"].append("%s (%s, %d net(s)): %s" % (pat, row["class"], nn, why))
+            continue
+        if st == "DECIDED":
+            kind = src.get("kind") or "STANDARD"
+            for n in row["nets"]:
+                by = "class entry %s, %s" % (pat, src["id"])
+                row["net_edges"][n] = net_edge([(float(src["rise_ns"]), kind, src["id"], by)])
+            if src.get("document"): used[src["document"]] = _sha16(os.path.join(repo, src["document"]))
+            for c in src.get("checked") or []:
+                if isinstance(c, dict) and c.get("document"): used[c["document"]] = _sha16(os.path.join(repo, c["document"]))
+        elif st == "UNDECIDED":
+            row["undecided"] = {n: [why] for n in row["nets"]}
+        else:                                                 # NOT_COVERED: ask each net for its drivers
+            for n in row["nets"]:
+                best, cands_n, reasons = ctx.resolve(n)
+                if reasons: row["undecided"][n] = reasons
+                else: row["net_edges"][n] = net_edge(cands_n)
+        for n, e in row["net_edges"].items():
+            od = _open_drain_for(letter, n, RATES, repo, used)
+            if od: e["rising"] = od
+        nd, nu = len(row["net_edges"]), len(row["undecided"])
+        row["status"] = "DECIDED" if not nu else ("UNDECIDED" if not nd else "PARTIAL")
+        if row["status"] != "DECIDED" and st == "NOT_COVERED":
+            row["why"] = "%d of %d net(s) have a driver the data file does not decide" % (nu, nn)
+        counts["undecided_nets"] += nu
+        counts["decided_nets"] += nd
+        if not nd: continue
+        row["rise_ns"] = min(e["edge_ns"] for e in row["net_edges"].values())
+        crit_of = {n: float(e["edge_ns"]) * 1000.0 / (float(k) * tpd) for n, e in row["net_edges"].items()}
+        row["critical_mm"] = round(min(crit_of.values()), 1)
+        row["critical_by_net"] = {n: round(c, 1) for n, c in sorted(crit_of.items())}
+        row["bound_nets"] = sorted(n for n, e in row["net_edges"].items() if e["decided_by"] == "BOUND")
+        row["maker_nets"] = sorted(n for n, e in row["net_edges"].items() if e["decided_by"] == "MAKER")
+        counts["bound_edge_nets"] += len(row["bound_nets"])
+        counts["maker_edge_nets"] += len(row["maker_nets"])
         # a board with no declared outline has no corner-to-corner run to compare with, so every net of the class may
         # be long (the second independent check of 26 September: a missing extent read as "never long")
-        row["may_be_long"] = extent is None or crit < extent
-        if not row["may_be_long"]:
+        long_nets = [n for n in row["net_edges"] if extent is None or crit_of[n] < extent]
+        row["may_be_long"] = bool(long_nets)
+        if not long_nets:
             row["needs"] = "nothing: the critical length is past the board's corner-to-corner run"
+            row["answered"], row["layout_bound"], row["bound_decides"], row["maker_holds"] = {}, [], [], []
             continue
-        row["needs"] = "an impedance target, a series termination or a declaration, or every net under %.1f mm" % crit
+        row["needs"] = "an impedance target, a series termination or a declaration, or every net under %.1f mm" % row["critical_mm"]
         ans, bound = {}, []
-        for n in row["nets"]:
+        for n in sorted(long_nets):
             c, how = cls_of(n)
             if c in targets:
                 ans[n] = "impedance target on class %s (%s, from the %s)" % (c, ", ".join("%s %s" % kv for kv in sorted(targets[c].items())), how)
@@ -560,14 +1195,48 @@ def schematic_table(net_path, letter=None, intent_path=None, facts=None, repo=No
                 else: bound.append(n)
         row["answered"] = ans
         row["layout_bound"] = bound
-        counts["may_be_long_nets"] += nn
+        # THE BOUND DECIDES (ER-D9 with ER-D13): a layout-bound net on which at least one driver has no published
+        # minimum. Its governing edge is that driver's bound and so is its critical length, whatever the other drivers'
+        # makers publish. A layout-bound net is held by a maker's figure only when EVERY driver on it has one. (Until
+        # the independent check of 27 September 2026 a net was called maker-held when ANY maker's figure on it gave a
+        # length, which named 40 nets by a figure that did not govern them.)
+        row["bound_decides"] = [n for n in bound if row["net_edges"][n]["decided_by"] == "BOUND"]
+        row["maker_holds"] = [n for n in bound if row["net_edges"][n]["decided_by"] == "MAKER"]
+        counts["may_be_long_nets"] += len(long_nets)
         counts["answered_nets"] += len(ans)
         counts["layout_bound_nets"] += len(bound)
+        counts["bound_decided_nets"] += len(row["bound_decides"])
+        counts["maker_held_nets"] += len(row["maker_holds"])
     res["rows"] = [rows[p] for p in sorted(rows)]
     res["counts"] = counts
-    # every held document this board's edges are taken from, by sha, so a corrected transcription is seen
-    for i, d in enumerate(sorted({s["document"] for s in EDGE_SOURCES if letter in (s.get("covers") or {})}), 1):
-        res["inputs"]["document_%d" % i] = {"path": d, "sha256_16": _sha16(os.path.join(repo, d))}
+    if (RATES.get("search_listing") or {}).get("path"):
+        sl = RATES["search_listing"]
+        res["inputs"]["search_listing"] = {"path": sl["path"], "sha256_16": _sha16(os.path.join(repo, sl["path"]))}
+    # WHAT THE READING DOES NOT ASK (ER-D2, an instrument limit said out loud): a relay's contact, a mechanical switch
+    # and a transformer's winding make or pass an edge and are no U or Q part, so no record is asked for them
+    slow = {n for r in rows.values() if r.get("status") == "LOW_SPEED_OR_DC" for n in r["nets"]}
+    unasked = {}
+    for n in signals:
+        if n in slow: continue
+        for r, _p, _f, _t in nets[n]["nodes"]:
+            pre = _prefix(r)
+            if pre in UNASKED_PREFIXES or pre.startswith("SW"): unasked.setdefault(n, set()).add(r)
+    counts["unasked_part_nets"] = len(unasked)
+    if unasked:
+        res["notes"].append("%d signal net(s) outside LOW_SPEED_OR_DC carry a relay, a switch or a transformer, which the "
+                            "reading asks for no edge (ER-D2, an instrument limit): %s%s" % (
+                                len(unasked), ", ".join("%s (%s)" % (n, "/".join(sorted(rs))) for n, rs in sorted(unasked.items())[:12]),
+                                " ..." if len(unasked) > 12 else ""))
+    # a record the maker's own file contradicts makes every length computed from it wrong: a FAIL, as a declared
+    # rise time its document contradicts has been since 26 September
+    for L2, rec in sorted(ctx.far_read.items()):
+        res["inputs"]["far_netlist_%s" % L2] = rec
+    for fid, why in sorted(ctx.contradicted.items()):
+        res["fails"].append("pcb_edge_rates.yaml family %s: %s" % (fid, why))
+    # every held document this board's edges are taken from, by sha, so a corrected transcription or model is seen
+    used.update(ctx.used_docs)
+    for i, d in enumerate(sorted(used), 1):
+        res["inputs"]["document_%d" % i] = {"path": d, "sha256_16": used[d]}
     return res
 
 
@@ -587,6 +1256,40 @@ def schematic_result(res):
     return _v.PASS
 
 
+def _reason_summary(r):
+    """The distinct reasons a row's nets are undecided, most frequent first."""
+    import collections
+    c = collections.Counter()
+    for rs in (r.get("undecided") or {}).values():
+        for x in rs: c[x] += 1
+    if not c: return r.get("why") or ""
+    return "; ".join("%s%s" % (x, " (x%d)" % k if k > 1 else "") for x, k in c.most_common(3))
+
+
+def _basis_of(r):
+    """How a row's fastest decided edge is known: STANDARD, IBIS, DATASHEET, or a MODEL or BOUND. At equal edges a net
+    a bound governs is named before one a maker's figure governs (ER-D13)."""
+    ne = r.get("net_edges") or {}
+    if not ne: return "?"
+    e = min(ne.values(), key=lambda x: (x["edge_ns"], 0 if x.get("decided_by") == "BOUND" else 1))
+    return "%s %s" % (e["basis"], e["source"])
+
+
+def _layout_bound_groups(r, k_tpd=None):
+    """[(decided_by, edge_ns, basis, source, critical_mm, [nets])] of a row's layout-bound nets, a bound's group first:
+    one evidence line per governing edge, so a net is never shown under an edge that does not govern it."""
+    g = {}
+    for n in r.get("layout_bound") or []:
+        e = r["net_edges"][n]
+        key = (0 if e["decided_by"] == "BOUND" else 1, e["edge_ns"], e["basis"], e["source"])
+        g.setdefault(key, []).append(n)
+    out = []
+    for (o, edge, basis, source), nets in sorted(g.items()):
+        crit = min((r.get("critical_by_net") or {}).get(n, r.get("critical_mm")) for n in nets)
+        out.append(("BOUND" if o == 0 else "MAKER", edge, basis, source, crit, sorted(nets)))
+    return out
+
+
 def write_schematic_verdict(res, out_dir=None, quiet=False, table_file=True):
     """Write the `edge_length` verdict (rule SI-001) and, beside it, the table as edge_length.table.json."""
     import verdict as _v
@@ -594,14 +1297,27 @@ def write_schematic_verdict(res, out_dir=None, quiet=False, table_file=True):
     c = res.get("counts") or {}
     ev = list(res["fails"])
     for r in res.get("rows") or []:
-        if r["status"] == "UNDECIDED":
-            ev.append("UNDECIDED %s (%s, %d net(s)): %s; ICs on them: %s" % (
-                r["pattern"], r["class"], len(r["nets"]), r["why"][:90],
-                ", ".join("%s %s" % (v, "/".join(rs[:3])) for v, rs in list(r["drivers"].items())[:5]) or "none"))
+        if r["status"] in ("UNDECIDED", "PARTIAL"):
+            why = _reason_summary(r)
+            ev.append("UNDECIDED %s (%s, %d of %d net(s)): %s; ICs on them: %s" % (
+                r["pattern"], r["class"], len(r.get("undecided") or r["nets"]), len(r["nets"]), why[:140],
+                ", ".join("%s %s" % (" ".join(v.split()[:2]), "/".join(rs[:3])) for v, rs in list(r["drivers"].items())[:4]) or "none"))
+    # the summaries before the per-row lines, so the evidence cap never cuts them
+    bd = [(r["pattern"], n) for r in res.get("rows") or [] for n in r.get("bound_decides") or []]
+    if bd:
+        ev.append("BOUND_DECIDES %d layout-bound net(s) whose governing edge is a bound or a model: at least one driver "
+                  "on each has no published minimum, whatever the other drivers' makers publish (ER-D13): %s%s" % (
+                      len(bd), ", ".join(n for _p, n in bd[:12]), " ..." if len(bd) > 12 else ""))
+    mh = [(r["pattern"], n) for r in res.get("rows") or [] for n in r.get("maker_holds") or []]
+    if mh:
+        ev.append("MAKER_HELD %d layout-bound net(s) on which every driver has a published minimum: %s%s" % (
+            len(mh), ", ".join(n for _p, n in mh[:12]), " ..." if len(mh) > 12 else ""))
     for r in res.get("rows") or []:
-        if r.get("layout_bound"):
-            ev.append("LAYOUT_BOUND %s (%s, %.1f ns, critical %.1f mm): %s" % (
-                r["pattern"], r["class"], float(r["rise_ns"]), r["critical_mm"], ", ".join(r["layout_bound"][:8])))
+        for who, edge, basis, source, crit, nets in _layout_bound_groups(r):
+            ev.append("LAYOUT_BOUND %s (%s, %.3f ns %s %s, critical %.1f mm, decided by %s): %s%s" % (
+                r["pattern"], r["class"], float(edge), basis, source, crit,
+                "a bound" if who == "BOUND" else "a published figure on every driver",
+                ", ".join(nets[:8]), " ..." if len(nets) > 8 else ""))
     inputs = dict(res.get("inputs") or {})
     if res.get("letter"): inputs["board"] = res["letter"]
     od = out_dir or os.environ.get("VERDICT_DIR") or "out"
@@ -626,7 +1342,16 @@ def write_schematic_verdict(res, out_dir=None, quiet=False, table_file=True):
                           "(edge_length_routed). The table is edge_length.table.json beside this verdict. Session "
                           "decisions of 26 September 2026: LOW_SPEED_OR_DC asked no edge, the first matching entry "
                           "decides, the slowest layer of the declared and ruled stacks, the stripline bound, the "
-                          "corner-to-corner extent, the project file's class where the netlist says Default"))
+                          "corner-to-corner extent, the project file's class where the netlist says Default. Since 27 "
+                          "September 2026 every edge is a record of tools/pcb_edge_rates.yaml (a configuration input, by "
+                          "sha in inputs.edge_rates): a class entry's interface record, or per net the fastest of its "
+                          "drivers' families (a maker's IBIS model read per pin, a published minimum, a model or a "
+                          "bound), its far ends and one series resistor away; a net whose driver has no record is "
+                          "UNDECIDED. The governing edge of a net is the fastest any driver on it can produce, so one "
+                          "driver with no published minimum makes the net decided by a bound whatever the others "
+                          "publish (ER-D13); a layout-bound net a bound decides is named under BOUND_DECIDES and holds "
+                          "the reading INCONCLUSIVE. counts: decided = maker_edge + bound_edge; layout_bound = "
+                          "maker_held + bound_decided"))
 
 
 def print_table(res):
@@ -634,17 +1359,23 @@ def print_table(res):
     i = res.get("inputs") or {}
     print("edge_length: SI-001 schematic table, board %s: k %s, slowest layer %s at %s ps/mm, extent %s mm; %d signal "
           "net(s), %d decided, %d undecided, %d declared slow or DC, %d contradicted; of the decided %d may be "
-          "electrically long, %d answered in the netlist and %d layout-bound"
+          "electrically long, %d answered in the netlist and %d layout-bound; of the decided, %d by a published figure "
+          "on every driver and %d by a bound or model; of the layout-bound, %d by a published figure on every driver and "
+          "%d by a bound (BOUND_DECIDES)"
           % (str(res.get("letter") or "?").upper(), i.get("critical_k"), i.get("slowest_layer"), i.get("t_pd_ps_per_mm"),
              i.get("extent_mm"), c.get("signal_nets", 0), c.get("decided_nets", 0), c.get("undecided_nets", 0),
              c.get("low_speed_nets", 0), c.get("contradicted_nets", 0), c.get("may_be_long_nets", 0),
-             c.get("answered_nets", 0), c.get("layout_bound_nets", 0)))
+             c.get("answered_nets", 0), c.get("layout_bound_nets", 0), c.get("maker_edge_nets", 0),
+             c.get("bound_edge_nets", 0), c.get("maker_held_nets", 0), c.get("bound_decided_nets", 0)))
     for r in res.get("rows") or []:
         tail = ""
         if r.get("critical_mm") is not None:
-            tail = ", %.1f ns, critical %.1f mm, %s" % (float(r["rise_ns"]), r["critical_mm"],
-                                                        "%d answered, %d layout-bound" % (len(r.get("answered") or {}), len(r.get("layout_bound") or []))
+            tail = ", %.3f ns %s, critical %.1f mm, %s" % (float(r["rise_ns"]), _basis_of(r), r["critical_mm"],
+                                                        "%d answered, %d layout-bound%s" % (len(r.get("answered") or {}), len(r.get("layout_bound") or []),
+                                                        ", %d decided by a bound" % len(r["bound_decides"]) if r.get("bound_decides") else "")
                                                         if r.get("may_be_long") else "never long here")
+        if r.get("undecided") and r["status"] != "LOW_SPEED_OR_DC" and r["class"] != "UNKNOWN":
+            tail += "; undecided %d: %s" % (len(r["undecided"]), _reason_summary(r)[:110])
         print("  %-12s %-22s %-20s %3d net(s)%s" % (r["status"], r["pattern"][:22], r["class"][:20], len(r["nets"]), tail))
     for n in res.get("notes") or []: print("  note: %s" % n)
     for f in res.get("fails") or []: print("  FAIL %s" % f)
