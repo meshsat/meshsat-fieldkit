@@ -118,8 +118,9 @@ def prove(old, new):
     account = ("the calls other than electrical-intent declarations differ only in the ten parts of the D8 mezzanine's buck (U41, "
                "L13, C227 to C232, R217, R218) and the layout class of C229 and C230, U23's input net (+5V_DEV to +5V_D8IN), the "
                "ILM value texts of U32 and U39 (TPS2596 equation 7's sign) and the power-flag list (+5V_D8IN added); of the module "
-               "assignments only SECTIONS differs, by the ten references in section %r; %d intent declarations differ"
-               % (grew[0][0].split(":")[0], sum(((ni - oi) + (oi - ni)).values())))
+               "assignments only SECTIONS differs, by the ten references in section %r; of the electrical-intent declarations %d of "
+               "set 8's texts are gone and %d are new (a changed declaration counts in both), which no rule this record rests "
+               "on reads" % (grew[0][0].split(":")[0], sum((oi - ni).values()), sum((ni - oi).values())))
     return names, account
 
 
