@@ -1,19 +1,21 @@
-# Options: a second battery block for the relay mission (M1)
+# Options: the 72-hour relay mission (M1)
 
-Prototype; AI analysis on planning figures (`ENERGY-RECONCILIATION.md` 7c, 8). **In every option the mission as written (full kit, 72 hours,
-battery and sun) fails: REQ-072 stays FAIL.** "Reduced" means the monitor, 5G, the WiFi link, Zigbee and
-two of the three computers OFF; one computer on 16 W keeps LoRa, Iridium, APRS, GNSS.
+MESHSAT-1357, 29 September 2026 (replaces the sheet of 28 September). Prototype; AI analysis on the September
+reference-day model (`ENERGY-RECONCILIATION.md` section 9, `energy_architecture.out`). Nothing is bought or built.
 
-1. **Second block wired to the first (one 290 Wh battery, one protection board), a 200-watt panel held
-   to 100 W, the lower shutdown line, and reduced whenever the sun alone cannot carry the full kit.** Reduced 16
-   hours a day in September and 14 in June; carries average September days (battery above 17 C) and June
-   days. December: reduced all 24 hours and still fails. Under 150 EUR, 0.6 kg, protection board
-   additions, board A's heater limit; west antenna cables re-planned (open); transport rules unknown.
-2. **The same battery, never reduced.** Full kit every hour; stops in the first night (September, June) or the first morning (December),
-   every month examined. Same costs.
-3. **Keep one block, never reduced by rule.** From a morning start it stops the first afternoon. M1 recorded unmet for prototype 1: open, not fulfilled.
-   A 12 V external source may carry a night, optionally, never the basis.
+The mission as written (full kit at 42.8 W, 72 hours, battery and sun) needs at least 546 Wh of usable battery, about
+655 Wh with margin, against today's 108 Wh, and at least 200 W of solar input where today's limit is 100 W.
 
-**Recommendation: 1**, the only option carrying a relay through a September night on battery and sun, at 16
-reduced hours a day; it reopens your deferral of the second pack (D-01) and changes the mission's
-operating state, both yours.
+**A. Full mission (recommended).** Two packs: the base pockets (4S6P) and a lid module (4S12P), 72 cells, 655 Wh usable
+aged, about 3.6 kg of cells; four 100 W panels in two series pairs into a 200 W stage; the charger raised to about
+125 W. On the model it meets September at +20 C (91 Wh left) and at +15 C (27 Wh left). Not yet drawn or tested:
+REQ-072 stays FAIL until it is. Your decisions: **D-06**, the battery grows from 145 Wh to about 870 Wh nominal (it
+travels by road or sea, not by air); **REQ-016**, solar input from 100 W and 25 V to 200 W and about 50 V; **D-01**, the
+second pack moves into prototype 1 and takes the lid space of the deferred HF tray and tablet bracket.
+
+**B. Keep today's limits.** M1 is not met; REQ-072 stays FAIL. Under them no design carries the full kit through a
+September night.
+
+**C. Reduced service (conditional, not a replacement).** Base pockets only, a 200 W panel held to 100 W, part of the kit
+switched off 16 hours a day. REQ-072 stays FAIL. It holds on the average-day model only with cells at about 17 C or
+warmer; its protection, harness, heater and mechanical findings stay open.
