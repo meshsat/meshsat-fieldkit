@@ -28,6 +28,10 @@ pinned:
      what: "the same model's reduced mode and heat stages: 31.38, 21.73, 22.21, 23.27 W; CHECKED, not parsed"}
   - {path: v2/ecad/tools/gen_sch_e.py, sha256: f846e138cb53a8c63247efb3ad7b5cc44a68cb73e71699c65fd53b63c01af186,
      what: "board E's generator: the solar stage (LT8705A U5, FBIN 17.6 V, F2 10 A, J_SOLAR 10 A, PV_P v_max 25 V, TRK_OUT efficiency 0.93) and the vehicle entry (LM5069 U6, 4.85 to 6.15 A, F1 10 A); CHECKED, not parsed"}
+  - {path: v2/docs/records/energy/night_bounds.out, sha256: bb695d4f8e9fce1c77b06e9d70de3450d38a8d904583e6c7ae8cc0c7365334f1,
+     what: "this stream's night state on the tree's model (night_bounds.py imports records/rv-pwr/pwr_budget.py unchanged, pinned): LOW / PLAN / HIGH 11.02 / 16.20 / 39.67 W; CHECKED, not parsed"}
+  - {path: v2/docs/records/energy/packfit_west.out, sha256: 1af26f00624e17d7f68d156f59557c1af961f0fcdcf3ae439b63ee8e74f2def4,
+     what: "A06's pack_fit.py (imported unchanged, pinned) on the west pocket: the block alone FITS (Z clear 5.20 nominal, 3.99 worst); board P on top, at the end, at the side, or a second board P in the east pocket: NO; CHECKED, not parsed"}
 
 # ------------------------------------------------------------------------------------------- the loads, PS-IDLE-SPEC
 # Columns: name; battery-side W in PS-IDLE-SPEC (pwr_budget.out, PLAN); W at the load; tier; group (used by the state
@@ -41,7 +45,7 @@ loads:
   - {name: "CM5 slot 1",                           bat: 2.17, load: 2.00, tier: S, group: cm5_s1,   src: "as CM5 slot 2"}
   - {name: "three STM32H743 supervisors and parts", bat: 2.16, load: 1.30, tier: R, group: sups,     src: "ST DS12110 Rev 10 Table 30 (PDF page 111): 71 mA at 400 MHz VOS1 peripherals off (typ), 33 mA at 200 MHz VOS3; plus 0.06 A declared per supervisor for its other parts (gen_sch_b.py:222)", low_load: 0.92}
   - {name: "KSZ9897R AVDDL+DVDDL 1.2 V",           bat: 1.84, load: 1.45, tier: S, group: ksz,      src: "Microchip DS00002330D Table 6-1 (PDF page 169): 460 + 750 mA at 1.2 V, every port at 1000 Mb/s; energy-detect 30 + 150 mA", low_load: 0.216}
-  - {name: "panel board C",                        bat: 1.62, load: 1.50, tier: D, group: panel,    src: "declared PANEL_5V 0.6 A typical (gen_sch_b.py:82)", maker_w_at_load: 0.92, maker_src: "d4energy: RP2040 'Popcorn' 35.7 mA + 2 x PCA9555 0.7 mA + 1.0 mA inferred = 0.126 W; every lamp at its design current 0.7965 W (the intent's declared typical, an upper figure); e-paper 0.001 W", night_load: 0.25, night_src: "the lamps at PANEL.md's NIGHT duty of 15 percent (0.12 W) plus the logic"}
+  - {name: "panel board C",                        bat: 1.62, load: 1.50, tier: D, group: panel,    src: "declared PANEL_5V 0.6 A typical (gen_sch_b.py:82)", maker_w_at_load: 0.92, maker_src: "d4energy: RP2040 'Popcorn' 35.7 mA + 2 x PCA9555 0.7 mA + 1.0 mA inferred = 0.126 W; every lamp at its design current 0.7965 W (the intent's declared typical, an upper figure); e-paper 0.001 W", night_load: 0.823, night_src: "the declaration's own logic share (1.50 W less the lamps' declared 0.7965 W) plus the lamps at PANEL.md's NIGHT duty of 15 percent (0.12 W): a declaration, not the makers' figure (night_bounds.py)"}
   - {name: "other +3V3_DEV logic",                 bat: 1.54, load: 1.30, tier: D, group: b_logic,  src: "declared 0.395 A (gen_sch_b.py:95-108)", maker_w_at_load: 0.033, maker_src: "d4energy logic_b33: TPS23861 5.0 + 2 x PCA9555 0.7 + ATECC608B 2.0 + DS3231 0.2 + TMP117 0.135 + 3 x TMUXHS4212 0.18 + gates 0.69 mA = 9.97 mA at 3.3 V"}
   - {name: "two mixer fans",                       bat: 1.45, load: 1.44, tier: R, group: mixfans,  src: "Sunon catalogue 240-A p. 38 (60 x 60 x 15 IP68, 12 V): GF60151B9 0.39 W to B6 1.50 W; 0.72 W each taken; declared 0.1 A each (gen_sch_e.py:34)"}
   - {name: "WiFi link card 2 (standby)",           bat: 1.30, load: 1.00, tier: T, group: wifi2,    src: "no maker's figure for a card with its radio disabled; 1.0 W placeholder, 0 W if its module holds PCIE_PWR_EN low, bounded by 9.1 W"}
@@ -70,8 +74,8 @@ loads:
   - {name: "QMX USB and HDMI 5 V",                 bat: 0.32, load: 0.30, tier: D, group: usb5,     src: "declared F3 0.3 A and F2 0.2 A peaks (gen_sch_b.py:83, 87); W2 0.3 W; no document for what the monitor draws on HDMI 5 V; the QMX is deferred by D-01"}
   - {name: "KSZ9897R VDDIO 3.3 V",                 bat: 0.31, load: 0.26, tier: S, group: ksz,      src: "DS00002330D Table 6-1: 80 mA at 3.3 V; energy-detect 30 mA", low_load: 0.099}
   - {name: "5G RM520N-GL (idle, registered)",      bat: 0.30, load: 0.22, tier: S, group: modem,    src: "Quectel RM520N series HD v1.1 Table 43 (PDF page 76): idle 60 mA at 3.7 V"}
-  - {name: "LoRa E22-900M30S (receive)",           bat: 0.08, load: 0.07, tier: S, group: lora,     src: "Ebyte E22-900M30S manual v1.20 section 2.2 (PDF page 3): RX current 14 mA (at 5 V); TX 650 mA"}
-  - {name: "RockBLOCK 9704 (idle)",                bat: 0.07, load: 0.06, tier: S, group: rb,       src: "Ground Control RB9704-001-JUN26 PDF page 2: '60mW Idle, 1.4W Max'"}
+  - {name: "LoRa E22-900M30S (receive)",           bat: 0.08, load: 0.07, tier: S, group: lora,     src: "Ebyte E22-900M30S manual v1.20 section 2.2 (PDF page 3): RX current 14 mA (at 5 V); TX 650 mA", night_load: 0.30, night_src: "the model's RED figure: receive plus about 9 percent airtime (CONOPS section 5), the relay passing traffic"}
+  - {name: "RockBLOCK 9704 (idle)",                bat: 0.07, load: 0.06, tier: S, group: rb,       src: "Ground Control RB9704-001-JUN26 PDF page 2: '60mW Idle, 1.4W Max'", night_load: 0.10, night_src: "message driven, one session in ten minutes: PS-TYP's planning duty (CONOPS section 5)"}
   - {name: "E72 x2 (Zigbee, Thread) receive",      bat: 0.06, load: 0.05, tier: S, group: e72,      src: "Ebyte E72-2G4M20S1E manual 1.0 (PDF page 6): RX 7.3 mA at 3.3 V, x2"}
 
 # What the tree's model prints for the four states M1 uses (PLAN, battery-side, W) and their documented bounds.
@@ -80,6 +84,7 @@ model_states:
   PS-RED2:      {plan: 31.38, low: 17.62, high: 55.56, src: "pwr_red2.out, PS-RED2 (slots 2 and 3)"}
   PS-SURV-R:    {plan: 23.27, low: 12.78, high: 46.94, src: "pwr_red2.out, PS-SURV-R (slot 3 alone after BANK-R1)"}
   PS-SURV:      {plan: 21.73, low: 12.45, high: 42.0,  src: "pwr_red2.out, PS-SURV (slot 2 alone)"}
+  PS-NIGHT-RELAY: {plan: 16.20, low: 11.02, high: 39.67, src: "night_bounds.out: the model's RED state with the night overrides (this record's option a)"}
 
 # The state rules, applied to the PS-IDLE-SPEC rows to recount the other states from the same components
 # (CONOPS 4a and 4c define the states; pwr_red2.py applies the same rules to pwr_budget's model).
@@ -105,7 +110,7 @@ state_rules:
     base: PS-SURV-R
     off_groups: [mixfans, geiger, usb5, e72]
     low: [ksz, sups]
-    night: [panel, pa]
+    night: [panel, pa, lora, rb]
     note: "slot 3 alone (LoRa mesh, Iridium idle, APRS receive with fixed-site beacons, GNSS, the panel at NIGHT lighting, SOS path); the Ethernet switch in energy-detect (two of its ports have no module), the supervisors at 200 MHz, the mixer fans stopped (a cool night, shaded), the Geiger and the QMX deferred by D-01 off, the E72 pair off (not a bearer of M1), the monitor and HDMI off"
 
 distribution_mohm: 22.5      # pwr_budget.py R_DIST since its third cycle, the chemical fuse F2 at its maximum included
@@ -191,6 +196,16 @@ solar:
     voc_max_v: {value: 25.0, src: "REQ-016: at most 25 V open circuit at the panel's coldest; PV_P v_max 25.0"}
     fuse_f2_a: {value: 10.0, src: "gen_sch_e.py:437: F2 10 A mini blade"}
     connector_a: {value: 10.0, src: "gen_sch_e.py:436: J_SOLAR JST-VH 10 A"}
+    front_end_draw_w: {value: 126.9, src: "gen_sch_e.py:104-107: board A's front end limits its output at VSNS 57 mV over R11 10 mOhm, 5.7 A at 20.7 V, so it draws at most 5.7 x 20.7 / 0.93 = 126.9 W; nothing in the stage bounds the power below that (gen_sch_e.py:99-101, 580-583)"}
+    stage_current_loops_as_generated: "gen_sch_e.py:482-484, U5's pin map: pins 29 to 31 (EXTVCC, CSNOUT, CSPOUT on the 38-lead QFN) on TRK_OUT and pins 32 to 34 (CSNIN, CSPIN, VIN) on PV_P: both current monitors are tied off as the maker says for a monitor 'not in use' (8705af PDF pages 11 and 12), so neither current loop can act; R16 and R17 (10k) hold IMON_IN and IMON_OUT to ground (line 628)"
+    stage_limit:
+      v_reg_imon_v: {min: 1.187, typ: 1.208, max: 1.229, src: "8705af PDF page 4: Regulation Voltages for IMON_IN and IMON_OUT, VC = 1.2 V"}
+      gm_imon_out_mmho: {min: 0.94, typ: 1.0, max: 1.085, src: "8705af PDF page 5: VCSPOUT-CSNOUT to IMON_OUT Amplifier A6 gm at 50 mV, LT8705AE and LT8705AI, over temperature"}
+      r_imon_kohm: 24.3
+      resistor_tol: 0.01
+      i_target_a: {value: 6.16, src: "the stage's output at 15.1 V for 100 W in at the declared 0.93: 100 x 0.93 / 15.1 (gen_sch_e.py:583)"}
+      trk_out_v: 15.1
+      stage_eta: 0.93
   chain:
     - {stage: "board E's LT8705A stage, PV_P (17.6 V) to TRK_OUT (15.1 V)", eta: 0.93, low: 0.90, high: 0.97, src: "the intent's declared 0.93 (gen_sch_e.py:606, rail TRK_OUT); NOT PLOTTED at this ratio (8705af plots a 48 V design); the bracket is this stream's"}
     - {stage: "board A's front end LM5176 U2, VIN_RAW to VBUS20 (20 V)", eta: 0.93, low: 0.90, high: 0.97, src: "the intent's declared 0.93 (gen_sch_a.py:103, rail VBUS20); NOT PLOTTED at 20 V out"}
@@ -223,7 +238,7 @@ pockets:
   block: {wrap_mm: 0.5, joint_mm: 1.0, src: "A06's shrink-wrapped block: 3 x 18.55 + 2 x 0.5 = 56.65 wide, 2 x 18.55 + 2 x 0.5 = 38.10 high, 66.25 a section plus 1.0"}
   board_p_mm: {w: 44.0, l: 70.0, gap: 2.0}
   a06_verdicts:
-    - {config: "4S3P 18650, 12 cells", east: "FITS as a shrink-wrapped block with board P at its end (X spare 1.35, Z clear 4.53 nominal, 3.32 at the worst base)", west: "NO (X spare -17.42 with board P beside the cells)", wh_nominal: 144.7}
+    - {config: "4S3P 18650, 12 cells", east: "FITS as a shrink-wrapped block with board P at its end (X spare 1.35, Z clear 4.53 nominal, 3.32 at the worst base)", west: "the block ALONE fits (Z clear 5.20 nominal, 3.99 worst, packfit_west.out); with board P on top, at its end or at its side NO", wh_nominal: 144.7}
     - {config: "4S4P 18650, 16 cells", east: "NO (X spare -17.42 in the nearest arrangement)", west: "NO", wh_nominal: 192.96}
     - {config: "4S2P 21700, 8 cells", east: "FITS (X spare 3.12, Z clear 1.42 nominal, 0.21 at the worst base)", west: "NO", wh_nominal: 144.0, note: "about 144 Wh with a representative 5 Ah cell (no 21700 cell is held in v2/vendor/)"}
     - {config: "4S3P 21700, 12 cells", east: "NO (X spare -4.87)", west: "NO", wh_nominal: 216.0}

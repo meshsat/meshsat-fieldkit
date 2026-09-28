@@ -1,0 +1,6 @@
+NIGHT STATE BOUNDS with the tree's model (records/rv-pwr/pwr_budget.py, sha256 469d0820b046ef6f, imported unchanged). AI review.
+battery W at the pack terminals: LOW / PLAN / HIGH (the model's scenarios)
+  PS-SURV-R (check: pwr_red2.out 12.78 / 23.27 / 46.94)  12.78 /  23.27 /  46.94
+  PS-NIGHT-RELAY                                        11.02 /  16.20 /  39.67
+panel board C at night: 0.823 W plan (the declaration's 1.50 W less the lamps' declared 0.7965 W, plus the lamps at 15 percent), 2.939 W high
+the LoRa module at the model's RED figure (0.3 W plan, receive plus about 9 percent airtime); the RockBLOCK at 0.1 W plan (one session in ten minutes)
