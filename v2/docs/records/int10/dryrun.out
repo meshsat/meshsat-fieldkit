@@ -1,0 +1,54 @@
+overlay /home/claude-runner/worktrees/meshsat-fieldkit/_scratch/s99reg/ov from /home/claude-runner/worktrees/meshsat-fieldkit/s99reg
+$ rules_lib.py requirements (overlay, before the scripts)
+  exit 1; last line: rules_lib: 144 requirement record(s), 3 error(s), 1 warning(s)
+    warn  out/rule-audit is not in this tree: a PASS is not checked against its rules' classes
+    warn  REQ-077: its reading is bound to v2/ecad/tools/gen_sch_a.py at ebb5c0f250780a48 and the tree holds eb2e347e4d371e0f: re-read it before it decides
+    ERROR CON-019: its reading is bound to v2/ecad/tools/gen_sch_a.py at ebb5c0f250780a48 and the tree holds eb2e347e4d371e0f: re-read it before it decides
+    ERROR CON-018: its reading is bound to v2/ecad/tools/gen_sch_a.py at ebb5c0f250780a48 and the tree holds eb2e347e4d371e0f: re-read it before it decides
+    ERROR CFL-014: its reading is bound to v2/ecad/tools/gen_sch_a.py at ebb5c0f250780a48 and the tree holds eb2e347e4d371e0f: re-read it before it decides
+$ apply_rebind_generator_a_s99.py --check
+  exit 0; last line: apply_rebind_generator_a_s99: CHECK ONLY, nothing written: 4 records rebound (CFL-014, CON-018, CON-019, REQ-077); v2/ecad/tools/gen_sch_a.py ebb5c0f250780a48 -> eb2e347e4d371e0f
+$ apply_rebind_generator_a_s99.py
+  exit 0; last line: OWED: rules_render.py --requirements (the registry changed)
+    apply_rebind_generator_a_s99: 4 records rebound (CFL-014, CON-018, CON-019, REQ-077); v2/ecad/tools/gen_sch_a.py ebb5c0f250780a48 -> eb2e347e4d371e0f
+$ apply_rebind_generator_a_s99.py (second run)
+  exit 2; last line: apply_rebind_generator_a_s99: REFUSED: already applied (a second run)
+$ apply_s99_registry.py --check
+  exit 0; last line: apply_s99_registry: CHECK ONLY, nothing written: S-99's title re-stated, S-115 (LAYOUT_STAGE) and S-116 would open, REQ-018, REQ-009, REQ-002 would wait on S-116
+$ apply_s99_registry.py
+  exit 0; last line: apply_s99_registry: S-99's title re-stated (no disposition; REQ-018 still waits on it); S-115 opened (LAYOUT_STAGE); S-116 opened and REQ-018, REQ-009, REQ-002 wait on it
+$ apply_s99_registry.py (second run)
+  exit 2; last line: apply_s99_registry: REFUSED: S-115 exists already (a second run)
+$ apply_decision_55.py --check
+  exit 0; last line: OWED: decisions_render.py (the page's closed table has no row for decision 55 today, so --check reads it stale until it is re-rendered); rules_render.py --requirements (the registry changed by the rebind)
+$ apply_decision_55.py
+  exit 0; last line: OWED: decisions_render.py (the page's closed table has no row for decision 55 today, so --check reads it stale until it is re-rendered); rules_render.py --requirements (the registry changed by the rebind)
+    apply_decision_55: decision 55 appended (SESSION, ruled 2026-09-28); v2/ecad/tools/pcb_decisions.yaml@4e1ff91f98e06b72 -> @ad64649584227d29; 1 record(s) rebound with an evidence entry: CFL-016
+$ apply_decision_55.py (second run)
+  exit 2; last line: apply_decision_55: REFUSED: decision 55 is in the file (a second run)
+$ apply_if_ab_power_s99.py --check
+  exit 0; last line: apply_if_ab_power_s99: CHECK ONLY, nothing written: 13 replacement(s) (s99a's two included); cites read from the generators: IF-AB-POWER A 1051-1052, 1149, B 551, 1119, 1210, slot rails 119, Q28 54, +54V_POE 152; IF-AD-HARNESS A 1387, 1598-1599, D 259-261, U23 1387; IF-AB-WALL A 1596-1597, B 1637-1638, the D-12 block 1613-1618
+$ apply_if_ab_power_s99.py
+  exit 0; last line: OWED: the readings that record pcb_interfaces.yaml by sha (interfaces.py, rules_status CONFIG_INPUTS) are re-taken
+    apply_if_ab_power_s99: 002ae8575028468a -> 363af4715553e42b; 13 replacement(s) (s99a's two included); cites read from the generators: IF-AB-POWER A 1051-1052, 1149, B 551, 1119, 1210, slot rails 119, Q28 54, +54V_POE 152; IF-AD-HARNESS A 1387, 1598-1599, D 259-261, U23 1387; IF-AB-WALL A 1596-1597, 
+$ apply_if_ab_power_s99.py (second run)
+  exit 2; last line: apply_if_ab_power_s99: REFUSED: already applied (a second run)
+$ apply_pages_s99.py --check
+  exit 0; last line: apply_pages_s99: CHECK ONLY, nothing written: v2/docs/HW-FW-CONTRACT.md, v2/docs/ASSEMBLY.md, v2/docs/records/s98/README.md and v2/docs/records/s98/LAYER-ROWS.md corrected; ASSEMBLY.md 0ca504d746b427cb -> ee4eff52fc5df307; rebound: CFL-015; the review of decision 31 left as filed (pinned 094817023210d1b0), its erratum v2/docs/records/int10/ERRATA-DECISION-31-REVIEW.md
+$ apply_pages_s99.py
+  exit 0; last line: OWED: rules_render.py --requirements (the registry changed by the rebind)
+    apply_pages_s99: v2/docs/HW-FW-CONTRACT.md, v2/docs/ASSEMBLY.md, v2/docs/records/s98/README.md and v2/docs/records/s98/LAYER-ROWS.md corrected; ASSEMBLY.md 0ca504d746b427cb -> ee4eff52fc5df307; rebound: CFL-015; the review of decision 31 left as filed (pinned 094817023210d1b0), its erratum v2/docs/r
+$ apply_pages_s99.py (second run)
+  exit 2; last line: apply_pages_s99: REFUSED: already applied (a second run)
+$ rules_lib.py requirements (overlay, after the scripts)
+  exit 0; last line: rules_lib: 144 requirement record(s), 0 error(s), 0 warning(s)
+    warn  out/rule-audit is not in this tree: a PASS is not checked against its rules' classes
+repository copies of the edited files unchanged: True
+  v2/ecad/tools/pcb_requirements.yaml: +163 -23 lines; overlay sha256/16 35c66dff6e9f8d18
+  v2/ecad/tools/pcb_decisions.yaml: +59 -0 lines; overlay sha256/16 ad64649584227d29
+  v2/ecad/tools/pcb_interfaces.yaml: +21 -17 lines; overlay sha256/16 363af4715553e42b
+  v2/docs/HW-FW-CONTRACT.md: +1 -1 lines; overlay sha256/16 1e0dbda2a799d29e
+  v2/docs/ASSEMBLY.md: +1 -1 lines; overlay sha256/16 ee4eff52fc5df307
+  v2/docs/records/s98/README.md: +7 -2 lines; overlay sha256/16 cb3ad0882e138978
+  v2/docs/records/s98/LAYER-ROWS.md: +1 -1 lines; overlay sha256/16 7c53a8844330dcb8
+DRY RUN PASSED
