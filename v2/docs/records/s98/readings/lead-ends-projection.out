@@ -1,0 +1,23 @@
+PROJECTION, not a regenerated file: the committed intent files with the declarations fnd/s98's generators now carry written in by hand, to preview lead_ends.py and the rail() load-sum invariant before the box regenerates them.
+rail() invariant, loads sum <= 1.02 x peak (intent.py:170-172), on the projected rails:
+  A VBAT      typ 10.00 peak 18.00 loads sum 11.560  OK
+  A +5V_S1    typ  2.50 peak  5.00 loads sum  5.000  OK
+  A +5V_S2    typ  4.20 peak  5.63 loads sum  5.630  OK
+  A +5V_S3    typ  2.50 peak  5.00 loads sum  5.000  OK
+  A +5V_DEV   typ  5.10 peak  6.90 loads sum  5.100  OK
+  A +54V_POE  typ  0.30 peak  0.60 loads sum  0.300  OK
+  B +5V_S1    typ  2.50 peak  5.00 loads sum  4.751  OK
+  B +5V_S2    typ  4.20 peak  5.63 loads sum  4.751  OK
+  B +5V_S3    typ  2.50 peak  5.00 loads sum  4.751  OK
+  B +5V_DEV   typ  3.80 peak  6.00 loads sum  5.490  OK
+  B +54V_POE  typ  0.30 peak  0.60 loads sum  0.600  OK
+lead_ends: A intent /tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit/90a77d46-57cf-4758-b702-e06537d0a6cc/scratchpad/s98-projection/pcb-a-power-intent.projected.json sha256/16 fd9cf5d424856131
+lead_ends: B intent /tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit/90a77d46-57cf-4758-b702-e06537d0a6cc/scratchpad/s98-projection/pcb-b-compute-intent.projected.json sha256/16 10c56b02759dcc8e
+lead_ends: +5V_S1    AGREE    A 2.50 / 5.00 A (load J_5V_S1 5.0), B 2.50 / 5.00 A
+lead_ends: +5V_S2    AGREE    A 4.20 / 5.63 A (load J_5V_S2 5.63), B 4.20 / 5.63 A
+lead_ends: +5V_S3    AGREE    A 2.50 / 5.00 A (load J_5V_S3 5.0), B 2.50 / 5.00 A
+lead_ends: +5V_DEV   AGREE    at the lead: A apportions 3.8 A to J_5V_DEV, B declares 3.80 A typical arriving; A's typical 5.10 A = 3.8 + U23 1.00 + U32 0.30
+lead_ends:           S-99     converter side, NOT JUDGED HERE: A's peak 6.90 A against B's peak 6.00 A arriving plus A's other branches at their load figures (1.30 A); the coincident figures and the LM5176 average loop's limit are S-99's
+lead_ends: +54V_POE  AGREE    A 0.30 / 0.60 A (load J_54V 0.3), B 0.30 / 0.60 A
+lead_ends: 5 of 5 leads AGREE (declaration consistency only; adequacy, the mode currents and S-99 are not judged here)
+exit 0
