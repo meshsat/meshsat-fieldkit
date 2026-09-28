@@ -13,7 +13,7 @@ the boards; each one needs hardware that does not exist yet.
 | INT-003 a transformerless Ethernet link is verified up at 1000M on the built board | Link instability, bias fighting between the two PHYs, and emissions from an unbalanced pair. | the bench test the ruling rests on: each of the three module links brought up at 1000M full duplex with auto-n | LAB |
 | THM-001 every dissipating part has a path | Silent derating, shortened life, and thermal shutdown in the sun. | decision 34 is ruled (21 September 2026), so the ambient this rule was missing is stated: +40 C in use and abo | SESSION |
 | EMC-001 source, path, victim | Receiver desense in the kit's own box, and a product that cannot pass an emissions test. | The SHEET and the PLAN are DONE (16 September 2026, verified again on the 17th): pcb_emc.yaml carries every sw | SESSION |
-| REL-001 the build survives its service life | A tall part shears its joints, a connector wears, a coated board traps moisture. | The SHEET is DONE (17 September 2026): every board carries its wear-out and environment classes with the parts | OWNER |
+| REL-001 the build survives its service life | A tall part shears its joints, a connector wears, a coated board traps moisture. | 28 September 2026: the checker and the list are repaired (stream d6rel, S-89). What remains of the SHEET is th | OWNER |
 | BAT-001 the cell block is protected in hardware | Thermal runaway from an over-charge, a deep discharge, or an external short. | 27 September 2026: decision 40 is ruled and in the schematic, and the table judges the parts it added; what re | OWNER |
 
 6 rule(s) of 59 wait on hardware. Nothing has been fabricated or powered, so each of these is UNKNOWN rather
