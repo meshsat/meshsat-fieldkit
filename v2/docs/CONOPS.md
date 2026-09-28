@@ -208,6 +208,13 @@ mode, and the ambient at which it stops is a bound until the empty-case heat-bal
 measures the conductance. The ruling stands; the changed figure is reported to the owner at the next checkpoint, not
 asked.
 
+**Owner's instruction of 28 September 2026 (D-20, section 7):** M1 and REQ-072 stand as written, with their duration and
+operating conditions; an external DC source may remain optional, but requiring it overnight is not a substitute. The energy
+budget is reconciled (the requirements registry's S-114, `records/energy/`) against verified loads, usable pack energy,
+night duration and solar contribution, with feasible options inside the approved constraints; any change to pack capacity,
+placement or operating modes is presented to the owner explicitly. Until then REQ-072 reads FAIL and this section is not
+restated.
+
 ### M2. Vehicle move with position reporting
 
 **Setting:** the kit travels in a vehicle, powered from the 9 to 36 V vehicle input, lid closed. The input
@@ -1051,6 +1058,8 @@ with its effect, never an assumed answer.
 | D-15 | Cell under-voltage on the gauge's firmware (decision 40) | RULED 26 Sep | a 4S secondary protector that also covers cell under-voltage if one can be sourced near the cost of the over-voltage-only part; otherwise firmware under-voltage with a data-flash verification at commissioning. The session floor either way: the over-voltage secondary protector, a chemical fuse, the BQ4050's FUSE output and its PTC input |
 | D-16 | Vehicle surge claim | RULED 26 Sep | no vehicle surge claim for the prototype; the entry is recorded as not qualified, with a warning against 24 V military vehicle buses; MIL-STD-1275 is revisited only if military vehicles become a market |
 | D-17 | Board A's USB-C CC pins (decision 31) | RULED 26 Sep | an external low-capacitance ESD array at the CC pins by the connector, riding on the board A update already owed |
+| D-19 | The case test package (decision sheet OD-01) | RULED 28 Sep | the buy route, staged: one checkout-ready list for the minimum package on one prototype case, machining quotes apart, the monitor and the logger deferred unless the procedure needs them, a test brief for an operator the owner assigns; purchasing stays the owner's and no unpriced purchase is authorised; the exact case variant (1450 or 1450EU, the 1450PF frame's target) confirmed before ordering |
+| D-20 | Mission M1's energy (decision sheet OD-02, corrected) | RULED 28 Sep | M1 and REQ-072 preserved with their duration and conditions; an external DC source optional, never the overnight basis; the energy budget reconciled against verified loads, usable pack energy, night duration and solar (S-114), options within the fixed case, the D-06 pack and the mission, and the smallest justified changes presented for the owner's decision; unmet criteria stay visible |
 | D-18 | IP68 fans | OPEN, conditional | it arises only if Delta's 40 mm IP68 fan does not fit the coolers; if it does, the session settles it under the owner's standing rule of 26 September 2026 (section 7a) and records the option it takes. The sealed case's thermal path waits on it. **This layer does not wait on it:** no mode, trigger or behaviour here changes with the fan part; a stopped fan is a fault of section 4e, and the fans-on conductance every thermal row assumes is what the empty-case heat-balance test measures (FEA-004). The fit check against the fan's and the CM5 Cooler's drawings is the parts stream's, the fan's drawing still to be filed under `v2/vendor/` |
 
 The board-level decisions 27 (board C on six layers), 28 (board P on four layers at 2 oz), 41 (the order set

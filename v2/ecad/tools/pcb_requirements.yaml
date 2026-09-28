@@ -276,7 +276,7 @@ baseline_reviews:
   - "v2/docs/reviews/TARGETED-RECHECK-LAYER-3-2026-09-27.md@7831358b96b6f5ca"
 sources_read_at: 08f3665a
 needs_document: "v2/docs/CONOPS.md"
-needs_document_sha256: 6ebe6760c4312bcadab789da80d103d6e40da0a7657dfe636315eef66930fa54
+needs_document_sha256: 6cb7b241cb84d7290caffa74df2622c64222dd66a2de66693e480e3a18e44281
 companion_documents: []
 
 # The needs of CONOPS section 2, quoted. The validator compares each statement with the needs table of the
@@ -666,6 +666,35 @@ owner_rulings:
       under this rule, with its reason, so that it can be reversed.
     source: ["owner ruling standing-rule"]
 
+  - id: D-19
+    authority: OWNER
+    ruled_on: "2026-09-28"
+    title: "the case test package: the buy route, staged"
+    ruling: >-
+      OD-01 of the decision sheet of 28 September 2026: the physical-validation route is selected, with staged
+      purchasing. The session prepares one checkout-ready list for the minimum package on one prototype case (exact
+      compatible part numbers, VAT, shipping, total), obtains the machining quotes separately, keeps the monitor and the
+      thermocouple logger deferred unless the test procedure shows them necessary and no existing or borrowed equipment
+      suffices, and writes a short test brief naming the competence and the equipment required so that the owner can
+      assign the operator. Purchasing remains the owner's: this selects the route and authorises no unpriced purchase,
+      and buying parts closes no measurement gate. The exact case variant is confirmed before ordering (Peli states the
+      1450PF frame is intended for the 1450EU).
+    source: ["owner ruling OD-01 of 28 September 2026", "v2/docs/CONOPS.md section 7", "v2/docs/reviews/READY-TO-ACT.md sections 0, 5 and 6"]
+  - id: D-20
+    authority: OWNER
+    ruled_on: "2026-09-28"
+    title: "mission M1's energy: the requirements preserved, the budget reconciled"
+    ruling: >-
+      OD-02 of the decision sheet of 28 September 2026, as corrected by the owner the same evening: the original mission
+      M1 and requirement REQ-072, with their specified duration and operating conditions, are preserved; an external DC
+      source may remain optional, but requiring it overnight is not an acceptable substitute. The session reconciles the
+      energy budget against verified loads, usable battery energy, night duration and solar contribution, develops
+      feasible options within the approved constraints (the case that never changes, the pack of D-06, the required
+      mission), presents any change to battery capacity, placement or operating modes explicitly, and, if the fixed
+      case, the pack and the mission are incompatible, demonstrates the conflict and presents the smallest justified
+      changes for the owner's decision. Unmet criteria stay visible: REQ-072 reads FAIL until the reconciliation decides
+      otherwise. The routes (c) to (e) of EQ-13 are not taken.
+    source: ["owner ruling OD-02 of 28 September 2026, corrected the same evening", "v2/docs/CONOPS.md sections 3 and 7", "v2/docs/handover/ENGINEERING-QUESTIONS.md EQ-13"]
 # Choices the session took under the owner's standing rule of 26 September 2026: each is the session's, never
 # the owner's, names the ruling that lets the session take it, says why, and can be reversed. `closes` names the
 # open items it answered; `adds_core_needs` a need it added to prototype 1's core. A choice later withdrawn keeps
@@ -2487,7 +2516,9 @@ open_items:
       CM5 heatsink, and stand-ins for the boards and the pack: not approved by D-09; it needs the owner's spending
       approval before boards A, B, E and P enter layout, because a failing check of their YES rows moves board A's east
       edge, board B's edges, east-end parts and stack, board E's south edge and clamp lanes, or board P's place
-      (CASE-FIT-UNCERTAINTIES.md sections 2 and 7; FEA-007).
+      (CASE-FIT-UNCERTAINTIES.md sections 2 and 7; FEA-007). Owner ruling D-19 (28 September 2026): the buy route is
+      selected, staged; the checkout-ready list, the machining quotes and the operator's brief are owed by the session
+      (READY-TO-ACT.md sections 5 and 6); purchasing remains the owner's and buying closes no measurement gate.
   - id: S-01
     class: SESSION
     status: OPEN
@@ -2967,7 +2998,10 @@ open_items:
       solar alone. The session's recommendation and the arithmetic are ENGINEERING-QUESTIONS EQ-13. Decided before
       boards A, E and P enter layout, because the answer can move the pack pocket, board E's solar stage (D4, F2,
       J_SOLAR) and board A's front end. Until then REQ-072 stays FAIL, CONOPS M1 states that a night needs an overnight
-      input on the 9 to 36 V entry, and nothing is lowered: neither REQ-016 nor REQ-072 is restated to fit.
+      input on the 9 to 36 V entry, and nothing is lowered: neither REQ-016 nor REQ-072 is restated to fit. Owner's
+      instruction of 28 September 2026 (D-20): the routes (c), (d) and (e) are not chosen; the energy budget is
+      reconciled first (S-114) and the smallest justified changes come back to the owner; M1 and REQ-072 stay as
+      written.
 
   - id: S-82
     class: SESSION
@@ -3407,6 +3441,21 @@ open_items:
       conductors, not judged at the desk, and J_MAINSW, read on board C's netlist). A declaration form that names the
       part, its document and the level it is rated to, read by the tool, is owed (the review of decision 31 (stream
       d8dec31, 28 September 2026), section 10, T-3). For the tools stream.
+  - id: S-114
+    class: SESSION
+    status: OPEN
+    title: >-
+      (stream energy, owner ruling D-20) The energy reconciliation of mission M1 on the approved constraints: every load
+      of the states M1 uses classed as a maker's figure, a project allocation or a bound (measured: none until the
+      bench); the usable energy of the 4S3P pack new and aged from the cell maker's sheet and the protection and gauge
+      windows; the dark hours at 52 N by month computed from the solar declination; the solar energy per day into the
+      kit within REQ-016's 25 V and 100 W entry by month; an hour-by-hour balance of M1 as written for the design and
+      the worst month with a sensitivity table; the options within the constraints (a night operating mode that still
+      meets M1's must-hold, the usable depth of discharge, the cells the pocket admits, a second pack's location in the
+      fixed case, the panel against the stage's ceiling, an external DC source as optional only) with their numbers;
+      and, if M1 as written is not met, the smallest justified changes for the owner's decision. Record:
+      v2/docs/records/energy/. Open until the study is filed and REQ-072 re-read on it; REQ-072's statement and
+      acceptance are not rewritten.
 closed_items:
   - id: S-89
     closed_by: commit aaed6daa4434f2ae94331cdafb3134056fb1eb97
@@ -4583,8 +4632,13 @@ records:
           the hardware ENABLE was owed) and correction 31 added at the end; every other line is byte-identical to the
           file at a92ea2ef3793a3c9; line 32 and correction 6, which this reading cites, are byte-identical, so it stands
           PASS on the file at e1fdcebe8638e471
+      - >-
+          v2/docs/CONOPS.md re-read at integration set 7 (28 September 2026): two rows added to the section 7 table
+          (owner rulings D-19 and D-20) and one paragraph appended to section 3's M1 (the owner's instruction that M1
+          and REQ-072 stand as written); every other section byte-identical by heading, the sections this record cites
+          among them. Rebound from 6ebe6760c4312bca to 6cb7b241cb84d729; this entry changes no result.
     evidence_bound_to:
-      - "v2/docs/CONOPS.md@6ebe6760c4312bca"
+      - "v2/docs/CONOPS.md@6cb7b241cb84d729"
       - "v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8"
       - "v2/docs/V2-SPEC.md@e1fdcebe8638e471"
     release_effect: BLOCKER
@@ -6254,7 +6308,7 @@ records:
       decisions: []
     rule_coverage: PARTIAL
     choices: [SC-36]
-    waits_on: [S-53, S-47]
+    waits_on: [S-53, S-47, S-114]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: BLOCKER
@@ -6303,9 +6357,9 @@ records:
       rules: [PWR-001]
       decisions: []
     rule_coverage: PARTIAL
-    rulings: [D-06]
+    rulings: [D-06, D-20]
     choices: [SC-36, SC-21, SC-37]
-    waits_on: [S-53, M-02]
+    waits_on: [S-53, M-02, S-114]
     status: DEFINED
     evidence_result: FAIL
     evidence_phase: SCHEMATIC
@@ -6354,6 +6408,11 @@ records:
           the FAN1_SW and FAN2_SW node declarations after the fan loop, J_BLK's value, the GPIO list comment and the
           section list, and nothing else; the solar stage this reading rests on (J_SOLAR, F2, D4, U5 and the FBIN point)
           is unchanged, so it stands FAIL on the file at f846e138cb53a8c6
+      - >-
+          v2/docs/CONOPS.md section 7, owner ruling D-20 of 28 September 2026: this record is preserved with its
+          duration and its operating conditions and stays FAIL at desk; an external DC source overnight is not a
+          substitute for the balance it states; the reconciliation study S-114 is opened and this record waits on it.
+          This entry changes no result, statement or acceptance.
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_e.py@f846e138cb53a8c6"
       - "v2/docs/feasibility/POWER-THERMAL.md@ad3ba27cef9e0f68"
@@ -12015,11 +12074,16 @@ records:
           is unchanged and in the same order, which the draft asserts on the parsed file before it writes, decisions
           28 and 40, which this record reads, among them; so this reading stands on
           v2/ecad/tools/pcb_decisions.yaml@4e1ff91f98e06b72
+      - >-
+          v2/docs/CONOPS.md re-read at integration set 7 (28 September 2026): two rows added to the section 7 table
+          (owner rulings D-19 and D-20) and one paragraph appended to section 3's M1 (the owner's instruction that M1
+          and REQ-072 stand as written); every other section byte-identical by heading, the sections this record cites
+          among them. Rebound from 6ebe6760c4312bca to 6cb7b241cb84d729; this entry changes no result.
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@7a2c0ac2190b141a"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@56adc9746d61c4e0"
       - "v2/docs/PANEL.md@4647782f5aca7c13"
-      - "v2/docs/CONOPS.md@6ebe6760c4312bca"
+      - "v2/docs/CONOPS.md@6cb7b241cb84d729"
       - "v2/docs/V2-SPEC.md@e1fdcebe8638e471"
       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
       - "v2/docs/TEST-PLAN.md@ae57da0b57e214f7"
@@ -13954,9 +14018,14 @@ records:
           section 7's 0x21 and 0x24 row (U27's P1.5 reads HOT-R1), with the line count kept; every other line is
           byte-identical to the file at 57a56726f9db723a; section 10 is unchanged, so it stands PASS on the file at
           4647782f5aca7c13
+      - >-
+          v2/docs/CONOPS.md re-read at integration set 7 (28 September 2026): two rows added to the section 7 table
+          (owner rulings D-19 and D-20) and one paragraph appended to section 3's M1 (the owner's instruction that M1
+          and REQ-072 stand as written); every other section byte-identical by heading, the sections this record cites
+          among them. Rebound from 6ebe6760c4312bca to 6cb7b241cb84d729; this entry changes no result.
     evidence_bound_to:
       - "v2/docs/PANEL.md@4647782f5aca7c13"
-      - "v2/docs/CONOPS.md@6ebe6760c4312bca"
+      - "v2/docs/CONOPS.md@6cb7b241cb84d729"
       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
       - "v2/ecad/tools/gen_sch_a.py@9684e7a9606aede6"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
