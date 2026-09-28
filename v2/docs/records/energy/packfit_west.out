@@ -1,0 +1,16 @@
+WEST POCKET, A06's tool (pack_fit.py sha256 a2a050dc24c461f2, unchanged). B underside Z 47.90; bases nominal 1.40 / worst 2.61 (heater mat and pads).
+the 4S3P block: 3x2 section, 2 sections, W 56.65 x L 133.50 x H 38.10 (A06's wrap 0.5 and joint 1.0)
+1 block alone        base=nom   top Z 39.50  X spare   1.35  Y spare  26.50  Z clear   5.20 at C33 1n 2kV C1812 on B.Cu  => FITS
+2 board P on top     base=nom   parts 16.17 (Keystone 3568 with its blade): top Z 57.77  Z clear -11.47 at IOCTRL logic on B.Cu (U41 LQFP-100, U70..U79 TSSOP-14, 060  => NO
+2 board P on top     base=nom   parts  9.80 (JST XH): top Z 51.40  Z clear  -5.10 at IOCTRL logic on B.Cu (U41 LQFP-100, U70..U79 TSSOP-14, 060  => NO
+2 board P on top     base=nom   parts  6.40 (the first issue's 8 mm board): top Z 48.00  Z clear  -1.70 at IOCTRL logic on B.Cu (U41 LQFP-100, U70..U79 TSSOP-14, 060  => NO
+3 board P end        base=nom   group 56.65 x 205.50  X spare   1.35  Y spare -45.50  => NO (length)
+3 board P side       base=nom   group 75.42 x 133.50  X spare -17.42  Y spare  26.50  => NO (width)
+1 block alone        base=worst top Z 40.71  X spare   1.35  Y spare  26.50  Z clear   3.99 at C33 1n 2kV C1812 on B.Cu  => FITS
+2 board P on top     base=worst parts 16.17 (Keystone 3568 with its blade): top Z 58.98  Z clear -12.68 at IOCTRL logic on B.Cu (U41 LQFP-100, U70..U79 TSSOP-14, 060  => NO
+2 board P on top     base=worst parts  9.80 (JST XH): top Z 52.61  Z clear  -6.31 at IOCTRL logic on B.Cu (U41 LQFP-100, U70..U79 TSSOP-14, 060  => NO
+2 board P on top     base=worst parts  6.40 (the first issue's 8 mm board): top Z 49.21  Z clear  -2.91 at IOCTRL logic on B.Cu (U41 LQFP-100, U70..U79 TSSOP-14, 060  => NO
+3 board P end        base=worst group 56.65 x 205.50  X spare   1.35  Y spare -45.50  => NO (length)
+3 board P side       base=worst group 75.42 x 133.50  X spare -17.42  Y spare  26.50  => NO (width)
+4 east pocket 58 x 240: the ruled group (block, 2.0, board P) is 205.50 long, leaving 34.50 in Y; a second board P needs 44.0 (its short side) plus 2.0: NO
+  and beside the block in X: pocket 58.0 less block 56.65 = 1.35 against board P's 1.0 + 1.6 + 16.17 on edge: NO
