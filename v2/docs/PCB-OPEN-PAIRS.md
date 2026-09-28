@@ -7,7 +7,7 @@ Every pair that is not a current PASS, classified. Generated from tools/pcb_deci
 map's maturity and each deciding verdict: a decision that claims a pair wins over everything else, because
 the ruling is the action that moves it, and the measurement is reported beside it rather than lost.
 
-**136 open pair(s)** over 7 board(s). **40 are measured failures** (a tool looked and the board failed), which are **31 distinct readings**, and **0 of those are claimed by an open owner decision**.
+**138 open pair(s)** over 7 board(s). **40 are measured failures** (a tool looked and the board failed), which are **31 distinct readings**, and **0 of those are claimed by an open owner decision**.
 
 | waiting on | pairs | what it means |
 |---|---:|---|
@@ -18,7 +18,7 @@ the ruling is the action that moves it, and the measurement is reported beside i
 | `MEASURED_FAILURE` | 40 | the tool looked and the board failed |
 | `VENDOR_WAIT` | 2 | a fabricator or a standards body, and nobody here |
 | `OWNER_WORK` | 7 | work only the owner or the ordering session can do |
-| `NOT_JUDGED` | 49 | not judged, for the reason the reading gives |
+| `NOT_JUDGED` | 51 | not judged, for the reason the reading gives |
 
 A pair is what a BOARD has to satisfy, so the table counts pairs; these rules are decided by a verdict
 written ONCE for the whole set, so their rows are one reading seen on every board and not that many separate
@@ -31,8 +31,8 @@ things to fix.
 | board | open | of which measured | decision-bound | authority | missing input | not judged |
 |---|---:|---:|---:|---:|---:|---:|
 | A | 26 | 13 | 1 | 1 | 4 | 6 |
-| B | 37 | 4 | 1 | 1 | 5 | 23 |
-| C | 14 | 4 | 1 | 0 | 0 | 8 |
+| B | 38 | 4 | 1 | 1 | 5 | 24 |
+| C | 15 | 4 | 1 | 0 | 0 | 9 |
 | D | 16 | 2 | 1 | 1 | 4 | 7 |
 | E | 19 | 6 | 1 | 0 | 4 | 7 |
 | E5 | 8 | 4 | 1 | 0 | 0 | 3 |
@@ -40,7 +40,7 @@ things to fix.
 
 ## Readings owed
 
-Of the 111 open pairs with a reading beside them, **105 are decided by a reading taken under a tool that has
+Of the 113 open pairs with a reading beside them, **92 are decided by a reading taken under a tool that has
 CHANGED since**. A tool change moves no rule-set fingerprint and no per-rule digest, so nothing else on these
 pages can say it. It is an upper bound, because a tool file moves for a comment as readily as for a
 criterion, and it decides nothing: it says the reading is owed. Re-take with retake_gate.sh or a sweep.
@@ -66,7 +66,6 @@ criterion, and it decides nothing: it says the reading is owed. Re-take with ret
 | `PLC-001` | A, B |
 | `PLC-002` | B |
 | `PLN-001` | B |
-| `REL-001` | A, B, C, D, E, E5, P |
 | `RET-001` | B, C, P |
 | `RET-002` | B, C, P |
 | `RET-003` | A, B, C, D, E |
@@ -76,7 +75,6 @@ criterion, and it decides nothing: it says the reading is owed. Re-take with ret
 | `RTE-002` | B |
 | `SCH-002` | A, B |
 | `SCH-003` | B |
-| `SI-001` | A, B, C, D, E, P |
 | `STK-001` | B, E5, P |
 | `SUP-001` | A, B, C, D, E, E5, P |
 | `VIA-001` | B |
@@ -218,13 +216,13 @@ What closes these is a re-cut and a route, not a drawing.
 | `DFA-001` | E | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 | `DFA-001` | P | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 
-## NOT_JUDGED (49): not judged, for the reason the reading gives
+## NOT_JUDGED (51): not judged, for the reason the reading gives
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
 | `SI-001` | A | INCONCLUSIVE | edge_length INCONCLUSIVE: SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (U |
 | `RF-002` | A | INCONCLUSIVE | inhibit_chain_a INCONCLUSIVE: RF-002 on this board: where the transmit inhibit line runs, it is present, reaches the gate it keys, has the panel toggle as its only source, is buffered and no |
-| `REL-001` | A | INCONCLUSIVE | reliability was taken 2026-09-28T14:54:53, before 2026-09-28T20:33:53+02:00, when its tool changed what the verdict means; re-take it |
+| `REL-001` | A | INCONCLUSIVE | reliability INCONCLUSIVE: every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the m |
 | `DOC-001` | A | INCONCLUSIVE | final_gate_a INCONCLUSIVE: this board is HELD by an open owner decision, so its paperwork is not current and cannot be made current while the hold stands |
 | `SCH-003` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
 | `PI-002` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
@@ -239,36 +237,38 @@ What closes these is a re-cut and a route, not a drawing.
 | `SI-001` | B | INCONCLUSIVE | edge_length INCONCLUSIVE: SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (U |
 | `RF-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
 | `RF-002` | B | INCONCLUSIVE | inhibit_chain_b INCONCLUSIVE: RF-002 on this board: where the transmit inhibit line runs, it is present, reaches the gate it keys, has the panel toggle as its only source, is buffered and no |
+| `TRN-001` | B | INCONCLUSIVE | port_protect_b INCONCLUSIVE: every declared external conductor meets a protection part before a chip; 0 clamp(s) could not be judged for polarity, 290 connector pin(s) are covered by no ent |
 | `ISO-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
 | `PLC-002` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
 | `RTE-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
 | `VIA-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
 | `PLN-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
 | `EMC-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
-| `REL-001` | B | INCONCLUSIVE | reliability was taken 2026-09-28T14:54:54, before 2026-09-28T20:33:53+02:00, when its tool changed what the verdict means; re-take it |
+| `REL-001` | B | INCONCLUSIVE | reliability INCONCLUSIVE: every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the m |
 | `SCH-002` | C | INCONCLUSIVE | no netlist_parts verdict for this board |
 | `CMP-002` | C | INCONCLUSIVE | jlc_certify_c was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
 | `SUP-001` | C | INCONCLUSIVE | jlc_certify_c was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
 | `RET-003` | C | INCONCLUSIVE | return_stitch INCONCLUSIVE: this board has no transition between two different reference nets, so RET-003 has nothing on it to judge |
 | `SI-001` | C | INCONCLUSIVE | edge_length INCONCLUSIVE: SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (U |
-| `REL-001` | C | INCONCLUSIVE | reliability was taken 2026-09-28T14:54:55, before 2026-09-28T20:33:53+02:00, when its tool changed what the verdict means; re-take it |
+| `TRN-001` | C | INCONCLUSIVE | port_protect_c INCONCLUSIVE: every declared external conductor meets a protection part before a chip; 0 clamp(s) could not be judged for polarity, 39 connector pin(s) are covered by no entr |
+| `REL-001` | C | INCONCLUSIVE | reliability INCONCLUSIVE: every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the m |
 | `SCH-002` | D | INCONCLUSIVE | no netlist_parts verdict for this board |
 | `RET-003` | D | INCONCLUSIVE | return_stitch INCONCLUSIVE: this board has no transition between two different reference nets, so RET-003 has nothing on it to judge |
 | `SI-001` | D | INCONCLUSIVE | edge_length INCONCLUSIVE: SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (U |
 | `RF-002` | D | INCONCLUSIVE | inhibit_chain_d INCONCLUSIVE: RF-002 on this board: where the transmit inhibit line runs, it is present, reaches the gate it keys, has the panel toggle as its only source, is buffered and no |
-| `REL-001` | D | INCONCLUSIVE | reliability was taken 2026-09-28T14:54:55, before 2026-09-28T20:33:53+02:00, when its tool changed what the verdict means; re-take it |
+| `REL-001` | D | INCONCLUSIVE | reliability INCONCLUSIVE: every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the m |
 | `DOC-001` | D | INCONCLUSIVE | final_gate_d INCONCLUSIVE: this board is HELD by an open owner decision, so its paperwork is not current and cannot be made current while the hold stands |
 | `SCH-002` | E | INCONCLUSIVE | no netlist_parts verdict for this board |
 | `RET-003` | E | INCONCLUSIVE | return_stitch INCONCLUSIVE: this board has no transition between two different reference nets, so RET-003 has nothing on it to judge |
 | `SI-001` | E | INCONCLUSIVE | edge_length INCONCLUSIVE: SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (U |
-| `REL-001` | E | INCONCLUSIVE | reliability was taken 2026-09-28T14:54:56, before 2026-09-28T20:33:53+02:00, when its tool changed what the verdict means; re-take it |
+| `REL-001` | E | INCONCLUSIVE | reliability INCONCLUSIVE: every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the m |
 | `DOC-001` | E | INCONCLUSIVE | final_gate_e INCONCLUSIVE: this board is HELD by an open owner decision, so its paperwork is not current and cannot be made current while the hold stands |
 | `CMP-002` | E5 | INCONCLUSIVE | jlc_certify_e5 was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
 | `SUP-001` | E5 | INCONCLUSIVE | jlc_certify_e5 was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
-| `REL-001` | E5 | INCONCLUSIVE | reliability was taken 2026-09-28T14:54:57, before 2026-09-28T20:33:53+02:00, when its tool changed what the verdict means; re-take it |
+| `REL-001` | E5 | INCONCLUSIVE | reliability INCONCLUSIVE: every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the m |
 | `SCH-002` | P | INCONCLUSIVE | no netlist_parts verdict for this board |
 | `CMP-002` | P | INCONCLUSIVE | jlc_certify_p was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
 | `SUP-001` | P | INCONCLUSIVE | jlc_certify_p was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
 | `SI-001` | P | INCONCLUSIVE | edge_length INCONCLUSIVE: SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (U |
-| `REL-001` | P | INCONCLUSIVE | reliability was taken 2026-09-28T14:54:58, before 2026-09-28T20:33:53+02:00, when its tool changed what the verdict means; re-take it |
+| `REL-001` | P | INCONCLUSIVE | reliability INCONCLUSIVE: every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the m |
 
