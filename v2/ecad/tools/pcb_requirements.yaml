@@ -3253,6 +3253,51 @@ open_items:
       prints every ground, or prints how many it cut; a test with a fixture of four grounds in one state. Changing the
       report writer changes the tool's code bundle, so RF-002 is re-taken on every board with it (with the set's next
       box re-take).
+  - id: S-98
+    class: SESSION
+    status: OPEN
+    disposition: DECLARATION
+    disposition_why: >-
+      A declaration item: it moves no record's verdict directly (INT-001 judges the contract's agreement and PWR-001
+      judges board A's copper at the declared current). The generator owners of boards A and B apply the interim entries
+      in the circuit round; the contract is re-read and INT-001 and PWR-001 re-taken then.
+    title: >-
+      (cx1, finding I-03 on the contract IF-AB-POWER) The two ends of the board A to board B power leads declare
+      different currents for one conductor: +5V_S2 (board A 2.5 A typical and 5.0 A peak; board B 4.2 A typical and 5.63
+      A coincident with the 5G module at 4 A) and +5V_DEV (board A apportions 3.2 A to J_5V_DEV; board B declares 3.8 A
+      typical arriving). The pilot's record (v2/docs/records/cx1/ANALYSIS.md and CORRECTION.md, its independent AI check
+      in checks/) derives board B's figures from held maker pages (the CM5's 0.9 A typical, release 3, no maximum
+      published; the RM520N-GL's 3 A continuous and 4 A peak supply capability, Hardware Design v1.0 and v1.1) and finds
+      no held document that decides the PS-ALLTX mode current of any of the five rails (INCONCLUSIVE on all five), so
+      the alignment is INTERIM and the end that derives its figure is the one aligned to: board A's +5V_S2 4.2 A typical
+      and 5.63 A peak with J_5V_S2 5.63 A and the VBAT load Q28 2.22 A, board B's +5V_S2 peak 5.63 A, board A's J_5V_DEV
+      3.8 A and +5V_DEV typical 5.1 A (3.8 + the D8 mezzanine's 1.0 + the wall port's 0.3), as the four verified,
+      unexecuted entries of records/cx1/apply_declarations_draft.py (its --check passes against the generators as held).
+      The generator owners of boards A and B apply them in the circuit round with the regeneration on the KiCad host;
+      then the contract's currents rows are rewritten and INT-001 and PWR-001 re-taken. The mode figures are decided by
+      TEST-PLAN power tests at J_5V_S2 and J_5V_DEV under PS-ALLTX on a built board (prototype verification). Also for
+      board B's owner: the supervisor LDOs U40, U50 and U60 at 0.05 A against their child rails' 0.12 and 0.25 A, the
+      LoRa module U21 at 0.6 A against Ebyte's 0.65 A transmit figure, and U25's comment of 1.4 A against the declared
+      1.2 A on +3V3_DEV.
+  - id: S-99
+    class: SESSION
+    status: OPEN
+    title: >-
+      (cx1, finding I-03's second half) Board A's +5V_DEV converter, an LM5176 stage whose average current limit is 7.10
+      A at the sense resistor's +1 percent and 7.17 A nominal (TI SNVSAI1D, VSNS on page 7 and section 7.3.6 on page
+      17), declares 6.9 A peak, which is board B's 6.0 A plus the wall port's 0.9 A with the D8 mezzanine at zero, while
+      D8 declares 1.0 A typical and 2.0 A peak (its eFuse U23's nominal limit) and nothing in the design makes the three
+      loads non-coincident (the D-11 interlock drops POE_EN and PD_EN only). The coincident peak is 7.9 A with D8 at its
+      typical and 8.9 A at every declared limit, both above the average loop's threshold; the registry's own power model
+      already puts the rail's HIGH case at 7.8 A (v2/docs/feasibility/POWER-THERMAL.md, the +5V_DEV row and its LM5176
+      note). If demand holds above the threshold the loop folds the output back, a brown-out of the always-on fabric
+      during REQ-018's key-down. A session decision is owed (authority SESSION, tools/pcb_decisions.yaml) with more than
+      one option standing: raise the stage's average limit by its sense resistor within the FETs' and the inductor's
+      ratings, make D8 or the wall port non-coincident with the PA key-down by an interlock, or declare the 8.9 A bound
+      with the fold-back named as the limiter and REQ-018 judged on it. Board A's generator owner in the circuit round,
+      PWR-001 and INT-001 re-taken; the bench decides the mode current at J_5V_DEV under PS-ALLTX with the LoRa,
+      RockBLOCK and APRS bursts (prototype verification). Record: v2/docs/records/cx1/ANALYSIS.md, CORRECTION.md item B2
+      and checks/check-1-RESULT.md item B2.
 closed_items:
   - id: S-57
     closed_by: SC-70
@@ -6336,7 +6381,7 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-11]
     choices: [SC-10, SC-35, SC-24]
-    waits_on: [S-74, S-75]
+    waits_on: [S-74, S-75, S-99]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: BLOCKER
