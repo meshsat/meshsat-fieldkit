@@ -1,19 +1,26 @@
-THE INVENTORY OF REL-001 ON THE SET 6 ARTEFACTS, BEFORE AND AFTER (worker d6rel, MESHSAT-1357, taken 28 September 2026 16:46 CEST on the pinned list)
+THE INVENTORY OF REL-001 ON THE SET 6 ARTEFACTS, BEFORE AND AFTER (worker d6rel, MESHSAT-1357, taken 28 September 2026 17:55 CEST, after the fixes of the fresh check)
 Written by v2/docs/records/d6rel/measure_inventory.py (read only; the old list is git show 73ae2f21:v2/ecad/tools/pcb_reliability.yaml written to $SP/old/):
   python3 v2/docs/records/d6rel/measure_inventory.py v2/ecad/tools --old $SP/old
-No board has been built; these are readings of netlists and of board E5's board file.
+No board has been built; these are readings of netlists and of board E5's board file. The population is the NETLIST's (board E5: its board file's): footprints only a board file carries are open item REL-O-13.
 
 old list  : $SP/old/pcb_reliability.yaml sha16 fbf56eb06df1d007 (git show 73ae2f21:v2/ecad/tools/pcb_reliability.yaml)
-new list  : ecad/tools/pcb_reliability.yaml sha16 f0912cb02741be21
-tool      : reliability.py sha16 a8d85b24b344e4dc, wear_inventory.py sha16 503a05eedb8a0a29
+new list  : ecad/tools/pcb_reliability.yaml sha16 40f2a98323b1f9ce
+tool      : reliability.py sha16 c50f2b8b35d1d57b, wear_inventory.py sha16 503a05eedb8a0a29
 
 == board A  netlist pcb-a-power-a23/out/pcb-a-power.net  sha16 0a2b59087bcc2678  612 part(s)
    candidates 82: by reference class 82, by a mechanical land 0, by an undeclared land 0, by no land 0, by the word net 0, undeclared class 0
    BEFORE (the old list's 6 class(es) over the inventory): classed 39, excluded 0, refused 43
    AFTER  (the new list's 11 class(es) and 1 exclusion(s)): classed 57, excluded 25, refused 0; result INCONCLUSIVE
       excluded 25: TP10, TP11, TP12, TP13, TP14, TP15, TP16, TP17, TP18, TP19, TP20, TP21, TP22, TP23, TP24, TP25, TP26, TP27, TP3, TP4, TP5, TP6, TP7, TP8, TP9: a test point: a bare pad touched by a probe at the bench, nothing is mated and nothing hangs on it
-      owed: A: class the pre-charge pin owes its cycle figure (open item REL-O-01: board A's pre-charge pin J_PRE1, the longer Mill-Max pin that mates first, has no order code (the part identities table of stream
-      owed: A: class the USB-C outlet's pigtail header owes its cycle figure (open item REL-O-02: the 2.54 mm pin header lands that are mated in service carry no named part: whether a header is fitted or the lead
+      owed: A: class the pre-charge pin owes its cycle figure (open item REL-O-01: board A's pre-charge pin J_PRE1, the longer Mill-Max pin that mates first, has no order code: its value in the netlist names no p
+      owed: A: class the USB-C outlet's pigtail header owes its cycle figure (open item REL-O-02: the 2.54 mm pin header lands carry no named part: their values in the netlists name the lead, the module or the be
+      owed: A: open item REL-O-07 holds the board: the expected number of mates of each connector over a service life is stated nowhere (REQ-028: no life requirement for prototype 1), so this list carries ratings
+      owed: A: open item REL-O-08 holds the board: the joints under heavy soldered parts (the soldered radio modules, the magnetics, the large inductors) are joints that carry load in transport, and this inventor
+      owed: A: open item REL-O-13 holds the board: the inventory of a board with a schematic is its NETLIST's, and the declared-phase board files carry footprints no netlist holds: mounting holes H1 to H8 on boar
+      owed: A: class JST VH power headers has no cycle figure: the maker's documents that were read state none (v2/vendor/connectors/jst-vh-catalogue.pdf, v2/vendor/connectors/jst-handling-precautions-2020.pdf), 
+      owed: A: class JST XH lead headers has no cycle figure: the maker's documents that were read state none (v2/vendor/connectors/jst-xh-catalogue.pdf, v2/vendor/connectors/jst-handling-precautions-2020.pdf), s
+      owed: A: class JST PH lead header has no cycle figure: the maker's documents that were read state none (v2/vendor/connectors/jst-ph-catalogue.pdf, v2/vendor/connectors/jst-handling-precautions-2020.pdf), so
+      owed: A: class the blade fuse holder has no cycle figure: the maker's documents that were read state none (v2/vendor/keystone/M65p42.pdf), so the class is undecided and the board is not passed on it (open i
    refused BEFORE (43): J_CN1, J_CN2, J_CN3, J_CN4, J_CP1, J_CP2, J_CP3, J_CP4, J_DOCK, J_PRE1, J_VN1, J_VN2, J_VN3, J_VN4, J_VR1, J_VR2, J_VR3, J_VR4, TP10, TP11, TP12, TP13, TP14, TP15, TP16, TP17, TP18, TP19, TP20, TP21, TP22, TP23, TP24, TP25, TP26, TP27, TP3, TP4, TP5, TP6, TP7, TP8, TP9
    THE INVENTORY (ref, pins, land, disposition, value):
      F1             2  Fuse:Fuseholder_Blade_Mini_Keystone_3568                   class the blade fuse holder: 25 A mini blade (Keystone 3568 holder): pack node to the RSR shunt
@@ -100,18 +107,27 @@ tool      : reliability.py sha16 a8d85b24b344e4dc, wear_inventory.py sha16 503a0
      TP9            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: VBAT
 
 == board B  netlist pcb-b-compute-b19/out/pcb-b-compute.net  sha16 028997a6c5e8810f  1280 part(s)
-   candidates 153: by reference class 144, by a mechanical land 9, by an undeclared land 0, by no land 0, by the word net 0, undeclared class 0
-   BEFORE (the old list's 6 class(es) over the inventory): classed 38, excluded 0, refused 115
-   AFTER  (the new list's 14 class(es) and 4 exclusion(s)): classed 46, excluded 107, refused 0; result INCONCLUSIVE
+   candidates 155: by reference class 144, by a mechanical land 9, by an undeclared land 0, by no land 0, by the word net 2, undeclared class 0
+   BEFORE (the old list's 6 class(es) over the inventory): classed 38, excluded 0, refused 117
+   AFTER  (the new list's 15 class(es) and 5 exclusion(s)): classed 56, excluded 99, refused 0; result INCONCLUSIVE
       excluded 91: TP10, TP101, TP102, TP103, TP104, TP11, TP12, TP13, TP14, TP15, TP16, TP17, TP18, TP19, TP2, TP20, TP201, TP202, TP203, TP204, TP21, TP22, TP23, TP24, TP25, TP26, TP27, TP28, TP29, TP3, TP30, TP301, TP302, TP303, TP304, TP31, TP4, TP41, TP42, TP43, TP44, TP45, TP46, TP47, TP48, TP49, TP5, TP50, TP501, TP502, TP503, TP504, TP505, TP506, TP507, TP508, TP509, TP51, TP510, TP511, TP512, TP513, TP514, TP515, TP516, TP517, TP518, TP519, TP520, TP521, TP522, TP523, TP524, TP525, TP526, TP527, TP528, TP529, TP530, TP531, TP532, TP533, TP534, TP535, TP536, TP537, TP538, TP6, TP7, TP8, TP9: a test point: a bare pad touched by a probe at the bench, nothing is mated and nothing hangs on it
       excluded 3: F1, F2, F3: a resettable fuse soldered to the board in an 1812 package: there is no holder and nothing is mated
-      excluded 3: U42, U52, U62: the programming pads of the three I/O controllers: bare surface lands for a probe clip at the bench, no part is fitted on them (the part identities table of stream w5ident reads them NOT_A_PART)
-      excluded 10: J_DBG1, J_DBG2, J_DBG3, J_GNSS2, J_IOCOFF_A, J_IOCOFF_B, J_IOCOFF_C, J_SPI3, J_ZBDBG1, J_ZBDBG2: bench and commissioning access only (a console, a debug port, a breakout, a jumper the value calls not fitted in service): not mated in the field, and whether a header is fitted at all is a build choice not made. Taken by the session (authority SESSION, 28 September 2026); to reverse, move them to the class of lead headers mated in service
+      excluded 3: U42, U52, U62: the programming pads of the three I/O controllers: bare surface lands for a probe clip at the bench, no part is fitted on them (their values in the netlist call them SWD pads)
+      excluded 1: T1: soldered Ethernet magnetics (Pulse H5007NL): a candidate only because its value names the wall RJ45 it feeds (the word net, since jack, RJ45 and plug joined it); nothing is mated on it. The joints under its mass are open item REL-O-08
+      excluded 1: U5: a soldered PoE controller in a TSSOP-28 (TI TPS23861PWR): a candidate only because its value names the wall RJ45 port it powers; nothing is mated on it
       owed: B: class M.2 NVMe sockets (Amphenol) owes its cycle figure (open item REL-O-03: board B's three NVMe sockets are Amphenol MDT420M02001. The held drawing of that part states no durability, and Amphenol
       owed: B: class the coin cell retainer owes its measure (open item REL-O-09: board B's coin cell retainer is surface mounted (Keystone 3034), and no measure is recorded against the lever of changing the cell
-      owed: B: class lead headers on 2.54 mm lands, mated in service owes its cycle figure (open item REL-O-02: the 2.54 mm pin header lands that are mated in service carry no named part: whether a header is fitt
-   set aside, a wear word in the description only: U101, U116, U201, U216, U301, U316
-   refused BEFORE (115): F1, F2, F3, J_CAM, J_DBG1, J_DBG2, J_DBG3, J_ETH, J_GNSS2, J_IOCOFF_A, J_IOCOFF_B, J_IOCOFF_C, J_QMX, J_RPIBOOT1, J_RPIBOOT2, J_RPIBOOT3, J_SIM1, J_SIM2, J_SPI3, J_ZBDBG1, J_ZBDBG2, TP10, TP101, TP102, TP103, TP104, TP11, TP12, TP13, TP14, TP15, TP16, TP17, TP18, TP19, TP2, TP20, TP201, TP202, TP203, TP204, TP21, TP22, TP23, TP24, TP25, TP26, TP27, TP28, TP29, TP3, TP30, TP301, TP302, TP303, TP304, TP31, TP4, TP41, TP42, TP43, TP44, TP45, TP46, TP47, TP48, TP49, TP5, TP50, TP501, TP502, TP503, TP504, TP505, TP506, TP507, TP508, TP509, TP51, TP510, TP511, TP512, TP513, TP514, TP515, TP516, TP517, TP518, TP519, TP520, TP521, TP522, TP523, TP524, TP525, TP526, TP527, TP528, TP529, TP530, TP531, TP532, TP533, TP534, TP535, TP536, TP537, TP538, TP6, TP7, TP8, TP9, U42, U52, U62
+      owed: B: class lead headers on 2.54 mm lands, mated in service owes its cycle figure (open item REL-O-02: the 2.54 mm pin header lands carry no named part: their values in the netlists name the lead, the mo
+      owed: B: class bench and commissioning headers on 2.54 mm lands owes its cycle figure (open item REL-O-02: the 2.54 mm pin header lands carry no named part: their values in the netlists name the lead, the m
+      owed: B: class bench and commissioning headers on 2.54 mm lands owes its measure (open item REL-O-02: the 2.54 mm pin header lands carry no named part: their values in the netlists name the lead, the module
+      owed: B: open item REL-O-07 holds the board: the expected number of mates of each connector over a service life is stated nowhere (REQ-028: no life requirement for prototype 1), so this list carries ratings
+      owed: B: open item REL-O-08 holds the board: the joints under heavy soldered parts (the soldered radio modules, the magnetics, the large inductors) are joints that carry load in transport, and this inventor
+      owed: B: open item REL-O-13 holds the board: the inventory of a board with a schematic is its NETLIST's, and the declared-phase board files carry footprints no netlist holds: mounting holes H1 to H8 on boar
+      owed: B: class the coin cell retainer has no cycle figure: the maker's documents that were read state none (v2/vendor/keystone/M65p9.pdf), so the class is undecided and the board is not passed on it (open i
+      owed: B: class JST VH power headers has no cycle figure: the maker's documents that were read state none (v2/vendor/connectors/jst-vh-catalogue.pdf, v2/vendor/connectors/jst-handling-precautions-2020.pdf), 
+      owed: B: class JST SH fan headers has no cycle figure: the maker's documents that were read state none (v2/vendor/connectors/jst-sh-catalogue.pdf, v2/vendor/connectors/jst-handling-precautions-2020.pdf), so
+   set aside, a wear word in the description only: U1, U101, U11, U116, U201, U216, U301, U316
+   refused BEFORE (117): F1, F2, F3, J_CAM, J_DBG1, J_DBG2, J_DBG3, J_ETH, J_GNSS2, J_IOCOFF_A, J_IOCOFF_B, J_IOCOFF_C, J_QMX, J_RPIBOOT1, J_RPIBOOT2, J_RPIBOOT3, J_SIM1, J_SIM2, J_SPI3, J_ZBDBG1, J_ZBDBG2, T1, TP10, TP101, TP102, TP103, TP104, TP11, TP12, TP13, TP14, TP15, TP16, TP17, TP18, TP19, TP2, TP20, TP201, TP202, TP203, TP204, TP21, TP22, TP23, TP24, TP25, TP26, TP27, TP28, TP29, TP3, TP30, TP301, TP302, TP303, TP304, TP31, TP4, TP41, TP42, TP43, TP44, TP45, TP46, TP47, TP48, TP49, TP5, TP50, TP501, TP502, TP503, TP504, TP505, TP506, TP507, TP508, TP509, TP51, TP510, TP511, TP512, TP513, TP514, TP515, TP516, TP517, TP518, TP519, TP520, TP521, TP522, TP523, TP524, TP525, TP526, TP527, TP528, TP529, TP530, TP531, TP532, TP533, TP534, TP535, TP536, TP537, TP538, TP6, TP7, TP8, TP9, U42, U5, U52, U62
    THE INVENTORY (ref, pins, land, disposition, value):
      BT1            2  Battery:BatteryHolder_Keystone_3034_1x20mm                 class the coin cell retainer: CR2032 holder Keystone 3034: VBAT for the three modules' RTCs, the LG290P backup and the D
      F1             2  Fuse:Fuse_1812_4532Metric                                  exclusion a resettable fuse soldered to the board : 1.1A hold 1812 (Bourns MF-MSMF110-2)
@@ -125,9 +141,9 @@ tool      : reliability.py sha16 a8d85b24b344e4dc, wear_inventory.py sha16 503a0
      J_AB1         26  meshsat:IDC-Header_2x13_P2.54mm_Vertical_NarrowPad         class ribbon box headers: A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
      J_AB2         10  meshsat:IDC-Header_2x05_P2.54mm_Vertical_NarrowPad         class ribbon box headers: A-B wall-port ribbon (IDC 2x5): the wall USB pair (bank 3 hub port 3) on the END row with 
      J_CAM          4  Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical class lead headers on 2.54 mm lands, mated in : camera lead (USB 2.0, bank 1 hub, port 3): 5V D- D+ GND
-     J_DBG1         5  Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical exclusion bench and commissioning access only (a c: console UART0 and the module I2C of S1 (3.3 V, bench): GND TX RX SDA SCL
-     J_DBG2         5  Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical exclusion bench and commissioning access only (a c: console UART0 and the module I2C of S2 (3.3 V, bench): GND TX RX SDA SCL
-     J_DBG3         5  Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical exclusion bench and commissioning access only (a c: console UART0 and the module I2C of S3 (3.3 V, bench): GND TX RX SDA SCL
+     J_DBG1         5  Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical class bench and commissioning headers on 2.54 : console UART0 and the module I2C of S1 (3.3 V, bench): GND TX RX SDA SCL
+     J_DBG2         5  Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical class bench and commissioning headers on 2.54 : console UART0 and the module I2C of S2 (3.3 V, bench): GND TX RX SDA SCL
+     J_DBG3         5  Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical class bench and commissioning headers on 2.54 : console UART0 and the module I2C of S3 (3.3 V, bench): GND TX RX SDA SCL
      J_ETH          9  Connector_RJ:RJ45_Amphenol_RJHSE5380                       class the Ethernet jack: RJ45 jack (Amphenol RJHSE5380): patch lead to the sealed wall RJ45; PoE out on 1-2 (+) and
      J_FAN1         4  Connector_JST:JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical class JST SH fan headers: IP68 cooler fan of S1 (JST-SH 1.0): 5V GND TACHO PWM
      J_FAN2         4  Connector_JST:JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical class JST SH fan headers: IP68 cooler fan of S2 (JST-SH 1.0): 5V GND TACHO PWM
@@ -136,11 +152,11 @@ tool      : reliability.py sha16 a8d85b24b344e4dc, wear_inventory.py sha16 503a0
      J_FLASH2      17  Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12          class USB-C flash receptacles: USB-C 2.0 receptacle
      J_FLASH3      17  Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12          class USB-C flash receptacles: USB-C 2.0 receptacle
      J_GNSS1        2  Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical        class U.FL antenna sockets: U.FL socket: pigtail to A22's GNSS jack J_RF4
-     J_GNSS2        3  Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical exclusion bench and commissioning access only (a c: LG290P UART2 (bench): GND TX RX
+     J_GNSS2        3  Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical class bench and commissioning headers on 2.54 : LG290P UART2 (bench): GND TX RX
      J_HDMI        20  Connector_Video:HDMI_A_Molex_208658-1001_Horizontal        class the HDMI receptacle: HDMI type A receptacle (Molex 208658-1001): cable to the monitor pass-through on the face 
-     J_IOCOFF_A     2  Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical_SMD_Pin1Left exclusion bench and commissioning access only (a c: bench jumper, controller A: fit to hold its LDO off (IOHA A4, A6); not fitted in service
-     J_IOCOFF_B     2  Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical_SMD_Pin1Left exclusion bench and commissioning access only (a c: bench jumper, controller B: fit to hold its LDO off (IOHA A4, A6); not fitted in service
-     J_IOCOFF_C     2  Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical_SMD_Pin1Left exclusion bench and commissioning access only (a c: bench jumper, controller C: fit to hold its LDO off (IOHA A4, A6); not fitted in service
+     J_IOCOFF_A     2  Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical_SMD_Pin1Left class bench and commissioning headers on 2.54 : bench jumper, controller A: fit to hold its LDO off (IOHA A4, A6); not fitted in service
+     J_IOCOFF_B     2  Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical_SMD_Pin1Left class bench and commissioning headers on 2.54 : bench jumper, controller B: fit to hold its LDO off (IOHA A4, A6); not fitted in service
+     J_IOCOFF_C     2  Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical_SMD_Pin1Left class bench and commissioning headers on 2.54 : bench jumper, controller C: fit to hold its LDO off (IOHA A4, A6); not fitted in service
      J_LIME        10  Connector_USB:USB3_A_Receptacle_Wuerth_692122030100        class the USB 3 receptacle of the SDR bay: USB 3.0 type A receptacle (Wuerth 692122030100 land): the LimeSDR Mini 2.4 in its bay
      J_LORA1        2  Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical        class U.FL antenna sockets: U.FL socket: pigtail to A22's LoRa jack J_RF11
      J_M2C1        67  meshsat:M2_E-Key_Socket_2230                               class M.2 card sockets (TE): M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (tw
@@ -157,15 +173,16 @@ tool      : reliability.py sha16 a8d85b24b344e4dc, wear_inventory.py sha16 503a0
      J_RPIBOOT3     2  Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical class lead headers on 2.54 mm lands, mated in : nRPIBOOT jumper S3: fit to flash the eMMC over J_FLASH3
      J_SIM1         7  Connector_Card:nanoSIM_GCT_SIM8060-6-0-14-00               class nano-SIM sockets: nano-SIM push-push GCT SIM8060 (SIM 1)
      J_SIM2         7  Connector_Card:nanoSIM_GCT_SIM8060-6-0-14-00               class nano-SIM sockets: nano-SIM push-push GCT SIM8060 (SIM 2)
-     J_SPI3        10  Connector_PinHeader_2.54mm:PinHeader_2x05_P2.54mm_Vertical exclusion bench and commissioning access only (a c: SPI0 breakout of S3 (2x5): 3V3 GND MISO MOSI SCLK CE0 CE1 IO23 IO24 IO26; the E22 LoRa mod
+     J_SPI3        10  Connector_PinHeader_2.54mm:PinHeader_2x05_P2.54mm_Vertical class bench and commissioning headers on 2.54 : SPI0 breakout of S3 (2x5): 3V3 GND MISO MOSI SCLK CE0 CE1 IO23 IO24 IO26; the E22 LoRa mod
      J_W1A          2  Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical        class U.FL antenna sockets: U.FL: MHF4 pigtail from the slot 1 WiFi card, chain A
      J_W1B          2  Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical        class U.FL antenna sockets: U.FL: MHF4 pigtail from the slot 1 WiFi card, chain B
      J_W3A          2  Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical        class U.FL antenna sockets: U.FL: MHF4 pigtail from the slot 3 WiFi card, chain A
      J_W3B          2  Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical        class U.FL antenna sockets: U.FL: MHF4 pigtail from the slot 3 WiFi card, chain B
      J_WOA          2  Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical        class U.FL antenna sockets: U.FL: pigtail to A22's P2P jack, chain A
      J_WOB          2  Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical        class U.FL antenna sockets: U.FL: pigtail to A22's P2P jack, chain B
-     J_ZBDBG1       5  Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical exclusion bench and commissioning access only (a c: CC2652P cJTAG ZBA (bench): 3V3 GND TMSC TCKC RESET
-     J_ZBDBG2       5  Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical exclusion bench and commissioning access only (a c: CC2652P cJTAG ZBB (bench): 3V3 GND TMSC TCKC RESET
+     J_ZBDBG1       5  Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical class bench and commissioning headers on 2.54 : CC2652P cJTAG ZBA (bench): 3V3 GND TMSC TCKC RESET
+     J_ZBDBG2       5  Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical class bench and commissioning headers on 2.54 : CC2652P cJTAG ZBB (bench): 3V3 GND TMSC TCKC RESET
+     T1            24  meshsat:Pulse_H5007NL                                      exclusion soldered Ethernet magnetics (Pulse H5007: Pulse H5007NL 1000BASE-T magnetics (switch port 4 to the wall RJ45)
      TP10           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SDA
      TP101          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: GND
      TP102          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +3V3_S1A
@@ -264,6 +281,7 @@ tool      : reliability.py sha16 a8d85b24b344e4dc, wear_inventory.py sha16 503a0
      U32A         100  meshsat:CM5_Conn_A_10164227                                class CM5 module receptacles: Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM51
      U32B         100  meshsat:CM5_Conn_B_10164227                                class CM5 module receptacles: Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side)
      U42            5  Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical_SMD_Pin1Left exclusion the programming pads of the three I/O co: SWD pads, controller A: 3V3 SWDIO SWCLK NRST GND
+     U5            28  Package_SO:TSSOP-28_4.4x9.7mm_P0.65mm                      exclusion a soldered PoE controller in a TSSOP-28 : TI TPS23861PWR PoE PSE controller, port 1 to the wall RJ45 (802.3at), I2C on the kit bus
      U52            5  Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical_SMD_Pin1Left exclusion the programming pads of the three I/O co: SWD pads, controller B: 3V3 SWDIO SWCLK NRST GND
      U62            5  Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical_SMD_Pin1Left exclusion the programming pads of the three I/O co: SWD pads, controller C: 3V3 SWDIO SWCLK NRST GND
 
@@ -273,8 +291,10 @@ tool      : reliability.py sha16 a8d85b24b344e4dc, wear_inventory.py sha16 503a0
    AFTER  (the new list's 11 class(es) and 2 exclusion(s)): classed 24, excluded 50, refused 0; result INCONCLUSIVE
       excluded 48: TP1, TP10, TP11, TP12, TP13, TP14, TP15, TP16, TP17, TP18, TP19, TP2, TP20, TP21, TP22, TP23, TP24, TP25, TP26, TP27, TP28, TP29, TP3, TP30, TP31, TP32, TP33, TP34, TP35, TP36, TP37, TP38, TP39, TP4, TP40, TP41, TP42, TP43, TP44, TP45, TP46, TP47, TP48, TP5, TP6, TP7, TP8, TP9: a test point: a bare pad touched by a probe at the bench, nothing is mated and nothing hangs on it
       excluded 2: JP1, JP2: a solder jumper: two copper pads bridged with solder or left open, no part is fitted and nothing is mated
-      owed: C: class the panel ribbon header owes its cycle figure (open item REL-O-04: board C's panel ribbon header is XFCN BH254VS-26P (the part identities table of stream w5ident), and no document of its make
+      owed: C: class the panel ribbon header owes its cycle figure (open item REL-O-04: board C's panel ribbon header is a session pick that no generator carries, XFCN BH254VS-26P (v2/docs/parts/PROCUREMENT.md se
       owed: C: class headset jacks in the plate owes its cycle figure (open item REL-O-05: board C's two headset jacks are a U-174/U class panel jack with no maker's part picked and its drawing owed (the value sa
+      owed: C: open item REL-O-07 holds the board: the expected number of mates of each connector over a service life is stated nowhere (REQ-028: no life requirement for prototype 1), so this list carries ratings
+      owed: C: open item REL-O-08 holds the board: the joints under heavy soldered parts (the soldered radio modules, the magnetics, the large inductors) are joints that carry load in transport, and this inventor
    refused BEFORE (65): BZ1, CAM_H1, CAM_H2, JP1, JP2, J_EPD, J_HSJ1, J_HSJ2, J_MAINSW, J_PIJ2, SW_EMCON, SW_LIGHT, SW_MAIN, SW_PI, SW_SOS, SW_TEST, SW_ZERO, TP1, TP10, TP11, TP12, TP13, TP14, TP15, TP16, TP17, TP18, TP19, TP2, TP20, TP21, TP22, TP23, TP24, TP25, TP26, TP27, TP28, TP29, TP3, TP30, TP31, TP32, TP33, TP34, TP35, TP36, TP37, TP38, TP39, TP4, TP40, TP41, TP42, TP43, TP44, TP45, TP46, TP47, TP48, TP5, TP6, TP7, TP8, TP9
    THE INVENTORY (ref, pins, land, disposition, value):
      BZ1            2  meshsat:PanelSounder                                       class the sounder in the plate: IP67 panel-mount sounder, 5 V DC continuous, bezel gasket on the face, two flying leads (F
@@ -359,6 +379,12 @@ tool      : reliability.py sha16 a8d85b24b344e4dc, wear_inventory.py sha16 503a0
       excluded 27: TP1, TP10, TP11, TP12, TP13, TP14, TP15, TP16, TP17, TP18, TP19, TP2, TP20, TP21, TP22, TP23, TP24, TP25, TP26, TP27, TP3, TP4, TP5, TP6, TP7, TP8, TP9: a test point: a bare pad touched by a probe at the bench, nothing is mated and nothing hangs on it
       excluded 2: JP1, JP2: a solder jumper: two copper pads bridged with solder or left open, no part is fitted and nothing is mated
       owed: D: class the transmit and receive relay owes its measure (open item REL-O-10: board D's relay K1 changes over at every key-down and carries the 30 W output in transmit; whether it changes over under R
+      owed: D: open item REL-O-07 holds the board: the expected number of mates of each connector over a service life is stated nowhere (REQ-028: no life requirement for prototype 1), so this list carries ratings
+      owed: D: open item REL-O-08 holds the board: the joints under heavy soldered parts (the soldered radio modules, the magnetics, the large inductors) are joints that carry load in transport, and this inventor
+      owed: D: open item REL-O-13 holds the board: the inventory of a board with a schematic is its NETLIST's, and the declared-phase board files carry footprints no netlist holds: mounting holes H1 to H8 on boar
+      owed: D: class the JST VH power header has no cycle figure: the maker's documents that were read state none (v2/vendor/connectors/jst-vh-catalogue.pdf, v2/vendor/connectors/jst-handling-precautions-2020.pdf
+      owed: D: class JST PH lead headers has no cycle figure: the maker's documents that were read state none (v2/vendor/connectors/jst-ph-catalogue.pdf, v2/vendor/connectors/jst-handling-precautions-2020.pdf), s
+      owed: D: class the flange thermistor's header has no cycle figure: the maker's documents that were read state none (v2/vendor/connectors/jst-xh-catalogue.pdf, v2/vendor/connectors/jst-handling-precautions-2
    refused BEFORE (30): JP1, JP2, K1, TP1, TP10, TP11, TP12, TP13, TP14, TP15, TP16, TP17, TP18, TP19, TP2, TP20, TP21, TP22, TP23, TP24, TP25, TP26, TP27, TP3, TP4, TP5, TP6, TP7, TP8, TP9
    THE INVENTORY (ref, pins, land, disposition, value):
      JP1            2  Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm      exclusion a solder jumper: two copper pads bridged: electret bias headset 1 (close for an electret microphone)
@@ -408,7 +434,13 @@ tool      : reliability.py sha16 a8d85b24b344e4dc, wear_inventory.py sha16 503a0
    AFTER  (the new list's 6 class(es) and 2 exclusion(s)): classed 21, excluded 14, refused 0; result INCONCLUSIVE
       excluded 13: TP1, TP10, TP11, TP12, TP13, TP2, TP3, TP4, TP5, TP6, TP7, TP8, TP9: a test point: a bare pad touched by a probe at the bench, nothing is mated and nothing hangs on it
       excluded 1: JP1: a solder jumper: two copper pads bridged with solder or left open, no part is fitted and nothing is mated
-      owed: E: class lead headers on 2.54 mm lands, mated in service owes its cycle figure (open item REL-O-02: the 2.54 mm pin header lands that are mated in service carry no named part: whether a header is fitt
+      owed: E: class lead headers on 2.54 mm lands, mated in service owes its cycle figure (open item REL-O-02: the 2.54 mm pin header lands carry no named part: their values in the netlists name the lead, the mo
+      owed: E: open item REL-O-07 holds the board: the expected number of mates of each connector over a service life is stated nowhere (REQ-028: no life requirement for prototype 1), so this list carries ratings
+      owed: E: open item REL-O-08 holds the board: the joints under heavy soldered parts (the soldered radio modules, the magnetics, the large inductors) are joints that carry load in transport, and this inventor
+      owed: E: open item REL-O-13 holds the board: the inventory of a board with a schematic is its NETLIST's, and the declared-phase board files carry footprints no netlist holds: mounting holes H1 to H8 on boar
+      owed: E: class the blade fuse holders has no cycle figure: the maker's documents that were read state none (v2/vendor/keystone/M65p42.pdf), so the class is undecided and the board is not passed on it (open 
+      owed: E: class JST VH input headers has no cycle figure: the maker's documents that were read state none (v2/vendor/connectors/jst-vh-catalogue.pdf, v2/vendor/connectors/jst-handling-precautions-2020.pdf), 
+      owed: E: class JST XH lead headers has no cycle figure: the maker's documents that were read state none (v2/vendor/connectors/jst-xh-catalogue.pdf, v2/vendor/connectors/jst-handling-precautions-2020.pdf), s
    refused BEFORE (27): JP1, J_BLK, J_DCF, J_FAN1, J_FAN2, J_GEIGER, J_LTG, J_POD, PAD_W1, PAD_W2, P_CN, P_CP, P_VN, P_VR, TP1, TP10, TP11, TP12, TP13, TP2, TP3, TP4, TP5, TP6, TP7, TP8, TP9
    THE INVENTORY (ref, pins, land, disposition, value):
      F1             2  Fuse:Fuseholder_Blade_Mini_Keystone_3568                   class the blade fuse holders: 10 A mini blade (Keystone 3568 holder): vehicle input
@@ -453,6 +485,7 @@ tool      : reliability.py sha16 a8d85b24b344e4dc, wear_inventory.py sha16 503a0
    AFTER  (the new list's 4 class(es) and 0 exclusion(s)): classed 17, excluded 0, refused 0; result INCONCLUSIVE
       owed: E5: class power pin targets owes its cycle figure (open item REL-O-06: board E5's contact targets are the board's own plated copper under board A's spring pins. No maker rates them, and how the platin
       owed: E5: class signal contact targets owes its cycle figure (open item REL-O-06: board E5's contact targets are the board's own plated copper under board A's spring pins. No maker rates them, and how the p
+      owed: E5: open item REL-O-07 holds the board: the expected number of mates of each connector over a service life is stated nowhere (REQ-028: no life requirement for prototype 1), so this list carries rating
    refused BEFORE (17): H1, H2, H3, H4, L_SIG, T_CN1, T_CN2, T_CN3, T_CN4, T_CP1, T_CP2, T_CP3, T_CP4, T_PRE, T_SIG, WH_CN, WH_CP
    THE INVENTORY (ref, pins, land, disposition, value):
      H1             1  MountingHole_3.2mm_M3                                      class standoff screw joints: M3 standoff 6 mm to the dock strip
@@ -481,6 +514,12 @@ tool      : reliability.py sha16 a8d85b24b344e4dc, wear_inventory.py sha16 503a0
       excluded 1: JP1: the fuse arming jumper, a solder jumper: two copper pads closed with solder at commissioning, no part is fitted and nothing is mated
       excluded 1: F2: the self-control fuse is soldered to the board (Eaton SCF9550, surface mount): there is no holder and nothing is mated
       owed: P: class the pack's wire lands owes its measure (open item REL-O-11: how the pack and its 12 AWG lead are held is not designed (the pack's hold-down, S-27), so nothing keeps a pull on the lead from bo
+      owed: P: open item REL-O-07 holds the board: the expected number of mates of each connector over a service life is stated nowhere (REQ-028: no life requirement for prototype 1), so this list carries ratings
+      owed: P: open item REL-O-08 holds the board: the joints under heavy soldered parts (the soldered radio modules, the magnetics, the large inductors) are joints that carry load in transport, and this inventor
+      owed: P: open item REL-O-13 holds the board: the inventory of a board with a schematic is its NETLIST's, and the declared-phase board files carry footprints no netlist holds: mounting holes H1 to H8 on boar
+      owed: P: class the pack fuse holder has no cycle figure: the maker's documents that were read state none (v2/vendor/keystone/M65p42.pdf), so the class is undecided and the board is not passed on it (open it
+      owed: P: class JST XH lead headers has no cycle figure: the maker's documents that were read state none (v2/vendor/connectors/jst-xh-catalogue.pdf, v2/vendor/connectors/jst-handling-precautions-2020.pdf), s
+      owed: P: class JST PH thermistor headers has no cycle figure: the maker's documents that were read state none (v2/vendor/connectors/jst-ph-catalogue.pdf, v2/vendor/connectors/jst-handling-precautions-2020.p
    refused BEFORE (19): F2, JP1, TP1, TP10, TP11, TP12, TP13, TP14, TP15, TP2, TP3, TP4, TP5, TP6, TP7, TP8, TP9, W_BN, W_BP
    THE INVENTORY (ref, pins, land, disposition, value):
      F1             2  Fuse:Fuseholder_Blade_Mini_Keystone_3568                   class the pack fuse holder: 25 A mini blade (Keystone 3568 holder): the pack's fuse
@@ -512,11 +551,11 @@ tool      : reliability.py sha16 a8d85b24b344e4dc, wear_inventory.py sha16 503a0
 
 == SUMMARY  (candidates; BEFORE classed / refused; AFTER classed / excluded / refused; result)
    A     82     39 /   43     57 /   25 /    0   INCONCLUSIVE
-   B    153     38 /  115     46 /  107 /    0   INCONCLUSIVE
+   B    155     38 /  117     56 /   99 /    0   INCONCLUSIVE
    C     74      9 /   65     24 /   50 /    0   INCONCLUSIVE
    D     40     10 /   30     11 /   29 /    0   INCONCLUSIVE
    E     35      8 /   27     21 /   14 /    0   INCONCLUSIVE
    E5    17      0 /   17     17 /    0 /    0   INCONCLUSIVE
    P     26      7 /   19      9 /   17 /    0   INCONCLUSIVE
-   set  427    111 /  316    185 /  242 /    0
+   set  429    111 /  318    195 /  234 /    0
    the old TOOL's own reading of the same netlists (its population the twelve words): 111 covered, 0 refused (v2/docs/records/r8int6/fix/wear-before-after.txt, 27 September 2026)

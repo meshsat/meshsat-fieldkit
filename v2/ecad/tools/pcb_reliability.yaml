@@ -10,7 +10,10 @@
 #                mechanical or electrical, and the lands that are mechanical or soldered. A reference class or a
 #                land that is declared nowhere makes its part a candidate, and an undeclared class is refused.
 #   open_items   what is owed, each with the next action. A class whose figure is OWED names one of them, and
-#                its board reads INCONCLUSIVE until the item is closed.
+#                its board reads INCONCLUSIVE until the item is closed. An item that is about a board and not
+#                about one class names the boards it holds (`holds: all`, or a list), and holds them the same
+#                way. An item that names no board and that no class names is refused by the tool's check of
+#                this list: every open item here holds a reading.
 #   boards       per board, the CLASSES (each with the lands it speaks of, its cycle figure or the reason it has
 #                none, its load and its measure) and the EXCLUSIONS (each with its reason and its lands).
 #                Every candidate falls in exactly one class or under exactly one exclusion, or the gate refuses.
@@ -26,7 +29,10 @@
 # not defined anywhere, so no figure here is compared with one (open item REL-O-07).
 #   cycles: N + source        the maker's document states it. Where the document gives a range or several
 #                             figures, the LOWEST is carried and the words say so: a bound is named a bound.
-#   no_figure none_published  the maker's documents named in `looked_in` were read and state no figure.
+#   no_figure none_published  the maker's documents named in `looked_in` were read and state no figure. The
+#                             class is UNDECIDED and holds its board INCONCLUSIVE, named, as an owed figure
+#                             does: a class whose maker publishes no figure never lets a board read PASS
+#                             (the integrator's decision of 28 September 2026 after the fresh check, m1).
 #   no_figure not_mated       nothing is mated: a solder land, a screw joint. What it has is a load and a measure.
 #   no_figure owed            the part or its document is not identified. No number is invented for it.
 #
@@ -99,16 +105,18 @@ inventory:
 
 open_items:
   REL-O-01:
-    what: "board A's pre-charge pin J_PRE1, the longer Mill-Max pin that mates first, has no order code (the part
-      identities table of stream w5ident reads it UNRESOLVED), so no maker's figure can be cited for it"
+    what: "board A's pre-charge pin J_PRE1, the longer Mill-Max pin that mates first, has no order code: its value in
+      the netlist names no part ('pre-charge pin, longer, mates first (32.24 AX)') and no document of a longer
+      pin is held, so no maker's figure can be cited for it"
     next_action: "pick the pin (the length that gives the pre-charge lead time), file its Mill-Max page and carry
       its durability figure"
   REL-O-02:
-    what: "the 2.54 mm pin header lands that are mated in service carry no named part: whether a header is
-      fitted or the lead is soldered into the holes is a build choice not made (the part identities table of
-      stream w5ident reads them UNRESOLVED). ASSEMBLY.md section 4 names JST PH housings for J_CAM, J_QMX, J_POD
+    what: "the 2.54 mm pin header lands carry no named part: their values in the netlists name the lead, the
+      module or the bench use and no header, and whether a header is fitted or the lead is soldered into the
+      holes is a build choice not made. ASSEMBLY.md section 4 names JST PH housings for J_CAM, J_QMX, J_POD
       and the three sensor modules and SH housings for board E's two mixer fans, and the netlists draw 2.54 mm
-      pin header lands for all of them"
+      pin header lands for all of them. Board B's ten bench and commissioning headers are owed under the same
+      item: whether a header is fitted on them at all is the same choice"
     next_action: "decide per lead between a named header with its mating housing and a soldered lead, bring the
       netlist's land and ASSEMBLY.md section 4 to the same answer, then carry the maker's figure or move the
       land to the soldered lead lands"
@@ -119,8 +127,9 @@ open_items:
     next_action: "obtain Amphenol's product specification GS-12-1142 or the part's own sheet and carry the figure
       of the plating option fitted"
   REL-O-04:
-    what: "board C's panel ribbon header is XFCN BH254VS-26P (the part identities table of stream w5ident), and
-      no document of its maker is held"
+    what: "board C's panel ribbon header is a session pick that no generator carries, XFCN BH254VS-26P
+      (v2/docs/parts/PROCUREMENT.md section 5, HC6-SC-7; v2/vendor/SOURCES.yaml reads the pick's identity
+      NOT_PINNED), its value in the netlist names no part, and no document of its maker is held"
     next_action: "file the maker's sheet of the BH254VS-26P and carry its durability figure, or name a header
       whose document is held"
   REL-O-05:
@@ -137,12 +146,14 @@ open_items:
       life requirement for prototype 1), so this list carries ratings and compares them with nothing"
     next_action: "when a service life is ruled, state the expected mates per connector from CONOPS section 5 and
       compare each class's figure with it"
+    holds: all
   REL-O-08:
     what: "the joints under heavy soldered parts (the soldered radio modules, the magnetics, the large
       inductors) are joints that carry load in transport, and this inventory cannot find them: a netlist
       carries no mass"
     next_action: "list the parts above a mass limit from the makers' documents and add them as a class per
       board with the staking or support each needs"
+    holds: [a, b, c, d, e, p]
   REL-O-09:
     what: "board B's coin cell retainer is surface mounted (Keystone 3034), and no measure is recorded against
       the lever of changing the cell on its two solder tails; the list of 16 September called it through-hole"
@@ -158,6 +169,25 @@ open_items:
       keeps a pull on the lead from board P's solder lands"
     next_action: "design the hold-down and the lead's tie points with S-27 and state the strain relief of the
       four lands"
+  REL-O-12:
+    what: "the makers of sixteen classes publish no mating-cycle or insertion-cycle figure in the documents
+      held and read: JST (the VH, XH, PH and SH series catalogues and JST's handling precautions) and Keystone
+      (catalogue M65 pages 9 and 42: the 3034 retainer and the 3568 blade fuse holder). A class with no figure
+      is undecided and holds its board"
+    next_action: "prepare the question to each maker for the owner to send (outside contact is his), or take
+      each class's figure from the prototype's mate-cycle test once TEST-PLAN.md sets its cycle count; carry
+      the figure with its document, or with the test's record"
+  REL-O-13:
+    what: "the inventory of a board with a schematic is its NETLIST's, and the declared-phase board files carry
+      footprints no netlist holds: mounting holes H1 to H8 on board A, twenty on board B (M2.5, M3 and M4) with
+      six S_ references beside them, H1 to H4 on boards D and P and twenty-eight on board E, every H on a
+      MountingHole land, while boards C and E5 class the same kind of joint because their own artefacts carry
+      it. The board files also carry a few R, Q, C and U references the netlists do not, and the netlists carry
+      parts the board files do not (225 on board A), so the two are different generations of each design"
+    next_action: "when each board file is regenerated from its declared netlist, read its footprints beside the
+      netlist (wear_inventory.read_board) and class every screw joint per board with its torque, its thread
+      lock and what hangs on it, from ASSEMBLY.md"
+    holds: [a, b, d, e, p]
 
 boards:
 
@@ -170,7 +200,7 @@ boards:
       count_expected: 11
       part: "Amphenol RF 132134-11"
       cycles: 500
-      source: {document: "v2/vendor/rf/amphenol-rf-132134-11-part-page-wayback-20260217.html", sha256_16: "08292fb855ce95e8",
+      source: {document: "v2/vendor/rf/amphenol-rf-132134-11-part-page-wayback-20260217.html", sha256_16: "08292fb855ce95e8", revision: "the Wayback Machine's capture of 17 February 2026",
                page: "the part page's specification table", words: "Mating Cycles (Min) 500"}
       load: "a coax pigtail from each device screwed onto the jack at build and again at service (ASSEMBLY.md
         section 4); a pull on the pigtail levers the jack against its solder joints"
@@ -182,7 +212,7 @@ boards:
       count_expected: 11
       part: "Radiall R222M00720 (SMP-MAX)"
       cycles: 100
-      source: {document: "v2/vendor/rf/radiall-R222M00720-tds.pdf", sha256_16: "849a5fd1a4084b6b",
+      source: {document: "v2/vendor/rf/radiall-R222M00720-tds.pdf", sha256_16: "849a5fd1a4084b6b", revision: "Issue 1107 B",
                page: "2", words: "Mating life 100 Cycles mini"}
       load: "mated and parted every time the stack is lifted off the dock: each receptacle slides onto the plug
         held in the float clamp bar on the dock strip (ASSEMBLY.md section 7). It is the lowest-rated joint that
@@ -196,7 +226,7 @@ boards:
       count_expected: 16
       part: "Mill-Max 0858-0-15-20-82-14-11-0"
       cycles: 100000
-      source: {document: "v2/vendor/connectors/millmax-0858-product-page-20260927.html", sha256_16: "7a11ec390b01e69f",
+      source: {document: "v2/vendor/connectors/millmax-0858-product-page-20260927.html", sha256_16: "7a11ec390b01e69f", revision: "the page as served 2026-09-27T00:12:15Z (v2/vendor/SOURCES.yaml)",
                page: "the product page's Tech Specs block",
                words: "Mechanical life (Durability): 100,000 to 1,000,000 Cycles @ Mid-Stroke (the lower figure is carried)"}
       load: "spring force at every lift of the stack; the pins carry the pack node, its return and VIN_RAW with
@@ -231,6 +261,7 @@ boards:
       cycles: null
       no_figure:
         kind: none_published
+        open_item: REL-O-12
         statement: "JST's VH catalogue gives current, voltage, temperature, contact and insulation resistance
           and the wire range and no mating-cycle figure, and the handling precautions it refers to give none"
         looked_in:
@@ -246,6 +277,7 @@ boards:
       cycles: null
       no_figure:
         kind: none_published
+        open_item: REL-O-12
         statement: "JST's XH catalogue states no mating-cycle figure, and the handling precautions it refers to
           give none"
         looked_in:
@@ -261,6 +293,7 @@ boards:
       cycles: null
       no_figure:
         kind: none_published
+        open_item: REL-O-12
         statement: "JST's PH catalogue states no mating-cycle figure, and the handling precautions it refers to
           give none"
         looked_in:
@@ -275,11 +308,11 @@ boards:
       part: "Wurth WR-BHD 61202621621 (2x13), 61201021621 (2x5), 61201621621 (2x8)"
       cycles: 30
       source:
-        - {document: "v2/vendor/connectors/wurth-wr-bhd-box-header-61202621621.pdf", sha256_16: "38509e478ba394d0",
+        - {document: "v2/vendor/connectors/wurth-wr-bhd-box-header-61202621621.pdf", sha256_16: "38509e478ba394d0", revision: "002.001, 2026-08-30",
            page: "2", words: "Durability 30 Mating cycles"}
-        - {document: "v2/vendor/connectors/wurth-wr-bhd-box-header-61201021621.pdf", sha256_16: "dbaa4765e57457ac",
+        - {document: "v2/vendor/connectors/wurth-wr-bhd-box-header-61201021621.pdf", sha256_16: "dbaa4765e57457ac", revision: "002.001, 2026-08-30",
            page: "2", words: "Durability 30 Mating cycles"}
-        - {document: "v2/vendor/connectors/wurth-wr-bhd-box-header-61201621621.pdf", sha256_16: "0df87add7e40d43c",
+        - {document: "v2/vendor/connectors/wurth-wr-bhd-box-header-61201621621.pdf", sha256_16: "0df87add7e40d43c", revision: "002.001, 2026-08-30",
            page: "2", words: "Durability 30 Mating cycles"}
       load: "the ribbons to board B and to the mezzanine, mated at build and at every service that parts the
         boards"
@@ -301,6 +334,7 @@ boards:
       cycles: null
       no_figure:
         kind: none_published
+        open_item: REL-O-12
         statement: "Keystone's catalogue page of the 3568 gives its material, its ratings and its dimensions and
           no insertion-cycle figure"
         looked_in:
@@ -334,7 +368,7 @@ boards:
       count_expected: 3
       part: "TE 2199230-4 (E key), TE 2199119-3 (B key)"
       cycles: 60
-      source: {document: "v2/vendor/m2/te-2199119-m2-b-key.pdf", sha256_16: "d8f58c5892aec2ef",
+      source: {document: "v2/vendor/m2/te-2199119-m2-b-key.pdf", sha256_16: "d8f58c5892aec2ef", revision: "CS 01/2014 (TE Quick Reference Guide 1-1773702-1; v2/vendor/SOURCES.yaml)",
                page: "6 (the guide's page 5 lists PN 2199230-X and PN 2199119-X)", words: "Durability 60 Cycles"}
       load: "a card pivoted down into the socket and screwed at its far end"
       measure: "each card is screwed to an M2.5 standoff at its far end (ASSEMBLY.md section 1, M.2 cards on B16)"
@@ -358,7 +392,7 @@ boards:
       count_expected: 8
       part: "Hirose U.FL-R-SMT-1(10)"
       cycles: 30
-      source: {document: "v2/vendor/hirose/hirose-ufl-series-catalogue-2009-02-digikey-copy.pdf", sha256_16: "6949727d3bc42a67",
+      source: {document: "v2/vendor/hirose/hirose-ufl-series-catalogue-2009-02-digikey-copy.pdf", sha256_16: "6949727d3bc42a67", revision: "2009.2, printed on the catalogue",
                page: "2", words: "5. Durability (mating / un-mating) ... 30 cycles"}
       load: "a coax pigtail pulled sideways during service, which is what a U.FL tolerates least"
       measure: "every pigtail is tied at both ends (ASSEMBLY.md section 4); a U.FL is lifted with the tool, never
@@ -371,10 +405,11 @@ boards:
       cycles: null
       no_figure:
         kind: none_published
+        open_item: REL-O-12
         statement: "Keystone's catalogue page of the 3034 gives its material and its dimensions and no
           insertion-cycle figure"
         looked_in:
-          - {document: "v2/vendor/keystone/M65p9.pdf", sha256_16: "58aa74ce778e2b33"}
+          - {document: "v2/vendor/keystone/M65p9.pdf", sha256_16: "58aa74ce778e2b33", revision: "M65.1 S1p9r1, 9/29/15 (the page's slug line)"}
       load: "a cell pushed under the retainer and levered out; the retainer is surface mounted, so the lever
         acts on its two solder tails"
       measure: "none is recorded beyond the retainer's own solder tails"
@@ -387,6 +422,7 @@ boards:
       cycles: null
       no_figure:
         kind: none_published
+        open_item: REL-O-12
         statement: "JST's VH catalogue states no mating-cycle figure, and the handling precautions it refers to
           give none"
         looked_in:
@@ -402,6 +438,7 @@ boards:
       cycles: null
       no_figure:
         kind: none_published
+        open_item: REL-O-12
         statement: "JST's SH catalogue states no mating-cycle figure, and the handling precautions it refers to
           give none"
         looked_in:
@@ -417,11 +454,11 @@ boards:
       part: "Wurth WR-BHD 61202621621 (2x13), 61201021621 (2x5), 61201621621 (2x8)"
       cycles: 30
       source:
-        - {document: "v2/vendor/connectors/wurth-wr-bhd-box-header-61202621621.pdf", sha256_16: "38509e478ba394d0",
+        - {document: "v2/vendor/connectors/wurth-wr-bhd-box-header-61202621621.pdf", sha256_16: "38509e478ba394d0", revision: "002.001, 2026-08-30",
            page: "2", words: "Durability 30 Mating cycles"}
-        - {document: "v2/vendor/connectors/wurth-wr-bhd-box-header-61201021621.pdf", sha256_16: "dbaa4765e57457ac",
+        - {document: "v2/vendor/connectors/wurth-wr-bhd-box-header-61201021621.pdf", sha256_16: "dbaa4765e57457ac", revision: "002.001, 2026-08-30",
            page: "2", words: "Durability 30 Mating cycles"}
-        - {document: "v2/vendor/connectors/wurth-wr-bhd-box-header-61201621621.pdf", sha256_16: "0df87add7e40d43c",
+        - {document: "v2/vendor/connectors/wurth-wr-bhd-box-header-61201621621.pdf", sha256_16: "0df87add7e40d43c", revision: "002.001, 2026-08-30",
            page: "2", words: "Durability 30 Mating cycles"}
       load: "the ribbons to board A and to the panel and the RockBLOCK's lead; the panel ribbon is unplugged
         every time the face plate comes off (ASSEMBLY.md section 7)"
@@ -444,6 +481,7 @@ boards:
       part: "HRO TYPE-C-31-M-12"
       cycles: 10000
       source: {document: "v2/vendor/connectors/hro-type-c-31-m-12.pdf", sha256_16: "6ae33d50ac478201",
+               verify: "the drawing has no text layer (pdftotext returns 18 characters): render its one page (pdftoppm -r 200 -png) and read note 3-3 of the notes block",
                page: "1 (the drawing's note 3-3)", words: "DURABILITY: 10000 CYCLES"}
       load: "a USB-C lead plugged in to flash a module's eMMC, at the bench with the case open"
       measure: "the receptacle's four shell legs are soldered through the board"
@@ -453,7 +491,8 @@ boards:
       count_expected: 1
       part: "Molex 2086581001"
       cycles: 10000
-      source: {document: "v2/vendor/connectors/molex-2086581001-part-page-wayback-20251116.html", sha256_16: "2144edad4eb08bb3",
+      source: {document: "v2/vendor/connectors/molex-2086581001-part-page-wayback-20251116.html", sha256_16: "2144edad4eb08bb3", revision: "the Wayback Machine's capture of 16 November 2025",
+               verify: "the figure is not in the page's visible text: it is in the file's one script block of type application/ld+json, the PropertyValue named Durability Mating Cycles Max with the value 10000; read that block with a JSON parser",
                page: "the part page's specification list", words: "Durability Mating Cycles Max 10000"}
       load: "the monitor's own HDMI cable, unplugged every time the face plate comes off; an HDMI plug has no
         latch and a stiff cable"
@@ -464,7 +503,7 @@ boards:
       count_expected: 1
       part: "Wurth 692122030100"
       cycles: 5000
-      source: {document: "v2/vendor/connectors/wurth-wr-com-usb3-a-692122030100.pdf", sha256_16: "df28a01bf0fb46ac",
+      source: {document: "v2/vendor/connectors/wurth-wr-com-usb3-a-692122030100.pdf", sha256_16: "df28a01bf0fb46ac", revision: "001.003, 2025-06-12",
                page: "2", words: "Durability 5 000 Mating cycles"}
       load: "the LimeSDR Mini plugs straight into the receptacle and hangs on it: the board is a lever on the
         receptacle in transport"
@@ -476,7 +515,7 @@ boards:
       count_expected: 2
       part: "GCT SIM8060-6-0-14-00-A"
       cycles: 5000
-      source: {document: "v2/vendor/connectors/gct-sim8060-nano-sim-socket.pdf", sha256_16: "6f2c1c6cccd7b02c",
+      source: {document: "v2/vendor/connectors/gct-sim8060-nano-sim-socket.pdf", sha256_16: "6f2c1c6cccd7b02c", revision: "A, 6th September 2018 (the drawing's revision block)",
                page: "1", words: "Durability : 5,000 cycles"}
       load: "a SIM pushed in and pushed again to release, with the stack out of the case"
       measure: "a push-push socket: the card is released by the socket's own spring and never levered"
@@ -490,6 +529,23 @@ boards:
       load: "the camera's and the QMX's USB leads, unplugged when the face plate or the lid comes off, and the
         three boot jumpers fitted to flash a module"
       measure: "the leads are tied at both ends (ASSEMBLY.md section 4); the lands are through-hole"
+    - name: "bench and commissioning headers on 2.54 mm lands"
+      refs: ["J_DBG?", "J_GNSS2", "J_ZBDBG?", "J_IOCOFF_?", "J_SPI3"]
+      footprints: ["Connector_PinHeader_2.54mm:PinHeader_?x0?_P2.54mm_Vertical*"]
+      count_expected: 10
+      cycles: null
+      no_figure: {kind: owed, open_item: REL-O-02,
+                  statement: "no part is named for these lands and whether a header is fitted on them at all is
+                    a build choice not made, so there is no maker's document to cite. They were excluded as
+                    bench access until the fresh check of 28 September 2026 (m4): the same uncertainty is
+                    owed elsewhere and owed is the safer reading (the integrator's decision, authority
+                    SESSION; to reverse, restore the exclusion of efd6899a)"}
+      load: "a console, debug or breakout lead at the bench and at commissioning, and the three controllers'
+        bench jumpers, which their values call not fitted in service; J_SPI3's value names no bench use, and
+        the LoRa module hangs on its nets"
+      measure: "none is recorded: no lead is dressed to them in ASSEMBLY.md section 4; seven of the lands are
+        through-hole and the three jumper lands are surface mounted"
+      measure_owed: REL-O-02
    exclusions:
     - refs: ["TP*"]
       footprints: ["TestPoint:*"]
@@ -504,14 +560,18 @@ boards:
       footprints: ["Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical_SMD_Pin1Left"]
       count_expected: 3
       reason: "the programming pads of the three I/O controllers: bare surface lands for a probe clip at the
-        bench, no part is fitted on them (the part identities table of stream w5ident reads them NOT_A_PART)"
-    - refs: ["J_DBG?", "J_GNSS2", "J_ZBDBG?", "J_IOCOFF_?", "J_SPI3"]
-      footprints: ["Connector_PinHeader_2.54mm:PinHeader_?x0?_P2.54mm_Vertical*"]
-      count_expected: 10
-      reason: "bench and commissioning access only (a console, a debug port, a breakout, a jumper the value
-        calls not fitted in service): not mated in the field, and whether a header is fitted at all is a build
-        choice not made. Taken by the session (authority SESSION, 28 September 2026); to reverse, move them to
-        the class of lead headers mated in service"
+        bench, no part is fitted on them (their values in the netlist call them SWD pads)"
+    - refs: ["T1"]
+      footprints: ["meshsat:Pulse_H5007NL"]
+      count_expected: 1
+      reason: "soldered Ethernet magnetics (Pulse H5007NL): a candidate only because its value names the wall
+        RJ45 it feeds (the word net, since jack, RJ45 and plug joined it); nothing is mated on it. The joints
+        under its mass are open item REL-O-08"
+    - refs: ["U5"]
+      footprints: ["Package_SO:TSSOP-28_*"]
+      count_expected: 1
+      reason: "a soldered PoE controller in a TSSOP-28 (TI TPS23861PWR): a candidate only because its value
+        names the wall RJ45 port it powers; nothing is mated on it"
 
  c:
    written_against: {artefact: netlist, path: "pcb-c-display-c8/out/pcb-c-display.net", sha256_16: "3fddbb3edcd4248a", content16: "ebde053efc0a3906"}
@@ -534,7 +594,7 @@ boards:
       count_expected: 1
       part: "Hirose FH34SRJ-24S-0.5SH(50)"
       cycles: 20
-      source: {document: "v2/vendor/hirose/hirose-fh34-series-ffc-connectors.pdf", sha256_16: "bcd77fb04a18033d",
+      source: {document: "v2/vendor/hirose/hirose-fh34-series-ffc-connectors.pdf", sha256_16: "bcd77fb04a18033d", revision: "Mar. 2025, printed on the catalogue",
                page: "4", words: "Mating Durability ... 20 times"}
       load: "the display's 24-way flex, inserted at build and again only if the display or the backer is
         changed. It is the lowest figure in the kit"
@@ -557,7 +617,7 @@ boards:
       count_expected: 1
       part: "C&K ATP19-SL1-603-B0SA-03G"
       cycles: 50000
-      source: {document: "v2/vendor/switches/ck-atp19-series-datasheet.pdf", sha256_16: "ebf7ad2c6da083b2",
+      source: {document: "v2/vendor/switches/ck-atp19-series-datasheet.pdf", sha256_16: "ebf7ad2c6da083b2", revision: "Revised: VL 02/05/25",
                page: "1", words: "Operating Life 50,000 make-and-break cycles at full load (the lower figure is
                  carried; Mechanical Life Momentary 1,000,000 cycles)"}
       load: "pressed at every power-on and power-off"
@@ -664,7 +724,7 @@ boards:
       count_expected: 2
       part: "Amphenol RF 132134"
       cycles: 500
-      source: {document: "v2/vendor/rf/amphenol-rf-132134-part-page-wayback-20260213.html", sha256_16: "8abb34d101dcbe57",
+      source: {document: "v2/vendor/rf/amphenol-rf-132134-part-page-wayback-20260213.html", sha256_16: "8abb34d101dcbe57", revision: "the Wayback Machine's capture of 13 February 2026",
                page: "the part page's specification table", words: "Mating Cycles (Min) 500"}
       load: "the antenna pigtail to board A and the PA's output coax, screwed on at build and at service"
       measure: "through-hole jacks; the coax is tied at both ends (ASSEMBLY.md section 4)"
@@ -674,7 +734,7 @@ boards:
       count_expected: 1
       part: "Hirose U.FL-R-SMT-1(10)"
       cycles: 30
-      source: {document: "v2/vendor/hirose/hirose-ufl-series-catalogue-2009-02-digikey-copy.pdf", sha256_16: "6949727d3bc42a67",
+      source: {document: "v2/vendor/hirose/hirose-ufl-series-catalogue-2009-02-digikey-copy.pdf", sha256_16: "6949727d3bc42a67", revision: "2009.2, printed on the catalogue",
                page: "2", words: "5. Durability (mating / un-mating) ... 30 cycles"}
       load: "the PA drive coax, unplugged when the face plate comes off"
       measure: "the coax is tied at both ends (ASSEMBLY.md section 4); a U.FL is lifted with the tool, never by
@@ -687,6 +747,7 @@ boards:
       cycles: null
       no_figure:
         kind: none_published
+        open_item: REL-O-12
         statement: "JST's VH catalogue states no mating-cycle figure, and the handling precautions it refers to
           give none"
         looked_in:
@@ -702,6 +763,7 @@ boards:
       cycles: null
       no_figure:
         kind: none_published
+        open_item: REL-O-12
         statement: "JST's PH catalogue states no mating-cycle figure, and the handling precautions it refers to
           give none"
         looked_in:
@@ -718,6 +780,7 @@ boards:
       cycles: null
       no_figure:
         kind: none_published
+        open_item: REL-O-12
         statement: "JST's XH catalogue states no mating-cycle figure, and the handling precautions it refers to
           give none"
         looked_in:
@@ -733,7 +796,7 @@ boards:
       count_expected: 1
       part: "Wurth WR-BHD 61201621621"
       cycles: 30
-      source: {document: "v2/vendor/connectors/wurth-wr-bhd-box-header-61201621621.pdf", sha256_16: "0df87add7e40d43c",
+      source: {document: "v2/vendor/connectors/wurth-wr-bhd-box-header-61201621621.pdf", sha256_16: "0df87add7e40d43c", revision: "002.001, 2026-08-30",
                page: "2", words: "Durability 30 Mating cycles"}
       load: "the 16-way ribbon to board A, mated at build and at service"
       measure: "a through-hole box header; the ribbon is 60 mm long and captive between the two boards"
@@ -743,7 +806,7 @@ boards:
       count_expected: 1
       part: "Omron G6K-2F-Y 5 VDC"
       cycles: 100000
-      source: {document: "v2/vendor/omron/omron-g6k-signal-relay.pdf", sha256_16: "25d2046127b3ffa7",
+      source: {document: "v2/vendor/omron/omron-g6k-signal-relay.pdf", sha256_16: "25d2046127b3ffa7", revision: "Cat. No. K106-E1-11",
                page: "3", words: "Durability Electrical 100,000 operations min. (with a rated load at 1,800
                  operations/hour) (the lower figure is carried; Mechanical 50,000,000 operations min.)"}
       load: "it changes over at every key-down and key-up of the VHF transmitter; nothing is mated, its contacts
@@ -770,7 +833,7 @@ boards:
       count_expected: 1
       part: "Amass XT60-M"
       cycles: 1000
-      source: {document: "v2/vendor/battery/amass-xt60-spec-tme.pdf", sha256_16: "c2cbb5962c1f37da",
+      source: {document: "v2/vendor/battery/amass-xt60-spec-tme.pdf", sha256_16: "c2cbb5962c1f37da", revision: "V1.2, stated on the sheet (v2/vendor/SOURCES.yaml)",
                page: "2 (the XT60-M sheet)", words: "USE TIMES 1000 TIMES"}
       load: "the pack is unplugged before every lift of the stack and whenever it is swapped (ASSEMBLY.md section
         7): the most cycled connector inside the case, on 12 AWG leads"
@@ -785,6 +848,7 @@ boards:
       cycles: null
       no_figure:
         kind: none_published
+        open_item: REL-O-12
         statement: "Keystone's catalogue page of the 3568 gives its material, its ratings and its dimensions and
           no insertion-cycle figure"
         looked_in:
@@ -800,6 +864,7 @@ boards:
       cycles: null
       no_figure:
         kind: none_published
+        open_item: REL-O-12
         statement: "JST's VH catalogue states no mating-cycle figure, and the handling precautions it refers to
           give none"
         looked_in:
@@ -815,6 +880,7 @@ boards:
       cycles: null
       no_figure:
         kind: none_published
+        open_item: REL-O-12
         statement: "JST's XH catalogue states no mating-cycle figure, and the handling precautions it refers to
           give none"
         looked_in:
@@ -865,6 +931,7 @@ boards:
       cycles: null
       no_figure:
         kind: none_published
+        open_item: REL-O-12
         statement: "Keystone's catalogue page of the 3568 gives its material, its ratings and its dimensions and
           no insertion-cycle figure"
         looked_in:
@@ -879,6 +946,7 @@ boards:
       cycles: null
       no_figure:
         kind: none_published
+        open_item: REL-O-12
         statement: "JST's XH catalogue states no mating-cycle figure, and the handling precautions it refers to
           give none"
         looked_in:
@@ -894,6 +962,7 @@ boards:
       cycles: null
       no_figure:
         kind: none_published
+        open_item: REL-O-12
         statement: "JST's PH catalogue states no mating-cycle figure, and the handling precautions it refers to
           give none"
         looked_in:

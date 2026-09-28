@@ -1,4 +1,4 @@
-THE FOUR-CASE MATRIX ON THE UNREPAIRED TOOL (worker d6rel, MESHSAT-1357, first taken 27 September 2026 23:57 CEST, re-taken 28 September 2026 16:46 CEST with the final matrix.py)
+THE FOUR-CASE MATRIX ON THE UNREPAIRED TOOL (worker d6rel, MESHSAT-1357, first taken 27 September 2026 23:57 CEST, re-taken 28 September 2026 17:55 CEST with the final matrix.py)
 The tool is git show 73ae2f21:v2/ecad/tools/reliability.py written to $SP/old/ ($SP is the session's scratch directory, outside the tree);
 case 4's list is git show 73ae2f21:v2/ecad/tools/pcb_reliability.yaml beside it. Command, from anywhere:
   python3 v2/docs/records/d6rel/matrix.py v2/ecad/tools $SP/old/reliability.py
