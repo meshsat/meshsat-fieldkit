@@ -3557,3 +3557,63 @@ documents_filed_hc3:
     filing_note: "fetched, not redistributed, as for every standard in v2/vendor/standards/; the kit claims no conformity with it and no night-vision compatibility until the examination has passed (owner ruling D-01)"
     status: VERIFIED
     matches_fitted: "not a part document: the design target and test of the NVG mode"
+
+# ADDED 27 SEPTEMBER 2026 (MESHSAT-1357, the QMX lid tray r2, branch fnd/w5tray). Outside `parts:` on purpose, as the closers'
+# documents_filed blocks above: the QMX is a bought unit in the lid and the filaments are a made part's material, so they join no BOM line.
+documents_filed_w5tray:
+  - for_entry: null
+    role: "the QMX's enclosure, 95 x 63 x 25 mm without protrusions and 220 g with the enclosure, which the r1 tray typed from no held document (S-63)"
+    path: "v2/vendor/qrp-labs/qmx-product-page-2026-09-27.txt"
+    doc_id: "QRP Labs, QMX product page (Created 19 May 2023, Last Updated 24 September 2026), text extraction"
+    url: "https://qrp-labs.com/qmx.html"
+    fetched: "2026-09-27T16:38Z, curl from the runner, HTTP 200, 105306 bytes, HTML sha256 377a906c03afe46a (lost with the first worktree); again 2026-09-27T20:53:04Z, HTML sha256 7da9d31b052540e1, whose text differs in the page's hit counter only and gives this file byte for byte with that line set back"
+    sha256: "ea72e0782d8ef82286f6ca8f32d8ee4f8faa489253b31e50b89663585b9c7bbf"
+    status: VERIFIED
+    matches_fitted: "the unit as bought (the optional enclosure); the jack places are not stated here"
+  - for_entry: null
+    role: "the enclosure's size (page 3), its parts (page 21: left and right panels, eight M2.5 screws, four optional rubber feet, two 15 mm knobs), the countersunk panel screws and the knobs' fitting (pages 76 and 77) and photographs 13 and 15 of the sibling QCX-mini in the same enclosure family (what stands proud of the unit, INFERRED)"
+    path: "v2/vendor/qrp-labs/qmx-assembly-1_04r-pages-1-3-20-21-75-78.pdf"
+    doc_id: "QRP Labs, QMX assembly Rev 1.04r (PCB Rev 4/5), pages 1-3, 20-21 and 75-78, a page subset"
+    url: "https://qrp-labs.com/images/qmx/manuals/assembly_1_04r.pdf"
+    fetched: "2026-09-27T20:53:05Z, curl from the runner, HTTP 200, 16261051 bytes, sha256 55c08baaf6ca5fb23aa7bd131fb6200374536bf6ae0ac5759f31d742be282a2b (the same at the first fetch of 16:40:30Z); the subset made with Ghostscript 10.00.0 pdfwrite, which writes its run time into the file"
+    sha256: "ece9bed53713d5fa98c09c35a471f822033678061f7d076763924eb000631056"
+    status: VERIFIED
+    matches_fitted: "PCB Rev 4/5; the enclosure is the same family on every revision"
+  - for_entry: null
+    role: "the maker's photograph of the right panel face on, which cross-checks the scaled panel figure (the RF jack 8.3 mm from the knob edge against the figure's 12.1)"
+    path: "v2/vendor/qrp-labs/qmx-product-photo-qmx4-right-panel.jpg"
+    doc_id: "QRP Labs, QMX product photograph qmx4.jpg"
+    url: "https://qrp-labs.com/images/qmx/1/qmx4.jpg"
+    fetched: "2026-09-27T20:53:05Z, curl from the runner, HTTP 200, 192643 bytes (the same bytes as the first fetch of 16:44Z)"
+    sha256: "4eab70ca5c51f1d3304549d8c9396380280d72758b270218ae3d553de9a3a946"
+    status: VERIFIED
+    matches_fitted: "an early unit's panel; the tray takes both the figure's and the photograph's places"
+  - for_entry: null
+    role: "the r2 tray's and frame's material: heat deflection 113 C at 0.45 MPa and 93 C at 1.80 MPa, interlayer adhesion 21 +-2 MPa, printed-specimen strengths"
+    path: "v2/vendor/materials/prusament-pc-blend-tds-v1.1-2022-02-16.pdf"
+    doc_id: "Prusa Polymers, Prusament PC Blend technical datasheet"
+    revision: "Version 1.1, last update 16-02-2022"
+    url: "https://prusament.com/wp-content/uploads/2022/10/PCBlend_Prusament_TDS_2022_16_EN.pdf"
+    fetched: "2026-09-27T20:53:06Z, curl from the runner, HTTP 200, 1601329 bytes (the same bytes as the first fetch of 16:55:56Z)"
+    sha256: "25f7aa7b99cc24e5b7d75fbbfd5fa949a3e5689b7201c6b34a9cb588d7c040c7"
+    status: VERIFIED
+    matches_fitted: "the material the r2 drawing names; typical values of the maker's own specimens"
+  - for_entry: null
+    role: "the r1 tray's PETG: heat deflection 68 C at 0.45 MPa, under TEST-PLAN E3-S's +71 C (why r2 is PC Blend)"
+    path: "v2/vendor/materials/prusament-petg-tds-v1.1-2022-02-16.pdf"
+    doc_id: "Prusa Polymers, Prusament PETG technical datasheet"
+    revision: "Version 1.1, last update 16-02-2022"
+    url: "https://prusament.com/wp-content/uploads/2022/10/PETG_Prusament_TDS_2021_10_EN.pdf"
+    fetched: "2026-09-27T20:53:06Z, curl from the runner, HTTP 200, 1646301 bytes (the same bytes as the first fetch of 16:55:37Z)"
+    sha256: "0159322f3d14300fe1b3a27a7e1233d87b6d7905ccb738f9f5a5bba88bb2e50d"
+    status: VERIFIED
+    matches_fitted: "not fitted: the superseded r1 tray's material"
+  - for_entry: null
+    role: "TEST-PLAN E2's level: the composite wheeled vehicle schedule, 2.24 g rms in the envelope for an unknown orientation, drive limited to 3 sigma, 40 minutes an axis (the r2 record's section D)"
+    path: "v2/vendor/standards/mil-std-810h-method-514-8.md"
+    doc_id: "MIL-STD-810H, Method 514.8 Vibration, Annex C paragraph 2.1.3 b (2); a TRANSCRIPTION of the lines cited (pages 514.8C-11 to 514.8C-13)"
+    url: "https://cvgstrategy.com/wp-content/uploads/2019/08/MIL-STD-810H-Method-514.8-Vibration.pdf (a copy of the ASSIST download of 2019-03-04)"
+    fetched: "2026-09-27T21:13:01Z, curl from the runner, HTTP 200, 3564432 bytes; sha256 of the file read cc8ec677d3b06eaab5c24244f10ee8acf52dba950ab25c645deeb99c9b177650"
+    sha256: "2b63b2122fc00f8dae5a29aa2338a588ff4715f6156d99cc539a07196b024b00"
+    status: VERIFIED
+    matches_fitted: "a test level, not a part; whether Change Notice 1 altered these lines was not checked"

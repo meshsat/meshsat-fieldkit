@@ -56,6 +56,8 @@ Two qualifications, added 26 Sep 2026 late (MESHSAT-1357 stream r8docs, the revi
 import math, os, sys, json
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "ecad", "tools"))
 import panel1450 as P1450                  # not "L": part C and part G use L as a local name
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "cad"))
+import lid_tray_qmx_r2 as QT               # the QMX lid tray r2 (27 Sep 2026, S-63): its stack from the lid ceiling and its east edge
 _Z = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "cad", "zstack.json"), encoding="utf-8"))
 def _part(board, ref):
     return next(p for p in _Z["boards"][board]["parts"] if p["ref"] == ref)
@@ -138,7 +140,7 @@ U51_H = _part("b", "U51")["height_max"]    # U51 (STM32H753VITx, LQFP-100) on B1
 PLATE = P1450.PLATE                        # C1
 REBATE = P1450.REBATE
 REB_IN = P1450.REB_IN
-TRAY = 28.0                                # v2/cad/lid_bracket_qmx.py:13-16
+TRAY = round(QT.BOND + QT.PLATE_T + QT.Z_TOP, 2)       # 32.30: bond, lid plate, tray and retaining frame (the r1 tray typed 28.0, no plate)
 PACK_EAST = round(P1450.PACK_WEST_X + P1450.PACK_BLOCK[0], 2)   # the 4S3P block's east face (west face X 122.0 and 56.65 wide, A06; panel1450)
 PACK_TOP = B_UNDER - (3.32 + 1.1)          # M6: the block's top under B16's underside
 MIN_FACE, MIN_MECH = 2.0, 1.0              # z_budget.py:16; the document's rigid-to-rigid minimum
@@ -296,8 +298,9 @@ if __name__ == "__main__":
     face_plan = [("plate float on its 6-32 screws", T_FLOAT), ("frame centring", T_CENTRE), ("rebate line", T_REBATE)]
     row("M2b", "full-thickness face (%.1f x %.1f) inside the lid's opening, in X (Y: %.2f nominal)" % (REB_IN[0], REB_IN[1], LID_OPEN[1] - REB_IN[1] / 2), MIN_MECH,
         LID_OPEN[0] - REB_IN[0] / 2, [("lid per wall", T_WALL), ("lid on the base (INFERRED)", T_LID)] + face_plan)
-    row("M3", "space under the QMX tray for the face parts (lid STEP 45.47; web 44.45 in the worst)", MIN_MECH, RIM + LID_STEP - TRAY - face_nom,
-        face_tols + rim_tols + [("lid depth, web page against STEP", LID_STEP - LID_WEB)], open_="parts under the tray: C&K button heights TBD")
+    row("M3", "space under the QMX tray r2 (%.2f from the ceiling) (lid STEP 45.47; web 44.45 in the worst)" % TRAY, MIN_MECH,
+        RIM + LID_STEP - TRAY - face_nom, face_tols + rim_tols + [("lid depth, web page against STEP", LID_STEP - LID_WEB)],
+        open_="each face part under the set: its M3r2 row in the r2 record; the knob rows there are OPEN")
     row("M5", "pack group (205.5 long, A06) to the east legs' inner faces at |Y| %.1f, per side" % LEG_Y[0], MIN_MECH, (2 * LEG_Y[0] - 205.5) / 2,
         [("pack placed by hand (INFERRED)", 1.0)] + LEG_IN_CASE, "group centred in Y")
     row("M7", "stack lift-out through the frame window, per side in X (Y has 16.91)", MIN_MECH, F_WIN[0] - B_OUT[0],
@@ -318,7 +321,7 @@ if __name__ == "__main__":
         print("  M8 without the centring step, frame pushed against the %s wall until its skirt touches and the plate floated the same way: plate gap %.2f nominal, %.2f with the frame -0.76" % (
             ax, g, g - T_SHEET / 2))
     skirt_tols = [("floor under the leg", T_FLOOR), ("leg height", T_LEG), ("skirt below the ring (SHEET class, INFERRED)", T_SHEET)]
-    row("M19", "QMX tray east edge inside the lid's flat ceiling (C5)", MIN_MECH, 173.08 - 171.0, [("case per wall", T_WALL)])
+    row("M19", "QMX tray east edge inside the lid's flat ceiling (C5; r2 keeps it)", MIN_MECH, 173.08 - QT.SPAN_X[1], [("case per wall", T_WALL)])
     print("  M20 (the seat, a statement): frame bottom %.2f nominal against rib tops %.2f: %.2f above them; at the extremes the legs may sit %.2f below the"
           " highest rib top, where an oversize frame rests on the ribs instead, higher and never lower" % (zb_nom, RIB_TOP, zb_nom - RIB_TOP, RIB_TOP + T_CASE_Z - zb_lo))
 
