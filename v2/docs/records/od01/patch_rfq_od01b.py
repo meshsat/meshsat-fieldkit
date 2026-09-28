@@ -120,7 +120,7 @@ for a, b in R:
     assert n == 1, ("expected once", n, a[:80])
     s = s.replace(a, b)
 assert s != s0
-assert "—" not in s and "–" not in s
+assert "\u2014" not in s and "\u2013" not in s
 open(FN, "w", encoding="utf-8").write(s)
 t = open(FN, encoding="utf-8").read()
 assert t.startswith("# OD-01: request for quote") and MARK in t and t.count("## 6.") == 1
