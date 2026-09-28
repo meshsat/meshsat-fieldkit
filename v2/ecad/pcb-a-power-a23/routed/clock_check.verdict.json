@@ -19,7 +19,7 @@
   "board": "a",
   "netlist": {
    "path": "out/pcb-a-power.net",
-   "sha256_16": "0a2b59087bcc2678"
+   "sha256_16": "2dfe1c546cb39ccb"
   }
  },
  "missing_input": null,
@@ -39,12 +39,12 @@
  },
  "tool": "clock_check",
  "tools": {
-  "git_head": "05af085c675d",
-  "tools_tree_sha": "14485a8d448de4d9"
+  "git_head": "19a2bb15a47b",
+  "tools_tree_sha": "d1e2b2878f05965a"
  },
- "ts": "2026-09-28T19:15:17Z",
+ "ts": "2026-09-28T21:17:47Z",
  "verdict": "INCONCLUSIVE",
- "version": "05af085c675d",
+ "version": "19a2bb15a47b",
  "writer": {
   "file": "clock_check.py",
   "sha16": "8da2b82cac511dd0"
