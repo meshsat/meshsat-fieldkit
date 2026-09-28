@@ -192,7 +192,7 @@ open_items:
 boards:
 
  a:
-   written_against: {artefact: netlist, path: "pcb-a-power-a23/out/pcb-a-power.net", sha256_16: "2dfe1c546cb39ccb", content16: "d464d30a17fb30f7"}
+   written_against: {artefact: netlist, path: "pcb-a-power-a23/out/pcb-a-power.net", sha256_16: "599ee964a9c23d6e", content16: "2efce63fe72079f1"}
    classes:
     - name: "SMA jacks for the device pigtails"
       refs: ["J_RF*"]

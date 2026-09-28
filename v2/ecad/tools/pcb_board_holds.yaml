@@ -61,7 +61,7 @@ holds:
          constraints the layout must keep (the clamp at the entry, its ground return short and on the plane)"
        document: "v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md"
        sha256: "094817023210d1b09d92e62716ba550d0fb5b11affc75fe18986bfc6ebae3609"
-       netlist_sha16: "2dfe1c546cb39ccb"
+       netlist_sha16: "599ee964a9c23d6e"
      - kind: fitted_parts
        what: "the exact fitted parts decision 31's executed record lists for board A, at their conductors"
        parts:
