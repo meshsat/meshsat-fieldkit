@@ -289,7 +289,8 @@ def run(b, check, path=None):
         if _g.GetLayer() == pcbnew.F_Cu: _f += 1
         else: _bk += 1
     two_sided = _dr.two_sided(_f, _bk)
-    allow_mm, allow_src = bypass_search.allowance(b, path)
+    allow_row, allow_src = bypass_search.allowance_row(b, path)
+    allow_mm = None if allow_row is None else _dr.via_allowance_mm(allow_row)
     _skip = fan_select.escape_skip(path)
     fan_boxes = fan_select.fan_boxes(b, _skip); tht_boxes = fan_select.tht_boxes(b)
     def _pad(q, ref=None):
@@ -321,14 +322,20 @@ def run(b, check, path=None):
             ok_far, why_far = _dr.far_side(e, two_sided, fan_select.courtyard_box(cf), fan_boxes, tht_boxes)
             if ok_far and allow_mm is None: ok_far, why_far = False, "%s: %s" % (e["cap"], allow_src)
             if not ok_far: refused = why_far
-            else: loop = _dr.loop_equivalent_mm(d, True, allow_mm)
+            else:
+                # T9: on a placed board the allowance is re-read with the seat's OWN via pitch where its two pads
+                # each reach a via; the page's 0.8 mm stands, and is said, where they do not
+                pitch, pitch_why = _dr.seat_via_pitch(_pad(rail[0], e["cap"]), _pad(gnd[0], e["cap"]) if gnd else None, _vias, NEAR_VIA)
+                seat_allow = _dr.via_allowance_mm(allow_row, via_pitch=pitch) if pitch else allow_mm
+                seat_src = "%s at %s" % (allow_src, pitch_why if pitch else "the page's 0.8 mm via pitch (%s)" % pitch_why)
+                loop = _dr.loop_equivalent_mm(d, True, seat_allow)
         if refused:
             # a seat the ruling refuses is refused whatever the allow file says (T9: "refused, never allowed")
             tally["fail"] += 1
             check(False, "bypass %s (%s) to %s.%s: on the side opposite its part and refused, %s" % (e["cap"], val, e["part"], e["pin"], refused.split(": ", 1)[-1]))
             continue
         st, why = _dr.judge(e, loop, allowed.get(e["cap"]))
-        side_txt = (" (the other side: %.2f mm in plane plus the %.1f mm via allowance of %s)" % (d, allow_mm, allow_src)) if far else ""
+        side_txt = (" (the other side: %.2f mm in plane plus the %.1f mm via allowance of %s)" % (d, seat_allow, seat_src)) if far else ""
         line = "bypass %s (%s) to %s.%s, class %s: %s%s" % (e["cap"], val, e["part"], e["pin"], e["class"], why.split(": ", 1)[-1], side_txt)
         if st == "fail": tally["fail"] += 1; check(False, line); continue
         # the loop closes through the planes: the rail pad reaches a via or a pour, as before
