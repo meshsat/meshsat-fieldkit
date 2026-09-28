@@ -231,7 +231,7 @@ def stage_items(root, dry):
     # that left the open list", now sits in the middle of the open list and is not used here)
     head = "\nclosed_items:\n"
     assert old.count(head) == 1, "the closed list's start is not where this script expects it"
-    t = old.replace(head, block.rstrip("\n") + "\n" + head)
+    t = old.replace(head, "\n" + block.rstrip("\n") + "\n" + head.lstrip("\n"))  # integrator fix (check 2, B2): the block starts on its own line whether or not a blank line precedes closed_items
     # every item linked from the record(s) whose verdict it can move
     by_rec = {}
     for sid, (fid, _t) in zip(ids, ITEMS):

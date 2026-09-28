@@ -3627,3 +3627,31 @@ documents_filed_w5tray:
     sha256: "2b63b2122fc00f8dae5a29aa2338a588ff4715f6156d99cc539a07196b024b00"
     status: VERIFIED
     matches_fitted: "a test level, not a part; whether Change Notice 1 altered these lines was not checked"
+
+# ADDED 28 SEPTEMBER 2026 (MESHSAT-1357, the review of decision 31, worktree fnd/d8dec31). Outside `parts:` because no
+# parts entry names the fitted codes yet (C534330, board E's Q1, Q4 and Q6; C3685740, board A's U34): those entries are
+# the parts stream's and are owed. Part documents, read for the review's ledger (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md
+# section 8) and filed so the ledger's rows can be reproduced.
+documents_filed_d8dec31:
+  - for_entry: null
+    role: "the ratings of board E's Q1, the N-FET the LM74700-Q1 ideal-diode controller U3 drives on the vehicle entry (also Q4 and Q6 of the panel tracker), read for finding E-F1 of the review of decision 31: VDS 60 V, 100 percent avalanche tested, EAS 50 mJ; session filing of 27 September 2026 under the owner's standing rule"
+    path: "v2/vendor/infineon/infineon-bsc039n06ns-rev2.4-c534330.pdf"
+    doc_id: "Infineon BSC039N06NS OptiMOS 5 Power-Transistor, 60 V, Final Data Sheet"
+    revision: "Rev.2.4, 2020-02-03 (13 pages, with a text layer; Infineon's own site serves a scan with no text layer)"
+    url: "https://datasheet.lcsc.com/datasheet/pdf/8e4886fa29da7cb0f19c73d556cca14b.pdf?productCode=C534330 (LCSC's copy of the maker's sheet, the pdfUrl of LCSC's product record for C534330; infineon.com was not tried by name because its file ids are not guessable)"
+    fetched: "2026-09-27T21:49:31Z, curl from the runner, 1,344,705 bytes, 13 pages"
+    sha256_of_the_file_read: "8d95c1da9c78b3afb037e1f80c3bea1ed0f874f689e3a0c96d926dafe6a437b9"
+    filing_note: "the fitted code C534330 is gen_sch_e.py's for Q1, Q4 and Q6 (value text 'BSC039N06NS 60 V ...'); whether LCSC's C534330 is this exact part and package (PG-TDSON-8) is the parts stream's condition 1 check, not done here"
+    status: VERIFIED
+    matches_fitted: "the value text names the part; the code's match to the part and package is not certified here"
+  - for_entry: null
+    role: "the absolute maximum ratings of board A's U34 (TPS37A010122DSKR, the front end's 65 V over- and under-voltage supervisor on VIN_RAW), read for the ledger of the review of decision 31: VDD, VSENSE, VRESET -0.3 to 70 V (7.1, p.6); session filing of 27 September 2026 under the owner's standing rule"
+    path: "v2/vendor/ti/ti-tps37-snvsbj1e.pdf"
+    doc_id: "TI TPS37 Wide VIN 65 V Dual Channel Overvoltage and Undervoltage (OV and UV) Detector with Programmable Sense and Reset Delay Function, datasheet"
+    revision: "SNVSBJ1E, October 2020, revised August 2023 (Rev. E, 44 pages)"
+    url: "https://www.ti.com/lit/ds/symlink/tps37.pdf"
+    fetched: "2026-09-27T21:49:20Z, curl from the runner, 3,124,179 bytes, 44 pages; the same bytes gen_sch_a.py:754 cites by sha256 d6aed9d9 from stream r4a's draft copy"
+    sha256_of_the_file_read: "d6aed9d98fbf7f16f4dea2d6edf7c889e5fd3fa862f4072da656fb3fe7cef545"
+    filing_note: "the fitted code C3685740 is gen_sch_a.py's for U34 (line 798); the code's match to the -DSKR suffix and the WSON-10 package is the parts stream's condition 1 check, not done here"
+    status: VERIFIED
+    matches_fitted: "the value text names the part; the code's match to the part and package is not certified here"

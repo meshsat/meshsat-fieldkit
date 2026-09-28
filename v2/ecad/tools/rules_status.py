@@ -724,8 +724,10 @@ CONFIG_INPUTS = {
     # port_protect.py:112, :463-472, :523-524 and :538-539 the board table's external_ports and _external_ports_why;
     # :482-485 boardtable.letter_for (every table's `name`; the reading records the letter it resolved); :101-106 and
     # :285-288 the intent file beside the netlist, whose rails stop the search, which the reading records by sha
-    # (phase_artefacts.reading_inputs, :436).
-    "port_protect.py": ("tools/boards/{letter}.json", "{phase}/out/{stem}-intent.json"),
+    # (phase_artefacts.reading_inputs, :436). Since 28 September 2026 (S-88, the review of decision 31, item B1):
+    # port_protect.reviews() reads tools/pcb_port_reviews.json, the external pins a review enumerated for each board,
+    # which reconcile() holds the declaration against pin by pin; the reading records it as inputs.port_reviews by sha.
+    "port_protect.py": ("tools/boards/{letter}.json", "{phase}/out/{stem}-intent.json", "tools/pcb_port_reviews.json"),
     # reliability.py:31 and :53 the declared list; :55 rules_lib.board_facts for the project names. (It also reads
     # the newest `<stem>*/out/<stem>.net` by mtime, :47, and records no netlist, so its readings do not bind anyway.)
     "reliability.py": ("tools/pcb_reliability.yaml", "tools/pcb_board_facts.yaml"),
