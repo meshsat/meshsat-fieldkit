@@ -1,0 +1,69 @@
+input v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json sha256 3422910a15c4d1450141aa9a5fd725ba75bca9fcb42ae8c87e4cf3385d7d4498
+input v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json sha256 96ee391b3e3f638d7436cad51fcabf77999b530d8734c1feb93f7766a4877d8a
+input v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs-intent.json sha256 8d9f3b2256521b0d76373d434c1104fae6438002e5945088d890ec743a4d260a
+input v2/ecad/tools/pcb_interfaces.yaml sha256 4b59132b2a0ecfa161eafd37de74532b08bbad43f098d6f53094d9769a16f20c
+board A intent written 2026-09-27 14:51; board B intent written 2026-09-27 15:05; board D intent written 2026-09-27 14:28
+contract title: A to B rail leads: J_5V_S1..3, J_5V_DEV, J_54V (JST-VH pairs, 16 and 18 AWG, 150 mm)
+
+== declarations (parsed from the intent files)
++5V_S1    A: typ 2.50 peak 5.00 loads {'J_5V_S1': 5.0} | B: typ 2.50 peak 5.00 loads-sum 4.751 (6 loads)
++5V_S2    A: typ 2.50 peak 5.00 loads {'J_5V_S2': 5.0} | B: typ 4.20 peak 5.00 loads-sum 4.751 (6 loads)
++5V_S3    A: typ 2.50 peak 5.00 loads {'J_5V_S3': 5.0} | B: typ 2.50 peak 5.00 loads-sum 4.751 (6 loads)
++5V_DEV   A: typ 4.00 peak 6.90 loads {'J_5V_DEV': 3.2, 'U23': 0.5, 'U32': 0.3} | B: typ 3.80 peak 6.00 loads-sum 5.180 (19 loads)
++54V_POE  A: typ 0.30 peak 0.60 loads {'J_54V': 0.3} | B: typ 0.30 peak 0.60 loads-sum 0.600 (2 loads)
+
+== +5V_S2 loads behind board B (PS-ALLTX: slot loaded, 5G module transmitting)
+  5G card buck U203 at 3.456 V / 0.88: 3.0 A cont -> 2.310 A; 4 A peak -> 3.080 A; 1.512 A max averaged (Table 37) -> 1.164 A
+  NVMe+switch 3.3 V buck U204: typ 0.662 A, peak 1.324 A (project allowance 0.9/1.8 A at 3.3 V)
+  1.0 V core buck U205: typ 0.185 A, peak 0.277 A (project allowance 0.8/1.2 A)
+  CM5 module: maker typical 0.90 A (no maximum); project allowance 1.60 A; fan 0.10 A (TBD per contract line 1057); gate 0.001 A
+  SUM typical (CM5 0.9, card 3.0 A cont)         = 4.157 A  (board B declares typ 4.20)
+  SUM coincident (CM5 1.6 alloc, card 4 A peak)  = 5.628 A  (the contract's 5.63 A)
+  SUM every branch at its peak or allowance      = 6.382 A  (a bound)
+  SUM with the card at Quectel's largest average = 3.012 A
+  board A limit: LM5176 U5 average current loop, VSNS (43.0, 50.0, 57.0) mV / R35 6 mOhm = 7.167 / 8.333 / 9.500 A (min/typ/max)
+  margins to the MINIMUM limit: coincident 1.539 A; all-peak 0.785 A; to the VH 10 A: all-peak 3.618 A
+  board A's declaration 2.5/5.0 against B's derivation: typ short by 1.66 A, peak short by 0.63 A (coincident) / 1.38 A (all-peak)
+  board B's own declared peak 5.00 is BELOW its own coincident figure 5.628
+
+== +5V_S1 and +5V_S3 (AP64500 stages; ends agree 2.5/5.0)
+  WiFi card at AsiaRF's 9.1 W max through 0.88 at 5.1 V = 2.028 A; slot sum with CM5 1.6 alloc: 4.575 A (POWER-THERMAL PS-ALLTX PLAN 4.65 A); all-peak 5.329 A
+  limit: AP64500 5.0 A continuous rating (DS41979 p.1); HS peak limit (6.8, 8.0, 9.2) A (p.6). Margin of the declared 5.0 A peak to the 5 A rating: 0.00 A
+  board B's declared loads sum 4.751 A against the declared typical 2.5 A on both ends
+
+== +5V_DEV
+  board B loads (declared, apportioned): {'U23': 1.2, 'U25': 0.9, 'U21': 0.6, 'F1': 0.6, 'U24': 0.45, 'F3': 0.3, 'U28': 0.25, 'F2': 0.2, 'U26': 0.15, 'U106': 0.1, 'U206': 0.1, 'U306': 0.1, 'U40': 0.05, 'U50': 0.05, 'U60': 0.05, 'U15': 0.02, 'U16': 0.02, 'U17': 0.02, 'U18': 0.02}
+  board B loads sum 5.180 A; B declares typ 3.80 peak 6.00 arriving
+  board A: typ 4.00 peak 6.90, loads {'J_5V_DEV': 3.2, 'U23': 0.5, 'U32': 0.3} (J_5V_DEV share 3.20)
+  board D's +5V_D8 (behind A's eFuse U23, ILM 2.0 A): typ 1.00 peak 2.00, loads sum 0.960
+  board A limit: LM5176 U7, VSNS / R43 6 mOhm = 7.167 / 8.333 / 9.500 A
+  converter sum at the ends' TYPICALS (B 3.8 + D 1.0 + wall 0.3) = 5.10 A against A's declared typ 4.00
+  converter sum at the ends' PEAKS (B 6.0 + D 2.0 eFuse ILM + wall 0.89 ILM) = 8.89 A: 1.72 A OVER the minimum limit 7.167 (a bound: two of the three are protection limits)
+  converter sum with D at its declared peak 2.0 and the wall port off = 8.00; with D typical 1.0 and wall 0.89 = 7.89 (A's declared 6.9 = 6.0 + 0.9, D8 at 0)
+  POWER-THERMAL.md line 709: PS-ALLTX +5V_DEV PLAN 5.89 A, HIGH 7.8 A: HIGH exceeds the 7.167 A minimum by 0.63 A (the page says so itself)
+  lead disagreement: A apportions 3.20 A to J_5V_DEV, B declares 3.80 A typical arriving: 0.60 A apart
+
+== +54V_POE
+  ends: A typ 0.30 peak 0.60; B typ 0.30 peak 0.60, loads {'R13': 0.593, 'U5': 0.007}
+  board A limit: LM5176 U16 boost, VSNS / R71 20 mOhm = 2.150 / 2.500 / 2.850 A; margin at 0.6 A: 1.55 A
+  in PS-ALLTX the rail is OFF by hardware (POE_EN = POE_SW_EN AND OUTLET_OK, S-14): 0 A in the named mode
+  lead 18 AWG (ASSEMBLY row 134): the catalogue's 10 A is stated for AWG 16 on the standard header and 7 A for AWG 18 on the SHROUDED header; no figure is stated for AWG 18 on the standard header B2P-VH that both boards fit
+
+== lead pair drop, 150 mm each way (300 mm of conductor), rho_cu 1.72e-08 ohm m (dc_drop.py), areas from the JST catalogue p.2
+  AWG 16 (1.25 mm2): wire loop 4.128 mOhm
+    at 2.500 A: wire 10.3 mV (0.20 % of 5.1 V); four VH contacts at the 10 mOhm initial max 100 mV (1.96 %), at the 20 mOhm after-test max 200 mV (3.92 %)
+    at 4.200 A: wire 17.3 mV (0.34 % of 5.1 V); four VH contacts at the 10 mOhm initial max 168 mV (3.29 %), at the 20 mOhm after-test max 336 mV (6.59 %)
+    at 5.000 A: wire 20.6 mV (0.40 % of 5.1 V); four VH contacts at the 10 mOhm initial max 200 mV (3.92 %), at the 20 mOhm after-test max 400 mV (7.84 %)
+    at 5.630 A: wire 23.2 mV (0.46 % of 5.1 V); four VH contacts at the 10 mOhm initial max 225 mV (4.42 %), at the 20 mOhm after-test max 450 mV (8.83 %)
+    at 6.380 A: wire 26.3 mV (0.52 % of 5.1 V); four VH contacts at the 10 mOhm initial max 255 mV (5.00 %), at the 20 mOhm after-test max 510 mV (10.01 %)
+    at 7.167 A: wire 29.6 mV (0.58 % of 5.1 V); four VH contacts at the 10 mOhm initial max 287 mV (5.62 %), at the 20 mOhm after-test max 573 mV (11.24 %)
+  AWG 18 (0.83 mm2): wire loop 6.217 mOhm
+    at 2.500 A: wire 15.5 mV (0.30 % of 5.1 V); four VH contacts at the 10 mOhm initial max 100 mV (1.96 %), at the 20 mOhm after-test max 200 mV (3.92 %)
+    at 4.200 A: wire 26.1 mV (0.51 % of 5.1 V); four VH contacts at the 10 mOhm initial max 168 mV (3.29 %), at the 20 mOhm after-test max 336 mV (6.59 %)
+    at 5.000 A: wire 31.1 mV (0.61 % of 5.1 V); four VH contacts at the 10 mOhm initial max 200 mV (3.92 %), at the 20 mOhm after-test max 400 mV (7.84 %)
+    at 5.630 A: wire 35.0 mV (0.69 % of 5.1 V); four VH contacts at the 10 mOhm initial max 225 mV (4.42 %), at the 20 mOhm after-test max 450 mV (8.83 %)
+    at 6.380 A: wire 39.7 mV (0.78 % of 5.1 V); four VH contacts at the 10 mOhm initial max 255 mV (5.00 %), at the 20 mOhm after-test max 510 mV (10.01 %)
+    at 7.167 A: wire 44.6 mV (0.87 % of 5.1 V); four VH contacts at the 10 mOhm initial max 287 mV (5.62 %), at the 20 mOhm after-test max 573 mV (11.24 %)
+  ASTM B258 formula (not held): AWG 16 diameter 1.291 mm, area 1.309 mm2
+  ASTM B258 formula (not held): AWG 18 diameter 1.024 mm, area 0.823 mm2
+  the contract's budget: 2 percent of 5.1 V = 102 mV, shares A 0.5 point + B 1.5 points = 2.0 points: NO share for the lead and its four contacts
