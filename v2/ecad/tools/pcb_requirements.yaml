@@ -3189,14 +3189,17 @@ open_items:
       netlists; inhibit_chain_d: 7 pass, 0 failed, 1 undecided of 8): (1) with U13's supply +3V3_D8 down, U13 no longer
       drives SA_PTT_n, which sits at 2.85 V from the currents that are known, and the SA868's maker states no input
       threshold for U2 pin 5; (2) its maker states no input current for U2 pin 5 either; (3) with EMCON on, the
-      open-drain output U13 pin 4 is released and SA_PTT_n is held at 2.86 V by R88 and R89 alone, and U13's sheet does
-      not state that output's off-state current while powered. CON-010, the transmit gate on board D (KEY = PTT_ANY AND
-      TX_INHIBIT_n), cannot read PASS at the desk while the row is undecided. S-64 (W3T-F1, TX_INHIBIT_n's fail-safe
-      level with board C unpowered) is closed by SC-67 and that check fails on no board since set 6; what remains for
-      CON-010 is this row and board A's two rows (S-93). Open until RF-002, re-taken on board D, reads the row decided:
-      each ground answered by a maker's figure in a held document under v2/vendor/, or by a hardware element that makes
-      it moot, or by a bench reading on a built board (bench E-01 of v2/docs/feasibility/EMCON.md; prototype
-      verification), which is a sample of one board and is recorded as one.
+      open-drain output U13 pin 4 is released and SA_PTT_n is held by R88 (1.2 k to +5V_SA) and R89 (2 k to ground)
+      alone: 3.12 V is that divider's nominal in the report's chain line, 2.86 V the walk's adverse level from the
+      currents that are known, and U13's sheet does not state that output's off-state current while powered. CON-010,
+      the transmit gate on board D (KEY = PTT_ANY AND TX_INHIBIT_n), cannot read PASS at the desk while the row is
+      undecided. S-64 (W3T-F1, TX_INHIBIT_n's fail-safe level with board C unpowered) is closed by SC-67 and that check
+      fails on no board since set 6; what remains for CON-010 is this row and board A's two rows (S-93). Open until
+      RF-002, re-taken on board D, reads the row decided: each ground answered by a maker's figure in a held document
+      under v2/vendor/, or by a hardware element that makes it moot, or by a bench reading on a built board, which is a
+      sample of one board and is recorded as one (prototype verification): bench E-01 of v2/docs/feasibility/EMCON.md
+      measures U2 pin 5's threshold and input current, grounds (1) and (2), and not U13 pin 4's off-state current, so
+      ground (3) needs E-01 to gain that current or another bench row named here (EMCON.md's writer, stream d4emcon).
   - id: S-93
     class: SESSION
     status: OPEN
@@ -3234,6 +3237,22 @@ open_items:
       v2/docs/feasibility/EMCON.md it is bound to), as CON-010 was; until then each stands FAIL as it was set, which is
       the cautious reading. Open until the three are re-decided with their derivation in the evidence.
 
+  - id: S-97
+    class: SESSION
+    status: OPEN
+    disposition: TOOLING
+    disposition_why: >-
+      A tool item: the report's completeness. It moves no record's verdict, because an item that rests on the walk
+      (S-92, S-93) closes on its row reading decided, whatever the report prints, and the walk's verdict counts are
+      unaffected by the slice. RF-002's owner changes the writer with the next tool change and re-takes the rule.
+    title: >-
+      (int7 check 3, p3: a tool item) tx_inhibit.py's report prints at most three failed grounds and three unsure
+      grounds per state (the slices bad[:3] and unsure[:3] in its report writer), so a state with four or more grounds
+      would lose some from the report with no sign. On the set 6 netlists the longest list is two and nothing was cut
+      (checked by the third fresh check of the set 6 integration, v2/docs/records/int7/CHECK-3.md). Owed: the report
+      prints every ground, or prints how many it cut; a test with a fixture of four grounds in one state. Changing the
+      report writer changes the tool's code bundle, so RF-002 is re-taken on every board with it (with the set's next
+      box re-take).
 closed_items:
   - id: S-57
     closed_by: SC-70
@@ -9118,7 +9137,7 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-05]
     choices: [SC-11]
-    waits_on: [S-01, S-02, S-44, S-87, S-65]
+    waits_on: [S-01, S-02, S-44, S-87, S-65, S-92, S-93]
     status: FEASIBILITY_OPEN
     evidence_result: INCONCLUSIVE
     evidence_phase: SCHEMATIC
