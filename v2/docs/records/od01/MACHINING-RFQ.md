@@ -20,7 +20,7 @@ files OK). Sheet numbers are those of the release.
 | C4-E, C4-W | RF entry plates, east (5 arrestors) and west (7) | 1 each | 6061 (or 5052) aluminium, 6.0 | edges broken | CNC (spot-faces) | mock-up T11 (one plate, or a coupon), build T6 and T7 | second (east plate only), rest at build |
 | C3 | Connector plate | 1 | 5052-H32 or 6061-T6, 5.0 | edges broken | CNC | build (T6 runs on the paper templates) | quote now, **do not release for cutting** (note 3) |
 | G1 to G3 | Gaskets: connector plate, east and west entry plates | 1 each | 2.0 closed-cell EPDM or neoprene | none | knife or waterjet | build (T7) | optional on this quote |
-| H2 | Dummy stack plate for the heaters: 200 x 150 x 3.0 at least, the three HS50 heaters bolted to it with compound (each 21.2 W exceeds the HS50's 14 W rating without a heatsink) | 1 | aluminium, 3.0 (any alloy) | none | shear or saw | heat test | first, may be the operator's |
+| H2 | Dummy stack plate for the heaters: 330 x 200 x 3.0, the stack's outline (board B's in zstack.json), matt black anodised or painted (a bare or smaller plate passes H2's 100 C stop limit at 42 and 64 W: the check's estimate, INFERRED), the three HS50 heaters bolted to it with compound (each 21.2 W exceeds the HS50's 14 W rating without a heatsink) | 1 | aluminium, 3.0 (any alloy) | none | shear or saw | heat test | first, may be the operator's |
 | H3 | Dummy pack block | 1 | aluminium block | none | saw | heat test and mock-up T4 | first, size owed (note 4) |
 | L1 | QMX lid plate r2 | 1 | 5052-H32, 2.0 | none | laser plus tapping | build (T8, T9) | optional |
 
@@ -61,13 +61,13 @@ tolerances and notes a DXF or STEP does not.
 > Request for quote: aluminium parts for one prototype enclosure, quantity 1 set, delivered to the Netherlands.
 >
 > Parts and files as in the attached table (lines H1, C6, C1, C4-E, C4-W, C3, optional G1 to G3, H2, H3, L1). Units are
-> millimetres. Each part has a drawing PDF; where a DXF or STEP and the PDF differ, the PDF governs and we ask you to
+> millimetres. Each part has a drawing PDF; where a DXF or STEP and the PDF differ, the PDF governs (for H1, this text governs over sheet 1) and we ask you to
 > tell us.
 >
 > - **H1** is the face plate of sheet 1 without its openings: machine only the outline 377.2 x 263.0 x 3.0 with R16
 >   corners, the rebated band (outside 368.0 x 253.0, 2.0 deep from the top face, 1.0 left), the 0.8 relief on the
 >   underside, the ten 4.6 holes at the insert pattern and FOUR PEM S-M3 self-clinching nuts in 4.2 holes on a 35.0 x 37.0
->   pattern centred on the PA flange site (they take the heat test's Arcol HS100 patch resistor: its four fixing holes,
+>   pattern centred on the PA flange site, 37.0 along the plate's X axis and 35.0 along Y (they take the heat test's Arcol HS100 patch resistor: its four fixing holes,
 >   3.2 maximum, on 35.0 x 37.0, Arcol HS datasheet 12/14.08, page 2). C1 keeps its two nuts 60 apart for the real flange. Omit both windows and their 1.0 pocket, the seventeen 2.6 H7 holes, the eight PEM SO-M3-10 standoffs and
 >   the four 4.5 holes for the monitor frame. Black anodised as C1.
 > - **C1** is sheet 1 complete: the H1 features plus the monitor window 205.75 x 140.09 R15 at (0, -24), the e-paper
