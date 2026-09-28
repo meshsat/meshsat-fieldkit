@@ -102,7 +102,9 @@ def run(tools, tool, d, ecad, vendor, sheet):
     env = dict(os.environ, PYTHONPATH=tools, PYTHONDONTWRITEBYTECODE="1", VERDICT_DIR=os.path.join(d, "out"))
     argv = [sys.executable, tool, "--rel", sheet, "--ecad", ecad, "--board", "a"]
     src = open(tool, encoding="utf-8").read()
-    if "--vendor" in src: argv += ["--vendor", vendor]           # the unrepaired tool has no such option
+    # The repaired tool checks every cited document by sha under the vendor folder it is given: the fixture's for
+    # the fixture sheet, the tree's for board A's own declaration (case 4). The unrepaired tool has no such option.
+    if "--vendor" in src and vendor: argv += ["--vendor", vendor]
     r = subprocess.run(argv, cwd=d, env=env, capture_output=True, text=True)
     vp = os.path.join(d, "out", "reliability.verdict.json")
     v = json.load(open(vp)) if os.path.exists(vp) else {}
@@ -133,6 +135,7 @@ def main(argv):
     bad = 0
     for name, parts, sh, want, what in cases:
         d, ecad, vendor, p = fixture(root, name, parts, sh)
+        if parts is None: vendor = os.path.normpath(os.path.join(tools, "..", "..", "vendor"))   # case 4: the tree's documents
         r, v = run(tools, tool, d, ecad, vendor, p)
         got = v.get("verdict")
         ok = (got == want and r.returncode == code[want])

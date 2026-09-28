@@ -1,0 +1,523 @@
+THE INVENTORY OF REL-001 ON THE SET 6 ARTEFACTS, BEFORE AND AFTER (worker d6rel, MESHSAT-1357, 28 September 2026 00:26 CEST)
+Written by v2/docs/records/d6rel/measure_inventory.py (read only; the old list is git show 73ae2f21:v2/ecad/tools/pcb_reliability.yaml written to $SP/old/):
+  python3 v2/docs/records/d6rel/measure_inventory.py v2/ecad/tools --old $SP/old
+No board has been built; these are readings of netlists and of board E5's board file.
+
+old list  : $SP/old/pcb_reliability.yaml sha16 fbf56eb06df1d007 (git show 73ae2f21:v2/ecad/tools/pcb_reliability.yaml)
+new list  : ecad/tools/pcb_reliability.yaml sha16 b83b335a0dc539ce
+tool      : reliability.py sha16 85bb2a8a05b78382, wear_inventory.py sha16 503a05eedb8a0a29
+
+== board A  netlist pcb-a-power-a23/out/pcb-a-power.net  sha16 0a2b59087bcc2678  612 part(s)
+   candidates 82: by reference class 82, by a mechanical land 0, by an undeclared land 0, by no land 0, by the word net 0, undeclared class 0
+   BEFORE (the old list's 6 class(es) over the inventory): classed 39, excluded 0, refused 43
+   AFTER  (the new list's 11 class(es) and 1 exclusion(s)): classed 57, excluded 25, refused 0; result INCONCLUSIVE
+      excluded 25: TP10, TP11, TP12, TP13, TP14, TP15, TP16, TP17, TP18, TP19, TP20, TP21, TP22, TP23, TP24, TP25, TP26, TP27, TP3, TP4, TP5, TP6, TP7, TP8, TP9: a test point: a bare pad touched by a probe at the bench, nothing is mated and nothing hangs on it
+      owed: A: class the pre-charge pin owes its cycle figure (open item REL-O-01: board A's pre-charge pin J_PRE1, the longer Mill-Max pin that mates first, has no order code (the part identities table of stream
+      owed: A: class the USB-C outlet's pigtail header owes its cycle figure (open item REL-O-02: the 2.54 mm pin header lands that are mated in service carry no named part: whether a header is fitted or the lead
+   refused BEFORE (43): J_CN1, J_CN2, J_CN3, J_CN4, J_CP1, J_CP2, J_CP3, J_CP4, J_DOCK, J_PRE1, J_VN1, J_VN2, J_VN3, J_VN4, J_VR1, J_VR2, J_VR3, J_VR4, TP10, TP11, TP12, TP13, TP14, TP15, TP16, TP17, TP18, TP19, TP20, TP21, TP22, TP23, TP24, TP25, TP26, TP27, TP3, TP4, TP5, TP6, TP7, TP8, TP9
+   THE INVENTORY (ref, pins, land, disposition, value):
+     F1             2  Fuse:Fuseholder_Blade_Mini_Keystone_3568                   class the blade fuse holder: 25 A mini blade (Keystone 3568 holder): pack node to the RSR shunt
+     J_54V          2  Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical          class JST VH power headers: 54 V to the PoE injector on B16 (JST-VH): + -
+     J_5V_DEV       2  Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical          class JST VH power headers: USB device rail to B16 (JST-VH): + -
+     J_5V_S1        2  Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical          class JST VH power headers: slot 1 5.1 V rail to B16 (JST-VH, 16 AWG): + -
+     J_5V_S2        2  Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical          class JST VH power headers: slot 2 5.1 V rail to B16 (JST-VH, 16 AWG): + -
+     J_5V_S3        2  Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical          class JST VH power headers: slot 3 5.1 V rail to B16 (JST-VH, 16 AWG): + -
+     J_AB1         26  meshsat:IDC-Header_2x13_P2.54mm_Vertical_NarrowPad         class ribbon box headers: A-B interconnect (IDC 2x13, top side) to B16's underside header
+     J_AB2         10  meshsat:IDC-Header_2x05_P2.54mm_Vertical_NarrowPad         class ribbon box headers: A-B wall-port ribbon (IDC 2x5): the wall USB pair on the END row with eight grounds behind
+     J_BM1          2  meshsat:Radiall_SMPMAX_R222M00720                          class blind-mate RF receptacles under the boar: SMP-MAX slide-on receptacle R222M00720 (underside), VHF to the dock plug
+     J_BM10         2  meshsat:Radiall_SMPMAX_R222M00720                          class blind-mate RF receptacles under the boar: SMP-MAX slide-on receptacle R222M00720 (underside), IRID to the dock plug
+     J_BM11         2  meshsat:Radiall_SMPMAX_R222M00720                          class blind-mate RF receptacles under the boar: SMP-MAX slide-on receptacle R222M00720 (underside), LORA to the dock plug
+     J_BM2          2  meshsat:Radiall_SMPMAX_R222M00720                          class blind-mate RF receptacles under the boar: SMP-MAX slide-on receptacle R222M00720 (underside), HF to the dock plug
+     J_BM3          2  meshsat:Radiall_SMPMAX_R222M00720                          class blind-mate RF receptacles under the boar: SMP-MAX slide-on receptacle R222M00720 (underside), WIFI24 to the dock plug
+     J_BM4          2  meshsat:Radiall_SMPMAX_R222M00720                          class blind-mate RF receptacles under the boar: SMP-MAX slide-on receptacle R222M00720 (underside), GNSS to the dock plug
+     J_BM5          2  meshsat:Radiall_SMPMAX_R222M00720                          class blind-mate RF receptacles under the boar: SMP-MAX slide-on receptacle R222M00720 (underside), SDR to the dock plug
+     J_BM6          2  meshsat:Radiall_SMPMAX_R222M00720                          class blind-mate RF receptacles under the boar: SMP-MAX slide-on receptacle R222M00720 (underside), P2P-A to the dock plug
+     J_BM7          2  meshsat:Radiall_SMPMAX_R222M00720                          class blind-mate RF receptacles under the boar: SMP-MAX slide-on receptacle R222M00720 (underside), P2P-B to the dock plug
+     J_BM8          2  meshsat:Radiall_SMPMAX_R222M00720                          class blind-mate RF receptacles under the boar: SMP-MAX slide-on receptacle R222M00720 (underside), 5G-MAIN to the dock plug
+     J_BM9          2  meshsat:Radiall_SMPMAX_R222M00720                          class blind-mate RF receptacles under the boar: SMP-MAX slide-on receptacle R222M00720 (underside), 5G-DIV to the dock plug
+     J_CN1          1  meshsat:Mill-Max_0858_power_pin                            class dock power spring pins: 9 A spring pin, pack return (Mill-Max 0858 class, dock block)
+     J_CN2          1  meshsat:Mill-Max_0858_power_pin                            class dock power spring pins: 9 A spring pin, pack return (Mill-Max 0858 class, dock block)
+     J_CN3          1  meshsat:Mill-Max_0858_power_pin                            class dock power spring pins: 9 A spring pin, pack return (Mill-Max 0858 class, dock block)
+     J_CN4          1  meshsat:Mill-Max_0858_power_pin                            class dock power spring pins: 9 A spring pin, pack return (Mill-Max 0858 class, dock block)
+     J_CP1          1  meshsat:Mill-Max_0858_power_pin                            class dock power spring pins: 9 A spring pin, CELL+ (Mill-Max 0858 class, dock block)
+     J_CP2          1  meshsat:Mill-Max_0858_power_pin                            class dock power spring pins: 9 A spring pin, CELL+ (Mill-Max 0858 class, dock block)
+     J_CP3          1  meshsat:Mill-Max_0858_power_pin                            class dock power spring pins: 9 A spring pin, CELL+ (Mill-Max 0858 class, dock block)
+     J_CP4          1  meshsat:Mill-Max_0858_power_pin                            class dock power spring pins: 9 A spring pin, CELL+ (Mill-Max 0858 class, dock block)
+     J_DOCK        12  meshsat:PogoPins_2x6                                       class dock signal spring connector: spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8
+     J_HEAT         2  Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical        class JST XH lead headers: JST-XH 1x2 socket: the pack heater mat (12 V, 7.5 W), fed a regulated 12.0 V: + and -
+     J_HF           2  Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical          class JST VH power headers: 12.0 V to the QMX HF unit in its lid tray (JST-VH, in the lid harness): + -
+     J_MAINSW       2  Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical        class JST XH lead headers: JST-XH 1x2 socket: the MAIN button lead from the panel, PB and GND
+     J_MEZZ1       16  meshsat:IDC-Header_2x08_P2.54mm_Vertical_NarrowPad         class ribbon box headers: D8 mezzanine harness (IDC 2x8): its USB pair, the PTT mirror, the inhibit, the PA rail sta
+     J_MEZZ_PWR1    2  Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical          class JST VH power headers: D8 mezzanine 5 V (JST-VH): + -
+     J_MON          2  Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical          class JST VH power headers: monitor supply lead to the Xenarc (JST-VH): + -
+     J_PA           2  Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical          class JST VH power headers: 13.8 V to the PA module on the face plate (JST-VH, 16 AWG): + -
+     J_PRE1         1  meshsat:Mill-Max_0858_power_pin                            class the pre-charge pin: pre-charge pin, longer, mates first (32.24 AX)
+     J_RF1          2  Connector_Coaxial:SMA_Amphenol_132134-11_Vertical          class SMA jacks for the device pigtails: SMA jack, Amphenol 132134-11 vertical (pigtail to the VHF device)
+     J_RF10         2  Connector_Coaxial:SMA_Amphenol_132134-11_Vertical          class SMA jacks for the device pigtails: SMA jack, Amphenol 132134-11 vertical (pigtail to the IRID device)
+     J_RF11         2  Connector_Coaxial:SMA_Amphenol_132134-11_Vertical          class SMA jacks for the device pigtails: SMA jack, Amphenol 132134-11 vertical (pigtail to the LORA device)
+     J_RF2          2  Connector_Coaxial:SMA_Amphenol_132134-11_Vertical          class SMA jacks for the device pigtails: SMA jack, Amphenol 132134-11 vertical (pigtail to the HF device)
+     J_RF3          2  Connector_Coaxial:SMA_Amphenol_132134-11_Vertical          class SMA jacks for the device pigtails: SMA jack, Amphenol 132134-11 vertical (pigtail to the WIFI24 device)
+     J_RF4          2  Connector_Coaxial:SMA_Amphenol_132134-11_Vertical          class SMA jacks for the device pigtails: SMA jack, Amphenol 132134-11 vertical (pigtail to the GNSS device)
+     J_RF5          2  Connector_Coaxial:SMA_Amphenol_132134-11_Vertical          class SMA jacks for the device pigtails: SMA jack, Amphenol 132134-11 vertical (pigtail to the SDR device)
+     J_RF6          2  Connector_Coaxial:SMA_Amphenol_132134-11_Vertical          class SMA jacks for the device pigtails: SMA jack, Amphenol 132134-11 vertical (pigtail to the P2P-A device)
+     J_RF7          2  Connector_Coaxial:SMA_Amphenol_132134-11_Vertical          class SMA jacks for the device pigtails: SMA jack, Amphenol 132134-11 vertical (pigtail to the P2P-B device)
+     J_RF8          2  Connector_Coaxial:SMA_Amphenol_132134-11_Vertical          class SMA jacks for the device pigtails: SMA jack, Amphenol 132134-11 vertical (pigtail to the 5G-MAIN device)
+     J_RF9          2  Connector_Coaxial:SMA_Amphenol_132134-11_Vertical          class SMA jacks for the device pigtails: SMA jack, Amphenol 132134-11 vertical (pigtail to the 5G-DIV device)
+     J_USBC_OUT     5  Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical class the USB-C outlet's pigtail header: wall USB-C outlet, power only (pigtail header): VBUS CC1 CC2 GND GND
+     J_USBW         4  Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical        class JST PH lead header: JST-PH 1x4 socket: the Glenair 233-370 USB host feed-through lead (VBUS D- D+ GND), B16 ba
+     J_VN1          1  meshsat:Mill-Max_0858_power_pin                            class dock power spring pins: 9 A spring pin, VIN_RAW return (Mill-Max 0858 class, dock block; EQ-16)
+     J_VN2          1  meshsat:Mill-Max_0858_power_pin                            class dock power spring pins: 9 A spring pin, VIN_RAW return (Mill-Max 0858 class, dock block; EQ-16)
+     J_VN3          1  meshsat:Mill-Max_0858_power_pin                            class dock power spring pins: 9 A spring pin, VIN_RAW return (Mill-Max 0858 class, dock block; EQ-16)
+     J_VN4          1  meshsat:Mill-Max_0858_power_pin                            class dock power spring pins: 9 A spring pin, VIN_RAW return (Mill-Max 0858 class, dock block; EQ-16)
+     J_VR1          1  meshsat:Mill-Max_0858_power_pin                            class dock power spring pins: 9 A spring pin, VIN_RAW (Mill-Max 0858 class, dock block; EQ-16)
+     J_VR2          1  meshsat:Mill-Max_0858_power_pin                            class dock power spring pins: 9 A spring pin, VIN_RAW (Mill-Max 0858 class, dock block; EQ-16)
+     J_VR3          1  meshsat:Mill-Max_0858_power_pin                            class dock power spring pins: 9 A spring pin, VIN_RAW (Mill-Max 0858 class, dock block; EQ-16)
+     J_VR4          1  meshsat:Mill-Max_0858_power_pin                            class dock power spring pins: 9 A spring pin, VIN_RAW (Mill-Max 0858 class, dock block; EQ-16)
+     TP10           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: GND
+     TP11           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +3V3
+     TP12           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: VBUS20
+     TP13           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: VIN_RAW
+     TP14           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: CELL+
+     TP15           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EMCON_HW
+     TP16           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: RAIL_EN
+     TP17           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SDA
+     TP18           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SCL
+     TP19           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: IADPT
+     TP20           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: IBAT
+     TP21           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: DOCK_SPARE
+     TP22           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: REGN
+     TP23           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: USBX_EN
+     TP24           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: USBX_FLT
+     TP25           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP2_SPC
+     TP26           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP2_SPD
+     TP27           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: AB_SPARE
+     TP3            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EMCON_EF_FLT
+     TP4            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP2_SP4
+     TP5            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP2_SP5
+     TP6            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP2_SP6
+     TP7            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP2_SP7
+     TP8            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP2_SP8
+     TP9            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: VBAT
+
+== board B  netlist pcb-b-compute-b19/out/pcb-b-compute.net  sha16 028997a6c5e8810f  1280 part(s)
+   candidates 153: by reference class 144, by a mechanical land 9, by an undeclared land 0, by no land 0, by the word net 0, undeclared class 0
+   BEFORE (the old list's 6 class(es) over the inventory): classed 38, excluded 0, refused 115
+   AFTER  (the new list's 14 class(es) and 4 exclusion(s)): classed 46, excluded 107, refused 0; result INCONCLUSIVE
+      excluded 91: TP10, TP101, TP102, TP103, TP104, TP11, TP12, TP13, TP14, TP15, TP16, TP17, TP18, TP19, TP2, TP20, TP201, TP202, TP203, TP204, TP21, TP22, TP23, TP24, TP25, TP26, TP27, TP28, TP29, TP3, TP30, TP301, TP302, TP303, TP304, TP31, TP4, TP41, TP42, TP43, TP44, TP45, TP46, TP47, TP48, TP49, TP5, TP50, TP501, TP502, TP503, TP504, TP505, TP506, TP507, TP508, TP509, TP51, TP510, TP511, TP512, TP513, TP514, TP515, TP516, TP517, TP518, TP519, TP520, TP521, TP522, TP523, TP524, TP525, TP526, TP527, TP528, TP529, TP530, TP531, TP532, TP533, TP534, TP535, TP536, TP537, TP538, TP6, TP7, TP8, TP9: a test point: a bare pad touched by a probe at the bench, nothing is mated and nothing hangs on it
+      excluded 3: F1, F2, F3: a resettable fuse soldered to the board in an 1812 package: there is no holder and nothing is mated
+      excluded 3: U42, U52, U62: the programming pads of the three I/O controllers: bare surface lands for a probe clip at the bench, no part is fitted on them (the part identities table of stream w5ident reads them NOT_A_PART)
+      excluded 10: J_DBG1, J_DBG2, J_DBG3, J_GNSS2, J_IOCOFF_A, J_IOCOFF_B, J_IOCOFF_C, J_SPI3, J_ZBDBG1, J_ZBDBG2: bench and commissioning access only (a console, a debug port, a breakout, a jumper the value calls not fitted in service): not mated in the field, and whether a header is fitted at all is a build choice not made. Taken by the session (authority SESSION, 28 September 2026); to reverse, move them to the class of lead headers mated in service
+      owed: B: class M.2 NVMe sockets (Amphenol) owes its cycle figure (open item REL-O-03: board B's three NVMe sockets are Amphenol MDT420M02001. The held drawing of that part states no durability, and Amphenol
+      owed: B: class the coin cell retainer owes its measure (open item REL-O-09: board B's coin cell retainer is surface mounted (Keystone 3034), and no measure is recorded against the lever of changing the cell
+      owed: B: class lead headers on 2.54 mm lands, mated in service owes its cycle figure (open item REL-O-02: the 2.54 mm pin header lands that are mated in service carry no named part: whether a header is fitt
+   set aside, a wear word in the description only: U101, U116, U201, U216, U301, U316
+   refused BEFORE (115): F1, F2, F3, J_CAM, J_DBG1, J_DBG2, J_DBG3, J_ETH, J_GNSS2, J_IOCOFF_A, J_IOCOFF_B, J_IOCOFF_C, J_QMX, J_RPIBOOT1, J_RPIBOOT2, J_RPIBOOT3, J_SIM1, J_SIM2, J_SPI3, J_ZBDBG1, J_ZBDBG2, TP10, TP101, TP102, TP103, TP104, TP11, TP12, TP13, TP14, TP15, TP16, TP17, TP18, TP19, TP2, TP20, TP201, TP202, TP203, TP204, TP21, TP22, TP23, TP24, TP25, TP26, TP27, TP28, TP29, TP3, TP30, TP301, TP302, TP303, TP304, TP31, TP4, TP41, TP42, TP43, TP44, TP45, TP46, TP47, TP48, TP49, TP5, TP50, TP501, TP502, TP503, TP504, TP505, TP506, TP507, TP508, TP509, TP51, TP510, TP511, TP512, TP513, TP514, TP515, TP516, TP517, TP518, TP519, TP520, TP521, TP522, TP523, TP524, TP525, TP526, TP527, TP528, TP529, TP530, TP531, TP532, TP533, TP534, TP535, TP536, TP537, TP538, TP6, TP7, TP8, TP9, U42, U52, U62
+   THE INVENTORY (ref, pins, land, disposition, value):
+     BT1            2  Battery:BatteryHolder_Keystone_3034_1x20mm                 class the coin cell retainer: CR2032 holder Keystone 3034: VBAT for the three modules' RTCs, the LG290P backup and the D
+     F1             2  Fuse:Fuse_1812_4532Metric                                  exclusion a resettable fuse soldered to the board : 1.1A hold 1812 (Bourns MF-MSMF110-2)
+     F2             2  Fuse:Fuse_1812_4532Metric                                  exclusion a resettable fuse soldered to the board : 0.5A hold 1812
+     F3             2  Fuse:Fuse_1812_4532Metric                                  exclusion a resettable fuse soldered to the board : 0.5A hold 1812
+     J_54V          2  Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical          class JST VH power headers: JST-VH socket, 10 A: 54 V PoE feed from A22 J_54V: + -
+     J_5V_DEV       2  Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical          class JST VH power headers: JST-VH socket, 10 A: USB device rail from A22 J_5V_DEV: + -
+     J_5V_S1        2  Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical          class JST VH power headers: JST-VH socket, 10 A: 5 V slot rail S1 from A22 J_5V_S1, 16 AWG lead: + -
+     J_5V_S2        2  Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical          class JST VH power headers: JST-VH socket, 10 A: 5 V slot rail S2 from A22 J_5V_S2, 16 AWG lead: + -
+     J_5V_S3        2  Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical          class JST VH power headers: JST-VH socket, 10 A: 5 V slot rail S3 from A22 J_5V_S3, 16 AWG lead: + -
+     J_AB1         26  meshsat:IDC-Header_2x13_P2.54mm_Vertical_NarrowPad         class ribbon box headers: A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+     J_AB2         10  meshsat:IDC-Header_2x05_P2.54mm_Vertical_NarrowPad         class ribbon box headers: A-B wall-port ribbon (IDC 2x5): the wall USB pair (bank 3 hub port 3) on the END row with 
+     J_CAM          4  Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical class lead headers on 2.54 mm lands, mated in : camera lead (USB 2.0, bank 1 hub, port 3): 5V D- D+ GND
+     J_DBG1         5  Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical exclusion bench and commissioning access only (a c: console UART0 and the module I2C of S1 (3.3 V, bench): GND TX RX SDA SCL
+     J_DBG2         5  Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical exclusion bench and commissioning access only (a c: console UART0 and the module I2C of S2 (3.3 V, bench): GND TX RX SDA SCL
+     J_DBG3         5  Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical exclusion bench and commissioning access only (a c: console UART0 and the module I2C of S3 (3.3 V, bench): GND TX RX SDA SCL
+     J_ETH          9  Connector_RJ:RJ45_Amphenol_RJHSE5380                       class the Ethernet jack: RJ45 jack (Amphenol RJHSE5380): patch lead to the sealed wall RJ45; PoE out on 1-2 (+) and
+     J_FAN1         4  Connector_JST:JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical class JST SH fan headers: IP68 cooler fan of S1 (JST-SH 1.0): 5V GND TACHO PWM
+     J_FAN2         4  Connector_JST:JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical class JST SH fan headers: IP68 cooler fan of S2 (JST-SH 1.0): 5V GND TACHO PWM
+     J_FAN3         4  Connector_JST:JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical class JST SH fan headers: IP68 cooler fan of S3 (JST-SH 1.0): 5V GND TACHO PWM
+     J_FLASH1      17  Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12          class USB-C flash receptacles: USB-C 2.0 receptacle
+     J_FLASH2      17  Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12          class USB-C flash receptacles: USB-C 2.0 receptacle
+     J_FLASH3      17  Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12          class USB-C flash receptacles: USB-C 2.0 receptacle
+     J_GNSS1        2  Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical        class U.FL antenna sockets: U.FL socket: pigtail to A22's GNSS jack J_RF4
+     J_GNSS2        3  Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical exclusion bench and commissioning access only (a c: LG290P UART2 (bench): GND TX RX
+     J_HDMI        20  Connector_Video:HDMI_A_Molex_208658-1001_Horizontal        class the HDMI receptacle: HDMI type A receptacle (Molex 208658-1001): cable to the monitor pass-through on the face 
+     J_IOCOFF_A     2  Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical_SMD_Pin1Left exclusion bench and commissioning access only (a c: bench jumper, controller A: fit to hold its LDO off (IOHA A4, A6); not fitted in service
+     J_IOCOFF_B     2  Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical_SMD_Pin1Left exclusion bench and commissioning access only (a c: bench jumper, controller B: fit to hold its LDO off (IOHA A4, A6); not fitted in service
+     J_IOCOFF_C     2  Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical_SMD_Pin1Left exclusion bench and commissioning access only (a c: bench jumper, controller C: fit to hold its LDO off (IOHA A4, A6); not fitted in service
+     J_LIME        10  Connector_USB:USB3_A_Receptacle_Wuerth_692122030100        class the USB 3 receptacle of the SDR bay: USB 3.0 type A receptacle (Wuerth 692122030100 land): the LimeSDR Mini 2.4 in its bay
+     J_LORA1        2  Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical        class U.FL antenna sockets: U.FL socket: pigtail to A22's LoRa jack J_RF11
+     J_M2C1        67  meshsat:M2_E-Key_Socket_2230                               class M.2 card sockets (TE): M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (tw
+     J_M2C2        67  meshsat:M2_B-Key_Socket_3052_TE2199119                     class M.2 card sockets (TE): M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or U
+     J_M2C3        67  meshsat:M2_E-Key_Socket_2230                               class M.2 card sockets (TE): M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: the second AsiaRF AW7915-AED (two MHF4
+     J_M2N1        67  meshsat:M2_M-Key_Socket_2242                               class M.2 NVMe sockets (Amphenol): M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S1 (k3s re
+     J_M2N2        67  meshsat:M2_M-Key_Socket_2242                               class M.2 NVMe sockets (Amphenol): M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S2 (k3s re
+     J_M2N3        67  meshsat:M2_M-Key_Socket_2242                               class M.2 NVMe sockets (Amphenol): M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S3 (k3s re
+     J_PANEL       26  meshsat:IDC-Header_2x13_P2.54mm_Vertical_NarrowPad         class ribbon box headers: panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMCON
+     J_QMX          4  Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical class lead headers on 2.54 mm lands, mated in : QMX USB lead (bank 2 hub, port 4): VBUS D- D+ GND; pigtail to the unit's USB-C
+     J_RB9704      16  meshsat:IDC-Header_2x08_P2.54mm_Vertical_NarrowPad         class ribbon box headers: RockBLOCK 9704 16-pin (IDC 2x8) on the Ground Control bracket
+     J_RPIBOOT1     2  Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical class lead headers on 2.54 mm lands, mated in : nRPIBOOT jumper S1: fit to flash the eMMC over J_FLASH1
+     J_RPIBOOT2     2  Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical class lead headers on 2.54 mm lands, mated in : nRPIBOOT jumper S2: fit to flash the eMMC over J_FLASH2
+     J_RPIBOOT3     2  Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical class lead headers on 2.54 mm lands, mated in : nRPIBOOT jumper S3: fit to flash the eMMC over J_FLASH3
+     J_SIM1         7  Connector_Card:nanoSIM_GCT_SIM8060-6-0-14-00               class nano-SIM sockets: nano-SIM push-push GCT SIM8060 (SIM 1)
+     J_SIM2         7  Connector_Card:nanoSIM_GCT_SIM8060-6-0-14-00               class nano-SIM sockets: nano-SIM push-push GCT SIM8060 (SIM 2)
+     J_SPI3        10  Connector_PinHeader_2.54mm:PinHeader_2x05_P2.54mm_Vertical exclusion bench and commissioning access only (a c: SPI0 breakout of S3 (2x5): 3V3 GND MISO MOSI SCLK CE0 CE1 IO23 IO24 IO26; the E22 LoRa mod
+     J_W1A          2  Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical        class U.FL antenna sockets: U.FL: MHF4 pigtail from the slot 1 WiFi card, chain A
+     J_W1B          2  Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical        class U.FL antenna sockets: U.FL: MHF4 pigtail from the slot 1 WiFi card, chain B
+     J_W3A          2  Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical        class U.FL antenna sockets: U.FL: MHF4 pigtail from the slot 3 WiFi card, chain A
+     J_W3B          2  Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical        class U.FL antenna sockets: U.FL: MHF4 pigtail from the slot 3 WiFi card, chain B
+     J_WOA          2  Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical        class U.FL antenna sockets: U.FL: pigtail to A22's P2P jack, chain A
+     J_WOB          2  Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical        class U.FL antenna sockets: U.FL: pigtail to A22's P2P jack, chain B
+     J_ZBDBG1       5  Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical exclusion bench and commissioning access only (a c: CC2652P cJTAG ZBA (bench): 3V3 GND TMSC TCKC RESET
+     J_ZBDBG2       5  Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical exclusion bench and commissioning access only (a c: CC2652P cJTAG ZBB (bench): 3V3 GND TMSC TCKC RESET
+     TP10           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SDA
+     TP101          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: GND
+     TP102          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +3V3_S1A
+     TP103          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +3V3_M2C1
+     TP104          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EMCON_ON1
+     TP11           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SCL
+     TP12           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +54V_POE
+     TP13           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: POE_DRAIN
+     TP14           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +5V_LIME
+     TP15           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +5V_RB
+     TP16           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +5V_LORA
+     TP17           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +3V3_ZB
+     TP18           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: HDMI_SEL1
+     TP19           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: HDMI_SEL2
+     TP2            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +5V_DEV
+     TP20           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +3V3_S1A
+     TP201          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: GND
+     TP202          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +3V3_S2A
+     TP203          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +3V3_M2C2
+     TP204          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EMCON_ON2
+     TP21           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +3V3_S1B
+     TP22           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +1V0_S1
+     TP23           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +1V1_S1
+     TP24           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +3V3_S2A
+     TP25           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +3V3_S2B
+     TP26           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +1V0_S2
+     TP27           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +1V1_S2
+     TP28           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +3V3_S3A
+     TP29           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +3V3_S3B
+     TP3            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +3V3_DEV
+     TP30           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +1V0_S3
+     TP301          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: GND
+     TP302          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +3V3_S3A
+     TP303          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +3V3_M2C3
+     TP304          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EMCON_ON3
+     TP31           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +1V1_S3
+     TP4            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +1V2_KSZ
+     TP41           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP_SPARE1
+     TP42           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP_SPARE2
+     TP43           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP_SPARE3
+     TP44           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP_SPARE4
+     TP45           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP_SPARE5
+     TP46           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP_SPARE6
+     TP47           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP_SPARE7
+     TP48           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP_SPARE8
+     TP49           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP_SPARE9
+     TP5            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +2V5_KSZ
+     TP50           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP_SPARE10
+     TP501          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: GND
+     TP502          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: GND
+     TP503          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: GND
+     TP504          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: BSEL1
+     TP505          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: BSEL2
+     TP506          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: BSEL3
+     TP507          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: BOE1_n
+     TP508          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: BOE2_n
+     TP509          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: BOE3_n
+     TP51           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP_SPARE11
+     TP510          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: WIFI_SEC
+     TP511          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: HUBRST1_VOTE
+     TP512          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: HUBRST2_VOTE
+     TP513          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: HUBRST3_VOTE
+     TP514          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SEL1_A
+     TP515          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SEL1_B
+     TP516          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SEL1_C
+     TP517          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SEL2_A
+     TP518          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SEL2_B
+     TP519          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SEL2_C
+     TP520          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SEL3_A
+     TP521          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SEL3_B
+     TP522          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SEL3_C
+     TP523          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: HUBRST1_A
+     TP524          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: HUBRST1_B
+     TP525          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: HUBRST1_C
+     TP526          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: HUBRST2_A
+     TP527          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: HUBRST2_B
+     TP528          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: HUBRST2_C
+     TP529          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: HUBRST3_A
+     TP530          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: HUBRST3_B
+     TP531          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: HUBRST3_C
+     TP532          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: WSEC_A
+     TP533          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: WSEC_B
+     TP534          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: WSEC_C
+     TP535          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: CANH_A
+     TP536          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: CANL_A
+     TP537          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: CANH_B
+     TP538          1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: CANL_B
+     TP6            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: VBAT_RTC
+     TP7            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EMCON_HW
+     TP8            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: ZEROIZE_HW
+     TP9            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: GNSS_PPS
+     U30A         100  meshsat:CM5_Conn_A_10164227                                class CM5 module receptacles: Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM51
+     U30B         100  meshsat:CM5_Conn_B_10164227                                class CM5 module receptacles: Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side)
+     U31A         100  meshsat:CM5_Conn_A_10164227                                class CM5 module receptacles: Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM51
+     U31B         100  meshsat:CM5_Conn_B_10164227                                class CM5 module receptacles: Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side)
+     U32A         100  meshsat:CM5_Conn_A_10164227                                class CM5 module receptacles: Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM51
+     U32B         100  meshsat:CM5_Conn_B_10164227                                class CM5 module receptacles: Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side)
+     U42            5  Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical_SMD_Pin1Left exclusion the programming pads of the three I/O co: SWD pads, controller A: 3V3 SWDIO SWCLK NRST GND
+     U52            5  Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical_SMD_Pin1Left exclusion the programming pads of the three I/O co: SWD pads, controller B: 3V3 SWDIO SWCLK NRST GND
+     U62            5  Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical_SMD_Pin1Left exclusion the programming pads of the three I/O co: SWD pads, controller C: 3V3 SWDIO SWCLK NRST GND
+
+== board C  netlist pcb-c-display-c8/out/pcb-c-display.net  sha16 3fddbb3edcd4248a  219 part(s)
+   candidates 74: by reference class 74, by a mechanical land 0, by an undeclared land 0, by no land 0, by the word net 0, undeclared class 0
+   BEFORE (the old list's 2 class(es) over the inventory): classed 9, excluded 0, refused 65
+   AFTER  (the new list's 11 class(es) and 2 exclusion(s)): classed 24, excluded 50, refused 0; result INCONCLUSIVE
+      excluded 48: TP1, TP10, TP11, TP12, TP13, TP14, TP15, TP16, TP17, TP18, TP19, TP2, TP20, TP21, TP22, TP23, TP24, TP25, TP26, TP27, TP28, TP29, TP3, TP30, TP31, TP32, TP33, TP34, TP35, TP36, TP37, TP38, TP39, TP4, TP40, TP41, TP42, TP43, TP44, TP45, TP46, TP47, TP48, TP5, TP6, TP7, TP8, TP9: a test point: a bare pad touched by a probe at the bench, nothing is mated and nothing hangs on it
+      excluded 2: JP1, JP2: a solder jumper: two copper pads bridged with solder or left open, no part is fitted and nothing is mated
+      owed: C: class the panel ribbon header owes its cycle figure (open item REL-O-04: board C's panel ribbon header is XFCN BH254VS-26P (the part identities table of stream w5ident), and no document of its make
+      owed: C: class headset jacks in the plate owes its cycle figure (open item REL-O-05: board C's two headset jacks are a U-174/U class panel jack with no maker's part picked and its drawing owed (the value sa
+   refused BEFORE (65): BZ1, CAM_H1, CAM_H2, JP1, JP2, J_EPD, J_HSJ1, J_HSJ2, J_MAINSW, J_PIJ2, SW_EMCON, SW_LIGHT, SW_MAIN, SW_PI, SW_SOS, SW_TEST, SW_ZERO, TP1, TP10, TP11, TP12, TP13, TP14, TP15, TP16, TP17, TP18, TP19, TP2, TP20, TP21, TP22, TP23, TP24, TP25, TP26, TP27, TP28, TP29, TP3, TP30, TP31, TP32, TP33, TP34, TP35, TP36, TP37, TP38, TP39, TP4, TP40, TP41, TP42, TP43, TP44, TP45, TP46, TP47, TP48, TP5, TP6, TP7, TP8, TP9
+   THE INVENTORY (ref, pins, land, disposition, value):
+     BZ1            2  meshsat:PanelSounder                                       class the sounder in the plate: IP67 panel-mount sounder, 5 V DC continuous, bezel gasket on the face, two flying leads (F
+     CAM_H1         0  MountingHole:MountingHole_2.2mm_M2                         class the camera module's screw joints: M2 screw of the USB camera module (25 x 25 board, sheet owed) behind the plate's sealed wi
+     CAM_H2         0  MountingHole:MountingHole_2.2mm_M2                         class the camera module's screw joints: M2 screw of the USB camera module (25 x 25 board, sheet owed) behind the plate's sealed wi
+     H1             1  meshsat:BackerScrew_M3_GND                                 class the backer's screw joints to the plate: M3 x 6 into the face plate's self-clinching standoff: GND bond to the plate
+     H2             1  meshsat:BackerScrew_M3_GND                                 class the backer's screw joints to the plate: M3 x 6 into the face plate's self-clinching standoff: GND bond to the plate
+     H3             1  meshsat:BackerScrew_M3_GND                                 class the backer's screw joints to the plate: M3 x 6 into the face plate's self-clinching standoff: GND bond to the plate
+     H4             1  meshsat:BackerScrew_M3_GND                                 class the backer's screw joints to the plate: M3 x 6 into the face plate's self-clinching standoff: GND bond to the plate
+     H5             1  meshsat:BackerScrew_M3_GND                                 class the backer's screw joints to the plate: M3 x 6 into the face plate's self-clinching standoff: GND bond to the plate
+     H6             1  meshsat:BackerScrew_M3_GND                                 class the backer's screw joints to the plate: M3 x 6 into the face plate's self-clinching standoff: GND bond to the plate
+     H7             1  meshsat:BackerScrew_M3_GND                                 class the backer's screw joints to the plate: M3 x 6 into the face plate's self-clinching standoff: GND bond to the plate
+     H8             1  meshsat:BackerScrew_M3_GND                                 class the backer's screw joints to the plate: M3 x 6 into the face plate's self-clinching standoff: GND bond to the plate
+     JP1            2  Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm      exclusion a solder jumper: two copper pads bridged: BOOTSEL: short while powering to enter the USB bootloader
+     JP2            2  Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm      exclusion a solder jumper: two copper pads bridged: PANEL_ID strap (closed = variant B)
+     J_EPD         26  meshsat:Hirose_FH34SRJ-24S                                 class the e-paper flex connector: Hirose FH34SRJ-24S-0.5SH ZIF for the E2370KS0C1 flex (0.5 mm, 24 way; pin names per the PD
+     J_HSJ1         0  meshsat:PanelJack_17mm                                     class headset jacks in the plate: U-174/U headset jack 1 (Amphenol Nexus class, drawing owed): 17 mm hole through the backer
+     J_HSJ2         0  meshsat:PanelJack_17mm                                     class headset jacks in the plate: U-174/U headset jack 2 (Amphenol Nexus class, drawing owed): 17 mm hole through the backer
+     J_MAINSW       2  meshsat:LeadLands_1x02                                     class soldered lead lands: MAIN button lead to A22 J_MAINSW (XH2.5 at the A22 end): two solder lands on the underside
+     J_PANEL       26  Connector_IDC:IDC-Header_2x13_P2.54mm_Vertical_SMD         class the panel ribbon header: panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inhib
+     J_PIJ2         2  meshsat:LeadLands_1x02                                     class soldered lead lands: PI button lead: two solder lands on the underside (the controller reads it as the module s
+     SW_EMCON       3  meshsat:ToggleBody_SPDT                                    class the locking toggles: EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_HW 
+     SW_LIGHT       6  meshsat:ToggleBody_DPDT                                    class the lighting toggle: LIGHTING DAY/NIGHT/BLACKOUT toggle DPDT ON-ON-ON (pole 1: rail, pole 2: sense); NKK M2044S
+     SW_MAIN        4  meshsat:PanelSwitch_19mm                                   class the MAIN pushbutton: MAIN PWR 19 mm momentary, green ring (to A22 J_MAINSW); C&K ATP19-SL1-603-B0SA-03G; silico
+     SW_PI          4  meshsat:PanelSwitch_16mm                                   class the PI and TEST pushbuttons: PI 16 mm recessed momentary, amber ring (PI_SHDN_REQ to the modules through the controller
+     SW_SOS         3  meshsat:ToggleBody_SPDT                                    class the locking toggles: SOS locking toggle, maintained (APEM 5636ADKB-2V, both positions locked, red boot, hinged 
+     SW_TEST        4  meshsat:PanelSwitch_16mm                                   class the PI and TEST pushbuttons: TEST/ACK 16 mm momentary, white ring; C&K ATP16-SL1-203-M0SA-04G; silicone gasket washer u
+     SW_ZERO        3  meshsat:ToggleBody_SPDT                                    class the locking toggles: ZEROIZE locking toggle, maintained (APEM 5636ADKB-2V, single pole ON-NONE-ON, lug 2 common
+     TP1            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SWCLK
+     TP10           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: TX_INHIBIT_n
+     TP11           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EMCON_HW
+     TP12           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: ZEROIZE_HW
+     TP13           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SPARE1
+     TP14           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SPARE2
+     TP15           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SPARE3
+     TP16           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SPARE4
+     TP17           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SPARE5
+     TP18           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SPARE6
+     TP19           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SPARE7
+     TP2            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SWDIO
+     TP20           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SPARE8
+     TP21           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SPARE9
+     TP22           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SPARE10
+     TP23           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SPARE11
+     TP24           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SPARE12
+     TP25           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EPD_BUSY
+     TP26           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EPD_VGH
+     TP27           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EPD_VGL
+     TP28           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: HB1
+     TP29           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: HB2
+     TP3            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: C_RUN
+     TP30           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: HB3
+     TP31           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SLOT_EN1
+     TP32           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SLOT_EN2
+     TP33           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SLOT_EN3
+     TP34           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: HDMI_SEL1
+     TP35           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: HDMI_SEL2
+     TP36           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: PI_SHDN_REQ
+     TP37           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: PI_KILL
+     TP38           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SHORE_INHIBIT
+     TP39           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: PIJ2_A
+     TP4            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: LED_RAIL
+     TP40           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: PIJ2_B
+     TP41           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: ZEROIZE_SW
+     TP42           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SDA
+     TP43           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SCL
+     TP44           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SOS_SW
+     TP45           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: TEST_SW
+     TP46           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: TR_APRS
+     TP47           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: C_DVDD
+     TP48           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: BOOT_J
+     TP5            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: LED_RAIL_SW
+     TP6            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +5V
+     TP7            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +3V3
+     TP8            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: GND
+     TP9            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP_INT
+
+== board D  netlist pcb-d-aprs-d9/out/pcb-d-aprs.net  sha16 7a2c0ac2190b141a  245 part(s)
+   candidates 40: by reference class 40, by a mechanical land 0, by an undeclared land 0, by no land 0, by the word net 0, undeclared class 0
+   BEFORE (the old list's 4 class(es) over the inventory): classed 10, excluded 0, refused 30
+   AFTER  (the new list's 7 class(es) and 2 exclusion(s)): classed 11, excluded 29, refused 0; result INCONCLUSIVE
+      excluded 27: TP1, TP10, TP11, TP12, TP13, TP14, TP15, TP16, TP17, TP18, TP19, TP2, TP20, TP21, TP22, TP23, TP24, TP25, TP26, TP27, TP3, TP4, TP5, TP6, TP7, TP8, TP9: a test point: a bare pad touched by a probe at the bench, nothing is mated and nothing hangs on it
+      excluded 2: JP1, JP2: a solder jumper: two copper pads bridged with solder or left open, no part is fitted and nothing is mated
+      owed: D: class the transmit and receive relay owes its measure (open item REL-O-10: board D's relay K1 changes over at every key-down and carries the 30 W output in transmit; whether it changes over under R
+   refused BEFORE (30): JP1, JP2, K1, TP1, TP10, TP11, TP12, TP13, TP14, TP15, TP16, TP17, TP18, TP19, TP2, TP20, TP21, TP22, TP23, TP24, TP25, TP26, TP27, TP3, TP4, TP5, TP6, TP7, TP8, TP9
+   THE INVENTORY (ref, pins, land, disposition, value):
+     JP1            2  Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm      exclusion a solder jumper: two copper pads bridged: electret bias headset 1 (close for an electret microphone)
+     JP2            2  Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm      exclusion a solder jumper: two copper pads bridged: electret bias headset 2
+     J_ANT          2  Connector_Coaxial:SMA_Amphenol_132134_Vertical             class SMA jacks: SMA jack: antenna pigtail to A22's VHF jack J_RF1
+     J_FLANGE       2  Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical        class the flange thermistor's header: JST-XH 1x2 socket: power amplifier flange NTC lead (Semitec 103AT-2 on the flange, bench-f
+     J_HARN1       16  meshsat:IDC-Header_2x08_P2.54mm_Vertical_NarrowPad         class the harness box header: A22 mezzanine harness J_MEZZ1 (IDC 2x8): USB pair, PTT mirror, inhibit, PA rail state, I2C
+     J_HS1          5  Connector_JST:JST_PH_B5B-PH-K_1x05_P2.00mm_Vertical        class JST PH lead headers: JST-PH 1x5 socket: headset 1, SPK GND MIC GND PTT (the lead runs to the face plate U-174/U
+     J_HS2          5  Connector_JST:JST_PH_B5B-PH-K_1x05_P2.00mm_Vertical        class JST PH lead headers: JST-PH 1x5 socket: headset 2, SPK GND MIC GND PTT (the lead runs to the face plate U-174/U
+     J_PAIN         2  Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical        class the PA drive socket: U.FL socket: PA drive (coax to the RA30H1317M1 input on the plate)
+     J_PAOUT        2  Connector_Coaxial:SMA_Amphenol_132134_Vertical             class SMA jacks: SMA jack: PA output (coax from the RA30H1317M1 output on the plate)
+     J_PWR1         2  Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical          class the JST VH power header: JST-VH socket, 10 A: 5 V from A22 J_MEZZ_PWR1 (behind A22's 2 A eFuse U23): + -
+     J_USB3         4  Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical        class JST PH lead headers: JST-PH 1x4 socket: spare hub port 3, 5V D- D+ GND (the lead is made up at build)
+     J_VGG          2  Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical        class JST PH lead headers: JST-PH 1x2 socket: PA gate bias, VGG GND (the lead runs to the RA30H1317M1 VGG pin)
+     K1             8  Relay_SMD:Relay_DPDT_Omron_G6K-2F-Y                        class the transmit and receive relay: Omron G6K-2F-Y 5 VDC DPDT signal relay, T/R
+     TP1            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: AF_OUT
+     TP10           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: AB_SPARE
+     TP11           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SA_TXD
+     TP12           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SA_RXD
+     TP13           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: PTT_SW_n
+     TP14           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SA_PD
+     TP15           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: TX_INHIBIT_n
+     TP16           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: PA_EN
+     TP17           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP_SPARE1
+     TP18           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP_SPARE2
+     TP19           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP_SPARE3
+     TP2            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: MIC_SUM
+     TP20           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP_SPARE4
+     TP21           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP_SPARE5
+     TP22           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP_SPARE6
+     TP23           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP_SPARE7
+     TP24           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: EXP_SPARE8
+     TP25           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +3V4_HUB
+     TP26           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: FLANGE_NTC
+     TP27           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +5V_TX
+     TP3            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: KEY
+     TP4            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: PA_KEY
+     TP5            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +3V3_D8
+     TP6            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +5V_D8
+     TP7            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: VGG_SW
+     TP8            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: RX_MIX
+     TP9            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: ZEROIZE_HW
+
+== board E  netlist pcb-e1-dock-e7/out/pcb-e1-dock.net  sha16 56adc9746d61c4e0  189 part(s)
+   candidates 35: by reference class 35, by a mechanical land 0, by an undeclared land 0, by no land 0, by the word net 0, undeclared class 0
+   BEFORE (the old list's 3 class(es) over the inventory): classed 8, excluded 0, refused 27
+   AFTER  (the new list's 6 class(es) and 2 exclusion(s)): classed 21, excluded 14, refused 0; result INCONCLUSIVE
+      excluded 13: TP1, TP10, TP11, TP12, TP13, TP2, TP3, TP4, TP5, TP6, TP7, TP8, TP9: a test point: a bare pad touched by a probe at the bench, nothing is mated and nothing hangs on it
+      excluded 1: JP1: a solder jumper: two copper pads bridged with solder or left open, no part is fitted and nothing is mated
+      owed: E: class lead headers on 2.54 mm lands, mated in service owes its cycle figure (open item REL-O-02: the 2.54 mm pin header lands that are mated in service carry no named part: whether a header is fitt
+   refused BEFORE (27): JP1, J_BLK, J_DCF, J_FAN1, J_FAN2, J_GEIGER, J_LTG, J_POD, PAD_W1, PAD_W2, P_CN, P_CP, P_VN, P_VR, TP1, TP10, TP11, TP12, TP13, TP2, TP3, TP4, TP5, TP6, TP7, TP8, TP9
+   THE INVENTORY (ref, pins, land, disposition, value):
+     F1             2  Fuse:Fuseholder_Blade_Mini_Keystone_3568                   class the blade fuse holders: 10 A mini blade (Keystone 3568 holder): vehicle input
+     F2             2  Fuse:Fuseholder_Blade_Mini_Keystone_3568                   class the blade fuse holders: 10 A mini blade (Keystone 3568 holder): panel input
+     F3             2  Fuse:Fuseholder_Blade_Mini_Keystone_3568                   class the blade fuse holders: 25 A mini blade (Keystone 3568 holder): pack to the block
+     JP1            2  Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm      exclusion a solder jumper: two copper pads bridged: BOOTSEL: short while powering to enter the USB bootloader
+     J_BATT         2  Connector_AMASS:AMASS_XT60-M_1x02_P7.20mm_Vertical         class the pack lead connector: Amass XT60-M: the 4S pack power lead from board P, 12 AWG (pin 2, the pad nearer the fuse 
+     J_BLK         12  meshsat:PogoTargets_2x6                                    class soldered lead lands: solder lands for the 12 signal wires to the block board underside (mirror of A22 J_DOCK): 
+     J_DCF          3  Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical class lead headers on 2.54 mm lands, mated in : DCF77 receiver module: 3.3 V, GND, pulse
+     J_DCIN         2  Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical          class JST VH input headers: JST-VH socket, 10 A: vehicle and shore DC in 9 to 36 V (lead from the D38999 wall receptac
+     J_FAN1         3  Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical class lead headers on 2.54 mm lands, mated in : mixer fan 1 under the plate (12 V class fan on the pack node, low-side PWM, tachometer)
+     J_FAN2         3  Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical class lead headers on 2.54 mm lands, mated in : mixer fan 2 under the plate (12 V class fan on the pack node, low-side PWM, tachometer)
+     J_GEIGER       3  Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical class lead headers on 2.54 mm lands, mated in : Geiger counter module (RadiationD-v1.1 class): 5 V switched by U16, GND, pulse
+     J_LTG          5  Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical class lead headers on 2.54 mm lands, mated in : AS3935 lightning sensor module (CJMCU-3935 class): 3.3 V, GND, SDA, SCL, IRQ
+     J_POD          4  Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical class lead headers on 2.54 mm lands, mated in : outside sensor pod on the connector plate (M8 sealed lead): 3.3 V, GND, SDA, SCL
+     J_SMB          4  Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical        class JST XH lead headers: SMBus lead to board P, JST-XH 1x4 (B4B-XH-A), P's pin order: 1 SMBC, 2 SMBD, 3 GND, 4 PRES
+     J_SOLAR        2  Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical          class JST VH input headers: JST-VH socket, 10 A: bare panel in (lead from the D38999 spare pair; a 36-cell 12 V class 
+     J_TAMP         2  Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical        class JST XH lead headers: JST-XH 1x2 (B2B-XH-A): lid and tamper reed sensor lead, Littelfuse 59140-1-S-05-A normally
+     PAD_W1         1  meshsat:SolderPad_8x6                                      class soldered lead lands: water electrode A (bare copper, +3.3 V through 1 M)
+     PAD_W2         1  meshsat:SolderPad_8x6                                      class soldered lead lands: water electrode B (bare copper, to ADC0)
+     P_CN           1  meshsat:SolderPad_8x6                                      class soldered lead lands: solder pad, 12 AWG wire to the block board return targets
+     P_CP           1  meshsat:SolderPad_8x6                                      class soldered lead lands: solder pad, 12 AWG wire to the block board CELL+ targets
+     P_VN           1  meshsat:SolderPad_8x6                                      class soldered lead lands: solder pad, 12 AWG wire to the block board VIN_RAW return targets (board A's four 9 A powe
+     P_VR           1  meshsat:SolderPad_8x6                                      class soldered lead lands: solder pad, 12 AWG wire to the block board VIN_RAW targets (board A's four 9 A power pins 
+     TP1            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: DC_IN
+     TP10           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SWCLK
+     TP11           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SWDIO
+     TP12           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: E6_RUN
+     TP13           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: GEIGER_IN
+     TP2            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: DC_P
+     TP3            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: VIN_RAW
+     TP4            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: GND
+     TP5            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: PV_P
+     TP6            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: TRK_OUT
+     TP7            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: BLK_SPARE
+     TP8            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: CELL_F
+     TP9            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: +5V_E6
+
+== board E5  board file pcb-e5-block/pcb-e5-block.kicad_pcb  sha16 686b29a734c55b9a  17 part(s)
+   candidates 17: by reference class 6, by a mechanical land 11, by an undeclared land 0, by no land 0, by the word net 0, undeclared class 0
+   BEFORE (the old list's 2 class(es) over the inventory): classed 0, excluded 0, refused 17
+   AFTER  (the new list's 4 class(es) and 0 exclusion(s)): classed 17, excluded 0, refused 0; result INCONCLUSIVE
+      owed: E5: class power pin targets owes its cycle figure (open item REL-O-06: board E5's contact targets are the board's own plated copper under board A's spring pins. No maker rates them, and how the platin
+      owed: E5: class signal contact targets owes its cycle figure (open item REL-O-06: board E5's contact targets are the board's own plated copper under board A's spring pins. No maker rates them, and how the p
+   refused BEFORE (17): H1, H2, H3, H4, L_SIG, T_CN1, T_CN2, T_CN3, T_CN4, T_CP1, T_CP2, T_CP3, T_CP4, T_PRE, T_SIG, WH_CN, WH_CP
+   THE INVENTORY (ref, pins, land, disposition, value):
+     H1             1  MountingHole_3.2mm_M3                                      class standoff screw joints: M3 standoff 6 mm to the dock strip
+     H2             1  MountingHole_3.2mm_M3                                      class standoff screw joints: M3 standoff 6 mm to the dock strip
+     H3             1  MountingHole_3.2mm_M3                                      class standoff screw joints: M3 standoff 6 mm to the dock strip
+     H4             1  MountingHole_3.2mm_M3                                      class standoff screw joints: M3 standoff 6 mm to the dock strip
+     L_SIG         12  WireLands_2x6                                              class soldered wire lands: plated wire lands to the strip J_BLK (net names on the underside silk)
+     T_CN1          1  Mill-Max_0858_target                                       class power pin targets: return target (9 A pin)
+     T_CN2          1  Mill-Max_0858_target                                       class power pin targets: return target (9 A pin)
+     T_CN3          1  Mill-Max_0858_target                                       class power pin targets: return target (9 A pin)
+     T_CN4          1  Mill-Max_0858_target                                       class power pin targets: return target (9 A pin)
+     T_CP1          1  Mill-Max_0858_target                                       class power pin targets: CELL+ target (9 A pin)
+     T_CP2          1  Mill-Max_0858_target                                       class power pin targets: CELL+ target (9 A pin)
+     T_CP3          1  Mill-Max_0858_target                                       class power pin targets: CELL+ target (9 A pin)
+     T_CP4          1  Mill-Max_0858_target                                       class power pin targets: CELL+ target (9 A pin)
+     T_PRE          1  Mill-Max_0858_target                                       class power pin targets: pre-charge target (longer pin, mates first)
+     T_SIG         12  PogoTargets_2x6                                            class signal contact targets: signal targets (A22 J_DOCK lands here)
+     WH_CN          1  WireHole_2mm                                               class soldered wire lands: 12 AWG to the strip P_CN
+     WH_CP          1  WireHole_2mm                                               class soldered wire lands: 12 AWG to the strip P_CP
+
+== board P  netlist pcb-p-pack-p2/out/pcb-p-pack.net  sha16 760ac6f74d62d194  85 part(s)
+   candidates 26: by reference class 26, by a mechanical land 0, by an undeclared land 0, by no land 0, by the word net 0, undeclared class 0
+   BEFORE (the old list's 3 class(es) over the inventory): classed 7, excluded 0, refused 19
+   AFTER  (the new list's 4 class(es) and 3 exclusion(s)): classed 9, excluded 17, refused 0; result INCONCLUSIVE
+      excluded 15: TP1, TP10, TP11, TP12, TP13, TP14, TP15, TP2, TP3, TP4, TP5, TP6, TP7, TP8, TP9: a test point: a bare pad touched by a probe at the bench, nothing is mated and nothing hangs on it
+      excluded 1: JP1: the fuse arming jumper, a solder jumper: two copper pads closed with solder at commissioning, no part is fitted and nothing is mated
+      excluded 1: F2: the self-control fuse is soldered to the board (Eaton SCF9550, surface mount): there is no holder and nothing is mated
+      owed: P: class the pack's wire lands owes its measure (open item REL-O-11: how the pack and its 12 AWG lead are held is not designed (the pack's hold-down, S-27), so nothing keeps a pull on the lead from bo
+   refused BEFORE (19): F2, JP1, TP1, TP10, TP11, TP12, TP13, TP14, TP15, TP2, TP3, TP4, TP5, TP6, TP7, TP8, TP9, W_BN, W_BP
+   THE INVENTORY (ref, pins, land, disposition, value):
+     F1             2  Fuse:Fuseholder_Blade_Mini_Keystone_3568                   class the pack fuse holder: 25 A mini blade (Keystone 3568 holder): the pack's fuse
+     F2             3  meshsat:Eaton_SCF9550_9.5x5.0mm                            exclusion the self-control fuse is soldered to the: SCF9550-30-05 self-control fuse (Eaton, 30 A, 4-5 cells): 1 and 2 the fuse, 3 the heater
+     JP1            2  Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm      exclusion the fuse arming jumper, a solder jumper:: fuse arming jumper: open as built, closed at commissioning
+     J_CELL         5  Connector_JST:JST_XH_B5B-XH-A_1x05_P2.50mm_Vertical        class JST XH lead headers: cell tap sense wires from the 4S block (JST-XH 1x5): B- C1 C2 C3 B+; the current leaves th
+     J_SMB          4  Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical        class JST XH lead headers: SMBus lead to E6 J_SMB (JST-XH 1x4): SMBC SMBD GND(pack side of the shunt) PRES
+     J_TS           5  Connector_JST:JST_PH_B5B-PH-K_1x05_P2.00mm_Vertical        class JST PH thermistor headers: JST-PH 1x5 socket for the four cell thermistors (Semitec 103AT-2, one per series group of 
+     J_TS2          2  Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical        class JST PH thermistor headers: second-level cell thermistor socket, JST-PH 1x2 (Semitec 103AT-2 on the hottest cell): 1 T
+     TP1            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: BTP_INT
+     TP10           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SMBD
+     TP11           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: FUSE_G
+     TP12           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SEC_DOUT
+     TP13           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SCP_OUT
+     TP14           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: FUSE_GQ
+     TP15           1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: TS_SEC
+     TP2            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: FUSE
+     TP3            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: CHG_R
+     TP4            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: DSG_R
+     TP5            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SW
+     TP6            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: FUSED
+     TP7            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: PACK_P
+     TP8            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: PACK_N
+     TP9            1  TestPoint:TestPoint_Pad_D1.5mm                             exclusion a test point: a bare pad touched by a pr: SMBC
+     W_BN           1  Connector_Wire:SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm      class the pack's wire lands: cell block B- (12 AWG from the block's negative strip)
+     W_BP           1  Connector_Wire:SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm      class the pack's wire lands: cell block B+ (12 AWG from the block's positive strip)
+     W_N            1  Connector_Wire:SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm      class the pack's wire lands: pack lead - (12 AWG to the XT60 on E6 J_BATT pin 1)
+     W_P            1  Connector_Wire:SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm      class the pack's wire lands: pack lead + (12 AWG to the XT60 on E6 J_BATT pin 2)
+
+== SUMMARY  (candidates; BEFORE classed / refused; AFTER classed / excluded / refused; result)
+   A     82     39 /   43     57 /   25 /    0   INCONCLUSIVE
+   B    153     38 /  115     46 /  107 /    0   INCONCLUSIVE
+   C     74      9 /   65     24 /   50 /    0   INCONCLUSIVE
+   D     40     10 /   30     11 /   29 /    0   INCONCLUSIVE
+   E     35      8 /   27     21 /   14 /    0   INCONCLUSIVE
+   E5    17      0 /   17     17 /    0 /    0   INCONCLUSIVE
+   P     26      7 /   19      9 /   17 /    0   INCONCLUSIVE
+   set  427    111 /  316    185 /  242 /    0
+   the old TOOL's own reading of the same netlists (its population the twelve words): 111 covered, 0 refused (v2/docs/records/r8int6/fix/wear-before-after.txt, 27 September 2026)
+exit: 0
