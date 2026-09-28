@@ -21,3 +21,5 @@ Times are CEST, read from `date` at the step.
 | 00:49 | Box run4 started at d62e768b (t4 clone; old clones t2 and t3 removed): the same three jobs | running |
 | 00:50 | inventory.py (the first author's) re-run on this host on the set 8 netlists, output to inventory-set8.json | G1 to G14 DONE; its T3 and T4 detectors predate the implementation and read NOT DONE (see README) |
 | 00:51 | README.md drafted (T1 to T10 table) | results of run4 to add |
+| 00:53 | Box run4 tests at d62e768b | `tests: 532 passed, 0 failed, 1 skipped` (the skip: test_finish_order's routeflow validate, skipped by its own condition on the box); the two new closure tests and the six T5 tests PASS |
+| 00:54 | box/gen_check.py written: the six schematic generators run once in copies of their project folders inside the box clone, under this branch's intent.py, their intents compared with the committed ones; box/results_md.py renders the run's results for README | to run after run4 |
