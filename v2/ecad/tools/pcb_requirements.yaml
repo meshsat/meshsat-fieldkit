@@ -3251,32 +3251,6 @@ open_items:
       prints every ground, or prints how many it cut; a test with a fixture of four grounds in one state. Changing the
       report writer changes the tool's code bundle, so RF-002 is re-taken on every board with it (with the set's next
       box re-take).
-  - id: S-98
-    class: SESSION
-    status: OPEN
-    disposition: DECLARATION
-    disposition_why: >-
-      A declaration item: it moves no record's verdict directly (INT-001 judges the contract's agreement and PWR-001
-      judges board A's copper at the declared current). The generator owners of boards A and B apply the interim entries
-      in the circuit round; the contract is re-read and INT-001 and PWR-001 re-taken then.
-    title: >-
-      (cx1, finding I-03 on the contract IF-AB-POWER) The two ends of the board A to board B power leads declare
-      different currents for one conductor: +5V_S2 (board A 2.5 A typical and 5.0 A peak; board B 4.2 A typical and 5.63
-      A coincident with the 5G module at 4 A) and +5V_DEV (board A apportions 3.2 A to J_5V_DEV; board B declares 3.8 A
-      typical arriving). The pilot's record (v2/docs/records/cx1/ANALYSIS.md and CORRECTION.md, its independent AI check
-      in checks/) derives board B's figures from held maker pages (the CM5's 0.9 A typical, release 3, no maximum
-      published; the RM520N-GL's 3 A continuous and 4 A peak supply capability, Hardware Design v1.0 and v1.1) and finds
-      no held document that decides the PS-ALLTX mode current of any of the five rails (INCONCLUSIVE on all five), so
-      the alignment is INTERIM and the end that derives its figure is the one aligned to: board A's +5V_S2 4.2 A typical
-      and 5.63 A peak with J_5V_S2 5.63 A and the VBAT load Q28 2.22 A, board B's +5V_S2 peak 5.63 A, board A's J_5V_DEV
-      3.8 A and +5V_DEV typical 5.1 A (3.8 + the D8 mezzanine's 1.0 + the wall port's 0.3), as the four verified,
-      unexecuted entries of records/cx1/apply_declarations_draft.py (its --check passes against the generators as held).
-      The generator owners of boards A and B apply them in the circuit round with the regeneration on the KiCad host;
-      then the contract's currents rows are rewritten and INT-001 and PWR-001 re-taken. The mode figures are decided by
-      TEST-PLAN power tests at J_5V_S2 and J_5V_DEV under PS-ALLTX on a built board (prototype verification). Also for
-      board B's owner: the supervisor LDOs U40, U50 and U60 at 0.05 A against their child rails' 0.12 and 0.25 A, the
-      LoRa module U21 at 0.6 A against Ebyte's 0.65 A transmit figure, and U25's comment of 1.4 A against the declared
-      1.2 A on +3V3_DEV.
   - id: S-99
     class: SESSION
     status: OPEN
@@ -4075,6 +4049,43 @@ closed_items:
       reconciliation and never shrinks the coverage in silence, and TRN-001 is re-taken on board A (stream d8dec31, with
       decision 31's protection review of boards A, D and E, whose holds stand).
 
+  - id: S-98
+    closed_by: commit ff1e0769
+    closing_evidence: >-
+      The interim alignment applied by the generator owners of boards A and B (stream s98, c098b8f3, merged into
+      integration set 8): board A's +5V_S2 4.2 A typical and 5.63 A peak with J_5V_S2 5.63 A and the VBAT load Q28 2.22
+      A, board B's +5V_S2 peak 5.63 A, board A's J_5V_DEV 3.8 A and +5V_DEV typical 5.1 A, the notes rewritten INTERIM
+      with the PS-ALLTX mode figures INCONCLUSIVE, board B's M7 branches reconciled (U21 0.70 A, U40, U50 and U60 0.12
+      A, U25's comment at the declared 1.2 A). Regenerated on the KiCad box (records/s98/box_regen_ab.sh at fff04e64;
+      the netlists PARITY_AFTER_NOISE, content unchanged; v2/docs/records/int9/box/regen-s98-summary.txt) and committed;
+      every schematic-phase reading re-taken at the commit carrying them, landed by ff1e0769: intents intent_a
+      35e430a791ab2b44 and intent_b a7bf625c8b878dd5; lead_ends.py 5 of 5 leads AGREE; check_contracts PASS of 99 with 0
+      fail (v2/ecad/pcb-a-power-a23/routed/check_contracts.verdict.json); interfaces_a PASS of 1 and interfaces_b PASS
+      of 7 on the rewritten contract v2/ecad/tools/pcb_interfaces.yaml (spec 002ae8575028468a, apply_contract_i03.py;
+      v2/ecad/pcb-a-power-a23/routed/interfaces_a.verdict.json,
+      v2/ecad/pcb-b-compute-b19/routed/interfaces_b.verdict.json); intent_rails PASS on A and B (PWR-001).
+      ARCHITECTURE.md's IF-AB-POWER row brought to the same statement and to the held JST VH catalogue
+      (apply_architecture_i03.py). DECLARATION CONSISTENCY ONLY: the electrical adequacy of the converters against their
+      loads is S-99's, the PS-ALLTX mode currents are the bench's (TEST-PLAN power rows), and the +5V_S2 all-peak bound
+      of 7.28 A against the loop minimum and the lead's own drop stay open with I-03.
+    title: >-
+      (cx1, finding I-03 on the contract IF-AB-POWER) The two ends of the board A to board B power leads declare
+      different currents for one conductor: +5V_S2 (board A 2.5 A typical and 5.0 A peak; board B 4.2 A typical and 5.63
+      A coincident with the 5G module at 4 A) and +5V_DEV (board A apportions 3.2 A to J_5V_DEV; board B declares 3.8 A
+      typical arriving). The pilot's record (v2/docs/records/cx1/ANALYSIS.md and CORRECTION.md, its independent AI check
+      in checks/) derives board B's figures from held maker pages (the CM5's 0.9 A typical, release 3, no maximum
+      published; the RM520N-GL's 3 A continuous and 4 A peak supply capability, Hardware Design v1.0 and v1.1) and finds
+      no held document that decides the PS-ALLTX mode current of any of the five rails (INCONCLUSIVE on all five), so
+      the alignment is INTERIM and the end that derives its figure is the one aligned to: board A's +5V_S2 4.2 A typical
+      and 5.63 A peak with J_5V_S2 5.63 A and the VBAT load Q28 2.22 A, board B's +5V_S2 peak 5.63 A, board A's J_5V_DEV
+      3.8 A and +5V_DEV typical 5.1 A (3.8 + the D8 mezzanine's 1.0 + the wall port's 0.3), as the four verified,
+      unexecuted entries of records/cx1/apply_declarations_draft.py (its --check passes against the generators as held).
+      The generator owners of boards A and B apply them in the circuit round with the regeneration on the KiCad host;
+      then the contract's currents rows are rewritten and INT-001 and PWR-001 re-taken. The mode figures are decided by
+      TEST-PLAN power tests at J_5V_S2 and J_5V_DEV under PS-ALLTX on a built board (prototype verification). Also for
+      board B's owner: the supervisor LDOs U40, U50 and U60 at 0.05 A against their child rails' 0.12 and 0.25 A, the
+      LoRa module U21 at 0.6 A against Ebyte's 0.65 A transmit figure, and U25's comment of 1.4 A against the declared
+      1.2 A on +3V3_DEV.
 records:
   - id: REQ-001
     kind: requirement
@@ -4281,9 +4292,15 @@ records:
           declaration is identical (1009 calls), so no part, pin, net, value or footprint moved; 2 intent declarations
           differ and the module assignment _DEV_LOADS (the +5V_DEV load map). This record judges no declared current, so
           its reading stands; rebound (apply_rebind_generators_s98.py). No result changes.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 8 (28 September 2026, stream s98,
+          S-98): regenerated on the KiCad box from the committed generator; main's file at 028997a6c5e8810f and the
+          tree's at 21a1f74a3ec1ae28 were compared with only their 4 date and source line(s) dropped and are
+          byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
+          rebound (apply_rebind_netlists_s98.py). No result changes.
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_b.py@a57047c3daa946f3"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@21a1f74a3ec1ae28"
       - "v2/docs/evidence/WRONG-MODEL-RECONCILIATION.md@97b1f63aa6ea11f1"
     release_effect: MUST_JUSTIFY
     source:
@@ -4810,9 +4827,15 @@ records:
           R480 to R500, R15 and R16 are still 10 k and the lock, arm and motion parts sit where FAILOVER-FABRIC.md
           section 9a says; the stream touches no part or net of the fabric, so this reading stands on the file at
           028997a6c5e8810f
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 8 (28 September 2026, stream s98,
+          S-98): regenerated on the KiCad box from the committed generator; main's file at 028997a6c5e8810f and the
+          tree's at 21a1f74a3ec1ae28 were compared with only their 4 date and source line(s) dropped and are
+          byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
+          rebound (apply_rebind_netlists_s98.py). No result changes.
     evidence_bound_to:
       - "v2/docs/feasibility/FAILOVER-FABRIC.md@a0ad3d7436cd126d"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@21a1f74a3ec1ae28"
     release_effect: BLOCKER
     source:
       - "v2/docs/ARCH-PCB-B-IOHA.md:87-93"
@@ -4918,9 +4941,15 @@ records:
           PG1 to PG3, their buffers and the qualifier muxes are on it unchanged, and the one new reader of a module pin,
           U{s}16 on PCIE_PWR_EN{s} (a module output), is an input (II +-1 uA at VCC 0 to 5.5 V, TI SCLS739F 6.5) that
           drives nothing into the module, so this reading stands on the file at 028997a6c5e8810f
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 8 (28 September 2026, stream s98,
+          S-98): regenerated on the KiCad box from the committed generator; main's file at 028997a6c5e8810f and the
+          tree's at 21a1f74a3ec1ae28 were compared with only their 4 date and source line(s) dropped and are
+          byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
+          rebound (apply_rebind_netlists_s98.py). No result changes.
     evidence_bound_to:
       - "v2/docs/feasibility/FAILOVER-FABRIC.md@a0ad3d7436cd126d"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@21a1f74a3ec1ae28"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/FAILOVER-FABRIC.md section 5.2", "v2/docs/feasibility/FAILOVER-FABRIC.md section 10"]
     source_check: VERIFIED
@@ -5366,9 +5395,15 @@ records:
           declaration is identical (1009 calls), so no part, pin, net, value or footprint moved; 2 intent declarations
           differ and the module assignment _DEV_LOADS (the +5V_DEV load map). This record judges no declared current, so
           its reading stands; rebound (apply_rebind_generators_s98.py). No result changes.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 8 (28 September 2026, stream s98,
+          S-98): regenerated on the KiCad box from the committed generator; main's file at 028997a6c5e8810f and the
+          tree's at 21a1f74a3ec1ae28 were compared with only their 4 date and source line(s) dropped and are
+          byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
+          rebound (apply_rebind_netlists_s98.py). No result changes.
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_b.py@a57047c3daa946f3"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@21a1f74a3ec1ae28"
       - "v2/docs/parts/STM32H743-COMPATIBILITY.md@67335ea42747e22f"
       - "v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf@f6e620179006c8c4"
       - "v2/vendor/st/st-rm0433-rev8.pdf@9ba54135736a47a3"
@@ -6816,9 +6851,15 @@ records:
           declaration is identical (465 calls), so no part, pin, net, value or footprint moved; 6 intent declarations
           differ. This record judges no declared current, so its reading stands; rebound
           (apply_rebind_generators_s98.py). No result changes.
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net re-read at integration set 8 (28 September 2026, stream s98,
+          S-98): regenerated on the KiCad box from the committed generator; main's file at 0a2b59087bcc2678 and the
+          tree's at 2dfe1c546cb39ccb were compared with only their 4 date and source line(s) dropped and are
+          byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
+          rebound (apply_rebind_netlists_s98.py). No result changes.
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_a.py@ebb5c0f250780a48"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2dfe1c546cb39ccb"
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@7a2c0ac2190b141a"
     release_effect: BLOCKER
     source: ["owner ruling D-11", "v2/docs/MESHSAT-709-geometry-appendix.md:2932", "v2/ecad/tools/gen_sch_a.py:1177-1190, 1237-1245"]
@@ -7626,9 +7667,15 @@ records:
           declaration is identical (465 calls), so no part, pin, net, value or footprint moved; 6 intent declarations
           differ. This record judges no declared current, so its reading stands; rebound
           (apply_rebind_generators_s98.py). No result changes.
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net re-read at integration set 8 (28 September 2026, stream s98,
+          S-98): regenerated on the KiCad box from the committed generator; main's file at 0a2b59087bcc2678 and the
+          tree's at 2dfe1c546cb39ccb were compared with only their 4 date and source line(s) dropped and are
+          byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
+          rebound (apply_rebind_netlists_s98.py). No result changes.
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_a.py@ebb5c0f250780a48"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2dfe1c546cb39ccb"
       - "v2/docs/TEST-PLAN.md@ae57da0b57e214f7"
     release_effect: MUST_JUSTIFY
     source: ["owner ruling D-17", "v2/ecad/tools/gen_sch_a.py:1104-1114", "v2/ecad/tools/pcb_decisions.yaml:256-429 (decision 31)"]
@@ -8077,9 +8124,15 @@ records:
           TX_INHIBIT_n line's fail-safe state with board C unpowered to PASS on the candidate, which this record's 'a
           board is unpowered' clause needs and none of those depends on, so it stands FAIL on the file at
           367c52bcba7eb2a1
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 8 (28 September 2026, stream s98,
+          S-98): regenerated on the KiCad box from the committed generator; main's file at 028997a6c5e8810f and the
+          tree's at 21a1f74a3ec1ae28 were compared with only their 4 date and source line(s) dropped and are
+          byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
+          rebound (apply_rebind_netlists_s98.py). No result changes.
     evidence_bound_to:
       - "v2/docs/feasibility/EMCON.md@367c52bcba7eb2a1"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@21a1f74a3ec1ae28"
     release_effect: BLOCKER
     source:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2787 (item 3)"
@@ -8277,9 +8330,15 @@ records:
           added sentence states the line's own latency (the contact's 2 ms bounce, a release of about 31 us) and
           sections 2 and 4.1 state R14's value and R50, none of which closes a row, so it stands FAIL on the file at
           367c52bcba7eb2a1
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 8 (28 September 2026, stream s98,
+          S-98): regenerated on the KiCad box from the committed generator; main's file at 028997a6c5e8810f and the
+          tree's at 21a1f74a3ec1ae28 were compared with only their 4 date and source line(s) dropped and are
+          byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
+          rebound (apply_rebind_netlists_s98.py). No result changes.
     evidence_bound_to:
       - "v2/docs/feasibility/EMCON.md@367c52bcba7eb2a1"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@21a1f74a3ec1ae28"
       - "v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568"
     release_effect: BLOCKER
     source:
@@ -8413,9 +8472,15 @@ records:
           declaration is identical (1009 calls), so no part, pin, net, value or footprint moved; 2 intent declarations
           differ and the module assignment _DEV_LOADS (the +5V_DEV load map). This record judges no declared current, so
           its reading stands; rebound (apply_rebind_generators_s98.py). No result changes.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 8 (28 September 2026, stream s98,
+          S-98): regenerated on the KiCad box from the committed generator; main's file at 028997a6c5e8810f and the
+          tree's at 21a1f74a3ec1ae28 were compared with only their 4 date and source line(s) dropped and are
+          byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
+          rebound (apply_rebind_netlists_s98.py). No result changes.
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_b.py@a57047c3daa946f3"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@21a1f74a3ec1ae28"
     release_effect: ADVISORY
     source:
       - "v2/ecad/tools/gen_sch_b.py:820-866"
@@ -8638,9 +8703,15 @@ records:
           rest of 4b, 5, 5a, 6, 7, 8 and 9 to 9d; sections 4.4 and 4.5, L3 and L4 and 4b's paragraphs on the 5G module
           and the back-feed, on which this reading rests, are byte-identical; the changed places are about
           TX_INHIBIT_n's pulls and fail-safe state, so it stands FAIL on the file at 367c52bcba7eb2a1
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 8 (28 September 2026, stream s98,
+          S-98): regenerated on the KiCad box from the committed generator; main's file at 028997a6c5e8810f and the
+          tree's at 21a1f74a3ec1ae28 were compared with only their 4 date and source line(s) dropped and are
+          byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
+          rebound (apply_rebind_netlists_s98.py). No result changes.
     evidence_bound_to:
       - "v2/docs/feasibility/EMCON.md@367c52bcba7eb2a1"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@21a1f74a3ec1ae28"
     release_effect: BLOCKER
     source:
       - "v2/ecad/tools/gen_sch_b.py:813-880"
@@ -8824,9 +8895,15 @@ records:
           section 7's 0x21 and 0x24 row (U27's P1.5 reads HOT-R1), with the line count kept; every other line is
           byte-identical to the file at 57a56726f9db723a; section 7's pull statements and the panel-less kit's text are
           unchanged; only the U27 row names P1.5, so it stands PASS on the file at 4647782f5aca7c13
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net re-read at integration set 8 (28 September 2026, stream s98,
+          S-98): regenerated on the KiCad box from the committed generator; main's file at 0a2b59087bcc2678 and the
+          tree's at 2dfe1c546cb39ccb were compared with only their 4 date and source line(s) dropped and are
+          byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
+          rebound (apply_rebind_netlists_s98.py). No result changes.
     evidence_bound_to:
       - "v2/docs/PANEL.md@4647782f5aca7c13"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2dfe1c546cb39ccb"
     release_effect: ADVISORY
     source:
       - "v2/docs/PANEL.md section 7"
@@ -9292,9 +9369,15 @@ records:
           inhibit_chain_c reads PASS of 6 on netlist 3fddbb3edcd4248a. This entry rebinds the page and re-decides
           nothing: the result stands as the predicate of this integration's entry set it, bound to the file at
           719cca08a0823263.
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net re-read at integration set 8 (28 September 2026, stream s98,
+          S-98): regenerated on the KiCad box from the committed generator; main's file at 0a2b59087bcc2678 and the
+          tree's at 2dfe1c546cb39ccb were compared with only their 4 date and source line(s) dropped and are
+          byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
+          rebound (apply_rebind_netlists_s98.py). No result changes.
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@7a2c0ac2190b141a"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2dfe1c546cb39ccb"
       - "v2/docs/feasibility/EMCON.md@367c52bcba7eb2a1"
       - "v2/docs/CURRENT-EVIDENCE.md@719cca08a0823263"
     release_effect: BLOCKER
@@ -9704,9 +9787,15 @@ records:
           (2) on U536, the back-feed, the plate's light guide, the RF-002 walk's unread classes on board B, every bench
           test); the changed places close W3T-F1 on the candidate only, so it stands INCONCLUSIVE on the file at
           367c52bcba7eb2a1
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 8 (28 September 2026, stream s98,
+          S-98): regenerated on the KiCad box from the committed generator; main's file at 028997a6c5e8810f and the
+          tree's at 21a1f74a3ec1ae28 were compared with only their 4 date and source line(s) dropped and are
+          byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
+          rebound (apply_rebind_netlists_s98.py). No result changes.
     evidence_bound_to:
       - "v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@21a1f74a3ec1ae28"
       - "v2/docs/feasibility/EMCON.md@367c52bcba7eb2a1"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/EMCON.md section 7", "v2/docs/reviews/2026-09-26-foundation-progress-review.md section 3"]
@@ -11181,11 +11270,17 @@ records:
           declaration is identical (465 calls), so no part, pin, net, value or footprint moved; 6 intent declarations
           differ. This record judges no declared current, so its reading stands; rebound
           (apply_rebind_generators_s98.py). No result changes.
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net re-read at integration set 8 (28 September 2026, stream s98,
+          S-98): regenerated on the KiCad box from the committed generator; main's file at 0a2b59087bcc2678 and the
+          tree's at 2dfe1c546cb39ccb were compared with only their 4 date and source line(s) dropped and are
+          byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
+          rebound (apply_rebind_netlists_s98.py). No result changes.
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_e.py@f846e138cb53a8c6"
       - "v2/ecad/tools/gen_sch_a.py@ebb5c0f250780a48"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@56adc9746d61c4e0"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2dfe1c546cb39ccb"
       - "v2/docs/records/w4ae/hot_r1_trace.py@2350c321fa744293"
     release_effect: BLOCKER
     source:
@@ -12123,6 +12218,18 @@ records:
           (owner rulings D-19 and D-20) and one paragraph appended to section 3's M1 (the owner's instruction that M1
           and REQ-072 stand as written); every other section byte-identical by heading, the sections this record cites
           among them. Rebound from 6ebe6760c4312bca to 6cb7b241cb84d729; this entry changes no result.
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net re-read at integration set 8 (28 September 2026, stream s98,
+          S-98): regenerated on the KiCad box from the committed generator; main's file at 0a2b59087bcc2678 and the
+          tree's at 2dfe1c546cb39ccb were compared with only their 4 date and source line(s) dropped and are
+          byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
+          rebound (apply_rebind_netlists_s98.py). No result changes.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 8 (28 September 2026, stream s98,
+          S-98): regenerated on the KiCad box from the committed generator; main's file at 028997a6c5e8810f and the
+          tree's at 21a1f74a3ec1ae28 were compared with only their 4 date and source line(s) dropped and are
+          byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
+          rebound (apply_rebind_netlists_s98.py). No result changes.
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@7a2c0ac2190b141a"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@56adc9746d61c4e0"
@@ -12132,8 +12239,8 @@ records:
       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
       - "v2/docs/TEST-PLAN.md@ae57da0b57e214f7"
       - "v2/ecad/tools/pcb_decisions.yaml@4e1ff91f98e06b72"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2dfe1c546cb39ccb"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@21a1f74a3ec1ae28"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@3fddbb3edcd4248a"
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@760ac6f74d62d194"
     release_effect: BLOCKER
@@ -14085,12 +14192,18 @@ records:
           declaration is identical (465 calls), so no part, pin, net, value or footprint moved; 6 intent declarations
           differ. This record judges no declared current, so its reading stands; rebound
           (apply_rebind_generators_s98.py). No result changes.
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net re-read at integration set 8 (28 September 2026, stream s98,
+          S-98): regenerated on the KiCad box from the committed generator; main's file at 0a2b59087bcc2678 and the
+          tree's at 2dfe1c546cb39ccb were compared with only their 4 date and source line(s) dropped and are
+          byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
+          rebound (apply_rebind_netlists_s98.py). No result changes.
     evidence_bound_to:
       - "v2/docs/PANEL.md@4647782f5aca7c13"
       - "v2/docs/CONOPS.md@6cb7b241cb84d729"
       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
       - "v2/ecad/tools/gen_sch_a.py@ebb5c0f250780a48"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2dfe1c546cb39ccb"
       - "v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md@44fdf9a022c49337"
     release_effect: BLOCKER
     source:
@@ -14524,9 +14637,15 @@ records:
           declaration is identical (1009 calls), so no part, pin, net, value or footprint moved; 2 intent declarations
           differ and the module assignment _DEV_LOADS (the +5V_DEV load map). This record judges no declared current, so
           its reading stands; rebound (apply_rebind_generators_s98.py). No result changes.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 8 (28 September 2026, stream s98,
+          S-98): regenerated on the KiCad box from the committed generator; main's file at 028997a6c5e8810f and the
+          tree's at 21a1f74a3ec1ae28 were compared with only their 4 date and source line(s) dropped and are
+          byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
+          rebound (apply_rebind_netlists_s98.py). No result changes.
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_b.py@a57047c3daa946f3"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@21a1f74a3ec1ae28"
     release_effect: BLOCKER
     source:
       - "v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf (key B p.15 and p.20; Table 32)"
@@ -14759,9 +14878,21 @@ records:
           pin 1, its cathode by the sheet SC-72 files, stays on +5V_TX, so this reading stands on
           v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@7a2c0ac2190b141a,
           v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@760ac6f74d62d194
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net re-read at integration set 8 (28 September 2026, stream s98,
+          S-98): regenerated on the KiCad box from the committed generator; main's file at 0a2b59087bcc2678 and the
+          tree's at 2dfe1c546cb39ccb were compared with only their 4 date and source line(s) dropped and are
+          byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
+          rebound (apply_rebind_netlists_s98.py). No result changes.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 8 (28 September 2026, stream s98,
+          S-98): regenerated on the KiCad box from the committed generator; main's file at 028997a6c5e8810f and the
+          tree's at 21a1f74a3ec1ae28 were compared with only their 4 date and source line(s) dropped and are
+          byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
+          rebound (apply_rebind_netlists_s98.py). No result changes.
     evidence_bound_to:
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2dfe1c546cb39ccb"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@21a1f74a3ec1ae28"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@3fddbb3edcd4248a"
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@7a2c0ac2190b141a"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@56adc9746d61c4e0"
