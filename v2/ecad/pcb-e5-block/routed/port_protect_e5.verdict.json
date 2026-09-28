@@ -53,12 +53,12 @@
  },
  "tool": "port_protect_e5",
  "tools": {
-  "git_head": "8ae28b233e9b",
+  "git_head": "87b7d5a9509c",
   "tools_tree_sha": "bfeac03e9fe6170b"
  },
- "ts": "2026-09-28T21:32:02Z",
+ "ts": "2026-09-28T21:56:13Z",
  "verdict": "PASS",
- "version": "8ae28b233e9b",
+ "version": "87b7d5a9509c",
  "writer": {
   "file": "port_protect.py",
   "sha16": "7acd5333fc59f8d0"
