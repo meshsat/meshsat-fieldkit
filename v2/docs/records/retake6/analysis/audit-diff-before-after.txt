@@ -1,0 +1,377 @@
+retake6: the audit of the set 6 candidate as restored from its evidence tar (before) against the audit in the worktree after the re-take (after)
+before: 339 rows; classes {'AWAITING_REVALIDATION': 283, 'CURRENT_CANDIDATE': 12, 'DESK_REVIEW': 21, 'NO_EVIDENCE': 22, 'VALID_HISTORICAL': 1}; results {'FAIL': 44, 'INCONCLUSIVE': 89, 'NOT_APPLICABLE': 1, 'PASS': 205}; CURRENT_CANDIDATE 12 of which PASS 12
+after: 339 rows; classes {'AWAITING_REVALIDATION': 213, 'CURRENT_CANDIDATE': 83, 'DESK_REVIEW': 21, 'NO_EVIDENCE': 22}; results {'FAIL': 40, 'INCONCLUSIVE': 89, 'NOT_APPLICABLE': 1, 'PASS': 209}; CURRENT_CANDIDATE 83 of which PASS 71
+
+ROWS WHOSE RESULT CHANGED
+  A  RF-002   SCHEM FAIL         AWAITING_REVALIDATION (TOOL_CHANGED)  ->  INCONCLUSIVE CURRENT_CANDIDATE (BOUND)
+       before: inhibit_chain_a FAIL: {'fail': 1, 'pass': 6, 'undecided': 2, 'unjudged': 0}
+       after:  inhibit_chain_a INCONCLUSIVE: RF-002 on this board: where the transmit inhibit line runs, it is present, reaches the gate it keys, has the panel toggle as its only source, is buffered and no
+  B  RF-002   SCHEM FAIL         AWAITING_REVALIDATION (TOOL_CHANGED)  ->  INCONCLUSIVE CURRENT_CANDIDATE (BOUND)
+       before: inhibit_chain_b FAIL: {'fail': 11, 'pass': 6, 'undecided': 3, 'unjudged': 0}
+       after:  inhibit_chain_b INCONCLUSIVE: RF-002 on this board: where the transmit inhibit line runs, it is present, reaches the gate it keys, has the panel toggle as its only source, is buffered and no
+  C  PWR-001  SCHEM FAIL         AWAITING_REVALIDATION (NETLIST_MISMATCH)  ->  PASS         CURRENT_CANDIDATE (BOUND)
+       before: intent_rails FAIL: {'census_nets': 153, 'checks': 7, 'declared_nodes': 1, 'declared_not_in_netlist': 0, 'declared_rails': 2, 'fail': 5, 'he
+       after:  intent_rails PASS of 6
+  C  RF-002   SCHEM FAIL         AWAITING_REVALIDATION (TOOL_CHANGED)  ->  PASS         CURRENT_CANDIDATE (BOUND)
+       before: inhibit_chain_c FAIL: {'fail': 1, 'pass': 5, 'undecided': 0, 'unjudged': 0}
+       after:  inhibit_chain_c PASS of 6
+  D  PWR-001  SCHEM INCONCLUSIVE AWAITING_REVALIDATION (NETLIST_MISMATCH)  ->  PASS         CURRENT_CANDIDATE (BOUND)
+       before: intent_rails INCONCLUSIVE: PWR-001 on the committed netlist and the intent file beside it: every power net is a declared rail, and every declared rail is a net of the netlist whose source
+       after:  intent_rails PASS of 7
+  D  RF-002   SCHEM FAIL         AWAITING_REVALIDATION (TOOL_CHANGED)  ->  INCONCLUSIVE CURRENT_CANDIDATE (BOUND)
+       before: inhibit_chain_d FAIL: {'fail': 2, 'pass': 6, 'undecided': 0, 'unjudged': 0}
+       after:  inhibit_chain_d INCONCLUSIVE: RF-002 on this board: where the transmit inhibit line runs, it is present, reaches the gate it keys, has the panel toggle as its only source, is buffered and no
+  E  PWR-001  SCHEM INCONCLUSIVE AWAITING_REVALIDATION (NETLIST_MISMATCH)  ->  PASS         CURRENT_CANDIDATE (BOUND)
+       before: intent_rails INCONCLUSIVE: PWR-001 on the committed netlist and the intent file beside it: every power net is a declared rail, and every declared rail is a net of the netlist whose source
+       after:  intent_rails PASS of 16
+  P  PWR-001  SCHEM FAIL         AWAITING_REVALIDATION (CONFIG_CHANGED)  ->  PASS         CURRENT_CANDIDATE (BOUND)
+       before: intent_rails FAIL: {'census_nets': 55, 'checks': 11, 'declared_nodes': 0, 'declared_not_in_netlist': 0, 'declared_rails': 5, 'fail': 6, 'he
+       after:  intent_rails PASS of 11
+  E5 SCH-003  ROUTE PASS         AWAITING_REVALIDATION (TOOL_CHANGED)  ->  FAIL         CURRENT_CANDIDATE (BOUND)
+       before: check_contracts_e5 PASS of 33
+       after:  check_contracts_e5 FAIL: {'fail': 10, 'pass': 28}
+  E5 INT-001  SCHEM INCONCLUSIVE AWAITING_REVALIDATION (CONFIG_CHANGED)  ->  FAIL         CURRENT_CANDIDATE (BOUND)
+       before: taken under rule set ff8151db3576437b, current is 635ff031f210f48c
+       after:  check_contracts_e5 FAIL: {'fail': 10, 'pass': 28}
+
+ROWS WHOSE CLASS OR CAUSE CHANGED, SAME RESULT
+  A  SCH-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  A  SCH-003  PASS         AWAITING_REVALIDATION (TOOL_CHANGED) -> AWAITING_REVALIDATION (UNBOUND)
+  A  SCH-004  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  A  SCH-005  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  A  CMP-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  A  PWR-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  A  PWR-002  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  A  PWR-003  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  A  SI-001   INCONCLUSIVE AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  A  INT-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  A  TRN-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  A  REL-001  PASS         AWAITING_REVALIDATION (TOOL_CHANGED) -> AWAITING_REVALIDATION (UNBOUND)
+  A  BAT-002  PASS         AWAITING_REVALIDATION (OTHER_DESIGN) -> CURRENT_CANDIDATE (BOUND)
+  B  SCH-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  B  SCH-003  INCONCLUSIVE AWAITING_REVALIDATION (TOOL_CHANGED) -> AWAITING_REVALIDATION (UNBOUND)
+  B  SCH-004  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  B  SCH-005  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  B  CMP-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  B  PWR-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  B  PWR-002  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  B  PWR-003  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  B  SI-001   INCONCLUSIVE AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  B  CLK-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  B  INT-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  B  TRN-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  B  REL-001  PASS         AWAITING_REVALIDATION (TOOL_CHANGED) -> AWAITING_REVALIDATION (UNBOUND)
+  C  SCH-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  C  SCH-003  PASS         AWAITING_REVALIDATION (TOOL_CHANGED) -> AWAITING_REVALIDATION (UNBOUND)
+  C  SCH-005  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  C  CMP-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  C  SI-001   INCONCLUSIVE AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  C  CLK-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  C  INT-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  C  TRN-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  C  REL-001  PASS         AWAITING_REVALIDATION (TOOL_CHANGED) -> AWAITING_REVALIDATION (UNBOUND)
+  D  SCH-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  D  SCH-003  PASS         AWAITING_REVALIDATION (TOOL_CHANGED) -> AWAITING_REVALIDATION (UNBOUND)
+  D  SCH-004  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  D  SCH-005  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  D  CMP-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  D  SI-001   INCONCLUSIVE AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  D  CLK-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  D  INT-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  D  TRN-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  D  REL-001  PASS         AWAITING_REVALIDATION (TOOL_CHANGED) -> AWAITING_REVALIDATION (UNBOUND)
+  E  SCH-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  E  SCH-003  PASS         AWAITING_REVALIDATION (TOOL_CHANGED) -> AWAITING_REVALIDATION (UNBOUND)
+  E  SCH-004  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  E  SCH-005  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  E  CMP-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  E  PWR-002  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  E  PWR-003  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  E  SI-001   INCONCLUSIVE AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  E  CLK-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  E  RF-002   PASS         AWAITING_REVALIDATION (TOOL_CHANGED) -> CURRENT_CANDIDATE (BOUND)
+  E  INT-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  E  TRN-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  E  REL-001  PASS         AWAITING_REVALIDATION (TOOL_CHANGED) -> AWAITING_REVALIDATION (UNBOUND)
+  E  BAT-002  PASS         AWAITING_REVALIDATION (OTHER_DESIGN) -> CURRENT_CANDIDATE (BOUND)
+  P  SCH-003  PASS         AWAITING_REVALIDATION (TOOL_CHANGED) -> AWAITING_REVALIDATION (UNBOUND)
+  P  SCH-004  PASS         AWAITING_REVALIDATION (CONFIG_CHANGED) -> CURRENT_CANDIDATE (BOUND)
+  P  SCH-005  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  P  CMP-001  PASS         AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+  P  PWR-002  PASS         AWAITING_REVALIDATION (CONFIG_CHANGED) -> CURRENT_CANDIDATE (BOUND)
+  P  SI-001   INCONCLUSIVE AWAITING_REVALIDATION (CONFIG_CHANGED) -> CURRENT_CANDIDATE (BOUND)
+  P  RF-002   PASS         AWAITING_REVALIDATION (TOOL_CHANGED) -> CURRENT_CANDIDATE (BOUND)
+  P  INT-001  PASS         AWAITING_REVALIDATION (CONFIG_CHANGED) -> CURRENT_CANDIDATE (BOUND)
+  P  TRN-001  PASS         AWAITING_REVALIDATION (CONFIG_CHANGED) -> CURRENT_CANDIDATE (BOUND)
+  P  REL-001  PASS         AWAITING_REVALIDATION (TOOL_CHANGED) -> AWAITING_REVALIDATION (UNBOUND)
+  P  BAT-001  FAIL         AWAITING_REVALIDATION (CONFIG_CHANGED) -> CURRENT_CANDIDATE (BOUND)
+  P  BAT-002  PASS         AWAITING_REVALIDATION (OTHER_DESIGN) -> CURRENT_CANDIDATE (BOUND)
+  E5 CMP-001  PASS         VALID_HISTORICAL (RATIONALE) -> CURRENT_CANDIDATE (BOUND)
+  E5 REL-001  PASS         AWAITING_REVALIDATION (TOOL_CHANGED) -> AWAITING_REVALIDATION (UNBOUND)
+  E5 BAT-002  PASS         AWAITING_REVALIDATION (OTHER_DESIGN) -> CURRENT_CANDIDATE (BOUND)
+   48  AWAITING_REVALIDATION (NETLIST_MISMATCH) -> CURRENT_CANDIDATE (BOUND)
+   13  AWAITING_REVALIDATION (TOOL_CHANGED) -> AWAITING_REVALIDATION (UNBOUND)
+    6  AWAITING_REVALIDATION (CONFIG_CHANGED) -> CURRENT_CANDIDATE (BOUND)
+    4  AWAITING_REVALIDATION (OTHER_DESIGN) -> CURRENT_CANDIDATE (BOUND)
+    2  AWAITING_REVALIDATION (TOOL_CHANGED) -> CURRENT_CANDIDATE (BOUND)
+    1  VALID_HISTORICAL (RATIONALE) -> CURRENT_CANDIDATE (BOUND)
+
+ROWS NOT CURRENT AFTER, BY CAUSE
+  176  AWAITING_REVALIDATION (TOOL_CHANGED)
+        A  SCH-002  PLACED_BOARD    FAIL         netlist_board.py       netlist_board: netlist_board.py has changed since this reading (wrote 309086c5bd63d252, now 655bc402d36b0fa5)
+        A  DEC-001  PLACED_BOARD    FAIL         intent_checks.py       intent_decoupling: intent_checks.py has changed since this reading (wrote 41cd5935c5f46f0b, now 1ad7af0c718ba940)
+        A  PI-001   ROUTED_BOARD    FAIL         dc_drop.py             dc_density: dc_drop.py has changed since this reading (wrote 99937ee8deef38d8, now 0b28f57e0a09a385)
+        A  PI-002   ROUTED_BOARD    FAIL         dc_drop.py             dc_drop: dc_drop.py has changed since this reading (wrote 99937ee8deef38d8, now 0b28f57e0a09a385)
+        A  PI-003   ROUTED_BOARD    FAIL         via_current.py         via_current: via_current.py has changed since this reading (wrote 9313a4354608f03a, now 92ed84ac1612fd54)
+        A  GND-001  ROUTED_BOARD    PASS         ground_system.py       ground_system: ground_system.py has changed since this reading (wrote 1f9648dd134877c3, now 228e0a905a75b254)
+        A  STK-001  ROUTED_BOARD    PASS         stackup_gate.py        stackup_gate: BY PROXY FOR ITS HELPERS: stackup_gate.py is byte for byte the file that wrote it, and 3 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:41:52Z): rules_lib.py 
+        A  RET-001  ROUTED_BOARD    PASS         intent_checks.py       intent_return_path: intent_checks.py has changed since this reading (wrote 41cd5935c5f46f0b, now 1ad7af0c718ba940)
+        A  RET-002  ROUTED_BOARD    PASS         intent_checks.py       intent_return_path: intent_checks.py has changed since this reading (wrote 41cd5935c5f46f0b, now 1ad7af0c718ba940)
+        A  RET-003  ROUTED_BOARD    FAIL         ref_change.py          return_stitch: BY PROXY FOR ITS HELPERS: ref_change.py is byte for byte the file that wrote it, and 7 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:41:48Z): intent_checks.
+        A  RET-004  ROUTED_BOARD    FAIL         return_via.py          return_via: return_via.py has changed since this reading (wrote d32e465cef7c5146, now b61d138e54955dd4)
+        A  IMP-002  PLACED_BOARD    PASS         class_floor.py         class_floor: BY PROXY FOR ITS HELPERS: class_floor.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:41:47Z): verdict.py last
+        A  PAIR-001 ROUTED_BOARD    PASS         impedance_check.py     impedance_check: BY PROXY FOR ITS HELPERS: impedance_check.py is byte for byte the file that wrote it, and 2 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:41:45Z): rules_l
+        A  ANA-001  PLACED_BOARD    FAIL         sensitive_nodes.py     sensitive_nodes: BY PROXY FOR ITS HELPERS: sensitive_nodes.py is byte for byte the file that wrote it, and 3 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:42:04Z): kisch.p
+        A  RF-001   ROUTED_BOARD    FAIL         rf_line.py             rf_line: BY PROXY FOR ITS HELPERS: rf_line.py is byte for byte the file that wrote it, and 2 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:42:05Z): rules_lib.py last commi
+        A  ISO-001  ROUTED_BOARD    FAIL         spacing.py             spacing: BY PROXY FOR ITS HELPERS: spacing.py is byte for byte the file that wrote it, and 2 module(s) it imports cannot be shown to predate the reading (2026-09-21T17:12:36Z): rules_lib.py last commi
+        A  PLC-001  PLACED_BOARD    FAIL         hardset.py,place_audit.py hardset-placed: BY PROXY: hardset.py or a module it imports cannot be shown to predate this reading (2026-09-17T22:55:42Z): hardset.py last committed 2026-09-21T10:44:24Z; verdict.py last committed 20
+        A  PLC-002  ROUTED_BOARD    PASS         closer_audit.py        closer_audit: BY PROXY FOR ITS HELPERS: closer_audit.py is byte for byte the file that wrote it, and 38 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:42:02Z): check_contra
+        A  RTE-001  ROUTED_BOARD    PASS         fab_limits.py          fab_limits: BY PROXY FOR ITS HELPERS: fab_limits.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:41:51Z): verdict.py last c
+        A  RTE-002  ROUTED_BOARD    PASS         hardset.py,pruned_gate.py hardset-routed-board-gate: BY PROXY FOR ITS HELPERS: hardset.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:41:25Z): verdi
+        A  VIA-002  ROUTED_BOARD    PASS         via_audit.py           via_annular: BY PROXY FOR ITS HELPERS: via_audit.py is byte for byte the file that wrote it, and 7 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:41:51Z): intent_checks.py 
+        A  VIA-001  ROUTED_BOARD    PASS         via_audit.py           via_audit: BY PROXY FOR ITS HELPERS: via_audit.py is byte for byte the file that wrote it, and 7 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:41:51Z): intent_checks.py la
+        A  PLN-001  ROUTED_BOARD    PASS         check_zone_nets.py     check_zone_nets: BY PROXY FOR ITS HELPERS: check_zone_nets.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:41:36Z): verdict
+        A  EMC-001  ROUTED_BOARD    PASS         emc_sheet.py           emc_sheet: BY PROXY FOR ITS HELPERS: emc_sheet.py is byte for byte the file that wrote it, and 2 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:41:58Z): rules_lib.py last c
+        A  MEC-001  PLACED_BOARD    FAIL         check_pcb_a.py         check_pcb_a: check_pcb_a.py has changed since this reading (wrote ebc59caeff549765, now ed09e95458341aa0)
+        A  DFM-001  RELEASE_PACKAGE INCONCLUSIVE verify_deliverable.py  verify_deliverable_a: BY PROXY: verify_deliverable.py or a module it imports cannot be shown to predate this reading (2026-09-18T18:07:52Z): verdict.py last committed 2026-09-26T22:14:38Z; whether the
+        A  DFA-001  RELEASE_PACKAGE INCONCLUSIVE assembly_set.py        assembly_set: assembly_set.py has changed since this reading (wrote 03299094353eb15f, now 721d3b56702b8573)
+        A  DOC-001  RELEASE_PACKAGE INCONCLUSIVE final_gate.py          final_gate_a: BY PROXY FOR ITS HELPERS: final_gate.py is byte for byte the file that wrote it, and 33 module(s) it imports cannot be shown to predate the reading (2026-09-20T14:11:41Z): check_contract
+        A  DOC-002  RELEASE_PACKAGE INCONCLUSIVE doc_provenance.py,ledger_verify.py doc_provenance_a: BY PROXY FOR ITS HELPERS: doc_provenance.py is byte for byte the file that wrote it, and 2 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:42:13Z): rules_l
+        A  OUT-001  RELEASE_PACKAGE FAIL         final_gate.py          final_gate: BY PROXY FOR ITS HELPERS: final_gate.py is byte for byte the file that wrote it, and 33 module(s) it imports cannot be shown to predate the reading (2026-09-20T14:11:41Z): check_contracts.
+        B  SCH-002  PLACED_BOARD    FAIL         netlist_board.py       netlist_board: netlist_board.py has changed since this reading (wrote 309086c5bd63d252, now 655bc402d36b0fa5)
+        B  DEC-001  PLACED_BOARD    PASS         intent_checks.py       intent_decoupling: intent_checks.py has changed since this reading (wrote 41cd5935c5f46f0b, now 1ad7af0c718ba940)
+        B  PI-001   ROUTED_BOARD    INCONCLUSIVE dc_drop.py             dc_density: dc_drop.py has changed since this reading (wrote 41f2d086fb80907b, now 0b28f57e0a09a385)
+        B  PI-002   ROUTED_BOARD    INCONCLUSIVE dc_drop.py             dc_drop: dc_drop.py has changed since this reading (wrote 41f2d086fb80907b, now 0b28f57e0a09a385)
+        B  PI-003   ROUTED_BOARD    INCONCLUSIVE via_current.py         via_current: via_current.py has changed since this reading (wrote 7dc42ecca2119b97, now 92ed84ac1612fd54)
+        B  GND-001  ROUTED_BOARD    INCONCLUSIVE ground_system.py       ground_system: ground_system.py has changed since this reading (wrote 1f9648dd134877c3, now 228e0a905a75b254)
+        B  STK-001  ROUTED_BOARD    INCONCLUSIVE stackup_gate.py        stackup_gate: BY PROXY FOR ITS HELPERS: stackup_gate.py is byte for byte the file that wrote it, and 3 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:47:27Z): rules_lib.py 
+        B  RET-001  ROUTED_BOARD    INCONCLUSIVE intent_checks.py       intent_return_path: intent_checks.py has changed since this reading (wrote 41cd5935c5f46f0b, now 1ad7af0c718ba940)
+        B  RET-002  ROUTED_BOARD    INCONCLUSIVE intent_checks.py       intent_return_path: intent_checks.py has changed since this reading (wrote 41cd5935c5f46f0b, now 1ad7af0c718ba940)
+        B  RET-003  ROUTED_BOARD    INCONCLUSIVE ref_change.py          return_stitch: BY PROXY FOR ITS HELPERS: ref_change.py is byte for byte the file that wrote it, and 7 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:47:16Z): intent_checks.
+        B  RET-004  ROUTED_BOARD    INCONCLUSIVE return_via.py          return_via: return_via.py has changed since this reading (wrote d32e465cef7c5146, now b61d138e54955dd4)
+        B  IMP-002  PLACED_BOARD    PASS         class_floor.py         class_floor: BY PROXY FOR ITS HELPERS: class_floor.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:47:12Z): verdict.py last
+        B  PAIR-001 ROUTED_BOARD    INCONCLUSIVE impedance_check.py     impedance_check: BY PROXY FOR ITS HELPERS: impedance_check.py is byte for byte the file that wrote it, and 2 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:47:07Z): rules_l
+        B  RF-001   ROUTED_BOARD    INCONCLUSIVE rf_line.py             rf_line: BY PROXY FOR ITS HELPERS: rf_line.py is byte for byte the file that wrote it, and 2 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:47:48Z): rules_lib.py last commi
+        B  ISO-001  ROUTED_BOARD    INCONCLUSIVE spacing.py             spacing: BY PROXY FOR ITS HELPERS: spacing.py is byte for byte the file that wrote it, and 2 module(s) it imports cannot be shown to predate the reading (2026-09-21T17:13:17Z): rules_lib.py last commi
+        B  PLC-001  PLACED_BOARD    FAIL         hardset.py,place_audit.py hardset-placed: hardset.py has changed since this reading (wrote af5a0e35d8ecd656, now be29a44c4a592876)
+        B  PLC-002  ROUTED_BOARD    INCONCLUSIVE closer_audit.py        closer_audit: BY PROXY FOR ITS HELPERS: closer_audit.py is byte for byte the file that wrote it, and 38 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:47:45Z): check_contra
+        B  RTE-001  ROUTED_BOARD    INCONCLUSIVE fab_limits.py          fab_limits: BY PROXY FOR ITS HELPERS: fab_limits.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:47:27Z): verdict.py last c
+        B  RTE-002  ROUTED_BOARD    FAIL         hardset.py,pruned_gate.py hardset-routed-board-gate: BY PROXY FOR ITS HELPERS: hardset.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:43:38Z): verdi
+        B  VIA-002  ROUTED_BOARD    INCONCLUSIVE via_audit.py           via_annular: BY PROXY FOR ITS HELPERS: via_audit.py is byte for byte the file that wrote it, and 7 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:47:26Z): intent_checks.py 
+        B  VIA-001  ROUTED_BOARD    INCONCLUSIVE via_audit.py           via_audit: BY PROXY FOR ITS HELPERS: via_audit.py is byte for byte the file that wrote it, and 7 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:47:27Z): intent_checks.py la
+        B  PLN-001  ROUTED_BOARD    INCONCLUSIVE check_zone_nets.py     check_zone_nets: BY PROXY FOR ITS HELPERS: check_zone_nets.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:45:31Z): verdict
+        B  EMC-001  ROUTED_BOARD    INCONCLUSIVE emc_sheet.py           emc_sheet: BY PROXY FOR ITS HELPERS: emc_sheet.py is byte for byte the file that wrote it, and 2 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:47:41Z): rules_lib.py last c
+        B  MEC-001  PLACED_BOARD    PASS         check_pcb_b.py         check_pcb_b: check_pcb_b.py has changed since this reading (wrote 40bd02191fab1a9e, now 1ddee20eca08ce2e)
+        B  DFM-001  RELEASE_PACKAGE INCONCLUSIVE verify_deliverable.py  verify_deliverable_b: BY PROXY: verify_deliverable.py or a module it imports cannot be shown to predate this reading (2026-09-18T18:07:52Z): verdict.py last committed 2026-09-26T22:14:38Z; whether the
+        B  DFA-001  RELEASE_PACKAGE INCONCLUSIVE assembly_set.py        assembly_set: assembly_set.py has changed since this reading (wrote 03299094353eb15f, now 721d3b56702b8573)
+        B  DOC-001  RELEASE_PACKAGE INCONCLUSIVE final_gate.py          final_gate_b: BY PROXY FOR ITS HELPERS: final_gate.py is byte for byte the file that wrote it, and 33 module(s) it imports cannot be shown to predate the reading (2026-09-20T14:11:41Z): check_contract
+        B  DOC-002  RELEASE_PACKAGE INCONCLUSIVE doc_provenance.py,ledger_verify.py doc_provenance_b: BY PROXY FOR ITS HELPERS: doc_provenance.py is byte for byte the file that wrote it, and 2 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:48:22Z): rules_l
+        B  OUT-001  RELEASE_PACKAGE FAIL         final_gate.py          final_gate: BY PROXY FOR ITS HELPERS: final_gate.py is byte for byte the file that wrote it, and 33 module(s) it imports cannot be shown to predate the reading (2026-09-20T14:11:41Z): check_contracts.
+        C  SCH-002  PLACED_BOARD    INCONCLUSIVE netlist_board.py       netlist_board: netlist_board.py has changed since this reading (wrote 309086c5bd63d252, now 655bc402d36b0fa5)
+        C  DEC-001  PLACED_BOARD    PASS         intent_checks.py       intent_decoupling: intent_checks.py has changed since this reading (wrote 41cd5935c5f46f0b, now 1ad7af0c718ba940)
+        C  PI-001   ROUTED_BOARD    PASS         dc_drop.py             dc_density: dc_drop.py has changed since this reading (wrote 41f2d086fb80907b, now 0b28f57e0a09a385)
+        C  PI-002   ROUTED_BOARD    PASS         dc_drop.py             dc_drop: dc_drop.py has changed since this reading (wrote 41f2d086fb80907b, now 0b28f57e0a09a385)
+        C  PI-003   ROUTED_BOARD    PASS         via_current.py         via_current: via_current.py has changed since this reading (wrote 7dc42ecca2119b97, now 92ed84ac1612fd54)
+        C  GND-001  ROUTED_BOARD    PASS         ground_system.py       ground_system: ground_system.py has changed since this reading (wrote 1f9648dd134877c3, now 228e0a905a75b254)
+        C  STK-001  ROUTED_BOARD    PASS         stackup_gate.py        stackup_gate: BY PROXY FOR ITS HELPERS: stackup_gate.py is byte for byte the file that wrote it, and 3 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:50:17Z): rules_lib.py 
+        C  RET-001  ROUTED_BOARD    FAIL         intent_checks.py       intent_return_path: intent_checks.py has changed since this reading (wrote 41cd5935c5f46f0b, now 1ad7af0c718ba940)
+        C  RET-002  ROUTED_BOARD    FAIL         intent_checks.py       intent_return_path: intent_checks.py has changed since this reading (wrote 41cd5935c5f46f0b, now 1ad7af0c718ba940)
+        C  RET-003  ROUTED_BOARD    INCONCLUSIVE ref_change.py          return_stitch: BY PROXY FOR ITS HELPERS: ref_change.py is byte for byte the file that wrote it, and 7 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:50:14Z): intent_checks.
+        C  RET-004  ROUTED_BOARD    FAIL         return_via.py          return_via: BY PROXY FOR ITS HELPERS: return_via.py is byte for byte the file that wrote it, and 6 module(s) it imports cannot be shown to predate the reading (2026-09-21T19:40:34Z): intent_checks.py 
+        C  IMP-002  PLACED_BOARD    PASS         class_floor.py         class_floor: BY PROXY FOR ITS HELPERS: class_floor.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:50:13Z): verdict.py last
+        C  PAIR-001 ROUTED_BOARD    PASS         impedance_check.py     impedance_check: BY PROXY FOR ITS HELPERS: impedance_check.py is byte for byte the file that wrote it, and 2 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:50:11Z): rules_l
+        C  PLC-001  PLACED_BOARD    PASS         hardset.py,place_audit.py hardset-placed: BY PROXY: hardset.py or a module it imports cannot be shown to predate this reading (2026-09-17T22:57:00Z): hardset.py last committed 2026-09-21T10:44:24Z; verdict.py last committed 20
+        C  PLC-002  ROUTED_BOARD    PASS         closer_audit.py        closer_audit: BY PROXY FOR ITS HELPERS: closer_audit.py is byte for byte the file that wrote it, and 38 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:50:27Z): check_contra
+        C  RTE-001  ROUTED_BOARD    PASS         fab_limits.py          fab_limits: BY PROXY FOR ITS HELPERS: fab_limits.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:50:17Z): verdict.py last c
+        C  RTE-002  ROUTED_BOARD    PASS         hardset.py,pruned_gate.py hardset-routed-board-gate: BY PROXY FOR ITS HELPERS: hardset.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:49:54Z): verdi
+        C  VIA-002  ROUTED_BOARD    PASS         via_audit.py           via_annular: BY PROXY FOR ITS HELPERS: via_audit.py is byte for byte the file that wrote it, and 7 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:50:16Z): intent_checks.py 
+        C  VIA-001  ROUTED_BOARD    PASS         via_audit.py           via_audit: BY PROXY FOR ITS HELPERS: via_audit.py is byte for byte the file that wrote it, and 7 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:50:17Z): intent_checks.py la
+        C  PLN-001  ROUTED_BOARD    PASS         check_zone_nets.py     check_zone_nets: BY PROXY FOR ITS HELPERS: check_zone_nets.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:50:04Z): verdict
+        C  EMC-001  ROUTED_BOARD    PASS         emc_sheet.py           emc_sheet: BY PROXY FOR ITS HELPERS: emc_sheet.py is byte for byte the file that wrote it, and 2 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:50:23Z): rules_lib.py last c
+        C  MEC-001  PLACED_BOARD    PASS         check_pcb_c.py         check_pcb_c: check_pcb_c.py has changed since this reading (wrote b02c4f5d5e2ae006, now d200b99c384fb763)
+        C  DFM-001  RELEASE_PACKAGE PASS         verify_deliverable.py  verify_deliverable_c: BY PROXY: verify_deliverable.py or a module it imports cannot be shown to predate this reading (2026-09-18T18:07:52Z): verdict.py last committed 2026-09-26T22:14:38Z; whether the
+        C  DFA-001  RELEASE_PACKAGE INCONCLUSIVE assembly_set.py        assembly_set: assembly_set.py has changed since this reading (wrote 03299094353eb15f, now 721d3b56702b8573)
+        C  DOC-001  RELEASE_PACKAGE PASS         final_gate.py          final_gate_c: BY PROXY FOR ITS HELPERS: final_gate.py is byte for byte the file that wrote it, and 33 module(s) it imports cannot be shown to predate the reading (2026-09-20T14:11:41Z): check_contract
+        C  OUT-001  RELEASE_PACKAGE FAIL         final_gate.py          final_gate: BY PROXY FOR ITS HELPERS: final_gate.py is byte for byte the file that wrote it, and 33 module(s) it imports cannot be shown to predate the reading (2026-09-20T14:11:41Z): check_contracts.
+        D  SCH-002  PLACED_BOARD    INCONCLUSIVE netlist_board.py       netlist_board: netlist_board.py has changed since this reading (wrote 309086c5bd63d252, now 655bc402d36b0fa5)
+        D  DEC-001  PLACED_BOARD    PASS         intent_checks.py       intent_decoupling: intent_checks.py has changed since this reading (wrote 41cd5935c5f46f0b, now 1ad7af0c718ba940)
+        D  PI-001   ROUTED_BOARD    PASS         dc_drop.py             dc_density: dc_drop.py has changed since this reading (wrote 41f2d086fb80907b, now 0b28f57e0a09a385)
+        D  PI-002   ROUTED_BOARD    PASS         dc_drop.py             dc_drop: dc_drop.py has changed since this reading (wrote 41f2d086fb80907b, now 0b28f57e0a09a385)
+        D  PI-003   ROUTED_BOARD    FAIL         via_current.py         via_current: via_current.py has changed since this reading (wrote 7dc42ecca2119b97, now 92ed84ac1612fd54)
+        D  GND-001  ROUTED_BOARD    PASS         ground_system.py       ground_system: ground_system.py has changed since this reading (wrote 1f9648dd134877c3, now 228e0a905a75b254)
+        D  STK-001  ROUTED_BOARD    PASS         stackup_gate.py        stackup_gate: BY PROXY FOR ITS HELPERS: stackup_gate.py is byte for byte the file that wrote it, and 3 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:51:16Z): rules_lib.py 
+        D  RET-001  ROUTED_BOARD    PASS         intent_checks.py       intent_return_path: intent_checks.py has changed since this reading (wrote 41cd5935c5f46f0b, now 1ad7af0c718ba940)
+        D  RET-002  ROUTED_BOARD    PASS         intent_checks.py       intent_return_path: intent_checks.py has changed since this reading (wrote 41cd5935c5f46f0b, now 1ad7af0c718ba940)
+        D  RET-003  ROUTED_BOARD    INCONCLUSIVE ref_change.py          return_stitch: BY PROXY FOR ITS HELPERS: ref_change.py is byte for byte the file that wrote it, and 7 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:51:13Z): intent_checks.
+        D  RET-004  ROUTED_BOARD    PASS         return_via.py          return_via: BY PROXY FOR ITS HELPERS: return_via.py is byte for byte the file that wrote it, and 6 module(s) it imports cannot be shown to predate the reading (2026-09-21T19:40:57Z): intent_checks.py 
+        D  IMP-002  PLACED_BOARD    PASS         class_floor.py         class_floor: BY PROXY FOR ITS HELPERS: class_floor.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:51:12Z): verdict.py last
+        D  PAIR-001 ROUTED_BOARD    PASS         impedance_check.py     impedance_check: BY PROXY FOR ITS HELPERS: impedance_check.py is byte for byte the file that wrote it, and 2 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:51:10Z): rules_l
+        D  ANA-001  PLACED_BOARD    PASS         sensitive_nodes.py     sensitive_nodes: BY PROXY FOR ITS HELPERS: sensitive_nodes.py is byte for byte the file that wrote it, and 3 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:51:27Z): kisch.p
+        D  RF-001   ROUTED_BOARD    PASS         rf_line.py             rf_line: BY PROXY FOR ITS HELPERS: rf_line.py is byte for byte the file that wrote it, and 2 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:51:28Z): rules_lib.py last commi
+        D  PLC-001  PLACED_BOARD    PASS         hardset.py,place_audit.py hardset-placed: BY PROXY: hardset.py or a module it imports cannot be shown to predate this reading (2026-09-17T22:57:19Z): hardset.py last committed 2026-09-21T10:44:24Z; verdict.py last committed 20
+        D  PLC-002  ROUTED_BOARD    PASS         closer_audit.py        closer_audit: BY PROXY FOR ITS HELPERS: closer_audit.py is byte for byte the file that wrote it, and 38 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:51:26Z): check_contra
+        D  RTE-001  ROUTED_BOARD    PASS         fab_limits.py          fab_limits: BY PROXY FOR ITS HELPERS: fab_limits.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:51:16Z): verdict.py last c
+        D  RTE-002  ROUTED_BOARD    PASS         hardset.py,pruned_gate.py hardset-routed-board-gate: BY PROXY FOR ITS HELPERS: hardset.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:50:52Z): verdi
+        D  VIA-002  ROUTED_BOARD    PASS         via_audit.py           via_annular: BY PROXY FOR ITS HELPERS: via_audit.py is byte for byte the file that wrote it, and 7 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:51:15Z): intent_checks.py 
+        D  VIA-001  ROUTED_BOARD    PASS         via_audit.py           via_audit: BY PROXY FOR ITS HELPERS: via_audit.py is byte for byte the file that wrote it, and 7 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:51:16Z): intent_checks.py la
+        D  PLN-001  ROUTED_BOARD    PASS         check_zone_nets.py     check_zone_nets: BY PROXY FOR ITS HELPERS: check_zone_nets.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:51:06Z): verdict
+        D  EMC-001  ROUTED_BOARD    PASS         emc_sheet.py           emc_sheet: BY PROXY FOR ITS HELPERS: emc_sheet.py is byte for byte the file that wrote it, and 2 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:51:22Z): rules_lib.py last c
+        D  MEC-001  PLACED_BOARD    PASS         check_pcb_d.py         check_pcb_d: BY PROXY FOR ITS HELPERS: check_pcb_d.py is byte for byte the file that wrote it, and 7 module(s) it imports cannot be shown to predate the reading (2026-09-21T16:21:15Z): intent_checks.p
+        D  DFM-001  RELEASE_PACKAGE INCONCLUSIVE verify_deliverable.py  verify_deliverable_d: BY PROXY: verify_deliverable.py or a module it imports cannot be shown to predate this reading (2026-09-18T18:07:52Z): verdict.py last committed 2026-09-26T22:14:38Z; whether the
+        D  DFA-001  RELEASE_PACKAGE INCONCLUSIVE assembly_set.py        assembly_set: assembly_set.py has changed since this reading (wrote 03299094353eb15f, now 721d3b56702b8573)
+        D  DOC-001  RELEASE_PACKAGE INCONCLUSIVE final_gate.py          final_gate_d: BY PROXY FOR ITS HELPERS: final_gate.py is byte for byte the file that wrote it, and 33 module(s) it imports cannot be shown to predate the reading (2026-09-20T14:11:41Z): check_contract
+        D  DOC-002  RELEASE_PACKAGE INCONCLUSIVE doc_provenance.py,ledger_verify.py doc_provenance_d: BY PROXY FOR ITS HELPERS: doc_provenance.py is byte for byte the file that wrote it, and 2 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:51:35Z): rules_l
+        D  OUT-001  RELEASE_PACKAGE FAIL         final_gate.py          final_gate: BY PROXY FOR ITS HELPERS: final_gate.py is byte for byte the file that wrote it, and 33 module(s) it imports cannot be shown to predate the reading (2026-09-20T14:11:41Z): check_contracts.
+        E  SCH-002  PLACED_BOARD    INCONCLUSIVE netlist_board.py       netlist_board: netlist_board.py has changed since this reading (wrote 309086c5bd63d252, now 655bc402d36b0fa5)
+        E  DEC-001  PLACED_BOARD    PASS         intent_checks.py       intent_decoupling: intent_checks.py has changed since this reading (wrote 41cd5935c5f46f0b, now 1ad7af0c718ba940)
+        E  PI-001   ROUTED_BOARD    FAIL         dc_drop.py             dc_density: dc_drop.py has changed since this reading (wrote 41f2d086fb80907b, now 0b28f57e0a09a385)
+        E  PI-002   ROUTED_BOARD    PASS         dc_drop.py             dc_drop: dc_drop.py has changed since this reading (wrote 41f2d086fb80907b, now 0b28f57e0a09a385)
+        E  PI-003   ROUTED_BOARD    FAIL         via_current.py         via_current: via_current.py has changed since this reading (wrote 7dc42ecca2119b97, now 92ed84ac1612fd54)
+        E  GND-001  ROUTED_BOARD    PASS         ground_system.py       ground_system: ground_system.py has changed since this reading (wrote 1f9648dd134877c3, now 228e0a905a75b254)
+        E  STK-001  ROUTED_BOARD    PASS         stackup_gate.py        stackup_gate: BY PROXY FOR ITS HELPERS: stackup_gate.py is byte for byte the file that wrote it, and 3 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:52:00Z): rules_lib.py 
+        E  RET-001  ROUTED_BOARD    PASS         intent_checks.py       intent_return_path: intent_checks.py has changed since this reading (wrote 41cd5935c5f46f0b, now 1ad7af0c718ba940)
+        E  RET-002  ROUTED_BOARD    PASS         intent_checks.py       intent_return_path: intent_checks.py has changed since this reading (wrote 41cd5935c5f46f0b, now 1ad7af0c718ba940)
+        E  RET-003  ROUTED_BOARD    INCONCLUSIVE ref_change.py          return_stitch: BY PROXY FOR ITS HELPERS: ref_change.py is byte for byte the file that wrote it, and 7 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:51:56Z): intent_checks.
+        E  RET-004  ROUTED_BOARD    FAIL         return_via.py          return_via: BY PROXY FOR ITS HELPERS: return_via.py is byte for byte the file that wrote it, and 6 module(s) it imports cannot be shown to predate the reading (2026-09-21T19:40:46Z): intent_checks.py 
+        E  IMP-002  PLACED_BOARD    PASS         class_floor.py         class_floor: BY PROXY FOR ITS HELPERS: class_floor.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:51:55Z): verdict.py last
+        E  PAIR-001 ROUTED_BOARD    PASS         impedance_check.py     impedance_check: BY PROXY FOR ITS HELPERS: impedance_check.py is byte for byte the file that wrote it, and 2 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:51:54Z): rules_l
+        E  ANA-001  PLACED_BOARD    FAIL         sensitive_nodes.py     sensitive_nodes: BY PROXY FOR ITS HELPERS: sensitive_nodes.py is byte for byte the file that wrote it, and 3 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:52:11Z): kisch.p
+        E  RF-001   ROUTED_BOARD    PASS         rf_line.py             rf_line: BY PROXY FOR ITS HELPERS: rf_line.py is byte for byte the file that wrote it, and 2 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:52:12Z): rules_lib.py last commi
+        E  ISO-001  ROUTED_BOARD    FAIL         spacing.py             spacing: BY PROXY FOR ITS HELPERS: spacing.py is byte for byte the file that wrote it, and 2 module(s) it imports cannot be shown to predate the reading (2026-09-21T17:12:58Z): rules_lib.py last commi
+        E  PLC-001  PLACED_BOARD    PASS         hardset.py,place_audit.py hardset-placed: BY PROXY: hardset.py or a module it imports cannot be shown to predate this reading (2026-09-18T09:01:07Z): hardset.py last committed 2026-09-21T10:44:24Z; verdict.py last committed 20
+        E  PLC-002  ROUTED_BOARD    PASS         closer_audit.py        closer_audit: BY PROXY FOR ITS HELPERS: closer_audit.py is byte for byte the file that wrote it, and 38 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:52:10Z): check_contra
+        E  RTE-001  ROUTED_BOARD    PASS         fab_limits.py          fab_limits: BY PROXY FOR ITS HELPERS: fab_limits.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:51:59Z): verdict.py last c
+        E  RTE-002  ROUTED_BOARD    PASS         hardset.py,pruned_gate.py hardset-routed-board-gate: BY PROXY FOR ITS HELPERS: hardset.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:51:45Z): verdi
+        E  VIA-002  ROUTED_BOARD    PASS         via_audit.py           via_annular: BY PROXY FOR ITS HELPERS: via_audit.py is byte for byte the file that wrote it, and 7 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:51:59Z): intent_checks.py 
+        E  VIA-001  ROUTED_BOARD    PASS         via_audit.py           via_audit: BY PROXY FOR ITS HELPERS: via_audit.py is byte for byte the file that wrote it, and 7 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:51:59Z): intent_checks.py la
+        E  PLN-001  ROUTED_BOARD    PASS         check_zone_nets.py     check_zone_nets: BY PROXY FOR ITS HELPERS: check_zone_nets.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:51:49Z): verdict
+        E  EMC-001  ROUTED_BOARD    PASS         emc_sheet.py           emc_sheet: BY PROXY FOR ITS HELPERS: emc_sheet.py is byte for byte the file that wrote it, and 2 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:52:06Z): rules_lib.py last c
+        E  MEC-001  PLACED_BOARD    PASS         check_pcb_e.py         check_pcb_e: check_pcb_e.py has changed since this reading (wrote 928c2e173e7afbe9, now a43d6c7b86ec7361)
+        E  DFM-001  RELEASE_PACKAGE INCONCLUSIVE verify_deliverable.py  verify_deliverable_e: BY PROXY: verify_deliverable.py or a module it imports cannot be shown to predate this reading (2026-09-18T18:07:52Z): verdict.py last committed 2026-09-26T22:14:38Z; whether the
+        E  DFA-001  RELEASE_PACKAGE INCONCLUSIVE assembly_set.py        assembly_set: assembly_set.py has changed since this reading (wrote 03299094353eb15f, now 721d3b56702b8573)
+        E  DOC-001  RELEASE_PACKAGE INCONCLUSIVE final_gate.py          final_gate_e: BY PROXY FOR ITS HELPERS: final_gate.py is byte for byte the file that wrote it, and 33 module(s) it imports cannot be shown to predate the reading (2026-09-20T14:11:41Z): check_contract
+        E  DOC-002  RELEASE_PACKAGE INCONCLUSIVE doc_provenance.py,ledger_verify.py doc_provenance_e: BY PROXY FOR ITS HELPERS: doc_provenance.py is byte for byte the file that wrote it, and 2 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:52:20Z): rules_l
+        E  OUT-001  RELEASE_PACKAGE FAIL         final_gate.py          final_gate: BY PROXY FOR ITS HELPERS: final_gate.py is byte for byte the file that wrote it, and 33 module(s) it imports cannot be shown to predate the reading (2026-09-20T14:11:41Z): check_contracts.
+        P  SCH-002  PLACED_BOARD    INCONCLUSIVE netlist_board.py       netlist_board: netlist_board.py has changed since this reading (wrote 309086c5bd63d252, now 655bc402d36b0fa5)
+        P  DEC-001  PLACED_BOARD    PASS         intent_checks.py       intent_decoupling: intent_checks.py has changed since this reading (wrote 41cd5935c5f46f0b, now 1ad7af0c718ba940)
+        P  PI-001   ROUTED_BOARD    FAIL         dc_drop.py             dc_density: dc_drop.py has changed since this reading (wrote 41f2d086fb80907b, now 0b28f57e0a09a385)
+        P  PI-002   ROUTED_BOARD    PASS         dc_drop.py             dc_drop: dc_drop.py has changed since this reading (wrote 41f2d086fb80907b, now 0b28f57e0a09a385)
+        P  GND-001  ROUTED_BOARD    PASS         ground_system.py       ground_system: ground_system.py has changed since this reading (wrote 1f9648dd134877c3, now 228e0a905a75b254)
+        P  STK-001  ROUTED_BOARD    FAIL         stackup_gate.py        stackup_gate: BY PROXY FOR ITS HELPERS: stackup_gate.py is byte for byte the file that wrote it, and 3 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:52:36Z): rules_lib.py 
+        P  RET-001  ROUTED_BOARD    FAIL         intent_checks.py       intent_return_path: intent_checks.py has changed since this reading (wrote 41cd5935c5f46f0b, now 1ad7af0c718ba940)
+        P  RET-002  ROUTED_BOARD    FAIL         intent_checks.py       intent_return_path: intent_checks.py has changed since this reading (wrote 41cd5935c5f46f0b, now 1ad7af0c718ba940)
+        P  IMP-002  PLACED_BOARD    PASS         class_floor.py         class_floor: BY PROXY FOR ITS HELPERS: class_floor.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:52:33Z): verdict.py last
+        P  ANA-001  PLACED_BOARD    PASS         sensitive_nodes.py     sensitive_nodes: BY PROXY FOR ITS HELPERS: sensitive_nodes.py is byte for byte the file that wrote it, and 3 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:52:47Z): kisch.p
+        P  PLC-001  PLACED_BOARD    PASS         hardset.py,place_audit.py hardset-placed: BY PROXY: hardset.py or a module it imports cannot be shown to predate this reading (2026-09-17T22:58:00Z): hardset.py last committed 2026-09-21T10:44:24Z; verdict.py last committed 20
+        P  PLC-002  ROUTED_BOARD    PASS         closer_audit.py        closer_audit: BY PROXY FOR ITS HELPERS: closer_audit.py is byte for byte the file that wrote it, and 38 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:52:46Z): check_contra
+        P  RTE-001  ROUTED_BOARD    FAIL         fab_limits.py          fab_limits: BY PROXY FOR ITS HELPERS: fab_limits.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:52:36Z): verdict.py last c
+        P  RTE-002  ROUTED_BOARD    PASS         hardset.py,pruned_gate.py hardset-routed-board-gate: BY PROXY FOR ITS HELPERS: hardset.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:52:27Z): verdi
+        P  VIA-002  ROUTED_BOARD    INCONCLUSIVE via_audit.py           via_annular: BY PROXY FOR ITS HELPERS: via_audit.py is byte for byte the file that wrote it, and 7 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:52:35Z): intent_checks.py 
+        P  VIA-001  ROUTED_BOARD    PASS         via_audit.py           via_audit: BY PROXY FOR ITS HELPERS: via_audit.py is byte for byte the file that wrote it, and 7 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:52:36Z): intent_checks.py la
+        P  PLN-001  ROUTED_BOARD    PASS         check_zone_nets.py     check_zone_nets: BY PROXY FOR ITS HELPERS: check_zone_nets.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:52:29Z): verdict
+        P  EMC-001  ROUTED_BOARD    PASS         emc_sheet.py           emc_sheet: BY PROXY FOR ITS HELPERS: emc_sheet.py is byte for byte the file that wrote it, and 2 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:52:42Z): rules_lib.py last c
+        P  MEC-001  PLACED_BOARD    PASS         check_pcb_p.py         check_pcb_p: BY PROXY FOR ITS HELPERS: check_pcb_p.py is byte for byte the file that wrote it, and 7 module(s) it imports cannot be shown to predate the reading (2026-09-21T16:15:21Z): intent_checks.p
+        P  DFM-001  RELEASE_PACKAGE PASS         verify_deliverable.py  verify_deliverable_p: BY PROXY: verify_deliverable.py or a module it imports cannot be shown to predate this reading (2026-09-18T18:07:52Z): verdict.py last committed 2026-09-26T22:14:38Z; whether the
+        P  DFA-001  RELEASE_PACKAGE INCONCLUSIVE assembly_set.py        assembly_set: assembly_set.py has changed since this reading (wrote 03299094353eb15f, now 721d3b56702b8573)
+        P  DOC-001  RELEASE_PACKAGE PASS         final_gate.py          final_gate_p: BY PROXY FOR ITS HELPERS: final_gate.py is byte for byte the file that wrote it, and 33 module(s) it imports cannot be shown to predate the reading (2026-09-20T14:11:41Z): check_contract
+        P  OUT-001  RELEASE_PACKAGE FAIL         final_gate.py          final_gate: BY PROXY FOR ITS HELPERS: final_gate.py is byte for byte the file that wrote it, and 33 module(s) it imports cannot be shown to predate the reading (2026-09-20T14:11:41Z): check_contracts.
+        E5 STK-001  ROUTED_BOARD    FAIL         stackup_gate.py        stackup_gate: BY PROXY FOR ITS HELPERS: stackup_gate.py is byte for byte the file that wrote it, and 3 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:53:04Z): rules_lib.py 
+        E5 ANA-001  PLACED_BOARD    PASS         sensitive_nodes.py     sensitive_nodes: BY PROXY FOR ITS HELPERS: sensitive_nodes.py is byte for byte the file that wrote it, and 3 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:53:09Z): kisch.p
+        E5 PLC-002  ROUTED_BOARD    PASS         closer_audit.py        closer_audit: BY PROXY FOR ITS HELPERS: closer_audit.py is byte for byte the file that wrote it, and 38 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:53:08Z): check_contra
+        E5 RTE-001  ROUTED_BOARD    PASS         fab_limits.py          fab_limits: BY PROXY FOR ITS HELPERS: fab_limits.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:53:03Z): verdict.py last c
+        E5 MEC-001  PLACED_BOARD    PASS         check_pcb_e5.py        check_pcb_e5: BY PROXY FOR ITS HELPERS: check_pcb_e5.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:52:57Z): verdict.py la
+        E5 DFM-001  RELEASE_PACKAGE PASS         verify_deliverable.py  verify_deliverable_e5: BY PROXY: verify_deliverable.py or a module it imports cannot be shown to predate this reading (2026-09-18T18:07:52Z): verdict.py last committed 2026-09-26T22:14:38Z; whether th
+        E5 DFA-001  RELEASE_PACKAGE PASS         assembly_set.py        assembly_set: assembly_set.py has changed since this reading (wrote 03299094353eb15f, now 721d3b56702b8573)
+        E5 DOC-001  RELEASE_PACKAGE PASS         final_gate.py          final_gate_e5: BY PROXY FOR ITS HELPERS: final_gate.py is byte for byte the file that wrote it, and 33 module(s) it imports cannot be shown to predate the reading (2026-09-20T14:11:41Z): check_contrac
+        E5 OUT-001  RELEASE_PACKAGE FAIL         final_gate.py          final_gate: BY PROXY FOR ITS HELPERS: final_gate.py is byte for byte the file that wrote it, and 33 module(s) it imports cannot be shown to predate the reading (2026-09-20T14:11:41Z): check_contracts.
+   20  AWAITING_REVALIDATION (UNBOUND)
+        A  ENV-002  RELEASE_PACKAGE PASS         claims_check.py        claims_check: claims_check records no document by content, so it cannot be shown to be about the current candidate; re-take it with the artefact's sha recorded
+        A  SCH-003  ROUTED_BOARD    PASS         check_contracts.py     check_contracts_a: check_contracts_a records no board by content, so it cannot be shown to be about the current candidate; re-take it with the artefact's sha recorded
+        A  REL-001  PROTOTYPE       PASS         reliability.py         reliability: reliability records no netlist by content, so it cannot be shown to be about the current candidate; re-take it with the artefact's sha recorded
+        B  ENV-002  RELEASE_PACKAGE PASS         claims_check.py        claims_check: claims_check records no document by content, so it cannot be shown to be about the current candidate; re-take it with the artefact's sha recorded
+        B  SCH-003  ROUTED_BOARD    INCONCLUSIVE check_contracts.py     check_contracts_b: check_contracts_b records no board by content, so it cannot be shown to be about the current candidate; re-take it with the artefact's sha recorded
+        B  REL-001  PROTOTYPE       PASS         reliability.py         reliability: reliability records no netlist by content, so it cannot be shown to be about the current candidate; re-take it with the artefact's sha recorded
+        C  ENV-002  RELEASE_PACKAGE PASS         claims_check.py        claims_check: claims_check records no document by content, so it cannot be shown to be about the current candidate; re-take it with the artefact's sha recorded
+        C  SCH-003  ROUTED_BOARD    PASS         check_contracts.py     check_contracts_c: check_contracts_c records no board by content, so it cannot be shown to be about the current candidate; re-take it with the artefact's sha recorded
+        C  REL-001  PROTOTYPE       PASS         reliability.py         reliability: reliability records no netlist by content, so it cannot be shown to be about the current candidate; re-take it with the artefact's sha recorded
+        D  ENV-002  RELEASE_PACKAGE PASS         claims_check.py        claims_check: claims_check records no document by content, so it cannot be shown to be about the current candidate; re-take it with the artefact's sha recorded
+        D  SCH-003  ROUTED_BOARD    PASS         check_contracts.py     check_contracts_d: check_contracts_d records no board by content, so it cannot be shown to be about the current candidate; re-take it with the artefact's sha recorded
+        D  REL-001  PROTOTYPE       PASS         reliability.py         reliability: reliability records no netlist by content, so it cannot be shown to be about the current candidate; re-take it with the artefact's sha recorded
+        E  ENV-002  RELEASE_PACKAGE PASS         claims_check.py        claims_check: claims_check records no document by content, so it cannot be shown to be about the current candidate; re-take it with the artefact's sha recorded
+        E  SCH-003  ROUTED_BOARD    PASS         check_contracts.py     check_contracts_e: check_contracts_e records no board by content, so it cannot be shown to be about the current candidate; re-take it with the artefact's sha recorded
+        E  REL-001  PROTOTYPE       PASS         reliability.py         reliability: reliability records no netlist by content, so it cannot be shown to be about the current candidate; re-take it with the artefact's sha recorded
+        P  ENV-002  RELEASE_PACKAGE PASS         claims_check.py        claims_check: claims_check records no document by content, so it cannot be shown to be about the current candidate; re-take it with the artefact's sha recorded
+        P  SCH-003  ROUTED_BOARD    PASS         check_contracts.py     check_contracts_p: check_contracts_p records no board by content, so it cannot be shown to be about the current candidate; re-take it with the artefact's sha recorded
+        P  REL-001  PROTOTYPE       PASS         reliability.py         reliability: reliability records no netlist by content, so it cannot be shown to be about the current candidate; re-take it with the artefact's sha recorded
+        E5 ENV-002  RELEASE_PACKAGE PASS         claims_check.py        claims_check: claims_check records no document by content, so it cannot be shown to be about the current candidate; re-take it with the artefact's sha recorded
+        E5 REL-001  PROTOTYPE       PASS         reliability.py         reliability: reliability records no board by content, so it cannot be shown to be about the current candidate; re-take it with the artefact's sha recorded
+   14  AWAITING_REVALIDATION (NOT_CURRENT_EVIDENCE)
+        A  CMP-002  RELEASE_PACKAGE INCONCLUSIVE jlc_certify.py         jlc_certify_a: jlc_certify_a was taken 2026-09-20T14:11:40, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it
+        A  SUP-001  RELEASE_PACKAGE INCONCLUSIVE jlc_certify.py         jlc_certify_a: jlc_certify_a was taken 2026-09-20T14:11:40, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it
+        B  CMP-002  RELEASE_PACKAGE INCONCLUSIVE jlc_certify.py         jlc_certify_b: jlc_certify_b was taken 2026-09-20T14:11:40, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it
+        B  SUP-001  RELEASE_PACKAGE INCONCLUSIVE jlc_certify.py         jlc_certify_b: jlc_certify_b was taken 2026-09-20T14:11:40, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it
+        C  CMP-002  RELEASE_PACKAGE INCONCLUSIVE jlc_certify.py,lcsc_fill.py jlc_certify_c: jlc_certify_c was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it
+        C  SUP-001  RELEASE_PACKAGE INCONCLUSIVE jlc_certify.py,lcsc_fill.py jlc_certify_c: jlc_certify_c was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it
+        D  CMP-002  RELEASE_PACKAGE INCONCLUSIVE jlc_certify.py         jlc_certify_d: jlc_certify_d was taken 2026-09-20T14:11:40, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it
+        D  SUP-001  RELEASE_PACKAGE INCONCLUSIVE jlc_certify.py         jlc_certify_d: jlc_certify_d was taken 2026-09-20T14:11:40, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it
+        E  CMP-002  RELEASE_PACKAGE INCONCLUSIVE jlc_certify.py         jlc_certify_e: jlc_certify_e was taken 2026-09-20T14:11:40, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it
+        E  SUP-001  RELEASE_PACKAGE INCONCLUSIVE jlc_certify.py         jlc_certify_e: jlc_certify_e was taken 2026-09-20T14:11:40, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it
+        P  CMP-002  RELEASE_PACKAGE INCONCLUSIVE jlc_certify.py,lcsc_fill.py jlc_certify_p: jlc_certify_p was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it
+        P  SUP-001  RELEASE_PACKAGE INCONCLUSIVE jlc_certify.py,lcsc_fill.py jlc_certify_p: jlc_certify_p was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it
+        E5 CMP-002  RELEASE_PACKAGE INCONCLUSIVE jlc_certify.py,lcsc_fill.py jlc_certify_e5: jlc_certify_e5 was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it
+        E5 SUP-001  RELEASE_PACKAGE INCONCLUSIVE jlc_certify.py,lcsc_fill.py jlc_certify_e5: jlc_certify_e5 was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it
+   10  NO_EVIDENCE (DOCUMENTED_ONLY)
+        A  GND-002  PLACED_BOARD    INCONCLUSIVE                        the coverage map gives this rule no deciding verification
+        A  THM-001  PLACED_BOARD    INCONCLUSIVE thermal.py             the coverage map gives this rule no deciding verification
+        B  GND-002  PLACED_BOARD    INCONCLUSIVE                        the coverage map gives this rule no deciding verification
+        B  THM-001  PLACED_BOARD    INCONCLUSIVE thermal.py             the coverage map gives this rule no deciding verification
+        C  GND-002  PLACED_BOARD    INCONCLUSIVE                        the coverage map gives this rule no deciding verification
+        C  THM-001  PLACED_BOARD    INCONCLUSIVE thermal.py             the coverage map gives this rule no deciding verification
+        D  THM-001  PLACED_BOARD    INCONCLUSIVE thermal.py             the coverage map gives this rule no deciding verification
+        E  GND-002  PLACED_BOARD    INCONCLUSIVE                        the coverage map gives this rule no deciding verification
+        E  THM-001  PLACED_BOARD    INCONCLUSIVE thermal.py             the coverage map gives this rule no deciding verification
+        P  THM-001  PLACED_BOARD    INCONCLUSIVE thermal.py             the coverage map gives this rule no deciding verification
+    7  NO_EVIDENCE (OWNER_DECISION_REQUIRED)
+        A  STK-002  RELEASE_PACKAGE INCONCLUSIVE layer_judge.py         the coverage map gives this rule no deciding verification
+        B  STK-002  RELEASE_PACKAGE INCONCLUSIVE layer_judge.py         the coverage map gives this rule no deciding verification
+        C  STK-002  RELEASE_PACKAGE INCONCLUSIVE layer_judge.py         the coverage map gives this rule no deciding verification
+        D  STK-002  RELEASE_PACKAGE INCONCLUSIVE layer_judge.py         the coverage map gives this rule no deciding verification
+        E  STK-002  RELEASE_PACKAGE INCONCLUSIVE layer_judge.py         the coverage map gives this rule no deciding verification
+        P  STK-002  RELEASE_PACKAGE INCONCLUSIVE layer_judge.py         the coverage map gives this rule no deciding verification
+        E5 STK-002  RELEASE_PACKAGE INCONCLUSIVE layer_judge.py         the coverage map gives this rule no deciding verification
+    3  NO_EVIDENCE (SOURCE_UNVERIFIED)
+        A  IMP-001  ROUTED_BOARD    INCONCLUSIVE impedance_check.py     the coverage map gives this rule no deciding verification
+        B  IMP-001  ROUTED_BOARD    INCONCLUSIVE impedance_check.py     the coverage map gives this rule no deciding verification
+        D  IMP-001  ROUTED_BOARD    INCONCLUSIVE impedance_check.py     the coverage map gives this rule no deciding verification
+    3  AWAITING_REVALIDATION (TEMP_INPUT)
+        C  DOC-002  RELEASE_PACKAGE PASS         doc_provenance.py,ledger_verify.py doc_provenance_c judged /tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit/3744628d-5552-4a03-830, a temporary directory and not this tree
+        P  DOC-002  RELEASE_PACKAGE PASS         doc_provenance.py,ledger_verify.py doc_provenance_p judged /tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit/3744628d-5552-4a03-830, a temporary directory and not this tree
+        E5 DOC-002  RELEASE_PACKAGE PASS         doc_provenance.py,ledger_verify.py doc_provenance_e5 judged /tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit/3744628d-5552-4a03-830, a temporary directory and not this tree
+    1  NO_EVIDENCE (NOT_APPLICABLE)
+        A  CLK-001  SCHEMATIC       NOT_APPLICABLE clock_check.py         this board carries no crystal, so CLK-001 has nothing on it to judge
+    1  NO_EVIDENCE (OPEN)
+        B  INT-003  PROTOTYPE       INCONCLUSIVE                        the coverage map gives this rule no deciding verification
+
+CURRENT ROWS THAT ARE NOT A PASS, AFTER
+  A  SI-001   SCHEMATIC       INCONCLUSIVE CURRENT_CANDIDATE (BOUND)      edge_length INCONCLUSIVE: SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (U
+  A  RF-002   SCHEMATIC       INCONCLUSIVE CURRENT_CANDIDATE (BOUND)      inhibit_chain_a INCONCLUSIVE: RF-002 on this board: where the transmit inhibit line runs, it is present, reaches the gate it keys, has the panel toggle as its only source, is buffered and no
+  B  SI-001   SCHEMATIC       INCONCLUSIVE CURRENT_CANDIDATE (BOUND)      edge_length INCONCLUSIVE: SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (U
+  B  RF-002   SCHEMATIC       INCONCLUSIVE CURRENT_CANDIDATE (BOUND)      inhibit_chain_b INCONCLUSIVE: RF-002 on this board: where the transmit inhibit line runs, it is present, reaches the gate it keys, has the panel toggle as its only source, is buffered and no
+  C  SI-001   SCHEMATIC       INCONCLUSIVE CURRENT_CANDIDATE (BOUND)      edge_length INCONCLUSIVE: SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (U
+  D  SI-001   SCHEMATIC       INCONCLUSIVE CURRENT_CANDIDATE (BOUND)      edge_length INCONCLUSIVE: SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (U
+  D  RF-002   SCHEMATIC       INCONCLUSIVE CURRENT_CANDIDATE (BOUND)      inhibit_chain_d INCONCLUSIVE: RF-002 on this board: where the transmit inhibit line runs, it is present, reaches the gate it keys, has the panel toggle as its only source, is buffered and no
+  E  SI-001   SCHEMATIC       INCONCLUSIVE CURRENT_CANDIDATE (BOUND)      edge_length INCONCLUSIVE: SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (U
+  P  SI-001   SCHEMATIC       INCONCLUSIVE CURRENT_CANDIDATE (BOUND)      edge_length INCONCLUSIVE: SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (U
+  P  BAT-001  SCHEMATIC       FAIL         CURRENT_CANDIDATE (BOUND)      pack_protection FAIL: {'checks': 63, 'devices': 13, 'fail': 3, 'functions': 14, 'limits': 14, 'software_only': 9}
+  E5 SCH-003  ROUTED_BOARD    FAIL         CURRENT_CANDIDATE (BOUND)      check_contracts_e5 FAIL: {'fail': 10, 'pass': 28}
+  E5 INT-001  SCHEMATIC       FAIL         CURRENT_CANDIDATE (BOUND)      check_contracts_e5 FAIL: {'fail': 10, 'pass': 28}

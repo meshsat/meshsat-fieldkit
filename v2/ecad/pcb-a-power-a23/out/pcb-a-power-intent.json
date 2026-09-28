@@ -1,6 +1,6 @@
 {
  "board": "pcb-a-power",
- "written": "2026-09-27 14:51",
+ "written": "2026-09-28 21:10",
  "bypass": [
   {
    "cap": "C8",
@@ -511,7 +511,7 @@
    "source": "R17",
    "loads": {
     "U4": 2.0,
-    "Q28": 2.0,
+    "Q28": 2.22,
     "U6": 2.0,
     "Q32": 2.0,
     "Q11": 1.5,
@@ -571,7 +571,7 @@
    "loads": {
     "J_5V_S1": 5.0
    },
-   "note": "one CM5 slot with its cooler fan; 5 A peak at the module; the rail net starts at the INA226 shunt. This board's share of the 2 percent is 0.5 point, measured 0.07",
+   "note": "one CM5 slot with its cooler fan; 5 A peak at the module, the AP64500's rating (DS41979 p.1); the rail net starts at the INA226 shunt. This board's share of the 2 percent is 0.5 point, measured 0.07",
    "budget": 0.02,
    "share": 0.005,
    "switch": "U4",
@@ -580,13 +580,13 @@
   },
   "+5V_S2": {
    "volts": 5.1,
-   "amps_typ": 2.5,
-   "amps_peak": 5.0,
+   "amps_typ": 4.2,
+   "amps_peak": 5.63,
    "source": "R35",
    "loads": {
-    "J_5V_S2": 5.0
+    "J_5V_S2": 5.63
    },
-   "note": "one CM5 slot with its cooler fan; 5 A peak at the module; the rail net starts at the INA226 shunt. This board's share of the 2 percent is 0.5 point, measured 0.07",
+   "note": "one CM5 slot with its cooler fan and the 5G module on the M.2 socket. INTERIM (S-98, finding I-03, 28 September 2026): 4.2 A typical and 5.63 A peak, aligned to board B's derivation from the held maker pages (the CM5's 0.9 A typical, release 3 Table 9, no maximum published; the RM520N-GL's 3 A continuous and 4 A peak supply capability, Hardware Design v1.0 and v1.1); the PS-ALLTX mode current is INCONCLUSIVE, no held document decides it (v2/docs/records/cx1/ANALYSIS.md, CORRECTION.md B1); the all-peak conditional bound, 7.28 A, sits above the LM5176 stage's average loop minimum of 7.10 to 7.17 A (SNVSAI1D VSNS 43 mV over the 6 mOhm ISNS shunt at +1 percent and nominal). The rail net starts at the INA226 shunt. This board's share of the 2 percent is 0.5 point, measured 0.07",
    "budget": 0.02,
    "share": 0.005,
    "switch": "U5",
@@ -601,7 +601,7 @@
    "loads": {
     "J_5V_S3": 5.0
    },
-   "note": "one CM5 slot with its cooler fan; 5 A peak at the module; the rail net starts at the INA226 shunt. This board's share of the 2 percent is 0.5 point, measured 0.07",
+   "note": "one CM5 slot with its cooler fan; 5 A peak at the module, the AP64500's rating (DS41979 p.1); the rail net starts at the INA226 shunt. This board's share of the 2 percent is 0.5 point, measured 0.07",
    "budget": 0.02,
    "share": 0.005,
    "switch": "U6",
@@ -610,15 +610,15 @@
   },
   "+5V_DEV": {
    "volts": 5.0,
-   "amps_typ": 4.0,
+   "amps_typ": 5.1,
    "amps_peak": 6.9,
    "source": "R43",
    "loads": {
-    "J_5V_DEV": 3.2,
-    "U23": 0.5,
+    "J_5V_DEV": 3.8,
+    "U23": 1.0,
     "U32": 0.3
    },
-   "note": "the USB devices, the LimeSDR bay and the RockBLOCK behind their switches, the D8 mezzanine behind U23 and the wall host port behind U32; the net starts at the ISNS shunt R43. 9 September 2026 (ARCH-PCB-B-IOHA): +0.8 A because B16's three hub banks had to leave the slot rails. 26 September 2026 (F-PR-04, D-12): the converter is an LM5176 stage with a 7.2 A minimum average limit, and the Glenair port's 0.9 A takes the peak to 6.9 A.",
+   "note": "the USB devices, the LimeSDR bay and the RockBLOCK behind their switches, the D8 mezzanine behind U23 and the wall host port behind U32; the net starts at the ISNS shunt R43. 9 September 2026 (ARCH-PCB-B-IOHA): +0.8 A because B16's three hub banks had to leave the slot rails. 26 September 2026 (F-PR-04, D-12): the converter is an LM5176 stage with a 7.2 A minimum average limit (7.10 A with the ISNS shunt at +1 percent, 7.17 A nominal: SNVSAI1D VSNS 43 mV over 6 mOhm), and the declared peak became 6.9 A, board B's 6.0 A plus the Glenair port's 0.9 A with the D8 mezzanine at zero. 28 September 2026 (S-98, finding I-03, INTERIM): the typical is 5.1 A, board B's 3.8 A at J_5V_DEV plus the D8 mezzanine's 1.0 A behind U23 plus the wall port's 0.3 A allocation behind U32; the PS-ALLTX mode current is INCONCLUSIVE (v2/docs/records/cx1/CORRECTION.md B2). The 6.9 A peak is held pending S-99: the coincident figures are 7.9 A with D8 at its typical and 8.9 A at every declared limit, both above the loop's minimum.",
    "budget": 0.02,
    "share": 0.005,
    "switch": "U7",
@@ -777,11 +777,11 @@
   },
   "S2_OUT": {
    "volts": 5.1,
-   "amps_typ": 2.5,
-   "amps_peak": 5.0,
+   "amps_typ": 4.2,
+   "amps_peak": 5.63,
    "source": "Q31",
    "loads": {
-    "R35": 2.5
+    "R35": 4.2
    },
    "note": "LM5176 stage S2, VBAT to +5V_S2: the output conductor between Q31's drain tab and the ISNS shunt R35, at the stage's whole output current. It was a node until 20 September 2026, so no power rule had ever looked at it.",
    "v_work": 5.1,
@@ -790,11 +790,11 @@
   },
   "SD_OUT": {
    "volts": 5.0,
-   "amps_typ": 4.0,
+   "amps_typ": 5.1,
    "amps_peak": 6.9,
    "source": "Q35",
    "loads": {
-    "R43": 4.0
+    "R43": 5.1
    },
    "note": "LM5176 stage SD, VBAT to +5V_DEV: the output conductor between Q35's drain tab and the ISNS shunt R43, at the stage's whole output current. It was a node until 20 September 2026, so no power rule had ever looked at it.",
    "v_work": 5.0,

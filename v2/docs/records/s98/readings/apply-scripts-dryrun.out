@@ -1,0 +1,82 @@
+== apply_contract_i03 dry run on scratch copies
+apply_contract_i03: IF-AB-POWER currents rows rewritten: +5V_S2 and +5V_DEV read AGREE (INTERIM, mode figures INCONCLUSIVE); generator lines re-numbered (A 48, 113, 135, 147; B 85, 111, 271); the converters line untouched
+apply_contract_i03: pcb_interfaces.yaml is a configuration input of interfaces.py: INT-001 reads CONFIG_CHANGED until the box re-take
+exit 0
+== second run
+apply_contract_i03: REFUSED: already applied (the rows carry the new text)
+exit 2
+== yaml parses
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "<string>", line 1, in <listcomp>
+TypeError: 'NoneType' object is not subscriptable
+rows 4
+== diff
+--- /home/claude-runner/worktrees/meshsat-fieldkit/s98/v2/ecad/tools/pcb_interfaces.yaml	2026-09-28 20:32:34.919174903 +0200
++++ /tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit/90a77d46-57cf-4758-b702-e06537d0a6cc/scratchpad/s98-apply/v2/ecad/tools/pcb_interfaces.yaml	2026-09-28 20:54:58.487351676 +0200
+@@ -375,15 +375,28 @@
+       converters: "A: +5V_S1 and +5V_S3 on AP64500 (U4, U6); +5V_S2 and +5V_DEV on LM5176 stages with a 7.2 to 9.5 A average
+         current limit (U5, U7; F-PR-04, 458b2873); +54V_POE on an LM5176 boost (U16)"
+       currents:
+-        - {rail: "+5V_S1, +5V_S3", a_declares: "2.5 A typical, 5.0 A peak (gen_sch_a.py:106)", b_declares: "2.5 A typical, 5.0 A peak (gen_sch_b.py:72)",
++        - {rail: "+5V_S1, +5V_S3", a_declares: "2.5 A typical, 5.0 A peak (gen_sch_a.py:113, slots 1 and 3; the AP64500's 5 A rating)",
++           b_declares: "2.5 A typical, 5.0 A peak (gen_sch_b.py:85)",
+            enable: "SLOT_ENx from the panel; OFF until the panel firmware drives it"}
+-        - {rail: "+5V_S2", a_declares: "2.5 A typical, 5.0 A peak (gen_sch_a.py:106)",
+-           b_declares: "4.2 A typical, 5.0 A peak, 5.63 A coincident peak with the 5G module at 4 A (gen_sch_b.py:66-72)",
+-           status: "DISAGREE: the two ends declare different currents for one conductor (I-03, open); A's stage limits at 7.2 A"}
+-        - {rail: "+5V_DEV", a_declares: "4.0 A typical, 6.9 A peak at the converter, of which 3.2 A apportioned to J_5V_DEV
+-             (gen_sch_a.py:110-115)", b_declares: "3.8 A typical, 6.0 A peak arriving (gen_sch_b.py:90)",
+-           status: "DISAGREE at the lead (A 3.2 A against B 3.8 A typical); enable DEV_EN, ON by design since 458b2873 (R42)"}
+-        - {rail: "+54V_POE", declared: "0.3 A typical, 0.6 A peak on both ends (gen_sch_a.py:125, gen_sch_b.py:242)",
++        - {rail: "+5V_S2", a_declares: "4.2 A typical, 5.63 A peak, J_5V_S2 5.63 A (gen_sch_a.py:113; the VBAT load Q28 2.22 A,
++             gen_sch_a.py:48)",
++           b_declares: "4.2 A typical, 5.63 A peak, the CM5 at its 1.6 A allowance coincident with the 5G module at 4 A
++             (gen_sch_b.py:85)",
++           status: "AGREE since S-98 (28 September 2026), INTERIM: both ends carry the figures board B derives from the held
++             maker pages (the CM5's 0.9 A typical, release 3 Table 9, no maximum published; the RM520N-GL's 3 A continuous
++             and 4 A peak supply capability, Hardware Design v1.0 and v1.1; v2/docs/records/cx1/ANALYSIS.md, CORRECTION.md
++             B1). The PS-ALLTX mode current is INCONCLUSIVE at both ends: no held document decides it, the bench decides it
++             at J_5V_S2 (TEST-PLAN power tests). The all-peak conditional bound, 7.28 A, sits above the stage's average loop
++             minimum of 7.10 to 7.17 A (S-99 owns the stage limits)"}
++        - {rail: "+5V_DEV", a_declares: "5.1 A typical, 6.9 A peak at the converter, of which 3.8 A apportioned to J_5V_DEV,
++             1.0 A to the D8 mezzanine's eFuse U23 and 0.3 A to the wall port's eFuse U32 (gen_sch_a.py:135)",
++           b_declares: "3.8 A typical, 6.0 A peak arriving (gen_sch_b.py:111)",
++           status: "AGREE at the lead since S-98 (28 September 2026), INTERIM: A apportions 3.8 A to J_5V_DEV and B declares
++             3.8 A typical arriving; the PS-ALLTX mode current is INCONCLUSIVE at both ends (v2/docs/records/cx1/CORRECTION.md
++             B2). The converter-side peak is S-99's: A's 6.9 A is B's 6.0 A plus the wall port's 0.9 A with the D8 mezzanine at
++             zero, against 7.9 A (D8 at its 1.0 A typical) and 8.9 A (every declared limit) coincident, both above the LM5176
++             average loop's minimum. Enable DEV_EN, ON by design since 458b2873 (R42)"}
++        - {rail: "+54V_POE", declared: "0.3 A typical, 0.6 A peak on both ends (gen_sch_a.py:147, gen_sch_b.py:271)",
+            enable: "POE_EN = POE_SW_EN AND OUTLET_OK: OFF at power-up and while the PA keys (S-14)"}
+       contact_rating: "JST VH catalogue held (v2/vendor/connectors/jst-vh-catalogue.pdf, page 1): 10 A per contact when
+         using AWG 16 with the standard header, which the four 5 V leads are; 7 A is stated for AWG 18 with the shrouded
+== apply_architecture_i03 dry run
+apply_architecture_i03: ARCHITECTURE.md line 1187 (the IF-AB-POWER row) rewritten; of 64 sections only '12. Interface contracts' differs, 63 byte-identical
+apply_architecture_i03: sha256/16 4f293351f99c00d1 -> c883f948f3221e74; no registry record binds this page by sha, so no rebind is made
+exit 0
+== second run
+apply_architecture_i03: REFUSED: already applied
+exit 2
+== diff
+--- /home/claude-runner/worktrees/meshsat-fieldkit/s98/v2/docs/ARCHITECTURE.md	2026-09-28 20:32:33.866852134 +0200
++++ /tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit/90a77d46-57cf-4758-b702-e06537d0a6cc/scratchpad/s98-apply/v2/docs/ARCHITECTURE.md	2026-09-28 20:54:58.781678399 +0200
+@@ -1184,7 +1184,7 @@
+ | IF-BC-PANEL | B J_PANEL, C J_PANEL (2x13) | PANEL_5V, kit I2C, every safety line, heartbeats, slot enables, panel USB | `check_contracts.py` section 1 (map identity) | the SLOT_EN hold (4.3); I3-F01 (supervisor addresses, a firmware contract); HF-F01 and SC-HF-02 (the kit bus); EMCON L1 and L2 (drawn at desk on B and C in their round 8; C's GPIO21 is off the line since `9f28c238`); FAB-04 on HDMI_SEL1/2 (10 k since board B's round 8 (27 September 2026)); B_PANEL_5V: F1 an MF-MSMF110 (1.1 A hold) under the 1.23 A conductor since then, its hold 0.95 A at 40 C against board C's 1.0 A peak (4.5); the ribbon and IDC parts have no MPN (their rating is TBD) |
+ | IF-AB-RIBBON | A J_AB1, B J_AB1 (2x13) | control lines to A, USB to D and E, the kit I2C | section 7 | the SLOT_EN hold; EMCON L2 (R102 10 k 1 % in board A's round 8); HF-F01 |
+ | IF-AB-WALL | A J_AB2, B J_AB2 (2x5) | the wall USB pair, on A to the Glenair 233-370 behind U32 (D-12) | sections 7b and 10 | W4-F17 (the header under board D); the J_AB2 lead length (no row in `ASSEMBLY.md` section 4) |
+-| IF-AB-POWER | A and B J_5V_S1..3, J_5V_DEV, J_54V (VH) | slot rails, device rail, 54 V | section 3 (net presence) | the two ends' current declarations disagree (I-03: +5V_S2 A 2.5 A against B 4.2 A typical, 5.63 A coincident; +5V_DEV A 3.2 A against B 3.8 A); the JST-VH rating document is not held |
++| IF-AB-POWER | A and B J_5V_S1..3, J_5V_DEV, J_54V (VH) | slot rails, device rail, 54 V | section 3 (net presence) | the two ends' current declarations AGREE since S-98 (28 September 2026), INTERIM: +5V_S2 4.2 A typical and 5.63 A peak at both ends, +5V_DEV 3.8 A at the lead, with the PS-ALLTX mode figures INCONCLUSIVE at both ends (v2/docs/records/cx1/); the converter-side peak of +5V_DEV is S-99's; the JST VH catalogue is held (page 1: 10 A per contact at AWG 16 on the standard header; no rating is stated for the AWG 18 lead of J_54V on the standard header, INCONCLUSIVE) |
+ | IF-AD-HARNESS | A J_MEZZ1 and J_MEZZ_PWR1, D J_HARN1 and J_PWR1 | D's USB, inhibit, PA_EN, I2C, 3.3 V and 5 V | section 8 (not the 5 V lead) | W4-F17; EMCON L4 on D (closed at desk in board D's round 8 but for bench E-11); PWR-F15 drawn in round 8 as IF-D-FLANGE; HF-F01 |
+ | IF-AE-DOCK | A J_DOCK, the pack pins and the VIN_RAW pins J_VR1-4, J_VN1-4, E5, E J_BLK, P_CP, P_CN, P_VR, P_VN | VIN_RAW, CELL+, pre-charge, USB, SHORE_INHIBIT; lifted only by the D-14 procedure, with a cap over E5 | sections 4, 5 and 5a (the EQ-16 dock checks); `block_contract.py` needs pcbnew | the VIN_RAW pins: 14.10 A declared at both ends since set 5 (EQ-16, R8E-N01 answered) on four Mill-Max 9 A pins, 3.53 A each with even sharing and 4.70 A with one open, the 813 contacts 1 to 4 ground; the ground current's share on the 813 ground contacts (W3DE-DOCK-R1, a bench measurement owed); E5's eight new targets and two 12 AWG holes are layer 7's; A04-D2 on the A32 board; BAT-F06 (stated, section 4.4) |
+ | IF-PE-PACK | P W_P, W_N, J_SMB; E J_BATT, J_SMB | pack power, gauge SMBus and PRES on JST-XH 1x4 at both ends in P's pin order | section 15b (the power pair) and 15c (the SMBus lead, since `93138ac1`) | PRES's contract (P's R14 10 k stays; E's GPIO17 pad pull-down off before a read, FW-E02); PWR-F12 |
+== dash scan of the scratch outputs
+dash exit 0 (1 = none)
+== worktree shared files untouched
+(end)
+IF-AB-POWER currents rows after apply_contract_i03 (scratch): 4
+  +5V_S1, +5V_S3   a=2.5 A typical, 5.0 A peak (gen_sch_a.py:113, slots 1 and 3; the AP6450 | b=2.5 A typical, 5.0 A peak (gen_sch_b.py:85) | SLOT_ENx from the panel; OFF until the panel firmware drives
+  +5V_S2           a=4.2 A typical, 5.63 A peak, J_5V_S2 5.63 A (gen_sch_a.py:113; the VBAT | b=4.2 A typical, 5.63 A peak, the CM5 at its 1.6 A a | AGREE since S-98 (28 September 2026), INTERIM: both ends car
+  +5V_DEV          a=5.1 A typical, 6.9 A peak at the converter, of which 3.8 A apportioned | b=3.8 A typical, 6.0 A peak arriving (gen_sch_b.py:1 | AGREE at the lead since S-98 (28 September 2026), INTERIM: A
+  +54V_POE         a=0.3 A typical, 0.6 A peak on both ends (gen_sch_a.py:147, gen_sch_b.py | b= | POE_EN = POE_SW_EN AND OUTLET_OK: OFF at power-up and while 
+converters unchanged: True

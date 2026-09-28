@@ -1,40 +1,111 @@
 {
  "advisory": false,
  "applicable": true,
+ "code_bundle": {
+  "entry": "reliability.py",
+  "files": {
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "reliability.py": "c50f2b8b35d1d57b",
+   "verdict.py": "e7d66c930b2c4357",
+   "wear_inventory.py": "503a05eedb8a0a29"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "70940aae54caa88b",
+  "unresolved": []
+ },
  "counts": {
   "boards": 1,
-  "classes": 2,
-  "covered": 9,
-  "fail": 0
+  "candidates": 74,
+  "citations_unjudged": 0,
+  "classed": 24,
+  "classes": 11,
+  "classes_undecided": 0,
+  "covered": 24,
+  "excluded": 50,
+  "exclusions": 2,
+  "fail": 0,
+  "figures_cited": 5,
+  "figures_none_published": 0,
+  "figures_not_mated": 4,
+  "figures_owed": 2,
+  "inconclusive": 4,
+  "measures_owed": 0,
+  "per_board": {
+   "c": {
+    "artefact": {
+     "kind": "netlist",
+     "sha256_16": "3fddbb3edcd4248a"
+    },
+    "bound": true,
+    "candidates": 74,
+    "citations_unjudged": 0,
+    "classed": 24,
+    "classes_undecided": 0,
+    "excluded": 50,
+    "held_by": [
+     "REL-O-04",
+     "REL-O-05",
+     "REL-O-07",
+     "REL-O-08"
+    ],
+    "refused": 0,
+    "result": "INCONCLUSIVE"
+   }
+  },
+  "refused": 0
  },
- "denominator": 11,
- "evidence": [],
+ "denominator": 74,
+ "evidence": [
+  "C: class the panel ribbon header owes its cycle figure (open item REL-O-04: board C's panel ribbon header is a session pick that no generator carries, XFCN BH254VS-26P (v2/docs/parts/PROCUREMENT.md section 5, HC6-SC-7; v2/vendor/SOURCES.yaml reads the pick's identity NOT_PINNED), its value in the netlist names no part, and no document of its maker is held)",
+  "C: class headset jacks in the plate owes its cycle figure (open item REL-O-05: board C's two headset jacks are a U-174/U class panel jack with no maker's part picked and its drawing owed (the value says so; ASSEMBLY.md section 1))",
+  "C: open item REL-O-07 holds the board: the expected number of mates of each connector over a service life is stated nowhere (REQ-028: no life requirement for prototype 1), so this list carries ratings and compares them with nothing (next action: when a service life is ruled, state the expected mates per connector from CONOPS section 5 and compare each class's figure with it)",
+  "C: open item REL-O-08 holds the board: the joints under heavy soldered parts (the soldered radio modules, the magnetics, the large inductors) are joints that carry load in transport, and this inventory cannot find them: a netlist carries no mass (next action: list the parts above a mass limit from the makers' documents and add them as a class per board with the staking or support each needs)",
+  "C: 48 part(s) excluded (TP1, TP10, TP11, TP12, TP13, TP14 and 42 more): a test point: a bare pad touched by a probe at the bench, nothing is mated and nothing hangs on it",
+  "C: 2 part(s) excluded (JP1, JP2): a solder jumper: two copper pads bridged with solder or left open, no part is fitted and nothing is mated"
+ ],
  "inputs": {
   "board": "c",
-  "list": "pcb_reliability.yaml"
+  "list": {
+   "path": "tools/pcb_reliability.yaml",
+   "sha256": "b568aed64fe8e734e53de390f3119a7798ba94b8ded385849aea38a84580a45a",
+   "sha256_16": "b568aed64fe8e734"
+  },
+  "netlist": {
+   "content16": "ebde053efc0a3906",
+   "parts": 219,
+   "path": "pcb-c-display-c8/out/pcb-c-display.net",
+   "sha256": "3fddbb3edcd4248a2a6c969b19809323ae59bf6525b2cfd1e8ea9c24eb351e15",
+   "sha256_16": "3fddbb3edcd4248a"
+  }
  },
  "missing_input": null,
- "note": "every part that carries load or sees cycling falls in a declared class with its cycle figure or the reason it has none, its load and the measure taken. It tests nothing: REL-001 is verified at the prototype and no board has been built",
+ "note": "every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the measure taken, or under one declared exclusion with its reason. A desk reading of a netlist and a list: it tests nothing and replaces no physical verification; REL-001 is verified at the prototype and no board has been built",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
    "REL-001": "d94df1c6a3ff6010"
   },
-  "rule_set_fingerprint": "ff8151db3576437b"
+  "rule_set_fingerprint": "635ff031f210f48c"
  },
  "rules": [
   "REL-001"
  ],
+ "runtime": {
+  "python": "3.12.3"
+ },
  "tool": "reliability",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "git_head": "87b7d5a9509c",
+  "tools_tree_sha": "bfeac03e9fe6170b"
  },
- "ts": "2026-09-21T12:50:27Z",
- "verdict": "PASS",
- "version": "unknown",
+ "ts": "2026-09-28T21:56:36Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "87b7d5a9509c",
  "writer": {
   "file": "reliability.py",
-  "sha16": "149a48e5f2419955"
+  "sha16": "c50f2b8b35d1d57b"
  }
 }

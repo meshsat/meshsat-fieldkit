@@ -1,40 +1,105 @@
 {
  "advisory": false,
  "applicable": true,
+ "code_bundle": {
+  "entry": "reliability.py",
+  "files": {
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "reliability.py": "c50f2b8b35d1d57b",
+   "verdict.py": "e7d66c930b2c4357",
+   "wear_inventory.py": "503a05eedb8a0a29"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "70940aae54caa88b",
+  "unresolved": []
+ },
  "counts": {
   "boards": 1,
-  "classes": 2,
-  "covered": 0,
-  "fail": 0
+  "candidates": 17,
+  "citations_unjudged": 0,
+  "classed": 17,
+  "classes": 4,
+  "classes_undecided": 0,
+  "covered": 17,
+  "excluded": 0,
+  "exclusions": 0,
+  "fail": 0,
+  "figures_cited": 0,
+  "figures_none_published": 0,
+  "figures_not_mated": 2,
+  "figures_owed": 2,
+  "inconclusive": 3,
+  "measures_owed": 0,
+  "per_board": {
+   "e5": {
+    "artefact": {
+     "kind": "board_file",
+     "sha256_16": "686b29a734c55b9a"
+    },
+    "bound": true,
+    "candidates": 17,
+    "citations_unjudged": 0,
+    "classed": 17,
+    "classes_undecided": 0,
+    "excluded": 0,
+    "held_by": [
+     "REL-O-06",
+     "REL-O-07"
+    ],
+    "refused": 0,
+    "result": "INCONCLUSIVE"
+   }
+  },
+  "refused": 0
  },
- "denominator": 2,
- "evidence": [],
+ "denominator": 17,
+ "evidence": [
+  "E5: class power pin targets owes its cycle figure (open item REL-O-06: board E5's contact targets are the board's own plated copper under board A's spring pins. No maker rates them, and how the plating wears under the pins' wipe is not known at the desk)",
+  "E5: class signal contact targets owes its cycle figure (open item REL-O-06: board E5's contact targets are the board's own plated copper under board A's spring pins. No maker rates them, and how the plating wears under the pins' wipe is not known at the desk)",
+  "E5: open item REL-O-07 holds the board: the expected number of mates of each connector over a service life is stated nowhere (REQ-028: no life requirement for prototype 1), so this list carries ratings and compares them with nothing (next action: when a service life is ruled, state the expected mates per connector from CONOPS section 5 and compare each class's figure with it)"
+ ],
  "inputs": {
   "board": "e5",
-  "list": "pcb_reliability.yaml"
+  "board_file": {
+   "parts": 17,
+   "path": "pcb-e5-block/pcb-e5-block.kicad_pcb",
+   "sha256": "686b29a734c55b9a676c3f08d3dc561cbeda4c17568655e44cff04fa2d9020c6",
+   "sha256_16": "686b29a734c55b9a"
+  },
+  "list": {
+   "path": "tools/pcb_reliability.yaml",
+   "sha256": "b568aed64fe8e734e53de390f3119a7798ba94b8ded385849aea38a84580a45a",
+   "sha256_16": "b568aed64fe8e734"
+  }
  },
  "missing_input": null,
- "note": "every part that carries load or sees cycling falls in a declared class with its cycle figure or the reason it has none, its load and the measure taken. It tests nothing: REL-001 is verified at the prototype and no board has been built",
+ "note": "every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the measure taken, or under one declared exclusion with its reason. A desk reading of a netlist and a list: it tests nothing and replaces no physical verification; REL-001 is verified at the prototype and no board has been built",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
    "REL-001": "d94df1c6a3ff6010"
   },
-  "rule_set_fingerprint": "ff8151db3576437b"
+  "rule_set_fingerprint": "635ff031f210f48c"
  },
  "rules": [
   "REL-001"
  ],
+ "runtime": {
+  "python": "3.12.3"
+ },
  "tool": "reliability",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "git_head": "87b7d5a9509c",
+  "tools_tree_sha": "bfeac03e9fe6170b"
  },
- "ts": "2026-09-21T12:53:08Z",
- "verdict": "PASS",
- "version": "unknown",
+ "ts": "2026-09-28T21:56:39Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "87b7d5a9509c",
  "writer": {
   "file": "reliability.py",
-  "sha16": "149a48e5f2419955"
+  "sha16": "c50f2b8b35d1d57b"
  }
 }

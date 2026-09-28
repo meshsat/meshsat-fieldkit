@@ -193,10 +193,15 @@ def board_doc(letter, st, reg, cov):
         L.append("| %s | %d | %.1f |" % (k, c[k], c[k.lower() + "_percent"]))
     L += ["| **denominator** | **%d** | 100.0 |" % c["denominator"], "",
           "| rule | effect | phase | result | why |", "|---|---|---|---|---|"]
+    # A READING AN OPEN ITEM LIMITS IS MARKED WHERE IT IS QUOTED (28 September 2026, handover H3's erratum f extended):
+    # the mark is read from the registry's open items (`limits_reading`) and leaves with the item.
+    limits = reading_limits(_req_or_none(None))
     for r in st["rows"]:
+        why = " ".join(str(r["why"]).split())[:150]
+        mark = limit_marker(limits, r["rule"], letter)
+        if mark: why = "%s; %s" % (why, mark) if why else mark
         L.append("| %s %s | %s | %s | **%s** | %s |" % (r["rule"], r["short_name"], r["release_effect"],
-                                                        r["verification_phase"], r["result"],
-                                                        " ".join(str(r["why"]).split())[:150]))
+                                                        r["verification_phase"], r["result"], why))
     return "\n".join(L) + "\n"
 
 
@@ -1389,14 +1394,84 @@ def _undeclared_writers_section(audits, boards):
     return L
 
 
+def _req_or_none(req):
+    """The requirements registry as loaded, or None when this tree has none (a tree being set up)."""
+    if req is not None: return req
+    try: return R.load_requirements()
+    except BaseException: return None
+
+
+def baseline_sentence(req):
+    """WHY THE FOUNDATIONS ARE INCOMPLETE, READ FROM THE REGISTRY (28 September 2026, handover H3's erratum g and the
+    reassessment's correction 3). The page used to carry a fixed sentence saying that the requirements and architecture
+    baselines are still open; the requirements registry had read BASELINED since a54b793b, so the sentence contradicted
+    the registry it was printed beside. Now: the requirements half is `baseline_state` as the registry states it, and
+    the architecture half is what the feasibility records say (kind feasibility, status FEASIBILITY_OPEN), so the
+    sentence changes when either does and never has to be edited by hand."""
+    if req is None:
+        return ("the requirements registry is absent from this tree, so neither the requirements nor the architecture "
+                "baseline can be read here")
+    bs = str(req.get("baseline_state") or "").strip()
+    fea = [r for r in (req.get("records") or []) if isinstance(r, dict) and r.get("kind") == "feasibility"]
+    open_ = [r["id"] for r in fea if r.get("status") == "FEASIBILITY_OPEN"]
+    req_open = not bs.startswith("BASELINED")
+    if req_open: r_part = "the requirements baseline is still open (the registry reads %s)" % (bs or "no baseline_state")
+    else: r_part = "the requirements baseline reads %s" % bs
+    if open_:
+        a_part = ("the architecture baseline is still open (%d of %d feasibility records FEASIBILITY_OPEN: %s)"
+                  % (len(open_), len(fea), ", ".join(open_)))
+    elif fea: a_part = "every one of the %d feasibility records is resolved" % len(fea)
+    else: a_part = "the registry holds no feasibility record"
+    if req_open and open_: return "the requirements and architecture baselines are still open: %s; %s" % (r_part, a_part)
+    if open_: return "%s while %s" % (a_part, r_part)
+    if req_open: return "%s while %s" % (r_part, a_part)
+    return "%s and %s" % (r_part, a_part)
+
+
+def reading_limits(req):
+    """{(rule, board letter or 'all'): (open item id, first sentence of its title)} for every OPEN item of the registry
+    that carries `limits_reading` (a list of {rule, boards}). An item that closes leaves open_items, and with it every
+    notice derived here; nothing about a limited reading is typed into a page (the reassessment of H3, correction 3)."""
+    out = {}
+    if not req: return out
+    for it in req.get("open_items") or []:
+        if not isinstance(it, dict) or it.get("status") != "OPEN": continue
+        for lim in it.get("limits_reading") or []:
+            if not isinstance(lim, dict) or not lim.get("rule"): continue
+            boards = lim.get("boards", "all")
+            keys = ["all"] if boards in ("all", None) else [str(b).lower() for b in boards]
+            first = " ".join(str(it.get("title") or "").split()).split(". ")[0].rstrip(".")
+            for k in keys: out[(str(lim["rule"]), k)] = (it.get("id"), first)
+    return out
+
+
+def limit_marker(limits, rule, letter):
+    """The point-of-use mark for a rule-board row whose reading an open item limits, or ''."""
+    hit = limits.get((rule, str(letter).lower())) or limits.get((rule, "all"))
+    return "LIMITED (open item %s)" % hit[0] if hit else ""
+
+
+def _limits_lines(req):
+    limits = reading_limits(req)
+    if not limits:
+        return ["- No open item of the requirements registry limits a reading shown current here (`limits_reading`)."]
+    L = ["- Readings limited by an open item of the requirements registry (`limits_reading`), each shown current here "
+         "and marked LIMITED on its board page until the item closes:"]
+    seen = set()
+    for (rule, k), (iid, first) in sorted(limits.items(), key=lambda x: (x[0][0], x[0][1])):
+        where = "every board" if k == "all" else "board %s" % k.upper()
+        if (rule, k, iid) in seen: continue
+        seen.add((rule, k, iid))
+        L.append(_wrap("- %s on %s: LIMITED while %s stands: %s." % (rule, where, iid, first), 110, "  ").replace("  - ", "  - ", 1))
+    return L
+
+
 def current_evidence_doc(audits, holds=None, regs=None, req=None):
     """The page. `audits` is {letter: status as rules_status.board_status returns it}; `req` replaces the requirements
     registry the feasibility stages are read from (fixtures only)."""
     holds = holds if holds is not None else R.board_holds()
     regs = regs if regs is not None else S.registers()
-    if req is None:
-        try: req = R.load_requirements()
-        except BaseException: req = None          # rules_status.feasibility_stages then holds every board, and says why
+    req = _req_or_none(req)                       # None: rules_status.feasibility_stages then holds every board, and says why
     boards = sorted(audits, key=lambda l: (len(l), l))
     les = {l: S.layout_entry(audits[l], holds, req) for l in boards}
     ready = {l: (les[l]["ready"], les[l]["reasons"]) for l in boards}
@@ -1407,8 +1482,9 @@ def current_evidence_doc(audits, holds=None, regs=None, req=None):
     L = [EVIDENCE_HEAD, "# Current evidence\n",
          "**Foundations incomplete; %d boards ready for layout; %d physically verified.**\n" % (n_ready, n_phys),
          _wrap("Prototype design: no V2 board has been fabricated, ordered, assembled or measured. The foundations are "
-               "incomplete because the requirements and architecture baselines are still open (review of 26 September "
-               "2026, section 6 item 1), whatever this page counts. \"Ready for layout\" here is the staged layout-entry "
+               "incomplete, and why is read from the requirements registry (review of 26 September 2026, section 6 item 1; "
+               "erratum g of handover H3): %s, whatever this page counts. \"Ready for layout\" here is the staged layout-entry "
+               % baseline_sentence(req) +
                "test (`rules_status.layout_entry`): every applicable required schematic-phase rule is a PASS on "
                "current-candidate evidence (a document rule may rest on a pinned desk review), no owner-decision hold "
                "that gates layout entry is on the board, every layout-entry requirement of a hold that gates a later "
@@ -1523,14 +1599,14 @@ def current_evidence_doc(audits, holds=None, regs=None, req=None):
           "- `rules_status.layout_entry`: the staged layout-entry test; holds from `tools/pcb_board_holds.yaml` (a hold's "
           "`stage`, LAYOUT_ENTRY when it names none, and its `layout_entry_requires`) and feasibility stages from "
           "`tools/pcb_requirements.yaml` (a feasibility record's `stages`, or its `holds_layout_entry` when it has none).",
-          ] + _evidence_bindings(regs) + [
+          ] + _evidence_bindings(regs, req) + [
           "- Holds from `tools/pcb_board_holds.yaml` via `rules_lib.board_holds`.", ""]
     if regs.get("errors"):
         L += ["**The evidence registers cannot be read:** %s" % "; ".join(regs["errors"]), ""]
     return "\n".join(L) + "\n"
 
 
-def _evidence_bindings(regs):
+def _evidence_bindings(regs, req=None):
     """What each input of the review's list is bound by, and the limits of the instruments, stated where the numbers
     are read (the review of 26 September 2026: "Bind current acceptance to the applicable schematic/netlist, PCB, BOM,
     stackup, configuration, rule and tool semantics")."""
@@ -1582,7 +1658,7 @@ def _evidence_bindings(regs):
         "- `v2/docs/evidence/INVALIDATED-*.md`: verdict files refused by content hash (%d listed); "
         "`v2/docs/evidence/COMPATIBILITY.md`: recorded rationales (%d)." % (len(regs.get("invalidated") or {}),
                                                                            len(regs.get("compatibility") or [])),
-    ]
+    ] + _limits_lines(req)
 
 
 def current_evidence_files(docs):

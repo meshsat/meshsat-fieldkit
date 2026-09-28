@@ -55,7 +55,12 @@ prototype needs anyway"), so for them the decision is **when** to buy, not **whe
 The review asks that unrelated engineering continue meanwhile. None of the following waits on an item of section 0:
 the round 8 circuit corrections on every board (EMCON remedies, failover fabric, address conflicts, board E,
 decoupling); regeneration and parity; the evidence re-take; board B's bounded escape experiment; the per-board path
-into layout up to layout entry, and layout entry itself for boards C, D and E5 (**corrected 27 September 2026:** the
+into layout up to layout entry; for boards C, D and E5 also the layout entry itself, in this sense only: no item of
+section 0 (a purchase, an engagement or an outreach) holds it. That does not make them ready for layout. Boards D and
+E5 are held at layout entry by FEA-007's desk items, which need no purchase (D: W4-F17; E5: the dock and blind-mate
+tolerance stack); board C is not held by FEA-007 at layout entry, only at fabrication release; and each of the three
+has its own layout-entry reasons in `v2/docs/CURRENT-EVIDENCE.md` (made exact for handover H3 from the registry's
+FEA-007 record, `holds_layout_entry` a, b, d, e, e5, p) (**corrected 27 September 2026:** the
 layout entry of boards A, B, E and P waits on item 9, the case mock-up, FEA-007, section 6.1, and with one case for
 items 8 and 9 on item 8 before it, S-1; their desk items do not); the golden image of the pack gauge (`v2/docs/review-packets/battery/PRIMARY-CONFIGURATION.md`); the panel
 firmware's wipe sequence (MESHSAT-837); the drawings the mock-up needs (section 6.2, drawn on 27 September 2026); and the review packets owed for

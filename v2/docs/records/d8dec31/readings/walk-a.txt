@@ -1,0 +1,169 @@
+##### A VIN_RAW
+NET VIN_RAW (14 nodes)  [VIN_RAW]
+  C11        pin 1                  passive      10u 100V X7R 1210
+  C12        pin 1                  passive      10u 100V X7R 1210
+  D19        pin 2   A              passive      BAT46W-7-F Schottky 100V (VIN blocking)
+  D2         pin 1   K              passive      SMCJ40A (VIN_RAW clamp behind E6's filter: 40 V standoff on a line specified to 36)
+  J_VR1      pin 1   Pin_1          passive      9 A spring pin, VIN_RAW (Mill-Max 0858 class, dock block; EQ-16)
+  J_VR2      pin 1   Pin_1          passive      9 A spring pin, VIN_RAW (Mill-Max 0858 class, dock block; EQ-16)
+  J_VR3      pin 1   Pin_1          passive      9 A spring pin, VIN_RAW (Mill-Max 0858 class, dock block; EQ-16)
+  J_VR4      pin 1   Pin_1          passive      9 A spring pin, VIN_RAW (Mill-Max 0858 class, dock block; EQ-16)
+  Q2         pin 5   VIN_RAW        passive      CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)
+  R14        pin 1                  passive      91k 1%
+  R195       pin 1                  passive      2k
+  R196       pin 1                  passive      1k
+  R200       pin 1                  passive      33k
+  TP13       pin 1   1              passive      VIN_RAW
+  NET FE_VINP (3 nodes)  [through D19]
+    C207       pin 1                  passive      1u 100V 1210
+    D19        pin 1   K              passive      BAT46W-7-F Schottky 100V (VIN blocking)
+    U2         pin 2   FE_VINP        passive      LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW
+  NET FE_UVS (4 nodes)  [through R14]
+    C211       pin 1                  passive      10n
+    R14        pin 2                  passive      91k 1%
+    R15        pin 1                  passive      10k 1%
+    U34        pin 3   FE_UVS         passive      TPS37A010122DSKR 65 V OV/UV supervisor: the FE's enable and its restart latch
+  NET FE_VISNS (2 nodes)  [through R195]
+    R195       pin 2                  passive      2k
+    U2         pin 3   FE_VISNS       passive      LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW
+  NET FE_GVDD (3 nodes)  [through R196]
+    C210       pin 1                  passive      1u 100V 1210
+    R196       pin 2                  passive      1k
+    U34        pin 1   FE_GVDD        passive      TPS37A010122DSKR 65 V OV/UV supervisor: the FE's enable and its restart latch
+  NET FE_VZ (5 nodes)  [through R200]
+    C214       pin 1                  passive      100n
+    D22        pin 1   K              passive      BZT52C12-7-F zener, the restart guard's pull-up clamp
+    R198       pin 1                  passive      100k
+    R200       pin 2                  passive      33k
+    R201       pin 1                  passive      100k
+##### A CELL+
+NET CELL+ (7 nodes)  [CELL+]
+  F1         pin 1                  passive      25 A mini blade (Keystone 3568 holder): pack node to the RSR shunt
+  J_CP1      pin 1   Pin_1          passive      9 A spring pin, CELL+ (Mill-Max 0858 class, dock block)
+  J_CP2      pin 1   Pin_1          passive      9 A spring pin, CELL+ (Mill-Max 0858 class, dock block)
+  J_CP3      pin 1   Pin_1          passive      9 A spring pin, CELL+ (Mill-Max 0858 class, dock block)
+  J_CP4      pin 1   Pin_1          passive      9 A spring pin, CELL+ (Mill-Max 0858 class, dock block)
+  R1         pin 2                  passive      10R 2W 2512
+  TP14       pin 1   1              passive      CELL+
+  NET CELL_FUSED (6 nodes)  [through F1]
+    C1         pin 1                  passive      47u 25V
+    C2         pin 1                  passive      47u 25V
+    C3         pin 1                  passive      10u 25V 1210
+    F1         pin 2                  passive      25 A mini blade (Keystone 3568 holder): pack node to the RSR shunt
+    R148       pin 1                  passive      10R
+    R17        pin 2                  passive      5mOhm 1% 2512 (RSR, charge current sense)
+  NET PRECHG (2 nodes)  [through R1]
+    J_PRE1     pin 1   Pin_1          passive      pre-charge pin, longer, mates first (32.24 AX)
+    R1         pin 1                  passive      10R 2W 2512
+##### A PRECHG
+NET PRECHG (2 nodes)  [PRECHG]
+  J_PRE1     pin 1   Pin_1          passive      pre-charge pin, longer, mates first (32.24 AX)
+  R1         pin 1                  passive      10R 2W 2512
+  NET CELL+ (7 nodes)  [through R1]
+    F1         pin 1                  passive      25 A mini blade (Keystone 3568 holder): pack node to the RSR shunt
+    J_CP1      pin 1   Pin_1          passive      9 A spring pin, CELL+ (Mill-Max 0858 class, dock block)
+    J_CP2      pin 1   Pin_1          passive      9 A spring pin, CELL+ (Mill-Max 0858 class, dock block)
+    J_CP3      pin 1   Pin_1          passive      9 A spring pin, CELL+ (Mill-Max 0858 class, dock block)
+    J_CP4      pin 1   Pin_1          passive      9 A spring pin, CELL+ (Mill-Max 0858 class, dock block)
+    R1         pin 2                  passive      10R 2W 2512
+    TP14       pin 1   1              passive      CELL+
+##### A SHORE_INHIBIT
+NET SHORE_INHIBIT (3 nodes)  [SHORE_INHIBIT]
+  J_AB1      pin 21  Pin_21         passive      A-B interconnect (IDC 2x13, top side) to B16's underside header
+  J_DOCK     pin 8   Pin_8          passive      spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8 SHORE_INH
+  R118       pin 1                  passive      100k
+##### A USB_E6_P
+NET USB_E6_P (2 nodes)  [USB_E6_P]
+  J_AB1      pin 25  Pin_25         passive      A-B interconnect (IDC 2x13, top side) to B16's underside header
+  J_DOCK     pin 9   Pin_9          passive      spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8 SHORE_INH
+##### A USB_E6_N
+NET USB_E6_N (2 nodes)  [USB_E6_N]
+  J_AB1      pin 26  Pin_26         passive      A-B interconnect (IDC 2x13, top side) to B16's underside header
+  J_DOCK     pin 10  Pin_10         passive      spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8 SHORE_INH
+##### A DOCK_SPARE
+NET DOCK_SPARE (4 nodes)  [DOCK_SPARE]
+  J_DOCK     pin 12  Pin_12         passive      spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8 SHORE_INH
+  R216       pin 1                  passive      10k
+  TP21       pin 1   1              passive      DOCK_SPARE
+  U27        pin 18  IO1_5          bidirectiona PCA9555PW (0x21): enables and status
+  NET +3V3 (56 nodes)  [through R216]
+    (a rail or a bus of 56 nodes: not expanded)
+##### A MAIN_PB
+NET MAIN_PB (2 nodes)  [MAIN_PB]
+  J_MAINSW   pin 1   Pin_1          passive      JST-XH 1x2 socket: the MAIN button lead from the panel, PB and GND
+  U1         pin 2   MAIN_PB        passive      LTC2954ITS8-1 push-button on/off controller, -40 to 85 C
+##### A PD_VBUS
+NET PD_VBUS (6 nodes)  [PD_VBUS]
+  C120       pin 1                  passive      10u 25V 1210
+  D4         pin 1   K              passive      SMBJ18A (VBUS clamp at the outlet)
+  J_USBC_OUT pin 1   Pin_1          passive      wall USB-C outlet, power only (pigtail header): VBUS CC1 CC2 GND GND
+  R138       pin 2                  passive      10mOhm 1% 2512 (ISNS)
+  R139       pin 2                  passive      43R 1W 2512 (DSCG)
+  U18        pin 21  PD_VBUS        passive      TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)
+  NET PD_SW (6 nodes)  [through R138]
+    Q27        pin 1   PD_SW          passive      CSD18510Q5B 40 V N-FET (VBUS switch)
+    Q27        pin 2   PD_SW          passive      CSD18510Q5B 40 V N-FET (VBUS switch)
+    Q27        pin 3   PD_SW          passive      CSD18510Q5B 40 V N-FET (VBUS switch)
+    R138       pin 1                  passive      10mOhm 1% 2512 (ISNS)
+    U18        pin 19  PD_SW          passive      TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)
+    U18        pin 23  PD_SW          passive      TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)
+  NET PD_DSCG (2 nodes)  [through R139]
+    R139       pin 1                  passive      43R 1W 2512 (DSCG)
+    U18        pin 24  PD_DSCG        passive      TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)
+##### A PD_CC1
+NET PD_CC1 (4 nodes)  [PD_CC1]
+  C96        pin 1                  passive      330p
+  J_USBC_OUT pin 2   Pin_2          passive      wall USB-C outlet, power only (pigtail header): VBUS CC1 CC2 GND GND
+  U18        pin 2   PD_CC1         passive      TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)
+  U31        pin 1   PD_CC1         passive      TPD2E2U06QDBZRQ1 low-capacitance ESD array, USB-C CC1 and CC2 at the connector
+##### A PD_CC2
+NET PD_CC2 (4 nodes)  [PD_CC2]
+  C97        pin 1                  passive      330p
+  J_USBC_OUT pin 3   Pin_3          passive      wall USB-C outlet, power only (pigtail header): VBUS CC1 CC2 GND GND
+  U18        pin 3   PD_CC2         passive      TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)
+  U31        pin 2   PD_CC2         passive      TPD2E2U06QDBZRQ1 low-capacitance ESD array, USB-C CC1 and CC2 at the connector
+##### A VBUS_WALL
+NET VBUS_WALL (4 nodes)  [VBUS_WALL]
+  C156       pin 1                  passive      22u 25V 1210
+  J_USBW     pin 1   Pin_1          passive      JST-PH 1x4 socket: the Glenair 233-370 USB host feed-through lead (VBUS D- D+ GND), B16 bank 3 hub p
+  U29        pin 5   VBUS           passive      USBLC6-2SC6
+  U32        pin 5   VBUS_WALL      passive      TPS259631DDAR eFuse +5V_DEV -> VBUS_WALL (1k 1% (ILM: 0.89 A))
+##### A USB_WALL_P
+NET USB_WALL_P (4 nodes)  [USB_WALL_P]
+  J_AB2      pin 1   Pin_1          passive      A-B wall-port ribbon (IDC 2x5): the wall USB pair on the END row with eight grounds behind it
+  J_USBW     pin 3   Pin_3          passive      JST-PH 1x4 socket: the Glenair 233-370 USB host feed-through lead (VBUS D- D+ GND), B16 bank 3 hub p
+  U29        pin 1   I/O1           passive      USBLC6-2SC6
+  U29        pin 6   I/O1           passive      USBLC6-2SC6
+##### A USB_WALL_N
+NET USB_WALL_N (4 nodes)  [USB_WALL_N]
+  J_AB2      pin 2   Pin_2          passive      A-B wall-port ribbon (IDC 2x5): the wall USB pair on the END row with eight grounds behind it
+  J_USBW     pin 2   Pin_2          passive      JST-PH 1x4 socket: the Glenair 233-370 USB host feed-through lead (VBUS D- D+ GND), B16 bank 3 hub p
+  U29        pin 3   I/O2           passive      USBLC6-2SC6
+  U29        pin 4   I/O2           passive      USBLC6-2SC6
+##### A VMON
+NET VMON (2 nodes)  [VMON]
+  J_MON      pin 1   Pin_1          passive      monitor supply lead to the Xenarc (JST-VH): + -
+  U21        pin 5   VMON           passive      TPS259631DDAR eFuse VBAT -> VMON (750R 1% (ILM: 1.2 A))
+##### A +5V_D8
+NET +5V_D8 (2 nodes)  [+5V_D8]
+  J_MEZZ_PWR1 pin 1   Pin_1          passive      D8 mezzanine 5 V (JST-VH): + -
+  U23        pin 5   +5V_D8         passive      TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (453R 1% (ILM: 2.0 A))
+##### A VHEAT
+NET VHEAT (5 nodes)  [VHEAT]
+  C161       pin 1                  passive      22u 25V 1210
+  C162       pin 1                  passive      22u 25V 1210
+  J_HEAT     pin 1   Pin_1          passive      JST-XH 1x2 socket: the pack heater mat (12 V, 7.5 W), fed a regulated 12.0 V: + and -
+  L12        pin 2   2              passive      15uH XAL4040-153ME (Isat 2.9 A)
+  R191       pin 1                  passive      140k 1%
+  NET HT_SW (3 nodes)  [through L12]
+    C157       pin 2                  passive      100n
+    L12        pin 1   1              passive      15uH XAL4040-153ME (Isat 2.9 A)
+    U33        pin 5   HT_SW          passive      TPS62933DRLR 3 A buck, 12.0 V heater rail
+  NET HT_FB (3 nodes)  [through R191]
+    R191       pin 2                  passive      140k 1%
+    R192       pin 1                  passive      10k 1%
+    U33        pin 8   HT_FB          passive      TPS62933DRLR 3 A buck, 12.0 V heater rail
+##### A RF_VHF
+NET RF_VHF (2 nodes)  [RF_VHF]
+  J_BM1      pin 1   In             passive      SMP-MAX slide-on receptacle R222M00720 (underside), VHF to the dock plug
+  J_RF1      pin 1   In             passive      SMA jack, Amphenol 132134-11 vertical (pigtail to the VHF device)

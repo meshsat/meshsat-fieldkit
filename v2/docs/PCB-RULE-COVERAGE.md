@@ -43,7 +43,7 @@ appears in the gap register.
 | PWR-001 | POWER_TREE | BLOCKER | gen_sch_*.py via intent.rail() | intent_checks.py -> intent_rails | tests/test_rail_loads.py, tests/test_rails_netlist.py, tests/test_rails_census.py | **ENFORCED** |
 | PWR-002 | POWER_TREE | MUST_JUSTIFY | the switch and always_on declarations in each gen_sch_*.py rail | power_sequence.py -> power_sequence | tests/test_power_sequence.py, tests/test_artefact_recording.py | **ENFORCED** |
 | PWR-003 | POWER_TREE | BLOCKER | pcb_energy_chain.yaml, the chain as data | energy_chain.py, pcb_fuse_derating.yaml -> energy_chain_<letter> | tests/test_energy_chain.py, tests/test_artefact_recording.py | **ENFORCED** |
-| REL-001 | RELIABILITY | MUST_JUSTIFY | NONE_YET | reliability.py -> reliability | tests/test_reliability.py | **ENFORCED** |
+| REL-001 | RELIABILITY | MUST_JUSTIFY | NONE_YET | reliability.py -> reliability | tests/test_reliability.py, tests/test_reliability_inventory.py | **ENFORCED** |
 | RET-001 | RETURN_PATH | BLOCKER | signal_class.py plus each board's signal_classes table, judged by intent_checks.py | intent_checks.py -> intent_return_path | tests/test_signal_class.py | **ENFORCED** |
 | RET-002 | RETURN_PATH | MUST_JUSTIFY | gen_pcb_*3.py pours | intent_checks.py -> intent_return_path | tests/test_board_gates.py | **ENFORCED** |
 | RET-003 | RETURN_PATH | BLOCKER | gen_pcb_a3.py In2 pours | ref_change.py -> return_stitch | tests/test_ref_change.py | **ENFORCED** |

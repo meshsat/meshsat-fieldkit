@@ -52,6 +52,7 @@ def t_a_drifted_panel1450_moves_the_reading():
             os.makedirs(os.path.join(tmp, "v2", sub), exist_ok=True)
         shutil.copy(C.FRAME_SEAT, os.path.join(tmp, "v2", "vendor", "peli", "frame_seat.py"))
         shutil.copy(os.path.join(V2, "cad", "zstack.json"), os.path.join(tmp, "v2", "cad", "zstack.json"))
+        shutil.copy(os.path.join(V2, "cad", "lid_tray_qmx_r2.py"), os.path.join(tmp, "v2", "cad", "lid_tray_qmx_r2.py"))   # frame_seat.py reads the r2 stack
         src = open(os.path.join(TOOLS, "panel1450.py"), encoding="utf-8").read()
         assert "FACE_HOLE = 4.6 " in src, "the fixture's anchor moved: panel1450.FACE_HOLE is no longer written as 4.6"
         open(os.path.join(tmp, "v2", "ecad", "tools", "panel1450.py"), "w", encoding="utf-8").write(src.replace("FACE_HOLE = 4.6 ", "FACE_HOLE = 4.4 ", 1))

@@ -1,0 +1,26 @@
+THE CONSUMERS OF THE RELIABILITY VERDICT, PROBED ON FIXTURES (worker d6rel, MESHSAT-1357, 28 September 2026 00:26 CEST)
+  python3 v2/docs/records/d6rel/consumers_probe.py v2/ecad/tools   (read only, in-memory records)
+
+1. rules_status.result_for on one INCONCLUSIVE reliability reading (board A):
+   result INCONCLUSIVE: reliability INCONCLUSIVE: board A has no netlist of its declared phase in this tree
+   -> INCONCLUSIVE reaches the rule as INCONCLUSIVE, with the tool's own reason.
+
+2. rules_status._supersedes: a NEW INCONCLUSIVE reading that declares its input absent, beside an OLD PASS
+   from the word-list tool that never declared anything (the reviewer's case 4 read PASS of 0 with no netlist):
+   new supersedes old: False
+   -> the OLD PASS stands in front of the new reading (the rule 'a reading taken with less input never replaces
+      one taken with more', which cannot tell that the old reading had no input either).
+
+3. The floor that closes it: pcb_rules_coverage.yaml REL-001 evidence_not_before (the apply script of this
+   stream adds it). With the floor, the OLD PASS is not current evidence, whichever reading wins:
+   old PASS under the floor: current=False: reliability was taken 2026-09-27T10:00:00, before 2026-09-28T00:00:00+02:00, when its tool changed what the verdict means; re-take it
+   result_for with the old PASS alone: INCONCLUSIVE: reliability was taken 2026-09-27T10:00:00, before 2026-09-28T00:00:00+02:00, when its tool changed what the verdict mean
+   result_for with a PASS taken after the floor: PASS
+   without the floor, the old PASS reads: PASS
+
+4. A crashed tool (verdict.guard) writes INCONCLUSIVE with missing_input, which reaches the rule the same way:
+   result INCONCLUSIVE: reliability INCONCLUSIVE: a decision: the gate crashed with ValueError
+
+5. No verdict at all for the board:
+   result INCONCLUSIVE: no reliability verdict for this board
+exit: 0

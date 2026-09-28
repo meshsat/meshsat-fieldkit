@@ -1,40 +1,124 @@
 {
  "advisory": false,
  "applicable": true,
+ "code_bundle": {
+  "entry": "reliability.py",
+  "files": {
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "reliability.py": "c50f2b8b35d1d57b",
+   "verdict.py": "e7d66c930b2c4357",
+   "wear_inventory.py": "503a05eedb8a0a29"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "70940aae54caa88b",
+  "unresolved": []
+ },
  "counts": {
   "boards": 1,
-  "classes": 6,
-  "covered": 41,
-  "fail": 0
+  "candidates": 155,
+  "citations_unjudged": 0,
+  "classed": 56,
+  "classes": 15,
+  "classes_undecided": 3,
+  "covered": 56,
+  "excluded": 99,
+  "exclusions": 5,
+  "fail": 0,
+  "figures_cited": 9,
+  "figures_none_published": 3,
+  "figures_not_mated": 0,
+  "figures_owed": 3,
+  "inconclusive": 11,
+  "measures_owed": 2,
+  "per_board": {
+   "b": {
+    "artefact": {
+     "kind": "netlist",
+     "sha256_16": "21a1f74a3ec1ae28"
+    },
+    "bound": true,
+    "candidates": 155,
+    "citations_unjudged": 0,
+    "classed": 56,
+    "classes_undecided": 3,
+    "excluded": 99,
+    "held_by": [
+     "REL-O-02",
+     "REL-O-03",
+     "REL-O-07",
+     "REL-O-08",
+     "REL-O-09",
+     "REL-O-12",
+     "REL-O-13"
+    ],
+    "refused": 0,
+    "result": "INCONCLUSIVE"
+   }
+  },
+  "refused": 0
  },
- "denominator": 47,
- "evidence": [],
+ "denominator": 155,
+ "evidence": [
+  "B: class M.2 NVMe sockets (Amphenol) owes its cycle figure (open item REL-O-03: board B's three NVMe sockets are Amphenol MDT420M02001. The held drawing of that part states no durability, and Amphenol's series sheet (SSIOPCIEM20519EA4) gives 25 to 60 mating cycles for a normal M.2 by plating option and does not list this part number in its table)",
+  "B: class the coin cell retainer owes its measure (open item REL-O-09: board B's coin cell retainer is surface mounted (Keystone 3034), and no measure is recorded against the lever of changing the cell on its two solder tails; the list of 16 September called it through-hole)",
+  "B: class lead headers on 2.54 mm lands, mated in service owes its cycle figure (open item REL-O-02: the 2.54 mm pin header lands carry no named part: their values in the netlists name the lead, the module or the bench use and no header, and whether a header is fitted or the lead is soldered into the holes is a build choice not made. ASSEMBLY.md section 4 names JST PH housings for J_CAM, J_QMX, J_POD and the three sensor modules and SH housings for board E's two mixer fans, and the netlists draw 2.54 mm pin header lands for all of them. Board B's ten bench and commissioning headers are owed under the same item: whether a header is fitted on them at all is the same choice)",
+  "B: class bench and commissioning headers on 2.54 mm lands owes its cycle figure (open item REL-O-02: the 2.54 mm pin header lands carry no named part: their values in the netlists name the lead, the module or the bench use and no header, and whether a header is fitted or the lead is soldered into the holes is a build choice not made. ASSEMBLY.md section 4 names JST PH housings for J_CAM, J_QMX, J_POD and the three sensor modules and SH housings for board E's two mixer fans, and the netlists draw 2.54 mm pin header lands for all of them. Board B's ten bench and commissioning headers are owed under the same item: whether a header is fitted on them at all is the same choice)",
+  "B: class bench and commissioning headers on 2.54 mm lands owes its measure (open item REL-O-02: the 2.54 mm pin header lands carry no named part: their values in the netlists name the lead, the module or the bench use and no header, and whether a header is fitted or the lead is soldered into the holes is a build choice not made. ASSEMBLY.md section 4 names JST PH housings for J_CAM, J_QMX, J_POD and the three sensor modules and SH housings for board E's two mixer fans, and the netlists draw 2.54 mm pin header lands for all of them. Board B's ten bench and commissioning headers are owed under the same item: whether a header is fitted on them at all is the same choice)",
+  "B: open item REL-O-07 holds the board: the expected number of mates of each connector over a service life is stated nowhere (REQ-028: no life requirement for prototype 1), so this list carries ratings and compares them with nothing (next action: when a service life is ruled, state the expected mates per connector from CONOPS section 5 and compare each class's figure with it)",
+  "B: open item REL-O-08 holds the board: the joints under heavy soldered parts (the soldered radio modules, the magnetics, the large inductors) are joints that carry load in transport, and this inventory cannot find them: a netlist carries no mass (next action: list the parts above a mass limit from the makers' documents and add them as a class per board with the staking or support each needs)",
+  "B: open item REL-O-13 holds the board: the inventory of a board with a schematic is its NETLIST's, and the declared-phase board files carry footprints no netlist holds: mounting holes H1 to H8 on board A, twenty on board B (M2.5, M3 and M4) with six S_ references beside them, H1 to H4 on boards D and P and twenty-eight on board E, every H on a MountingHole land, while boards C and E5 class the same kind of joint because their own artefacts carry it. The board files also carry a few R, Q, C and U references the netlists do not, and the netlists carry parts the board files do not (225 on board A), so the two are different generations of each design (next action: when each board file is regenerated from its declared netlist, read its footprints beside the netlist (wear_inventory.read_board) and class every screw joint per board with its torque, its thread lock and what hangs on it, from ASSEMBLY.md)",
+  "B: class the coin cell retainer has no cycle figure: the maker's documents that were read state none (v2/vendor/keystone/M65p9.pdf), so the class is undecided and the board is not passed on it (open item REL-O-12: prepare the question to each maker for the owner to send (outside contact is his), or take each class's figure from the prototype's mate-cycle test once TEST-PLAN.md sets its cycle count; carry the figure with its document, or with the test's record)",
+  "B: class JST VH power headers has no cycle figure: the maker's documents that were read state none (v2/vendor/connectors/jst-vh-catalogue.pdf, v2/vendor/connectors/jst-handling-precautions-2020.pdf), so the class is undecided and the board is not passed on it (open item REL-O-12: prepare the question to each maker for the owner to send (outside contact is his), or take each class's figure from the prototype's mate-cycle test once TEST-PLAN.md sets its cycle count; carry the figure with its document, or with the test's record)",
+  "B: class JST SH fan headers has no cycle figure: the maker's documents that were read state none (v2/vendor/connectors/jst-sh-catalogue.pdf, v2/vendor/connectors/jst-handling-precautions-2020.pdf), so the class is undecided and the board is not passed on it (open item REL-O-12: prepare the question to each maker for the owner to send (outside contact is his), or take each class's figure from the prototype's mate-cycle test once TEST-PLAN.md sets its cycle count; carry the figure with its document, or with the test's record)",
+  "B: 91 part(s) excluded (TP10, TP101, TP102, TP103, TP104, TP11 and 85 more): a test point: a bare pad touched by a probe at the bench, nothing is mated and nothing hangs on it",
+  "B: 3 part(s) excluded (F1, F2, F3): a resettable fuse soldered to the board in an 1812 package: there is no holder and nothing is mated",
+  "B: 3 part(s) excluded (U42, U52, U62): the programming pads of the three I/O controllers: bare surface lands for a probe clip at the bench, no part is fitted on them (their values in the netlist call them SWD pads)",
+  "B: 1 part(s) excluded (T1): soldered Ethernet magnetics (Pulse H5007NL): a candidate only because its value names the wall RJ45 it feeds (the word net, since jack, RJ45 and plug joined it); nothing is mated on it. The joints under its mass are open item REL-O-08",
+  "B: 1 part(s) excluded (U5): a soldered PoE controller in a TSSOP-28 (TI TPS23861PWR): a candidate only because its value names the wall RJ45 port it powers; nothing is mated on it"
+ ],
  "inputs": {
   "board": "b",
-  "list": "pcb_reliability.yaml"
+  "list": {
+   "path": "tools/pcb_reliability.yaml",
+   "sha256": "b568aed64fe8e734e53de390f3119a7798ba94b8ded385849aea38a84580a45a",
+   "sha256_16": "b568aed64fe8e734"
+  },
+  "netlist": {
+   "content16": "b9dbb9c4a430d108",
+   "parts": 1280,
+   "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
+   "sha256": "21a1f74a3ec1ae28966f62b648327d48de6f1df8e09527c6deed73b59898270a",
+   "sha256_16": "21a1f74a3ec1ae28"
+  }
  },
  "missing_input": null,
- "note": "every part that carries load or sees cycling falls in a declared class with its cycle figure or the reason it has none, its load and the measure taken. It tests nothing: REL-001 is verified at the prototype and no board has been built",
+ "note": "every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the measure taken, or under one declared exclusion with its reason. A desk reading of a netlist and a list: it tests nothing and replaces no physical verification; REL-001 is verified at the prototype and no board has been built",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
    "REL-001": "d94df1c6a3ff6010"
   },
-  "rule_set_fingerprint": "ff8151db3576437b"
+  "rule_set_fingerprint": "635ff031f210f48c"
  },
  "rules": [
   "REL-001"
  ],
+ "runtime": {
+  "python": "3.12.3"
+ },
  "tool": "reliability",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "git_head": "87b7d5a9509c",
+  "tools_tree_sha": "bfeac03e9fe6170b"
  },
- "ts": "2026-09-21T12:47:45Z",
- "verdict": "PASS",
- "version": "unknown",
+ "ts": "2026-09-28T21:56:35Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "87b7d5a9509c",
  "writer": {
   "file": "reliability.py",
-  "sha16": "149a48e5f2419955"
+  "sha16": "c50f2b8b35d1d57b"
  }
 }

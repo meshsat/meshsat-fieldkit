@@ -1,0 +1,100 @@
+QMX lid tray r2: the fit, the face room and the retention, from v2/cad/lid_tray_qmx_r2.py and frame_seat.out (M3 nominal +19.92, worst +16.39 for a tray 28.00 from the ceiling).
+Prototype design: nothing made, printed or fitted. SCALED and INFERRED inputs are marked; the makers' figures are named.
+
+A. JACKS AND PLUGS (tray open across both end panels above the sill; sill and keeper top 1.5 above the unit's bottom face)
+   jack    panel  v from knob edge  height (scaled)   admitted plug body   who and what
+   DC      L       10.2 ..  11.2      11.4 ..  12.4     d  18.8 (r  9.4)    lid harness: 12.0 V lead to A22 J_HF (2.1 x 5.5 barrel)
+   Audio   L       20.4 ..  21.4       8.0 ..   9.0     d  12.0 (r  6.0)    operator: earphones (3.5 mm stereo), lid open only
+   Paddle  L       32.3 ..  33.3       8.0 ..   9.0     d  12.0 (r  6.0)    operator: paddle, microphone or GPS (3.5 mm stereo), lid open only
+   RF      R        7.8 ..  12.6      10.0 ..  12.1     d  16.0 (r  8.0)    lid harness: RG-316 BNC-to-SMA jumper to A22 J_RF2
+   PTT     R       28.5 ..  30.2       7.4 ..   9.0     d  10.8 (r  5.4)    operator: PTT output to an amplifier (3.5 mm), lid open only
+   USB     R       40.6 ..  41.6       6.3 ..   7.5     d   8.6 (r  4.3)    lid harness: USB-C lead to B16 J_QMX
+   USB-C: the admitted envelope is a height, 4.3 above and below the axis; an overmold 12.35 wide (a class, INFERRED) is the other
+   bound, and the unit's own panel sets it against the PTT plug: PTT to USB centres 11.4 .. 12.1 apart, so a PTT plug beside a 12.35
+   overmold may be 10.5 across at most (the unit's panel, not the tray). Nothing of the tray lies within an end panel's outline above
+   the sill; each end's lintel lies above the unit's top face (27.1 to 29.1 above the plate) and 3.0 wide beyond the end face, over
+   every plug body; beyond the end faces only the sill or keeper (top 3.6 above the plate) and the lid plate lie under the plugs.
+   Leads (permanent: DC, RF, USB; the operator's Paddle, Audio and PTT plugs come out before the lid closes, the case closes sealed):
+   right panel to the flat ceiling's edge (case Y 115.93): 58.43; the RF jumper turns at R 12.5 (RG-316, the tree's figure), so its
+     BNC plug may reach 42.9 from the panel before its cable turns; the USB-C lead, turning at R 20.0, 35.4.
+   left panel to the flat ceiling's edge (case Y -115.93): 78.43; the DC lead loops back toward the hinge at R 20.0 west of the tray,
+     so its plug may reach 55.4 from the panel. R 20.0 is the requirement on the DC and USB lead picks (not picked).
+
+B. FACE ROOM with the lid closed (frame_seat.out M3's room between the face top and the lid ceiling: 47.92 nominal, 44.39 at the worst,
+   42.11 at the worst with every unstated allowance taken twice, the case margins' sensitivity reading that decides MET)
+   r2 stack from the ceiling: bond 0.20 + lid plate 2.0 + floor 1.6 + pad gap 0.5 + unit 25.0 = 29.30 to the unit's top face; + ledge 2.0 = 31.30
+   (the r1 tray's 28.0 counted no lid plate; its ASSEMBLY.md row names a 2 mm nut plate the M3 row left out)
+   key    min   nominal   worst  unstated x2
+   M3r2a  1.00   +16.62   +13.09   +10.81  under the walls and ledges (the flat face, the light guides 0.2 proud): MET
+   M3r2b  1.00   +18.62   +15.09   +12.81  under the unit's top face, over SW_MAIN, SW_PI, SW_TEST (cap heights TBD, C&K): OPEN on the cap heights (MET for caps up to 11.81, 14.09 at the worst)
+   M3r2k  1.00    +7.02    +3.49    +1.21  the knob tips over the flat face (knob 11.6 above the top face, INFERRED): MET on the INFERRED knob; OPEN on its unstated height: MET for a knob up to 11.81 (14.09 at the plain worst)
+   M19 (east edge at X 171.0 inside the flat ceiling): unchanged, nominal +2.08, worst +1.70, MET
+   place: X 83.4 .. 171.0 (grown 18.6 west of r1's 102.0 for the gussets; the lid ceiling is free there), Y -45.8 .. 65.8
+   knobs at case (X 109.4, Y -16.1) and (X 109.4, Y 36.1), each d 18.0: west of the buttons' column (X 140.4 .. 159.6) and of the light guides (X 126.4)
+
+C. PADS (Rogers PORON 4701-30 Very Soft, 320 kg/m3, 3.18 mm (0.125 in), black (04); standing on the plate in two floor windows 24 x 20, 960 mm2)
+   compression: nominal 1.08 (34 %), least 0.36 (13 %, thin pad, unit high), most 1.80 (51 %, thick pad, unit low)
+   so the unit always stands on the pads, pressed up against the ledges; at 25 % the sheet gives 21 to 55 kPa, 20 to 53 N
+   (the sheet states 25 % only: the preload at the least and most compression is not stated). Floor top 1.6: the hard stop toward the lid.
+
+D. RETENTION. Unit and mated plugs 0.240 kg (maker's 220 g + 20 g INFERRED): 2.35 N per g. With the tray, keeper and plate 0.342 kg.
+   Material: Prusament PC Blend (TDS v1.1): interlayer 19, flexural 87, tensile 62 MPa taken (typical less spread); printed
+   floor down, 100 percent infill, 0.20 mm layers as the sheet's specimens; walls and gussets vertical, so wall tension crosses the layers.
+   dir  link                                                                                                                    N        g
+   out  back ledge, root bending (93.0 long, lever 2.65)                                                                     4071     1730  half the load on each side
+   out  back wall, tension and bending across the layers at its root (4.3 pitches)                                           5264     2237  half the load on each wall
+   out  knob-edge ledge, root bending (33.0 long, lever 2.15)                                                                1780      756  half the load on each side
+   out  knob-edge wall, tension and bending across the layers at its root (4.3 pitches)                                      5607     2382  half the load on each wall
+   out  M3 threads in the 2.0 lid plate, four boss screws (engagement 1.4, tip 0.6 short of the bond)                        3958     1682  INFERRED shear
+   out  countersunk heads pulling through the 3.6 bosses, four                                                               6544     2781  
+   out* the lid plate's DP8005 bond on the lid's polypropylene: SCOPING ONLY (T-peel of 0.5 mm HDPE x perimeter 388)          612      182  no held figure bounds it
+   x    bearing of the left or right panel's bottom band on the sill or keeper (1.1 x 61 at the loose corner)                4160     1768  
+   x    three M3 through the keeper and deck (or the end block), bearing on the printed holes over 3.6                       2009      854  friction not counted
+   y    one wall pushed outward, bending across the layers at its root (resultant 13.0 above it, 4.3 pitches)                1655      703  lintels not counted
+   Governing link on the makers' typical figures: 703 g (direction y: one wall pushed outward, bending across the layers at its root). The bond is not bounded by any held figure: its
+   T-peel scoping number (182 g) is for a flexible strip, not a rigid 2 mm plate, and is no bound; it goes to CASE-MARGINS T8 as a
+   pull test on the case's polypropylene.
+   E1's peak on the lid is not stated by MIL-STD-810H (it sets the drop, not a pulse). Half-sine from 1.22 m over a stopping distance s:
+   s  2.0 mm:  958 g;  s  5.0 mm:  383 g;  s 10.0 mm:  192 g;  s 20.0 mm:   96 g
+   The known links hold to 703 g, which the bound passes for s >= 2.7 mm and fails below: a bound that includes failure. No board,
+   interface or purchase depends on it (the remedy, a machined 6061 tray from the same STEP or a larger bonded plate, moves no board),
+   so the retention verdict stays OPEN, allocated to E1 with an accelerometer on the lid and to T8 for the bond. E2 (MIL-STD-810H
+   514.8, composite wheeled vehicle): its levels are not held here; the pads' preload and E2's 'no loosened fastener' line are the check.
+   The r1 tray it replaces held the unit by one hook-and-loop strap (no figure stated) and a 6 mm lip, in PETG (HDT 68 C).
+
+SOLIDS (build123d 0.13.0): intersection volumes in mm3, every one must be 0.000
+   the unit at its nominal place                              tray 0.000  keeper 0.000
+   DC plug d 18.8 at v 10.2 h 11.4                            tray 0.000  keeper 0.000
+   DC plug d 18.8 at v 10.2 h 12.4                            tray 0.000  keeper 0.000
+   DC plug d 18.8 at v 11.2 h 11.4                            tray 0.000  keeper 0.000
+   DC plug d 18.8 at v 11.2 h 12.4                            tray 0.000  keeper 0.000
+   Audio plug d 12.0 at v 20.4 h 8.0                          tray 0.000  keeper 0.000
+   Audio plug d 12.0 at v 20.4 h 9.0                          tray 0.000  keeper 0.000
+   Audio plug d 12.0 at v 21.4 h 8.0                          tray 0.000  keeper 0.000
+   Audio plug d 12.0 at v 21.4 h 9.0                          tray 0.000  keeper 0.000
+   Paddle plug d 12.0 at v 32.3 h 8.0                         tray 0.000  keeper 0.000
+   Paddle plug d 12.0 at v 32.3 h 9.0                         tray 0.000  keeper 0.000
+   Paddle plug d 12.0 at v 33.3 h 8.0                         tray 0.000  keeper 0.000
+   Paddle plug d 12.0 at v 33.3 h 9.0                         tray 0.000  keeper 0.000
+   RF plug d 16.0 at v 7.8 h 10.0                             tray 0.000  keeper 0.000
+   RF plug d 16.0 at v 7.8 h 12.1                             tray 0.000  keeper 0.000
+   RF plug d 16.0 at v 12.6 h 10.0                            tray 0.000  keeper 0.000
+   RF plug d 16.0 at v 12.6 h 12.1                            tray 0.000  keeper 0.000
+   PTT plug d 10.8 at v 28.5 h 7.4                            tray 0.000  keeper 0.000
+   PTT plug d 10.8 at v 28.5 h 9.0                            tray 0.000  keeper 0.000
+   PTT plug d 10.8 at v 30.2 h 7.4                            tray 0.000  keeper 0.000
+   PTT plug d 10.8 at v 30.2 h 9.0                            tray 0.000  keeper 0.000
+   USB plug d 8.6 at v 40.6 h 6.3                             tray 0.000  keeper 0.000
+   USB overmold 12.35 x 8.6 at v 40.6 h 6.3                   tray 0.000  keeper 0.000
+   USB plug d 8.6 at v 40.6 h 7.5                             tray 0.000  keeper 0.000
+   USB overmold 12.35 x 8.6 at v 40.6 h 7.5                   tray 0.000  keeper 0.000
+   USB plug d 8.6 at v 41.6 h 6.3                             tray 0.000  keeper 0.000
+   USB overmold 12.35 x 8.6 at v 41.6 h 6.3                   tray 0.000  keeper 0.000
+   USB plug d 8.6 at v 41.6 h 7.5                             tray 0.000  keeper 0.000
+   USB overmold 12.35 x 8.6 at v 41.6 h 7.5                   tray 0.000  keeper 0.000
+   knob at x -26.1 with 6 mm finger room, to 32 above its top tray 0.000  keeper 0.000
+   knob at x +26.1 with 6 mm finger room, to 32 above its top tray 0.000  keeper 0.000
+   CONTROL: the unit 1.0 higher, into the ledges              tray 433.200  keeper 0.000  (must be > 0)
+   CONTROL: the RF plug 1.0 fatter at its lowest              tray 4.241  keeper 0.000  (must be > 0)
+   masses: tray 0.0490 kg, keeper 0.0013 kg (MASSES 0.0490, 0.0013)
+   RESULT: PASS: no intersection, and both controls intersect

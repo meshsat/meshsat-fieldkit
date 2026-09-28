@@ -1,0 +1,46 @@
+port_protect: board C declares 2 external port(s); 2 found on this netlist
+port_protect: 0 clamp(s) judged for polarity: 0 reversed, 0 drawn with a symbol that does not match the part's direction, 0 unjudged
+  J_PIJ2       2 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [the panel's exposed jack on the face]
+  J_MAINSW     2 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [the main switch on the face, which a person touches]
+port_protect: 0 connector pin(s) declared internal, 39 connector pin(s) that no entry covers
+  UNCOVERED J_EPD.10 on EPD_RST: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_EPD.11 on EPD_DC: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_EPD.12 on EPD_CS: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_EPD.13 on EPD_SCL: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_EPD.14 on EPD_SDA: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_EPD.15 on EPD_VCC: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_EPD.16 on EPD_VCC: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_EPD.18 on EPD_VDDD: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_EPD.2 on EPD_GDR: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_EPD.20 on EPD_VDH: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_EPD.21 on EPD_VGH: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_EPD.22 on EPD_VDL: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_EPD.23 on EPD_VGL: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_EPD.24 on EPD_VCOM: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_EPD.3 on EPD_RESE: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_EPD.5 on EPD_VDHR: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_EPD.9 on EPD_BUSY: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_PANEL.1 on +5V: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_PANEL.10 on ZEROIZE_HW: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_PANEL.11 on TX_INHIBIT_n: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_PANEL.12 on HDMI_SEL1: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_PANEL.13 on HDMI_SEL2: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_PANEL.15 on USB_PNL_P: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_PANEL.16 on USB_PNL_N: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_PANEL.18 on HB1: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_PANEL.19 on HB2: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_PANEL.2 on +5V: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_PANEL.20 on HB3: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_PANEL.21 on SLOT_EN1: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_PANEL.22 on SLOT_EN2: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_PANEL.23 on SLOT_EN3: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_PANEL.24 on PI_SHDN_REQ: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_PANEL.25 on PI_KILL: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_PANEL.26 on SHORE_INHIBIT: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_PANEL.4 on SDA: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_PANEL.5 on SCL: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_PANEL.6 on EXP_INT: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_PANEL.7 on TR_APRS: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+  UNCOVERED J_PANEL.8 on EMCON_HW: a connector pin carrying a supply or a signal that neither external_ports nor internal_ports names
+verdict: port_protect           INCONCLUSIVE of 4 {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 0, "clamps_one_way": 0, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unjudged": 0, "declarations_refused": 0, "declared": 2, "ground_pins_not_judged": 0, "internal_pins": 0, "not_on_netlist": 0, "ports": 2, "uncovered_pins": 39, "unprotected": 0} | every declared external conductor meets a protection part before a chip; 0 clamp(s) could not be judged for polarity and 39 connector pin(s) are covered by no entry of the declaration, so nobody has said whether they leave the case
+rc=3

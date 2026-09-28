@@ -1,0 +1,9 @@
+HEAD 5df41dd5987e32693baa8221614023fa0db98dc1  start 2026-09-27T21:36:58Z
+status-1 exit 1: verdict: rules_status           FAIL         of 338 {"FAIL": 40, "INCONCLUSIVE": 89, "PASS": 209, "WAIVED": 0, "denominator": 338, "fail_percent": 11.8, "inconclusive_percent": 26.3, "pass_percent": 61.8, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen
+status-2 exit 1: verdict: rules_status           FAIL         of 338 {"FAIL": 40, "INCONCLUSIVE": 89, "PASS": 209, "WAIVED": 0, "denominator": 338, "fail_percent": 11.8, "inconclusive_percent": 26.3, "pass_percent": 61.8, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen
+status-3 exit 1: verdict: rules_status           FAIL         of 338 {"FAIL": 40, "INCONCLUSIVE": 89, "PASS": 209, "WAIVED": 0, "denominator": 338, "fail_percent": 11.8, "inconclusive_percent": 26.3, "pass_percent": 61.8, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen
+render exit 0: 0 page(s) written
+rules_render --check exit 0: rules_render: 16 document(s), 0 out of date
+rules_render --requirements --check exit 0: rules_render: ../docs/REQUIREMENTS-TRACE.md is current
+rules_lib: 144 requirement record(s), 0 error(s), 0 warning(s)
+tracked files changed by it: 0

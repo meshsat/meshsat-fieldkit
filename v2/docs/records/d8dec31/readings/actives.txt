@@ -1,0 +1,151 @@
+===== A
+  L1    10uH XAL1010-103ME (Isat 17.5 A)                                                                               LCSC=C6358489  fp=L_Coilcraft_XAL1010-XXX
+  L2    3.3uH XAL6030-332ME (Isat 12.2 A)                                                                              LCSC=          fp=L_Coilcraft_XAL6060-XXX
+  L3    4.7uH XAL6060-472ME (Isat 11 A)                                                                                LCSC=          fp=L_Coilcraft_XAL6060-XXX
+  L4    6.8uH XAL1010-682ME (Isat 21.8 A)                                                                              LCSC=          fp=L_Coilcraft_XAL1010-XXX
+  L5    4.7uH XAL6060-472ME (Isat 11 A)                                                                                LCSC=          fp=L_Coilcraft_XAL6060-XXX
+  L6    6.8uH XAL1010-682ME (Isat 21.8 A)                                                                              LCSC=          fp=L_Coilcraft_XAL1010-XXX
+  L7    4.7uH XAL4030-472ME                                                                                            LCSC=          fp=L_Coilcraft_XAL4030-XXX
+  L8    6.8uH XAL1010-682ME (Isat 21.8 A)                                                                              LCSC=          fp=L_Coilcraft_XAL1010-XXX
+  L9    6.8uH XAL1010-682ME                                                                                            LCSC=          fp=L_Coilcraft_XAL1010-XXX
+  L10   15uH XAL1010-153ME (Isat 15.5 A)                                                                               LCSC=C2802562  fp=L_Coilcraft_XAL1010-XXX
+  L11   6.8uH XAL1010-682ME                                                                                            LCSC=          fp=L_Coilcraft_XAL1010-XXX
+  L12   15uH XAL4040-153ME (Isat 2.9 A)                                                                                LCSC=          fp=L_Coilcraft_XAL4040-XXX
+  Q1    2N7002: panel controller high = pull KILL low = power off (1 G, 2 S, 3 D)                                      LCSC=          fp=SOT-23
+  Q2    CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)                                       LCSC=C473333   fp=PowerPAK_SO-8_Single
+  Q3    CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)                                       LCSC=C473333   fp=PowerPAK_SO-8_Single
+  Q4    CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)                                       LCSC=C473333   fp=PowerPAK_SO-8_Single
+  Q5    CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)                                       LCSC=C473333   fp=PowerPAK_SO-8_Single
+  Q6    2N7002: CHG_INHIBIT high = ILIM_HIZ low = charger in HiZ                                                       LCSC=          fp=SOT-23
+  Q7    CSD18510Q5B 40 V N-FET                                                                                         LCSC=          fp=PowerPAK_SO-8_Single
+  Q8    CSD18510Q5B 40 V N-FET                                                                                         LCSC=          fp=PowerPAK_SO-8_Single
+  Q9    CSD18510Q5B 40 V N-FET                                                                                         LCSC=          fp=PowerPAK_SO-8_Single
+  Q10   CSD18510Q5B 40 V N-FET                                                                                         LCSC=          fp=PowerPAK_SO-8_Single
+  Q11   CSD18510Q5B 40 V N-FET                                                                                         LCSC=          fp=PowerPAK_SO-8_Single
+  Q12   CSD18510Q5B 40 V N-FET                                                                                         LCSC=          fp=PowerPAK_SO-8_Single
+  Q13   CSD18510Q5B 40 V N-FET                                                                                         LCSC=          fp=PowerPAK_SO-8_Single
+  Q14   CSD18510Q5B 40 V N-FET                                                                                         LCSC=          fp=PowerPAK_SO-8_Single
+  Q15   CSD18510Q5B 40 V N-FET                                                                                         LCSC=          fp=PowerPAK_SO-8_Single
+  Q16   CSD18510Q5B 40 V N-FET                                                                                         LCSC=          fp=PowerPAK_SO-8_Single
+  Q17   CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)                                       LCSC=C473333   fp=PowerPAK_SO-8_Single
+  Q18   CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)                                       LCSC=C473333   fp=PowerPAK_SO-8_Single
+  Q19   CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)                                       LCSC=C473333   fp=PowerPAK_SO-8_Single
+  Q20   CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)                                       LCSC=C473333   fp=PowerPAK_SO-8_Single
+  Q21   CSD18510Q5B 40 V N-FET                                                                                         LCSC=          fp=PowerPAK_SO-8_Single
+  Q22   CSD18510Q5B 40 V N-FET                                                                                         LCSC=          fp=PowerPAK_SO-8_Single
+  Q23   CSD18510Q5B 40 V N-FET                                                                                         LCSC=          fp=PowerPAK_SO-8_Single
+  Q24   CSD18510Q5B 40 V N-FET                                                                                         LCSC=          fp=PowerPAK_SO-8_Single
+  Q25   CSD18510Q5B 40 V N-FET                                                                                         LCSC=          fp=PowerPAK_SO-8_Single
+  Q26   CSD18510Q5B 40 V N-FET                                                                                         LCSC=          fp=PowerPAK_SO-8_Single
+  Q27   CSD18510Q5B 40 V N-FET (VBUS switch)                                                                           LCSC=          fp=PowerPAK_SO-8_Single
+  Q28   CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)                                       LCSC=C473333   fp=PowerPAK_SO-8_Single
+  Q29   CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)                                       LCSC=C473333   fp=PowerPAK_SO-8_Single
+  Q30   CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)                                       LCSC=C473333   fp=PowerPAK_SO-8_Single
+  Q31   CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)                                       LCSC=C473333   fp=PowerPAK_SO-8_Single
+  Q32   CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)                                       LCSC=C473333   fp=PowerPAK_SO-8_Single
+  Q33   CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)                                       LCSC=C473333   fp=PowerPAK_SO-8_Single
+  Q34   CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)                                       LCSC=C473333   fp=PowerPAK_SO-8_Single
+  Q35   CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)                                       LCSC=C473333   fp=PowerPAK_SO-8_Single
+  Q36   2N7002: FE_RUN high = latch sense held at 0 V (1 G, 2 S, 3 D)                                                  LCSC=C8545     fp=SOT-23
+  Q37   2N7002: FE_RUN high = bleed off (1 G, 2 S, 3 D)                                                                LCSC=C8545     fp=SOT-23
+  Q38   CSD19532Q5B 100 V N-FET (the VBUS20 bleed switch)                                                              LCSC=C473333   fp=PowerPAK_SO-8_Single
+  U1    LTC2954ITS8-1 push-button on/off controller, -40 to 85 C                                                       LCSC=C2657885  fp=TSOT-23-8
+  U2    LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW                                                          LCSC=C442493   fp=HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP
+  U3    BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B                                     LCSC=C2871872  fp=QFN-32-1EP_4x4mm_P0.4mm_EP2.65x2.6
+  U4    AP64500SP-13 5 A buck, 5.1 V rail +5V_S1                                                                       LCSC=C2070920  fp=SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.2
+  U5    LM5176PWPR buck-boost controller, +5V_S2 from VBAT                                                             LCSC=C442493   fp=HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP
+  U6    AP64500SP-13 5 A buck, 5.1 V rail +5V_S3                                                                       LCSC=C2070920  fp=SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.2
+  U7    LM5176PWPR buck-boost controller, +5V_DEV from VBAT                                                            LCSC=C442493   fp=HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP
+  U8    INA226 rail monitor +5V_S1                                                                                     LCSC=C49851    fp=VSSOP-10_3x3mm_P0.5mm
+  U9    INA226 rail monitor +5V_S2                                                                                     LCSC=C49851    fp=VSSOP-10_3x3mm_P0.5mm
+  U10   INA226 rail monitor +5V_S3                                                                                     LCSC=C49851    fp=VSSOP-10_3x3mm_P0.5mm
+  U11   INA226 rail monitor +5V_DEV                                                                                    LCSC=C49851    fp=VSSOP-10_3x3mm_P0.5mm
+  U12   TPS62933DRLR 3 A buck, 3.3 V logic                                                                             LCSC=C3200405  fp=SOT-583-8
+  U13   LM5176PWPR buck-boost controller, +13V8_PA from VBAT                                                           LCSC=C442493   fp=HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP
+  U14   INA226 PA rail monitor (0x46)                                                                                  LCSC=C49851    fp=VSSOP-10_3x3mm_P0.5mm
+  U15   LM5176PWPR buck-boost controller, +12V_HF from VBAT                                                            LCSC=C442493   fp=HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP
+  U16   LM5176PWPR buck-boost controller, +54V_POE from VBAT                                                           LCSC=C442493   fp=HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP
+  U17   INA226 PoE rail monitor (0x47)                                                                                 LCSC=C49851    fp=VSSOP-10_3x3mm_P0.5mm
+  U18   TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)                                      LCSC=C544309   fp=QFN-24-1EP_4x4mm_P0.5mm_EP2.5x2.5m
+  U19   LM5176PWPR buck-boost controller, PD_VPWR from VBAT                                                            LCSC=C442493   fp=HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP
+  U21   TPS259631DDAR eFuse VBAT -> VMON (750R 1% (ILM: 1.2 A))                                                        LCSC=C2155778  fp=SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.2
+  U22   TPS259631DDAR eFuse VBAT -> VHEAT_IN (909R 1% (ILM: 1.0 A))                                                    LCSC=C2155778  fp=SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.2
+  U23   TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (453R 1% (ILM: 2.0 A))                                                   LCSC=C2155778  fp=SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.2
+  U26   SN74LVC08APWR quad AND: the outlet interlock for PoE and USB-C (sections 3 and 4; 1 and 2 unused)              LCSC=C465737   fp=TSSOP-14_4.4x5mm_P0.65mm
+  U27   PCA9555PW (0x21): enables and status                                                                           LCSC=C2864778  fp=TSSOP-24_4.4x7.8mm_P0.65mm
+  U28   PCA9555PW (0x24): power-good lines, spares                                                                     LCSC=C2864778  fp=TSSOP-24_4.4x7.8mm_P0.65mm
+  U29   USBLC6-2SC6                                                                                                    LCSC=C7519     fp=SOT-23-6
+  U30   SN74LVC1G00DBVR NAND: OUTLET_OK = NOT (TR_APRS AND PA_EN), the outlet interlock                                LCSC=C7826     fp=SOT-23-5
+  U31   TPD2E2U06QDBZRQ1 low-capacitance ESD array, USB-C CC1 and CC2 at the connector                                 LCSC=C488151   fp=SOT-23
+  U32   TPS259631DDAR eFuse +5V_DEV -> VBUS_WALL (1k 1% (ILM: 0.89 A))                                                 LCSC=C2155778  fp=SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.2
+  U33   TPS62933DRLR 3 A buck, 12.0 V heater rail                                                                      LCSC=C3200405  fp=SOT-583-8
+  U34   TPS37A010122DSKR 65 V OV/UV supervisor: the FE's enable and its restart latch                                  LCSC=C3685740  fp=WSON-10-1EP_2.5x2.5mm_P0.5mm_EP1.2
+  U35   SN74AUP1G08DBVR AND: PA_TXOK = TX_INHIBIT_n AND EMCON_HW (the PA rail's EMCON gate)                            LCSC=C139409   fp=SOT-23-5
+  U36   SN74AUP1G08DBVR AND: PA_EN = PA_TXOK AND PA_HOLD (the software hold, through U40)                              LCSC=C139409   fp=SOT-23-5
+  U37   SN74AUP1G08DBVR AND: HF_TXOK = TX_INHIBIT_n AND EMCON_HW (the HF rail's EMCON gate)                            LCSC=C139409   fp=SOT-23-5
+  U38   SN74AUP1G08DBVR AND: HF_EN = HF_TXOK AND HF_HOLD (the software hold, through U40)                              LCSC=C139409   fp=SOT-23-5
+  U39   TPS259631DDAR eFuse +3V3 -> +3V3_EMCON_EF (4.7k 1% (ILM: 0.18 A))                                              LCSC=C2155778  fp=SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.2
+  U40   SN74LVC2G07DBVR dual open-drain buffer: the software holds into the EMCON gates' supply domain                 LCSC=C37708    fp=SOT-23-6
+===== D
+  K1    Omron G6K-2F-Y 5 VDC DPDT signal relay, T/R                                                                    LCSC=          fp=Relay_DPDT_Omron_G6K-2F-Y
+  L1    68nH 0805 (LPF, 145 MHz 5th order; values to be verified in MESHSAT-818)                                       LCSC=          fp=L_0805_2012Metric
+  L2    68nH 0805 (LPF)                                                                                                LCSC=          fp=L_0805_2012Metric
+  Q1    2N7002 PA_EN -> H/L low (never tie H/L high)                                                                   LCSC=C8545     fp=SOT-23
+  Q2    2N7002 relay coil                                                                                              LCSC=C8545     fp=SOT-23
+  Q3    2N7002                                                                                                         LCSC=C8545     fp=SOT-23
+  Q4    2N7002                                                                                                         LCSC=C8545     fp=SOT-23
+  Q5    2N7002                                                                                                         LCSC=C8545     fp=SOT-23
+  Q8    2N7002                                                                                                         LCSC=C8545     fp=SOT-23
+  Q9    2N7002                                                                                                         LCSC=C8545     fp=SOT-23
+  U1    TLV75533PDBV 3.3 V 500 mA LDO (1 IN 2 GND 3 EN 4 NC 5 OUT)                                                     LCSC=          fp=SOT-23-5
+  U2    NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A)                            LCSC=          fp=NiceRF_SA868
+  U3    CP2102N-A02-GQFN28 USB-UART bridge (SAU)                                                                       LCSC=C964632   fp=QFN-28-1EP_5x5mm_P0.5mm_EP3.35x3.3
+  U4    TUSB2046IBVFR four-port USB 2.0 full-speed hub (TI, LQFP-32 VF, -40 to 85 C, VCC 3.3 to 3.6 from +3V4_HUB; BUS LCSC=C702369   fp=LQFP-32_7x7mm_P0.8mm
+  U5    USBLC6-2SC6                                                                                                    LCSC=C7519     fp=SOT-23-6
+  U6    TI PCM2912A USB audio codec (TQFP-32): mono input from the exciter, stereo output to the headphone amplifier a LCSC=          fp=TQFP-32_7x7mm_P0.8mm
+  U7    TI TPA6132A2 headphone amplifier (QFN-16), receive audio to the two headset leads                              LCSC=          fp=QFN-16-1EP_3x3mm_P0.5mm_EP1.75x1.7
+  U8    TLV9062IDGK dual op amp (1 OUT1 2 IN1- 3 IN1+ 4 V- 5 IN2+ 6 IN2- 7 OUT2 8 V+): A the mic sum, B unused as a fo LCSC=          fp=VSSOP-8_3x3mm_P0.65mm
+  U9    74LVC1G08 AND (1 A 2 B 3 GND 4 Y 5 VCC): both headset PTT lines idle high                                      LCSC=C19829591 fp=SOT-23-5
+  U10   74LVC1G08 AND: headsets AND software PTT (RTS)                                                                 LCSC=C19829591 fp=SOT-23-5
+  U11   74LVC1G04 inverter (2 A 4 Y): PTT_ANY                                                                          LCSC=C7827     fp=SOT-23-5
+  U12   74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)                                     LCSC=C19829591 fp=SOT-23-5
+  U13   74LVC1G06 open-drain inverter (2 A 4 Y): KEY -> SA868 PTT (low = transmit; released = receive, held by R88 and LCSC=C840103   fp=SOT-23-5
+  U14   74LVC1G08 AND: PA_KEY = KEY AND PA_EN (A22's PA rail state)                                                    LCSC=C19829591 fp=SOT-23-5
+  U15   TLV75801PDRVR adjustable LDO, PA gate bias VGG 4.48 V while PA_KEY is high (1 OUT 2 FB 3 GND 4 EN 5 DNC 6 IN 7 LCSC=C2876308  fp=WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm
+  U16   PCA9555PW 0x26: COS, PTT states, KEY, PA_KEY in; exciter PD, amplifier EN, codec mute out; eight spares        LCSC=          fp=TSSOP-24_4.4x7.8mm_P0.65mm
+  U17   TLV75801PDBVR adjustable LDO, +3V4_HUB 3.44 V for the hub (1 IN 2 GND 3 EN 4 FB 5 OUT)                         LCSC=C2877852  fp=SOT-23-5
+  U18   74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): KEY -> PTT_MIR, the one-way driver of the PTT mirror TR_APRS      LCSC=C526347   fp=SOT-23-5
+  U19   74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): KEY read back into U16 IO0_3, one way (VCC the harness +3V3)      LCSC=C526347   fp=SOT-23-5
+  U20   74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): PA_KEY read back into U16 IO0_4, one way (VCC the harness +3V3)   LCSC=C526347   fp=SOT-23-5
+  U21   TPS22810DRV load switch, +5V_TX on while +3V3_D8 is above 2.23 to 2.78 V (EN/UVLO divider R90 R91, QOD through LCSC=C527679   fp=WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm
+  U22   ADS1115IDGSR 16-bit ADC at 0x48 (1 ADDR 2 ALERT/RDY 3 GND 4 AIN0 5 AIN1 6 AIN2 7 AIN3 8 VDD 9 SDA 10 SCL): the LCSC=C37593    fp=VSSOP-10_3x3mm_P0.5mm
+  Y1    6 MHz HC-49S-SMD passive (CL 20 pF, 80 Ohm; C1 = C2 = 27 pF and Rd 1.0k, SLLS413 figure 6 re-chosen for this p LCSC=C252308   fp=Crystal_SMD_HC49-SD
+  Y2    6 MHz HC-49S-SMD passive (codec clock, CL 20 pF; C1 = C2 = 27 pF)                                              LCSC=C252308   fp=Crystal_SMD_HC49-SD
+===== E
+  L1    10uH Coilcraft XAL1510-103MED (Isat 26 A, 10.0 mm tall)                                                        LCSC=C3911782  fp=L_Coilcraft_XAL1510-103
+  L2    Bourns SRF1260-1R5Y dual-winding choke, common-mode connection (each winding carries the line current: 6.89 A  LCSC=          fp=L_CommonModeChoke_Bourns_SRF1260
+  L3    4.7uH XAL4030-472ME                                                                                            LCSC=          fp=L_Coilcraft_XAL4020-XXX
+  Q1    BSC039N06NS 60 V 3.9 mOhm N-FET (PG-TDSON-8: 1-3 S, 4 G, 5-8 D)                                                LCSC=C534330   fp=TDSON-8-1
+  Q2    BSC039N06NS 60 V 3.9 mOhm N-FET (PG-TDSON-8: 1-3 S, 4 G, 5-8 D)                                                LCSC=C534330   fp=TDSON-8-1
+  Q3    BSC028N06NS 60 V 2.8 mOhm N-FET, M1 buck top (TDSON-8: 1-3 S, 4 G, 5-8 D)                                      LCSC=C148250   fp=TDSON-8-1
+  Q4    BSC039N06NS 60 V N-FET, M2 buck bottom                                                                         LCSC=C534330   fp=TDSON-8-1
+  Q5    BSC028N06NS 60 V N-FET, M3 boost bottom                                                                        LCSC=C148250   fp=TDSON-8-1
+  Q6    BSC039N06NS 60 V N-FET, M4 boost top                                                                           LCSC=C534330   fp=TDSON-8-1
+  Q7    CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6), hot-swap pass                        LCSC=C473333   fp=PowerPAK_SO-8_Single
+  Q8    2N7002: SHORE_INHIBIT high pulls UVLO low = input off (1 G, 2 S, 3 D)                                          LCSC=          fp=SOT-23
+  Q9    2N7002 fan 1 low-side switch (1 G, 2 S, 3 D)                                                                   LCSC=          fp=SOT-23
+  Q10   2N7002 fan 2 low-side switch (1 G, 2 S, 3 D)                                                                   LCSC=          fp=SOT-23
+  Q11   2N7002 HOT-R1 open drain: GPIO19 high pulls the dock line BLK_SPARE low (1 G, 2 S, 3 D)                        LCSC=          fp=SOT-23
+  U3    LM74700-Q1 ideal-diode controller: 1 VCAP 2 GND 3 EN 4 CATHODE 5 GATE 6 ANODE                                  LCSC=C2941042  fp=SOT-23-6
+  U4    LM74700-Q1 ideal-diode controller: 1 VCAP 2 GND 3 EN 4 CATHODE 5 GATE 6 ANODE                                  LCSC=C2941042  fp=SOT-23-6
+  U5    LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted         LCSC=C674164   fp=WQFN-38-1EP_5x7mm_P0.5mm_EP3.15x5.
+  U6    LM5069MM-2 hot-swap controller: 9 V on, 40 V off, current and power limit                                      LCSC=C111822   fp=VSSOP-10_3x3mm_P0.5mm
+  U10   RP2040 sensor controller (USB to B16 through the dock)                                                         LCSC=C2040     fp=QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2m
+  U11   W25Q16JVUXIQ 16 Mbit QSPI flash (USON-8: 1 CS 2 DO/IO1 3 WP/IO2 4 GND 5 DI/IO0 6 CLK 7 HOLD/IO3 8 VCC, pad)    LCSC=C2843335  fp=Winbond_USON-8-1EP_3x2mm_P0.5mm_EP
+  U12   AP63205WU-7 5 V 2 A buck for the controller, the Geiger module and the fans' logic                             LCSC=C2071056  fp=TSOT-23-6
+  U13   TLV75533PDBVR 3.3 V LDO                                                                                        LCSC=C404027   fp=SOT-23-5
+  U14   BME688 inside climate: temperature, humidity, pressure, gas index (I2C 0x76)                                   LCSC=C3664478  fp=Bosch_LGA-8_3x3mm_P0.8mm_Clockwise
+  U15   BMI270 six-axis IMU (I2C 0x68): shock and tilt log, motion wake                                                LCSC=C2836813  fp=Bosch_LGA-14_3x2.5mm_P0.5mm
+  U16   TPS22810DRV                                                                                                    LCSC=          fp=WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm
+  U17   SGP41-D-R4 VOC and NOx gas sensor, battery-bay air (I2C 0x59; DFN-6: 1 VDD 2 VSS 3 SDA 4 n/a to GND 5 VDDH 6 S LCSC=C3659325  fp=Sensirion_DFN-6-1EP_2.44x2.44mm_P0
+  Y1    12 MHz ABM8-272-T3 (3225): 1 XIN, 3 XOUT, 2 and 4 GND                                                          LCSC=C20625731 fp=Crystal_SMD_3225-4Pin_3.2x2.5mm
