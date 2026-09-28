@@ -10,7 +10,7 @@ import os, sys, math
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, TOOLS)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from harness import rest
+from harness import rest, Skip
 import edge_length as E
 SRC = open(os.path.join(TOOLS, "edge_length.py"), encoding="utf-8").read()
 
@@ -301,3 +301,830 @@ def t_si001_the_reading_records_its_inputs_by_sha_and_never_an_absolute_path():
     for k, x in v["inputs"].items():
         if isinstance(x, dict) and x.get("path"): assert not x["path"].startswith("/"), (k, x)
     assert os.path.exists(os.path.join(out, "edge_length.table.json")), "the table was not written beside the verdict"
+
+
+# ------------------------------------------------------------------------------------------------------------------
+# THE EDGE RATES AS DATA (27 September 2026, MESHSAT-1357, layer 9): tools/pcb_edge_rates.yaml, read per driver. The
+# fixtures hand edge_length a data file of their own for one call ("zz" is a board no real record names), and a small
+# IBIS file written here, so they run with no KiCad and without the held models.
+# ------------------------------------------------------------------------------------------------------------------
+import ibis_read as IB
+
+FIX_IBS = """[IBIS Ver] 3.2
+[File Name] fix.ibs
+|  a fixture: one input, one output through a selector (3.3 V and 5 V), one open drain, ground and power
+[Component] FIX_PKG
+[Manufacturer] fixture
+[Pin] signal_name model_name R_pin L_pin C_pin
+1 A IN_33
+2 Y OUT_SEL
+3 GND GND
+4 INT OD_33
+5 VCC POWER
+[Model Selector] OUT_SEL
+OUT_33 3.3 V
+OUT_50 5 V
+[Model] IN_33
+Model_type Input
+[Model] OUT_33
+Model_type Output
+[Ramp]
+dV/dt_r 1.0/0.40n 0.8/0.80n 1.2/0.30n
+dV/dt_f 1.0/0.50n 0.8/0.90n 1.2/0.25n
+R_load = 50
+[Model] OUT_50
+Model_type Output
+[Ramp]
+dV/dt_r 1.5/0.20n 1.2/0.40n 1.7/0.10n
+dV/dt_f 1.5/0.20n 1.2/0.40n 1.7/0.10n
+R_load = 50
+[Model] OD_33
+Model_type Open_drain
+[Ramp]
+dV/dt_r 1.0/0.05n 0.8/0.06n 1.2/0.04n
+dV/dt_f 1.0/2.00n 0.8/3.00n 1.2/1.50n
+R_load = 500
+[End]
+"""
+
+
+def t_ibis_reader_takes_the_fastest_driven_transition_and_an_open_drain_falls_only():
+    """The number is the maker's file's: the fastest 20-80 transition over the admitted models and all three corners
+    (ER-D5). An open drain drives only its fall (its model's rise is the fixture pull-up); an input, ground or power pin
+    drives nothing; a pin the component does not list is UNKNOWN, never a default."""
+    ib = IB.parse(FIX_IBS)
+    st, e, how = IB.pin_edge(ib, "FIX_PKG", "2", "_33$")
+    assert st == "DRIVES" and abs(e - 0.25) < 1e-9 and "f max" in how, (st, e, how)
+    st, e, _ = IB.pin_edge(ib, "FIX_PKG", "2", None)
+    assert abs(e - 0.10) < 1e-9, "the filter is what keeps the 5 V model out: %s" % e
+    st, e, how = IB.pin_edge(ib, "FIX_PKG", "4", "_33$")
+    assert st == "DRIVES" and abs(e - 1.5) < 1e-9, "an open drain's fixture rise was read as its edge: %s %s" % (e, how)
+    assert IB.pin_edge(ib, "FIX_PKG", "1", "_33$")[0] == "INPUT"
+    assert IB.pin_edge(ib, "FIX_PKG", "3", "_33$")[0] == "INPUT"
+    assert IB.pin_edge(ib, "FIX_PKG", "9", "_33$")[0] == "UNKNOWN"
+    assert IB.pin_edge(ib, "OTHER", "2", "_33$")[0] == "UNKNOWN"
+    assert IB.pin_edge(ib, "FIX_PKG", "2", "_18$")[0] == "UNKNOWN", "a filter that admits nothing must not read as an input"
+    assert abs(IB.fastest(ib, "FIX_PKG", "_33$")[0] - 0.25) < 1e-9
+
+
+def t_ibis_reader_reads_the_scale_suffixes_as_ibis_defines_them():
+    """IBIS's M is mega and m milli: a reader that took M for milli would read ST's 40 Mohm R_load as 40 milliohm."""
+    assert abs(IB.num("40.000000M") - 40e6) < 1e-3 and abs(IB.num("79.88890m") - 0.0798889) < 1e-12 and abs(IB.num("0.45102n") - 0.45102e-9) < 1e-21
+    assert abs(IB.num("0.140000k") - 140.0) < 1e-9 and abs(IB.num("1.62E-09") - 1.62e-9) < 1e-21
+
+
+import hashlib
+
+MCU_MD = "The MCU datasheet: a slew-rate control bit per pad, and no transition time for either setting.\n"
+SPEC_MD = "Table 9. tof output fall time from VIHmin to VILmax: Fast-mode minimum 12 ns at 3.3 V.\n"
+CLAIM_MD = "The PHY datasheet: the I2C interface timing adheres to the bus specification. SCL is a clock input.\n"
+
+
+def _s16(text): return hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
+
+
+def _listing_text(docs):
+    """A search listing as edge_search.py writes one: a line per document with the sha256/16 it was read at."""
+    return "".join("== %s (sha256/16 %s, 1 page(s)); cited by a fixture: 0 line(s)\n" % (d, _s16(t)) for d, t in docs)
+
+
+LISTING = "v2/docs/records/fix/edge-search.txt"
+LISTING_TEXT = _listing_text([("v2/vendor/fix/mcu.md", MCU_MD)])
+
+
+@contextlib.contextmanager
+def _rates(families=(), interfaces=(), far_ends=(), open_drain=(), listing=True):
+    """Hand edge_length a data file of the fixture's own for one call, validated as the real one is."""
+    old = (E.RATES, E.RATES_REFUSALS, E.EDGE_SOURCES)
+    d = tempfile.mkdtemp(prefix="si001-rates-")
+    p = os.path.join(d, "pcb_edge_rates.yaml")
+    import yaml
+    doc = {"interfaces": list(interfaces), "families": list(families), "far_ends": list(far_ends),
+           "open_drain": list(open_drain)}
+    if listing: doc["search_listing"] = {"path": LISTING, "sha256_16": _s16(LISTING_TEXT)}
+    yaml.safe_dump(doc, open(p, "w"))
+    rates, refusals = E.load_rates(p)
+    E.RATES, E.RATES_REFUSALS, E.EDGE_SOURCES = rates, refusals, E._standards(rates)
+    try: yield refusals
+    finally:
+        E.RATES, E.RATES_REFUSALS, E.EDGE_SOURCES = old
+
+
+FIX_MODEL = "v2/vendor/fix/ibis/fix.ibs"
+FIX_MANIFEST = "v2/vendor/ibis-manifest.yaml"
+
+
+def _manifest_row(file=FIX_MODEL, text=None, **more):
+    """One row of a model manifest as ibis_manifest accepts it, pinning `text` (the fixture model by default)."""
+    text = FIX_IBS if text is None else text
+    return dict({"id": "fix-model", "maker": "fixture", "part": "GATE", "file": file, "url": "https://example.invalid/fix.ibs",
+                 "container": "ibs", "sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(), "bytes": len(text.encode("utf-8")),
+                 "fetched": "never: a fixture", "notice": {"kind": "COPYRIGHT_NO_GRANT", "says": "a fixture",
+                                                           "quotes": [{"lines": "1", "text": "a fixture"}]}}, **more)
+
+
+def _fix_repo(listing_text=None, model=True, manifest=True, rows=None, model_text=None):
+    """A repository of the fixture's own: the documents, the search listing, the manifest that pins the fixture model
+    (`manifest`, `rows`) and the model itself (`model`; False is the state of a clean clone, where the models are
+    withheld)."""
+    repo = tempfile.mkdtemp(prefix="si001-repo-")
+    os.makedirs(os.path.join(repo, "v2", "vendor", "fix", "ibis"), exist_ok=True)
+    os.makedirs(os.path.join(repo, os.path.dirname(LISTING)), exist_ok=True)
+    if model: open(os.path.join(repo, FIX_MODEL), "w").write(FIX_IBS if model_text is None else model_text)
+    if manifest:
+        import yaml
+        yaml.safe_dump({"schema_version": 1, "models": [_manifest_row()] if rows is None else rows},
+                       open(os.path.join(repo, FIX_MANIFEST), "w"))
+    open(os.path.join(repo, "v2", "vendor", "fix", "mcu.md"), "w").write(MCU_MD)
+    open(os.path.join(repo, "v2", "vendor", "fix", "spec.md"), "w").write(SPEC_MD)
+    open(os.path.join(repo, "v2", "vendor", "fix", "claim.md"), "w").write(CLAIM_MD)
+    open(os.path.join(repo, LISTING), "w").write(LISTING_TEXT if listing_text is None else listing_text)
+    return repo
+
+
+def _cite(doc, text, quote, **more):
+    return dict({"document": doc, "quote": quote, "sha256_16": _s16(text), "where": "the fixture's one paragraph"}, **more)
+
+
+MCU_BOUND = {"id": "FIX-MCU", "kind": "BOUND", "parts": ["MCU"], "edge_ns": 0.0,
+             "derivation": "the fixture MCU publishes no transition; instantaneous (ER-D8)",
+             "checked": [_cite("v2/vendor/fix/mcu.md", MCU_MD, "no transition time for either setting")],
+             "applicability": "the fixture MCU", "verification_owed": "a measurement"}
+GATE_IBIS = {"id": "FIX-GATE", "kind": "IBIS", "parts": ["GATE"], "edge_ns": 0.25,
+             "ibis": {"file": FIX_MODEL, "component": "FIX_PKG", "models": "_33$", "sha256_16": _s16(FIX_IBS),
+                      "keyword": "[Model] OUT_33 [Ramp] dV/dt_f max", "ramp": "1.2/0.25n"},
+             "applicability": "the fixture gate at 3.3 V", "verification_owed": "none"}
+
+
+def _clk_fixture(extra_nets=(), extra_comps=None):
+    """A clocked net SPI_SCK between the MCU's pin 7 and a gate's input (pin 1), and the gate's output (pin 2) on
+    SPI_Q, beside the USB fixture."""
+    comps = {"U3": "GATE fixture"}
+    comps.update(extra_comps or {})
+    nets = [("SPI_SCK", "Default", [("U2", "7"), ("U3", "1")]), ("SPI_Q", "Default", [("U3", "2"), ("U2", "8")])]
+    return _fixture(extra_nets=nets + list(extra_nets), extra_comps=comps)
+
+
+def t_si001_a_net_whose_driver_has_no_record_stays_undecided_and_names_it():
+    p, d = _clk_fixture()
+    repo = _fix_repo()
+    with _board({"critical_k": 6, "signal_classes": [HS, EN, CK]}, ()), _rates(families=[GATE_IBIS]):
+        r = E.schematic_table(p, "zz", facts=FACTS, repo=repo)
+    row = next(x for x in r["rows"] if x["pattern"] == "SPI_*")
+    assert "SPI_SCK" in row["undecided"] and any("U2 MCU" in w and "no family" in w for w in row["undecided"]["SPI_SCK"]), row["undecided"]
+    assert "SPI_SCK" not in row["net_edges"], "a net with an unrecorded driver was given an edge"
+    assert E.schematic_result(r) == "INCONCLUSIVE"
+
+
+def t_si001_a_bound_record_decides_and_the_reading_marks_it_as_a_bound():
+    """A bound is a design input, never a pass: the net is decided, its basis reads BOUND, and a layout-bound net that
+    only the bound holds is named under BOUND_DECIDES (ER-D8, ER-D9)."""
+    p, d = _clk_fixture()
+    repo = _fix_repo()
+    with _board({"critical_k": 6, "signal_classes": [HS, EN, CK]}, ()), _rates(families=[GATE_IBIS, MCU_BOUND]):
+        r = E.schematic_table(p, "zz", facts=FACTS, repo=repo)
+        out = tempfile.mkdtemp(prefix="si001-v-")
+        E.write_schematic_verdict(r, out_dir=out, quiet=True, table_file=False)
+    row = next(x for x in r["rows"] if x["pattern"] == "SPI_*")
+    sck = row["net_edges"]["SPI_SCK"]
+    assert sck["basis"] == "BOUND" and sck["edge_ns"] == 0.0 and sck["maker_edge_ns"] is None, sck
+    assert "SPI_SCK" in row["layout_bound"] and "SPI_SCK" in row["bound_decides"], row
+    assert r["counts"]["bound_decided_nets"] >= 1 and r["counts"]["bound_edge_nets"] >= 1, r["counts"]
+    v = json.load(open(os.path.join(out, "edge_length.verdict.json")))
+    assert v["verdict"] == "INCONCLUSIVE", v["verdict"]
+    assert any(e.startswith("BOUND_DECIDES") and "SPI_SCK" in e for e in v["evidence"]), v["evidence"]
+    assert v["inputs"]["edge_rates"]["sha256_16"], "the data file is a configuration input and is not recorded by sha"
+
+
+def t_si001_one_driver_with_no_published_minimum_makes_the_net_bound_decides_whatever_the_others_publish():
+    """ER-D13, the independent check's first blocking item. SPI_Q carries the gate's output, whose maker publishes
+    0.25 ns in its IBIS model, and the MCU, whose maker publishes nothing. The governing edge of a net is the fastest
+    ANY driver on it can produce, and the MCU's is not known: the net is decided by a bound and named BOUND_DECIDES,
+    its critical length is the bound's, and the gate's figure is recorded beside it and decides nothing."""
+    p, d = _clk_fixture()
+    repo = _fix_repo()
+    with _board({"critical_k": 6, "signal_classes": [HS, EN, CK]}, ()), _rates(families=[GATE_IBIS, MCU_BOUND]):
+        r = E.schematic_table(p, "zz", facts=FACTS, repo=repo)
+        out = tempfile.mkdtemp(prefix="si001-v-")
+        E.write_schematic_verdict(r, out_dir=out, quiet=True, table_file=False)
+    row = next(x for x in r["rows"] if x["pattern"] == "SPI_*")
+    q = row["net_edges"]["SPI_Q"]
+    assert q["decided_by"] == "BOUND" and q["basis"] == "BOUND" and q["source"] == "FIX-MCU" and q["edge_ns"] == 0.0, q
+    assert abs(q["maker_edge_ns"] - 0.25) < 1e-9 and "FIX-GATE" in q["maker_by"], "the maker's figure is not recorded beside the bound: %s" % q
+    assert any("FIX-MCU" in x for x in q["bound_drivers"]), "the driver with no published minimum is not named: %s" % q
+    assert "SPI_Q" in row["bound_decides"] and "SPI_Q" not in row["maker_holds"], row
+    assert row["critical_by_net"]["SPI_Q"] == 0.0, "the critical length is not the bound's: %s" % row["critical_by_net"]
+    assert E.schematic_result(r) == "INCONCLUSIVE"
+    v = json.load(open(os.path.join(out, "edge_length.verdict.json")))
+    assert any(e.startswith("BOUND_DECIDES") and "SPI_Q" in e for e in v["evidence"]), v["evidence"]
+    assert not any(e.startswith("MAKER_HELD") and "SPI_Q" in e for e in v["evidence"]), v["evidence"]
+    assert not any(e.startswith("LAYOUT_BOUND") and "SPI_Q" in e and "0.250 ns" in e for e in v["evidence"]), \
+        "the net is shown under the maker's edge, which does not govern it: %s" % v["evidence"]
+
+
+def t_si001_a_net_whose_every_driver_has_a_published_minimum_is_held_by_the_makers_figure():
+    """The other side of ER-D13: SPI_Y carries one gate's output (0.25 ns in its maker's model) and another gate's
+    input, and no part without a figure. It is decided by the maker's figure and held to the length that gives."""
+    extra = [("SPI_Y", "Default", [("U4", "2"), ("U5", "1")])]
+    p, d = _clk_fixture(extra_nets=extra, extra_comps={"U4": "GATE fixture", "U5": "GATE fixture"})
+    repo = _fix_repo()
+    with _board({"critical_k": 6, "signal_classes": [HS, EN, CK]}, ()), _rates(families=[GATE_IBIS, MCU_BOUND]):
+        r = E.schematic_table(p, "zz", facts=FACTS, repo=repo)
+    row = next(x for x in r["rows"] if x["pattern"] == "SPI_*")
+    y = row["net_edges"]["SPI_Y"]
+    assert y["decided_by"] == "MAKER" and y["basis"] == "IBIS" and abs(y["edge_ns"] - 0.25) < 1e-9 and not y["bound_drivers"], y
+    assert "SPI_Y" in row["maker_holds"] and "SPI_Y" not in row["bound_decides"], row
+    assert 5.0 < row["critical_by_net"]["SPI_Y"] < 6.5, row["critical_by_net"]
+    _sums(r["counts"])
+    assert r["counts"]["maker_held_nets"] == 1 and r["counts"]["maker_edge_nets"] >= 1, r["counts"]
+
+
+def _sums(c):
+    """The sums a reader checks the counts with."""
+    assert c["signal_nets"] == c["low_speed_nets"] + c["decided_nets"] + c["undecided_nets"] + c["contradicted_nets"], c
+    assert c["undecided_nets"] == c["undecided_no_declaration_nets"] + c["undecided_model_absent_nets"] + c["undecided_other_nets"], c
+    assert c["decided_nets"] == c["maker_edge_nets"] + c["bound_edge_nets"], c
+    assert c["may_be_long_nets"] == c["answered_nets"] + c["layout_bound_nets"], c
+    assert c["layout_bound_nets"] == c["maker_held_nets"] + c["bound_decided_nets"], c
+
+
+def t_si001_the_counts_sum_on_every_committed_netlist():
+    """Per board: signal nets = slow + decided + undecided + contradicted; decided = by a maker's figure + by a bound;
+    layout-bound = held by a maker's figure + BOUND_DECIDES. Taken in memory from the committed netlists; nothing is
+    written."""
+    import phase_artefacts as PA
+    seen = 0
+    for L in "abcdep":
+        net = PA.netlist(L)
+        if not (net and os.path.exists(net)): continue
+        r = E.schematic_table(net, L)
+        if r.get("missing_input"): continue
+        _sums(r["counts"]); seen += 1
+        for row in r["rows"]:
+            for n in row.get("maker_holds") or []:
+                e = row["net_edges"][n]
+                assert e["decided_by"] == "MAKER" and e["basis"] in E.MAKER_KINDS and not e["bound_drivers"], (L, n, e)
+            for n in row.get("bound_decides") or []:
+                e = row["net_edges"][n]
+                assert e["decided_by"] == "BOUND" and e["bound_drivers"], (L, n, e)
+    assert seen, "no committed netlist was read"
+
+
+def t_si001_an_ibis_record_its_own_file_contradicts_fails_the_reading():
+    p, d = _clk_fixture()
+    repo = _fix_repo()
+    wrong = dict(GATE_IBIS, edge_ns=0.40)
+    with _board({"critical_k": 6, "signal_classes": [HS, EN, CK]}, ()), _rates(families=[wrong, MCU_BOUND]):
+        r = E.schematic_table(p, "zz", facts=FACTS, repo=repo)
+    assert E.schematic_result(r) == "FAIL" and any("FIX-GATE" in f and "CONTRADICTED" in f for f in r["fails"]), r["fails"]
+
+
+def t_si001_a_typical_or_maximum_is_not_an_edge_and_a_bound_needs_its_derivation():
+    """ER-D8: only a published minimum bounds the fastest edge. The STM32H743's datasheet publishes MAXIMUM rise times
+    (Table 53); a record built on one is refused, and so is a bound that says nothing about how it was reached."""
+    typ = dict(_cite("v2/vendor/fix/mcu.md", MCU_MD, "slew-rate"), id="FIX-TYP", kind="DATASHEET", parts=["MCU"], edge_ns=1.5,
+               statistic="max", applicability="x", verification_owed="y")
+    bare = dict(MCU_BOUND, id="FIX-BARE", derivation="")
+    with _rates(families=[typ, bare]) as refusals:
+        pass
+    assert any("FIX-TYP" in x and "MINIMUM" in x for x in refusals), refusals
+    assert any("FIX-BARE" in x and "derivation" in x for x in refusals), refusals
+
+
+def t_si001_a_connector_needs_its_far_end_named_and_a_series_resistor_carries_the_far_side():
+    """A pin on a connector is driven from the far side (ER-D2, ER-D7): unnamed, the net is UNDECIDED naming it. And a
+    net nothing drives but one series resistor away from a driven net takes that net's drivers (ER-D6)."""
+    extra = [("SPI_MOSI", "Default", [("U3", "1"), ("J9", "3")]),
+             ("SPI_G", "Default", [("R7", "2"), ("Q4", "1")]),
+             ("SPI_D", "Default", [("R7", "1"), ("U2", "9")])]
+    p, d = _clk_fixture(extra_nets=extra, extra_comps={"J9": "header", "R7": "1k", "Q4": "2N7002"})
+    repo = _fix_repo()
+    fe = {"id": "FIX-FAR", "board": "zz", "nets": ["SPI_MOSI"], "via": ["J9"], "families": ["FIX-MCU"],
+          "basis": "the fixture's far side", "members": ["an MCU"]}
+    fet = {"id": "FIX-FET", "kind": "BOUND", "parts": ["2N7002"], "edge_ns": 0.0, "inputs": "^G$", "input_pins": ["1"],
+           "derivation": "a FET's drain; the gate drives nothing", "applicability": "x", "verification_owed": "y",
+           "checked": [_cite("v2/vendor/fix/mcu.md", MCU_MD, "slew-rate")]}
+    with _board({"critical_k": 6, "signal_classes": [HS, EN, CK]}, ()), _rates(families=[GATE_IBIS, MCU_BOUND, fet]):
+        r = E.schematic_table(p, "zz", facts=FACTS, repo=repo)
+    row = next(x for x in r["rows"] if x["pattern"] == "SPI_*")
+    assert any("reaches J9" in w for w in row["undecided"].get("SPI_MOSI", [])), row["undecided"]
+    g = row["net_edges"].get("SPI_G")
+    assert g and g["by"].startswith("across R7 from SPI_D"), row
+    with _board({"critical_k": 6, "signal_classes": [HS, EN, CK]}, ()), _rates(families=[GATE_IBIS, MCU_BOUND, fet], far_ends=[fe]):
+        r2 = E.schematic_table(p, "zz", facts=FACTS, repo=repo)
+    row2 = next(x for x in r2["rows"] if x["pattern"] == "SPI_*")
+    assert "SPI_MOSI" in row2["net_edges"] and row2["net_edges"]["SPI_MOSI"]["by"].startswith("beyond J9"), row2
+
+
+def _models_state():
+    """(the manifest, {file: state}) of the real tree."""
+    import ibis_manifest as IM
+    man = IM.load(E.REPO)
+    return man, {f: IM.state_of(E.REPO, r)[0] for f, r in man["models"].items()}
+
+
+def t_si001_the_data_file_holds_against_its_documents_the_manifest_and_the_committed_netlists():
+    """WHAT HOLDS IN EVERY STATE OF THE MODELS, a clean clone included (the makers' IBIS models are withheld from the
+    repository): no record refused, every quoted word in its held document, every IBIS record's file PINNED by the
+    tracked manifest at the sha256/16 the record cites, no pin without a record, every far end's family defined, every
+    family met on a committed netlist or declared far_only, and the kit-bus far ends held to the netlists. What needs
+    the models themselves is the next test, which says so when it cannot run."""
+    import fnmatch, phase_artefacts as PA, ibis_manifest as IM
+    rates, refusals = E.load_rates()
+    assert not refusals, refusals
+    man = IM.load(E.REPO)
+    assert not man["why"] and not man["refusals"], (man["why"], man["refusals"])
+    cited = set()
+    for sect in ("interfaces", "families", "open_drain"):
+        for rec in rates[sect]:
+            why = E.record_holds(rec, E.REPO, rates)
+            # a record that cites a model holds, or says the model is withheld; nothing else may stop it
+            assert why is None or (getattr(why, "kind", None) == "MODEL_ABSENT" and why.file in man["models"]), (rec["id"], why)
+            for c in E.citations(rec):
+                if E.model_record(E.REPO, c["document"]) is None: continue
+                row = IM.pin(man, c["document"])
+                assert row is not None and row["sha256"].startswith(c["sha256_16"]), "%s cites the model %s, which the manifest does not pin at %s" % (
+                    rec["id"], c["document"], c["sha256_16"])
+                cited.add(c["document"])
+            if rec.get("kind") == "IBIS":
+                ib = rec["ibis"]
+                row = IM.pin(man, ib["file"])
+                assert row is not None, "%s cites %s, which the manifest does not pin" % (rec["id"], ib["file"])
+                assert row["sha256"].startswith(ib["sha256_16"]), "%s cites %s at %s and the manifest pins %s" % (
+                    rec["id"], ib["file"], ib["sha256_16"], row["sha256"][:16])
+                cited.add(ib["file"])
+            for c in E.citations(rec):
+                assert c["sha256_16"] and (c["page"] or c["where"]), (rec["id"], c)
+                if c["document"].lower().endswith(".pdf"): assert c["page"], "%s cites a PDF with no page: %s" % (rec["id"], c)
+            if rec.get("kind") in ("STANDARD", "DATASHEET"): assert rec.get("statistic") == "min", rec["id"]
+            for pe in rec.get("pin_edges") or []:
+                if pe["kind"] in ("STANDARD", "DATASHEET"): assert pe.get("statistic") == "min", (rec["id"], pe)
+    assert cited == set(man["models"]), "a model is pinned that no record reads, or read that is not pinned: %s" % sorted(cited ^ set(man["models"]))
+    values = {}
+    for L in "abcdep":
+        net = PA.netlist(L)
+        if net and os.path.exists(net):
+            values[L] = E.read_netlist(net)
+    fams = rates["families"]
+    seen = {f["id"] for L, (nets, vals) in values.items() for v in vals.values() for f in [E._family_for(v, fams)] if f}
+    for f in fams:
+        assert f.get("far_only") or f["id"] in seen, "family %s matches no part on any committed netlist: stale" % f["id"]
+    for fe in rates["far_ends"]:
+        # a continuation names boards and net names that must exist on the committed netlists, or it answers nothing
+        nets_here = values.get(fe["board"], ({}, {}))[0]
+        assert any(fnmatch.fnmatchcase(n, pat) for pat in fe["nets"] for n in nets_here) or fe["board"] not in values, \
+            "%s: board %s has no net matching %s" % (fe["id"], fe["board"], fe["nets"])
+        for L2 in fe.get("continues") or []:
+            nets2 = values.get(L2, ({}, {}))[0]
+            for pat in fe["nets"]:
+                here = [n for n in nets_here if fnmatch.fnmatchcase(n, pat)]
+                assert all(n in nets2 for n in here), "%s: board %s carries no %s" % (fe["id"], L2, [n for n in here if n not in nets2])
+
+
+def t_si001_the_data_file_holds_against_the_makers_models():
+    """NEEDS THE MODELS, and is skipped with the reason where they are not in the tree (a clean clone, the public
+    repository, a handover ZIP): every IBIS record's number, keyword, cell and flagged pins are the ones its model
+    gives, each model present is the file the manifest pins, and its header says what the manifest quotes from it."""
+    import ibis_manifest as IM
+    man, states = _models_state()
+    absent = sorted(f for f, st in states.items() if st == IM.ABSENT)
+    if absent:
+        raise Skip("%d of the %d makers' IBIS models are not in this tree (they are withheld from the repository and pinned by %s; "
+                   "`python3 v2/ecad/tools/ibis_fetch.py --fetch` fetches them): %s" % (
+                       len(absent), len(states), man["path"], ", ".join(absent)))
+    assert all(st == IM.PRESENT for st in states.values()), "a model present is not the file the manifest pins: %s" % states
+    for f, row in man["models"].items():
+        assert IM.notice_holds(E.REPO, row) is None, IM.notice_holds(E.REPO, row)
+    rates, _ = E.load_rates()
+    ctx = E._Ctx("a", {}, {}, rates, E.REPO, [], set())
+    for rec in rates["families"]:
+        if rec.get("kind") == "IBIS":
+            assert ctx.family_usable(rec) is None, (rec["id"], ctx.family_usable(rec))
+
+
+def _tree_without_models():
+    """A view of the real repository in which NO model is present, whatever the state of the tree the suite runs in:
+    a temporary directory whose v2/vendor is the real one's children by symbolic link, the `ibis` folders left out.
+    Nothing of the real tree is moved or written."""
+    view = tempfile.mkdtemp(prefix="si001-nomodels-")
+    real = os.path.join(E.REPO, "v2")
+    os.makedirs(os.path.join(view, "v2", "vendor"))
+    for name in os.listdir(real):
+        if name != "vendor": os.symlink(os.path.join(real, name), os.path.join(view, "v2", name))
+    for name in os.listdir(os.path.join(real, "vendor")):
+        src = os.path.join(real, "vendor", name)
+        if os.path.isdir(src) and os.path.isdir(os.path.join(src, "ibis")):
+            os.makedirs(os.path.join(view, "v2", "vendor", name))
+            for sub in os.listdir(src):
+                if sub != "ibis": os.symlink(os.path.join(src, sub), os.path.join(view, "v2", "vendor", name, sub))
+        else:
+            os.symlink(src, os.path.join(view, "v2", "vendor", name))
+    return view
+
+
+def t_si001_fails_closed_on_every_committed_netlist_when_the_models_are_withheld():
+    """THE STATE OF A CLEAN CLONE, asserted in every state the suite runs in: with no model in the tree no net is
+    decided by an IBIS figure, every net that waits on a model is UNDECIDED naming the file (kind MODEL_ABSENT), no
+    reading passes, and the reading says the state it was taken in. Nothing is written."""
+    import phase_artefacts as PA
+    view = _tree_without_models()
+    seen = waiting = 0
+    for L in "abcdep":
+        net = PA.netlist(L)
+        if not (net and os.path.exists(net)): continue
+        r = E.schematic_table(net, L, repo=view)
+        if r.get("missing_input"): continue
+        seen += 1
+        _sums(r["counts"])
+        assert E.schematic_result(r) != "PASS", "board %s passes with no model in the tree" % L
+        assert not r["fails"], (L, r["fails"][:3])
+        ms = r["inputs"]["model_state"]
+        assert ms["state"] in ("ABSENT", "NOT_ASKED") and ms["present"] == 0, (L, ms)
+        assert ms["absent"] == r["counts"]["models_absent"] == len(ms["absent_files"]), (L, ms)
+        assert not any(isinstance(v, dict) and str(v.get("path", "")).endswith(".ibs") and v.get("sha256_16")
+                       for v in r["inputs"].values()), "board %s records a model it cannot have read" % L
+        for row in r["rows"]:
+            for n, e in (row.get("net_edges") or {}).items():
+                assert e["basis"] != "IBIS", "board %s net %s is decided by an IBIS figure with no model in the tree" % (L, n)
+            for n, kind in (row.get("undecided_kind") or {}).items():
+                if kind != "MODEL_ABSENT": continue
+                waiting += 1
+                files = (row.get("undecided_models") or {}).get(n)
+                assert files and all(f in ms["absent_files"] for f in files), (L, n, files)
+                assert all(any(f in str(x) for f in files) for x in row["undecided"][n]), "board %s net %s does not name the absent file" % (L, n)
+        assert r["counts"]["undecided_model_absent_nets"] == sum(1 for row in r["rows"] for k in (row.get("undecided_kind") or {}).values() if k == "MODEL_ABSENT")
+    assert seen, "no committed netlist was read"
+    assert waiting, "no net of any committed netlist waits on a model: the view is not the state it claims to be"
+
+
+def t_si001_a_model_that_is_absent_decides_nothing_and_the_reading_says_which_state_it_is_in():
+    """The two states on one fixture. With the model in the tree the gate's output is decided by the maker's figure and
+    the reading records the model by sha with the sha that pins it; with the model withheld the same nets are UNDECIDED
+    naming the file, the record's own edge_ns is NOT used in its place, and the reading says ABSENT."""
+    p, d = _clk_fixture(extra_nets=[("SPI_Y", "Default", [("U3", "2"), ("R9", "1")])], extra_comps={"R9": "10k"})
+    got = {}
+    for state, model in (("PRESENT", True), ("ABSENT", False)):
+        repo = _fix_repo(model=model)
+        with _board({"critical_k": 6, "signal_classes": [HS, EN, CK]}, ()), _rates(families=[GATE_IBIS, MCU_BOUND]):
+            r = E.schematic_table(p, "zz", facts=FACTS, repo=repo)
+        got[state] = r
+        _sums(r["counts"])
+        ms = r["inputs"]["model_state"]
+        assert ms["state"] == state and ms["asked"] == 1, ms
+        assert r["inputs"]["ibis_manifest"]["path"] == FIX_MANIFEST and r["inputs"]["ibis_manifest"]["sha256_16"], r["inputs"]
+        m = r["inputs"]["model_1"]
+        assert m["path"] == FIX_MODEL and m["pinned_sha256_16"] == _s16(FIX_IBS), m
+        assert not any(k.startswith("document_") and str(v.get("path", "")).endswith(".ibs") for k, v in r["inputs"].items()
+                       if isinstance(v, dict)), "a model is recorded as a document"
+    row = [x for x in got["PRESENT"]["rows"] if x["pattern"] == "SPI_*"][0]
+    assert row["net_edges"]["SPI_Y"]["basis"] == "IBIS" and abs(row["net_edges"]["SPI_Y"]["edge_ns"] - 0.25) < 1e-9, row["net_edges"]
+    assert got["PRESENT"]["inputs"]["model_1"]["sha256_16"] == _s16(FIX_IBS) and not got["PRESENT"]["inputs"]["model_1"].get("absent")
+    assert got["PRESENT"]["counts"]["undecided_model_absent_nets"] == 0
+    row = [x for x in got["ABSENT"]["rows"] if x["pattern"] == "SPI_*"][0]
+    assert "SPI_Y" not in row["net_edges"], "the record's own edge_ns was used with no model to hold it: %s" % row["net_edges"].get("SPI_Y")
+    assert row["undecided_kind"]["SPI_Y"] == "MODEL_ABSENT" and row["undecided_models"]["SPI_Y"] == [FIX_MODEL], row
+    assert all(FIX_MODEL in x for x in row["undecided"]["SPI_Y"]), row["undecided"]["SPI_Y"]
+    assert got["ABSENT"]["inputs"]["model_1"].get("absent") is True and not got["ABSENT"]["inputs"]["model_1"].get("sha256_16")
+    assert got["ABSENT"]["counts"]["undecided_model_absent_nets"] >= 1 and got["ABSENT"]["counts"]["models_absent"] == 1
+    assert E.schematic_result(got["ABSENT"]) == "INCONCLUSIVE" and not got["ABSENT"]["fails"], got["ABSENT"]["fails"]
+    # a net with a model absent AND another reason is not counted as waiting on the model alone
+    p2, _ = _clk_fixture(extra_nets=[("SPI_Z", "Default", [("U3", "2"), ("U8", "1")])], extra_comps={"U8": "NOBODY looked this up"})
+    with _board({"critical_k": 6, "signal_classes": [HS, EN, CK]}, ()), _rates(families=[GATE_IBIS, MCU_BOUND]):
+        r = E.schematic_table(p2, "zz", facts=FACTS, repo=_fix_repo(model=False))
+    row = [x for x in r["rows"] if x["pattern"] == "SPI_*"][0]
+    assert row["undecided_kind"]["SPI_Z"] == "OTHER", row["undecided_kind"]
+
+
+def t_si001_a_model_is_read_only_when_the_manifest_pins_the_file_present():
+    """Four ways a model is not the one pinned, each deciding nothing and saying why: no manifest, a manifest that does
+    not name the file, a file present that is not the file pinned, and a record that cites another file than the
+    manifest pins (the data contradicts itself: a FAIL)."""
+    p, d = _clk_fixture(extra_nets=[("SPI_Y", "Default", [("U3", "2"), ("R9", "1")])], extra_comps={"R9": "10k"})
+    other = FIX_IBS.replace("0.25n", "0.35n")
+
+    def read(repo, fam=GATE_IBIS):
+        with _board({"critical_k": 6, "signal_classes": [HS, EN, CK]}, ()), _rates(families=[fam, MCU_BOUND]):
+            r = E.schematic_table(p, "zz", facts=FACTS, repo=repo)
+        return r, [x for x in r["rows"] if x["pattern"] == "SPI_*"][0]
+    r, row = read(_fix_repo(manifest=False))
+    assert "SPI_Y" in row["undecided"] and "nothing pins" in row["undecided"]["SPI_Y"][0], row["undecided"]
+    assert row["undecided_kind"]["SPI_Y"] == "OTHER", "a missing manifest is not a withheld model"
+    r, row = read(_fix_repo(rows=[_manifest_row(file="v2/vendor/fix/ibis/another.ibs")]))
+    assert "SPI_Y" in row["undecided"] and "names no" in row["undecided"]["SPI_Y"][0], row["undecided"]
+    r, row = read(_fix_repo(model_text=other))
+    assert "SPI_Y" in row["undecided"] and "is not the file" in row["undecided"]["SPI_Y"][0], row["undecided"]
+    assert r["inputs"]["model_state"]["state"] == "DIFFERS", r["inputs"]["model_state"]
+    r, row = read(_fix_repo(rows=[_manifest_row(text=other)]))
+    assert E.schematic_result(r) == "FAIL" and any("FIX-GATE" in f and "pins it at" in f for f in r["fails"]), r["fails"]
+    r, row = read(_fix_repo(rows=[dict(_manifest_row(), sha256="0" * 12)]))
+    assert any("model manifest refused" in f for f in r["fails"]), r["fails"]
+
+
+FIX_VT = """[IBIS Ver] 3.2
+[File Name] vt.ibs
+[Component] VT_PKG
+[Manufacturer] fixture
+[Pin] signal_name model_name R_pin L_pin C_pin
+1 GOOD OUT_GOOD
+2 SMALLDV OUT_SMALLDV
+3 SHORTDT OUT_SHORTDT
+4 BARE OUT_BARE
+5 VCC POWER
+6 GND GND
+[Model] OUT_GOOD
+Model_type Output
+[Ramp]
+dV/dt_r 1.8/1.20n 1.8/1.20n 1.8/1.20n
+dV/dt_f 1.8/1.20n 1.8/1.20n 1.8/1.20n
+R_load = 500
+[Rising Waveform]
+R_fixture = 500
+V_fixture = 0.0
+0.0n 0.0 0.0 0.0
+1.0n 0.6 0.6 0.6
+2.2n 2.4 2.4 2.4
+3.2n 3.0 3.0 3.0
+[Falling Waveform]
+R_fixture = 500
+V_fixture = 3.0
+0.0n 3.0 3.0 3.0
+1.0n 2.4 2.4 2.4
+2.2n 0.6 0.6 0.6
+3.2n 0.0 0.0 0.0
+[Model] OUT_SMALLDV
+Model_type Open_drain
+[Ramp]
+dV/dt_r 1.8/1.20n 1.8/1.20n 1.8/1.20n
+dV/dt_f 1.8/1.20n 1.8/1.20n 0.45/0.30n
+R_load = 500
+[Falling Waveform]
+R_fixture = 500
+V_fixture = 3.0
+0.0n 3.0 3.0 3.0
+1.0n 2.4 2.4 2.4
+2.2n 0.6 0.6 0.6
+3.2n 0.0 0.0 0.0
+[Model] OUT_SHORTDT
+Model_type Open_drain
+[Ramp]
+dV/dt_r 1.8/1.20n 1.8/1.20n 1.8/1.20n
+dV/dt_f 1.8/1.20n 1.8/1.20n 1.8/0.24n
+R_load = 500
+[Falling Waveform]
+R_fixture = 500
+V_fixture = 3.0
+0.0n 3.0 3.0 3.0
+1.0n 2.4 2.4 2.4
+2.2n 0.6 0.6 0.6
+3.2n 0.0 0.0 0.0
+[Model] OUT_BARE
+Model_type Output
+[Ramp]
+dV/dt_r 1.8/0.90n 1.8/0.90n 1.8/0.90n
+dV/dt_f 1.8/0.90n 1.8/0.90n 1.8/0.90n
+R_load = 500
+[End]
+"""
+
+
+def t_ibis_reader_holds_a_ramp_cell_to_the_models_own_vt_table():
+    """A [Ramp] cell is dV/dt with dV the 20 to 80 percent swing. A cell whose dV is a quarter of that, or whose dt is a
+    fifth of the time the model's own table takes between the same two levels, is CONTRADICTED by its model: the pin
+    reads FLAGGED and gives no edge, also when the contradicted cell is not its fastest, and the component's fastest
+    pin is taken among the pins that have a figure. A model with no table cannot be contradicted and is read."""
+    ib = IB.parse(FIX_VT)
+    good = ib["models"]["out_good"]
+    assert IB.cell_check(good, "r", 0)[0] == "HOLDS" and IB.cell_check(good, "f", 2)[0] == "HOLDS", IB.cell_check(good, "r", 0)
+    st, why = IB.cell_check(ib["models"]["out_smalldv"], "f", 2)
+    assert st == "CONTRADICTED" and "15 percent" in why, (st, why)
+    st, why = IB.cell_check(ib["models"]["out_shortdt"], "f", 2)
+    assert st == "CONTRADICTED" and "0.20 of the time" in why, (st, why)
+    assert IB.cell_check(ib["models"]["out_bare"], "r", 0)[0] == "NO_TABLE"
+    assert IB.model_unchecked(ib["models"]["out_bare"]) == ["r typ", "r min", "r max", "f typ", "f min", "f max"]
+    st, e, how = IB.pin_edge(ib, "VT_PKG", "1")
+    assert st == "DRIVES" and abs(e - 1.2) < 1e-9, (st, e, how)
+    for pin in ("2", "3"):
+        st, e, how = IB.pin_edge(ib, "VT_PKG", pin)
+        assert st == "FLAGGED" and e is None and "contradicted" in how, (pin, st, e, how)
+    st, e, _ = IB.pin_edge(ib, "VT_PKG", "4")
+    assert st == "DRIVES" and abs(e - 0.9) < 1e-9, "a model with no table is read as the file states it: %s %s" % (st, e)
+    assert [p for p, _h in IB.flagged_pins(ib, "VT_PKG")] == ["2", "3"]
+    e, how = IB.fastest(ib, "VT_PKG")
+    assert abs(e - 0.9) < 1e-9 and "pin 4" in how, "the fastest pin is taken among the pins that have a figure: %s %s" % (e, how)
+    # the contradicted cell of pin 2 is its FASTEST (0.30 ns); leaving it out would read 1.2 ns where the table may hold less
+    assert IB.model_edge(ib["models"]["out_smalldv"])[0] < 1.2
+
+
+def t_si001_a_pin_whose_ramp_cell_its_own_table_contradicts_takes_the_bound_and_the_record_names_it():
+    """ER-D16 on a netlist: the flagged pin's net is decided by a bound at 0 ns, never by a maker's figure; the net of
+    a pin that holds is decided by the maker's figure; and a record that does not name the flagged pins its own model
+    gives is contradicted by it (a FAIL)."""
+    vt = {"id": "FIX-VT", "kind": "IBIS", "parts": ["VTGATE"], "edge_ns": 0.9, "flagged_pins": ["2", "3"],
+          "ibis": {"file": FIX_MODEL, "component": "VT_PKG", "models": ".", "sha256_16": _s16(FIX_VT),
+                   "keyword": "[Model] OUT_BARE [Ramp] dV/dt_r typ", "ramp": "1.8/0.90n"},
+          "applicability": "a fixture", "verification_owed": "none"}
+    comps = {"U7": "VTGATE fixture", "R8": "10k", "R9": "10k"}
+    nets = [("SPI_GOOD", "Default", [("U7", "1"), ("R8", "1")]), ("SPI_FLAG", "Default", [("U7", "2"), ("R9", "1")])]
+    p, d = _fixture(extra_nets=nets, extra_comps=comps)
+    repo = _fix_repo(model_text=FIX_VT, rows=[_manifest_row(text=FIX_VT)])
+    with _board({"critical_k": 6, "signal_classes": [HS, EN, CK]}, ()), _rates(families=[vt, MCU_BOUND]):
+        r = E.schematic_table(p, "zz", facts=FACTS, repo=repo)
+    assert not r["fails"], r["fails"]
+    row = [x for x in r["rows"] if x["pattern"] == "SPI_*"][0]
+    g, f = row["net_edges"]["SPI_GOOD"], row["net_edges"]["SPI_FLAG"]
+    assert g["decided_by"] == "MAKER" and g["basis"] == "IBIS" and abs(g["edge_ns"] - 1.2) < 1e-9, g
+    assert f["decided_by"] == "BOUND" and f["basis"] == "BOUND" and f["edge_ns"] == 0.0 and f["maker_edge_ns"] is None, f
+    assert "contradicted" in f["by"], f
+    _sums(r["counts"])
+    silent = dict(vt, flagged_pins=[])
+    with _board({"critical_k": 6, "signal_classes": [HS, EN, CK]}, ()), _rates(families=[silent, MCU_BOUND]):
+        r = E.schematic_table(p, "zz", facts=FACTS, repo=repo)
+    assert E.schematic_result(r) == "FAIL" and any("FIX-VT" in x and "names the pins" in x for x in r["fails"]), r["fails"]
+
+
+def t_si001_a_net_that_continues_onto_another_board_takes_that_boards_own_drivers_pin_by_pin():
+    """The kit bus's far side is answered from the other board's netlist, pin by pin, not by each family's fastest
+    pin: a family's INT pin must not stand in for its SDA (ER-D7 applies only where no board of this set is beyond)."""
+    p, d = _clk_fixture()
+    repo = _fix_repo()
+    other = tempfile.mkdtemp(prefix="si001-other-")
+    # board "yy": SPI_SCK carries the gate's INPUT pin (1) and its open-drain pin (4, fall 1.5 ns); its output (2) is elsewhere
+    op = _k9(other, {"U5": "GATE fixture"}, [("SPI_SCK", "Default", [("U5", "1"), ("U5", "4"), ("J2", "1")]),
+                                               ("OTHER", "Default", [("U5", "2"), ("J2", "2")])], stem="pcb-yy-si")
+    t = open(p).read().replace('(node (ref "U3") (pin "1") (pintype "passive"))',
+                               '(node (ref "U3") (pin "1") (pintype "passive"))\n      (node (ref "J1") (pin "5") (pintype "passive"))')
+    open(p, "w").write(t)
+    fe = {"id": "FIX-CONT", "board": "zz", "nets": ["SPI_SCK"], "via": ["J1"], "continues": ["yy"],
+          "basis": "the fixture net continues onto board yy", "members": ["yy: GATE U5"]}
+    back = {"id": "FIX-BACK", "board": "yy", "nets": ["SPI_SCK"], "via": ["J2"], "continues": ["zz"],
+            "basis": "board yy's connector J2 is the same link, seen from its side", "members": ["zz: MCU U2"]}
+    gate_only = dict(GATE_IBIS)
+    with _board({"critical_k": 6, "signal_classes": [HS, EN, CK]}, ()), _rates(families=[gate_only, MCU_BOUND], far_ends=[fe, back]):
+        r = E.schematic_table(p, "zz", facts=FACTS, repo=repo, netlists={"yy": op})
+    row = next(x for x in r["rows"] if x["pattern"] == "SPI_*")
+    e = row["net_edges"]["SPI_SCK"]
+    assert e["maker_edge_ns"] is not None and abs(e["maker_edge_ns"] - 1.5) < 1e-9, \
+        "the far board's open drain (1.5 ns) should be the maker's figure, not the family's fastest pin (0.25 ns): %s" % e
+    assert e["decided_by"] == "BOUND", "the MCU on this board has no figure, so the bound governs the net (ER-D13): %s" % e
+    assert r["inputs"].get("far_netlist_yy", {}).get("sha256_16"), "the continued board's netlist is not recorded by sha"
+    # a connector of the continued board that no record names is a reason there as it is here, never silence
+    with _board({"critical_k": 6, "signal_classes": [HS, EN, CK]}, ()), _rates(families=[gate_only, MCU_BOUND], far_ends=[fe]):
+        r2 = E.schematic_table(p, "zz", facts=FACTS, repo=repo, netlists={"yy": op})
+    row2 = next(x for x in r2["rows"] if x["pattern"] == "SPI_*")
+    assert any("board YY" in w and "reaches J2" in w for w in row2["undecided"].get("SPI_SCK", [])), row2["undecided"]
+
+
+def t_si001_a_citation_names_the_held_file_by_sha_and_the_place_of_its_words():
+    """The acceptance of the second pass: every citation carries its document, the sha256/16 of the held file, where
+    in it the words are and the words. A record with no sha or no place is refused when the data file is read; one
+    whose document is no longer the file it was read from decides nothing, and its nets read UNDECIDED."""
+    no_sha = dict(MCU_BOUND, id="FIX-NOSHA", checked=[{"document": "v2/vendor/fix/mcu.md", "quote": "slew-rate", "where": "x"}])
+    no_place = dict(MCU_BOUND, id="FIX-NOPLACE", checked=[{"document": "v2/vendor/fix/mcu.md", "quote": "slew-rate", "sha256_16": _s16(MCU_MD)}])
+    no_kw = dict(GATE_IBIS, id="FIX-NOKW", ibis={k: v for k, v in GATE_IBIS["ibis"].items() if k != "keyword"})
+    with _rates(families=[no_sha, no_place, no_kw]) as refusals:
+        pass
+    assert any("FIX-NOSHA" in x and "sha256_16" in x for x in refusals), refusals
+    assert any("FIX-NOPLACE" in x and "no page" in x for x in refusals), refusals
+    assert any("FIX-NOKW" in x and "keyword" in x for x in refusals), refusals
+    p, d = _clk_fixture()
+    repo = _fix_repo()
+    open(os.path.join(repo, "v2", "vendor", "fix", "mcu.md"), "a").write("A later revision adds a line.\n")
+    with _board({"critical_k": 6, "signal_classes": [HS, EN, CK]}, ()), _rates(families=[GATE_IBIS, MCU_BOUND]):
+        r = E.schematic_table(p, "zz", facts=FACTS, repo=repo)
+    row = next(x for x in r["rows"] if x["pattern"] == "SPI_*")
+    assert any("is not the file the record was read from" in w for w in row["undecided"].get("SPI_SCK", [])), row["undecided"]
+    # and an IBIS record whose keyword or cell is not the file's is contradicted, a FAIL
+    repo2 = _fix_repo()
+    wrong = dict(GATE_IBIS, ibis=dict(GATE_IBIS["ibis"], ramp="1.2/0.26n"))
+    with _board({"critical_k": 6, "signal_classes": [HS, EN, CK]}, ()), _rates(families=[wrong, MCU_BOUND]):
+        r3 = E.schematic_table(p, "zz", facts=FACTS, repo=repo2)
+    assert E.schematic_result(r3) == "FAIL" and any("FIX-GATE" in f and "cell" in f for f in r3["fails"]), r3["fails"]
+
+
+def t_si001_a_bound_shows_its_documents_were_searched():
+    """A quote of the part's name proves a document is held, not that anyone looked in it for a transition time (the
+    independent check of 27 September 2026). A bound decides only while the data file's search listing holds every
+    document it cites at the held file's sha256/16."""
+    p, d = _clk_fixture()
+    for listing_text, rates_kw, want in (
+            (_listing_text([]), {}, "the search listing does not hold v2/vendor/fix/mcu.md"),
+            (_listing_text([("v2/vendor/fix/mcu.md", "an older text")]), {}, "the search listing read v2/vendor/fix/mcu.md at"),
+            (None, {"listing": False}, "the data file names no search listing")):
+        repo = _fix_repo(listing_text)
+        with _board({"critical_k": 6, "signal_classes": [HS, EN, CK]}, ()), _rates(families=[GATE_IBIS, MCU_BOUND], **rates_kw):
+            if listing_text is not None: E.RATES["search_listing"]["sha256_16"] = _s16(listing_text)
+            r = E.schematic_table(p, "zz", facts=FACTS, repo=repo)
+        row = next(x for x in r["rows"] if x["pattern"] == "SPI_*")
+        assert any(want in w for w in row["undecided"].get("SPI_SCK", [])), (want, row["undecided"])
+
+
+def t_si001_a_specification_binds_a_part_only_where_its_maker_claims_it():
+    """ER-D14. UM10204's minimum fall is a published figure for a part whose own datasheet claims the specification's
+    timing; for any other part it is somebody else's number. A STANDARD row with no quoted claim is refused; with one,
+    the pin takes the figure, its clock input drives nothing, and the net is the maker's."""
+    row = dict(_cite("v2/vendor/fix/spec.md", SPEC_MD, "Fast-mode minimum 12 ns at 3.3 V"), match="^SDA$", kind="STANDARD",
+               edge_ns=12.0, statistic="min")
+    base = {"id": "FIX-PHY", "kind": "BOUND", "parts": ["PHY"], "edge_ns": 0.0, "inputs": "^SCL$",
+            "inputs_cited": [_cite("v2/vendor/fix/claim.md", CLAIM_MD, "SCL is a clock input.")],
+            "derivation": "the fixture PHY publishes no transition of its own", "applicability": "x", "verification_owed": "y",
+            "checked": [_cite("v2/vendor/fix/mcu.md", MCU_MD, "slew-rate")]}
+    unclaimed = dict(base, id="FIX-UNCLAIMED", pin_edges=[row])
+    claimed = dict(base, pin_edges=[dict(row, claimed_by=_cite("v2/vendor/fix/claim.md", CLAIM_MD, "the I2C interface timing adheres to the bus specification"))])
+    with _rates(families=[unclaimed]) as refusals:
+        pass
+    assert any("FIX-UNCLAIMED" in x and "claims" in x for x in refusals), refusals
+    d = tempfile.mkdtemp(prefix="si001-")
+    comps = {"U7": "PHY fixture", "U8": "PHY fixture", "R1": "2.2k"}
+    nets = [("SPI_SDA", "Default", [("U7", "1"), ("U8", "1"), ("R1", "1")]), ("SPI_SCL", "Default", [("U7", "2"), ("U8", "2")]),
+            ("+3V3", "Default", [("R1", "2"), ("U7", "3")]), ("GND", "Default", [("U7", "4"), ("U8", "4")])]
+    p = _k9(d, comps, nets)
+    t = open(p).read()
+    for ref in ("U7", "U8"):
+        t = t.replace('(node (ref "%s") (pin "1") (pintype "passive"))' % ref, '(node (ref "%s") (pin "1") (pinfunction "SDA") (pintype "passive"))' % ref)
+        t = t.replace('(node (ref "%s") (pin "2") (pintype "passive"))' % ref, '(node (ref "%s") (pin "2") (pinfunction "SCL") (pintype "passive"))' % ref)
+    open(p, "w").write(t)
+    repo = _fix_repo()
+    rise = {"id": "FIX-RISE", "nets": {"zz": ["SPI_SDA"]}, "fall": "the pull-downs of the families",
+            "rise": dict(_cite("v2/vendor/fix/spec.md", SPEC_MD, "Table 9."), kind="MODEL", edge_ns=150.0, measure="30 to 70 percent",
+                         derivation="0.8473 Rp Cb with the fixture's values",
+                         checked=[_cite("v2/vendor/fix/mcu.md", MCU_MD, "slew-rate")]),
+            "applicability": "the fixture bus", "verification_owed": "a measurement"}
+    with _board({"critical_k": 6, "signal_classes": [CK]}, ()), _rates(families=[claimed], open_drain=[rise]):
+        r = E.schematic_table(p, "zz", facts=FACTS, repo=repo)
+    row_ = next(x for x in r["rows"] if x["pattern"] == "SPI_*")
+    sda = row_["net_edges"]["SPI_SDA"]
+    assert sda["decided_by"] == "MAKER" and sda["basis"] == "STANDARD" and abs(sda["edge_ns"] - 12.0) < 1e-9, sda
+    # AN OPEN-DRAIN NET HAS TWO EDGES: the rise is stated beside the fall and never governs
+    assert sda["rising"]["edge_ns"] == 150.0 and sda["rising"]["basis"] == "MODEL" and sda["rising"]["source"] == "FIX-RISE", sda
+    assert abs(sda["edge_ns"] - 12.0) < 1e-9, "the rise was taken as the governing edge: %s" % sda
+    assert any("no part on the net" in w for w in row_["undecided"].get("SPI_SCL", [])), \
+        "two clock INPUTS and no driver: the net has no edge to take, and says so: %s" % row_["undecided"]
+
+
+def t_si001_a_passive_switch_pin_that_is_neither_through_nor_control_is_named():
+    sw = {"id": "FIX-SW", "kind": "PASSIVE_SWITCH", "parts": ["SWITCH"], "through_pins": ["1", "3"], "input_pins": ["4"],
+          "basis": "a fixture switch: pins 1 and 3 pass, pin 4 selects"}
+    extra = [("SPI_A", "Default", [("U6", "1"), ("J9", "1")]), ("SPI_SEL", "Default", [("U6", "4"), ("U3", "2")]),
+             ("SPI_ODD", "Default", [("U6", "7"), ("U3", "1")])]
+    p, d = _clk_fixture(extra_nets=extra, extra_comps={"U6": "SWITCH fixture", "J9": "header"})
+    repo = _fix_repo()
+    fe = {"id": "FIX-FAR", "board": "zz", "nets": ["SPI_A"], "via": ["U6", "J9"], "families": ["FIX-MCU"],
+          "basis": "the fixture's far side", "members": ["an MCU"]}
+    with _board({"critical_k": 6, "signal_classes": [HS, EN, CK]}, ()), _rates(families=[GATE_IBIS, MCU_BOUND, sw], far_ends=[fe]):
+        r = E.schematic_table(p, "zz", facts=FACTS, repo=repo)
+    row = next(x for x in r["rows"] if x["pattern"] == "SPI_*")
+    assert row["net_edges"]["SPI_A"]["by"].startswith("beyond"), row["net_edges"].get("SPI_A")
+    assert row["net_edges"]["SPI_SEL"]["decided_by"] == "MAKER", "a control input of the switch drives nothing: %s" % row["net_edges"].get("SPI_SEL")
+    assert any("neither a through pin nor a control input" in w for w in row["undecided"].get("SPI_ODD", [])), row["undecided"]
+
+
+def t_ibis_reader_fails_closed_on_an_untyped_model_and_reads_both_spellings_of_a_keyword():
+    """The independent check's finding: a model with no Model_type read as an input, and [Model_Selector] spelled with
+    an underscore was not read at all. Both now answer UNKNOWN or the right model, never silence."""
+    untyped = FIX_IBS.replace("[Model] OUT_33\nModel_type Output\n", "[Model] OUT_33\n")
+    assert untyped != FIX_IBS
+    st, e, how = IB.pin_edge(IB.parse(untyped), "FIX_PKG", "2", "_33$")
+    assert st == "UNKNOWN" and "Model_type" in how, (st, how)
+    under = FIX_IBS.replace("[Model Selector] OUT_SEL", "[Model_Selector] OUT_SEL")
+    assert under != FIX_IBS
+    st, e, how = IB.pin_edge(IB.parse(under), "FIX_PKG", "2", "_33$")
+    assert st == "DRIVES" and abs(e - 0.25) < 1e-9, (st, e, how)
+    assert IB.fastest_cite(IB.parse(FIX_IBS), "FIX_PKG", "_33$") == ("[Model] OUT_33 [Ramp] dV/dt_f max", "1.2/0.25n")
+
+
+def t_si001_every_edge_of_the_data_file_carries_what_the_acceptance_asks():
+    """The acceptance of 27 September 2026, held on the real data file: every edge carries its document (the file, its
+    sha256/16, the page or the IBIS keyword), the words or the numbers quoted, its conditions or its derivation, its
+    applicability and the verification still owed; only a MINIMUM is a published figure; a bound that cites no
+    document says that none is held."""
+    rates, refusals = E.load_rates()
+    assert not refusals, refusals
+    seen = 0
+
+    def held(rid, rec, kind, parent=None):
+        par = parent or {}
+        if kind == "IBIS":
+            ib = rec["ibis"]
+            assert ib.get("file") and ib.get("sha256_16") and ib.get("keyword") and ib.get("ramp"), rid
+        else:
+            cites = E.citations(rec) if parent is None else E.citations({"checked": [rec]})
+            assert cites or rec.get("no_document") or par.get("checked"), "%s gives an edge and cites nothing" % rid
+            for c in cites:
+                assert c["sha256_16"] and c["quote"] and (c["page"] or c["where"]), (rid, c)
+        assert rec.get("conditions") or rec.get("derivation"), "%s states neither its conditions nor its derivation" % rid
+        assert rec.get("applicability") or par.get("applicability"), "%s states no applicability" % rid
+        assert rec.get("verification_owed") or par.get("verification_owed"), "%s states no verification owed" % rid
+        if kind in ("STANDARD", "DATASHEET"): assert rec.get("statistic") == "min", "%s is a published figure that is not a minimum" % rid
+        if kind in E.BOUND_KINDS: assert float(rec["edge_ns"]) >= 0 and rec.get("derivation"), rid
+
+    for r in rates["interfaces"]:
+        held(r["id"], r, r["kind"]); seen += 1
+    for r in rates["families"]:
+        if r["kind"] in E.EDGE_KINDS:
+            held(r["id"], r, r["kind"]); seen += 1
+        for j, pe in enumerate(r.get("pin_edges") or []):
+            held("%s pin_edges[%d]" % (r["id"], j), pe, pe["kind"], r); seen += 1
+    for r in rates["open_drain"]:
+        held(r["id"] + " rise", dict(r["rise"], applicability=r["applicability"], verification_owed=r["verification_owed"]), r["rise"]["kind"])
+        seen += 1
+    assert seen >= 60, "the data file holds %d edges: it was not read whole" % seen

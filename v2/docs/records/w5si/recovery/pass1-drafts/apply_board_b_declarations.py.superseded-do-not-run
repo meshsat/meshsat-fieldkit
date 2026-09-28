@@ -1,0 +1,94 @@
+#!/usr/bin/env python3
+"""DRAFT (stream w5si, 27 September 2026, MESHSAT-1357, layers 8 and 9): board B's RF lines classified as RF, and BOB as the termination it is.
+
+FOUND BY THE SI-001 READING (edge_length.py with tools/pcb_edge_rates.yaml), read on the committed netlist
+pcb-b-compute-b19/out/pcb-b-compute.net (sha256/16 8b78c59754a6a0c7) at c23c5e76:
+  1. boards/b.json declares `SW?_IN` and `SW?_O?` as CLOCKED_DIGITAL, "a voter input" and "a voter output". Every net
+     those patterns match on the committed netlist is a port of an RF switch: SWA_IN, SWB_IN (the SKY13351-378LF's
+     common port, U82 and U83 pin 5) and SWA_O1, SWA_O2, SWB_O1, SWB_O2 (its two throws), each behind a 22 pF DC block
+     (C500 to C505). No voter net carries those names. The declaration's class and basis describe nets that are not
+     there; the RF lines they do match are classified as clocked logic.
+  2. gen_pcb_b3.py's net-class patterns put those six ports and the four card RF lines W1A_CARD, W3A_CARD, W1B_CARD,
+     W3B_CARD in the USB pair class (0.127 mm tracks) instead of the RF class the same file defines for single-ended
+     50 ohm lines (0.14 mm, "50 ohm on this six-layer 3313 outer layer (32.221)"), and no pattern at all covers
+     GNSS_RF_IN, the LG290P's RF input (pin 11 RF_IN, "50 Ohm", LG290P(03) hardware design V1.1 p.21, quoted in
+     gen_sch_b.py). The USB class carries a 50 ohm single-ended target in the intent, so SI-001 reads these ports as
+     answered, by coincidence of that number; GNSS_RF_IN reads unanswered (class Default).
+What this draft changes (session decision W5SI-D1, taken under the owner's standing rule of 26 September 2026:
+reason above; reverse by restoring the two entries and the four pattern pairs):
+  * boards/b.json: the `SW?_IN` and `SW?_O?` entries become HIGH_SPEED_DIGITAL with a basis that names the parts;
+  * gen_pcb_b3.py PATTERNS: ("SW?_O*", "USB"), ("SW?_IN", "USB"), ("W?*_CARD", "USB") become "RF", and
+    ("GNSS_RF_IN", "RF") is added after ("*_ANT", "RF").
+It takes effect on board B's next layout generation (the RF class is first carried by B23); the SI-001 reading of the
+declared phase changes only when that phase's project file carries the new assignments.
+  3. boards/b.json declares `BOB` as CLOCKED_DIGITAL, "the break-before-make timing node of the same logic". The only
+     net of that name is the Ethernet magnetics' Bob Smith termination (gen_sch_b.py:1151: MCT3 and MCT4 through R9
+     and R10, 75 ohm, to C33, 1 nF 2 kV, to ground); the break-before-make nets are BBM*. No part drives BOB, so SI-001
+     reads it UNDECIDED under a basis that names a different circuit. Session decision W5SI-D2: BOB is declared
+     LOW_SPEED_OR_DC with a basis naming the termination (a common-mode node no part drives, with no edge to classify;
+     its layout belongs to the magnetics and the EMC rules). Reverse by restoring the entry. This one changes the
+     SI-001 reading at once: board B's last undecided net with a class goes.
+
+Applied on the integrated tree (after set 6), from the repository root:
+    python3 drafts/w5si/apply_board_b_declarations.py [--root <tree>]
+It asserts every old text once, writes, re-parses both files and checks the new state.
+"""
+import os, sys, json, ast
+
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+if "--root" in sys.argv: ROOT = os.path.abspath(sys.argv[sys.argv.index("--root") + 1])
+TOOLS = os.path.join(ROOT, "v2", "ecad", "tools")
+TABLE = os.path.join(TOOLS, "boards", "b.json")
+GEN = os.path.join(TOOLS, "gen_pcb_b3.py")
+
+T_OLD = [('''  {
+   "pattern": "SW?_IN",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a voter input"
+  },''', '''  {
+   "pattern": "SW?_IN",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the common RF port of the SKY13351-378LF antenna changeovers U82 and U83 (pin 5), behind a 22 pF DC block: radio frequency, a single-ended 50 ohm line (27 September 2026, stream w5si: the entry read 'a voter input' and no voter net carries this name)"
+  },'''),
+         ('''  {
+   "pattern": "SW?_O?",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a voter output"
+  },''', '''  {
+   "pattern": "SW?_O?",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the two RF throws of the SKY13351-378LF antenna changeovers U82 and U83 (pins 1 and 3), each behind a 22 pF DC block to a card's U.FL: radio frequency, a single-ended 50 ohm line (27 September 2026, stream w5si: the entry read 'a voter output' and no voter net carries this name)"
+  },'''),
+         ('''  {
+   "pattern": "BOB",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the break-before-make timing node of the same logic"
+  },''', '''  {
+   "pattern": "BOB",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the Ethernet magnetics' Bob Smith termination (gen_sch_b.py: MCT3 and MCT4 through R9 and R10, 75 ohm, to C33, 1 nF 2 kV, to ground): a common-mode node no part drives, with no edge to classify (27 September 2026, stream w5si, W5SI-D2: the entry read 'the break-before-make timing node', which is BBM*)"
+  },''')]
+G_OLD = '''PATTERNS = [("*_ANT", "RF"), ("USB*", "USB"), ("HUB*", "USB"), ("LIME_SS*", "USB"), ("LIME_D*", "USB"), ("CAM_D*", "USB"), ("QMX_D*", "USB"), ("HOST*", "USB"), ("BANK*", "USB"), ("MUX*", "USB"), ("SW?_O*", "USB"), ("SW?_IN", "USB"), ("W?*_CARD", "USB"),'''
+G_NEW = '''PATTERNS = [("*_ANT", "RF"), ("GNSS_RF_IN", "RF"), ("USB*", "USB"), ("HUB*", "USB"), ("LIME_SS*", "USB"), ("LIME_D*", "USB"), ("CAM_D*", "USB"), ("QMX_D*", "USB"), ("HOST*", "USB"), ("BANK*", "USB"), ("MUX*", "USB"), ("SW?_O*", "RF"), ("SW?_IN", "RF"), ("W?*_CARD", "RF"),   # the RF switch ports, the card RF lines and the GNSS RF input are single-ended 50 ohm lines (27 September 2026, stream w5si, W5SI-D1)'''
+
+
+def main():
+    t = open(TABLE, encoding="utf-8").read()
+    for old, new in T_OLD:
+        assert t.count(old) == 1, "board B's table no longer carries this entry as written: re-read it\n" + old
+        t = t.replace(old, new)
+    d = json.loads(t)
+    ents = {e["pattern"]: e for e in d["signal_classes"]}
+    assert ents["SW?_IN"]["class"] == ents["SW?_O?"]["class"] == "HIGH_SPEED_DIGITAL" and ents["BOB"]["class"] == "LOW_SPEED_OR_DC"
+    g = open(GEN, encoding="utf-8").read()
+    assert g.count(G_OLD) == 1, "gen_pcb_b3.py's PATTERNS head is not as written: re-read it"
+    g2 = g.replace(G_OLD, G_NEW)
+    assert g2 != g
+    ast.parse(g2)
+    open(TABLE, "w", encoding="utf-8").write(t)
+    open(GEN, "w", encoding="utf-8").write(g2)
+    print("board B: SW?_IN and SW?_O? declared RF, BOB the magnetics termination; gen_pcb_b3.py puts the switch ports, the card RF lines and GNSS_RF_IN in class RF")
+
+
+if __name__ == "__main__":
+    main()
