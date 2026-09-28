@@ -1,0 +1,40 @@
+a EXP_INT EXP_INT edge 0.0 BOUND MICROCHIP-KSZ9897 | maker 0.121 | table critical 0.0 mm | beyond J_AB1 on board B: U1 pin 94 INTRP_N
+a PROCHOT PROCHOT edge 0.0 BOUND TI-BQ25731 | maker 5.89 | table critical 0.0 mm | U3 pin 11 PROCHOT
+a SCL SCL edge 0.0 BOUND TI-BQ25731 | maker 0.451 | table critical 0.0 mm | U3 pin 13 SCL
+a SDA SDA edge 0.0 BOUND TI-BQ25731 | maker 0.451 | table critical 0.0 mm | U3 pin 12 SDA
+b *_SWCLK IOCA_SWCLK edge 0.0 BOUND FAR-BENCH-PROBE | maker 0.451 | table critical 0.0 mm | beyond U42 (far end B-BENCH): FAR-BENCH-PROBE
+b *_SWCLK IOCB_SWCLK edge 0.0 BOUND FAR-BENCH-PROBE | maker 0.451 | table critical 0.0 mm | beyond U52 (far end B-BENCH): FAR-BENCH-PROBE
+b *_SWCLK IOCC_SWCLK edge 0.0 BOUND FAR-BENCH-PROBE | maker 0.451 | table critical 0.0 mm | beyond U62 (far end B-BENCH): FAR-BENCH-PROBE
+b *_SWDIO IOCA_SWDIO edge 0.0 BOUND FAR-BENCH-PROBE | maker 0.451 | table critical 0.0 mm | beyond U42 (far end B-BENCH): FAR-BENCH-PROBE
+b *_SWDIO IOCB_SWDIO edge 0.0 BOUND FAR-BENCH-PROBE | maker 0.451 | table critical 0.0 mm | beyond U52 (far end B-BENCH): FAR-BENCH-PROBE
+b *_SWDIO IOCC_SWDIO edge 0.0 BOUND FAR-BENCH-PROBE | maker 0.451 | table critical 0.0 mm | beyond U62 (far end B-BENCH): FAR-BENCH-PROBE
+b BBM* BBM1 edge 0.0 BOUND NEXPERIA-74LVC1G157 | maker 0.136 | table critical 0.0 mm | U516 pin 6 BBM1
+b BBM* BBM1_ARMR edge 0.0 BOUND DIODES-74LVC1G17 | maker 0.113 | table critical 0.0 mm | U521 pin 2 BBM1_ARMR
+b BBM* BBM1_MOV edge 0.0 BOUND NEXPERIA-74LVC1G157 | maker 0.113 | table critical 0.0 mm | U527 pin 6 BBM1_MOV
+b BBM* BBM1_REQ edge 0.0 BOUND DIODES-74LVC1G17 | maker 0.113 | table critical 0.0 mm | across R522 from BBM1_ARMR: U521 pin 2 BBM1_ARMR
+b BBM* BBM2 edge 0.0 BOUND NEXPERIA-74LVC1G157 | maker 0.136 | table critical 0.0 mm | U517 pin 6 BBM2
+b BBM* BBM2_ARMR edge 0.0 BOUND DIODES-74LVC1G17 | maker 0.113 | table critical 0.0 mm | U522 pin 2 BBM2_ARMR
+b BBM* BBM2_MOV edge 0.0 BOUND NEXPERIA-74LVC1G157 | maker 0.113 | table critical 0.0 mm | U528 pin 6 BBM2_MOV
+b BBM* BBM2_REQ edge 0.0 BOUND DIODES-74LVC1G17 | maker 0.113 | table critical 0.0 mm | across R523 from BBM2_ARMR: U522 pin 2 BBM2_ARMR
+b BBM* BBM3 edge 0.0 BOUND NEXPERIA-74LVC1G157 | maker 0.136 | table critical 0.0 mm | U518 pin 6 BBM3
+b BBM* BBM3_ARMR edge 0.0 BOUND DIODES-74LVC1G17 | maker 0.113 | table critical 0.0 mm | U523 pin 2 BBM3_ARMR
+b BBM* BBM3_MOV edge 0.0 BOUND NEXPERIA-74LVC1G157 | maker 0.113 | table critical 0.0 mm | U529 pin 6 BBM3_MOV
+b BBM* BBM3_REQ edge 0.0 BOUND DIODES-74LVC1G17 | maker 0.113 | table critical 0.0 mm | across R524 from BBM3_ARMR: U523 pin 2 BBM3_ARMR
+b BSEL* BSEL1 edge 0.0 BOUND NEXPERIA-74LVC1G157 | maker 0.136 | table critical 0.0 mm | U524 pin 1 BSEL1
+b BSEL* BSEL2 edge 0.0 BOUND NEXPERIA-74LVC1G157 | maker 0.136 | table critical 0.0 mm | U525 pin 1 BSEL2
+b BSEL* BSEL3 edge 0.0 BOUND NEXPERIA-74LVC1G157 | maker 0.136 | table critical 0.0 mm | U526 pin 1 BSEL3
+b EXP_INT EXP_INT edge 0.0 BOUND MICROCHIP-KSZ9897 | maker 0.121 | table critical 0.0 mm | U1 pin 94 INTRP_N
+b HB* HB1 edge 0.0 BOUND DISCRETE-MOSFET | maker 0.451 | table critical 0.0 mm | Q105 pin 3 D
+b HB* HB2 edge 0.0 BOUND DISCRETE-MOSFET | maker 0.451 | table critical 0.0 mm | Q205 pin 3 D
+b HB* HB3 edge 0.0 BOUND DISCRETE-MOSFET | maker 0.451 | table critical 0.0 mm | Q305 pin 3 D
+b SCL* SCL edge 0.0 BOUND MICROCHIP-KSZ9897 | maker 0.451 | table critical 0.0 mm | U1 pin 101 SCL_MDC
+b SDA* SDA edge 0.0 BOUND MICROCHIP-KSZ9897 | maker 0.451 | table critical 0.0 mm | U1 pin 98 SDI_SDA
+c EXP_INT EXP_INT edge 0.0 BOUND RPI-RP2040 | maker 0.121 | table critical 0.0 mm | U3 pin 36 GPIO24
+c HB? HB1 edge 0.0 BOUND RPI-RP2040 | maker 0.451 | table critical 0.0 mm | U3 pin 13 GPIO10
+c HB? HB2 edge 0.0 BOUND RPI-RP2040 | maker 0.451 | table critical 0.0 mm | U3 pin 14 GPIO11
+c HB? HB3 edge 0.0 BOUND RPI-RP2040 | maker 0.451 | table critical 0.0 mm | U3 pin 15 GPIO12
+c SCL SCL edge 0.0 BOUND RPI-RP2040 | maker 0.451 | table critical 0.0 mm | U3 pin 3 GPIO1
+c SDA SDA edge 0.0 BOUND RPI-RP2040 | maker 0.451 | table critical 0.0 mm | U3 pin 2 GPIO0
+d EXP_INT EXP_INT edge 0.0 BOUND MICROCHIP-KSZ9897 | maker 0.121 | table critical 0.0 mm | beyond J_HARN1 on board B: U1 pin 94 INTRP_N
+d SCL SCL edge 0.0 BOUND TI-BQ25731 | maker 0.451 | table critical 0.0 mm | beyond J_HARN1 on board A: U3 pin 13 SCL
+d SDA SDA edge 0.0 BOUND TI-BQ25731 | maker 0.451 | table critical 0.0 mm | beyond J_HARN1 on board A: U3 pin 12 SDA
