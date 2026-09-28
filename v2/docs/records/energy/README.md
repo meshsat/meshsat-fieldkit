@@ -14,6 +14,8 @@ criteria visible. **Prototype design: nothing built, ordered or measured; an AI 
 | `energy_budget.out` | its output, byte for byte what the record quotes |
 | `night_bounds.py`, `night_bounds.out` | the night state's LOW / PLAN / HIGH (11.02 / 16.20 / 39.67 W) on the tree's model: imports `records/rv-pwr/pwr_budget.py` unchanged (pinned) and reproduces PS-SURV-R's 12.78 / 23.27 / 46.94 W as its check (second issue, review items m1 and m2) |
 | `packfit_west.py`, `packfit_west.out` | a second block in the west pocket judged with A06's `pack_fit.py` imported unchanged (pinned): the block alone fits, its board P fits nowhere beside, on top or in the east pocket (second issue, review item B1) |
+| `energy_4s6p.py`, `energy_4s6p.out` | section 8: the second block in the west pocket in parallel with the first under the one board P (one 4S6P pack): the gauge's words, balancing, currents, the one charge current, the strings' sharing, S-85, the harness, the drop-zone conflict, the energy runs (M1 as written, the night state, two day schedules) and the consequences; imports `energy_budget.py` and A06's `pack_fit.py` unchanged (pinned), reproduces `energy_budget.simulate` on four cases before printing |
+| `DECISION-OPTIONS.md` | the owner's options sheet for section 8, at most 250 words, three options, REQ-072 FAIL in each |
 | `apply_records_readme_row.py` | DRAFT for the integrator: adds this folder's row to `v2/docs/records/README.md`; not executed |
 | `apply_req072_evidence_note.py` | DRAFT for the integrator: adds one evidence line to REQ-072 in `pcb_requirements.yaml`, verdict and statement untouched; not executed |
 
@@ -28,6 +30,11 @@ minor items m1 to m11, answered in `ENERGY-RECONCILIATION.md` (its header lists 
 7b of the record and of `energy_budget.out`) and R2 (Route B's sense resistor 10 mOhm, its worst case at TRK_OUT's
 15.56 V and the stage's 0.90). Run order: `night_bounds.py`
 and `packfit_west.py` first (their outputs are pinned inputs of `energy_budget.py`), then `energy_budget.py`.
+
+**Section 8 (29 September 2026)**, the integrator's follow-up: one 4S6P pack under one board P. Run
+`python3 v2/docs/records/energy/energy_4s6p.py > v2/docs/records/energy/energy_4s6p.out` (about 0.6 s). Checks: two runs
+byte-identical; a run on a copied root identical; a changed `gen_sch_p.py` refused with exit 3 naming it; a changed
+file of `energy_inputs.yaml`'s pinned list refused with exit 3 naming it.
 
 Reused, cited, not duplicated: stream d4energy's `energy_data.yaml` (branch `fnd/d4energy`, commit `9b43e274`)
 for the load citations and the pack's curve readings, and the PVGIS mean-day profile it filed at `71be4943`.
