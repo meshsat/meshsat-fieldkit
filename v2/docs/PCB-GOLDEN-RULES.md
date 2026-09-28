@@ -2537,14 +2537,32 @@ level, and the measure taken (staking, support, strain relief, coating, mating c
 **If violated** A tall part shears its joints, a connector wears, a coated board traps moisture.
 
 **Today** nothing considers vibration, mating cycles or moisture for any interface 16 September 2026: THE LIST EXISTS
-AND IS CHECKED AGAINST THE BOARDS. pcb_reliability.yaml declares 25 classes over the seven boards covering
-all 111 parts whose value names a connector, a socket, a holder or a jack, each with its cycle figure or the
-reason none is published, the load it takes and the measure that makes it good enough. reliability.py refuses
-a wear part that falls in no class, a class that names no load or measure, a class with no cycle figure and
-no reason, and a declared count that the netlist does not match. The lowest figure in the kit is the U.FL
-socket at 30 mating cycles and the highest-cycled connector is the pack's XT60 at 1000, which is the one a
-user touches most. What it does NOT do is test anything: this rule is verified at the PROTOTYPE, no board has
-been built, and the dock block's contact targets carry the open item the mate-cycle test exists for.
+AND IS CHECKED AGAINST THE BOARDS. 28 September 2026 (stream d6rel, S-89): the population is an INVENTORY
+(wear_inventory.py): every component of the declared phase's netlist (board E5: its board file) is read and
+asked for by its reference class and its land, never by the words of its value, and every candidate is in
+exactly one declared class or under one declared exclusion with a visible reason and the land it speaks of,
+or the gate refuses. The population is the NETLIST's: a footprint only a board file carries is not in it
+(open item REL-O-13 of the list). On this tree's artefacts: 429 candidates (A 82, B 155, C 74, D 40, E 35, E5
+17, P 26), 195 classed in 58 classes, 234 excluded under 15 exclusions, 0 refused. Of the 58 classes, 24 cite
+the maker's cycle figure to a document held under v2/vendor/ by sha256, page and words (30 documents in all),
+16 have no figure because the maker's documents that were read state none, 8 mate nothing (solder lands,
+screw joints) and 10 owe their figure under an open item of the list; 4 measures are owed. A class whose
+maker publishes no figure is undecided and never lets its board read PASS. What holds each board from PASS,
+by the list's open items: A: REL-O-01, REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13 (4 of its classes
+have no figure because the maker states none); B: REL-O-02, REL-O-03, REL-O-07, REL-O-08, REL-O-09, REL-O-12,
+REL-O-13 (3 of its classes have no figure because the maker states none); C: REL-O-04, REL-O-05, REL-O-07,
+REL-O-08; D: REL-O-07, REL-O-08, REL-O-10, REL-O-12, REL-O-13 (3 of its classes have no figure because the
+maker states none); E: REL-O-02, REL-O-07, REL-O-08, REL-O-12, REL-O-13 (3 of its classes have no figure
+because the maker states none); E5: REL-O-06, REL-O-07; P: REL-O-07, REL-O-08, REL-O-11, REL-O-12, REL-O-13
+(3 of its classes have no figure because the maker states none). No board reads PASS. A missing, unreadable
+or empty netlist reads INCONCLUSIVE with the reason, never PASS, and so does a vendor library that is not in
+the tree; the netlist is the declared phase's and is recorded by sha256 and by content; each board's
+declaration is bound to the artefact it was written against (written_against) and another sha reads
+INCONCLUSIVE, because the gate cannot read a part off the value text and a substitution is a mismatch until
+proven. The lowest figure cited is 20 mating cycles (class the e-paper flex connector, board C, Hirose
+FH34SRJ-24S-0.5SH(50)). What it does NOT do is test anything: this rule is verified at the PROTOTYPE, no
+board has been built, and the dock block's contact targets carry the open item the mate-cycle test exists
+for.
 
 ## Energy Storage
 
