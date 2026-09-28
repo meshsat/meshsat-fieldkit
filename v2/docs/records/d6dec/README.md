@@ -30,10 +30,11 @@ The ruling this implements is `v2/docs/feasibility/DECOUPLING.md` section 6; the
   six committed intents, their quoted maker clauses looked up in the 428 held PDFs. FOUND 262, PAGE 42, NOT_FOUND 3,
   NO_QUOTE 133; each NOT_FOUND row read in its document (two quotations not verbatim, one text layer without the micro
   sign; none changes a value or a class).
-- `inventory-set8.json`: the first author's `inventory.py` re-run on the set 8 netlists (main 9147db5d merged): G1 to
-  G14 read DONE on the committed netlists and intents. Its T3 and T4 rows read NOT DONE because their detectors predate
-  the implementation (T3 looks at the first drop in `bypass_slots`, T4 asks whether `escape.py` itself reads a class;
-  `escape_cost.py` does). The table above is this stream's reading of T1 to T10. `inventory.json` stays the set 6 read.
+- `inventory-set8.json`: the first author's `inventory.py` re-run on the set 8 netlists (main 9147db5d merged), its
+  T3 and T4 detectors pointed at where that work now lives (`bypass_search.py`, `escape_cost.py`; the first form read
+  bypass_slots' first drop at rotation 0 and asked whether `escape.py` itself reads a class): G1 to G14 DONE on the
+  committed netlists and intents; T1 to T6, T9 and T10 DONE; T7 NOT DONE (the apply script is the integrator's to
+  run); T8 not applicable until T7 is in. `inventory.json` stays the set 6 read of 27 September.
 - `box/escape_parity.py`, `box/dec001_read.py`, `box/gen_check.py`, `box/run_box.sh`, `box/results_md.py`,
   `box/before_after.py`, `box/to_box.sh`: the box scripts; `box/run5/` and `box/run6/` their fetched outputs (tests,
   parity, generator check, DEC-001 read). The first author's box outputs of 27 September stay on the box under
@@ -131,9 +132,7 @@ entries are recorded (10.11 to 14.39 mm), not passed.
    and B's C37/C38 page: each board's writer corrects the basis text in its generator.
 4. Boards A and D's class fields (S-1): board A's writer adds `same_side: true` to its 8 class R entries; board D's
    writer states the ESR (or "not stated by the maker") on its 10 class L entries and the floor on C19 to C23.
-5. The inventory's T3 and T4 detectors (`inventory.py`) read the wrong places; next action if the inventory is re-used:
-   point T3 at `bypass_search.search`'s rotation loop and T4 at `escape_cost`.
-6. Every board's next placement under these tools, on the box, with the seats read and the escape cost measured
+5. Every board's next placement under these tools, on the box, with the seats read and the escape cost measured
    (FEA-006's closing evidence); the integrator's, after this branch is merged.
 
 ## What remains of FEA-006's layout-entry stage, per board
