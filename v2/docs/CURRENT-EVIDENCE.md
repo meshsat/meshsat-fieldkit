@@ -6,16 +6,18 @@
 **Foundations incomplete; 0 boards ready for layout; 0 physically verified.**
 
 Prototype design: no V2 board has been fabricated, ordered, assembled or measured. The foundations are
-incomplete because the requirements and architecture baselines are still open (review of 26 September 2026,
-section 6 item 1), whatever this page counts. "Ready for layout" here is the staged layout-entry test
-(`rules_status.layout_entry`): every applicable required schematic-phase rule is a PASS on current-candidate
-evidence (a document rule may rest on a pinned desk review), no owner-decision hold that gates layout entry
-is on the board, every layout-entry requirement of a hold that gates a later stage is met, and no feasibility
-blocker's layout-entry stage holds the board. Holds and blocker stages that gate fabrication release or
-prototype verification are listed in their own section and are not counted here: a check applies at the stage
-where it can be satisfied, and none is waived. A board that meets the test still needs its interfaces,
-stackup and geometry closed before a layout candidate is committed, and a desk review is never a physical
-test.
+incomplete, and why is read from the requirements registry (review of 26 September 2026, section 6 item 1;
+erratum g of handover H3): the architecture baseline is still open (7 of 7 feasibility records
+FEASIBILITY_OPEN: FEA-003, FEA-006, FEA-004, FEA-002, FEA-001, FEA-005, FEA-007) while the requirements
+baseline reads BASELINED at a54b793b, whatever this page counts. "Ready for layout" here is the staged
+layout-entry test (`rules_status.layout_entry`): every applicable required schematic-phase rule is a PASS on
+current-candidate evidence (a document rule may rest on a pinned desk review), no owner-decision hold that
+gates layout entry is on the board, every layout-entry requirement of a hold that gates a later stage is met,
+and no feasibility blocker's layout-entry stage holds the board. Holds and blocker stages that gate
+fabrication release or prototype verification are listed in their own section and are not counted here: a
+check applies at the stage where it can be satisfied, and none is waived. A board that meets the test still
+needs its interfaces, stackup and geometry closed before a layout candidate is committed, and a desk review
+is never a physical test.
 
 Re-takes alone would bring 0 of the 7 boards to layout entry, even if every re-take read PASS: the section
 "Layout entry, per board" names, for each remaining blocker, the step that must come first and the stream
@@ -359,5 +361,12 @@ tools that have changed since, across every board's revisions.
   - a reading that records another board's netlist, or the board file of a board with no schematic, is current only while that artefact is the other board's candidate (cause OTHER_DESIGN);
   - a file's last commit dates the version in this checkout; an edit made and reverted between two commits cannot be seen.
 - `v2/docs/evidence/INVALIDATED-*.md`: verdict files refused by content hash (8 listed); `v2/docs/evidence/COMPATIBILITY.md`: recorded rationales (7).
+- Readings limited by an open item of the requirements registry (`limits_reading`), each shown current here and marked LIMITED on its board page until the item closes:
+  - REL-001 on every board: LIMITED while S-89 stands: REL-001's completeness can be false (the independent
+  review of handover H3, finding H3-01, reproduced by the reviewer on four fixtures with the tool's own
+  command line).
+  - TRN-001 on board A: LIMITED while S-88 stands: TRN-001 on board A does not judge VIN_RAW's entry (the
+  independent review of handover H3, finding H3-02, v2/docs/reviews/2026-09-27-h3-independent-review.md;
+  erratum f of v2/docs/handover/RELEASE-H3.md).
 - Holds from `tools/pcb_board_holds.yaml` via `rules_lib.board_holds`.
 

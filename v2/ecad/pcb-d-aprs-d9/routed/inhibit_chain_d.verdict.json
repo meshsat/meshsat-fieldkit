@@ -86,12 +86,12 @@
  },
  "tool": "inhibit_chain_d",
  "tools": {
-  "git_head": "73ae2f2104c9",
-  "tools_tree_sha": "83ef0a1b203cfb46"
+  "git_head": "a4b157f07618",
+  "tools_tree_sha": "293a55e153ef9d1e"
  },
- "ts": "2026-09-27T21:00:20Z",
+ "ts": "2026-09-28T14:54:09Z",
  "verdict": "INCONCLUSIVE",
- "version": "73ae2f2104c9",
+ "version": "a4b157f07618",
  "writer": {
   "file": "check_contracts.py",
   "sha16": "5e14f456a0791c35"
