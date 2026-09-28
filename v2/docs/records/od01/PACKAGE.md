@@ -1,7 +1,7 @@
 # OD-01: the package an engineer needs, by path and sha256
 
 MESHSAT-1357, stream od01b, 29 September 2026. Written by `make_package.py` beside this file (stdlib; it refuses to run if a
-listed file is missing) at tree `c5a95973` plus the working files it hashed; the same list in `sha256sum` form is `PACKAGE.sha256`.
+listed file is missing) at tree `fec1c564` plus the working files it hashed; the same list in `sha256sum` form is `PACKAGE.sha256`.
 Prototype: nothing in the package has been made, bought, sent or run. **Export:** copy every path below keeping the
 repository paths, then from the repository root `sha256sum -c v2/docs/records/od01/PACKAGE.sha256` reads OK for all 66 files
 (13.4 MB in all). Groups A to G are what a shop needs for the quotes (each part's drawing PDF governs its DXF and STEP); A, H, I and J
@@ -15,7 +15,7 @@ what the operator needs for the tests; K regenerates H1. This file, `PACKAGE.sha
 | `v2/docs/records/od01/README.md` | 5711 | `b256364940e1eec8790ed12712e175688ad20c1abaaaeb26d66899521d820011` | the package's index and what remains |
 | `v2/docs/records/od01/TEST-BRIEF.md` | 9119 | `d5288022516123935a9b86eb9dcf89e7108864a5d78b5101456df127602a743b` | the operator's two-page brief |
 | `v2/docs/records/od01/TEST-PROCEDURE.md` | 31458 | `6fc9ba39fd4486f24ea59a6d9683c4f922a1cb4ae56504830e19bc18480018ad` | the complete procedure: what the heat test proves, the shutdown and its verification, set-up, steps, patch runs, test B, stop limits, records |
-| `v2/docs/records/od01/MACHINING-RFQ.md` | 20297 | `b1da1fdab9cf3cd6c44ab63a80883eb39f77857e0e9c7263d9fed16178ac721f` | the request for quote (NOT SENT) and section 6, the receipt checks R1 to R8 that gate cutting |
+| `v2/docs/records/od01/MACHINING-RFQ.md` | 20445 | `410c96d7396050e290a347dbb96aa9dde1e59201fac62f393757a6602c9f9d77` | the request for quote (NOT SENT) and section 6, the receipt checks R1 to R8 that gate cutting |
 | `v2/docs/records/od01/CHECKOUT-LIST.md` | 30485 | `e1712c0e73ec6f791ff10d38b07365633a9a542b528ea3b536fee35ecb553ffe` | what to buy, priced, with sources; lines 10 to 15 the shutdown |
 | `v2/docs/records/od01/checks/check-1.md` | 5917 | `aef368eed3b97c961f788bb1f1ba4c9ed82bbde47c4b373dc4232f4b310410bf` | independent AI check 1 of the package (28 Sep) |
 | `v2/docs/records/od01/checks/check-2.md` | 8584 | `2cd0f10fee406e0ba1fc3018d9c4a938701779cb529b437321075680c70ee7bf` | independent AI check 2: the lead exit's bias under 1 percent, H2's size |
