@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """DRAFT apply script (stream energy, MESHSAT-1357, 28 September 2026): adds ONE evidence line to REQ-072 in
-v2/ecad/tools/pcb_requirements.yaml, citing records/energy/ENERGY-RECONCILIATION.md. It changes nothing else:
+v2/ecad/tools/pcb_requirements.yaml, citing v2/docs/records/energy/ENERGY-RECONCILIATION.md (path corrected by the
+integrator at set 9: the validator counts an entry as naming a file only from `v2/`). It changes nothing else:
 not the statement, not the acceptance, not evidence_result (FAIL stays FAIL). For the integrator to run; NOT
 executed by the stream. Any rules_status or render that follows a registry edit is the integrator's.
 
@@ -20,7 +21,7 @@ import yaml
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULT = os.path.join(HERE, "..", "..", "..", "ecad", "tools", "pcb_requirements.yaml")
-NOTE = ("records/energy/ENERGY-RECONCILIATION.md (stream energy, 28 September 2026, on the owner's instruction of that day; "
+NOTE = ("v2/docs/records/energy/ENERGY-RECONCILIATION.md (stream energy, 28 September 2026, on the owner's instruction of that day; "
         "energy_budget.py, inputs pinned by sha256): the balance re-run hour by hour on the reference day with the loads of "
         "POWER-THERMAL.md section 4 (42.8 W, 39 loads: 20 maker figures, 8 inside a maker's bound, 8 declarations, 3 "
         "placeholders, none measured), the aged pack's usable energy from the cell sheet and the 3.00 V graceful line "
@@ -44,7 +45,7 @@ def main():
     path = os.path.abspath(a.file)
     with open(path, encoding="utf-8") as f:
         text = f.read()
-    if "records/energy/ENERGY-RECONCILIATION.md" in text:
+    if "v2/docs/records/energy/ENERGY-RECONCILIATION.md" in text:
         sys.stderr.write("apply_req072_evidence_note: the note is already present, refusing a second run\n")
         return 2
     before = yaml.safe_load(text)
