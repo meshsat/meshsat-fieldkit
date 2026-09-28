@@ -220,7 +220,8 @@ The pack gives 38.2 W at 06:00 (the panel 4.6 W at the node), 27.5 at 07:00, 16.
 10:00, 1.6 at 11:00, 1.2 at 12:00 and 4.2 at 13:00: 99.5 Wh by 14:00, when 8.3 Wh are left and the deficit is
 10.3 W. **The kit stops at hour 8, at 14:00 on the first day, in daylight.** The panel never exceeds the load
 (its peak at the node is 41.6 W against 42.8 W), so the pack drains from the first hour. Over the 72 hours the
-kit runs 23 hours and leaves 51 Wh of load unserved by the model's accounting; it never sees a night running.
+kit runs 23 hours, restarted by the operator on each recharged pack, and leaves 1870 Wh of the 3082 Wh asked
+unserved; it never sees a night running.
 
 **One night by hand.** From sunset to sunrise in September the sun gives nothing for 11.28 h: the night asks
 11.28 x 42.8 = 483 Wh of the pack (514 Wh over the 12 h of the profile's zero hours); the aged pack holds 107.9
@@ -272,7 +273,7 @@ figures is FAIL, unchanged.** The arithmetic on verified figures moves the aged 
 **5d. Combinations inside the approved constraints** (`energy_budget.out` 5d, 96 rows): with ONE pack no
 combination of the night state (a), the 2.80 V line (b) and any panel and window (e) meets 72 hours in any of
 the three months; the best one-pack case (the night state, 2.80 V, 330 Wp on a 300 W path, September) stops at
-hour 18 with 4 Wh unserved by the model's accounting, that is, the first night. With TWO packs (section 6d) the
+hour 18, in the first night, and leaves 241 Wh of the 72 hours' 1130 Wh unserved. With TWO packs (section 6d) the
 night state at 2.80 V meets June on 100 Wp and September on 200 Wp or more; December is not met by any
 combination (section 7).
 
