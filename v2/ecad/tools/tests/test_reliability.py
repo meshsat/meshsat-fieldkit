@@ -112,12 +112,20 @@ inventory:
     mechanical_names: ["*Conn*", "*Socket*"]
     soldered_libraries: ["Package_*", "Diode_*"]
     soldered_names: ["Fixture_Module"]
-open_items:
-  O-1: {what: "the part is not picked", next_action: "pick it and file its sheet"}
+open_items: {}
 boards:
  x:
    classes:
 """
+# An open item holds a reading or the list is refused (28 September 2026), so a fixture carries one only where a
+# class names it or the item names the board: `_open(sheet)` puts O-1 in.
+NO_OPEN = "open_items: {}\n"
+OPEN = 'open_items:\n  O-1: {what: "the part is not picked", next_action: "pick it and file its sheet"}\n'
+
+
+def _open(sheet, items=OPEN):
+    assert sheet.count(NO_OPEN) == 1
+    return sheet.replace(NO_OPEN, items)
 GOOD = HEAD + ('    - {name: "the jacks", refs: ["J_RF*"], cycles: 500, %s, basis: "the SMA standard", '
                'load: "a wrench", measure: "the case wall takes it"}\n' % SRC)
 POWER = '    - {name: "power", refs: ["J_PWR*"], cycles: 30, %s, basis: "JST VH", load: "a lead", measure: "a tie"}\n' % SRC
@@ -151,8 +159,27 @@ def t_a_class_with_no_cycle_figure_must_say_why():
                           'cycles: null, no_figure: {kind: none_published, statement: "the catalogue gives none", '
                           'looked_in: [{document: "v2/vendor/fixture/doc.pdf", sha256_16: "%s"}]}' % SHA)
     assert sheet2 != GOOD
+    # A CLASS WHOSE MAKER PUBLISHES NO FIGURE NEVER LETS ITS BOARD READ PASS (28 September 2026, the integrator's
+    # decision after the fresh check of stream d6rel; its counter-example P1: one connector, one `none_published`
+    # class, a pinned netlist). Until then this test asserted PASS here. The class is accepted as a DECLARATION (no
+    # refusal) and it is UNDECIDED: the board reads INCONCLUSIVE, the class is named, and the reason says that the
+    # maker's documents state no figure and which documents were read.
     r2 = _run(sheet2, {"J_RF1": "SMA jack"})
-    assert not r2["fails"] and r2["result"] == "PASS", r2
+    assert not r2["fails"] and r2["refused"] == 0 and r2["covered"] == 1, r2
+    assert r2["result"] == "INCONCLUSIVE" and r2["missing_input"] is None, (r2["result"], r2["missing_input"])
+    assert r2["figures"] == {"none_published": 1} and len(r2["undecided"]) == 1, (r2["figures"], r2["undecided"])
+    assert any("class the jacks has no cycle figure" in w and "state none" in w and "v2/vendor/fixture/doc.pdf" in w
+               for w in r2["inconclusive"]), r2["inconclusive"]
+    rc, v = _cli(_tree({"J_RF1": "SMA jack"}), sheet2)
+    assert rc == 3 and v["verdict"] == "INCONCLUSIVE" and v["missing_input"] is None, (rc, v["verdict"], v["missing_input"])
+    assert v["counts"]["classes_undecided"] == 1 and v["counts"]["per_board"]["x"]["classes_undecided"] == 1, v["counts"]
+    # it may name the open item that says what is done about it, and then the item is there and holds the board
+    named = _open(sheet2).replace("kind: none_published, ", "kind: none_published, open_item: O-1, ")
+    assert named != _open(sheet2)
+    r2b = _run(named, {"J_RF1": "SMA jack"})
+    assert r2b["result"] == "INCONCLUSIVE" and r2b["held_by"] == ["O-1"] and not r2b["fails"], r2b
+    r2c = _run(sheet2.replace("kind: none_published, ", "kind: none_published, open_item: O-9, "), {"J_RF1": "SMA jack"})
+    assert any("names no open item" in f for f in r2c["fails"]) and r2c["result"] == "FAIL", r2c["fails"]
     # and it says WHERE it looked, or it is refused
     sheet3 = sheet2.replace(', looked_in: [{document: "v2/vendor/fixture/doc.pdf", sha256_16: "%s"}]' % SHA, "")
     assert sheet3 != sheet2
@@ -278,7 +305,7 @@ def t_matrix_2_an_undeclared_idc_header_fails():
 def t_matrix_3_an_undeclared_rj45_magjack_fails():
     """SILENT ON THE UNREPAIRED TOOL: `RJ45 MagJack` carries none of the twelve words, so the part left the
     denominator and the board read PASS of one covered part. It is a J on a connector land: a candidate."""
-    assert not REL.WEAR.search(RJ45[0]), "the fixture must be a value the word list does not find"
+    assert not REL.WEAR_TWELVE.search(RJ45[0]), "the fixture must be a value the twelve words of the defect do not find"
     rc, v = _matrix({"J_PWR1": JST, "J_ETH": RJ45})
     assert rc == 1 and v["verdict"] == "FAIL", (rc, v["verdict"])
     assert v["counts"]["candidates"] == 2 and v["counts"]["refused"] == 1, v["counts"]
@@ -290,7 +317,9 @@ def t_matrix_4_a_declaration_with_no_netlist_is_inconclusive():
     Board A's own committed declaration is used, as the reviewer did."""
     import yaml
     real = yaml.safe_load(open(REL.REL, encoding="utf-8"))
-    real["boards"] = {"a": real["boards"]["a"]}
+    # THE WHOLE LIST, asked for board A (28 September 2026). Cut down to board A alone, the list orphans the open items
+    # the other boards' classes name and is refused by its own check, which is INCONCLUSIVE too but for another reason
+    # than the one this case is about (shown at the end).
     d = _tree(None, stem="pcb-a-power", letter="a")
     p = os.path.join(d, "rel.yaml"); open(p, "w", encoding="utf-8").write(yaml.safe_dump(real))
     out = os.path.join(d, "verdicts")
@@ -301,6 +330,14 @@ def t_matrix_4_a_declaration_with_no_netlist_is_inconclusive():
     assert v["missing_input"] and "no netlist of its declared phase" in v["missing_input"], v["missing_input"]
     assert v["denominator"] == 0 and v["counts"]["classed"] == 0 and v["counts"]["candidates"] == 0, v
     assert "netlist" not in v["inputs"], "a netlist is recorded that was never read: %r" % v["inputs"]
+    assert v["counts"]["per_board"]["a"]["artefact"] is None and v["counts"]["per_board"]["a"]["bound"] is False, v["counts"]
+    # the reviewer's literal form, board A's declaration alone: never PASS either, and it says why
+    real["boards"] = {"a": real["boards"]["a"]}
+    open(p, "w", encoding="utf-8").write(yaml.safe_dump(real))
+    rc = REL.main(["--rel", p, "--ecad", os.path.join(d, "ecad"), "--board", "a", "--manifest", os.path.join(d, "manifest.json"),
+                   "--profiles", os.path.join(d, "profiles"), "--out-dir", out])
+    v = json.load(open(os.path.join(out, "reliability.verdict.json")))
+    assert rc == 3 and v["verdict"] == "INCONCLUSIVE" and "refused by its own check" in v["note"], (rc, v["verdict"], v["note"])
 
 
 # ------------------------------------------------------------------------------------------------------------------
@@ -430,8 +467,8 @@ def t_a_class_of_several_part_numbers_cites_each_document():
 def t_an_owed_figure_keeps_the_board_inconclusive_and_names_its_open_item():
     """NO NUMBER IS INVENTED. A part with no maker's part picked carries an open item, and the board does not read
     PASS while a figure is owed: a bar that was skipped is not a bar that held."""
-    owed = GOOD.replace("cycles: 500, %s" % SRC, 'cycles: null, no_figure: {kind: owed, open_item: O-1, statement: "no part is picked"}')
-    assert owed != GOOD
+    owed = _open(GOOD).replace("cycles: 500, %s" % SRC, 'cycles: null, no_figure: {kind: owed, open_item: O-1, statement: "no part is picked"}')
+    assert owed != _open(GOOD)
     r = _run(owed, {"J_RF1": "SMA jack"})
     assert not r["fails"] and r["refused"] == 0 and r["covered"] == 1, r
     assert r["result"] == "INCONCLUSIVE" and r["missing_input"] is None, r
@@ -441,7 +478,7 @@ def t_an_owed_figure_keeps_the_board_inconclusive_and_names_its_open_item():
     assert v["counts"]["figures_owed"] == 1 and v["counts"]["refused"] == 0, v["counts"]
     # an owed figure with no open item behind it is a refusal, and so is one naming an item the list does not hold
     for bad in ('open_item: O-9, ', ""):
-        r2 = _run(owed.replace("open_item: O-1, ", bad), {"J_RF1": "SMA jack"})
+        r2 = _run(owed.replace("open_item: O-1, ", bad).replace(OPEN, NO_OPEN), {"J_RF1": "SMA jack"})
         assert any("names no open item" in f for f in r2["fails"]) and r2["result"] == "FAIL", (bad, r2["fails"])
     # a figure and a reason it has none, both: refused
     both = GOOD.replace("cycles: 500,", 'cycles: 500, no_figure: {kind: not_mated, statement: "soldered"},')
@@ -450,12 +487,13 @@ def t_an_owed_figure_keeps_the_board_inconclusive_and_names_its_open_item():
 
 
 def t_an_owed_measure_keeps_the_board_inconclusive():
-    sheet = GOOD.replace('measure: "the case wall takes it"', 'measure: "none is recorded", measure_owed: O-1')
-    assert sheet != GOOD
+    sheet = _open(GOOD).replace('measure: "the case wall takes it"', 'measure: "none is recorded", measure_owed: O-1')
+    assert sheet != _open(GOOD)
     r = _run(sheet, {"J_RF1": "SMA jack"})
     assert not r["fails"] and r["result"] == "INCONCLUSIVE" and r["measures_owed"] == 1, r
     assert any("owes its measure" in w and "O-1" in w for w in r["inconclusive"]), r["inconclusive"]
-    r2 = _run(sheet.replace("measure_owed: O-1", "measure_owed: O-9"), {"J_RF1": "SMA jack"})
+    assert r["held_by"] == ["O-1"], r["held_by"]
+    r2 = _run(sheet.replace("measure_owed: O-1", "measure_owed: O-9").replace(OPEN, NO_OPEN), {"J_RF1": "SMA jack"})
     assert any("owes its measure and names no open item" in f for f in r2["fails"]), r2["fails"]
 
 
@@ -524,6 +562,94 @@ def t_a_vendor_library_that_is_not_there_leaves_the_citations_unjudged():
     r = _judge(_tree({"J_RF1": "SMA jack"}), GOOD, vendor=False)["x"]
     assert r["result"] == "INCONCLUSIVE" and not r["fails"], r
     assert any("vendor library is not in this tree" in w and "doc.pdf" in w for w in r["inconclusive"]), r["inconclusive"]
+    # ...AND IT IS DECLARED AS A MISSING INPUT, with its count in the verdict (28 September 2026, the fresh check's
+    # m9e): the reading had `missing_input` empty, so a consumer could not tell it from one that only owes a figure.
+    assert r["missing_input"] and "vendor library is not in this tree" in r["missing_input"] and r["unjudged"] == 1, r
+    d = _tree({"J_RF1": "SMA jack"})
+    p = os.path.join(d, "rel.yaml"); open(p, "w", encoding="utf-8").write(_pin(d, GOOD))
+    out = os.path.join(d, "verdicts")
+    rc = REL.main(["--rel", p, "--ecad", os.path.join(d, "ecad"), "--board", "x", "--vendor", os.path.join(d, "nowhere"),
+                   "--manifest", os.path.join(d, "manifest.json"), "--profiles", os.path.join(d, "profiles"), "--out-dir", out])
+    v = json.load(open(os.path.join(out, "reliability.verdict.json")))
+    assert rc == 3 and v["verdict"] == "INCONCLUSIVE" and "vendor library" in v["missing_input"], (rc, v["missing_input"])
+    assert v["counts"]["citations_unjudged"] == 1 and v["counts"]["per_board"]["x"]["citations_unjudged"] == 1, v["counts"]
+    rc2, v2 = _cli(d, GOOD)
+    assert rc2 == 0 and v2["counts"]["citations_unjudged"] == 0 and v2["missing_input"] is None, (rc2, v2["counts"])
+
+
+# ------------------------------------------------------------------------------------------------------------------
+# EVERY OPEN ITEM HOLDS A READING (28 September 2026, the fresh check of stream d6rel, m2 and its P15)
+# ------------------------------------------------------------------------------------------------------------------
+def t_an_open_item_that_names_no_board_and_no_class_refuses_the_list():
+    """P15: a list with an open item nothing refers to and one cited class read PASS, as if the item were accounted
+    for. The tool's own check of its list refuses it before any board is judged, by name."""
+    stray = _open(GOOD, 'open_items:\n  O-8: {what: "the joints under heavy soldered parts are in no inventory", '
+                        'next_action: "list them by mass"}\n')
+    d = _tree({"J_RF1": "SMA jack"})
+    try:
+        _judge(d, stray)
+    except REL.Refused as e:
+        assert "open item O-8 names no board" in str(e) and "holds no reading" in str(e), str(e)
+    else:
+        raise AssertionError("a list with an open item that holds nothing was judged")
+    rc, v = _cli(d, stray)
+    assert rc == 3 and v["verdict"] == "INCONCLUSIVE" and v["denominator"] == 0, (rc, v["verdict"])
+    assert "refused by its own check" in v["note"] and "O-8" in v["note"] and "O-8" in v["missing_input"], (v["note"], v["missing_input"])
+    # the control: the same list without the stray item passes
+    rc0, v0 = _cli(d, GOOD)
+    assert rc0 == 0 and v0["verdict"] == "PASS", (rc0, v0["verdict"])
+    # an item with no next action, a `holds` that names a board the list does not declare, a `holds` of another shape
+    for items, why in (('open_items:\n  O-8: {what: "something", holds: all}\n', "does not say what is owed and the next action"),
+                       ('open_items:\n  O-8: {what: "w", next_action: "n", holds: [zz]}\n', "which the list does not declare"),
+                       ('open_items:\n  O-8: {what: "w", next_action: "n", holds: []}\n', "neither `all` nor a list of boards"),
+                       ('open_items:\n  O-8: {what: "w", next_action: "n", holds: every}\n', "neither `all` nor a list of boards"),
+                       ("open_items: [a, b]\n", "is not a mapping")):
+        try: _judge(d, _open(GOOD, items))
+        except REL.Refused as e: assert why in str(e), (items, str(e))
+        else: raise AssertionError("judged: %r" % items)
+
+
+def t_an_open_item_that_names_the_board_holds_it():
+    """What the list cannot see on a board, or cannot compare, is about the board and not about one class: the item
+    names the boards it holds, and it holds them INCONCLUSIVE with its next action, every class cited or not."""
+    for holds in ("all", "[x]", "[X, y]"):
+        sheet = _open(GOOD, 'open_items:\n  O-7: {what: "no expected number of mates is stated", '
+                            'next_action: "state it when a service life is ruled", holds: %s}\n' % holds)
+        if "y" in holds: sheet += " y:\n   classes: []\n"
+        r = _judge(_tree({"J_RF1": "SMA jack"}), sheet)["x"]
+        assert not r["fails"] and r["covered"] == 1 and r["result"] == "INCONCLUSIVE", (holds, r)
+        assert r["held_by"] == ["O-7"] and r["missing_input"] is None, (holds, r["held_by"])
+        assert any("open item O-7 holds the board" in w and "state it when a service life is ruled" in w
+                   for w in r["inconclusive"]), r["inconclusive"]
+    # an item that holds ANOTHER board leaves this one alone
+    d = _tree({"J_RF1": "SMA jack"})
+    m = json.load(open(os.path.join(d, "manifest.json"))); m["boards"]["y"] = {"project": "pcb-y-test", "required": True}
+    json.dump(m, open(os.path.join(d, "manifest.json"), "w"))
+    sheet = _open(GOOD, 'open_items:\n  O-7: {what: "w", next_action: "n", holds: [y]}\n') + " y:\n   classes: []\n"
+    r = _judge(d, sheet, None)
+    assert r["x"]["result"] == "PASS" and r["x"]["held_by"] == [], r["x"]
+    assert r["y"]["held_by"] == ["O-7"] and r["y"]["result"] == "INCONCLUSIVE", r["y"]
+    rc, v = _cli(d, sheet, "x")
+    assert rc == 0 and v["counts"]["per_board"]["x"]["held_by"] == [] and v["counts"]["per_board"]["x"]["bound"] is True, v["counts"]
+
+
+def t_a_jack_drawn_as_an_ic_on_a_soldered_land_is_found_by_the_words():
+    """The fresh check's P14, the residue of the original defect: an `RJ45 MagJack` drawn as `U99` on a SOIC-8 land
+    passes the reference class (U is electrical) and the land (a soldered package), and the second net did not know
+    `jack`, `RJ45` or `plug`. It must not read PASS."""
+    magjack = ("RJ45 MagJack", "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm")
+    assert not REL.WEAR_TWELVE.search(magjack[0]) and REL.WEAR.search(magjack[0])
+    r = _run(GOOD, {"J_RF1": "SMA jack", "U99": magjack})
+    assert r["result"] == "FAIL" and r["by_words"] == ["U99"] and r["refused"] == 1, r
+    assert any("U99" in f and "in no declared class" in f for f in r["fails"]), r["fails"]
+    rc, v = _cli(_tree({"J_RF1": "SMA jack", "U99": magjack}), GOOD)
+    assert rc == 1 and v["verdict"] == "FAIL" and v["counts"]["candidates"] == 2, (rc, v["counts"])
+    for value in ("panel plug, 3 way", "headset jack (U-174/U)", "8P8C RJ45 shielded"):
+        r = _run(GOOD, {"J_RF1": "SMA jack", "U98": (value, "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm")})
+        assert r["by_words"] == ["U98"] and r["result"] == "FAIL", (value, r["by_words"], r["result"])
+    # a word in the DESCRIPTION of what a soldered part does is still set aside by name, never counted
+    r = _run(GOOD, {"J_RF1": "SMA jack", "U97": ("TPS23861PWR PoE controller: port 1 to the wall RJ45 jack", "Package_SO:TSSOP-28_4.4x9.7mm_P0.65mm")})
+    assert r["result"] == "PASS" and r["prose_only"] == ["U97"] and r["candidates"] == 1, r
 
 
 def t_a_list_that_cannot_be_read_is_inconclusive():
@@ -580,7 +706,9 @@ def t_the_reading_records_what_it_read_by_sha():
     assert l["path"] == lst and l["sha256"] == hashlib.sha256(open(lst, "rb").read()).hexdigest(), l
     c = v["counts"]
     assert (c["candidates"], c["classed"], c["excluded"], c["refused"]) == (2, 1, 1, 0), c
-    assert c["per_board"] == {"x": {"result": "PASS", "candidates": 2, "classed": 1, "excluded": 1, "refused": 0}}, c
+    assert c["per_board"] == {"x": {"result": "PASS", "candidates": 2, "classed": 1, "excluded": 1, "refused": 0,
+                                    "held_by": [], "classes_undecided": 0, "citations_unjudged": 0, "bound": True,
+                                    "artefact": {"kind": "netlist", "sha256_16": n["sha256_16"]}}}, c
 
 
 def _content16(raw):
@@ -746,8 +874,10 @@ def t_the_committed_list_disposes_every_candidate_of_every_board():
         assert v["refused"] == 0 and v["candidates"] == v["covered"] + v["excluded"], (letter, v["candidates"], v["covered"], v["excluded"])
         assert v["candidates"] == len(v["inventory"]) > 0, letter
         assert all(row["disposition"] in ("class", "exclusion") for row in v["inventory"]), letter
-        assert all("owes its" in w for w in v["inconclusive"]), (letter, v["inconclusive"])
+        assert all(("owes its" in w) or ("has no cycle figure" in w) or ("holds the board" in w) for w in v["inconclusive"]), \
+            (letter, v["inconclusive"])
         assert v["result"] == ("INCONCLUSIVE" if v["inconclusive"] else "PASS"), (letter, v["result"])
+        assert v["unjudged"] == 0, "board %s: %d cited document(s) were not checked" % (letter, v["unjudged"])
     import yaml
     d = yaml.safe_load(open(REL.REL, encoding="utf-8"))
     for letter, b in d["boards"].items():
@@ -785,5 +915,33 @@ def t_the_parts_the_word_list_never_found_are_in_the_inventory():
         for ref in refs:
             assert ref in rows, "board %s: %s is not in the inventory" % (letter, ref)
             assert rows[ref]["disposition"] == "class", (letter, ref, rows[ref])
-            assert not REL.WEAR.search(REL.identity(rows[ref]["value"])), \
-                "%s %s is a part the word list finds, so it does not show the defect" % (letter, ref)
+            assert not REL.WEAR_TWELVE.search(REL.identity(rows[ref]["value"])), \
+                "%s %s is a part the twelve words find, so it does not show the defect" % (letter, ref)
+
+
+def t_every_open_item_of_the_committed_list_holds_a_reading_and_every_board_says_what_holds_it():
+    """The committed list: no open item that holds nothing, every class whose maker publishes no figure names the
+    item that says what is done about it, no dependency on a table that is on no integrated line, and each board's
+    reading names exactly the items that hold it."""
+    import yaml
+    d = yaml.safe_load(open(REL.REL, encoding="utf-8"))
+    assert REL.check_open_items(d) == [], REL.check_open_items(d)
+    text = open(REL.REL, encoding="utf-8").read()
+    assert "w5ident" not in text.split("\nschema_version:")[1], "the list's data cites the unmerged identities table"
+    r = REL.judge()
+    want = {}
+    for letter, b in d["boards"].items():
+        s = set()
+        for c in b["classes"]:
+            nf = c.get("no_figure") or {}
+            if nf.get("kind") in ("owed", "none_published") and nf.get("open_item"): s.add(nf["open_item"])
+            if nf.get("kind") == "none_published": assert nf.get("open_item"), (letter, c["name"])
+            if c.get("measure_owed"): s.add(c["measure_owed"])
+        for key, it in d["open_items"].items():
+            if REL._holds(it, letter): s.add(key)
+        want[letter] = sorted(s)
+    for letter, v in sorted(r.items()):
+        assert v["held_by"] == want[letter] and v["held_by"], (letter, v["held_by"], want[letter])
+        assert v["result"] == "INCONCLUSIVE", (letter, v["result"])
+        assert "REL-O-07" in v["held_by"], letter
+    assert {k for v in r.values() for k in v["held_by"]} == set(d["open_items"]), "an open item holds no board"
