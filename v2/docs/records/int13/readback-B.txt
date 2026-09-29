@@ -1,0 +1,65 @@
+The read-back of stream d4emcon's circuit drafts (tools/readback_d4e.py)
+  board B  v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net  sha256/16 5b89d5ef6fe0299a
+
+PASS  net RB_RXD         3 nodes; missing none; must not be on it none
+PASS  net RB_RXD_H       2 nodes; missing none; must not be on it none
+PASS  net RB_CTRL        3 nodes; missing none; must not be on it none
+PASS  net RB_CTRL_H      2 nodes; missing none; must not be on it none
+PASS  net RB_GO          3 nodes; missing none; must not be on it none
+PASS  net RB_STATUS      4 nodes; missing none; must not be on it none
+PASS  net RB_XMTG        3 nodes; missing none; must not be on it none
+PASS  net RB_TXD         3 nodes; missing none; must not be on it none
+PASS  net RB_IEN         5 nodes; missing none; must not be on it none
+PASS  net RB_IEN_DRV     2 nodes; missing none; must not be on it none
+PASS  net ZBA_RXD        3 nodes; missing none; must not be on it none
+PASS  net ZBA_RST_n      4 nodes; missing none; must not be on it none
+PASS  net ZBA_BSL        3 nodes; missing none; must not be on it none
+PASS  net ZBB_RXD        3 nodes; missing none; must not be on it none
+PASS  net ZBB_RST_n      4 nodes; missing none; must not be on it none
+PASS  net ZBB_BSL        3 nodes; missing none; must not be on it none
+PASS  net +3V3_ZB        17 nodes; missing none; must not be on it none
+PASS  net LORA_GO        7 nodes; missing none; must not be on it none
+PASS  net E22_EN         3 nodes; missing none; must not be on it none
+PASS  net LORA_RXEN_G    3 nodes; missing none; must not be on it none
+PASS  net LORA_TXEN_G    3 nodes; missing none; must not be on it none
+PASS  net LORA_NRST      3 nodes; missing none; must not be on it none
+PASS  net LORA_MOSI      2 nodes; missing none; must not be on it none
+PASS  net LORA_SCLK      2 nodes; missing none; must not be on it none
+PASS  net LORA_NSS       2 nodes; missing none; must not be on it none
+PASS  net LORA_DIO1      3 nodes; missing none; must not be on it none
+PASS  net LORA_BUSY      3 nodes; missing none; must not be on it none
+PASS  net LORA_MISO      3 nodes; missing none; must not be on it none
+PASS  net LORA_RXEN      3 nodes; missing none; must not be on it none
+PASS  net LORA_TXEN      3 nodes; missing none; must not be on it none
+PASS  net SPI3_MISO      3 nodes; missing none; must not be on it none
+PASS  net SPI3_CE1       4 nodes; missing none; must not be on it none
+PASS  net SPI3_IO26      4 nodes; missing none; must not be on it none
+PASS  net SPI3_MOSI      4 nodes; missing none; must not be on it none
+PASS  net SPI3_SCLK      4 nodes; missing none; must not be on it none
+PASS  net 5G_TPR_n       3 nodes; missing none; must not be on it none
+PASS  net 5G_PWROFF_n    5 nodes; missing none; must not be on it none
+PASS  value R41   '2.2k 1%' (expected to start with '2.2k 1%')
+PASS  value R42   '2.2k 1%' (expected to start with '2.2k 1%')
+PASS  value R527  '15k 1%' (expected to start with '15k 1%')
+PASS  value R532  '2.2k 1%' (expected to start with '2.2k 1%')
+PASS  value R238  '100k 1%' (expected to start with '100k 1%')
+PASS  value R538  '4.7k 1%' (expected to start with '4.7k 1%')
+PASS  supply U537 pin 5 on +3V3_DEV (expected +3V3_DEV)
+PASS  supply U538 pin 5 on +3V3_DEV (expected +3V3_DEV)
+PASS  supply U539 pin 5 on +3V3_DEV (expected +3V3_DEV)
+PASS  supply U540 pin 5 on +3V3_DEV (expected +3V3_DEV)
+PASS  supply U541 pin 5 on +3V3_DEV (expected +3V3_DEV)
+PASS  supply U542 pin 5 on +3V3_DEV (expected +3V3_DEV)
+PASS  supply U543 pin 6 on +5V_DEV (expected +5V_DEV)
+PASS  supply U544 pin 5 on +3V3_CM3 (expected +3V3_CM3)
+PASS  supply U545 pin 5 on +3V3_CM3 (expected +3V3_CM3)
+PASS  supply U550 pin 5 on +3V3_CM3 (expected +3V3_CM3)
+PASS  supply U551 pin 5 on +3V3_CM3 (expected +3V3_CM3)
+PASS  supply U553 pin 5 on +3V3_CM3 (expected +3V3_CM3)
+PASS  supply U554 pin 5 on +3V3_CM2 (expected +3V3_CM2)
+PASS  pin U543.5 on +3V3_DEV (expected +3V3_DEV)
+PASS  pin R538.2 on GND (expected GND)
+PASS  pin R41.2 on GND (expected GND)
+PASS  pin R42.2 on GND (expected GND)
+
+RESULT: every check holds
