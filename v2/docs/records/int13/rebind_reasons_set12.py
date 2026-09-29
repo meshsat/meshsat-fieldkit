@@ -3,6 +3,8 @@
 # R238, R527 and U536's values); GND, +3V3_DEV and +5V_DEV are named because the new parts take their supplies and returns
 # from them. Board C's are R52 and D23 on EMCON_HW and TX_INHIBIT_n (D4E-F1). The remedies' technical fit is the set 12
 # independent check's; these reasons say only why each record's reading is or is not moved.
+# Board B's "CFL-016" reason below was FALSE for CONOPS section 4b (the set 12 check's B1); the entries it wrote are
+# corrected by apply_check13_fixes.py, and the text is kept as the record of what was written.
 B = {
  "CHO-001": "the change adds glue logic on the radio lines and moves the values of R41, R42, R238, R527 and U536; no device of the ruled set is added, removed or substituted, so the device-set reading is unchanged",
  "CON-003": "the changed parts sit on the RockBLOCK, E72, E22 and 5G power-off lines, none on the voted fabric's selects, output enables or hub resets; GND gains only the new parts' returns",
@@ -39,6 +41,8 @@ A = {
  "CON-019": "the PoE and USB-C outlets' interlock and the PA key path are untouched; set 12 changes only the charger U3's power stage, compensation and the census declarations of IADPT and CH_COMP1",
  "CON-018": "the USB-C CC ESD array by the connector is untouched; set 12 changes only the charger U3's power stage and compensation",
  "CFL-005": "EMCON_HW's pull-down R102 and the slot enables are untouched; set 12 changes only the charger U3's power stage and compensation",
+ # m1 of the set 12 check: the L2 below is EMCON.md's line-hold item, not board D's; corrected in the registry
+ # by apply_check13_fixes.py.
  "CON-010": "the PA's VGG gate and board D's KEY path are untouched; the L2 this record's evidence names is board D's, not board A's charger inductor that set 12 replaced",
  "REQ-077": "the charger's power stage, frequency row and compensation change (S-117, decisions 56 and 57), not its thermistor input, the gauge's thresholds or the shedding path this reading rests on",
  "CFL-016": "the published contracts this conflict resolved name no charger FET; the Q7 this record names is on another board or unchanged in role, and PANEL.md's rows stay true",

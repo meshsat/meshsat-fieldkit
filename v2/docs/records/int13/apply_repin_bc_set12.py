@@ -10,7 +10,7 @@ reading; (3) the new line is the one `reliability.py --pins` prints. No hold or 
 A board already pinned at its current netlist is left as it is, so the script moves a pin again after a later
 re-export of the same content (board C after its EMCON_HW node declaration), always proving against main.
 Widened after the set 12 check's minors (apply_b_chk12.py): board B also adds R551 (U543's timing tie).
-Refuses when a proof fails or on a second run. Run from the repository root: python3 <this file>."""
+Refuses when a proof fails; a board already pinned is re-proved and left as it is, and the file is written again (the set 12 check's m6). Run from the repository root: python3 <this file>."""
 import hashlib, json, os, subprocess, sys, tempfile
 
 import yaml

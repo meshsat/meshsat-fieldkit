@@ -22,6 +22,8 @@ sys.path.insert(0, os.path.join(TOP, "v2/ecad/tools"))
 import apply_check1_answers as A
 import tx_inhibit as TX
 REG = os.path.join(TOP, "v2/ecad/tools/pcb_requirements.yaml")
+# The change's name in each entry (the set 12 check's m2: board A's entries named d4emcon's); the default is the text it ran with.
+CHANGE = os.environ.get("REBIND_CHANGE", "the circuit change of stream d4emcon's FEA-002 remedies")
 WORD = re.compile(r"[A-Za-z0-9_+./-]+")
 
 
@@ -70,9 +72,9 @@ def main():
         if hit and r["id"] not in judged:
             manual.append((r["id"], hit)); continue
         why = judged.get(r["id"]) or "none of the parts or nets this record names changed"
-        entry = ("%s re-read at integration set 12 (apply_rebind_after_circuit %s %s): the circuit change of stream d4emcon's FEA-002 remedies was "
+        entry = ("%s re-read at integration set 12 (apply_rebind_after_circuit %s %s): %s was "
                  "compared with main's netlist %s by parsed components and net node sets; changed parts %s; changed nets %s. %s; "
-                 "rebound to %s. No result changes." % (rel, letter, n16, o16, ", ".join(parts) or "none", ", ".join(nets) or "none",
+                 "rebound to %s. No result changes." % (rel, letter, n16, CHANGE, o16, ", ".join(parts) or "none", ", ".join(nets) or "none",
                                                       why[0].upper() + why[1:], n16))
         A.screen(entry, r["id"])
         i, j = A.span(out, r["id"])
