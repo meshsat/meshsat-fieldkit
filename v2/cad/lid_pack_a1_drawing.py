@@ -321,7 +321,7 @@ def sheet4(pdf, arr):
              "  against 10 x OD = 44 (the requirement on the pick)",
              "STRAIN RELIEF bonded tie mounts at T_L, T_P and every 60 mm or less;",
              "  a printed guide keeps the lead inboard of the lid wall (Y < 130.9)",
-             "DISCONNECT XT60 pair and JST XH 1x4 beside P2 (the lid comes off)",
+             "DISCONNECT XT60 pair and JST XH 1x4 in the back channel (lid off)",
              "CROSSING the sealed face: S-95 (EQ-31), NOT designed: +2 power poles",
              "  of 25 A or more and 4 signal contacts, sealed mated and unmated"]
     tx.text(0, 1, "\n".join(lines), family="DejaVu Sans Mono", fontsize=5.8, va="top")
