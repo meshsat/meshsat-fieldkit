@@ -104,9 +104,18 @@ to board B and C's regenerated netlists and `gen_sch_b.py`, render.
   Read-back `tools/readback_chk12.py` (parses the netlist and the intent JSON; a module rail's loads are compared with the
   logic parts the netlist puts on it): 10 FAIL of 11 on set 12's committed board B (only U543's open MR passes), as it must
   before regeneration; `tools/selftest_readback_chk12.py`: it passes a synthetic after-pair and fails three mutants.
-- 14:07 to 14:12 EMCON.md section 4d.6 written (the check's minors on this stream's remedies corrected in place, the drafts
+- 14:07 to 14:09 EMCON.md section 4d.6 written (the check's minors on this stream's remedies corrected in place, the drafts
   named, the walk's change) and bench E-04 extended with the 9704's I_EN-low-to-I_BTD-low time; no claim word, no non-ASCII
   character; `test_requirements` 65 passed with the page changed (the seven records bound to it are FAIL or INCONCLUSIVE, so
   the moved page warns). `apply_rebind_page_rf2walk2.py` written for the integrator (the d4emcon page phase refuses a second
   run): tried in the worktree, 7 records rebound 173bc6357996d467 to the page's new sha, a second run refused, the registry
   restored. README.md gains the second round.
+
+## Where the stream stands (29 September 2026, 14:10)
+
+B1 closed in the walk (`149b15f7`): a gate is a line's own source only on the board carrying SW_EMCON and is solved by its own
+rails; CX9 in both forms and CX3b fail as fixtures, and both fail on the previous walk; set 12 and main read byte for byte as
+before (0 FAIL, 11 UNDECIDED, 15 PASS). The check's minors on this stream's remedies: drafted for board B as `apply_b_chk12.py`
+(M1, M2, M5) with `tools/readback_chk12.py`, stated in EMCON.md 4d.6 (minors 3, 4, 6, 7), and bench E-04 extended.
+Open: the 9704's shutdown time (E-04, sets U543's td), B-3's turn-on exposure, the module pull-down tolerance behind B-5,
+the regeneration and read-back of `apply_b_chk12.py`, and the 11 UNDECIDED rows as listed in README.md.
