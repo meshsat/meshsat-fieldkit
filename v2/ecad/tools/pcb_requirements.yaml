@@ -276,7 +276,7 @@ baseline_reviews:
   - "v2/docs/reviews/TARGETED-RECHECK-LAYER-3-2026-09-27.md@7831358b96b6f5ca"
 sources_read_at: 08f3665a
 needs_document: "v2/docs/CONOPS.md"
-needs_document_sha256: b2c55e289da2dcbca344d106519fbf0754cef44a8778b90c696c6222013a8028
+needs_document_sha256: 3c5d49078ba6dbfd36e914375e8c6d66305d552009462a935c4449f6adb69bf5
 companion_documents: []
 
 # The needs of CONOPS section 2, quoted. The validator compares each statement with the needs table of the
@@ -4912,8 +4912,16 @@ records:
           parsed as a diff, the file changed only in section 4b's RockBLOCK 9704 and E22-900M30S rows (lines 411 and
           412), corrected to board B's set 12 netlist 3ef9b8c49a01b728. This record reads section 2a's list of critical
           peripherals, which the diff does not touch; rebound to b2c55e289da2dcbc. No result changes.
+      - >-
+          v2/docs/CONOPS.md re-read at integration set 12, second pass (v2/docs/records/int13/apply_conops_4b_set12.py,
+          b2c55e289da2dcbc to 3c5d49078ba6dbfd): section 4b's preamble and table and section 4's EMCON row were
+          rewritten whole from the committed netlists of set 12 (A 6c40250c47195ebb, B 3ef9b8c49a01b728, C
+          87b69472ac83ca5a, D a2d48972d171aad1), 146 pin assignments of the gates they name asserted on those netlists
+          before the text was written; the diff touches only old lines 315 to 315; 399 to 406; 410 to 411; 413 to 418,
+          all after the needs table. This record reads section 2a's list of critical peripherals, which the diff does
+          not touch; rebound to 3c5d49078ba6dbfd. No result changes.
     evidence_bound_to:
-      - "v2/docs/CONOPS.md@b2c55e289da2dcbc"
+      - "v2/docs/CONOPS.md@3c5d49078ba6dbfd"
       - "v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8"
       - "v2/docs/V2-SPEC.md@e1fdcebe8638e471"
     release_effect: BLOCKER
@@ -13695,11 +13703,27 @@ records:
           board A's change at set 12 is stream s117's (decisions 56 and 57: R219, C233 to C235 and R220 added on IADPT
           and the compensation networks; C26, C27, L2, Q7 to Q10 and R25 changed). The parsed comparison and the reason
           in that entry stand (v2/docs/records/int13/apply_check13_fixes.py).
+      - >-
+          v2/docs/CONOPS.md re-read at integration set 12, second pass (v2/docs/records/int13/apply_conops_4b_set12.py,
+          b2c55e289da2dcbc to 3c5d49078ba6dbfd): section 4b's preamble and table and section 4's EMCON row were
+          rewritten whole from the committed netlists of set 12 (A 6c40250c47195ebb, B 3ef9b8c49a01b728, C
+          87b69472ac83ca5a, D a2d48972d171aad1), 146 pin assignments of the gates they name asserted on those netlists
+          before the text was written; the diff touches only old lines 315 to 315; 399 to 406; 410 to 411; 413 to 418,
+          all after the needs table. Correction (the focused re-check of set 12,
+          v2/docs/records/int13/checks/check-int13-2.md, blocking B1 carried): the entry of apply_check13_fixes said
+          that the section's other rows were read against the same netlist by the check, and that every named document
+          describes the circuit as generated; both sentences are withdrawn. The first check had read only the two rows
+          it named, and more were stale on main since stream w4b: section 4's EMCON row (the RockBLOCK's ENABLE held by
+          firmware, the back-feed paths owed), section 4b's 5G row (its buck's enable named U215; it is U216, EMCON_HW
+          AND PCIE_PWR_EN2 on +5V_S2), its WiFi row (U115 and U315 named for the buck enables; they are U116 and U316,
+          and U115 and U315 pull W_DISABLE1# only), and its board A rows, which named U26 and a round 8 candidate where
+          U35 to U38 are generated. The other documents this record names were read by that re-check, which found no
+          stale statement outside CONOPS.md; rebound to 3c5d49078ba6dbfd. The result stands on the rewritten text.
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8"
       - "v2/docs/PANEL.md@4647782f5aca7c13"
-      - "v2/docs/CONOPS.md@b2c55e289da2dcbc"
+      - "v2/docs/CONOPS.md@3c5d49078ba6dbfd"
       - "v2/docs/V2-SPEC.md@e1fdcebe8638e471"
       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
       - "v2/docs/TEST-PLAN.md@ae57da0b57e214f7"
@@ -15751,9 +15775,17 @@ records:
           board A's change at set 12 is stream s117's (decisions 56 and 57: R219, C233 to C235 and R220 added on IADPT
           and the compensation networks; C26, C27, L2, Q7 to Q10 and R25 changed). The parsed comparison and the reason
           in that entry stand (v2/docs/records/int13/apply_check13_fixes.py).
+      - >-
+          v2/docs/CONOPS.md re-read at integration set 12, second pass (v2/docs/records/int13/apply_conops_4b_set12.py,
+          b2c55e289da2dcbc to 3c5d49078ba6dbfd): section 4b's preamble and table and section 4's EMCON row were
+          rewritten whole from the committed netlists of set 12 (A 6c40250c47195ebb, B 3ef9b8c49a01b728, C
+          87b69472ac83ca5a, D a2d48972d171aad1), 146 pin assignments of the gates they name asserted on those netlists
+          before the text was written; the diff touches only old lines 315 to 315; 399 to 406; 410 to 411; 413 to 418,
+          all after the needs table. This record reads section 4's Charging row, which the diff does not touch; rebound
+          to 3c5d49078ba6dbfd. No result changes.
     evidence_bound_to:
       - "v2/docs/PANEL.md@4647782f5aca7c13"
-      - "v2/docs/CONOPS.md@b2c55e289da2dcbc"
+      - "v2/docs/CONOPS.md@3c5d49078ba6dbfd"
       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
       - "v2/ecad/tools/gen_sch_a.py@6a136feec6c9cf4e"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb"
