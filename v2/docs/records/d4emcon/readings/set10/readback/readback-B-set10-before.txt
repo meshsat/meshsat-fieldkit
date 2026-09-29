@@ -29,10 +29,13 @@ FAIL  net LORA_NSS       0 nodes; missing U12.19, U550.4; must not be on it none
 FAIL  net LORA_DIO1      0 nodes; missing R539.1, U12.13, U551.2; must not be on it none
 FAIL  net LORA_BUSY      0 nodes; missing R540.1, U12.14, U552.2; must not be on it none
 FAIL  net LORA_MISO      0 nodes; missing R541.1, U12.16, U553.2; must not be on it none
-FAIL  net LORA_RXEN      2 nodes; missing U545.1; must not be on it U12.6
-FAIL  net LORA_TXEN      2 nodes; missing U546.1; must not be on it U12.7
+FAIL  net LORA_RXEN      2 nodes; missing R546.1, U545.1; must not be on it U12.6
+FAIL  net LORA_TXEN      2 nodes; missing R547.1, U546.1; must not be on it U12.7
 FAIL  net SPI3_MISO      3 nodes; missing U553.4; must not be on it U12.16
 FAIL  net SPI3_CE1       4 nodes; missing U550.1; must not be on it U12.19
+FAIL  net SPI3_IO26      3 nodes; missing R548.1, U547.1; must not be on it U12.15
+FAIL  net SPI3_MOSI      3 nodes; missing R549.1, U548.1; must not be on it U12.17
+FAIL  net SPI3_SCLK      3 nodes; missing R550.1, U549.1; must not be on it U12.18
 FAIL  net 5G_TPR_n       0 nodes; missing R545.1, U221.1, U554.1; must not be on it none
 FAIL  net 5G_PWROFF_n    5 nodes; missing U554.6; must not be on it U221.1
 FAIL  value R41   '10k' (expected to start with '2.2k 1%')
@@ -59,4 +62,4 @@ FAIL  pin R538.2 on None (expected GND)
 FAIL  pin R41.2 on +3V3_DEV (expected GND)
 FAIL  pin R42.2 on +3V3_DEV (expected GND)
 
-RESULT: 56 check(s) fail
+RESULT: 59 check(s) fail

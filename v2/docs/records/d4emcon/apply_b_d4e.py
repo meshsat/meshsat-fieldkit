@@ -38,7 +38,8 @@ B-3  SD-EMC-2, the E22-900M30S (U12). As drawn, nine CM5 slot 3 pins reach the m
      unpowered moves by 1 uA x 25.25 k = 25 mV), gates the six host-driven lines in SN74LVC1G08s (U545 to U550); the module's
      three outputs reach the host through 74LVC1G34 buffers (U551 to U553); every new part runs from slot 3's own +3V3_CM3,
      the rail that powers the host pins (EMCON L3's rule), so with the module's host dead the gates are dead with it. R539 to
-     R544 (100 k 1%) hold the module's side of DIO1, BUSY, MISO, TXEN, RXEN and NRST low when their driver is off. EMCON
+     R544 (100 k 1%) hold the module's side of DIO1, BUSY, MISO, TXEN, RXEN and NRST low when their driver is off. R546 to R550 (100 k 1%)
+     hold the gates' host-side inputs low while slot 3 has not configured its pins (NSS keeps R25). EMCON
      asserted: every line into the module at the gates' VOL, 0.1 V at 100 uA; the module's own outputs see only the buffers'
      inputs, 1 uA each. Cost: ten single gates and ten capacitors; the round trip of MISO gains two gate delays (SN74LVC1G08
      3.6 ns maximum at 3.3 V, 15 pF, SCES217AA 5.6); SPI3_MISO is now driven by U553 whenever slot 3 runs, so the bench
@@ -136,6 +137,11 @@ for _u, _a, _y, _c, _w in (("U551", "LORA_DIO1", "SPI3_IO24", "C681", "DIO1"), (
     lvc1g34(_u, _a, _y, "+3V3_CM3", _c, "the E22's %s to the host, no host pin on the module (SD-EMC-2, D4E-B)" % _w)
 for _r, _n in (("R539", "LORA_DIO1"), ("R540", "LORA_BUSY"), ("R541", "LORA_MISO"), ("R542", "LORA_TXEN_G"), ("R543", "LORA_RXEN_G"), ("R544", "LORA_NRST")):
     r(_r, "100k 1%", _n, "GND", lcsc="C25803")
+# The gates' host-side inputs must not float while slot 3's firmware has not configured its pins (SCES217AA 6.3 note: "All
+# unused inputs of the device must be held at VCC or GND"): R546 to R550 (100 k 1%) hold RXEN, TXEN, NRST, MOSI and SCK low
+# there (the PA off and the module in reset until the host drives them); NSS keeps R25's pull-up.
+for _r, _n in (("R546", "LORA_RXEN"), ("R547", "LORA_TXEN"), ("R548", "SPI3_IO26"), ("R549", "SPI3_MOSI"), ("R550", "SPI3_SCLK")):
+    r(_r, "100k 1%", _n, "GND", lcsc="C25803")
 '''))
 
 # ---------- B-2: the E72s' lines
@@ -225,7 +231,7 @@ def main(argv):
         assert new.count(a) == 1, a[:90]
         new = new.replace(a, b)
     assert new != old and MARK in new
-    for ref in ("U537", "U538", "U539", "U540", "U541", "U542", "U543", "U544", "U550", "U551", "U553", "U554", "R532", "R545"):
+    for ref in ("U537", "U538", "U539", "U540", "U541", "U542", "U543", "U544", "U550", "U551", "U553", "U554", "R532", "R545", "R550"):
         assert new.count('"%s"' % ref) >= 1, ref
     ast.parse(new)
     if dry:
