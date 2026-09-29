@@ -899,15 +899,21 @@ CONFIG_INPUTS = {
                          "../vendor/ti/ti-tps62933.pdf", "../vendor/ti/ti-tusb2046b.pdf",
                          "../vendor/ti/ti-tusb8041.pdf", "../vendor/ti/tps23861-datasheet.pdf"),
     # edge_length.py, ROUTED half (verdict edge_length_routed, which no rule names today): :89 the intent file beside
-    # the board; :91-92, :98, :130 and :161 the board table's rise_ns, critical_k, signal_classes and edge_allow;
-    # signal_class.classify (the same table); :120-122 the project file; :94 impedance_check.read_stackup reads the
-    # stack from the board file itself, which the reading records.
-    # SCHEMATIC half (verdict edge_length, SI-001; schematic_table, :413 onward, ts-net 26 September 2026): :439 the
-    # intent file beside the netlist; :441, :462-466 the board table's critical_k, signal_classes (through
-    # signal_class.declarations) and edge_allow; :459-461 the project file's netclass_assignments; :384 and :440
-    # rules_lib.board_facts, the declared stack, routing layers and outline (pcb_board_facts.yaml); :368
-    # stackup_write.STACKS (a data table in an imported module, declared as stackup_gate's is); :351 every document
-    # EDGE_SOURCES names (one today). It records every one of them by sha, the netlist by content16 too. A document
+    # the board; :91-92, :98 and :130 the board table's rise_ns, critical_k and signal_classes, and :164 its edge_allow
+    # (load_allow, :909, with the documents each entry cites and worst_delay's stack); signal_class.classify (the same
+    # table); :121-123 the project file; :94 impedance_check.read_stackup reads the stack from the board file itself,
+    # which the reading records.
+    # SCHEMATIC half (verdict edge_length, SI-001; schematic_table, :1272 onward, ts-net 26 September 2026): :1279 the
+    # intent file beside the netlist; :1300 and :1321-1326 the board table's critical_k, signal_classes (through
+    # signal_class.declarations) and edge_allow (load_allow); :1317-1320 the project file's netclass_assignments;
+    # :1243 and :1299 rules_lib.board_facts, the declared stack, routing layers and outline (pcb_board_facts.yaml);
+    # :1227 stackup_write.STACKS (a data table in an imported module, declared as stackup_gate's is); :583 every
+    # document EDGE_SOURCES names (one today). Line numbers read at stream csi's second round, 29 September 2026.
+    # THE DOCUMENTS A BOARD TABLE'S edge_allow ENTRIES CITE (stream csi, CSI-D1, 29 September 2026; the independent
+    # check's m1) are recorded as document_N like a record's, and declared at the end of this entry by hand: board C's
+    # entries cite Raspberry Pi's hardware design guide and the stream's measurement of the maker's reference layout.
+    # apply_rules_status_config_inputs.py --refresh derives its list from pcb_edge_rates.yaml alone and would drop them:
+    # add a board table's allowance documents back after any refresh. It records every one of them by sha, the netlist by content16 too. A document
     # added to EDGE_SOURCES is not seen here until it is added to this entry (an instrument limit, as for any new read).
     # SINCE 27 SEPTEMBER 2026 (stream w5si, MESHSAT-1357) EDGE_SOURCES is the STANDARD records of tools/pcb_edge_rates.yaml,
     # the data file every edge is read from (edge_length.load_rates). The reading records it by sha (inputs.edge_rates),
@@ -954,6 +960,8 @@ CONFIG_INPUTS = {
                        "../vendor/winbond/winbond-w25q16jv-serial-flash.pdf",
                        "../vendor/xenarc/xenarc-709gnk-product-manual-v2.pdf",
                        "../vendor/zigbee/ebyte-e72-2g4m20s1e-user-manual.pdf",
+                       "../vendor/rp2040/rpi-rp2040-hardware-design.pdf",
+                       "../docs/records/csi/readings/minimal-layout-lengths.txt",
                        "../docs/records/w5si/readings/edge-search.txt", "pcb-a-power-a23/out/pcb-a-power.net",
                        "pcb-b-compute-b19/out/pcb-b-compute.net", "pcb-c-display-c8/out/pcb-c-display.net",
                        "pcb-d-aprs-d9/out/pcb-d-aprs.net", "pcb-e1-dock-e7/out/pcb-e1-dock.net",

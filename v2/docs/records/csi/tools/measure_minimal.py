@@ -85,6 +85,28 @@ def measure(pcb_text):
     return length, vias, layers
 
 
+C_MM_PER_PS = 0.299792458
+
+
+def stack(root):
+    """(thickness, [(layer, type, epsilon_r)]) from the board's setup stackup, as KiCad writes it."""
+    setup = kid(root, "setup")
+    st = kid(setup, "stackup") if setup else None
+    gen = kid(root, "general")
+    thick = float(kid(gen, "thickness")[1]) if gen and kid(gen, "thickness") else None
+    rows = []
+    for L in (st or [])[1:]:
+        if isinstance(L, list) and L and L[0] == "layer":
+            ty = kid(L, "type"); er = kid(L, "epsilon_r")
+            rows.append((L[1], ty[1] if ty else "", float(er[1]) if er else None))
+    return thick, rows
+
+
+def outer_tpd(er):
+    """edge_length.t_pd_ps_per_mm for an outer layer: a microstrip sees (er + 1) / 2 + 0.04."""
+    return math.sqrt((er + 1.0) / 2.0 + 0.04) / C_MM_PER_PS
+
+
 def main(argv):
     if not argv: print(__doc__); return 2
     if argv[0] == "--fetch":
@@ -101,12 +123,22 @@ def main(argv):
     text = raw.decode("utf-8")
     if got != PCB_SHA256: print("the board file is not the one measured (sha256 %s, expected %s)" % (got, PCB_SHA256)); return 1
     length, vias, layers = measure(text)
+    thick, rows = stack(parse(text))
     print("== Raspberry Pi RP2040 minimal design example, %s (sha256 %s), board file %s (sha256 %s)" % (URL, ZIP_SHA256, PCB_NAME, PCB_SHA256))
     print("   the routed length of each net (every track segment and arc on it, summed), its vias and its layers")
     for n in NETS:
         print("   %-11s %6.2f mm  vias %d  layers %s" % (n.lstrip("/"), length.get(n, 0.0), vias.get(n, 0), ",".join(sorted(layers.get(n, ())))))
     q = [length.get(n, 0.0) for n in NETS if "QSPI" in n]
     print("   QSPI: longest %.2f mm, shortest %.2f mm" % (max(q), min(q)))
+    cu = [r[0] for r in rows if r[1] == "copper"]
+    i = [r[0] for r in rows].index("F.Cu")
+    under = next(r for r in rows[i + 1:] if r[2] is not None)
+    used = sorted({x for n in NETS for x in layers.get(n, ())})
+    assert used == ["F.Cu"] and not any(vias.get(n) for n in NETS), (used, vias)
+    print("   the board: %s mm thick, %d copper layers (%s); every net above is on %s alone, with no via" % (
+        thick, len(cu), ", ".join(cu), ", ".join(used)))
+    print("   reference t_pd %.3f ps/mm: F.Cu is a microstrip over %s (%s, epsilon_r %s), by the formula edge_length.py "
+          "uses for an outer layer, sqrt((er + 1) / 2 + 0.04) / c" % (outer_tpd(under[2]), under[0], under[1], under[2]))
     return 0
 
 

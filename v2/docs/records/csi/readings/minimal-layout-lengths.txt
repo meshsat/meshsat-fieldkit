@@ -12,3 +12,5 @@
    SWCLK        25.92 mm  vias 0  layers F.Cu
    SWD          24.34 mm  vias 0  layers F.Cu
    QSPI: longest 22.73 mm, shortest 8.20 mm
+   the board: 1.0 mm thick, 2 copper layers (F.Cu, B.Cu); every net above is on F.Cu alone, with no via
+   reference t_pd 5.572 ps/mm: F.Cu is a microstrip over dielectric 1 (core, epsilon_r 4.5), by the formula edge_length.py uses for an outer layer, sqrt((er + 1) / 2 + 0.04) / c
