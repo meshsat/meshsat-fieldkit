@@ -42,3 +42,11 @@ reading is of a committed netlist or a maker's document; nothing is built.
   `t_a_supervisor_whose_value_names_the_rockblock_is_classified_only_when_declared`. The file: 136 passed, 0 failed. The
   three new tests on the unfixed walk (a scratch copy of the tools with HEAD's `tx_inhibit.py`): all three FAIL. Readings
   filed under `readings/`.
+- 13:29 to 13:33 Circuit question answered from the walk and the documents: the 3.18 V is U9 itself (push-pull, DS35124),
+  taken powered in a state the walk misnamed "no source", 3.465 V through R52 into R58 parallel R102 at their adverse ends,
+  plus about 111 uA of pin currents. D23 merges `EMCON_HW`'s pin currents into `TX_INHIBIT_n` (0.243 V on main to 0.354 V
+  with board C down, all four boards; per-fragment levels read with a spy on `_judge_fs`: `EMCON_HW` identical to main in
+  every fragment, `TX_INHIBIT_n` higher only in the fragments that hold board C, worst 0.578 V in A and D alone, unchanged);
+  its reverse element never conducts. No circuit defect, no apply script. README.md written with the table of the 21 FAILs,
+  the readings and what remains (the 11 UNDECIDED rows, the same rows as main's under the same walk, their grounds narrower on
+  set 12 for the RockBLOCK, the E22 and both E72).
