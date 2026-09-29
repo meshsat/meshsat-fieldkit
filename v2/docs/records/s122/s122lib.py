@@ -42,7 +42,7 @@ SCOPE = [
     ("v2/docs/ASSEMBLY.md", {"2": ("1", "6"), "4": None, "8": None, "9": None}),
     ("v2/ecad/tools/pcb_decisions.yaml", {"28": None, "40": None}),
 ]
-DASHES = ("—", "–")
+DASHES = ("\u2014", "\u2013")
 
 
 AT = os.environ.get("S122_AT") or None   # read the documents at this commit (the netlists are always this tree's)
