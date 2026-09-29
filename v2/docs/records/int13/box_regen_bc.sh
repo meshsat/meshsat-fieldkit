@@ -83,7 +83,7 @@ for L in m["boards"]:
 PY
 # --- (2) the regeneration of A and B, the schematic phase only
 S=$D/REGEN-SUMMARY.txt; : > $S
-for LET in b c; do
+for LET in ${REGEN_BOARDS:-b c}; do
   read -r _ PD STEM < <(awk -v l=$LET '$1 == l' $D/phase-dirs.txt)
   P=$E/$PD; O=$D/regen/$LET; mkdir -p $O/ref $O/v
   cd $P || { echo "no phase dir for $LET" >> $S; continue; }
