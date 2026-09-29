@@ -41,3 +41,5 @@ Worker: one Claude author, worktree `a1mech`, branch `fnd/a1mech` from `13b5352b
   handed to the thermal and energy streams.
 - 02:57: the solids and their check re-run on the box at `80ab97b1`, where `lid_pack_a1.py` has its final content: PASS for A, B,
   C, C10 and D, both controls fail as they must. The box's `/root/a1mech/` keeps only this stream's clone and outputs.
+- 02:59: a sensitivity of the counts to the module's INFERRED allowances added to the generator (most and least favourable
+  settings, every face row re-judged): A 35, B 56, C 58 at both ends; C10 47 and 45; D 77 and 74. The finding does not hinge on them.

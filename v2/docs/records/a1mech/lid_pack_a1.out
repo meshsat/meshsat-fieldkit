@@ -208,6 +208,12 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
    lid) 58 (4S14P); C10 (10 inch tablet kept, HF out) 47 (4S11P); D (both out) 77 (4S19P).
    With HF in the lid, the 10 inch class (243 x 170 + lips) needs 249 in X between the guard caps (-141.94) and the QMX tray (83.20 less 1.0), 224.14 available:
    it does not fit beside the QMX set in any arrangement, pack or no pack; the 8 inch class is the one that fits with HF.
+   SENSITIVITY of the counts to the module's INFERRED allowances (a sensitivity reading, not a bound; every face row re-judged):
+     most favourable: plan 0.76, bays 5.0, joints 1.0, wrap 0.5, lips 2.0, own allowances halved:
+       A 35 (4S8P), B 56 (4S14P), C 58 (4S14P), C10 47 (4S11P), D 77 (4S19P)
+     least favourable: plan 1.50, bays 9.0, joints 1.5, wrap 0.6, lips 4.0, own allowances doubled:
+       A 35 (4S8P), B 56 (4S14P), C 58 (4S14P), C10 45 (4S11P), D 74 (4S18P)
+   (the finding holds at both ends if A stays under 48 and B and C stay at 48 or more)
 
    RETENTION of the module (arrangement B, every place filled: 56 cells), to the r2 set's load case: 100 g in each direction
      module 3.46 kg (cells at 50 g max, the rest ESTIMATE): 3390 N at 100 g. Bond area under the lid plate about 46502 mm2 (the slices and bays):
