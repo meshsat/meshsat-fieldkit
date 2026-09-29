@@ -1,0 +1,3174 @@
+{
+ "board_c": [
+  {
+   "id": "S-a5c3762a4c",
+   "identity": {
+    "next_action": "read the order code in Floyd Bell's own catalogue and file the page",
+    "reason": "'class' names a family, not a part: the maker's order code for the 5 V continuous IP67 panel sounder is owed from Floyd Bell's own catalogue (the value names no part number and no code is carried); a hand-fit purchase route is declared in jlc-handfit.txt (MC-09-530-Q)",
+    "status": "UNRESOLVED"
+   },
+   "key": "BZ|value=IP67 panel-mount sounder, 5 V DC continuous, bezel gasket on the face, two flying leads (Floyd Bell MC-09-530-Q class)|land=PanelSounder",
+   "order_code": {
+    "route": "Floyd Bell through Mouser, https://www.mouser.com/c/?q=Floyd%20Bell%20MC-09 ; C's IP67 panel-mount sounder, two flying leads, a plate part in C's CPL exclusion list. A CLASS row: the dash number is picked from Floyd Bell's IP67 range against 5 V DC continuous before anything is ordered"
+   },
+   "rows": [
+    "c:BZ1"
+   ]
+  },
+  {
+   "id": "S-dd4f412083",
+   "identity": {
+    "next_action": "the board C author states the intensity and viewing angle in the value or the panel contract; the lamp is then searched on those",
+    "reason": "the design names a colour, 3 mm and 'sunlight viewable' only; no luminous intensity or viewing angle is stated, so a part cannot be chosen without that requirement. Question: the minimum intensity each lamp needs through the Mentor 1282.5004 light guide to be read in direct sun, and the angle it is read from (the value names no part number and no code is carried)",
+    "status": "UNRESOLVED"
+   },
+   "key": "D|value=3 mm BAT1 amber, sunlight viewable|land=LED_D3.0mm",
+   "order_code": {},
+   "rows": [
+    "c:D12"
+   ]
+  },
+  {
+   "id": "S-6bb4ef8de2",
+   "identity": {
+    "next_action": "the board C author states the intensity and viewing angle in the value or the panel contract; the lamp is then searched on those",
+    "reason": "the design names a colour, 3 mm and 'sunlight viewable' only; no luminous intensity or viewing angle is stated, so a part cannot be chosen without that requirement. Question: the minimum intensity each lamp needs through the Mentor 1282.5004 light guide to be read in direct sun, and the angle it is read from (the value names no part number and no code is carried)",
+    "status": "UNRESOLVED"
+   },
+   "key": "D|value=3 mm BAT2 green, sunlight viewable|land=LED_D3.0mm",
+   "order_code": {},
+   "rows": [
+    "c:D13"
+   ]
+  },
+  {
+   "id": "S-e780581586",
+   "identity": {
+    "next_action": "the board C author states the intensity and viewing angle in the value or the panel contract; the lamp is then searched on those",
+    "reason": "the design names a colour, 3 mm and 'sunlight viewable' only; no luminous intensity or viewing angle is stated, so a part cannot be chosen without that requirement. Question: the minimum intensity each lamp needs through the Mentor 1282.5004 light guide to be read in direct sun, and the angle it is read from (the value names no part number and no code is carried)",
+    "status": "UNRESOLVED"
+   },
+   "key": "D|value=3 mm BAT3 green, sunlight viewable|land=LED_D3.0mm",
+   "order_code": {},
+   "rows": [
+    "c:D14"
+   ]
+  },
+  {
+   "id": "S-b37e94be3b",
+   "identity": {
+    "next_action": "the board C author states the intensity and viewing angle in the value or the panel contract; the lamp is then searched on those",
+    "reason": "the design names a colour, 3 mm and 'sunlight viewable' only; no luminous intensity or viewing angle is stated, so a part cannot be chosen without that requirement. Question: the minimum intensity each lamp needs through the Mentor 1282.5004 light guide to be read in direct sun, and the angle it is read from (the value names no part number and no code is carried)",
+    "status": "UNRESOLVED"
+   },
+   "key": "D|value=3 mm BAT4 green, sunlight viewable|land=LED_D3.0mm",
+   "order_code": {},
+   "rows": [
+    "c:D15"
+   ]
+  },
+  {
+   "id": "S-42e9b825ad",
+   "identity": {
+    "next_action": "the board C author states the intensity and viewing angle in the value or the panel contract; the lamp is then searched on those",
+    "reason": "the design names a colour, 3 mm and 'sunlight viewable' only; no luminous intensity or viewing angle is stated, so a part cannot be chosen without that requirement. Question: the minimum intensity each lamp needs through the Mentor 1282.5004 light guide to be read in direct sun, and the angle it is read from (the value names no part number and no code is carried)",
+    "status": "UNRESOLVED"
+   },
+   "key": "D|value=3 mm BAT5 green, sunlight viewable|land=LED_D3.0mm",
+   "order_code": {},
+   "rows": [
+    "c:D16"
+   ]
+  },
+  {
+   "id": "S-0f5317816f",
+   "identity": {
+    "next_action": "the board C author states the intensity and viewing angle in the value or the panel contract; the lamp is then searched on those",
+    "reason": "the design names a colour, 3 mm and 'sunlight viewable' only; no luminous intensity or viewing angle is stated, so a part cannot be chosen without that requirement. Question: the minimum intensity each lamp needs through the Mentor 1282.5004 light guide to be read in direct sun, and the angle it is read from (the value names no part number and no code is carried)",
+    "status": "UNRESOLVED"
+   },
+   "key": "D|value=3 mm CHG white, sunlight viewable|land=LED_D3.0mm",
+   "order_code": {},
+   "rows": [
+    "c:D10"
+   ]
+  },
+  {
+   "id": "S-1972f6ded9",
+   "identity": {
+    "next_action": "the board C author states the intensity and viewing angle in the value or the panel contract; the lamp is then searched on those",
+    "reason": "the design names a colour, 3 mm and 'sunlight viewable' only; no luminous intensity or viewing angle is stated, so a part cannot be chosen without that requirement. Question: the minimum intensity each lamp needs through the Mentor 1282.5004 light guide to be read in direct sun, and the angle it is read from (the value names no part number and no code is carried)",
+    "status": "UNRESOLVED"
+   },
+   "key": "D|value=3 mm EMCON amber (hardware, no processor), sunlight viewable|land=LED_D3.0mm",
+   "order_code": {},
+   "rows": [
+    "c:D22"
+   ]
+  },
+  {
+   "id": "S-eabd0ebd9e",
+   "identity": {
+    "next_action": "the board C author states the intensity and viewing angle in the value or the panel contract; the lamp is then searched on those",
+    "reason": "the design names a colour, 3 mm and 'sunlight viewable' only; no luminous intensity or viewing angle is stated, so a part cannot be chosen without that requirement. Question: the minimum intensity each lamp needs through the Mentor 1282.5004 light guide to be read in direct sun, and the angle it is read from (the value names no part number and no code is carried)",
+    "status": "UNRESOLVED"
+   },
+   "key": "D|value=3 mm GPS green, sunlight viewable|land=LED_D3.0mm",
+   "order_code": {},
+   "rows": [
+    "c:D8"
+   ]
+  },
+  {
+   "id": "S-2ebc928830",
+   "identity": {
+    "next_action": "the board C author states the intensity and viewing angle in the value or the panel contract; the lamp is then searched on those",
+    "reason": "the design names a colour, 3 mm and 'sunlight viewable' only; no luminous intensity or viewing angle is stated, so a part cannot be chosen without that requirement. Question: the minimum intensity each lamp needs through the Mentor 1282.5004 light guide to be read in direct sun, and the angle it is read from (the value names no part number and no code is carried)",
+    "status": "UNRESOLVED"
+   },
+   "key": "D|value=3 mm LTE green, sunlight viewable|land=LED_D3.0mm",
+   "order_code": {},
+   "rows": [
+    "c:D7"
+   ]
+  },
+  {
+   "id": "S-d037f2cede",
+   "identity": {
+    "next_action": "the board C author states the intensity and viewing angle in the value or the panel contract; the lamp is then searched on those",
+    "reason": "the design names a colour, 3 mm and 'sunlight viewable' only; no luminous intensity or viewing angle is stated, so a part cannot be chosen without that requirement. Question: the minimum intensity each lamp needs through the Mentor 1282.5004 light guide to be read in direct sun, and the angle it is read from (the value names no part number and no code is carried)",
+    "status": "UNRESOLVED"
+   },
+   "key": "D|value=3 mm MCAUT amber, sunlight viewable|land=LED_D3.0mm",
+   "order_code": {},
+   "rows": [
+    "c:D2"
+   ]
+  },
+  {
+   "id": "S-977c26bef7",
+   "identity": {
+    "next_action": "the board C author states the intensity and viewing angle in the value or the panel contract; the lamp is then searched on those",
+    "reason": "the design names a colour, 3 mm and 'sunlight viewable' only; no luminous intensity or viewing angle is stated, so a part cannot be chosen without that requirement. Question: the minimum intensity each lamp needs through the Mentor 1282.5004 light guide to be read in direct sun, and the angle it is read from (the value names no part number and no code is carried)",
+    "status": "UNRESOLVED"
+   },
+   "key": "D|value=3 mm MESH green, sunlight viewable|land=LED_D3.0mm",
+   "order_code": {},
+   "rows": [
+    "c:D6"
+   ]
+  },
+  {
+   "id": "S-8980a4551b",
+   "identity": {
+    "next_action": "the board C author states the intensity and viewing angle in the value or the panel contract; the lamp is then searched on those",
+    "reason": "the design names a colour, 3 mm and 'sunlight viewable' only; no luminous intensity or viewing angle is stated, so a part cannot be chosen without that requirement. Question: the minimum intensity each lamp needs through the Mentor 1282.5004 light guide to be read in direct sun, and the angle it is read from (the value names no part number and no code is carried)",
+    "status": "UNRESOLVED"
+   },
+   "key": "D|value=3 mm MSG white, sunlight viewable|land=LED_D3.0mm",
+   "order_code": {},
+   "rows": [
+    "c:D11"
+   ]
+  },
+  {
+   "id": "S-fc60c3e172",
+   "identity": {
+    "next_action": "the board C author states the intensity and viewing angle in the value or the panel contract; the lamp is then searched on those",
+    "reason": "the design names a colour, 3 mm and 'sunlight viewable' only; no luminous intensity or viewing angle is stated, so a part cannot be chosen without that requirement. Question: the minimum intensity each lamp needs through the Mentor 1282.5004 light guide to be read in direct sun, and the angle it is read from (the value names no part number and no code is carried)",
+    "status": "UNRESOLVED"
+   },
+   "key": "D|value=3 mm MWARN red, sunlight viewable|land=LED_D3.0mm",
+   "order_code": {},
+   "rows": [
+    "c:D1"
+   ]
+  },
+  {
+   "id": "S-5129549cc5",
+   "identity": {
+    "next_action": "the board C author states the intensity and viewing angle in the value or the panel contract; the lamp is then searched on those",
+    "reason": "the design names a colour, 3 mm and 'sunlight viewable' only; no luminous intensity or viewing angle is stated, so a part cannot be chosen without that requirement. Question: the minimum intensity each lamp needs through the Mentor 1282.5004 light guide to be read in direct sun, and the angle it is read from (the value names no part number and no code is carried)",
+    "status": "UNRESOLVED"
+   },
+   "key": "D|value=3 mm SAT green, sunlight viewable|land=LED_D3.0mm",
+   "order_code": {},
+   "rows": [
+    "c:D5"
+   ]
+  },
+  {
+   "id": "S-ff56863745",
+   "identity": {
+    "next_action": "the board C author states the intensity and viewing angle in the value or the panel contract; the lamp is then searched on those",
+    "reason": "the design names a colour, 3 mm and 'sunlight viewable' only; no luminous intensity or viewing angle is stated, so a part cannot be chosen without that requirement. Question: the minimum intensity each lamp needs through the Mentor 1282.5004 light guide to be read in direct sun, and the angle it is read from (the value names no part number and no code is carried)",
+    "status": "UNRESOLVED"
+   },
+   "key": "D|value=3 mm SHORE green, sunlight viewable|land=LED_D3.0mm",
+   "order_code": {},
+   "rows": [
+    "c:D9"
+   ]
+  },
+  {
+   "id": "S-d5859f628c",
+   "identity": {
+    "next_action": "the board C author states the intensity and viewing angle in the value or the panel contract; the lamp is then searched on those",
+    "reason": "the design names a colour, 3 mm and 'sunlight viewable' only; no luminous intensity or viewing angle is stated, so a part cannot be chosen without that requirement. Question: the minimum intensity each lamp needs through the Mentor 1282.5004 light guide to be read in direct sun, and the angle it is read from (the value names no part number and no code is carried)",
+    "status": "UNRESOLVED"
+   },
+   "key": "D|value=3 mm SOSACT red, sunlight viewable|land=LED_D3.0mm",
+   "order_code": {},
+   "rows": [
+    "c:D4"
+   ]
+  },
+  {
+   "id": "S-7bf4b2ac53",
+   "identity": {
+    "next_action": "the board C author states the intensity and viewing angle in the value or the panel contract; the lamp is then searched on those",
+    "reason": "the design names a colour, 3 mm and 'sunlight viewable' only; no luminous intensity or viewing angle is stated, so a part cannot be chosen without that requirement. Question: the minimum intensity each lamp needs through the Mentor 1282.5004 light guide to be read in direct sun, and the angle it is read from (the value names no part number and no code is carried)",
+    "status": "UNRESOLVED"
+   },
+   "key": "D|value=3 mm TX red (RF hazard), sunlight viewable|land=LED_D3.0mm",
+   "order_code": {},
+   "rows": [
+    "c:D3"
+   ]
+  },
+  {
+   "id": "S-7863c3dc47",
+   "identity": {
+    "catalogue_line": "-55\u2103~+150\u2103 200mA 2uA 30V 600mA 800mV@100mA Standalone SOD-123 Schottky Diodes ROHS",
+    "chosen_by": "the incumbent (generator) carries the named part",
+    "datasheet": {
+     "joined_by": null,
+     "path": null,
+     "status": "OWED",
+     "what": "no maker document for this part number is filed in the tree by this stream"
+    },
+    "maker": "Hongjiacheng",
+    "maker_as_catalogued": "hongjiacheng",
+    "mpn": "BAT54W",
+    "next_action": "file the maker's document for BAT54W under v2/vendor/ and bind it in SOURCES.yaml by order code or fitted_mpn; --write-table then reads it",
+    "status": "RESOLVED_DATASHEET_OWED"
+   },
+   "key": "D|value=BAT54 lamp-test tie|land=D_SOD-123",
+   "order_code": {
+    "code": "C7502705",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:35:52Z",
+    "jlc_stock": 154424,
+    "lcsc_read_utc": "2026-09-27T20:35:53Z",
+    "lcsc_stock": 153000,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:D17"
+   ]
+  },
+  {
+   "id": "S-330f4dd290",
+   "identity": {
+    "catalogue_line": "-50\u2103~+150\u2103 1 Independent 100uA@40V 2A 40V 500mV@2A 50A SOD-123FL Schottky Diodes ROHS",
+    "chosen_by": "the incumbent (generator) carries the named part",
+    "datasheet": {
+     "joined_by": "code",
+     "path": "v2/vendor/power/panjit-ss2020fl-series.pdf",
+     "sources_entry": "epd-rectifiers",
+     "status": "HELD",
+     "what": "the document SOURCES.yaml entry epd-rectifiers holds, joined by order code C268712 (review_packet.sources_index): PANJIT SS2020FL~SS20100FL"
+    },
+    "maker": "PANJIT International",
+    "mpn": "SS2040FL",
+    "status": "RESOLVED"
+   },
+   "key": "D|value=SS2040FL: EPD_SW -> VGH|land=D_SOD-123F",
+   "order_code": {
+    "code": "C268712",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:36:11Z",
+    "jlc_stock": 9693,
+    "lcsc_read_utc": "2026-09-27T20:36:11Z",
+    "lcsc_stock": 9690,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:D19"
+   ]
+  },
+  {
+   "id": "S-a95bcbbc1e",
+   "identity": {
+    "catalogue_line": "-50\u2103~+150\u2103 1 Independent 100uA@40V 2A 40V 500mV@2A 50A SOD-123FL Schottky Diodes ROHS",
+    "chosen_by": "the incumbent (generator) carries the named part",
+    "datasheet": {
+     "joined_by": "code",
+     "path": "v2/vendor/power/panjit-ss2020fl-series.pdf",
+     "sources_entry": "epd-rectifiers",
+     "status": "HELD",
+     "what": "the document SOURCES.yaml entry epd-rectifiers holds, joined by order code C268712 (review_packet.sources_index): PANJIT SS2020FL~SS20100FL"
+    },
+    "maker": "PANJIT International",
+    "mpn": "SS2040FL",
+    "status": "RESOLVED"
+   },
+   "key": "D|value=SS2040FL: pump -> VGL|land=D_SOD-123F",
+   "order_code": {
+    "code": "C268712",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:36:11Z",
+    "jlc_stock": 9693,
+    "lcsc_read_utc": "2026-09-27T20:36:11Z",
+    "lcsc_stock": 9690,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:D21"
+   ]
+  },
+  {
+   "id": "S-af1ea25d67",
+   "identity": {
+    "catalogue_line": "-50\u2103~+150\u2103 1 Independent 100uA@40V 2A 40V 500mV@2A 50A SOD-123FL Schottky Diodes ROHS",
+    "chosen_by": "the incumbent (generator) carries the named part",
+    "datasheet": {
+     "joined_by": "code",
+     "path": "v2/vendor/power/panjit-ss2020fl-series.pdf",
+     "sources_entry": "epd-rectifiers",
+     "status": "HELD",
+     "what": "the document SOURCES.yaml entry epd-rectifiers holds, joined by order code C268712 (review_packet.sources_index): PANJIT SS2020FL~SS20100FL"
+    },
+    "maker": "PANJIT International",
+    "mpn": "SS2040FL",
+    "status": "RESOLVED"
+   },
+   "key": "D|value=SS2040FL: pump clamp|land=D_SOD-123F",
+   "order_code": {
+    "code": "C268712",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:36:11Z",
+    "jlc_stock": 9693,
+    "lcsc_read_utc": "2026-09-27T20:36:11Z",
+    "lcsc_stock": 9690,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:D20"
+   ]
+  },
+  {
+   "id": "S-d58aa066ad",
+   "identity": {
+    "catalogue_line": "-40\u2103~+85\u2103 120\u00b0 25mA 3.3V 518nm 520nm~535nm 95mW Discrete Diode Emerald Green Water Clear 0603 LED Indication - Discrete ROHS",
+    "chosen_by": "the incumbent (lcsc_fill MAP '^status\\\\b') carries the named part",
+    "datasheet": {
+     "joined_by": null,
+     "path": null,
+     "status": "OWED",
+     "what": "no maker document for this part number is filed in the tree by this stream"
+    },
+    "maker": "Everlight Elec",
+    "mpn": "19-217/GHC-YR1S2/6T",
+    "next_action": "file the maker's document for 19-217/GHC-YR1S2/6T under v2/vendor/ and bind it in SOURCES.yaml by order code or fitted_mpn; --write-table then reads it",
+    "status": "RESOLVED_DATASHEET_OWED"
+   },
+   "key": "D|value=status (GPIO25)|land=LED_0603_1608Metric",
+   "order_code": {
+    "code": "C2986059",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:36:13Z",
+    "jlc_stock": 299027,
+    "lcsc_read_utc": "2026-09-27T20:36:13Z",
+    "lcsc_stock": 285800,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:D18"
+   ]
+  },
+  {
+   "id": "S-fdd8168950",
+   "identity": {
+    "next_action": "the mechanical owner names the screw standard, material and plating",
+    "reason": "mechanical hardware: the screw's standard, material and plating are not stated, and it is the plate's GND bond, so its contact resistance matters. Question: which screw (ISO 7380 or ISO 14583, A2 stainless or zinc-plated steel) the face plate's self-clinching standoffs take (the value names no part number and no code is carried)",
+    "status": "UNRESOLVED"
+   },
+   "key": "H|value=M3 x 6 into the face plate's self-clinching standoff: GND bond to the plate|land=BackerScrew_M3_GND",
+   "order_code": {},
+   "rows": [
+    "c:H1",
+    "c:H2",
+    "c:H3",
+    "c:H4",
+    "c:H5",
+    "c:H6",
+    "c:H7",
+    "c:H8"
+   ]
+  },
+  {
+   "id": "S-772e38ca2c",
+   "identity": {
+    "reason": "copper or a wire on the board itself (land SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm): nothing is bought for this row",
+    "status": "NOT_A_PART"
+   },
+   "key": "JP|value=BOOTSEL: short while powering to enter the USB bootloader|land=SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm",
+   "order_code": {},
+   "rows": [
+    "c:JP1",
+    "e:JP1"
+   ]
+  },
+  {
+   "id": "S-fac864ded0",
+   "identity": {
+    "reason": "copper or a wire on the board itself (land SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm): nothing is bought for this row",
+    "status": "NOT_A_PART"
+   },
+   "key": "JP|value=PANEL_ID strap (closed = variant B)|land=SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm",
+   "order_code": {},
+   "rows": [
+    "c:JP2"
+   ]
+  },
+  {
+   "id": "S-13d7058c0e",
+   "identity": {
+    "catalogue_line": "-55\u2103~+105\u2103 0.3mm 0.5mm 1mm 24P Double-Sided Contacts, Top and Bottom Entry Gold Phosphor bronze Surface Mount, Right Angle SMD,P=0.5mm,\u5367\u8d34 FFC, FPC (Flat Flexible) Connector Assemblies ROHS",
+    "chosen_by": "the catalogue line whose part number carries the named part ['FH34SRJ-24S-0.5SH'], highest stock",
+    "datasheet": {
+     "joined_by": null,
+     "path": null,
+     "status": "OWED",
+     "what": "no maker document for this part number is filed in the tree by this stream"
+    },
+    "maker": "Hirose Electric (HRS)",
+    "maker_as_catalogued": "HRS(Hirose)",
+    "mpn": "FH34SRJ-24S-0.5SH(50)",
+    "next_action": "file the maker's document for FH34SRJ-24S-0.5SH(50) under v2/vendor/ and bind it in SOURCES.yaml by order code or fitted_mpn; --write-table then reads it",
+    "status": "RESOLVED_DATASHEET_OWED"
+   },
+   "key": "J_EPD|value=Hirose FH34SRJ-24S-0.5SH ZIF for the E2370KS0C1 flex (0.5 mm, 24 way; pin names per the PDi driving circuit note rev 02)|land=Hirose_FH34SRJ-24S",
+   "order_code": {
+    "code": "C324726",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:36:26Z",
+    "jlc_stock": 6470,
+    "lcsc_read_utc": "2026-09-27T20:36:26Z",
+    "lcsc_stock": 6235,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:J_EPD"
+   ]
+  },
+  {
+   "id": "S-ce3bc3dcc6",
+   "identity": {
+    "next_action": "file the jack's drawing, then the order code",
+    "reason": "a U-174/U class jack with its drawing owed (the value says so); the maker's order code follows the drawing (no JLCPCB catalogue line carries the named part ['U-174/U']); a hand-fit purchase route is declared in jlc-handfit.txt (U-174/U headset jack 1 (Amphenol Nexus class, drawing owed))",
+    "status": "UNRESOLVED"
+   },
+   "key": "J_HSJ|value=U-174/U headset jack 1 (Amphenol Nexus class, drawing owed): 17 mm hole through the backer, bushing nut below; its five leads run to D8 J_HS1|land=PanelJack_17mm",
+   "order_code": {
+    "route": "Amphenol Nexus through Mouser, https://www.mouser.com/c/?q=U-174%2FU ; a 17 mm panel hole through C's backer with a bushing nut below, five flying leads to D. Its footprint is a MountingHole: there is no BOM line for JLC to place. THE DRAWING IS STILL OWED and the hole diameter rests on it"
+   },
+   "rows": [
+    "c:J_HSJ1"
+   ]
+  },
+  {
+   "id": "S-d7fbcd75a0",
+   "identity": {
+    "next_action": "file the jack's drawing, then the order code",
+    "reason": "a U-174/U class jack with its drawing owed (the value says so); the maker's order code follows the drawing (no JLCPCB catalogue line carries the named part ['U-174/U']); a hand-fit purchase route is declared in jlc-handfit.txt (U-174/U headset jack 2 (Amphenol Nexus class, drawing owed))",
+    "status": "UNRESOLVED"
+   },
+   "key": "J_HSJ|value=U-174/U headset jack 2 (Amphenol Nexus class, drawing owed): 17 mm hole through the backer, bushing nut below; its five leads run to D8 J_HS2|land=PanelJack_17mm",
+   "order_code": {
+    "route": "the same jack, same route, same owed drawing"
+   },
+   "rows": [
+    "c:J_HSJ2"
+   ]
+  },
+  {
+   "id": "S-ccd83888e1",
+   "identity": {
+    "reason": "copper or a wire on the board itself (land LeadLands_1x02): nothing is bought for this row",
+    "status": "NOT_A_PART"
+   },
+   "key": "J_MAINSW|value=MAIN button lead to A22 J_MAINSW (XH2.5 at the A22 end): two solder lands on the underside, soldered and beaded|land=LeadLands_1x02",
+   "order_code": {},
+   "rows": [
+    "c:J_MAINSW"
+   ]
+  },
+  {
+   "id": "S-30334f702e",
+   "identity": {
+    "catalogue_line": "-40\u2103~+105\u2103 13 2 2.54mm 2x13P 3A Black Copper alloy IDC Header Surface Mount,Vertical SMD,P=2.54mm IDC Connectors ROHS",
+    "chosen_by": "recorded choice: PROCUREMENT.md HC6-SC-7 (the weakest pick: no maker sheet read)",
+    "datasheet": {
+     "joined_by": null,
+     "path": null,
+     "status": "OWED",
+     "what": "no maker document for this part number is filed in the tree by this stream"
+    },
+    "maker": "XFCN",
+    "mpn": "BH254VS-26P",
+    "next_action": "file the maker's document for BH254VS-26P under v2/vendor/ and bind it in SOURCES.yaml by order code or fitted_mpn; --write-table then reads it",
+    "status": "RESOLVED_DATASHEET_OWED"
+   },
+   "key": "J_PANEL|value=panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inhibit, HDMI selects, USB, heartbeats, slot enables, power control|land=IDC-Header_2x13_P2.54mm_Vertical_SMD",
+   "order_code": {
+    "code": "C48687640",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:36:38Z",
+    "jlc_stock": 186,
+    "lcsc_read_utc": "2026-09-27T20:36:38Z",
+    "lcsc_stock": 60,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:J_PANEL"
+   ]
+  },
+  {
+   "id": "S-f85fe2a707",
+   "identity": {
+    "reason": "copper or a wire on the board itself (land LeadLands_1x02): nothing is bought for this row",
+    "status": "NOT_A_PART"
+   },
+   "key": "J_PIJ|value=PI button lead: two solder lands on the underside (the controller reads it as the module shutdown request)|land=LeadLands_1x02",
+   "order_code": {},
+   "rows": [
+    "c:J_PIJ2"
+   ]
+  },
+  {
+   "id": "S-b9d2bcde2e",
+   "identity": {
+    "catalogue_line": "1 N-channel 115mA 2.5V 225mW 25pF 50pF 5pF 5\u03a9@10V 60V N-Channel \u00b120V SOT-23 MOSFETs ROHS",
+    "chosen_by": "the incumbent (generator) carries the named part",
+    "datasheet": {
+     "joined_by": "code",
+     "path": "v2/vendor/power/jscj-2n7002-c8545.pdf",
+     "sources_entry": "logic-nfet-2n7002",
+     "status": "HELD",
+     "what": "the document SOURCES.yaml entry logic-nfet-2n7002 holds, joined by order code C8545 (review_packet.sources_index): JSCJ 2N7002 (SOT-23)"
+    },
+    "maker": "Jiangsu Changjing Electronics Technology Co., Ltd.",
+    "mpn": "2N7002",
+    "status": "RESOLVED"
+   },
+   "key": "Q|value=2N7002|land=SOT-23",
+   "order_code": {
+    "code": "C8545",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "base",
+    "jlc_read_utc": "2026-09-27T20:36:48Z",
+    "jlc_stock": 1745429,
+    "lcsc_read_utc": "2026-09-27T20:36:48Z",
+    "lcsc_stock": 1312050,
+    "need_5_kits": 111,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "b:Q102",
+    "b:Q103",
+    "b:Q104",
+    "b:Q105",
+    "b:Q202",
+    "b:Q203",
+    "b:Q204",
+    "b:Q205",
+    "b:Q302",
+    "b:Q303",
+    "b:Q304",
+    "b:Q305",
+    "c:Q2",
+    "c:Q3",
+    "c:Q4",
+    "d:Q3",
+    "d:Q4",
+    "d:Q5",
+    "d:Q8",
+    "d:Q9"
+   ]
+  },
+  {
+   "id": "S-55e88b2fbd",
+   "identity": {
+    "catalogue_line": "1 P-Channel 14nC@10V 30V 47m\u03a9@10V\u300160m\u03a9@4.5V\u300185m\u03a9@2.5V 4A 55pF 645pF 80pF 900mV SOT-23 MOSFETs ROHS",
+    "chosen_by": "the incumbent (generator) carries the named part",
+    "datasheet": {
+     "joined_by": null,
+     "path": null,
+     "status": "OWED",
+     "what": "no maker document for this part number is filed in the tree by this stream"
+    },
+    "maker": "Alpha & Omega Semicon",
+    "mpn": "AO3401A",
+    "next_action": "file the maker's document for AO3401A under v2/vendor/ and bind it in SOURCES.yaml by order code or fitted_mpn; --write-table then reads it",
+    "status": "RESOLVED_DATASHEET_OWED"
+   },
+   "key": "Q|value=AO3401A P-FET high side|land=SOT-23",
+   "order_code": {
+    "code": "C15127",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "base",
+    "jlc_read_utc": "2026-09-27T20:36:51Z",
+    "jlc_stock": 884564,
+    "lcsc_read_utc": "2026-09-27T20:36:51Z",
+    "lcsc_stock": 496865,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:Q1"
+   ]
+  },
+  {
+   "id": "S-cae89bf0ce",
+   "identity": {
+    "catalogue_line": "1 P-Channel 14nC@10V 30V 47m\u03a9@10V\u300160m\u03a9@4.5V\u300185m\u03a9@2.5V 4A 55pF 645pF 80pF 900mV SOT-23 MOSFETs ROHS",
+    "chosen_by": "the incumbent (generator) carries the named part",
+    "datasheet": {
+     "joined_by": null,
+     "path": null,
+     "status": "OWED",
+     "what": "no maker document for this part number is filed in the tree by this stream"
+    },
+    "maker": "Alpha & Omega Semicon",
+    "mpn": "AO3401A",
+    "next_action": "file the maker's document for AO3401A under v2/vendor/ and bind it in SOURCES.yaml by order code or fitted_mpn; --write-table then reads it",
+    "status": "RESOLVED_DATASHEET_OWED"
+   },
+   "key": "Q|value=AO3401A P-FET: the e-paper's supply switch (EPD_PWR_n low = on)|land=SOT-23",
+   "order_code": {
+    "code": "C15127",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "base",
+    "jlc_read_utc": "2026-09-27T20:36:51Z",
+    "jlc_stock": 884564,
+    "lcsc_read_utc": "2026-09-27T20:36:51Z",
+    "lcsc_stock": 496865,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:Q5"
+   ]
+  },
+  {
+   "id": "S-7917d94eb1",
+   "identity": {
+    "catalogue_line": "-55\u2103~+150\u2103 1 N-channel 1.1W 1.5V 19pF 3.6A 30V 320pF 6.5nC@10V 68m\u03a9@4.5V SOT-23 MOSFETs ROHS",
+    "chosen_by": "the incumbent (generator) carries the named part",
+    "datasheet": {
+     "joined_by": "code",
+     "path": "v2/vendor/vishay/vishay-si2300ds.pdf",
+     "sources_entry": "epd-boost-fet",
+     "status": "HELD",
+     "what": "the document SOURCES.yaml entry epd-boost-fet holds, joined by order code C72271 (review_packet.sources_index): Vishay document 65701"
+    },
+    "maker": "Vishay",
+    "maker_as_catalogued": "Vishay Intertech",
+    "mpn": "SI2300DS-T1-GE3",
+    "status": "RESOLVED"
+   },
+   "key": "Q|value=Si2300DS-T1-GE3 N-FET (Vishay, SOT-23, G S D like the 2N7002 symbol; RDS(on) 85 mOhm max at VGS 2.5 V, VGS(th) 0.6 to 1.5 V): the EMCON lamp's sink|land=SOT-23",
+   "order_code": {
+    "code": "C72271",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:37:00Z",
+    "jlc_stock": 30000,
+    "lcsc_read_utc": "2026-09-27T20:37:00Z",
+    "lcsc_stock": 30000,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:Q7"
+   ]
+  },
+  {
+   "id": "S-2c230ffa91",
+   "identity": {
+    "catalogue_line": "-55\u2103~+150\u2103 1 N-channel 1.1W 1.5V 19pF 3.6A 30V 320pF 6.5nC@10V 68m\u03a9@4.5V SOT-23 MOSFETs ROHS",
+    "chosen_by": "the incumbent (generator) carries the named part",
+    "datasheet": {
+     "joined_by": "code",
+     "path": "v2/vendor/vishay/vishay-si2300ds.pdf",
+     "sources_entry": "epd-boost-fet",
+     "status": "HELD",
+     "what": "the document SOURCES.yaml entry epd-boost-fet holds, joined by order code C72271 (review_packet.sources_index): Vishay document 65701"
+    },
+    "maker": "Vishay",
+    "maker_as_catalogued": "Vishay Intertech",
+    "mpn": "SI2300DS-T1-GE3",
+    "status": "RESOLVED"
+   },
+   "key": "Q|value=Si2300DS-T1-GE3 N-FET (Vishay, SOT-23, G S D like the 2N7002 symbol; VDS 30 V, RDS 85 mOhm max at VGS 2.5 V, VGS(th) 0.6 to 1.5 V; named by PDi Rev.02): the boost switch on GDR|land=SOT-23",
+   "order_code": {
+    "code": "C72271",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:37:00Z",
+    "jlc_stock": 30000,
+    "lcsc_read_utc": "2026-09-27T20:37:00Z",
+    "lcsc_stock": 30000,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:Q6"
+   ]
+  },
+  {
+   "id": "S-3a7e735184",
+   "identity": {
+    "chosen_by": "the maker and number the design names; no JLCPCB/LCSC line carries it on 2026-09-27",
+    "datasheet": {
+     "joined_by": null,
+     "path": null,
+     "status": "OWED",
+     "what": "no maker document for this part number is filed in the tree by this stream"
+    },
+    "maker": "APEM",
+    "mpn": "5636ADKB-2V",
+    "next_action": "file the maker's document for 5636ADKB-2V under v2/vendor/ and bind it in SOURCES.yaml by order code or fitted_mpn; --write-table then reads it",
+    "status": "RESOLVED_DATASHEET_OWED"
+   },
+   "key": "SW_EMCON|value=EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_HW low, the same sense; APEM 5636ADKB-2V, hinged safety cover); K front seal in the keyed 6.5 hole|land=ToggleBody_SPDT",
+   "order_code": {
+    "route": "hand-fit, jlc-handfit.txt: APEM through Mouser, https://www.mouser.com/c/?q=5636ADKB-2V ; the SOS, EMCON and ZEROIZE locking toggles",
+    "status": "NONE"
+   },
+   "rows": [
+    "c:SW_EMCON"
+   ]
+  },
+  {
+   "id": "S-722b702520",
+   "identity": {
+    "chosen_by": "the maker and number the design names; no JLCPCB/LCSC line carries it on 2026-09-27",
+    "datasheet": {
+     "joined_by": null,
+     "path": null,
+     "status": "OWED",
+     "what": "no maker document for this part number is filed in the tree by this stream"
+    },
+    "maker": "NKK",
+    "mpn": "M2044SD3A01",
+    "next_action": "file the maker's document for M2044SD3A01 under v2/vendor/ and bind it in SOURCES.yaml by order code or fitted_mpn; --write-table then reads it",
+    "status": "RESOLVED_DATASHEET_OWED"
+   },
+   "key": "SW_LIGHT|value=LIGHTING DAY/NIGHT/BLACKOUT toggle DPDT ON-ON-ON (pole 1: rail, pole 2: sense); NKK M2044SD3A01 on the D3 splashproof bushing, its O-ring (spare AT516) under the nut on the face, AT428H boot; D hole, flat toward +X|land=ToggleBody_DPDT",
+   "order_code": {
+    "route": "hand-fit, jlc-handfit.txt: NKK through Mouser, https://www.mouser.com/c/?q=M2044SD3A01 ; the DPDT ON-ON-ON lighting toggle",
+    "status": "NONE"
+   },
+   "rows": [
+    "c:SW_LIGHT"
+   ]
+  },
+  {
+   "id": "S-0a37bce91a",
+   "identity": {
+    "chosen_by": "the maker and number the design names; no JLCPCB/LCSC line carries it on 2026-09-27",
+    "datasheet": {
+     "joined_by": null,
+     "path": null,
+     "status": "OWED",
+     "what": "no maker document for this part number is filed in the tree by this stream"
+    },
+    "maker": "C&K",
+    "mpn": "ATP19-SL1-603-B0SA-03G",
+    "next_action": "file the maker's document for ATP19-SL1-603-B0SA-03G under v2/vendor/ and bind it in SOURCES.yaml by order code or fitted_mpn; --write-table then reads it",
+    "status": "RESOLVED_DATASHEET_OWED"
+   },
+   "key": "SW_MAIN|value=MAIN PWR 19 mm momentary, green ring (to A22 J_MAINSW); C&K ATP19-SL1-603-B0SA-03G; silicone gasket washer under the bezel|land=PanelSwitch_19mm",
+   "order_code": {
+    "route": "hand-fit, jlc-handfit.txt: C&K through Mouser, https://www.mouser.com/c/?q=ATP19-SL1-603-B0SA-03G ; MAIN PWR 19 mm, green ring",
+    "status": "NONE"
+   },
+   "rows": [
+    "c:SW_MAIN"
+   ]
+  },
+  {
+   "id": "S-ff16699f19",
+   "identity": {
+    "chosen_by": "the maker and number the design names; no JLCPCB/LCSC line carries it on 2026-09-27",
+    "datasheet": {
+     "joined_by": null,
+     "path": null,
+     "status": "OWED",
+     "what": "no maker document for this part number is filed in the tree by this stream"
+    },
+    "maker": "C&K",
+    "mpn": "ATP16-SL1-403-M0SA-04G",
+    "next_action": "file the maker's document for ATP16-SL1-403-M0SA-04G under v2/vendor/ and bind it in SOURCES.yaml by order code or fitted_mpn; --write-table then reads it",
+    "status": "RESOLVED_DATASHEET_OWED"
+   },
+   "key": "SW_PI|value=PI 16 mm recessed momentary, amber ring (PI_SHDN_REQ to the modules through the controller); C&K ATP16-SL1-403-M0SA-04G; silicone gasket washer under the bezel|land=PanelSwitch_16mm",
+   "order_code": {
+    "route": "hand-fit, jlc-handfit.txt: C&K through Mouser, https://www.mouser.com/c/?q=ATP16-SL1-403-M0SA-04G ; PI 16 mm recessed, amber ring",
+    "status": "NONE"
+   },
+   "rows": [
+    "c:SW_PI"
+   ]
+  },
+  {
+   "id": "S-6c7337d7a2",
+   "identity": {
+    "chosen_by": "the maker and number the design names; no JLCPCB/LCSC line carries it on 2026-09-27",
+    "datasheet": {
+     "joined_by": null,
+     "path": null,
+     "status": "OWED",
+     "what": "no maker document for this part number is filed in the tree by this stream"
+    },
+    "maker": "APEM",
+    "mpn": "5636ADKB-2V",
+    "next_action": "file the maker's document for 5636ADKB-2V under v2/vendor/ and bind it in SOURCES.yaml by order code or fitted_mpn; --write-table then reads it",
+    "status": "RESOLVED_DATASHEET_OWED"
+   },
+   "key": "SW_SOS|value=SOS locking toggle, maintained (APEM 5636ADKB-2V, both positions locked, red boot, hinged safety cover per 32.50; ruling 32.13); K front seal in the keyed 6.5 hole; the controller acts after 2 s closed|land=ToggleBody_SPDT",
+   "order_code": {
+    "route": "hand-fit, jlc-handfit.txt: APEM through Mouser, https://www.mouser.com/c/?q=5636ADKB-2V ; the SOS, EMCON and ZEROIZE locking toggles",
+    "status": "NONE"
+   },
+   "rows": [
+    "c:SW_SOS"
+   ]
+  },
+  {
+   "id": "S-b2e775c075",
+   "identity": {
+    "chosen_by": "the maker and number the design names; no JLCPCB/LCSC line carries it on 2026-09-27",
+    "datasheet": {
+     "joined_by": null,
+     "path": null,
+     "status": "OWED",
+     "what": "no maker document for this part number is filed in the tree by this stream"
+    },
+    "maker": "C&K",
+    "mpn": "ATP16-SL1-203-M0SA-04G",
+    "next_action": "file the maker's document for ATP16-SL1-203-M0SA-04G under v2/vendor/ and bind it in SOURCES.yaml by order code or fitted_mpn; --write-table then reads it",
+    "status": "RESOLVED_DATASHEET_OWED"
+   },
+   "key": "SW_TEST|value=TEST/ACK 16 mm momentary, white ring; C&K ATP16-SL1-203-M0SA-04G; silicone gasket washer under the bezel|land=PanelSwitch_16mm",
+   "order_code": {
+    "route": "hand-fit, jlc-handfit.txt: C&K through Mouser, https://www.mouser.com/c/?q=ATP16-SL1-203-M0SA-04G ; TEST/ACK 16 mm, white ring",
+    "status": "NONE"
+   },
+   "rows": [
+    "c:SW_TEST"
+   ]
+  },
+  {
+   "id": "S-617c909b60",
+   "identity": {
+    "chosen_by": "the maker and number the design names; no JLCPCB/LCSC line carries it on 2026-09-27",
+    "datasheet": {
+     "joined_by": null,
+     "path": null,
+     "status": "OWED",
+     "what": "no maker document for this part number is filed in the tree by this stream"
+    },
+    "maker": "APEM",
+    "mpn": "5636ADKB-2V",
+    "next_action": "file the maker's document for 5636ADKB-2V under v2/vendor/ and bind it in SOURCES.yaml by order code or fitted_mpn; --write-table then reads it",
+    "status": "RESOLVED_DATASHEET_OWED"
+   },
+   "key": "SW_ZERO|value=ZEROIZE locking toggle, maintained (APEM 5636ADKB-2V, single pole ON-NONE-ON, lug 2 common, hinged safety cover; ruling 32.13); K front seal in the keyed 6.5 hole; closed = ZEROIZE_SW low, read by the panel controller alone (GPIO22); ruled firmware behaviour (owner D-03): read at boot before any slot powers, crypto-erase after 5 s closed|land=ToggleBody_SPDT",
+   "order_code": {
+    "route": "hand-fit, jlc-handfit.txt: APEM through Mouser, https://www.mouser.com/c/?q=5636ADKB-2V ; the SOS, EMCON and ZEROIZE locking toggles",
+    "status": "NONE"
+   },
+   "rows": [
+    "c:SW_ZERO"
+   ]
+  },
+  {
+   "id": "S-8362226c90",
+   "identity": {
+    "catalogue_line": "-25\u2103~+85\u2103 120klx 16bit 2.35mm 2.5V~3.6V 3mm 6.8mm I2C Light Intensity Low power/sleep mode\u3001Spectral correction/filtering\u3001High dynamic range measurement\u3001Adjustable gain control\u3001Interrupt/event trigger\u3001Built-in temperature compensation SMD-4P Ambient Light Sensors ROHS",
+    "chosen_by": "the incumbent (generator) carries the named part",
+    "datasheet": {
+     "joined_by": null,
+     "path": null,
+     "status": "OWED",
+     "what": "no maker document for this part number is filed in the tree by this stream"
+    },
+    "maker": "Vishay",
+    "maker_as_catalogued": "Vishay Intertech",
+    "mpn": "VEML7700-TR",
+    "next_action": "file the maker's document for VEML7700-TR under v2/vendor/ and bind it in SOURCES.yaml by order code or fitted_mpn; --write-table then reads it",
+    "status": "RESOLVED_DATASHEET_OWED"
+   },
+   "key": "U_LIGHT|value=Vishay VEML7700 ambient light sensor (1 SCL 2 VDD 3 GND 4 SDA), I2C 0x10|land=Vishay_VEML7700",
+   "order_code": {
+    "code": "C504893",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:37:07Z",
+    "jlc_stock": 3435,
+    "lcsc_read_utc": "2026-09-27T20:37:07Z",
+    "lcsc_stock": 3435,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:U_LIGHT"
+   ]
+  },
+  {
+   "id": "S-3399dc8073",
+   "identity": {
+    "catalogue_line": "-40\u2103~+125\u2103 1 1 1.65V~5.5V 10uA 32mA 32mA 4.4ns@5V,15pF 74LVC Push-pull Schmitt trigger Unidirectional SOT-25-5 Buffers, Drivers, Receivers, Transceivers ROHS",
+    "chosen_by": "the incumbent (generator) carries the named part",
+    "datasheet": {
+     "joined_by": "code",
+     "path": "v2/vendor/diodes/diodes-74lvc1g17.pdf",
+     "sources_entry": "panel-schmitt-buffers",
+     "status": "HELD",
+     "what": "the document SOURCES.yaml entry panel-schmitt-buffers holds, joined by order code C151394 (review_packet.sources_index): Diodes Incorporated DS35124"
+    },
+    "maker": "Diodes Incorporated",
+    "mpn": "74LVC1G17W5-7",
+    "status": "RESOLVED"
+   },
+   "key": "U|value=74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3)|land=SOT-23-5",
+   "order_code": {
+    "code": "C151394",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:37:14Z",
+    "jlc_stock": 11986,
+    "lcsc_read_utc": "2026-09-27T20:37:14Z",
+    "lcsc_stock": 11985,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:U9"
+   ]
+  },
+  {
+   "id": "S-82a0c53bb2",
+   "identity": {
+    "catalogue_line": "-40\u2103~+125\u2103 1 1 1.65V~5.5V 10uA 32mA 32mA 4.4ns@5V,15pF 74LVC Push-pull Schmitt trigger Unidirectional SOT-25-5 Buffers, Drivers, Receivers, Transceivers ROHS",
+    "chosen_by": "the incumbent (generator) carries the named part",
+    "datasheet": {
+     "joined_by": "code",
+     "path": "v2/vendor/diodes/diodes-74lvc1g17.pdf",
+     "sources_entry": "panel-schmitt-buffers",
+     "status": "HELD",
+     "what": "the document SOURCES.yaml entry panel-schmitt-buffers holds, joined by order code C151394 (review_packet.sources_index): Diodes Incorporated DS35124"
+    },
+    "maker": "Diodes Incorporated",
+    "mpn": "74LVC1G17W5-7",
+    "status": "RESOLVED"
+   },
+   "key": "U|value=74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): ZEROIZE_HW follows the local ZEROIZE_SW (owner D-03)|land=SOT-23-5",
+   "order_code": {
+    "code": "C151394",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:37:14Z",
+    "jlc_stock": 11986,
+    "lcsc_read_utc": "2026-09-27T20:37:14Z",
+    "lcsc_stock": 11985,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:U12"
+   ]
+  },
+  {
+   "id": "S-ac3ac5929e",
+   "identity": {
+    "catalogue_line": "-40\u2103~+125\u2103 1 1 1.65V~5.5V 10uA 32mA 32mA 4.4ns@5V,15pF 74LVC Push-pull Schmitt trigger Unidirectional SOT-25-5 Buffers, Drivers, Receivers, Transceivers ROHS",
+    "chosen_by": "the incumbent (generator) carries the named part",
+    "datasheet": {
+     "joined_by": "code",
+     "path": "v2/vendor/diodes/diodes-74lvc1g17.pdf",
+     "sources_entry": "panel-schmitt-buffers",
+     "status": "HELD",
+     "what": "the document SOURCES.yaml entry panel-schmitt-buffers holds, joined by order code C151394 (review_packet.sources_index): Diodes Incorporated DS35124"
+    },
+    "maker": "Diodes Incorporated",
+    "mpn": "74LVC1G17W5-7",
+    "status": "RESOLVED"
+   },
+   "key": "U|value=74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): the panel controller's one-way copy of EMCON_HW (EMCON_RD, to GPIO21 through R46)|land=SOT-23-5",
+   "order_code": {
+    "code": "C151394",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:37:14Z",
+    "jlc_stock": 11986,
+    "lcsc_read_utc": "2026-09-27T20:37:14Z",
+    "lcsc_stock": 11985,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:U13"
+   ]
+  },
+  {
+   "id": "S-2005fc2180",
+   "identity": {
+    "catalogue_line": "-40\u2103~+85\u2103 1.1mA 10mA 16 2.3V~5.5V 25mA 400kHz 400mV 4V 8 I2C\u3001SMBus Interrupt Output Push-Pull Reset function\u3001Cascading and address extension\u3001Built-in LED driver TSSOP-24 I/O Expanders ROHS",
+    "chosen_by": "the incumbent (generator) carries the named part",
+    "datasheet": {
+     "joined_by": "code",
+     "path": "v2/vendor/ti/ti-pca9555.pdf",
+     "sources_entry": "io-expander-pca9555",
+     "status": "HELD",
+     "what": "the document SOURCES.yaml entry io-expander-pca9555 holds, joined by order code C2864778 (review_packet.sources_index): TI SCPS131"
+    },
+    "maker": "Texas Instruments",
+    "mpn": "PCA9555PWR",
+    "status": "RESOLVED"
+   },
+   "key": "U|value=PCA9555PW 0x22: LED sinks, light mode inputs|land=TSSOP-24_4.4x7.8mm_P0.65mm",
+   "order_code": {
+    "code": "C2864778",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:37:50Z",
+    "jlc_stock": 12871,
+    "lcsc_read_utc": "2026-09-27T20:37:50Z",
+    "lcsc_stock": 12871,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:U1"
+   ]
+  },
+  {
+   "id": "S-ad00071efd",
+   "identity": {
+    "catalogue_line": "-40\u2103~+85\u2103 1.1mA 10mA 16 2.3V~5.5V 25mA 400kHz 400mV 4V 8 I2C\u3001SMBus Interrupt Output Push-Pull Reset function\u3001Cascading and address extension\u3001Built-in LED driver TSSOP-24 I/O Expanders ROHS",
+    "chosen_by": "the incumbent (generator) carries the named part",
+    "datasheet": {
+     "joined_by": "code",
+     "path": "v2/vendor/ti/ti-pca9555.pdf",
+     "sources_entry": "io-expander-pca9555",
+     "status": "HELD",
+     "what": "the document SOURCES.yaml entry io-expander-pca9555 holds, joined by order code C2864778 (review_packet.sources_index): TI SCPS131"
+    },
+    "maker": "Texas Instruments",
+    "mpn": "PCA9555PWR",
+    "status": "RESOLVED"
+   },
+   "key": "U|value=PCA9555PW 0x23: LED sinks, the battery bar, lamp test|land=TSSOP-24_4.4x7.8mm_P0.65mm",
+   "order_code": {
+    "code": "C2864778",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:37:50Z",
+    "jlc_stock": 12871,
+    "lcsc_read_utc": "2026-09-27T20:37:50Z",
+    "lcsc_stock": 12871,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:U2"
+   ]
+  },
+  {
+   "id": "S-75a8527525",
+   "identity": {
+    "catalogue_line": "12bit 133MHz 30 LQFN-56(7x7) Microcontrollers (MCU/MPU/SOC) ROHS",
+    "chosen_by": "the incumbent (generator) carries the named part",
+    "datasheet": {
+     "joined_by": "code",
+     "path": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+     "sources_entry": "rp2040",
+     "status": "HELD",
+     "what": "the document SOURCES.yaml entry rp2040 holds, joined by order code C2040 (review_packet.sources_index): RP2040 Datasheet"
+    },
+    "maker": "Raspberry Pi",
+    "mpn": "RP2040",
+    "status": "RESOLVED"
+   },
+   "key": "U|value=RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)|land=QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm",
+   "order_code": {
+    "code": "C2040",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:37:53Z",
+    "jlc_stock": 72650,
+    "lcsc_read_utc": "2026-09-27T20:37:53Z",
+    "lcsc_stock": 66147,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:U3"
+   ]
+  },
+  {
+   "id": "S-a3081131d9",
+   "identity": {
+    "catalogue_line": "-40\u2103~+125\u2103 1 1.2V\u30011.9V\u30012.4V\u30013.8V 1.65V~5.5V 10uA 3 300mV\u3001400mV\u3001450mV\u3001550mV 32mA 32mA 6.3ns@3.3V,50pF 74LVC Series Configurable Multi-Function Gate Overvoltage-tolerant input\u3001Rear drive protection\u3001Level shifting\u3001Local shutdown mode\u3001Live insertion protection SOT-23-6 Logic Gates ROHS",
+    "chosen_by": "the incumbent (generator) carries the named part",
+    "datasheet": {
+     "joined_by": "code",
+     "path": "v2/vendor/ti/ti-sn74lvc1g57.pdf",
+     "sources_entry": "panel-emcon-lamp-gate",
+     "status": "HELD",
+     "what": "the document SOURCES.yaml entry panel-emcon-lamp-gate holds, joined by order code C485080 (review_packet.sources_index): Texas Instruments SCES414P"
+    },
+    "maker": "Texas Instruments",
+    "mpn": "SN74LVC1G57DBVR",
+    "status": "RESOLVED"
+   },
+   "key": "U|value=SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 1 In1 on GND, 2 GND, 3 In0 TX_INHIBIT_n, 4 Y, 5 VCC, 6 In2 EMCON_HW): the EMCON lamp's gate, high only while both EMCON lines read low|land=SOT-23-6",
+   "order_code": {
+    "code": "C485080",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:38:03Z",
+    "jlc_stock": 1832,
+    "lcsc_read_utc": "2026-09-27T20:38:04Z",
+    "lcsc_stock": 1830,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:U14"
+   ]
+  },
+  {
+   "id": "S-3da103208a",
+   "identity": {
+    "catalogue_line": "-40\u2103~+125\u2103@(Tj) 1 238mV@(500mA) 25uA 3.3V 46dB@(100kHz) 5.5V 500mA 71.5uVrms Fixed Over Current Protection\u3001Thermal Shutdown\u3001Input undervoltage protection Positive SOT-23-5 Voltage Regulators - Linear, Low Drop Out (LDO) Regulators ROHS",
+    "chosen_by": "the incumbent (lcsc_fill MAP '^TLV75533PDBV') carries the named part",
+    "datasheet": {
+     "joined_by": null,
+     "path": null,
+     "status": "OWED",
+     "what": "no maker document for this part number is filed in the tree by this stream"
+    },
+    "maker": "Texas Instruments",
+    "mpn": "TLV75533PDBVR",
+    "next_action": "file the maker's document for TLV75533PDBVR under v2/vendor/ and bind it in SOURCES.yaml by order code or fitted_mpn; --write-table then reads it",
+    "status": "RESOLVED_DATASHEET_OWED"
+   },
+   "key": "U|value=TLV75533PDBV 3.3 V 500 mA LDO for the controller, expanders, e-paper and sensor (1 IN 2 GND 3 EN 4 NC 5 OUT)|land=SOT-23-5",
+   "order_code": {
+    "code": "C404027",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:38:21Z",
+    "jlc_stock": 138916,
+    "lcsc_read_utc": "2026-09-27T20:38:22Z",
+    "lcsc_stock": 137485,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:U5"
+   ]
+  },
+  {
+   "id": "S-e1dcd70451",
+   "identity": {
+    "catalogue_line": "-40\u2103~+125\u2103 150nA 17V 2 3.5pF 5.25V 5A 6V ESD IEC 61000-4-2 Unidirectional SOT-23-6L ESD and Surge Protection (TVS/ESD) ROHS",
+    "chosen_by": "the incumbent (generator) carries the named part",
+    "datasheet": {
+     "joined_by": "code",
+     "path": "v2/vendor/st/st-usblc6-2-esd-protection.pdf",
+     "sources_entry": "usb-esd-array",
+     "status": "HELD",
+     "what": "the document SOURCES.yaml entry usb-esd-array holds, joined by order code C7519 (review_packet.sources_index): ST DS4260"
+    },
+    "maker": "STMicroelectronics",
+    "mpn": "USBLC6-2SC6",
+    "status": "RESOLVED"
+   },
+   "key": "U|value=USBLC6-2SC6|land=SOT-23-6",
+   "order_code": {
+    "code": "C7519",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:36:12Z",
+    "jlc_stock": 46448,
+    "lcsc_read_utc": "2026-09-27T20:36:12Z",
+    "lcsc_stock": 42945,
+    "need_5_kits": 83,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "a:U29",
+    "b:U107",
+    "b:U207",
+    "b:U29",
+    "b:U307",
+    "b:U33",
+    "b:U34",
+    "b:U35",
+    "b:U37",
+    "c:U10",
+    "c:U11",
+    "c:U6",
+    "c:U7",
+    "c:U8",
+    "d:U5"
+   ]
+  },
+  {
+   "id": "S-dfbcfc88f2",
+   "identity": {
+    "catalogue_line": "-40\u2103~+85\u2103 100,000 cycles 10uA 133MHz 16Mbit 2.7V~3.6V 20 Years 3ms SPI USON-8-EP(2x3) NOR FLASH ROHS",
+    "chosen_by": "the incumbent (generator) carries the named part",
+    "datasheet": {
+     "joined_by": null,
+     "path": null,
+     "status": "OWED",
+     "what": "no maker document for this part number is filed in the tree by this stream"
+    },
+    "maker": "Winbond Elec",
+    "mpn": "W25Q16JVUXIQ",
+    "next_action": "file the maker's document for W25Q16JVUXIQ under v2/vendor/ and bind it in SOURCES.yaml by order code or fitted_mpn; --write-table then reads it",
+    "status": "RESOLVED_DATASHEET_OWED"
+   },
+   "key": "U|value=W25Q16JVUXIQ 16 Mbit QSPI flash (USON-8: 1 CS 2 DO/IO1 3 WP/IO2 4 GND 5 DI/IO0 6 CLK 7 HOLD/IO3 8 VCC, pad)|land=Winbond_USON-8-1EP_3x2mm_P0.5mm_EP0.2x1.6mm",
+   "order_code": {
+    "code": "C2843335",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:38:41Z",
+    "jlc_stock": 6353,
+    "lcsc_read_utc": "2026-09-27T20:38:41Z",
+    "lcsc_stock": 5270,
+    "need_5_kits": 12,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:U4",
+    "e:U11"
+   ]
+  },
+  {
+   "id": "S-99c3720b2d",
+   "identity": {
+    "catalogue_line": "-40\u2103~+85\u2103 10pF 12MHz 50\u03a9 Crystal Oscillator \u00b130ppm \u00b130ppm SMD3225-4P Crystals ROHS",
+    "chosen_by": "the incumbent (generator) carries the named part",
+    "datasheet": {
+     "joined_by": null,
+     "path": null,
+     "status": "OWED",
+     "what": "no maker document for this part number is filed in the tree by this stream"
+    },
+    "maker": "Abracon LLC",
+    "mpn": "ABM8-272-T3",
+    "next_action": "file the maker's document for ABM8-272-T3 under v2/vendor/ and bind it in SOURCES.yaml by order code or fitted_mpn; --write-table then reads it",
+    "status": "RESOLVED_DATASHEET_OWED"
+   },
+   "key": "Y|value=12 MHz ABM8-272-T3 (3225): 1 XIN, 3 XOUT, 2 and 4 GND|land=Crystal_SMD_3225-4Pin_3.2x2.5mm",
+   "order_code": {
+    "code": "C20625731",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:38:42Z",
+    "jlc_stock": 16472,
+    "lcsc_read_utc": "2026-09-27T20:38:43Z",
+    "lcsc_stock": 16472,
+    "need_5_kits": 12,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:Y1",
+    "e:Y1"
+   ]
+  },
+  {
+   "id": "S-45ad5deffe",
+   "identity": {
+    "catalogue_line": "100nF 50V X7R \u00b110% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+    "chosen_by": "the incumbent (lcsc_fill MAP '^100n') meets every requirement",
+    "datasheet": {
+     "fetched": "2026-09-27T20:53:35Z",
+     "joined_by": "filed by this stream",
+     "path": "v2/vendor/passives/yageo-cc-series.pdf",
+     "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648",
+     "source": "https://datasheet.lcsc.com/datasheet/pdf/23ccee80ee542e7cf156a772bb589942.pdf?productCode=C60474",
+     "status": "FILED",
+     "what": "LCSC's copy of the maker's sheet (the part's pdfUrl in LCSC's product detail)"
+    },
+    "maker": "YAGEO",
+    "mpn": "CC0603KRX7R9BB104",
+    "status": "RESOLVED"
+   },
+   "key": "capacitor|value=100nF|package=0603|construction=MLCC|dielectric=X7R|v_rating_min=6.3|tolerance_max_pct=10",
+   "order_code": {
+    "code": "C14663",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "base",
+    "jlc_read_utc": "2026-09-27T20:39:14Z",
+    "jlc_stock": 51313475,
+    "lcsc_read_utc": "2026-09-27T20:39:11Z",
+    "lcsc_stock": 3530900,
+    "need_5_kits": 1712,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "a:C103",
+    "a:C104",
+    "a:C106",
+    "a:C107",
+    "a:C153",
+    "a:C155",
+    "a:C215",
+    "a:C216",
+    "a:C217",
+    "a:C218",
+    "a:C225",
+    "a:C226",
+    "a:C93",
+    "a:C95",
+    "b:C110",
+    "b:C135",
+    "b:C136",
+    "b:C137",
+    "b:C138",
+    "b:C139",
+    "b:C140",
+    "b:C141",
+    "b:C142",
+    "b:C143",
+    "b:C144",
+    "b:C145",
+    "b:C146",
+    "b:C150",
+    "b:C158",
+    "b:C166",
+    "b:C167",
+    "b:C168",
+    "b:C169",
+    "b:C17",
+    "b:C170",
+    "b:C171",
+    "b:C172",
+    "b:C173",
+    "b:C18",
+    "b:C183",
+    "b:C184",
+    "b:C185",
+    "b:C19",
+    "b:C192",
+    "b:C194",
+    "b:C197",
+    "b:C20",
+    "b:C200",
+    "b:C21",
+    "b:C210",
+    "b:C22",
+    "b:C23",
+    "b:C235",
+    "b:C236",
+    "b:C237",
+    "b:C238",
+    "b:C239",
+    "b:C24",
+    "b:C240",
+    "b:C241",
+    "b:C242",
+    "b:C243",
+    "b:C244",
+    "b:C245",
+    "b:C246",
+    "b:C25",
+    "b:C250",
+    "b:C258",
+    "b:C26",
+    "b:C261",
+    "b:C262",
+    "b:C266",
+    "b:C267",
+    "b:C268",
+    "b:C269",
+    "b:C270",
+    "b:C271",
+    "b:C272",
+    "b:C273",
+    "b:C285",
+    "b:C286",
+    "b:C289",
+    "b:C292",
+    "b:C294",
+    "b:C297",
+    "b:C299",
+    "b:C310",
+    "b:C335",
+    "b:C336",
+    "b:C337",
+    "b:C338",
+    "b:C339",
+    "b:C340",
+    "b:C341",
+    "b:C342",
+    "b:C343",
+    "b:C344",
+    "b:C345",
+    "b:C346",
+    "b:C350",
+    "b:C358",
+    "b:C36",
+    "b:C366",
+    "b:C367",
+    "b:C368",
+    "b:C369",
+    "b:C37",
+    "b:C370",
+    "b:C371",
+    "b:C372",
+    "b:C373",
+    "b:C38",
+    "b:C383",
+    "b:C384",
+    "b:C385",
+    "b:C392",
+    "b:C394",
+    "b:C397",
+    "b:C40",
+    "b:C402",
+    "b:C403",
+    "b:C404",
+    "b:C405",
+    "b:C406",
+    "b:C409",
+    "b:C412",
+    "b:C422",
+    "b:C423",
+    "b:C424",
+    "b:C425",
+    "b:C426",
+    "b:C429",
+    "b:C432",
+    "b:C44",
+    "b:C442",
+    "b:C443",
+    "b:C444",
+    "b:C445",
+    "b:C446",
+    "b:C449",
+    "b:C452",
+    "b:C47",
+    "b:C470",
+    "b:C471",
+    "b:C472",
+    "b:C473",
+    "b:C474",
+    "b:C475",
+    "b:C476",
+    "b:C477",
+    "b:C478",
+    "b:C479",
+    "b:C480",
+    "b:C49",
+    "b:C508",
+    "b:C509",
+    "b:C51",
+    "b:C510",
+    "b:C511",
+    "b:C512",
+    "b:C513",
+    "b:C514",
+    "b:C515",
+    "b:C516",
+    "b:C517",
+    "b:C518",
+    "b:C519",
+    "b:C531",
+    "b:C532",
+    "b:C533",
+    "b:C534",
+    "b:C535",
+    "b:C536",
+    "b:C537",
+    "b:C538",
+    "b:C539",
+    "b:C54",
+    "b:C540",
+    "b:C541",
+    "b:C542",
+    "b:C543",
+    "b:C544",
+    "b:C545",
+    "b:C546",
+    "b:C547",
+    "b:C548",
+    "b:C55",
+    "b:C552",
+    "b:C554",
+    "b:C556",
+    "b:C558",
+    "b:C560",
+    "b:C561",
+    "b:C562",
+    "b:C563",
+    "b:C564",
+    "b:C565",
+    "b:C566",
+    "b:C567",
+    "b:C568",
+    "b:C569",
+    "b:C57",
+    "b:C570",
+    "b:C571",
+    "b:C572",
+    "b:C573",
+    "b:C574",
+    "b:C575",
+    "b:C576",
+    "b:C577",
+    "b:C578",
+    "b:C579",
+    "b:C580",
+    "b:C581",
+    "b:C582",
+    "b:C583",
+    "b:C584",
+    "b:C585",
+    "b:C586",
+    "b:C587",
+    "b:C588",
+    "b:C589",
+    "b:C590",
+    "b:C60",
+    "b:C601",
+    "b:C602",
+    "b:C603",
+    "b:C604",
+    "b:C605",
+    "b:C606",
+    "b:C62",
+    "b:C631",
+    "b:C632",
+    "b:C633",
+    "b:C634",
+    "b:C635",
+    "b:C636",
+    "b:C65",
+    "b:C66",
+    "b:C661",
+    "b:C662",
+    "b:C663",
+    "b:C664",
+    "b:C665",
+    "b:C666",
+    "b:C67",
+    "b:C68",
+    "b:C69",
+    "b:C70",
+    "b:C71",
+    "b:C73",
+    "c:C10",
+    "c:C11",
+    "c:C12",
+    "c:C13",
+    "c:C15",
+    "c:C17",
+    "c:C18",
+    "c:C25",
+    "c:C26",
+    "c:C27",
+    "c:C38",
+    "c:C39",
+    "c:C40",
+    "c:C41",
+    "c:C42",
+    "c:C43",
+    "c:C44",
+    "c:C7",
+    "c:C8",
+    "c:C9",
+    "d:C11",
+    "d:C15",
+    "d:C16",
+    "d:C39",
+    "d:C4",
+    "d:C49",
+    "d:C50",
+    "d:C51",
+    "d:C52",
+    "d:C53",
+    "d:C54",
+    "d:C55",
+    "d:C56",
+    "d:C57",
+    "d:C6",
+    "d:C63",
+    "d:C66",
+    "d:C67",
+    "d:C68",
+    "d:C73",
+    "d:C74",
+    "d:C75",
+    "e:C38",
+    "e:C39",
+    "e:C40",
+    "e:C41",
+    "e:C42",
+    "e:C43",
+    "e:C44",
+    "e:C46",
+    "e:C48",
+    "e:C49",
+    "e:C50",
+    "e:C51",
+    "e:C52",
+    "e:C55",
+    "e:C59",
+    "e:C60",
+    "e:C61",
+    "e:C62"
+   ]
+  },
+  {
+   "id": "S-fd71845200",
+   "identity": {
+    "next_action": "declare the voltage of the net named above in the board's intent file (rails or nodes), then re-derive the table",
+    "reason": "the voltage this capacitor must be rated for is not known: UNRESOLVED: a side of the part is UNBOUNDED (EPD_VCC UNBOUNDED (a possible switch node, L1->EPD_SW: the intent declares switch nodes and no ringing figure, and this one is not declared) / GND GROUND; a side UNBOUNDED)",
+    "status": "UNRESOLVED"
+   },
+   "key": "capacitor|value=100nF|package=0603|construction=MLCC|dielectric=X7R|v_rating_min=|v_open_on=c:EPD_VCC+GND|tolerance_max_pct=10",
+   "order_code": {},
+   "rows": [
+    "c:C29"
+   ]
+  },
+  {
+   "id": "S-8b55c1443b",
+   "identity": {
+    "catalogue_line": "10nF 50V X7R \u00b110% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+    "chosen_by": "the incumbent (lcsc_fill MAP '^10n$') meets every requirement",
+    "datasheet": {
+     "fetched": "2026-09-27T20:53:35Z",
+     "joined_by": "filed by this stream",
+     "path": "v2/vendor/passives/fenghua-series-705023d3.pdf",
+     "sha256": "705023d3be0454148a96fc2715d249a32d8ff442e70b64d1116d3490ed1d8136",
+     "source": "https://datasheet.lcsc.com/datasheet/pdf/09fe2daf22580a99fa7fea93ccb20fb7.pdf?productCode=C1546",
+     "status": "FILED",
+     "what": "LCSC's copy of the maker's sheet (the part's pdfUrl in LCSC's product detail)"
+    },
+    "maker": "Fenghua Advanced Technology",
+    "maker_as_catalogued": "FH (Guangdong Fenghua Advanced Tech)",
+    "mpn": "0603B103K500NT",
+    "status": "RESOLVED"
+   },
+   "key": "capacitor|value=10nF|package=0603|construction=MLCC|dielectric=X7R|v_rating_min=6.3|tolerance_max_pct=10",
+   "order_code": {
+    "code": "C57112",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "base",
+    "jlc_read_utc": "2026-09-27T20:39:49Z",
+    "jlc_stock": 7096854,
+    "lcsc_read_utc": "2026-09-27T20:39:45Z",
+    "lcsc_stock": 0,
+    "need_5_kits": 89,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "a:C102",
+    "a:C154",
+    "a:C211",
+    "a:C224",
+    "b:C481",
+    "b:C482",
+    "b:C483",
+    "b:C56",
+    "b:C61",
+    "c:C19",
+    "c:C20",
+    "c:C21",
+    "c:C22",
+    "c:C23",
+    "c:C24",
+    "d:C70"
+   ]
+  },
+  {
+   "id": "S-6d1de2f8e8",
+   "identity": {
+    "catalogue_line": "10uF 16V X7R \u00b110% 0805 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+    "chosen_by": "rule I-1: extended library, maker tier YAGEO, stock 259244",
+    "datasheet": {
+     "fetched": "2026-09-27T20:53:35Z",
+     "joined_by": "filed by this stream",
+     "path": "v2/vendor/passives/yageo-cc-series.pdf",
+     "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648",
+     "source": "https://datasheet.lcsc.com/datasheet/pdf/23ccee80ee542e7cf156a772bb589942.pdf?productCode=C60474",
+     "status": "FILED",
+     "what": "LCSC's copy of the maker's sheet (the part's pdfUrl in LCSC's product detail)"
+    },
+    "maker": "YAGEO",
+    "mpn": "CC0805KKX7R7BB106",
+    "status": "RESOLVED"
+   },
+   "key": "capacitor|value=10uF|package=0805|construction=MLCC|dielectric=X7R|v_rating_min=6.3|tolerance_max_pct=20",
+   "order_code": {
+    "code": "C326595",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:39:56Z",
+    "jlc_stock": 259244,
+    "lcsc_read_utc": "2026-09-27T20:39:57Z",
+    "lcsc_stock": 244025,
+    "need_5_kits": 281,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "b:C105",
+    "b:C106",
+    "b:C107",
+    "b:C108",
+    "b:C109",
+    "b:C125",
+    "b:C130",
+    "b:C147",
+    "b:C148",
+    "b:C16",
+    "b:C174",
+    "b:C205",
+    "b:C206",
+    "b:C207",
+    "b:C208",
+    "b:C209",
+    "b:C225",
+    "b:C230",
+    "b:C247",
+    "b:C248",
+    "b:C274",
+    "b:C305",
+    "b:C306",
+    "b:C307",
+    "b:C308",
+    "b:C309",
+    "b:C325",
+    "b:C330",
+    "b:C347",
+    "b:C348",
+    "b:C374",
+    "b:C39",
+    "b:C4",
+    "b:C401",
+    "b:C41",
+    "b:C421",
+    "b:C441",
+    "b:C46",
+    "b:C53",
+    "b:C550",
+    "b:C64",
+    "b:C7",
+    "c:C1",
+    "c:C2",
+    "d:C17",
+    "d:C24",
+    "d:C25",
+    "d:C3",
+    "d:C33",
+    "d:C40",
+    "d:C9"
+   ]
+  },
+  {
+   "id": "S-8b1dfb7d63",
+   "identity": {
+    "catalogue_line": "15pF 50V C0G \u00b15% 0402 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+    "chosen_by": "the incumbent (lcsc_fill MAP '^15p NP0$') meets every requirement",
+    "datasheet": {
+     "fetched": "2026-09-27T20:53:35Z",
+     "joined_by": "filed by this stream",
+     "path": "v2/vendor/passives/fenghua-series-705023d3.pdf",
+     "sha256": "705023d3be0454148a96fc2715d249a32d8ff442e70b64d1116d3490ed1d8136",
+     "source": "https://datasheet.lcsc.com/datasheet/pdf/09fe2daf22580a99fa7fea93ccb20fb7.pdf?productCode=C1546",
+     "status": "FILED",
+     "what": "LCSC's copy of the maker's sheet (the part's pdfUrl in LCSC's product detail)"
+    },
+    "maker": "Fenghua Advanced Technology",
+    "maker_as_catalogued": "FH (Guangdong Fenghua Advanced Tech)",
+    "mpn": "0402CG150J500NT",
+    "status": "RESOLVED"
+   },
+   "key": "capacitor|value=15pF|package=0402|construction=MLCC|dielectric=C0G|v_rating_min=6.3|tolerance_max_pct=5",
+   "order_code": {
+    "code": "C1548",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "base",
+    "jlc_read_utc": "2026-09-27T20:40:22Z",
+    "jlc_stock": 1481123,
+    "lcsc_read_utc": "2026-09-27T20:40:23Z",
+    "lcsc_stock": 962100,
+    "need_5_kits": 12,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:C5",
+    "c:C6"
+   ]
+  },
+  {
+   "id": "S-9ae5738976",
+   "identity": {
+    "catalogue_line": "1uF 25V X7R \u00b110% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+    "chosen_by": "the incumbent (lcsc_fill MAP '^1u 25V$') meets every requirement",
+    "datasheet": {
+     "fetched": "2026-09-27T20:53:35Z",
+     "joined_by": "filed by this stream",
+     "path": "v2/vendor/passives/yageo-cc-series.pdf",
+     "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648",
+     "source": "https://datasheet.lcsc.com/datasheet/pdf/23ccee80ee542e7cf156a772bb589942.pdf?productCode=C60474",
+     "status": "FILED",
+     "what": "LCSC's copy of the maker's sheet (the part's pdfUrl in LCSC's product detail)"
+    },
+    "maker": "YAGEO",
+    "mpn": "CC0603KRX7R8BB105",
+    "status": "RESOLVED"
+   },
+   "key": "capacitor|value=1uF|package=0603|construction=MLCC|dielectric=X7R|v_rating_min=25|v_not_checked_on=c:EPD_VCOM+GND|tolerance_max_pct=10",
+   "order_code": {
+    "code": "C106858",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:40:51Z",
+    "jlc_stock": 320883,
+    "lcsc_read_utc": "2026-09-27T20:40:52Z",
+    "lcsc_stock": 258940,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:C37"
+   ]
+  },
+  {
+   "id": "S-12603c7856",
+   "identity": {
+    "catalogue_line": "1uF 25V X7R \u00b110% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+    "chosen_by": "the incumbent (lcsc_fill MAP '^1u 25V$') meets every requirement",
+    "datasheet": {
+     "fetched": "2026-09-27T20:53:35Z",
+     "joined_by": "filed by this stream",
+     "path": "v2/vendor/passives/yageo-cc-series.pdf",
+     "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648",
+     "source": "https://datasheet.lcsc.com/datasheet/pdf/23ccee80ee542e7cf156a772bb589942.pdf?productCode=C60474",
+     "status": "FILED",
+     "what": "LCSC's copy of the maker's sheet (the part's pdfUrl in LCSC's product detail)"
+    },
+    "maker": "YAGEO",
+    "mpn": "CC0603KRX7R8BB105",
+    "status": "RESOLVED"
+   },
+   "key": "capacitor|value=1uF|package=0603|construction=MLCC|dielectric=X7R|v_rating_min=25|v_not_checked_on=c:EPD_VDDD+GND|tolerance_max_pct=10",
+   "order_code": {
+    "code": "C106858",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:40:51Z",
+    "jlc_stock": 320883,
+    "lcsc_read_utc": "2026-09-27T20:40:52Z",
+    "lcsc_stock": 258940,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:C34"
+   ]
+  },
+  {
+   "id": "S-c3afdba8a6",
+   "identity": {
+    "catalogue_line": "1uF 25V X7R \u00b110% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+    "chosen_by": "the incumbent (lcsc_fill MAP '^1u 25V$') meets every requirement",
+    "datasheet": {
+     "fetched": "2026-09-27T20:53:35Z",
+     "joined_by": "filed by this stream",
+     "path": "v2/vendor/passives/yageo-cc-series.pdf",
+     "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648",
+     "source": "https://datasheet.lcsc.com/datasheet/pdf/23ccee80ee542e7cf156a772bb589942.pdf?productCode=C60474",
+     "status": "FILED",
+     "what": "LCSC's copy of the maker's sheet (the part's pdfUrl in LCSC's product detail)"
+    },
+    "maker": "YAGEO",
+    "mpn": "CC0603KRX7R8BB105",
+    "status": "RESOLVED"
+   },
+   "key": "capacitor|value=1uF|package=0603|construction=MLCC|dielectric=X7R|v_rating_min=25|v_not_checked_on=c:EPD_VDH+GND|tolerance_max_pct=10",
+   "order_code": {
+    "code": "C106858",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:40:51Z",
+    "jlc_stock": 320883,
+    "lcsc_read_utc": "2026-09-27T20:40:52Z",
+    "lcsc_stock": 258940,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:C35"
+   ]
+  },
+  {
+   "id": "S-69d0f41966",
+   "identity": {
+    "catalogue_line": "1uF 25V X7R \u00b110% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+    "chosen_by": "the incumbent (lcsc_fill MAP '^1u 25V$') meets every requirement",
+    "datasheet": {
+     "fetched": "2026-09-27T20:53:35Z",
+     "joined_by": "filed by this stream",
+     "path": "v2/vendor/passives/yageo-cc-series.pdf",
+     "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648",
+     "source": "https://datasheet.lcsc.com/datasheet/pdf/23ccee80ee542e7cf156a772bb589942.pdf?productCode=C60474",
+     "status": "FILED",
+     "what": "LCSC's copy of the maker's sheet (the part's pdfUrl in LCSC's product detail)"
+    },
+    "maker": "YAGEO",
+    "mpn": "CC0603KRX7R8BB105",
+    "status": "RESOLVED"
+   },
+   "key": "capacitor|value=1uF|package=0603|construction=MLCC|dielectric=X7R|v_rating_min=25|v_not_checked_on=c:EPD_VDHR+GND|tolerance_max_pct=10",
+   "order_code": {
+    "code": "C106858",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:40:51Z",
+    "jlc_stock": 320883,
+    "lcsc_read_utc": "2026-09-27T20:40:52Z",
+    "lcsc_stock": 258940,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:C33"
+   ]
+  },
+  {
+   "id": "S-bd25452813",
+   "identity": {
+    "catalogue_line": "1uF 25V X7R \u00b110% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+    "chosen_by": "the incumbent (lcsc_fill MAP '^1u 25V$') meets every requirement",
+    "datasheet": {
+     "fetched": "2026-09-27T20:53:35Z",
+     "joined_by": "filed by this stream",
+     "path": "v2/vendor/passives/yageo-cc-series.pdf",
+     "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648",
+     "source": "https://datasheet.lcsc.com/datasheet/pdf/23ccee80ee542e7cf156a772bb589942.pdf?productCode=C60474",
+     "status": "FILED",
+     "what": "LCSC's copy of the maker's sheet (the part's pdfUrl in LCSC's product detail)"
+    },
+    "maker": "YAGEO",
+    "mpn": "CC0603KRX7R8BB105",
+    "status": "RESOLVED"
+   },
+   "key": "capacitor|value=1uF|package=0603|construction=MLCC|dielectric=X7R|v_rating_min=25|v_not_checked_on=c:EPD_VDL+GND|tolerance_max_pct=10",
+   "order_code": {
+    "code": "C106858",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:40:51Z",
+    "jlc_stock": 320883,
+    "lcsc_read_utc": "2026-09-27T20:40:52Z",
+    "lcsc_stock": 258940,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:C36"
+   ]
+  },
+  {
+   "id": "S-9121e77997",
+   "identity": {
+    "catalogue_line": "1uF 25V X7R \u00b110% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+    "chosen_by": "the incumbent (lcsc_fill MAP '^1u 25V$') meets every requirement",
+    "datasheet": {
+     "fetched": "2026-09-27T20:53:35Z",
+     "joined_by": "filed by this stream",
+     "path": "v2/vendor/passives/yageo-cc-series.pdf",
+     "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648",
+     "source": "https://datasheet.lcsc.com/datasheet/pdf/23ccee80ee542e7cf156a772bb589942.pdf?productCode=C60474",
+     "status": "FILED",
+     "what": "LCSC's copy of the maker's sheet (the part's pdfUrl in LCSC's product detail)"
+    },
+    "maker": "YAGEO",
+    "mpn": "CC0603KRX7R8BB105",
+    "status": "RESOLVED"
+   },
+   "key": "capacitor|value=1uF|package=0603|construction=MLCC|dielectric=X7R|v_rating_min=25|v_not_checked_on=c:EPD_VGH+GND|tolerance_max_pct=10",
+   "order_code": {
+    "code": "C106858",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:40:51Z",
+    "jlc_stock": 320883,
+    "lcsc_read_utc": "2026-09-27T20:40:52Z",
+    "lcsc_stock": 258940,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:C30"
+   ]
+  },
+  {
+   "id": "S-a9d5694441",
+   "identity": {
+    "catalogue_line": "1uF 25V X7R \u00b110% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+    "chosen_by": "the incumbent (lcsc_fill MAP '^1u 25V$') meets every requirement",
+    "datasheet": {
+     "fetched": "2026-09-27T20:53:35Z",
+     "joined_by": "filed by this stream",
+     "path": "v2/vendor/passives/yageo-cc-series.pdf",
+     "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648",
+     "source": "https://datasheet.lcsc.com/datasheet/pdf/23ccee80ee542e7cf156a772bb589942.pdf?productCode=C60474",
+     "status": "FILED",
+     "what": "LCSC's copy of the maker's sheet (the part's pdfUrl in LCSC's product detail)"
+    },
+    "maker": "YAGEO",
+    "mpn": "CC0603KRX7R8BB105",
+    "status": "RESOLVED"
+   },
+   "key": "capacitor|value=1uF|package=0603|construction=MLCC|dielectric=X7R|v_rating_min=25|v_not_checked_on=c:EPD_VGL+GND|tolerance_max_pct=10",
+   "order_code": {
+    "code": "C106858",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:40:51Z",
+    "jlc_stock": 320883,
+    "lcsc_read_utc": "2026-09-27T20:40:52Z",
+    "lcsc_stock": 258940,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:C32"
+   ]
+  },
+  {
+   "id": "S-5eeee312c8",
+   "identity": {
+    "catalogue_line": "16V 1uF X7R \u00b110% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+    "chosen_by": "rule I-1: extended library, maker tier YAGEO, stock 904962",
+    "datasheet": {
+     "fetched": "2026-09-27T20:53:35Z",
+     "joined_by": "filed by this stream",
+     "path": "v2/vendor/passives/yageo-cc-series.pdf",
+     "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648",
+     "source": "https://datasheet.lcsc.com/datasheet/pdf/23ccee80ee542e7cf156a772bb589942.pdf?productCode=C60474",
+     "status": "FILED",
+     "what": "LCSC's copy of the maker's sheet (the part's pdfUrl in LCSC's product detail)"
+    },
+    "maker": "YAGEO",
+    "mpn": "CC0603KRX7R7BB105",
+    "status": "RESOLVED"
+   },
+   "key": "capacitor|value=1uF|package=0603|construction=MLCC|dielectric=X7R|v_rating_min=6.3|tolerance_max_pct=10",
+   "order_code": {
+    "code": "C106248",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:40:53Z",
+    "jlc_stock": 904962,
+    "lcsc_read_utc": "2026-09-27T20:40:49Z",
+    "lcsc_stock": 873600,
+    "need_5_kits": 259,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "b:C12",
+    "b:C13",
+    "b:C163",
+    "b:C193",
+    "b:C263",
+    "b:C293",
+    "b:C363",
+    "b:C393",
+    "b:C400",
+    "b:C413",
+    "b:C420",
+    "b:C433",
+    "b:C440",
+    "b:C453",
+    "c:C14",
+    "c:C16",
+    "c:C3",
+    "c:C4",
+    "d:C12",
+    "d:C18",
+    "d:C19",
+    "d:C20",
+    "d:C21",
+    "d:C22",
+    "d:C23",
+    "d:C28",
+    "d:C29",
+    "d:C30",
+    "d:C34",
+    "d:C37",
+    "d:C38",
+    "d:C41",
+    "d:C42",
+    "d:C61",
+    "d:C64",
+    "d:C65",
+    "d:C7",
+    "d:C71",
+    "d:C8",
+    "e:C20",
+    "e:C34",
+    "e:C35",
+    "e:C45",
+    "e:C47",
+    "e:C56",
+    "e:C57",
+    "e:C58"
+   ]
+  },
+  {
+   "id": "S-62ab53c6e1",
+   "identity": {
+    "catalogue_line": "25V 4.7uF X5R \u00b110% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+    "chosen_by": "the incumbent (generator) meets every requirement",
+    "datasheet": {
+     "fetched": "2026-09-27T20:53:44Z",
+     "joined_by": "filed by this stream",
+     "path": "v2/vendor/passives/murata-grm188r61e475ke11d.pdf",
+     "sha256": "f7d46ecff4291a82e843c992a3174cc7c098187400e7c4f4dbe5850dad120ce5",
+     "source": "https://datasheet.lcsc.com/datasheet/pdf/bb7c7daf22f40d74dc9493dcdcae707d.pdf?productCode=C90057",
+     "status": "FILED",
+     "what": "LCSC's copy of the maker's sheet (the part's pdfUrl in LCSC's product detail)"
+    },
+    "fallback": "rule C-D3b: no X7R part is made or stocked at this value, land and rating; X5R taken, and its hot-spot temperature against +85 C is OPEN (worst inside air 62.1 C, pcb_envelope.yaml worst_inside_air_c)",
+    "maker": "Murata Electronics",
+    "mpn": "GRM188R61E475KE11D",
+    "status": "RESOLVED"
+   },
+   "key": "capacitor|value=4.7uF|package=0603|construction=MLCC|dielectric=X7R|v_rating_min=25|v_not_checked_on=c:EPD_PUMP+EPD_SW|tolerance_max_pct=10",
+   "order_code": {
+    "code": "C90057",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:42:58Z",
+    "jlc_stock": 119180,
+    "lcsc_read_utc": "2026-09-27T20:42:58Z",
+    "lcsc_stock": 105810,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:C31"
+   ]
+  },
+  {
+   "id": "S-4fb1ca0365",
+   "identity": {
+    "next_action": "declare the voltage of the net named above in the board's intent file (rails or nodes), then re-derive the table",
+    "reason": "the voltage this capacitor must be rated for is not known: UNRESOLVED: a side of the part is UNBOUNDED (EPD_VCC UNBOUNDED (a possible switch node, L1->EPD_SW: the intent declares switch nodes and no ringing figure, and this one is not declared) / GND GROUND; a side UNBOUNDED)",
+    "status": "UNRESOLVED"
+   },
+   "key": "capacitor|value=4.7uF|package=0805|construction=MLCC|dielectric=X7R|v_rating_min=|v_open_on=c:EPD_VCC+GND|tolerance_max_pct=10",
+   "order_code": {},
+   "rows": [
+    "c:C28"
+   ]
+  },
+  {
+   "id": "S-91ba60fcef",
+   "identity": {
+    "catalogue_line": "-55\u2103~+125\u2103 1 200mA 450m\u03a9 600\u03a9@100MHz \u00b125% 0603 Ferrite Beads ROHS",
+    "chosen_by": "the incumbent (generator) carries the named part",
+    "datasheet": {
+     "joined_by": null,
+     "path": null,
+     "status": "OWED",
+     "what": "no maker document for this part number is filed in the tree by this stream"
+    },
+    "maker": "Sunlord",
+    "mpn": "GZ1608D601TF",
+    "next_action": "file the maker's document for GZ1608D601TF under v2/vendor/ and bind it in SOURCES.yaml by order code or fitted_mpn; --write-table then reads it",
+    "status": "RESOLVED_DATASHEET_OWED"
+   },
+   "key": "inductor|ind_kind=ferrite bead|land=L_0603_1608Metric|value=ferrite 600R|use=",
+   "order_code": {
+    "code": "C1002",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "base",
+    "jlc_read_utc": "2026-09-27T20:44:20Z",
+    "jlc_stock": 765968,
+    "lcsc_read_utc": "2026-09-27T20:44:21Z",
+    "lcsc_stock": null,
+    "need_5_kits": 23,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:FB1",
+    "c:FB2",
+    "c:FB3",
+    "c:FB4"
+   ]
+  },
+  {
+   "id": "S-23fe50c33a",
+   "identity": {
+    "chosen_by": "the maker and number the design names; no JLCPCB/LCSC line carries it on 2026-09-27",
+    "datasheet": {
+     "joined_by": "filed by this stream",
+     "path": "v2/vendor/passives/arlitech-atnr-series-spec.pdf",
+     "sha256": "a310e24af39280e30b895950dee80c128de8fd955f1b3151b1160043083cbc90",
+     "source": "https://www.arlitech.com/pdf/58441/ATNR%20Series%20Spec",
+     "status": "FILED",
+     "what": "Arlitech Electronic Corp. ATNR Series specification: ATNR4010100[]T, 10 uH, 480 mOhm, Isat 0.8 A, Irms 0.8 A"
+    },
+    "maker": "Arlitech Electronic Corp.",
+    "mpn": "ATNR4010100MT",
+    "status": "RESOLVED"
+   },
+   "key": "inductor|ind_kind=power inductor|land=L_APV_ANR4020|named_part=Arlitech Electronic Corp. ATNR4010100MT",
+   "order_code": {
+    "route": "hand-fit, jlc-handfit.txt: Abracon, Digi-Key https://www.digikey.com/en/products?keywords=ATNR4010100MT ; 10 uH 0.8 A boost inductor. NO DATASHEET IN THIS TREE",
+    "status": "NONE"
+   },
+   "rows": [
+    "c:L1"
+   ]
+  },
+  {
+   "id": "S-d7aa8a0726",
+   "identity": {
+    "catalogue_line": "-55\u2103~+155\u2103 100mW 100\u03a9 75V Thick Film Resistor \u00b11% \u00b1100ppm/\u2103 0603 Chip Resistor - Surface Mount ROHS",
+    "chosen_by": "the incumbent (lcsc_fill MAP '^100R$') meets every requirement",
+    "datasheet": {
+     "fetched": "2026-09-27T20:53:50Z",
+     "joined_by": "filed by this stream",
+     "path": "v2/vendor/passives/uniroyal-series-11cd644d.pdf",
+     "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+     "source": "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf?productCode=C25469",
+     "status": "FILED",
+     "what": "LCSC's copy of the maker's sheet (the part's pdfUrl in LCSC's product detail)"
+    },
+    "maker": "UNI-ROYAL (Uniroyal Electronics)",
+    "maker_as_catalogued": "UNI-ROYAL(Uniroyal Elec)",
+    "mpn": "0603WAF1000T5E",
+    "status": "RESOLVED"
+   },
+   "key": "resistor|value=100Ohm|package=0603|resistor_kind=general|tolerance_max_pct=5|power_min_w=0.1",
+   "order_code": {
+    "code": "C22775",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "base",
+    "jlc_read_utc": "2026-09-27T20:44:42Z",
+    "jlc_stock": 12300136,
+    "lcsc_read_utc": "2026-09-27T20:44:42Z",
+    "lcsc_stock": 6353600,
+    "need_5_kits": 95,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "b:R194",
+    "b:R294",
+    "b:R394",
+    "c:R19",
+    "c:R44",
+    "c:R48",
+    "e:R44",
+    "e:R45",
+    "p:R1",
+    "p:R2",
+    "p:R20",
+    "p:R21",
+    "p:R3",
+    "p:R4",
+    "p:R5",
+    "p:R8",
+    "p:R9"
+   ]
+  },
+  {
+   "id": "S-a44109c662",
+   "identity": {
+    "catalogue_line": "-55\u2103~+155\u2103 100k\u03a9 100mW 75V Thick Film Resistor \u00b11% \u00b1100ppm/\u2103 0603 Chip Resistor - Surface Mount ROHS",
+    "chosen_by": "the incumbent (lcsc_fill MAP '^100k$') meets every requirement",
+    "datasheet": {
+     "fetched": "2026-09-27T20:53:50Z",
+     "joined_by": "filed by this stream",
+     "path": "v2/vendor/passives/uniroyal-series-11cd644d.pdf",
+     "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+     "source": "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf?productCode=C25469",
+     "status": "FILED",
+     "what": "LCSC's copy of the maker's sheet (the part's pdfUrl in LCSC's product detail)"
+    },
+    "maker": "UNI-ROYAL (Uniroyal Electronics)",
+    "maker_as_catalogued": "UNI-ROYAL(Uniroyal Elec)",
+    "mpn": "0603WAF1003T5E",
+    "status": "RESOLVED"
+   },
+   "key": "resistor|value=100kOhm|package=0603|resistor_kind=general|tolerance_max_pct=5|power_min_w=0.1",
+   "order_code": {
+    "code": "C25803",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "base",
+    "jlc_read_utc": "2026-09-27T20:44:43Z",
+    "jlc_stock": 22800506,
+    "lcsc_read_utc": "2026-09-27T20:44:44Z",
+    "lcsc_stock": 16266100,
+    "need_5_kits": 375,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "a:R116",
+    "a:R118",
+    "a:R119",
+    "a:R120",
+    "a:R121",
+    "a:R123",
+    "a:R126",
+    "a:R128",
+    "a:R13",
+    "a:R135",
+    "a:R145",
+    "a:R171",
+    "a:R172",
+    "a:R178",
+    "a:R179",
+    "a:R193",
+    "a:R197",
+    "a:R198",
+    "a:R2",
+    "a:R201",
+    "a:R206",
+    "a:R207",
+    "a:R208",
+    "a:R30",
+    "a:R34",
+    "a:R38",
+    "a:R4",
+    "a:R42",
+    "a:R57",
+    "a:R73",
+    "b:R106",
+    "b:R111",
+    "b:R112",
+    "b:R160",
+    "b:R161",
+    "b:R192",
+    "b:R206",
+    "b:R211",
+    "b:R212",
+    "b:R260",
+    "b:R261",
+    "b:R292",
+    "b:R306",
+    "b:R311",
+    "b:R312",
+    "b:R360",
+    "b:R361",
+    "b:R392",
+    "b:R477",
+    "b:R478",
+    "b:R479",
+    "b:R49",
+    "b:R59",
+    "b:R66",
+    "b:R78",
+    "b:R90",
+    "c:R20",
+    "c:R38",
+    "c:R45",
+    "d:R2",
+    "d:R3",
+    "d:R53",
+    "e:R1",
+    "e:R18",
+    "e:R26",
+    "e:R52",
+    "e:R56",
+    "p:R28"
+   ]
+  },
+  {
+   "id": "S-50018f6fcc",
+   "identity": {
+    "catalogue_line": "-55\u2103~+155\u2103 100mW 10k\u03a9 75V Thick Film Resistor \u00b11% \u00b1100ppm/\u2103 0603 Chip Resistor - Surface Mount ROHS",
+    "chosen_by": "the incumbent (lcsc_fill MAP '^10k$') meets every requirement",
+    "datasheet": {
+     "fetched": "2026-09-27T20:53:50Z",
+     "joined_by": "filed by this stream",
+     "path": "v2/vendor/passives/uniroyal-series-11cd644d.pdf",
+     "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+     "source": "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf?productCode=C25469",
+     "status": "FILED",
+     "what": "LCSC's copy of the maker's sheet (the part's pdfUrl in LCSC's product detail)"
+    },
+    "maker": "UNI-ROYAL (Uniroyal Electronics)",
+    "maker_as_catalogued": "UNI-ROYAL(Uniroyal Elec)",
+    "mpn": "0603WAF1002T5E",
+    "status": "RESOLVED"
+   },
+   "key": "resistor|value=10kOhm|package=0603|resistor_kind=general|tolerance_max_pct=5|power_min_w=0.1",
+   "order_code": {
+    "code": "C25804",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "base",
+    "jlc_read_utc": "2026-09-27T20:44:52Z",
+    "jlc_stock": 22820798,
+    "lcsc_read_utc": "2026-09-27T20:44:52Z",
+    "lcsc_stock": 0,
+    "need_5_kits": 986,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "a:R110",
+    "a:R117",
+    "a:R142",
+    "a:R187",
+    "a:R210",
+    "a:R22",
+    "a:R23",
+    "a:R24",
+    "a:R25",
+    "a:R3",
+    "a:R44",
+    "a:R91",
+    "a:R95",
+    "a:R99",
+    "b:R11",
+    "b:R132",
+    "b:R133",
+    "b:R134",
+    "b:R135",
+    "b:R137",
+    "b:R138",
+    "b:R141",
+    "b:R145",
+    "b:R146",
+    "b:R149",
+    "b:R15",
+    "b:R151",
+    "b:R154",
+    "b:R155",
+    "b:R156",
+    "b:R157",
+    "b:R158",
+    "b:R16",
+    "b:R162",
+    "b:R163",
+    "b:R164",
+    "b:R21",
+    "b:R22",
+    "b:R232",
+    "b:R233",
+    "b:R234",
+    "b:R235",
+    "b:R237",
+    "b:R238",
+    "b:R241",
+    "b:R245",
+    "b:R246",
+    "b:R249",
+    "b:R25",
+    "b:R251",
+    "b:R254",
+    "b:R255",
+    "b:R256",
+    "b:R257",
+    "b:R258",
+    "b:R262",
+    "b:R263",
+    "b:R264",
+    "b:R28",
+    "b:R29",
+    "b:R296",
+    "b:R30",
+    "b:R31",
+    "b:R332",
+    "b:R333",
+    "b:R334",
+    "b:R335",
+    "b:R337",
+    "b:R338",
+    "b:R341",
+    "b:R345",
+    "b:R346",
+    "b:R349",
+    "b:R351",
+    "b:R354",
+    "b:R355",
+    "b:R356",
+    "b:R357",
+    "b:R358",
+    "b:R362",
+    "b:R363",
+    "b:R364",
+    "b:R37",
+    "b:R4",
+    "b:R41",
+    "b:R42",
+    "b:R44",
+    "b:R47",
+    "b:R474",
+    "b:R475",
+    "b:R476",
+    "b:R480",
+    "b:R481",
+    "b:R482",
+    "b:R483",
+    "b:R484",
+    "b:R485",
+    "b:R486",
+    "b:R487",
+    "b:R488",
+    "b:R489",
+    "b:R490",
+    "b:R491",
+    "b:R492",
+    "b:R493",
+    "b:R494",
+    "b:R495",
+    "b:R496",
+    "b:R497",
+    "b:R498",
+    "b:R499",
+    "b:R500",
+    "b:R510",
+    "b:R514",
+    "b:R515",
+    "b:R516",
+    "b:R517",
+    "b:R518",
+    "b:R519",
+    "b:R520",
+    "b:R521",
+    "b:R522",
+    "b:R523",
+    "b:R524",
+    "b:R56",
+    "b:R63",
+    "b:R64",
+    "b:R75",
+    "b:R76",
+    "b:R87",
+    "b:R88",
+    "c:R10",
+    "c:R11",
+    "c:R12",
+    "c:R13",
+    "c:R14",
+    "c:R15",
+    "c:R16",
+    "c:R4",
+    "c:R42",
+    "c:R49",
+    "c:R9",
+    "d:R10",
+    "d:R31",
+    "d:R32",
+    "d:R35",
+    "d:R36",
+    "d:R37",
+    "d:R38",
+    "d:R39",
+    "d:R45",
+    "d:R46",
+    "d:R47",
+    "d:R5",
+    "d:R66",
+    "d:R67",
+    "d:R68",
+    "d:R69",
+    "d:R70",
+    "d:R71",
+    "d:R76",
+    "d:R77",
+    "d:R78",
+    "d:R79",
+    "d:R84",
+    "d:R85",
+    "d:R9",
+    "e:R13",
+    "e:R16",
+    "e:R17",
+    "e:R25",
+    "e:R31",
+    "e:R46",
+    "e:R47",
+    "e:R49",
+    "e:R50",
+    "e:R53",
+    "p:R14",
+    "p:R15"
+   ]
+  },
+  {
+   "id": "S-e35e0a5cd2",
+   "identity": {
+    "catalogue_line": "-55\u2103~+155\u2103 100mW 180\u03a9 75V Thick Film Resistor \u00b11% \u00b1100ppm/\u2103 0603 Chip Resistor - Surface Mount ROHS",
+    "chosen_by": "the incumbent (generator) meets every requirement",
+    "datasheet": {
+     "fetched": "2026-09-27T20:53:50Z",
+     "joined_by": "filed by this stream",
+     "path": "v2/vendor/passives/uniroyal-series-11cd644d.pdf",
+     "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+     "source": "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf?productCode=C25469",
+     "status": "FILED",
+     "what": "LCSC's copy of the maker's sheet (the part's pdfUrl in LCSC's product detail)"
+    },
+    "maker": "UNI-ROYAL (Uniroyal Electronics)",
+    "maker_as_catalogued": "UNI-ROYAL(Uniroyal Elec)",
+    "mpn": "0603WAF1800T5E",
+    "status": "RESOLVED"
+   },
+   "key": "resistor|value=180Ohm|package=0603|resistor_kind=general|tolerance_max_pct=5|power_min_w=0.1",
+   "order_code": {
+    "code": "C22828",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:45:12Z",
+    "jlc_stock": 2453038,
+    "lcsc_read_utc": "2026-09-27T20:45:12Z",
+    "lcsc_stock": 2382900,
+    "need_5_kits": 62,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:R24",
+    "c:R25",
+    "c:R26",
+    "c:R27",
+    "c:R28",
+    "c:R29",
+    "c:R30",
+    "c:R32",
+    "c:R33",
+    "c:R34",
+    "c:R35"
+   ]
+  },
+  {
+   "id": "S-0baee211d0",
+   "identity": {
+    "catalogue_line": "-55\u2103~+155\u2103 100mW 1k\u03a9 75V Thick Film Resistor \u00b11% \u00b1100ppm/\u2103 0603 Chip Resistor - Surface Mount ROHS",
+    "chosen_by": "the incumbent (lcsc_fill MAP '^1k$') meets every requirement",
+    "datasheet": {
+     "fetched": "2026-09-27T20:53:50Z",
+     "joined_by": "filed by this stream",
+     "path": "v2/vendor/passives/uniroyal-series-11cd644d.pdf",
+     "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+     "source": "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf?productCode=C25469",
+     "status": "FILED",
+     "what": "LCSC's copy of the maker's sheet (the part's pdfUrl in LCSC's product detail)"
+    },
+    "maker": "UNI-ROYAL (Uniroyal Electronics)",
+    "maker_as_catalogued": "UNI-ROYAL(Uniroyal Elec)",
+    "mpn": "0603WAF1001T5E",
+    "status": "RESOLVED"
+   },
+   "key": "resistor|value=1kOhm|package=0603|resistor_kind=general|tolerance_max_pct=5|power_min_w=0.1",
+   "order_code": {
+    "code": "C21190",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "base",
+    "jlc_read_utc": "2026-09-27T20:45:17Z",
+    "jlc_stock": 23613048,
+    "lcsc_read_utc": "2026-09-27T20:45:17Z",
+    "lcsc_stock": 5465700,
+    "need_5_kits": 397,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "a:R196",
+    "a:R5",
+    "b:R101",
+    "b:R129",
+    "b:R130",
+    "b:R131",
+    "b:R136",
+    "b:R139",
+    "b:R148",
+    "b:R150",
+    "b:R191",
+    "b:R201",
+    "b:R229",
+    "b:R230",
+    "b:R231",
+    "b:R236",
+    "b:R239",
+    "b:R24",
+    "b:R248",
+    "b:R250",
+    "b:R26",
+    "b:R27",
+    "b:R291",
+    "b:R301",
+    "b:R32",
+    "b:R329",
+    "b:R33",
+    "b:R330",
+    "b:R331",
+    "b:R336",
+    "b:R339",
+    "b:R34",
+    "b:R348",
+    "b:R35",
+    "b:R350",
+    "b:R391",
+    "b:R40",
+    "b:R5",
+    "b:R57",
+    "b:R6",
+    "b:R65",
+    "b:R7",
+    "b:R77",
+    "b:R8",
+    "b:R89",
+    "c:R1",
+    "c:R37",
+    "c:R46",
+    "c:R5",
+    "c:R6",
+    "d:R11",
+    "d:R29",
+    "d:R30",
+    "d:R4",
+    "d:R49",
+    "d:R50",
+    "d:R52",
+    "d:R86",
+    "d:R87",
+    "d:R93",
+    "d:R94",
+    "e:R28",
+    "e:R32",
+    "e:R33",
+    "e:R54",
+    "p:R22",
+    "p:R24",
+    "p:R25",
+    "p:R26",
+    "p:R27",
+    "p:R6",
+    "p:R7"
+   ]
+  },
+  {
+   "id": "S-099e530a08",
+   "identity": {
+    "catalogue_line": "-55\u2103~+155\u2103 100mW 2.2k\u03a9 75V Thick Film Resistor \u00b11% \u00b1100ppm/\u2103 0603 Chip Resistor - Surface Mount ROHS",
+    "chosen_by": "the incumbent (lcsc_fill MAP '^2\\\\.2k$') meets every requirement",
+    "datasheet": {
+     "fetched": "2026-09-27T20:53:50Z",
+     "joined_by": "filed by this stream",
+     "path": "v2/vendor/passives/uniroyal-series-11cd644d.pdf",
+     "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+     "source": "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf?productCode=C25469",
+     "status": "FILED",
+     "what": "LCSC's copy of the maker's sheet (the part's pdfUrl in LCSC's product detail)"
+    },
+    "maker": "UNI-ROYAL (Uniroyal Electronics)",
+    "maker_as_catalogued": "UNI-ROYAL(Uniroyal Elec)",
+    "mpn": "0603WAF2201T5E",
+    "status": "RESOLVED"
+   },
+   "key": "resistor|value=2.2kOhm|package=0603|resistor_kind=general|tolerance_max_pct=5|power_min_w=0.1",
+   "order_code": {
+    "code": "C4190",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "base",
+    "jlc_read_utc": "2026-09-27T20:45:18Z",
+    "jlc_stock": 7860795,
+    "lcsc_read_utc": "2026-09-27T20:45:18Z",
+    "lcsc_stock": 6024300,
+    "need_5_kits": 78,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "a:R130",
+    "a:R132",
+    "b:R17",
+    "b:R18",
+    "b:R54",
+    "b:R55",
+    "c:R17",
+    "c:R7",
+    "c:R8",
+    "d:R1",
+    "d:R43",
+    "d:R44",
+    "d:R51",
+    "e:R27"
+   ]
+  },
+  {
+   "id": "S-b3916fa625",
+   "identity": {
+    "catalogue_line": "-55\u2103~+155\u2103 100mW 27\u03a9 75V Thick Film Resistor \u00b11% \u00b1200ppm/\u2103 0603 Chip Resistor - Surface Mount ROHS",
+    "chosen_by": "the incumbent (lcsc_fill MAP '^27R$') meets every requirement",
+    "datasheet": {
+     "fetched": "2026-09-27T20:53:50Z",
+     "joined_by": "filed by this stream",
+     "path": "v2/vendor/passives/uniroyal-series-11cd644d.pdf",
+     "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+     "source": "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf?productCode=C25469",
+     "status": "FILED",
+     "what": "LCSC's copy of the maker's sheet (the part's pdfUrl in LCSC's product detail)"
+    },
+    "maker": "UNI-ROYAL (Uniroyal Electronics)",
+    "maker_as_catalogued": "UNI-ROYAL(Uniroyal Elec)",
+    "mpn": "0603WAF270JT5E",
+    "status": "RESOLVED"
+   },
+   "key": "resistor|value=27Ohm|package=0603|resistor_kind=general|tolerance_max_pct=5|power_min_w=0.1",
+   "order_code": {
+    "code": "C25190",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:45:40Z",
+    "jlc_stock": 116177,
+    "lcsc_read_utc": "2026-09-27T20:45:40Z",
+    "lcsc_stock": 27300,
+    "need_5_kits": 23,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:R2",
+    "c:R3",
+    "e:R29",
+    "e:R30"
+   ]
+  },
+  {
+   "id": "S-293aa5edf9",
+   "identity": {
+    "catalogue_line": "-55\u2103~+155\u2103 100mW 300\u03a9 75V Thick Film Resistor \u00b11% \u00b1100ppm/\u2103 0603 Chip Resistor - Surface Mount ROHS",
+    "chosen_by": "the incumbent (generator) meets every requirement",
+    "datasheet": {
+     "fetched": "2026-09-27T20:53:50Z",
+     "joined_by": "filed by this stream",
+     "path": "v2/vendor/passives/uniroyal-series-11cd644d.pdf",
+     "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+     "source": "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf?productCode=C25469",
+     "status": "FILED",
+     "what": "LCSC's copy of the maker's sheet (the part's pdfUrl in LCSC's product detail)"
+    },
+    "maker": "UNI-ROYAL (Uniroyal Electronics)",
+    "maker_as_catalogued": "UNI-ROYAL(Uniroyal Elec)",
+    "mpn": "0603WAF3000T5E",
+    "status": "RESOLVED"
+   },
+   "key": "resistor|value=300Ohm|package=0603|resistor_kind=general|tolerance_max_pct=5|power_min_w=0.1",
+   "order_code": {
+    "code": "C23025",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "base",
+    "jlc_read_utc": "2026-09-27T20:45:49Z",
+    "jlc_stock": 1620511,
+    "lcsc_read_utc": "2026-09-27T20:45:49Z",
+    "lcsc_stock": 1018700,
+    "need_5_kits": 39,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:R21",
+    "c:R22",
+    "c:R23",
+    "c:R31",
+    "c:R36",
+    "c:R40",
+    "p:R23"
+   ]
+  },
+  {
+   "id": "S-900262aed5",
+   "identity": {
+    "catalogue_line": "-55\u2103~+155\u2103 100mW 470\u03a9 75V Thick Film Resistor \u00b11% \u00b1100ppm/\u2103 0603 Chip Resistor - Surface Mount ROHS",
+    "chosen_by": "the incumbent (generator) meets every requirement",
+    "datasheet": {
+     "fetched": "2026-09-27T20:53:50Z",
+     "joined_by": "filed by this stream",
+     "path": "v2/vendor/passives/uniroyal-series-11cd644d.pdf",
+     "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+     "source": "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf?productCode=C25469",
+     "status": "FILED",
+     "what": "LCSC's copy of the maker's sheet (the part's pdfUrl in LCSC's product detail)"
+    },
+    "maker": "UNI-ROYAL (Uniroyal Electronics)",
+    "maker_as_catalogued": "UNI-ROYAL(Uniroyal Elec)",
+    "mpn": "0603WAF4700T5E",
+    "status": "RESOLVED"
+   },
+   "key": "resistor|value=470Ohm|package=0603|resistor_kind=general|tolerance_max_pct=5|power_min_w=0.1",
+   "order_code": {
+    "code": "C23179",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "base",
+    "jlc_read_utc": "2026-09-27T20:46:14Z",
+    "jlc_stock": 6637323,
+    "lcsc_read_utc": "2026-09-27T20:46:14Z",
+    "lcsc_stock": 4716100,
+    "need_5_kits": 23,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:R39",
+    "c:R41",
+    "c:R47",
+    "d:R33"
+   ]
+  },
+  {
+   "id": "S-8fcb029420",
+   "identity": {
+    "catalogue_line": "-55\u2103~+155\u2103 200mW 300V 470m\u03a9 Thick Film Resistor \u00b11% \u00b1200ppm/\u2103 0603 Chip Resistor - Surface Mount ROHS",
+    "chosen_by": "rule I-1: extended library, maker tier UNI-ROYAL(Uniroyal Elec), stock 5024",
+    "datasheet": {
+     "fetched": "2026-09-27T20:53:57Z",
+     "joined_by": "filed by this stream",
+     "path": "v2/vendor/passives/uniroyal-cs03w5f470lt5e.pdf",
+     "sha256": "e9f02c2005353fc79ee97c90227ab555447336a2dae7f70db6a658c4cb22cb98",
+     "source": "https://datasheet.lcsc.com/datasheet/pdf/a071500011b9a971e18c119af6e24d65.pdf?productCode=C414503",
+     "status": "FILED",
+     "what": "LCSC's copy of the maker's sheet (the part's pdfUrl in LCSC's product detail)"
+    },
+    "maker": "UNI-ROYAL (Uniroyal Electronics)",
+    "maker_as_catalogued": "UNI-ROYAL(Uniroyal Elec)",
+    "mpn": "CS03W5F470LT5E",
+    "status": "RESOLVED"
+   },
+   "key": "resistor|value=470mOhm|package=0603|resistor_kind=current sense|tolerance_max_pct=1|tcr_max_ppm=200|power_min_w=0.1",
+   "order_code": {
+    "code": "C414503",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "expand",
+    "jlc_read_utc": "2026-09-27T20:46:15Z",
+    "jlc_stock": 5024,
+    "lcsc_read_utc": "2026-09-27T20:46:16Z",
+    "lcsc_stock": 5024,
+    "need_5_kits": 7,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "c:R43"
+   ]
+  },
+  {
+   "id": "S-6b277c1b9f",
+   "identity": {
+    "catalogue_line": "-55\u2103~+155\u2103 100mW 47\u03a9 75V Thick Film Resistor \u00b11% \u00b1100ppm/\u2103 0603 Chip Resistor - Surface Mount ROHS",
+    "chosen_by": "the incumbent (generator) meets every requirement",
+    "datasheet": {
+     "fetched": "2026-09-27T20:53:50Z",
+     "joined_by": "filed by this stream",
+     "path": "v2/vendor/passives/uniroyal-series-11cd644d.pdf",
+     "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+     "source": "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf?productCode=C25469",
+     "status": "FILED",
+     "what": "LCSC's copy of the maker's sheet (the part's pdfUrl in LCSC's product detail)"
+    },
+    "maker": "UNI-ROYAL (Uniroyal Electronics)",
+    "maker_as_catalogued": "UNI-ROYAL(Uniroyal Elec)",
+    "mpn": "0603WAF470JT5E",
+    "status": "RESOLVED"
+   },
+   "key": "resistor|value=47Ohm|package=0603|resistor_kind=general|tolerance_max_pct=5|power_min_w=0.1",
+   "order_code": {
+    "code": "C23182",
+    "distributor": "LCSC (the JLCPCB parts library carries the same code)",
+    "jlc_library": "base",
+    "jlc_read_utc": "2026-09-27T20:46:19Z",
+    "jlc_stock": 1280224,
+    "lcsc_read_utc": "2026-09-27T20:46:19Z",
+    "lcsc_stock": 515000,
+    "need_5_kits": 12,
+    "status": "IN_STOCK"
+   },
+   "rows": [
+    "b:R526",
+    "c:R18"
+   ]
+  }
+ ],
+ "by_order_code": {
+  "C23138": {
+   "maker": "UNI-ROYAL (Uniroyal Electronics)",
+   "mpn": "0603WAF3300T5E",
+   "selection": "S-c62c375c58"
+  },
+  "C25804": {
+   "maker": "UNI-ROYAL (Uniroyal Electronics)",
+   "mpn": "0603WAF1002T5E",
+   "selection": "S-50018f6fcc"
+  },
+  "C4190": {
+   "maker": "UNI-ROYAL (Uniroyal Electronics)",
+   "mpn": "0603WAF2201T5E",
+   "selection": "S-099e530a08"
+  },
+  "C83152": {
+   "maker": "Diodes Incorporated",
+   "mpn": "BAT46W-7-F",
+   "selection": "S-c4d618841e"
+  }
+ },
+ "source_commit": "c08f4d5a1330be8ec5253192a7d36c5f94b3e025",
+ "source_table_sha256": "0087c3cec2aaa2e9a3997494daaf44bc0f07cd205e6ab16681877f1495eeeb04",
+ "w5ident_rules": [
+  {
+   "id": "K-1",
+   "reversal": "none needed: a coarser grouping is a view over this one",
+   "rule": "A selection is the set of per-reference rows that agree on every property that decides the part: kind, value, land, the required rating, dielectric or construction, tolerance, power, temperature coefficient, the use a value states and any named part. Rows whose requirement differs are separate selections even when one part meets both. ONE EXCEPTION, stated: an inductor whose value names a maker's part is keyed by that part number and its land, and the use the value states is left out of its key, so the XAL1010-682ME and the XAL6030-332ME selections hold rows that state a saturation current beside rows that state none; the named part is the requirement there, and its document gives the current",
+   "why": "the third checkpoint review, section 5: never merge rows whose ratings or functional constraints differ"
+  },
+  {
+   "id": "K-2",
+   "reversal": "none",
+   "rule": "A row that is two parts, a holder that is placed and what is fitted in it at build (a blade fuse in its holder, a coin cell in its holder), has TWO identities: `identity` is the placed part and `fitted` the part fitted in it, each with its own maker, part number, rating and document. The selection is as resolved as the less resolved of the two",
+   "why": "the first check of pass 1, blocking item 3: the fuse is the protective part, and an identity that names only its holder loses it"
+  },
+  {
+   "id": "V-1",
+   "reversal": "declare the net (intent rails or nodes) and the bound or the open item is replaced by the declaration",
+   "rule": "A capacitor's voltage requirement is the stated rating, or the voltage across it from the intent declarations at the project's 20 percent derate margin (derate.py), rounded up to a standard rating. A net nobody declared is BOUNDED by the highest of every source that can set its level, and only when every source is bounded: the declared voltages on an active part's other pins, a declared net reached through a resistor, ferrite, fuse, diode, switch or link, a pin level a maker's document gives (rule V-2). GROUND IS A FLOOR AND NEVER A CEILING: a ground net, or a net declared at or below 0 V, enters no maximum, and a node only ground reaches is UNBOUNDED. A SWITCH NODE IS DECLARED OR UNBOUNDED: an inductor that is not a ferrite, with either node on a Q, D or U, passes nothing; the project declares its switch nodes in the intent (v_max the larger rail the node reaches, v_min -1.0 V) and declares no ringing figure, so an undeclared one is not bounded here. A net the intent declares with no maximum is UNBOUNDED. A stated rating is never lowered and is raised only by a DECLARED voltage. An UNBOUNDED side leaves an unstated requirement OPEN (the selection is UNRESOLVED: no part is guessed) and a stated one NOT CHECKED",
+   "why": "the value strings state a rating on under a third of the capacitors; CMP-001 needs the voltage across the part. Corrected after the first check of pass 1 found ground bounding other nets at 0.0 V (83 row-nets) and a boost's switch node reading its input rail"
+  },
+  {
+   "id": "V-2",
+   "reversal": "declare the net in the intent, which always wins, or correct an entry against the document",
+   "rule": "The role of a pin is read from its maker's document filed in the tree where the netlist and the intent cannot say it (PIN_ROLES in part_identities.py): an input is not a source; an output's ceiling is the level the document gives; a pin the device holds from its supply pins tracks them; a pin driven at a level the document does not state is a source of unknown level. Three parts today: TI BQ4050 (SLUSC67B), TI BQ77207 (SLUSEG7D), PDi E2370KS0C1 (EPD Driving Circuit Rev. 02)",
+   "why": "board P's gauge and protector pins and board C's e-paper pump pins are not declared, and the premise of V-1 (a pin stays within its part's declared pins) is wrong for a gate drive above the pack"
+  },
+  {
+   "id": "F-1",
+   "reversal": "a stated voltage rating in the value",
+   "rule": "A fuse is its rated current, as the value states it, and the voltage it must interrupt: the highest voltage the intent and rule V-1 put on either of its nets. An UNBOUNDED net leaves the requirement open",
+   "why": "the first check of pass 1, blocking item 3: a fuse's rating is a deciding property"
+  },
+  {
+   "id": "F-2",
+   "reversal": "a value that names the element",
+   "rule": "A MINI blade fuse row is the Keystone 3568 holder the land is drawn for and a Littelfuse MINI element of the stated current, in the lowest voltage series whose rating meets the voltage on the fuse's nets with the 20 percent margin: MINI 297 (32 V DC) where it does, else MINI 997 (58 V DC), with the margin recorded OPEN where even that falls short. The 25 A and the 10 A elements, and the MINI and the regular ATO families, are never one part",
+   "why": "Keystone catalogue M65 page 42 lists the 3568 'for Littelfuse Mini 297 or 997 series'; SOURCES.yaml entry pack-blade-fuse-holder records the 0297025 as board P's element"
+  },
+  {
+   "id": "D-1",
+   "reversal": "bind the document in SOURCES.yaml by code and the stronger join takes over",
+   "rule": "A maker document the tree already holds is joined to a selection through v2/vendor/SOURCES.yaml, in this order, and the table records which join bound it (datasheet.joined_by): by order code, the repository's own join (review_packet.sources_index on the code fields of an entry); by the part number an entry's fitted_mpn names; by the part number in a document's title; by the part number in a document's file name. The last two are weaker and counted apart. Only an entry whose identity is MATCH counts (NOT_PINNED when joined by part number), and only a document that is in the tree",
+   "why": "the first check of pass 1, blocking item 2: the earlier join matched a code field only when it was exactly a code, so 43 selections read OWED whose document is held"
+  },
+  {
+   "id": "M-1",
+   "reversal": "the declaration's own: the row stops ordering the part, or a compatibility decision with evidence",
+   "rule": "An order code that tools/jlc-mismatch.yaml declares a mismatch on a row (owner condition 1) is never taken as that row's order code; the declaration's own words are the reason, and its two ways of lifting are the next action",
+   "why": "one declared input for jlc_certify.py, lcsc_fill.py and this table, so a re-derivation cannot put a declared substitution back"
+  },
+  {
+   "id": "N-1",
+   "reversal": "none",
+   "rule": "NOT_A_PART is copper on the board itself: a solder pad, lead lands, a solder jumper, pogo targets, probe pads. What is bought is never NOT_A_PART: a wire soldered in and a header that takes a shunt are UNRESOLVED until named",
+   "why": "the first check of pass 1, minor 2"
+  },
+  {
+   "id": "C-D1",
+   "reversal": "a stated dielectric",
+   "rule": "a crystal's load capacitor (a net shared with a crystal) is C0G",
+   "why": "the crystal's load must not move with temperature or bias"
+  },
+  {
+   "id": "C-D2",
+   "reversal": "a stated dielectric",
+   "rule": "an unstated dielectric at 1 nF and below on a 0805 or smaller land is C0G",
+   "why": "timing, filter and compensation roles at these values; C0G is the standard part there"
+  },
+  {
+   "id": "C-D3",
+   "reversal": "a stated X5R, or a hot-spot computation showing +85 C is not approached",
+   "rule": "an unstated class 2 dielectric is X7R (X8R or C0G accepted)",
+   "why": "worst inside air 62.1 C (pcb_envelope.yaml worst_inside_air_c, lid closed) plus local rise near converters leaves X5R's +85 C class limit too close"
+  },
+  {
+   "id": "C-D3b",
+   "reversal": "a land or value change by the board author",
+   "rule": "where no X7R part is made or stocked at the value, land and rating, X5R is taken and the hot-spot question is recorded OPEN on the selection",
+   "why": "the land and value are the design's; the dielectric is the only freedom left"
+  },
+  {
+   "id": "C-T",
+   "reversal": "a stated tolerance",
+   "rule": "unstated capacitor tolerance: C0G 5 percent, class 2 below 10 uF 10 percent, 10 uF and above or bulk 20 percent",
+   "why": "the widest standard grade of each class, so no row is held to a tolerance the design did not ask"
+  },
+  {
+   "id": "R-T1",
+   "reversal": "a stated tolerance",
+   "rule": "unstated resistor tolerance is 5 percent",
+   "why": "the widest standard thick-film grade; a 1 percent part meets it"
+  },
+  {
+   "id": "R-S1",
+   "reversal": "a stated coefficient",
+   "rule": "a shunt below 1 ohm with no stated temperature coefficient needs at most 200 ppm/K",
+   "why": "its reading moves at most 1.6 percent over the 80 K the envelope and self-heating span"
+  },
+  {
+   "id": "R-P",
+   "reversal": "a source that sets another screen",
+   "rule": "a shunt is rated at least twice its I^2 R at the declared peak rail current; any other resistor takes its package's standard rating, CHECKED against V^2/R only when it sits between a declared net and ground",
+   "why": "a 50 percent stress screen; no authoritative source in this tree backs the number"
+  },
+  {
+   "id": "R-P1",
+   "reversal": "a larger land or two shunts in parallel, by the board author",
+   "rule": "where no part meets twice the bound, a part rated above the bound itself is taken and the screen exceedance is recorded OPEN",
+   "why": "the land is the design's; the peak's duration decides whether the screen matters"
+  },
+  {
+   "id": "I-1",
+   "reversal": "change the ranking and re-run the resolver",
+   "rule": "among parts meeting every requirement with JLCPCB stock for five kits: the code the design already carries (generator, else lcsc_fill.py's MAP, else the certified table), then JLCPCB's basic library, then a preferred part, then a maker whose own datasheet is public (MAKER_TIER), then the highest stock",
+   "why": "continuity with earlier decisions and the least assembly cost, then documents that can be filed"
+  },
+  {
+   "id": "I-2",
+   "reversal": "none",
+   "rule": "a value that names a maker's part is that part; its order code is the catalogue line whose part number carries every character of the name (suffixes for packing only); a header's value names what it connects to and is never searched as a part",
+   "why": "the design's own words are the identity; the order code is a separate reading"
+  },
+  {
+   "id": "I-3",
+   "reversal": "the page's own reversal",
+   "rule": "identities already chosen on a page of record are applied as recorded: PROCUREMENT.md HC6-SC-7 (Wurth WR-BHD IDC headers, XFCN SMD 2x13), HC6-SC-8 (Mill-Max 0858-0-15-20-82-14-11-0), HC6-SC-10 (NiceRF SA868-V, INFERRED)",
+   "why": "one decision in one place"
+  }
+ ],
+ "what": "Stream w5ident's identities of every board C selection, and the identity its table gives four order codes board C's new parts carry, extracted from its table (fnd/w5ident, v2/ecad/tools/pcb_part_identities.yaml) by stream w5identc so the builder does not depend on the branch"
+}
