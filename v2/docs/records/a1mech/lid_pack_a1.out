@@ -38,7 +38,7 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
    cell: Samsung INR18650-35E, d 18.55 max, L 65.25 max, 50 g max (spec Ver. 1.1, 3.10 and the drawing); 3.35 Ah min, 3.60 V
    block: A06's construction (the ruled base block's): cells touching at 18.55, wrap 0.5 a side, 1.0 at each end joint along the axis;
    cells lie with their axis along X, three or four end to end (series joints at the end gaps), one layer across Y, and a second layer
-   nested in the grooves (16.065 higher) wherever the face under it allows
+   nested in the grooves of the first, 16.065 further from the ceiling (toward the face), wherever the face under it allows
    stack from the ceiling: bond 0.20 + 5052-H32 plate 2.00 + block (19.55 one layer, 35.61 two) + PORON pad 1.00 + cover 1.25
    module depth: one layer 24.00, two layers 40.06; own allowances {'bond': 0.1, 'plate': 0.13, 'standoff': 0.1, 'cover': 0.1} = 0.43 (INFERRED, none stated by a source)
    P2 (ASSUMPTION until fnd/a1elec reports): board P's outline 70 x 44, tallest part 16.17 (Keystone 3568 with its blade, packfit_west.out),
@@ -208,6 +208,20 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
    With HF in the lid, the 10 inch class (243 x 170 + lips) needs 249 in X between the guard caps (-141.94) and the QMX tray (83.20 less 1.0), 224.14 available:
    it does not fit beside the QMX set in any arrangement, pack or no pack; the 8 inch class is the one that fits with HF.
 
+   RETENTION of the module (arrangement B, every place filled: 56 cells), to the r2 set's load case: 100 g in each direction
+     module 3.46 kg (cells at 50 g max, the rest ESTIMATE): 3390 N at 100 g. Bond area under the lid plate about 46502 mm2 (the slices and bays):
+     mean stress 0.073 MPa in tension (a drop on the base pulls the module off the ceiling) or shear (on an end). DP8005's sheet gives no
+     strength on polypropylene (its 0.3 MPa is the overlap shear at which a part may be handled, a cure milestone, not a rating) and no
+     peel figure but T-peel on 0.5 mm HDPE: the bond is bounded by no held figure, OPEN at T8 (a pull test of a bonded plate on Peli's
+     polypropylene after a thermal cycle) and E1 with an accelerometer on the lid, as the r2 set's bond is.
+     the block to the plate: cell glue between cells and a fillet to the plate (adhesive TBD): 49 N per cell at 100 g (0.8 N/mm on a
+     cell's 65.25 mm contact line); the cover on eight M3 standoffs in the end bays catches the block if the glue lets go: 343 N each
+     at 100 g, against the r2 record's 1019 N for a button head on a 3.0 printed part (a 1.0 cover takes less; the cover's spans of
+     65 to 200 between bays are not a beam that carries the block: the glue is the primary hold, the cover a catch). OPEN at E1.
+     Peli states no load for its hinges or the lid's stop; the lid grows from about 1.0 to 4.9 kg: T-A1-4 (and the lid stay, section 4).
+     heater: the lid pack's own mat (9h: the charge window starts at 0 C) is not placed; a 1.0 mat between the plate and the block
+     deepens both depths by 1.0: the tightest rows (the window 3.10, the LED bar 2.40 at the worst) still meet 1.0.
+
 3. THE HINGE HARNESS (the lid pack to the base), for arrangement B
    current (ASSUMPTION for fnd/a1elec): 10 A continuous, 18 A for 60 s with the base pack isolated, 8.6 A of charge
    conductor: 12 AWG fine-strand silicone, 5.21 mOhm/m (annealed copper), OD 4.4 (INFERRED class); run 0.45 m in the lid + 0.35 m in the base;
@@ -305,6 +319,8 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
    west M4bw block end face to the end wall                                            1.0    9.68   7.38   6.38  MET (mirror: Peli's cavity and the RF entry plates are the same at both ends)
    east M4c block end face to the RF entry plate's bottom screw heads inside          1.0    5.86   3.18   1.80  MET
    west M4cw block end face to the RF entry plate's bottom screw heads inside          1.0    5.86   3.18   1.80  MET (mirror: Peli's cavity and the RF entry plates are the same at both ends)
+   east M5  pack group in Y between the east legs (block + 2.0 + board P = 205.5); west: the block alone, 133.5  1.0    3.65   1.77   0.27  OPEN: placed by hand, the legs' locator; T4
+   west M5w west block alone in Y between the west legs (inner faces |Y| 106.4), per side  1.0   39.65  37.77  36.89  MET (the block's Y place is not ruled; centred here)
    east M6  block top under B16's underside (A06 at the pessimistic base, +1.1 VHB)   1.0    4.42   3.66   2.90  MET
    west M6w block top under B16's underside parts (C33, A06's tool: packfit_west.out)  1.0    5.20   3.99    n/a  OPEN: the x2 reading is not computed by A06's tool; T4
    west RF jumpers (CASE-MARGINS 3.4 West, M17w): sites at Y [-93.0, -62.0, -31.0, 0.0, 31.0, 62.0, 93.0]; with the west block centred (Y +-66.75), 5 of 7 cables fall onto it ([-62.0, -31.0, 0.0, 31.0, 62.0]).

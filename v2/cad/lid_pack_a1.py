@@ -371,10 +371,15 @@ def base_rows():
     east = [("M4a", "block corner to Peli's R 15.88 fillet (web interior 372.4 at the corner)", 1.0, 3.71, 1.85, 0.85, "OPEN: placed by hand; T4"),
             ("M4b", "block end face to the end wall", 1.0, 9.68, 7.38, 6.38, "MET"),
             ("M4c", "block end face to the RF entry plate's bottom screw heads inside", 1.0, 5.86, 3.18, 1.80, "MET"),
+            ("M5", "pack group in Y between the east legs (block + 2.0 + board P = 205.5); west: the block alone, 133.5", 1.0, 3.65, 1.77, 0.27, "OPEN: placed by hand, the legs' locator; T4"),
             ("M6", "block top under B16's underside (A06 at the pessimistic base, +1.1 VHB)", 1.0, 4.42, 3.66, 2.90, "MET")]
     rows = []
     for r in east:
         rows.append(("east " + r[0],) + r[1:])
+        if r[0] == "M5":
+            rows.append(("west M5w", "west block alone in Y between the west legs (inner faces |Y| 106.4), per side", 1.0, 39.65, 37.77, 36.89,
+                         "MET (the block's Y place is not ruled; centred here)"))
+            continue
         if r[0] == "M6":
             rows.append(("west M6w", "block top under B16's underside parts (C33, A06's tool: packfit_west.out)", 1.0, 5.20, 3.99, None,
                          "OPEN: the x2 reading is not computed by A06's tool; T4"))
@@ -390,6 +395,12 @@ def west_jumpers():
     over = [y for y in sites if abs(y) - 2.49 / 2 < half + 1.0]
     gap_to_a = 2.0          # the block's east face 2.0 from board A's west edge (panel1450 PACK_WEST_X mirrored)
     return sites, over, gap_to_a
+
+
+def L_BAYS_AREA(a):
+    """The two end bays' plan area (they carry the plate too)."""
+    ys = min(s[2] for s in a["south"])
+    return BAY * (a["y_n"] - ys)
 
 
 def main(fp):
@@ -421,7 +432,7 @@ def main(fp):
     w("   cell: Samsung INR18650-35E, d %.2f max, L %.2f max, %.0f g max (spec Ver. 1.1, 3.10 and the drawing); %.2f Ah min, %.2f V" % (CELL_D, CELL_L, CELL_M * 1000, CELL_AH, CELL_V))
     w("   block: A06's construction (the ruled base block's): cells touching at %.2f, wrap %.1f a side, %.1f at each end joint along the axis;" % (CELL_D, WRAP, END_GAP))
     w("   cells lie with their axis along X, three or four end to end (series joints at the end gaps), one layer across Y, and a second layer")
-    w("   nested in the grooves (%.3f higher) wherever the face under it allows" % NEST_DZ)
+    w("   nested in the grooves of the first, %.3f further from the ceiling (toward the face), wherever the face under it allows" % NEST_DZ)
     w("   stack from the ceiling: bond %.2f + 5052-H32 plate %.2f + block (%.2f one layer, %.2f two) + PORON pad %.2f + cover %.2f" % (
         BOND, PLATE, CELL_D + 2 * WRAP, CELL_D + NEST_DZ + 2 * WRAP, PAD, COVER))
     w("   module depth: one layer %.2f, two layers %.2f; own allowances %s = %.2f (INFERRED, none stated by a source)" % (DEPTH1, DEPTH2, OWN, OWN_SUM))
@@ -477,6 +488,28 @@ def main(fp):
     w("   With HF in the lid, the 10 inch class (%.0f x %.0f + lips) needs %.0f in X between the guard caps (%.2f) and the QMX tray (%.2f less 1.0), %.2f available:" % (
         t10["w"], t10["h"], t10["w"] + 2 * LIP, -143.0 + PLAN_ALLOW, QMX["rect"][0], QMX["rect"][0] - 1.0 - (-143.0 + PLAN_ALLOW)))
     w("   it does not fit beside the QMX set in any arrangement, pack or no pack; the 8 inch class is the one that fits with HF.")
+    w()
+    # ---------------------------------------------------------------- retention
+    items = mass_items(aB, 9.0, (0.0, 0.0, 55.0))
+    mod_m = sum(i[2] for i in items if i[0].startswith(("lid pack cells", "lid plate", "cover", "nickel", "wrap", "P2")))
+    area = sum((x1 - x0) * (aB["y_n"] - ys) for (x0, x1, ys, j) in aB["south"]) + 2 * L_BAYS_AREA(aB)
+    F = mod_m * 100.0 * 9.81
+    w("   RETENTION of the module (arrangement B, every place filled: %d cells), to the r2 set's load case: 100 g in each direction" % len(aB["cells"]))
+    w("     module %.2f kg (cells at 50 g max, the rest ESTIMATE): %.0f N at 100 g. Bond area under the lid plate about %.0f mm2 (the slices and bays):" % (mod_m, F, area))
+    w("     mean stress %.3f MPa in tension (a drop on the base pulls the module off the ceiling) or shear (on an end). DP8005's sheet gives no" % (F / area))
+    w("     strength on polypropylene (its 0.3 MPa is the overlap shear at which a part may be handled, a cure milestone, not a rating) and no")
+    w("     peel figure but T-peel on 0.5 mm HDPE: the bond is bounded by no held figure, OPEN at T8 (a pull test of a bonded plate on Peli's")
+    w("     polypropylene after a thermal cycle) and E1 with an accelerometer on the lid, as the r2 set's bond is.")
+    w("     the block to the plate: cell glue between cells and a fillet to the plate (adhesive TBD): %.0f N per cell at 100 g (%.1f N/mm on a" % (
+        CELL_M * 100 * 9.81, CELL_M * 100 * 9.81 / CELL_L))
+    w("     cell's %.2f mm contact line); the cover on eight M3 standoffs in the end bays catches the block if the glue lets go: %.0f N each" % (
+        CELL_L, len(aB["cells"]) * CELL_M * 100 * 9.81 / 8))
+    w("     at 100 g, against the r2 record's 1019 N for a button head on a 3.0 printed part (a 1.0 cover takes less; the cover's spans of")
+    w("     65 to 200 between bays are not a beam that carries the block: the glue is the primary hold, the cover a catch). OPEN at E1.")
+    w("     Peli states no load for its hinges or the lid's stop; the lid grows from about 1.0 to %.1f kg: T-A1-4 (and the lid stay, section 4)." % (
+        sum(i[2] for i in items if i[1] == "lid")))
+    w("     heater: the lid pack's own mat (9h: the charge window starts at 0 C) is not placed; a 1.0 mat between the plate and the block")
+    w("     deepens both depths by 1.0: the tightest rows (the window 3.10, the LED bar 2.40 at the worst) still meet 1.0.")
     w()
     # ---------------------------------------------------------------- harness
     w("3. THE HINGE HARNESS (the lid pack to the base), for arrangement B")
