@@ -202,3 +202,5 @@ line with an em or en dash is the script's own dash guard constant (n6); the mes
 * **Validators:** 0 errors, 0 warnings. Renderers current. `claims_check` PASS of 91.
 * **Tests:** 82 passed, 0 failed.
 * **Files:** 52 changed, all explained. Filed s120 checks: 4 of 4 free of local paths.
+
+<!-- Filed from the checker's report; local paths replaced by <scratch>/ and <local path> (records/int15/apply_check15*.py). Where the report itself spoke of that substitution, its words read garbled. -->

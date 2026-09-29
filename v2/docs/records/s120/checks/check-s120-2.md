@@ -111,3 +111,5 @@ Blocking 1. Minor 7. Round 1 items answered: B1, B2, B3 closed; m1 to m11 answer
 Facts 21 of 21 reproduced by an independent reader. Mutants 4 of 4 FAIL (mine). Registry copies 4 of 4 at 0 errors and 0
 warnings; S-124 opened on both lines checked; `closed_by` 40 characters. Figures: every number of `.out` sections 2 to 11
 re-derived, all agree at the printed decimals.
+
+<!-- Filed from the checker's report; local paths replaced by <scratch>/ and <local path> (records/int15/apply_check15*.py). Where the report itself spoke of that substitution, its words read garbled. -->

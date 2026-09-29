@@ -3620,6 +3620,14 @@ open_items:
       sentences above false at their own dates, so they close only corrected. v2/docs/records/s122/close_s122.py refuses
       unless the inventory declares that it reads part numbers, the five sentences are corrected, and the filed check
       names check-int15-1 and was committed on a line that carries 097d2517.
+      Correction at set 14's third check (v2/docs/records/int15/checks/check-int15-3.md, blocking B1): the previous
+      sentence overstated the closing script. What v2/docs/records/s122/close_s122.py checks, since
+      v2/docs/records/int15/apply_check15c_fixes.py: the finder returns a maker's part number from probe sentences that
+      name only one; verdicts.out asserts board B's U3 or U4 as TS3DV642, board E's U6 as LM5069, board D's U6 as
+      PCM2912A and board B's J_M2C2 as 2199119; V2-SPEC.md's B16, APRS and E6 rows and OPERATING-ENVELOPE.md's TRACO and
+      Amphenol rows no longer name the parts check-int15-1 found; and the filed check names check-int15-1 and was
+      committed on a line that carries 097d2517. Confirming that each correction is true in substance remains the filed
+      check's job. check-int15-2 found lines 82 and 86 false at their stated date; lines 47, 77 and 83 carry no date.
   - id: S-123
     class: SESSION
     status: OPEN

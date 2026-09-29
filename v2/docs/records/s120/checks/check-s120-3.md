@@ -113,3 +113,5 @@ Blocking 0. Minor 4 (r1 to r3 on the work, r4 a correction of my own round 2 fix
 n7 answered. Facts 20 of 20 reproduced by an independent reader. Fixtures: 8 FAIL as intended, 3 PASS as intended,
 including the added CACN. Registry copies 4 of 4 at 0 errors and 0 warnings; S-124 opened on both registries; `closed_by`
 40 characters. Every figure of `.out` sections 2 to 11 re-derived; all agree at the printed decimals.
+
+<!-- Filed from the checker's report; local paths replaced by <scratch>/ and <local path> (records/int15/apply_check15*.py). Where the report itself spoke of that substitution, its words read garbled. -->

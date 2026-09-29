@@ -152,3 +152,5 @@ Blocking 3. Minor 11. Circuit facts 18 of 18 reproduced by an independent reader
 sha256 match. Registry runs 2 lines (S-123 on main, S-124 on set 13), 4 of 4 copies at 0 errors and 0 warnings, 4 refusals
 reproduced. Maker pages read 32 (LM5176 10, BQ25731 16, FETs 4, LM5069 1, Littelfuse 1). Every figure of `.out` sections 2
 to 11 re-derived; all agree at the printed decimals except the Q7 rows of B1.
+
+<!-- Filed from the checker's report; local paths replaced by <scratch>/ and <local path> (records/int15/apply_check15*.py). Where the report itself spoke of that substitution, its words read garbled. -->

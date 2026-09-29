@@ -20,6 +20,7 @@ Branch `fnd/int15`, from main `b874b744`. The checks under `checks/` are AI revi
 |---|---|---|
 | `checks/check-int15-1.md` (the integration check at `1f3dd306`) | not mergeable. B1: five sentences in CFL-016's scope name parts no generator carries, and S-122's inventory does not read part numbers. B2: CFL-016 is not bound to three files its reading rests on. Eight minors. | the rewind; `apply_check15_fixes.py` (B1, B2, m4, m5, m7 into S-122); this README (m1, m2, m6, m8) |
 | `checks/check-int15-2.md` (the re-check at `097d2517`) | not mergeable. B1: `close_s122.py` never read S-122's extension and would close it again on the old check, and the extension let a false sentence close as dated. Six minors. | `apply_check15b_fixes.py` (the gate in `close_s122.py`, S-122's title on dated sentences, n3 to n6), this README (n1, n2) |
+| `checks/check-int15-3.md` (the third check, at `f21fc8f8`) | not mergeable. B1: S-122's sentence said the gate confirms the five corrections, while it checked five strings and a declared token. Six minors. | `apply_check15c_fixes.py` (the gate made an instrument: a finder probe for part numbers, verdict assertions naming the generated parts, row-level checks, the check path resolved; S-122 states exactly what the gate checks and that substance is the filed check's job; S-122 appended at the end of closed_items; the index row; a filing note at the end of every filed check) |
 
 ## Carried from check-int15-1
 

@@ -56,3 +56,5 @@ None new.
 Blocking 0. Minor 0. CHECK-3's r1, r2, r3 answered (r4 was mine). Clauses of the round 3 closing test lost: 0; clauses
 added: 3. `.out` reprinted byte for byte. Registry copies 4 of 4 at 0 errors and 0 warnings; S-124 opened on both;
 `closed_by` 40 characters.
+
+<!-- Filed from the checker's report; local paths replaced by <scratch>/ and <local path> (records/int15/apply_check15*.py). Where the report itself spoke of that substitution, its words read garbled. -->

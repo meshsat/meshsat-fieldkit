@@ -353,3 +353,5 @@ no em or en dash in added text or in messages. No vendor, held, IBIS or Claude f
 * **Validators:** 0 errors, 0 warnings. Renderers current. `claims_check` PASS of 91.
 * **Tests:** 82 passed, 0 failed.
 * **Files:** 44 changed, all explained.
+
+<!-- Filed from the checker's report; local paths replaced by <scratch>/ and <local path> (records/int15/apply_check15*.py). Where the report itself spoke of that substitution, its words read garbled. -->
