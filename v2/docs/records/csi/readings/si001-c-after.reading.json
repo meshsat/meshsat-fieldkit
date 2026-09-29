@@ -75,7 +75,7 @@
   },
   "board_table": {
    "path": "tools/boards/c.json",
-   "sha256_16": "3defffcb6cc95d47"
+   "sha256_16": "64286b9916e65fe7"
   },
   "critical_k": 6,
   "document_1": {
@@ -255,7 +255,7 @@
  "tool": "edge_length",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "a26a8b7679616fa5"
+  "tools_tree_sha": "6032eb028331c477"
  },
  "verdict": "INCONCLUSIVE",
  "version": "unknown",
