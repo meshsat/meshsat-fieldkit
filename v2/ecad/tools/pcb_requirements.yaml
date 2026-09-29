@@ -3517,15 +3517,16 @@ open_items:
     class: SESSION
     status: OPEN
     title: >-
-      (set 9's AI check, minor item M10) Board A's charger U3 (BQ25731) switches at the frequency its PWM_FREQ bit
-      selects: 400 kHz at power-on, 800 kHz when firmware clears it (SLUSE66A, ChargeOption0). The maker recommends
-      4.7 uH at 400 kHz and 2.2 uH at 800 kHz; board A fits 3.3 uH (L2, XAL6030-332ME) and no firmware setting is
-      declared in HW-FW-CONTRACT.md. The inductor ripple current and the EMC sheet's frequency follow from the
-      choice. Closes when the setting is declared in the firmware contract and L2 is shown against the maker's
-      ripple guidance at that frequency (or changed by board A's writer), with the EMC row updated to match.
-    disposition: LAYOUT_STAGE
-    disposition_why: board A's charger design choice, decided with its firmware contract before board A's layout; no
-      schematic-phase record rests on the frequency.
+      (set 10's AI check, blocking item B1; round 4's finding O-24, records/r4a/r4-open-items.md) Board A's charger U3
+      (BQ25731) reads its switching frequency and its inductance from the resistor on its IADPT pin before the converter
+      starts (TI SLUSE66A 9.3.11 and Table 9-4, printed page 27: 169 kOhm, 3 percent or better, for 3.3 uH at 800 kHz;
+      191 or 187 kOhm for 4.7 uH at 400 kHz). Board A's IADPT net carries only U3 pin 8 and TP19: no resistor, and not
+      the 100 pF capacitor the pin table asks for, so the frequency and inductance the drawn circuit starts with are not
+      established. Its COMP1 and COMP2 networks are not those of the datasheet's compensation table for either
+      frequency, and PWM_FREQ's power-on default (1b, 400 kHz) is the frequency TI pairs with 4.7 uH, where board A fits
+      3.3 uH (L2). Closes when board A's writer draws the IADPT resistor and capacitor for the chosen inductor and
+      frequency and the compensation networks from the datasheet's table, the firmware contract declares PWM_FREQ to
+      match, and the EMC sheet's U3 row carries that frequency.
 closed_items:
   - id: S-89
     closed_by: commit aaed6daa4434f2ae94331cdafb3134056fb1eb97
@@ -6440,7 +6441,7 @@ records:
       decisions: [31, 34]
     rule_coverage: PARTIAL
     rulings: [D-16]
-    waits_on: [S-106, S-107, S-111]
+    waits_on: [S-106, S-107, S-111, S-117]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: BLOCKER
