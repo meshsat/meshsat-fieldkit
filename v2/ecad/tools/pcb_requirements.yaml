@@ -276,7 +276,7 @@ baseline_reviews:
   - "v2/docs/reviews/TARGETED-RECHECK-LAYER-3-2026-09-27.md@7831358b96b6f5ca"
 sources_read_at: 08f3665a
 needs_document: "v2/docs/CONOPS.md"
-needs_document_sha256: 6cb7b241cb84d7290caffa74df2622c64222dd66a2de66693e480e3a18e44281
+needs_document_sha256: b2c55e289da2dcbca344d106519fbf0754cef44a8778b90c696c6222013a8028
 companion_documents: []
 
 # The needs of CONOPS section 2, quoted. The validator compares each statement with the needs table of the
@@ -2544,6 +2544,10 @@ open_items:
       87b69472ac83ca5a): D4E-F1, D4E-F2, L4 on U536 and SD-EMC-2's back-feed into the RockBLOCK, the E22 and both E72
       are drawn and closed at desk; what stays in this item is the Iridium 9704's response to its ENABLE (a maker's
       document owed, or bench E-04) and every bench row.
+      At set 12's final netlist (board B 3ef9b8c49a01b728) that read-back fails the three values the set 12 check's
+      minors changed on purpose (R238, R527, R532); stream rf2walk2's v2/docs/records/rf2walk/tools/readback_chk12.py
+      carries them and reads every check holding on it (29 September 2026,
+      v2/docs/records/int13/apply_check13_fixes.py).
   - id: S-02
     class: SESSION
     status: OPEN
@@ -4215,8 +4219,8 @@ closed_items:
   - id: S-117
     closed_by: commit 230fdd65949524d275ea3d9dbe4d8cfd1c34c711
     closing_evidence: >-
-      Board A regenerated with v2/docs/records/s117/apply_gen_sch_a_s117.py (decision 56) and committed by
-      230fdd65949524d275ea3d9dbe4d8cfd1c34c711: v2/ecad/pcb-a-power-a23/out/pcb-a-power.net (sha256/16 6c40250c47195ebb)
+      Board A regenerated with v2/docs/records/s117/apply_gen_sch_a_s117.py (decision 56) and carried at
+      230fdd65949524d275ea3d9dbe4d8cfd1c34c711 (first committed at 3d3e32d6): v2/ecad/pcb-a-power-a23/out/pcb-a-power.net (sha256/16 6c40250c47195ebb)
       is this tree's generator's by sch_prov and v2/docs/records/s117/readback_s117.py reads 23 of 23 checks PASS on it:
       L2 4.7uH XAL1010-472ME (Isat 25.4 A) on L_Coilcraft_XAL1010-XXX between CH_SW1 and CH_SW2; IADPT holds U3 pin 8,
       TP19, R219 191k 1% to GND and C233 33p to GND (SLUSE66A Table 9-4, printed page 27; the pin table, page 6);
@@ -4240,8 +4244,8 @@ closed_items:
   - id: S-118
     closed_by: commit 230fdd65949524d275ea3d9dbe4d8cfd1c34c711
     closing_evidence: >-
-      Board A regenerated with v2/docs/records/s117/apply_gen_sch_a_fets_s117.py (decision 57) and committed by
-      230fdd65949524d275ea3d9dbe4d8cfd1c34c711: v2/ecad/pcb-a-power-a23/out/pcb-a-power.net (sha256/16 6c40250c47195ebb)
+      Board A regenerated with v2/docs/records/s117/apply_gen_sch_a_fets_s117.py (decision 57) and carried at
+      230fdd65949524d275ea3d9dbe4d8cfd1c34c711 (first committed at 3d3e32d6): v2/ecad/pcb-a-power-a23/out/pcb-a-power.net (sha256/16 6c40250c47195ebb)
       is this tree's generator's by sch_prov and v2/docs/records/s117/readback_s117.py --fets reads 8 of 8 FET checks
       PASS on it: Q7 CSD17578Q5A 30 V N-FET, Q8 CSD17577Q5A 30 V N-FET, Q9 CSD17577Q5A 30 V N-FET and Q10 CSD17577Q5A 30
       V N-FET, each on the PowerPAK SO-8 land with its pads on the nets it had; v2/ecad/tools/intent_checks.py's
@@ -4903,8 +4907,13 @@ records:
           (owner rulings D-19 and D-20) and one paragraph appended to section 3's M1 (the owner's instruction that M1
           and REQ-072 stand as written); every other section byte-identical by heading, the sections this record cites
           among them. Rebound from 6ebe6760c4312bca to 6cb7b241cb84d729; this entry changes no result.
+      - >-
+          v2/docs/CONOPS.md re-read at integration set 12 (apply_check13_fixes, 6cb7b241cb84d729 to b2c55e289da2dcbc):
+          parsed as a diff, the file changed only in section 4b's RockBLOCK 9704 and E22-900M30S rows (lines 411 and
+          412), corrected to board B's set 12 netlist 3ef9b8c49a01b728. This record reads section 2a's list of critical
+          peripherals, which the diff does not touch; rebound to b2c55e289da2dcbc. No result changes.
     evidence_bound_to:
-      - "v2/docs/CONOPS.md@6cb7b241cb84d729"
+      - "v2/docs/CONOPS.md@b2c55e289da2dcbc"
       - "v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8"
       - "v2/docs/V2-SPEC.md@e1fdcebe8638e471"
     release_effect: BLOCKER
@@ -7336,6 +7345,12 @@ records:
           touches were computed from the generator's changed lines and both netlists (67 parts and nets). The PoE and
           USB-C outlets' interlock and the PA key path are untouched; set 12 changes only the charger U3's power stage,
           compensation and the census declarations of IADPT and CH_COMP1; rebound. No result changes.
+      - >-
+          Correction (the independent integration check of set 12, minor m2): the entry written by
+          apply_rebind_after_circuit a 6c40250c47195ebb names the circuit change of stream d4emcon's FEA-002 remedies;
+          board A's change at set 12 is stream s117's (decisions 56 and 57: R219, C233 to C235 and R220 added on IADPT
+          and the compensation networks; C26, C27, L2, Q7 to Q10 and R25 changed). The parsed comparison and the reason
+          in that entry stand (v2/docs/records/int13/apply_check13_fixes.py).
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_a.py@6a136feec6c9cf4e"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb"
@@ -8193,6 +8208,12 @@ records:
           touches were computed from the generator's changed lines and both netlists (67 parts and nets). The USB-C CC
           ESD array by the connector is untouched; set 12 changes only the charger U3's power stage and compensation;
           rebound. No result changes.
+      - >-
+          Correction (the independent integration check of set 12, minor m2): the entry written by
+          apply_rebind_after_circuit a 6c40250c47195ebb names the circuit change of stream d4emcon's FEA-002 remedies;
+          board A's change at set 12 is stream s117's (decisions 56 and 57: R219, C233 to C235 and R220 added on IADPT
+          and the compensation networks; C26, C27, L2, Q7 to Q10 and R25 changed). The parsed comparison and the reason
+          in that entry stand (v2/docs/records/int13/apply_check13_fixes.py).
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_a.py@6a136feec6c9cf4e"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb"
@@ -9721,6 +9742,12 @@ records:
           L2, Q10, Q7, Q8, Q9, R25; changed nets CH_COMP1, CH_COMP2, CH_COMP2C, GND, IADPT. EMCON_HW's pull-down R102
           and the slot enables are untouched; set 12 changes only the charger U3's power stage and compensation; rebound
           to 6c40250c47195ebb. No result changes.
+      - >-
+          Correction (the independent integration check of set 12, minor m2): the entry written by
+          apply_rebind_after_circuit a 6c40250c47195ebb names the circuit change of stream d4emcon's FEA-002 remedies;
+          board A's change at set 12 is stream s117's (decisions 56 and 57: R219, C233 to C235 and R220 added on IADPT
+          and the compensation networks; C26, C27, L2, Q7 to Q10 and R25 changed). The parsed comparison and the reason
+          in that entry stand (v2/docs/records/int13/apply_check13_fixes.py).
     evidence_bound_to:
       - "v2/docs/PANEL.md@4647782f5aca7c13"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb"
@@ -10366,6 +10393,24 @@ records:
           6c40250c47195ebb); board C's inhibit_chain_c reads PASS of 6 on netlist 87b69472ac83ca5a. This entry rebinds
           the page and re-decides nothing: the result stands as the predicate of this integration's entry set it, bound
           to the file at dbd82cddb8bcfdd4.
+      - >-
+          Correction (the independent integration check of set 12, minor m1): the reason written by
+          apply_rebind_after_circuit a 6c40250c47195ebb says the L2 this record's evidence names is board D's. The only
+          L2 in this record's text is feasibility/EMCON.md's item L2, the line-hold limitation (section 7's L2 and L4
+          rows), not an inductor; board A's charger inductor L2, which set 12 replaced, is not what this record rests
+          on. The conclusion of that entry stands (v2/docs/records/int13/apply_check13_fixes.py).
+      - >-
+          Correction (the independent integration check of set 12, minor m2): the entry written by
+          apply_rebind_after_circuit a 6c40250c47195ebb names the circuit change of stream d4emcon's FEA-002 remedies;
+          board A's change at set 12 is stream s117's (decisions 56 and 57: R219, C233 to C235 and R220 added on IADPT
+          and the compensation networks; C26, C27, L2, Q7 to Q10 and R25 changed). The parsed comparison and the reason
+          in that entry stand (v2/docs/records/int13/apply_check13_fixes.py).
+      - >-
+          Completing the page-rebind entry of set 12 (the independent integration check of set 12, minor m3): besides
+          stream d4emcon's remedies and the walk's rounds, the branch carries stream s117 (decisions 56 and 57, board A
+          regenerated and read back 35 of 35), the census node declarations (EMCON_HW on C; IADPT and CH_COMP1 on A;
+          ZBA_RXD, ZBB_RXD and LED_ACT_A1 to A3 on B), the closes of S-117 and S-118 and the opening of S-119 and S-120
+          (v2/docs/records/int13/apply_check13_fixes.py).
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb"
@@ -12128,6 +12173,12 @@ records:
           -10.0 to 60.0). The review D-09 asks for before the pack board is released is still not engaged, and a
           re-render changes nothing of that; this entry rebinds the page and re-decides nothing, so the record stays
           INCONCLUSIVE, bound to the file at dbd82cddb8bcfdd4.
+      - >-
+          Completing the page-rebind entry of set 12 (the independent integration check of set 12, minor m3): besides
+          stream d4emcon's remedies and the walk's rounds, the branch carries stream s117 (decisions 56 and 57, board A
+          regenerated and read back 35 of 35), the census node declarations (EMCON_HW on C; IADPT and CH_COMP1 on A;
+          ZBA_RXD, ZBB_RXD and LED_ACT_A1 to A3 on B), the closes of S-117 and S-118 and the opening of S-119 and S-120
+          (v2/docs/records/int13/apply_check13_fixes.py).
     evidence_bound_to:
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@20c7b0795593d761"
       - "v2/ecad/tools/gen_sch_p.py@740817ada5c8e14a"
@@ -12555,6 +12606,12 @@ records:
           touches were computed from the generator's changed lines and both netlists (67 parts and nets). The charger's
           power stage, frequency row and compensation change (S-117, decisions 56 and 57), not its thermistor input, the
           gauge's thresholds or the shedding path this reading rests on; rebound. No result changes.
+      - >-
+          Correction (the independent integration check of set 12, minor m2): the entry written by
+          apply_rebind_after_circuit a 6c40250c47195ebb names the circuit change of stream d4emcon's FEA-002 remedies;
+          board A's change at set 12 is stream s117's (decisions 56 and 57: R219, C233 to C235 and R220 added on IADPT
+          and the compensation networks; C26, C27, L2, Q7 to Q10 and R25 changed). The parsed comparison and the reason
+          in that entry stand (v2/docs/records/int13/apply_check13_fixes.py).
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_e.py@f846e138cb53a8c6"
       - "v2/ecad/tools/gen_sch_a.py@6a136feec6c9cf4e"
@@ -13619,11 +13676,30 @@ records:
           to 44107103b49d036c): parsed against main's file, every decision it holds is present and identical, and
           exactly two are added (56, 57: stream s117's charger frequency row and FETs, board A); no decision this record
           reads changed; rebound. No result changes.
+      - >-
+          v2/docs/CONOPS.md re-read at integration set 12 (apply_check13_fixes, 6cb7b241cb84d729 to b2c55e289da2dcbc):
+          parsed as a diff, the file changed only in section 4b's RockBLOCK 9704 and E22-900M30S rows (lines 411 and
+          412), corrected to board B's set 12 netlist 3ef9b8c49a01b728. Correction (the independent integration check of
+          set 12, blocking B1): the set 12 entry on board B's netlist (apply_rebind_after_circuit b 3ef9b8c49a01b728 and
+          its earlier b entries) gave as its reason that the published contracts still describe the circuit, which was
+          false for this section: its E22 row said TXEN is driven by slot 3 and is not on the line, where set 12 gates
+          it (U12 pin 7 on LORA_TXEN_G = LORA_TXEN AND LORA_GO, U546; LORA_GO a copy of E22_EN, U544; E22_EN = EMCON_HW
+          AND LORA_ON, U504), and its RockBLOCK row said ENABLE is driven only by the firmware expander U6, out of date
+          on main since stream w4b's U536 and further by set 12's U543 and U537. Both rows now name those gates, each
+          asserted on the netlist by this script before the text was written; the section's other rows were read against
+          the same netlist by the check. Re-read: every named document describes the circuit as generated; rebound to
+          b2c55e289da2dcbc. The result stands.
+      - >-
+          Correction (the independent integration check of set 12, minor m2): the entry written by
+          apply_rebind_after_circuit a 6c40250c47195ebb names the circuit change of stream d4emcon's FEA-002 remedies;
+          board A's change at set 12 is stream s117's (decisions 56 and 57: R219, C233 to C235 and R220 added on IADPT
+          and the compensation networks; C26, C27, L2, Q7 to Q10 and R25 changed). The parsed comparison and the reason
+          in that entry stand (v2/docs/records/int13/apply_check13_fixes.py).
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8"
       - "v2/docs/PANEL.md@4647782f5aca7c13"
-      - "v2/docs/CONOPS.md@6cb7b241cb84d729"
+      - "v2/docs/CONOPS.md@b2c55e289da2dcbc"
       - "v2/docs/V2-SPEC.md@e1fdcebe8638e471"
       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
       - "v2/docs/TEST-PLAN.md@ae57da0b57e214f7"
@@ -15664,9 +15740,20 @@ records:
           touches were computed from the generator's changed lines and both netlists (67 parts and nets). The charger's
           cell-count strap stays 4S and the loads stay on VSYS; set 12 changes its inductor, FETs and compensation
           (S-117), which HW-FW-CONTRACT.md's FW-A17 and V-A05 now record; rebound. No result changes.
+      - >-
+          v2/docs/CONOPS.md re-read at integration set 12 (apply_check13_fixes, 6cb7b241cb84d729 to b2c55e289da2dcbc):
+          parsed as a diff, the file changed only in section 4b's RockBLOCK 9704 and E22-900M30S rows (lines 411 and
+          412), corrected to board B's set 12 netlist 3ef9b8c49a01b728. This record reads section 4's Charging row,
+          which the diff does not touch; rebound to b2c55e289da2dcbc. No result changes.
+      - >-
+          Correction (the independent integration check of set 12, minor m2): the entry written by
+          apply_rebind_after_circuit a 6c40250c47195ebb names the circuit change of stream d4emcon's FEA-002 remedies;
+          board A's change at set 12 is stream s117's (decisions 56 and 57: R219, C233 to C235 and R220 added on IADPT
+          and the compensation networks; C26, C27, L2, Q7 to Q10 and R25 changed). The parsed comparison and the reason
+          in that entry stand (v2/docs/records/int13/apply_check13_fixes.py).
     evidence_bound_to:
       - "v2/docs/PANEL.md@4647782f5aca7c13"
-      - "v2/docs/CONOPS.md@6cb7b241cb84d729"
+      - "v2/docs/CONOPS.md@b2c55e289da2dcbc"
       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
       - "v2/ecad/tools/gen_sch_a.py@6a136feec6c9cf4e"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb"
@@ -16518,6 +16605,12 @@ records:
           unconnected-(U552-NC-Pad1), unconnected-(U553-NC-Pad1), unconnected-(U554-NC-Pad4). No new part is a one-way
           surge clamp or a rectifier on board B; the pin-direction reading of this record's tool did not move at the
           re-take; rebound to 3ef9b8c49a01b728. No result changes.
+      - >-
+          Correction (the independent integration check of set 12, minor m2): the entry written by
+          apply_rebind_after_circuit a 6c40250c47195ebb names the circuit change of stream d4emcon's FEA-002 remedies;
+          board A's change at set 12 is stream s117's (decisions 56 and 57: R219, C233 to C235 and R220 added on IADPT
+          and the compensation networks; C26, C27, L2, Q7 to Q10 and R25 changed). The parsed comparison and the reason
+          in that entry stand (v2/docs/records/int13/apply_check13_fixes.py).
     evidence_bound_to:
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728"
