@@ -14,7 +14,8 @@
       and appends to S-122 exactly what the gate checks, and that confirming each correction's substance is the filed
       check's job (p3's wording corrected in the same sentence).
   p4  close_s122.py appends S-122 at the END of closed_items.
-  p5, p6  the records index row's word "enforced"; a filing note heading every filed check of int15 and s120.
+  p5, p6  the records index row's word "enforced"; a filing note ending every filed check of int15 and s120 (this
+          line said heading; corrected by stream s122, round 4, the fourth check of set 14, q4).
 Refuses a second run. Run: python3 <this file>."""
 import ast, os, re, subprocess, sys
 

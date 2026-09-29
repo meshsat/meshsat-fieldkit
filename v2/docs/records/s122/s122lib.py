@@ -9,8 +9,9 @@ It reads, and writes nothing:
     quotes and paragraphs, then into sentences;
   * the scope: which sections of each document are CFL-016's (its statement, its notes and the brief of stream s122).
 
-A sentence is inventoried when it names a part reference, a net, a board, a rail, a gate function or a generator
-line (`names()`); the finder is a parser of tokens, never a judge of the sentence."""
+A sentence is inventoried when it names a part reference, a net, a board, a rail, a gate function, a generator line
+or (round 4, set 14's check-int15-1 B1) a maker's part number (`names()`, key `parts`, found by `partnos()`); the
+finder is a parser of tokens, never a judge of the sentence."""
 import hashlib, os, re, subprocess, sys
 
 sys.dont_write_bytecode = True
@@ -252,15 +253,138 @@ def names(s, nets):
     topic = ["EMCON"] if TOPIC.search(body) else []
     counts = sorted({m.group(0) for m in COUNT.finditer(body)})
     return {"refs": refs, "nets": sorted(nn), "boards": boards, "rails": rails, "gates": gates, "gens": gens,
-            "topic": topic, "counts": counts}
+            "topic": topic, "counts": counts, "parts": partnos(body, nets)}
 
 
-ABSENT = re.compile(r"\b(absent|owed|not drawn|not connected)\b", re.I)
+# round 3 read four words; round 4 (check-s122-3 m2: other wordings of the same class) reads the wordings the check swept
+ABSENT = re.compile(r"\b(absent|owed|not drawn|not connected|not gated|has no|have no|does not have|do not have|nothing does|"
+                    r"lacks?|no path|no hardware|only through|driven only|in the schematic|until [^.;]{0,80}generators?)\b", re.I)
+
+# ------------------------------------------------------------------ makers' part numbers (round 4, widened in round 5)
+# A maker's part number is read by its shape, never from a list of known parts. Round 5 (check-s122-4 m1) widened the
+# shapes to the families the round 4 finder missed (TI's SN74 single gates, BAT46W, BAT54, USBLC6-2SC6, E72-2G4M20S1E,
+# LIS3MDL, Si2300DS, all-digit numbers), and the closing gate probes the finder with every semiconductor part number the
+# six netlists' values carry. A token (letters, digits, - and /, and a dot between two digits) is a part number when:
+#   * it is letter-led, has no lower-case letter, is five characters or more and holds a run of three digits (round 4's
+#     rule: TMDS341A, LM5069, D38999/20, M39029/56-352);
+#   * it is letter-led, has no lower-case letter, holds two digits or more and two capitals or more, and is five
+#     characters or more (SN74LVC1G08, BAT46W, BAT54, USBLC6-2SC6, E72-2G4M20S1E, SMBJ5.0A, G6K-2F-Y) or four with two
+#     digits (XT60, SS14);
+#   * it is letter-led, has no lower-case letter, holds four capitals or more and a digit that is not its last character,
+#     and is six characters or more (LIS3MDL, B2B-XH-A);
+#   * it is letter-led and mixes cases, with two capitals or more and three digits or more (Si2300DS, nRF52840,
+#     IRLML6344TRPbF);
+#   * it is digit-led, holds a capital and four digits or more and no dot (74LVC1G157GW, 2N7002, 5636ADKB-2V; not the
+#     table 516.8-IX);
+#   * it is digit-only with a dash or slash and a run of six digits (2199119-3, 1-2199119-5, 132134-11), or digit-only of
+#     seven digits or more right after a capitalised maker's word (Molex 5023520600, Wuerth 692122030100);
+#   * it is a series word of two to four capitals, a space, and a digit-led token with a dash and three digits or more
+#     (TEN 40-2412WIN, APEM 5636ADKB-2V; not "FOR 1-CELL");
+#   * it has one of these shapes in the file name of a maker's sheet the sentence cites
+#     (`m2/amphenol-mdt420b01001-m2-b-key.pdf` gives MDT420B01001): a row's source names the part the row relies on.
+# Not part numbers: a token with no capital (a commit, a unit, a value), a registry, finding or standard identifier
+# (CFL-016, MIL-STD-810, AEC-Q100, W3-F01, R8P-02, F-DEC40), a designator (TP10), a pin, an interface, an ingress code,
+# a list of bands (GPIO19, USB3-0, SPI3, IP67, L1/L2/L5/E6), a TI literature number (SLUSE66A), a month code (JUN26), a
+# series and pitch (XH2.5), a token led by a
+# standard body (IEC, EN, ISO, UN, ...), a pure range of two numbers of up to four digits (144-146), a file path, a URL,
+# a commit and a generator citation (removed before the scan).
+STDBODY = {"IEC", "EN", "ISO", "UN", "MIL", "IPC", "ECSS", "ETSI", "SAE", "NATO", "ANSI", "IEEE", "JEDEC", "RTCA", "EIA",
+           "UL", "CISPR", "ITU", "IP", "DO"}
+PN_STRIP = re.compile(r"https?://\S+|[\w./-]+\.(?:py|md|yaml|json|out|net|pdf|kicad_\w+|csv|txt|sh|step|stp)(?::\d+(?:-\d+)?)?"
+                      r"|\b(?=[0-9a-f]*[a-f])[0-9a-f]{7,40}\b")   # a commit holds a letter a to f; 2199119 is a part
+PN_TOK = re.compile(r"(?<![\w/.+-])([A-Za-z0-9](?:[A-Za-z0-9/-]|(?<=\d)\.(?=\d))*[A-Za-z0-9])(?![\w/+-]|\.\w)")
+PN_ID = re.compile(r"^(?:[A-Z]+(?:-[A-Z]+)*-[A-Z]?\d+[a-z]?|[A-Z]\d[A-Z]*-[A-Z]?\d+)$")
+PN_PIN = re.compile(r"^(?:GPIO|IO|PIO|AIN|ADC|P[A-K])\d+$|^(?:USB|PCIE|HDMI|UART|SPI|I2C|SDIO|CAN|ANT|USIM|SIM)\d+(?:-\d+)?$"
+                    r"|^IP\d{2}$"                                  # an ingress code
+                    r"|^S[LNBCW][A-Z]{2,4}\d{1,3}[A-Z]$"            # a TI literature number (SLUSE66A, SNVS452G)
+                    r"|^(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\d{2}$"   # a month code in a sheet's name
+                    r"|^[A-Z]{1,3}\d\.\d{1,2}$"                     # a series and its pitch or a thread (XH2.5, M2.5)
+                    r"|^[A-Z]+-[A-Z]{1,4}\d+$"                      # a finding identifier (F-DEC40)
+                    r"|^(?:[A-Z]{1,2}\d{1,2}/)+[A-Z]{1,2}\d{1,2}$")   # a list of bands or pins (L1/L2/L5/E6)
+PN_SERIES = re.compile(r"\b([A-Z]{2,4}) (\d[0-9A-Z]*-[0-9A-Z-]*[0-9A-Z])\b")
+PN_MAKERNUM = re.compile(r"\b([A-Z][a-z]{1,15}) (\d{7,})\b")
+PN_MONTHS = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
+             "November", "December"}
+
+
+# round 6 (check-s122-5 m4): literature codes (TI's SNVA559, SLVA505; ST's AN2606, RM0433, ES0392, PM0253, UM2179,
+# TN1204, DS12110), connector and bus standards (RJ45, RS485, 1000BASE-T) are not part numbers. Round 7 (check-s122-6
+# m4): ST numbers its reference manuals, errata and programming manuals from 0 (RM0433, ES0392, PM0253) and its
+# technical notes from 0 and 1 (TN1204), so RM3100 (PNI's magnetometer) and TN2106 (Microchip's FET) read as parts; ST's
+# datasheet codes (DS and five digits) keep the shape of Dallas's DS12887, which this filter still drops (a stated limit)
+PN_LIT = re.compile(r"^S[LNBCW][A-Z]{1,4}\d{1,3}[A-Z]?$|^(?:AN|UM)\d{4}$|^(?:RM|ES|PM)0\d{3}$|^TN[01]\d{3}$|^DS\d{5}$"
+                    r"|^(?:RJ|RS)\d{2,3}$|^\d+BASE-[A-Z0-9]+$")
+# round 7 (check-s122-6 m4): a token right after a maker's name, or after 'article', is that maker's number when it
+# holds a digit (ABLIC S-8261, TI bq2970, u-blox ANN-MB2, Xenarc 709GNK, Amphenol 132170, Lapp's article 0021917,
+# MG Chemicals 422B), unless it is a literature code, a pin or a designator
+PN_MAKER = re.compile(r"\b(?:ABLIC|TI|u-blox|Xenarc|Amphenol|Molex|Lapp|Chemicals|article) "
+                      r"([A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9]))*[A-Za-z0-9])(?![\w/+-]|\.\w)")
+_DESIG = []        # the designators of the six netlists, read once (a token that names one is a designator)
+
+
+def designators():
+    if not _DESIG:
+        d = set()
+        for nl in netlists().values(): d |= set(nl["comps"])
+        _DESIG.append(d)
+    return _DESIG[0]
+
+
+def is_partno(t, nets=None):
+    """True when the token has a maker's part number's shape (the rules above). Round 6 (check-s122-5 m4): a token of a
+    designator's shape is a designator only when one of the six netlists carries it (L76K is a part, L76 would be a
+    coil); a net of the netlists (VBUS20) is not a part number; a digit-only token of nine digits or more is a maker's
+    number (5023520600); a token led by a standard body's letters (UN38.3) is not."""
+    digits, caps = len(re.findall(r"\d", t)), len(re.findall(r"[A-Z]", t))
+    if not digits or PN_PIN.match(t) or PN_LIT.match(t): return False
+    if REF.fullmatch(t) and t in designators(): return False   # a designator is not a part number
+    if nets is not None and t in nets: return False
+    if re.fullmatch(r"\d{9,}", t): return True       # round 7: an eight-digit date never reaches here (the dead guard is gone)
+    if t[0].isalpha():
+        lead = re.match(r"^[A-Z]+", t)
+        if PN_ID.match(t) or re.split(r"[-/]", t)[0] in STDBODY or (lead and lead.group(0) in STDBODY): return False
+        if re.search(r"[a-z]", t):
+            return caps >= 2 and digits >= 3
+        if len(t) >= 5 and re.search(r"\d{3}", t): return True         # round 4's rule (M39029/56-352, D38999/20)
+        if digits >= 2 and caps >= 2 and (len(t) >= 5 or (len(t) == 4 and digits == 2)): return True
+        return caps >= 4 and len(t) >= 6 and bool(re.search(r"\d(?=.)", t)) and not t[-1].isdigit()
+    if re.search(r"[a-z]", t) or "." in t: return False     # a digit-led token with a dot is a clause or a table (516.8-IX)
+    if caps:
+        return len(t) >= 5 and digits >= 4
+    return bool(re.search(r"\d{6}", t)) and bool(re.search(r"[-/]", t))
+
+
+PN_SHEET = re.compile(r"[\w./-]*?([\w-]+)\.(?:pdf|html?)\b")
+
+
+def partnos(s, nets=None):
+    """The makers' part numbers a sentence names, by shape (`is_partno`), a series word kept with its number, and those
+    in the file names of the sheets it cites; `nets` (the netlists' nets) keeps net names out."""
+    out = set()
+    for m in PN_SHEET.finditer(s):
+        for seg in re.split(r"[-_]", m.group(1)):
+            if is_partno(seg.upper()) and not re.fullmatch(r"\d+", seg): out.add(seg.upper())
+    body = PN_STRIP.sub(" ", s)
+    for m in PN_SERIES.finditer(body):
+        if m.group(1) not in STDBODY and len(re.findall(r"\d", m.group(2))) >= 3: out.add(m.group(1) + " " + m.group(2))
+    for m in PN_MAKERNUM.finditer(body):
+        if m.group(1) not in PN_MONTHS: out.add(m.group(2))
+    for m in PN_MAKER.finditer(body):
+        tok = m.group(1)
+        fid = bool(re.fullmatch(r"[A-Z]+-[A-Z]+\d+", tok))    # after a maker's name, ANN-MB2 is not a finding identifier
+        if (re.search(r"\d", tok) and len(tok) >= 4 and (fid or not PN_PIN.match(tok)) and not PN_LIT.match(tok)
+                and not (REF.fullmatch(tok) and tok in designators()) and not (nets is not None and tok in nets)):
+            out.add(tok)
+    for m in PN_TOK.finditer(body):
+        tok = m.group(1)
+        if is_partno(tok, nets) and not any(tok != x and tok in x.split(" ") for x in out): out.add(tok)
+    return sorted(out)
 
 
 def inventory(nls=None):
     """[(id, doc, section, kind, line, sentence, names)] for every in-scope sentence that names something, and every
-    sentence of a baselined document that states something absent, owed, not drawn or not connected."""
+    sentence of a baselined document that states something absent, owed, not drawn or not connected (the wordings of
+    ABSENT)."""
     nls = nls or netlists()
     nets = all_nets(nls)
     inv = []
@@ -282,6 +406,8 @@ def inventory(nls=None):
                 if not scoped and not absent: continue
                 nm = names(s, nets)
                 if not any(nm.values()) and not absent: continue
+                if kind.startswith("cell:") and rowkey:
+                    nm["row"] = [rowkey]      # round 4: a cell's row label, which names the board of a boards table row
                 base = "%s#%s:L%d:%s" % (os.path.basename(rel), key, line, kind)
                 cnt[base] = cnt.get(base, 0) + 1
                 inv.append(("%s:s%d" % (base, cnt[base]), rel, key, kind, line, s, nm))

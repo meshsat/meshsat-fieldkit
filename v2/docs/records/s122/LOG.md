@@ -103,3 +103,161 @@ No box, no agent, no other model. No gate, `rules_status.py` or `rules_render.py
   trace page's render, 71 passed after; `close_s122.py` refused the fixture while staged, closed S-122 with it
   committed (862 sentences, 0 STALE, 0 UNJUDGED; CFL-016 PASS; S-123 and S-42 open) and refused a second run; after it
   0 errors, 71 passed, `claims_check` PASS 91 of 91. The clone is deleted.
+
+## Round 4 (set 14: makers' part numbers; `fnd/s122c` from `1bafab8c`)
+
+- 20:52 Worktree `s122c` on `fnd/s122c` from `1bafab8c` (set 14, `fnd/int15`). Read whole: S-122's title in the
+  registry at `1bafab8c` (its three set 14 additions), `records/int15/checks/check-int15-1.md` to `-3.md`, the fourth
+  check of set 14 (the integrator's `CHECK-4.md`, not filed), `checks/check-s122-3.md`, and `close_s122.py`'s
+  `gate_set14`.
+- 21:16 (one label for the round's work up to the README, read from `date`):
+  - `s122lib.partnos`: makers' part numbers by shape (and in cited sheets' file names), returned by `names()` under
+    `parts`; a table cell carries its row label. `verdicts.check_parts` judges each against the six netlists' part
+    values (a part on no netlist, or not on the one board a sentence and its row name, needs `parts_ok`; a NOT
+    DERIVABLE judgement is never an excuse). New assertion form `PDF:` (pdftotext). The absent rule's wordings widened
+    (check-s122-3 m2). First run: 951, then 986 sentences with 149 UNJUDGED and 11 STALE before judging.
+  - `apply_docs_s122_r4.py --check`, then its run on `1bafab8c`'s documents: 12 edits, 51 assertions held first; a
+    second run refuses. V2-SPEC.md lines 47, 82, 84, 86 and correction 34; OPERATING-ENVELOPE.md lines 77 and 83 and
+    a correction note (the LM5069's range from `ti/ti-lm5069.pdf` SNVS452G 7.3, the TE socket's from
+    `m2/te-2199119-m2-b-key.pdf`, both read by pdftotext); row DC-10; the int15 docstring (q4).
+  - Every new or changed sentence judged in `judgements.py` (round 4 block): 985 sentences, 410 TRUE, 0 STALE, 40
+    BASELINE, 535 NOT DERIVABLE, 0 UNJUDGED, 3219 assertions. `verdicts-set14.out` (the documents at `1bafab8c`): 7
+    STALE, each corrected; `verdicts-base.out` (`e57a7365`): 72 STALE.
+  - `close_s122.py`'s `gate_set14` rewritten (probes made up at run time, sentences found by what they say and TRUE,
+    the closing check's marker with their lines). On this tree it refused `check-s122-3.md` at the marker, and a
+    fixture with the marker and no lines listing the six lines.
+  - `apply_registry_s122_r4.py` written (rebinds against `1bafab8c`, CFL-016's entry and note, S-122's sentence, the
+    envelope re-pin); its two new sentences pass claims_check's screen.
+- 21:20 Committed `e5fdf670` behind the pre-commit PASSED line. Replay on a throwaway clone of it: the six outputs byte
+  identical; `apply_docs_s122_r4.py` from `1bafab8c`'s four files gives the tip byte for byte and refuses a second run;
+  the gate refused ten mutants (a rigged finder, the documents at `1bafab8c`, TMDS351 with the row relabelled, the
+  LM5176 back in the E6 row "all under A22", a WM8731 codec, a Molex B-key row, a TRACO TEN 60 row, the B16 row judged
+  HISTORY, the B16 row without its U3 and U4 assertions, a check without the marker);
+  `apply_registry_s122_r4.py` rebound 5 records and refused a second run; `rules_lib.py requirements` 144 records, 0
+  errors, 0 warnings; the tests 69 passed and 2 failed before the trace page's render, 71 passed after; the closure
+  refused the fixture while staged, closed S-122 with it committed (CFL-016 PASS; S-42, S-123, S-124 open) and refused a
+  second run; after it 0 errors, 71 passed, `claims_check` PASS 91 of 91. The clone is deleted.
+
+## Round 5 (the answer to `checks/check-s122-4.md`: 1 blocking, 3 minor)
+
+- 21:33 Check read whole (the checker's report, filed byte for byte as `checks/check-s122-4.md`).
+- 21:48 (one label for the round's work, read from `date`):
+  - `verdicts.check_roles`: a part named in a role is read against the designators whose values carry it (forward:
+    the noun, with `ROLE_SYN`; reverse: a specific qualifier stated by another designator; rails: a plain part list
+    after a rail phrase against each converter or monitor of that rail's net); `roles_ok` binds a role to an own
+    assertion on a designator that carries the part. On the documents at `edead832` it reads V2-SPEC.md lines 81 and 84
+    STALE (`verdicts-r4.out`, which also carries lines 83 and 86 as STALE by the check's m2 and m3).
+  - `s122lib.is_partno` widened (the check's m1 list, and all-digit numbers after a maker's name) with exclusions by
+    shape; every semiconductor, crystal and relay part number of the six netlists' values is read.
+  - `apply_docs_s122_r5.py --check`, then its run: 5 edits, 33 assertions held first; a second run refuses.
+  - Judgements for the new and corrected texts: 1005 sentences, 420 TRUE, 0 STALE, 40 BASELINE, 545 NOT DERIVABLE, 0
+    UNJUDGED, 3295 assertions.
+  - `close_s122.py`'s gate: the netlists' part numbers in the probe, the round 5 rows in (b), the role fixtures in
+    (e). On this tree it passed (a), (b) and (e) three times and refused a marker-only fixture at (c), listing
+    V2-SPEC.md lines 47, 81, 82, 83, 84 and 86 and OPERATING-ENVELOPE.md lines 77 and 83.
+  - `apply_registry_s122_r4.py` re-issued for the round 5 diff (its REF, CFL-016's entry, S-122's sentence); the new
+    texts pass claims_check's screen.
+- 21:51 Committed `8d7874f5` behind the pre-commit PASSED line. Replay on a throwaway clone of it: the seven outputs
+  byte identical; `apply_docs_s122_r5.py` from `edead832`'s V2-SPEC.md gives the tip byte for byte and refuses a second
+  run; the gate refused eight mutants (round 4's finder, the role rule off, V2-SPEC.md as at `edead832`, the TPS22810
+  gate-bias switch, the AP64500 list, the magnetometer, sixteen LEDs, a check without line 81);
+  `apply_registry_s122_r4.py` rebound 5 records and refused a second run; `rules_lib.py requirements` 144 records, 0
+  errors, 0 warnings; the tests 69 passed and 2 failed before the trace page's render, 71 passed after; the closure
+  refused the fixture while staged, closed S-122 with it committed (CFL-016 PASS; S-42, S-123, S-124 open) and refused
+  a second run; after it 0 errors, 71 passed, `claims_check` PASS 91 of 91. The clone is deleted.
+
+## Round 6 (the answer to `checks/check-s122-5.md`: 1 blocking, 4 minor)
+
+- Check read whole first (the checker's report, filed byte for byte as `checks/check-s122-5.md`).
+- 22:41 (one label for the round's work, read from `date`):
+  - m4: `s122lib.is_partno` reads L76K (a designator only when a netlist carries it) and all-digit numbers of nine
+    digits or more; `PN_LIT` rejects literature and manual codes, RJ and RS numbers, `NBASE-T` names; the netlists'
+    net names are not parts. Three NOT DERIVABLE sentences left the inventory (ASSEMBLY.md line 148's two RJ45 cells,
+    TEST-PLAN.md line 43's RS103 cell).
+  - m1: `rail_lists` reads every list and each item's part; `target_roles` judges "<part> <noun> on <slot or rail>";
+    the one-word qualifier test on active parts; supply and driver in `ROLE_NOUN`; the history tie of `parts_ok`.
+  - m2: `verdicts.ROLE_TESTS` switches; the gate's condition (e) judges fourteen mutants of the A22 and D8 rows.
+  - B1: `apply_docs_s122_r6.py --check`, then its run: V2-SPEC.md not among the baselines (PRODUCT-BRIEF.md,
+    CONOPS.md); 2 edits, 9 assertions held first.
+  - The figures: `verdicts.figure_tokens`, `figures_uncovered`, `check_figs`; the assertion forms `PCB:`, `#net~`,
+    `CNT@`, `DEC:`; `figures_ok` on every sentence of the eight lines of the closing list (45 tokens); the gate's
+    condition (f) scans those lines; the planted 1 W is refused by (b) and by the scan alone.
+  - m3: the closure's evidence names `apply_docs_s122_r5.py` and `apply_docs_s122_r6.py`.
+  - Outputs regenerated: `inventory.out` and `verdicts.out` (1004 sentences, 422 TRUE, 0 STALE, 40 BASELINE, 542 NOT
+    DERIVABLE, 0 UNJUDGED, 3338 assertions), `-base` (931, 74 STALE), `-set14` (989, 10 STALE), `verdicts-r4.out`
+    (998, 5 STALE), `verdicts-r5.out` (1002, 1 STALE: line 47).
+  - `test_close_s122.py`: ALL PASS (T1 the fixtures and the scan; T2 each of the five switches off makes the gate
+    refuse; T3 `check_figs` off, the planted 1 W still refused; T4 45 tokens, each changed by one, all refused).
+  - `close_s122.py`'s gate on this tree passed (a), (b), (e) and (f) and refused at (c) for want of a check file.
+  - `apply_registry_s122_r4.py` re-issued for the round 6 diff (its REF, CFL-016's entry, S-122's sentence).
+  - In this tree `rules_render.py --requirements --check` refuses and `rules_lib.py requirements` reads 4 errors, the
+    rebinds the integrator's `apply_registry_s122_r4.py` writes (REQ-005, CFL-010, CFL-013 on V2-SPEC.md; CFL-014 on
+    OPERATING-ENVELOPE.md); the replay runs them after it.
+- 22:42 Committed `19bddf75` behind the pre-commit PASSED line. Replay on a throwaway clone of it (22:43 to 22:49):
+  the eight outputs byte identical; `apply_docs_s122_r6.py` from `a6429e66`'s V2-SPEC.md gives the tip and refuses a
+  second run; `apply_registry_s122_r4.py` rebound 5 records and refused a second run; `rules_lib.py requirements` 144
+  records, 0 errors, 0 warnings; the tests 69 passed and 2 failed before the trace page's render, 71 passed after;
+  with a committed fixture check the closure refused nine file mutants (the 1 W planted in line 47 with and without a
+  judgement, the forward test off, the check's AP64500 parenthesis, an envelope range, a judgement without its
+  figures, twelve float clamps, the rails test off, a changed outline); `test_close_s122.py` ALL PASS; the closure
+  refused the fixture while staged, closed S-122 with it committed (CFL-016 PASS; S-42, S-123, S-124 open) and refused
+  a second run; after it 0 errors, 72 passed, `claims_check` PASS 91 of 91. The clone is deleted.
+
+## Round 7 (the answer to `checks/check-s122-6.md`: 1 blocking, 6 minor; the coordinator's change of diagnosis)
+
+- 23:18 Check read whole (the checker's report, filed byte for byte as `checks/check-s122-6.md`).
+- 23:34 (one label for the round's work, read from `date`):
+  - B1: line 81's 14.4 V node bound to `gen_sch_p.py`'s cell node CELL4, with `P:J_CELL~4S block`, the generator's
+    Samsung INR18650-35E block and the 35E sheet's 3.60 V nominal beside it; the BQ4050 binding dropped. The README
+    carries the 45 bindings, one row each, generated from the judgements with `verdicts.run_assert`'s own reading.
+  - m1: `verdicts._values` and `_fig_match` compare ordered, signed values with their units; the PDF reader reads the
+    sheets' U+2013 minus as "-"; the LM5069 range asserted "-40 125". `close_s122.KEYED` (five plants with the keys
+    rewritten) in the gate; `test_close_s122.py` T4 rewrites keys, T5 removes the comparison.
+  - m2: "wordmatch" and "load" in `verdicts.ROLE_TESTS`, three mutants added (seventeen); the other classes named.
+  - m3: `apply_docs_s122_r7.py --check`, then its run: 1 edit (correction 36's wording); a second run refuses. The
+    sources lists name a generator's text at a commit.
+  - m4: the maker rule (`s122lib.PN_MAKER`), ST's literature shapes narrowed, the dead date guard removed; seven
+    sentences newly inventoried and twelve judged for the new part numbers.
+  - m6: a string `counts_ok` covers nothing; hex addresses are not NxM figures.
+  - `apply_registry_s122_r4.py`: the round 7 sentence with the escape classes, and the follow-up item at the next free
+    S number, disposition PROCESS, in no record's waits_on; `close_s122.py` refuses without it and names it.
+  - Outputs regenerated: `verdicts.out` 1011 sentences, 422 TRUE, 0 STALE, 40 BASELINE, 549 NOT DERIVABLE, 0
+    UNJUDGED, 3340 assertions; `-base` 938 (74 STALE), `-set14` 996 (10), `verdicts-r4.out` 1005 (5), `verdicts-r5.out`
+    1009 (1), `verdicts-r6.out` (new, `1c187977`) 1011 (0).
+  - `test_close_s122.py`: ALL PASS (T2 seven switches, T4 45 of 45 refused by the comparison, T5 45 of 45 pass
+    without it and the gate refuses).
+- 23:34 Committed `c3490c9b` behind the pre-commit PASSED line. Replay on a throwaway clone of it: the nine outputs
+  byte identical; `apply_docs_s122_r7.py` from `1c187977`'s V2-SPEC.md gives the tip and refuses a second run;
+  `test_close_s122.py` ALL PASS. The clone is deleted.
+- 23:36 The integrator sequence on a throwaway clone of `fnd/int16` (`36bb1d12`, int16's ignored files installed,
+  `c3490c9b` merged): `apply_registry_s122_r4.py` refused at its screen, which reads "MIL-STD-461" in the follow-up
+  item's title as a claim word. Committed `43b5a25c` (the texts name the EMC test methods without the standard's number)
+  behind the pre-commit PASSED line.
+- 23:36 to 23:39 The sequence again, the clone reset to `36bb1d12` and `43b5a25c` merged: the registry script rebound 5
+  records, opened S-126 (PROCESS, no record waiting on it) and refused a second run; `rules_lib.py requirements` 0
+  errors, 0 warnings; the trace page rendered; `rules_status.py` NOT_READY (39 FAIL, 104 INCONCLUSIVE, 195 PASS of
+  338) and the full render moved CURRENT-EVIDENCE.md (`c9b98931` to `0f2c59cb`), after which 0 errors and 2 warnings
+  (CON-010, REQ-044); the outputs re-run (header line only) and committed; the fixture check refused while staged,
+  then committed; `test_close_s122.py` ALL PASS; the closure closed S-122 (CFL-016 PASS) and refused a second run;
+  after it 0 errors, 2 warnings, 59 rules 0 errors, the tests 72 passed, `claims_check` PASS 91 of 91. The clone is
+  deleted.
+
+## Round 8 (the answer to `checks/check-s122-7.md`: 1 blocking, 5 minor), 29 and 30 September 2026
+
+- 23:58 Check read whole (the checker's report, filed byte for byte as `checks/check-s122-7.md`).
+- 00:01 (one label for the round's work, read from `date`):
+  - B1: the finder's clause of the scope statement in the check's wording (a five-digit DS code is dropped, not read).
+  - m4: `apply_registry_s122_r4.ESCAPES`, one list read by S-122's title sentence and the follow-up item's title, with
+    m3's two role mutants (each read TRUE here with its row's judgement), m5's "Lapp article" miss and the two figure
+    forms the scan does not read.
+  - m1: `apply_docs_s122_r8.py --check`, then its run: 1 edit; a second run refuses.
+  - m2: the closure's evidence names `apply_docs_s122_r7.py` and `apply_docs_s122_r8.py`.
+  - Outputs regenerated: only the header lines of `inventory.out` and `verdicts.out` moved; `test_close_s122.py` ALL
+    PASS; the texts pass the registry script's screen.
+- 00:01 Committed `b53258bb` behind the pre-commit PASSED line.
+- 00:02 to 00:05 The set 15 order on a throwaway clone of `fnd/int16` (`36bb1d12`, its ignored files installed): review
+  D's `4795d5bf` merged (`v2/vendor/sources.txt` resolved by keeping both sides), its facts, refusal tests and findings
+  applied, 0 errors; then `b53258bb` merged: S-135 opened, the renders, the outputs re-run and committed, the fixture
+  check refused while staged and then committed, `test_close_s122.py` ALL PASS, S-122 closed with CFL-016 PASS, a
+  second run refused; after it 0 errors, 2 warnings (CON-010, REQ-044), the tests 72 passed, `claims_check` PASS 91 of
+  91. The clone is deleted.

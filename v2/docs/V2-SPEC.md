@@ -44,7 +44,7 @@ The node, the inputs, every rail with its part and its EMCON gate: appendix 32.5
 | LoRa mesh | bare 1 W SPI module of the E22-900M30S class (SX1262 + 30 dBm amplifier), meshtasticd on the CM5, EU power capped in software | B16 SPI, east jack |
 | Zigbee | Ebyte E72-2G4M20S1E (CC2652P) as coordinator, on-board antenna | B16 UART |
 | Thread and Matter | a second E72 as OpenThread radio for a Thread border router and Matter controller | B16 UART |
-| APRS and VHF voice | NiceRF SA868 1 W with a 30 W VHF amplifier stage (RA30H1317M class, T/R relay, low-pass filter; sheet *owed*), Direwolf on the WM8960 codec, hardware PTT inhibit | D8, west jack |
+| APRS and VHF voice | NiceRF SA868 VHF 2 W exciter (`U2`, correction 36) with a 30 W VHF amplifier stage (the Mitsubishi RA30H1317M1, T/R relay, low-pass filter; the amplifier's sheet held since 27 September 2026, `OPERATING-ENVELOPE.md` section 2), Direwolf on D8's PCM2912A USB codec (`U6`), hardware PTT inhibit (correction 34) | D8, west jack |
 | HF beyond line of sight | the assembled QRP Labs QMX (5 W, USB CAT and audio) in its lid tray, Rhizomatica's Mercury modem (open, VARA-compatible, Reticulum over its KISS/TCP broadcast port; ARDOP or VARA as alternatives), Winlink and TAK data; wire antenna kit outside; proven first on the V1 kits (MESHSAT-1318) | B16 USB (`J_QMX`), A22's 12 V HF rail, the HF jack |
 | SDR | LimeSDR Mini 2.4 (10 MHz to 3.5 GHz, transmit and receive) with a receive limiter or relay during PA key-down | B16 USB 3, west jack |
 | GNSS | Quectel LG290P (all six constellations, L1/L2/L5/E6, RTK capable) with the Quectel YEGD006U1A puck or the u-blox ANN-MB2 | B16 UART, west jack |
@@ -78,12 +78,12 @@ the third 5G jack of the key-B socket (TE 2199119-3 since `458b2873`, whose land
 ## Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11)
 | Board | Role |
 |---|---|
-| A22 | power and I/O, 240 x 160 mm, six layers (In1 and In4 solid ground): 14.4 V node, BQ25731 SMBus charger, the 9 to 36 V input passed up from E6, three 5.1 V slot rails and a device rail (AP64500, INA226 monitored), the 13.8 V PA and 12 V HF rails (LM5176, EMCON gated), the 54 V PoE rail, the 45 W USB-C outlet (TPS25740A and an LM5176 stage; the TPS55288 had left the design on 7 September, correction 32), 3.3 V logic, eleven SMP-MAX blind-mate sites, the D8 mezzanine site, the 2x13 ribbon to B16 |
-| B16 | compute and radios, 330 x 200 mm, six layers (In1 solid ground, In4 the 5 V planes; decision 43 of 25 Sep 2026: measured on eight layers first, its whole-board run EXPERIMENTAL): three CM5 slots, per slot a PI7C9X2G404 PCIe switch, an NVMe 2242 socket, a card socket, a TUSB8041 USB 3 hub and a cooler fan header; the I/O high-availability layer of `ARCH-PCB-B-IOHA.md` (per bank a TMUXHS4212 and a TS3USB221A selecting between the home module and a neighbour, three STM32H743 supervisors (the part bought, which the owner accepted under D-13; the schematic text of `U41`, `U51` and `U61` reads H743 and CON-017 reads PASS in the requirements registry, corrections 14 and 32) on two CAN-FD fabrics, seven 2-of-3 voters and the antenna changeover); the KSZ9897 Ethernet switch, the TMDS341A display switch, the LimeSDR bay, the RockBLOCK site, the LG290P, the E22 LoRa module, two E72, the DS3231M clock, the ATECC608B, the TMP117, the panel and A22 ribbons |
-| C7 | panel backer under the plate, a 344 x 228 ring with a 240 x 176 void, four layers (six ruled by the owner on 25 Sep 2026, decision 27, not yet regenerated): the RP2040 panel controller (a USB device with the hardware EMCON and ZEROIZE lines), sixteen LEDs under light guides, two PCA9555, the PDi e-paper ZIF and its boost stage, the sounder driver, the VEML7700, the switch lands, the headset jack and camera holes, the notch for the monitor's connector block; the PA flange sits in its void |
-| D8 | VHF APRS mezzanine on A22, 100 x 80 mm, four layers: the SA868 exciter, the G6K T/R relay, the low-pass filter and the leads to the RA30H1317M1 on the plate, the PCM2912A USB codec and TPA6132A2 amplifier for the two headset jacks, the TUSB2046B hub and CP2102N bridge, the PTT and EMCON gate logic, the TPS22810 gate-bias switch, a PCA9555 |
+| A22 | power and I/O, 240 x 160 mm, six layers (In1 and In4 solid ground): 14.4 V node, BQ25731 SMBus charger, the 9 to 36 V input passed up from E6, three 5.1 V slot rails and a device rail (the AP64500 buck on slots 1 and 3, `U4` and `U6`, and LM5176 stages on slot 2 and the device rail, `U5` and `U7`, all four AP64500 on 7 September, correction 35; INA226 monitored), the 13.8 V PA and 12 V HF rails (LM5176, EMCON gated), the 54 V PoE rail, the 45 W USB-C outlet (TPS25740A and an LM5176 stage; the TPS55288 had left the design on 7 September, correction 32), 3.3 V logic, eleven SMP-MAX blind-mate sites, the D8 mezzanine site, the 2x13 ribbon to B16 |
+| B16 | compute and radios, 330 x 200 mm, six layers (In1 solid ground, In4 the 5 V planes; decision 43 of 25 Sep 2026: measured on eight layers first, its whole-board run EXPERIMENTAL): three CM5 slots, per slot a PI7C9X2G404 PCIe switch, an NVMe 2242 socket, a card socket, a TUSB8041 USB 3 hub and a cooler fan header; the I/O high-availability layer of `ARCH-PCB-B-IOHA.md` (per bank a TMUXHS4212 and a TS3USB221A selecting between the home module and a neighbour, three STM32H743 supervisors (the part bought, which the owner accepted under D-13; the schematic text of `U41`, `U51` and `U61` reads H743 and CON-017 reads PASS in the requirements registry, corrections 14 and 32) on two CAN-FD fabrics, seven 2-of-3 voters and the antenna changeover); the KSZ9897 Ethernet switch, the two TS3DV642 display switches (`U3`, `U4`; correction 34), the LimeSDR bay, the RockBLOCK site, the LG290P, the E22 LoRa module, two E72, the DS3231SN clock (`U9`; the DS3231M on 7 September, correction 34), the ATECC608B, the TMP117, the panel and A22 ribbons |
+| C7 | panel backer under the plate, a 344 x 228 ring with a 240 x 176 void, four layers (six ruled by the owner on 25 Sep 2026, decision 27, not yet regenerated): the RP2040 panel controller (a USB device with the hardware EMCON and ZEROIZE lines), seventeen 3 mm LEDs under light guides (`D1` to `D16` and, since board C's round 8, the hardware EMCON lamp `D22`, whose guide in the plate is owed, open item S-44; correction 35), two PCA9555, the PDi e-paper ZIF and its boost stage, the sounder driver, the VEML7700, the switch lands, the headset jack and camera holes, the notch for the monitor's connector block; the PA flange sits in its void |
+| D8 | VHF APRS mezzanine on A22, 100 x 80 mm, four layers: the SA868 exciter, the G6K T/R relay, the low-pass filter and the leads to the RA30H1317M1 on the plate, the PCM2912A USB codec and TPA6132A2 amplifier for the two headset jacks, the TUSB2046I hub (`U4`, TUSB2046IBVFR, the industrial grade since 26 September 2026; the TUSB2046B on 7 September, correction 34) and CP2102N bridge, the PTT and EMCON gate logic, the TLV75801 gate-bias LDO on `PA_KEY` (`U15`; on 7 September a TPS22810 switched the bias, correction 35), the TPS22810 load switch of the exciter's `+5V_TX` (`U21`), a PCA9555 |
 | P1 | the pack BMS board, 70 x 44 mm, two layers, 2 oz (four layers at 2 oz ruled by the owner on 25 Sep 2026, decision 28, not yet regenerated): BQ4050 SMBus gauge with protection and balancing, two CSD17570Q5B high-side FETs, 2 mohm shunt, 25 A blade, tap, thermistor and SMBus headers, lead lands (appendix 32.62) |
-| E6 | dock strip, 267 x 68 mm, four layers, and the block E5: the LM5176 9 to 36 V front end, the LT8705A solar tracker, the pack entry (XT60, 25 A fuse, SMBus), eleven float clamps, the sensor controller with the BME688, BMI270 and magnetometer, the water electrodes, the gas sensor, the DCF77, Geiger, lightning and outside-pod headers, two mixer fan headers |
+| E6 | dock strip, 267 x 68 mm, four layers, and the block E5: the LM5069 hot swap on the 9 to 36 V input (`U6`), which passes the bus up to A22's LM5176 front end (`U2`; correction 34), the LT8705A solar tracker, the pack entry (XT60, 25 A fuse, SMBus), eleven float clamps, the sensor controller with the BME688 and BMI270 (`U14`, `U15`; the magnetometer is in the outside pod, reached through `J_POD`, correction 35), the water electrodes, the gas sensor, the DCF77, Geiger, lightning and outside-pod headers, two mixer fan headers |
 
 ## Estimated cost per kit (parts only, prototype quantities, 6 Sep 2026)
 
@@ -292,3 +292,39 @@ Stream s122 (MESHSAT-1357, open item S-122) read the lines above against the com
     baselined text at `c5430071`, where section 4b is a baseline value; the circuit as generated is kept in
     `feasibility/EMCON.md` section 0a.1 (`handover/DEFINITION-STATUS.md`, row DC-01), which line 24 now cites.
     Nothing is built.
+
+34. **Part numbers (lines 47, 82, 84 and 86).** Session reading of stream s122, round 4 (29 September 2026,
+    MESHSAT-1357, open item S-122; the integration check of set 14,
+    `v2/docs/records/int15/checks/check-int15-1.md`, B1), whose inventory reads makers' part numbers since that
+    round. Line 82 named the TMDS341A display switch, which no schematic generator has carried: `gen_sch_b.py`
+    carried the TS3DV642 when this table was written (`b2709118`), and board B's display switches are `U3` and
+    `U4`, TS3DV642A0RUAR. Line 86 put the LM5176 front end on E6; at `b2709118` too board E's generator carried
+    the LM5069 hot swap and sent the bus up the dock contacts into A22's LM5176 front end, today board E's `U6`
+    and board A's `U2`. Line 47 named the WM8960 codec, which left `gen_sch_d.py` with the D8 generators at
+    `bdfc7b3f` (7 September);
+    D8's codec is the PCM2912A `U6`, and the RA30H1317M1's sheet, which the line called owed, is held (a row of
+    `OPERATING-ENVELOPE.md` section 2 since 27 September 2026). Two names were true on 7 September and are not
+    today: line 82's DS3231M, now board B's DS3231SN `U9`, and line 84's TUSB2046B, now board D's TUSB2046I `U4`
+    (TUSB2046IBVFR, since 26 September 2026). Nothing is built.
+
+35. **Parts in their roles (lines 81, 83, 84 and 86).** Session reading of stream s122, round 5 (29 September
+    2026, MESHSAT-1357, open item S-122; its independent check, `v2/docs/records/s122/checks/check-s122-4.md`,
+    B1 and m2, m3), whose judgement asks since that round that a part named in a role hold that role on its board.
+    Line 84 called the TPS22810 the gate-bias switch: board D's gate bias is `U15`, a TLV75801 LDO enabled by
+    `PA_KEY`, since `faf8c981`, and its TPS22810 is `U21`, the load switch of the exciter's `+5V_TX`; on 7
+    September (`b2709118`) a TPS22810 switched the bias. Line 81 gave the three slot rails and the device rail to
+    the AP64500: board A's `U4` and `U6` are AP64500 bucks for slots 1 and 3, and `U5` and `U7` are LM5176 stages
+    for slot 2 and the device rail; all four were AP64500 at `b2709118`. Line 86 put a magnetometer on the sensor
+    controller; board E carries the BME688 `U14` and the BMI270 `U15`, and `gen_sch_e.py` puts the magnetometer in
+    the outside pod, reached through `J_POD`. Line 83 counted sixteen LEDs; board C carries seventeen, `D22` the
+    seventeenth. Nothing is built.
+
+36. **The exciter's rating (line 47).** Session reading of stream s122, round 6 (29 September 2026, MESHSAT-1357,
+    open item S-122; its independent check, `v2/docs/records/s122/checks/check-s122-5.md`, B1), whose closing check
+    since that round asserts every figure with a unit, and every spelled count, on the lines it closes, and
+    compares a unit only where the source states one (a number with no unit is outside it; this wording since
+    rounds 7 and 8, check-s122-6 m3 and check-s122-7 m1). Line 47 named the NiceRF SA868 a 1 W
+    part, the figure of the device set of 6 September (appendix 32.49). Board D's `U2` is the SA868 VHF 2 W
+    exciter; `gen_sch_d.py` has said 2 W high and 0.5 W low since `bdfc7b3f` (7 September), and the maker's sheet
+    v1.3 (`v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf`) gives 31 to 33 dBm on high power and 24 to 26 dBm on
+    low. Nothing is built.
