@@ -1,0 +1,2 @@
+apply_decision_s117: decision 56 appended (board A: the charger U3 takes TI's 400 kHz row, 4.7 uH on th...); 33 decisions -> 34; nothing else moved
+CHECK ONLY: pcb_decisions.yaml not written. Next after the write: python3 v2/ecad/tools/decisions_render.py

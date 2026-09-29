@@ -1,0 +1,2 @@
+apply_emc_s117: board A's U3 row f_khz 800 -> 400, basis restated; emc_sheet.judge on board A: 13 source(s), 0 failure(s) before, 0 after, none naming U3
+CHECK ONLY: pcb_emc.yaml not written.

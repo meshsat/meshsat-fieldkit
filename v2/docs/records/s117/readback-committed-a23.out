@@ -1,0 +1,19 @@
+readback_s117: v2/ecad/pcb-a-power-a23/out/pcb-a-power.net (sha256/16 30ad87746d1801ca)
+  FAIL L2 is the XAL1010-472ME                              value '3.3uH XAL6030-332ME (Isat 12.2 A)'
+  FAIL L2 on the XAL1010 land                               footprint 'Inductor_SMD:L_Coilcraft_XAL6060-XXX'
+  PASS L2 between CH_SW1 and CH_SW2                         L2 pins on ['CH_SW1', 'CH_SW2']
+  FAIL L2 is 4.7 uH                                         value '3.3uH XAL6030-332ME (Isat 12.2 A)'
+  PASS U3 pins 8, 16, 17 on IADPT, CH_COMP1, CH_COMP2       pin 8 IADPT, 16 CH_COMP1, 17 CH_COMP2
+  FAIL IADPT holds U3, TP19, one resistor and one capacitor IADPT: [('TP19', '1'), ('U3', '8')]
+  FAIL CH_COMP1 holds U3, R25 and C234 only                 CH_COMP1: [('R25', '1'), ('U3', '16')]
+  PASS CH_COMP1C holds R25 and C26 only                     CH_COMP1C: [('C26', '1'), ('R25', '2')]
+  FAIL R25 is 40.2 kOhm                                     value '10k'
+  FAIL C26 is 4.7 nF to GND                                 value '10n', C26 pins on ['CH_COMP1C', 'GND']
+  FAIL C234 is 33 pF to GND                                 value '', C234 pins on []
+  FAIL CH_COMP2 holds U3, R220 and C27 only                 CH_COMP2: [('C27', '1'), ('U3', '17')]
+  FAIL CH_COMP2C holds R220 and C235 only                   CH_COMP2C: []
+  FAIL R220 is 15 kOhm                                      value ''
+  FAIL C235 is 680 pF to GND                                value '', C235 pins on []
+  FAIL C27 is 15 pF to GND                                  value '1n', C27 pins on ['CH_COMP2', 'GND']
+  PASS C121 is 10 nF across CH_ACP_F and CH_ACN_F           value '10n', C121 pins on ['CH_ACN_F', 'CH_ACP_F']
+readback_s117: FAIL, 4 of 17 checks hold

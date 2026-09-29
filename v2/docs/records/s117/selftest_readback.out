@@ -1,0 +1,31 @@
+committed netlist: FAIL (4 of 17 checks hold) -> as it must
+synthetic after:   PASS (23 of 23) -> as it must
+mutant L2 left on the XAL60xx land:             FAIL (L2 on the XAL1010 land) -> as it must
+mutant L2 the 3.3 uH part:                      FAIL (L2 is the XAL1010-472ME; L2 is 4.7 uH) -> as it must
+mutant IADPT resistor 169k (the 3.3 uH row):    FAIL (IADPT resistor R219 is 191 or 187 kOhm) -> as it must
+mutant IADPT resistor at 5 percent:             FAIL (IADPT resistor R219 at 1 percent or better) -> as it must
+mutant IADPT resistor with no tolerance:        FAIL (IADPT resistor R219 at 1 percent or better) -> as it must
+mutant IADPT resistor to +3V3:                  FAIL (IADPT resistor R219 to GND) -> as it must
+mutant IADPT capacitor 150 pF:                  FAIL (IADPT capacitor C233 is 100 pF or less) -> as it must
+mutant IADPT capacitor missing:                 FAIL (IADPT holds U3, TP19, one resistor and one capacitor) -> as it must
+mutant IADPT resistor missing:                  FAIL (IADPT holds U3, TP19, one resistor and one capacitor) -> as it must
+mutant a second resistor on IADPT:              FAIL (IADPT holds U3, TP19, one resistor and one capacitor) -> as it must
+mutant R25 at the 800 kHz row's 16.9k:          FAIL (R25 is 40.2 kOhm) -> as it must
+mutant C26 at the 800 kHz row's 3.3 nF:         FAIL (C26 is 4.7 nF to GND) -> as it must
+mutant C234 missing:                            FAIL (CH_COMP1 holds U3, R25 and C234 only; C234 is 33 pF to GND) -> as it must
+mutant C235 at the 800 kHz row's 1200 pF:       FAIL (C235 is 680 pF to GND) -> as it must
+mutant C27 left at 1 nF:                        FAIL (C27 is 15 pF to GND) -> as it must
+mutant R220 on the wrong net:                   FAIL (CH_COMP1 holds U3, R25 and C234 only; CH_COMP2 holds U3, R220 and C27 only) -> as it must
+mutant C121 removed (the 800 kHz permission):   FAIL (C121 is 10 nF across CH_ACP_F and CH_ACN_F) -> as it must
+against, synthetic after vs committed: PASS -> as it must
+against, mutant R24's value moved too:             FAIL (parts changed are exactly C26, C27, L2, R25) -> as it must
+against, mutant a sixth new part:                  FAIL (parts added are exactly the five new ones; net members moved exactly by the change's pins) -> as it must
+against, mutant R219 drawn to +3V3 instead of GND: FAIL (net members moved exactly by the change's pins) -> as it must
+fets, committed netlist: FAIL -> as it must
+fets, synthetic after with the FETs, against the committed netlist (--fets): PASS -> as it must
+fets, the same without --fets: FAIL (parts changed are exactly C26, C27, L2, R25) -> as it must
+fets, mutant Q7 left a CSD18510Q5B:         FAIL (Q7 is the CSD17578Q5A) -> as it must
+fets, mutant Q7 and Q8 swapped:             FAIL (Q7 is the CSD17578Q5A; Q8 is the CSD17577Q5A) -> as it must
+fets, mutant Q9 on another land:            FAIL (Q9 on the PowerPAK SO-8 land, pads on their nets) -> as it must
+fets, mutant Q10 drain and source swapped:  FAIL (Q10 on the PowerPAK SO-8 land, pads on their nets) -> as it must
+selftest_readback_s117: every case as it must

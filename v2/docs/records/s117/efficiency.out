@@ -1,0 +1,127 @@
+THE CHARGER'S EFFICIENCY BY OPERATING POINT (efficiency.py, stream s117 second issue, MESHSAT-1357). Desk arithmetic
+on the makers' figures (SLUSE66A Equations 6 to 22); nothing built or measured. Core loss, board copper and PFM EXCLUDED:
+every figure is high by them. Readings: lower = the makers' maxima; TI = Equation 14 with typical figures; Qgs2; upper.
+
+1. U3 WITH THE DRAWN FETS (Q7 to Q10 CSD18510Q5B), S-117's row (XAL1010-472ME, 400 kHz), R16 10 mOhm, R17 5 mOhm
+   operating point (20.7 V in, buck)                                  lower     TI   Qgs2  upper
+   model peak (a1elec .out 7): 6.20 A in, node 14.5 V, base charge 1.91 A 0.924  0.943  0.953  0.964
+   reconciliation's minimum cap: 6.1 A in, 14.5 V, ChargeCurrent 3.968 A 0.923  0.942  0.953  0.963
+   pack range, low: 6.1 A in, node 12.0 V                             0.911  0.933  0.945  0.958
+   pack range, high: 6.1 A in, node 16.8 V                            0.931  0.948  0.957  0.967
+   entry E1: 4.15 A in, 14.5 V                                        0.919  0.939  0.949  0.960
+   load only: about 2.15 A in (42.8 W out), 14.5 V                    0.903  0.928  0.937  0.948
+   the reference day's hour 06 UTC under the E2 cap: 18.7 W in, 0.90 A 0.851  0.888  0.894  0.906
+   the reference day's hour 07 UTC under the E2 cap: 62.4 W in, 3.01 A 0.912  0.934  0.944  0.955
+   the reference day's hour 08 UTC under the E2 cap: 107.3 W in, 5.18 A 0.922  0.941  0.951  0.962
+   the reference day's hour 15 UTC under the E2 cap: 105.5 W in, 5.09 A 0.922  0.941  0.951  0.962
+   the reference day's hour 16 UTC under the E2 cap: 61.5 W in, 2.97 A 0.912  0.934  0.944  0.955
+   the reference day's hour 17 UTC under the E2 cap: 16.7 W in, 0.81 A 0.840  0.879  0.885  0.897
+   buck-boost BOUND at 16.8 V (all four switching; TI states no threshold) 0.891  0.920  0.934  0.949
+   the day, energy-weighted, entry E2 (1142 Wh into U3 a day)         0.919  0.939  0.949  0.960
+   the day, energy-weighted, entry E1 (847 Wh into U3 a day)          0.915  0.936  0.946  0.957
+
+2. U3 WITH THE CHOSEN FETS (Q7 CSD17578Q5A; Q8, Q9, Q10 CSD17577Q5A), the same row and sense resistors
+   operating point (20.7 V in, buck)                                  lower     TI   Qgs2  upper
+   model peak (a1elec .out 7): 6.20 A in, node 14.5 V, base charge 1.91 A 0.972  0.979  0.981  0.983
+   reconciliation's minimum cap: 6.1 A in, 14.5 V, ChargeCurrent 3.968 A 0.972  0.979  0.980  0.982
+   pack range, low: 6.1 A in, node 12.0 V                             0.965  0.974  0.976  0.978
+   pack range, high: 6.1 A in, node 16.8 V                            0.976  0.982  0.983  0.985
+   entry E1: 4.15 A in, 14.5 V                                        0.975  0.981  0.983  0.985
+   load only: about 2.15 A in (42.8 W out), 14.5 V                    0.976  0.983  0.984  0.986
+   the reference day's hour 06 UTC under the E2 cap: 18.7 W in, 0.90 A 0.967  0.975  0.976  0.979
+   the reference day's hour 07 UTC under the E2 cap: 62.4 W in, 3.01 A 0.976  0.982  0.983  0.985
+   the reference day's hour 08 UTC under the E2 cap: 107.3 W in, 5.18 A 0.973  0.980  0.981  0.983
+   the reference day's hour 15 UTC under the E2 cap: 105.5 W in, 5.09 A 0.974  0.980  0.982  0.984
+   the reference day's hour 16 UTC under the E2 cap: 61.5 W in, 2.97 A 0.976  0.982  0.983  0.985
+   the reference day's hour 17 UTC under the E2 cap: 16.7 W in, 0.81 A 0.965  0.974  0.975  0.978
+   buck-boost BOUND at 16.8 V (all four switching; TI states no threshold) 0.969  0.977  0.979  0.982
+   the day, energy-weighted, entry E2 (1142 Wh into U3 a day)         0.972  0.979  0.981  0.983
+   the day, energy-weighted, entry E1 (847 Wh into U3 a day)          0.975  0.981  0.982  0.984
+
+   the reference day's hours (U3's input, W): E2 19 62 107 128 128 128 128 128 128 105 61 17
+                                              E1 19 62 86 86 86 86 86 86 86 86 61 17
+   (energy_two_pack.py's September reference day, 400 Wp, the 200 W stage, stage 0.93 and front end 0.93 as it carries them)
+
+3. THE BREAKDOWN AT THE MODEL'S PEAK (6.20 A in, 14.5 V), TI's reading, W
+   drawn   total 7.37 W (IL 8.34 A): Q7 4.77, Q8 0.46, Q10 0.08, gate drive 1.24, L2 copper 0.40, R16 0.38, R17 0.02, Iq 0.02
+   chosen  total 2.69 W (IL 8.67 A): Q7 0.98, Q8 0.35, Q10 0.29, gate drive 0.22, L2 copper 0.43, R16 0.38, R17 0.02, Iq 0.02
+   the budget for 0.98 at this point: 2.57 W
+   with the chosen FETs the 800 kHz row (XAL1010-332ME, 169 kOhm) against S-117's 400 kHz row: lower 0.961 against 0.972 (1.37 W more); TI 0.971 against 0.979 (0.97 W more); upper 0.978 against 0.983 (0.56 W more)
+
+4. U3B (Option A(i)'s lid charger, records/a1elec/TOPOLOGY.md 3b), VIN = VBAT 14.5 V, the model's 55.3 W at its peak hour,
+   lid charge 3.69 A; the lid below VBAT runs buck, above it boost, near it buck-boost (bound)
+   drafted: CSD18510Q5B x 4, 800 kHz, XAL1010-332ME, 5 mOhm sense
+        lid 13.0 V, buck                                              0.866  0.896  0.912  0.930
+        lid 14.0 V, buck                                              0.871  0.899  0.915  0.932
+        lid 15.5 V, boost                                             0.856  0.891  0.909  0.929
+        lid about 14.5 V, buck-boost BOUND                            0.734  0.802  0.834  0.869
+   CSD17578Q5A x 4, the drafted 800 kHz row
+        lid 13.0 V, buck                                              0.966  0.975  0.977  0.980
+        lid 14.0 V, buck                                              0.968  0.976  0.978  0.982
+        lid 15.5 V, boost                                             0.968  0.976  0.978  0.982
+        lid about 14.5 V, buck-boost BOUND                            0.947  0.961  0.965  0.971
+   Q7B, Q9B CSD17578Q5A and Q8B, Q10B CSD17577Q5A, the 400 kHz row (4.7 uH, 10 mOhm sense)
+        lid 13.0 V, buck                                              0.976  0.981  0.983  0.985
+        lid 14.0 V, buck                                              0.978  0.982  0.984  0.985
+        lid 15.5 V, boost                                             0.977  0.982  0.984  0.985
+        lid about 14.5 V, buck-boost BOUND                            0.966  0.974  0.976  0.980
+
+5. REGN'S GATE-DRIVE BUDGET (SLUSE66A 8.5 p.11: VREGN_REG specified for 0 to 60 mA; IREGN_LIM 50 min, 65 typ mA).
+   I = sum of the switching FETs' Qg at 6 V x fS; typical Qg at the typical fS, the scaled maximum Qg at the maximum fS
+   U3 drawn               buck         60.0 mA typical,   88.6 mA at the maxima: OVER 50 mA
+   U3 drawn               buck-boost  120.0 mA typical,  177.2 mA at the maxima: OVER 50 mA
+   U3 chosen              buck         10.5 mA typical,   16.3 mA at the maxima: inside 50 mA
+   U3 chosen              buck-boost   23.3 mA typical,   36.5 mA at the maxima: inside 50 mA
+   U3B drafted            buck        120.0 mA typical,  177.2 mA at the maxima: OVER 50 mA
+   U3B drafted            buck-boost  240.0 mA typical,  354.4 mA at the maxima: OVER 50 mA
+   U3B 800 kHz, 78 x 4    buck         16.5 mA typical,   25.0 mA at the maxima: inside 50 mA
+   U3B 800 kHz, 78 x 4    buck-boost   33.0 mA typical,   49.9 mA at the maxima: inside 50 mA
+   U3B 400 kHz, 78/77     buck         10.5 mA typical,   16.3 mA at the maxima: inside 50 mA
+   U3B 400 kHz, 78/77     buck-boost   21.0 mA typical,   32.6 mA at the maxima: inside 50 mA
+   U3B 800 kHz, 78/77     buck         21.0 mA typical,   32.6 mA at the maxima: inside 50 mA
+   U3B 800 kHz, 78/77     buck-boost   42.1 mA typical,   65.3 mA at the maxima: typical inside, maxima OVER 50 mA
+
+6. THE HOTTEST FET (the FETs' own dissipation; RthJA 50 C/W maximum on TI's 1 in2, 2 oz copper pad, SLPS526 and SLPS516
+   5.2 p.3; board A's copper is not TI's pad, so the rise orders the cases and does not predict a temperature)
+   model peak (a1elec .out 7): 6.20 A in, node 14.5 V, base charge 1.91 A
+     drawn  TI    IL  8.34 A: Q7 4.77 W, Q8 0.46 W, Q10 0.08 W; hottest Q7 (CSD18510Q5B) 238 K over its surroundings at 50 C/W
+     drawn  lower IL  8.18 A: Q7 6.71 W, Q8 0.51 W, Q10 0.10 W; hottest Q7 (CSD18510Q5B) 335 K over its surroundings at 50 C/W
+     chosen TI    IL  8.67 A: Q7 0.98 W, Q8 0.35 W, Q10 0.29 W; hottest Q7 (CSD17578Q5A) 49 K over its surroundings at 50 C/W
+     chosen lower IL  8.60 A: Q7 1.49 W, Q8 0.43 W, Q10 0.43 W; hottest Q7 (CSD17578Q5A) 74 K over its surroundings at 50 C/W
+   G1: 5.7 A in, pack 10.0 V (the as-generated bound)
+     drawn  TI    IL 10.88 A: Q7 6.19 W, Q8 0.56 W, Q10 0.13 W; hottest Q7 (CSD18510Q5B) 309 K over its surroundings at 50 C/W
+     drawn  lower IL 10.58 A: Q7 8.65 W, Q8 0.63 W, Q10 0.17 W; hottest Q7 (CSD18510Q5B) 432 K over its surroundings at 50 C/W
+     chosen TI    IL 11.43 A: Q7 1.25 W, Q8 0.58 W, Q10 0.51 W; hottest Q7 (CSD17578Q5A) 62 K over its surroundings at 50 C/W
+     chosen lower IL 11.31 A: Q7 1.89 W, Q8 0.76 W, Q10 0.75 W; hottest Q7 (CSD17578Q5A) 94 K over its surroundings at 50 C/W
+   A2: 6.45 A in, pack 10.0 V (Option A(i)'s bound)
+     drawn  TI    IL 12.32 A: Q7 7.03 W, Q8 0.61 W, Q10 0.17 W; hottest Q7 (CSD18510Q5B) 352 K over its surroundings at 50 C/W
+     drawn  lower IL 11.98 A: Q7 9.80 W, Q8 0.70 W, Q10 0.22 W; hottest Q7 (CSD18510Q5B) 490 K over its surroundings at 50 C/W
+     chosen TI    IL 12.91 A: Q7 1.47 W, Q8 0.69 W, Q10 0.65 W; hottest Q7 (CSD17578Q5A) 74 K over its surroundings at 50 C/W
+     chosen lower IL 12.76 A: Q7 2.22 W, Q8 0.91 W, Q10 0.95 W; hottest Q7 (CSD17578Q5A) 111 K over its surroundings at 50 C/W
+
+7. WHAT THE ENERGY MODEL SHOULD CARRY FOR THE CHARGERS (a table for the energy record's writer; core loss excluded)
+                                                lower     TI        upper     carry (TI's reading, the day's weighted)
+   U3 as on main (XAL6030-332ME, 400 kHz), E2   0.912     0.934     0.954     0.934
+   U3 as on main (XAL6030-332ME, 400 kHz), E1   0.910     0.933     0.952     0.933
+   U3, drawn FETs (S-117's row), day at E2      0.919     0.939     0.960     0.939
+   U3, drawn FETs (S-117's row), day at E1      0.915     0.936     0.957     0.936
+   U3, chosen FETs, day at E2                   0.972     0.979     0.983     0.979
+   U3, chosen FETs, day at E1                   0.975     0.981     0.984     0.981
+   U3B, drafted (800 kHz, CSD18510Q5B)          0.734     0.802     0.869     0.802 (the worst of buck, buck-boost bound and boost at the peak hour)
+   U3B, CSD17578Q5A x 4, 800 kHz                0.947     0.961     0.971     0.961 (the worst of buck, buck-boost bound and boost at the peak hour)
+   U3B, 78/77 pairs, 400 kHz row                0.966     0.974     0.980     0.974 (the worst of buck, buck-boost bound and boost at the peak hour)
+
+8. THE SCREEN: the independent check's criteria for the switching pair (Qg at 6 V about 12 nC or less, Qgd + Qgs about
+   7 nC or less, Qrr about 15 nC or less, RDS(on) at 6 V about 5 mOhm or less, 30 V or more) against every FET read,
+   and U3's efficiency at the model's peak with that part as Q7 and Q8 (Q9, Q10 CSD17577Q5A), TI's reading and the lower
+   CSD18510Q5B    2 of 5 (MISSED Qg at 6 V <= 12 nC; MISSED Qgd + Qgs <= 7 nC; MISSED Qrr <= 15 nC); SON 5 x 6 (Q5B), drawn; as Q7 and Q8: 0.941 (lower 0.922)
+   CSD17578Q5A    4 of 5 (MISSED RDS(on) at 6 V <= 5 mOhm); SON 5 x 6 (Q5A), the drawn land; as Q7 and Q8: 0.979 (lower 0.972)
+   CSD17577Q5A    3 of 5 (MISSED Qg at 6 V <= 12 nC; MISSED Qgd + Qgs <= 7 nC); SON 5 x 6 (Q5A), the drawn land; as Q7 and Q8: 0.978 (lower 0.970)
+   CSD17579Q5A    4 of 5 (MISSED RDS(on) at 6 V <= 5 mOhm); SON 5 x 6 (Q5A), the drawn land; as Q7 and Q8: 0.979 (lower 0.972)
+   CSD17581Q5A    3 of 5 (MISSED Qg at 6 V <= 12 nC; MISSED Qgd + Qgs <= 7 nC); SON 5 x 6 (Q5A), the drawn land; as Q7 and Q8: 0.973 (lower 0.963)
+   PSMN4R0-30YLD  5 of 5 (all met); LFPAK56 (SOT669), NOT the drawn land; as Q7 and Q8: 0.979 (lower 0.974)
+   CHOSEN: Q7 CSD17578Q5A with Q8 to Q10 CSD17577Q5A: 0.979 (lower 0.972)
+
+   The energy chain's rows today: U3 0.98 (records/energy/energy_inputs.yaml, SLUSE66A Figure 8-4, FETs not named) and U3B
+   0.975 (records/a1elec/energy_two_pack.py, Figure 8-3). Figure 8-4 at 4 A and 14.8 V loses about 0.96 W in all, less than
+   the drawn FETs' gate drive alone (1.24 W at 400 kHz): the curve describes FETs of a much smaller gate charge.
