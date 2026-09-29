@@ -108,6 +108,31 @@ def main():
         bad = [n for n, ok, _ in RB.against(d, base) if not ok]
         print("against, mutant %-34s %s -> %s" % (name + ":", "FAIL (%s)" % "; ".join(bad) if bad else "PASS", "as it must" if bad else "WRONG"))
         fails += not bad
+    # --fets (the second issue): the four FETs as apply_gen_sch_a_fets_s117.py draws them
+    PP = "Package_SO:PowerPAK_SO-8_Single"
+    def with_fets(d0):
+        d = copy.deepcopy(d0)
+        for ref, (part, pinmap) in RB.FETS.items():
+            put(d, ref, "%s 30 V N-FET" % part, PP, pinmap)
+        return d
+    gf = with_fets(good)
+    rf = RB.check_fets(base)
+    print("fets, committed netlist: %s -> %s" % ("PASS" if all(ok for _, ok, _ in rf) else "FAIL", "WRONG" if all(ok for _, ok, _ in rf) else "as it must"))
+    fails += all(ok for _, ok, _ in rf)
+    okf = all(ok for _, ok, _ in RB.check(gf) + RB.check_fets(gf) + RB.against(gf, base, True))
+    print("fets, synthetic after with the FETs, against the committed netlist (--fets): %s -> %s" % ("PASS" if okf else "FAIL", "as it must" if okf else "WRONG"))
+    fails += not okf
+    bad0 = [n for n, ok, _ in RB.against(gf, base, False) if not ok]
+    print("fets, the same without --fets: %s -> %s" % ("FAIL (%s)" % "; ".join(bad0) if bad0 else "PASS", "as it must" if bad0 else "WRONG"))
+    fails += not bad0
+    for name, fn in (("Q7 left a CSD18510Q5B", lambda d: put(d, "Q7", "CSD18510Q5B 40 V N-FET", PP, RB.FETS["Q7"][1])),
+                     ("Q7 and Q8 swapped", lambda d: (put(d, "Q7", "CSD17577Q5A 30 V N-FET", PP, RB.FETS["Q7"][1]), put(d, "Q8", "CSD17578Q5A 30 V N-FET", PP, RB.FETS["Q8"][1]))),
+                     ("Q9 on another land", lambda d: put(d, "Q9", "CSD17577Q5A 30 V N-FET", "Package_SON:VSON-8_5x6mm", RB.FETS["Q9"][1])),
+                     ("Q10 drain and source swapped", lambda d: put(d, "Q10", "CSD17577Q5A 30 V N-FET", PP, {"1": "VBAT", "2": "VBAT", "3": "VBAT", "4": "CH_HIDRV2", "5": "CH_SW2"}))):
+        d = copy.deepcopy(gf); fn(d)
+        bad = [n for n, ok, _ in RB.check_fets(d) if not ok]
+        print("fets, mutant %-30s %s -> %s" % (name + ":", "FAIL (%s)" % "; ".join(bad) if bad else "PASS", "as it must" if bad else "WRONG"))
+        fails += not bad
     print("selftest_readback_s117: %s" % ("every case as it must" if not fails else "%d case(s) WRONG" % fails))
     return 0 if not fails else 1
 

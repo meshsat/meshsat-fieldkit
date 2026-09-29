@@ -60,6 +60,32 @@ FETS = {
             "at 6 V, plateau 2.6 to 2.9 V at 18 A (INFERRED); Figure 7 p.5: 3.9 mOhm at 6 V, 25 C, 5.8 at 125 C (INFERRED); "
             "Figure 5 p.5: Coss about 190 pF from 15 to 21 V, so Qoss at 20.7 V about 7.1 nC (INFERRED)"),
 }
+# The screen's other candidates (fetched and pinned, held back; v2/vendor/sources.txt). Table figures only where no curve was
+# read: Qg at 6 V and RDS(on) at 6 V interpolated between the 4.5 V and 10 V rows (INFERRED), 125 C as 1.5 x (INFERRED).
+SCREEN = {
+    "CSD17579Q5A": dict(  # TI SLPS524 (March 2015) 5.1 p.3: Qg 5.4/7 nC at 4.5 V, 11.6/15.1 at 10 V; Qgd 1.2, Qgs 2.3,
+        # Qg(th) 1.1; Qoss 2.9 at 15 V; Qrr 4.2; RDS(on) 11.6/13.3 mOhm at 4.5 V, 8.4/9.7 at 10 V; RG 1.9/3.8
+        v=30, qg=7.1e-9, qg_max=9.2e-9, qsw14=3.5e-9, qsw2=2.4e-9, qgd=1.2e-9, qoss=3.4e-9, qrr=4.2e-9, rds=10.5e-3,
+        rds_up=10.5e-3, rds_hot=15.8e-3, rg=1.9, rg_max=3.8, vplt=2.7, vplt_lo=2.55, land="SON 5 x 6 (Q5A), the drawn land",
+        src="SLPS524 5.1 p.3"),
+    "CSD17581Q5A": dict(  # TI SLPS630 (September 2016) 5.1 p.3: Qg 20/25 nC at 4.5 V, 41/54 at 10 V; Qgd 4.0, Qgs 6.9,
+        # Qg(th) 3.6; Qoss 11.7 at 15 V; Qrr 13; RDS(on) 3.5/4.2 mOhm at 4.5 V, 2.9/3.4 at 10 V; RG 1.8/3.6
+        v=30, qg=25.7e-9, qg_max=32.9e-9, qsw14=10.9e-9, qsw2=7.3e-9, qgd=4.0e-9, qoss=13.7e-9, qrr=13e-9, rds=3.3e-3,
+        rds_up=3.3e-3, rds_hot=5.0e-3, rg=1.8, rg_max=3.6, vplt=2.4, vplt_lo=2.25, land="SON 5 x 6 (Q5A), the drawn land",
+        src="SLPS630 5.1 p.3"),
+    "PSMN4R0-30YLD": dict(  # Nexperia, 10 October 2013, p.6 and p.7: QG(tot) 9.1 nC at 4.5 V and 19.4 at 10 V (typical;
+        # no maximum stated, so the lower reading takes the typical), QGD 2.4, QGS 2.6, QGS(th) 1.9, VGS(pl) 2.3 V; Qoss 16
+        # nC at 15 V; Qr 13.3 nC (15 V, 25 A, 100 A/us); RDSon 4.4/5.5 mOhm at 4.5 V and 3.4/4.0 at 10 V, 9.1 and 6.6 max
+        # at 150 C; RG 2.2
+        v=30, qg=11.9e-9, qg_max=11.9e-9, qsw14=5.0e-9, qsw2=3.1e-9, qgd=2.4e-9, qoss=17.9e-9, qrr=13.3e-9, rds=4.0e-3,
+        rds_up=4.0e-3, rds_hot=6.9e-3, rg=2.2, rg_max=2.2, vplt=2.3, vplt_lo=2.15, land="LFPAK56 (SOT669), NOT the drawn land",
+        src="PSMN4R0-30YLD p.6 and p.7"),
+}
+FETS.update(SCREEN)
+FETS["CSD17578Q5A"]["land"] = FETS["CSD17577Q5A"]["land"] = "SON 5 x 6 (Q5A), the drawn land"
+FETS["CSD18510Q5B"]["land"] = "SON 5 x 6 (Q5B), drawn"
+CRITERIA = (("Qg at 6 V <= 12 nC", "qg", 12e-9), ("Qgd + Qgs <= 7 nC", "qsw14", 7e-9), ("Qrr <= 15 nC", "qrr", 15e-9),
+            ("RDS(on) at 6 V <= 5 mOhm", "rds", 5e-3), (">= 30 V", "v", 30))
 
 # --------------------------------------------------------------------------------------------- the inductors
 # Coilcraft 804-1 (XAL1010, revised 02/25/26): DCR typ / max; 804-2 curves read by this stream (INFERRED), in uH.
@@ -258,6 +284,12 @@ def main():
         P("   %-7s total %.2f W (IL %.2f A): Q7 %.2f, Q8 %.2f, Q10 %.2f, gate drive %.2f, L2 copper %.2f, R16 %.2f, R17 %.2f, Iq %.2f"
           % (lab, tot, il, per[0], per[1], per[3], t["gates"], t["L copper"], t["R_in"], t["R_chg"], t["Iq"]))
     P("   the budget for 0.98 at this point: %.2f W" % (0.02 * 20.7 * 6.20))
+    s = []
+    for r in ("lower", "TI", "upper"):
+        a4 = stage("buck", 20.7, 6.20, 14.5, 1.91, CHOSEN_U3, "XAL1010-472ME", 400e3, 0.010, 0.005, r)[0]
+        a8 = stage("buck", 20.7, 6.20, 14.5, 1.91, CHOSEN_U3, "XAL1010-332ME", 800e3, 0.010, 0.005, r)[0]
+        s.append("%s %.3f against %.3f (%.2f W more)" % (r, 1 - a8 / (20.7 * 6.20), 1 - a4 / (20.7 * 6.20), a8 - a4))
+    P("   with the chosen FETs the 800 kHz row (XAL1010-332ME, 169 kOhm) against S-117's 400 kHz row: %s" % "; ".join(s))
     P("")
     P("4. U3B (Option A(i)'s lid charger, records/a1elec/TOPOLOGY.md 3b), VIN = VBAT 14.5 V, the model's 55.3 W at its peak hour,")
     P("   lid charge 3.69 A; the lid below VBAT runs buck, above it boost, near it buck-boost (bound)")
@@ -304,6 +336,22 @@ def main():
         v = [min(eta(m, 14.5, 55.3 / 14.5, vo, 3.69, fets, row["ind"], row["f"], row["r_in"], row["r_chg"], r) for m, vo in (("buck", 13.0), ("bb", 14.5), ("boost", 15.5)))
              for r in ("lower", "TI", "upper")]
         P("   %-44s %-9.3f %-9.3f %-9.3f %.3f (the worst of buck, buck-boost bound and boost at the peak hour)" % (lab, v[0], v[1], v[2], v[1]))
+    P("")
+    P("8. THE SCREEN: the independent check's criteria for the switching pair (Qg at 6 V about 12 nC or less, Qgd + Qgs about")
+    P("   7 nC or less, Qrr about 15 nC or less, RDS(on) at 6 V about 5 mOhm or less, 30 V or more) against every FET read,")
+    P("   and U3's efficiency at the model's peak with that part as Q7 and Q8 (Q9, Q10 CSD17577Q5A), TI's reading and the lower")
+    for n in ("CSD18510Q5B", "CSD17578Q5A", "CSD17577Q5A", "CSD17579Q5A", "CSD17581Q5A", "PSMN4R0-30YLD"):
+        f = FETS[n]
+        met = ["%s %s" % ("met" if (f[k] >= lim if k == "v" else f[k] <= lim) else "MISSED", lab) for lab, k, lim in CRITERIA]
+        sets = (n, n, "CSD17577Q5A", "CSD17577Q5A")
+        e_ti = eta("buck", 20.7, 6.20, 14.5, 1.91, sets, U3["ind"], U3["f"], U3["r_in"], U3["r_chg"], "TI")
+        e_lo = eta("buck", 20.7, 6.20, 14.5, 1.91, sets, U3["ind"], U3["f"], U3["r_in"], U3["r_chg"], "lower")
+        P("   %-14s %d of 5 (%s); %s; as Q7 and Q8: %.3f (lower %.3f)" % (n, sum(m.startswith("met") for m in met),
+                                                                        "; ".join(x for x in met if x.startswith("MISSED")) or "all met", f["land"], e_ti, e_lo))
+    e_ti = eta("buck", 20.7, 6.20, 14.5, 1.91, CHOSEN_U3, U3["ind"], U3["f"], U3["r_in"], U3["r_chg"], "TI")
+    e_lo = eta("buck", 20.7, 6.20, 14.5, 1.91, CHOSEN_U3, U3["ind"], U3["f"], U3["r_in"], U3["r_chg"], "lower")
+    P("   CHOSEN: Q7 CSD17578Q5A with Q8 to Q10 CSD17577Q5A: %.3f (lower %.3f)" % (e_ti, e_lo))
+    P("")
     P("   The energy chain's rows today: U3 0.98 (records/energy/energy_inputs.yaml, SLUSE66A Figure 8-4, FETs not named) and U3B")
     P("   0.975 (records/a1elec/energy_two_pack.py, Figure 8-3). Figure 8-4 at 4 A and 14.8 V loses about 0.96 W in all, less than")
     P("   the drawn FETs' gate drive alone (1.24 W at 400 kHz): the curve describes FETs of a much smaller gate charge.")

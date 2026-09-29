@@ -137,7 +137,9 @@ S1   20.70   5.70   9.00    13.11  sensitivity only: the secondary protector's 9
 
    'stage' is Q7 + Q8 + Q10 + L2's copper; 'sw part' is every term that scales with fS. Not in 'stage': the core
    loss (not held), R16 and R17, the controller's own quiescent draw, and the FETs' rise in RDS(on) with temperature
-   (Figure 2 is 25 C). eta here is therefore an upper figure for the stage, not the charger's efficiency.
+   (Figure 2 is 25 C), with IL taken at an efficiency of 1. The eta column is therefore NOT the charger's efficiency and
+   bounds it on neither side (corrected in the second issue after the independent check's B1): efficiency.py gives the
+   charger's efficiency by operating point, R16 and R17 counted, IL solved, with the makers' maxima and TI's method.
 
 4. THE 400 kHz ROW AGAINST THE 800 kHz ROW ON THE SAME LAND (XAL1010), switching terms only, both Qsw readings
    pt      400k 4.7uH     800k 3.3uH     800k extra
