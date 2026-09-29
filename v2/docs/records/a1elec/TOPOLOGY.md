@@ -101,7 +101,8 @@ divider from U3B's own VDDA (the pin sets the input limit as 1 V + 40 x IDPM x R
 at ground with its gate pulled up to U3B's REGN (REGN stays enabled in HiZ, 9.3.8), so U3B sits in HiZ by default; a
 second 2N7002 **Q_E2** pulls Q_E1's gate down, released only while an SN74LVC1G08 AND (held,
 `v2/vendor/ti/ti-sn74lvc1g08.pdf`) of CHRG_OK and LID_CHG_EN is high. An unpowered gate, a low input or a dead host
-leave U3B in HiZ. With the kit on batteries alone U3's CHRG_OK is low and U3B cannot run, so **the base can never
+leave U3B in HiZ; a host that hangs with LID_CHG_EN high stops talking to the lid gauge, whose host watchdog (HWD,
+10 s) then opens the lid's charge FET, and U3's CHRG_OK falls at sunset. With the kit on batteries alone U3's CHRG_OK is low and U3B cannot run, so **the base can never
 charge the lid on battery**. The same AND output drives a third 2N7002 that pulls the LM5069's UVLO low (3c):
 **whenever U3B may run, the lid's discharge path is off.** Without
 it, U3B's output would lift the lid's end of the harness (the charge current through the lead and the cells, about 0.3 V
