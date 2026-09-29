@@ -105,7 +105,7 @@ TOGGLE = ("EMCON locking toggle (closed = TX inhibit)", "Connector:X", "Connecto
 # SW1 on either line and SW2 and SW_EMCON on TX_INHIBIT_n, each to ground, on any board a fixture names, with the kit's own
 # declaration beside them. Any other switch in a fixture (SW_BENCH, SW_X) is an ordinary part, as on the kit's boards.
 FIXTURE_TOGGLES = list(T.EMCON_TOGGLES) + [
-    dict(board=b, ref=r, value=r"EMCON locking toggle", line=l, why="a fixture's toggle")
+    dict(board=b, ref=r, value=r"EMCON locking toggle", line=l, lugs=("1", "2"), why="a fixture's toggle")
     for b in "ABCDEP" for r, l in (("SW1", "EMCON_HW"), ("SW1", "TX_INHIBIT_n"), ("SW2", "TX_INHIBIT_n"), ("SW_EMCON", "TX_INHIBIT_n"))]
 
 
@@ -1054,7 +1054,7 @@ def t_the_bound_covers_every_whole_board_state_the_review_named():
     line = _line_of(kit)
     assert line["ok"] is False and "boards B, C unpowered and A powered" in line["detail"], line
     s, cond = "EMCON_HW", [(k, "EMCON_HW") for k in "ABC"]
-    src = {(k, ref): why for k, n in cond for ref, why in T._line_sources(kit[k], n)}
+    src = {(k, ref): why for k, n in cond for ref, why in T._line_sources(kit[k], n, k)}
     bound = T._fs_bound(kit, s, cond, {"C"}, set(), src)
     assert bound["ok"] is False and bound["v"] > 0.8, bound
     for down in ({"C"}, {"A", "C"}, {"B", "C"}):
@@ -1077,7 +1077,7 @@ def t_the_bound_covers_every_whole_board_state_the_review_named():
     for pd in (None, "100k"):
         kit = _panel({}, {}, pull_down=pd, u19_rail="VCC_X")
         cond = [(k, s) for k in "BC"]
-        src = {(k, ref): why for k, n in cond for ref, why in T._line_sources(kit[k], n)}
+        src = {(k, ref): why for k, n in cond for ref, why in T._line_sources(kit[k], n, k)}
         bound = T._fs_bound(kit, s, cond, {"C"}, set(), src)
         assert not bound.get("na") and bound["ok"] is (False if pd is None else None), (pd, bound)
         for down in ({"C"}, {"B", "C"}):
@@ -1380,7 +1380,7 @@ def t_a_switch_readers_domain_is_its_input_rail_not_its_output():
                  {"EMCON_HW": [("U21", "5", "EN/UVLO"), ("U30", "1", "")], "+5V_DEV": [("U21", "6", "VIN")],
                   "+3V3_LORA": [("U21", "1", "VOUT"), ("U30", "5", "")], "GND": [("U21", "4", "GND"), ("U30", "3", "")]})
     s = "EMCON_HW"; cond = [(k, s) for k in "BC"]
-    src = {(k, ref): why for k, n in cond for ref, why in T._line_sources(kit[k], n)}
+    src = {(k, ref): why for k, n in cond for ref, why in T._line_sources(kit[k], n, k)}
     base = T._fs_base(kit, cond, {"C"}, set(), src)
     net0 = T._network(kit, cond, 0, dict(base, domain=frozenset()))
     doms = {lab: d for d, items in net0["cands"].items() for _x, lab in items}
@@ -3825,14 +3825,14 @@ def t_the_panels_buffer_behind_its_series_resistor_is_the_lines_own_source():
     private net (an expander pin), the buffer's input on a net that is not an asserted line, or a pull-up on the private
     net; the net is then an ordinary one and EMCON_HW FAILS, as it did before the source was recognised."""
     b = _panel_clamped()
-    assert T.drive_net(b["C"], "EMCON_HW_DRV")["ref"] == "U9" and T.drive_net(b["C"], "EMCON_HW_DRV")["res"] == "R52"
-    assert [r for r, _w in T._line_sources(b["C"], "EMCON_HW")] == ["U9"], T._line_sources(b["C"], "EMCON_HW")
+    assert T.drive_net(b["C"], "EMCON_HW_DRV", "C")["ref"] == "U9" and T.drive_net(b["C"], "EMCON_HW_DRV", "C")["res"] == "R52"
+    assert [r for r, _w in T._line_sources(b["C"], "EMCON_HW", "C")] == ["U9"], T._line_sources(b["C"], "EMCON_HW", "C")
     for name in ("EMCON_HW", "TX_INHIBIT_n"):
         line = _line_of(b, name)
         assert line["ok"] is True and "second BUF output" not in line["detail"], (name, line)
     for v in ("second_driver", "input_elsewhere", "pull_up"):
         bv = _panel_clamped(v)
-        assert T.drive_net(bv["C"], "EMCON_HW_DRV") is None, v
+        assert T.drive_net(bv["C"], "EMCON_HW_DRV", "C") is None, v
         line = _line_of(bv)
         assert line["ok"] is False, (v, line)
     assert "second BUF output" in _line_of(_panel_clamped("input_elsewhere"))["detail"]
@@ -3905,7 +3905,7 @@ def t_a_latch_of_two_buffers_across_the_lines_fails_both_lines():
             line = _line_of(b, name)
             assert line["ok"] is False, (board, behind, name, line)
     b = _latch("B", True, "+3V3_DEV")
-    assert T.drive_net(b["B"], "U30_DRV") is None and T._line_sources(b["B"], "EMCON_HW") == [], T._line_sources(b["B"], "EMCON_HW")
+    assert T.drive_net(b["B"], "U30_DRV", "B") is None and T._line_sources(b["B"], "EMCON_HW", "B") == [], T._line_sources(b["B"], "EMCON_HW", "B")
     assert "second BUF output" in _line_of(b)["detail"], _line_of(b)
     # the switch's own board keeps its buffer: D4E-F1's shape still passes both lines
     ok = _panel_clamped()
@@ -4028,5 +4028,40 @@ def t_only_the_declared_toggle_is_a_source():
     T._TOGGLES_NOW, before = FIXTURE_TOGGLES, T._TOGGLES_NOW
     try:
         assert T._is_toggle("B", sw1, "SW1") is not None
+    finally:
+        T._TOGGLES_NOW = before
+
+
+def t_the_toggle_is_its_declared_contact_and_its_board_key_is_required():
+    """The independent check of stream rf2walk, round 3, minors (set 12): the declaration named no lugs, so a toggle
+    wired across lugs 1 and 3 (two throws that never close together on the APEM 5636ADKB-2V) or across 2 and 3 (the
+    other lever position's contact) read as the line's source; and a call without the board key matched a declaration
+    on any board. The kit's toggle names its pair (1 and 2, the sheet's position I); the contact is symmetric, so the
+    line on the common and ground on the throw is the same contact. A missing key and a declaration without lugs are
+    refused, not defaulted. Each defective case read as the toggle under the previous predicate."""
+    kit = T.EMCON_TOGGLES
+    assert kit[0]["lugs"] == ("1", "2") and "page 6" in kit[0]["lugs_src"]
+    tgl = ("EMCON locking toggle", "Connector:X", "Connector_Generic:Conn_01x03")
+    def wired(line_lug, gnd_lug):
+        return _nl({"SW_EMCON": tgl}, {"TX_INHIBIT_n": [("SW_EMCON", line_lug, "")], "GND": [("SW_EMCON", gnd_lug, "")]})
+    assert T._is_toggle("C", wired("1", "2"), "SW_EMCON") is kit[0]
+    assert T._is_toggle("C", wired("2", "1"), "SW_EMCON") is kit[0]
+    for bad in (("1", "3"), ("3", "1"), ("3", "2"), ("2", "3")):
+        assert T._is_toggle("C", wired(*bad), "SW_EMCON") is None, bad
+    for call in (lambda: T._is_toggle(None, wired("1", "2"), "SW_EMCON"),
+                 lambda: T._switch_board(wired("1", "2"), None)):
+        try:
+            call()
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("a call without the board key was not refused")
+    T._TOGGLES_NOW, before = [dict(kit[0], lugs=None)], T._TOGGLES_NOW
+    try:
+        T._is_toggle("C", wired("1", "2"), "SW_EMCON")
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("a declaration without its contact lugs was not refused")
     finally:
         T._TOGGLES_NOW = before
