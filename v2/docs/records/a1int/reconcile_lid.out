@@ -3,15 +3,15 @@ parallel count and its charge current at 0.6613 A a string. Design case: 400 Wp,
 lid at 13.23 C (the September mean day's minimum air), both start hours, 42.8 W, aged 80 percent.
 
 4S8P lid: both owner-approved lid functions kept (a1mech: 35 places), 4S14P in all
-   at 13.23 C: NOT MET  stops [22, 10]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  258.9 Wh
+   at 13.23 C: NOT MET  stops [22, 10]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  259.0 Wh
    does not meet M1 even with the lid at +40 C
 
 4S12P lid: a1elec's assumption, 4S18P in all
-   at 13.23 C: MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid    0.7 Wh (  0.2 %), both   31.1 Wh; unserved    0.0 Wh
+   at 13.23 C: MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid    0.7 Wh (  0.2 %), both   31.0 Wh; unserved    0.0 Wh
    lowest lid temperature that still meets M1: +9.6 C
 
 4S14P lid: the tablet out of the lid (B, 56 places), 4S20P in all
-   at 13.23 C: MEETS    stops [None, None] lowest base   49.1 Wh ( 22.5 %), lid   44.9 Wh ( 10.2 %), both   94.0 Wh; unserved    0.0 Wh
+   at 13.23 C: MEETS    stops [None, None] lowest base   49.1 Wh ( 22.5 %), lid   44.9 Wh ( 10.1 %), both   94.0 Wh; unserved    0.0 Wh
    lowest lid temperature that still meets M1: +3.8 C
 
 4S15P lid: the QMX out of the lid (C, 61 places after the mechanical check), 4S21P in all
@@ -20,11 +20,11 @@ lid at 13.23 C (the September mean day's minimum air), both start hours, 42.8 W,
 
 4S9P lid: both functions kept with P2 allowed under the tablet (the independent check of a1mech found 39 places),
 4S15P in all, at the arrays beyond A(i)'s 400 Wp too, with the lid at its basis and at the base's +20 C:
-    400 Wp, lid 13.23 C: NOT MET  stops [23, 11]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  164.8 Wh
-    400 Wp, lid 20.00 C: NOT MET  stops [24, 36]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved   39.7 Wh
-    650 Wp, lid 13.23 C: NOT MET  stops [23, 11]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  110.9 Wh
-    650 Wp, lid 20.00 C: MEETS    stops [None, None] lowest base    1.4 Wh (  0.7 %), lid    0.5 Wh (  0.2 %), both    2.0 Wh; unserved    0.0 Wh
-   1000 Wp, lid 13.23 C: NOT MET  stops [23, 11]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved   41.7 Wh
+    400 Wp, lid 13.23 C: NOT MET  stops [23, 11]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  164.9 Wh
+    400 Wp, lid 20.00 C: NOT MET  stops [24, 36]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved   39.8 Wh
+    650 Wp, lid 13.23 C: NOT MET  stops [23, 11]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  111.0 Wh
+    650 Wp, lid 20.00 C: MEETS    stops [None, None] lowest base    1.4 Wh (  0.6 %), lid    0.5 Wh (  0.2 %), both    1.9 Wh; unserved    0.0 Wh
+   1000 Wp, lid 13.23 C: NOT MET  stops [23, 11]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved   41.8 Wh
    1000 Wp, lid 20.00 C: MEETS    stops [None, None] lowest base   12.4 Wh (  5.7 %), lid   17.0 Wh (  5.2 %), both   29.4 Wh; unserved    0.0 Wh
 
 END. Each line is the model's arithmetic on the September reference day; nothing is measured.

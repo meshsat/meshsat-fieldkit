@@ -15,14 +15,21 @@ bracket; entry E2's 6.2 A is the nominal. U3B's charge current stays at its reco
 first issue scaled it per string, above the gauge's 8.0 A and, at 4S15P with +3 percent, OCC1's 10.0 A; the entry, not the
 setting, sets the lid current, so no figure moved). It prints the verdict and lowest points at the September lid basis and
 the lowest lid temperature that still meets M1. Model results on the reference day at the 40 degree south plane; nothing
-is measured. Run from the repository root: python3 v2/docs/records/a1int/reconcile_lid_panel.py"""
+is measured.
+
+Third issue (stream s119, S-119, 29 September 2026): TP_SHA moved to energy_two_pack.py's second issue, which carries
+board A's charger U3 at 0.979 (was 0.98, through energy_inputs.yaml) and the lid charger U3B at 0.961 (was 0.975), both
+from the drawn or drafted FETs' losses by TI's method (records/s117/efficiency.out), and energy_runs.out is its third
+issue (the ratios A, B and C unchanged). The NOTES below were measured by the checks at the second issue's settings and
+are labelled so; the per-lid comparison with the second issue, the failing case and the sensitivity are
+records/s119/reconcile_s119.py's. Run from the repository root: python3 v2/docs/records/a1int/reconcile_lid_panel.py"""
 import hashlib, os, re, subprocess, sys
 
 sys.dont_write_bytecode = True
 HERE = os.path.dirname(os.path.abspath(__file__))
 TOP = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=HERE, capture_output=True, check=True).stdout.decode().strip()
 TPDIR = os.path.join(HERE, "..", "a1elec")
-TP_SHA = "81694b2bfc5dfef10c7f2895cd5fc4bae3682cc764e9d1c969757387c393f027"   # energy_two_pack.py, the pin energy_runs.py carries
+TP_SHA = "2c8e52c8eec8d753c0bdeac43170c8f9f330ea9c4fe1be619e17c5dc360786f3"   # energy_two_pack.py second issue (s119; was 81694b2b), the pin energy_runs.py carries
 if hashlib.sha256(open(os.path.join(TPDIR, "energy_two_pack.py"), "rb").read()).hexdigest() != TP_SHA:
     sys.stderr.write("reconcile_lid_panel: energy_two_pack.py is not the pinned file; refusing\n"); sys.exit(2)
 sys.path.insert(0, TPDIR)
@@ -73,10 +80,11 @@ def main():
     rat = ratios()
     _, t2m = run(n0, 20.0, rat["A"][1], U3[0][1])
     tmin = round(min(t2m), 2)
-    out = ["OPTION A(i), THE LID OPTIONS WITH THE CHOSEN ARRAY'S RATIOS (reconcile_lid_panel.py, second issue). Model: a1elec's",
-           "energy_two_pack.py (pinned), unchanged but for the lid's parallel count, the ratio and U3's input limit; U3B's charge",
-           "current at code 62, %.3f A, for every lid; 400 Wp, 200 W stage, front end R11 6.2 mOhm (entry E2), base at +%.0f C," % (TP.v("chg_a_lid"), TP.v("t_base_c")),
-           "lid at %.2f C (the September mean day's minimum air), both start hours, 42.8 W, aged 80 percent; the 40 degree south plane." % tmin,
+    out = ["OPTION A(i), THE LID OPTIONS WITH THE CHOSEN ARRAY'S RATIOS (reconcile_lid_panel.py, third issue). Model: a1elec's",
+           "energy_two_pack.py (pinned, second issue: U3 %.3f, U3B %.3f), unchanged but for the lid's parallel count, the ratio" % (TP.chain(TP.load_model()[0])[2], TP.v("eta_u3b")),
+           "and U3's input limit; U3B's charge current at code 62, %.3f A, for every lid; 400 Wp, 200 W stage, front end R11" % TP.v("chg_a_lid"),
+           "6.2 mOhm (entry E2), base at +%.0f C, lid at %.2f C (the September mean day's minimum air), both start hours, 42.8 W," % (TP.v("t_base_c"), tmin),
+           "aged 80 percent; the 40 degree south plane.",
            "U3's IIN_HOST: %s." % "; ".join("%s %.1f A" % (k, a) for k, a in U3),
            "Ratios read from %s section 2:" % OUT]
     for k in "ABC":
@@ -95,13 +103,15 @@ def main():
                 out.append("      %s" % ("does not meet M1 even with the lid at +40 C" if t is None else "lowest lid temperature that still meets M1: %+.1f C" % t))
         out.append("")
     TP.NP_L = n0; TP.NP_T = TP.NP_B + n0
-    out += ["NOTES (the independent checks' minor items, measured at this issue's settings, checks/check-a1int-2.md): the model",
-            "evaluates the charge taper once an hour; a 0.01 h step lowers the lowest stores by about 1.2 to 1.9 Wh (B) and 3.3 to",
-            "4.2 Wh (C), and the lid thresholds are not stable to better than about 1.5 K (at 0.1 h the 4S14P C threshold at the",
-            "minimum U3 reads about +4.6 C). U3B at its 0.96 efficiency bracket costs 6.0 and 6.2 Wh at C with U3 at 6.1 A. Node",
-            "power offered to a full store is discarded at the clamp after U3B's loss is charged on it (8.2 to 48.2 Wh over 72 h);",
-            "no energy is created and no lowest point moves. The lid path's standby drain (about 1.5 to 1.8 Wh over 72 h) is outside",
-            "the 42.8 W, and board PL's own supply is not read. The results hold on the 40 degree south plane only.",
+    out += ["NOTES (the independent checks' minor items, measured at the SECOND issue's settings, U3 0.98 and U3B 0.975, and",
+            "not re-measured at this issue's; checks/check-a1int-2.md): the model evaluates the charge taper once an hour; a",
+            "0.01 h step lowers the lowest stores by about 1.2 to 1.9 Wh (B) and 3.3 to 4.2 Wh (C), and the lid thresholds are",
+            "not stable to better than about 1.5 K (at 0.1 h the 4S14P C threshold at the minimum U3 read about +4.6 C). U3B at",
+            "its then 0.96 efficiency bracket cost 6.0 and 6.2 Wh at C with U3 at 6.1 A (this issue's bracket, 0.947 to 0.971,",
+            "is run in records/s119/reconcile_s119.out). Node power offered to a full store is discarded at the clamp after",
+            "U3B's loss is charged on it (8.2 to 48.2 Wh over 72 h); no energy is created and no lowest point moves. The lid",
+            "path's standby drain (about 1.5 to 1.8 Wh over 72 h) is outside the 42.8 W, and board PL's own supply is not read.",
+            "The results hold on the 40 degree south plane only.",
             "END. Each line is the model's arithmetic on the September reference day; nothing is measured."]
     sys.stdout.write("\n".join(out) + "\n")
     return 0
