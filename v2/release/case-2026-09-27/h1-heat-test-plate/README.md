@@ -15,7 +15,7 @@ lists every file an engineer needs, this folder's included, by path and sha256.
 | File | What it is |
 |---|---|
 | `h1-heat-test-plate-drawing.pdf` | Sheet H1-1, A3: plan with every dimension, the PEM nut section, material, thickness, finish, flatness, tolerances and notes. **It governs** over the DXF and STEP where they differ. |
-| `h1-heat-test-plate.dxf` | The outline and every feature on its own layer, in the case frame (origin at the plate's centre): `OUTLINE`, `THROUGH` (ten 4.6), `REBATE_2MM_TOP`, `RELIEF_0.8MM_UNDERSIDE`, `PEM_S_M3` (four 4.2), `INFO` (one text line, not a feature) |
+| `h1-heat-test-plate.dxf` | The outline and every feature on its own layer, in the case frame (origin at the plate's centre): `OUTLINE`, `THROUGH` (ten 4.6), `REBATE_2MM_TOP`, `RELIEF_0.8MM_UNDERSIDE`, `PEM_S_M3` (four 4.22), `INFO` (one text line, not a feature) |
 | `h1-heat-test-plate.step`, `.stl` | The solid, Z up from the underside |
 | `h1-heat-test-plate-check.out` | The generator's check: H1's DXF parsed and compared with the released C1 DXF (`../face-plate/face-plate.dxf`): outline, rebate line, relief and the ten screw holes equal within 0.001 mm; each layer holds only its features; the four nuts on 37.0 (X) by 35.0 (Y) about (-45.0, 70.0); the resistor's footprint 2.92 mm inside the 1450PF window, 20.12 mm from the nearest screw hole; the nuts in the full-thickness face. **RESULT PASS: 15 checks, 0 failed.** |
 
@@ -25,7 +25,7 @@ lists every file an engineer needs, this folder's included, by path and sha256.
   3.0, R16; the band outside 368.0 x 253.0 (R16) rebated 2.0 from the top, 1.0 left; the 44.0 x 9.0 x 0.8 relief in the
   underside over the 1450PF frame's lettering; ten 4.6 holes at Peli's insert bores for 6-32 UNC x 1/2 in A2 pan heads.
   It lies on the frame and covers Peli's o-ring as C1 does.
-- **The one H1-only feature:** four PEM S-M3 self-clinching nuts in 4.2 holes on the Arcol HS100's fixing pattern, F 35.0
+- **The one H1-only feature:** four PEM S-M3-2 self-clinching nuts in 4.22 +0.08/-0.00 holes (PEM bulletin CL) on the Arcol HS100's fixing pattern, F 35.0
   by G 37.0 (Arcol "HS Aluminium Housed Resistors" sheet 12/14.08, page 2: F and G +-0.3, mounting holes L 4.4 +-0.25,
   mounting foot K 3.7 max; held as `v2/vendor/arcol/arcol-hs-datasheet-12-14-08.pdf`. The "3.2 max." on that page sits at
   the solder tag and is read here as the tag's hole, not the mounting hole, which corrects the independent check's reading
@@ -42,10 +42,11 @@ lists every file an engineer needs, this folder's included, by path and sha256.
 
 ## Choices taken here (`authority: SESSION`, under the owner's standing rule of 26 September 2026)
 
-1. **PEM S-M3-2** (shank code 2). PEM's S-type bulletin is not held (pemnet.com's PDF and its Archive copies answered 404
-   on 29 September 2026 at 01:30 CEST), so the code is the session's reading of PEM's S table for a 3.0 sheet (INFERRED),
-   the hole stays at C1's 4.2, and the drawing asks the shop to follow PEM's installation data and say so where they differ.
-   Reversal: PEM's bulletin, or the shop's statement.
+1. **PEM S-M3-2** (shank code 2), confirmed by PEM's own bulletin CL (held since 29 September 2026 as
+   `v2/vendor/pem/pem-cl-self-clinching-nuts-bulletin.pdf`, found by the independent check of this folder): the S metric
+   table gives M3 x 0.5 shank code 2 for a minimum sheet of 1.4 mm and the mounting hole 4.22 +0.08, and the hardware
+   goes in after finishing. H1 draws its holes at 4.22 +0.08/-0.00 (it drew C1's 4.2 before); C1's own 4.2 in
+   `face_plate.py` is a separate open item of the case set, not changed here.
 2. **The pattern at C1's +-0.10** on position: an M3 in the HS100's 4.4 +-0.25 mounting holes floats at least 0.5
    (4.15 minimum hole, 3.0 screw), more than Arcol's +-0.3 on the pattern and H1's +-0.10 together, so M3 x 10 A2 pan
    heads with flat washers pass all four holes at every tolerance. Reversal: none needed unless the owner's M3 choice

@@ -1,7 +1,7 @@
 # H1 heat-test plate blank: check record (v2/cad/h1_heat_test_plate.py, MESHSAT-1357 stream od01b)
 # inputs, sha256 first 16:
 #   3bdb88df98260244  v2/ecad/tools/panel1450.py
-#   166d753f6354dd5a  v2/cad/h1_heat_test_plate.py
+#   9e949f9e1b9237a2  v2/cad/h1_heat_test_plate.py
 #   19703fa5838f9e4a  v2/release/case-2026-09-27/face-plate/face-plate.dxf
 #   ec17870c5a92d11e  v2/vendor/arcol/arcol-hs-datasheet-12-14-08.pdf
 # PEM holes (x, y): (-63.50, 52.50); (-26.50, 52.50); (-63.50, 87.50); (-26.50, 87.50)
@@ -18,6 +18,6 @@ PASS  PEM_S_M3: four 4.2 holes on X 37.0 apart (G) and Y 35.0 apart (F), centred
 PASS  the HS100 footprint X -68.75..-21.25, Y 26.00..114.00 lies inside the 1450PF window (+-174.82, +-116.92) with 2.92 mm to its nearest edge (Y, the ring under the plate)
 PASS  the HS100 footprint keeps 20.12 mm to the nearest of the ten screw holes
 PASS  the HS100 footprint keeps 142.40 mm to the relief pocket
-PASS  every PEM hole lies in the full-thickness face, 36.90 mm from its edge to the rebate line
-PASS  solid 377.20 x 263.00 x 3.00 mm, volume 283771 mm3 (766 g at 2.70 g/cm3)
+PASS  every PEM hole lies in the full-thickness face, 36.89 mm from its edge to the rebate line
+PASS  solid 377.20 x 263.00 x 3.00 mm, volume 283769 mm3 (766 g at 2.70 g/cm3)
 RESULT PASS: 15 checks, 0 failed

@@ -1,10 +1,10 @@
 # OD-01: the package an engineer needs, by path and sha256
 
 MESHSAT-1357, stream od01b, 29 September 2026. Written by `make_package.py` beside this file (stdlib; it refuses to run if a
-listed file is missing) at tree `fec1c564` plus the working files it hashed; the same list in `sha256sum` form is `PACKAGE.sha256`.
+listed file is missing) at tree `e0cd5ec1` plus the working files it hashed; the same list in `sha256sum` form is `PACKAGE.sha256`.
 Prototype: nothing in the package has been made, bought, sent or run. **Export:** copy every path below keeping the
-repository paths, then from the repository root `sha256sum -c v2/docs/records/od01/PACKAGE.sha256` reads OK for all 66 files
-(13.4 MB in all). Groups A to G are what a shop needs for the quotes (each part's drawing PDF governs its DXF and STEP); A, H, I and J
+repository paths, then from the repository root `sha256sum -c v2/docs/records/od01/PACKAGE.sha256` reads OK for all 71 files
+(14.8 MB in all). Groups A to G are what a shop needs for the quotes (each part's drawing PDF governs its DXF and STEP); A, H, I and J
 what the operator needs for the tests; K regenerates H1. This file, `PACKAGE.sha256` and `LOG-od01b.md` are not in the list.
 
 
@@ -12,11 +12,11 @@ what the operator needs for the tests; K regenerates H1. This file, `PACKAGE.sha
 
 | Path | Bytes | sha256 | For |
 |---|---|---|---|
-| `v2/docs/records/od01/README.md` | 5711 | `b256364940e1eec8790ed12712e175688ad20c1abaaaeb26d66899521d820011` | the package's index and what remains |
-| `v2/docs/records/od01/TEST-BRIEF.md` | 9119 | `d5288022516123935a9b86eb9dcf89e7108864a5d78b5101456df127602a743b` | the operator's two-page brief |
-| `v2/docs/records/od01/TEST-PROCEDURE.md` | 31458 | `6fc9ba39fd4486f24ea59a6d9683c4f922a1cb4ae56504830e19bc18480018ad` | the complete procedure: what the heat test proves, the shutdown and its verification, set-up, steps, patch runs, test B, stop limits, records |
-| `v2/docs/records/od01/MACHINING-RFQ.md` | 20445 | `410c96d7396050e290a347dbb96aa9dde1e59201fac62f393757a6602c9f9d77` | the request for quote (NOT SENT) and section 6, the receipt checks R1 to R8 that gate cutting |
-| `v2/docs/records/od01/CHECKOUT-LIST.md` | 30485 | `e1712c0e73ec6f791ff10d38b07365633a9a542b528ea3b536fee35ecb553ffe` | what to buy, priced, with sources; lines 10 to 15 the shutdown |
+| `v2/docs/records/od01/README.md` | 5711 | `36bc6a47f227149b61ba3abd5019cdc3e9a762f0723c2524bc3ced2dff05a36e` | the package's index and what remains |
+| `v2/docs/records/od01/TEST-BRIEF.md` | 9186 | `99092483a91a27a3fcd120c950f97861eef863c87f3e449d8a1523ce98d80739` | the operator's two-page brief |
+| `v2/docs/records/od01/TEST-PROCEDURE.md` | 32955 | `a61e36b4977b3beb51a24cb828c3cb06c150f7c1edd986d149d98ffacb3bc88c` | the complete procedure: what the heat test proves, the shutdown and its verification, set-up, steps, patch runs, test B, stop limits, records |
+| `v2/docs/records/od01/MACHINING-RFQ.md` | 20540 | `da27232ec0e534477c4487b1bce7dcdb7d031250f9462aad9d273d6355900b53` | the request for quote (NOT SENT) and section 6, the receipt checks R1 to R8 that gate cutting |
+| `v2/docs/records/od01/CHECKOUT-LIST.md` | 30605 | `ec773360b227e36799049815d0530c6dd57b0d775bf5e61b8c3e040bf88f0dae` | what to buy, priced, with sources; lines 10 to 15 the shutdown |
 | `v2/docs/records/od01/checks/check-1.md` | 5917 | `aef368eed3b97c961f788bb1f1ba4c9ed82bbde47c4b373dc4232f4b310410bf` | independent AI check 1 of the package (28 Sep) |
 | `v2/docs/records/od01/checks/check-2.md` | 8584 | `2cd0f10fee406e0ba1fc3018d9c4a938701779cb529b437321075680c70ee7bf` | independent AI check 2: the lead exit's bias under 1 percent, H2's size |
 
@@ -24,13 +24,13 @@ what the operator needs for the tests; K regenerates H1. This file, `PACKAGE.sha
 
 | Path | Bytes | sha256 | For |
 |---|---|---|---|
-| `v2/release/case-2026-09-27/h1-heat-test-plate/h1-heat-test-plate-drawing.pdf` | 73240 | `92059843ba66a495990c9fe94303d1d5f49a9e237506e620bc4ffe67c80688e0` | sheet H1-1, governs |
-| `v2/release/case-2026-09-27/h1-heat-test-plate/h1-heat-test-plate.step` | 138293 | `f33a6b6b705c3bf4ee99ae8a822727f894e5f77966908d05f09e33b58685c2c7` | H1 solid |
-| `v2/release/case-2026-09-27/h1-heat-test-plate/h1-heat-test-plate.dxf` | 21325 | `5547c559da4b9c77a006b4e49e3f18729c1d729bf80563351dce998136e98025` | H1 outline and features by layer |
-| `v2/release/case-2026-09-27/h1-heat-test-plate/h1-heat-test-plate.stl` | 409084 | `71aedd882d888358f1c7f62c694dc3a119e62f32c989006d230a1c7f37a4444b` | H1 mesh (viewing) |
-| `v2/release/case-2026-09-27/h1-heat-test-plate/h1-heat-test-plate-check.out` | 1853 | `2aead4eeb039a7f25f3e3271d619213235d8670b20451baa33e2ac1b89b3aaa8` | the generator's check against C1's DXF (PASS of 15) |
-| `v2/release/case-2026-09-27/h1-heat-test-plate/README.md` | 7706 | `d113e7d9da080a226e85bd67ed9546c6c7fa55ce80a840ece9cbfa2a20f18275` | H1's definition, choices and provenance |
-| `v2/release/case-2026-09-27/h1-heat-test-plate/MANIFEST.sha256` | 701 | `3b4096513fedee3a2933539ff76dd6345453d182143b18e3d034655c35a93d82` | H1 folder manifest |
+| `v2/release/case-2026-09-27/h1-heat-test-plate/h1-heat-test-plate-drawing.pdf` | 73447 | `f737c08588fabdf5e14706c530f12c8c0361a3d568947a8b3303681942e78406` | sheet H1-1, governs |
+| `v2/release/case-2026-09-27/h1-heat-test-plate/h1-heat-test-plate.step` | 138325 | `e5b3ca495dcfc2389c7951da4a8edf5438960d42afd02500602897dbf9105d22` | H1 solid |
+| `v2/release/case-2026-09-27/h1-heat-test-plate/h1-heat-test-plate.dxf` | 21329 | `c499bd35844f6c560abb88e9f7cdd2dd5dbd93c64e43e9b1d8af2251f5de5ca4` | H1 outline and features by layer |
+| `v2/release/case-2026-09-27/h1-heat-test-plate/h1-heat-test-plate.stl` | 409084 | `7697959db5cf696fa22d0f268fdaa4403238c348effdc330f2993d7833080b6e` | H1 mesh (viewing) |
+| `v2/release/case-2026-09-27/h1-heat-test-plate/h1-heat-test-plate-check.out` | 1853 | `b2a51e79375580cac389a14f7e7286056af7ba28797663244c655b2514863511` | the generator's check against C1's DXF (PASS of 15) |
+| `v2/release/case-2026-09-27/h1-heat-test-plate/README.md` | 7846 | `f3f6f4cd5e5b28b0d436d606219bce5f70158ee2dcc9b14b551041c2fc8689e3` | H1's definition, choices and provenance |
+| `v2/release/case-2026-09-27/h1-heat-test-plate/MANIFEST.sha256` | 701 | `5894a9480c4cdb6686b8d334bc09d5323ac019d1fe0a07289a12d2043736b371` | H1 folder manifest |
 
 ### C. Quote: C6 legs
 
@@ -122,9 +122,24 @@ what the operator needs for the tests; K regenerates H1. This file, `PACKAGE.sha
 
 | Path | Bytes | sha256 | For |
 |---|---|---|---|
-| `v2/cad/h1_heat_test_plate.py` | 13403 | `166d753f6354dd5adee94a641d967a7dfba360a2818a1275190071ccce763b08` | H1's DXF, STEP, STL and check |
-| `v2/cad/h1_heat_test_plate_drawing.py` | 13712 | `b47781490b1fd386377bf9310c976ecad364ff2d390533babeea250bf7d6d550` | sheet H1-1 |
+| `v2/cad/h1_heat_test_plate.py` | 13615 | `9e949f9e1b9237a20e4fbf89c0a6f27881c1187be31a1c24c00ba6226f382b00` | H1's DXF, STEP, STL and check |
+| `v2/cad/h1_heat_test_plate_drawing.py` | 13846 | `8e0d56a6a030240f0651942dc97864b361ae33a11d7794eb937c86ce809c33c5` | sheet H1-1 |
 | `v2/cad/drawing_kit.py` | 9640 | `49e7f00d7d57893fe2543e4d71571c2eb965993661bc1ae9d848f79ac4e87ca6` | the sheets' shared helpers |
 | `v2/ecad/tools/panel1450.py` | 38937 | `3bdb88df9826024484326e8e7d67c74789ae20f610ce3e4ed69988bfc9f0340f` | the single geometry source of C1 and H1 |
 | `v2/cad/case_manifest.py` | 1860 | `5433e025c0bcadb4b3607fd80bf551b491c5e1df1ef7b1481d248d571e1e50ed` | writes a release folder's manifest |
 | `v2/cad/requirements-cad.lock` | 1374 | `32f887be3a68bb56b9ad9a1978c0c43ae9fdc27e40611d318c3fb054b504c5d9` | the pinned CAD venv |
+
+### A. Read first
+
+| Path | Bytes | sha256 | For |
+|---|---|---|---|
+| `v2/docs/records/od01/checks/check-3.md` | 13523 | `445f092220cd3f67e2612be2a1a755d33d34e4b5a13de8a65e9e1d16ea5fa96c` | independent AI check 3 (29 Sep) of the corrected package; its items answered by patch_od01c.py |
+
+### D. Referenced records
+
+| Path | Bytes | sha256 | For |
+|---|---|---|---|
+| `v2/docs/reviews/READY-TO-ACT.md` | 73938 | `bdaf61a4991afb8ca1c45d0c1f71330dd8954e493af357503e01e350b8ed8fff` | the ready-to-act review the checkout list and RFQ cite |
+| `v2/docs/ASSEMBLY.md` | 66445 | `ee4eff52fc5df3070f0871021380c3e9a75b12c83314ec16b78916d3399658dc` | the assembly steps the RFQ and the procedure cite |
+| `v2/release/case-2026-09-27/lid-tray-qmx-r2/README.md` | 20290 | `3d3bbcfe240596398783956c15d850e36d9dc31495e8a86b49f9bcc386d2e558` | the lid tray r2 the RFQ names as printed, not machined |
+| `v2/vendor/pem/pem-cl-self-clinching-nuts-bulletin.pdf` | 1237643 | `8296128324e3954db753661ce257e5b01cbe98a364964af1d4f862e9cc04fe0e` | PEM bulletin CL: the S-M3-2 nut, its 4.22 +0.08 hole, insertion after finishing |
