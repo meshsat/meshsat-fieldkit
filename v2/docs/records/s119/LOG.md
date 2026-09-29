@@ -50,3 +50,41 @@ Decisions taken (authority SESSION, each reversible by restoring the first issue
    REGN's limit at the makers' maxima); the recommendation given is way (b).
 3. The two unpinned importers are issued a second time with pins rather than left with outputs a re-run would not
    reproduce.
+
+## Second round, after the independent check (29 September 2026, times CEST)
+
+- **16:15** The check read in full (`_scratch/chk-s119/CHECK.md`: mergeable yes, 0 blocking, M1 to M7) with the
+  coordinator's second-round list: draw U3B's FETs as a SESSION decision, carry U3B over the model's own hours (M1), the
+  core-loss room hour by hour and a search for Coilcraft's loss data (M2), M3 to M7.
+- **16:18** SLUSE66A re-read for U3B on the 400 kHz row: ILIM_HIZ (pin table, page 6; EN_EXTILIM, the lower limit applies;
+  VDDA at REGN through 10 Ohm), Table 9-1 (page 26, no 4.7 uH row; 6.35 A at RSNS_RAC = 0b), FSW 340 / 400 / 460 kHz
+  (page 16), 10.2.2.3 (page 85), VOCP_lim_ACX (page 15), PWM_FREQ's text (Table 9-8, page 43). Coilcraft 804-1 page 1
+  read for the XAL1010-472ME. The Coilcraft site and its web.archive.org copies answered 403 to this host; no other
+  model or search service was used.
+- **16:20** energy_two_pack.py: `eta_at` (U3B's efficiency may be a function of its input power, for the analysis scripts),
+  a guard for a zero efficiency, U3B's input limit 6.2 A on 10 mOhm, the charge loop 23 mOhm (M3), section 4's rows and
+  section 7's losses with the sense resistors inside each charger. `u3b_hourly.py`: U3B's efficiency over the model's own
+  hours from efficiency.py's equations; the 800 kHz row reproduces the check's 0.957 to 0.960 and 0.906; the 400 kHz row
+  weighs 0.9724 to 0.9736, carried 0.972 (0.963 to 0.978). `inductor_u3b.py`: ripple, peak, RMS and the fault bound at
+  400 kHz. efficiency.py's third issue pins energy_two_pack.py (M4) and names the rows before and after. recheck_two_pack.py
+  typed the new figures and gained pins (M4): every figure agrees. Commit `37582c04`.
+- **16:26** reconcile_lid and reconcile_lid_panel re-pinned and regenerated: adverse 85.5 and 116.6 Wh. Commit `e2361e4e`.
+- **16:29** reconcile_s119.py rewritten whole: pins on energy_runs.py and u3b_hourly.py (M4), U3B hour by hour (85.8 and
+  116.9 Wh adverse), the failing case, the sensitivity, the room for the core loss per charger in watts hour by hour (M2),
+  the planes with U3B hourly. Commit `62bada16`.
+- **16:35** The session decision's apply script (`apply_decision_s119.py`); TOPOLOGY.md 3b and CHARGER.md 2 and 3 drawn
+  (U3B's parts table and settings, the loss table with the sense resistors counted once: 13.9 W, M3); the page notes
+  restated (M6's wording in RECONCILE's note); `apply_records_readme_row.py` with `--check` and exits (M7); headline_diff
+  naming file hashes (M5); `apply_registry_s119.py` closing S-119, filing U3B's finding closed and leaving REQ-072 on S-53,
+  M-02 and S-114. Commit `c8b148a2`. On scratch copies: the decision applied as 58 and refused a second run; the registry
+  closure `--check` re-ran all sixteen scripts to the byte (104 s), applied, and refused a second run.
+- **16:45** README rewritten whole for the second round; this log.
+
+Decisions taken in the second round (authority SESSION):
+4. U3B on U3's 400 kHz row with the FET pair of decision 57 (drafted for the register by `apply_decision_s119.py`): REGN's
+   margin, the lower loss and one part set for both chargers. Reverse: the decision's reversed_by.
+5. U3B's row carried as the lowest energy-weighted figure over the model's own hours (0.972), as U3's is carried; the
+   hour-by-hour run is printed beside it and reads 0.3 Wh higher in the adverse case, so the carried figure is the
+   conservative one. Reverse: carry the peak-hour 0.974.
+6. U3B's FET finding filed in the registry as a closed item rather than opened: the draft answers it on this branch, so
+   REQ-072 is left waiting on what truly remains (S-53, M-02, S-114).
