@@ -31,7 +31,7 @@
   "figures_none_published": 3,
   "figures_not_mated": 0,
   "figures_owed": 0,
-  "inconclusive": 8,
+  "inconclusive": 7,
   "measures_owed": 1,
   "per_board": {
    "d": {
@@ -39,7 +39,7 @@
      "kind": "netlist",
      "sha256_16": "a2d48972d171aad1"
     },
-    "bound": false,
+    "bound": true,
     "candidates": 40,
     "citations_unjudged": 0,
     "classed": 11,
@@ -60,7 +60,6 @@
  },
  "denominator": 40,
  "evidence": [
-  "board D's declaration was written against the netlist of sha256 7a2c0ac2190b141a and the declared phase's netlist pcb-d-aprs-d9/out/pcb-d-aprs.net reads a2d48972d171aad1: its components and nets are the same (a re-export of the same design): read the values against the list and re-pin it (reliability.py --pins)",
   "D: class the transmit and receive relay owes its measure (open item REL-O-10: board D's relay K1 changes over at every key-down and carries the 30 W output in transmit; whether it changes over under RF power, and how many key-downs a service life holds, is stated nowhere)",
   "D: open item REL-O-07 holds the board: the expected number of mates of each connector over a service life is stated nowhere (REQ-028: no life requirement for prototype 1), so this list carries ratings and compares them with nothing (next action: when a service life is ruled, state the expected mates per connector from CONOPS section 5 and compare each class's figure with it)",
   "D: open item REL-O-08 holds the board: the joints under heavy soldered parts (the soldered radio modules, the magnetics, the large inductors) are joints that carry load in transport, and this inventory cannot find them: a netlist carries no mass (next action: list the parts above a mass limit from the makers' documents and add them as a class per board with the staking or support each needs)",
@@ -75,8 +74,8 @@
   "board": "d",
   "list": {
    "path": "tools/pcb_reliability.yaml",
-   "sha256": "9225abf62cf39f86cf23a5750963c55d0a07030362cd54a8d8f21b9b4fb644d7",
-   "sha256_16": "9225abf62cf39f86"
+   "sha256": "d07967f84ce1c3849419adec9e0ca0ce9d3b07869e079e673ed579423bb96965",
+   "sha256_16": "d07967f84ce1c384"
   },
   "netlist": {
    "content16": "be4194ed867c8406",
@@ -86,7 +85,7 @@
    "sha256_16": "a2d48972d171aad1"
   }
  },
- "missing_input": "board D's declaration was written against the netlist of sha256 7a2c0ac2190b141a and the declared phase's netlist pcb-d-aprs-d9/out/pcb-d-aprs.net reads a2d48972d171aad1: its components and nets are the same (a re-export of the same design): read the values against the list and re-pin it (reliability.py --pins)",
+ "missing_input": null,
  "note": "every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the measure taken, or under one declared exclusion with its reason. A desk reading of a netlist and a list: it tests nothing and replaces no physical verification; REL-001 is verified at the prototype and no board has been built",
  "policy": {
   "hard_types": 15,
@@ -103,12 +102,12 @@
  },
  "tool": "reliability",
  "tools": {
-  "git_head": "13b5352b2d8a",
-  "tools_tree_sha": "fedf14205ed9e57d"
+  "git_head": "958a7de7a15f",
+  "tools_tree_sha": "7a55e9ef29ec7734"
  },
- "ts": "2026-09-29T00:12:36Z",
+ "ts": "2026-09-29T00:17:58Z",
  "verdict": "INCONCLUSIVE",
- "version": "13b5352b2d8a",
+ "version": "958a7de7a15f",
  "writer": {
   "file": "reliability.py",
   "sha16": "c50f2b8b35d1d57b"

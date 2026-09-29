@@ -153,7 +153,7 @@
   "extent_mm": 335.0,
   "far_netlist_p": {
    "path": "pcb-p-pack-p2/out/pcb-p-pack.net",
-   "sha256_16": "760ac6f74d62d194"
+   "sha256_16": "20c7b0795593d761"
   },
   "ibis_manifest": {
    "path": "v2/vendor/ibis-manifest.yaml",
@@ -161,7 +161,7 @@
   },
   "intent": {
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock-intent.json",
-   "sha256_16": "dad1163afd720b5e"
+   "sha256_16": "4b328380172ff2c7"
   },
   "model_state": {
    "absent": 0,
@@ -175,7 +175,7 @@
   "netlist": {
    "content16": "dc06b84a39724641",
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
-   "sha256_16": "56adc9746d61c4e0"
+   "sha256_16": "2ed95a0e8069ebf8"
   },
   "project": {
    "path": "pcb-e1-dock-e7/pcb-e1-dock.kicad_pro",
@@ -212,12 +212,12 @@
  },
  "tool": "edge_length",
  "tools": {
-  "git_head": "36ac4bef1ade",
-  "tools_tree_sha": "fedf14205ed9e57d"
+  "git_head": "958a7de7a15f",
+  "tools_tree_sha": "7a55e9ef29ec7734"
  },
- "ts": "2026-09-29T00:03:18Z",
+ "ts": "2026-09-29T00:17:16Z",
  "verdict": "INCONCLUSIVE",
- "version": "36ac4bef1ade",
+ "version": "958a7de7a15f",
  "writer": {
   "file": "edge_length.py",
   "sha16": "21d61d18e18e56a8"

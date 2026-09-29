@@ -34,12 +34,12 @@
   "board": "p",
   "intent": {
    "path": "pcb-p-pack-p2/out/pcb-p-pack-intent.json",
-   "sha256_16": "12f92bd3ce7a8264"
+   "sha256_16": "657f4c42db51e4da"
   },
   "netlist": {
    "content16": "efe60479293f0004",
    "path": "pcb-p-pack-p2/out/pcb-p-pack.net",
-   "sha256_16": "760ac6f74d62d194"
+   "sha256_16": "20c7b0795593d761"
   }
  },
  "missing_input": null,
@@ -59,12 +59,12 @@
  },
  "tool": "safe_lines_p",
  "tools": {
-  "git_head": "36ac4bef1ade",
-  "tools_tree_sha": "fedf14205ed9e57d"
+  "git_head": "958a7de7a15f",
+  "tools_tree_sha": "7a55e9ef29ec7734"
  },
- "ts": "2026-09-29T00:03:33Z",
+ "ts": "2026-09-29T00:17:35Z",
  "verdict": "PASS",
- "version": "36ac4bef1ade",
+ "version": "958a7de7a15f",
  "writer": {
   "file": "safe_lines.py",
   "sha16": "8529487f405ec55d"
