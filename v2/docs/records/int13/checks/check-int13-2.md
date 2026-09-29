@@ -5,9 +5,9 @@ mergeable: no
 This is an AI review, not a qualified engineering review.
 
 **Set-up**
-* Clone: a scratch clone, a shared clone detached at `69156cad11ac064f414c16a696c9aefc212a57e4` (checked with `git rev-parse fnd/int13`, still the tip at 16:11).
+* Clone: `<scratch>/chk-int13b`, a shared clone detached at `69156cad11ac064f414c16a696c9aefc212a57e4` (checked with `git rev-parse fnd/int13`, still the tip at 16:11).
 * Evidence archive of the tip installed: `int13-evidence-69156cad.tar`, sha256 `5f2ee6236328b915c02d...`, 939 files; `git status` clean after it.
-* Comparison clone (the coordinator's instruction): a scratch clone, a shared clone at `005e5f5e` with the first check's archive `int13-evidence-005e5f5e.tar` (sha256 `e2256dd9777dd2714f4374da...`) installed; `git status` clean after it.
+* Comparison clone (the coordinator's instruction): `<scratch>/chk-int13b-base`, a shared clone at `005e5f5e` with the first check's archive `int13-evidence-005e5f5e.tar` (sha256 `e2256dd9777dd2714f4374da...`) installed; `git status` clean after it.
 * The 17 held vendor files: byte identical to the int13 worktree's 17 ignored files; `ibis_fetch.py --check` reads 13 PRESENT of 13; the four TI sheets match `v2/vendor/sources.txt` lines 454 to 457 by full sha256.
 * Time: 29 September 2026, 15:56 to 16:13 CEST (from `date`).
 * Written in the clone: only this file. My scripts and outputs are in the session scratchpad (`chkb/`). Every rule tool ran from a scratch cwd with `VERDICT_DIR` in the scratchpad; `git status` stayed clean throughout.
@@ -141,7 +141,7 @@ This is an AI review, not a qualified engineering review.
 * a1f8ec70: `EXECUTION-PLAN.md`; the merge brings exactly `77e35dd3`'s diff, and main is still `77e35dd3`.
 * a46db71b: CONOPS, the trace page, the registry, the four scripts, the README and the two filed checks (items 1 and 2).
   * `check-int13-1.md` equals the first check's CHECK.md apart from the clone path line.
-  * `check-set12-1.md` equals a scratch clone plus one filing comment.
+  * `check-set12-1.md` equals `<scratch>/chk-set12/CHECK.md` plus one filing comment.
 * 69156cad: 90 routed verdicts (item 4).
 
 Nothing unexplained.
@@ -161,7 +161,7 @@ Nothing unexplained.
   * The problem predates set 12. It is worth correcting with B1's fix.
 * **m4. README.md, the "Checks and answers" table.**
   * It says `checks/check-set12-1.md` holds the substance check "and its re-checks on rf2walk2 and rf2walk3".
-  * The file holds only the first report. The re-checks exist only as a scratch clone and `CHECK-3.md`, outside the tree, and `records/rf2walk/README.md` cites them by those scratch paths.
+  * The file holds only the first report. The re-checks exist only as `<scratch>/chk-set12/CHECK-2.md` and `CHECK-3.md`, outside the tree, and `records/rf2walk/README.md` cites them by those scratch paths.
   * Fix: file them as `check-set12-2.md` and `check-set12-3.md`, or correct the row.
 * **m5. README.md, the m4 note: "+35 lines after line 857 and by +55 after line 907".**
   * The hunks start at main's lines 860 (+35) and 910 (+20, cumulative +55), so lines 858 to 861 and 908 to 910 do not move as stated.
