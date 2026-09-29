@@ -35,8 +35,10 @@ ENTRY = dict(
                   "bought or changed: it decides how a held maker's document is read), changes no claim about the kit (a "
                   "DECODED binding is labelled so wherever it is counted), and accepts no residual risk that no "
                   "measurement in this tree can remove: its stated limit (the range table) is removed by reading the "
-                  "maker's range tables, which the tree holds for Yageo (round 3's independent check read pages 5 and 6 of "
-                  "the filed sheet and found 0603 50 V 100 nF, 0603 25 V 1 uF, 0603 16 V 1 uF and 0805 16 V 10 uF listed); "
+                  "maker's range tables, which the tree holds for both makers (the first independent check read Yageo's "
+                  "pages 5 and 6 and found 0603 50 V 100 nF, 0603 25 V 1 uF, 0603 16 V 1 uF and 0805 16 V 10 uF listed; "
+                  "the second read Uniroyal's page 4, 0603 1/10 W 1 percent from 0.01 Ohm to 10 MOhm, which covers the "
+                  "13 values); "
                   "the owner's ruling of 21 September 2026 makes such an engineering decision the session's",
     ruled_by="SESSION under the owner's ruling of 21 September 2026",
     ruled_on="2026-09-29",
@@ -46,8 +48,9 @@ ENTRY = dict(
             "part_identities.SCHEMES with the document's sha256 (a table cannot add or edit one). The tool reads the "
             "layout from that page (Yageo's numbered placeholders, Uniroyal's numbered code positions), slices the whole "
             "part number by it with nothing left over, requires each field to be the one the page puts at that position "
-            "and each literal to equal the scheme's, reads each code but the value's in a row of its own part of the "
-            "page that maps it to the meaning claimed, computes the value by the rule its row states (with the power of "
+            "and each literal to equal the scheme's, reads each code but the value's as exactly one `code = meaning` "
+            "entry of a row in its own position's part of the page, the claimed meaning being that entry's, computes "
+            "the value by the rule its row states (with the power of "
             "ten row for resistors), and requires every deciding property of the kind (capacitor: value, package, "
             "tolerance, rated voltage, dielectric, construction; resistor: value, package, tolerance, power) to meet the "
             "selection's requirements as the check derives them from the netlist, the intent and the generator's value, "
@@ -73,11 +76,13 @@ ENTRY = dict(
              "t_a_decoded_binding_on_a_page_that_lacks_a_field_is_refused, "
              "t_a_decoded_binding_on_a_distributors_page_is_refused, "
              "t_the_checkers_scheme_probes_are_refused_on_the_makers_own_page, "
-             "t_uniroyal_positions_refuse_a_permuted_part_number, t_the_check_judges_on_requirements_derived_from_the_netlist); "
+             "t_uniroyal_positions_refuse_a_permuted_part_number, t_the_check_judges_on_requirements_derived_from_the_netlist, "
+             "t_a_code_must_be_one_of_its_rows_entries, t_a_size_code_on_the_metric_column_is_refused, "
+             "t_a_printed_part_must_be_the_part_the_design_names); "
              "v2/docs/records/w5identc/readings/check-board-c-b874b744.json; YAGEO CC X7R product specification V.26 "
              "page 2 (v2/vendor/passives/yageo-cc-series.pdf) and Uniroyal's thick film chip resistor data sheet page 2 "
-             "(held back, v2/docs/records/w5identc/fetch_held_back.py); the independent check of round 3 "
-             "(_scratch/chk-w5identc/CHECK.md)",
+             "(held back, v2/docs/records/w5identc/fetch_held_back.py); the stream's two independent checks, filed as "
+             "v2/docs/records/w5identc/checks/check-w5identc-1.md and check-w5identc-2.md",
     blocks={},
     holds_nothing_today="it releases no rule-board pair: no rule of pcb_rules.yaml reads part identities; it moves "
                         "board C's exact-part reading (LAYER-STATUS item 6.1, the open item of apply_identities_c.py)",

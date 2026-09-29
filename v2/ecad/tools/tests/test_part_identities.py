@@ -423,7 +423,7 @@ def t_a_decoded_binding_on_a_page_that_lacks_a_field_is_refused():
     d, h, ds = _decoded(YAGEO_PAGE, _yageo_fields("CC0603KRX7R8BB104", volt_means="50 V"))
     with _Scheme(h):
         r = PI.read_binding(ds, "CC0603KRX7R8BB104", root=d, maker="YAGEO", req=CAP_REQ, kind="capacitor")
-        assert r["state"] == "REFUSED" and "does not map" in r["why"], r
+        assert r["state"] == "REFUSED" and "maps '8' to '25 V'" in r["why"], r
 
 
 def t_a_decoded_binding_on_a_distributors_page_is_refused():
@@ -540,3 +540,71 @@ def t_resistor_values_decode_by_the_makers_power_row():
     assert abs(PI._decode_value("104", "pf_2sig") - 100e-9) < 1e-18
     assert abs(PI._decode_value("1R5", "pf_2sig") - 1.5e-12) < 1e-21
     assert PI._decode_value("10", "pf_2sig") is None and PI._decode_value("1002", "nope") is None
+
+
+def t_a_code_must_be_one_of_its_rows_entries():
+    """Round 4's check, BB1, on the makers' own pages: a unit letter or the "E" of "E.g." passed as a code and took the
+    next entry's meaning. Yageo's voltage codes are 5 to 9, 0, A and Y; Uniroyal's tolerance codes are D, F, G and J."""
+    f = _real_fields("CC0603KRX7R9BB104")
+    for x in f:
+        if x["field"] == "voltage": x.update(code="V", row="5 = 6.3 V 0 = 100 V", means="0 = 100 V")
+    r = _real_yageo("CC0603KRX7RVBB104", fields=f)
+    assert r["state"] == "REFUSED" and "not one code" in r["why"], "the unit letter V decoded as a voltage code: %r" % (r,)
+    for x in f:
+        if x["field"] == "voltage": x.update(means="100 V")
+    r = _real_yageo("CC0603KRX7RVBB104", fields=f)
+    assert r["state"] == "REFUSED", r
+    c37 = {"value": "1uF", "package": "0603", "construction": "MLCC", "dielectric": "X7R", "v_rating_min": 25.0,
+           "v_not_checked_on": "c:EPD_VCOM+GND", "tolerance_max_pct": 10.0}
+    f = _real_fields("CC0603KRX7R9BB105")
+    for x in f:
+        if x["field"] == "voltage": x.update(code="V", row="5 = 6.3 V 0 = 100 V", means="0 = 100 V")
+        if x["field"] == "value": x.update(code="105")
+    r = _real_yageo("CC0603KRX7RVBB105", fields=f, req=c37)
+    assert r["state"] == "REFUSED", "C37's probe decoded: %r" % (r,)
+    f = _real_fields("CC0603KRX7R8BB105")
+    for x in f:
+        if x["field"] == "value": x.update(code="105")
+    r = _real_yageo("CC0603KRX7R8BB105", fields=f, req=c37)
+    assert r["state"] == "DECODED", "C37's true part no longer decodes: %r" % (r,)
+    doc = "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf"
+    if not os.path.exists(os.path.join(PI.REPO, doc)): raise Skip("Uniroyal's sheet is held back and not fetched here")
+    tol = "7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%"
+    fields = [dict(field="size", code="0603", row="1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512."),
+              dict(field="power", code="WA", row="E.g.: WA=1/10W W4=1/4W", means="1/10W"),
+              dict(field="tolerance", code="E", row=tol, means=".g.: D=±0.5%"),
+              dict(field="value", code="1002", row="2.4.2 If value belongs to standard value of ≤2% series, 8th~10th codes are significant figures of the resistance, and 11th code is the power of ten.",
+                   means_row="0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6"),
+              dict(field="packaging", code="T", row="12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel", means="Tape/Reel"),
+              dict(field="quantity", code="5", row="4=4000pcs 5=5000pcs C=10000pcs D=20000pcs E=15000pcs", means="5000pcs"),
+              dict(field="special", code="E", row="E = Environmental Protection, Lead Free, or Standard type.", means="Environmental Protection")]
+    ds = dict(path=doc, sha256=PI.SCHEMES["uniroyal-thick-film-p2"]["sha256"], page=2, binding="DECODED", scheme="uniroyal-thick-film-p2",
+              publisher="UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)", fields=fields)
+    req = {"value": "10kOhm", "package": "0603", "resistor_kind": "general", "tolerance_max_pct": 1.0, "power_min_w": 0.1}
+    r = PI.read_binding(ds, "0603WAE1002T5E", maker="UNI-ROYAL (Uniroyal Electronics)", req=req, kind="resistor")
+    assert r["state"] == "REFUSED" and "not one code" in r["why"], "the E of E.g. decoded as a tolerance code: %r" % (r,)
+    fields[2].update(code="F", means="±1%")
+    r = PI.read_binding(ds, "0603WAF1002T5E", maker="UNI-ROYAL (Uniroyal Electronics)", req=req, kind="resistor")
+    assert r["state"] == "DECODED", r
+
+
+def t_a_size_code_on_the_metric_column_is_refused():
+    """Round 4's check, minor 5: Yageo's size rows are 'INCH (METRIC)'; 0603 cited on the row '0201 (0603)' is refused."""
+    f = _real_fields("CC0603KRX7R9BB104")
+    f[1]["row"] = "0201 (0603)"
+    r = _real_yageo("CC0603KRX7R9BB104", fields=f)
+    assert r["state"] == "REFUSED" and "inch code" in r["why"], r
+    assert PI.row_entries("5 = 6.3 V 0 = 100 V") == [("5", "6.3 V"), ("0", "100 V")]
+    assert [c for c, _ in PI.row_entries("7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%")] == ["D", "F", "G", "J"]
+
+
+def t_a_printed_part_must_be_the_part_the_design_names():
+    """Round 4's check, minor 1: a PRINTED binding was checked for identity only, so C28 (4.7 uF, value '4.7u', no code)
+    bound to PCA9555PWR, or J_EPD (24 way) bound to FH34SRJ-26S-0.5SH(50), held."""
+    assert not PI.printed_is_the_design_part(["4.7u"], set(), "PCA9555PWR")[0]
+    assert PI.printed_is_the_design_part(["PCA9555PW 0x22: LED sinks, light mode inputs"], set(), "PCA9555PWR")[0]
+    assert PI.printed_is_the_design_part(["Vishay VEML7700 ambient light sensor"], set(), "VEML7700-TR")[0]
+    j = ["Hirose FH34SRJ-24S-0.5SH ZIF for the E2370KS0C1 flex (0.5 mm, 24 way)"]
+    assert PI.printed_is_the_design_part(j, set(), "FH34SRJ-24S-0.5SH(50)", "(50)")[0]
+    assert not PI.printed_is_the_design_part(j, set(), "FH34SRJ-26S-0.5SH(50)", "(50)")[0]
+    assert not PI.printed_is_the_design_part(["2N7002"], set(), "2N7002K")[0], "a longer part number passed as the named one"

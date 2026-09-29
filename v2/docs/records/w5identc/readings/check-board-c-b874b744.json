@@ -1,8 +1,8 @@
 {
  "identity_status": {
-  "NOT_A_PART": 3,
+  "NOT_A_PART": 2,
   "RESOLVED": 44,
-  "UNRESOLVED": 40
+  "UNRESOLVED": 41
  },
  "inputs": [
   {
@@ -142,6 +142,7 @@
   },
   {
    "binding": "PRINTED",
+   "design_part": "the value names BAT46W-7-F",
    "document": "v2/vendor/diodes/diodes-bat46w.pdf",
    "id": "S-479b8ebac6",
    "line": "BAT46W-7-F SOD123 3,000 Tape & Reel",
@@ -160,6 +161,7 @@
   },
   {
    "binding": "PRINTED",
+   "design_part": "the value names SS2040FL",
    "document": "v2/vendor/power/panjit-ss2020fl-series.pdf",
    "id": "S-330f4dd290",
    "line": "PARAMETER SYMBOL SS2020FL SS2030FL SS2040FL SS2060FL SS20100FL UNITS",
@@ -172,6 +174,7 @@
   },
   {
    "binding": "PRINTED",
+   "design_part": "the value names SS2040FL",
    "document": "v2/vendor/power/panjit-ss2020fl-series.pdf",
    "id": "S-a95bcbbc1e",
    "line": "PARAMETER SYMBOL SS2020FL SS2030FL SS2040FL SS2060FL SS20100FL UNITS",
@@ -184,6 +187,7 @@
   },
   {
    "binding": "PRINTED",
+   "design_part": "the value names SS2040FL",
    "document": "v2/vendor/power/panjit-ss2020fl-series.pdf",
    "id": "S-af1ea25d67",
    "line": "PARAMETER SYMBOL SS2020FL SS2030FL SS2040FL SS2060FL SS20100FL UNITS",
@@ -220,6 +224,7 @@
   },
   {
    "binding": "PRINTED",
+   "design_part": "the value names FH34SRJ-24S-0.5SH",
    "document": "v2/vendor/hirose/hirose-fh34-series-ffc-connectors.pdf",
    "id": "S-13d7058c0e",
    "line": "FH34SRJ-24S-0.5SH(##) CL0580-1255-6-## 24 14.0 11.5 12.57 13.38",
@@ -256,12 +261,13 @@
   },
   {
    "id": "S-f85fe2a707",
-   "reason_class": null,
+   "reason_class": "CHOICE_OWED",
    "rows": 1,
-   "status": "NOT_A_PART"
+   "status": "UNRESOLVED"
   },
   {
    "binding": "PRINTED",
+   "design_part": "the value names 2N7002",
    "document": "v2/vendor/power/jscj-2n7002-c8545.pdf",
    "id": "S-b9d2bcde2e",
    "line": "2N7002 MOSFET (N-Channel)",
@@ -274,6 +280,7 @@
   },
   {
    "binding": "PRINTED",
+   "design_part": "the value names AO3401A",
    "document": "v2/vendor/power/aos-ao3401a-p-mosfet.pdf",
    "id": "S-55e88b2fbd",
    "line": "AO3401A",
@@ -286,6 +293,7 @@
   },
   {
    "binding": "PRINTED",
+   "design_part": "the value names AO3401A",
    "document": "v2/vendor/power/aos-ao3401a-p-mosfet.pdf",
    "id": "S-cae89bf0ce",
    "line": "AO3401A",
@@ -298,6 +306,7 @@
   },
   {
    "binding": "PRINTED",
+   "design_part": "the value names SI2300DS-T1-GE3",
    "document": "v2/vendor/vishay/vishay-si2300ds.pdf",
    "id": "S-7917d94eb1",
    "line": "Lead (Pb)-free and halogen-free Si2300DS-T1-GE3",
@@ -310,6 +319,7 @@
   },
   {
    "binding": "PRINTED",
+   "design_part": "the value names SI2300DS-T1-GE3",
    "document": "v2/vendor/vishay/vishay-si2300ds.pdf",
    "id": "S-2c230ffa91",
    "line": "Lead (Pb)-free and halogen-free Si2300DS-T1-GE3",
@@ -364,6 +374,7 @@
   },
   {
    "binding": "PRINTED",
+   "design_part": "the value names VEML7700",
    "document": "v2/vendor/vishay/veml7700-datasheet.pdf",
    "id": "S-8362226c90",
    "line": "VEML7700-TR Tape and reel MOQ: 2300 (MOQ is one reel) Side view",
@@ -376,6 +387,7 @@
   },
   {
    "binding": "PRINTED",
+   "design_part": "the value names 74LVC1G17W5-7",
    "document": "v2/vendor/diodes/diodes-74lvc1g17.pdf",
    "id": "S-3399dc8073",
    "line": "74LVC1G17W5-7 W5 SOT25 3,000/Tape & Reel -7",
@@ -388,6 +400,7 @@
   },
   {
    "binding": "PRINTED",
+   "design_part": "the value names 74LVC1G17W5-7",
    "document": "v2/vendor/diodes/diodes-74lvc1g17.pdf",
    "id": "S-82a0c53bb2",
    "line": "74LVC1G17W5-7 W5 SOT25 3,000/Tape & Reel -7",
@@ -400,6 +413,7 @@
   },
   {
    "binding": "PRINTED",
+   "design_part": "the value names 74LVC1G17W5-7",
    "document": "v2/vendor/diodes/diodes-74lvc1g17.pdf",
    "id": "S-ac3ac5929e",
    "line": "74LVC1G17W5-7 W5 SOT25 3,000/Tape & Reel -7",
@@ -412,6 +426,7 @@
   },
   {
    "binding": "PRINTED",
+   "design_part": "the value names PCA9555PW",
    "document": "v2/vendor/ti/ti-pca9555.pdf",
    "id": "S-2005fc2180",
    "line": "PCA9555PWR Active Production TSSOP (PW) | 24 2000 | LARGE T&R Yes NIPDAU Level-1-260C-UNLIM -40 to 85 PD9555",
@@ -424,6 +439,7 @@
   },
   {
    "binding": "PRINTED",
+   "design_part": "the value names PCA9555PW",
    "document": "v2/vendor/ti/ti-pca9555.pdf",
    "id": "S-ad00071efd",
    "line": "PCA9555PWR Active Production TSSOP (PW) | 24 2000 | LARGE T&R Yes NIPDAU Level-1-260C-UNLIM -40 to 85 PD9555",
@@ -436,6 +452,7 @@
   },
   {
    "binding": "PRINTED",
+   "design_part": "the value names RP2040",
    "document": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
    "id": "S-75a8527525",
    "line": "RP2040 Datasheet",
@@ -448,6 +465,7 @@
   },
   {
    "binding": "PRINTED",
+   "design_part": "the value names SN74LVC1G57DBVR",
    "document": "v2/vendor/ti/ti-sn74lvc1g57.pdf",
    "id": "S-a3081131d9",
    "line": "SN74LVC1G57DBVR Active Production SOT-23 (DBV) | 6 3000 | LARGE T&R Yes NIPDAU Level-1-260C-UNLIM -40 to 125 (CA7O, CA7R)",
@@ -460,6 +478,7 @@
   },
   {
    "binding": "PRINTED",
+   "design_part": "the value names TLV75533PDBV",
    "document": "v2/vendor/power/ti-tlv755p-ldo.pdf",
    "id": "S-3da103208a",
    "line": "TLV75533PDBVR Active Production SOT-23 (DBV) | 5 3000 | LARGE T&R Yes SN Level-1-260C-UNLIM -40 to 125 1FWF",
@@ -472,6 +491,7 @@
   },
   {
    "binding": "PRINTED",
+   "design_part": "the value names USBLC6-2SC6",
    "document": "v2/vendor/st/st-usblc6-2-esd-protection.pdf",
    "id": "S-e1dcd70451",
    "line": "The USBLC6-2SC6 and USBLC6-2P6 are monolithic application specific devices",
@@ -484,6 +504,7 @@
   },
   {
    "binding": "PRINTED",
+   "design_part": "the value names W25Q16JVUXIQ",
    "document": "v2/vendor/winbond/winbond-w25q16jv-serial-flash.pdf",
    "id": "S-dfbcfc88f2",
    "line": "USON-8 16M-bit W25Q16JVUXIQ",
@@ -991,11 +1012,11 @@
  ],
  "selections": 87,
  "table": "v2/ecad/tools/pcb_part_identities.yaml",
- "table_sha256": "2dce2a39a9a99c1910e173a664463e32affc620816f6c4b46bdd141163bf7917",
- "tool_sha256": "20adab11d0bd2d4da960e0e2b56d91a3b657a673c05515e1fcb9cb9196a5c4f9",
+ "table_sha256": "bea90e3c496f324a622a68a92df8d241b28d72f47eb25f38116c1d9273f38600",
+ "tool_sha256": "26c7862e2dd212d41bf650261d1507bba472c28695947a245e027f0e2bfc7e6f",
  "unfetched_ok": false,
  "unresolved_by_reason": {
-  "CHOICE_OWED": 23,
+  "CHOICE_OWED": 24,
   "DOCUMENT_DOES_NOT_NAME_THE_PART": 8,
   "DOCUMENT_OWED": 8,
   "PART_DOES_NOT_MEET_THE_REQUIREMENT": 1

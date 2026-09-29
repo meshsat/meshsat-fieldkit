@@ -203,7 +203,9 @@ def rules(w5):
               "the part number, letter case aside (the characters on either side are not letters or digits); where the "
               "part number carries the maker's packing code, the page may print it as the maker's placeholder (Hirose's "
               "FH34SRJ-24S-0.5SH(##)) if the same page keys the placeholder to that code (\"(##) : (50)\"); a part number "
-              "that carries no packing code (SS2040FL) is printed as it is, the reel being the order code's business. "
+              "that carries no packing code (SS2040FL) is printed as it is, the reel being the order code's business; "
+              "and the part must be the one the design names: the value text names it (less its packing code or a reel "
+              "suffix) or the netlist's order code reads as it in this tree's catalogue reading. "
               "DECODED: the page is the maker's own ordering-code table for a scheme written in part_identities.SCHEMES "
               "(the document pinned by sha256), the tool reads the layout from the page, slices the whole part number by "
               "it, reads each code's meaning in its own part of the page and requires every deciding property of the kind "
@@ -280,6 +282,14 @@ def page_with(path, phrase):
     for pg in range(1, PI.page_count(os.path.join(REPO, path)) + 1):
         if PI._flat(phrase) in PI._flat(PI.page_text(os.path.join(REPO, path), pg)): return pg
     raise SystemExit("build_table: %s prints %r on no page" % (path, phrase))
+
+
+def line_of(path, start):
+    """(line number, text) of the one line of a tree file that begins with `start` (whitespace aside)."""
+    hits = [(i + 1, l) for i, l in enumerate(open(os.path.join(REPO, path), encoding="utf-8").read().splitlines())
+            if l.strip().startswith(start)]
+    if len(hits) != 1: raise SystemExit("build_table: %s has %d lines beginning %r" % (path, len(hits), start))
+    return hits[0]
 
 
 def file_has(path, phrase):
@@ -378,20 +388,31 @@ def reread(sid, s, ident, scan):
                            "U-174/U (%s)" % scan_words(scan),
                     next_action="the board C author names the jack (maker's part number) and files its drawing; the 17 mm "
                                 "hole and the five leads to board D8 are then checked against it")
-    if land == "LeadLands_1x02":                   # J_MAINSW and J_PIJ
+    if land == "LeadLands_1x02":                   # J_MAINSW and J_PIJ2: both leads are bought (rule N-1)
         if "XH2.5 at the A22 end" in sorted(s["values"])[0]:
             value_has(s, "MAIN button lead to A22 J_MAINSW", "two solder lands on the underside")
+            n, line = line_of("v2/docs/ASSEMBLY.md", "| MAIN button | C7 `J_MAINSW`")
+            for ph in ("24 AWG twisted", "XH2.5 at the A22 end"):
+                if ph not in line: raise SystemExit("build_table: ASSEMBLY.md line %d no longer says %r" % (n, ph))
             return dict(status="UNRESOLVED", reason_class="CHOICE_OWED",
                         reason="the netlist's value names a lead soldered to two lands on the underside and plugged into "
-                               "A22's J_MAINSW with an XH2.5 housing at that end: the lead's wire and the XH2.5 housing are "
-                               "bought, and neither is named (rule N-1: what is bought is never NOT_A_PART; w5ident's table "
-                               "called this row NOT_A_PART)",
-                        next_action="the board C author names the wire (gauge, insulation, length) and the XH2.5 housing and "
-                                    "crimp contacts at A22's end")
+                               "A22's J_MAINSW with an XH2.5 housing at that end; ASSEMBLY.md line %d (section 4, Leads) "
+                               "gives the wire as 24 AWG twisted and the XH2.5 housing at the A22 end, and names no "
+                               "insulation, length, maker, housing part number or crimp contacts: the lead is bought, so it "
+                               "is not NOT_A_PART (rule N-1; w5ident's table called it NOT_A_PART)" % n,
+                        next_action="the board C author names the wire (insulation, length, maker) and the XH2.5 housing "
+                                    "and crimp contacts at A22's end by their part numbers")
         value_has(s, "PI button lead: two solder lands on the underside")
-        return dict(status="NOT_A_PART",
-                    reason="two solder lands on the board's underside (land LeadLands_1x02); the netlist's value names no "
-                           "wire, plug or housing to buy for this row")
+        n, line = line_of("v2/docs/ASSEMBLY.md", "| PI button | SW_PI's contacts | C7 `J_PIJ2`")
+        for ph in ("24 AWG", "soldered, beaded"):
+            if ph not in line: raise SystemExit("build_table: ASSEMBLY.md line %d no longer says %r" % (n, ph))
+        return dict(status="UNRESOLVED", reason_class="CHOICE_OWED",
+                    reason="the netlist's value names two solder lands on the underside for the PI button's lead; "
+                           "ASSEMBLY.md line %d (section 4, Leads) gives that lead as 24 AWG, soldered and beaded, from "
+                           "SW_PI's contacts to J_PIJ2, and names no insulation, length or maker: a wire soldered in is "
+                           "bought, so it is not NOT_A_PART (rule N-1; round 4's check, BB2)" % n,
+                    next_action="the board C author names the wire (insulation, length, maker) with the gauge ASSEMBLY.md "
+                                "gives")
     if land == "BackerScrew_M3_GND":               # H1 to H8
         value_has(s, "M3 x 6", "GND bond to the plate")
         return dict(status="UNRESOLVED", reason_class="CHOICE_OWED",
