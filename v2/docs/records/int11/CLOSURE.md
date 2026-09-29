@@ -21,7 +21,7 @@ nothing here has been built, ordered or measured. The checks named below are AI 
 |---|---|
 | Validators on the candidate | rules_lib 59 rules and 144 records, 0 errors; every `--check` exit 0; constraints_bound PASS |
 | Isolated clone at `559a072d` with only its archive (935 files) | status 0 lines after status x3 and render x2; every check exit 0 |
-| Full suite on the box at `559a072d` | recorded in `v2/docs/EXECUTION-PLAN.md`'s milestone entry for set 10 |
+| Full suite on the box | at `559a072d`: 2247 passed, 1 failed (test_rule_gate_mapping: the coverage map's rule-set stamp still named the fingerprint before DEC-001's new text; T7's apply script had not moved it), 3 skipped; the stamp moved in `c65ee303` and committed before status ran, the evidence page then unchanged; at `538e14e1`: **2248 passed, 0 failed, 3 skipped** |
 | Fresh AI check | owed when a worker slot frees (the owner assigned both slots to Option A(i) on 29 September) |
 
 ## What it does not claim
