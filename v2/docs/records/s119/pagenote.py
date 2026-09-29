@@ -37,7 +37,7 @@ def apply(page, anchor, note, check=False):
         refuse("the anchor occurs %d times in %s: %r" % (old.count(anchor), page, anchor[:80]))
     if not anchor.endswith("\n\n"):
         refuse("the anchor must end in a blank line")
-    if "—" in note or "–" in note:
+    if "\u2014" in note or "\u2013" in note:
         refuse("the note carries an em or en dash")
     if not note.startswith(MARK):
         refuse("the note does not open with the mark")
