@@ -65,7 +65,8 @@ def evidence_gate(commit):
         if git("diff", "--quiet", "HEAD", "--", path).returncode: refuse("%s has an uncommitted change" % path)
         at_c = git("rev-parse", "%s:%s" % (commit, path))
         at_h = git("rev-parse", "HEAD:%s" % path)
-        if at_c.returncode or at_c.stdout != at_h.stdout: refuse("%s at %s differs from HEAD's" % (path, commit[:8]))
+        if at_c.returncode: refuse("%s is not carried by %s" % (path, commit[:8]))
+        if at_c.stdout != at_h.stdout: refuse("%s at %s differs from HEAD's" % (path, commit[:8]))
 
 
 def rerun_bound():
@@ -133,8 +134,9 @@ def texts(F, commit, ring_id):
            26.0 - F["bound"], 32.0 - F["bound"] - 6.3, F["sysovp"], F["d1_a2"], 30.0 - F["d1_a2"], ring_id))
     s111 = (
         " S-120's residual (stream s120, v2/docs/records/s120/vbus20_bound.out section 11): a U2 or Q2 failure, which a "
-        "surge past U2's 60 V could cause, passes VIN_RAW onto VBUS20 less a body diode (about %.1f V at 36 V in and %.1f V "
-        "at the lockout's maximum) or, with R6 open or FB shorted, lets the stage run the bus up with nothing on board A to "
+        "surge past U2's 60 V could cause, passes VIN_RAW onto VBUS20 less a body diode's drop (%.1f V at 36 V in and %.1f V "
+        "at the lockout's maximum, the drop INFERRED) or, with R6 open or FB shorted, lets the stage run the bus up with "
+        "nothing on board A to "
         "stop it, since the LM5176's over-voltage protection reads the same FB pin; board A has no clamp on VBUS20, and "
         "U3's VBUS, ACP and ACN (32 V absolute, SLUSE66A page 8) are the first parts past their rating. Options to weigh: an "
         "independent over-voltage trip on VBUS20 (U34's channel 1 re-armed while the stage runs) for the FB faults, and an "

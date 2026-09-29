@@ -128,8 +128,8 @@ Neither fault is bounded by the FETs' rating: 40 V parts would not keep U3 insid
 S-111 names, not taken here: an independent over-voltage trip on VBUS20 (a second divider into U34's channel 1, re-armed while
 the stage runs) for the FB faults; an SMCJ22A on VBUS20 (22 V standoff over the 20.96 V band), which holds a Q2 short at about
 28.2 V at board E's 6.15 A hot-swap limit (INFERRED straight line) until the LM5069's fault timer opens, and clamps 35.5 V at
-its own IPP. `apply_registry_s120.py` adds this residual to S-111's title, since a surge past U2's 60 V is how such a failure
-would most likely start.
+its own IPP. `apply_registry_s120.py` adds this residual to S-111's title, since a surge past U2's 60 V is one way such a
+failure could start.
 
 ## 9. The choice, and why
 
@@ -152,8 +152,12 @@ On the runner, after merging this branch at `<commit>`:
 No box run is owed: no generator changed, no netlist moves. `fetch_held_back.py` (stream s117) wherever the FET sheets are
 wanted.
 
-Dry run (`dryrun.out`): on a scratch copy of the registry the script wrote once, re-parsed, and refused a second run;
-`rules_lib.py requirements` on the copy read the same errors and warnings as on the unmodified copy.
+Dry run (`dryrun.out`, at `3ca20d5a`): `--check` on the tree's registry wrote nothing; on a scratch copy the script wrote
+once (S-120 closed, S-123 opened on today's registry, REQ-015 waiting on S-106, S-107, S-111, S-123, S-111's title extended)
+and refused a second run; it refused a commit that does not carry the records, a missing commit and an uncommitted change
+to an evidence file; `rules_lib.py requirements` read 0 errors and 0 warnings on both the unmodified and the applied copy;
+and `vbus20_bound.py` read FAIL (exit 1) on three netlist mutants of board A (R6 at 249k, U3's pin 5 off GND, a diode on
+VBUS20). The S number is computed at the apply, so it may differ from S-123 if another item lands first.
 
 ## 11. What remains open
 
