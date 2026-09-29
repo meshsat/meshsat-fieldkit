@@ -23,6 +23,12 @@ arrangement), and that carries M1 on this model only with the lid's cells as war
 lowest point, down to a +3.8 C lid). The choice of which function leaves the lid, and where it goes, is the owner's:
 `records/a1mech/DECISION-A1.md` (B, the tablet out, is the engineering recommendation there).
 
+**After the electrical check's corrections (29 September 2026 03:17).** a1elec now takes every limit at its minimum: board A
+as generated (E1) does not meet M1 at all, the model needs at least 5.56 A (115.1 W) into U3, and the drafted entry E2 (R11
+6.2 mOhm, U3 IIN_HOST 6.2 A, under the front end's 6.94 A minimum) is the design case above. Re-run on the corrected model,
+every figure of the table is unchanged (`reconcile_lid.out`). A 4S14P lid needs its BQ4050 calibrated at k = 3, not k = 2
+(at k = 2 its cWh word would be 33,768, above the 32,767 the gauge holds; a1elec's GAUGE.md).
+
 **What this does not show.** The circuits are drafts (a second charger, the ideal-diode join, the lid gauge's k = 2
 calibration, board A's entry re-rated with its inductor, board E's 200 W stage); the lid pack's heater, its temperature in
 use and the case's stability with a heavier lid (a stay at 100 degrees) are findings; the panel is not yet selected

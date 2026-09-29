@@ -1,5 +1,5 @@
 OPTION A(i), THE LID SIZES THAT FIT (reconcile_lid.py). Model: a1elec's energy_two_pack.py, unchanged but for the lid's
-parallel count and its charge current at 0.6667 A a string. Design case: 400 Wp, 200 W stage, entry E2, base at +20 C,
+parallel count and its charge current at 0.6613 A a string. Design case: 400 Wp, 200 W stage, entry E2, base at +20 C,
 lid at 13.23 C (the September mean day's minimum air), both start hours, 42.8 W, aged 80 percent.
 
 4S8P lid: both owner-approved lid functions kept (a1mech: 35 places), 4S14P in all
