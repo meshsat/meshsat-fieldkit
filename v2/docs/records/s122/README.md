@@ -1,16 +1,66 @@
 # Stream s122: the documents CFL-016 names, re-read against the netlists (S-122, MESHSAT-1357)
 
-Prototype design: nothing here is built, bought or measured. Branch `fnd/s122b` from `main` at `b874b744` (set 13 promoted as `32f26b41`, its
-milestone `b874b744`), carrying this stream's seven commits of `fnd/s122` by cherry-pick, 29 September 2026. The stream changes documents only; no
-generator, netlist or registry file is edited on this branch (the registry changes are `apply_registry_s122.py` and
-`close_s122.py`, for the integrator).
+Prototype design: nothing here is built, bought or measured. Rounds 1 to 3 ran on `fnd/s122` and `fnd/s122b` (from
+`main` at `b874b744`, set 13 promoted as `32f26b41`); set 14 (`fnd/int15`) carried them to `1bafab8c`, where
+`apply_registry_s122.py` has run. Round 4 runs on `fnd/s122c` from `1bafab8c`, 29 September 2026. The stream changes
+documents and its own records only; no generator, netlist or registry file is edited on its branches (the registry
+changes are `apply_registry_s122.py`, `apply_registry_s122_r4.py` and `close_s122.py`, for the integrator).
 
 Round 1 corrected 43 passages. The independent check of round 1 (`checks/check-s122-1.md`, filed byte for byte from the
 checker's `<scratch>/chk-s122/CHECK.md`) read all 43 true and found 3 blocking and 12 minor items. Round 2 answers them under the coordinator's ruling on CONOPS.md's
 baseline. The independent check of round 2 (`checks/check-s122-2.md`, filed byte for byte from the checker's
 `<scratch>/chk-s122/CHECK-2.md`) found 1 blocking and 8 minor items; round 3 answers them and changes the method so the
-blocking item's class cannot recur (below). Every statement below about what was read is what one of these scripts read, or a filed check's own words
-quoted with its file.
+blocking item's class cannot recur (below). Set 14's integration checks
+(`v2/docs/records/int15/checks/check-int15-1.md` to `-3.md`, and a fourth check of set 14 held by the integrator)
+found five sentences in scope naming parts no generator carries, which the finder could not see because it did not read
+makers' part numbers; round 4 answers them and check-s122-3's three minors (below). Every statement below about what
+was read is what one of these scripts read, or a filed check's own words quoted with its file.
+
+## Round 4: makers' part numbers (set 14)
+
+* **The finder** (`s122lib.partnos`, returned by `names()` under `parts`) reads a maker's part number by its shape, not
+  from a list: a letter-led token of capitals and digits with a run of three digits (TMDS341A, LM5069, E22-900M30S,
+  D38999/26FC4SN), a digit-led token with a capital and four digits (74LVC1G157GW, 2N7002), a digit token with a dash
+  and six digits (2199119-3), a series word of two to four capitals before a digit-led number with a dash and three
+  digits (TEN 40-2412WIN), and the same shapes in the file names of the makers' sheets a sentence cites
+  (`m2/amphenol-mdt420b01001-m2-b-key.pdf`). It leaves out tokens with a lower-case letter (commits, units), registry
+  and standard identifiers (letters, dashes, one number: CFL-016, MIL-STD-810), tokens led by a standard body, and pure
+  ranges of two numbers of up to four digits (144-146). A table cell carries its row's label (`names()["row"]`).
+* **The judgement** (`verdicts.check_parts`): each part number is looked up in the part values of the six netlists. One
+  on no netlist, or not on the one board a sentence and its row label name, makes a TRUE judgement STALE and a NOT
+  DERIVABLE one UNJUDGED, unless the judgement's `parts_ok` names it: an own assertion that names it (a generator or a
+  netlist at a commit, a document, a part value), or a reason that starts with a kind (`document`, `case`, `bought`,
+  `stock`, `stackup`, `withdrawn`, `owed`, `module`, `elsewhere`; `elsewhere` is refused unless the part is on some
+  netlist). A dated heading excuses no part: the boards table's rows are judged part by part.
+* **New assertion forms:** a held maker's sheet read with `pdftotext` (`PDF:<path>~words`).
+* **What it found on set 14's documents** (`verdicts-set14.out`, the documents at `1bafab8c` judged by round 4's tools):
+  7 STALE, each corrected by `apply_docs_s122_r4.py` (12 edits, 51 assertions held first):
+
+  | Where (at `1bafab8c`) | What it named | What the netlists carry | Correction |
+  |---|---|---|---|
+  | V2-SPEC.md line 82, B16 row | the TMDS341A display switch (no schematic generator has held one, `git log --all -S TMDS341`) and the DS3231M clock | board B's `U3` and `U4` TS3DV642A0RUAR (`gen_sch_b.py` held the TS3DV642 at `b2709118`, when the table was written); `U9` DS3231SN | "the two TS3DV642 display switches (`U3`, `U4`)", "the DS3231SN clock (`U9`; the DS3231M on 7 September)" |
+  | V2-SPEC.md line 84, D8 row | the TUSB2046B hub | board D's `U4` TUSB2046IBVFR (the industrial grade since 26 September 2026, W6-F5) | "the TUSB2046I hub (`U4`, TUSB2046IBVFR ...; the TUSB2046B on 7 September)" |
+  | V2-SPEC.md line 86, E6 row | the LM5176 9 to 36 V front end on E6 | board E's `U6` LM5069MM-2 hot swap; the LM5176 front end is board A's `U2`, as `gen_sch_e.py` said at `b2709118` | "the LM5069 hot swap on the 9 to 36 V input (`U6`), which passes the bus up to A22's LM5176 front end (`U2`)" |
+  | V2-SPEC.md line 47, APRS row | the WM8960 codec, and the PA's sheet "owed" | board D's `U6` PCM2912A (the WM8960 left `gen_sch_d.py` at `bdfc7b3f`); the RA30H1317M1's sheet held in `v2/vendor/mitsubishi/` | "Direwolf on D8's PCM2912A USB codec (`U6`)", the sheet held |
+  | OPERATING-ENVELOPE.md line 77 | TRACO TEN 40-2412WIN, -40 to +75 C | no TRACO part on any netlist (`gen_sch_e.py`: the TRACO converter of E4 is gone); board E's input part is `U6` LM5069 | "TI LM5069 hot-swap controller on the 9 to 36 V input (board E `U6`)", junction -40 to +125 C from `ti/ti-lm5069.pdf` (SNVS452G, 7.3, read by pdftotext) |
+  | OPERATING-ENVELOPE.md line 83 | Amphenol M.2 B-key socket, MDT420B01001 (in its source's file name) | board B's `J_M2C2` TE 2199119-3; Amphenol's MDT420M02001 are the M-key NVMe sockets | "TE 2199119-3 M.2 B-key socket (board B `J_M2C2`)", -40 to +80 C service temperature from `m2/te-2199119-m2-b-key.pdf` (Performance Ratings) |
+  | CONOPS.md line 1056, section 7's D-13 row | the STM32H753 in the schematic, the mismatch open | `U41`, `U51`, `U61` STM32H743VIT6 since `458b2873`; CON-017 PASS | the baseline stays; row DC-10 on the status page (check-s122-3 m1) |
+
+  V2-SPEC.md records the four lines as correction 34; OPERATING-ENVELOPE.md carries a correction note after its table;
+  in check-int15-1's words (B1 fix) no envelope number depends on either row.
+* **check-s122-3's minors:** m1, row DC-10 (above); m2, the absent rule reads the wordings the check swept ("has no",
+  "does not have", "only through", "in the schematic", "nothing does", "lacks", "no path", "no hardware", "not gated",
+  "driven only", "until ... generator", besides the four words): the committed `verdicts.out` at `d38c6b4d` held 35
+  CONOPS sentences with those wordings (18 with the four words), and it holds 51 now, 16 TRUE, 18 BASELINE, 17 NOT
+  DERIVABLE with each wording bound to a phrase that is not about the circuit, 0 STALE, 0 UNJUDGED; the sentences it
+  added include section 7a's HOT-R1 row's second cell (BASELINE on DC-02) and section 7's D-13 row; m3, the CON-003
+  note below.
+* **check-int15-1's m7:** `apply_registry_s122_r4.py` appends to CFL-016's `notes` the reading of its acceptance through
+  the status page.
+* **The fourth check of set 14:** q1 (S-122's row clause) is answered by `apply_registry_s122_r4.py`'s appended
+  sentence; q2 and q3 by `close_s122.py`'s gate (below); q4 by `apply_docs_s122_r4.py`'s edit of
+  `records/int15/apply_check15c_fixes.py`'s docstring (its filing note ends each check) and the gate's rewritten
+  docstring.
 
 ## The baseline rule, and what it changed
 
@@ -45,14 +95,17 @@ a circuit correction updates the status page and the records it names, not the b
 | `inventory.py` | writes `inventory.out` |
 | `judgements.py` | the stream's judgement of each sentence, keyed by its digest, with its assertions |
 | `verdicts.py` | looks up every named part, reads every cited generator line, evaluates every assertion and every stated count of parts, applies the baseline rule and the absent rule, writes `verdicts.out` |
-| `sweep_absent.py` | counts the CONOPS.md sentences of a `verdicts.out` (the working file, a path, or the file at a revision) that state something absent, owed, not drawn or not connected, by verdict |
-| `inventory-base.out`, `verdicts-base.out` | the base's documents at `e57a7365` (run with `S122_AT=e57a7365`), judged on set 13's netlists |
-| `inventory.out`, `verdicts.out` | the documents as they stand: 862 sentences, 0 STALE, 0 UNJUDGED |
+| `sweep_absent.py` | counts the CONOPS.md sentences of a `verdicts.out` (the working file, a path, or the file at a revision) that state something absent or owed (the wordings of `s122lib.ABSENT`), by verdict |
+| `inventory-base.out`, `verdicts-base.out` | the base's documents at `e57a7365` (run with `S122_AT=e57a7365`), judged on the committed netlists |
+| `inventory-set14.out`, `verdicts-set14.out` | set 14's documents at `1bafab8c` (run with `S122_AT=1bafab8c`), judged by round 4's tools |
+| `inventory.out`, `verdicts.out` | the documents as they stand: 985 sentences, 0 STALE, 0 UNJUDGED |
 | `apply_docs_s122.py` | round 1's 43 passages (on this branch in `51952c0c`; refuses a second run) |
 | `apply_docs_s122_r2.py` | round 2: the CONOPS restore, EMCON.md 0a.1, the status page's section, 16 passages; 497 assertions held first (on this branch in `29acd948`) |
 | `apply_docs_s122_r3.py` | round 3: the status page's rows DC-07 to DC-09, the notes of DC-03 and DC-04 and the section's lead, the baselines table's `c5430071` file, the EMCON citations of PANEL.md and V2-SPEC.md and V2-SPEC.md's correction 33; 144 assertions held first; refuses a second run |
-| `checks/` | the filed independent checks, `check-s122-1.md` (round 1) and `check-s122-2.md` (round 2) |
-| `apply_registry_s122.py` | for the integrator: rebinds, CFL-016's three entries, S-122's title correction, the envelope re-pin |
+| `apply_docs_s122_r4.py` | round 4: V2-SPEC.md lines 47, 82, 84 and 86 and correction 34, OPERATING-ENVELOPE.md's two rows and note, row DC-10, the int15 docstring; 51 assertions held first; refuses a second run |
+| `checks/` | the filed independent checks, `check-s122-1.md` to `check-s122-3.md` (rounds 1 to 3) |
+| `apply_registry_s122.py` | rounds 1 to 3's registry script (run at set 14, `9eaf406f`; refuses since) |
+| `apply_registry_s122_r4.py` | for the integrator: round 4's rebinds, CFL-016's entry and note, S-122's title sentence, the envelope re-pin |
 | `close_s122.py` | S-122's closure, for the integrator, last |
 | `LOG.md` | the stream's log |
 
@@ -110,24 +163,24 @@ such sentence of the file, in any section.
 
 ## Counts per document
 
-| Document | Base (`e57a7365` on set 13): sentences | STALE | After: sentences | TRUE | STALE | BASELINE | NOT DERIVABLE |
-|---|---|---|---|---|---|---|---|
-| PANEL.md | 158 | 10 | 161 | 126 | 0 | 0 | 35 |
-| CONOPS.md | 252 | 29 | 250 | 30 | 0 | 38 | 182 |
-| V2-SPEC.md | 111 | 6 | 121 | 35 | 0 | 0 | 86 |
-| OPERATING-ENVELOPE.md | 32 | 4 | 32 | 8 | 0 | 0 | 24 |
-| TEST-PLAN.md | 99 | 2 | 99 | 17 | 0 | 0 | 82 |
-| ASSEMBLY.md | 147 | 13 | 147 | 85 | 0 | 0 | 62 |
-| decisions 28 and 40 | 9 | 0 | 9 | 6 | 0 | 0 | 3 |
-| EMCON.md 0a.1 | 0 | 0 | 21 | 17 | 0 | 0 | 4 |
-| DEFINITION-STATUS.md (the section) | 0 | 0 | 22 | 15 | 0 | 0 | 7 |
-| total | 808 | 64 | 862 | 339 | 0 | 38 | 485 |
+| Document | Base (`e57a7365`): sentences | STALE | Set 14 (`1bafab8c`): sentences | STALE | After: sentences | TRUE | STALE | BASELINE | NOT DERIVABLE |
+|---|---|---|---|---|---|---|---|---|---|
+| PANEL.md | 164 | 10 | 167 | 0 | 167 | 131 | 0 | 0 | 36 |
+| CONOPS.md | 286 | 31 | 284 | 1 | 284 | 50 | 0 | 40 | 194 |
+| V2-SPEC.md | 137 | 10 | 146 | 4 | 150 | 56 | 0 | 0 | 94 |
+| OPERATING-ENVELOPE.md | 56 | 6 | 56 | 2 | 60 | 20 | 0 | 0 | 40 |
+| TEST-PLAN.md | 109 | 2 | 109 | 0 | 109 | 18 | 0 | 0 | 91 |
+| ASSEMBLY.md | 156 | 13 | 156 | 0 | 156 | 90 | 0 | 0 | 66 |
+| decisions 28 and 40 | 9 | 0 | 9 | 0 | 9 | 6 | 0 | 0 | 3 |
+| EMCON.md 0a.1 | 0 | 0 | 26 | 0 | 26 | 22 | 0 | 0 | 4 |
+| DEFINITION-STATUS.md (the section) | 0 | 0 | 22 | 0 | 24 | 17 | 0 | 0 | 7 |
+| total | 917 | 72 | 975 | 7 | 985 | 410 | 0 | 40 | 535 |
 
-2803 assertions are evaluated after (2159 at the base). The 38 BASELINE sentences of CONOPS point to DC-01 (11), DC-02
-(7), DC-03 (1), DC-04 (1), DC-05 (1), DC-06 (14), DC-07 and DC-08 (the same 2) and DC-09 (1). The base moved from
-round 2's 805 sentences and 60 STALE because round 3's rules read more of it: in CONOPS.md the absent sweep adds four
-base sentences and the parser's merge of section 4d's wrapped items takes one away, and the four sentences round 3
-judged BASELINE are STALE at the base, which has no status page rows.
+All three files are judged by round 4's tools (so the base and set 14 read part numbers too; 0 UNJUDGED in each).
+3219 assertions are evaluated after (2492 at the base, 3148 on set 14's documents); 252 sentences name a part number.
+Before round 4 the committed `verdicts.out` read 862 sentences, 339 TRUE, 0 STALE, 38 BASELINE, 485 NOT DERIVABLE.
+The 40 BASELINE sentences of CONOPS point to DC-01 (11), DC-02 (8), DC-03 (1), DC-04 (1), DC-05 (1), DC-06 (14), DC-07
+and DC-08 (the same 2), DC-09 (1) and DC-10 (1).
 
 ## The check's items (check-s122-1)
 
@@ -183,8 +236,28 @@ statements), and S-123.
   * appends n3 and n4 to S-122's title;
   * re-pins the envelope and ENV-001 after asserting no envelope number left OPERATING-ENVELOPE.md;
   * asserts every other record and item unchanged, re-parses, and refuses a second run.
-* `close_s122.py <check>`:
-  * checks the rebinds are in and current;
+* `apply_registry_s122_r4.py` (round 4; after `apply_registry_s122.py`, which has run at set 14):
+  * rebinds the records bound to V2-SPEC.md (REQ-005, CFL-010, CFL-013, CFL-016), OPERATING-ENVELOPE.md (CFL-014,
+    CFL-016) and DEFINITION-STATUS.md (CFL-016) at their set 14 shas, each reason read from the diff against
+    `1bafab8c`, the sentence sets, `verdicts-set14.out` and `verdicts.out`, and the record's own text;
+  * appends CFL-016's round 4 inventory entry (the finder, the judgement, the counts it reads, the corrections) and a
+    sentence to its `notes` (m7); appends one sentence to S-122's title stating what the gate checks since round 4 (q1);
+  * re-pins the envelope and ENV-001 after asserting no envelope number left OPERATING-ENVELOPE.md and the diff stays in
+    section 2; CONOPS.md is unchanged, so the needs pin does not move;
+  * asserts every other record and item unchanged, re-parses, and refuses a second run.
+* `close_s122.py <check>`, its gate (`gate_set14`, rewritten in round 4):
+  * (a) probes the finder with the five part numbers check-int15-1 found and ten made up at run time in five shapes,
+    and with five made-up non-parts it must not read;
+  * (b) finds the corrected sentences by what they say ("<part> display switch", "<part> codec", "<part> hot swap",
+    "<part> hot-swap controller", "<part> M.2 B-key socket" in V2-SPEC.md and OPERATING-ENVELOPE.md outside their
+    correction notes), and needs each to name the generated part, be TRUE and not HISTORY, and assert that part on its
+    board; it refuses the TMDS341A, the WM8960, a TRACO part or the MDT420B there, and the LM5176 in a dock strip
+    sentence other than as A22's;
+  * (c) needs the check to carry the heading "## S-122 closing check" and under it each such sentence by its document
+    and line; on this commit those are V2-SPEC.md lines 47, 82, 84 and 86 and OPERATING-ENVELOPE.md lines 77 and 83;
+  * (d) needs the check to name check-int15-1 and to have been committed on a line that carries `097d2517`;
+* and then, as before:
+  * checks the rebinds of both registry scripts are in and current;
   * re-runs the inventory and verdicts, and needs 0 STALE and 0 UNJUDGED, identical to the committed outputs;
   * needs CFL-016's baseline entry, the status page's rows, and sentences judged in EMCON.md and DEFINITION-STATUS.md;
     the absent rule holds through its 0 UNJUDGED;
@@ -215,15 +288,15 @@ statements), and S-123.
 
 ## Integrator's run order
 
-1. Merge `fnd/s122b` (from main `b874b744`).
-2. `python3 v2/docs/records/s122/apply_registry_s122.py`
+1. Merge `fnd/s122c` (from `1bafab8c`, set 14's line, where `apply_registry_s122.py` has run).
+2. `python3 v2/docs/records/s122/apply_registry_s122_r4.py`
 3. `rules_render.py --requirements`; `rules_status.py` and `rules_render.py` for the envelope pin (ENV-001's `verified_sha`, the PCB-RULE-STATUS pages, LAYER-STATUS).
-4. An independent check filed under `v2/docs/records/s122/checks/` and committed. It must name PANEL.md, CONOPS.md,
-   V2-SPEC.md, OPERATING-ENVELOPE.md, TEST-PLAN.md, ASSEMBLY.md, pcb_decisions.yaml, EMCON.md, DEFINITION-STATUS.md and
-   `verdicts.out`, in its own words.
-5. `python3 v2/docs/records/s122/close_s122.py v2/docs/records/s122/checks/<the check>` (since set 14 it refuses unless the
-   inventory declares that it reads part numbers, check-int15-1's five sentences are corrected, and the check names
-   check-int15-1 and was committed on a line that carries 097d2517: `records/int15/apply_check15b_fixes.py`)
+4. An independent check filed under `v2/docs/records/s122/checks/` and committed. It must start `mergeable: yes`, name
+   check-int15-1, PANEL.md, CONOPS.md, V2-SPEC.md, OPERATING-ENVELOPE.md, TEST-PLAN.md, ASSEMBLY.md, pcb_decisions.yaml,
+   EMCON.md, DEFINITION-STATUS.md and `verdicts.out`, and carry the heading `## S-122 closing check` under which it names
+   V2-SPEC.md line 47, V2-SPEC.md line 82, V2-SPEC.md line 84, V2-SPEC.md line 86, OPERATING-ENVELOPE.md line 77 and
+   OPERATING-ENVELOPE.md line 83 (the gate prints the list if a line moves), in its own words.
+5. `python3 v2/docs/records/s122/close_s122.py v2/docs/records/s122/checks/<the check>`
 6. `rules_render.py --requirements` again.
 
 If a document of the scope changes on main before step 5, re-run `inventory.py` and `verdicts.py`, judge the new text
@@ -235,10 +308,14 @@ in `judgements.py`, and commit the outputs, or the closure refuses.
 * CONOPS.md's 38 BASELINE passages stay as baselined. Their current values live on the status page until a reopening of
   the definition decides otherwise. `feasibility/ZEROIZE.md`'s citation `CONOPS.md:404` (the check's observation) is
   outside the scope.
-* Observed, not changed by this stream (the registry's text, for the integrator): CON-003's evidence says "R480 and
-  R500 still 100k" and CON-022's says FAB-02's "remedy (b) and (c) is not drawn", both bound to board B's netlist
-  `3ef9b8c49a01b728`, where `R480` and `R500` read 10k and `U513` to `U520` are drawn (asserted in the judgement of row
-  DC-08's cell). S-42 stays open; its title's terms are the gate's assertion and its mutation for each fix.
+* CON-003 and CON-022 (corrected in round 4, check-s122-3 m3 and its section 5): CON-003's evidence entry 2 says
+  "R480 and R500 still 100k" of the netlist "at `eadbe571`", and CON-022's entry 1 says FAB-02's "remedy (b) and (c) is
+  not drawn"; in check-s122-3's words (its section 5) their later entries record the change (CON-003: "R480 to R500,
+  R15 and R16 are 10 k"; CON-022's entry 5: (b) and (c) "are drawn"), so these are dated readings in chronological
+  lists, not the records' current claims.
+  On board B's netlist `3ef9b8c49a01b728` `R480` and `R500` read 10k and `U513` to `U520` are drawn (asserted in the
+  judgement of row DC-08's cell). S-42 stays open; its title's terms are the gate's assertion and its mutation for
+  each fix.
 * check-s122-2's observations: EXECUTION-PLAN.md line 629 and `feasibility/ZEROIZE.md`'s CONOPS line citations are
   outside the scope.
 * The finder is a token finder. A circuit sentence that names none of its tokens is outside the inventory; V2-SPEC.md

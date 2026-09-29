@@ -3,8 +3,10 @@
 `apply_registry_s122.py`, and after an independent check of the corrected documents has been filed.
 
 It closes S-122 and returns CFL-016 to PASS only when all of these hold, each read by this script:
-  1. the registry carries `apply_registry_s122`'s rebinds and every document CFL-016 is bound to is bound at the sha16
-     it has now (nothing changed after the rebind);
+  0. set 14's gate, `gate_set14` below (round 4: the part-number finder probed with made-up numbers, the corrected
+     sentences found by what they say and TRUE on the netlists, the closing check's marker and provenance);
+  1. the registry carries the rebinds of `apply_registry_s122.py` and `apply_registry_s122_r4.py` and every document
+     CFL-016 is bound to is bound at the sha16 it has now (nothing changed after the rebind);
   2. it RE-RUNS the inventory and the verdicts itself (`inventory.render`, `verdicts.judge` and `verdicts.render`, on
      the committed netlists and documents at this commit) and finds 0 STALE and 0 UNJUDGED sentences, and the texts
      it writes are identical to the committed `inventory.out` and `verdicts.out` (so the committed record is this
@@ -24,7 +26,7 @@ Then it moves S-122 to closed_items (closed_by the current commit, the closing e
 read and the check's path), sets CFL-016's evidence_result to PASS, drops its waits_on and appends one entry. Every
 other record and item is asserted unchanged; the registry re-parses. Refuses a second run.
 Run: python3 close_s122.py <path of the filed check, relative to the repository>."""
-import os, re, subprocess, sys
+import os, random, re, subprocess, sys
 
 import yaml
 
@@ -43,7 +45,7 @@ REG = os.path.join(L.TOP, "v2/ecad/tools/pcb_requirements.yaml")
 NAMES = ("PANEL.md", "CONOPS.md", "V2-SPEC.md", "OPERATING-ENVELOPE.md", "TEST-PLAN.md", "ASSEMBLY.md", "pcb_decisions.yaml",
          "EMCON.md", "DEFINITION-STATUS.md", "verdicts.out")
 OUTSIDE = ("PANEL.md's head and sections 4, 8 and 11; CONOPS.md's sections other than 2a, M2, M4, 4 with 4a to 4f, and 5, "
-           "except its sentences that state something absent, owed, not drawn or not connected, which are read in every section; "
+           "except its sentences that state something absent or owed (the wordings of s122lib.ABSENT), which are read in every section; "
            "OPERATING-ENVELOPE.md sections 1 and 5 to 8; ASSEMBLY.md's sections other than 2, 4, 8 and 9; EMCON.md's "
            "sections other than 0a.1; the status page's sections other than its section of CONOPS's current circuit values")
 
@@ -54,40 +56,106 @@ def refuse(m):
 
 
 def gate_set14(chk):
-    """Set 14's gate (v2/docs/records/int15/apply_check15c_fixes.py, answering check-int15-3 B1): S-122 closes only when
-    the finder reads makers' part numbers (probed), the verdicts assert the generated parts the corrected sentences name,
-    the five rows no longer name the parts check-int15-1 found, and the check is filed after 097d2517."""
-    probes = (("the WM8960 codec", "WM8960"), ("a TRACO TEN 40-2412WIN converter", "TEN 40-2412WIN"),
+    """Set 14's gate, as stream s122's round 4 rewrote it (the fourth check of set 14, q2 to q4; its first form was
+    v2/docs/records/int15/apply_check15c_fixes.py's). S-122 closes only when all four hold, each read here:
+      (a) the finder is an instrument: `s122lib.names` returns, under `parts`, the five part numbers check-int15-1 found
+          in their probe sentences AND ten part numbers made up at run time in five shapes (a list of known strings
+          cannot pass), and returns none of five non-parts made up at run time (a commit, a registry identifier, a
+          designator, a net, an ingress code: a finder that returns every token cannot pass);
+      (b) the corrected sentences, found by what they say and not by a row label: in V2-SPEC.md and
+          OPERATING-ENVELOPE.md, outside the correction notes, every "<part> display switch", "<part> codec", "<part>
+          hot swap", "<part> hot-swap controller" and "<part> M.2 B-key socket" names the generated part (TS3DV642,
+          PCM2912A, LM5069, LM5069, 2199119), each such sentence is TRUE in this commit's verdicts, its judgement is not
+          HISTORY, and its own assertions include the generated part on its board (B U3 and U4, D U6, E U6, B J_M2C2);
+          at least one such sentence stands in each place; no sentence there names the TMDS341A, the WM8960, a TRACO
+          part or the MDT420B, and a sentence that names the dock strip names the LM5176 only as A22's;
+      (c) the filed check carries the closing check's marker, the heading "## S-122 closing check", and under it names
+          each sentence of (b) by its document and current line ("V2-SPEC.md line 82"), so only a check written to close
+          S-122 on these sentences passes;
+      (d) the check names check-int15-1 and was committed on a line that carries 097d2517.
+    The gate reads the verdicts; whether each corrected sentence is true in substance stays the filed check's to say."""
+    rnd = random.SystemRandom()
+    up = "ABCDEFGHJKLMNPQRSTUVWXYZ"
+    def word(n): return "".join(rnd.choice(up) for _ in range(n))
+    def digs(n): return "".join(rnd.choice("0123456789") for _ in range(n))
+    shapes = [lambda: word(rnd.randint(2, 4)) + digs(rnd.randint(3, 5)) + word(rnd.randint(0, 2)),
+              lambda: digs(2) + word(3) + digs(1) + word(1) + digs(3) + word(2),
+              lambda: word(3) + digs(4) + "-" + word(3),
+              lambda: str(rnd.randint(1, 9)) + digs(6) + "-" + str(rnd.randint(1, 9)),
+              lambda: word(3) + " " + digs(2) + "-" + digs(4) + word(3)]
+    frames = ["the %s display switch", "Direwolf on the %s codec", "| %s | dock strip, inside |", "a socket, %s, on board B",
+              "two %s switches and a relay"]
+    probes = [("the WM8960 codec", "WM8960"), ("a TRACO TEN 40-2412WIN converter", "TEN 40-2412WIN"),
               ("an Amphenol M.2 B-key socket, MDT420B01001", "MDT420B01001"), ("the TMDS341A display switch", "TMDS341A"),
-              ("two TS3DV642 switches", "TS3DV642"))
+              ("two TS3DV642 switches", "TS3DV642")]
+    for shape in shapes:
+        for _ in range(2):
+            p = shape()
+            while not re.search(r"\d{3}", p) or re.split(r"[- /]", p)[0] in L.STDBODY: p = shape()
+            probes.append((rnd.choice(frames) % p, p))
     nets = L.all_nets(L.netlists())
     for sent, part in probes:
-        got = L.names(sent, nets)
-        if part not in " ".join(str(x) for x in (got.get("parts") or [])):
+        if part not in (L.names(sent, nets).get("parts") or []):
             refuse("the finder does not read the part number %s in %r (S-122's set 14 extension)" % (part, sent))
-    ver = open(os.path.join(L.TOP, "v2/docs/records/s122/verdicts.out"), encoding="utf-8").read()
-    for label, pat in (("board B's U3 or U4 as TS3DV642", r"\bB U[34] value has '[^']*TS3DV642"),
-                       ("board E's U6 as LM5069", r"\bE U6 value has '[^']*LM5069"),
-                       ("board D's U6 as PCM2912A", r"\bD U6 value has '[^']*PCM2912A"),
-                       ("board B's J_M2C2 as TE 2199119", r"\bB J_M2C2 value has '[^']*2199119")):
-        if not re.search(pat, ver): refuse("verdicts.out asserts no %s" % label)
-    spec = open(os.path.join(L.TOP, "v2/docs/V2-SPEC.md"), encoding="utf-8").read().split("\n")
-    env = open(os.path.join(L.TOP, "v2/docs/OPERATING-ENVELOPE.md"), encoding="utf-8").read().split("\n")
-    def row(lines, head): return [l for l in lines if l.startswith(head)]
-    left = []
-    if any("TMDS341A" in l for l in row(spec, "| B16 |")): left.append("V2-SPEC.md's B16 row names the TMDS341A")
-    if any("WM8960" in l for l in row(spec, "| APRS and VHF voice |")): left.append("V2-SPEC.md's APRS row names the WM8960")
-    if any("LM5176" in l and "A22" not in l for l in row(spec, "| E6 |")): left.append("V2-SPEC.md's E6 row puts the LM5176 on E6")
-    if row(env, "| TRACO TEN 40"): left.append("OPERATING-ENVELOPE.md keeps its TRACO TEN 40 row")
-    if row(env, "| Amphenol M.2 B-key socket |"): left.append("OPERATING-ENVELOPE.md keeps its Amphenol M.2 B-key row")
-    if left: refuse("check-int15-1's sentences still stand: %s" % "; ".join(left))
+    nonparts = ["%07x" % rnd.randrange(0x1000000, 0xfffffff) + "a", "%s-%s" % (word(3), digs(3)), "U%s" % digs(3),
+                "%s_%s" % (word(4), word(3)), "IP%s" % digs(2)]
+    for np_ in nonparts:
+        got = L.names("the part %s here" % np_, nets).get("parts") or []
+        if got: refuse("the finder reads %r as a part number %s: it does not tell parts from other tokens" % (np_, got))
+    # (b) the corrected sentences in this commit's verdicts, found by what they say
+    nls = L.netlists()
+    rows = V.judge(L.inventory(nls), nls)
+    note = {}
+    for rel in ("v2/docs/V2-SPEC.md", "v2/docs/OPERATING-ENVELOPE.md"):
+        for key, title, kind, line, text, _rk in L.md_blocks(rel):
+            if kind == "heading": continue
+            note[(os.path.basename(rel), line)] = title.startswith("Corrections") or bool(re.match(r"^\**Corrected", text))
+    rules = [("V2-SPEC.md", r"(\S+) display switch", "TS3DV642", ["B U3 value has 'TS3DV642", "B U4 value has 'TS3DV642"]),
+             ("V2-SPEC.md", r"(\S+)(?: USB)? codec", "PCM2912A", ["D U6 value has 'PCM2912A"]),
+             ("V2-SPEC.md", r"(\S+) hot swap", "LM5069", ["E U6 value has 'LM5069"]),
+             ("OPERATING-ENVELOPE.md", r"(\S+) hot-swap controller", "LM5069", ["E U6 value has 'LM5069"]),
+             ("OPERATING-ENVELOPE.md", r"(\S+) M\.2 B-key socket", "2199119", ["B J_M2C2 value has 'TE 2199119"])]
+    found, lines = {i: 0 for i in range(len(rules))}, []
+    for sid, d, verdict, det, s in rows:
+        doc = sid.split("#")[0]
+        if doc not in ("V2-SPEC.md", "OPERATING-ENVELOPE.md"): continue
+        line = int(re.search(r":L(\d+):", sid).group(1))
+        if note.get((doc, line)): continue
+        for bad in ("TMDS341", "WM8960", "TRACO", "TEN 40", "MDT420B"):
+            if bad in s: refuse("%s line %d still names %s outside a correction note" % (doc, line, bad))
+        if "dock strip" in s and re.search(r"(?<!A22's )LM5176", s):
+            refuse("%s line %d names the LM5176 in a dock strip sentence other than as A22's" % (doc, line))
+        for i, (rdoc, rx, part, need) in enumerate(rules):
+            if doc != rdoc: continue
+            for m in re.finditer(rx, s):
+                w = m.group(1).strip("`,;()")
+                if not L.is_partno(w) and not L.partnos(w): continue
+                if part not in w: refuse("%s line %d: %r names %s, not the generated %s" % (doc, line, m.group(0), w, part))
+                judg = " ".join(x for x in det if x.startswith("judgement: "))
+                asrt = " ".join(x for x in det if x.startswith("asserted ("))
+                if verdict != "TRUE" or judg.startswith("judgement: HISTORY"):
+                    refuse("%s line %d (%s) is %s%s, not TRUE on the netlists" % (doc, line, m.group(0), verdict,
+                                                                                 ", HISTORY" if "HISTORY" in judg else ""))
+                miss = [n for n in need if n not in asrt]
+                if miss: refuse("%s line %d (%s): its judgement does not assert %s" % (doc, line, m.group(0), "; ".join(miss)))
+                found[i] += 1
+                lines.append("%s line %d" % (doc, line))
+    empty = [rules[i][1] for i, n in found.items() if not n]
+    if empty: refuse("no corrected sentence stands for %s" % "; ".join(empty))
+    # (c) the closing check's marker, with the sentences by their lines, and (d) its provenance
     path = chk if os.path.isabs(chk) else os.path.join(L.TOP, chk)
     if not os.path.exists(path): refuse("no check at %s" % chk)
-    if "check-int15-1" not in open(path, encoding="utf-8").read(): refuse("the check does not name check-int15-1")
+    txt = open(path, encoding="utf-8").read()
+    if "\n## S-122 closing check" not in txt: refuse("the check carries no '## S-122 closing check' heading")
+    under = txt.split("\n## S-122 closing check", 1)[1]
+    miss = sorted(set(x for x in lines if x not in under))
+    if miss: refuse("the check's closing section does not name %s" % ", ".join(miss))
+    if "check-int15-1" not in txt: refuse("the check does not name check-int15-1")
     added = subprocess.run(["git", "-C", L.TOP, "log", "--diff-filter=A", "--format=%H", "--", os.path.relpath(path, L.TOP)],
                            capture_output=True, text=True).stdout.split()
     if not added or subprocess.run(["git", "-C", L.TOP, "merge-base", "--is-ancestor", "097d2517", added[-1]]).returncode:
         refuse("the check was not committed on a line that carries 097d2517 (set 14's extension of S-122)")
+
 
 def main():
     if len(sys.argv) != 2: refuse("usage: close_s122.py <the filed independent check>")
@@ -98,6 +166,7 @@ def main():
     if not any(x["id"] == "S-122" for x in before["open_items"]): refuse("S-122 is not open")
     rec = {r["id"]: r for r in before["records"]}["CFL-016"]
     if not any("apply_registry_s122" in str(e) for e in rec.get("evidence") or []): refuse("apply_registry_s122.py has not run")
+    if not any("apply_registry_s122_r4" in str(e) for e in rec.get("evidence") or []): refuse("apply_registry_s122_r4.py has not run")
     if rec.get("evidence_result") != "FAIL" or rec.get("waits_on") != ["S-122"]: refuse("CFL-016's state")
     for b in rec.get("evidence_bound_to") or []:
         rel, s = b.rsplit("@", 1)
@@ -135,8 +204,8 @@ def main():
     closing = ("Stream s122 (v2/docs/records/s122/README.md): the sentences of the documents CFL-016 names, in the scope "
                "s122lib.SCOPE sets (outside it the scripts read nothing: %s), were inventoried (inventory.py) and judged "
                "against the committed netlists of boards A, B, C, D, E and P and the generators (verdicts.py and "
-               "judgements.py); verdicts-base.out read %s STALE sentences of %s in the base's documents at e57a7365, and "
-               "apply_docs_s122.py, apply_docs_s122_r2.py and apply_docs_s122_r3.py corrected the five correctable documents and the status page, asserting every part, "
+               "judgements.py), makers' part numbers among what the finder reads since round 4; verdicts-base.out read %s STALE sentences of %s in the base's documents at e57a7365, and "
+               "apply_docs_s122.py, apply_docs_s122_r2.py, apply_docs_s122_r3.py and apply_docs_s122_r4.py corrected the five correctable documents and the status page, asserting every part, "
                "pin, net, count and generator line their new text names before they wrote. CONOPS.md, a baselined "
                "definition, is restored to its text at c5430071 and read through handover/DEFINITION-STATUS.md: each of its "
                "passages whose value differs from the netlists is BASELINE with its current value kept on the status page "

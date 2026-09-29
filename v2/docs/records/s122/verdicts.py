@@ -132,6 +132,13 @@ def run_assert(a, nls):
     if sm:
         got = nls[sm.group(1)]["sha16"]
         return got == sm.group(2), "board %s netlist sha256/16 %s (read: %s)" % (sm.group(1), sm.group(2), got)
+    pm = re.match(r"^PDF:(?P<f>[\w./-]+\.pdf)~(?P<w>.+)$", a.strip())
+    if pm:   # round 4: a held maker's sheet, read with pdftotext (the text layer), whitespace normalised
+        r = subprocess.run(["pdftotext", "-layout", os.path.join(L.TOP, pm.group("f")), "-"], capture_output=True)
+        if r.returncode: return False, "%s not readable by pdftotext" % pm.group("f")
+        txt = " ".join(r.stdout.decode("utf-8", "replace").split())
+        ok = all(" ".join(w.split()) in txt for w in pm.group("w").split("|"))
+        return ok, "%s's text holds %r" % (pm.group("f"), pm.group("w")[:80])
     dm = DOCASSERT.match(a.strip())
     if dm:
         if dm.group("c"):   # round 3: a document at a commit (the commit's file, read with git show)
@@ -183,6 +190,62 @@ def check_names(s, nm, nls, j):
             fails.append("%s is on no netlisted board" % r)
         elif boards and not set(on) & set(boards) and r not in j.get("any_board", ()):
             notes.append("%s on %s (sentence names %s)" % (r, "".join(on), "".join(boards)))
+    return fails, notes
+
+
+PART_KINDS = ("document", "case", "bought", "stock", "stackup", "withdrawn", "owed", "module", "elsewhere")
+
+
+def part_boards(part, nls):
+    """{board: [refs]} whose netlist value text holds the part number (with its series word, or the number alone)."""
+    keys = [part] + ([part.split(" ", 1)[1]] if " " in part else [])
+    out = {}
+    for b, nl in sorted(nls.items()):
+        refs = sorted(r for r, c in nl["comps"].items() if any(k in c["value"] for k in keys))
+        if refs: out[b] = refs
+    return out
+
+
+def check_parts(s, nm, nls, j):
+    """Round 4 (set 14, check-int15-1 B1): every maker's part number the sentence names is judged against the part values
+    of the six netlists. It is on a netlist (a board other than the one the sentence names is noted), or the judgement's
+    `parts_ok` names it: 'asserted: <one of its own assertions that names the part>' (a generator at a commit, a
+    document, a part value), or a reason that starts with one of PART_KINDS and a colon (a document number, a case item,
+    a bought item, a stock code, a stackup, a part the sentence names as withdrawn or owed, a module on a socket).
+    Returns (failures, notes)."""
+    fails, notes = [], []
+    ok = j.get("parts_ok") or {}
+    boards = [k for rx, k in BOARD_OF if rx.search(s + " " + " ".join(nm.get("row") or []))]
+    for part in nm.get("parts") or []:
+        on = part_boards(part, nls)
+        why = ok.get(part)
+        if why is not None:
+            if why.startswith("asserted: "):
+                x = why[len("asserted: "):]
+                num = part.split(" ", 1)[-1]
+                if x not in j.get("a", ()) or num not in x: fails.append("%s: parts_ok names no own assertion of it (%s)" % (part, x))
+                else: notes.append("%s asserted" % part)
+            elif why.split(":", 1)[0] not in PART_KINDS or ":" not in why:
+                fails.append("%s: parts_ok's reason does not start with one of %s" % (part, ", ".join(PART_KINDS)))
+            elif why.startswith("elsewhere:") and not on:
+                fails.append("%s: said to be elsewhere, and it is on no netlist" % part)
+            else:
+                notes.append("%s %s" % (part, why))
+            continue
+        if not on:
+            fails.append("%s is on no netlist's part values" % part)
+        elif len(boards) == 1 and boards[0] not in on:
+            # the sentence (with its row label) names one board, and the part is not on it: the E6 row's LM5176
+            fails.append("%s is on %s, not on board %s, the one board the sentence names" % (
+                part, ", ".join("%s (%s)" % (b, ",".join(r[:4])) for b, r in on.items()), boards[0]))
+        elif boards and not set(on) & set(boards):
+            # a note when the sentence names several boards
+            notes.append("%s on %s (the sentence names %s)" % (
+                part, ", ".join("%s (%s)" % (b, ",".join(r[:4])) for b, r in on.items()), "".join(boards)))
+        else:
+            notes.append("%s on %s" % (part, ", ".join("%s (%s)" % (b, ",".join(r[:4])) for b, r in on.items())))
+    for k in ok:
+        if k not in (nm.get("parts") or []): fails.append("parts_ok names %s, which the sentence does not" % k)
     return fails, notes
 
 
@@ -283,6 +346,7 @@ def judge(inv, nls):
         if j is None:
             rows.append((sid, d, "UNJUDGED", ["no judgement for this text"], s)); continue
         f1, n1 = check_names(s, nm, nls, j)
+        f5, n5 = check_parts(s, nm, nls, j)
         f2, n2 = check_gens(s, nm, nls, j)
         f3, n3 = [], []
         for a in j.get("a", ()):
@@ -302,6 +366,10 @@ def judge(inv, nls):
             kept = j.get("kept") if isinstance(j.get("kept"), list) else [j.get("kept")]
             kept_ok = all(k in status_rows() for k in kept)
             if not kept_ok: f3.append("the status page keeps no row %s for it" % ", ".join(k for k in kept if k not in status_rows()))
+        if v == "N" and f5:
+            # round 4: NOT DERIVABLE (HISTORY among them) never excuses a part number the netlists do not carry; the
+            # judgement names each in parts_ok, a history one by an assertion of the generator at its date
+            f4 = f4 + ["a part number not on the netlists needs its parts_ok entry: " + "; ".join(f5)]
         if v == "S":
             verdict = "STALE"
         elif f4:
@@ -311,7 +379,7 @@ def judge(inv, nls):
             # on the status page; the names and citation checks are reported, not held against it. Its assertions, which
             # state the current value, are (round 3: any failing one makes it STALE)
             verdict = "BASELINE" if kept_ok and not f3 else "STALE"
-        elif f1 or f2 or f3:
+        elif f1 or f2 or f3 or f5:
             verdict = "STALE" if v == "T" else "NOT DERIVABLE"
         else:
             verdict = {"T": "TRUE", "N": "NOT DERIVABLE"}[v]
@@ -320,9 +388,10 @@ def judge(inv, nls):
         if v == "B": det.append("baseline value (CONOPS.md's head and handover/DEFINITION-STATUS.md): its current value is "
                                 "kept on the status page, row %s, which this script judges directly"
                                 % (", ".join(j["kept"]) if isinstance(j.get("kept"), list) else j.get("kept")))
-        if f1 or f2 or f3 or f4: det += ["FAILS: " + x for x in f1 + f2 + f3 + f4]
+        if f1 or f2 or f3 or f4 or f5: det += ["FAILS: " + x for x in f1 + f2 + f3 + f4 + (f5 if v != "N" else [])]
         det.append("names looked up: %d parts, %d nets%s" % (len(nm["refs"]), len(nm["nets"]), ("; " + "; ".join(n1)) if n1 else ""))
         if n2: det.append("citations: " + "; ".join(n2))
+        if nm.get("parts"): det.append("part numbers (%d): %s" % (len(nm["parts"]), "; ".join(n5) or "none judged"))
         if n3: det.append("asserted (%d): " % len(n3) + "; ".join(n3))
         rows.append((sid, d, verdict, det, s))
     return rows
