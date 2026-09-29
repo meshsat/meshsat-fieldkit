@@ -9,10 +9,14 @@ It closes S-122 and returns CFL-016 to PASS only when all of these hold, each re
      the committed netlists and documents at this commit) and finds 0 STALE and 0 UNJUDGED sentences, and the texts
      it writes are identical to the committed `inventory.out` and `verdicts.out` (so the committed record is this
      commit's);
-  3. the independent check named on the command line is a file in the tree whose first line reads `mergeable: yes`
-     and whose text names every document of the scope (PANEL.md, CONOPS.md, V2-SPEC.md, OPERATING-ENVELOPE.md,
-     TEST-PLAN.md, ASSEMBLY.md, pcb_decisions.yaml) and `verdicts.out`; what the check says it read is left in its own
-     words, and this script quotes none of it.
+  3. CONOPS.md is read under the baseline rule (CFL-016's baseline entry): a CONOPS sentence whose value differs from
+     the netlists is BASELINE only with its row on the status page, and the status page's section and EMCON.md section
+     0a.1, where the current values are kept, were judged directly (both carry sentences in verdicts.out);
+  4. the independent check named on the command line is committed at HEAD with the bytes the working file has (a file
+     only staged is refused), its first line reads `mergeable: yes`, and its text names every document of the scope
+     (PANEL.md, CONOPS.md, V2-SPEC.md, OPERATING-ENVELOPE.md, TEST-PLAN.md, ASSEMBLY.md, pcb_decisions.yaml, EMCON.md,
+     DEFINITION-STATUS.md) and `verdicts.out`; what the check says it read is left in its own words, and this script
+     quotes none of it.
 Then it moves S-122 to closed_items (closed_by the current commit, the closing evidence naming the counts this run
 read and the check's path), sets CFL-016's evidence_result to PASS, drops its waits_on and appends one entry. Every
 other record and item is asserted unchanged; the registry re-parses. Refuses a second run.
@@ -34,7 +38,10 @@ import apply_check1_answers as A  # noqa: E402
 TAG = "close_s122"
 REG = os.path.join(L.TOP, "v2/ecad/tools/pcb_requirements.yaml")
 NAMES = ("PANEL.md", "CONOPS.md", "V2-SPEC.md", "OPERATING-ENVELOPE.md", "TEST-PLAN.md", "ASSEMBLY.md", "pcb_decisions.yaml",
-         "verdicts.out")
+         "EMCON.md", "DEFINITION-STATUS.md", "verdicts.out")
+OUTSIDE = ("PANEL.md's head and sections 4, 8 and 11; CONOPS.md's sections other than 2a, M2, M4, 4 with 4a to 4f, and 5; "
+           "OPERATING-ENVELOPE.md sections 1 and 5 to 8; ASSEMBLY.md's sections other than 2, 4, 8 and 9; EMCON.md's "
+           "sections other than 0a.1; the status page's sections other than its section of CONOPS's current circuit values")
 
 
 def refuse(m):
@@ -60,12 +67,20 @@ def main():
     inv_txt = I.render(inv, nls)
     ver_txt, tot = V.render(V.judge(inv, nls), nls)
     if tot["STALE"] or tot["UNJUDGED"]: refuse("the verdicts read %d STALE and %d UNJUDGED" % (tot["STALE"], tot["UNJUDGED"]))
+    # CONOPS.md under the baseline rule: every BASELINE sentence is CONOPS's and has its row on the status page (verdicts.py
+    # turns one without a row into STALE), and the status page's section and EMCON.md section 0a.1 were judged directly
+    if not any("The baseline rule (stream s122, round 2" in str(e) for e in rec.get("evidence") or []): refuse("CFL-016 has no baseline entry")
+    if not V.status_rows(): refuse("the status page carries no row of CONOPS's current circuit values")
+    for doc in ("EMCON.md", "DEFINITION-STATUS.md"):
+        if not re.search(r"(?m)^%s: [1-9]\d* sentences" % re.escape(doc), ver_txt): refuse("%s was not judged" % doc)
     for name, txt in (("inventory.out", inv_txt), ("verdicts.out", ver_txt)):
         if open(os.path.join(HERE, name), encoding="utf-8").read() != txt: refuse("the committed %s is not this commit's: re-run %s" % (name, name.replace(".out", ".py")))
     # 3. the filed independent check
     p = os.path.join(L.TOP, chk)
     if not os.path.isfile(p): refuse("no check at %s" % chk)
-    if subprocess.run(["git", "-C", L.TOP, "ls-files", "--error-unmatch", chk], capture_output=True).returncode: refuse("%s is not committed" % chk)
+    # committed means in HEAD's tree with the same bytes as the working file (a file only staged is refused: check m10)
+    blob = subprocess.run(["git", "-C", L.TOP, "show", "HEAD:%s" % chk], capture_output=True)
+    if blob.returncode or blob.stdout != open(p, "rb").read(): refuse("%s is not committed at HEAD as it stands" % chk)
     t = open(p, encoding="utf-8").read()
     if t.lstrip().split("\n", 1)[0].strip() != "mergeable: yes": refuse("the check's first line is not 'mergeable: yes'")
     missing = [n for n in NAMES if n not in t]
@@ -76,23 +91,32 @@ def main():
     base_tot = [l for l in open(os.path.join(HERE, "verdicts-base.out"), encoding="utf-8") if l.startswith("total: ")]
     m0 = re.match(r"^total: (\d+) sentences, \d+ TRUE, (\d+) STALE", base_tot[0]) if base_tot else None
     if not m0: refuse("verdicts-base.out has no total line")
-    closing = ("Stream s122 (v2/docs/records/s122/README.md): the documents CFL-016 names were inventoried sentence by sentence "
-               "(inventory.py, the scope in s122lib.SCOPE) and judged against the committed netlists of boards A, B, C, D, E "
-               "and P and the generators (verdicts.py and judgements.py); verdicts-base.out read %s STALE sentences of %s at "
-               "e57a7365, and apply_docs_s122.py corrected them, asserting every part, pin, net and generator line its new "
-               "text names before it wrote. At %s this closure re-ran the inventory and the verdicts and read %d sentences: "
-               "%d TRUE, 0 STALE, %d NOT DERIVABLE, 0 UNJUDGED, %d assertions (%s), identical to the committed inventory.out "
-               "and verdicts.out. The filed independent check is %s; this script reads only that its first line is "
+    closing = ("Stream s122 (v2/docs/records/s122/README.md): the sentences of the documents CFL-016 names, in the scope "
+               "s122lib.SCOPE sets (outside it the scripts read nothing: %s), were inventoried (inventory.py) and judged "
+               "against the committed netlists of boards A, B, C, D, E and P and the generators (verdicts.py and "
+               "judgements.py); verdicts-base.out read %s STALE sentences of %s in the base's documents at e57a7365, and "
+               "apply_docs_s122.py and apply_docs_s122_r2.py corrected the five correctable documents, asserting every part, "
+               "pin, net, count and generator line their new text names before they wrote. CONOPS.md, a baselined "
+               "definition, is restored to its text at c5430071 and read through handover/DEFINITION-STATUS.md: each of its "
+               "passages whose value differs from the netlists is BASELINE with its current value kept on the status page "
+               "and in feasibility/EMCON.md section 0a.1, both judged directly. At %s this closure re-ran the inventory and "
+               "the verdicts and read %d sentences in that scope: %d TRUE, 0 STALE, %d BASELINE, %d NOT DERIVABLE, 0 "
+               "UNJUDGED, %d assertions (%s), identical to the committed inventory.out and verdicts.out. The filed "
+               "independent check is %s; this script reads only that it is committed at HEAD, that its first line is "
                "'mergeable: yes' and that it names each document; what it read is in its own words there."
-               % (m0.group(2), m0.group(1), head[:8], tot["sentences"], tot["TRUE"], tot["NOT DERIVABLE"], tot["asserted"],
-                  counts, chk))
+               % (OUTSIDE, m0.group(2), m0.group(1), head[:8], tot["sentences"], tot["TRUE"], tot["BASELINE"],
+                  tot["NOT DERIVABLE"], tot["asserted"], counts, chk))
     entry = ("v2/docs/records/s122/close_s122.py (S-122 closed at %s): the inventory and the verdicts re-run by the closure "
-             "read %d sentences of the documents this record names, 0 STALE and 0 UNJUDGED on the committed netlists of set "
-             "12 (v2/docs/records/s122/verdicts.out), and the independent check %s is filed; so no sentence of the named "
-             "documents and outcomes that names a part, a net, a board, a rail, a gate function or a generator line is "
-             "judged to describe a replaced circuit, and the envelope was re-pinned by apply_registry_s122.py. What is NOT "
-             "DERIVABLE (held documents, firmware, procedures and dated history, %d sentences) is left as it stands and "
-             "said so in verdicts.out. The result is PASS (was FAIL)." % (head[:8], tot["sentences"], chk, tot["NOT DERIVABLE"]))
+             "read %d sentences in the scope s122lib.SCOPE sets for the documents this record names (outside it the scripts "
+             "read nothing: %s), 0 STALE and 0 UNJUDGED on the committed netlists (v2/docs/records/s122/verdicts.out); "
+             "CONOPS.md is read through its status page under the baseline rule, %d of its sentences BASELINE with their "
+             "current values kept on handover/DEFINITION-STATUS.md and in feasibility/EMCON.md section 0a.1, which were "
+             "judged directly; and the independent check %s is filed. So in that scope no sentence of the five correctable "
+             "documents and of decisions 28 and 40, and no place the status page names for CONOPS.md, is judged to describe "
+             "a replaced circuit, and the envelope was re-pinned by apply_registry_s122.py. What is NOT DERIVABLE (held "
+             "documents, firmware, procedures and dated history, %d sentences) is left as it stands and said so in "
+             "verdicts.out. The result is PASS (was FAIL)." % (head[:8], tot["sentences"], OUTSIDE, tot["BASELINE"], chk,
+                                                               tot["NOT DERIVABLE"]))
     for txt in (closing, entry):
         A.screen(txt, "S-122")
         if any(d in txt for d in L.DASHES): refuse("a dash")

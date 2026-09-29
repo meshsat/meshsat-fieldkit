@@ -257,11 +257,12 @@ def main():
             entry = ("%s re-read at stream s122 (%s, %s to %s; MESHSAT-1357, open item S-122): the diff, read by "
                      "v2/docs/records/s122/apply_registry_s122.py, changes lines %s (sections %s); %s (the verdicts of "
                      "v2/docs/records/s122, verdicts-base.out on the base's documents and verdicts.out on these, both on "
-                     "the committed netlists of set 13; the correcting scripts asserted every part their new text names "
-                     "before they wrote); %s; %s.%s This entry does not re-read the rest of this record's argument; rebound "
-                     "to %s. This entry changes no result."
-                     % (rel, REF, old16, new[rel], lines_txt, "; ".join(changed), change_txt, rel_txt, part_txt, why_doc,
-                        new[rel]))
+                     "the committed netlists of set 13; %s); %s; %s.%s This entry does not re-read the rest of this "
+                     "record's argument; rebound to %s. This entry changes no result."
+                     % (rel, REF, old16, new[rel], lines_txt, "; ".join(changed), change_txt,
+                        ("the restoring script asserted the file equal to c5430071's byte for byte" if rel == "v2/docs/CONOPS.md"
+                         else "the correcting scripts asserted every part their new text names before they wrote"),
+                        rel_txt, part_txt, why_doc, new[rel]))
             out = append_entry(out, rid, entry, ('"%s"' % oldb, '"%s"' % newb))
             touched.setdefault(rid, []).append(base)
     # the needs pin
