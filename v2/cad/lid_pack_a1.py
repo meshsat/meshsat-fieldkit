@@ -77,7 +77,8 @@ QMX = dict(rect=(83.2, -45.9, 171.0, 65.9), unit_face=29.30, frame=32.30, knobs=
            right_panel_y=57.5, left_panel_y=-37.5, plug_rf=42.9, plug_usb=35.4, plug_dc=55.4, lead_r=20.0, rf_r=12.5)
 # the DC lead of the r2 set looped back toward the hinge at R 20 WEST of the tray, where the lid pack now lies: it is re-routed EAST (SESSION,
 # section 3 of the README): from the plug's end (Y -92.9) an R 20 turn east along Y -112.9, then R 20 north in the fillet lane X 174..184 to the hinge
-DC_ROUTE = [(94.5, -37.5), (94.5, -92.9), (114.5, -112.9), (158.0, -112.9), (178.0, -92.9), (178.0, 100.0)]
+# the unit spans X 95.6..158.6 (63 wide, centred in the set), its knob edge west: the DC jack at v 10.2..11.2 from it is at X 105.8..106.8
+DC_ROUTE = [(106.3, -37.5), (106.3, -92.9), (126.3, -112.9), (158.0, -112.9), (178.0, -92.9), (178.0, 100.0)]
 
 # ---------------------------------------------------------------- the cell and the block (Samsung INR18650-35E spec Ver. 1.1; A06 block basis)
 CELL_D, CELL_L, CELL_M = 18.55, 65.25, 0.050   # spec 3.10 and the drawing: diameter max 18.55, height max 65.25, weight 50 g max
@@ -607,6 +608,13 @@ def main(fp):
     w("   tipping line: Y %.2f (the outer flat bottom's edge, INFERRED), feet at Z %.2f; hinge axis Y %.1f, Z %.1f (ESTIMATE); the lid's stop angle" % (Y_TIP, FOOT_Z, HINGE["y"], HINGE["z"]))
     w("   is stated by no held Peli file (TBD): swept 90 to 180 degrees; each row is the worst over base 7 to 14 kg, CG Y -20..+20, Z 45..65")
     w("   and the hinge axis Y 147..163")
+    for a in (aB,):
+        items = mass_items(a, 9.0, (0.0, 0.0, 55.0))
+        for phi in (0, 90, 100):
+            m, x, y, z = cg(items, phi=phi)
+            ml, xl, yl, zl = cg(items, part="lid", phi=phi)
+            w("   B, central estimate (base 9 kg at (0, 0, 55)), lid at %3d deg: case %.2f kg, centre of mass (%.1f, %.1f, %.1f); lid alone (%.1f, %.1f, %.1f)" % (
+                phi, m, x, y, z, xl, yl, zl))
     w("   arrangement  lid open   worst CG Y   level ground   worst critical back slope (tips beyond)")
     lim = {}
     for a in (aB, aA):
