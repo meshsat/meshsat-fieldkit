@@ -15,7 +15,7 @@
    "ibis_read.py": "1d48c256b6ceca65",
    "impedance_check.py": "e2495a04e16fc600",
    "intent.py": "0071fe553548eb5d",
-   "intent_checks.py": "68afac7a314ccf3b",
+   "intent_checks.py": "082b701e7bab36d9",
    "kicad_compat.py": "6b8f77490466e939",
    "netclass.py": "4cc1adf0ddae0390",
    "netlist_board.py": "655bc402d36b0fa5",
@@ -32,7 +32,7 @@
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "42e90afa9033a241",
+  "sha16": "d59545707562acb5",
   "unresolved": []
  },
  "counts": {
@@ -148,12 +148,12 @@
  },
  "tool": "edge_length",
  "tools": {
-  "git_head": "d75384201515",
-  "tools_tree_sha": "254a65b96010ac03"
+  "git_head": "8263b60a25d4",
+  "tools_tree_sha": "d690cc33e4cc6968"
  },
- "ts": "2026-09-29T11:48:24Z",
+ "ts": "2026-09-29T12:53:50Z",
  "verdict": "INCONCLUSIVE",
- "version": "d75384201515",
+ "version": "8263b60a25d4",
  "writer": {
   "file": "edge_length.py",
   "sha16": "21d61d18e18e56a8"

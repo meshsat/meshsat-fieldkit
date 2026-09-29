@@ -15,7 +15,7 @@
    "ibis_read.py": "1d48c256b6ceca65",
    "impedance_check.py": "e2495a04e16fc600",
    "intent.py": "0071fe553548eb5d",
-   "intent_checks.py": "68afac7a314ccf3b",
+   "intent_checks.py": "082b701e7bab36d9",
    "kicad_compat.py": "6b8f77490466e939",
    "netclass.py": "4cc1adf0ddae0390",
    "netlist_board.py": "655bc402d36b0fa5",
@@ -32,7 +32,7 @@
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "42e90afa9033a241",
+  "sha16": "d59545707562acb5",
   "unresolved": []
  },
  "counts": {
@@ -43,20 +43,20 @@
   "contradicted_nets": 0,
   "decided_nets": 84,
   "layout_bound_nets": 65,
-  "low_speed_nets": 172,
+  "low_speed_nets": 173,
   "maker_edge_nets": 7,
   "maker_held_nets": 1,
   "may_be_long_nets": 84,
   "models_absent": 0,
   "models_asked": 5,
-  "signal_nets": 294,
+  "signal_nets": 295,
   "unasked_part_nets": 0,
   "undecided_model_absent_nets": 0,
   "undecided_nets": 38,
   "undecided_no_declaration_nets": 38,
   "undecided_other_nets": 0
  },
- "denominator": 294,
+ "denominator": 295,
  "evidence": [
   "UNDECIDED (no declaration) (UNKNOWN, 38 of 38 net(s)): no signal-class declaration (x38); ICs on them: LM5176PWPR buck-boost U15, LM5176PWPR buck-boost U13, LM5176PWPR buck-boost U16, LM5176PWPR buck-boost U7",
   "BOUND_DECIDES 64 layout-bound net(s) whose governing edge is a bound or a model: at least one driver on each has no published minimum, whatever the other drivers' makers publish (ER-D13): S1_BOOT, S3_BOOT, FE_BOOT1, HF_BOOT1, PA_BOOT1, PD_BOOT1, POE_BOOT1, S2_BOOT1, SD_BOOT1, FE_BOOT2, HF_BOOT2, PA_BOOT2 ...",
@@ -158,7 +158,7 @@
   "extent_mm": 400.0,
   "far_netlist_b": {
    "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
-   "sha256_16": "5b89d5ef6fe0299a"
+   "sha256_16": "3ef9b8c49a01b728"
   },
   "far_netlist_c": {
    "path": "pcb-c-display-c8/out/pcb-c-display.net",
@@ -174,7 +174,7 @@
   },
   "intent": {
    "path": "pcb-a-power-a23/out/pcb-a-power-intent.json",
-   "sha256_16": "f9e4827ba2f6d2bd"
+   "sha256_16": "b75d0e156142af59"
   },
   "model_1": {
    "path": "v2/vendor/st/ibis/stm32h742_743_750_753_lqfp100.ibs",
@@ -211,9 +211,9 @@
    "state": "PRESENT"
   },
   "netlist": {
-   "content16": "2efce63fe72079f1",
+   "content16": "3876a0a8e689f1a5",
    "path": "pcb-a-power-a23/out/pcb-a-power.net",
-   "sha256_16": "30ad87746d1801ca"
+   "sha256_16": "6c40250c47195ebb"
   },
   "project": {
    "path": "pcb-a-power-a23/pcb-a-power.kicad_pro",
@@ -250,12 +250,12 @@
  },
  "tool": "edge_length",
  "tools": {
-  "git_head": "d75384201515",
-  "tools_tree_sha": "254a65b96010ac03"
+  "git_head": "8263b60a25d4",
+  "tools_tree_sha": "d690cc33e4cc6968"
  },
- "ts": "2026-09-29T11:46:06Z",
+ "ts": "2026-09-29T12:51:32Z",
  "verdict": "INCONCLUSIVE",
- "version": "d75384201515",
+ "version": "8263b60a25d4",
  "writer": {
   "file": "edge_length.py",
   "sha16": "21d61d18e18e56a8"

@@ -39,14 +39,14 @@
    "sha256_16": "5d1f81e183dcad49"
   },
   "netlist_a": {
-   "content16": "2efce63fe72079f1",
+   "content16": "3876a0a8e689f1a5",
    "path": "pcb-a-power-a23/out/pcb-a-power.net",
-   "sha256_16": "30ad87746d1801ca"
+   "sha256_16": "6c40250c47195ebb"
   },
   "netlist_b": {
-   "content16": "31190f043dc21cfa",
+   "content16": "ccdeb5659d62553e",
    "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
-   "sha256_16": "5b89d5ef6fe0299a"
+   "sha256_16": "3ef9b8c49a01b728"
   },
   "netlist_e": {
    "content16": "dc06b84a39724641",
@@ -76,12 +76,12 @@
  },
  "tool": "energy_chain",
  "tools": {
-  "git_head": "d75384201515",
-  "tools_tree_sha": "254a65b96010ac03"
+  "git_head": "8263b60a25d4",
+  "tools_tree_sha": "d690cc33e4cc6968"
  },
- "ts": "2026-09-29T11:48:10Z",
+ "ts": "2026-09-29T12:53:36Z",
  "verdict": "PASS",
- "version": "d75384201515",
+ "version": "8263b60a25d4",
  "writer": {
   "file": "energy_chain.py",
   "sha16": "2eb665d0e50ee781"

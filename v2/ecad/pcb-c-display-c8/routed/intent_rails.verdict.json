@@ -11,7 +11,7 @@
    "fan_select.py": "39fff82524253c05",
    "hardset.py": "be29a44c4a592876",
    "intent.py": "0071fe553548eb5d",
-   "intent_checks.py": "68afac7a314ccf3b",
+   "intent_checks.py": "082b701e7bab36d9",
    "kicad_compat.py": "6b8f77490466e939",
    "netclass.py": "4cc1adf0ddae0390",
    "netlist_board.py": "655bc402d36b0fa5",
@@ -27,7 +27,7 @@
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "789f7841536ca92f",
+  "sha16": "ed6cecb873c5d32b",
   "unresolved": []
  },
  "counts": {
@@ -104,14 +104,14 @@
  },
  "tool": "intent_rails",
  "tools": {
-  "git_head": "d75384201515",
-  "tools_tree_sha": "254a65b96010ac03"
+  "git_head": "8263b60a25d4",
+  "tools_tree_sha": "d690cc33e4cc6968"
  },
- "ts": "2026-09-29T11:46:58Z",
+ "ts": "2026-09-29T12:52:23Z",
  "verdict": "PASS",
- "version": "d75384201515",
+ "version": "8263b60a25d4",
  "writer": {
   "file": "intent_checks.py",
-  "sha16": "68afac7a314ccf3b"
+  "sha16": "082b701e7bab36d9"
  }
 }

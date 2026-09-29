@@ -14,11 +14,11 @@
    "phase_artefacts.py": "96642ce767188c73",
    "regen_compare.py": "341d7f129a1e6f24",
    "sch_prov.py": "a98e5a71ac74ccee",
-   "tx_inhibit.py": "cf2154a62f6491dd",
+   "tx_inhibit.py": "a6a7a016f87d83ce",
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "b402aef5e9338a1d",
+  "sha16": "d913c37a5a486852",
   "unresolved": []
  },
  "counts": {
@@ -67,12 +67,12 @@
  },
  "tool": "inhibit_chain_p",
  "tools": {
-  "git_head": "d75384201515",
-  "tools_tree_sha": "254a65b96010ac03"
+  "git_head": "8263b60a25d4",
+  "tools_tree_sha": "d690cc33e4cc6968"
  },
- "ts": "2026-09-29T11:48:31Z",
+ "ts": "2026-09-29T12:53:57Z",
  "verdict": "PASS",
- "version": "d75384201515",
+ "version": "8263b60a25d4",
  "writer": {
   "file": "check_contracts.py",
   "sha16": "5e14f456a0791c35"

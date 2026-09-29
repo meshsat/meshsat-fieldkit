@@ -37,7 +37,7 @@
    "b": {
     "artefact": {
      "kind": "netlist",
-     "sha256_16": "5b89d5ef6fe0299a"
+     "sha256_16": "3ef9b8c49a01b728"
     },
     "bound": true,
     "candidates": 155,
@@ -83,15 +83,15 @@
   "board": "b",
   "list": {
    "path": "tools/pcb_reliability.yaml",
-   "sha256": "fee24b863c5f824c5a58823ee59aa7798c5779952e2767be55e547f009939b97",
-   "sha256_16": "fee24b863c5f824c"
+   "sha256": "5e2585c373cba41a408205592119edf2a176bc32e79afd2dbfb9bbeb78ef1e16",
+   "sha256_16": "5e2585c373cba41a"
   },
   "netlist": {
-   "content16": "31190f043dc21cfa",
-   "parts": 1335,
+   "content16": "ccdeb5659d62553e",
+   "parts": 1336,
    "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
-   "sha256": "5b89d5ef6fe0299af8ee427a03be8e0dfd62b0ba1a8c6ced81795e5671dbc686",
-   "sha256_16": "5b89d5ef6fe0299a"
+   "sha256": "3ef9b8c49a01b72834dece18a69e8637305d97bbf7342d765d28be596f0464d6",
+   "sha256_16": "3ef9b8c49a01b728"
   }
  },
  "missing_input": null,
@@ -111,12 +111,12 @@
  },
  "tool": "reliability",
  "tools": {
-  "git_head": "d75384201515",
-  "tools_tree_sha": "254a65b96010ac03"
+  "git_head": "8263b60a25d4",
+  "tools_tree_sha": "d690cc33e4cc6968"
  },
- "ts": "2026-09-29T11:48:38Z",
+ "ts": "2026-09-29T12:54:04Z",
  "verdict": "INCONCLUSIVE",
- "version": "d75384201515",
+ "version": "8263b60a25d4",
  "writer": {
   "file": "reliability.py",
   "sha16": "c50f2b8b35d1d57b"
