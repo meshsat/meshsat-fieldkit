@@ -28,7 +28,7 @@ def box(x0, y0, z0, x1, y1, z1):
 
 def envelope_parts(a, ceil_z, own_scale=1.0):
     """(name, solid) for the module's zones hung from ceil_z; the own allowances lower each zone."""
-    parts = []
+    parts = [("lid plate %d" % i, box(r[0], r[1], ceil_z - L.BOND - L.PLATE - own_scale * L.OWN_SUM, r[2], r[3], ceil_z)) for i, r in enumerate(L.plate_rects(a))]
     for s, (x0, x1, ys, j) in enumerate(a["south"]):
         xa = a["x_w"] if s == 0 else x0
         xb = a["x_e"] if s == len(a["south"]) - 1 else x1
@@ -101,13 +101,16 @@ def main():
     ok = total_bad == 0 and c1 > 0 and c2 > 0
     # the solids of B in the case frame, nominal ceiling
     cz = L.CEIL_Z_NOM
-    plate = box(a["x_w"], min(s[2] for s in a["south"]), cz - L.BOND - L.PLATE, a["x_e"], a["y_n"], cz - L.BOND)
+    plate_parts = [box(r[0], r[1], cz - L.BOND - L.PLATE, r[2], r[3], cz - L.BOND) for r in L.plate_rects(a)]   # the plate follows the slices (check M2)
+    plate = plate_parts[0]
+    for p_ in plate_parts[1:]:
+        plate = plate + p_
     cells = []
     for c in a["cells"]:
         zc = cz - L.BOND - L.PLATE - L.WRAP - L.CELL_D / 2 - (L.NEST_DZ if c["layer"] == 2 else 0.0)
         cyl = Cylinder(L.CELL_D / 2, L.CELL_L).rotate(Axis.Y, 90).moved(Location(Vector((c["x0"] + c["x1"]) / 2, c["yc"], zc)))
         cells.append(cyl)
-    env_nom = [s for n, s in envelope_parts(a, cz, own_scale=0.0) if not n.startswith("P2")]
+    env_nom = [s for n, s in envelope_parts(a, cz, own_scale=0.0) if not n.startswith(("P2", "lid plate"))]
     p = a["p2_rect"]
     p2 = box(p[0], p[1], cz - L.P2_DEPTH, p[2], p[3], cz - L.BOND - L.PLATE)
     comp_cells = Compound(children=cells)
@@ -116,7 +119,7 @@ def main():
         env_union = env_union + s
     # every cell inside the envelope: the cells minus the envelope must be empty
     outside = sum((cl - env_union).volume for cl in cells)
-    lines += ["", "ARRANGEMENT B solids, case frame, lid closed, ceiling Z %.2f: plate %.1f x %.1f x %.1f; %d cells d %.2f x %.2f (the sheet's maxima);" % (
+    lines += ["", "ARRANGEMENT B solids, case frame, lid closed, ceiling Z %.2f: plate over %.1f x %.1f (per slice) x %.1f; %d cells d %.2f x %.2f (the sheet's maxima);" % (
         cz, a["x_e"] - a["x_w"], a["y_n"] - min(s[2] for s in a["south"]), L.PLATE, len(cells), L.CELL_D, L.CELL_L),
               "cell volume outside the module's envelope: %.3f mm3 (must be 0.000); lowest point of the envelope Z %.2f (face top %.2f nominal: %.2f)" % (
         outside, env_union.bounding_box().min.Z, L.FACE_Z_NOM, env_union.bounding_box().min.Z - L.FACE_Z_NOM)]
