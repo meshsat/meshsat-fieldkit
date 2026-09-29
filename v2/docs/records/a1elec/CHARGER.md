@@ -14,7 +14,7 @@ The design case is 400 Wp into a 200 W stage (the energy record's 9g way (i)), t
 | sun offered at the node | 166.3 W | | |
 | front end (LM5176 U2) output | 169.6 W = **8.20 A** on VBUS20 at 20.7 V | limit 5.7 A (VSNS 57 mV over R11 10 mOhm) = 118.0 W | **exceeded** |
 | U3's input (through R16) | 8.20 A | R16 10 mOhm, RSNS_RAC = 0b: IIN_HOST clamped at 6.35 A (SLUSE66A 9.3.5, page 25) | **exceeded** |
-| U3's output at the node | 166.3 W = **11.47 A** at 14.50 V: load 42.8 W, base 41.2 W (2.84 A), U3B 82.3 W (5.68 A) | | |
+| U3's output at the node | 166.3 W = **11.47 A** at 14.50 V (the model's node voltage, the base's mean discharge voltage; while the base charges the node sits higher and every current here is lower): load 42.8 W, base 41.2 W (2.84 A), U3B 82.3 W (5.68 A) | | |
 | U3's L2 peak (buck, 3.3 uH) | 13.11 A at 400 kHz (ripple 3.29 A p-p); 12.29 A at 800 kHz | XAL6030-332ME, Isat 12.2 A by its value text | **exceeded at both** |
 | VBUS20 | 8.20 A continuous for the hours around noon | declared 6.0 A typical, 8.0 A peak | **exceeded** |
 | U3B's input from VBAT | 5.68 A (82.3 W) at this hour; 8.0 A nominal ceiling | new part | |

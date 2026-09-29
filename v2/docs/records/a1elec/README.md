@@ -24,6 +24,12 @@ difference it prints comes from a named departure. On the September reference da
   into the charger with the panel on VIN_RAW).
 - Every fault case examined fails M1, as expected of a 72-hour mission on a one-pack remainder (TOPOLOGY.md 6).
 
+**Hand check of the two stores** (energy_budget's chain, section 8c's method): the lid at 13.23 C holds 48 cells x 3.35
+Ah x f_rate 1.000 (0.16 A a cell) x f_T 0.8674 (0.4124 + 23.23 / 30 x 0.5876) x V_mean 3.6244 V (clamped at the 0.2C
+point) x f_dod 0.937 x 0.80 aged = **378.9 Wh**; the base at +20 C, 24 x 3.35 x 1.000 x 1.000 x 3.6244 x 0.937 x 0.80 =
+**218.4 Wh**; both as `energy_two_pack.out` 3c prints them. The aggregate 4S18P at +20 C holds 655.3 Wh; the lid's
+temperature alone takes 57.9 Wh of it.
+
 **The outside review's point 2** (the BQ4050's 32,767 limit on the lid's 40,200 mAh and 57,888 cWh). `GAUGE.md`:
 IPScale is not used (TI's manual contradicts itself on it); the lid's board PL runs the BQ4050 with a current-scale
 calibration of k = 2 made by TI's own calibration procedure, and `gauge_scale.py` parses TI's data-flash table to find
