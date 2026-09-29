@@ -1,0 +1,48 @@
+Stream csi, 29 September 2026 (read 12:40 to 12:55 UTC from the runner, curl, no browser, no login, no contact).
+What each maker publishes for the drivers of board C's 23 layout-bound nets, beyond what pcb_edge_rates.yaml already
+cites. A search, not a model: nothing below is committed from the makers' sites except these words.
+
+== Raspberry Pi, RP2040 (drives EPD_CS, EPD_DC, EPD_SCL, EPD_SDA, HB1 to HB3 by ER-D10, QSPI_*, SCL, SDA, SWDIO; is
+   read on EXP_INT and, across R37, on Q3_G)
+ * Product Information Portal, https://pip.raspberrypi.com/categories/814-rp2040 (HTTP 200, 44136 bytes; its sha256 is at the
+   end of this file). The RP2040 category lists five documents and no model:
+   "hardware-design-with-rp2040" (updated 24 Aug 2026, PDF), "hardware-design-with-rp2040-JP" (6 Oct 2025, PDF),
+   "Minimal-KiCAD" (22 Jul 2026, ZIP), "rp2040-datasheet" (6 Oct 2025, PDF), "rp2040-product-brief" (6 Oct 2025, PDF).
+ * Raspberry Pi's documentation source, github.com/raspberrypi/documentation, branch master, file
+   documentation/asciidoc/microcontrollers/microcontroller-chips/rp2040.adoc (HTTP 200, 6488 bytes): names the
+   datasheet (RP-008371-DS), the Pico and Pico W design files, the Minimal Viable Board (RP-008296-DS, KiCad) and the
+   VGA carrier board. No IBIS model. The repository's tree (1062 paths) holds no path containing "ibis".
+ * GitHub issue search: "IBIS org:raspberrypi" 0 results; "ibis model rp2040 in:title,body" 0 results.
+ * www.raspberrypi.com/documentation refuses this host (HTTP 403, a bot check), as does its Internet Archive copy.
+ RESULT: Raspberry Pi publishes no IBIS model of the RP2040 and no minimum output transition (the datasheet's pad
+ registers carry a slew bit and a drive field, PADS_BANK0 SLEWFAST, p. 303, as pcb_edge_rates.yaml RPI-RP2040 cites).
+ The RPI-RP2040 record's bound stands. What the maker does publish is its own reference layout (next section).
+
+== Raspberry Pi, the minimal design example (RP-008296-DS, "Minimal-KiCAD")
+ * https://pip.raspberrypi.com/documents/RP-008296-DS redirects to
+   https://pip-assets.raspberrypi.com/categories/814-rp2040/documents/RP-008296-DS-2-Minimal-KiCAD.zip (HTTP 200,
+   813914 bytes, sha256 8fdae5c1d3d8e58f43a45cd604ce9836b1ad4649f11eca4a9bea97eec6c2093a). Its LICENSE.txt: "This
+   design is provided under the MIT license", "Copyright (c) 2026 Raspberry Pi Ltd". The board file
+   RPI-RP2040-MINIMAL_R3-S1.kicad_pcb (sha256 f6c8e633a567ca884b269dc7ec934bebbce28534d0fdb84623a007840a01a471,
+   title block "RP2040 Minimal Design Example", rev R3, 2026-07-03) is measured by tools/measure_minimal.py:
+   readings/minimal-layout-lengths.txt. The archive is not committed (the maker publishes it; the measurement is).
+
+== Diodes Incorporated, 74LVC1G34 (board D's U18, Diodes 74LVC1G34W5-7, drives TR_APRS and, across R37, Q3_G)
+ * https://www.diodes.com/part/view/74LVC1G34 refuses this host (HTTP 403). Its Internet Archive copy,
+   https://web.archive.org/web/20250916173232id_/https://www.diodes.com/part/view/74LVC1G34 (HTTP 200, 372161 bytes),
+   lists under Specifications & Technical Documents the datasheet and TN1.pdf ("Recommended Soldering Techniques"),
+   and a site-wide "Spice Models" link; no IBIS model of the part. The LVC1G34-BUFFER record's bound stands.
+
+== Winbond, W25Q16JV (U4 on the QSPI nets)
+ * Not searched again: pcb_edge_rates.yaml WINBOND-W25Q16JV already says Winbond lists an IBIS model that is not held.
+   It would decide nothing here: the RP2040 is on every QSPI net and has no published minimum, so the net stays
+   decided by a bound whatever the flash's maker publishes (ER-D13).
+
+== Texas Instruments, PCA9555 (EXP_INT)
+ * TI's model is pinned and held (v2/vendor/ibis-manifest.yaml, ti-pca9555); its INT pin 1 is flagged under ER-D16
+   (the [Ramp] cells its own V-t table contradicts), so the pin takes the bound. Nothing further to search.
+
+The pages' own sha256, as served at the time of reading:
+ab11490d8ae666319def387e31e80352c85f587f1994a85c3b09ad3856fae405  pip-rp2040.html
+1c6b2481cc48e7801b3a926b4a56da932dc3b9f1ae73b94141791d523b3cad22  rp2040.adoc
+ae40750d926faf797016897118ad86ee9fb8ef100e7611faa1426826e2744f02  diodes-1g34.html

@@ -1,0 +1,13 @@
+tools/r2_counterexamples.py, the round 2 tool (6605f3f6's edge_length.py in a scratch view of this tree):
+== the given edge_length.py, board C's committed entries, board C's slowest delay 7.154 ps/mm
+  HELD     XOUT_R with SWCLK's row of the same listing, max_mm 20.1 (its own limit 2.1)
+  HELD     XOUT_R with an unrelated "extent 572.0 mm" of another document, max_mm 445
+  HELD     QSPI_SCLK on QSPI_SD1's row, max_mm 13.1 (the first round's own error)
+  HELD     XOUT_R's length row and delay row from two documents
+
+the same, this round's tool:
+== the tree's edge_length.py, board C's committed entries, board C's slowest delay 7.154 ps/mm
+  REFUSED  XOUT_R with SWCLK's row of the same listing, max_mm 20.1 (its own limit 2.1): checked[2] quotes 'SWCLK 25.92 mm', a length of SWCLK, which is none of its reference_nets (XOUT)
+  REFUSED  XOUT_R with an unrelated "extent 572.0 mm" of another document, max_mm 445: checked[2] quotes 'extent 572.0 mm', a length of extent, which is none of its reference_nets (XOUT)
+  REFUSED  QSPI_SCLK on QSPI_SD1's row, max_mm 13.1 (the first round's own error): checked[0] quotes 'QSPI_SD1 16.85 mm', a length of QSPI_SD1, which is none of its reference_nets (QSPI_SCLK)
+  REFUSED  XOUT_R's length row and delay row from two documents: its length and delay rows cite 2 documents (v2/fix/a.txt, v2/fix/b.txt): they come from one

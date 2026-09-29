@@ -221,12 +221,240 @@ def t_si001_a_fast_net_with_no_target_or_termination_is_bound_to_its_length_and_
     E.write_schematic_verdict(r, out_dir=out, quiet=True, table_file=False)
     v = json.load(open(os.path.join(out, "edge_length.verdict.json")))
     assert any(e.startswith("LAYOUT_BOUND USB_*") and "USB_DN" in e for e in v["evidence"]), v["evidence"]
-    # the schematic answers it: a declaration in edge_allow, and the reading passes
+    # a declaration that is a sentence answers nothing since CSI-D1 (29 September 2026): it is refused, the reading
+    # FAILS and the net stays layout-bound
     with _board({"critical_k": 6, "signal_classes": [HS, EN],
                  "edge_allow": [{"pattern": "USB_DN", "why": "fixture: run under the critical length by placement"}]},
                 _src(doc)):
         r2 = E.schematic_table(p, "zz", facts=FACTS, repo=repo)
-    assert E.schematic_result(r2) == "PASS", [x.get("layout_bound") for x in r2["rows"]]
+    assert E.schematic_result(r2) == "FAIL" and any("edge_allow refused" in f and "no ruled_by" in f for f in r2["fails"]), r2["fails"]
+    assert "USB_DN" in next(x for x in r2["rows"] if x["pattern"] == "USB_*")["layout_bound"]
+    # the schematic answers it: a declaration in edge_allow that carries its basis, and the reading passes
+    with _board({"critical_k": 6, "signal_classes": [HS, EN], "edge_allow": [_allow(repo)]}, _src(doc)):
+        r3 = E.schematic_table(p, "zz", facts=FACTS, repo=repo)
+    # it is answered, and pending the layout while no rule decides on the routed reading (ALLOW_PENDS_LAYOUT, the
+    # re-check's m3): INCONCLUSIVE with nothing layout-bound; PASS once the guard is lifted
+    assert E.schematic_result(r3) == "INCONCLUSIVE", (r3["fails"], [x.get("layout_bound") for x in r3["rows"]])
+    assert r3["counts"]["allowed_nets"] == 1 and r3["counts"]["layout_bound_nets"] == 0, r3["counts"]
+    E.ALLOW_PENDS_LAYOUT = False
+    try: assert E.schematic_result(r3) == "PASS", r3["counts"]
+    finally: E.ALLOW_PENDS_LAYOUT = True
+
+
+ALLOW_MD = "> The data lines are wired directly, using short connections to maintain the signal integrity.\n"
+ALLOW_LST = ("   USB_DN     12.50 mm  vias 0  layers F.Cu\n   USB_DP     30.00 mm  vias 0  layers F.Cu\n"
+             "   reference t_pd 5.572 ps/mm: the fixture's microstrip\n")
+OTHER_LST = "   extent 572.0 mm\n   USB_DN     12.50 mm\n"
+ALLOW_TPD = 7.1541528   # the fixture stack's slowest layer (JLC06161H-3313), as worst_delay reads it
+
+
+def _row_other(good, quote):
+    """A checked row of the entry's own listing quoting another line of it."""
+    return dict(good["checked"][0], quote=quote)
+
+
+def _row_doc2(quote):
+    """A checked row of a second fixture document (other.txt), which _allow writes beside the listing."""
+    return {"document": "v2/vendor/fix/other.txt", "sha256_16": _s16(OTHER_LST), "where": "the fixture's line", "quote": quote}
+
+
+def _allow(repo, text=ALLOW_MD, **more):
+    """An edge_allow entry for USB_DN with its basis: a held fixture document, its sha, where the words are, the words;
+    a checked row quoting the length measured on a reference layout and one quoting that layout's delay; and max_mm, at
+    most the length scaled by the delays (12.50 x 5.572 / 7.154 = 9.74 mm)."""
+    p = os.path.join(repo, "v2", "vendor", "fix", "layout-guide.md")
+    os.makedirs(os.path.dirname(p), exist_ok=True)
+    open(p, "w").write(text)
+    open(os.path.join(repo, "v2", "vendor", "fix", "lengths.txt"), "w").write(ALLOW_LST)
+    open(os.path.join(repo, "v2", "vendor", "fix", "other.txt"), "w").write(OTHER_LST)
+    row = lambda q: {"document": "v2/vendor/fix/lengths.txt", "sha256_16": _s16(ALLOW_LST), "where": "the fixture's line", "quote": q}
+    e = {"pattern": "USB_DN", "why": "fixture: the maker asks for a short direct run and the layout holds it",
+         "ruled_by": "SESSION (fixture)", "document": "v2/vendor/fix/layout-guide.md", "sha256_16": _s16(ALLOW_MD),
+         "where": "the fixture's one line", "quote": "wired directly, using short connections to maintain",
+         "checked": [row("USB_DN 12.50 mm"), row("reference t_pd 5.572 ps/mm")], "reference_nets": ["USB_DN"],
+         "reference_ps_per_mm": 5.572,
+         "max_mm": 9.7, "max_mm_basis": "the fixture maker's reference layout runs it at 12.50 mm, scaled to this stack"}
+    e.update(more)
+    return e
+
+
+def t_si001_an_allowance_answers_only_with_its_basis_held():
+    """CSI-D1 and CSI-D2 (with the independent check of 29 September 2026, B2 and m7): an edge_allow entry answers a
+    layout-bound net only when its citation holds, as a record's must, and its max_mm is tied to what it cites. Each
+    case below is refused, FAILS the reading and leaves the net layout-bound; a held entry answers, and the documents it
+    cites are inputs of the reading by sha."""
+    p, d = _fixture(usb_class="Default")
+    repo = tempfile.mkdtemp(prefix="si001-repo-")
+    doc = _doc(repo, "high-speed differential rise and fall times must be 500 ps or longer")
+    good = _allow(repo)
+    outside = os.path.join(os.path.dirname(repo), os.path.basename(repo) + "-outside")
+    os.makedirs(outside, exist_ok=True)
+    open(os.path.join(outside, "layout-guide.md"), "w").write(ALLOW_MD)
+    cases = {"does not contain the words quoted": dict(good, quote="routed on any layer at any length"),
+             "not the file the record was read from": dict(good, sha256_16="0" * 16),
+             "no basis": {k: v for k, v in good.items() if k not in ("document", "sha256_16", "where", "quote")},
+             "no ruled_by": dict(good, ruled_by=""),
+             "no page and no clause": {k: v for k, v in good.items() if k != "where"},
+             # B2: the length is tied to what the entry cites, and an entry holds a length or answers nothing
+             "above what its checked rows support": dict(good, max_mm=500.0),
+             "no max_mm": {k: v for k, v in good.items() if k != "max_mm"},
+             "no checked row quotes the length": dict(good, checked=[good["checked"][1]]),
+             "quoted by no delay row": dict(good, reference_ps_per_mm=7.0),
+             "no reference_nets": {k: v for k, v in good.items() if k != "reference_nets"},
+             # R2-B1 (the re-check): a row that names another net, a row that names no net, a row of a second
+             # document; each of these the round 2 tool held
+             "none of its reference_nets": dict(good, max_mm=23.3, checked=good["checked"] + [_row_other(good, "USB_DP 30.00 mm")]),
+             "names no reference net": dict(good, checked=good["checked"] + [dict(good["checked"][0], quote="vias 0 layers F.Cu")]),
+             "cite 2 documents": dict(good, checked=[_row_doc2("USB_DN 12.50 mm"), good["checked"][1]]),
+             "no reference_ps_per_mm": {k: v for k, v in good.items() if k != "reference_ps_per_mm"},
+             # m7: a pattern names nets, a quote is a sentence, a PDF is cited by its page, a document is of this tree
+             "names no nets": dict(good, pattern="*"),
+             "shorter than 5 words": dict(good, quote="wired"),
+             "with no page": dict(good, document="v2/vendor/fix/guide.pdf", where="p. 999"),
+             "outside the repository": dict(good, document="../%s/layout-guide.md" % os.path.basename(outside))}
+    for want, entry in cases.items():
+        with _board({"critical_k": 6, "signal_classes": [HS, EN], "edge_allow": [entry]}, _src(doc)):
+            r = E.schematic_table(p, "zz", facts=FACTS, repo=repo)
+        assert E.schematic_result(r) == "FAIL", (want, r["fails"])
+        assert any(want in f for f in r["fails"] if f.startswith("edge_allow refused")), (want, r["fails"])
+        row = next(x for x in r["rows"] if x["pattern"] == "USB_*")
+        assert "USB_DN" in row["layout_bound"] and r["counts"]["allowed_nets"] == 0, (want, row)
+    # the check's second counterexample: a row quoting an unrelated quantity of another document, max_mm raised to it
+    extent = dict(good, max_mm=445.0, checked=good["checked"] + [_row_doc2("extent 572.0 mm")])
+    assert "none of its reference_nets" in (E.allow_refusal(extent, ALLOW_TPD) or ""), E.allow_refusal(extent, ALLOW_TPD)
+    with _board({"critical_k": 6, "signal_classes": [HS, EN],
+                 "edge_allow": [good, dict(good, pattern="USB_DP")]}, _src(doc)):
+        r = E.schematic_table(p, "zz", facts=FACTS, repo=repo)
+    assert E.schematic_result(r) == "INCONCLUSIVE" and not r["fails"], (r["fails"], r["counts"])   # pending the layout
+    assert r["counts"]["layout_bound_nets"] == 0, r["counts"]
+    assert r["counts"]["allowed_nets"] == 2 and r["counts"]["answered_nets"] == 2, r["counts"]
+    assert {"path": "v2/vendor/fix/layout-guide.md", "sha256_16": _s16(ALLOW_MD)} in r["inputs"].values(), r["inputs"]
+    assert {"path": "v2/vendor/fix/lengths.txt", "sha256_16": _s16(ALLOW_LST)} in r["inputs"].values(), r["inputs"]
+
+
+def t_si001_an_allowance_hands_its_length_to_the_layout_and_the_routed_half_holds_it():
+    """CSI-D2: an entry's max_mm is the length the layout may route the nets it answers, at most the length its checked
+    rows quote scaled by the delays. The schematic table hands it on (row length_limits, the evidence line ALLOWED,
+    "pending the layout"); allow_answers answers a routed net only while its length is at most that and says both
+    numbers when it is past it; an entry without max_mm answers nothing."""
+    p, d = _fixture(usb_class="Default")
+    repo = tempfile.mkdtemp(prefix="si001-repo-")
+    doc = _doc(repo, "high-speed differential rise and fall times must be 500 ps or longer")
+    held = _allow(repo)
+    lim, how = E.allow_limit(held, ALLOW_TPD)
+    assert abs(lim - 12.5 * 5.572 / ALLOW_TPD) < 1e-6 and "12.50 mm measured" in how, (lim, how)
+    assert E.allow_refusal(dict(held, max_mm=9.8), ALLOW_TPD), "a max_mm past the scaled length was held"
+    assert E.allow_refusal(held, ALLOW_TPD) is None, E.allow_refusal(held, ALLOW_TPD)
+    with _board({"critical_k": 6, "signal_classes": [HS, EN], "edge_allow": [held]}, _src(doc)):
+        r = E.schematic_table(p, "zz", facts=FACTS, repo=repo)
+    row = next(x for x in r["rows"] if x["pattern"] == "USB_*")
+    assert row["length_limits"] == {"USB_DN": 9.7} and "pending the layout: at most 9.7 mm" in row["answered"]["USB_DN"], row
+    out = tempfile.mkdtemp(prefix="si001-v-")
+    E.write_schematic_verdict(r, out_dir=out, quiet=True, table_file=False)
+    v = json.load(open(os.path.join(out, "edge_length.verdict.json")))
+    assert any(e.startswith("ALLOWED 1 net(s), pending the layout") and "USB_DN <= 9.7 mm" in e for e in v["evidence"]), v["evidence"]
+    ok, words = E.allow_answers(held, 9.6)
+    assert ok and "within its 9.70 mm" in words, words
+    ok, words = E.allow_answers(held, 9.8)
+    assert not ok and "routed 9.80 mm, past the 9.70 mm" in words, words
+    ok, words = E.allow_answers(dict(held, max_mm=2.1), 2.15)     # the re-check's m1: both numbers to the hundredth
+    assert not ok and "routed 2.15 mm, past the 2.10 mm" in words, words
+    assert not E.allow_answers({k: v for k, v in held.items() if k != "max_mm"}, 1.0)[0], "an entry with no max_mm answered"
+    for bad, want in ((dict(held, max_mm_basis=""), "no max_mm_basis"), (dict(held, max_mm=0), "not a length"),
+                      (dict(held, max_mm=True), "not a length")):
+        assert want in (E.allow_refusal(bad, ALLOW_TPD) or ""), (bad, E.allow_refusal(bad, ALLOW_TPD))
+
+
+@contextlib.contextmanager
+def _routed_stubs(nets, series=()):
+    """edge_length.routed_main on a board without KiCad (the independent check's routed_stub.py, as a fixture): stub
+    modules for pcbnew, intent, signalnets, impedance_check and signal_class; nets [(name, mm, class)], each one straight
+    track; series [(ref, value, net a, net b)] two-pad resistors. Everything is put back."""
+    import types
+    class P_:
+        def __init__(s, x, y): s.x, s.y = x, y
+    class Tr:
+        def __init__(s, net, mm): s.net, s.mm = net, mm
+        def GetClass(s): return "PCB_TRACK"
+        def GetNetname(s): return s.net
+        def GetStart(s): return P_(0, 0)
+        def GetEnd(s): return P_(int(s.mm * 1e6), 0)
+        def GetLayer(s): return 0
+    class Pad:
+        def __init__(s, net): s.net = net
+        def GetNetname(s): return s.net
+    class Fp:
+        def __init__(s, ref, val, a, b): s.ref, s.val, s.pads = ref, val, [Pad("/" + a), Pad("/" + b)]
+        def GetReference(s): return s.ref
+        def GetValue(s): return s.val
+        def Pads(s): return s.pads
+    class Board:
+        def GetTracks(s): return [Tr("/" + n, mm) for n, mm, _c in nets]
+        def GetFootprints(s): return [Fp(*x) for x in series]
+    mods = {}
+    m = types.ModuleType("pcbnew"); m.LoadBoard = lambda p: Board(); m.F_Cu, m.B_Cu = 0, 2; mods["pcbnew"] = m
+    m = types.ModuleType("intent"); m.load = lambda p: {}; mods["intent"] = m
+    m = types.ModuleType("signalnets"); m.classify = lambda b, p, r: (set(), None); m.is_signal = lambda n, s: True; mods["signalnets"] = m
+    m = types.ModuleType("impedance_check"); m.read_stackup = lambda p: [("core1", "core", 0.2, 4.3)]; mods["impedance_check"] = m
+    m = types.ModuleType("signal_class"); m.classify = lambda b, p, t, x: ({"/" + n: (c, "stub") for n, _mm, c in nets},); mods["signal_class"] = m
+    saved = {k: sys.modules.get(k) for k in mods}
+    sys.modules.update(mods)
+    try: yield
+    finally:
+        for k, v in saved.items():
+            if v is None: sys.modules.pop(k, None)
+            else: sys.modules[k] = v
+
+
+def _routed(nets, series=()):
+    d = tempfile.mkdtemp(prefix="si001-routed-")
+    path = os.path.join(d, "pcb-c-display.kicad_pcb")
+    open(path, "w").write("(kicad_pcb)\n")
+    with _routed_stubs(nets, series):
+        E.routed_main([path])
+    return json.load(open(os.path.join(d, "out", "edge_length_routed.verdict.json")))
+
+
+def t_si001_the_routed_half_holds_every_allowance_net_to_its_declared_length():
+    """The independent check of 29 September 2026, B1 and m10: routed_main holds EVERY net a held edge_allow entry names
+    to its max_mm, on board C's committed table, whatever the net's class (none of board C's allowance classes declares a
+    rise time), its critical length, or a series resistor on it. C24's lengths (QSPI_SCLK 63.82 mm, XIN 167.59 mm) FAIL;
+    within the limits the reading passes. On the tool before this check the same board read INCONCLUSIVE with nothing
+    over its declared limit."""
+    held, refused = E.load_allow("c")
+    assert not refused and {e["pattern"] for e in held} >= {"QSPI_SCLK", "QSPI_D?", "XIN"}, refused
+    v = _routed([("QSPI_SCLK", 63.82, "HIGH_SPEED_DIGITAL"), ("QSPI_D0", 40.0, "HIGH_SPEED_DIGITAL"),
+                 ("QSPI_D0_B", 1.0, "HIGH_SPEED_DIGITAL"), ("XIN", 5.0, "HIGH_SPEED_DIGITAL")],
+                series=[("R99", "22", "QSPI_D0", "QSPI_D0_B")])
+    assert v["verdict"] == "FAIL", v
+    assert v["counts"]["over_declared_limit"] == 2 and v["counts"]["held_within_declared_limit"] == 1, v["counts"]
+    ev = " ".join(v["evidence"])
+    assert "OVER ITS DECLARED LIMIT QSPI_SCLK: routed 63.82 mm, past the 8.00 mm" in ev and "QSPI_D0: routed 40.00 mm" in ev, ev
+    v2 = _routed([("QSPI_SCLK", 7.9, "HIGH_SPEED_DIGITAL"), ("XIN", 5.0, "HIGH_SPEED_DIGITAL")])
+    assert v2["verdict"] == "PASS" and v2["counts"]["over_declared_limit"] == 0, v2
+
+
+def t_si001_the_board_tables_allowances_hold_against_their_documents():
+    """Every edge_allow entry the committed board tables carry holds (CSI-D1) and names the length it holds a net to
+    with its basis wherever it states one: a refused entry would FAIL the board's reading."""
+    import boardtable
+    held_c = {e["pattern"]: e for e in E.load_allow("c")[0]}
+    tpd = E.worst_delay("c")[0]
+    xr, sc = held_c["XOUT_R"], held_c["QSPI_SCLK"]
+    swclk = dict(xr["checked"][0], quote="SWCLK 25.92 mm", where="the line of the net SWCLK")
+    sd1 = dict(sc["checked"][0], quote="QSPI_SD1 16.85 mm", where="the line of the net QSPI_SD1")
+    for bad in (dict(xr, max_mm=20.1, checked=xr["checked"] + [swclk]), dict(sc, max_mm=13.1, checked=[sd1, sc["checked"][-1]])):
+        why = E.allow_refusal(bad, tpd)
+        assert why and "none of its reference_nets" in why, (bad["pattern"], why)
+        assert E._quotes_hold(bad, E.REPO) is None, "the counterexample's citations must hold, so only the method refuses it"
+    n = 0
+    for letter in ("a", "b", "c", "d", "e", "p"):
+        held, refused = E.load_allow(letter)
+        assert not refused, (letter, refused)
+        n += len(held)
+        for e in held:
+            assert e.get("max_mm") is None or str(e.get("max_mm_basis") or "").strip(), (letter, e["pattern"])
+    assert n >= 1, "no board table carries an edge_allow entry"
 
 
 def t_si001_a_board_with_no_declared_outline_has_every_decided_net_possibly_long():
