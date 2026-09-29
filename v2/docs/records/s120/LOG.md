@@ -29,3 +29,10 @@ a maker's document. AI engineering work, not a qualified review. No agent, no ot
 - 17:29 to 17:33 `vbus20_bound.py` leaves its figures in `FIG` for the registry script (output unchanged byte for byte);
   the CH_ACN figure is worded as the square root of L it is. `apply_registry_s120.py` drafted (one phase, `close <commit>`).
   `README.md` written: answer (a).
+- 17:33 Dry run into \`dryrun.out\` at \`3ca20d5a\`: \`--check\` on the tree's registry writes nothing (sha256/16 c88d7528
+  before and after); on a scratch copy one write (S-120 closed, S-123 opened, REQ-015 on S-106, S-107, S-111, S-123, S-111's
+  title extended) and a refused second run; refusals for a commit without the records, no commit, and an uncommitted change
+  to LOG.md (appended, refused, restored byte for byte); \`rules_lib.py requirements\` 0 errors and 0 warnings on both copies;
+  \`vbus20_bound.py\` exit 1 on three netlist mutants (R6 249k, U3 pin 5 off GND, a diode on VBUS20). The S-111 wording and
+  one refusal message sharpened before the recorded run.
+- 17:35 Final commit of the stream (README section 10 and this log).
