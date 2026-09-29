@@ -1,7 +1,7 @@
 # Stream s122 verdicts: every inventoried sentence judged against the committed netlists and the generators.
 # Written by v2/docs/records/s122/verdicts.py (checks: names, citations, assertions; see its docstring).
 # Netlists: A v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb, B v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728, C v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@c9f7394594201045, D v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1, E v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8, P v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@20c7b0795593d761
-# Documents: v2/docs/PANEL.md@b396d028b41e880d, v2/docs/CONOPS.md@6cb7b241cb84d729, v2/docs/V2-SPEC.md@2c722c9b5457bd56, v2/docs/OPERATING-ENVELOPE.md@26e98ecfd2e4ec2f, v2/docs/TEST-PLAN.md@42a3dff33442c860, v2/docs/ASSEMBLY.md@942d562edd128759, v2/ecad/tools/pcb_decisions.yaml@a41df5d12ff95995, v2/docs/feasibility/EMCON.md@c8eb306265110076, v2/docs/handover/DEFINITION-STATUS.md@f7f0d7324b94dbc8
+# Documents: v2/docs/PANEL.md@b396d028b41e880d, v2/docs/CONOPS.md@6cb7b241cb84d729, v2/docs/V2-SPEC.md@2c722c9b5457bd56, v2/docs/OPERATING-ENVELOPE.md@26e98ecfd2e4ec2f, v2/docs/TEST-PLAN.md@42a3dff33442c860, v2/docs/ASSEMBLY.md@942d562edd128759, v2/ecad/tools/pcb_decisions.yaml@823a6b32baf41481, v2/docs/feasibility/EMCON.md@c8eb306265110076, v2/docs/handover/DEFINITION-STATUS.md@f7f0d7324b94dbc8
 
 PANEL.md#1:L55:cell:1:s1 [d2e1df041f] TRUE
     `U3` RP2040, `U4` W25Q16 QSPI flash, `Y1` 12 MHz, `R5`/`JP1` BOOTSEL strap, `TP1`..`TP3` SWD

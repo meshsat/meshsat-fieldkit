@@ -159,14 +159,14 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 
 | board | CURRENT_CANDIDATE | VALID_HISTORICAL | PASS on either | AWAITING_REVALIDATION | DESK_REVIEW | PHYSICAL_TEST | NO_EVIDENCE | pairs |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| A | 13 | 0 | 11 | 34 | 4 | 0 | 4 | 55 |
-| B | 13 | 0 | 10 | 33 | 5 | 0 | 5 | 56 |
-| C | 10 | 0 | 8 | 31 | 4 | 0 | 3 | 48 |
-| D | 11 | 0 | 9 | 33 | 4 | 0 | 3 | 51 |
-| E | 14 | 0 | 13 | 34 | 4 | 0 | 3 | 55 |
-| P | 14 | 0 | 12 | 28 | 4 | 0 | 2 | 48 |
-| E5 | 8 | 0 | 6 | 13 | 3 | 0 | 1 | 25 |
-| **set** | **83** | **0** | **69** | **206** | **28** | **0** | **21** | **338** |
+| A | 12 | 0 | 10 | 35 | 4 | 0 | 4 | 55 |
+| B | 12 | 0 | 9 | 34 | 5 | 0 | 5 | 56 |
+| C | 9 | 0 | 7 | 32 | 4 | 0 | 3 | 48 |
+| D | 10 | 0 | 8 | 34 | 4 | 0 | 3 | 51 |
+| E | 13 | 0 | 12 | 35 | 4 | 0 | 3 | 55 |
+| P | 13 | 0 | 11 | 29 | 4 | 0 | 2 | 48 |
+| E5 | 7 | 0 | 5 | 14 | 3 | 0 | 1 | 25 |
+| **set** | **76** | **0** | **62** | **213** | **28** | **0** | **21** | **338** |
 
 ## Rules with a PASS on the current candidate
 
@@ -182,7 +182,6 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 | A | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_a: netlist 6c40250c47195ebb is the current candidate's |
 | A | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_a: netlist 6c40250c47195ebb is the current candidate's |
 | A | BAT-002 the energy chain is bounded end to end | SCHEMATIC | energy_chain: netlist 6c40250c47195ebb is the current candidate's |
-| A | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
 | B | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist 3ef9b8c49a01b728 is the current candidate's |
 | B | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_b: netlist 3ef9b8c49a01b728 is the current candidate's |
 | B | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_b: netlist 3ef9b8c49a01b728 is the current candidate's |
@@ -192,7 +191,6 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 | B | PWR-003 protection coordination | SCHEMATIC | energy_chain_b: netlist 3ef9b8c49a01b728 is the current candidate's |
 | B | CLK-001 oscillators, straps and boot pins | SCHEMATIC | clock_check: netlist 3ef9b8c49a01b728 is the current candidate's |
 | B | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_b: netlist 3ef9b8c49a01b728 is the current candidate's |
-| B | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
 | C | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist c9f7394594201045 is the current candidate's |
 | C | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_c: netlist c9f7394594201045 is the current candidate's |
 | C | CMP-001 absolute maximum never reached | SCHEMATIC | derate: netlist c9f7394594201045 is the current candidate's |
@@ -200,7 +198,6 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 | C | CLK-001 oscillators, straps and boot pins | SCHEMATIC | clock_check: netlist c9f7394594201045 is the current candidate's |
 | C | RF-002 transmit inhibit is hardware | SCHEMATIC | inhibit_chain_c: netlist c9f7394594201045 is the current candidate's |
 | C | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_c: netlist c9f7394594201045 is the current candidate's |
-| C | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
 | D | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist a2d48972d171aad1 is the current candidate's |
 | D | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_d: netlist a2d48972d171aad1 is the current candidate's |
 | D | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_d: netlist a2d48972d171aad1 is the current candidate's |
@@ -209,7 +206,6 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 | D | CLK-001 oscillators, straps and boot pins | SCHEMATIC | clock_check: netlist a2d48972d171aad1 is the current candidate's |
 | D | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_d: netlist a2d48972d171aad1 is the current candidate's |
 | D | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_d: netlist a2d48972d171aad1 is the current candidate's |
-| D | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
 | E | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist 2ed95a0e8069ebf8 is the current candidate's |
 | E | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_e: netlist 2ed95a0e8069ebf8 is the current candidate's |
 | E | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_e: netlist 2ed95a0e8069ebf8 is the current candidate's |
@@ -222,7 +218,6 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 | E | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_e: netlist 2ed95a0e8069ebf8 is the current candidate's |
 | E | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_e: netlist 2ed95a0e8069ebf8 is the current candidate's |
 | E | BAT-002 the energy chain is bounded end to end | SCHEMATIC | energy_chain: netlist 2ed95a0e8069ebf8 is the current candidate's |
-| E | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
 | P | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist 20c7b0795593d761 is the current candidate's |
 | P | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_p: netlist 20c7b0795593d761 is the current candidate's |
 | P | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_p: netlist 20c7b0795593d761 is the current candidate's |
@@ -234,13 +229,11 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 | P | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_p: netlist 20c7b0795593d761 is the current candidate's |
 | P | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_p: netlist 20c7b0795593d761 is the current candidate's |
 | P | BAT-002 the energy chain is bounded end to end | SCHEMATIC | energy_chain: netlist 20c7b0795593d761 is the current candidate's |
-| P | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
 | E5 | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_e5: board 686b29a734c55b9a is the current design (no schematic) |
 | E5 | CMP-001 absolute maximum never reached | SCHEMATIC | derate: board 686b29a734c55b9a is the current design (no schematic) |
 | E5 | PWR-003 protection coordination | SCHEMATIC | energy_chain_e5: board 686b29a734c55b9a is the current design (no schematic) |
 | E5 | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_e5: board 686b29a734c55b9a is the current design (no schematic) |
 | E5 | BAT-002 the energy chain is bounded end to end | SCHEMATIC | energy_chain: board 686b29a734c55b9a is the current design (no schematic) |
-| E5 | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
 
 ## Reused under a recorded rationale
 
@@ -259,6 +252,7 @@ tool.
 | TOOL_CHANGED | the code that wrote it has changed since: its entry script or a local module it imports (exact by the reading's code bundle; for an older reading by its writer's hash and its imports' commit dates) | re-taken under the current tool (current only when the re-take also binds its artefact and configuration), or a compatibility entry proving the change is not semantic | 29 | 28 | 25 | 28 | 29 | 22 | 9 | 170 | 9 |
 | NOT_CURRENT_EVIDENCE | the reading itself is stale (epoch, rule digest, another board, or a tool meaning change) | re-taken | 3 | 3 | 3 | 3 | 3 | 3 | 2 | 20 | 0 |
 | TEMP_INPUT | it judged files in a temporary directory, not this tree | re-taken in this tree | 0 | 0 | 1 | 0 | 0 | 1 | 1 | 3 | 0 |
+| CONFIG_CHANGED | a configuration input its writer reads (rules_status.CONFIG_INPUTS) changed after the reading | re-taken, or a `kind: config` compatibility entry showing the change does not reach what the tool reads | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 7 | 0 |
 
 ## Writers whose configuration is not declared yet
 
