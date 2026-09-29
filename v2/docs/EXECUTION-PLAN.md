@@ -599,3 +599,52 @@ The lever is engineering, not an owner decision: switching FETs of about 12 nC g
 reverse recovery and 5 mOhm or less would support 0.98 (the check's criteria); the s117 stream is selecting real parts
 from makers' documents, then the energy model's charger efficiencies are corrected and the reconciliation re-run and
 checked. Until then REQ-072 stays FAIL and no Option A(i) margin is quoted as current.
+
+### Milestone, 29 September 2026 16:59 CEST: integration set 12 on main (FEA-002's desk remedies, RF-002's walk, board A's charger set)
+
+**Accepted:** `d0717859`. Merged:
+- **Stream d4emcon: FEA-002's remedies on boards B and C.**
+  - Board B: the RockBLOCK, E72 and E22 inputs gated against back-feed; the RockBLOCK's enable held low in the low-supply
+    band; the 5G card's power-off line repeated.
+  - Board C: its EMCON line clamped (D4E-F1, D4E-F2).
+  - Applied with the check's minors on board B.
+- **RF-002's walk, rounds 2 and 3.** The EMCON toggle is declared as data; a gate is the line's own source only on the
+  toggle's board.
+- **Stream s117: board A's charger set to its inductor and FETs.**
+  - Decision 56: 400 kHz with 4.7 uH, 191 k on IADPT.
+  - Decision 57: CSD17578Q5A and CSD17577Q5A.
+  - S-117 and S-118 closed; S-119 and S-120 opened.
+- **The census node declarations,** and boards A, B and C regenerated on the box and read back.
+
+**Gates:**
+- One re-take on the box with the held makers' files and the thirteen IBIS models installed: 0 of 615 routed verdicts
+  moved against the readings checked.
+- Status and render stable; validators 0 errors; the isolated clone clean.
+- Suite 2271 passed, 0 failed, 3 skipped at the promoted commit.
+- Five integration checks (AI reviews) are filed under `records/int13/checks/`. The last reads mergeable, with 4 wording
+  minors carried to S-122.
+
+**CFL-016 reads FAIL on this set and waits on S-122.** Its entries claimed readings no check had made, three times; the
+documents it names had not been re-read whole since 26 September, and passages in PANEL.md, V2-SPEC.md and CONOPS.md
+describe replaced circuits. CONOPS.md section 4b and its EMCON row are rewritten from the netlists and checked true.
+S-122 re-reads every named document by a script that asserts each part it names. No layer closed.
+
+**The two-pack verification (S-119, `fnd/s119`, for set 13):**
+- **The charger rows,** both independently checked (mergeable, 0 blocking, figures reproduced with a separate hourly
+  model):
+  - U3 is restated from 0.98 to 0.979 with decision 57's FETs.
+  - U3B is drawn on U3's 400 kHz row with the same FET pair (drafted decision 58; REGN 32.6 mA against 50 mA), at 0.972
+    over the model's hours.
+- **Figures at U3's minimum input limit** (model results; nothing is measured and REQ-072 stays FAIL):
+  - tablet-out lid: 93.7 Wh typical, 85.8 Wh adverse (was 87.4);
+  - QMX-out lid: 125.2 Wh typical, 116.9 Wh adverse (was 118.5);
+  - both lid functions kept: M1 not met;
+  - the first-drawn FETs: not met in any case.
+- **The inductors' core loss is the largest term not modelled.** The tablet-out lid still meets with about 2.5 W of it in
+  each charger. The decision table above reads with these figures once set 13 carries them; Q1 to Q4 are not taken.
+
+**Next, ready:**
+- set 13 (s119, then csi once its check passes, then walkmin once its check passes);
+- S-122 (the documents);
+- S-120 (the charge bus against the 30 V FETs);
+- board C's layout-entry chain (C-SI under check, then identities and review D).

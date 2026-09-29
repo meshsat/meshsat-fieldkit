@@ -28,6 +28,8 @@ Branch `fnd/int13`. The integrator's scripts, read-backs and checks for set 12. 
 | `checks/check-set12-1.md` (the substance check), `checks/check-set12-2.md` and `-3.md` (its re-checks on rf2walk2 and rf2walk3) | remedies hold; B1 the walk; rf2walk3 accepted | streams rf2walk2 and rf2walk3 |
 | `checks/check-int13-1.md` (the integration check at `005e5f5e`) | not mergeable: B1, and minors m1 to m9 | `apply_check13_fixes.py` (B1, m1, m2, m3, m6, m8, m9), this README (m4, m5, m7), the re-take at the corrected commit (m5) |
 | `checks/check-int13-2.md` (the focused re-check at `69156cad`) | not mergeable: B1 carried (the first answer claimed rows it had not read), and five minors | `apply_conops_4b_set12.py` (section 4b and the EMCON row rewritten whole from the netlists, B1 and minors 1 to 3), this README (minors 4 and 5) |
+| `checks/check-int13-3.md` (the targeted re-check at `7a9f7b5b`) | not mergeable: the rewrite true pin by pin, but CFL-016's entry claimed a reading of the other documents that no check made | `apply_cfl016_set12.py` (a change of diagnosis: CFL-016 reads FAIL and waits on S-122, the documents re-read whole) |
+| `checks/check-int13-4.md` (the re-check at `d0717859`, the promoted commit) | mergeable: 0 blocking, 4 wording minors | carried to S-122's stream |
 
 The suite at `005e5f5e` failed 3 tests:
 - a 191k resistor with no order code;
