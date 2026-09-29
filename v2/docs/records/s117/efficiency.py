@@ -26,7 +26,11 @@ INFERRED inputs (readings of the makers' curves by this stream, marked where use
 and 125 C, Qoss at 20.7 V from the Coss curve, the inductors' DC-bias fall. The drawn FET's figures are the independent
 check's own readings (v2/docs/records/s117 README, second issue), so the drawn column reproduces its table.
 
-Usage: python3 efficiency.py > efficiency.out   (deterministic; the committed .out is this script's output)"""
+Usage: python3 efficiency.py > efficiency.out   (deterministic; the committed .out is this script's output)
+
+Third issue (stream s119, S-119, 29 September 2026, the second round after its check, item M4): profile() refuses unless
+energy_two_pack.py is the file TP_SHA names (the first two issues imported it with no pin); the closing sentence names the
+chain's rows before and after stream s119. No figure of the output changes."""
 import math
 import os
 import sys
@@ -34,6 +38,7 @@ import sys
 sys.dont_write_bytecode = True
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
+TP_SHA = "a3426880bf607d38b08449ec0a880f10a064ee2767324afad2c250cd5a9444f4"   # energy_two_pack.py, stream s119's second issue (second round)
 
 # --------------------------------------------------------------------------------------------- the FETs (per 6 V drive)
 # qg / qg_max: total gate charge at VGS 6 V, typical (curve reading) and scaled from the table's maxima as
@@ -217,6 +222,11 @@ U3_POINTS = [  # label, VIN, IIN, VOUT, charge current through R17
 def profile():
     """The energy model's reference day (September, 400 Wp, the 200 W stage), per hour: U3's input in watts under the
     entries E2 (as drafted: 128.3 W) and E1 (as generated with FW-A16 revised: 85.9 W). Read through energy_two_pack.py."""
+    tp = os.path.join(ROOT, "v2", "docs", "records", "a1elec", "energy_two_pack.py")
+    import hashlib
+    if hashlib.sha256(open(tp, "rb").read()).hexdigest() != TP_SHA:
+        sys.stderr.write("efficiency: energy_two_pack.py is not the pinned file; refusing\n")
+        sys.exit(2)
     sys.path.insert(0, os.path.join(ROOT, "v2", "docs", "records", "a1elec"))
     import energy_two_pack as T
     d, pack, res4, t2m = T.load_model()
@@ -357,9 +367,11 @@ def main():
     e_lo = eta("buck", 20.7, 6.20, 14.5, 1.91, CHOSEN_U3, U3["ind"], U3["f"], U3["r_in"], U3["r_chg"], "lower")
     P("   CHOSEN: Q7 CSD17578Q5A with Q8 to Q10 CSD17577Q5A: %.3f (lower %.3f)" % (e_ti, e_lo))
     P("")
-    P("   The energy chain's rows today: U3 0.98 (records/energy/energy_inputs.yaml, SLUSE66A Figure 8-4, FETs not named) and U3B")
-    P("   0.975 (records/a1elec/energy_two_pack.py, Figure 8-3). Figure 8-4 at 4 A and 14.8 V loses about 0.96 W in all, less than")
-    P("   the drawn FETs' gate drive alone (1.24 W at 400 kHz): the curve describes FETs of a much smaller gate charge.")
+    P("   The energy chain's rows before stream s119: U3 0.98 (records/energy/energy_inputs.yaml, SLUSE66A Figure 8-4, FETs not")
+    P("   named) and U3B 0.975 (records/a1elec/energy_two_pack.py, Figure 8-3); since S-119, U3 0.979 (section 7) and U3B 0.972 (the")
+    P("   400 kHz row weighted over the model's hours, records/s119/u3b_hourly.out). Figure 8-4 at 4 A and 14.8 V loses about")
+    P("   0.96 W in all, less than the drawn FETs' gate drive alone (1.24 W at 400 kHz): the curve describes FETs of a much")
+    P("   smaller gate charge.")
 
 
 if __name__ == "__main__":

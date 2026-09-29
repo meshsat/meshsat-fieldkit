@@ -61,13 +61,16 @@ footprint key L6060 (XAL6060 class), and no Coilcraft XAL6030 or XAL6060 sheet i
 mismatch for board A's owner (`gen_sch_a.py:861`), not an a1elec change (check item M8). The **IADPT resistor, 169 k**
 (Table 9-4; missing today, round 4's O-24) is needed for the inductance detection whatever is chosen.
 
-**U3B (the lid's charger, new)**, TOPOLOGY.md 3b: R16B and R17B 5 mOhm (RSNS_RAC = RSNS_RSR = 1b), 169 k on IADPT, L2B
-XAL1010-332ME, ChargeVoltage 16.8 V, ChargeCurrent at most **7.936 A** (code 62) and never above 2 x the lid gauge's
-ChargingCurrent(), IIN_HOST **8.0 A** nominal (code 80; 8.2 A maximum), VINDPM 12.0 V, the fail-safe HiZ enable.
-**EN_FAST_5MOHM written 0b explicitly on U3B** (ChargeOption1 bit 0, power-on 1b; SLUSE66A Table 9-28, page 60: at 1b
-"IIN_HOST DAC is clamped at 6.4 A", under the 8.0 A setting; TI's note limits the fast compensation to IADPT below
-160 k anyway), and on U3 too if its R16 becomes 5 mOhm (check item M1). A deeply discharged lid is charged at the
-charger's battery low-voltage clamp, 384 mA (SLUSE66A 9.3.5, page 25), until its cells recover.
+**U3B (the lid's charger, new; second issue, stream s119, by the session decision of `records/s119/apply_decision_s119.py`)**,
+TOPOLOGY.md 3b: U3's 400 kHz row, R16B 10 mOhm (RSNS_RAC = 0b) and R17B 5 mOhm (RSNS_RSR = 1b), 191 k on IADPT, L2B
+XAL1010-472ME, Q7B and Q9B CSD17578Q5A, Q8B and Q10B CSD17577Q5A, Table 9-5's 400 kHz compensation, ChargeVoltage 16.8 V,
+ChargeCurrent at most **7.936 A** (code 62) and never above 2 x the lid gauge's ChargingCurrent(), IIN_HOST **6.2 A**
+nominal (code 124; 6.3 A maximum; the 6.35 A clamp of 9.3.5, page 25), VINDPM 12.0 V, the fail-safe HiZ enable with the
+ILIM_HIZ divider at 3.48 V (6.2 A on 10 mOhm). The first issue's instruction to write EN_FAST_5MOHM 0b on U3B lapses with
+its 5 mOhm sense (SLUSE66A Table 9-1, page 26, gives 6.35 A at RSNS_RAC = 0b whatever the bit); it still applies to U3 if
+its R16 ever becomes 5 mOhm (check item M1). The first issue's U3B (5 mOhm, 169 k, XAL1010-332ME, 8.0 A, CSD18510Q5B) is
+superseded: its REGN could not drive those FETs. A deeply discharged lid is charged at the charger's battery
+low-voltage clamp, 384 mA (SLUSE66A 9.3.5, page 25), until its cells recover.
 
 **Board E, listed and not designed here** (its owner's): the 200 W stage itself. At 200 W in and 0.93, TRK_OUT carries
 12.3 A at 15.1 V against its declared 6.16 A and F2's and J_SOLAR's 10 A; the panel wiring of 9g way (i) (two series
@@ -75,34 +78,35 @@ pairs, about 50 V open circuit cold) is above REQ-016's 25 V, a requirement the 
 
 ## 3. The losses at those settings and the thermal load on board A
 
-At E2's busiest hour (`.out` 7; the chain's figures: 0.93 for the front end, 0.98 for U3, 0.975 for U3B):
+At E2's busiest hour (`.out` 7), second issue (stream s119): the chain's figures are 0.93 for the front end, 0.979 for U3
+and 0.972 for U3B, each by TI's method with its sense resistors INSIDE it (the first issue's table, at 0.98 and 0.975,
+also listed R16, R17, R16B and R17B beside the chargers and so counted them twice; the independent check of stream s119,
+item M3):
 
 | element | E1, as generated (U3 at 4.15 A, 85.9 W) | E2, drafted (U3 at 6.2 A, 128.3 W) | E3, unconstrained peak (8.20 A) |
 |---|---|---|---|
 | front end U2 | 6.5 W | **9.7 W** | 12.8 W |
-| U3 | 1.7 W | **2.6 W** | 3.4 W |
-| R16 (10 mOhm) | 0.17 W | **0.38 W** | 0.67 W |
-| R17 | under 0.05 W | 0.02 W (1.91 A) | 0.04 W |
-| U3B | none | **1.4 W** (55.3 W in) | 2.1 W |
-| R16B, R17B | none | 0.07 W, 0.07 W | 0.16 W, 0.15 W |
-| **board A, charging peak** | **about 8.4 W** | **about 14.2 W** | about 19.0 W |
+| U3 (R16 and R17 inside) | 1.8 W | **2.7 W** (R16 0.38 W, R17 0.02 W) | 3.6 W |
+| U3B (R16B and R17B inside) | none | **1.5 W** (55.2 W in; R16B 0.15 W, R17B 0.07 W) | not re-derived |
+| **board A, charging peak** | **about 8.3 W** | **about 13.9 W** | at least 16.4 W with U3B |
 
 The lid path at night (1.97 A): LM74700 0.039 W, the LM5069's FET 0.004 W, its 5.6 mOhm sense 0.022 W. **In current
 limit the LM5069 holds its FET linear**, so the FET takes the gap less the loops' drop: 1.0 W at a 1.0 V gap, 12.0 W at
 2.0 V and **42.7 W at 4.8 V** (`.out` 8), until its power limit and fault timer (PWR and TIMER, sized by board A's owner
 with SNVS452G's procedure) turn it off; the -2 variant retries (check item M3; the first issue's 0.12 W was the fully
-enhanced FET). Over the 72 hours the lid chain costs the model 22.3 to 31.7 Wh in U3B, 5.7 to 8.2 Wh in the charge loop
-and **6.0 Wh** in the discharge path (`.out` 3c; the first issue's 5.5 Wh was a stale reading, check item M2), all
+enhanced FET). Over the 72 hours the lid chain costs the model 25.1 to 35.6 Wh in U3B, 4.7 to 6.7 Wh in the charge loop
+(second issue; the first issue's 22.3 to 31.7 and 5.7 to 8.2 Wh are superseded) and **6.0 Wh** in the discharge path (`.out` 3c; the first issue's 5.5 Wh was a stale reading, check item M2), all
 inside the balance that meets M1.
 
-**Not computed here:** the temperature those watts produce. Board A sits in the closed base; E2 adds about 5.8 W to the
+**Not computed here:** the temperature those watts produce. Board A sits in the closed base; E2 adds about 5.6 W to the
 as-generated charging peak, at midday, while the base's inside air is warmest. `feasibility/POWER-THERMAL.md`'s owner
-re-runs it with board A at 14.2 W at the charging peak. No part's rating is claimed against a temperature in this record.
+re-runs it with board A at about 13.9 W at the charging peak (second issue; the first issue's 14.2 W is superseded). No part's rating is claimed against a temperature in this record.
 
 ## 4. What remains a bench item
 
-U3's and U3B's efficiencies at these points (the 0.98 and 0.975 are plot readings at other conditions: 5 mOhm sense,
-4.7 uH, 400 kHz); the front end's 0.93 at 6.2 A and its current limit at the re-rated R11; the IADPT detection at 169 k;
+U3's and U3B's efficiencies at these points (second issue: 0.979 and 0.972 by TI's method on the makers' figures, the
+inductors' core loss excluded; the first issue's 0.98 and 0.975 were plot readings at other conditions); the front end's
+0.93 at 6.2 A and its current limit at the re-rated R11; the IADPT detection at 191 k (U3 and U3B);
 the compensation at the chosen frequency; U3B's input loop holding the node while the base supplies the load (the
 allocation loop's reaction time); the LM5069's power limit and timer at a join and at the kit's 18 A peak; the ideal
 diode's reverse response on a harness short.

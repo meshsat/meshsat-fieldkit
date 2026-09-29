@@ -1,0 +1,42 @@
+U3B'S EFFICIENCY OVER THE MODEL'S OWN HOURS (u3b_hourly.py, stream s119, S-119, second round). AI arithmetic on the
+makers' figures (SLUSE66A Equations 6 to 22 via records/s117/efficiency.py); nothing built or measured; core loss and
+light-load PFM excluded. Buck-boost bound at every hour; VIN the model's node voltage, VOUT its lid voltage. The
+weighting takes every hour; at the lightest (under 5 W, the taper's tail) fixed losses dominate and the equations read
+low, down to 0 where they exceed the input, which PFM would soften; those hours carry little energy (printed).
+
+the 400 kHz row (the S-119 decision)
+   the curve at 4S14P's node 14.50 V and lid 14.50 V (input W: lower / TI / upper):
+        2.0 W: 0.722 / 0.786 / 0.803
+        5.0 W: 0.879 / 0.908 / 0.917
+       10.0 W: 0.931 / 0.948 / 0.955
+       20.0 W: 0.955 / 0.966 / 0.972
+       30.0 W: 0.962 / 0.972 / 0.977
+       40.0 W: 0.965 / 0.974 / 0.979
+       55.0 W: 0.966 / 0.974 / 0.980
+       60.0 W: 0.966 / 0.974 / 0.979
+       80.0 W: 0.965 / 0.973 / 0.978
+   4S14P, ratio B, start 06 UTC: 30 hours, 901 Wh into U3B over 72 h, peak 56.6 W; weighted 0.9644 / 0.9731 / 0.9785; worst hour of 5 W or more 0.952 (TI); 10 hours under 5 W carry 0.0 Wh
+   4S14P, ratio B, start 18 UTC: 30 hours, 1301 Wh into U3B over 72 h, peak 56.6 W; weighted 0.9650 / 0.9736 / 0.9789; worst hour of 5 W or more 0.955 (TI); 3 hours under 5 W carry 0.0 Wh
+   4S14P, ratio C, start 06 UTC: 30 hours, 886 Wh into U3B over 72 h, peak 56.6 W; weighted 0.9634 / 0.9724 / 0.9778; worst hour of 5 W or more 0.943 (TI); 8 hours under 5 W carry 0.0 Wh
+   4S14P, ratio C, start 18 UTC: 30 hours, 1279 Wh into U3B over 72 h, peak 56.6 W; weighted 0.9643 / 0.9730 / 0.9784; worst hour of 5 W or more 0.943 (TI); 1 hours under 5 W carry 0.0 Wh
+   4S15P, ratio B, start 06 UTC: 30 hours, 918 Wh into U3B over 72 h, peak 57.7 W; weighted 0.9645 / 0.9731 / 0.9785; worst hour of 5 W or more 0.950 (TI); 10 hours under 5 W carry 0.0 Wh
+   4S15P, ratio B, start 18 UTC: 30 hours, 1325 Wh into U3B over 72 h, peak 57.7 W; weighted 0.9650 / 0.9736 / 0.9789; worst hour of 5 W or more 0.956 (TI); 3 hours under 5 W carry 0.0 Wh
+   4S15P, ratio C, start 06 UTC: 30 hours, 902 Wh into U3B over 72 h, peak 57.7 W; weighted 0.9635 / 0.9724 / 0.9779; worst hour of 5 W or more 0.944 (TI); 8 hours under 5 W carry 0.0 Wh
+   4S15P, ratio C, start 18 UTC: 30 hours, 1305 Wh into U3B over 72 h, peak 57.7 W; weighted 0.9644 / 0.9731 / 0.9785; worst hour of 5 W or more 0.944 (TI); 1 hours under 5 W carry 0.0 Wh
+
+way (a), 800 kHz, CSD17578Q5A x 4 (not drawn)
+   4S14P, ratio B, start 06 UTC: 30 hours, 902 Wh into U3B over 72 h, peak 56.6 W; weighted 0.9441 / 0.9586 / 0.9691; worst hour of 5 W or more 0.925 (TI); 10 hours under 5 W carry 0.0 Wh
+   4S14P, ratio B, start 18 UTC: 30 hours, 1310 Wh into U3B over 72 h, peak 56.6 W; weighted 0.9452 / 0.9595 / 0.9700; worst hour of 5 W or more 0.926 (TI); 3 hours under 5 W carry 0.0 Wh
+   4S14P, ratio C, start 06 UTC: 30 hours, 887 Wh into U3B over 72 h, peak 56.6 W; weighted 0.9423 / 0.9572 / 0.9678; worst hour of 5 W or more 0.906 (TI); 8 hours under 5 W carry 0.0 Wh
+   4S14P, ratio C, start 18 UTC: 30 hours, 1279 Wh into U3B over 72 h, peak 56.6 W; weighted 0.9438 / 0.9584 / 0.9689; worst hour of 5 W or more 0.906 (TI); 1 hours under 5 W carry 0.0 Wh
+   4S15P, ratio B, start 06 UTC: 30 hours, 919 Wh into U3B over 72 h, peak 57.7 W; weighted 0.9443 / 0.9587 / 0.9692; worst hour of 5 W or more 0.922 (TI); 10 hours under 5 W carry 0.0 Wh
+   4S15P, ratio B, start 18 UTC: 30 hours, 1334 Wh into U3B over 72 h, peak 57.7 W; weighted 0.9453 / 0.9596 / 0.9700; worst hour of 5 W or more 0.927 (TI); 3 hours under 5 W carry 0.0 Wh
+   4S15P, ratio C, start 06 UTC: 30 hours, 903 Wh into U3B over 72 h, peak 57.7 W; weighted 0.9425 / 0.9574 / 0.9680; worst hour of 5 W or more 0.908 (TI); 8 hours under 5 W carry 0.0 Wh
+   4S15P, ratio C, start 18 UTC: 30 hours, 1305 Wh into U3B over 72 h, peak 57.7 W; weighted 0.9440 / 0.9585 / 0.9691; worst hour of 5 W or more 0.908 (TI); 1 hours under 5 W carry 0.0 Wh
+
+THE FIGURE CARRIED (the 400 kHz row): the lowest weighted TI figure over the eight cases, rounded down, 0.972 (range
+0.9724 to 0.9736); bracket 0.963 (the lowest at the makers' maxima) to 0.978 (the highest at the most favourable reading).
+Way (a) at 800 kHz on the same hours, for comparison: 0.9572 to 0.9596; worst hour of 5 W or more 0.906.
+The peak-hour figures of efficiency.out section 7 (0.974 at 400 kHz, 0.961 at 800 kHz) sit above these: the peak is
+U3B's most favourable load, and its light hours cost more in proportion.
+END.
