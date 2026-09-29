@@ -1,5 +1,5 @@
 S-120: board A's charge bus VBUS20 and the charger's switch nodes against the 30 V FETs of decision 57. MESHSAT-1357,
-stream s120, second issue. Desk arithmetic on the makers' figures and the committed netlists; nothing is built, powered
+stream s120, fourth issue. Desk arithmetic on the makers' figures and the committed netlists; nothing is built, powered
 or measured. INFERRED = a figure the maker does not state; MODEL = an estimate from a simplified circuit, not a bound.
 netlist A v2/ecad/pcb-a-power-a23/out/pcb-a-power.net sha256/16 6c40250c47195ebb
 netlist E v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net sha256/16 2ed95a0e8069ebf8
@@ -140,6 +140,10 @@ netlist E v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net sha256/16 2ed95a0e8069ebf8
      U3 SW1 recommended 26 V                                                         5.04 /  2.60 V
      U3 SW1 and SW2 below PGND: -2 V, and -4 V for at most 25 ns (p.8). In every dead time SW1 sits at minus Q8's VSD
      (1.0 V maximum), inside -2 V; the ring below that has 3.0 V to -4 V, for at most 25 ns
+     SW2 rides VBAT, not the bus (Table 9-3 p.27): it sits at VBAT in buck mode with Q10 on and switches only in
+     buck-boost; its overshoot, and with it Q9's and Q10's VDS, is referred to the charger's cutoff SYSOVP 20.0 V (p.14).
+     ACP less ACN: 0.5 V absolute (p.8). The pins sit behind R146 and R147 (10 Ohm each) with C121 10 nF across, 200 ns;
+     a 4.7 V ring on CH_ACN at 48 MHz (1 nH against 11 nF, the model below) reaches them at about 0.08 V (INFERRED).
    MODEL for the layout writer (not a bound; typical driver figures, the plateau INFERRED):
    Q7's TURN-OFF (sets Q7's VDS and SW1's undershoot): its current falls in (Qgs - Qg(th)) / (VPLT / (RDS_HI_OFF + RG)) =
    1.4 nC / (2.7 V / (1.3 + 1.8 Ohm)) = 1.61 ns (SLPS526 p.3; SLUSE66A p.16); each nH of the loop C190 and C191, Q7,
