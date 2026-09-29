@@ -2007,7 +2007,7 @@ parts:
     identity_note: "the code is pinned in the generator because the generated PARTS.md row carried C55259975, a FUXINSEMI part of the same name (gen_sch_c.py comment above D19)"
     status: VERIFIED
     documents:
-      - path: "v2/vendor/power/panjit-ss2020fl-series.pdf"
+      - path: "v2/vendor/power/held/panjit-ss2020fl-series.pdf"
         doc_id: "PANJIT SS2020FL~SS20100FL"
         revision: "SS2020FL_SERIES-REV.10S, August 17, 2017"
         url: "https://www.panjit.com.tw/upload/datasheet/SS2020FL_SERIES.pdf"
