@@ -97,7 +97,7 @@ DEPTH2 = BOND + PLATE + (CELL_D + NEST_DZ + 2 * WRAP) + PAD + COVER     # two ne
 OWN = dict(bond=0.10, plate=0.13, standoff=0.10, cover=0.10)             # the module's own allowances, none stated by a source (INFERRED)
 OWN_SUM = sum(OWN.values())
 # the lid pack's protection board: ASSUMPTION, board P's own outline and tallest part until the electrical stream (fnd/a1elec) reports
-P2 = dict(w=70.0, h=44.0, parts=16.17, standoff=3.0, board=1.6, mass=0.080)
+P2 = dict(w=70.0, h=44.0, parts=16.17, standoff=2.5, board=1.6, mass=0.080)   # 2.5 standoffs: 22.47 deep, 0.28 inside the cover's inner face (22.75)
 P2_DEPTH = BOND + PLATE + P2["standoff"] + P2["board"] + P2["parts"]    # 22.97
 
 # ---------------------------------------------------------------- the tablet (appendix 32.50 16d; REQ-011; SC-45: the model is a pick)
@@ -177,7 +177,7 @@ def lay(x_w, n_slices, y_n, tablet_rect):
 
 
 def p2_candidates(x_w, x_e, y_n, south, tablet_rect):
-    """P2 at a corner of the module, either way round, inside the module's outline and off the tablet's bracket."""
+    """P2 at a corner of the module, either way round, inside the module's outline (it may lie over the tablet, which hangs below the cover)."""
     out = []
     ys_min = min(s[2] for s in south)
     for (w, h) in ((P2["w"], P2["h"]), (P2["h"], P2["w"])):
@@ -190,7 +190,8 @@ def p2_candidates(x_w, x_e, y_n, south, tablet_rect):
                     sl = south[0] if cx == "w" else south[-1]
                     y0 = sl[2] + SIDE; y1 = y0 + h
                 r = (x0, y0, x0 + w, y1)
-                if tablet_rect and overlap(r, tablet_rect, 1.0): continue
+                # (no rule keeps P2 off the tablet's plan: P2 lies inside the module above the one-layer cover, the tablet below it;
+                #  the first issue refused it without a reason and lost 4 places in arrangement A: the independent check's B1)
                 if any(overlap(r, f[1], PLAN_ALLOW) and (f[2] is None or margins(P2_DEPTH, f[2], OWN_SUM)[1] < MIN_CLEAR) for f in FACE): continue
                 out.append(r)
     return out
@@ -214,9 +215,19 @@ def build(name, x_w, x_e, y_n, n_slices, tablet=None, tablet_rect=None, qmx=True
                 p2_rect=p2_rect, qmx=qmx)
 
 
+def plate_rects(a):
+    """The lid plate's outline: one rectangle per slice from the slice's south edge (the end bays with the end slices)."""
+    out = []
+    for s, (x0, x1, ys, j) in enumerate(a["south"]):
+        xa = a["x_w"] if s == 0 else x0
+        xb = a["x_e"] if s == len(a["south"]) - 1 else x1
+        out.append((xa, ys, xb, a["y_n"]))
+    return out
+
+
 def zones(a):
     """The module's plan zones with their depth: each slice's one-layer zone, each layer-2 column's zone, P2, the tablet."""
-    z = []
+    z = [("lid plate", r, BOND + PLATE, OWN_SUM) for r in plate_rects(a)]
     for s, (x0, x1, ys, j) in enumerate(a["south"]):
         xa = a["x_w"] if s == 0 else x0
         xb = a["x_e"] if s == len(a["south"]) - 1 else x1
@@ -243,6 +254,9 @@ def check(a, out):
     plan = []
     plan.append(("module inside the flat ceiling, X", CEIL_FLAT[0] - max(abs(a["x_w"]), abs(a["x_e"])), 1.0))
     plan.append(("module inside the flat ceiling, Y", CEIL_FLAT[1] - max(abs(a["y_s"]), abs(a["y_n"])), 1.0))
+    cap0 = [f[1] for f in FACE if f[0] == "SW_SOS_GUARD"][0]
+    plan.append(("module west edge to the guard caps (X -143.0) with the plan allowance", a["x_w"] - (cap0[2] + PLAN_ALLOW), MIN_CLEAR))
+    plan.append(("P2's tallest part inside the cover's inner face (one-layer depth less the cover)", DEPTH1 - COVER - P2_DEPTH, 0.0))
     if a["qmx"]:
         plan.append(("module east edge to the QMX tray's west edge (both on the ceiling)", QMX["rect"][0] - a["x_e"], 1.0))
         if a["tablet_rect"]:
@@ -257,7 +271,7 @@ def check(a, out):
         plan.append(("tablet bracket to the nearest two-layer zone, in Y", min(gaps) if gaps else 99.0, 0.0))
         cap = [f[1] for f in FACE if f[0] == "SW_SOS_GUARD"][0]; bz = [f[1] for f in FACE if f[0] == "BZ1"][0]
         if tr[0] < cap[2] + PLAN_ALLOW + 20.0:
-            plan.append(("tablet bracket west edge to the guard caps (X -143.0) with the plan allowance", tr[0] - (cap[2] + PLAN_ALLOW), 0.0))
+            plan.append(("tablet bracket west edge to the guard caps (X -143.0) with the plan allowance", tr[0] - (cap[2] + PLAN_ALLOW), MIN_CLEAR))
         if tr[0] < bz[2] + PLAN_ALLOW:
             plan.append(("tablet bracket south edge to the sounder ring (Y -79.1) with the plan allowance", tr[1] - (bz[3] + PLAN_ALLOW), 0.0))
     return rows, plan
@@ -270,7 +284,7 @@ def best_tablet(name, x_w, x_e, n_slices, t, qmx):
     the chosen place is then checked like any other zone."""
     y_n = CEIL_FLAT[1] - 1.0
     x_lim = (QMX["rect"][0] - 1.0) if qmx else (CEIL_FLAT[0] - 1.0)
-    x_min = -143.0 + PLAN_ALLOW                      # east of the guard caps with the plan allowance
+    x_min = -143.0 + PLAN_ALLOW + MIN_CLEAR          # 1.0 east of the guard caps with the plan allowance (check M3)
     best, tried = None, 0
     def steps(lo, hi, d):
         v, out = lo, []
@@ -300,7 +314,7 @@ def best_tablet(name, x_w, x_e, n_slices, t, qmx):
 
 def arrangements():
     y_n = CEIL_FLAT[1] - 1.0                         # north (hinge) edge 1.0 inside the flat ceiling
-    x_w = -141.0                                     # west edge 2.0 east of the guard caps (checked in the face rows)
+    x_w = -143.0 + PLAN_ALLOW + MIN_CLEAR            # west edge 1.0 east of the guard caps with the plan allowance (check M3)
     x_e3 = x_w + 3 * CELL_L + 4 * END_GAP + 2 * BAY  # three slices: 72.75, 10.45 short of the QMX tray
     x_e4 = CEIL_FLAT[0] - 1.0
     out = [build("B: HF kept, no tablet in the lid", x_w, x_e3, y_n, 3),
@@ -339,7 +353,7 @@ LID_SHARE = 0.397     # the lid's share of the shell by inside area (382 x 268 o
 def mass_items(a, base_m, base_cg):
     n = len(a["cells"])
     mx = a["x_e"] - a["x_w"]; my = a["y_n"] - a["y_s"]
-    plate = mx * my * PLATE * 2.68e-6
+    plate = sum((r[2] - r[0]) * (r[3] - r[1]) for r in plate_rects(a)) * PLATE * 2.68e-6
     cover = (mx * my + 2 * (mx + my) * 40.0) * 1.0 * 1.25e-6
     nick = n * 0.0012 + 0.030
     wrap = n * 0.0015 + 0.030
@@ -547,7 +561,7 @@ def main(fp):
     w("   lid) %d (4S%dP); C10 (10 inch tablet kept, HF out) %d (4S%dP); D (both out) %d (4S%dP)." % (nC, pC, n10, p10, nD, pD))
     t10 = TABLET_10
     w("   With HF in the lid, the 10 inch class (%.0f x %.0f + lips) needs %.0f in X between the guard caps (%.2f) and the QMX tray (%.2f less 1.0), %.2f available:" % (
-        t10["w"], t10["h"], t10["w"] + 2 * LIP, -143.0 + PLAN_ALLOW, QMX["rect"][0], QMX["rect"][0] - 1.0 - (-143.0 + PLAN_ALLOW)))
+        t10["w"], t10["h"], t10["w"] + 2 * LIP, -143.0 + PLAN_ALLOW + MIN_CLEAR, QMX["rect"][0], QMX["rect"][0] - 1.0 - (-143.0 + PLAN_ALLOW + MIN_CLEAR)))
     w("   it does not fit beside the QMX set in any arrangement, pack or no pack; the 8 inch class is the one that fits with HF.")
     w("   SENSITIVITY of the counts to the module's INFERRED allowances (a sensitivity reading, not a bound; every face row re-judged):")
     for label, res in sensitivity():
@@ -603,7 +617,7 @@ def main(fp):
     r_bow = c0 ** 2 / (8 * sag) + sag / 2
     r_s = H["span_x"] ** 2 / (4 * max(offs))
     w("   T_L turns at R %.1f about the axis. Lead between the ties: %.1f (the longest chord, %.1f at 180 degrees, plus 5 percent)." % (rad, lead, c1))
-    w("   Closed, the lead bows %.1f (in the X-Z plane of the back channel, which is about 14 wide in Y and 40 tall), radius about %.0f; fully" % (sag, r_bow))
+    w("   Closed, the lead bows %.1f (in the X-Z plane of the back channel, which is about 16 wide in Y and 40 tall), radius about %.0f; fully" % (sag, r_bow))
     w("   open it is an S across an offset of %.1f over %.0f, radius about %.0f. Requirement on the pick (INFERRED class): a flexing radius of" % (max(offs), H["span_x"], r_s))
     w("   10 x OD = %.0f or less, met by both figures above: %s." % (10 * H["od"], "yes" if min(r_bow, r_s) >= 10 * H["od"] else "NO"))
     p2 = aB["p2_rect"]
@@ -648,35 +662,76 @@ def main(fp):
             w("   B, central estimate (base 9 kg at (0, 0, 55)), lid at %3d deg: case %.2f kg, centre of mass (%.1f, %.1f, %.1f); lid alone (%.1f, %.1f, %.1f)" % (
                 phi, m, x, y, z, xl, yl, zl))
     w("   arrangement  lid open   worst CG Y   level ground   worst critical back slope (tips beyond)")
+    w("   (each row the worst over base 7..14 kg, CG Y -20..+20, Z 45..65, the hinge axis Y 147..163 and Z 106..116: check M4)")
     lim = {}
-    for a in (aB, aA):
+    HY, HZ = HINGE["y"], HINGE["z"]
+    hinges = [(hy, hz) for hy in (HY - HINGE["dy"], HY, HY + HINGE["dy"]) for hz in (HZ - HINGE["dz"], HZ, HZ + HINGE["dz"])]
+    bases = [(bm, (0.0, by, bz)) for bm in (7.0, 9.0, 14.0) for by in (-20.0, 0.0, 20.0) for bz in (45.0, 65.0)]
+    def worst_over(a, phi, tip_y=Y_TIP):
+        worst = (99.0, None, None)
+        for hy, hz in hinges:
+            HINGE["y"], HINGE["z"] = hy, hz
+            for bm, bc in bases:
+                items = mass_items(a, bm, bc)
+                sl, y, z = critical_slope(items, phi, tip_y)
+                if sl < worst[0]: worst = (sl, y, (hy, hz, bm, bc, items))
+        HINGE["y"], HINGE["z"] = HY, HZ
+        return worst
+    for a in (aB, aA, aC):
         for phi in (0, 90, 100, 110, 120, 135, 150, 180):
-            worst = (99.0, None)
-            for hy in (HINGE["y"] - HINGE["dy"], HINGE["y"], HINGE["y"] + HINGE["dy"]):
-                h0 = HINGE["y"]; HINGE["y"] = hy
-                for bm in (7.0, 9.0, 14.0):
-                    for by in (-20.0, 0.0, 20.0):
-                        for bz in (45.0, 65.0):
-                            sl, y, z = critical_slope(mass_items(a, bm, (0.0, by, bz)), phi)
-                            if sl < worst[0]: worst = (sl, y)
-                HINGE["y"] = h0
-            lim[(a["name"][0], phi)] = worst[0]
-            w("   %-12s %5.0f deg   %8.2f     %-12s   %5.1f deg" % (a["name"].split(":")[0], phi, worst[1], "stands" if worst[1] < Y_TIP else "TIPS", worst[0]))
-    for ty in (100.0,):
-        wst = min(critical_slope(mass_items(aB, bm, (0.0, by, bz)), 100, tip_y=ty)[0] for bm in (7.0, 9.0, 14.0) for by in (-20.0, 0.0, 20.0) for bz in (45.0, 65.0))
-        lvl = [p for p in (90, 100, 110, 120, 135) if min(critical_slope(mass_items(aB, bm, (0.0, by, bz)), p, tip_y=ty)[0] for bm in (7.0, 9.0, 14.0) for by in (-20.0, 0.0, 20.0) for bz in (45.0, 65.0)) <= 0]
-        w("   sensitivity: the feet's place is not in Peli's files; with the tipping line at Y %.0f (feet inboard, INFERRED bound) B at 100 degrees" % ty)
-        w("   stands on a back slope of %.1f deg at the worst, and tips on level ground from %s degrees (hinge axis Y 155)" % (wst, lvl[0] if lvl else "beyond 135"))
+            wsl, wy, _c = worst_over(a, phi)
+            lim[(a["name"].split(":")[0], phi)] = wsl
+            w("   %-12s %5.0f deg   %8.2f     %-12s   %5.1f deg" % (a["name"].split(":")[0], phi, wy, "stands" if wy < Y_TIP else "TIPS", wsl))
+    for key, a in (("B", aB), ("C", aC)):
+        items = mass_items(a, 9.0, (0.0, 0.0, 55.0))
+        w("   %s's lid, every place filled (%d cells): %.2f kg" % (key, len(a["cells"]), sum(i[2] for i in items if i[1] == "lid")))
+    lvl_in = [p for p in (90, 100, 110, 120, 135) if worst_over(aB, p, 100.0)[0] <= 0]
+    w("   sensitivity (feet inboard, tipping line Y 100, INFERRED bound), over the same sweep: B at 100 degrees stands on a back slope of")
+    w("   %.1f deg at the worst and tips on level ground from %s degrees" % (worst_over(aB, 100, 100.0)[0], lvl_in[0] if lvl_in else "beyond 135"))
     tip_phi = min([p for p in (90, 100, 110, 120, 135, 150, 180) if lim[("B", p)] <= 0] or [999])
     w("   verdict (B): the open case stands on level ground up to a lid opening of %s degrees in every swept case; beyond it a light base with" % (
         "%d" % max(p for p in (90, 100, 110, 120, 135, 150) if lim[("B", p)] > 0)))
     w("   its CG back and high tips on level ground (first at %s degrees swept). Fix, the session's (authority SESSION, reversible): a lid stay" % tip_phi)
-    w("   that stops the lid at 100 degrees (a webbing strap between two bonded anchors, one on the lid's inner back wall, one on the face")
-    w("   plate's rebated back band; no hole in the case or the plate; about EUR 10, ESTIMATE; it folds into the back channel when the lid")
-    w("   closes), which also carries the lid's added mass off Peli's hinge stop. With it the")
-    w("   worst back slope the open case stands on is %.1f deg (B) and %.1f deg (A); the operator's sheet states: open the lid only on ground" % (lim[("B", 100)], lim[("A", 100)]))
-    w("   sloping less than %d degrees toward the hinge side. If Peli's own stop is at or under 100 degrees the stay is not needed for" % math.floor(lim[("B", 100)]))
-    w("   stability; the stop angle and the hinge axis are read on the mock-up (T-A1-3).")
+    w("   that stops the lid at 100 degrees. With it the worst back slope the open case stands on is %.1f deg (B), %.1f deg (A), %.1f deg (C)" % (
+        lim[("B", 100)], lim[("A", 100)], lim[("C", 100)]))
+    w("   at the flat-bottom tipping line, and %.1f deg (B) with the feet inboard. The operator's sheet: open the lid only on ground sloping" % worst_over(aB, 100, 100.0)[0])
+    w("   less than %d degrees toward the hinge side until T-A1-3 has measured the feet, the stop and the hinge axis." % math.floor(min(lim[("B", 100)], lim[("C", 100)])))
+    # M5: the stay sized
+    LA, BA = (60.0, 140.0), (75.95, 106.52 + 2.4)
+    w("   THE STAY (check M5): a polyester webbing strap at X -179 (the lid's west end zone, outside the flat ceiling and clear of the guard")
+    w("   caps at X -157..-143 and the back channel), from a tab bonded (DP8005) to the lid's inner west end wall at (Y %.0f, Z %.0f) closed, to a" % LA)
+    w("   stainless tab under the face plate's 6-32 pan head at (X -179.07, Y %.2f), which pulls Peli's brass insert against the ring's" % BA[0])
+    w("   underside, its strong direction (CASE-MARGINS 2.5).")
+    for key, a in (("B", aB), ("A", aA), ("C", aC)):
+        items = mass_items(a, 9.0, (0.0, 0.0, 55.0))
+        for hy, hz in ((HY, HZ), (HY + HINGE["dy"], HZ - HINGE["dz"]), (HY - HINGE["dy"], HZ + HINGE["dz"])):
+            HINGE["y"], HINGE["z"] = hy, hz
+            ml, xl, yl, zl = cg(items, part="lid", phi=100)
+            M = ml * 9.81 * (yl - hy) / 1000.0
+            L = rot(LA, 100)
+            dy, dz = L[0] - BA[0], L[1] - BA[1]
+            d = abs(dy * (BA[1] - hz) - dz * (BA[0] - hy)) / math.hypot(dy, dz)
+            closed = math.hypot(LA[0] - BA[0], LA[1] - BA[1])
+            w("     %s, hinge (%.0f, %.0f): lid %.2f kg, moment at 100 deg %.2f N m, strap lever %.1f mm, tension %.0f N static, %.0f N at an arrest" % (
+                key, hy, hz, ml, M, d, M / (d / 1000.0), 3.0 * M / (d / 1000.0)))
+            w("        factor of 3 (ESTIMATE); strap %.1f long open, %.1f between the anchors closed (the slack folds in the west end zone)" % (math.hypot(dy, dz), closed))
+        HINGE["y"], HINGE["z"] = HY, HZ
+    w("     the bonded tab on Peli's polypropylene has no held strength (DP8005's sheet gives none on PP) and Peli states none for its inserts:")
+    w("     both OPEN at T8 (a pull test of the tab at 3 times the largest tension above) and T-A1-3 (the stay on the mock-up, the lid dropped")
+    w("     open onto it). Stay parts: 25 mm polyester webbing, two stainless tabs; about EUR 10 (ESTIMATE).")
+    # M6: operator loads
+    w("   OPERATOR LOADS (check M6): a horizontal backward push on the open lid at the QMX set's height (B, A) or the tablet's (C) tips the")
+    w("   worst swept case on level ground when it exceeds:")
+    for key, a in (("B", aB), ("A", aA), ("C", aC)):
+        wsl, wy, (hy, hz, bm, bc, items) = worst_over(a, 100)
+        HINGE["y"], HINGE["z"] = hy, hz
+        m, x, y, z = cg(items, phi=100)
+        push = rot((10.0, CEIL_Z_NOM - 15.0), 100)
+        F = m * 9.81 * (Y_TIP - y) / (push[1] - FOOT_Z)
+        HINGE["y"], HINGE["z"] = HY, HZ
+        w("     %s at 100 deg: %.2f kg, CG Y %.2f, restoring %.2f N m; push at Z %.0f: %.1f N (%.1f kgf)" % (key, m, y, m * 9.81 * (Y_TIP - y) / 1000.0, push[1], F, F / 9.81))
+    w("     so pressing the QMX's controls, plugging its jacks or tapping a tablet in the lid must be done with a hand on the case, or the")
+    w("     case stood with its back against something: a use limit on the operator's sheet; with the base's real mass and CG (T-A1-3) it may rise.")
     w()
     w("5. THE BASE POCKETS: section 8's 4S6P (east block as ruled, west block mirrored) at the same worst figures")
     w("   row      margin                                                                 min  nominal  worst  x2     verdict")
