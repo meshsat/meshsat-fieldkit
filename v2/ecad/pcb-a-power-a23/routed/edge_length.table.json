@@ -99,11 +99,11 @@
   "extent_mm": 400.0,
   "far_netlist_b": {
    "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
-   "sha256_16": "97823ef1171a61ce"
+   "sha256_16": "5b89d5ef6fe0299a"
   },
   "far_netlist_c": {
    "path": "pcb-c-display-c8/out/pcb-c-display.net",
-   "sha256_16": "fef4df255c00f4db"
+   "sha256_16": "87b69472ac83ca5a"
   },
   "far_netlist_d": {
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",

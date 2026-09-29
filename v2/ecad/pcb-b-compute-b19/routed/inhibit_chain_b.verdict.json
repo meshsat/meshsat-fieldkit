@@ -14,25 +14,29 @@
    "phase_artefacts.py": "96642ce767188c73",
    "regen_compare.py": "341d7f129a1e6f24",
    "sch_prov.py": "a98e5a71ac74ccee",
-   "tx_inhibit.py": "7dd14f45f5d62cb4",
+   "tx_inhibit.py": "cf2154a62f6491dd",
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "3d0f8abc5a5faa53",
+  "sha16": "b402aef5e9338a1d",
   "unresolved": []
  },
  "counts": {
   "fail": 0,
-  "pass": 16,
-  "undecided": 4,
+  "pass": 12,
+  "undecided": 8,
   "unjudged": 0
  },
  "denominator": 20,
  "evidence": [
   "undecided: RF-002 LimeSDR Mini 2.4 in its USB 3 bay: EMCON reaches it in hardware (B power on J_LIME)",
+  "undecided: RF-002 RockBLOCK 9704 (Iridium): EMCON reaches it in hardware (B power on J_RB9704)",
+  "undecided: RF-002 E22-900M30S LoRa: EMCON reaches it in hardware (B power on U12)",
   "undecided: RF-002 E72 CC2652P Zigbee coordinator: EMCON reaches it in hardware (B power on U13)",
   "undecided: RF-002 E72 CC2652P OpenThread RCP: EMCON reaches it in hardware (B power on U14)",
-  "undecided: RF-002 RM520N-GL 5G module: EMCON reaches it in hardware (B rf_disable on J_M2C2 or B power on J_M2C2)"
+  "undecided: RF-002 RM520N-GL 5G module: EMCON reaches it in hardware (B rf_disable on J_M2C2 or B power on J_M2C2)",
+  "undecided: RF-002 AW7915-AED WiFi link card, slot 1: EMCON reaches it in hardware (B rf_disable on J_M2C1 or B power on J_M2C1)",
+  "undecided: RF-002 AW7915-AED WiFi link card, slot 3: EMCON reaches it in hardware (B rf_disable on J_M2C3 or B power on J_M2C3)"
  ],
  "inputs": {
   "boards": "A,B,C,D,E,P",
@@ -42,11 +46,11 @@
   },
   "intent_b": {
    "path": "pcb-b-compute-b19/out/pcb-b-compute-intent.json",
-   "sha256_16": "9fd37fd39026c102"
+   "sha256_16": "84d2e641a3db261a"
   },
   "intent_c": {
    "path": "pcb-c-display-c8/out/pcb-c-display-intent.json",
-   "sha256_16": "03af8453948d391c"
+   "sha256_16": "d321f2979e0c4244"
   },
   "intent_d": {
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs-intent.json",
@@ -58,14 +62,14 @@
    "sha256_16": "30ad87746d1801ca"
   },
   "netlist_b": {
-   "content16": "b9dbb9c4a430d108",
+   "content16": "31190f043dc21cfa",
    "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
-   "sha256_16": "97823ef1171a61ce"
+   "sha256_16": "5b89d5ef6fe0299a"
   },
   "netlist_c": {
-   "content16": "ebde053efc0a3906",
+   "content16": "424a8b6ee5851775",
    "path": "pcb-c-display-c8/out/pcb-c-display.net",
-   "sha256_16": "fef4df255c00f4db"
+   "sha256_16": "87b69472ac83ca5a"
   },
   "netlist_d": {
    "content16": "be4194ed867c8406",
@@ -74,7 +78,7 @@
   }
  },
  "missing_input": null,
- "note": "RF-002 on this board: where the transmit inhibit line runs, it is present, reaches the gate it keys, has the panel toggle as its only source, is buffered and not inverted, and is pulled down so a missing panel inhibits, and with the panel unplugged or unpowered its own pull-downs hold it under the gates' 0.8 V against everything on it that can source current, every pin's stated leakage included (II, Ioff) with every other part powered or not, whichever is worse; every transmitter this board carries is reached from EMCON in hardware (tx_inhibit.py), with every net on the way driven by nothing else on any board, and with each gate on the way unpowered its enable or keying pin is still held at EMCON's level by a passive pull; and every part that names a radio is a listed transmitter, an accessory or a receiver. 4 result(s) are undecided: judged on every input, and a pin or a declaration on the way is not proved",
+ "note": "RF-002 on this board: where the transmit inhibit line runs, it is present, reaches the gate it keys, has the panel toggle as its only source, is buffered and not inverted, and is pulled down so a missing panel inhibits, and with the panel unplugged or unpowered its own pull-downs hold it under the gates' 0.8 V against everything on it that can source current, every pin's stated leakage included (II, Ioff) with every other part powered or not, whichever is worse; every transmitter this board carries is reached from EMCON in hardware (tx_inhibit.py), with every net on the way driven by nothing else on any board, and with each gate on the way unpowered its enable or keying pin is still held at EMCON's level by a passive pull; and every part that names a radio is a listed transmitter, an accessory or a receiver. 8 result(s) are undecided: judged on every input, and a pin or a declaration on the way is not proved",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
@@ -90,12 +94,12 @@
  },
  "tool": "inhibit_chain_b",
  "tools": {
-  "git_head": "958a7de7a15f",
-  "tools_tree_sha": "7a55e9ef29ec7734"
+  "git_head": "d75384201515",
+  "tools_tree_sha": "254a65b96010ac03"
  },
- "ts": "2026-09-29T00:16:11Z",
+ "ts": "2026-09-29T11:46:50Z",
  "verdict": "INCONCLUSIVE",
- "version": "958a7de7a15f",
+ "version": "d75384201515",
  "writer": {
   "file": "check_contracts.py",
   "sha16": "5e14f456a0791c35"

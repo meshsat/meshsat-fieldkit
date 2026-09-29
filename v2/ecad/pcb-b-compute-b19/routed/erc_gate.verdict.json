@@ -22,9 +22,9 @@
  "counts": {
   "allowed": 7,
   "blocking": 0,
-  "violations": 2912
+  "violations": 3131
  },
- "denominator": 2912,
+ "denominator": 3131,
  "evidence": [],
  "inputs": {
   "allow_list": {
@@ -34,16 +34,16 @@
   "board": "b",
   "erc_report": {
    "path": "pcb-b-compute-b19/out/pcb-b-compute-erc.json",
-   "sha256_16": "a716c41aa319f381"
+   "sha256_16": "9445578f9b9be28d"
   },
   "netlist": {
-   "content16": "b9dbb9c4a430d108",
+   "content16": "31190f043dc21cfa",
    "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
-   "sha256_16": "97823ef1171a61ce"
+   "sha256_16": "5b89d5ef6fe0299a"
   },
   "netlist_tie": {
    "proved": true,
-   "why": "the report, the schematic and the netlist's own provenance agree on schematic 40748a4341a9"
+   "why": "the report, the schematic and the netlist's own provenance agree on schematic 3369340caa99"
   },
   "project": {
    "path": ".",
@@ -51,7 +51,7 @@
   },
   "schematic": {
    "path": "pcb-b-compute-b19/pcb-b-compute.kicad_sch",
-   "sha256_16": "40748a4341a951cf"
+   "sha256_16": "3369340caa9957c3"
   }
  },
  "missing_input": null,
@@ -71,12 +71,12 @@
  },
  "tool": "erc_gate",
  "tools": {
-  "git_head": "958a7de7a15f",
-  "tools_tree_sha": "7a55e9ef29ec7734"
+  "git_head": "d75384201515",
+  "tools_tree_sha": "254a65b96010ac03"
  },
- "ts": "2026-09-29T00:15:44Z",
+ "ts": "2026-09-29T11:46:22Z",
  "verdict": "PASS",
- "version": "958a7de7a15f",
+ "version": "d75384201515",
  "writer": {
   "file": "erc_gate.py",
   "sha16": "bb4bf868c515f37a"

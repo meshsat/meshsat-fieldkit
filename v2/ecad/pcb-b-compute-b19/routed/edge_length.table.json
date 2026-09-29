@@ -2,24 +2,24 @@
  "board": "b",
  "counts": {
   "answered_nets": 361,
-  "bound_decided_nets": 153,
-  "bound_edge_nets": 451,
+  "bound_decided_nets": 144,
+  "bound_edge_nets": 442,
   "classes": 154,
   "contradicted_nets": 0,
-  "decided_nets": 554,
-  "layout_bound_nets": 193,
+  "decided_nets": 545,
+  "layout_bound_nets": 184,
   "low_speed_nets": 324,
   "maker_edge_nets": 103,
   "maker_held_nets": 40,
-  "may_be_long_nets": 554,
+  "may_be_long_nets": 545,
   "models_absent": 0,
   "models_asked": 10,
-  "signal_nets": 886,
+  "signal_nets": 907,
   "unasked_part_nets": 8,
   "undecided_model_absent_nets": 0,
-  "undecided_nets": 8,
-  "undecided_no_declaration_nets": 8,
-  "undecided_other_nets": 0
+  "undecided_nets": 38,
+  "undecided_no_declaration_nets": 29,
+  "undecided_other_nets": 9
  },
  "inputs": {
   "board": "b",
@@ -101,28 +101,32 @@
    "sha256_16": "98191bec36d43771"
   },
   "document_25": {
+   "path": "v2/vendor/ti/ti-sn74lvc1g34.pdf",
+   "sha256_16": "04384d3a3cf65b2b"
+  },
+  "document_26": {
    "path": "v2/vendor/ti/ti-tcan334-can-fd-transceiver.pdf",
    "sha256_16": "bb89f067e6a79028"
   },
-  "document_26": {
+  "document_27": {
    "path": "v2/vendor/ti/tps23861-datasheet.pdf",
    "sha256_16": "65262ce4766a5f8e"
   },
-  "document_27": {
+  "document_28": {
    "path": "v2/vendor/vishay/veml7700-datasheet.pdf",
    "sha256_16": "f338cf7d5911828a"
   },
-  "document_28": {
+  "document_29": {
    "path": "v2/vendor/xenarc/xenarc-709gnk-product-manual-v2.pdf",
    "sha256_16": "ba3b1474406fdaf5"
-  },
-  "document_29": {
-   "path": "v2/vendor/zigbee/ebyte-e72-2g4m20s1e-user-manual.pdf",
-   "sha256_16": "4bae5b3e67483b0b"
   },
   "document_3": {
    "path": "v2/vendor/cluster/ksz989x-hw-design-checklist.pdf",
    "sha256_16": "2a9d80931a0bed4b"
+  },
+  "document_30": {
+   "path": "v2/vendor/zigbee/ebyte-e72-2g4m20s1e-user-manual.pdf",
+   "sha256_16": "4bae5b3e67483b0b"
   },
   "document_4": {
    "path": "v2/vendor/cm5/cm5-datasheet.pdf",
@@ -133,16 +137,16 @@
    "sha256_16": "029f345a1e7be917"
   },
   "document_6": {
+   "path": "v2/vendor/diodes/diodes-74lvc1g34.pdf",
+   "sha256_16": "efd2d7978bb880b7"
+  },
+  "document_7": {
    "path": "v2/vendor/diodes/diodes-pi7c9x2g404sl.pdf",
    "sha256_16": "675fa7ee40c91ad6"
   },
-  "document_7": {
+  "document_8": {
    "path": "v2/vendor/fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf",
    "sha256_16": "fae7e21365939be5"
-  },
-  "document_8": {
-   "path": "v2/vendor/lora/ebyte-e22-900m30s-user-manual-en-v1.20.pdf",
-   "sha256_16": "d864e9ca390f15c9"
   },
   "document_9": {
    "path": "v2/vendor/microchip/microchip-atecc608b-summary-DS40002239B.pdf",
@@ -159,7 +163,7 @@
   },
   "far_netlist_c": {
    "path": "pcb-c-display-c8/out/pcb-c-display.net",
-   "sha256_16": "fef4df255c00f4db"
+   "sha256_16": "87b69472ac83ca5a"
   },
   "far_netlist_d": {
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
@@ -171,7 +175,7 @@
   },
   "intent": {
    "path": "pcb-b-compute-b19/out/pcb-b-compute-intent.json",
-   "sha256_16": "9fd37fd39026c102"
+   "sha256_16": "84d2e641a3db261a"
   },
   "model_1": {
    "path": "v2/vendor/st/ibis/stm32h742_743_750_753_lqfp100.ibs",
@@ -233,9 +237,9 @@
    "state": "PRESENT"
   },
   "netlist": {
-   "content16": "b9dbb9c4a430d108",
+   "content16": "31190f043dc21cfa",
    "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
-   "sha256_16": "97823ef1171a61ce"
+   "sha256_16": "5b89d5ef6fe0299a"
   },
   "project": {
    "path": "pcb-b-compute-b19/pcb-b-compute.kicad_pro",
@@ -264,6 +268,33 @@
    "basis": "",
    "class": "UNKNOWN",
    "drivers": {
+    "74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): LORA_GO = E22_EN, one load on the enable (SD-EMC-2, D4E-B)": [
+     "U544"
+    ],
+    "74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the E22's BUSY to the host, no host pin on the module (SD-EMC-2, D4E-B)": [
+     "U552"
+    ],
+    "74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the E22's DIO1 to the host, no host pin on the module (SD-EMC-2, D4E-B)": [
+     "U551"
+    ],
+    "74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the E22's MISO to the host, no host pin on the module (SD-EMC-2, D4E-B)": [
+     "U553"
+    ],
+    "CP2102N-A02-GQFN28 USB-UART bridge (RB)": [
+     "U18"
+    ],
+    "CP2102N-A02-GQFN28 USB-UART bridge (ZBA)": [
+     "U16"
+    ],
+    "CP2102N-A02-GQFN28 USB-UART bridge (ZBB)": [
+     "U17"
+    ],
+    "Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1: TXEN GPIO4, RXEN GPIO5, DIO1 GPIO24, BUSY GPIO23, NRST GPIO26; EU power cap in meshtasticd": [
+     "U12"
+    ],
+    "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)": [
+     "U6"
+    ],
     "SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 V (EMCON L3)": [
      "U112"
     ],
@@ -272,6 +303,36 @@
     ],
     "SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 V (EMCON L3)": [
      "U312"
+    ],
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), EMCON AND software (EMCON.md 4.4, W4B-D1), through R532 (D4E-B)": [
+     "U536"
+    ],
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK P_EN only while RB_GO (SD-EMC-2, D4E-B)": [
+     "U539"
+    ],
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK RXD only while RB_GO (SD-EMC-2, D4E-B)": [
+     "U538"
+    ],
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK inputs allowed: I_EN AND I_BTD (SD-EMC-2, D4E-B)": [
+     "U537"
+    ],
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): the E22's MOSI only while its supply is enabled (SD-EMC-2, D4E-B)": [
+     "U548"
+    ],
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): the E22's NRST only while its supply is enabled (SD-EMC-2, D4E-B)": [
+     "U547"
+    ],
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): the E22's NSS only while its supply is enabled (SD-EMC-2, D4E-B)": [
+     "U550"
+    ],
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): the E22's RXEN only while its supply is enabled (SD-EMC-2, D4E-B)": [
+     "U545"
+    ],
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): the E22's SCK only while its supply is enabled (SD-EMC-2, D4E-B)": [
+     "U549"
+    ],
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): the E22's TXEN only while its supply is enabled (SD-EMC-2, D4E-B)": [
+     "U546"
     ],
     "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls FULL_CARD_POWER_OFF# low at once (SD-EMC-1); channel 2 spare": [
      "U220"
@@ -294,6 +355,18 @@
     "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's card W_DISABLE1# low (L7); channel 2 spare since W4B-D3": [
      "U315"
     ],
+    "SN74LVC2G07DBVR dual open-drain buffer (1 1A 6 1Y, 3 2A 4 2Y): U221's Tpr hold repeated onto FULL_CARD_POWER_OFF# (D4E-F2); channel 2 spare": [
+     "U554"
+    ],
+    "SN74LVC2G07DBVR dual open-drain buffer (1 1A 6 1Y, 3 2A 4 2Y): ZBA's RX and RESET_N, pulled up only to the gated +3V3_ZB (SD-EMC-2, D4E-B)": [
+     "U540"
+    ],
+    "SN74LVC2G07DBVR dual open-drain buffer (1 1A 6 1Y, 3 2A 4 2Y): ZBB's RX and RESET_N, pulled up only to the gated +3V3_ZB (SD-EMC-2, D4E-B)": [
+     "U542"
+    ],
+    "SN74LVC2G07DBVR dual open-drain buffer (1 1A 6 1Y, 3 2A 4 2Y): both E72's BSL, pulled up only to the gated +3V3_ZB (SD-EMC-2, D4E-B)": [
+     "U541"
+    ],
     "TPS3808G30DBVR supervisor on +3V3_S2A: holds FULL_CARD_POWER_OFF# low for 180 to 420 ms after the rail (RM520N Tpr >= 100 ms)": [
      "U221"
     ]
@@ -302,12 +375,33 @@
    "nets": [
     "5G_DCHG",
     "5G_TPR_CT",
+    "5G_TPR_n",
     "CARD1_PERST_n",
     "CARD2_PERST_n",
     "CARD3_PERST_n",
     "EMCON_ON1",
     "EMCON_ON2",
-    "EMCON_ON3"
+    "EMCON_ON3",
+    "LORA_BUSY",
+    "LORA_DIO1",
+    "LORA_GO",
+    "LORA_MISO",
+    "LORA_MOSI",
+    "LORA_NRST",
+    "LORA_NSS",
+    "LORA_RXEN_G",
+    "LORA_SCLK",
+    "LORA_TXEN_G",
+    "RB_CTRL_H",
+    "RB_GO",
+    "RB_IEN_DRV",
+    "RB_RXD_H",
+    "ZBA_BSL_H",
+    "ZBA_RST_H",
+    "ZBA_RXD_H",
+    "ZBB_BSL_H",
+    "ZBB_RST_H",
+    "ZBB_RXD_H"
    ],
    "pattern": "(no declaration)",
    "rise_ns": null,
@@ -317,6 +411,9 @@
      "no signal-class declaration"
     ],
     "5G_TPR_CT": [
+     "no signal-class declaration"
+    ],
+    "5G_TPR_n": [
      "no signal-class declaration"
     ],
     "CARD1_PERST_n": [
@@ -336,17 +433,98 @@
     ],
     "EMCON_ON3": [
      "no signal-class declaration"
+    ],
+    "LORA_BUSY": [
+     "no signal-class declaration"
+    ],
+    "LORA_DIO1": [
+     "no signal-class declaration"
+    ],
+    "LORA_GO": [
+     "no signal-class declaration"
+    ],
+    "LORA_MISO": [
+     "no signal-class declaration"
+    ],
+    "LORA_MOSI": [
+     "no signal-class declaration"
+    ],
+    "LORA_NRST": [
+     "no signal-class declaration"
+    ],
+    "LORA_NSS": [
+     "no signal-class declaration"
+    ],
+    "LORA_RXEN_G": [
+     "no signal-class declaration"
+    ],
+    "LORA_SCLK": [
+     "no signal-class declaration"
+    ],
+    "LORA_TXEN_G": [
+     "no signal-class declaration"
+    ],
+    "RB_CTRL_H": [
+     "no signal-class declaration"
+    ],
+    "RB_GO": [
+     "no signal-class declaration"
+    ],
+    "RB_IEN_DRV": [
+     "no signal-class declaration"
+    ],
+    "RB_RXD_H": [
+     "no signal-class declaration"
+    ],
+    "ZBA_BSL_H": [
+     "no signal-class declaration"
+    ],
+    "ZBA_RST_H": [
+     "no signal-class declaration"
+    ],
+    "ZBA_RXD_H": [
+     "no signal-class declaration"
+    ],
+    "ZBB_BSL_H": [
+     "no signal-class declaration"
+    ],
+    "ZBB_RST_H": [
+     "no signal-class declaration"
+    ],
+    "ZBB_RXD_H": [
+     "no signal-class declaration"
     ]
    },
    "undecided_kind": {
     "5G_DCHG": "NO_DECLARATION",
     "5G_TPR_CT": "NO_DECLARATION",
+    "5G_TPR_n": "NO_DECLARATION",
     "CARD1_PERST_n": "NO_DECLARATION",
     "CARD2_PERST_n": "NO_DECLARATION",
     "CARD3_PERST_n": "NO_DECLARATION",
     "EMCON_ON1": "NO_DECLARATION",
     "EMCON_ON2": "NO_DECLARATION",
-    "EMCON_ON3": "NO_DECLARATION"
+    "EMCON_ON3": "NO_DECLARATION",
+    "LORA_BUSY": "NO_DECLARATION",
+    "LORA_DIO1": "NO_DECLARATION",
+    "LORA_GO": "NO_DECLARATION",
+    "LORA_MISO": "NO_DECLARATION",
+    "LORA_MOSI": "NO_DECLARATION",
+    "LORA_NRST": "NO_DECLARATION",
+    "LORA_NSS": "NO_DECLARATION",
+    "LORA_RXEN_G": "NO_DECLARATION",
+    "LORA_SCLK": "NO_DECLARATION",
+    "LORA_TXEN_G": "NO_DECLARATION",
+    "RB_CTRL_H": "NO_DECLARATION",
+    "RB_GO": "NO_DECLARATION",
+    "RB_IEN_DRV": "NO_DECLARATION",
+    "RB_RXD_H": "NO_DECLARATION",
+    "ZBA_BSL_H": "NO_DECLARATION",
+    "ZBA_RST_H": "NO_DECLARATION",
+    "ZBA_RXD_H": "NO_DECLARATION",
+    "ZBB_BSL_H": "NO_DECLARATION",
+    "ZBB_RST_H": "NO_DECLARATION",
+    "ZBB_RXD_H": "NO_DECLARATION"
    },
    "why": "no signal-class declaration names these nets, so neither their class nor their edge is known"
   },
@@ -620,17 +798,14 @@
    "basis": "a radio module's bootstrap-loader strap, read once at reset",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {
-    "CP2102N-A02-GQFN28 USB-UART bridge (ZBA)": [
-     "U16"
-    ],
-    "CP2102N-A02-GQFN28 USB-UART bridge (ZBB)": [
-     "U17"
-    ],
     "Ebyte E72-2G4M20S1E CC2652P (OpenThread RCP for Matter): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge": [
      "U14"
     ],
     "Ebyte E72-2G4M20S1E CC2652P (Zigbee coordinator): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge": [
      "U13"
+    ],
+    "SN74LVC2G07DBVR dual open-drain buffer (1 1A 6 1Y, 3 2A 4 2Y): both E72's BSL, pulled up only to the gated +3V3_ZB (SD-EMC-2, D4E-B)": [
+     "U541"
     ]
    },
    "net_edges": {},
@@ -969,8 +1144,8 @@
    "basis": "a module control line, a static level",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {
-    "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)": [
-     "U6"
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK P_EN only while RB_GO (SD-EMC-2, D4E-B)": [
+     "U539"
     ]
    },
    "net_edges": {},
@@ -1361,6 +1536,9 @@
    "basis": "an enable, a static level with an RC on it",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {
+    "74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): LORA_GO = E22_EN, one load on the enable (SD-EMC-2, D4E-B)": [
+     "U544"
+    ],
     "AP2112K-3.3 LDO: the private 3.3 V of controller A, its own branch off the device rail": [
      "U40"
     ],
@@ -1650,8 +1828,14 @@
     "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)": [
      "U6"
     ],
-    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), EMCON AND software (EMCON.md 4.4, W4B-D1)": [
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), EMCON AND software (EMCON.md 4.4, W4B-D1), through R532 (D4E-B)": [
      "U536"
+    ],
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK inputs allowed: I_EN AND I_BTD (SD-EMC-2, D4E-B)": [
+     "U537"
+    ],
+    "TPS3808G30DBVR supervisor on +5V_DEV watching +3V3_DEV: holds the RockBLOCK's I_EN low below 2.79 V (L4 on U536, D4E-B)": [
+     "U543"
     ]
    },
    "net_edges": {},
@@ -1934,8 +2118,8 @@
     "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls FULL_CARD_POWER_OFF# low at once (SD-EMC-1); channel 2 spare": [
      "U220"
     ],
-    "TPS3808G30DBVR supervisor on +3V3_S2A: holds FULL_CARD_POWER_OFF# low for 180 to 420 ms after the rail (RM520N Tpr >= 100 ms)": [
-     "U221"
+    "SN74LVC2G07DBVR dual open-drain buffer (1 1A 6 1Y, 3 2A 4 2Y): U221's Tpr hold repeated onto FULL_CARD_POWER_OFF# (D4E-F2); channel 2 spare": [
+     "U554"
     ]
    },
    "net_edges": {},
@@ -2396,9 +2580,7 @@
     "IOCA_RST_n",
     "IOCB_RST_n",
     "IOCC_RST_n",
-    "KSZ_RST_n",
-    "ZBA_RST_n",
-    "ZBB_RST_n"
+    "KSZ_RST_n"
    ],
    "bound_nets": [
     "5G_RST_n",
@@ -2409,9 +2591,7 @@
     "IOCA_RST_n",
     "IOCB_RST_n",
     "IOCC_RST_n",
-    "KSZ_RST_n",
-    "ZBA_RST_n",
-    "ZBB_RST_n"
+    "KSZ_RST_n"
    ],
    "class": "CLOCKED_DIGITAL",
    "critical_by_net": {
@@ -2423,19 +2603,11 @@
     "IOCA_RST_n": 0.0,
     "IOCB_RST_n": 0.0,
     "IOCC_RST_n": 0.0,
-    "KSZ_RST_n": 0.0,
-    "ZBA_RST_n": 0.0,
-    "ZBB_RST_n": 0.0
+    "KSZ_RST_n": 0.0
    },
    "critical_mm": 0.0,
    "document": null,
    "drivers": {
-    "CP2102N-A02-GQFN28 USB-UART bridge (ZBA)": [
-     "U16"
-    ],
-    "CP2102N-A02-GQFN28 USB-UART bridge (ZBB)": [
-     "U17"
-    ],
     "Ebyte E72-2G4M20S1E CC2652P (OpenThread RCP for Matter): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge": [
      "U14"
     ],
@@ -2447,6 +2619,12 @@
     ],
     "Quectel LG290P03AAMD GNSS RTK module: UART1 to the bridge, 1PPS to every slot, active antenna on the west-wall GNSS jack": [
      "U11"
+    ],
+    "SN74LVC2G07DBVR dual open-drain buffer (1 1A 6 1Y, 3 2A 4 2Y): ZBA's RX and RESET_N, pulled up only to the gated +3V3_ZB (SD-EMC-2, D4E-B)": [
+     "U540"
+    ],
+    "SN74LVC2G07DBVR dual open-drain buffer (1 1A 6 1Y, 3 2A 4 2Y): ZBB's RX and RESET_N, pulled up only to the gated +3V3_ZB (SD-EMC-2, D4E-B)": [
+     "U542"
     ],
     "STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
      "U41"
@@ -2482,9 +2660,7 @@
     "IOCA_RST_n",
     "IOCB_RST_n",
     "IOCC_RST_n",
-    "KSZ_RST_n",
-    "ZBA_RST_n",
-    "ZBB_RST_n"
+    "KSZ_RST_n"
    ],
    "maker_holds": [],
    "maker_nets": [],
@@ -2600,34 +2776,6 @@
      "maker_by": null,
      "maker_edge_ns": null,
      "source": "DISCRETE-MOSFET"
-    },
-    "ZBA_RST_n": {
-     "basis": "BOUND",
-     "bound_drivers": [
-      "EBYTE-E72-CC2652P: U13 pin 24 ZBA_RST_n",
-      "SILABS-CP2102N: U16 pin 24 RTS",
-      "FAR-BENCH-PROBE: beyond J_ZBDBG1 (far end B-BENCH): FAR-BENCH-PROBE"
-     ],
-     "by": "U13 pin 24 ZBA_RST_n",
-     "decided_by": "BOUND",
-     "edge_ns": 0.0,
-     "maker_by": null,
-     "maker_edge_ns": null,
-     "source": "EBYTE-E72-CC2652P"
-    },
-    "ZBB_RST_n": {
-     "basis": "BOUND",
-     "bound_drivers": [
-      "EBYTE-E72-CC2652P: U14 pin 24 ZBB_RST_n",
-      "SILABS-CP2102N: U17 pin 24 RTS",
-      "FAR-BENCH-PROBE: beyond J_ZBDBG2 (far end B-BENCH): FAR-BENCH-PROBE"
-     ],
-     "by": "U14 pin 24 ZBB_RST_n",
-     "decided_by": "BOUND",
-     "edge_ns": 0.0,
-     "maker_by": null,
-     "maker_edge_ns": null,
-     "source": "EBYTE-E72-CC2652P"
     }
    },
    "nets": [
@@ -2646,11 +2794,21 @@
    "pattern": "*_RST_n",
    "rise_ns": 0.0,
    "source": null,
-   "status": "DECIDED",
-   "undecided": {},
-   "undecided_kind": {},
+   "status": "PARTIAL",
+   "undecided": {
+    "ZBA_RST_n": [
+     "U540 SN74LVC2G07DBVR dual open-drain: no family in pcb_edge_rates.yaml"
+    ],
+    "ZBB_RST_n": [
+     "U542 SN74LVC2G07DBVR dual open-drain: no family in pcb_edge_rates.yaml"
+    ]
+   },
+   "undecided_kind": {
+    "ZBA_RST_n": "OTHER",
+    "ZBB_RST_n": "OTHER"
+   },
    "undecided_models": {},
-   "why": "no interface record covers the entry"
+   "why": "2 of 11 net(s) have a driver the data file does not decide"
   },
   {
    "basis": "a frequency-setting resistor node, a DC bias",
@@ -2695,38 +2853,20 @@
    "answered": {},
    "basis": "a UART receive line to a module",
    "bound_decides": [
-    "GNSS_RXD",
-    "RB_RXD",
-    "ZBA_RXD",
-    "ZBB_RXD"
+    "GNSS_RXD"
    ],
    "bound_nets": [
-    "GNSS_RXD",
-    "RB_RXD",
-    "ZBA_RXD",
-    "ZBB_RXD"
+    "GNSS_RXD"
    ],
    "class": "CLOCKED_DIGITAL",
    "critical_by_net": {
-    "GNSS_RXD": 0.0,
-    "RB_RXD": 0.0,
-    "ZBA_RXD": 0.0,
-    "ZBB_RXD": 0.0
+    "GNSS_RXD": 0.0
    },
    "critical_mm": 0.0,
    "document": null,
    "drivers": {
     "CP2102N-A02-GQFN28 USB-UART bridge (GNSS)": [
      "U15"
-    ],
-    "CP2102N-A02-GQFN28 USB-UART bridge (RB)": [
-     "U18"
-    ],
-    "CP2102N-A02-GQFN28 USB-UART bridge (ZBA)": [
-     "U16"
-    ],
-    "CP2102N-A02-GQFN28 USB-UART bridge (ZBB)": [
-     "U17"
     ],
     "Ebyte E72-2G4M20S1E CC2652P (OpenThread RCP for Matter): 7 DIO_12 RX, 8 DIO_13 TX, 10 DIO_15 BSL, 24 RESET_N; PCB antenna to the north edge": [
      "U14"
@@ -2736,13 +2876,19 @@
     ],
     "Quectel LG290P03AAMD GNSS RTK module: UART1 to the bridge, 1PPS to every slot, active antenna on the west-wall GNSS jack": [
      "U11"
+    ],
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK RXD only while RB_GO (SD-EMC-2, D4E-B)": [
+     "U538"
+    ],
+    "SN74LVC2G07DBVR dual open-drain buffer (1 1A 6 1Y, 3 2A 4 2Y): ZBA's RX and RESET_N, pulled up only to the gated +3V3_ZB (SD-EMC-2, D4E-B)": [
+     "U540"
+    ],
+    "SN74LVC2G07DBVR dual open-drain buffer (1 1A 6 1Y, 3 2A 4 2Y): ZBB's RX and RESET_N, pulled up only to the gated +3V3_ZB (SD-EMC-2, D4E-B)": [
+     "U542"
     ]
    },
    "layout_bound": [
-    "GNSS_RXD",
-    "RB_RXD",
-    "ZBA_RXD",
-    "ZBB_RXD"
+    "GNSS_RXD"
    ],
    "maker_holds": [],
    "maker_nets": [],
@@ -2761,45 +2907,6 @@
      "maker_by": null,
      "maker_edge_ns": null,
      "source": "QUECTEL-LG290P"
-    },
-    "RB_RXD": {
-     "basis": "BOUND",
-     "bound_drivers": [
-      "SILABS-CP2102N: U18 pin 26 TXD",
-      "FAR-ROCKBLOCK-9704: beyond J_RB9704 (far end ROCKBLOCK): FAR-ROCKBLOCK-9704"
-     ],
-     "by": "U18 pin 26 TXD",
-     "decided_by": "BOUND",
-     "edge_ns": 0.0,
-     "maker_by": null,
-     "maker_edge_ns": null,
-     "source": "SILABS-CP2102N"
-    },
-    "ZBA_RXD": {
-     "basis": "BOUND",
-     "bound_drivers": [
-      "EBYTE-E72-CC2652P: U13 pin 7 ZBA_RXD",
-      "SILABS-CP2102N: U16 pin 26 TXD"
-     ],
-     "by": "U13 pin 7 ZBA_RXD",
-     "decided_by": "BOUND",
-     "edge_ns": 0.0,
-     "maker_by": null,
-     "maker_edge_ns": null,
-     "source": "EBYTE-E72-CC2652P"
-    },
-    "ZBB_RXD": {
-     "basis": "BOUND",
-     "bound_drivers": [
-      "EBYTE-E72-CC2652P: U14 pin 7 ZBB_RXD",
-      "SILABS-CP2102N: U17 pin 26 TXD"
-     ],
-     "by": "U14 pin 7 ZBB_RXD",
-     "decided_by": "BOUND",
-     "edge_ns": 0.0,
-     "maker_by": null,
-     "maker_edge_ns": null,
-     "source": "EBYTE-E72-CC2652P"
     }
    },
    "nets": [
@@ -2811,11 +2918,25 @@
    "pattern": "*_RXD",
    "rise_ns": 0.0,
    "source": null,
-   "status": "DECIDED",
-   "undecided": {},
-   "undecided_kind": {},
+   "status": "PARTIAL",
+   "undecided": {
+    "RB_RXD": [
+     "U538 SN74LVC1G08DBVR AND (1: no family in pcb_edge_rates.yaml"
+    ],
+    "ZBA_RXD": [
+     "U540 SN74LVC2G07DBVR dual open-drain: no family in pcb_edge_rates.yaml"
+    ],
+    "ZBB_RXD": [
+     "U542 SN74LVC2G07DBVR dual open-drain: no family in pcb_edge_rates.yaml"
+    ]
+   },
+   "undecided_kind": {
+    "RB_RXD": "OTHER",
+    "ZBA_RXD": "OTHER",
+    "ZBB_RXD": "OTHER"
+   },
    "undecided_models": {},
-   "why": "no interface record covers the entry"
+   "why": "3 of 4 net(s) have a driver the data file does not decide"
   },
   {
    "answered": {},
@@ -2878,8 +2999,8 @@
     "Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
      "U32A"
     ],
-    "Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1: TXEN GPIO4, RXEN GPIO5, DIO1 GPIO24, BUSY GPIO23, NRST GPIO26; EU power cap in meshtasticd": [
-     "U12"
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): the E22's RXEN only while its supply is enabled (SD-EMC-2, D4E-B)": [
+     "U545"
     ]
    },
    "net_edges": {},
@@ -3209,6 +3330,9 @@
    "drivers": {
     "PCA9555PW 0x25: inputs (faults, RockBLOCK status) and spares": [
      "U7"
+    ],
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK inputs allowed: I_EN AND I_BTD (SD-EMC-2, D4E-B)": [
+     "U537"
     ]
    },
    "net_edges": {},
@@ -3811,8 +3935,8 @@
     "Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
      "U32A"
     ],
-    "Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1: TXEN GPIO4, RXEN GPIO5, DIO1 GPIO24, BUSY GPIO23, NRST GPIO26; EU power cap in meshtasticd": [
-     "U12"
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): the E22's TXEN only while its supply is enabled (SD-EMC-2, D4E-B)": [
+     "U546"
     ]
    },
    "net_edges": {},
@@ -6751,7 +6875,7 @@
     "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2)": [
      "U504"
     ],
-    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), EMCON AND software (EMCON.md 4.4, W4B-D1)": [
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), EMCON AND software (EMCON.md 4.4, W4B-D1), through R532 (D4E-B)": [
      "U536"
     ],
     "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2)": [
@@ -13173,54 +13297,56 @@
    "basis": "an SPI bus to a radio module, a few megahertz",
    "bound_decides": [
     "SPI3_CE0",
-    "SPI3_CE1",
     "SPI3_IO23",
     "SPI3_IO24",
-    "SPI3_IO26",
-    "SPI3_MISO",
-    "SPI3_MOSI",
-    "SPI3_SCLK"
+    "SPI3_MISO"
    ],
    "bound_nets": [
     "SPI3_CE0",
-    "SPI3_CE1",
     "SPI3_IO23",
     "SPI3_IO24",
-    "SPI3_IO26",
-    "SPI3_MISO",
-    "SPI3_MOSI",
-    "SPI3_SCLK"
+    "SPI3_MISO"
    ],
    "class": "CLOCKED_DIGITAL",
    "critical_by_net": {
     "SPI3_CE0": 0.0,
-    "SPI3_CE1": 0.0,
     "SPI3_IO23": 0.0,
     "SPI3_IO24": 0.0,
-    "SPI3_IO26": 0.0,
-    "SPI3_MISO": 0.0,
-    "SPI3_MOSI": 0.0,
-    "SPI3_SCLK": 0.0
+    "SPI3_MISO": 0.0
    },
    "critical_mm": 0.0,
    "document": null,
    "drivers": {
+    "74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the E22's BUSY to the host, no host pin on the module (SD-EMC-2, D4E-B)": [
+     "U552"
+    ],
+    "74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the E22's DIO1 to the host, no host pin on the module (SD-EMC-2, D4E-B)": [
+     "U551"
+    ],
+    "74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the E22's MISO to the host, no host pin on the module (SD-EMC-2, D4E-B)": [
+     "U553"
+    ],
     "Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
      "U32A"
     ],
-    "Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1: TXEN GPIO4, RXEN GPIO5, DIO1 GPIO24, BUSY GPIO23, NRST GPIO26; EU power cap in meshtasticd": [
-     "U12"
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): the E22's MOSI only while its supply is enabled (SD-EMC-2, D4E-B)": [
+     "U548"
+    ],
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): the E22's NRST only while its supply is enabled (SD-EMC-2, D4E-B)": [
+     "U547"
+    ],
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): the E22's NSS only while its supply is enabled (SD-EMC-2, D4E-B)": [
+     "U550"
+    ],
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): the E22's SCK only while its supply is enabled (SD-EMC-2, D4E-B)": [
+     "U549"
     ]
    },
    "layout_bound": [
     "SPI3_CE0",
-    "SPI3_CE1",
     "SPI3_IO23",
     "SPI3_IO24",
-    "SPI3_IO26",
-    "SPI3_MISO",
-    "SPI3_MOSI",
-    "SPI3_SCLK"
+    "SPI3_MISO"
    ],
    "maker_holds": [],
    "maker_nets": [],
@@ -13240,103 +13366,47 @@
      "maker_edge_ns": null,
      "source": "RPI-CM5-RECEPTACLE"
     },
-    "SPI3_CE1": {
-     "basis": "BOUND",
-     "bound_drivers": [
-      "EBYTE-E22-SX1262: U12 pin 19 NSS",
-      "RPI-CM5-RECEPTACLE: U32A pin 37 GPIO7",
-      "FAR-BENCH-PROBE: beyond J_SPI3 (far end B-BENCH): FAR-BENCH-PROBE"
-     ],
-     "by": "U12 pin 19 NSS",
-     "decided_by": "BOUND",
-     "edge_ns": 0.0,
-     "maker_by": null,
-     "maker_edge_ns": null,
-     "source": "EBYTE-E22-SX1262"
-    },
     "SPI3_IO23": {
      "basis": "BOUND",
      "bound_drivers": [
-      "EBYTE-E22-SX1262: U12 pin 14 BUSY",
       "RPI-CM5-RECEPTACLE: U32A pin 47 GPIO23",
+      "LVC1G34-BUFFER: U552 pin 4 SPI3_IO23",
       "FAR-BENCH-PROBE: beyond J_SPI3 (far end B-BENCH): FAR-BENCH-PROBE"
      ],
-     "by": "U12 pin 14 BUSY",
+     "by": "U32A pin 47 GPIO23",
      "decided_by": "BOUND",
      "edge_ns": 0.0,
      "maker_by": null,
      "maker_edge_ns": null,
-     "source": "EBYTE-E22-SX1262"
+     "source": "RPI-CM5-RECEPTACLE"
     },
     "SPI3_IO24": {
      "basis": "BOUND",
      "bound_drivers": [
-      "EBYTE-E22-SX1262: U12 pin 13 DIO1",
       "RPI-CM5-RECEPTACLE: U32A pin 45 GPIO24",
+      "LVC1G34-BUFFER: U551 pin 4 SPI3_IO24",
       "FAR-BENCH-PROBE: beyond J_SPI3 (far end B-BENCH): FAR-BENCH-PROBE"
      ],
-     "by": "U12 pin 13 DIO1",
+     "by": "U32A pin 45 GPIO24",
      "decided_by": "BOUND",
      "edge_ns": 0.0,
      "maker_by": null,
      "maker_edge_ns": null,
-     "source": "EBYTE-E22-SX1262"
-    },
-    "SPI3_IO26": {
-     "basis": "BOUND",
-     "bound_drivers": [
-      "EBYTE-E22-SX1262: U12 pin 15 NRST",
-      "RPI-CM5-RECEPTACLE: U32A pin 24 GPIO26",
-      "FAR-BENCH-PROBE: beyond J_SPI3 (far end B-BENCH): FAR-BENCH-PROBE"
-     ],
-     "by": "U12 pin 15 NRST",
-     "decided_by": "BOUND",
-     "edge_ns": 0.0,
-     "maker_by": null,
-     "maker_edge_ns": null,
-     "source": "EBYTE-E22-SX1262"
+     "source": "RPI-CM5-RECEPTACLE"
     },
     "SPI3_MISO": {
      "basis": "BOUND",
      "bound_drivers": [
-      "EBYTE-E22-SX1262: U12 pin 16 MISO",
       "RPI-CM5-RECEPTACLE: U32A pin 40 GPIO9",
+      "LVC1G34-BUFFER: U553 pin 4 SPI3_MISO",
       "FAR-BENCH-PROBE: beyond J_SPI3 (far end B-BENCH): FAR-BENCH-PROBE"
      ],
-     "by": "U12 pin 16 MISO",
+     "by": "U32A pin 40 GPIO9",
      "decided_by": "BOUND",
      "edge_ns": 0.0,
      "maker_by": null,
      "maker_edge_ns": null,
-     "source": "EBYTE-E22-SX1262"
-    },
-    "SPI3_MOSI": {
-     "basis": "BOUND",
-     "bound_drivers": [
-      "EBYTE-E22-SX1262: U12 pin 17 MOSI",
-      "RPI-CM5-RECEPTACLE: U32A pin 44 GPIO10",
-      "FAR-BENCH-PROBE: beyond J_SPI3 (far end B-BENCH): FAR-BENCH-PROBE"
-     ],
-     "by": "U12 pin 17 MOSI",
-     "decided_by": "BOUND",
-     "edge_ns": 0.0,
-     "maker_by": null,
-     "maker_edge_ns": null,
-     "source": "EBYTE-E22-SX1262"
-    },
-    "SPI3_SCLK": {
-     "basis": "BOUND",
-     "bound_drivers": [
-      "EBYTE-E22-SX1262: U12 pin 18 SCK",
-      "RPI-CM5-RECEPTACLE: U32A pin 38 GPIO11",
-      "FAR-BENCH-PROBE: beyond J_SPI3 (far end B-BENCH): FAR-BENCH-PROBE"
-     ],
-     "by": "U12 pin 18 SCK",
-     "decided_by": "BOUND",
-     "edge_ns": 0.0,
-     "maker_by": null,
-     "maker_edge_ns": null,
-     "source": "EBYTE-E22-SX1262"
+     "source": "RPI-CM5-RECEPTACLE"
     }
    },
    "nets": [
@@ -13352,11 +13422,29 @@
    "pattern": "SPI*_*",
    "rise_ns": 0.0,
    "source": null,
-   "status": "DECIDED",
-   "undecided": {},
-   "undecided_kind": {},
+   "status": "PARTIAL",
+   "undecided": {
+    "SPI3_CE1": [
+     "U550 SN74LVC1G08DBVR AND (1: no family in pcb_edge_rates.yaml"
+    ],
+    "SPI3_IO26": [
+     "U547 SN74LVC1G08DBVR AND (1: no family in pcb_edge_rates.yaml"
+    ],
+    "SPI3_MOSI": [
+     "U548 SN74LVC1G08DBVR AND (1: no family in pcb_edge_rates.yaml"
+    ],
+    "SPI3_SCLK": [
+     "U549 SN74LVC1G08DBVR AND (1: no family in pcb_edge_rates.yaml"
+    ]
+   },
+   "undecided_kind": {
+    "SPI3_CE1": "OTHER",
+    "SPI3_IO26": "OTHER",
+    "SPI3_MOSI": "OTHER",
+    "SPI3_SCLK": "OTHER"
+   },
    "undecided_models": {},
-   "why": "no interface record covers the entry"
+   "why": "4 of 8 net(s) have a driver the data file does not decide"
   },
   {
    "answered": {

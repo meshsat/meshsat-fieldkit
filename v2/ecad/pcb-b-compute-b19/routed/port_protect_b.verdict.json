@@ -87,12 +87,12 @@
   "board": "b",
   "intent": {
    "path": "pcb-b-compute-b19/out/pcb-b-compute-intent.json",
-   "sha256_16": "9fd37fd39026c102"
+   "sha256_16": "84d2e641a3db261a"
   },
   "netlist": {
-   "content16": "b9dbb9c4a430d108",
+   "content16": "31190f043dc21cfa",
    "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
-   "sha256_16": "97823ef1171a61ce"
+   "sha256_16": "5b89d5ef6fe0299a"
   },
   "port_reviews": {
    "path": "tools/pcb_port_reviews.json",
@@ -116,12 +116,12 @@
  },
  "tool": "port_protect_b",
  "tools": {
-  "git_head": "958a7de7a15f",
-  "tools_tree_sha": "7a55e9ef29ec7734"
+  "git_head": "d75384201515",
+  "tools_tree_sha": "254a65b96010ac03"
  },
- "ts": "2026-09-29T00:16:14Z",
+ "ts": "2026-09-29T11:46:53Z",
  "verdict": "INCONCLUSIVE",
- "version": "958a7de7a15f",
+ "version": "d75384201515",
  "writer": {
   "file": "port_protect.py",
   "sha16": "7acd5333fc59f8d0"

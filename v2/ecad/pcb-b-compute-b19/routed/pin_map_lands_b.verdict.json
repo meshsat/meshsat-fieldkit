@@ -18,17 +18,17 @@
  },
  "counts": {
   "failures": 0,
-  "judged": 1280,
+  "judged": 1335,
   "merged_pad_pins": 0,
   "unreadable": 0
  },
- "denominator": 1280,
+ "denominator": 1335,
  "evidence": [],
  "inputs": {
   "board": "b",
   "netlist": {
    "path": "out/pcb-b-compute.net",
-   "sha256_16": "97823ef1171a61ce"
+   "sha256_16": "5b89d5ef6fe0299a"
   }
  },
  "missing_input": null,
@@ -48,12 +48,12 @@
  },
  "tool": "pin_map_lands_b",
  "tools": {
-  "git_head": "958a7de7a15f",
-  "tools_tree_sha": "7a55e9ef29ec7734"
+  "git_head": "d75384201515",
+  "tools_tree_sha": "254a65b96010ac03"
  },
- "ts": "2026-09-29T00:15:47Z",
+ "ts": "2026-09-29T11:46:24Z",
  "verdict": "PASS",
- "version": "958a7de7a15f",
+ "version": "d75384201515",
  "writer": {
   "file": "pin_map_lands.py",
   "sha16": "89d2ad7c2bab8ba0"

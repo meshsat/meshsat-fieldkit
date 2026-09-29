@@ -4,7 +4,7 @@
   "answered_nets": 10,
   "bound_decided_nets": 23,
   "bound_edge_nets": 29,
-  "classes": 47,
+  "classes": 48,
   "contradicted_nets": 0,
   "decided_nets": 33,
   "layout_bound_nets": 23,
@@ -14,11 +14,11 @@
   "may_be_long_nets": 33,
   "models_absent": 0,
   "models_asked": 6,
-  "signal_nets": 134,
+  "signal_nets": 135,
   "unasked_part_nets": 0,
   "undecided_model_absent_nets": 0,
-  "undecided_nets": 0,
-  "undecided_no_declaration_nets": 0,
+  "undecided_nets": 1,
+  "undecided_no_declaration_nets": 1,
   "undecided_other_nets": 0
  },
  "inputs": {
@@ -119,7 +119,7 @@
   },
   "far_netlist_b": {
    "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
-   "sha256_16": "97823ef1171a61ce"
+   "sha256_16": "5b89d5ef6fe0299a"
   },
   "far_netlist_d": {
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
@@ -131,7 +131,7 @@
   },
   "intent": {
    "path": "pcb-c-display-c8/out/pcb-c-display-intent.json",
-   "sha256_16": "03af8453948d391c"
+   "sha256_16": "d321f2979e0c4244"
   },
   "model_1": {
    "path": "v2/vendor/st/ibis/stm32h742_743_750_753_lqfp100.ibs",
@@ -173,9 +173,9 @@
    "state": "PRESENT"
   },
   "netlist": {
-   "content16": "ebde053efc0a3906",
+   "content16": "424a8b6ee5851775",
    "path": "pcb-c-display-c8/out/pcb-c-display.net",
-   "sha256_16": "fef4df255c00f4db"
+   "sha256_16": "87b69472ac83ca5a"
   },
   "project": {
    "path": "pcb-c-display-c8/pcb-c-display.kicad_pro",
@@ -198,6 +198,31 @@
  },
  "notes": [],
  "rows": [
+  {
+   "basis": "",
+   "class": "UNKNOWN",
+   "drivers": {
+    "74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3)": [
+     "U9"
+    ]
+   },
+   "net_edges": {},
+   "nets": [
+    "EMCON_HW_DRV"
+   ],
+   "pattern": "(no declaration)",
+   "rise_ns": null,
+   "status": "UNDECIDED",
+   "undecided": {
+    "EMCON_HW_DRV": [
+     "no signal-class declaration"
+    ]
+   },
+   "undecided_kind": {
+    "EMCON_HW_DRV": "NO_DECLARATION"
+   },
+   "why": "no signal-class declaration names these nets, so neither their class nor their edge is known"
+  },
   {
    "basis": "an indicator LED anode: a static level or a blink of a few hertz",
    "class": "LOW_SPEED_OR_DC",
@@ -467,9 +492,6 @@
    "basis": "the emission-control line, a static level",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {
-    "74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3)": [
-     "U9"
-    ],
     "74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): the panel controller's one-way copy of EMCON_HW (EMCON_RD, to GPIO21 through R46)": [
      "U13"
     ],
