@@ -193,3 +193,12 @@ No box, no agent, no other model. No gate, `rules_status.py` or `rules_render.py
   - In this tree `rules_render.py --requirements --check` refuses and `rules_lib.py requirements` reads 4 errors, the
     rebinds the integrator's `apply_registry_s122_r4.py` writes (REQ-005, CFL-010, CFL-013 on V2-SPEC.md; CFL-014 on
     OPERATING-ENVELOPE.md); the replay runs them after it.
+- 22:42 Committed `19bddf75` behind the pre-commit PASSED line. Replay on a throwaway clone of it (22:43 to 22:49):
+  the eight outputs byte identical; `apply_docs_s122_r6.py` from `a6429e66`'s V2-SPEC.md gives the tip and refuses a
+  second run; `apply_registry_s122_r4.py` rebound 5 records and refused a second run; `rules_lib.py requirements` 144
+  records, 0 errors, 0 warnings; the tests 69 passed and 2 failed before the trace page's render, 71 passed after;
+  with a committed fixture check the closure refused nine file mutants (the 1 W planted in line 47 with and without a
+  judgement, the forward test off, the check's AP64500 parenthesis, an envelope range, a judgement without its
+  figures, twelve float clamps, the rails test off, a changed outline); `test_close_s122.py` ALL PASS; the closure
+  refused the fixture while staged, closed S-122 with it committed (CFL-016 PASS; S-42, S-123, S-124 open) and refused
+  a second run; after it 0 errors, 72 passed, `claims_check` PASS 91 of 91. The clone is deleted.

@@ -398,6 +398,28 @@ statements), and S-123.
     the absent rule holds through its 0 UNJUDGED;
   * needs the check committed at HEAD, starting `mergeable: yes`, and naming every document and `verdicts.out`;
   * then closes S-122 and sets CFL-016 to PASS.
+* **Round 6, replayed on a throwaway clone of `19bddf75` (deleted after):**
+  * the eight outputs reproduce byte for byte (`inventory.out`, `verdicts.out`, `-base` at `e57a7365`, `-set14` at
+    `1bafab8c`, `verdicts-r4.out` at `edead832`, `verdicts-r5.out` at `a6429e66`);
+  * `apply_docs_s122_r6.py` refuses on the tip; with V2-SPEC.md checked out from `a6429e66` it reads V2-SPEC.md outside
+    the baselines, writes 2 edits after 9 assertions and the tree equals the tip; a second run refuses;
+  * `apply_registry_s122_r4.py` rebound 5 records (CFL-010, CFL-013, CFL-014, CFL-016, REQ-005) and refused a second
+    run; `rules_lib.py requirements`: 144 records, 0 errors, 0 warnings; `rules_lib.py`: 59 rules, 0 errors;
+    `test_envelope_data` with `test_requirements`: 69 passed and 2 failed (the trace page) before
+    `rules_render.py --requirements`, 71 passed after;
+  * with a fixture check committed (not filed; the marker and the eight lines), the closure refused nine mutants of
+    the files: line 47 with the 1 W planted back, its judgement moved to the new text and the outputs regenerated (at
+    (b), STALE) and without a judgement (UNJUDGED); the forward test off (at (e), the TPA6132A2 named a codec reads
+    TRUE); the check's "(AP64500, EMCON gated)" on line 81 with its judgement moved (STALE); OPERATING-ENVELOPE.md
+    line 83 at -40 to +85 C with its judgement moved (at (f), no assertion covers it); line 47's judgement without its
+    `figures_ok` (at (f), 2 W and 30 W uncovered); line 86's twelve float clamps and line 82's 330 x 210 mm with their
+    judgements moved (STALE); the rails test off (at (e), round 5's A22 fixture);
+  * `test_close_s122.py`: ALL PASS; the closure refused the fixture while only staged, closed S-122 with it committed
+    (1004 sentences, 0 STALE, 0 UNJUDGED; CFL-016 PASS; the closing evidence names `apply_docs_s122_r5.py` and
+    `apply_docs_s122_r6.py`; S-42, S-123 and S-124 still open) and refused a second run; after it
+    `rules_lib.py requirements` 0 errors, the tests 72 passed, `claims_check` PASS, 91 of 91.
+  * `rules_render.py --check` reads `PCB-ETA.md` out of date on the branch and on the clone alike, a page this stream
+    does not touch; the replay rendered only the trace page.
 * **Round 5, replayed on a throwaway clone of `8d7874f5` (deleted after):**
   * the seven outputs reproduce byte for byte (`inventory.out`, `verdicts.out`, `-base` at `e57a7365`, `-set14` at
     `1bafab8c`, `verdicts-r4.out` at `edead832`);
