@@ -10,29 +10,36 @@ owner decision required.
 
 ## The answer in brief
 
+**Corrected 29 September 2026 after the independent AI check (`_scratch/chk-a1mech/CHECK.md`, acceptable: no): its B1 and M1
+to M11 are answered in place; section 11 lists each.**
+
 1. **48 cells do not fit in the lid with both the QMX set and a tablet bracket.** At the worst of Peli's figures (44.39 from
-   the face top to the lid's ceiling) the lid holds **35 cell places with both kept (4S8P, 13 cells or two groups of four
-   short of 4S12P)**; the kit's total would be 4S14P, under section 9c's 4S15P floor (in a 200 W window 4S14P met M1 only with a 20 kWp array
-   in the independent review's re-check), so M1 is not met on section 9's model with any array the record examines.
-2. **Two arrangements fit 4S12P, each at the cost of one owner-approved lid function:** B keeps HF and takes the tablet
-   bracket out of the lid (**56 places, 4S14P**); C keeps an 8 inch tablet and takes the QMX set out of the lid (**58 places,
-   4S14P**). A 10 inch tablet fits only with HF out, and then gives 47 places (4S11P), one cell short. With neither: 77
-   places (4S19P). **That choice is the owner decision** (section 3 below): it removes an item he approved on
-   6 September 2026, and it reopens D-01, which defers HF, the tablet bracket and a second pack from prototype 1.
-3. The module that does it: the cells lie flat on a bonded 5052 lid plate, in the ruled base block's construction (A06:
-   cells touching, 0.5 wrap, 1.0 end joints), three slices end to end along X with a **second layer nested in the grooves**
-   (a module 40.06 deep) wherever the face under it stands 0.69 or less; one layer (24.00 deep) elsewhere. Every face row
-   meets 1.0 at the worst; the tightest are the nested layer over the Xenarc window (3.10) and over the battery bar LEDs
-   (2.40), OPEN at the sensitivity reading, as the r2 set's knob rows are. A boolean check on the solids agrees with the
-   arithmetic for all five arrangements and fails on both controls (`cad/lid_pack_a1_cad.out`).
+   the face top to the lid's ceiling) the lid holds **39 cell places with both kept: 4S9P, 4S15P with the base**. (The first
+   issue read 35: an unstated rule kept P2 off the tablet's plan; it is dropped, B1.) On a1elec's two-pack model, run by the
+   coordinator for a 4S9P lid (September reference day, 200 W stage, the lid's charge current scaled per string): **with the
+   lid at its 13.23 C basis M1 is NOT met at 400, 650 or 1000 Wp** (164.8, 110.9 and 41.7 Wh unserved); with the lid at +20 C
+   it is not met at 400 Wp (39.7 Wh unserved) and is met at 650 Wp (2.0 Wh left) and 1000 Wp (29.4 Wh left). So both kept
+   carries M1 neither at the lid's temperature basis nor at A(i)'s 400 Wp. Nothing found reaches 48 with both kept.
+2. **What fits 4S12P costs one owner-approved lid function:** B keeps HF and takes the tablet bracket out of the lid (**56
+   places, 4S14P**); C keeps an 8 inch tablet and takes the QMX set out of the lid (**61 places, 4S15P**). A 10 inch tablet
+   fits only with HF out, and then exactly 48 places (4S12P). With neither: 77 places (4S19P). **That choice is the owner
+   decision** (section 3): it removes an item he approved on 6 September 2026, and it reopens D-01, which defers HF, the
+   tablet bracket and a second pack from prototype 1.
+3. The module that does it: the cells lie flat on a bonded 5052 lid plate (the plate follows the slices), in the ruled base
+   block's construction (A06: cells touching, 0.5 wrap, 1.0 end joints), three slices end to end along X with a **second
+   layer nested in the grooves** (a module 40.06 deep) wherever the worst margin over the face part under it stays 1.0 or more
+   (parts up to 2.90 high: over the LEDs it reads 2.40); one layer (24.00 deep) elsewhere. Every face row meets 1.0 at the
+   worst; the tightest are the nested layer over the Xenarc window (3.10) and over the LEDs (2.40), OPEN at the sensitivity
+   reading. The counts hold at both ends of a sensitivity reading of the module's inferred allowances. A boolean check on the
+   solids agrees with the arithmetic for all five arrangements and fails on both controls (`cad/lid_pack_a1_cad.out`).
 4. The hinge harness: 12 AWG, assumed 10 A continuous and 18 A for 60 s, a free lead of 169.7 between two ties 150 apart
-   along the back channel, bending at about R 94 to R 102 over the lid's travel; disconnect (XT60 and XH) beside P2 in the
-   lid. **The crossing of the sealed face plate is not designed** (S-95, EQ-31, which the QMX leads already need).
-5. Stability: the lid grows from about 1.4 kg (shell and QMX set) to 4.9 kg. The open case stands on level ground up to 120 degrees of opening
-   in every swept case and **tips from 135 degrees with a light base** (7 kg, its centre of mass back and high). Peli's stop
-   angle is in no held file. **Fix (the session's): a lid stay at 100 degrees**, a webbing strap on two bonded anchors,
-   about EUR 10 (ESTIMATE); with it the open case stands on a back slope of 10.0 degrees at the worst of the sweep (5.7 if
-   Peli's feet stand 14.5 further in than the flat bottom's edge; the feet are in no Peli file).
+   along the back channel, bending at about R 94 to R 102 over the lid's travel; disconnect (XT60 and XH) in the back channel
+   beside the module. **The crossing of the sealed face plate is not designed** (S-95, EQ-31, which the QMX leads need too).
+5. Stability: the lid grows from about 1.4 kg (shell and QMX set) to 4.9 kg in B and 5.5 kg in C (every place filled). The
+   open case stands on level ground up to 120 degrees of opening in B's every swept case (110 in C) and tips beyond it with a
+   light base. Peli's stop angle is in no held file. **Fix (the session's): a lid stay at 100 degrees**, sized at 56 to 63 N
+   static. With it the open case stands on a back slope of 9.5 degrees (B) or 7.0 (C) at the worst of the full sweep, 3.6
+   (B) if Peli's feet stand 14.5 inboard; a backward push of 9 to 13 N at the QMX's height tips the lightest swept case.
 6. The base pockets: section 8's 4S6P keeps every east row (M4a 1.85 OPEN, M4b, M4c, M6 MET, M5 1.77 OPEN) and mirrors them
    at the west; the west block's top clears board B's C33 by 3.99 at the worst (OPEN). **The west RF jumpers fail as
    assumed:** five of seven cables fall onto the west block, and the only drop past it is its 2.0 gap to board A, under one
@@ -46,7 +53,7 @@ owner decision required.
 | `lid_pack_a1.out` | its record (sections 1 to 5), regenerated by `python3 v2/cad/lid_pack_a1.py v2/docs/records/a1mech/lid_pack_a1.out` |
 | `v2/cad/lid_pack_a1_drawing.py`, `lid-pack-a1-drawings.pdf` | the drawing set, six A3 sheets from the generator (A1-1 arrangement B in plan, A1-2 sections, A1-3 the arrangements and the decision, A1-4 the hinge harness, A1-5 mass and stability, A1-6 the base pockets); read back as images after rendering |
 | `v2/cad/lid_pack_a1_cad.py`, `cad/` | the solids (build123d 0.13.0): `lid-pack-a1-B-module.step`/`.stl` (plate, 56 cells at the sheet's maxima, P2's envelope, case frame, lid closed, ceiling Z 154.44), `lid-pack-a1-B-envelope.step` (the zones the face rows are judged on), `lid_pack_a1_cad.out` (the boolean check) |
-| `DECISION-A1.md` | the owner's decision sheet, drafted (274 words; the integrator's to send) |
+| `DECISION-A1.md` | the owner's decision sheet, drafted (under 300 words counted by `wc -w` over the whole file; the integrator's to send) |
 | `LOG.md` | the stream's running log |
 
 ## 1. The lid, at Peli's figures (`lid_pack_a1.out` section 1)
@@ -60,6 +67,8 @@ owner decision required.
   `v2/vendor/peli/1450/1451-931-top.faces.txt`).
 - **Gasket land:** the lid seals on the base's tongue outboard of the cavity (X 195.56 to 201.96, CASE-MARGINS 2.3); no lid
   item reaches the cavity walls, so none bears on the seal.
+- **Plan clearance at the 28.00 guard caps** (M3): the module's west edge and the tablet bracket stand 1.0 beyond the caps' edge
+  and the plan allowance (X -140.94), as every Z row keeps 1.0; no count moves.
 - **Plan allowance** between a lid item and a face part: 1.06 (the lid's place on the base 0.76 in the case class, and a
   bonded plate set by a printed locator 0.30; both INFERRED). Minimum clearance 1.0, as every face-room row of the r2 record.
 
@@ -89,7 +98,9 @@ owner decision required.
   taken wherever the face under them allows. Each slice's south edge is set by the face (the headset jacks, TBD, stop the west
   slice at Y -75.07; the other slices run to Y -112.17). No holder brackets: at a 20 mm holder pitch a single layer held about
   33 cells beside the QMX set.
-- **Stack from the ceiling:** DP8005 bond 0.20, 5052-H32 lid plate 2.00 (the r2 set's recipe; no hole in the case), the block
+- **Stack from the ceiling:** DP8005 bond 0.20, 5052-H32 lid plate 2.00 (the r2 set's recipe; no hole in the case; one
+  rectangle per slice from the slice's south edge, so no plate stands over the TBD headset jacks, M2, and the plate is judged
+  as a zone of its own), the block
   (19.55 one layer, 35.61 two), a PORON 4701-30 pad 1.00, a cover 1.25 (a printed UL94 V-0 class shell 1.0 with 0.25
   insulation, INFERRED). **Depth 24.00 (one layer), 40.06 (two).** The module's own allowances (bond, plate, standoff, cover)
   0.43 in all, INFERRED.
@@ -97,9 +108,10 @@ owner decision required.
   parallel strips and the group links lie in those joints and in the two 7.0 end bays, where the balance taps leave. The map
   of four series groups is the electrical stream's (the current in each link too).
 - **P2**, the lid pack's protection board (**ASSUMPTION** until `fnd/a1elec` reports): board P's outline, 44 x 70, and its
-  tallest part 16.17 (Keystone 3568 with its blade, `packfit_west.out`), on 3.0 standoffs: 22.97 deep, inside the one-layer
-  depth. It is placed at the module corner that costs the fewest cells (in B the west slice, where the XFRAME screws already
-  refuse layer-2 places: 6 cells).
+  tallest part 16.17 (Keystone 3568 with its blade, `packfit_west.out`), on 2.5 standoffs: 22.47 deep, 0.28 inside the
+  cover's inner face (22.75; the first issue's 3.0 standoffs reached 0.22 into the cover, M1). It is placed at the module corner
+  that costs the fewest cells, over the tablet's plan where one is kept (the tablet hangs below the cover; B1); in B the west
+  slice, where the XFRAME screws already refuse layer-2 places: 6 cells.
 - **Insulation:** the block's wrap on the plate side, the 0.25 liner in the cover, fish paper at every joint.
 - **Hold-down:** the block bonded to the plate (cell glue and a fillet, the adhesive TBD: 49 N a cell at 100 g), the cover on
   eight M3 standoffs in the end bays as a catch (343 N each at 100 g if the glue lets go), the pad's preload. The module is
@@ -116,20 +128,20 @@ owner decision required.
 
 | | Lid functions kept | Places | Lid pack | With the base 4S6P | Face rows at the worst |
 |---|---|---|---|---|---|
-| A | HF (QMX r2) and an 8 inch tablet | 35 | 4S8P | 4S14P | 0 NOT MET, 10 OPEN |
+| A | HF (QMX r2) and an 8 inch tablet | 39 | 4S9P | 4S15P | 0 NOT MET, 16 OPEN |
 | B | HF (QMX r2); the tablet bracket out of the lid | 56 | 4S14P (4S12P used, 8 spare) | 4S18P as instructed (4S20P possible) | 0 NOT MET, 26 OPEN |
-| C | an 8 inch tablet; the QMX set out of the lid | 58 | 4S14P (4S12P used, 10 spare) | 4S18P as instructed (4S20P possible) | 0 NOT MET, 14 OPEN |
-| C10 | a 10 inch tablet; the QMX set out of the lid | 47 | 4S11P | 4S17P | 0 NOT MET, 14 OPEN |
+| C | an 8 inch tablet; the QMX set out of the lid | 61 | 4S15P (4S12P used, 13 spare) | 4S18P as instructed (4S21P possible) | 0 NOT MET, 18 OPEN |
+| C10 | a 10 inch tablet; the QMX set out of the lid | 48 | 4S12P | 4S18P | 0 NOT MET, 15 OPEN |
 | D | neither | 77 | 4S19P | 4S25P | 0 NOT MET, 44 OPEN |
 
 **Other constructions, counted by hand (ESTIMATE, not in the generator):** holder brackets at a 20 mm pitch, one layer 21.9
 deep, hold about 33 cells beside the QMX set with no tablet; the cells' axis along Y (three rows of 66.25 across the lid's
-depth) gives arrangement A about 30, because the headset jacks cost the south row in four columns and an 8 inch tablet's band
+depth) gives arrangement A about 30 (a first-issue hand count, P2 kept off the tablet), because the headset jacks cost the south row in four columns and an 8 inch tablet's band
 (133) spans two of the three rows. Neither beats the generator's layout, so the finding is stated for this construction
-family: **no arrangement found holds more than 35 with both functions kept.** The counts do not hinge on the module's
+family: **no arrangement found holds more than 39 with both functions kept** (the check's bound with P2 costing nothing: 43). The counts do not hinge on the module's
 INFERRED allowances: with every one set to its most favourable value (plan 0.76, bays 5.0, lips 2.0, own allowances halved)
-and to its least favourable (plan 1.50, bays 9.0, joints 1.5, wrap 0.6, lips 4.0, own allowances doubled) A reads 35, B 56
-and C 58 at both ends (`lid_pack_a1.out` section 2, SENSITIVITY; a sensitivity reading, not a bound).
+and to its least favourable (plan 1.50, bays 9.0, joints 1.5, wrap 0.6, lips 4.0, own allowances doubled) A reads 39 and B 56
+at both ends, C 61 and 60, C10 48 and 46 (`lid_pack_a1.out` section 2, SENSITIVITY; a sensitivity reading, not a bound).
 
 The tablet, where kept, hangs under the module's one-layer part in a bracket (3.0 lips, 1.0 back, 1.5 below the screen),
 36.60 below the ceiling; it costs the two-layer places above its band. The design envelopes are the rugged classes (8 inch
@@ -141,14 +153,18 @@ the lid a 10 inch tablet does not fit at all** (it needs 249 in X, 224.14 is fre
 **Question:** Option A(i) needs 48 cells in the lid. The lid holds them only if one of the two lid functions the owner
 approved on 6 September 2026 leaves the lid. Which one?
 
-1. **Keep HF (16a, the QMX r2 set as released); the tablet bracket (16d) leaves the lid** (arrangement B, 56 places): the
-   tablet is carried outside the case and still works on the kit's WiFi and the USB-C outlet; REQ-011's bracket is not met.
-2. **Keep the tablet bracket (8 inch class); the QMX set leaves the lid** (arrangement C, 58 places): HF inside (16a) is lost,
-   because the base has no volume for it (appendix 32.60: no bay on B16 cleared the unit, the reason it went to the lid; the
-   west pocket now takes the second block); outside the case it would need a lead through the back wall, which the ruled
-   connector plate does not carry.
-3. **Keep both and a 4S8P lid pack** (arrangement A): this is not Option A(i); 4S14P in all is under section 9c's 4S15P floor,
-   so M1 is not met on section 9's model.
+1. **Keep HF (16a, the QMX r2 set as released); the tablet bracket (16d) leaves the lid** (arrangement B, 56 places, 48
+   used): the tablet is carried outside the case and still works on the kit's WiFi and the USB-C outlet; REQ-011's bracket is
+   not met. Lid 4.9 kg with every place filled; the stay holds the open case on a back slope under 9.5 degrees.
+2. **Keep the tablet bracket (8 inch class); the QMX set leaves the lid** (arrangement C, 61 places, 48 used): HF inside
+   (16a) is lost, because the base has no volume for it (appendix 32.60: no bay on B16 cleared the unit, the reason it went to
+   the lid; the west pocket now takes the second block); outside the case it would need a lead through the back wall, which
+   the ruled connector plate does not carry. Lid 5.48 kg with every place filled, 4.83 kg with 48 fitted; the stay holds the
+   open case on a back slope under 7.0 degrees at the worst.
+3. **Keep both and a 4S9P lid pack** (arrangement A, 39 places, 36 used; 4S15P in all): not Option A(i). On a1elec's two-pack
+   model (the coordinator's run, September reference day, 200 W stage) M1 is not met with the lid at its 13.23 C basis at
+   400, 650 or 1000 Wp, and with the lid at +20 C only from 650 Wp (2.0 Wh left). It does not carry M1 at the lid's
+   temperature basis or at A(i)'s 400 Wp.
 
 Whichever is taken, D-01 (which defers HF, the tablet bracket and the second pack from prototype 1) is reopened by Option
 A(i) itself. The session's engineering view, for the owner's sheet only: option 1 keeps a radio bearer inside the kit and
@@ -167,13 +183,19 @@ with 400 Wp in a 200 W window), not this stream's.
   (Y 122.0, Z 106.52; the 5.0 rebated band beyond it cannot take a 4.4 lead under the lid wall at Y 130.9), then to the crossing. About 0.45 m in the lid.
 - **Travel:** the hinge axis is not in any Peli file: ESTIMATE Y 155 +-8, Z 111 +-5, inside the fairings. T_L turns at R 27.0
   about it; the chord T_L to T_P runs from 150.2 (closed) to 161.6 (180 degrees). The lead between the ties is 169.7: closed
-  it bows 33.1 in the back channel's X-Z plane (about 16 wide in Y, 40 tall), radius about 102; open it forms an S across 60.1
+  it bows 33.1 in the back channel's X-Z plane (16 wide in Y, about 40 tall), radius about 102; open it forms an S across 60.1
   over 150, radius about 94. **Requirement on the pick:** a flexing radius of 10 x OD (44) or less.
 - **Strain relief:** a bonded tie mount at T_L, at T_P and every 60 mm or less on both runs (the r2 set's rule); a printed
   guide on the lid's back wall keeps the free lead inboard of the lid wall (Y under 130.9) so that closing folds it toward the
   face, never over the rim or the seal.
-- **Disconnect:** beside P2 in the lid, an XT60 pair (Amass XT60, the tree's pack connector) and a JST XH 1x4 for SMBus, so
-  the lid comes off its hinge as ASSEMBLY.md section 7 has it; the lead is fused at P2.
+- **Disconnect** (M9): an XT60 pair and a JST XH 1x4 for SMBus in the back channel (Y 114.93 to about 130.9, 16 wide, about 40
+  tall) at X -135 to -100, lying along X, so the lid comes off its hinge as ASSEMBLY.md section 7 has it; the lead is fused at
+  P2. The held sheet (Amass XT60-F, V1.2, `v2/vendor/battery/amass-xt60-spec-tme.pdf`): 30 A rated, 60 A instantaneous, 12 AWG
+  recommended, 1000 mating cycles, -20 to 120 C, 0.55 mOhm: it carries the assumed 10 A and 18 A. From P2 the two 4.4 leads run
+  one above the other in the 7.0 west bay (8.8 of its 22.5 depth under the plate), beside the cover's standoffs at the bay's
+  ends, the group links and the balance taps (thin leads); no cross-section of the bay is drawn beyond that (OPEN at T9).
+- **Bend radius source** (M9): no conductor sheet is held; the 10 x OD flexing radius and any flex life are INFERRED
+  requirements on the pick, not a maker's figure.
 - **Not designed: the crossing of the sealed face.** It is S-95's crossing (EQ-31), which the QMX leads already need; this
   harness adds two power poles of 25 A or more and four signal contacts, sealed mated and unmated, at a site clear of the
   frame's ring, the backer's top strip and B16's tall parts. Until it is designed the lid pack cannot be connected with the
@@ -184,29 +206,42 @@ with 400 Wp in a 200 W window), not this stream's.
 
 ## 5. Mass and stability (`lid_pack_a1.out` section 4; sheet A1-5)
 
-- **Added to the lid by the pack (B):** 3.54 kg (56 cells 2.80 at the sheet's maximum; plate 0.26, cover 0.105, strip 0.097,
-  wrap and glue 0.114, P2 0.080, harness 0.080; ESTIMATE but the cells). The lid in all: 4.90 kg with the QMX set and the shell
-  (0.99, an area share of Peli's 2.5 kg, ESTIMATE). A: 4.33 kg.
+- **Added to the lid by the pack (B):** 3.54 kg (56 cells 2.80 at the sheet's maximum; plate, cover, strip, wrap and glue, P2,
+  harness; ESTIMATE but the cells). The lid in all: 4.89 kg with the QMX set and the shell (0.99, an area share of Peli's 2.5
+  kg, ESTIMATE). A: 4.53 kg. C: 5.48 kg with its 61 places filled, 4.83 kg with 48 fitted.
 - **Base:** shell 1.51 kg; contents swept 7 to 14 kg at Z 45 to 65 and Y -20 to +20 (ARCHITECTURE.md 11 sources a floor of
-  about 7.0 kg; much of the kit has no sourced mass). Tipping line Y 114.49 (the outer flat bottom's edge, INFERRED), feet at
-  Z -8.38.
+  about 7.0 kg). Tipping line Y 114.49 (the outer flat bottom's edge, INFERRED), feet at Z -8.38. The hinge axis (ESTIMATE, no
+  Peli figure) is swept over Y 147 to 163 **and Z 106 to 116** (check M4).
 - **Centre of mass (B, central estimate: base contents 9 kg at (0, 0, 55)):** the case 15.41 kg; lid closed (-2.2, 3.0, 80.1),
   lid at 90 degrees (-2.2, 58.1, 117.7), at 100 degrees (-2.2, 66.0, 115.4); the lid alone closed (-6.8, 9.4, 138.5).
-- **Result (worst over the sweep, the hinge axis Y 147 to 163 included):** stands on level ground at 90 to 120 degrees of
-  opening; tips on level ground from 135 degrees (worst centre of mass Y 116.83 against 114.49). Critical back slope at the
-  worst: 13.5 degrees at 90, 10.0 at 100, 6.6 at 110, 3.4 at 120.
-- **Fix, the session's:** a lid stay at 100 degrees (a webbing strap between two bonded anchors, one on the lid's inner wall
-  and one on the face plate's rebated back band; no hole in the case or the plate; about EUR 10, ESTIMATE; it folds into
-  the back channel when the lid closes). It also takes the added mass off Peli's own
-  stop. With it the operator's sheet states: open the lid only on ground sloping less than 9 degrees toward the hinge side. If
-  Peli's own stop proves to be at 100 degrees or less, the stay is not needed for stability. **Sensitivity:** the feet's place
-  is in no Peli file; with the tipping line 14.5 further in (Y 100, feet inboard) the case stands at 100 degrees on 5.7 degrees
-  at the worst and tips on level ground from 120 degrees, so the slope limit is set after T-A1-3 measures the feet and the stop.
+- **Result (worst over the full sweep):** B stands on level ground at 90 to 120 degrees of opening and tips from 135; A from
+  135; C from 120. Critical back slope at 100 degrees: 9.5 (B), 10.7 (A), 7.0 (C). With the feet 14.5 inboard (Y 100, an
+  INFERRED bound) B stands on 3.6 degrees at 100 and tips on level ground from 110.
+- **Fix, the session's: a lid stay at 100 degrees** (check M5): 25 mm polyester webbing at X -179 in the lid's west end zone
+  (outside the flat ceiling, clear of the guard caps and of the back channel), from a tab bonded with DP8005 to the lid's
+  inner west end wall at (Y 60, Z 140) closed, to a stainless tab under the face plate's 6-32 pan head at (X -179.07, Y
+  75.95), which loads Peli's brass insert toward its shoulder (its strong direction, CASE-MARGINS 2.5). The lid's moment about
+  the hinge at 100 degrees is 2.1 to 3.2 N m over the hinge sweep; the strap's lever is 39 to 51 mm, so its tension is 53 to
+  63 N static and 159 to 190 N at an arrest (a factor of 3, ESTIMATE). Neither anchor has a held strength (DP8005 gives none
+  on polypropylene; Peli gives none for its inserts): OPEN at T8 (the tab pulled at 3 times the largest tension) and T-A1-3.
+  About EUR 10 (ESTIMATE). **Slope condition:** with the stay the operator's sheet says: open the lid only on ground sloping
+  less than 6 degrees toward the hinge side until T-A1-3 has measured the feet, the stop and the hinge axis (3.6 degrees if
+  the feet prove inboard).
+- **Operator loads** (check M6): a horizontal backward push at the QMX set's height (Z about 251) tips the lightest swept case
+  on level ground above 11.7 N (B), 12.8 N (A) or 9.3 N (C): the QMX's controls, its jacks or a lid tablet are worked with a
+  hand on the case or with the case's back against something; a use limit on the operator's sheet.
 - **REQ-023** (under 45.4 kg closed): the central estimate is 15.41 kg with the lid pack; the pack adds about 4.3 kg (3.54 in
   the lid, 0.75 in the base), far inside the limit; the kit's total stays TBD (ARCHITECTURE.md 11).
 - **The lid pack's temperature** (section 9h) is not a mechanical result: the cells lie 2.2 (plate and bond) under the lid's
-  skin, which faces the sky when the lid is closed and faces backward, away from the operator, when it is open; the lid in the sun (D-02e's shade
-  rule) and the cells' +20 C basis are the thermal and energy streams' items.
+  skin, which faces the sky when the lid is closed and faces backward, away from the operator, when it is open; the lid in
+  the sun (D-02e's shade rule) and the cells' temperature basis are the thermal and energy streams' items.
+
+**The tamper magnet** (M10): ASSEMBLY.md's lead table puts the Littelfuse 57140 magnet in the lid for the 59140 reed under the
+frame. With the 57140 the 59140's normally open option S pulls in at 9 to 16 mm (Littelfuse sheet 2022-03-25, table 5). The
+reed's place is not fixed in the tree; the lid keeps two places no lid item covers, the west end zone beside the stay (X -186
+to -173) and the east end zone beside the QMX DC lead (X 172 to 185), each near the parting plane (Z about 110). A reed under
+the frame's ring (Z 94 or lower) is 16 mm or more below them, at or past the far end of that range: the reed's place, on the
+plate's underside near an end (Z about 103.5, 6.5 below the magnet), is an item for the face's next issue. OPEN.
 
 ## 6. The base pockets (`lid_pack_a1.out` section 5; sheet A1-6)
 
@@ -254,12 +289,12 @@ the harness geometry over the lid's travel; the mass and tipping sweep; the base
 |---|---|---|---|
 | SC-A1-01 | The lid module is built in the ruled base block's construction (A06), a second layer nested in the grooves | a holder at a 20 mm pitch fits about 33 cells beside the QMX set; the block's basis is already ruled for this cell | a maker's holder whose stated pitch and height fit the rows |
 | SC-A1-02 | Cells along X in three slices (four without the QMX set), anchored at the hinge side, each slice's south edge set by the face | the face's tall parts are at the west strip and the south-west corner; the hinge side is flat | a slice layout that keeps more places at the same rows |
-| SC-A1-03 | P2 at the corner that costs the fewest cells | board size is an assumption; the corner is re-chosen when P2 reports | the electrical stream's board outline |
+| SC-A1-03 | P2 at the corner that costs the fewest cells, over the tablet's plan where one is kept | board size is an assumption; the corner is re-chosen when P2 reports; P2 lies above the cover, the tablet below it | the electrical stream's board outline |
 | SC-A1-04 | The tablet, where kept, hangs under the one-layer zone, not in the lid's west third | the west third holds the guarded toggles (28.00), which no lid item may cover; the 32.51 placement (clear of the boxed Xenarc) predates the monitor's recess of 9 September 2026 | a tablet place that keeps more cells |
 | SC-A1-05 | The tablet's design envelopes are the 8 and 10 inch rugged classes | no maker sheet held; the model is a pick (SC-45) | the pick's sheet |
 | SC-A1-06 | The QMX DC lead re-routed east of the tray | the pack lies west of it | an arrangement without the pack west of the tray |
 | SC-A1-07 | Harness: 12 AWG, two ties 150 apart along the back channel, disconnect beside P2 | the lid's travel becomes a gentle bend of a long run instead of a tight loop at the hinge | the electrical stream's conductor and a mock-up (T-A1-4) |
-| SC-A1-08 | A lid stay at 100 degrees | the open case tips from 135 degrees in the sweep; Peli's stop is not stated | Peli's stop measured at 100 or less (T-A1-3) |
+| SC-A1-08 | A lid stay at 100 degrees, webbing at X -179 between a bonded tab and a tab under a plate screw | the open case tips from 120 (C) and 135 degrees (B) in the sweep; Peli's stop is not stated | Peli's stop measured at 100 or less (T-A1-3) |
 | SC-A1-09 | Plan allowance 1.06 between lid items and face parts | the lid's place (0.76, the case class) and a bonded plate's (0.30) | a measured place (T3, T9) |
 
 ## 9. For the coordinator: electrical assumptions to reconcile with `fnd/a1elec`
@@ -280,6 +315,23 @@ the harness geometry over the lid's travel; the mass and tipping sweep; the base
   new checks T-A1-1 to T-A1-4, T8 and T9 extended.
 - REQUIREMENTS-TRACE REQ-011 (the tablet bracket) and appendix 32.50 items 16a and 16d: nothing until the owner decides.
 
+## 11. The independent check's items, answered (commit `1aefa027` and the README and sheet commit after it)
+
+| Item | Answer |
+|---|---|
+| B1 | The rule that kept P2 off the tablet's plan had no reason: P2 lies above the one-layer cover, the tablet below it. Dropped; A reads 39 (4S9P, 4S15P in all). DECISION-A1.md and sections 1 and 3 restated from the coordinator's two-pack run: both kept does not carry M1 at the lid's 13.23 C basis or at 400 Wp |
+| M1 | P2 on 2.5 standoffs: 22.47 deep, 0.28 inside the cover's inner face (a plan row prints it) |
+| M2 | The lid plate is one rectangle per slice, so none stands over the headset jacks; the plate is judged as a zone and built so in the solids |
+| M3 | 1.0 in plan beside the guard caps for the module and the tablet (X -140.94); no count moves |
+| M4 | The hinge Z swept too (106 to 116): 9.5 degrees at 100 for B; feet inboard 3.6 and tips from 110 |
+| M5 | The stay sized: moment, lever, tension (53 to 63 N static, 159 to 190 N at an arrest), anchors and their open strength, the slope condition |
+| M6 | Operator pushes: 9.3 to 12.8 N at the QMX's height tip the lightest case; a use limit |
+| M7 | C's lid 5.48 kg (61 places), 4.83 kg with 48; tips from 120 degrees, 7.0 degrees at 100 |
+| M8 | Item 3 and LOG corrected: layer 2 wherever the worst margin stays 1.0 (parts up to 2.90) |
+| M9 | XT60 figures quoted; the disconnect in the back channel; the west bay's content; the bend radius labelled INFERRED |
+| M10 | The magnet's two free places and the reed's distance; OPEN on the reed's place |
+| M11 | The back channel is 16 wide everywhere; the sheet's word count method stated |
+
 ## Sources
 
 Peli 1451-931 top and bottom STEP, 1450PF STEP and sheet, drawing 1451-931 (`v2/vendor/peli/1450/`); the Pelican 1450 product
@@ -293,7 +345,8 @@ ARCHITECTURE.md section 11. No new maker document was filed: Samsung's tablet pa
 (one refused, none in the Wayback index).
 
 Generated on the rented CAD box (Ubuntu 24.04.5 LTS, Python 3.12.3, the d7fit CAD venv whose `pip freeze` equals
-`v2/cad/requirements-cad.lock` line for line apart from its comment line; build123d 0.13.0) from commit `f2432732` of
-`fnd/a1mech` (the solids and `cad/lid_pack_a1_cad.out`), where `v2/cad/lid_pack_a1.py` has its final content. `lid_pack_a1.out` and the drawing set are regenerated on the runner at the
+`v2/cad/requirements-cad.lock` line for line apart from its comment line; build123d 0.13.0) from the branch's correction commits
+(the solids and `cad/lid_pack_a1_cad.out`; the commit is named in the log's last line), where `v2/cad/lid_pack_a1.py` and
+`lid_pack_a1_cad.py` have their final content. `lid_pack_a1.out` and the drawing set are regenerated on the runner at the
 branch's last commit (plain Python 3; matplotlib 3.10.9 for the sheets). AI review only; no qualified mechanical or battery engineer has reviewed this work (D-09's qualified battery
 review applies to both packs).
