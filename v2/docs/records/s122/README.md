@@ -52,6 +52,19 @@ mismatches", and replays the set 15 order (review D first, then S-122: the follo
   part for "on 20260929 the" or "20260929"; the report does not give the form it ran).
 * **Outputs.** Regenerated; only the header lines of `inventory.out` and `verdicts.out` move (V2-SPEC.md's sha); the
   other seven are byte identical. `test_close_s122.py`: ALL PASS.
+* **Replayed on a throwaway clone of `fnd/int16` (`36bb1d12`, int16's ignored files installed; deleted after), in the
+  set 15 order.** Review D first: `4795d5bf` merged with one conflict, `v2/vendor/sources.txt`, resolved by keeping
+  both sides (int16's two passives lines, then review D's Arlitech line); its `facts.py` 55 facts, 0 FAIL;
+  `test_refusals.py` 17 cases, 0 FAIL; `apply_findings.py --check`, then its run (9 open items added, 1 extended), a
+  second run refused; `rules_lib.py requirements` 0 errors, 0 warnings; the trace page rendered and committed. Then
+  `b53258bb` merged with no conflict: `apply_registry_s122_r4.py` rebound 5 records, opened S-135 (PROCESS, no record
+  waiting on it) and refused a second run; 0 errors, 0 warnings; the trace page; `rules_status.py` (39 FAIL, 104
+  INCONCLUSIVE, 195 PASS of 338) and the full render, then 0 errors and 2 warnings (CON-010, REQ-044); the outputs
+  re-run (1011 sentences, 0 STALE, 0 UNJUDGED) and committed; the fixture check refused while staged, then committed;
+  `test_close_s122.py` ALL PASS; `close_s122.py` closed S-122 (CFL-016 PASS; its evidence names `apply_docs_s122_r7.py`,
+  `apply_docs_s122_r8.py` and S-135; the title carries the corrected clause and the follow-up item the same list) and
+  refused a second run; review D's waits_on (CON-009, REQ-007, REQ-060 read) stand; after it 0 errors, 2 warnings,
+  59 rules and 0 errors, the tests 72 passed, `claims_check` PASS 91 of 91.
 
 The scope statement's list, as `ESCAPES` holds it:
 

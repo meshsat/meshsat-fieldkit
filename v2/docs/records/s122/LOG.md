@@ -254,3 +254,10 @@ No box, no agent, no other model. No gate, `rules_status.py` or `rules_render.py
   - m2: the closure's evidence names `apply_docs_s122_r7.py` and `apply_docs_s122_r8.py`.
   - Outputs regenerated: only the header lines of `inventory.out` and `verdicts.out` moved; `test_close_s122.py` ALL
     PASS; the texts pass the registry script's screen.
+- 00:01 Committed `b53258bb` behind the pre-commit PASSED line.
+- 00:02 to 00:05 The set 15 order on a throwaway clone of `fnd/int16` (`36bb1d12`, its ignored files installed): review
+  D's `4795d5bf` merged (`v2/vendor/sources.txt` resolved by keeping both sides), its facts, refusal tests and findings
+  applied, 0 errors; then `b53258bb` merged: S-135 opened, the renders, the outputs re-run and committed, the fixture
+  check refused while staged and then committed, `test_close_s122.py` ALL PASS, S-122 closed with CFL-016 PASS, a
+  second run refused; after it 0 errors, 2 warnings (CON-010, REQ-044), the tests 72 passed, `claims_check` PASS 91 of
+  91. The clone is deleted.
