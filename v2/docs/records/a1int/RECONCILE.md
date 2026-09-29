@@ -35,17 +35,33 @@ re-check `check-a1elec-2.md`, acceptable yes): its minor items N1 to N4 stay ope
 charge-order sentence of TOPOLOGY 3b, the 13 UTC in CHARGER.md, a doubled table header, a heat column's sum), and
 `gauge_scale.py` hard-codes k = 2 and a 4S12P table, so a 4S14P lid needs it edited, not re-run.
 
-**With the chosen panel (stream a1solar, integrated 29 September 2026).** `reconcile_lid_panel.py` (output
-`reconcile_lid_panel.out`) re-runs the three lid options with the performance ratios of four Renogy RNG-100DB-H in 2S2P at
-the drafted fixed input point, read from `records/a1solar/energy_runs.out` section 2: A 0.9417 (the pinned MPPT ratio,
-which reproduces the table above), B 0.9326 typical, C 0.8573 with everything adverse at once. On the 40 degree south
-plane at the lid basis of 13.23 C: both functions kept (4S9P) does not meet M1 under any of the three, even with the lid
-at +40 C; tablet out (4S14P) meets with 93.7 Wh typical and 90.9 Wh adverse at its lowest, down to a lid at +3.8 and
-+4.1 C; QMX out (4S15P) meets with 125.2 and 122.4 Wh, down to +1.5 and +2.1 C. The panels must stand at 20 to 50
-degrees facing within 15 degrees of south (`records/a1solar/ARRAY.md` 7, a model result): laid flat, the two-pack case
-does not meet M1. Model results on the reference day; nothing is measured.
+**With the chosen panel (stream a1solar, integrated 29 September 2026; second issue after the independent check
+`checks/check-a1int-1.md`).** `reconcile_lid_panel.py` (output `reconcile_lid_panel.out`) re-runs the three lid options
+with the performance ratios of four Renogy RNG-100DB-H in 2S2P at the drafted fixed input point, read from
+`records/a1solar/energy_runs.out` section 2: A 0.9417 (the pinned MPPT ratio, which reproduces the table above), B 0.9326
+typical, C 0.8573 with everything adverse at once. **U3's input limit is taken at its minimum**, as CHARGER.md's rule asks:
+6.1 A (SLUSE66A prints no 10 mOhm accuracy row; its 5 mOhm rows and 9.6.22 read so), with 6.0 A as the bracket and the
+6.2 A nominal shown; U3B charges at its recorded code 62, 7.936 A, for every lid (the first issue scaled it per string,
+above the gauge's limits, which moved no figure because the entry sets the lid current). On the 40 degree south plane at
+the lid basis of 13.23 C (model results; the check's independent balance reproduces every one to 0.05 Wh at a 1 h step):
 
-**What this does not show.** The circuits are drafts (a second charger, the ideal-diode join, the lid gauge's k = 2
+| Lid | Ratio B, typical (U3 at 6.2, 6.1 or 6.0 A) | Ratio C, adverse, U3 at its minimum 6.1 A | Ratio C, U3 at 6.0 A |
+|---|---|---|---|
+| 4S9P, both lid functions kept | NOT MET (not even with the lid at +40 C) | NOT MET | NOT MET |
+| 4S14P, the tablet out (4S20P in all) | MEETS, lowest 93.7 Wh, lid down to +3.8 C | MEETS, 87.4 Wh, lid down to +5.9 C | MEETS, 77.6 Wh, +6.1 C |
+| 4S15P, the QMX out (4S21P in all) | MEETS, 125.2 Wh, lid down to +1.5 C | MEETS, 118.5 Wh, lid down to +2.2 C | MEETS, 108.7 Wh, +4.0 C |
+
+The model needs at least 5.57 A (4S14P) and 5.43 A (4S15P) into U3 at ratio C to meet M1 at the basis (the check). The
+lid thresholds are not stable to better than about 1.5 K with the model's hourly taper (at 0.1 h the 4S14P C threshold at
+6.1 A reads about +4.6 C); a 0.01 h step lowers the lowest stores by about 0.8 Wh (B) and 2.4 Wh (C). U3B at its 0.96
+efficiency bracket costs 3.2 and 3.5 Wh at C. **Both 4S14P and 4S15P need the lid gauge calibrated at k = 3** (at k = 2
+their cWh words would be 33,768 and 36,180, above the gauge's 32,767; GAUGE.md), and `gauge_scale.py` is written for 4S12P.
+**The planes:** `records/a1solar/ARRAY.md` 7's rule (20 to 50 degrees within 15 degrees of south) was computed for a 4S12P
+lid; for these lids it is sufficient, and the check's own runs found both meet over a wider range and the 4S15P lid meeting
+laid flat in the typical case only (4S14P laid flat does not). A plane grid for the chosen lid is re-run when the owner
+decides which function leaves the lid. Nothing is measured.
+
+**What this does not show.** The circuits are drafts (a second charger, the ideal-diode join, the lid gauge's k = 3
 calibration, board A's entry re-rated with its inductor, board E's 200 W stage); the lid pack's heater, its temperature in
 use and the case's stability with a heavier lid (a stay at 100 degrees) are findings; the panel is selected on its maker's figures and a model (`records/a1solar/`), not measured, and board E's
 entry is not yet re-rated for it (REQ-016 is the owner's). Nothing here is physical verification or fabrication readiness.
