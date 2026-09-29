@@ -111,7 +111,7 @@ to board B and C's regenerated netlists and `gen_sch_b.py`, render.
   run): tried in the worktree, 7 records rebound 173bc6357996d467 to the page's new sha, a second run refused, the registry
   restored. README.md gains the second round.
 
-## Where the stream stands (29 September 2026, 14:10)
+## Where the stream stands (29 September 2026, 14:09)
 
 B1 closed in the walk (`149b15f7`): a gate is a line's own source only on the board carrying SW_EMCON and is solved by its own
 rails; CX9 in both forms and CX3b fail as fixtures, and both fail on the previous walk; set 12 and main read byte for byte as
