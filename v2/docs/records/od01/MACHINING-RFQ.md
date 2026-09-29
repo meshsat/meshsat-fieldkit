@@ -18,7 +18,8 @@ The heat-balance test runs first on the sealed, undrilled case, so its two parts
 mock-up follows in the same case. Every drawing states its tolerances, material and finish; the release folder's
 `MANIFEST.sha256` was verified on 28 September 2026 at 20:51 UTC (`sha256sum -c` in `v2/release/case-2026-09-27/`: all
 files OK). Sheet numbers are those of the release. H1's folder `h1-heat-test-plate/` carries its own `MANIFEST.sha256`
-(verified on 29 September 2026 at 01:53 CEST, all files OK); its sheet is H1-1.
+(written by `v2/cad/case_manifest.py` after its README's last correction and verified on 29 September 2026 at 04:01 CEST,
+all files OK); its sheet is H1-1.
 
 | Line | Part | Qty | Material, thickness | Finish | Made how | Needed for | Stage |
 |---|---|---|---|---|---|---|---|

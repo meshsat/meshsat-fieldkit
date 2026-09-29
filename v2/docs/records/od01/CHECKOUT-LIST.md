@@ -91,7 +91,7 @@ lead as the page shows them.
 **Added 29 September 2026: the automatic over-temperature shutdown** (`TEST-PROCEDURE.md` section 3; the owner's
 instruction R5). Read at reichelt's Netherlands shop on 28 September 2026 between 23:24 and 23:33 UTC (29 September,
 01:24 to 01:33 CEST), in the same parcel as lines 5 to 7. The thermostats' maker states AC contact ratings only, so they
-carry only the two relay coils' current (about 108 mA, 54 mA each) and the relays' contacts in series (DC1 breaking capacity 8 A at 30 V each, Finder's sheet) switch the heaters.
+carry only the two relay coils' current (about 110 mA, 55 mA each on Finder's 12 V DC coil row) and the relays' contacts in series (DC1 breaking capacity 8 A at 30 V each, Finder's sheet) switch the heaters.
 
 | # | Part (exact number) | Seller and page | Unit price as shown, VAT status | Qty | Line total | Shipping to NL as stated | Stock or lead as shown | Read (UTC) |
 |---|---|---|---|---|---|---|---|---|
