@@ -11,7 +11,10 @@ It closes S-122 and returns CFL-016 to PASS only when all of these hold, each re
      commit's);
   3. CONOPS.md is read under the baseline rule (CFL-016's baseline entry): a CONOPS sentence whose value differs from
      the netlists is BASELINE only with its row on the status page, and the status page's section and EMCON.md section
-     0a.1, where the current values are kept, were judged directly (both carry sentences in verdicts.out);
+     0a.1, where the current values are kept, were judged directly (both carry sentences in verdicts.out); and every
+     CONOPS sentence that states something absent, owed, not drawn or not connected, in any section, is inventoried and
+     is TRUE or BASELINE, or binds each such word to a phrase not about the circuit (`verdicts.absent_rule`, round 3;
+     a sentence that does neither is UNJUDGED, which step 2 refuses);
   4. the independent check named on the command line is committed at HEAD with the bytes the working file has (a file
      only staged is refused), its first line reads `mergeable: yes`, and its text names every document of the scope
      (PANEL.md, CONOPS.md, V2-SPEC.md, OPERATING-ENVELOPE.md, TEST-PLAN.md, ASSEMBLY.md, pcb_decisions.yaml, EMCON.md,
@@ -39,7 +42,8 @@ TAG = "close_s122"
 REG = os.path.join(L.TOP, "v2/ecad/tools/pcb_requirements.yaml")
 NAMES = ("PANEL.md", "CONOPS.md", "V2-SPEC.md", "OPERATING-ENVELOPE.md", "TEST-PLAN.md", "ASSEMBLY.md", "pcb_decisions.yaml",
          "EMCON.md", "DEFINITION-STATUS.md", "verdicts.out")
-OUTSIDE = ("PANEL.md's head and sections 4, 8 and 11; CONOPS.md's sections other than 2a, M2, M4, 4 with 4a to 4f, and 5; "
+OUTSIDE = ("PANEL.md's head and sections 4, 8 and 11; CONOPS.md's sections other than 2a, M2, M4, 4 with 4a to 4f, and 5, "
+           "except its sentences that state something absent, owed, not drawn or not connected, which are read in every section; "
            "OPERATING-ENVELOPE.md sections 1 and 5 to 8; ASSEMBLY.md's sections other than 2, 4, 8 and 9; EMCON.md's "
            "sections other than 0a.1; the status page's sections other than its section of CONOPS's current circuit values")
 
@@ -95,7 +99,7 @@ def main():
                "s122lib.SCOPE sets (outside it the scripts read nothing: %s), were inventoried (inventory.py) and judged "
                "against the committed netlists of boards A, B, C, D, E and P and the generators (verdicts.py and "
                "judgements.py); verdicts-base.out read %s STALE sentences of %s in the base's documents at e57a7365, and "
-               "apply_docs_s122.py and apply_docs_s122_r2.py corrected the five correctable documents, asserting every part, "
+               "apply_docs_s122.py, apply_docs_s122_r2.py and apply_docs_s122_r3.py corrected the five correctable documents and the status page, asserting every part, "
                "pin, net, count and generator line their new text names before they wrote. CONOPS.md, a baselined "
                "definition, is restored to its text at c5430071 and read through handover/DEFINITION-STATUS.md: each of its "
                "passages whose value differs from the netlists is BASELINE with its current value kept on the status page "

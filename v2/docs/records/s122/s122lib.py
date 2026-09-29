@@ -100,9 +100,13 @@ def md_blocks(rel):
     lines = read(rel).split("\n")
     out, key, title, para, pstart = [], "head", "head", [], 0
     stack = []
+    item = []          # [key, title, first line, [texts], number] of the list item being read (round 3, check m7)
 
     def flush():
-        nonlocal para
+        nonlocal para, item
+        if item:
+            out.append((item[0], item[1], "item", item[2], " ".join(x.strip() for x in item[3]), item[4]))
+        item = []
         if para:
             out.append((key, title, "para", pstart, " ".join(x.strip() for x in para), None))
         para = []
@@ -130,8 +134,13 @@ def md_blocks(rel):
         m2 = re.match(r"^([-*]|(\d+)\.)\s+", s)
         if m2:
             flush()
-            out.append((key, title, "item", n, s[m2.end():], m2.group(2)))
+            item = [key, title, n, [s[m2.end():]], m2.group(2)]
             continue
+        if item and l[:1] in (" ", "\t"):
+            item[3].append(s)          # a wrapped item's continuation line
+            continue
+        if item:
+            flush()
         if s.startswith(">"):
             s = s.lstrip("> ").strip()
             if not para: pstart = n
@@ -246,8 +255,12 @@ def names(s, nets):
             "topic": topic, "counts": counts}
 
 
+ABSENT = re.compile(r"\b(absent|owed|not drawn|not connected)\b", re.I)
+
+
 def inventory(nls=None):
-    """[(id, doc, section, kind, line, sentence, names)] for every in-scope sentence that names something."""
+    """[(id, doc, section, kind, line, sentence, names)] for every in-scope sentence that names something, and every
+    sentence of a baselined document that states something absent, owed, not drawn or not connected."""
     nls = nls or netlists()
     nets = all_nets(nls)
     inv = []
@@ -260,10 +273,15 @@ def inventory(nls=None):
         cnt = {}
         for key, title, kind, line, text, rowkey in blocks:
             if kind == "heading": continue
-            if not in_scope(rel, spec2, key, kind, rowkey): continue
+            scoped = in_scope(rel, spec2, key, kind, rowkey)
+            if not scoped and rel not in BASELINED: continue
             for s in sentences(text):
+                # round 3 (check-s122-2, B1): every sentence of a baselined document that states something is absent,
+                # owed, not drawn or not connected is inventoried, in any section, named or not
+                absent = rel in BASELINED and bool(ABSENT.search(s))
+                if not scoped and not absent: continue
                 nm = names(s, nets)
-                if not any(nm.values()): continue
+                if not any(nm.values()) and not absent: continue
                 base = "%s#%s:L%d:%s" % (os.path.basename(rel), key, line, kind)
                 cnt[base] = cnt.get(base, 0) + 1
                 inv.append(("%s:s%d" % (base, cnt[base]), rel, key, kind, line, s, nm))

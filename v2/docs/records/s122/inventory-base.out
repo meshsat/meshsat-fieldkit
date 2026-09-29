@@ -478,6 +478,9 @@ PANEL.md#10:L213:para:s7 [f1f111b885]
 PANEL.md#10:L213:para:s8 [d1a6b91d38]
     **Corrected 26 September 2026:** this paragraph said E6's end was a 2.54 mm 1x6 header that no lead mated, which was true before `faf8c981`.
     names: boards=E6
+CONOPS.md#2:L79:cell:1:s1 [c530f82b50]
+    Relay messages between local off-grid networks and remote correspondents when internet and cellular infrastructure are absent or down.
+    names: 
 CONOPS.md#2a:L107:para:s1 [ad42c9eb94]
     The second pack has no location found yet: no pack is expected to fit the 160 mm west pocket as the board set stands (INFERRED from the committed board B underside, `v2/ecad/tools/panel1450.py` line 23, against the pocket of appendix 32.62; no case measurement is owed since the owner reversed D-08 on 26 September 2026), and the pack ruling D-06 of 26 September 2026 sets one pack in the east pocket, with missions longer than it relying on vehicle or solar input.
     names: boards=board B; gens=panel1450.py
@@ -1072,23 +1075,20 @@ CONOPS.md#4c:L817:para:s2 [025fe974ad]
 CONOPS.md#4c:L830:para:s1 [26986a1d9d]
     In that state board E's always-on domain, on the pack side of the gauge's FETs, is unpowered, so the lid and tamper log does not run, and the kit starts only once an input has woken the gauge (Review A, m5).
     names: boards=board E
-CONOPS.md#4d:L845:item:s1 [dd37381138]
-    **Build checks, current-limited, board by board**, as `ASSEMBLY.md` section 8 orders them (each rail at its
-    names: rails=rail
-CONOPS.md#4d:L846:para:s1 [b72e2ec123]
-    converter before its loads), **except its step 10**, ten minutes of key-down of the PA at 30 W into a load: K1 limits every key-down to 60 s (section 5), and one 60 s key-down at 45 W of heat from a +50 C plate already puts the flange at about 95 C on the record's own figure, against the RA30H1317M1's +100 C case maximum and its 90 C advice (`feasibility/POWER-THERMAL.md` PWR-F15).
-    names: refs=K1
-CONOPS.md#4d:L846:para:s2 [805be5c76e]
+CONOPS.md#4d:L845:item:s1 [aa962fffd3]
+    **Build checks, current-limited, board by board**, as `ASSEMBLY.md` section 8 orders them (each rail at its converter before its loads), **except its step 10**, ten minutes of key-down of the PA at 30 W into a load: K1 limits every key-down to 60 s (section 5), and one 60 s key-down at 45 W of heat from a +50 C plate already puts the flange at about 95 C on the record's own figure, against the RA30H1317M1's +100 C case maximum and its 90 C advice (`feasibility/POWER-THERMAL.md` PWR-F15).
+    names: refs=K1; rails=rail
+CONOPS.md#4d:L845:item:s2 [805be5c76e]
     Step 10 is superseded by T-H3's procedure (`TEST-PLAN.md` section 8): key-downs of at most 60 s into a load, at least 2 s apart, with the flange sensor and a thermocouple beside it logged, each started only inside K2 and ended by C4.
     names: refs=C4,K2
-CONOPS.md#4d:L855:para:s1 [9d93b39b55]
-    and enabled protections read back and compared with `v2/ecad/tools/pcb_pack_protection.yaml` (the data-flash verification of D-15; `ASSEMBLY.md` section 8 step 12); the second level's commissioning readings (`review-packets/battery/PROTECTION-ARCHITECTURE.md`, O-9); only when both pass is the arming jumper JP1 closed, which lets the second level and the gauge's FUSE output blow the chemical fuse F2.
+CONOPS.md#4d:L854:item:s1 [2ec2a400f8]
+    **The pack, before its first charge or discharge:** the gauge's golden image written and its protection thresholds and enabled protections read back and compared with `v2/ecad/tools/pcb_pack_protection.yaml` (the data-flash verification of D-15; `ASSEMBLY.md` section 8 step 12); the second level's commissioning readings (`review-packets/battery/PROTECTION-ARCHITECTURE.md`, O-9); only when both pass is the arming jumper JP1 closed, which lets the second level and the gauge's FUSE output blow the chemical fuse F2.
     names: refs=F2,JP1; gates=enabled
-CONOPS.md#4d:L865:item:s1 [c42d5042b3]
-    **Firmware:** the panel controller, the sensor controller and the three supervisors (their software-verified boot
+CONOPS.md#4d:L865:item:s1 [61013cde57]
+    **Firmware:** the panel controller, the sensor controller and the three supervisors (their software-verified boot is D-13's floor), each image's version logged.
     names: counts=three supervisors
-CONOPS.md#4d:L867:item:s1 [beabaf8862]
-    **The functional check of `TEST-PLAN.md` section 4**, including EMCON with the lamp check of section 4b.1 and a
+CONOPS.md#4d:L867:item:s1 [f83ed5d19a]
+    **The functional check of `TEST-PLAN.md` section 4**, including EMCON with the lamp check of section 4b.1 and a ZEROIZE, after which the drives are re-enrolled from the recovery state (`feasibility/ZEROIZE.md` section 3.2).
     names: topic=EMCON
 CONOPS.md#4e:L872:para:s1 [02d81ab6f6]
     As generated at `45bde541` unless a row says a fix is owed.
@@ -1225,6 +1225,15 @@ CONOPS.md#5:L988:cell:2:s1 [526de24db6]
 CONOPS.md#5:L992:cell:2:s1 [ad58e8c6bc]
     PS-RED2 31.4 W; the heat stage PS-SURV-R 23.3 W after BANK-R1, PS-SURV 21.7 W as generated
     names: boards=as generated
+CONOPS.md#7:L1060:cell:3:s1 [a4c8583ce6]
+    an external low-capacitance ESD array at the CC pins by the connector, riding on the board A update already owed
+    names: boards=board A
+CONOPS.md#7a:L1098:cell:1:s1 [000d312aa9]
+    two exchanges of hub ports on board B, the RockBLOCK with the QMX (port 4 of banks 1 and 2) and the panel controller with the sealed wall USB port (bank 1 port 2, bank 3 port 3), so that slot 3 alone carries the owner's example with the SOS path; owed by board B's owner before its layout entry, from the hand-off's proposed generator change; until it is in the generator, REQ-052 is not met by board B as generated, a finding reported to the owner
+    names: boards=as generated,board B
+CONOPS.md#7a:L1113:cell:1:s1 [41d1053ffe]
+    the sensor controller drives the dock's spare contact (board E's `J_BLK` pin 12 to board A's `J_DOCK` pin 12, which already lands on the expander `U27`'s input and so on `EXP_INT`) through an open-drain 2N7002, and board A pulls it up with 10 k; four states on the line (1 Hz: read and below H1; 5 Hz: H1; low: H2; high: the detector lost); owed before the layout entry of boards A and E, with the dock contract's pin 12 and the two firmware contracts; until then the hot stop's requirement reads FAIL on the generated boards, a finding reported to the owner
+    names: refs=J_BLK,J_DOCK,U27; nets=EXP_INT; boards=board A,board E,boards A and E,the generated boards; gates=open-drain
 V2-SPEC.md#MeshSat field kit V2, approved specification (state of 7 Sep 2026, design record sections 32.40 to 32.61):L3:para:s1 [8ca89fa881]
     The 7 September text records the owner's rulings in `MESHSAT-709-geometry-appendix.md` together with proposals the session made under them (the 200 Wh pack of 32.62 was one), and the board generation that implements it is MESHSAT-830 (A22, B16, C7, D8, E6, face plate and case template).
     names: refs=C7,D8; boards=A22,B16,C7,D8,E6
@@ -1486,76 +1495,76 @@ V2-SPEC.md#Corrections, 26 September 2026:L139:item:s1 [f211cada9a]
 V2-SPEC.md#Corrections, 26 September 2026:L140:item:s1 [4bae2bcb5a]
     **Re-read against the generators at `45bde541` (open item S-07 of the requirements registry, later on 26 September 2026; lines 11, 22, 24, 34, 41, 43, 73 and 76; corrections 2, 4, 7, 9, 12 and 13).** Session reading of the circuit corrections of `faf8c981`, `458b2873` and `d90f30e4`, which the lines above had described as owed: the EMCON line removes the WiFi link cards' supplies and pulls the compute modules' own radio disables low through open drains (D-05; the 5G module's supply removal is still owed); keying the PA drops the PoE and USB-C outlets in hardware (D-11; the key-down and state-of-charge thresholds are PROVISIONAL, session choice SC-10 of the registry); the wall data path leaves board A for the Glenair 233-370 and the USB-C outlet is power only (D-12); board P's schematic carries the floor of D-15, a BQ7720700 second level that also covers cell under-voltage, the SCF9550 chemical fuse and the gauge's PTC input; an external ESD array sits at board A's USB-C CC pins (D-17); the monitor and heater eFuses no longer lock out on the pack and the heater mat gets a regulated 12 V; the 5G socket is key B and SIM 2 is on the module's own pins; the ZEROIZE toggle is sensed on board C alone; a lid and tamper reed switch is drawn on board E.
     names: boards=board A,board C,board E,board P; gates=open drains; topic=EMCON
-V2-SPEC.md#Corrections, 27 September 2026:L150:para:s1 [c8af65ddfb]
-    of 26 September 2026, after the owner reversed D-08 (`CASE-MARGINS.md` section 4, recorded as SC-07 of the requirements registry and in `CONOPS.md` section 7a): C1, the face plate on top of the 1450PF frame over Peli's o-ring, screwed from above into Peli's 6-32 inserts, as Peli documents; C6, four setting legs under the frame's ring give the frame its height; C2, the ruled gas-discharge arrestors are the twelve antenna bulkheads at Z 59, five on the east wall and seven on the west, the two WIFI P2P jacks moving west; C3, one connector plate between the hinge fairings carrying all six ruled wall items; C4, one aluminium RF entry plate per end wall carrying the arrestors and their common ground, which retires the Amphenol 132170 couplers; C5, the QMX tray 1.5 mm west.
+V2-SPEC.md#Corrections, 27 September 2026:L149:item:s1 [488d983a0f]
+    **Case and antenna entries (lines 9, 10, 11, 13, 42 and 51).** Choices the session took under the owner's standing rule of 26 September 2026, after the owner reversed D-08 (`CASE-MARGINS.md` section 4, recorded as SC-07 of the requirements registry and in `CONOPS.md` section 7a): C1, the face plate on top of the 1450PF frame over Peli's o-ring, screwed from above into Peli's 6-32 inserts, as Peli documents; C6, four setting legs under the frame's ring give the frame its height; C2, the ruled gas-discharge arrestors are the twelve antenna bulkheads at Z 59, five on the east wall and seven on the west, the two WIFI P2P jacks moving west; C3, one connector plate between the hinge fairings carrying all six ruled wall items; C4, one aluminium RF entry plate per end wall carrying the arrestors and their common ground, which retires the Amphenol 132170 couplers; C5, the QMX tray 1.5 mm west.
     names: refs=C1,C2,C3,C4,C5,C6; boards=C5,C6; counts=two WIFI P2P jacks
-V2-SPEC.md#Corrections, 27 September 2026:L150:para:s2 [88040ba1cc]
+V2-SPEC.md#Corrections, 27 September 2026:L149:item:s2 [88040ba1cc]
     Line 13's screws follow C1: ten 6-32, not the ten M3 it read.
     names: refs=C1
-V2-SPEC.md#Corrections, 27 September 2026:L150:para:s3 [164b0034a6]
+V2-SPEC.md#Corrections, 27 September 2026:L149:item:s3 [164b0034a6]
     The generators (`panel1450.py`, `case_wall_cutouts.py`) and the templates of `release/revA/case/` still carried the eleven couplers at Z 88 and the plate between the ribs until `c351115d` (correction 30).
     names: gens=panel1450.py
-V2-SPEC.md#Corrections, 27 September 2026:L172:para:s1 [93ed4f24e0]
+V2-SPEC.md#Corrections, 27 September 2026:L171:item:s1 [93ed4f24e0]
     Options: (a) the eSIM plus nano-SIM of appendix 32.50 item 12 as the only configuration, which needs a module variant with the optional internal eSIM whose order code no held document names (`v2/vendor/SOURCES.yaml`, the RM520N-GL entry: no regional or firmware order code is named); (b) two nano-SIM holders only, which would drop the ruled eSIM configuration; (c) Quectel's compatible design for USIM2 (hardware design v1.1 section 4.1.6, Figure 19), which the generator already carries: two nano-SIM holders, with the eSIM configuration built by leaving four 0 ohm links off.
     names: counts=two nano-SIM holders
-V2-SPEC.md#Corrections, 27 September 2026:L172:para:s2 [30bcc6427f]
+V2-SPEC.md#Corrections, 27 September 2026:L171:item:s2 [30bcc6427f]
     Still owed, and carried outside conflict CFL-010, which the requirements registry resolves on this description (its writer's second pass, after Review B of layer 3, finding B6): the SIM TVS array of at most 10 pF that section 4.1.7 of the same document asks for, on board B's schematic (board B's SIM TVS constraint in the registry, drawn since board B's round 8, correction 28), and the eSIM variant's order code before an eSIM build is bought (open item S-13).
     names: boards=board B
-V2-SPEC.md#Corrections, 27 September 2026:L189:para:s1 [83b0b3fdc8]
+V2-SPEC.md#Corrections, 27 September 2026:L188:item:s1 [83b0b3fdc8]
     The restrictions stay as proposed controls and the design implements them on measured pack current and temperatures (C1 module shedding, C2 the outlet budget, C3 a current trigger, C4 the in-key guard), a PROVISIONAL choice the session took under the owner's standing rule; the hot end is decided by the proposed heat-balance test or `TEST-PLAN.md` E3 (feasibility blocker FEA-004).
     names: refs=C1,C2,C3,C4
-V2-SPEC.md#Corrections, 27 September 2026:L212:item:s1 [485179e54c]
-    **EMCON (lines 24 and 76).** Session reading of `feasibility/EMCON.md` at `e3aedb25` (sixth revision, sections 0a,
+V2-SPEC.md#Corrections, 27 September 2026:L212:item:s1 [1e990ac1c7]
+    **EMCON (lines 24 and 76).** Session reading of `feasibility/EMCON.md` at `e3aedb25` (sixth revision, sections 0a, 4.1, 4.4, 5a and 7) and registry FEA-002, after the first pass of Review A, layer 1 (finding B1).
     names: topic=EMCON
-V2-SPEC.md#Corrections, 27 September 2026:L213:para:s1 [110d02f908]
+V2-SPEC.md#Corrections, 27 September 2026:L212:item:s2 [110d02f908]
     Lines 24 and 76 named the 5G module's supply removal and the shared items as the only EMCON work owed.
     names: topic=EMCON
-V2-SPEC.md#Corrections, 27 September 2026:L213:para:s2 [32e44f2efa]
+V2-SPEC.md#Corrections, 27 September 2026:L212:item:s3 [32e44f2efa]
     The sixth revision reports local and end-to-end conclusions apart: the radio's own chain closes at desk for 14 of the 17 transmitters and is open for three, the SA868 (its PTT pin's receive threshold is unpublished, bench E-01), the RockBLOCK 9704 (read on Ground Control's schematic rev 2B: after `+5V_RB` is cut the module runs from two 10 F supercapacitors of its own, about 16 J, with its ENABLE driven only by the firmware expander U6, so ENABLE forced low by the EMCON hardware is owed, and what the Iridium module does when ENABLE falls is in no held document) and the 5G module (SD-EMC-1 not drawn); end to end 0 of 17 rows is closed, because every row also waits on the shared items and on the latency of section 5a (REQ-071), which no row is shown to meet.
     names: refs=U6; nets=+5V_RB; rails=+5V_RB; topic=EMCON
-V2-SPEC.md#Corrections, 27 September 2026:L213:para:s3 [6d8b58cd7d]
+V2-SPEC.md#Corrections, 27 September 2026:L212:item:s4 [6d8b58cd7d]
     The circuit line 24 describes as generated is unchanged; what it says is owed now follows section 0a.
     names: boards=as generated
-V2-SPEC.md#Corrections, 27 September 2026:L213:para:s4 [7e2122c8fa]
+V2-SPEC.md#Corrections, 27 September 2026:L212:item:s5 [7e2122c8fa]
     As drawn, no panel indication of EMCON is independent of firmware: the TX lamp's supply exists only while the panel controller drives `PANEL_PWM` (`feasibility/EMCON.md` section 0, `PANEL.md` section 3).
     names: nets=PANEL_PWM; topic=EMCON
-V2-SPEC.md#Corrections, 27 September 2026:L226:para:s1 [1a8e99596c]
+V2-SPEC.md#Corrections, 27 September 2026:L225:item:s1 [1a8e99596c]
     Nothing else on the line changed: the trigger, the order of the wipe, the boot-time read, the circuit (the toggle sensed on C7 alone since `faf8c981`) and the owed items are as they were.
     names: refs=C7; boards=C7
-V2-SPEC.md#Corrections, 27 September 2026:L231:item:s1 [ba724f447c]
-    **Board B's round 8 (lines 24, 41 and 76).** Session reading of board B's round 8 generator and netlist (27 September
+V2-SPEC.md#Corrections, 27 September 2026:L231:item:s1 [edd3aa4d2f]
+    **Board B's round 8 (lines 24, 41 and 76).** Session reading of board B's round 8 generator and netlist (27 September 2026, MESHSAT-1357, integrated in round 8 set 3).
     names: boards=B's,board B
-V2-SPEC.md#Corrections, 27 September 2026:L232:para:s1 [a7523e86eb]
+V2-SPEC.md#Corrections, 27 September 2026:L231:item:s2 [a7523e86eb]
     EMCON removes the 5G module's supply by hardware at once (SD-EMC-1r8, `feasibility/EMCON.md` section 4b), so the 5G module's own chain closes at desk and 15 of the 17 close locally; end to end no row closes.
     names: topic=EMCON
-V2-SPEC.md#Corrections, 27 September 2026:L232:para:s2 [f76be55b28]
+V2-SPEC.md#Corrections, 27 September 2026:L231:item:s3 [f76be55b28]
     Board B's EMCON stages are single gates and open-drain logic outputs run per slot from each module's own 3.3 V (Q212, the 5G socket rail's discharge FET, aside).
     names: refs=Q212; boards=B's; rails=rail; gates=gates,open-drain; topic=EMCON
-V2-SPEC.md#Corrections, 27 September 2026:L232:para:s3 [c3cfb2621c]
+V2-SPEC.md#Corrections, 27 September 2026:L231:item:s4 [c3cfb2621c]
     The key-B socket's land carries the two locating holes of TE drawing C-2199119 rev F sheet 3 (S-12), and each SIM holder carries a TI TPD4E001 (1.5 pF, board B's SIM TVS constraint of correction 22).
     names: boards=board B
-V2-SPEC.md#Corrections, 27 September 2026:L241:para:s1 [045032dec5]
-    rule of 26 September 2026 (requirements registry, the session choice on NEED-03's failure set; record ASM-002): the requirement covers the loss of one compute module or one I/O supervisor in every way it can fail (dead, unpowered while its neighbours run, held in reset, wedged, or shorted on its own rails), and a failed module or supervisor must not take a shared element down with it (REQ-073).
+V2-SPEC.md#Corrections, 27 September 2026:L240:item:s1 [c12a46ae87]
+    **NEED-03's failure set (line 29).** Choice of the layer 3 closer, taken by the session under the owner's standing rule of 26 September 2026 (requirements registry, the session choice on NEED-03's failure set; record ASM-002): the requirement covers the loss of one compute module or one I/O supervisor in every way it can fail (dead, unpowered while its neighbours run, held in reset, wedged, or shorted on its own rails), and a failed module or supervisor must not take a shared element down with it (REQ-073).
     names: rails=rails; gates=supervisor
-V2-SPEC.md#Corrections, 27 September 2026:L241:para:s2 [8a7c2cc868]
+V2-SPEC.md#Corrections, 27 September 2026:L240:item:s2 [8a7c2cc868]
     Four shared elements are outside that set and are single points of failure of the kit as generated: the `+5V_DEV` and `+3V3_DEV` converters on board A (one each), the `J_PANEL` ribbon, the KSZ9897R Ethernet switch, and the kit I2C bus with the panel controller as its one master.
     names: refs=J_PANEL; nets=+3V3_DEV,+5V_DEV; boards=as generated,board A; rails=+3V3_DEV,+5V_DEV
-V2-SPEC.md#Corrections, 27 September 2026:L250:para:s1 [6b5ffb2144]
+V2-SPEC.md#Corrections, 27 September 2026:L249:item:s1 [6b5ffb2144]
     Since `c351115d` the case generators carry the case choices C1 to C6: `panel1450.py` (the plate 377.2 x 263.0 x 3.0 on ten 6-32 UNC; the twelve PolyPhaser GTH-SFF-AL at Z 59), `case_wall_cutouts.py` and `v2/cad/face_plate.py`, and the current case set (CAD, dimensioned drawings, 1:1 templates and the QMX lid tray) is `release/case-2026-09-27/`; `release/revA/case/` is marked historical and is not to be made from.
     names: refs=C1,C6; boards=C6; gens=panel1450.py
-V2-SPEC.md#Corrections, 27 September 2026:L250:para:s2 [ce048350b0]
+V2-SPEC.md#Corrections, 27 September 2026:L249:item:s2 [ce048350b0]
     The committed board files and the deliverable folders of `release/revA/boards/` predate C1 to C6.
     names: refs=C1,C6; boards=C6
-V2-SPEC.md#Corrections, 27 September 2026:L250:para:s3 [8186d44a9b]
+V2-SPEC.md#Corrections, 27 September 2026:L249:item:s3 [8186d44a9b]
     Board C's round 8 draws the hardware EMCON lamp of SD-EMC-6 (`D22` through `U14` and `Q7`, lit while both EMCON lines read low, with no processor in its path); its light-guide hole in the face plate is owed (open item S-44), and until it is cut the lamp cannot be seen.
     names: refs=D22,Q7,U14; boards=C's; topic=EMCON
-V2-SPEC.md#Corrections, 27 September 2026:L261:item:s1 [adef5b5d31]
-    **Set 6 (line 24).** Session reading of board B's stream w4b as integrated at r8int6 (27 September 2026,
+V2-SPEC.md#Corrections, 27 September 2026:L261:item:s1 [60fc961b25]
+    **Set 6 (line 24).** Session reading of board B's stream w4b as integrated at r8int6 (27 September 2026, MESHSAT-1357; SC-64 and SC-66).
     names: boards=board B
-V2-SPEC.md#Corrections, 27 September 2026:L262:para:s1 [48691b711e]
+V2-SPEC.md#Corrections, 27 September 2026:L261:item:s2 [48691b711e]
     The RockBLOCK 9704's ENABLE is `EMCON_HW` AND the panel's request in `U536`, held low by `R527` with the gate unpowered, so the ENABLE forced low by the EMCON hardware is drawn; the row stays open locally, because what the Iridium module does when ENABLE falls, and how long it runs on its own capacitors, is stated in no held document (`feasibility/EMCON.md` sections 4.4 and 4c).
     names: refs=R527,U536; nets=EMCON_HW; gates=and,gate; topic=EMCON
-V2-SPEC.md#Corrections, 27 September 2026:L262:para:s2 [f64abb1173]
+V2-SPEC.md#Corrections, 27 September 2026:L261:item:s3 [f64abb1173]
     Each card buck's enable is driven from its slot's own 5 V (`U116`, `U216`, `U316`).
     names: refs=U116,U216,U316; gates=enable
 OPERATING-ENVELOPE.md#2:L79:cell:1:s1 [5e98fc1920]
@@ -1600,22 +1609,22 @@ OPERATING-ENVELOPE.md#3:L186:para:s1 [e20bc8f1b4]
 OPERATING-ENVELOPE.md#3:L186:para:s2 [31985580ef]
     Decision 40, ruled by the owner on 26 September 2026, adds hardware beside the gauge, and board P's schematic carries it since `faf8c981`: a BQ7720700 second level (cell over-voltage 4.325 V, under-voltage 2.25 V, open wire, and a fixed 70 C over-temperature on its own thermistor since `d90f30e4`) that blows the Eaton SCF9550 chemical fuse F2 once the arming jumper is closed at commissioning, and the gauge's PTC input enabled (`gen_sch_p.py` lines 243, 288 and 414 to 502 at `45bde541`).
     names: refs=F2; boards=board P; gates=enabled; gens=gen_sch_p.py
-OPERATING-ENVELOPE.md#4:L215:para:s1 [78311d8113]
-    2 and 3, monitor off) when its inside air reaches +50 C or any cell +55 C, and, if those are reached again, to one module (the heat stage: slot 3 once board B carries BANK-R1, slot 2 as generated, `CONOPS.md` section 4c); it restores 5 K below (control C1, `feasibility/POWER-THERMAL.md` section 9.3, `CONOPS.md` section 4c).
+OPERATING-ENVELOPE.md#4:L214:item:s1 [d242bb413f]
+    **the hot end, on measured temperatures (restated 27 September 2026):** the kit sheds to the reduced mode (slots 2 and 3, monitor off) when its inside air reaches +50 C or any cell +55 C, and, if those are reached again, to one module (the heat stage: slot 3 once board B carries BANK-R1, slot 2 as generated, `CONOPS.md` section 4c); it restores 5 K below (control C1, `feasibility/POWER-THERMAL.md` section 9.3, `CONOPS.md` section 4c).
     names: refs=C1; boards=as generated,board B
-OPERATING-ENVELOPE.md#4:L215:para:s2 [69c53126c9]
+OPERATING-ENVELOPE.md#4:L214:item:s2 [69c53126c9]
     Until 27 September 2026 this line read "above +35 C: the kit runs the reduced mode (one module) so the inside air stays under the +55 C that the battery-bay sensor and the pack need", the figure the owner's D-02b consequence was argued at (section 8), which is not where the current analysis puts it: on 32.53's conductance three typical modules reach C1 at +28.6 to +30.5 C.
     names: refs=C1
-OPERATING-ENVELOPE.md#4:L215:para:s3 [0a6d39484c]
+OPERATING-ENVELOPE.md#4:L214:item:s3 [0a6d39484c]
     What it is for: REQ-077 requires the kit to act before any cell passes +60 C, idle cells on an input included, where the enclosure alone cannot keep them under it, and the design intends the stop to do that once HOT-R1 is in the generators of boards A and E (the requirement reads FAIL on the generated boards until then) and on the provisional error budget (`TEST-PLAN.md` P14); the kit runs no module while it acts.
     names: boards=boards A and E,the generated boards
-OPERATING-ENVELOPE.md#4:L236:item:s1 [46ff45e4c7]
-    **below 0 C inside air:** the two AW7915-AED WiFi link cards and the LimeSDR are powered only once the inside air
+OPERATING-ENVELOPE.md#4:L236:item:s1 [9ba46bddfe]
+    **below 0 C inside air:** the two AW7915-AED WiFi link cards and the LimeSDR are powered only once the inside air reads 0 C or more, and the kit's cold warm-up (the pack heater with the three modules loaded) is what brings it there: lid open with the fans, the warm-up reaches 0 C from an ambient of -22.0 to -24.2 C on appendix 32.53's conductance and lower still on the independent bound, while the idle and typical states, with or without the heater, need at least -11.3 to -20.3 C there (`CONOPS.md` section 4c; `records/hc2/pwr_red2.out`).
     names: counts=two AW7915-AED WiFi link cards
-OPERATING-ENVELOPE.md#4:L237:para:s1 [c836951a27]
+OPERATING-ENVELOPE.md#4:L236:item:s2 [c836951a27]
     At the envelope's -20 C the warm-up holds only while the conductance, lid open with the fans, is at most about 3.6 W/K, which no measurement has shown (T-H1): above it the link cards stay off, the kit-to-kit link is lost at the cold end and `TEST-PLAN.md` E4-O fails on it.
     names: boards=E4
-OPERATING-ENVELOPE.md#4:L237:para:s2 [84c26222a6]
+OPERATING-ENVELOPE.md#4:L236:item:s3 [84c26222a6]
     That bound stays open, with an extended-grade card and SDR (layer 6, decided before board B's layout entry if a socket or supply changes) as the route that removes it.
     names: boards=board B
 OPERATING-ENVELOPE.md#4:L263:para:s1 [22912384cc]
@@ -2422,7 +2431,7 @@ pcb_decisions.yaml#40:L896:field:reversed_by:s1 [b7bc3415b2]
 
 # counts per document
 v2/docs/PANEL.md: 158 sentences
-v2/docs/CONOPS.md: 249 sentences
+v2/docs/CONOPS.md: 252 sentences
 v2/docs/V2-SPEC.md: 111 sentences
 v2/docs/OPERATING-ENVELOPE.md: 32 sentences
 v2/docs/TEST-PLAN.md: 99 sentences
@@ -2430,4 +2439,4 @@ v2/docs/ASSEMBLY.md: 147 sentences
 v2/ecad/tools/pcb_decisions.yaml: 9 sentences
 v2/docs/feasibility/EMCON.md: 0 sentences
 v2/docs/handover/DEFINITION-STATUS.md: 0 sentences
-total: 805 sentences
+total: 808 sentences

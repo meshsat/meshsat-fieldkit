@@ -15,6 +15,17 @@ For each sentence the script itself performs, and records in the output:
      3 fails; the text of the netlist is given), NOT DERIVABLE (the claim rests on a held document, a measurement, the
      firmware or a procedure, not on a netlist: left as it is and said so), or UNJUDGED (no judgement written for this
      text; the closure refuses on any).
+  5. BASELINE (round 2): a CONOPS.md sentence whose value is the baseline's, its current value kept in the row(s) of the
+     status page it names (`kept`); its assertions state the current value and must hold (round 3), or it is STALE.
+  6. COUNTS (rounds 2 and 3): every spelled count of parts is covered: with one count, a count assertion (#) of the same
+     number or a `counts_ok` reason; with several, `counts_ok` maps each count phrase to a reason that names what the
+     phrase counts, or to 'asserted: <one of the judgement's own count assertions of the same number>'.
+  7. ABSENT (round 3, check-s122-2 B1): every CONOPS.md sentence that states something absent, owed, not drawn or not
+     connected is inventoried in any section and judged TRUE or BASELINE; a NOT DERIVABLE judgement of one binds each
+     such word to a phrase of the sentence that is not about the circuit (`absent_ok`), or the sentence is UNJUDGED.
+Assertion forms added in round 3: a netlist at a commit (`B@<commit>:U41@PB7=SDA`, parsed from `git show`), a document at
+a commit and its negation (`DOC@<commit>:<path>~words`, `DOC@<commit>^:<path>!~words`), a net's exact members
+(`B:NET>=ref1,ref2`), and open and closed items in `REG:` (their `status`).
 A judgement is keyed by the sentence's digest (sha256/10 of its whitespace-normalised text), so a corrected sentence is a
 new text that needs its own judgement, and a line shift moves nothing.
 
@@ -33,9 +44,9 @@ BOARD_OF = [(re.compile(r"\b(?:A2\d|board A|A's)\b"), "A"), (re.compile(r"\b(?:B
             (re.compile(r"\b(?:E[67]|board E|E's|the dock strip)\b"), "E"), (re.compile(r"\b(?:P[2-9]|board P|P's)\b"), "P")]
 ASSERT = re.compile(r"^(?P<b>[ABCDEP]):(?:(?P<absent>!)(?P<ar>[\w{}#+-]+)|(?P<ref>[\w#+-]+)\.(?P<pin>[\w]+)=(?P<net>\S+)|"
                     r"(?P<fref>[\w#+-]+)@(?P<func>[\w~{}]+)=(?P<fnet>\S+)|"
-                    r"(?P<vref>[\w#+-]+)~(?P<val>.+)|(?P<nnet>[^>\s]+)>(?P<members>[\w,#+-]+)|(?P<eref>[\w#+-]+)\?)$")
+                    r"(?P<vref>[\w#+-]+)~(?P<val>.+)|(?P<nnet>[^>\s]+)>(?P<exact>=?)(?P<members>[\w,#+-]+)|(?P<eref>[\w#+-]+)\?)$")
 GASSERT = re.compile(r"^G@(?P<c>[0-9a-f]+|HEAD):(?P<f>[\w./-]+):(?P<a>\d+)(?:-(?P<b>\d+))?~(?P<w>.+)$")
-DOCASSERT = re.compile(r"^DOC:(?P<f>[\w./-]+)~(?P<w>.+)$")
+DOCASSERT = re.compile(r"^DOC(?:@(?P<c>[0-9a-f]+\^?))?:(?P<f>[\w./-]+)(?P<neg>!)?~(?P<w>.+)$")
 _GIT = {}
 
 
@@ -50,7 +61,32 @@ def gen_text(rel, commit):
     return _GIT[k]
 
 
+_AT_NL = {}
+
+
+def netlist_at(board, commit):
+    """Board's committed netlist at a commit, parsed with tx_inhibit.parse_netlist from a temporary copy."""
+    import tempfile
+    k = (board, commit)
+    if k not in _AT_NL:
+        r = subprocess.run(["git", "-C", L.TOP, "show", "%s:%s" % (commit, L.NETLISTS[board])], capture_output=True)
+        if r.returncode:
+            _AT_NL[k] = None
+        else:
+            with tempfile.TemporaryDirectory() as d:
+                f = os.path.join(d, "n.net")
+                open(f, "wb").write(r.stdout)
+                _AT_NL[k] = L.TX.parse_netlist(f)
+    return _AT_NL[k]
+
+
 def run_assert(a, nls):
+    am = re.match(r"^([ABCDEP])@([0-9a-f]+):(.+)$", a.strip())
+    if am:
+        nl = netlist_at(am.group(1), am.group(2))
+        if nl is None: return False, "board %s's netlist at %s not readable" % (am.group(1), am.group(2))
+        ok, msg = run_assert("%s:%s" % (am.group(1), am.group(3)), dict(nls, **{am.group(1): nl}))
+        return ok, "at %s: %s" % (am.group(2), msg)
     g = GASSERT.match(a.strip())
     if g:
         rel = g.group("f") if "/" in g.group("f") else "v2/ecad/tools/" + g.group("f")
@@ -81,7 +117,10 @@ def run_assert(a, nls):
     if rg:
         import yaml
         if "reg" not in _ROWS:
-            _ROWS["reg"] = {r["id"]: r for r in yaml.safe_load(L.read("v2/ecad/tools/pcb_requirements.yaml"))["records"]}
+            y = yaml.safe_load(L.read("v2/ecad/tools/pcb_requirements.yaml"))
+            _ROWS["reg"] = {r["id"]: r for r in y["records"]}
+            _ROWS["reg"].update({r["id"]: dict(r, status=r.get("status", "OPEN")) for r in y["open_items"]})
+            _ROWS["reg"].update({r["id"]: dict(r, status="CLOSED") for r in y["closed_items"]})
         got = (_ROWS["reg"].get(rg.group(1)) or {}).get(rg.group(2))
         ok = (str(got) == rg.group(4)) if rg.group(3) == "=" else (rg.group(4) in str(got))
         return ok, "registry %s %s %s %s (read: %s)" % (rg.group(1), rg.group(2), rg.group(3), rg.group(4), got)
@@ -95,9 +134,16 @@ def run_assert(a, nls):
         return got == sm.group(2), "board %s netlist sha256/16 %s (read: %s)" % (sm.group(1), sm.group(2), got)
     dm = DOCASSERT.match(a.strip())
     if dm:
-        txt = " ".join(open(os.path.join(L.TOP, dm.group("f")), encoding="utf-8").read().split())
-        ok = all(" ".join(w.split()) in txt for w in dm.group("w").split("|"))
-        return ok, "%s says %r" % (dm.group("f"), dm.group("w")[:80])
+        if dm.group("c"):   # round 3: a document at a commit (the commit's file, read with git show)
+            lines = gen_text(dm.group("f"), dm.group("c"))
+            if lines is None: return False, "%s at %s not readable" % (dm.group("f"), dm.group("c"))
+            txt = " ".join("\n".join(lines).split())
+        else:
+            txt = " ".join(open(os.path.join(L.TOP, dm.group("f")), encoding="utf-8").read().split())
+        has = all(" ".join(w.split()) in txt for w in dm.group("w").split("|"))
+        ok = (not has) if dm.group("neg") else has
+        return ok, "%s%s %s %r" % (dm.group("f"), (" at " + dm.group("c")) if dm.group("c") else "",
+                                    "does not say" if dm.group("neg") else "says", dm.group("w")[:80])
     m = ASSERT.match(a.strip())
     if not m: return False, "unparsable assertion %r" % a
     nl = nls[m.group("b")]
@@ -117,6 +163,8 @@ def run_assert(a, nls):
     if m.group("nnet"):
         on = {r for r, _p, *_x in nl["nets"].get(m.group("nnet"), [])}
         want = set(m.group("members").split(","))
+        if m.group("exact"):
+            return want == on, "%s net %s holds exactly %s (read: %s)" % (m.group("b"), m.group("nnet"), ",".join(sorted(want)), ",".join(sorted(on)))
         return want <= on, "%s net %s holds %s (missing: %s)" % (m.group("b"), m.group("nnet"), ",".join(sorted(want)), ",".join(sorted(want - on)) or "none")
     if m.group("eref"):
         return (m.group("eref") in nl["comps"]), "%s %s present" % (m.group("b"), m.group("eref"))
@@ -164,6 +212,59 @@ def check_gens(s, nm, nls, j):
 
 
 _ROWS = {}
+NUMS = L.NUMW.split("|")
+ABSENT = L.ABSENT
+
+
+def absent_rule(rel, s, j):
+    """Round 3 (check-s122-2, B1): in a baselined document, a statement that something is absent, owed, not drawn or not
+    connected as generated is judged against the netlists, TRUE or BASELINE, never NOT DERIVABLE. A NOT DERIVABLE
+    judgement of such a sentence must bind every occurrence of those words to a phrase of the sentence (`absent_ok`, a
+    dict: the phrase, quoted from the sentence, to why it is not a statement about the generated circuit)."""
+    if rel not in L.BASELINED or j["v"] != "N": return []
+    ok = j.get("absent_ok") or {}
+    out = []
+    for m in ABSENT.finditer(s):
+        if not any(k in s and s.index(k) <= m.start() and m.end() <= s.index(k) + len(k) and ok[k] for k in ok):
+            out.append("'%s' (at %d) states what is absent or owed; judged TRUE or BASELINE, or its phrase bound in absent_ok"
+                       % (m.group(0), m.start()))
+    return out
+
+
+def count_rule(phrases, j):
+    """Every count of parts a sentence states is covered, and the cover is checked (round 3, check-s122-2 m8: two
+    excuses named the wrong thing and `counts_ok` was not read by the script). With one count: a count assertion (#)
+    of the same number, or a `counts_ok` entry. With several: `counts_ok` is a dict keyed by a piece of each count
+    phrase. An entry reading 'asserted: <assertion>' must name one of the judgement's own count assertions whose
+    number is the phrase's; any other entry is a reason bound to that phrase, and it must name what the phrase counts
+    (the phrase's noun), so an excuse cannot be filed against another count of the same sentence."""
+    if not phrases: return []
+    ok = j.get("counts_ok")
+    a = list(j.get("a", ()))
+    num = lambda p: NUMS.index(p.split()[0].lower()) + 2
+    noun = lambda p: re.sub(r"(es|s)$", "", p.split()[-1].lower()) if p.split()[-1].lower() not in ("switches", "fuses") \
+        else p.split()[-1].lower()[:-2]
+    anum = lambda x: int(x.rsplit("=", 1)[1]) if re.match(r"^[ABCDEP](@[0-9a-f]+)?:#", x) and "=" in x else None
+    out = []
+    if isinstance(ok, str):
+        if len(phrases) > 1:
+            return ["one reason for several counts (%s): counts_ok must name each" % "; ".join(phrases)]
+        ok = {phrases[0]: ok}
+    ok = ok or {}
+    for p in phrases:
+        keys = [k for k in ok if k.lower() in p.lower()]
+        if not keys:
+            if len(phrases) == 1 and any(anum(x) == num(p) for x in a): continue
+            out.append("no counts_ok entry for '%s'" % p)
+            continue
+        v = ok[keys[0]]
+        if v.startswith("asserted: "):
+            x = v[len("asserted: "):]
+            if x not in a: out.append("'%s' names an assertion the judgement does not make (%s)" % (p, x))
+            elif anum(x) != num(p): out.append("'%s' is covered by %s, whose number is not %d" % (p, x, num(p)))
+        elif noun(p) not in v.lower():
+            out.append("the reason for '%s' does not name what it counts (%s): %s" % (p, noun(p), v))
+    return out
 
 
 def status_rows():
@@ -190,22 +291,26 @@ def judge(inv, nls):
         v = j["v"]
         why = j.get("why", "")
         f4 = []
-        if nm.get("counts") and not j.get("counts_ok") and not any(re.match(r"^[ABCDEP]:#", a) for a in j.get("a", ())):
-            f4.append("a count the sentence states (%s) is neither asserted nor said to be outside the netlists"
-                      % "; ".join(nm["counts"]))
+        f4 += count_rule(nm.get("counts") or [], j)
+        # round 3 (check-s122-2, B1): a baselined document's statement that something is absent, owed, not drawn or not
+        # connected is a statement about the circuit; it is judged against the netlists, TRUE or BASELINE, never NOT
+        # DERIVABLE
+        f4 += absent_rule(rel, s, j)
         kept_ok = None
         if v == "B":
             if rel not in L.BASELINED: f3.append("BASELINE is only for a baselined document")
-            kept_ok = j.get("kept") in status_rows()
-            if not kept_ok: f3.append("the status page keeps no row %s for it" % j.get("kept"))
+            kept = j.get("kept") if isinstance(j.get("kept"), list) else [j.get("kept")]
+            kept_ok = all(k in status_rows() for k in kept)
+            if not kept_ok: f3.append("the status page keeps no row %s for it" % ", ".join(k for k in kept if k not in status_rows()))
         if v == "S":
             verdict = "STALE"
         elif f4:
             verdict = "UNJUDGED"
         elif v == "B":
             # a baseline value may name parts or lines the netlists and generators no longer carry: that is why it is kept
-            # on the status page; the names and citation checks are reported, not held against it
-            verdict = "BASELINE" if kept_ok and not [x for x in f3 if "status page" in x or "baselined" in x] else "STALE"
+            # on the status page; the names and citation checks are reported, not held against it. Its assertions, which
+            # state the current value, are (round 3: any failing one makes it STALE)
+            verdict = "BASELINE" if kept_ok and not f3 else "STALE"
         elif f1 or f2 or f3:
             verdict = "STALE" if v == "T" else "NOT DERIVABLE"
         else:
@@ -213,7 +318,8 @@ def judge(inv, nls):
         det = []
         if why: det.append("judgement: " + why)
         if v == "B": det.append("baseline value (CONOPS.md's head and handover/DEFINITION-STATUS.md): its current value is "
-                                "kept on the status page, row %s, which this script judges directly" % j.get("kept"))
+                                "kept on the status page, row %s, which this script judges directly"
+                                % (", ".join(j["kept"]) if isinstance(j.get("kept"), list) else j.get("kept")))
         if f1 or f2 or f3 or f4: det += ["FAILS: " + x for x in f1 + f2 + f3 + f4]
         det.append("names looked up: %d parts, %d nets%s" % (len(nm["refs"]), len(nm["nets"]), ("; " + "; ".join(n1)) if n1 else ""))
         if n2: det.append("citations: " + "; ".join(n2))
