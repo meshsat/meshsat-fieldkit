@@ -293,7 +293,7 @@ ARCHITECTURE.md section 11. No new maker document was filed: Samsung's tablet pa
 (one refused, none in the Wayback index).
 
 Generated on the rented CAD box (Ubuntu 24.04.5 LTS, Python 3.12.3, the d7fit CAD venv whose `pip freeze` equals
-`v2/cad/requirements-cad.lock` line for line apart from its comment line; build123d 0.13.0) from commit `80ab97b1` of
+`v2/cad/requirements-cad.lock` line for line apart from its comment line; build123d 0.13.0) from commit `f2432732` of
 `fnd/a1mech` (the solids and `cad/lid_pack_a1_cad.out`), where `v2/cad/lid_pack_a1.py` has its final content. `lid_pack_a1.out` and the drawing set are regenerated on the runner at the
 branch's last commit (plain Python 3; matplotlib 3.10.9 for the sheets). AI review only; no qualified mechanical or battery engineer has reviewed this work (D-09's qualified battery
 review applies to both packs).

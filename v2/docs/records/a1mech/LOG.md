@@ -39,7 +39,8 @@ Worker: one Claude author, worktree `a1mech`, branch `fnd/a1mech` from `13b5352b
 - 02:56: the light toggle's height read from NKK's sheet (M2044SD3A01: S bat 10.5 on a D3 bushing 8.9, 16.40 above the face) in
   place of the APEM bound; no arrangement moves (it lies under no lid item). README: REQ-023's margin, the lid pack's temperature
   handed to the thermal and energy streams.
-- 02:57: the solids and their check re-run on the box at `80ab97b1`, where `lid_pack_a1.py` has its final content: PASS for A, B,
+- 02:57: the solids and their check re-run on the box at `80ab97b1`: PASS for A, B,
   C, C10 and D, both controls fail as they must. The box's `/root/a1mech/` keeps only this stream's clone and outputs.
 - 02:59: a sensitivity of the counts to the module's INFERRED allowances added to the generator (most and least favourable
   settings, every face row re-judged): A 35, B 56, C 58 at both ends; C10 47 and 45; D 77 and 74. The finding does not hinge on them.
+- 03:00: the solids and their check re-run at `f2432732`, where `lid_pack_a1.py` has its final content: PASS, both controls fail.
