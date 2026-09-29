@@ -1013,12 +1013,79 @@ def _decode_value(code, rule):
     return None
 
 
-def read_decoded(ds, mpn, maker, req, text, first_page_text):
-    """Rule D-2's DECODED binding read on the cited page. Returns (state, why, detail)."""
+# THE SCHEMES a DECODED binding may cite, written here in the tool (a table cannot edit one): the maker's document by its
+# sha256 and page, the kind of part the scheme orders, and how the page lays the part number out. The layout is READ from
+# the page each time: Yageo prints a scheme row whose placeholders are numbered by labels "(1) SIZE" to "(5) CAPACITANCE
+# VALUE"; Uniroyal numbers its code positions ("1st~4th codes: Part name." to "14th code: Special features."). The tool
+# slices the part number by that layout, so a field out of order, a padding character or a missing field is refused.
+SCHEMES = {
+    "yageo-cc-x7r-v26-p2": dict(
+        sha256="61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648", page=2, kind="capacitor",
+        maker_mark="YAGEO", layout="numbered_placeholders", scheme_row="CC XXXX X X X7R X BB XXX",
+        labels={"SIZE": "size", "TOLERANCE": "tolerance", "PACKING STYLE": "packaging", "RATED VOLTAGE": "voltage",
+                "CAPACITANCE VALUE": "value"},
+        literals={"CC": "series", "X7R": "dielectric", "BB": "process"}, section_end="NOTE",
+        construction=("MLCC", "Ceramic Multilayer Capacitors"), value_rule="pf_2sig"),
+    "uniroyal-thick-film-p2": dict(
+        sha256="11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef", page=2, kind="resistor",
+        resistor_kinds=("general",), maker_mark="UNI-ROYAL", layout="numbered_positions",
+        labels={"Part name": "size", "Power rating": "power", "Tolerance": "tolerance", "Resistance Value": "value",
+                "Packaging Type": "packaging", "Standard Packing Quantity": "quantity", "Special features": "special"},
+        section_end="3. Ordering Procedure", value_rule="ohm_3sig"),
+}
+CAP_KEYS = {"value", "package", "construction", "dielectric", "v_rating_min", "tolerance_max_pct", "v_open_on", "v_not_checked_on"}
+RES_KEYS = {"value", "package", "resistor_kind", "tolerance_max_pct", "power_min_w", "v_working_bound"}
+MUST = {"capacitor": ("value", "package", "tolerance", "voltage", "dielectric", "construction"),
+        "resistor": ("value", "package", "tolerance", "power")}
+_ORD = r"(\d+)(?:st|nd|rd|th)"
+
+
+def scheme_slots(sc, flat):
+    """[(kind, width, literal or None)] in the order the page lays the part number out, read from the page; or a
+    string saying why the page does not give the layout."""
+    if sc["layout"] == "numbered_placeholders":
+        if sc["scheme_row"] not in flat: return "the scheme row %r is not on the page" % sc["scheme_row"]
+        out, k = [], 0
+        for tok in sc["scheme_row"].split():
+            if set(tok) == {"X"}:
+                k += 1
+                found = [lab for lab in sc["labels"] if "(%d) %s" % (k, lab) in flat]
+                if len(found) != 1: return "placeholder %d of the scheme row has %s label on the page" % (k, "no" if not found else "more than one")
+                out.append((sc["labels"][found[0]], len(tok), None, "(%d) %s" % (k, found[0])))
+            elif tok in sc["literals"]:
+                out.append((sc["literals"][tok], len(tok), tok, None))
+            else:
+                return "the scheme row's token %r is neither a placeholder nor a known literal" % tok
+        return out
+    if sc["layout"] == "numbered_positions":
+        m = re.search(r"Part No\. includes (\d+) codes", flat)
+        if not m: return "the page does not state how many codes the part number has"
+        total, spans = int(m.group(1)), []
+        for lab, kind in sc["labels"].items():
+            m = re.search(_ORD + r"(?:~" + _ORD + r")? codes?: " + re.escape(lab) + r"\.", flat)
+            if not m: return "the page does not give the position of %r" % lab
+            a = int(m.group(1)); b = int(m.group(2)) if m.group(2) else a
+            spans.append((a, b, kind, m.group(0)))
+        spans.sort()
+        pos = 1
+        for a, b, kind, _lab in spans:
+            if a != pos: return "the page's positions leave a gap or overlap at code %d" % pos
+            pos = b + 1
+        if pos != total + 1: return "the page's positions cover %d codes where it says %d" % (pos - 1, total)
+        return [(kind, b - a + 1, None, lab) for a, b, kind, lab in spans]
+    return "the scheme's layout %r is unknown" % sc["layout"]
+
+
+def read_decoded(ds, mpn, maker, req, kind, text, first_page_text, doc_sha256):
+    """Rule D-2's DECODED binding (decision 59) read on the cited page. Returns (state, why, detail)."""
     flat = _flat(text)
+    sc = SCHEMES.get(ds.get("scheme"))
+    if sc is None: return ("REFUSED", "the scheme %r is not one this tool knows" % ds.get("scheme"), {})
+    if doc_sha256 != sc["sha256"] or int(ds.get("page") or 0) != sc["page"]:
+        return ("REFUSED", "the scheme %s is written for another document or page" % ds["scheme"], {})
     pub = str(ds.get("publisher") or "")
-    mark = str(ds.get("maker_mark") or "")
-    if not pub or not mark: return ("REFUSED", "a DECODED binding names its publisher and the maker's mark", {})
+    mark = sc["maker_mark"]
+    if not pub: return ("REFUSED", "a DECODED binding names its publisher", {})
     if any(d in pub.upper() for d in DISTRIBUTORS):
         return ("REFUSED", "the publisher %r is a distributor: a distributor's page is not the maker's document" % pub, {})
     if _alnum(mark) not in _alnum(maker) or _alnum(mark) not in _alnum(pub):
@@ -1028,88 +1095,104 @@ def read_decoded(ds, mpn, maker, req, text, first_page_text):
         return ("REFUSED", "neither the cited page nor page 1 prints the maker's mark %r" % mark, {})
     dist = [d for d in DISTRIBUTORS if re.search(r"(?<![A-Z])" + re.escape(d) + r"(?![A-Z])", both)]
     if dist: return ("REFUSED", "the document prints a distributor's name (%s): a distributor's page, not the maker's" % ", ".join(dist), {})
+    # the kind: a capacitor scheme only for a capacitor selection, and nothing the kind does not know
+    if kind != sc["kind"]:
+        return ("REFUSED", "a %s scheme cannot resolve a %s selection" % (sc["kind"], kind), {})
+    known = CAP_KEYS if kind == "capacitor" else RES_KEYS
+    extra = sorted(k for k, v in (req or {}).items() if v is not None and k not in known)
+    if extra: return ("REFUSED", "the selection has deciding properties the scheme cannot decode: %s" % ", ".join(extra), {})
+    if kind == "resistor" and req.get("resistor_kind") not in sc["resistor_kinds"]:
+        return ("REFUSED", "the scheme orders %s resistors, the selection is %s" % ("/".join(sc["resistor_kinds"]), req.get("resistor_kind")), {})
+    # the layout, read from the page, and the part number sliced by it: whole, in order, nothing left over
+    slots = scheme_slots(sc, flat)
+    if isinstance(slots, str): return ("REFUSED", slots, {})
+    if len(mpn) != sum(x[1] for x in slots):
+        return ("REFUSED", "%s has %d characters where the page's layout gives %d" % (mpn, len(mpn), sum(x[1] for x in slots)), {})
+    # each coded position's rows must lie in that position's own part of the page: from its label to the next label
+    # (or the scheme's section end), so a row of another position cannot stand in for it
+    starts = sorted(flat.index(x[3]) for x in slots if x[3])
+    end_all = flat.find(sc["section_end"], max(starts)) if sc.get("section_end") else -1
+    end_all = end_all if end_all > 0 else len(flat)
+    def segment(label):
+        a = flat.index(label)
+        later = [b for b in starts if b > a]
+        return flat[a:(later[0] if later else end_all)]
     fields = ds.get("fields") or []
-    if "".join(str(f.get("code") or "") for f in fields).upper() != str(mpn).upper():
-        return ("REFUSED", "the decoded fields %s do not spell %s" % ("|".join(str(f.get("code")) for f in fields), mpn), {})
-    got = {}
-    for f in fields:
-        kind, code = f.get("field"), str(f.get("code"))
-        rows = [f.get("row")] + ([f["means_row"]] if f.get("means_row") else [])
-        for r in rows:
-            if not r or _flat(r) not in flat:
-                return ("REFUSED", "field %s (%s): its row %r is not on the cited page" % (kind, code, r), {})
-        row = _flat(f["row"])
-        if kind != "value" and not _token(code, row):
-            return ("REFUSED", "field %s: the code %r is not in its row %r" % (kind, code, row), {})
-        if kind in MEANING_KINDS:
-            means = _flat(f.get("means") or "")
-            if not means or not re.search(r"(?<![A-Za-z0-9])" + re.escape(code) + r"\s*[=:：]?\s*" + re.escape(means), row):
-                return ("REFUSED", "field %s: the row does not map %r to %r" % (kind, code, means), {})
-            if kind == "tolerance": got["tolerance_pct"] = _pct(means)
-            if kind == "voltage": got["volts"] = _volts(means)
-            if kind == "power": got["watts"] = _watts(means)
-        elif kind == "size":
-            got["package"] = code
-        elif kind == "dielectric":
-            got["dielectric"] = code.upper().replace("NP0", "C0G")
-        elif kind == "series":
-            if f.get("means"):
-                if _flat(f["means"]) not in _flat(f.get("means_row") or f["row"]):
-                    return ("REFUSED", "field series: %r is not on its row" % f["means"], {})
-                got["series_means"] = f["means"]
-        elif kind == "value":
-            v = _decode_value(code, f.get("rule"))
-            if v is None: return ("REFUSED", "field value: %r does not decode by the rule %r" % (code, f.get("rule")), {})
-            need = {"pf_2sig": "significant digits", "ohm_3sig": "significant figures"}[f["rule"]]
-            if need not in _flat(f["row"]).lower():
-                return ("REFUSED", "field value: its row does not state the rule (%r)" % need, {})
-            if f["rule"] == "ohm_3sig":
-                p = code[3]
+    if len(fields) != len(slots):
+        return ("REFUSED", "%d fields for the page's %d positions" % (len(fields), len(slots)), {})
+    got, pos = {}, 0
+    for (skind, width, lit, label), f in zip(slots, fields):
+        piece = mpn[pos:pos + width]; pos += width
+        code = str(f.get("code"))
+        if f.get("field") != skind: return ("REFUSED", "position %d is %s on the page, the binding says %s" % (pos - width + 1, skind, f.get("field")), {})
+        if code.upper() != piece.upper(): return ("REFUSED", "the %s position of %s is %r, the binding says %r" % (skind, mpn, piece, code), {})
+        if lit is not None and piece.upper() != lit.upper(): return ("REFUSED", "the %s position must be %r and is %r" % (skind, lit, piece), {})
+        if lit is None and skind != "value":
+            row = _flat(f.get("row") or "")
+            if not row or row not in flat: return ("REFUSED", "field %s (%s): its row %r is not on the cited page" % (skind, code, f.get("row")), {})
+            if row not in segment(label): return ("REFUSED", "field %s (%s): its row is not under the page's %r" % (skind, code, label), {})
+            if not _token(code, row): return ("REFUSED", "field %s: the code %r is not in its row %r" % (skind, code, row), {})
+            if skind in MEANING_KINDS:
+                means = _flat(f.get("means") or "")
+                if not means or not re.search(r"(?<![A-Za-z0-9])" + re.escape(code) + r"\s*[=:：]?\s*" + re.escape(means), row):
+                    return ("REFUSED", "field %s: the row does not map %r to %r" % (skind, code, means), {})
+                if skind == "tolerance": got["tolerance_pct"] = _pct(means)
+                if skind == "voltage": got["volts"] = _volts(means)
+                if skind == "power": got["watts"] = _watts(means)
+            if skind == "size": got["package"] = piece
+        if skind == "dielectric": got["dielectric"] = piece.upper().replace("NP0", "C0G")
+        if skind == "value":
+            for r in [f.get("row")] + ([f["means_row"]] if f.get("means_row") else []):
+                if not r or _flat(r) not in flat: return ("REFUSED", "field value: its row %r is not on the cited page" % r, {})
+                if _flat(r) not in segment(label): return ("REFUSED", "field value: its row is not under the page's %r" % label, {})
+            v = _decode_value(piece, sc["value_rule"])
+            if v is None: return ("REFUSED", "field value: %r does not decode by the rule %r" % (piece, sc["value_rule"]), {})
+            need = {"pf_2sig": "significant digits", "ohm_3sig": "significant figures"}[sc["value_rule"]]
+            if need not in _flat(f["row"]).lower(): return ("REFUSED", "field value: its row does not state the rule (%r)" % need, {})
+            if sc["value_rule"] == "ohm_3sig":
+                p = piece[3]
                 pw = ("%s=10%s" % (p, p)) if p.isdigit() else ("%s=10%d" % (p, _POW[p]))
                 if pw not in _flat(f.get("means_row") or "").replace(" ", ""):
-                    return ("REFUSED", "field value: the power code %s=10^%s is not in the table's power row" % (p, p if p.isdigit() else _POW[p]), {})
+                    return ("REFUSED", "field value: the power code %s is not in the table's power of ten row" % p, {})
             got["value"] = v
-        elif kind not in LITERAL_KINDS:
-            return ("REFUSED", "field %s is not a kind the rule knows" % kind, {})
-    # the decoded properties against the selection's deciding properties
+    if pos != len(mpn): return ("REFUSED", "%s has characters the page's layout does not account for" % mpn, {})
+    if sc.get("construction"):
+        c, anchor = sc["construction"]
+        if anchor in flat: got["construction"] = c
+    # every deciding property of the kind decoded, and each meeting the selection
     bad, est = [], []
     rv = _req_value(req)
-    if rv is not None:
-        if got.get("value") is None: bad.append("the decode does not establish the value")
-        elif abs(got["value"] - rv) > 1e-6 * rv: bad.append("value %g where the selection needs %g" % (got["value"], rv))
-        else: est.append("value")
-    if req.get("package"):
-        if got.get("package") is None: bad.append("the decode does not establish the package")
-        elif got["package"] != str(req["package"]): bad.append("package %s where the selection needs %s" % (got["package"], req["package"]))
-        else: est.append("package")
-    if req.get("tolerance_max_pct") is not None:
-        if got.get("tolerance_pct") is None: bad.append("the decode does not establish the tolerance")
-        elif got["tolerance_pct"] > float(req["tolerance_max_pct"]) + 1e-9:
-            bad.append("tolerance ±%g%% where the selection allows at most %g%%" % (got["tolerance_pct"], req["tolerance_max_pct"]))
-        else: est.append("tolerance")
-    if req.get("v_rating_min") is not None:
-        if got.get("volts") is None: bad.append("the decode does not establish the rated voltage")
+    if got.get("value") is None or rv is None: bad.append("the value is not decoded or not stated")
+    elif abs(got["value"] - rv) > 1e-6 * rv: bad.append("value %g where the selection needs %g" % (got["value"], rv))
+    else: est.append("value")
+    if got.get("package") is None or not req.get("package"): bad.append("the package is not decoded or not stated")
+    elif got["package"] != str(req["package"]): bad.append("package %s where the selection needs %s" % (got["package"], req["package"]))
+    else: est.append("package")
+    if got.get("tolerance_pct") is None or req.get("tolerance_max_pct") is None: bad.append("the tolerance is not decoded or not stated")
+    elif got["tolerance_pct"] > float(req["tolerance_max_pct"]) + 1e-9:
+        bad.append("tolerance ±%g%% where the selection allows at most %g%%" % (got["tolerance_pct"], req["tolerance_max_pct"]))
+    else: est.append("tolerance")
+    if kind == "capacitor":
+        if got.get("volts") is None or req.get("v_rating_min") is None: bad.append("the rated voltage is not decoded or not required")
         elif got["volts"] + 1e-9 < float(req["v_rating_min"]): bad.append("rated %g V where the selection needs %g V" % (got["volts"], req["v_rating_min"]))
         else: est.append("voltage")
-    if req.get("dielectric"):
-        if got.get("dielectric") is None: bad.append("the decode does not establish the dielectric")
+        if got.get("dielectric") is None or not req.get("dielectric"): bad.append("the dielectric is not decoded or not required")
         elif got["dielectric"] not in DIELECTRIC_ACCEPTS.get(req["dielectric"], (req["dielectric"],)):
             bad.append("dielectric %s where the selection needs %s" % (got["dielectric"], req["dielectric"]))
         else: est.append("dielectric")
-    if req.get("construction") == "MLCC":
-        if "CERAMIC" not in str(got.get("series_means") or "").upper(): bad.append("the decode does not establish a ceramic multilayer construction")
+        if got.get("construction") != req.get("construction"): bad.append("construction %s where the selection needs %s" % (got.get("construction"), req.get("construction")))
         else: est.append("construction")
-    not_est = []
-    if req.get("power_min_w") is not None:
-        if got.get("watts") is None: not_est.append("power_min_w")
+    if kind == "resistor":
+        if got.get("watts") is None or req.get("power_min_w") is None: bad.append("the power rating is not decoded or not required")
         elif got["watts"] + 1e-9 < float(req["power_min_w"]): bad.append("rated %g W where the selection needs %g W" % (got["watts"], req["power_min_w"]))
         else: est.append("power")
-    if req.get("tcr_max_ppm") is not None: not_est.append("tcr_max_ppm")
-    if bad: return ("REFUSED", "the decoded part does not meet the selection: " + "; ".join(bad), {})
-    return ("DECODED", "page %s decodes it: %s" % (ds.get("page"), ", ".join(est)), dict(established=est, not_established=not_est))
+    missing = [m for m in MUST[kind] if m not in est]
+    if bad or missing:
+        return ("REFUSED", "the decoded part does not meet the selection: " + "; ".join(bad or ["%s not established" % ", ".join(missing)]), {})
+    return ("DECODED", "page %s decodes it: %s" % (ds.get("page"), ", ".join(est)), dict(established=est, not_established=[]))
 
 
-def read_binding(ds, mpn, root=REPO, maker=None, req=None):
+def read_binding(ds, mpn, root=REPO, maker=None, req=None, kind=None):
     """Rule D-2 on one binding {path, sha256, page, binding}: READ (PRINTED: the cited page prints the part number),
     DECODED (the cited page is the maker's ordering-code table and decodes it, read_decoded), REFUSED (the file is there
     and its sha256, its page or its decode does not agree), or UNREAD (held back and not fetched on this host)."""
@@ -1125,16 +1208,40 @@ def read_binding(ds, mpn, root=REPO, maker=None, req=None):
         return dict(state="REFUSED", why="%s is not the document bound: sha256 %s, the table %s" % (path, got[:16], ds["sha256"][:16]))
     if not ds.get("sha256"):
         return dict(state="REFUSED", why="the binding records no sha256 of %s" % path)
-    kind = ds.get("binding") or "PRINTED"
-    if kind == "DECODED":
-        st, why, det = read_decoded(ds, mpn, maker or "", req or {}, page_text(full, int(page)), page_text(full, 1))
-        return dict(state=st, why=why, binding=kind, **det)
-    if kind != "PRINTED":
-        return dict(state="REFUSED", why="the binding kind %r is neither PRINTED nor DECODED" % kind)
+    bkind = ds.get("binding") or "PRINTED"
+    if bkind == "DECODED":
+        st, why, det = read_decoded(ds, mpn, maker or "", req or {}, kind, page_text(full, int(page)), page_text(full, 1), got)
+        return dict(state=st, why=why, binding=bkind, **det)
+    if bkind != "PRINTED":
+        return dict(state="REFUSED", why="the binding kind %r is neither PRINTED nor DECODED" % bkind)
+    pk = ds.get("packing")
+    if pk:
+        # a PRINTED part number whose packing code the page prints as a placeholder and keys on the same page (Hirose's
+        # FH34SRJ-24S-0.5SH(##) with "(##) : (50)"); the code's meaning may sit on another page of the same document
+        code, ph = str(pk.get("code") or ""), str(pk.get("placeholder") or "")
+        if not code or not ph or not mpn.endswith(code):
+            return dict(state="REFUSED", why="the packing code %r does not end the part number %s" % (code, mpn))
+        printed = mpn[:len(mpn) - len(code)] + ph
+        text = page_text(full, int(page))
+        ok, line = names_part(text, printed)
+        if not ok: return dict(state="REFUSED", why="page %s of %s does not print %s" % (page, path, printed))
+        key = _flat(pk.get("key_row") or "")
+        if not key or key not in _flat(text) or not re.search(re.escape(ph) + r"\s*:\s*" + re.escape(code), key):
+            return dict(state="REFUSED", why="page %s does not key %s to %s" % (page, ph, code))
+        if pk.get("means_page"):
+            if _flat(pk.get("means_row") or "") not in _flat(page_text(full, int(pk["means_page"]))) or code not in str(pk.get("means_row")):
+                return dict(state="REFUSED", why="page %s does not give the meaning of %s" % (pk["means_page"], code))
+        return dict(state="READ", why="page %s prints %s and keys %s to %s" % (page, printed, ph, code), line=line, binding=bkind)
     ok, line = names_part(page_text(full, int(page)), mpn)
     if not ok:
         return dict(state="REFUSED", why="page %s of %s does not name %s" % (page, path, mpn))
-    return dict(state="READ", why="page %s names it" % page, line=line, binding=kind)
+    return dict(state="READ", why="page %s names it" % page, line=line, binding=bkind)
+
+
+def _judged(req):
+    """A selection's requirements as bindings are judged on them: v_working_bound is per row (it is left out of the
+    key, K-1), so it is left out here too; everything else is the selection's."""
+    return {k: v for k, v in (req or {}).items() if k != "v_working_bound"}
 
 
 def check(argv):
@@ -1155,6 +1262,9 @@ def check(argv):
     if not scope: print("part_identities check: the table names no scope (its boards)"); return 1
     rs, meta = rows(boards=scope)
     now_key = {"%s:%s" % (p["board"], p["ref"]): p["key"] for p in rs}
+    # the requirements every binding is judged against are DERIVED here from the committed netlist, the intent and the
+    # generator's value text, never taken from the table (round 3's check, B1: a table whose C37 said 6.3 V held)
+    now_req = {"%s:%s" % (p["board"], p["ref"]): (p["kind"], _judged(p["requirements"])) for p in rs}
     seen, bad, reading = {}, [], []
     inputs = {str(i.get("board")): i for i in (t.get("inputs") or [])}
     for m in meta:
@@ -1180,7 +1290,15 @@ def check(argv):
         row = dict(id=s["id"], status=st, rows=len(s["rows"]))
         if st == "RESOLVED":
             if not (i.get("maker") and i.get("mpn")): bad.append("%s is RESOLVED without a maker and a part number" % s["id"])
-            r = read_binding(i.get("datasheet") or {}, i.get("mpn"), maker=i.get("maker"), req=s["requirements"])
+            derived = {json.dumps(now_req[x], sort_keys=True, default=str) for x in s["rows"] if x in now_req}
+            if len(derived) != 1:
+                bad.append("%s: its rows do not derive one requirement (%d)" % (s["id"], len(derived))); continue
+            dkind, dreq = now_req[next(x for x in s["rows"] if x in now_req)]
+            if _judged(s.get("requirements") or {}) != dreq or s.get("kind") != dkind:
+                bad.append("%s: the table's requirements are not the ones the netlist and the intent derive (%s)"
+                           % (s["id"], ", ".join(sorted(k for k in set(dreq) | set(_judged(s.get("requirements") or {}))
+                                                         if dreq.get(k) != _judged(s.get("requirements") or {}).get(k))) or "the kind"))
+            r = read_binding(i.get("datasheet") or {}, i.get("mpn"), maker=i.get("maker"), req=dreq, kind=dkind)
             if r["state"] in ("READ", "DECODED") and r.get("binding") != ((i.get("datasheet") or {}).get("binding") or "PRINTED"):
                 bad.append("%s: its binding reads %s where the table says %s" % (s["id"], r.get("binding"), (i.get("datasheet") or {}).get("binding")))
             row.update(mpn=i.get("mpn"), document=(i.get("datasheet") or {}).get("path"), page=(i.get("datasheet") or {}).get("page"), **r)
