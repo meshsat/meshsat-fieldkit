@@ -192,7 +192,7 @@ open_items:
 boards:
 
  a:
-   written_against: {artefact: netlist, path: "pcb-a-power-a23/out/pcb-a-power.net", sha256_16: "30ad87746d1801ca", content16: "2efce63fe72079f1"}
+   written_against: {artefact: netlist, path: "pcb-a-power-a23/out/pcb-a-power.net", sha256_16: "d68ce269daa23080", content16: "3876a0a8e689f1a5"}
    classes:
     - name: "SMA jacks for the device pigtails"
       refs: ["J_RF*"]
@@ -349,7 +349,7 @@ boards:
       reason: "a test point: a bare pad touched by a probe at the bench, nothing is mated and nothing hangs on it"
 
  b:
-   written_against: {artefact: netlist, path: "pcb-b-compute-b19/out/pcb-b-compute.net", sha256_16: "5b89d5ef6fe0299a", content16: "31190f043dc21cfa"}
+   written_against: {artefact: netlist, path: "pcb-b-compute-b19/out/pcb-b-compute.net", sha256_16: "1aec97f435080163", content16: "ccdeb5659d62553e"}
    classes:
     - name: "CM5 module receptacles"
       refs: ["U30A", "U30B", "U31A", "U31B", "U32A", "U32B"]
