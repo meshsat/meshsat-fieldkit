@@ -435,6 +435,11 @@ for i, net in enumerate(("ZEROIZE_SW", "SDA", "SCL", "SOS_SW", "TEST_SW", "TR_AP
 _intent.node("TX_INHIBIT_n", 3.333, "the hardware EMCON line at its source: R14 (2.2k 1 percent) to +3V3 and SW_EMCON to GND, R50 (10k) and the "
              "three consumer pull-downs to GND; at most +3V3 at the TLV75533's 1 percent (TI SBVS320D, 'Output accuracy: 1%'), and no "
              "part takes its supply from it (U9, U14 and the far gates read it)", v_work=3.333)
+# EMCON_HW DECLARED AS A NODE (set 12, MESHSAT-1357, 29 September 2026): D4E-F1's D23 joins it to TX_INHIBIT_n, so PWR-001's
+# census read it as a possible supply with nothing to settle it; it is U9's output line, declared here in TX_INHIBIT_n's form.
+_intent.node("EMCON_HW", 3.333, "the hardware EMCON line as board C drives it: U9 (74LVC1G17, rail-to-rail on +3V3) through "
+             "R52 (330R 1 percent), clamped by D23 (BAT46W) to TX_INHIBIT_n; at most +3V3 at the TLV75533's 1 percent (TI "
+             "SBVS320D, 'Output accuracy: 1%'), and no part takes its supply from it (U13, U14 and board B's gates read it)", v_work=3.333)
 # THE LED RAIL SENSE IS A DIVIDER (finding W4C-F1, read while declaring LED_RAIL_SW for PWR-001; taken by the session under the owner's
 # standing rule of 26 September 2026). R15 alone joined the 5 V LED_RAIL_SW to GPIO26 (ADC0, U3 pin 38). The RP2040 datasheet
 # (v2/vendor/rp2040/rpi-rp2040-datasheet.pdf, build-version 3184e62-clean): 'the voltage on the ADC analogue inputs must not exceed IOVDD
