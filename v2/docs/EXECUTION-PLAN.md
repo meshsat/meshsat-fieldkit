@@ -585,3 +585,17 @@ is preserved as it stands (`v2/docs/records/od01/`, the laptop's `MESHSAT-OD01-c
 not closed by this: every physical test (the receipt checks R1 to R8, the shutdown's V1 to V4 on the built rig, tests A and
 B), and the two-pack mission validation of Option A(i) (a model result; board A's charger efficiency, which S-117's stream
 reads as 0.92 to 0.95 where the energy model uses 0.98, is under independent check and may move the accepted margins).
+
+### Finding, 29 September 2026 13:44 CEST: Option A(i)'s accepted margins rest on charger efficiencies the drawn parts do not support
+
+Stream s117 (S-117, board A's charger set to its inductor) found, and its independent AI check confirmed at the energy
+model's operating points (20.7 V in, the 14.5 V node, 4.15 to 6.2 A in), that board A's BQ25731 U3 with the drawn
+CSD18510Q5B switching FETs runs at **0.92 to 0.96 (0.94 by TI's method)**, not the 0.98 the energy model and the checked
+two-pack reconciliation use, and that Option A(i)'s drafted lid charger U3B runs at 0.87 to 0.93 at its 800 kHz, not
+0.975. A coordinator's scratch sensitivity of the reconciliation: with both at 0.95 both lid options still meet M1 but the
+tablet-out lid's adverse lowest store falls from 87.4 to 30.3 Wh; with both at 0.92 both lid options do NOT meet the
+adverse case. **So the two-pack M1 result quoted in the decision table above is not established for the circuit as drawn.**
+The lever is engineering, not an owner decision: switching FETs of about 12 nC gate charge, 7 nC switching charge, 15 nC
+reverse recovery and 5 mOhm or less would support 0.98 (the check's criteria); the s117 stream is selecting real parts
+from makers' documents, then the energy model's charger efficiencies are corrected and the reconciliation re-run and
+checked. Until then REQ-072 stays FAIL and no Option A(i) margin is quoted as current.
