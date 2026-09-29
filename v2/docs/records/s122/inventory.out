@@ -1,7 +1,7 @@
 # Stream s122 inventory: every in-scope sentence of the documents CFL-016 names that names a part, net, board,
 # rail, gate function or generator line. Written by v2/docs/records/s122/inventory.py at the commit it ran in.
 # Netlists parsed (tx_inhibit.parse_netlist): A v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb, B v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728, C v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@c9f7394594201045, D v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1, E v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8, P v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@20c7b0795593d761
-# Documents: v2/docs/PANEL.md@b396d028b41e880d, v2/docs/CONOPS.md@6cb7b241cb84d729, v2/docs/V2-SPEC.md@c480bac24e8c048c, v2/docs/OPERATING-ENVELOPE.md@26e98ecfd2e4ec2f, v2/docs/TEST-PLAN.md@42a3dff33442c860, v2/docs/ASSEMBLY.md@942d562edd128759, v2/ecad/tools/pcb_decisions.yaml@a41df5d12ff95995, v2/docs/feasibility/EMCON.md@c8eb306265110076, v2/docs/handover/DEFINITION-STATUS.md@f7f0d7324b94dbc8
+# Documents: v2/docs/PANEL.md@b396d028b41e880d, v2/docs/CONOPS.md@6cb7b241cb84d729, v2/docs/V2-SPEC.md@4f1fd784aa325a0d, v2/docs/OPERATING-ENVELOPE.md@26e98ecfd2e4ec2f, v2/docs/TEST-PLAN.md@42a3dff33442c860, v2/docs/ASSEMBLY.md@942d562edd128759, v2/ecad/tools/pcb_decisions.yaml@a41df5d12ff95995, v2/docs/feasibility/EMCON.md@c8eb306265110076, v2/docs/handover/DEFINITION-STATUS.md@f7f0d7324b94dbc8
 # Scope: PANEL.md 1, 2, 3, 5, 6, 7, 9, 10; CONOPS.md 2a, M2, M4, 4, 4a, 4b, 4b.1, 4c, 4d, 4e, 4f, 5; V2-SPEC.md whole; OPERATING-ENVELOPE.md 2, 3, 4; TEST-PLAN.md whole; ASSEMBLY.md 2, 4, 8, 9; pcb_decisions.yaml 28, 40; EMCON.md 0a.1; DEFINITION-STATUS.md Current values of CONOPS's circuit passages (stream s122, 29 September 2026)
 
 PANEL.md#1:L55:cell:1:s1 [d2e1df041f]
@@ -54,7 +54,7 @@ PANEL.md#1:L63:cell:1:s5 [f52539503d]
     names: refs=SW_EMCON; row=EMCON logic
 PANEL.md#1:L64:cell:1:s1 [d757d209e1]
     the Xenarc 709GNK monitor's connector block (its HDMI and 12 V leads go below the plate to B16 `J_HDMI` and A22 `J_MON`, its USB touch lead to D8 `J_USB3` through the adapter of `ASSEMBLY.md` section 4: the session's choice SC-HF-06 of 27 September 2026, `HW-FW-CONTRACT.md` section 8), two U-174/U headset jacks `J_HSJ1`/`J_HSJ2` (leads to D8 `J_HS1`/`J_HS2`), the USB camera module behind the sealed window (lead to B16 `J_CAM`)
-    names: refs=D8,J_CAM,J_HDMI,J_HS1,J_HS2,J_HSJ1,J_HSJ2,J_MON,J_USB3; boards=A22,B16,D8; counts=two U-174/U headset jacks; parts=U-174/U; row=Pass-throughs
+    names: refs=D8,J_CAM,J_HDMI,J_HS1,J_HS2,J_HSJ1,J_HSJ2,J_MON,J_USB3; boards=A22,B16,D8; counts=two U-174/U headset jacks; parts=709GNK,U-174/U; row=Pass-throughs
 PANEL.md#2:L70:cell:1:s1 [436512e5ba]
     +5V
     names: nets=+5V; rails=+5V; row=1
@@ -1288,6 +1288,9 @@ CONOPS.md#5:L920:para:s3 [403303aa15]
 CONOPS.md#5:L920:para:s4 [360270daa1]
     The hardware interlock that drops the outlets while the PA keys, which the design record asks for (32.55 line 2932), is on board A since `458b2873`: `U30` forms OUTLET_OK = NOT (TR_APRS AND PA_EN), low while the PA keys, and two gates of `U26` give POE_EN = POE_SW_EN AND OUTLET_OK and PD_EN = PD_SW_EN AND OUTLET_OK (`gen_sch_a.py` lines 1088 to 1104 at `45bde541`).
     names: refs=U26,U30; nets=OUTLET_OK,PA_EN,PD_EN,PD_SW_EN,POE_EN,POE_SW_EN,TR_APRS; boards=board A; gates=and,gates,interlock; gens=gen_sch_a.py; counts=two gates
+CONOPS.md#5:L947:cell:2:s1 [05b3d33f08]
+    at most 10 W (Xenarc 709GNK product manual v2)
+    names: parts=709GNK; row=Xenarc monitor
 CONOPS.md#5:L949:cell:2:s1 [f61fe4f4f1]
     idle 60 mA, RF disabled 4.7 mA, LTE carrier aggregation 1,512 mA (RM520N series hardware design v1.1, Table 43)
     names: parts=RM520N; row=5G module
@@ -1383,7 +1386,7 @@ V2-SPEC.md#Case and construction:L10:cell:1:s1 [e231767e5f]
     names: refs=C2,C4; counts=twelve gas-discharge arrestors; row=End walls
 V2-SPEC.md#Case and construction:L10:cell:1:s2 [facb104de6]
     The case generators `panel1450.py` and `case_wall_cutouts.py` carry them since `c351115d`, and the current case set is `release/case-2026-09-27/` (correction 30); the committed boards and the templates of `release/revA/case/` still show the eleven Amphenol 132170 SMA couplers at Z 88 of 32.56 (west VHF, HF, WIFI 2.4, GNSS, SDR; east 5G MAIN, 5G DIV, IRIDIUM, LORA, WIFI P2P A, WIFI P2P B), which is history; every cable ends at the dock strip's float clamp under the stack's blind-mate receptacle (`ecad/tools/panel1450.py` is the single source of the positions and the legends).
-    names: boards=the dock strip; gens=panel1450.py,panel1450.py; row=End walls
+    names: boards=the dock strip; gens=panel1450.py,panel1450.py; parts=132170; row=End walls
 V2-SPEC.md#Case and construction:L10:cell:1:s3 [5151a2ab87]
     The 5G module's ports are ANT0 to ANT3, not MAIN and DIV: the owner ruled three 5G jacks on ANT0, ANT2 and ANT3, at the board A site found free (X +46), if the case measurement confirms that site and the board E clamp fit, and otherwise two on ANT0 and ANT2 (D-07, 26 Sep 2026; correction 12); the case half is laid out as the east wall's middle arrestor, and the board E clamp fit remains
     names: boards=board A,board E; counts=three 5G jacks; row=End walls
@@ -1509,13 +1512,16 @@ V2-SPEC.md#Bearers and radios:L49:cell:2:s1 [7047eb808a]
     names: boards=B16; row=SDR
 V2-SPEC.md#Bearers and radios:L50:cell:1:s1 [26424f2f31]
     Quectel LG290P (all six constellations, L1/L2/L5/E6, RTK capable) with the Quectel YEGD006U1A puck or the u-blox ANN-MB2
-    names: refs=L1; boards=E6; parts=LG290P,YEGD006U1A; row=GNSS
+    names: refs=L1; boards=E6; parts=ANN-MB2,LG290P,YEGD006U1A; row=GNSS
 V2-SPEC.md#Bearers and radios:L50:cell:2:s1 [ccb40f1128]
     B16 UART, west jack
     names: boards=B16; row=GNSS
 V2-SPEC.md#Bearers and radios:L51:cell:1:s1 [3a7ee237a0]
     gas-discharge arrestors as the bulkheads, the twelve PolyPhaser GTH-SFF-AL of line 10 on the RF entry plates, grounded through the plates to the ground stud (case choices C2 and C4, correction 20; their ground lead is owed to `GROUNDING-AND-SHIELDS.md`); a receive limiter or relay on the SDR path during key-down (line 49); a shielded compartment for the PA
     names: refs=C2,C4; gates=and; row=RF protection
+V2-SPEC.md#Panel and human interface (face plate, C7):L56:cell:1:s1 [158db4d812]
+    Xenarc 709GNK boxed monitor set INTO the plate, its glass level with the aluminium face (owner ruling 9 Sep 2026, appendix 32.85): 7 in, 1024 x 600, 1000 nits, projected-capacitive touch, HDMI, IP67, -20 to +70 C; connector side from Xenarc's drawing *owed*
+    names: parts=709GNK; row=Display
 V2-SPEC.md#Panel and human interface (face plate, C7):L57:cell:1:s1 [3ca8195c32]
     Pervasive Displays E2370KS0C1, 3.7 in 416 x 240 wide-temperature panel under the plate lens: identity, status and the QR code with the power off
     names: parts=E2370KS0C1; row=E-paper
@@ -1582,6 +1588,9 @@ V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owne
 V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L86:cell:1:s1 [ef24592b40]
     dock strip, 267 x 68 mm, four layers, and the block E5: the LM5069 hot swap on the 9 to 36 V input (`U6`), which passes the bus up to A22's LM5176 front end (`U2`; correction 34), the LT8705A solar tracker, the pack entry (XT60, 25 A fuse, SMBus), eleven float clamps, the sensor controller with the BME688 and BMI270 (`U14`, `U15`; the magnetometer is in the outside pod, reached through `J_POD`, correction 35), the water electrodes, the gas sensor, the DCF77, Geiger, lightning and outside-pod headers, two mixer fan headers
     names: refs=J_POD,U14,U15,U2,U6; boards=A22,E5; counts=two mixer fan; parts=BME688,BMI270,DCF77,LM5069,LM5176,LT8705A,XT60; row=E6
+V2-SPEC.md#Estimated cost per kit (parts only, prototype quantities, 6 Sep 2026):L95:cell:0:s1 [c64a44b1c1]
+    Xenarc 709GNK monitor
+    names: parts=709GNK; row=Xenarc 709GNK monitor
 V2-SPEC.md#Estimated cost per kit (parts only, prototype quantities, 6 Sep 2026):L100:cell:0:s1 [5e3035b8b7]
     AW7915-AED WiFi card
     names: parts=AW7915-AED; row=AW7915-AED WiFi card
@@ -1710,7 +1719,7 @@ V2-SPEC.md#Corrections, 26 September 2026:L140:item:s1 [4bae2bcb5a]
     names: boards=board A,board C,board E,board P; gates=open drains; topic=EMCON; parts=BQ7720700,SCF9550
 V2-SPEC.md#Corrections, 27 September 2026:L149:item:s1 [488d983a0f]
     **Case and antenna entries (lines 9, 10, 11, 13, 42 and 51).** Choices the session took under the owner's standing rule of 26 September 2026, after the owner reversed D-08 (`CASE-MARGINS.md` section 4, recorded as SC-07 of the requirements registry and in `CONOPS.md` section 7a): C1, the face plate on top of the 1450PF frame over Peli's o-ring, screwed from above into Peli's 6-32 inserts, as Peli documents; C6, four setting legs under the frame's ring give the frame its height; C2, the ruled gas-discharge arrestors are the twelve antenna bulkheads at Z 59, five on the east wall and seven on the west, the two WIFI P2P jacks moving west; C3, one connector plate between the hinge fairings carrying all six ruled wall items; C4, one aluminium RF entry plate per end wall carrying the arrestors and their common ground, which retires the Amphenol 132170 couplers; C5, the QMX tray 1.5 mm west.
-    names: refs=C1,C2,C3,C4,C5,C6; boards=C5,C6; counts=two WIFI P2P jacks; parts=1450PF
+    names: refs=C1,C2,C3,C4,C5,C6; boards=C5,C6; counts=two WIFI P2P jacks; parts=132170,1450PF
 V2-SPEC.md#Corrections, 27 September 2026:L149:item:s2 [88040ba1cc]
     Line 13's screws follow C1: ten 6-32, not the ten M3 it read.
     names: refs=C1
@@ -1852,6 +1861,9 @@ OPERATING-ENVELOPE.md#2:L73:cell:3:s1 [39d7edd5fb]
 OPERATING-ENVELOPE.md#2:L74:cell:3:s1 [355e205565]
     `battery/samsung-35e-orbtronic.pdf`, Samsung INR18650-35E Ver. 1.1, 3.12 (source corrected 26 September 2026)
     names: parts=INR18650-35E; row=4S pack cells, charge
+OPERATING-ENVELOPE.md#2:L76:cell:0:s1 [c64a44b1c1]
+    Xenarc 709GNK monitor
+    names: parts=709GNK; row=Xenarc 709GNK monitor
 OPERATING-ENVELOPE.md#2:L77:cell:0:s1 [e5f22b220e]
     TI LM5069 hot-swap controller on the 9 to 36 V input (board E `U6`)
     names: refs=U6; boards=board E; parts=LM5069; row=TI LM5069 hot-swap controller on the 9 t
@@ -2752,6 +2764,9 @@ ASSEMBLY.md#4:L166:cell:1:s1 [27280d94b4]
 ASSEMBLY.md#4:L166:cell:2:s1 [53e544156a]
     **Corrected 27 September 2026 (MESHSAT-1357, the case set C1 to C6):** the inner jacks of the PolyPhaser GTH-SFF-AL arrestors on the RF entry plates (C2, C4): west VHF, HF, WIFI 2.4, GNSS, SDR, WIFI P2P A, WIFI P2P B at Y -93, -62, -31, 0, +31, +62, +93; east 5G MAIN, 5G DIV, 5G ANT3, IRIDIUM, LORA at Y -62, -31, 0, +31, +62; all at Z 59.
     names: refs=C1,C2,C4,C6; boards=C6; row=RF jumpers, 11 x
+ASSEMBLY.md#4:L166:cell:2:s2 [7fa81a144e]
+    Until 27 September 2026: eleven Amphenol 132170 couplers at Z 88
+    names: parts=132170; row=RF jumpers, 11 x
 ASSEMBLY.md#4:L167:cell:1:s1 [22fe281a54]
     **Corrected 27 September 2026 (MESHSAT-1357, the case set C1 to C6):** 114.0 x 68.3 x 5.0 aluminium (C3, `v2/release/case-2026-09-27/connector-plate/`); until 27 September 2026 54 x 82 x 3 between ribs
     names: refs=C1,C3,C6; boards=C6; row=Connector plate
@@ -2761,6 +2776,9 @@ ASSEMBLY.md#4:L167:cell:4:s1 [cda4473e43]
 ASSEMBLY.md#4:L175:cell:1:s1 [3a53e10db7]
     Glenair D38999/26FC4SN plug (shell 13, insert 13-4, four M39029/56-352 size 16 socket contacts, key N, electroless nickel), crimped with the M22520/1-01 tool and the M22520/1-04 positioner, seated with M81969/14-03; Glenair M85049/38S13N self-locking straight strain relief on the plug's M18 x 1 thread
     names: counts=four M39029/56-352 size 16 socket; parts=D38999/26FC4SN,M22520/1-01,M22520/1-04,M39029/56-352,M81969/14-03,M85049/38S13N; row=DC lead
+ASSEMBLY.md#4:L175:cell:2:s1 [9a3c85265f]
+    Lapp OLFLEX ROBUST 210 4 x 1.0 (article 0021917, 6.6 mm, TPE, outdoor), or Alpha Wire 25064 (18 AWG 4C, TPU, 6.58 mm); 2 m
+    names: parts=0021917; row=DC lead
 ASSEMBLY.md#4:L180:para:s1 [c8263105e0]
     Twelve Preci-Dip 813 contacts in `J_DOCK` on A22's underside land on the raised block's targets: pins 1 to 7 ground, 8 `SHORE_INHIBIT`, 9 and 10 the USB pair of E6's sensor controller, 11 ground and 12 the hot stop line HOT-R1 (`DOCK_SPARE`, since stream w4ae), with `VIN_RAW` (the 9 to 36 V input and the solar tracker's output, passed up to A22's front end) on four 9 A spring pins of its own, `J_VR1` to `J_VR4`, with its return on four more, `J_VN1` to `J_VN4`, since EQ-16 (`gen_sch_a.py:294` and `gen_sch_e.py:660` at `e57a7365`; at `45bde541`, `gen_sch_a.py:225` and `gen_sch_e.py:488`, pins 1 to 4 carried `VIN_RAW`; corrected 26 September 2026, S-07: this sentence put the wall outlet's console pair on 9 and 10).
     names: refs=J_DOCK,J_VN1,J_VN4,J_VR1,J_VR4; nets=DOCK_SPARE,SHORE_INHIBIT,VIN_RAW; boards=A22,E6; rails=VIN_RAW; gens=gen_sch_a.py:294,gen_sch_e.py:660,gen_sch_a.py:225,gen_sch_e.py:488; counts=Twelve Preci-Dip 813 contacts,four 9 A spring pins
@@ -2838,7 +2856,7 @@ ASSEMBLY.md#9:L223:item:s1 [3d63f552f7]
     names: boards=E5
 ASSEMBLY.md#9:L224:item:s1 [cd9739a701]
     Case and face (**Corrected 27 September 2026 (MESHSAT-1357, the case set C1 to C6):** C1 to C6): the four setting legs with their VHB 5952 pads, the printed locator and the two pairs of printed wedges; the connector plate (114.0 x 68.3 x 5.0) and its gasket with its receptacles on the back wall, each on a Glenair 930-001 silicone flange gasket, the six M4 x 25 plate screws with bonded sealing washers; the twelve PolyPhaser GTH-SFF-AL arrestors on the two 6.0 mm RF entry plates with their two gaskets and sixteen M4 x 12 ISO 7380 screws on rubber-faced sealing washers (in place of the eleven Amphenol 132170 couplers at Z 88); the sensor pod on its M8; ten 6-32 UNC x 1/2 in A2 pan heads for the plate (in place of the M3 x 10 with star washers); the face seals and hardware of `vendor/seals/` and `vendor/mentor/`: the e-paper tape frames from `face-plate.dxf` (the PORON ring is dropped, C1), the 2.0 mm UV polycarbonate lens with 3M Primer 94, three Silex GP60 silicone washers, the NKK AT516 spare O-ring and AT428H boot, the APEM K seals, the Floyd Bell 61663 gasket, sixteen Mentor 1282.5004 light guides, eight PEM SO-M3-10 standoffs and two S-M3 nuts, the Xenarc window gasket, DOWSIL 3145 clear for the beads, MG Chemicals 422B for the backer's underside, the 3M 7871EC serial label; the QMX tray r2 (the printed tray and retaining frame, the 5052 lid plate, ten M3 x 5 countersunk A2, six M3 x 10 button head A2 with six M3 square nuts, two PORON 4701-30 pads, DP8005 for the plate, bonded tie mounts for the lid harness).
-    names: refs=C1,C6; boards=C6,the backer; counts=twelve PolyPhaser GTH-SFF-AL arrestors; parts=7871EC,AT428H,AT516,DP8005,GP60,SO-M3-10
+    names: refs=C1,C6; boards=C6,the backer; counts=twelve PolyPhaser GTH-SFF-AL arrestors; parts=132170,422B,7871EC,AT428H,AT516,DP8005,GP60,SO-M3-10
 pcb_decisions.yaml#28:L52:field:outcome:s1 [27a657c309]
     owner ruling 25 September 2026, asked one decision at a time with the options and the recommendation: four layers at 2 oz outer copper for board P, the arm P8 measured at 0 hard and 0 unrouted at the fabricator's 0.16 mm floor.
     names: boards=P8,board P
@@ -2857,10 +2875,13 @@ pcb_decisions.yaml#40:L896:field:outcome:s1 [4698174d5f]
 pcb_decisions.yaml#40:L896:field:outcome:s2 [a89adf0d12]
     If a 4S secondary protector that also covers under-voltage can be sourced near the cost of the over-voltage-only part, it is used; otherwise the under-voltage protection stays in the BQ4050's firmware and the residual is accepted, with a verification of the gauge's data flash (the thresholds and the enabled protections read back against `pcb_pack_protection.yaml`) as a commissioning step.
     names: gates=enabled; parts=BQ4050
-pcb_decisions.yaml#40:L896:field:outcome:s3 [4f6b62b753]
+pcb_decisions.yaml#40:L896:field:outcome:s3 [1f1b7f0b3f]
+    The two parts this entry named on 18 September (ABLIC S-8261 and TI bq2970) are single-cell protectors and cannot protect a 4S block (W2 finding F-DEC40, confirmed by its challenger: S-8261 is "FOR 1-CELL PACK", bq2970's PACK+ is limited to 12 V), so neither is the part.
+    names: parts=S-8261,bq2970
+pcb_decisions.yaml#40:L896:field:outcome:s4 [4f6b62b753]
     IN BOARD P'S SCHEMATIC SINCE faf8c981 (round 4 of MESHSAT-1357), with the second level's over-temperature network of d90f30e4: a TI BQ7720700 second level (3S to 7S; cell over-voltage 4.325 V, cell under-voltage 2.25 V, open wire, and a fixed 70 C over-temperature on its own 103AT-2 thermistor; SLUSEG7D, v2/vendor/battery/ti-bq77207.pdf) whose COUT and the BQ4050's FUSE output both drive the heater switch of an Eaton SCF9550-30-05 chemical fuse F2 through the arming jumper JP1, which is closed at commissioning after the gauge's image is written and read back; its DOUT holds the discharge FET off below 2.25 V; and the BQ4050's PTC input is enabled with a Murata PRF15BB103RB6RC chip PTC element (gen_sch_p.py:243, :288 and :414-502 at 45bde541).
     names: refs=F2,JP1; gates=enabled; gens=gen_sch_p.py:243, :288 and :414-502; parts=103AT-2,BQ4050,BQ77207,BQ7720700,PRF15BB103RB6RC,SCF9550-30-05
-pcb_decisions.yaml#40:L896:field:outcome:s4 [c1269c680b]
+pcb_decisions.yaml#40:L896:field:outcome:s5 [c1269c680b]
     It is not laid out: the committed board P layout (P4) predates the schematic and is re-placed and re-routed at board P's next phase, and BAT-001 on board P stays open until that copper exists and pack_protection judges board P as generated (S-45).
     names: boards=P4,as generated,board P
 pcb_decisions.yaml#40:L896:field:reversed_by:s1 [b7bc3415b2]
@@ -3019,12 +3040,12 @@ DEFINITION-STATUS.md#Current values of CONOPS's circuit passages (stream s122, 2
 
 # counts per document
 v2/docs/PANEL.md: 167 sentences
-v2/docs/CONOPS.md: 287 sentences
-v2/docs/V2-SPEC.md: 157 sentences
-v2/docs/OPERATING-ENVELOPE.md: 66 sentences
+v2/docs/CONOPS.md: 288 sentences
+v2/docs/V2-SPEC.md: 159 sentences
+v2/docs/OPERATING-ENVELOPE.md: 67 sentences
 v2/docs/TEST-PLAN.md: 110 sentences
-v2/docs/ASSEMBLY.md: 158 sentences
-v2/ecad/tools/pcb_decisions.yaml: 9 sentences
+v2/docs/ASSEMBLY.md: 160 sentences
+v2/ecad/tools/pcb_decisions.yaml: 10 sentences
 v2/docs/feasibility/EMCON.md: 26 sentences
 v2/docs/handover/DEFINITION-STATUS.md: 24 sentences
-total: 1004 sentences
+total: 1011 sentences

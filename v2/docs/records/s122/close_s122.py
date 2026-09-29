@@ -43,6 +43,7 @@ sys.path.insert(0, os.path.join(L.TOP, "v2/docs/records/int7"))
 import apply_check1_answers as A  # noqa: E402
 
 TAG = "close_s122"
+FOLLOW_MARK = "(stream s122, the regression instrument's known escape classes"
 REG = os.path.join(L.TOP, "v2/ecad/tools/pcb_requirements.yaml")
 NAMES = ("PANEL.md", "CONOPS.md", "V2-SPEC.md", "OPERATING-ENVELOPE.md", "TEST-PLAN.md", "ASSEMBLY.md", "pcb_decisions.yaml",
          "EMCON.md", "DEFINITION-STATUS.md", "verdicts.out")
@@ -195,7 +196,58 @@ MUTANTS = [("A22", "the 13.8 V PA and 12 V HF rails (LM5176, EMCON gated)", "the
            ("D8", "the TUSB2046I hub (`U4`", "the TUSB2046B hub (`U4`", "m1: a history-excused part (TUSB2046B) put back as current"),
            ("D8", "the PCM2912A USB codec and TPA6132A2 amplifier", "the TPA6132A2 USB codec and PCM2912A amplifier",
             "m2: the codec and the amplifier swapped (the check's example)"),
-           ("D8", "and TPA6132A2 amplifier", "and TPA6132A2 codec", "m2: the TPA6132A2 named a codec (no qualifier: the forward test)")]
+           ("D8", "and TPA6132A2 amplifier", "and TPA6132A2 codec", "m2: the TPA6132A2 named a codec (no qualifier: the forward test)"),
+           # round 7 (check-s122-6 m2 c, d): a part named after its load, and a qualifier matched inside another word
+           ("D8", "the PCM2912A USB codec and TPA6132A2 amplifier", "the PCM2912A headphone amplifier and TPA6132A2 amplifier",
+            "m2 (c): the PCM2912A named the headphone amplifier, its value's load"),
+           ("D8", "the PCM2912A USB codec and TPA6132A2 amplifier", "the TPA6132A2 USB interface and PCM2912A amplifier",
+            "m2 (c): the check's swap with an unlisted noun on one side"),
+           ("A22", "3.3 V logic,", "3.3 V logic, the CSD19532Q5B VBUS switch,",
+            "m2 (d): the CSD19532Q5B named the VBUS switch, VBUS read inside VBUS20")]
+# (e) round 7 (check-s122-6 m1): wrong figures planted with the judgement's figures_ok and counts_ok keys rewritten to
+# the new text and its assertions kept, so only the scan's comparison of ordered, signed values with their units can
+# refuse them: check-s122-6's four plants and line 47's 1 W
+KEYED = [("SA868 VHF 2 W exciter", "SA868 VHF 1 W exciter"), ("240 x 160 mm", "160 x 240 mm"), ("2x13 ribbon", "2x2 ribbon"),
+         ("-40 to +80 C", "+40 to +80 C"), ("-40 to +125 C", "+40 to +125 C")]
+
+
+def rekeyed(j, old, new):
+    """A copy of a judgement with every figures_ok and counts_ok key that holds `old` rewritten to hold `new`."""
+    x = dict(j)
+    for f in ("figures_ok", "counts_ok"):
+        if isinstance(j.get(f), dict):
+            x[f] = {k.replace(old, new): v for k, v in j[f].items()}
+    return x
+
+
+def keyed_sentence(old):
+    """The one sentence of V2-SPEC.md or OPERATING-ENVELOPE.md that holds `old` inside a key of its judgement's figures_ok."""
+    hits = []
+    for rel in ("v2/docs/V2-SPEC.md", "v2/docs/OPERATING-ENVELOPE.md"):
+        for key, title, kind, line, text, rk in L.md_blocks(rel):
+            for s in L.sentences(text):
+                j = V.J.J.get(L.sid_digest(s)) or {}
+                if old in s and any(old in k for k in (j.get("figures_ok") or {})): hits.append(s)
+    if len(hits) != 1: refuse("the keyed fixture %r finds %d sentences, not one" % (old, len(hits)))
+    return hits[0]
+
+
+def keyed_refused(nls):
+    """[(the plant, the scan's refusal or None)] for KEYED."""
+    out = []
+    for old, new in KEYED:
+        s = keyed_sentence(old)
+        sp = s.replace(old, new)
+        d = L.sid_digest(sp)
+        had = V.J.J.get(d)
+        V.J.J[d] = rekeyed(V.J.J[L.sid_digest(s)], old, new)
+        try:
+            out.append((new, figure_uncovered(sp, {d: "TRUE"}, nls)))
+        finally:
+            if had is None: del V.J.J[d]
+            else: V.J.J[d] = had
+    return out
+
 PLANT = ("SA868 VHF 2 W exciter", "SA868 VHF 1 W exciter")   # (f)'s fixture: line 47's 1 W planted back
 
 
@@ -269,7 +321,9 @@ def gate_fixtures(nls, nets):
         else: V.J.J[L.sid_digest(sp)] = had
     if not bad_b: refuse("(b) does not refuse line 47 with the 1 W planted back (check-s122-5 B1)")
     if "1 W" not in un or not bad_f: refuse("(f)'s scan does not refuse line 47 with the 1 W planted back (check-s122-5 B1)")
-    return 2 + len(MUTANTS) + 1
+    for new, bad in keyed_refused(nls):
+        if not bad: refuse("the scan does not refuse %r with its key rewritten and its assertion kept (check-s122-6 m1)" % new)
+    return 2 + len(MUTANTS) + 1 + len(KEYED)
 
 
 def gate_set14(chk):
@@ -299,20 +353,28 @@ def gate_set14(chk):
       (d) the check names check-int15-1 and was committed on a line that carries 097d2517.
       (e) the fixtures (`gate_fixtures`): the role rule's two sentences as they stood at edead832 (round 5, check-s122-4
           B1), judged TRUE with the check's own reading of them, are refused by `verdicts.check_roles` and do not read
-          TRUE; the fourteen MUTANTS of the A22 and D8 rows as they stand (round 6, check-s122-5 m1 and m2: a non-part token
-          in a parenthesis, converters named on rails they do not feed (a rail with no rail word among them), a one-word
-          and a two-word qualifier another part holds, a role noun the netlist never states (supply, driver), a history-excused part put back as current, the codec and the amplifier swapped, a part named a codec
-          with no qualifier), each judged with the judgement its row carries, read STALE; and line 47 with the 1 W
-          planted back is refused both by (b) and by (f)'s scan alone;
-      (f) the figures of the closing list (round 6, check-s122-5 B1): every sentence of every listed line, read from
-          the document (a cell the inventory does not take included), whose text holds a figure-and-unit token
-          (`verdicts.figure_tokens`: a number with W, mW, kW, V, mV, A, mA, Wh, Ah, mAh, dBm, dB, mm, cm, C, Hz, kHz,
-          MHz, GHz, ohm or oz, a range or a product of two, an 'N x M' size, an 'NxM' header, a spelled count from two
-          to twenty) has a TRUE judgement whose own assertions, named in its `figures_ok` or in an 'asserted:' entry of
-          its `counts_ok` on a phrase that holds the token, state the token's numbers (`verdicts.figures_uncovered`). A
-          figure with no source to assert against takes its line off the closing list, NOT DERIVABLE; none does at
-          round 6. The scan reads only the listed lines: a figure elsewhere is not judged by this gate, and neither
-          is a number with no unit (a form factor like 2242, a port like USB 3, a slot or a decision's number).
+          TRUE; the seventeen MUTANTS of the A22 and D8 rows as they stand (rounds 6 and 7, check-s122-5 m1 and m2 and
+          check-s122-6 m2: a non-part token in a parenthesis, converters named on rails they do not feed, a one-word and
+          a two-word qualifier another part holds, a role noun the netlists never state (supply, driver), a
+          history-excused part put back as current, the codec and the amplifier swapped, a part named a codec with no
+          qualifier, a part named after its value's load, a qualifier read inside another word), each judged with the
+          judgement its row carries, read STALE; line 47 with the 1 W planted back is refused both by (b) and by (f)'s
+          scan alone; and the KEYED plants (round 7, check-s122-6 m1: 160 x 240 mm, 2x2, +40 to +80 C, +40 to +125 C and
+          the 1 W), with the judgement's keys rewritten and its assertions kept, are refused by the scan's comparison;
+      (f) the figures of the closing list (round 6, check-s122-5 B1; round 7, check-s122-6 m1): every sentence of every
+          listed line, read from the document (a cell the inventory does not take included), whose text holds a
+          figure-and-unit token (`verdicts.figure_tokens`: a number with W, mW, kW, V, mV, A, mA, Wh, Ah, mAh, dBm, dB,
+          mm, cm, C, Hz, kHz, MHz, GHz, ohm or oz, a range or a product of two, an 'N x M' size, an 'NxM' header that is
+          not a hex address, a spelled count from two to twenty) has a TRUE judgement whose own assertion, named in its
+          `figures_ok` or in an 'asserted:' entry of its `counts_ok` on a phrase that holds the token, states the
+          token's values in the same order with their signs, and its unit where the source states one
+          (`verdicts.figures_uncovered`, `verdicts._fig_match`). A figure with no source to assert against takes its
+          line off the closing list, NOT DERIVABLE; none does at round 7.
+    What the gate does NOT catch (its known escape classes, carried by the follow-up item the registry script opens, with
+    disposition PROCESS; the documents do not hang on them): a number with no unit (2242, USB 3) and any figure off
+    the closing list; a role noun outside ROLE_NOUN (FET, source, generator, interface); a stale part placed in a clause
+    that states a date or a history word ('fitted since 26 September 2026'); a designator written beside a part it
+    does not carry ('the TLV75801 gate-bias LDO on PA_KEY (U17'); and a part number of a shape the finder does not read.
     Since round 5 the probe of (a) also takes every part number a semiconductor's, crystal's or relay's value in the six
     netlists starts with (check-s122-4 m1). The gate reads the verdicts; whether each corrected sentence is true in
     substance stays the filed check's to say."""
@@ -391,6 +453,12 @@ def main():
     if not any("apply_registry_s122" in str(e) for e in rec.get("evidence") or []): refuse("apply_registry_s122.py has not run")
     if not any("apply_registry_s122_r4" in str(e) for e in rec.get("evidence") or []): refuse("apply_registry_s122_r4.py has not run")
     if rec.get("evidence_result") != "FAIL" or rec.get("waits_on") != ["S-122"]: refuse("CFL-016's state")
+    # round 7: the follow-up item for the instrument's escape classes, opened by apply_registry_s122_r4.py at the next free
+    # S number, disposition PROCESS, and in no record's waits_on (the documents do not hang on it)
+    fu = [x for x in before["open_items"] if str(x.get("title", "")).startswith(FOLLOW_MARK)]
+    if len(fu) != 1 or fu[0].get("disposition") != "PROCESS": refuse("the follow-up item of the instrument's escape classes is not open once with disposition PROCESS")
+    follow = fu[0]["id"]
+    if any(follow in (r.get("waits_on") or []) for r in before["records"]): refuse("a record waits on %s" % follow)
     for b in rec.get("evidence_bound_to") or []:
         rel, s = b.rsplit("@", 1)
         if L.sha16(rel) != s: refuse("CFL-016 is bound to %s, and the file is now %s: re-read and rebind first" % (b, L.sha16(rel)))
@@ -431,8 +499,10 @@ def main():
                "apply_docs_s122.py, apply_docs_s122_r2.py, apply_docs_s122_r3.py, apply_docs_s122_r4.py, apply_docs_s122_r5.py and "
                "apply_docs_s122_r6.py corrected the five correctable documents and the status page, asserting every part, "
                "pin, net, count, figure and generator line their new text names before they wrote; on the lines of the "
-               "closing list every figure-and-unit token is bound to an assertion of the netlists, the board files, a "
-               "maker's page or a decision's record (close_s122.py's scan, round 6). CONOPS.md, a baselined "
+               "closing list every figure with a unit and every spelled count is bound to an assertion of the netlists, "
+               "the board files, a maker's page, a generator's text (at a commit) or a decision's record that states its "
+               "values in order with their signs (close_s122.py's scan, rounds 6 and 7); the instrument's known escape "
+               "classes are carried by %s (disposition PROCESS). CONOPS.md, a baselined "
                "definition, is restored to its text at c5430071 and read through handover/DEFINITION-STATUS.md: each of its "
                "passages whose value differs from the netlists is BASELINE with its current value kept on the status page "
                "and in feasibility/EMCON.md section 0a.1, both judged directly. At %s this closure re-ran the inventory and "
@@ -440,7 +510,7 @@ def main():
                "UNJUDGED, %d assertions (%s), identical to the committed inventory.out and verdicts.out. The filed "
                "independent check is %s; this script reads only that it is committed at HEAD, that its first line is "
                "'mergeable: yes' and that it names each document; what it read is in its own words there."
-               % (OUTSIDE, m0.group(2), m0.group(1), head[:8], tot["sentences"], tot["TRUE"], tot["BASELINE"],
+               % (OUTSIDE, m0.group(2), m0.group(1), follow, head[:8], tot["sentences"], tot["TRUE"], tot["BASELINE"],
                   tot["NOT DERIVABLE"], tot["asserted"], counts, chk))
     entry = ("v2/docs/records/s122/close_s122.py (S-122 closed at %s): the inventory and the verdicts re-run by the closure "
              "read %d sentences in the scope s122lib.SCOPE sets for the documents this record names (outside it the scripts "

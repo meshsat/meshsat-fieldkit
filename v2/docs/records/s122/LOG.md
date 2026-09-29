@@ -202,3 +202,27 @@ No box, no agent, no other model. No gate, `rules_status.py` or `rules_render.py
   figures, twelve float clamps, the rails test off, a changed outline); `test_close_s122.py` ALL PASS; the closure
   refused the fixture while staged, closed S-122 with it committed (CFL-016 PASS; S-42, S-123, S-124 open) and refused
   a second run; after it 0 errors, 72 passed, `claims_check` PASS 91 of 91. The clone is deleted.
+
+## Round 7 (the answer to `checks/check-s122-6.md`: 1 blocking, 6 minor; the coordinator's change of diagnosis)
+
+- 23:18 Check read whole (the checker's report, filed byte for byte as `checks/check-s122-6.md`).
+- 23:34 (one label for the round's work, read from `date`):
+  - B1: line 81's 14.4 V node bound to `gen_sch_p.py`'s cell node CELL4, with `P:J_CELL~4S block`, the generator's
+    Samsung INR18650-35E block and the 35E sheet's 3.60 V nominal beside it; the BQ4050 binding dropped. The README
+    carries the 45 bindings, one row each, generated from the judgements with `verdicts.run_assert`'s own reading.
+  - m1: `verdicts._values` and `_fig_match` compare ordered, signed values with their units; the PDF reader reads the
+    sheets' U+2013 minus as "-"; the LM5069 range asserted "-40 125". `close_s122.KEYED` (five plants with the keys
+    rewritten) in the gate; `test_close_s122.py` T4 rewrites keys, T5 removes the comparison.
+  - m2: "wordmatch" and "load" in `verdicts.ROLE_TESTS`, three mutants added (seventeen); the other classes named.
+  - m3: `apply_docs_s122_r7.py --check`, then its run: 1 edit (correction 36's wording); a second run refuses. The
+    sources lists name a generator's text at a commit.
+  - m4: the maker rule (`s122lib.PN_MAKER`), ST's literature shapes narrowed, the dead date guard removed; seven
+    sentences newly inventoried and twelve judged for the new part numbers.
+  - m6: a string `counts_ok` covers nothing; hex addresses are not NxM figures.
+  - `apply_registry_s122_r4.py`: the round 7 sentence with the escape classes, and the follow-up item at the next free
+    S number, disposition PROCESS, in no record's waits_on; `close_s122.py` refuses without it and names it.
+  - Outputs regenerated: `verdicts.out` 1011 sentences, 422 TRUE, 0 STALE, 40 BASELINE, 549 NOT DERIVABLE, 0
+    UNJUDGED, 3340 assertions; `-base` 938 (74 STALE), `-set14` 996 (10), `verdicts-r4.out` 1005 (5), `verdicts-r5.out`
+    1009 (1), `verdicts-r6.out` (new, `1c187977`) 1011 (0).
+  - `test_close_s122.py`: ALL PASS (T2 seven switches, T4 45 of 45 refused by the comparison, T5 45 of 45 pass
+    without it and the gate refuses).

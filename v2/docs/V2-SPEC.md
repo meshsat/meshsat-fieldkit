@@ -321,7 +321,8 @@ Stream s122 (MESHSAT-1357, open item S-122) read the lines above against the com
 
 36. **The exciter's rating (line 47).** Session reading of stream s122, round 6 (29 September 2026, MESHSAT-1357,
     open item S-122; its independent check, `v2/docs/records/s122/checks/check-s122-5.md`, B1), whose closing check
-    since that round asserts every figure and unit on the lines it closes. Line 47 named the NiceRF SA868 a 1 W
+    since that round asserts every figure with a unit, and every spelled count, on the lines it closes (a number
+    with no unit is outside it; this wording since round 7, check-s122-6 m3). Line 47 named the NiceRF SA868 a 1 W
     part, the figure of the device set of 6 September (appendix 32.49). Board D's `U2` is the SA868 VHF 2 W
     exciter; `gen_sch_d.py` has said 2 W high and 0.5 W low since `bdfc7b3f` (7 September), and the maker's sheet
     v1.3 (`v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf`) gives 31 to 33 dBm on high power and 24 to 26 dBm on

@@ -133,23 +133,31 @@ def board_geo(board):
 # value names one of its own assertions that carries the figure's numbers.
 FIG_UNIT = r"(?:W|mW|kW|V|mV|A|mA|Wh|Ah|mAh|dBm|dB|mm|cm|C|Hz|kHz|MHz|GHz|ohm|oz)"
 FIG_NUM = r"[-+]?\d+(?:\.\d+)?"
-FIG_RX = re.compile(r"(?<![\w.+-])(%s(?:\s*(?:to|x)\s*%s)?)\s*%s\b|(?<![\w.])(\d+ x \d+)\b|(?<![\w.])(\d+x\d+)\b|\b(%s)\b"
+FIG_RX = re.compile(r"(?<![\w.+-])(%s(?:\s*(?:to|x)\s*%s)?)\s*(%s)\b|(?<![\w.])(\d+ x \d+)\b|(?<![\w.])(?!0x)(\d+x\d+)\b|\b(%s)\b"
                     % (FIG_NUM, FIG_NUM, FIG_UNIT, L.NUMW), re.I)
+# round 7 (check-s122-6 m6): a hex address (0x22) is not an 'NxM' figure
 NUMWORD = {w: i + 2 for i, w in enumerate(L.NUMW.split("|"))}
 
 
+def _unit(u):
+    return None if u is None else {"\u00b0C": "C"}.get(u, u)
+
+
 def figure_tokens(s):
-    """[(start, end, text, [numbers])] of the figure-and-unit tokens of a sentence (dates and designators are not)."""
+    """[(start, end, text, values)] of the figure-and-unit tokens of a sentence (dates and designators are not). Round 7
+    (check-s122-6 m1): `values` are the token's numbers in order, each (signed value, unit): '-40 to +125 C' is
+    [(-40, 'C'), (125, 'C')], '240 x 160 mm' [(240, 'mm'), (160, 'mm')], '2x13' [(2, None), (13, None)], 'eleven'
+    [(11, None)]."""
     out = []
     for m in FIG_RX.finditer(s):
         txt = m.group(0)
-        if m.group(4):
+        if m.group(5):
             if not re.match(r"^\s*[a-z]", s[m.end():m.end() + 2]) and not re.match(r"^\s*[A-Z0-9]", s[m.end():m.end() + 2]):
                 continue
-            out.append((m.start(), m.end(), txt, [str(NUMWORD[txt.lower()])]))
+            out.append((m.start(), m.end(), txt, [(float(NUMWORD[txt.lower()]), None)]))
             continue
-        nums = [re.sub(r"^[-+]", "", x) for x in re.findall(FIG_NUM, txt)]
-        out.append((m.start(), m.end(), txt, nums))
+        unit = _unit(m.group(2)) if m.group(1) else None
+        out.append((m.start(), m.end(), txt, [(float(x), unit) for x in re.findall(FIG_NUM, txt)]))
     return out
 
 
@@ -160,18 +168,59 @@ def _content(x):
     return x[k + 1:] if k else x
 
 
-def _digits(x):
-    """A text's number groups, with 13V8 and 3V3 read as 13.8 and 3.3 and a decimal point dropped: {'138', '33', ...}."""
-    x = re.sub(r"(\d)V(\d)", r"\1\2", x)
-    x = re.sub(r"(\d)\.(\d)", r"\1\2", x)
-    return set(re.findall(r"\d+", x))
+VAL_UNIT = re.compile(r"\s?(\u00b0C|mAh|MHz|GHz|kHz|dBm|Wh|Ah|mA|mV|mW|kW|mm|cm|dB|Hz|ohm|oz|W|V|A|C)(?![A-Za-z0-9])")
+
+
+def _values(x):
+    """Round 7 (check-s122-6 m1): what an assertion's content states as numbers, in order, each (signed value, unit or
+    None). 13V8 reads 13.8 V and 240x160 reads 240 and 160; a spelled count reads its number; a number inside a name
+    (In4, CELL4, the 2 of E72-2G4M20S1E, a part number's digits) is not a value; a minus or plus is a sign only after a
+    space, a bracket, '=', '~' or '|' (135-175MHz is 135 and 175 MHz; the sheets' U+2013 minus is read as '-')."""
+    x = x.replace("\u2013", "-").replace("\u2212", "-")
+    x = re.sub(r"(\d)V(\d)", r"\1.\2 V", x)
+    x = re.sub(r"(\d)x(\d)", r"\1 x \2", x)
+    out = []
+    for m in re.finditer(r"([-+]?)(\d+(?:\.\d+)?)", x):
+        i = m.start(2)
+        sign = m.group(1)
+        before = x[m.start() - 1] if m.start() > 0 else " "
+        if sign and (before.isalnum() or before in "_."):
+            sign, before = "", sign            # a range dash or a name's hyphen, not a sign
+        elif not sign:
+            before = x[i - 1] if i > 0 else " "
+        if before.isalnum() or before in "_.":
+            continue                           # a number inside a name
+        u = VAL_UNIT.match(x, m.end())
+        if u:
+            out.append((m.start(), float(sign + m.group(2)) if sign != "+" else float(m.group(2)), _unit(u.group(1))))
+        elif m.end() < len(x) and (x[m.end()].isalnum() or x[m.end()] == "_"):
+            continue                           # followed by a name's letters (2G4), not a unit
+        else:
+            out.append((m.start(), float(sign + m.group(2)) if sign != "+" else float(m.group(2)), None))
+    for m in re.finditer(r"\b(%s)\b" % L.NUMW, x, re.I):
+        out.append((m.start(), float(NUMWORD[m.group(1).lower()]), None))
+    return [(v, u) for _p, v, u in sorted(out)]
+
+
+def _fig_match(tv, x):
+    """Round 7 (check-s122-6 m1): the token's values (figure_tokens) stand in the assertion's content in the same order,
+    one after the other, each the same signed number; where the content states a unit it is the token's, and a token
+    with no unit (a count, an 'NxM') matches only numbers with none. test_close_s122.py's T5 replaces this function
+    with one that accepts everything, and T4 must then fail."""
+    av = _values(_content(x))
+    for i in range(len(av) - len(tv) + 1):
+        if all(av[i + k][0] == tv[k][0] and (av[i + k][1] is None if tv[k][1] is None else av[i + k][1] in (None, tv[k][1]))
+               for k in range(len(tv))):
+            return True
+    return False
 
 
 def figures_uncovered(s, j):
     """The figure tokens of a sentence that no `figures_ok` key (or 'asserted:' counts_ok key) covers with an own assertion
-    carrying the token's numbers (a spelled count may be carried by its word or an '=N' count assertion)."""
-    cover = dict(j.get("figures_ok") or {})
-    cover.update({k: v for k, v in (j.get("counts_ok") or {}).items() if isinstance(v, str) and v.startswith("asserted: ")})
+    whose content states the token's values in order, with their signs and units (`_fig_match`)."""
+    cover = dict(j.get("figures_ok") or {}) if isinstance(j.get("figures_ok"), dict) else {}
+    co = j.get("counts_ok") if isinstance(j.get("counts_ok"), dict) else {}      # round 7 (m6): a string counts_ok covers nothing
+    cover.update({k: v for k, v in co.items() if isinstance(v, str) and v.startswith("asserted: ")})
     spans = []
     for k, v in cover.items():
         if not v.startswith("asserted: "): continue
@@ -179,16 +228,12 @@ def figures_uncovered(s, j):
         if x not in j.get("a", ()): continue
         for m in re.finditer(re.escape(k), s): spans.append((m.start(), m.end(), x))
     out = []
-    for a, b, txt, nums in figure_tokens(s):
+    for a, b, txt, vals in figure_tokens(s):
         ok = False
         for sa, sb, x in spans:
-            if sa <= a and b <= sb:
-                dg = _digits(_content(x))
-                words = _content(x).lower()
-                if all(n.replace(".", "") in dg or any(re.search(r"\b%s\b" % w, words) for w, i in NUMWORD.items() if str(i) == n)
-                       for n in nums):
-                    ok = True
-                    break
+            if sa <= a and b <= sb and _fig_match(vals, x):
+                ok = True
+                break
         if not ok: out.append(txt)
     return out
 
@@ -306,7 +351,9 @@ def run_assert(a, nls):
     if pm:   # round 4: a held maker's sheet, read with pdftotext (the text layer), whitespace normalised
         r = subprocess.run(["pdftotext", "-layout", os.path.join(L.TOP, pm.group("f")), "-"], capture_output=True)
         if r.returncode: return False, "%s not readable by pdftotext" % pm.group("f")
-        txt = " ".join(r.stdout.decode("utf-8", "replace").split())
+        txt = " ".join(r.stdout.decode("utf-8", "replace").replace("\u2013", "-").replace("\u2212", "-").split())
+        # (round 7, check-s122-6 m1: a sheet's minus printed as U+2013 or U+2212 is read as '-', so '-40 125' is asserted
+        # with its sign and no dash character enters a judgement)
         ok = all(" ".join(w.split()) in txt for w in pm.group("w").split("|"))
         return ok, "%s's text holds %r" % (pm.group("f"), pm.group("w")[:80])
     dm = DOCASSERT.match(a.strip())
@@ -570,7 +617,20 @@ def target_roles(s, parts):
 
 # round 6 (check-s122-5 m2): the role rule's four tests and check_parts' history tie, each switchable so that a mutation
 # test can turn one off and see the closing gate refuse (test_close_s122.py); a verdict is only ever written with all on
-ROLE_TESTS = {"forward": True, "reverse1": True, "reverse2": True, "rails": True, "history": True}
+ROLE_TESTS = {"forward": True, "reverse1": True, "reverse2": True, "rails": True, "history": True, "wordmatch": True,
+              "load": True}
+# round 7 (check-s122-6 m2 c, d): 'wordmatch' reads a qualifier in a value as a word (VBUS is not in 'VBUS20'), 'load'
+# drops a value's 'to the <load>' phrase before the forward test (D U6 'stereo output to the headphone amplifier' is not
+# an amplifier)
+
+
+def _has(q, v):
+    """A qualifier in a normalised value: as a word, or (with ROLE_TESTS['wordmatch'] off) as a substring."""
+    return bool(re.search(r"\b%s\b" % re.escape(q), v)) if ROLE_TESTS["wordmatch"] else q in v
+
+
+def _unload(v):
+    return re.sub(r"\bto the [^,;:()]*", " ", v) if ROLE_TESTS["load"] else v
 
 
 def check_roles(s, nm, nls, j):
@@ -607,12 +667,12 @@ def check_roles(s, nm, nls, j):
             else: notes.append("%s on %s:%s (%s)" % (key, mm.group(1), mm.group(2), mm.group(3)))
             continue
         if not hold: continue      # the part check reports a part on no netlist
-        if ROLE_TESTS["forward"] and not any(any(w in _norm(v) for w in ROLE_SYN.get(noun, (noun,))) for _b, _r, v in hold):
+        if ROLE_TESTS["forward"] and not any(any(w in _norm(_unload(v)) for w in ROLE_SYN.get(noun, (noun,))) for _b, _r, v in hold):
             fails.append("%s is named a %s%s; its designators state another role (%s)" % (
                 p, (" ".join(q) + " ") if q else "", noun, "; ".join("%s:%s %s" % (b, r, v[:60]) for b, r, v in hold[:3])))
             continue
         qn = _norm(" ".join(q))
-        if ROLE_TESTS["reverse1"] and len(qn.split()) == 1 and not any(qn in _norm(v) for _b, _r, v in hold):
+        if ROLE_TESTS["reverse1"] and len(qn.split()) == 1 and not any(_has(qn, _norm(v)) for _b, _r, v in hold):
             # round 6 (check-s122-5 m1 d): a one-word qualifier the part's own values do not state, while an active part
             # (U or Q) of the board states it, gives the part a function the netlist gives another part ('the TPS22810
             # bias switch': board D's bias is U15's)
@@ -625,9 +685,9 @@ def check_roles(s, nm, nls, j):
                 fails.append("%s is named the %s %s; the %s is %s:%s (%s), and %s is not" % (
                     p, " ".join(q), noun, " ".join(q), b, r, v[:70], p))
                 continue
-        if ROLE_TESTS["reverse2"] and len(qn.split()) >= 2 and not any(qn in _norm(v) for _b, _r, v in hold):
+        if ROLE_TESTS["reverse2"] and len(qn.split()) >= 2 and not any(_has(qn, _norm(v)) for _b, _r, v in hold):
             other = [(b, r, v) for b in bset for r, c in sorted(nls[b]["comps"].items())
-                     for v in [c["value"]] if qn in _norm(v) and (b, r, v) not in hold]
+                     for v in [c["value"]] if _has(qn, _norm(v)) and (b, r, v) not in hold]
             if other:
                 b, r, v = other[0]
                 fails.append("%s is named the %s %s; the %s is %s:%s (%s), and %s is not" % (

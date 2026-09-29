@@ -96,7 +96,7 @@ PANEL.md#1:L64:cell:1:s1 [d757d209e1] TRUE
     the Xenarc 709GNK monitor's connector block (its HDMI and 12 V leads go below the plate to B16 `J_HDMI` and A22 `J_MON`, its USB touch lead to D8 `J_USB3` through the adapter of `ASSEMBLY.md` section 4: the session's choice SC-HF-06 of 27 September 2026, `HW-FW-CONTRACT.md` section 8), two U-174/U headset jacks `J_HSJ1`/`J_HSJ2` (leads to D8 `J_HS1`/`J_HS2`), the USB camera module behind the sealed window (lead to B16 `J_CAM`)
     judgement: the leads' ends as drawn; the adapter and SC-HF-06 are a lead item
     names looked up: 9 parts, 0 nets; J_HSJ1 on C (sentence names ABD); J_HSJ2 on C (sentence names ABD)
-    part numbers (1): U-174/U on C (J_HSJ1,J_HSJ2), D (J_HS1,J_HS2)
+    part numbers (2): 709GNK bought: the Xenarc monitor, a bought unit wired by its leads, on no board; U-174/U on C (J_HSJ1,J_HSJ2), D (J_HS1,J_HS2)
     asserted (9): B J_HDMI present; A J_MON present; D J_USB3 present; C J_HSJ1 present; C J_HSJ2 present; D J_HS1 present; D J_HS2 present; B J_CAM present; board C: 2 parts whose designator holds 'J_HSJ' (read: 2, J_HSJ1,J_HSJ2)
 PANEL.md#2:L70:cell:1:s1 [436512e5ba] TRUE
     +5V
@@ -2070,6 +2070,11 @@ CONOPS.md#5:L920:para:s4 [360270daa1] TRUE
     judgement: U30 and U26 as the interlock; the citation is dated
     names looked up: 2 parts, 7 nets
     asserted (11): A U30 value has 'NAND' (netlist: 'SN74LVC1G00DBVR NAND: OUTLET_OK = NOT (TR_APRS AND PA_EN), t'); A U30.1 on TR_APRS (netlist: TR_APRS); A U30.2 on PA_EN (netlist: PA_EN); A U30.4 on OUTLET_OK (netlist: OUTLET_OK); A U26.9 on POE_SW_EN (netlist: POE_SW_EN); A U26.10 on OUTLET_OK (netlist: OUTLET_OK); A U26.8 on POE_EN (netlist: POE_EN); A U26.12 on PD_SW_EN (netlist: PD_SW_EN); A U26.13 on OUTLET_OK (netlist: OUTLET_OK); A U26.11 on PD_EN (netlist: PD_EN); gen_sch_a.py lines 1088 to 1104 at 45bde541 hold U30
+CONOPS.md#5:L947:cell:2:s1 [05b3d33f08] NOT DERIVABLE
+    at most 10 W (Xenarc 709GNK product manual v2)
+    judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (the monitor's maker figure, its product manual)
+    names looked up: 0 parts, 0 nets
+    part numbers (1): 709GNK bought: the Xenarc monitor, a bought unit wired by its leads, on no board
 CONOPS.md#5:L949:cell:2:s1 [f61fe4f4f1] NOT DERIVABLE
     idle 60 mA, RF disabled 4.7 mA, LTE carrier aggregation 1,512 mA (RM520N series hardware design v1.1, Table 43)
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (Quectel's hardware design figures)
@@ -2218,6 +2223,7 @@ V2-SPEC.md#Case and construction:L10:cell:1:s2 [facb104de6] NOT DERIVABLE
     The case generators `panel1450.py` and `case_wall_cutouts.py` carry them since `c351115d`, and the current case set is `release/case-2026-09-27/` (correction 30); the committed boards and the templates of `release/revA/case/` still show the eleven Amphenol 132170 SMA couplers at Z 88 of 32.56 (west VHF, HF, WIFI 2.4, GNSS, SDR; east 5G MAIN, 5G DIV, IRIDIUM, LORA, WIFI P2P A, WIFI P2P B), which is history; every cable ends at the dock strip's float clamp under the stack's blind-mate receptacle (`ecad/tools/panel1450.py` is the single source of the positions and the legends).
     judgement: CASE: a mechanical or case item, not a netlist claim
     names looked up: 0 parts, 0 nets
+    part numbers (1): 132170 case: Amphenol's SMA couplers of the case templates, which the case set of 27 September 2026 retired
 V2-SPEC.md#Case and construction:L10:cell:1:s3 [5151a2ab87] NOT DERIVABLE
     The 5G module's ports are ANT0 to ANT3, not MAIN and DIV: the owner ruled three 5G jacks on ANT0, ANT2 and ANT3, at the board A site found free (X +46), if the case measurement confirms that site and the board E clamp fit, and otherwise two on ANT0 and ANT2 (D-07, 26 Sep 2026; correction 12); the case half is laid out as the east wall's middle arrestor, and the board E clamp fit remains
     judgement: CASE: a mechanical or case item, not a netlist claim and ruling D-07
@@ -2436,7 +2442,7 @@ V2-SPEC.md#Bearers and radios:L50:cell:1:s1 [26424f2f31] NOT DERIVABLE
     Quectel LG290P (all six constellations, L1/L2/L5/E6, RTK capable) with the Quectel YEGD006U1A puck or the u-blox ANN-MB2
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (the GNSS receiver's maker data)
     names looked up: 1 parts, 0 nets
-    part numbers (2): LG290P elsewhere: board B's U11; E6 here is the Galileo band; YEGD006U1A case: Quectel's antenna puck on the wall
+    part numbers (3): ANN-MB2 bought: u-blox's GNSS antenna, the puck's alternative, on no board; LG290P elsewhere: board B's U11; E6 here is the Galileo band; YEGD006U1A case: Quectel's antenna puck on the wall
 V2-SPEC.md#Bearers and radios:L50:cell:2:s1 [ccb40f1128] TRUE
     B16 UART, west jack
     judgement: the LG290P on B16
@@ -2446,6 +2452,11 @@ V2-SPEC.md#Bearers and radios:L51:cell:1:s1 [3a7ee237a0] NOT DERIVABLE
     gas-discharge arrestors as the bulkheads, the twelve PolyPhaser GTH-SFF-AL of line 10 on the RF entry plates, grounded through the plates to the ground stud (case choices C2 and C4, correction 20; their ground lead is owed to `GROUNDING-AND-SHIELDS.md`); a receive limiter or relay on the SDR path during key-down (line 49); a shielded compartment for the PA
     judgement: CASE: a mechanical or case item, not a netlist claim
     names looked up: 2 parts, 0 nets
+V2-SPEC.md#Panel and human interface (face plate, C7):L56:cell:1:s1 [158db4d812] NOT DERIVABLE
+    Xenarc 709GNK boxed monitor set INTO the plate, its glass level with the aluminium face (owner ruling 9 Sep 2026, appendix 32.85): 7 in, 1024 x 600, 1000 nits, projected-capacitive touch, HDMI, IP67, -20 to +70 C; connector side from Xenarc's drawing *owed*
+    judgement: CASE: a mechanical or case item, not a netlist claim (the monitor set into the plate, its maker data and appendix 32.85)
+    names looked up: 0 parts, 0 nets
+    part numbers (1): 709GNK bought: the Xenarc monitor, a bought unit wired by its leads, on no board
 V2-SPEC.md#Panel and human interface (face plate, C7):L57:cell:1:s1 [3ca8195c32] TRUE
     Pervasive Displays E2370KS0C1, 3.7 in 416 x 240 wide-temperature panel under the plate lens: identity, status and the QR code with the power off
     judgement: C7's e-paper ZIF for the E2370KS0C1
@@ -2572,6 +2583,11 @@ V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owne
     names looked up: 0 parts, 0 nets
     part numbers (6): BME688 on E (U14); BMI270 on E (U15); DCF77 on E (J_DCF); LT8705A on E (U5); XT60 on E (J_BATT), P (W_N,W_P)
     asserted (4): E U6 value has 'LM5069' (netlist: 'LM5069MM-2 hot-swap controller: 9 V on, 40 V off, current an'); board E has no part whose value holds 'LM5176' (found: none); A U2 value has 'LM5176' (netlist: 'LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW'); v2/ecad/tools/gen_sch_e.py at b2709118 says "into A22's LM5176 front end"
+V2-SPEC.md#Estimated cost per kit (parts only, prototype quantities, 6 Sep 2026):L95:cell:0:s1 [c64a44b1c1] NOT DERIVABLE
+    Xenarc 709GNK monitor
+    judgement: CASE: a mechanical or case item, not a netlist claim (the monitor's name as a row's subject)
+    names looked up: 0 parts, 0 nets
+    part numbers (1): 709GNK bought: the Xenarc monitor, a bought unit wired by its leads, on no board
 V2-SPEC.md#Estimated cost per kit (parts only, prototype quantities, 6 Sep 2026):L100:cell:0:s1 [5e3035b8b7] NOT DERIVABLE
     AW7915-AED WiFi card
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (the cost estimate of 6 September 2026)
@@ -2773,7 +2789,7 @@ V2-SPEC.md#Corrections, 27 September 2026:L149:item:s1 [488d983a0f] NOT DERIVABL
     **Case and antenna entries (lines 9, 10, 11, 13, 42 and 51).** Choices the session took under the owner's standing rule of 26 September 2026, after the owner reversed D-08 (`CASE-MARGINS.md` section 4, recorded as SC-07 of the requirements registry and in `CONOPS.md` section 7a): C1, the face plate on top of the 1450PF frame over Peli's o-ring, screwed from above into Peli's 6-32 inserts, as Peli documents; C6, four setting legs under the frame's ring give the frame its height; C2, the ruled gas-discharge arrestors are the twelve antenna bulkheads at Z 59, five on the east wall and seven on the west, the two WIFI P2P jacks moving west; C3, one connector plate between the hinge fairings carrying all six ruled wall items; C4, one aluminium RF entry plate per end wall carrying the arrestors and their common ground, which retires the Amphenol 132170 couplers; C5, the QMX tray 1.5 mm west.
     judgement: HISTORY: a dated record of an earlier reading or wording, true as history, not re-derived against set 12 (the case choices C1 to C6, CASE-MARGINS.md section 4)
     names looked up: 6 parts, 0 nets
-    part numbers (1): 1450PF case: Peli's panel frame
+    part numbers (2): 132170 case: Amphenol's SMA couplers of the case templates, which the case set of 27 September 2026 retired; 1450PF case: Peli's panel frame
 V2-SPEC.md#Corrections, 27 September 2026:L149:item:s2 [88040ba1cc] NOT DERIVABLE
     Line 13's screws follow C1: ten 6-32, not the ten M3 it read.
     judgement: HISTORY: a dated record of an earlier reading or wording, true as history, not re-derived against set 12
@@ -2949,6 +2965,11 @@ OPERATING-ENVELOPE.md#2:L74:cell:3:s1 [355e205565] NOT DERIVABLE
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (the row's source, a held maker's sheet)
     names looked up: 0 parts, 0 nets
     part numbers (1): INR18650-35E bought: Samsung's cell of the built pack, not a board part
+OPERATING-ENVELOPE.md#2:L76:cell:0:s1 [c64a44b1c1] NOT DERIVABLE
+    Xenarc 709GNK monitor
+    judgement: CASE: a mechanical or case item, not a netlist claim (the monitor's name as a row's subject)
+    names looked up: 0 parts, 0 nets
+    part numbers (1): 709GNK bought: the Xenarc monitor, a bought unit wired by its leads, on no board
 OPERATING-ENVELOPE.md#2:L77:cell:0:s1 [2b5ab8d2af] STALE
     TRACO TEN 40-2412WIN
     judgement: no netlist carries a TRACO part; board E's input part is the LM5069 U6 (replaced in round 4)
@@ -4314,6 +4335,11 @@ ASSEMBLY.md#4:L166:cell:2:s1 [53e544156a] NOT DERIVABLE
     **Corrected 27 September 2026 (MESHSAT-1357, the case set C1 to C6):** the inner jacks of the PolyPhaser GTH-SFF-AL arrestors on the RF entry plates (C2, C4): west VHF, HF, WIFI 2.4, GNSS, SDR, WIFI P2P A, WIFI P2P B at Y -93, -62, -31, 0, +31, +62, +93; east 5G MAIN, 5G DIV, 5G ANT3, IRIDIUM, LORA at Y -62, -31, 0, +31, +62; all at Z 59.
     judgement: CASE: a mechanical or case item, not a netlist claim
     names looked up: 4 parts, 0 nets
+ASSEMBLY.md#4:L166:cell:2:s2 [7fa81a144e] NOT DERIVABLE
+    Until 27 September 2026: eleven Amphenol 132170 couplers at Z 88
+    judgement: HISTORY: a dated record of an earlier reading or wording, true as history, not re-derived against set 12 (the couplers until 27 September 2026)
+    names looked up: 0 parts, 0 nets
+    part numbers (1): 132170 case: Amphenol's SMA couplers of the case templates, which the case set of 27 September 2026 retired
 ASSEMBLY.md#4:L167:cell:1:s1 [22fe281a54] NOT DERIVABLE
     **Corrected 27 September 2026 (MESHSAT-1357, the case set C1 to C6):** 114.0 x 68.3 x 5.0 aluminium (C3, `v2/release/case-2026-09-27/connector-plate/`); until 27 September 2026 54 x 82 x 3 between ribs
     judgement: CASE: a mechanical or case item, not a netlist claim
@@ -4328,6 +4354,11 @@ ASSEMBLY.md#4:L175:cell:1:s1 [3a53e10db7] NOT DERIVABLE
     judgement: LEAD: the plug
     names looked up: 0 parts, 0 nets
     part numbers (6): D38999/26FC4SN case: Glenair's plug, contacts, tools or strain relief, a cable item; M22520/1-01 case: Glenair's plug, contacts, tools or strain relief, a cable item; M22520/1-04 case: Glenair's plug, contacts, tools or strain relief, a cable item; M39029/56-352 case: Glenair's plug, contacts, tools or strain relief, a cable item; M81969/14-03 case: Glenair's plug, contacts, tools or strain relief, a cable item; M85049/38S13N case: Glenair's plug, contacts, tools or strain relief, a cable item
+ASSEMBLY.md#4:L175:cell:2:s1 [9a3c85265f] NOT DERIVABLE
+    Lapp OLFLEX ROBUST 210 4 x 1.0 (article 0021917, 6.6 mm, TPE, outdoor), or Alpha Wire 25064 (18 AWG 4C, TPU, 6.58 mm); 2 m
+    judgement: CASE: a mechanical or case item, not a netlist claim (a lead's cable)
+    names looked up: 0 parts, 0 nets
+    part numbers (1): 0021917 bought: Lapp's cable, its article number, a lead
 ASSEMBLY.md#4:L180:para:s1 [c8263105e0] TRUE
     Twelve Preci-Dip 813 contacts in `J_DOCK` on A22's underside land on the raised block's targets: pins 1 to 7 ground, 8 `SHORE_INHIBIT`, 9 and 10 the USB pair of E6's sensor controller, 11 ground and 12 the hot stop line HOT-R1 (`DOCK_SPARE`, since stream w4ae), with `VIN_RAW` (the 9 to 36 V input and the solar tracker's output, passed up to A22's front end) on four 9 A spring pins of its own, `J_VR1` to `J_VR4`, with its return on four more, `J_VN1` to `J_VN4`, since EQ-16 (`gen_sch_a.py:294` and `gen_sch_e.py:660` at `e57a7365`; at `45bde541`, `gen_sch_a.py:225` and `gen_sch_e.py:488`, pins 1 to 4 carried `VIN_RAW`; corrected 26 September 2026, S-07: this sentence put the wall outlet's console pair on 9 and 10).
     judgement: J_DOCK's twelve pins and the VIN_RAW pins; the citations are dated
@@ -4457,7 +4488,7 @@ ASSEMBLY.md#9:L224:item:s1 [cd9739a701] NOT DERIVABLE
     Case and face (**Corrected 27 September 2026 (MESHSAT-1357, the case set C1 to C6):** C1 to C6): the four setting legs with their VHB 5952 pads, the printed locator and the two pairs of printed wedges; the connector plate (114.0 x 68.3 x 5.0) and its gasket with its receptacles on the back wall, each on a Glenair 930-001 silicone flange gasket, the six M4 x 25 plate screws with bonded sealing washers; the twelve PolyPhaser GTH-SFF-AL arrestors on the two 6.0 mm RF entry plates with their two gaskets and sixteen M4 x 12 ISO 7380 screws on rubber-faced sealing washers (in place of the eleven Amphenol 132170 couplers at Z 88); the sensor pod on its M8; ten 6-32 UNC x 1/2 in A2 pan heads for the plate (in place of the M3 x 10 with star washers); the face seals and hardware of `vendor/seals/` and `vendor/mentor/`: the e-paper tape frames from `face-plate.dxf` (the PORON ring is dropped, C1), the 2.0 mm UV polycarbonate lens with 3M Primer 94, three Silex GP60 silicone washers, the NKK AT516 spare O-ring and AT428H boot, the APEM K seals, the Floyd Bell 61663 gasket, sixteen Mentor 1282.5004 light guides, eight PEM SO-M3-10 standoffs and two S-M3 nuts, the Xenarc window gasket, DOWSIL 3145 clear for the beads, MG Chemicals 422B for the backer's underside, the 3M 7871EC serial label; the QMX tray r2 (the printed tray and retaining frame, the 5052 lid plate, ten M3 x 5 countersunk A2, six M3 x 10 button head A2 with six M3 square nuts, two PORON 4701-30 pads, DP8005 for the plate, bonded tie mounts for the lid harness).
     judgement: CASE: a mechanical or case item, not a netlist claim
     names looked up: 2 parts, 0 nets
-    part numbers (6): 7871EC bought: 3M's serial label, a case item; AT428H on C (SW_LIGHT); AT516 on C (SW_LIGHT); DP8005 bought: 3M's DP8005 adhesive, a case material; GP60 bought: Silex's silicone washers, a case item; SO-M3-10 case: PEM standoffs
+    part numbers (8): 132170 case: Amphenol's SMA couplers of the case templates, which the case set of 27 September 2026 retired; 422B bought: MG Chemicals' conformal coating, a material; 7871EC bought: 3M's serial label, a case item; AT428H on C (SW_LIGHT); AT516 on C (SW_LIGHT); DP8005 bought: 3M's DP8005 adhesive, a case material; GP60 bought: Silex's silicone washers, a case item; SO-M3-10 case: PEM standoffs
 pcb_decisions.yaml#28:L52:field:outcome:s1 [27a657c309] NOT DERIVABLE
     owner ruling 25 September 2026, asked one decision at a time with the options and the recommendation: four layers at 2 oz outer copper for board P, the arm P8 measured at 0 hard and 0 unrouted at the fabricator's 0.16 mm floor.
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (the ruling and the route arm P8)
@@ -4489,14 +4520,19 @@ pcb_decisions.yaml#40:L896:field:outcome:s2 [a89adf0d12] NOT DERIVABLE
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (the owner's branch)
     names looked up: 0 parts, 0 nets
     part numbers (1): BQ4050 on P (RT1,U1)
-pcb_decisions.yaml#40:L896:field:outcome:s3 [4f6b62b753] TRUE
+pcb_decisions.yaml#40:L896:field:outcome:s3 [1f1b7f0b3f] NOT DERIVABLE
+    The two parts this entry named on 18 September (ABLIC S-8261 and TI bq2970) are single-cell protectors and cannot protect a 4S block (W2 finding F-DEC40, confirmed by its challenger: S-8261 is "FOR 1-CELL PACK", bq2970's PACK+ is limited to 12 V), so neither is the part.
+    judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (W2 finding F-DEC40)
+    names looked up: 0 parts, 0 nets
+    part numbers (2): S-8261 withdrawn: ABLIC's single-cell protector, which decision 40 set aside; bq2970 withdrawn: TI's single-cell protector, which decision 40 set aside
+pcb_decisions.yaml#40:L896:field:outcome:s4 [4f6b62b753] TRUE
     IN BOARD P'S SCHEMATIC SINCE faf8c981 (round 4 of MESHSAT-1357), with the second level's over-temperature network of d90f30e4: a TI BQ7720700 second level (3S to 7S; cell over-voltage 4.325 V, cell under-voltage 2.25 V, open wire, and a fixed 70 C over-temperature on its own 103AT-2 thermistor; SLUSEG7D, v2/vendor/battery/ti-bq77207.pdf) whose COUT and the BQ4050's FUSE output both drive the heater switch of an Eaton SCF9550-30-05 chemical fuse F2 through the arming jumper JP1, which is closed at commissioning after the gauge's image is written and read back; its DOUT holds the discharge FET off below 2.25 V; and the BQ4050's PTC input is enabled with a Murata PRF15BB103RB6RC chip PTC element (gen_sch_p.py:243, :288 and :414-502 at 45bde541).
     judgement: board P's schematic carries the second level, F2, JP1 and the PTC element; the citation is dated
     names looked up: 2 parts, 0 nets
     citations: citations judged: gen_sch_p.py lines at 45bde541 asserted below
     part numbers (6): 103AT-2 on D (J_FLANGE), P (J_TS,J_TS2,U2); BQ4050 on P (RT1,U1); BQ77207 on P (U2); BQ7720700 on P (U2); PRF15BB103RB6RC on P (RT1); SCF9550-30-05 on P (F2)
     asserted (7): P U2 value has 'BQ7720700' (netlist: 'BQ7720700DSSR: second-level cell OV 4.325 V / UV 2.25 V / op'); P F2 value has 'SCF9550' (netlist: 'SCF9550-30-05 self-control fuse (Eaton, 30 A, 4-5 cells): 1 '); P JP1 present; P RT1 value has 'PRF15BB103RB6RC' (netlist: 'PRF15BB103RB6RC chip PTC 10k, 4.7M at 130 C (Murata): the BQ'); gen_sch_p.py lines 243 to 243 at 45bde541 hold RT1; gen_sch_p.py lines 288 to 288 at 45bde541 hold F2; gen_sch_p.py lines 414 to 502 at 45bde541 hold JP1
-pcb_decisions.yaml#40:L896:field:outcome:s4 [c1269c680b] TRUE
+pcb_decisions.yaml#40:L896:field:outcome:s5 [c1269c680b] TRUE
     It is not laid out: the committed board P layout (P4) predates the schematic and is re-placed and re-routed at board P's next phase, and BAT-001 on board P stays open until that copper exists and pack_protection judges board P as generated (S-45).
     judgement: the committed layout predates the schematic
     names looked up: 0 parts, 0 nets
@@ -4754,12 +4790,12 @@ DEFINITION-STATUS.md#Current values of CONOPS's circuit passages (stream s122, 2
 
 # counts per document (sentences, TRUE, STALE, BASELINE, NOT DERIVABLE, UNJUDGED, assertions evaluated)
 PANEL.md: 167 sentences, 131 TRUE, 0 STALE, 0 BASELINE, 36 NOT DERIVABLE, 0 UNJUDGED, 787 assertions
-CONOPS.md: 287 sentences, 51 TRUE, 1 STALE, 39 BASELINE, 196 NOT DERIVABLE, 0 UNJUDGED, 784 assertions
-V2-SPEC.md: 147 sentences, 48 TRUE, 6 STALE, 0 BASELINE, 93 NOT DERIVABLE, 0 UNJUDGED, 334 assertions
-OPERATING-ENVELOPE.md: 63 sentences, 18 TRUE, 3 STALE, 0 BASELINE, 42 NOT DERIVABLE, 0 UNJUDGED, 151 assertions
+CONOPS.md: 288 sentences, 51 TRUE, 1 STALE, 39 BASELINE, 197 NOT DERIVABLE, 0 UNJUDGED, 784 assertions
+V2-SPEC.md: 149 sentences, 48 TRUE, 6 STALE, 0 BASELINE, 95 NOT DERIVABLE, 0 UNJUDGED, 334 assertions
+OPERATING-ENVELOPE.md: 64 sentences, 18 TRUE, 3 STALE, 0 BASELINE, 43 NOT DERIVABLE, 0 UNJUDGED, 151 assertions
 TEST-PLAN.md: 110 sentences, 18 TRUE, 0 STALE, 0 BASELINE, 92 NOT DERIVABLE, 0 UNJUDGED, 128 assertions
-ASSEMBLY.md: 158 sentences, 91 TRUE, 0 STALE, 0 BASELINE, 67 NOT DERIVABLE, 0 UNJUDGED, 242 assertions
-pcb_decisions.yaml: 9 sentences, 6 TRUE, 0 STALE, 0 BASELINE, 3 NOT DERIVABLE, 0 UNJUDGED, 17 assertions
+ASSEMBLY.md: 160 sentences, 91 TRUE, 0 STALE, 0 BASELINE, 69 NOT DERIVABLE, 0 UNJUDGED, 242 assertions
+pcb_decisions.yaml: 10 sentences, 6 TRUE, 0 STALE, 0 BASELINE, 4 NOT DERIVABLE, 0 UNJUDGED, 17 assertions
 EMCON.md: 26 sentences, 22 TRUE, 0 STALE, 0 BASELINE, 4 NOT DERIVABLE, 0 UNJUDGED, 455 assertions
 DEFINITION-STATUS.md: 22 sentences, 15 TRUE, 0 STALE, 0 BASELINE, 7 NOT DERIVABLE, 0 UNJUDGED, 265 assertions
-total: 989 sentences, 400 TRUE, 10 STALE, 39 BASELINE, 540 NOT DERIVABLE, 0 UNJUDGED, 3163 assertions
+total: 996 sentences, 400 TRUE, 10 STALE, 39 BASELINE, 547 NOT DERIVABLE, 0 UNJUDGED, 3163 assertions
